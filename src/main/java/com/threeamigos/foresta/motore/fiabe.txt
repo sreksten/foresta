@@ -1,0 +1,454 @@
+FIABA
+	[PROEMIO]\n[RACCONTO]
+
+PROEMIO
+	[TEMPO_PROEMIO], [LUOGO_PROEMIO], [FATTO_PROEMIO].
+
+TEMPO_PROEMIO
+	Molto, molto tempo fa | All'alba dei tempi | Nella notte dei tempi | Molti, molti anni fa
+	Qualche tempo fa | Diversi anni fa | Nelle notti di luna piena | Durante le vacanze estive
+	Durante le vacanze natalizie | A Pasqua | Al tempo in cui Berta filava
+	Quando il mondo era ancora giovane | Quando i mulini erano bianchi
+	Non piu' tardi della settimana scorsa | Nelle crepe dello spaziotempo
+	Nell'Alto Medioevo | Nel Basso Medioevo | Durante il Rinascimento
+	Il secolo scorso | Nell'anno Mille | All'alba del mondo | Cent'anni fa
+	Quando gli asini volavano | Durante il lockdown mondiale | Il mese scorso
+
+LUOGO_PROEMIO
+	in un paese lontano lontano | in un posto cosi' in culo al mondo che nessuno se lo ricorda
+	a Monculi, all'epoca in cui si ferravano i loci | in capo al mondo | in cima al Monte Fato
+	alle pendici del vulcano piu' attivo al mondo | nella Gora dell'Eterno Fetore
+	in un paese incantato | in un paese di cui solo i vecchi si ricordano il nome
+	in un paesino nelle montagne | in un paese in riva al mare | accanto ad un lago
+	in una grotta | in un buco per terra | sul crinale di una collina | dietro la discarica comunale
+	in un castello fatiscente | in una malfamata bettola | in una spelonca | in un antro da tregenda
+	a fianco dell'inceneritore municipale | in un posto dimenticato da Dio
+	in una galassia lontana lontana | sotto un tombino | in un bosco incantato
+	in una palude maledetta | in una torbiera | in un deposito di munizioni | dentro a una fogna
+	all'estremo Sud | nel freddo Nord | nel misterioso Oriente | nell'Est | nel Paese dei Balocchi
+	nel Paese della Cuccagna | nel manicomio criminale | dietro al campo da calcio
+
+FATTO_PROEMIO
+	viveva [*NOME_PROTAGONISTA] [CONOSCIUTO_COME]
+	abitava [*NOME_PROTAGONISTA] [CONOSCIUTO_COME]
+	dimorava [*NOME_PROTAGONISTA] [CONOSCIUTO_COME]
+	usava riposare le sue stanche ossa [*NOME_PROTAGONISTA] [CONOSCIUTO_COME]
+	si nascondeva [*NOME_PROTAGONISTA] [CONOSCIUTO_COME]
+	si rendeva latitante [*NOME_PROTAGONISTA] [CONOSCIUTO_COME]
+	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME], si allenava al salto del pasto
+	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME], si allenava alla corsa campestre contro le guardie del re per [CRIMINE]
+	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME], era ricercato per [CRIMINE]
+	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME], era solito [ABITUDINE]
+	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME], usava [ABITUDINE]
+
+CONOSCIUTO_COME
+	, detto [*SOPRANNOME_PROTAGONISTA]
+	, conosciuto anche come [*SOPRANNOME_PROTAGONISTA]
+	, altrimenti conosciuto come [*SOPRANNOME_PROTAGONISTA]
+	, altrimenti detto [*SOPRANNOME_PROTAGONISTA]
+	, che i nemici chiamavano [*SOPRANNOME_PROTAGONISTA]
+	, che tutto il paese conosceva come [*SOPRANNOME_PROTAGONISTA]
+	, che gli amici nominavano [*SOPRANNOME_PROTAGONISTA]
+	, che tutti conoscevano come [*SOPRANNOME_PROTAGONISTA]
+	, il cui nome era ormai dimenticato poiche' tutti lo chiamavano [*SOPRANNOME_PROTAGONISTA]
+
+ABITUDINE
+	scappare dalle guardie del re per [CRIMINE] | nascondersi dalla giustizia per [CRIMINE]
+	scuoiare i viandanti | tentare la sorte nelle taverne e nelle bettole
+	commerciare in armi ed organi umani | derubare le vecchiette | cavare sangue dalle rape
+	fare il bullo con i piu' deboli | rendersi irreperibile per [CRIMINE]
+	giocare a scacchi perdendo contro il suo [ANIMALE_DA_COMPAGNIA]
+	approcciare le pulzelle senza successo, essendo piu' brutto del suo [ANIMALE_DA_COMPAGNIA]
+
+CRIMINE
+	divieto di sosta | caccia abusiva ai polli | schiamazzi notturni | comportamento disdicevole
+	ubriachezza molesta | truffa aggravata ai danni dei villici
+	aver trombato le mogli altrui | aver trombato i mariti altrui | aver trombato gli animali altrui
+	furto delle offerte alla chiesa | la sua abitudine di collezionare cose altrui
+	furto, saccheggio e incendio
+
+ANIMALE_DA_COMPAGNIA
+	gatto | criceto | pesce rosso | canarino | cane | asino | mulo
+
+PROTAGONISTA
+	[*NOME_PROTAGONISTA] | [*SOPRANNOME_PROTAGONISTA]
+
+NOME_PROTAGONISTA
+	Romy Jona | Luca Viola | Massimo Capanni | Massimiliano Falchi | Andrea [STOPPIONI] | il Vox
+
+STOPPIONI
+	Stoppioni | Scoppioni | Scorpioni | Scarponi
+
+SOPRANNOME_PROTAGONISTA
+	lo sventrapapere | il torvo | il losco | il Porco Gordo | il Massimo Fattore | il furtivendolo
+	il battipaglia | l'insegnante di zerbinaggio | il professore del furto | il laido | il guercio | lo zoppo
+	il tritaporci | lo scannamuli | lo squartatore di gatti | il ladro di polli | il molestapaperi | lo spaventapassere
+	il ribaldo | il trombategami | il campione di bruttezza | il Signore delle Scorregge | il Signore del Male
+	l'autonominatosi Imperatore Galattico | il puzzone
+
+RACCONTO
+	[RACCONTO_P_1] [RACCONTO_P_2] [RACCONTO_P_3] [RACCONTO_P_4] [RACCONTO_P_5] [MORALE]
+	[RACCONTO_P_1] [RACCONTO_P_2] [RACCONTO_P_6]
+	[RACCONTO_P_1] [RACCONTO_P_2] [RACCONTO_P_7]
+
+RACCONTO_P_1
+	Un giorno[MOTIVAZIONE] decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE].
+
+MOTIVAZIONE
+	, stufo delle continue angherie dei vicini, 
+	, stufo delle angherie dei suoi amici, 
+	, stufo delle angherie che le sue bestie gli riservavano, 
+	, stanco delle ristrettezze economiche in cui versava, 
+	, senza motivo apparente, 
+	, apparentemente per un colpo di sole, 
+	, probabilmente per via della primavera, 
+	, a causa del livello altissimo di testosterone, 
+	, a causa di alcuni affari andati male, 
+	, per sfuggire ai creditori che lo braccavano, 
+	, per fare qualcosa di diverso dal solito, 
+	, per migliorare le sue relazioni sociali, 
+	, per provare il brivido dell'imprevisto, 
+	, poiche' il cervello gli si era definitivamente spento, 
+	, siccome gli era scappato il cane, 
+	, stanco di non vincere mai i tornei di briscola, 
+	, stufo dell'ombra che i pini gettavano sulla sua casa, 
+	
+# Qui sopra c'e' una tabulazione che indica una motivazione vuota
+
+DECISIONE_1
+	andare in culo a tutti | levarsi da tre passi | levarsi dai cosiddetti | prendere armi e bagagli
+	far fagotto | traslocare | sparire | far perdere le proprie tracce | scomparire come Kaiser Soze
+	spostarsi | svanire nel nulla | cambiare residenza | partire | evaporare | scomparire
+
+DECISIONE_2
+	andare a [DELINQUERE] | andare a cercar [QUALCOSA]
+	andare a caccia di cervi del re | andare a caccia di gloria
+	cercare la gloria | tentare la fortuna | sfidare le avversita'
+
+DELINQUERE
+	delinquere | rubare [OGGETTI_DA_RUBARE] | truffare [VITTIME] | rigare portiere di auto altrui
+	commettere i suoi crimini | derubare [VITTIME] | turlupinare [VITTIME]
+
+OGGETTI_DA_RUBARE
+	automobili | oro | cavalli | capi di bestiame | capi d'abbigliamento | soldi e titoli azionari
+
+VITTIME
+	malcapitati | vecchiette | poveracci | allocchi | orfani | mendicanti
+
+QUALCOSA
+	fortuna | moglie | soldi e fama | vittime innocenti | gloria e ricchezze | qualcosa da mangiare
+	enormi ricchezze | montagne di gioielli
+
+DECISIONE_DOVE
+	da un'altra parte | altrove | in altri luoghi | in altre contrade | all'estero | in capo al mondo
+	in paesi remoti | in altre regioni | nella vicina citta' | in terre inesplorate |
+	in terre sconosciute ai piu' | al Polo Sud | al Polo Nord | dove il sole tramonta
+	dove il sole sorge | ad Ovest | a quel paese
+
+RACCONTO_P_2
+	Fu cosi' che [RACCONTO_P_2_QUANDO] si mise in cammino, [RACCONTO_P_2_FORNITO_DI] un [*EQUIPAGGIAMENTO].
+
+RACCONTO_P_2_QUANDO
+	appena sorse il sole | all'alba | a mezzogiorno | al tramonto | all'inizio della primavera | all'inizio dell'estate
+	i primi giorni d'autunno | nel mezzo dell'inverno | ai primi tepori | a Ferragosto | alle Idi di Marzo
+	verso mezzanotte | dopo il cambio della guardia | alla prima crisi di governo | subito dopo pranzo | dopo aver digerito
+	alle undici e mezza | al cambio della guardia | non appena fu possibile | appena il momento fu favorevole | il giorno dopo
+
+RACCONTO_P_2_FORNITO_DI
+	avendo con se | fornito di | attrezzato con | imbracciando | essendosi procurato | portandosi dietro | equipaggiato con | armato di
+
+EQUIPAGGIAMENTO
+	fiasco di vino | computer portatile | fiasco di Chianti | sacco di letame | mucchio di latta
+	carro di concio | fazzoletto a scacchi | papero da guardia | cane da pastore | pezzo di formaggio
+	chilo di moccio | gallo cedrone da mangiare a colazione | pulcino dislessico | lupo da compagnia
+	asino sapiente | cammello a tre gobbe | gatto nero | corvo ammestrato | coltello da cucina | chilo di caffe'
+	etto di burro | sacco di noci | dispositivo magico radiocomandato | cavallo da tiro
+
+RACCONTO_P_3
+	[RACCONTO_ECCO_CHE] un [*ANTAGONISTA] [*ATTRIBUTO_ANTAGONISTA]. [PENSIERO] [RACCONTO_P_3_DISSE] [RACCONTO_P_3_PENSANDO] [TAPINO].
+
+RACCONTO_ECCO_CHE
+	Ecco che incontro' | All'improvviso vide | Eccogli venire incontro | A sbarragli la strada trovo' | Dopo pochi passi ecco
+	Appena uscito di casa ecco | Appena lasciato il paese ecco | Immediatamente fuori dall'abitato vide | Come volto' l'angolo incontro'
+	Dopo pochi passi gli venne incontro | Voltato l'angolo vide | In fondo alla strada gli si presento'
+
+ANTAGONISTA
+	[ANIMALE] | [PERSONAGGIO]
+
+ANIMALE
+	lupo | coboldo | somaro | caprone | licaone | maiale | rospo | verre | cinghiale | bue | camaleonte
+	gufo | tapiro | piccione | leone | minotauro | serpente | passero solitario | drago furioso
+
+PERSONAGGIO
+	soldato | mago | commerciante | marinaio | musicante | rappresentante di profumi
+	pescatore | fabbro | viandante | passante | necromante | venditore di pesce | contadino
+	tessitore | cavaliere | armigero | condottiero | capitano di vascello | giudice
+	bambinaio | picchiatore | assassino | ladro | pirata | bucaniere | contrabbandiere
+	stregone | fattucchiere | venditore ambulante di paperelle di gomma 
+
+ATTRIBUTO_ANTAGONISTA
+	mannaro | grasso e pelato | antipatico come il mal di pancia | sorridente | puzzolente | losco
+	malefico | stanco | stremato | arrabbiatissimo | felice | contento | triste | infingardo
+	sospetto | tranquillo | furibondo | gioioso | sudato | accaldato | assetato | furioso | arrogante
+	reietto | quantomeno equivoco | con la cresta | con le corna | dalla lingua biforcuta
+
+PENSIERO
+	"Sara' dura liberarsi di questo [*ANTAGONISTA]"
+	"Che incontro fortunato!"
+	"Quale fortuna inaspettata"
+	"Questo e' il cacio sui maccheroni, anzi, il [*ANTAGONISTA] [POSIZIONE_DISDICEVOLE]"
+	"Non aspettavo altro!"
+	"Che colpo di fortuna!"
+	"La sorte mi e' benigna"
+	"La sorte mi e' avversa"
+	"Che triste destino"
+	"Che incontro inaspettato!"
+	"Qual buon vento lo portera'?"
+
+POSIZIONE_DISDICEVOLE
+	nella brace | con la faccia sotto le mie scarpe | con i segni delle mie mani sul suo grugno
+	pronto ad essere spennato | che si offre come vittima sacrificale | che fa da capro espiatorio
+	pronto a subire le angherie del destino | destinato a subire le angherie della sorte
+
+RACCONTO_P_3_DISSE
+	, disse tra se e se,
+	, borbotto',
+	, fu la sua prima impressione,
+	, gli venne subito in mente,
+	, ragiono' tra se e se,
+	, immagino',
+	, penso' ad una prima occhiata,
+
+RACCONTO_P_3_PENSANDO
+	pensando di allenarsi al tiro al bersaglio con il
+	pensando di - truffare - compiere qualche vantaggioso affare con il
+	progettando di massacrare senza ritegno, a chiaro scopo di rapina, il
+	meditando se lasciar passare o uccidere il
+	sperando di fare amicizia con il
+	progettando di accompagnarsi con il
+	ragionando se ignorare, malmenare o truffare il
+	ipotizzando di imbrogliare il
+
+TAPINO
+	poveretto | poveraccio | malcapitato | tapino | povero soggetto | poverino | poveretto | [*ANTAGONISTA]
+
+RACCONTO_P_4
+	[IN_REALTA] [*PROTAGONISTA] scopri' che il [*ANTAGONISTA] era [CHI_ERA_L_ANTAGONISTA], fu subito [RIDOTTO_COME].
+
+IN_REALTA
+	In realta', come | A dire il vero, appena | Ma appena | Non appena pero' | Tuttavia, quando
+
+CHI_ERA_L_ANTAGONISTA
+	il campione nazionale di karate | il campione nazionale di pugilato | il campione nazionale di schiaffi nel muso
+	un esperto giuocatore di rava | un campione di risse nelle taverne | il capo di una banda di briganti
+	il capo delle guardie del re | un noto capitano di ventura con le truppe al suo seguito | un esperto picchiatore
+	il capo di una banda di briganti | il campione di Ju-Jitsu del luogo | espertissimo ad usare una mazza
+	un campione nell'uso della sciabola
+
+RIDOTTO_COME
+	ridotto a piu' miti consigli | massacrato senza pieta' | disintegrato da una gragnuola di colpi
+	ridotto ad una maschera di sangue | ridotto ad un nodo di dolore | conciato per le feste
+	preso a calci come un cane in chiesa | portato a piu' miti consigli | portato a rivedere i suoi piani
+	ridotto in condizioni cosi' pietose che neppure [SAMARITANO] avrebbe potuto aiutarlo
+
+SAMARITANO
+	il Buon Samaritano | la Fata dai Capelli Turchini | Babbo Natale | Mago Merlino | la Fatina dei Denti
+
+RACCONTO_P_5
+	Fu cosi' che dovette rinunciare al suo [*EQUIPAGGIAMENTO], vinto [VINTO_COME], ottenendo in cambio un [OGGETTO_SPREGEVOLE].
+
+OTTENUTO
+	vinto [VINTO_COME] | rubato ai soldati del fortino vicino | rubato ad una vecchietta
+	rubato ad un poverello | involato da una finestra della casa dei vicini
+
+VINTO_COME
+	giocando a carte | giocando a freccette | scappando dai soldati del fortino vicino
+	giocando a dadi | giocando a morra | giocando a rava | scommettendo ai cavalli
+	alle corse di cani | alla lotteria nazionale | giocando in una taverna malfamata
+
+OGGETTO_SPREGEVOLE
+	papero magico che poteva prevedere quando sarebbe finito in padella
+	volano a pedali | apribottiglie elettronico | motorazzo a pila | ariete da battaglia
+	preservativo usato | pezzo di ferro | chiodo arrugginito | cofano vuoto
+	tappo rugginoso | coniglio di cioccolata | dispositivo anti-piccioni
+
+RACCONTO_P_6
+	[RACCONTO_ECCO_CHE] un [*ANIMALE] [*ATTRIBUTO_ANTAGONISTA]. [BACIAMI] [REAZIONE_PROTAGONISTA]
+
+BACIAMI
+	"Sono stato trasformato in un [*ANIMALE] da [MAGO_CATTIVO_PREPROD][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO] perche' [MOTIVAZIONE_TRASFORMAZIONE] ma se [BUONA_AZIONE] [MI_VEDRAI_TORNARE] un [PERSONAGGIO] [ATTRIBUTO_ANTAGONISTA]."
+
+MAGO_CATTIVO_PREPROD
+	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Mago Merlino]
+	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Maga Mago']
+	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=fata molto permalosa]
+	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=fata spregevole]
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=mago]
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=necromante]
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=folletto dispettoso]
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=malvagio stregone]
+	[MAGO_CATTIVO_ARTDET=l' ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=occultista furioso]
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=mago prestidigitatore]
+	[MAGO_CATTIVO_ARTDET=l'][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=alieno proveniente dalla quinta dimensione]
+
+MOTIVAZIONE_TRASFORMAZIONE
+	mi ero bevuto tutto il suo [SOSTANZA_ALCOOLICA]
+	mi ero mangiato tutte le sue [FRUTTA]
+	avevo rubato tutte le sue [POSSEDIMENTI]
+	mi ero divertito alle sue spalle
+	avevo avuto un rapporto intimo con [PARENTE_MAGO_CATTIVO]
+	mi divertivo a suonare la grancassa sotto le sue finestre
+	avevo suonato il suo campanello per fare un dispetto
+	avevo rotto un vetro con una pallonata
+	avevo tagliato le gomme della sua automobile
+
+SOSTANZA_ALCOOLICA
+	cordiale | gin | vermouth | cognac | vino | whisky | rum
+
+FRUTTA
+	mele | pere | ciliegie | angurie | pesche noci | noci | banane
+
+POSSEDIMENTI
+	mucche | pecore | capre | galline | concubine
+
+PARENTE_MAGO_CATTIVO
+	sua figlia | suo figlio | sua madre | suo padre | sua sorella | suo fratello | sua nonna | suo nonno | sua zia | suo zio
+	il cugino del fratello del compagno di stanza di suo padre
+
+BUONA_AZIONE
+	mi bacerai | mi leccherai le zampe | mi leccherai la schiena | mi laverai | mi farai fare tre salti mortali
+	mi toglierai le pulci e le zecche che mi infestano | sarai in grado di sopportare il mio odore
+	mi batterai in una gara di rutti | mi batterai a braccio di ferro | mi leverai queste scarpette magiche
+	mi depilerai completamente | sparlerai di me con i tuoi amici | mi urlerai nelle orecchie | mi curerai le emorroidi
+	ti lascerai scuoiare | ti farai baciare | ti butterai da quel dirupo | ti farai rapinare
+	ti farai utilizzare come mezzo di trasporto | ti lascerai sodomizzare | ti farai rapare | ti farai tagliare le orecchie
+	farai da palo alle mie prossime rapine | farai da complice per i miei crimini | avrai pieta' di me
+	combatterai contro [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO]
+
+MI_VEDRAI_TORNARE
+	io potro' nuovamente diventare | io potro' nuovamente essere | mi vedrai tornare | mi trasformero' nuovamente in
+	la maledizione finira' ed io tornero' ad essere | il maleficio scomparira' ed io ritornero' ad essere
+
+REAZIONE_PROTAGONISTA
+	[PENSIERO_PROTAGONISTA], penso' [*PROTAGONISTA] e fece la buona azione. [LIETO_FINE]
+	[PENSIERO_PROTAGONISTA], penso' [*PROTAGONISTA]; ma tale risposta fu presa come un diniego dal [*ANIMALE], per cui [*PROTAGONISTA] venne [RIDOTTO_COME].
+	[PENSIERO_PROTAGONISTA], disse [*PROTAGONISTA], e acconsenti'. [LIETO_FINE]
+	[PENSIERO_PROTAGONISTA], rispose [*PROTAGONISTA]. [APPARIZIONE_MAGO_CATTIVO] [MAGO_CATTIVO_PREPROD][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO] [MAGO_CATTIVO_APOSTROFA] [FRASE_MAGO_CATTIVO], e [*PROTAGONISTA] venne a sua volta trasformato in un [ANIMALE] [ATTRIBUTO_ANTAGONISTA].
+	[PENSIERO_PROTAGONISTA], rispose [*PROTAGONISTA]. Ma il [*ANIMALE] gli disse [FRASE_MAGO_CATTIVO], e il nostro venne [RIDOTTO_COME].
+
+PENSIERO_PROTAGONISTA
+	"Mi sembra un buon affare" | "Col cavolo" | "Era una vita che aspettavo una occasione cosi'" | "Certo, come no?"
+	"Ma ovviamente!" | "E' sempre stato il mio sogno!" | "Lo faro' subito!" | "E' il sogno della mia vita!"
+	"Non vedevo l'ora!" | "Non aspettavo altro!"
+
+APPARIZIONE_MAGO_CATTIVO
+	Al che si materializzo' | Ed ecco che apparve | Da sotto un tombino usci' | Sbuco' fuori da una nuvola di fumo | Apparve pero'
+	Si teletrasporto' tuttavia | Venne pero' visto da
+
+MAGO_CATTIVO_APOSTROFA
+	che gli disse: | che cosi' lo apostrofo': | che gli rivolse il seguente ammonimento: | che tuono':
+
+FRASE_MAGO_CATTIVO
+	"Ecco che la tua cattiveria viene allo scoperto"
+	"Sei dunque cosi' insensibile alle disgrazie altrui"
+	"Sei proprio un infingardo"
+	"Sei un farabutto e verrai punito"
+	"Come puoi parlare in questo modo"
+	"Sei la somma di tutto il male del mondo"
+	"Sei la persona piu' spregevole che io abbia mai visto"
+	"Sei veramente una persona pessima"
+
+LIETO_FINE
+	I due si sposarono e vissero felici e contenti.
+	I due divennero i migliori amici che si siano mai visti.
+	I due si lasciarono da buoni amici, [VINTO_COME].
+	I due divennero amici e cominciarono a [ATTIVITA_CRIMINOSE] insieme finche' non furono [FINACCIA] per [CRIMINE].
+
+ATTIVITA_CRIMINOSE
+	compiere rapine, furti e grassazioni
+	lasciare il carro in divieto di sosta
+	massacrare villici inermi
+	rubare a piu' non posso
+	rapire vergini innocenti
+	rubare le gomme delle auto dei vicini
+	dare la caccia agli scoiattoli
+	maltrattare i poverelli
+
+FINACCIA
+	arrestati | condotti al patibolo | esiliati | incarcerati | giudicati colpevoli
+
+MORALE
+	[PENSIERO_PROFONDO], [CONCLUSE] [CHIOSA].
+
+PENSIERO_PROFONDO
+	"Non tutto il male vien per nuocere"
+	"Tanto va la gatta al lardo che ci lascia lo zampino"
+	"Non esistono piu' le mezze stagioni"
+	"Piove, governo ladro"
+	"Chi pecora si fa il lupo se la mangia"
+	"Che mondo"
+	"Cosa non tocca fare per campare"
+	"Ride bene chi ride ultimo"
+	"Non finisce qui, mi rivedrete"
+
+CONCLUSE
+	penso tra se e se
+	concluse
+	capi' quindi
+	osservo'
+
+CHIOSA
+	tornando da dove era venuto
+	incamminandosi verso altre avventure
+	imbarcandosi per cercar fortuna
+	scappando dai creditori
+	fuggendo da una moltitudine inferocita
+
+RACCONTO_P_7
+	Un giorno, mentre [ATTIVITA_SPREGEVOLE], senti' che [NOTIZIA]
+
+ATTIVITA_SPREGEVOLE
+	scuoiava paperi | spennava galline | rapinava viandanti | beveva a ritrecina in una bettola malfamata
+	derubava i passanti | uccideva le mosche | cercava da mangiare negli orti altrui
+	si faceva i fatti suoi | passeggiava per quadrivi ed angiporti | cercava di assaltare una nave in secca
+	progettava di assalire una carovana | progettava il furto del secolo | assaltava una diligenza
+	rigava portiere di macchine | spaccava vetrine | tagliava gomme di automobili | parcheggiava in doppia fila
+
+NOTIZIA
+	il re aveva chiesto aiuto per salvare sua figlia [*NOME_PRINCIPESSA], una principessa [*ATTRIBUTO_PRINCIPESSA]. [SVOLGIMENTO_PRINCIPESSA]
+	un orco aveva rapito la figlia del re, una principessa di nome [*NOME_PRINCIPESSA]. [SVOLGIMENTO_PRINCIPESSA]
+	un malfattore aveva portato via nella notte l'erede al trono, la principessa [*NOME_PRINCIPESSA]. [SVOLGIMENTO_PRINCIPESSA]
+
+ATTRIBUTO_PRINCIPESSA
+	molto magra | assai obesa | veramente brutta ma ricchissima | antipatica
+	brutta come la morte | simpatica come le tasse | veramente bellissima | malinconica
+	affascinante | pelata
+
+NOME_PRINCIPESSA
+	Ermenegilda | Guendalina | Genoveffa | Bacheca | Rasperonzola | Guidrigilda | Brigitta | Beppina | Ortensia
+
+SVOLGIMENTO_PRINCIPESSA
+	Il nostro [*NOME_PROTAGONISTA] ovviamente se ne frego' e la poverina fece una finaccia.
+	Dopo innumerevoli peripezie [*NOME_PROTAGONISTA] salvo' la principessa [*ATTRIBUTO_PRINCIPESSA]. [LIETO_FINE]
+	[*NOME_PROTAGONISTA] si mise in cammino, attraversando [LUOGO_1] e [LUOGO_2], finche' non giunse ad [LUOGO_3] dove la principessa [*ATTRIBUTO_PRINCIPESSA] era tenuta [IN_CATTIVITA] da [MAGO_CATTIVO_PREPROD][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO]. [SVOLGIMENTO_PRINCIPESSA_2]
+
+LUOGO_1
+	monti | montagne | paludi | boschi | canali | fiumi | laghi | caverne | pascoli | prati | periferie malfamate | vicoli bui
+
+LUOGO_2
+	mari | pianure | torbiere | paesi | citta' | castelli | ponti | locande | bettole | postacci
+
+LUOGO_3
+	un castello | un fortino | una grotta | un antro | un capanno | un paese
+
+IN_CATTIVITA
+	prigioniera | come dama di compagnia | come sguattera | come capro espiatorio | rinchiusa in un torrione
+
+SVOLGIMENTO_PRINCIPESSA_2
+	Dopo essersi accordato con [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO] per [30_DENARI], [*PROTAGONISTA] torno' a casa a [ATTIVITA_CRIMINOSE], lasciando [*NOME_PRINCIPESSA] al suo triste destino.
+	Dopo aver combattuto con [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO], [*PROTAGONISTA] venne trasformato in un [*ANIMALE] [*ATTRIBUTO_ANTAGONISTA].
+	Dopo aver corrotto [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO], [*PROTAGONISTA] sposo' la [*ATTRIBUTO_PRINCIPESSA] [*NOME_PRINCIPESSA]. [LIETO_FINE]
+
+30_DENARI
+	30 denari | una forma di cacio | un tozzo di pane | una somma considerevole di denaro | una mandria di buoi
+	un sacchetto di monete | una fornitura a vita di [SOSTANZA_ALCOOLICA] | un pezzo di pane | un soldo bucato

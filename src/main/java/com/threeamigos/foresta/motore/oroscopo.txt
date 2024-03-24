@@ -1,0 +1,178 @@
+OROSCOPO
+	[SEGNO]: [PREVISIONE]
+SEGNO
+	Segno del cuscino sulla faccia
+	Segno della mano aperta sulla faccia
+	Segno delle mani nel muso
+	Segno di chiavi sulla portiera
+	Segno di chiavi sulla fiancata della vostra macchina nuova
+	Segno del sistemista
+	Segno del programmatore
+	Segno di scasso sulla porta di casa
+	Brutto segno
+	Segno che era meglio rimanere a casa
+	Vergine - se ne esistono ancora -
+PREVISIONE
+	[PIANETA] [RELAZIONE] [AZIONE]. [CHIOSA]
+PIANETA
+	Marte | Mercurio | Giove | Venere | Saturno | Urano | Nettuno | Plutone
+QUALCOSA
+	[QUALCOSA_SINGOLARE] | [QUALCOSA_PLURALE]
+QUALCOSA_SINGOLARE
+	il nuovo kernel Linux | il server principale della vostra azienda | il periodo di ferie dei sistemisti
+	il disco di boot | il lettore CD-ROM | il server di dominio | il server di posta
+	la burocratizzazione informatica della vostra azienda | la documentazione interna
+	la partita della Nazionale | la gestione politico-economica della vostra azienda
+	l'ultima tempesta solare | l'ultimo best-seller del vostro autore preferito
+	l'infrastruttura di sicurezza | il servizio di videosorveglianza
+	il layer di persistenza delle vostre applicazioni | il layer di rete
+	una gita di religiose | una gita scolastica | la burocrazia statale
+QUALCOSA_PLURALE
+	i programmi legacy | i protocolli di trasmissione dati | i servizi pubblici
+	i nuovi assunti | i neo-laureati recentemente assunti | i flussi dati | le onde radio
+	le ultime riunioni dirigenziali | le telecamere di videosorveglianza | gli addetti alle pulizie
+	le piante ornamentali sparse per i locali | i commerciali | gli impiegati | le forze dell'ordine
+	le strutture antincendio
+RELAZIONE
+	in congiunzione con [QUALCOSA]
+	in trigono a [QUALCOSA]
+	in quadrato a [QUALCOSA]
+	opposto a [QUALCOSA]
+	in cuspide con [QUALCOSA]
+	nella [CARDINALE] casa
+	alleato a [QUALCOSA]
+	in associazione a delinquere con [QUALCOSA_SINGOLARE] e [QUALCOSA_PLURALE]
+	in opposizione a [QUALCOSA]
+
+CARDINALE
+	prima | seconda | terza | quarta | quinta | sesta | settima | ottava | nona | decima | ennesima | ultima
+GIORNO_SETTIMANALE
+	lunedi' | martedi' | mercoledi' | giovedi' | venerdi' | sabato | domenica
+AZIONE
+	provochera' [DANNO] | causera'  [DANNO] | si produrra' in [DANNO]
+	vi rendera' insofferenti [INSOFFERENZA] | vi fara' star male almeno fino a [GIORNO_SETTIMANALE]
+	vi procurera' problemi legati a [QUALCOSA] fino a [GIORNO_SETTIMANALE]
+	vi suggerisce di [SUGGERIMENTO]
+	fara' si che [QUALCOSA_SINGOLARE] vi procuri noie da [GIORNO_SETTIMANALE] per [PERIODO_DI_TEMPO]
+	fara' si che [QUALCOSA_PLURALE] vi procurino noie per [PERIODO_DI_TEMPO] cominciando da [GIORNO_SETTIMANALE]
+DANNO
+	una perdita di dati sul vostro disco rigido
+	una intrusione di ignoti cracker
+	una formattazione a basso livello del cluster di database
+	una invasione di virus e malware
+	una revoca delle licenze d'uso del parco software
+	una denuncia per violazione di brevetto
+	una ennesima modifica delle specifiche di progetto
+	un tentativo di documentare i flussi aziendali
+	una caduta di tensione che a sua volta [AZIONE]
+	una spaccatura politica all'interno della maggioranza
+	una interrogazione parlamentare
+	un danno irreparabile
+	un improvviso malessere
+	una forte emicrania
+	una riduzione di stipendio
+	una riduzione di personale
+	un trasferimento verso [LOCALITA_SPREGEVOLE]
+INSOFFERENZA
+	al mal di denti del vostro collega
+	alle bevande zuccherate
+	al traffico sulla rete
+	alle luci natalizie
+	alla mattinata di [GIORNO_SETTIMANALE]
+	ai progetti di gruppo
+	agli sport acquatici
+	ai felini
+	alle farfalle notturne
+	ai gadget ipertecnologici
+	ai telefoni cellulari
+	al mal di pancia
+	alle mezze stagioni, anche se non esistono piu'
+	alle minigonne
+	al sito web della vostra azienda
+	alla ADSL
+SUGGERIMENTO
+	documentare il codice sviluppato
+	rinunciare a quel viaggio a cui sospiravate, cambiando meta: [LOCALITA_SPREGEVOLE]
+	andare a trovare i vostri parenti finche' siete in tempo
+	fare una copia di sicurezza di tutti i vostri dati
+	preparare il passaporto e le valigie per una fuga veloce
+	passare piu' tempo con il vostro partner
+	organizzare un torneo di briscola
+	passare una serata in compagnia
+	pulirvi il naso
+	fare le pulizie di Pasqua
+	spolverare il costume da Babbo Natale
+	cucinare quello che avete in frigo
+	andare a pesca di trote
+	tornare a giocare online
+	perdere un po' di tempo in chat
+	perdere un po' di tempo su un multiuser dungeon
+	documentare tutti i flussi aziendali
+	giocare a PacMan
+	trovare una nuova professione
+	cercare il pelo nell'uovo
+	cercare l'ago nel pagliaio
+	togliervi tutto quel che avete sullo stomaco
+	prendere un digestivo
+LOCALITA_SPREGEVOLE
+	San Vittore
+	Abu Grahib
+	Guantanamo
+	Regina Coeli
+	la discarica comunale
+	il pronto soccorso
+	il cimitero comunale
+	una scuola religiosa in Afghanistan
+CHIOSA
+	Per i nati nella prima decade [ATTENZIONE].
+	Per i nati nella seconda decade [ATTENZIONE].
+	Per i nati nella terza decade [ATTENZIONE].
+	La prudenza non e' mai troppa.
+	Meglio un uovo oggi che una gallina domani.
+	Una lira risparmiata, una lira guadagnata.
+	Meglio vivere un giorno da leone che cent'anni da pecora.
+	Chi pecora si fa, il lupo se la mangia.
+	Chi va piano va sano e va lontano.
+	Rinunciate in partenza a qualsiasi cosa abbiate progettato.
+	Barbapapa' consiglia di [SUGGERIMENTO].
+	La prudenza consiglia: [SUGGERIMENTO].
+	Chi la fa, l'aspetti.
+ATTENZIONE
+	prestate molta attenzione alla vostra buona stella che cerchera' di cadervi sul capo: vista la massa, potrebbe fare parecchio male
+	guardatevi da [PERSONA] che [SPREGIO]
+	occhio alle bucce di banana
+	attenzione a non correre per le scale con oggetti taglienti
+	date un'occhio ai semafori
+	evitate il traffico urbano
+	osservate la legge Urbani
+	evitate le code in autostrada
+	evitate gli energumeni alticci
+	attenzione alle guardie del corpo
+	occhio alla penna
+	non credere agli oroscopi
+SPREGIO
+	[SPREGIO_CHIOSA]
+	grazie ad una breccia nella sicurezza [SPREGIO_CHIOSA]
+	con la complicita' di [PERSONA] [SPREGIO_CHIOSA]
+	[SPREGIO_CHIOSA_1] e [SPREGIO_CHIOSA_2]
+SPREGIO_CHIOSA
+	[SPREGIO_CHIOSA_1] | [SPREGIO_CHIOSA_2]
+SPREGIO_CHIOSA_1
+	cerchera' di farvi le scarpe
+	cancellera' involontariamente i vostri dati
+	intasera' completamente il traffico in uscita sulla rete
+	cancellera' diversi documenti
+	annullera' un importante progetto
+SPREGIO_CHIOSA_2
+	sputera' nel piatto in cui dovrete mangiare
+	cerchera' di mettervi in cattiva luce con [PERSONA]
+	scrivera' dati a casaccio nel database aziendale
+	parlera' male di voi con [PERSONA]
+PERSONA
+	un collega di lavoro | il vostro capo | il vostro partner | il vostro vicino di casa
+	la vostra vicina di casa | il vostro commercialista | il vigile di quartiere | il postino
+	il lattaio | il vostro edicolante di fiducia | l'uomo della strada | la fotomodella dei vostri sogni
+	un noto giornalista | un noto commediografo | una pattuglia dei carabinieri
+	un gruppo di hooligans | il bullo del quartiere | il bagnino
+PERIODO_DI_TEMPO
+	un'ora | un giorno | una settimana | un mese | un trimestre | un semestre | un anno

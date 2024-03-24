@@ -1,0 +1,85 @@
+package com.threeamigos.foresta.ui;
+
+public class ClassiIcona {
+
+	public static final int
+	MASCHIO = 0,
+	FEMMINA = 1,
+
+	CENTAURO = 2,
+	EREMITA = 3,
+	GIGANTE = 4,
+	GOBLIN = 5,
+	HOBGOBLIN = 6,
+	MINOTAURO = 7,
+	TITANO = 8,
+	GUERRIERA = 9,
+	GUERRIERO = 10,
+	LADRA = 11,
+	LADRO = 12,
+	BARDO = 13,
+	CANTASTORIE = 14,
+	ELFA = 15,
+	ELFO = 16,
+	MAGA = 17,
+	MAGO = 18,
+	OMBRAFIAMMA = 19,
+
+	COMBATTIMENTO = 20,
+	INCANTESIMO = 21,
+	CORRUZIONE = 22,
+	AMICIZIA = 23,
+	FUGA = 24,
+
+	ARIA = 25,
+	ACQUA = 26,
+	TERRA = 27,
+	FUOCO = 28,
+	MORTE = 29,
+	FULMINE = 30,
+	RESURREZIONE = 31,
+	NO_INCANTESIMO = 32,
+
+	NORD = 33,
+	EST = 34,
+	SUD = 35,
+	OVEST = 36,
+
+	ACCAMPAMENTO = 37,
+	FORZA = 38,
+	GRANDE_FORZA = 39,
+	MAGIA = 40,
+	MAPPA = 41,
+	FLOPPY = 42,
+
+	NUMERO_1 = 43,
+	NUMERO_2 = 44,
+	NUMERO_3 = 45,
+	NUMERO_4 = 46,
+	NUMERO_5 = 47,
+
+	LOCANDA = 48,
+	ALCHIMISTA = 49,
+	ESCI_DA_CITTA = 50,
+
+	GRUPPO = 51,
+	SINGOLO = 52,
+
+	SI = 53,
+	NO = 54,
+	
+	ANNULLA = 55,
+
+	AIUTO = 56,
+	PERGAMENA = 57,
+
+	SU = 58,
+	GIU = 59,
+	DESTRA = 60,
+	SINISTRA = 61,
+
+	RUTTOLOMEO = 62,
+	STORPSGORBLIN = 63,
+
+	NUMERO_ICONE = 64;
+}
