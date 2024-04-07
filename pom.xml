@@ -1,15 +1,63 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-  <modelVersion>4.0.0</modelVersion>
-  <groupId>com.threeamigos</groupId>
-  <artifactId>foresta</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
-  <name>La Foresta</name>
-  <description>La Foresta by Gundam of 3AM</description>
-  <dependencies>
-  	<dependency>
-  		<groupId>com.google.code.gson</groupId>
-  		<artifactId>gson</artifactId>
-  		<version>2.9.0</version>
-  	</dependency>
-  </dependencies>
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>com.threeamigos</groupId>
+    <artifactId>foresta</artifactId>
+    <version>0.0.1-SNAPSHOT</version>
+    <name>La Foresta</name>
+    <description>La Foresta by Gundam of 3AM</description>
+    <packaging>jar</packaging>
+
+    <properties>
+        <maven.compiler.source>1.8</maven.compiler.source>
+        <maven.compiler.target>1.8</maven.compiler.target>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.9.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <version>2.4</version>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.threeamigos.foresta.Main</mainClass>
+                        </manifest>
+                    </archive>
+                    <outputDirectory>${project.basedir}</outputDirectory>
+                </configuration>
+            </plugin>
+            <plugin>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <archive>
+                        <manifest>
+                            <mainClass>com.threeamigos.foresta.Main</mainClass>
+                        </manifest>
+                    </archive>
+                    <outputDirectory>${project.basedir}</outputDirectory>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
 </project>
