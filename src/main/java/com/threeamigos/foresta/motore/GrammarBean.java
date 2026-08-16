@@ -47,10 +47,14 @@ import java.util.*;
  *     <b>locally fixed production</b>: like the global one, but the cached value is
  *     only reused within the same production subtree (i.e. it does not leak into
  *     sibling branches produced independently).</li>
- *     <li>A reference of the form {@code [key=value]} <b>assigns</b> a literal value
- *     to {@code key}, to be later retrieved with a {@code #} reference.</li>
+ *     <li>A reference of the form {@code [key=value]} <b>assigns</b> a value
+ *     to {@code key} in the same global cache used by {@code *} references, to be
+ *     later retrieved with a {@code #} reference anywhere in the produced text.
+ *     {@code value} may itself contain {@code [...]} tokens (e.g.
+ *     {@code [key=[OtherProduction]]}), which are fully resolved before the result
+ *     is stored.</li>
  *     <li>A reference prefixed with {@code #} (e.g. {@code [#key]}) retrieves the
- *     value previously assigned to {@code key} (locally first, then globally).</li>
+ *     value previously assigned to {@code key} via a {@code key=value} token.</li>
  *     <li>A line starting with {@code #} is a full-line comment and is ignored, as
  *     are empty lines.</li>
  *     <li>An alternative may start with a {@code [^N]} token ({@code N} a positive
@@ -79,6 +83,15 @@ import java.util.*;
  *     boost is still being computed — deterministic for a given grammar, but not
  *     symmetric between structurally identical cycle members (see
  *     {@link #adjustWeightsForDescendants}).</li>
+ *     <li>A reference of any kind ({@code [Name]}, {@code [*Name]}, {@code [!Name]} or
+ *     {@code [#key]}) prefixed with {@code ^} immediately to its left, <b>outside</b>
+ *     the square brackets (e.g. {@code ^[Name]}), has its resolved value's first letter
+ *     capitalized. Unlike the {@code [^N]} weight token — which lives just inside the
+ *     brackets, at the very start of an alternative's own text, and is resolved at
+ *     grammar-load time — this marker is resolved at production time, as each reference
+ *     is expanded, so it works uniformly on whatever that specific reference produces.
+ *     There is no escape sequence for a literal {@code ^} immediately before a
+ *     reference, same as the file's other markers.</li>
  * </ul>
  * A second, optional post-production file lists literal text substitutions
  * ({@code pre:post}) applied to the final produced text, to fix natural-language
@@ -156,11 +169,13 @@ public class GrammarBean {
 	 */
 	private static final String LOCAL_FIXED_PRODUCTION_MARKER = "!";
 	/**
-	 * Marker assigning a literal value to a fixed production key (key=value).
+	 * Marker assigning a literal value to a key in the global fixed-productions cache
+	 * (key=value).
 	 */
 	private static final String ASSIGNMENT_MARKER = "=";
 	/**
-	 * Marker referencing a previously fixed production's value.
+	 * Marker referencing a previously assigned key's value in the global fixed-productions
+	 * cache.
 	 */
 	private static final String REFERENCE_MARKER = "#";
 	/**
@@ -171,6 +186,15 @@ public class GrammarBean {
 	 * lazily at production time.
 	 */
 	private static final String WEIGHT_MARKER = "^";
+	/**
+	 * Marker capitalizing the first letter of a reference's resolved value when found
+	 * immediately before its opening bracket, outside it (e.g. {@code ^[Name]}). Same
+	 * character as {@link #WEIGHT_MARKER} but in the mirror position (before the bracket
+	 * rather than just inside it), so the two never occur at the same character position
+	 * and cannot be confused with one another. Resolved at production time, in
+	 * {@link #produceImpl(String, Map, Map)}.
+	 */
+	private static final String CAPITALIZE_MARKER = "^";
 	/**
 	 * Scale factor applied to a referenced production's aggregate weight when boosting the
 	 * weight of an alternative that references it; see {@link #adjustWeightsForDescendants}.
@@ -642,25 +666,65 @@ public class GrammarBean {
 	 * validates each of them via {@link #checkTokenValidity}. Called once, right after
 	 * the whole grammar file (including any inline-alternation-generated productions)
 	 * has been parsed.
+	 * <p>A key assigned anywhere via {@code [key=value]} is a valid target for a
+	 * {@code *}/{@code !}/plain reference elsewhere, even if no production named
+	 * {@code key} exists, since at runtime such a reference is satisfied from the
+	 * fixed-productions cache rather than from the productions map. This requires a
+	 * first pass ({@link #collectAssignedKeys()}) over the whole grammar before the
+	 * actual validation pass, since an assignment can textually appear after the
+	 * reference that depends on it.
 	 * @throws InvalidGrammarException if a reference is malformed or points to an undefined production
 	 */
 	private void checkProductionsValidity() throws InvalidGrammarException {
-        for (String key : productionsMap.keySet()) {
-            for (WeightedAlternative alternative : productionsMap.get(key)) {
-                String thisProduction = alternative.text;
-                int openingBracketIndex;
-                int closingBracketIndex;
-                while ((openingBracketIndex = thisProduction.indexOf(OPENING_BRACKET)) >= 0) {
-                    closingBracketIndex = thisProduction.indexOf(CLOSING_BRACKET, openingBracketIndex + 1);
-                    if (closingBracketIndex == -1) {
-                        throw new InvalidGrammarException("Missing '" + CLOSING_BRACKET + "' element after token " + thisProduction);
-                    } else {
-                        checkTokenValidity(thisProduction.substring(openingBracketIndex + 1, closingBracketIndex));
-                        thisProduction = thisProduction.substring(closingBracketIndex + 1);
-                    }
-                }
-            }
-        }
+		Set<String> assignedKeys = collectAssignedKeys();
+		for (String key : productionsMap.keySet()) {
+			for (WeightedAlternative alternative : productionsMap.get(key)) {
+				checkTokensValidity(alternative.text, assignedKeys);
+			}
+		}
+	}
+
+	/**
+	 * Walks every child of every production collecting the keys assigned via
+	 * {@code [key=value]}, including assignments nested inside another assignment's
+	 * value (e.g. {@code [key=[OtherProduction]]}).
+	 */
+	private Set<String> collectAssignedKeys() throws InvalidGrammarException {
+		Set<String> assignedKeys = new HashSet<>();
+		for (List<WeightedAlternative> alternatives : productionsMap.values()) {
+			for (WeightedAlternative alternative : alternatives) {
+				collectAssignedKeys(alternative.text, assignedKeys);
+			}
+		}
+		return assignedKeys;
+	}
+
+	private void collectAssignedKeys(String text, Set<String> assignedKeys) throws InvalidGrammarException {
+		int openingBracketIndex;
+		while ((openingBracketIndex = text.indexOf(OPENING_BRACKET)) >= 0) {
+			int closingBracketIndex = findClosingBracketOrThrow(text, openingBracketIndex);
+			String tokenBody = text.substring(openingBracketIndex + 1, closingBracketIndex);
+			int equalsPosition = tokenBody.indexOf(ASSIGNMENT_MARKER);
+			if (equalsPosition > 0) {
+				assignedKeys.add(tokenBody.substring(0, equalsPosition));
+				collectAssignedKeys(tokenBody.substring(equalsPosition + ASSIGNMENT_MARKER.length()), assignedKeys);
+			}
+			text = text.substring(closingBracketIndex + 1);
+		}
+	}
+
+	/**
+	 * Walks every {@code [...]} token in {@code text} (nesting-aware, so a token like
+	 * {@code [key=[OtherProduction]]} is treated as a single outer token whose value is
+	 * itself validated recursively) and validates each via {@link #checkTokenValidity}.
+	 */
+	private void checkTokensValidity(String text, Set<String> assignedKeys) throws InvalidGrammarException {
+		int openingBracketIndex;
+		while ((openingBracketIndex = text.indexOf(OPENING_BRACKET)) >= 0) {
+			int closingBracketIndex = findClosingBracketOrThrow(text, openingBracketIndex);
+			checkTokenValidity(text.substring(openingBracketIndex + 1, closingBracketIndex), assignedKeys);
+			text = text.substring(closingBracketIndex + 1);
+		}
 	}
 
 	/**
@@ -669,8 +733,9 @@ public class GrammarBean {
 	 * @throws InvalidGrammarException if a fixed-production marker has no name after it,
 	 *                                  an assignment marker has no key before it, or the
 	 *                                  token is a plain name that is not a defined production
+	 *                                  and was not assigned anywhere in the grammar
 	 */
-	private void checkTokenValidity(String thisProduction) throws InvalidGrammarException {
+	private void checkTokenValidity(String thisProduction, Set<String> assignedKeys) throws InvalidGrammarException {
 		if (thisProduction.startsWith(GLOBAL_FIXED_PRODUCTION_MARKER) || thisProduction.startsWith(LOCAL_FIXED_PRODUCTION_MARKER)) {
 			thisProduction = thisProduction.substring(1);
 			if (thisProduction.isEmpty()) {
@@ -681,8 +746,26 @@ public class GrammarBean {
 		if (thisProduction.startsWith(ASSIGNMENT_MARKER)) {
 			throw new InvalidGrammarException(ASSIGNMENT_MARKER + " symbol must be preceded by a node name");
 		}
-		if (productionsMap.get(thisProduction) == null && !thisProduction.startsWith(REFERENCE_MARKER) && thisProduction.indexOf(ASSIGNMENT_MARKER) < 0) {
+		int equalsPosition = thisProduction.indexOf(ASSIGNMENT_MARKER);
+		if (equalsPosition >= 0) {
+			checkTokensValidity(thisProduction.substring(equalsPosition + ASSIGNMENT_MARKER.length()), assignedKeys);
+			return;
+		}
+		if (productionsMap.get(thisProduction) == null && !assignedKeys.contains(thisProduction) && !thisProduction.startsWith(REFERENCE_MARKER)) {
 			throw new InvalidGrammarException(PRODUCTION + thisProduction + " is not defined");
+		}
+	}
+
+	/**
+	 * Like {@link #findClosingBracket}, but reports a mismatched bracket as an
+	 * {@link InvalidGrammarException} instead of an {@link IllegalArgumentException},
+	 * for use during grammar-load-time validation.
+	 */
+	private int findClosingBracketOrThrow(String text, int openingBracketIndex) throws InvalidGrammarException {
+		try {
+			return findClosingBracket(text, openingBracketIndex);
+		} catch (IllegalArgumentException e) {
+			throw new InvalidGrammarException("Missing '" + CLOSING_BRACKET + "' element after token " + text);
 		}
 	}
 
@@ -757,25 +840,37 @@ public class GrammarBean {
 	 * aggregate weight twice to that alternative's descendant-weight boost (see
 	 * {@link #adjustWeightsForDescendants}). Mirrors {@link #checkTokenValidity}'s
 	 * marker-stripping so {@code [key=value]}/{@code [#key]} tokens, which don't
-	 * reference a production, are skipped. Assumes {@code text} is already known to be
-	 * well-formed (called only after {@link #checkProductionsValidity} has succeeded).
+	 * reference a production, are skipped, except that an assignment's value is itself
+	 * searched recursively (so {@code [key=[OtherProduction]]} still counts
+	 * {@code OtherProduction} as referenced). A {@code *}/{@code !}/plain name that is not
+	 * an actual production (i.e. only ever populated via {@code =} elsewhere) is skipped
+	 * too, since it has no aggregate weight of its own. Assumes {@code text} is already
+	 * known to be well-formed (called only after {@link #checkProductionsValidity} has
+	 * succeeded).
 	 */
 	private List<String> findReferencedProductions(String text) {
 		List<String> referenced = new ArrayList<>();
+		collectReferencedProductions(text, referenced);
+		return referenced;
+	}
+
+	private void collectReferencedProductions(String text, List<String> referenced) {
 		String remaining = text;
 		int openingBracketIndex;
 		while ((openingBracketIndex = remaining.indexOf(OPENING_BRACKET)) >= 0) {
-			int closingBracketIndex = remaining.indexOf(CLOSING_BRACKET, openingBracketIndex + 1);
+			int closingBracketIndex = findClosingBracket(remaining, openingBracketIndex);
 			String tokenBody = remaining.substring(openingBracketIndex + 1, closingBracketIndex);
 			if (tokenBody.startsWith(GLOBAL_FIXED_PRODUCTION_MARKER) || tokenBody.startsWith(LOCAL_FIXED_PRODUCTION_MARKER)) {
 				tokenBody = tokenBody.substring(1);
 			}
-			if (!tokenBody.startsWith(REFERENCE_MARKER) && tokenBody.indexOf(ASSIGNMENT_MARKER) < 0) {
+			int equalsPosition = tokenBody.indexOf(ASSIGNMENT_MARKER);
+			if (equalsPosition >= 0) {
+				collectReferencedProductions(tokenBody.substring(equalsPosition + ASSIGNMENT_MARKER.length()), referenced);
+			} else if (!tokenBody.startsWith(REFERENCE_MARKER) && productionsMap.containsKey(tokenBody)) {
 				referenced.add(tokenBody);
 			}
 			remaining = remaining.substring(closingBracketIndex + 1);
 		}
-		return referenced;
 	}
 
 	/**
@@ -917,25 +1012,53 @@ public class GrammarBean {
 		Map<String, String> localFixedProductions = new HashMap<>();
 		int openingBracketIndex;
 		while ((openingBracketIndex = production.indexOf(OPENING_BRACKET)) >= 0) {
+			boolean capitalize = openingBracketIndex > 0
+					&& production.charAt(openingBracketIndex - 1) == CAPITALIZE_MARKER.charAt(0);
+			int prefixEnd = capitalize ? openingBracketIndex - 1 : openingBracketIndex;
 			int closingBracketIndex = findClosingBracket(production, openingBracketIndex);
-			String prefix = production.substring(0, openingBracketIndex);
+			String prefix = production.substring(0, prefixEnd);
 			String tokenBody = production.substring(openingBracketIndex + 1, closingBracketIndex);
 			String postfix = production.substring(closingBracketIndex + 1);
 			String resolved = resolveToken(tokenBody, superProductionsMap, superFixedProductions, localFixedProductions);
+			if (capitalize) {
+				resolved = capitalizeFirstLetter(resolved);
+			}
 			production = prefix + resolved + postfix;
 		}
 		return production;
 	}
 
 	/**
-	 * @throws IllegalArgumentException if {@code production} has no {@code ]} after {@code openingBracketIndex}
+	 * Capitalizes the first character of {@code text}, if any; used to implement
+	 * {@link #CAPITALIZE_MARKER}.
+	 */
+	private static String capitalizeFirstLetter(String text) {
+		if (text.isEmpty()) {
+			return text;
+		}
+		return Character.toUpperCase(text.charAt(0)) + text.substring(1);
+	}
+
+	/**
+	 * Finds the {@code ]} matching the {@code [} at {@code openingBracketIndex}, honoring
+	 * nesting so that e.g. in {@code [key=[OtherProduction]]} the outer token is matched
+	 * to the outer, final {@code ]} rather than the first one encountered.
+	 * @throws IllegalArgumentException if {@code production} has no matching {@code ]} after {@code openingBracketIndex}
 	 */
 	private int findClosingBracket(String production, int openingBracketIndex) {
-		int closingBracketIndex = production.indexOf(CLOSING_BRACKET, openingBracketIndex + 1);
-		if (closingBracketIndex == -1) {
-			throw new IllegalArgumentException("Missing '" + CLOSING_BRACKET + "' element after token " + production);
+		int depth = 1;
+		for (int index = openingBracketIndex + 1; index < production.length(); index++) {
+			char c = production.charAt(index);
+			if (c == OPENING_BRACKET.charAt(0)) {
+				depth++;
+			} else if (c == CLOSING_BRACKET.charAt(0)) {
+				depth--;
+				if (depth == 0) {
+					return index;
+				}
+			}
 		}
-		return closingBracketIndex;
+		throw new IllegalArgumentException("Missing '" + CLOSING_BRACKET + "' element after token " + production);
 	}
 
 	/**
@@ -952,11 +1075,11 @@ public class GrammarBean {
 			return resolveFixedProduction(name, localFixedProductions, productionsMap, superFixedProductions);
 		}
 		if (tokenBody.indexOf(ASSIGNMENT_MARKER) >= 0) {
-			assignFixedProduction(tokenBody, superFixedProductions);
+			assignFixedProduction(tokenBody, productionsMap, superFixedProductions);
 			return "";
 		}
 		if (tokenBody.startsWith(REFERENCE_MARKER)) {
-			return resolveReference(tokenBody, localFixedProductions, superFixedProductions);
+			return resolveReference(tokenBody, localFixedProductions);
 		}
 		return resolvePlainProduction(tokenBody, productionsMap, localFixedProductions);
 	}
@@ -983,26 +1106,32 @@ public class GrammarBean {
 
 	/**
 	 * Handles a {@code [key=value]} token by storing {@code value} under {@code key} in
-	 * {@code superFixedProductions}, to be retrieved later by a {@code [#key]} reference.
+	 * {@link #globalFixedProductions}, to be retrieved later by a {@code [#key]} reference
+	 * anywhere in the produced text (not just within the current production subtree).
+	 * If {@code value} itself contains {@code [...]} tokens (e.g. {@code [key=[OtherProduction]]}),
+	 * they are fully resolved before the result is stored, so the cached value is always
+	 * plain text.
 	 */
-	private void assignFixedProduction(String tokenBody, Map<String, String> superFixedProductions) {
+	private void assignFixedProduction(String tokenBody, Map<String, List<WeightedAlternative>> productionsMap, Map<String, String> superFixedProductions) {
 		int equalsPosition = tokenBody.indexOf(ASSIGNMENT_MARKER);
 		String key = tokenBody.substring(0, equalsPosition);
 		String value = tokenBody.substring(equalsPosition + ASSIGNMENT_MARKER.length());
-		superFixedProductions.put(key, value);
+		String resolvedValue = produceImpl(value, productionsMap, superFixedProductions);
+		globalFixedProductions.put(key, resolvedValue);
 	}
 
 	/**
 	 * Handles a {@code [#key]} token by looking up the value previously assigned to
-	 * {@code key} (via {@link #assignFixedProduction}), checking the local map first
-	 * and then the super one.
+	 * {@code key}: first in {@code localFixedProductions} (which a {@code [!key]} in the
+	 * same call frame may have populated), then in {@link #globalFixedProductions} (which
+	 * {@link #assignFixedProduction} populates).
 	 * @throws IllegalArgumentException if {@code key} was never assigned
 	 */
-	private String resolveReference(String tokenBody, Map<String, String> localFixedProductions, Map<String, String> superFixedProductions) {
+	private String resolveReference(String tokenBody, Map<String, String> localFixedProductions) {
 		String key = tokenBody.substring(REFERENCE_MARKER.length());
 		String value = localFixedProductions.get(key);
 		if (value == null) {
-			value = superFixedProductions.get(key);
+			value = globalFixedProductions.get(key);
 		}
 		if (value == null) {
 			throw new IllegalArgumentException(PRODUCTION + tokenBody + " not yet defined!");

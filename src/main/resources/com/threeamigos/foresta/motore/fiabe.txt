@@ -1,35 +1,36 @@
 FIABA
 	[PROEMIO]\n[RACCONTO]
-	[RACCONTO_BREVE]
+#	[RACCONTO_BREVE]
 
 PROEMIO
-	[TEMPO_PROEMIO], [LUOGO_PROEMIO], [FATTO_PROEMIO].
+	^[TEMPO_PROEMIO] [LUOGO_PROEMIO] [FATTO_PROEMIO].
+	^[LUOGO_PROEMIO] [TEMPO_PROEMIO] [FATTO_PROEMIO].
 
 TEMPO_PROEMIO
 	[TEMPO_PROEMIO_EPICO_FANTASTICO] | [TEMPO_PROEMIO_STORICO_CRONOLOGICO] | [TEMPO_PROEMIO_SURREALISTA]
 
 TEMPO_PROEMIO_EPICO_FANTASTICO
-    [QUANDO] { [QUANDO_AVVENIMENTO_EPICO_FANTASTICO] | [QUANDO_AVVENIMENTO_EPICO_FANTASTICO] e [QUANDO_AVVENIMENTO_EPICO_FANTASTICO] }
-    [PRIMA_CHE] { [PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO] | [PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO] e [PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO] }
-    { All'alba | Nella notte } dei tempi
-    In un'epoca dimenticata { dagli uomini | da tutti | dal mondo | dalla storia | dal tempo | }
-    Nell'era del ferro e del fuoco
-    Ai confini del tempo
-    Molto { , molto | } tempo fa
-    Molti { , molti | } anni fa
-    Nelle notti di luna { piena | nuova }
-    All'alba del mondo
-    In { una primavera | un'estate | un autunno | un inverno } che non finiva mai
-    Nell'alba di un mondo senza confini
-    Nell'epoca dei re senza corona
-    Nell'epoca dei patti tra uomini e spiriti
-    Nell'epoca delle grandi migrazioni dei draghi
-    Nell'era dei sette soli
-    Nell'era dei re-sciamani
-    Ai tempi delle grandi alleanze tra elfi e uomini
+    [QUANDO] { [QUANDO_AVVENIMENTO_EPICO_FANTASTICO] | [QUANDO_AVVENIMENTO_EPICO_FANTASTICO] e [QUANDO_AVVENIMENTO_EPICO_FANTASTICO], }
+    [PRIMA_CHE] { [PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO] | [PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO] e [PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO], }
+    { all'alba | Nella notte } dei tempi
+    in un'epoca dimenticata { dagli uomini | da tutti | dal mondo | dalla storia | dal tempo | }
+    nell'era del ferro e del fuoco
+    ai confini del tempo
+    molto { , molto | } tempo fa
+    molti { , molti | } anni fa
+    nelle notti di luna { piena | nuova }
+    all'alba del mondo
+    in { una primavera | un'estate | un autunno | un inverno } che non finiva mai
+    nell'alba di un mondo senza confini
+    nell'epoca dei re senza corona
+    nell'epoca dei patti tra uomini e spiriti
+    nell'epoca delle grandi migrazioni dei draghi
+    nell'era dei sette soli
+    nell'era dei re-sciamani
+    ai tempi delle grandi alleanze tra elfi e uomini
 
 QUANDO
-    Quando | { In un tempo | Nell'era | { Ai | Nei } tempi | Nell'epoca } in cui
+    quando | { in un tempo | nell'era | { ai | nei } tempi | nell'epoca } in cui
 
 QUANDO_AVVENIMENTO_EPICO_FANTASTICO$
 # Il carattere $ dopo il nome di QUANDO_AVVENIMENTO è un one-shot-marker.
@@ -90,7 +91,7 @@ QUANDO_AVVENIMENTO_EPICO_FANTASTICO$
     la { spada | magia } era l'unica legge
 
 PRIMA_CHE
-    { Prima | Molto prima | Parecchio prima } che
+    { prima | molto prima | parecchio prima } che
 
 PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO$
     { il primo sole | la prima luna } { sorgesse | facesse capolino nel cielo }
@@ -104,222 +105,222 @@ PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO$
     il primo castello fosse innalzato
 
 TEMPO_PROEMIO_STORICO_CRONOLOGICO
-    Nel crepuscolo di un impero
-    Poco prima della caduta dell'impero
-    Durante il regno di una dinastia ormai estinta
-    Sotto il regno di un sovrano ormai dimenticato
-    Durante l'assedio di una città ormai scomparsa
-    Mentre le grandi città { sorgevano | venivano costruite | venivano innalzate }
-    { Negli anni | All'indomani } della grande { carestia | guerra | depressione | pestilenza }
-    Durante la peste nera
-    Durante gli anni della ricostruzione
-    Quando le carrozze ancora solcavano le strade
-    Nell'ultimo anno di un secolo remoto
-    In un'epoca di polvere e fumo
-    Prima che le mappe fossero disegnate
-    Durante l'era delle grandi scoperte
-    Nell'Alto Medioevo
-    Nel Basso Medioevo
-    Durante il Rinascimento
-    Il secolo scorso
-    Nell'anno Mille
-    Cent'anni fa
-    Qualche tempo fa
-    Diversi anni fa
-    In un'epoca di rivoluzioni
-    Molti decenni prima che nascessero i nonni
-    Durante la corsa all'oro
-    Nell'epoca dei pionieri
-    Nell'epoca dei grandi navigatori
-    Al tempo delle crociate
-    Nell'epoca delle grandi cattedrali
-    Nell'epoca delle scoperte geografiche
-    Nell'epoca dei grandi imperi coloniali
-    Al tempo delle grandi migrazioni verso il nuovo mondo
-    Durante gli anni della grande depressione
-    Nell'epoca dei grandi concili
-    Al tempo delle invasioni barbariche
-    Al tempo delle grandi carovane lungo le vie del commercio
-    Al tempo delle prime università
-    Durante l'epoca delle grandi biblioteche
-    Al tempo delle corporazioni
-    Al tempo delle spedizioni polari
-    Durante il periodo delle grandi dighe e canali
-    Nell'epoca dei primi alfabeti
-    Nell'epoca dei primi orologi meccanici
-    Nell'epoca dei primi trattati di pace tra le nazioni
-    Nelle crepe dello spazio-tempo
+    nel crepuscolo di un impero
+    poco prima della caduta dell'impero
+    durante il regno di una dinastia ormai estinta
+    sotto il regno di un sovrano ormai dimenticato
+    durante l'assedio di una città ormai scomparsa
+    mentre le grandi città { sorgevano | venivano costruite | venivano innalzate }
+    { negli anni | all'indomani } della grande { carestia | guerra | depressione | pestilenza }
+    durante la peste nera
+    durante gli anni della ricostruzione
+    quando le carrozze ancora solcavano le strade
+    nell'ultimo anno di un secolo remoto
+    in un'epoca di polvere e fumo
+    prima che le mappe fossero disegnate
+    durante l'era delle grandi scoperte
+    nell'Alto Medioevo
+    nel Basso Medioevo
+    durante il Rinascimento
+    il secolo scorso
+    nell'anno Mille
+    cent'anni fa
+    qualche tempo fa
+    diversi anni fa
+    in un'epoca di rivoluzioni
+    molti decenni prima che nascessero i nonni
+    durante la corsa all'oro
+    nell'epoca dei pionieri
+    nell'epoca dei grandi navigatori
+    al tempo delle crociate
+    nell'epoca delle grandi cattedrali
+    nell'epoca delle scoperte geografiche
+    nell'epoca dei grandi imperi coloniali
+    al tempo delle grandi migrazioni verso il nuovo mondo
+    durante gli anni della grande depressione
+    nell'epoca dei grandi concili
+    al tempo delle invasioni barbariche
+    al tempo delle grandi carovane lungo le vie del commercio
+    al tempo delle prime università
+    durante l'epoca delle grandi biblioteche
+    al tempo delle corporazioni
+    al tempo delle spedizioni polari
+    durante il periodo delle grandi dighe e canali
+    nell'epoca dei primi alfabeti
+    nell'epoca dei primi orologi meccanici
+    nell'epoca dei primi trattati di pace tra le nazioni
+    nelle crepe dello spazio-tempo
 
 TEMPO_PROEMIO_STORICO_CRONOLOGICO_OOP
-    Durante l'era industriale
-    Durante la dominazione romana
-    Nell'epoca dei lanzichenecchi
-    Durante l'epoca dei faraoni
-    Nell'antica Grecia dei filosofi
-    Al tempo della Repubblica Romana
-    Al tempo dei primi mercanti veneziani
-    Al tempo dei conquistadores
-    Durante la rivoluzione industriale
-    Al tempo delle guerre napoleoniche
-    Durante la belle époque
-    Nell'epoca dei telegrafi e delle prime ferrovie
-    Durante gli anni del proibizionismo
-    Nell'epoca della corsa allo spazio
-    Al tempo della guerra fredda
-    Al tempo delle grandi esposizioni universali
-    Durante gli anni del boom economico
-    Nell'epoca dei primi telefoni pubblici
-    Al tempo delle dittature del secolo scorso
-    Durante la caduta del muro di Berlino
-    Nell'epoca dei primi computer
-    Nell'epoca dei pionieri del West
-    Al tempo delle repubbliche marinare
-    Durante l'epoca giustinianea
-    Al tempo dei primi imperatori cinesi
-    Durante gli anni delle riforme protestanti
-    Durante la costruzione delle grandi piramidi
-    Al tempo delle guerre puniche
-    Durante la dinastia Tudor
-    Nell'epoca dei vichinghi
-    Nell'epoca dei samurai
-    Nell'epoca dell'Illuminismo
-    Nell'epoca dei primi giornali stampati
-    Durante il periodo delle signorie italiane
-    Durante il lockdown mondiale
+    dDurante l'era industriale
+    durante la dominazione romana
+    nell'epoca dei lanzichenecchi
+    durante l'epoca dei faraoni
+    nell'antica Grecia dei filosofi
+    al tempo della Repubblica Romana
+    al tempo dei primi mercanti veneziani
+    al tempo dei conquistadores
+    durante la rivoluzione industriale
+    al tempo delle guerre napoleoniche
+    durante la belle époque
+    nell'epoca dei telegrafi e delle prime ferrovie
+    durante gli anni del proibizionismo
+    nell'epoca della corsa allo spazio
+    al tempo della guerra fredda
+    al tempo delle grandi esposizioni universali
+    durante gli anni del boom economico
+    nell'epoca dei primi telefoni pubblici
+    al tempo delle dittature del secolo scorso
+    durante la caduta del muro di Berlino
+    nell'epoca dei primi computer
+    nell'epoca dei pionieri del West
+    al tempo delle repubbliche marinare
+    durante l'epoca giustinianea
+    al tempo dei primi imperatori cinesi
+    durante gli anni delle riforme protestanti
+    durante la costruzione delle grandi piramidi
+    al tempo delle guerre puniche
+    durante la dinastia Tudor
+    nell'epoca dei vichinghi
+    nell'epoca dei samurai
+    nell'epoca dell'Illuminismo
+    nell'epoca dei primi giornali stampati
+    durante il periodo delle signorie italiane
+    durante il lockdown mondiale
 
 ISTANTE_PRECISO
-    Un lunedì mattina qualunque
-    Poco dopo la sveglia del lunedì
-    Un martedì come tanti altri
-    Un mercoledì sera come tanti
-    Nell'ora di cena di una qualunque domenica
-    Durante una qualunque serata d'inverno
-    Durante un fine settimana di pioggia
-    Durante un pomeriggio piovoso
-    Durante una qualunque mattina di pioggia
-    In un pomeriggio di fine autunno
-    Durante un temporale estivo
-    Mentre la pioggia batteva contro i vetri
-    Proprio mentre il mondo sembrava fermarsi
-    Pochi istanti prima del disastro
-    Pochi istanti prima del tramonto
-    Durante un'eclissi improvvisa
-    Mentre il paese dormiva ancora
-    In un momento di assoluta quiete
-    Non più tardi della settimana scorsa
-    Il mese scorso
-    Durante la pausa pranzo
-    Nell'ora di punta
-    Poco prima di andare a dormire
-    Il giorno dopo il suo compleanno
-    Mentre aspettava il turno dal medico
-    Poco dopo la pausa caffè
-    Mentre riordinava la cantina
-    Durante una cena tra amici finita male
-    Poco prima della chiusura dei negozi
-    Durante un trasloco improvvisato
-    Mentre faceva la spesa settimanale
-    Durante una gita fuori porta
-    Durante un pomeriggio di compiti scolastici
-    Mentre aspettava che l'acqua bollisse
-    Durante una passeggiata al parco
-    Poco dopo il rientro dalle vacanze
-    Mentre faceva jogging nel quartiere
-    Durante un pranzo di famiglia
-    Poco dopo un litigio con il vicino
-    Mentre cercava le chiavi di casa
-    Nell'attesa che il caffè fosse pronto
-    Mentre parcheggiava la bicicletta
-    Poco prima di spegnere la luce per dormire
-    Mentre aspettava un messaggio che non arrivava
+    nn lunedì mattina qualunque
+    poco dopo la sveglia del lunedì
+    un martedì come tanti altri
+    un mercoledì sera come tanti
+    nell'ora di cena di una qualunque domenica
+    durante una qualunque serata d'inverno
+    durante un fine settimana di pioggia
+    durante un pomeriggio piovoso
+    durante una qualunque mattina di pioggia
+    in un pomeriggio di fine autunno
+    durante un temporale estivo
+    mentre la pioggia batteva contro i vetri
+    proprio mentre il mondo sembrava fermarsi
+    pochi istanti prima del disastro
+    pochi istanti prima del tramonto
+    durante un'eclissi improvvisa
+    mentre il paese dormiva ancora
+    in un momento di assoluta quiete
+    non più tardi della settimana scorsa
+    il mese scorso
+    durante la pausa pranzo
+    nell'ora di punta
+    poco prima di andare a dormire
+    il giorno dopo il suo compleanno
+    mentre aspettava il turno dal medico
+    poco dopo la pausa caffè
+    mentre riordinava la cantina
+    durante una cena tra amici finita male
+    poco prima della chiusura dei negozi
+    durante un trasloco improvvisato
+    mentre faceva la spesa settimanale
+    durante una gita fuori porta
+    durante un pomeriggio di compiti scolastici
+    dentre aspettava che l'acqua bollisse
+    durante una passeggiata al parco
+    poco dopo il rientro dalle vacanze
+    mentre faceva jogging nel quartiere
+    durante un pranzo di famiglia
+    poco dopo un litigio con il vicino
+    mentre cercava le chiavi di casa
+    nell'attesa che il caffè fosse pronto
+    mentre parcheggiava la bicicletta
+    poco prima di spegnere la luce per dormire
+    mentre aspettava un messaggio che non arrivava
 
 ISTANTE_PRECISO_OOP
-    Durante una videochiamata di lavoro
-    Durante una noiosa riunione di lavoro
-    Durante le vacanze estive
-    Durante le vacanze natalizie
-    A Pasqua
-    Mentre il traffico rendeva tutti nervosi
-    Mentre aspettava l'autobus
-    Durante la fila alla cassa del supermercato
-    Nell'intervallo di una partita di calcio
-    Mentre scorreva distrattamente il telefono
-    Durante un ingorgo sull'autostrada
-    Nell'attesa di un treno in ritardo
-    Mentre guardava la partita in televisione
-    Nell'attesa dei risultati di un esame
-    Mentre aspettava la pizza a domicilio
-    Mentre cercava parcheggio in centro
-    Poco prima di un colloquio di lavoro
-    Nell'attesa del risultato di una partita
-    Mentre controllava la posta elettronica
-    Durante una riunione di condominio
-    Nell'attesa di un aggiornamento software
-    In attesa dell'ascensore
-    Mentre guardava le notizie della sera
-    Durante un allenamento in palestra
-    Poco prima dell'inizio dei saldi
-    Mentre aspettava il risultato di un tampone
-    Durante una fila alla posta
-    Mentre pagava le bollette online
-    Durante una serata di zapping tra i canali
-    Durante un giorno di smart working
+    durante una videochiamata di lavoro
+    durante una noiosa riunione di lavoro
+    durante le vacanze estive
+    durante le vacanze natalizie
+    a Pasqua
+    mentre il traffico rendeva tutti nervosi
+    mentre aspettava l'autobus
+    durante la fila alla cassa del supermercato
+    nell'intervallo di una partita di calcio
+    mentre scorreva distrattamente il telefono
+    durante un ingorgo sull'autostrada
+    nell'attesa di un treno in ritardo
+    mentre guardava la partita in televisione
+    nell'attesa dei risultati di un esame
+    mentre aspettava la pizza a domicilio
+    mentre cercava parcheggio in centro
+    poco prima di un colloquio di lavoro
+    nell'attesa del risultato di una partita
+    mentre controllava la posta elettronica
+    durante una riunione di condominio
+    nell'attesa di un aggiornamento software
+    in attesa dell'ascensore
+    mentre guardava le notizie della sera
+    durante un allenamento in palestra
+    poco prima dell'inizio dei saldi
+    mentre aspettava il risultato di un tampone
+    durante una fila alla posta
+    mentre pagava le bollette online
+    durante una serata di zapping tra i canali
+    durante un giorno di smart working
 
 TEMPO_PROEMIO_SURREALISTA
-    Quando i mulini erano bianchi
-    Quando i gatti governavano le città
-    Quando le ombre decisero di staccarsi dai corpi
-    Quando le ombre camminavano da sole
-    Quando le nuvole erano fatte di zucchero filato
-    Quando le nuvole iniziarono a giocare a scacchi
-    Quando le nuvole si misero a fare capriole
-    Quando le nuvole iniziarono a distribuire caramelle
-    Quando le nuvole organizzarono una gara di nuoto
-    Quando gli asini volavano
-    Quando le sedie decisero di scioperare
-    Quando i cappelli iniziarono a pensare da soli
-    Quando le porte si misero a cantare
-    Quando le lumache vinsero la maratona
-    Quando le ombre litigarono per un parcheggio
-    Quando i libri iniziarono a leggersi da soli
-    Quando le formiche organizzarono un concerto rock
-    Quando gli orologi si misero a correre indietro per gioco
-    Quando le tazze da tè si misero a ballare il tango
-    Quando le biciclette iniziarono a correre senza nessuno sopra
-    Quando le patate decisero di governare l'orto
-    Quando le galline organizzarono un'elezione
-    Quando le sveglie iniziarono a suonare canzoni napoletane
-    Quando le zanzare organizzarono un sindacato
-    Quando gli ombrelli iniziarono a fare previsioni del tempo
-    Quando un cammello imparò a nuotare meglio di un pesce
-    Quando i broccoli dichiararono guerra alle carote
-    Quando le nuvole si travestirono da pecore
-    Mentre la luna giocava a nascondino con le nuvole
-    Mentre i pesci imparavano a volare
-    Un giorno qualunque
-    Proprio mentre il mondo sembrava fermarsi
-    In un pomeriggio di fine autunno
-    Durante la grande guerra delle tovaglie
+    quando i mulini erano bianchi
+    quando i gatti governavano le città
+    quando le ombre decisero di staccarsi dai corpi
+    quando le ombre camminavano da sole
+    quando le nuvole erano fatte di zucchero filato
+    quando le nuvole iniziarono a giocare a scacchi
+    quando le nuvole si misero a fare capriole
+    quando le nuvole iniziarono a distribuire caramelle
+    quando le nuvole organizzarono una gara di nuoto
+    quando gli asini volavano
+    quando le sedie decisero di scioperare
+    quando i cappelli iniziarono a pensare da soli
+    quando le porte si misero a cantare
+    quando le lumache vinsero la maratona
+    quando le ombre litigarono per un parcheggio
+    quando i libri iniziarono a leggersi da soli
+    quando le formiche organizzarono un concerto rock
+    quando gli orologi si misero a correre indietro per gioco
+    quando le tazze da tè si misero a ballare il tango
+    quando le biciclette iniziarono a correre senza nessuno sopra
+    quando le patate decisero di governare l'orto
+    quando le galline organizzarono un'elezione
+    quando le sveglie iniziarono a suonare canzoni napoletane
+    quando le zanzare organizzarono un sindacato
+    quando gli ombrelli iniziarono a fare previsioni del tempo
+    quando un cammello imparò a nuotare meglio di un pesce
+    quando i broccoli dichiararono guerra alle carote
+    quando le nuvole si travestirono da pecore
+    mentre la luna giocava a nascondino con le nuvole
+    mentre i pesci imparavano a volare
+    un giorno qualunque
+    proprio mentre il mondo sembrava fermarsi
+    in un pomeriggio di fine autunno
+    durante la grande guerra delle tovaglie
 
 ISTANTE_PRECISO_SURREALISTA
-    Mentre gli specchi raccontavano bugie
-    Mentre il tè cadeva verso l'alto
-    Mentre le scarpe decisero di andare a passeggio da sole
-    Mentre le pentole intonavano un coro
-    Mentre le foglie cadevano verso il cielo
-    Mentre le rane insegnavano geografia ai pesci
-    Mentre le stelle si presero una pausa dal brillare
-    Mentre gli ombrelli protestavano contro il sole
-    Mentre le lavagne scrivevano da sole compiti sbagliati
-    Mentre un pinguino tentò la scalata dell'Everest in pantofole
-    Mentre i tappeti volanti chiedevano un aumento
-    Mentre le stelle cadenti chiedevano indicazioni stradali
-    Mentre le stagioni si scambiarono i vestiti per errore
-    Mentre un orologio a cucù smise di lavorare per andare in ferie
-    Mentre i gomitoli di lana tessevano da soli sciarpe per i lampioni
-    In un momento di estrema confusione
-    In un secondo di pura assurdità
-    In un giorno che il calendario non ricordava
+    mentre gli specchi raccontavano bugie
+    mentre il tè cadeva verso l'alto
+    mentre le scarpe decisero di andare a passeggio da sole
+    mentre le pentole intonavano un coro
+    mentre le foglie cadevano verso il cielo
+    mentre le rane insegnavano geografia ai pesci
+    mentre le stelle si presero una pausa dal brillare
+    mentre gli ombrelli protestavano contro il sole
+    mentre le lavagne scrivevano da sole compiti sbagliati
+    mentre un pinguino tentò la scalata dell'Everest in pantofole
+    mentre i tappeti volanti chiedevano un aumento
+    mentre le stelle cadenti chiedevano indicazioni stradali
+    mentre le stagioni si scambiarono i vestiti per errore
+    mentre un orologio a cucù smise di lavorare per andare in ferie
+    mentre i gomitoli di lana tessevano da soli sciarpe per i lampioni
+    in un momento di estrema confusione
+    in un secondo di pura assurdità
+    in un giorno che il calendario non ricordava
     [NELL_ATTIMO_IN_CUI] il tempo decise di fare un pisolino
     [NELL_ATTIMO_IN_CUI] il tè era ancora caldo
     [NELL_ATTIMO_IN_CUI] i calzini scomparirono in un'altra dimensione
@@ -343,7 +344,7 @@ ISTANTE_PRECISO_SURREALISTA
     [NELL_ATTIMO_IN_CUI] le sedie si misero in fila per ballare il valzer
 
 NELL_ATTIMO_IN_CUI
-    Nell'{ attimo | istante} { preciso | } in cui | Mentre | Allorché
+    nell'{ attimo | istante} { preciso | } in cui | Mentre | Allorché
 
 GIORNO_DELLA_SETTIMANA
     lunedì | martedì | mercoledì | giovedì | venerdì | sabato | domenica
@@ -363,26 +364,28 @@ LUOGO_PROEMIO
 	nel Paese della Cuccagna | nel manicomio criminale | dietro al campo da calcio
 
 FATTO_PROEMIO
-	[VIVEVA] [*NOME_PROTAGONISTA] [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA]
-	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], si allenava al salto del pasto
-	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], si allenava alla corsa campestre contro le guardie del re per [CRIMINE]
-	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], era ricercato per [CRIMINE]
-	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], era solito [ABITUDINE]
-	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], usava [ABITUDINE]
+	[VIVEVA] [CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA]
+	[CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], si allenava al salto del pasto
+	[CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], si allenava alla corsa campestre contro le guardie del re per [CRIMINE]
+	[CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], era ricercato per [CRIMINE]
+	[CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], { era solito | era uso | usava } [ABITUDINE]
 
 VIVEVA
     viveva | abitava | dimorava | usava riposare le sue stanche ossa | si nascondeva | si rendeva latitante
+    tirava a campare | si guadagnava da vivere in modo non proprio cristallino | bivaccava
 
 CONOSCIUTO_COME
-    , detto
-    , conosciuto anche come
-    , altrimenti conosciuto come
-    , altrimenti detto
-    , che i nemici chiamavano
-    , che tutto il paese conosceva come
-    , che gli amici nominavano
-    , che tutti conoscevano come
-    , il cui nome era ormai dimenticato poiché tutti lo chiamavano
+    detto
+    conosciuto anche come
+    altrimenti conosciuto come
+    altrimenti detto
+    che i nemici chiamavano
+    che tutto il paese conosceva come
+    che gli amici nominavano
+    che tutti conoscevano come
+    il cui nome era ormai dimenticato poiché tutti lo chiamavano
+    per gli amici semplicemente
+    che il boia conosceva fin troppo bene come
 
 ABITUDINE
 	scappare dalle guardie del re per [CRIMINE] | nascondersi dalla giustizia per [CRIMINE]
@@ -391,23 +394,38 @@ ABITUDINE
 	fare il bullo con i più deboli | rendersi irreperibile per [CRIMINE]
 	giocare a scacchi perdendo contro il suo [ANIMALE_DA_COMPAGNIA]
 	approcciare le pulzelle senza successo, essendo più brutto del suo [ANIMALE_DA_COMPAGNIA]
+	raccontare frottole al mercato in cambio di un tozzo di pane | scommettere l'anima ai dadi in una bettola malfamata
 
 CRIMINE
 	divieto di sosta | caccia abusiva ai polli | schiamazzi notturni | comportamento disdicevole
 	ubriachezza molesta | truffa aggravata ai danni dei villici
 	aver trombato le mogli altrui | aver trombato i mariti altrui | aver trombato gli animali altrui
-	furto delle offerte alla chiesa | la sua abitudine di collezionare cose altrui
+	furto delle offerte alla chiesa | la sua { pessima | nefasta | } abitudine di collezionare cose altrui
 	furto, saccheggio e incendio
+	bestemmia in luogo pubblico | contrabbando di aringhe affumicate | detenzione abusiva di un drago da compagnia
 
 ANIMALE_DA_COMPAGNIA
-	gatto | criceto | pesce rosso | canarino | cane | asino | mulo
+	gatto | criceto | pesce rosso | canarino | cane | asino | mulo | furetto | pappagallo | riccio
+
+CREAZIONE_PROTAGONISTA
+	[*NOME_PROTAGONISTA] [*COGNOME_PROTAGONISTA]
+	[COGNOME_PROTAGONISTA=Romy] [NOME_PROTAGONISTA=Jona] [#COGNOME_PROTAGONISTA] [#NOME_PROTAGONISTA]
+	[NOME_PROTAGONISTA=Luca] [COGNOME_PROTAGONISTA=Viola] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
+	[NOME_PROTAGONISTA=Massimo] [COGNOME_PROTAGONISTA=Capanni] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
+	[NOME_PROTAGONISTA=Massimiliano] [COGNOME_PROTAGONISTA=Falchi] [#NOME_PROTAGONISTA] [#COGNOME_PROTAGONISTA]
+	[NOME_PROTAGONISTA=Andrea] [#NOME_PROTAGONISTA] [COGNOME_STOPPIONI]
+    [NOME_PROTAGONISTA=il Vox] [#NOME_PROTAGONISTA]
 
 PROTAGONISTA
 	[*NOME_PROTAGONISTA] | [*SOPRANNOME_PROTAGONISTA]
 
+COGNOME_STOPPIONI
+    Stoppioni | Scoppioni | Scorpioni | Scarponi
+
 NOME_PROTAGONISTA
-	Romy Jona | Luca Viola | Massimo Capanni | Massimiliano Falchi
-	Andrea { Stoppioni | Scoppioni | Scorpioni | Scarponi } | il Vox
+	Fabrizio | Ottavio | Ottaviano | Learco | Telemaco | Ulisse | Romualdo
+COGNOME_PROTAGONISTA
+	Sganga | Panzeri | Sbrodoloni | Sgangheroni | Sbrindelloni
 
 SOPRANNOME_PROTAGONISTA
 	lo sventrapapere | il torvo | il losco | il Porco Gordo | il Massimo Fattore | il furtivendolo
@@ -415,72 +433,85 @@ SOPRANNOME_PROTAGONISTA
 	il tritaporci | lo scannamuli | lo squartatore di gatti | il ladro di polli | il molestapaperi | lo spaventapassere
 	il ribaldo | il trombategami | il campione di bruttezza | il Signore delle Scorregge | il Signore del Male
 	l'autonominatosi Imperatore Galattico | il puzzone
+	il [TITOLO_NOBILIARE] { dei Piedi Sporchi | degli Spiccioli | della Sbronza | di Nessun Luogo }
+
+TITOLO_NOBILIARE
+    Cavaliere | Barone | Conte | Visconte | Duca
 
 RACCONTO
-	[RACCONTO_P_1] [RACCONTO_P_2] [RACCONTO_P_3] [RACCONTO_P_4] [RACCONTO_P_5] [MORALE]
-	[RACCONTO_P_1] [RACCONTO_P_2] [RACCONTO_P_6]
-	[RACCONTO_P_1] [RACCONTO_P_2] [RACCONTO_P_7]
+	^[RACCONTO_P_1] [RACCONTO_P_2] [RACCONTO_P_3] [RACCONTO_P_4] [RACCONTO_P_5] [MORALE]
+	^[RACCONTO_P_1] [RACCONTO_P_2] [RACCONTO_P_6]
+	^[RACCONTO_P_1] [RACCONTO_P_2] [RACCONTO_P_7]
 
 RACCONTO_BREVE
     { [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] } [*NOME_PROTAGONISTA] [CONOSCIUTO_COME] \
-        [*SOPRANNOME_PROTAGONISTA] [MOTIVAZIONE] decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE]. \
+        [*SOPRANNOME_PROTAGONISTA] [MOTIVAZIONE] { egli | [#NOME_PROTAGONISTA] } decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE]. \
         [RACCONTO_P_2] [RACCONTO_P_3] [RACCONTO_P_4] [RACCONTO_P_5] [MORALE]
     { [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] } [*NOME_PROTAGONISTA] [CONOSCIUTO_COME] \
-        [*SOPRANNOME_PROTAGONISTA] [MOTIVAZIONE] decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE]. \
+        [*SOPRANNOME_PROTAGONISTA] [MOTIVAZIONE] { egli | [#NOME_PROTAGONISTA] } decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE]. \
         [RACCONTO_P_2] [RACCONTO_P_6]
     { [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] } [*NOME_PROTAGONISTA] [CONOSCIUTO_COME] \
-        [*SOPRANNOME_PROTAGONISTA] [MOTIVAZIONE] decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE]. [RACCONTO_P_7]
+        [*SOPRANNOME_PROTAGONISTA] [MOTIVAZIONE] { egli | [#NOME_PROTAGONISTA] } decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE]. [RACCONTO_P_7]
 
 RACCONTO_P_1
-	{ [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] | Un giorno }[MOTIVAZIONE] decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE].
+	{ [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] | Un giorno }[MOTIVAZIONE] { egli | [#NOME_PROTAGONISTA] } decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE].
 
 MOTIVAZIONE
-    , stufo delle { continue | } angherie { dei { vicini | suoi amici } | che le sue bestie gli riservavano },
-    , stufo delle { barzellette | dicerie | maldicenze | brutte cose che si dicevano } su di lui,
-    , stanco delle ristrettezze economiche in cui versava,
-    , senza motivo apparente,
-    , { apparentemente | probabilmente } per via { della primavera | del caldo estivo | di un colpo di sole },
-    , a causa del livello altissimo di testosterone,
-    , a causa di alcuni affari andati male,
-    , per sfuggire ai creditori che lo braccavano,
-    , per fare qualcosa di diverso dal solito,
-    , per migliorare le sue relazioni sociali,
-    , per provare il brivido dell'imprevisto,
-    , poiché il cervello gli si era definitivamente spento,
-    , siccome gli era scappato il { cane | gatto | pappagallo | canarino | pesce rosso },
-    , stanco di non vincere mai i tornei di { briscola | scopa | scopone scientifico | poker },
-    , stufo dell'ombra che { i pini | i lecci | gli alberi | gli abeti | i pioppi } gettavano sulla sua casa, |
+    , illuminato sulla via di Damasco
+    , avendo avuto una rivelazione mistica
+    , stufo delle { continue | } angherie { dei { vicini | suoi amici } | che le sue bestie gli riservavano }
+    , stufo delle { barzellette | dicerie | maldicenze | brutte cose che si dicevano } su di lui
+    , stanco delle ristrettezze economiche in cui versava
+    , senza motivo apparente
+    , { apparentemente | probabilmente } per via { della primavera | del caldo estivo | di un colpo di sole }
+    , a causa del livello altissimo di testosterone
+    , a causa di alcuni affari andati male
+    , per sfuggire ai creditori che lo braccavano
+    , per fare qualcosa di diverso dal solito
+    , per migliorare le sue relazioni sociali
+    , per provare il brivido dell'imprevisto
+    , poiché il cervello gli si era definitivamente spento
+    , siccome gli era scappato il { cane | gatto | pappagallo | canarino | pesce rosso }
+    , stanco di non vincere mai i tornei di { briscola | scopa | scopone scientifico | poker }
+    , stufo dell'ombra che { i pini | i lecci | gli alberi | gli abeti | i pioppi } gettavano sulla sua casa
+    , esasperato dall'ennesimo litigio con la suocera
+    , in preda a una crisi di mezza età particolarmente violenta
+    , convinto che altrove l'erba fosse più verde (e i polli più grassi)
+    , dopo aver consultato un oroscopo a dir poco funesto |
 # Il carattere pipe sopra indica una motivazione vuota
 
 DECISIONE_1
 	andare in culo a tutti | levarsi da tre passi | levarsi dai cosiddetti | prendere armi e bagagli
 	far fagotto | traslocare | sparire | far perdere le proprie tracce | scomparire come Kaiser Soze
 	spostarsi | svanire nel nulla | cambiare residenza | partire | evaporare | scomparire
+	sloggiare in tutta fretta | tagliare la corda | volatilizzarsi come un mago da fiera
 
 DECISIONE_2
 	andare a [DELINQUERE] | andare a cercar [QUALCOSA]
 	andare a caccia di cervi del re | andare a caccia di gloria
 	cercare gloria | tentare la fortuna | sfidare le avversità
+	andare a menar le mani per sport | mettersi al soldo di qualche signorotto poco raccomandabile
 
 DELINQUERE
     delinquere | rubare [OGGETTI_DA_RUBARE] | truffare [VITTIME] | rigare portiere di auto altrui
-	commettere i suoi crimini | derubare [VITTIME] | turlupinare [VITTIME]
+	commettere i suoi crimini | derubare [VITTIME] | turlupinare [VITTIME] | spillare denaro ai gonzi | organizzare bische clandestine
 
 OGGETTI_DA_RUBARE
-	automobili | oro | cavalli | capi di bestiame | capi d'abbigliamento | soldi e titoli azionari
+	automobili | oro | cavalli | capi di bestiame | capi d'abbigliamento | soldi e titoli azionari | polli | ricami preziosi | reliquie sacre
 
 VITTIME
-	malcapitati | vecchiette | poveracci | allocchi | orfani | mendicanti
+	malcapitati | vecchiette | poveracci | allocchi | orfani | mendicanti | pellegrini | esattori delle tasse
 
 QUALCOSA
 	fortuna | moglie | soldi e fama | vittime innocenti | gloria e ricchezze | qualcosa da mangiare
-	enormi ricchezze | montagne di gioielli
+	enormi ricchezze | montagne di gioielli | un pasto caldo | un po' di rispetto
 
 DECISIONE_DOVE
 	da un'altra parte | altrove | in altri luoghi | in altre contrade | all'estero | in capo al mondo
 	in paesi remoti | in altre regioni | nella vicina città | in terre inesplorate |
 	in terre sconosciute ai più | al Polo Sud | al Polo Nord | dove il sole tramonta
 	dove il sole sorge | ad Ovest | ad Est | a quel paese
+	in capo al Regno più vicino | tra le nebbie del Nord | dove nessuno conoscesse il suo nome
 
 RACCONTO_P_2
 	Fu così che [RACCONTO_P_2_QUANDO] si mise in cammino, [RACCONTO_P_2_FORNITO_DI] un [*EQUIPAGGIAMENTO].
@@ -492,48 +523,71 @@ RACCONTO_P_2_QUANDO
 	alle undici e mezza | al cambio della guardia | non appena fu possibile | appena il momento fu favorevole | il giorno dopo
 
 RACCONTO_P_2_FORNITO_DI
-	avendo con se | fornito di | attrezzato con | imbracciando | essendosi procurato | portandosi dietro | equipaggiato con | armato di
+	{ avendo con se | fornito di | attrezzato con | essendosi procurato | portandosi dietro | equipaggiato con } \
+	    [EQUIPAGGIAMENTO={ [EQUIPAGGIAMENTO_CIBO] | [EQUIPAGGIAMENTO_ANIMALE] | [EQUIPAGGIAMENTO_ARMA] | [EQUIPAGGIAMENTO_FUCILE] | [EQUIPAGGIAMENTO_ALTRO] }]
+	imbracciando [EQUIPAGGIAMENTO=[EQUIPAGGIAMENTO_FUCILE]]
+	armato di [EQUIPAGGIAMENTO=[EQUIPAGGIAMENTO_ARMA]]
+	accompagnato da [EQUIPAGGIAMENTO=[EQUIPAGGIAMENTO_ANIMALE]]
 
 EQUIPAGGIAMENTO
-	fiasco di vino | computer portatile | fiasco di Chianti | sacco di letame | mucchio di latta
-	carro di concio | fazzoletto a scacchi | papero da guardia | cane da pastore | pezzo di formaggio
-	chilo di moccio | gallo cedrone da mangiare a colazione | pulcino dislessico | lupo da compagnia
-	asino sapiente | cammello a tre gobbe | gatto nero | corvo ammestrato | coltello da cucina | chilo di caffè
-	etto di burro | sacco di noci | dispositivo magico radiocomandato | cavallo da tiro
+    (segnaposto per il controllo della validità grammaticale)
+
+EQUIPAGGIAMENTO_CIBO
+	fiasco di vino | fiasco di Chianti | pezzo di formaggio | chilo di caffè | etto di burro | sacco di noci
+	otre di vino { annacquato | }
+
+EQUIPAGGIAMENTO_ANIMALE
+    papero da guardia | cane da pastore | gallo cedrone da mangiare a colazione | pulcino dislessico | lupo da compagnia
+    asino sapiente | cammello a tre gobbe | gatto nero | corvo ammaestrato  | cavallo da tiro
+
+EQUIPAGGIAMENTO_ARMA
+	pugnale spuntato | coltello da cucina | [EQUIPAGGIAMENTO_FUCILE]
+
+EQUIPAGGIAMENTO_FUCILE
+    { vecchio | } { fucile | moschetto } { rugginoso | }
+
+EQUIPAGGIAMENTO_ALTRO
+    dispositivo magico radiocomandato | mantello logoro | grimorio mai letto | sacco di letame | mucchio di latta
+    carro di concio | fazzoletto a scacchi | chilo di moccio
 
 RACCONTO_P_3
-	[RACCONTO_ECCO_CHE] un [*ANTAGONISTA] [*ATTRIBUTO_ANTAGONISTA]. [PENSIERO] [RACCONTO_P_3_DISSE] [RACCONTO_P_3_PENSANDO] [TAPINO].
+	^[RACCONTO_ECCO_CHE] un [*ANTAGONISTA] [*ATTRIBUTO_ANTAGONISTA]. [PENSIERO] [RACCONTO_P_3_DISSE] [RACCONTO_P_3_PENSANDO] [TAPINO].
 
 RACCONTO_ECCO_CHE
-	Ecco che incontrò | All'improvviso vide | Eccogli venire incontro | A sbarragli la strada trovò | Dopo pochi passi ecco
-	Appena uscito di casa ecco | Appena lasciato il paese ecco | Immediatamente fuori dall'abitato vide | Come voltò l'angolo incontrò
-	Dopo pochi passi gli venne incontro | Voltato l'angolo vide | In fondo alla strada gli si presentò
+	ecco che incontrò | all'improvviso vide | eccogli venire incontro | a sbarragli la strada trovò | dopo pochi passi ecco
+	appena uscito di casa ecco | appena lasciato il paese ecco | immediatamente fuori dall'abitato vide | come voltò l'angolo incontrò
+	dopo pochi passi gli venne incontro | voltato l'angolo vide | in fondo alla strada gli si presentò
+	proprio dietro l'angolo si imbatté in | neanche il tempo di respirare che vide
 
 ANTAGONISTA
 	[ANIMALE] | [PERSONAGGIO]
 
 ANIMALE
 	lupo | coboldo | somaro | caprone | licaone | maiale | rospo | verre | cinghiale | bue | camaleonte
-	gufo | tapiro | piccione | leone | minotauro | serpente | passero solitario | drago
+	gufo | tapiro | piccione | leone | minotauro | serpente | passero solitario | drago | cerbero | basilisco
+	grifone | troll
+	orso
 
 PERSONAGGIO
 	soldato | mago | commerciante | marinaio | musicante | rappresentante di profumi
 	pescatore | fabbro | viandante | passante | necromante | venditore di pesce | contadino
-	tessitore | cavaliere | armigero | condottiero | capitano di vascello | giudice
-	bambinaio | picchiatore | assassino | ladro | pirata | bucaniere | contrabbandiere
-	stregone | fattucchiere | venditore ambulante di paperelle di gomma
+	tessitore | cavaliere | condottiero | capitano di vascello | giudice
+	bambinaio | picchiatore | ladro | pirata | bucaniere | contrabbandiere
+	fattucchiere | venditore ambulante di paperelle di gomma | banditore | ciarlatano | locandiere
+	armigero | assassino | esattore delle tasse
 
 ATTRIBUTO_ANTAGONISTA
 	mannaro | grasso e pelato | antipatico come il mal di pancia | sorridente | puzzolente | losco
 	malefico | stanco | stremato | arrabbiatissimo | felice | contento | triste | infingardo
 	sospetto | tranquillo | furibondo | gioioso | sudato | accaldato | assetato | furioso | arrogante
 	reietto | quantomeno equivoco | con la cresta | con le corna | dalla lingua biforcuta
+	spelacchiato | dall'alito pestilenziale | palesemente ubriaco | con uno sguardo poco rassicurante
 
 PENSIERO
 	"\"Sarà dura liberarsi di questo [*ANTAGONISTA]\""
 	"\"Che incontro fortunato!\""
 	"\"Quale fortuna inaspettata\""
-	"\"Questo è il cacio sui maccheroni, anzi, il [*ANTAGONISTA] [POSIZIONE_DISDICEVOLE]\""
+	"\"Questo è il cacio sui maccheroni, anzi, un [*ANTAGONISTA] [POSIZIONE_DISDICEVOLE]\""
 	"\"Non aspettavo altro!\""
 	"\"Che colpo di fortuna!\""
 	"\"La sorte mi è benigna\""
@@ -541,11 +595,14 @@ PENSIERO
 	"\"Che triste destino\""
 	"\"Che incontro inaspettato!\""
 	"\"Qual buon vento lo porterà?\""
+	"\"Ecco la mia occasione di gloria!\""
+	"\"Ancora questa sfortuna!\""
 
 POSIZIONE_DISDICEVOLE
 	nella brace | con la faccia sotto le mie scarpe | con i segni delle mie mani sul suo grugno
 	pronto ad essere spennato | che si offre come vittima sacrificale | che fa da capro espiatorio
 	{ destinato | pronto } a subire le angherie { del destino | della sorte }
+	con le terga esposte al pubblico ludibrio | buono ormai solo per farne un tappeto
 
 RACCONTO_P_3_DISSE
     , disse tra se e se,
@@ -555,6 +612,7 @@ RACCONTO_P_3_DISSE
     , ragionò tra se e se,
     , immaginò,
     , pensò ad una prima occhiata,
+    , sentenziò senza indugio,
 
 RACCONTO_P_3_PENSANDO
 	pensando di allenarsi al tiro al bersaglio con il
@@ -565,15 +623,17 @@ RACCONTO_P_3_PENSANDO
 	progettando di accompagnarsi con il
 	ragionando se ignorare, malmenare o truffare il
 	ipotizzando di imbrogliare il
+	sperando di spillare quattro soldi al
+	domandandosi se convenisse scappare o affrontare il
 
 TAPINO
-	poveretto | poveraccio | malcapitato | tapino | povero soggetto | poverino | poveretto | [*ANTAGONISTA]
+	poveretto | poveraccio | malcapitato | tapino | povero soggetto | poverino | poveretto | disgraziato | [*ANTAGONISTA]
 
 RACCONTO_P_4
-	[IN_REALTA] [*PROTAGONISTA] scoprì che il [*ANTAGONISTA] era [CHI_ERA_L_ANTAGONISTA], fu subito [RIDOTTO_COME].
+	^[IN_REALTA] [*PROTAGONISTA] scoprì che il [*ANTAGONISTA] era [CHI_ERA_L_ANTAGONISTA], fu subito [RIDOTTO_COME].
 
 IN_REALTA
-	In realtà, come | A dire il vero, appena | Ma appena | Non appena però | Tuttavia, quando
+	in realtà, come | a dire il vero, appena | ma appena | non appena però | tuttavia, quando
 
 CHI_ERA_L_ANTAGONISTA
 	il campione nazionale di karate | il campione nazionale di pugilato | il campione nazionale di schiaffi nel muso
@@ -581,15 +641,19 @@ CHI_ERA_L_ANTAGONISTA
 	il capo delle guardie del re | un noto capitano di ventura con le truppe al suo seguito | un esperto picchiatore
 	il capo di una banda di briganti | il campione di Ju-Jitsu del luogo | espertissimo ad usare una mazza
 	un campione nell'uso della sciabola
+	il pluridecorato veterano di cento risse da osteria | un lottatore di fama { almeno regionale | nazionale | mondiale }
 
 RIDOTTO_COME
 	ridotto a più miti consigli | massacrato senza pietà | disintegrato da una gragnuola di colpi
 	ridotto ad una maschera di sangue | ridotto ad un nodo di dolore | conciato per le feste
-	preso a calci come un cane in chiesa | portato a più miti consigli | portato a rivedere i suoi piani
-	ridotto in condizioni così pietose che neppure [SAMARITANO] avrebbe potuto aiutarlo
+	preso a calci come un cane in chiesa
+	{ violentemente | bruscamente | forzatamente | } portato a { rivedere i suoi piani | più miti consigli }
+	ridotto in condizioni così { misere | pietose } che neppure [SAMARITANO] avrebbe potuto aiutarlo
+	spedito di corsa dal medico più vicino | ridotto a chieder scusa in ginocchio
 
 SAMARITANO
 	il Buon Samaritano | la Fata dai Capelli Turchini | Babbo Natale | Mago Merlino | la Fatina dei Denti
+	il Genio della Lampada | il migliore dei medici
 
 RACCONTO_P_5
 	Fu così che dovette rinunciare al suo [*EQUIPAGGIAMENTO], vinto [VINTO_COME], ottenendo in cambio un [OGGETTO_SPREGEVOLE].
@@ -602,36 +666,41 @@ VINTO_COME
 	giocando a carte | giocando a freccette | scappando dai soldati del fortino vicino
 	giocando a dadi | giocando a morra | giocando a rava | scommettendo ai cavalli
 	alle corse di cani | alla lotteria nazionale | giocando in una taverna malfamata
+	a testa o croce | a sasso-carta-forbici | scommettendo sull'esito di una gara di lumache
 
 OGGETTO_SPREGEVOLE
 	papero magico che poteva prevedere quando sarebbe finito in padella
 	volano a pedali | apribottiglie elettronico | motorazzo a pila | ariete da battaglia
 	preservativo usato | pezzo di ferro | chiodo arrugginito | cofano vuoto
 	tappo rugginoso | coniglio di cioccolata | dispositivo anti-piccioni
+	ombrello spuntato dal vento | specchio rotto (sette anni di sfortuna inclusi)
 
 RACCONTO_P_6
-	[RACCONTO_ECCO_CHE] un [*ANIMALE] [*ATTRIBUTO_ANTAGONISTA]. [BACIAMI] [REAZIONE_PROTAGONISTA]
+	^[RACCONTO_ECCO_CHE] un [*ANIMALE] [*ATTRIBUTO_ANTAGONISTA]. [BACIAMI] [REAZIONE_PROTAGONISTA]
 
 BACIAMI
-	"\"Sono stato trasformato in un [*ANIMALE] da [MAGO_CATTIVO_PREPROD][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO] \
+	"\"Sono stato trasformato in un [*ANIMALE] da [CREAZIONE_MAGO_CATTIVO][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO] [#MAGO_CATTIVO_AGGETTIVO]\
 	    perché [MOTIVAZIONE_TRASFORMAZIONE] ma se [BUONA_AZIONE] [MI_VEDRAI_TORNARE] un [PERSONAGGIO] \
 	    [ATTRIBUTO_ANTAGONISTA].\""
 
-MAGO_CATTIVO_PREPROD
-	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Mago Merlino]
-	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Maga Magò]
-	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=fata molto permalosa]
-	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=fata spregevole]
-	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=mago]
-	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=necromante]
-	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=folletto dispettoso]
-	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=malvagio stregone]
-	[MAGO_CATTIVO_ARTDET=l' ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=occultista furioso]
-	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=mago prestidigitatore]
-	[MAGO_CATTIVO_ARTDET=l'][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=alieno proveniente dalla quinta dimensione]
+CREAZIONE_MAGO_CATTIVO
+	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Mago Merlino][MAGO_CATTIVO_AGGETTIVO=]
+	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Maga Magò][MAGO_CATTIVO_AGGETTIVO=]
+	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=fata][MAGO_CATTIVO_AGGETTIVO=molto permalosa]
+	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=fata][MAGO_CATTIVO_AGGETTIVO=spregevole]
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=mago][MAGO_CATTIVO_AGGETTIVO=]
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=necromante][MAGO_CATTIVO_AGGETTIVO=]
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=folletto][MAGO_CATTIVO_AGGETTIVO=dispettoso]
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=malvagio stregone][MAGO_CATTIVO_AGGETTIVO=]
+	[MAGO_CATTIVO_ARTDET=l'][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=occultista][MAGO_CATTIVO_AGGETTIVO=furioso]
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=mago prestidigitatore][MAGO_CATTIVO_AGGETTIVO=]
+	[MAGO_CATTIVO_ARTDET=l'][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=alieno][MAGO_CATTIVO_AGGETTIVO=proveniente dalla quinta dimensione]
+	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=strega][MAGO_CATTIVO_AGGETTIVO=dal naso adunco]
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=vecchio saggio][MAGO_CATTIVO_AGGETTIVO=dal pessimo carattere]
+	[MAGO_CATTIVO_ARTDET=lo ][MAGO_CATTIVO_ARTINDET=uno ][MAGO_CATTIVO=gnomo permaloso][MAGO_CATTIVO_AGGETTIVO=permaloso]
 
 MOTIVAZIONE_TRASFORMAZIONE
-	mi ero { bevuto | scolato } tutto il suo [SOSTANZA_ALCOOLICA]
+	mi ero { bevuto | scolato } { tutto il suo [SOSTANZA_ALCOOLICA_MASCHILE] | tutta la sua [SOSTANZA_ALCOOLICA_FEMMINILE] }
 	mi ero mangiato tutte le sue [FRUTTA]
 	avevo rubato tutte le sue [POSSEDIMENTI]
 	mi ero divertito alle sue spalle
@@ -640,19 +709,24 @@ MOTIVAZIONE_TRASFORMAZIONE
 	avevo suonato il suo campanello per fare un dispetto
 	avevo rotto un vetro con una pallonata
 	avevo tagliato le gomme della sua automobile
+	avevo copiato il suo compito di aritmetica
+	mi ero intrufolato nel suo orto a rubare zucche
 
-SOSTANZA_ALCOOLICA
-	cordiale | gin | vermouth | cognac | vino | whisky | rum
+SOSTANZA_ALCOOLICA_MASCHILE
+	cordiale | gin | vermouth | cognac | vino | whisky | rum | grappa | amaro | sidro
+
+SOSTANZA_ALCOOLICA_FEMMINILE
+    grappa | birra
 
 FRUTTA
-	mele | pere | ciliegie | angurie | pesche noci | noci | banane
+	mele | pere | ciliegie | angurie | pesche noci | noci | banane | albicocche | prugne
 
 POSSEDIMENTI
-	mucche | pecore | capre | galline | concubine
+	mucche | pecore | capre | galline | concubine | oche
 
 PARENTE_MAGO_CATTIVO
-	sua figlia | suo figlio | sua madre | suo padre | sua sorella | suo fratello | sua nonna | suo nonno | sua zia | suo zio
-	il cugino del fratello del compagno di stanza di suo padre
+	sua figlia | suo figlio | sua madre | suo padre | sua sorella | suo fratello | sua nonna | suo nonno | sua zia
+	suo zio | sua cugina | suo cognato | il cugino del fratello del compagno di stanza di suo padre
 
 BUONA_AZIONE
 	mi bacerai | mi leccherai le zampe | mi leccherai la schiena | mi laverai | mi farai fare tre salti mortali
@@ -663,9 +737,10 @@ BUONA_AZIONE
 	ti farai utilizzare come mezzo di trasporto | ti lascerai sodomizzare | ti farai rapare | ti farai tagliare le orecchie
 	farai da palo alle mie prossime rapine | farai da complice per i miei crimini | avrai pietà di me
 	combatterai contro [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO]
+	mi racconterai una barzelletta decente (impresa improba) | mi porterai la colazione a letto per un mese
 
 MI_VEDRAI_TORNARE
-	io potro' nuovamente diventare | io potrò nuovamente essere | mi vedrai tornare | mi trasformerò nuovamente in
+	io potrò nuovamente diventare | io potrò nuovamente essere | mi vedrai tornare | mi trasformerò nuovamente in
 	{ la maledizione | il maleficio } { finirà | scomparirà } ed io { ri | }tornerò ad essere
 
 REAZIONE_PROTAGONISTA
@@ -674,7 +749,7 @@ REAZIONE_PROTAGONISTA
 	    [*PROTAGONISTA] venne [RIDOTTO_COME].
 	[PENSIERO_PROTAGONISTA], disse [*PROTAGONISTA], e acconsentì. [LIETO_FINE]
 	[PENSIERO_PROTAGONISTA], rispose [*PROTAGONISTA]. [APPARIZIONE_MAGO_CATTIVO] \
-	    [MAGO_CATTIVO_PREPROD][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO] [MAGO_CATTIVO_APOSTROFA] [FRASE_MAGO_CATTIVO], e \
+	    [CREAZIONE_MAGO_CATTIVO][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO] [#MAGO_CATTIVO_AGGETTIVO] [MAGO_CATTIVO_APOSTROFA] [FRASE_MAGO_CATTIVO], e \
 	    [*PROTAGONISTA] venne a sua volta trasformato in un [ANIMALE] [ATTRIBUTO_ANTAGONISTA].
 	[PENSIERO_PROTAGONISTA], rispose [*PROTAGONISTA]. Ma il [*ANIMALE] gli disse [FRASE_MAGO_CATTIVO], e il nostro \
 	    venne [RIDOTTO_COME].
@@ -684,13 +759,16 @@ PENSIERO_PROTAGONISTA
 	"\"Certo, come no?\""
 	"\"Ma ovviamente!\"" | "\"E' sempre stato il mio sogno!\"" | "\"Lo farò subito!\"" | "\"E' il sogno della mia vita!\""
 	"\"Non vedevo l'ora!\"" | "\"Non aspettavo altro!\""
+	"\"E chi se lo aspettava!\"" | "\"Meglio di niente!\""
 
 APPARIZIONE_MAGO_CATTIVO
 	Al che si materializzò | Ed ecco che apparve | Da sotto un { pietrone | tombino | albero } uscì
 	Sbucò fuori da una nuvola di fumo | Apparve pero' |	Si teletrasportò tuttavia | Venne però visto da
+	Comparve dal nulla tra un tuono e un lampo | Emerse da uno specchio polveroso
 
 MAGO_CATTIVO_APOSTROFA
 	che gli disse: | che così lo apostrofò: | che gli rivolse il seguente ammonimento: | che tuonò:
+	che lo apostrofò seccamente: | che sbuffò: | che urlò:
 
 FRASE_MAGO_CATTIVO
 	"\"Ecco che la tua cattiveria viene allo scoperto!\""
@@ -701,12 +779,14 @@ FRASE_MAGO_CATTIVO
 	"\"Sei la somma di tutto il male del mondo!\""
 	"\"Sei la persona più spregevole che io abbia mai visto!\""
 	"\"Sei veramente una persona pessima!\""
+	"\"Vedrai che imparerai il rispetto, prima o poi!\""
 
 LIETO_FINE
 	I due si sposarono e vissero felici e contenti.
 	I due divennero i migliori amici che si siano mai visti.
 	I due si lasciarono da buoni amici, [VINTO_COME].
 	I due divennero amici e cominciarono a [ATTIVITA_CRIMINOSE] insieme finchè non furono [FINACCIA] per [CRIMINE].
+	I due aprirono una { bettola | taverna | casa di tolleranza } insieme e vissero, tutto sommato, felici.
 
 ATTIVITA_CRIMINOSE
 	compiere rapine, furti e grassazioni
@@ -717,9 +797,12 @@ ATTIVITA_CRIMINOSE
 	rubare le gomme delle auto dei vicini
 	dare la caccia agli scoiattoli
 	maltrattare i poverelli
+	spennare polli altrui col favore delle tenebre
+	organizzare tornei di carte truccati
 
 FINACCIA
-	arrestati | condotti al patibolo | esiliati | incarcerati | giudicati colpevoli | crocifissi | impalati | condannati
+	arrestati | condotti al patibolo | esiliati | incarcerati | giudicati colpevoli | crocifissi | impalati
+	condannati | banditi | messi alla gogna | coperti di pece e piume | garrotati
 
 MORALE
 	[PENSIERO_PROFONDO], [CONCLUSE] [CHIOSA].
@@ -735,12 +818,15 @@ PENSIERO_PROFONDO
 	"\"Ride bene chi ride ultimo\""
 	"\"Non finisce qui, mi rivedrete\""
 	"\"Chi si contenta, gode\""
+	"\"Can che abbaia non morde\""
+	"\"Meglio un uovo oggi che una gallina domani, purché non sia rubata\""
 
 CONCLUSE
 	pensò tra se e se
 	concluse
 	capì quindi
 	osservò
+	sospirò
 
 CHIOSA
 	tornando da dove era venuto
@@ -748,53 +834,81 @@ CHIOSA
 	imbarcandosi per cercar fortuna
 	scappando dai creditori
 	fuggendo da una { folla | moltitudine } inferocita
+	borbottando improperi vari
 
 RACCONTO_P_7
 	Un giorno, mentre [ATTIVITA_SPREGEVOLE], sentì che [NOTIZIA]
 
 ATTIVITA_SPREGEVOLE
-	scuoiava paperi | spennava galline | rapinava viandanti | beveva a ritrecina in una bettola malfamata
+	scuoiava paperi | spennava galline | rapinava viandanti
+	beveva { a ritrecina | senza ritegno | come se non ci fosse un domani } in una { bettola | taverna } malfamata
 	derubava i passanti | uccideva le mosche | cercava da mangiare negli orti altrui
 	si faceva i fatti suoi | passeggiava per quadrivi ed angiporti | cercava di assaltare una nave in secca
 	progettava di assalire una carovana | progettava il furto del secolo | assaltava una diligenza
 	rigava portiere di macchine | spaccava vetrine | tagliava gomme di automobili | parcheggiava in doppia fila
+	tosava pecore non sue | vendeva biglietti falsi per lo spettacolo del paese
 
 NOTIZIA
-	il re aveva chiesto aiuto per salvare sua figlia [*NOME_PRINCIPESSA], una principessa [*ATTRIBUTO_PRINCIPESSA]. [SVOLGIMENTO_PRINCIPESSA]
+	il re aveva chiesto aiuto per salvare sua figlia [*CREA_NOME_PRINCIPESSA], una principessa [*ATTRIBUTO_PRINCIPESSA]. [SVOLGIMENTO_PRINCIPESSA]
 	un orco aveva rapito la figlia del re, una principessa di nome [*NOME_PRINCIPESSA]. [SVOLGIMENTO_PRINCIPESSA]
-	un malfattore aveva portato via nella notte l'erede al trono, la principessa [*NOME_PRINCIPESSA]. [SVOLGIMENTO_PRINCIPESSA]
+	un malfattore aveva portato via nella notte l'erede al trono, la principessa [CREA_NOME_PRINCIPESSA]. [SVOLGIMENTO_PRINCIPESSA]
 
 ATTRIBUTO_PRINCIPESSA
 	molto magra | assai obesa | veramente brutta ma ricchissima | antipatica
 	brutta come la morte | simpatica come le tasse | veramente bellissima | malinconica
 	affascinante | pelata
+	goffa | permalosa | dotata di un caratteraccio leggendario
+
+CREA_NOME_PRINCIPESSA
+	[*NOME_PRINCIPESSA] | [*NOME_PRINCIPESSA] [NOME_SEMPLICE_PRINCIPESSA]
 
 NOME_PRINCIPESSA
+    [NOME_SEMPLICE_PRINCIPESSA]
+
+NOME_SEMPLICE_PRINCIPESSA$
 	Ermenegilda | Guendalina | Genoveffa | Bacheca | Rasperonzola | Guidrigilda | Brigitta | Beppina | Ortensia
-	Mafalda | Abelarda
+	Mafalda | Abelarda | Barbargilda | Brunilde | Gisella | Clotilde | Isolde | Teodolinda | Brigida | Gualberta
+	Ermantina | Amabilia | Eustachia | Eulalia | Labilia | Zelinda | Aurelia | Seraphina | Vincenza | Clementina
+	Elettra | Filomena | Aglaia | Zita | Lalla | Gisla | Tullia | Fausta | Onoria | Berta | Demetria | Ermina
+	Gaudenzia | Irene | Lidia | Matilde | Rina | Gisberta | Ermelinda | Gualberta | Ermengarda | Sigfrida
+    Sardina | Zoccola | Scarpina | Serratura | Spazzola Calamita | Sferruccola | Zavorra
+    Rantastruzza | Masticarda | Sgrattina | Pizzicarda | Sgusciola | Ruvidilda | Stuccata | Grugnita | Sventola
+    Zampata | Rantola
 
 SVOLGIMENTO_PRINCIPESSA
-	Il nostro [*NOME_PROTAGONISTA] ovviamente se ne fregò e la poverina fece una finaccia.
-	Dopo innumerevoli peripezie [*NOME_PROTAGONISTA] salvò la principessa [*ATTRIBUTO_PRINCIPESSA]. [LIETO_FINE]
-	[*NOME_PROTAGONISTA] si mise in cammino, attraversando [LUOGO_1] e [LUOGO_2], finché non giunse ad [LUOGO_3] dove la principessa [*ATTRIBUTO_PRINCIPESSA] era tenuta [IN_CATTIVITA] da [MAGO_CATTIVO_PREPROD][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO]. [SVOLGIMENTO_PRINCIPESSA_2]
+	Il nostro [*NOME_PROTAGONISTA] ovviamente se ne fregò e la poverina fece una { finaccia | triste fine | misera fine }.
+	Dopo innumerevoli peripezie [*NOME_PROTAGONISTA] { riuscì a salvare | salvò } \
+	    { [#NOME_PRINCIPESSA] | la principessa [*ATTRIBUTO_PRINCIPESSA] }. [LIETO_FINE]
+	[*NOME_PROTAGONISTA] si mise in cammino, attraversando [LUOGO_1] e [LUOGO_2], finché non giunse ad [LUOGO_3] \
+	    dove la principessa [*ATTRIBUTO_PRINCIPESSA] era [TENUTA_IN_CATTIVITA] da \
+	    [CREAZIONE_MAGO_CATTIVO][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO] [#MAGO_CATTIVO_AGGETTIVO]. [SVOLGIMENTO_PRINCIPESSA_2]
 
 LUOGO_1
-	monti | montagne | paludi | boschi | canali | fiumi | laghi | caverne | pascoli | prati | periferie malfamate | vicoli bui
+	monti | montagne | paludi | boschi | canali | fiumi | laghi | caverne | pascoli | prati | periferie malfamate
+	vicoli bui | gole rocciose | brughiere | gore
 
 LUOGO_2
-	mari | pianure | torbiere | paesi | città | castelli | ponti | locande | bettole | postacci
+	mari | pianure | torbiere | paesi | città | castelli | ponti | locande | bettole | postacci | porti malfamati
+	fiere di paese
 
 LUOGO_3
-	un castello | un fortino | una grotta | un antro | un capanno | un paese | una stamberga
+	un castello | un fortino | una grotta | un antro | un capanno | un paese | una stamberga | una torre diroccata
+	un covo di briganti
 
-IN_CATTIVITA
-	prigioniera | come dama di compagnia | come sguattera | come capro espiatorio | rinchiusa in un torrione
+TENUTA_IN_CATTIVITA
+	tenuta prigioniera | tenuta come dama di compagnia | tenuta come sguattera | tenuta come capro espiatorio |
+	tenuta rinchiusa in un torrione | costretta a lavare { i piatti | i pavimenti | piatti e pavimenti }
+	tenuta a pane e acqua | tenuta a stecchetto
 
 SVOLGIMENTO_PRINCIPESSA_2
-	Dopo essersi accordato con [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO] per [30_DENARI], [*PROTAGONISTA] tornò a casa a [ATTIVITA_CRIMINOSE], lasciando [*NOME_PRINCIPESSA] al suo triste destino.
-	Dopo aver combattuto con [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO], [*PROTAGONISTA] venne trasformato in un [*ANIMALE] [*ATTRIBUTO_ANTAGONISTA].
-	Dopo aver corrotto [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO], [*PROTAGONISTA] sposò la [*ATTRIBUTO_PRINCIPESSA] [*NOME_PRINCIPESSA]. [LIETO_FINE]
+	Dopo essersi accordato con [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO] per [30_DENARI], [*PROTAGONISTA] tornò a casa \
+	    a [ATTIVITA_CRIMINOSE], lasciando [*NOME_PRINCIPESSA] al suo triste destino.
+	Dopo aver combattuto con [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO], [*PROTAGONISTA] venne trasformato in un \
+	    [*ANIMALE] [*ATTRIBUTO_ANTAGONISTA].
+	Dopo aver corrotto [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO], [*PROTAGONISTA] sposò la [*ATTRIBUTO_PRINCIPESSA] \
+	    [*NOME_PRINCIPESSA]. [LIETO_FINE]
 
 30_DENARI
 	30 denari | una forma di cacio | un tozzo di pane | una somma considerevole di denaro | una mandria di buoi
-	un sacchetto di monete | una fornitura a vita di [SOSTANZA_ALCOOLICA] | un pezzo di pane | un soldo bucato
+	un sacchetto di monete | una fornitura a vita di { [SOSTANZA_ALCOOLICA_MASCHILE] | [SOSTANZA_ALCOOLICA_FEMMINILE] }
+	un pezzo di pane | un soldo bucato | una cassa di ottimo vino | un pagherò mai onorato

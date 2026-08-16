@@ -408,6 +408,32 @@ class GrammarBeanTest {
     }
 
     @Test
+    void assignmentValueCanReferenceAnotherProduction() throws Exception {
+        // The assignment's value is itself a bracketed production reference: it must be fully
+        // resolved before being cached under "k", so "[#k]" retrieves the resolved word, not
+        // the raw "[OTHER]" text.
+        GrammarBean bean = new GrammarBean("ROOT\n\t[k=[OTHER]] [#k]\nOTHER\n\tresolved\n");
+        assertEquals("resolved", bean.produce().get(0));
+    }
+
+    @Test
+    void assignmentValueReferencingUndefinedProductionIsInvalidAtLoadTime() {
+        assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\t[k=[NEVER_DEFINED]] [#k]\n"));
+    }
+
+    @Test
+    void fixedProductionMarkerCanTargetAnAssignmentOnlyKey() throws Exception {
+        // "EQUIPAGGIAMENTO" is never declared as its own production, only ever assigned via
+        // "=" elsewhere in the grammar; a later "[*EQUIPAGGIAMENTO]" must still be considered
+        // valid at load time and resolve to the previously assigned value at runtime.
+        GrammarBean bean = new GrammarBean(
+                "ROOT\n\t[EQUIPAGGIAMENTO=[EQUIPAGGIAMENTO_POSSIBILE]] preso [*EQUIPAGGIAMENTO] di nuovo\n"
+                        + "EQUIPAGGIAMENTO_POSSIBILE\n\tfucile\n");
+        assertEquals("preso fucile di nuovo", bean.produce().get(0));
+    }
+
+    @Test
     void referenceFindsLocallyFixedValueWithoutFallback() throws Exception {
         // [!NAME] caches its result into the current call frame's own local-fixed map under
         // key "NAME"; the following [#NAME] then finds it there directly, with no need to
@@ -645,16 +671,15 @@ class GrammarBeanTest {
         assertEquals(java.util.Arrays.asList("line1", "line2"), result);
     }
 
-    // ---- runtime bracket mismatch introduced through assignment + reference splicing ----
+    // ---- unbalanced brackets are rejected at load time ----
 
     @Test
-    void strayUnmatchedBracketReintroducedAtRuntimeThrows() throws Exception {
-        // "[k=X[Y]" is accepted at load time because the FIRST ']' found closes the outer token;
-        // the embedded '[' inside the assigned value is only discovered once "[#k]" splices the
-        // raw value ("X[Y") back into the text being expanded, leaving an unmatched '[' with no ']'
-        // anywhere in the remainder of the produced text.
-        GrammarBean bean = new GrammarBean("ROOT\n\t[k=X[Y] [#k]\n");
-        assertThrows(IllegalArgumentException.class, bean::produce);
+    void unbalancedBracketIsRejectedAtLoadTime() {
+        // "[k=X[Y]" has three '[' but only two ']': bracket matching is nesting-aware, so this
+        // is caught as malformed as soon as the grammar is loaded, instead of silently producing
+        // a broken token that only blows up later when the story is generated.
+        assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\t[k=X[Y] [#k]\n"));
     }
 
     // ---- self-referencing (recursive) productions ----
@@ -915,5 +940,58 @@ class GrammarBeanTest {
     void threeWayCyclicProductionsAdjustmentDoesNotHang() {
         assertTimeoutPreemptively(java.time.Duration.ofSeconds(2), () ->
                 new GrammarBean("A\n\t[B]|stopA\nB\n\t[C]|stopB\nC\n\t[A]|stopC\n"));
+    }
+
+    // ---- Capitalize marker ----
+
+    @Test
+    void capitalizeMarkerCapitalizesPlainProductionResult() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\t^[X]\nX\n\thello\n");
+        assertEquals("Hello", bean.produce().get(0));
+    }
+
+    @Test
+    void referenceWithoutMarkerIsUnaffected() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\t[X]\nX\n\thello\n");
+        assertEquals("hello", bean.produce().get(0));
+    }
+
+    @Test
+    void caretNotImmediatelyFollowedByBracketIsLiteralText() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\tpower^2 [X]\nX\n\thello\n");
+        assertEquals("power^2 hello", bean.produce().get(0));
+    }
+
+    @Test
+    void capitalizeMarkerWorksOnGloballyFixedProduction() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\t^[*NAME]\nNAME\n\treal\n");
+        assertEquals("Real", bean.produce().get(0));
+    }
+
+    @Test
+    void capitalizeMarkerWorksOnLocallyFixedProduction() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\t^[!NAME]\nNAME\n\treal\n");
+        assertEquals("Real", bean.produce().get(0));
+    }
+
+    @Test
+    void capitalizeMarkerWorksOnStoredValueReference() throws Exception {
+        // [!NAME] caches "value" under key "NAME"; [#NAME] retrieves it, and the leading
+        // ^ capitalizes that retrieved copy without affecting the first, uncapitalized one.
+        GrammarBean bean = new GrammarBean("ROOT\n\t[!NAME]^[#NAME]\nNAME\n\tvalue\n");
+        assertEquals("valueValue", bean.produce().get(0));
+    }
+
+    @Test
+    void capitalizeMarkerOnEmptyResolutionIsNoOp() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\ta^[X]b\nX\n\thello|\n");
+        bean.setProductionMode(ProductionModeEnum.LAST);
+        assertEquals("ab", bean.produce().get(0));
+    }
+
+    @Test
+    void capitalizeMarkerHandlesAccentedFirstLetter() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\t^[X]\nX\n\tàlbero\n");
+        assertEquals("Àlbero", bean.produce().get(0));
     }
 }
