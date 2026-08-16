@@ -422,9 +422,14 @@ RACCONTO
 	[RACCONTO_P_1] [RACCONTO_P_2] [RACCONTO_P_7]
 
 RACCONTO_BREVE
-    { [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] } [*NOME_PROTAGONISTA] [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA] [MOTIVAZIONE] decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE]. [RACCONTO_P_2] [RACCONTO_P_3] [RACCONTO_P_4] [RACCONTO_P_5] [MORALE]
-    { [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] } [*NOME_PROTAGONISTA] [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA] [MOTIVAZIONE] decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE]. [RACCONTO_P_2] [RACCONTO_P_6]
-    { [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] } [*NOME_PROTAGONISTA] [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA] [MOTIVAZIONE] decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE]. [RACCONTO_P_7]
+    { [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] } [*NOME_PROTAGONISTA] [CONOSCIUTO_COME] \
+        [*SOPRANNOME_PROTAGONISTA] [MOTIVAZIONE] decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE]. \
+        [RACCONTO_P_2] [RACCONTO_P_3] [RACCONTO_P_4] [RACCONTO_P_5] [MORALE]
+    { [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] } [*NOME_PROTAGONISTA] [CONOSCIUTO_COME] \
+        [*SOPRANNOME_PROTAGONISTA] [MOTIVAZIONE] decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE]. \
+        [RACCONTO_P_2] [RACCONTO_P_6]
+    { [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] } [*NOME_PROTAGONISTA] [CONOSCIUTO_COME] \
+        [*SOPRANNOME_PROTAGONISTA] [MOTIVAZIONE] decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE]. [RACCONTO_P_7]
 
 RACCONTO_P_1
 	{ [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] | Un giorno }[MOTIVAZIONE] decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE].
@@ -475,7 +480,7 @@ DECISIONE_DOVE
 	da un'altra parte | altrove | in altri luoghi | in altre contrade | all'estero | in capo al mondo
 	in paesi remoti | in altre regioni | nella vicina città | in terre inesplorate |
 	in terre sconosciute ai più | al Polo Sud | al Polo Nord | dove il sole tramonta
-	dove il sole sorge | ad Ovest | a quel paese
+	dove il sole sorge | ad Ovest | ad Est | a quel paese
 
 RACCONTO_P_2
 	Fu così che [RACCONTO_P_2_QUANDO] si mise in cammino, [RACCONTO_P_2_FORNITO_DI] un [*EQUIPAGGIAMENTO].
@@ -509,7 +514,7 @@ ANTAGONISTA
 
 ANIMALE
 	lupo | coboldo | somaro | caprone | licaone | maiale | rospo | verre | cinghiale | bue | camaleonte
-	gufo | tapiro | piccione | leone | minotauro | serpente | passero solitario | drago furioso
+	gufo | tapiro | piccione | leone | minotauro | serpente | passero solitario | drago
 
 PERSONAGGIO
 	soldato | mago | commerciante | marinaio | musicante | rappresentante di profumi
@@ -528,7 +533,7 @@ PENSIERO
 	"\"Sarà dura liberarsi di questo [*ANTAGONISTA]\""
 	"\"Che incontro fortunato!\""
 	"\"Quale fortuna inaspettata\""
-	"\"Questo e' il cacio sui maccheroni, anzi, il [*ANTAGONISTA] [POSIZIONE_DISDICEVOLE]\""
+	"\"Questo è il cacio sui maccheroni, anzi, il [*ANTAGONISTA] [POSIZIONE_DISDICEVOLE]\""
 	"\"Non aspettavo altro!\""
 	"\"Che colpo di fortuna!\""
 	"\"La sorte mi è benigna\""
@@ -540,7 +545,7 @@ PENSIERO
 POSIZIONE_DISDICEVOLE
 	nella brace | con la faccia sotto le mie scarpe | con i segni delle mie mani sul suo grugno
 	pronto ad essere spennato | che si offre come vittima sacrificale | che fa da capro espiatorio
-	pronto a subire le angherie del destino | destinato a subire le angherie della sorte
+	{ destinato | pronto } a subire le angherie { del destino | della sorte }
 
 RACCONTO_P_3_DISSE
     , disse tra se e se,
@@ -553,7 +558,7 @@ RACCONTO_P_3_DISSE
 
 RACCONTO_P_3_PENSANDO
 	pensando di allenarsi al tiro al bersaglio con il
-	pensando di - truffare - compiere qualche vantaggioso affare con il
+	pensando di -truffare- compiere qualche vantaggioso affare con il
 	progettando di massacrare senza ritegno, a chiaro scopo di rapina, il
 	meditando se lasciar passare o uccidere il
 	sperando di fare amicizia con il
@@ -608,7 +613,9 @@ RACCONTO_P_6
 	[RACCONTO_ECCO_CHE] un [*ANIMALE] [*ATTRIBUTO_ANTAGONISTA]. [BACIAMI] [REAZIONE_PROTAGONISTA]
 
 BACIAMI
-	"\"Sono stato trasformato in un [*ANIMALE] da [MAGO_CATTIVO_PREPROD][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO] perché [MOTIVAZIONE_TRASFORMAZIONE] ma se [BUONA_AZIONE] [MI_VEDRAI_TORNARE] un [PERSONAGGIO] [ATTRIBUTO_ANTAGONISTA].\""
+	"\"Sono stato trasformato in un [*ANIMALE] da [MAGO_CATTIVO_PREPROD][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO] \
+	    perché [MOTIVAZIONE_TRASFORMAZIONE] ma se [BUONA_AZIONE] [MI_VEDRAI_TORNARE] un [PERSONAGGIO] \
+	    [ATTRIBUTO_ANTAGONISTA].\""
 
 MAGO_CATTIVO_PREPROD
 	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Mago Merlino]
@@ -624,7 +631,7 @@ MAGO_CATTIVO_PREPROD
 	[MAGO_CATTIVO_ARTDET=l'][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=alieno proveniente dalla quinta dimensione]
 
 MOTIVAZIONE_TRASFORMAZIONE
-	mi ero bevuto tutto il suo [SOSTANZA_ALCOOLICA]
+	mi ero { bevuto | scolato } tutto il suo [SOSTANZA_ALCOOLICA]
 	mi ero mangiato tutte le sue [FRUTTA]
 	avevo rubato tutte le sue [POSSEDIMENTI]
 	mi ero divertito alle sue spalle
@@ -659,14 +666,18 @@ BUONA_AZIONE
 
 MI_VEDRAI_TORNARE
 	io potro' nuovamente diventare | io potrò nuovamente essere | mi vedrai tornare | mi trasformerò nuovamente in
-	la maledizione finirà ed io tornerò ad essere | il maleficio scomparirà ed io ritornerò ad essere
+	{ la maledizione | il maleficio } { finirà | scomparirà } ed io { ri | }tornerò ad essere
 
 REAZIONE_PROTAGONISTA
 	[PENSIERO_PROTAGONISTA], pensò [*PROTAGONISTA] e fece la buona azione. [LIETO_FINE]
-	[PENSIERO_PROTAGONISTA], pensò [*PROTAGONISTA]; ma tale risposta fu presa come un diniego dal [*ANIMALE], per cui [*PROTAGONISTA] venne [RIDOTTO_COME].
+	[PENSIERO_PROTAGONISTA], pensò [*PROTAGONISTA]; ma tale risposta fu presa come un diniego dal [*ANIMALE], per cui \
+	    [*PROTAGONISTA] venne [RIDOTTO_COME].
 	[PENSIERO_PROTAGONISTA], disse [*PROTAGONISTA], e acconsentì. [LIETO_FINE]
-	[PENSIERO_PROTAGONISTA], rispose [*PROTAGONISTA]. [APPARIZIONE_MAGO_CATTIVO] [MAGO_CATTIVO_PREPROD][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO] [MAGO_CATTIVO_APOSTROFA] [FRASE_MAGO_CATTIVO], e [*PROTAGONISTA] venne a sua volta trasformato in un [ANIMALE] [ATTRIBUTO_ANTAGONISTA].
-	[PENSIERO_PROTAGONISTA], rispose [*PROTAGONISTA]. Ma il [*ANIMALE] gli disse [FRASE_MAGO_CATTIVO], e il nostro venne [RIDOTTO_COME].
+	[PENSIERO_PROTAGONISTA], rispose [*PROTAGONISTA]. [APPARIZIONE_MAGO_CATTIVO] \
+	    [MAGO_CATTIVO_PREPROD][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO] [MAGO_CATTIVO_APOSTROFA] [FRASE_MAGO_CATTIVO], e \
+	    [*PROTAGONISTA] venne a sua volta trasformato in un [ANIMALE] [ATTRIBUTO_ANTAGONISTA].
+	[PENSIERO_PROTAGONISTA], rispose [*PROTAGONISTA]. Ma il [*ANIMALE] gli disse [FRASE_MAGO_CATTIVO], e il nostro \
+	    venne [RIDOTTO_COME].
 
 PENSIERO_PROTAGONISTA
 	"\"Mi sembra un buon affare\"" | "\"Col cavolo\"" | "\"Era una vita che aspettavo una occasione così\""
@@ -675,21 +686,21 @@ PENSIERO_PROTAGONISTA
 	"\"Non vedevo l'ora!\"" | "\"Non aspettavo altro!\""
 
 APPARIZIONE_MAGO_CATTIVO
-	Al che si materializzò | Ed ecco che apparve | Da sotto un tombino uscì | Sbucò fuori da una nuvola di fumo | Apparve pero'
-	Si teletrasportò tuttavia | Venne però visto da
+	Al che si materializzò | Ed ecco che apparve | Da sotto un { pietrone | tombino | albero } uscì
+	Sbucò fuori da una nuvola di fumo | Apparve pero' |	Si teletrasportò tuttavia | Venne però visto da
 
 MAGO_CATTIVO_APOSTROFA
 	che gli disse: | che così lo apostrofò: | che gli rivolse il seguente ammonimento: | che tuonò:
 
 FRASE_MAGO_CATTIVO
-	"\"Ecco che la tua cattiveria viene allo scoperto\""
-	"\"Sei dunque così insensibile alle disgrazie altrui\""
-	"\"Sei proprio un infingardo\""
-	"\"Sei un farabutto e verrai punito\""
-	"\"Come puoi parlare in questo modo\""
-	"\"Sei la somma di tutto il male del mondo\""
-	"\"Sei la persona più spregevole che io abbia mai visto\""
-	"\"Sei veramente una persona pessima\""
+	"\"Ecco che la tua cattiveria viene allo scoperto!\""
+	"\"Sei dunque così insensibile alle disgrazie altrui?\""
+	"\"Sei proprio un infingardo!\""
+	"\"Sei un farabutto e verrai punito!\""
+	"\"Come puoi parlare in questo modo!\""
+	"\"Sei la somma di tutto il male del mondo!\""
+	"\"Sei la persona più spregevole che io abbia mai visto!\""
+	"\"Sei veramente una persona pessima!\""
 
 LIETO_FINE
 	I due si sposarono e vissero felici e contenti.
@@ -708,7 +719,7 @@ ATTIVITA_CRIMINOSE
 	maltrattare i poverelli
 
 FINACCIA
-	arrestati | condotti al patibolo | esiliati | incarcerati | giudicati colpevoli
+	arrestati | condotti al patibolo | esiliati | incarcerati | giudicati colpevoli | crocifissi | impalati | condannati
 
 MORALE
 	[PENSIERO_PROFONDO], [CONCLUSE] [CHIOSA].
@@ -723,6 +734,7 @@ PENSIERO_PROFONDO
 	"\"Cosa non tocca fare per campare\""
 	"\"Ride bene chi ride ultimo\""
 	"\"Non finisce qui, mi rivedrete\""
+	"\"Chi si contenta, gode\""
 
 CONCLUSE
 	pensò tra se e se
@@ -759,6 +771,7 @@ ATTRIBUTO_PRINCIPESSA
 
 NOME_PRINCIPESSA
 	Ermenegilda | Guendalina | Genoveffa | Bacheca | Rasperonzola | Guidrigilda | Brigitta | Beppina | Ortensia
+	Mafalda | Abelarda
 
 SVOLGIMENTO_PRINCIPESSA
 	Il nostro [*NOME_PROTAGONISTA] ovviamente se ne fregò e la poverina fece una finaccia.
@@ -772,7 +785,7 @@ LUOGO_2
 	mari | pianure | torbiere | paesi | città | castelli | ponti | locande | bettole | postacci
 
 LUOGO_3
-	un castello | un fortino | una grotta | un antro | un capanno | un paese
+	un castello | un fortino | una grotta | un antro | un capanno | un paese | una stamberga
 
 IN_CATTIVITA
 	prigioniera | come dama di compagnia | come sguattera | come capro espiatorio | rinchiusa in un torrione

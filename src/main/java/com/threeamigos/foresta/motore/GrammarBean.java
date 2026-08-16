@@ -95,14 +95,14 @@ import java.util.*;
  * That trimming only ever protects the edges of a single reference's own expansion: a
  * production reference that intentionally resolves to an empty string (e.g. an
  * alternative meant to represent "no extra text here") still leaves behind the literal
- * spaces the surrounding template text put on either side of the reference, producing a
- * double space, or, if the reference sits right before a punctuation mark at the end of a
- * sentence, a single stray space before that punctuation. To keep such deliberately-empty
- * alternatives usable without requiring every template to special-case them, any run of
- * two or more spaces left in the final produced text is automatically collapsed into a
- * single space, and any space left immediately before a punctuation mark is removed,
- * once, after every post-production substitution has been applied (see
- * {@link #postProduce}).
+ * spaces or tabs the surrounding template text put on either side of the reference,
+ * producing a run of two or more whitespace characters, or, if the reference sits right
+ * before a punctuation mark at the end of a sentence, a single stray space or tab before
+ * that punctuation. To keep such deliberately-empty alternatives usable without requiring
+ * every template to special-case them, any run of two or more spaces and/or tabs left in
+ * the final produced text is automatically collapsed into a single space, and any space
+ * or tab left immediately before a punctuation mark is removed, once, after every
+ * post-production substitution has been applied (see {@link #postProduce}).
  */
 public class GrammarBean {
 
@@ -138,6 +138,11 @@ public class GrammarBean {
 	 * Character escaping a {@link #QUOTE_CHAR} inside a raw literal span so it doesn't close it.
 	 */
 	private static final char ESCAPE_CHAR = '\\';
+	/**
+	 * Marker that, found as the very last character of a line, means the line is not
+	 * finished yet: it is stripped and the next line is appended in its place.
+	 */
+	private static final String LINE_CONTINUATION_MARKER = "\\";
 	/**
 	 * Prefix used to name productions auto-generated from inline alternation groups.
 	 */
@@ -180,14 +185,15 @@ public class GrammarBean {
 	 */
 	private static final String LINE_BREAK_REGEX = "\\n";
 	/**
-	 * Regex matching a run of two or more spaces, collapsed to one by {@link #postProduce}.
+	 * Regex matching a run of two or more spaces and/or tabs, collapsed to one space by
+	 * {@link #postProduce}.
 	 */
-	private static final String MULTIPLE_SPACES_REGEX = " {2,}";
+	private static final String MULTIPLE_SPACES_REGEX = "[ \t]{2,}";
 	/**
-	 * Regex matching one or more spaces immediately before a sentence/clause punctuation
-	 * mark, removed by {@link #postProduce}.
+	 * Regex matching one or more spaces and/or tabs immediately before a sentence/clause
+	 * punctuation mark, removed by {@link #postProduce}.
 	 */
-	private static final String SPACE_BEFORE_PUNCTUATION_REGEX = " +(?=[.,;:!?])";
+	private static final String SPACE_BEFORE_PUNCTUATION_REGEX = "[ \t]+(?=[.,;:!?])";
 	/**
 	 * Root production from which the generation process starts.
 	 */
@@ -295,7 +301,12 @@ public class GrammarBean {
 	 * Reads the grammar file line by line, populating {@link #productionsMap}: each
 	 * unindented line starts a new production (see {@link #handleProduction}), each
 	 * TAB/space-indented line adds children to the current production (see
-	 * {@link #handleChildren}). Comments and empty lines are skipped.
+	 * {@link #handleChildren}). Comments and empty lines are skipped. A line ending with
+	 * {@link #LINE_CONTINUATION_MARKER} is not yet finished: the marker is stripped and
+	 * the following line is appended in its place, repeating as needed until a line not
+	 * ending with the marker is found; reaching the end of the file while still expecting
+	 * a continuation is an error.
+	 * @throws InvalidGrammarException if the file ends with a dangling line continuation marker
 	 */
 	private void readSourceFileAndCreateProductionsMap(InputStream inputStream) throws IOException, InvalidGrammarException {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
@@ -305,6 +316,14 @@ public class GrammarBean {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				currentLineNumber++;
+				while (line.endsWith(LINE_CONTINUATION_MARKER)) {
+					String nextLine = reader.readLine();
+					if (nextLine == null) {
+						throw new InvalidGrammarException(LINE + currentLineNumber + ": Line continuation marker '" + LINE_CONTINUATION_MARKER + "' at end of file");
+					}
+					currentLineNumber++;
+					line = line.substring(0, line.length() - LINE_CONTINUATION_MARKER.length()) + nextLine;
+				}
 				if (line.isEmpty() || line.startsWith(COMMENT_PREFIX)) {
 					continue;
 				}
@@ -1090,9 +1109,10 @@ public class GrammarBean {
 	 * Applies every {@code pre:post} substitution from {@link #postProductions} to the
 	 * fully-expanded text, fixing natural-language issues arising from the mechanical
 	 * concatenation of production alternatives, then collapses any run of two or more
-	 * spaces left behind (typically by a deliberately-empty alternative) into one, and
-	 * finally strips any space left immediately before a punctuation mark (typically left
-	 * behind when a reference at the very end of a sentence expands to an empty string).
+	 * spaces and/or tabs left behind (typically by a deliberately-empty alternative) into
+	 * one space, and finally strips any space or tab left immediately before a punctuation
+	 * mark (typically left behind when a reference at the very end of a sentence expands
+	 * to an empty string).
 	 */
 	private String postProduce(String intermediateProduction) {
 		for (Map.Entry<String, String> entry : postProductions.entrySet()) {

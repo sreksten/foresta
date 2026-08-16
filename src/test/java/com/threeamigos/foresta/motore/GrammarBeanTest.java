@@ -103,6 +103,34 @@ class GrammarBeanTest {
         assertEquals("only", bean.produce().get(0));
     }
 
+    // ---- Line continuation (\) ----
+
+    @Test
+    void lineEndingWithBackslashIsJoinedWithNextLine() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\tHello \\\nworld\n");
+        assertEquals("Hello world", bean.produce().get(0));
+    }
+
+    @Test
+    void multipleConsecutiveContinuationsAreAllJoined() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\tHello \\\ncruel \\\nworld\n");
+        assertEquals("Hello cruel world", bean.produce().get(0));
+    }
+
+    @Test
+    void continuationAlsoWorksOnAProductionHeaderLine() throws Exception {
+        GrammarBean bean = new GrammarBean("RO\\\nOT\n\tx\n");
+        assertEquals("ROOT", bean.getRootNode());
+        assertEquals("x", bean.produce().get(0));
+    }
+
+    @Test
+    void danglingContinuationMarkerAtEndOfFileIsInvalid() {
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\tx \\\n"));
+        assertTrue(ex.getMessage().contains("continuation"));
+    }
+
     // ---- Inline alternation groups ----
 
     @Test
@@ -547,6 +575,37 @@ class GrammarBeanTest {
         // instead of surviving as a double space.
         GrammarBean bean = new GrammarBean("ROOT\n\tleft [EMPTY] right\nEMPTY\n\t\n");
         assertEquals("left right", bean.produce().get(0));
+    }
+
+    @Test
+    void aRunOfMoreThanTwoSpacesIsAlsoCollapsedToOne() throws Exception {
+        // Three consecutive empty references, each flanked by a literal space, leave behind
+        // a run of four spaces; MULTIPLE_SPACES_REGEX ("[ \t]{2,}") must collapse any such
+        // run, not just exactly two spaces, down to a single one.
+        GrammarBean bean = new GrammarBean("ROOT\n\ta [E1] [E2] [E3] b\nE1\n\t\nE2\n\t\nE3\n\t\n");
+        assertEquals("a b", bean.produce().get(0));
+    }
+
+    @Test
+    void aRunOfTabsIsAlsoCollapsedToOneSpace() throws Exception {
+        // The template embeds literal tabs (not just spaces) around [EMPTY]; a run of two
+        // consecutive tabs left behind by the empty reference must collapse to one space too.
+        GrammarBean bean = new GrammarBean("ROOT\n\ta\t[EMPTY]\tb\nEMPTY\n\t\n");
+        assertEquals("a b", bean.produce().get(0));
+    }
+
+    @Test
+    void aMixedRunOfSpacesAndTabsIsAlsoCollapsedToOneSpace() throws Exception {
+        // One literal space and one literal tab, back to back, straddling the empty
+        // reference: a "run of whitespace" is not just same-character repetition.
+        GrammarBean bean = new GrammarBean("ROOT\n\ta \t[EMPTY]\t b\nEMPTY\n\t\n");
+        assertEquals("a b", bean.produce().get(0));
+    }
+
+    @Test
+    void aTabBeforePunctuationIsAlsoRemoved() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\tleft\t[EMPTY].\nEMPTY\n\t\n");
+        assertEquals("left.", bean.produce().get(0));
     }
 
     @Test
