@@ -233,6 +233,14 @@ ISTANTE_PRECISO
     mentre parcheggiava la bicicletta
     poco prima di spegnere la luce per dormire
     mentre aspettava un messaggio che non arrivava
+    mentre sedeva sul water leggendo una rivista
+    durante una qualunque notte di insonnia
+    mentre raccoglieva i cocci di una tazza rotta
+    nel bel mezzo di uno starnuto
+    mentre s'accorgeva che mancava uno dei suoi calzini
+    poco dopo essersi svegliato con un'idea pazza
+    mentre maneggiava una nota delle tasse non pagata
+    in un momento di assoluta disperazione economica
 
 ISTANTE_PRECISO_OOP
     durante una videochiamata di lavoro
@@ -301,6 +309,11 @@ TEMPO_PROEMIO_SURREALISTA
     proprio mentre il mondo sembrava fermarsi
     in un pomeriggio di fine autunno
     durante la grande guerra delle tovaglie
+    quando i cani iniziarono a scrivere poesie incomprensibili
+    quando il formaggio si mise a urlare alla luna
+    quando i bottoni delle giacche dichiararono l'indipendenza dai vestiti
+    quando le carrozze iniziarono a muoversi di loro spontanea volontà
+    quando i funghi cominciarono a filosofeggiare sulla natura dell'esistenza
 
 ISTANTE_PRECISO_SURREALISTA
     mentre gli specchi raccontavano bugie
@@ -342,6 +355,11 @@ ISTANTE_PRECISO_SURREALISTA
     [NELL_ATTIMO_IN_CUI] una lumaca vinse una gara di velocità contro un fulmine
     [NELL_ATTIMO_IN_CUI] un pinguino si travestì da fenicottero
     [NELL_ATTIMO_IN_CUI] le sedie si misero in fila per ballare il valzer
+    [NELL_ATTIMO_IN_CUI] gli spaghetti dichiararono la guerra alle tagliatelle
+    [NELL_ATTIMO_IN_CUI] un paio di calzini organizzò una rivolta
+    [NELL_ATTIMO_IN_CUI] i botteghini iniziarono a vendere biglietti invisibili
+    [NELL_ATTIMO_IN_CUI] le maniglie delle porte si misero a fare versi di animali
+    [NELL_ATTIMO_IN_CUI] un termometro si innamorò di un barometro
 
 NELL_ATTIMO_IN_CUI
     nell'{ attimo | istante} { preciso | } in cui | Mentre | Allorché
@@ -359,9 +377,12 @@ LUOGO_PROEMIO
 	in un castello fatiscente | in una malfamata bettola | in una spelonca | in un antro da tregenda
 	a fianco dell'inceneritore municipale | in un posto dimenticato da Dio
 	in una galassia lontana lontana | sotto un tombino | in un bosco incantato
-	in una palude maledetta | in una torbiera | in un deposito di munizioni | dentro a una fogna
+	in una { torbiera | palude} { stregata | maledetta | } | in un deposito di munizioni | dentro a una fogna
 	all'estremo Sud | nel freddo Nord | nel misterioso Oriente | nell'Est | nel Paese dei Balocchi
 	nel Paese della Cuccagna | nel manicomio criminale | dietro al campo da calcio
+	in una caverna puzzolente abitata da briganti smidollati | dentro un carcere abbandonato
+	nelle fogne di una città che non aveva più nome | in un convento sconsacrato pieno di fantasmi
+	sotto le fondamenta di una chiesa | in una locanda dove il vino era sempre cattivo
 
 FATTO_PROEMIO
 	[VIVEVA] [CREAZIONE_PROTAGONISTA], [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA]
