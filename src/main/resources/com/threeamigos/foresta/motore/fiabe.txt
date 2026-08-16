@@ -42,15 +42,15 @@ FATTO_PROEMIO
 	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME], usava [ABITUDINE]
 
 CONOSCIUTO_COME
-	, detto [*SOPRANNOME_PROTAGONISTA]
-	, conosciuto anche come [*SOPRANNOME_PROTAGONISTA]
-	, altrimenti conosciuto come [*SOPRANNOME_PROTAGONISTA]
-	, altrimenti detto [*SOPRANNOME_PROTAGONISTA]
-	, che i nemici chiamavano [*SOPRANNOME_PROTAGONISTA]
-	, che tutto il paese conosceva come [*SOPRANNOME_PROTAGONISTA]
-	, che gli amici nominavano [*SOPRANNOME_PROTAGONISTA]
-	, che tutti conoscevano come [*SOPRANNOME_PROTAGONISTA]
-	, il cui nome era ormai dimenticato poiche' tutti lo chiamavano [*SOPRANNOME_PROTAGONISTA]
+    , detto [*SOPRANNOME_PROTAGONISTA]
+    , conosciuto anche come [*SOPRANNOME_PROTAGONISTA]
+    , altrimenti conosciuto come [*SOPRANNOME_PROTAGONISTA]
+    , altrimenti detto [*SOPRANNOME_PROTAGONISTA]
+    , che i nemici chiamavano [*SOPRANNOME_PROTAGONISTA]
+    , che tutto il paese conosceva come [*SOPRANNOME_PROTAGONISTA]
+    , che gli amici nominavano [*SOPRANNOME_PROTAGONISTA]
+    , che tutti conoscevano come [*SOPRANNOME_PROTAGONISTA]
+    , il cui nome era ormai dimenticato poiche' tutti lo chiamavano [*SOPRANNOME_PROTAGONISTA]
 
 ABITUDINE
 	scappare dalle guardie del re per [CRIMINE] | nascondersi dalla giustizia per [CRIMINE]
@@ -95,23 +95,23 @@ RACCONTO_P_1
 	Un giorno[MOTIVAZIONE] decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE].
 
 MOTIVAZIONE
-	, stufo delle continue angherie dei vicini, 
-	, stufo delle angherie dei suoi amici, 
-	, stufo delle angherie che le sue bestie gli riservavano, 
-	, stanco delle ristrettezze economiche in cui versava, 
-	, senza motivo apparente, 
-	, apparentemente per un colpo di sole, 
-	, probabilmente per via della primavera, 
-	, a causa del livello altissimo di testosterone, 
-	, a causa di alcuni affari andati male, 
-	, per sfuggire ai creditori che lo braccavano, 
-	, per fare qualcosa di diverso dal solito, 
-	, per migliorare le sue relazioni sociali, 
-	, per provare il brivido dell'imprevisto, 
-	, poiche' il cervello gli si era definitivamente spento, 
-	, siccome gli era scappato il cane, 
-	, stanco di non vincere mai i tornei di briscola, 
-	, stufo dell'ombra che i pini gettavano sulla sua casa, 
+    , stufo delle continue angherie dei vicini,
+    , stufo delle angherie dei suoi amici,
+    , stufo delle angherie che le sue bestie gli riservavano,
+    , stanco delle ristrettezze economiche in cui versava,
+    , senza motivo apparente,
+    , apparentemente per un colpo di sole,
+    , probabilmente per via della primavera,
+    , a causa del livello altissimo di testosterone,
+    , a causa di alcuni affari andati male,
+    , per sfuggire ai creditori che lo braccavano,
+    , per fare qualcosa di diverso dal solito,
+    , per migliorare le sue relazioni sociali,
+    , per provare il brivido dell'imprevisto,
+    , poiche' il cervello gli si era definitivamente spento,
+    , siccome gli era scappato il cane,
+    , stanco di non vincere mai i tornei di briscola,
+    , stufo dell'ombra che i pini gettavano sulla sua casa,
 	
 # Qui sopra c'e' una tabulazione che indica una motivazione vuota
 
@@ -126,7 +126,7 @@ DECISIONE_2
 	cercare la gloria | tentare la fortuna | sfidare le avversita'
 
 DELINQUERE
-	delinquere | rubare [OGGETTI_DA_RUBARE] | truffare [VITTIME] | rigare portiere di auto altrui
+    delinquere | rubare [OGGETTI_DA_RUBARE] | truffare [VITTIME] | rigare portiere di auto altrui
 	commettere i suoi crimini | derubare [VITTIME] | turlupinare [VITTIME]
 
 OGGETTI_DA_RUBARE
@@ -211,13 +211,13 @@ POSIZIONE_DISDICEVOLE
 	pronto a subire le angherie del destino | destinato a subire le angherie della sorte
 
 RACCONTO_P_3_DISSE
-	, disse tra se e se,
-	, borbotto',
-	, fu la sua prima impressione,
-	, gli venne subito in mente,
-	, ragiono' tra se e se,
-	, immagino',
-	, penso' ad una prima occhiata,
+    , disse tra se e se,
+    , borbotto',
+    , fu la sua prima impressione,
+    , gli venne subito in mente,
+    , ragiono' tra se e se,
+    , immagino',
+    , penso' ad una prima occhiata,
 
 RACCONTO_P_3_PENSANDO
 	pensando di allenarsi al tiro al bersaglio con il

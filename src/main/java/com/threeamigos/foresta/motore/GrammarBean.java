@@ -4,13 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 public class GrammarBean {
 
@@ -101,7 +95,7 @@ public class GrammarBean {
 		if (rootNode == null) {
 			rootNode = "[" + currentProduction + "]";
 		}
-		if (productionsMap.get(currentProduction) != null) {
+		if (productionsMap.containsKey(currentProduction)) {
 			throw new InvalidGrammarException(LINE + currentLineNumber + ": Production " + currentProduction + " already found.");
 		}
 		productionsMap.put(currentProduction, new ArrayList<>());
@@ -214,17 +208,13 @@ public class GrammarBean {
 	}
 
 	/**
-	 * Function to be called to produce a random story
-	 * @return a random story generated from the root node
+	 * Function to be called to produce a random text
+	 * @return a random text generated from the root node
 	 */
 	public List<String> produceImpl(String startNode) {
 		String firstResult = produceImpl(startNode, currentProductionsMap, globalFixedProductions);
 		String intermediateResult = postProduce(firstResult);
-		List<String> finalResult = new ArrayList<>();
-		for (String line : intermediateResult.split("\\n")) {
-			finalResult.add(line);
-		}
-		return finalResult;
+        return new ArrayList<>(Arrays.asList(intermediateResult.split("\\n")));
 	}
 
 	private String produceImpl(String production, Map<String, List<String>> superProductionsMap, Map<String, String> superFixedProductions) {

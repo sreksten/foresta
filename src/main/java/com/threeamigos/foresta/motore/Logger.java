@@ -5,11 +5,11 @@ public class Logger {
 	private Logger() {
 	}
 
-	public static final void log(String messaggio) {
+	public static void log(String messaggio) {
 		System.out.println(messaggio);
 	}
 	
-	public static final void log(Exception e) {
-		e.printStackTrace();
+	public static void log(Exception e) {
+		e.printStackTrace(System.err);
 	}
 }
