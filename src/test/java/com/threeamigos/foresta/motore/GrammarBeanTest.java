@@ -147,9 +147,10 @@ class GrammarBeanTest {
     void emptyInlineAlternationGroupProducesEmptyLeaf() throws Exception {
         // Both options between the braces are blank once trimmed; unlike before, this is no
         // longer invalid: it's kept as an empty-string leaf, aligning inline groups with how a
-        // trailing "|" on a regular production's children line is already handled.
+        // trailing "|" on a regular production's children line is already handled. The double
+        // space this empty leaf would otherwise leave behind is collapsed by postProduce.
         GrammarBean bean = new GrammarBean("ROOT\n\tSomething {   |  } vuoto\n");
-        assertEquals("Something  vuoto", bean.produce().get(0));
+        assertEquals("Something vuoto", bean.produce().get(0));
     }
 
     @Test
@@ -216,6 +217,59 @@ class GrammarBeanTest {
         GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
                 () -> new GrammarBean("ROOT\n\t{a|{b|c}\n"));
         assertTrue(ex.getMessage().contains("Missing '}'"));
+    }
+
+    // ---- Raw literal spans ----
+
+    @Test
+    void quotedBracesAreKeptAsLiteralTextInsteadOfBecomingAGroup() throws Exception {
+        // Without the quotes "{a}" would be parsed as an inline alternation group with a
+        // single option "a", collapsing to just "a"; the quotes must make the braces literal.
+        GrammarBean bean = new GrammarBean("ROOT\n\tvalue \"{a}\" here\n");
+        assertEquals("value {a} here", bean.produce().get(0));
+    }
+
+    @Test
+    void quotedPipeIsKeptAsLiteralTextInsteadOfSplitting() throws Exception {
+        // Without the quotes this line would be split into two alternatives ("x " and " y");
+        // the quotes must keep the whole thing as a single leaf.
+        GrammarBean bean = new GrammarBean("ROOT\n\t\"x | y\"\n");
+        assertEquals("x | y", bean.produce().get(0));
+    }
+
+    @Test
+    void escapedQuoteInsideSpanProducesLiteralQuoteWithoutClosingIt() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\t\"say \\\"hi\\\" now\"\n");
+        assertEquals("say \"hi\" now", bean.produce().get(0));
+    }
+
+    @Test
+    void unclosedQuoteAtEndOfLineIsInvalid() {
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\t\"never closed\n"));
+        assertTrue(ex.getMessage().contains("Missing closing '\"'"));
+    }
+
+    @Test
+    void quotedPipeInsideInlineGroupOptionIsKeptAsLiteralText() throws Exception {
+        // The group has two top-level options: the quoted "a|b" (a single literal option, its
+        // "|" must not split it) and the plain "c".
+        GrammarBean bean = new GrammarBean("ROOT\n\t{ \"a|b\" | c }\n");
+        Set<String> seen = new HashSet<>();
+        for (int i = 0; i < 60; i++) {
+            seen.add(bean.produce().get(0));
+        }
+        assertEquals(new HashSet<>(java.util.Arrays.asList("a|b", "c")), seen);
+    }
+
+    @Test
+    void unclosedQuoteInsideInlineGroupBodyIsInvalid() {
+        // The quote is never closed before end of line, so splitTopLevelAlternatives (run on the
+        // whole raw line, before the group's braces are ever matched) reports the missing quote —
+        // it never even gets to findMatchingClosingBrace/createInlineProduction.
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\t{ \"a | b }\n"));
+        assertTrue(ex.getMessage().contains("Missing closing '\"'"));
     }
 
     // ---- [Name] reference validity checks ----
@@ -486,6 +540,39 @@ class GrammarBeanTest {
         assertEquals("hello earth", bean.produce().get(0));
     }
 
+    @Test
+    void deliberatelyEmptyAlternativeDoesNotLeaveADoubleSpace() throws Exception {
+        // EMPTY's only alternative is the empty string; the literal spaces the ROOT
+        // template puts on either side of [EMPTY] must collapse into a single space
+        // instead of surviving as a double space.
+        GrammarBean bean = new GrammarBean("ROOT\n\tleft [EMPTY] right\nEMPTY\n\t\n");
+        assertEquals("left right", bean.produce().get(0));
+    }
+
+    @Test
+    void postProductionSubstitutionThatIntroducesAdjacentSpacesIsAlsoCollapsed() throws Exception {
+        // The substitution's own "post" text (" bar ") has a space on both sides, right
+        // where the surrounding literal text already has one too; the resulting double
+        // spaces must still be collapsed, not just ones present before substitutions run.
+        GrammarBean bean = new GrammarBean("ROOT\n\tx foo y\n", "foo: bar ");
+        assertEquals("x bar y", bean.produce().get(0));
+    }
+
+    @Test
+    void deliberatelyEmptyAlternativeBeforePunctuationDoesNotLeaveAStraySpace() throws Exception {
+        // EMPTY's only alternative is the empty string, sitting right before the final
+        // period; the literal space the ROOT template puts before [EMPTY] must be removed
+        // instead of surviving as a space immediately before the period.
+        GrammarBean bean = new GrammarBean("ROOT\n\tleft [EMPTY].\nEMPTY\n\t\n");
+        assertEquals("left.", bean.produce().get(0));
+    }
+
+    @Test
+    void spaceBeforePunctuationIsRemovedForEveryCommonMark() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\ta [EMPTY], b [EMPTY]; c [EMPTY]: d [EMPTY]! e [EMPTY]?\nEMPTY\n\t\n");
+        assertEquals("a, b; c: d! e?", bean.produce().get(0));
+    }
+
     // ---- multi-line output ----
 
     @Test
@@ -546,5 +633,228 @@ class GrammarBeanTest {
             }
         }
         assertTrue(sawBounce, "Expected at least one run to bounce between A and B before stopping");
+    }
+
+    // ---- Weighted alternatives ----
+
+    @Test
+    void weightTokenIsStrippedFromAlternativeText() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\t[^5] A|B\n");
+        bean.setProductionMode(ProductionModeEnum.FIRST);
+        assertEquals("A", bean.produce().get(0));
+    }
+
+    @Test
+    void weightTokenOnLastAlternativeIsAlsoStripped() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\tA|[^3] B\n");
+        bean.setProductionMode(ProductionModeEnum.LAST);
+        assertEquals("B", bean.produce().get(0));
+    }
+
+    @Test
+    void unmarkedAlternativesStillBehaveAsBeforeWhenMixedWithWeights() throws Exception {
+        // The unweighted alternatives ("B", "C") must remain reachable exactly as before,
+        // regardless of the presence of a weighted sibling ("A").
+        GrammarBean bean = new GrammarBean("ROOT\n\t[^5] A|B|C\n");
+        Set<String> seen = new HashSet<>();
+        for (int i = 0; i < 200; i++) {
+            seen.add(bean.produce().get(0));
+        }
+        assertEquals(new HashSet<>(java.util.Arrays.asList("A", "B", "C")), seen);
+    }
+
+    @Test
+    void zeroWeightIsInvalid() {
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\t[^0] A\n"));
+        assertTrue(ex.getMessage().contains("positive number"));
+    }
+
+    @Test
+    void negativeWeightIsInvalid() {
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\t[^-1] A\n"));
+        assertTrue(ex.getMessage().contains("positive number"));
+    }
+
+    @Test
+    void nonNumericWeightIsInvalid() {
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\t[^abc] A\n"));
+        assertTrue(ex.getMessage().contains("positive number"));
+    }
+
+    @Test
+    void unclosedWeightTokenIsInvalid() {
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\t[^5 A\n"));
+        assertTrue(ex.getMessage().contains("Missing ']'"));
+    }
+
+    @Test
+    void fractionalWeightTokenIsStrippedAndHonored() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\t[^2.5] A|B\n");
+        bean.setProductionMode(ProductionModeEnum.FIRST);
+        assertEquals("A", bean.produce().get(0));
+    }
+
+    @Test
+    void infiniteWeightIsInvalid() {
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\t[^Infinity] A\n"));
+        assertTrue(ex.getMessage().contains("positive number"));
+    }
+
+    @Test
+    void nanWeightIsInvalid() {
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\t[^NaN] A\n"));
+        assertTrue(ex.getMessage().contains("positive number"));
+    }
+
+    @Test
+    void heavilyWeightedAlternativeIsPickedProportionallyMoreOftenUnderRandomMode() throws Exception {
+        // "A" is 20x as likely as "B" under RANDOM mode; over enough trials the observed
+        // frequency ordering must reflect that, without asserting an exact ratio (to avoid
+        // flakiness).
+        GrammarBean bean = new GrammarBean("ROOT\n\t[^20] A|B\n");
+        int countA = 0;
+        int countB = 0;
+        for (int i = 0; i < 2000; i++) {
+            if ("A".equals(bean.produce().get(0))) {
+                countA++;
+            } else {
+                countB++;
+            }
+        }
+        assertTrue(countA > countB * 5, "Expected A to dominate B by a wide margin: A=" + countA + " B=" + countB);
+    }
+
+    @Test
+    void fractionalWeightSkewsRandomSelectionProportionally() throws Exception {
+        // "A" (weight 0.5) is a fifth as likely as "B" (weight 2.5) under RANDOM mode.
+        GrammarBean bean = new GrammarBean("ROOT\n\t[^0.5] A|[^2.5] B\n");
+        int countA = 0;
+        int countB = 0;
+        for (int i = 0; i < 2000; i++) {
+            if ("A".equals(bean.produce().get(0))) {
+                countA++;
+            } else {
+                countB++;
+            }
+        }
+        assertTrue(countB > countA * 2, "Expected B to dominate A by a wide margin: A=" + countA + " B=" + countB);
+    }
+
+    @Test
+    void weightedAlternativeInsideOneShotProductionIsRemovedAfterUse() throws Exception {
+        // X has two weighted alternatives; consuming one via FIRST mode must remove exactly
+        // that one (by reference, not by content), leaving the other one reachable afterward.
+        GrammarBean bean = new GrammarBean("ROOT\n\t[X]\nX$\n\t[^5] a|[^3] b\n");
+        bean.setProductionMode(ProductionModeEnum.FIRST);
+        assertEquals("a", bean.produce().get(0));
+        assertEquals("b", bean.produce().get(0));
+    }
+
+    @Test
+    void weightedOptionInsideInlineGroupIsHonored() throws Exception {
+        // The inline group becomes an on-the-fly production; its "x" option is heavily
+        // weighted relative to "y", and this must be honored without any special handling.
+        GrammarBean bean = new GrammarBean("ROOT\n\t{[^20] x|y}\n");
+        int countX = 0;
+        int countY = 0;
+        for (int i = 0; i < 2000; i++) {
+            if ("x".equals(bean.produce().get(0))) {
+                countX++;
+            } else {
+                countY++;
+            }
+        }
+        assertTrue(countX > countY * 5, "Expected x to dominate y by a wide margin: x=" + countX + " y=" + countY);
+    }
+
+    // ---- Descendant weight adjustment ----
+
+    @Test
+    void alternativeReferencingRicherProductionIsBoostedRelativeToPoorerOne() throws Exception {
+        // RICH has ten leaf alternatives (aggregate weight 10), POOR has one (aggregate
+        // weight 1); ROOT's two alternatives start out with the same base weight, but the
+        // one referencing RICH must end up boosted well above the one referencing POOR.
+        GrammarBean bean = new GrammarBean("ROOT\n\t[RICH]|[POOR]\nRICH\n\ta|b|c|d|e|f|g|h|i|j\nPOOR\n\tz\n");
+        int richCount = 0;
+        int poorCount = 0;
+        for (int i = 0; i < 3000; i++) {
+            if ("z".equals(bean.produce().get(0))) {
+                poorCount++;
+            } else {
+                richCount++;
+            }
+        }
+        assertTrue(richCount > poorCount * 2, "Expected RICH branch to dominate: rich=" + richCount + " poor=" + poorCount);
+    }
+
+    @Test
+    void grammarWithNoCrossReferencesIsUnaffectedByDescendantAdjustment() throws Exception {
+        // No alternative references another production, so findReferencedProductions
+        // returns nothing for every one of them: weights must stay exactly as declared.
+        GrammarBean bean = new GrammarBean("ROOT\n\t[^5] A|B|C\n");
+        int countA = 0;
+        int countOther = 0;
+        for (int i = 0; i < 2000; i++) {
+            if ("A".equals(bean.produce().get(0))) {
+                countA++;
+            } else {
+                countOther++;
+            }
+        }
+        // Same margin as heavilyWeightedAlternativeIsPickedProportionallyMoreOftenUnderRandomMode:
+        // A (weight 5) vs B+C (weight 1 each, total 2) is a 5:2 ratio, well above 2x.
+        assertTrue(countA > countOther * 2, "Expected A to dominate B/C: A=" + countA + " other=" + countOther);
+    }
+
+    @Test
+    void assignmentAndReferenceTokensDoNotCountAsDescendantReferences() throws Exception {
+        // "[k=X]" assigns a literal value and "[#k]" retrieves it; neither references a
+        // production, so they must not contribute to any descendant-weight boost, and
+        // must not be mistaken for an undefined-production reference either.
+        assertDoesNotThrow(() -> new GrammarBean("ROOT\n\t[k=X] [#k]\n"));
+    }
+
+    @Test
+    void fixedReferencesContributeToDescendantBoostLikePlainReferences() throws Exception {
+        // [*RICH] and [!RICH] must count RICH's aggregate weight toward the boost exactly
+        // like a plain [RICH] reference would.
+        GrammarBean beanGlobal = new GrammarBean("ROOT\n\t[*RICH]|[POOR]\nRICH\n\ta|b|c|d|e|f|g|h|i|j\nPOOR\n\tz\n");
+        GrammarBean beanLocal = new GrammarBean("ROOT\n\t[!RICH]|[POOR]\nRICH\n\ta|b|c|d|e|f|g|h|i|j\nPOOR\n\tz\n");
+        for (GrammarBean bean : java.util.Arrays.asList(beanGlobal, beanLocal)) {
+            int richCount = 0;
+            int poorCount = 0;
+            for (int i = 0; i < 3000; i++) {
+                if ("z".equals(bean.produce().get(0))) {
+                    poorCount++;
+                } else {
+                    richCount++;
+                }
+            }
+            assertTrue(richCount > poorCount * 2, "Expected RICH branch to dominate: rich=" + richCount + " poor=" + poorCount);
+        }
+    }
+
+    @Test
+    void selfRecursiveProductionAdjustmentDoesNotHang() {
+        assertTimeoutPreemptively(java.time.Duration.ofSeconds(2), () ->
+                new GrammarBean("LISTA\n\telemento [LISTA]|fine\n"));
+    }
+
+    @Test
+    void mutuallyRecursiveProductionsAdjustmentDoesNotHang() {
+        assertTimeoutPreemptively(java.time.Duration.ofSeconds(2), () ->
+                new GrammarBean("A\n\tx[B]|stop\nB\n\ty[A]|stop\n"));
+    }
+
+    @Test
+    void threeWayCyclicProductionsAdjustmentDoesNotHang() {
+        assertTimeoutPreemptively(java.time.Duration.ofSeconds(2), () ->
+                new GrammarBean("A\n\t[B]|stopA\nB\n\t[C]|stopB\nC\n\t[A]|stopC\n"));
     }
 }

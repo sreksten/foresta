@@ -1,32 +1,22 @@
 FIABA
 	[PROEMIO]\n[RACCONTO]
+	[RACCONTO_BREVE]
 
 PROEMIO
 	[TEMPO_PROEMIO], [LUOGO_PROEMIO], [FATTO_PROEMIO].
 
 TEMPO_PROEMIO
-	[TEMPO_PROEMIO_EPICO_FANTASTICO] | [TEMPO_PROEMIO_STORICO_CRONOLOGICO] | [TEMPO_PROEMIO_REALISTICO_CONTEMPORANEO]
-	[TEMPO_PROEMIO_SURREALISTA]
+	[TEMPO_PROEMIO_EPICO_FANTASTICO] | [TEMPO_PROEMIO_STORICO_CRONOLOGICO] | [TEMPO_PROEMIO_SURREALISTA]
 
 TEMPO_PROEMIO_EPICO_FANTASTICO
-    [QUANDO] { [QUANDO_AVVENIMENTI] | [QUANDO_AVVENIMENTI] e [QUANDO_AVVENIMENTI] }
-
-PJUPPA
+    [QUANDO] { [QUANDO_AVVENIMENTO_EPICO_FANTASTICO] | [QUANDO_AVVENIMENTO_EPICO_FANTASTICO] e [QUANDO_AVVENIMENTO_EPICO_FANTASTICO] }
+    [PRIMA_CHE] { [PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO] | [PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO] e [PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO] }
     { All'alba | Nella notte } dei tempi
-    [PRIMA_CHE] { il primo sole | la prima luna } { sorgesse | facesse capolino nel cielo }
-    [PRIMA_CHE] il silenzio fosse interrotto
-    [PRIMA_CHE] la prima parola fosse pronunciata
-    [PRIMA_CHE] i nomi delle cose fossero scelti
-    [PRIMA_CHE] il tempo imparasse a scorrere
-    [PRIMA_CHE] le prime mappe fossero disegnate sulle stelle
-    [PRIMA_CHE] la notte e il giorno fossero separati
-    [PRIMA_CHE] gli oracoli imparassero a mentire
-    [PRIMA_CHE] il primo castello fosse innalzato
     In un'epoca dimenticata { dagli uomini | da tutti | dal mondo | dalla storia | dal tempo | }
     Nell'era del ferro e del fuoco
     Ai confini del tempo
-    Molto, molto tempo fa
-    Molti, molti anni fa
+    Molto { , molto | } tempo fa
+    Molti { , molti | } anni fa
     Nelle notti di luna { piena | nuova }
     All'alba del mondo
     In { una primavera | un'estate | un autunno | un inverno } che non finiva mai
@@ -41,14 +31,10 @@ PJUPPA
 QUANDO
     Quando | { In un tempo | Nell'era | { Ai | Nei } tempi | Nell'epoca } in cui
 
-PRIMA_CHE
-    { Prima | Molto prima } che
-
-QUANDO_AVVENIMENTI$
-# Il carattere $ dopo il nome di QUANDO_AVVENIMENTI è un one-shot-marker.
+QUANDO_AVVENIMENTO_EPICO_FANTASTICO$
+# Il carattere $ dopo il nome di QUANDO_AVVENIMENTO è un one-shot-marker.
 # Significa che ogni alternativa scelta viene rimossa dal pool finché non si chiama reset():
-# una espansione non potrà mai generare due volte lo stesso risultato, ma il pool si esaurisce
-# nel tempo (nessun reset() viene chiamato su questo GrammarBean).
+# una espansione non potrà mai generare due volte lo stesso risultato, ma il pool si esaurisce nel tempo.
     le stelle erano ancora vicine alla terra
     il ferro era ancora morbido come l'argilla
     il silenzio regnava sul mondo
@@ -103,10 +89,30 @@ QUANDO_AVVENIMENTI$
     i regni erano protetti da giganti di pietra
     la { spada | magia } era l'unica legge
 
+PRIMA_CHE
+    { Prima | Molto prima | Parecchio prima } che
+
+PRIMA_CHE_AVVENIMENTO_EPICO_FANTASTICO$
+    { il primo sole | la prima luna } { sorgesse | facesse capolino nel cielo }
+    il silenzio fosse interrotto
+    la prima parola fosse pronunciata
+    i nomi delle cose fossero scelti
+    il tempo imparasse a scorrere
+    le prime mappe fossero disegnate { sulle stelle | }
+    la notte e il giorno fossero separati
+    gli oracoli imparassero a mentire
+    il primo castello fosse innalzato
+
 TEMPO_PROEMIO_STORICO_CRONOLOGICO
     Nel crepuscolo di un impero
+    Poco prima della caduta dell'impero
+    Durante il regno di una dinastia ormai estinta
+    Sotto il regno di un sovrano ormai dimenticato
+    Durante l'assedio di una città ormai scomparsa
     Mentre le grandi città { sorgevano | venivano costruite | venivano innalzate }
-    Negli anni della grande carestia
+    { Negli anni | All'indomani } della grande { carestia | guerra | depressione | pestilenza }
+    Durante la peste nera
+    Durante gli anni della ricostruzione
     Quando le carrozze ancora solcavano le strade
     Nell'ultimo anno di un secolo remoto
     In un'epoca di polvere e fumo
@@ -118,226 +124,226 @@ TEMPO_PROEMIO_STORICO_CRONOLOGICO
     Il secolo scorso
     Nell'anno Mille
     Cent'anni fa
-    All'indomani della grande guerra
+    Qualche tempo fa
+    Diversi anni fa
     In un'epoca di rivoluzioni
     Molti decenni prima che nascessero i nonni
-    Sotto il regno di un sovrano ormai dimenticato
+    Durante la corsa all'oro
+    Nell'epoca dei pionieri
+    Nell'epoca dei grandi navigatori
+    Al tempo delle crociate
+    Nell'epoca delle grandi cattedrali
+    Nell'epoca delle scoperte geografiche
+    Nell'epoca dei grandi imperi coloniali
+    Al tempo delle grandi migrazioni verso il nuovo mondo
+    Durante gli anni della grande depressione
+    Nell'epoca dei grandi concili
+    Al tempo delle invasioni barbariche
+    Al tempo delle grandi carovane lungo le vie del commercio
+    Al tempo delle prime università
+    Durante l'epoca delle grandi biblioteche
+    Al tempo delle corporazioni
+    Al tempo delle spedizioni polari
+    Durante il periodo delle grandi dighe e canali
+    Nell'epoca dei primi alfabeti
+    Nell'epoca dei primi orologi meccanici
+    Nell'epoca dei primi trattati di pace tra le nazioni
+    Nelle crepe dello spazio-tempo
+
+TEMPO_PROEMIO_STORICO_CRONOLOGICO_OOP
     Durante l'era industriale
     Durante la dominazione romana
     Nell'epoca dei lanzichenecchi
-    Al tempo delle grandi pestilenze
-    Durante la corsa all'oro
-    Nell'epoca dei pionieri
-    Poco prima della caduta dell'impero
-    Durante gli anni della ricostruzione
-    Nell'epoca dei grandi navigatori
-    Al tempo delle crociate
-    Durante il regno di una dinastia ormai estinta
     Durante l'epoca dei faraoni
     Nell'antica Grecia dei filosofi
     Al tempo della Repubblica Romana
-    Durante l'assedio di una città ormai scomparsa
-    Nell'epoca delle grandi cattedrali
     Al tempo dei primi mercanti veneziani
-    Durante la peste nera
-    Nell'epoca delle scoperte geografiche
     Al tempo dei conquistadores
     Durante la rivoluzione industriale
-    Nell'epoca dei grandi imperi coloniali
     Al tempo delle guerre napoleoniche
     Durante la belle époque
     Nell'epoca dei telegrafi e delle prime ferrovie
-    Al tempo delle grandi migrazioni verso il nuovo mondo
     Durante gli anni del proibizionismo
     Nell'epoca della corsa allo spazio
     Al tempo della guerra fredda
+    Al tempo delle grandi esposizioni universali
     Durante gli anni del boom economico
     Nell'epoca dei primi telefoni pubblici
     Al tempo delle dittature del secolo scorso
     Durante la caduta del muro di Berlino
     Nell'epoca dei primi computer
-    Al tempo delle grandi esposizioni universali
-    Durante gli anni della grande depressione
     Nell'epoca dei pionieri del West
     Al tempo delle repubbliche marinare
-    Durante il periodo delle signorie italiane
-    Nell'epoca dei grandi concili
-    Al tempo delle invasioni barbariche
     Durante l'epoca giustinianea
-    Nell'epoca dei vichinghi
     Al tempo dei primi imperatori cinesi
-    Durante la dinastia Tudor
-    Nell'epoca dei samurai
-    Al tempo delle grandi carovane lungo la via della seta
     Durante gli anni delle riforme protestanti
-    Nell'epoca dell'Illuminismo
-    Al tempo delle prime università
     Durante la costruzione delle grandi piramidi
-    Nell'epoca dei primi alfabeti
     Al tempo delle guerre puniche
-    Durante l'epoca delle grandi biblioteche antiche
-    Nell'epoca dei primi orologi meccanici
-    Al tempo delle corporazioni medievali
-    Durante gli anni delle grandi carestie europee
+    Durante la dinastia Tudor
+    Nell'epoca dei vichinghi
+    Nell'epoca dei samurai
+    Nell'epoca dell'Illuminismo
     Nell'epoca dei primi giornali stampati
-    Al tempo delle spedizioni polari
-    Durante il periodo delle grandi dighe e canali
-    Nell'epoca dei primi trattati di pace tra le nazioni
+    Durante il periodo delle signorie italiane
+    Durante il lockdown mondiale
 
-TEMPO_PROEMIO_REALISTICO_CONTEMPORANEO
-    Quando i mulini erano bianchi
+ISTANTE_PRECISO
     Un lunedì mattina qualunque
+    Poco dopo la sveglia del lunedì
+    Un martedì come tanti altri
+    Un mercoledì sera come tanti
+    Nell'ora di cena di una qualunque domenica
+    Durante una qualunque serata d'inverno
+    Durante un fine settimana di pioggia
+    Durante un pomeriggio piovoso
+    Durante una qualunque mattina di pioggia
+    In un pomeriggio di fine autunno
+    Durante un temporale estivo
     Mentre la pioggia batteva contro i vetri
     Proprio mentre il mondo sembrava fermarsi
-    In un pomeriggio di fine autunno
     Pochi istanti prima del disastro
-    Durante un'eclissi improvvisa
-    Mentre la città dormiva ancora
-    In un momento di assoluta quiete
-    Qualche tempo fa
-    Diversi anni fa
-    Durante le vacanze estive
-    Durante le vacanze natalizie
-    A Pasqua
-    Non più tardi della settimana scorsa
-    Durante il lockdown mondiale
-    Il mese scorso
     Pochi istanti prima del tramonto
-    Un martedì come tanti altri
+    Durante un'eclissi improvvisa
+    Mentre il paese dormiva ancora
+    In un momento di assoluta quiete
+    Non più tardi della settimana scorsa
+    Il mese scorso
     Durante la pausa pranzo
-    Mentre il traffico rendeva tutti nervosi
     Nell'ora di punta
-    Durante un weekend di pioggia
     Poco prima di andare a dormire
-    Durante una noiosa riunione di lavoro
-    Mentre aspettava l'autobus
-    Il giorno dopo il compleanno
-    Durante una qualunque serata d'inverno
-    Un mercoledì sera come tanti
-    Durante la fila alla cassa del supermercato
+    Il giorno dopo il suo compleanno
     Mentre aspettava il turno dal medico
-    Nell'intervallo di una partita di calcio
-    Durante un temporale estivo
     Poco dopo la pausa caffè
-    Mentre scorreva distrattamente il telefono
-    Durante un ingorgo sull'autostrada
-    Nell'attesa di un treno in ritardo
     Mentre riordinava la cantina
     Durante una cena tra amici finita male
     Poco prima della chiusura dei negozi
-    Mentre guardava la partita in televisione
     Durante un trasloco improvvisato
-    Nell'attesa dei risultati di un esame
     Mentre faceva la spesa settimanale
-    Durante una videochiamata di lavoro
-    Poco dopo la sveglia del lunedì
-    Mentre aspettava la pizza a domicilio
     Durante una gita fuori porta
-    Nell'ora di cena di una qualunque domenica
-    Mentre cercava parcheggio in centro
     Durante un pomeriggio di compiti scolastici
-    Poco prima di un colloquio di lavoro
     Mentre aspettava che l'acqua bollisse
     Durante una passeggiata al parco
+    Poco dopo il rientro dalle vacanze
+    Mentre faceva jogging nel quartiere
+    Durante un pranzo di famiglia
+    Poco dopo un litigio con il vicino
+    Mentre cercava le chiavi di casa
+    Nell'attesa che il caffè fosse pronto
+    Mentre parcheggiava la bicicletta
+    Poco prima di spegnere la luce per dormire
+    Mentre aspettava un messaggio che non arrivava
+
+ISTANTE_PRECISO_OOP
+    Durante una videochiamata di lavoro
+    Durante una noiosa riunione di lavoro
+    Durante le vacanze estive
+    Durante le vacanze natalizie
+    A Pasqua
+    Mentre il traffico rendeva tutti nervosi
+    Mentre aspettava l'autobus
+    Durante la fila alla cassa del supermercato
+    Nell'intervallo di una partita di calcio
+    Mentre scorreva distrattamente il telefono
+    Durante un ingorgo sull'autostrada
+    Nell'attesa di un treno in ritardo
+    Mentre guardava la partita in televisione
+    Nell'attesa dei risultati di un esame
+    Mentre aspettava la pizza a domicilio
+    Mentre cercava parcheggio in centro
+    Poco prima di un colloquio di lavoro
     Nell'attesa del risultato di una partita
     Mentre controllava la posta elettronica
     Durante una riunione di condominio
-    Poco dopo il rientro dalle vacanze
-    Mentre faceva jogging nel quartiere
-    Durante un pomeriggio piovoso in ufficio
+    Nell'attesa di un aggiornamento software
     In attesa dell'ascensore
     Mentre guardava le notizie della sera
     Durante un allenamento in palestra
     Poco prima dell'inizio dei saldi
     Mentre aspettava il risultato di un tampone
     Durante una fila alla posta
-    Nell'attesa di un aggiornamento software
     Mentre pagava le bollette online
-    Durante un pranzo di famiglia
-    Poco dopo un litigio con il vicino
-    Mentre cercava le chiavi di casa
     Durante una serata di zapping tra i canali
-    Nell'attesa che il caffè fosse pronto
-    Mentre parcheggiava la bicicletta
     Durante un giorno di smart working
-    Poco prima di spegnere la luce per dormire
-    Mentre aspettava un messaggio che non arrivava
-    Durante una qualunque mattina di pioggia
 
 TEMPO_PROEMIO_SURREALISTA
+    Quando i mulini erano bianchi
+    Quando i gatti governavano le città
+    Quando le ombre decisero di staccarsi dai corpi
+    Quando le ombre camminavano da sole
+    Quando le nuvole erano fatte di zucchero filato
+    Quando le nuvole iniziarono a giocare a scacchi
+    Quando le nuvole si misero a fare capriole
+    Quando le nuvole iniziarono a distribuire caramelle
+    Quando le nuvole organizzarono una gara di nuoto
+    Quando gli asini volavano
+    Quando le sedie decisero di scioperare
+    Quando i cappelli iniziarono a pensare da soli
+    Quando le porte si misero a cantare
+    Quando le lumache vinsero la maratona
+    Quando le ombre litigarono per un parcheggio
+    Quando i libri iniziarono a leggersi da soli
+    Quando le formiche organizzarono un concerto rock
+    Quando gli orologi si misero a correre indietro per gioco
+    Quando le tazze da tè si misero a ballare il tango
+    Quando le biciclette iniziarono a correre senza nessuno sopra
+    Quando le patate decisero di governare l'orto
+    Quando le galline organizzarono un'elezione
+    Quando le sveglie iniziarono a suonare canzoni napoletane
+    Quando le zanzare organizzarono un sindacato
+    Quando gli ombrelli iniziarono a fare previsioni del tempo
+    Quando un cammello imparò a nuotare meglio di un pesce
+    Quando i broccoli dichiararono guerra alle carote
+    Quando le nuvole si travestirono da pecore
+    Mentre la luna giocava a nascondino con le nuvole
+    Mentre i pesci imparavano a volare
     Un giorno qualunque
     Proprio mentre il mondo sembrava fermarsi
     In un pomeriggio di fine autunno
-    Quando i gatti governavano le città
-    Mentre il tè era ancora caldo
-    In un momento di estrema confusione
-    Quando le ombre decisero di staccarsi dai corpi
-    Durante la grande guerra dei tovaglie
-    Mentre il tempo decideva di fare un pisolino
-    Quando le nuvole erano fatte di zucchero filato
-    In un secondo di pura assurdità
-    Nelle crepe dello spaziotempo
-    Quando gli asini volavano
-    Quando le ombre camminavano da sole
-    Mentre i pesci imparavano a volare
-    Nell'istante in cui il tempo si annodò su se stesso
-    Quando le sedie decisero di scioperare
-    Mentre la luna giocava a nascondino con le nuvole
-    In un giorno che il calendario non ricordava
-    Quando i cappelli iniziarono a pensare da soli
+    Durante la grande guerra delle tovaglie
+
+ISTANTE_PRECISO_SURREALISTA
     Mentre gli specchi raccontavano bugie
-    Nell'attimo in cui due più due fece cinque
-    Quando le porte si misero a cantare
-    Quando le lumache vinsero la maratona
-    Mentre i calzini scomparivano in un'altra dimensione
-    Nell'istante in cui i semafori si misero a discutere
-    Quando le nuvole iniziarono a giocare a scacchi
     Mentre il tè cadeva verso l'alto
-    Nell'attimo in cui i gatti impararono a suonare il pianoforte
-    Quando le ombre litigarono per un parcheggio
     Mentre le scarpe decisero di andare a passeggio da sole
-    Nell'istante in cui la luna si stancò di essere rotonda
-    Quando i libri iniziarono a leggersi da soli
     Mentre le pentole intonavano un coro
-    Nell'attimo in cui un elefante volò più leggero di una piuma
-    Quando le formiche organizzarono un concerto rock
-    Mentre le nuvole si travestirono da pecore
-    Nell'istante in cui i quadri iniziarono a chiacchierare tra loro
-    Quando gli orologi si misero a correre indietro per gioco
-    Mentre le rane insegnavano geografia ai pesci
-    Nell'attimo in cui il sole decise di prendersi un giorno di riposo
-    Quando le tazze da tè si misero a ballare il tango
     Mentre le foglie cadevano verso il cielo
-    Nell'istante in cui un cactus imparò a cantare l'opera
-    Quando le biciclette iniziarono a correre senza nessuno sopra
+    Mentre le rane insegnavano geografia ai pesci
     Mentre le stelle si presero una pausa dal brillare
-    Nell'attimo in cui i cappotti si scambiarono i proprietari da soli
-    Quando le patate decisero di governare l'orto
     Mentre gli ombrelli protestavano contro il sole
-    Nell'istante in cui un gatto si laureò in matematica
-    Quando le nuvole si misero a fare capriole
     Mentre le lavagne scrivevano da sole compiti sbagliati
-    Nell'attimo in cui il vento si dimenticò come soffiare
-    Quando le galline organizzarono un'elezione
-    Mentre i tappeti volanti chiedevano un aumento
-    Nell'istante in cui due ombre si scambiarono i corpi
-    Quando le sveglie iniziarono a suonare canzoni napoletane
     Mentre un pinguino tentò la scalata dell'Everest in pantofole
-    Nell'attimo in cui le porte iniziarono a bussare da sole
-    Quando le zanzare organizzarono un sindacato
-    Mentre le stagioni si scambiarono i vestiti per errore
-    Nell'istante in cui un frigorifero si innamorò di un forno
-    Quando le nuvole iniziarono a distribuire caramelle
-    Mentre i gomitoli di lana tessevano da soli sciarpe per i lampioni
-    Nell'attimo in cui una lumaca vinse una gara di velocità contro un fulmine
-    Quando le ombrelle iniziarono a fare previsioni del tempo
-    Mentre un cammello imparò a nuotare meglio di un pesce
-    Nell'istante in cui le sedie si misero in fila per ballare il valzer
-    Quando i broccoli dichiararono guerra alle carote
+    Mentre i tappeti volanti chiedevano un aumento
     Mentre le stelle cadenti chiedevano indicazioni stradali
-    Nell'attimo in cui un pinguino si travestì da fenicottero
-    Quando le nuvole organizzarono una gara di nuoto
+    Mentre le stagioni si scambiarono i vestiti per errore
     Mentre un orologio a cucù smise di lavorare per andare in ferie
+    Mentre i gomitoli di lana tessevano da soli sciarpe per i lampioni
+    In un momento di estrema confusione
+    In un secondo di pura assurdità
+    In un giorno che il calendario non ricordava
+    [NELL_ATTIMO_IN_CUI] il tempo decise di fare un pisolino
+    [NELL_ATTIMO_IN_CUI] il tè era ancora caldo
+    [NELL_ATTIMO_IN_CUI] i calzini scomparirono in un'altra dimensione
+    [NELL_ATTIMO_IN_CUI] il tempo si annodò su se stesso
+    [NELL_ATTIMO_IN_CUI] due più due fece cinque
+    [NELL_ATTIMO_IN_CUI] i semafori si misero a discutere
+    [NELL_ATTIMO_IN_CUI] i gatti impararono a suonare il pianoforte
+    [NELL_ATTIMO_IN_CUI] la luna si stancò di essere rotonda
+    [NELL_ATTIMO_IN_CUI] un elefante volò più leggero di una piuma
+    [NELL_ATTIMO_IN_CUI] i quadri iniziarono a chiacchierare tra loro
+    [NELL_ATTIMO_IN_CUI] il sole decise di prendersi un giorno di riposo
+    [NELL_ATTIMO_IN_CUI] un cactus imparò a cantare l'opera
+    [NELL_ATTIMO_IN_CUI] i cappotti si scambiarono i proprietari da soli
+    [NELL_ATTIMO_IN_CUI] un gatto si laureò in matematica
+    [NELL_ATTIMO_IN_CUI] il vento si dimenticò come soffiare
+    [NELL_ATTIMO_IN_CUI] due ombre si scambiarono i corpi
+    [NELL_ATTIMO_IN_CUI] le porte iniziarono a bussare da sole
+    [NELL_ATTIMO_IN_CUI] un frigorifero si innamorò di un forno
+    [NELL_ATTIMO_IN_CUI] una lumaca vinse una gara di velocità contro un fulmine
+    [NELL_ATTIMO_IN_CUI] un pinguino si travestì da fenicottero
+    [NELL_ATTIMO_IN_CUI] le sedie si misero in fila per ballare il valzer
+
+NELL_ATTIMO_IN_CUI
+    Nell'{ attimo | istante} { preciso | } in cui | Mentre | Allorché
 
 GIORNO_DELLA_SETTIMANA
     lunedì | martedì | mercoledì | giovedì | venerdì | sabato | domenica
@@ -357,26 +363,26 @@ LUOGO_PROEMIO
 	nel Paese della Cuccagna | nel manicomio criminale | dietro al campo da calcio
 
 FATTO_PROEMIO
-	[VIVEVA] [*NOME_PROTAGONISTA] [CONOSCIUTO_COME]
-	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME], si allenava al salto del pasto
-	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME], si allenava alla corsa campestre contro le guardie del re per [CRIMINE]
-	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME], era ricercato per [CRIMINE]
-	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME], era solito [ABITUDINE]
-	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME], usava [ABITUDINE]
+	[VIVEVA] [*NOME_PROTAGONISTA] [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA]
+	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], si allenava al salto del pasto
+	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], si allenava alla corsa campestre contro le guardie del re per [CRIMINE]
+	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], era ricercato per [CRIMINE]
+	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], era solito [ABITUDINE]
+	[*NOME_PROTAGONISTA] [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA], usava [ABITUDINE]
 
 VIVEVA
     viveva | abitava | dimorava | usava riposare le sue stanche ossa | si nascondeva | si rendeva latitante
 
 CONOSCIUTO_COME
-    , detto [*SOPRANNOME_PROTAGONISTA]
-    , conosciuto anche come [*SOPRANNOME_PROTAGONISTA]
-    , altrimenti conosciuto come [*SOPRANNOME_PROTAGONISTA]
-    , altrimenti detto [*SOPRANNOME_PROTAGONISTA]
-    , che i nemici chiamavano [*SOPRANNOME_PROTAGONISTA]
-    , che tutto il paese conosceva come [*SOPRANNOME_PROTAGONISTA]
-    , che gli amici nominavano [*SOPRANNOME_PROTAGONISTA]
-    , che tutti conoscevano come [*SOPRANNOME_PROTAGONISTA]
-    , il cui nome era ormai dimenticato poiché tutti lo chiamavano [*SOPRANNOME_PROTAGONISTA]
+    , detto
+    , conosciuto anche come
+    , altrimenti conosciuto come
+    , altrimenti detto
+    , che i nemici chiamavano
+    , che tutto il paese conosceva come
+    , che gli amici nominavano
+    , che tutti conoscevano come
+    , il cui nome era ormai dimenticato poiché tutti lo chiamavano
 
 ABITUDINE
 	scappare dalle guardie del re per [CRIMINE] | nascondersi dalla giustizia per [CRIMINE]
@@ -400,10 +406,8 @@ PROTAGONISTA
 	[*NOME_PROTAGONISTA] | [*SOPRANNOME_PROTAGONISTA]
 
 NOME_PROTAGONISTA
-	Romy Jona | Luca Viola | Massimo Capanni | Massimiliano Falchi | Andrea [STOPPIONI] | il Vox
-
-STOPPIONI
-	Stoppioni | Scoppioni | Scorpioni | Scarponi
+	Romy Jona | Luca Viola | Massimo Capanni | Massimiliano Falchi
+	Andrea { Stoppioni | Scoppioni | Scorpioni | Scarponi } | il Vox
 
 SOPRANNOME_PROTAGONISTA
 	lo sventrapapere | il torvo | il losco | il Porco Gordo | il Massimo Fattore | il furtivendolo
@@ -417,18 +421,20 @@ RACCONTO
 	[RACCONTO_P_1] [RACCONTO_P_2] [RACCONTO_P_6]
 	[RACCONTO_P_1] [RACCONTO_P_2] [RACCONTO_P_7]
 
+RACCONTO_BREVE
+    { [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] } [*NOME_PROTAGONISTA] [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA] [MOTIVAZIONE] decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE]. [RACCONTO_P_2] [RACCONTO_P_3] [RACCONTO_P_4] [RACCONTO_P_5] [MORALE]
+    { [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] } [*NOME_PROTAGONISTA] [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA] [MOTIVAZIONE] decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE]. [RACCONTO_P_2] [RACCONTO_P_6]
+    { [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] } [*NOME_PROTAGONISTA] [CONOSCIUTO_COME] [*SOPRANNOME_PROTAGONISTA] [MOTIVAZIONE] decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE]. [RACCONTO_P_7]
+
 RACCONTO_P_1
-	Un giorno[MOTIVAZIONE] decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE].
+	{ [ISTANTE_PRECISO] | [ISTANTE_PRECISO_SURREALISTA] | Un giorno }[MOTIVAZIONE] decise di [DECISIONE_1] e [DECISIONE_2] [DECISIONE_DOVE].
 
 MOTIVAZIONE
-    , stufo delle continue angherie dei vicini,
-    , stufo delle angherie dei suoi amici,
-    , stufo delle angherie che le sue bestie gli riservavano,
+    , stufo delle { continue | } angherie { dei { vicini | suoi amici } | che le sue bestie gli riservavano },
     , stufo delle { barzellette | dicerie | maldicenze | brutte cose che si dicevano } su di lui,
     , stanco delle ristrettezze economiche in cui versava,
     , senza motivo apparente,
-    , apparentemente per un colpo di sole,
-    , probabilmente per via della primavera,
+    , { apparentemente | probabilmente } per via { della primavera | del caldo estivo | di un colpo di sole },
     , a causa del livello altissimo di testosterone,
     , a causa di alcuni affari andati male,
     , per sfuggire ai creditori che lo braccavano,
@@ -438,9 +444,8 @@ MOTIVAZIONE
     , poiché il cervello gli si era definitivamente spento,
     , siccome gli era scappato il { cane | gatto | pappagallo | canarino | pesce rosso },
     , stanco di non vincere mai i tornei di { briscola | scopa | scopone scientifico | poker },
-    , stufo dell'ombra che { i pini | i lecci | gli alberi | gli abeti } gettavano sulla sua casa,
-
-# Qui sopra c'è una tabulazione che indica una motivazione vuota
+    , stufo dell'ombra che { i pini | i lecci | gli alberi | gli abeti | i pioppi } gettavano sulla sua casa, |
+# Il carattere pipe sopra indica una motivazione vuota
 
 DECISIONE_1
 	andare in culo a tutti | levarsi da tre passi | levarsi dai cosiddetti | prendere armi e bagagli
@@ -450,7 +455,7 @@ DECISIONE_1
 DECISIONE_2
 	andare a [DELINQUERE] | andare a cercar [QUALCOSA]
 	andare a caccia di cervi del re | andare a caccia di gloria
-	cercare la gloria | tentare la fortuna | sfidare le avversità
+	cercare gloria | tentare la fortuna | sfidare le avversità
 
 DELINQUERE
     delinquere | rubare [OGGETTI_DA_RUBARE] | truffare [VITTIME] | rigare portiere di auto altrui
@@ -473,7 +478,7 @@ DECISIONE_DOVE
 	dove il sole sorge | ad Ovest | a quel paese
 
 RACCONTO_P_2
-	Fu cosi' che [RACCONTO_P_2_QUANDO] si mise in cammino, [RACCONTO_P_2_FORNITO_DI] un [*EQUIPAGGIAMENTO].
+	Fu così che [RACCONTO_P_2_QUANDO] si mise in cammino, [RACCONTO_P_2_FORNITO_DI] un [*EQUIPAGGIAMENTO].
 
 RACCONTO_P_2_QUANDO
 	appena sorse il sole | all'alba | a mezzogiorno | al tramonto | all'inizio della primavera | all'inizio dell'estate
@@ -520,17 +525,17 @@ ATTRIBUTO_ANTAGONISTA
 	reietto | quantomeno equivoco | con la cresta | con le corna | dalla lingua biforcuta
 
 PENSIERO
-	"Sarà dura liberarsi di questo [*ANTAGONISTA]"
-	"Che incontro fortunato!"
-	"Quale fortuna inaspettata"
-	"Questo e' il cacio sui maccheroni, anzi, il [*ANTAGONISTA] [POSIZIONE_DISDICEVOLE]"
-	"Non aspettavo altro!"
-	"Che colpo di fortuna!"
-	"La sorte mi è benigna"
-	"La sorte mi è avversa"
-	"Che triste destino"
-	"Che incontro inaspettato!"
-	"Qual buon vento lo porterà?"
+	"\"Sarà dura liberarsi di questo [*ANTAGONISTA]\""
+	"\"Che incontro fortunato!\""
+	"\"Quale fortuna inaspettata\""
+	"\"Questo e' il cacio sui maccheroni, anzi, il [*ANTAGONISTA] [POSIZIONE_DISDICEVOLE]\""
+	"\"Non aspettavo altro!\""
+	"\"Che colpo di fortuna!\""
+	"\"La sorte mi è benigna\""
+	"\"La sorte mi è avversa\""
+	"\"Che triste destino\""
+	"\"Che incontro inaspettato!\""
+	"\"Qual buon vento lo porterà?\""
 
 POSIZIONE_DISDICEVOLE
 	nella brace | con la faccia sotto le mie scarpe | con i segni delle mie mani sul suo grugno
@@ -603,7 +608,7 @@ RACCONTO_P_6
 	[RACCONTO_ECCO_CHE] un [*ANIMALE] [*ATTRIBUTO_ANTAGONISTA]. [BACIAMI] [REAZIONE_PROTAGONISTA]
 
 BACIAMI
-	"Sono stato trasformato in un [*ANIMALE] da [MAGO_CATTIVO_PREPROD][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO] perché [MOTIVAZIONE_TRASFORMAZIONE] ma se [BUONA_AZIONE] [MI_VEDRAI_TORNARE] un [PERSONAGGIO] [ATTRIBUTO_ANTAGONISTA]."
+	"\"Sono stato trasformato in un [*ANIMALE] da [MAGO_CATTIVO_PREPROD][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO] perché [MOTIVAZIONE_TRASFORMAZIONE] ma se [BUONA_AZIONE] [MI_VEDRAI_TORNARE] un [PERSONAGGIO] [ATTRIBUTO_ANTAGONISTA].\""
 
 MAGO_CATTIVO_PREPROD
 	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Mago Merlino]
@@ -664,9 +669,10 @@ REAZIONE_PROTAGONISTA
 	[PENSIERO_PROTAGONISTA], rispose [*PROTAGONISTA]. Ma il [*ANIMALE] gli disse [FRASE_MAGO_CATTIVO], e il nostro venne [RIDOTTO_COME].
 
 PENSIERO_PROTAGONISTA
-	"Mi sembra un buon affare" | "Col cavolo" | "Era una vita che aspettavo una occasione così" | "Certo, come no?"
-	"Ma ovviamente!" | "E' sempre stato il mio sogno!" | "Lo farò subito!" | "E' il sogno della mia vita!"
-	"Non vedevo l'ora!" | "Non aspettavo altro!"
+	"\"Mi sembra un buon affare\"" | "\"Col cavolo\"" | "\"Era una vita che aspettavo una occasione così\""
+	"\"Certo, come no?\""
+	"\"Ma ovviamente!\"" | "\"E' sempre stato il mio sogno!\"" | "\"Lo farò subito!\"" | "\"E' il sogno della mia vita!\""
+	"\"Non vedevo l'ora!\"" | "\"Non aspettavo altro!\""
 
 APPARIZIONE_MAGO_CATTIVO
 	Al che si materializzò | Ed ecco che apparve | Da sotto un tombino uscì | Sbucò fuori da una nuvola di fumo | Apparve pero'
@@ -676,14 +682,14 @@ MAGO_CATTIVO_APOSTROFA
 	che gli disse: | che così lo apostrofò: | che gli rivolse il seguente ammonimento: | che tuonò:
 
 FRASE_MAGO_CATTIVO
-	"Ecco che la tua cattiveria viene allo scoperto"
-	"Sei dunque così insensibile alle disgrazie altrui"
-	"Sei proprio un infingardo"
-	"Sei un farabutto e verrai punito"
-	"Come puoi parlare in questo modo"
-	"Sei la somma di tutto il male del mondo"
-	"Sei la persona più spregevole che io abbia mai visto"
-	"Sei veramente una persona pessima"
+	"\"Ecco che la tua cattiveria viene allo scoperto\""
+	"\"Sei dunque così insensibile alle disgrazie altrui\""
+	"\"Sei proprio un infingardo\""
+	"\"Sei un farabutto e verrai punito\""
+	"\"Come puoi parlare in questo modo\""
+	"\"Sei la somma di tutto il male del mondo\""
+	"\"Sei la persona più spregevole che io abbia mai visto\""
+	"\"Sei veramente una persona pessima\""
 
 LIETO_FINE
 	I due si sposarono e vissero felici e contenti.
@@ -708,15 +714,15 @@ MORALE
 	[PENSIERO_PROFONDO], [CONCLUSE] [CHIOSA].
 
 PENSIERO_PROFONDO
-	"Non tutto il male vien per nuocere"
-	"Tanto va la gatta al lardo che ci lascia lo zampino"
-	"Non esistono più le mezze stagioni"
-	"Piove, governo ladro"
-	"Chi pecora si fa il lupo se la mangia"
-	"Che mondo"
-	"Cosa non tocca fare per campare"
-	"Ride bene chi ride ultimo"
-	"Non finisce qui, mi rivedrete"
+	"\"Non tutto il male vien per nuocere\""
+	"\"Tanto va la gatta al lardo che ci lascia lo zampino\""
+	"\"Non esistono più le mezze stagioni\""
+	"\"Piove, governo ladro\""
+	"\"Chi pecora si fa il lupo se la mangia\""
+	"\"Che mondo\""
+	"\"Cosa non tocca fare per campare\""
+	"\"Ride bene chi ride ultimo\""
+	"\"Non finisce qui, mi rivedrete\""
 
 CONCLUSE
 	pensò tra se e se
