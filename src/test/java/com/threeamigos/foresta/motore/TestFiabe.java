@@ -8,7 +8,7 @@ public class TestFiabe {
 				TestMissioni.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
 		for (int i = 0; i < 5; i++) {
 			for (String s : gBean.produce()) {
-				System.out.println(s);
+				System.out.println(s.replace("\\n", "\n"));
 			}
 			System.out.println("-----");
 		}

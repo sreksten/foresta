@@ -123,7 +123,7 @@ PERSONAGGIO_RICHIEDENTE
 PERSONAGGIO_BERSAGLIO
 	PERSONAGGIO_BERSAGLIO { [!PERSONAGGIO] }
 
-PERSONAGGIO{1}
+PERSONAGGIO$
 	PERSONAGGIO { il sindaco }
 	PERSONAGGIO { lo sceriffo }
 	PERSONAGGIO { il capo dei pompieri }
@@ -133,16 +133,16 @@ PERSONAGGIO{1}
 	PERSONAGGIO { il venditore di biscotti }
 
 
-OGGETTO_FISICO{1}
+OGGETTO_FISICO$
 	OGGETTO_SINGOLO { cazzabubbolo a molla }
 	OGGETTO_SINGOLO { motorazzo a pile }
 	OGGETTO_SINGOLO { cesto di vimini }
 
-INFORMAZIONI{1}
+INFORMAZIONI$
 	INFORMAZIONI { l'indirizzo di casa del Vox }
 	INFORMAZIONI { le indicazioni per la stazione }
 
-INGREDIENTE{1}
+INGREDIENTE$
 	INGREDIENTE { radice di mandragola }
 	INGREDIENTE { etto di burro }
 	INGREDIENTE { chilo di farina }
@@ -151,7 +151,7 @@ QUANTITA_OGGETTO
 	QUANTITA_OGGETTO { 10 }
 	QUANTITA_OGGETTO { 20 }
 
-LUOGO_BERSAGLIO{1}
+LUOGO_BERSAGLIO$
 	LUOGO_BERSAGLIO { il pub }
 	LUOGO_BERSAGLIO { la cantina sociale }
 	LUOGO_BERSAGLIO { il circolino }

@@ -8,7 +8,7 @@ import com.threeamigos.foresta.motore.GrammarBean.InvalidGrammarException;
 public class ProduttoreDiTestiCasuale {
 
 	private static GrammarBean fiabe;
-	private static GrammarBean oroscopo;
+	private static GrammarBean oroscopi;
 
 	private ProduttoreDiTestiCasuale() {
 	}
@@ -18,7 +18,7 @@ public class ProduttoreDiTestiCasuale {
 			fiabe = new GrammarBean(
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/fiabe.txt"),
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
-			oroscopo = new GrammarBean(
+			oroscopi = new GrammarBean(
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/oroscopo.txt"),
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
 		} catch (InvalidGrammarException | IOException e) {
@@ -28,10 +28,14 @@ public class ProduttoreDiTestiCasuale {
 	}
 
 	public static final List<String> fiaba() {
-		return fiabe.produce();
+		List<String> fiaba = fiabe.produce();
+		fiabe.reset();
+		return fiaba;
 	}
 
 	public static final List<String> oroscopo() {
-		return oroscopo.produce();
+		List<String> oroscopo = oroscopi.produce();
+		oroscopi.reset();
+		return oroscopo;
 	}
 }
