@@ -416,6 +416,8 @@ ABITUDINE
 	giocare a scacchi perdendo contro il suo [ANIMALE_DA_COMPAGNIA]
 	approcciare le pulzelle senza successo, essendo più brutto del suo [ANIMALE_DA_COMPAGNIA]
 	raccontare frottole al mercato in cambio di un tozzo di pane | scommettere l'anima ai dadi in una bettola malfamata
+	litigare furiosamente con gli specchi | urlare insulti ai gatti dalla finestra della sua stamberga
+	rubacchiare monete dalle fontane pubbliche | fingere la cecità per elemosinare ai crocevia
 
 CRIMINE
 	divieto di sosta | caccia abusiva ai polli | schiamazzi notturni | comportamento disdicevole
@@ -424,6 +426,8 @@ CRIMINE
 	furto delle offerte alla chiesa | la sua { pessima | nefasta | } abitudine di collezionare cose altrui
 	furto, saccheggio e incendio
 	bestemmia in luogo pubblico | contrabbando di aringhe affumicate | detenzione abusiva di un drago da compagnia
+	insulti pubblici alla regalità | frequentazione di bettole dove si suonava musica senza licenza
+	frode ai danni della tesoreria | furto di stoviglie dai conventi | seduzione di vedove benestanti
 
 ANIMALE_DA_COMPAGNIA
 	gatto | criceto | pesce rosso | canarino | cane | asino | mulo | furetto | pappagallo | riccio
@@ -499,6 +503,10 @@ MOTIVAZIONE
     , in preda a una crisi di mezza età particolarmente violenta
     , convinto che altrove l'erba fosse più verde (e i polli più grassi)
     , dopo aver consultato un oroscopo a dir poco funesto |
+    , stufo di essere ignorato perfino dai cani randagi
+    , con la certezza assoluta che il mondo dovesse qualcosa alla sua mediocrità
+    , sospettando che i vicini complottassero contro di lui
+    , perché gli era venuta una voglia irrefrenabile di fare casino
 # Il carattere pipe sopra indica una motivazione vuota
 
 DECISIONE_1
@@ -512,10 +520,12 @@ DECISIONE_2
 	andare a caccia di cervi del re | andare a caccia di gloria
 	cercare gloria | tentare la fortuna | sfidare le avversità
 	andare a menar le mani per sport | mettersi al soldo di qualche signorotto poco raccomandabile
+	cercare di redimere la sua reputazione (impresa disperata) | sfidare il destino e perderci le ossa
 
 DELINQUERE
     delinquere | rubare [OGGETTI_DA_RUBARE] | truffare [VITTIME] | rigare portiere di auto altrui
 	commettere i suoi crimini | derubare [VITTIME] | turlupinare [VITTIME] | spillare denaro ai gonzi | organizzare bische clandestine
+	svendere reliquie false ai pellegrini ingenui | contraffare documenti per questioni di eredità
 
 OGGETTI_DA_RUBARE
 	automobili | oro | cavalli | capi di bestiame | capi d'abbigliamento | soldi e titoli azionari | polli | ricami preziosi | reliquie sacre
@@ -603,6 +613,8 @@ ATTRIBUTO_ANTAGONISTA
 	sospetto | tranquillo | furibondo | gioioso | sudato | accaldato | assetato | furioso | arrogante
 	reietto | quantomeno equivoco | con la cresta | con le corna | dalla lingua biforcuta
 	spelacchiato | dall'alito pestilenziale | palesemente ubriaco | con uno sguardo poco rassicurante
+	visibilmente affetto da una crisi esistenziale | straordinariamente ordinario | tristemente banale
+	ridicolmente pomposo | odorante di aceto e rimpianto | con le tasche piene di soldi non suoi
 
 PENSIERO
 	"\"Sarà dura liberarsi di questo [*ANTAGONISTA]\""
@@ -618,6 +630,9 @@ PENSIERO
 	"\"Qual buon vento lo porterà?\""
 	"\"Ecco la mia occasione di gloria!\""
 	"\"Ancora questa sfortuna!\""
+	"\"Uno sporco individuo, proprio come piace a me!\""
+	"\"Se riesco a truffarlo, mi gioco tutto ai dadi!\""
+	"\"Finalmente qualcuno più sfortunato di me!\""
 
 POSIZIONE_DISDICEVOLE
 	nella brace | con la faccia sotto le mie scarpe | con i segni delle mie mani sul suo grugno
@@ -695,6 +710,8 @@ OGGETTO_SPREGEVOLE
 	preservativo usato | pezzo di ferro | chiodo arrugginito | cofano vuoto
 	tappo rugginoso | coniglio di cioccolata | dispositivo anti-piccioni
 	ombrello spuntato dal vento | specchio rotto (sette anni di sfortuna inclusi)
+	fogliaccio stropicciato che prometteva ricchezze | scarpone solitario di taglia sbagliata
+	dente d'oro (falso) | libro sulla meditazione mai aperto | paio di calzini spaiati provenienti da altre dimensioni
 
 RACCONTO_P_6
 	^[RACCONTO_ECCO_CHE] un [*ANIMALE] [*ATTRIBUTO_ANTAGONISTA]. [BACIAMI] [REAZIONE_PROTAGONISTA]
@@ -732,6 +749,8 @@ MOTIVAZIONE_TRASFORMAZIONE
 	avevo tagliato le gomme della sua automobile
 	avevo copiato il suo compito di aritmetica
 	mi ero intrufolato nel suo orto a rubare zucche
+	gli avevo raccontato bugie sulle sue origini | avevo fatto circolare pettegolezzi sulla sua famiglia
+	gli avevo gridato insulti in piazza | avevo rovinato la sua reputazione
 
 SOSTANZA_ALCOOLICA_MASCHILE
 	cordiale | gin | vermouth | cognac | vino | whisky | rum | grappa | amaro | sidro
@@ -820,10 +839,13 @@ ATTIVITA_CRIMINOSE
 	maltrattare i poverelli
 	spennare polli altrui col favore delle tenebre
 	organizzare tornei di carte truccati
+	fare circolare monete false al mercato | spacciare acqua per vino in osterie malfamate
+	organizzare truffe piramidali con proposte di arricchimento facile | insegnare ai bambini l'arte del borseggio
 
 FINACCIA
 	arrestati | condotti al patibolo | esiliati | incarcerati | giudicati colpevoli | crocifissi | impalati
 	condannati | banditi | messi alla gogna | coperti di pece e piume | garrotati
+	ridotti a mendicanti senza un soldo | trascinati in esilio con la coda tra le gambe | dichiarati infami pubblicamente
 
 MORALE
 	[PENSIERO_PROFONDO], [CONCLUSE] [CHIOSA].
@@ -841,6 +863,9 @@ PENSIERO_PROFONDO
 	"\"Chi si contenta, gode\""
 	"\"Can che abbaia non morde\""
 	"\"Meglio un uovo oggi che una gallina domani, purché non sia rubata\""
+	"\"La vita è come un'osteria: piena di ubriachi e truffe\""
+	"\"Il denaro non è tutto, ma il niente è ancora meno\""
+	"\"Se puoi rubare, perché lavorare?\""
 
 CONCLUSE
 	pensò tra se e se
@@ -856,6 +881,8 @@ CHIOSA
 	scappando dai creditori
 	fuggendo da una { folla | moltitudine } inferocita
 	borbottando improperi vari
+	promettendosi di non cambiare mai i suoi vizi | continuando a mentire come se non ci fosse un domani
+	litigando con i suoi fantasmi personali
 
 RACCONTO_P_7
 	Un giorno, mentre [ATTIVITA_SPREGEVOLE], sentì che [NOTIZIA]
@@ -868,6 +895,8 @@ ATTIVITA_SPREGEVOLE
 	progettava di assalire una carovana | progettava il furto del secolo | assaltava una diligenza
 	rigava portiere di macchine | spaccava vetrine | tagliava gomme di automobili | parcheggiava in doppia fila
 	tosava pecore non sue | vendeva biglietti falsi per lo spettacolo del paese
+	scommetteva tutto ai dadi in una bettola sotterranea | insultava i passanti dal balcone di una malfamata cameretta
+	cercava di sedurre monache con promesse di matrimonio | raccontava pettegolezzi per denaro nelle piazze
 
 NOTIZIA
 	il re aveva chiesto aiuto per salvare sua figlia [*CREA_NOME_PRINCIPESSA], una principessa [*ATTRIBUTO_PRINCIPESSA]. [SVOLGIMENTO_PRINCIPESSA]
