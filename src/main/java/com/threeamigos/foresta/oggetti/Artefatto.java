@@ -10,7 +10,7 @@ import com.threeamigos.foresta.ui.UI;
 
 public class Artefatto implements Oggetto {
 
-	private ArtefattoMD md = new ArtefattoMD();
+	private final ArtefattoMD md;
 
 	public Artefatto(ArtefattoMD artefattoMD) {
 		this.md = artefattoMD;
@@ -141,7 +141,7 @@ public class Artefatto implements Oggetto {
 	}
 	
 	public static class Costruttore {
-		private ArtefattoMD artefattoMD = new ArtefattoMD();
+		private final ArtefattoMD artefattoMD = new ArtefattoMD();
 		
 		public Costruttore setNome(String nome) {
 			artefattoMD.setNome(nome);

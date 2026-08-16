@@ -41,10 +41,10 @@ public enum ClassiPersonaggio {
 	MAGO(Mago::new),
 	OMBRAFIAMMA(OmbraFiamma::new);
 
-	private Supplier<Personaggio> supplier;
+	private final Supplier<Personaggio> supplier;
 	private int quantitaMassima = 1;
 
-	private ClassiPersonaggio(Supplier<Personaggio> supplier) {
+	ClassiPersonaggio(Supplier<Personaggio> supplier) {
 		this.supplier = supplier;
 	}
 

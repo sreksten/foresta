@@ -7,12 +7,10 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 public class GrammarBean {
 
@@ -33,10 +31,10 @@ public class GrammarBean {
 	/**
 	 * Fixed productions map
 	 */
-	private Map<String, String> globalFixedProductions = new HashMap<>();
+	private final Map<String, String> globalFixedProductions = new HashMap<>();
 	/**
 	 * Map of all productions that happen after the main production has finished, to adjust the result fixing natural language grammar issues
-	 * (e.g. in Italian language, 'a il' is transformed to 'al').
+	 * (e.g., in the Italian language, 'a il' is transformed to 'al').
 	 */
 	private final Map<String, String> postProductions = new HashMap<>();
 	/**
@@ -46,7 +44,7 @@ public class GrammarBean {
 	/**
 	 * Productions that must be removed once used within a cycle
 	 */
-	private Set<String> oneShotProductions = new HashSet<>();
+	private final Set<String> oneShotProductions = new HashSet<>();
 
 	public GrammarBean(InputStream grammar, InputStream postProduction) throws InvalidGrammarException, IOException {
 		setSourceFile(grammar);
@@ -56,14 +54,13 @@ public class GrammarBean {
 
 	/**
 	 * Reads and parses the grammar file.
-	 * @param inputStream
-	 */
-	private final void setSourceFile(InputStream inputStream) throws InvalidGrammarException, IOException {
+     */
+	private void setSourceFile(InputStream inputStream) throws InvalidGrammarException, IOException {
 		readSourceFileAndCreateProductionsMap(inputStream);
 		checkProductionsValidity();
 	}
 
-	private final void readSourceFileAndCreateProductionsMap(InputStream inputStream) throws IOException, InvalidGrammarException {
+	private void readSourceFileAndCreateProductionsMap(InputStream inputStream) throws IOException, InvalidGrammarException {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
 			String currentProduction = null;
 			String previousProduction = null;
@@ -71,7 +68,7 @@ public class GrammarBean {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				currentLineNumber++;
-				if (line.length() == 0 || line.startsWith("#")) {
+				if (line.isEmpty() || line.startsWith("#")) {
 					continue;
 				}
 				if (line.startsWith("\t")) {
@@ -85,7 +82,7 @@ public class GrammarBean {
 		}
 	}
 
-	private final void checkPreviousProduction(int currentLineNumber, String previousProduction) throws InvalidGrammarException {
+	private void checkPreviousProduction(int currentLineNumber, String previousProduction) throws InvalidGrammarException {
 		if (previousProduction != null) {
 			List<String> previousProductionChildren = productionsMap.get(previousProduction);
 			if (previousProductionChildren == null || previousProductionChildren.isEmpty()) {
@@ -94,7 +91,7 @@ public class GrammarBean {
 		}
 	}
 
-	private final String handleProduction(int currentLineNumber, String line) throws InvalidGrammarException {
+	private String handleProduction(int currentLineNumber, String line) throws InvalidGrammarException {
 		String currentProduction = line.trim();
 		if (currentProduction.endsWith("{1}")) {
 			currentProduction = currentProduction.substring(0, currentProduction.length() - 3);
@@ -111,42 +108,39 @@ public class GrammarBean {
 		return currentProduction;
 	}
 
-	private final void handleChildren(String line, int currentLine, String currentProduction) throws InvalidGrammarException {
+	private void handleChildren(String line, int currentLine, String currentProduction) throws InvalidGrammarException {
 		if (currentProduction == null) {
 			throw new InvalidGrammarException(LINE + currentLine + ": Missing parent production. Lines beginning with TAB must be preceded by a production.");
 		} else {
 			List<String> currentProductionChildren = productionsMap.get(currentProduction);
-			StringTokenizer st = new StringTokenizer(line, "|");
-			while (st.hasMoreTokens()) {
-				currentProductionChildren.add(st.nextToken().trim());
+			for (String child : line.split("\\|")) {
+				currentProductionChildren.add(child.trim());
 			}
 		}
 	}
 
-	private final void checkProductionsValidity() throws InvalidGrammarException {
-		for (Iterator<String> productionsIterator = productionsMap.keySet().iterator(); productionsIterator.hasNext(); ) {
-			String key = productionsIterator.next();
-			for (Iterator<String> childrenIterator = productionsMap.get(key).iterator(); childrenIterator.hasNext(); ) {
-				String thisProduction = childrenIterator.next();
-				int openingBracketIndex;
-				int closingBracketIndex;
-				while ((openingBracketIndex = thisProduction.indexOf('[')) >= 0) {
-					closingBracketIndex = thisProduction.indexOf(']');
-					if (closingBracketIndex == -1) {
-						throw new InvalidGrammarException("Missing ']' element after token " + thisProduction);
-					} else {
-						checkTokenValidity(thisProduction.substring(openingBracketIndex + 1, closingBracketIndex));
-						thisProduction = thisProduction.substring(closingBracketIndex + 1);
-					}
-				}
-			}
-		}
+	private void checkProductionsValidity() throws InvalidGrammarException {
+        for (String key : productionsMap.keySet()) {
+            for (String thisProduction : productionsMap.get(key)) {
+                int openingBracketIndex;
+                int closingBracketIndex;
+                while ((openingBracketIndex = thisProduction.indexOf('[')) >= 0) {
+                    closingBracketIndex = thisProduction.indexOf(']');
+                    if (closingBracketIndex == -1) {
+                        throw new InvalidGrammarException("Missing ']' element after token " + thisProduction);
+                    } else {
+                        checkTokenValidity(thisProduction.substring(openingBracketIndex + 1, closingBracketIndex));
+                        thisProduction = thisProduction.substring(closingBracketIndex + 1);
+                    }
+                }
+            }
+        }
 	}
 
-	private final void checkTokenValidity(String thisProduction) throws InvalidGrammarException {
+	private void checkTokenValidity(String thisProduction) throws InvalidGrammarException {
 		if (thisProduction.startsWith("*") || thisProduction.startsWith("!")) {
 			thisProduction = thisProduction.substring(1);
-			if (thisProduction.length() == 0) {
+			if (thisProduction.isEmpty()) {
 				throw new InvalidGrammarException("Empty fixed production present (* or ! alone)");
 			}
 		}
@@ -158,7 +152,7 @@ public class GrammarBean {
 		}
 	}
 
-	private final void setPostProductionFile(InputStream inputStream) throws InvalidGrammarException, IOException {
+	private void setPostProductionFile(InputStream inputStream) throws InvalidGrammarException, IOException {
 		if (inputStream == null) {
 			return;
 		}
@@ -169,16 +163,16 @@ public class GrammarBean {
 			int currentLine = 0;
 			while ((line = reader.readLine()) != null) {
 				currentLine++;
-				StringTokenizer st = new StringTokenizer(line, ":");
-				pre = st.nextToken();
-				if (pre == null || pre.trim().length() == 0) {
+				String[] parts = line.split(":", 2);
+				pre = parts[0];
+				if (pre == null || pre.trim().isEmpty()) {
 					throw new InvalidGrammarException(LINE + currentLine + ": No pre production");
 				}
-				if (!st.hasMoreTokens()) {
+				if (parts.length < 2) {
 					throw new InvalidGrammarException(LINE + currentLine + ": No post production");
 				}
-				post = st.nextToken();
-				if (post == null || post.trim().length() == 0) {
+				post = parts[1];
+				if (post == null || post.trim().isEmpty()) {
 					throw new InvalidGrammarException(LINE + currentLine + ": Empty post production");
 				}
 				postProductions.put(pre, post);
@@ -190,7 +184,7 @@ public class GrammarBean {
 		if (productionsMap.get(rootNode) == null) {
 			throw new IllegalArgumentException(rootNode + ": not a valid production");
 		}
-		this.rootNode = new StringBuilder("[").append(rootNode).append(']').toString();
+		this.rootNode = "[" + rootNode + ']';
 	}
 
 	public String getRootNode() {
@@ -208,36 +202,33 @@ public class GrammarBean {
 	}
 
 	public List<String> produce() {
-		List<String> result = privProduce(rootNode);
-		globalFixedProductions.clear();
-		return result;
+		try {
+			return produceImpl(rootNode);
+		} finally {
+			globalFixedProductions.clear();
+		}
 	}
 
 	public List<String> produce(String rootNode) {
-		return privProduce(new StringBuilder("[").append(rootNode).append(']').toString());
+		return produceImpl("[" + rootNode + ']');
 	}
 
 	/**
 	 * Function to be called to produce a random story
 	 * @return a random story generated from the root node
 	 */
-	public List<String> privProduce(String startNode) {
-		String firstResult = privProduce(startNode, currentProductionsMap, globalFixedProductions);
+	public List<String> produceImpl(String startNode) {
+		String firstResult = produceImpl(startNode, currentProductionsMap, globalFixedProductions);
 		String intermediateResult = postProduce(firstResult);
 		List<String> finalResult = new ArrayList<>();
-		int carriageReturnPos = intermediateResult.indexOf("\\n");
-		while (carriageReturnPos >= 0) {
-			finalResult.add(intermediateResult.substring(0, carriageReturnPos));
-			intermediateResult = intermediateResult.substring(carriageReturnPos + 2);
-			carriageReturnPos = intermediateResult.indexOf("\\n");
+		for (String line : intermediateResult.split("\\n")) {
+			finalResult.add(line);
 		}
-		finalResult.add(intermediateResult);
 		return finalResult;
 	}
 
-	private String privProduce(String production, Map<String, List<String>> superProductionsMap, Map<String, String> superFixedProductions) {
-		Map<String, List<String>> localProductionsMap = new HashMap<>();
-		localProductionsMap.putAll(superProductionsMap);
+	private String produceImpl(String production, Map<String, List<String>> superProductionsMap, Map<String, String> superFixedProductions) {
+        Map<String, List<String>> localProductionsMap = new HashMap<>(superProductionsMap);
 		Map<String, String> localFixedProductions = new HashMap<>();
 		int openingBracketIndex;
 		int closingBracketIndex;
@@ -262,7 +253,7 @@ public class GrammarBean {
 					if (productions == null) {
 						throw new IllegalArgumentException(PRODUCTION + production + " is empty!");
 					}
-					t = privProduce(getProduction(localProductionsMap, production), localProductionsMap, superFixedProductions);
+					t = produceImpl(getProduction(localProductionsMap, production), localProductionsMap, superFixedProductions);
 					globalFixedProductions.put(production, t);
 				}
 				sb.append(t);
@@ -274,7 +265,7 @@ public class GrammarBean {
 					if (productions == null) {
 						throw new IllegalArgumentException(PRODUCTION + production + " is empty!");
 					}
-					t = privProduce(getProduction(localProductionsMap, production), localProductionsMap, superFixedProductions);
+					t = produceImpl(getProduction(localProductionsMap, production), localProductionsMap, superFixedProductions);
 					localFixedProductions.put(production, t);
 				}
 				sb.append(t);
@@ -294,7 +285,7 @@ public class GrammarBean {
 				}
 				sb.append(value);
 			} else {
-				sb.append(privProduce(getProduction(localProductionsMap, production), localProductionsMap, localFixedProductions));
+				sb.append(produceImpl(getProduction(localProductionsMap, production), localProductionsMap, localFixedProductions));
 			}
 			sb.append(postfix);
 			production = sb.toString();
@@ -306,8 +297,10 @@ public class GrammarBean {
 		List<String> productions = localProductionsMap.get(production);
 		String result = productions.get(rnd.nextInt(productions.size()));
 		if (oneShotProductions.contains(production)) {
-			productions.remove(result);
-			if (productions.isEmpty()) {
+			List<String> productionsCopy = new ArrayList<>(productions);
+			productionsCopy.remove(result);
+			localProductionsMap.put(production, productionsCopy);
+			if (productionsCopy.isEmpty()) {
 				removeProduction(localProductionsMap, production);
 			}
 		}
@@ -320,7 +313,7 @@ public class GrammarBean {
 		for (Map.Entry<String, List<String>> entry : localProductionsMap.entrySet()) {
 			List<String> productsToRemove = new ArrayList<String>();
 			for (String product : entry.getValue()) {
-				if (product.indexOf(production) >= 0) {
+				if (product.contains(production)) {
 					productsToRemove.add(product);
 				}
 			}
@@ -336,12 +329,12 @@ public class GrammarBean {
 		}
 	}
 
-	private final String postProduce(String intermediateProduction) {
+	private String postProduce(String intermediateProduction) {
 		for (Map.Entry<String, String> entry : postProductions.entrySet()) {
 			String pre = entry.getKey();
 			String post = entry.getValue();
 			int pos;
-			while ((pos = intermediateProduction.indexOf(pre)) > 0) {
+			while ((pos = intermediateProduction.indexOf(pre)) >= 0) {
 				StringBuilder sb = new StringBuilder(intermediateProduction.substring(0, pos)).append(post);
 				int l = pos + pre.length();
 				if (l < intermediateProduction.length()) {
@@ -353,7 +346,7 @@ public class GrammarBean {
 		return intermediateProduction;
 	}
 
-	public class InvalidGrammarException extends Exception {
+	public static class InvalidGrammarException extends Exception {
 		private static final long serialVersionUID = 1L;
 
 		public InvalidGrammarException(String error) {

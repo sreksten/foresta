@@ -11,7 +11,7 @@ SEGNO
 	Segno di scasso sulla porta di casa
 	Brutto segno
 	Segno che era meglio rimanere a casa
-	Vergine (se ne esistono ancora)
+	Vergine - se ne esistono ancora -
 PREVISIONE
 	[PIANETA] [RELAZIONE] [AZIONE]. [CHIOSA]
 PIANETA
@@ -43,18 +43,18 @@ RELAZIONE
 	alleato a [QUALCOSA]
 	in associazione a delinquere con [QUALCOSA_SINGOLARE] e [QUALCOSA_PLURALE]
 	in opposizione a [QUALCOSA]
-	
+
 CARDINALE
 	prima | seconda | terza | quarta | quinta | sesta | settima | ottava | nona | decima | ennesima | ultima
 GIORNO_SETTIMANALE
-	lunedì | martedì | mercoledì | giovedì | venerdì | sabato | domenica
+	lunedi' | martedi' | mercoledi' | giovedi' | venerdi' | sabato | domenica
 AZIONE
-	provocherà [DANNO] | causerà [DANNO] | si produrrà in [DANNO]
-	vi renderà insofferenti [INSOFFERENZA] | vi farà star male almeno fino a [GIORNO_SETTIMANALE]
-	vi procurerà problemi legati a [QUALCOSA] fino a [GIORNO_SETTIMANALE]
+	provochera' [DANNO] | causera'  [DANNO] | si produrra' in [DANNO]
+	vi rendera' insofferenti [INSOFFERENZA] | vi fara' star male almeno fino a [GIORNO_SETTIMANALE]
+	vi procurera' problemi legati a [QUALCOSA] fino a [GIORNO_SETTIMANALE]
 	vi suggerisce di [SUGGERIMENTO]
-	farà si che [QUALCOSA_SINGOLARE] vi procuri noie da [GIORNO_SETTIMANALE] per [PERIODO_DI_TEMPO]
-	farà si che [QUALCOSA_PLURALE] vi procurino noie per [PERIODO_DI_TEMPO] cominciando da [GIORNO_SETTIMANALE]
+	fara' si che [QUALCOSA_SINGOLARE] vi procuri noie da [GIORNO_SETTIMANALE] per [PERIODO_DI_TEMPO]
+	fara' si che [QUALCOSA_PLURALE] vi procurino noie per [PERIODO_DI_TEMPO] cominciando da [GIORNO_SETTIMANALE]
 DANNO
 	una perdita di dati sul vostro disco rigido
 	una intrusione di ignoti cracker
@@ -86,17 +86,17 @@ INSOFFERENZA
 	ai gadget ipertecnologici
 	ai telefoni cellulari
 	al mal di pancia
-	alle mezze stagioni, anche se non esistono più
+	alle mezze stagioni, anche se non esistono piu'
 	alle minigonne
 	al sito web della vostra azienda
 	alla ADSL
 SUGGERIMENTO
 	documentare il codice sviluppato
 	rinunciare a quel viaggio a cui sospiravate, cambiando meta: [LOCALITA_SPREGEVOLE]
-	andare a trovare i vostri parenti finché siete in tempo
+	andare a trovare i vostri parenti finche' siete in tempo
 	fare una copia di sicurezza di tutti i vostri dati
 	preparare il passaporto e le valigie per una fuga veloce
-	passare più tempo con il vostro partner
+	passare piu' tempo con il vostro partner
 	organizzare un torneo di briscola
 	passare una serata in compagnia
 	pulirvi il naso
@@ -127,18 +127,18 @@ CHIOSA
 	Per i nati nella prima decade [ATTENZIONE].
 	Per i nati nella seconda decade [ATTENZIONE].
 	Per i nati nella terza decade [ATTENZIONE].
-	La prudenza non è mai troppa.
+	La prudenza non e' mai troppa.
 	Meglio un uovo oggi che una gallina domani.
 	Una lira risparmiata, una lira guadagnata.
 	Meglio vivere un giorno da leone che cent'anni da pecora.
 	Chi pecora si fa, il lupo se la mangia.
 	Chi va piano va sano e va lontano.
 	Rinunciate in partenza a qualsiasi cosa abbiate progettato.
-	Barbapapà consiglia di [SUGGERIMENTO].
+	Barbapapa' consiglia di [SUGGERIMENTO].
 	La prudenza consiglia: [SUGGERIMENTO].
 	Chi la fa, l'aspetti.
 ATTENZIONE
-	prestate molta attenzione alla vostra buona stella che cercherà di cadervi sul capo: vista la massa, potrebbe fare parecchio male
+	prestate molta attenzione alla vostra buona stella che cerchera' di cadervi sul capo: vista la massa, potrebbe fare parecchio male
 	guardatevi da [PERSONA] che [SPREGIO]
 	occhio alle bucce di banana
 	attenzione a non correre per le scale con oggetti taglienti
@@ -153,21 +153,21 @@ ATTENZIONE
 SPREGIO
 	[SPREGIO_CHIOSA]
 	grazie ad una breccia nella sicurezza [SPREGIO_CHIOSA]
-	con la complicità di [PERSONA] [SPREGIO_CHIOSA]
+	con la complicita' di [PERSONA] [SPREGIO_CHIOSA]
 	[SPREGIO_CHIOSA_1] e [SPREGIO_CHIOSA_2]
 SPREGIO_CHIOSA
 	[SPREGIO_CHIOSA_1] | [SPREGIO_CHIOSA_2]
 SPREGIO_CHIOSA_1
-	cercherà di farvi le scarpe
-	cancellerà involontariamente i vostri dati
-	intaserà completamente il traffico in uscita sulla rete
-	cancellerà diversi documenti
-	annullerà un importante progetto
+	cerchera' di farvi le scarpe
+	cancellera' involontariamente i vostri dati
+	intasera' completamente il traffico in uscita sulla rete
+	cancellera' diversi documenti
+	annullera' un importante progetto
 SPREGIO_CHIOSA_2
-	sputerà nel piatto in cui dovrete mangiare
-	cercherà di mettervi in cattiva luce con [PERSONA]
-	scriverà dati a casaccio nel database aziendale
-	parlerà male di voi con [PERSONA]
+	sputera' nel piatto in cui dovrete mangiare
+	cerchera' di mettervi in cattiva luce con [PERSONA]
+	scrivera' dati a casaccio nel database aziendale
+	parlera' male di voi con [PERSONA]
 PERSONA
 	un collega di lavoro | il vostro capo | il vostro partner | il vostro vicino di casa
 	la vostra vicina di casa | il vostro commercialista | il vigile di quartiere | il postino

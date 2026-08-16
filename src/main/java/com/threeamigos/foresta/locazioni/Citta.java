@@ -8,7 +8,7 @@ import com.threeamigos.foresta.motore.Stato;
 import com.threeamigos.foresta.ui.UI;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 
-public abstract class Citta extends LocazioneBase {
+public abstract class Citta extends LocazioneUnica {
 
 	private enum StatoInCitta {
 		IN_PIAZZA,
@@ -30,7 +30,7 @@ public abstract class Citta extends LocazioneBase {
 		stato = StatoInCitta.IN_PIAZZA;
 	}
 
-	abstract String getNome();
+	public abstract String getNome();
 	
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {

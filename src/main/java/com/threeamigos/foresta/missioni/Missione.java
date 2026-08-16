@@ -4,28 +4,28 @@ import com.threeamigos.foresta.motore.modellodati.MissioneMD;
 
 public interface Missione {
 
-	public String getNome();
+	String getNome();
 	
-	public String getDescrizione();
+	String getDescrizione();
 	
-	public void controllaPreLocazione();
+	void controllaPreLocazione();
 	
-	public void controllaInLocazione();
+	void controllaInLocazione();
 
-	public void controllaPostLocazione();
+	void controllaPostLocazione();
 
-	public boolean isPrimaria();
+	boolean isPrimaria();
 	
-	public boolean isAttiva();
+	boolean isAttiva();
 	
-	public void attivaMissione();
+	void attivaMissione();
 
-	public boolean isCompleta();
+	boolean isCompleta();
 	
-	public void completaMissione();
+	void completaMissione();
 
-	public MissioneMD getModelloDati();
+	MissioneMD getModelloDati();
 	
-	public void setModelloDati(MissioneMD modelloDati);
+	void setModelloDati(MissioneMD modelloDati);
 	
 }
