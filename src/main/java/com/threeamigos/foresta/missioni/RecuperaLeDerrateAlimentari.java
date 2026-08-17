@@ -18,7 +18,7 @@ public class RecuperaLeDerrateAlimentari extends MissioneRecuperaBersaglio imple
 		if (!isBersaglioRecuperato()) {
 			return "Il Borgomastro chiede aiuto: una banda di Troll ha fatto sparire un carico di derrate alimentari. Offre 20 monete come ricompensa.";
 		} else {
-			return "Torna in citta' per riconsegnare le derrate alimentari recuperate e ottenere la ricompensa di 20 monete.";
+			return "Torna in città per riconsegnare le derrate alimentari recuperate e ottenere la ricompensa di 20 monete.";
 		}
 	}
 
@@ -33,7 +33,7 @@ public class RecuperaLeDerrateAlimentari extends MissioneRecuperaBersaglio imple
 		if (gruppo.isInLocazioneUnica(ClassiLocazione.CITTA_RUUNA) &&
 				!LineaTemporale.isCittaDistrutta(ClassiLocazione.CITTA_RUUNA)) {
 			if (!isAttiva()) {
-				UI.notifica("Il Borgomastro chiede a " + gruppo.getCapo().getNome() + " aiuto per recuperare un carico di derrate alimentari che e' stato rubato da una banda di Troll, che si nascondono in alcune rovine. Offre 20 monete in cambio.");
+				UI.notifica("Il Borgomastro chiede a " + gruppo.getCapo().getNome() + " aiuto per recuperare un carico di derrate alimentari che è stato rubato da una banda di Troll, che si nascondono in alcune rovine. Offre 20 monete in cambio.");
 				attivaMissione();
 				Foresta.costruisciLocazioneUnica(ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, true);
 			} else if (!isCompleta() && isBersaglioRecuperato()) {

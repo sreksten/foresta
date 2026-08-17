@@ -418,6 +418,8 @@ ABITUDINE
 	raccontare frottole al mercato in cambio di un tozzo di pane | scommettere l'anima ai dadi in una bettola malfamata
 	litigare furiosamente con gli specchi | urlare insulti ai gatti dalla finestra della sua stamberga
 	rubacchiare monete dalle fontane pubbliche | fingere la cecità per elemosinare ai crocevia
+	ruttare e scoreggare pubblicamente senza pudore | accumulare debiti di gioco senza possibilità di pagamento
+	molestare le donne del villaggio con battute volgari | rubare panni stesi dalle corde dei vicini
 
 CRIMINE
 	divieto di sosta | caccia abusiva ai polli | schiamazzi notturni | comportamento disdicevole
@@ -428,6 +430,8 @@ CRIMINE
 	bestemmia in luogo pubblico | contrabbando di aringhe affumicate | detenzione abusiva di un drago da compagnia
 	insulti pubblici alla regalità | frequentazione di bettole dove si suonava musica senza licenza
 	frode ai danni della tesoreria | furto di stoviglie dai conventi | seduzione di vedove benestanti
+	traffico illegale di reliquie false | diffamazione pubblica di personaggi illustri
+	mancato pagamento delle tasse per tre generazioni | gestione di gioco d'azzardo clandestino | vigliaccheria in battaglia
 
 ANIMALE_DA_COMPAGNIA
 	gatto | criceto | pesce rosso | canarino | cane | asino | mulo | furetto | pappagallo | riccio
@@ -507,6 +511,10 @@ MOTIVAZIONE
     , con la certezza assoluta che il mondo dovesse qualcosa alla sua mediocrità
     , sospettando che i vicini complottassero contro di lui
     , perché gli era venuta una voglia irrefrenabile di fare casino
+    , convinto di essere stato tradito da un amico immaginario
+    , perché un passero gli aveva urlato una profezia incomprensibile
+    , stanco di fingere di avere una dignità che non possedeva
+    , per sfuggire agli unici tre amici che ancora lo tolleravano
 # Il carattere pipe sopra indica una motivazione vuota
 
 DECISIONE_1
@@ -615,6 +623,8 @@ ATTRIBUTO_ANTAGONISTA
 	spelacchiato | dall'alito pestilenziale | palesemente ubriaco | con uno sguardo poco rassicurante
 	visibilmente affetto da una crisi esistenziale | straordinariamente ordinario | tristemente banale
 	ridicolmente pomposo | odorante di aceto e rimpianto | con le tasche piene di soldi non suoi
+	dall'aspetto di qualcuno che ha perso una scommessa importante | sporco come una padella non lavata per anni
+	con un'aria di chi ha appena fallito un'impresa | che borbotta invettive contro persone morte da secoli
 
 PENSIERO
 	"\"Sarà dura liberarsi di questo [*ANTAGONISTA]\""
@@ -633,6 +643,9 @@ PENSIERO
 	"\"Uno sporco individuo, proprio come piace a me!\""
 	"\"Se riesco a truffarlo, mi gioco tutto ai dadi!\""
 	"\"Finalmente qualcuno più sfortunato di me!\""
+	"\"Che bel soggetto da sfruttare!\""
+	"\"Mi somiglia terribilmente, probabilmente siamo parenti!\""
+	"\"Ora sì che la fortuna mi guarda dal lato giusto!\""
 
 POSIZIONE_DISDICEVOLE
 	nella brace | con la faccia sotto le mie scarpe | con i segni delle mie mani sul suo grugno
@@ -712,6 +725,8 @@ OGGETTO_SPREGEVOLE
 	ombrello spuntato dal vento | specchio rotto (sette anni di sfortuna inclusi)
 	fogliaccio stropicciato che prometteva ricchezze | scarpone solitario di taglia sbagliata
 	dente d'oro (falso) | libro sulla meditazione mai aperto | paio di calzini spaiati provenienti da altre dimensioni
+	borsa di tela con dentro solo stracci e promesse | mappa di un tesoro che porta a una fognatura
+	chiave che apre tutte le porte tranne quella che servirebbe | moneta che cambia valore ogni giorno
 
 RACCONTO_P_6
 	^[RACCONTO_ECCO_CHE] un [*ANIMALE] [*ATTRIBUTO_ANTAGONISTA]. [BACIAMI] [REAZIONE_PROTAGONISTA]
@@ -751,6 +766,8 @@ MOTIVAZIONE_TRASFORMAZIONE
 	mi ero intrufolato nel suo orto a rubare zucche
 	gli avevo raccontato bugie sulle sue origini | avevo fatto circolare pettegolezzi sulla sua famiglia
 	gli avevo gridato insulti in piazza | avevo rovinato la sua reputazione
+	gli avevo rubato la fidanzata e poi l'avevo abbandonata | avevo fatto mangiare cibo guasto al suo cavallo
+	avevo insegnato a suo figlio parolacce terribili | avevo convinto la moglie che lui aveva un'altra
 
 SOSTANZA_ALCOOLICA_MASCHILE
 	cordiale | gin | vermouth | cognac | vino | whisky | rum | grappa | amaro | sidro
@@ -841,6 +858,8 @@ ATTIVITA_CRIMINOSE
 	organizzare tornei di carte truccati
 	fare circolare monete false al mercato | spacciare acqua per vino in osterie malfamate
 	organizzare truffe piramidali con proposte di arricchimento facile | insegnare ai bambini l'arte del borseggio
+	profanare cimiteri in cerca di anelli d'oro | estorcere denaro con ricatti sporchi
+	contrabbandare reliquie sacre nei confini di altri regni | sedurre vedove per razziare le loro eredità
 
 FINACCIA
 	arrestati | condotti al patibolo | esiliati | incarcerati | giudicati colpevoli | crocifissi | impalati
@@ -866,6 +885,9 @@ PENSIERO_PROFONDO
 	"\"La vita è come un'osteria: piena di ubriachi e truffe\""
 	"\"Il denaro non è tutto, ma il niente è ancora meno\""
 	"\"Se puoi rubare, perché lavorare?\""
+	"\"La virtù è il rifugio dei mediocri\""
+	"\"Chi muore pagando debiti almeno muore coerente\""
+	"\"L'onestà è una malattia che si cura col tempo\""
 
 CONCLUSE
 	pensò tra se e se
@@ -883,6 +905,8 @@ CHIOSA
 	borbottando improperi vari
 	promettendosi di non cambiare mai i suoi vizi | continuando a mentire come se non ci fosse un domani
 	litigando con i suoi fantasmi personali
+	cercando di dimenticare in una bettola ancora più squallida | sperando che nessuno lo riconoscesse
+	progettando nuove truffe da qui all'eternità | affidandosi al caso e alla disperazione
 
 RACCONTO_P_7
 	Un giorno, mentre [ATTIVITA_SPREGEVOLE], sentì che [NOTIZIA]
@@ -897,6 +921,8 @@ ATTIVITA_SPREGEVOLE
 	tosava pecore non sue | vendeva biglietti falsi per lo spettacolo del paese
 	scommetteva tutto ai dadi in una bettola sotterranea | insultava i passanti dal balcone di una malfamata cameretta
 	cercava di sedurre monache con promesse di matrimonio | raccontava pettegolezzi per denaro nelle piazze
+	accumulava debiti senza alcuna speranza di pagarli | fingeva di essere ricco per spillare prestiti ai gonzi
+	organizzava competizioni truccate con il suo bestiame | insegnava ai bambini come fare soldi disonestamente
 
 NOTIZIA
 	il re aveva chiesto aiuto per salvare sua figlia [*CREA_NOME_PRINCIPESSA], una principessa [*ATTRIBUTO_PRINCIPESSA]. [SVOLGIMENTO_PRINCIPESSA]
@@ -946,9 +972,7 @@ LUOGO_3
 	un covo di briganti
 
 TENUTA_IN_CATTIVITA
-	tenuta prigioniera | tenuta come dama di compagnia | tenuta come sguattera | tenuta come capro espiatorio |
-	tenuta rinchiusa in un torrione | costretta a lavare { i piatti | i pavimenti | piatti e pavimenti }
-	tenuta a pane e acqua | tenuta a stecchetto
+	tenuta prigioniera | tenuta come dama di compagnia | tenuta come sguattera | tenuta come capro espiatorio | tenuta rinchiusa in un torrione | costretta a lavare { i piatti | i pavimenti | piatti e pavimenti } | tenuta a pane e acqua | tenuta a stecchetto
 
 SVOLGIMENTO_PRINCIPESSA_2
 	Dopo essersi accordato con [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO] per [30_DENARI], [*PROTAGONISTA] tornò a casa \

@@ -34,6 +34,18 @@ class DoomdarkFontSmall implements DoomdarkFont {
 			return maiuscole[(c - 'A')][0];
 		} else if (c >= '0' && c <= '9') {
 			return cifre[(c - '0')][0];
+		} else if (c == 'à') {
+			return a_grave[0];
+		} else if (c == 'è') {
+			return e_grave[0];
+		} else if (c == 'é') {
+			return e_acute[0];
+		} else if (c == 'ì') {
+			return i_grave[0];
+		} else if (c == 'ò') {
+			return o_grave[0];
+		} else if (c == 'ù') {
+			return u_grave[0];
 		} else if (c == '\'') {
 			return apostrofo[0];
 		} else if (c == '"') {
@@ -56,6 +68,10 @@ class DoomdarkFontSmall implements DoomdarkFont {
 			return punto_esclamativo[0];
 		} else if (c == ' ') {
 			return spazio[0];
+		} else if (c == '(') {
+			return parentesi_aperta[0];
+		} else if (c == ')') {
+			return parentesi_chiusa[0];
 		}
 		throw new IllegalArgumentException();
 	}
@@ -67,6 +83,18 @@ class DoomdarkFontSmall implements DoomdarkFont {
 			return maiuscole[c - 'A'];
 		} else if (c >= '0' && c <= '9') {
 			return cifre[c - '0'];
+		} else if (c == 'à') {
+			return a_grave;
+		} else if (c == 'è') {
+			return e_grave;
+		} else if (c == 'é') {
+			return e_acute;
+		} else if (c == 'ì') {
+			return i_grave;
+		} else if (c == 'ò') {
+			return o_grave;
+		} else if (c == 'ù') {
+			return u_grave;
 		} else if (c == '\'') {
 			return apostrofo;
 		} else if (c == '"') {
@@ -89,6 +117,10 @@ class DoomdarkFontSmall implements DoomdarkFont {
 			return punto_esclamativo;
 		} else if (c == ' ') {
 			return spazio;
+		} else if (c == '(') {
+			return parentesi_aperta;
+		} else if (c == ')') {
+			return parentesi_chiusa;
 		}
 		throw new IllegalArgumentException();
 	}
@@ -976,5 +1008,102 @@ class DoomdarkFontSmall implements DoomdarkFont {
 			(byte)0b00110000,
 			(byte)0b01100000,
 			(byte)0b00000000
+	};
+
+	// Lettere accentate minuscole
+	private static final byte[] a_grave = {
+			7, // à
+			(byte)0b01100000,
+			(byte)0b00110000,
+			(byte)0b00000000,
+			(byte)0b01111000,
+			(byte)0b10001100,
+			(byte)0b11111100,
+			(byte)0b11000110,
+			(byte)0b00000000
+	};
+
+	private static final byte[] e_grave = {
+			7, // è
+			(byte)0b01100000,
+			(byte)0b00110000,
+			(byte)0b00000000,
+			(byte)0b01111000,
+			(byte)0b11111110,
+			(byte)0b11000000,
+			(byte)0b01111100,
+			(byte)0b00000000
+	};
+
+	private static final byte[] e_acute = {
+			7, // é
+			(byte)0b00001100,
+			(byte)0b00011000,
+			(byte)0b00000000,
+			(byte)0b01111000,
+			(byte)0b11111110,
+			(byte)0b11000000,
+			(byte)0b01111100,
+			(byte)0b00000000
+	};
+
+	private static final byte[] i_grave = {
+			4, // ì
+			(byte)0b1100000,
+			(byte)0b01100000,
+			(byte)0b00000000,
+			(byte)0b11000000,
+			(byte)0b11000000,
+			(byte)0b11000000,
+			(byte)0b11100000,
+			(byte)0b00000000
+	};
+
+	private static final byte[] o_grave = {
+			7, // ò
+			(byte)0b01100000,
+			(byte)0b00110000,
+			(byte)0b00000000,
+			(byte)0b01111000,
+			(byte)0b11001100,
+			(byte)0b11001100,
+			(byte)0b01111000,
+			(byte)0b00000000
+	};
+
+	private static final byte[] u_grave = {
+			7, // ù
+			(byte)0b01100000,
+			(byte)0b00110000,
+			(byte)0b00000000,
+			(byte)0b11001100,
+			(byte)0b11001100,
+			(byte)0b11001100,
+			(byte)0b01111110,
+			(byte)0b00000000
+	};
+
+	private static final byte[] parentesi_aperta = {
+			5, // ù
+			(byte)0b00010000,
+			(byte)0b01100000,
+			(byte)0b11100000,
+			(byte)0b11100000,
+			(byte)0b11100000,
+			(byte)0b11100000,
+			(byte)0b01100000,
+			(byte)0b10010000
+	};
+
+	private static final byte[] parentesi_chiusa = {
+			5, // ù
+			(byte)0b10000000,
+			(byte)0b01100000,
+			(byte)0b00111000,
+			(byte)0b00111000,
+			(byte)0b00111000,
+			(byte)0b00111000,
+			(byte)0b01100000,
+			(byte)0b10000000
 	};
 }

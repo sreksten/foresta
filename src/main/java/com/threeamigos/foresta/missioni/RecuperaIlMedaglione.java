@@ -18,7 +18,7 @@ public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements M
 		if (isBersaglioRecuperato()) {
 			return "Un uomo ti ha chiesto di recuperare il suo prezioso medaglione rubato da una banda di ladri.";
 		} else {
-			return "Torna in citta' per riconsegnare il medaglione rubato in cambio della ricompensa.";
+			return "Torna in città per riconsegnare il medaglione rubato in cambio della ricompensa.";
 		}
 	}
 
@@ -37,7 +37,7 @@ public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements M
 				attivaMissione();
 				Foresta.costruisciLocazioneUnica(ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE, true);
 			} else if (!isCompleta() && isBersaglioRecuperato()) {
-				UI.notifica("L'uomo e' felicissimo di riavere il suo medaglione in cambio delle 20 monete promesse.");
+				UI.notifica("L'uomo è felicissimo di riavere il suo medaglione in cambio delle 20 monete promesse.");
 				gruppo.addMonete(20);
 				completaMissione();
 			}
@@ -49,7 +49,7 @@ public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements M
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		if (gruppo.isInLocazioneUnica(ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE) &&
 				gruppo.getClasseLocazione().getIstanza().isCompleta() && !isBersaglioRecuperato()) {
-			UI.notifica("Il medaglione e' stato recuperato. Puoi tornare in citta' per reclamare la ricompensa.");
+			UI.notifica("Il medaglione è stato recuperato. Puoi tornare in città per reclamare la ricompensa.");
 			setBersaglioRecuperato();
 		}
 	}

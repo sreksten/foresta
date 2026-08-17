@@ -24,9 +24,9 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 	@Override
 	public String getDescrizione() {
 		StringBuilder sb = new StringBuilder();
-		sb.append("La Foresta e' minacciata da un temibile Drago. ");
+		sb.append("La Foresta è minacciata da un temibile Drago. ");
 		if (!isDragoApparso()) {
-			sb.append("Il Castello dove si trova e' nascosto da un incantesimo. ");
+			sb.append("Il Castello dove si trova è nascosto da un incantesimo. ");
 			sb.append(GruppoGiocatore.getIstanza().getCapo().getNome());
 			sb.append(" deve sconfiggere tutti i suoi alleati per poterlo affrontare!");			
 		} else {
@@ -51,7 +51,7 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 	@Override
 	public void controllaPostLocazione() {
 		if (!isDragoApparso() && castelliDistrutti()) {
-			UI.notifica("L'incantesimo che nascondeva il castello del Drago e' svanito! La missione e' quasi giunta al termine!");
+			UI.notifica("L'incantesimo che nascondeva il castello del Drago è svanito! La missione è quasi giunta al termine!");
 			CoordinateMD coordinateCastelloDrago = Foresta.costruisciLocazioneUnica(ClassiLocazione.CASTELLO_DRAGO, false);
 			Foresta.setLocazioneVisitata(coordinateCastelloDrago, false);
 			setDragoApparso();
@@ -59,7 +59,7 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 			GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 			if (gruppo.getClasseLocazione() == ClassiLocazione.CASTELLO_DRAGO && gruppo.getClasseLocazione().getIstanza().isCompleta()) {
 				completaMissione();
-				UI.notifica("Il Drago e' morto!");
+				UI.notifica("Il Drago è morto!");
 				LineaTemporale.setGiocoFinito(true);
 			}
 		}

@@ -52,7 +52,7 @@ public class DoomdarkTextRectangle {
 			}
 			int charWidth = charData[0];
 			for (int bits = 0; bits < charWidth; bits++) {
-				// Questo controllo lo metto all'inizio così se la larghezza del canvas è zero non dà errore e torna
+				// Questo controllo lo metto all'inizio cosï¿½ se la larghezza del canvas ï¿½ zero non dï¿½ errore e torna
 				if (rowDataIndex >= width - charPadding) {
 					return;
 				}
@@ -74,9 +74,13 @@ public class DoomdarkTextRectangle {
 	}
 
 	public final void addString(String s) {
-		List<String> substrings = FontTool.split(fontSmall, s, width);
-		for (String substring : substrings) {
-			drawString(substring);
+		// Gestisce i \n letterali come vere newline
+		String[] lines = s.split("\\\\n");
+		for (String line : lines) {
+			List<String> substrings = FontTool.split(fontSmall, line, width);
+			for (String substring : substrings) {
+				drawString(substring);
+			}
 		}
 	}
 

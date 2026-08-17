@@ -34,6 +34,18 @@ class DoomdarkFontMedium implements DoomdarkFont {
 			return maiuscole[(c - 'A')][0];
 		} else if (c >= '0' && c <= '9') {
 			return cifre[(c - '0')][0];
+		} else if (c == 'à') {
+			return a_grave[0];
+		} else if (c == 'è') {
+			return e_grave[0];
+		} else if (c == 'é') {
+			return e_acute[0];
+		} else if (c == 'ì') {
+			return i_grave[0];
+		} else if (c == 'ò') {
+			return o_grave[0];
+		} else if (c == 'ù') {
+			return u_grave[0];
 		} else if (c == '\'') {
 			return apostrofo[0];
 		} else if (c == '"') {
@@ -56,6 +68,10 @@ class DoomdarkFontMedium implements DoomdarkFont {
 			return punto_esclamativo[0];
 		} else if (c == ' ') {
 			return spazio[0];
+		} else if (c == '(') {
+			return parentesi_aperta[0];
+		} else if (c == ')') {
+			return parentesi_chiusa[0];
 		}
 		throw new UnsupportedCharacterException(c);
 	}
@@ -67,6 +83,18 @@ class DoomdarkFontMedium implements DoomdarkFont {
 			return maiuscole[c - 'A'];
 		} else if (c >= '0' && c <= '9') {
 			return cifre[c - '0'];
+		} else if (c == 'à') {
+			return a_grave;
+		} else if (c == 'è') {
+			return e_grave;
+		} else if (c == 'é') {
+			return e_acute;
+		} else if (c == 'ì') {
+			return i_grave;
+		} else if (c == 'ò') {
+			return o_grave;
+		} else if (c == 'ù') {
+			return u_grave;
 		} else if (c == '\'') {
 			return apostrofo;
 		} else if (c == '"') {
@@ -89,6 +117,10 @@ class DoomdarkFontMedium implements DoomdarkFont {
 			return punto_esclamativo;
 		} else if (c == ' ') {
 			return spazio;
+		} else if (c == '(') {
+			return parentesi_aperta;
+		} else if (c == ')') {
+			return parentesi_chiusa;
 		}
 		throw new UnsupportedCharacterException(c);
 	}
@@ -1558,5 +1590,166 @@ class DoomdarkFontMedium implements DoomdarkFont {
 			(byte)0b11110000, (byte)0b00000000,
 			(byte)0b11100000, (byte)0b00000000,
 			(byte)0b00000000, (byte)0b00000000,
+	};
+
+	// Lettere accentate minuscole
+	private static final byte[] a_grave = {
+			14, // à
+			(byte)0b00001110, (byte)0b00000000,
+			(byte)0b00000011, (byte)0b10000000,
+			(byte)0b00000001, (byte)0b11000000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00011111, (byte)0b00111100,
+			(byte)0b01111111, (byte)0b10111100,
+			(byte)0b11111000, (byte)0b11111100,
+			(byte)0b11110000, (byte)0b01111100,
+			(byte)0b11110000, (byte)0b00111100,
+			(byte)0b11110000, (byte)0b00111100,
+			(byte)0b11110000, (byte)0b01111100,
+			(byte)0b11111000, (byte)0b11111100,
+			(byte)0b01111111, (byte)0b10111100,
+			(byte)0b00011111, (byte)0b00111100,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00000000, (byte)0b00000000
+	};
+
+	private static final byte[] e_grave = {
+			14, // è
+			(byte)0b00001110, (byte)0b00000000,
+			(byte)0b00000011, (byte)0b10000000,
+			(byte)0b00000001, (byte)0b11000000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00011111, (byte)0b11000000,
+			(byte)0b01111111, (byte)0b11110000,
+			(byte)0b11110000, (byte)0b00111000,
+			(byte)0b11110000, (byte)0b00111000,
+			(byte)0b11111111, (byte)0b11110000,
+			(byte)0b11111111, (byte)0b11111100,
+			(byte)0b11110000, (byte)0b00000000,
+			(byte)0b11110000, (byte)0b00000000,
+			(byte)0b01111111, (byte)0b11110000,
+			(byte)0b00011111, (byte)0b11000000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00000000, (byte)0b00000000
+	};
+
+	private static final byte[] e_acute = {
+			14, // é
+			(byte)0b00000000, (byte)0b01110000,
+			(byte)0b00000000, (byte)0b11100000,
+			(byte)0b00000001, (byte)0b11000000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00011111, (byte)0b11000000,
+			(byte)0b01111111, (byte)0b11110000,
+			(byte)0b11110000, (byte)0b00111000,
+			(byte)0b11110000, (byte)0b00111000,
+			(byte)0b11111111, (byte)0b11110000,
+			(byte)0b11111111, (byte)0b11111100,
+			(byte)0b11110000, (byte)0b00000000,
+			(byte)0b11110000, (byte)0b00000000,
+			(byte)0b01111111, (byte)0b11110000,
+			(byte)0b00011111, (byte)0b11000000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00000000, (byte)0b00000000
+	};
+
+	private static final byte[] i_grave = {
+			12, // ì (più stretto, come 'f')
+			(byte)0b00001110, (byte)0b00000000,
+			(byte)0b00000011, (byte)0b10000000,
+			(byte)0b00000001, (byte)0b11000000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00111100, (byte)0b00000000,
+			(byte)0b00111100, (byte)0b00000000,
+			(byte)0b00111100, (byte)0b00000000,
+			(byte)0b00111100, (byte)0b00000000,
+			(byte)0b00111100, (byte)0b00000000,
+			(byte)0b00111100, (byte)0b00000000,
+			(byte)0b00111100, (byte)0b00000000,
+			(byte)0b00111100, (byte)0b00000000,
+			(byte)0b00011111, (byte)0b00000000,
+			(byte)0b00001111, (byte)0b00000000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00000000, (byte)0b00000000
+	};
+
+	private static final byte[] o_grave = {
+			14, // ò
+			(byte)0b00001110, (byte)0b00000000,
+			(byte)0b00000011, (byte)0b10000000,
+			(byte)0b00000001, (byte)0b11000000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00011111, (byte)0b11100000,
+			(byte)0b01111111, (byte)0b11111000,
+			(byte)0b11111000, (byte)0b01111100,
+			(byte)0b11110000, (byte)0b00111100,
+			(byte)0b11110000, (byte)0b00111100,
+			(byte)0b11110000, (byte)0b00111100,
+			(byte)0b11110000, (byte)0b00111100,
+			(byte)0b11111000, (byte)0b01111100,
+			(byte)0b01111111, (byte)0b11111000,
+			(byte)0b00011111, (byte)0b11100000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00000000, (byte)0b00000000
+	};
+
+	private static final byte[] u_grave = {
+			14, // ù
+			(byte)0b00000111, (byte)0b00000000,
+			(byte)0b00000011, (byte)0b10000000,
+			(byte)0b00000001, (byte)0b11000000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b01111111, (byte)0b00111100,
+			(byte)0b00011111, (byte)0b00111100,
+			(byte)0b00111100, (byte)0b00111100,
+			(byte)0b01111000, (byte)0b00111100,
+			(byte)0b11110000, (byte)0b00111100,
+			(byte)0b11110000, (byte)0b00111100,
+			(byte)0b11110000, (byte)0b01111100,
+			(byte)0b11111000, (byte)0b11111100,
+			(byte)0b01111111, (byte)0b10111100,
+			(byte)0b00011111, (byte)0b00111100,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00000000, (byte)0b00000000
+	};
+
+	private static final byte[] parentesi_aperta = {
+			7, // ù
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00001100, (byte)0b00000000,
+			(byte)0b00111000, (byte)0b00000000,
+			(byte)0b01110000, (byte)0b00000000,
+			(byte)0b01110000, (byte)0b00000000,
+			(byte)0b11110000, (byte)0b00000000,
+			(byte)0b11110000, (byte)0b00000000,
+			(byte)0b11110000, (byte)0b00000000,
+			(byte)0b11110000, (byte)0b00000000,
+			(byte)0b11110000, (byte)0b00000000,
+			(byte)0b11110000, (byte)0b00000000,
+			(byte)0b01110000, (byte)0b00000000,
+			(byte)0b01110000, (byte)0b00000000,
+			(byte)0b00111000, (byte)0b00000000,
+			(byte)0b00001100, (byte)0b00000000,
+			(byte)0b00000000, (byte)0b00000000
+	};
+
+	private static final byte[] parentesi_chiusa = {
+			7, // ù
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b11000000, (byte)0b00000000,
+			(byte)0b01110000, (byte)0b00000000,
+			(byte)0b01110000, (byte)0b00000000,
+			(byte)0b01110000, (byte)0b00000000,
+			(byte)0b01111000, (byte)0b00000000,
+			(byte)0b01111000, (byte)0b00000000,
+			(byte)0b01111000, (byte)0b00000000,
+			(byte)0b01111000, (byte)0b00000000,
+			(byte)0b01111000, (byte)0b00000000,
+			(byte)0b01111000, (byte)0b00000000,
+			(byte)0b01110000, (byte)0b00000000,
+			(byte)0b01110000, (byte)0b00000000,
+			(byte)0b01110000, (byte)0b00000000,
+			(byte)0b11000000, (byte)0b00000000,
+			(byte)0b00000000, (byte)0b00000000
 	};
 }
