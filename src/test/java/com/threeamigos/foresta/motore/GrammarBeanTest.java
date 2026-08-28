@@ -934,6 +934,45 @@ class GrammarBeanTest {
         assertEquals(java.util.Arrays.asList("line1", "line2"), result);
     }
 
+    // ---- character encoding ----
+
+    @Test
+    void accentedTextFromAnInputStreamIsDecodedAsUtf8() throws Exception {
+        // Both source files are decoded with an explicit UTF-8 charset rather than the JVM
+        // default, so a grammar's accented letters survive on any platform. On a JVM whose
+        // default is already UTF-8 this passes either way; it fails where the default differs.
+        byte[] grammatica = "ROOT\n\tperch\u00e9 la citt\u00e0 pu\u00f2 gi\u00e0 finire cos\u00ec\n"
+                .getBytes(StandardCharsets.UTF_8);
+        GrammarBean bean = new GrammarBean(new ByteArrayInputStream(grammatica), null);
+        assertEquals("perch\u00e9 la citt\u00e0 pu\u00f2 gi\u00e0 finire cos\u00ec", bean.produce().get(0));
+    }
+
+    @Test
+    void accentedTextInPostProductionStreamIsDecodedAsUtf8() throws Exception {
+        byte[] grammatica = "ROOT\n\ta il perche\n".getBytes(StandardCharsets.UTF_8);
+        byte[] post = "a il perche:al perch\u00e9".getBytes(StandardCharsets.UTF_8);
+        GrammarBean bean = new GrammarBean(new ByteArrayInputStream(grammatica), new ByteArrayInputStream(post));
+        assertEquals("al perch\u00e9", bean.produce().get(0));
+    }
+
+    @Test
+    void accentedTextFromTheStringConstructorRoundTrips() throws Exception {
+        // The String constructor encodes to bytes and immediately re-reads them: the encode and
+        // the decode must agree, which they only do if both name UTF-8 explicitly.
+        GrammarBean bean = new GrammarBean("ROOT\n\tl'et\u00e0 dell'or\u00f2 \u00e8 gi\u00e0 finita\n",
+                "or\u00f2:oro");
+        assertEquals("l'et\u00e0 dell'oro \u00e8 gi\u00e0 finita", bean.produce().get(0));
+    }
+
+    @Test
+    void accentedLetterIsCapitalizedCorrectlyThroughTheWholePipeline() throws Exception {
+        // Ties the encoding to the capitalize marker: a multi-byte first letter must survive
+        // decoding and still be upper-cased.
+        GrammarBean bean = new GrammarBean(
+                new ByteArrayInputStream("ROOT\n\t^[X]\nX\n\t\u00e8 vero\n".getBytes(StandardCharsets.UTF_8)), null);
+        assertEquals("\u00c8 vero", bean.produce().get(0));
+    }
+
     // ---- random seeding ----
 
     @Test

@@ -116,7 +116,7 @@ public interface InterfacciaUtente {
 	public void impostaAzioni();
 
 	/**
-	 * Prepara tutto quel che può servire per disegnare la locazione corrente
+	 * Prepara tutto quel che puÃ² servire per disegnare la locazione corrente
 	 */
 	public void preparaLocazione();
 	

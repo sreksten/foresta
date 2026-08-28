@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 
 /**
@@ -95,6 +96,11 @@ import java.util.*;
  *     There is no escape sequence for a literal {@code ^} immediately before a
  *     reference, same as the file's other markers.</li>
  * </ul>
+ * Both source files are decoded as <b>UTF-8</b>, explicitly rather than through the JVM's
+ * default charset, so that a grammar's accented letters survive regardless of the platform
+ * the game runs on. A {@code String} handed to the text-based constructors is likewise
+ * encoded as UTF-8 before being re-read.
+ * <p>
  * A second, optional post-production file lists literal text substitutions
  * ({@code pre:post}) applied to the final produced text, to fix natural-language
  * issues arising from the mechanical concatenation (e.g., in Italian, {@code "a il"}
@@ -318,8 +324,9 @@ public class GrammarBean {
 	 * @throws IOException if either text cannot be read
 	 */
 	public GrammarBean(String grammar, String postProduction) throws InvalidGrammarException, IOException {
-		this(new ByteArrayInputStream(grammar.getBytes()),
-				postProduction == null ? null : new ByteArrayInputStream(postProduction.getBytes()));
+		this(new ByteArrayInputStream(grammar.getBytes(StandardCharsets.UTF_8)),
+				postProduction == null ? null
+						: new ByteArrayInputStream(postProduction.getBytes(StandardCharsets.UTF_8)));
 	}
 
 	/**
@@ -357,7 +364,7 @@ public class GrammarBean {
 	 * @throws InvalidGrammarException if the file ends with a dangling line continuation marker
 	 */
 	private void readSourceFileAndCreateProductionsMap(InputStream inputStream) throws IOException, InvalidGrammarException {
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 			String currentProduction = null;
 			int currentLineNumber = 0;
 			String line;
@@ -939,7 +946,7 @@ public class GrammarBean {
 		if (inputStream == null) {
 			return;
 		}
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
 			String line;
 			String pre;
 			String post;

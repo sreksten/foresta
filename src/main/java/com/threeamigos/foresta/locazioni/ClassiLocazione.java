@@ -20,14 +20,14 @@ public enum ClassiLocazione {
 	GROTTA_RECUPERA_IL_MEDAGLIONE(GrottaRecuperaIlMedaglione::getIstanza, TipoLocazione.MISSIONE_SECONDARIA),
 	ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI(RovineRecuperaLeDerrateAlimentari::getIstanza, TipoLocazione.MISSIONE_SECONDARIA),
 	/*
-	 * Citt‡
+	 * Citt√†
 	 */
 	CITTA_NYENA(CittaNyena::getIstanza, TipoLocazione.CITTA),
 	CITTA_MALGAARD(CittaMalgaard::getIstanza, TipoLocazione.CITTA),
 	CITTA_RUUNA(CittaRuuna::getIstanza, TipoLocazione.CITTA),
 	CITTA_FLEENA(CittaFleena::getIstanza, TipoLocazione.CITTA),
 	/*
-	 * L'Alchimista si trova unicamente in citt‡
+	 * L'Alchimista si trova unicamente in citt√†
 	 */
 	ALCHIMISTA(Alchimista::getIstanza, TipoLocazione.STANDARD),
 	/*

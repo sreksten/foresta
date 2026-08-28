@@ -21,11 +21,11 @@ public abstract class OggettoBase implements Oggetto {
 
 	/**
 	 * Il gruppo riesce a prendere l'oggetto con l'azione specificata?
-	 * (Se il gruppo è composto da più persone e l'oggetto interagisce 
+	 * (Se il gruppo Ã¨ composto da piÃ¹ persone e l'oggetto interagisce 
 	 * occorre passare una azione che indica il personaggio che lo fa)
 	 * @param gruppo
 	 * @param azione
-	 * @return true se l'oggetto è stato raccolto
+	 * @return true se l'oggetto Ã¨ stato raccolto
 	 */
 	@Override
 	public boolean prendi(GruppoGiocatore gruppo, Comando azione) {

@@ -61,7 +61,7 @@ public abstract class LocazioneBase implements Locazione {
 	
 	private Oggetto oggettoCorrente;
 
-	// Una locazione e' completa se non vi sono più mostri ed il gruppo non
+	// Una locazione e' completa se non vi sono piÃ¹ mostri ed il gruppo non
 	// e' fuggito; questo serve per sapere se si possono
 	// prendere gli oggetti o se i mostri dei castelli sono
 	// stati sconfitti.
@@ -70,7 +70,7 @@ public abstract class LocazioneBase implements Locazione {
 	private boolean opzioneCorruzioneDisponibile;
 	// Se il gruppo puo' (ancora) cercare di fare amicizia
 	private boolean opzioneAmiciziaDisponibile;
-	// Se il gruppo stringe amicizia non può prendere gli oggetti
+	// Se il gruppo stringe amicizia non puÃ² prendere gli oggetti
 	private boolean haStrettoAmicizia;
 	// Se si riesce a fare amicizia potrebbe essere formulata un'offerta
 	private Offerta offerta;
@@ -572,7 +572,7 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
-	 * Alla fine di un turno un gruppo rade al suolo una locazione e si può verificare
+	 * Alla fine di un turno un gruppo rade al suolo una locazione e si puÃ² verificare
 	 * qualcosa; per adesso al momento in cui il giocatore rade al suolo quattro castelli
 	 * appare quello del drago
 	 */

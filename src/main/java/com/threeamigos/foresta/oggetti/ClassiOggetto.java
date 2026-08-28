@@ -42,7 +42,7 @@ public enum ClassiOggetto {
 			.setQuantitaMassima(1)
 			.setValore(100)
 			),
-	// Gli artefatti non vanno mai restituiti tra gli oggetti che una locazione può nascondere!
+	// Gli artefatti non vanno mai restituiti tra gli oggetti che una locazione puÃ² nascondere!
 	ARTEFATTO(null, builder()
 			.setImmagine(null)
 			.setQuantitaMassima(1)

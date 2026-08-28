@@ -739,7 +739,7 @@ public class Automa implements ControlloreDiGioco {
 	}
 
 	/**
-	 * Riporta Azione.PERSONAGGIO_1 se un unico personaggio è disponibile,
+	 * Riporta Azione.PERSONAGGIO_1 se un unico personaggio Ã¨ disponibile,
 	 * altrimenti null ed imposta le azioni per scegliere il personaggio
 	 */
 	private Comando scegliPersonaggio(boolean ancheSeMorto) {

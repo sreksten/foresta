@@ -127,7 +127,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 			azione == Comando.PERSONAGGIO_3 ||
 			azione == Comando.PERSONAGGIO_4 ||
 			azione == Comando.PERSONAGGIO_5) {
-				//TODO la gestione acquisti dall'alchimista può essere migliorata rimanendo in locazione finché si hanno monete
+				//TODO la gestione acquisti dall'alchimista puÃ² essere migliorata rimanendo in locazione finchÃ© si hanno monete
 				if (g.getMonete() >= 10) {
 					Personaggio p = g.getPersonaggio(azione);
 					g.subMonete(10);

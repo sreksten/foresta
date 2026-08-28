@@ -28,7 +28,7 @@ public class ForestaMD implements Serializzabile {
 	private int maxYConosciuta;
 
 	// Serve tenerne traccia per le informazioni che i PNG danno al gruppo.
-	// Si potrebbe fare anche un ciclo su tutta la foresta ma così si fa prima.
+	// Si potrebbe fare anche un ciclo su tutta la foresta ma cosÃ¬ si fa prima.
 	private Map<ClassiLocazione, CoordinateMD> locazioniUniche;
 
 	public int getDimensioneX() {

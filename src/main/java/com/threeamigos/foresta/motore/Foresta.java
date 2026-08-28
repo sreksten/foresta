@@ -120,7 +120,7 @@ public class Foresta {
 	}
 	
 	/**
-	 * Costruisce le citt‡ e ci piazza un personaggio a caso
+	 * Costruisce le citt√† e ci piazza un personaggio a caso
 	 */
 	private static final void costruisciCittaEPosizionaPersonaggi() {
 		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {

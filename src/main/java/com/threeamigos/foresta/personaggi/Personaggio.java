@@ -315,7 +315,7 @@ public interface Personaggio {
 	 */
 	public Offerta getOfferta(Comando azione);
 	/**
-	 * Un personaggio potrebbe essere immune a una certa classe di incantesimi (o più)
+	 * Un personaggio potrebbe essere immune a una certa classe di incantesimi (o piÃ¹)
 	 */
 	public boolean isImmuneAIncantesimo(ClassiIncantesimo classeIncantesimo);
 	

@@ -96,7 +96,7 @@ public class LineaTemporale {
 
 	private static final String COLONNA = " vede levarsi una colonna di fumo ";
 
-	//TODO le città potrebbero essere distrutte a caso
+	//TODO le cittÃ  potrebbero essere distrutte a caso
 	public static final void eventi(GruppoGiocatore gruppo) {
 		int giorno = getGiorno();
 		if (giorno > 40) {

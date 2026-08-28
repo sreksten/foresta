@@ -53,12 +53,12 @@ public interface Locazione {
 	public boolean isCompleta();
 	
 	/**
-	 * Il gruppo è riuscito a stringere amicizia?
+	 * Il gruppo Ã¨ riuscito a stringere amicizia?
 	 */
 	public boolean isHaStrettoAmicizia();
 
 	/**
-	 * Alla fine di un turno un gruppo rade al suolo una locazione e si può verificare
+	 * Alla fine di un turno un gruppo rade al suolo una locazione e si puÃ² verificare
 	 * qualcosa; per adesso al momento in cui il giocatore rade al suolo quattro castelli
 	 * appare quello del drago
 	 */

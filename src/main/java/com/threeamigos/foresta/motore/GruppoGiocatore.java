@@ -191,7 +191,7 @@ public class GruppoGiocatore extends Gruppo {
 	}
 
 	/**
-	 * Usata da oggetti.Cofano per sapere se può essere vuoto o meno
+	 * Usata da oggetti.Cofano per sapere se puÃ² essere vuoto o meno
 	 */
 	//TODO rinominare in getClasseLocazioneCorrente per chiarezza
 	public ClassiLocazione getClasseLocazione() {

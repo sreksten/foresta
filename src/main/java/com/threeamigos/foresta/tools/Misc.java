@@ -116,7 +116,7 @@ public class Misc {
 
 	/**
 	 * Riporta la direzione di un punto della foresta rispetto ad un gruppo
-	 * (per le informazioni su citt‡, castelli, artefatti, o per gli eventi)
+	 * (per le informazioni su citt√†, castelli, artefatti, o per gli eventi)
 	 */
 	public static String getDirezione(GruppoGiocatore g, CoordinateMD coordinate) {
 		return getDirezione(g.getX(), g.getY(), coordinate.getX(), coordinate.getY());

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 /**
- * Gli stati in cui l'automa che controlla lo stato del gioco si può trovare
+ * Gli stati in cui l'automa che controlla lo stato del gioco si puÃ² trovare
  */
 public enum Stato {
 
