@@ -46,7 +46,9 @@ import java.util.*;
  *     <li>A reference prefixed with {@code !} (e.g. {@code [!Name]}) is a
  *     <b>locally fixed production</b>: like the global one, but the cached value is
  *     only reused within the same production subtree (i.e. it does not leak into
- *     sibling branches produced independently).</li>
+ *     sibling branches produced independently). It is visible to everything nested
+ *     below the point that fixed it, at any depth, so a {@code [#Name]} inside a
+ *     referenced production still finds the value its caller fixed.</li>
  *     <li>A reference of the form {@code [key=value]} <b>assigns</b> a value
  *     to {@code key} in the same global cache used by {@code *} references, to be
  *     later retrieved with a {@code #} reference anywhere in the produced text.
@@ -335,7 +337,6 @@ public class GrammarBean {
 	private void readSourceFileAndCreateProductionsMap(InputStream inputStream) throws IOException, InvalidGrammarException {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream))) {
 			String currentProduction = null;
-			String previousProduction = null;
 			int currentLineNumber = 0;
 			String line;
 			while ((line = reader.readLine()) != null) {
@@ -354,8 +355,7 @@ public class GrammarBean {
 				if (CHILD_LINE_PREFIX_CHARS.indexOf(line.charAt(0)) >= 0) {
 					handleChildren(line, currentLineNumber, currentProduction);
 				} else {
-					checkPreviousProduction(currentLineNumber, previousProduction);
-					previousProduction = currentProduction;
+					checkPreviousProduction(currentLineNumber, currentProduction);
 					currentProduction = handleProduction(currentLineNumber, line);
 				}
 			}
@@ -366,7 +366,10 @@ public class GrammarBean {
 	/**
 	 * Checks that the production just closed off by reaching a new production header
 	 * (or the end of file) has at least one child, since a production that produces
-	 * nothing would break generation later on.
+	 * nothing would break generation later on. Called with the production that was
+	 * still being filled in, so that every production in the file is checked exactly
+	 * once: when the header that closes it is read, or, for the last one, when the end
+	 * of file is reached.
 	 * @throws InvalidGrammarException if {@code previousProduction} has no children at all
 	 */
 	private void checkPreviousProduction(int currentLineNumber, String previousProduction) throws InvalidGrammarException {
@@ -977,12 +980,19 @@ public class GrammarBean {
 
 	/**
 	 * Produces a random text starting from an explicitly given production, without
-	 * changing {@link #rootNode}.
+	 * changing {@link #rootNode}. Like {@link #produce()}, the global fixed-production
+	 * cache is cleared once the text has been produced, so that a {@code [*Name]}
+	 * reference stays fixed within a single call instead of being frozen across every
+	 * subsequent one.
 	 * @param rootNode the plain name (no brackets) of an existing production
 	 * @return the produced text, split into one entry per line
 	 */
 	public List<String> produce(String rootNode) {
-		return produceImpl(OPENING_BRACKET + rootNode + CLOSING_BRACKET);
+		try {
+			return produceImpl(OPENING_BRACKET + rootNode + CLOSING_BRACKET);
+		} finally {
+			globalFixedProductions.clear();
+		}
 	}
 
 	/**
@@ -1009,7 +1019,12 @@ public class GrammarBean {
 	 * @return the fully expanded text, with no {@code [...]} tokens left
 	 */
 	private String produceImpl(String production, Map<String, List<WeightedAlternative>> superProductionsMap, Map<String, String> superFixedProductions) {
-		Map<String, String> localFixedProductions = new HashMap<>();
+		// Seeded from the caller's cache rather than empty, so that a value fixed by a
+		// [!Name] higher up is visible to a [#Name] (or a further [!Name]) anywhere below
+		// it in the same subtree, at any depth. The copy is what keeps sibling branches
+		// independent: each inherits the same starting point but writes only into its own
+		// map, so nothing a branch fixes leaks back up or sideways.
+		Map<String, String> localFixedProductions = new HashMap<>(superFixedProductions);
 		int openingBracketIndex;
 		while ((openingBracketIndex = production.indexOf(OPENING_BRACKET)) >= 0) {
 			boolean capitalize = openingBracketIndex > 0
@@ -1123,7 +1138,8 @@ public class GrammarBean {
 	/**
 	 * Handles a {@code [#key]} token by looking up the value previously assigned to
 	 * {@code key}: first in {@code localFixedProductions} (which a {@code [!key]} in the
-	 * same call frame may have populated), then in {@link #globalFixedProductions} (which
+	 * same call frame, or in any enclosing one within the same subtree, may have
+	 * populated), then in {@link #globalFixedProductions} (which
 	 * {@link #assignFixedProduction} populates).
 	 * @throws IllegalArgumentException if {@code key} was never assigned
 	 */

@@ -75,6 +75,44 @@ class GrammarBeanTest {
     }
 
     @Test
+    void productionWithNoChildrenIsInvalidInEveryPosition() {
+        // Regression: checkPreviousProduction used to be called one production behind, so the
+        // second-to-last production in the file was the one position never checked. A childless
+        // production there loaded silently and only blew up much later, when generation reached
+        // it, as "IndexOutOfBoundsException: Index -1 out of bounds for length 0" from
+        // pickWeighted. Every position must be rejected at load time.
+        String[] grammars = {
+                "A\nB\n\tx\nC\n\tx\nD\n\tx\n",   // first
+                "A\n\tx\nB\nC\n\tx\nD\n\tx\n",   // second
+                "A\n\tx\nB\n\tx\nC\nD\n\tx\n",   // second-to-last (the regression)
+                "A\n\tx\nB\n\tx\nC\n\tx\nD\n",   // last
+                "A\n\tx\nB\n\tx\nC\n\tx\nD\nE\n\tx\n",
+                "A\nB\n\tx\n",                       // first of two
+                "A\n",                                  // the only one
+        };
+        for (String grammar : grammars) {
+            GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                    () -> new GrammarBean(grammar), "Expected rejection for: " + grammar);
+            assertTrue(ex.getMessage().contains("does not produce anything"), ex.getMessage());
+        }
+    }
+
+    @Test
+    void penultimateProductionWithNoChildrenIsInvalid() {
+        // The single position the old off-by-one missed, called out on its own so a future
+        // regression names itself.
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("A\n\tx\nB\n\tx\nC\nD\n\tx\n"));
+        assertTrue(ex.getMessage().contains("Production C does not produce anything"), ex.getMessage());
+    }
+
+    @Test
+    void grammarWithEveryProductionPopulatedIsStillAccepted() {
+        // Guard against over-correcting D1 into rejecting valid grammars.
+        assertDoesNotThrow(() -> new GrammarBean("A\n\tx\nB\n\tx\nC\n\tx\n"));
+    }
+
+    @Test
     void childLineWithoutPrecedingProductionIsInvalid() {
         GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
                 () -> new GrammarBean("\tx\n"));
@@ -375,6 +413,59 @@ class GrammarBeanTest {
     }
 
     @Test
+    void locallyFixedValueIsVisibleToReferenceInNestedSubtree() throws Exception {
+        // Regression: [!N] caches into the frame that resolved it, and a nested production's
+        // own frame used to start from an empty local cache, so a [#N] one level down failed
+        // with "Production #N not yet defined!" even though its caller had just fixed N.
+        GrammarBean bean = new GrammarBean("ROOT\n\t[!N] [SUB]\nSUB\n\tvisto:[#N]\nN\n\tvalore\n");
+        assertEquals("valore visto:valore", bean.produce().get(0));
+    }
+
+    @Test
+    void locallyFixedValueIsVisibleTwoLevelsDownTheSubtree() throws Exception {
+        // Visibility must be transitive, not just one frame deep.
+        GrammarBean bean = new GrammarBean(
+                "ROOT\n\t[!N] [SUB]\nSUB\n\t[SUB2]\nSUB2\n\tvisto:[#N]\nN\n\tvalore\n");
+        assertEquals("valore visto:valore", bean.produce().get(0));
+    }
+
+    @Test
+    void locallyFixedValueIsReusedByANestedLocallyFixedReferenceToTheSameName() throws Exception {
+        // "Locally fixed" means fixed for the subtree: a [!NAME] nested below another [!NAME]
+        // must reuse the value rather than draw a fresh one.
+        GrammarBean bean = new GrammarBean(
+                "ROOT\n\t[!NAME] [SUB]\nSUB\n\t[!NAME]\nNAME\n\ta|b|c|d|e|f|g|h\n");
+        for (int i = 0; i < 100; i++) {
+            String[] parts = bean.produce().get(0).split(" ");
+            assertEquals(2, parts.length);
+            assertEquals(parts[0], parts[1], "Nested [!NAME] should reuse the enclosing subtree's value");
+        }
+    }
+
+    @Test
+    void inheritedLocalValueDoesNotLeakBackToTheCallerOrToSiblings() throws Exception {
+        // Each frame inherits a *copy*: a value fixed inside one branch must not become
+        // visible to a sibling branch produced afterwards, nor escape upwards. BRANCH fixes
+        // NAME in its own frame; the two branches must therefore stay independent, while the
+        // halves within each branch agree.
+        GrammarBean bean = new GrammarBean(
+                "ROOT\n\t[BRANCH] [BRANCH]\nBRANCH\n\t[!NAME]-[!NAME]\nNAME\n\ta|b|c|d|e|f|g|h\n");
+        boolean sawDifference = false;
+        for (int i = 0; i < 200; i++) {
+            String[] branches = bean.produce().get(0).split(" ");
+            assertEquals(2, branches.length);
+            for (String branch : branches) {
+                String[] halves = branch.split("-");
+                assertEquals(halves[0], halves[1]);
+            }
+            if (!branches[0].equals(branches[1])) {
+                sawDifference = true;
+            }
+        }
+        assertTrue(sawDifference, "Sibling branches must stay independent of each other");
+    }
+
+    @Test
     void addFixedProductionPreSeedsGlobalFixedValue() throws Exception {
         GrammarBean bean = new GrammarBean("ROOT\n\t[*NAME]\nNAME\n\treal\n");
         bean.addFixedProduction("NAME", "overridden");
@@ -463,6 +554,39 @@ class GrammarBeanTest {
         GrammarBean bean = new GrammarBean("FIRST\n\tfirstText\nSECOND\n\tsecondText\n");
         assertEquals("secondText", bean.produce("SECOND").get(0));
         assertEquals("FIRST", bean.getRootNode());
+    }
+
+    @Test
+    void globalFixedProductionIsClearedBetweenProduceWithExplicitRootCalls() throws Exception {
+        // Regression: produce() cleared globalFixedProductions in a finally block but
+        // produce(String) did not, so the very first value a [*Name] resolved to was frozen
+        // for the whole lifetime of the bean, silently making every later call identical.
+        GrammarBean bean = new GrammarBean("ROOT\n\t[*NAME]\nNAME\n\ta|b|c|d|e|f|g|h\n");
+        Set<String> seen = new HashSet<>();
+        for (int i = 0; i < 200; i++) {
+            seen.add(bean.produce("ROOT").get(0));
+        }
+        assertTrue(seen.size() > 1, "Global fixed cache should reset between produce(String) calls, saw only " + seen);
+    }
+
+    @Test
+    void globalFixedProductionIsStillCachedWithinASingleProduceWithExplicitRootCall() throws Exception {
+        // The clearing must happen after the text is produced, not before: within one call the
+        // two occurrences must still agree.
+        GrammarBean bean = new GrammarBean("ROOT\n\t[*NAME] [*NAME]\nNAME\n\ta|b|c|d|e|f|g|h\n");
+        for (int i = 0; i < 50; i++) {
+            String[] parts = bean.produce("ROOT").get(0).split(" ");
+            assertEquals(2, parts.length);
+            assertEquals(parts[0], parts[1]);
+        }
+    }
+
+    @Test
+    void addFixedProductionStillAppliesToProduceWithExplicitRoot() throws Exception {
+        // A pre-seeded value must survive until the text has been produced.
+        GrammarBean bean = new GrammarBean("ROOT\n\t[*NAME]\nNAME\n\treal\n");
+        bean.addFixedProduction("NAME", "overridden");
+        assertEquals("overridden", bean.produce("ROOT").get(0));
     }
 
     // ---- production mode ----
