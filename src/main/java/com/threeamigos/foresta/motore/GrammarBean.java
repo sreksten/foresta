@@ -83,8 +83,9 @@ import java.util.*;
  *     used for the rest of the {@code GrammarBean}'s lifetime. Reference cycles
  *     (self- or mutually-recursive productions) are handled by using a production's
  *     original, not-yet-boosted weight wherever it is re-encountered while its own
- *     boost is still being computed — deterministic for a given grammar, but not
- *     symmetric between structurally identical cycle members (see
+ *     boost is still being computed. Two structurally identical members of a cycle
+ *     therefore do not end up with the same weight: the one <b>declared first in the
+ *     file</b> is boosted first, and so ends up the heavier of the two (see
  *     {@link #adjustWeightsForDescendants}).</li>
  *     <li>A reference of any kind ({@code [Name]}, {@code [*Name]}, {@code [!Name]} or
  *     {@code [#key]}) prefixed with {@code ^} immediately to its left, <b>outside</b>
@@ -126,6 +127,47 @@ import java.util.*;
  * the final produced text is automatically collapsed into a single space, and any space
  * or tab left immediately before a punctuation mark is removed, once, after every
  * post-production substitution has been applied (see {@link #postProduce}).
+ * <p>
+ * <b>One-shot productions make a sequence of {@code produce()} calls stateful, and the
+ * caller decides where one sequence ends and the next begins by calling
+ * {@link #reset()}.</b> There is no single right policy, because the two things a grammar
+ * may want are opposites:
+ * <ul>
+ *     <li><b>Independent results.</b> Each call should stand on its own and draw from the
+ *     full set of alternatives — one fairy tale per visit to the inn, say. Call
+ *     {@link #reset()} after every {@code produce()}. Without it the one-shot pools keep
+ *     draining across calls, and results get progressively poorer until they fail
+ *     outright.</li>
+ *     <li><b>A run of deliberately distinct results.</b> Generating, say, five different
+ *     characters that must not repeat one another is exactly what a one-shot production is
+ *     for: <b>do not</b> reset between them, or they will be free to repeat. Reset only when
+ *     starting a new run.</li>
+ * </ul>
+ * The failure mode of the second case is worth knowing, because it arrives late and its
+ * message names an innocent production: once a one-shot production's last alternative has
+ * been consumed, the production is removed and the cascade in {@link #removeProduction}
+ * strips every alternative referencing it, recursively removing whatever is left empty. A
+ * later call then dies with {@code IllegalArgumentException: Production X is empty!}, where
+ * {@code X} may be several levels above the pool that actually ran dry. The length of a run
+ * is therefore bounded by the smallest one-shot pool it draws from — see
+ * {@link #ONE_SHOT_MARKER} and {@link #getProduction}.
+ * <p>
+ * <b>This class is not thread-safe.</b> An instance must be confined to a single thread.
+ * The catch is that {@link #produce()} looks like a read but is not: it consumes one-shot
+ * alternatives out of {@link #currentProductionsMap} (cascading through
+ * {@link #removeProduction}), fills and then clears {@link #globalFixedProductions}, and
+ * draws from a shared {@link Random}. Two threads calling {@code produce()} on the same
+ * instance can therefore lose one another's fixed values, consume the same one-shot
+ * alternative twice, or leave the productions map half-pruned. {@link #reset()},
+ * {@link #addFixedProduction}, {@link #setRootNode} and {@link #setProductionMode} mutate
+ * the same state and are equally unguarded.
+ * <p>
+ * What <i>is</i> safe is sharing the grammar <i>source</i>: everything parsed at load time
+ * ({@link #productionsMap}, including the weights baked in by
+ * {@link #adjustWeightsForDescendants}, and {@link #postProductions}) is never written
+ * again once the constructor returns. So the way to produce text from more than one thread
+ * is to give each thread its own {@code GrammarBean} built from the same file, not to
+ * synchronize access to one shared instance.
  */
 public class GrammarBean {
 
@@ -249,13 +291,24 @@ public class GrammarBean {
 	 */
 	private String rootNode = null;
 	/**
-	 * Map of all available productions
+	 * Map of all available productions. Insertion-ordered, so that iterating it follows the
+	 * order in which the productions were declared in the grammar file (with any production
+	 * auto-generated from an inline alternation group sitting where it was created). Three
+	 * things depend on that: which member of a reference cycle gets its descendant weight
+	 * boosted first (see {@link #adjustWeightsForDescendants}), which broken reference is
+	 * reported first when a grammar has several (see {@link #checkProductionsValidity}), and
+	 * the order in which an exhausted one-shot production's cascade strips other productions
+	 * (see {@link #removeProduction}). A plain {@link HashMap} left all three up to hash
+	 * order: reproducible for a given grammar and JVM, but impossible to predict by reading
+	 * the file.
 	 */
-	private final Map<String, List<WeightedAlternative>> productionsMap = new HashMap<>();
+	private final Map<String, List<WeightedAlternative>> productionsMap = new LinkedHashMap<>();
 	/**
-	 * Map of all available productions to be reused in a cycle of productions
+	 * Map of all available productions to be reused in a cycle of productions. Insertion-ordered
+	 * like {@link #productionsMap}, which {@link #reset()} copies it from, so the one-shot
+	 * removal cascade walks the productions in declaration order.
 	 */
-	private final Map<String, List<WeightedAlternative>> currentProductionsMap = new HashMap<>();
+	private final Map<String, List<WeightedAlternative>> currentProductionsMap = new LinkedHashMap<>();
 	/**
 	 * Fixed productions map
 	 */
@@ -263,8 +316,14 @@ public class GrammarBean {
 	/**
 	 * Map of all productions that happen after the main production has finished, to adjust the result fixing natural language grammar issues
 	 * (e.g., in the Italian language, 'a il' is transformed to 'al').
+	 * <p>
+	 * Insertion-ordered, so {@link #postProduce} applies the rules in the order they are
+	 * written in the post-production file. This matters whenever two rules can match the same
+	 * span of text — a shorter {@code pre} that is a prefix of a longer one, say — because
+	 * whichever runs first consumes it. With a plain {@link HashMap} that outcome was decided
+	 * by hash order, so a file could not express its own precedence.
 	 */
-	private final Map<String, String> postProductions = new HashMap<>();
+	private final Map<String, String> postProductions = new LinkedHashMap<>();
 	/**
 	 * To randomly choose a production. Left to {@link Random}'s own no-argument seeding
 	 * rather than seeded from {@link System#currentTimeMillis()}: the latter has
@@ -832,6 +891,10 @@ public class GrammarBean {
 	 * inline-alternation-group productions) has been parsed and validated, and before
 	 * {@link #reset()} ever copies {@link #productionsMap} into
 	 * {@link #currentProductionsMap}.
+	 * <p>
+	 * Productions are visited in declaration order, which is what makes the outcome for
+	 * reference cycles predictable from the grammar file; see
+	 * {@link #computeAdjustedAggregateWeight}.
 	 */
 	private void adjustWeightsForDescendants() {
 		Map<String, Double> aggregateWeightCache = new HashMap<>();
@@ -852,9 +915,10 @@ public class GrammarBean {
 	 * productions). A production still being computed higher up the call stack (tracked in
 	 * {@code inProgressProductions}) is not re-entered; its current, not-yet-boosted
 	 * alternatives are summed directly instead, breaking the cycle with that production's
-	 * original base weight. For a cycle spanning more than one production, whichever member
-	 * is reached first ends up with a bigger boost than the other(s): deterministic for a
-	 * given grammar, but not symmetric between structurally identical cycle members.
+	 * original base weight. For a cycle spanning more than one production, the member reached
+	 * first ends up with a bigger boost than the other(s); since {@link #productionsMap} is
+	 * insertion-ordered, that is the member declared first in the grammar file, so the
+	 * asymmetry can be predicted (and reordered) by reading the file.
 	 */
 	private double computeAdjustedAggregateWeight(String name, Map<String, Double> aggregateWeightCache, Set<String> inProgressProductions) {
 		Double cached = aggregateWeightCache.get(name);
@@ -1014,6 +1078,19 @@ public class GrammarBean {
 	 * clears {@link #globalFixedProductions}, so that any one-shot alternative consumed by a
 	 * previous production cycle is available again and no stale fixed value leaks into the next
 	 * cycle.
+	 * <p>
+	 * This is the call that draws the boundary between one production run and the next, so
+	 * <b>when</b> to make it is a choice, not a formality:
+	 * <ul>
+	 *     <li>after every {@link #produce()}, when each result must be independent of the
+	 *     others and may reuse the same alternatives;</li>
+	 *     <li>only at the start of a run, when the point of the run is that its results do
+	 *     <b>not</b> repeat one another — resetting in between would defeat the one-shot
+	 *     productions the grammar relies on for that.</li>
+	 * </ul>
+	 * A grammar with no one-shot production and no {@code [*Name]} reference has nothing to
+	 * restore, so calling this is harmless but pointless. See the class documentation for what
+	 * happens to a run that outlives its smallest one-shot pool.
 	 */
 	public void reset() {
 		currentProductionsMap.clear();
@@ -1033,6 +1110,11 @@ public class GrammarBean {
 
 	/**
 	 * Produces a random text starting from {@link #rootNode}.
+	 * <p>
+	 * If the grammar has one-shot productions, whether this call should be followed by
+	 * {@link #reset()} depends on what the caller is after: reset to make every call
+	 * independent, do not reset to build a run of results that must not repeat one another.
+	 * See the class documentation.
 	 * @return the produced text, split into one entry per line
 	 */
 	public List<String> produce() {
@@ -1048,7 +1130,8 @@ public class GrammarBean {
 	 * changing {@link #rootNode}. Like {@link #produce()}, the global fixed-production
 	 * cache is cleared once the text has been produced, so that a {@code [*Name]}
 	 * reference stays fixed within a single call instead of being frozen across every
-	 * subsequent one.
+	 * subsequent one. One-shot productions, on the other hand, stay consumed until
+	 * {@link #reset()} is called; see the class documentation for when that is what you want.
 	 * @param rootNode the plain name (no brackets) of an existing production
 	 * @return the produced text, split into one entry per line
 	 */
@@ -1334,6 +1417,9 @@ public class GrammarBean {
 	 * real bracket first, before the substitutions run: every token has already been expanded by
 	 * now, so a bracket restored here can no longer be mistaken for a reference, and the
 	 * post-production rules and the whitespace clean-up both get to see the final text.
+	 * <p>
+	 * Rules are applied in the order they appear in the post-production file, so a file listing
+	 * a longer {@code pre} before a shorter one that is its prefix gets the longer match first.
 	 * <p>
 	 * Each rule is applied repeatedly until its {@code pre} no longer occurs, re-scanning
 	 * from the start of the text every time, so that occurrences overlapping one another

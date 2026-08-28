@@ -934,6 +934,67 @@ class GrammarBeanTest {
         assertEquals(java.util.Arrays.asList("line1", "line2"), result);
     }
 
+    // ---- declaration order is honoured ----
+
+    @Test
+    void undefinedReferenceIsReportedInDeclarationOrder() {
+        // productionsMap is insertion-ordered, so validation walks the productions in the order
+        // the file declares them and the first broken reference reported is the first one written.
+        // Under a plain HashMap this was decided by hash order instead.
+        GrammarBean.InvalidGrammarException prima = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\t[MANCA_UNO]\nSECONDA\n\t[MANCA_DUE]\n"));
+        assertTrue(prima.getMessage().contains("MANCA_UNO"), prima.getMessage());
+
+        GrammarBean.InvalidGrammarException dopo = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("SECONDA\n\t[MANCA_DUE]\nROOT\n\t[MANCA_UNO]\n"));
+        assertTrue(dopo.getMessage().contains("MANCA_DUE"), dopo.getMessage());
+    }
+
+    @Test
+    void postProductionRulesAreAppliedInFileOrder() throws Exception {
+        // "abc" and "ab" both match the produced text: the rule listed first consumes it.
+        GrammarBean bean = new GrammarBean("ROOT\n\tabc\n", "abc:Y\nab:X");
+        assertEquals("Y", bean.produce().get(0));
+    }
+
+    @Test
+    void reorderingPostProductionRulesChangesWhichOneWins() throws Exception {
+        // Same two rules, opposite order: now the shorter "ab" gets there first and leaves the "c"
+        // behind. This is the whole point of honouring file order -- the file can express its own
+        // precedence, which under hash order it could not.
+        GrammarBean bean = new GrammarBean("ROOT\n\tabc\n", "ab:X\nabc:Y");
+        assertEquals("Xc", bean.produce().get(0));
+    }
+
+    @Test
+    void cycleWeightAsymmetryFollowsDeclarationOrder() throws Exception {
+        // A and B are mutually recursive and structurally identical, so one of them must end up
+        // heavier: the descendant-weight boost breaks the cycle using the not-yet-boosted weight
+        // of whichever member it reaches second. Reaching order is now declaration order, so the
+        // member declared FIRST gets the heavier recursive branch and therefore picks its own
+        // "stop" alternative less often. Swapping the declarations must mirror the outcome.
+        String aPrima = "A\n\tx[B]|stopA\nB\n\ty[A]|stopB\n";
+        String bPrima = "B\n\ty[A]|stopB\nA\n\tx[B]|stopA\n";
+        double stopAConAPrima = percentualeDiUscitaImmediata(aPrima, "A", "stopA");
+        double stopAConBPrima = percentualeDiUscitaImmediata(bPrima, "A", "stopA");
+        // measured: about 34.7% vs about 37.7%; assert the direction with a wide margin
+        assertTrue(stopAConBPrima > stopAConAPrima + 1.0,
+                "A declared first should make stopA rarer: " + stopAConAPrima + "% vs " + stopAConBPrima + "%");
+    }
+
+    private static double percentualeDiUscitaImmediata(String grammatica, String radice, String uscita)
+            throws Exception {
+        GrammarBean bean = new GrammarBean(grammatica);
+        int conteggio = 0;
+        int prove = 40000;
+        for (int i = 0; i < prove; i++) {
+            if (uscita.equals(bean.produce(radice).get(0))) {
+                conteggio++;
+            }
+        }
+        return 100.0 * conteggio / prove;
+    }
+
     // ---- character encoding ----
 
     @Test
