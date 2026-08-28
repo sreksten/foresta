@@ -4,6 +4,7 @@ import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
 import java.util.List;
@@ -245,14 +246,15 @@ class GrammarBeanTest {
 
     @Test
     void nestedInlineAlternationGroupExpandsRecursively() throws Exception {
-        // The outer group's only alternative is "x {y|z}"; expanding it recursively turns the
+        // One of the outer group's alternatives is "x {y|z}"; expanding it recursively turns the
         // nested group into its own on-the-fly production before the outer one is registered.
-        GrammarBean bean = new GrammarBean("ROOT\n\ta { x { y | z } } b\n");
+        // (The outer group needs a second option of its own: a single-option group is rejected.)
+        GrammarBean bean = new GrammarBean("ROOT\n\ta { x { y | z } | w } b\n");
         Set<String> seen = new HashSet<>();
-        for (int i = 0; i < 60; i++) {
+        for (int i = 0; i < 200; i++) {
             seen.add(bean.produce().get(0));
         }
-        assertEquals(new HashSet<>(java.util.Arrays.asList("a x y b", "a x z b")), seen);
+        assertEquals(new HashSet<>(java.util.Arrays.asList("a x y b", "a x z b", "a w b")), seen);
     }
 
     @Test
@@ -276,6 +278,40 @@ class GrammarBeanTest {
         GrammarBean bean = new GrammarBean("ROOT\n\t{ x | y { z | } }\n");
         bean.setProductionMode(ProductionModeEnum.LAST);
         assertEquals("y", bean.produce().get(0));
+    }
+
+    @Test
+    void inlineAlternationGroupWithASingleOptionIsInvalid() {
+        // A group with no top-level '|' has nothing to alternate between: all it does is strip its
+        // own braces, which silently swallows text the author probably meant to keep. Rejecting it
+        // forces the intent to be stated — either drop the braces, or quote them to emit them.
+        for (String grammar : new String[]{
+                "ROOT\n\t{a}\n",
+                "ROOT\n\tTAG { [X] }\nX\n\tvalore\n",
+                "ROOT\n\t{}\n",
+                "ROOT\n\ta { x { y | z } } b\n",   // the offending group is the outer one
+        }) {
+            GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                    () -> new GrammarBean(grammar), "Expected rejection for: " + grammar);
+            assertTrue(ex.getMessage().contains("has no '|'"), ex.getMessage());
+        }
+    }
+
+    @Test
+    void inlineAlternationGroupWithTwoOptionsIsStillValid() {
+        // Guard against over-correcting: two options are enough, and one of them may be empty
+        // (the optional-element idiom) or blank.
+        assertDoesNotThrow(() -> new GrammarBean("ROOT\n\t{a|b}\n"));
+        assertDoesNotThrow(() -> new GrammarBean("ROOT\n\tUn {grande|}lupo\n"));
+        assertDoesNotThrow(() -> new GrammarBean("ROOT\n\tSomething {   |  } vuoto\n"));
+    }
+
+    @Test
+    void literalBracesAreEmittedByQuotingThemInsteadOfUsingASingleOptionGroup() throws Exception {
+        // The replacement idiom for what a single-option group used to do silently, except that
+        // now the braces actually reach the output.
+        GrammarBean bean = new GrammarBean("ROOT\n\tTAG \"{\" [X] \"}\"\nX\n\tvalore\n");
+        assertEquals("TAG { valore }", bean.produce().get(0));
     }
 
     @Test
@@ -326,6 +362,49 @@ class GrammarBeanTest {
             seen.add(bean.produce().get(0));
         }
         assertEquals(new HashSet<>(java.util.Arrays.asList("a|b", "c")), seen);
+    }
+
+    @Test
+    void escapedBracketsInsideQuotedSpanAreLiteralText() throws Exception {
+        // Regression: a quoted span protected '{', '}' and '|' but never '[' and ']', so a literal
+        // bracket could not be emitted at all -- "[1, 2]" was parsed as a reference to a
+        // production named "1, 2" and rejected at load time.
+        GrammarBean bean = new GrammarBean("ROOT\n\t\"\\[1, 2\\]\"\n");
+        assertEquals("[1, 2]", bean.produce().get(0));
+    }
+
+    @Test
+    void escapedBracketsCoexistWithRealReferencesInTheSameSpan() throws Exception {
+        // The escape is per-bracket: an unescaped [X] in the same span must still expand, which is
+        // what artefatti.txt relies on.
+        GrammarBean bean = new GrammarBean(
+                "ROOT\n\t\"{ \\\"tags\\\": \\[[X]\\] }\"\nX\n\t7\n");
+        assertEquals("{ \"tags\": [7] }", bean.produce().get(0));
+    }
+
+    @Test
+    void unescapedBracketInsideQuotedSpanIsStillAReference() throws Exception {
+        // Explicitly pinned: quoted spans still do NOT protect brackets by themselves. Changing
+        // that would break artefatti.txt, whose JSON embeds [ATTRIBUTO_*] references inside spans.
+        GrammarBean bean = new GrammarBean("ROOT\n\t\"[X]\"\nX\n\tvalore\n");
+        assertEquals("valore", bean.produce().get(0));
+    }
+
+    @Test
+    void escapedBracketOutsideAQuotedSpanIsNotAnEscape() {
+        // The escape only exists inside a raw literal span, where '\\' is already the escape
+        // character. Outside one, the backslash is not special and the bracket is still a token.
+        assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\t\\[X\\]\nX\n\tvalore\n"));
+    }
+
+    @Test
+    void reservedPlaceholderCharacterInSourceIsRejected() {
+        // The placeholders standing in for escaped brackets are control characters, but a source
+        // file containing one would still corrupt the output silently, so it is refused.
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\ttesto \uE000 qui\n"));
+        assertTrue(ex.getMessage().contains("Reserved placeholder"), ex.getMessage());
     }
 
     @Test
@@ -705,6 +784,66 @@ class GrammarBeanTest {
     }
 
     @Test
+    void postProductionRuleWhosePostContainsPreIsInvalid() {
+        // Regression: postProduce re-scans from the start of the text after every rewrite, so a
+        // rule that writes its own "pre" back into the text kept matching what it had just
+        // written and looped forever, hanging the caller. Rejecting the rule at load time is
+        // what keeps that repeated-application loop safe.
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\ta il gatto\n", "a il:a il grande"));
+        assertTrue(ex.getMessage().contains("would never terminate"), ex.getMessage());
+    }
+
+    @Test
+    void postProductionRuleWhosePostEqualsPreIsInvalid() {
+        // The degenerate no-op rule: also an endless loop, since the match is rewritten
+        // identically and found again at the same position.
+        assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\tx\n", "x:x"));
+    }
+
+    @Test
+    void postProductionRuleWhosePostContainsPreAnywhereIsInvalid() {
+        // The containment can be at the start, in the middle or at the end of "post": all three
+        // feed the rule back into itself.
+        for (String rule : new String[]{"il:il bello", "il:bel il lo", "il:bello il"}) {
+            assertThrows(GrammarBean.InvalidGrammarException.class,
+                    () -> new GrammarBean("ROOT\n\til gatto\n", rule), "Expected rejection for: " + rule);
+        }
+    }
+
+    @Test
+    void postProductionRuleSharingCharactersWithoutContainingPreIsStillValid() {
+        // Guard against over-correcting into a rejection of legitimate rules: " a il " and " al "
+        // share most of their characters, but "post" does not contain "pre", so the rule
+        // terminates and must be accepted.
+        assertDoesNotThrow(() -> new GrammarBean("ROOT\n\tvai a il castello\n", " a il : al "));
+        assertDoesNotThrow(() -> new GrammarBean("ROOT\n\ta , b\n", " ,:,"));
+    }
+
+    @Test
+    void shippedPostProductionFileIsStillAccepted() throws Exception {
+        // The rules actually used by the game must keep loading: preposizioni_articolate_pp.txt
+        // is treated as final, so this test fails loudly if the new check ever rejects it.
+        try (InputStream grammar = new ByteArrayInputStream("ROOT\n\tvai a il castello\n".getBytes(StandardCharsets.UTF_8));
+             InputStream postProduction = GrammarBeanTest.class.getResourceAsStream(
+                     "/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt")) {
+            assertNotNull(postProduction, "preposizioni_articolate_pp.txt not found on the test classpath");
+            GrammarBean bean = new GrammarBean(grammar, postProduction);
+            assertEquals("vai al castello", bean.produce().get(0));
+        }
+    }
+
+    @Test
+    void postProductionRewritesOverlappingOccurrences() throws Exception {
+        // The behaviour the load-time check exists to preserve: " a il " can overlap itself,
+        // because it both starts and ends with a space, and the repeated-application loop
+        // rewrites every occurrence. A single-pass replacement would leave the second one.
+        GrammarBean bean = new GrammarBean("ROOT\n\tvai a il a il castello\n", " a il : al ");
+        assertEquals("vai al al castello", bean.produce().get(0));
+    }
+
+    @Test
     void postProductionSubstitutesEveryOccurrence() throws Exception {
         GrammarBean bean = new GrammarBean("ROOT\n\ta il gatto e a il cane\n", "a il:al");
         assertEquals("al gatto e al cane", bean.produce().get(0));
@@ -788,11 +927,42 @@ class GrammarBeanTest {
     void producedTextIsSplitIntoLines() throws Exception {
         // Neither the grammar file nor the post-production file can embed a literal newline
         // inside a single entry (both are parsed via BufferedReader.readLine()), so the only way
-        // to exercise the final line-splitting is to call the public produceImpl(String) directly
+        // to exercise the final line-splitting is to call the package-private produceImpl(String)
         // with a string that already contains one.
         GrammarBean bean = new GrammarBean("ROOT\n\tirrelevant\n");
         List<String> result = bean.produceImpl("line1\nline2");
         assertEquals(java.util.Arrays.asList("line1", "line2"), result);
+    }
+
+    // ---- random seeding ----
+
+    @Test
+    void beansCreatedBackToBackDoNotShareTheSameRandomSequence() throws Exception {
+        // Regression: rnd used to be seeded from System.currentTimeMillis(), whose resolution is
+        // a millisecond, so two beans built one after another (exactly what
+        // ProduttoreDiTestiCasuale's static initializer does) drew the identical sequence.
+        // Random's own no-argument seeding mixes in a per-instance uniquifier, so it cannot.
+        GrammarBean first = new GrammarBean("ROOT\n\ta|b|c|d|e|f|g|h\n");
+        GrammarBean second = new GrammarBean("ROOT\n\ta|b|c|d|e|f|g|h\n");
+        StringBuilder fromFirst = new StringBuilder();
+        StringBuilder fromSecond = new StringBuilder();
+        for (int i = 0; i < 40; i++) {
+            fromFirst.append(first.produce().get(0));
+            fromSecond.append(second.produce().get(0));
+        }
+        assertNotEquals(fromFirst.toString(), fromSecond.toString(),
+                "Two beans built back to back must not draw the same sequence");
+    }
+
+    @Test
+    void aSingleBeanStillVariesAcrossCalls() throws Exception {
+        // Sanity guard for the seeding change: the generator must still be random.
+        GrammarBean bean = new GrammarBean("ROOT\n\ta|b|c|d|e|f|g|h\n");
+        Set<String> seen = new HashSet<>();
+        for (int i = 0; i < 200; i++) {
+            seen.add(bean.produce().get(0));
+        }
+        assertEquals(8, seen.size(), "Expected every alternative to be reachable, saw " + seen);
     }
 
     // ---- unbalanced brackets are rejected at load time ----

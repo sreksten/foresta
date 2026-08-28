@@ -98,7 +98,9 @@ import java.util.*;
  * A second, optional post-production file lists literal text substitutions
  * ({@code pre:post}) applied to the final produced text, to fix natural-language
  * issues arising from the mechanical concatenation (e.g., in Italian, {@code "a il"}
- * becoming {@code "al"}).
+ * becoming {@code "al"}). A rule's {@code post} may not contain its own {@code pre}
+ * verbatim, since each rule is applied until its {@code pre} no longer occurs (see
+ * {@link #setPostProductionFile} and {@link #postProduce}).
  * <p>
  * Every production is expected to produce a trimmed string (see
  * {@link #resolvePlainProduction} and {@link #resolveFixedProduction}): any leading or
@@ -150,9 +152,25 @@ public class GrammarBean {
 	 */
 	private static final char QUOTE_CHAR = '"';
 	/**
-	 * Character escaping a {@link #QUOTE_CHAR} inside a raw literal span so it doesn't close it.
+	 * Character escaping a {@link #QUOTE_CHAR}, an {@link #OPENING_BRACKET} or a
+	 * {@link #CLOSING_BRACKET} inside a raw literal span so it is treated as plain text.
 	 */
 	private static final char ESCAPE_CHAR = '\\';
+	/**
+	 * Characters standing in for a literal {@code [} and {@code ]} written as {@code \[} and
+	 * {@code \]} inside a raw literal span. Substituted in by {@link #unescapeQuotes} at
+	 * grammar-load time and turned back into real brackets by {@link #postProduce}, once every
+	 * token has been expanded: this is what keeps an escaped bracket invisible to the
+	 * token scanners ({@link #checkTokensValidity}, {@link #collectReferencedProductions},
+	 * {@link #produceImpl(String, Map, Map)}), which all look for a bare {@code [}. Control
+	 * Private-use-area characters are used so that no plausible grammar text can collide with
+	 * them; a source file containing one is rejected outright (see
+	 * {@link #readSourceFileAndCreateProductionsMap}). They must stay above {@code U+0020},
+	 * because every production's expansion is passed through {@link String#trim()}, which would
+	 * otherwise strip a placeholder sitting at either edge of it.
+	 */
+	private static final char LITERAL_OPENING_BRACKET_PLACEHOLDER = '\uE000';
+	private static final char LITERAL_CLOSING_BRACKET_PLACEHOLDER = '\uE001';
 	/**
 	 * Marker that, found as the very last character of a line, means the line is not
 	 * finished yet: it is stripped and the next line is appended in its place.
@@ -242,9 +260,13 @@ public class GrammarBean {
 	 */
 	private final Map<String, String> postProductions = new HashMap<>();
 	/**
-	 * To randomly choose a production
+	 * To randomly choose a production. Left to {@link Random}'s own no-argument seeding
+	 * rather than seeded from {@link System#currentTimeMillis()}: the latter has
+	 * millisecond granularity, so two {@code GrammarBean}s built within the same
+	 * millisecond — as happens when several grammars are loaded one after another in a
+	 * single static initializer — ended up drawing the very same sequence.
 	 */
-	private final Random rnd = new Random(System.currentTimeMillis());
+	private final Random rnd = new Random();
 	/**
 	 * Controls how a production's alternative is picked; see {@link ProductionModeEnum}.
 	 * Defaults to {@link ProductionModeEnum#RANDOM}. Setting it to {@link ProductionModeEnum#FIRST}
@@ -348,6 +370,12 @@ public class GrammarBean {
 					}
 					currentLineNumber++;
 					line = line.substring(0, line.length() - LINE_CONTINUATION_MARKER.length()) + nextLine;
+				}
+				if (line.indexOf(LITERAL_OPENING_BRACKET_PLACEHOLDER) >= 0
+						|| line.indexOf(LITERAL_CLOSING_BRACKET_PLACEHOLDER) >= 0) {
+					throw new InvalidGrammarException(LINE + currentLineNumber
+							+ ": Reserved placeholder character found; use '" + ESCAPE_CHAR + OPENING_BRACKET
+							+ "' inside a quoted span for a literal bracket");
 				}
 				if (line.isEmpty() || line.startsWith(COMMENT_PREFIX)) {
 					continue;
@@ -566,7 +594,9 @@ public class GrammarBean {
 
 	/**
 	 * Strips the {@link #QUOTE_CHAR} delimiters of every raw literal span found in {@code text},
-	 * turning a {@code \"} escape into a literal {@code "}. This is the single point where a raw
+	 * turning a {@code \"} escape into a literal {@code "} and a {@code \[}/{@code \]} escape into
+	 * the placeholder that {@link #postProduce} will turn back into a literal bracket. This is the
+	 * single point where a raw
 	 * literal span's markers are actually resolved: earlier scans ({@link #splitTopLevelAlternatives},
 	 * {@link #findMatchingClosingBrace}, {@link #findNextUnquotedOpeningBrace}) only need to know
 	 * where a span is, not strip it, since doing so before group detection is finished would make a
@@ -580,6 +610,12 @@ public class GrammarBean {
 			if (inQuotes) {
 				if (c == ESCAPE_CHAR && i + 1 < text.length() && text.charAt(i + 1) == QUOTE_CHAR) {
 					result.append(QUOTE_CHAR);
+					i++;
+				} else if (c == ESCAPE_CHAR && i + 1 < text.length() && text.charAt(i + 1) == OPENING_BRACKET.charAt(0)) {
+					result.append(LITERAL_OPENING_BRACKET_PLACEHOLDER);
+					i++;
+				} else if (c == ESCAPE_CHAR && i + 1 < text.length() && text.charAt(i + 1) == CLOSING_BRACKET.charAt(0)) {
+					result.append(LITERAL_CLOSING_BRACKET_PLACEHOLDER);
 					i++;
 				} else if (c == QUOTE_CHAR) {
 					inQuotes = false;
@@ -651,8 +687,15 @@ public class GrammarBean {
 	 *                                  option's weight token is malformed
 	 */
 	private String createInlineProduction(String inlineOptionsText, int currentLineNumber) throws InvalidGrammarException {
+		List<String> rawOptions = splitTopLevelAlternatives(inlineOptionsText, currentLineNumber);
+		if (rawOptions.size() < 2) {
+			throw new InvalidGrammarException(LINE + currentLineNumber + ": Inline alternation group '"
+					+ OPENING_BRACE + inlineOptionsText + CLOSING_BRACE + "' has no '|': a group with a single"
+					+ " option only strips its own braces. Remove them, or quote them (\"" + OPENING_BRACE
+					+ "\" ... \"" + CLOSING_BRACE + "\") to emit them as literal text");
+		}
 		List<WeightedAlternative> options = new ArrayList<>();
-		for (String option : splitTopLevelAlternatives(inlineOptionsText, currentLineNumber)) {
+		for (String option : rawOptions) {
 			WeightedAlternative weighted = parseWeight(option.trim(), currentLineNumber);
 			options.add(new WeightedAlternative(expandInlineAlternations(weighted.text, currentLineNumber), weighted.weight));
 		}
@@ -880,7 +923,17 @@ public class GrammarBean {
 	 * Reads the optional post-production file into {@link #postProductions}. Each line
 	 * must be of the form {@code pre:post}; a missing file (a {@code null} stream) simply
 	 * results in no post-production substitutions.
-	 * @throws InvalidGrammarException if a line is missing its pre- or post-production text
+	 * <p>
+	 * A rule whose {@code post} contains its own {@code pre} verbatim is rejected here,
+	 * because {@link #postProduce} re-scans the text it has just rewritten and would
+	 * therefore keep finding that same {@code pre} inside the {@code post} it just wrote,
+	 * looping forever. Rejecting it at load time keeps the substitution loop in
+	 * {@link #postProduce} exactly as it is — repeated application per rule, so that
+	 * overlapping occurrences are all rewritten — instead of trading that behaviour away
+	 * for a single-pass replacement.
+	 * @throws InvalidGrammarException if a line is missing its pre- or post-production
+	 *                                  text, or its post-production contains its own
+	 *                                  pre-production
 	 */
 	private void setPostProductionFile(InputStream inputStream) throws InvalidGrammarException, IOException {
 		if (inputStream == null) {
@@ -904,6 +957,11 @@ public class GrammarBean {
 				post = parts[1];
 				if (post.trim().isEmpty()) {
 					throw new InvalidGrammarException(LINE + currentLine + ": Empty post production");
+				}
+				if (post.contains(pre)) {
+					throw new InvalidGrammarException(LINE + currentLine + ": Post production '" + post
+							+ "' contains its own pre production '" + pre
+							+ "': the substitution would never terminate");
 				}
 				postProductions.put(pre, post);
 			}
@@ -999,10 +1057,16 @@ public class GrammarBean {
 	 * Expands {@code startNode} (already wrapped in brackets by {@link #produce()} or
 	 * {@link #produce(String)}) into its final text, then applies post-production
 	 * substitutions and splits the result into lines.
+	 * <p>
+	 * Package-private on purpose: it takes an already-bracketed token and exposes the
+	 * internal ordering of the production phases, so it is not part of the class's public
+	 * surface. It is visible only so that tests in this package can drive the final
+	 * line-splitting step directly, which no grammar file can reach (neither source file
+	 * can embed a literal newline inside a single entry).
 	 * @param startNode a single {@code [Name]} token to expand
 	 * @return the produced text, split into one entry per line
 	 */
-	public List<String> produceImpl(String startNode) {
+	List<String> produceImpl(String startNode) {
 		String firstResult = produceImpl(startNode, currentProductionsMap, globalFixedProductions);
 		String intermediateResult = postProduce(firstResult);
         return new ArrayList<>(Arrays.asList(intermediateResult.split(LINE_BREAK_REGEX)));
@@ -1258,8 +1322,22 @@ public class GrammarBean {
 	 * one space, and finally strips any space or tab left immediately before a punctuation
 	 * mark (typically left behind when a reference at the very end of a sentence expands
 	 * to an empty string).
+	 * <p>
+	 * Any {@code \[}/{@code \]} escape written inside a raw literal span is turned back into a
+	 * real bracket first, before the substitutions run: every token has already been expanded by
+	 * now, so a bracket restored here can no longer be mistaken for a reference, and the
+	 * post-production rules and the whitespace clean-up both get to see the final text.
+	 * <p>
+	 * Each rule is applied repeatedly until its {@code pre} no longer occurs, re-scanning
+	 * from the start of the text every time, so that occurrences overlapping one another
+	 * are all rewritten. This terminates because {@link #setPostProductionFile} refuses
+	 * any rule whose {@code post} contains its own {@code pre}: without that guarantee a
+	 * rule would keep matching the text it had just written.
 	 */
 	private String postProduce(String intermediateProduction) {
+		intermediateProduction = intermediateProduction
+				.replace(LITERAL_OPENING_BRACKET_PLACEHOLDER, OPENING_BRACKET.charAt(0))
+				.replace(LITERAL_CLOSING_BRACKET_PLACEHOLDER, CLOSING_BRACKET.charAt(0));
 		for (Map.Entry<String, String> entry : postProductions.entrySet()) {
 			String pre = entry.getKey();
 			String post = entry.getValue();
