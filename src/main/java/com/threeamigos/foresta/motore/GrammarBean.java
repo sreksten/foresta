@@ -46,7 +46,7 @@ import java.util.*;
  *     occurrence, anywhere in the produced text.</li>
  *     <li>A reference prefixed with {@code !} (e.g. {@code [!Name]}) is a
  *     <b>locally fixed production</b>: like the global one, but the cached value is
- *     only reused within the same production subtree (i.e. it does not leak into
+ *     only reused within the same production subtree (i.e., it does not leak into
  *     sibling branches produced independently). It is visible to everything nested
  *     below the point that fixed it, at any depth, so a {@code [#Name]} inside a
  *     referenced production still finds the value its caller fixed.</li>
