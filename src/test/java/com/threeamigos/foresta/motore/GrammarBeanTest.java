@@ -844,6 +844,37 @@ class GrammarBeanTest {
     }
 
     @Test
+    void postProductionCommentsAndBlankLinesAreSkipped() throws Exception {
+        // A rule like "[,:[" is cryptic enough that it needs a comment beside it, so the
+        // post-production file accepts them like the grammar file does.
+        GrammarBean bean = new GrammarBean("ROOT\n\ta il gatto\n",
+                "# questa riga spiega la regola\n\na il:al\n\n# e questa la chiude\n");
+        assertEquals("al gatto", bean.produce().get(0));
+    }
+
+    @Test
+    void postProductionErrorStillReportsTheRealLineNumber() {
+        // Comments and blank lines are skipped but still counted, so the line number in the
+        // message points at the offending line of the file, not at the n-th rule.
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\tx\n", "# commento\n\na il:al\nsenzaduepunti\n"));
+        assertTrue(ex.getMessage().startsWith("Line 4:"), ex.getMessage());
+    }
+
+    @Test
+    void postProductionFileMadeOnlyOfCommentsMeansNoSubstitutions() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\ta il gatto\n", "# nessuna regola qui\n\n");
+        assertEquals("a il gatto", bean.produce().get(0));
+    }
+
+    @Test
+    void postProductionRuleIsNotConfusedWithACommentWhenTheHashIsNotFirst() throws Exception {
+        // Only a '#' at the very start of the line opens a comment: one inside a rule is text.
+        GrammarBean bean = new GrammarBean("ROOT\n\tvedi nota\n", "vedi:cfr. #1");
+        assertEquals("cfr. #1 nota", bean.produce().get(0));
+    }
+
+    @Test
     void postProductionSubstitutesEveryOccurrence() throws Exception {
         GrammarBean bean = new GrammarBean("ROOT\n\ta il gatto e a il cane\n", "a il:al");
         assertEquals("al gatto e al cane", bean.produce().get(0));
@@ -932,6 +963,146 @@ class GrammarBeanTest {
         GrammarBean bean = new GrammarBean("ROOT\n\tirrelevant\n");
         List<String> result = bean.produceImpl("line1\nline2");
         assertEquals(java.util.Arrays.asList("line1", "line2"), result);
+    }
+
+    // ---- default value on a reference ----
+
+    @Test
+    void barePipeInsideATokenIsNoLongerAnAlternativeSeparator() {
+        // Prerequisite for the default construct: splitTopLevelAlternatives used to track curly
+        // braces and quotes but not square brackets, so a '|' inside [...] cut the token in half
+        // and the load failed with "Missing ']'".
+        assertDoesNotThrow(() -> new GrammarBean("ROOT\n\t[K=a|b] [#K]\n"));
+        assertEquals("a|b", assertDoesNotThrow(
+                () -> new GrammarBean("ROOT\n\t[K=a|b] [#K]\n").produce().get(0)));
+    }
+
+    @Test
+    void defaultIsUsedWhenTheValueIsNotAvailableYetForEveryReferenceForm() throws Exception {
+        // The assignment sits AFTER the read in every one of these, so the fallback is what comes
+        // out. Without the '?' each of them would throw halfway through the generation.
+        String tail = " poi [K=[V]]\nV\n\tvalore\n";
+        assertEquals("ripiego poi", new GrammarBean("ROOT\n\t[*K? | ripiego]" + tail).produce().get(0));
+        assertEquals("ripiego poi", new GrammarBean("ROOT\n\t[#K? | ripiego]" + tail).produce().get(0));
+        assertEquals("ripiego poi", new GrammarBean("ROOT\n\t[!K? | ripiego]" + tail).produce().get(0));
+        assertEquals("ripiego poi", new GrammarBean("ROOT\n\t[K? | ripiego]" + tail).produce().get(0));
+    }
+
+    @Test
+    void defaultIsIgnoredWhenTheValueIsAvailable() throws Exception {
+        // Guard against the fallback shadowing a perfectly good value: once assigned, the real
+        // value wins, and a name that is a declared production is resolved normally.
+        GrammarBean assegnata = new GrammarBean("ROOT\n\t[K=[V]] [*K? | ripiego]\nV\n\tvalore\n");
+        assertEquals("valore", assegnata.produce().get(0));
+        GrammarBean dichiarata = new GrammarBean("ROOT\n\t[V? | ripiego]\nV\n\tvalore\n");
+        assertEquals("valore", dichiarata.produce().get(0));
+    }
+
+    @Test
+    void emptyDefaultIsWrittenEitherWithATrailingPipeOrWithTheShortForm() throws Exception {
+        // An empty fallback is the way to say "if there is nothing, put nothing here"; the
+        // surrounding spaces are collapsed by postProduce exactly as for any empty alternative.
+        String grammatica = "ROOT\n\tprima %s dopo\nX\n\t[K=[V]]\nV\n\tvalore\n";
+        assertEquals("prima dopo", new GrammarBean(String.format(grammatica, "[K? | ]")).produce().get(0));
+        assertEquals("prima dopo", new GrammarBean(String.format(grammatica, "[K?]")).produce().get(0));
+    }
+
+    @Test
+    void defaultMayBeALiteralAReferenceOrAnInlineGroup() throws Exception {
+        String tail = " [K=[V]]\nALTRA\n\taltra\nV\n\tvalore\n";
+        assertEquals("letterale", new GrammarBean("ROOT\n\t[K? | letterale]" + tail).produce().get(0));
+        assertEquals("altra", new GrammarBean("ROOT\n\t[K? | [ALTRA]]" + tail).produce().get(0));
+        Set<String> visti = new HashSet<>();
+        GrammarBean gruppo = new GrammarBean("ROOT\n\t[K? | {a|b}]" + tail);
+        for (int i = 0; i < 200; i++) {
+            visti.add(gruppo.produce().get(0));
+        }
+        assertEquals(new HashSet<>(java.util.Arrays.asList("a", "b")), visti);
+    }
+
+    @Test
+    void literalPipeInsideADefaultIsProtectedByAQuotedSpan() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\t[K? | \"a|b\"] [K=[V]]\nV\n\tvalore\n");
+        assertEquals("a|b", bean.produce().get(0));
+    }
+
+    @Test
+    void capitalizeMarkerAppliesToTheDefaultToo() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\t^[K? | \u00e0bc] [K=[V]]\nV\n\tvalore\n");
+        assertEquals("\u00c0bc", bean.produce().get(0));
+    }
+
+    @Test
+    void defaultAlsoCoversAOneShotProductionThatHasBeenExhausted() throws Exception {
+        // The lookup runs against the pruned currentProductionsMap, so an exhausted one-shot
+        // production simply reads as "no value available" and the fallback takes over, instead of
+        // the cascade killing the whole generation.
+        GrammarBean con = new GrammarBean("ROOT\n\t[X? | esaurito]\nX$\n\tsolo\n");
+        assertEquals("solo", con.produce().get(0));
+        assertEquals("esaurito", con.produce().get(0));
+        assertEquals("esaurito", con.produce().get(0));
+
+        GrammarBean senza = new GrammarBean("ROOT\n\t[X]\nX$\n\tsolo\n");
+        assertEquals("solo", senza.produce().get(0));
+        assertThrows(IllegalArgumentException.class, senza::produce);
+    }
+
+    @Test
+    void defaultedNameStillHasToBeKnownToTheGrammar() {
+        // The '?' buys tolerance about WHEN a value appears, not about whether the name means
+        // anything: a typo must still be caught at load time rather than silently defaulting for
+        // ever. A name is "known" if it is a declared production or a key assigned somewhere.
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\t[MAI_VISTA? | ripiego]\n"));
+        assertTrue(ex.getMessage().contains("MAI_VISTA"), ex.getMessage());
+        assertDoesNotThrow(() -> new GrammarBean("ROOT\n\t[K? | ripiego] [K=[V]]\nV\n\tvalore\n"));
+        assertDoesNotThrow(() -> new GrammarBean("ROOT\n\t[V? | ripiego]\nV\n\tvalore\n"));
+    }
+
+    @Test
+    void defaultMarkerWithoutANameIsInvalid() {
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\t[? | ripiego]\n"));
+        assertTrue(ex.getMessage().contains("must be preceded by a node name"), ex.getMessage());
+    }
+
+    @Test
+    void aBrokenReferenceInsideADefaultIsStillRejected() {
+        // The fallback is grammar too: it gets validated like any other text.
+        assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT\n\t[K? | [MAI_VISTA]] [K=[V]]\nV\n\tvalore\n"));
+    }
+
+    @Test
+    void anAssignmentInsideADefaultIsCollectedAsAnAssignedKey() throws Exception {
+        // collectAssignedKeys has to descend into the fallback, otherwise "[B=...]" written there
+        // would go unnoticed and the later "[#B]" would be rejected as undefined.
+        GrammarBean bean = new GrammarBean(
+                "ROOT\n\t[K? | [B=[V]]ripiego] [#B]\nX\n\t[K=[V]]\nV\n\tvalore\n");
+        assertEquals("ripiego valore", bean.produce().get(0));
+    }
+
+    @Test
+    void productionNameMayNotEndWithTheDefaultMarker() {
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT?\n\tx\n"));
+        assertTrue(ex.getMessage().contains("may not end with"), ex.getMessage());
+    }
+
+    @Test
+    void questionMarkAndPipeInsideAnAssignmentStayPlainText() throws Exception {
+        // An assignment's value is free text, so "?|" in there is not a default separator.
+        GrammarBean bean = new GrammarBean("ROOT\n\t[K=a? | b] [#K]\n");
+        assertEquals("a? | b", bean.produce().get(0));
+    }
+
+    @Test
+    void whitespaceAroundTheDefaultMarkerAndPipeIsIgnored() throws Exception {
+        String tail = " [K=[V]]\nV\n\tvalore\n";
+        for (String token : new String[]{"[K?|ripiego]", "[K? |ripiego]", "[K ? | ripiego]", "[K   ?   |   ripiego]"}) {
+            assertEquals("ripiego", new GrammarBean("ROOT\n\t" + token + tail).produce().get(0),
+                    "Unexpected result for " + token);
+        }
     }
 
     // ---- declaration order is honoured ----

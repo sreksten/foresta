@@ -58,6 +58,21 @@ import java.util.*;
  *     is stored.</li>
  *     <li>A reference prefixed with {@code #} (e.g. {@code [#key]}) retrieves the
  *     value previously assigned to {@code key} via a {@code key=value} token.</li>
+ *     <li>A reference of any kind may carry a <b>default value</b>, written after the
+ *     referenced name as {@code ?} followed by {@code |} and the text to fall back on:
+ *     {@code [*EQUIPAGGIAMENTO? | fagotto]}. Whitespace around the {@code ?} and the
+ *     {@code |} is ignored, and {@code [Name?]} on its own is the short form for an empty
+ *     default. The fallback is ordinary grammar text: a literal, a {@code [Reference]}, an
+ *     inline group, or a mix. It is used whenever no value is available at that point —
+ *     because the name was never declared, because the {@code [key=value]} that would have
+ *     filled it has not run yet, or because a one-shot production has been exhausted — which
+ *     is what makes a grammar safe to write without declaring a placeholder production just
+ *     to satisfy validation. The {@code ?} buys tolerance about <i>when</i> a value appears,
+ *     not about whether the name means anything: the name must still be a declared production
+ *     or a key assigned somewhere in the grammar, so a typo is still refused at load time
+ *     (see {@link #checkTokenValidity}). A production name may therefore not end with
+ *     {@code ?}. An assignment's value is free text, so {@code ?} and {@code |} inside
+ *     {@code [key=value]} stay plain text.</li>
  *     <li>A line starting with {@code #} is a full-line comment and is ignored, as
  *     are empty lines.</li>
  *     <li>An alternative may start with a {@code [^N]} token ({@code N} a positive
@@ -78,8 +93,10 @@ import java.util.*;
  *     references), so alternatives that expand into structurally richer subtrees get
  *     picked proportionally more often under {@link ProductionModeEnum#RANDOM} without
  *     requiring a hand-written {@code [^N]} token. A production referenced more than
- *     once in the same alternative contributes to the boost once per occurrence. This
- *     adjustment is computed once, at grammar-load time, and baked into the weights
+ *     once in the same alternative contributes to the boost once per occurrence. A
+ *     reference carrying a default counts either the referenced production or whatever its
+ *     fallback references, never both, since only one of the two is taken at production time.
+ *     This adjustment is computed once, at grammar-load time, and baked into the weights
  *     used for the rest of the {@code GrammarBean}'s lifetime. Reference cycles
  *     (self- or mutually-recursive productions) are handled by using a production's
  *     original, not-yet-boosted weight wherever it is re-encountered while its own
@@ -263,6 +280,17 @@ public class GrammarBean {
 	 * {@link #produceImpl(String, Map, Map)}.
 	 */
 	private static final String CAPITALIZE_MARKER = "^";
+	/**
+	 * Marker making a reference tolerant of a missing value: written just after the referenced
+	 * name and followed by {@code |} and the value to fall back on
+	 * ({@code [Name? | fallback]}), or alone for an empty fallback ({@code [Name?]}). Resolved
+	 * at production time, in {@link #resolveToken}. Distinct in position from both
+	 * {@link #WEIGHT_MARKER} (which follows the opening bracket, at the very start of an
+	 * alternative) and {@link #CAPITALIZE_MARKER} (which precedes the opening bracket), so the
+	 * three never occupy the same character position. A production name may therefore not end
+	 * with this character (see {@link #handleProduction}).
+	 */
+	private static final String DEFAULT_MARKER = "?";
 	/**
 	 * Scale factor applied to a referenced production's aggregate weight when boosting the
 	 * weight of an alternative that references it; see {@link #adjustWeightsForDescendants}.
@@ -490,6 +518,10 @@ public class GrammarBean {
 			Logger.log("One-shot production: " + currentProduction);
 			oneShotProductions.add(currentProduction);
 		}
+		if (currentProduction.endsWith(DEFAULT_MARKER)) {
+			throw new InvalidGrammarException(LINE + currentLineNumber + ": Production name " + currentProduction
+					+ " may not end with '" + DEFAULT_MARKER + "', which marks a reference's default value");
+		}
 		if (rootNode == null) {
 			rootNode = currentProduction;
 		}
@@ -561,15 +593,20 @@ public class GrammarBean {
 	 * treating any {@code |} found between an opening and matching closing curly brace as part of
 	 * an inline alternation group rather than an alternative separator, so that a line like
 	 * <code>A {a|b} | C</code> is split into two pieces (<code>A {a|b} </code> and <code> C</code>),
-	 * not four. A {@code |} (or {@code {}}/{@code }}}) found inside a raw literal span
-	 * ({@code "..."}) is likewise never treated as a separator; quotes and escapes are left
-	 * untouched here (they are resolved later, in {@link #expandInlineAlternations}).
+	 * not four. A {@code |} found between an opening and matching closing square bracket is
+	 * likewise part of a token rather than a separator, which is what lets a token carry a
+	 * default value (<code>[Name? | fallback]</code>, see {@link #splitDefault}) or an
+	 * assignment whose value contains a literal {@code |}. A {@code |} (or {@code {}}/{@code }}})
+	 * found inside a raw literal span ({@code "..."}) is never treated as a separator either;
+	 * quotes and escapes are left untouched here (they are resolved later, in
+	 * {@link #expandInlineAlternations}).
 	 * @throws InvalidGrammarException if a raw literal span is opened but never closed
 	 */
 	private List<String> splitTopLevelAlternatives(String line, int currentLineNumber) throws InvalidGrammarException {
 		List<String> alternatives = new ArrayList<>();
 		StringBuilder current = new StringBuilder();
 		int braceDepth = 0;
+		int bracketDepth = 0;
 		boolean inQuotes = false;
 		for (int i = 0; i < line.length(); i++) {
 			char c = line.charAt(i);
@@ -592,7 +629,13 @@ public class GrammarBean {
 			} else if (c == CLOSING_BRACE) {
 				braceDepth--;
 				current.append(c);
-			} else if (c == '|' && braceDepth == 0) {
+			} else if (c == OPENING_BRACKET.charAt(0)) {
+				bracketDepth++;
+				current.append(c);
+			} else if (c == CLOSING_BRACKET.charAt(0)) {
+				bracketDepth = Math.max(0, bracketDepth - 1);
+				current.append(c);
+			} else if (c == '|' && braceDepth == 0 && bracketDepth == 0) {
 				alternatives.add(current.toString());
 				current.setLength(0);
 			} else {
@@ -816,10 +859,16 @@ public class GrammarBean {
 		while ((openingBracketIndex = text.indexOf(OPENING_BRACKET)) >= 0) {
 			int closingBracketIndex = findClosingBracketOrThrow(text, openingBracketIndex);
 			String tokenBody = text.substring(openingBracketIndex + 1, closingBracketIndex);
-			int equalsPosition = tokenBody.indexOf(ASSIGNMENT_MARKER);
-			if (equalsPosition > 0) {
-				assignedKeys.add(tokenBody.substring(0, equalsPosition));
-				collectAssignedKeys(tokenBody.substring(equalsPosition + ASSIGNMENT_MARKER.length()), assignedKeys);
+			TokenWithDefault withDefault = splitDefault(tokenBody);
+			if (withDefault.fallback != null) {
+				// a defaulted token only ever reads; its fallback, though, may well assign
+				collectAssignedKeys(withDefault.fallback, assignedKeys);
+			} else {
+				int equalsPosition = tokenBody.indexOf(ASSIGNMENT_MARKER);
+				if (equalsPosition > 0) {
+					assignedKeys.add(tokenBody.substring(0, equalsPosition));
+					collectAssignedKeys(tokenBody.substring(equalsPosition + ASSIGNMENT_MARKER.length()), assignedKeys);
+				}
 			}
 			text = text.substring(closingBracketIndex + 1);
 		}
@@ -848,6 +897,23 @@ public class GrammarBean {
 	 *                                  and was not assigned anywhere in the grammar
 	 */
 	private void checkTokenValidity(String thisProduction, Set<String> assignedKeys) throws InvalidGrammarException {
+		TokenWithDefault withDefault = splitDefault(thisProduction);
+		if (withDefault.fallback != null) {
+			checkTokensValidity(withDefault.fallback, assignedKeys);
+			String name = withDefault.name;
+			if (name.startsWith(GLOBAL_FIXED_PRODUCTION_MARKER) || name.startsWith(LOCAL_FIXED_PRODUCTION_MARKER)
+					|| name.startsWith(REFERENCE_MARKER)) {
+				name = name.substring(1);
+			}
+			if (name.isEmpty()) {
+				throw new InvalidGrammarException(DEFAULT_MARKER + " marker must be preceded by a node name");
+			}
+			if (productionsMap.get(name) == null && !assignedKeys.contains(name)) {
+				throw new InvalidGrammarException(PRODUCTION + name + " is not defined: a '" + DEFAULT_MARKER
+						+ "' default covers the order in which an assignment runs, not the existence of the name");
+			}
+			return;
+		}
 		if (thisProduction.startsWith(GLOBAL_FIXED_PRODUCTION_MARKER) || thisProduction.startsWith(LOCAL_FIXED_PRODUCTION_MARKER)) {
 			thisProduction = thisProduction.substring(1);
 			if (thisProduction.isEmpty()) {
@@ -977,6 +1043,23 @@ public class GrammarBean {
 		while ((openingBracketIndex = remaining.indexOf(OPENING_BRACKET)) >= 0) {
 			int closingBracketIndex = findClosingBracket(remaining, openingBracketIndex);
 			String tokenBody = remaining.substring(openingBracketIndex + 1, closingBracketIndex);
+			TokenWithDefault withDefault = splitDefault(tokenBody);
+			if (withDefault.fallback != null) {
+				// exactly one of the two branches is taken at production time, so counting both
+				// would inflate the alternative's weight: prefer the name when it is a real
+				// production, and fall back on what the default itself references
+				String name = withDefault.name;
+				if (name.startsWith(GLOBAL_FIXED_PRODUCTION_MARKER) || name.startsWith(LOCAL_FIXED_PRODUCTION_MARKER)) {
+					name = name.substring(1);
+				}
+				if (!name.startsWith(REFERENCE_MARKER) && productionsMap.containsKey(name)) {
+					referenced.add(name);
+				} else {
+					collectReferencedProductions(withDefault.fallback, referenced);
+				}
+				remaining = remaining.substring(closingBracketIndex + 1);
+				continue;
+			}
 			if (tokenBody.startsWith(GLOBAL_FIXED_PRODUCTION_MARKER) || tokenBody.startsWith(LOCAL_FIXED_PRODUCTION_MARKER)) {
 				tokenBody = tokenBody.substring(1);
 			}
@@ -994,6 +1077,16 @@ public class GrammarBean {
 	 * Reads the optional post-production file into {@link #postProductions}. Each line
 	 * must be of the form {@code pre:post}; a missing file (a {@code null} stream) simply
 	 * results in no post-production substitutions.
+	 * <p>
+	 * A line starting with {@link #COMMENT_PREFIX} is a full-line comment and a blank line is
+	 * ignored, exactly as in the grammar file — a substitution rule like {@code [,:[} needs a
+	 * word of explanation next to it far more than a grammar line does. Comments and blank
+	 * lines still count towards the line number reported in an error message, so it points at
+	 * the real line of the file. Note that a line is treated as blank when it is
+	 * <i>whitespace-only</i>, not merely empty: unlike a grammar file, where an indented blank
+	 * line is a meaningful empty alternative, here it could never express a rule. A rule whose
+	 * {@code pre} starts with {@code #} is consequently not expressible, the same trade-off the
+	 * grammar file makes.
 	 * <p>
 	 * A rule whose {@code post} contains its own {@code pre} verbatim is rejected here,
 	 * because {@link #postProduce} re-scans the text it has just rewritten and would
@@ -1017,6 +1110,9 @@ public class GrammarBean {
 			int currentLine = 0;
 			while ((line = reader.readLine()) != null) {
 				currentLine++;
+				if (line.trim().isEmpty() || line.startsWith(COMMENT_PREFIX)) {
+					continue;
+				}
 				String[] parts = line.split(POST_PRODUCTION_SEPARATOR, 2);
 				pre = parts[0];
 				if (pre.trim().isEmpty()) {
@@ -1209,6 +1305,139 @@ public class GrammarBean {
 	}
 
 	/**
+	 * A token body split into the name it references and the value to fall back on when that
+	 * name has no value available. {@link #fallback} is {@code null} for a token without a
+	 * {@link #DEFAULT_MARKER}, which is what tells every caller to take the ordinary path.
+	 */
+	private static final class TokenWithDefault {
+		private final String name;
+		private final String fallback;
+
+		private TokenWithDefault(String name, String fallback) {
+			this.name = name;
+			this.fallback = fallback;
+		}
+	}
+
+	/**
+	 * Finds the {@code |} separating a token's referenced name from its default value: the
+	 * first one at nesting depth zero (square brackets, curly braces and raw literal spans all
+	 * count) whose closest preceding non-whitespace character is a {@link #DEFAULT_MARKER}.
+	 * <p>
+	 * Returns {@code -1} when there is none, and also when a {@code =} is found at depth zero
+	 * first: that makes the token an assignment ({@code [key=value]}), whose value is free to
+	 * contain {@code ?} and {@code |} as plain text. The very first depth-zero {@code |}
+	 * decides — if it is not preceded by a {@link #DEFAULT_MARKER} the token simply has no
+	 * default, rather than the scan hunting for a later candidate.
+	 */
+	private int findDefaultSeparator(String tokenBody) {
+		int braceDepth = 0;
+		int bracketDepth = 0;
+		boolean inQuotes = false;
+		for (int i = 0; i < tokenBody.length(); i++) {
+			char c = tokenBody.charAt(i);
+			if (inQuotes) {
+				if (c == ESCAPE_CHAR && i + 1 < tokenBody.length()) {
+					i++;
+				} else if (c == QUOTE_CHAR) {
+					inQuotes = false;
+				}
+			} else if (c == QUOTE_CHAR) {
+				inQuotes = true;
+			} else if (c == OPENING_BRACE) {
+				braceDepth++;
+			} else if (c == CLOSING_BRACE) {
+				braceDepth = Math.max(0, braceDepth - 1);
+			} else if (c == OPENING_BRACKET.charAt(0)) {
+				bracketDepth++;
+			} else if (c == CLOSING_BRACKET.charAt(0)) {
+				bracketDepth = Math.max(0, bracketDepth - 1);
+			} else if (braceDepth == 0 && bracketDepth == 0) {
+				if (c == ASSIGNMENT_MARKER.charAt(0)) {
+					return -1;
+				}
+				if (c == '|') {
+					return endsWithDefaultMarker(tokenBody.substring(0, i)) ? i : -1;
+				}
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * @return whether {@code text}, ignoring trailing whitespace, ends with the
+	 *         {@link #DEFAULT_MARKER}
+	 */
+	private static boolean endsWithDefaultMarker(String text) {
+		String trimmed = trimTrailingWhitespace(text);
+		return trimmed.endsWith(DEFAULT_MARKER);
+	}
+
+	private static String trimTrailingWhitespace(String text) {
+		int end = text.length();
+		while (end > 0 && Character.isWhitespace(text.charAt(end - 1))) {
+			end--;
+		}
+		return text.substring(0, end);
+	}
+
+	/**
+	 * Splits a token body into the name it references and its default value, recognizing both
+	 * {@code Name? | fallback} and the short form {@code Name?} (an empty fallback). Whitespace
+	 * around the {@link #DEFAULT_MARKER} and the {@code |} is ignored; the fallback itself is
+	 * returned verbatim, to be expanded and trimmed by whoever needs its value.
+	 * @return a {@link TokenWithDefault} whose {@code fallback} is {@code null} when the token
+	 *         carries no default at all, in which case its {@code name} is {@code tokenBody}
+	 *         untouched
+	 */
+	private TokenWithDefault splitDefault(String tokenBody) {
+		int separatorIndex = findDefaultSeparator(tokenBody);
+		if (separatorIndex >= 0) {
+			String beforeSeparator = trimTrailingWhitespace(tokenBody.substring(0, separatorIndex));
+			String name = beforeSeparator.substring(0, beforeSeparator.length() - DEFAULT_MARKER.length()).trim();
+			return new TokenWithDefault(name, tokenBody.substring(separatorIndex + 1));
+		}
+		if (endsWithDefaultMarker(tokenBody) && !hasTopLevelAssignment(tokenBody)) {
+			String trimmed = trimTrailingWhitespace(tokenBody);
+			return new TokenWithDefault(trimmed.substring(0, trimmed.length() - DEFAULT_MARKER.length()).trim(), "");
+		}
+		return new TokenWithDefault(tokenBody, null);
+	}
+
+	/**
+	 * @return whether {@code tokenBody} carries an {@link #ASSIGNMENT_MARKER} at nesting depth
+	 *         zero, i.e. whether it is an assignment rather than a reference
+	 */
+	private boolean hasTopLevelAssignment(String tokenBody) {
+		int braceDepth = 0;
+		int bracketDepth = 0;
+		boolean inQuotes = false;
+		for (int i = 0; i < tokenBody.length(); i++) {
+			char c = tokenBody.charAt(i);
+			if (inQuotes) {
+				if (c == ESCAPE_CHAR && i + 1 < tokenBody.length()) {
+					i++;
+				} else if (c == QUOTE_CHAR) {
+					inQuotes = false;
+				}
+			} else if (c == QUOTE_CHAR) {
+				inQuotes = true;
+			} else if (c == OPENING_BRACE) {
+				braceDepth++;
+			} else if (c == CLOSING_BRACE) {
+				braceDepth = Math.max(0, braceDepth - 1);
+			} else if (c == OPENING_BRACKET.charAt(0)) {
+				bracketDepth++;
+			} else if (c == CLOSING_BRACKET.charAt(0)) {
+				bracketDepth = Math.max(0, bracketDepth - 1);
+			} else if (c == ASSIGNMENT_MARKER.charAt(0) && braceDepth == 0 && bracketDepth == 0) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
 	 * Finds the {@code ]} matching the {@code [} at {@code openingBracketIndex}, honoring
 	 * nesting so that e.g. in {@code [key=[OtherProduction]]} the outer token is matched
 	 * to the outer, final {@code ]} rather than the first one encountered.
@@ -1235,6 +1464,14 @@ public class GrammarBean {
 	 * depending on its marker ({@code *}, {@code !}, {@code =} or {@code #}).
 	 */
 	private String resolveToken(String tokenBody, Map<String, List<WeightedAlternative>> productionsMap, Map<String, String> superFixedProductions, Map<String, String> localFixedProductions) {
+		TokenWithDefault withDefault = splitDefault(tokenBody);
+		if (withDefault.fallback != null) {
+			String resolved = resolveTokenOrNull(withDefault.name, productionsMap, superFixedProductions, localFixedProductions);
+			if (resolved != null) {
+				return resolved;
+			}
+			return produceImpl(withDefault.fallback, productionsMap, localFixedProductions).trim();
+		}
 		if (tokenBody.startsWith(GLOBAL_FIXED_PRODUCTION_MARKER)) {
 			String name = tokenBody.substring(GLOBAL_FIXED_PRODUCTION_MARKER.length());
 			return resolveFixedProduction(name, globalFixedProductions, productionsMap, superFixedProductions);
@@ -1251,6 +1488,56 @@ public class GrammarBean {
 			return resolveReference(tokenBody, localFixedProductions);
 		}
 		return resolvePlainProduction(tokenBody, productionsMap, localFixedProductions);
+	}
+
+	/**
+	 * Resolves a reference the same way {@link #resolveToken} does, but answers {@code null}
+	 * instead of throwing when no value is available, so that the caller can fall back on the
+	 * token's default. "No value available" deliberately covers every reason at once:
+	 * <ul>
+	 *     <li>the name was never declared as a production and never assigned;</li>
+	 *     <li>it is a key that some {@code [key=value]} assigns, but that assignment has not run
+	 *     yet at this point of the expansion;</li>
+	 *     <li>it names a one-shot production whose alternatives have all been consumed, since
+	 *     {@code productionsMap} here is the pruned {@link #currentProductionsMap} and an
+	 *     exhausted production has been removed from it.</li>
+	 * </ul>
+	 * An assignment token never reaches this method: {@link #findDefaultSeparator} refuses to
+	 * see a default in a token that assigns.
+	 */
+	private String resolveTokenOrNull(String tokenBody, Map<String, List<WeightedAlternative>> productionsMap, Map<String, String> superFixedProductions, Map<String, String> localFixedProductions) {
+		if (tokenBody.startsWith(GLOBAL_FIXED_PRODUCTION_MARKER)) {
+			return resolveFixedProductionOrNull(tokenBody.substring(GLOBAL_FIXED_PRODUCTION_MARKER.length()),
+					globalFixedProductions, productionsMap, superFixedProductions);
+		}
+		if (tokenBody.startsWith(LOCAL_FIXED_PRODUCTION_MARKER)) {
+			return resolveFixedProductionOrNull(tokenBody.substring(LOCAL_FIXED_PRODUCTION_MARKER.length()),
+					localFixedProductions, productionsMap, superFixedProductions);
+		}
+		if (tokenBody.startsWith(REFERENCE_MARKER)) {
+			String key = tokenBody.substring(REFERENCE_MARKER.length());
+			String value = localFixedProductions.get(key);
+			return value != null ? value : globalFixedProductions.get(key);
+		}
+		if (!productionsMap.containsKey(tokenBody)) {
+			return null;
+		}
+		return resolvePlainProduction(tokenBody, productionsMap, localFixedProductions);
+	}
+
+	/**
+	 * The nullable counterpart of {@link #resolveFixedProduction}: the cache first, then the
+	 * productions map, then {@code null}.
+	 */
+	private String resolveFixedProductionOrNull(String name, Map<String, String> fixedProductionsCache, Map<String, List<WeightedAlternative>> productionsMap, Map<String, String> superFixedProductions) {
+		String cached = fixedProductionsCache.get(name);
+		if (cached != null) {
+			return cached;
+		}
+		if (!productionsMap.containsKey(name)) {
+			return null;
+		}
+		return resolveFixedProduction(name, fixedProductionsCache, productionsMap, superFixedProductions);
 	}
 
 	/**
