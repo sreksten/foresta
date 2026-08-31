@@ -1,0 +1,6 @@
+# Gli elementi delle collezioni si accumulano portando ciascuno la propria virgola davanti a
+# sé, perché una grammatica non può sapere se un elemento è il primo della lista. Resta quindi
+# una virgola di troppo subito dopo la parentesi quadra aperta dell'array: questa regola la
+# toglie. Un array vuoto resta "[]".
+
+[,:[

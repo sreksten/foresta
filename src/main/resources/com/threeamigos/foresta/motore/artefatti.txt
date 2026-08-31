@@ -1,0 +1,915 @@
+ARTEFATTO
+    [SPADA]
+
+# Il livello scelto esegue soltanto le assegnazioni: il JSON lo emette una volta sola il
+# template qui sotto. I separatori (lo spazio nel nome, la virgola fra gli elementi delle
+# collezioni) stanno DENTRO i valori, così spariscono insieme al valore che accompagnano.
+#
+# Le due collezioni sono accumulatori: [DANNI="[#DANNI?]…"] rilegge sé stesso e vi accoda,
+# perché il valore di un'assegnazione viene risolto prima di essere memorizzato. Ogni elemento
+# porta la virgola davanti a sé; quella iniziale di troppo la toglie artefatti_pp.txt.
+SPADA
+#    { [SPADA_LIV_1] | [SPADA_LIV_2] | [SPADA_LIV_3] | [SPADA_LIV_4] } \
+    [SPADA_LIV_3] \
+    "{ \"livello\": [#LIVELLO], \"tipo\": \"SPADA\"," \
+    "\"nome\": \"[#NOME_PRE?]Spada[#NOME_POST?][#NOME_POST_2?][#NOME_DI?][#NOME_ULTERIORE?]\"," \
+    "\"danniAggiuntivi\": \[[#DANNI?]\]," \
+    "\"modificatori\": \[[#MODIFICATORI?]\] }"
+
+SPADA_LIV_1
+    [LIVELLO=1] [NOME_POST=" [ATTRIBUTO_PRE_O_POST_LIV_1]"]
+    [LIVELLO=1] [NOME_POST=" [ATTRIBUTO_SOLO_POST_LIV_1]"]
+    [LIVELLO=1] [NOME_DI=" [ATTRIBUTO_DI]"]
+
+ATTRIBUTO_PRE_O_POST_LIV_1
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ Sottilissima | Inconsistente | Eterea | Volatile | Leggerissima | Sgattaiolante | Saltimbanca | Sgusciante | Mosca | Saponetta }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"]{ Debole | Esile | Gracile | Flessibile | Fragile | Sedentaria | Flaccida | Impiegatizia | Mozzarella | Piumosa }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": 1 }"]{ Filosofica | Erudita | Accademica | Poetica | Teorica | Secchiona | Progettuale | Contabile | Sottile | Cervellotica }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ Vigorosa | Potente | Robusta | Muscolare | Nervosa | Smanettona | Bruta | Forzuta | Sgobbona | Impattante }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": 1 }"]{ Dinamica | Impulsiva | Reattiva | Lanciata | Dirompente | Pesante | Iperattiva | Scattante | Svelta | Furiosa | Aggressiva }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": -1 }"]{ Massiccia | Mastodontica | Titanica | Colossale | Ciclopica | Pesantissima | Monolitica | Siderale | Poderosa }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 2 }"]{ Statica | Immobile | Monumentale | Arroccata | Incrollabile | Divanata | Trattorina | Cementizia | Corazzata | Tank }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": -1 }"]{ Goffa | Impacciata | Pesante | Rigida | Massiccia | Incriccata | Bloccata | Rallentata | Sabatina | Antinfortunistica }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ Orsina | Cinghialesca | Bruta | Massiccia | Fabbrile | Grezza | Poderosa | Tosta | Palettatrice | Buttafuori }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": 1 }"]{ Chirurgica | Meticolosa | Calibrata | Mirata | Accurata | Orologiaia | Sarta | Pignola | Geometrica | Ragioniera }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": -1 }"]{ Piumosa | Aerea | Impalpabile | Volatile | Leggera | Estiva | Minimalista | Scontrina | Svestita | Libera }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 2 }"]{ Agile | Scattante | Svelta | Fluida | Sguizzante | Giocoliera | Evasiva | Sfuggente | Saponetta | Anguilla }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"]{ Cristallina | Vetrosa | Porcellanata | Specchiata | Fragilissima | Miracolata | Sopravvissuta | Velina | Fortunata | Guscia }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": -1 }"]{ Malaticcia | Debole | Fragile | Cedevole | Tenera | Sedentaria | Pallida | Febbricitante | Sciatalgia | Flessibile }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ Farfallina | Volatile | Seta | Libellula | Colibrì | Sgattaiolante | Saltimbanca | Svelta | Fuggitiva | Saponetta }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": 1 }"]{ Capiente | Facchina | Mulesca | Portante | Tollerante | Carica | Attrezzata | Stivata | Camalla | Spesa }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": -1 }"]{ Tartarughesca | Trichechina | Pesante | Massiccia | Statica | Flemmatica | Rallentata | Frenata | Lunatica | Soporifera }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 2 }"]{ Robusta | Incrollabile | Indistruttibile | Ferrea | Granitica | Corazzata | Blindata | Minerale | Tosta | Stagnante }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 2 }"]{ Trollesca | Massiccia | Rocciosa | Cinghialesca | Ottusa | Caprina | Mattona | Cementizia | Trattorina | Divanata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": -1 }"]{ Stolta | Ignorante | Novizia | Neofita | Inesperta | Somara | Negata | Smemorata | Matricola | Sbadata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ Bestiale | Ciclopica | Golemica | Minotaurica | Barbarica | Bruta | Spaccapietre | Culturista | Rozza | Massiccia }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": 1 }"]{ Alchemica | Arcana | Astrologica | Cartografica | Veggente | Nerd | Contabile | Smanettona | Sistemista | Esperta }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"]{ Riflessiva | Intellettuale | Poetica | Teologica | Accademica | Secchiona | Progettuale | Teorica | Sottile | Esile }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": 2 }"]{ Geniale | Sapiente | Filosofica | Erudita | Acuta | Cervellona | Ingegneristica | Direttoriale | Logica | Computerizzata }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"]{ Folle | Incosciente | Kamikaze | Miracolata | Temeraria | Sconsiderata | Sventata | Spensierata | Sognatrice | Sconsiderata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": -1 }"]{ Distratta | Confusa | Sventata | Sconsiderata | Incosciente | Fake | Ubriaca | Smarrita | Nebbiosa | Disorientata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": 1 }"]{ Fanatica | Zelota | Berserker | Incendiaria | Crociata | Arrabbiata | Furente | Impazzita | Scatenata | Permalosa }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": 1 }"]{ Civettina | Lincina | Sciamanica | Attenta | Ispettiva | Sentinella | Portinaia | Ispettrice | Suocera | Rilevatrice }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": -1 }"]{ Meditativa | Anziana | Teologica | Calma | Ascetica | Flemmatica | Lenta | Pensatrice | Ritardata | Lunatica }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": 2 }"]{ Veggente | Illuminata | Santa | Patriarcale | Ragionevole | Mentore | Guru | Spirituale | Profonda | Misurata }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", "quantita": -2 }"]{ Anonima | Muta | Timida | Introversa | Antipatica | Guastafeste | Ragioniera | Stagista | Invisibile | Buroocratica }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": -1 }"]{ Goffa | Scontrosa | Rozza | Villana | Solitaria | Mutanghera | Musona | Timida | Asociale | Burbera }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", "quantita": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", "quantita": 1 }"]{ Inquisitoria | Spaventosa | Oscura | Tirannica | Severa | Direttoriale | Fiscale | Intimidatoria | Antipatica | Rigida }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"]{ Affascinante | Ammiccante | Seduttiva | Persuasiva | Nobile | Paracula | Raccomandata | Simpatica | Sanremese | Fascina }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"]{ Damerina | Narcisista | Modaiola | Modella | Estetica | Figlia di Papà | Belloccia | Diva | Vanitosa | Specchiata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": 2 }"]{ Regale | Magnetica | Autorevole | Splendente | Popolare | Influencer | Persuasiva | Politica | Carismatica | Dominante }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", "quantita": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", "quantita": 1 }"]{ zSciagurata | Disastrosa | Calamitosa | Catastrofica | Portasfiga | Sfigatissima | Nera | Sinistra | Dannata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", "quantita": -1 }"]{ Sventurata | Scalognata | Infausta | Sinistra | Disgraziata | Macumbata | Iettatoria | Sfigata | Sfortunata | Maledetta }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", "quantita": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "SAGGEZZA", "quantita": 1 }"]{ Stoica | Resiliente | Paziente | Penitente | Calma | Rassegnata | Ottimista | Incassatrice | Tollerante | Passiva }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", "quantita": 1 }"]{ Scintillante | Fidata | Propizia | Promettente | Auspicabile | Truccata | Sorteggiata | Premiata | Opportuna | Tempestiva }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", "quantita": 1 }"]{ Fatidica | Presaga | Letale | Cruciale | Decisiva | Jolly | Vincente | Spietata | Oculata | Fortunata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", "quantita": 2 }"]{ Miracolata | Intoccabile | Prescelta | Benedetta | Radiosa | Sfacciata | Fortunatissima | Stellata | Baciata | Protetta }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", "quantita": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", "quantita": -1 }"]{ Disastrosa | Fallimentare | Difettosa | Sghemba | Inefficace | Usata | Ricondizionata | Low-Cost | Fiacca | Sfortunata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", "quantita": -1 }"]{ Smussata | Arrotondata | Logora | Consumata | Innocua | Gomma | Cartone | Giocattolo | Fiacca | Usurata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", "quantita": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "PARATA", "quantita": 1 }"]{ Difensiva | Protettiva | Guardinga | Cauta | Prudente | Vigilante | Arroccata | Coperta | Passiva | Schermata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", "quantita": 1 }"]{ Affilata | Tagliente | Penetrante | Incisiva | Letale | Occasionale | Fatalistica | Rapida | Tagliente }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "FORZA", "quantita": 1 }"]{ Spaccatutto | Dirompente | Mannaia | Pesante | Fratturante | Martellante | Poderosa | Bruta | Massiccia | Impattante }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", "quantita": 2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", "quantita": -1 }"]{ Affilatissima | Devastante | Spietata | Lacerante | Macellaia | Letale | Sventolante | Violenta | Cieca | Sconsiderata | Brutale }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", "quantita": -2 }"]{ Cieca | Guercia | Miope | Talpa | Sguercia | Ubriaca | Storta | Pendola | Sbandata | Disallineata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", "quantita": -1 }"]{ Sbadata | Approssimativa | Frettolosa | Distratta | Cialtrona | Vaga | Storta | Nebbiosa | Disattenta | Casuale }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", "quantita": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "FORZA", "quantita": 1 }"]{ Picchiatrice | Furente | Cieca | Bruta | Massiccia | Smanettona | Rozza | Violenta | Disordinata | Disallineata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "DESTREZZA", "quantita": 1 }"]{ Orologiaia | Cacciatrice | Sarta | Calibratrice | Attenta | Pignola | Meticolosa | Zanzara | Rigorosa | Ordinata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "FORZA", "quantita": -1 }"]{ Schermistica | Matematica | Calcolata | Tecnica | Grafologica | Esile | Leggera | Sottile | Truccatrice | Svasata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", "quantita": 2 }"]{ Infallibile | Chirurgica | Centrata | Mirata | Accurata | Laser | Millimetrica | Perfetta | Geometrica | Calibrata }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", "quantita": -2 }"]{ Lumaca | Piombata | Intasata | Bloccata | Buroocratica | Infinita | Scarica | Lenta | Inceppata | Registro }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", "quantita": -1 }"]{ Bradipica | Lenta | Pesante | Flemmatica | Pigra | Abbioccata | Soporifera | Frenata | Sbadigliante | Tardiva }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", "quantita": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "COSTITUZIONE", "quantita": 1 }"]{ Ancorata | Massiccia | Statica | Golemica | Montana | Cementizia | Trattorina | Blindata | Surgelata | Corazzata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "DESTREZZA", "quantita": 1 }"]{ Rondinina | Leprina | Ventosa | Libellula | Colibrì | Smanettona | Giocoliera | Cameriere | Fuggiasca | Rapida }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "FORZA", "quantita": -1 }"]{ Frecciata | Slanciata | Leggera | Piumosa | Scintillante | Volante | Soffio | Sottile | Aerea | Vacua }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", "quantita": 2 }"]{ Fulminea | Saetta | Rapida | Istantanea | Celere | Fibra | Scattante | Volante | Jet | Svelta }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "FURTIVITA", "quantita": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", "quantita": 1 }"]{ Clamorosa | Plateale | Roboante | Teatrale | Esplosiva | Banda | Spoileratrice | Allarme | Bombardiera | Urlante }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "FURTIVITA", "quantita": -1 }"]{ Goffa | Sbadata | Rumorosa | Distratta | Elefantesca | Pasticciona | Cascamorta | Sguaiata | Rozza | Palese }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "FURTIVITA", "quantita": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "SONICO", "quantita": 1 }"]{ Risonante | Squillante | Clacson | Trapano | Megafono | Boato | Caciara | Sirena | Sonaglio | Rumorosa }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "FURTIVITA", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "DESTREZZA", "quantita": 1 }"]{ Felina | Sguizzante | Seta | Leggera | Scalza | Discreta | Muta | Velata | Sottile | Rapida }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "FURTIVITA", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", "quantita": 1 }"]{ Infiltrata | Scout | Pipistrello | Civetta | Spia | Rilevatrice | Origliatrice | Curiosa | Microspia | Attenta }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "FURTIVITA", "quantita": 2 }"]{ Silenziosa | Invisibile | Spettrale | Ombra | Camaleontica | Ninja | Volpina | Occulta | Segreta | Guardona }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "PARATA", "quantita": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "DESTREZZA", "quantita": 1 }"]{ Fragile | Cristallina | Sottile | Vetrosa | Seta | Schermistica | Saponetta | Mosca | Saltimbanca | Disarmata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "PARATA", "quantita": -1 }"]{ Scoperta | Sbilanciata | Esposta | Vulnerabile | Temeraria | Sconsiderata | Cartone | Aperta | Disarmata | Nuda }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "PARATA", "quantita": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", "quantita": 1 }"]{ Fanatica | Zelota | Berserker | Iraconda | Furente | Nervosa | Isterica | Scatenata | Impulsiva | Aggressiva }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "PARATA", "quantita": 1 }"]{ Protettiva | Guardiana | Scuda | Palizzata | Fortezza | Difensiva | Vigile | Sbarra | Trincerata | Buttafuori }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "PARATA", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "COSTITUZIONE", "quantita": 1 }"]{ Paladina | Protettrice | Testuggine | Quercia | Corazzata | Aziendale | Cassaforte | Solida | Robusta | Ferrea }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "PARATA", "quantita": 2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", "quantita": -1 }"]{ Invalicabile | Inespugnabile | Baluarda | Chiusa | Lucchetto | Portiera | Cancello | Buttafuori | Sbarra | Bloccata }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", "quantita": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", "quantita": -1 }"]{ Vulnerabile | Condannata | Trance | Pezza | Nuda | Credulona | Marketing | Complottista | Fragile | Esposta }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", "quantita": -1 }"]{ Sensibile | Ricettiva | Instabile | Conduttrice | Fluida | Spugna | Libera | Candina | Apertura | Porosa }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", "quantita": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", "quantita": 1 }"]{ Medium | Catalizzatrice | Sifone | Canale | Ripetitrice | Calamita | Prolunga | Wi-Fi | Aperta | Recettiva }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "SAGGEZZA", "quantita": 1 }"]{ Templare | Devota | Santuaria | Stoica | Flemmatica | Passiva | Temperata | Calma | Protetta | Filtro }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "COSTITUZIONE", "quantita": 1 }"]{ Piombata | Spessa | Bastiona | Quercia | Antiamanto | Isolante | Lastrona | Gomma | Carro Armato | Robusta }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", "quantita": 2 }"]{ Antimagica | Schermata | Isolata | Incredula | Diffidente | No-Vax | Firewall | Sigillata | Bloccata | Refrattaria }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", "quantita": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", "quantita": 1 }"]{ Talpa | Cieca | Sguercia | Orba | Notturna | Miracolata | Smemorata | Dormiente | Fortunata | Protetta }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", "quantita": -1 }"]{ Sbadata | Distratta | Miope | Confusa | Guercia | Turista | Appannata | Vaga | Nebbiosa | Stagista }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", "quantita": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "FORZA", "quantita": 1 }"]{ Bestiale | Ciclopica | Golemica | Minotaurica | Barbarica | Spaccapietre | Bulldozer | Martella | Rozza | Massiccia }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", "quantita": 1 }"]{ Chirurgica | Falconica | Mirata | Laser | Oculata | Guardalinee | Meticolosa | Controllore | Cecchina | Attenta }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "SAGGEZZA", "quantita": 1 }"]{ Veggente | Illuminata | Sciamanica | Eremita | Portinaia | Consulente | Investigativa | Attenta | Saggia | Sapiente }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", "quantita": 2 }"]{ Lincina | Falchina | Civettina | Ispettiva | Rilevatrice | Spia | Suocera | Vedetta | Direttoriale | Attenta }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", "quantita": -2 }"]{ Catastale | Burocratica | Comunale | Chiusa | Bollata | Condominiale | Amministrativa | Lenta | Noiosa | Soporifera }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", "quantita": -1 }"]{ Buffona | Giullara | Innocua | Simpatica | Macchietta | Timida | Scalza | Pagliaccia | Cucciola | Divertente }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", "quantita": 1 }"]{ Favolosa | Mitica | Fantasmagorica | Leggendaria | Imperiale | Conquistatrice | Dittatoriale | Padronale | Direttoriale | Suprema }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", "quantita": 1 }"]{ Spauracchio | Furtiva | Predatrice | Ispettiva | Buttafuori | Legale | Minacciosa | Severa | Rigida | Autorevole }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", "quantita": 2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "NECROTICO", "quantita": 1 }"]{ Terrificante | Spaventosa | Mortale | Inevitabile | Eterna | Cadaverica | Tombale | Funesta | Macabra | Spettrale }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", "quantita": 2 }"]{ Apocalittica | Caotica | Ruinosa | Licenziatrice | Fallimentare | Fiscale | Sconvolgente | Devastante | Terribile | Tremenda }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", "quantita": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "PARATA", "quantita": 1 }"]{ Apatica | Inerte | Letargica | Statica | Passiva | Scioperante | Statale | Bloccata | Scarica | Sospesa }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", "quantita": -1 }"]{ Calma | Mansueta | Paziente | Flemmatica | Pacifica | Rassegnata | Divanata | Dormiente | Rilassata | Mansueta }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", "quantita": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "SAGGEZZA", "quantita": 1 }"]{ Zen | Buddista | Meditativa | Distaccata | Passiva | Deserta | Calma | Serena | Pacifica | Equilibrata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "FORZA", "quantita": 1 }"]{ Vendicativa | Caricante | Rinocerontica | Poderosa | Tosta | Esasperata | Clacson | Smanettona | Nervosa | Violenta }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", "quantita": 1 }"]{ Ringhiosa | Nervosa | Adrenalinica | Permalosa | Sbuffante | Reattiva | Impulsiva | Irritata | Agitata | Tesa }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", "quantita": 2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "PARATA", "quantita": -1 }"]{ Furiosa | Berserker | Scatenata | Iraconda | Furente | Esasperata | Impazzita | Adrenalinica | Rabbiosa | Cieca }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", "quantita": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", "quantita": -1 }"]{ Fragile | Velina | Guscia | Inconsistente | Vuota | Esaurita | Piena | Bloccata | Zero | Fallimentare }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", "quantita": -1 }"]{ Minimalista | Leggera | Inconsistente | Scalza | Bucata | Aerea | Svasata | Ridotta | Sottile | Libera }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", "quantita": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "DESTREZZA", "quantita": 1 }"]{ Farfallina | Colibrì | Seta | Libellula | Volatile | Stagista | Saponetta | Saltimbanca | Svelta | Fuggitiva }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", "quantita": 1 }"]{ Facchina | Mulesca | Asinina | Camalla | Portapacchi | Trasloco | Scolastica | Sabatina | Cartone | Spezzata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "COSTITUZIONE", "quantita": 1 }"]{ Sollevatrice | Tiro | Custode | Portatrice | Stivata | Trekking | Alberghiera | Robusta | Solida | Capiente }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", "quantita": 2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", "quantita": -1 }"]{ Caravan | Mammut | Cargo | Capiente | Stivata | Pesante | Ingombrante | Massiccia | Statica | Zavorrata }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", "quantita": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "INTELLIGENZA", "quantita": -1 }"]{ Bloccata | Antimagica | Vuota | Cenerina | Arida | Burnout | Scioperante | Scarica | Persa | Inceppata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", "quantita": -1 }"]{ Profana | Terrena | Materiale | Arida | Rustica | Babbana | Scettica | Pallida | Cartone | Sempliciotta }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", "quantita": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "FORZA", "quantita": 1 }"]{ Barbarica | Bestiale | Ciclopica | Minotaurica | Spaccapietre | Scaricatrice | Bulldozer | Martella | Rozza | Massiccia }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "INTELLIGENZA", "quantita": 1 }"]{ Alchemica | Scriba | Astrologica | Veggente | Cartografica | Sistemista | Smanettona | Nerd | Esperta | Tecnica }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "FORZA", "quantita": -1 }"]{ Scintillante | Fluida | Aura | Eterea | Incantata | Prolunga | Wi-Fi | Aperta | Recettiva | Sottile }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", "quantita": 2 }"]{ Canalizzatrice | Incantata | Arcana | Focalizzata | Esoterica | Manatizia | Stregata | Fattucchiera | Illusionista | Svuotapozioni }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", "quantita": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", "quantita": 1 }"]{ Coniglia | Codarda | Fuggitiva | Disertrice | Invertebrata | Panica | Burnout | Scaricabarile | Deserta | Miracolata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", "quantita": -1 }"]{ Prudente | Cauta | Timida | Guardinga | Esitante | Stagista | Ragioniera | Musona | Sbadata | Discreta }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", "quantita": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "PARATA", "quantita": 1 }"]{ Protettiva | Difensiva | Calma | Bastiona | Vigilante | Cauta | Airbag | Cuscina | Prudente | Schermata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", "quantita": 1 }"]{ Berserker | Crociata | Caricante | Gladiatoria | Vendicatrice | Esasperata | Nervosa | Arrabbiata | Furiosa | Impazzita }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", "quantita": 1 }"]{ Tirannica | Imperiale | Conquistatrice | Predatrice | Solitaria | Direttoriale | Fiscale | Padronale | Buttafuori | Severa }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", "quantita": 2 }"]{ Audace | Intrepida | Fiera | Impavida | Leonina | Fegatosa | Sfrontata | Cuor-di-Leone | Temeraria | Spavalda }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", "quantita": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", "quantita": 1 }"]{ Traditrice | Rinnegata | Giuda | Vile | Disertrice | Scaricabarile | Paracula | Voltafaccia | Salta-Fila | Sopravvissuta }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", "quantita": -1 }"]{ Individualista | Solitaria | Neutrale | Egoista | Distaccata | Freelance | Esterna | Indifferente | Spettatrice | Autonoma }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", "quantita": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "FURTIVITA", "quantita": 1 }"]{ Ladruncola | Ombra | Volpina | Disertrice | Spia | Scroccona | Fuggitiva | Sgattaiolante | Furba | Fantasma }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "COSTITUZIONE", "quantita": 1 }"]{ Protettrice | Martire | Bastiona | Guardiana | Difensiva | Ferrea | Bodyguard | Cassaforte | Sindacale | Solida }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", "quantita": 1 }"]{ Leader | Campione | Popolare | Comandante | Splendente | Benefica | Carismatica | Rappresentante | Vincente | Trascinatrice }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", "quantita": 2 }"]{ Eroica | Onorevole | Gloriosa | Cavalleresca | Leggendaria | Virtuosa | Meritocratica | Premiata | Medagliata | Raccomandata }
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", "quantita": 2 }"]{ Estenuante | Logorante | Faticosa | Pesante | Spossante | Sonnolenta | Abbioccata | Sbadigliante | Divanata | Pigra }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", "quantita": 1 }"]{ Flemmatica | Sonnecchiante | Pesante | Rallentata | Pigra | Sbadigliante | Fiacca | Rilassata | Calante | Lunatica }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "COSTITUZIONE", "quantita": 1 }"]{ Letargica | Anfibia | Tassina | Orsina | Inerte | Postale | Memory | Passiva | Copertina | Corazzata }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", "quantita": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "DESTREZZA", "quantita": 1 }"]{ Riposata | Scattante | Fresca | Leprina | Risvegliata | Mattiniera | Felina | Motivata | Svelta | Agile }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", "quantita": -1 }"]{ Sveglia | Vigile | Attenta | Pronta | Attiva | Giornaliera | Ricaricata | Slanciata | Reattiva | Lucida }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", "quantita": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", "quantita": 1 }"]{ Energetica | Iperattiva | Insonne | Scossa | Furiosa | Caffè | Energy | Turbocompressa | Rapida | Scattante }
+
+ATTRIBUTO_SOLO_POST_LIV_1
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": -2 }"]Smussata
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 2 }"]Bilanciata
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": 2 }"]Sussurrante
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": -1 }"]Rugginosa
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": -1 }"]Ammaccata
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 3 }"]Fortunata
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": 1 }"]Certificata a Norma di Legge
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": -1 }"]Ricondizionata
+
+SPADA_LIV_2
+    [LIVELLO=2] [NOME_POST=" [ATTRIBUTO_PRE_O_POST_LIV_2]"]
+    [LIVELLO=2] [NOME_POST=" [ATTRIBUTO_SOLO_POST_LIV_2]"]
+    [LIVELLO=2] [NOME_DI=" [ATTRIBUTO_DI]"]
+
+ATTRIBUTO_PRE_O_POST_LIV_2 = ATTRIBUTO_PRE_O_POST_LIV_1
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 1 }"]Favolosa
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 2 }"]Mitica
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 3 }"]Fantasmagorica
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 4 }"]Leggendaria
+
+ATTRIBUTO_SOLO_POST_LIV_2 = ATTRIBUTO_SOLO_POST_LIV_1
+    [DANNI="[#DANNI?],{ \"tipo\": \"ARIA\", \"quantita\": 3 }"]{ Sibilante | Eolica | Tempestosa | Volatile | Alata | Ventosa | Sventolante | Spifferante | Asciugacapelli | Ciclonica | Tornado | Turbinante | Brezzolina | Sventola | Ventilatore | Sbuffante | Tramontana }
+    [DANNI="[#DANNI?],{ \"tipo\": \"ACQUA\", \"quantita\": 3 }"]{ Idrica | Marittima | Lacustre | Torrenziale | Ondosa | Umida | Bagnata | ad Idromassaggio | Fradicia | Brodosa | Abissale | Fluviale | Diluviante | Acquazzone | Inzuppata | Pozzanghera | Sciacquone }
+    [DANNI="[#DANNI?],{ \"tipo\": \"TERRA\", \"quantita\": 3 }"]{ Tellurica | Sismica | Geodetica | Rocciosa | Granitica | Terrosa | Infangata | Zappaterra | Mattone | Polverosa | Ancestrale | Sotterranea | Minerale | Zolla | Cantiere | Geometra | Lastricata }
+    [DANNI="[#DANNI?],{ \"tipo\": \"FUOCO\", \"quantita\": 3 }"]{ Fiammeggiante | Ardente | Vulcanica | Incendiaria | Piromane | Bruciante | Grigliata | Piccante | Accendino | Scottadito | Magmatica | Infernale | Ustionante | a Carbonella | Fornello | Caldarrosta | Lanterna | Fiammifero }
+    [DANNI="[#DANNI?],{ \"tipo\": \"FULMINE\", \"quantita\": 2 }"]{ Ronzante | Fulminante | Voltaica | Scintillante | Galvanica | Elettrica | Friggitrice | Scossa | Cortocircuito | Temporalesca | Ionica | Magnetica | Dinamo | Presa-di-corrente | Batteria | Cercafase | Elettroshock | Lampadina }
+    [DANNI="[#DANNI?],{ \"tipo\": \"GELO\", \"quantita\": 3 }"]{ Gelida | Artica | Glaciale | Invernale | Criogenica | Surgelata | Frigorifero | Ghiacciolo | Freddolosa | Pinguina | Polare | Iperborea | Brinata | Brivido | Ghiacciaia | Pupazzo-di-neve | Sottozero }
+    [DANNI="[#DANNI?],{ \"tipo\": \"ACIDO\", \"quantita\": 3 }"]{ Corrosiva | Caustica | Tossica | Dissolvente | Erosiva | Aspra | Limonosa | Sgorgante | Corrosiva | Brucia-stomaci | Alchemica | Velenosa | Putrescente | Marinata | Sottaceto | Acida | Basica | Solvente }
+    [DANNI="[#DANNI?],{ \"tipo\": \"SONICO\", \"quantita\": 3 }"]{ Tuonante | Risonante | Acustica | Vibrante | Supersonica | Rumorosa | Sbraitante | Amplificata | Caciara | Altoparlante | Ecoica | Vocale | Rimbombante | Megafono | Clacson | Trapano | Strillante | Disturbo-della-Quiete }
+    [DANNI="[#DANNI?],{ \"tipo\": \"VELENO\", \"quantita\": 3 }"]{ Letale | Tossica | Nociva | Venefica | Contaminata | Sibilante | Serpenta | Malmostosa | Vipera | Arsenica | Infetta | Malefica | Gorgonzola | Pungiglione | Suocera }
+    [DANNI="[#DANNI?],{ \"tipo\": \"NECROTICO\", \"quantita\": 4 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": -2 }"]{ Maledetta | Spettrale | Sepolcrale | Cadaverica | Tombale | Funesta | Macabra | Zombie | Spettrale | Spettrina | Ossuta | Riempi-cimiteri | Lumino | Rianimata | Necroforina | Scheletrica }
+    [DANNI="[#DANNI?],{ \"tipo\": \"SACRO\", \"quantita\": 4 }"]{ Benedetta | Divina | Radiosa | Celestiale | Consacrata | Angelica | Santificata | Chierica | Miracolosa | dei Pii Desideri | Gloriosa | Redentrice | Martire | Devota | Campanile | Incensata | Chierichetta | Sagrestana }
+    [DANNI="[#DANNI?],{ \"tipo\": \"PSICHICO\", \"quantita\": 4 }"]{ Allucinante | Mentale | Telepatica | Illusoria | Cerebrale | Schizzata | Paranoica | Cervellotica | Emicrania | Onirica | Ipnotica | Psicotica | Allucinogena | Esaurimento | Emicranica | Svitata }
+    [DANNI="[#DANNI?],{ \"tipo\": \"ARCANO\", \"quantita\": 4 }"]{ Mistica | Runica | Prodigiosa | Esoterica | Eterea | Magica | Fatata | Abracadabra | Tracotante | Astratta | Alchemica | Stellata | Scintillina | Evocatrice | Prestigiatrice | Circo | MagoZurlì }
+    [DANNI="[#DANNI?],{ \"tipo\": \"VUOTO\", \"quantita\": 4 }"]{ Astrale | Cosmica | Siderale | Gravitazionale | Infinita | Vacua | Spaziale | Dispersa | Nullafacente | Eclissata | Nebulosa | Interstellare | Abissale | Dispersa | Astronauta | Desolata | AriaFritta }
+    [DANNI="[#DANNI?],{ \"tipo\": \"MALEDIZIONE\", \"quantita\": 4 }"]{ Portasfiga | Sciagurata | Funesta | Infausta | Dannata | Iettatrice | Malocchia | Malefica | Disgraziata | Dannata | Funesta | Sciagurata | Malaugurio | GattoNero | Venerdì13 | Sventurata | Scalognata }
+
+SPADA_LIV_3
+    [LIVELLO=3] [NOME_PRE="[ATTRIBUTO_SOLO_PRE_LIV_3] "] [NOME_DI=" [ATTRIBUTO_DI]"]
+    [LIVELLO=3] [NOME_PRE="[ATTRIBUTO_SOLO_PRE_LIV_3] "] [NOME_DI=" [ATTRIBUTO_DI]"]
+
+ATTRIBUTO_SOLO_PRE_LIV_3
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 2 }"]{ Terribile | Tremenda }
+# FORZA +2 / DESTREZZA -1: Aggettivi iperbolici di stazza che messi prima del nome enfatizzano solennemente il peso e la mole.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": -1 }"]{ Immane | Smisurata | Sovrumana | Inenarrabile | Generosa | Indomabile | Mastodontica | Formidabile | Cruenta | Poderosa }
+# FORZA +1: Aggettivi di lode della potenza che aprono il nome con una sfumatura di indubbia efficacia bellica.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ Valente | Fiera | Fiera | Temuta | Blasonata | Promettente | Conclamata | Autentica | Franca | Gagliarda }
+# FORZA +1 / VELOCITÀ +1: Espressioni d'impatto fulmineo che preparano l'orecchio a un'azione repentina.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": 1 }"]{ Subitanea | Pronta | Impetuosa | Fulminea | Vigorosa | Smanettona | Scalpitante | Calibrata | Fulminea | Istantanea }
+# FORZA -1: Aggettivi dispregiativi d'apertura che qualificano immediatamente l'arma come un ferro vecchio o un attrezzo mediocre.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"]{ Misera | Meschina | Vile | Modesta | Sottostimata | Ordinaria | Ordinaria | Comune | Infelice | Tapina }
+# FORZA -1 / INTELLIGENZA +1: Sfumature intellettuali che anteposte al nome evocano uno strumento da studio o da dotti.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": 1 }"]{ Dotta | Sapiente | Sottile | Arguta | Ragionata | Contabile | Filosofica | Archivistica | Accademica | Calcolata }
+# FORZA -2 / DESTREZZA +1: Termini di consistenza quasi eterea o impercettibile che funzionano magnificamente come prefissi.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ Sottile | Sottilissima | Fugace | Svanente | Minuta | Impalpabile | Invisibile | Sgattaiolante | Libera | Sottile }
+
+# DESTREZZA +2: Aggettivi di pura rapidità e astuzia che creano un perfetto titolo epico anteposti al nome.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 2 }"]{ Lesta | Scaltra | Pronta | Schiva | Svelta | Snella | Fuggitiva | Scaltrita | Fluida | Sgattaiolante }
+# DESTREZZA +1 / PRECISIONE +1: Termini di accuratezza e perfezione millimetrica che aprono la descrizione in modo solenne.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": 1 }"]{ Accurata | Calibrata | Mirata | Orologiaia | Rigorosa | Sacra | Regolamentare | Chiara | Pignola | Nitida }
+# DESTREZZA +1 / CARICO -1: Espressioni di leggerezza che preparano il testo a una lama priva di gravame.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": -1 }"]{ Lieve | Piumosa | Sottile | Chiara | Minima | Sobria | Semplice | Nuda | Schietta | Essenziale }
+# DESTREZZA -1: Aggettivi di palese goffaggine o difetto motorio che distruggono la grazia dell'arma fin dalla prima parola.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": -1 }"]{ Maldestra | Incolta | Pigra | Tarda | Tarda | Pesante | Rallentata | Sghemba | Rigida | Sventata }
+# DESTREZZA -1 / FORZA +1: Prefissi che evocano la pesantezza d'impatto tipica delle armi rozze o monumentali.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ Rozza | Severa | Bruta | Massiccia | Dura | Grezza | Tosta | Pesante | Fabbrile | Orsina }
+# DESTREZZA -2 / COSTITUZIONE +2: Termini di assoluta staticità o fermezza geometrica adatti solo come apertura.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 2 }"]{ Ferma | Immobile | Fissa | Salda | Perenne | Statica | Sghemba | Piombata | Monumentale | Quadrata }
+
+# COSTITUZIONE +2: Aggettivi mitici di resistenza eterna che messi a sinistra elevano l'arma a reliquia.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 2 }"]{ Antica | Vetusta | Secolare | Immortale | Sacra | Ferrea | Invincibile | Integra | Salda | Eterna }
+# COSTITUZIONE +1 / CARICO +1: Prefissi di capienza e affidabilità materiale che suonano ottimi in apertura.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": 1 }"]{ Grata | Onesta | Sicura | Generosa | Solida | Capiente | Tollerante | Ampia | Comoda | Fornita }
+# COSTITUZIONE +1 / VELOCITÀ -1: Termini di flemma protettiva o pesantezza saggia che introducono il nome rallentandolo.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": -1 }"]{ Grave | Lenta | Tarda | Saggia | Flemmatica | Pesante | Statica | Calma | Severa | Soporifera }
+# COSTITUZIONE -1: Aggettivi di cagionevolezza fisica o fragilità materiale che bollano istantaneamente l'arma come insicura.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": -1 }"]{ Precaria | Instabile | Fragile | Chiara | Triste | Sventurata | Pallida | Malata | Misera | Breve }
+# COSTITUZIONE -1 / DESTREZZA +1: Prefissi di assoluta gracilità o leggerezza quasi poetica adatti ad aprire la frase.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ Lieve | Chiara | Sottile | Volatile | Snella | Pronta | Svelta | Fugace | Sgattaiolante | Agile }
+# COSTITUZIONE -2 / FORTUNA +1: Termini legati alla natura effimera o vetrosa dell'oggetto che a sinistra creano un contrasto perfetto.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"]{ Effimera | Vetrosa | Porcellanata | Chiara | Sottile | Delicata | Fortunata | Miracolata | Instabile | Sottilissima }
+# INTELLIGENZA +2: Aggettivi di sommo intelletto che nobilitano l'arma fin dalla prima parola.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": 2 }"]{ Acuta | Chiara | Dotta | Lucida | Saggia | Fina | Geniale | Logica | Direttoriale | Architettata }
+
+# INTELLIGENZA +1 / MAGIA +1: Prefissi che evocano la preparazione teorica e la conoscenza dei flussi occulti.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": 1 }"]{ Sapiente | Arcana | Alchemica | Veggente | Pratica | Chiara | Esperta | Tecnica | Smanettona | Archivistica }
+# INTELLIGENZA +1 / FORZA -1: Sfumature di puro studio analitico che denotano una lama tanto colta quanto esile.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"]{ Riflessiva | Sottile | Poetica | Teorica | Chiara | Dotta | Secchiona | Accademica | Esile | Calcolata }
+# INTELLIGENZA -1: Dispregiativi d'apertura che qualificano l'oggetto come rozzo, ignorante o privo di alcuna finezza progettuale.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": -1 }"]{ Incolta | Stolta | Cruda | Grossolana | Rozza | Povera | Misera | Smemorata | Matricola | Cieca }
+# INTELLIGENZA -1 / FORZA +1: Prefissi che preparano l'orecchio a uno strumento dominato dalla pura violenza bruta, privo di logica.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ Bruta | Bestiale | Ciclopica | Ferina | Rozza | Dura | Massiccia | Tosta | Grezza | Spaccapietre }
+# INTELLIGENZA -2 / COSTITUZIONE +2: Termini di ottusa e monumentale staticità che funzionano unicamente anteposti al nome.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 2 }"]{ Ottusa | Dura | Salda | Ferma | Immobile | Quadrata | Mattona | Cementizia | Trattorina | Divanata }
+
+# SAGGEZZA +2: Aggettivi morali e profetici che conferiscono all'arma lo status di guida spirituale.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": 2 }"]{ Retta | Saggia | Giusta | Illuminata | Santa | Chiara | Profonda | Moderata | Misurata | Maestra }
+# SAGGEZZA +1 / PERCEZIONE +1: Prefissi di assoluta vigilanza e profondo intuito, ideali per aprire la descrizione.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": 1 }"]{ Accorta | Attenta | Scaltra | Pronta | Chiara | Ispettiva | Sentinella | Portinaia | Rilevatrice | Suocera }
+# SAGGEZZA +1 / VELOCITÀ -1: Termini di flemma riflessiva che rallentano solennemente l'azione fin dal titolo.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": -1 }"]{ Grave | Lenta | Calma | Meditativa | Chiara | Saggia | Flemmatica | Anziana | Tarda | Soporifera }
+# SAGGEZZA -1: Aggettivi che descrivono una totale mancanza di senno, distrazione o giudizio alterato.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": -1 }"]{ Vana | Folle | Sventata | Ceca | Distratta | Confusa | Misera | Triste | Sconsiderata | Disorientata }
+# SAGGEZZA -1 / FURIA +1: Espressioni di cieco fanatismo e foga bellica sconsiderata, adatte solo sul lato sinistro.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": 1 }"]{ Furente | Fanatica | Zelota | Cieca | Caricante | Arrabbiata | Impazzita | Scatenata | Permalosa | Incendiaria }
+# SAGGEZZA -2 / FORTUNA +1: Termini di totale incoscienza o disperazione protetti da un destino bizzarro.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"]{ Folle | Temeraria | Sconsiderata | Incosciente | Fugace | Sventata | Spensierata | Sognatrice | Miracolata | Kamikaze }
+
+# CARISMA +2: Aggettivi di magnificenza estetica e splendore regale che elevano istantaneamente l'arma.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": 2 }"]{ Vaga | Bella | Splendida | Fiera | Nobile | Chiara | Illustre | Magnifica | Regale | Carismatica }
+# CARISMA +1 / FORTUNA +1: Prefissi che evocano un fascino paraculo o una parlantina fortunata.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"]{ Chiara | Propizia | Simpatica | Nobile | Grata | Bella | Ammiccante | Paracula | Raccomandata | Sanremese }
+# CARISMA +1 / FORZA -1: Espressioni legate alla pura vanità o al lusso di corte, prive di vera sostanza fisica.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"]{ Vana | Leggera | Fine | Vaga | Chiara | Specchiata | Narcisista | Modaiola | Vanitosa | Diva }
+# CARISMA -1: Aggettivi che descrivono una lama cupa, asociale o burbera che deprime l'atmosfera.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": -1 }"]{ Mesta | Cupa | Rozza | Ruvida | Scontrosa | Goffa | Triste | Solitaria | Misera | Burbera }
+# CARISMA -1 / SOGGEZIONE +1: Prefissi autoritari e privi di empatia che impongono il timore togliendo ogni briciolo di calore.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 1 }"]{ Dura | Severa | Oscura | Fiscale | Rigida | Inquisitoria | Spaventosa | Tirannica | Direttoriale | Intimidatoria }
+# CARISMA -2: Termini di assoluta trasparenza sociale, timidezza estrema o sottomissione burocratica.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": -2 }"]{ Muta | Umile | Bassa | Piccola | Anonima | Invisibile | Timida | Introversa | Ragioniera | Stagista }
+
+# FORTUNA +2: Aggettivi di sommo favore celestiale che elevano l'arma a strumento predestinato.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 2 }"]{ Grata | Radiosa | Beata | Miracolata | Sacra | Benedetta | Intoccabile | Sfacciata | Protetta | Stellata }
+# FORTUNA +1: Prefissi che indicano un auspicio favorevole o un'opportunità colta al momento giusto.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"]{ Buona | Propizia | Fidata | Promettente | Chiara | Auspicabile | Truccata | Premiata | Opportuna | Tempestiva }
+# FORTUNA +1 / CRITICO +1: Espressioni di svolta imminente e destino letale che aprono solennemente la descrizione.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": 1 }"]{ Fatidica | Presaga | Letale | Cruciale | Chiara | Jolly | Vincente | Spietata | Oculata | Decisiva }
+# FORTUNA -1: Dispregiativi classici della sventura che marchiano l'arma fin dal principio come portatrice di sciagure.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": -1 }"]{ Infausta | Sinistra | Misera | Triste | Cupa | Scalognata | Sventurata | Disgraziata | Macumbata | Iettatoria }
+# FORTUNA -1 / SAGGEZZA +1: Prefissi che denotano sopportazione stoica e resilienza di fronte alle avversità.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": 1 }"]{ Stoica | Calma | Paziente | Penitente | Chiara | Rassegnata | Ottimista | Incassatrice | Tollerante | Passiva }
+# FORTUNA -2 / SOGGEZIONE +1: Termini di jella catastrofica che creano un'aura spaventosa attorno al portatore.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 1 }"]{ Infausta | Sciagurata | Dannata | Sinistra | Cupa | Disastrosa | Calamitosa | Catastrofica | Portasfiga }
+
+# CRITICO +2 / PRECISIONE -1: Termini di smisurata e feroce lacerazione che a sinistra indicano una violenza incontrollata.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": 2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": -1 }"]{ Feroce | Cieca | Dura | Cruda | Letale | Devastante | Spietata | Lacerante | Macellaia | Brutale }
+# CRITICO +1: Aggettivi che denotano un'affilatura micidiale o un'indole atta all'esecuzione rapida.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": 1 }"]{ Letale | Fine | Pronta | Acuta | Chiara | Penetrante | Incisiva | Boia | Rasoio | Fatalistica }
+# CRITICO +1 / FORZA +1: Prefissi impattanti che preparano l'orecchio a un colpo pesante e demolitore.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ Dura | Grave | Massiccia | Potente | Chiara | Spaccatutto | Dirompente | Mannaia | Fratturante | Martellante }
+# CRITICO -1: Aggettivi di logoramento o inefficacia che tolgono dignità offensiva alla lama alla prima sillaba.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": -1 }"]{ Stanca | Fiacca | Triste | Misera | Povera | Smussata | Arrotondata | Logora | Consumata | Innocua }
+# CRITICO -1 / PARATA +1: Espressioni di prudenza arroccata che prediligono lo schermo protettivo all'offesa.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": 1 }"]{ Cauta | Prudente | Guardinga | Coperta | Chiara | Difensiva | Protettiva | Vigilante | Arroccata | Schermata }
+# CRITICO -2 / FORTUNA -1: Prefissi fallimentari legati a difetti strutturali o sfortuna di fabbricazione.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": -1 }"]{ Triste | Misera | Sghemba | Fiacca | Infausta | Disastrosa | Fallimentare | Difettosa | Inefficace | Low-Cost }
+
+# PRECISIONE +2: Aggettivi di infallibile certezza geometrica che blindano l'esito del colpo prima del nome.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": 2 }"]{ Sicura | Retta | Ferma | Salda | Chiara | Infallibile | Chirurgica | Centrata | Mirata | Accurata }
+# PRECISIONE +1 / DESTREZZA +1: Prefissi di assoluto rigore e meticolosità artigianale o burocratica.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ Accorta | Pronta | Calibrata | Attenta | Chiara | Orologiaia | Cacciatrice | Sarta | Calibratrice | Pignola }
+# PRECISIONE +1 / FORZA -1: Sfumature di colpo calcolato e geometrico che denotano grazia tecnica a scapito della potenza muscolare.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"]{ Fine | Sottile | Calcolata | Pratica | Chiara | Schermistica | Matematica | Tecnica | Grafologica | Esile }
+# PRECISIONE -1: Aggettivi di distrazione o approssimazione frettolosa che svalutano la traiettoria dell'attacco.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": -1 }"]{ Vaga | Cieca | Storta | Frettolosa | Chiara | Sbadata | Approssimativa | Distratta | Cialtrona | Casuale }
+# PRECISIONE -1 / FORZA +1: Prefissi legati a una foga violenta e disordinata, dove l'impatto conta più della mira.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ Bruta | Cieca | Massiccia | Furente | Chiara | Picchiatrice | Smanettona | Rozza | Violenta | Disordinata }
+# PRECISIONE -2: Termini di cecità tattica assoluta che aprono la produzione con una menomazione visiva evidente.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": -2 }"]{ Cieca | Guercia | Storta | Orba | Chiara | Miope | Talpa | Sguercia | Ubriaca | Pendola }
+
+# VELOCITÀ +2: Aggettivi di fulminea rapidità che aprono il nome proiettando l'arma nel turno d'azione prima di chiunque altro.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": 2 }"]{ Lesta | Svelta | Pronta | Rapida | Chiara | Fulminea | Saetta | Istantanea | Celere | Volante }
+# VELOCITÀ +1 / DESTREZZA +1: Prefissi che uniscono il movimento rapido a un gioco di gambe agile ed elusivo.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ Accorta | Pronta | Svelta | Chiara | Agile | Rondinina | Leprina | Ventosa | Libellula | Giocoliera }
+# VELOCITÀ +1 / FORZA -1: Espressioni di leggerezza aerea che suggeriscono un fendente fulmineo privo però di massa d'impatto.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"]{ Lieve | Sottile | Chiara | Frecciata | Slanciata | Leggera | Piumosa | Volante | Soffio | Aerea }
+# VELOCITÀ -1: Aggettivi di flemma o pigrizia motoria che appesantiscono la frase fin dalla prima sillaba.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": -1 }"]{ Tarda | Lenta | Pigra | Flemmatica | Chiara | Bradipica | Pesante | Abbioccata | Soporifera | Tardiva }
+# VELOCITÀ -1 / COSTITUZIONE +1: Prefissi che denotano una solidità monumentale che ancora il portatore sacrificando lo scatto.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"]{ Grave | Salda | Ferma | Massiccia | Chiara | Ancorata | Statica | Golemica | Montana | Cementizia }
+# VELOCITÀ -2: Termini di blocco totale, intoppo burocratico o totale immobilità strutturale adatti solo come prefissi.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": -2 }"]{ Ferma | Fissa | Lenta | Chiara | Lumaca | Piombata | Intasata | Bloccata | Buroocratica | Infinita }
+
+# FURTIVITÀ +2: Aggettivi di assoluta discrezione e occultamento che ammantano l'arma di mistero prima del nome.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": 2 }"]{ Cheta | Muta | Acquetta | Chiara | Silenziosa | Invisibile | Spettrale | Ombra | Occulta | Segreta }
+# FURTIVITÀ +1 / DESTREZZA +1: Prefissi felini legati a movimenti fluidi e felpati adatti ad aprire la frase.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ Lesta | Accorta | Svelta | Felina | Chiara | Sguizzante | Seta | Leggera | Scalza | Discreta }
+# FURTIVITÀ +1 / PERCEZIONE +1: Espressioni di infiltrazione vigile per spiare i nemici senza farsi scoprire.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": 1 }"]{ Accorta | Scaltra | Chiara | Attenta | Infiltrata | Scout | Pipistrello | Civetta | Spia | Rilevatrice }
+# FURTIVITÀ -1: Aggettivi che denotano goffaggine o modi rumorosi che tradiscono subito l'effetto sorpresa.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": -1 }"]{ Rozza | Goffa | Chiara | Sbadata | Rumorosa | Distratta | Elefantesca | Pasticciona | Cascamorta | Sguaiata }
+# FURTIVITÀ -1 / SONICO +1: Prefissi rumorosi o ronzanti che emettono baccano pur amplificando l'urto d'impatto.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SONICO\", \"quantita\": 1 }"]{ Chiara | Sgargiante | Squillante | Clacson | Trapano | Megafono | Boato | Caciara | Sirena | Sonaglio }
+# FURTIVITÀ -2 / SOGGEZIONE +1: Espressioni roboanti e plateali che rinunciano all'ombra per intimidire i presenti col rumore.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 1 }"]{ Chiara | Plateale | Clamorosa | Roboante | Teatrale | Esplosiva | Banda | Spoileratrice | Allarme | Bombardiera }
+
+# PARATA +2 / VELOCITÀ -1: Termini di sbarramento invalicabile che sacrificano l'iniziativa per trincerare il portatore.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": 2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": -1 }"]{ Salda | Ferma | Chiusa | Chiara | Invalicabile | Inespugnabile | Baluarda | Lucchetto | Portiera | Cancello }
+# PARATA +1: Aggettivi protettivi standard che pongono una barriera sicura prima del nome dell'arma.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": 1 }"]{ Sicura | Salda | Chiara | Protettiva | Guardiana | Scuda | Palizzata | Fortezza | Difensiva | Vigile }
+# PARATA +1 / COSTITUZIONE +1: Prefissi legati a una difesa ferrea o a scudi pesanti, eccellenti sul lato sinistro.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"]{ Salda | Robusta | Ferrea | Paladina | Protettrice | Testuggine | Quercia | Corazzata | Aziendale | Cassaforte }
+# PARATA -1: Aggettivi che descrivono una lama sbilanciata o priva di guardia che lascia il fianco indifeso.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": -1 }"]{ Nuda | Chiara | Scoperta | Sbilanciata | Esposta | Vulnerabile | Temeraria | Sconsiderata | Cartone | Aperta }
+# PARATA -1 / FURIA +1: Espressioni di attacco cieco e sconsiderato che azzerano la difesa a favore della rabbia.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": 1 }"]{ Chiara | Furente | Fanatica | Zelota | Berserker | Iraconda | Nervosa | Isterica | Scatenata | Impulsiva }
+# PARATA -2 / DESTREZZA +1: Prefissi di assoluta gracilità o filamenti fragili che non reggono i colpi ma favoriscono i balzi.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ Sottile | Chiara | Fragile | Cristallina | Vetrosa | Seta | Schermistica | Saponetta | Mosca | Saltimbanca }
+
+# RESISTENZA_MAGICA +2: Aggettivi di totale isolamento e refrattarietà mistica che bloccano gli incantesimi fin dal titolo.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", \"quantita\": 2 }"]{ Refrattaria | Sorda | Isolata | Diffidente | Chiara | Antimagica | Schermata | Incredula | No-Vax | Firewall }
+# RESISTENZA_MAGICA +1 / SAGGEZZA +1: Prefissi spirituali e stoici che schermano la mente e l'acciaio dalle maledizioni.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": 1 }"]{ Devota | Calma | Stoica | Flemmatica | Chiara | Templare | Santuaria | Passiva | Temperata | Protetta }
+# RESISTENZA_MAGICA +1 / COSTITUZIONE +1: Espressioni di densità materiale isolante eccellenti sul lato sinistro.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"]{ Spessa | Massiccia | Dura | Salda | Chiara | Piombata | Bastiona | Quercia | Isolante | Lastrona }
+# RESISTENZA_MAGICA -1: Aggettivi di porosità o sensibilità che rendono l'arma un ricettore spontaneo di anatemi.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", \"quantita\": -1 }"]{ Porosa | Fluida | Instabile | Libera | Chiara | Sensibile | Ricettiva | Conduttrice | Spugna | Candina }
+# RESISTENZA_MAGICA -1 / MAGIA +1: Prefissi che denotano un canale aperto e vulnerabile verso i flussi del mana.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": 1 }"]{ Aperta | Libera | Chiara | Medium | Catalizzatrice | Sifone | Canale | Ripetitrice | Calamita | Recettiva }
+# RESISTENZA_MAGICA -2 / SOGGEZIONE -1: Termini di totale nudità spirituale e credulità indifesa adatti solo come apertura.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": -1 }"]{ Nuda | Fragile | Chiara | Vulnerabile | Condannata | Trance | Pezza | Credulona | Marketing | Complottista }
+
+# PERCEZIONE +2: Aggettivi di vigilanza assoluta che gettano uno sguardo attento sull'ambiente circostante.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": 2 }"]{ Ispettiva | Accorta | Chiara | Attenta | Lincina | Falchina | Civettina | Rilevatrice | Spia | Suocera }
+# PERCEZIONE +1 / PRECISIONE +1: Prefissi di mira millimetrica e acume visivo ideali per iniziare la produzione.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": 1 }"]{ Accurata | Oculata | Chiara | Chirurgica | Falconica | Mirata | Laser | Meticolosa | Controllore | Cecchina }
+# PERCEZIONE +1 / SAGGEZZA +1: Espressioni di lungimiranza e intuito profondo adatte ad aprire il testo.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": 1 }"]{ Saggia | Sapiente | Chiara | Veggente | Illuminata | Sciamanica | Eremita | Portinaia | Consulente | Investigativa }
+# PERCEZIONE -1: Aggettivi di palese distrazione o appannamento sensoriale che svalutano l'arma fin dalla prima parola.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": -1 }"]{ Vaga | Nebbiosa | Chiara | Sbadata | Distratta | Miope | Confusa | Guercia | Turista | Appannata }
+# PERCEZIONE -1 / FORZA +1: Prefissi brutali che descrivono uno strumento guidato dalla pura forza cieca dei bicipiti.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ Bruta | Rozza | Massiccia | Bestiale | Ciclopica | Golemica | Minotaurica | Barbarica | Spaccapietre | Bulldozer }
+# PERCEZIONE -2 / FORTUNA +1: Termini di assoluta oscurità visiva compensati da una strana e provvidenziale sorte.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"]{ Orba | Chiara | Fortunata | Talpa | Cieca | Sguercia | Notturna | Miracolata | Smemorata | Dormiente }
+
+# SOGGEZIONE +2 / NECROTICO +1: Aggettivi funesti di stampo tombale che evocano il terrore della fine imminente.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"NECROTICO\", \"quantita\": 1 }"]{ Funesta | Macabra | Chiara | Terrificante | Spaventosa | Mortale | Inevitabile | Eterna | Cadaverica | Tombale }
+# SOGGEZIONE +2: Espressioni catastrofiche d'impatto psicologico devastante sul morale avversario.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 2 }"]{ Chiara | Apocalittica | Caotica | Ruinosa | Licenziatrice | Fallimentare | Fiscale | Sconvolgente | Devastante | Terribile }
+# SOGGEZIONE +1 / CARISMA +1: Prefissi di gloriosa e terrificante maestà regale che impongono il rispetto.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": 1 }"]{ Fiera | Chiara | Favolosa | Mitica | Fantasmagorica | Leggendaria | Imperiale | Conquistatrice | Dittatoriale | Padronale }
+# SOGGEZIONE +1: Termini autoritari o minacciosi adatti a intimorire alla prima lettura della frase.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 1 }"]{ Severa | Rigida | Chiara | Spauracchio | Furtiva | Predatrice | Ispettiva | Buttafuori | Legale | Minacciosa }
+# SOGGEZIONE -1: Aggettivi che descrivono un'arma priva di mordente, incapace di suscitare alcuno spavento.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": -1 }"]{ Mansueta | Chiara | Buffona | Giullara | Innocua | Simpatica | Macchietta | Timida | Scalza | Pagliaccia }
+# SOGGEZIONE -2: Prefissi di totale sgonfiamento psicologico legati alla noia soporifera della burocrazia comunale.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": -2 }"]{ Lenta | Chiara | Catastale | Buroocratica | Comunale | Chiusa | Bollata | Condominiale | Amministrativa | Noiosa }
+
+# FURIA +2 / PARATA -1: Aggettivi di cieca e incontrollabile rabbia bellica che aggrediscono l'orecchio fin dall'inizio.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": 2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": -1 }"]{ Iraconda | Furente | Rabbiosa | Cieca | Sconsiderata | Furiosa | Berserker | Scatenata | Esasperata | Impazzita }
+# FURIA +1 / FORZA +1: Prefissi vendicativi o d'assalto che uniscono la foga a un pesante impatto fisico.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ Fiera | Tosta | Violenta | Vendicativa | Caricante | Rinocerontica | Poderosa | Esasperata | Clacson | Smanettona }
+# FURIA +1: Espressioni di accesa irritazione o temperamento permaloso adatte ad aprire il nome dell'arma.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": 1 }"]{ Calda | Tesa | Agitata | Ringhiosa | Nervosa | Adrenalinica | Permalosa | Sbuffante | Reattiva | Impulsiva }
+# FURIA -1: Aggettivi di palese mansuetudine o rilassatezza che smorzano ogni ardore offensivo alla prima sillaba.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": -1 }"]{ Mita | Calma | Chiara | Mansueta | Paziente | Flemmatica | Pacifica | Rassegnata | Divanata | Dormiente }
+# FURIA -1 / SAGGEZZA +1: Prefissi legati al distacco spirituale o alla totale imperturbabilità filosofica e passiva.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": 1 }"]{ Retta | Calma | Serena | Pacifica | Equilibrata | Zen | Buddista | Meditativa | Distaccata | Passiva }
+# FURIA -2 / PARATA +1: Termini di assoluta apatia bellica o letargo operativo eccellenti come scudo passivo a sinistra.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": 1 }"]{ Inerte | Lenta | Chiara | Apatica | Letargica | Statica | Passiva | Scioperante | Statale | Bloccata }
+
+# CARICO +2 / VELOCITÀ -1: Aggettivi iperbolici di stivaggio o ingombro che appesantiscono solennemente il titolo.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": 2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": -1 }"]{ Grave | Massiccia | Statica | Zavorrata | Caravan | Mammut | Cargo | Capiente | Stivata | Pesante }
+# CARICO +1: Prefissi che denotano un fido strumento da trasporto o fatiche quotidiane e scolastiche.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": 1 }"]{ Onesta | Chiara | Fornita | Facchina | Mulesca | Asinina | Camalla | Portapacchi | Trasloco | Scolastica }
+# CARICO +1 / COSTITUZIONE +1: Espressioni di robustezza strutturale idonee a supportare pesi gravosi fin dall'apertura.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"]{ Solida | Robusta | Ferrea | Capiente | Sollevatrice | Tiro | Custode | Portatrice | Stivata | Trekking }
+# CARICO -1: Termini legati al viaggio leggero o alla totale assenza di ingombri inventariali.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": -1 }"]{ Lieve | Sottile | Libera | Minimalista | Leggera | Inconsistente | Scalza | Bucata | Aerea | Svasata }
+# CARICO -1 / DESTREZZA +1: Prefissi di assoluta leggerezza volatile o natura felpata ideali per muoversi di scatto.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ Svelta | Fuggitiva | Saponetta | Saltimbanca | Farfallina | Colibrì | Seta | Libellula | Volatile | Stagista }
+# CARICO -2 / FORTUNA -1: Aggettivi di vuoto pneumatico o precarietà spaziale adatti ad aprire la riga.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": -1 }"]{ Vuota | Chiara | Mesta | Fragile | Velina | Guscia | Inconsistente | Esaurita | Piena | Bloccata }
+
+# MAGIA +2: Aggettivi mitici di puro stampo arcano o manipolazione occulta che nobilitano l'arma.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": 2 }"]{ Stregata | Arcana | Incantata | Esoterica | Canalizzatrice | Focalizzata | Manatizia | Fattucchiera | Illusionista | Svuotapozioni }
+# MAGIA +1 / INTELLIGENZA +1: Prefissi di dottrina magica o competenza tecnica misticheggiante adatti come apertura.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": 1 }"]{ Dotta | Sapiente | Chiara | Alchemica | Scriba | Astrologica | Veggente | Cartografica | Sistemista | Smanettona }
+# MAGIA +1 / FORZA -1: Espressioni di energia fluida o risonanza eterea che anteposte al nome denotano scarsa potenza fisica.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"]{ Fine | Sottile | Chiara | Scintillante | Fluida | Aura | Eterea | Incantata | Prolunga | Wi-Fi }
+# MAGIA -1: Dispregiativi d'arrecata prosaicità che privano lo strumento di qualsiasi scintilla soprannaturale.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": -1 }"]{ Arida | Cruda | Chiara | Profana | Terrena | Materiale | Rustica | Babbana | Scettica | Pallida }
+# MAGIA -1 / FORZA +1: Prefissi legati all'ignoranza magica compensata da muscoli d'acciaio spaccapietre.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ Bruta | Rozza | Massiccia | Barbarica | Bestiale | Ciclopica | Minotaurica | Spaccapietre | Scaricatrice | Bulldozer }
+# MAGIA -2 / INTELLIGENZA -1: Termini di siccità mistica assoluta o burnout mentale ottimi in apertura.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": -1 }"]{ Arida | Chiara | Mesta | Bloccata | Antimagica | Vuota | Cenerina | Burnout | Scioperante | Scarica }
+
+# CORAGGIO +2: Aggettivi di sommo ardire e sprezzo del pericolo che nobilitano l'arma fin dall'apertura.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", \"quantita\": 2 }"]{ Leonina | Intrepida | Audace | Impavida | Fiera | Fegatosa | Sfrontata | Temeraria | Spavalda | Calibrata }
+# CORAGGIO +1 / FURIA +1: Prefissi d'assalto e spinta offensiva che preparano l'orecchio a una carica feroce.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": 1 }"]{ Furente | Crociata | Caricante | Violenta | Tosta | Berserker | Gladiatoria | Vendicatrice | Esasperata | Nervosa }
+# CORAGGIO +1 / SOGGEZIONE +1: Espressioni di ferma e autoritaria sicurezza che impongono il timore reverenziale.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 1 }"]{ Fiera | Severa | Rigida | Chiara | Tirannica | Imperiale | Conquistatrice | Predatrice | Solitaria | Direttoriale }
+# CORAGGIO -1: Aggettivi di esitazione o timidezza d'apertura che smorzano subito l'ardore bellico del portatore.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", \"quantita\": -1 }"]{ Prudente | Cauta | Timida | Guardinga | Esitante | Stagista | Ragioniera | Musona | Sbadata | Discreta }
+# CORAGGIO -1 / PARATA +1: Prefissi di spiccata cautela difensiva che anteposti al nome congelano l'offensiva a favore dello schermo.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": 1 }"]{ Cauta | Calma | Chiara | Protettiva | Difensiva | Bastiona | Vigilante | Airbag | Cuscina | Prudente }
+# CORAGGIO -2 / FORTUNA +1: Termini di codardia disperata o panico incontrollato assistiti da un destino provvidenziale.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"]{ Vile | Mesta | Chiara | Coniglia | Codarda | Fuggitiva | Disertrice | Invertebrata | Panica | Burnout }
+
+# VALORE +2: Aggettivi onorevoli e cavallereschi che elevano la condotta del portatore a titolo di lode misticheggiante.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", \"quantita\": 2 }"]{ Virtuosa | Eroica | Onorevole | Gloriosa | Leggendaria | Meritocratica | Premiata | Medagliata | Cavalleresca | Chiara }
+# VALORE +1 / COSTITUZIONE +1: Prefissi di fermo spirito di sacrificio e protezione pesante, adatti ad aprire la frase.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"]{ Salda | Ferrea | Solida | Martire | Bastiona | Guardiana | Difensiva | Bodyguard | Cassaforte | Protettrice }
+# VALORE +1 / CARISMA +1: Espressioni d'alto carisma eroico che trascinano e ispirano le retrovie.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": 1 }"]{ Fiera | Chiara | Magnifica | Carismatica | Leader | Campione | Popolare | Comandante | Splendente | Benefica }
+# VALORE -1: Aggettivi di distacco individualista ed egoismo tattico che negano l'onore della prima linea.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", \"quantita\": -1 }"]{ Solitaria | Neutrale | Chiara | Egoista | Distaccata | Freelance | Esterna | Indifferente | Spettatrice | Autonoma }
+# VALORE -1 / FURTIVITÀ +1: Prefissi che preparano l'orecchio a movenze scaltre, volte alla ritirata o al colpo a sorpresa nell'ombra.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": 1 }"]{ Scaltra | Volpina | Chiara | Ladruncola | Ombra | Disertrice | Spia | Scroccona | Fuggitiva | Sgattaiolante }
+# VALORE -2 / FORTUNA +1: Termini legati al tradimento o al puro opportunismo d'apertura salvati da una sorte bizzarra.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"]{ Vile | Chiara | Fortunata | Traditrice | Rinnegata | Giuda | Disertrice | Scaricabarile | Paracula | Voltafaccia }
+
+# STANCHEZZA -2 / VELOCITÀ +1: Aggettivi iperattivi di pura spinta cinetica che accelerano drasticamente la frase fin dal principio.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": 1 }"]{ Pronta | Svelta | Chiara | Energetica | Iperattiva | Insonne | Scossa | Furiosa | Indefessa }
+# STANCHEZZA -1 / DESTREZZA +1: Prefissi di freschezza muscolare e risveglio scattante eccellenti come titolo d'apertura.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", \"quantita\": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ Fresca | Svelta | Agile | Riposata | Scattante | Leprina | Risvegliata | Mattiniera | Felina | Motivata }
+# STANCHEZZA -1: Espressioni di normale prontezza operativa e lucidità mentale ottime sul lato sinistro.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", \"quantita\": -1 }"]{ Sveglia | Vigile | Attenta | Pronta | Attiva | Giornaliera | Ricaricata | Slanciata | Reattiva | Lucida }
+# STANCHEZZA +1: Aggettivi di rallentamento o pesantezza biologica che tolgono brio all'attacco.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", \"quantita\": 1 }"]{ Grave | Lenta | Flemmatica | Sonnecchiante | Pesante | Rallentata | Pigra | Sbadigliante | Fiacca | Rilassata }
+# STANCHEZZA +1 / COSTITUZIONE +1: Prefissi legati a un letargo difensivo o a una pesantezza rilassata e corazzata.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"]{ Salda | Robusta | Massiccia | Letargica | Anfibia | Tassina | Orsina | Inerte | Postale | Memory }
+# STANCHEZZA +2: Dispregiativi dell'affaticamento totale e del crollo fisico che deprimono la produzione fin dal principio.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", \"quantita\": 2 }"]{ Estenuante | Logorante | Faticosa | Pesante | Spossante | Sonnolenta | Abbioccata | Sbadigliante | Divanata | Pigra }
+
+SPADA_LIV_4
+    [LIVELLO=4] \
+    [NOME_PRE="[ATTRIBUTO_SOLO_PRE_LIV_3] "] \
+    [NOME_POST=" [ATTRIBUTO_PRE_O_POST_LIV_2]"] \
+    [ATTRIBUTO_POST_NOME_VALORE=[ATTRIBUTO_POST_NOME]][NOME_POST_2=" [#ATTRIBUTO_POST_NOME_SEPARATORE?][#ATTRIBUTO_POST_NOME_VALORE]"] \
+    [NOME_DI=" [ATTRIBUTO_DI]"] \
+    {[NOME_ULTERIORE=" [ATTRIBUTO_ULTERIORE]"]|}
+
+ATTRIBUTO_DI
+
+# FORZA -2 / DESTREZZA +1: Un'arma leggerissima, quasi inconsistente dal punto di vista dell'impatto fisico, ma che rende il portatore estremamente sgusciante.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ del Grillo | della Zanzara | dello Spirito Volante | della Seta | del Ladruncolo | dell'Impiegato Agile | dell'Apprendista Fuggiasco | della Saponetta | della Mosca | del Saltimbanco }
+# FORZA -1: Un leggero indebolimento muscolare dovuto alla delicatezza strutturale dell'arma o a una scarsa attitudine alla fatica fisica.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"]{ del Debole | del Novizio | del Fuscello | della Foglia | del Vetro | del Fisico da Scrivania | del Segretario | del Flautista | della Mozzarella | della Piuma }
+# FORZA -1 / INTELLIGENZA +1: Il classico archetipo del mago o dello studioso: meno forza fisica, ma più capacità intellettuale.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": 1 }"]{ dello Scriba | del Filosofo Esile | del Veggente | dell'Astrologo | del Poeta | del Secchione | del Progettista | dell'Ingegnere Clinico | del Nerd da Tastiera | del Contabile }
+# FORZA +1: Un incremento standard della potenza muscolare e dell'impatto dei colpi, ideale per i combattenti fisici di prima linea.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ della Vittoria | del Campione | del Titano | del Toro | del Minotauro | del Braccio di Ferro | dello Smanettone | dello Scaricatore di Porto | del Traslocatore | del Culturista }
+# FORZA +1 / VELOCITÀ +1: Una riga ibrida positiva per lame bilanciate che colpiscono duro ma velocemente.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": 1 }"]{ del Ghepardo Corazzato | della Pantera | del Centauro | del Cavaliere d'Assalto | della Valanga | dello Smanettone del Lunedì | dell'Atleta dell'Ultimo Minuto | del Corridore con la Spesa | della Furia del Casello | dello Scatto Felino }
+# FORZA +2 / DESTREZZA -1: Malus all'agilità per gli oggetti massicci e pesanti.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": -1 }"]{ del Cinghiale Furioso | del Golem d'Argilla | del Rinoceronte Caricante | del Berserker Cieco | del Fabbro Pesante | del Trattore | del Blocco di Cemento | del Sollevatore di Pesi | del Bulldozer | del Ghiottone Rampante }
+
+# DESTREZZA -2 / COSTITUZIONE +2: L'archetipo del "Tank" o dell'oggetto immobile (come il Divano o il Carro Armato). Perdi totalmente la capacità di schivare, ma diventi indistruttibile.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": -2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 2 }"]{ della Montagna | del Bastione | della Fortezza | della Quercia | del Muro Portante | del Divano | del Trattore | della Riunione di Condominio | del Blocco di Cemento | del Carro Armato }
+# DESTREZZA -1: Un leggero impaccio nei riflessi o nella coordinazione, causato da un bilanciamento goffo dell'arma o da fattori ambientali scivolosi e ingombranti.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": -1 }"]{ dell'Inciampo | del Golem | dell'Ancora | del Masso | del Piombo | del Cantiere | del Pavimento Cerato | del Branzino Surgelato | delle Scarpe Antinfortunistiche | del Sabato Sera }
+# DESTREZZA -1 / FORZA +1: Il classico compromesso dell'arma pesante che sacrifica un briciolo di agilità a favore dell'impatto brutale.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ dell'Orso | del Tasso del Miele | del Cinghiale | del Minotauro | del Fabbro | del Palettatore | del Sollevatore | del Buttafuori | dello Scaricatore | del Fusto di Birra }
+# DESTREZZA +1 / PRECISIONE +1: L'accoppiata perfetta per i personaggi agili e letali (stile Ladro/Arciere).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": 1 }"]{ del Falco | del Cecchino | dell'Arciere | della Lince | del Chirurgo | del Geometra | dell'Orologiaio | del Sarto | della Zanzara | del Contabile Pignolo }
+# DESTREZZA +1 / CARICO -1: La lama ti rende rapidissimo, ma è così sottile o leggera che non ti permette di trasportare carichi pesanti.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": -1 }"]{ della Piuma | del Vento leggero | della Foglia | dello Spettro | della Seta | del Guardaroba Estivo | del Bagaglio a Mano | dello Scontrino | della Bolla di Sapone | dello Stagista senza fissa dimora }
+# DESTREZZA +2: Massima reattività fisica, coordinazione e gioco di gambe sgusciante, ideale per eludere le difese ed evitare i colpi nemici.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 2 }"]{ della Lucertola | del Ghepardo | del Giocoliere | della Libellula | del Ladro d'Anime | del Gatto di Marmo | della Saponetta | del Serpente | dell'Anguilla | dell'Evasore Fiscale }
+
+# COSTITUZIONE -2 / FORTUNA +1: L'archetipo del "cannone di vetro". Il portatore è fragilissimo e basta un soffio per romperlo (come uno Specchio o un Guscio d'Uovo), ma compensa questa fragilità con un pizzico di fortuna sfacciata per evitare il peggio.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": -2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"]{ del Cristallo | del Vetro di Murano | della Porcellana | dello Specchio | della Bolla di Sapone | del Miracolato | del Sopravvissuto per Caso | del Gratta e Vinci | della Carta Velina | del Guscio d'Uovo }
+# COSTITUZIONE -1: Una lieve debilitazione fisica o tendenza all'affaticamento, legata a uno stile di vita sedentario o a piccoli acciacchi di natura quotidiana e impiegatizia.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": -1 }"]{ del Debole | del Malaticcio | del Fuscello | della Canna al Vento | della Foglia d'Autunno | del Fisico da Scrivania | della Cariatide | dello Stagista Pallido | della Linea di Febbre | della Sciatalgia }
+# COSTITUZIONE -1 / DESTREZZA +1: Perdi resistenza ai colpi (meno HP), ma il corpo diventa leggerissimo, favorendo scatti e schivate.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ della Farfalla | della Libellula | del Colibrì | dello Spirito | della Seta | della Saponetta | del Saltimbanco | della Mosca | della Sgattaiolata | del Fuggiasco }
+# COSTITUZIONE +1 / CARICO +1: L'archetipo del portatore robusto. Ottima salute fisica e grande capacità di trasportare equipaggiamento pesante senza affaticarsi.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": 1 }"]{ del Facchino | del Mulo | dell'Asino | del Cavallo da Tiro | del Guardiano | del Portapacchi | della Spesa del Sabato | del Camallo | dello Zaino da Trekking | del Facchino d'Albergo }
+# COSTITUZIONE +1 / VELOCITÀ -1: Guadagni robustezza cellulare e resistenza, ma l'arma ti appesantisce nei movimenti rendendoti più lento nel turno.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": -1 }"]{ della Lumaca Corazzata | della Tartaruga | del Tricheco | del Cuor di Pietra | dell'Incudine | della Coda alle Poste | del Freno a Mano | del Cantiere Stradale | del Branzino Surgelato | del Lunedì Mattina }
+# COSTITUZIONE +2: La tua riga originale, ora chiusa a 10 elementi grazie all'aggiunta del Golem di Granito.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 2 }"]{ dell'Orso | del Tasso del Miele | della Montagna Impervia | della Quercia Secolare | del Bastione | del Muro portante | del Carro Armato | dello Stomaco di Ferro | della Corazza | del Golem di Granito }
+
+# INTELLIGENZA -2 / COSTITUZIONE +2: L'archetipo della creatura ottusa ma incrollabile (come un Troll o un Mattone). Zero flussi logici, ma una testa così dura da incassare qualsiasi colpo senza battere ciglio.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": -2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 2 }"]{ del Troll | del Masso | della Roccia | del Cinghiale | del Golem d'Argilla | della Capra | del Mattone | del Blocco di Cemento | del Trattore | del Divano }
+# INTELLIGENZA -1 / FORZA +1: Il classico "tutto muscoli e niente cervello". Perdi un po' di acume tattico, ma compensi potendo colpire molto più duro in mischia.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": -1 }"]{ dell'Apprendista | dello Stolto | dell'Ignorante | del Novizio | del Neofita | del Somaro | del Negato | dello Smemorato | della Matricola | del Cervello in Sciopero }
+# INTELLIGENZA -1: La mancanza di esperienza o la sbadataggine.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ del Bestione | del Golem | del Ciclope | del Minotauro | del Barbaro | del Braccio di Ferro | dello Scaricatore | del Culturista | del Bulldozer | dello Spaccapietre }
+# INTELLIGENZA +1 / FORZA -1: Lo stereotipo dell'intellettuale. Una mente brillante intrappolata in un corpo debole e poco allenato alla fatica fisica.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": 1 }"]{ dello Scriba | dell'Alchimista | dell'Astrologo | del Cartografo | del Veggente | del Nerd | del Contabile | dello Smanettone | del Sistemista | dell'Esperto }
+# INTELLIGENZA +1 / MAGIA +1: La combinazione classica per i maghi intermedi o gli studiosi dell'occulto. Ti dà intelligenza e aumenta anche la riserva di mana utilizzabile.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"]{ del Pensatore | dello Studioso | del Poeta | del Teologo | dell'Accademico | del Fisico da Scrivania | del Secchione | del Progettista | del Topo di Biblioteca | del Filosofo Esile }
+# INTELLIGENZA +2: L'archetipo del genio assoluto o del massimo esponente magico. Massima acutezza mentale.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": 2 }"]{ dell'Arcimago | del Saggio | del Filosofo | dell'Erudito | del Genio | del Cervellone | dell'Ingegnere | del Capoprogetto | del Grande Capo | del Computer }
+
+# SAGGEZZA -2 / FORTUNA +1: L'archetipo dell'incosciente totale. Chi impugna l'arma agisce senza pensare alle conseguenze minime (come il Turista Fai-da-Te o il Kamikaze), ma il destino lo protegge con un pizzico di fortuna sfacciata.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": -2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"]{ dello Sconsiderato | del Folle | dello Sventato | dell'Incosciente | del Kamikaze | del Miracolato | del Sopravvissuto per Caso | del Gratta e Vinci | del Turista Fai-da-Te | del Sognatore Spensierato }
+# SAGGEZZA -1 / FURIA +1: Il classico "zelota" o fanatico. Perdi il senno e la saggezza dell'autocontrollo, ma vieni pervaso da una foga in battaglia che aumenta i tuoi danni.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": -1 }"]{ del Monaco Distratto | del Frate Distratto | del Parroco Distratto | dell'Eremita Cieco | del Veggente Confuso | del Guru Fake | del Filosofo Ubriaco | del Distratto | del Confuso | della Testa tra le Nuvole }
+# SAGGEZZA -1: Rappresenta la pura distrazione o la perdita temporanea della bussola interiore.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": 1 }"]{ del Fanatico | dello Zelota | del Berserker | del Cane Sciolto | del Crociato | dell'Automobilista nell'Ingorgo | del Cliente Arrabbiato | del Capo Furioso | del Toro Scatenato | dello Smanettone Impazzito }
+# SAGGEZZA +1 / VELOCITÀ -1: La saggezza degli anziani o della meditazione profonda. Il personaggio ragiona benissimo, ma agisce con molta flemma e calma.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": 1 }"]{ del Guardiano del Tempio | della Civetta | del Monaco Saggio | della Lince | dello Sciamano | del Capoufficio Attento | della Suocera | dell'Ispettore | della Sentinella | del Vecchio Saggio }
+# SAGGEZZA +1 / PERCEZIONE +1: Un perfetto bilanciamento per chi capisce il mondo interiore ed esteriore (es. chierici, cacciatori, o nel mondo semiserio la Suocera o il Capoufficio Attento).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": -1 }"]{ del Filosofo Meditativo | dell'Anziano | del Teologo | del Guru Calmo | dell'Asceta | della Lumaca Pensatrice | della Coda alle Poste | della Riunione Infinita | del Registro Lento | del Lunedì Mattina }
+# SAGGEZZA +2: L'archetipo dell'illuminazione spirituale e del controllo interiore totale. Ottimo per massimizzare gli effetti sacri.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": 2 }"]{ del Veggente | del Mentore | dell'Illuminato | dell'Eremita Santo | del Patriarca | del Saggio del Villaggio | del Saggio Supremo | del Guru | del Capo Carismatico | della Voce della Ragione }
+
+# CARISMA -2: La riga originale legata all'invisibilità sociale assoluta o all'antipatia burocratica.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": -2 }"]{ del Reparto Acquisti | del Burocrate | dello Stagista Muto | del Cugino Timido | dell'Introverso | del Nerd Solitario | dell'Antipatico | del Guastafeste | del Ragioniere | del Supervisore }
+# CARISMA -1 / SOGGEZIONE +1: L'archetipo della figura spaventosa ma priva di fascino personale (es. L'Inquisitore o Il Fisco). Nessuno lo trova amichevole o affascinante (malus al Carisma), ma la sua sola presenza incute timore e rispetto forzato.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": -1 }"]{ del Goffo | dello Scontroso | del Rozzo | del Villano | del Solitario | del Mutanghero | del Pesante | del Musone | del Timido | dello Sbadato }
+# CARISMA -1: Il personaggio è semplicemente goffo, asociale o burbero. Non è odiato, ma fa fatica a farsi ascoltare nei dialoghi.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 1 }"]{ del Tiranno Silenzioso | del Boia | del Monarca Oscuro | dell'Inquisitore | dello Spauracchio | del Direttore Generale | del Fisco | del Controllore sul Bus | dell'Ispettore del Lavoro | del Buttafuori }
+# CARISMA +1 / FORZA -1: Lo stereotipo del Dandy o del damerino da corte. Ha una parlantina e un aspetto splendidi, ma se c'è da sollevare un peso o fare fatica fisica si tira indietro.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"]{ del Visconte | del Millantatore | del Bardo | del Seduttore | del Nobile | del Paraculo | del Raccomandato | del Vincitore di Sanremo | del Cugino Simpatico | del Re del Quiz }
+# CARISMA +1 / FORTUNA +1: L'archetipo del ciarlatano o dell'affabulatore fortunato (stile Bardo o Venditore di Tappeti). La gente gli crede per pura simpatia e le cose gli vanno sempre bene.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"]{ del Damerino | del Narcisista | del Dandy | del Modello | del Poeta di Corte | del Figlio di Papà | dello Specchiato | del Modaiolo | del Belloccio esile | del Divo }
+# CARISMA +2: Rappresenta il magnetismo assoluto, la regalità o l'abilità persuasiva suprema.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": 2 }"]{ del Cavaliere Senza Macchia | del Re Saggio | del Leader Nato | del Paladino Splendente | dell'Eroe Popolare | dell'Influencer | del Venditore di Tappeti | del Politico | del Padrone di Casa | del Capo Carismatico }
+
+# FORTUNA -2 / SOGGEZIONE +1: La sfortuna cosmica e distruttiva. Chi impugna l'arma ha una jella così leggendaria che le sventure gli piovono addosso a grappoli; tuttavia, questa aura di sfiga nera è così densa che finisce per spaventare e mettere a disagio anche i nemici (SOGGEZIONE +1).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": -2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 1 }"]{ del Martire della Sfiga | della Calamità | della Sciagura Animata | del Portasfiga | del Gatto Nero in Autostrada | della Marca da Bollo Smarrita | del Controllore alle Poste | del Disastro Ambulante }
+# FORTUNA -1 / SAGGEZZA +1: L'archetipo dello Stoico. La vita ti bersaglia di sventure (malus Fortuna), ma tu impari a incassare e sviluppi una grande forza interiore e autocontrollo (bonus Saggezza).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": -1 }"]{ dello Sventurato | del Disgraziata | dello Scalognato | dell'Infausto | della Sfortuna | del Gatto Nero | dello Specchio Rotto | del Venerdì 13 | del Malocchio | della Macumba }
+# FORTUNA -1: La sfiga quotidiana del viandante. Gli specchi rotti, i gatti neri e i piccoli imprevisti che complicano i turni di combattimento.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": 1 }"]{ del Filosofo Resiliente | dello Stoico | del Monaco Paziente | del Penitente | dell'Eremita Sfortunato | di Quello che non molla | del Ragioniere Ottimista | del Burocrate Calmo | del Vecchio Saggio | del Reietto }
+# FORTUNA +1: La riga di partenza, ottima per piccoli aiuti del destino nel calcolo delle probabilità.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"]{ del Quadrifoglio | della Scommessa | del Fato | della Dea Bendata | del Colpo di Fortuna | della Fortuna Sfacciata | della Lotteria | della Moneta Truccata | dell'Ultimo Secondo }
+# FORTUNA +1 / CRITICO +1: L'accoppiata perfetta per i giocatori d'azzardo. La fortuna si trasforma direttamente in probabilità di infilare un colpo critico micidiale (Il Colpo Gobbo, Il Jolly).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": 1 }"]{ dell'Auspicio | del Presagio | della Svolta | del Destino Letale | della Ruota della Fortuna | del Gratta e Vinci d'Oro | della Scommessa Vinta | del Colpo Gobbo | del Jolly | del Tredici al Totocalcio }
+# FORTUNA +2: L'archetipo del personaggio baciato dagli dei. Tutto gli va bene per puro caso (es. Il Miracolato o Il Re del Poker).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 2 }"]{ del Miracolato | del Sopravvissuto | dell'Intoccabile | del Prescelto | del Fato Favorevole | del Re del Poker | dell'Abbonato al Culo | dello Sfacciato | del Turista Fortunato | della Buona Stella }
+
+# CRITICO -2 / FORTUNA -1: Il fondo del barile delle armi. Non solo la spada non farà mai un critico a causa di difetti strutturali, ma attira anche una leggera sfortuna tattica (Fornitore Al Risparmio, Controllo Qualità Fallito).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": -2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": -1 }"]{ del Disastro | della Sfortuna Nera | del Colpo a Vuoto | del Fiacco | della Lama Sghemba | di Seconda Mano | del Controllo Qualità Fallito | del Modello Difettoso | del Fabbro Distratto | del Fornitore Al Risparmio }
+# CRITICO -1 / PARATA +1: Un'arma sbilanciata volutamente verso la difesa. Rinunci alla capacità di fare colpi letali in cambio di una guardia più larga e sicura che aumenta la parata.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": -1 }"]{ dello Smussato | dell'Arrotondato | del Logoro | del Filo Perso | dell'Innocuo | del Coltello da Burro | della Spada di Gomma | del Giocattolo | della Lama di Cartone | del Cucchiaio }
+# CRITICO -1: L'arma ha perso completamente il filo o è fatta di materiali inadatti al combattimento (Il Coltello da Burro, La Spada di Gomma). È quasi impossibile fare danni ingenti.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": 1 }"]{ dello Scudo della Guardia | del Bastione | del Paladino Calmo | del Protettore | della Difesa Chiara | del Buttafuori Prudente | del Vigile Urbano | del Cuscino delle Poste | dell'Airbag | della Cautela }
+# CRITICO +1 / FORZA +1: L'arma unisce la penetrazione del critico alla forza bruta dell'impatto (La Mannaia Pesante, Il Pugno di Ghisa).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": 1 }"]{ del Boia | del Rasoio | del Colpo Letale | del Carnefice | della Ghigliottina | dell'Occasione | del Colpo secco | del Punto Debole | della Fatalità | della Sfortuna Altrui }
+# CRITICO +1: La riga di partenza, incentrata sui punti deboli e sull'esecuzione pulita.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ del Maglio Spaccatutto | della Frattura | del Bulldozer | della Mannaia Pesante | del Tritacarne | dello Spacca-Scrivanie | della Martellata | del Pugno di Ghisa | dello Scaricatore di Porto | del Fusto di Birra Cadente }
+# CRITICO +2 / PRECISIONE -1: L'archetipo del colpo disperato ma letale (Tutto o Niente). L'arma infligge lacerazioni micidiali se va a segno, ma la sua bilanciatura estrema rende leggermente più difficile colpire il bersaglio.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": 2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": -1 }"]{ del Colpo Devastante | del Macellaio | della Spaccatura | dell'Anatomista | del Mietitore | del Tutto o Niente | della Sventola | della Pallonata | del Sasso in un Occhio | del Braccio di Ferro Impazzito }
+
+# PRECISIONE -2: appresenta la cecità tattica e i colpi completamente fuori bersaglio.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": -2 }"]{ del Fabbro Ubriaco | dell'Arciere Cieco | del Guercio | della Talpa | del Miope | dello Cecato | dello Sguercio | del Cecchino della Domenica | della Mira Storta | del Pendolo }
+# PRECISIONE -1 / FORZA +1: L'archetipo del "basta che colpisca" (Il Picchiatore, La Foga Bruta). L'attacco sventola alla cieca e manca spesso il bersaglio mobile, ma se riesce ad impattare fa molto male grazie al bonus di forza.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": -1 }"]{ dello Sbadato | dell'Approssimativo | del Frettoloso | del Distratto | del Cialtrone | del Tira-a-Campare | dell'Occhio Storto | del Vetro Appannato | dello Sguardo Vago | della Fretta }
+# PRECISIONE -1: L'arma ha un bilanciamento leggermente impreciso o difetti minori che rendono l'attacco un po' approssimativo (Il Frettoloso, Il Vetro Appannato).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ del Picchiatore | del Ciclone | del Martello | del Macigno | del Braccio di Ferro | dello Smanettone Cieco | dello Scaricatore Distratto | della Spaccata | del Sasso nel Buio | della Foga Bruta }
+# PRECISIONE +1 / FORZA -1: Un'arma da tocco geometrico o da studio analitico (Lo Schermidore, Il Disegnatore Tecnico). Il colpo va esattamente dove previsto, ma non ha una grande potenza d'impatto muscolare dietro.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ dell'Orologiaio | del Sarto | del Cacciatore | del Colibrì | del Perito | del Revisore dei Conti | della Zanzara | del Contabile Pignolo | dell'Amministratore Meticoloso | del Perito Calibratore }
+# PRECISIONE +1 / DESTREZZA +1: L'arma è finemente calibrata per muoversi agilmente e colpire senza sforzo nei punti giusti (L'Orologiaio, Il Sarto).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"]{ dello Schermidore | del Matematico | del Cartografo | dello Scacchista | del Maestro d'Armi | del Topo di Biblioteca | del Grafologo | del Disegnatore Tecnico | del Truccatore | dell'Impiegato Esile }
+# PRECISIONE +2: Rappresenta la coordinazione occhio-mano assoluta e la capacità di colpire una mosca in volo.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": 2 }"]{ del Cecchino | del Chirurgo | del Falco | dell'Aquila | della Mosca sul Muro | del Geometra Pignolo | del Ragno | del Laser | del Mirino | del Centromirato }
+
+# VELOCITÀ -2: Ho unito le tue due righe di malus pesanti in un unico blocco da 10 elementi, che rappresenta l'immobilità quasi totale o i rallentamenti più frustranti del mondo reale (la burocrazia, le riunioni e i download infiniti).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": -2 }"]{ della Lumaca | del Piombo | della Coda in Autostrada | del Cantiere Stradale | del Traffico | della Riunione Infinita | della Burocrazia | del Registro Elettronico | del Download Lento | a Batteria Scarica }
+# VELOCITÀ -1 / COSTITUZIONE +1: L'archetipo difensivo del "guscio". Sacrifichi un briciolo di velocità nei turni perché l'arma ti ancora al terreno, ma in cambio guadagni la stabilità e la salute tipiche di un blocco di pietra (dell'Ancora, del Trattore).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": -1 }"]{ del Bradipo | della Tartaruga | del Peso Massimo | dell'Incudine | della Zavorra | del Lunedì Mattina | dell'Abbiocco Pomeridiano | del Freno a Mano | dello Sbadiglio | del Sonnellino }
+# VELOCITÀ -1: Una leggera flemma nei movimenti. L'arma è leggermente goffa o induce un po' di pigrizia tattica (del Bradipo, del Lunedì Mattina).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"]{ del Macigno | dell'Ancora | del Bastione | del Golem | della Montagna | del Blocco di Cemento | del Trattore | del Carro Armato | del Branzino Surgelato | della Corazza Pesante }
+# VELOCITÀ +1 / FORZA -1: Un'arma leggerissima che fende l'aria a velocità pazzesca (es. della Freccia), ma che proprio per la sua assenza di massa non imprime una grande forza bruta sull'impatto fisico.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ della Rondine | del Colibrì | della Lepre | del Vento | della Libellula | del Cameriere Esperto | del Giocoliere | dello Smanettone | del Fuggiasco | del Rider in Ritardo }
+# VELOCITÀ +1 / DESTREZZA +1: L'arma è agile e scattante. Ottima per i combattenti leggeri che uniscono il movimento fulmineo a riflessi pronti (della Lepre, del Rider in Ritardo).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"]{ della Freccia | del Giavellotto | del Proiettile | della Scintilla | del Fruscio | della Piuma al Vento | del Peso Piuma | del Foglio Volante | dell'Aeroplanino di Carta | del Soffio }
+# VELOCITÀ +2: L'archetipo della rapidità assoluta. Ottieni un netto vantaggio sull'iniziativa e attacchi prima di chiunque altro (es. del Fulmine, della Fibra Ottica).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": 2 }"]{ del Fulmine | della Saetta | del Ghepardo | della Luce | della Tromba d'Aria | della Fibra Ottica | dello Scatto Felino | del Centometrista | del Jet | del Millisecondo }
+
+# FURTIVITÀ -2 / SOGGEZIONE +1: L'annullamento totale della discrezione. Fai un baccano così leggendario e plateale da essere l'esatto opposto di un ninja (dell'Elefante in una Cristalleria, della Banda di Paese). Impossibile nascondersi, ma questo ingresso teatrale e roboante finisce per intimidire e scioccare i nemici, applicando un bonus a SOGGEZIONE.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": -2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 1 }"]{ dell'Elefante in una Cristalleria | del Cinghiale nel Sottobosco | della Banda di Paese | del Temporale | del Cannone | dell'Annunciatore Generale | della Notifica a Tutto Volume | dello Spoileratore | del Direttore al Microfono | della Sirena d'Allarme }
+# FURTIVITÀ -1 / SONICO +1: L'arma fa rumore di per sé. Magari ha dei sonagli ornamentali o emette un ronzio che rovina l'effetto sorpresa (malus Furtività), ma l'impatto amplifica le onde d'urto sonore (bonus Sonico).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": -1 }"]{ del Goffo | dello Sbadato | dell'Inciampo | del Rumoroso | del Distratto | del Cialtrone | dell'Elefante | del Tira-i-Piedi | del Saltatore di Poio | del Cascamorto }
+# FURTIVITÀ -1: Sei semplicemente maldestro. Calpesti i rametti secchi, sbatti contro le porte e fatichi a passare inosservato (del Goffo, dell'Elefante).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SONICO\", \"quantita\": 1 }"]{ del Sonaglio | della Campanella | della Sirena | del Grido | del Boato | del Portavoce | del Megafono | del Clacson | del Trapano del Sabato | della Caciara }
+# FURTIVITÀ +1 / PERCEZIONE +1: L'archetipo dell'esploratore (dell'Infiltrato). Ti muovi nell'ombra ma sei anche incredibilmente attento a ciò che ti circonda, spiando i nemici prima che ti vedano.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ del Gatto | del furetto | del Fruscio | della Seta | dello Spirito | del Passista | del Passetto | dello Scalzista | del Mago dei Pacchi | del Sosia }
+# FURTIVITÀ +1 / DESTREZZA +1: L'arma favorisce movenze agili e felini, permettendo di sgattaiolare via con un'ottima coordinazione fisica (del Gatto, del Passetto).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": 1 }"]{ dell'Infiltrato | dello Scout | del Pipistrello | della Civetta | del Cacciatore | della Talpa del Reparto | dello Psicoanalista | dell'Origliatore | del Curioso | della Microspia }
+# FURTIVITÀ +2: La tua ottima riga di partenza. Rappresenta l'invisibilità assoluta e l'archetipo dell'assassino o della spia che si muove senza lasciare traccia.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": 2 }"]{ dell'Ombra | del Fantasma | del Ladro | della Volpe | del Gufo | della Spia | del Camaleonte | del Ninja | del Gatto Nero | del Guardone }
+
+# PARATA -2 / DESTREZZA +1: Un'arma talmente sottile, leggera o fragile da rendere impossibile il blocco di un fendente pesante (rischierebbe di spezzarsi come il Vetro o il Fioretto). In compenso, l'assenza di peso ti rende molto più agile nei movimenti (DESTREZZA +1).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": -2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ della Lama Fragile | del Cristallo | del Fioretto Leggero | del Vetro | della Seta | dello Schermidore Folle | della Mosca | della Saponetta | del Saltimbanco | dello Stagista Disarmato }
+# PARATA -1 / FURIA +1: L'archetipo dell'attacco sconsiderato. Abbassi totalmente la guardia per concentrarti solo sul colpire duro, scambiando la capacità di parare con una foga cieca.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": -1 }"]{ dello Scoperto | dello Sbilanciato | del Temerario | dello Sconsiderato | dell'Assalitore | del Guardrail di Plastica | della Difesa di Cartone | della Porta Aperta | dello Specchietto Retrovisore | del Ciao Ciao }
+# PARATA -1: L'arma ha una guardia stretta o una struttura che espone facilmente ai colpi nemici (Lo Sbilanciato, La Difesa di Cartone).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": 1 }"]{ del Fanatico | dello Zelota | del Berserker | del Toro Scatenato | della Tempesta di Spade | del Cliente Furente | del Guidatore Nervoso | del Computer Bloccato | dello Smanettone Furioso | dell'Isterico }
+# PARATA +1 / COSTITUZIONE +1: L'accoppiata perfetta per i difensori di prima linea (Il Paladino, La Cassaforte). Non solo blocchi i colpi, ma migliori la robustezza fisica generale del corpo.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": 1 }"]{ dello Scudo | del Bastione | del Guardiano | della Palizzata | della Fortezza | del Portiere | del Vigile | della Sbarra | della Trionea | del Buttafuori }
+# PARATA +1: La riga di partenza ideale, che evoca l'atto di frapporre una barriera solida tra sé e il pericolo.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"]{ del Paladino | del Protettore Imperiale | della Testuggine | della Quercia | della Corazza | dell'Armatura Aziendale | dello Stomaco di Ferro | del Muro del Pianto | del Blocco Portante | della Cassaforte }
+# PARATA +2 / VELOCITÀ -1: Massima capacità di blocco dei colpi (Muro Invalicabile, Cancello Chiuso). L'arma funge quasi da scudo fisso, ma la sua stazza rallenta leggermente la rapidità nei movimenti e nei turni.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": 2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": -1 }"]{ del Golem di Ferro | del Muro Invalicabile | del Guardiano Eterno | della Fortezza Inespugnabile | del Baluardo | del Lucchetto Rustico | della Sbarra del Passaggio a Livello | del Portiere di Notte | del Cancello Chiuso | del Buttafuori della Discoteca }
+
+# RESISTENZA_MAGICA -2 / SOGGEZIONE -1: Il livello massimo di esposizione magica. Non solo non hai barriere contro gli anatemi, ma la tua mente è così fragile e manipolabile da farti perdere anche l'impatto psicologico sui nemici (del Credulone, del Reparto Marketing).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", \"quantita\": -2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": -1 }"]{ del Condannato | della Bambola di Pezza | del Trance | del Vulnerabile | dell'Anima Nuda | del Credulone | dell'Orecchiante | del Reparto Marketing | del Fan dei Complotti | della Foglia al Vento }
+# RESISTENZA_MAGICA -1 / MAGIA +1: L'archetipo del "catalizzatore" (del Wi-Fi Aperto). Abbassi le tue difese mistiche e diventi più vulnerabile agli incantesimi nemici, ma in cambio apri i tuoi canali aumentando la riserva o la rigenerazione del tuo mana.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", \"quantita\": -1 }"]{ del Sensibile | del Ricettivo | dell'Instabile | del Conduttore | del Fluido | della Spugna | dell'Abbonato | del Segnale Libero | della Antenna | dell'Anima Candila }
+# RESISTENZA_MAGICA -1: Il portatore è biologicamente o strutturalmente poroso alle energie arcane, assorbendole facilmente come una Spugna.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": 1 }"]{ dell'Apprendista Stregone | del Canale Aperto | del Catalizzatore | del Sifone | del Medium | del Wi-Fi Aperto | del Ripetitore | dell'Infuocato | della Calamita | della Prolunga }
+# RESISTENZA_MAGICA +1 / COSTITUZIONE +1: Una difesa puramente materiale. L'arma scherma la magia semplicemente perché è densa, pesante e isolante (del Golem di Piombo, della Gomma).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": 1 }"]{ del Monaco Calmo | dell'Asceta | del Templare | del Devoto | del Santuario | dello Stoico | del Vetro Temperato | del Ragioniere Passivo | della Flemma | del Filtro Spam }
+# RESISTENZA_MAGICA +1 / SAGGEZZA +1: L'archetipo del difensore spirituale (del Templare, del Filtro Spam). La stabilità della mente e dello spirito si riflette in una barriera protettiva contro gli incantesimi
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"]{ del Golem di Piombo | della Piastra | del Bastione | del Muro Spesso | della Quercia | del Blocco di Piombo | della Gomma | del Carro Armato | della Tuta di Amianto | del Lastrone }
+# RESISTENZA_MAGICA +2: La tua ottima riga di partenza, perfetta per rappresentare la totale refrattarietà o lo scetticismo verso qualsiasi influsso arcano o maledizione.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", \"quantita\": 2 }"]{ dell'Antimagia | del Firewall | del Sigillo Runico | del Golem di Pietra | dello Schermo Mistico | della Nonna Diffidente | del No-Vax | dell'Incredulo | del Blocco Mentale | dell'Isolante }
+
+# PERCEZIONE -2 / FORTUNA +1: La cecità tattica assoluta (sei una Talpa). Impossibile schivare o mirare con criterio, ma il destino si impietosisce e ti concede un bonus alla Fortuna per compensare i tuoi passi falsi nel buio (del Miracolato).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": -2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"]{ della Talpa | del Cieco | dello Sguercio | dell'Orbo | della Notte Fonda | del Miracolato | del Sopravvissuto per Caso | del Gratta e Vinci | dello Smemorato | del Dormiente }
+# PERCEZIONE -1 / FORZA +1: L'archetipo del picchiatore cieco. Non ti accorgi di dove arrivano i colpi, ma quando agiti l'arma fai terra bruciata intorno a te (del Ciclope, dello Spaccapietre).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": -1 }"]{ dello Sbadato | del Distratto | del Miope | del Confuso | del Guercio | del Turista Fai-da-Te | del Vetro Appannato | dello Sguardo Vago | della Testa tra le Nuvole | dello Stagista }
+# PERCEZIONE -1: Piccoli difetti di vista o pura sbadataggine che rendono difficile accorgersi delle minacce o delle trappole ambientali (del Miope, dello Stagista).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ del Bestione | del Ciclope | del Golem | del Minotauro | del Barbaro | dello Spaccapietre | dello Scaricatore Distratto | del Bulldozer | del Martello | del Cinghiale Furioso }
+# PERCEZIONE +1 / SAGGEZZA +1: I sensi acuti uniti alla comprensione profonda del mondo, che sia spirituale o puramente legata ai pettegolezzi di quartiere (dello Sciamano, la Portinaia).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": 1 }"]{ del Cecchino | del Chirurgo | dell'Aquila | del Cacciatore | del Mirino | del Geometra Pignolo | del Laser | del Contabile Meticoloso | del Controllore | del Guardalinee }
+# PERCEZIONE +1 / PRECISIONE +1: L'accoppiata logica perfetta. Vedere benissimo il bersaglio si traduce direttamente in una mira infallibile (del Cecchino, del Contabile Meticoloso).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": 1 }"]{ del Veggente | del Mentore | dell'Illuminato | dello Sciamano | dell'Eremita | della Portinaia | del Consulente Senior | del Rilevatore | dell'Investigatore | del Consulente }
+# PERCEZIONE +2: La tua riga originale, l'archetipo dello sguardo che tutto vede, dalle creature mistiche nascoste ai dettagli burocratici più temibili (della Suocera, del Capoufficio).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": 2 }"]{ del Grifone | della Lince | del Falco | della Vedetta | della Civetta | del Capoufficio | della Suocera | del Rilevatore | della Spia | dell'Ispettore }
+
+# SOGGEZIONE -2: Rappresenta la noia soporifera, la frustrazione e lo svilimento totale causati dagli incubi della burocrazia terrena (del Catasto, della Marca da Bollo). Nessuno scappa per il terrore, ma l'avversario potrebbe arrendersi per sfinimento psicologico.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": -2 }"]{ del Catasto | del Burocrate | dell'Impiegato Comunale | dello Sportello Chiuso | della Marca da Bollo | del Modulo 3B | della Fila alle Poste | della Riunione di Condominio | dell'Amministratore | della TARI }
+# SOGGEZIONE -1: Il portatore non fa paura a nessuno, anzi, suscita ilarità o tenerezza. Impossibile intimidire i nemici (del Giullare, dello Stagista Timido).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": -1 }"]{ del Buffone | del Giullare | dell'Innocuo | del Simpatico | della Macchietta | dello Stagista Timido | del Cugino Scalzo | del Pagliaccio | della Barzelletta | del Cucciolo }
+# SOGGEZIONE +1: Lo scaglione positivo d'ingresso che mancava. L'arma ha un aspetto minaccioso o evoca piccoli spauracchi quotidiani e legali della vita moderna (dello Spauracchio, della Notifica Legale).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": 1 }"]{ dei Sette Regni | del Tiranno | del Trono Oscuro | dell'Imperatore | del Conquistatore | del Fisco | del Direttore Generale | del Padrone | del Capo Supremo | del Dittatore }
+# SOGGEZIONE +1 / CARISMA +1: La tua vecchia riga a valore 3. È l'intimidazione legittima esercitata da chi detiene il potere supremo e l'autorità assoluta, incutendo rispetto e timore reverenziale (dell'Imperatore, del Direttore Generale).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 1 }"]{ dello Spauracchio | dell'Ombra Lunga | del Fantasma | del Lupo Solitario | del Predatore | dell'Ispettore del Lavoro | del Buttafuori | della Notifica Legale | dell'Avis di Scadenza | del Richiamo Scritto }
+# SOGGEZIONE +2: La tua vecchia riga a valore 4. Rappresenta l'angoscia totale e la rovina imminente, sia essa mistica o puramente economica (della Rovina, del Licenziamento).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"NECROTICO\", \"quantita\": 1 }"]{ della Morte | del Tristo Mietitore | del Destino Inevitabile | della Fine | dell'Eternità | del Capolinea | dell'Ultima Ora | del Boia | dell'Oltretomba | del Giudizio Universale }
+# SOGGEZIONE +2 / NECROTICO +1: Evoca il terrore ancestrale della fine di tutto. Questa aura spaventosa è così densa che infonde nell'arma una debole energia di danno necrotico spontaneo (della Morte, dell'Oltretomba).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 2 }"]{ della Perdizione | dell'Abisso | dell'Apocalisse | del Caos | della Rovina | del Debito Pubblico | della Scadenza | del Licenziamento | del Fallimento | della Finanziaria }
+
+# FURIA -2 / PARATA +1: L'apatia o la rassegnazione assoluta (della Calma Piatta, dell'Impiegato Statale). È impossibile farsi scorrere il sangue agli occhi, ma questa totale assenza di foga ti permette di rimanere rintanato in una difesa passiva e arroccata estremamente solida (PARATA +1).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": -2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": 1 }"]{ della Calma Piatta | della Pace Eterna | del Letargo | dell'Inerte | dell'Apatia | dello Sciopero dei Mezzi | dell'Impiegato Statale | del Computer Bloccato | della Batteria Scarica | della Richiesta in Sospeso }
+# FURIA -1 / SAGGEZZA +1: L'archetipo dell'autocontrollo totale (dello Zen). Rifiuti l'ira e la rabbia bellica per mantenere la mente fredda e lucida, guadagnando un netto bonus in Saggezza spirituale.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": -1 }"]{ del Calmo | del Mansueto | della Pazienza | della Flemma | del Pacifico | dello Stagista Rassegnato | del Budino | del Camomillato | del Divano | del Gatto che Dorme }
+# FURIA -1: Il personaggio è semplicemente troppo rilassato, mansueto o pigro per arrabbiarsi, rendendo difficile attivare bonus basati sulla perdita di punti vita (della Pazienza, del Gatto che Dorme).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": 1 }"]{ dello Zen | del Monaco Buddista | dell'Asceta | della Meditazione | del Distaccato | del Ragioniere Passivo | della Riunione di Condominio Deserta | del Firewall Calmo | del Venerdì Pomeriggio | della Pace dei Sensi }
+# FURIA +1: Lo scaglione positivo d'ingresso. Una leggera irritazione o foga agonistica che aumenta la reattività del personaggio nei primi turni.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ del Guerriero Iracondo | della Vendetta | del Sangue Caldo | della Carica | del Rinoceronte | del Commesso Esasperato | del Lunedì Mattina senza Caffè | del Clacson Impazzito | dello Smanettone Furioso | dell'Uscita Anticipata Negata }
+# FURIA +1 / FORZA +1: L'ira si trasforma in energia muscolare e spinta offensiva immediata (della Vendetta, del Lunedì Mattina senza Caffè).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": 1 }"]{ della Scintilla | del Nervoso | del Ringhio | dell'Adrenalina | del Battito accelerato | del Tipo Permaloso | dello Sfogato | della Tastiera Presa a Pugni | del Cane che Abbaia | dello Sbuffo }
+# FURIA +2 / PARATA -1: La tua riga originale. Rappresenta l'ira incontrollabile dello stato Berserk. Colpisci con una rabbia cieca e devastante, ma proprio per questo motivo abbassi inevitabilmente la guardia lasciandoti scoperto ai contrattacchi nemiche (PARATA -1).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": 2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": -1 }"]{ della Furia | del Berserker | del Cataclisma | del Toro Scatenato | della Tempesta di Sangue | dell'Automobilista nell'Ingorgo | della Connessione Persa | del Cliente Arrabbiato | del Capo Furioso | del Cane Malato }
+
+# CARICO -2 / FORTUNA -1: Il livello minimo di capienza. L'arma è così strutturalmente vuota o incapace di reggere pesi che riduce drasticamente lo spazio dell'inventario. A questa fragilità si aggiunge anche una leggera dose di sfortuna legata agli imprevisti monetari e spaziali (del Cloud Pieno, del Portafoglio a Fine Mese).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": -2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": -1 }"]{ della Piuma Fragile | della Carta Velina | del Guscio d'Uovo | dell'Inconsistente | dell'Involucro Vuoto | del Portafoglio a Fine Mese | dello Spazio Esaurito | del Cloud Pieno | dell'Armadio Esploso | del Saldo Zero }
+# CARICO -1 / DESTREZZA +1: Rinunci a trasportare oggetti pesanti o corazze di piastra (malus Carico) in cambio di una totale libertà di movimento che amplifica la tua agilità nei balletti in mischia (della Libellula, della Farfalla).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": -1 }"]{ del Minimalista | del Leggero | dell'Inconsistente | del Viandante Scalzo | della Tasca Bucata | del Bagaglio a Mano | dello Zainetto | della Scatola di Scarpe | del Marsupio | dello Scontrino }
+# CARICO -1: L'arma riduce lo spazio disponibile o ti impone di viaggiare leggerissimo, costringendoti a fare una selezione ferrea dell'inventario (del Bagaglio a Mano, del Marsupio).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ della Farfalla | del Colibrì | della Seta | dello Spirito Volante | della Libellula | dello Stagista senza fissa dimora | del Fuggiasco | della Saponetta | del Saltimbanco | della Bolla di Sapone }
+# CARICO +1 / COSTITUZIONE +1: L'arma ti aiuta a distribuire perfettamente i pesi sul corpo. Non solo trasporti più oggetti, ma ne giova anche la tua salute e la resistenza della schiena (dello Zaino da Trekking, del Cavallo da Tiro).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": 1 }"]{ del Facchino | del Mulo | dell'Asino | del Camallo | del Portapacchi | del Trasloco | dello Zaino di Scuola | della Spesa del Sabato | della Valigia di Cartone | del Carrello Spezzato }
+# CARICO +1: La tua riga di partenza ideale, un grande tributo ai lavoratori e alle fatiche del trasporto quotidiano e scolastico.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"]{ del Sollevatore | del Cavallo da Tiro | del Custode | del Golem di Piombo | del Portatore del Tempio | del Pallet di Ghisa | dello Zaino da Trekking | del Facchino d'Albergo | dello Stivatore | del Superequipaggiato }
+# CARICO +2 / VELOCITÀ -1: Diventi una vera e propria stazione di stoccaggio ambulante, potendo trasportare qualsiasi armatura pesante o bottino colossale. Tuttavia, la stazza imponente di questo assetto penalizza leggermente i tuoi riflessi e la tua iniziativa nei turni (VELOCITÀ -1).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": 2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": -1 }"]{ del Caravan | del Carro da Trasporto | del Camallo dei Docks | della Chiatta | del Mammut | del Tir in Autostrada | della Nave Cargo | della Valigia da Stiva | del Furgone dei Traslochi | del Trasloco Intercontinentale }
+
+# MAGIA -2 / INTELLIGENZA -1: La totale siccità magica o il blocco dei flussi. Non solo l'arma prosciuga ogni briciolo di mana disponibile, ma induce anche una nebbia mentale che blocca i flussi logici del cervello (del Burnout, del Cervello in Sciopero).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": -2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": -1 }"]{ del Blocco Runico | dell'Antimagia | del Vuoto Mistico | della Cenere | dell'Aridità | del Burnout | del Cervello in Sciopero | della Batteria Scarica | del Modulo Perso | del Computer Bloccato }
+# MAGIA -1 / FORZA +1: L'archetipo del combattente ignorante. Rinuncerai a qualsiasi velleità magica o riserva di mana, ma compensi potendo contare su bicipiti d'acciaio che aumentano la tua forza d'impatto.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": -1 }"]{ del Profano | del Terreno | del Materiale | dell'Arido | del Rustico | del Babbani | dello Scettico | dello Stagista Pallido | del Cartone | del Sempliciotto }
+# MAGIA -1: Il personaggio è semplicemente tagliato fuori dalle energie superiori. È un essere puramente materiale che non vibra con i flussi del mana (del Profano, dello Scettico).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"]{ del Barbaro | del Bestione | del Ciclope | del Minotauro | dello Spaccapietre | dello Scaricatore | del Bulldozer | del Martello | del Cinghiale Furioso | del Braccio di Ferro }
+# MAGIA +1 / FORZA -1: Guadagni energia mistica e canali aperti verso il flusso arcano, ma sacrifichi la tua prestanza fisica e la potenza muscolare nei colpi bianchi.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": 1 }"]{ dell'Alchimista | dello Scriba | dell'Astrologo | del Veggente | del Cartografo | del Sistemista | dello Smanettone | del Nerd | dell'Esperto | del Sistemista }
+# MAGIA +1 / INTELLIGENZA +1: L'accoppiata logica ideale per i maghi. Espandere i tuoi canali di mana si sposa con una mente analitica ed esperta (dell'Alchimista, del Sistemista).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"]{ della Scintilla | del Fluido | dell'Aura | dell'Etere | dell'Incanto | del Trucchetto | della Prolunga | del Wi-Fi Aperto | della Prolunga | del Canale Aperto }
+# MAGIA +2: La tua ottima riga originale, perfetta per rappresentare la massima canalizzazione di mana e l'archetipo dell'incantatore puro.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": 2 }"]{ del Mana | del Mago | dell'Incantatore | della Congrega | della Riserva | del Trucchetto | della Pozione | dello Stregone | del Grimorio | del Mago di Oz }
+
+# CORAGGIO -2 / FORTUNA +1: La codardia assoluta (sei un Coniglio). Scappi davanti a qualsiasi ombra o rumore molesto e la tua mente cede facilmente al panico; tuttavia, la tua vergognosa fuga disperata fa sì che il destino si impietosisca, concedendoti un bonus alla Fortuna per salvarti la pelle all'ultimo secondo (del Miracolato).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", \"quantita\": -2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"]{ del Coniglio | del Codardo | del Fuggitivo | del Disertore | dell'Invertebrato | dell'Attacco di Panico | della Sindrome da Burnout | dello Scaricabarile | della Riunione Deserta | del Miracolato }
+# CORAGGIO -1 / PARATA +1: L'archetipo della difesa prudente. Perdi l'ardore di caricare a testa bassa (malus Coraggio), ma proprio perché preferisci stare sul chi va là mantieni la guardia alta aumentando l'efficacia dei tuoi blocchi (della Cautela, dell'Airbag).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", \"quantita\": -1 }"]{ del Prudente | del Cauto | del Timido | del Guardingo | dell'Esitante | dello Stagista Timido | del Ragioniere | del Musone | del Cugino Timido | dello Sbadato }
+# CORAGGIO -1: Il personaggio è semplicemente esitante o molto prudente. Preferisce valutare i rischi anziché buttarsi nella mischia, risentendo maggiormente degli attacchi mentali (del Cauto, del Ragioniere).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": 1 }"]{ dello Scudo della Guardia | del Protettore | della Difesa Chiara | del Paladino Calmo | del Bastione | del Buttafuori Prudente | del Vigile Urbano | del Cuscino delle Poste | dell'Airbag | della Cautela }
+# CORAGGIO +1 / SOGGEZIONE +1: Un coraggio freddo, regale e autoritario. Non hai paura di nulla e questa tua incrollabile sicurezza incute un timore reverenziale in chi ti guarda (del Conquistatore, del Direttore Generale).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": 1 }"]{ del Berserker | del Crociato | del Caricatore | del Gladiatore | del Vendicatore | del Commesso Esasperato | del Guidatore Nervoso | del Cliente Arrabbiato | del Capo Furioso | dello Smanettone Impazzito }
+# CORAGGIO +1 / FURIA +1: L'audacia si trasforma in carica e determinazione feroce. Ti lanci in prima linea senza esitazioni, alimentando la tua foga distruttiva (del Berserker, del Commesso Esasperato).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 1 }"]{ del Tiranno | dell'Imperatore | del Conquistatore | del Predatore | del Lupo Solitario | del Direttore Generale | del Fisco | del Padrone | del Buttafuori | del Richiamo Scritto }
+# CORAGGIO +2: La tua ottima riga originale. Rappresenta l'ardimento puro, lo sprezzo del pericolo e la totale immunità agli effetti di spavento (del Leone, del Kamikaze).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", \"quantita\": 2 }"]{ del Leone | dell'Eroe | del Paladino | dell'Infiltrato | della Spavalderia | del Fegato | del Kamikaze | della Faccia Tosta | del Temerario | del Coraggioso }
+
+# VALORE -2 / FORTUNA +1: Il livello minimo di lealtà, ovvero il puro opportunismo e il tradimento aperto (dello Scaricabarile, del Voltafaccia). Chi impugna l'arma è disposto a vendersi i compagni per salvarsi, ma questo atteggiamento meschino e vigliacco fa sì che la divinità dei codardi gli conceda un bonus alla Fortuna per evitare di pagare il conto delle sue azioni.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", \"quantita\": -2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"]{ del Traditore | del Rinnegato | del Giuda | del Vile | del Disertore | dello Scaricabarile | del Paraculo | del Voltafaccia | del Salta-Fila | del Sopravvissuto Egoista }
+# VALORE -1 / FURTIVITÀ +1: L'archetipo del "coraggio flessibile". Rinunci all'onore dello scontro frontale (malus Valore), preferendo dileguarti tatticamente per colpire nell'ombra (dello Sgattaiolatore, dello Stagista Fantasma).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", \"quantita\": -1 }"]{ dell'Individualista | del Solitario | del Neutrale | dell'Egoista | del Distaccato | del Freelance | del Consulente Esterno | del Contratto a Chiamata | dell'Indifferente | dello Spettatore }
+# VALORE -1: Il personaggio pensa solo a se stesso o mantiene un profilo distaccato, rifiutando di sacrificarsi per gli alleati o di coprire le retrovie (dell'Egoista, del Consulente Esterno).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": 1 }"]{ del Ladruncolo | dell'Ombra | della Volpe | del Disertore Scaltro | della Spia | dello Scroccone | del Fuggiasco | dello Sgattaiolatore | del Cugino Furbo | dello Stagista Fantasma }
+# VALORE +1 / CARISMA +1: L'eroe carismatico che ispira le masse. Il suo valore in battaglia si riflette in un magnetismo che guida e potenzia i compagni (del Leader Nato, del Trascinatore).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"]{ del Protettore | del Martire | del Bastione | del Guardiano Celato | del Difensore | del Muro d'Acciaio | del Bodyguard | della Cassaforte | del Primo Turno | della Resistenza Sindacale }
+# VALORE +1 / COSTITUZIONE +1: L'archetipo del protettore incrollabile (del Martire, del Bodyguard). Lo spirito di sacrificio e il desiderio di proteggere il gruppo aumentano biologicamente la robustezza fisica.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": 1 }"]{ del Leader Nato | del Campione | dell'Eroe Popolare | del Comandante | del Paladino Splendente | dell'Influencer Benefico | del Capo Carismatico | del Rappresentante | del Vincitore | del Trascinatore }
+# VALORE +2: Rappresenta l'eroismo puro, lo spirito cavalleresco e la condotta specchiata, con quella punta di ironia legata a Sponsor o Raccomandato.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", \"quantita\": 2 }"]{ dell'Onore | del Cavaliere | della Vittoria | del Paladino | della Corona | del Raccomandato | della Medaglia | dello Sponsor | del Supereroe | dei Punti Esperienza }
+
+# STANCHEZZA +2: L'esaurimento fisico e mentale totale legato ai ritmi biologici o lavorativi più massacranti (del Lunedì, del Turno di Notte).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", \"quantita\": 2 }"]{ dell'Abbiocco | del Divano | della Fiacca | del Sonno | della Pigrizia | del Lunedì | dello Sbadiglio | della Controra | del Letargo | del Turno di Notte }
+# STANCHEZZA +1 / COSTITUZIONE +1: L'archetipo del "Letargo" (del Materasso Memory). Sei stanco e non hai voglia di muoverti, ma questa totale immobilità rilassata ti permette di incassare meglio i colpi e rigenerare la pelle, aumentando la salute massima.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", \"quantita\": 1 }"]{ della Flemma | del Sonnecchiante | del Pesante | del Rallentato | del Pigro | del Venerdì Pomeriggio | dell'Occhio Chiuso | della Pausa Sigaretta | della Fiacca | del Calo idrosalino }
+# STANCHEZZA +1: Cominciano i primi sbadigli. I movimenti si fanno leggermente goffi e pigri, accusando la fatica dell'esplorazione o della routine aziendale (del Venerdì Pomeriggio).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", \"quantita\": 1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"]{ del Letargico | dell'Anfibio | del Tasso | dell'Orso in Inverno | dell'Inerte | del Cuscino delle Poste | del Materasso Memory | dello Smart Working passivo | della Copertina | del Riposino Corazzato }
+# STANCHEZZA -1: Uno stato di normale prontezza operativa. Sei semplicemente sveglio e reattivo rispetto alla media dei viandanti.
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", \"quantita\": -1 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ del Riposato | dello Scattante | del Fresco | della Lepre | del Risveglio | dello Smanettone del Mattino | del Caffè Espresso | dello Stagista Motivato | del Gatto Felino | del Mattiniero }
+# STANCHEZZA -1 / DESTREZZA +1: L'archetipo del fisico riposato e fresco. I muscoli scattano all'istante senza acido lattico, favorendo riflessi pronti e schivate pulite (del Risveglio, dello Stagista Motivato).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", \"quantita\": -1 }"]{ della Sveglia | del Vigile | dell'Attento | del Pronto | dell'Attivo | del Turno di Giorno | della Ricarica | del Lunedì Pomeriggio | dell'Occhio Aperto | dello Slancio }
+# STANCHEZZA -2 / VELOCITÀ +1: Il massimo livello di iperattività. Il portatore è così privo di affaticamento e carico di adrenalina da muoversi a una velocità pazzesca, ideale per lanciare combo a ripetizione (del Caffè Doppio, del Turbocompressore).
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", \"quantita\": -2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": 1 }"]{ dell'Energia Pura | dell'Iperattivo | dell'Insonne | della Scossa | della Furia | del Caffè Doppio | dell'Energy Drink | delle Tre Scatole di Red Bull | del Rider all'Ultimo Minuto | del Turbocompressore }
+
+#    [DANNI="[#DANNI?],{ \"tipo\": \"CONTUNDENTE\", \"quantita\": 3 }"]{ del Maglio | della Roccia | del Ciclone | del Macigno | del Gigante | della Badilata | del Matterello | del Cazzotto | della Padellata | della Clava }
+#    [DANNI="[#DANNI?],{ \"tipo\": \"PERFORANTE\", \"quantita\": 3 }"]{ della Zanna | dello Spino | del Pungiglione | della Lancia | della Vespa | del Cavatappi | dello Stuzzicadenti | dello Spillone | della Zanzara | del Chiodo }
+#    [DANNI="[#DANNI?],{ \"tipo\": \"TAGLIENTE\", \"quantita\": 3 }"]{ del Rasoio | della Ghigliottina | della Falce | del Trinciapollo | della Mannaia | del Tagliacarte | dell'Affettatrice | della Lametta | del Gatto | della Forbice }
+    [DANNI="[#DANNI?],{ \"tipo\": \"ARIA\", \"quantita\": 3 }"]{ del Tornado | del Tifone | del Maestrale | della Brezza | del Ciclone | del Ventilatore | dello Sbuffo | del Sospiro | della Ventola }
+    [DANNI="[#DANNI?],{ \"tipo\": \"ACQUA\", \"quantita\": 3 }"]{ dell'Oceano | dell'Abisso | dello Tsunami | della Cascata | del Diluvio | della Pozzanghera | dello Sciacquone | del Gavettone | della Cannella }
+    [DANNI="[#DANNI?],{ \"tipo\": \"TERRA\", \"quantita\": 3 }"]{ del Terremoto | della Montagna | del Cataclisma | del Granito | della Faglia | della Zappa | del Cantiere | della Mattonella | della Talpa | del Mattone }
+    [DANNI="[#DANNI?],{ \"tipo\": \"FUOCO\", \"quantita\": 5 }"]{ del Vulcano | del Drago | dell'Inferno | del Falò | della Fenice | del Barbecue | del Fornello | del Fiammifero | del Drago Sdentato | dello Scottadito }
+    [DANNI="[#DANNI?],{ \"tipo\": \"FULMINE\", \"quantita\": 4 }"]{ della Tempesta | del Fulmine | della Saetta | del Tuono | dell'Atomo | del Cortocircuito | della Dinamo | della Scossa | della Presa Multipla }
+    [DANNI="[#DANNI?],{ \"tipo\": \"GELO\", \"quantita\": 4 }"]{ delle Nevi Eterne | del Ghiacciaio | dell'Artide | della Tormenta | del Criostato | del Frigorifero | del Calippo | del Ghiacciolo | del Cubetto | del Pinguino }
+    [DANNI="[#DANNI?],{ \"tipo\": \"ACIDO\", \"quantita\": 3 }"]{ della Palude | della Corrosione | della Lava | del Solfato | dell'Alchimista | del Sottaceto | dello Sgorgante | del Limone | della Batteria | del Vomito }
+    [DANNI="[#DANNI?],{ \"tipo\": \"VELENO\", \"quantita\": 3 }"]{ della Vipera | del Serpente | del Cobra | del Pesce Pietra | dello Scorpione | del Basilisco | della Viverna | del Ragno | del Wyrm | della Suocera | del Fungo | del Rosicone }
+    [DANNI="[#DANNI?],{ \"tipo\": \"NECROTICO\", \"quantita\": 3 }"]{ del Crepuscolo | della Cripta | del Necromante | della Piaga | della Tomba | dello Zombie | della Puzza di Piedi | del Cadavere | del Lumino | del Fantasma }
+    [DANNI="[#DANNI?],{ \"tipo\": \"SACRO\", \"quantita\": 3 }"]{ dell'Alba | dell'Aurora | del Paradiso | dell'Angelo | del Santo | del Chierichetto | del Campanile | del Miracolo | dei Pii Desideri | della Sagrestia }
+    [DANNI="[#DANNI?],{ \"tipo\": \"PSICHICO\", \"quantita\": 4 }"]{ dell'Illusione | dell'Incubo | della Mente | della Follia | dell'Ipnosi | del Matto | dell'Emicrania | dello Schizzato | dello Svitato }
+    [DANNI="[#DANNI?],{ \"tipo\": \"ARCANO\", \"quantita\": 4 }"]{ dell'Arcano | della Magia | delle Rune | del Portale | del Cosmo | del Mago Zurlì | del Trucchetto Magico | dell'Abracadabra | della Scintillina | del Circo }
+    [DANNI="[#DANNI?],{ \"tipo\": \"VUOTO\", \"quantita\": 4 }"]{ del Vuoto | dell'Eclissi | della Singolarità | dell'Abisso | del Buco Nero | dell'Aria Fritta | del Nulla | dell'Astronauta | del Divano | del Deserto }
+    [DANNI="[#DANNI?],{ \"tipo\": \"MALEDIZIONE\", \"quantita\": 4 }"]{ del Malocchio | della Sventura | della Jella | dell'Infausto | della Condanna | del Gatto Nero | del Venerdì 13 | della Scalogna | del Portasfiga }
+
+ATTRIBUTO_POST_NOME
+    Volante
+    Rotante con Rinterzo
+    [DANNI="[#DANNI?],{ \"tipo\": \"FULMINE\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Fulminante
+    [DANNI="[#DANNI?],{ \"tipo\": \"FULMINE\", \"quantita\": 5 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Strafulminante
+    [DANNI="[#DANNI?],{ \"tipo\": \"FUOCO\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Carbonizzante
+    [DANNI="[#DANNI?],{ \"tipo\": \"VELENO\", \"quantita\": 5 }"]al Plutonio
+    [DANNI="[#DANNI?],{ \"tipo\": \"VELENO\", \"quantita\": 6 }"]all'Uranio Impoverito
+    [DANNI="[#DANNI?],{ \"tipo\": \"SONICO\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Vibrante
+    [DANNI="[#DANNI?],{ \"tipo\": \"PSICHICO\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Ululante
+    [DANNI="[#DANNI?],{ \"tipo\": \"ACIDO\", \"quantita\": 4 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Corrosiva
+    [DANNI="[#DANNI?],{ \"tipo\": \"SACRO\", \"quantita\": 5 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Purificatrice
+    [DANNI="[#DANNI?],{ \"tipo\": \"NECROTICO\", \"quantita\": 5 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Divoratrice
+    [DANNI="[#DANNI?],{ \"tipo\": \"SANGUINAMENTO\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Dissanguante
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Silenziosa
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Autoaffilante
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": 1 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Antiruggine
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": -2 }"]a Batteria Scarica
+
+ATTRIBUTO_ULTERIORE
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": -1 }"] { (con { Bulloni Allentati | Struttura Cedevole | Manico di Plastica | Impugnatura Usurata | Lama Piegata | Sconto del 50% | Difetto di Fabbrica | Gioco sul Pomolo | Struttura Fragile } | Semicotta ) | \
+            (senza { Rinforzo Strutturale | Struttura Portante | Telaio Rinforzato | Contrappeso in Acciaio | Supporto Rigido | Metallo Denso | Perni di Tenuta | Anima d'Acciaio | Spessore Interno | Bilanciamento di Massa | Pistone Idraulico | Lega Pesante | Impugnatura Solida | Nucleo Denso | Molla Potenziata | Innesto Muscolare | Struttura Monoblocco }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORZA\", \"quantita\": 1 }"] (con { Rinforzo Strutturale | Struttura Portante | Telaio Rinforzato | Contrappeso in Acciaio | Supporto Rigido | Metallo Denso | Perni di Tenuta | Anima d'Acciaio | Spessore Interno | Bilanciamento di Massa | Pistone Idraulico | Lega Pesante | Impugnatura Solida | Nucleo Denso | Molla Potenziata | Innesto Muscolare | Struttura Monoblocco })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": -1 }"] { (con { Peso Sbilanciato | Impugnatura Incollata | Manico Unto | Assetto Goffo | Ergonomia Bocciata | Finitura Grezza | Peso Eccessivo | Bilanciamento Sghembo | Vernice Fresca | Grip Scadente }) | \
+            (senza { Grip Ergonomico | Impugnatura Antiscivolo | Bilanciamento Dinamico | Assetto Aerodinamico | Rivestimento in Gomma | Profilo Snello | Finitura Calibrata | Ergonomia | Distribuzione del Peso | Impugnatura Curva | Impugnatura Sagomata | Peso Fluido | Finitura Ultra-Leggera | Bilanciere di Precisione }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"] (con { Grip Ergonomico | Impugnatura Antiscivolo | Bilanciamento Dinamico | Assetto Aerodinamico | Rivestimento in Gomma | Profilo Snello | Finitura Calibrata | Ergonomia | Distribuzione del Peso | Impugnatura Curva | Impugnatura Sagomata | Peso Fluido | Finitura Ultra-Leggera | Bilanciere di Precisione })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": -1 }"] { (con { Segni di Cedimento | Crepa sulla Lama | Microfratture | Metallo Poroso | Ruggine Interna | Scadenza a Breve | Saldatura Debole | Difetto Strutturale | Materiale Riciclato | Sottile Spessore }) | \
+            (senza { Giunto di Sicurezza | Certificato di Resilienza | Rivestimento Antishock | Sigillo di Durata | Spessore Maggiorato | Piastra di Rinforzo | Collaudo Strutturale | Trattamento Termico | Garanzia sui Materiali | Lega Antirottura | Lega Temperata | Protezione Termica | Anima di Ghisa }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 1 }"] (con { Giunto di Sicurezza | Certificato di Resilienza | Rivestimento Antishock | Sigillo di Durata | Spessore Maggiorato | Piastra di Rinforzo | Collaudo Strutturale | Trattamento Termico | Garanzia sui Materiali | Lega Antirottura | Lega Temperata | Protezione Termica | Anima di Ghisa })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": -1 }"] { (con { Cervello in Sciopero | Nebbia Mentale | Errori di Battitura | Logica Mancante | Bug di Sistema | Memoria Piena | Cortocircuito Logico | Dati Corrotti | Traduzione Imbarazzante | Schermo Nero })  | \
+            (senza { Manuale di Istruzioni | Guida Rapida | Scheda Tecnica | Tutorial Cartaceo | Istruzioni di Montaggio | Schema Logico | Assistenza dello Sviluppatore | Note del Produttore | Etichetta | Traduzione dei Testi | Bino di Note | Mappa dei Flussi | Note a Margine | Glossario Tecnico | FAQ Incluse }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"INTELLIGENZA\", \"quantita\": 1 }"] (con { Manuale di Istruzioni | Guida Rapida | Scheda Tecnica | Tutorial Cartaceo | Istruzioni di Montaggio | Schema Logico | Assistenza dello Sviluppatore | Note del Produttore | Etichetta | Traduzione dei Testi | Bino di Note | Mappa dei Flussi | Note a Margine | Glossario Tecnico | FAQ Incluse })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": -1 }"] { (con { Crisi d'Ansia | Impulsività | Attacco di Panico | Distrazione Totale | Crisi Esistenziale | Cattive Intenzioni | Sconsideratezza | Arroganza | Testa tra le Nuvole | Follia Transitoria }) | \
+            (senza { Santino Incluso | Benedizione Standard | Clausola di Coscienza | Nota Spirituale | Vademecum Etico | Principi Morali | Consapevolezza | Moderazione | Autocontrollo | Senso della Misura | Consigli del Mentore | Consigli del Consulente | Buone Intenzioni | Pensiero del Giorno | Scuse Formali | Autocertificazione Spirituale }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SAGGEZZA\", \"quantita\": 1 }"] (con { Santino Incluso | Benedizione Standard | Clausola di Coscienza | Nota Spirituale | Vademecum Etico | Principi Morali | Consapevolezza | Moderazione | Autocontrollo | Senso della Misura | Consigli del Mentore | Consigli del Consulente | Buone Intenzioni | Pensiero del Giorno | Scuse Formali | Autocertificazione Spirituale })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": -1 }"] { (con { Cattivo Odore | Colore Sbiadito | Design Imbarazzante | Finitura Grezza | Ruggine Visibile | Bave di Colla | Aspetto Anonimo | Linee Goffe | Rivestimento Spellato | Dettagli Trascurati }) | \
+            (senza { Logo Aziendale | Design di Tendenza | Finitura Lucida | Look Accattivante | Bollino di Qualità | Confezione Estetica | Sponsor in Evidenza | Cura del Dettaglio | Verniciatura | Elementi Grafici | Effetto Instagram | Confezione Regalo | Fiocchetto Rosso | Stile Unico }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARISMA\", \"quantita\": 1 }"] (con { Logo Aziendale | Design di Tendenza | Finitura Lucida | Look Accattivante | Bollino di Qualità | Confezione Estetica | Sponsor in Evidenza | Cura del Dettaglio | Verniciatura | Elementi Grafici | Effetto Instagram | Confezione Regalo | Fiocchetto Rosso | Stile Unico })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": -1 }"] { (in { Comodato d'Uso | Leasing | Subappalto | Sfratto | Regime di Proroga | Amministrazione Controllata | Liquidazione | Pegno | Franchigia | Contratto a Termine }) | \
+            (senza { Garanzia Biennale | Garanzia Triennale | Garanzia Estesa | Assicurazione Kasko | Assicurazione Infortuni | Clausola di Recesso | Rimborso Garantito | Polizza Vetri | Tutela Legale | Copertura Imprevisti | Fondo di Riserva | Paracadute Finanziario | Scudo Fiscale | Biglietto della Lotteria | Opzione Soddisfatti o Rimborsati }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 1 }"] (con { Garanzia Biennale | Garanzia Triennale | Garanzia Estesa | Assicurazione Kasko | Assicurazione Infortuni | Clausola di Recesso | Rimborso Garantito | Polizza Vetri | Tutela Legale | Copertura Imprevisti | Fondo di Riserva | Paracadute Finanziario | Scudo Fiscale | Biglietto della Lotteria | Opzione Soddisfatti o Rimborsati })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": -1 }"] { (con { Usata | di Seconda Mano | Ricondizionata | da Esposizione | Km Zero | di Fine Serie | da Stock | Fallimentare | Fuori Catalogo | da Cesto delle Offerte }) | \
+            (senza { Lama Autoaffilante | Filo al Diamante | Profilo a Rasoio | Angolo di Taglio Ottimale | Intaglio di Precisione | Tempra Laser | Punta Spillo | Profilo Dentellato | Smussatura al Micrometro | Geometria Letale | Affilatura | Controllo del Filo | Rifinitura della Lama }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": 1 }"] (con { Lama Autoaffilante | Filo al Diamante | Profilo a Rasoio | Angolo di Taglio Ottimale | Intaglio di Precisione | Tempra Laser | Punta Spillo | Profilo Dentellato | Smussatura al Micrometro | Geometria Letale | Affilatura | Controllo del Filo | Rifinitura della Lama })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": -1 }"] { (con { Lama Sghemba | Mirino Storto | Angolazione Fallata | Lente Incrinata | Vibrazione Strutturale | Gioco sul Perno | Assemblaggio Approssimativo | Bilanciamento Difettoso | Ottica Graffiata | Calibrazione Mancata }) | \
+            (senza { Allineamento Ottico | Taratura Laser | Centratura di Fabbrica | Collaudo Finale | Certificato di Calibrazione | Controllo Qualità | Mirino Regolabile | Squadratura Millimetrica | Assistenza Tecnica | Revisione | Regolazione Basale | Livella a Bolla | Calibratore Automatico | Ottica di Puntamento | Sistema di Allineamento }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": 1 }"] (con { Allineamento Ottico | Taratura Laser | Centratura di Fabbrica | Collaudo Finale | Certificato di Calibrazione | Controllo Qualità | Mirino Regolabile | Squadratura Millimetrica | Assistenza Tecnica | Revisione | Regolazione Basale | Livella a Bolla | Calibratore Automatico | Ottica di Puntamento | Sistema di Allineamento })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": -1 }"] { (con { Freno di Stazionamento | Limitatore di Giri | Batteria Scarica | Alimentatore Lento | Connessione 3G | Sistema Inceppato | Peso Morto | Trasmissione Grippata | Attrito Elevato | Blocco di Sicurezza | Zavorra | Attrito | Viscosità | Resistenza Meccanica | Rallentatore Innato }) | \
+            (senza { Alleggerimento di Massa | Cuscinetto a Sfera | Struttura Traforata | Lega Aeronautica | Svuotamento Interno | Cinetica Fluida | Risposta Rapida | Scatto Meccanico | Profilo Svasato | Riduzione d'Attrito }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": 1 }"] (con { Alleggerimento di Massa | Cuscinetto a Sfera | Struttura Traforata | Lega Aeronautica | Svuotamento Interno | Cinetica Fluida | Risposta Rapida | Scatto Meccanico | Profilo Svasato | Riduzione d'Attrito })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": -1 }"] { (con { Sonaglio di Serie | Allarme Acustico | Led Lampeggiante | Sirena Incorporata | Vernice Catarifrangente | Cassa Bluetooth | Campanellino | Finitura Neon | Tracciamento GPS | Avviso Sonoro }) | \
+            (senza { Silenziatore in Feltro | Rivestimento Opaco | Vernice Antiriflesso | Fodero Felpato | Impugnatura Sorda | Finitura Ombra | Isolamento Acustico | Camuffamento Mimetico | Profilo Antirisonante | Assorbitore di Vibrazioni | Opacizzazione }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": 1 }"] (con { Silenziatore in Feltro | Rivestimento Opaco | Vernice Antiriflesso | Fodero Felpato | Impugnatura Sorda | Finitura Ombra | Isolamento Acustico | Camuffamento Mimetico | Profilo Antirisonante | Assorbitore di Vibrazioni | Opacizzazione })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": -1 }"] { (con { Elsa Fragile | Paramano Mancante | Guardia Allentata | Impugnatura Corta | Protezione Assente | Manico Scheggiato | Struttura Aperta | Profilo Sottile | Nessuno Schermo | Gioco sul Blocco }) | \
+            (senza { Paramano Rinforzato | Elsa a Cesto | Guardia Maggiorata | Scudo da Pugno | Blocco di Sicurezza | Protezione Dita | Guardia d'Acciaio | Arresto di Battuta | Staffa di Protezione | Contrappeso Difensivo | Barriera Fisica | Croce d'Arresto | Copertura Laterale }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": 1 }"] (con { Paramano Rinforzato | Elsa a Cesto | Guardia Maggiorata | Scudo da Pugno | Blocco di Sicurezza | Protezione Dita | Guardia d'Acciaio | Arresto di Battuta | Staffa di Protezione | Contrappeso Difensivo | Barriera Fisica | Croce d'Arresto | Copertura Laterale })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", \"quantita\": -1 }"] { (con { Antenna Arcana | Canale Aperto | Firewall Bucato | Vulnerabilità Zero-Day | Connessione Non Protetta | Sensibilità Mistica | Sigillo Infranto | Bug di Sistema | Ripetitore Runico | Calamita per Anatemi }) | \
+            (senza { Schermatura Mistica | Isolamento Arcano | Protezione Antivirus | Firewall Attivo | Filtro Malefici | Barriera Elementale | Sigillo di Sicurezza | Blindatura Runica | Messa a Terra | Protezione della Privacy }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", \"quantita\": 1 }"] (con { Schermatura Mistica | Isolamento Arcano | Protezione Antivirus | Firewall Attivo | Filtro Malefici | Barriera Elementale | Sigillo di Sicurezza | Blindatura Runica | Messa a Terra | Protezione della Privacy })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": -1 }"] { (con { Visiera Opaca | Vetro Graffiato | Lente Appannata | Sensore Sporco | Angolo Cieco | Display Rotto | Indicatori Spenti | Copertura Mancante | Filtro Notturno Fallato | Visuale Ridotta }) | \
+            (senza { Visiera Chiara | Lente di Ingrandimento | Sensore Rilevatore | Visore Notturno | Indicatore Luminoso | Display di Stato | Filtro di Contrasto | Rilevatore d'Impronte | Scanner Ambientale | Tracciatore Ottico | Segnale Sonoro }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": 1 }"] (con { Visiera Chiara | Lente di Ingrandimento | Sensore Rilevatore | Visore Notturno | Indicatore Luminoso | Display di Stato | Filtro di Contrasto | Rilevatore d'Impronte | Scanner Ambientale | Tracciatore Ottico | Segnale Sonoro })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": -1 }"] { (con { Aspetto Ridicolo | Colore Rosa | Stampa Cartoon | Finitura Clown | Vernice Pastello | Adesivi di Gattini | Suono Divertente | Design Simpatico | Look Amichevole | Sagoma Buffa }) | \
+            (senza { Intaglio a Teschio | Aura d'Ombra | Finitura Spaventosa | Design Gotico | Profilo Aggressivo | Incisione Minacciosa | Estetica Oscura | Silhouette Demoniaca | Effetto Terrore | Aspetto Intimidatorio | Linee Spigolose }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 1 }"] (con { Intaglio a Teschio | Aura d'Ombra | Finitura Spaventosa | Design Gotico | Profilo Aggressivo | Incisione Minacciosa | Estetica Oscura | Silhouette Demoniaca | Effetto Terrore | Look Intimidatorio | Linee Spigolose })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": -1 }"] { (con { Valvola di Sfogo | Sedativo Included | Camomilla in Omaggio | Modalità Relax | Sistema Antistress | Filtro Calma | Stabilizzatore d'Umore | Tappo di Sicurezza | Blocco Agonistico | Modalità Eco }) | \
+            (senza { Iniettore d'Adrenalina | Molla di Scatto | Canalizzatore di Rabbia | Amplificatore di Impatto | Innesco Chimico | Valvola di Sovrapressione | Modulo Frenetico | Risonatore d'Umore | Sensore di Battito | Condensatore Agonistico | Regolatore di Flusso | Limitatore d'Impulso | Controllo di Spinta | Moderatore }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURIA\", \"quantita\": 1 }"] (con { Iniettore d'Adrenalina | Molla di Scatto | Canalizzatore di Rabbia | Amplificatore di Impatto | Innesco Chimico | Valvola di Sovrapressione | Modulo Frenetico | Risonatore d'Umore | Sensore di Battito | Condensatore Agonistico | Regolatore di Flusso | Limitatore d'Impulso | Controllo di Spinta | Moderatore })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": -1 }"] { (con { Cerniera Rotta | Tracolla Sfilacciata | Tessuto Strappato | Gancio Allentato | Scatola Umida | Manico Spezzato | Cuciture Cedevoli | Plastica Crepata | Vano Ostruito | Chiusura Difettosa }) | \
+            (senza { Custodia Rigida | Sacca da Trasporto | Tracolla Imbottita | Gancio da Cintura | Custodia Morbida | Scatola Originale | Supporto da Muro | Valigetta di Plastica | Marsupio Dedicato | Imbracatura di Tela | Vano Dedicato | Contenitore | Custodia Rigida in Omaggio }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": 1 }"] (con { Custodia Rigida | Sacca da Trasporto | Tracolla Imbottita | Gancio da Cintura | Custodia Morbida | Scatola Originale | Supporto da Muro | Valigetta di Plastica | Marsupio Dedicato | Imbracatura di Tela | Vano Dedicato | Contenitore | Custodia Rigida in Omaggio })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": -1 }"] { (con { Serbatoio Vuoto | Filtro Mana Intasato | Canali Ostruiti | Assenza di Carica | Isolamento Misto | Spina Staccata | Condensatore Fuso | Zero Risonanza | Flusso Interrotto | Batteria Runica Scarica }) | \
+            (senza { Cristallo di Risonanza | Serbatoio di Mana | Batteria Runica | Canale Aperto | Condensatore di Flusso | Antenna Arcana | Filtro Energetico | Sifone Attivo | Cavità per Gemme | Circuito di Flusso }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", \"quantita\": 1 }"] (con { Cristallo di Risonanza | Serbatoio di Mana | Batteria Runica | Canale Aperto | Condensatore di Flusso | Antenna Arcana | Filtro Energetico | Sifone Attivo | Cavità per Gemme | Circuito di Flusso })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", \"quantita\": -1 }"] { (con { Sistema di Fuga Automatico | Espulsione Rapida | Specchietto Retrovisore | Modalità Prudenza | Sensore di Pericolo | Avviso di Ritiro | Paracadute | Pulsante Panico | Localizzatore per Soccorsi | Manuale d'Emergenza }) | \
+            (senza { Piastra dell'Orgoglio | Sigillo dell'Audace | Stemma del Leone | Incisione del Patrono | Amuleto del Fegato | Blocco dell'Esitazione | Scudo Mentale | Modulo di Fermezza | Emblema del Combattente | Ancora Emotiva | Protezione Volitiva | Simbolo Tutelare }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CORAGGIO\", \"quantita\": 1 }"] (con { Piastra dell'Orgoglio | Sigillo dell'Audace | Stemma del Leone | Incisione del Patrono | Amuleto del Fegato | Blocco dell'Esitazione | Scudo Mentale | Modulo di Fermezza | Emblema del Combattente | Ancora Emotiva | Protezione Volitiva | Simbolo Tutelare })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", \"quantita\": -1 }"] { (con { Clausola di Manleva | Scarico di Responsabilità | Contratto Subappaltato | Nota di Credito | Copertura Assicurativa Parziale | Patto di Non Concorrenza | Clausola Arbitrale | Scrittura Privata | Rinuncia ai Diritti | Delega di Funzioni }) | \
+            (senza { Blocco Altruista | Scudo di Intercettazione | Placcatura d'Onore | Modulo di Protezione | Incisione Eroica | Sigillo del Martire | Giuramento Vincolante | Patto di Difesa | Custodia Condivisa | Copertura Esecutiva | Vincolo di Supporto | Sistema Tutelare }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VALORE\", \"quantita\": 1 }"] (con { Blocco Altruista | Scudo di Intercettazione | Placcatura d'Onore | Modulo di Protezione | Incisione Eroica | Sigillo del Martire | Giuramento Vincolante | Patto di Difesa | Custodia Condivisa | Copertura Esecutiva | Vincolo di Supporto | Sistema Tutelare })
+
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", \"quantita\": 1 }"] { (con { Calo Idrosalino | Flemma Innata | Peso Soporifero | Effetto Lunedì | Abbiocco Pomeridiano | Stanchezza Cronica | Palpebra Calante | Ritmo Rallentato | Mancanza di Caffeina | Flusso Pigro }) | \
+            (senza { Cuscino Incorporato | Modalità Riposino | Sensazione di Sonno | Effetto Amaca | Materassino Gonfiabile | Sconto Caffè | Rilevatore di Sbadigli | Modalità Divano | Copertina da Viaggio | Tappo per Orecchie | Imbottitura Relax | Appoggio Cervicale }) }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", \"quantita\": -1 }"] (con { Cuscino Incorporato | Modalità Riposino | Sensazione di Sonno | Effetto Amaca | Materassino Gonfiabile | Sconto Caffè | Rilevatore di Sbadigli | Modalità Divano | Copertina da Viaggio | Tappo per Orecchie | Imbottitura Relax | Appoggio Cervicale })
+
+# Lista di lunghezza variabile: la coda vuota è pesata forte, così la ricorsione termina
+# presto. Senza il peso il boost dei discendenti favorirebbe il ramo ricorsivo (vedi D5).
+INCANTESIMI
+    [^12]
+    [UN_INCANTESIMO] [INCANTESIMI]
+
+UN_INCANTESIMO
+    [DANNI="[#DANNI?],{ \"tipo\": \"ARCANO\", \"quantita\": 2 }"]
+    [DANNI="[#DANNI?],{ \"tipo\": \"GELO\", \"quantita\": 4 }"]
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 2 }"]
+    [DANNI="[#DANNI?],{ \"tipo\": \"SACRO\", \"quantita\": 3 }"]
+    [DANNI="[#DANNI?],{ \"tipo\": \"NECROTICO\", \"quantita\": 3 }"]
+    [DANNI="[#DANNI?],{ \"tipo\": \"ACIDO\", \"quantita\": 2 }"]
+    [DANNI="[#DANNI?],{ \"tipo\": \"PSICHICO\", \"quantita\": 4 }"]
+    [DANNI="[#DANNI?],{ \"tipo\": \"TENEBRA\", \"quantita\": 2 }"]
+    [DANNI="[#DANNI?],{ \"tipo\": \"SONICO\", \"quantita\": 2 }"]
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 2 }"]
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 2 }"]
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", \"quantita\": 3 }"]
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": 2 }"]
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", \"quantita\": 1 }"]
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", \"quantita\": 1 }"]
