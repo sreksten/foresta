@@ -10,7 +10,7 @@ public class TestArtefatti extends TestGrammatiche {
         GrammarBean gBean = new GrammarBean(
                 TestArtefatti.class.getResourceAsStream("/com/threeamigos/foresta/motore/artefatti.txt"),
                 TestArtefatti.class.getResourceAsStream("/com/threeamigos/foresta/motore/artefatti_pp.txt"));
-        printProductions(gBean);
+        printProductionsNoNewline(gBean);
     }
 
 }

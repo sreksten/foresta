@@ -195,15 +195,16 @@ public class GrammarBean {
 	 */
 	private static final String COMMENT_PREFIX = "#";
 	/**
-	 * Characters marking a line as a child (alternative) of the current production: a tab or a space.
-	 */
-	private static final String CHILD_LINE_PREFIX_CHARS = "\t ";
-	/**
 	 * Suffix marking a production as one-shot (removed once used within a cycle). A single
 	 * character rather than {@code {1}} to avoid visual confusion with inline alternation
 	 * groups ({@link #OPENING_BRACE}/{@link #CLOSING_BRACE}), which use the same braces.
 	 */
 	private static final String ONE_SHOT_MARKER = "$";
+	/**
+	 * Marker for productions that derive their possible values also from other productions.
+	 */
+	private static final String DERIVED_MARKER = "=";
+
 	private static final String OPENING_BRACKET = "[";
 	private static final String CLOSING_BRACKET = "]";
 	/**
@@ -377,12 +378,14 @@ public class GrammarBean {
 	 */
 	private int inlineProductionCounter = 0;
 
+	private Map<String, Collection<String>> derivedProductions = new HashMap<>();
+
 	/**
 	 * An alternative's text together with its selection weight (see {@link #WEIGHT_MARKER},
 	 * {@link #parseWeight}). Immutable; instances are shared between {@link #productionsMap}
 	 * and {@link #currentProductionsMap} copies made by {@link #reset()}.
 	 */
-	private static final class WeightedAlternative {
+	static final class WeightedAlternative {
 		private final String text;
 		private final double weight;
 
@@ -390,41 +393,61 @@ public class GrammarBean {
 			this.text = text;
 			this.weight = weight;
 		}
+
+		String getText() {
+			return text;
+		}
 	}
 
 	/**
 	 * Builds a grammar from a source string, with no post-production substitutions.
-	 * @param grammar the grammar source text, see the class documentation for its syntax
+	 * @param grammar grammar source text, see the class documentation for its syntax
 	 * @throws InvalidGrammarException if the text does not describe a valid grammar
 	 * @throws IOException if the text cannot be read
 	 */
 	public GrammarBean(String grammar) throws InvalidGrammarException, IOException {
-		this(grammar, null);
+		if (grammar == null) {
+			throw new InvalidGrammarException("Grammar text cannot be null");
+		}
+		init(grammar, null);
 	}
 
 	/**
 	 * Builds a grammar from a source string and an optional post-production string.
-	 * @param grammar the grammar source text, see the class documentation for its syntax
-	 * @param postProduction the optional (may be {@code null}) post-production text, listing
+	 * @param grammar grammar source text, see the class documentation for its syntax
+	 * @param postProduction the optional (can be {@code null}) post-production text, listing
 	 *                       {@code pre:post} literal text substitutions applied to produced text
 	 * @throws InvalidGrammarException if either text does not describe a valid grammar
 	 * @throws IOException if either text cannot be read
 	 */
 	public GrammarBean(String grammar, String postProduction) throws InvalidGrammarException, IOException {
-		this(new ByteArrayInputStream(grammar.getBytes(StandardCharsets.UTF_8)),
-				postProduction == null ? null
-						: new ByteArrayInputStream(postProduction.getBytes(StandardCharsets.UTF_8)));
+		if (grammar == null) {
+			throw new InvalidGrammarException("Grammar text cannot be null");
+		}
+		init(grammar, postProduction == null ? null
+				: new ByteArrayInputStream(postProduction.getBytes(StandardCharsets.UTF_8)));
 	}
 
 	/**
 	 * Builds a grammar from a source file and an optional post-production file.
-	 * @param grammar the grammar source file, see the class documentation for its syntax
-	 * @param postProduction the optional (may be {@code null}) post-production file, listing
+	 * @param grammar grammar source file, see the class documentation for its syntax
+	 * @param postProduction the optional (can be {@code null}) post-production file, listing
 	 *                        {@code pre:post} literal text substitutions applied to produced text
 	 * @throws InvalidGrammarException if either file does not describe a valid grammar
 	 * @throws IOException if either file cannot be read
 	 */
 	public GrammarBean(InputStream grammar, InputStream postProduction) throws InvalidGrammarException, IOException {
+		if (grammar == null) {
+			throw new InvalidGrammarException("Grammar source file cannot be null");
+		}
+		init(grammar, postProduction);
+	}
+
+	private void init(String grammar, InputStream postProduction) throws InvalidGrammarException, IOException {
+		init(new ByteArrayInputStream(grammar.getBytes(StandardCharsets.UTF_8)), postProduction);
+	}
+
+	private void init(InputStream grammar, InputStream postProduction) throws InvalidGrammarException, IOException {
 		setSourceFile(grammar);
 		setPostProductionFile(postProduction);
 		reset();
@@ -444,7 +467,7 @@ public class GrammarBean {
 	 * unindented line starts a new production (see {@link #handleProduction}), each
 	 * TAB/space-indented line adds children to the current production (see
 	 * {@link #handleChildren}). Comments and empty lines are skipped. A line ending with
-	 * {@link #LINE_CONTINUATION_MARKER} is not yet finished: the marker is stripped and
+	 * {@link #LINE_CONTINUATION_MARKER} is not yet finished: the marker is stripped, and
 	 * the following line is appended in its place, repeating as needed until a line not
 	 * ending with the marker is found; reaching the end of the file while still expecting
 	 * a continuation is an error.
@@ -457,6 +480,11 @@ public class GrammarBean {
 			String line;
 			while ((line = reader.readLine()) != null) {
 				currentLineNumber++;
+
+				if (line.isEmpty() || line.startsWith(COMMENT_PREFIX)) {
+					continue;
+				}
+
 				while (line.endsWith(LINE_CONTINUATION_MARKER)) {
 					String nextLine = reader.readLine();
 					if (nextLine == null) {
@@ -465,23 +493,39 @@ public class GrammarBean {
 					currentLineNumber++;
 					line = line.substring(0, line.length() - LINE_CONTINUATION_MARKER.length()) + nextLine;
 				}
+
 				if (line.indexOf(LITERAL_OPENING_BRACKET_PLACEHOLDER) >= 0
 						|| line.indexOf(LITERAL_CLOSING_BRACKET_PLACEHOLDER) >= 0) {
 					throw new InvalidGrammarException(LINE + currentLineNumber
 							+ ": Reserved placeholder character found; use '" + ESCAPE_CHAR + OPENING_BRACKET
 							+ "' inside a quoted span for a literal bracket");
 				}
-				if (line.isEmpty() || line.startsWith(COMMENT_PREFIX)) {
-					continue;
-				}
-				if (CHILD_LINE_PREFIX_CHARS.indexOf(line.charAt(0)) >= 0) {
-					handleChildren(line, currentLineNumber, currentProduction);
-				} else {
-					checkPreviousProduction(currentLineNumber, currentProduction);
+
+				boolean isParent = !line.startsWith("\t") && !line.startsWith(" ");
+
+				if (isParent) {
+					validatePreviousProduction(currentLineNumber, currentProduction);
 					currentProduction = handleProduction(currentLineNumber, line);
+				} else {
+					if (currentProduction == null) {
+						throw new InvalidGrammarException(LINE + line + ": Missing parent production. Lines beginning with TAB or space must be preceded by a production.");
+					}
+					handleChildren(line, currentLineNumber, currentProduction);
 				}
 			}
-			checkPreviousProduction(currentLineNumber, currentProduction);
+			validatePreviousProduction(currentLineNumber, currentProduction);
+		}
+
+		for (Map.Entry<String, Collection<String>> entry : derivedProductions.entrySet()) {
+			String derivedProduction = entry.getKey();
+			Collection<String> values = entry.getValue();
+			for (String value : values) {
+                List<WeightedAlternative> valueProductions = productionsMap.get(value);
+				if (valueProductions == null) {
+					throw new InvalidGrammarException("Production " + derivedProduction + " refers to an undeclared production: " + value);
+				}
+				productionsMap.computeIfAbsent(derivedProduction, k -> new ArrayList<>()).addAll(valueProductions);
+			}
 		}
 	}
 
@@ -494,11 +538,11 @@ public class GrammarBean {
 	 * of file is reached.
 	 * @throws InvalidGrammarException if {@code previousProduction} has no children at all
 	 */
-	private void checkPreviousProduction(int currentLineNumber, String previousProduction) throws InvalidGrammarException {
+	private void validatePreviousProduction(int currentLineNumber, String previousProduction) throws InvalidGrammarException {
 		if (previousProduction != null) {
 			List<WeightedAlternative> previousProductionChildren = productionsMap.get(previousProduction);
-			if (previousProductionChildren.isEmpty()) {
-				throw new InvalidGrammarException(LINE + currentLineNumber + ": Production " + previousProduction + " does not produce anything.");
+			if (previousProductionChildren.isEmpty() && derivedProductions.get(previousProduction) == null) {
+				throw new InvalidGrammarException(LINE + currentLineNumber + ": Production " + previousProduction + " has no children.");
 			}
 		}
 	}
@@ -507,12 +551,38 @@ public class GrammarBean {
 	 * Registers a new production header line: strips the {@link #ONE_SHOT_MARKER}
 	 * suffix if present (marking the production as one-shot), sets it as the
 	 * {@link #rootNode} if it is the first production found, and adds it (initially
-	 * childless) to {@link #productionsMap}.
+	 * childless) to {@link #productionsMap}. If the production is derived from others,
+	 * it checks for self, mutual, and repeated derivations.
+	 *
 	 * @return the plain production name (without the one-shot marker)
 	 * @throws InvalidGrammarException if a production with the same name was already declared
 	 */
 	private String handleProduction(int currentLineNumber, String line) throws InvalidGrammarException {
 		String currentProduction = line.trim();
+		if (currentProduction.contains(DERIVED_MARKER)) {
+			String derivingProductions = currentProduction.substring(currentProduction.indexOf(DERIVED_MARKER) + DERIVED_MARKER.length());
+			// Clean up deriving productions
+			derivingProductions = derivingProductions.replaceAll("\\s+", " ").trim();
+
+			currentProduction = currentProduction.substring(0, currentProduction.indexOf(DERIVED_MARKER)).trim();
+
+			if (!derivingProductions.isEmpty()) {
+				Collection<String> associatedProducers = derivedProductions.computeIfAbsent(currentProduction, k -> new HashSet<>());
+				for (String derivingProduction : derivingProductions.split(" ")) {
+					if (derivingProduction.equals(currentProduction)) {
+						throw new InvalidGrammarException(LINE + currentLineNumber + ": Production " + currentProduction + " derives from itself");
+					}
+					if (associatedProducers.contains(derivingProduction)) {
+						throw new InvalidGrammarException(LINE + currentLineNumber + ": Production " + derivingProduction + " is repeated more than once");
+					}
+					if (derivedProductions.containsKey(derivingProduction)) {
+						throw new InvalidGrammarException(LINE + currentLineNumber + ": Production " + derivingProduction + " and Production " + currentProduction + " are mutually derived");
+					}
+					associatedProducers.add(derivingProduction);
+				}
+			}
+		}
+
 		if (currentProduction.endsWith(ONE_SHOT_MARKER)) {
 			currentProduction = currentProduction.substring(0, currentProduction.length() - ONE_SHOT_MARKER.length());
 			Logger.log("One-shot production: " + currentProduction);
@@ -526,7 +596,7 @@ public class GrammarBean {
 			rootNode = currentProduction;
 		}
 		if (productionsMap.containsKey(currentProduction)) {
-			throw new InvalidGrammarException(LINE + currentLineNumber + ": Production " + currentProduction + " already found.");
+			throw new InvalidGrammarException(LINE + currentLineNumber + ": Production " + currentProduction + " is repeated.");
 		}
 		productionsMap.put(currentProduction, new ArrayList<>());
 		return currentProduction;
@@ -540,18 +610,14 @@ public class GrammarBean {
 	 * weight token, if any, parsed off (see {@link #parseWeight}) before its inline alternation
 	 * groups are expanded into auto-generated productions (see {@link #expandInlineAlternations}).
 	 * @throws InvalidGrammarException if the line is not preceded by a production header,
-	 *                                  it contains a malformed inline alternation group, or a
+	 *                                  it contains a malformed inline alternation group or a
 	 *                                  malformed weight token
 	 */
 	private void handleChildren(String line, int currentLine, String currentProduction) throws InvalidGrammarException {
-		if (currentProduction == null) {
-			throw new InvalidGrammarException(LINE + currentLine + ": Missing parent production. Lines beginning with TAB or space must be preceded by a production.");
-		} else {
-			List<WeightedAlternative> currentProductionChildren = productionsMap.get(currentProduction);
-			for (String child : splitTopLevelAlternatives(line, currentLine)) {
-				WeightedAlternative weighted = parseWeight(child.trim(), currentLine);
-				currentProductionChildren.add(new WeightedAlternative(expandInlineAlternations(weighted.text, currentLine), weighted.weight));
-			}
+		List<WeightedAlternative> currentProductionChildren = productionsMap.get(currentProduction);
+		for (String child : splitTopLevelAlternatives(line, currentLine)) {
+			WeightedAlternative weighted = parseWeight(child.trim(), currentLine);
+			currentProductionChildren.add(new WeightedAlternative(expandInlineAlternations(weighted.text, currentLine), weighted.weight));
 		}
 	}
 
@@ -742,7 +808,7 @@ public class GrammarBean {
 
 	/**
 	 * Finds the closing curly brace matching the opening one at {@code openingBraceIndex}, honoring
-	 * nesting depth so that e.g. in <code>{a|{b|c}}</code> the outer group's match is the very last
+	 * nesting depth so that e.g., in <code>{a|{b|c}}</code> the outer group's match is the very last
 	 * <code>}</code>, not the first one encountered.
 	 * A {@link #OPENING_BRACE}/{@link #CLOSING_BRACE} found inside a raw literal span
 	 * ({@code "..."}) does not affect the depth count, so a group's own text may contain
@@ -1152,6 +1218,10 @@ public class GrammarBean {
 	 */
 	public String getRootNode() {
 		return rootNode;
+	}
+
+	List<WeightedAlternative> getProductions(String rootProduction) {
+		return productionsMap.get(rootProduction);
 	}
 
 	/**
@@ -1616,7 +1686,7 @@ public class GrammarBean {
 	 * Picks an alternative of {@code production} from {@code localProductionsMap}, according to
 	 * {@link #productionMode}: always the first one, always the last one, or a weighted-random one
 	 * (see {@link #pickWeighted}, weighing each alternative by its {@link WeightedAlternative#weight}
-	 * so that e.g. an alternative with weight 10 is picked ten times as often as one with the default
+	 * so that e.g., an alternative with weight 10 is picked ten times as often as one with the default
 	 * weight of 1). If {@code production} is one-shot, the chosen alternative (and, if it was the
 	 * last one, the whole production, cascading via {@link #removeProduction}) is removed so it
 	 * cannot be picked again within the same production cycle.
@@ -1693,9 +1763,9 @@ public class GrammarBean {
 
 	/**
 	 * Applies every {@code pre:post} substitution from {@link #postProductions} to the
-	 * fully-expanded text, fixing natural-language issues arising from the mechanical
+	 * fully expanded text, fixing natural-language issues arising from the mechanical
 	 * concatenation of production alternatives, then collapses any run of two or more
-	 * spaces and/or tabs left behind (typically by a deliberately-empty alternative) into
+	 * spaces and/or tabs left behind (typically by a deliberately empty alternative) into
 	 * one space, and finally strips any space or tab left immediately before a punctuation
 	 * mark (typically left behind when a reference at the very end of a sentence expands
 	 * to an empty string).
@@ -1703,7 +1773,7 @@ public class GrammarBean {
 	 * Any {@code \[}/{@code \]} escape written inside a raw literal span is turned back into a
 	 * real bracket first, before the substitutions run: every token has already been expanded by
 	 * now, so a bracket restored here can no longer be mistaken for a reference, and the
-	 * post-production rules and the whitespace clean-up both get to see the final text.
+	 * post-production rules and the whitespace cleanup both get to see the final text.
 	 * <p>
 	 * Rules are applied in the order they appear in the post-production file, so a file listing
 	 * a longer {@code pre} before a shorter one that is its prefix gets the longer match first.

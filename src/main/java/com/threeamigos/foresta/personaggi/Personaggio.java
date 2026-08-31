@@ -1,31 +1,35 @@
 package com.threeamigos.foresta.personaggi;
 
 import java.awt.image.BufferedImage;
+import java.util.Collection;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Gruppo;
+import com.threeamigos.foresta.motore.OggettoConArticoli;
+import com.threeamigos.foresta.motore.modellodati.EffettoDiStato;
+import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 
-public interface Personaggio {
+public interface Personaggio extends OggettoConArticoli {
 
 	public enum NotificaFerite {
 		SI,
 		NO;
 	}
-	
+
 	public enum NotificaMorte {
 		SI,
 		NO;
 	}
-	
+
 	public enum Sesso {
 		MASCHIO,
 		FEMMINA;
 	}
-	
+
 	public enum Caratteristica {
 		FORZA,
 		FORZA_MASSIMA,
@@ -37,22 +41,6 @@ public interface Personaggio {
 		CARISMA
 	}
 
-	/**
-	 * Articolo indeterminativo singolare
-	 */
-	public String getAIS();
-	/**
-	 * Una sorta di "articolo indeterminativo plurale" (alcuni, alcune)
-	 */
-	public String getAIP();
-	/**
-	 * Articolo determinativo singolare
-	 */
-	public String getADS();
-	/**
-	 * Articolo determinativo plurale
-	 */
-	public String getADP();
 	/**
 	 * Di + articolo determinativo singolare
 	 */
@@ -135,6 +123,16 @@ public interface Personaggio {
 	 * Il nome proprio del personaggio (puo' essere null)
 	 */
 	public String getNome(); // il nome del personaggio
+	/**
+	 * Il livello corrente del personaggio
+	 * @return
+	 */
+	public int getLivello();
+	/**
+	 * L'esperienza accumulata dal personaggio
+	 * @return
+	 */
+	public int getEsperienza();
 	/**
 	 * Indica se il personaggio sia immortale
 	 */
@@ -318,8 +316,50 @@ public interface Personaggio {
 	 * Un personaggio potrebbe essere immune a una certa classe di incantesimi (o più)
 	 */
 	public boolean isImmuneAIncantesimo(ClassiIncantesimo classeIncantesimo);
-	
+
 	public PersonaggioMD getModelloDati();
-	
+
 	public void setModelloDati(PersonaggioMD modelloDati);
+
+	/*
+	 * Nuove funzionalità per i personaggi
+	 */
+
+	// Modificatori di stato
+
+	public Collection<EffettoDiStato> getEffettiDiStato();
+
+	public void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int valore);
+
+	public boolean hasEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato);
+
+	public int getValoreEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato);
+
+	public void removeEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato);
+
+	// Artefatti
+
+	public Collection<Artefatto> getInventario();
+
+	//public void addArtefatto(Artefatto a);
+
+	public void removeArtefatto(Artefatto a);
+
+	public int getPrecisioneBase();
+
+	public int getVelocitaBase();
+
+	public int getForzaBase();
+
+	public int getIntelligenzaBase();
+
+	public int getResistenzaMagicaBase();
+
+	public int getCostituzioneBase();
+
+	public int getCriticoBase();
+
+	public int getMagiaBase();
+
+	public int getFuriaBase();
 }

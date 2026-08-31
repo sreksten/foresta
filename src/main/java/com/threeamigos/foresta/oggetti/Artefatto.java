@@ -4,6 +4,7 @@ import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.motore.modellodati.TipoModificatoreAttributo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.UI;
@@ -208,4 +209,17 @@ public class Artefatto implements Oggetto {
 		}
 
 	}
+
+	public int getModificatoreAttributo(TipoModificatoreAttributo tipoModificatoreAttributo) {
+		return md.getModificatoreAttributo(tipoModificatoreAttributo);
+	}
+
+	public int getLivello() {
+		return md.getLivello();
+	}
+
+	public int getDanniBase() {
+		return md.getDanniBase();
+	}
+
 }

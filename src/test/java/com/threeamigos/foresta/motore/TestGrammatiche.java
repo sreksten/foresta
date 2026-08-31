@@ -8,9 +8,29 @@ abstract class TestGrammatiche {
 
     private static final int MAX_LINE_LENGTH = 120;
 
+    protected static void printProductionsNoNewline(GrammarBean gBean) {
+        for (int i = 0; i < 10; i++) {
+            for (String s : gBean.produce()) {
+                for (String line : s.replace("\\n", "\n").split("\n", -1)) {
+                    System.out.println(line);
+                }
+            }
+        }
+    }
     protected static void printProductions(GrammarBean gBean) {
         for (int i = 0; i < 5; i++) {
             for (String s : gBean.produce()) {
+                for (String line : s.replace("\\n", "\n").split("\n", -1)) {
+                    printWrapped(line);
+                }
+            }
+            System.out.println("-----");
+        }
+    }
+
+    protected static void printProductions(GrammarBean gBean, String rootProduction) {
+        for (int i = 0; i < 5; i++) {
+            for (String s : gBean.produce(rootProduction)) {
                 for (String line : s.replace("\\n", "\n").split("\n", -1)) {
                     printWrapped(line);
                 }

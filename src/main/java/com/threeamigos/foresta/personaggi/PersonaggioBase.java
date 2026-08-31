@@ -1,7 +1,10 @@
 package com.threeamigos.foresta.personaggi;
 
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
@@ -13,7 +16,9 @@ import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.motore.modellodati.EffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
+import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
@@ -42,6 +47,8 @@ public abstract class PersonaggioBase implements Personaggio {
 	private String nomeImmagine;
 	private String nomeIcona;
 	private int quantitaMassima = 1;
+
+	private List<EffettoDiStato> effettiDiStato = new ArrayList<>();
 
 	public PersonaggioBase(PersonaggioMD personaggioMD) {
 		this.md = personaggioMD;
@@ -611,6 +618,15 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.getArtefatti().add(a.getModelloDati());
 	}
 
+	public void removeArtefatto(Artefatto a) {
+		md.getArtefatti().remove(a.getModelloDati());
+	}
+
+	//FIXME così fa un po' caà ma intanto facciamolo compilare
+	public List<Artefatto> getInventario() {
+		return md.getArtefatti().stream().map(Artefatto::new).collect(Collectors.toList());
+	}
+
 	public void attacca(Personaggio bersaglio) {
 		Logger.log("Contrattacco avversario");
 		Incantesimo incantesimoScelto = null;
@@ -722,4 +738,70 @@ public abstract class PersonaggioBase implements Personaggio {
 		this.md = personaggioMD;
 		png = false;
 	}
+
+
+	public int getPrecisioneBase() {
+		return md.getPrecisione();
+	}
+
+	public int getVelocitaBase() {
+		return md.getVelocita();
+	}
+
+	public int getForzaBase() {
+		return md.getForza();
+	}
+
+	public int getIntelligenzaBase() {
+		return md.getIntelligenza();
+	}
+
+	public int getResistenzaMagicaBase() {
+		return md.getResistenzaMagica();
+	}
+
+	public int getCostituzioneBase() {
+		return md.getCostituzione();
+	}
+
+	public int getCriticoBase() {
+		return md.getCritico();
+	}
+
+	public int getLivello() {
+		return md.getLivello();
+	}
+
+	public int getEsperienza() {
+		return md.getEsperienza();
+	}
+
+	public int getMagiaBase() {
+		return md.getMagia();
+	}
+
+	public int getFuriaBase() {
+		return md.getFuria();
+	}
+
+	public Collection<EffettoDiStato> getEffettiDiStato() {
+		return effettiDiStato;
+	}
+
+	public void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int valore) {
+		effettiDiStato.add(new EffettoDiStato(tipoEffettoDiStato, valore));
+	}
+
+	public boolean hasEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
+		return effettiDiStato.stream().anyMatch(e -> e.getTipoModificatoreAttributo() == tipoEffettoDiStato);
+	}
+
+	public int getValoreEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
+		return effettiDiStato.stream().filter(e -> e.getTipoModificatoreAttributo() == tipoEffettoDiStato).mapToInt(EffettoDiStato::getValore).sum();
+	}
+
+	public void removeEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
+		effettiDiStato.removeIf(e -> e.getTipoModificatoreAttributo() == tipoEffettoDiStato);
+	}
+
 }

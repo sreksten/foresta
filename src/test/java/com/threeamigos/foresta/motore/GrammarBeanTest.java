@@ -17,6 +17,27 @@ class GrammarBeanTest {
     // ---- Constructors ----
 
     @Test
+    void constructorWithNullGrammarIsNotAccepted() {
+        assertThrows(GrammarBean.InvalidGrammarException.class, () -> new GrammarBean(null));
+    }
+
+    @Test
+    void constructorWithNullGrammarAndNullPostProductionIsNotAccepted() {
+        assertThrows(GrammarBean.InvalidGrammarException.class, () -> new GrammarBean((String)null, null));
+    }
+
+    @Test
+    void constructorWithNullGrammarAndPostProductionIsNotAccepted() {
+        assertThrows(GrammarBean.InvalidGrammarException.class, () -> new GrammarBean((String)null, ""));
+    }
+
+    @Test
+    void constructorWithNullGrammarStreamAndNullPostProductionIsNotAccepted() {
+        assertThrows(GrammarBean.InvalidGrammarException.class, () -> new GrammarBean((InputStream)null, null));
+    }
+
+
+    @Test
     void constructorWithGrammarOnlyHasNoPostProduction() throws Exception {
         GrammarBean bean = new GrammarBean("ROOT\n\tHello\n");
         assertEquals("Hello", bean.produce().get(0));
@@ -66,7 +87,7 @@ class GrammarBeanTest {
     void duplicateProductionNameIsInvalid() {
         GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
                 () -> new GrammarBean("ROOT\n\tx\nROOT\n\ty\n"));
-        assertTrue(ex.getMessage().contains("already found"));
+        assertTrue(ex.getMessage().contains("is repeated"));
     }
 
     @Test
@@ -94,7 +115,7 @@ class GrammarBeanTest {
         for (String grammar : grammars) {
             GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
                     () -> new GrammarBean(grammar), "Expected rejection for: " + grammar);
-            assertTrue(ex.getMessage().contains("does not produce anything"), ex.getMessage());
+            assertTrue(ex.getMessage().contains("has no children"), ex.getMessage());
         }
     }
 
@@ -104,7 +125,7 @@ class GrammarBeanTest {
         // regression names itself.
         GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
                 () -> new GrammarBean("A\n\tx\nB\n\tx\nC\nD\n\tx\n"));
-        assertTrue(ex.getMessage().contains("Production C does not produce anything"), ex.getMessage());
+        assertTrue(ex.getMessage().contains("Production C has no children"), ex.getMessage());
     }
 
     @Test
@@ -1558,5 +1579,58 @@ class GrammarBeanTest {
     void capitalizeMarkerHandlesAccentedFirstLetter() throws Exception {
         GrammarBean bean = new GrammarBean("ROOT\n\t^[X]\nX\n\tàlbero\n");
         assertEquals("Àlbero", bean.produce().get(0));
+    }
+
+    // Derived productions
+
+    @Test
+    void correctDerivedProduction() throws Exception {
+        GrammarBean grammarBean = new GrammarBean("ROOT=PROD1 PROD2\nPROD1\n\talbero\nPROD2\n\ttavolo");
+        List<GrammarBean.WeightedAlternative> productions = grammarBean.getProductions("ROOT");
+        assertTrue(productions.stream().anyMatch(p -> p.getText().equals("tavolo")));
+        assertTrue(productions.stream().anyMatch(p -> p.getText().equals("albero")));
+    }
+
+    @Test
+    void correctDerivedProductionWithNoProducers() throws Exception {
+        GrammarBean grammarBean = new GrammarBean("ROOT=\n\talbero\n\ttavolo");
+        List<GrammarBean.WeightedAlternative> productions = grammarBean.getProductions("ROOT");
+        assertTrue(productions.stream().anyMatch(p -> p.getText().equals("albero")));
+        assertTrue(productions.stream().anyMatch(p -> p.getText().equals("tavolo")));
+    }
+
+    @Test
+    void undeclaredProduction() throws Exception {
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT=PROD1"));
+        assertTrue(ex.getMessage().contains("undeclared production: PROD1"));
+    }
+
+    @Test
+    void selfDerivedProduction() throws Exception {
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT=ROOT"));
+        assertTrue(ex.getMessage().contains("derives from itself"));
+    }
+
+    @Test
+    void repeatedProduction() throws Exception {
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT=PROD1\tPROD1"));
+        assertTrue(ex.getMessage().contains("PROD1 is repeated more than once"));
+    }
+
+    @Test
+    void mutuallyDerivedProduction1() throws Exception {
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT=PROD1\nPROD1=ROOT"));
+        assertTrue(ex.getMessage().contains("are mutually derived"));
+    }
+
+    @Test
+    void mutuallyDerivedProduction2() throws Exception {
+        GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
+                () -> new GrammarBean("ROOT=PROD1\nPROD1=PROD2\nPROD2=ROOT"));
+        assertTrue(ex.getMessage().contains("are mutually derived"));
     }
 }
