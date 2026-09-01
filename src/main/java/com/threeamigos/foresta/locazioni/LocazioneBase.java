@@ -1,22 +1,10 @@
 package com.threeamigos.foresta.locazioni;
 
-import java.util.List;
-import java.util.Optional;
-
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
-import com.threeamigos.foresta.motore.Azioni;
-import com.threeamigos.foresta.motore.Comando;
-import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.motore.Gruppo;
-import com.threeamigos.foresta.motore.GruppoAvversario;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.Logger;
-import com.threeamigos.foresta.motore.RegistroArtefatti;
-import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.motore.Stato;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
@@ -24,9 +12,10 @@ import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
-import com.threeamigos.foresta.tools.Random;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
+
+import java.util.List;
 
 /**
  * La locazione e' un automa a stati finiti. Un gruppo mentre si sposta per
@@ -57,8 +46,8 @@ public abstract class LocazioneBase implements Locazione {
 	protected static ClassePersonaggio[] possibiliIncontri = {};
 	protected static ClassiOggetto[] possibiliOggetti = {};
 
-	private GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-	private GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
+	private final GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
+	private final GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
 	
 	private Oggetto oggettoCorrente;
 
@@ -134,18 +123,19 @@ public abstract class LocazioneBase implements Locazione {
 	 * tipi di mostri e di oggetti. Ogni locazione semplicemente modifica la
 	 * getMostri() e la getOggetti() per riportare quale mostro e quale oggetto
 	 * possono essere trovati in ogni locazione. La locazione base non ha mostri
-	 * ed oggetti associati.
+	 * e oggetti associati.
 	 */
 	public void crea(GruppoGiocatore g, GruppoAvversario avversario) {
 		ClassePersonaggio[] m = getPossibiliIncontri();
 		if (m.length > 0) {
-			int ordinale = Random.getInt(m.length) + 1;
+			int possibilitaIncontro = Dado.tira(100);
 			// Non sempre si trovano mostri
-			if (ordinale < m.length) {
+			if (possibilitaIncontro <= 90) {
+				int ordinale = Dado.tira(m.length) - 1;
 				ClassePersonaggio classePersonaggio = m[ordinale];
-				int numero = 1 + Random.getInt(classePersonaggio.getQuantitaMassima() - 1);
+				int numero = Dado.tira(classePersonaggio.getQuantitaMassima());
 				Logger.log("Scelta da " + m.length + " personaggi la classe " + classePersonaggio + ", numero " + numero);
-				Personaggio p = null;
+				Personaggio p;
 				for (int i = 0; i < numero; i++) {
 					p = classePersonaggio.getIstanza();
 					p.setOrdinale(i + 1);
@@ -164,7 +154,7 @@ public abstract class LocazioneBase implements Locazione {
 			ClassiOggetto[] o = getPossibiliOggetti();
 			Logger.log("Scelta da " + o.length + " oggetti");
 			if (o.length > 0) {
-				ClassiOggetto classeOggetto = o[Random.getInt(o.length)];
+				ClassiOggetto classeOggetto = o[Dado.tira(o.length) - 1];
 				Logger.log("Classe oggetto " + classeOggetto);
 				Oggetto probabileOggetto = classeOggetto.getIstanza();
 				if (probabileOggetto.getQuantita() > 0) {
@@ -326,7 +316,7 @@ public abstract class LocazioneBase implements Locazione {
 					Azioni.clear();
 					for (int i = 0; i < l; i++) {
 						personaggio = gruppo.getPersonaggio(i);
-						Logger.log("tipo == Incantesimo.SINGOLO_QUALSIASI || p.isVivo() ? " + (Boolean.toString(tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo())));
+						Logger.log("tipo == Incantesimo.SINGOLO_QUALSIASI || p.isVivo() ? " + ((tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo())));
 						if (tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo()) {
 							Azioni.add(Comando.ofPersonaggio(i));
 						}
@@ -354,7 +344,7 @@ public abstract class LocazioneBase implements Locazione {
 				statoLocazione = StatoLocazione.IN_LOCAZIONE;
 				break;
 			}
-			if (gruppo.getMonete() >= gruppo.getNumeroPersonaggi() * 2 && Random.getInt(10) > 3) {
+			if (gruppo.getMonete() >= gruppo.getNumeroPersonaggi() * 2 && Dado.tira(10) > 3) {
 				gruppo.subMonete(gruppo.getNumeroPersonaggi() * 2);
 				UI.notifica(gruppo.chiMaiuscolo() + " ha ottenuto un passaggio sicuro.");
 				setOggetto(null);
@@ -395,7 +385,7 @@ public abstract class LocazioneBase implements Locazione {
 				break;
 			}
 			Personaggio personaggio = gruppo.getPersonaggio(azione);
-			if (personaggio.getCarisma() > Random.getInt(12)) {
+			if (personaggio.getCarisma() > Dado.tira(12)) {
 				personaggio.addCarisma(1);
                 String sb = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
                         " riesce a stringere amicizia.";
@@ -419,51 +409,51 @@ public abstract class LocazioneBase implements Locazione {
 				completa = true;
 				return Stato.FINE_LOCAZIONE;
 			} else {
-				int spregio = Random.getInt(5);
+				int spregio = Dado.tira(5);
 				String descrizione = null;
 				switch (spregio) {
-				case 0:
-					ClassiIncantesimo quale = ClassiIncantesimo.casuale();
-					Incantesimo qualeIncantesimo = quale.getIstanza();
-					if (gruppo.getIncantesimi(quale) > 0) {
-						descrizione = "perde un " + qualeIncantesimo.getNomeSingolare() + '.';
-						gruppo.subIncantesimi(quale, 1);
-					}
-					break;
-				case 1:
-					Personaggio avversario = gruppoAvversario.getCapo();
-					int ferite = Random.getInt(avversario.getSalute());
-					if (ferite < 20) {
-						descrizione = "riceve alcune lievi ferite.";
-					} else if (ferite > 40) {
-						descrizione = "riceve gravi ferite.";
-					} else {
-						descrizione = "riceve alcune ferite.";
-					}
-					personaggio.subSalute(ferite, avversario, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
-					break;
-				case 2:
-					if (gruppo.getMonete() > 0) {
-						descrizione = "perde alcune monete.";
-						int quanteMonetePerde = Random.getInt(5) + 1;
-						if (quanteMonetePerde > gruppo.getMonete()) {
-							quanteMonetePerde = gruppo.getMonete();
+					case 1:
+						ClassiIncantesimo quale = ClassiIncantesimo.casuale();
+						Incantesimo qualeIncantesimo = quale.getIstanza();
+						if (gruppo.getIncantesimi(quale) > 0) {
+							descrizione = "perde un " + qualeIncantesimo.getNomeSingolare() + '.';
+							gruppo.subIncantesimi(quale, 1);
 						}
-						gruppo.subMonete(quanteMonetePerde);
-					}
-					break;
-				case 3:
-					if (gruppo.getPreziosi() > 0) {
-						descrizione = "perde alcuni preziosi.";
-						int quantiPreziosiPerde = Random.getInt(5) + 1;
-						if (quantiPreziosiPerde > gruppo.getPreziosi()) {
-							quantiPreziosiPerde = gruppo.getPreziosi();
+						break;
+					case 2:
+						Personaggio avversario = gruppoAvversario.getCapo();
+						int ferite = Dado.tira(avversario.getSalute());
+						if (ferite < 20) {
+							descrizione = "riceve alcune lievi ferite.";
+						} else if (ferite > 40) {
+							descrizione = "riceve gravi ferite.";
+						} else {
+							descrizione = "riceve alcune ferite.";
 						}
-						gruppo.subPreziosi(quantiPreziosiPerde);
-					}
-					break;
-				default:
-					break;
+						personaggio.subSalute(ferite, avversario, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
+						break;
+					case 3:
+						if (gruppo.getMonete() > 0) {
+							descrizione = "perde alcune monete.";
+							int quanteMonetePerde = Dado.tira(5);
+							if (quanteMonetePerde > gruppo.getMonete()) {
+								quanteMonetePerde = gruppo.getMonete();
+							}
+							gruppo.subMonete(quanteMonetePerde);
+						}
+						break;
+					case 4:
+						if (gruppo.getPreziosi() > 0) {
+							descrizione = "perde alcuni preziosi.";
+							int quantiPreziosiPerde = Dado.tira(5);
+							if (quantiPreziosiPerde > gruppo.getPreziosi()) {
+								quantiPreziosiPerde = gruppo.getPreziosi();
+							}
+							gruppo.subPreziosi(quantiPreziosiPerde);
+						}
+						break;
+					default:
+						break;
 				}
 
 				String s = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
@@ -582,11 +572,11 @@ public abstract class LocazioneBase implements Locazione {
 				if (numeroAvversari == 1) {
 					sb.append(p.getAIS()).append(p.getNomeSingolare());
 					if (numeroOggetti > 0) {
-						switch (Random.getInt(3)) {
-							case 0:
+						switch (Dado.tira(3)) {
+							case 1:
 								sb.append(" che protegge ");
 								break;
-							case 1:
+							case 2:
 								sb.append(" che custodisce ");
 								break;
 							default:
@@ -597,11 +587,11 @@ public abstract class LocazioneBase implements Locazione {
 				} else {
 					sb.append(Misc.getCardinaleM(numeroAvversari)).append(' ').append(p.getNomePlurale());
 					if (numeroOggetti > 0) {
-						switch (Random.getInt(3)) {
-							case 0:
+						switch (Dado.tira(3)) {
+							case 1:
 								sb.append(" che proteggono ");
 								break;
-							case 1:
+							case 2:
 								sb.append(" che custodiscono ");
 								break;
 							default:

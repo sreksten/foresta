@@ -4,9 +4,9 @@ import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Comando;
+import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.tools.Misc;
-import com.threeamigos.foresta.tools.Random;
 import com.threeamigos.foresta.ui.UI;
 
 public class Cofano extends OggettoBase implements Oggetto {
@@ -51,23 +51,23 @@ public class Cofano extends OggettoBase implements Oggetto {
 	public boolean prendi(GruppoGiocatore gruppo, Comando azione) {
 		ClassiLocazione classeLocazione = gruppo.getClasseLocazione();
 		int min;
-		int span;
+		int max;
 		int tipo;
 		if (classeLocazione.getTipoLocazione() == ClassiLocazione.TipoLocazione.CASTELLO) {
 			min = 1;
-			span = 7;
+			max = 6;
 		} else {
 			min = 0;
-			span = 8;
+			max = 7;
 		}
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < quantita; i++) {
-			tipo = Random.getInt(span) + min;
+			tipo = Dado.tira(min, max);
 			sb.append("Aprendo il");
 			if (quantita > 1) {
 				sb.append(' ').append(Misc.getOrdinaleM(i + 1, false));
 			}
-			if (Random.getInt(2) == 0) {
+			if (Dado.tira(2) == 1) {
 				sb.append(" cofano, ");
 			} else {
 				sb.append(" forziere, ");
@@ -100,10 +100,10 @@ public class Cofano extends OggettoBase implements Oggetto {
 				gruppo.addPozioniMagia(1);
 			} else if (tipo == 6) {
 				sb.append("trova alcune monete d'oro.");
-				gruppo.addMonete(5 + Random.getInt(5));
+				gruppo.addMonete(Dado.tira(5, 10));
 			} else if (tipo == 7) {
 				sb.append("trova alcune gemme.");
-				gruppo.addPreziosi(5 + Random.getInt(5));
+				gruppo.addPreziosi(Dado.tira(5, 10));
 			}
 			if (i < quantita - 1) {
 				sb.append(' ');

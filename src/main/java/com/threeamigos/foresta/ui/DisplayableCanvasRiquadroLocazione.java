@@ -1,26 +1,26 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.util.HashMap;
-import java.util.Map;
-
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
+import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tools.Random;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.HashMap;
+import java.util.Map;
 
 class DisplayableCanvasRiquadroLocazione {
 
-	private int topLeftX;
-	private int topLeftY;
+	private final int topLeftX;
+	private final int topLeftY;
 
-	private Map<Personaggio, CoordinateMD> mappaCoordinate = new HashMap<>();
+	private final Map<Personaggio, CoordinateMD> mappaCoordinate = new HashMap<>();
 	
 	DisplayableCanvasRiquadroLocazione(int topLeftX, int topLeftY) {
 		this.topLeftX = topLeftX;
@@ -36,7 +36,7 @@ class DisplayableCanvasRiquadroLocazione {
 		for (int i = personaggi - 1; i >= 0; i--) {
 			personaggioCorrente = gruppoAvversario.getPersonaggio(i);
 			d = personaggioCorrente.getImmagine();
-			mappaCoordinate.put(personaggioCorrente, new CoordinateMD(topLeftX + i * 20 + Random.getInt(10),
+			mappaCoordinate.put(personaggioCorrente, new CoordinateMD(topLeftX + i * 20 + Dado.tira(10),
 					ImageCache.SPACING + ImageCache.locazioni.get(ClassiLocazione.BOSCO).getHeight() - i * 6 - d.getHeight()));
 		}
 

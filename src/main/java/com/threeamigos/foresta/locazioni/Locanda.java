@@ -1,24 +1,17 @@
 package com.threeamigos.foresta.locazioni;
 
-import java.util.List;
-
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
-import com.threeamigos.foresta.motore.Azioni;
-import com.threeamigos.foresta.motore.Comando;
-import com.threeamigos.foresta.motore.GruppoAvversario;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.motore.RegistroPersonaggi;
-import com.threeamigos.foresta.motore.Stato;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.offerte.Informazioni;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tools.Random;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
 
+import java.util.List;
+
 public class Locanda extends LocazioneBase {
 
-	private static Locanda istanza = new Locanda();
+	private static final Locanda istanza = new Locanda();
 	
 	private Locanda() {
 	}
@@ -234,12 +227,12 @@ public class Locanda extends LocazioneBase {
 			RegistroPersonaggi.rimuoviPersonaggioInLocazione(g.getCoordinate());
 			GruppoAvversario.getIstanza().rimuoviPersonaggio(personaggioDisponibile);
 			g.aggiungiPersonaggio(personaggioDisponibile);
-			g.addMonete(Random.getInt(10) + 5);
-			g.addIncantesimi(ClassiIncantesimo.ARIA, Random.getInt(3));
-			g.addIncantesimi(ClassiIncantesimo.ACQUA, Random.getInt(3));
-			g.addIncantesimi(ClassiIncantesimo.TERRA, Random.getInt(3));
-			g.addIncantesimi(ClassiIncantesimo.FUOCO, Random.getInt(3));
-			g.addPreziosi(Random.getInt(10));
+			g.addMonete(Dado.tira(5, 15));
+			g.addIncantesimi(ClassiIncantesimo.ARIA, Dado.tira(0, 3));
+			g.addIncantesimi(ClassiIncantesimo.ACQUA, Dado.tira(0, 3));
+			g.addIncantesimi(ClassiIncantesimo.TERRA, Dado.tira(0, 3));
+			g.addIncantesimi(ClassiIncantesimo.FUOCO, Dado.tira(0, 3));
+			g.addPreziosi(Dado.tira(0, 10));
 			personaggioDisponibile = null;
 			UI.rinfresca();
 		} else {

@@ -1,21 +1,17 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.motore.Dado;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-
-import com.threeamigos.foresta.tools.Random;
+import java.util.*;
 
 public class RegistroPersonaggiMD implements Serializzabile {
 
-	private List<PersonaggioMD> elencoIniziale = new ArrayList<>();
+	private final List<PersonaggioMD> elencoIniziale = new ArrayList<>();
 
-	private Map<CoordinateMD, PersonaggioMD> personaggiInLocazione = new HashMap<>();
+	private final Map<CoordinateMD, PersonaggioMD> personaggiInLocazione = new HashMap<>();
 
 	public void reimposta() {
 		elencoIniziale.clear();
@@ -30,18 +26,17 @@ public class RegistroPersonaggiMD implements Serializzabile {
 		PersonaggioMD personaggio = null;
 		int size = elencoIniziale.size();
 		if (size > 0) {
-			int quale = Random.getInt(size);
-			personaggio = elencoIniziale.get(quale);
-			elencoIniziale.remove(quale);
+			int indice = Dado.tira(size) - 1;
+			personaggio = elencoIniziale.get(indice);
+			elencoIniziale.remove(indice);
 		}
 		return personaggio;
 	}
 
 	public final PersonaggioMD getPersonaggioCasuale() {
-		if (!personaggiInLocazione.isEmpty()) {			
-			ArrayList<CoordinateMD> elencoCoordinate = new ArrayList<>();
-			elencoCoordinate.addAll(personaggiInLocazione.keySet());
-			int indice = Random.getInt(elencoCoordinate.size());
+		if (!personaggiInLocazione.isEmpty()) {
+            ArrayList<CoordinateMD> elencoCoordinate = new ArrayList<>(personaggiInLocazione.keySet());
+			int indice = Dado.tira(elencoCoordinate.size()) - 1;
 			CoordinateMD coordinate = elencoCoordinate.get(indice);
 			PersonaggioMD personaggio = personaggiInLocazione.get(coordinate);
 			personaggiInLocazione.remove(coordinate);

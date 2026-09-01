@@ -1,15 +1,15 @@
 package com.threeamigos.foresta.offerte;
 
+import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tools.Random;
-import com.threeamigos.foresta.ui.UI;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
+import com.threeamigos.foresta.ui.UI;
 
 public class Pasto implements Offerta {
 
-	private int gustoso = Random.getInt(3);
+	private final int gustoso = Dado.tira(4);
 	
 	@Override
 	public boolean isFattibile(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
@@ -23,7 +23,7 @@ public class Pasto implements Offerta {
 
 	@Override
 	public String getDescrizione(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
-		if (gustoso > 0) {
+		if (gustoso > 1) {
 			return "Viene offerto un pasto caldo che risulta essere squisito.";
 		} else {
 			StringBuilder sb = new StringBuilder("Viene offerto un pasto caldo che pero' non incontra i gusti ");
@@ -38,7 +38,7 @@ public class Pasto implements Offerta {
 
 	@Override
 	public void accetta(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
-		if (gustoso > 0) {
+		if (gustoso > 1) {
 			for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
 				personaggio.addSalute(50);
 			}

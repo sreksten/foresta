@@ -1,20 +1,16 @@
 package com.threeamigos.foresta.offerte;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.LocazioneUnica;
-import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.motore.GruppoAvversario;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.RegistroArtefatti;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.RegistroArtefattiMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
-import com.threeamigos.foresta.tools.Random;
+
+import java.util.ArrayList;
+import java.util.List;
 
 // Ubicazione artefatto/citta'/castello
 public class Informazioni implements Offerta {
@@ -38,18 +34,20 @@ public class Informazioni implements Offerta {
 		int tipo;
 		if (classeLocazione.getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA) {
 			// Qualsiasi informazione ma non quelle sulle citta' visto che gia' ci siamo
-			tipo = 1 + Random.getInt(2);
+			tipo = Dado.tira(2, 3);
 		} else {
-			tipo = Random.getInt(3);
+			tipo = Dado.tira(3);
 		}
-		if (tipo == 0 || tipo == 1) {
-			if (tipo == 0) {
+		switch (tipo) {
+			case 1:
 				informazioniSuCitta(gruppo, sb);
-			} else {
+				break;
+			case 2:
 				informazioniSuCastello(gruppo, sb);
-			}
-		} else {
-			informazioneSuArtefatti(gruppo, sb);
+				break;
+			default:
+				informazioneSuArtefatti(gruppo, sb);
+				break;
 		}
 		return sb.toString();
 	}
@@ -63,9 +61,10 @@ public class Informazioni implements Offerta {
 			}
 		}
 		if (citta.isEmpty()) {
-			sb.append("tutte le citta' sono state distrutte dal Drago.");
+			sb.append("tutte le città sono state distrutte dal Drago.");
 		} else {
-			ClassiLocazione classeLocazione = citta.get(Random.getInt(citta.size()));
+			int indice = Dado.tira(citta.size()) - 1;
+			ClassiLocazione classeLocazione = citta.get(indice);
 			CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(classeLocazione);
 			Foresta.setLocazioneConosciuta(coordinate);
 			sb.append(((LocazioneUnica)classeLocazione.getIstanza()).getNome());
@@ -84,7 +83,8 @@ public class Informazioni implements Offerta {
 					castelli.add(corrente);
 				}
 			}
-			classeLocazione = castelli.get(Random.getInt(castelli.size()));
+			int indice = Dado.tira(castelli.size()) - 1;
+			classeLocazione = castelli.get(indice);
 			coordinate = Foresta.getCoordinateLocazioneUnica(classeLocazione);
 		}
 		Foresta.setLocazioneConosciuta(coordinate);

@@ -1,21 +1,17 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.motore.Dado;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
-
-import com.threeamigos.foresta.tools.Random;
+import java.util.*;
 
 public class RegistroArtefattiMD implements Serializzabile {
 
-	private List<ArtefattoMD> elencoIniziale = new ArrayList<>();
+	private final List<ArtefattoMD> elencoIniziale = new ArrayList<>();
 
-	private Map<CoordinateMD, ArtefattoMD> artefattiInLocazione = new HashMap<>();
+	private final Map<CoordinateMD, ArtefattoMD> artefattiInLocazione = new HashMap<>();
 
 	public void reimposta() {
 		elencoIniziale.clear();
@@ -30,18 +26,17 @@ public class RegistroArtefattiMD implements Serializzabile {
 		ArtefattoMD artefatto = null;
 		int size = elencoIniziale.size();
 		if (size > 0) {
-			int quale = Random.getInt(size);
-			artefatto = elencoIniziale.get(quale);
-			elencoIniziale.remove(quale);
+			int indice = Dado.tira(size) - 1;
+			artefatto = elencoIniziale.get(indice);
+			elencoIniziale.remove(indice);
 		}
 		return artefatto;
 	}
 
 	public final ArtefattoESuaUbicazione getArtefattoCasuale() {
-		if (!artefattiInLocazione.isEmpty()) {			
-			ArrayList<CoordinateMD> elencoCoordinate = new ArrayList<>();
-			elencoCoordinate.addAll(artefattiInLocazione.keySet());
-			int indice = Random.getInt(elencoCoordinate.size());
+		if (!artefattiInLocazione.isEmpty()) {
+            ArrayList<CoordinateMD> elencoCoordinate = new ArrayList<>(artefattiInLocazione.keySet());
+			int indice = Dado.tira(elencoCoordinate.size()) - 1;
 			CoordinateMD coordinate = elencoCoordinate.get(indice);
 			ArtefattoMD artefatto = artefattiInLocazione.get(coordinate);
 			return new ArtefattoESuaUbicazione(artefatto, coordinate);
@@ -88,8 +83,8 @@ public class RegistroArtefattiMD implements Serializzabile {
 
 	public class ArtefattoESuaUbicazione {
 
-		private ArtefattoMD artefattoMD;
-		private CoordinateMD coordinate;
+		private final ArtefattoMD artefattoMD;
+		private final CoordinateMD coordinate;
 
 		public ArtefattoESuaUbicazione(ArtefattoMD artefattoMD, CoordinateMD coordinate) {
 			this.artefattoMD = artefattoMD;

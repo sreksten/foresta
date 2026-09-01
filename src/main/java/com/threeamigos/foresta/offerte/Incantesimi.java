@@ -2,23 +2,23 @@ package com.threeamigos.foresta.offerte;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
+import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
-import com.threeamigos.foresta.tools.Random;
-import com.threeamigos.foresta.ui.UI;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
+import com.threeamigos.foresta.ui.UI;
 
 public class Incantesimi implements Offerta {
 
-	private ClassiIncantesimo classeIncantesimo;
-	private int quantita;
-	private int costo;
+	private final ClassiIncantesimo classeIncantesimo;
+	private final int quantita;
+	private final int costo;
 
 	public Incantesimi() {
 		classeIncantesimo = ClassiIncantesimo.casuale();
-		quantita = Random.getInt(3) + 1;
+		quantita = Dado.tira(3);
 		costo = quantita * classeIncantesimo.getIstanza().getCostoAcquisto() / 2;
 	}
 
@@ -59,7 +59,7 @@ public class Incantesimi implements Offerta {
 			}
 			sb.append(capoAvversario.getADS()).append(capoAvversario.getNomeSingolare());
 		}
-		sb.append(" e' dispost").append(sesso == Personaggio.Sesso.MASCHIO ? 'o' : 'a').append(" a vendere ");
+		sb.append(" è dispost").append(capoAvversario.getLetteraFinaleAttributo()).append(" a vendere ");
 		if (quantita == 1) {
 			sb.append("un ");
 		} else {

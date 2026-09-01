@@ -1,13 +1,13 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.motore.Comando;
+import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
-import com.threeamigos.foresta.tools.Random;
-import com.threeamigos.foresta.ui.UI;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
+import com.threeamigos.foresta.ui.UI;
 
 public class Anello extends OggettoBase implements Oggetto {
 
@@ -15,12 +15,14 @@ public class Anello extends OggettoBase implements Oggetto {
 	private static final int CORAGGIO = 1;
 	private static final int CARISMA = 2;
 	
-	private int tipo;
+	private final boolean anelloMagico;
+	private final int tipo;
 	private boolean notificato;
 
 	public Anello() {
 		super();
-		tipo = Random.getInt(3);
+		anelloMagico = Dado.tira(6) == 6;
+		tipo = Dado.tira(3);
 	}
 
 	public String getAIS() {
@@ -53,12 +55,12 @@ public class Anello extends OggettoBase implements Oggetto {
 
 	@Override
 	public boolean prendi(GruppoGiocatore gruppo, Comando azione) {
-		if (tipo <= CARISMA) {
+		if (anelloMagico) {
 			if (!notificato) {
 				StringBuilder sb = new StringBuilder("Questo e' un anello magico, che fa aumentare ");
-				if (tipo == 0)
+				if (tipo == 1)
 					sb.append("il valore in combattimento");
-				else if (tipo == 1)
+				else if (tipo == 2)
 					sb.append("il coraggio");
 				else
 					sb.append("il carisma");
@@ -75,9 +77,9 @@ public class Anello extends OggettoBase implements Oggetto {
 				}
 				Personaggio p = gruppo.getPersonaggio(azione);
 				UI.notifica(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " indossa l'anello.");
-				if (tipo == VALORE)
+				if (tipo == 1)
 					p.addValore(5);
-				else if (tipo == CORAGGIO)
+				else if (tipo == 2)
 					p.addCoraggio(5);
 				else // CARISMA
 					p.addCarisma(1);

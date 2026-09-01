@@ -10,7 +10,7 @@ public class Dado {
     /**
      * Simula un lancio di dado a N facce.<p>
      * @param N il numero di facce del dado (maggiore di uno)
-     * @return il risultato del lancio
+     * @return il risultato del lancio, da 1 a N inclusi
      */
     public static int tira(int N) {
         if (N <= 1) {
@@ -23,7 +23,7 @@ public class Dado {
      * Produce un numero casuale tra min e max compresi (min deve essere strettamente minore di max)
      * @param min il valore minimo
      * @param max il valore massimo
-     * @return il risultato del lancio
+     * @return il risultato del lancio, da min a max inclusi
      */
     public static int tira(int min, int max) {
         if (min >= max) {

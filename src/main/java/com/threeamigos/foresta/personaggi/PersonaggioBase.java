@@ -1,13 +1,5 @@
 package com.threeamigos.foresta.personaggi;
 
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
-import java.util.function.Function;
-import java.util.stream.Collectors;
-
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
@@ -18,10 +10,16 @@ import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tools.Misc;
-import com.threeamigos.foresta.tools.Random;
 import com.threeamigos.foresta.ui.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.ImageCache;
 import com.threeamigos.foresta.ui.UI;
+
+import java.awt.image.BufferedImage;
+import java.util.Collection;
+import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /*
  * I personaggi originali della Foresta su ZX Spectrum:
@@ -282,17 +280,13 @@ public abstract class PersonaggioBase implements Personaggio {
 		 * forza e la forza massima danni = (getForza() + getForzaMassima()) / 10; }
 		 * else {
 		 */
-		danni = (getSalute() + getValoreEffettoDiStato() + getCoraggio()) / 10 - getStanchezza() - Random.getInt(10);
+		danni = Math.min(0, (getSalute() + getValoreEffettoDiStato() + getCoraggio()) / 10 - getStanchezza() - Dado.tira(10));
 		/*
 		 * }
 		 */
 		Logger.log((getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)) + "(" + getSalute() + "/"
 				+ getSaluteMassima() + ") fa " + danni + " danni.");
-		if (danni < 0) {
-			return 0;
-		} else {
-			return danni * getModificaDanniForza();
-		}
+		return danni * getModificaDanniForza();
 	}
 
 	public int getModificaDanniForza() {
@@ -496,8 +490,8 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public void fugge() {
-		subCoraggio(Random.getInt(10) + 10);
-		subSalute(Random.getInt(50) + 50, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
+		subCoraggio(Dado.tira(10, 20));
+		subSalute(Dado.tira(50, 100), null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
 		subCarisma(1);
 	}
 
@@ -508,7 +502,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			Logger.log("Avversario magico, scelgo incantesimo");
 			for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
 				Incantesimo incantesimoCorrente = classeIncantesimo.getIstanza();
-				if (getMagia() >= incantesimoCorrente.getCostoLancio() && incantesimoCorrente.getTipo() == TipoIncantesimo.MALEFICO && (incantesimoScelto == null || Random.getInt(2) == 1)) {
+				if (getMagia() >= incantesimoCorrente.getCostoLancio() && incantesimoCorrente.getTipo() == TipoIncantesimo.MALEFICO && (incantesimoScelto == null || Dado.tira(2) == 1)) {
 					incantesimoScelto = incantesimoCorrente;
 				}
 			}
@@ -555,7 +549,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 		if (bersaglio == null) {
 			for (Personaggio personaggio : personaggiPossibili) {
-				if (bersaglio == null || Random.getInt(2) == 1) {
+				if (bersaglio == null || Dado.tira(2) == 1) {
 					bersaglio = personaggio;
 				}
 			}
@@ -586,7 +580,8 @@ public abstract class PersonaggioBase implements Personaggio {
 			offerte = getOfferteCorruzione();
 		}
 		if (offerte.length > 0) {
-			return offerte[Random.getInt(offerte.length)].getIstanza();
+			int indice = Dado.tira(offerte.length) - 1;
+			return offerte[indice].getIstanza();
 		}
 		return null;
 	}

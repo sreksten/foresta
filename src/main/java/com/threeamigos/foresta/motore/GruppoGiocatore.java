@@ -9,7 +9,6 @@ import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
-import com.threeamigos.foresta.tools.Random;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
 
@@ -32,7 +31,7 @@ public class GruppoGiocatore extends Gruppo {
 		return istanza;
 	}
 
-	private GruppoGiocatoreMD md = ModelloDati.getIstanza().getGruppoGiocatoreMD();
+	private final GruppoGiocatoreMD md = ModelloDati.getIstanza().getGruppoGiocatoreMD();
 	private Locazione locazioneCorrente;
 	private boolean fuggito = false;
 	
@@ -358,12 +357,12 @@ public class GruppoGiocatore extends Gruppo {
 		if (md.getPreziosi() > 0) {
 			int quantita = md.getPreziosi();
 			if (getPersonaggiVivi().stream().anyMatch(p -> p.getClasse() == ClassePersonaggio.LADRA || p.getClasse() == ClassePersonaggio.LADRO)) {
-				quantita += Random.getInt(md.getPreziosi());
+				quantita += Dado.tira(md.getPreziosi());
 			}
-			StringBuilder sb = new StringBuilder(chiMaiuscolo())
-					.append(" ha venduto i preziosi raccolti, ricavandone ").append(quantita)
-					.append(quantita == 1 ? " moneta." : " monete.");
-			UI.notifica(sb.toString());
+            String sb = chiMaiuscolo() +
+                    " ha venduto i preziosi raccolti, ricavandone " + quantita +
+                    (quantita == 1 ? " moneta." : " monete.");
+			UI.notifica(sb);
 			addMonete(quantita);
 			subPreziosi(md.getPreziosi());
 		}
@@ -372,16 +371,16 @@ public class GruppoGiocatore extends Gruppo {
 	public final void fugge() {
 		fuggito = true;		
 		UI.notifica(chiMaiuscolo() + ", in preda al panico, cerca la salvezza nella fuga! Sfortunatamente riceve gravi ferite e perde molte delle cose in suo possesso!");
-		subMonete(Random.getInt(md.getMonete() / 2));
-		subPreziosi(Random.getInt(md.getPreziosi() / 2));
+		subMonete(Dado.tira(0, md.getMonete() / 2));
+		subPreziosi(Dado.tira(0, md.getPreziosi() / 2));
 		for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
 			int totaleIncantesimi = md.getIncantesimi(classeIncantesimo);
-			md.setIncantesimi(classeIncantesimo, totaleIncantesimi - Random.getInt(totaleIncantesimi / 2));
+			md.setIncantesimi(classeIncantesimo, totaleIncantesimi - Dado.tira(0, totaleIncantesimi / 2));
 		}
-		subPozioniForza(Random.getInt(md.getPozioniForza() / 2));
-		subPozioniGrandeForza(Random.getInt(md.getPozioniGrandeForza() / 2));
-		subPozioniMagia(Random.getInt(md.getPozioniMagia() / 2));
-		getPersonaggiVivi().stream().forEach(Personaggio::fugge);
+		subPozioniForza(Dado.tira(0, md.getPozioniForza() / 2));
+		subPozioniGrandeForza(Dado.tira(0, md.getPozioniGrandeForza() / 2));
+		subPozioniMagia(Dado.tira(0, md.getPozioniMagia() / 2));
+		getPersonaggiVivi().forEach(Personaggio::fugge);
 		UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 		UI.rinfresca();
 	}

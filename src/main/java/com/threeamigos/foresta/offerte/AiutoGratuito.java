@@ -1,21 +1,21 @@
 package com.threeamigos.foresta.offerte;
 
-import java.util.List;
-
+import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tools.Random;
-import com.threeamigos.foresta.ui.UI;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
+import com.threeamigos.foresta.ui.UI;
+
+import java.util.List;
 
 public class AiutoGratuito implements Offerta {
 
 	private Personaggio personaggio;
-	private int durata;
+	private final int durata;
 
 	public AiutoGratuito() {
-		durata = Random.getInt(5) + 1;
+		durata = Dado.tira(6);
 	}
 
 	@Override

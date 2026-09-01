@@ -1,17 +1,17 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tools.Random;
 import com.threeamigos.foresta.ui.UI;
 
 public class Tempio extends LocazioneBase {
 
-	private static Tempio istanza = new Tempio();
+	private static final Tempio istanza = new Tempio();
 	
 	private Tempio() {
 	}
@@ -31,13 +31,12 @@ public class Tempio extends LocazioneBase {
 		int nCofani;
 		Artefatto a = getArtefatto(g);
 		if (a == null) {
-			nViverne = Random.getInt(5);
+			nViverne = Dado.tira(5);
 			if (!isLocazioneVisitata()) {
-				nCofani = Random.getInt(6);
-				setOggetto(new Cofano(nCofani));
+				setOggetto(new Cofano(Dado.tira(0, 5)));
 			}
 		} else {
-			nViverne = 4 + Random.getInt(4);
+			nViverne = Dado.tira(4, 7);
 			setOggetto(a);
 		}
 		Personaggio p;

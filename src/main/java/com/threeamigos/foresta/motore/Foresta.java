@@ -7,7 +7,6 @@ import com.threeamigos.foresta.motore.modellodati.ForestaMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tools.Random;
 
 /**
  * Contiene la mappa di una istanza della Foresta,
@@ -20,7 +19,7 @@ public class Foresta {
 	private Foresta() {
 	}
 
-	private static ForestaMD forestaMD = ModelloDati.getIstanza().getForestaMD();
+	private static final ForestaMD forestaMD = ModelloDati.getIstanza().getForestaMD();
 	
 	public static final int getDimensioneX() {
 		return forestaMD.getDimensioneX();
@@ -209,7 +208,7 @@ public class Foresta {
 		ClassiLocazione classeLocazione;
 		CoordinateMD coordinate;
 		do {
-			coordinate = new CoordinateMD(Random.getInt(getDimensioneX()), Random.getInt(getDimensioneY()));
+			coordinate = new CoordinateMD(Dado.tira(getDimensioneX()) - 1, Dado.tira(getDimensioneY()) - 1);
 			classeLocazione = getLocazione(coordinate);
 		} while (classeLocazione != null && classeLocazione != ClassiLocazione.BOSCO && classeLocazione != ClassiLocazione.RADURA);
 		return coordinate;

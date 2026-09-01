@@ -1,15 +1,11 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.motore.Comando;
-import com.threeamigos.foresta.motore.GruppoAvversario;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.Stato;
-import com.threeamigos.foresta.tools.Random;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.ui.UI;
 
 public class Palude extends LocazioneBase {
 
-	private static Palude istanza = new Palude();
+	private static final Palude istanza = new Palude();
 	
 	private Palude() {
 	}
@@ -35,11 +31,11 @@ public class Palude extends LocazioneBase {
 
 	@Override
 	public Stato impostaAzioni(GruppoGiocatore g, GruppoAvversario gng, Comando azione) {
-		if (Random.getInt(10) > 3) {
-			UI.notifica("Il posto pero' non promette nulla di buono e " + g.chi() + " decide di non restare.");
+		if (Dado.tira(10) > 3) {
+			UI.notifica("Il posto però non promette nulla di buono e " + g.chi() + " decide di non restare.");
 			return Stato.FINE_LOCAZIONE;
 		}
-		UI.notifica("Approfittando della quiete del posto, " + g.chi() + " riposera' un poco.");
+		UI.notifica("Approfittando della quiete del posto, " + g.chi() + " riposerà un poco.");
 		g.riposa();
 		return Stato.FINE_LOCAZIONE;
 	}
