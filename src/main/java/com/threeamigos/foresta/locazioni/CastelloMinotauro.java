@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -9,7 +10,7 @@ import com.threeamigos.foresta.ui.UI;
 
 public class CastelloMinotauro extends LocazioneUnica {
 
-	private static CastelloMinotauro istanza = new CastelloMinotauro();
+	private static final CastelloMinotauro istanza = new CastelloMinotauro();
 	
 	private CastelloMinotauro() {
 	}
@@ -26,7 +27,7 @@ public class CastelloMinotauro extends LocazioneUnica {
 	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
 		gng.aggiungiPersonaggio(new MinotauroGigante());
-		setOggetto(new Cofano(5));
+		setOggetto(new Cofano(Costanti.COFANI_IN_CASTELLO_MINOTAURO));
 	}
 
 	@Override

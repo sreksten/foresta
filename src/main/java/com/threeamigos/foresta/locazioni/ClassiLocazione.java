@@ -39,10 +39,10 @@ public enum ClassiLocazione {
 	CASTELLO_STREGA(CastelloStrega::getIstanza, TipoLocazione.CASTELLO),
 	CASTELLO_DRAGO(CastelloDrago::getIstanza, TipoLocazione.CASTELLO);
 
-	private Supplier<Locazione> supplier;
-	private TipoLocazione tipoLocazione;
+	private final Supplier<Locazione> supplier;
+	private final TipoLocazione tipoLocazione;
 	
-	private ClassiLocazione(Supplier<Locazione> supplier, TipoLocazione tipoLocazione) {
+	ClassiLocazione(Supplier<Locazione> supplier, TipoLocazione tipoLocazione) {
 		this.supplier = supplier;
 		this.tipoLocazione = tipoLocazione;
 	}

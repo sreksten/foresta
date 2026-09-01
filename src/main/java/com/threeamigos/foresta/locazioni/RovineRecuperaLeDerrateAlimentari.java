@@ -9,7 +9,7 @@ import com.threeamigos.foresta.ui.UI;
 
 public class RovineRecuperaLeDerrateAlimentari extends LocazioneUnica {
 
-	private static RovineRecuperaLeDerrateAlimentari istanza = new RovineRecuperaLeDerrateAlimentari();
+	private static final RovineRecuperaLeDerrateAlimentari istanza = new RovineRecuperaLeDerrateAlimentari();
 	
 	private RovineRecuperaLeDerrateAlimentari() {
 	}
@@ -28,7 +28,7 @@ public class RovineRecuperaLeDerrateAlimentari extends LocazioneUnica {
 		return "il covo dei Troll che hanno rubato il carico di derrate alimentari";
 	}	
 
-	private final boolean isMissioneCompleta() {
+	private boolean isMissioneCompleta() {
 		return RegistroMissioni.getMissione(TipoMissione.RECUPERA_LE_DERRATE_ALIMENTARI).isCompleta(); 
 	}
 	
@@ -51,13 +51,6 @@ public class RovineRecuperaLeDerrateAlimentari extends LocazioneUnica {
 			UI.notifica("Tra queste rovine si nasconde la banda di Troll che ha rubato il carico di derrate alimentari!");
 		} else {
 			UI.notifica("Tra queste rovine si nascondeva la banda di Troll che aveva rubato il carico di derrate alimentari.");
-		}
-	}
-
-	@Override
-	public void azzeraLocazione(GruppoGiocatore g) {
-		if (completa) {
-			g.setLocazioneVisitata();
 		}
 	}
 

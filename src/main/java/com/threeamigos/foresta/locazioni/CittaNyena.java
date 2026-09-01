@@ -2,7 +2,7 @@ package com.threeamigos.foresta.locazioni;
 
 public class CittaNyena extends Citta {
 
-	private static CittaNyena istanza = new CittaNyena();
+	private static final CittaNyena istanza = new CittaNyena();
 	
 	private CittaNyena() {
 	}
@@ -18,7 +18,7 @@ public class CittaNyena extends Citta {
 
 	@Override
 	public String getNome() {
-		return "la citta' di Nyena";
+		return "la città di Nyena";
 	}
 
 	@Override

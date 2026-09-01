@@ -2,7 +2,7 @@ package com.threeamigos.foresta.locazioni;
 
 public class CittaMalgaard extends Citta {
 
-	private static CittaMalgaard istanza = new CittaMalgaard();
+	private static final CittaMalgaard istanza = new CittaMalgaard();
 	
 	private CittaMalgaard() {
 	}
@@ -18,7 +18,7 @@ public class CittaMalgaard extends Citta {
 
 	@Override
 	public String getNome() {
-		return "la citta' di Malgaard";
+		return "la città di Malgaard";
 	}
 
 	@Override

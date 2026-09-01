@@ -2,7 +2,7 @@ package com.threeamigos.foresta.locazioni;
 
 public class CittaRuuna extends Citta {
 
-	private static CittaRuuna istanza = new CittaRuuna();
+	private static final CittaRuuna istanza = new CittaRuuna();
 	
 	private CittaRuuna() {
 	}
@@ -18,7 +18,7 @@ public class CittaRuuna extends Citta {
 
 	@Override
 	public String getNome() {
-		return "la citta' di Ruuna";
+		return "la città di Ruuna";
 	}
 
 	@Override

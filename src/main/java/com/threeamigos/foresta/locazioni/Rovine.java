@@ -8,7 +8,7 @@ import com.threeamigos.foresta.ui.UI;
 
 public class Rovine extends LocazioneBase {
 
-	private static Rovine istanza = new Rovine();
+	private static final Rovine istanza = new Rovine();
 	
 	private Rovine() {
 	}
@@ -22,7 +22,7 @@ public class Rovine extends LocazioneBase {
 		return ClassiLocazione.ROVINE;
 	}
 
-	private static ClassePersonaggio[] mostri = {
+	private static final ClassePersonaggio[] mostri = {
 			ClassePersonaggio.CHIMERA,
 			ClassePersonaggio.CHIMERA_DRAGO,
 			ClassePersonaggio.FANTASMA,
@@ -36,7 +36,7 @@ public class Rovine extends LocazioneBase {
 			ClassePersonaggio.SPIRITO
 	};
 
-	private static ClassiOggetto[] oggetti = {
+	private static final ClassiOggetto[] oggetti = {
 			ClassiOggetto.COFANO
 	};
 

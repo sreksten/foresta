@@ -12,8 +12,6 @@ import java.util.List;
 
 public class Alchimista extends LocazioneBase implements Locazione {
 
-	private static final int AUMENTO_MAGIA_PERSONAGGIO = 20;
-
 	private static final Alchimista istanza = new Alchimista();
 	
 	private Alchimista() {
@@ -58,11 +56,12 @@ public class Alchimista extends LocazioneBase implements Locazione {
 
 	private void reimpostaAcquistiPossibili() {
 		int monete = gruppo.getMonete();
-		pozioniAcquistabili = monete >= CostiAcquisto.POZIONE_SALUTE;
-		aumentareMagia = monete >= CostiAcquisto.AUMENTO_MAGIA_GIOCATORE_SINGOLO;
+		pozioniAcquistabili = monete >= Costanti.COSTO_POZIONE_SALUTE;
+		aumentareMagia = monete >= Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO;
 		if (gruppo.getNumeroPersonaggiVivi() > 1) {
-			costoTotaleAumentoMagiaGruppo = CostiAcquisto.AUMENTO_MAGIA_GIOCATORE_SINGOLO +
-					(CostiAcquisto.AUMENTO_MAGIA_GIOCATORE_SINGOLO * (gruppo.getNumeroPersonaggiVivi() - 1)) * 75 / 100;
+			// Dopo il primo personaggio sconta del 25%. Molto generoso.
+			costoTotaleAumentoMagiaGruppo = Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO +
+					(Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO * (gruppo.getNumeroPersonaggiVivi() - 1)) * 75 / 100;
 			aumentareMagiaGruppo = monete >= costoTotaleAumentoMagiaGruppo;
 		} else {
 			aumentareMagiaGruppo = false;
@@ -73,7 +72,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 
 	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
-		// nulla da fare
+		// nulla da creare
 	}
 
 	@Override
@@ -90,11 +89,12 @@ public class Alchimista extends LocazioneBase implements Locazione {
 				UI.notifica("'Buongiorno! Mi dispiace ma non posso fare credito.'" + DICE);
 				return Stato.FINE_LOCAZIONE;
 			}
-			UI.notifica("L'alchimista e' intento a produrre l'oroscopo della giornata:");
+			UI.notifica("L'alchimista è intento a produrre l'oroscopo della giornata:");
 			List<String> oroscopo = ProduttoreDiTestiCasuale.oroscopo();
 			for (String linea : oroscopo) {
 				UI.notifica(linea);
 			}
+			UI.notifica("");
 			UI.impostaAzioni(Comando.PERGAMENA);
 			stato = StatoDaAlchimista.ENTRATO;
 			return Stato.IN_LOCAZIONE;
@@ -110,10 +110,10 @@ public class Alchimista extends LocazioneBase implements Locazione {
 			azione == Comando.PERSONAGGIO_3 ||
 			azione == Comando.PERSONAGGIO_4 ||
 			azione == Comando.PERSONAGGIO_5) {
-				if (gruppo.getMonete() >= CostiAcquisto.AUMENTO_MAGIA_GIOCATORE_SINGOLO) {
+				if (gruppo.getMonete() >= Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO) {
 					Personaggio p = gruppo.getPersonaggio(azione);
-					gruppo.subMonete(CostiAcquisto.AUMENTO_MAGIA_GIOCATORE_SINGOLO);
-					p.addMagia(AUMENTO_MAGIA_PERSONAGGIO);
+					gruppo.subMonete(Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO);
+					p.addMagia(Costanti.AUMENTO_MAGIA_PERSONAGGIO);
 					UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 					UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
 					UI.rinfresca();
@@ -128,19 +128,18 @@ public class Alchimista extends LocazioneBase implements Locazione {
 				if (gruppo.getMonete() >= costoTotaleAumentoMagiaGruppo) {
 					gruppo.subMonete(costoTotaleAumentoMagiaGruppo);
 					for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
-						personaggio.addMagia(AUMENTO_MAGIA_PERSONAGGIO);
+						personaggio.addMagia(Costanti.AUMENTO_MAGIA_PERSONAGGIO);
 					}
 					UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 					UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
 					UI.rinfresca();
-					return Stato.FINE_LOCAZIONE;
-				} else {
+                } else {
 					UI.notifica("'Non avete abbastanza monete per pagare i miei servigi.'" + DICE);
 					imposta();
-					return Stato.FINE_LOCAZIONE;
-				}
+                }
+                return Stato.FINE_LOCAZIONE;
 
-			} else if (azione == Comando.INCANTESIMO) {
+            } else if (azione == Comando.INCANTESIMO) {
 				stato = StatoDaAlchimista.INCANTESIMI;
 				UI.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI);
 				UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
@@ -149,7 +148,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 				return Stato.IN_LOCAZIONE;
 
 			} else if (azione == Comando.POZIONE_SALUTE) {
-				gruppo.subMonete(CostiAcquisto.POZIONE_SALUTE);
+				gruppo.subMonete(Costanti.COSTO_POZIONE_SALUTE);
 				gruppo.addPozioniSalute(1);
 				UI.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI);
 				UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
@@ -157,7 +156,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 				return Stato.IN_LOCAZIONE;
 
 			} else if (azione == Comando.POZIONE_MAGIA) {
-				gruppo.subMonete(CostiAcquisto.POZIONE_MAGIA);
+				gruppo.subMonete(Costanti.COSTO_POZIONE_MAGIA);
 				gruppo.addPozioniMagia(1);
 				UI.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI);
 				UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
@@ -217,7 +216,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 		}
 		if (aumentareMagia) {
 			sb.append(" o aumentare il tuo potere magico per ")
-					.append(CostiAcquisto.AUMENTO_MAGIA_GIOCATORE_SINGOLO)
+					.append(Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO)
 					.append(" monete");
 			if (aumentareMagiaGruppo) {
 				sb.append(", o aumentare quello di tutto il gruppo per ")

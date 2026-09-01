@@ -9,7 +9,7 @@ import com.threeamigos.foresta.ui.UI;
 
 public class CastelloDrago extends LocazioneUnica {
 
-	private static CastelloDrago istanza = new CastelloDrago();
+	private static final CastelloDrago istanza = new CastelloDrago();
 	
 	private CastelloDrago() {
 	}
@@ -35,7 +35,7 @@ public class CastelloDrago extends LocazioneUnica {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		UI.notifica(g.chi() + " entra al Castello della Morte Alata, per lo scontro finale. Con uno sbatter d'ali simile al rombo di tuono, la Grande Minaccia si erge ora davanti al gruppo: il Drago e' qui!");
+		UI.notifica(g.chi() + " entra al Castello della Morte Alata, per lo scontro finale. Con uno sbatter d'ali simile al rombo di tuono, la Grande Minaccia si erge ora davanti al gruppo: il Drago è qui!");
 	}
 
 	@Override

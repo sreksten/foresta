@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -9,7 +10,7 @@ import com.threeamigos.foresta.ui.UI;
 
 public class CastelloIdra extends LocazioneUnica {
 
-	private static CastelloIdra istanza = new CastelloIdra();
+	private static final CastelloIdra istanza = new CastelloIdra();
 	
 	private CastelloIdra() {
 	}
@@ -26,7 +27,7 @@ public class CastelloIdra extends LocazioneUnica {
 	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
 		gng.aggiungiPersonaggio(new Idra());
-		setOggetto(new Cofano(5));
+		setOggetto(new Cofano(Costanti.COFANI_IN_CASTELLO_IDRA));
 	}
 
 	@Override

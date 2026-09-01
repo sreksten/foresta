@@ -11,7 +11,7 @@ import com.threeamigos.foresta.ui.UI;
 
 public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 
-	private static GrottaRecuperaIlMedaglione istanza = new GrottaRecuperaIlMedaglione();
+	private static final GrottaRecuperaIlMedaglione istanza = new GrottaRecuperaIlMedaglione();
 	
 	private GrottaRecuperaIlMedaglione() {
 	}
@@ -30,7 +30,7 @@ public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 		return "la grotta dei ladri del Medaglione";
 	}
 	
-	private final boolean isMissioneCompleta() {
+	private boolean isMissioneCompleta() {
 		return RegistroMissioni.getMissione(TipoMissione.RECUPERA_IL_MEDAGLIONE).isCompleta(); 
 	}
 	
@@ -61,7 +61,7 @@ public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
 		if (!isMissioneCompleta()) {
-			UI.notifica("Questa e' la grotta dove risiede la banda di ladri che ha rubato il Medaglione!");
+			UI.notifica("Questa è la grotta dove risiede la banda di ladri che ha rubato il Medaglione!");
 		} else {
 			UI.notifica("In questa grotta avevano il loro covo i ladri del medaglione.");
 		}

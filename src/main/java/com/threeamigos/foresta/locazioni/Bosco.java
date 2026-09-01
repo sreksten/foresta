@@ -8,7 +8,7 @@ import com.threeamigos.foresta.ui.UI;
 
 public class Bosco extends LocazioneBase {
 
-	private static Bosco istanza = new Bosco();
+	private static final Bosco istanza = new Bosco();
 	
 	private Bosco() {
 	}
@@ -22,7 +22,7 @@ public class Bosco extends LocazioneBase {
 		return ClassiLocazione.BOSCO;
 	}
 
-	private static ClassePersonaggio[] mostri = {
+	private static final ClassePersonaggio[] mostri = {
 			ClassePersonaggio.ARPIA,
 			ClassePersonaggio.CENTAURO,
 			ClassePersonaggio.CHIMERA,
@@ -39,7 +39,7 @@ public class Bosco extends LocazioneBase {
 			ClassePersonaggio.VIVERNA
 	};
 
-	private static ClassiOggetto[] oggetti = {
+	private static final ClassiOggetto[] oggetti = {
 			ClassiOggetto.ANELLO,
 			ClassiOggetto.COFANO,
 			ClassiOggetto.CORONA,

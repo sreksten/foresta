@@ -8,7 +8,7 @@ import com.threeamigos.foresta.ui.UI;
 
 public class Radura extends LocazioneBase {
 
-	private static Radura istanza = new Radura();
+	private static final Radura istanza = new Radura();
 	
 	private Radura() {
 	}
@@ -22,7 +22,7 @@ public class Radura extends LocazioneBase {
 		return ClassiLocazione.RADURA;
 	}
 
-	private static ClassePersonaggio[] mostri = {
+	private static final ClassePersonaggio[] mostri = {
 			ClassePersonaggio.ARPIA,
 			ClassePersonaggio.CENTAURO,
 			ClassePersonaggio.CHIMERA,
@@ -39,7 +39,7 @@ public class Radura extends LocazioneBase {
 			ClassePersonaggio.VIVERNA
 	};
 
-	private static ClassiOggetto[] oggetti = {};
+	private static final ClassiOggetto[] oggetti = {};
 
 	@Override
 	public ClassePersonaggio[] getPossibiliIncontri() {

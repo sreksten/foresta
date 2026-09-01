@@ -22,15 +22,15 @@ import java.util.List;
  * la foresta si trova all'interno di una locazione. Appena entra la locazione
  * è in stato NUOVA_LOCAZIONE (vengono creati i mostri e gli oggetti). Quindi
  * il gruppo continua a trovarsi in stato IN_LOCAZIONE. A seconda delle azioni
- * che intraprende puo' spostarsi momentaneamente da tale stato (ad esempio
+ * che intraprende può spostarsi momentaneamente da tale stato (ad esempio
  * per richiedere il personaggio attivo o il bersaglio di un incantesimo) ma finisce
  * sempre per tornarvi.
- * Il gruppo puo' decidere di combattere e va in stato CHI_COMBATTE,
- * puo' decidere di formulare un incantesimo e va in stato CHI_FORMULA e
+ * Il gruppo può decidere di combattere e va in stato CHI_COMBATTE,
+ * può decidere di formulare un incantesimo e va in stato CHI_FORMULA e
  * quindi in stato QUALE_FORMULA; eventualmente se l'incantesimo ha
  * bisogno di un personaggio bersaglio va in stato SU_CHI_FORMULA.
- * Puo' anche tentare una corruzione e va in stato CHI_CORROMPE, o
- * puo' tentare di fare amicizia e va in stato CHI_FA_AMICIZIA.
+ * Può anche tentare una corruzione e va in stato CHI_CORROMPE, o
+ * può tentare di fare amicizia e va in stato CHI_FA_AMICIZIA.
  * Gli stati sono riferiti al gruppo ma vengono tenuti all'interno della
  * locazione, questo perché esistono altre locazioni che fanno invece altre
  * cose - la locanda, ad esempio, permette di pernottare o prendere gente con se),
@@ -56,9 +56,9 @@ public abstract class LocazioneBase implements Locazione {
 	// prendere gli oggetti o se i mostri dei castelli sono
 	// stati sconfitti.
 	protected boolean completa;
-	// Se il gruppo puo' (ancora) tentare di corrompere gli avversari
+	// Se il gruppo può (ancora) tentare di corrompere gli avversari
 	private boolean opzioneCorruzioneDisponibile;
-	// Se il gruppo puo' (ancora) cercare di fare amicizia
+	// Se il gruppo può (ancora) cercare di fare amicizia
 	private boolean opzioneAmiciziaDisponibile;
 	// Se il gruppo stringe amicizia non può prendere gli oggetti
 	private boolean haStrettoAmicizia;
@@ -67,7 +67,7 @@ public abstract class LocazioneBase implements Locazione {
 
 	private StatoLocazione statoLocazione;
 
-	// chi sta combattendo
+	// Chi sta combattendo
 	private Personaggio combattente;
 	// Per formulare un incantesimo
 	private Personaggio formulante;
@@ -147,26 +147,26 @@ public abstract class LocazioneBase implements Locazione {
 		Artefatto a = getArtefatto(g);
 		if (a != null) {
 			setOggetto(a);
-//		} else if (!isLocazioneVisitata()) {
-//			// Non ci sono artefatti, creiamo un oggetto.
-//			ClassiOggetto[] o = getPossibiliOggetti();
-//			Logger.log("Scelta da " + o.length + " oggetti");
-//			if (o.length > 0) {
-//				ClassiOggetto classeOggetto = o[Dado.tira(o.length) - 1];
-//				Logger.log("Classe oggetto " + classeOggetto);
-//				Oggetto probabileOggetto = classeOggetto.getIstanza();
-//				if (probabileOggetto.getQuantita() > 0) {
-//					setOggetto(probabileOggetto);
-//				}
-//			}
-//		}
-		} else {
-			Oggetto anello = null;
-			while (anello == null || anello.getQuantita() == 0) {
-				anello = ClassiOggetto.ANELLO.getIstanza();
+		} else if (!isLocazioneVisitata()) {
+			// Non ci sono artefatti, creiamo un oggetto.
+			ClassiOggetto[] o = getPossibiliOggetti();
+			Logger.log("Scelta da " + o.length + " oggetti");
+			if (o.length > 0) {
+				ClassiOggetto classeOggetto = o[Dado.tira(o.length) - 1];
+				Logger.log("Classe oggetto " + classeOggetto);
+				Oggetto probabileOggetto = classeOggetto.getIstanza();
+				if (probabileOggetto.getQuantita() > 0) {
+					setOggetto(probabileOggetto);
+				}
 			}
-			setOggetto(anello);
 		}
+//		} else {
+//			Oggetto anello = null;
+//			while (anello == null || anello.getQuantita() == 0) {
+//				anello = ClassiOggetto.ANELLO.getIstanza();
+//			}
+//			setOggetto(anello);
+//		}
 	}
 	
 	protected boolean isLocazioneVisitata() {
@@ -176,7 +176,6 @@ public abstract class LocazioneBase implements Locazione {
 	/**
 	 * Restituisce il primo artefatto presente in questa locazione
 	 */
-	//TODO potremmo generare gli artefatti a caso
 	protected Artefatto getArtefatto(GruppoGiocatore g) {
 		return RegistroArtefatti.getArtefattoInLocazione(g.getCoordinate());
 	}
@@ -228,10 +227,10 @@ public abstract class LocazioneBase implements Locazione {
 			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_CURATRICE");
 			if (azione != Comando.ANNULLA) {
 				chiAgisce = gruppo.getPersonaggio(azione);
-				chiAgisce.addSalute(100);
+				chiAgisce.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE);
 				gruppo.subPozioniSalute(1);
 				UI.notifica(chiAgisce.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-						" ha bevuto una pozione che fa riacquistare forza.");
+						" ha bevuto una pozione che fa riacquistare salute.");
 			}
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
 			impostaAzioni(gruppo, gruppoAvversario, null);
@@ -241,11 +240,11 @@ public abstract class LocazioneBase implements Locazione {
 			Logger.log("LocazioneBase.CHI_BEVE_GRANDE_POZIONE_CURATRICE");
 			if (azione != Comando.ANNULLA) {
 				chiAgisce = gruppo.getPersonaggio(azione);
-				chiAgisce.addSalute(chiAgisce.getSaluteMassima());
-				chiAgisce.addSaluteMassima(10);
+				chiAgisce.addSaluteMassima(Costanti.AUMENTO_SALUTE_DA_POZIONE_SALUTE_GRANDE);
+				chiAgisce.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE_GRANDE);
 				gruppo.subPozioniSaluteGrande(1);
 				UI.notifica(chiAgisce.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
-						" ha bevuto una pozione che fa aumentare la forza!");
+						" ha bevuto una pozione che recupera e fa aumentare la salute massima!");
 			}
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
 			impostaAzioni(gruppo, gruppoAvversario, null);
@@ -255,10 +254,10 @@ public abstract class LocazioneBase implements Locazione {
 			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_MAGIA");
 			if (azione != Comando.ANNULLA) {
 				chiAgisce = gruppo.getPersonaggio(azione);
-				chiAgisce.addMagia(10);
+				chiAgisce.addMagia(Costanti.RECUPERO_DA_POZIONE_MAGIA);
 				gruppo.subPozioniMagia(1);
 				UI.notifica(chiAgisce.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
-						" ha bevuto una pozione che fa acquistare magia.");
+						" ha bevuto una pozione che fa riacquistare magia.");
 			}
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
 			impostaAzioni(gruppo, gruppoAvversario, null);

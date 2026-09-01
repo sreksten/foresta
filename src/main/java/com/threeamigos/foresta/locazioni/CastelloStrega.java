@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -9,7 +10,7 @@ import com.threeamigos.foresta.ui.UI;
 
 public class CastelloStrega extends LocazioneUnica {
 
-	private static CastelloStrega istanza = new CastelloStrega();
+	private static final CastelloStrega istanza = new CastelloStrega();
 	
 	private CastelloStrega() {
 	}
@@ -26,7 +27,7 @@ public class CastelloStrega extends LocazioneUnica {
 	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
 		gng.aggiungiPersonaggio(new Strega());
-		setOggetto(new Cofano(5));
+		setOggetto(new Cofano(Costanti.COFANI_IN_CASTELLO_STREGA));
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class CastelloStrega extends LocazioneUnica {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		UI.notifica(g.chiMaiuscolo() + " entra nel Maniero del Malefizio. Ecco arrivare, annunciata da un vento di tempesta, la piu' tremenda alleata del Drago: la Signora della Magia Nera, la Strega!");
+		UI.notifica(g.chiMaiuscolo() + " entra nel Maniero del Malefizio. Ecco arrivare, annunciata da un vento di tempesta, la più pericolosa alleata del Drago: la Signora della Magia Nera, la Strega!");
 	}
 	
 	@Override

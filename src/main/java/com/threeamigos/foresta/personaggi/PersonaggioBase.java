@@ -327,7 +327,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public void addCoraggio(int quantita) {
-		md.setCoraggio(Math.min(md.getCoraggio() + quantita, 99));
+		md.setCoraggio(Math.min(md.getCoraggio() + quantita, Costanti.MAX_CORAGGIO));
 		UI.variaCoraggio(this, quantita);
 	}
 
@@ -341,7 +341,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public void addValore(int quantita) {
-		md.setValore(Math.min(md.getValore() + quantita, 99));
+		md.setValore(Math.min(md.getValore() + quantita, Costanti.MAX_VALORE));
 		UI.variaValore(this, quantita);
 	}
 
@@ -351,7 +351,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public void addStanchezza(int quantita) {
-		md.setStanchezza(Math.min(md.getStanchezza() + quantita, 9));
+		md.setStanchezza(Math.min(md.getStanchezza() + quantita, Costanti.MAX_STANCHEZZA));
 		UI.variaStanchezza(this, quantita);
 	}
 
@@ -365,7 +365,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 	
 	public void addCarisma(int quantita) {
-		md.setCarisma(Math.min(md.getCarisma() + quantita, 10));
+		md.setCarisma(Math.min(md.getCarisma() + quantita, Costanti.MAX_CARISMA));
 		UI.variaCarisma(this, quantita);
 	}
 

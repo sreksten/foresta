@@ -34,6 +34,12 @@ public class Costanti {
     public static final int INCANTESIMO_TERRA_COSTO_LANCIO = 2;
     public static final int INCANTESIMO_TERRA_DANNI = 50;
 
+    // Pozioni
+    public static final int RECUPERO_DA_POZIONE_SALUTE = 100;
+    public static final int RECUPERO_DA_POZIONE_SALUTE_GRANDE = 150;
+    public static final int AUMENTO_SALUTE_DA_POZIONE_SALUTE_GRANDE = 10;
+    public static final int RECUPERO_DA_POZIONE_MAGIA = 10;
+
     // Gruppo
     public static final int MAX_PERSONAGGI_GRUPPO_GIOCATORE = 5;
 
@@ -54,4 +60,9 @@ public class Costanti {
     public static final int COSTO_PERNOTTAMENTO = 5;
     public static final int RECUPERO_SALUTE_DA_PASTO = 100;
 
+    // Castelli
+    public static final int COFANI_IN_CASTELLO_IDRA = 5;
+    public static final int COFANI_IN_CASTELLO_LICH = 5;
+    public static final int COFANI_IN_CASTELLO_MINOTAURO = 5;
+    public static final int COFANI_IN_CASTELLO_STREGA = 5;
 }

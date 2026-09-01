@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -9,7 +10,7 @@ import com.threeamigos.foresta.ui.UI;
 
 public class CastelloLich extends LocazioneUnica {
 
-	private static CastelloLich istanza = new CastelloLich();
+	private static final CastelloLich istanza = new CastelloLich();
 	
 	private CastelloLich() {
 	}
@@ -26,7 +27,7 @@ public class CastelloLich extends LocazioneUnica {
 	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
 		gng.aggiungiPersonaggio(new Lich());
-		setOggetto(new Cofano(5));
+		setOggetto(new Cofano(Costanti.COFANI_IN_CASTELLO_LICH));
 	}
 
 	@Override
@@ -36,7 +37,7 @@ public class CastelloLich extends LocazioneUnica {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		UI.notifica(g.chiMaiuscolo() + " giunge al Castello dell'Ombra. Da una nuvola di fumo nero ecco apparire il piu' tremendo tra i non morti: il Lich!");
+		UI.notifica(g.chiMaiuscolo() + " giunge al Castello dell'Ombra. Da una nuvola di fumo nero ecco apparire il più spaventoso tra i non morti: il Lich!");
 	}
 	
 	@Override

@@ -28,8 +28,7 @@ public class Tempio extends LocazioneBase {
 	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
 		int nViverne;
-		int nCofani;
-		Artefatto a = getArtefatto(g);
+        Artefatto a = getArtefatto(g);
 		if (a == null) {
 			nViverne = Dado.tira(5);
 			if (!isLocazioneVisitata()) {

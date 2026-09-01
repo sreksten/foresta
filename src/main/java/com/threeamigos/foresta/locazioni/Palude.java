@@ -21,7 +21,7 @@ public class Palude extends LocazioneBase {
 
 	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
-		// niente da fare
+		// niente da creare
 	}
 
 	@Override
@@ -31,7 +31,7 @@ public class Palude extends LocazioneBase {
 
 	@Override
 	public Stato impostaAzioni(GruppoGiocatore g, GruppoAvversario gng, Comando azione) {
-		if (Dado.tira(10) > 3) {
+		if (isLocazioneVisitata() || Dado.tira(10) > 3) {
 			UI.notifica("Il posto però non promette nulla di buono e " + g.chi() + " decide di non restare.");
 			return Stato.FINE_LOCAZIONE;
 		}
