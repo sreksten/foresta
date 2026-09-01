@@ -13,57 +13,57 @@ public class UI {
 	private static InterfacciaUtente interfacciaUtente;
 	private static boolean interfacciaUtentePronta;
 
-	public static final void impostaInterfacciaUtente(InterfacciaUtente userInterface) {
+	public static void impostaInterfacciaUtente(InterfacciaUtente userInterface) {
 		interfacciaUtente = userInterface;
 	}
 
-	public static final void setInterfacciaUtentePronta() {
+	public static void setInterfacciaUtentePronta() {
 		interfacciaUtentePronta = true;
 	}
 
-	public static final boolean isInterfacciaUtentePronta() {
+	public static boolean isInterfacciaUtentePronta() {
 		return interfacciaUtentePronta;
 	}
 
 	/**
 	 * Ripulisce eventuali dati da partite precedenti
 	 */
-	public static final void reinizializza() {
+	public static void reinizializza() {
 		interfacciaUtente.reinizializza();
 	}
 
 	/**
 	 * Richiama la schermata o animazione di introduzione
 	 */
-	public static final void intro() {
+	public static void intro() {
 		interfacciaUtente.intro();
 	}
 
 	/**
 	 * Richiama la schermata di selezione nuovo gioco o caricamento di un salvataggio
 	 */
-	public static final void nuovoGiocoOCaricaPrecedente() {
+	public static void nuovoGiocoOCaricaPrecedente() {
 		interfacciaUtente.nuovoGiocoOCaricaPrecedente();
 	}
 
 	/**
 	 * Richiama la schermata di selezione salvataggio
 	 */
-	public static final void selezioneSlotSalvataggioDaCaricare() {
+	public static void selezioneSlotSalvataggioDaCaricare() {
 		interfacciaUtente.selezioneSlotSalvataggioDaCaricare();
 	}
 
 	/**
 	 * Mostra la mappa di gioco conosciuta
 	 */
-	public static final void mappa() {
+	public static void mappa() {
 		interfacciaUtente.mappa();
 	}
 
 	/**
 	 * Centra la mappa dopo un eventuale spostamento se non ci stava tutta a schermo
 	 */
-	public static final void centraMappa() {
+	public static void centraMappa() {
 		interfacciaUtente.centraMappa();
 	}
 
@@ -71,35 +71,35 @@ public class UI {
 	 * Muove la visuale della mappa di gioco conosciuta su ricezione di
 	 * Comando.(NORD|SUD|EST|OVEST)
 	 */
-	public static final void muoviMappa(Comando direzione) {
+	public static void muoviMappa(Comando direzione) {
 		interfacciaUtente.muoviMappa(direzione);
 	}
 
 	/**
 	 * Richiama la schermata di selezione salvataggio
 	 */
-	public static final void selezioneSlotSalvataggioDaSalvare() {
+	public static void selezioneSlotSalvataggioDaSalvare() {
 		interfacciaUtente.selezioneSlotSalvataggioDaSalvare();
 	}
 
 	/**
 	 * Richiede se si vuole uscire dal gioco
 	 */
-	public static final void confermaUscita() {
+	public static void confermaUscita() {
 		interfacciaUtente.confermaUscita();
 	}
 	
 	/**
 	 * Richiama la schermata o animazione di sconfitta
 	 */
-	public static final void perso() {
+	public static void perso() {
 		interfacciaUtente.perso();
 	}
 
 	/**
 	 * Richiama la schermata o animazione di vittoria
 	 */
-	public static final void vinto() {
+	public static void vinto() {
 		interfacciaUtente.vinto();
 	}
 
@@ -107,14 +107,14 @@ public class UI {
 	 * Richiama la schermata o animazione che mostra le statistiche sui mostri
 	 * uccisi eccetera.
 	 */
-	public static final void statistiche() {
+	public static void statistiche() {
 		interfacciaUtente.statistiche();
 	}
 
 	/**
 	 * Richiama la schermata o animazione che riporta la tabella dei punteggi
 	 */
-	public static final void hiscore() {
+	public static void hiscore() {
 		interfacciaUtente.hiscore();
 	}
 
@@ -122,35 +122,35 @@ public class UI {
 	 * Mostra un messaggio di comunicazione prima/dopo il gioco come ad esempio la
 	 * richiesta di inserire il nome del giocatore
 	 */
-	public static final void scriviGrande(String messaggio) {
+	public static void scriviGrande(String messaggio) {
 		interfacciaUtente.scriviGrande(messaggio);
 	}
 
 	/**
 	 * Mostra un messaggio di gioco
 	 */
-	public static final void notifica(String messaggio) {
+	public static void notifica(String messaggio) {
 		interfacciaUtente.notifica(messaggio);
 	}
 
 	/**
 	 * Porta in primo piano una finestra di gioco (UI.FINESTRA_...)
 	 */
-	public static final void primoPiano(InterfacciaUtente.Finestra finestra) {
+	public static void primoPiano(InterfacciaUtente.Finestra finestra) {
 		interfacciaUtente.primoPiano(finestra);
 	}
 
 	/**
 	 * Mostra la richiesta di un testo da parte di un controllore di gioco
 	 */
-	public static final void chiediTesto() {
+	public static void chiediTesto() {
 		interfacciaUtente.chiediTesto();
 	}
 
 	/**
 	 * Inoltra un testo ricevuto ad un controllore di gioco
 	 */
-	public static final void riceviTesto(String s) {
+	public static void riceviTesto(String s) {
 		interfacciaUtente.riceviTesto(s);
 	}
 
@@ -159,103 +159,102 @@ public class UI {
 	 * poter continuare il gioco. L'array azioni[] viene riempito con valori
 	 * provenienti dalla classe Comando
 	 */
-	public static final void impostaAzioni() {
+	public static void impostaAzioni() {
 		interfacciaUtente.impostaAzioni();
 	}
 
 	/**
 	 * Scorciatoia per impostare i comandi e modificare subito l'interfaccia utente
-	 * @param comandi
 	 */
-	public static final void impostaAzioni(Comando ... comandi) {
+	public static void impostaAzioni(Comando... comandi) {
 		Azioni.set(comandi);
 		impostaAzioni();
 	}
 
-	public static final void preparaLocazione() {
+	public static void preparaLocazione() {
 		interfacciaUtente.preparaLocazione();
 	}
 
 	/**
 	 * Mostra la forza in combattimento.
 	 */
-	public static final void infoCombattimento(boolean mostra, Personaggio combattente, Personaggio avversario) {
+	public static void infoCombattimento(boolean mostra, Personaggio combattente, Personaggio avversario) {
 		interfacciaUtente.infoCombattimento(mostra, combattente, avversario);
 	}
 
-	public static final void notificaMorte(Personaggio personaggio) {
+	public static void notificaMorte(Personaggio personaggio) {
 		interfacciaUtente.notificaMorte(personaggio);
 	}
 	
-	public static final void variaSalute(Personaggio personaggio, int variazione) {
+	public static void variaSalute(Personaggio personaggio, int variazione) {
 		interfacciaUtente.variaSalute(personaggio, variazione);
 	}
 
-	public static final void variaSaluteMassima(Personaggio personaggio, int variazione) {
+	public static void variaSaluteMassima(Personaggio personaggio, int variazione) {
 		interfacciaUtente.variaSaluteMassima(personaggio, variazione);
 	}
 
-	public static final void variaMagia(Personaggio personaggio, int variazione) {
+	public static void variaMagia(Personaggio personaggio, int variazione) {
 		interfacciaUtente.variaMagia(personaggio, variazione);
 	}
 	
-	public static final void variaMagiaMassima(Personaggio personaggio, int variazione) {
+	public static void variaMagiaMassima(Personaggio personaggio, int variazione) {
 		interfacciaUtente.variaMagiaMassima(personaggio, variazione);
 	}
 	
-	public static final void variaCoraggio(Personaggio personaggio, int variazione) {
+	public static void variaCoraggio(Personaggio personaggio, int variazione) {
 		interfacciaUtente.variaCoraggio(personaggio, variazione);
 	}
 	
-	public static final void variaValore(Personaggio personaggio, int variazione) {
+	public static void variaValore(Personaggio personaggio, int variazione) {
 		interfacciaUtente.variaValore(personaggio, variazione);
 	}
 	
-	public static final void variaCarisma(Personaggio personaggio, int variazione) {
+	public static void variaCarisma(Personaggio personaggio, int variazione) {
 		interfacciaUtente.variaCarisma(personaggio, variazione);
 	}
 	
-	public static final void variaStanchezza(Personaggio personaggio, int variazione) {
+	public static void variaStanchezza(Personaggio personaggio, int variazione) {
 		interfacciaUtente.variaStanchezza(personaggio, variazione);
 	}
 
-	public static final void variaTempo(Personaggio personaggio, int variazione) {
+	public static void variaTempo(Personaggio personaggio, int variazione) {
 		interfacciaUtente.variaTempo(personaggio, variazione);
 	}
 
-	public static final void variaGemme(int variazione) {
+	public static void variaGemme(int variazione) {
 		interfacciaUtente.variaGemme(variazione);
 	}
 
-	public static final void variaMonete(int variazione) {
+	public static void variaMonete(int variazione) {
 		interfacciaUtente.variaMonete(variazione);
 	}
 
-	public static final void variaPunti(int variazione) {
+	public static void variaPunti(int variazione) {
 		interfacciaUtente.variaPunti(variazione);
 	}
 
-	public static final void variaIncantesimi(ClassiIncantesimo classeIncantesimo, int variazione) {
+	public static void variaIncantesimi(ClassiIncantesimo classeIncantesimo, int variazione) {
 		interfacciaUtente.variaIncantesimi(classeIncantesimo, variazione);
 	}
 
-	public static final void variaPozioniForza(int variazione) {
+	public static void variaPozioniForza(int variazione) {
 		interfacciaUtente.variaPozioniForza(variazione);
 	}
 
-	public static final void variaPozioniMagia(int variazione) {
+	public static void variaPozioniMagia(int variazione) {
 		interfacciaUtente.variaPozioniMagia(variazione);
 	}
 
-	public static final void variaPozioniGrandeForza(int variazione) {
+	public static void variaPozioniGrandeForza(int variazione) {
 		interfacciaUtente.variaPozioniForza(variazione);
 	}
 
-	public static final void variaMappa() {
+	public static void variaMappa() {
 		interfacciaUtente.variaMappa();
 	}
 
-	public static final void raccogliOggetto() {
+	public static void raccogliOggetto() {
 		interfacciaUtente.raccogliOggetto();
 	}
 
@@ -263,7 +262,7 @@ public class UI {
 	 * Rinfresca l'interfaccia utente (ad esempio dopo aver richiesto un primo piano
 	 * di una qualche finestra)
 	 */
-	public static final void rinfresca() {
+	public static void rinfresca() {
 		interfacciaUtente.rinfresca();
 	}
 }

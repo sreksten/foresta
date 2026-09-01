@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import java.util.List;
+
 /**
  * Simula un lancio di dado.
  *
@@ -30,5 +32,24 @@ public class Dado {
             throw new IllegalArgumentException("Il valore minimo deve essere minore al valore massimo");
         }
         return (int) (Math.random() * (max - min + 1)) + min;
+    }
+
+    /**
+     * Sfila un elemento casuale da una collezione e lo restituisce
+     */
+    public static <T> T selezionaCasualmente(List<T> elencoIniziale) {
+        T t = null;
+        int size = elencoIniziale.size();
+        if (size > 0) {
+            if (size == 1) {
+                t = elencoIniziale.get(0);
+                elencoIniziale.remove(0);
+            } else {
+                int indice = Dado.tira(size) - 1;
+                t = elencoIniziale.get(indice);
+                elencoIniziale.remove(indice);
+            }
+        }
+        return t;
     }
 }

@@ -2,12 +2,7 @@ package com.threeamigos.foresta;
 
 import com.threeamigos.foresta.motore.Automa;
 import com.threeamigos.foresta.motore.Gioco;
-import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.tools.GestorePunteggi;
-import com.threeamigos.foresta.tools.GestorePunteggiSuFile;
-import com.threeamigos.foresta.tools.GestoreSalvataggi;
-import com.threeamigos.foresta.tools.GestoreSalvataggiSuFile;
-import com.threeamigos.foresta.tools.TemporizzatoreJ2SE;
+import com.threeamigos.foresta.tools.*;
 import com.threeamigos.foresta.ui.ForestaUI;
 import com.threeamigos.foresta.ui.Orientamento;
 import com.threeamigos.foresta.ui.UI;
@@ -29,12 +24,9 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		leggiArgomenti(args);
-		ProduttoreDiTestiCasuale.fiaba();
-		ProduttoreDiTestiCasuale.oroscopo();
 		GestorePunteggi.impostaGestorePunteggi(new GestorePunteggiSuFile());
 		GestoreSalvataggi.impostaGestoreSalvataggi(new GestoreSalvataggiSuFile());
-		Gioco.impostaTemporizzatore(new TemporizzatoreJ2SE());
-		Gioco.impostaControlloreDiGioco(new Automa());
+		Gioco.impostaParametri(new TemporizzatoreJ2SE(), new Automa());
 		UI.impostaInterfacciaUtente(new ForestaUI(orientamento, tuttoSchermo));
 		while (!UI.isInterfacciaUtentePronta()) {
 			Thread.sleep(1000);

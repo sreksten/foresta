@@ -56,7 +56,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			md.setMagia(md.getMagiaMassima());
 			md.setStanchezza(0);
 		} else {
-			final Function<Integer, Integer> tira = max -> Dado.tira(max / 2, max);
+			final Function<Integer, Integer> tira = max -> max == 0 ? 0 : Dado.tira(max / 2, max);
 			md.setSalute(tira.apply(md.getSaluteMassima()));
 			md.setMagia(tira.apply(md.getMagiaMassima()));
 			md.setValore(tira.apply(md.getValore()));
@@ -280,7 +280,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		 * forza e la forza massima danni = (getForza() + getForzaMassima()) / 10; }
 		 * else {
 		 */
-		danni = Math.min(0, (getSalute() + getValoreEffettoDiStato() + getCoraggio()) / 10 - getStanchezza() - Dado.tira(10));
+		danni = Math.max(0, (getSalute() + getCoraggio()) / 10 + getValoreEffettoDiStato() - getStanchezza() - Dado.tira(-5, +5));
 		/*
 		 * }
 		 */
@@ -557,13 +557,17 @@ public abstract class PersonaggioBase implements Personaggio {
 		attacca(bersaglio);
 	}
 
+	public boolean isATempo() {
+		return md.getTempo() != PersonaggioMD.NO_TEMPO;
+	}
+
 	public void setTempo(int tempo) {
 		md.setTempo(tempo);
 	}
 
 	public int decrementaTempo() {
 		int tempo = md.getTempo();
-		if (!md.isVivo() || tempo == Personaggio.NO_TEMPO) {
+		if (!md.isVivo() || !isATempo()) {
 			return tempo;
 		}
 		tempo--;

@@ -23,14 +23,7 @@ public class RegistroArtefattiMD implements Serializzabile {
 	}
 
 	public final ArtefattoMD getArtefattoDisponibile() {
-		ArtefattoMD artefatto = null;
-		int size = elencoIniziale.size();
-		if (size > 0) {
-			int indice = Dado.tira(size) - 1;
-			artefatto = elencoIniziale.get(indice);
-			elencoIniziale.remove(indice);
-		}
-		return artefatto;
+		return Dado.selezionaCasualmente(elencoIniziale);
 	}
 
 	public final ArtefattoESuaUbicazione getArtefattoCasuale() {

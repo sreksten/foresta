@@ -9,30 +9,22 @@ public class Gioco {
 
 	private static Temporizzatore temporizzatore;
 	private static ControlloreDiGioco motore;
-	
-	public static final void impostaTemporizzatore(Temporizzatore t) {
+
+	public static void impostaParametri(Temporizzatore t, ControlloreDiGioco c) {
 		temporizzatore = t;
-		if (motore != null) {
-			motore.setTemporizzatore(t);
-		}
-	}
-	
-	public static final void impostaControlloreDiGioco(ControlloreDiGioco c) {
 		motore = c;
-		if (temporizzatore != null) {
-			motore.setTemporizzatore(temporizzatore);
-		}
+		motore.setTemporizzatore(temporizzatore);
 	}
 
-	public static final void inizia() {
+	public static void inizia() {
 		motore.inizia();
 	}
 
-	public static final void riceviTesto(String s) {
+	public static void riceviTesto(String s) {
 		motore.riceviTesto(s);
 	}
 
-	public static final void processaAzione(Comando azione) {
+	public static void processaAzione(Comando azione) {
 		motore.processaAzione(azione);
 	}
 }

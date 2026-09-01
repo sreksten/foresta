@@ -1,13 +1,5 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.Color;
-import java.awt.Container;
-import java.awt.Dimension;
-import java.awt.Toolkit;
-
-import javax.swing.JFrame;
-import javax.swing.SwingUtilities;
-
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Comando;
@@ -15,10 +7,13 @@ import com.threeamigos.foresta.motore.Gioco;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
+import javax.swing.*;
+import java.awt.*;
+
 public class ForestaUI implements InterfacciaUtente {
 
-	private Orientamento orientamento = Orientamento.VERTICALE;
-	private boolean tuttoSchermo;
+	private final Orientamento orientamento;
+	private final boolean tuttoSchermo;
 
 	private JFrame jframe;
 	private Prompt prompt;
@@ -67,8 +62,8 @@ public class ForestaUI implements InterfacciaUtente {
 					height = screenDimension.height;
 				}
 			} else {
-				width = screenDimension.width < 640 ? screenDimension.width : 640;
-				height = screenDimension.height < 200 ? screenDimension.height : 200;
+				width = Math.min(screenDimension.width, 640);
+				height = Math.min(screenDimension.height, 200);
 			}
 		}
 
@@ -194,10 +189,10 @@ public class ForestaUI implements InterfacciaUtente {
 		if (!mostra) {
 			displayableCanvas.getRiquadroCombattimento().setVisible(false);
 		} else {
-			DisplayableCanvasRiquadroCombattimento info = displayableCanvas.getRiquadroCombattimento();
-			info.setCombattente(combattente);
-			info.setAvversario(avversario);
-			info.setVisible(true);
+			DisplayableCanvasRiquadroCombattimento infoCombattimento = displayableCanvas.getRiquadroCombattimento();
+			infoCombattimento.setCombattente(combattente);
+			infoCombattimento.setAvversario(avversario);
+			infoCombattimento.setVisible(true);
 		}
 		rinfresca();
 	}

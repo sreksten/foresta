@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -8,10 +10,12 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
-import com.threeamigos.foresta.personaggi.Personaggio;
-
 public class PersonaggioMD implements Serializzabile {
+
+	/**
+	 * Costante che indica che un PNG è entrato definitivamente nel gruppo di un giocatore
+	 */
+	public static final int NO_TEMPO = -1;
 
 	private ClassePersonaggio classe;
 	private String nome;
@@ -64,7 +68,7 @@ public class PersonaggioMD implements Serializzabile {
 	private int stanchezza;
 
 	private String causaTrapasso;
-	private int tempo = Personaggio.NO_TEMPO;
+	private int tempo = NO_TEMPO;
 
 	private List<EffettoDiStato> effettiDiStato = new ArrayList<>();
 

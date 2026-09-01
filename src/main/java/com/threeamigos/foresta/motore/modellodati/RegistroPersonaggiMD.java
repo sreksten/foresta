@@ -23,14 +23,7 @@ public class RegistroPersonaggiMD implements Serializzabile {
 	}
 
 	public final PersonaggioMD getPersonaggioDisponibile() {
-		PersonaggioMD personaggio = null;
-		int size = elencoIniziale.size();
-		if (size > 0) {
-			int indice = Dado.tira(size) - 1;
-			personaggio = elencoIniziale.get(indice);
-			elencoIniziale.remove(indice);
-		}
-		return personaggio;
+		return Dado.selezionaCasualmente(elencoIniziale);
 	}
 
 	public final PersonaggioMD getPersonaggioCasuale() {

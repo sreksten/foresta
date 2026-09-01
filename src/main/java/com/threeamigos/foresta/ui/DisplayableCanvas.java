@@ -1,20 +1,17 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.Color;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
-
-import javax.swing.JPanel;
-
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DisplayableCanvas extends JPanel implements Runnable {
 
@@ -36,23 +33,23 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	private StatoDisplayableCanvas stato;
-	private ArrayList<InterfacciaUtente.Finestra> stackElementiGrafici;
+	private final ArrayList<InterfacciaUtente.Finestra> stackElementiGrafici;
 	
-	private transient DisplayableCanvasIntroOutro introOutro;
-	private transient DisplayableCanvasRiquadroMappa riquadroMappa;
-	private transient DisplayableCanvasRiquadroLocazione riquadroLocazione;
-	private transient DisplayableCanvasRiquadroStatistiche riquadroStatistiche;
-	private transient DisplayableCanvasRiquadroCombattimento riquadroCombattimento;
-	private transient DisplayableCanvasRiquadroTesto riquadroTesto;
-	private transient DisplayableCanvasRiquadroGruppo riquadroGruppo;
-	private transient DisplayableCanvasRiquadroIncantesimi riquadroIncantesimi;
-	private transient DisplayableCanvasRiquadroMissioni riquadroMissioni;
-	private transient DisplayableCanvasMappaATuttoSchermo mappaATuttoSchermo;
+	private final transient DisplayableCanvasIntroOutro introOutro;
+	private final transient DisplayableCanvasRiquadroMappa riquadroMappa;
+	private final transient DisplayableCanvasRiquadroLocazione riquadroLocazione;
+	private final transient DisplayableCanvasRiquadroStatistiche riquadroStatistiche;
+	private final transient DisplayableCanvasRiquadroCombattimento riquadroCombattimento;
+	private final transient DisplayableCanvasRiquadroTesto riquadroTesto;
+	private final transient DisplayableCanvasRiquadroGruppo riquadroGruppo;
+	private final transient DisplayableCanvasRiquadroIncantesimi riquadroIncantesimi;
+	private final transient DisplayableCanvasRiquadroMissioni riquadroMissioni;
+	private final transient DisplayableCanvasMappaATuttoSchermo mappaATuttoSchermo;
 	
-	private ArrayList<SpriteInterface> sprites;
+	private final ArrayList<SpriteInterface> sprites;
 	
-	private transient Thread animator;
-	private boolean animatorRunning = false;
+	private transient Thread animatore;
+	private boolean animatoreInAzione = false;
 	
 	public DisplayableCanvas(int width, int height) {
 		super();
@@ -107,24 +104,24 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	@Override
 	public void addNotify() {
 		super.addNotify();
-		startAnimationThread();
+		avviaThreadAnimazione();
 	}
 	
-	private void startAnimationThread() {
-		if (animator == null || !animatorRunning) {
-			animator = new Thread(this);
-			animator.setDaemon(true);
-			animator.start();
+	private void avviaThreadAnimazione() {
+		if (animatore == null || !animatoreInAzione) {
+			animatore = new Thread(this);
+			animatore.setDaemon(true);
+			animatore.start();
 		}
 	}
 	
-	public void stopAnimationThread() {
-		animatorRunning = false;
+	public void fermaThreadAnimazione() {
+		animatoreInAzione = false;
 	}
 	
 	public void run() {
-		animatorRunning = true;
-		while (animatorRunning) {
+		animatoreInAzione = true;
+		while (animatoreInAzione) {
 			if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO) {
 				//gameUpdate();
 				//gameRender();
@@ -357,91 +354,91 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	
 	public void notificaMorte(Personaggio personaggio) {
 		if (personaggio.isPNG()) {
-			addSprite(riquadroLocazione.notificaMorte(personaggio));
+			aggiungiSprite(riquadroLocazione.notificaMorte(personaggio));
 		}
 	}
 	
 	public void variaSalute(Personaggio personaggio, int variazione) {
 		if (personaggio.isPNG()) {
-			addSprite(riquadroLocazione.variaSalute(personaggio, variazione));
+			aggiungiSprite(riquadroLocazione.variaSalute(personaggio, variazione));
 		} else {
-			addSprite(riquadroGruppo.variaSalute(personaggio, variazione));
+			aggiungiSprite(riquadroGruppo.variaSalute(personaggio, variazione));
 		}
 	}
 
 	public void variaForzaMassima(Personaggio personaggio, int variazione) {
-		addSprite(riquadroGruppo.variaForzaMassima(personaggio, variazione));
+		aggiungiSprite(riquadroGruppo.variaForzaMassima(personaggio, variazione));
 	}
 
 	public void variaMagia(Personaggio personaggio, int variazione) {
 		if (personaggio.isPNG()) {
-			addSprite(riquadroLocazione.variaMagia(personaggio, variazione));
+			aggiungiSprite(riquadroLocazione.variaMagia(personaggio, variazione));
 		} else {
-			addSprite(riquadroGruppo.variaMagia(personaggio, variazione));
+			aggiungiSprite(riquadroGruppo.variaMagia(personaggio, variazione));
 		}
 	}
 	
 	public void variaMagiaMassima(Personaggio personaggio, int variazione) {
-		addSprite(riquadroGruppo.variaMagiaMassima(personaggio, variazione));
+		aggiungiSprite(riquadroGruppo.variaMagiaMassima(personaggio, variazione));
 	}
 	
 	public void variaCoraggio(Personaggio personaggio, int variazione) {
-		addSprite(riquadroGruppo.variaCoraggio(personaggio, variazione));
+		aggiungiSprite(riquadroGruppo.variaCoraggio(personaggio, variazione));
 	}
 	
 	public void variaValore(Personaggio personaggio, int variazione) {
-		addSprite(riquadroGruppo.variaValore(personaggio, variazione));
+		aggiungiSprite(riquadroGruppo.variaValore(personaggio, variazione));
 	}
 	
 	public void variaCarisma(Personaggio personaggio, int variazione) {
-		addSprite(riquadroGruppo.variaCarisma(personaggio, variazione));
+		aggiungiSprite(riquadroGruppo.variaCarisma(personaggio, variazione));
 	}
 	
 	public void variaStanchezza(Personaggio personaggio, int variazione) {
-		addSprite(riquadroGruppo.variaStanchezza(personaggio, variazione));
+		aggiungiSprite(riquadroGruppo.variaStanchezza(personaggio, variazione));
 	}
 
 	public void variaTempo(Personaggio personaggio, int variazione) {
-		addSprite(riquadroGruppo.variaTempo(personaggio, variazione));
+		aggiungiSprite(riquadroGruppo.variaTempo(personaggio, variazione));
 	}
 
 	public void variaMonete(int variazione) {
-		addSprite(riquadroStatistiche.variaMonete(variazione));
+		aggiungiSprite(riquadroStatistiche.variaMonete(variazione));
 	}
 	
 	public void variaGemme(int variazione) {
-		addSprite(riquadroStatistiche.variaGemme(variazione));
+		aggiungiSprite(riquadroStatistiche.variaGemme(variazione));
 	}
 
 	public void variaPunti(int variazione) {
-		addSprite(riquadroStatistiche.variaPunti(variazione));
+		aggiungiSprite(riquadroStatistiche.variaPunti(variazione));
 	}
 
 	public void variaIncantesimi(ClassiIncantesimo classeIncantesimo, int variazione) {
-		addSprite(riquadroIncantesimi.variaIncantesimi(classeIncantesimo, variazione));
+		aggiungiSprite(riquadroIncantesimi.variaIncantesimi(classeIncantesimo, variazione));
 	}
 
 	public void variaPozioniForza(int variazione) {
-		addSprite(riquadroIncantesimi.variaPozioniForza(variazione));
+		aggiungiSprite(riquadroIncantesimi.variaPozioniForza(variazione));
 	}
 
 	public void variaPozioniMagia(int variazione) {
-		addSprite(riquadroIncantesimi.variaPozioniGrandeForza(variazione));
+		aggiungiSprite(riquadroIncantesimi.variaPozioniGrandeForza(variazione));
 	}
 
 	public void variaPozioniGrandeForza(int variazione) {
-		addSprite(riquadroIncantesimi.variaPozioniMagia(variazione));
+		aggiungiSprite(riquadroIncantesimi.variaPozioniMagia(variazione));
 	}
 
 	public void variaMappa() {
-		addSprite(riquadroMappa.variaMappa());
+		aggiungiSprite(riquadroMappa.variaMappa());
 	}
 
 	public void raccogliOggetto() {
-		addSprite(riquadroLocazione.raccogliOggetto());
+		aggiungiSprite(riquadroLocazione.raccogliOggetto());
 	}
 	
-	private void addSprite(SpriteInterface sprite) {
+	private void aggiungiSprite(SpriteInterface sprite) {
 		if (sprite != null) {
 			sprites.add(sprite);
 		}

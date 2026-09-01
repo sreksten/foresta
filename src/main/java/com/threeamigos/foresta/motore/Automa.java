@@ -6,18 +6,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.oggetti.Oggetto;
-import com.threeamigos.foresta.personaggi.Bardo;
-import com.threeamigos.foresta.personaggi.Cantastorie;
-import com.threeamigos.foresta.personaggi.Elfa;
-import com.threeamigos.foresta.personaggi.Elfo;
-import com.threeamigos.foresta.personaggi.Guerriera;
-import com.threeamigos.foresta.personaggi.Guerriero;
-import com.threeamigos.foresta.personaggi.Ladra;
-import com.threeamigos.foresta.personaggi.Ladro;
-import com.threeamigos.foresta.personaggi.Maga;
-import com.threeamigos.foresta.personaggi.Mago;
-import com.threeamigos.foresta.personaggi.OmbraFiamma;
-import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.tools.GestorePunteggi;
 import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import com.threeamigos.foresta.tools.InterfacciaGestoreSalvataggi;
@@ -402,6 +391,7 @@ public class Automa implements ControlloreDiGioco {
 			UI.infoCombattimento(false, null, null);
 			UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 
+			//FIXME come mai a volte non si prende l'oggetto? (Se non c'è nessuno)
 			// Recuperiamo l'oggetto se fattibile
 			if (locazioneCorrente.isCompleta()) {				
 				if (!locazioneCorrente.isHaStrettoAmicizia()) {
@@ -439,9 +429,11 @@ public class Automa implements ControlloreDiGioco {
 
 			// Controlliamo i personaggi "a tempo"
 			for (Personaggio personaggioCorrente : gruppo.getPersonaggiVivi()) {
-				int tempo = personaggioCorrente.decrementaTempo();
-				if (tempo != Personaggio.NO_TEMPO && tempo == 0) {
-					gruppo.rimuoviPersonaggio(personaggioCorrente);
+				if (personaggioCorrente.isATempo()) {
+					int tempo = personaggioCorrente.decrementaTempo();
+					if (tempo == 0) {
+						gruppo.rimuoviPersonaggio(personaggioCorrente);
+					}
 				}
 			}
 
