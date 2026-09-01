@@ -1,14 +1,12 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.Color;
-import java.awt.Graphics;
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
-
-import javax.swing.JPanel;
 
 public class ImageButton extends JPanel implements MouseListener {
 
@@ -20,10 +18,10 @@ public class ImageButton extends JPanel implements MouseListener {
 	private static final int WIDTH = 62;
 	private static final int HEIGHT = 64;
 
-	private transient BufferedImage img;
-	private int borderstatus = NO_BORDER;
-	private transient ActionListener listener;
-	private int action;
+	private final transient BufferedImage img;
+	private int borderStatus = NO_BORDER;
+	private final transient ActionListener listener;
+	private final int action;
 
 	public ImageButton(BufferedImage d, ActionListener listener, int action) {
 		super();
@@ -43,13 +41,13 @@ public class ImageButton extends JPanel implements MouseListener {
 		int sx = WIDTH - 1;
 		int sy = HEIGHT - 1;
 		g.drawImage(img, 0, 0, null);
-		if (borderstatus == HI_BORDER) {
+		if (borderStatus == HI_BORDER) {
 			g.setColor(Color.lightGray);
 			g.drawLine(0,0,sx,0);
 			g.drawLine(0,0,0,sy);
 			g.drawLine(0,sy,sx,sy);
 			g.drawLine(sx,sy,sx,0);
-		} else if (borderstatus == CLICK_BORDER) {
+		} else if (borderStatus == CLICK_BORDER) {
 			g.setColor(Color.white);
 			g.drawLine(0,0,sx,0);
 			g.drawLine(0,0,0,sy);
@@ -66,28 +64,28 @@ public class ImageButton extends JPanel implements MouseListener {
 
 	/* MouseListener interface */
 	public void mouseClicked(MouseEvent e) {
-		borderstatus = NO_BORDER;
+		borderStatus = NO_BORDER;
 		repaint();
 		notifyListeners();
 	}
 
 	public void mousePressed(MouseEvent e) {
-		borderstatus = CLICK_BORDER;
+		borderStatus = CLICK_BORDER;
 		repaint();
 	}
 
 	public void mouseReleased(MouseEvent e) {
-		borderstatus = NO_BORDER;
+		borderStatus = NO_BORDER;
 		repaint();
 	}
 
 	public void mouseEntered(MouseEvent e) {
-		borderstatus = HI_BORDER;
+		borderStatus = HI_BORDER;
 		repaint();
 	}
 
 	public void mouseExited(MouseEvent e) {
-		borderstatus = NO_BORDER;
+		borderStatus = NO_BORDER;
 		repaint();
 	}
 }

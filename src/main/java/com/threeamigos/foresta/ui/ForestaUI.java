@@ -18,7 +18,7 @@ public class ForestaUI implements InterfacciaUtente {
 	private JFrame jframe;
 	private Prompt prompt;
 	private DisplayableCanvas displayableCanvas;
-	private IconPanel iconPanel;
+	private PannelloIcone pannelloIcone;
 
 	public ForestaUI(Orientamento orientamento, boolean tuttoSchermo) {
 		this.orientamento = orientamento;
@@ -82,18 +82,18 @@ public class ForestaUI implements InterfacciaUtente {
 			displayableCanvas = new DisplayableCanvas(width, height - altezzaIconPanel);
 			jframe.add(displayableCanvas);
 			displayableCanvas.setLocation(0, 0);
-			iconPanel = new IconPanel(IconPanel.ORIENTAMENTO_ORIZZONTALE);
-			jframe.add(iconPanel);
-			iconPanel.setSize(width, altezzaIconPanel);
-			iconPanel.setLocation(0, height - altezzaIconPanel - 1);
+			pannelloIcone = new PannelloIcone(PannelloIcone.ORIENTAMENTO_ORIZZONTALE);
+			jframe.add(pannelloIcone);
+			pannelloIcone.setSize(width, altezzaIconPanel);
+			pannelloIcone.setLocation(0, height - altezzaIconPanel - 1);
 		} else {
 			displayableCanvas = new DisplayableCanvas(320, height);
 			jframe.add(displayableCanvas);
 			displayableCanvas.setLocation(0, 0);
-			iconPanel = new IconPanel(IconPanel.ORIENTAMENTO_VERTICALE);
-			jframe.add(iconPanel);
-			iconPanel.setSize(altezzaIconPanel, height);
-			iconPanel.setLocation(width - altezzaIconPanel - 1, 0);
+			pannelloIcone = new PannelloIcone(PannelloIcone.ORIENTAMENTO_VERTICALE);
+			jframe.add(pannelloIcone);
+			pannelloIcone.setSize(altezzaIconPanel, height);
+			pannelloIcone.setLocation(width - altezzaIconPanel - 1, 0);
 		}
 
 		jframe.pack();
@@ -177,7 +177,7 @@ public class ForestaUI implements InterfacciaUtente {
 	}
 
 	public void impostaAzioni() {
-		iconPanel.impostaAzioni();
+		pannelloIcone.impostaAzioni();
 	}
 	
 	public void preparaLocazione() {

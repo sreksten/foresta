@@ -8,7 +8,7 @@ public class Azioni {
 	private Azioni() {
 	}
 
-	private static List<Comando> possibiliAzioni = new ArrayList<>();
+	private static final List<Comando> possibiliAzioni = new ArrayList<>();
 	
 	public static void clear() {
 		possibiliAzioni.clear();

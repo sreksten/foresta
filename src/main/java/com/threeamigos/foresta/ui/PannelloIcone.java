@@ -1,62 +1,58 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.util.List;
-
-import javax.swing.JPanel;
-
 import com.threeamigos.foresta.motore.Azioni;
 import com.threeamigos.foresta.motore.Comando;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Gioco;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+
+import javax.swing.*;
+import java.awt.*;
+import java.util.List;
 
 /**
  * Un pannello che contiene bottoni con immagine personalizzata.
- * Se la dimensione del pannello non e' sufficiente a contenerli tutti,
+ * Se la dimensione del pannello non è sufficiente a contenerli tutti,
  * vengono aggiunti dei bottoni "Precedente" e "Successivo" in testa
  * e in coda alla fila dei bottoni, che servono a scorrere tra le varie
  * scelte. L'evento dei bottoni Precedente e Successivo non viene
- * trasmesso ad un eventuale listener.
- *
+ * trasmesso a un eventuale listener.
+ * <p>
  * La classe implementa ComponentListener per il resize.
  */
-public class IconPanel extends JPanel implements java.awt.event.ActionListener {
+public class PannelloIcone extends JPanel implements java.awt.event.ActionListener {
 
 	private static final long serialVersionUID = 1L;
 	
 	public static final int ORIENTAMENTO_ORIZZONTALE = 0;
 	public static final int ORIENTAMENTO_VERTICALE = 1;
 
+	private final int orientamento;
+	private final Image[] copyrightImages = new Image[3];
+	private final int[] copyrightImagesXOffset= new int[3];
+	private final int[] copyrightImagesYOffset= new int[3];
+
 	private ImageButton[] bottoni;
-	private ImageButton bottonePrec;
-	private ImageButton bottoneSucc;
+	private ImageButton bottonePrecedente;
+	private ImageButton bottoneSuccessivo;
 	private int quanteScelte = 0;
 	private int saltaPrimi = 0;
-	private int orientamento = ORIENTAMENTO_ORIZZONTALE;
 
-	private Image[] copyrightImages = new Image[3];
-	private int[] copyrightImagesXOffset= new int[3];
-	private int[] copyrightImagesYOffset= new int[3];
-	
-	public IconPanel(int orientamento) {
+	public PannelloIcone(int orientamento) {
 		this.orientamento = orientamento;
 		inizializza();
 	}
 
-	private final void inizializza() {
+	private void inizializza() {
 		setLayout(null);
 		if (orientamento == ORIENTAMENTO_ORIZZONTALE) {
 			setSize(1, 72);
-			bottonePrec = new ImageButton(ImageCache.icone[ClassiIcona.SINISTRA], this, Comando.SINISTRA.ordinal());
-			bottoneSucc = new ImageButton(ImageCache.icone[ClassiIcona.DESTRA], this, Comando.DESTRA.ordinal());
+			bottonePrecedente = new ImageButton(ImageCache.icone[ClassiIcona.SINISTRA], this, Comando.SINISTRA.ordinal());
+			bottoneSuccessivo = new ImageButton(ImageCache.icone[ClassiIcona.DESTRA], this, Comando.DESTRA.ordinal());
 		} else {
-			bottonePrec = new ImageButton(ImageCache.icone[ClassiIcona.SU], this, Comando.SU.ordinal());
-			bottoneSucc = new ImageButton(ImageCache.icone[ClassiIcona.GIU], this, Comando.GIU.ordinal());
+			bottonePrecedente = new ImageButton(ImageCache.icone[ClassiIcona.SU], this, Comando.SU.ordinal());
+			bottoneSuccessivo = new ImageButton(ImageCache.icone[ClassiIcona.GIU], this, Comando.GIU.ordinal());
 			setSize(72, 1);
 		}
 		setBackground(Color.black);
@@ -254,7 +250,7 @@ public class IconPanel extends JPanel implements java.awt.event.ActionListener {
 				icona = ClassiIcona.TERRA;
 				break;
 			default:
-				break;
+				throw new IllegalArgumentException("Icona non associata a " + possibiliAzioni.get(i));
 			}
 			bottoni[i] = new ImageButton(ImageCache.icone[icona], this, possibiliAzioni.get(i).ordinal());
 		}
@@ -262,53 +258,58 @@ public class IconPanel extends JPanel implements java.awt.event.ActionListener {
 		ridistribuisciScelte();
 	}
 
-	private int getIconaPersonaggio(int ordinale) {
-		Personaggio personaggio = GruppoGiocatore.getIstanza().getPersonaggio(ordinale);
-		if (personaggio == null)
-			return -1;
-		switch (personaggio.getClasse()) {
-		case CENTAURO:
-			return ClassiIcona.CENTAURO;
-		case EREMITA:
-			return ClassiIcona.EREMITA;
-		case GIGANTE:
-			return ClassiIcona.GIGANTE;
-		case GOBLIN:
-			return ClassiIcona.GOBLIN;
-		case HOBGOBLIN:
-			return ClassiIcona.HOBGOBLIN;
-		case MINOTAURO:
-			return ClassiIcona.MINOTAURO;
-		case TITANO:
-			return ClassiIcona.TITANO;
-		case GUERRIERA:
-			return ClassiIcona.GUERRIERA;
-		case GUERRIERO:
-			return ClassiIcona.GUERRIERO;
-		case LADRA:
-			return ClassiIcona.LADRA;
-		case LADRO:
-			return ClassiIcona.LADRO;
-		case CANTASTORIE:
-			return ClassiIcona.CANTASTORIE;
-		case BARDO:
-			return ClassiIcona.BARDO;
-		case ELFA:
-			return ClassiIcona.ELFA;
-		case ELFO:
-			return ClassiIcona.ELFO;
-		case MAGA:
-			return ClassiIcona.MAGA;
-		case MAGO:
-			return ClassiIcona.MAGO;
-		case OMBRAFIAMMA:
-			return ClassiIcona.OMBRAFIAMMA;
-		default:
-			throw new IllegalArgumentException();
+	private int getIconaPersonaggio(int indice) {
+		Personaggio personaggio = GruppoGiocatore.getIstanza().getPersonaggio(indice);
+		if (personaggio == null) {
+			throw new IllegalStateException("Personaggio no trovato con indice " + indice);
+		}
+		return getIconaPersonaggio(personaggio.getClasse());
+	}
+
+	private int getIconaPersonaggio(ClassePersonaggio classe) {
+		switch (classe) {
+			case CENTAURO:
+				return ClassiIcona.CENTAURO;
+			case EREMITA:
+				return ClassiIcona.EREMITA;
+			case GIGANTE:
+				return ClassiIcona.GIGANTE;
+			case GOBLIN:
+				return ClassiIcona.GOBLIN;
+			case HOBGOBLIN:
+				return ClassiIcona.HOBGOBLIN;
+			case MINOTAURO:
+				return ClassiIcona.MINOTAURO;
+			case TITANO:
+				return ClassiIcona.TITANO;
+			case GUERRIERA:
+				return ClassiIcona.GUERRIERA;
+			case GUERRIERO:
+				return ClassiIcona.GUERRIERO;
+			case LADRA:
+				return ClassiIcona.LADRA;
+			case LADRO:
+				return ClassiIcona.LADRO;
+			case CANTASTORIE:
+				return ClassiIcona.CANTASTORIE;
+			case BARDO:
+				return ClassiIcona.BARDO;
+			case ELFA:
+				return ClassiIcona.ELFA;
+			case ELFO:
+				return ClassiIcona.ELFO;
+			case MAGA:
+				return ClassiIcona.MAGA;
+			case MAGO:
+				return ClassiIcona.MAGO;
+			case OMBRAFIAMMA:
+				return ClassiIcona.OMBRAFIAMMA;
+			default:
+				throw new IllegalArgumentException("Icona non associata a classe " + classe);
 		}
 	}
 
-	private final void ridistribuisciScelte() {
+	private void ridistribuisciScelte() {
 		if (bottoni == null) {
 			return;
 		}
@@ -347,58 +348,58 @@ public class IconPanel extends JPanel implements java.awt.event.ActionListener {
 				int offsetVerticale = height - ImageCache.icone[0].getHeight() >> 1;
 				ImageButton b;
 				if (precedente) {
-					b = bottonePrec;
+					b = bottonePrecedente;
 					b.setLocation(offset, offsetVerticale);
 					add(b);
 					b.repaint();
 					offset += 62;
 				}
-				for (int i = 0; i < bottoni.length; i++) {
-					if (iconeDaSaltare > 0) {
-						iconeDaSaltare--;
-					} else {
-						b = bottoni[i];
-						b.setLocation(offset, offsetVerticale);
-						add(b);
-						b.repaint();
-						offset += 62; // 31 + 2 pixel vuoti di spazio
-						iconeDaVisualizzare--;
-						if (iconeDaVisualizzare == 0)
-							break;
-					}
-				}
-				if (successivo) {
-					b = bottoneSucc;
-					b.setLocation(offset, offsetVerticale);
-					add(b);
-					b.repaint();
-				}
+            for (ImageButton imageButton : bottoni) {
+                if (iconeDaSaltare > 0) {
+                    iconeDaSaltare--;
+                } else {
+                    b = imageButton;
+                    b.setLocation(offset, offsetVerticale);
+                    add(b);
+                    b.repaint();
+                    offset += 62; // 31 + 2 pixel vuoti di spazio
+                    iconeDaVisualizzare--;
+                    if (iconeDaVisualizzare == 0)
+                        break;
+                }
+            }
+			if (successivo) {
+				b = bottoneSuccessivo;
+				b.setLocation(offset, offsetVerticale);
+				add(b);
+				b.repaint();
+			}
 		} else { // ORIENTAMENTO_VERTICALE
 			int offset = (height - totaleIcone * 64 - 2 * (totaleIcone - 1)) >> 1;
 			ImageButton b = null;
 			if (precedente) {
-				b = bottonePrec;
+				b = bottonePrecedente;
 				b.setLocation(2, offset);
 				add(b);
 				b.repaint();
 				offset += 32;
 			}
-			for (int i = 0; i < bottoni.length; i++) {
-				if (iconeDaSaltare > 0) {
-					iconeDaSaltare--;
-				} else {
-					b = bottoni[i];
-					b.setLocation(2, offset);
-					add(b);
-					b.repaint();
-					offset += 32; // 32 + 2 pixel vuoti di spazio
-					iconeDaVisualizzare--;
-					if (iconeDaVisualizzare == 0)
-						break;
-				}
-			}
+            for (ImageButton imageButton : bottoni) {
+                if (iconeDaSaltare > 0) {
+                    iconeDaSaltare--;
+                } else {
+                    b = imageButton;
+                    b.setLocation(2, offset);
+                    add(b);
+                    b.repaint();
+                    offset += 32; // 32 + 2 pixel vuoti di spazio
+                    iconeDaVisualizzare--;
+                    if (iconeDaVisualizzare == 0)
+                        break;
+                }
+            }
 			if (successivo) {
-				b = bottoneSucc;
+				b = bottoneSuccessivo;
 				b.setLocation(2, offset);
 				add(b);
 				b.repaint();
@@ -431,9 +432,7 @@ public class IconPanel extends JPanel implements java.awt.event.ActionListener {
 		copyright((Graphics2D)graphics);
 	}
 
-	
-	
-	private final void copyright(Graphics2D graphics) {
+	private void copyright(Graphics2D graphics) {
 		if (copyrightImages[0] == null) {
 			DoomdarkFont fontSmall = DoomdarkFontSmall.getInstance();
 			copyrightImages[0] = DoomdarkTextProducer.getImage(
@@ -441,7 +440,7 @@ public class IconPanel extends JPanel implements java.awt.event.ActionListener {
 					fontSmall,
 					DoomdarkColorModel.Color.VERY_DARK_GRAY);
 			copyrightImages[1] = DoomdarkTextProducer.getImage(
-					"copyright 1984-2019",
+					"copyright 1984-2026",
 					fontSmall,
 					DoomdarkColorModel.Color.VERY_DARK_GRAY);
 			copyrightImages[2] = DoomdarkTextProducer.getImage(
