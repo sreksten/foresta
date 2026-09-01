@@ -12,11 +12,7 @@ import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
 import com.threeamigos.foresta.incantesimi.TipoIncantesimo;
-import com.threeamigos.foresta.motore.Comando;
-import com.threeamigos.foresta.motore.Gruppo;
-import com.threeamigos.foresta.motore.GruppoAvversario;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.Logger;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.offerte.Offerta;
@@ -62,12 +58,13 @@ public abstract class PersonaggioBase implements Personaggio {
 			md.setMagia(md.getMagiaMassima());
 			md.setStanchezza(0);
 		} else {
-			md.setSalute(md.getSaluteMassima() / 2 + Random.getInt(md.getSaluteMassima() / 2));
-			md.setMagia(md.getMagiaMassima() / 2 + Random.getInt(md.getMagiaMassima() / 2));
-			md.setValore(md.getValore() / 2 + Random.getInt(md.getValore() / 2));
-			md.setCoraggio(md.getCoraggio() / 2 + Random.getInt(md.getCoraggio() / 2));
-			md.setCarisma(md.getCarisma() / 2 + Random.getInt(md.getCarisma() / 2));
-			md.setStanchezza(Random.getInt(5));
+			final Function<Integer, Integer> tira = max -> Dado.tira(max / 2, max);
+			md.setSalute(tira.apply(md.getSaluteMassima()));
+			md.setMagia(tira.apply(md.getMagiaMassima()));
+			md.setValore(tira.apply(md.getValore()));
+			md.setCoraggio(tira.apply(md.getCoraggio()));
+			md.setCarisma(tira.apply(md.getCarisma()));
+			md.setStanchezza(Dado.tira(0, 5));
 		}
 		Logger.log("Nuovo: " + getNomeSingolare() + " (" + md.getSalute() + "/" + md.getSaluteMassima() + ")");
 	}
@@ -83,7 +80,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 	
 	/**
-	 * Deve impostare forzaMassima, magiaMassima, valore, coraggio, carisma
+	 * Deve impostare saluteMassima, magiaMassima, valore, coraggio, carisma
 	 */
 	protected abstract void impostaValori();
 
@@ -836,6 +833,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	// Artefatti
 
 	//FIXME così fa un po' caà ma intanto facciamolo compilare
+	@Override
 	public List<Artefatto> getInventario() {
 		return md.getArtefatti().stream().map(Artefatto::new).collect(Collectors.toList());
 	}
