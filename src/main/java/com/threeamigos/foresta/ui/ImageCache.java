@@ -219,7 +219,7 @@ public class ImageCache {
 
 		punto = BufferedImageBuilder.buildBufferedImage("alfabeto/Punto.gif");
 		virgola = BufferedImageBuilder.buildBufferedImage("alfabeto/Virgola.gif");
-		puntodd = BufferedImageBuilder.buildBufferedImage("alfabeto/Puntodd.gif");
+		puntodd = BufferedImageBuilder.buildBufferedImage("alfabeto/PuntoDiDomanda.gif");
 		apostrofo = BufferedImageBuilder.buildBufferedImage("alfabeto/Apostrofo.gif");
 		
 		spriteIncantesimi = new BufferedImage[ClassiIncantesimo.values().length];
