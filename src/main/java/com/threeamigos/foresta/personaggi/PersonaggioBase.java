@@ -47,8 +47,6 @@ public abstract class PersonaggioBase implements Personaggio {
 	private String nomeIcona;
 	private int quantitaMassima = 1;
 
-	private List<EffettoDiStato> effettiDiStato = new ArrayList<>();
-
 	public PersonaggioBase(PersonaggioMD personaggioMD) {
 		this.md = personaggioMD;
 	}
@@ -169,10 +167,11 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public void muore(String causaTrapasso) {
-		if (!isImmortale()) {
-			md.setVivo(false);
-			md.setCausaTrapasso(causaTrapasso);
+		if (isImmortale()) {
+			return;
 		}
+		md.setVivo(false);
+		md.setCausaTrapasso(causaTrapasso);
 		UI.notificaMorte(this);
 	}
 
@@ -815,23 +814,23 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public Collection<EffettoDiStato> getEffettiDiStato() {
-		return effettiDiStato;
+		return md.getEffettiDiStato();
 	}
 
 	public void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int valore) {
-		effettiDiStato.add(new EffettoDiStato(tipoEffettoDiStato, valore));
+		md.getEffettiDiStato().add(new EffettoDiStato(tipoEffettoDiStato, valore));
 	}
 
 	public boolean hasEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
-		return effettiDiStato.stream().anyMatch(e -> e.getTipoModificatoreAttributo() == tipoEffettoDiStato);
+		return md.getEffettiDiStato().stream().anyMatch(e -> e.getTipoModificatoreAttributo() == tipoEffettoDiStato);
 	}
 
 	public int getValoreEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
-		return effettiDiStato.stream().filter(e -> e.getTipoModificatoreAttributo() == tipoEffettoDiStato).mapToInt(EffettoDiStato::getValore).sum();
+		return md.getEffettiDiStato().stream().filter(e -> e.getTipoModificatoreAttributo() == tipoEffettoDiStato).mapToInt(EffettoDiStato::getValore).sum();
 	}
 
 	public void removeEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
-		effettiDiStato.removeIf(e -> e.getTipoModificatoreAttributo() == tipoEffettoDiStato);
+		md.getEffettiDiStato().removeIf(e -> e.getTipoModificatoreAttributo() == tipoEffettoDiStato);
 	}
 
 	// Artefatti

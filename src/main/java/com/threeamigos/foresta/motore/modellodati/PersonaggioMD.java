@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -64,6 +65,9 @@ public class PersonaggioMD implements Serializzabile {
 
 	private String causaTrapasso;
 	private int tempo = Personaggio.NO_TEMPO;
+
+	private List<EffettoDiStato> effettiDiStato = new ArrayList<>();
+
 	private List<ArtefattoMD> artefatti = new ArrayList<>();
 
 	public ClassePersonaggio getClasse() {
@@ -450,6 +454,14 @@ public class PersonaggioMD implements Serializzabile {
 		this.tempo = tempo;
 	}
 
+	public List<EffettoDiStato> getEffettiDiStato() {
+		return effettiDiStato;
+	}
+
+	public void setEffettiDiStato(List<EffettoDiStato> effettiDiStato) {
+		this.effettiDiStato = effettiDiStato;
+	}
+
 	public List<ArtefattoMD> getArtefatti() {
 		return artefatti;
 	}
@@ -555,8 +567,22 @@ public class PersonaggioMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(tempo);
 		stream.print(PIPE);
+		stream.print(artefatti.size());
+		stream.print(PIPE);
 
-		stream.println(artefatti.size());
+		Iterator<EffettoDiStato> iterator = effettiDiStato.iterator();
+		while (iterator.hasNext()) {
+			EffettoDiStato effettoDiStato = iterator.next();
+			stream.print(effettoDiStato.getTipoModificatoreAttributo().name());
+			stream.print(PIPE);
+			stream.print(effettoDiStato.getValore());
+			if (iterator.hasNext()) {
+				stream.print(PIPE);
+			}
+		}
+
+		stream.println("");
+
 		for (ArtefattoMD artefatto : artefatti) {
 			artefatto.salva(stream);
 		}
@@ -623,8 +649,13 @@ public class PersonaggioMD implements Serializzabile {
 		valore = Integer.parseInt(st.nextToken());
 		stanchezza = Integer.parseInt(st.nextToken());
 		tempo = Integer.parseInt(st.nextToken());
-
 		int numeroArtefatti = Integer.parseInt(st.nextToken());
+
+		while (st.hasMoreTokens()) {
+			EffettoDiStato effettoDiStato = new EffettoDiStato(TipoEffettoDiStato.valueOf(st.nextToken()), Integer.parseInt(st.nextToken()));
+			effettiDiStato.add(effettoDiStato);
+		}
+
 		artefatti.clear();
 		for (int i = 0; i < numeroArtefatti; i++) {
 			ArtefattoMD artefatto = new ArtefattoMD();
