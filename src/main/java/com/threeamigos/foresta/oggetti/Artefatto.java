@@ -4,6 +4,7 @@ import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
@@ -17,6 +18,10 @@ public class Artefatto implements Oggetto {
 		this.md = artefattoMD;
 	}
 
+	public final TipoArtefatto getTipo() {
+		return md.getTipo();
+	}
+
 	public final String getNome() {
 		return md.getNome();
 	}
@@ -25,44 +30,24 @@ public class Artefatto implements Oggetto {
 		return md.getDescrizione();
 	}
 
+	public final int getLivello() {
+		return md.getLivello();
+	}
+
+	public int getDanni() {
+		return md.getDanni();
+	}
+
 	public final int getCostoAcquisto() {
 		return md.getCostoAcquisto();
 	}
 
-	public final int getSalute() {
-		return md.getSalute();
+	public int getPeso() {
+		return md.getPeso();
 	}
 
-	public final int getForza() {
-		return md.getForza();
-	}
-
-	public final int getMagia() {
-		return md.getMagia();
-	}
-
-	public final int getValore() {
-		return md.getValore();
-	}
-
-	public final int getCoraggio() {
-		return md.getCoraggio();
-	}
-
-	public final int getCarisma() {
-		return md.getCarisma();
-	}
-
-	public final int getStanchezza() {
-		return md.getStanchezza();
-	}
-
-	public final int getBersagli() {
-		return md.getBersagli();
-	}
-
-	public final int getProtezione() {
-		return md.getProtezione();
+	public final int getModificatoreAttributo(TipoAttributo tipoAttributo) {
+		return md.getModificatoreAttributo(tipoAttributo);
 	}
 
 	/**
@@ -72,7 +57,7 @@ public class Artefatto implements Oggetto {
 	public boolean prendi(GruppoGiocatore gruppo, Comando azione) {
 		if (azione == null) {
 			if (gruppo.getNumeroPersonaggi() > 1)
-				UI.notifica(new StringBuilder("Chi raccoglie ").append(getNome()).append('?').toString());
+				UI.notifica("Chi raccoglie " + getNome() + '?');
 			return false;
 		}
 		Logger.log("Artefatto::prendi() - azione " + azione);
@@ -113,25 +98,9 @@ public class Artefatto implements Oggetto {
 	public ClassiOggetto getClasse() {
 		return ClassiOggetto.ARTEFATTO;
 	}
-	
+
 	public ArtefattoMD getModelloDati() {
 		return md;
-	}
-
-	public int getModificatoreAttributo(TipoAttributo tipoAttributo) {
-		return md.getModificatoreAttributo(tipoAttributo);
-	}
-
-	public int getLivello() {
-		return md.getLivello();
-	}
-
-	public int getDanniBase() {
-		return md.getDanniBase();
-	}
-
-	public int getPeso() {
-		return md.getPeso();
 	}
 
 }

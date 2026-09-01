@@ -63,7 +63,7 @@ public class CostruttoreArtefattoImpl implements
 
     @Override
     public CostruttoreArtefatto.StepModificatore2 setModificatore(TipoAttributo modificatore, int quantita) {
-        artefattoMD.addModificatore(modificatore, quantita);
+        artefattoMD.addModificatoreAttributo(modificatore, quantita);
         return this;
     }
 

@@ -197,10 +197,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public void subSalute(int quantita, Personaggio avversario, Personaggio.NotificaFerite notificaFerite, Personaggio.NotificaMorte notificaMorte) {
-		int modificaDaArtefatti = 0;
-		for (ArtefattoMD artefatto : md.getArtefatti()) {
-			modificaDaArtefatti += artefatto.getProtezione();
-		}
+		int modificaDaArtefatti = getModificatore(TipoAttributo.PARATA);
 		quantita -= modificaDaArtefatti;
 		if (quantita <= 0) {
 			if (notificaFerite == Personaggio.NotificaFerite.SI) {
@@ -248,39 +245,25 @@ public abstract class PersonaggioBase implements Personaggio {
 					} else {
 						sb.append(md.getNome());
 					}
-					//sb.append(" non ce l'ha fatta, ed e' mort");
-					sb.append(" e' mort");
-					if (getSesso() == Personaggio.Sesso.MASCHIO)
-						sb.append('o');
-					else
-						sb.append('a');
+					sb.append(" è mort");
+					sb.append(getLetteraFinaleAttributo());
 					sb.append(" per le ferite riportate.");
 					UI.notifica(sb.toString());
 					Logger.log("Notificata morte del personaggio");
 				}
 				if (avversario != null) {
-					sb = new StringBuilder(getSesso() == Personaggio.Sesso.MASCHIO ? "Ucciso " : "Uccisa ");
-					sb.append(avversario.getDa()).append(avversario.getNomeSingolare()).append('.');
-					md.setCausaTrapasso(sb.toString());
+					md.setCausaTrapasso("Uccis" + getLetteraFinaleAttributo() + " " + avversario.getDa() + avversario.getNomeSingolare() + ".");
 				} else {
-					md.setCausaTrapasso((getSesso() == Personaggio.Sesso.MASCHIO ? "Morto" : "Morta") + " per troppa codardia.");
+					md.setCausaTrapasso("Mort" + getLetteraFinaleAttributo() + " per troppa codardia.");
 				}
 				muore(md.getCausaTrapasso());
 			}
 		} else {
 			if (notificaFerite == Personaggio.NotificaFerite.SI) {
-				StringBuilder sb = new StringBuilder();
-				if (md.getNome() == null) {
-					String ads = getADS();
-					sb.append(Character.toUpperCase(ads.charAt(0)));
-					sb.append(ads.substring(1));
-					sb.append(getNomeSingolare());
-				} else {
-					sb.append(md.getNome());
-				}
-				sb.append(" ha ancora ").append(salute).append(" punt").append(salute == 1 ? 'o' : 'i')
-						.append(" ferita su ").append(md.getSaluteMassima()).append('.');
-				UI.notifica(sb.toString());
+				String nome = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
+                String notifica = nome + " ha ancora " + salute + " punt" + (salute == 1 ? 'o' : 'i') +
+                        " ferita su " + md.getSaluteMassima() + '.';
+				UI.notifica(notifica);
 			}
 		}
 		md.setSalute(salute);
@@ -341,10 +324,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public int getBersagliPerIncantesimo() {
-		int modificaDaArtefatti = 1;
-		for (ArtefattoMD artefatto : md.getArtefatti()) {
-			modificaDaArtefatti += artefatto.getBersagli();
-		}
+		int modificaDaArtefatti = getModificatore(TipoAttributo.NUMERO_BERSAGLI);
 		return 1 + modificaDaArtefatti;
 	}
 
@@ -404,11 +384,9 @@ public abstract class PersonaggioBase implements Personaggio {
 		UI.variaCarisma(this, -quantita);
 	}
 
+	@Deprecated
 	public int getBersagli() {
-		int modificaDaArtefatti = 0;
-		for (ArtefattoMD artefatto : md.getArtefatti()) {
-			modificaDaArtefatti += artefatto.getBersagli();
-		}
+		int modificaDaArtefatti = getModificatore(TipoAttributo.NUMERO_BERSAGLI);
 		return 1 + modificaDaArtefatti;
 	}
 
@@ -478,7 +456,7 @@ public abstract class PersonaggioBase implements Personaggio {
 					sb.append(',');
 				}
 				a = artefatti.get(i);
-				sb.append(a.getUtilizzo()).append(' ').append(a.getNome()).append(", ").append(a.getDescrizione());
+				sb.append(a.getTipo().getUtilizzo()).append(' ').append(a.getNome()).append(", ").append(a.getDescrizione());
 			}
 			sb.append('.');
 		}
@@ -492,16 +470,15 @@ public abstract class PersonaggioBase implements Personaggio {
 			md.setStanchezza(0);
 		} else {
 			modifica = md.getStanchezza() / 2;
-			for (ArtefattoMD artefatto : md.getArtefatti()) {
-				modifica += artefatto.getStanchezza();
+			int modificaDaArtefatti = getModificatore(TipoAttributo.STANCHEZZA);
+			if (modificaDaArtefatti > 0) {
+				// Ci sono artefatti che aumentano la stanchezza, ma per pietà verso il giocatore non li consideriamo
+				modifica += modificaDaArtefatti;
 			}
 			subStanchezza(modifica);
 		}
-		// accresce la forza
-		modifica = 0;
-		for (ArtefattoMD artefatto : md.getArtefatti()) {
-			modifica += artefatto.getForza();
-		}
+		// accresce la salute
+		modifica = getModificatore(TipoAttributo.SALUTE);
 		if (ore < 4) {
 			if (alCoperto) {
 				addSalute(getRecuperoSalute() * ore + modifica);
@@ -518,10 +495,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			}
 		}
 		// torna la magia
-		modifica = 0;
-		for (ArtefattoMD artefatto : md.getArtefatti()) {
-			modifica += artefatto.getMagia();
-		}
+		modifica = getModificatore(TipoAttributo.MAGIA);
 		addMagia(getRecuperoMagia() * ore + modifica);
 	}
 

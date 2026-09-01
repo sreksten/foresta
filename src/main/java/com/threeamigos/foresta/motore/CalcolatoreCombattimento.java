@@ -2,7 +2,6 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 /**
@@ -95,7 +94,7 @@ public class CalcolatoreCombattimento {
         int intuitoCritico = attaccante.getCritico();
 
         // 2. MATEMATICA DI BASE DEL DANNO (Con fattore di scala livello arma)
-        int dannoBaseArma = arma.getDanniBase() * arma.getLivello();
+        int dannoBaseArma = arma.getDanni() * arma.getLivello();
 
         // Rapporto di Efficacia dell'Arma per evitare exploit di armi liv. 1 su campioni liv. 20
         double rapportoEfficacia = (double) arma.getLivello() / (double) attaccante.getLivello();

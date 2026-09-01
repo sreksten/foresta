@@ -9,42 +9,15 @@ import java.util.StringTokenizer;
 
 public class ArtefattoMD implements Serializzabile {
 
-	private Collection<ModificatoreAttributo> modificatori = new ArrayList<>();
-
-	private int livello;
-	private int danniBase;
-
 	private TipoArtefatto tipo;
 	private String nome;
 	private String descrizione;
-	private String utilizzo;
+	private int livello;
+	private int danni;
 	protected int costoAcquisto;
-	protected int salute;
-	protected int forza;
-	private int magia;
-	private int valore;
-	private int coraggio;
-	private int carisma;
-	private int stanchezza;
-	private int bersagli;
-	private int protezione;
 	private int peso;
 
-	public int getLivello() {
-		return livello;
-	}
-
-	public void setLivello(int livello) {
-		this.livello = livello;
-	}
-
-	public int getDanniBase() {
-		return danniBase;
-	}
-
-	public void setDanniBase(int danniBase) {
-		this.danniBase = danniBase;
-	}
+	private final Collection<ModificatoreAttributo> modificatori = new ArrayList<>();
 
 	public TipoArtefatto getTipo() {
 		return tipo;
@@ -70,12 +43,20 @@ public class ArtefattoMD implements Serializzabile {
 		this.descrizione = descrizione;
 	}
 
-	public String getUtilizzo() {
-		return utilizzo;
+	public int getLivello() {
+		return livello;
 	}
 
-	public void setUtilizzo(String utilizzo) {
-		this.utilizzo = utilizzo;
+	public void setLivello(int livello) {
+		this.livello = livello;
+	}
+
+	public int getDanni() {
+		return danni;
+	}
+
+	public void setDanni(int danniBase) {
+		this.danni = danniBase;
 	}
 
 	public int getCostoAcquisto() {
@@ -86,78 +67,6 @@ public class ArtefattoMD implements Serializzabile {
 		this.costoAcquisto = costoAcquisto;
 	}
 
-	public int getSalute() {
-		return salute;
-	}
-
-	public void setSalute(int salute) {
-		this.salute = salute;
-	}
-
-	public int getForza() {
-		return forza;
-	}
-
-	public void setForza(int forza) {
-		this.forza = forza;
-	}
-
-	public int getMagia() {
-		return magia;
-	}
-
-	public void setMagia(int magia) {
-		this.magia = magia;
-	}
-
-	public int getValore() {
-		return valore;
-	}
-
-	public void setValore(int valore) {
-		this.valore = valore;
-	}
-
-	public int getCoraggio() {
-		return coraggio;
-	}
-
-	public void setCoraggio(int coraggio) {
-		this.coraggio = coraggio;
-	}
-
-	public int getCarisma() {
-		return carisma;
-	}
-
-	public void setCarisma(int carisma) {
-		this.carisma = carisma;
-	}
-
-	public int getStanchezza() {
-		return stanchezza;
-	}
-
-	public void setStanchezza(int stanchezza) {
-		this.stanchezza = stanchezza;
-	}
-
-	public int getBersagli() {
-		return bersagli;
-	}
-
-	public void setBersagli(int bersagli) {
-		this.bersagli = bersagli;
-	}
-
-	public int getProtezione() {
-		return protezione;
-	}
-
-	public void setProtezione(int protezione) {
-		this.protezione = protezione;
-	}
-
 	public int getPeso() {
 		return peso;
 	}
@@ -166,28 +75,8 @@ public class ArtefattoMD implements Serializzabile {
 		this.peso = peso;
 	}
 
-	public Collection<ModificatoreAttributo> getModificatori() {
-		return modificatori;
-	}
-
-	public void setModificatori(Collection<ModificatoreAttributo> modificatori) {
-		this.modificatori = modificatori;
-	}
-
-	public void aggiungiModificatore(ModificatoreAttributo modificatore) {
-		modificatori.add(modificatore);
-	}
-
-	public void addModificatore(TipoAttributo tipoModificatoreAttributo, int valore) {
+	public void addModificatoreAttributo(TipoAttributo tipoModificatoreAttributo, int valore) {
 		modificatori.add(new ModificatoreAttributo(tipoModificatoreAttributo, valore));
-	}
-
-	public void rimuoviModificatore(ModificatoreAttributo modificatore) {
-		modificatori.remove(modificatore);
-	}
-
-	public void rimuoviModificatori() {
-		modificatori.clear();
 	}
 
 	public int getModificatoreAttributo(TipoAttributo tipoAttributo) {
@@ -202,49 +91,41 @@ public class ArtefattoMD implements Serializzabile {
 
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
+		stream.print(tipo.name());
+		stream.print(PIPE);
 		stream.print(nome);
 		stream.print(PIPE);
 		stream.print(descrizione);
 		stream.print(PIPE);
-		stream.print(utilizzo);
+		stream.print(livello);
+		stream.print(PIPE);
+		stream.print(danni);
 		stream.print(PIPE);
 		stream.print(costoAcquisto);
 		stream.print(PIPE);
-		stream.print(forza);
+		stream.print(peso);
 		stream.print(PIPE);
-		stream.print(magia);
-		stream.print(PIPE);
-		stream.print(valore);
-		stream.print(PIPE);
-		stream.print(coraggio);
-		stream.print(PIPE);
-		stream.print(carisma);
-		stream.print(PIPE);
-		stream.print(stanchezza);
-		stream.print(PIPE);
-		stream.print(bersagli);
-		stream.print(PIPE);
-		stream.print(protezione);
-		stream.print(PIPE);
-		stream.println(peso);
+		for (ModificatoreAttributo modificatore : modificatori) {
+			stream.print(modificatore.getTipoModificatoreAttributo().name());
+			stream.print(PIPE);
+			stream.print(modificatore.getValore());
+			stream.print(PIPE);
+		}
 	}
 
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		String line = stream.readLine();
 		StringTokenizer st = new StringTokenizer(line, PIPE);
+		tipo = TipoArtefatto.valueOf(st.nextToken());
 		nome = st.nextToken();
 		descrizione = st.nextToken();
-		utilizzo = st.nextToken();
+		livello = Integer.parseInt(st.nextToken());
+		danni = Integer.parseInt(st.nextToken());
 		costoAcquisto = Integer.parseInt(st.nextToken());
-		forza = Integer.parseInt(st.nextToken());
-		magia = Integer.parseInt(st.nextToken());
-		valore = Integer.parseInt(st.nextToken());
-		coraggio = Integer.parseInt(st.nextToken());
-		carisma= Integer.parseInt(st.nextToken());
-		stanchezza = Integer.parseInt(st.nextToken());
-		bersagli = Integer.parseInt(st.nextToken());
-		protezione = Integer.parseInt(st.nextToken());
 		peso = Integer.parseInt(st.nextToken());
+		while (st.hasMoreTokens()) {
+			modificatori.add(new ModificatoreAttributo(TipoAttributo.valueOf(st.nextToken()), Integer.parseInt(st.nextToken())));
+		}
 	}
 }
