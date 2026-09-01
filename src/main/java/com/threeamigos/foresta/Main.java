@@ -9,13 +9,15 @@ import com.threeamigos.foresta.ui.UI;
 
 public class Main {
 
-	private static Orientamento orientamento = Orientamento.VERTICALE;
+	private static Orientamento orientamento = Orientamento.ORIZZONTALE;
 	private static boolean tuttoSchermo = false;
 
 	private static void leggiArgomenti(String[] args) {
         for (String arg : args) {
             if (arg.equalsIgnoreCase("ORIZZONTALE")) {
-                orientamento = Orientamento.ORIZZONTALE;
+				orientamento = Orientamento.ORIZZONTALE;
+			} else if (arg.equalsIgnoreCase("VERTICALE")) {
+				orientamento = Orientamento.VERTICALE;
             } else if (arg.equalsIgnoreCase("TUTTOSCHERMO")) {
                 tuttoSchermo = true;
             }

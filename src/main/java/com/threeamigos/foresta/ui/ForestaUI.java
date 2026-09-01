@@ -38,7 +38,7 @@ public class ForestaUI implements InterfacciaUtente {
 			width = screenDimension.width;
 			height = screenDimension.height;
 		} else {
-			if (orientamento == Orientamento.VERTICALE) {
+			if (orientamento == Orientamento.ORIZZONTALE) {
 				width = ImageCache.SPACING +
 						ImageCache.corniceMappa.getWidth() +
 						ImageCache.SPACING + 
@@ -62,8 +62,8 @@ public class ForestaUI implements InterfacciaUtente {
 					height = screenDimension.height;
 				}
 			} else {
-				width = Math.min(screenDimension.width, 640);
-				height = Math.min(screenDimension.height, 200);
+				width = Math.min(screenDimension.width, 400);
+				height = Math.min(screenDimension.height, 640);
 			}
 		}
 
@@ -78,7 +78,7 @@ public class ForestaUI implements InterfacciaUtente {
 
 		Logger.log("Orientamento: " + orientamento);
 		int altezzaIconPanel = 72;			
-		if (orientamento == Orientamento.VERTICALE) {
+		if (orientamento == Orientamento.ORIZZONTALE) {
 			displayableCanvas = new DisplayableCanvas(width, height - altezzaIconPanel);
 			jframe.add(displayableCanvas);
 			displayableCanvas.setLocation(0, 0);
@@ -87,7 +87,7 @@ public class ForestaUI implements InterfacciaUtente {
 			pannelloIcone.setSize(width, altezzaIconPanel);
 			pannelloIcone.setLocation(0, height - altezzaIconPanel - 1);
 		} else {
-			displayableCanvas = new DisplayableCanvas(320, height);
+			displayableCanvas = new DisplayableCanvas(640, height);
 			jframe.add(displayableCanvas);
 			displayableCanvas.setLocation(0, 0);
 			pannelloIcone = new PannelloIcone(PannelloIcone.ORIENTAMENTO_VERTICALE);
