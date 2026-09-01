@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Troll extends PersonaggioBase implements Personaggio {
@@ -25,12 +26,12 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Troll.gif");
-		setSaluteMassima(80);
-		setMagiaMassima(0);
-		setValore(60);
-		setCoraggio(80);
-		setCarisma(0);
-		setQuantitaMassima(3);
+		setSaluteMassima(Costanti.TROLL_MAX_SALUTE);
+		setMagiaMassima(Costanti.TROLL_MAX_MAGIA);
+		setValore(Costanti.TROLL_MAX_VALORE);
+		setCoraggio(Costanti.TROLL_MAX_CORAGGIO);
+		setCarisma(Costanti.TROLL_MAX_CARISMA);
+		setQuantitaMassima(Costanti.TROLL_MAX_NUMERO);
 		setCorrompibile(true);
 	}
 

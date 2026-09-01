@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Bardo extends PersonaggioBase implements Personaggio {
@@ -29,11 +30,11 @@ public class Bardo extends PersonaggioBase implements Personaggio {
 	protected void impostaValori() {
 		setImmagine("personaggi/Bardo.gif");
 		setIcona("icone/Bardo.gif");
-		setSaluteMassima(400);
-		setMagiaMassima(50);
-		setValore(50);
-		setCoraggio(50);
-		setCarisma(8);
+		setSaluteMassima(Costanti.BARDO_MAX_SALUTE);
+		setMagiaMassima(Costanti.BARDO_MAX_MAGIA);
+		setValore(Costanti.BARDO_MAX_VALORE);
+		setCoraggio(Costanti.BARDO_MAX_CORAGGIO);
+		setCarisma(Costanti.BARDO_MAX_CARISMA);
 		setCorrompibile(true);
 		setAmichevole(true);
 	}

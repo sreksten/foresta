@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Gargoyle extends PersonaggioBase implements Personaggio {
@@ -17,8 +18,8 @@ public class Gargoyle extends PersonaggioBase implements Personaggio {
 	public String getNomePlurale() { return "Gargoyle"; }
 	public String getPronome() { return Misc.ESSO; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
-	public int getRecuperoForza() { return 20; }
-	public int getRecuperoMagia() { return 2; }
+	public int getRecuperoForza() { return Costanti.GARGOYLE_RECUPERO_FORZA; }
+	public int getRecuperoMagia() { return Costanti.GARGOYLE_RECUPERO_MAGIA; }
 
 	public Gargoyle() {
 		super(ClassePersonaggio.GARGOYLE);
@@ -27,12 +28,12 @@ public class Gargoyle extends PersonaggioBase implements Personaggio {
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Gargoyle.gif");
-		setSaluteMassima(50);
-		setMagiaMassima(20);
-		setValore(70);
-		setCoraggio(70);
-		setCarisma(0);
-		setQuantitaMassima(2);
+		setSaluteMassima(Costanti.GARGOYLE_MAX_SALUTE);
+		setMagiaMassima(Costanti.GARGOYLE_MAX_MAGIA);
+		setValore(Costanti.GARGOYLE_MAX_VALORE);
+		setCoraggio(Costanti.GARGOYLE_MAX_CORAGGIO);
+		setCarisma(Costanti.GARGOYLE_MAX_CARISMA);
+		setQuantitaMassima(Costanti.GARGOYLE_MAX_NUMERO);
 	}
 
 	@Override

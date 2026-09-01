@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
 public class MinotauroGigante extends PersonaggioBase implements Personaggio {
@@ -30,10 +31,10 @@ public class MinotauroGigante extends PersonaggioBase implements Personaggio {
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/MinotauroGigante.gif");
-		setSaluteMassima(700);
-		setMagiaMassima(0);
-		setValore(80);
-		setCoraggio(90);
-		setCarisma(0);
+		setSaluteMassima(Costanti.MINOTAUROGIGANTE_MAX_SALUTE);
+		setMagiaMassima(Costanti.MINOTAUROGIGANTE_MAX_MAGIA);
+		setValore(Costanti.MINOTAUROGIGANTE_MAX_VALORE);
+		setCoraggio(Costanti.MINOTAUROGIGANTE_MAX_CORAGGIO);
+		setCarisma(Costanti.MINOTAUROGIGANTE_MAX_CARISMA);
 	}
 }

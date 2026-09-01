@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -25,12 +26,12 @@ public class Folletto extends PersonaggioBase implements Personaggio {
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Folletto.gif");
-		setSaluteMassima(10);
-		setMagiaMassima(1);
-		setValore(40);
-		setCoraggio(20);
-		setCarisma(1);
-		setQuantitaMassima(5);
+		setSaluteMassima(Costanti.FOLLETTO_MAX_SALUTE);
+		setMagiaMassima(Costanti.FOLLETTO_MAX_MAGIA);
+		setValore(Costanti.FOLLETTO_MAX_VALORE);
+		setCoraggio(Costanti.FOLLETTO_MAX_CORAGGIO);
+		setCarisma(Costanti.FOLLETTO_MAX_CARISMA);
+		setQuantitaMassima(Costanti.FOLLETTO_MAX_NUMERO);
 		setCorrompibile(true);
 		setAmichevole(true);
 	}

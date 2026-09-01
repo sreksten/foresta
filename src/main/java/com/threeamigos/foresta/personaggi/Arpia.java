@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Arpia extends PersonaggioBase implements Personaggio {
@@ -25,12 +26,12 @@ public class Arpia extends PersonaggioBase implements Personaggio {
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Arpia.gif");
-		setSaluteMassima(30);
-		setMagiaMassima(5);
-		setValore(30);
-		setCoraggio(30);
-		setCarisma(0);
-		setQuantitaMassima(4);
+		setSaluteMassima(Costanti.ARPIA_MAX_SALUTE);
+		setMagiaMassima(Costanti.ARPIA_MAX_MAGIA);
+		setValore(Costanti.ARPIA_MAX_VALORE);
+		setCoraggio(Costanti.ARPIA_MAX_CORAGGIO);
+		setCarisma(Costanti.ARPIA_MAX_CARISMA);
+		setQuantitaMassima(Costanti.ARPIA_MAX_NUMERO);
 	}
 
 	@Override

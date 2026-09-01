@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -26,12 +27,12 @@ public class Gigante extends PersonaggioBase implements Personaggio {
 	protected void impostaValori() {
 		setImmagine("personaggi/Gigante.gif");
 		setIcona("icone/Gigante.gif");
-		setSaluteMassima(80);
-		setMagiaMassima(10);
-		setValore(60);
-		setCoraggio(80);
-		setCarisma(3);
-		setQuantitaMassima(3);
+		setSaluteMassima(Costanti.GIGANTE_MAX_SALUTE);
+		setMagiaMassima(Costanti.GIGANTE_MAX_MAGIA);
+		setValore(Costanti.GIGANTE_MAX_VALORE);
+		setCoraggio(Costanti.GIGANTE_MAX_CORAGGIO);
+		setCarisma(Costanti.GIGANTE_MAX_CARISMA);
+		setQuantitaMassima(Costanti.GIGANTE_MAX_NUMERO);
 		setCorrompibile(true);
 		setAmichevole(true);
 	}

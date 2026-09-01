@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Chimera extends PersonaggioBase implements Personaggio {
@@ -16,7 +17,6 @@ public class Chimera extends PersonaggioBase implements Personaggio {
 	public String getNomePlurale() { return "Chimere"; }
 	public String getPronome() { return Misc.ESSA; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
-	public int getRecuperoForza() { return 5; }
 
 	public Chimera() {
 		super(ClassePersonaggio.CHIMERA);
@@ -25,11 +25,11 @@ public class Chimera extends PersonaggioBase implements Personaggio {
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Chimera.gif");
-		setSaluteMassima(45);
-		setMagiaMassima(0);
-		setValore(50);
-		setCoraggio(60);
-		setCarisma(0);
-		setQuantitaMassima(3);
+		setSaluteMassima(Costanti.CHIMERA_MAX_SALUTE);
+		setMagiaMassima(Costanti.CHIMERA_MAX_MAGIA);
+		setValore(Costanti.CHIMERA_MAX_VALORE);
+		setCoraggio(Costanti.CHIMERA_MAX_CORAGGIO);
+		setCarisma(Costanti.CHIMERA_MAX_CARISMA);
+		setQuantitaMassima(Costanti.CHIMERA_MAX_NUMERO);
 	}
 }

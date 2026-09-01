@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Cantastorie extends PersonaggioBase implements Personaggio {
@@ -29,11 +30,11 @@ public class Cantastorie extends PersonaggioBase implements Personaggio {
 	protected void impostaValori() {
 		setImmagine("personaggi/Cantastorie.gif");
 		setIcona("icone/Cantastorie.gif");
-		setSaluteMassima(400);
-		setMagiaMassima(50);
-		setValore(50);
-		setCoraggio(50);
-		setCarisma(8);
+		setSaluteMassima(Costanti.CANTASTORIE_MAX_SALUTE);
+		setMagiaMassima(Costanti.CANTASTORIE_MAX_MAGIA);
+		setValore(Costanti.CANTASTORIE_MAX_VALORE);
+		setCoraggio(Costanti.CANTASTORIE_MAX_CORAGGIO);
+		setCarisma(Costanti.CANTASTORIE_MAX_CARISMA);
 		setCorrompibile(true);
 		setAmichevole(true);
 	}

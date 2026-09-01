@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Guerriero extends PersonaggioBase implements Personaggio {
@@ -16,7 +17,7 @@ public class Guerriero extends PersonaggioBase implements Personaggio {
 	public String getNomePlurale() { return "Guerrieri"; }
 	public String getPronome() { return Misc.EGLI; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
-	public int getModificaDanniForza() { return 2; }
+	public int getModificaDanniForza() { return Costanti.GUERRIERO_MODIFICATORE_DANNI_FORZA; }
 
 	public Guerriero() {
 		super(ClassePersonaggio.GUERRIERO);
@@ -30,11 +31,11 @@ public class Guerriero extends PersonaggioBase implements Personaggio {
 	protected void impostaValori() {
 		setImmagine("personaggi/Guerriero.gif");
 		setIcona("icone/Guerriero.gif");
-		setSaluteMassima(550);
-		setMagiaMassima(30);
-		setValore(70);
-		setCoraggio(70);
-		setCarisma(5);
+		setSaluteMassima(Costanti.GUERRIERO_MAX_SALUTE);
+		setMagiaMassima(Costanti.GUERRIERO_MAX_MAGIA);
+		setValore(Costanti.GUERRIERO_MAX_VALORE);
+		setCoraggio(Costanti.GUERRIERO_MAX_CORAGGIO);
+		setCarisma(Costanti.GUERRIERO_MAX_CARISMA);
 		setCorrompibile(true);
 		setAmichevole(true);
 	}

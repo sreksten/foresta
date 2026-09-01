@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Ladro extends PersonaggioBase implements Personaggio {
@@ -29,11 +30,11 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 	protected void impostaValori() {
 		setImmagine("personaggi/Ladro.gif");
 		setIcona("icone/Ladro.gif");
-		setSaluteMassima(450);
-		setMagiaMassima(40);
-		setValore(60);
-		setCoraggio(60);
-		setCarisma(6);
+		setSaluteMassima(Costanti.LADRO_MAX_SALUTE);
+		setMagiaMassima(Costanti.LADRO_MAX_MAGIA);
+		setValore(Costanti.LADRO_MAX_VALORE);
+		setCoraggio(Costanti.LADRO_MAX_CORAGGIO);
+		setCarisma(Costanti.LADRO_MAX_CARISMA);
 		setCorrompibile(true);
 		setAmichevole(true);
 	}

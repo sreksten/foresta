@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -26,11 +27,11 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	protected void impostaValori() {
 		setImmagine("personaggi/Eremita.gif");
 		setIcona("icone/Eremita.gif");
-		setSaluteMassima(70);
-		setMagiaMassima(0);
-		setValore(50);
-		setCoraggio(80);
-		setCarisma(1);
+		setSaluteMassima(Costanti.EREMITA_MAX_SALUTE);
+		setMagiaMassima(Costanti.EREMITA_MAX_MAGIA);
+		setValore(Costanti.EREMITA_MAX_VALORE);
+		setCoraggio(Costanti.EREMITA_MAX_CORAGGIO);
+		setCarisma(Costanti.EREMITA_MAX_CARISMA);
 		setCorrompibile(true);
 		setAmichevole(true);
 	}

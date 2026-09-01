@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -26,12 +27,12 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	protected void impostaValori() {
 		setImmagine("personaggi/Centauro.gif");
 		setIcona("icone/Centauro.gif");
-		setSaluteMassima(70);
-		setMagiaMassima(0);
-		setValore(40);
-		setCoraggio(60);
-		setCarisma(4);
-		setQuantitaMassima(3);
+		setSaluteMassima(Costanti.CENTAURO_MAX_SALUTE);
+		setMagiaMassima(Costanti.CENTAURO_MAX_MAGIA);
+		setValore(Costanti.CENTAURO_MAX_VALORE);
+		setCoraggio(Costanti.CENTAURO_MAX_CORAGGIO);
+		setCarisma(Costanti.CENTAURO_MAX_CARISMA);
+		setQuantitaMassima(Costanti.CENTAURO_MAX_NUMERO);
 		setCorrompibile(true);
 		setAmichevole(true);
 	}

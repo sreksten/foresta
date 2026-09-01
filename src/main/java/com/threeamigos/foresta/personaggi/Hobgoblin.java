@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -17,7 +18,7 @@ public class Hobgoblin extends PersonaggioBase implements Personaggio {
 	public String getNomePlurale() { return "Hobgoblin"; }
 	public String getPronome() { return Misc.ESSO; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
-	public int getRecuperoForza() { return 8; }
+	public int getRecuperoForza() { return Costanti.HOBGOBLIN_RECUPERO_FORZA; }
 
 	public Hobgoblin() {
 		super(ClassePersonaggio.HOBGOBLIN);
@@ -27,12 +28,12 @@ public class Hobgoblin extends PersonaggioBase implements Personaggio {
 	protected void impostaValori() {
 		setImmagine("personaggi/Hobgoblin.gif");
 		setIcona("icone/Hobgoblin.gif");
-		setSaluteMassima(65);
-		setMagiaMassima(10);
-		setValore(40);
-		setCoraggio(60);
-		setCarisma(0);
-		setQuantitaMassima(3);
+		setSaluteMassima(Costanti.HOBGOBLIN_MAX_SALUTE);
+		setMagiaMassima(Costanti.HOBGOBLIN_MAX_MAGIA);
+		setValore(Costanti.HOBGOBLIN_MAX_VALORE);
+		setCoraggio(Costanti.HOBGOBLIN_MAX_CORAGGIO);
+		setCarisma(Costanti.HOBGOBLIN_MAX_CARISMA);
+		setQuantitaMassima(Costanti.HOBGOBLIN_MAX_NUMERO);
 		setCorrompibile(true);
 	}
 

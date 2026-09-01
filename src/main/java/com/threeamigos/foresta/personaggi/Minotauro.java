@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -35,12 +36,12 @@ public class Minotauro extends PersonaggioBase implements Personaggio {
 	protected void impostaValori() {
 		setImmagine("personaggi/Minotauro.gif");
 		setIcona("icone/Minotauro.gif");
-		setSaluteMassima(70);
-		setMagiaMassima(0);
-		setValore(50);
-		setCoraggio(50);
-		setCarisma(0);
-		setQuantitaMassima(3);
+		setSaluteMassima(Costanti.MINOTAURO_MAX_SALUTE);
+		setMagiaMassima(Costanti.MINOTAURO_MAX_MAGIA);
+		setValore(Costanti.MINOTAURO_MAX_VALORE);
+		setCoraggio(Costanti.MINOTAURO_MAX_CORAGGIO);
+		setCarisma(Costanti.MINOTAURO_MAX_CARISMA);
+		setQuantitaMassima(Costanti.MINOTAURO_MAX_NUMERO);
 		setCorrompibile(true);
 	}
 }

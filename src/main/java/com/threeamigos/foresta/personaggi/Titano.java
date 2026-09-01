@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -26,12 +27,12 @@ public class Titano extends PersonaggioBase implements Personaggio {
 	protected void impostaValori() {
 		setImmagine("personaggi/Titano.gif");
 		setIcona("icone/Titano.gif");
-		setSaluteMassima(100);
-		setMagiaMassima(15);
-		setValore(80);
-		setCoraggio(90);
-		setCarisma(3);
-		setQuantitaMassima(3);
+		setSaluteMassima(Costanti.TITANO_MAX_SALUTE);
+		setMagiaMassima(Costanti.TITANO_MAX_MAGIA);
+		setValore(Costanti.TITANO_MAX_VALORE);
+		setCoraggio(Costanti.TITANO_MAX_CORAGGIO);
+		setCarisma(Costanti.TITANO_MAX_CARISMA);
+		setQuantitaMassima(Costanti.TITANO_MAX_NUMERO);
 		setCorrompibile(true);
 		setAmichevole(true);
 	}

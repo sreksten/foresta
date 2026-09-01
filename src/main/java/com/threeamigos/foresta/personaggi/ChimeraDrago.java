@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
 public class ChimeraDrago extends PersonaggioBase implements Personaggio {
@@ -25,12 +26,12 @@ public class ChimeraDrago extends PersonaggioBase implements Personaggio {
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/ChimeraDrago.gif");
-		setSaluteMassima(80);
-		setMagiaMassima(30);
-		setValore(60);
-		setCoraggio(75);
-		setCarisma(0);
-		setQuantitaMassima(2);
+		setSaluteMassima(Costanti.CHIMERADRAGO_MAX_SALUTE);
+		setMagiaMassima(Costanti.CHIMERADRAGO_MAX_MAGIA);
+		setValore(Costanti.CHIMERADRAGO_MAX_VALORE);
+		setCoraggio(Costanti.CHIMERADRAGO_MAX_CORAGGIO);
+		setCarisma(Costanti.CHIMERADRAGO_MAX_CARISMA);
+		setQuantitaMassima(Costanti.CHIMERADRAGO_MAX_NUMERO);
 	}
 
 	@Override

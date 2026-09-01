@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Strega extends PersonaggioBase implements Personaggio {
@@ -17,9 +18,9 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	public String getNomePlurale() { return "Streghe"; }
 	public String getPronome() { return Misc.ELLA; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
-	public int getRecuperoMagia() { return 35; }
-	public int getModificaDanniMagia(int danniBase) { return danniBase * 3; }
-	public int getBersagliPerIncantesimo() { return 5; }
+	public int getRecuperoMagia() { return Costanti.STREGA_RECUPERO_MAGIA; }
+	public int getModificaDanniMagia(int danniBase) { return danniBase * Costanti.STREGA_MODIFICATORE_DANNI_MAGIA; }
+	public int getBersagliPerIncantesimo() { return Costanti.STREGA_BERSAGLI_PER_INCANTESIMO; }
 
 	public Strega() {
 		super(ClassePersonaggio.STREGA);
@@ -28,11 +29,11 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Strega.gif");
-		setSaluteMassima(800);
-		setMagiaMassima(350);
-		setValore(50);
-		setCoraggio(60);
-		setCarisma(0);
+		setSaluteMassima(Costanti.STREGA_MAX_SALUTE);
+		setMagiaMassima(Costanti.STREGA_MAX_MAGIA);
+		setValore(Costanti.STREGA_MAX_VALORE);
+		setCoraggio(Costanti.STREGA_MAX_CORAGGIO);
+		setCarisma(Costanti.STREGA_MAX_CARISMA);
 	}
 
 	@Override

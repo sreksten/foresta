@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Spirito extends PersonaggioBase implements Personaggio {
@@ -25,12 +26,12 @@ public class Spirito extends PersonaggioBase implements Personaggio {
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Spirito.gif");
-		setSaluteMassima(40);
-		setMagiaMassima(0);
-		setValore(50);
-		setCoraggio(50);
-		setCarisma(0);
-		setQuantitaMassima(2);
+		setSaluteMassima(Costanti.SPIRITO_MAX_SALUTE);
+		setMagiaMassima(Costanti.SPIRITO_MAX_MAGIA);
+		setValore(Costanti.SPIRITO_MAX_VALORE);
+		setCoraggio(Costanti.SPIRITO_MAX_CORAGGIO);
+		setCarisma(Costanti.SPIRITO_MAX_CARISMA);
+		setQuantitaMassima(Costanti.SPIRITO_MAX_NUMERO);
 		setAmichevole(true);
 	}
 

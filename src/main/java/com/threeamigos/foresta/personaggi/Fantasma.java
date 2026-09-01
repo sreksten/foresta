@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Fantasma extends PersonaggioBase implements Personaggio {
@@ -25,12 +26,12 @@ public class Fantasma extends PersonaggioBase implements Personaggio {
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Fantasma.gif");
-		setSaluteMassima(50);
-		setMagiaMassima(0);
-		setValore(70);
-		setCoraggio(60);
-		setCarisma(0);
-		setQuantitaMassima(3);
+		setSaluteMassima(Costanti.FANTASMA_MAX_SALUTE);
+		setMagiaMassima(Costanti.FANTASMA_MAX_MAGIA);
+		setValore(Costanti.FANTASMA_MAX_VALORE);
+		setCoraggio(Costanti.FANTASMA_MAX_CORAGGIO);
+		setCarisma(Costanti.FANTASMA_MAX_CARISMA);
+		setQuantitaMassima(Costanti.FANTASMA_MAX_NUMERO);
 	}
 
 	@Override

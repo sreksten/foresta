@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Spettro extends PersonaggioBase implements Personaggio {
@@ -25,12 +26,12 @@ public class Spettro extends PersonaggioBase implements Personaggio {
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Spettro.gif");
-		setSaluteMassima(40);
-		setMagiaMassima(0);
-		setValore(50);
-		setCoraggio(50);
-		setCarisma(0);
-		setQuantitaMassima(2);
+		setSaluteMassima(Costanti.SPETTRO_MAX_SALUTE);
+		setMagiaMassima(Costanti.SPETTRO_MAX_MAGIA);
+		setValore(Costanti.SPETTRO_MAX_VALORE);
+		setCoraggio(Costanti.SPETTRO_MAX_CORAGGIO);
+		setCarisma(Costanti.SPETTRO_MAX_CARISMA);
+		setQuantitaMassima(Costanti.SPETTRO_MAX_NUMERO);
 	}
 
 	@Override

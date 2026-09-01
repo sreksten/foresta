@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Idra extends PersonaggioBase implements Personaggio {
@@ -26,11 +27,11 @@ public class Idra extends PersonaggioBase implements Personaggio {
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Idra.gif");
-		setSaluteMassima(600);
-		setMagiaMassima(0);
-		setValore(70);
-		setCoraggio(70);
-		setCarisma(0);
+		setSaluteMassima(Costanti.IDRA_MAX_SALUTE);
+		setMagiaMassima(Costanti.IDRA_MAX_MAGIA);
+		setValore(Costanti.IDRA_MAX_VALORE);
+		setCoraggio(Costanti.IDRA_MAX_CORAGGIO);
+		setCarisma(Costanti.IDRA_MAX_CARISMA);
 	}
 
 	@Override

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Maga extends PersonaggioBase implements Personaggio {
@@ -16,10 +17,10 @@ public class Maga extends PersonaggioBase implements Personaggio {
 	public String getNomePlurale() { return "Maghe"; }
 	public String getPronome() { return Misc.ELLA; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
-	public int getRecuperoForza() { return 35; }
-	public int getRecuperoMagia() { return 3; }
-	public int getModificaDanniMagia(int danniBase) { return danniBase * 3; }
-	public int getBersagliPerIncantesimo() { return 2 + super.getBersagliPerIncantesimo(); }
+	public int getRecuperoForza() { return Costanti.MAGA_RECUPERO_FORZA; }
+	public int getRecuperoMagia() { return Costanti.MAGA_RECUPERO_MAGIA; }
+	public int getModificaDanniMagia(int danniBase) { return danniBase * Costanti.MAGA_MODIFICATORE_DANNI_MAGIA; }
+	public int getBersagliPerIncantesimo() { return Costanti.MAGA_BERSAGLI_PER_INCANTESIMO_BONUS + super.getBersagliPerIncantesimo(); }
 
 	public Maga() {
 		super(ClassePersonaggio.MAGA);
@@ -33,11 +34,11 @@ public class Maga extends PersonaggioBase implements Personaggio {
 	protected void impostaValori() {
 		setImmagine("personaggi/Maga.gif");
 		setIcona("icone/Maga.gif");
-		setSaluteMassima(350);
-		setMagiaMassima(70);
-		setValore(30);
-		setCoraggio(30);
-		setCarisma(6);
+		setSaluteMassima(Costanti.MAGA_MAX_SALUTE);
+		setMagiaMassima(Costanti.MAGA_MAX_MAGIA);
+		setValore(Costanti.MAGA_MAX_VALORE);
+		setCoraggio(Costanti.MAGA_MAX_CORAGGIO);
+		setCarisma(Costanti.MAGA_MAX_CARISMA);
 		setCorrompibile(true);
 		setAmichevole(true);
 	}

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -26,12 +27,12 @@ public class Goblin extends PersonaggioBase implements Personaggio {
 	protected void impostaValori() {
 		setImmagine("personaggi/Goblin.gif");
 		setIcona("icone/Goblin.gif");
-		setSaluteMassima(40);
-		setMagiaMassima(0);
-		setValore(30);
-		setCoraggio(50);
-		setCarisma(0);
-		setQuantitaMassima(5);
+		setSaluteMassima(Costanti.GOBLIN_MAX_SALUTE);
+		setMagiaMassima(Costanti.GOBLIN_MAX_MAGIA);
+		setValore(Costanti.GOBLIN_MAX_VALORE);
+		setCoraggio(Costanti.GOBLIN_MAX_CORAGGIO);
+		setCarisma(Costanti.GOBLIN_MAX_CARISMA);
+		setQuantitaMassima(Costanti.GOBLIN_MAX_NUMERO);
 		setCorrompibile(true);
 	}
 

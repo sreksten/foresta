@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
 public class OmbraFiamma extends PersonaggioBase implements Personaggio {
@@ -16,10 +17,10 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	public String getNomePlurale() { return "OmbreFiamma"; }
 	public String getPronome() { return Misc.EGLI; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
-	public int getRecuperoMagia() { return 5; }
-	public int getModificaDanniForza() { return 3; }
-	public int getModificaDanniMagia(int danniBase) { return danniBase * 5; }
-	public int getBersagliPerIncantesimo() { return 4 + super.getBersagliPerIncantesimo(); }
+	public int getRecuperoMagia() { return Costanti.OMBRAFIAMMA_RECUPERO_MAGIA; }
+	public int getModificaDanniForza() { return Costanti.OMBRAFIAMMA_MODIFICATORE_DANNI_FORZA; }
+	public int getModificaDanniMagia(int danniBase) { return danniBase * Costanti.OMBRAFIAMMA_MODIFICATORE_DANNI_MAGIA; }
+	public int getBersagliPerIncantesimo() { return Costanti.OMBRAFIAMMA_BERSAGLI_PER_INCANTESIMO_BONUS + super.getBersagliPerIncantesimo(); }
 
 	public OmbraFiamma() {
 		super(ClassePersonaggio.OMBRAFIAMMA);
@@ -33,11 +34,11 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	protected void impostaValori() {
 		setImmagine("personaggi/OmbraFiamma.gif");
 		setIcona("icone/OmbraFiamma.gif");
-		setSaluteMassima(500);
-		setMagiaMassima(90);
-		setValore(100);
-		setCoraggio(100);
-		setCarisma(9);
+		setSaluteMassima(Costanti.OMBRAFIAMMA_MAX_SALUTE);
+		setMagiaMassima(Costanti.OMBRAFIAMMA_MAX_MAGIA);
+		setValore(Costanti.OMBRAFIAMMA_MAX_VALORE);
+		setCoraggio(Costanti.OMBRAFIAMMA_MAX_CORAGGIO);
+		setCarisma(Costanti.OMBRAFIAMMA_MAX_CARISMA);
 		setCorrompibile(true);
 		setAmichevole(true);
 	}

@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Viverna extends PersonaggioBase implements Personaggio {
@@ -17,7 +18,7 @@ public class Viverna extends PersonaggioBase implements Personaggio {
 	public String getNomePlurale() { return "Viverne"; }
 	public String getPronome() { return Misc.ESSA; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
-	public int getRecuperoMagia() { return 3; }
+	public int getRecuperoMagia() { return Costanti.VIVERNA_RECUPERO_MAGIA; }
 
 	public Viverna() {
 		super(ClassePersonaggio.VIVERNA);
@@ -26,12 +27,12 @@ public class Viverna extends PersonaggioBase implements Personaggio {
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Viverna.gif");
-		setSaluteMassima(120);
-		setMagiaMassima(50);
-		setValore(80);
-		setCoraggio(90);
-		setCarisma(0);
-		setQuantitaMassima(3);
+		setSaluteMassima(Costanti.VIVERNA_MAX_SALUTE);
+		setMagiaMassima(Costanti.VIVERNA_MAX_MAGIA);
+		setValore(Costanti.VIVERNA_MAX_VALORE);
+		setCoraggio(Costanti.VIVERNA_MAX_CORAGGIO);
+		setCarisma(Costanti.VIVERNA_MAX_CARISMA);
+		setQuantitaMassima(Costanti.VIVERNA_MAX_NUMERO);
 	}
 
 	@Override
