@@ -43,6 +43,11 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public boolean isParteConValoriMassimi() {
+		return true;
+	}
+
+	@Override
 	public boolean isImmortale() {
 		return true;
 	}

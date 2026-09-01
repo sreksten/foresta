@@ -17,7 +17,6 @@ public class Arpia extends PersonaggioBase implements Personaggio {
 	public String getNomePlurale() { return "Arpie"; }
 	public String getPronome() { return Misc.ESSA; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
-	public int getRecuperoForza() { return 5; }
 
 	public Arpia() {
 		super(ClassePersonaggio.ARPIA);

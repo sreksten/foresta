@@ -51,6 +51,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.setVivo(true);
 		impostaValori();
 		classe.setQuantitaMassima(quantitaMassima);
+		// I boss partono con valori massimi
 		if (isParteConValoriMassimi()) {
 			md.setSalute(md.getSaluteMassima());
 			md.setMagia(md.getMagiaMassima());
