@@ -1,19 +1,14 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.AlphaComposite;
-import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
-import java.awt.Image;
-import java.awt.Transparency;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
 
 class DisplayableCanvasRiquadroTesto {
 
-	private int topLeftX;
-	private int topLeftY;
-	private DoomdarkTextRectangle2x doomdarkTextRectangle;
+	private final int topLeftX;
+	private final int topLeftY;
+	private final DoomdarkTextRectangle2x doomdarkTextRectangle;
 
 	DisplayableCanvasRiquadroTesto(int topLeftX, int topLeftY, int width, int height) {
 		this.topLeftX = topLeftX;
@@ -53,7 +48,7 @@ class DisplayableCanvasRiquadroTesto {
 		Graphics2D g2d = copy.createGraphics();		
 		g2d.drawImage(image, 0, 0, null);
 		g2d.dispose();
-		int vertLimit = imageHeight < 256 ? imageHeight : 256;
+		int vertLimit = Math.min(imageHeight, 256);
 		for (int y = 0; y < vertLimit; y++) {
 			int mask = (y << 16) + (y << 8) + y;
 			for (int x = 0; x < imageWidth; x++) {

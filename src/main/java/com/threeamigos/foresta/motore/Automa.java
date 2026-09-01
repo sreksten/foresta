@@ -52,7 +52,7 @@ public class Automa implements ControlloreDiGioco {
 			gruppoAvversario = GruppoAvversario.getIstanza();
 
 			nomePersonaggio = s.trim();
-			if (nomePersonaggio.equals("")) {
+			if (nomePersonaggio.isEmpty()) {
 				personaggio = RegistroPersonaggi.getPersonaggioCasuale();
 				if (personaggio == null) {
 					UI.scriviGrande("Non ci sono personaggi disponibili. Occorre crearne uno specificando il nome.");
@@ -63,7 +63,7 @@ public class Automa implements ControlloreDiGioco {
 				processaAzione(null);
 				break;
 			} else {
-				// Qui mettiamo il codice per i personaggi nascosti :) tipo:
+				// Qui mettiamo il codice per i personaggi nascosti tipo:
 				if (s.equals("OmbraFiamma")) {
 					personaggio = new OmbraFiamma("Alakazam");
 					stato = Stato.INIZIALIZZAZIONE_GIOCO;
@@ -80,10 +80,10 @@ public class Automa implements ControlloreDiGioco {
 			if (s.isEmpty()) {
 				s = GruppoGiocatore.getIstanza().getPersonaggio(0).getNomeProprio().orElseThrow(Personaggio.PERSONAGGIO_SENZA_NOME);
 			}
-			GestorePunteggi.addRecord(s, Statistiche.getPunti());
+			GestorePunteggi.addPunteggio(s, Statistiche.getPunti());
 			stato = Stato.HI_SCORE;
 			UI.impostaAzioni(Comando.PERGAMENA);
-			UI.hiscore();
+			UI.punteggi();
 			processaAzione(null);
 			break;
 
@@ -94,7 +94,7 @@ public class Automa implements ControlloreDiGioco {
 
 	/**
 	 * Questa funzione in base allo stato del gruppo e alla azione ricevuta
-	 * e' il motore di gioco vero e proprio, ed e' quindi abbastanza monumentale.
+	 * è il motore di gioco vero e proprio, ed è quindi abbastanza monumentale.
 	 * Per alcuni stati l'azione ricevuta non serve a nulla, giusto per cambiare
 	 * lo stato stesso.
 	 */
@@ -257,12 +257,12 @@ public class Automa implements ControlloreDiGioco {
 			}
 			/*
 			 * Ogni locazione ha un metodo impostaAzioni; nel caso delle
-			 * locazioni di base impostera' le azioni combattimento,
-			 * incantesimo, corruzione, amicizia... mentre per alcune
-			 * locazioni specifiche permettera' di accettare la proposta
+			 * locazioni di base imposterà le azioni combattimento,
+			 * incantesimo, corruzione, amicizia... Mentre per alcune
+			 * locazioni specifiche permetterà di accettare la proposta
 			 * di aggregazione di altri personaggi eccetera. Se la locazione
-			 * e' automaticamente completata il metodo torna LOCAZIONE_COMPLETA.
-			 * Altrimenti ogni locazione e' in effetti un automa a stati finiti
+			 * è automaticamente completata il metodo torna LOCAZIONE_COMPLETA.
+			 * Altrimenti ogni locazione è in effetti un automa a stati finiti
 			 * che tiene traccia del suo stato.
 			 */
 			stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, null);
@@ -281,7 +281,7 @@ public class Automa implements ControlloreDiGioco {
 			statoPrecedente = stato;
 			/*
 			 * Continuiamo a fornire all'automa a stati finiti della
-			 * locazione la possibilita' di andare avanti fino a
+			 * locazione la possibilità di andare avanti fino a
 			 * LOCAZIONE_COMPLETA
 			 */
 			stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, azione);
@@ -378,9 +378,7 @@ public class Automa implements ControlloreDiGioco {
 		case ATTESA_SI_NO:
 			if (azione == null) {
 				UI.impostaAzioni(Comando.SI, Comando.NO);
-			} else if (azione == Comando.TIMER) {
-				// non fa niente
-			} else {
+			} else if (azione != Comando.TIMER) {
 				stato = statoPrecedente;
 				processaAzione(azione);
 			}
@@ -721,6 +719,9 @@ public class Automa implements ControlloreDiGioco {
 			UI.impostaAzioni(Comando.PERGAMENA);
 			break;
 
+		case ATTESA_NOME_HI_SCORE:
+			break;
+
 		case HI_SCORE:
 			inizia();
 			break;
@@ -732,7 +733,7 @@ public class Automa implements ControlloreDiGioco {
 
 	/**
 	 * Riporta Azione.PERSONAGGIO_1 se un unico personaggio è disponibile,
-	 * altrimenti null ed imposta le azioni per scegliere il personaggio
+	 * altrimenti null e imposta le azioni per scegliere il personaggio
 	 */
 	private Comando scegliPersonaggio(boolean ancheSeMorto) {
 		if (gruppo.getNumeroPersonaggiVivi() == 1) {
@@ -754,7 +755,7 @@ public class Automa implements ControlloreDiGioco {
 		}
 	}
 
-	private final void impostaAzioniPerNumeroPassi(int numeroPassi) {
+	private void impostaAzioniPerNumeroPassi(int numeroPassi) {
 		Azioni.clear();
 		if (numeroPassi > 0) {
 			Azioni.add(Comando.NUMERO_1);
@@ -773,7 +774,7 @@ public class Automa implements ControlloreDiGioco {
 		}
 	}
 	
-	private final String convertiComandoInSlotSalvataggio(Comando azione) {
+	private String convertiComandoInSlotSalvataggio(Comando azione) {
 		if (azione == Comando.NUMERO_1) {
 			return "1";
 		} else if (azione == Comando.NUMERO_2) {
@@ -789,11 +790,11 @@ public class Automa implements ControlloreDiGioco {
 		}
 	}
 	
-	private final boolean leggi(Comando azione) {
+	private boolean leggi(Comando azione) {
 		return GestoreSalvataggi.leggi(convertiComandoInSlotSalvataggio(azione));
 	}
 
-	private final void salva(Comando azione) {
+	private void salva(Comando azione) {
 		String id = convertiComandoInSlotSalvataggio(azione);
 		if (id != null) {
 			StringBuilder sb = new StringBuilder();

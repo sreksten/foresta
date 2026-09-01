@@ -111,6 +111,7 @@ public class ArtefattoMD implements Serializzabile {
 			stream.print(modificatore.getValore());
 			stream.print(PIPE);
 		}
+		stream.println();
 	}
 
 	@Override

@@ -1,15 +1,12 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.motore.Foresta;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.EnumMap;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.StringTokenizer;
-
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.motore.Foresta;
+import java.util.*;
 
 public class ForestaMD implements Serializzabile {
 
@@ -125,9 +122,7 @@ public class ForestaMD implements Serializzabile {
 	}
 
 	public final void ottieniMappa() {
-		for (int i = 0; i < locazioniConosciute.length; i++) {
-			locazioniConosciute[i] = 0xFFFFFFFF;
-		}
+        Arrays.fill(locazioniConosciute, 0xFFFFFFFF);
 		minXConosciuta = 0;
 		maxXConosciuta = Foresta.getDimensioneX() - 1;
 		minYConosciuta = 0;
@@ -136,7 +131,7 @@ public class ForestaMD implements Serializzabile {
 
 	// implementazioni private che dipendono dal modello dati
 
-	private final void impostaLocazioneVisitata(int x, int y, boolean visitata) {
+	private void impostaLocazioneVisitata(int x, int y, boolean visitata) {
 		int offset = x + y * dimensioneX;
 		if (visitata) {
 			locazioniVisitate[offset >> 5] |= (1 << (offset & 0x1F));
@@ -145,17 +140,17 @@ public class ForestaMD implements Serializzabile {
 		}
 	}
 
-	private final boolean isLocazioneVisitata(int x, int y) {
+	private boolean isLocazioneVisitata(int x, int y) {
 		int offset = x + y * dimensioneX;
 		return (locazioniVisitate[offset >> 5] & (1 << (offset & 0x1F))) != 0;
 	}
 
-	private final boolean isLocazioneConosciuta(int x, int y) {
+	private boolean isLocazioneConosciuta(int x, int y) {
 		int offset = x + y * dimensioneX;
 		return (locazioniConosciute[offset >> 5] & (1 << (offset & 0x1F))) != 0;
 	}
 
-	private final void impostaLocazioneConosciuta(int x, int y) {
+	private void impostaLocazioneConosciuta(int x, int y) {
 		int offset = x + y * dimensioneX;
 		locazioniConosciute[offset >> 5] |= (1 << (offset & 0x1F));
 		if (minXConosciuta == -1 || minXConosciuta > x) {
@@ -202,23 +197,23 @@ public class ForestaMD implements Serializzabile {
 	private String getLocazioni() {
 		Map<ClassiLocazione, Character> mappa = new EnumMap<>(ClassiLocazione.class);
 		for (ClassiLocazione classeCorrente : ClassiLocazione.values()) {
-			mappa.put(classeCorrente, Character.valueOf((char)(classeCorrente.ordinal() + 'A')));
+			mappa.put(classeCorrente, (char) (classeCorrente.ordinal() + 'A'));
 		}
 		StringBuilder sb = new StringBuilder();
-		for (int indice = 0; indice < arrayLocazioni.length; indice++) {
-			sb.append(mappa.get(arrayLocazioni[indice]));
-		}
+        for (ClassiLocazione classiLocazione : arrayLocazioni) {
+            sb.append(mappa.get(classiLocazione));
+        }
 		return sb.toString();
 	}
 
 	private void setLocazioni(String locazioni) {
 		Map<Character, ClassiLocazione> mappa = new HashMap<>();
 		for (ClassiLocazione classeCorrente : ClassiLocazione.values()) {
-			mappa.put(Character.valueOf((char)(classeCorrente.ordinal() + 'A')), classeCorrente);
+			mappa.put((char) (classeCorrente.ordinal() + 'A'), classeCorrente);
 		}
 		arrayLocazioni = new ClassiLocazione[dimensioneX * dimensioneY];
 		for (int indice = 0; indice < arrayLocazioni.length; indice++) {
-			ClassiLocazione classeLocazione = mappa.get(Character.valueOf(locazioni.charAt(indice))); 
+			ClassiLocazione classeLocazione = mappa.get(locazioni.charAt(indice));
 			arrayLocazioni[indice] = classeLocazione;
 			if (classeLocazione.isLocazioneUnica()) {
 				locazioniUniche.put(classeLocazione, new CoordinateMD(indice % dimensioneX, indice / dimensioneX));

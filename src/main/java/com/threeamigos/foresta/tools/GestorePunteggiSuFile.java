@@ -1,14 +1,14 @@
 package com.threeamigos.foresta.tools;
 
+import com.threeamigos.foresta.motore.Logger;
+
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.StringTokenizer;
-
-import com.threeamigos.foresta.motore.Logger;
 
 public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 
@@ -19,27 +19,24 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 		super();
 	}
 
-	private final String nomeFile() {
+	private String nomeFile() {
 		if (nomeFile == null)
-			nomeFile = new StringBuilder(System.getProperty("user.home"))
-			.append(File.separatorChar).append(".forestaHS").toString();
+			nomeFile = System.getProperty("user.home") +
+                    File.separatorChar + ".forestaHS";
 		return nomeFile;
 	}
 
 	public boolean carica() {
 		Logger.log("Leggo i punteggi dal file " + nomeFile);
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(nomeFile())))) {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(nomeFile()))))) {
 			String line;
 			StringTokenizer st;
-			int posizione = 0;
-			int cardinalita = getCardinalita();
-			while (posizione < cardinalita) {
+			for (int posizione = 0; posizione < getConteggio(); posizione++) {
 				line = reader.readLine();
 				st = new StringTokenizer(line, SEPARATORE);
 				String nome = st.nextToken();
 				int punteggio = Integer.parseInt(st.nextToken());
-				setRecord(posizione, nome, punteggio);
-				posizione++;
+				setPunteggio(posizione, nome, punteggio);
 			}
 		} catch (Exception e) {
 			return false;
@@ -48,15 +45,12 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 	}
 
 	public boolean salva() {
-		try (PrintWriter writer = new PrintWriter(new FileOutputStream(nomeFile()))) {
-			int posizione = 0;
-			int cardinalita = getCardinalita();
-			while (posizione < cardinalita) {
-				InterfacciaGestorePunteggi.Record record = getRecord(posizione);
-				writer.print(record.getNome());
+		try (PrintWriter writer = new PrintWriter(Files.newOutputStream(Paths.get(nomeFile())))) {
+			for (int posizione = 0; posizione < getConteggio(); posizione++) {
+				Punteggio punteggio = getPunteggio(posizione);
+				writer.print(punteggio.getNome());
 				writer.print(SEPARATORE);
-				writer.println(record.getPunteggio());
-				posizione++;
+				writer.println(punteggio.getPunteggio());
 			}
 			writer.flush();
 		} catch (Exception e) {

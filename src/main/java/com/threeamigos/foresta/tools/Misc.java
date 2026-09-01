@@ -55,11 +55,11 @@ public class Misc {
 			"zero", "uno", "due", "tre", "quattro", "cinque", "sei", "sette", "otto", "nove", "dieci"
 	};
 
-	public static final String getCardinaleM(int numero) {
+	public static String getCardinaleM(int numero) {
 		return cardinali[numero];
 	}
 
-	public static final String getCardinaleF(int numero) {
+	public static String getCardinaleF(int numero) {
 		if (numero == 1)
 			return "una";
 		else
@@ -76,11 +76,11 @@ public class Misc {
 
 	private static final String ESIM = "esim";
 
-	public static final String getOrdinaleM(int numero) {
+	public static String getOrdinaleM(int numero) {
 		return getOrdinaleM(numero, false);
 	}
 
-	public static final String getOrdinaleM(int numero, boolean articolo) {
+	public static String getOrdinaleM(int numero, boolean articolo) {
 		StringBuilder sb = new StringBuilder(15);
 		if (articolo) {
 			if (numero == 8 || numero == 11)
@@ -95,11 +95,11 @@ public class Misc {
 		return sb.toString();
 	}
 
-	public static final String getOrdinaleF(int numero) {
+	public static String getOrdinaleF(int numero) {
 		return getOrdinaleF(numero, false);
 	}
 
-	public static final String getOrdinaleF(int numero, boolean articolo) {
+	public static String getOrdinaleF(int numero, boolean articolo) {
 		StringBuilder sb = new StringBuilder(15);
 		if (articolo) {
 			if (numero == 8 || numero == 11)

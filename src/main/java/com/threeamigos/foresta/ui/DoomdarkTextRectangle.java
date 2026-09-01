@@ -1,37 +1,38 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.image.MemoryImageSource;
-import java.util.List;
-
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.ui.DoomdarkFont.UnsupportedCharacterException;
+
+import java.awt.image.MemoryImageSource;
+import java.util.Arrays;
+import java.util.List;
 
 public class DoomdarkTextRectangle {
 
 	// I testi contenuti
-	private String[] strings;
+	private final String[] strings;
 	// buffer per l'immagine temporanea che tiene il testo prima del rendering
-	private int[] textdata;
+	private final int[] textData;
 
-	private int width;
-	private int height;
-	private int fontHeight = DoomdarkFontSmall.getInstance().getHeight();
-	private int charPadding = DoomdarkFontSmall.getInstance().getPadding();
-	private DoomdarkFont fontSmall = DoomdarkFontSmall.getInstance();
+	private final int width;
+	private final int height;
+	private final int fontHeight = DoomdarkFontSmall.getInstance().getHeight();
+	private final int charPadding = DoomdarkFontSmall.getInstance().getPadding();
+	private final DoomdarkFont fontSmall = DoomdarkFontSmall.getInstance();
 
 	public DoomdarkTextRectangle(int width, int height) {
 		this.width = width;
 		this.height = height;
 		int maxStrings = height / fontHeight;
 		strings = new String[maxStrings];
-		textdata = new int[width * height];
+		textData = new int[width * height];
 	}
 
 	// muove verso l'alto il buffer temporaneo
-	private final void scrollUp() {
-		System.arraycopy(textdata, (fontHeight + 1) * width, textdata, 0, (height - fontHeight - 1) * width);
-		for (int i = (height - fontHeight) * width; i < textdata.length; i++) {
-			textdata[i] = 0x00;
+	private void scrollUp() {
+		System.arraycopy(textData, (fontHeight + 1) * width, textData, 0, (height - fontHeight - 1) * width);
+		for (int i = (height - fontHeight) * width; i < textData.length; i++) {
+			textData[i] = 0x00;
 		}
 		for (int i = 0; i < strings.length - 1; i++) {
 			strings[i] = strings[i + 1];
@@ -39,11 +40,11 @@ public class DoomdarkTextRectangle {
 	}
 
 	// renderizza una stringa
-	private final void render(String resource) {
+	private void render(String resource) {
 		int textDataIndex = width * (height - fontHeight) + charPadding; // punta alla prima cella in alto a sx dell'ultima riga di testo
 		int rowDataIndex = 1; // scorre lungo la riga per scoprire quando siamo usciti
 		for (int charIndex = 0; charIndex < resource.length(); charIndex++) {
-			byte[] charData = null;
+			byte[] charData;
 			try {
 				charData = fontSmall.getGlyphData(resource.charAt(charIndex));
 			} catch (UnsupportedCharacterException e) {
@@ -52,12 +53,12 @@ public class DoomdarkTextRectangle {
 			}
 			int charWidth = charData[0];
 			for (int bits = 0; bits < charWidth; bits++) {
-				// Questo controllo lo metto all'inizio cos� se la larghezza del canvas � zero non d� errore e torna
+				// Questo controllo lo metto all'inizio così se la larghezza del canvas è zero non dà errore e torna
 				if (rowDataIndex >= width - charPadding) {
 					return;
 				}
 				for (int row = 0; row < fontHeight; row++) {
-					textdata[textDataIndex + (width * row)] = (charData[row + 1] >> (7 - bits)) & 1;
+					textData[textDataIndex + (width * row)] = (charData[row + 1] >> (7 - bits)) & 1;
 				}
 				textDataIndex++;
 				rowDataIndex++;
@@ -67,7 +68,7 @@ public class DoomdarkTextRectangle {
 		}
 	}
 
-	private final void drawString(String s) {
+	private void drawString(String s) {
 		scrollUp();
 		strings[strings.length - 1] = s;
 		render(s);
@@ -85,16 +86,14 @@ public class DoomdarkTextRectangle {
 	}
 
 	public final void clear() {
-		for (int i = 0; i < strings.length; i++) {
-			strings[i] = "";
-		}
-		int l = textdata.length;
+        Arrays.fill(strings, "");
+		int l = textData.length;
 		for (int i = 0; i < l; i++) {
-			textdata[i] = 0;
+			textData[i] = 0;
 		}
 	}
 
 	public MemoryImageSource getImageSource() {
-		return new MemoryImageSource(width, height, DoomdarkColorModel.getColorModel(DoomdarkColorModel.Color.WHITE), textdata, 0, width);
+		return new MemoryImageSource(width, height, DoomdarkColorModel.getColorModel(DoomdarkColorModel.Color.WHITE), textData, 0, width);
 	}
 }

@@ -584,8 +584,7 @@ public class PersonaggioMD implements Serializzabile {
 				stream.print(PIPE);
 			}
 		}
-
-		stream.println("");
+		stream.println();
 
 		for (ArtefattoMD artefatto : artefatti) {
 			artefatto.salva(stream);

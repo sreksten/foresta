@@ -29,7 +29,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		STATO_PERSO,
 		STATO_VINTO,
 		STATO_STATISTICHE,
-		STATO_HISCORE
+		STATO_PUNTEGGI
 	}
 
 	private StatoDisplayableCanvas stato;
@@ -259,7 +259,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			introOutro.vinto(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_STATISTICHE) {
 			introOutro.statistiche(graphics);
-		} else if (stato == StatoDisplayableCanvas.STATO_HISCORE) {
+		} else if (stato == StatoDisplayableCanvas.STATO_PUNTEGGI) {
 			introOutro.hiscore(graphics);
 		}
 	}
@@ -270,7 +270,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			stato = StatoDisplayableCanvas.STATO_INTRO;
 			introOutro.resettaSequenza();
 		} else {
-			// + 2 per permettere i titoli di testa e gli highscore
+			// + 2 per permettere i titoli di testa e i punteggi
 			introOutro.incrementaSequenza(Misc.STORIA.length + 2);
 		}
 		repaint();
@@ -336,7 +336,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	public void hiscore() {
-		stato = StatoDisplayableCanvas.STATO_HISCORE;
+		stato = StatoDisplayableCanvas.STATO_PUNTEGGI;
 		repaint();
 	}
 

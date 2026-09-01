@@ -18,9 +18,9 @@ import com.threeamigos.foresta.ui.UI;
 import java.util.List;
 
 /**
- * La locazione e' un automa a stati finiti. Un gruppo mentre si sposta per
+ * La locazione è un automa a stati finiti. Un gruppo mentre si sposta per
  * la foresta si trova all'interno di una locazione. Appena entra la locazione
- * e' in stato NUOVA_LOCAZIONE (vengono creati i mostri e gli oggetti). Quindi
+ * è in stato NUOVA_LOCAZIONE (vengono creati i mostri e gli oggetti). Quindi
  * il gruppo continua a trovarsi in stato IN_LOCAZIONE. A seconda delle azioni
  * che intraprende puo' spostarsi momentaneamente da tale stato (ad esempio
  * per richiedere il personaggio attivo o il bersaglio di un incantesimo) ma finisce
@@ -32,15 +32,15 @@ import java.util.List;
  * Puo' anche tentare una corruzione e va in stato CHI_CORROMPE, o
  * puo' tentare di fare amicizia e va in stato CHI_FA_AMICIZIA.
  * Gli stati sono riferiti al gruppo ma vengono tenuti all'interno della
- * locazione, questo perche' esistono altre locazioni che fanno invece altre
+ * locazione, questo perché esistono altre locazioni che fanno invece altre
  * cose - la locanda, ad esempio, permette di pernottare o prendere gente con se),
- * la citta' anche (andare da un alchimista, eccetera).
+ * la città anche (andare da un alchimista, eccetera).
  */
 
 public abstract class LocazioneBase implements Locazione {
 
 	/**
-	 * L'elenco dei mostri e degli oggetti che e' possibile trovare
+	 * L'elenco dei mostri e degli oggetti che è possibile trovare
 	 * all'interno di questa locazione
 	 */
 	protected static ClassePersonaggio[] possibiliIncontri = {};
@@ -51,8 +51,8 @@ public abstract class LocazioneBase implements Locazione {
 	
 	private Oggetto oggettoCorrente;
 
-	// Una locazione e' completa se non vi sono più mostri ed il gruppo non
-	// e' fuggito; questo serve per sapere se si possono
+	// Una locazione è completa se non vi sono più mostri e il gruppo non
+	// è fuggito; questo serve per sapere se si possono
 	// prendere gli oggetti o se i mostri dei castelli sono
 	// stati sconfitti.
 	protected boolean completa;
@@ -71,10 +71,8 @@ public abstract class LocazioneBase implements Locazione {
 	private Personaggio combattente;
 	// Per formulare un incantesimo
 	private Personaggio formulante;
-	// Per fare una azione generica
-	private Personaggio chiAgisce;
-	
-	private Incantesimo incantesimo;
+
+    private Incantesimo incantesimo;
 	private Gruppo gruppoBersaglio;
 
 	private enum StatoLocazione {
@@ -133,7 +131,7 @@ public abstract class LocazioneBase implements Locazione {
 			if (possibilitaIncontro <= 90) {
 				int ordinale = Dado.tira(m.length) - 1;
 				ClassePersonaggio classePersonaggio = m[ordinale];
-				int numero = Dado.tira(classePersonaggio.getQuantitaMassima());
+				int numero = classePersonaggio.getQuantitaMassima() == 1 ? 1 : Dado.tira(classePersonaggio.getQuantitaMassima());
 				Logger.log("Scelta da " + m.length + " personaggi la classe " + classePersonaggio + ", numero " + numero);
 				Personaggio p;
 				for (int i = 0; i < numero; i++) {
@@ -186,11 +184,12 @@ public abstract class LocazioneBase implements Locazione {
 	 */
 	@Override
 	public Stato impostaAzioni(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario, Comando azione) {
-		String nome;
-		Stato possibileStato = null;
-		switch (statoLocazione) {
+        Stato possibileStato;
+        // Per fare una azione generica
+        Personaggio chiAgisce;
+        switch (statoLocazione) {
 		case NUOVA_LOCAZIONE:
-			possibileStato = gestisciNuovaLocazione(azione);
+			possibileStato = gestisciNuovaLocazione();
 			if (possibileStato != null) {
 				return possibileStato;
 			}
@@ -385,7 +384,9 @@ public abstract class LocazioneBase implements Locazione {
 				break;
 			}
 			Personaggio personaggio = gruppo.getPersonaggio(azione);
-			if (personaggio.getCarisma() > Dado.tira(12)) {
+			int tiroDelDado = Dado.tira(12);
+			Logger.log("Carisma personaggio: " + personaggio.getCarisma() + "; tiro del dado: " + tiroDelDado);
+			if (personaggio.getCarisma() > tiroDelDado) {
 				personaggio.addCarisma(1);
                 String sb = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
                         " riesce a stringere amicizia.";
@@ -458,7 +459,7 @@ public abstract class LocazioneBase implements Locazione {
 
 				String s = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 				if (descrizione != null) {
-					UI.notifica("Non solo " + s + " non riesce a stringere amicizia, ma in una breve collutazione " + descrizione);
+					UI.notifica("Non solo " + s + " non riesce a stringere amicizia, ma in una breve colluttazione " + descrizione);
 					UI.rinfresca();
 				} else {
 					UI.notifica(s + " non riesce a stringere amicizia.");
@@ -529,7 +530,7 @@ public abstract class LocazioneBase implements Locazione {
 		if (gruppo.getPozioniMagia() > 0) {
 			Azioni.add(Comando.MAGIA);
 		}
-		// Si puo' sempre ricorrere ad una bella...
+		// Si puo' sempre ricorrere a una bella...
 		Azioni.add(Comando.FUGA);
 		// E possiamo sempre richiedere di descrivere di nuovo la locazione
 		Azioni.add(Comando.AIUTO);
@@ -538,7 +539,7 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
-	 * Il giocatore ha portato in fondo la locazione o e' fuggito?
+	 * Il giocatore ha portato in fondo la locazione o è fuggito?
 	 */
 	public boolean isCompleta() {
 		return completa;
@@ -663,7 +664,7 @@ public abstract class LocazioneBase implements Locazione {
 		return haStrettoAmicizia;
 	}
 	
-	private Stato gestisciNuovaLocazione(Comando azione) {
+	private Stato gestisciNuovaLocazione() {
 		Logger.log("LocazioneBase.NUOVA_LOCAZIONE");
 		TipoLocazione tipoLocazione = gruppo.getClasseLocazione().getTipoLocazione();
 		int numeroAvversari = gruppoAvversario.getNumeroPersonaggi();

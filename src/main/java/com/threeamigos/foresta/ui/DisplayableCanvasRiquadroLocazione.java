@@ -12,7 +12,9 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 class DisplayableCanvasRiquadroLocazione {
@@ -31,15 +33,12 @@ class DisplayableCanvasRiquadroLocazione {
 		mappaCoordinate.clear();
 		GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
 		int personaggi = gruppoAvversario.getNumeroPersonaggi();
-		BufferedImage d;
-		Personaggio personaggioCorrente;
-		for (int i = personaggi - 1; i >= 0; i--) {
-			personaggioCorrente = gruppoAvversario.getPersonaggio(i);
-			d = personaggioCorrente.getImmagine();
-			mappaCoordinate.put(personaggioCorrente, new CoordinateMD(topLeftX + i * 20 + Dado.tira(10),
+		int i = 0;
+		for (Personaggio personaggioCorrente : gruppoAvversario.getPersonaggi()) {
+			BufferedImage d = personaggioCorrente.getImmagine();
+			mappaCoordinate.put(personaggioCorrente, new CoordinateMD(topLeftX + i++ * 20 + Dado.tira(10),
 					ImageCache.SPACING + ImageCache.locazioni.get(ClassiLocazione.BOSCO).getHeight() - i * 6 - d.getHeight()));
 		}
-
 	}
 
 	void disegnaLocazione(Graphics2D graphics) {
@@ -50,21 +49,19 @@ class DisplayableCanvasRiquadroLocazione {
 		int locXOffset = topLeftX;
 		graphics.drawImage(locazione, locXOffset, topLeftY, null);
 
-		int personaggi = gng.getNumeroPersonaggi();
-		BufferedImage d;
-		Personaggio personaggioCorrente;
-		for (int i = personaggi - 1; i >= 0; i--) {
-			personaggioCorrente = gng.getPersonaggio(i);
-			if (personaggioCorrente.isVivo()) {
-				d = personaggioCorrente.getImmagine();
-				CoordinateMD coordinate = mappaCoordinate.get(personaggioCorrente);
-				graphics.drawImage(d, coordinate.getX(), coordinate.getY(), null);
-			}
+		// Lista invertita
+		List<Personaggio> avversariDaDisegnare = new ArrayList<>();
+		gng.getPersonaggiVivi().forEach(p -> avversariDaDisegnare.add(0, p));
+
+		for (Personaggio personaggioCorrente : avversariDaDisegnare) {
+			BufferedImage d = personaggioCorrente.getImmagine();
+			CoordinateMD coordinate = mappaCoordinate.get(personaggioCorrente);
+			graphics.drawImage(d, coordinate.getX(), coordinate.getY(), null);
 		}
 
 		Oggetto oggetto = classeLocazione.getIstanza().getOggetto();
 		if (oggetto != null && oggetto.getClasse() != ClassiOggetto.ARTEFATTO) {
-			d = oggetto.getClasse().getImmagine();
+			BufferedImage d = oggetto.getClasse().getImmagine();
 			graphics.drawImage(d, locXOffset + locazione.getWidth() - d.getWidth() - 5, ImageCache.SPACING + locazione.getHeight() - d.getHeight() - 5, null);
 		}
 	}

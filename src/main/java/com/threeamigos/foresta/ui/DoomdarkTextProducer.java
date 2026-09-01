@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.*;
 import java.awt.image.MemoryImageSource;
 import java.util.List;
 
@@ -10,7 +9,7 @@ public class DoomdarkTextProducer {
 	private DoomdarkTextProducer() {
 	}
 
-	private static final Image buildImageSource(String resource, DoomdarkFont font, DoomdarkColorModel.Color color) {		
+	private static Image buildImageSource(String resource, DoomdarkFont font, DoomdarkColorModel.Color color) {
 		int imageWidth = FontTool.getWidth(font, resource);
 		int fontHeight = font.getHeight();
 		int[] textData = new int[imageWidth * fontHeight]; // buffer per l'immagine temporanea
@@ -32,7 +31,7 @@ public class DoomdarkTextProducer {
 	}
 
 	// Rendering del testo
-	private static final Image buildImageSource(String multiLineResource, DoomdarkFont font, DoomdarkColorModel.Color color, int maxWidth) {
+	private static Image buildImageSource(String multiLineResource, DoomdarkFont font, DoomdarkColorModel.Color color, int maxWidth) {
 		List<String> strings = FontTool.split(font, multiLineResource, maxWidth);
 		int imageWidth = 0;
 		for (String string : strings) {
@@ -63,33 +62,33 @@ public class DoomdarkTextProducer {
 						DoomdarkColorModel.getColorModel(color), textData, 0, imageWidth));
 	}
 
-	public static final Image getImage(int number, DoomdarkFont font) {
+	public static Image getImage(int number, DoomdarkFont font) {
 		return getImage(String.valueOf(number), font, DoomdarkColorModel.Color.LIGHT_GRAY);
 	}
 
-	public static final Image getImage(String text, DoomdarkFont font) {
+	public static Image getImage(String text, DoomdarkFont font) {
 		return buildImageSource(text, font, DoomdarkColorModel.Color.LIGHT_GRAY);
 	}
-	public static final Image getImage(int number, DoomdarkFont font, DoomdarkColorModel.Color color) {
+	public static Image getImage(int number, DoomdarkFont font, DoomdarkColorModel.Color color) {
 		return getImage(String.valueOf(number), font, color);
 	}
 
-	public static final Image getImage(String text, DoomdarkFont font, DoomdarkColorModel.Color color) {
+	public static Image getImage(String text, DoomdarkFont font, DoomdarkColorModel.Color color) {
 		return buildImageSource(text, font, color);
 	}
 
-	public static final Image getImage(int number, DoomdarkFont font, int maxWidth) {
+	public static Image getImage(int number, DoomdarkFont font, int maxWidth) {
 		return getImage(String.valueOf(number), font, DoomdarkColorModel.Color.LIGHT_GRAY, maxWidth);
 	}
 
-	public static final Image getImage(String text, DoomdarkFont font, int maxWidth) {
+	public static Image getImage(String text, DoomdarkFont font, int maxWidth) {
 		return buildImageSource(text, font, DoomdarkColorModel.Color.LIGHT_GRAY, maxWidth);
 	}
-	public static final Image getImage(int number, DoomdarkFont font, DoomdarkColorModel.Color color, int maxWidth) {
+	public static Image getImage(int number, DoomdarkFont font, DoomdarkColorModel.Color color, int maxWidth) {
 		return getImage(String.valueOf(number), font, color, maxWidth);
 	}
 
-	public static final Image getImage(String text, DoomdarkFont font, DoomdarkColorModel.Color color, int maxWidth) {
+	public static Image getImage(String text, DoomdarkFont font, DoomdarkColorModel.Color color, int maxWidth) {
 		return buildImageSource(text, font, color, maxWidth);
 	}
 }

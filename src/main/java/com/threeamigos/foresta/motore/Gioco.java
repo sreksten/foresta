@@ -7,24 +7,22 @@ public class Gioco {
 	private Gioco() {
 	}
 
-	private static Temporizzatore temporizzatore;
-	private static ControlloreDiGioco motore;
+    private static ControlloreDiGioco controlloreDiGioco;
 
-	public static void impostaParametri(Temporizzatore t, ControlloreDiGioco c) {
-		temporizzatore = t;
-		motore = c;
-		motore.setTemporizzatore(temporizzatore);
+	public static void impostaParametri(Temporizzatore temporizzatore, ControlloreDiGioco controllore) {
+        controlloreDiGioco = controllore;
+		controlloreDiGioco.setTemporizzatore(temporizzatore);
 	}
 
 	public static void inizia() {
-		motore.inizia();
+		controlloreDiGioco.inizia();
 	}
 
 	public static void riceviTesto(String s) {
-		motore.riceviTesto(s);
+		controlloreDiGioco.riceviTesto(s);
 	}
 
 	public static void processaAzione(Comando azione) {
-		motore.processaAzione(azione);
+		controlloreDiGioco.processaAzione(azione);
 	}
 }

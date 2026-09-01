@@ -115,8 +115,8 @@ public class UI {
 	/**
 	 * Richiama la schermata o animazione che riporta la tabella dei punteggi
 	 */
-	public static void hiscore() {
-		interfacciaUtente.hiscore();
+	public static void punteggi() {
+		interfacciaUtente.punteggi();
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class UI {
 	}
 
 	/**
-	 * Inoltra un testo ricevuto ad un controllore di gioco
+	 * Inoltra un testo ricevuto a un controllore di gioco
 	 */
 	public static void riceviTesto(String s) {
 		interfacciaUtente.riceviTesto(s);
@@ -157,7 +157,7 @@ public class UI {
 
 	/**
 	 * Propone al giocatore una serie di possibili azioni tra le quali scegliere per
-	 * poter continuare il gioco. L'array azioni[] viene riempito con valori
+	 * poter continuare il gioco. L'elenco delle possibili azioni viene riempito con valori
 	 * provenienti dalla classe Comando
 	 */
 	public static void impostaAzioni() {
@@ -239,16 +239,16 @@ public class UI {
 		interfacciaUtente.variaIncantesimi(classeIncantesimo, variazione);
 	}
 
-	public static void variaPozioniForza(int variazione) {
-		interfacciaUtente.variaPozioniForza(variazione);
+	public static void variaPozioniSalute(int variazione) {
+		interfacciaUtente.variaPozioniSalute(variazione);
 	}
 
 	public static void variaPozioniMagia(int variazione) {
 		interfacciaUtente.variaPozioniMagia(variazione);
 	}
 
-	public static void variaPozioniGrandeForza(int variazione) {
-		interfacciaUtente.variaPozioniForza(variazione);
+	public static void variaGrandiPozioniSalute(int variazione) {
+		interfacciaUtente.variaGrandiPozioniSalute(variazione);
 	}
 
 	public static void variaMappa() {

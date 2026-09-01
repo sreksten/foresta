@@ -151,7 +151,7 @@ public class ForestaUI implements InterfacciaUtente {
 		displayableCanvas.statistiche();
 	}
 
-	public void hiscore() {
+	public void punteggi() {
 		displayableCanvas.hiscore();
 	}
 
@@ -268,7 +268,7 @@ public class ForestaUI implements InterfacciaUtente {
 	}
 
 	@Override
-	public void variaPozioniForza(int variazione) {
+	public void variaPozioniSalute(int variazione) {
 		displayableCanvas.variaPozioniForza(variazione);
 	}
 
@@ -278,7 +278,7 @@ public class ForestaUI implements InterfacciaUtente {
 	}
 
 	@Override
-	public void variaPozioniGrandeForza(int variazione) {
+	public void variaGrandiPozioniSalute(int variazione) {
 		displayableCanvas.variaPozioniGrandeForza(variazione);
 	}
 

@@ -120,12 +120,12 @@ public class GruppoGiocatore extends Gruppo {
 
 	public final void addPozioniForza(int quantita) {
 		md.setPozioniForza(md.getPozioniForza() + quantita);
-		UI.variaPozioniForza(quantita);
+		UI.variaPozioniSalute(quantita);
 	}
 
 	public final void subPozioniForza(int quantita) {
 		md.setPozioniForza(md.getPozioniForza() - quantita);
-		UI.variaPozioniForza(-quantita);
+		UI.variaPozioniSalute(-quantita);
 	}
 
 	public final int getPozioniGrandeForza() {
@@ -134,12 +134,12 @@ public class GruppoGiocatore extends Gruppo {
 	
 	public final void addPozioniGrandeForza(int quantita) {
 		md.setPozioniForza(md.getPozioniGrandeForza() + quantita);
-		UI.variaPozioniGrandeForza(quantita);
+		UI.variaGrandiPozioniSalute(quantita);
 	}
 
 	public final void subPozioniGrandeForza(int quantita) {
 		md.setPozioniForza(md.getPozioniGrandeForza() - quantita);
-		UI.variaPozioniGrandeForza(-quantita);
+		UI.variaGrandiPozioniSalute(-quantita);
 	}
 	
 	public final int getPozioniMagia() {

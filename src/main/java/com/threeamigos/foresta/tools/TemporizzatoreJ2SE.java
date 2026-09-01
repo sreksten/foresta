@@ -2,41 +2,21 @@ package com.threeamigos.foresta.tools;
 
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.ControlloreDiGioco;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 
 public class TemporizzatoreJ2SE implements Temporizzatore {
 
-	private class MyThread extends Thread {
-		private boolean termina;
-		private int secondi;
+	private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1, r -> {
+		Thread t = new Thread(r);
+		t.setDaemon(true);
+		return t;
+	});
 
-		public MyThread(int secondi) {
-			this.secondi = secondi;
-			termina = false;
-			setDaemon(true);
-			start();
-		}
-
-		public void interrompi() {
-			termina = true;
-		}
-
-		@Override
-		public void run() {
-			try {
-				while (!termina) {
-					sleep((long) secondi * 1000);
-					if (!termina) {
-						controlloreDiGioco.processaAzione(Comando.TIMER);
-					}
-				}
-			} catch (InterruptedException e) {
-				Thread.currentThread().interrupt();
-			}
-		}
-	}
-
+	private ScheduledFuture<?> timerTask;
 	private ControlloreDiGioco controlloreDiGioco;
-	private MyThread myThread;
 
 	public void setControlloreDiGioco(ControlloreDiGioco c) {
 		this.controlloreDiGioco = c;
@@ -44,15 +24,20 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 	}
 
 	public void inizia(int secondi) {
-		if (myThread != null) {
-			myThread.interrompi();
+		if (timerTask != null) {
+			timerTask.cancel(false);
 		}
-		myThread = new MyThread(secondi);
+		timerTask = executor.scheduleWithFixedDelay(
+			() -> controlloreDiGioco.processaAzione(Comando.TIMER),
+                secondi,
+                secondi,
+			TimeUnit.SECONDS
+		);
 	}
 
 	public void termina() {
-		if (myThread != null) {
-			myThread.interrompi();
+		if (timerTask != null) {
+			timerTask.cancel(false);
 		}
 	}
 }

@@ -1,18 +1,18 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.motore.Logger;
+import com.threeamigos.foresta.ui.DoomdarkFont.UnsupportedCharacterException;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
-
-import com.threeamigos.foresta.motore.Logger;
-import com.threeamigos.foresta.ui.DoomdarkFont.UnsupportedCharacterException;
 
 public class FontTool {
 	
 	private FontTool() {
 	}
 
-	public static final int getWidth(DoomdarkFont font, String s) {
+	public static int getWidth(DoomdarkFont font, String s) {
 		int width = 0;
 		final int charSpacing = font.getSpacing();
 		for (int i = 0; i < s.length(); i++) {
@@ -26,8 +26,8 @@ public class FontTool {
 		return width;
 	}
 
-	// Spezza la frase in più stringhe per falr rientrare in una larghezza massima
-	public static final List<String> split(DoomdarkFont font, String s, int width) {
+	// Spezza la frase in più stringhe per farla rientrare in una larghezza massima
+	public static List<String> split(DoomdarkFont font, String s, int width) {
 		List<String> list = new ArrayList<>();
 		StringTokenizer st = new StringTokenizer(s, " ");
 		int phraseWidth = 0;

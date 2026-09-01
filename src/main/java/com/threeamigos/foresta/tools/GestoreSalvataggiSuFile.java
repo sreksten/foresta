@@ -1,15 +1,10 @@
 package com.threeamigos.foresta.tools;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
+import com.threeamigos.foresta.motore.Logger;
+
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.threeamigos.foresta.motore.Logger;
 
 public class GestoreSalvataggiSuFile extends GestoreSalvataggiBase {
 
@@ -77,7 +72,7 @@ public class GestoreSalvataggiSuFile extends GestoreSalvataggiBase {
 		}
 	}
 
-	private final File recuperaDirectorySalvataggi() {
+	private File recuperaDirectorySalvataggi() {
 		String homeName = System.getProperty("user.home");
 		File homeFile = new File(homeName);
 		if (homeFile.isDirectory()) {

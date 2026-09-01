@@ -13,13 +13,13 @@ public class Main {
 	private static boolean tuttoSchermo = false;
 
 	private static void leggiArgomenti(String[] args) {
-		for (int i = 0; i < args.length; i++) {
-			if (args[i].equalsIgnoreCase("ORIZZONTALE")) {
-				orientamento = Orientamento.ORIZZONTALE;
-			} else if (args[i].equalsIgnoreCase("TUTTOSCHERMO")) {
-				tuttoSchermo = true;
-			}
-		}
+        for (String arg : args) {
+            if (arg.equalsIgnoreCase("ORIZZONTALE")) {
+                orientamento = Orientamento.ORIZZONTALE;
+            } else if (arg.equalsIgnoreCase("TUTTOSCHERMO")) {
+                tuttoSchermo = true;
+            }
+        }
 	}
 
 	public static void main(String[] args) throws Exception {
