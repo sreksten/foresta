@@ -1,13 +1,13 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+
 import java.awt.image.BufferedImage;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
-
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
 public class ImageCache {
 
@@ -36,15 +36,15 @@ public class ImageCache {
 	static BufferedImage spriteAmicizia;
 	static BufferedImage spriteCombattimento;
 	static BufferedImage spriteMagia;
-	static BufferedImage spritePozioneForza;
-	static BufferedImage spritePozioneGrandeForza;
+	static BufferedImage spritePozioneSalute;
+	static BufferedImage spritePozioneSaluteGrande;
 	static BufferedImage spritePozioneMagia;
 	static BufferedImage spriteMappa;
 	static BufferedImage spriteMoneta;
 	static BufferedImage spriteGemma;
 	static BufferedImage spriteTempo;
 
-	private static Map<String, BufferedImage> imageMap = new HashMap<>();
+	private static final Map<String, BufferedImage> imageMap = new HashMap<>();
 	
 	private static boolean inited = false;
 	
@@ -98,9 +98,9 @@ public class ImageCache {
 		icone[ClassiIcona.SUD] = BufferedImageBuilder.buildBufferedImage("icone/Sud.gif");
 		icone[ClassiIcona.OVEST] = BufferedImageBuilder.buildBufferedImage("icone/Ovest.gif");
 		icone[ClassiIcona.ACCAMPAMENTO] = BufferedImageBuilder.buildBufferedImage("icone/Accampamento.gif");
-		icone[ClassiIcona.FORZA] = BufferedImageBuilder.buildBufferedImage("icone/Forza.gif");
-		icone[ClassiIcona.GRANDE_FORZA] = BufferedImageBuilder.buildBufferedImage("icone/GrandeForza.gif");
-		icone[ClassiIcona.MAGIA] = BufferedImageBuilder.buildBufferedImage("icone/Magia.gif");
+		icone[ClassiIcona.POZIONE_SALUTE] = BufferedImageBuilder.buildBufferedImage("icone/PozioneSalute.gif");
+		icone[ClassiIcona.GRANDE_POZIONE_SALUTE] = BufferedImageBuilder.buildBufferedImage("icone/PozioneSaluteGrande.gif");
+		icone[ClassiIcona.POZIONE_MAGIA] = BufferedImageBuilder.buildBufferedImage("icone/PozioneMagia.gif");
 		icone[ClassiIcona.MAPPA] = BufferedImageBuilder.buildBufferedImage("icone/Mappa.gif");
 		icone[ClassiIcona.FLOPPY] = BufferedImageBuilder.buildBufferedImage("icone/Floppy.gif");
 		icone[ClassiIcona.NUMERO_1] = BufferedImageBuilder.buildBufferedImage("icone/1.gif");
@@ -234,9 +234,9 @@ public class ImageCache {
 		spriteAmicizia = BufferedImageBuilder.buildBufferedImage("icone/Amicizia-nobordo-piccolo.gif");
 		spriteCombattimento = BufferedImageBuilder.buildBufferedImage("icone/Combattimento-nobordo-piccolo.gif");
 		spriteMagia = BufferedImageBuilder.buildBufferedImage("icone/Incantesimo-nobordo-piccolo.gif");
-		spritePozioneForza = BufferedImageBuilder.buildBufferedImage("icone/Forza-nobordo-piccolo.gif");
-		spritePozioneGrandeForza = BufferedImageBuilder.buildBufferedImage("icone/GrandeForza-nobordo-piccolo.gif");
-		spritePozioneMagia = BufferedImageBuilder.buildBufferedImage("icone/Magia-nobordo-piccolo.gif");
+		spritePozioneSalute = BufferedImageBuilder.buildBufferedImage("icone/PozioneSalute-nobordo-piccolo.gif");
+		spritePozioneSaluteGrande = BufferedImageBuilder.buildBufferedImage("icone/PozioneSaluteGrande-nobordo-piccolo.gif");
+		spritePozioneMagia = BufferedImageBuilder.buildBufferedImage("icone/PozioneMagia-nobordo-piccolo.gif");
 		spriteMappa = BufferedImageBuilder.buildBufferedImage("icone/Mappa-nobordo-piccolo.gif");
 		spriteMoneta = BufferedImageBuilder.buildBufferedImage("icone/Moneta-nobordo-piccolo.gif");
 		spriteGemma = BufferedImageBuilder.buildBufferedImage("icone/Gemma-nobordo-piccolo.gif");

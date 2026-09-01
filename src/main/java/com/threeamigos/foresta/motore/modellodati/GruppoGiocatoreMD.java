@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.StringTokenizer;
-
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 
 public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 
@@ -13,8 +13,8 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	private int monete;
 	private int preziosi;
 	private int[] incantesimi = new int[ClassiIncantesimo.values().length];
-	private int pozioniForza;
-	private int pozioniGrandeForza;
+	private int pozioniSalute;
+	private int pozioniSaluteGrande;
 	private int pozioniMagia;
 	// Coordinate all'interno della Foresta
 	private CoordinateMD coordinate;
@@ -51,20 +51,20 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		this.incantesimi = incantesimi;
 	}
 
-	public int getPozioniForza() {
-		return pozioniForza;
+	public int getPozioniSalute() {
+		return pozioniSalute;
 	}
 
-	public void setPozioniForza(int pozioniForza) {
-		this.pozioniForza = pozioniForza;
+	public void setPozioniSalute(int pozioniSalute) {
+		this.pozioniSalute = pozioniSalute;
 	}
 
-	public int getPozioniGrandeForza() {
-		return pozioniGrandeForza;
+	public int getPozioniSaluteGrande() {
+		return pozioniSaluteGrande;
 	}
 
-	public void setPozioniGrandeForza(int pozioniGrandeForza) {
-		this.pozioniGrandeForza = pozioniGrandeForza;
+	public void setPozioniSaluteGrande(int pozioniSaluteGrande) {
+		this.pozioniSaluteGrande = pozioniSaluteGrande;
 	}
 
 	public int getPozioniMagia() {
@@ -109,9 +109,9 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 			stream.print(incantesimi[i]);
 			stream.print(PIPE);
 		}
-		stream.print(pozioniForza);
+		stream.print(pozioniSalute);
 		stream.print(PIPE);
-		stream.print(pozioniGrandeForza);
+		stream.print(pozioniSaluteGrande);
 		stream.print(PIPE);
 		stream.print(pozioniMagia);
 		stream.print(PIPE);
@@ -130,8 +130,8 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		for (int i = 0; i < incantesimi.length; i++) {
 			incantesimi[i] = Integer.parseInt(st.nextToken());
 		}
-		pozioniForza = Integer.parseInt(st.nextToken());
-		pozioniGrandeForza = Integer.parseInt(st.nextToken());
+		pozioniSalute = Integer.parseInt(st.nextToken());
+		pozioniSaluteGrande = Integer.parseInt(st.nextToken());
 		pozioniMagia = Integer.parseInt(st.nextToken());
 		coordinate = new CoordinateMD(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
 	}

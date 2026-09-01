@@ -1,15 +1,14 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.motore.Comando;
-import com.threeamigos.foresta.motore.Dado;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
 
 public class Anello extends OggettoBase implements Oggetto {
+
+
 
 	private static final int VALORE = 0;
 	private static final int CORAGGIO = 1;
@@ -21,8 +20,16 @@ public class Anello extends OggettoBase implements Oggetto {
 
 	public Anello() {
 		super();
-		anelloMagico = Dado.tira(6) == 6;
-		tipo = Dado.tira(3);
+		int tiroDado = Dado.tira(6);
+		Logger.log("Tiro del dado per anello magico: " + tiroDado);
+		if (tiroDado == 6) {
+			anelloMagico = true;
+			tipo = Dado.tira(3);
+			Logger.log("Anello magico di tipo " + tipo);
+		} else {
+			anelloMagico = false;
+			tipo = -1;
+		}
 	}
 
 	public String getAIS() {
@@ -68,7 +75,7 @@ public class Anello extends OggettoBase implements Oggetto {
 				UI.notifica(sb.toString());
 				notificato = true;
 			}
-			if (gruppo.getNumeroPersonaggi() > 1 && azione == null) {
+			if (gruppo.getNumeroPersonaggiVivi() > 1 && azione == null) {
 				UI.notifica("Chi lo vuole indossare?");
 				return false;
 			} else {

@@ -397,7 +397,7 @@ public class Automa implements ControlloreDiGioco {
 						if (oggetto != null) {
 							Logger.log("Prendo oggetto utilizzando azione " + azione);
 							if (!oggetto.prendi(gruppo, azione)) {
-								Logger.log("L'oggetto non si lascia prendere con l'azione specificata");
+								Logger.log("L'oggetto non si lascia prendere con l'azione " + azione);
 								statoPrecedente = Stato.FINE_LOCAZIONE;
 								stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 								processaAzione(null);
@@ -468,14 +468,14 @@ public class Automa implements ControlloreDiGioco {
 						Azioni.add(Comando.ACCAMPAMENTO);
 					}
 				}
-				if (gruppo.getPozioniForza() > 0) {
-					Azioni.add(Comando.FORZA);
+				if (gruppo.getPozioniSalute() > 0) {
+					Azioni.add(Comando.POZIONE_SALUTE);
 				}
-				if (gruppo.getPozioniGrandeForza() > 0) {
-					Azioni.add(Comando.GRANDE_FORZA);
+				if (gruppo.getPozioniSaluteGrande() > 0) {
+					Azioni.add(Comando.GRANDE_POZIONE_SALUTE);
 				}
 				if (gruppo.getPozioniMagia() > 0) {
-					Azioni.add(Comando.MAGIA);
+					Azioni.add(Comando.POZIONE_MAGIA);
 				}
 				Azioni.add(Comando.FLOPPY);
 
@@ -501,17 +501,17 @@ public class Automa implements ControlloreDiGioco {
 					stato = Stato.ATTESA_DIREZIONE;
 					processaAzione(null);
 					return;
-				case FORZA:
+				case POZIONE_SALUTE:
 					statoPrecedente = Stato.ATTESA_POZIONE_SALUTE;
 					stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 					processaAzione(null);
 					return;
-				case GRANDE_FORZA:
+				case GRANDE_POZIONE_SALUTE:
 					statoPrecedente = Stato.ATTESA_GRANDE_POZIONE_SALUTE;
 					stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 					processaAzione(null);
 					return;
-				case MAGIA:
+				case POZIONE_MAGIA:
 					statoPrecedente = Stato.ATTESA_MAGIA;
 					stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 					processaAzione(null);
@@ -574,7 +574,7 @@ public class Automa implements ControlloreDiGioco {
 				if (azione != Comando.ANNULLA) {
 					personaggio = gruppo.getPersonaggio(azione);
 					personaggio.addSalute(100);
-					gruppo.subPozioniForza(1);
+					gruppo.subPozioniSalute(1);
 					UI.notifica(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ha bevuto una pozione che fa riacquistare salute.");
 				}
 				stato = Stato.ATTESA_DIREZIONE;
@@ -587,7 +587,7 @@ public class Automa implements ControlloreDiGioco {
 					personaggio = gruppo.getPersonaggio(azione);
 					personaggio.addSalute(personaggio.getSaluteMassima());
 					personaggio.addSaluteMassima(10);
-					gruppo.subPozioniGrandeForza(1);
+					gruppo.subPozioniSaluteGrande(1);
 					UI.notifica(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ha bevuto una pozione che fa aumentare la salute!");
 				}
 				stato = Stato.ATTESA_DIREZIONE;

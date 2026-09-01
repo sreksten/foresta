@@ -12,6 +12,8 @@ import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
 
+import java.util.function.Function;
+
 /**
  * Un insieme di personaggi guidati da un giocatore
  */
@@ -44,8 +46,8 @@ public class GruppoGiocatore extends Gruppo {
 		md.setIncantesimi(ClassiIncantesimo.ARIA, 3);
 		md.setIncantesimi(ClassiIncantesimo.ACQUA, 3);
 		md.setIncantesimi(ClassiIncantesimo.TERRA, 3);
-		md.setPozioniForza(0);
-		md.setPozioniGrandeForza(0);
+		md.setPozioniSalute(0);
+		md.setPozioniSaluteGrande(0);
 		md.setPozioniMagia(0);
 		md.setCoordinate(Foresta.getCoordinateLibere());
 		Foresta.aggiorna(this);
@@ -114,32 +116,32 @@ public class GruppoGiocatore extends Gruppo {
 		UI.variaIncantesimi(classeIncantesimo, -quantita);
 	}
 	
-	public final int getPozioniForza() {
-		return md.getPozioniForza();
+	public final int getPozioniSalute() {
+		return md.getPozioniSalute();
 	}
 
-	public final void addPozioniForza(int quantita) {
-		md.setPozioniForza(md.getPozioniForza() + quantita);
+	public final void addPozioniSalute(int quantita) {
+		md.setPozioniSalute(md.getPozioniSalute() + quantita);
 		UI.variaPozioniSalute(quantita);
 	}
 
-	public final void subPozioniForza(int quantita) {
-		md.setPozioniForza(md.getPozioniForza() - quantita);
+	public final void subPozioniSalute(int quantita) {
+		md.setPozioniSalute(md.getPozioniSalute() - quantita);
 		UI.variaPozioniSalute(-quantita);
 	}
 
-	public final int getPozioniGrandeForza() {
-		return md.getPozioniGrandeForza();
+	public final int getPozioniSaluteGrande() {
+		return md.getPozioniSaluteGrande();
 	}
 	
-	public final void addPozioniGrandeForza(int quantita) {
-		md.setPozioniForza(md.getPozioniGrandeForza() + quantita);
-		UI.variaGrandiPozioniSalute(quantita);
+	public final void addPozioniSaluteGrande(int quantita) {
+		md.setPozioniSalute(md.getPozioniSaluteGrande() + quantita);
+		UI.variaPozioniSaluteGrande(quantita);
 	}
 
-	public final void subPozioniGrandeForza(int quantita) {
-		md.setPozioniForza(md.getPozioniGrandeForza() - quantita);
-		UI.variaGrandiPozioniSalute(-quantita);
+	public final void subPozioniSaluteGrande(int quantita) {
+		md.setPozioniSalute(md.getPozioniSaluteGrande() - quantita);
+		UI.variaPozioniSaluteGrande(-quantita);
 	}
 	
 	public final int getPozioniMagia() {
@@ -371,16 +373,21 @@ public class GruppoGiocatore extends Gruppo {
 	public final void fugge() {
 		fuggito = true;		
 		UI.notifica(chiMaiuscolo() + ", in preda al panico, cerca la salvezza nella fuga! Sfortunatamente riceve gravi ferite e perde molte delle cose in suo possesso!");
-		subMonete(Dado.tira(0, md.getMonete() / 2));
-		subPreziosi(Dado.tira(0, md.getPreziosi() / 2));
+
+		Function<Integer, Integer> calcolaPerdita = m -> m < 2 ? m : Dado.tira(0, m / 2);
+
+		subMonete(calcolaPerdita.apply(md.getMonete()));
+		subPreziosi(calcolaPerdita.apply(md.getPreziosi()));
 		for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
 			int totaleIncantesimi = md.getIncantesimi(classeIncantesimo);
-			md.setIncantesimi(classeIncantesimo, totaleIncantesimi - Dado.tira(0, totaleIncantesimi / 2));
+			md.setIncantesimi(classeIncantesimo, calcolaPerdita.apply(totaleIncantesimi));
 		}
-		subPozioniForza(Dado.tira(0, md.getPozioniForza() / 2));
-		subPozioniGrandeForza(Dado.tira(0, md.getPozioniGrandeForza() / 2));
-		subPozioniMagia(Dado.tira(0, md.getPozioniMagia() / 2));
+		subPozioniSalute(calcolaPerdita.apply(md.getPozioniSalute()));
+		subPozioniSaluteGrande(calcolaPerdita.apply(md.getPozioniSaluteGrande()));
+		subPozioniMagia(calcolaPerdita.apply(md.getPozioniMagia()));
+
 		getPersonaggiVivi().forEach(Personaggio::fugge);
+
 		UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 		UI.rinfresca();
 	}

@@ -80,8 +80,8 @@ public abstract class LocazioneBase implements Locazione {
 		IN_LOCAZIONE,
 		CHI_COMBATTE,
 		IN_COMBATTIMENTO,
-		CHI_BEVE_POZIONE_CURATRICE,
-		CHI_BEVE_GRANDE_POZIONE_CURATRICE,
+		CHI_BEVE_POZIONE_SALUTE,
+		CHI_BEVE_POZIONE_SALUTE_GRANDE,
 		CHI_BEVE_POZIONE_MAGIA,
 		CHI_FORMULA,
 		QUALE_FORMULA,
@@ -147,18 +147,25 @@ public abstract class LocazioneBase implements Locazione {
 		Artefatto a = getArtefatto(g);
 		if (a != null) {
 			setOggetto(a);
-		} else if (!isLocazioneVisitata()) {
-			// Non ci sono artefatti, creiamo un oggetto.
-			ClassiOggetto[] o = getPossibiliOggetti();
-			Logger.log("Scelta da " + o.length + " oggetti");
-			if (o.length > 0) {
-				ClassiOggetto classeOggetto = o[Dado.tira(o.length) - 1];
-				Logger.log("Classe oggetto " + classeOggetto);
-				Oggetto probabileOggetto = classeOggetto.getIstanza();
-				if (probabileOggetto.getQuantita() > 0) {
-					setOggetto(probabileOggetto);
-				}
+//		} else if (!isLocazioneVisitata()) {
+//			// Non ci sono artefatti, creiamo un oggetto.
+//			ClassiOggetto[] o = getPossibiliOggetti();
+//			Logger.log("Scelta da " + o.length + " oggetti");
+//			if (o.length > 0) {
+//				ClassiOggetto classeOggetto = o[Dado.tira(o.length) - 1];
+//				Logger.log("Classe oggetto " + classeOggetto);
+//				Oggetto probabileOggetto = classeOggetto.getIstanza();
+//				if (probabileOggetto.getQuantita() > 0) {
+//					setOggetto(probabileOggetto);
+//				}
+//			}
+//		}
+		} else {
+			Oggetto anello = null;
+			while (anello == null || anello.getQuantita() == 0) {
+				anello = ClassiOggetto.ANELLO.getIstanza();
 			}
+			setOggetto(anello);
 		}
 	}
 	
@@ -217,12 +224,12 @@ public abstract class LocazioneBase implements Locazione {
 			gestisciChiCombatte(azione);
 			break;
 
-		case CHI_BEVE_POZIONE_CURATRICE:
+		case CHI_BEVE_POZIONE_SALUTE:
 			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_CURATRICE");
 			if (azione != Comando.ANNULLA) {
 				chiAgisce = gruppo.getPersonaggio(azione);
 				chiAgisce.addSalute(100);
-				gruppo.subPozioniForza(1);
+				gruppo.subPozioniSalute(1);
 				UI.notifica(chiAgisce.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
 						" ha bevuto una pozione che fa riacquistare forza.");
 			}
@@ -230,13 +237,13 @@ public abstract class LocazioneBase implements Locazione {
 			impostaAzioni(gruppo, gruppoAvversario, null);
 			return Stato.IN_LOCAZIONE;
 
-		case CHI_BEVE_GRANDE_POZIONE_CURATRICE:
+		case CHI_BEVE_POZIONE_SALUTE_GRANDE:
 			Logger.log("LocazioneBase.CHI_BEVE_GRANDE_POZIONE_CURATRICE");
 			if (azione != Comando.ANNULLA) {
 				chiAgisce = gruppo.getPersonaggio(azione);
 				chiAgisce.addSalute(chiAgisce.getSaluteMassima());
 				chiAgisce.addSaluteMassima(10);
-				gruppo.subPozioniGrandeForza(1);
+				gruppo.subPozioniSaluteGrande(1);
 				UI.notifica(chiAgisce.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
 						" ha bevuto una pozione che fa aumentare la forza!");
 			}
@@ -521,14 +528,14 @@ public abstract class LocazioneBase implements Locazione {
 		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO) {
 			Azioni.add(Comando.MAPPA);
 		}
-		if (gruppo.getPozioniForza() > 0) {
-			Azioni.add(Comando.FORZA);
+		if (gruppo.getPozioniSalute() > 0) {
+			Azioni.add(Comando.POZIONE_SALUTE);
 		}
-		if (gruppo.getPozioniGrandeForza() > 0) {
-			Azioni.add(Comando.GRANDE_FORZA);
+		if (gruppo.getPozioniSaluteGrande() > 0) {
+			Azioni.add(Comando.GRANDE_POZIONE_SALUTE);
 		}
 		if (gruppo.getPozioniMagia() > 0) {
-			Azioni.add(Comando.MAGIA);
+			Azioni.add(Comando.POZIONE_MAGIA);
 		}
 		// Si puo' sempre ricorrere a una bella...
 		Azioni.add(Comando.FUGA);
@@ -750,13 +757,13 @@ public abstract class LocazioneBase implements Locazione {
 		if (azione == Comando.MAPPA) {
 			return Stato.MAPPA;
 		}
-		if (azione == Comando.FORZA) {
+		if (azione == Comando.POZIONE_SALUTE) {
 			return Stato.ATTESA_POZIONE_SALUTE;
 		}
-		if (azione == Comando.GRANDE_FORZA) {
+		if (azione == Comando.GRANDE_POZIONE_SALUTE) {
 			return Stato.ATTESA_GRANDE_POZIONE_SALUTE;
 		}
-		if (azione == Comando.MAGIA) {
+		if (azione == Comando.POZIONE_MAGIA) {
 			return Stato.ATTESA_MAGIA;
 		}
 		return null;
@@ -790,17 +797,17 @@ public abstract class LocazioneBase implements Locazione {
 				Logger.log("Azione.MAPPA");
 				return Stato.MAPPA;
 				
-			case FORZA:
+			case POZIONE_SALUTE:
 				Logger.log("Azione.POZIONE_FORZA");
-				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_CURATRICE;
+				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 				
-			case GRANDE_FORZA:
+			case GRANDE_POZIONE_SALUTE:
 				Logger.log("Azione.POZIONE_GRANDE_FORZA");
-				statoLocazione = StatoLocazione.CHI_BEVE_GRANDE_POZIONE_CURATRICE;
+				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE_GRANDE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 
-			case MAGIA:
+			case POZIONE_MAGIA:
 				Logger.log("Azione.POZIONE_MAGIA");
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;

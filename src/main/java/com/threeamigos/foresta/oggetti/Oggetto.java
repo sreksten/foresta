@@ -9,21 +9,21 @@ public interface Oggetto extends OggettoConArticoli {
 	/**
 	 * La classe dell'oggetto da ClassiOggetto
 	 */
-	public ClassiOggetto getClasse();
+    ClassiOggetto getClasse();
 
 	/**
 	 * Il nome singolare dell'oggetto
 	 */
-	public String getNomeSingolare();
+    String getNomeSingolare();
 	/**
 	 * Il nome plurale dell'oggetto
 	 */
-	public String getNomePlurale();
+    String getNomePlurale();
 
 	/**
 	 * Quanti oggetti il gruppo giocante ha trovato
 	 */
-	public int getQuantita();
+    int getQuantita();
 
 	/**
 	 * @param azione il numero del personaggio che prende l'oggetto, scelto tra
@@ -33,5 +33,5 @@ public interface Oggetto extends OggettoConArticoli {
 	 *         false se occorre specificare il personaggio attivo, ossia il personaggio che
 	 *         prende l'oggetto e ne subisce le conseguenze.
 	 */
-	public boolean prendi(GruppoGiocatore gruppo, Comando azione);
+    boolean prendi(GruppoGiocatore gruppo, Comando azione);
 }

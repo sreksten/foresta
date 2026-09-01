@@ -157,7 +157,7 @@ public interface InterfacciaUtente {
 
 	void variaPozioniMagia(int variazione);
 
-	void variaGrandiPozioniSalute(int variazione);
+	void variaPozioniSaluteGrande(int variazione);
 
 	void variaMappa();
 

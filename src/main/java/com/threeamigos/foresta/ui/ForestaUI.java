@@ -269,7 +269,7 @@ public class ForestaUI implements InterfacciaUtente {
 
 	@Override
 	public void variaPozioniSalute(int variazione) {
-		displayableCanvas.variaPozioniForza(variazione);
+		displayableCanvas.variaPozioniSalute(variazione);
 	}
 
 	@Override
@@ -278,8 +278,8 @@ public class ForestaUI implements InterfacciaUtente {
 	}
 
 	@Override
-	public void variaGrandiPozioniSalute(int variazione) {
-		displayableCanvas.variaPozioniGrandeForza(variazione);
+	public void variaPozioniSaluteGrande(int variazione) {
+		displayableCanvas.variaPozioniSaluteGrande(variazione);
 	}
 
 	@Override

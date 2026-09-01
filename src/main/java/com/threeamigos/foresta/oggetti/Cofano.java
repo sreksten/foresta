@@ -91,10 +91,10 @@ public class Cofano extends OggettoBase implements Oggetto {
 				gruppo.addIncantesimi(classeIncantesimo, 3);
 			} else if (tipo == 3) {
 				sb.append("trova una pozione della forza.");
-				gruppo.addPozioniForza(1);
+				gruppo.addPozioniSalute(1);
 			} else if (tipo == 4) {
 				sb.append("trova una pozione della grande forza.");
-				gruppo.addPozioniGrandeForza(1);
+				gruppo.addPozioniSaluteGrande(1);
 			} else if (tipo == 5) {
 				sb.append("trova una pozione della magia.");
 				gruppo.addPozioniMagia(1);

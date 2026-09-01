@@ -54,14 +54,17 @@ public class Artefatto implements Oggetto {
 	 * Interfaccia Oggetto
 	 */
 	@Override
-	public boolean prendi(GruppoGiocatore gruppo, Comando azione) {
-		if (azione == null) {
-			if (gruppo.getNumeroPersonaggi() > 1)
+	public boolean prendi(GruppoGiocatore gruppo, Comando comando) {
+		if (comando == null) {
+			if (gruppo.getNumeroPersonaggiVivi() > 1) {
 				UI.notifica("Chi raccoglie " + getNome() + '?');
-			return false;
+				return false;
+			} else {
+				comando = Comando.PERSONAGGIO_1;
+			}
 		}
-		Logger.log("Artefatto::prendi() - azione " + azione);
-		Personaggio p = gruppo.getPersonaggio(azione);
+		Logger.log("Artefatto::prendi() - azione " + comando);
+		Personaggio p = gruppo.getPersonaggio(comando);
 		p.addArtefatto(this);
 		UI.notifica(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " raccoglie " + md.getNome() + '.');
 		return true;

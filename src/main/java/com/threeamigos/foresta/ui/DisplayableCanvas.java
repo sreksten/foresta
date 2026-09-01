@@ -418,16 +418,16 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		aggiungiSprite(riquadroIncantesimi.variaIncantesimi(classeIncantesimo, variazione));
 	}
 
-	public void variaPozioniForza(int variazione) {
-		aggiungiSprite(riquadroIncantesimi.variaPozioniForza(variazione));
+	public void variaPozioniSalute(int variazione) {
+		aggiungiSprite(riquadroIncantesimi.variaPozioniSalute(variazione));
 	}
 
 	public void variaPozioniMagia(int variazione) {
-		aggiungiSprite(riquadroIncantesimi.variaPozioniGrandeForza(variazione));
+		aggiungiSprite(riquadroIncantesimi.variaPozioniMagia(variazione));
 	}
 
-	public void variaPozioniGrandeForza(int variazione) {
-		aggiungiSprite(riquadroIncantesimi.variaPozioniMagia(variazione));
+	public void variaPozioniSaluteGrande(int variazione) {
+		aggiungiSprite(riquadroIncantesimi.variaPozioniSaluteGrande(variazione));
 	}
 
 	public void variaMappa() {

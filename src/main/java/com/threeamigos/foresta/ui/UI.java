@@ -247,8 +247,8 @@ public class UI {
 		interfacciaUtente.variaPozioniMagia(variazione);
 	}
 
-	public static void variaGrandiPozioniSalute(int variazione) {
-		interfacciaUtente.variaGrandiPozioniSalute(variazione);
+	public static void variaPozioniSaluteGrande(int variazione) {
+		interfacciaUtente.variaPozioniSaluteGrande(variazione);
 	}
 
 	public static void variaMappa() {

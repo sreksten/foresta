@@ -1,24 +1,23 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 class DisplayableCanvasRiquadroIncantesimi {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI = 16;
 
-	private int topLeftX;
-	private int topLeftY;
-	private int iconaIncantesimoX;
-	private int nomeIncantesimoX;
-	private int totaleIncantesimoX;
-	private int iconaPozioneX;
-	private int nomePozioneX;
-	private int totalePozioneX;
+	private final int topLeftX;
+	private final int topLeftY;
+	private final int iconaIncantesimoX;
+	private final int nomeIncantesimoX;
+	private final int totaleIncantesimoX;
+	private final int iconaPozioneX;
+	private final int nomePozioneX;
+	private final int totalePozioneX;
 
 	DisplayableCanvasRiquadroIncantesimi(int topLeftX, int topLeftY) {
 		this.topLeftX = topLeftX;
@@ -32,8 +31,8 @@ class DisplayableCanvasRiquadroIncantesimi {
 		totaleIncantesimoX = topLeftX + (ImageCache.corniceIncantesimi.getWidth() / 2);
 
 		maxIconWidth = 0;
-		maxIconWidth = Math.max(maxIconWidth, ImageCache.spritePozioneForza.getWidth());
-		maxIconWidth = Math.max(maxIconWidth, ImageCache.spritePozioneGrandeForza.getWidth());
+		maxIconWidth = Math.max(maxIconWidth, ImageCache.spritePozioneSalute.getWidth());
+		maxIconWidth = Math.max(maxIconWidth, ImageCache.spritePozioneSaluteGrande.getWidth());
 		maxIconWidth = Math.max(maxIconWidth, ImageCache.spritePozioneMagia.getWidth());
 		iconaPozioneX = topLeftX + ImageCache.corniceIncantesimi.getWidth() / 2;
 		nomePozioneX = iconaPozioneX + maxIconWidth + 2;
@@ -69,19 +68,19 @@ class DisplayableCanvasRiquadroIncantesimi {
 		}
 		
 		locYOffset = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI;
-		BufferedImage iconaPozioneForza = ImageCache.spritePozioneForza;
-		graphics.drawImage(iconaPozioneForza, iconaPozioneX, locYOffset - (iconaPozioneForza.getHeight() - fontMedium.getHeight()) / 2, null);
+		BufferedImage iconaPozioneSalute = ImageCache.spritePozioneSalute;
+		graphics.drawImage(iconaPozioneSalute, iconaPozioneX, locYOffset - (iconaPozioneSalute.getHeight() - fontMedium.getHeight()) / 2, null);
 		doomdark = DoomdarkTextProducer.getImage("Salute", fontMedium, color);
 		graphics.drawImage(doomdark, nomePozioneX, locYOffset, null);
-		doomdark = DoomdarkTextProducer.getImage(g.getPozioniForza(), fontMedium, color);
+		doomdark = DoomdarkTextProducer.getImage(g.getPozioniSalute(), fontMedium, color);
 		graphics.drawImage(doomdark, totalePozioneX - doomdark.getWidth(null), locYOffset, null);
 		locYOffset += fontMedium.getHeight();
 
-		BufferedImage iconaPozioneGrandeForza = ImageCache.spritePozioneGrandeForza;
-		graphics.drawImage(iconaPozioneGrandeForza, iconaPozioneX, locYOffset - (iconaPozioneGrandeForza.getHeight() - fontMedium.getHeight()) / 2, null);
+		BufferedImage iconaPozioneSaluteGrande = ImageCache.spritePozioneSaluteGrande;
+		graphics.drawImage(iconaPozioneSaluteGrande, iconaPozioneX, locYOffset - (iconaPozioneSaluteGrande.getHeight() - fontMedium.getHeight()) / 2, null);
 		doomdark = DoomdarkTextProducer.getImage("G. Salute", fontMedium, color);
 		graphics.drawImage(doomdark, nomePozioneX, locYOffset, null);
-		doomdark = DoomdarkTextProducer.getImage(g.getPozioniGrandeForza(), fontMedium, color);
+		doomdark = DoomdarkTextProducer.getImage(g.getPozioniSaluteGrande(), fontMedium, color);
 		graphics.drawImage(doomdark, totalePozioneX - doomdark.getWidth(null), locYOffset, null);
 		locYOffset += fontMedium.getHeight();
 
@@ -105,21 +104,21 @@ class DisplayableCanvasRiquadroIncantesimi {
 		return new SpriteATempo(icona, variazione, fontMedium, totaleIncantesimoX, y);
 	}
 
-	SpriteInterface variaPozioniForza(int variazione) {
+	SpriteInterface variaPozioniSalute(int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
-		BufferedImage icona = ImageCache.spritePozioneForza;
+		BufferedImage icona = ImageCache.spritePozioneSalute;
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI;
 		return new SpriteATempo(icona, variazione, fontMedium, totalePozioneX, y);
 	}
 
-	SpriteInterface variaPozioniGrandeForza(int variazione) {
+	SpriteInterface variaPozioniSaluteGrande(int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
-		BufferedImage icona = ImageCache.spritePozioneGrandeForza;
+		BufferedImage icona = ImageCache.spritePozioneSaluteGrande;
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + fontMedium.getHeight();
 		return new SpriteATempo(icona, variazione, fontMedium, totalePozioneX, y);
