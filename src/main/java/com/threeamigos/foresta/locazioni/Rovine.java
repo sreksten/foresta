@@ -3,7 +3,7 @@ package com.threeamigos.foresta.locazioni;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
-import com.threeamigos.foresta.personaggi.ClassiPersonaggio;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.ui.UI;
 
 public class Rovine extends LocazioneBase {
@@ -22,18 +22,18 @@ public class Rovine extends LocazioneBase {
 		return ClassiLocazione.ROVINE;
 	}
 
-	private static ClassiPersonaggio[] mostri = {
-			ClassiPersonaggio.CHIMERA,
-			ClassiPersonaggio.CHIMERA_DRAGO,
-			ClassiPersonaggio.FANTASMA,
-			ClassiPersonaggio.GARGOYLE,
-			ClassiPersonaggio.GOBLIN,
-			ClassiPersonaggio.HOBGOBLIN,
-			ClassiPersonaggio.MINOTAURO,
-			ClassiPersonaggio.OMBRA_NERA,
-			ClassiPersonaggio.SCHELETRO,
-			ClassiPersonaggio.SPETTRO,
-			ClassiPersonaggio.SPIRITO
+	private static ClassePersonaggio[] mostri = {
+			ClassePersonaggio.CHIMERA,
+			ClassePersonaggio.CHIMERA_DRAGO,
+			ClassePersonaggio.FANTASMA,
+			ClassePersonaggio.GARGOYLE,
+			ClassePersonaggio.GOBLIN,
+			ClassePersonaggio.HOBGOBLIN,
+			ClassePersonaggio.MINOTAURO,
+			ClassePersonaggio.OMBRA_NERA,
+			ClassePersonaggio.SCHELETRO,
+			ClassePersonaggio.SPETTRO,
+			ClassePersonaggio.SPIRITO
 	};
 
 	private static ClassiOggetto[] oggetti = {
@@ -41,7 +41,7 @@ public class Rovine extends LocazioneBase {
 	};
 
 	@Override
-	public ClassiPersonaggio[] getPossibiliIncontri() {
+	public ClassePersonaggio[] getPossibiliIncontri() {
 		return mostri;
 	}
 

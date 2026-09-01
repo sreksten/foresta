@@ -18,18 +18,18 @@ public class Ladra extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 
 	public Ladra() {
-		super(ClassiPersonaggio.LADRA);
+		super(ClassePersonaggio.LADRA);
 	}
 
 	public Ladra(String nome) {
-		super(nome, ClassiPersonaggio.LADRA);
+		super(nome, ClassePersonaggio.LADRA);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Ladra.gif");
 		setIcona("icone/Ladra.gif");
-		setForzaMassima(450);
+		setSaluteMassima(450);
 		setMagiaMassima(40);
 		setValore(60);
 		setCoraggio(60);

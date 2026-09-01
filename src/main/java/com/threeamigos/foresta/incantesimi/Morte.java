@@ -61,20 +61,15 @@ public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 			return;
 		if (!bersaglio.isVivo())
 			return;
-		if (bersaglio.getForza() < bersaglio.getForzaMassima() / 4) {
-			String s = bersaglio.getNome();
-			if (s == null)
-				s = bersaglio.getADS() + bersaglio.getNomeSingolare();
+		if (bersaglio.getSalute() < bersaglio.getSaluteMassima() / 4) {
+			String s = bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 			UI.notifica("L'incantesimo ha ucciso " + s + ".");
 			bersaglio.muore((bersaglio.getSesso() == Personaggio.Sesso.MASCHIO ? "Ucciso " : "Uccisa ") + " da un incantesimo di Morte");
 			uccisi++;
 		} else {
-			String s = formulante.getNome();
-			if (s == null) {
-				s = formulante.getADS() + formulante.getNomeSingolare();
-			}
+			String s = formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 			UI.notifica("L'incantesimo non ha avuto successo e si e' ritorto contro " + s + ".");
-			formulante.subForza(formulante.getForza() / 4, bersaglio, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
+			formulante.subSalute(formulante.getSalute() / 4, bersaglio, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
 		}
 	}
 }

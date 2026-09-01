@@ -127,9 +127,9 @@ public interface InterfacciaUtente {
 
 	public void notificaMorte(Personaggio personaggio);
 	
-	public void variaForza(Personaggio personaggio, int variazione);
+	public void variaSalute(Personaggio personaggio, int variazione);
 	
-	public void variaForzaMassima(Personaggio personaggio, int variazione);
+	public void variaSaluteMassima(Personaggio personaggio, int variazione);
 	
 	public void variaMagia(Personaggio personaggio, int variazione);
 	

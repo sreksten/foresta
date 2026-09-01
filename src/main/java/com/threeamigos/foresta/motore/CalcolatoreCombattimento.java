@@ -23,22 +23,15 @@ public class CalcolatoreCombattimento {
             return true;
         }
 
-        // 1. CALCOLO DELLA PRECISIONE TOTALE DELL'ATTACCANTE (Base + Inventario)
-        int precisioneTotale = attaccante.getPrecisioneBase();
-        for (Artefatto artefatto : attaccante.getInventario()) {
-            precisioneTotale += artefatto.getModificatoreAttributo(TipoModificatoreAttributo.PRECISIONE);
-            precisioneTotale += artefatto.getModificatoreAttributo(TipoModificatoreAttributo.DESTREZZA);
-        }
+        // 1. CALCOLO DELLA PRECISIONE TOTALE DELL'ATTACCANTE
+        int precisioneTotale = attaccante.getPrecisione() + attaccante.getDestrezza();
 
-        // 2. CALCOLO DELLA VELOCITÀ TOTALE DEL DIFENSORE (Base + Inventario)
-        int velocitaTotale = difensore.getVelocitaBase();
-        for (Artefatto artefatto : difensore.getInventario()) {
-            velocitaTotale += artefatto.getModificatoreAttributo(TipoModificatoreAttributo.VELOCITA);
-        }
+        // 2. CALCOLO DELLA VELOCITÀ TOTALE DEL DIFENSORE
+        int velocitaTotale = difensore.getVelocita() + difensore.getParata();
 
         // 3. CONTROLLO EFFETTI DI STATO
         if (attaccante.hasEffettoDiStato(TipoEffettoDiStato.CONFUSO)) {
-            precisioneTotale = precisioneTotale - ( precisioneTotale * 20 / 100);
+            precisioneTotale = precisioneTotale * 8 / 10;
         }
         if (attaccante.hasEffettoDiStato(TipoEffettoDiStato.ACCECATO)) {
             precisioneTotale = precisioneTotale / 2;
@@ -57,7 +50,7 @@ public class CalcolatoreCombattimento {
         }
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO)) {
             // La paura blocca le gambe e riduce i riflessi
-            velocitaTotale = velocitaTotale - (velocitaTotale * 10 / 100);
+            velocitaTotale = velocitaTotale * 9 / 10;
         }
 
         // 5. CALCOLO DELLA PROBABILITÀ FINALE DI COLPIRE (Formula GDR base: 75% +/- scarto)
@@ -71,14 +64,10 @@ public class CalcolatoreCombattimento {
         }
 
         // 6. TIRO DEL DADO (Generazione numero casuale da 1 a 100)
-        int tiroDado = generaNumeroCasuale(1, 100);
+        int tiroDado = Dado.tira(100);
 
         return tiroDado <= probabilitaFinale;
 
-    }
-
-    private static int generaNumeroCasuale(int min, int max) {
-        return (int) (Math.random() * (max - min + 1)) + min;
     }
 
     public RisultatoDanno calcolaDannoFinale(Personaggio attaccante, Personaggio difensore, TipoDanno tipoDanno,
@@ -86,39 +75,24 @@ public class CalcolatoreCombattimento {
 
         RisultatoDanno risultatoDanno = new RisultatoDanno();
 
-        // 1. CALCOLO STATISTICHE EFFETTIVE (Base + Inventario)
+        // 1. CALCOLO STATISTICHE EFFETTIVE
         // Determina se l'attacco scala su FORZA (Fisico) o INTELLIGENZA (Magico/Elementale)
         int statOffensiva;
         if (tipoDanno.getSuperTipo() == SupertipoDanno.ELEMENTALE || tipoDanno.getSuperTipo() == SupertipoDanno.MAGICO) {
-            statOffensiva = attaccante.getIntelligenzaBase();
-            for (Artefatto oggetto : attaccante.getInventario()) {
-                statOffensiva = statOffensiva + oggetto.getModificatoreAttributo(TipoModificatoreAttributo.INTELLIGENZA);
-            }
+            statOffensiva = attaccante.getIntelligenza();
         } else {
-            statOffensiva = attaccante.getForzaBase();
-            for (Artefatto oggetto : attaccante.getInventario()) {
-                statOffensiva = statOffensiva + oggetto.getModificatoreAttributo(TipoModificatoreAttributo.FORZA);
-            }
+            statOffensiva = attaccante.getForza();
         }
 
         // Determina la difesa del bersaglio (COSTITUZIONE per Fisico, RESISTENZA_MAGICA per Magico/Elementale)
         double statDifensiva;
         if (tipoDanno.getSuperTipo() == SupertipoDanno.ELEMENTALE || tipoDanno.getSuperTipo() == SupertipoDanno.MAGICO) {
-            statDifensiva = difensore.getResistenzaMagicaBase();
-            for (Artefatto artefatto: difensore.getInventario()) {
-                statDifensiva = statDifensiva + artefatto.getModificatoreAttributo(TipoModificatoreAttributo.RESISTENZA_MAGICA);
-            }
+            statDifensiva = difensore.getResistenzaMagica();
         } else {
-            statDifensiva = difensore.getCostituzioneBase();
-            for (Artefatto artefatto: difensore.getInventario()) {
-                statDifensiva = statDifensiva + artefatto.getModificatoreAttributo(TipoModificatoreAttributo.COSTITUZIONE);
-            }
+            statDifensiva = difensore.getCostituzione();
         }
 
-        int intuitoCritico = attaccante.getCriticoBase();
-        for (Artefatto artefatto: attaccante.getInventario()) {
-            intuitoCritico = intuitoCritico + artefatto.getModificatoreAttributo(TipoModificatoreAttributo.CRITICO);
-        }
+        int intuitoCritico = attaccante.getCritico();
 
         // 2. MATEMATICA DI BASE DEL DANNO (Con fattore di scala livello arma)
         int dannoBaseArma = arma.getDanniBase() * arma.getLivello();
@@ -215,7 +189,7 @@ public class CalcolatoreCombattimento {
         // Formula di base: 5% fisso + 1% per ogni punto statistica CRITICO dell'attaccante.
         double probabilitaCritico = 5.0d + intuitoCritico;
 
-        double tiroDadoCritico = generaNumeroCasuale(1, 100);
+        double tiroDadoCritico = Dado.tira(100);
         if (tiroDadoCritico <= probabilitaCritico || criticoAutomatico) {
             // Il colpo critico raddoppia il danno finale calcolato
             dannoMitigato = dannoMitigato * 2.0d;
@@ -227,19 +201,13 @@ public class CalcolatoreCombattimento {
             int statAusiliariaProc;
 
             if (tipoDanno.getSuperTipo() == SupertipoDanno.MAGICO || tipoDanno.getSuperTipo() == SupertipoDanno.ELEMENTALE) {
-                statAusiliariaProc = attaccante.getMagiaBase();
-                for (Artefatto artefatto : attaccante.getInventario()) {
-                    statAusiliariaProc += artefatto.getModificatoreAttributo(TipoModificatoreAttributo.MAGIA);
-                }
+                statAusiliariaProc = attaccante.getMagia();
             } else {
-                statAusiliariaProc = attaccante.getFuriaBase();
-                for (Artefatto artefatto : attaccante.getInventario()) {
-                    statAusiliariaProc += artefatto.getModificatoreAttributo(TipoModificatoreAttributo.FURIA);
-                }
+                statAusiliariaProc = attaccante.getFuria();
             }
 
-            double probabilitaApplicareStato = ((dannoMitigato * 100.0d) / difensore.getForzaMassima()) + (statAusiliariaProc * 2.0d);
-            double tiroDadoStato = generaNumeroCasuale(1, 100);
+            double probabilitaApplicareStato = ((dannoMitigato * 100.0d) / difensore.getForza()) + (statAusiliariaProc * 2.0d);
+            double tiroDadoStato = Dado.tira(100);
 
             if (tiroDadoStato <= probabilitaApplicareStato) {
                 TipoEffettoDiStato effettoDiStato = tipoDanno.getTipoEffettoDiStatoCasuale();

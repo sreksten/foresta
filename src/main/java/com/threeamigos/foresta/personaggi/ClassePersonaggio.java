@@ -2,7 +2,7 @@ package com.threeamigos.foresta.personaggi;
 
 import java.util.function.Supplier;
 
-public enum ClassiPersonaggio {
+public enum ClassePersonaggio {
 
 	ARPIA(Arpia::new),
 	CENTAURO(Centauro::new),
@@ -44,7 +44,7 @@ public enum ClassiPersonaggio {
 	private final Supplier<Personaggio> supplier;
 	private int quantitaMassima = 1;
 
-	ClassiPersonaggio(Supplier<Personaggio> supplier) {
+	ClassePersonaggio(Supplier<Personaggio> supplier) {
 		this.supplier = supplier;
 	}
 

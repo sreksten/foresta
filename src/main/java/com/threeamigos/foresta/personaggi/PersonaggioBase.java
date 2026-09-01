@@ -4,6 +4,8 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
@@ -15,10 +17,7 @@ import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Logger;
-import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.motore.modellodati.EffettoDiStato;
-import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
+import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
@@ -54,32 +53,32 @@ public abstract class PersonaggioBase implements Personaggio {
 		this.md = personaggioMD;
 	}
 	
-	public PersonaggioBase(ClassiPersonaggio classe) {
+	public PersonaggioBase(ClassePersonaggio classe) {
 		md.setClasse(classe);
 		png = true;
 		md.setVivo(true);
 		impostaValori();
 		classe.setQuantitaMassima(quantitaMassima);
 		if (isParteConValoriMassimi()) {
-			md.setForza(md.getForzaMassima());
+			md.setSalute(md.getSaluteMassima());
 			md.setMagia(md.getMagiaMassima());
 			md.setStanchezza(0);
 		} else {
-			md.setForza(md.getForzaMassima() / 2 + Random.getInt(md.getForzaMassima() / 2));
+			md.setSalute(md.getSaluteMassima() / 2 + Random.getInt(md.getSaluteMassima() / 2));
 			md.setMagia(md.getMagiaMassima() / 2 + Random.getInt(md.getMagiaMassima() / 2));
 			md.setValore(md.getValore() / 2 + Random.getInt(md.getValore() / 2));
 			md.setCoraggio(md.getCoraggio() / 2 + Random.getInt(md.getCoraggio() / 2));
 			md.setCarisma(md.getCarisma() / 2 + Random.getInt(md.getCarisma() / 2));
 			md.setStanchezza(Random.getInt(5));
 		}
-		Logger.log("Nuovo: " + getNomeSingolare() + " (" + md.getForza() + "/" + md.getForzaMassima() + ")");
+		Logger.log("Nuovo: " + getNomeSingolare() + " (" + md.getSalute() + "/" + md.getSaluteMassima() + ")");
 	}
 	
 	/**
 	 * Un personaggio giocante (il giocatore o uno dei personaggi che si incontrano
 	 * nelle locande)
 	 */
-	public PersonaggioBase(String nome, ClassiPersonaggio classe) {
+	public PersonaggioBase(String nome, ClassePersonaggio classe) {
 		this(classe);
 		md.setNome(nome);
 		png = false;
@@ -90,10 +89,6 @@ public abstract class PersonaggioBase implements Personaggio {
 	 */
 	protected abstract void impostaValori();
 
-	public ClassiPersonaggio getClasse() {
-		return md.getClasse();
-	}
-	
 	protected void setImmagine(String nomeImmagine) {
 		this.nomeImmagine = nomeImmagine;
 		if (ImageCache.get(nomeImmagine) == null) {
@@ -145,18 +140,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		return md.getMagiaMassima() > 0;
 	}
 
-	public int getRecuperoForza() {
-		if (isPNG()) {
-			return getForzaMassima() / 10;
-		} else {
-			return getForzaMassima() / 20;
-		}
-	}
-
-	public int getRecuperoMagia() {
-		return 1;
-	}
-
 	protected ClassiOfferta[] getOfferteAmicizia() {
 		return new ClassiOfferta[0];
 	}
@@ -175,10 +158,6 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	public boolean isPNG() {
 		return png;
-	}
-
-	public String getNome() {
-		return md.getNome();
 	}
 
 	public boolean isImmortale() {
@@ -204,28 +183,20 @@ public abstract class PersonaggioBase implements Personaggio {
 	public void resuscita() {
 		md.setVivo(true);
 		md.setCausaTrapasso(null);
-		md.setForza(md.getForzaMassima() / 10);
+		md.setSalute(md.getSaluteMassima() / 10);
 		md.setStanchezza(9);
 	}
 
-	public int getForza() {
-		int modificaDaArtefatti = 0;
-		for (ArtefattoMD artefatto : md.getArtefatti()) {
-			modificaDaArtefatti += artefatto.getForza();
+	public void addSalute(int quantita) {
+		int forza = md.getSalute() + quantita;
+		if (forza > md.getSaluteMassima()) {
+			forza = md.getSaluteMassima();
 		}
-		return md.getForza() + modificaDaArtefatti;
+		md.setSalute(forza);
+		UI.variaSalute(this, quantita);
 	}
 
-	public void addForza(int quantita) {
-		int forza = md.getForza() + quantita;
-		if (forza > md.getForzaMassima()) {
-			forza = md.getForzaMassima();
-		}
-		md.setForza(forza);
-		UI.variaForza(this, quantita);
-	}
-
-	public void subForza(int quantita, Personaggio avversario, Personaggio.NotificaFerite notificaFerite, Personaggio.NotificaMorte notificaMorte) {
+	public void subSalute(int quantita, Personaggio avversario, Personaggio.NotificaFerite notificaFerite, Personaggio.NotificaMorte notificaMorte) {
 		int modificaDaArtefatti = 0;
 		for (ArtefattoMD artefatto : md.getArtefatti()) {
 			modificaDaArtefatti += artefatto.getProtezione();
@@ -233,32 +204,18 @@ public abstract class PersonaggioBase implements Personaggio {
 		quantita -= modificaDaArtefatti;
 		if (quantita <= 0) {
 			if (notificaFerite == Personaggio.NotificaFerite.SI) {
-				StringBuilder sb = new StringBuilder();
-				if (md.getNome() == null) {
-					String ads = getADS();
-					sb.append(Character.toUpperCase(ads.charAt(0)));
-					sb.append(ads.substring(1));
-					sb.append(getNomeSingolare());
-				} else {
-					sb.append(md.getNome());
-				}
-				sb.append(" non ha riportato danni dall'attacco ");
-				if (avversario.getNome() == null) {
-					sb.append(avversario.getDeS());
-					sb.append(avversario.getNomeSingolare());
-				} else {
-					sb.append("di ");
-					sb.append(avversario.getNome());
-				}
-				sb.append('.');
-				UI.notifica(sb.toString());
+                String sb = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+                        " non ha riportato danni dall'attacco " +
+                        avversario.getNome(OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
+                        '.';
+				UI.notifica(sb);
 			}
 			return;
 		}
 
-		int forza = md.getForza() - quantita;
-		if (forza <= 0) {
-			forza = 0;
+		int salute = md.getSalute() - quantita;
+		if (salute <= 0) {
+			salute = 0;
 			if (!isImmortale()) {
 				md.setVivo(false);
 				StringBuilder sb;
@@ -321,26 +278,22 @@ public abstract class PersonaggioBase implements Personaggio {
 				} else {
 					sb.append(md.getNome());
 				}
-				sb.append(" ha ancora ").append(forza).append(" punt").append(forza == 1 ? 'o' : 'i')
-						.append(" ferita su ").append(md.getForzaMassima()).append('.');
+				sb.append(" ha ancora ").append(salute).append(" punt").append(salute == 1 ? 'o' : 'i')
+						.append(" ferita su ").append(md.getSaluteMassima()).append('.');
 				UI.notifica(sb.toString());
 			}
 		}
-		md.setForza(forza);
-		UI.variaForza(this, -quantita);
+		md.setSalute(salute);
+		UI.variaSalute(this, -quantita);
 	}
 
-	protected void setForzaMassima(int forzaMassima) {
-		md.setForzaMassima(forzaMassima);
+	protected void setSaluteMassima(int saluteMassima) {
+		md.setSaluteMassima(saluteMassima);
 	}
 
-	public int getForzaMassima() {
-		return md.getForzaMassima();
-	}
-
-	public void addForzaMassima(int quantita) {
-		md.setForzaMassima(md.getForzaMassima() + quantita);
-		UI.variaForzaMassima(this, quantita);
+	public void addSaluteMassima(int quantita) {
+		md.setSaluteMassima(md.getSaluteMassima() + quantita);
+		UI.variaSaluteMassima(this, quantita);
 	}
 
 	public int getDanniInCombattimento() {
@@ -350,12 +303,12 @@ public abstract class PersonaggioBase implements Personaggio {
 		 * forza e la forza massima danni = (getForza() + getForzaMassima()) / 10; }
 		 * else {
 		 */
-		danni = (getForza() + getValore() + getCoraggio()) / 10 - getStanchezza() - Random.getInt(10);
+		danni = (getSalute() + getValoreEffettoDiStato() + getCoraggio()) / 10 - getStanchezza() - Random.getInt(10);
 		/*
 		 * }
 		 */
-		Logger.log((getNome() == null ? getNomeSingolare() : getNome()) + "(" + getForza() + "/"
-				+ getForzaMassima() + ") fa " + danni + " danni.");
+		Logger.log((getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)) + "(" + getSalute() + "/"
+				+ getSaluteMassima() + ") fa " + danni + " danni.");
 		if (danni < 0) {
 			return 0;
 		} else {
@@ -365,10 +318,6 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	public int getModificaDanniForza() {
 		return 1;
-	}
-
-	public int getMagia() {
-		return md.getMagia();
 	}
 
 	public void addMagia(int quantita) {
@@ -383,10 +332,6 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	protected void setMagiaMassima(int magiaMassima) {
 		md.setMagiaMassima(magiaMassima);
-	}
-	
-	public int getMagiaMassima() {
-		return md.getMagiaMassima();
 	}
 
 	//TODO esiste un massimo per la magia?
@@ -411,14 +356,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.setCoraggio(coraggio);
 	}
 
-	public int getCoraggio() {
-		int modificaDaArtefatti = 0;
-		for (ArtefattoMD artefatto : md.getArtefatti()) {
-			modificaDaArtefatti += artefatto.getForza();
-		}
-		return md.getCoraggio() + modificaDaArtefatti;
-	}
-
 	public void addCoraggio(int quantita) {
 		md.setCoraggio(Math.min(md.getCoraggio() + quantita, 99));
 		UI.variaCoraggio(this, quantita);
@@ -432,14 +369,6 @@ public abstract class PersonaggioBase implements Personaggio {
 	protected void setValore(int valore) {
 		md.setValore(valore);
 	}
-	
-	public int getValore() {
-		int modificaDaArtefatti = 0;
-		for (ArtefattoMD artefatto : md.getArtefatti()) {
-			modificaDaArtefatti += artefatto.getValore();
-		}
-		return md.getValore() + modificaDaArtefatti;
-	}
 
 	public void addValore(int quantita) {
 		md.setValore(Math.min(md.getValore() + quantita, 99));
@@ -449,14 +378,6 @@ public abstract class PersonaggioBase implements Personaggio {
 	public void subValore(int quantita) {
 		md.setValore(Math.max(md.getValore() - quantita, 0));
 		UI.variaValore(this, -quantita);
-	}
-
-	public int getStanchezza() {
-		int modificaDaArtefatti = 0;
-		for (ArtefattoMD artefatto : md.getArtefatti()) {
-			modificaDaArtefatti += artefatto.getStanchezza();
-		}
-		return Math.max(md.getStanchezza() - modificaDaArtefatti, 0);
 	}
 
 	public void addStanchezza(int quantita) {
@@ -473,10 +394,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.setCarisma(carisma);
 	}
 	
-	public int getCarisma() {
-		return md.getCarisma();
-	}
-
 	public void addCarisma(int quantita) {
 		md.setCarisma(Math.min(md.getCarisma() + quantita, 10));
 		UI.variaCarisma(this, quantita);
@@ -506,21 +423,21 @@ public abstract class PersonaggioBase implements Personaggio {
 			sb.append(getNomeSingolare());
 		}
 		sb.append(' ');
-		int forza = md.getForza();
-		if (forza < 20) {
-			sb.append("e' molto debole");
-		} else if (forza < 40) {
-			sb.append("e' debole");
-		} else if (forza < 80) {
-			sb.append("non e' molto forte");
-		} else if (forza < 100) {
-			sb.append("e' forte");
-		} else if (forza < 200) {
-			sb.append("e' molto forte");
-		} else if (forza < 400) {
-			sb.append("e' davvero forte");
+		int salute = md.getSalute();
+		if (salute < 20) {
+			sb.append("è molto debole");
+		} else if (salute < 40) {
+			sb.append("è debole");
+		} else if (salute < 80) {
+			sb.append("non è molto in salute");
+		} else if (salute < 100) {
+			sb.append("è in salute");
+		} else if (salute < 200) {
+			sb.append("è assolutamente in salute");
+		} else if (salute < 400) {
+			sb.append("è davvero in salute");
 		} else {
-			sb.append("ha una forza enorme");
+			sb.append("è sano coe un pesce");
 		}
 		sb.append(", ");
 		int coraggio = md.getCoraggio();
@@ -587,17 +504,17 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 		if (ore < 4) {
 			if (alCoperto) {
-				addForza(getRecuperoForza() * ore + modifica);
+				addSalute(getRecuperoSalute() * ore + modifica);
 			}
 		} else {
 			if (alCoperto) {
-				addForza(100 + modifica);
+				addSalute(100 + modifica);
 			} else {
-				int i = getRecuperoForza() * ore;
+				int i = getRecuperoSalute() * ore;
 				if (i > 100) {
 					i = 100;
 				}
-				addForza(i + modifica);
+				addSalute(i + modifica);
 			}
 		}
 		// torna la magia
@@ -610,21 +527,8 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	public void fugge() {
 		subCoraggio(Random.getInt(10) + 10);
-		subForza(Random.getInt(50) + 50, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
+		subSalute(Random.getInt(50) + 50, null, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
 		subCarisma(1);
-	}
-
-	public void addArtefatto(Artefatto a) {
-		md.getArtefatti().add(a.getModelloDati());
-	}
-
-	public void removeArtefatto(Artefatto a) {
-		md.getArtefatti().remove(a.getModelloDati());
-	}
-
-	//FIXME così fa un po' caà ma intanto facciamolo compilare
-	public List<Artefatto> getInventario() {
-		return md.getArtefatti().stream().map(Artefatto::new).collect(Collectors.toList());
 	}
 
 	public void attacca(Personaggio bersaglio) {
@@ -645,33 +549,20 @@ public abstract class PersonaggioBase implements Personaggio {
 			if (incantesimoScelto.getPortata() == PortataIncantesimo.GRUPPO && GruppoGiocatore.getIstanza().getNumeroPersonaggiVivi() > 1) {
 				sb.append("il gruppo");
 			} else {
-				if (bersaglio.isPNG()) {
-					sb.append(bersaglio.getADS()).append(bersaglio.getNomeSingolare());				
-				} else {
-					sb.append(bersaglio.getNome());
-				}
+				sb.append(bersaglio.getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 			}
 			sb.append('.');
 			UI.notifica(sb.toString());
 			incantesimoScelto.formula(this, bersaglio, null);
 		} else {
-			String s;
-			StringBuilder sb = new StringBuilder();
-			s = getNome();
-			if (s == null) {
-				if (GruppoAvversario.getIstanza().getNumeroPersonaggiVivi() == 1) {
-					s = getADS();
-				} else {
-					s = getAIS();
-				}
-				sb.append(Character.toUpperCase(s.charAt(0))).append(s.substring(1)).append(getNomeSingolare());
-			} else {
-				sb.append(s);
-			}
-			sb.append(" attacca ").append(bersaglio.getNome()).append('.');
-			UI.notifica(sb.toString());
+			OpzioniGetNome articoloDaIncludere = GruppoAvversario.getIstanza().getNumeroPersonaggiVivi() == 1 ?
+					OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE :
+					OpzioniGetNome.INCLUDI_ARTICOLO_INDETERMINATIVO_SINGOLARE;
+            String sb = getNome(articoloDaIncludere, OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+                    " attacca " + bersaglio.getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + '.';
+			UI.notifica(sb);
 			int danno = getDanniInCombattimento();
-			bersaglio.subForza(danno, this, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
+			bersaglio.subSalute(danno, this, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
 		}
 	}
 
@@ -679,14 +570,14 @@ public abstract class PersonaggioBase implements Personaggio {
 		List<Personaggio> personaggiPossibili = gruppoBersaglio.getPersonaggiVivi();
 		Personaggio bersaglio = null;
 		for (Personaggio personaggio : personaggiPossibili) {
-			if (personaggio.getClasse() == ClassiPersonaggio.MAGA || personaggio.getClasse() == ClassiPersonaggio.MAGO) {
+			if (personaggio.getClasse() == ClassePersonaggio.MAGA || personaggio.getClasse() == ClassePersonaggio.MAGO) {
 				bersaglio = personaggio;
 				break;
 			}
 		}
 		if (bersaglio == null) {
 			for (Personaggio personaggio : personaggiPossibili) {
-				if (personaggio.getClasse() == ClassiPersonaggio.ELFA || personaggio.getClasse() == ClassiPersonaggio.ELFO) {
+				if (personaggio.getClasse() == ClassePersonaggio.ELFA || personaggio.getClasse() == ClassePersonaggio.ELFO) {
 					bersaglio = personaggio;
 					break;
 				}
@@ -739,33 +630,59 @@ public abstract class PersonaggioBase implements Personaggio {
 		png = false;
 	}
 
+	// Statistiche del personaggio
 
-	public int getPrecisioneBase() {
-		return md.getPrecisione();
+	@Override
+	public ClassePersonaggio getClasse() {
+		return md.getClasse();
 	}
 
-	public int getVelocitaBase() {
-		return md.getVelocita();
+	@Override
+	public Optional<String> getNomeProprio() {
+		return Optional.ofNullable(md.getNome());
 	}
 
-	public int getForzaBase() {
-		return md.getForza();
+	@Override
+	public String getNome(Personaggio.OpzioniGetNome... opzioni) {
+		boolean includiArticoloDeterminativoSingolare = false;
+		boolean includiArticoloIndeterminativoSingolare = false;
+		boolean includiPreposizioneArticolata = false;
+		boolean inizialeMaiuscola = false;
+		for (Personaggio.OpzioniGetNome opzione : opzioni) {
+			if (opzione == Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) {
+				includiArticoloDeterminativoSingolare = true;
+			} else if (opzione == Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_INDETERMINATIVO_SINGOLARE) {
+				includiArticoloIndeterminativoSingolare = true;
+			} else if (opzione == Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) {
+				includiPreposizioneArticolata = true;
+			} else if (opzione == Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) {
+				inizialeMaiuscola = true;
+			}
+		}
+		String nome = md.getNome();
+		if (nome != null) {
+			return includiPreposizioneArticolata ? " di " + nome : nome;
+		} else if (!isPNG()) {
+			throw new IllegalStateException("Personaggio giocante senza nome!");
+		}
+		StringBuilder sb = new StringBuilder();
+		if (includiArticoloDeterminativoSingolare) {
+			sb.append(getADS());
+		} else if (includiArticoloIndeterminativoSingolare) {
+			sb.append(getAIS());
+		} else if (includiPreposizioneArticolata) {
+			sb.append(getDeS());
+		}
+		sb.append(getNomeSingolare());
+		if (inizialeMaiuscola) {
+			sb.replace(0, 1, sb.substring(0, 1).toUpperCase());
+		}
+		return sb.toString();
 	}
 
-	public int getIntelligenzaBase() {
-		return md.getIntelligenza();
-	}
-
-	public int getResistenzaMagicaBase() {
-		return md.getResistenzaMagica();
-	}
-
-	public int getCostituzioneBase() {
-		return md.getCostituzione();
-	}
-
-	public int getCriticoBase() {
-		return md.getCritico();
+	@Override
+	public String getLetteraFinaleAttributo() {
+		return getSesso() == Personaggio.Sesso.MASCHIO ? "o" : "a";
 	}
 
 	public int getLivello() {
@@ -776,12 +693,151 @@ public abstract class PersonaggioBase implements Personaggio {
 		return md.getEsperienza();
 	}
 
-	public int getMagiaBase() {
+	@Override
+	public int getSalute() {
+		return md.getSalute();
+	}
+
+	@Override
+	public int getSaluteMassima() {
+		return get(PersonaggioMD::getSaluteMassima, TipoAttributo.SALUTE);
+	}
+
+	@Override
+	public int getRecuperoSalute() {
+		if (isPNG()) {
+			return getSaluteMassima() / 10 + getModificatore(TipoAttributo.SALUTE);
+		} else {
+			return getSaluteMassima() / 20;
+		}
+	}
+
+	@Override
+	public int getMagia() {
 		return md.getMagia();
 	}
 
-	public int getFuriaBase() {
-		return md.getFuria();
+	@Override
+	public int getMagiaMassima() {
+		return get(PersonaggioMD::getMagiaMassima, TipoAttributo.MAGIA);
+	}
+
+	@Override
+	public int getRecuperoMagia() {
+		return 1 + getModificatore(TipoAttributo.MAGIA);
+	}
+
+	@Override
+	public int getCarico() {
+		return md.getCarico();
+	}
+
+	@Override
+	public int getCaricoMassimo() {
+		return get(PersonaggioMD::getCaricoMassimo, TipoAttributo.CARICO);
+	}
+
+	@Override
+	public int getForza() {
+		return get(PersonaggioMD::getForza, TipoAttributo.FORZA);
+	}
+
+	@Override
+	public int getDestrezza() {
+		return get(PersonaggioMD::getDestrezza, TipoAttributo.DESTREZZA);
+	}
+
+	@Override
+	public int getCostituzione() {
+		return get(PersonaggioMD::getCostituzione, TipoAttributo.COSTITUZIONE);
+	}
+
+	@Override
+	public int getIntelligenza() {
+		return get(PersonaggioMD::getIntelligenza, TipoAttributo.INTELLIGENZA);
+	}
+
+	@Override
+	public int getSaggezza() {
+		return get(PersonaggioMD::getSaggezza, TipoAttributo.SAGGEZZA);
+	}
+
+	@Override
+	public int getCarisma() {
+		return get(PersonaggioMD::getCarisma, TipoAttributo.CARISMA);
+	}
+
+	@Override
+	public int getFortuna() {
+		return get(PersonaggioMD::getFortuna, TipoAttributo.FORTUNA);
+	}
+
+	@Override
+	public int getCritico() {
+		return get(PersonaggioMD::getCritico, TipoAttributo.CRITICO);
+	}
+
+	@Override
+	public int getPrecisione() {
+		return get(PersonaggioMD::getPrecisione, TipoAttributo.PRECISIONE);
+	}
+
+	@Override
+	public int getVelocita() {
+		return get(PersonaggioMD::getVelocita, TipoAttributo.VELOCITA);
+	}
+
+	@Override
+	public int getFurtivita() {
+		return get(PersonaggioMD::getFurtivita, TipoAttributo.FURTIVITA);
+	}
+
+	@Override
+	public int getParata() {
+		return get(PersonaggioMD::getParata, TipoAttributo.PARATA);
+	}
+
+	@Override
+	public int getResistenzaMagica() {
+		return get(PersonaggioMD::getResistenzaMagica, TipoAttributo.RESISTENZA_MAGICA);
+	}
+
+	@Override
+	public int getPercezione() {
+		return get(PersonaggioMD::getPercezione, TipoAttributo.PERCEZIONE);
+	}
+
+	@Override
+	public int getSoggezione() {
+		return get(PersonaggioMD::getSoggezione, TipoAttributo.SOGGEZIONE);
+	}
+
+	@Override
+	public int getFuria() {
+		return get(PersonaggioMD::getFuria, TipoAttributo.FURIA);
+	}
+
+	@Override
+	public int getCoraggio() {
+		return get(PersonaggioMD::getCoraggio, TipoAttributo.CORAGGIO);
+	}
+
+	@Override
+	public int getValoreEffettoDiStato() {
+		return get(PersonaggioMD::getValore, TipoAttributo.VALORE);
+	}
+
+	@Override
+	public int getStanchezza() {
+		return get(PersonaggioMD::getStanchezza, TipoAttributo.STANCHEZZA);
+	}
+
+	private int get(Function<PersonaggioMD, Integer> getterAttributo, TipoAttributo tipoAttributo) {
+		return getterAttributo.apply(this.getModelloDati()) + getModificatore(tipoAttributo);
+	}
+
+	private int getModificatore(TipoAttributo tipoAttributo) {
+		return md.getArtefatti().stream().mapToInt(a -> a.getModificatoreAttributo(tipoAttributo)).sum();
 	}
 
 	public Collection<EffettoDiStato> getEffettiDiStato() {
@@ -802,6 +858,21 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	public void removeEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
 		effettiDiStato.removeIf(e -> e.getTipoModificatoreAttributo() == tipoEffettoDiStato);
+	}
+
+	// Artefatti
+
+	//FIXME così fa un po' caà ma intanto facciamolo compilare
+	public List<Artefatto> getInventario() {
+		return md.getArtefatti().stream().map(Artefatto::new).collect(Collectors.toList());
+	}
+
+	public void addArtefatto(Artefatto a) {
+		md.getArtefatti().add(a.getModelloDati());
+	}
+
+	public void removeArtefatto(Artefatto a) {
+		md.getArtefatti().remove(a.getModelloDati());
 	}
 
 }

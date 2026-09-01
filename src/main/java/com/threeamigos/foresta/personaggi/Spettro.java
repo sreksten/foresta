@@ -19,13 +19,13 @@ public class Spettro extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Spettro() {
-		super(ClassiPersonaggio.SPETTRO);
+		super(ClassePersonaggio.SPETTRO);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Spettro.gif");
-		setForzaMassima(40);
+		setSaluteMassima(40);
 		setMagiaMassima(0);
 		setValore(50);
 		setCoraggio(50);

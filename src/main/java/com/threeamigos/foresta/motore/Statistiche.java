@@ -2,7 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.StatisticheMD;
-import com.threeamigos.foresta.personaggi.ClassiPersonaggio;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.ui.UI;
 
 public class Statistiche {
@@ -21,11 +21,11 @@ public class Statistiche {
 		return statisticheMD.getPunti();
 	}
 
-	public static final void addMostroUcciso(ClassiPersonaggio classe) {
+	public static final void addMostroUcciso(ClassePersonaggio classe) {
 		statisticheMD.addMostroUcciso(classe);
 	}
 
-	public static final int getMostriUccisi(ClassiPersonaggio classe) {
+	public static final int getMostriUccisi(ClassePersonaggio classe) {
 		return statisticheMD.getMostriUccisi(classe);
 	}
 }

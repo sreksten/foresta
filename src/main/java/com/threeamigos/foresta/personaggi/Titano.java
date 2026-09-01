@@ -19,14 +19,14 @@ public class Titano extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Titano() {
-		super(ClassiPersonaggio.TITANO);
+		super(ClassePersonaggio.TITANO);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Titano.gif");
 		setIcona("icone/Titano.gif");
-		setForzaMassima(100);
+		setSaluteMassima(100);
 		setMagiaMassima(15);
 		setValore(80);
 		setCoraggio(90);

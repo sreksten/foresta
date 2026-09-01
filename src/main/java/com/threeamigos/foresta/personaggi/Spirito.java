@@ -19,13 +19,13 @@ public class Spirito extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Spirito() {
-		super(ClassiPersonaggio.SPIRITO);
+		super(ClassePersonaggio.SPIRITO);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Spirito.gif");
-		setForzaMassima(40);
+		setSaluteMassima(40);
 		setMagiaMassima(0);
 		setValore(50);
 		setCoraggio(50);

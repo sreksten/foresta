@@ -5,6 +5,7 @@ import java.awt.Image;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -19,9 +20,9 @@ class DisplayableCanvasRiquadroGruppo {
 	private Map<Object, Image> lightGrayMap = new HashMap<>();
 	private Map<Object, Image> mediumGrayMap = new HashMap<>();
 	private DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
-	private int leftXOffsetLabelForza;
-	private int rightXOffsetForza;
-	private int leftXOffsetSeparatoreForza;
+	private int leftXOffsetLabelSalute;
+	private int rightXOffsetSalute;
+	private int leftXOffsetSeparatoreSalute;
 	private int rightXOffsetForzaMassima;
 	private int leftXOffsetLabelMagia;
 	private int rightXOffsetMagia;
@@ -40,14 +41,14 @@ class DisplayableCanvasRiquadroGruppo {
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
 		innerWidth = ImageCache.corniceGrande.getWidth() - (DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE << 1);
-		lightGrayMap.put(Personaggio.Caratteristica.FORZA, DoomdarkTextProducer.getImage("Fr:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
+		lightGrayMap.put(Personaggio.Caratteristica.SALUTE, DoomdarkTextProducer.getImage("Sl:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
 		lightGrayMap.put(Personaggio.Caratteristica.MAGIA, DoomdarkTextProducer.getImage("Mg:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
 		lightGrayMap.put(Personaggio.Caratteristica.CORAGGIO, DoomdarkTextProducer.getImage("Cr:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
 		lightGrayMap.put(Personaggio.Caratteristica.VALORE, DoomdarkTextProducer.getImage("Vl:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
 		lightGrayMap.put(Personaggio.Caratteristica.STANCHEZZA, DoomdarkTextProducer.getImage("St:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
 		lightGrayMap.put(Personaggio.Caratteristica.CARISMA, DoomdarkTextProducer.getImage("Ca:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
 		lightGrayMap.put("/", DoomdarkTextProducer.getImage("/", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
-		mediumGrayMap.put(Personaggio.Caratteristica.FORZA, DoomdarkTextProducer.getImage("Fr:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
+		mediumGrayMap.put(Personaggio.Caratteristica.SALUTE, DoomdarkTextProducer.getImage("Sl:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
 		mediumGrayMap.put(Personaggio.Caratteristica.MAGIA, DoomdarkTextProducer.getImage("Mg:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
 		mediumGrayMap.put(Personaggio.Caratteristica.CORAGGIO, DoomdarkTextProducer.getImage("Cr:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
 		mediumGrayMap.put(Personaggio.Caratteristica.VALORE, DoomdarkTextProducer.getImage("Vl:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
@@ -58,9 +59,9 @@ class DisplayableCanvasRiquadroGruppo {
 		int glyph9Width = fontMedium.getGlyphWidth('9');
 		
 		 // Fr:999/999 Mg:99/99
-		leftXOffsetLabelForza = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE;
-		rightXOffsetForza = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 6;
-		leftXOffsetSeparatoreForza = rightXOffsetForza;
+		leftXOffsetLabelSalute = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE;
+		rightXOffsetSalute = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 6;
+		leftXOffsetSeparatoreSalute = rightXOffsetSalute;
 		rightXOffsetForzaMassima = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 10;
 		leftXOffsetLabelMagia = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 11;
 		rightXOffsetMagia = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 16;
@@ -89,13 +90,16 @@ class DisplayableCanvasRiquadroGruppo {
 		Personaggio p;
 		for (int i = 0; i < l; i++) {
 			p = g.getPersonaggio(i);
-			Image doomdark = null;
+			Image doomdark;
+			Optional<String> nomeOpt = p.getNomeProprio();
+			String nome;
+			if (nomeOpt.isPresent()) {
+				nome = nomeOpt.get() + "-" + p.getNomeSingolare();
+			} else {
+				nome = p.getNomeSingolare();
+			}
 			if (!p.isVivo()) {
-				if (p.getNome() != null) {
-					doomdark = DoomdarkTextProducer.getImage(new StringBuilder(p.getNome()).append('-').append(p.getNomeSingolare()).toString(), fontMedium, DoomdarkColorModel.Color.DARK_GRAY);
-				} else {
-					doomdark = DoomdarkTextProducer.getImage(p.getNomeSingolare(), fontMedium, DoomdarkColorModel.Color.DARK_GRAY);
-				}
+				doomdark = DoomdarkTextProducer.getImage(nome, fontMedium, DoomdarkColorModel.Color.DARK_GRAY);
 				graphics.drawImage(doomdark, locXOffset, locYOffset, null);
 				locYOffset += fontMedium.getHeight();
 				doomdark = DoomdarkTextProducer.getImage(p.getCausaTrapasso(), fontMedium, DoomdarkColorModel.Color.DARK_GRAY, innerWidth);
@@ -104,19 +108,15 @@ class DisplayableCanvasRiquadroGruppo {
 			} else {
 				DoomdarkColorModel.Color color = i % 2 == 0 ? DoomdarkColorModel.Color.MEDIUM_GRAY : DoomdarkColorModel.Color.LIGHT_GRAY;
 				Map<Object, Image> imageMap = i % 2 == 0 ? mediumGrayMap : lightGrayMap;
-				if (p.getNome() != null) {
-					doomdark = DoomdarkTextProducer.getImage(new StringBuilder(p.getNome()).append('-').append(p.getNomeSingolare()).toString(), fontMedium, color);
-				} else {
-					doomdark = DoomdarkTextProducer.getImage(p.getNomeSingolare(), fontMedium, color);
-				}
+				doomdark = DoomdarkTextProducer.getImage(nome, fontMedium, color);
 				graphics.drawImage(doomdark, locXOffset, locYOffset, null);
 
 				locYOffset += fontMedium.getHeight();
-				graphics.drawImage(imageMap.get(Personaggio.Caratteristica.FORZA), leftXOffsetLabelForza, locYOffset, null);
-				doomdark = DoomdarkTextProducer.getImage(p.getForza(), fontMedium, color);
-				graphics.drawImage(doomdark, rightXOffsetForza - doomdark.getWidth(null), locYOffset, null);
-				graphics.drawImage(imageMap.get("/"), leftXOffsetSeparatoreForza, locYOffset, null);
-				doomdark = DoomdarkTextProducer.getImage(p.getForzaMassima(), fontMedium, color);
+				graphics.drawImage(imageMap.get(Personaggio.Caratteristica.SALUTE), leftXOffsetLabelSalute, locYOffset, null);
+				doomdark = DoomdarkTextProducer.getImage(p.getSalute(), fontMedium, color);
+				graphics.drawImage(doomdark, rightXOffsetSalute - doomdark.getWidth(null), locYOffset, null);
+				graphics.drawImage(imageMap.get("/"), leftXOffsetSeparatoreSalute, locYOffset, null);
+				doomdark = DoomdarkTextProducer.getImage(p.getSaluteMassima(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetForzaMassima - doomdark.getWidth(null), locYOffset, null);
 
 				graphics.drawImage(imageMap.get(Personaggio.Caratteristica.MAGIA), leftXOffsetLabelMagia, locYOffset, null);
@@ -132,7 +132,7 @@ class DisplayableCanvasRiquadroGruppo {
 				graphics.drawImage(doomdark, rightXOffsetCoraggio - doomdark.getWidth(null), locYOffset, null);
 
 				graphics.drawImage(imageMap.get(Personaggio.Caratteristica.VALORE), leftXOffsetLabelValore, locYOffset, null);
-				doomdark = DoomdarkTextProducer.getImage(p.getValore(), fontMedium, color);
+				doomdark = DoomdarkTextProducer.getImage(p.getValoreEffettoDiStato(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetValore - doomdark.getWidth(null), locYOffset, null);
 
 				graphics.drawImage(imageMap.get(Personaggio.Caratteristica.STANCHEZZA), leftXOffsetLabelStanchezza, locYOffset, null);
@@ -158,7 +158,7 @@ class DisplayableCanvasRiquadroGruppo {
 		return -1;
 	}
 
-	SpriteInterface variaForza(Personaggio personaggio, int variazione) {
+	SpriteInterface variaSalute(Personaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
@@ -168,7 +168,7 @@ class DisplayableCanvasRiquadroGruppo {
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
-		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetForza, y);
+		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetSalute, y);
 	}
 
 	SpriteInterface variaForzaMassima(Personaggio personaggio, int variazione) {

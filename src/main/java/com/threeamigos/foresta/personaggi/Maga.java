@@ -22,18 +22,18 @@ public class Maga extends PersonaggioBase implements Personaggio {
 	public int getBersagliPerIncantesimo() { return 2 + super.getBersagliPerIncantesimo(); }
 
 	public Maga() {
-		super(ClassiPersonaggio.MAGA);
+		super(ClassePersonaggio.MAGA);
 	}
 
 	public Maga(String nome) {
-		super(nome, ClassiPersonaggio.MAGA);
+		super(nome, ClassePersonaggio.MAGA);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Maga.gif");
 		setIcona("icone/Maga.gif");
-		setForzaMassima(350);
+		setSaluteMassima(350);
 		setMagiaMassima(70);
 		setValore(30);
 		setCoraggio(30);

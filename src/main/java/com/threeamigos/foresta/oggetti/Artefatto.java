@@ -4,7 +4,7 @@ import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.motore.modellodati.TipoModificatoreAttributo;
+import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.UI;
@@ -17,25 +17,6 @@ public class Artefatto implements Oggetto {
 		this.md = artefattoMD;
 	}
 
-	public Artefatto(String nome, String descrizione, String utilizzo,
-			int costoAcquisto,
-			int forza, int magia, int valore, int coraggio,
-			int carisma, int stanchezza, int bersagli, int protezione) {
-		md = new ArtefattoMD();
-		md.setNome(nome);
-		md.setDescrizione(descrizione);
-		md.setUtilizzo(utilizzo);
-		md.setCostoAcquisto(costoAcquisto);
-		md.setForza(forza);
-		md.setMagia(magia);
-		md.setValore(valore);
-		md.setCoraggio(coraggio);
-		md.setCarisma(carisma);
-		md.setStanchezza(stanchezza);
-		md.setBersagli(bersagli);
-		md.setProtezione(protezione);
-	}
-
 	public final String getNome() {
 		return md.getNome();
 	}
@@ -44,12 +25,12 @@ public class Artefatto implements Oggetto {
 		return md.getDescrizione();
 	}
 
-	public final String getUtilizzo() {
-		return md.getUtilizzo();
-	}
-
 	public final int getCostoAcquisto() {
 		return md.getCostoAcquisto();
+	}
+
+	public final int getSalute() {
+		return md.getSalute();
 	}
 
 	public final int getForza() {
@@ -97,7 +78,7 @@ public class Artefatto implements Oggetto {
 		Logger.log("Artefatto::prendi() - azione " + azione);
 		Personaggio p = gruppo.getPersonaggio(azione);
 		p.addArtefatto(this);
-		UI.notifica(new StringBuilder(p.getNome()).append(" raccoglie ").append(md.getNome()).append('.').toString());
+		UI.notifica(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " raccoglie " + md.getNome() + '.');
 		return true;
 	}
 
@@ -136,82 +117,9 @@ public class Artefatto implements Oggetto {
 	public ArtefattoMD getModelloDati() {
 		return md;
 	}
-	
-	public static final Costruttore getCostruttore() {
-		return new Costruttore();
-	}
-	
-	public static class Costruttore {
-		private final ArtefattoMD artefattoMD = new ArtefattoMD();
-		
-		public Costruttore setNome(String nome) {
-			artefattoMD.setNome(nome);
-			return this;
-		}
-		
-		public Costruttore setDescrizione(String descrizione) {
-			artefattoMD.setDescrizione(descrizione);
-			return this;
-		}
 
-		public Costruttore setUtilizzo(String utilizzo) {
-			artefattoMD.setUtilizzo(utilizzo);
-			return this;
-		}
-		
-		public Costruttore setCostoAcquisto(int costoAcquisto) {
-			artefattoMD.setCostoAcquisto(costoAcquisto);
-			return this;
-		}
-		
-		public Costruttore setForza(int forza) {
-			artefattoMD.setForza(forza);
-			return this;
-		}
-		
-		public Costruttore setMagia(int magia) {
-			artefattoMD.setMagia(magia);
-			return this;
-		}
-		
-		public Costruttore setValore(int valore) {
-			artefattoMD.setValore(valore);
-			return this;
-		}
-		
-		public Costruttore setCoraggio(int coraggio) {
-			artefattoMD.setCoraggio(coraggio);
-			return this;
-		}
-		
-		public Costruttore setCarisma(int carisma) {
-			artefattoMD.setCarisma(carisma);
-			return this;
-		}
-		
-		public Costruttore setStanchezza(int stanchezza) {
-			artefattoMD.setStanchezza(stanchezza);
-			return this;
-		}
-		
-		public Costruttore setBersagli(int bersagli) {
-			artefattoMD.setBersagli(bersagli);
-			return this;
-		}
-		
-		public Costruttore setProtezione(int protezione) {
-			artefattoMD.setProtezione(protezione);
-			return this;
-		}
-		
-		public Artefatto getArtefatto() {
-			return new Artefatto(artefattoMD);
-		}
-
-	}
-
-	public int getModificatoreAttributo(TipoModificatoreAttributo tipoModificatoreAttributo) {
-		return md.getModificatoreAttributo(tipoModificatoreAttributo);
+	public int getModificatoreAttributo(TipoAttributo tipoAttributo) {
+		return md.getModificatoreAttributo(tipoAttributo);
 	}
 
 	public int getLivello() {
@@ -220,6 +128,10 @@ public class Artefatto implements Oggetto {
 
 	public int getDanniBase() {
 		return md.getDanniBase();
+	}
+
+	public int getPeso() {
+		return md.getPeso();
 	}
 
 }

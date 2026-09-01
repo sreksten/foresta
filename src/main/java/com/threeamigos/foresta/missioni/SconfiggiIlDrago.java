@@ -7,6 +7,7 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.ui.UI;
 
 public class SconfiggiIlDrago extends MissioneBase implements Missione {
@@ -27,7 +28,7 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 		sb.append("La Foresta è minacciata da un temibile Drago. ");
 		if (!isDragoApparso()) {
 			sb.append("Il Castello dove si trova è nascosto da un incantesimo. ");
-			sb.append(GruppoGiocatore.getIstanza().getCapo().getNome());
+			sb.append(GruppoGiocatore.getIstanza().getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 			sb.append(" deve sconfiggere tutti i suoi alleati per poterlo affrontare!");			
 		} else {
 			sb.append("Occorre entrare nel suo Castello ed affrontarlo!");

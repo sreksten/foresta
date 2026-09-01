@@ -72,11 +72,11 @@ public abstract class Gruppo {
 	}
 
 	public String chi() {
-		return personaggi.size() > 1 ? "il gruppo" : capo.getNome();
+		return personaggi.size() > 1 ? "il gruppo" : capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 	}
 
 	public String chiMaiuscolo() {
-		return personaggi.size() > 1 ? "Il gruppo" : capo.getNome();
+		return personaggi.size() > 1 ? "Il gruppo" : capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 	}
 	
 	public boolean contiene(Personaggio personaggio) {

@@ -19,14 +19,14 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Centauro() {
-		super(ClassiPersonaggio.CENTAURO);
+		super(ClassePersonaggio.CENTAURO);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Centauro.gif");
 		setIcona("icone/Centauro.gif");
-		setForzaMassima(70);
+		setSaluteMassima(70);
 		setMagiaMassima(0);
 		setValore(40);
 		setCoraggio(60);

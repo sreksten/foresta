@@ -22,18 +22,18 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	public int getBersagliPerIncantesimo() { return 4 + super.getBersagliPerIncantesimo(); }
 
 	public OmbraFiamma() {
-		super(ClassiPersonaggio.OMBRAFIAMMA);
+		super(ClassePersonaggio.OMBRAFIAMMA);
 	}
 
 	public OmbraFiamma(String nome) {
-		super(nome, ClassiPersonaggio.OMBRAFIAMMA);
+		super(nome, ClassePersonaggio.OMBRAFIAMMA);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/OmbraFiamma.gif");
 		setIcona("icone/OmbraFiamma.gif");
-		setForzaMassima(500);
+		setSaluteMassima(500);
 		setMagiaMassima(90);
 		setValore(100);
 		setCoraggio(100);

@@ -39,28 +39,18 @@ public class Resurrezione implements Incantesimo {
 	}
 
 	public void formula(Personaggio formulante, Personaggio personaggioBersaglio, Gruppo gruppoBersaglio) {
-		String nome = personaggioBersaglio.getNome();
-		if (nome == null) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(Character.toUpperCase(personaggioBersaglio.getADS().charAt(0)))
-			.append(personaggioBersaglio.getADS().substring(1))
-			.append(personaggioBersaglio.getNomeSingolare());
-			nome = sb.toString();
-		}
+		String nome = personaggioBersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+
 		if (personaggioBersaglio.isVivo()) {
-			StringBuilder sb = new StringBuilder(nome);
-			sb.append(" era gia' viv")
-			.append(personaggioBersaglio.getSesso() == Personaggio.Sesso.MASCHIO ? 'o' : 'a')
-			.append(", per cui la sua forza e' stata completamente reintegrata.");
-			UI.notifica(sb.toString());
-			personaggioBersaglio.addForza(personaggioBersaglio.getForzaMassima());
+            String notifica = nome + " era gia' viv" + personaggioBersaglio.getLetteraFinaleAttributo() +
+                    ", per cui la sua forza è stata completamente reintegrata.";
+			UI.notifica(notifica);
+			personaggioBersaglio.addSalute(personaggioBersaglio.getSaluteMassima());
 			personaggioBersaglio.subStanchezza(9);
 		} else {
-			StringBuilder sb = new StringBuilder(nome);
-			sb.append(" e' risort")
-			.append(personaggioBersaglio.getSesso() == Personaggio.Sesso.MASCHIO ? 'o' : 'a')
-			.append(" dalle proprie ceneri.");
-			UI.notifica(sb.toString());
+            String notifica = nome + " è risort" + personaggioBersaglio.getLetteraFinaleAttributo() +
+                    " dalle proprie ceneri.";
+			UI.notifica(notifica);
 			personaggioBersaglio.resuscita();
 		}
 	}

@@ -4,6 +4,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
+import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.ui.UI;
 
 public class RecuperaLeDerrateAlimentari extends MissioneRecuperaBersaglio implements Missione {
@@ -33,11 +34,13 @@ public class RecuperaLeDerrateAlimentari extends MissioneRecuperaBersaglio imple
 		if (gruppo.isInLocazioneUnica(ClassiLocazione.CITTA_RUUNA) &&
 				!LineaTemporale.isCittaDistrutta(ClassiLocazione.CITTA_RUUNA)) {
 			if (!isAttiva()) {
-				UI.notifica("Il Borgomastro chiede a " + gruppo.getCapo().getNome() + " aiuto per recuperare un carico di derrate alimentari che è stato rubato da una banda di Troll, che si nascondono in alcune rovine. Offre 20 monete in cambio.");
+				UI.notifica("Il Borgomastro chiede a " +
+						gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
+						" aiuto per recuperare un carico di derrate alimentari che è stato rubato da una banda di Troll, che si nascondono in alcune rovine. Offre 20 monete in cambio.");
 				attivaMissione();
 				Foresta.costruisciLocazioneUnica(ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, true);
 			} else if (!isCompleta() && isBersaglioRecuperato()) {
-				UI.notifica(new StringBuilder("Il Borgomastro accoglie ").append(gruppo.chi()).append(", che ha recuperato le derrate alimentari. La ricompensa promessa viene saldata: 20 monete.").toString());
+				UI.notifica("Il Borgomastro accoglie " + gruppo.chi() + ", che ha recuperato le derrate alimentari. La ricompensa promessa viene saldata: 20 monete.");
 				gruppo.addMonete(20);
 				completaMissione();
 			}

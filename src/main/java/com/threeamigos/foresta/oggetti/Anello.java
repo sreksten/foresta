@@ -74,7 +74,7 @@ public class Anello extends OggettoBase implements Oggetto {
 					return false;
 				}
 				Personaggio p = gruppo.getPersonaggio(azione);
-				UI.notifica(p.getNome() + " indossa l'anello.");
+				UI.notifica(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " indossa l'anello.");
 				if (tipo == VALORE)
 					p.addValore(5);
 				else if (tipo == CORAGGIO)

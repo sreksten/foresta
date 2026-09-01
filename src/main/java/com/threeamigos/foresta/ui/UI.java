@@ -187,12 +187,12 @@ public class UI {
 		interfacciaUtente.notificaMorte(personaggio);
 	}
 	
-	public static final void variaForza(Personaggio personaggio, int variazione) {
-		interfacciaUtente.variaForza(personaggio, variazione);
+	public static final void variaSalute(Personaggio personaggio, int variazione) {
+		interfacciaUtente.variaSalute(personaggio, variazione);
 	}
 
-	public static final void variaForzaMassima(Personaggio personaggio, int variazione) {
-		interfacciaUtente.variaForzaMassima(personaggio, variazione);
+	public static final void variaSaluteMassima(Personaggio personaggio, int variazione) {
+		interfacciaUtente.variaSaluteMassima(personaggio, variazione);
 	}
 
 	public static final void variaMagia(Personaggio personaggio, int variazione) {

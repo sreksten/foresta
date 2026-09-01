@@ -361,11 +361,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 	}
 	
-	public void variaForza(Personaggio personaggio, int variazione) {
+	public void variaSalute(Personaggio personaggio, int variazione) {
 		if (personaggio.isPNG()) {
-			addSprite(riquadroLocazione.variaForza(personaggio, variazione));
+			addSprite(riquadroLocazione.variaSalute(personaggio, variazione));
 		} else {
-			addSprite(riquadroGruppo.variaForza(personaggio, variazione));
+			addSprite(riquadroGruppo.variaSalute(personaggio, variazione));
 		}
 	}
 

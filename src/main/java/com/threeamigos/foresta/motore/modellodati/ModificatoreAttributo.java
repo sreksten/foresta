@@ -1,20 +1,20 @@
 package com.threeamigos.foresta.motore.modellodati;
 
 /**
- *
+ * Modifica di un certo scostamento (positivo o negativo) il valore base di un attributo di un personaggio
  * @author Stefano Reksten
  */
 public class ModificatoreAttributo {
 
-    private final TipoModificatoreAttributo tipoModificatore;
+    private final TipoAttributo tipoModificatore;
     private final int valore;
 
-    public ModificatoreAttributo(TipoModificatoreAttributo tipoModificatore, int valore) {
+    public ModificatoreAttributo(TipoAttributo tipoModificatore, int valore) {
         this.tipoModificatore = tipoModificatore;
         this.valore = valore;
     }
 
-    public TipoModificatoreAttributo getTipoModificatoreAttributo() {
+    public TipoAttributo getTipoModificatoreAttributo() {
         return tipoModificatore;
     }
 

@@ -19,6 +19,7 @@ public class ArtefattoMD implements Serializzabile {
 	private String descrizione;
 	private String utilizzo;
 	protected int costoAcquisto;
+	protected int salute;
 	protected int forza;
 	private int magia;
 	private int valore;
@@ -27,6 +28,7 @@ public class ArtefattoMD implements Serializzabile {
 	private int stanchezza;
 	private int bersagli;
 	private int protezione;
+	private int peso;
 
 	public int getLivello() {
 		return livello;
@@ -82,6 +84,14 @@ public class ArtefattoMD implements Serializzabile {
 
 	public void setCostoAcquisto(int costoAcquisto) {
 		this.costoAcquisto = costoAcquisto;
+	}
+
+	public int getSalute() {
+		return salute;
+	}
+
+	public void setSalute(int salute) {
+		this.salute = salute;
 	}
 
 	public int getForza() {
@@ -148,6 +158,14 @@ public class ArtefattoMD implements Serializzabile {
 		this.protezione = protezione;
 	}
 
+	public int getPeso() {
+		return peso;
+	}
+
+	public void setPeso(int peso) {
+		this.peso = peso;
+	}
+
 	public Collection<ModificatoreAttributo> getModificatori() {
 		return modificatori;
 	}
@@ -160,7 +178,7 @@ public class ArtefattoMD implements Serializzabile {
 		modificatori.add(modificatore);
 	}
 
-	public void addModificatore(TipoModificatoreAttributo tipoModificatoreAttributo, int valore) {
+	public void addModificatore(TipoAttributo tipoModificatoreAttributo, int valore) {
 		modificatori.add(new ModificatoreAttributo(tipoModificatoreAttributo, valore));
 	}
 
@@ -172,10 +190,10 @@ public class ArtefattoMD implements Serializzabile {
 		modificatori.clear();
 	}
 
-	public int getModificatoreAttributo(TipoModificatoreAttributo tipoModificatoreAttributo) {
+	public int getModificatoreAttributo(TipoAttributo tipoAttributo) {
 		int risultato = 0;
 		for (ModificatoreAttributo modificatore : modificatori) {
-			if (modificatore.getTipoModificatoreAttributo() == tipoModificatoreAttributo) {
+			if (modificatore.getTipoModificatoreAttributo() == tipoAttributo) {
 				risultato += modificatore.getValore();
 			}
 		}
@@ -206,7 +224,9 @@ public class ArtefattoMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(bersagli);
 		stream.print(PIPE);
-		stream.println(protezione);
+		stream.print(protezione);
+		stream.print(PIPE);
+		stream.println(peso);
 	}
 
 	@Override
@@ -225,5 +245,6 @@ public class ArtefattoMD implements Serializzabile {
 		stanchezza = Integer.parseInt(st.nextToken());
 		bersagli = Integer.parseInt(st.nextToken());
 		protezione = Integer.parseInt(st.nextToken());
+		peso = Integer.parseInt(st.nextToken());
 	}
 }

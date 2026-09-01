@@ -34,7 +34,7 @@ public class MappaZona implements Offerta {
 		} else {
 			sb.append("Durante la conversazione ").append(capoAvversario.getADS()).append(capoAvversario.getNomeSingolare());
 		}
-		sb.append(" fa vedere a ").append(gruppo.getCapo().getNome()).append(" una mappa della zona.");
+		sb.append(" fa vedere a ").append(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)).append(" una mappa della zona.");
 		return sb.toString();
 	}
 

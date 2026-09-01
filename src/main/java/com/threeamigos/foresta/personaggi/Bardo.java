@@ -18,18 +18,18 @@ public class Bardo extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Bardo() {
-		super(ClassiPersonaggio.BARDO);
+		super(ClassePersonaggio.BARDO);
 	}
 
 	public Bardo(String nome) {
-		super(nome, ClassiPersonaggio.BARDO);
+		super(nome, ClassePersonaggio.BARDO);
 	}
 	
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Bardo.gif");
 		setIcona("icone/Bardo.gif");
-		setForzaMassima(400);
+		setSaluteMassima(400);
 		setMagiaMassima(50);
 		setValore(50);
 		setCoraggio(50);

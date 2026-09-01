@@ -13,20 +13,20 @@ public class Idra extends PersonaggioBase implements Personaggio {
 	public String getDeP() { return Misc.DELLE; }
 	public String getDa() { return Misc.DA_UN_APOSTROFO; }
 
-	public ClassiPersonaggio getClasse() { return ClassiPersonaggio.IDRA; }
+	public ClassePersonaggio getClasse() { return ClassePersonaggio.IDRA; }
 	public String getNomeSingolare() { return "Idra"; }
 	public String getNomePlurale() { return "Idre"; }
 	public String getPronome() { return Misc.ESSA; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 
 	public Idra() {
-		super(ClassiPersonaggio.IDRA);
+		super(ClassePersonaggio.IDRA);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Idra.gif");
-		setForzaMassima(600);
+		setSaluteMassima(600);
 		setMagiaMassima(0);
 		setValore(70);
 		setCoraggio(70);

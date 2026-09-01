@@ -74,14 +74,14 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 	
 	private void formulaImpl(Personaggio formulante, Personaggio personaggioBersaglio, int danni, Personaggio.NotificaFerite notificaFerite, Personaggio.NotificaMorte notificaMorte) {
 		if (!personaggioBersaglio.isImmuneAIncantesimo(getClasse())) {
-			personaggioBersaglio.subForza(danni, formulante, notificaFerite, notificaMorte);
+			personaggioBersaglio.subSalute(danni, formulante, notificaFerite, notificaMorte);
 			if (personaggioBersaglio.isVivo()) {
 				feriti++;
 			} else {
 				uccisi++;
 				if (GruppoGiocatore.getIstanza().contiene(formulante)) {
 					Statistiche.addMostroUcciso(personaggioBersaglio.getClasse());
-					Statistiche.addPunti(personaggioBersaglio.getForzaMassima());
+					Statistiche.addPunti(personaggioBersaglio.getSaluteMassima());
 				}
 			}
 		} else {
@@ -92,7 +92,10 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 
 	protected String risultato(Personaggio formulante) {
 		Logger.log("Totale: " + totale + ", bersagli: " + bersagli + ", feriti: " + feriti + ", uccisi: " + uccisi);
-		StringBuilder sb = new StringBuilder(formulante.getNome());
+
+		String s = formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+
+		StringBuilder sb = new StringBuilder(s);
 		if (uccisi == totale && totale > 1) {
 			sb.append(" ha formulato l'incantesimo alla perfezione, eliminando i suoi avversari.");
 		} else {

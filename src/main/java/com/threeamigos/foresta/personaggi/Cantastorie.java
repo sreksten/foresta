@@ -18,18 +18,18 @@ public class Cantastorie extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 
 	public Cantastorie() {
-		super(ClassiPersonaggio.CANTASTORIE);
+		super(ClassePersonaggio.CANTASTORIE);
 	}
 
 	public Cantastorie(String nome) {
-		super(nome, ClassiPersonaggio.CANTASTORIE);
+		super(nome, ClassePersonaggio.CANTASTORIE);
 	}
 	
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Cantastorie.gif");
 		setIcona("icone/Cantastorie.gif");
-		setForzaMassima(400);
+		setSaluteMassima(400);
 		setMagiaMassima(50);
 		setValore(50);
 		setCoraggio(50);

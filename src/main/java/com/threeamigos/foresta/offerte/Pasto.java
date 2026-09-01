@@ -28,7 +28,7 @@ public class Pasto implements Offerta {
 		} else {
 			StringBuilder sb = new StringBuilder("Viene offerto un pasto caldo che pero' non incontra i gusti ");
 			if (gruppo.getNumeroPersonaggiVivi() == 1) {
-				sb.append("di ").append(gruppo.getCapo().getNome()).append('.');
+				sb.append(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA)).append('.');
 			} else {
 				sb.append("del gruppo.");
 			}
@@ -40,7 +40,7 @@ public class Pasto implements Offerta {
 	public void accetta(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
 		if (gustoso > 0) {
 			for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
-				personaggio.addForza(50);
+				personaggio.addSalute(50);
 			}
 			UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 			UI.rinfresca();

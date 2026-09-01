@@ -19,13 +19,13 @@ public class Fantasma extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Fantasma() {
-		super(ClassiPersonaggio.FANTASMA);
+		super(ClassePersonaggio.FANTASMA);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Fantasma.gif");
-		setForzaMassima(50);
+		setSaluteMassima(50);
 		setMagiaMassima(0);
 		setValore(70);
 		setCoraggio(60);

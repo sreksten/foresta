@@ -3,7 +3,7 @@ package com.threeamigos.foresta.locazioni;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
-import com.threeamigos.foresta.personaggi.ClassiPersonaggio;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.ui.UI;
 
 public class Radura extends LocazioneBase {
@@ -22,27 +22,27 @@ public class Radura extends LocazioneBase {
 		return ClassiLocazione.RADURA;
 	}
 
-	private static ClassiPersonaggio[] mostri = {
-			ClassiPersonaggio.ARPIA,
-			ClassiPersonaggio.CENTAURO,
-			ClassiPersonaggio.CHIMERA,
-			ClassiPersonaggio.CHIMERA_DRAGO,
-			ClassiPersonaggio.EREMITA,
-			ClassiPersonaggio.FOLLETTO,
-			ClassiPersonaggio.GIGANTE,
-			ClassiPersonaggio.GOBLIN,
-			ClassiPersonaggio.HOBGOBLIN,
-			ClassiPersonaggio.MINOTAURO,
-			ClassiPersonaggio.SCHELETRO,
-			ClassiPersonaggio.TITANO,
-			ClassiPersonaggio.TROLL,
-			ClassiPersonaggio.VIVERNA
+	private static ClassePersonaggio[] mostri = {
+			ClassePersonaggio.ARPIA,
+			ClassePersonaggio.CENTAURO,
+			ClassePersonaggio.CHIMERA,
+			ClassePersonaggio.CHIMERA_DRAGO,
+			ClassePersonaggio.EREMITA,
+			ClassePersonaggio.FOLLETTO,
+			ClassePersonaggio.GIGANTE,
+			ClassePersonaggio.GOBLIN,
+			ClassePersonaggio.HOBGOBLIN,
+			ClassePersonaggio.MINOTAURO,
+			ClassePersonaggio.SCHELETRO,
+			ClassePersonaggio.TITANO,
+			ClassePersonaggio.TROLL,
+			ClassePersonaggio.VIVERNA
 	};
 
 	private static ClassiOggetto[] oggetti = {};
 
 	@Override
-	public ClassiPersonaggio[] getPossibiliIncontri() {
+	public ClassePersonaggio[] getPossibiliIncontri() {
 		return mostri;
 	}
 

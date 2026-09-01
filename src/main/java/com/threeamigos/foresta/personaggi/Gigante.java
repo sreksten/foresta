@@ -19,14 +19,14 @@ public class Gigante extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Gigante() {
-		super(ClassiPersonaggio.GIGANTE);
+		super(ClassePersonaggio.GIGANTE);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Gigante.gif");
 		setIcona("icone/Gigante.gif");
-		setForzaMassima(80);
+		setSaluteMassima(80);
 		setMagiaMassima(10);
 		setValore(60);
 		setCoraggio(80);

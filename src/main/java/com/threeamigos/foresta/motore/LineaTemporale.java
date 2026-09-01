@@ -4,6 +4,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.LineaTemporaleMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 public class LineaTemporale {
@@ -100,24 +101,27 @@ public class LineaTemporale {
 	public static final void eventi(GruppoGiocatore gruppo) {
 		int giorno = getGiorno();
 		if (giorno > 40) {
-			evento = new StringBuilder("Sventura! ").append(gruppo.getCapo().getNome()).append(" ha invano tentato di fermare il Drago, che col tempo ha abbattuto l'ultimo baluardo della resistenza... tutto e' perduto!").toString();
+			evento = "Sventura! " + gruppo.getPersonaggi().get(0).getNomeProprio() + " ha invano tentato di fermare il Drago, che col tempo ha abbattuto l'ultimo baluardo della resistenza... tutto e' perduto!";
 			setGiocoFinito(true);
-		} else if (giorno >= 35 && !isCittaDistrutta(ClassiLocazione.CITTA_MALGAARD)) {
-			CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_MALGAARD);
-			evento = new StringBuilder(gruppo.getCapo().getNome()).append(COLONNA).append(Misc.getDirezione(gruppo, coordinate)).toString();
-			setCittaDistrutta(ClassiLocazione.CITTA_MALGAARD);
-		} else if (giorno >= 30 && !isCittaDistrutta(ClassiLocazione.CITTA_FLEENA)) {
-			CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_FLEENA);
-			evento = new StringBuilder(gruppo.getCapo().getNome()).append(COLONNA).append(Misc.getDirezione(gruppo, coordinate)).toString();
-			setCittaDistrutta(ClassiLocazione.CITTA_FLEENA);
-		} else if (giorno >= 25 && !isCittaDistrutta(ClassiLocazione.CITTA_NYENA)) {
-			CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA);
-			evento = new StringBuilder(gruppo.getCapo().getNome()).append(COLONNA).append(Misc.getDirezione(gruppo, coordinate)).toString();
-			setCittaDistrutta(ClassiLocazione.CITTA_NYENA);
-		} else if (giorno >= 20 && !isCittaDistrutta(ClassiLocazione.CITTA_RUUNA)) {
-			CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_RUUNA);
-			evento = new StringBuilder(gruppo.getCapo().getNome()).append(COLONNA).append(Misc.getDirezione(gruppo, coordinate)).toString();
-			setCittaDistrutta(ClassiLocazione.CITTA_RUUNA);
+		} else {
+			String nome = gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+			if (giorno >= 35 && !isCittaDistrutta(ClassiLocazione.CITTA_MALGAARD)) {
+				CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_MALGAARD);
+				evento = nome + COLONNA + Misc.getDirezione(gruppo, coordinate);
+				setCittaDistrutta(ClassiLocazione.CITTA_MALGAARD);
+			} else if (giorno >= 30 && !isCittaDistrutta(ClassiLocazione.CITTA_FLEENA)) {
+				CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_FLEENA);
+				evento = nome + COLONNA + Misc.getDirezione(gruppo, coordinate);
+				setCittaDistrutta(ClassiLocazione.CITTA_FLEENA);
+			} else if (giorno >= 25 && !isCittaDistrutta(ClassiLocazione.CITTA_NYENA)) {
+				CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA);
+				evento = nome + COLONNA + Misc.getDirezione(gruppo, coordinate);
+				setCittaDistrutta(ClassiLocazione.CITTA_NYENA);
+			} else if (giorno >= 20 && !isCittaDistrutta(ClassiLocazione.CITTA_RUUNA)) {
+				CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_RUUNA);
+				evento = nome + COLONNA + Misc.getDirezione(gruppo, coordinate);
+				setCittaDistrutta(ClassiLocazione.CITTA_RUUNA);
+			}
 		}
 	}
 

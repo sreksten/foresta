@@ -77,7 +77,7 @@ class DisplayableCanvasRiquadroLocazione {
 		return new SpriteInDissolvenza(personaggio.getImmagine(), coordinate.getX(), coordinate.getY());
 	}
 	
-	SpriteInterface variaForza(Personaggio personaggio, int variazione) {
+	SpriteInterface variaSalute(Personaggio personaggio, int variazione) {
 		CoordinateMD coordinate = mappaCoordinate.get(personaggio);
 		if (coordinate == null) {
 			return null;

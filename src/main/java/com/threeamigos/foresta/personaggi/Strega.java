@@ -22,13 +22,13 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	public int getBersagliPerIncantesimo() { return 5; }
 
 	public Strega() {
-		super(ClassiPersonaggio.STREGA);
+		super(ClassePersonaggio.STREGA);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Strega.gif");
-		setForzaMassima(800);
+		setSaluteMassima(800);
 		setMagiaMassima(350);
 		setValore(50);
 		setCoraggio(60);

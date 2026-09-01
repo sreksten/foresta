@@ -19,14 +19,14 @@ public class Goblin extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Goblin() {
-		super(ClassiPersonaggio.GOBLIN);
+		super(ClassePersonaggio.GOBLIN);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Goblin.gif");
 		setIcona("icone/Goblin.gif");
-		setForzaMassima(40);
+		setSaluteMassima(40);
 		setMagiaMassima(0);
 		setValore(30);
 		setCoraggio(50);

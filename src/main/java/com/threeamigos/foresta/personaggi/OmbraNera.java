@@ -20,13 +20,13 @@ public class OmbraNera extends PersonaggioBase implements Personaggio {
 	public int getRecuperoMagia() { return 2; }
 
 	public OmbraNera() {
-		super(ClassiPersonaggio.OMBRA_NERA);
+		super(ClassePersonaggio.OMBRA_NERA);
 	}
 	
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/OmbraNera.gif");
-		setForzaMassima(100);
+		setSaluteMassima(100);
 		setMagiaMassima(50);
 		setValore(70);
 		setCoraggio(90);

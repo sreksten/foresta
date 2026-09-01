@@ -20,13 +20,13 @@ public class Viverna extends PersonaggioBase implements Personaggio {
 	public int getRecuperoMagia() { return 3; }
 
 	public Viverna() {
-		super(ClassiPersonaggio.VIVERNA);
+		super(ClassePersonaggio.VIVERNA);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Viverna.gif");
-		setForzaMassima(120);
+		setSaluteMassima(120);
 		setMagiaMassima(50);
 		setValore(80);
 		setCoraggio(90);

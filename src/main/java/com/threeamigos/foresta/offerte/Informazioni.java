@@ -12,6 +12,7 @@ import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.RegistroArtefattiMD;
+import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.tools.Random;
 
@@ -31,7 +32,8 @@ public class Informazioni implements Offerta {
 	@Override
 	public String getDescrizione(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
 		StringBuilder sb = new StringBuilder("Scambiando quattro chiacchiere, ")
-				.append(gruppo.getCapo().getNome()).append(" viene a sapere che ");
+				.append(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE))
+				.append(" viene a sapere che ");
 		ClassiLocazione classeLocazione = gruppo.getClasseLocazione();
 		int tipo;
 		if (classeLocazione.getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA) {

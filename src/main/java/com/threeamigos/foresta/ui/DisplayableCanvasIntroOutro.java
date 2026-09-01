@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.personaggi.ClassiPersonaggio;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tools.GestorePunteggi;
 import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import com.threeamigos.foresta.tools.InterfacciaGestorePunteggi;
@@ -79,7 +79,7 @@ public class DisplayableCanvasIntroOutro {
 		doomdark = DoomdarkTextProducer.getImage("Avversari uccisi in " + (giorni > 1 ? (Misc.getCardinaleM(giorni) + " giorni:") : "un giorno:"), fontMedium);
 		graphics.drawImage(doomdark, locXOffset + 9, locYOffset, null);
 		locYOffset += fontMedium.getHeight();
-		for (ClassiPersonaggio classePersonaggio : ClassiPersonaggio.values()) {
+		for (ClassePersonaggio classePersonaggio : ClassePersonaggio.values()) {
 			int m = Statistiche.getMostriUccisi(classePersonaggio);
 			if (m > 0) {
 				color = (color == DoomdarkColorModel.Color.MEDIUM_GRAY ? DoomdarkColorModel.Color.LIGHT_GRAY : DoomdarkColorModel.Color.MEDIUM_GRAY); 
@@ -307,7 +307,7 @@ public class DisplayableCanvasIntroOutro {
 		int coordinataX = (width >> 1) + 100 * (id - 3);
 		int altezzaMinima = 999;
 		while (st.hasMoreTokens()) {
-			ClassiPersonaggio classePersonaggio = ClassiPersonaggio.values()[Integer.parseInt(st.nextToken())];
+			ClassePersonaggio classePersonaggio = ClassePersonaggio.values()[Integer.parseInt(st.nextToken())];
 			BufferedImage immagine = classePersonaggio.getIstanza().getImmagine();
 			immagini.add(0, immagine);
 			coordinateX.add(0, coordinataX);

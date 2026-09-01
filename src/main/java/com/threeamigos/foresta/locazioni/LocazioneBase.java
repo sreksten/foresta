@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
@@ -20,7 +21,7 @@ import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
-import com.threeamigos.foresta.personaggi.ClassiPersonaggio;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.tools.Random;
@@ -53,7 +54,7 @@ public abstract class LocazioneBase implements Locazione {
 	 * L'elenco dei mostri e degli oggetti che e' possibile trovare
 	 * all'interno di questa locazione
 	 */
-	protected static ClassiPersonaggio[] possibiliIncontri = {};
+	protected static ClassePersonaggio[] possibiliIncontri = {};
 	protected static ClassiOggetto[] possibiliOggetti = {};
 
 	private GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
@@ -92,8 +93,8 @@ public abstract class LocazioneBase implements Locazione {
 		IN_LOCAZIONE,
 		CHI_COMBATTE,
 		IN_COMBATTIMENTO,
-		CHI_BEVE_POZIONE_FORZA,
-		CHI_BEVE_POZIONE_GRANDE_FORZA,
+		CHI_BEVE_POZIONE_CURATRICE,
+		CHI_BEVE_GRANDE_POZIONE_CURATRICE,
 		CHI_BEVE_POZIONE_MAGIA,
 		CHI_FORMULA,
 		QUALE_FORMULA,
@@ -104,7 +105,7 @@ public abstract class LocazioneBase implements Locazione {
 		CONFERMA_FUGA
 	}
 
-	protected ClassiPersonaggio[] getPossibiliIncontri() {
+	protected ClassePersonaggio[] getPossibiliIncontri() {
 		return possibiliIncontri;
 	}
 
@@ -136,12 +137,12 @@ public abstract class LocazioneBase implements Locazione {
 	 * ed oggetti associati.
 	 */
 	public void crea(GruppoGiocatore g, GruppoAvversario avversario) {
-		ClassiPersonaggio[] m = getPossibiliIncontri();
+		ClassePersonaggio[] m = getPossibiliIncontri();
 		if (m.length > 0) {
 			int ordinale = Random.getInt(m.length) + 1;
 			// Non sempre si trovano mostri
 			if (ordinale < m.length) {
-				ClassiPersonaggio classePersonaggio = m[ordinale];
+				ClassePersonaggio classePersonaggio = m[ordinale];
 				int numero = 1 + Random.getInt(classePersonaggio.getQuantitaMassima() - 1);
 				Logger.log("Scelta da " + m.length + " personaggi la classe " + classePersonaggio + ", numero " + numero);
 				Personaggio p = null;
@@ -189,11 +190,6 @@ public abstract class LocazioneBase implements Locazione {
 	 * All'interno di una specifica locazione possono essere eseguiti determinati tipi di azioni.
 	 * La funzione torna lo stato (dell'Automa) in cui si trova il gruppo.
 	 *
-	 * @param azioni un int[] destinato a tenere tutte le azioni che il gruppo puo'
-	 *        fare all'interno dei questa locazione (l'automa di stato della locazione
-	 *        puo' tornare valori differenti a seconda del suo stato). L'ultima azione
-	 *        DEVE sempre essere Azione.INVALIDA, che indica che non ci sono
-	 *        azioni ulteriori.
 	 * @param azione l'azione che il gruppo ha deciso di intraprendere; la prima
 	 *        volta la funzione viene chiamata con Azione.INVALIDA; dalla successiva
 	 *        viene chiamata passandole l'azione scelta dal giocatore.
@@ -232,26 +228,28 @@ public abstract class LocazioneBase implements Locazione {
 			gestisciChiCombatte(azione);
 			break;
 
-		case CHI_BEVE_POZIONE_FORZA:
-			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_FORZA");
+		case CHI_BEVE_POZIONE_CURATRICE:
+			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_CURATRICE");
 			if (azione != Comando.ANNULLA) {
 				chiAgisce = gruppo.getPersonaggio(azione);
-				chiAgisce.addForza(100);
+				chiAgisce.addSalute(100);
 				gruppo.subPozioniForza(1);
-				UI.notifica(chiAgisce.getNome() + " ha bevuto una pozione che fa riacquistare forza.");
+				UI.notifica(chiAgisce.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+						" ha bevuto una pozione che fa riacquistare forza.");
 			}
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
 			impostaAzioni(gruppo, gruppoAvversario, null);
 			return Stato.IN_LOCAZIONE;
 
-		case CHI_BEVE_POZIONE_GRANDE_FORZA:
-			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_GRANDE_FORZA");
+		case CHI_BEVE_GRANDE_POZIONE_CURATRICE:
+			Logger.log("LocazioneBase.CHI_BEVE_GRANDE_POZIONE_CURATRICE");
 			if (azione != Comando.ANNULLA) {
 				chiAgisce = gruppo.getPersonaggio(azione);
-				chiAgisce.addForza(chiAgisce.getForzaMassima());
-				chiAgisce.addForzaMassima(10);
+				chiAgisce.addSalute(chiAgisce.getSaluteMassima());
+				chiAgisce.addSaluteMassima(10);
 				gruppo.subPozioniGrandeForza(1);
-				UI.notifica(chiAgisce.getNome() + " ha bevuto una pozione che fa aumentare la forza!");
+				UI.notifica(chiAgisce.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
+						" ha bevuto una pozione che fa aumentare la forza!");
 			}
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
 			impostaAzioni(gruppo, gruppoAvversario, null);
@@ -263,7 +261,8 @@ public abstract class LocazioneBase implements Locazione {
 				chiAgisce = gruppo.getPersonaggio(azione);
 				chiAgisce.addMagia(10);
 				gruppo.subPozioniMagia(1);
-				UI.notifica(chiAgisce.getNome() + " ha bevuto una pozione che fa acquistare magia.");
+				UI.notifica(chiAgisce.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
+						" ha bevuto una pozione che fa acquistare magia.");
 			}
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
 			impostaAzioni(gruppo, gruppoAvversario, null);
@@ -289,15 +288,9 @@ public abstract class LocazioneBase implements Locazione {
 				opzioneAmiciziaDisponibile = false;
 				incantesimo = ClassiIncantesimo.ofComando(azione);
 				if (formulante.getMagia() < incantesimo.getCostoLancio()) {
-					nome = formulante.getNome();
-					StringBuilder sb = new StringBuilder("Il livello di magia ");
-					if (nome == null) {
-						sb.append(formulante.getDeS()).append(formulante.getNomeSingolare());
-					} else {
-						sb.append(" di ").append(formulante.getNome());
-					}
-					sb.append(" non permette di formulare questo incantesimo.");
-					UI.notifica(sb.toString());
+                    String sb = "Il livello di magia " + formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
+                            " non permette di formulare questo incantesimo.";
+					UI.notifica(sb);
 					rispostaAvversaria(null, gruppo, gruppoAvversario);
 					if (!gruppo.getCapo().isVivo()) {
 						return Stato.GIOCO_PERSO;
@@ -333,7 +326,7 @@ public abstract class LocazioneBase implements Locazione {
 					Azioni.clear();
 					for (int i = 0; i < l; i++) {
 						personaggio = gruppo.getPersonaggio(i);
-						Logger.log("tipo == Incantesimo.SINGOLO_QUALSIASI || p.isVivo() ? " + (tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo() ? "true" : "false"));
+						Logger.log("tipo == Incantesimo.SINGOLO_QUALSIASI || p.isVivo() ? " + (Boolean.toString(tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo())));
 						if (tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo()) {
 							Azioni.add(Comando.ofPersonaggio(i));
 						}
@@ -386,15 +379,9 @@ public abstract class LocazioneBase implements Locazione {
 				return Stato.FINE_LOCAZIONE;
 			} else {
 				Personaggio p = gruppo.getPersonaggio(azione);
-				nome = p.getNome();
-				StringBuilder sb = new StringBuilder("Il tentativo di corruzione ");
-				if (nome == null) {
-					sb.append(p.getDeS()).append(p.getNomeSingolare());
-				} else {
-					sb.append(" di ").append(p.getNome());
-				}
-				sb.append(" non ha avuto successo.");
-				UI.notifica(sb.toString());
+                String sb = "Il tentativo di corruzione " + p.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
+                        " non ha avuto successo.";
+				UI.notifica(sb);
 				opzioneCorruzioneDisponibile = false;
 				opzioneAmiciziaDisponibile = false;
 				statoLocazione = StatoLocazione.IN_LOCAZIONE;
@@ -410,16 +397,10 @@ public abstract class LocazioneBase implements Locazione {
 			Personaggio personaggio = gruppo.getPersonaggio(azione);
 			if (personaggio.getCarisma() > Random.getInt(12)) {
 				personaggio.addCarisma(1);
-				nome = personaggio.getNome();
-				StringBuilder sb = new StringBuilder();
-				if (nome == null) {
-					sb.append(Character.toUpperCase(personaggio.getADS().charAt(0))).append(personaggio.getADS().substring(1)).append(personaggio.getNomeSingolare());
-				} else {
-					sb.append(personaggio.getNome());
-				}
-				sb.append(" riesce a stringere amicizia.");
+                String sb = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+                        " riesce a stringere amicizia.";
 				haStrettoAmicizia = true;
-				UI.notifica(sb.toString());
+				UI.notifica(sb);
 
 				offerta = gruppoAvversario.getCapo().getOfferta(Comando.AMICIZIA);
 				if (offerta != null && offerta.isFattibile(gruppo, gruppoAvversario)) {
@@ -445,13 +426,13 @@ public abstract class LocazioneBase implements Locazione {
 					ClassiIncantesimo quale = ClassiIncantesimo.casuale();
 					Incantesimo qualeIncantesimo = quale.getIstanza();
 					if (gruppo.getIncantesimi(quale) > 0) {
-						descrizione = new StringBuffer("perde un ").append(qualeIncantesimo.getNomeSingolare()).append('.').toString();
+						descrizione = "perde un " + qualeIncantesimo.getNomeSingolare() + '.';
 						gruppo.subIncantesimi(quale, 1);
 					}
 					break;
 				case 1:
 					Personaggio avversario = gruppoAvversario.getCapo();
-					int ferite = Random.getInt(avversario.getForza());
+					int ferite = Random.getInt(avversario.getSalute());
 					if (ferite < 20) {
 						descrizione = "riceve alcune lievi ferite.";
 					} else if (ferite > 40) {
@@ -459,7 +440,7 @@ public abstract class LocazioneBase implements Locazione {
 					} else {
 						descrizione = "riceve alcune ferite.";
 					}
-					personaggio.subForza(ferite, avversario, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
+					personaggio.subSalute(ferite, avversario, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
 					break;
 				case 2:
 					if (gruppo.getMonete() > 0) {
@@ -484,11 +465,13 @@ public abstract class LocazioneBase implements Locazione {
 				default:
 					break;
 				}
+
+				String s = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 				if (descrizione != null) {
-					UI.notifica(new StringBuffer("Non solo ").append(personaggio.getNome()).append(" non riesce a stringere amicizia, ma in una breve collutazione ").append(descrizione).toString());
+					UI.notifica("Non solo " + s + " non riesce a stringere amicizia, ma in una breve collutazione " + descrizione);
 					UI.rinfresca();
 				} else {
-					UI.notifica(new StringBuffer(personaggio.getNome()).append(" non riesce a stringere amicizia.").toString());
+					UI.notifica(s + " non riesce a stringere amicizia.");
 				}
 				opzioneAmiciziaDisponibile = false;
 				statoLocazione = StatoLocazione.IN_LOCAZIONE;
@@ -585,60 +568,60 @@ public abstract class LocazioneBase implements Locazione {
 	/**
 	 * La descrizione dei presenti
 	 */
-	protected String descrizioneMostriEOggetti(GruppoGiocatore g, GruppoAvversario gng) {
-		int numeroAvversari = gng.getNumeroPersonaggi();
-		Personaggio p = gng.getCapo();
+	protected String descrizioneMostriEOggetti(GruppoGiocatore gruppoGiocatore, GruppoAvversario gruppoAvversario) {
+		int numeroAvversari = gruppoAvversario.getNumeroPersonaggi();
+		Personaggio p = gruppoAvversario.getCapo();
 		Oggetto o = getOggetto();
 		int numeroOggetti = (o == null ? 0 : o.getQuantita());
-		StringBuilder sb = new StringBuilder(g.getCapo().getNome());
+		StringBuilder sb = new StringBuilder(gruppoGiocatore.getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 		if (numeroAvversari == 0 && numeroOggetti == 0) {
 			sb.append(" non trova nulla");
 		} else {
 			sb.append(" vede ");
-		}
-		if (numeroAvversari > 0) {
-			if (numeroAvversari == 1) {
-				sb.append(p.getAIS()).append(p.getNomeSingolare());
-				if (numeroOggetti > 0) {
-					switch (Random.getInt(3)) {
-					case 0:
-						sb.append(" che protegge ");
-						break;
-					case 1:
-						sb.append(" che custodisce ");
-						break;
-					default:
-						sb.append(" che sorveglia ");
-						break;
+			if (numeroAvversari > 0) {
+				if (numeroAvversari == 1) {
+					sb.append(p.getAIS()).append(p.getNomeSingolare());
+					if (numeroOggetti > 0) {
+						switch (Random.getInt(3)) {
+							case 0:
+								sb.append(" che protegge ");
+								break;
+							case 1:
+								sb.append(" che custodisce ");
+								break;
+							default:
+								sb.append(" che sorveglia ");
+								break;
+						}
 					}
-				}
-			} else {
-				sb.append(Misc.getCardinaleM(numeroAvversari)).append(' ').append(p.getNomePlurale());
-				if (numeroOggetti > 0) {
-					switch (Random.getInt(3)) {
-					case 0:
-						sb.append(" che proteggono ");
-						break;
-					case 1:
-						sb.append(" che custodiscono ");
-						break;
-					default:
-						sb.append(" che sorvegliano ");
-						break;
+				} else {
+					sb.append(Misc.getCardinaleM(numeroAvversari)).append(' ').append(p.getNomePlurale());
+					if (numeroOggetti > 0) {
+						switch (Random.getInt(3)) {
+							case 0:
+								sb.append(" che proteggono ");
+								break;
+							case 1:
+								sb.append(" che custodiscono ");
+								break;
+							default:
+								sb.append(" che sorvegliano ");
+								break;
+						}
 					}
 				}
 			}
-		}
-		if (numeroOggetti > 0) {
-			if (numeroOggetti == 1) {
-				if (o.getClasse() == ClassiOggetto.ARTEFATTO) {
-					Artefatto artefatto = (Artefatto)o;
-					sb.append(artefatto.getNome()).append(", ").append(artefatto.getDescrizione());
+			if (numeroOggetti > 0) {
+				if (numeroOggetti == 1) {
+					if (o.getClasse() == ClassiOggetto.ARTEFATTO) {
+						Artefatto artefatto = (Artefatto)o;
+						sb.append(artefatto.getNome()).append(", ").append(artefatto.getDescrizione());
+					} else {
+						sb.append(o.getAIS()).append(o.getNomeSingolare());
+					}
 				} else {
-					sb.append(o.getAIS()).append(o.getNomeSingolare());
+					sb.append(Misc.getCardinaleM(numeroOggetti)).append(' ').append(o.getNomePlurale());
 				}
-			} else {
-				sb.append(Misc.getCardinaleM(numeroOggetti)).append(' ').append(o.getNomePlurale());
 			}
 		}
 		sb.append('.');
@@ -740,7 +723,7 @@ public abstract class LocazioneBase implements Locazione {
 			int danniBersaglio = bersaglio.getDanniInCombattimento();
 			int danniCombattente = combattente.getDanniInCombattimento();
 
-			combattente.subForza(danniBersaglio, bersaglio, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
+			combattente.subSalute(danniBersaglio, bersaglio, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
 			if (!combattente.isVivo()) {
 				if (gruppo.getCapo().isVivo()) {
 					statoLocazione = StatoLocazione.IN_LOCAZIONE;
@@ -749,11 +732,11 @@ public abstract class LocazioneBase implements Locazione {
 					return Stato.GIOCO_PERSO;
 				}
 			}
-			bersaglio.subForza(danniCombattente, combattente, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
+			bersaglio.subSalute(danniCombattente, combattente, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
 			if (!bersaglio.isVivo()) {
 				if (GruppoGiocatore.getIstanza().contiene(combattente)) {
 					Statistiche.addMostroUcciso(bersaglio.getClasse());
-					Statistiche.addPunti(bersaglio.getForzaMassima());
+					Statistiche.addPunti(bersaglio.getSaluteMassima());
 				}
 				Personaggio nuovoBersaglio = gruppoAvversario.getPersonaggioVivo();
 				if (nuovoBersaglio != null) {
@@ -764,18 +747,9 @@ public abstract class LocazioneBase implements Locazione {
 
 			if (gruppoAvversario.getNumeroPersonaggiVivi() > gruppo.getNumeroPersonaggiVivi()) {
 				bersaglio = gruppoAvversario.getPersonaggioVivo();
-				StringBuilder sb = new StringBuilder();
-				String s = bersaglio.getNome();
-				if (s == null) {
-					s = bersaglio.getAIS();
-					sb.append(Character.toUpperCase(s.charAt(0)));
-					sb.append(s.substring(1));
-					sb.append(bersaglio.getNomeSingolare());
-				} else {
-					sb.append(s);
-				}
-				sb.append(" si disimpegna e attacca!");
-				UI.notifica(sb.toString());
+                String sb = bersaglio.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
+                        " si disimpegna e attacca!";
+				UI.notifica(sb);
 				bersaglio.attacca(gruppo);
 			}
 			if (!gruppo.getCapo().isVivo()) {
@@ -786,10 +760,10 @@ public abstract class LocazioneBase implements Locazione {
 			return Stato.MAPPA;
 		}
 		if (azione == Comando.FORZA) {
-			return Stato.ATTESA_FORZA;
+			return Stato.ATTESA_POZIONE_SALUTE;
 		}
 		if (azione == Comando.GRANDE_FORZA) {
-			return Stato.ATTESA_GRANDE_FORZA;
+			return Stato.ATTESA_GRANDE_POZIONE_SALUTE;
 		}
 		if (azione == Comando.MAGIA) {
 			return Stato.ATTESA_MAGIA;
@@ -827,12 +801,12 @@ public abstract class LocazioneBase implements Locazione {
 				
 			case FORZA:
 				Logger.log("Azione.POZIONE_FORZA");
-				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_FORZA;
+				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_CURATRICE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 				
 			case GRANDE_FORZA:
 				Logger.log("Azione.POZIONE_GRANDE_FORZA");
-				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_GRANDE_FORZA;
+				statoLocazione = StatoLocazione.CHI_BEVE_GRANDE_POZIONE_CURATRICE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 
 			case MAGIA:
@@ -843,16 +817,13 @@ public abstract class LocazioneBase implements Locazione {
 			case FUGA:
 				Logger.log("Azione.FUGA");
 				if (gruppo.getNumeroPersonaggiVivi() > 1) {
-					UI.notifica("Il gruppo e' sicuro di voler fuggire?");
+					UI.notifica("Il gruppo è sicuro di voler fuggire?");
 				} else {
-					StringBuilder sb = new StringBuilder(gruppo.getCapo().getNome());
-					sb.append(" e' sicur");
-					if (gruppo.getCapo().getSesso() == Personaggio.Sesso.MASCHIO)
-						sb.append('o');
-					else
-						sb.append('a');
-					sb.append(" di voler fuggire?");
-					UI.notifica(sb.toString());
+					Personaggio capo = gruppo.getCapo();
+                    String sb = capo.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + " è sicur" +
+                            capo.getLetteraFinaleAttributo() +
+                            " di voler fuggire?";
+					UI.notifica(sb);
 				}
 				statoLocazione = StatoLocazione.CONFERMA_FUGA;
 				Azioni.set(Comando.SI, Comando.NO);
@@ -890,14 +861,7 @@ public abstract class LocazioneBase implements Locazione {
 			return;
 		}
 		combattente = gruppo.getPersonaggio(azione);
-		String nome = combattente.getNome();
-		if (nome == null) {
-			StringBuilder sb = new StringBuilder();
-			sb.append(combattente.getADS());
-			sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-			sb.append(combattente.getNomeSingolare());
-			nome = sb.toString();
-		}
+		String nome = combattente.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 		UI.notifica(nome + " si appresta al combattimento.");
 		UI.infoCombattimento(true, combattente, gruppoAvversario.getPersonaggioVivo());
 		opzioneAmiciziaDisponibile = false;

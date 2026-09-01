@@ -21,18 +21,18 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	public int getBersagliPerIncantesimo() { return 1 + super.getBersagliPerIncantesimo(); }
 
 	public Elfo() {
-		super(ClassiPersonaggio.ELFO);
+		super(ClassePersonaggio.ELFO);
 	}
 
 	public Elfo(String nome) {
-		super(nome, ClassiPersonaggio.ELFO);
+		super(nome, ClassePersonaggio.ELFO);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Elfo.gif");
 		setIcona("icone/Elfo.gif");
-		setForzaMassima(350);
+		setSaluteMassima(350);
 		setMagiaMassima(60);
 		setValore(40);
 		setCoraggio(40);

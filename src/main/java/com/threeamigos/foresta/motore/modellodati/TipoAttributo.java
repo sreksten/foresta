@@ -7,7 +7,12 @@ package com.threeamigos.foresta.motore.modellodati;
  *
  * @author Stefano Reksten
  */
-public enum TipoModificatoreAttributo {
+public enum TipoAttributo {
+
+    /**
+     * Salute fisica e resistenza complessiva. Quando la salute corrente scende a zero, il personaggio muore.
+     */
+    SALUTE("Salute fisica e resistenza complessiva."),
 
     /**
      * Forza fisica bruta e potenza muscolare.
@@ -194,11 +199,16 @@ public enum TipoModificatoreAttributo {
      * <p><b>In difesa:</b> Penalizza pesantemente il valore di Schivata e aumenta il tempo di recupero dagli stati di
      * stordimento o atterramento (il personaggio si rialza più lentamente).</p>
      */
-    STANCHEZZA("Livello di affaticamento che penalizza le prestazioni fisiche.");
+    STANCHEZZA("Livello di affaticamento che penalizza le prestazioni fisiche."),
+
+    /**
+     * Il numero massimo di bersagli che un personaggio può colpire in un turno.
+     */
+    NUMERO_BERSAGLI("Numero massimo di bersagli che un personaggio può colpire in un turno.");
 
     private final String descrizione;
 
-    TipoModificatoreAttributo(String descrizione) {
+    TipoAttributo(String descrizione) {
         this.descrizione = descrizione;
     }
 

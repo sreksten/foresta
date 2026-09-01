@@ -13,14 +13,14 @@ public class Minotauro extends PersonaggioBase implements Personaggio {
 	public String getDeP() { return Misc.DEI; }
 	public String getDa() { return Misc.DAL; }
 
-	public ClassiPersonaggio getClasse() { return ClassiPersonaggio.MINOTAURO; }
+	public ClassePersonaggio getClasse() { return ClassePersonaggio.MINOTAURO; }
 	public String getNomeSingolare() { return "Minotauro"; }
 	public String getNomePlurale() { return "Minotauri"; }
 	public String getPronome() { return Misc.ESSO; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Minotauro() {
-		super(ClassiPersonaggio.MINOTAURO);
+		super(ClassePersonaggio.MINOTAURO);
 	}
 
 	@Override
@@ -35,7 +35,7 @@ public class Minotauro extends PersonaggioBase implements Personaggio {
 	protected void impostaValori() {
 		setImmagine("personaggi/Minotauro.gif");
 		setIcona("icone/Minotauro.gif");
-		setForzaMassima(70);
+		setSaluteMassima(70);
 		setMagiaMassima(0);
 		setValore(50);
 		setCoraggio(50);

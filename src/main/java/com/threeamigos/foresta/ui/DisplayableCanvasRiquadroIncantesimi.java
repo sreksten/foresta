@@ -71,7 +71,7 @@ class DisplayableCanvasRiquadroIncantesimi {
 		locYOffset = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI;
 		BufferedImage iconaPozioneForza = ImageCache.spritePozioneForza;
 		graphics.drawImage(iconaPozioneForza, iconaPozioneX, locYOffset - (iconaPozioneForza.getHeight() - fontMedium.getHeight()) / 2, null);
-		doomdark = DoomdarkTextProducer.getImage("Forza", fontMedium, color);
+		doomdark = DoomdarkTextProducer.getImage("Salute", fontMedium, color);
 		graphics.drawImage(doomdark, nomePozioneX, locYOffset, null);
 		doomdark = DoomdarkTextProducer.getImage(g.getPozioniForza(), fontMedium, color);
 		graphics.drawImage(doomdark, totalePozioneX - doomdark.getWidth(null), locYOffset, null);
@@ -79,7 +79,7 @@ class DisplayableCanvasRiquadroIncantesimi {
 
 		BufferedImage iconaPozioneGrandeForza = ImageCache.spritePozioneGrandeForza;
 		graphics.drawImage(iconaPozioneGrandeForza, iconaPozioneX, locYOffset - (iconaPozioneGrandeForza.getHeight() - fontMedium.getHeight()) / 2, null);
-		doomdark = DoomdarkTextProducer.getImage("G. Forza", fontMedium, color);
+		doomdark = DoomdarkTextProducer.getImage("G. Salute", fontMedium, color);
 		graphics.drawImage(doomdark, nomePozioneX, locYOffset, null);
 		doomdark = DoomdarkTextProducer.getImage(g.getPozioniGrandeForza(), fontMedium, color);
 		graphics.drawImage(doomdark, totalePozioneX - doomdark.getWidth(null), locYOffset, null);

@@ -22,13 +22,13 @@ public class Lich extends PersonaggioBase implements Personaggio {
 	public int getBersagliPerIncantesimo() { return 5; }
 
 	public Lich() {
-		super(ClassiPersonaggio.LICH);
+		super(ClassePersonaggio.LICH);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Lich.gif");
-		setForzaMassima(700);
+		setSaluteMassima(700);
 		setMagiaMassima(200);
 		setValore(50);
 		setCoraggio(70);

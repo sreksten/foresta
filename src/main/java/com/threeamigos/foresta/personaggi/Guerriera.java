@@ -19,18 +19,18 @@ public class Guerriera extends PersonaggioBase implements Personaggio {
 	public int getModificaDanniForza() { return 2; }
 
 	public Guerriera() {
-		super(ClassiPersonaggio.GUERRIERA);
+		super(ClassePersonaggio.GUERRIERA);
 	}
 
 	public Guerriera(String nome) {
-		super(nome, ClassiPersonaggio.GUERRIERA);
+		super(nome, ClassePersonaggio.GUERRIERA);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Guerriera.gif");
 		setIcona("icone/Guerriera.gif");
-		setForzaMassima(550);
+		setSaluteMassima(550);
 		setMagiaMassima(30);
 		setValore(70);
 		setCoraggio(70);

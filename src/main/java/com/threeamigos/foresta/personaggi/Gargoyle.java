@@ -21,13 +21,13 @@ public class Gargoyle extends PersonaggioBase implements Personaggio {
 	public int getRecuperoMagia() { return 2; }
 
 	public Gargoyle() {
-		super(ClassiPersonaggio.GARGOYLE);
+		super(ClassePersonaggio.GARGOYLE);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Gargoyle.gif");
-		setForzaMassima(50);
+		setSaluteMassima(50);
 		setMagiaMassima(20);
 		setValore(70);
 		setCoraggio(70);

@@ -19,13 +19,13 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Scheletro() {
-		super(ClassiPersonaggio.SCHELETRO);
+		super(ClassePersonaggio.SCHELETRO);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Scheletro.gif");
-		setForzaMassima(50);
+		setSaluteMassima(50);
 		setMagiaMassima(0);
 		setValore(40);
 		setCoraggio(50);

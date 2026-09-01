@@ -19,14 +19,14 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Eremita() {
-		super(ClassiPersonaggio.EREMITA);
+		super(ClassePersonaggio.EREMITA);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Eremita.gif");
 		setIcona("icone/Eremita.gif");
-		setForzaMassima(70);
+		setSaluteMassima(70);
 		setMagiaMassima(0);
 		setValore(50);
 		setCoraggio(80);

@@ -6,13 +6,31 @@ package com.threeamigos.foresta.motore.modellodati;
  */
 public enum TipoArtefatto {
 
-    SPADA,
-    MAZZA,
-    LANCIA,
+    SPADA("impugna"),
+    MAZZA("brandisce"),
+    ASCIA("impugna"),
+    LANCIA("impugna"),
 
-    SCUDO,
-    ELMO,
+    SCUDO("porta"),
+    ELMO("indossa"),
+    ARMATURA("indossa"),
 
-    MONILE
+    TALISMANO("possiede"),
+
+    LIBRO_MAGICO("porta"),
+
+    BASTONE_MAGICO("impugna"),
+
+    VESTE("indossa");
+
+    private final String utilizzo;
+
+    TipoArtefatto(String utilizzo) {
+        this.utilizzo = utilizzo;
+    }
+
+    public String getUtilizzo() {
+        return utilizzo;
+    }
 
 }

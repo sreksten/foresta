@@ -208,12 +208,12 @@ public class ForestaUI implements InterfacciaUtente {
 	}
 	
 	@Override
-	public void variaForza(Personaggio personaggio, int variazione) {
-		displayableCanvas.variaForza(personaggio, variazione);
+	public void variaSalute(Personaggio personaggio, int variazione) {
+		displayableCanvas.variaSalute(personaggio, variazione);
 	}
 
 	@Override
-	public void variaForzaMassima(Personaggio personaggio, int variazione) {
+	public void variaSaluteMassima(Personaggio personaggio, int variazione) {
 		displayableCanvas.variaForzaMassima(personaggio, variazione);
 	}
 

@@ -7,7 +7,7 @@ import java.util.Map;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.personaggi.ClassiPersonaggio;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
 public class ImageCache {
 
@@ -246,7 +246,7 @@ public class ImageCache {
 	
 	static void init() {
 		if (!inited) {
-			for (ClassiPersonaggio classePersonaggio : ClassiPersonaggio.values()) {
+			for (ClassePersonaggio classePersonaggio : ClassePersonaggio.values()) {
 				classePersonaggio.getIstanza();
 			}
 			inited = true;

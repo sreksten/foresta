@@ -22,13 +22,13 @@ public class Drago extends PersonaggioBase implements Personaggio {
 	public int getBersagliPerIncantesimo() { return 5; }
 
 	public Drago() {
-		super(ClassiPersonaggio.DRAGO);
+		super(ClassePersonaggio.DRAGO);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Drago.gif");
-		setForzaMassima(1000);
+		setSaluteMassima(1000);
 		setMagiaMassima(500);
 		setValore(80);
 		setCoraggio(90);

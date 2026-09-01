@@ -19,13 +19,13 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Troll() {
-		super(ClassiPersonaggio.TROLL);
+		super(ClassePersonaggio.TROLL);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Troll.gif");
-		setForzaMassima(80);
+		setSaluteMassima(80);
 		setMagiaMassima(0);
 		setValore(60);
 		setCoraggio(80);

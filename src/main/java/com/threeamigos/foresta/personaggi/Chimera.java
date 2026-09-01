@@ -19,13 +19,13 @@ public class Chimera extends PersonaggioBase implements Personaggio {
 	public int getRecuperoForza() { return 5; }
 
 	public Chimera() {
-		super(ClassiPersonaggio.CHIMERA);
+		super(ClassePersonaggio.CHIMERA);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Chimera.gif");
-		setForzaMassima(45);
+		setSaluteMassima(45);
 		setMagiaMassima(0);
 		setValore(50);
 		setCoraggio(60);

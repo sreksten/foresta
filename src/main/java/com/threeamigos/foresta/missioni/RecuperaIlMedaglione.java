@@ -4,6 +4,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
+import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.ui.UI;
 
 public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements Missione {
@@ -33,7 +34,8 @@ public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements M
 		if (gruppo.isInLocazioneUnica(ClassiLocazione.CITTA_FLEENA) &&
 				!LineaTemporale.isCittaDistrutta(ClassiLocazione.CITTA_FLEENA)) {
 			if (!isAttiva()) {
-				UI.notifica(gruppo.getCapo().getNome() + " incontra un uomo che chiede aiuto per recuperare il suo prezioso medaglione rubato da una banda di ladri, che hanno il loro covo in una grotta. Offre 20 monete in cambio.");
+				UI.notifica(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
+						" incontra un uomo che chiede aiuto per recuperare il suo prezioso medaglione rubato da una banda di ladri, che hanno il loro covo in una grotta. Offre 20 monete in cambio.");
 				attivaMissione();
 				Foresta.costruisciLocazioneUnica(ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE, true);
 			} else if (!isCompleta() && isBersaglioRecuperato()) {

@@ -12,14 +12,14 @@ public class MinotauroGigante extends PersonaggioBase implements Personaggio {
 	public String getDeP() { return Misc.DEI; }
 	public String getDa() { return Misc.DAL; }
 
-	public ClassiPersonaggio getClasse() { return ClassiPersonaggio.MINOTAURO_GIGANTE; }
+	public ClassePersonaggio getClasse() { return ClassePersonaggio.MINOTAURO_GIGANTE; }
 	public String getNomeSingolare() { return "Minotauro Gigante"; }
 	public String getNomePlurale() { return "Minotauri Giganti"; }
 	public String getPronome() { return Misc.ESSO; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public MinotauroGigante() {
-		super(ClassiPersonaggio.MINOTAURO_GIGANTE);
+		super(ClassePersonaggio.MINOTAURO_GIGANTE);
 	}
 
 	@Override
@@ -30,7 +30,7 @@ public class MinotauroGigante extends PersonaggioBase implements Personaggio {
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/MinotauroGigante.gif");
-		setForzaMassima(700);
+		setSaluteMassima(700);
 		setMagiaMassima(0);
 		setValore(80);
 		setCoraggio(90);

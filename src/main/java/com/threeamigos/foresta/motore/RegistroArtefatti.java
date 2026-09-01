@@ -1,24 +1,15 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.modellodati.RegistroArtefattiMD;
+import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 
 public class RegistroArtefatti {
 
 	private RegistroArtefatti() {
 	}
 
-	private static RegistroArtefattiMD registroMD = ModelloDati.getIstanza().getRegistroArtefattiMD();
-
-	private static final String IMPUGNA = "impugna";
-	private static final String BRANDISCE = "brandisce";
-	private static final String INDOSSA = "indossa";
-	private static final String PORTA = "porta al braccio";
-	private static final String HA_CON_SE = "ha con se";
-	private static final String POSSIEDE = "possiede";
+	private static final RegistroArtefattiMD registroMD = ModelloDati.getIstanza().getRegistroArtefattiMD();
 
 	private static final String COMBATTIMENTO = "il cui potere e' nel combattimento";
 	private static final String PROTEZIONE = "che protegge dagli attacchi avversari";
@@ -28,136 +19,181 @@ public class RegistroArtefatti {
 	static final void reimposta() {
 		registroMD.reimposta();
 
-		aggiungiArtefatto(Artefatto.getCostruttore()
-				.setNome("il Pugnale di Worr")
+		aggiungiArtefatto(CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.SPADA)
+				.setNome("il pugnale di Worr")
 				.setDescrizione(COMBATTIMENTO)
-				.setUtilizzo(IMPUGNA)
+				.setLivello(2)
 				.setCostoAcquisto(15)
-				.setForza(10)
-				.setValore(5)
-				.setCoraggio(5)
-				.getArtefatto());
-		aggiungiArtefatto(Artefatto.getCostruttore()
+				.setPeso(1)
+				.setModificatore(TipoAttributo.FORZA, 10)
+				.setModificatore(TipoAttributo.VALORE, 5)
+				.setModificatore(TipoAttributo.CORAGGIO, 5)
+				.costruisci());
+
+		aggiungiArtefatto(CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.ASCIA)
 				.setNome("l'Ascia di Thrann")
 				.setDescrizione(COMBATTIMENTO)
-				.setUtilizzo(IMPUGNA)
+				.setLivello(3)
 				.setCostoAcquisto(15)
-				.setForza(15)
-				.setValore(5)
-				.setCoraggio(5)
-				.getArtefatto());
-		aggiungiArtefatto(Artefatto.getCostruttore()
+				.setPeso(2)
+				.setModificatore(TipoAttributo.FORZA, 15)
+				.setModificatore(TipoAttributo.VALORE, 5)
+				.setModificatore(TipoAttributo.CORAGGIO, 5)
+				.costruisci());
+
+		aggiungiArtefatto(CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.SPADA)
 				.setNome("la Daga di Yltrim")
 				.setDescrizione(COMBATTIMENTO)
-				.setUtilizzo(BRANDISCE)
+				.setLivello(4)
 				.setCostoAcquisto(20)
-				.setForza(20)
-				.setValore(10)
-				.setCoraggio(10)
-				.getArtefatto());
-		aggiungiArtefatto(Artefatto.getCostruttore()
+				.setPeso(1)
+				.setModificatore(TipoAttributo.FORZA, 20)
+				.setModificatore(TipoAttributo.VALORE, 10)
+				.setModificatore(TipoAttributo.CORAGGIO, 10)
+				.costruisci());
+
+		aggiungiArtefatto(CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.SPADA)
 				.setNome("la Spada di Kartham")
 				.setDescrizione(COMBATTIMENTO)
-				.setUtilizzo(BRANDISCE)
+				.setLivello(5)
 				.setCostoAcquisto(25)
-				.setForza(25)
-				.setValore(10)
-				.setCoraggio(10)
-				.getArtefatto());
+				.setPeso(2)
+				.setModificatore(TipoAttributo.FORZA, 25)
+				.setModificatore(TipoAttributo.VALORE, 10)
+				.setModificatore(TipoAttributo.CORAGGIO, 10)
+				.costruisci());
 
-		aggiungiArtefatto(Artefatto.getCostruttore()
+		aggiungiArtefatto(CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.VESTE)
 				.setNome("il Manto di Grakk")
 				.setDescrizione(PROTEZIONE)
-				.setUtilizzo(INDOSSA)
-				.setCostoAcquisto(5)
-				.setStanchezza(1)
-				.setProtezione(5)
-				.getArtefatto());
-		aggiungiArtefatto(Artefatto.getCostruttore()
+				.setLivello(1)
+				.setCostoAcquisto(20)
+				.setPeso(1)
+				.setModificatore(TipoAttributo.STANCHEZZA, 1)
+				.setModificatore(TipoAttributo.PARATA, 5)
+				.setModificatore(TipoAttributo.RESISTENZA_MAGICA, 5)
+				.costruisci());
+
+		aggiungiArtefatto(CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.ELMO)
 				.setNome("l'Elmo di Mithrr")
 				.setDescrizione(PROTEZIONE)
-				.setUtilizzo(INDOSSA)
+				.setLivello(2)
 				.setCostoAcquisto(10)
-				.setCarisma(1)
-				.setProtezione(10)
-				.getArtefatto());
-		aggiungiArtefatto(Artefatto.getCostruttore()
+				.setPeso(1)
+				.setModificatore(TipoAttributo.CARISMA, 1)
+				.setModificatore(TipoAttributo.PARATA, 10)
+				.costruisci());
+
+		aggiungiArtefatto(CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.SCUDO)
 				.setNome("lo Scudo di Kalar")
 				.setDescrizione(PROTEZIONE)
-				.setUtilizzo(PORTA)
+				.setLivello(3)
 				.setCostoAcquisto(15)
-				.setCarisma(1)
-				.setProtezione(15)
-				.getArtefatto());
-		aggiungiArtefatto(Artefatto.getCostruttore()
+				.setPeso(2)
+				.setModificatore(TipoAttributo.CARISMA, 1)
+				.setModificatore(TipoAttributo.PARATA, 15)
+				.costruisci());
+
+		aggiungiArtefatto(CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.ARMATURA)
 				.setNome("la Corazza di Yar")
 				.setDescrizione(PROTEZIONE)
-				.setUtilizzo(INDOSSA)
+				.setLivello(4)
 				.setCostoAcquisto(20)
-				.setProtezione(20)
-				.getArtefatto());
+				.setPeso(3)
+				.setModificatore(TipoAttributo.PARATA, 20)
+				.costruisci());
 
-		aggiungiArtefatto(Artefatto.getCostruttore()
+		aggiungiArtefatto(CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.TALISMANO)
 				.setNome("il Talismano di Beltram")
 				.setDescrizione(PERSUASIONE)
-				.setUtilizzo(HA_CON_SE)
+				.setLivello(2)
 				.setCostoAcquisto(10)
-				.setCarisma(2)
-				.getArtefatto());
-		aggiungiArtefatto(Artefatto.getCostruttore()
+				.setPeso(1)
+				.setModificatore(TipoAttributo.CARISMA, 2)
+				.costruisci());
+
+		aggiungiArtefatto(CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.TALISMANO)
 				.setNome("il Sigillo di Yshtalar")
 				.setDescrizione(PERSUASIONE)
-				.setUtilizzo(POSSIEDE)
+				.setLivello(3)
 				.setCostoAcquisto(15)
-				.setCarisma(3)
-				.getArtefatto());
-		aggiungiArtefatto(Artefatto.getCostruttore()
+				.setPeso(1)
+				.setModificatore(TipoAttributo.CARISMA, 3)
+				.costruisci());
+
+		aggiungiArtefatto(CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.TALISMANO)
 				.setNome("la Serpe di Yalar")
 				.setDescrizione(PERSUASIONE)
-				.setUtilizzo(HA_CON_SE)
+				.setLivello(4)
 				.setCostoAcquisto(20)
-				.setCarisma(4)
-				.getArtefatto());
-		aggiungiArtefatto(Artefatto.getCostruttore()
+				.setPeso(1)
+				.setModificatore(TipoAttributo.CARISMA, 4)
+				.costruisci());
+
+		aggiungiArtefatto(CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.TALISMANO)
 				.setNome("il Flagello di Mutr")
 				.setDescrizione(PERSUASIONE)
-				.setUtilizzo(POSSIEDE)
+				.setLivello(1)
 				.setCostoAcquisto(25)
-				.setCarisma(5)
-				.getArtefatto());
+				.setPeso(1)
+				.setModificatore(TipoAttributo.CARISMA, 5)
+				.costruisci());
 
-		aggiungiArtefatto(Artefatto.getCostruttore()
+		aggiungiArtefatto(CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.BASTONE_MAGICO)
 				.setNome("la Bacchetta di Yuw")
 				.setDescrizione(MAGIA)
-				.setUtilizzo(IMPUGNA)
+				.setLivello(1)
 				.setCostoAcquisto(10)
-				.setMagia(5)
-				.setBersagli(1)
-				.getArtefatto());
-		aggiungiArtefatto(Artefatto.getCostruttore()
+				.setPeso(1)
+				.setModificatore(TipoAttributo.MAGIA, 5)
+				.costruisci());
+
+		aggiungiArtefatto(CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.BASTONE_MAGICO)
 				.setNome("la Verga di Pannk")
 				.setDescrizione(MAGIA)
-				.setUtilizzo(IMPUGNA)
+				.setLivello(2)
 				.setCostoAcquisto(15)
-				.setMagia(10)
-				.setBersagli(2)
-				.getArtefatto());
-		aggiungiArtefatto(Artefatto.getCostruttore()
+				.setPeso(2)
+				.setModificatore(TipoAttributo.MAGIA, 10)
+				.setModificatore(TipoAttributo.NUMERO_BERSAGLI, 2)
+				.costruisci());
+
+		aggiungiArtefatto(CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.LIBRO_MAGICO)
 				.setNome("il Libro di Menk")
 				.setDescrizione(MAGIA)
-				.setUtilizzo(POSSIEDE)
+				.setLivello(3)
 				.setCostoAcquisto(20)
-				.setMagia(15)
-				.setBersagli(3)
-				.getArtefatto());
-		aggiungiArtefatto(Artefatto.getCostruttore()
+				.setPeso(1)
+				.setModificatore(TipoAttributo.MAGIA, 15)
+				.setModificatore(TipoAttributo.NUMERO_BERSAGLI, 3)
+				.costruisci());
+
+		aggiungiArtefatto(CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.BASTONE_MAGICO)
 				.setNome("il Bastone di Plarr")
 				.setDescrizione(MAGIA)
-				.setUtilizzo(IMPUGNA)
+				.setLivello(4)
 				.setCostoAcquisto(25)
-				.setMagia(20)
-				.setBersagli(4)
-				.getArtefatto());
+				.setPeso(1)
+				.setModificatore(TipoAttributo.MAGIA, 20)
+				.setModificatore(TipoAttributo.NUMERO_BERSAGLI, 4)
+				.costruisci());
+
 	}
 
 	static Artefatto getArtefattoDisponibile() {
@@ -168,23 +204,23 @@ public class RegistroArtefatti {
 		return registroMD.getArtefattoCasuale();
 	}
 
-	public static final void addArtefattoInLocazione(Artefatto artefatto, CoordinateMD coordinate) {
+	public static void addArtefattoInLocazione(Artefatto artefatto, CoordinateMD coordinate) {
 		registroMD.addArtefattoInLocazione(artefatto.getModelloDati(), coordinate);
 	}
 
-	public static final Artefatto getArtefattoInLocazione(CoordinateMD coordinate) {
+	public static Artefatto getArtefattoInLocazione(CoordinateMD coordinate) {
 		return costruisciArtefatto(registroMD.getArtefattoInLocazione(coordinate));
 	}
 
-	public static final void rimuoviArtefattoInLocazione(CoordinateMD coordinate) {
+	public static void rimuoviArtefattoInLocazione(CoordinateMD coordinate) {
 		registroMD.rimuoviArtefattoInLocazione(coordinate);
 	}
 
-	private static final void aggiungiArtefatto(Artefatto artefatto) {
+	private static void aggiungiArtefatto(Artefatto artefatto) {
 		registroMD.aggiungiArtefatto(artefatto.getModelloDati());
 	}
 
-	private static final Artefatto costruisciArtefatto(ArtefattoMD modelloDati) {
+	private static Artefatto costruisciArtefatto(ArtefattoMD modelloDati) {
 		if (modelloDati == null) {
 			return null;
 		}

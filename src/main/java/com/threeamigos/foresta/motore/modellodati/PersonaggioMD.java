@@ -7,16 +7,23 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.StringTokenizer;
 
-import com.threeamigos.foresta.personaggi.ClassiPersonaggio;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 public class PersonaggioMD implements Serializzabile {
 
-	private ClassiPersonaggio classe;
+	private ClassePersonaggio classe;
 	private String nome;
 	private boolean vivo;
 	private int livello;
 	private int esperienza;
+
+	private int salute;
+	private int saluteMassima;
+	private int magia;
+	private int magiaMassima;
+	private int carico;
+	private int caricoMassimo;
 
 	private int forza;
 	private int forzaMassima;
@@ -50,10 +57,6 @@ public class PersonaggioMD implements Serializzabile {
 	private int soggezioneMassima;
 	private int furia;
 	private int furiaMassima;
-	private int carico;
-	private int caricoMassimo;
-	private int magia;
-	private int magiaMassima;
 
 	private int coraggio;
 	private int valore;
@@ -63,11 +66,11 @@ public class PersonaggioMD implements Serializzabile {
 	private int tempo = Personaggio.NO_TEMPO;
 	private List<ArtefattoMD> artefatti = new ArrayList<>();
 
-	public ClassiPersonaggio getClasse() {
+	public ClassePersonaggio getClasse() {
 		return classe;
 	}
 
-	public void setClasse(ClassiPersonaggio classe) {
+	public void setClasse(ClassePersonaggio classe) {
 		this.classe = classe;
 	}
 
@@ -101,6 +104,22 @@ public class PersonaggioMD implements Serializzabile {
 
 	public void setEsperienza(int esperienza) {
 		this.esperienza = esperienza;
+	}
+
+	public int getSalute() {
+		return salute;
+	}
+
+	public void setSalute(int forza) {
+		this.salute = forza;
+	}
+
+	public int getSaluteMassima() {
+		return saluteMassima;
+	}
+
+	public void setSaluteMassima(int saluteMassima) {
+		this.saluteMassima = saluteMassima;
 	}
 
 	public int getForza() {
@@ -451,6 +470,18 @@ public class PersonaggioMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(esperienza);
 		stream.print(PIPE);
+		stream.print(salute);
+		stream.print(PIPE);
+		stream.print(saluteMassima);
+		stream.print(PIPE);
+		stream.print(magia);
+		stream.print(PIPE);
+		stream.print(magiaMassima);
+		stream.print(PIPE);
+		stream.print(carico);
+		stream.print(PIPE);
+		stream.print(caricoMassimo);
+		stream.print(PIPE);
 		stream.print(forza);
 		stream.print(PIPE);
 		stream.print(forzaMassima);
@@ -515,15 +546,7 @@ public class PersonaggioMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(furiaMassima);
 		stream.print(PIPE);
-		stream.print(carico);
-		stream.print(PIPE);
-		stream.print(caricoMassimo);
-		stream.print(PIPE);
 
-		stream.print(magia);
-		stream.print(PIPE);
-		stream.print(magiaMassima);
-		stream.print(PIPE);
 		stream.print(coraggio);
 		stream.print(PIPE);
 		stream.print(valore);
@@ -543,7 +566,7 @@ public class PersonaggioMD implements Serializzabile {
 	public void leggi(BufferedReader stream) throws IOException{
 		String line = stream.readLine();
 		StringTokenizer st = new StringTokenizer(line, PIPE);
-		classe = ClassiPersonaggio.values()[Integer.parseInt(st.nextToken())];
+		classe = ClassePersonaggio.values()[Integer.parseInt(st.nextToken())];
 		nome = st.nextToken();
 		if ("null".equals(nome)) {
 			nome = null;
@@ -558,6 +581,12 @@ public class PersonaggioMD implements Serializzabile {
 		}
 		livello = Integer.parseInt(st.nextToken());
 		esperienza = Integer.parseInt(st.nextToken());
+		salute = Integer.parseInt(st.nextToken());
+		saluteMassima = Integer.parseInt(st.nextToken());
+		magia = Integer.parseInt(st.nextToken());
+		magiaMassima = Integer.parseInt(st.nextToken());
+		carico = Integer.parseInt(st.nextToken());
+		caricoMassimo = Integer.parseInt(st.nextToken());
 		forza = Integer.parseInt(st.nextToken());
 		forzaMassima = Integer.parseInt(st.nextToken());
 		destrezza = Integer.parseInt(st.nextToken());
@@ -590,10 +619,6 @@ public class PersonaggioMD implements Serializzabile {
 		soggezioneMassima = Integer.parseInt(st.nextToken());
 		furia = Integer.parseInt(st.nextToken());
 		furiaMassima = Integer.parseInt(st.nextToken());
-		carico = Integer.parseInt(st.nextToken());
-		caricoMassimo = Integer.parseInt(st.nextToken());
-		magia = Integer.parseInt(st.nextToken());
-		magiaMassima = Integer.parseInt(st.nextToken());
 		coraggio = Integer.parseInt(st.nextToken());
 		valore = Integer.parseInt(st.nextToken());
 		stanchezza = Integer.parseInt(st.nextToken());

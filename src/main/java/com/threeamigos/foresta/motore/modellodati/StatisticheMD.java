@@ -7,12 +7,12 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import com.threeamigos.foresta.personaggi.ClassiPersonaggio;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
 public class StatisticheMD implements Serializzabile {
 
 	private int punti;
-	private Map<ClassiPersonaggio, Integer> mostriUccisi = new EnumMap<>(ClassiPersonaggio.class);
+	private Map<ClassePersonaggio, Integer> mostriUccisi = new EnumMap<>(ClassePersonaggio.class);
 
 	public final int getPunti() {
 		return punti;
@@ -22,11 +22,11 @@ public class StatisticheMD implements Serializzabile {
 		this.punti = punti;
 	}
 
-	public final Map<ClassiPersonaggio, Integer> getMostriUccisi() {
+	public final Map<ClassePersonaggio, Integer> getMostriUccisi() {
 		return mostriUccisi;
 	}
 
-	public final void setMostriUccisi(Map<ClassiPersonaggio, Integer> mostriUccisi) {
+	public final void setMostriUccisi(Map<ClassePersonaggio, Integer> mostriUccisi) {
 		this.mostriUccisi = mostriUccisi;
 	}
 
@@ -41,7 +41,7 @@ public class StatisticheMD implements Serializzabile {
 		punti += quantita;
 	}
 
-	public final void addMostroUcciso(ClassiPersonaggio classe) {
+	public final void addMostroUcciso(ClassePersonaggio classe) {
 		Integer uccisi = mostriUccisi.get(classe);
 		if (uccisi == null) {
 			mostriUccisi.put(classe,  1);
@@ -50,7 +50,7 @@ public class StatisticheMD implements Serializzabile {
 		}
 	}
 
-	public final int getMostriUccisi(ClassiPersonaggio classe) {
+	public final int getMostriUccisi(ClassePersonaggio classe) {
 		Integer uccisi = mostriUccisi.get(classe);
 		if (uccisi == null) {
 			return 0;
@@ -61,7 +61,7 @@ public class StatisticheMD implements Serializzabile {
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stream.println(punti);
-		for (ClassiPersonaggio classePersonaggio : ClassiPersonaggio.values()) {
+		for (ClassePersonaggio classePersonaggio : ClassePersonaggio.values()) {
 			stream.print(classePersonaggio.ordinal());
 			stream.print(PIPE);
 			stream.print(getMostriUccisi(classePersonaggio));
@@ -75,7 +75,7 @@ public class StatisticheMD implements Serializzabile {
 		String line = stream.readLine();
 		punti = Integer.parseInt(line);
 		mostriUccisi.clear();
-		ClassiPersonaggio[] classi = ClassiPersonaggio.values();
+		ClassePersonaggio[] classi = ClassePersonaggio.values();
 		line = stream.readLine();
 		StringTokenizer st = new StringTokenizer(line, PIPE);
 		for (int i = 0; i < classi.length; i++) {

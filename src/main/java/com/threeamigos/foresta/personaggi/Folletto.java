@@ -19,13 +19,13 @@ public class Folletto extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Folletto() {
-		super(ClassiPersonaggio.FOLLETTO);
+		super(ClassePersonaggio.FOLLETTO);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Folletto.gif");
-		setForzaMassima(10);
+		setSaluteMassima(10);
 		setMagiaMassima(1);
 		setValore(40);
 		setCoraggio(20);

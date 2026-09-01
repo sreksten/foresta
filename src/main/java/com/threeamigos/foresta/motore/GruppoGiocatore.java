@@ -6,7 +6,7 @@ import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.GruppoGiocatoreMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.personaggi.ClassiPersonaggio;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.tools.Random;
@@ -56,16 +56,8 @@ public class GruppoGiocatore extends Gruppo {
 	@Override
 	public final void aggiungiPersonaggio(Personaggio personaggio) {
 		super.aggiungiPersonaggio(personaggio);
-		if (personaggio.isPNG()) {
-			String s = personaggio.getNome();
-			if (s == null) {
-				s = personaggio.getADS();
-				s = Character.toUpperCase(s.charAt(0)) + s.substring(1) + personaggio.getNomeSingolare();
-			}
-			UI.notifica(s + " entra a far parte del gruppo.");
-		} else {
-			UI.notifica(personaggio.getNome() + " e' felice di poter far parte del gruppo.");
-		}
+		String nome = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+		UI.notifica(nome + " e' felice di poter far parte del gruppo.");
 		md.addPersonaggioMD(personaggio.getModelloDati());
 	}
 
@@ -77,12 +69,8 @@ public class GruppoGiocatore extends Gruppo {
 	@Override
 	public final void rimuoviPersonaggio(Personaggio p) {
 		super.rimuoviPersonaggio(p);
-		String s = p.getNome();
-		if (s == null) {
-			s = p.getADS();
-			s = Character.toUpperCase(s.charAt(0)) + s.substring(1) + p.getNomeSingolare();
-		}
-		UI.notifica(s + " lascia il gruppo.");
+		String nome = p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+		UI.notifica(nome + " lascia il gruppo.");
 	}
 
 	public final int getMonete() {
@@ -329,7 +317,7 @@ public class GruppoGiocatore extends Gruppo {
 			if (getNumeroPersonaggiVivi() > 1) {
 				sb.append("tutto il gruppo");
 			} else {
-				sb.append(capo.getNome());
+				sb.append(capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 			}
 			sb.append(". La notte alla locanda trascorre placida e tranquilla.");
 			UI.notifica(sb.toString());
@@ -350,14 +338,14 @@ public class GruppoGiocatore extends Gruppo {
 				if (getNumeroPersonaggiVivi() > 1) {
 					sb.append("Il gruppo");
 				} else {
-					sb.append(capo.getNome());
+					sb.append(capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
 				}
 				sb.append(" ha riposato abbastanza");
 			}
 			sb.append(" per rimettersi in forze.");
 			UI.notifica(sb.toString());
 		}
-		getPersonaggiVivi().stream().forEach(p -> p.riposa(ore, alCoperto));
+		getPersonaggiVivi().forEach(p -> p.riposa(ore, alCoperto));
 		UI.notifica("Il sole sorge e l'avventura ricomincia.");
 		UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 		UI.rinfresca();
@@ -369,7 +357,7 @@ public class GruppoGiocatore extends Gruppo {
 	public final void vendePreziosi() {
 		if (md.getPreziosi() > 0) {
 			int quantita = md.getPreziosi();
-			if (getPersonaggiVivi().stream().anyMatch(p -> p.getClasse() == ClassiPersonaggio.LADRA || p.getClasse() == ClassiPersonaggio.LADRO)) {
+			if (getPersonaggiVivi().stream().anyMatch(p -> p.getClasse() == ClassePersonaggio.LADRA || p.getClasse() == ClassePersonaggio.LADRO)) {
 				quantita += Random.getInt(md.getPreziosi());
 			}
 			StringBuilder sb = new StringBuilder(chiMaiuscolo())

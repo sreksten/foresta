@@ -131,7 +131,7 @@ public class Locanda extends LocazioneBase {
 				UI.notifica("Viene servito un pasto caldo, che fa riacquistare rapidamente le forze.");
 				int personaggiCheHannoMangiato = 0;
 				for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
-					personaggio.addForza(100);
+					personaggio.addSalute(100);
 					personaggiCheHannoMangiato++;
 				}
 				gruppo.subMonete(COSTO_PASTO * personaggiCheHannoMangiato);
@@ -162,13 +162,12 @@ public class Locanda extends LocazioneBase {
 
 		case CHI_MANGIA:
 			Personaggio p = gruppo.getPersonaggio(azione);
-			p.addForza(100);
+			p.addSalute(100);
 			gruppo.subMonete(COSTO_PASTO);
-			StringBuilder sb = new StringBuilder(p.getNome());
-			sb.append(" si e' rifocillat");
-			sb.append(p.getSesso() == Personaggio.Sesso.MASCHIO ? 'o' : 'a');
-			sb.append(" in gran fretta, ed il gruppo lascia la locanda dietro pressione dell'oste.");
-			UI.notifica(sb.toString());
+			String nome = p.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
+            String sb = nome + " si e' rifocillat" + p.getLetteraFinaleAttributo() +
+                    " in gran fretta, ed il gruppo lascia la locanda dietro pressione dell'oste.";
+			UI.notifica(sb);
 			return Stato.FINE_LOCAZIONE;
 			
 		case PERSONAGGIO:
@@ -213,15 +212,16 @@ public class Locanda extends LocazioneBase {
 		Personaggio capo = g.getCapo();
 		personaggioDisponibile = RegistroPersonaggi.getPersonaggioInLocazione(g.getCoordinate());
 		if (personaggioDisponibile != null) {
-			StringBuilder sb = new StringBuilder("'").append(capo.getNome()).append("!', urla una voce. ")
-					.append(capo.getPronome()).append(" si volta e vede ").append(personaggioDisponibile.getNome())
-					.append(", ").append(personaggioDisponibile.getAIS()).append(personaggioDisponibile.getNomeSingolare())
-					.append(", sua vecchia amicizia. ").append(personaggioDisponibile.getDescrizione())
-					.append(' ').append(capo.getNome())
-					.append(personaggioDisponibile.getSesso() == Personaggio.Sesso.MASCHIO ? " lo" : " la")
-					.append(" vuole con se?");
+            String sb = "'Ehi, " + capo.getNome() + "!', urla una voce. " +
+                    Character.toUpperCase(capo.getPronome().charAt(0)) + capo.getPronome().substring(1) +
+					" si volta e vede " + personaggioDisponibile.getNomeProprio().orElseThrow(Personaggio.PERSONAGGIO_SENZA_NOME) +
+                    ", " + personaggioDisponibile.getAIS() + personaggioDisponibile.getNomeSingolare() +
+                    ", sua vecchia amicizia. " + personaggioDisponibile.getDescrizione() +
+                    ' ' + capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+                    (personaggioDisponibile.getSesso() == Personaggio.Sesso.MASCHIO ? " lo" : " la") +
+                    " vuole con se?";
 			UI.notifica("");
-			UI.notifica(sb.toString());
+			UI.notifica(sb);
 			UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 			UI.rinfresca();
 			return true;
@@ -243,9 +243,10 @@ public class Locanda extends LocazioneBase {
 			personaggioDisponibile = null;
 			UI.rinfresca();
 		} else {
-			StringBuilder sb = new StringBuilder("'Pazienza. Sara' per un'altra volta.' dice ")
-					.append(personaggioDisponibile.getNome()).append(", allontanandosi.");
-			UI.notifica(sb.toString());
+            String sb = "'Pazienza. Sara' per un'altra volta.' dice " +
+                    personaggioDisponibile.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
+                    ", allontanandosi.";
+			UI.notifica(sb);
 		}
 	}
 }

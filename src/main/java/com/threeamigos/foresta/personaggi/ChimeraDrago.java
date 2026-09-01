@@ -19,13 +19,13 @@ public class ChimeraDrago extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 
 	public ChimeraDrago() {
-		super(ClassiPersonaggio.CHIMERA_DRAGO);
+		super(ClassePersonaggio.CHIMERA_DRAGO);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/ChimeraDrago.gif");
-		setForzaMassima(80);
+		setSaluteMassima(80);
 		setMagiaMassima(30);
 		setValore(60);
 		setCoraggio(75);

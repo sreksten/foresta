@@ -20,14 +20,14 @@ public class Hobgoblin extends PersonaggioBase implements Personaggio {
 	public int getRecuperoForza() { return 8; }
 
 	public Hobgoblin() {
-		super(ClassiPersonaggio.HOBGOBLIN);
+		super(ClassePersonaggio.HOBGOBLIN);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Hobgoblin.gif");
 		setIcona("icone/Hobgoblin.gif");
-		setForzaMassima(65);
+		setSaluteMassima(65);
 		setMagiaMassima(10);
 		setValore(40);
 		setCoraggio(60);

@@ -20,13 +20,13 @@ public class Arpia extends PersonaggioBase implements Personaggio {
 	public int getRecuperoForza() { return 5; }
 
 	public Arpia() {
-		super(ClassiPersonaggio.ARPIA);
+		super(ClassePersonaggio.ARPIA);
 	}
 
 	@Override
 	protected void impostaValori() {
 		setImmagine("personaggi/Arpia.gif");
-		setForzaMassima(30);
+		setSaluteMassima(30);
 		setMagiaMassima(5);
 		setValore(30);
 		setCoraggio(30);

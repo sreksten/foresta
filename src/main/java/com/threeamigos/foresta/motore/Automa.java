@@ -88,8 +88,8 @@ public class Automa implements ControlloreDiGioco {
 			break;
 
 		case ATTESA_NOME_HI_SCORE:
-			if (s.length() == 0) {
-				s = GruppoGiocatore.getIstanza().getCapo().getNome();
+			if (s.isEmpty()) {
+				s = GruppoGiocatore.getIstanza().getPersonaggio(0).getNomeProprio().orElseThrow(Personaggio.PERSONAGGIO_SENZA_NOME);
 			}
 			GestorePunteggi.addRecord(s, Statistiche.getPunti());
 			stato = Stato.HI_SCORE;
@@ -512,12 +512,12 @@ public class Automa implements ControlloreDiGioco {
 				processaAzione(null);
 				return;
 			case FORZA:
-				statoPrecedente = Stato.ATTESA_FORZA;
+				statoPrecedente = Stato.ATTESA_POZIONE_SALUTE;
 				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 				processaAzione(null);
 				return;
 			case GRANDE_FORZA:
-				statoPrecedente = Stato.ATTESA_GRANDE_FORZA;
+				statoPrecedente = Stato.ATTESA_GRANDE_POZIONE_SALUTE;
 				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 				processaAzione(null);
 				return;
@@ -580,25 +580,25 @@ public class Automa implements ControlloreDiGioco {
 			processaAzione(null);
 			break;
 
-		case ATTESA_FORZA:
+		case ATTESA_POZIONE_SALUTE:
 			if (azione != Comando.ANNULLA) {
 				personaggio = gruppo.getPersonaggio(azione);
-				personaggio.addForza(100);
+				personaggio.addSalute(100);
 				gruppo.subPozioniForza(1);
-				UI.notifica(personaggio.getNome() + " ha bevuto una pozione che fa riacquistare forza.");
+				UI.notifica(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ha bevuto una pozione che fa riacquistare salute.");
 			}
 			stato = Stato.ATTESA_DIREZIONE;
 			UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 			processaAzione(null);
 			break;
 
-		case ATTESA_GRANDE_FORZA:
+		case ATTESA_GRANDE_POZIONE_SALUTE:
 			if (azione != Comando.ANNULLA) {
 				personaggio = gruppo.getPersonaggio(azione);
-				personaggio.addForza(personaggio.getForzaMassima());
-				personaggio.addForzaMassima(10);
+				personaggio.addSalute(personaggio.getSaluteMassima());
+				personaggio.addSaluteMassima(10);
 				gruppo.subPozioniGrandeForza(1);
-				UI.notifica(personaggio.getNome() + " ha bevuto una pozione che fa aumentare la forza!");
+				UI.notifica(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ha bevuto una pozione che fa aumentare la salute!");
 			}
 			stato = Stato.ATTESA_DIREZIONE;
 			UI.primoPiano(InterfacciaUtente.Finestra.STATO);
@@ -610,7 +610,7 @@ public class Automa implements ControlloreDiGioco {
 				personaggio = gruppo.getPersonaggio(azione);
 				personaggio.addMagia(10);
 				gruppo.subPozioniMagia(1);
-				UI.notifica(personaggio.getNome() + " ha bevuto una pozione che fa acquistare magia.");
+				UI.notifica(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ha bevuto una pozione che fa acquistare magia.");
 			}
 			stato = Stato.ATTESA_DIREZIONE;
 			UI.primoPiano(InterfacciaUtente.Finestra.STATO);
@@ -621,7 +621,7 @@ public class Automa implements ControlloreDiGioco {
 			Logger.log("Stato MAPPA, azione " + azione);
 			if (azione == null) {
 				UI.impostaAzioni(Comando.SINISTRA, Comando.SU, Comando.GIU, Comando.DESTRA, Comando.SI);
-				UI.notifica(gruppo.getCapo().getNome() + " consulta la sua mappa della Foresta.");
+				UI.notifica(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " consulta la sua mappa della Foresta.");
 				UI.mappa();
 			} else {
 				switch (azione) {
@@ -813,7 +813,7 @@ public class Automa implements ControlloreDiGioco {
 				}
 			}
 			sb.append("|");
-			sb.append(gruppo.getCapo().getNome())
+			sb.append(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))
 			.append(" - giorno ")
 			.append(LineaTemporale.getGiorno())
 			.append(", ora ")

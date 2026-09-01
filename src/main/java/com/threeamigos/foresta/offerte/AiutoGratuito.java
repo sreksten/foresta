@@ -47,15 +47,13 @@ public class AiutoGratuito implements Offerta {
 			}
 			sb.append(" di loro ");
 		} else {
-			sb.append(Character.toUpperCase(capoAvversario.getADS().charAt(0)))
-			.append(capoAvversario.getADS().substring(1))
-			.append(capoAvversario.getNomeSingolare());
+			sb.append(capoAvversario.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
 		}
-		sb.append(" e' dispost").append(sesso == Personaggio.Sesso.MASCHIO ? 'o' : 'a').append(" ad accompagnare ");
+		sb.append(" è dispost").append(capoAvversario.getLetteraFinaleAttributo()).append(" ad accompagnare ");
 		if (gruppo.getNumeroPersonaggiVivi() > 1) {
 			sb.append("il gruppo");
 		} else {
-			sb.append(gruppo.getCapo().getNome());
+			sb.append(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 		}
 		sb.append(" per un po'.");
 		return sb.toString();
