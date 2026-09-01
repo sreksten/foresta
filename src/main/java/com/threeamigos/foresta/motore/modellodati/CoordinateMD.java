@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.motore.Costanti;
+
 public class CoordinateMD {
 	
 	private int x;
@@ -43,6 +45,6 @@ public class CoordinateMD {
 	
 	@Override
 	public int hashCode() {
-		return ForestaMD.MAX_DIMENSIONE * x + y;
+		return Costanti.MAX_DIMENSIONE_LATO_FORESTA * x + y;
 	}
 }

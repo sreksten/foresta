@@ -74,7 +74,7 @@ public class RegistroArtefattiMD implements Serializzabile {
 		}
 	}
 
-	public class ArtefattoESuaUbicazione {
+	public static class ArtefattoESuaUbicazione {
 
 		private final ArtefattoMD artefattoMD;
 		private final CoordinateMD coordinate;

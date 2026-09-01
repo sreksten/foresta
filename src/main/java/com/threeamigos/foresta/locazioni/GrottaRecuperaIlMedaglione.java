@@ -70,7 +70,7 @@ public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 	@Override
 	public void azzeraLocazione(GruppoGiocatore g) {
 		if (completa) {
-			g.setLocazioneVisitata();
+			g.setLocazioneCorrenteVisitata();
 			Foresta.impostaLocazioneCorrente(ClassiLocazione.GROTTA);
 		}
 	}

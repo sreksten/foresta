@@ -1,16 +1,16 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.motore.RegistroMissioni;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
 
-import com.threeamigos.foresta.motore.RegistroMissioni;
-
 public class RegistroMissioniMD implements Serializzabile {
 
-	private Map<String, MissioneMD> missioni = new HashMap<>();
+	private final Map<String, MissioneMD> missioni = new HashMap<>();
 
 	public void reimposta() {
 		missioni.clear();

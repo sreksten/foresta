@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 
 interface Serializzabile {
 
-	static final String PIPE = "|";
+	String PIPE = "|";
 
 	void salva(PrintWriter stream) throws IOException;
 	

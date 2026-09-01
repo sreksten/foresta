@@ -58,7 +58,7 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 			setDragoApparso();
 		} else {
 			GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-			if (gruppo.getClasseLocazione() == ClassiLocazione.CASTELLO_DRAGO && gruppo.getClasseLocazione().getIstanza().isCompleta()) {
+			if (gruppo.getClasseLocazioneCorrente() == ClassiLocazione.CASTELLO_DRAGO && gruppo.getClasseLocazioneCorrente().getIstanza().isCompleta()) {
 				completaMissione();
 				UI.notifica("Il Drago è morto!");
 				LineaTemporale.setGiocoFinito(true);

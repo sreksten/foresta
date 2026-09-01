@@ -43,7 +43,7 @@ public class CastelloMinotauro extends LocazioneUnica {
 	@Override
 	public void azzeraLocazione(GruppoGiocatore g) {
 		if (completa) {
-			g.setLocazioneVisitata();
+			g.setLocazioneCorrenteVisitata();
 			Foresta.distruggiLocazioneUnica(getClasseLocazione(), ClassiLocazione.ROVINE);
 		}
 	}

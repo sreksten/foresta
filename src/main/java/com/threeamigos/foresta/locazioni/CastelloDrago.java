@@ -42,7 +42,7 @@ public class CastelloDrago extends LocazioneUnica {
 	public void azzeraLocazione(GruppoGiocatore g) {
 		if (completa) {
 			LineaTemporale.setDragoSconfitto(true);
-			g.setLocazioneVisitata();
+			g.setLocazioneCorrenteVisitata();
 			Foresta.distruggiLocazioneUnica(getClasseLocazione(), ClassiLocazione.ROVINE);
 		}
 	}

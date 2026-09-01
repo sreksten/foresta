@@ -10,8 +10,6 @@ import java.util.*;
 
 public class ForestaMD implements Serializzabile {
 
-	public static final int MAX_DIMENSIONE = 80;
-
 	private int dimensioneX;
 	private int dimensioneY;
 	private ClassiLocazione[] arrayLocazioni;

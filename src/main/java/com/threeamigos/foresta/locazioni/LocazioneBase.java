@@ -558,7 +558,7 @@ public abstract class LocazioneBase implements Locazione {
 	 */
 	public void azzeraLocazione(GruppoGiocatore g) {
 		if (completa) {
-			g.setLocazioneVisitata();
+			g.setLocazioneCorrenteVisitata();
 		}
 	}
 
@@ -672,7 +672,7 @@ public abstract class LocazioneBase implements Locazione {
 	
 	private Stato gestisciNuovaLocazione() {
 		Logger.log("LocazioneBase.NUOVA_LOCAZIONE");
-		TipoLocazione tipoLocazione = gruppo.getClasseLocazione().getTipoLocazione();
+		TipoLocazione tipoLocazione = gruppo.getClasseLocazioneCorrente().getTipoLocazione();
 		int numeroAvversari = gruppoAvversario.getNumeroPersonaggi();
 		if (numeroAvversari == 0) {
 			if (oggettoCorrente != null) {

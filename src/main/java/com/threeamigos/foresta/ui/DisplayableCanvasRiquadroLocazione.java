@@ -44,7 +44,7 @@ class DisplayableCanvasRiquadroLocazione {
 	void disegnaLocazione(Graphics2D graphics) {
 		GruppoGiocatore g = GruppoGiocatore.getIstanza();
 		GruppoAvversario gng = GruppoAvversario.getIstanza();
-		ClassiLocazione classeLocazione = g.getClasseLocazione();
+		ClassiLocazione classeLocazione = g.getClasseLocazioneCorrente();
 		BufferedImage locazione = ImageCache.locazioni.get(classeLocazione);
 		int locXOffset = topLeftX;
 		graphics.drawImage(locazione, locXOffset, topLeftY, null);
@@ -91,7 +91,7 @@ class DisplayableCanvasRiquadroLocazione {
 	}
 	
 	SpriteInterface raccogliOggetto() {
-		ClassiLocazione classeLocazione = GruppoGiocatore.getIstanza().getClasseLocazione();
+		ClassiLocazione classeLocazione = GruppoGiocatore.getIstanza().getClasseLocazioneCorrente();
 		Locazione l = classeLocazione.getIstanza();
 		BufferedImage locazione = ImageCache.locazioni.get(classeLocazione);
 		Oggetto oggetto = l.getOggetto();

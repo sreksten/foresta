@@ -49,7 +49,7 @@ public class Cofano extends OggettoBase implements Oggetto {
 
 	@Override
 	public boolean prendi(GruppoGiocatore gruppo, Comando azione) {
-		ClassiLocazione classeLocazione = gruppo.getClasseLocazione();
+		ClassiLocazione classeLocazione = gruppo.getClasseLocazioneCorrente();
 		int min;
 		int max;
 		int tipo;

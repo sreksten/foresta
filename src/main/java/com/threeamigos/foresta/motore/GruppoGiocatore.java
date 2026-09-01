@@ -51,14 +51,25 @@ public class GruppoGiocatore extends Gruppo {
 		md.setPozioniMagia(0);
 		md.setCoordinate(Foresta.getCoordinateLibere());
 		Foresta.aggiorna(this);
-		Foresta.ottieniMappa();
+
+		// FIXME questo è lecito solo finché stiamo debuggando...
+		if (getCapo().getClasse() == ClassePersonaggio.OMBRAFIAMMA) {
+			md.setMonete(9999);
+			for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
+				md.setIncantesimi(classeIncantesimo, 99);
+			}
+			md.setPozioniSalute(99);
+			md.setPozioniSaluteGrande(99);
+			md.setPozioniMagia(99);
+			Foresta.ottieniMappa();
+		}
 	}
 
 	@Override
 	public final void aggiungiPersonaggio(Personaggio personaggio) {
 		super.aggiungiPersonaggio(personaggio);
 		String nome = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
-		UI.notifica(nome + " e' felice di poter far parte del gruppo.");
+		UI.notifica(nome + " è felice di poter far parte del gruppo.");
 		md.addPersonaggioMD(personaggio.getModelloDati());
 	}
 
@@ -175,15 +186,14 @@ public class GruppoGiocatore extends Gruppo {
 		return md.getCoordinate();
 	}
 
-	private final ClassiLocazione getClasseLocazione(int x, int y) {
+	private ClassiLocazione getClasseLocazioneCorrente(int x, int y) {
 		return Foresta.getLocazione(x, y);
 	}
 
 	/**
-	 * Usata da oggetti.Cofano per sapere se può essere vuoto o meno
+	 * Usata da oggetti Cofano per sapere se può essere vuoto o meno
 	 */
-	//TODO rinominare in getClasseLocazioneCorrente per chiarezza
-	public ClassiLocazione getClasseLocazione() {
+	public ClassiLocazione getClasseLocazioneCorrente() {
 		return Foresta.getLocazione(md.getCoordinate());
 	}
 
@@ -195,8 +205,7 @@ public class GruppoGiocatore extends Gruppo {
 		this.locazioneCorrente = locazioneCorrente;
 	}
 
-	//TODO rinominare in setLocazioneCorrenteVisitata per chiarezza
-	public final void setLocazioneVisitata() {
+	public final void setLocazioneCorrenteVisitata() {
 		Foresta.setLocazioneVisitata(md.getCoordinate());
 	}
 
@@ -209,7 +218,7 @@ public class GruppoGiocatore extends Gruppo {
 			if (getY() - i == 0) {
 				return i;
 			}
-			locazioneCorrente = getClasseLocazione(getX(), getY() - i);
+			locazioneCorrente = getClasseLocazioneCorrente(getX(), getY() - i);
 			if (locazioneCorrente != ClassiLocazione.BOSCO && locazioneCorrente != ClassiLocazione.RADURA) {
 				return i;
 			}
@@ -233,7 +242,7 @@ public class GruppoGiocatore extends Gruppo {
 			if (getX() + i == Foresta.getDimensioneX() - 1) {
 				return i;
 			}
-			locazioneCorrente = getClasseLocazione(getX() + i, getY());
+			locazioneCorrente = getClasseLocazioneCorrente(getX() + i, getY());
 			if (locazioneCorrente != ClassiLocazione.BOSCO && locazioneCorrente != ClassiLocazione.RADURA) {
 				return i;
 			}
@@ -258,7 +267,7 @@ public class GruppoGiocatore extends Gruppo {
 			if (getY() + i == Foresta.getDimensioneY() - 1) {
 				return i;
 			}
-			locazioneCorrente = getClasseLocazione(getX(), getY() + i);
+			locazioneCorrente = getClasseLocazioneCorrente(getX(), getY() + i);
 			if (locazioneCorrente != ClassiLocazione.BOSCO && locazioneCorrente != ClassiLocazione.RADURA) {
 				return i;
 			}
@@ -283,7 +292,7 @@ public class GruppoGiocatore extends Gruppo {
 			if (getX() - i == 0) {
 				return i;
 			}
-			locazioneCorrente = getClasseLocazione(getX() - i, getY());
+			locazioneCorrente = getClasseLocazioneCorrente(getX() - i, getY());
 			if (locazioneCorrente != ClassiLocazione.BOSCO && locazioneCorrente != ClassiLocazione.RADURA) {
 				return i;
 			}
@@ -300,15 +309,15 @@ public class GruppoGiocatore extends Gruppo {
 	}
 
 	public final void riposa() {
-		UI.notifica("Adesso riposera' un poco.");
-		getPersonaggiVivi().stream().forEach(p -> p.riposa(1, false));
+		UI.notifica("Adesso riposerà un poco.");
+		getPersonaggiVivi().forEach(p -> p.riposa(1, false));
 		UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 		UI.rinfresca();
 	}
 
 	public final void pernotta() {
 		Logger.log("Inizio pernottamento");
-		ClassiLocazione classeLocazione = getClasseLocazione();
+		ClassiLocazione classeLocazione = getClasseLocazioneCorrente();
 		int ore = LineaTemporale.oreFinoAlMattino();
 		boolean alCoperto = classeLocazione == ClassiLocazione.LOCANDA
 				|| classeLocazione.getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA;
@@ -326,7 +335,7 @@ public class GruppoGiocatore extends Gruppo {
 			StringBuilder sb = new StringBuilder("Il gruppo decide di accamparsi qui per riposare un po'. Dopo aver stabilito i turni di guardia, i ")
 					.append(Misc.getCardinaleM(personaggi.size())).append(" intrepidi avventurieri si godono un meritato riposo. ");
 			if (ore == 1) {
-				sb.append("Ma un'ora sola e' veramente insufficiente");
+				sb.append("Ma un'ora sola è veramente insufficiente");
 			} else if (ore == 2) {
 				sb.append("Ma due ore sono insufficienti");
 			} else if (ore == 3) {
@@ -353,7 +362,7 @@ public class GruppoGiocatore extends Gruppo {
 	}
 
 	/**
-	 * La vendita dei preziosi ha miglior successo se nel gruppo c'e' un ladro
+	 * La vendita dei preziosi ha miglior successo se nel gruppo c'è un ladro
 	 */
 	public final void vendePreziosi() {
 		if (md.getPreziosi() > 0) {
@@ -361,10 +370,10 @@ public class GruppoGiocatore extends Gruppo {
 			if (getPersonaggiVivi().stream().anyMatch(p -> p.getClasse() == ClassePersonaggio.LADRA || p.getClasse() == ClassePersonaggio.LADRO)) {
 				quantita += Dado.tira(md.getPreziosi());
 			}
-            String sb = chiMaiuscolo() +
-                    " ha venduto i preziosi raccolti, ricavandone " + quantita +
-                    (quantita == 1 ? " moneta." : " monete.");
-			UI.notifica(sb);
+            String notifica = chiMaiuscolo() +
+                    " ha venduto i preziosi raccolti, ricavandone " +
+                    (quantita == 1 ? " una moneta." : (quantita + " monete."));
+			UI.notifica(notifica);
 			addMonete(quantita);
 			subPreziosi(md.getPreziosi());
 		}
@@ -396,11 +405,7 @@ public class GruppoGiocatore extends Gruppo {
 		this.fuggito = fuggito;
 	}
 
-	public boolean isFuggito() {
-		return fuggito;
-	}
-	
 	public boolean isInLocazioneUnica(ClassiLocazione classeLocazioneUnica) {
-		return getClasseLocazione() == classeLocazioneUnica;
+		return getClasseLocazioneCorrente() == classeLocazioneUnica;
 	}
 }

@@ -1,13 +1,13 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.personaggi.Personaggio;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.personaggi.Personaggio;
 
 public class GruppoMD implements Serializzabile {
 
@@ -19,14 +19,6 @@ public class GruppoMD implements Serializzabile {
 
 	public List<PersonaggioMD> getPersonaggiMD() {
 		return personaggiMD;
-	}
-
-	public void setPersonaggiMD(List<PersonaggioMD> personaggi) {
-		this.personaggiMD = personaggi;
-	}
-
-	public boolean contiene(PersonaggioMD personaggio) {
-		return personaggiMD.contains(personaggio);
 	}
 
 	@Override

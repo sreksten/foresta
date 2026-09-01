@@ -51,8 +51,8 @@ public class RecuperaLeDerrateAlimentari extends MissioneRecuperaBersaglio imple
 	public void controllaPostLocazione() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		if (gruppo.isInLocazioneUnica(ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI) &&
-				gruppo.getClasseLocazione().getIstanza().isCompleta() && !isBersaglioRecuperato()) {
-			UI.notifica(new StringBuilder("Le derrate alimentari sono state recuperate. ").append(gruppo.chiMaiuscolo()).append(" puo' tornare in citta' per reclamare la ricompensa.").toString());
+				gruppo.getClasseLocazioneCorrente().getIstanza().isCompleta() && !isBersaglioRecuperato()) {
+			UI.notifica("Le derrate alimentari sono state recuperate. " + gruppo.chiMaiuscolo() + " puo' tornare in citta' per reclamare la ricompensa.");
 			setBersaglioRecuperato();
 		}
 	}

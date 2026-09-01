@@ -30,7 +30,7 @@ public class Informazioni implements Offerta {
 		StringBuilder sb = new StringBuilder("Scambiando quattro chiacchiere, ")
 				.append(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE))
 				.append(" viene a sapere che ");
-		ClassiLocazione classeLocazione = gruppo.getClasseLocazione();
+		ClassiLocazione classeLocazione = gruppo.getClasseLocazioneCorrente();
 		int tipo;
 		if (classeLocazione.getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA) {
 			// Qualsiasi informazione ma non quelle sulle citta' visto che gia' ci siamo

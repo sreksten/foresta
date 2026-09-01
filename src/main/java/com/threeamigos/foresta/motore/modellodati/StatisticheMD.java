@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -7,27 +9,13 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.StringTokenizer;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
-
 public class StatisticheMD implements Serializzabile {
 
 	private int punti;
-	private Map<ClassePersonaggio, Integer> mostriUccisi = new EnumMap<>(ClassePersonaggio.class);
+	private final Map<ClassePersonaggio, Integer> mostriUccisi = new EnumMap<>(ClassePersonaggio.class);
 
 	public final int getPunti() {
 		return punti;
-	}
-
-	public final void setPunti(int punti) {
-		this.punti = punti;
-	}
-
-	public final Map<ClassePersonaggio, Integer> getMostriUccisi() {
-		return mostriUccisi;
-	}
-
-	public final void setMostriUccisi(Map<ClassePersonaggio, Integer> mostriUccisi) {
-		this.mostriUccisi = mostriUccisi;
 	}
 
 	////////////////////
@@ -42,12 +30,7 @@ public class StatisticheMD implements Serializzabile {
 	}
 
 	public final void addMostroUcciso(ClassePersonaggio classe) {
-		Integer uccisi = mostriUccisi.get(classe);
-		if (uccisi == null) {
-			mostriUccisi.put(classe,  1);
-		} else {
-			mostriUccisi.put(classe, uccisi + 1);
-		}
+        mostriUccisi.merge(classe, 1, Integer::sum);
 	}
 
 	public final int getMostriUccisi(ClassePersonaggio classe) {
@@ -55,7 +38,7 @@ public class StatisticheMD implements Serializzabile {
 		if (uccisi == null) {
 			return 0;
 		}
-		return uccisi.intValue();
+		return uccisi;
 	}
 
 	@Override

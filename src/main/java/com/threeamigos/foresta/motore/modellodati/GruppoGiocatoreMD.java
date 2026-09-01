@@ -9,7 +9,8 @@ import java.util.StringTokenizer;
 
 public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 
-	private GruppoMD gruppo = new GruppoMD();
+	private final GruppoMD gruppo = new GruppoMD();
+
 	private int monete;
 	private int preziosi;
 	private int[] incantesimi = new int[ClassiIncantesimo.values().length];
@@ -18,14 +19,6 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	private int pozioniMagia;
 	// Coordinate all'interno della Foresta
 	private CoordinateMD coordinate;
-
-	public GruppoMD getGruppoMD() {
-		return gruppo;
-	}
-
-	public void setGruppoMD(GruppoMD gruppo) {
-		this.gruppo = gruppo;
-	}
 
 	public int getMonete() {
 		return monete;
@@ -105,10 +98,10 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(preziosi);
 		stream.print(PIPE);
-		for (int i = 0; i < incantesimi.length; i++) {
-			stream.print(incantesimi[i]);
-			stream.print(PIPE);
-		}
+        for (int j : incantesimi) {
+            stream.print(j);
+            stream.print(PIPE);
+        }
 		stream.print(pozioniSalute);
 		stream.print(PIPE);
 		stream.print(pozioniSaluteGrande);

@@ -6,15 +6,15 @@ import java.io.PrintWriter;
 
 public class ModelloDati implements Serializzabile {
 
-	private static ModelloDati istanza = new ModelloDati();
+	private static final ModelloDati istanza = new ModelloDati();
 
-	private ForestaMD forestaMD;
-	private GruppoGiocatoreMD gruppoGiocatoreMD;
-	private StatisticheMD statisticheMD;
-	private LineaTemporaleMD lineaTemporaleMD;
-	private RegistroPersonaggiMD registroPersonaggiMD;
-	private RegistroArtefattiMD registroArtefattiMD;
-	private RegistroMissioniMD registroMissioniMD;
+	private final ForestaMD forestaMD;
+	private final GruppoGiocatoreMD gruppoGiocatoreMD;
+	private final StatisticheMD statisticheMD;
+	private final LineaTemporaleMD lineaTemporaleMD;
+	private final RegistroPersonaggiMD registroPersonaggiMD;
+	private final RegistroArtefattiMD registroArtefattiMD;
+	private final RegistroMissioniMD registroMissioniMD;
 
 	public ModelloDati() {
 		forestaMD = new ForestaMD();
@@ -26,7 +26,7 @@ public class ModelloDati implements Serializzabile {
 		registroMissioniMD = new RegistroMissioniMD();
 	}
 
-	public static final ModelloDati getIstanza() {
+	public static ModelloDati getIstanza() {
 		return istanza;
 	}
 

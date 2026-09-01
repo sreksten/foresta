@@ -151,7 +151,7 @@ public class Automa implements ControlloreDiGioco {
 					stato = Stato.ATTESA_DIREZIONE;
 					gruppo = GruppoGiocatore.getIstanza();
 					gruppoAvversario = GruppoAvversario.getIstanza();
-					locazioneCorrente = gruppo.getClasseLocazione().getIstanza();
+					locazioneCorrente = gruppo.getClasseLocazioneCorrente().getIstanza();
 					locazioneCorrente.reimposta();
 					UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
 					UI.rinfresca();
@@ -243,7 +243,7 @@ public class Automa implements ControlloreDiGioco {
 				}
 				gruppo.setFuggito(false);
 				gruppoAvversario.reimposta();
-				locazioneCorrente = gruppo.getClasseLocazione().getIstanza();
+				locazioneCorrente = gruppo.getClasseLocazioneCorrente().getIstanza();
 				locazioneCorrente.reimposta();
 				gruppo.setLocazioneCorrente(locazioneCorrente);
 				UI.notifica("");
@@ -461,7 +461,7 @@ public class Automa implements ControlloreDiGioco {
 				}
 				Azioni.add(Comando.MAPPA);
 				if (gruppo.getNumeroPersonaggiVivi() > 1 && (LineaTemporale.getOra() > 20 || LineaTemporale.getOra() < 6)) {
-					ClassiLocazione classeLocazione = gruppo.getClasseLocazione();
+					ClassiLocazione classeLocazione = gruppo.getClasseLocazioneCorrente();
 					if (classeLocazione.getTipoLocazione() != TipoLocazione.CITTA &&
 							classeLocazione != ClassiLocazione.LOCANDA &&
 							classeLocazione != ClassiLocazione.PALUDE) {

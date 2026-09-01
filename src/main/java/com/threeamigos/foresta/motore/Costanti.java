@@ -65,4 +65,8 @@ public class Costanti {
     public static final int COFANI_IN_CASTELLO_LICH = 5;
     public static final int COFANI_IN_CASTELLO_MINOTAURO = 5;
     public static final int COFANI_IN_CASTELLO_STREGA = 5;
+
+    // Foresta
+    public static final int MAX_DIMENSIONE_LATO_FORESTA = 80;
+
 }

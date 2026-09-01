@@ -3,17 +3,13 @@ package com.threeamigos.foresta.motore.modellodati;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.StringTokenizer;
+import java.util.*;
 
 public class MissioneMD implements Serializzabile {
 
 	private String id;
-	private Map<String, String> map = new HashMap<>();
-	private List<MissioneMD> missioniSecondarie = new ArrayList<>();
+	private final Map<String, String> map = new HashMap<>();
+	private final List<MissioneMD> missioniSecondarie = new ArrayList<>();
 
 	public void setId(String id) {
 		this.id = id;
@@ -35,8 +31,8 @@ public class MissioneMD implements Serializzabile {
 		return map.get(nome);
 	}
 
-	public String rimuoviProprieta(String nome) {
-		return map.remove(nome);
+	public void rimuoviProprieta(String nome) {
+		map.remove(nome);
 	}
 
 	public void aggiungiMissioneMD(MissioneMD missioneMD) {
