@@ -104,11 +104,11 @@ public class Locanda extends LocazioneBase {
 				stato = StatoInLocanda.CHI_MANGIA;
 				Personaggio p;
 				int l = gruppo.getNumeroPersonaggiVivi();
-				Azioni.clear();
+				ComandiPossibili.reimposta();
 				for (int i = 0; i < l; i++) {
 					p = gruppo.getPersonaggio(i);
 					if (p.isVivo()) {
-						Azioni.add(Comando.ofPersonaggio(i));
+						ComandiPossibili.add(Comando.ofPersonaggio(i));
 					}
 				}
 				return Stato.IN_LOCAZIONE;
@@ -128,7 +128,7 @@ public class Locanda extends LocazioneBase {
 
 				if (incontra(gruppo)) {
 					stato = StatoInLocanda.PERSONAGGIO;
-					Azioni.set(Comando.SI, Comando.NO);
+					ComandiPossibili.set(Comando.SI, Comando.NO);
 					return Stato.IN_LOCAZIONE;
 				} else {
 					if (gruppo.getMonete() < Costanti.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggi()) {
@@ -139,7 +139,7 @@ public class Locanda extends LocazioneBase {
 						UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 						UI.rinfresca();
 						stato = StatoInLocanda.PERNOTTA;
-						Azioni.set(Comando.SI, Comando.NO);
+						ComandiPossibili.set(Comando.SI, Comando.NO);
 						return Stato.IN_LOCAZIONE;
 					}
 				}
@@ -171,7 +171,7 @@ public class Locanda extends LocazioneBase {
 				UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 				UI.rinfresca();
 				stato = StatoInLocanda.PERNOTTA;
-				Azioni.set(Comando.SI, Comando.NO);
+				ComandiPossibili.set(Comando.SI, Comando.NO);
 				return Stato.IN_LOCAZIONE;
 			}
 			

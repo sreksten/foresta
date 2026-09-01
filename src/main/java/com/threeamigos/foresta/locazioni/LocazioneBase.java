@@ -318,12 +318,12 @@ public abstract class LocazioneBase implements Locazione {
 					Logger.log("Incantesimo di tipo " + (tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI ? "SINGOLO_SOLO_VIVI" : "SINGOLO_QUALSIASI"));
 					int l = gruppo.getNumeroPersonaggi();
 					Personaggio personaggio;
-					Azioni.clear();
+					ComandiPossibili.reimposta();
 					for (int i = 0; i < l; i++) {
 						personaggio = gruppo.getPersonaggio(i);
 						Logger.log("tipo == Incantesimo.SINGOLO_QUALSIASI || p.isVivo() ? " + ((tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo())));
 						if (tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo()) {
-							Azioni.add(Comando.ofPersonaggio(i));
+							ComandiPossibili.add(Comando.ofPersonaggio(i));
 						}
 					}
 					statoLocazione = StatoLocazione.SU_CHI_FORMULA;
@@ -361,7 +361,7 @@ public abstract class LocazioneBase implements Locazione {
 						offerta.accetta(gruppo, gruppoAvversario);
 					} else {
 						UI.notifica("Accetta?");
-						Azioni.set(Comando.SI, Comando.NO);
+						ComandiPossibili.set(Comando.SI, Comando.NO);
 						statoLocazione = StatoLocazione.ACCETTA_OFFERTA;
 						return Stato.IN_LOCAZIONE;
 					}
@@ -406,7 +406,7 @@ public abstract class LocazioneBase implements Locazione {
 						offerta.accetta(gruppo, gruppoAvversario);
 					} else {
 						UI.notifica("Accetta?");
-						Azioni.set(Comando.SI, Comando.NO);
+						ComandiPossibili.set(Comando.SI, Comando.NO);
 						statoLocazione = StatoLocazione.ACCETTA_OFFERTA;
 						return Stato.IN_LOCAZIONE;
 					}
@@ -504,42 +504,42 @@ public abstract class LocazioneBase implements Locazione {
 			return Stato.FINE_LOCAZIONE;
 		}
 
-		Azioni.clear();
+		ComandiPossibili.reimposta();
 		// Possiamo combattere?
 		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO) {
-			Azioni.add(Comando.COMBATTIMENTO);
+			ComandiPossibili.add(Comando.COMBATTIMENTO);
 		}
 		// Possiamo formulare incantesimi?
 		for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
 			if (gruppo.getIncantesimi(classeIncantesimo) > 0) {
-				Azioni.add(Comando.INCANTESIMO);
+				ComandiPossibili.add(Comando.INCANTESIMO);
 				break;
 			}
 		}
 		// Possiamo corrompere gli avversari?
 		if (opzioneCorruzioneDisponibile) {
-			Azioni.add(Comando.CORRUZIONE);
+			ComandiPossibili.add(Comando.CORRUZIONE);
 		}
 		// Possiamo fare amicizia?
 		if (opzioneAmiciziaDisponibile) {
-			Azioni.add(Comando.AMICIZIA);
+			ComandiPossibili.add(Comando.AMICIZIA);
 		}
 		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO) {
-			Azioni.add(Comando.MAPPA);
+			ComandiPossibili.add(Comando.MAPPA);
 		}
 		if (gruppo.getPozioniSalute() > 0) {
-			Azioni.add(Comando.POZIONE_SALUTE);
+			ComandiPossibili.add(Comando.POZIONE_SALUTE);
 		}
 		if (gruppo.getPozioniSaluteGrande() > 0) {
-			Azioni.add(Comando.GRANDE_POZIONE_SALUTE);
+			ComandiPossibili.add(Comando.GRANDE_POZIONE_SALUTE);
 		}
 		if (gruppo.getPozioniMagia() > 0) {
-			Azioni.add(Comando.POZIONE_MAGIA);
+			ComandiPossibili.add(Comando.POZIONE_MAGIA);
 		}
 		// Si puo' sempre ricorrere a una bella...
-		Azioni.add(Comando.FUGA);
+		ComandiPossibili.add(Comando.FUGA);
 		// E possiamo sempre richiedere di descrivere di nuovo la locazione
-		Azioni.add(Comando.AIUTO);
+		ComandiPossibili.add(Comando.AIUTO);
 
 		return statoLocazione == StatoLocazione.IN_COMBATTIMENTO ? Stato.IN_COMBATTIMENTO : Stato.IN_LOCAZIONE;
 	}
@@ -823,7 +823,7 @@ public abstract class LocazioneBase implements Locazione {
 					UI.notifica(sb);
 				}
 				statoLocazione = StatoLocazione.CONFERMA_FUGA;
-				Azioni.set(Comando.SI, Comando.NO);
+				ComandiPossibili.set(Comando.SI, Comando.NO);
 				return Stato.ATTESA_SI_NO;
 				
 			case AIUTO:

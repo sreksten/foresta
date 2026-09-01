@@ -229,37 +229,37 @@ public class Alchimista extends LocazioneBase implements Locazione {
 	}
 
 	private void imposta() {
-		Azioni.clear();
+		ComandiPossibili.reimposta();
 		if (aumentareMagia) {
 			int l = gruppo.getNumeroPersonaggi();
 			Personaggio personaggio;
 			for (int i = 0; i < l; i++) {
 				personaggio = gruppo.getPersonaggio(i);
 				if (personaggio.isVivo()) {
-					Azioni.add(Comando.ofPersonaggio(i));
+					ComandiPossibili.add(Comando.ofPersonaggio(i));
 				}
 			}
 		}
 		if (aumentareMagiaGruppo) {
-			Azioni.add(Comando.GRUPPO);
+			ComandiPossibili.add(Comando.GRUPPO);
 		}
 		if (incantesimiAcquistabili) {
-			Azioni.add(Comando.INCANTESIMO);
+			ComandiPossibili.add(Comando.INCANTESIMO);
 		}
 		if (pozioniAcquistabili) {
-			Azioni.add(Comando.POZIONE_MAGIA);
-			Azioni.add(Comando.POZIONE_SALUTE);
+			ComandiPossibili.add(Comando.POZIONE_MAGIA);
+			ComandiPossibili.add(Comando.POZIONE_SALUTE);
 		}
-		Azioni.add(Comando.NO_INCANTESIMO);
+		ComandiPossibili.add(Comando.NO_INCANTESIMO);
 	}
 
 	private void impostaIncantesimi() {
-		Azioni.clear();
+		ComandiPossibili.reimposta();
 		for (ClassiIncantesimo classiIncantesimo : ClassiIncantesimo.values()) {
 			if (classiIncantesimo.getIstanza().getCostoAcquisto() <= gruppo.getMonete()) {
-				Azioni.add(classiIncantesimo.getComandoDiAttivazione());
+				ComandiPossibili.add(classiIncantesimo.getComandoDiAttivazione());
 			}
 		}
-		Azioni.add(Comando.NO_INCANTESIMO);
+		ComandiPossibili.add(Comando.NO_INCANTESIMO);
 	}
 }

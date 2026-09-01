@@ -126,19 +126,19 @@ public class Automa implements ControlloreDiGioco {
 					processaAzione(null);
 				} else if (azione == Comando.NUMERO_2) {
 					stato = Stato.SELEZIONE_SALVATAGGIO_DA_LEGGERE;
-					Azioni.clear();
+					ComandiPossibili.reimposta();
 					for (InterfacciaGestoreSalvataggi.InterfacciaTestataSalvataggio testata : GestoreSalvataggi.getSalvataggiDisponibili()) {
 						String id = testata.getId();
 						if ("1".equals(id)) {
-							Azioni.add(Comando.NUMERO_1);
+							ComandiPossibili.add(Comando.NUMERO_1);
 						} else if ("2".equals(id)) {
-							Azioni.add(Comando.NUMERO_2);
+							ComandiPossibili.add(Comando.NUMERO_2);
 						} else if ("3".equals(id)) {
-							Azioni.add(Comando.NUMERO_3);
+							ComandiPossibili.add(Comando.NUMERO_3);
 						} else if ("4".equals(id)) {
-							Azioni.add(Comando.NUMERO_4);
+							ComandiPossibili.add(Comando.NUMERO_4);
 						} else if ("5".equals(id)) {
-							Azioni.add(Comando.NUMERO_5);
+							ComandiPossibili.add(Comando.NUMERO_5);
 						}
 					}
 					UI.impostaAzioni();
@@ -163,10 +163,12 @@ public class Automa implements ControlloreDiGioco {
 				break;
 
 			case LETTURA_SALVATAGGIO:
-				break;
+
+            case ATTESA_NOME_HI_SCORE:
+                break;
 
 			case PRE_GAME_SELEZIONE_PERSONAGGIO:
-				Azioni.clear();
+				ComandiPossibili.reimposta();
 				UI.impostaAzioni();
 				UI.scriviGrande(SCEGLI_NOME_PERSONAGGIO);
 				stato = Stato.PRE_GAME_ATTESA_NOME_PERSONAGGIO;
@@ -347,24 +349,24 @@ public class Automa implements ControlloreDiGioco {
 				break;
 
 			case SCELTA_INCANTESIMO_DA_LANCIARE:
-				Azioni.clear();
+				ComandiPossibili.reimposta();
 				for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
 					if (gruppo.getIncantesimi(classeIncantesimo) > 0) {
-						Azioni.add(classeIncantesimo.getComandoDiAttivazione());
+						ComandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
 					}
 				}
-				Azioni.add(Comando.NO_INCANTESIMO);
+				ComandiPossibili.add(Comando.NO_INCANTESIMO);
 				UI.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI);
 				UI.impostaAzioni();
 				stato = Stato.INCANTESIMO_SCELTO;
 				break;
 
 			case ATTESA_INCANTESIMO_QUALSIASI:
-				Azioni.clear();
+				ComandiPossibili.reimposta();
 				for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
-					Azioni.add(classeIncantesimo.getComandoDiAttivazione());
+					ComandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
 				}
-				Azioni.add(Comando.NO_INCANTESIMO);
+				ComandiPossibili.add(Comando.NO_INCANTESIMO);
 				UI.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI);
 				UI.impostaAzioni();
 				stato = Stato.INCANTESIMO_SCELTO;
@@ -446,38 +448,38 @@ public class Automa implements ControlloreDiGioco {
 
 			case ATTESA_DIREZIONE:
 				UI.notifica(gruppo.chiMaiuscolo() + " se ne va. In quale direzione si incammina?");
-				Azioni.clear();
+				ComandiPossibili.reimposta();
 				if (gruppo.getMaxPassiNord() > 0) {
-					Azioni.add(Comando.NORD);
+					ComandiPossibili.add(Comando.NORD);
 				}
 				if (gruppo.getMaxPassiEst() > 0) {
-					Azioni.add(Comando.EST);
+					ComandiPossibili.add(Comando.EST);
 				}
 				if (gruppo.getMaxPassiSud() > 0) {
-					Azioni.add(Comando.SUD);
+					ComandiPossibili.add(Comando.SUD);
 				}
 				if (gruppo.getMaxPassiOvest() > 0) {
-					Azioni.add(Comando.OVEST);
+					ComandiPossibili.add(Comando.OVEST);
 				}
-				Azioni.add(Comando.MAPPA);
+				ComandiPossibili.add(Comando.MAPPA);
 				if (gruppo.getNumeroPersonaggiVivi() > 1 && (LineaTemporale.getOra() > 20 || LineaTemporale.getOra() < 6)) {
 					ClassiLocazione classeLocazione = gruppo.getClasseLocazioneCorrente();
 					if (classeLocazione.getTipoLocazione() != TipoLocazione.CITTA &&
 							classeLocazione != ClassiLocazione.LOCANDA &&
 							classeLocazione != ClassiLocazione.PALUDE) {
-						Azioni.add(Comando.ACCAMPAMENTO);
+						ComandiPossibili.add(Comando.ACCAMPAMENTO);
 					}
 				}
 				if (gruppo.getPozioniSalute() > 0) {
-					Azioni.add(Comando.POZIONE_SALUTE);
+					ComandiPossibili.add(Comando.POZIONE_SALUTE);
 				}
 				if (gruppo.getPozioniSaluteGrande() > 0) {
-					Azioni.add(Comando.GRANDE_POZIONE_SALUTE);
+					ComandiPossibili.add(Comando.GRANDE_POZIONE_SALUTE);
 				}
 				if (gruppo.getPozioniMagia() > 0) {
-					Azioni.add(Comando.POZIONE_MAGIA);
+					ComandiPossibili.add(Comando.POZIONE_MAGIA);
 				}
-				Azioni.add(Comando.FLOPPY);
+				ComandiPossibili.add(Comando.FLOPPY);
 
 				stato = Stato.ATTESA_PASSI;
 				UI.impostaAzioni();
@@ -719,10 +721,7 @@ public class Automa implements ControlloreDiGioco {
 				UI.impostaAzioni(Comando.PERGAMENA);
 				break;
 
-			case ATTESA_NOME_HI_SCORE:
-				break;
-
-			case HI_SCORE:
+            case HI_SCORE:
 				inizia();
 				break;
 
@@ -740,15 +739,15 @@ public class Automa implements ControlloreDiGioco {
 			Logger.log("Automa::scegliPersonaggio(ancheMorto=" + ancheSeMorto + "): automaticamente PERSONAGGIO_1");
 			return Comando.PERSONAGGIO_1;
 		} else {
-			Azioni.clear();
+			ComandiPossibili.reimposta();
 			int i = 0;
 			for (Personaggio personaggioCorrente : gruppo.getPersonaggi()) {
 				if (ancheSeMorto || personaggioCorrente.isVivo()) {
-					Azioni.add(Comando.ofPersonaggio(i));
+					ComandiPossibili.add(Comando.ofPersonaggio(i));
 				}
 				i++;
 			}
-			Azioni.add(Comando.ANNULLA);
+			ComandiPossibili.add(Comando.ANNULLA);
 			Logger.log("Automa::scegliPersonaggio(ancheMorto=" + ancheSeMorto + "): imposto le azioni");
 			UI.impostaAzioni();
 			return null;
@@ -756,21 +755,21 @@ public class Automa implements ControlloreDiGioco {
 	}
 
 	private void impostaAzioniPerNumeroPassi(int numeroPassi) {
-		Azioni.clear();
+		ComandiPossibili.reimposta();
 		if (numeroPassi > 0) {
-			Azioni.add(Comando.NUMERO_1);
+			ComandiPossibili.add(Comando.NUMERO_1);
 		}
 		if (numeroPassi > 1) {
-			Azioni.add(Comando.NUMERO_2);
+			ComandiPossibili.add(Comando.NUMERO_2);
 		}
 		if (numeroPassi > 2) {
-			Azioni.add(Comando.NUMERO_3);
+			ComandiPossibili.add(Comando.NUMERO_3);
 		}
 		if (numeroPassi > 3) {
-			Azioni.add(Comando.NUMERO_4);
+			ComandiPossibili.add(Comando.NUMERO_4);
 		}
 		if (numeroPassi > 4) {
-			Azioni.add(Comando.NUMERO_5);
+			ComandiPossibili.add(Comando.NUMERO_5);
 		}
 	}
 	

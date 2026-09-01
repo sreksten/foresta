@@ -47,7 +47,7 @@ public abstract class Citta extends LocazioneUnica {
 	public abstract String getNomeLocanda();
 
 	private void impostaAzioniCitta() {
-		Azioni.set(Comando.LOCANDA, Comando.ALCHIMISTA, Comando.ESCI_DA_CITTA);
+		ComandiPossibili.set(Comando.LOCANDA, Comando.ALCHIMISTA, Comando.ESCI_DA_CITTA);
 	}
 	
 	@Override

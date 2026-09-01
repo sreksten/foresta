@@ -3,19 +3,22 @@ package com.threeamigos.foresta.motore;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Azioni {
+public class ComandiPossibili {
 	
-	private Azioni() {
+	private ComandiPossibili() {
 	}
 
-	private static final List<Comando> possibiliAzioni = new ArrayList<>();
-	
-	public static void clear() {
-		possibiliAzioni.clear();
+	private static final List<Comando> comandiPossibili = new ArrayList<>();
+
+	/**
+	 * Ripulisce l'elenco dei possibili comandi disponibili
+	 */
+	public static void reimposta() {
+		comandiPossibili.clear();
 	}
 
 	public static void add(Comando comando) {
-		possibiliAzioni.add(comando);
+		comandiPossibili.add(comando);
 	}
 	
 	public static void add(Comando ... comandi) {
@@ -25,16 +28,16 @@ public class Azioni {
 	}
 	
 	public static void set(Comando ... comandi) {
-		clear();
+		reimposta();
 		add(comandi);
 	}
 	
 	public static void set(Comando comando) {
-		clear();
+		reimposta();
 		add(comando);
 	}
 
 	public static List<Comando> getComandi() {
-		return possibiliAzioni;
+		return comandiPossibili;
 	}
 }

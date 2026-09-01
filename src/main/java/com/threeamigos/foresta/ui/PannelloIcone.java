@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.motore.Azioni;
+import com.threeamigos.foresta.motore.ComandiPossibili;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Gioco;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -59,7 +59,7 @@ public class PannelloIcone extends JPanel implements java.awt.event.ActionListen
 	}
 
 	public void impostaAzioni() {
-		List<Comando> possibiliAzioni = Azioni.getComandi();
+		List<Comando> possibiliAzioni = ComandiPossibili.getComandi();
 		quanteScelte = possibiliAzioni.size();
 		bottoni = new ImageButton[quanteScelte];
 		int icona;

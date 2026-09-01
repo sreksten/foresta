@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
-import com.threeamigos.foresta.motore.Azioni;
+import com.threeamigos.foresta.motore.ComandiPossibili;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import java.util.concurrent.CountDownLatch;
@@ -168,7 +168,7 @@ public class UI {
 	 * Scorciatoia per impostare i comandi e modificare subito l'interfaccia utente
 	 */
 	public static void impostaAzioni(Comando... comandi) {
-		Azioni.set(comandi);
+		ComandiPossibili.set(comandi);
 		impostaAzioni();
 	}
 
