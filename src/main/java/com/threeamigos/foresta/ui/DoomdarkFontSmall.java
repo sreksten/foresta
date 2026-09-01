@@ -56,6 +56,8 @@ class DoomdarkFontSmall implements DoomdarkFont {
 			return punto[0];
 		} else if (c == ':') {
 			return duepunti[0];
+		} else if (c == ';') {
+			return punto_e_virgola[0];
 		} else if (c == '-') {
 			return meno[0];
 		} else if (c == '+') {
@@ -105,6 +107,8 @@ class DoomdarkFontSmall implements DoomdarkFont {
 			return punto;
 		} else if (c == ':') {
 			return duepunti;
+		} else if (c == ';') {
+			return punto_e_virgola;
 		} else if (c == '-') {
 			return meno;
 		} else if (c == '+') {
@@ -915,27 +919,39 @@ class DoomdarkFontSmall implements DoomdarkFont {
 	};
 
 	private static final byte[] punto = {
-			2,
+			3,
 			(byte)0b00000000,
 			(byte)0b00000000,
 			(byte)0b00000000,
 			(byte)0b00000000,
 			(byte)0b00000000,
-			(byte)0b11000000,
-			(byte)0b11000000,
+			(byte)0b01100000,
+			(byte)0b01100000,
 			(byte)0b00000000
 	};
 
 	private static final byte[] duepunti = {
-			2,
+			3,
 			(byte)0b00000000,
 			(byte)0b00000000,
-			(byte)0b11000000,
-			(byte)0b11000000,
+			(byte)0b01100000,
+			(byte)0b01100000,
 			(byte)0b00000000,
-			(byte)0b11000000,
-			(byte)0b11000000,
+			(byte)0b01100000,
+			(byte)0b01100000,
 			(byte)0b00000000
+	};
+
+	private static final byte[] punto_e_virgola = {
+			3,
+			(byte)0b00000000,
+			(byte)0b00000000,
+			(byte)0b01100000,
+			(byte)0b01100000,
+			(byte)0b00000000,
+			(byte)0b01100000,
+			(byte)0b01100000,
+			(byte)0b11000000
 	};
 
 	private static final byte[] punto_interrogativo = {
