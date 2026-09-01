@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.ui.UI;
@@ -27,15 +28,15 @@ public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 	}
 
 	public int getCostoAcquisto() {
-		return 5;
+		return Costanti.INCANTESIMO_MORTE_COSTO_ACQUISTO;
 	}
 
 	public int getCostoLancio() {
-		return 5;
+		return Costanti.INCANTESIMO_MORTE_COSTO_LANCIO;
 	}
 
 	public int getDanni() {
-		return 0;
+		return Costanti.INCANTESIMO_MORTE_DANNI;
 	}
 
 	@Override
@@ -68,7 +69,7 @@ public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 			uccisi++;
 		} else {
 			String s = formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
-			UI.notifica("L'incantesimo non ha avuto successo e si e' ritorto contro " + s + ".");
+			UI.notifica("L'incantesimo non ha avuto successo e si è ritorto contro " + s + ".");
 			formulante.subSalute(formulante.getSalute() / 4, bersaglio, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
 		}
 	}

@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.incantesimi;
 
-import java.util.List;
-
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Logger;
@@ -10,11 +8,13 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.UI;
 
+import java.util.List;
+
 /*
  * Incantesimi originali su ZX Spectrum:
  * Sonno
  * Lievitazione
- * Invisibilita'
+ * Invisibilità
  */
 
 public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
@@ -97,7 +97,7 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 
 		StringBuilder sb = new StringBuilder(s);
 		if (uccisi == totale && totale > 1) {
-			sb.append(" ha formulato l'incantesimo alla perfezione, eliminando i suoi avversari.");
+			sb.append(" ha formulato l'incantesimo alla perfezione, eliminando tutti i suoi avversari.");
 		} else {
 			if (uccisi > 0) {
 				sb.append(" ha eliminato ");
@@ -107,8 +107,6 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 					} else {
 						sb.append("un suo avversario");
 					}
-				} else if (uccisi == totale) {
-					sb.append("tutti i suoi avversari");
 				} else {
 					sb.append(Misc.getCardinaleM(uccisi)).append(" dei suoi avversari");
 				}

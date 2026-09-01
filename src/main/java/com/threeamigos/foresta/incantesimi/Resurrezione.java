@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.ui.UI;
@@ -31,22 +32,22 @@ public class Resurrezione implements Incantesimo {
 	}
 
 	public int getCostoAcquisto() {
-		return 15;
+		return Costanti.INCANTESIMO_RESURREZIONE_COSTO_ACQUISTO;
 	}
 
 	public int getCostoLancio() {
-		return 15;
+		return Costanti.INCANTESIMO_RESURREZIONE_COSTO_LANCIO;
 	}
 
 	public void formula(Personaggio formulante, Personaggio personaggioBersaglio, Gruppo gruppoBersaglio) {
 		String nome = personaggioBersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 
 		if (personaggioBersaglio.isVivo()) {
-            String notifica = nome + " era gia' viv" + personaggioBersaglio.getLetteraFinaleAttributo() +
-                    ", per cui la sua forza è stata completamente reintegrata.";
+            String notifica = nome + " era già viv" + personaggioBersaglio.getLetteraFinaleAttributo() +
+                    ", per cui la sua salute è stata completamente reintegrata.";
 			UI.notifica(notifica);
 			personaggioBersaglio.addSalute(personaggioBersaglio.getSaluteMassima());
-			personaggioBersaglio.subStanchezza(9);
+			personaggioBersaglio.subStanchezza(Costanti.MAX_STANCHEZZA);
 		} else {
             String notifica = nome + " è risort" + personaggioBersaglio.getLetteraFinaleAttributo() +
                     " dalle proprie ceneri.";

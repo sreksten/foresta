@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.motore.Costanti;
+
 public class Fuoco extends IncantesimoMaleficoImpl implements Incantesimo {
 
 	public ClassiIncantesimo getClasse() {
@@ -23,14 +25,14 @@ public class Fuoco extends IncantesimoMaleficoImpl implements Incantesimo {
 	}
 
 	public int getCostoAcquisto() {
-		return 5;
+		return Costanti.INCANTESIMO_FUOCO_COSTO_ACQUISTO;
 	}
 
 	public int getCostoLancio() {
-		return 3;
+		return Costanti.INCANTESIMO_FUOCO_COSTO_LANCIO;
 	}
 
 	public int getDanni() {
-		return 60;
+		return Costanti.INCANTESIMO_FUOCO_DANNI;
 	}
 }

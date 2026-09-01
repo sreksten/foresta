@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.motore.Costanti;
+
 public class Acqua extends IncantesimoMaleficoImpl implements Incantesimo {
 
 	public ClassiIncantesimo getClasse() {
@@ -25,16 +27,16 @@ public class Acqua extends IncantesimoMaleficoImpl implements Incantesimo {
 
 	@Override
 	public int getCostoAcquisto() {
-		return 5;
+		return Costanti.INCANTESIMO_ACQUA_COSTO_ACQUISTO;
 	}
 	
 	@Override
 	public int getCostoLancio() {
-		return 1;
+		return Costanti.INCANTESIMO_ACQUA_COSTO_LANCIO;
 	}
 	
 	@Override
 	public int getDanni() {
-		return 45;
+		return Costanti.INCANTESIMO_ACQUA_DANNI;
 	}
 }
