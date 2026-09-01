@@ -28,9 +28,7 @@ public class Main {
 		GestoreSalvataggi.impostaGestoreSalvataggi(new GestoreSalvataggiSuFile());
 		Gioco.impostaParametri(new TemporizzatoreJ2SE(), new Automa());
 		UI.impostaInterfacciaUtente(new ForestaUI(orientamento, tuttoSchermo));
-		while (!UI.isInterfacciaUtentePronta()) {
-			Thread.sleep(1000);
-		}
+		UI.aspettaInterfacciaUtentePronta();
 		Gioco.inizia();
 	}
 }

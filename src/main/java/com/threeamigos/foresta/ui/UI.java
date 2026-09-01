@@ -4,6 +4,7 @@ import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.Azioni;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import java.util.concurrent.CountDownLatch;
 
 public class UI {
 
@@ -11,18 +12,18 @@ public class UI {
 	}
 
 	private static InterfacciaUtente interfacciaUtente;
-	private static boolean interfacciaUtentePronta;
+	private static final CountDownLatch interfacciaUtentePronta = new CountDownLatch(1);
 
 	public static void impostaInterfacciaUtente(InterfacciaUtente userInterface) {
 		interfacciaUtente = userInterface;
 	}
 
 	public static void setInterfacciaUtentePronta() {
-		interfacciaUtentePronta = true;
+		interfacciaUtentePronta.countDown();
 	}
 
-	public static boolean isInterfacciaUtentePronta() {
-		return interfacciaUtentePronta;
+	public static void aspettaInterfacciaUtentePronta() throws InterruptedException {
+		interfacciaUtentePronta.await();
 	}
 
 	/**
