@@ -12,19 +12,19 @@ public class LineaTemporale {
 	private LineaTemporale() {
 	}
 
-	private static LineaTemporaleMD lineaTemporaleMD = ModelloDati.getIstanza().getLineaTemporaleMD();
+	private static final LineaTemporaleMD lineaTemporaleMD = ModelloDati.getIstanza().getLineaTemporaleMD();
 
 	private static String evento;
 
-	public static final int getOra() {
+	public static int getOra() {
 		return lineaTemporaleMD.getOra();
 	}
 
-	public static final int getGiorno() {
+	public static int getGiorno() {
 		return lineaTemporaleMD.getGiorno();
 	}
 
-	public static final void reimposta() {
+	public static void reimposta() {
 		lineaTemporaleMD.reimposta();
 	}
 
@@ -55,7 +55,7 @@ public class LineaTemporale {
 			"Sono le undici di notte"
 	};
 
-	public static final String getDescrizioneOraDelGiorno() {
+	public static String getDescrizioneOraDelGiorno() {
 		StringBuilder sb = new StringBuilder(ore[getOra()]).append(" del");
 		int giorno = getGiorno();
 		if (giorno == 8 || giorno == 11) {
@@ -67,7 +67,7 @@ public class LineaTemporale {
 		return sb.toString();
 	}
 
-	public static final int oreFinoAlMattino() {
+	public static int oreFinoAlMattino() {
 		int ora = getOra();
 		if (ora >= 8) {
 			return 32 - ora; // 24 ore - ora corrente + 8 ore
@@ -76,7 +76,7 @@ public class LineaTemporale {
 		}
 	}
 
-	public static final void mattinoSeguente() {
+	public static void mattinoSeguente() {
 		if (getOra() >= LineaTemporaleMD.PRIMA_ORA_DEL_MATTINO) {
 			lineaTemporaleMD.setOra(LineaTemporaleMD.PRIMA_ORA_DEL_MATTINO);
 			lineaTemporaleMD.setGiorno(lineaTemporaleMD.getGiorno() + 1);
@@ -85,7 +85,7 @@ public class LineaTemporale {
 		}
 	}
 
-	public static final void aggiungiOre(int quantita) {
+	public static void aggiungiOre(int quantita) {
 		int ora = getOra() + quantita;
 		if (ora >= 24) {
 			lineaTemporaleMD.setOra(ora % 24);
@@ -98,7 +98,7 @@ public class LineaTemporale {
 	private static final String COLONNA = " vede levarsi una colonna di fumo ";
 
 	//TODO le città potrebbero essere distrutte a caso
-	public static final void eventi(GruppoGiocatore gruppo) {
+	public static void eventi(GruppoGiocatore gruppo) {
 		int giorno = getGiorno();
 		if (giorno > 40) {
 			evento = "Sventura! " + gruppo.getPersonaggi().get(0).getNomeProprio() + " ha invano tentato di fermare il Drago, che col tempo ha abbattuto l'ultimo baluardo della resistenza... tutto e' perduto!";
@@ -125,35 +125,35 @@ public class LineaTemporale {
 		}
 	}
 
-	public static final String getEvento() {
+	public static String getEvento() {
 		String e = evento;
 		evento = null;
 		return e;
 	}
 
-	public static final boolean isGiocoFinito() {
+	public static boolean isGiocoFinito() {
 		return lineaTemporaleMD.isGiocoFinito();
 	}
 
-	public static final void setGiocoFinito(boolean finito) {
+	public static void setGiocoFinito(boolean finito) {
 		lineaTemporaleMD.setGiocoFinito(finito);
 	}
 
-	public static final boolean isCittaDistrutta(ClassiLocazione citta) {
+	public static boolean isCittaDistrutta(ClassiLocazione citta) {
 		if (citta.getTipoLocazione() != ClassiLocazione.TipoLocazione.CITTA) {
 			throw new IllegalArgumentException();
 		}
 		return lineaTemporaleMD.isCittaDistrutta(citta);
 	}
 
-	public static final void setCittaDistrutta(ClassiLocazione citta) {
+	public static void setCittaDistrutta(ClassiLocazione citta) {
 		if (citta.getTipoLocazione() != ClassiLocazione.TipoLocazione.CITTA) {
 			throw new IllegalArgumentException();
 		}
 		lineaTemporaleMD.addCittaDistrutta(citta);
 	}
 
-	public static final void setDragoSconfitto(boolean dragoSconfitto) {
+	public static void setDragoSconfitto(boolean dragoSconfitto) {
 		lineaTemporaleMD.setGiocoFinito(dragoSconfitto);
 	}
 }

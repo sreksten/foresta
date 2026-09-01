@@ -40,6 +40,12 @@ public class Costanti {
     public static final int AUMENTO_SALUTE_DA_POZIONE_SALUTE_GRANDE = 10;
     public static final int RECUPERO_DA_POZIONE_MAGIA = 10;
 
+    // Oggetti
+    public static final int ANELLO_MAGICO_AGGIUNTA_VALORE = 5;
+    public static final int ANELLO_MAGICO_AGGIUNTA_CORAGGIO = 5;
+    public static final int ANELLO_MAGICO_AGGIUNTA_CARISMA = 1;
+    public static final int ANELLO_MAGICO_PUNTEGGIO = 50;
+
     // Gruppo
     public static final int MAX_PERSONAGGI_GRUPPO_GIOCATORE = 5;
 
@@ -68,5 +74,7 @@ public class Costanti {
 
     // Foresta
     public static final int MAX_DIMENSIONE_LATO_FORESTA = 80;
+
+    public static final int COSTO_MAPPA_DELLA_FORESTA = 10;
 
 }

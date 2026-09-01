@@ -26,7 +26,7 @@ public class GruppoGiocatore extends Gruppo {
 	
 	private static GruppoGiocatore istanza;
 	
-	public static final GruppoGiocatore getIstanza() {
+	public static GruppoGiocatore getIstanza() {
 		if (istanza == null) {
 			istanza = new GruppoGiocatore();
 		}
@@ -35,8 +35,7 @@ public class GruppoGiocatore extends Gruppo {
 
 	private final GruppoGiocatoreMD md = ModelloDati.getIstanza().getGruppoGiocatoreMD();
 	private Locazione locazioneCorrente;
-	private boolean fuggito = false;
-	
+
 	@Override
 	public final void reimposta() {
 		super.reimposta();
@@ -380,7 +379,6 @@ public class GruppoGiocatore extends Gruppo {
 	}
 
 	public final void fugge() {
-		fuggito = true;		
 		UI.notifica(chiMaiuscolo() + ", in preda al panico, cerca la salvezza nella fuga! Sfortunatamente riceve gravi ferite e perde molte delle cose in suo possesso!");
 
 		Function<Integer, Integer> calcolaPerdita = m -> m < 2 ? m : Dado.tira(0, m / 2);
@@ -399,10 +397,6 @@ public class GruppoGiocatore extends Gruppo {
 
 		UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 		UI.rinfresca();
-	}
-
-	public void setFuggito(boolean fuggito) {
-		this.fuggito = fuggito;
 	}
 
 	public boolean isInLocazioneUnica(ClassiLocazione classeLocazioneUnica) {

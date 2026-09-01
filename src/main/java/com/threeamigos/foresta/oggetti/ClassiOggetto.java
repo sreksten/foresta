@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.ui.BufferedImageBuilder;
+
 import java.awt.image.BufferedImage;
 import java.util.function.Supplier;
-
-import com.threeamigos.foresta.ui.BufferedImageBuilder;
 
 public enum ClassiOggetto {
 
@@ -49,12 +49,12 @@ public enum ClassiOggetto {
 			.setValore(100)
 			);
 
-	private Supplier<Oggetto> supplier;
-	private BufferedImage immagine;
-	private int quantitaMassima;
-	private int valore;
+	private final Supplier<Oggetto> supplier;
+	private final BufferedImage immagine;
+	private final int quantitaMassima;
+	private final int valore;
 	
-	private ClassiOggetto(Supplier<Oggetto> supplier, Builder builder) {
+	ClassiOggetto(Supplier<Oggetto> supplier, Builder builder) {
 		this.supplier = supplier;
 		this.immagine = BufferedImageBuilder.buildBufferedImage(builder.getImmagine());
 		this.quantitaMassima = builder.getQuantitaMassima();
@@ -81,15 +81,15 @@ public enum ClassiOggetto {
 		return Builder.istanza();
 	}
 	
-	static interface BuilderStep0 {
+	interface BuilderStep0 {
 		BuilderStep1 setImmagine(String immagine);
 	}
 	
-	static interface BuilderStep1 {
+	interface BuilderStep1 {
 		BuilderStep2 setQuantitaMassima(int quantitaMassima);
 	}
 		
-	static interface BuilderStep2 {
+	interface BuilderStep2 {
 		Builder setValore(int valore);
 	}
 	

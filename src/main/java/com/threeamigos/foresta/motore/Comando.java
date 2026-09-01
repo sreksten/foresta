@@ -2,9 +2,11 @@ package com.threeamigos.foresta.motore;
 
 public enum Comando {
 
+	// All'inizio del gioco, per scegliere il sesso del proprio personaggio
 	MASCHIO,
 	FEMMINA,
 
+	// All'inizio del gioco, per scegliere la classe del proprio personaggio
 	GUERRIERA,
 	GUERRIERO,
 	LADRA,
@@ -16,18 +18,21 @@ public enum Comando {
 	MAGA,
 	MAGO,
 
+	// Le scelte tipiche all'interno di una locazione standard
 	COMBATTIMENTO,
 	INCANTESIMO,
 	CORRUZIONE,
 	AMICIZIA,
 	FUGA,
 
+	// Quando occorre scegliere un particolare componente del gruppo
 	PERSONAGGIO_1,
 	PERSONAGGIO_2,
 	PERSONAGGIO_3,
 	PERSONAGGIO_4,
 	PERSONAGGIO_5,
 
+	// Selezione di un tipo di incantesimo
 	ARIA,
 	ACQUA,
 	TERRA,
@@ -35,13 +40,16 @@ public enum Comando {
 	FULMINE,
 	MORTE,
 	RESURREZIONE,
+	// Annulla la scelta di un incantesimo
 	NO_INCANTESIMO,
 
+	// Direzione verso la quale muoversi
 	NORD,
 	EST,
 	SUD,
 	OVEST,
 
+	// Scelte possibili al completamento di una locazione
 	ACCAMPAMENTO,
 	POZIONE_SALUTE,
 	GRANDE_POZIONE_SALUTE,
@@ -49,34 +57,42 @@ public enum Comando {
 	MAPPA,
 	FLOPPY,
 
+	// Numero di passi di cui muoversi, o scelta di uno slot di salvataggio
 	NUMERO_1,
 	NUMERO_2,
 	NUMERO_3,
 	NUMERO_4,
 	NUMERO_5,
 
+	// Scelte possibili all'interno di una città
 	LOCANDA,
 	ALCHIMISTA,
 	ESCI_DA_CITTA,
 
+	// Dall'alchimista, sceglie se agire su un personaggio o su tutto il gruppo
 	GRUPPO,
 	SINGOLO,
 
 	SI,
 	NO,
-	
 	ANNULLA,
 
 	AIUTO,
+
+	// Usata per chiedere conferma all'utente prima di andare avanti
 	PERGAMENA,
 
+	// In caso di mancanza di posto per l'elenco delle possibili azioni, appaiono due frecce
+	// agli estremi (a seconda del layout di visualizzazione)
 	SU,
 	GIU,
 	DESTRA,
 	SINISTRA,
 
+	// Azione automaticamente generata dal sistema quando si è in una locazione, per le animazioni
 	TIMER,
 
+	// Top secret
 	RUTTOLOMEO,
 	STORPSGORBLIN;
 
@@ -91,7 +107,7 @@ public enum Comando {
 		throw new IllegalArgumentException();
 	}
 	
-	public static final Comando ofPersonaggio(int personaggio) {
+	public static Comando ofPersonaggio(int personaggio) {
 		if (personaggio == 0) {
 			return PERSONAGGIO_1;
 		} else if (personaggio == 1) {
@@ -106,18 +122,4 @@ public enum Comando {
 		throw new IllegalArgumentException();
 	}
 
-	public static final Comando ofNumero(int numero) {
-		if (numero == 0) {
-			return NUMERO_1;
-		} else if (numero == 1) {
-			return NUMERO_2;
-		} else if (numero == 2) {
-			return NUMERO_3;
-		} else if (numero == 3) {
-			return NUMERO_4;
-		} else if (numero == 4) {
-			return NUMERO_5;
-		}
-		throw new IllegalArgumentException();
-	}
 }

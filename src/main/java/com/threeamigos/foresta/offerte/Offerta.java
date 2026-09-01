@@ -10,17 +10,17 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 public interface Offerta {
 
 	/**
-	 * se esistono dei prerequisiti (ad esempio per comprare la mappa occorrono 10 monete)
+	 * Se esistono dei prerequisiti (ad esempio per comprare la mappa occorrono delle monete)
 	 */
 	boolean isFattibile(GruppoGiocatore gruppo, GruppoAvversario gng);
 
 	/**
-	 * se e' gratuita viene accettata subito
+	 * Se è gratuita viene accettata subito
 	 */
 	boolean isGratuita(GruppoGiocatore gruppo, GruppoAvversario gng);
 
 	/**
-	 * la descrizione dell'offerta, per sapere cosa ci danno/vendono
+	 * La descrizione dell'offerta, per sapere cosa ci danno/vendono
 	 */
 	String getDescrizione(GruppoGiocatore g, GruppoAvversario gng);
 

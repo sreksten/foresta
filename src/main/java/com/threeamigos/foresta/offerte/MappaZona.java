@@ -49,9 +49,9 @@ public class MappaZona implements Offerta {
 		Logger.log("MappaZona::accetta(), fx=" + fx + ",tx=" + tx);
 		if (fx < 0) {
 			fx = 0;
-			tx = dm1x < 14 ? dm1x : 14;
+			tx = Math.min(dm1x, 14);
 		} else if (tx >= Foresta.getDimensioneX()) {
-			fx = Foresta.getDimensioneX() - (Foresta.getDimensioneX() < 15 ? Foresta.getDimensioneX() : 15);
+			fx = Foresta.getDimensioneX() - (Math.min(Foresta.getDimensioneX(), 15));
 			tx = dm1x;
 		}
 		int dm1y = Foresta.getDimensioneY() - 1;
@@ -60,9 +60,9 @@ public class MappaZona implements Offerta {
 		Logger.log("MappaZona::accetta(), fy=" + fy + ",ty=" + ty);
 		if (fy < 0) {
 			fy = 0;
-			ty = dm1y < 14 ? dm1y : 14;
+			ty = Math.min(dm1y, 14);
 		} else if (ty >= Foresta.getDimensioneY()) {
-			fy = Foresta.getDimensioneY() - (Foresta.getDimensioneY() < 15 ? Foresta.getDimensioneY() : 15);
+			fy = Foresta.getDimensioneY() - (Math.min(Foresta.getDimensioneY(), 15));
 			ty = dm1y;
 		}
 		Logger.log("MappaZona::accetta(), fx=" + fx + ",fy=" + fy + ",tx=" + tx + ",ty=" + ty);

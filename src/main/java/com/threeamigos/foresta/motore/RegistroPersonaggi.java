@@ -4,26 +4,16 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.motore.modellodati.RegistroPersonaggiMD;
-import com.threeamigos.foresta.personaggi.Bardo;
-import com.threeamigos.foresta.personaggi.Cantastorie;
-import com.threeamigos.foresta.personaggi.Elfa;
-import com.threeamigos.foresta.personaggi.Elfo;
-import com.threeamigos.foresta.personaggi.Guerriera;
-import com.threeamigos.foresta.personaggi.Guerriero;
-import com.threeamigos.foresta.personaggi.Ladra;
-import com.threeamigos.foresta.personaggi.Ladro;
-import com.threeamigos.foresta.personaggi.Maga;
-import com.threeamigos.foresta.personaggi.Mago;
-import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.personaggi.*;
 
 public class RegistroPersonaggi {
 
 	private RegistroPersonaggi() {
 	}
 	
-	private static RegistroPersonaggiMD registroMD = ModelloDati.getIstanza().getRegistroPersonaggiMD();
+	private static final RegistroPersonaggiMD registroMD = ModelloDati.getIstanza().getRegistroPersonaggiMD();
 
-	static final void reimposta() {
+	static void reimposta() {
 		registroMD.reimposta();
 		
 		aggiungiPersonaggio(new Guerriero("Reginald"));
@@ -55,23 +45,23 @@ public class RegistroPersonaggi {
 		return costruisciPersonaggio(registroMD.getPersonaggioCasuale());
 	}
 
-	public static final void addPersonaggioInLocazione(Personaggio personaggio, CoordinateMD coordinate) {
+	public static void addPersonaggioInLocazione(Personaggio personaggio, CoordinateMD coordinate) {
 		registroMD.addPersonaggioInLocazione(personaggio.getModelloDati(), coordinate);
 	}
 	
-	public static final Personaggio getPersonaggioInLocazione(CoordinateMD coordinate) {
+	public static Personaggio getPersonaggioInLocazione(CoordinateMD coordinate) {
 		return costruisciPersonaggio(registroMD.getPersonaggioInLocazione(coordinate));
 	}
 
-	public static final void rimuoviPersonaggioInLocazione(CoordinateMD coordinate) {
+	public static void rimuoviPersonaggioInLocazione(CoordinateMD coordinate) {
 		registroMD.rimuoviPersonaggioInLocazione(coordinate);
 	}
 	
-	private static final void aggiungiPersonaggio(Personaggio personaggio) {
+	private static void aggiungiPersonaggio(Personaggio personaggio) {
 		registroMD.aggiungiPersonaggio(personaggio.getModelloDati());
 	}
 	
-	private static final Personaggio costruisciPersonaggio(PersonaggioMD modelloDati) {
+	private static Personaggio costruisciPersonaggio(PersonaggioMD modelloDati) {
 		if (modelloDati == null) {
 			return null;
 		}

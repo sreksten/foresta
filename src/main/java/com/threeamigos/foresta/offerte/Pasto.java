@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.offerte;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -26,7 +27,7 @@ public class Pasto implements Offerta {
 		if (gustoso > 1) {
 			return "Viene offerto un pasto caldo che risulta essere squisito.";
 		} else {
-			StringBuilder sb = new StringBuilder("Viene offerto un pasto caldo che pero' non incontra i gusti ");
+			StringBuilder sb = new StringBuilder("Viene offerto un pasto caldo che però non incontra i gusti ");
 			if (gruppo.getNumeroPersonaggiVivi() == 1) {
 				sb.append(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA)).append('.');
 			} else {
@@ -40,7 +41,7 @@ public class Pasto implements Offerta {
 	public void accetta(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
 		if (gustoso > 1) {
 			for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
-				personaggio.addSalute(50);
+				personaggio.addSalute(Costanti.RECUPERO_SALUTE_DA_PASTO);
 			}
 			UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 			UI.rinfresca();

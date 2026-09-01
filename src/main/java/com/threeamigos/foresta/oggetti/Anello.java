@@ -8,12 +8,6 @@ import com.threeamigos.foresta.ui.UI;
 
 public class Anello extends OggettoBase implements Oggetto {
 
-
-
-	private static final int VALORE = 0;
-	private static final int CORAGGIO = 1;
-	private static final int CARISMA = 2;
-	
 	private final boolean anelloMagico;
 	private final int tipo;
 	private boolean notificato;
@@ -64,7 +58,7 @@ public class Anello extends OggettoBase implements Oggetto {
 	public boolean prendi(GruppoGiocatore gruppo, Comando azione) {
 		if (anelloMagico) {
 			if (!notificato) {
-				StringBuilder sb = new StringBuilder("Questo e' un anello magico, che fa aumentare ");
+				StringBuilder sb = new StringBuilder("Questo è un anello magico, che fa aumentare ");
 				if (tipo == 1)
 					sb.append("il valore in combattimento");
 				else if (tipo == 2)
@@ -85,12 +79,12 @@ public class Anello extends OggettoBase implements Oggetto {
 				Personaggio p = gruppo.getPersonaggio(azione);
 				UI.notifica(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " indossa l'anello.");
 				if (tipo == 1)
-					p.addValore(5);
+					p.addValore(Costanti.ANELLO_MAGICO_AGGIUNTA_VALORE);
 				else if (tipo == 2)
-					p.addCoraggio(5);
+					p.addCoraggio(Costanti.ANELLO_MAGICO_AGGIUNTA_CORAGGIO);
 				else // CARISMA
-					p.addCarisma(1);
-				Statistiche.addPunti(50);
+					p.addCarisma(Costanti.ANELLO_MAGICO_AGGIUNTA_CARISMA);
+				Statistiche.addPunti(Costanti.ANELLO_MAGICO_PUNTEGGIO);
 			}
 		}
 		UI.primoPiano(InterfacciaUtente.Finestra.STATO);

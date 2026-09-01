@@ -11,12 +11,12 @@ public class RegistroArtefatti {
 
 	private static final RegistroArtefattiMD registroMD = ModelloDati.getIstanza().getRegistroArtefattiMD();
 
-	private static final String COMBATTIMENTO = "il cui potere e' nel combattimento";
+	private static final String COMBATTIMENTO = "il cui potere è nel combattimento";
 	private static final String PROTEZIONE = "che protegge dagli attacchi avversari";
-	private static final String PERSUASIONE = "il cui potere e' nella persuasione";
+	private static final String PERSUASIONE = "il cui potere è nella persuasione";
 	private static final String MAGIA = "che aumenta il potere magico";
 
-	static final void reimposta() {
+	static void reimposta() {
 		registroMD.reimposta();
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()

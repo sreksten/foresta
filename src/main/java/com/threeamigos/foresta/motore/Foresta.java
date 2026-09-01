@@ -21,26 +21,26 @@ public class Foresta {
 
 	private static final ForestaMD forestaMD = ModelloDati.getIstanza().getForestaMD();
 	
-	public static final int getDimensioneX() {
+	public static int getDimensioneX() {
 		return forestaMD.getDimensioneX();
 	}
 	
-	public static final int getDimensioneY() {
+	public static int getDimensioneY() {
 		return forestaMD.getDimensioneY();
 	}
 	
-	public static final void impostaLocazioneCorrente(ClassiLocazione classeLocazione) {
+	public static void impostaLocazioneCorrente(ClassiLocazione classeLocazione) {
 		forestaMD.impostaLocazione(GruppoGiocatore.getIstanza().getCoordinate(), classeLocazione);
 	}
 
-	public static final CoordinateMD getCoordinateLocazioneUnica(ClassiLocazione classeLocazione) {
+	public static CoordinateMD getCoordinateLocazioneUnica(ClassiLocazione classeLocazione) {
 		if (!classeLocazione.isLocazioneUnica()) {
 			throw new IllegalArgumentException();
 		}
 		return forestaMD.ottieniCoordinateLocazioneUnica(classeLocazione);
 	}
 	
-	public static final void distruggiLocazioneUnica(ClassiLocazione classeLocazione, ClassiLocazione nuovaClasseLocazione) {
+	public static void distruggiLocazioneUnica(ClassiLocazione classeLocazione, ClassiLocazione nuovaClasseLocazione) {
 		CoordinateMD coordinate = getCoordinateLocazioneUnica(classeLocazione);
 		if (coordinate != null) {
 			forestaMD.impostaLocazione(coordinate, nuovaClasseLocazione);
@@ -56,9 +56,9 @@ public class Foresta {
 		return forestaMD.ottieniClasseLocazione(x, y);
 	}
 	
-	public static final CoordinateMD costruisciLocazioneUnica(ClassiLocazione classeLocazioneUnica, boolean conosciutaSuMappa) {
+	public static CoordinateMD costruisciLocazioneUnica(ClassiLocazione classeLocazioneUnica, boolean conosciutaSuMappa) {
 		if (!classeLocazioneUnica.isLocazioneUnica()) {
-			throw new IllegalArgumentException("Utilizzare costruisciLocazione per istanziare " + classeLocazioneUnica.name());
+			throw new IllegalArgumentException("Utilizzare costruisciLocazione per creare " + classeLocazioneUnica.name());
 		}
 		Logger.log("Costruzione di " + classeLocazioneUnica);
 		CoordinateMD coordinate = getCoordinateLibere();
@@ -73,7 +73,7 @@ public class Foresta {
 	/**
 	 * Per uso da parte di un ControlloreDiGioco
 	 */
-	static final void reimposta() {
+	static void reimposta() {
 		
 		RegistroPersonaggi.reimposta();
 		LineaTemporale.reimposta();
@@ -114,14 +114,14 @@ public class Foresta {
 		}
 	}
 
-	private static final void setLocazione(CoordinateMD coordinate, ClassiLocazione classeLocazione) {
+	private static void setLocazione(CoordinateMD coordinate, ClassiLocazione classeLocazione) {
 		forestaMD.impostaClasseLocazione(coordinate, classeLocazione);
 	}
 	
 	/**
 	 * Costruisce le città e ci piazza un personaggio a caso
 	 */
-	private static final void costruisciCittaEPosizionaPersonaggi() {
+	private static void costruisciCittaEPosizionaPersonaggi() {
 		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
 			if (classeLocazione.getTipoLocazione() == TipoLocazione.CITTA) {
 				CoordinateMD coordinate = costruisciLocazioneUnica(classeLocazione, false);
@@ -136,7 +136,7 @@ public class Foresta {
 	/**
 	 * Costruisce tutti i castelli tranne quello del Drago che appare solo dopo aver distrutto tutti gli altri
 	 */
-	private static final void costruisciCastelli() {
+	private static void costruisciCastelli() {
 		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
 			if (classeLocazione.getTipoLocazione() == TipoLocazione.CASTELLO && classeLocazione != ClassiLocazione.CASTELLO_DRAGO) {
 				costruisciLocazioneUnica(classeLocazione, false);
@@ -147,9 +147,9 @@ public class Foresta {
 	/**
 	 * Costruisce le locande e piazza i rimanenti personaggi disponibili
 	 */
-	private static final void costruisciLocandeEPosizionaPersonaggi() {
+	private static void costruisciLocandeEPosizionaPersonaggi() {
 		int locandeCostruite = 0;
-		Personaggio personaggioDisponibile = null;
+		Personaggio personaggioDisponibile;
 		while ((personaggioDisponibile = RegistroPersonaggi.getPersonaggioDisponibile()) != null) {
 			costruisci(ClassiLocazione.LOCANDA, personaggioDisponibile);
 			locandeCostruite++;
@@ -163,9 +163,9 @@ public class Foresta {
 	/**
 	 * Costruisce le locande e piazza i rimanenti personaggi disponibili
 	 */
-	private static final void costruisciTempliEPosizionaArtefatti() {
+	private static void costruisciTempliEPosizionaArtefatti() {
 		int templiCostruiti = 0;
-		Artefatto artefattoDisponibile = null;
+		Artefatto artefattoDisponibile;
 		while ((artefattoDisponibile = RegistroArtefatti.getArtefattoDisponibile()) != null) {
 			costruisci(ClassiLocazione.TEMPIO, artefattoDisponibile);
 			templiCostruiti++;
@@ -176,27 +176,27 @@ public class Foresta {
 		}
 	}
 
-	private static final void costruisci(ClassiLocazione classeLocazione, Personaggio personaggio) {
+	private static void costruisci(ClassiLocazione classeLocazione, Personaggio personaggio) {
 		if (classeLocazione.isLocazioneUnica()) {
-			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per istanziare " + classeLocazione.name());
+			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + classeLocazione.name());
 		}
 		CoordinateMD coordinate = getCoordinateLibere();
 		setLocazione(coordinate, classeLocazione);
 		RegistroPersonaggi.addPersonaggioInLocazione(personaggio, coordinate);
 	}
 	
-	private static final void costruisci(ClassiLocazione classeLocazione, Artefatto artefatto) {
+	private static void costruisci(ClassiLocazione classeLocazione, Artefatto artefatto) {
 		if (classeLocazione.isLocazioneUnica()) {
-			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per istanziare " + classeLocazione.name());
+			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + classeLocazione.name());
 		}
 		CoordinateMD coordinate = getCoordinateLibere();
 		setLocazione(coordinate, classeLocazione);
 		RegistroArtefatti.addArtefattoInLocazione(artefatto, coordinate);
 	}
 
-	private static final void costruisci(ClassiLocazione classeLocazione, int quantita) {
+	private static void costruisci(ClassiLocazione classeLocazione, int quantita) {
 		if (classeLocazione.isLocazioneUnica()) {
-			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per istanziare " + classeLocazione.name());
+			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + classeLocazione.name());
 		}
 		Logger.log("Costruzione di " + quantita + " classiLocazione " + classeLocazione);
 		for (int i = 0; i < quantita; i++) {
@@ -204,7 +204,7 @@ public class Foresta {
 		}
 	}
 	
-	static final CoordinateMD getCoordinateLibere() {
+	static CoordinateMD getCoordinateLibere() {
 		ClassiLocazione classeLocazione;
 		CoordinateMD coordinate;
 		do {
@@ -217,42 +217,42 @@ public class Foresta {
 	/**
 	 * Abbiamo appena visitato questa locazione
 	 */
-	static final void setLocazioneVisitata(CoordinateMD coordinate) {
+	static void setLocazioneVisitata(CoordinateMD coordinate) {
 		forestaMD.impostaLocazioneVisitata(coordinate);
 	}
 
-	public static final void setLocazioneVisitata(CoordinateMD coordinate, boolean visitata) {
+	public static void setLocazioneVisitata(CoordinateMD coordinate, boolean visitata) {
 		forestaMD.impostaLocazioneVisitata(coordinate, visitata);
 	}
 
 	/**
-	 * Siamo gia' passati da questa locazione?
+	 * Siamo già passati da questa locazione?
 	 */
-	public static final boolean isLocazioneVisitata(CoordinateMD coordinate) {
+	public static boolean isLocazioneVisitata(CoordinateMD coordinate) {
 		return forestaMD.isLocazioneVisitata(coordinate);
 	}
 
 	/**
 	 * Sappiamo cosa ci sia in questa locazione
 	 */
-	public static final void setLocazioneConosciuta(CoordinateMD coordinate) {
+	public static void setLocazioneConosciuta(CoordinateMD coordinate) {
 		forestaMD.impostaLocazioneConosciuta(coordinate);
 	}
 
-	public static final boolean isLocazioneConosciuta(CoordinateMD coordinate) {
+	public static boolean isLocazioneConosciuta(CoordinateMD coordinate) {
 		return forestaMD.isLocazioneConosciuta(coordinate);
 	}
 	/**
 	 * Un personaggio compra la mappa della foresta da un PNG
 	 */
-	public static final void ottieniMappa() {
+	public static void ottieniMappa() {
 		forestaMD.ottieniMappa();
 	}
 
 	/**
-	 * Un PNG mostra ad un personaggio un pezzetto della mappa della foresta
+	 * Un PNG mostra a un personaggio un pezzetto della mappa della foresta
 	 */
-	public static final void ottieniMappaZona(int daX, int daY, int aX, int aY) {
+	public static void ottieniMappaZona(int daX, int daY, int aX, int aY) {
 		for (int x = daX; x <= aX; x++) {
 			for (int y = daY; y <= aY; y++) {
 				setLocazioneConosciuta(new CoordinateMD(x, y));
@@ -263,7 +263,7 @@ public class Foresta {
 	/**
 	 * Questa funzione viene richiamata ogni volta che un gruppo si sposta
 	 */
-	public static final void aggiorna(GruppoGiocatore gruppo) {
+	public static void aggiorna(GruppoGiocatore gruppo) {
 		int x = gruppo.getX();
 		int y = gruppo.getY();
 		int daX = x - 3;
@@ -289,19 +289,19 @@ public class Foresta {
 		ottieniMappaZona(daX, daY, aX, aY);
 	}
 	
-	public static final int getMinXConosciuta() {
+	public static int getMinXConosciuta() {
 		return forestaMD.getMinXConosciuta();
 	}
 	
-	public static final int getMaxXConosciuta() {
+	public static int getMaxXConosciuta() {
 		return forestaMD.getMaxXConosciuta();
 	}
 	
-	public static final int getMinYConosciuta() {
+	public static int getMinYConosciuta() {
 		return forestaMD.getMinYConosciuta();
 	}
 	
-	public static final int getMaxYConosciuta() {
+	public static int getMaxYConosciuta() {
 		return forestaMD.getMaxYConosciuta();
 	}
 }

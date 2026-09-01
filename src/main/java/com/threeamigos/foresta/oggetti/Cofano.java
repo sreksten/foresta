@@ -90,10 +90,10 @@ public class Cofano extends OggettoBase implements Oggetto {
 				sb.append(inc.getNomePlurale()).append('.');
 				gruppo.addIncantesimi(classeIncantesimo, 3);
 			} else if (tipo == 3) {
-				sb.append("trova una pozione della forza.");
+				sb.append("trova una pozione della salute.");
 				gruppo.addPozioniSalute(1);
 			} else if (tipo == 4) {
-				sb.append("trova una pozione della grande forza.");
+				sb.append("trova una pozione della salute grande.");
 				gruppo.addPozioniSaluteGrande(1);
 			} else if (tipo == 5) {
 				sb.append("trova una pozione della magia.");

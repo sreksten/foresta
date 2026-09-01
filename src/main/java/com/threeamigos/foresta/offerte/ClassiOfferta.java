@@ -12,9 +12,9 @@ public enum ClassiOfferta {
 	MAPPA_ZONA(MappaZona::new),
 	PASTO(Pasto::new);
 
-	private Supplier<Offerta> supplier;
+	private final Supplier<Offerta> supplier;
 	
-	private ClassiOfferta(Supplier<Offerta> supplier) {
+	ClassiOfferta(Supplier<Offerta> supplier) {
 		this.supplier = supplier;
 	}
 

@@ -76,12 +76,12 @@ public class Automa implements ControlloreDiGioco {
 			}
 			break;
 
-		case ATTESA_NOME_HI_SCORE:
+		case ATTESA_NOME_PUNTEGGI:
 			if (s.isEmpty()) {
 				s = GruppoGiocatore.getIstanza().getPersonaggio(0).getNomeProprio().orElseThrow(Personaggio.PERSONAGGIO_SENZA_NOME);
 			}
 			GestorePunteggi.addPunteggio(s, Statistiche.getPunti());
-			stato = Stato.HI_SCORE;
+			stato = Stato.PUNTEGGI;
 			UI.impostaAzioni(Comando.PERGAMENA);
 			UI.punteggi();
 			processaAzione(null);
@@ -164,7 +164,7 @@ public class Automa implements ControlloreDiGioco {
 
 			case LETTURA_SALVATAGGIO:
 
-            case ATTESA_NOME_HI_SCORE:
+            case ATTESA_NOME_PUNTEGGI:
                 break;
 
 			case PRE_GAME_SELEZIONE_PERSONAGGIO:
@@ -243,7 +243,6 @@ public class Automa implements ControlloreDiGioco {
 						break;
 					}
 				}
-				gruppo.setFuggito(false);
 				gruppoAvversario.reimposta();
 				locazioneCorrente = gruppo.getClasseLocazioneCorrente().getIstanza();
 				locazioneCorrente.reimposta();
@@ -711,7 +710,7 @@ public class Automa implements ControlloreDiGioco {
 					UI.statistiche();
 				} else if (azione == Comando.PERGAMENA) {
 					if (GestorePunteggi.isPunteggioInClassifica(Statistiche.getPunti())) {
-						stato = Stato.ATTESA_NOME_HI_SCORE;
+						stato = Stato.ATTESA_NOME_PUNTEGGI;
 						UI.scriviGrande("congratulazioni! inserisci il tuo nome");
 						UI.chiediTesto();
 					} else {
@@ -721,7 +720,7 @@ public class Automa implements ControlloreDiGioco {
 				UI.impostaAzioni(Comando.PERGAMENA);
 				break;
 
-            case HI_SCORE:
+            case PUNTEGGI:
 				inizia();
 				break;
 

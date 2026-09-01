@@ -10,22 +10,22 @@ public class Statistiche {
 	private Statistiche() {
 	}
 
-	private static StatisticheMD statisticheMD = ModelloDati.getIstanza().getStatisticheMD();
+	private static final StatisticheMD statisticheMD = ModelloDati.getIstanza().getStatisticheMD();
 
-	public static final void addPunti(int quantita) {
+	public static void addPunti(int quantita) {
 		statisticheMD.addPunti(quantita);
 		UI.variaPunti(quantita);
 	}
 
-	public static final int getPunti() {
+	public static int getPunti() {
 		return statisticheMD.getPunti();
 	}
 
-	public static final void addMostroUcciso(ClassePersonaggio classe) {
+	public static void addMostroUcciso(ClassePersonaggio classe) {
 		statisticheMD.addMostroUcciso(classe);
 	}
 
-	public static final int getMostriUccisi(ClassePersonaggio classe) {
+	public static int getMostriUccisi(ClassePersonaggio classe) {
 		return statisticheMD.getMostriUccisi(classe);
 	}
 }
