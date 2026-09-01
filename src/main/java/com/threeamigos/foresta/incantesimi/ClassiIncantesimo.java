@@ -37,7 +37,7 @@ public enum ClassiIncantesimo {
 				return corrente.supplier.get();
 			}
 		}
-		throw new IllegalArgumentException();
+		throw new IllegalArgumentException("Comando invalido per incantesimo: " + comando);
 	}
 
 	public static ClassiIncantesimo casuale() {
@@ -47,6 +47,6 @@ public enum ClassiIncantesimo {
 				return corrente;
 			}
 		}
-		throw new IllegalArgumentException();
+		throw new IllegalStateException("Errore nella generazione casuale di un incantesimo");
 	}
 }
