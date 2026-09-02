@@ -104,5 +104,14 @@ public enum TipoEffettoDiStato {
     // 🔨 CONTUNDENTE ➔ Frantumazione: Rompe il ghiaccio istantaneamente infliggendo un colpo critico automatico (x2.0 danno fisico) e rimuove lo stato.
     // 🔥 FUOCO ➔ Disgelo: Rimuove lo stato congelato ma infligge il 50% di danni in più per lo shock termico.
     // ⚡ FULMINE ➔ Superconduzione: Il fulmine attraversa i cristalli di ghiaccio, infligge danni bonus e riduce la Difesa Fisica del bersaglio del 30%.
-    CONGELATO;
+    CONGELATO,
+
+    // =========================================================================
+    // Stati Speciali
+    // =========================================================================
+
+    // BERSERK (Berserk): Esclusivo ai Guerrieri. Attivato quando la salute scende sotto una soglia critica e il Guerriero ha FURIA > 0.
+    // Mentre in stato BERSERK, il danno fisico del Guerriero scala esponenzialmente sulla proporzione di salute persa (più è ferito, più forte colpisce).
+    // Lo stato termina automaticamente quando il Guerriero abbandona la locazione (ritorno alla mappa).
+    BERSERK;
 }

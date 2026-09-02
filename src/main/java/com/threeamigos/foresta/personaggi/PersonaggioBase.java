@@ -263,6 +263,14 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 		md.setSalute(salute);
 		UI.variaSalute(this, -quantita);
+
+		if ((md.getClasse() == ClassePersonaggio.GUERRIERO || md.getClasse() == ClassePersonaggio.GUERRIERA) &&
+				getFuria() > 0 && !hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
+			int sogliaBerserk = md.getSaluteMassima() / 3;
+			if (salute > 0 && salute <= sogliaBerserk) {
+				addEffettoDiStato(TipoEffettoDiStato.BERSERK, 1);
+			}
+		}
 	}
 
 	protected void setSaluteMassima(int saluteMassima) {
@@ -322,10 +330,6 @@ public abstract class PersonaggioBase implements Personaggio {
 	public int getModificaDanniMagia(int danniBase) {
 		return danniBase;
 	}
-	
-	protected void setCoraggio(int coraggio) {
-		md.setCoraggio(coraggio);
-	}
 
 	public void addCoraggio(int quantita) {
 		md.setCoraggio(Math.min(md.getCoraggio() + quantita, Costanti.MAX_CORAGGIO));
@@ -361,10 +365,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		UI.variaStanchezza(this, -quantita);
 	}
 
-	protected void setCarisma(int carisma) {
-		md.setCarisma(carisma);
-	}
-	
 	public void addCarisma(int quantita) {
 		md.setCarisma(Math.min(md.getCarisma() + quantita, Costanti.MAX_CARISMA));
 		UI.variaCarisma(this, quantita);
@@ -375,7 +375,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		UI.variaCarisma(this, -quantita);
 	}
 
-	@Deprecated
 	public int getBersagli() {
 		int modificaDaArtefatti = getModificatore(TipoAttributo.NUMERO_BERSAGLI);
 		return 1 + modificaDaArtefatti;
@@ -682,6 +681,10 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 	}
 
+	protected void setMagia(int valore) {
+		md.setMagia(valore);
+	}
+
 	@Override
 	public int getMagia() {
 		return md.getMagia();
@@ -707,9 +710,17 @@ public abstract class PersonaggioBase implements Personaggio {
 		return get(PersonaggioMD::getCaricoMassimo, TipoAttributo.CARICO);
 	}
 
+	protected void setForza(int valore) {
+		md.setForza(valore);
+	}
+
 	@Override
 	public int getForza() {
 		return get(PersonaggioMD::getForza, TipoAttributo.FORZA);
+	}
+
+	protected void setDestrezza(int valore) {
+		md.setDestrezza(valore);
 	}
 
 	@Override
@@ -717,9 +728,17 @@ public abstract class PersonaggioBase implements Personaggio {
 		return get(PersonaggioMD::getDestrezza, TipoAttributo.DESTREZZA);
 	}
 
+	protected void setCostituzione(int valore) {
+		md.setCostituzione(valore);
+	}
+
 	@Override
 	public int getCostituzione() {
 		return get(PersonaggioMD::getCostituzione, TipoAttributo.COSTITUZIONE);
+	}
+
+	protected void setIntelligenza(int valore) {
+		md.setIntelligenza(valore);
 	}
 
 	@Override
@@ -727,9 +746,17 @@ public abstract class PersonaggioBase implements Personaggio {
 		return get(PersonaggioMD::getIntelligenza, TipoAttributo.INTELLIGENZA);
 	}
 
+	protected void setSaggezza(int valore) {
+		md.setSaggezza(valore);
+	}
+
 	@Override
 	public int getSaggezza() {
 		return get(PersonaggioMD::getSaggezza, TipoAttributo.SAGGEZZA);
+	}
+
+	protected void setCarisma(int valore) {
+		md.setCarisma(valore);
 	}
 
 	@Override
@@ -737,9 +764,17 @@ public abstract class PersonaggioBase implements Personaggio {
 		return get(PersonaggioMD::getCarisma, TipoAttributo.CARISMA);
 	}
 
+	protected void setFortuna(int valore) {
+		md.setFortuna(valore);
+	}
+
 	@Override
 	public int getFortuna() {
 		return get(PersonaggioMD::getFortuna, TipoAttributo.FORTUNA);
+	}
+
+	protected void setCritico(int valore) {
+		md.setCritico(valore);
 	}
 
 	@Override
@@ -747,9 +782,17 @@ public abstract class PersonaggioBase implements Personaggio {
 		return get(PersonaggioMD::getCritico, TipoAttributo.CRITICO);
 	}
 
+	protected void setPrecisione(int valore) {
+		md.setSaggezza(valore);
+	}
+
 	@Override
 	public int getPrecisione() {
 		return get(PersonaggioMD::getPrecisione, TipoAttributo.PRECISIONE);
+	}
+
+	protected void setVelocita(int valore) {
+		md.setSaggezza(valore);
 	}
 
 	@Override
@@ -757,9 +800,17 @@ public abstract class PersonaggioBase implements Personaggio {
 		return get(PersonaggioMD::getVelocita, TipoAttributo.VELOCITA);
 	}
 
+	protected void setFurtivita(int valore) {
+		md.setFurtivita(valore);
+	}
+
 	@Override
 	public int getFurtivita() {
 		return get(PersonaggioMD::getFurtivita, TipoAttributo.FURTIVITA);
+	}
+
+	protected void setParata(int valore) {
+		md.setParata(valore);
 	}
 
 	@Override
@@ -767,9 +818,17 @@ public abstract class PersonaggioBase implements Personaggio {
 		return get(PersonaggioMD::getParata, TipoAttributo.PARATA);
 	}
 
+	protected void setResistenzaMagica(int valore) {
+		md.setResistenzaMagica(valore);
+	}
+
 	@Override
 	public int getResistenzaMagica() {
 		return get(PersonaggioMD::getResistenzaMagica, TipoAttributo.RESISTENZA_MAGICA);
+	}
+
+	protected void setPercezione(int valore) {
+		md.setPercezione(valore);
 	}
 
 	@Override
@@ -777,14 +836,26 @@ public abstract class PersonaggioBase implements Personaggio {
 		return get(PersonaggioMD::getPercezione, TipoAttributo.PERCEZIONE);
 	}
 
+	protected void setSoggezione(int valore) {
+		md.setSoggezione(valore);
+	}
+
 	@Override
 	public int getSoggezione() {
 		return get(PersonaggioMD::getSoggezione, TipoAttributo.SOGGEZIONE);
 	}
 
+	protected void setFuria(int valore) {
+		md.setFuria(valore);
+	}
+
 	@Override
 	public int getFuria() {
 		return get(PersonaggioMD::getFuria, TipoAttributo.FURIA);
+	}
+
+	protected void setCoraggio(int valore) {
+		md.setCoraggio(valore);
 	}
 
 	@Override
@@ -795,6 +866,10 @@ public abstract class PersonaggioBase implements Personaggio {
 	@Override
 	public int getValoreEffettoDiStato() {
 		return get(PersonaggioMD::getValore, TipoAttributo.VALORE);
+	}
+
+	protected void setStanchezza(int valore) {
+		md.setStanchezza(valore);
 	}
 
 	@Override
