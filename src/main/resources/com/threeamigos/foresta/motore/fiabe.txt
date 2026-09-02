@@ -601,8 +601,7 @@ ANTAGONISTA
 ANIMALE
 	lupo | coboldo | somaro | caprone | licaone | maiale | rospo | verre | cinghiale | bue | camaleonte
 	gufo | tapiro | piccione | leone | minotauro | serpente | passero solitario | drago | cerbero | basilisco
-	grifone | troll
-	orso
+	grifone | troll | ciclope | orso
 
 PERSONAGGIO
 	soldato | mago | commerciante | marinaio | musicante | rappresentante di profumi
