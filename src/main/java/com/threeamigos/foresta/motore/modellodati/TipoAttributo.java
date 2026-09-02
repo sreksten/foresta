@@ -55,7 +55,7 @@ public enum TipoAttributo {
      * <p><b>In attacco:</b> Potenzia direttamente i danni di tipo Sacro e l'efficacia degli incantesimi di cura
      * lanciati sugli alleati.</p>
      * <p><b>In difesa:</b> Aumenta la resistenza mentale e riduce la durata delle Maledizioni e dei debuff spirituali
-     * subiti.</p>
+     * subiti, rendendo il personaggio più resistente agli effetti di controllo mentale (es. Confuso o Spaventato).</p>
      */
     SAGGEZZA("Fede, intuito e resistenza spirituale."),
 
@@ -63,8 +63,8 @@ public enum TipoAttributo {
      * Forza della personalità, magnetismo e forza di volontà.
      * <p><b>In attacco:</b> Potenzia le abilità di comando che buffano gli alleati e aumenta l'efficacia dei danni
      * Psichici/Mentali basati sull'ego.</p>
-     * <p><b>In difesa:</b> Rende il personaggio immune o altamente resistente agli effetti di controllo mentale
-     * (es. Confuso o Spaventato).</p>
+     * <p><b>In difesa:</b> Rende più difficile per estranei o nemici manipolare, corrompere o intimidire socialmente
+     * il personaggio, mantenendo la fedeltà al gruppo anche sotto pressione.</p>
      */
     CARISMA("Forza della personalità e presenza scenica."),
 
@@ -72,8 +72,8 @@ public enum TipoAttributo {
      * Probabilità che gli eventi girino a favore del personaggio.
      * <p><b>In attacco:</b> Aumenta in modo imprevedibile la precisione o aggiunge effetti casuali positivi ai colpi
      * (es. applica un debuff elementale extra).</p>
-     * <p><b>In difesa:</b> Permette di sopravvivere con 1 HP a colpi altrimenti letali o fa fallire le trappole
-     * ambientali nemiche.</p>
+     * <p><b>In difesa:</b> Permette di sopravvivere con 1 HP a colpi altrimenti letali, fa fallire le trappole
+     * ambientali nemiche e riduce la probabilità di subire un Colpo Critico.</p>
      */
     FORTUNA("Influenza del fato sulle probabilità di successo."),
 
@@ -81,8 +81,8 @@ public enum TipoAttributo {
      * Precisione millimetrica nel colpire i punti vitali scoperti.
      * <p><b>In attacco:</b> Aumenta drasticamente la probabilità di sferrare un Colpo Critico, raddoppiando o
      * triplicando il danno finale.</p>
-     * <p><b>In difesa:</b> Permette di prevedere i colpi critici nemici, declassandoli a normali attacchi standard se
-     * intercettati.</p>
+     * <p><b>In difesa:</b> Non ha alcun ruolo difensivo: contrastare i Colpi Critici subiti è compito della
+     * FORTUNA.</p>
      */
     CRITICO("Probabilità e moltiplicatore dei colpi devastanti."),
 
