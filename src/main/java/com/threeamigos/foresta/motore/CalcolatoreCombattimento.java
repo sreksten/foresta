@@ -26,15 +26,21 @@ public class CalcolatoreCombattimento {
         int precisioneTotale = attaccante.getPrecisione() + attaccante.getDestrezza();
 
         // 2. CALCOLO DELLA VELOCITÀ TOTALE DEL DIFENSORE
-        int velocitaTotale = difensore.getVelocita() + difensore.getParata();
+        int velocitaTotale = difensore.getVelocita() + difensore.getDestrezza();
 
         // 3. CONTROLLO EFFETTI DI STATO
         if (attaccante.hasEffettoDiStato(TipoEffettoDiStato.CONFUSO)) {
-            precisioneTotale = precisioneTotale * 8 / 10;
+            // La SAGGEZZA aiuta a mantenere la lucidità nonostante la confusione
+            precisioneTotale = precisioneTotale * (8 + Math.min(2, attaccante.getSaggezza() / 20)) / 10;
         }
         if (attaccante.hasEffettoDiStato(TipoEffettoDiStato.ACCECATO)) {
-            precisioneTotale = precisioneTotale / 2;
+            // La PERCEZIONE aiuta a compensare la cecità trovando il bersaglio
+            double penalitaAccecato = (precisioneTotale / 2.0) * (1.0 - Math.min(1.0, attaccante.getPercezione() / 100.0));
+            precisioneTotale -= (int)penalitaAccecato;
         }
+
+        // Penalità di STANCHEZZA sull'attaccante
+        precisioneTotale -= attaccante.getStanchezza() * 2;
 
         // 4. APPLICAZIONE DEI MODIFICATORI DI STATO AL DIFENSORE
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.ATTERRATO) ||
@@ -48,9 +54,12 @@ public class CalcolatoreCombattimento {
             velocitaTotale = velocitaTotale / 2;
         }
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO)) {
-            // La paura blocca le gambe e riduce i riflessi
-            velocitaTotale = velocitaTotale * 9 / 10;
+            // La paura blocca le gambe e riduce i riflessi; la SAGGEZZA e il CORAGGIO aiutano a resistervi
+            velocitaTotale = (int)(velocitaTotale * (9 + Math.min(1, difensore.getSaggezza() / 20) + Math.min(1, difensore.getCoraggio() / 100.0)) / 10);
         }
+
+        // Penalità di STANCHEZZA sul difensore
+        velocitaTotale -= difensore.getStanchezza() * 2;
 
         // 5. CALCOLO DELLA PROBABILITÀ FINALE DI COLPIRE (Formula GDR base: 75% +/- scarto)
         int probabilitaFinale = 75 + (precisioneTotale - velocitaTotale) * 2;
@@ -79,19 +88,24 @@ public class CalcolatoreCombattimento {
         int statOffensiva;
         if (tipoDanno.getSuperTipo() == SupertipoDanno.ELEMENTALE || tipoDanno.getSuperTipo() == SupertipoDanno.MAGICO) {
             statOffensiva = attaccante.getIntelligenza();
+            // La SAGGEZZA potenzia i danni SACRO
+            if (tipoDanno == TipoDanno.SACRO) {
+                statOffensiva += attaccante.getSaggezza() / 2;
+            }
         } else {
             statOffensiva = attaccante.getForza();
         }
 
-        // Determina la difesa del bersaglio (COSTITUZIONE per Fisico, RESISTENZA_MAGICA per Magico/Elementale)
+        // Determina la difesa del bersaglio (COSTITUZIONE + PARATA per Fisico, RESISTENZA_MAGICA per Magico/Elementale)
         double statDifensiva;
         if (tipoDanno.getSuperTipo() == SupertipoDanno.ELEMENTALE || tipoDanno.getSuperTipo() == SupertipoDanno.MAGICO) {
             statDifensiva = difensore.getResistenzaMagica();
         } else {
-            statDifensiva = difensore.getCostituzione();
+            statDifensiva = difensore.getCostituzione() + difensore.getParata();
         }
 
         int intuitoCritico = attaccante.getCritico();
+        int contromisuraCritico = difensore.getFortuna();
 
         // 2. MATEMATICA DI BASE DEL DANNO (Con fattore di scala livello arma)
         int dannoBaseArma = arma.getDanni() * arma.getLivello();
@@ -104,6 +118,14 @@ public class CalcolatoreCombattimento {
 
         double contributoEroe = (double)(statOffensiva * attaccante.getLivello()) / 5;
         double dannoOffensivoGrezzo = dannoBaseArma + Math.floor(contributoEroe * rapportoEfficacia);
+
+        // 2.5 APPLICAZIONE DEL BONUS BERSERK (Esclusivo ai Guerrieri con FURIA)
+        if (tipoDanno.getSuperTipo() != SupertipoDanno.ELEMENTALE && tipoDanno.getSuperTipo() != SupertipoDanno.MAGICO &&
+                attaccante.hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
+            // Il danno fisico scala con la salute persa: più è ferito, più forte colpisce
+            double percentualeSalutePerduta = 1.0d - ((double)attaccante.getSalute() / (double)attaccante.getSaluteMassima());
+            dannoOffensivoGrezzo = dannoOffensivoGrezzo * (1.0d + percentualeSalutePerduta * 0.5d);
+        }
 
         // 3. APPLICAZIONE INTERAZIONI ELEMENTALI E STATI DEL DIFENSORE
         double moltiplicatoreDannoStato = 1.0d;
@@ -157,7 +179,9 @@ public class CalcolatoreCombattimento {
 
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.MALEDETTO)) {
             if (tipoDanno == TipoDanno.NECROTICO) {
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 2.0d;
+                // La SAGGEZZA del difensore riduce l'efficacia dei danni NECROTICO su un bersaglio MALEDETTO
+                double moltiplicatoreMaledetto = Math.max(1.0d, 2.0d - (difensore.getSaggezza() / 100.0));
+                moltiplicatoreDannoStato = moltiplicatoreDannoStato * moltiplicatoreMaledetto;
                 risultatoDanno.addInterazioneElementale(TipoInterazioneElementale.MIETITURA);
             } else if (tipoDanno == TipoDanno.SACRO) {
                 risultatoDanno.rimuoviEffettoDiStato(TipoEffettoDiStato.MALEDETTO);
@@ -185,8 +209,9 @@ public class CalcolatoreCombattimento {
         double dannoMitigato = Math.floor(dannoOffensivoGrezzo * fattoreMitigazione * moltiplicatoreDannoStato);
 
         // 5. DETERMINAZIONE DEL COLPO CRITICO (Come capire se il colpo raddoppia)
-        // Formula di base: 5% fisso + 1% per ogni punto statistica CRITICO dell'attaccante.
-        double probabilitaCritico = 5.0d + intuitoCritico;
+        // Formula di base: 5% fisso + 1% per ogni punto statistica CRITICO dell'attaccante,
+        // contrastata dalla FORTUNA del difensore.
+        double probabilitaCritico = Math.max(0.0d, 5.0d + intuitoCritico - contromisuraCritico);
 
         double tiroDadoCritico = Dado.tira(100);
         if (tiroDadoCritico <= probabilitaCritico || criticoAutomatico) {
