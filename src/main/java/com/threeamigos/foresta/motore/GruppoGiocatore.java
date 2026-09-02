@@ -52,16 +52,14 @@ public class GruppoGiocatore extends Gruppo {
 		Foresta.aggiorna(this);
 
 		// FIXME questo è lecito solo finché stiamo debuggando...
-		if (getCapo().getClasse() == ClassePersonaggio.OMBRAFIAMMA) {
-			md.setMonete(9999);
-			for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
-				md.setIncantesimi(classeIncantesimo, 99);
-			}
-			md.setPozioniSalute(99);
-			md.setPozioniSaluteGrande(99);
-			md.setPozioniMagia(99);
-			Foresta.ottieniMappa();
+		md.setMonete(9999);
+		for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
+			md.setIncantesimi(classeIncantesimo, 99);
 		}
+		md.setPozioniSalute(99);
+		md.setPozioniSaluteGrande(99);
+		md.setPozioniMagia(99);
+		Foresta.ottieniMappa();
 	}
 
 	@Override
@@ -308,7 +306,6 @@ public class GruppoGiocatore extends Gruppo {
 	}
 
 	public final void riposa() {
-		UI.notifica("Adesso riposerà un poco.");
 		getPersonaggiVivi().forEach(p -> p.riposa(1, false));
 		UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 		UI.rinfresca();
