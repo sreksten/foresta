@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.tools;
 
-import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.oggetti.Artefatto;
@@ -15,28 +14,33 @@ public interface CostruttoreArtefatto {
         return new CostruttoreArtefattoImpl();
     }
 
-    public interface StepTipo {
+    interface StepTipo {
         StepNome setTipo(TipoArtefatto tipo);
     }
-    public interface StepNome {
+    interface StepNome {
         StepDescrizione setNome(String nome);
     }
-    public interface StepDescrizione {
+    interface StepDescrizione {
         StepLivello setDescrizione(String descrizione);
     }
-    public interface StepLivello {
-        StepCostoAcquisto setLivello(int livello);
+    interface StepLivello {
+        StepDanniBase setLivello(int livello);
     }
-    public interface StepCostoAcquisto {
+    interface StepDanniBase {
+        StepCostoAcquisto setDanniBase(int livello);
+
         StepPeso setCostoAcquisto(int costoAcquisto);
     }
-    public interface StepPeso {
+    interface StepCostoAcquisto {
+        StepPeso setCostoAcquisto(int costoAcquisto);
+    }
+    interface StepPeso {
         StepModificatore setPeso(int peso);
     }
-    public interface StepModificatore {
+    interface StepModificatore {
         StepModificatore2 setModificatore(TipoAttributo modificatore, int quantita);
     }
-    public interface StepModificatore2 {
+    interface StepModificatore2 {
         StepModificatore2 setModificatore(TipoAttributo modificatore, int quantita);
         Artefatto costruisci();
     }

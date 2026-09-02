@@ -14,6 +14,7 @@ public class CostruttoreArtefattoImpl implements
         CostruttoreArtefatto.StepNome,
         CostruttoreArtefatto.StepDescrizione,
         CostruttoreArtefatto.StepLivello,
+        CostruttoreArtefatto.StepDanniBase,
         CostruttoreArtefatto.StepCostoAcquisto,
         CostruttoreArtefatto.StepPeso,
         CostruttoreArtefatto.StepModificatore,
@@ -44,8 +45,14 @@ public class CostruttoreArtefattoImpl implements
     }
 
     @Override
-    public CostruttoreArtefatto.StepCostoAcquisto setLivello(int livello) {
+    public CostruttoreArtefatto.StepDanniBase setLivello(int livello) {
         artefattoMD.setLivello(livello);
+        return this;
+    }
+
+    @Override
+    public CostruttoreArtefatto.StepCostoAcquisto setDanniBase(int livello) {
+        artefattoMD.setDanni(livello);
         return this;
     }
 
