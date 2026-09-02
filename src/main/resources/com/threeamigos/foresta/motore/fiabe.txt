@@ -701,7 +701,7 @@ SAMARITANO
 	il Genio della Lampada | il migliore dei medici
 
 RACCONTO_P_5
-	Fu così che dovette rinunciare al suo [*EQUIPAGGIAMENTO? | fagotto], vinto [VINTO_COME], ottenendo in cambio un [OGGETTO_SPREGEVOLE].
+	Fu così che dovette rinunciare al suo [*EQUIPAGGIAMENTO? | fagotto], vinto [VINTO_COME], ottenendo in cambio [OGGETTO_SPREGEVOLE].
 
 OTTENUTO
 	vinto [VINTO_COME] | rubato ai soldati del fortino vicino | rubato ad una vecchietta
@@ -714,15 +714,15 @@ VINTO_COME
 	a testa o croce | a sasso-carta-forbici | scommettendo sull'esito di una gara di lumache
 
 OGGETTO_SPREGEVOLE
-	papero magico che poteva prevedere quando sarebbe finito in padella
-	volano a pedali | apribottiglie elettronico | motorazzo a pila | ariete da battaglia
-	preservativo usato | pezzo di ferro | chiodo arrugginito | cofano vuoto
-	tappo rugginoso | coniglio di cioccolata | dispositivo anti-piccioni
-	ombrello spuntato dal vento | specchio rotto (sette anni di sfortuna inclusi)
-	fogliaccio stropicciato che prometteva ricchezze | scarpone solitario di taglia sbagliata
-	dente d'oro (falso) | libro sulla meditazione mai aperto | paio di calzini spaiati provenienti da altre dimensioni
-	borsa di tela con dentro solo stracci e promesse | mappa di un tesoro che porta a una fognatura
-	chiave che apre tutte le porte tranne quella che servirebbe | moneta che cambia valore ogni giorno
+	un papero magico che poteva prevedere quando sarebbe finito in padella
+	un volano a pedali | un apribottiglie elettronico | un motorazzo a pila | un ariete da battaglia
+	un preservativo usato | un pezzo di ferro | un chiodo arrugginito | un cofano vuoto
+	un tappo rugginoso | un coniglio di cioccolata | un dispositivo anti-piccioni
+	un ombrello spuntato dal vento | uno specchio rotto (sette anni di sfortuna inclusi)
+	un fogliaccio stropicciato che prometteva ricchezze | uno scarpone solitario di taglia sbagliata
+	un dente d'oro (falso) | un libro sulla meditazione mai aperto | un paio di calzini spaiati provenienti da altre dimensioni
+	un borsone di tela con dentro solo stracci e promesse | una mappa di un tesoro che porta a una fognatura
+	una chiave che apre tutte le porte tranne quella che servirebbe | una moneta che cambia valore ogni giorno
 
 RACCONTO_P_6
 	^[RACCONTO_ECCO_CHE] un [*ANIMALE] [*ATTRIBUTO_ANTAGONISTA]. [BACIAMI] [REAZIONE_PROTAGONISTA]
