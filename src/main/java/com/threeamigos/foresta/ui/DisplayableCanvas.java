@@ -213,8 +213,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			}
 		}
 		
+		List<SpriteInterface> copiaSprites = new ArrayList<>(sprites);
 		List<SpriteInterface> inactiveSprites = new ArrayList<>();
-		for (SpriteInterface sprite : sprites) {
+		for (SpriteInterface sprite : copiaSprites) {
 			sprite.animate(graphics);
 			if (!sprite.isActive()) {
 				inactiveSprites.add(sprite);
