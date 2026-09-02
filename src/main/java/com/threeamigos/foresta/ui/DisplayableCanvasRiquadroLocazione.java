@@ -32,12 +32,12 @@ class DisplayableCanvasRiquadroLocazione {
 	void assegnaCoordinateAgliAvversari() {
 		mappaCoordinate.clear();
 		GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
-		int personaggi = gruppoAvversario.getNumeroPersonaggi();
 		int i = 0;
 		for (Personaggio personaggioCorrente : gruppoAvversario.getPersonaggi()) {
 			BufferedImage d = personaggioCorrente.getImmagine();
-			mappaCoordinate.put(personaggioCorrente, new CoordinateMD(topLeftX + i++ * 20 + Dado.tira(10),
-					ImageCache.SPACING + ImageCache.locazioni.get(ClassiLocazione.BOSCO).getHeight() - i * 6 - d.getHeight()));
+			CoordinateMD coordinate = new CoordinateMD(topLeftX + i++ * 20 + Dado.tira(10),
+					ImageCache.SPACING + ImageCache.locazioni.get(ClassiLocazione.BOSCO).getHeight() - i * 6 - d.getHeight());
+			mappaCoordinate.put(personaggioCorrente, coordinate);
 		}
 	}
 
