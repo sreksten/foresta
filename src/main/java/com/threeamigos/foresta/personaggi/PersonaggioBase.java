@@ -224,19 +224,19 @@ public abstract class PersonaggioBase implements Personaggio {
 							gruppo = GruppoAvversario.getIstanza();
 						}
 						if (gruppo.getNumeroPersonaggi() > 1 && isGruppoAvversario) {
-							if (getSesso() == Personaggio.Sesso.MASCHIO)
+							if (getSesso() == Personaggio.Sesso.MASCHIO) {
 								sb.append(Misc.getOrdinaleM(ordinale, true));
-							else
+							} else {
 								sb.append(Misc.getOrdinaleF(ordinale, true));
+							}
+							sb.append(" ");
 							sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-							sb.append(' ');
 						} else {
 							String ads = getADS();
 							sb.append(Character.toUpperCase(ads.charAt(0)));
 							sb.append(ads.substring(1));
 						}
 						sb.append(getNomeSingolare());
-						sb.append(' ');
 					} else {
 						sb.append(md.getNome());
 					}
@@ -526,6 +526,27 @@ public abstract class PersonaggioBase implements Personaggio {
                     " attacca " + bersaglio.getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + '.';
 			UI.notifica(sb);
 			int danno = getDanniInCombattimento();
+
+			// Test per nuovo motore combattimento
+
+//			Logger.log("Valutazione danno originale: " + danno);
+//			boolean colpirebbe = CalcolatoreCombattimento.colpisce(this, bersaglio);
+//			if (colpirebbe) {
+//				Artefatto arma = CostruttoreArtefatto.istanza()
+//						.setTipo(TipoArtefatto.ASCIA)
+//						.setNome("il budello di tu' ma' vestito da spada leggendaria")
+//						.setDescrizione("si presta bene a picchiare")
+//						.setLivello(1)
+//						.setCostoAcquisto(15)
+//						.setPeso(2)
+//						.setModificatore(TipoAttributo.FORZA, 1)
+//						.costruisci();
+//                RisultatoDanno risultato = CalcolatoreCombattimento.calcolaDannoFinale(this, bersaglio, TipoDanno.TAGLIENTE, arma);
+//				Logger.log("Con nuovo motore colpirebbe assegnando " + risultato.getDannoTotale() + " danni");
+//			} else {
+//				Logger.log("Con nuovo motore non colpisce");
+//			}
+
 			bersaglio.subSalute(danno, this, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
 		}
 	}

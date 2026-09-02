@@ -96,6 +96,9 @@ public class PannelloIcone extends JPanel implements java.awt.event.ActionListen
 			case COMBATTIMENTO:
 				icona = ClassiIcona.COMBATTIMENTO;
 				break;
+			case INTERRUZIONE_COMBATTIMENTO:
+				icona = ClassiIcona.INTERRUZIONE_COMBATTIMENTO;
+				break;
 			case CORRUZIONE:
 				icona = ClassiIcona.CORRUZIONE;
 				break;

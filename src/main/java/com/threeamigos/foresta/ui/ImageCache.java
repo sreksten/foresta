@@ -81,6 +81,7 @@ public class ImageCache {
 		icone[ClassiIcona.MAGO] = BufferedImageBuilder.buildBufferedImage("icone/Mago.gif");
 		icone[ClassiIcona.OMBRAFIAMMA] = BufferedImageBuilder.buildBufferedImage("icone/OmbraFiamma.gif");
 		icone[ClassiIcona.COMBATTIMENTO] = BufferedImageBuilder.buildBufferedImage("icone/Combattimento.gif");
+		icone[ClassiIcona.INTERRUZIONE_COMBATTIMENTO] = BufferedImageBuilder.buildBufferedImage("icone/InterruzioneCombattimento.gif");
 		icone[ClassiIcona.INCANTESIMO] = BufferedImageBuilder.buildBufferedImage("icone/Incantesimo.gif");
 		icone[ClassiIcona.CORRUZIONE] = BufferedImageBuilder.buildBufferedImage("icone/Corruzione.gif");
 		icone[ClassiIcona.AMICIZIA] = BufferedImageBuilder.buildBufferedImage("icone/Amicizia.gif");

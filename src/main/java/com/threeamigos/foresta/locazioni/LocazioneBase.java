@@ -153,7 +153,8 @@ public abstract class LocazioneBase implements Locazione {
 			ClassiOggetto[] o = getPossibiliOggetti();
 			Logger.log("Scelta da " + o.length + " oggetti");
 			if (o.length > 0) {
-				ClassiOggetto classeOggetto = o[Dado.tira(o.length) - 1];
+				int indice = o.length == 1 ? 0 : Dado.tira(o.length) - 1;
+				ClassiOggetto classeOggetto = o[indice];
 				Logger.log("Classe oggetto " + classeOggetto);
 				Oggetto probabileOggetto = classeOggetto.getIstanza();
 				if (probabileOggetto.getQuantita() > 0) {
@@ -161,13 +162,6 @@ public abstract class LocazioneBase implements Locazione {
 				}
 			}
 		}
-//		} else {
-//			Oggetto anello = null;
-//			while (anello == null || anello.getQuantita() == 0) {
-//				anello = ClassiOggetto.ANELLO.getIstanza();
-//			}
-//			setOggetto(anello);
-//		}
 	}
 	
 	protected boolean isLocazioneVisitata() {
@@ -505,10 +499,21 @@ public abstract class LocazioneBase implements Locazione {
 			return Stato.FINE_LOCAZIONE;
 		}
 
+		impostaComandiPossibili();
+
+		return statoLocazione == StatoLocazione.IN_COMBATTIMENTO ? Stato.IN_COMBATTIMENTO : Stato.IN_LOCAZIONE;
+	}
+
+	private void impostaComandiPossibili() {
+
 		ComandiPossibili.reimposta();
 		// Possiamo combattere?
-		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO) {
+		// Se stiamo combattendo no, ma in questo caso dovremmo aggingere la possibilità di imterrompere il combattimento
+		// oppure lasciarla se i personaggi sono più di uno.
+		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO || gruppo.getNumeroPersonaggiVivi() > 1) {
 			ComandiPossibili.add(Comando.COMBATTIMENTO);
+		} else if (statoLocazione == StatoLocazione.IN_COMBATTIMENTO) {
+			ComandiPossibili.add(Comando.INTERRUZIONE_COMBATTIMENTO);
 		}
 		// Possiamo formulare incantesimi?
 		for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
@@ -542,7 +547,6 @@ public abstract class LocazioneBase implements Locazione {
 		// E possiamo sempre richiedere di descrivere di nuovo la locazione
 		ComandiPossibili.add(Comando.AIUTO);
 
-		return statoLocazione == StatoLocazione.IN_COMBATTIMENTO ? Stato.IN_COMBATTIMENTO : Stato.IN_LOCAZIONE;
 	}
 
 	/**
@@ -717,6 +721,11 @@ public abstract class LocazioneBase implements Locazione {
 	
 	private Stato gestisciCombattimento(Comando azione) {
 		Logger.log("LocazioneBase.IN_COMBATTIMENTO");
+		if (azione == Comando.INTERRUZIONE_COMBATTIMENTO) {
+			UI.infoCombattimento(false, null, null);
+			statoLocazione = StatoLocazione.IN_LOCAZIONE;
+			return Stato.IN_LOCAZIONE;
+		}
 		if (azione == Comando.COMBATTIMENTO || azione == Comando.TIMER) {
 			Personaggio bersaglio = gruppoAvversario.getPersonaggioVivo();
 			if (bersaglio == null) {
@@ -725,6 +734,37 @@ public abstract class LocazioneBase implements Locazione {
 			}
 			int danniBersaglio = bersaglio.getDanniInCombattimento();
 			int danniCombattente = combattente.getDanniInCombattimento();
+
+
+			// Test per nuovo motore combattimento
+
+//			Artefatto arma = CostruttoreArtefatto.istanza()
+//					.setTipo(TipoArtefatto.ASCIA)
+//					.setNome("il budello di tu' ma' vestito da spada leggendaria")
+//					.setDescrizione("si presta bene a picchiare")
+//					.setLivello(1)
+//					.setCostoAcquisto(15)
+//					.setPeso(2)
+//					.setModificatore(TipoAttributo.FORZA, 1)
+//					.costruisci();
+//
+//			Logger.log("Valutazione danno originale: danniBersaglio (" + bersaglio.getNome() + ") = " + danniBersaglio + ", danniCombattente (" + combattente.getNome() + ") = " + danniCombattente);
+//			Logger.log("Valutazione combattente -> bersaglio");
+//			boolean colpirebbe = CalcolatoreCombattimento.colpisce(combattente, bersaglio);
+//			if (colpirebbe) {
+//				RisultatoDanno risultato = CalcolatoreCombattimento.calcolaDannoFinale(combattente, bersaglio, TipoDanno.TAGLIENTE, arma);
+//				Logger.log("Con nuovo motore il combattente colpirebbe assegnando " + risultato.getDannoTotale() + " danni");
+//			} else {
+//				Logger.log("Con nuovo motore il combattente non colpisce");
+//			}
+//			Logger.log("Valutazione bersaglio -> combattente");
+//			colpirebbe = CalcolatoreCombattimento.colpisce(bersaglio, combattente);
+//			if (colpirebbe) {
+//				RisultatoDanno risultato = CalcolatoreCombattimento.calcolaDannoFinale(bersaglio, combattente, TipoDanno.TAGLIENTE, arma);
+//				Logger.log("Con nuovo motore il bersaglio colpirebbe assegnando " + risultato.getDannoTotale() + " danni");
+//			} else {
+//				Logger.log("Con nuovo motore il bersaglio non colpisce");
+//			}
 
 			combattente.subSalute(danniBersaglio, bersaglio, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
 			if (!combattente.isVivo()) {
@@ -755,8 +795,8 @@ public abstract class LocazioneBase implements Locazione {
 				UI.notifica(sb);
 				bersaglio.attacca(gruppo);
 			}
-			if (!gruppo.getCapo().isVivo()) {
-				return Stato.GIOCO_PERSO;
+				if (!gruppo.getCapo().isVivo()) {
+					return Stato.GIOCO_PERSO;
 			}
 		}
 		if (azione == Comando.MAPPA) {
@@ -771,7 +811,7 @@ public abstract class LocazioneBase implements Locazione {
 		if (azione == Comando.POZIONE_MAGIA) {
 			return Stato.ATTESA_MAGIA;
 		}
-		return null;
+		return Stato.IN_COMBATTIMENTO;
 	}
 	
 	private Stato gestisciInLocazione(Comando azione) {
@@ -868,6 +908,7 @@ public abstract class LocazioneBase implements Locazione {
 		UI.notifica(nome + " si appresta al combattimento.");
 		UI.infoCombattimento(true, combattente, gruppoAvversario.getPersonaggioVivo());
 		opzioneAmiciziaDisponibile = false;
+		opzioneCorruzioneDisponibile = false;
 		statoLocazione = StatoLocazione.IN_COMBATTIMENTO;
 	}
 }

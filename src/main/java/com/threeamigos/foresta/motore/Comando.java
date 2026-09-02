@@ -20,6 +20,7 @@ public enum Comando {
 
 	// Le scelte tipiche all'interno di una locazione standard
 	COMBATTIMENTO,
+	INTERRUZIONE_COMBATTIMENTO,
 	INCANTESIMO,
 	CORRUZIONE,
 	AMICIZIA,
