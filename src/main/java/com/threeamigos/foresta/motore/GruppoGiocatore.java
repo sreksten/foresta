@@ -148,7 +148,7 @@ public class GruppoGiocatore extends Gruppo {
 	}
 
 	public final void subPozioniSaluteGrande(int quantita) {
-		md.setPozioniSalute(md.getPozioniSaluteGrande() - quantita);
+		md.setPozioniSaluteGrande(md.getPozioniSaluteGrande() - quantita);
 		UI.variaPozioniSaluteGrande(-quantita);
 	}
 	

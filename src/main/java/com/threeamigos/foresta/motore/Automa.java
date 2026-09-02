@@ -572,7 +572,7 @@ public class Automa implements ControlloreDiGioco {
 				break;
 
 			case ATTESA_POZIONE_SALUTE:
-				if (azione != Comando.ANNULLA) {
+				if (azione != null && azione != Comando.ANNULLA) {
 					personaggio = gruppo.getPersonaggio(azione);
 					personaggio.addSalute(100);
 					gruppo.subPozioniSalute(1);
@@ -584,7 +584,7 @@ public class Automa implements ControlloreDiGioco {
 				break;
 
 			case ATTESA_GRANDE_POZIONE_SALUTE:
-				if (azione != Comando.ANNULLA) {
+				if (azione != null && azione != Comando.ANNULLA) {
 					personaggio = gruppo.getPersonaggio(azione);
 					personaggio.addSalute(personaggio.getSaluteMassima());
 					personaggio.addSaluteMassima(10);
@@ -597,7 +597,7 @@ public class Automa implements ControlloreDiGioco {
 				break;
 
 			case ATTESA_MAGIA:
-				if (azione != Comando.ANNULLA) {
+				if (azione != null && azione != Comando.ANNULLA) {
 					personaggio = gruppo.getPersonaggio(azione);
 					personaggio.addMagia(10);
 					gruppo.subPozioniMagia(1);

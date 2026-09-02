@@ -1,6 +1,9 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.motore.modellodati.*;
+import com.threeamigos.foresta.motore.modellodati.SupertipoDanno;
+import com.threeamigos.foresta.motore.modellodati.TipoDanno;
+import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
+import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
@@ -78,7 +81,7 @@ public class CalcolatoreCombattimento {
 
     }
 
-    public RisultatoDanno calcolaDannoFinale(Personaggio attaccante, Personaggio difensore, TipoDanno tipoDanno,
+    public static RisultatoDanno calcolaDannoFinale(Personaggio attaccante, Personaggio difensore, TipoDanno tipoDanno,
                                              Artefatto arma) {
 
         RisultatoDanno risultatoDanno = new RisultatoDanno();

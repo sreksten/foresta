@@ -508,7 +508,7 @@ public abstract class LocazioneBase implements Locazione {
 
 		ComandiPossibili.reimposta();
 		// Possiamo combattere?
-		// Se stiamo combattendo no, ma in questo caso dovremmo aggingere la possibilità di imterrompere il combattimento
+		// Se stiamo combattendo no, ma in questo caso dovremmo aggiungere la possibilità di imterrompere il combattimento
 		// oppure lasciarla se i personaggi sono più di uno.
 		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO || gruppo.getNumeroPersonaggiVivi() > 1) {
 			ComandiPossibili.add(Comando.COMBATTIMENTO);
@@ -784,6 +784,9 @@ public abstract class LocazioneBase implements Locazione {
 				Personaggio nuovoBersaglio = gruppoAvversario.getPersonaggioVivo();
 				if (nuovoBersaglio != null) {
 					bersaglio = nuovoBersaglio;
+				} else {
+					completa = true;
+					return Stato.FINE_LOCAZIONE;
 				}
 			}
 			UI.infoCombattimento(true, combattente, bersaglio);
@@ -803,13 +806,61 @@ public abstract class LocazioneBase implements Locazione {
 			return Stato.MAPPA;
 		}
 		if (azione == Comando.POZIONE_SALUTE) {
-			return Stato.ATTESA_POZIONE_SALUTE;
+			if (gruppo.getNumeroPersonaggiVivi() > 1) {
+				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE;
+				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+			} else {
+				Personaggio capo = gruppo.getCapo();
+				capo.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE);
+				gruppo.subPozioniSalute(1);
+				UI.notifica(capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ha bevuto una pozione che fa riacquistare salute.");
+				return Stato.IN_COMBATTIMENTO;
+			}
 		}
 		if (azione == Comando.GRANDE_POZIONE_SALUTE) {
-			return Stato.ATTESA_GRANDE_POZIONE_SALUTE;
+			if (gruppo.getNumeroPersonaggiVivi() > 1) {
+				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE_GRANDE;
+				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+			} else {
+				Personaggio capo = gruppo.getCapo();
+				capo.addSaluteMassima(Costanti.AUMENTO_SALUTE_DA_POZIONE_SALUTE_GRANDE);
+				capo.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE_GRANDE);
+				gruppo.subPozioniSaluteGrande(1);
+				UI.notifica(capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ha bevuto una pozione che fa aumentare la salute!");
+				return Stato.IN_COMBATTIMENTO;
+			}
 		}
 		if (azione == Comando.POZIONE_MAGIA) {
-			return Stato.ATTESA_MAGIA;
+			if (gruppo.getNumeroPersonaggiVivi() > 1) {
+				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA;
+				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+			} else {
+				Personaggio capo = gruppo.getCapo();
+				capo.addMagia(Costanti.RECUPERO_DA_POZIONE_MAGIA);
+				gruppo.subPozioniMagia(1);
+				UI.notifica(capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ha bevuto una pozione che fa riacquistare magia.");
+				return Stato.IN_COMBATTIMENTO;
+			}
+		}
+		if (azione == Comando.INCANTESIMO) {
+			UI.infoCombattimento(false, null, null);
+			statoLocazione = StatoLocazione.CHI_FORMULA;
+			return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+		}
+		if (azione == Comando.FUGA) {
+			UI.infoCombattimento(false, null, null);
+			if (gruppo.getNumeroPersonaggiVivi() > 1) {
+				UI.notifica("Il gruppo è sicuro di voler fuggire?");
+			} else {
+				Personaggio capo = gruppo.getCapo();
+				String sb = capo.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + " è sicur" +
+						capo.getLetteraFinaleAttributo() +
+						" di voler fuggire?";
+				UI.notifica(sb);
+			}
+			statoLocazione = StatoLocazione.CONFERMA_FUGA;
+			ComandiPossibili.set(Comando.SI, Comando.NO);
+			return Stato.ATTESA_SI_NO;
 		}
 		return Stato.IN_COMBATTIMENTO;
 	}
