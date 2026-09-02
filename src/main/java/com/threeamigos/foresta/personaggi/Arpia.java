@@ -34,19 +34,19 @@ public class Arpia extends PersonaggioBase implements Personaggio {
 		setCarisma(Costanti.ARPIA_MAX_CARISMA);
 		setQuantitaMassima(Costanti.ARPIA_MAX_NUMERO);
 
-		setForza(Dado.tira(Costanti.ARPIA_FORZA_MIN, Costanti.ARPIA_FORZA_MAX));
-		setDestrezza(Dado.tira(Costanti.ARPIA_DESTREZZA_MIN, Costanti.ARPIA_DESTREZZA_MAX));
-		setCostituzione(Dado.tira(Costanti.ARPIA_COSTITUZIONE_MIN, Costanti.ARPIA_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tira(Costanti.ARPIA_INTELLIGENZA_MIN, Costanti.ARPIA_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tira(Costanti.ARPIA_SAGGEZZA_MIN, Costanti.ARPIA_SAGGEZZA_MAX));
-		setFortuna(Dado.tira(Costanti.ARPIA_FORTUNA_MIN, Costanti.ARPIA_FORTUNA_MAX));
-		setCritico(Dado.tira(Costanti.ARPIA_CRITICO_MIN, Costanti.ARPIA_CRITICO_MAX));
-		setPrecisione(Dado.tira(Costanti.ARPIA_PRECISIONE_MIN, Costanti.ARPIA_PRECISIONE_MAX));
-		setVelocita(Dado.tira(Costanti.ARPIA_VELOCITA_MIN, Costanti.ARPIA_VELOCITA_MAX));
-		setParata(Dado.tira(Costanti.ARPIA_PARATA_MIN, Costanti.ARPIA_PARATA_MAX));
-		setResistenzaMagica(Dado.tira(Costanti.ARPIA_RESISTENZA_MAGICA_MIN, Costanti.ARPIA_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tira(Costanti.ARPIA_MAGIA_MIN, Costanti.ARPIA_MAGIA_MAX));
-		setFuria(Dado.tira(Costanti.ARPIA_FURIA_MIN, Costanti.ARPIA_FURIA_MAX));
+		setForza(Dado.tiraAncheSenzaRange(Costanti.ARPIA_FORZA_MIN, Costanti.ARPIA_FORZA_MAX));
+		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.ARPIA_DESTREZZA_MIN, Costanti.ARPIA_DESTREZZA_MAX));
+		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.ARPIA_COSTITUZIONE_MIN, Costanti.ARPIA_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.ARPIA_INTELLIGENZA_MIN, Costanti.ARPIA_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.ARPIA_SAGGEZZA_MIN, Costanti.ARPIA_SAGGEZZA_MAX));
+		setFortuna(Dado.tiraAncheSenzaRange(Costanti.ARPIA_FORTUNA_MIN, Costanti.ARPIA_FORTUNA_MAX));
+		setCritico(Dado.tiraAncheSenzaRange(Costanti.ARPIA_CRITICO_MIN, Costanti.ARPIA_CRITICO_MAX));
+		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.ARPIA_PRECISIONE_MIN, Costanti.ARPIA_PRECISIONE_MAX));
+		setVelocita(Dado.tiraAncheSenzaRange(Costanti.ARPIA_VELOCITA_MIN, Costanti.ARPIA_VELOCITA_MAX));
+		setParata(Dado.tiraAncheSenzaRange(Costanti.ARPIA_PARATA_MIN, Costanti.ARPIA_PARATA_MAX));
+		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.ARPIA_RESISTENZA_MAGICA_MIN, Costanti.ARPIA_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tiraAncheSenzaRange(Costanti.ARPIA_MAGIA_MIN, Costanti.ARPIA_MAGIA_MAX));
+		setFuria(Dado.tiraAncheSenzaRange(Costanti.ARPIA_FURIA_MIN, Costanti.ARPIA_FURIA_MAX));
 
 	}
 

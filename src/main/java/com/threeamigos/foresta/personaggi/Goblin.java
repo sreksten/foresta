@@ -36,19 +36,19 @@ public class Goblin extends PersonaggioBase implements Personaggio {
 		setQuantitaMassima(Costanti.GOBLIN_MAX_NUMERO);
 		setCorrompibile(true);
 
-		setForza(Dado.tira(Costanti.GOBLIN_FORZA_MIN, Costanti.GOBLIN_FORZA_MAX));
-		setDestrezza(Dado.tira(Costanti.GOBLIN_DESTREZZA_MIN, Costanti.GOBLIN_DESTREZZA_MAX));
-		setCostituzione(Dado.tira(Costanti.GOBLIN_COSTITUZIONE_MIN, Costanti.GOBLIN_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tira(Costanti.GOBLIN_INTELLIGENZA_MIN, Costanti.GOBLIN_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tira(Costanti.GOBLIN_SAGGEZZA_MIN, Costanti.GOBLIN_SAGGEZZA_MAX));
-		setFortuna(Dado.tira(Costanti.GOBLIN_FORTUNA_MIN, Costanti.GOBLIN_FORTUNA_MAX));
-		setCritico(Dado.tira(Costanti.GOBLIN_CRITICO_MIN, Costanti.GOBLIN_CRITICO_MAX));
-		setPrecisione(Dado.tira(Costanti.GOBLIN_PRECISIONE_MIN, Costanti.GOBLIN_PRECISIONE_MAX));
-		setVelocita(Dado.tira(Costanti.GOBLIN_VELOCITA_MIN, Costanti.GOBLIN_VELOCITA_MAX));
-		setParata(Dado.tira(Costanti.GOBLIN_PARATA_MIN, Costanti.GOBLIN_PARATA_MAX));
-		setResistenzaMagica(Dado.tira(Costanti.GOBLIN_RESISTENZA_MAGICA_MIN, Costanti.GOBLIN_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tira(Costanti.GOBLIN_MAGIA_MIN, Costanti.GOBLIN_MAGIA_MAX));
-		setFuria(Dado.tira(Costanti.GOBLIN_FURIA_MIN, Costanti.GOBLIN_FURIA_MAX));
+		setForza(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_FORZA_MIN, Costanti.GOBLIN_FORZA_MAX));
+		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_DESTREZZA_MIN, Costanti.GOBLIN_DESTREZZA_MAX));
+		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_COSTITUZIONE_MIN, Costanti.GOBLIN_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_INTELLIGENZA_MIN, Costanti.GOBLIN_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_SAGGEZZA_MIN, Costanti.GOBLIN_SAGGEZZA_MAX));
+		setFortuna(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_FORTUNA_MIN, Costanti.GOBLIN_FORTUNA_MAX));
+		setCritico(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_CRITICO_MIN, Costanti.GOBLIN_CRITICO_MAX));
+		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_PRECISIONE_MIN, Costanti.GOBLIN_PRECISIONE_MAX));
+		setVelocita(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_VELOCITA_MIN, Costanti.GOBLIN_VELOCITA_MAX));
+		setParata(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_PARATA_MIN, Costanti.GOBLIN_PARATA_MAX));
+		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_RESISTENZA_MAGICA_MIN, Costanti.GOBLIN_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_MAGIA_MIN, Costanti.GOBLIN_MAGIA_MAX));
+		setFuria(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_FURIA_MIN, Costanti.GOBLIN_FURIA_MAX));
 
 	}
 

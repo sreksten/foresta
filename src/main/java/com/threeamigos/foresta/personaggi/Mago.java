@@ -43,18 +43,18 @@ public class Mago extends PersonaggioBase implements Personaggio {
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		setForza(Dado.tira(Costanti.MAGO_FORZA_MIN, Costanti.MAGO_FORZA_MAX));
-		setDestrezza(Dado.tira(Costanti.MAGO_DESTREZZA_MIN, Costanti.MAGO_DESTREZZA_MAX));
-		setCostituzione(Dado.tira(Costanti.MAGO_COSTITUZIONE_MIN, Costanti.MAGO_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tira(Costanti.MAGO_INTELLIGENZA_MIN, Costanti.MAGO_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tira(Costanti.MAGO_SAGGEZZA_MIN, Costanti.MAGO_SAGGEZZA_MAX));
-		setFortuna(Dado.tira(Costanti.MAGO_FORTUNA_MIN, Costanti.MAGO_FORTUNA_MAX));
-		setCritico(Dado.tira(Costanti.MAGO_CRITICO_MIN, Costanti.MAGO_CRITICO_MAX));
-		setPrecisione(Dado.tira(Costanti.MAGO_PRECISIONE_MIN, Costanti.MAGO_PRECISIONE_MAX));
-		setVelocita(Dado.tira(Costanti.MAGO_VELOCITA_MIN, Costanti.MAGO_VELOCITA_MAX));
-		setParata(Dado.tira(Costanti.MAGO_PARATA_MIN, Costanti.MAGO_PARATA_MAX));
-		setResistenzaMagica(Dado.tira(Costanti.MAGO_RESISTENZA_MAGICA_MIN, Costanti.MAGO_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tira(Costanti.MAGO_MAGIA_MIN, Costanti.MAGO_MAGIA_MAX));
-		setFuria(Dado.tira(Costanti.MAGO_FURIA_MIN, Costanti.MAGO_FURIA_MAX));
+		setForza(Dado.tiraAncheSenzaRange(Costanti.MAGO_FORZA_MIN, Costanti.MAGO_FORZA_MAX));
+		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.MAGO_DESTREZZA_MIN, Costanti.MAGO_DESTREZZA_MAX));
+		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.MAGO_COSTITUZIONE_MIN, Costanti.MAGO_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.MAGO_INTELLIGENZA_MIN, Costanti.MAGO_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.MAGO_SAGGEZZA_MIN, Costanti.MAGO_SAGGEZZA_MAX));
+		setFortuna(Dado.tiraAncheSenzaRange(Costanti.MAGO_FORTUNA_MIN, Costanti.MAGO_FORTUNA_MAX));
+		setCritico(Dado.tiraAncheSenzaRange(Costanti.MAGO_CRITICO_MIN, Costanti.MAGO_CRITICO_MAX));
+		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.MAGO_PRECISIONE_MIN, Costanti.MAGO_PRECISIONE_MAX));
+		setVelocita(Dado.tiraAncheSenzaRange(Costanti.MAGO_VELOCITA_MIN, Costanti.MAGO_VELOCITA_MAX));
+		setParata(Dado.tiraAncheSenzaRange(Costanti.MAGO_PARATA_MIN, Costanti.MAGO_PARATA_MAX));
+		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.MAGO_RESISTENZA_MAGICA_MIN, Costanti.MAGO_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tiraAncheSenzaRange(Costanti.MAGO_MAGIA_MIN, Costanti.MAGO_MAGIA_MAX));
+		setFuria(Dado.tiraAncheSenzaRange(Costanti.MAGO_FURIA_MIN, Costanti.MAGO_FURIA_MAX));
 	}
 }

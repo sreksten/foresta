@@ -39,19 +39,19 @@ public class Ladra extends PersonaggioBase implements Personaggio {
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		setForza(Dado.tira(Costanti.LADRA_FORZA_MIN, Costanti.LADRA_FORZA_MAX));
-		setDestrezza(Dado.tira(Costanti.LADRA_DESTREZZA_MIN, Costanti.LADRA_DESTREZZA_MAX));
-		setCostituzione(Dado.tira(Costanti.LADRA_COSTITUZIONE_MIN, Costanti.LADRA_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tira(Costanti.LADRA_INTELLIGENZA_MIN, Costanti.LADRA_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tira(Costanti.LADRA_SAGGEZZA_MIN, Costanti.LADRA_SAGGEZZA_MAX));
-		setFortuna(Dado.tira(Costanti.LADRA_FORTUNA_MIN, Costanti.LADRA_FORTUNA_MAX));
-		setCritico(Dado.tira(Costanti.LADRA_CRITICO_MIN, Costanti.LADRA_CRITICO_MAX));
-		setPrecisione(Dado.tira(Costanti.LADRA_PRECISIONE_MIN, Costanti.LADRA_PRECISIONE_MAX));
-		setVelocita(Dado.tira(Costanti.LADRA_VELOCITA_MIN, Costanti.LADRA_VELOCITA_MAX));
-		setParata(Dado.tira(Costanti.LADRA_PARATA_MIN, Costanti.LADRA_PARATA_MAX));
-		setResistenzaMagica(Dado.tira(Costanti.LADRA_RESISTENZA_MAGICA_MIN, Costanti.LADRA_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tira(Costanti.LADRA_MAGIA_MIN, Costanti.LADRA_MAGIA_MAX));
-		setFuria(Dado.tira(Costanti.LADRA_FURIA_MIN, Costanti.LADRA_FURIA_MAX));
+		setForza(Dado.tiraAncheSenzaRange(Costanti.LADRA_FORZA_MIN, Costanti.LADRA_FORZA_MAX));
+		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.LADRA_DESTREZZA_MIN, Costanti.LADRA_DESTREZZA_MAX));
+		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.LADRA_COSTITUZIONE_MIN, Costanti.LADRA_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.LADRA_INTELLIGENZA_MIN, Costanti.LADRA_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.LADRA_SAGGEZZA_MIN, Costanti.LADRA_SAGGEZZA_MAX));
+		setFortuna(Dado.tiraAncheSenzaRange(Costanti.LADRA_FORTUNA_MIN, Costanti.LADRA_FORTUNA_MAX));
+		setCritico(Dado.tiraAncheSenzaRange(Costanti.LADRA_CRITICO_MIN, Costanti.LADRA_CRITICO_MAX));
+		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.LADRA_PRECISIONE_MIN, Costanti.LADRA_PRECISIONE_MAX));
+		setVelocita(Dado.tiraAncheSenzaRange(Costanti.LADRA_VELOCITA_MIN, Costanti.LADRA_VELOCITA_MAX));
+		setParata(Dado.tiraAncheSenzaRange(Costanti.LADRA_PARATA_MIN, Costanti.LADRA_PARATA_MAX));
+		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.LADRA_RESISTENZA_MAGICA_MIN, Costanti.LADRA_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tiraAncheSenzaRange(Costanti.LADRA_MAGIA_MIN, Costanti.LADRA_MAGIA_MAX));
+		setFuria(Dado.tiraAncheSenzaRange(Costanti.LADRA_FURIA_MIN, Costanti.LADRA_FURIA_MAX));
 
 	}
 }

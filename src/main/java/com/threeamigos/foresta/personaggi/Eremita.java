@@ -36,19 +36,19 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		setForza(Dado.tira(Costanti.EREMITA_FORZA_MIN, Costanti.EREMITA_FORZA_MAX));
-		setDestrezza(Dado.tira(Costanti.EREMITA_DESTREZZA_MIN, Costanti.EREMITA_DESTREZZA_MAX));
-		setCostituzione(Dado.tira(Costanti.EREMITA_COSTITUZIONE_MIN, Costanti.EREMITA_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tira(Costanti.EREMITA_INTELLIGENZA_MIN, Costanti.EREMITA_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tira(Costanti.EREMITA_SAGGEZZA_MIN, Costanti.EREMITA_SAGGEZZA_MAX));
-		setFortuna(Dado.tira(Costanti.EREMITA_FORTUNA_MIN, Costanti.EREMITA_FORTUNA_MAX));
-		setCritico(Dado.tira(Costanti.EREMITA_CRITICO_MIN, Costanti.EREMITA_CRITICO_MAX));
-		setPrecisione(Dado.tira(Costanti.EREMITA_PRECISIONE_MIN, Costanti.EREMITA_PRECISIONE_MAX));
-		setVelocita(Dado.tira(Costanti.EREMITA_VELOCITA_MIN, Costanti.EREMITA_VELOCITA_MAX));
-		setParata(Dado.tira(Costanti.EREMITA_PARATA_MIN, Costanti.EREMITA_PARATA_MAX));
-		setResistenzaMagica(Dado.tira(Costanti.EREMITA_RESISTENZA_MAGICA_MIN, Costanti.EREMITA_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tira(Costanti.EREMITA_MAGIA_MIN, Costanti.EREMITA_MAGIA_MAX));
-		setFuria(Dado.tira(Costanti.EREMITA_FURIA_MIN, Costanti.EREMITA_FURIA_MAX));
+		setForza(Dado.tiraAncheSenzaRange(Costanti.EREMITA_FORZA_MIN, Costanti.EREMITA_FORZA_MAX));
+		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.EREMITA_DESTREZZA_MIN, Costanti.EREMITA_DESTREZZA_MAX));
+		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.EREMITA_COSTITUZIONE_MIN, Costanti.EREMITA_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.EREMITA_INTELLIGENZA_MIN, Costanti.EREMITA_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.EREMITA_SAGGEZZA_MIN, Costanti.EREMITA_SAGGEZZA_MAX));
+		setFortuna(Dado.tiraAncheSenzaRange(Costanti.EREMITA_FORTUNA_MIN, Costanti.EREMITA_FORTUNA_MAX));
+		setCritico(Dado.tiraAncheSenzaRange(Costanti.EREMITA_CRITICO_MIN, Costanti.EREMITA_CRITICO_MAX));
+		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.EREMITA_PRECISIONE_MIN, Costanti.EREMITA_PRECISIONE_MAX));
+		setVelocita(Dado.tiraAncheSenzaRange(Costanti.EREMITA_VELOCITA_MIN, Costanti.EREMITA_VELOCITA_MAX));
+		setParata(Dado.tiraAncheSenzaRange(Costanti.EREMITA_PARATA_MIN, Costanti.EREMITA_PARATA_MAX));
+		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.EREMITA_RESISTENZA_MAGICA_MIN, Costanti.EREMITA_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tiraAncheSenzaRange(Costanti.EREMITA_MAGIA_MIN, Costanti.EREMITA_MAGIA_MAX));
+		setFuria(Dado.tiraAncheSenzaRange(Costanti.EREMITA_FURIA_MIN, Costanti.EREMITA_FURIA_MAX));
 
 	}
 

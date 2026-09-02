@@ -34,19 +34,19 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 		setCarisma(Costanti.SCHELETRO_MAX_CARISMA);
 		setQuantitaMassima(Costanti.SCHELETRO_MAX_NUMERO);
 
-		setForza(Dado.tira(Costanti.SCHELETRO_FORZA_MIN, Costanti.SCHELETRO_FORZA_MAX));
-		setDestrezza(Dado.tira(Costanti.SCHELETRO_DESTREZZA_MIN, Costanti.SCHELETRO_DESTREZZA_MAX));
-		setCostituzione(Dado.tira(Costanti.SCHELETRO_COSTITUZIONE_MIN, Costanti.SCHELETRO_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tira(Costanti.SCHELETRO_INTELLIGENZA_MIN, Costanti.SCHELETRO_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tira(Costanti.SCHELETRO_SAGGEZZA_MIN, Costanti.SCHELETRO_SAGGEZZA_MAX));
-		setFortuna(Dado.tira(Costanti.SCHELETRO_FORTUNA_MIN, Costanti.SCHELETRO_FORTUNA_MAX));
-		setCritico(Dado.tira(Costanti.SCHELETRO_CRITICO_MIN, Costanti.SCHELETRO_CRITICO_MAX));
-		setPrecisione(Dado.tira(Costanti.SCHELETRO_PRECISIONE_MIN, Costanti.SCHELETRO_PRECISIONE_MAX));
-		setVelocita(Dado.tira(Costanti.SCHELETRO_VELOCITA_MIN, Costanti.SCHELETRO_VELOCITA_MAX));
-		setParata(Dado.tira(Costanti.SCHELETRO_PARATA_MIN, Costanti.SCHELETRO_PARATA_MAX));
-		setResistenzaMagica(Dado.tira(Costanti.SCHELETRO_RESISTENZA_MAGICA_MIN, Costanti.SCHELETRO_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tira(Costanti.SCHELETRO_MAGIA_MIN, Costanti.SCHELETRO_MAGIA_MAX));
-		setFuria(Dado.tira(Costanti.SCHELETRO_FURIA_MIN, Costanti.SCHELETRO_FURIA_MAX));
+		setForza(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_FORZA_MIN, Costanti.SCHELETRO_FORZA_MAX));
+		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_DESTREZZA_MIN, Costanti.SCHELETRO_DESTREZZA_MAX));
+		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_COSTITUZIONE_MIN, Costanti.SCHELETRO_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_INTELLIGENZA_MIN, Costanti.SCHELETRO_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_SAGGEZZA_MIN, Costanti.SCHELETRO_SAGGEZZA_MAX));
+		setFortuna(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_FORTUNA_MIN, Costanti.SCHELETRO_FORTUNA_MAX));
+		setCritico(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_CRITICO_MIN, Costanti.SCHELETRO_CRITICO_MAX));
+		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_PRECISIONE_MIN, Costanti.SCHELETRO_PRECISIONE_MAX));
+		setVelocita(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_VELOCITA_MIN, Costanti.SCHELETRO_VELOCITA_MAX));
+		setParata(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_PARATA_MIN, Costanti.SCHELETRO_PARATA_MAX));
+		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_RESISTENZA_MAGICA_MIN, Costanti.SCHELETRO_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_MAGIA_MIN, Costanti.SCHELETRO_MAGIA_MAX));
+		setFuria(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_FURIA_MIN, Costanti.SCHELETRO_FURIA_MAX));
 
 	}
 

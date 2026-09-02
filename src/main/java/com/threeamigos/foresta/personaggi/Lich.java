@@ -36,19 +36,19 @@ public class Lich extends PersonaggioBase implements Personaggio {
 		setCoraggio(Costanti.LICH_MAX_CORAGGIO);
 		setCarisma(Costanti.LICH_MAX_CARISMA);
 
-		setForza(Dado.tira(Costanti.LICH_FORZA_MIN, Costanti.LICH_FORZA_MAX));
-		setDestrezza(Dado.tira(Costanti.LICH_DESTREZZA_MIN, Costanti.LICH_DESTREZZA_MAX));
-		setCostituzione(Dado.tira(Costanti.LICH_COSTITUZIONE_MIN, Costanti.LICH_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tira(Costanti.LICH_INTELLIGENZA_MIN, Costanti.LICH_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tira(Costanti.LICH_SAGGEZZA_MIN, Costanti.LICH_SAGGEZZA_MAX));
-		setFortuna(Dado.tira(Costanti.LICH_FORTUNA_MIN, Costanti.LICH_FORTUNA_MAX));
-		setCritico(Dado.tira(Costanti.LICH_CRITICO_MIN, Costanti.LICH_CRITICO_MAX));
-		setPrecisione(Dado.tira(Costanti.LICH_PRECISIONE_MIN, Costanti.LICH_PRECISIONE_MAX));
-		setVelocita(Dado.tira(Costanti.LICH_VELOCITA_MIN, Costanti.LICH_VELOCITA_MAX));
-		setParata(Dado.tira(Costanti.LICH_PARATA_MIN, Costanti.LICH_PARATA_MAX));
-		setResistenzaMagica(Dado.tira(Costanti.LICH_RESISTENZA_MAGICA_MIN, Costanti.LICH_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tira(Costanti.LICH_MAGIA_MIN, Costanti.LICH_MAGIA_MAX));
-		setFuria(Dado.tira(Costanti.LICH_FURIA_MIN, Costanti.LICH_FURIA_MAX));
+		setForza(Dado.tiraAncheSenzaRange(Costanti.LICH_FORZA_MIN, Costanti.LICH_FORZA_MAX));
+		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.LICH_DESTREZZA_MIN, Costanti.LICH_DESTREZZA_MAX));
+		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.LICH_COSTITUZIONE_MIN, Costanti.LICH_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.LICH_INTELLIGENZA_MIN, Costanti.LICH_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.LICH_SAGGEZZA_MIN, Costanti.LICH_SAGGEZZA_MAX));
+		setFortuna(Dado.tiraAncheSenzaRange(Costanti.LICH_FORTUNA_MIN, Costanti.LICH_FORTUNA_MAX));
+		setCritico(Dado.tiraAncheSenzaRange(Costanti.LICH_CRITICO_MIN, Costanti.LICH_CRITICO_MAX));
+		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.LICH_PRECISIONE_MIN, Costanti.LICH_PRECISIONE_MAX));
+		setVelocita(Dado.tiraAncheSenzaRange(Costanti.LICH_VELOCITA_MIN, Costanti.LICH_VELOCITA_MAX));
+		setParata(Dado.tiraAncheSenzaRange(Costanti.LICH_PARATA_MIN, Costanti.LICH_PARATA_MAX));
+		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.LICH_RESISTENZA_MAGICA_MIN, Costanti.LICH_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tiraAncheSenzaRange(Costanti.LICH_MAGIA_MIN, Costanti.LICH_MAGIA_MAX));
+		setFuria(Dado.tiraAncheSenzaRange(Costanti.LICH_FURIA_MIN, Costanti.LICH_FURIA_MAX));
 
 	}
 

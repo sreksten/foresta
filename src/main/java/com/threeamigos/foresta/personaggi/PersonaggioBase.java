@@ -9,6 +9,7 @@ import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.ImageCache;
@@ -57,7 +58,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			md.setMagia(md.getMagiaMassima());
 			md.setStanchezza(0);
 		} else {
-			final Function<Integer, Integer> tira = max -> max == 0 ? 0 : Dado.tira(max / 2, max);
+			final Function<Integer, Integer> tira = max -> max == 0 ? 0 : Dado.tiraAncheSenzaRange(max / 2, max);
 			md.setSalute(tira.apply(md.getSaluteMassima()));
 			md.setMagia(tira.apply(md.getMagiaMassima()));
 			md.setValore(tira.apply(md.getValore()));
@@ -529,23 +530,24 @@ public abstract class PersonaggioBase implements Personaggio {
 
 			// Test per nuovo motore combattimento
 
-//			Logger.log("Valutazione danno originale: " + danno);
-//			boolean colpirebbe = CalcolatoreCombattimento.colpisce(this, bersaglio);
-//			if (colpirebbe) {
-//				Artefatto arma = CostruttoreArtefatto.istanza()
-//						.setTipo(TipoArtefatto.ASCIA)
-//						.setNome("il budello di tu' ma' vestito da spada leggendaria")
-//						.setDescrizione("si presta bene a picchiare")
-//						.setLivello(1)
-//						.setCostoAcquisto(15)
-//						.setPeso(2)
-//						.setModificatore(TipoAttributo.FORZA, 1)
-//						.costruisci();
-//                RisultatoDanno risultato = CalcolatoreCombattimento.calcolaDannoFinale(this, bersaglio, TipoDanno.TAGLIENTE, arma);
-//				Logger.log("Con nuovo motore colpirebbe assegnando " + risultato.getDannoTotale() + " danni");
-//			} else {
-//				Logger.log("Con nuovo motore non colpisce");
-//			}
+			Logger.log("Valutazione danno originale: " + danno);
+			boolean colpirebbe = CalcolatoreCombattimento.colpisce(this, bersaglio);
+			if (colpirebbe) {
+				Artefatto arma = CostruttoreArtefatto.istanza()
+						.setTipo(TipoArtefatto.ASCIA)
+						.setNome("il budello di tu' ma' vestito da spada leggendaria")
+						.setDescrizione("si presta bene a picchiare")
+						.setLivello(1)
+						.setDanniBase(5)
+						.setCostoAcquisto(15)
+						.setPeso(2)
+						.setModificatore(TipoAttributo.FORZA, 1)
+						.costruisci();
+                RisultatoDanno risultato = CalcolatoreCombattimento.calcolaDannoFinale(this, bersaglio, TipoDanno.TAGLIENTE, arma);
+				Logger.log("Con nuovo motore colpirebbe assegnando " + risultato.getDannoTotale() + " danni");
+			} else {
+				Logger.log("Con nuovo motore non colpisce");
+			}
 
 			bersaglio.subSalute(danno, this, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
 		}
@@ -605,7 +607,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			offerte = getOfferteCorruzione();
 		}
 		if (offerte.length > 0) {
-			int indice = Dado.tira(offerte.length) - 1;
+			int indice = Dado.tiraAncheAUnaFaccia(offerte.length) - 1;
 			return offerte[indice].getIstanza();
 		}
 		return null;

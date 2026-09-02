@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import java.util.Random;
+import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.motore.Logger;
 
 /**
  *
@@ -70,10 +71,13 @@ public enum TipoDanno {
 
     public TipoEffettoDiStato getTipoEffettoDiStatoCasuale() {
         if (effetti.length == 0) {
+            Logger.log("TipoDanno.getTipoEffettoDiStatoCasuale(): nessun effetto collaterale");
             return null;
         }
-
-        return effetti[new Random().nextInt(effetti.length) - 1];
+        int tiroDado = Dado.tiraAncheAUnaFaccia(effetti.length) - 1;
+        TipoEffettoDiStato tipoEffetto = effetti[tiroDado];
+        Logger.log("TipoDanno.getTipoEffettoDiStatoCasuale(): effetto casuale: " + tipoEffetto);
+        return tipoEffetto;
     }
 
 }

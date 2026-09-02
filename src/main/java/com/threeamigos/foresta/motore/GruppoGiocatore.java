@@ -364,7 +364,7 @@ public class GruppoGiocatore extends Gruppo {
 		if (md.getPreziosi() > 0) {
 			int quantita = md.getPreziosi();
 			if (getPersonaggiVivi().stream().anyMatch(p -> p.getClasse() == ClassePersonaggio.LADRA || p.getClasse() == ClassePersonaggio.LADRO)) {
-				quantita += Dado.tira(md.getPreziosi());
+				quantita += Dado.tiraAncheAUnaFaccia(md.getPreziosi());
 			}
             String notifica = chiMaiuscolo() +
                     " ha venduto i preziosi raccolti, ricavandone " +
@@ -378,7 +378,7 @@ public class GruppoGiocatore extends Gruppo {
 	public final void fugge() {
 		UI.notifica(chiMaiuscolo() + ", in preda al panico, cerca la salvezza nella fuga! Sfortunatamente riceve gravi ferite e perde molte delle cose in suo possesso!");
 
-		Function<Integer, Integer> calcolaPerdita = m -> m < 2 ? m : Dado.tira(0, m / 2);
+		Function<Integer, Integer> calcolaPerdita = m -> Dado.tiraAncheSenzaRange(0, m / 2);
 
 		subMonete(calcolaPerdita.apply(md.getMonete()));
 		subPreziosi(calcolaPerdita.apply(md.getPreziosi()));

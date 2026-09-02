@@ -33,19 +33,19 @@ public class Chimera extends PersonaggioBase implements Personaggio {
 		setCarisma(Costanti.CHIMERA_MAX_CARISMA);
 		setQuantitaMassima(Costanti.CHIMERA_MAX_NUMERO);
 
-		setForza(Dado.tira(Costanti.CHIMERA_FORZA_MIN, Costanti.CHIMERA_FORZA_MAX));
-		setDestrezza(Dado.tira(Costanti.CHIMERA_DESTREZZA_MIN, Costanti.CHIMERA_DESTREZZA_MAX));
-		setCostituzione(Dado.tira(Costanti.CHIMERA_COSTITUZIONE_MIN, Costanti.CHIMERA_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tira(Costanti.CHIMERA_INTELLIGENZA_MIN, Costanti.CHIMERA_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tira(Costanti.CHIMERA_SAGGEZZA_MIN, Costanti.CHIMERA_SAGGEZZA_MAX));
-		setFortuna(Dado.tira(Costanti.CHIMERA_FORTUNA_MIN, Costanti.CHIMERA_FORTUNA_MAX));
-		setCritico(Dado.tira(Costanti.CHIMERA_CRITICO_MIN, Costanti.CHIMERA_CRITICO_MAX));
-		setPrecisione(Dado.tira(Costanti.CHIMERA_PRECISIONE_MIN, Costanti.CHIMERA_PRECISIONE_MAX));
-		setVelocita(Dado.tira(Costanti.CHIMERA_VELOCITA_MIN, Costanti.CHIMERA_VELOCITA_MAX));
-		setParata(Dado.tira(Costanti.CHIMERA_PARATA_MIN, Costanti.CHIMERA_PARATA_MAX));
-		setResistenzaMagica(Dado.tira(Costanti.CHIMERA_RESISTENZA_MAGICA_MIN, Costanti.CHIMERA_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tira(Costanti.CHIMERA_MAGIA_MIN, Costanti.CHIMERA_MAGIA_MAX));
-		setFuria(Dado.tira(Costanti.CHIMERA_FURIA_MIN, Costanti.CHIMERA_FURIA_MAX));
+		setForza(Dado.tiraAncheSenzaRange(Costanti.CHIMERA_FORZA_MIN, Costanti.CHIMERA_FORZA_MAX));
+		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.CHIMERA_DESTREZZA_MIN, Costanti.CHIMERA_DESTREZZA_MAX));
+		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.CHIMERA_COSTITUZIONE_MIN, Costanti.CHIMERA_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.CHIMERA_INTELLIGENZA_MIN, Costanti.CHIMERA_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.CHIMERA_SAGGEZZA_MIN, Costanti.CHIMERA_SAGGEZZA_MAX));
+		setFortuna(Dado.tiraAncheSenzaRange(Costanti.CHIMERA_FORTUNA_MIN, Costanti.CHIMERA_FORTUNA_MAX));
+		setCritico(Dado.tiraAncheSenzaRange(Costanti.CHIMERA_CRITICO_MIN, Costanti.CHIMERA_CRITICO_MAX));
+		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.CHIMERA_PRECISIONE_MIN, Costanti.CHIMERA_PRECISIONE_MAX));
+		setVelocita(Dado.tiraAncheSenzaRange(Costanti.CHIMERA_VELOCITA_MIN, Costanti.CHIMERA_VELOCITA_MAX));
+		setParata(Dado.tiraAncheSenzaRange(Costanti.CHIMERA_PARATA_MIN, Costanti.CHIMERA_PARATA_MAX));
+		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.CHIMERA_RESISTENZA_MAGICA_MIN, Costanti.CHIMERA_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tiraAncheSenzaRange(Costanti.CHIMERA_MAGIA_MIN, Costanti.CHIMERA_MAGIA_MAX));
+		setFuria(Dado.tiraAncheSenzaRange(Costanti.CHIMERA_FURIA_MIN, Costanti.CHIMERA_FURIA_MAX));
 
 	}
 }

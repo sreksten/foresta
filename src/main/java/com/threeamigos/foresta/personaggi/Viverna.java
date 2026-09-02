@@ -35,19 +35,19 @@ public class Viverna extends PersonaggioBase implements Personaggio {
 		setCarisma(Costanti.VIVERNA_MAX_CARISMA);
 		setQuantitaMassima(Costanti.VIVERNA_MAX_NUMERO);
 
-		setForza(Dado.tira(Costanti.VIVERNA_FORZA_MIN, Costanti.VIVERNA_FORZA_MAX));
-		setDestrezza(Dado.tira(Costanti.VIVERNA_DESTREZZA_MIN, Costanti.VIVERNA_DESTREZZA_MAX));
-		setCostituzione(Dado.tira(Costanti.VIVERNA_COSTITUZIONE_MIN, Costanti.VIVERNA_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tira(Costanti.VIVERNA_INTELLIGENZA_MIN, Costanti.VIVERNA_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tira(Costanti.VIVERNA_SAGGEZZA_MIN, Costanti.VIVERNA_SAGGEZZA_MAX));
-		setFortuna(Dado.tira(Costanti.VIVERNA_FORTUNA_MIN, Costanti.VIVERNA_FORTUNA_MAX));
-		setCritico(Dado.tira(Costanti.VIVERNA_CRITICO_MIN, Costanti.VIVERNA_CRITICO_MAX));
-		setPrecisione(Dado.tira(Costanti.VIVERNA_PRECISIONE_MIN, Costanti.VIVERNA_PRECISIONE_MAX));
-		setVelocita(Dado.tira(Costanti.VIVERNA_VELOCITA_MIN, Costanti.VIVERNA_VELOCITA_MAX));
-		setParata(Dado.tira(Costanti.VIVERNA_PARATA_MIN, Costanti.VIVERNA_PARATA_MAX));
-		setResistenzaMagica(Dado.tira(Costanti.VIVERNA_RESISTENZA_MAGICA_MIN, Costanti.VIVERNA_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tira(Costanti.VIVERNA_MAGIA_MIN, Costanti.VIVERNA_MAGIA_MAX));
-		setFuria(Dado.tira(Costanti.VIVERNA_FURIA_MIN, Costanti.VIVERNA_FURIA_MAX));
+		setForza(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_FORZA_MIN, Costanti.VIVERNA_FORZA_MAX));
+		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_DESTREZZA_MIN, Costanti.VIVERNA_DESTREZZA_MAX));
+		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_COSTITUZIONE_MIN, Costanti.VIVERNA_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_INTELLIGENZA_MIN, Costanti.VIVERNA_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_SAGGEZZA_MIN, Costanti.VIVERNA_SAGGEZZA_MAX));
+		setFortuna(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_FORTUNA_MIN, Costanti.VIVERNA_FORTUNA_MAX));
+		setCritico(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_CRITICO_MIN, Costanti.VIVERNA_CRITICO_MAX));
+		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_PRECISIONE_MIN, Costanti.VIVERNA_PRECISIONE_MAX));
+		setVelocita(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_VELOCITA_MIN, Costanti.VIVERNA_VELOCITA_MAX));
+		setParata(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_PARATA_MIN, Costanti.VIVERNA_PARATA_MAX));
+		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_RESISTENZA_MAGICA_MIN, Costanti.VIVERNA_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_MAGIA_MIN, Costanti.VIVERNA_MAGIA_MAX));
+		setFuria(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_FURIA_MIN, Costanti.VIVERNA_FURIA_MAX));
 
 	}
 

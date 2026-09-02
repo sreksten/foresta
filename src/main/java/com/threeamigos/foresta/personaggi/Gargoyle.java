@@ -36,19 +36,19 @@ public class Gargoyle extends PersonaggioBase implements Personaggio {
 		setCarisma(Costanti.GARGOYLE_MAX_CARISMA);
 		setQuantitaMassima(Costanti.GARGOYLE_MAX_NUMERO);
 
-		setForza(Dado.tira(Costanti.GARGOYLE_FORZA_MIN, Costanti.GARGOYLE_FORZA_MAX));
-		setDestrezza(Dado.tira(Costanti.GARGOYLE_DESTREZZA_MIN, Costanti.GARGOYLE_DESTREZZA_MAX));
-		setCostituzione(Dado.tira(Costanti.GARGOYLE_COSTITUZIONE_MIN, Costanti.GARGOYLE_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tira(Costanti.GARGOYLE_INTELLIGENZA_MIN, Costanti.GARGOYLE_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tira(Costanti.GARGOYLE_SAGGEZZA_MIN, Costanti.GARGOYLE_SAGGEZZA_MAX));
-		setFortuna(Dado.tira(Costanti.GARGOYLE_FORTUNA_MIN, Costanti.GARGOYLE_FORTUNA_MAX));
-		setCritico(Dado.tira(Costanti.GARGOYLE_CRITICO_MIN, Costanti.GARGOYLE_CRITICO_MAX));
-		setPrecisione(Dado.tira(Costanti.GARGOYLE_PRECISIONE_MIN, Costanti.GARGOYLE_PRECISIONE_MAX));
-		setVelocita(Dado.tira(Costanti.GARGOYLE_VELOCITA_MIN, Costanti.GARGOYLE_VELOCITA_MAX));
-		setParata(Dado.tira(Costanti.GARGOYLE_PARATA_MIN, Costanti.GARGOYLE_PARATA_MAX));
-		setResistenzaMagica(Dado.tira(Costanti.GARGOYLE_RESISTENZA_MAGICA_MIN, Costanti.GARGOYLE_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tira(Costanti.GARGOYLE_MAGIA_MIN, Costanti.GARGOYLE_MAGIA_MAX));
-		setFuria(Dado.tira(Costanti.GARGOYLE_FURIA_MIN, Costanti.GARGOYLE_FURIA_MAX));
+		setForza(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_FORZA_MIN, Costanti.GARGOYLE_FORZA_MAX));
+		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_DESTREZZA_MIN, Costanti.GARGOYLE_DESTREZZA_MAX));
+		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_COSTITUZIONE_MIN, Costanti.GARGOYLE_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_INTELLIGENZA_MIN, Costanti.GARGOYLE_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_SAGGEZZA_MIN, Costanti.GARGOYLE_SAGGEZZA_MAX));
+		setFortuna(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_FORTUNA_MIN, Costanti.GARGOYLE_FORTUNA_MAX));
+		setCritico(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_CRITICO_MIN, Costanti.GARGOYLE_CRITICO_MAX));
+		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_PRECISIONE_MIN, Costanti.GARGOYLE_PRECISIONE_MAX));
+		setVelocita(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_VELOCITA_MIN, Costanti.GARGOYLE_VELOCITA_MAX));
+		setParata(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_PARATA_MIN, Costanti.GARGOYLE_PARATA_MAX));
+		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_RESISTENZA_MAGICA_MIN, Costanti.GARGOYLE_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_MAGIA_MIN, Costanti.GARGOYLE_MAGIA_MAX));
+		setFuria(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_FURIA_MIN, Costanti.GARGOYLE_FURIA_MAX));
 
 	}
 

@@ -37,19 +37,19 @@ public class Titano extends PersonaggioBase implements Personaggio {
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		setForza(Dado.tira(Costanti.TITANO_FORZA_MIN, Costanti.TITANO_FORZA_MAX));
-		setDestrezza(Dado.tira(Costanti.TITANO_DESTREZZA_MIN, Costanti.TITANO_DESTREZZA_MAX));
-		setCostituzione(Dado.tira(Costanti.TITANO_COSTITUZIONE_MIN, Costanti.TITANO_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tira(Costanti.TITANO_INTELLIGENZA_MIN, Costanti.TITANO_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tira(Costanti.TITANO_SAGGEZZA_MIN, Costanti.TITANO_SAGGEZZA_MAX));
-		setFortuna(Dado.tira(Costanti.TITANO_FORTUNA_MIN, Costanti.TITANO_FORTUNA_MAX));
-		setCritico(Dado.tira(Costanti.TITANO_CRITICO_MIN, Costanti.TITANO_CRITICO_MAX));
-		setPrecisione(Dado.tira(Costanti.TITANO_PRECISIONE_MIN, Costanti.TITANO_PRECISIONE_MAX));
-		setVelocita(Dado.tira(Costanti.TITANO_VELOCITA_MIN, Costanti.TITANO_VELOCITA_MAX));
-		setParata(Dado.tira(Costanti.TITANO_PARATA_MIN, Costanti.TITANO_PARATA_MAX));
-		setResistenzaMagica(Dado.tira(Costanti.TITANO_RESISTENZA_MAGICA_MIN, Costanti.TITANO_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tira(Costanti.TITANO_MAGIA_MIN, Costanti.TITANO_MAGIA_MAX));
-		setFuria(Dado.tira(Costanti.TITANO_FURIA_MIN, Costanti.TITANO_FURIA_MAX));
+		setForza(Dado.tiraAncheSenzaRange(Costanti.TITANO_FORZA_MIN, Costanti.TITANO_FORZA_MAX));
+		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.TITANO_DESTREZZA_MIN, Costanti.TITANO_DESTREZZA_MAX));
+		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.TITANO_COSTITUZIONE_MIN, Costanti.TITANO_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.TITANO_INTELLIGENZA_MIN, Costanti.TITANO_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.TITANO_SAGGEZZA_MIN, Costanti.TITANO_SAGGEZZA_MAX));
+		setFortuna(Dado.tiraAncheSenzaRange(Costanti.TITANO_FORTUNA_MIN, Costanti.TITANO_FORTUNA_MAX));
+		setCritico(Dado.tiraAncheSenzaRange(Costanti.TITANO_CRITICO_MIN, Costanti.TITANO_CRITICO_MAX));
+		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.TITANO_PRECISIONE_MIN, Costanti.TITANO_PRECISIONE_MAX));
+		setVelocita(Dado.tiraAncheSenzaRange(Costanti.TITANO_VELOCITA_MIN, Costanti.TITANO_VELOCITA_MAX));
+		setParata(Dado.tiraAncheSenzaRange(Costanti.TITANO_PARATA_MIN, Costanti.TITANO_PARATA_MAX));
+		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.TITANO_RESISTENZA_MAGICA_MIN, Costanti.TITANO_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tiraAncheSenzaRange(Costanti.TITANO_MAGIA_MIN, Costanti.TITANO_MAGIA_MAX));
+		setFuria(Dado.tiraAncheSenzaRange(Costanti.TITANO_FURIA_MIN, Costanti.TITANO_FURIA_MAX));
 
 	}
 

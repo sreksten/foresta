@@ -13,7 +13,7 @@ public abstract class OggettoBase implements Oggetto {
 	
 	OggettoBase() {
 		int quantitaMassima = getClasse().getQuantitaMassima();
-		quantita = quantitaMassima == 1 ? 1 : Dado.tira(quantitaMassima);
+		quantita = Dado.tiraAncheAUnaFaccia(quantitaMassima);
 	}
 	
 	public final int getQuantita() {

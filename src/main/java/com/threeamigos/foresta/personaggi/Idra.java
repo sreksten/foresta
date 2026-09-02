@@ -34,19 +34,19 @@ public class Idra extends PersonaggioBase implements Personaggio {
 		setCoraggio(Costanti.IDRA_MAX_CORAGGIO);
 		setCarisma(Costanti.IDRA_MAX_CARISMA);
 
-		setForza(Dado.tira(Costanti.IDRA_FORZA_MIN, Costanti.IDRA_FORZA_MAX));
-		setDestrezza(Dado.tira(Costanti.IDRA_DESTREZZA_MIN, Costanti.IDRA_DESTREZZA_MAX));
-		setCostituzione(Dado.tira(Costanti.IDRA_COSTITUZIONE_MIN, Costanti.IDRA_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tira(Costanti.IDRA_INTELLIGENZA_MIN, Costanti.IDRA_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tira(Costanti.IDRA_SAGGEZZA_MIN, Costanti.IDRA_SAGGEZZA_MAX));
-		setFortuna(Dado.tira(Costanti.IDRA_FORTUNA_MIN, Costanti.IDRA_FORTUNA_MAX));
-		setCritico(Dado.tira(Costanti.IDRA_CRITICO_MIN, Costanti.IDRA_CRITICO_MAX));
-		setPrecisione(Dado.tira(Costanti.IDRA_PRECISIONE_MIN, Costanti.IDRA_PRECISIONE_MAX));
-		setVelocita(Dado.tira(Costanti.IDRA_VELOCITA_MIN, Costanti.IDRA_VELOCITA_MAX));
-		setParata(Dado.tira(Costanti.IDRA_PARATA_MIN, Costanti.IDRA_PARATA_MAX));
-		setResistenzaMagica(Dado.tira(Costanti.IDRA_RESISTENZA_MAGICA_MIN, Costanti.IDRA_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tira(Costanti.IDRA_MAGIA_MIN, Costanti.IDRA_MAGIA_MAX));
-		setFuria(Dado.tira(Costanti.IDRA_FURIA_MIN, Costanti.IDRA_FURIA_MAX));
+		setForza(Dado.tiraAncheSenzaRange(Costanti.IDRA_FORZA_MIN, Costanti.IDRA_FORZA_MAX));
+		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.IDRA_DESTREZZA_MIN, Costanti.IDRA_DESTREZZA_MAX));
+		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.IDRA_COSTITUZIONE_MIN, Costanti.IDRA_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.IDRA_INTELLIGENZA_MIN, Costanti.IDRA_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.IDRA_SAGGEZZA_MIN, Costanti.IDRA_SAGGEZZA_MAX));
+		setFortuna(Dado.tiraAncheSenzaRange(Costanti.IDRA_FORTUNA_MIN, Costanti.IDRA_FORTUNA_MAX));
+		setCritico(Dado.tiraAncheSenzaRange(Costanti.IDRA_CRITICO_MIN, Costanti.IDRA_CRITICO_MAX));
+		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.IDRA_PRECISIONE_MIN, Costanti.IDRA_PRECISIONE_MAX));
+		setVelocita(Dado.tiraAncheSenzaRange(Costanti.IDRA_VELOCITA_MIN, Costanti.IDRA_VELOCITA_MAX));
+		setParata(Dado.tiraAncheSenzaRange(Costanti.IDRA_PARATA_MIN, Costanti.IDRA_PARATA_MAX));
+		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.IDRA_RESISTENZA_MAGICA_MIN, Costanti.IDRA_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tiraAncheSenzaRange(Costanti.IDRA_MAGIA_MIN, Costanti.IDRA_MAGIA_MAX));
+		setFuria(Dado.tiraAncheSenzaRange(Costanti.IDRA_FURIA_MIN, Costanti.IDRA_FURIA_MAX));
 
 	}
 

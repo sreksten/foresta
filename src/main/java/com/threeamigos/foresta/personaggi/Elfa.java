@@ -42,19 +42,19 @@ public class Elfa extends PersonaggioBase implements Personaggio {
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		setForza(Dado.tira(Costanti.ELFA_FORZA_MIN, Costanti.ELFA_FORZA_MAX));
-		setDestrezza(Dado.tira(Costanti.ELFA_DESTREZZA_MIN, Costanti.ELFA_DESTREZZA_MAX));
-		setCostituzione(Dado.tira(Costanti.ELFA_COSTITUZIONE_MIN, Costanti.ELFA_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tira(Costanti.ELFA_INTELLIGENZA_MIN, Costanti.ELFA_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tira(Costanti.ELFA_SAGGEZZA_MIN, Costanti.ELFA_SAGGEZZA_MAX));
-		setFortuna(Dado.tira(Costanti.ELFA_FORTUNA_MIN, Costanti.ELFA_FORTUNA_MAX));
-		setCritico(Dado.tira(Costanti.ELFA_CRITICO_MIN, Costanti.ELFA_CRITICO_MAX));
-		setPrecisione(Dado.tira(Costanti.ELFA_PRECISIONE_MIN, Costanti.ELFA_PRECISIONE_MAX));
-		setVelocita(Dado.tira(Costanti.ELFA_VELOCITA_MIN, Costanti.ELFA_VELOCITA_MAX));
-		setParata(Dado.tira(Costanti.ELFA_PARATA_MIN, Costanti.ELFA_PARATA_MAX));
-		setResistenzaMagica(Dado.tira(Costanti.ELFA_RESISTENZA_MAGICA_MIN, Costanti.ELFA_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tira(Costanti.ELFA_MAGIA_MIN, Costanti.ELFA_MAGIA_MAX));
-		setFuria(Dado.tira(Costanti.ELFA_FURIA_MIN, Costanti.ELFA_FURIA_MAX));
+		setForza(Dado.tiraAncheSenzaRange(Costanti.ELFA_FORZA_MIN, Costanti.ELFA_FORZA_MAX));
+		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.ELFA_DESTREZZA_MIN, Costanti.ELFA_DESTREZZA_MAX));
+		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.ELFA_COSTITUZIONE_MIN, Costanti.ELFA_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.ELFA_INTELLIGENZA_MIN, Costanti.ELFA_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.ELFA_SAGGEZZA_MIN, Costanti.ELFA_SAGGEZZA_MAX));
+		setFortuna(Dado.tiraAncheSenzaRange(Costanti.ELFA_FORTUNA_MIN, Costanti.ELFA_FORTUNA_MAX));
+		setCritico(Dado.tiraAncheSenzaRange(Costanti.ELFA_CRITICO_MIN, Costanti.ELFA_CRITICO_MAX));
+		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.ELFA_PRECISIONE_MIN, Costanti.ELFA_PRECISIONE_MAX));
+		setVelocita(Dado.tiraAncheSenzaRange(Costanti.ELFA_VELOCITA_MIN, Costanti.ELFA_VELOCITA_MAX));
+		setParata(Dado.tiraAncheSenzaRange(Costanti.ELFA_PARATA_MIN, Costanti.ELFA_PARATA_MAX));
+		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.ELFA_RESISTENZA_MAGICA_MIN, Costanti.ELFA_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tiraAncheSenzaRange(Costanti.ELFA_MAGIA_MIN, Costanti.ELFA_MAGIA_MAX));
+		setFuria(Dado.tiraAncheSenzaRange(Costanti.ELFA_FURIA_MIN, Costanti.ELFA_FURIA_MAX));
 
 	}
 }

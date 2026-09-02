@@ -37,19 +37,19 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		setForza(Dado.tira(Costanti.CENTAURO_FORZA_MIN, Costanti.CENTAURO_FORZA_MAX));
-		setDestrezza(Dado.tira(Costanti.CENTAURO_DESTREZZA_MIN, Costanti.CENTAURO_DESTREZZA_MAX));
-		setCostituzione(Dado.tira(Costanti.CENTAURO_COSTITUZIONE_MIN, Costanti.CENTAURO_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tira(Costanti.CENTAURO_INTELLIGENZA_MIN, Costanti.CENTAURO_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tira(Costanti.CENTAURO_SAGGEZZA_MIN, Costanti.CENTAURO_SAGGEZZA_MAX));
-		setFortuna(Dado.tira(Costanti.CENTAURO_FORTUNA_MIN, Costanti.CENTAURO_FORTUNA_MAX));
-		setCritico(Dado.tira(Costanti.CENTAURO_CRITICO_MIN, Costanti.CENTAURO_CRITICO_MAX));
-		setPrecisione(Dado.tira(Costanti.CENTAURO_PRECISIONE_MIN, Costanti.CENTAURO_PRECISIONE_MAX));
-		setVelocita(Dado.tira(Costanti.CENTAURO_VELOCITA_MIN, Costanti.CENTAURO_VELOCITA_MAX));
-		setParata(Dado.tira(Costanti.CENTAURO_PARATA_MIN, Costanti.CENTAURO_PARATA_MAX));
-		setResistenzaMagica(Dado.tira(Costanti.CENTAURO_RESISTENZA_MAGICA_MIN, Costanti.CENTAURO_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tira(Costanti.CENTAURO_MAGIA_MIN, Costanti.CENTAURO_MAGIA_MAX));
-		setFuria(Dado.tira(Costanti.CENTAURO_FURIA_MIN, Costanti.CENTAURO_FURIA_MAX));
+		setForza(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_FORZA_MIN, Costanti.CENTAURO_FORZA_MAX));
+		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_DESTREZZA_MIN, Costanti.CENTAURO_DESTREZZA_MAX));
+		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_COSTITUZIONE_MIN, Costanti.CENTAURO_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_INTELLIGENZA_MIN, Costanti.CENTAURO_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_SAGGEZZA_MIN, Costanti.CENTAURO_SAGGEZZA_MAX));
+		setFortuna(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_FORTUNA_MIN, Costanti.CENTAURO_FORTUNA_MAX));
+		setCritico(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_CRITICO_MIN, Costanti.CENTAURO_CRITICO_MAX));
+		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_PRECISIONE_MIN, Costanti.CENTAURO_PRECISIONE_MAX));
+		setVelocita(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_VELOCITA_MIN, Costanti.CENTAURO_VELOCITA_MAX));
+		setParata(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_PARATA_MIN, Costanti.CENTAURO_PARATA_MAX));
+		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_RESISTENZA_MAGICA_MIN, Costanti.CENTAURO_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_MAGIA_MIN, Costanti.CENTAURO_MAGIA_MAX));
+		setFuria(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_FURIA_MIN, Costanti.CENTAURO_FURIA_MAX));
 
 	}
 

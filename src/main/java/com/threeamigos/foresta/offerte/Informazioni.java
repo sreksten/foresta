@@ -63,7 +63,7 @@ public class Informazioni implements Offerta {
 		if (citta.isEmpty()) {
 			sb.append("tutte le città sono state distrutte dal Drago.");
 		} else {
-			int indice = Dado.tira(citta.size()) - 1;
+			int indice = Dado.tiraAncheAUnaFaccia(citta.size()) - 1;
 			ClassiLocazione classeLocazione = citta.get(indice);
 			CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(classeLocazione);
 			Foresta.setLocazioneConosciuta(coordinate);
@@ -83,7 +83,7 @@ public class Informazioni implements Offerta {
 					castelli.add(corrente);
 				}
 			}
-			int indice = Dado.tira(castelli.size()) - 1;
+			int indice = Dado.tiraAncheAUnaFaccia(castelli.size()) - 1;
 			classeLocazione = castelli.get(indice);
 			coordinate = Foresta.getCoordinateLocazioneUnica(classeLocazione);
 		}

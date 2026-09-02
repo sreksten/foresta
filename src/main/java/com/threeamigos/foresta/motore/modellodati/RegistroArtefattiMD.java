@@ -29,7 +29,7 @@ public class RegistroArtefattiMD implements Serializzabile {
 	public final ArtefattoESuaUbicazione getArtefattoCasuale() {
 		if (!artefattiInLocazione.isEmpty()) {
             ArrayList<CoordinateMD> elencoCoordinate = new ArrayList<>(artefattiInLocazione.keySet());
-			int indice = Dado.tira(elencoCoordinate.size()) - 1;
+			int indice = Dado.tiraAncheAUnaFaccia(elencoCoordinate.size()) - 1;
 			CoordinateMD coordinate = elencoCoordinate.get(indice);
 			ArtefattoMD artefatto = artefattiInLocazione.get(coordinate);
 			return new ArtefattoESuaUbicazione(artefatto, coordinate);

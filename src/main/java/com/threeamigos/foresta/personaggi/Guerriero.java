@@ -40,19 +40,19 @@ public class Guerriero extends PersonaggioBase implements Personaggio {
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		setForza(Dado.tira(Costanti.GUERRIERO_FORZA_MIN, Costanti.GUERRIERO_FORZA_MAX));
-		setDestrezza(Dado.tira(Costanti.GUERRIERO_DESTREZZA_MIN, Costanti.GUERRIERO_DESTREZZA_MAX));
-		setCostituzione(Dado.tira(Costanti.GUERRIERO_COSTITUZIONE_MIN, Costanti.GUERRIERO_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tira(Costanti.GUERRIERO_INTELLIGENZA_MIN, Costanti.GUERRIERO_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tira(Costanti.GUERRIERO_SAGGEZZA_MIN, Costanti.GUERRIERO_SAGGEZZA_MAX));
-		setFortuna(Dado.tira(Costanti.GUERRIERO_FORTUNA_MIN, Costanti.GUERRIERO_FORTUNA_MAX));
-		setCritico(Dado.tira(Costanti.GUERRIERO_CRITICO_MIN, Costanti.GUERRIERO_CRITICO_MAX));
-		setPrecisione(Dado.tira(Costanti.GUERRIERO_PRECISIONE_MIN, Costanti.GUERRIERO_PRECISIONE_MAX));
-		setVelocita(Dado.tira(Costanti.GUERRIERO_VELOCITA_MIN, Costanti.GUERRIERO_VELOCITA_MAX));
-		setParata(Dado.tira(Costanti.GUERRIERO_PARATA_MIN, Costanti.GUERRIERO_PARATA_MAX));
-		setResistenzaMagica(Dado.tira(Costanti.GUERRIERO_RESISTENZA_MAGICA_MIN, Costanti.GUERRIERO_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tira(Costanti.GUERRIERO_MAGIA_MIN, Costanti.GUERRIERO_MAGIA_MAX));
-		setFuria(Dado.tira(Costanti.GUERRIERO_FURIA_MIN, Costanti.GUERRIERO_FURIA_MAX));
+		setForza(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_FORZA_MIN, Costanti.GUERRIERO_FORZA_MAX));
+		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_DESTREZZA_MIN, Costanti.GUERRIERO_DESTREZZA_MAX));
+		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_COSTITUZIONE_MIN, Costanti.GUERRIERO_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_INTELLIGENZA_MIN, Costanti.GUERRIERO_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_SAGGEZZA_MIN, Costanti.GUERRIERO_SAGGEZZA_MAX));
+		setFortuna(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_FORTUNA_MIN, Costanti.GUERRIERO_FORTUNA_MAX));
+		setCritico(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_CRITICO_MIN, Costanti.GUERRIERO_CRITICO_MAX));
+		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_PRECISIONE_MIN, Costanti.GUERRIERO_PRECISIONE_MAX));
+		setVelocita(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_VELOCITA_MIN, Costanti.GUERRIERO_VELOCITA_MAX));
+		setParata(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_PARATA_MIN, Costanti.GUERRIERO_PARATA_MAX));
+		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_RESISTENZA_MAGICA_MIN, Costanti.GUERRIERO_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_MAGIA_MIN, Costanti.GUERRIERO_MAGIA_MAX));
+		setFuria(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_FURIA_MIN, Costanti.GUERRIERO_FURIA_MAX));
 
 	}
 }

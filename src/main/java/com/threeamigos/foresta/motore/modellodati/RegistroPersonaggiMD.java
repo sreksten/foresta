@@ -29,7 +29,7 @@ public class RegistroPersonaggiMD implements Serializzabile {
 	public final PersonaggioMD getPersonaggioCasuale() {
 		if (!personaggiInLocazione.isEmpty()) {
             ArrayList<CoordinateMD> elencoCoordinate = new ArrayList<>(personaggiInLocazione.keySet());
-			int indice = Dado.tira(elencoCoordinate.size()) - 1;
+			int indice = Dado.tiraAncheAUnaFaccia(elencoCoordinate.size()) - 1;
 			CoordinateMD coordinate = elencoCoordinate.get(indice);
 			PersonaggioMD personaggio = personaggiInLocazione.get(coordinate);
 			personaggiInLocazione.remove(coordinate);

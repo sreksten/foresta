@@ -37,19 +37,19 @@ public class Gigante extends PersonaggioBase implements Personaggio {
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		setForza(Dado.tira(Costanti.GIGANTE_FORZA_MIN, Costanti.GIGANTE_FORZA_MAX));
-		setDestrezza(Dado.tira(Costanti.GIGANTE_DESTREZZA_MIN, Costanti.GIGANTE_DESTREZZA_MAX));
-		setCostituzione(Dado.tira(Costanti.GIGANTE_COSTITUZIONE_MIN, Costanti.GIGANTE_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tira(Costanti.GIGANTE_INTELLIGENZA_MIN, Costanti.GIGANTE_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tira(Costanti.GIGANTE_SAGGEZZA_MIN, Costanti.GIGANTE_SAGGEZZA_MAX));
-		setFortuna(Dado.tira(Costanti.GIGANTE_FORTUNA_MIN, Costanti.GIGANTE_FORTUNA_MAX));
-		setCritico(Dado.tira(Costanti.GIGANTE_CRITICO_MIN, Costanti.GIGANTE_CRITICO_MAX));
-		setPrecisione(Dado.tira(Costanti.GIGANTE_PRECISIONE_MIN, Costanti.GIGANTE_PRECISIONE_MAX));
-		setVelocita(Dado.tira(Costanti.GIGANTE_VELOCITA_MIN, Costanti.GIGANTE_VELOCITA_MAX));
-		setParata(Dado.tira(Costanti.GIGANTE_PARATA_MIN, Costanti.GIGANTE_PARATA_MAX));
-		setResistenzaMagica(Dado.tira(Costanti.GIGANTE_RESISTENZA_MAGICA_MIN, Costanti.GIGANTE_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tira(Costanti.GIGANTE_MAGIA_MIN, Costanti.GIGANTE_MAGIA_MAX));
-		setFuria(Dado.tira(Costanti.GIGANTE_FURIA_MIN, Costanti.GIGANTE_FURIA_MAX));
+		setForza(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_FORZA_MIN, Costanti.GIGANTE_FORZA_MAX));
+		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_DESTREZZA_MIN, Costanti.GIGANTE_DESTREZZA_MAX));
+		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_COSTITUZIONE_MIN, Costanti.GIGANTE_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_INTELLIGENZA_MIN, Costanti.GIGANTE_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_SAGGEZZA_MIN, Costanti.GIGANTE_SAGGEZZA_MAX));
+		setFortuna(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_FORTUNA_MIN, Costanti.GIGANTE_FORTUNA_MAX));
+		setCritico(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_CRITICO_MIN, Costanti.GIGANTE_CRITICO_MAX));
+		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_PRECISIONE_MIN, Costanti.GIGANTE_PRECISIONE_MAX));
+		setVelocita(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_VELOCITA_MIN, Costanti.GIGANTE_VELOCITA_MAX));
+		setParata(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_PARATA_MIN, Costanti.GIGANTE_PARATA_MAX));
+		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_RESISTENZA_MAGICA_MIN, Costanti.GIGANTE_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_MAGIA_MIN, Costanti.GIGANTE_MAGIA_MAX));
+		setFuria(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_FURIA_MIN, Costanti.GIGANTE_FURIA_MAX));
 
 	}
 

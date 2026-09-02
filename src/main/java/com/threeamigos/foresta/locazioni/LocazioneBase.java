@@ -5,6 +5,9 @@ import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
+import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
+import com.threeamigos.foresta.motore.modellodati.TipoDanno;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
@@ -12,6 +15,7 @@ import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
@@ -130,9 +134,9 @@ public abstract class LocazioneBase implements Locazione {
 			int possibilitaIncontro = Dado.tira(100);
 			// Non sempre si trovano mostri
 			if (possibilitaIncontro <= 90) {
-				int ordinale = Dado.tira(m.length) - 1;
+				int ordinale = Dado.tiraAncheAUnaFaccia(m.length) - 1;
 				ClassePersonaggio classePersonaggio = m[ordinale];
-				int numero = classePersonaggio.getQuantitaMassima() == 1 ? 1 : Dado.tira(classePersonaggio.getQuantitaMassima());
+				int numero = Dado.tiraAncheAUnaFaccia(classePersonaggio.getQuantitaMassima());
 				Logger.log("Scelta da " + m.length + " personaggi la classe " + classePersonaggio + ", numero " + numero);
 				Personaggio p;
 				for (int i = 0; i < numero; i++) {
@@ -153,7 +157,7 @@ public abstract class LocazioneBase implements Locazione {
 			ClassiOggetto[] o = getPossibiliOggetti();
 			Logger.log("Scelta da " + o.length + " oggetti");
 			if (o.length > 0) {
-				int indice = o.length == 1 ? 0 : Dado.tira(o.length) - 1;
+				int indice = Dado.tiraAncheAUnaFaccia(o.length) - 1;
 				ClassiOggetto classeOggetto = o[indice];
 				Logger.log("Classe oggetto " + classeOggetto);
 				Oggetto probabileOggetto = classeOggetto.getIstanza();
@@ -424,7 +428,7 @@ public abstract class LocazioneBase implements Locazione {
 						break;
 					case 2:
 						Personaggio avversario = gruppoAvversario.getCapo();
-						int ferite = Dado.tira(avversario.getSalute());
+						int ferite = Dado.tiraAncheAUnaFaccia(avversario.getSalute());
 						if (ferite < 20) {
 							descrizione = "riceve alcune lievi ferite.";
 						} else if (ferite > 40) {
@@ -738,33 +742,34 @@ public abstract class LocazioneBase implements Locazione {
 
 			// Test per nuovo motore combattimento
 
-//			Artefatto arma = CostruttoreArtefatto.istanza()
-//					.setTipo(TipoArtefatto.ASCIA)
-//					.setNome("il budello di tu' ma' vestito da spada leggendaria")
-//					.setDescrizione("si presta bene a picchiare")
-//					.setLivello(1)
-//					.setCostoAcquisto(15)
-//					.setPeso(2)
-//					.setModificatore(TipoAttributo.FORZA, 1)
-//					.costruisci();
-//
-//			Logger.log("Valutazione danno originale: danniBersaglio (" + bersaglio.getNome() + ") = " + danniBersaglio + ", danniCombattente (" + combattente.getNome() + ") = " + danniCombattente);
-//			Logger.log("Valutazione combattente -> bersaglio");
-//			boolean colpirebbe = CalcolatoreCombattimento.colpisce(combattente, bersaglio);
-//			if (colpirebbe) {
-//				RisultatoDanno risultato = CalcolatoreCombattimento.calcolaDannoFinale(combattente, bersaglio, TipoDanno.TAGLIENTE, arma);
-//				Logger.log("Con nuovo motore il combattente colpirebbe assegnando " + risultato.getDannoTotale() + " danni");
-//			} else {
-//				Logger.log("Con nuovo motore il combattente non colpisce");
-//			}
-//			Logger.log("Valutazione bersaglio -> combattente");
-//			colpirebbe = CalcolatoreCombattimento.colpisce(bersaglio, combattente);
-//			if (colpirebbe) {
-//				RisultatoDanno risultato = CalcolatoreCombattimento.calcolaDannoFinale(bersaglio, combattente, TipoDanno.TAGLIENTE, arma);
-//				Logger.log("Con nuovo motore il bersaglio colpirebbe assegnando " + risultato.getDannoTotale() + " danni");
-//			} else {
-//				Logger.log("Con nuovo motore il bersaglio non colpisce");
-//			}
+			Artefatto arma = CostruttoreArtefatto.istanza()
+					.setTipo(TipoArtefatto.ASCIA)
+					.setNome("il budello di tu' ma' vestito da spada leggendaria")
+					.setDescrizione("si presta bene a picchiare")
+					.setLivello(1)
+					.setDanniBase(5)
+					.setCostoAcquisto(15)
+					.setPeso(2)
+					.setModificatore(TipoAttributo.FORZA, 1)
+					.costruisci();
+
+			Logger.log("Valutazione danno originale: danniBersaglio (" + bersaglio.getNome() + ") = " + danniBersaglio + ", danniCombattente (" + combattente.getNome() + ") = " + danniCombattente);
+			Logger.log("Valutazione combattente -> bersaglio");
+			boolean colpirebbe = CalcolatoreCombattimento.colpisce(combattente, bersaglio);
+			if (colpirebbe) {
+				RisultatoDanno risultato = CalcolatoreCombattimento.calcolaDannoFinale(combattente, bersaglio, TipoDanno.TAGLIENTE, arma);
+				Logger.log("Con nuovo motore il combattente colpirebbe assegnando " + risultato.getDannoTotale() + " danni");
+			} else {
+				Logger.log("Con nuovo motore il combattente non colpisce");
+			}
+			Logger.log("Valutazione bersaglio -> combattente");
+			colpirebbe = CalcolatoreCombattimento.colpisce(bersaglio, combattente);
+			if (colpirebbe) {
+				RisultatoDanno risultato = CalcolatoreCombattimento.calcolaDannoFinale(bersaglio, combattente, TipoDanno.TAGLIENTE, arma);
+				Logger.log("Con nuovo motore il bersaglio colpirebbe assegnando " + risultato.getDannoTotale() + " danni");
+			} else {
+				Logger.log("Con nuovo motore il bersaglio non colpisce");
+			}
 
 			combattente.subSalute(danniBersaglio, bersaglio, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
 			if (!combattente.isVivo()) {
