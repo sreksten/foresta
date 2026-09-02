@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Bardo extends PersonaggioBase implements Personaggio {
@@ -37,5 +38,20 @@ public class Bardo extends PersonaggioBase implements Personaggio {
 		setCarisma(Costanti.BARDO_MAX_CARISMA);
 		setCorrompibile(true);
 		setAmichevole(true);
+
+		setForza(Dado.tira(Costanti.BARDO_FORZA_MIN, Costanti.BARDO_FORZA_MAX));
+		setDestrezza(Dado.tira(Costanti.BARDO_DESTREZZA_MIN, Costanti.BARDO_DESTREZZA_MAX));
+		setCostituzione(Dado.tira(Costanti.BARDO_COSTITUZIONE_MIN, Costanti.BARDO_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tira(Costanti.BARDO_INTELLIGENZA_MIN, Costanti.BARDO_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tira(Costanti.BARDO_SAGGEZZA_MIN, Costanti.BARDO_SAGGEZZA_MAX));
+		setFortuna(Dado.tira(Costanti.BARDO_FORTUNA_MIN, Costanti.BARDO_FORTUNA_MAX));
+		setCritico(Dado.tira(Costanti.BARDO_CRITICO_MIN, Costanti.BARDO_CRITICO_MAX));
+		setPrecisione(Dado.tira(Costanti.BARDO_PRECISIONE_MIN, Costanti.BARDO_PRECISIONE_MAX));
+		setVelocita(Dado.tira(Costanti.BARDO_VELOCITA_MIN, Costanti.BARDO_VELOCITA_MAX));
+		setParata(Dado.tira(Costanti.BARDO_PARATA_MIN, Costanti.BARDO_PARATA_MAX));
+		setResistenzaMagica(Dado.tira(Costanti.BARDO_RESISTENZA_MAGICA_MIN, Costanti.BARDO_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tira(Costanti.BARDO_MAGIA_MIN, Costanti.BARDO_MAGIA_MAX));
+		setFuria(Dado.tira(Costanti.BARDO_FURIA_MIN, Costanti.BARDO_FURIA_MAX));
+
 	}
 }

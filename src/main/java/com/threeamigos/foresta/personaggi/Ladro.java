@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Ladro extends PersonaggioBase implements Personaggio {
@@ -37,5 +38,20 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 		setCarisma(Costanti.LADRO_MAX_CARISMA);
 		setCorrompibile(true);
 		setAmichevole(true);
+
+		setForza(Dado.tira(Costanti.LADRO_FORZA_MIN, Costanti.LADRO_FORZA_MAX));
+		setDestrezza(Dado.tira(Costanti.LADRO_DESTREZZA_MIN, Costanti.LADRO_DESTREZZA_MAX));
+		setCostituzione(Dado.tira(Costanti.LADRO_COSTITUZIONE_MIN, Costanti.LADRO_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tira(Costanti.LADRO_INTELLIGENZA_MIN, Costanti.LADRO_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tira(Costanti.LADRO_SAGGEZZA_MIN, Costanti.LADRO_SAGGEZZA_MAX));
+		setFortuna(Dado.tira(Costanti.LADRO_FORTUNA_MIN, Costanti.LADRO_FORTUNA_MAX));
+		setCritico(Dado.tira(Costanti.LADRO_CRITICO_MIN, Costanti.LADRO_CRITICO_MAX));
+		setPrecisione(Dado.tira(Costanti.LADRO_PRECISIONE_MIN, Costanti.LADRO_PRECISIONE_MAX));
+		setVelocita(Dado.tira(Costanti.LADRO_VELOCITA_MIN, Costanti.LADRO_VELOCITA_MAX));
+		setParata(Dado.tira(Costanti.LADRO_PARATA_MIN, Costanti.LADRO_PARATA_MAX));
+		setResistenzaMagica(Dado.tira(Costanti.LADRO_RESISTENZA_MAGICA_MIN, Costanti.LADRO_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tira(Costanti.LADRO_MAGIA_MIN, Costanti.LADRO_MAGIA_MAX));
+		setFuria(Dado.tira(Costanti.LADRO_FURIA_MIN, Costanti.LADRO_FURIA_MAX));
+
 	}
 }

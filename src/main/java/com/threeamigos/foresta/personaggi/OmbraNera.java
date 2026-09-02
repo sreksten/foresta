@@ -2,6 +2,7 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
 
 public class OmbraNera extends PersonaggioBase implements Personaggio {
@@ -33,6 +34,21 @@ public class OmbraNera extends PersonaggioBase implements Personaggio {
 		setCoraggio(Costanti.OMBRANERA_MAX_CORAGGIO);
 		setCarisma(Costanti.OMBRANERA_MAX_CARISMA);
 		setQuantitaMassima(Costanti.OMBRANERA_MAX_NUMERO);
+
+		setForza(Dado.tira(Costanti.OMBRANERA_FORZA_MIN, Costanti.OMBRANERA_FORZA_MAX));
+		setDestrezza(Dado.tira(Costanti.OMBRANERA_DESTREZZA_MIN, Costanti.OMBRANERA_DESTREZZA_MAX));
+		setCostituzione(Dado.tira(Costanti.OMBRANERA_COSTITUZIONE_MIN, Costanti.OMBRANERA_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tira(Costanti.OMBRANERA_INTELLIGENZA_MIN, Costanti.OMBRANERA_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tira(Costanti.OMBRANERA_SAGGEZZA_MIN, Costanti.OMBRANERA_SAGGEZZA_MAX));
+		setFortuna(Dado.tira(Costanti.OMBRANERA_FORTUNA_MIN, Costanti.OMBRANERA_FORTUNA_MAX));
+		setCritico(Dado.tira(Costanti.OMBRANERA_CRITICO_MIN, Costanti.OMBRANERA_CRITICO_MAX));
+		setPrecisione(Dado.tira(Costanti.OMBRANERA_PRECISIONE_MIN, Costanti.OMBRANERA_PRECISIONE_MAX));
+		setVelocita(Dado.tira(Costanti.OMBRANERA_VELOCITA_MIN, Costanti.OMBRANERA_VELOCITA_MAX));
+		setParata(Dado.tira(Costanti.OMBRANERA_PARATA_MIN, Costanti.OMBRANERA_PARATA_MAX));
+		setResistenzaMagica(Dado.tira(Costanti.OMBRANERA_RESISTENZA_MAGICA_MIN, Costanti.OMBRANERA_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tira(Costanti.OMBRANERA_MAGIA_MIN, Costanti.OMBRANERA_MAGIA_MAX));
+		setFuria(Dado.tira(Costanti.OMBRANERA_FURIA_MIN, Costanti.OMBRANERA_FURIA_MAX));
+
 	}
 
 	@Override

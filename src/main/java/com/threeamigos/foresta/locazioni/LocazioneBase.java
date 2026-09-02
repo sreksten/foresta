@@ -5,6 +5,7 @@ import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
@@ -559,6 +560,11 @@ public abstract class LocazioneBase implements Locazione {
 	public void azzeraLocazione(GruppoGiocatore g) {
 		if (completa) {
 			g.setLocazioneCorrenteVisitata();
+		}
+		for (Personaggio p : g.getPersonaggi()) {
+			if (p.hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
+				p.removeEffettoDiStato(TipoEffettoDiStato.BERSERK);
+			}
 		}
 	}
 

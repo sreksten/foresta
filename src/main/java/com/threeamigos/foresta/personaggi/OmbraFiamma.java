@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
 
 public class OmbraFiamma extends PersonaggioBase implements Personaggio {
@@ -41,6 +42,21 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 		setCarisma(Costanti.OMBRAFIAMMA_MAX_CARISMA);
 		setCorrompibile(true);
 		setAmichevole(true);
+
+		setForza(Dado.tira(Costanti.OMBRAFIAMMA_FORZA_MIN, Costanti.OMBRAFIAMMA_FORZA_MAX));
+		setDestrezza(Dado.tira(Costanti.OMBRAFIAMMA_DESTREZZA_MIN, Costanti.OMBRAFIAMMA_DESTREZZA_MAX));
+		setCostituzione(Dado.tira(Costanti.OMBRAFIAMMA_COSTITUZIONE_MIN, Costanti.OMBRAFIAMMA_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tira(Costanti.OMBRAFIAMMA_INTELLIGENZA_MIN, Costanti.OMBRAFIAMMA_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tira(Costanti.OMBRAFIAMMA_SAGGEZZA_MIN, Costanti.OMBRAFIAMMA_SAGGEZZA_MAX));
+		setFortuna(Dado.tira(Costanti.OMBRAFIAMMA_FORTUNA_MIN, Costanti.OMBRAFIAMMA_FORTUNA_MAX));
+		setCritico(Dado.tira(Costanti.OMBRAFIAMMA_CRITICO_MIN, Costanti.OMBRAFIAMMA_CRITICO_MAX));
+		setPrecisione(Dado.tira(Costanti.OMBRAFIAMMA_PRECISIONE_MIN, Costanti.OMBRAFIAMMA_PRECISIONE_MAX));
+		setVelocita(Dado.tira(Costanti.OMBRAFIAMMA_VELOCITA_MIN, Costanti.OMBRAFIAMMA_VELOCITA_MAX));
+		setParata(Dado.tira(Costanti.OMBRAFIAMMA_PARATA_MIN, Costanti.OMBRAFIAMMA_PARATA_MAX));
+		setResistenzaMagica(Dado.tira(Costanti.OMBRAFIAMMA_RESISTENZA_MAGICA_MIN, Costanti.OMBRAFIAMMA_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tira(Costanti.OMBRAFIAMMA_MAGIA_MIN, Costanti.OMBRAFIAMMA_MAGIA_MAX));
+		setFuria(Dado.tira(Costanti.OMBRAFIAMMA_FURIA_MIN, Costanti.OMBRAFIAMMA_FURIA_MAX));
+
 	}
 
 	@Override

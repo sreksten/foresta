@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Elfo extends PersonaggioBase implements Personaggio {
@@ -40,5 +41,20 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 		setCarisma(Costanti.ELFO_MAX_CARISMA);
 		setCorrompibile(true);
 		setAmichevole(true);
+
+		setForza(Dado.tira(Costanti.ELFO_FORZA_MIN, Costanti.ELFO_FORZA_MAX));
+		setDestrezza(Dado.tira(Costanti.ELFO_DESTREZZA_MIN, Costanti.ELFO_DESTREZZA_MAX));
+		setCostituzione(Dado.tira(Costanti.ELFO_COSTITUZIONE_MIN, Costanti.ELFO_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tira(Costanti.ELFO_INTELLIGENZA_MIN, Costanti.ELFO_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tira(Costanti.ELFO_SAGGEZZA_MIN, Costanti.ELFO_SAGGEZZA_MAX));
+		setFortuna(Dado.tira(Costanti.ELFO_FORTUNA_MIN, Costanti.ELFO_FORTUNA_MAX));
+		setCritico(Dado.tira(Costanti.ELFO_CRITICO_MIN, Costanti.ELFO_CRITICO_MAX));
+		setPrecisione(Dado.tira(Costanti.ELFO_PRECISIONE_MIN, Costanti.ELFO_PRECISIONE_MAX));
+		setVelocita(Dado.tira(Costanti.ELFO_VELOCITA_MIN, Costanti.ELFO_VELOCITA_MAX));
+		setParata(Dado.tira(Costanti.ELFO_PARATA_MIN, Costanti.ELFO_PARATA_MAX));
+		setResistenzaMagica(Dado.tira(Costanti.ELFO_RESISTENZA_MAGICA_MIN, Costanti.ELFO_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tira(Costanti.ELFO_MAGIA_MIN, Costanti.ELFO_MAGIA_MAX));
+		setFuria(Dado.tira(Costanti.ELFO_FURIA_MIN, Costanti.ELFO_FURIA_MAX));
+
 	}
 }

@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -35,6 +36,21 @@ public class Hobgoblin extends PersonaggioBase implements Personaggio {
 		setCarisma(Costanti.HOBGOBLIN_MAX_CARISMA);
 		setQuantitaMassima(Costanti.HOBGOBLIN_MAX_NUMERO);
 		setCorrompibile(true);
+
+		setForza(Dado.tira(Costanti.HOBGOBLIN_FORZA_MIN, Costanti.HOBGOBLIN_FORZA_MAX));
+		setDestrezza(Dado.tira(Costanti.HOBGOBLIN_DESTREZZA_MIN, Costanti.HOBGOBLIN_DESTREZZA_MAX));
+		setCostituzione(Dado.tira(Costanti.HOBGOBLIN_COSTITUZIONE_MIN, Costanti.HOBGOBLIN_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tira(Costanti.HOBGOBLIN_INTELLIGENZA_MIN, Costanti.HOBGOBLIN_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tira(Costanti.HOBGOBLIN_SAGGEZZA_MIN, Costanti.HOBGOBLIN_SAGGEZZA_MAX));
+		setFortuna(Dado.tira(Costanti.HOBGOBLIN_FORTUNA_MIN, Costanti.HOBGOBLIN_FORTUNA_MAX));
+		setCritico(Dado.tira(Costanti.HOBGOBLIN_CRITICO_MIN, Costanti.HOBGOBLIN_CRITICO_MAX));
+		setPrecisione(Dado.tira(Costanti.HOBGOBLIN_PRECISIONE_MIN, Costanti.HOBGOBLIN_PRECISIONE_MAX));
+		setVelocita(Dado.tira(Costanti.HOBGOBLIN_VELOCITA_MIN, Costanti.HOBGOBLIN_VELOCITA_MAX));
+		setParata(Dado.tira(Costanti.HOBGOBLIN_PARATA_MIN, Costanti.HOBGOBLIN_PARATA_MAX));
+		setResistenzaMagica(Dado.tira(Costanti.HOBGOBLIN_RESISTENZA_MAGICA_MIN, Costanti.HOBGOBLIN_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tira(Costanti.HOBGOBLIN_MAGIA_MIN, Costanti.HOBGOBLIN_MAGIA_MAX));
+		setFuria(Dado.tira(Costanti.HOBGOBLIN_FURIA_MIN, Costanti.HOBGOBLIN_FURIA_MAX));
+
 	}
 
 	@Override

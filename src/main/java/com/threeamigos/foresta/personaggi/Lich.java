@@ -2,6 +2,7 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Lich extends PersonaggioBase implements Personaggio {
@@ -34,6 +35,21 @@ public class Lich extends PersonaggioBase implements Personaggio {
 		setValore(Costanti.LICH_MAX_VALORE);
 		setCoraggio(Costanti.LICH_MAX_CORAGGIO);
 		setCarisma(Costanti.LICH_MAX_CARISMA);
+
+		setForza(Dado.tira(Costanti.LICH_FORZA_MIN, Costanti.LICH_FORZA_MAX));
+		setDestrezza(Dado.tira(Costanti.LICH_DESTREZZA_MIN, Costanti.LICH_DESTREZZA_MAX));
+		setCostituzione(Dado.tira(Costanti.LICH_COSTITUZIONE_MIN, Costanti.LICH_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tira(Costanti.LICH_INTELLIGENZA_MIN, Costanti.LICH_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tira(Costanti.LICH_SAGGEZZA_MIN, Costanti.LICH_SAGGEZZA_MAX));
+		setFortuna(Dado.tira(Costanti.LICH_FORTUNA_MIN, Costanti.LICH_FORTUNA_MAX));
+		setCritico(Dado.tira(Costanti.LICH_CRITICO_MIN, Costanti.LICH_CRITICO_MAX));
+		setPrecisione(Dado.tira(Costanti.LICH_PRECISIONE_MIN, Costanti.LICH_PRECISIONE_MAX));
+		setVelocita(Dado.tira(Costanti.LICH_VELOCITA_MIN, Costanti.LICH_VELOCITA_MAX));
+		setParata(Dado.tira(Costanti.LICH_PARATA_MIN, Costanti.LICH_PARATA_MAX));
+		setResistenzaMagica(Dado.tira(Costanti.LICH_RESISTENZA_MAGICA_MIN, Costanti.LICH_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tira(Costanti.LICH_MAGIA_MIN, Costanti.LICH_MAGIA_MAX));
+		setFuria(Dado.tira(Costanti.LICH_FURIA_MIN, Costanti.LICH_FURIA_MAX));
+
 	}
 
 	@Override

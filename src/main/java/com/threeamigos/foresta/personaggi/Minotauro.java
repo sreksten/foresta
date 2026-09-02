@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -43,5 +44,20 @@ public class Minotauro extends PersonaggioBase implements Personaggio {
 		setCarisma(Costanti.MINOTAURO_MAX_CARISMA);
 		setQuantitaMassima(Costanti.MINOTAURO_MAX_NUMERO);
 		setCorrompibile(true);
+
+		setForza(Dado.tira(Costanti.MINOTAURO_FORZA_MIN, Costanti.MINOTAURO_FORZA_MAX));
+		setDestrezza(Dado.tira(Costanti.MINOTAURO_DESTREZZA_MIN, Costanti.MINOTAURO_DESTREZZA_MAX));
+		setCostituzione(Dado.tira(Costanti.MINOTAURO_COSTITUZIONE_MIN, Costanti.MINOTAURO_COSTITUZIONE_MAX));
+		setIntelligenza(Dado.tira(Costanti.MINOTAURO_INTELLIGENZA_MIN, Costanti.MINOTAURO_INTELLIGENZA_MAX));
+		setSaggezza(Dado.tira(Costanti.MINOTAURO_SAGGEZZA_MIN, Costanti.MINOTAURO_SAGGEZZA_MAX));
+		setFortuna(Dado.tira(Costanti.MINOTAURO_FORTUNA_MIN, Costanti.MINOTAURO_FORTUNA_MAX));
+		setCritico(Dado.tira(Costanti.MINOTAURO_CRITICO_MIN, Costanti.MINOTAURO_CRITICO_MAX));
+		setPrecisione(Dado.tira(Costanti.MINOTAURO_PRECISIONE_MIN, Costanti.MINOTAURO_PRECISIONE_MAX));
+		setVelocita(Dado.tira(Costanti.MINOTAURO_VELOCITA_MIN, Costanti.MINOTAURO_VELOCITA_MAX));
+		setParata(Dado.tira(Costanti.MINOTAURO_PARATA_MIN, Costanti.MINOTAURO_PARATA_MAX));
+		setResistenzaMagica(Dado.tira(Costanti.MINOTAURO_RESISTENZA_MAGICA_MIN, Costanti.MINOTAURO_RESISTENZA_MAGICA_MAX));
+		setMagia(Dado.tira(Costanti.MINOTAURO_MAGIA_MIN, Costanti.MINOTAURO_MAGIA_MAX));
+		setFuria(Dado.tira(Costanti.MINOTAURO_FURIA_MIN, Costanti.MINOTAURO_FURIA_MAX));
+
 	}
 }
