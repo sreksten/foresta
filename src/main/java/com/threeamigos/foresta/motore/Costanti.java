@@ -113,6 +113,13 @@ public class Costanti {
     public static final int BARDO_FURIA_MIN = 15;
     public static final int BARDO_FURIA_MAX = 20;
 
+public static final double BARDO_MOLTIPLICATORE_CARICO = 0.9;
+public static final String BARDO_MOLTIPLICATORE_CARICO_NOTA = "Struttura slanciata ed elegante. Predilige la mobilità e l'armatura leggera rispetto alla pura massa da trasporto.";
+public static final double BARDO_MOLTIPLICATORE_CRITICO = 1.1;
+public static final String BARDO_MOLTIPLICATORE_CRITICO_NOTA = "Opportunista sul campo di battaglia; sa leggere il ritmo del duello e colpire quando il nemico si scopre per un errore.";
+public static final double BARDO_MOLTIPLICATORE_PRECISIONE = 1.0;
+public static final String BARDO_MOLTIPLICATORE_PRECISIONE_NOTA = "Precisione umana standard; si affida al tempismo e alla coordinazione base.";
+
     public static final int CANTASTORIE_MAX_SALUTE = 400;
     public static final int CANTASTORIE_MAX_MAGIA = 50;
     public static final int CANTASTORIE_MAX_VALORE = 50;
@@ -144,6 +151,13 @@ public class Costanti {
     public static final int CANTASTORIE_MAGIA_MAX = 40;
     public static final int CANTASTORIE_FURIA_MIN = 15;
     public static final int CANTASTORIE_FURIA_MAX = 20;
+
+public static final double CANTASTORIE_MOLTIPLICATORE_CARICO = 0.85;
+public static final String CANTASTORIE_MOLTIPLICATORE_CARICO_NOTA = "Struttura slanciata ed elegante. Predilige la mobilità e l'armatura leggera rispetto alla pura massa da trasporto.";
+public static final double CANTASTORIE_MOLTIPLICATORE_CRITICO = 1.15;
+public static final String CANTASTORIE_MOLTIPLICATORE_CRITICO_NOTA = "Opportunista sul campo di battaglia; sa leggere il ritmo del duello e colpire quando il nemico si scopre per un errore.";
+public static final double CANTASTORIE_MOLTIPLICATORE_PRECISIONE = 1.0;
+public static final String CANTASTORIE_MOLTIPLICATORE_PRECISIONE_NOTA = "Precisione umana standard; si affida al tempismo e alla coordinazione base.";
 
     public static final int ELFA_MAX_SALUTE = 350;
     public static final int ELFA_MAX_MAGIA = 60;
@@ -180,6 +194,13 @@ public class Costanti {
     public static final int ELFA_FURIA_MIN = 10;
     public static final int ELFA_FURIA_MAX = 15;
 
+public static final double ELFA_MOLTIPLICATORE_CARICO = 0.85;
+public static final String ELFA_MOLTIPLICATORE_CARICO_NOTA = "Struttura slanciata ed elegante. Predilige la mobilità e l'armatura leggera rispetto alla pura massa da trasporto.";
+public static final double ELFA_MOLTIPLICATORE_CRITICO = 1.2;
+public static final String ELFA_MOLTIPLICATORE_CRITICO_NOTA = "Grazia, millenni di addestramento e vista acuta garantiscono una precisione nativa superiore alla media umana.";
+public static final double ELFA_MOLTIPLICATORE_PRECISIONE = 1.3;
+public static final String ELFA_MOLTIPLICATORE_PRECISIONE_NOTA = "Tra i migliori. Vista leggendaria, addestramento secolare con l'arco e totale assenza di tremore muscolare.";
+
     public static final int ELFO_MAX_SALUTE = 350;
     public static final int ELFO_MAX_MAGIA = 60;
     public static final int ELFO_MAX_VALORE = 40;
@@ -215,6 +236,13 @@ public class Costanti {
     public static final int ELFO_FURIA_MIN = 10;
     public static final int ELFO_FURIA_MAX = 15;
 
+public static final double ELFO_MOLTIPLICATORE_CARICO = 0.9;
+public static final String ELFO_MOLTIPLICATORE_CARICO_NOTA = "Struttura slanciata ed elegante. Predilige la mobilità e l'armatura leggera rispetto alla pura massa da trasporto.";
+public static final double ELFO_MOLTIPLICATORE_CRITICO = 1.2;
+public static final String ELFO_MOLTIPLICATORE_CRITICO_NOTA = "Grazia, millenni di addestramento e vista acuta garantiscono una precisione nativa superiore alla media umana.";
+public static final double ELFO_MOLTIPLICATORE_PRECISIONE = 1.3;
+public static final String ELFO_MOLTIPLICATORE_PRECISIONE_NOTA = "Tra i migliori. Vista leggendaria, addestramento secolare con l'arco e totale assenza di tremore muscolare.";
+
     public static final int GUERRIERA_MAX_SALUTE = 550;
     public static final int GUERRIERA_MAX_MAGIA = 30;
     public static final int GUERRIERA_MAX_VALORE = 70;
@@ -247,6 +275,13 @@ public class Costanti {
     public static final int GUERRIERA_MAGIA_MAX = 20;
     public static final int GUERRIERA_FURIA_MIN = 25;
     public static final int GUERRIERA_FURIA_MAX = 35;
+
+public static final double GUERRIERA_MOLTIPLICATORE_CARICO = 1.2;
+public static final String GUERRIERA_MOLTIPLICATORE_CARICO_NOTA = "L'archetipo del combattente addestrato a marciare per giorni con piastre d'acciaio addosso.";
+public static final double GUERRIERA_MOLTIPLICATORE_CRITICO = 1.0;
+public static final String GUERRIERA_MOLTIPLICATORE_CRITICO_NOTA = "La Linea di Base. Combattimento frontale bilanciato, basato sull'efficacia marziale standard.";
+public static final double GUERRIERA_MOLTIPLICATORE_PRECISIONE = 1.1;
+public static final String GUERRIERA_MOLTIPLICATORE_PRECISIONE_NOTA = "Riceve un bonus grazie all'addestramento marziale costante, alla disciplina e all'uso metodico delle armi.";
 
     public static final int GUERRIERO_MAX_SALUTE = 550;
     public static final int GUERRIERO_MAX_MAGIA = 30;
@@ -281,6 +316,13 @@ public class Costanti {
     public static final int GUERRIERO_FURIA_MIN = 25;
     public static final int GUERRIERO_FURIA_MAX = 35;
 
+public static final double GUERRIERO_MOLTIPLICATORE_CARICO = 1.25;
+public static final String GUERRIERO_MOLTIPLICATORE_CARICO_NOTA = "L'archetipo del combattente addestrato a marciare per giorni con piastre d'acciaio addosso.";
+public static final double GUERRIERO_MOLTIPLICATORE_CRITICO = 1.0;
+public static final String GUERRIERO_MOLTIPLICATORE_CRITICO_NOTA = "La Linea di Base. Combattimento frontale bilanciato, basato sull'efficacia marziale standard.";
+public static final double GUERRIERO_MOLTIPLICATORE_PRECISIONE = 1.1;
+public static final String GUERRIERO_MOLTIPLICATORE_PRECISIONE_NOTA = "Riceve un bonus grazie all'addestramento marziale costante, alla disciplina e all'uso metodico delle armi.";
+
     public static final int LADRA_MAX_SALUTE = 450;
     public static final int LADRA_MAX_MAGIA = 40;
     public static final int LADRA_MAX_VALORE = 60;
@@ -313,6 +355,13 @@ public class Costanti {
     public static final int LADRA_FURIA_MIN = 15;
     public static final int LADRA_FURIA_MAX = 25;
 
+public static final double LADRA_MOLTIPLICATORE_CARICO = 0.95;
+public static final String LADRA_MOLTIPLICATORE_CARICO_NOTA = "Rappresenta il perfetto equilibrio umano per la reattività. Porta solo lo stretto necessario per non farsi sentire.";
+public static final double LADRA_MOLTIPLICATORE_CRITICO = 1.5;
+public static final String LADRA_MOLTIPLICATORE_CRITICO_NOTA = "Il Re dei Critici. Studia l'anatomia, attacca dall'ombra e usa armi perforanti nei punti scoperti.";
+public static final double LADRA_MOLTIPLICATORE_PRECISIONE = 1.3;
+public static final String LADRA_MOLTIPLICATORE_PRECISIONE_NOTA = "L'eccellenza della mira. Addestrato a far valere ogni singolo pugnale o dardo d'infamia. Non può permettersi di mancare.";
+
     public static final int LADRO_MAX_SALUTE = 450;
     public static final int LADRO_MAX_MAGIA = 40;
     public static final int LADRO_MAX_VALORE = 60;
@@ -344,6 +393,13 @@ public class Costanti {
     public static final int LADRO_MAGIA_MAX = 25;
     public static final int LADRO_FURIA_MIN = 15;
     public static final int LADRO_FURIA_MAX = 25;
+
+public static final double LADRO_MOLTIPLICATORE_CARICO = 1.0;
+public static final String LADRO_MOLTIPLICATORE_CARICO_NOTA = "Rappresenta il perfetto equilibrio umano per la reattività. Porta solo lo stretto necessario per non farsi sentire.";
+public static final double LADRO_MOLTIPLICATORE_CRITICO = 1.5;
+public static final String LADRO_MOLTIPLICATORE_CRITICO_NOTA = "Il Re dei Critici. Studia l'anatomia, attacca dall'ombra e usa armi perforanti nei punti scoperti.";
+public static final double LADRO_MOLTIPLICATORE_PRECISIONE = 1.3;
+public static final String LADRO_MOLTIPLICATORE_PRECISIONE_NOTA = "L'eccellenza della mira. Addestrato a far valere ogni singolo pugnale o dardo d'infamia. Non può permettersi di mancare.";
 
     public static final int MAGA_MAX_SALUTE = 350;
     public static final int MAGA_MAX_MAGIA = 70;
@@ -381,6 +437,13 @@ public class Costanti {
     public static final int MAGA_FURIA_MIN = 5;
     public static final int MAGA_FURIA_MAX = 10;
 
+public static final double MAGA_MOLTIPLICATORE_CARICO = 0.75;
+public static final String MAGA_MOLTIPLICATORE_CARICO_NOTA = "Fisico non avvezzo agli sforzi prolungati; preferisce borse leggere per ingredienti alchemici e pergamene.";
+public static final double MAGA_MOLTIPLICATORE_CRITICO = 0.8;
+public static final String MAGA_MOLTIPLICATORE_CRITICO_NOTA = "Focalizzati su incantesimi ad area (es. palle di fuoco) o manipolazioni. Non cercano il punto debole anatomico.";
+public static final double MAGA_MOLTIPLICATORE_PRECISIONE = 1.0;
+public static final String MAGA_MOLTIPLICATORE_PRECISIONE_NOTA = "Standard. La coordinazione fisica non è eccelsa, ma compensata dalla precisione nel canalizzare i flussi magici.";
+
     public static final int MAGO_MAX_SALUTE = 350;
     public static final int MAGO_MAX_MAGIA = 70;
     public static final int MAGO_MAX_VALORE = 30;
@@ -416,6 +479,13 @@ public class Costanti {
     public static final int MAGO_MAGIA_MAX = 60;
     public static final int MAGO_FURIA_MIN = 5;
     public static final int MAGO_FURIA_MAX = 10;
+
+public static final double MAGO_MOLTIPLICATORE_CARICO = 0.8;
+public static final String MAGO_MOLTIPLICATORE_CARICO_NOTA = "Fisico non avvezzo agli sforzi prolungati; preferisce borse leggere per ingredienti alchemici e pergamene.";
+public static final double MAGO_MOLTIPLICATORE_CRITICO = 0.8;
+public static final String MAGO_MOLTIPLICATORE_CRITICO_NOTA = "Focalizzati su incantesimi ad area (es. palle di fuoco) o manipolazioni. Non cercano il punto debole anatomico.";
+public static final double MAGO_MOLTIPLICATORE_PRECISIONE = 1.0;
+public static final String MAGO_MOLTIPLICATORE_PRECISIONE_NOTA = "Standard. La coordinazione fisica non è eccelsa, ma compensata dalla precisione nel canalizzare i flussi magici.";
 
     // Personaggio giocabile segreto per test
 
@@ -455,40 +525,41 @@ public class Costanti {
     public static final int OMBRAFIAMMA_FURIA_MIN = 30;
     public static final int OMBRAFIAMMA_FURIA_MAX = 40;
 
+    public static final double OMBRAFIAMMA_MOLTIPLICATORE_CARICO = 90;
+    public static final double OMBRAFIAMMA_MOLTIPLICATORE_CRITICO = 1.5;
+    public static final double OMBRAFIAMMA_MOLTIPLICATORE_PRECISIONE = 1.5;
+
     // Personaggi non giocabili (avversari). Alcuno possono essere amichevoli o corrompibili e offrire supporto
 
+    public static final int ARPIA_MAX_CARICO = 4;
     public static final int ARPIA_MAX_SALUTE = 30;
     public static final int ARPIA_MAX_MAGIA = 5;
-    public static final int ARPIA_MAX_VALORE = 30;
+    public static final int ARPIA_MAX_FORZA = 10;
+    public static final int ARPIA_MAX_DESTREZZA = 15;
+    public static final int ARPIA_MAX_COSTITUZIONE = 7;
+    public static final int ARPIA_MAX_INTELLIGENZA = 8;
+    public static final int ARPIA_MAX_SAGGEZZA = 5;
+    public static final int ARPIA_MAX_CARISMA = 1;
+    public static final int ARPIA_MAX_FORTUNA = 4;
+    public static final int ARPIA_MAX_CRITICO = 4;
+    public static final int ARPIA_MAX_PRECISIONE = 18;
+    public static final int ARPIA_MAX_VELOCITA = 20;
+    public static final int ARPIA_MAX_FURTIVITA = 5;
+    public static final int ARPIA_MAX_PARATA = 4;
+    public static final int ARPIA_MAX_RESISTENZA_MAGICA = 4;
+    public static final int ARPIA_MAX_PERCEZIONE = 3;
+    public static final int ARPIA_MAX_SOGGEZIONE = 4;
+    public static final int ARPIA_MAX_FURIA = 12;
     public static final int ARPIA_MAX_CORAGGIO = 30;
-    public static final int ARPIA_MAX_CARISMA = 0;
+    public static final int ARPIA_MAX_VALORE = 30;
     public static final int ARPIA_MAX_NUMERO = 4;
-    public static final int ARPIA_FORZA_MIN = 5;
-    public static final int ARPIA_FORZA_MAX = 10;
-    public static final int ARPIA_DESTREZZA_MIN = 10;
-    public static final int ARPIA_DESTREZZA_MAX = 15;
-    public static final int ARPIA_COSTITUZIONE_MIN = 3;
-    public static final int ARPIA_COSTITUZIONE_MAX = 7;
-    public static final int ARPIA_INTELLIGENZA_MIN = 5;
-    public static final int ARPIA_INTELLIGENZA_MAX = 8;
-    public static final int ARPIA_SAGGEZZA_MIN = 3;
-    public static final int ARPIA_SAGGEZZA_MAX = 5;
-    public static final int ARPIA_FORTUNA_MIN = 2;
-    public static final int ARPIA_FORTUNA_MAX = 4;
-    public static final int ARPIA_CRITICO_MIN = 2;
-    public static final int ARPIA_CRITICO_MAX = 4;
-    public static final int ARPIA_PRECISIONE_MIN = 12;
-    public static final int ARPIA_PRECISIONE_MAX = 18;
-    public static final int ARPIA_VELOCITA_MIN = 15;
-    public static final int ARPIA_VELOCITA_MAX = 20;
-    public static final int ARPIA_PARATA_MIN = 2;
-    public static final int ARPIA_PARATA_MAX = 4;
-    public static final int ARPIA_RESISTENZA_MAGICA_MIN = 2;
-    public static final int ARPIA_RESISTENZA_MAGICA_MAX = 4;
-    public static final int ARPIA_MAGIA_MIN = 3;
-    public static final int ARPIA_MAGIA_MAX = 8;
-    public static final int ARPIA_FURIA_MIN = 8;
-    public static final int ARPIA_FURIA_MAX = 12;
+
+public static final double ARPIA_MOLTIPLICATORE_CARICO = 0.7;
+public static final String ARPIA_MOLTIPLICATORE_CARICO_NOTA = "Pur avendo dimensioni simili a un umano, la sua struttura ossea deve rimanere cava e leggera per consentirle il volo. Un sovraccarico le impedirebbe di decollare.";
+public static final double ARPIA_MOLTIPLICATORE_CRITICO = 1.3;
+public static final String ARPIA_MOLTIPLICATORE_CRITICO_NOTA = "Sfrutta la picchiata dall'alto e gli artigli affilati per mirare direttamente agli occhi o alla gola del bersaglio.";
+public static final double ARPIA_MOLTIPLICATORE_PRECISIONE = 1.1;
+public static final String ARPIA_MOLTIPLICATORE_PRECISIONE_NOTA = "Ottima vista da rapace e coordinazione nel ghermire i bersagli in movimento dall'alto.";
 
     public static final int CENTAURO_MAX_SALUTE = 70;
     public static final int CENTAURO_MAX_MAGIA = 0;
@@ -523,6 +594,13 @@ public class Costanti {
     public static final int CENTAURO_FURIA_MIN = 15;
     public static final int CENTAURO_FURIA_MAX = 20;
 
+public static final double CENTAURO_MOLTIPLICATORE_CARICO = 2.0;
+public static final String CENTAURO_MOLTIPLICATORE_CARICO_NOTA = "Unisce la parte superiore umana a quella inferiore di un cavallo. Beneficia del bonus da quadrupede (molto stabile).";
+public static final double CENTAURO_MOLTIPLICATORE_CRITICO = 0.8;
+public static final String CENTAURO_MOLTIPLICATORE_CRITICO_NOTA = "Eccellente nella carica, ma la sua stazza ibrida lo rende meno adatto alle finte o ai colpi di fioretto ravvicinati.";
+public static final double CENTAURO_MOLTIPLICATORE_PRECISIONE = 1.1;
+public static final String CENTAURO_MOLTIPLICATORE_PRECISIONE_NOTA = "Anatomia stabile che fornisce un'eccellente base d'appoggio per scoccare frecce o lanciare giavellotti.";
+
     public static final int CHIMERA_MAX_SALUTE = 45;
     public static final int CHIMERA_MAX_MAGIA = 0;
     public static final int CHIMERA_MAX_VALORE = 50;
@@ -555,6 +633,13 @@ public class Costanti {
     public static final int CHIMERA_MAGIA_MAX = 5;
     public static final int CHIMERA_FURIA_MIN = 18;
     public static final int CHIMERA_FURIA_MAX = 25;
+
+public static final double CHIMERA_MOLTIPLICATORE_CARICO = 2.5;
+public static final String CHIMERA_MOLTIPLICATORE_CARICO_NOTA = "Corpo da leone (quadrupede grande), con tre teste e code. Ha una base d'appoggio formidabile per caricare prede o fardelli sulla schiena.";
+public static final double CHIMERA_MOLTIPLICATORE_CRITICO = 1.1;
+public static final String CHIMERA_MOLTIPLICATORE_CRITICO_NOTA = "Avendo tre teste indipendenti (leone, capra, serpente), attacca da angolazioni multiple aumentando le chance di trovare un punto scoperto.";
+public static final double CHIMERA_MOLTIPLICATORE_PRECISIONE = 1.0;
+public static final String CHIMERA_MOLTIPLICATORE_PRECISIONE_NOTA = "Bilanciata: compensa la foga bestiale con tre linee visive indipendenti che coprono gli angoli ciechi.";
 
     public static final int CHIMERADRAGO_MAX_SALUTE = 80;
     public static final int CHIMERADRAGO_MAX_MAGIA = 30;
@@ -589,6 +674,13 @@ public class Costanti {
     public static final int CHIMERADRAGO_FURIA_MIN = 35;
     public static final int CHIMERADRAGO_FURIA_MAX = 50;
 
+public static final double CHIMERADRAGO_MOLTIPLICATORE_CARICO = 6.0;
+public static final String CHIMERADRAGO_MOLTIPLICATORE_CARICO_NOTA = "Essendo il doppio di una chimera normale, la sua massa volumetrica e la capacità di sollevamento scalano in modo esponenziale.";
+public static final double CHIMERADRAGO_MOLTIPLICATORE_CRITICO = 0.8;
+public static final String CHIMERADRAGO_MOLTIPLICATORE_CRITICO_NOTA = "Grande il doppio della chimera normale. Diventa più sgraziata e brutale; perde la finezza delle tre teste a favore della devastazione.";
+public static final double CHIMERADRAGO_MOLTIPLICATORE_PRECISIONE = 0.9;
+public static final String CHIMERADRAGO_MOLTIPLICATORE_PRECISIONE_NOTA = "La mole raddoppiata la rende leggermente più lenta nei micro-aggiustamenti d'attacco.";
+
     public static final int EREMITA_MAX_SALUTE = 70;
     public static final int EREMITA_MAX_MAGIA = 0;
     public static final int EREMITA_MAX_VALORE = 50;
@@ -620,6 +712,13 @@ public class Costanti {
     public static final int EREMITA_MAGIA_MAX = 15;
     public static final int EREMITA_FURIA_MIN = 10;
     public static final int EREMITA_FURIA_MAX = 20;
+
+public static final double EREMITA_MOLTIPLICATORE_CARICO = 0.8;
+public static final String EREMITA_MOLTIPLICATORE_CARICO_NOTA = "Fisico non avvezzo agli sforzi prolungati; preferisce borse leggere per ingredienti alchemici e pergamene.";
+public static final double EREMITA_MOLTIPLICATORE_CRITICO = 0.8;
+public static final String EREMITA_MOLTIPLICATORE_CRITICO_NOTA = "Focalizzati su incantesimi ad area (es. palle di fuoco) o manipolazioni. Non cercano il punto debole anatomico.";
+public static final double EREMITA_MOLTIPLICATORE_PRECISIONE = 0.9;
+public static final String EREMITA_MOLTIPLICATORE_PRECISIONE_NOTA = "Riflessi fisici leggermente arrugginiti dall'isolamento, compensati però dalla concentrazione mentale.";
 
     public static final int FANTASMA_MAX_SALUTE = 50;
     public static final int FANTASMA_MAX_MAGIA = 0;
@@ -654,6 +753,13 @@ public class Costanti {
     public static final int FANTASMA_FURIA_MIN = 3;
     public static final int FANTASMA_FURIA_MAX = 8;
 
+public static final double FANTASMA_MOLTIPLICATORE_CARICO = 0;
+public static final String FANTASMA_MOLTIPLICATORE_CARICO_NOTA = "Trattandosi di uno spettro, azzera completamente la formula. Non ha un inventario fisico per gli oggetti del mondo materiale.";
+public static final double FANTASMA_MOLTIPLICATORE_CRITICO = 0.5;
+public static final String FANTASMA_MOLTIPLICATORE_CRITICO_NOTA = "Creature eteree che fluttuano. La loro parziale intangibilità rende difficile sferrare un colpo fisico concentrato sui punti vitali corporei.";
+public static final double FANTASMA_MOLTIPLICATORE_PRECISIONE = 0.8;
+public static final String FANTASMA_MOLTIPLICATORE_PRECISIONE_NOTA = "La sua natura incorporea rende difficile calcolare l'impatto perfetto con la materia fisica del mondo reale.";
+
     public static final int FOLLETTO_MAX_SALUTE = 10;
     public static final int FOLLETTO_MAX_MAGIA = 1;
     public static final int FOLLETTO_MAX_VALORE = 40;
@@ -686,6 +792,13 @@ public class Costanti {
     public static final int FOLLETTO_MAGIA_MAX = 3;
     public static final int FOLLETTO_FURIA_MIN = 3;
     public static final int FOLLETTO_FURIA_MAX = 5;
+
+public static final double FOLLETTO_MOLTIPLICATORE_CARICO = 0.2;
+public static final String FOLLETTO_MOLTIPLICATORE_CARICO_NOTA = "Creatura minuscola e magica. Può trasportare solo oggetti leggerissimi (anelli, piccole fiale, aghi).";
+public static final double FOLLETTO_MOLTIPLICATORE_CRITICO = 1.2;
+public static final String FOLLETTO_MOLTIPLICATORE_CRITICO_NOTA = "Minuscolo e rapidissimo, infila i suoi piccoli aghi e dardi magici esattamente nelle fessure delle armature.";
+public static final double FOLLETTO_MOLTIPLICATORE_PRECISIONE = 1.1;
+public static final String FOLLETTO_MOLTIPLICATORE_PRECISIONE_NOTA = "Nonostante la frenesia, le sue dimensioni ridotte gli permettono una percezione dello spazio ravvicinato molto acuta.";
 
     public static final int GARGOYLE_MAX_SALUTE = 50;
     public static final int GARGOYLE_MAX_MAGIA = 20;
@@ -722,6 +835,13 @@ public class Costanti {
     public static final int GARGOYLE_FURIA_MIN = 15;
     public static final int GARGOYLE_FURIA_MAX = 20;
 
+public static final double GARGOYLE_MOLTIPLICATORE_CARICO = 1.4;
+public static final String GARGOYLE_MOLTIPLICATORE_CARICO_NOTA = "Essendo fatto di pietra animata, la sua struttura sopporta pesi elevati, ma le ali ne limitano la capacità estrema se vuole planare.";
+public static final double GARGOYLE_MOLTIPLICATORE_CRITICO = 0.8;
+public static final String GARGOYLE_MOLTIPLICATORE_CRITICO_NOTA = "Corpo di pietra rigido. I suoi attacchi sono pesanti e prevedibili, facili da intercettare prima che tocchino un punto vitale.";
+public static final double GARGOYLE_MOLTIPLICATORE_PRECISIONE = 0.9;
+public static final String GARGOYLE_MOLTIPLICATORE_PRECISIONE_NOTA = "Le articolazioni di pietra rigida riducono la fluidità e la coordinazione millimetrica nei colpi.";
+
     public static final int GIGANTE_MAX_SALUTE = 80;
     public static final int GIGANTE_MAX_MAGIA = 10;
     public static final int GIGANTE_MAX_VALORE = 60;
@@ -755,6 +875,13 @@ public class Costanti {
     public static final int GIGANTE_FURIA_MIN = 20;
     public static final int GIGANTE_FURIA_MAX = 30;
 
+public static final double GIGANTE_MOLTIPLICATORE_CARICO = 4.5;
+public static final String GIGANTE_MOLTIPLICATORE_CARICO_NOTA = "Supera facilmente i 4-5 metri d'altezza. Le sue armi base pesano quanto un intero soldato umano.";
+public static final double GIGANTE_MOLTIPLICATORE_CRITICO = 0.6;
+public static final String GIGANTE_MOLTIPLICATORE_CRITICO_NOTA = "Le sue armi sono talmente enormi che colpiscono intere porzioni del corpo. Non ha bisogno di fare \"centro\" per fare male.";
+public static final double GIGANTE_MOLTIPLICATORE_PRECISIONE = 0.7;
+public static final String GIGANTE_MOLTIPLICATORE_PRECISIONE_NOTA = "Sgraziato e lento. La sua scommessa è colpire un'area così vasta da rendere superflua la mira millimetrica.";
+
     public static final int GOBLIN_MAX_SALUTE = 40;
     public static final int GOBLIN_MAX_MAGIA = 0;
     public static final int GOBLIN_MAX_VALORE = 30;
@@ -787,6 +914,13 @@ public class Costanti {
     public static final int GOBLIN_MAGIA_MAX = 3;
     public static final int GOBLIN_FURIA_MIN = 10;
     public static final int GOBLIN_FURIA_MAX = 15;
+
+public static final double GOBLIN_MOLTIPLICATORE_CARICO = 0.6;
+public static final String GOBLIN_MOLTIPLICATORE_CARICO_NOTA = "Più piccolo di un umano e storicamente costretto ad arrangiarsi con equipaggiamento leggero e di fortuna.";
+public static final double GOBLIN_MOLTIPLICATORE_CRITICO = 1.2;
+public static final String GOBLIN_MOLTIPLICATORE_CRITICO_NOTA = "Combatte in modo estremamente sporco. Mira costantemente a tendini, talloni e parti basse per invalidare i nemici.";
+public static final double GOBLIN_MOLTIPLICATORE_PRECISIONE = 1.0;
+public static final String GOBLIN_MOLTIPLICATORE_PRECISIONE_NOTA = "Precisione nella media; sopperisce alla mancanza di disciplina con l'opportunismo e colpi a bruciapelo.";
 
     public static final int HOBGOBLIN_MAX_SALUTE = 65;
     public static final int HOBGOBLIN_MAX_MAGIA = 10;
@@ -822,6 +956,13 @@ public class Costanti {
     public static final int HOBGOBLIN_FURIA_MIN = 15;
     public static final int HOBGOBLIN_FURIA_MAX = 20;
 
+public static final double HOBGOBLIN_MOLTIPLICATORE_CARICO = 1.1;
+public static final String HOBGOBLIN_MOLTIPLICATORE_CARICO_NOTA = "Variante più robusta, militare e massiccia del goblin comune.";
+public static final double HOBGOBLIN_MOLTIPLICATORE_CRITICO = 1.1;
+public static final String HOBGOBLIN_MOLTIPLICATORE_CRITICO_NOTA = "Più disciplinato e addestrato militarmente del goblin comune, sa riconoscere le debolezze strutturali delle formazioni.";
+public static final double HOBGOBLIN_MOLTIPLICATORE_PRECISIONE = 1.2;
+public static final String HOBGOBLIN_MOLTIPLICATORE_PRECISIONE_NOTA = "Superiore al guerriero comune per via di un addestramento militare rigido e una coordinazione di falange spietata.";
+
     public static final int MINOTAURO_MAX_SALUTE = 70;
     public static final int MINOTAURO_MAX_MAGIA = 0;
     public static final int MINOTAURO_MAX_VALORE = 50;
@@ -854,6 +995,13 @@ public class Costanti {
     public static final int MINOTAURO_MAGIA_MAX = 5;
     public static final int MINOTAURO_FURIA_MIN = 25;
     public static final int MINOTAURO_FURIA_MAX = 35;
+
+public static final double MINOTAURO_MOLTIPLICATORE_CARICO = 2.2;
+public static final String MINOTAURO_MOLTIPLICATORE_CARICO_NOTA = "Un bipede taurino massiccio, alto più di due metri e mezzo, con una densità muscolare spaventosa.";
+public static final double MINOTAURO_MOLTIPLICATORE_CRITICO = 0.7;
+public static final String MINOTAURO_MOLTIPLICATORE_CRITICO_NOTA = "Carica a testa bassa spinto dalla bramosia di sangue. Schiaccia l'avversario con la forza bruta anziché con la precisione.";
+public static final double MINOTAURO_MOLTIPLICATORE_PRECISIONE = 0.7;
+public static final String MINOTAURO_MOLTIPLICATORE_PRECISIONE_NOTA = "La bramosia di sangue e la furia lo portano ad attaccare alla cieca, spalancando la guardia e mancando spesso i bersagli agili.";
 
     public static final int OMBRANERA_MAX_SALUTE = 100;
     public static final int OMBRANERA_MAX_MAGIA = 50;
@@ -889,6 +1037,13 @@ public class Costanti {
     public static final int OMBRANERA_FURIA_MIN = 20;
     public static final int OMBRANERA_FURIA_MAX = 30;
 
+public static final double OMBRANERA_MOLTIPLICATORE_CARICO = 0;
+public static final String OMBRANERA_MOLTIPLICATORE_CARICO_NOTA = "Trattandosi di uno spettro, azzera completamente la formula. Non ha un inventario fisico per gli oggetti del mondo materiale.";
+public static final double OMBRANERA_MOLTIPLICATORE_CRITICO = 1.4;
+public static final String OMBRANERA_MOLTIPLICATORE_CRITICO_NOTA = "Non-morto irascibile ma letale; si materializza alle spalle della vittima colpendo direttamente l'essenza vitale con precisione maligna.";
+public static final double OMBRANERA_MOLTIPLICATORE_PRECISIONE = 1.2;
+public static final String OMBRANERA_MOLTIPLICATORE_PRECISIONE_NOTA = "Si muove guidata da un istinto predatore soprannaturale; aggancia il bersaglio nell'oscurità e lo colpisce senza esitazione.";
+
     public static final int SCHELETRO_MAX_SALUTE = 50;
     public static final int SCHELETRO_MAX_MAGIA = 0;
     public static final int SCHELETRO_MAX_VALORE = 40;
@@ -922,12 +1077,52 @@ public class Costanti {
     public static final int SCHELETRO_FURIA_MIN = 10;
     public static final int SCHELETRO_FURIA_MAX = 15;
 
+public static final double SCHELETRO_MOLTIPLICATORE_CARICO = 1.1;
+public static final String SCHELETRO_MOLTIPLICATORE_CARICO_NOTA = "Può sembrare strano (non ha muscoli), ma non avendo organi interni, pelle o grasso, la sua intera struttura ossea è \"carico utile vuoto\". Inoltre, essendo un non-morto, non risente del dolore da sforzo (può caricarsi finché le ossa non si spezzano fisicamente).";
+public static final double SCHELETRO_MOLTIPLICATORE_CRITICO = 1.1;
+public static final String SCHELETRO_MOLTIPLICATORE_CRITICO_NOTA = "Non ha muscoli o emozioni che tremano: sferra colpi geometricamente perfetti e freddi, senza esitazione.";
+public static final double SCHELETRO_MOLTIPLICATORE_PRECISIONE = 1.0;
+public static final String SCHELETRO_MOLTIPLICATORE_PRECISIONE_NOTA = "Precisione matematica e fissa. Non ha muscoli che si affaticano, ma manca dell'intuito per anticipare le finte nemiche.";
+
     public static final int SPETTRO_MAX_SALUTE = 40;
     public static final int SPETTRO_MAX_MAGIA = 0;
     public static final int SPETTRO_MAX_VALORE = 50;
     public static final int SPETTRO_MAX_CORAGGIO = 50;
     public static final int SPETTRO_MAX_CARISMA = 0;
     public static final int SPETTRO_MAX_NUMERO = 2;
+    public static final int SPETTRO_FORZA_MIN = 3;
+    public static final int SPETTRO_FORZA_MAX = 8;
+    public static final int SPETTRO_DESTREZZA_MIN = 20;
+    public static final int SPETTRO_DESTREZZA_MAX = 25;
+    public static final int SPETTRO_COSTITUZIONE_MIN = 5;
+    public static final int SPETTRO_COSTITUZIONE_MAX = 10;
+    public static final int SPETTRO_INTELLIGENZA_MIN = 12;
+    public static final int SPETTRO_INTELLIGENZA_MAX = 18;
+    public static final int SPETTRO_SAGGEZZA_MIN = 25;
+    public static final int SPETTRO_SAGGEZZA_MAX = 35;
+    public static final int SPETTRO_FORTUNA_MIN = 8;
+    public static final int SPETTRO_FORTUNA_MAX = 12;
+    public static final int SPETTRO_CRITICO_MIN = 5;
+    public static final int SPETTRO_CRITICO_MAX = 10;
+    public static final int SPETTRO_PRECISIONE_MIN = 18;
+    public static final int SPETTRO_PRECISIONE_MAX = 25;
+    public static final int SPETTRO_VELOCITA_MIN = 25;
+    public static final int SPETTRO_VELOCITA_MAX = 30;
+    public static final int SPETTRO_PARATA_MIN = 3;
+    public static final int SPETTRO_PARATA_MAX = 8;
+    public static final int SPETTRO_RESISTENZA_MAGICA_MIN = 30;
+    public static final int SPETTRO_RESISTENZA_MAGICA_MAX = 40;
+    public static final int SPETTRO_MAGIA_MIN = 5;
+    public static final int SPETTRO_MAGIA_MAX = 10;
+    public static final int SPETTRO_FURIA_MIN = 5;
+    public static final int SPETTRO_FURIA_MAX = 10;
+
+public static final double SPETTRO_MOLTIPLICATORE_CARICO = 0;
+public static final String SPETTRO_MOLTIPLICATORE_CARICO_NOTA = "Trattandosi di uno spettro, azzera completamente la formula. Non ha un inventario fisico per gli oggetti del mondo materiale.";
+public static final double SPETTRO_MOLTIPLICATORE_CRITICO = 0.5;
+public static final String SPETTRO_MOLTIPLICATORE_CRITICO_NOTA = "Creature eteree che fluttuano. La loro parziale intangibilità rende difficile sferrare un colpo fisico concentrato sui punti vitali corporei.";
+public static final double SPETTRO_MOLTIPLICATORE_PRECISIONE = 0.8;
+public static final String SPETTRO_MOLTIPLICATORE_PRECISIONE_NOTA = "Come il fantasma, soffre della transizione tra il piano etereo e quello fisico durante l'affondo.";
 
     public static final int SPIRITO_MAX_SALUTE = 40;
     public static final int SPIRITO_MAX_MAGIA = 0;
@@ -935,6 +1130,39 @@ public class Costanti {
     public static final int SPIRITO_MAX_CORAGGIO = 50;
     public static final int SPIRITO_MAX_CARISMA = 0;
     public static final int SPIRITO_MAX_NUMERO = 2;
+    public static final int SPIRITO_FORZA_MIN = 2;
+    public static final int SPIRITO_FORZA_MAX = 5;
+    public static final int SPIRITO_DESTREZZA_MIN = 18;
+    public static final int SPIRITO_DESTREZZA_MAX = 22;
+    public static final int SPIRITO_COSTITUZIONE_MIN = 3;
+    public static final int SPIRITO_COSTITUZIONE_MAX = 8;
+    public static final int SPIRITO_INTELLIGENZA_MIN = 10;
+    public static final int SPIRITO_INTELLIGENZA_MAX = 15;
+    public static final int SPIRITO_SAGGEZZA_MIN = 30;
+    public static final int SPIRITO_SAGGEZZA_MAX = 40;
+    public static final int SPIRITO_FORTUNA_MIN = 5;
+    public static final int SPIRITO_FORTUNA_MAX = 10;
+    public static final int SPIRITO_CRITICO_MIN = 3;
+    public static final int SPIRITO_CRITICO_MAX = 8;
+    public static final int SPIRITO_PRECISIONE_MIN = 15;
+    public static final int SPIRITO_PRECISIONE_MAX = 20;
+    public static final int SPIRITO_VELOCITA_MIN = 28;
+    public static final int SPIRITO_VELOCITA_MAX = 35;
+    public static final int SPIRITO_PARATA_MIN = 2;
+    public static final int SPIRITO_PARATA_MAX = 5;
+    public static final int SPIRITO_RESISTENZA_MAGICA_MIN = 35;
+    public static final int SPIRITO_RESISTENZA_MAGICA_MAX = 45;
+    public static final int SPIRITO_MAGIA_MIN = 3;
+    public static final int SPIRITO_MAGIA_MAX = 8;
+    public static final int SPIRITO_FURIA_MIN = 3;
+    public static final int SPIRITO_FURIA_MAX = 5;
+
+public static final double SPIRITO_MOLTIPLICATORE_CARICO = 0;
+public static final String SPIRITO_MOLTIPLICATORE_CARICO_NOTA = "Trattandosi di uno spettro, azzera completamente la formula. Non ha un inventario fisico per gli oggetti del mondo materiale.";
+public static final double SPIRITO_MOLTIPLICATORE_CRITICO = 0.5;
+public static final String SPIRITO_MOLTIPLICATORE_CRITICO_NOTA = "Creature eteree che fluttuano. La loro parziale intangibilità rende difficile sferrare un colpo fisico concentrato sui punti vitali corporei.";
+public static final double SPIRITO_MOLTIPLICATORE_PRECISIONE = 0.8;
+public static final String SPIRITO_MOLTIPLICATORE_PRECISIONE_NOTA = "Creatura astratta, più incline a fluttuare e confondere che a colpire con accuratezza millimetrica.";
 
     public static final int TITANO_MAX_SALUTE = 100;
     public static final int TITANO_MAX_MAGIA = 15;
@@ -969,59 +1197,12 @@ public class Costanti {
     public static final int TITANO_FURIA_MIN = 35;
     public static final int TITANO_FURIA_MAX = 50;
 
-    public static final int SPETTRO_FORZA_MIN = 3;
-    public static final int SPETTRO_FORZA_MAX = 8;
-    public static final int SPETTRO_DESTREZZA_MIN = 20;
-    public static final int SPETTRO_DESTREZZA_MAX = 25;
-    public static final int SPETTRO_COSTITUZIONE_MIN = 5;
-    public static final int SPETTRO_COSTITUZIONE_MAX = 10;
-    public static final int SPETTRO_INTELLIGENZA_MIN = 12;
-    public static final int SPETTRO_INTELLIGENZA_MAX = 18;
-    public static final int SPETTRO_SAGGEZZA_MIN = 25;
-    public static final int SPETTRO_SAGGEZZA_MAX = 35;
-    public static final int SPETTRO_FORTUNA_MIN = 8;
-    public static final int SPETTRO_FORTUNA_MAX = 12;
-    public static final int SPETTRO_CRITICO_MIN = 5;
-    public static final int SPETTRO_CRITICO_MAX = 10;
-    public static final int SPETTRO_PRECISIONE_MIN = 18;
-    public static final int SPETTRO_PRECISIONE_MAX = 25;
-    public static final int SPETTRO_VELOCITA_MIN = 25;
-    public static final int SPETTRO_VELOCITA_MAX = 30;
-    public static final int SPETTRO_PARATA_MIN = 3;
-    public static final int SPETTRO_PARATA_MAX = 8;
-    public static final int SPETTRO_RESISTENZA_MAGICA_MIN = 30;
-    public static final int SPETTRO_RESISTENZA_MAGICA_MAX = 40;
-    public static final int SPETTRO_MAGIA_MIN = 5;
-    public static final int SPETTRO_MAGIA_MAX = 10;
-    public static final int SPETTRO_FURIA_MIN = 5;
-    public static final int SPETTRO_FURIA_MAX = 10;
-
-    public static final int SPIRITO_FORZA_MIN = 2;
-    public static final int SPIRITO_FORZA_MAX = 5;
-    public static final int SPIRITO_DESTREZZA_MIN = 18;
-    public static final int SPIRITO_DESTREZZA_MAX = 22;
-    public static final int SPIRITO_COSTITUZIONE_MIN = 3;
-    public static final int SPIRITO_COSTITUZIONE_MAX = 8;
-    public static final int SPIRITO_INTELLIGENZA_MIN = 10;
-    public static final int SPIRITO_INTELLIGENZA_MAX = 15;
-    public static final int SPIRITO_SAGGEZZA_MIN = 30;
-    public static final int SPIRITO_SAGGEZZA_MAX = 40;
-    public static final int SPIRITO_FORTUNA_MIN = 5;
-    public static final int SPIRITO_FORTUNA_MAX = 10;
-    public static final int SPIRITO_CRITICO_MIN = 3;
-    public static final int SPIRITO_CRITICO_MAX = 8;
-    public static final int SPIRITO_PRECISIONE_MIN = 15;
-    public static final int SPIRITO_PRECISIONE_MAX = 20;
-    public static final int SPIRITO_VELOCITA_MIN = 28;
-    public static final int SPIRITO_VELOCITA_MAX = 35;
-    public static final int SPIRITO_PARATA_MIN = 2;
-    public static final int SPIRITO_PARATA_MAX = 5;
-    public static final int SPIRITO_RESISTENZA_MAGICA_MIN = 35;
-    public static final int SPIRITO_RESISTENZA_MAGICA_MAX = 45;
-    public static final int SPIRITO_MAGIA_MIN = 3;
-    public static final int SPIRITO_MAGIA_MAX = 8;
-    public static final int SPIRITO_FURIA_MIN = 3;
-    public static final int SPIRITO_FURIA_MAX = 5;
+public static final double TITANO_MOLTIPLICATORE_CARICO = 10.0;
+public static final String TITANO_MOLTIPLICATORE_CARICO_NOTA = "Forze semidivine o creature mitologiche capaci di spostare l'ambiente circostante. Per lui sollevare un masso o un'armatura pesante è indifferente.";
+public static final double TITANO_MOLTIPLICATORE_CRITICO = 0.4;
+public static final String TITANO_MOLTIPLICATORE_CRITICO_NOTA = "Forze primordiali della natura. Un loro attacco è come un terremoto o una frana; il concetto stesso di \"colpo critico millimetrico\" per loro non esiste.";
+public static final double TITANO_MOLTIPLICATORE_PRECISIONE = 0.5;
+public static final String TITANO_MOLTIPLICATORE_PRECISIONE_NOTA = "I suoi attacchi muovono le montagne. Non mira al singolo soldato, mira al codice postale in cui si trova il soldato.";
 
     public static final int TROLL_MAX_SALUTE = 80;
     public static final int TROLL_MAX_MAGIA = 0;
@@ -1055,6 +1236,13 @@ public class Costanti {
     public static final int TROLL_MAGIA_MAX = 5;
     public static final int TROLL_FURIA_MIN = 30;
     public static final int TROLL_FURIA_MAX = 40;
+
+public static final double TROLL_MOLTIPLICATORE_CARICO = 2.8;
+public static final String TROLL_MOLTIPLICATORE_CARICO_NOTA = "Corpo da leone (quadrupede grande), con tre teste e code. Ha una base d'appoggio formidabile per caricare prede o fardelli sulla schiena.";
+public static final double TROLL_MOLTIPLICATORE_CRITICO = 0.7;
+public static final String TROLL_MOLTIPLICATORE_CRITICO_NOTA = "Combatte in preda a una foga rigenerativa selvaggia, agitando le braccia o clave nodose in modo caotico.";
+public static final double TROLL_MOLTIPLICATORE_PRECISIONE = 0.7;
+public static final String TROLL_MOLTIPLICATORE_PRECISIONE_NOTA = "Agita clave e artigli in preda a un'adrenalina caotica. Facile da schivare se il difensore è minimamente agile.";
 
     public static final int VIVERNA_MAX_SALUTE = 120;
     public static final int VIVERNA_MAX_MAGIA = 50;
@@ -1090,6 +1278,13 @@ public class Costanti {
     public static final int VIVERNA_FURIA_MIN = 25;
     public static final int VIVERNA_FURIA_MAX = 35;
 
+public static final double VIVERNA_MOLTIPLICATORE_CARICO = 3.5;
+public static final String VIVERNA_MOLTIPLICATORE_CARICO_NOTA = "Un rettile alato predatore di taglia grande. Può ghermire e trasportare in volo intero bestiame.";
+public static final double VIVERNA_MOLTIPLICATORE_CRITICO = 1.2;
+public static final String VIVERNA_MOLTIPLICATORE_CRITICO_NOTA = "Predatore aereo efficiente. Il colpo di coda col pungiglione o la picchiata sono letali e mirati.";
+public static final double VIVERNA_MOLTIPLICATORE_PRECISIONE = 1.1;
+public static final String VIVERNA_MOLTIPLICATORE_PRECISIONE_NOTA = "Ottimo predatore aereo. Deve essere precisa quando scatta per afferrare una preda in corsa sul terreno.";
+
     // Boss
 
     public static final int IDRA_MAX_SALUTE = 600;
@@ -1123,6 +1318,13 @@ public class Costanti {
     public static final int IDRA_MAGIA_MAX = 20;
     public static final int IDRA_FURIA_MIN = 45;
     public static final int IDRA_FURIA_MAX = 60;
+
+public static final double IDRA_MOLTIPLICATORE_CARICO = 5.0;
+public static final String IDRA_MOLTIPLICATORE_CARICO_NOTA = "Scarica tutta la sua potenza muscolare rettiliana sul terreno, muovendosi come un cingolato biologico capace di trascinare pesi spaventosi.";
+public static final double IDRA_MOLTIPLICATORE_CRITICO = 0.6;
+public static final String IDRA_MOLTIPLICATORE_CRITICO_NOTA = "Le molteplici teste mordono in modo caotico e frenetico per sbranare la preda, senza una vera strategia chirurgica.";
+public static final double IDRA_MOLTIPLICATORE_PRECISIONE = 0.8;
+public static final String IDRA_MOLTIPLICATORE_PRECISIONE_NOTA = "Le teste si ostacolano a vicenda nella foga di mordere lo stesso bersaglio, riducendo l'accuratezza del singolo colpo.";
 
     public static final int LICH_MAX_SALUTE = 700;
     public static final int LICH_MAX_MAGIA = 200;
@@ -1159,6 +1361,13 @@ public class Costanti {
     public static final int LICH_FURIA_MIN = 15;
     public static final int LICH_FURIA_MAX = 25;
 
+public static final double LICH_MOLTIPLICATORE_CARICO = 1.0;
+public static final String LICH_MOLTIPLICATORE_CARICO_NOTA = "Il suo corpo è mosso da pura energia magica e non soffre la fatica biologica o i dolori muscolari legati al trasporto di fardelli pesanti. Non arriva a 1.1 come lo Scheletro comune poiché la sua figura è votata esclusivamente all'intelletto e all'arcano, non alla manovalanza.";
+public static final double LICH_MOLTIPLICATORE_CRITICO = 1.0;
+public static final String LICH_MOLTIPLICATORE_CRITICO_NOTA = "Superiore al mago comune perché padroneggia la magia mortale (Necromanzia), incanalando anatemi che mirano all'anima.";
+public static final double LICH_MOLTIPLICATORE_PRECISIONE = 1.1;
+public static final String LICH_MOLTIPLICATORE_PRECISIONE_NOTA = "La sua mente immortale calcola le traiettorie con freddezza geometrica e ignora qualsiasi distrazione fisica o emotiva.";
+
     public static final int MINOTAUROGIGANTE_MAX_SALUTE = 700;
     public static final int MINOTAUROGIGANTE_MAX_MAGIA = 0;
     public static final int MINOTAUROGIGANTE_MAX_VALORE = 80;
@@ -1190,6 +1399,13 @@ public class Costanti {
     public static final int MINOTAUROGIGANTE_MAGIA_MAX = 15;
     public static final int MINOTAUROGIGANTE_FURIA_MIN = 50;
     public static final int MINOTAUROGIGANTE_FURIA_MAX = 65;
+
+public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_CARICO = 4.0;
+public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_CARICO_NOTA = "Un bipede taurino massiccio, alto più di quattro metri, con una densità muscolare spaventosa.";
+public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_CRITICO = 0.5;
+public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_CRITICO_NOTA = "Unisce la furia del Minotauro alla mole del gigante: i suoi attacchi sono cataclismi ad area, la precisione è zero.";
+public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_PRECISIONE = 0.6;
+public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_PRECISIONE_NOTA = "Unisce la cecità della rabbia taurina a una mole mastodontica: i suoi colpi sono lenti e facilmente prevedibili.";
 
     public static final int STREGA_MAX_SALUTE = 800;
     public static final int STREGA_MAX_MAGIA = 350;
@@ -1225,6 +1441,13 @@ public class Costanti {
     public static final int STREGA_MAGIA_MAX = 200;
     public static final int STREGA_FURIA_MIN = 20;
     public static final int STREGA_FURIA_MAX = 30;
+
+public static final double STREGA_MOLTIPLICATORE_CARICO = 0.95;
+public static final String STREGA_MOLTIPLICATORE_CARICO_NOTA = "Umano standard";
+public static final double STREGA_MOLTIPLICATORE_CRITICO = 0.8;
+public static final String STREGA_MOLTIPLICATORE_CRITICO_NOTA = "Focalizzati su incantesimi ad area (es. palle di fuoco) o manipolazioni. Non cercano il punto debole anatomico.";
+public static final double STREGA_MOLTIPLICATORE_PRECISIONE = 0.9;
+public static final String STREGA_MOLTIPLICATORE_PRECISIONE_NOTA = "Preferisce lanciare malocchi ad area o calderoni di debuff; la sua mira fisica diretta è trascurata.";
 
     // Boss finale
 
@@ -1262,5 +1485,797 @@ public class Costanti {
     public static final int DRAGO_MAGIA_MAX = 300;
     public static final int DRAGO_FURIA_MIN = 60;
     public static final int DRAGO_FURIA_MAX = 80;
+
+public static final double DRAGO_MOLTIPLICATORE_CARICO = 8.0;
+public static final String DRAGO_MOLTIPLICATORE_CARICO_NOTA = "Unisce i vantaggi di una struttura quadrupede immensa alla potenza innata della stirpe draconica.";
+public static final double DRAGO_MOLTIPLICATORE_CRITICO = 1.0;
+public static final String DRAGO_MOLTIPLICATORE_CRITICO_NOTA = "Leggendario e millenario, compensa la mole imponente con un'intelligenza sopraffina che gli fa riconoscere i punti deboli dei nemici.";
+public static final double DRAGO_MOLTIPLICATORE_PRECISIONE = 1.2;
+public static final String DRAGO_MOLTIPLICATORE_PRECISIONE_NOTA = "Creatura millenaria dotata di sensi divini e di un'intelligenza che gli permette di calcolare i flussi d'aria e i movimenti nemici.";
+
+    /*
+
+    VELOCITA
+
+public static final double ARPIA_MOLTIPLICATORE_VELOCITA = 1.3;
+public static final String ARPIA_MOLTIPLICATORE_VELOCITA_NOTA = "Estremamente rapida. Il vantaggio del volo le permette scatti fulminei e picchiate difficili da anticipare.";
+public static final double BARDO_MOLTIPLICATORE_VELOCITA = 1.1;
+public static final String BARDO_MOLTIPLICATORE_VELOCITA_NOTA = "Più scattante della media umana; si affida alla mobilità per muoversi tra le retrovie del campo di battaglia.";
+public static final double CANTASTORIE_MOLTIPLICATORE_VELOCITA = 1.1;
+public static final String CANTASTORIE_MOLTIPLICATORE_VELOCITA_NOTA = "Più scattante della media umana; si affida alla mobilità per muoversi tra le retrovie del campo di battaglia.";
+public static final double CENTAURO_MOLTIPLICATORE_VELOCITA = 1.4;
+public static final String CENTAURO_MOLTIPLICATORE_VELOCITA_NOTA = "Tra i più veloci a terra. Il corpo equino gli conferisce una velocità di galoppo e una carica devastanti.";
+public static final double CHIMERA_MOLTIPLICATORE_VELOCITA = 1.2;
+public static final String CHIMERA_MOLTIPLICATORE_VELOCITA_NOTA = "Agilità felina combinata con i riflessi di tre teste. Reattiva nello scatto iniziale.";
+public static final double CHIMERADRAGO_MOLTIPLICATORE_VELOCITA = 0.9;
+public static final String CHIMERADRAGO_MOLTIPLICATORE_VELOCITA_NOTA = "Avendo raddoppiato la sua mole, subisce l'effetto dell'inerzia: è potente ma molto più lenta a partire.";
+public static final double DRAGO_MOLTIPLICATORE_VELOCITA = 1.1;
+public static final String DRAGO_MOLTIPLICATORE_VELOCITA_NOTA = "Nonostante la mole colossale, la sua natura magica e le ali imponenti gli permettono movimenti sorprendentemente rapidi.";
+public static final double ELFA_MOLTIPLICATORE_VELOCITA = 1.2;
+public static final String ELFA_MOLTIPLICATORE_VELOCITA_NOTA = "Leggero, agile e dotato di riflessi biologicamente superiori a quelli umani. Agisce quasi sempre prima dei nemici.";
+public static final double ELFO_MOLTIPLICATORE_VELOCITA = 1.2;
+public static final String ELFO_MOLTIPLICATORE_VELOCITA_NOTA = "Leggero, agile e dotato di riflessi biologicamente superiori a quelli umani. Agisce quasi sempre prima dei nemici.";
+public static final double EREMITA_MOLTIPLICATORE_VELOCITA = 0.8;
+public static final String EREMITA_MOLTIPLICATORE_VELOCITA_NOTA = "Lo stile di vita ascetico e l'età avanzata ne rallentano i movimenti fisici e l'iniziativa.";
+public static final double FANTASMA_MOLTIPLICATORE_VELOCITA = 1.1;
+public static final String FANTASMA_MOLTIPLICATORE_VELOCITA_NOTA = "Fluttua nell'aria ignorando l'attrito del terreno e la gravità, guadagnando una discreta rapidità d'azione.";
+public static final double FOLLETTO_MOLTIPLICATORE_VELOCITA = 1.5;
+public static final String FOLLETTO_MOLTIPLICATORE_VELOCITA_NOTA = "Il Re della Velocità. Una vera e propria scheggia magica, quasi impossibile da inquadrare visivamente quando si muove.";
+public static final double GARGOYLE_MOLTIPLICATORE_VELOCITA = 0.7;
+public static final String GARGOYLE_MOLTIPLICATORE_VELOCITA_NOTA = "Fatto di pietra animata. Le sue articolazioni rigide lo rendono lento e pesante nei turni d'azione.";
+public static final double GIGANTE_MOLTIPLICATORE_VELOCITA = 0.6;
+public static final String GIGANTE_MOLTIPLICATORE_VELOCITA_NOTA = "Spostare arti lunghi diversi metri richiede tempo. I suoi attacchi sono lenti e ampi, facili da prevedere.";
+public static final double GOBLIN_MOLTIPLICATORE_VELOCITA = 1.2;
+public static final String GOBLIN_MOLTIPLICATORE_VELOCITA_NOTA = "Piccolo e iperattivo. Compensa la debolezza fisica con scatti nevrotici e ritirate strategiche fulminee.";
+public static final double GUERRIERA_MOLTIPLICATORE_VELOCITA = 1.0;
+public static final String GUERRIERA_MOLTIPLICATORE_VELOCITA_NOTA = "La Linea di Base. Rapidità e iniziativa umane standard in assetto da combattimento.";
+public static final double GUERRIERO_MOLTIPLICATORE_VELOCITA = 1.0;
+public static final String GUERRIERO_MOLTIPLICATORE_VELOCITA_NOTA = "La Linea di Base. Rapidità e iniziativa umane standard in assetto da combattimento.";
+public static final double HOBGOBLIN_MOLTIPLICATORE_VELOCITA = 0.9;
+public static final String HOBGOBLIN_MOLTIPLICATORE_VELOCITA_NOTA = "Più pesante, corazzato e metodico del goblin comune; preferisce la stabilità della linea alla velocità.";
+public static final double IDRA_MOLTIPLICATORE_VELOCITA = 0.8;
+public static final String IDRA_MOLTIPLICATORE_VELOCITA_NOTA = "Corpo massiccio e baricentro basso. Si muove lentamente e le teste spesso competono sui riflessi d'attacco.";
+public static final double LADRA_MOLTIPLICATORE_VELOCITA = 1.4;
+public static final String LADRA_MOLTIPLICATORE_VELOCITA_NOTA = "L'eccellenza nei riflessi. Vive di iniziativa e attacchi a sorpresa. Deve agire prima che il nemico estragga l'arma.";
+public static final double LADRO_MOLTIPLICATORE_VELOCITA = 1.4;
+public static final String LADRO_MOLTIPLICATORE_VELOCITA_NOTA = "L'eccellenza nei riflessi. Vive di iniziativa e attacchi a sorpresa. Deve agire prima che il nemico estragga l'arma.";
+public static final double LICH_MOLTIPLICATORE_VELOCITA = 0.9;
+public static final String LICH_MOLTIPLICATORE_VELOCITA_NOTA = "Non ha fretta fisica. Si muove con flemma cerimoniale, affidandosi alla magia per compensare la lentezza del corpo.";
+public static final double MAGA_MOLTIPLICATORE_VELOCITA = 0.9;
+public static final String MAGA_MOLTIPLICATORE_VELOCITA_NOTA = "Preferisce calcolare la situazione prima di agire; i suoi tempi di reazione fisici sono leggermente sotto la media.";
+public static final double MAGO_MOLTIPLICATORE_VELOCITA = 0.9;
+public static final String MAGO_MOLTIPLICATORE_VELOCITA_NOTA = "Preferisce calcolare la situazione prima di agire; i suoi tempi di reazione fisici sono leggermente sotto la media.";
+public static final double MINOTAURO_MOLTIPLICATORE_VELOCITA = 0.8;
+public static final String MINOTAURO_MOLTIPLICATORE_VELOCITA_NOTA = "Sebbene sia un predatore, la sua stazza imponente e lo stile basato sulla forza bruta lo rendono lento nei turni.";
+public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_VELOCITA = 0.5;
+public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_VELOCITA_NOTA = "Un ammasso colossale di muscoli e corna. I suoi tempi di reazione sono minimi, agisce quasi sempre per ultimo.";
+public static final double OMBRANERA_MOLTIPLICATORE_VELOCITA = 1.3;
+public static final String OMBRANERA_MOLTIPLICATORE_VELOCITA_NOTA = "Si propaga e si sposta tra le ombre alla velocità del pensiero, cogliendo le vittime di sorpresa.";
+public static final double SCHELETRO_MOLTIPLICATORE_VELOCITA = 1.0;
+public static final String SCHELETRO_MOLTIPLICATORE_VELOCITA_NOTA = "Movimenti scattanti e privi del peso di organi o grasso, ma rigidamente legati all'assenza di intuito o adrenalina.";
+public static final double SPETTRO_MOLTIPLICATORE_VELOCITA = 1.2;
+public static final String SPETTRO_MOLTIPLICATORE_VELOCITA_NOTA = "Più aggressivo del fantasma comune; scivola sul campo di battaglia con una rapidità spaventosa.";
+public static final double SPIRITO_MOLTIPLICATORE_VELOCITA = 1.1;
+public static final String SPIRITO_MOLTIPLICATORE_VELOCITA_NOTA = "Fluttua costantemente cambiandosi di posto in modo etereo ed elusivo.";
+public static final double STREGA_MOLTIPLICATORE_VELOCITA = 0.9;
+public static final String STREGA_MOLTIPLICATORE_VELOCITA_NOTA = "Come il mago, le sue movenze sono legate ai tempi di canalizzazione dei sortilegi, non alla rapidità fisica.";
+public static final double TITANO_MOLTIPLICATORE_VELOCITA = 0.4;
+public static final String TITANO_MOLTIPLICATORE_VELOCITA_NOTA = "Muoversi alla velocità di una montagna significa agire per ultimo. Ogni sua azione richiede un'intera fase del turno.";
+public static final double TROLL_MOLTIPLICATORE_VELOCITA = 0.7;
+public static final String TROLL_MOLTIPLICATORE_VELOCITA_NOTA = "Sgraziato, gobbo e pesante. Si muove in modo goffo, bilanciando la lentezza con la pura resistenza biologica.";
+public static final double VIVERNA_MOLTIPLICATORE_VELOCITA = 1.2;
+public static final String VIVERNA_MOLTIPLICATORE_VELOCITA_NOTA = "Predatore aereo scattante. Sfrutta le correnti d'aria per piombare sui bersagli a velocità sostenuta.";
+
+    FURTIVITA
+
+public static final double ARPIA_MOLTIPLICATORE_FURTIVITA = 0.7;
+public static final String ARPIA_MOLTIPLICATORE_FURTIVITA_NOTA = "Il piumaggio e lo sbattere delle ali la rendono rumorosa; predilige l'attacco a viso aperto dall'alto piuttosto che l'approccio furtivo.";
+public static final double BARDO_MOLTIPLICATORE_FURTIVITA = 1.1;
+public static final String BARDO_MOLTIPLICATORE_FURTIVITA_NOTA = "Abile nell'arte del camuffamento e del depistaggio; sa come passare inosservato tra la folla o muoversi con passo leggero.";
+public static final double CANTASTORIE_MOLTIPLICATORE_FURTIVITA = 1.1;
+public static final String CANTASTORIE_MOLTIPLICATORE_FURTIVITA_NOTA = "Abile nell'arte del camuffamento e del depistaggio; sa come passare inosservato tra la folla o muoversi con passo leggero.";
+public static final double CENTAURO_MOLTIPLICATORE_FURTIVITA = 0.5;
+public static final String CENTAURO_MOLTIPLICATORE_FURTIVITA_NOTA = "Gli zoccoli che battono sul terreno rendono quasi impossibile muoversi silenziosamente, tranne che su terreni erbosi soffici.";
+public static final double CHIMERA_MOLTIPLICATORE_FURTIVITA = 1.1;
+public static final String CHIMERA_MOLTIPLICATORE_FURTIVITA_NOTA = "Possiede la furtività felina innata del leone, parzialmente limitata però dalla presenza delle altre due teste che possono tradirla.";
+public static final double CHIMERADRAGO_MOLTIPLICATORE_FURTIVITA = 0.6;
+public static final String CHIMERADRAGO_MOLTIPLICATORE_FURTIVITA_NOTA = "Le dimensioni raddoppiate distruggono ogni velleità felina: i suoi passi fanno vibrare il terreno.";
+public static final double DRAGO_MOLTIPLICATORE_FURTIVITA = 0.5;
+public static final String DRAGO_MOLTIPLICATORE_FURTIVITA_NOTA = "Sebbene possa usare la magia per celarsi, le sue dimensioni naturali lo rendono una presenza impossibile da nascondere a occhio nudo.";
+public static final double ELFA_MOLTIPLICATORE_FURTIVITA = 1.3;
+public static final String ELFA_MOLTIPLICATORE_FURTIVITA_NOTA = "Passo leggerissimo. Gli elfi camminano sul terreno senza lasciare quasi impronte e sanno fondersi perfettamente con la natura.";
+public static final double ELFO_MOLTIPLICATORE_FURTIVITA = 1.3;
+public static final String ELFO_MOLTIPLICATORE_FURTIVITA_NOTA = "Passo leggerissimo. Gli elfi camminano sul terreno senza lasciare quasi impronte e sanno fondersi perfettamente con la natura.";
+public static final double EREMITA_MOLTIPLICATORE_FURTIVITA = 1.1;
+public static final String EREMITA_MOLTIPLICATORE_FURTIVITA_NOTA = "Anni passati a vivere nei boschi o nelle grotte gli hanno insegnato a muoversi senza disturbare la fauna locale.";
+public static final double FANTASMA_MOLTIPLICATORE_FURTIVITA = 1.3;
+public static final String FANTASMA_MOLTIPLICATORE_FURTIVITA_NOTA = "Incorporeo e fluttuante. Non produce alcun rumore di passi e può attraversare gli ostacoli visivi per nascondersi.";
+public static final double FOLLETTO_MOLTIPLICATORE_FURTIVITA = 1.4;
+public static final String FOLLETTO_MOLTIPLICATORE_FURTIVITA_NOTA = "Minuscolo e dotato di magie elusive naturali. Può nascondersi facilmente dietro a un semplice filo d'erba o a un fungo.";
+public static final double GARGOYLE_MOLTIPLICATORE_FURTIVITA = 0.4;
+public static final String GARGOYLE_MOLTIPLICATORE_FURTIVITA_NOTA = "Fatto di pietra. Quando è immobile sembra una statua (mimetismo perfetto), ma quando si muove il rumore della roccia lo tradisce subito.";
+public static final double GIGANTE_MOLTIPLICATORE_FURTIVITA = 0.2;
+public static final String GIGANTE_MOLTIPLICATORE_FURTIVITA_NOTA = "Alto come una torre, ogni suo movimento spezza alberi o sposta detriti. La furtività per lui non è contemplata.";
+public static final double GOBLIN_MOLTIPLICATORE_FURTIVITA = 1.3;
+public static final String GOBLIN_MOLTIPLICATORE_FURTIVITA_NOTA = "Maestro dell'infamia. Piccolo, scattante e abituato a strisciare nei cunicoli o nel fango per tendere imboscate.";
+public static final double GUERRIERA_MOLTIPLICATORE_FURTIVITA = 1.0;
+public static final String GUERRIERA_MOLTIPLICATORE_FURTIVITA_NOTA = "La Linea di Base. Rappresenta l'efficacia umana standard quando non è appesantito da armature metalliche.";
+public static final double GUERRIERO_MOLTIPLICATORE_FURTIVITA = 1.0;
+public static final String GUERRIERO_MOLTIPLICATORE_FURTIVITA_NOTA = "La Linea di Base. Rappresenta l'efficacia umana standard quando non è appesantito da armature metalliche.";
+public static final double HOBGOBLIN_MOLTIPLICATORE_FURTIVITA = 0.9;
+public static final String HOBGOBLIN_MOLTIPLICATORE_FURTIVITA_NOTA = "Più massiccio del goblin e solitamente equipaggiato con armature marziali che tintennano, riducendo l'elusività.";
+public static final double IDRA_MOLTIPLICATORE_FURTIVITA = 0.4;
+public static final String IDRA_MOLTIPLICATORE_FURTIVITA_NOTA = "Un enorme rettile a più teste che striscia sul terreno smuovendo terra e rocce, oltre a emettere costanti sibili da più bocche.";
+public static final double LADRA_MOLTIPLICATORE_FURTIVITA = 1.5;
+public static final String LADRA_MOLTIPLICATORE_FURTIVITA_NOTA = "Il Re dell'Ombra. Progettato attorno a questa statistica. Sa sfruttare ogni angolo cieco, cono d'ombra e tecnica di occultamento.";
+public static final double LADRO_MOLTIPLICATORE_FURTIVITA = 1.5;
+public static final String LADRO_MOLTIPLICATORE_FURTIVITA_NOTA = "Il Re dell'Ombra. Progettato attorno a questa statistica. Sa sfruttare ogni angolo cieco, cono d'ombra e tecnica di occultamento.";
+public static final double LICH_MOLTIPLICATORE_FURTIVITA = 0.8;
+public static final String LICH_MOLTIPLICATORE_FURTIVITA_NOTA = "Emana un'aura gelida di morte e i suoi paramenti cerimoniali lo rendono visibile; si affida alle illusioni più che al nascondersi fisicamente.";
+public static final double MAGA_MOLTIPLICATORE_FURTIVITA = 0.9;
+public static final String MAGA_MOLTIPLICATORE_FURTIVITA_NOTA = "Concentrato sui suoi studi, non ha un addestramento specifico nel muoversi in silenzio, ma non è nemmeno sgraziato.";
+public static final double MAGO_MOLTIPLICATORE_FURTIVITA = 0.9;
+public static final String MAGO_MOLTIPLICATORE_FURTIVITA_NOTA = "Concentrato sui suoi studi, non ha un addestramento specifico nel muoversi in silenzio, ma non è nemmeno sgraziato.";
+public static final double MINOTAURO_MOLTIPLICATORE_FURTIVITA = 0.5;
+public static final String MINOTAURO_MOLTIPLICATORE_FURTIVITA_NOTA = "Il respiro pesante, gli zoccoli e la mole taurina lo rendono un predatore da carica frontale, non da imboscata silenziosa.";
+public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_FURTIVITA = 0.2;
+public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_FURTIVITA_NOTA = "Un colosso infuriato. Impossibile da non notare, sia visivamente che acusticamente.";
+public static final double OMBRANERA_MOLTIPLICATORE_FURTIVITA = 1.5;
+public static final String OMBRANERA_MOLTIPLICATORE_FURTIVITA_NOTA = "L'eccellenza spettrale. Essendo letteralmente un'ombra senziente, si fonde al 100% con l'oscurità ambientale, eguagliando il Ladro.";
+public static final double SCHELETRO_MOLTIPLICATORE_FURTIVITA = 0.9;
+public static final String SCHELETRO_MOLTIPLICATORE_FURTIVITA_NOTA = "Non respira e non ha battito cardiaco, ma lo sfregamento delle ossa e lo sferragliare delle giunture consumate producono un leggero rumore.";
+public static final double SPETTRO_MOLTIPLICATORE_FURTIVITA = 1.4;
+public static final String SPETTRO_MOLTIPLICATORE_FURTIVITA_NOTA = "Variante aggressiva del fantasma; si muove come un soffio di vento gelido tra le ombre, quasi impossibile da percepire.";
+public static final double SPIRITO_MOLTIPLICATORE_FURTIVITA = 1.2;
+public static final String SPIRITO_MOLTIPLICATORE_FURTIVITA_NOTA = "Fluttua in modo silenzioso, ma la sua natura energetica può emettere un leggero bagliore mistico che ne tradisce la posizione.";
+public static final double STREGA_MOLTIPLICATORE_FURTIVITA = 1.0;
+public static final String STREGA_MOLTIPLICATORE_FURTIVITA_NOTA = "Abituata ad agire nell'ombra e a nascondersi dalle cacce alle streghe, possiede una buona propensione a non farsi notare.";
+public static final double TITANO_MOLTIPLICATORE_FURTIVITA = 0.0;
+public static final String TITANO_MOLTIPLICATORE_FURTIVITA_NOTA = "Impossibile. Una forza divina colossale che altera la gravità e l'ambiente circostante solo camminando. Il suo moltiplicatore azzera la statistica.";
+public static final double TROLL_MOLTIPLICATORE_FURTIVITA = 0.5;
+public static final String TROLL_MOLTIPLICATORE_FURTIVITA_NOTA = "Grosso, gobbo e sgraziato. Lascia tracce evidenti e si muove in modo pesante e rumoroso.";
+public static final double VIVERNA_MOLTIPLICATORE_FURTIVITA = 0.8;
+public static final String VIVERNA_MOLTIPLICATORE_FURTIVITA_NOTA = "Sebbene sia un predatore, le sue dimensioni e il battito delle ali membranose la rendono percepibile prima dell'attacco.";
+
+    PARATA
+
+public static final double ARPIA_MOLTIPLICATORE_PARATA = 0.7;
+public static final String ARPIA_MOLTIPLICATORE_PARATA_NOTA = "Struttura ossea leggera e fragile; preferisce schivare piuttosto che bloccare un colpo che le spezzerebbe le ali.";
+public static final double BARDO_MOLTIPLICATORE_PARATA = 1.0;
+public static final String BARDO_MOLTIPLICATORE_PARATA_NOTA = "Linea di Base Umana. Addestrato all'uso di armi da scherma leggere o piccoli buckler.";
+public static final double CANTASTORIE_MOLTIPLICATORE_PARATA = 1.0;
+public static final String CANTASTORIE_MOLTIPLICATORE_PARATA_NOTA = "Linea di Base Umana. Addestrato all'uso di armi da scherma leggere o piccoli buckler.";
+public static final double CENTAURO_MOLTIPLICATORE_PARATA = 1.1;
+public static final String CENTAURO_MOLTIPLICATORE_PARATA_NOTA = "La sua stabilità a quattro zampe gli permette di incassare l'impatto di un blocco senza perdere l'equilibrio.";
+public static final double CHIMERA_MOLTIPLICATORE_PARATA = 0.9;
+public static final String CHIMERA_MOLTIPLICATORE_PARATA_NOTA = "Si affida agli artigli o ai balzi; non ha la struttura per "parare" in senso tecnico, ma può deviare i colpi con le zampe.";
+public static final double CHIMERADRAGO_MOLTIPLICATORE_PARATA = 1.2;
+public static final String CHIMERADRAGO_MOLTIPLICATORE_PARATA_NOTA = "La mole raddoppiata le permette di usare le sue enormi zampe anteriori e le scaglie come scudi naturali stabili.";
+public static final double DRAGO_MOLTIPLICATORE_PARATA = 1.4;
+public static final String DRAGO_MOLTIPLICATORE_PARATA_NOTA = "Le sue ali membranose corazzate e le zampe titaniche possono intercettare e deviare quasi ogni attacco convenzionale.";
+public static final double ELFA_MOLTIPLICATORE_PARATA = 1.1;
+public static final String ELFA_MOLTIPLICATORE_PARATA_NOTA = "Compensa la minor forza fisica con riflessi fulminei, deviando i colpi nemici con la punta della spada (deflect).";
+public static final double ELFO_MOLTIPLICATORE_PARATA = 1.1;
+public static final String ELFO_MOLTIPLICATORE_PARATA_NOTA = "Compensa la minor forza fisica con riflessi fulminei, deviando i colpi nemici con la punta della spada (deflect).";
+public static final double EREMITA_MOLTIPLICATORE_PARATA = 0.8;
+public static final String EREMITA_MOLTIPLICATORE_PARATA_NOTA = "Riflessi rallentati e scarsa propensione all'uso di scudi pesanti; preferisce evitare il confronto diretto.";
+public static final double FANTASMA_MOLTIPLICATORE_PARATA = 0.2;
+public static final String FANTASMA_MOLTIPLICATORE_PARATA_NOTA = "Quasi impossibile parare un colpo fisico. La materia solida attraversa il suo corpo a meno che non usi armi incantate.";
+public static final double FOLLETTO_MOLTIPLICATORE_PARATA = 0.3;
+public static final String FOLLETTO_MOLTIPLICATORE_PARATA_NOTA = "Troppo minuto. Qualsiasi tentativo di bloccare un'arma normale lo farebbe volare via a causa dell'energia cinetica.";
+public static final double GARGOYLE_MOLTIPLICATORE_PARATA = 1.4;
+public static final String GARGOYLE_MOLTIPLICATORE_PARATA_NOTA = "Solidità di pietra. Può incrociare le ali di roccia davanti a sé, agendo come un vero e propria barriera statica.";
+public static final double GIGANTE_MOLTIPLICATORE_PARATA = 1.4;
+public static final String GIGANTE_MOLTIPLICATORE_PARATA_NOTA = "Un suo avambraccio è grande quanto lo scudo a torre di un guerriero. Para i colpi per pura opposizione di massa.";
+public static final double GOBLIN_MOLTIPLICATORE_PARATA = 0.8;
+public static final String GOBLIN_MOLTIPLICATORE_PARATA_NOTA = "Braccia corte e armi di fortuna. Preferisce evitare i blocchi diretti per non farsi spezzare le armi.";
+public static final double GUERRIERA_MOLTIPLICATORE_PARATA = 1.5;
+public static final String GUERRIERA_MOLTIPLICATORE_PARATA_NOTA = "Il Re della Parata Marziale. Addestrato all'uso di scudi a torre, tecniche di deflessione e contrattacchi difensivi.";
+public static final double GUERRIERO_MOLTIPLICATORE_PARATA = 1.5;
+public static final String GUERRIERO_MOLTIPLICATORE_PARATA_NOTA = "Il Re della Parata Marziale. Addestrato all'uso di scudi a torre, tecniche di deflessione e contrattacchi difensivi.";
+public static final double HOBGOBLIN_MOLTIPLICATORE_PARATA = 1.4;
+public static final String HOBGOBLIN_MOLTIPLICATORE_PARATA_NOTA = "Addestramento militare d'élite e uso costante di scudi pesanti in formazione di falange.";
+public static final double IDRA_MOLTIPLICATORE_PARATA = 1.0;
+public static final String IDRA_MOLTIPLICATORE_PARATA_NOTA = "Può sacrificare o usare una delle sue molteplici teste per intercettare o deviare un colpo diretto al corpo.";
+public static final double LADRA_MOLTIPLICATORE_PARATA = 1.0;
+public static final String LADRA_MOLTIPLICATORE_PARATA_NOTA = "Linea di Base Umana. Si affida alla parata di reazione con doppi pugnali o armi corte, prediligendo comunque la schivata.";
+public static final double LADRO_MOLTIPLICATORE_PARATA = 1.0;
+public static final String LADRO_MOLTIPLICATORE_PARATA_NOTA = "Linea di Base Umana. Si affida alla parata di reazione con doppi pugnali o armi corte, prediligendo comunque la schivata.";
+public static final double LICH_MOLTIPLICATORE_PARATA = 0.7;
+public static final String LICH_MOLTIPLICATORE_PARATA_NOTA = "Non usa scudi o armi fisiche; preferisce che siano le barriere magiche o il suo Mana Shield ad assorbire i danni.";
+public static final double MAGA_MOLTIPLICATORE_PARATA = 0.6;
+public static final String MAGA_MOLTIPLICATORE_PARATA_NOTA = "Scarsa forza fisica e nessuna competenza marziale nel frapporre armi o scudi d'acciaio.";
+public static final double MAGO_MOLTIPLICATORE_PARATA = 0.6;
+public static final String MAGO_MOLTIPLICATORE_PARATA_NOTA = "Scarsa forza fisica e nessuna competenza marziale nel frapporre armi o scudi d'acciaio.";
+public static final double MINOTAURO_MOLTIPLICATORE_PARATA = 1.2;
+public static final String MINOTAURO_MOLTIPLICATORE_PARATA_NOTA = "Usa le sue massicce corna o i grandi sguardi d'ascia per intercettare i colpi, opponendo una resistenza brutale.";
+public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_PARATA = 1.4;
+public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_PARATA_NOTA = "La sua mole colossale gli permette di bloccare gli attacchi nemici quasi senza accorgersene, grazie a muscoli duri come il ferro.";
+public static final double OMBRANERA_MOLTIPLICATORE_PARATA = 0.5;
+public static final String OMBRANERA_MOLTIPLICATORE_PARATA_NOTA = "Pur essendo aggressiva, la sua natura semiliquida e spettrale rende i blocchi fisici inefficienti.";
+public static final double SCHELETRO_MOLTIPLICATORE_PARATA = 1.1;
+public static final String SCHELETRO_MOLTIPLICATORE_PARATA_NOTA = "Se equipaggiato come soldato, esegue le parate in modo rigido, preciso e privo della paura di rompersi un osso.";
+public static final double SPETTRO_MOLTIPLICATORE_PARATA = 0.3;
+public static final String SPETTRO_MOLTIPLICATORE_PARATA_NOTA = "Come il fantasma, la sua natura eterea predilige l'elusione rispetto al blocco della materia solida.";
+public static final double SPIRITO_MOLTIPLICATORE_PARATA = 0.3;
+public static final String SPIRITO_MOLTIPLICATORE_PARATA_NOTA = "Fluttua e si dissolve parzialmente all'impatto; non ha una struttura idonea a generare una parata solida.";
+public static final double STREGA_MOLTIPLICATORE_PARATA = 0.6;
+public static final String STREGA_MOLTIPLICATORE_PARATA_NOTA = "Come il mago, manca di addestramento e forza fisica per i blocchi marziali.";
+public static final double TITANO_MOLTIPLICATORE_PARATA = 1.6;
+public static final String TITANO_MOLTIPLICATORE_PARATA_NOTA = "Il Blocco Assoluto. Può fermare una catapulta o un fendente leggendario semplicemente interponendo il palmo della mano.";
+public static final double TROLL_MOLTIPLICATORE_PARATA = 1.2;
+public static final String TROLL_MOLTIPLICATORE_PARATA_NOTA = "Para i colpi incassandoli deliberatamente sui grossi avambracci coriacei, sapendo che la sua rigenerazione curerà le ferite.";
+public static final double VIVERNA_MOLTIPLICATORE_PARATA = 0.9;
+public static final String VIVERNA_MOLTIPLICATORE_PARATA_NOTA = "Usa le giunture artigliate delle ali per deviare gli attacchi a terra, ma la sua struttura resta esposta.";
+
+    RESISTENZA MAGICA
+
+public static final double ARPIA_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.9;
+public static final String ARPIA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Creatura più istintiva che spirituale; le sue difese contro gli incantesimi complessi sono leggermente sotto la media.";
+public static final double BARDO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
+public static final String BARDO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "La sua familiarità con la magia della musica e delle parole gli conferisce una buona elasticità contro gli incantesimi mentali.";
+public static final double CANTASTORIE_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
+public static final String CANTASTORIE_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "La sua familiarità con la magia della musica e delle parole gli conferisce una buona elasticità contro gli incantesimi mentali.";
+public static final double CENTAURO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.0;
+public static final String CENTAURO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Connesso alla natura ma privo di uno studio arcano approfondito; si attesta sullo standard di base.";
+public static final double CHIMERA_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.9;
+public static final String CHIMERA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Essendo un costrutto biologico o una bestia magica selvaggia, si affida alla pelliccia coriacea più che a barriere mistiche.";
+public static final double CHIMERADRAGO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
+public static final String CHIMERADRAGO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Il sangue di drago infuso nella sua forma raddoppiata le conferisce una parziale immunità magica innata.";
+public static final double DRAGO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.5;
+public static final String DRAGO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Il Re della Mitigazione. Le scaglie di drago sono leggendarie per la loro capacità di riflettere e assorbire i flussi magici puri.";
+public static final double ELFA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
+public static final String ELFA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Razza intrinsecamente magica. Ogni elfo possiede una barriera mistica naturale che scorre nelle sue vene.";
+public static final double ELFO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
+public static final String ELFO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Razza intrinsecamente magica. Ogni elfo possiede una barriera mistica naturale che scorre nelle sue vene.";
+public static final double EREMITA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
+public static final String EREMITA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Anni di meditazione isolata e introspezione spirituale ne hanno fortificato la mente contro i malefici e le maledizioni.";
+public static final double FANTASMA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
+public static final String FANTASMA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Essendo già morto ed etereo, gli incantesimi che mirano al corpo fisico falliscono; subisce però la magia spirituale.";
+public static final double FOLLETTO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.3;
+public static final String FOLLETTO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Creatura fatata intessuta di pura magia selvaggia (Fey). Altamente refrattaria agli incantesimi convenzionali dei mortali.";
+public static final double GARGOYLE_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
+public static final String GARGOYLE_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "La pietra animata da cui è composto è intrisa di potenti rune di legame che lo schermano dalle energie magiche grezze.";
+public static final double GIGANTE_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.8;
+public static final String GIGANTE_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Troppo legato alla materia fisica e alla terra. La sua enorme mole lo rende un bersaglio facile per le energie arcane.";
+public static final double GOBLIN_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.8;
+public static final String GOBLIN_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Mente caotica e superstiziosa, facilmente influenzabile da sortilegi, illusioni e malocchi.";
+public static final double GUERRIERA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.0;
+public static final String GUERRIERA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "La Linea di Base. Rappresenta la resistenza mentale e la tempra di un umano standard privo di addestramento mistico.";
+public static final double GUERRIERO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.0;
+public static final String GUERRIERO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "La Linea di Base. Rappresenta la resistenza mentale e la tempra di un umano standard privo di addestramento mistico.";
+public static final double HOBGOBLIN_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.9;
+public static final String HOBGOBLIN_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Più disciplinato del goblin, ma la sua mentalità strettamente militarista rigetta la comprensione della magia.";
+public static final double IDRA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
+public static final String IDRA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "La sua natura di abominio antico le conferisce una discreta resilienza ai flussi magici che tentano di alterarne la biologia.";
+public static final double LADRA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.0;
+public static final String LADRA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "La Linea di Base. Si affida all'evitare l'incantesimo piuttosto che all'assorbirlo con la forza della mente.";
+public static final double LADRO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.0;
+public static final String LADRO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "La Linea di Base. Si affida all'evitare l'incantesimo piuttosto che all'assorbirlo con la forza della mente.";
+public static final double LICH_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.5;
+public static final String LICH_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Maestro dell'Arcano. Essendo un potente mago non-morto immortale, conosce ogni segreto della trama magica e la devia a piacimento.";
+public static final double MAGA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.4;
+public static final String MAGA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "L'eccellenza dello studio. Passa la vita a studiare la struttura delle formule magiche; sa esattamente come neutralizzarle.";
+public static final double MAGO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.4;
+public static final String MAGO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "L'eccellenza dello studio. Passa la vita a studiare la struttura delle formule magiche; sa esattamente come neutralizzarle.";
+public static final double MINOTAURO_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.7;
+public static final String MINOTAURO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "La sua mente è costantemente offuscata dalla rabbia e dall'istinto bestiale, rendendolo vulnerabile a incantesimi e maledizioni.";
+public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.6;
+public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Un ammasso di foga distruttiva privo di qualsiasi barriera o comprensione mistica. Vulnerabilissimo all'arcano.";
+public static final double OMBRANERA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.3;
+public static final String OMBRANERA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Composta di pura energia del Vuoto o delle Ombre; assorbe e dissolve le magie di elemento opposto (come il Sacro o l'Arcano).";
+public static final double SCHELETRO_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.7;
+public static final String SCHELETRO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Un semplice ammasso di ossa animate da magia di basso livello. Non ha una mente o un'anima per generare resistenza.";
+public static final double SPETTRO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
+public static final String SPETTRO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Più denso di rancore rispetto al fantasma comune; canalizza l'energia necrotica per deviare gli attacchi magici dei vivi.";
+public static final double SPIRITO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.3;
+public static final String SPIRITO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Essendo una manifestazione energetica pura, fluttua tra le frequenze magiche e risulta difficile da dissolvere o danneggiare.";
+public static final double STREGA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.4;
+public static final String STREGA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Maestra dei Sortilegi. Al pari del mago, manipola le maledizioni e i flussi occulti, possedendo una schermatura altissima.";
+public static final double TITANO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.4;
+public static final String TITANO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Creatura semidivina originaria del mito. La magia dei mortali scivola sulla sua pelle come pioggia su una roccia.";
+public static final double TROLL_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.7;
+public static final String TROLL_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "La sua rigenerazione cura le ferite fisiche, ma la sua carne debole e la mente primitiva capitSpecificano davanti alle maledizioni.";
+public static final double VIVERNA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.0;
+public static final String VIVERNA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Bestia magica con una resistenza standard, bilanciata tra la sua pelle coriacea e la mancanza di intelletto mistico.";
+
+    PERCEZIONE
+
+public static final double ARPIA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.4;
+public static final String ARPIA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Vista da rapace. Capace di scorgere un topo che si muove tra l'erba da centinaia di metri d'altezza.";
+public static final double BARDO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
+public static final String BARDO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Ottimo osservatore del comportamento umano; nota subito i dettagli fuori posto, i sussurri e i movimenti sospetti.";
+public static final double CANTASTORIE_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
+public static final String CANTASTORIE_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Ottimo osservatore del comportamento umano; nota subito i dettagli fuori posto, i sussurri e i movimenti sospetti.";
+public static final double CENTAURO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
+public static final String CENTAURO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Essendo una creatura delle praterie e un cacciatore nato, ha sensi molto sviluppati per prevenire gli agguati.";
+public static final double CHIMERA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.3;
+public static final String CHIMERA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Tre teste significano tre paia di occhi e orecchie indipendenti. Praticamente impossibile da cogliere alle spalle.";
+public static final double CHIMERADRAGO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.4;
+public static final String CHIMERADRAGO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Unisce la visione a 360 gradi della chimera ai sensi magici superiori ereditati dalla stirpe dei draghi.";
+public static final double DRAGO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.5;
+public static final String DRAGO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Il Sensorio Assoluto. Sensi millenari divini. Percepisce le vibrazioni del terreno, il calore corporeo e i flussi magici.";
+public static final double ELFA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.4;
+public static final String ELFA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Cacciatore Leggendario. Vista e udito finissimi; percepisce il respiro di un nemico nascosto a grande distanza.";
+public static final double ELFO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.4;
+public static final String ELFO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Cacciatore Leggendario. Vista e udito finissimi; percepisce il respiro di un nemico nascosto a grande distanza.";
+public static final double EREMITA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
+public static final String EREMITA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "La vita in solitudine nella natura selvaggia ha affinato il suo intuito e la sua capacità di ascoltare l'ambiente.";
+public static final double FANTASMA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.0;
+public static final String FANTASMA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Sente la presenza delle anime e dei vivi, ma la sua transizione spettrale ne distorce parzialmente la vista fisica.";
+public static final double FOLLETTO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
+public static final String FOLLETTO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Molto attento e curioso, anche se la sua natura iperattiva lo porta a distrarsi facilmente.";
+public static final double GARGOYLE_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.9;
+public static final String GARGOYLE_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Quando è in forma di statua i suoi sensi sono limitati; la pietra ne attenua la ricezione dei suoni sottili.";
+public static final double GIGANTE_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.8;
+public static final String GIGANTE_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "La sua mole imponente lo allontana dai dettagli del terreno; fatica a notare creature minuscole ai suoi piedi.";
+public static final double GOBLIN_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
+public static final String GOBLIN_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Sensi ferini molto sviluppati, specialmente l'olfatto e la vista notturna, utili per sopravvivere nelle caverne.";
+public static final double GUERRIERA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.0;
+public static final String GUERRIERA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "La Linea di Base. L'attenzione e l'occhio vigile di un soldato umano addestrato alla guardia.";
+public static final double GUERRIERO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.0;
+public static final String GUERRIERO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "La Linea di Base. L'attenzione e l'occhio vigile di un soldato umano addestrato alla guardia.";
+public static final double HOBGOBLIN_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
+public static final String HOBGOBLIN_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Disciplinato e paranoico; addestrato a scansionare costantemente i perimetri per evitare imboscate alle truppe.";
+public static final double IDRA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.3;
+public static final String IDRA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Come la chimera, le sue numerose teste coprono ogni angolo visivo. Se una testa dorme, le altre vigilano.";
+public static final double LADRA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.3;
+public static final String LADRA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "L'occhio del professionista. Deve avere una percezione altissima per scovare le trappole nemiche e i segreti prima che sia tardi.";
+public static final double LADRO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.3;
+public static final String LADRO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "L'occhio del professionista. Deve avere una percezione altissima per scovare le trappole nemiche e i segreti prima che sia tardi.";
+public static final double LICH_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
+public static final String LICH_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "La sua vista è guidata da una percezione magica e spirituale che ignora le illusioni visive dei mortali.";
+public static final double MAGA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
+public static final String MAGA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Abituato a percepire le alterazioni della trama magica e l'energia arcana, compensando la vista fisica comune.";
+public static final double MAGO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
+public static final String MAGO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Abituato a percepire le alterazioni della trama magica e l'energia arcana, compensando la vista fisica comune.";
+public static final double MINOTAURO_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.8;
+public static final String MINOTAURO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "La bramosia di sangue e il labirinto ne limitano la visione strategica; si affida quasi solo all'olfatto.";
+public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.6;
+public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Troppo colossale e costantemente infuriato per badare ai dettagli. Facile da ingannare con le finte.";
+public static final double OMBRANERA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
+public static final String OMBRANERA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Vede perfettamente nel buio assoluto e percepisce il battito cardiaco e la paura delle sue prede.";
+public static final double SCHELETRO_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.6;
+public static final String SCHELETRO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Privo di occhi e orecchie fisiche; è mosso solo da un flebile istinto magico che lo rende facilissimo da aggirare.";
+public static final double SPETTRO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.1;
+public static final String SPETTRO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Più vigile del fantasma comune; caccia attivamente i vivi seguendo il calore della loro energia vitale.";
+public static final double SPIRITO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.2;
+public static final String SPIRITO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Sente le vibrazioni emotive e spirituali dell'area circostante in modo estremamente acuto.";
+public static final double STREGA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.3;
+public static final String STREGA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Dotata di un forte intuito e di "terzo occhio" magico, eccelle nello scovare segreti e intenzioni nascoste.";
+public static final double TITANO_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.0;
+public static final String TITANO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Vede il mondo su scala macroscopica; nota i grandi movimenti tellurici ma ignora i piccoli dettagli individuali.";
+public static final double TROLL_MOLTIPLICATORE_RESISTENZA_MAGICA = 0.7;
+public static final String TROLL_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Intelletto primitivo e sensi ottusi dal parassitismo o dalla scarsa igiene; compensa solo con un buon olfatto.";
+public static final double VIVERNA_MOLTIPLICATORE_RESISTENZA_MAGICA = 1.3;
+public static final String VIVERNA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA = "Predatore volante con una vista eccezionale, specializzata nell'agganciare bersagli in movimento dall'alto.";
+
+    SOGGEZIONE
+
+public static final double ARPIA_MOLTIPLICATORE_SOGGEZIONE = 0.9;
+public static final String ARPIA_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Più fastidiosa e stridula che veramente terrificante; la sua presenza non impone rispetto o blocco psicologico.";
+public static final double BARDO_MOLTIPLICATORE_SOGGEZIONE = 1.2;
+public static final String BARDO_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Fascino e magnetismo eccezionali. Emana una maestosità teatrale che ammalia gli alleati e soggioga i nemici.";
+public static final double CANTASTORIE_MOLTIPLICATORE_SOGGEZIONE = 1.2;
+public static final String CANTASTORIE_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Fascino e magnetismo eccezionali. Emana una maestosità teatrale che ammalia gli alleati e soggioga i nemici.";
+public static final double CENTAURO_MOLTIPLICATORE_SOGGEZIONE = 1.1;
+public static final String CENTAURO_MOLTIPLICATORE_SOGGEZIONE_NOTA = "La fisionomia fiera e imponente del corpo equino incute un naturale timore reverenziale.";
+public static final double CHIMERA_MOLTIPLICATORE_SOGGEZIONE = 1.2;
+public static final String CHIMERA_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Un abominio a tre teste che ruggisce, bela e fissa il nemico contemporaneamente è un incubo psicologico.";
+public static final double CHIMERADRAGO_MOLTIPLICATORE_SOGGEZIONE = 1.4;
+public static final String CHIMERADRAGO_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Raddoppiata nelle dimensioni e infusa di tratti draconici; emana una presenza opprimente sul campo.";
+public static final double DRAGO_MOLTIPLICATORE_SOGGEZIONE = 1.6;
+public static final String DRAGO_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Il Re del Terrore. Possiede la Presenza Terrificante innata. Il suo solo sguardo può paralizzare interi eserciti.";
+public static final double ELFA_MOLTIPLICATORE_SOGGEZIONE = 1.1;
+public static final String ELFA_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Emana un'eleganza distaccata, eterea e quasi divina che intimidisce i mortali comuni.";
+public static final double ELFO_MOLTIPLICATORE_SOGGEZIONE = 1.1;
+public static final String ELFO_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Emana un'eleganza distaccata, eterea e quasi divina che intimidisce i mortali comuni.";
+public static final double EREMITA_MOLTIPLICATORE_SOGGEZIONE = 0.8;
+public static final String EREMITA_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Aspetto trasandato e isolato; evoca follia o pietà più che rispetto o timore reverenziale.";
+public static final double FANTASMA_MOLTIPLICATORE_SOGGEZIONE = 1.1;
+public static final String FANTASMA_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Un'apparizione spettrale che fluttua urlando spezza facilmente il morale dei soldati meno coraggiosi.";
+public static final double FOLLETTO_MOLTIPLICATORE_SOGGEZIONE = 0.4;
+public static final String FOLLETTO_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Troppo buffo, minuscolo e irritante. Nessuno si sente intimidito dalla sua sola presenza scenica.";
+public static final double GARGOYLE_MOLTIPLICATORE_SOGGEZIONE = 1.1;
+public static final String GARGOYLE_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Un mostro di pietra grottesco arroccato nell'ombra genera una forte ansia psicologica in chi si avvicina.";
+public static final double GIGANTE_MOLTIPLICATORE_SOGGEZIONE = 1.4;
+public static final String GIGANTE_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Una montagna di muscoli alta 5 metri che ti sovrasta applica un debuff automatico alla tua autostima.";
+public static final double GOBLIN_MOLTIPLICATORE_SOGGEZIONE = 0.5;
+public static final String GOBLIN_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Creatura storicamente codarda e minuta. Fa ridere o innervosire, non incute soggezione.";
+public static final double GUERRIERA_MOLTIPLICATORE_SOGGEZIONE = 1.0;
+public static final String GUERRIERA_MOLTIPLICATORE_SOGGEZIONE_NOTA = "La Linea di Base. La presenza ferma e determinata di un soldato umano corazzato.";
+public static final double GUERRIERO_MOLTIPLICATORE_SOGGEZIONE = 1.0;
+public static final String GUERRIERO_MOLTIPLICATORE_SOGGEZIONE_NOTA = "La Linea di Base. La presenza ferma e determinata di un soldato umano corazzato.";
+public static final double HOBGOBLIN_MOLTIPLICATORE_SOGGEZIONE = 1.1;
+public static final String HOBGOBLIN_MOLTIPLICATORE_SOGGEZIONE_NOTA = "A differenza del goblin, ha un portamento marziale, fiero e spietato che incute timore sul campo.";
+public static final double IDRA_MOLTIPLICATORE_SOGGEZIONE = 1.3;
+public static final String IDRA_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Vedere cinque o più teste giganti pronte a sbranarti genera un terrore biologico immediato.";
+public static final double LADRA_MOLTIPLICATORE_SOGGEZIONE = 0.9;
+public static final String LADRA_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Preferisce non farsi notare affatto. Se lo vedi, la sua figura non punta a intimidire ma a colpire di sorpresa.";
+public static final double LADRO_MOLTIPLICATORE_SOGGEZIONE = 0.9;
+public static final String LADRO_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Preferisce non farsi notare affatto. Se lo vedi, la sua figura non punta a intimidire ma a colpire di sorpresa.";
+public static final double LICH_MOLTIPLICATORE_SOGGEZIONE = 1.5;
+public static final String LICH_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Maestosità della Morte. Un sovrano non-morto immortale che emana un'aura gelida di sottomissione assoluta.";
+public static final double MAGA_MOLTIPLICATORE_SOGGEZIONE = 1.0;
+public static final String MAGA_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Standard. La sua figura può incutere rispetto per via della conoscenza, ma non è intrinsecamente spaventosa.";
+public static final double MAGO_MOLTIPLICATORE_SOGGEZIONE = 1.0;
+public static final String MAGO_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Standard. La sua figura può incutere rispetto per via della conoscenza, ma non è intrinsecamente spaventosa.";
+public static final double MINOTAURO_MOLTIPLICATORE_SOGGEZIONE = 1.3;
+public static final String MINOTAURO_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Il classico mostro brutale del labirinto. Il suo ruggito taurino e la stazza spezzano la concentrazione nemica.";
+public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_SOGGEZIONE = 1.5;
+public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Unisce il terrore del minotauro alla mole del gigante. Una furia inarrestabile che costringe i nemici alla fuga.";
+public static final double OMBRANERA_MOLTIPLICATORE_SOGGEZIONE = 1.4;
+public static final String OMBRANERA_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Una sagoma d'oscurità pura, irascibile e maligna, che sembra inghiottire la luce circostante.";
+public static final double SCHELETRO_MOLTIPLICATORE_SOGGEZIONE = 0.8;
+public static final String SCHELETRO_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Sebbene sia un non-morto, è troppo comune e fragile per incutere un vero blocco psicologico nei veterani.";
+public static final double SPETTRO_MOLTIPLICATORE_SOGGEZIONE = 1.3;
+public static final String SPETTRO_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Una manifestazione d'ira e rancore spettrale che gela il sangue nelle vene di chi la guarda.";
+public static final double SPIRITO_MOLTIPLICATORE_SOGGEZIONE = 1.0;
+public static final String SPIRITO_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Più misterioso ed elusivo che terrificante; evoca cautela o curiosità mistica.";
+public static final double STREGA_MOLTIPLICATORE_SOGGEZIONE = 1.2;
+public static final String STREGA_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Emana una presenza maligna e inquietante, supportata da sguardi penetranti e sussurri occulti.";
+public static final double TITANO_MOLTIPLICATORE_SOGGEZIONE = 1.6;
+public static final String TITANO_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Presenza Divina. Una forza primordiale del mito. Davanti a lui i mortali cadono in ginocchio per l'insignificanza.";
+public static final double TROLL_MOLTIPLICATORE_SOGGEZIONE = 1.1;
+public static final String TROLL_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Grosso, deforme e spaventoso, ma la sua evidente stupidità attenua parzialmente la soggezione psicologica.";
+public static final double VIVERNA_MOLTIPLICATORE_SOGGEZIONE = 1.2;
+public static final String VIVERNA_MOLTIPLICATORE_SOGGEZIONE_NOTA = "Un grande rettile predatore che stride nei cieli evoca il terrore di essere ghermiti da un momento all'altro.";
+
+    FURIA
+
+public static final double ARPIA_MOLTIPLICATORE_FURIA = 1.1;
+public static final String ARPIA_MOLTIPLICATORE_FURIA_NOTA = "Creatura isterica e furente; quando viene ferita attacca graffiando e stridendo in preda a un'agitazione selvaggia.";
+public static final double BARDO_MOLTIPLICATORE_FURIA = 0.7;
+public static final String BARDO_MOLTIPLICATORE_FURIA_NOTA = "Cerca l'armonia e il controllo del ritmo sul campo; la rabbia cieca distruggerebbe la sua esecuzione musicale.";
+public static final double CANTASTORIE_MOLTIPLICATORE_FURIA = 0.7;
+public static final String CANTASTORIE_MOLTIPLICATORE_FURIA_NOTA = "Cerca l'armonia e il controllo del ritmo sul campo; la rabbia cieca distruggerebbe la sua esecuzione musicale.";
+public static final double CENTAURO_MOLTIPLICATORE_FURIA = 1.1;
+public static final String CENTAURO_MOLTIPLICATORE_FURIA_NOTA = "Sebbene sia disciplinato, se viene provocato cede alla sua metà bestiale, travolgendo tutto nella carica.";
+public static final double CHIMERA_MOLTIPLICATORE_FURIA = 1.3;
+public static final String CHIMERA_MOLTIPLICATORE_FURIA_NOTA = "Tre menti bestiali predatrici che si fondono in un unico corpo generano un livello di ferocia innata spaventoso.";
+public static final double CHIMERADRAGO_MOLTIPLICATORE_FURIA = 1.4;
+public static final String CHIMERADRAGO_MOLTIPLICATORE_FURIA_NOTA = "Unisce la ferocia caotica della chimera alla devastante e distruttiva rabbia draconica.";
+public static final double DRAGO_MOLTIPLICATORE_FURIA = 1.2;
+public static final String DRAGO_MOLTIPLICATORE_FURIA_NOTA = "Raramente perde il controllo a causa della sua intelligenza millenaria, ma se ferito cede a una collera leggendaria.";
+public static final double ELFA_MOLTIPLICATORE_FURIA = 0.6;
+public static final String ELFA_MOLTIPLICATORE_FURIA_NOTA = "Autocontrollo assoluto. La sua filosofia marziale rifiuta la foga cieca a favore della precisione fredda e distaccata.";
+public static final double ELFO_MOLTIPLICATORE_FURIA = 0.6;
+public static final String ELFO_MOLTIPLICATORE_FURIA_NOTA = "Autocontrollo assoluto. La sua filosofia marziale rifiuta la foga cieca a favore della precisione fredda e distaccata.";
+public static final double EREMITA_MOLTIPLICATORE_FURIA = 0.7;
+public static final String EREMITA_MOLTIPLICATORE_FURIA_NOTA = "Ha passato la vita a cercare la pace interiore e l'isolamento; è difficile che si lasci trascinare dalla foga bellica.";
+public static final double FANTASMA_MOLTIPLICATORE_FURIA = 0.8;
+public static final String FANTASMA_MOLTIPLICATORE_FURIA_NOTA = "Più freddo e distaccato rispetto ad altri spettri; fluttua senza forti picchi di adrenalina fisica.";
+public static final double FOLLETTO_MOLTIPLICATORE_FURIA = 1.2;
+public static final String FOLLETTO_MOLTIPLICATORE_FURIA_NOTA = "Una creatura iperattiva, incline a scatti d'ira infantili ma violentissimi se le cose non vanno come desidera.";
+public static final double GARGOYLE_MOLTIPLICATORE_FURIA = 0.5;
+public static final String GARGOYLE_MOLTIPLICATORE_FURIA_NOTA = "Fatto di pietra rigida ed esanime. Non possiede sangue o ghiandole surrenali per provare la trance agonistica.";
+public static final double GIGANTE_MOLTIPLICATORE_FURIA = 1.3;
+public static final String GIGANTE_MOLTIPLICATORE_FURIA_NOTA = "Tradizionalmente incline a scatti d'ira catastrofici. Quando si infuria, devasta l'ambiente circostante.";
+public static final double GOBLIN_MOLTIPLICATORE_FURIA = 1.1;
+public static final String GOBLIN_MOLTIPLICATORE_FURIA_NOTA = "Instabile, codardo ma capace di attacchi isterici e feroci se messo all'angolo dalla paura.";
+public static final double GUERRIERA_MOLTIPLICATORE_FURIA = 1.0;
+public static final String GUERRIERA_MOLTIPLICATORE_FURIA_NOTA = "La Linea di Base. Può attingere alla trance agonistica del soldato, mantenendo però un minimo di disciplina.";
+public static final double GUERRIERO_MOLTIPLICATORE_FURIA = 1.0;
+public static final String GUERRIERO_MOLTIPLICATORE_FURIA_NOTA = "La Linea di Base. Può attingere alla trance agonistica del soldato, mantenendo però un minimo di disciplina.";
+public static final double HOBGOBLIN_MOLTIPLICATORE_FURIA = 0.9;
+public static final String HOBGOBLIN_MOLTIPLICATORE_FURIA_NOTA = "Più freddo, militare e controllato rispetto al goblin comune; preferisce l'ordine marziale alla rabbia caotica.";
+public static final double IDRA_MOLTIPLICATORE_FURIA = 1.2;
+public static final String IDRA_MOLTIPLICATORE_FURIA_NOTA = "La fame insaziabile e il dolore derivato dal farsi tagliare le teste la spingono a mordere con foga crescente.";
+public static final double LADRA_MOLTIPLICATORE_FURIA = 0.8;
+public static final String LADRA_MOLTIPLICATORE_FURIA_NOTA = "La furia distruggerebbe la sua concentrazione, la sua furtività e la sua mira chirurgica. Preferisce restare calma.";
+public static final double LADRO_MOLTIPLICATORE_FURIA = 0.8;
+public static final String LADRO_MOLTIPLICATORE_FURIA_NOTA = "La furia distruggerebbe la sua concentrazione, la sua furtività e la sua mira chirurgica. Preferisce restare calmo.";
+public static final double LICH_MOLTIPLICATORE_FURIA = 0.4;
+public static final String LICH_MOLTIPLICATORE_FURIA_NOTA = "Una mente di puro ghiaccio immortale e logica necromantica. Non prova emozioni o impulsi biologici di rabbia.";
+public static final double MAGA_MOLTIPLICATORE_FURIA = 0.5;
+public static final String MAGA_MOLTIPLICATORE_FURIA_NOTA = "Richiede una mente lucida e ferma per calcolare i flussi arcani; cedere alla furia gli impedirebbe di lanciare incantesimi.";
+public static final double MAGO_MOLTIPLICATORE_FURIA = 0.5;
+public static final String MAGO_MOLTIPLICATORE_FURIA_NOTA = "Richiede una mente lucida e ferma per calcolare i flussi arcani; cedere alla furia gli impedirebbe di lanciare incantesimi.";
+public static final double MINOTAURO_MOLTIPLICATORE_FURIA = 1.5;
+public static final String MINOTAURO_MOLTIPLICATORE_FURIA_NOTA = "Il Re della Furia. La sua intera esistenza è basata sulla bramosia di sangue e sulla carica cieca del Berserk.";
+public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_FURIA = 1.6;
+public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_FURIA_NOTA = "La Devastazione Totale. Unisce la stazza del gigante all'instabilità del minotauro. Una macchina da guerra inarrestabile.";
+public static final double OMBRANERA_MOLTIPLICATORE_FURIA = 1.5;
+public static final String OMBRANERA_MOLTIPLICATORE_FURIA_NOTA = "L'Irascibile per eccellenza. Come specificato nella descrizione, questo non-morto è dominato da un rancore violento e distruttivo.";
+public static final double SCHELETRO_MOLTIPLICATORE_FURIA = 0.6;
+public static final String SCHELETRO_MOLTIPLICATORE_FURIA_NOTA = "Automa senza cervello mosso da impulsi magici base. Esegue gli ordini senza passione, paura o rabbia.";
+public static final double SPETTRO_MOLTIPLICATORE_FURIA = 1.3;
+public static final String SPETTRO_MOLTIPLICATORE_FURIA_NOTA = "Un concentrato di odio e rancore ultraterreno che si manifesta sotto forma di violenza cieca contro i vivi.";
+public static final double SPIRITO_MOLTIPLICATORE_FURIA = 0.9;
+public static final String SPIRITO_MOLTIPLICATORE_FURIA_NOTA = "Può manifestare turbolenze energetiche distruttive se agitato, oscillando tra calma ed eccitazione.";
+public static final double STREGA_MOLTIPLICATORE_FURIA = 0.8;
+public static final String STREGA_MOLTIPLICATORE_FURIA_NOTA = "Sebbene sia un mago, usa le emozioni negative per alimentare i malefici, tollerando una discreta dose di foga.";
+public static final double TITANO_MOLTIPLICATORE_FURIA = 1.1;
+public static final String TITANO_MOLTIPLICATORE_FURIA_NOTA = "La sua collera si esprime su scala geologica, ma è più simile a una tempesta inarrestabile che a un attacco di panico isterico.";
+public static final double TROLL_MOLTIPLICATORE_FURIA = 1.5;
+public static final String TROLL_MOLTIPLICATORE_FURIA_NOTA = "L'essenza del Berserk. Combatte in preda a una frenesia selvaggia, amplificata dal fatto che non teme le ferite grazie alla rigenerazione.";
+public static final double VIVERNA_MOLTIPLICATORE_FURIA = 1.1;
+public static final String VIVERNA_MOLTIPLICATORE_FURIA_NOTA = "Bestia predatrice che si agita e morde con ferocia se ferita o se deve difendere il proprio nido.";
+
+    CORAGGIO
+
+public static final double ARPIA_MOLTIPLICATORE_FURIA = 0.7;
+public static final String ARPIA_MOLTIPLICATORE_FURIA_NOTA = "Creatura opportunista. Se si rende conto che lo scontro è svantaggioso, cede facilmente al panico e si ritira.";
+public static final double BARDO_MOLTIPLICATORE_FURIA = 1.1;
+public static final String BARDO_MOLTIPLICATORE_FURIA_NOTA = "Ha una forte personalità; abituato a stare al centro dell'attenzione, non si lascia intimidire facilmente dalle minacce.";
+public static final double CANTASTORIE_MOLTIPLICATORE_FURIA = 1.1;
+public static final String CANTASTORIE_MOLTIPLICATORE_FURIA_NOTA = "Ha una forte personalità; abituato a stare al centro dell'attenzione, non si lascia intimidire facilmente dalle minacce.";
+public static final double CENTAURO_MOLTIPLICATORE_FURIA = 1.1;
+public static final String CENTAURO_MOLTIPLICATORE_FURIA_NOTA = "Orgoglioso e fiero guerriero delle praterie. Possiede una solida fermezza marziale contro la paura.";
+public static final double CHIMERA_MOLTIPLICATORE_FURIA = 1.0;
+public static final String CHIMERA_MOLTIPLICATORE_FURIA_NOTA = "Bilanciata: la ferocia delle tre teste le impedisce di fuggire subito, ma non ha una disciplina mentale superiore.";
+public static final double CHIMERADRAGO_MOLTIPLICATORE_FURIA = 1.2;
+public static final String CHIMERADRAGO_MOLTIPLICATORE_FURIA_NOTA = "La componente draconica infusa nella sua forma le conferisce un netto aumento della forza di volontà.";
+public static final double DRAGO_MOLTIPLICATORE_FURIA = 1.6;
+public static final String DRAGO_MOLTIPLICATORE_FURIA_NOTA = "Orgoglio Millenario. Consapevole della propria superiorità assoluta. Praticamente immune alla paura dei mortali.";
+public static final double ELFA_MOLTIPLICATORE_FURIA = 1.1;
+public static final String ELFA_MOLTIPLICATORE_FURIA_NOTA = "Distaccato e fiero; guarda i pericoli del mondo con la fermezza di chi ha vissuto per secoli.";
+public static final double ELFO_MOLTIPLICATORE_FURIA = 1.1;
+public static final String ELFO_MOLTIPLICATORE_FURIA_NOTA = "Distaccato e fiero; guarda i pericoli del mondo con la fermezza di chi ha vissuto per secoli.";
+public static final double EREMITA_MOLTIPLICATORE_FURIA = 1.0;
+public static final String EREMITA_MOLTIPLICATORE_FURIA_NOTA = "Ha affrontato la solitudine e le privazioni; la sua mente è stabile, anche se non ha lo slancio dell'eroe.";
+public static final double FANTASMA_MOLTIPLICATORE_FURIA = 1.2;
+public static final String FANTASMA_MOLTIPLICATORE_FURIA_NOTA = "Essendo già morto, ha superato la paura della fine biologica, risultando molto saldo contro i debuff mentali.";
+public static final double FOLLETTO_MOLTIPLICATORE_FURIA = 0.6;
+public static final String FOLLETTO_MOLTIPLICATORE_FURIA_NOTA = "Estremamente volubile e pauroso. Se affrontato da nemici imponenti, preferisce scappare e nascondersi.";
+public static final double GARGOYLE_MOLTIPLICATORE_FURIA = 1.3;
+public static final String GARGOYLE_MOLTIPLICATORE_FURIA_NOTA = "Sentinella di pietra incrollabile. Esegue il suo compito di guardia senza provare emozioni come il terrore.";
+public static final double GIGANTE_MOLTIPLICATORE_FURIA = 1.2;
+public static final String GIGANTE_MOLTIPLICATORE_FURIA_NOTA = "La sua stessa mole imponente lo fa sentire al sicuro dalla maggior parte delle minacce del mondo.";
+public static final double GOBLIN_MOLTIPLICATORE_FURIA = 0.4;
+public static final String GOBLIN_MOLTIPLICATORE_FURIA_NOTA = "Il Re della Codardia. Combatte solo se in netta superiorità numerica. Se il leader cade, fugge all'istante.";
+public static final double GUERRIERA_MOLTIPLICATORE_FURIA = 1.3;
+public static final String GUERRIERA_MOLTIPLICATORE_FURIA_NOTA = "L'essenza del Coraggio Marziale. Addestrata a mantenere la linea di sangue e a guardare la morte in faccia.";
+public static final double GUERRIERO_MOLTIPLICATORE_FURIA = 1.3;
+public static final String GUERRIERO_MOLTIPLICATORE_FURIA_NOTA = "L'essenza del Coraggio Marziale. Addestrato a mantenere la linea di sangue e a guardare la morte in faccia.";
+public static final double HOBGOBLIN_MOLTIPLICATORE_FURIA = 1.3;
+public static final String HOBGOBLIN_MOLTIPLICATORE_FURIA_NOTA = "Militarmente disciplinato come il guerriero umano; il senso del dovere della falange annulla la paura goblin.";
+public static final double IDRA_MOLTIPLICATORE_FURIA = 1.1;
+public static final String IDRA_MOLTIPLICATORE_FURIA_NOTA = "La sua natura primordiale e rigenerativa la rende ostinata; continua a combattere finché ha una testa attiva.";
+public static final double LADRA_MOLTIPLICATORE_FURIA = 1.0;
+public static final String LADRA_MOLTIPLICATORE_FURIA_NOTA = "La Linea di Base. Pragmatico: non si fa paralizzare dal terrore, ma preferisce ritirarsi se la situazione scotta.";
+public static final double LADRO_MOLTIPLICATORE_FURIA = 1.0;
+public static final String LADRO_MOLTIPLICATORE_FURIA_NOTA = "La Linea di Base. Pragmatico: non si fa paralizzare dal terrore, ma preferisce ritirarsi se la situazione scotta.";
+public static final double LICH_MOLTIPLICATORE_FURIA = 1.6;
+public static final String LICH_MOLTIPLICATORE_FURIA_NOTA = "Volontà Immortale. Ha sconfitto la morte stessa tramite la necromanzia; la sua mente è una fortezza inespugnabile.";
+public static final double MAGA_MOLTIPLICATORE_FURIA = 1.0;
+public static final String MAGA_MOLTIPLICATORE_FURIA_NOTA = "Standard. Si affida alla logica per analizzare il pericolo, controllando le emozioni con l'intelletto.";
+public static final double MAGO_MOLTIPLICATORE_FURIA = 1.0;
+public static final String MAGO_MOLTIPLICATORE_FURIA_NOTA = "Standard. Si affida alla logica per analizzare il pericolo, controllando le emozioni con l'intelletto.";
+public static final double MINOTAURO_MOLTIPLICATORE_FURIA = 1.2;
+public static final String MINOTAURO_MOLTIPLICATORE_FURIA_NOTA = "Più che coraggioso è ostinato e accecato dalla bramosia di sangue, il che lo spinge ad avanzare nonostante i rischi.";
+public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_FURIA = 1.3;
+public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_FURIA_NOTA = "La furia selvaggia e la mole colossale lo rendono del tutto noncurante di ciò che gli si para davanti.";
+public static final double OMBRANERA_MOLTIPLICATORE_FURIA = 1.4;
+public static final String OMBRANERA_MOLTIPLICATORE_FURIA_NOTA = "Il suo temperamento irascibile e maligno si traduce in una determinazione feroce a distruggere il bersaglio.";
+public static final double SCHELETRO_MOLTIPLICATORE_FURIA = 1.5;
+public static final String SCHELETRO_MOLTIPLICATORE_FURIA_NOTA = "Immunità Emotiva. Un automa privo di cervello e paura. Avanza verso il pericolo senza alcuna esitazione biologica.";
+public static final double SPETTRO_MOLTIPLICATORE_FURIA = 1.3;
+public static final String SPETTRO_MOLTIPLICATORE_FURIA_NOTA = "Mosso da un rancore eterno e implacabile che annulla qualsiasi forma di esitazione o timore.";
+public static final double SPIRITO_MOLTIPLICATORE_FURIA = 1.1;
+public static final String SPIRITO_MOLTIPLICATORE_FURIA_NOTA = "Entità astratta refrattaria ai condizionamenti psicologici e biologici standard del mondo dei vivi.";
+public static final double STREGA_MOLTIPLICATORE_FURIA = 1.1;
+public static final String STREGA_MOLTIPLICATORE_FURIA_NOTA = "Abituata a trattare con forze oscure e occulte, possiede una mente temprata contro i terrori mistici.";
+public static final double TITANO_MOLTIPLICATORE_FURIA = 1.7;
+public static final String TITANO_MOLTIPLICATORE_FURIA_NOTA = "L'Incrollabile. Una forza mitologica primordiale. Il concetto stesso di "paura" o "esitazione" gli è totalmente estraneo.";
+public static final double TROLL_MOLTIPLICATORE_FURIA = 0.9;
+public static final String TROLL_MOLTIPLICATORE_FURIA_NOTA = "Abbastanza stupido da non comprendere appieno i pericoli complessi, ma può spaventarsi davanti al fuoco o a ferite letali.";
+public static final double VIVERNA_MOLTIPLICATORE_FURIA = 1.0;
+public static final String VIVERNA_MOLTIPLICATORE_FURIA_NOTA = "Predatore fiero ma guidato dall'istinto animale; se ferito gravemente, preferisce volare via per salvarsi.";
+
+    VALORE
+
+public static final double ARPIA_MOLTIPLICATORE_FURIA = 0.5;
+public static final String ARPIA_MOLTIPLICATORE_FURIA_NOTA = "Creatura predatrice ed egoista; preferisce banchettare sulle carogne piuttosto che rischiare la vita per un suo simile.";
+public static final double BARDO_MOLTIPLICATORE_FURIA = 1.1;
+public static final String BARDO_MOLTIPLICATORE_FURIA_NOTA = "Affascinato dalle ballate eroiche e dalle gesta epiche; è propenso a compiere azioni plateali e coraggiose per salvare i compagni.";
+public static final double CANTASTORIE_MOLTIPLICATORE_FURIA = 1.1;
+public static final String CANTASTORIE_MOLTIPLICATORE_FURIA_NOTA = "Affascinato dalle ballate eroiche e dalle gesta epiche; è propenso a compiere azioni plateali e coraggiose per salvare i compagni.";
+public static final double CENTAURO_MOLTIPLICATORE_FURIA = 1.3;
+public static final String CENTAURO_MOLTIPLICATORE_FURIA_NOTA = "Fiero e leale difensore della tribù; ha un profondo senso dell'onore e della protezione del branco.";
+public static final double CHIMERA_MOLTIPLICATORE_FURIA = 0.6;
+public static final String CHIMERA_MOLTIPLICATORE_FURIA_NOTA = "Bestia magica selvaggia mossa solo da fame e istinto di sopravvivenza individuale.";
+public static final double CHIMERADRAGO_MOLTIPLICATORE_FURIA = 0.7;
+public static final String CHIMERADRAGO_MOLTIPLICATORE_FURIA_NOTA = "Nonostante la mole, resta un abominio privo di codice morale o legami empatici con altre creature.";
+public static final double DRAGO_MOLTIPLICATORE_FURIA = 1.1;
+public static final String DRAGO_MOLTIPLICATORE_FURIA_NOTA = "Superbo e solitario, ma possiede un'immensa dignità e un orgoglio antico che gli impediscono di fuggire vigliaccamente.";
+public static final double ELFA_MOLTIPLICATORE_FURIA = 1.2;
+public static final String ELFA_MOLTIPLICATORE_FURIA_NOTA = "Profondo senso di responsabilità verso la propria stirpe e la natura; combatte con nobiltà e spirito di squadra.";
+public static final double ELFO_MOLTIPLICATORE_FURIA = 1.2;
+public static final String ELFO_MOLTIPLICATORE_FURIA_NOTA = "Profondo senso di responsabilità verso la propria stirpe e la natura; combatte con nobiltà e spirito di squadra.";
+public static final double EREMITA_MOLTIPLICATORE_FURIA = 1.0;
+public static final String EREMITA_MOLTIPLICATORE_FURIA_NOTA = "Distaccato dalle dinamiche del mondo, ma conserva una profonda saggezza morale e compassione se costretto a proteggere qualcuno.";
+public static final double FANTASMA_MOLTIPLICATORE_FURIA = 0.4;
+public static final String FANTASMA_MOLTIPLICATORE_FURIA_NOTA = "Una presenza eterea sbiadita, troppo intrappolata nel proprio limbo per curarsi del destino dei vivi.";
+public static final double FOLLETTO_MOLTIPLICATORE_FURIA = 0.5;
+public static final String FOLLETTO_MOLTIPLICATORE_FURIA_NOTA = "Dispettoso e capriccioso; la sua natura lo spinge a fuggire o a scherzare anziché sacrificarsi eroicamente per il gruppo.";
+public static final double GARGOYLE_MOLTIPLICATORE_FURIA = 1.2;
+public static final String GARGOYLE_MOLTIPLICATORE_FURIA_NOTA = "Sentinella protettiva nata; il suo intero scopo biologico e magico è fare da scudo e difendere il luogo o le persone assegnate.";
+public static final double GIGANTE_MOLTIPLICATORE_FURIA = 1.1;
+public static final String GIGANTE_MOLTIPLICATORE_FURIA_NOTA = "Sebbene rozzo, possiede una dignità tribale stagna e protegge accanitamente i membri del suo clan.";
+public static final double GOBLIN_MOLTIPLICATORE_FURIA = 0.3;
+public static final String GOBLIN_MOLTIPLICATORE_FURIA_NOTA = "L'antitesi del Valore. Vigliacco e traditore per natura; se un compagno è in difficoltà, lo usa come scudo per salvarsi.";
+public static final double GUERRIERA_MOLTIPLICATORE_FURIA = 1.5;
+public static final String GUERRIERA_MOLTIPLICATORE_FURIA_NOTA = "Il Re del Valore. L'archetipo del cavaliere o del protettore addestrato a intercettare i colpi e a fare da baluardo per il gruppo.";
+public static final double GUERRIERO_MOLTIPLICATORE_FURIA = 1.5;
+public static final String GUERRIERO_MOLTIPLICATORE_FURIA_NOTA = "Il Re del Valore. L'archetipo del cavaliere o del protettore addestrato a intercettare i colpi e a fare da baluardo per il gruppo.";
+public static final double HOBGOBLIN_MOLTIPLICATORE_FURIA = 1.3;
+public static final String HOBGOBLIN_MOLTIPLICATORE_FURIA_NOTA = "Possiede un rigido codice d'onore militare e un senso del dovere verso la legione che lo spinge a proteggere la falange.";
+public static final double IDRA_MOLTIPLICATORE_FURIA = 0.5;
+public static final String IDRA_MOLTIPLICATORE_FURIA_NOTA = "Creatura primordiale mossa da un appetito caotico; non concepisce il concetto di alleanza o sacrificio.";
+public static final double LADRA_MOLTIPLICATORE_FURIA = 1.0;
+public static final String LADRA_MOLTIPLICATORE_FURIA_NOTA = "La Linea di Base. Individualista e pragmatico; aiuta il gruppo solo se questo rientra nei suoi piani di sopravvivenza o profitto.";
+public static final double LADRO_MOLTIPLICATORE_FURIA = 1.0;
+public static final String LADRO_MOLTIPLICATORE_FURIA_NOTA = "La Linea di Base. Individualista e pragmatico; aiuta il gruppo solo se questo rientra nei suoi piani di sopravvivenza o profitto.";
+public static final double LICH_MOLTIPLICATORE_FURIA = 0.2;
+public static final String LICH_MOLTIPLICATORE_FURIA_NOTA = "Ha sacrificato ogni briciolo di umanità, etica ed empatia per ottenere l'immortalità; cinico e spietato al massimo grado.";
+public static final double MAGA_MOLTIPLICATORE_FURIA = 1.0;
+public static final String MAGA_MOLTIPLICATORE_FURIA_NOTA = "Standard. Si affida alla logica e al dovere tattico per supportare la squadra, senza lo slancio marziale del guerriero.";
+public static final double MAGO_MOLTIPLICATORE_FURIA = 1.0;
+public static final String MAGO_MOLTIPLICATORE_FURIA_NOTA = "Standard. Si affida alla logica e al dovere tattico per supportare la squadra, senza lo slancio marziale del guerriero.";
+public static final double MINOTAURO_MOLTIPLICATORE_FURIA = 0.6;
+public static final String MINOTAURO_MOLTIPLICATORE_FURIA_NOTA = "Accecato dalla bramosia di sangue; in battaglia vede solo bersagli da distruggere, ignorando lo stato dei suoi alleati.";
+public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_FURIA = 0.5;
+public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_FURIA_NOTA = "Una furia devastante del tutto incapace di discernere il concetto di protezione o coordinazione difensiva.";
+public static final double OMBRANERA_MOLTIPLICATORE_FURIA = 0.3;
+public static final String OMBRANERA_MOLTIPLICATORE_FURIA_NOTA = "Non-morto irascibile guidato da un rancore maligno e puro egoismo distruttivo.";
+public static final double SCHELETRO_MOLTIPLICATORE_FURIA = 0.0;
+public static final String SCHELETRO_MOLTIPLICATORE_FURIA_NOTA = "Privo di Scelta. Un automa senza mente, morale o anima. Non può scegliere il valore o il sacrificio; esegue solo ordini.";
+public static final double SPETTRO_MOLTIPLICATORE_FURIA = 0.2;
+public static final String SPETTRO_MOLTIPLICATORE_FURIA_NOTA = "Una manifestazione di puro odio ultraterreno focalizzata solo sul tormentare i vivi.";
+public static final double SPIRITO_MOLTIPLICATORE_FURIA = 0.9;
+public static final String SPIRITO_MOLTIPLICATORE_FURIA_NOTA = "Entità astratta che può agire da custode o protettore a seconda della sua natura originaria.";
+public static final double STREGA_MOLTIPLICATORE_FURIA = 0.8;
+public static final String STREGA_MOLTIPLICATORE_FURIA_NOTA = "Opportunista e legata a patti oscuri; raramente rischia la propria pelle per proteggere un alleato in fin di vita.";
+public static final double TITANO_MOLTIPLICATORE_FURIA = 1.4;
+public static final String TITANO_MOLTIPLICATORE_FURIA_NOTA = "Figura mitologica monumentale. Custode dell'ordine primordiale, affronta minacce colossali con dignità epica.";
+public static final double TROLL_MOLTIPLICATORE_FURIA = 0.7;
+public static final String TROLL_MOLTIPLICATORE_FURIA_NOTA = "Intelletto primitivo e selvaggio; protegge i suoi simili solo se spinto da un basilare istinto di branco.";
+public static final double VIVERNA_MOLTIPLICATORE_FURIA = 0.8;
+public static final String VIVERNA_MOLTIPLICATORE_FURIA_NOTA = "Bestia territoriale; difende ferocemente solo la sua prole o il suo nido, non i membri di un gruppo eterogeneo.";
+
+    NUMERO_BERSAGLI
+
+public static final double ARPIA_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.8;
+public static final String ARPIA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Focalizzata su attacchi rapidi in picchiata contro un singolo bersaglio isolato; non ha raggio d'azione ampio.";
+public static final double BARDO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
+public static final String BARDO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "La sua musica o le sue parole si propagano nell'aria, permettendogli di influenzare più bersagli contemporaneamente.";
+public static final double CANTASTORIE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
+public static final String CANTASTORIE_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "La sua musica o le sue parole si propagano nell'aria, permettendogli di influenzare più bersagli contemporaneamente.";
+public static final double CENTAURO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.2;
+public static final String CENTAURO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "La stazza equina e la travolgente spazzata della lancia in carica gli permettono di colpire più nemici in linea.";
+public static final double CHIMERA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.4;
+public static final String CHIMERA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Avendo tre teste che mordono e attaccano in direzioni diverse, può ingaggiare più nemici nello stesso istante.";
+public static final double CHIMERADRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.6;
+public static final String CHIMERADRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Raddoppiata nelle dimensioni; i suoi artigli e la coda coprono una porzione di campo di battaglia immensa.";
+public static final double DRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.8;
+public static final String DRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Il Signore delle Spazzate. Oltre all'intelligenza nel gestire il campo, un singolo colpo di coda o artiglio falcia interi gruppi.";
+public static final double ELFA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
+public static final String ELFA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Bilanciato: predilige l'accuratezza del colpo singolo, ma la sua grazia gli permette di gestire la linea di fronte.";
+public static final double ELFO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
+public static final String ELFO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Bilanciato: predilige l'accuratezza del colpo singolo, ma la sua grazia gli permette di gestire la linea di fronte.";
+public static final double EREMITA_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
+public static final String EREMITA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Abituato a combattere da solo, fatica a dividere la sua attenzione su folle di nemici.";
+public static final double FANTASMA_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
+public static final String FANTASMA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "I suoi attacchi spettrali passano attraverso la materia, ma è limitato nella capacità di colpire più corpi solidi insieme.";
+public static final double FOLLETTO_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.6;
+public static final String FOLLETTO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Troppo piccolo. I suoi attacchi con micro-armi sono chirurgici ma strettamente limitati a un nemico alla volta.";
+public static final double GARGOYLE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
+public static final String GARGOYLE_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Ottimo nel controllo della folla ravvicinata grazie alle ampie ali di pietra utilizzabili come fruste.";
+public static final double GIGANTE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.6;
+public static final String GIGANTE_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Una clava lunga 3 metri brandita da lui attraversa il campo orizzontalmente, travolgendo qualunque soldato si trovi sulla traiettoria.";
+public static final double GOBLIN_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.8;
+public static final String GOBLIN_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Armi corte e fisicità ridotta. Tende a concentrarsi in gruppo contro un solo bersaglio piuttosto che fare il contrario.";
+public static final double GUERRIERA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
+public static final String GUERRIERA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "L'addestramento marziale gli insegna a eseguire fendenti circolari e a gestire più nemici ingaggiati intorno a lui.";
+public static final double GUERRIERO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
+public static final String GUERRIERO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "L'addestramento marziale gli insegna a eseguire fendenti circolari e a gestire più nemici ingaggiati intorno a lui.";
+public static final double HOBGOBLIN_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
+public static final String HOBGOBLIN_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Addestrato alla falange; sa coordinare i colpi per coprire lo spazio davanti alla sua postazione.";
+public static final double IDRA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.9;
+public static final String IDRA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Il Massimo Potenziale Fisico. Con cinque o più teste indipendenti che scattano, è una macchina da multi-target naturale.";
+public static final double LADRA_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
+public static final String LADRA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Specialista del Bersaglio Singolo. Punta tutto sull'assassinio mirato di un'unica vittima dall'ombra.";
+public static final double LADRO_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
+public static final String LADRO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Specialista del Bersaglio Singolo. Punta tutto sull'assassinio mirato di un'unica vittima dall'ombra.";
+public static final double LICH_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.4;
+public static final String LICH_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Unisce un'Intelligenza immensa a magie ad area necrotiche capaci di ghermire le anime di interi plotoni.";
+public static final double MAGA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.3;
+public static final String MAGA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "I maestri dell'AoE. La loro intera dottrina si basa sul canalizzare incantesimi (es. Palle di fuoco o Catene di fulmini) su più nemici.";
+public static final double MAGO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.3;
+public static final String MAGO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "I maestri dell'AoE. La loro intera dottrina si basa sul canalizzare incantesimi (es. Palle di fuoco o Catene di fulmini) su più nemici.";
+public static final double MINOTAURO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.3;
+public static final String MINOTAURO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Brandisce enormi asce bipenni con spazzate selvagge e brutali che colpiscono tutto ciò che lo circonda.";
+public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.6;
+public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Unisce le spazzate d'ascia del minotauro alla portata geometrica del gigante.";
+public static final double OMBRANERA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
+public static final String OMBRANERA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Può allungare i suoi lembi d'ombra per graffiare o ghermire più nemici vicini nella sua foga irascibile.";
+public static final double SCHELETRO_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
+public static final String SCHELETRO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Esegue attacchi rigidi e lineari; manca dell'elasticità mentale per alternare i colpi su bersagli multipli fluidamente.";
+public static final double SPETTRO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
+public static final String SPETTRO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Il suo passaggio lascia una scia gelida che può infliggere danni a chiunque si trovi sul suo percorso.";
+public static final double SPIRITO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
+public static final String SPIRITO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Può manifestare impulsi energetici che si irradiano in cerchio attorno alla sua forma fluttuante.";
+public static final double STREGA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.3;
+public static final String STREGA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "I Maestri dell'AoE. La loro intera dottrina si basa sul canalizzare incantesimi (es. Palle di fuoco o Catene di fulmini) su più nemici.";
+public static final double TITANO_MOLTIPLICATORE_NUMERO_BERSAGLI = 2.0;
+public static final String TITANO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Il Cataclisma. Un suo pugno o calpestamento modifica la topografia del terreno. Non colpisce individui, colpisce reggimenti.";
+public static final double TROLL_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.2;
+public static final String TROLL_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Le braccia lunghe e scimmiesche gli permettono ampie zampate capaci di colpire due o tre avversari vicini.";
+public static final double VIVERNA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.2;
+public static final String VIVERNA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Sfrutta il raggio d'azione del lungo pungiglione caudale e le ali per tenere a bada più avversari.";
+
+    STANCHEZZA
+
+public static final double ARPIA_MOLTIPLICATORE_STANCHEZZA = 1.1;
+public static final String ARPIA_MOLTIPLICATORE_STANCHEZZA_NOTA = "Il volo battuto in combattimento richiede un dispendio energetico notevole, accelerando la fatica.";
+public static final double BARDO_MOLTIPLICATORE_STANCHEZZA = 1.0;
+public static final String BARDO_MOLTIPLICATORE_STANCHEZZA_NOTA = "Standard umano; muoversi e cantare contemporaneamente lo mantiene nella media.";
+public static final double CANTASTORIE_MOLTIPLICATORE_STANCHEZZA = 1.0;
+public static final String CANTASTORIE_MOLTIPLICATORE_STANCHEZZA_NOTA = "Standard umano; muoversi e cantare contemporaneamente lo mantiene nella media.";
+public static final double CENTAURO_MOLTIPLICATORE_STANCHEZZA = 0.8;
+public static final String CENTAURO_MOLTIPLICATORE_STANCHEZZA_NOTA = "Resistenza equina leggendaria. Abituato a galoppare per ore prima di mostrare segni di cedimento.";
+public static final double CHIMERA_MOLTIPLICATORE_STANCHEZZA = 0.9;
+public static final String CHIMERA_MOLTIPLICATORE_STANCHEZZA_NOTA = "Metabolismo predatore efficiente, ma coordinare tre teste in battaglia consuma energia stagna.";
+public static final double CHIMERADRAGO_MOLTIPLICATORE_STANCHEZZA = 1.1;
+public static final String CHIMERADRAGO_MOLTIPLICATORE_STANCHEZZA_NOTA = "La mole raddoppiata richiede uno sforzo immenso del cuore e dei muscoli per muoversi.";
+public static final double DRAGO_MOLTIPLICATORE_STANCHEZZA = 0.7;
+public static final String DRAGO_MOLTIPLICATORE_STANCHEZZA_NOTA = "Creatura leggendaria supportata da un'immensa energia magica interna che previene la fatica fisica.";
+public static final double ELFA_MOLTIPLICATORE_STANCHEZZA = 0.8;
+public static final String ELFA_MOLTIPLICATORE_STANCHEZZA_NOTA = "Passo leggero e atletico. La sua fisiologia superiore spreca pochissima energia nei movimenti.";
+public static final double ELFO_MOLTIPLICATORE_STANCHEZZA = 0.8;
+public static final String ELFO_MOLTIPLICATORE_STANCHEZZA_NOTA = "Passo leggero e atletico. La sua fisiologia superiore spreca pochissima energia nei movimenti.";
+public static final double EREMITA_MOLTIPLICATORE_STANCHEZZA = 1.2;
+public static final String EREMITA_MOLTIPLICATORE_STANCHEZZA_NOTA = "L'età avanzata e la scarsa abitudine ai ritmi frenetici del combattimento lo fanno stancare prima.";
+public static final double FANTASMA_MOLTIPLICATORE_STANCHEZZA = 0.0;
+public static final String FANTASMA_MOLTIPLICATORE_STANCHEZZA_NOTA = "Immune. Essendo uno spettro incorporeo, non ha muscoli, polmoni o acido lattico.";
+public static final double FOLLETTO_MOLTIPLICATORE_STANCHEZZA = 1.3;
+public static final String FOLLETTO_MOLTIPLICATORE_STANCHEZZA_NOTA = "Iperattivo e frenetico; brucia le sue riserve di energia rapidamente, necessitando di riposo.";
+public static final double GARGOYLE_MOLTIPLICATORE_STANCHEZZA = 0.5;
+public static final String GARGOYLE_MOLTIPLICATORE_STANCHEZZA_NOTA = "Fatto di pietra animata da rune. Non si stanca in senso biologico, ma il legame magico si usura lentamente.";
+public static final double GIGANTE_MOLTIPLICATORE_STANCHEZZA = 1.3;
+public static final String GIGANTE_MOLTIPLICATORE_STANCHEZZA_NOTA = "Spostare una massa corporea di svariate tonnellate genera un accumulo di fatica molto rapido.";
+public static final double GOBLIN_MOLTIPLICATORE_STANCHEZZA = 1.1;
+public static final String GOBLIN_MOLTIPLICATORE_STANCHEZZA_NOTA = "Fisiologia debole e movimenti nevrotici che lo portano a esaurire il fiato velocemente se lo scontro si allunga.";
+public static final double GUERRIERA_MOLTIPLICATORE_STANCHEZZA = 1.0;
+public static final String GUERRIERA_MOLTIPLICATORE_STANCHEZZA_NOTA = "La Linea di Base. Un soldato umano atletico e addestrato a gestire la fatica in armatura.";
+public static final double GUERRIERO_MOLTIPLICATORE_STANCHEZZA = 1.0;
+public static final String GUERRIERO_MOLTIPLICATORE_STANCHEZZA_NOTA = "La Linea di Base. Un soldato umano atletico e addestrato a gestire la fatica in armatura.";
+public static final double HOBGOBLIN_MOLTIPLICATORE_STANCHEZZA = 1.0;
+public static final String HOBGOBLIN_MOLTIPLICATORE_STANCHEZZA_NOTA = "Disciplinato e resistente quanto un guerriero umano grazie all'addestramento militare.";
+public static final double IDRA_MOLTIPLICATORE_STANCHEZZA = 0.9;
+public static final String IDRA_MOLTIPLICATORE_STANCHEZZA_NOTA = "La rigenerazione cellulare continua aiuta a combattere i micro-traumi muscolari, riducendo la fatica.";
+public static final double LADRA_MOLTIPLICATORE_STANCHEZZA = 0.9;
+public static final String LADRA_MOLTIPLICATORE_STANCHEZZA_NOTA = "Abituato a dosare le forze, colpire di precisione e muoversi con fluidità economica senza sprecare fiato.";
+public static final double LADRO_MOLTIPLICATORE_STANCHEZZA = 0.9;
+public static final String LADRO_MOLTIPLICATORE_STANCHEZZA_NOTA = "Abituato a dosare le forze, colpire di precisione e muoversi con fluidità economica senza sprecare fiato.";
+public static final double LICH_MOLTIPLICATORE_STANCHEZZA = 0.0;
+public static final String LICH_MOLTIPLICATORE_STANCHEZZA_NOTA = "Immune. Sovrano non-morto mosso da pura necromanzia; ignora totalmente la stanchezza.";
+public static final double MAGA_MOLTIPLICATORE_STANCHEZZA = 1.4;
+public static final String MAGA_MOLTIPLICATORE_STANCHEZZA_NOTA = "Tra i più fragili. Fisico sedentario non abituato agli sforzi; lo stress di canalizzare l'arcano li sfinisce subito.";
+public static final double MAGO_MOLTIPLICATORE_STANCHEZZA = 1.4;
+public static final String MAGO_MOLTIPLICATORE_STANCHEZZA_NOTA = "Tra i più fragili. Fisico sedentario non abituato agli sforzi; lo stress di canalizzare l'arcano li sfinisce subito.";
+public static final double MINOTAURO_MOLTIPLICATORE_STANCHEZZA = 1.2;
+public static final String MINOTAURO_MOLTIPLICATORE_STANCHEZZA_NOTA = "La foga selvaggia e incontrollata lo porta a dare il massimo all'inizio, ma a corto di fiato se lo scontro dura.";
+public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_STANCHEZZA = 1.4;
+public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_STANCHEZZA_NOTA = "Unisce l'instabilità del minotauro alla mole del gigante. Si sfinisce rapidamente se non chiude il match.";
+public static final double OMBRANERA_MOLTIPLICATORE_STANCHEZZA = 0.0;
+public static final String OMBRANERA_MOLTIPLICATORE_STANCHEZZA_NOTA = "Immune. Composta di oscurità e rancore non-morto; esente da affaticamento fisico.";
+public static final double SCHELETRO_MOLTIPLICATORE_STANCHEZZA = 0.0;
+public static final String SCHELETRO_MOLTIPLICATORE_STANCHEZZA_NOTA = "Immune. Pura struttura ossea mossa da un impulso magico base. Non accumula fatica.";
+public static final double SPETTRO_MOLTIPLICATORE_STANCHEZZA = 0.0;
+public static final String SPETTRO_MOLTIPLICATORE_STANCHEZZA_NOTA = "Immune. Entità ultraterrene prive di un corpo biologico da affaticare.";
+public static final double SPIRITO_MOLTIPLICATORE_STANCHEZZA = 0.0;
+public static final String SPIRITO_MOLTIPLICATORE_STANCHEZZA_NOTA = "Immune. Entità ultraterrene prive di un corpo biologico da affaticare.";
+public static final double STREGA_MOLTIPLICATORE_STANCHEZZA = 1.4;
+public static final String STREGA_MOLTIPLICATORE_STANCHEZZA_NOTA = "Tra i più fragile. Fisico sedentario non abituato agli sforzi; lo stress di canalizzare l'arcano li sfinisce subito.";
+public static final double TITANO_MOLTIPLICATORE_STANCHEZZA = 0.5;
+public static final String TITANO_MOLTIPLICATORE_STANCHEZZA_NOTA = "Forza monumentale. Le attività dei mortali richiedono così poca percentuale del suo potere da non stancarlo quasi.";
+public static final double TROLL_MOLTIPLICATORE_STANCHEZZA = 0.8;
+public static final String TROLL_MOLTIPLICATORE_STANCHEZZA_NOTA = "La rigenerazione mostruosa dei tessuti elimina l'acido lattico quasi all'istante, rendendolo instancabile.";
+public static final double VIVERNA_MOLTIPLICATORE_STANCHEZZA = 1.0;
+public static final String VIVERNA_MOLTIPLICATORE_STANCHEZZA_NOTA = "Predatore robusto, ma lo sforzo del volo e dei morsi si attesta sulla media di combattimento.";
+
+     */
 
 }
