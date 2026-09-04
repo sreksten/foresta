@@ -1,9 +1,10 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Goblin extends PersonaggioBase implements Personaggio {
 
@@ -25,31 +26,164 @@ public class Goblin extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Goblin.gif");
 		setIcona("icone/Goblin.gif");
-		setSaluteMassima(Costanti.GOBLIN_MAX_SALUTE);
-		setMagiaMassima(Costanti.GOBLIN_MAX_MAGIA);
-		setValore(Costanti.GOBLIN_MAX_VALORE);
-		setCoraggio(Costanti.GOBLIN_MAX_CORAGGIO);
-		setCarisma(Costanti.GOBLIN_MAX_CARISMA);
-		setQuantitaMassima(Costanti.GOBLIN_MAX_NUMERO);
 		setCorrompibile(true);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_FORZA_MIN, Costanti.GOBLIN_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_DESTREZZA_MIN, Costanti.GOBLIN_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_COSTITUZIONE_MIN, Costanti.GOBLIN_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_INTELLIGENZA_MIN, Costanti.GOBLIN_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_SAGGEZZA_MIN, Costanti.GOBLIN_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_FORTUNA_MIN, Costanti.GOBLIN_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_CRITICO_MIN, Costanti.GOBLIN_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_PRECISIONE_MIN, Costanti.GOBLIN_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_VELOCITA_MIN, Costanti.GOBLIN_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_PARATA_MIN, Costanti.GOBLIN_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_RESISTENZA_MAGICA_MIN, Costanti.GOBLIN_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_MAGIA_MIN, Costanti.GOBLIN_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.GOBLIN_FURIA_MIN, Costanti.GOBLIN_FURIA_MAX));
+		md.setSaluteMassima(Costanti.GOBLIN_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.GOBLIN_MAX_MAGIA);
+		md.setForzaMassima(Costanti.GOBLIN_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.GOBLIN_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.GOBLIN_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.GOBLIN_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.GOBLIN_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.GOBLIN_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.GOBLIN_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.GOBLIN_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
+	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.GOBLIN_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 
 	@Override

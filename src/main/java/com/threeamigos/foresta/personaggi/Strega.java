@@ -2,8 +2,9 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Strega extends PersonaggioBase implements Personaggio {
 
@@ -28,28 +29,162 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Strega.gif");
-		setSaluteMassima(Costanti.STREGA_MAX_SALUTE);
-		setMagiaMassima(Costanti.STREGA_MAX_MAGIA);
-		setValore(Costanti.STREGA_MAX_VALORE);
-		setCoraggio(Costanti.STREGA_MAX_CORAGGIO);
-		setCarisma(Costanti.STREGA_MAX_CARISMA);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.STREGA_FORZA_MIN, Costanti.STREGA_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.STREGA_DESTREZZA_MIN, Costanti.STREGA_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.STREGA_COSTITUZIONE_MIN, Costanti.STREGA_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.STREGA_INTELLIGENZA_MIN, Costanti.STREGA_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.STREGA_SAGGEZZA_MIN, Costanti.STREGA_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.STREGA_FORTUNA_MIN, Costanti.STREGA_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.STREGA_CRITICO_MIN, Costanti.STREGA_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.STREGA_PRECISIONE_MIN, Costanti.STREGA_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.STREGA_VELOCITA_MIN, Costanti.STREGA_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.STREGA_PARATA_MIN, Costanti.STREGA_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.STREGA_RESISTENZA_MAGICA_MIN, Costanti.STREGA_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.STREGA_MAGIA_MIN, Costanti.STREGA_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.STREGA_FURIA_MIN, Costanti.STREGA_FURIA_MAX));
+		md.setSaluteMassima(Costanti.STREGA_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.STREGA_MAX_MAGIA);
+		md.setForzaMassima(Costanti.STREGA_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.STREGA_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.STREGA_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.STREGA_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.STREGA_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.STREGA_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.STREGA_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.STREGA_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
+	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.STREGA_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.STREGA_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.STREGA_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.STREGA_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.STREGA_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.STREGA_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.STREGA_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.STREGA_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.STREGA_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.STREGA_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.STREGA_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.STREGA_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.STREGA_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.STREGA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.STREGA_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.STREGA_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.STREGA_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.STREGA_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.STREGA_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.STREGA_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.STREGA_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.STREGA_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.STREGA_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.STREGA_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.STREGA_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.STREGA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.STREGA_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.STREGA_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 
 	@Override

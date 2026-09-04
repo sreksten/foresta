@@ -755,6 +755,8 @@ public abstract class LocazioneBase implements Locazione {
 
 			Logger.log("Valutazione danno originale: danniBersaglio (" + bersaglio.getNome() + ") = " + danniBersaglio + ", danniCombattente (" + combattente.getNome() + ") = " + danniCombattente);
 			Logger.log("Valutazione combattente -> bersaglio");
+			Logger.log("Combattente: " + combattente.stats());
+			Logger.log("Difensore  : " + bersaglio.stats());
 			boolean colpirebbe = CalcolatoreCombattimento.colpisce(combattente, bersaglio);
 			if (colpirebbe) {
 				RisultatoDanno risultato = CalcolatoreCombattimento.calcolaDannoFinale(combattente, bersaglio, TipoDanno.TAGLIENTE, arma);

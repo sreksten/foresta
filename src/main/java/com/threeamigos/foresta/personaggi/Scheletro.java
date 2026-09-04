@@ -2,8 +2,9 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Scheletro extends PersonaggioBase implements Personaggio {
 
@@ -25,29 +26,162 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Scheletro.gif");
-		setSaluteMassima(Costanti.SCHELETRO_MAX_SALUTE);
-		setMagiaMassima(Costanti.SCHELETRO_MAX_MAGIA);
-		setValore(Costanti.SCHELETRO_MAX_VALORE);
-		setCoraggio(Costanti.SCHELETRO_MAX_CORAGGIO);
-		setCarisma(Costanti.SCHELETRO_MAX_CARISMA);
+
+		md.setSaluteMassima(Costanti.SCHELETRO_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.SCHELETRO_MAX_MAGIA);
+		md.setForzaMassima(Costanti.SCHELETRO_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.SCHELETRO_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.SCHELETRO_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.SCHELETRO_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.SCHELETRO_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.SCHELETRO_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.SCHELETRO_MAX_FORTUNA);
+
 		setQuantitaMassima(Costanti.SCHELETRO_MAX_NUMERO);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_FORZA_MIN, Costanti.SCHELETRO_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_DESTREZZA_MIN, Costanti.SCHELETRO_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_COSTITUZIONE_MIN, Costanti.SCHELETRO_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_INTELLIGENZA_MIN, Costanti.SCHELETRO_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_SAGGEZZA_MIN, Costanti.SCHELETRO_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_FORTUNA_MIN, Costanti.SCHELETRO_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_CRITICO_MIN, Costanti.SCHELETRO_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_PRECISIONE_MIN, Costanti.SCHELETRO_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_VELOCITA_MIN, Costanti.SCHELETRO_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_PARATA_MIN, Costanti.SCHELETRO_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_RESISTENZA_MAGICA_MIN, Costanti.SCHELETRO_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_MAGIA_MIN, Costanti.SCHELETRO_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.SCHELETRO_FURIA_MIN, Costanti.SCHELETRO_FURIA_MAX));
+		super.impostaValoriDiPartenza(funzione);
+	}
 
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 
 	@Override

@@ -1,41 +1,40 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.personaggi.Personaggio;
+
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.personaggi.Personaggio;
-
 class DisplayableCanvasRiquadroGruppo {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE = 16;
 
-	private int topLeftX;
-	private int topLeftY;
-	private int innerWidth;
-	private Map<Object, Image> lightGrayMap = new HashMap<>();
-	private Map<Object, Image> mediumGrayMap = new HashMap<>();
-	private DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
-	private int leftXOffsetLabelSalute;
-	private int rightXOffsetSalute;
-	private int leftXOffsetSeparatoreSalute;
-	private int rightXOffsetForzaMassima;
-	private int leftXOffsetLabelMagia;
-	private int rightXOffsetMagia;
-	private int leftXOffsetSeparatoreMagia;
-	private int rightXOffsetMagiaMassima;
-	private int leftXOffsetLabelCoraggio;
-	private int rightXOffsetCoraggio;
-	private int leftXOffsetLabelValore;
-	private int rightXOffsetValore;
-	private int leftXOffsetLabelStanchezza;
-	private int rightXOffsetStanchezza;
-	private int leftXOffsetLabelCarisma;
-	private int rightXOffsetCarisma;
+	private final int topLeftX;
+	private final int topLeftY;
+	private final int innerWidth;
+	private final Map<Object, Image> lightGrayMap = new HashMap<>();
+	private final Map<Object, Image> mediumGrayMap = new HashMap<>();
+	private final DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
+	private final int leftXOffsetLabelSalute;
+	private final int rightXOffsetSalute;
+	private final int leftXOffsetSeparatoreSalute;
+	private final int rightXOffsetForzaMassima;
+	private final int leftXOffsetLabelMagia;
+	private final int rightXOffsetMagia;
+	private final int leftXOffsetSeparatoreMagia;
+	private final int rightXOffsetMagiaMassima;
+	private final int leftXOffsetLabelCoraggio;
+	private final int rightXOffsetCoraggio;
+	private final int leftXOffsetLabelValore;
+	private final int rightXOffsetValore;
+	private final int leftXOffsetLabelStanchezza;
+	private final int rightXOffsetStanchezza;
+	private final int leftXOffsetLabelCarisma;
+	private final int rightXOffsetCarisma;
 
 	DisplayableCanvasRiquadroGruppo(int topLeftX, int topLeftY) {
 		this.topLeftX = topLeftX;
@@ -132,7 +131,7 @@ class DisplayableCanvasRiquadroGruppo {
 				graphics.drawImage(doomdark, rightXOffsetCoraggio - doomdark.getWidth(null), locYOffset, null);
 
 				graphics.drawImage(imageMap.get(Personaggio.Caratteristica.VALORE), leftXOffsetLabelValore, locYOffset, null);
-				doomdark = DoomdarkTextProducer.getImage(p.getValoreEffettoDiStato(), fontMedium, color);
+				doomdark = DoomdarkTextProducer.getImage(p.getQuantitaEffettoDiStato(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetValore - doomdark.getWidth(null), locYOffset, null);
 
 				graphics.drawImage(imageMap.get(Personaggio.Caratteristica.STANCHEZZA), leftXOffsetLabelStanchezza, locYOffset, null);

@@ -2,8 +2,9 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Lich extends PersonaggioBase implements Personaggio {
 
@@ -28,28 +29,162 @@ public class Lich extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Lich.gif");
-		setSaluteMassima(Costanti.LICH_MAX_SALUTE);
-		setMagiaMassima(Costanti.LICH_MAX_MAGIA);
-		setValore(Costanti.LICH_MAX_VALORE);
-		setCoraggio(Costanti.LICH_MAX_CORAGGIO);
-		setCarisma(Costanti.LICH_MAX_CARISMA);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.LICH_FORZA_MIN, Costanti.LICH_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.LICH_DESTREZZA_MIN, Costanti.LICH_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.LICH_COSTITUZIONE_MIN, Costanti.LICH_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.LICH_INTELLIGENZA_MIN, Costanti.LICH_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.LICH_SAGGEZZA_MIN, Costanti.LICH_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.LICH_FORTUNA_MIN, Costanti.LICH_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.LICH_CRITICO_MIN, Costanti.LICH_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.LICH_PRECISIONE_MIN, Costanti.LICH_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.LICH_VELOCITA_MIN, Costanti.LICH_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.LICH_PARATA_MIN, Costanti.LICH_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.LICH_RESISTENZA_MAGICA_MIN, Costanti.LICH_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.LICH_MAGIA_MIN, Costanti.LICH_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.LICH_FURIA_MIN, Costanti.LICH_FURIA_MAX));
+		md.setSaluteMassima(Costanti.LICH_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.LICH_MAX_MAGIA);
+		md.setForzaMassima(Costanti.LICH_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.LICH_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.LICH_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.LICH_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.LICH_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.LICH_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.LICH_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.LICH_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
+	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.LICH_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.LICH_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.LICH_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.LICH_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.LICH_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.LICH_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.LICH_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.LICH_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.LICH_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.LICH_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.LICH_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.LICH_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.LICH_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.LICH_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.LICH_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.LICH_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.LICH_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.LICH_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.LICH_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.LICH_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.LICH_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.LICH_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.LICH_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.LICH_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.LICH_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.LICH_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.LICH_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.LICH_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 
 	@Override
@@ -60,4 +195,5 @@ public class Lich extends PersonaggioBase implements Personaggio {
 	@Override
 	public boolean isImmuneAIncantesimo(ClassiIncantesimo classeIncantesimo) {
 		return classeIncantesimo == ClassiIncantesimo.MORTE;
-	}}
+	}
+}

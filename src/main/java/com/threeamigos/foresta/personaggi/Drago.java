@@ -2,8 +2,9 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Drago extends PersonaggioBase implements Personaggio {
 
@@ -28,28 +29,162 @@ public class Drago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Drago.gif");
-		setSaluteMassima(Costanti.DRAGO_MAX_SALUTE);
-		setMagiaMassima(Costanti.DRAGO_MAX_MAGIA);
-		setValore(Costanti.DRAGO_MAX_VALORE);
-		setCoraggio(Costanti.DRAGO_MAX_CORAGGIO);
-		setCarisma(Costanti.DRAGO_MAX_CARISMA);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.DRAGO_FORZA_MIN, Costanti.DRAGO_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.DRAGO_DESTREZZA_MIN, Costanti.DRAGO_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.DRAGO_COSTITUZIONE_MIN, Costanti.DRAGO_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.DRAGO_INTELLIGENZA_MIN, Costanti.DRAGO_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.DRAGO_SAGGEZZA_MIN, Costanti.DRAGO_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.DRAGO_FORTUNA_MIN, Costanti.DRAGO_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.DRAGO_CRITICO_MIN, Costanti.DRAGO_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.DRAGO_PRECISIONE_MIN, Costanti.DRAGO_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.DRAGO_VELOCITA_MIN, Costanti.DRAGO_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.DRAGO_PARATA_MIN, Costanti.DRAGO_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.DRAGO_RESISTENZA_MAGICA_MIN, Costanti.DRAGO_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.DRAGO_MAGIA_MIN, Costanti.DRAGO_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.DRAGO_FURIA_MIN, Costanti.DRAGO_FURIA_MAX));
+		md.setSaluteMassima(Costanti.DRAGO_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.DRAGO_MAX_MAGIA);
+		md.setForzaMassima(Costanti.DRAGO_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.DRAGO_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.DRAGO_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.DRAGO_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.DRAGO_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.DRAGO_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.DRAGO_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.DRAGO_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
+	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.DRAGO_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.DRAGO_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.DRAGO_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.DRAGO_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.DRAGO_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.DRAGO_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.DRAGO_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.DRAGO_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.DRAGO_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.DRAGO_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.DRAGO_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.DRAGO_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.DRAGO_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.DRAGO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.DRAGO_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.DRAGO_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.DRAGO_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.DRAGO_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.DRAGO_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.DRAGO_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.DRAGO_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.DRAGO_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.DRAGO_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.DRAGO_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.DRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.DRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.DRAGO_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.DRAGO_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 
 	@Override

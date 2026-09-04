@@ -2,8 +2,9 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Spirito extends PersonaggioBase implements Personaggio {
 
@@ -25,30 +26,163 @@ public class Spirito extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Spirito.gif");
-		setSaluteMassima(Costanti.SPIRITO_MAX_SALUTE);
-		setMagiaMassima(Costanti.SPIRITO_MAX_MAGIA);
-		setValore(Costanti.SPIRITO_MAX_VALORE);
-		setCoraggio(Costanti.SPIRITO_MAX_CORAGGIO);
-		setCarisma(Costanti.SPIRITO_MAX_CARISMA);
-		setQuantitaMassima(Costanti.SPIRITO_MAX_NUMERO);
 		setAmichevole(true);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.SPIRITO_FORZA_MIN, Costanti.SPIRITO_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.SPIRITO_DESTREZZA_MIN, Costanti.SPIRITO_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.SPIRITO_COSTITUZIONE_MIN, Costanti.SPIRITO_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.SPIRITO_INTELLIGENZA_MIN, Costanti.SPIRITO_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.SPIRITO_SAGGEZZA_MIN, Costanti.SPIRITO_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.SPIRITO_FORTUNA_MIN, Costanti.SPIRITO_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.SPIRITO_CRITICO_MIN, Costanti.SPIRITO_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.SPIRITO_PRECISIONE_MIN, Costanti.SPIRITO_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.SPIRITO_VELOCITA_MIN, Costanti.SPIRITO_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.SPIRITO_PARATA_MIN, Costanti.SPIRITO_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.SPIRITO_RESISTENZA_MAGICA_MIN, Costanti.SPIRITO_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.SPIRITO_MAGIA_MIN, Costanti.SPIRITO_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.SPIRITO_FURIA_MIN, Costanti.SPIRITO_FURIA_MAX));
+		md.setSaluteMassima(Costanti.SPIRITO_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.SPIRITO_MAX_MAGIA);
+		md.setForzaMassima(Costanti.SPIRITO_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.SPIRITO_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.SPIRITO_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.SPIRITO_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.SPIRITO_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.SPIRITO_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.SPIRITO_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.SPIRITO_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
+	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.SPIRITO_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 
 	@Override

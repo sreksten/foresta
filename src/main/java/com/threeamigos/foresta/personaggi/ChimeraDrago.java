@@ -2,8 +2,9 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class ChimeraDrago extends PersonaggioBase implements Personaggio {
 
@@ -25,29 +26,162 @@ public class ChimeraDrago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/ChimeraDrago.gif");
-		setSaluteMassima(Costanti.CHIMERADRAGO_MAX_SALUTE);
-		setMagiaMassima(Costanti.CHIMERADRAGO_MAX_MAGIA);
-		setValore(Costanti.CHIMERADRAGO_MAX_VALORE);
-		setCoraggio(Costanti.CHIMERADRAGO_MAX_CORAGGIO);
-		setCarisma(Costanti.CHIMERADRAGO_MAX_CARISMA);
+
+		md.setSaluteMassima(Costanti.CHIMERADRAGO_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.CHIMERADRAGO_MAX_MAGIA);
+		md.setForzaMassima(Costanti.CHIMERADRAGO_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.CHIMERADRAGO_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.CHIMERADRAGO_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.CHIMERADRAGO_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.CHIMERADRAGO_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.CHIMERADRAGO_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.CHIMERADRAGO_MAX_FORTUNA);
+
 		setQuantitaMassima(Costanti.CHIMERADRAGO_MAX_NUMERO);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.CHIMERADRAGO_FORZA_MIN, Costanti.CHIMERADRAGO_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.CHIMERADRAGO_DESTREZZA_MIN, Costanti.CHIMERADRAGO_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.CHIMERADRAGO_COSTITUZIONE_MIN, Costanti.CHIMERADRAGO_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.CHIMERADRAGO_INTELLIGENZA_MIN, Costanti.CHIMERADRAGO_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.CHIMERADRAGO_SAGGEZZA_MIN, Costanti.CHIMERADRAGO_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.CHIMERADRAGO_FORTUNA_MIN, Costanti.CHIMERADRAGO_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.CHIMERADRAGO_CRITICO_MIN, Costanti.CHIMERADRAGO_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.CHIMERADRAGO_PRECISIONE_MIN, Costanti.CHIMERADRAGO_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.CHIMERADRAGO_VELOCITA_MIN, Costanti.CHIMERADRAGO_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.CHIMERADRAGO_PARATA_MIN, Costanti.CHIMERADRAGO_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.CHIMERADRAGO_RESISTENZA_MAGICA_MIN, Costanti.CHIMERADRAGO_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.CHIMERADRAGO_MAGIA_MIN, Costanti.CHIMERADRAGO_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.CHIMERADRAGO_FURIA_MIN, Costanti.CHIMERADRAGO_FURIA_MAX));
+		super.impostaValoriDiPartenza(funzione);
+	}
 
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 
 	@Override

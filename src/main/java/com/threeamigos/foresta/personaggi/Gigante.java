@@ -1,9 +1,10 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Gigante extends PersonaggioBase implements Personaggio {
 
@@ -25,32 +26,165 @@ public class Gigante extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Gigante.gif");
 		setIcona("icone/Gigante.gif");
-		setSaluteMassima(Costanti.GIGANTE_MAX_SALUTE);
-		setMagiaMassima(Costanti.GIGANTE_MAX_MAGIA);
-		setValore(Costanti.GIGANTE_MAX_VALORE);
-		setCoraggio(Costanti.GIGANTE_MAX_CORAGGIO);
-		setCarisma(Costanti.GIGANTE_MAX_CARISMA);
-		setQuantitaMassima(Costanti.GIGANTE_MAX_NUMERO);
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_FORZA_MIN, Costanti.GIGANTE_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_DESTREZZA_MIN, Costanti.GIGANTE_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_COSTITUZIONE_MIN, Costanti.GIGANTE_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_INTELLIGENZA_MIN, Costanti.GIGANTE_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_SAGGEZZA_MIN, Costanti.GIGANTE_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_FORTUNA_MIN, Costanti.GIGANTE_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_CRITICO_MIN, Costanti.GIGANTE_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_PRECISIONE_MIN, Costanti.GIGANTE_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_VELOCITA_MIN, Costanti.GIGANTE_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_PARATA_MIN, Costanti.GIGANTE_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_RESISTENZA_MAGICA_MIN, Costanti.GIGANTE_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_MAGIA_MIN, Costanti.GIGANTE_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.GIGANTE_FURIA_MIN, Costanti.GIGANTE_FURIA_MAX));
+		md.setSaluteMassima(Costanti.GIGANTE_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.GIGANTE_MAX_MAGIA);
+		md.setForzaMassima(Costanti.GIGANTE_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.GIGANTE_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.GIGANTE_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.GIGANTE_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.GIGANTE_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.GIGANTE_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.GIGANTE_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.GIGANTE_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
+	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 
 	@Override

@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class MinotauroGigante extends PersonaggioBase implements Personaggio {
 
@@ -30,27 +31,161 @@ public class MinotauroGigante extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/MinotauroGigante.gif");
-		setSaluteMassima(Costanti.MINOTAUROGIGANTE_MAX_SALUTE);
-		setMagiaMassima(Costanti.MINOTAUROGIGANTE_MAX_MAGIA);
-		setValore(Costanti.MINOTAUROGIGANTE_MAX_VALORE);
-		setCoraggio(Costanti.MINOTAUROGIGANTE_MAX_CORAGGIO);
-		setCarisma(Costanti.MINOTAUROGIGANTE_MAX_CARISMA);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.MINOTAUROGIGANTE_FORZA_MIN, Costanti.MINOTAUROGIGANTE_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.MINOTAUROGIGANTE_DESTREZZA_MIN, Costanti.MINOTAUROGIGANTE_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.MINOTAUROGIGANTE_COSTITUZIONE_MIN, Costanti.MINOTAUROGIGANTE_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.MINOTAUROGIGANTE_INTELLIGENZA_MIN, Costanti.MINOTAUROGIGANTE_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.MINOTAUROGIGANTE_SAGGEZZA_MIN, Costanti.MINOTAUROGIGANTE_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.MINOTAUROGIGANTE_FORTUNA_MIN, Costanti.MINOTAUROGIGANTE_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.MINOTAUROGIGANTE_CRITICO_MIN, Costanti.MINOTAUROGIGANTE_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.MINOTAUROGIGANTE_PRECISIONE_MIN, Costanti.MINOTAUROGIGANTE_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.MINOTAUROGIGANTE_VELOCITA_MIN, Costanti.MINOTAUROGIGANTE_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.MINOTAUROGIGANTE_PARATA_MIN, Costanti.MINOTAUROGIGANTE_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.MINOTAUROGIGANTE_RESISTENZA_MAGICA_MIN, Costanti.MINOTAUROGIGANTE_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.MINOTAUROGIGANTE_MAGIA_MIN, Costanti.MINOTAUROGIGANTE_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.MINOTAUROGIGANTE_FURIA_MIN, Costanti.MINOTAUROGIGANTE_FURIA_MAX));
+		md.setSaluteMassima(Costanti.MINOTAUROGIGANTE_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.MINOTAUROGIGANTE_MAX_MAGIA);
+		md.setForzaMassima(Costanti.MINOTAUROGIGANTE_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.MINOTAUROGIGANTE_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.MINOTAUROGIGANTE_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.MINOTAUROGIGANTE_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.MINOTAUROGIGANTE_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.MINOTAUROGIGANTE_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.MINOTAUROGIGANTE_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.MINOTAUROGIGANTE_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
+	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 }

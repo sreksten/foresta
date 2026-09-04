@@ -1,9 +1,10 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Folletto extends PersonaggioBase implements Personaggio {
 
@@ -25,31 +26,164 @@ public class Folletto extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Folletto.gif");
-		setSaluteMassima(Costanti.FOLLETTO_MAX_SALUTE);
-		setMagiaMassima(Costanti.FOLLETTO_MAX_MAGIA);
-		setValore(Costanti.FOLLETTO_MAX_VALORE);
-		setCoraggio(Costanti.FOLLETTO_MAX_CORAGGIO);
-		setCarisma(Costanti.FOLLETTO_MAX_CARISMA);
-		setQuantitaMassima(Costanti.FOLLETTO_MAX_NUMERO);
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.FOLLETTO_FORZA_MIN, Costanti.FOLLETTO_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.FOLLETTO_DESTREZZA_MIN, Costanti.FOLLETTO_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.FOLLETTO_COSTITUZIONE_MIN, Costanti.FOLLETTO_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.FOLLETTO_INTELLIGENZA_MIN, Costanti.FOLLETTO_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.FOLLETTO_SAGGEZZA_MIN, Costanti.FOLLETTO_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.FOLLETTO_FORTUNA_MIN, Costanti.FOLLETTO_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.FOLLETTO_CRITICO_MIN, Costanti.FOLLETTO_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.FOLLETTO_PRECISIONE_MIN, Costanti.FOLLETTO_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.FOLLETTO_VELOCITA_MIN, Costanti.FOLLETTO_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.FOLLETTO_PARATA_MIN, Costanti.FOLLETTO_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.FOLLETTO_RESISTENZA_MAGICA_MIN, Costanti.FOLLETTO_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.FOLLETTO_MAGIA_MIN, Costanti.FOLLETTO_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.FOLLETTO_FURIA_MIN, Costanti.FOLLETTO_FURIA_MAX));
+		md.setSaluteMassima(Costanti.FOLLETTO_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.FOLLETTO_MAX_MAGIA);
+		md.setForzaMassima(Costanti.FOLLETTO_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.FOLLETTO_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.FOLLETTO_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.FOLLETTO_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.FOLLETTO_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.FOLLETTO_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.FOLLETTO_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.FOLLETTO_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
+	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.FOLLETTO_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 
 	@Override

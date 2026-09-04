@@ -1,25 +1,60 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
 
+import java.util.function.Function;
+
 public class Minotauro extends PersonaggioBase implements Personaggio {
 
-	public String getAIS() { return Misc.UN; }
-	public String getADS() { return Misc.IL; }
-	public String getAIP() { return Misc.ALCUNI; }
-	public String getADP() { return Misc.I; }
-	public String getDeS() { return Misc.DEL; }
-	public String getDeP() { return Misc.DEI; }
-	public String getDa() { return Misc.DAL; }
+	public String getAIS() {
+		return Misc.UN;
+	}
 
-	public ClassePersonaggio getClasse() { return ClassePersonaggio.MINOTAURO; }
-	public String getNomeSingolare() { return "Minotauro"; }
-	public String getNomePlurale() { return "Minotauri"; }
-	public String getPronome() { return Misc.ESSO; }
-	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
+	public String getADS() {
+		return Misc.IL;
+	}
+
+	public String getAIP() {
+		return Misc.ALCUNI;
+	}
+
+	public String getADP() {
+		return Misc.I;
+	}
+
+	public String getDeS() {
+		return Misc.DEL;
+	}
+
+	public String getDeP() {
+		return Misc.DEI;
+	}
+
+	public String getDa() {
+		return Misc.DAL;
+	}
+
+	public ClassePersonaggio getClasse() {
+		return ClassePersonaggio.MINOTAURO;
+	}
+
+	public String getNomeSingolare() {
+		return "Minotauro";
+	}
+
+	public String getNomePlurale() {
+		return "Minotauri";
+	}
+
+	public String getPronome() {
+		return Misc.ESSO;
+	}
+
+	public Personaggio.Sesso getSesso() {
+		return Personaggio.Sesso.MASCHIO;
+	}
 
 	public Minotauro() {
 		super(ClassePersonaggio.MINOTAURO);
@@ -27,37 +62,171 @@ public class Minotauro extends PersonaggioBase implements Personaggio {
 
 	@Override
 	public ClassiOfferta[] getOfferteCorruzione() {
-		return new ClassiOfferta[] {
+		return new ClassiOfferta[]{
 				ClassiOfferta.AIUTO_MERCENARIO,
 				ClassiOfferta.MAPPA_FORESTA,
 		};
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Minotauro.gif");
 		setIcona("icone/Minotauro.gif");
-		setSaluteMassima(Costanti.MINOTAURO_MAX_SALUTE);
-		setMagiaMassima(Costanti.MINOTAURO_MAX_MAGIA);
-		setValore(Costanti.MINOTAURO_MAX_VALORE);
-		setCoraggio(Costanti.MINOTAURO_MAX_CORAGGIO);
-		setCarisma(Costanti.MINOTAURO_MAX_CARISMA);
-		setQuantitaMassima(Costanti.MINOTAURO_MAX_NUMERO);
 		setCorrompibile(true);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.MINOTAURO_FORZA_MIN, Costanti.MINOTAURO_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.MINOTAURO_DESTREZZA_MIN, Costanti.MINOTAURO_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.MINOTAURO_COSTITUZIONE_MIN, Costanti.MINOTAURO_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.MINOTAURO_INTELLIGENZA_MIN, Costanti.MINOTAURO_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.MINOTAURO_SAGGEZZA_MIN, Costanti.MINOTAURO_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.MINOTAURO_FORTUNA_MIN, Costanti.MINOTAURO_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.MINOTAURO_CRITICO_MIN, Costanti.MINOTAURO_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.MINOTAURO_PRECISIONE_MIN, Costanti.MINOTAURO_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.MINOTAURO_VELOCITA_MIN, Costanti.MINOTAURO_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.MINOTAURO_PARATA_MIN, Costanti.MINOTAURO_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.MINOTAURO_RESISTENZA_MAGICA_MIN, Costanti.MINOTAURO_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.MINOTAURO_MAGIA_MIN, Costanti.MINOTAURO_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.MINOTAURO_FURIA_MIN, Costanti.MINOTAURO_FURIA_MAX));
+		md.setSaluteMassima(Costanti.MINOTAURO_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.MINOTAURO_MAX_MAGIA);
+		md.setForzaMassima(Costanti.MINOTAURO_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.MINOTAURO_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.MINOTAURO_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.MINOTAURO_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.MINOTAURO_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.MINOTAURO_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.MINOTAURO_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.MINOTAURO_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
 	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.MINOTAURO_MOLTIPLICATORE_STANCHEZZA_NOTA;
+	}
+	
 }

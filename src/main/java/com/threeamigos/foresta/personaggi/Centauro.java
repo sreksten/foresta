@@ -1,9 +1,10 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Centauro extends PersonaggioBase implements Personaggio {
 
@@ -25,32 +26,165 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Centauro.gif");
 		setIcona("icone/Centauro.gif");
-		setSaluteMassima(Costanti.CENTAURO_MAX_SALUTE);
-		setMagiaMassima(Costanti.CENTAURO_MAX_MAGIA);
-		setValore(Costanti.CENTAURO_MAX_VALORE);
-		setCoraggio(Costanti.CENTAURO_MAX_CORAGGIO);
-		setCarisma(Costanti.CENTAURO_MAX_CARISMA);
-		setQuantitaMassima(Costanti.CENTAURO_MAX_NUMERO);
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_FORZA_MIN, Costanti.CENTAURO_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_DESTREZZA_MIN, Costanti.CENTAURO_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_COSTITUZIONE_MIN, Costanti.CENTAURO_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_INTELLIGENZA_MIN, Costanti.CENTAURO_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_SAGGEZZA_MIN, Costanti.CENTAURO_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_FORTUNA_MIN, Costanti.CENTAURO_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_CRITICO_MIN, Costanti.CENTAURO_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_PRECISIONE_MIN, Costanti.CENTAURO_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_VELOCITA_MIN, Costanti.CENTAURO_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_PARATA_MIN, Costanti.CENTAURO_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_RESISTENZA_MAGICA_MIN, Costanti.CENTAURO_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_MAGIA_MIN, Costanti.CENTAURO_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.CENTAURO_FURIA_MIN, Costanti.CENTAURO_FURIA_MAX));
+		md.setSaluteMassima(Costanti.CENTAURO_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.CENTAURO_MAX_MAGIA);
+		md.setForzaMassima(Costanti.CENTAURO_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.CENTAURO_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.CENTAURO_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.CENTAURO_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.CENTAURO_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.CENTAURO_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.CENTAURO_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.CENTAURO_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
+	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 
 	@Override

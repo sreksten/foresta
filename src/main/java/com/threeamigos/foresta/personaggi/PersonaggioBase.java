@@ -31,7 +31,7 @@ import java.util.stream.Collectors;
 
 public abstract class PersonaggioBase implements Personaggio {
 
-	private PersonaggioMD md = new PersonaggioMD();
+	protected PersonaggioMD md = new PersonaggioMD();
 
 	private int ordinale;
 	private boolean png;
@@ -50,22 +50,15 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.setClasse(classe);
 		png = true;
 		md.setVivo(true);
-		impostaValori();
-		classe.setQuantitaMassima(quantitaMassima);
-		// I boss partono con valori massimi
+		md.setLivello(1);
+		Function<Integer, Integer> funzionePerValoriIniziali;
 		if (isParteConValoriMassimi()) {
-			md.setSalute(md.getSaluteMassima());
-			md.setMagia(md.getMagiaMassima());
-			md.setStanchezza(0);
+			funzionePerValoriIniziali = val -> val;
 		} else {
-			final Function<Integer, Integer> tira = max -> max == 0 ? 0 : Dado.tiraAncheSenzaRange(max / 2, max);
-			md.setSalute(tira.apply(md.getSaluteMassima()));
-			md.setMagia(tira.apply(md.getMagiaMassima()));
-			md.setValore(tira.apply(md.getValore()));
-			md.setCoraggio(tira.apply(md.getCoraggio()));
-			md.setCarisma(tira.apply(md.getCarisma()));
-			md.setStanchezza(Dado.tira(0, 5));
+			funzionePerValoriIniziali = (max) -> Dado.tiraAncheSenzaRange(max * 3 / 4, max);
 		}
+		impostaValoriDiPartenza(funzionePerValoriIniziali);
+		classe.setQuantitaMassima(quantitaMassima);
 		Logger.log("Nuovo: " + getNomeSingolare() + " (" + md.getSalute() + "/" + md.getSaluteMassima() + ")");
 	}
 	
@@ -79,11 +72,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		png = false;
 	}
 	
-	/**
-	 * Deve impostare saluteMassima, magiaMassima, valore, coraggio, carisma
-	 */
-	protected abstract void impostaValori();
-
 	protected void setImmagine(String nomeImmagine) {
 		this.nomeImmagine = nomeImmagine;
 		if (ImageCache.get(nomeImmagine) == null) {
@@ -183,118 +171,11 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.setStanchezza(9);
 	}
 
-	public void addSalute(int quantita) {
-		int forza = md.getSalute() + quantita;
-		if (forza > md.getSaluteMassima()) {
-			forza = md.getSaluteMassima();
-		}
-		md.setSalute(forza);
-		UI.variaSalute(this, quantita);
-	}
-
-	public void subSalute(int quantita, Personaggio avversario, Personaggio.NotificaFerite notificaFerite, Personaggio.NotificaMorte notificaMorte) {
-		int modificaDaArtefatti = getModificatore(TipoAttributo.PARATA);
-		quantita -= modificaDaArtefatti;
-		if (quantita <= 0) {
-			if (notificaFerite == Personaggio.NotificaFerite.SI) {
-                String sb = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-                        " non ha riportato danni dall'attacco " +
-                        avversario.getNome(OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
-                        '.';
-				UI.notifica(sb);
-			}
-			return;
-		}
-
-		int salute = md.getSalute() - quantita;
-		if (salute <= 0) {
-			salute = 0;
-			if (!isImmortale()) {
-				md.setVivo(false);
-				StringBuilder sb;
-				if (notificaMorte == Personaggio.NotificaMorte.SI) {
-					sb = new StringBuilder();
-					if (md.getNome() == null) {
-						boolean isGruppoAvversario;
-						Gruppo gruppo;
-						if (GruppoGiocatore.getIstanza().contiene(this)) {
-							isGruppoAvversario = false;
-							gruppo = GruppoGiocatore.getIstanza();
-						} else {
-							isGruppoAvversario = true;
-							gruppo = GruppoAvversario.getIstanza();
-						}
-						if (gruppo.getNumeroPersonaggi() > 1 && isGruppoAvversario) {
-							if (getSesso() == Personaggio.Sesso.MASCHIO) {
-								sb.append(Misc.getOrdinaleM(ordinale, true));
-							} else {
-								sb.append(Misc.getOrdinaleF(ordinale, true));
-							}
-							sb.append(" ");
-							sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
-						} else {
-							String ads = getADS();
-							sb.append(Character.toUpperCase(ads.charAt(0)));
-							sb.append(ads.substring(1));
-						}
-						sb.append(getNomeSingolare());
-					} else {
-						sb.append(md.getNome());
-					}
-					sb.append(" è mort");
-					sb.append(getLetteraFinaleAttributo());
-					sb.append(" per le ferite riportate.");
-					UI.notifica(sb.toString());
-					Logger.log("Notificata morte del personaggio");
-				}
-				if (avversario != null) {
-					md.setCausaTrapasso("Uccis" + getLetteraFinaleAttributo() + " " + avversario.getDa() + avversario.getNomeSingolare() + ".");
-				} else {
-					md.setCausaTrapasso("Mort" + getLetteraFinaleAttributo() + " per troppa codardia.");
-				}
-				muore(md.getCausaTrapasso());
-			}
-		} else {
-			if (notificaFerite == Personaggio.NotificaFerite.SI) {
-				String nome = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
-                String notifica = nome + " ha ancora " + salute + " punt" + (salute == 1 ? 'o' : 'i') +
-                        " ferita su " + md.getSaluteMassima() + '.';
-				UI.notifica(notifica);
-			}
-		}
-		md.setSalute(salute);
-		UI.variaSalute(this, -quantita);
-
-		if ((md.getClasse() == ClassePersonaggio.GUERRIERO || md.getClasse() == ClassePersonaggio.GUERRIERA) &&
-				getFuria() > 0 && !hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
-			int sogliaBerserk = md.getSaluteMassima() / 3;
-			if (salute > 0 && salute <= sogliaBerserk) {
-				addEffettoDiStato(TipoEffettoDiStato.BERSERK, 1);
-			}
-		}
-	}
-
-	protected void setSaluteMassima(int saluteMassima) {
-		md.setSaluteMassima(saluteMassima);
-	}
-
-	public void addSaluteMassima(int quantita) {
-		md.setSaluteMassima(md.getSaluteMassima() + quantita);
-		UI.variaSaluteMassima(this, quantita);
-	}
-
 	public int getDanniInCombattimento() {
-		int danni;
-		/*
-		 * if (isPNG()) { // per i personaggi non giocanti facciamo una media // tra la
-		 * forza e la forza massima danni = (getForza() + getForzaMassima()) / 10; }
-		 * else {
-		 */
-		danni = Math.max(0, (getSalute() + getCoraggio()) / 10 + getValoreEffettoDiStato() - getStanchezza() - Dado.tira(-5, +5));
-		/*
-		 * }
-		 */
-		Logger.log((getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)) + "(" + getSalute() + "/"
+
+		int danni = Math.max(0, (getSalute() + getCoraggio()) / 10 + getQuantitaEffettoDiStato() - getStanchezza() - Dado.tira(-5, +5));
+
+		Logger.log((getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)) + " (" + getSalute() + "/"
 				+ getSaluteMassima() + ") fa " + danni + " danni.");
 		return danni * getModificaDanniForza();
 	}
@@ -303,28 +184,8 @@ public abstract class PersonaggioBase implements Personaggio {
 		return 1;
 	}
 
-	public void addMagia(int quantita) {
-		md.setMagia(Math.min(md.getMagia() + quantita, md.getMagiaMassima()));
-		UI.variaMagia(this, quantita);
-	}
-
-	public void subMagia(int quantita) {
-		md.setMagia(Math.max(md.getMagia() - quantita, 0));
-		UI.variaMagia(this, -quantita);
-	}
-
-	protected void setMagiaMassima(int magiaMassima) {
-		md.setMagiaMassima(magiaMassima);
-	}
-
-	//TODO esiste un massimo per la magia?
-	public void addMagiaMassima(int quantita) {
-		md.setMagiaMassima(md.getMagiaMassima() + quantita);
-		UI.variaMagiaMassima(this, quantita);
-	}
-
 	public int getBersagliPerIncantesimo() {
-		int modificaDaArtefatti = getModificatore(TipoAttributo.NUMERO_BERSAGLI);
+		int modificaDaArtefatti = getModificaDaArtefatti(TipoAttributo.NUMERO_BERSAGLI);
 		return 1 + modificaDaArtefatti;
 	}
 
@@ -332,52 +193,8 @@ public abstract class PersonaggioBase implements Personaggio {
 		return danniBase;
 	}
 
-	public void addCoraggio(int quantita) {
-		md.setCoraggio(Math.min(md.getCoraggio() + quantita, Costanti.MAX_CORAGGIO));
-		UI.variaCoraggio(this, quantita);
-	}
-
-	public void subCoraggio(int quantita) {
-		md.setCoraggio(Math.max(md.getCoraggio() - quantita, 0));
-		UI.variaCoraggio(this, -quantita);
-	}
-
-	protected void setValore(int valore) {
-		md.setValore(valore);
-	}
-
-	public void addValore(int quantita) {
-		md.setValore(Math.min(md.getValore() + quantita, Costanti.MAX_VALORE));
-		UI.variaValore(this, quantita);
-	}
-
-	public void subValore(int quantita) {
-		md.setValore(Math.max(md.getValore() - quantita, 0));
-		UI.variaValore(this, -quantita);
-	}
-
-	public void addStanchezza(int quantita) {
-		md.setStanchezza(Math.min(md.getStanchezza() + quantita, Costanti.MAX_STANCHEZZA));
-		UI.variaStanchezza(this, quantita);
-	}
-
-	public void subStanchezza(int quantita) {
-		md.setStanchezza(Math.max(md.getStanchezza() - quantita, 0));
-		UI.variaStanchezza(this, -quantita);
-	}
-
-	public void addCarisma(int quantita) {
-		md.setCarisma(Math.min(md.getCarisma() + quantita, Costanti.MAX_CARISMA));
-		UI.variaCarisma(this, quantita);
-	}
-
-	public void subCarisma(int quantita) {
-		md.setCarisma(Math.max(md.getCarisma() - quantita, 0));
-		UI.variaCarisma(this, -quantita);
-	}
-
 	public int getBersagli() {
-		int modificaDaArtefatti = getModificatore(TipoAttributo.NUMERO_BERSAGLI);
+		int modificaDaArtefatti = getModificaDaArtefatti(TipoAttributo.NUMERO_BERSAGLI);
 		return 1 + modificaDaArtefatti;
 	}
 
@@ -461,7 +278,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			md.setStanchezza(0);
 		} else {
 			modifica = md.getStanchezza() / 2;
-			int modificaDaArtefatti = getModificatore(TipoAttributo.STANCHEZZA);
+			int modificaDaArtefatti = getModificaDaArtefatti(TipoAttributo.STANCHEZZA);
 			if (modificaDaArtefatti > 0) {
 				// Ci sono artefatti che aumentano la stanchezza, ma per pietà verso il giocatore non li consideriamo
 				modifica += modificaDaArtefatti;
@@ -469,7 +286,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			subStanchezza(modifica);
 		}
 		// accresce la salute
-		modifica = getModificatore(TipoAttributo.SALUTE);
+		modifica = getModificaDaArtefatti(TipoAttributo.SALUTE);
 		if (ore < 4) {
 			if (alCoperto) {
 				addSalute(getRecuperoSalute() * ore + modifica);
@@ -486,7 +303,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			}
 		}
 		// torna la magia
-		modifica = getModificatore(TipoAttributo.MAGIA);
+		modifica = getModificaDaArtefatti(TipoAttributo.MAGIA);
 		addMagia(getRecuperoMagia() * ore + modifica);
 	}
 
@@ -581,7 +398,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public boolean isATempo() {
-		return md.getTempo() != PersonaggioMD.NO_TEMPO;
+		return md.getTempo() != PersonaggioMD.SENZA_LIMITE;
 	}
 
 	public void setTempo(int tempo) {
@@ -624,10 +441,13 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	// Statistiche del personaggio
 
+	// CLASSE
 	@Override
 	public ClassePersonaggio getClasse() {
 		return md.getClasse();
 	}
+
+	// NOME
 
 	@Override
 	public Optional<String> getNomeProprio() {
@@ -677,40 +497,235 @@ public abstract class PersonaggioBase implements Personaggio {
 		return getSesso() == Personaggio.Sesso.MASCHIO ? "o" : "a";
 	}
 
+	/**
+	 * Da chiamare durante l'inizializzazione di un personaggio. Imposta il personaggio a vivo, il livello a 1
+	 * e l'esperienza e il carico a 0. Inoltre in base ai valori massimi degli attributi primari imposta quelli
+	 * correnti per gli attributi primari e calcola gli attributi secondari.
+	 * @param funzione una funzione che determina il valore per un attributo. O il massimo valore possibile
+	 *                    o un valore scelto a caso in un dato intervallo.
+	 */
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
+		md.setVivo(true);
+		md.setLivello(1);
+		md.setEsperienza(0);
+		md.setCarico(0);
+		md.setSalute(funzione.apply(getSaluteMassima()));
+		md.setMagia(funzione.apply(getMagiaMassima()));
+		md.setForza(funzione.apply(getForzaMassima()));
+		md.setDestrezza(funzione.apply(getDestrezzaMassima()));
+		md.setCostituzione(funzione.apply(getCostituzioneMassima()));
+		md.setIntelligenza(funzione.apply(getIntelligenzaMassima()));
+		md.setSaggezza(funzione.apply(getSaggezzaMassima()));
+		md.setCarisma(funzione.apply(getCarismaMassimo()));
+		md.setFortuna(funzione.apply(getFortunaMassima()));
+
+		md.setStanchezza(Costanti.MAX_STANCHEZZA - funzione.apply(Costanti.MAX_STANCHEZZA));
+
+		ricalcolaAttributiSecondari();
+	}
+
+	/**
+	 * Funzione che limita il valore di un attributo al suo massimo (valore base più modifica da artefatti)
+	 */
+	private int limitaEntroMassimi(int valoreAttuale, int valoreMassimo, int quantitaDaAggiungere) {
+		if (valoreMassimo == PersonaggioMD.SENZA_LIMITE) {
+			return quantitaDaAggiungere;
+		}
+		if (valoreAttuale + quantitaDaAggiungere <= valoreMassimo) {
+			return quantitaDaAggiungere;
+		}
+		return valoreMassimo - valoreAttuale;
+	}
+
+	// LIVELLO - non è un attributo con un massimo
+
 	public int getLivello() {
 		return md.getLivello();
 	}
 
+	// ESPERIENZA - non è un attributo con un massimo
+
 	public int getEsperienza() {
 		return md.getEsperienza();
 	}
+
+	//FIXME aggiungendo esperienza si dovrebbe poter salire di livello e aumentare alcune statistiche
+	public void addEsperienza(int esperienza) {
+		md.setEsperienza(md.getEsperienza() + esperienza);
+	}
+
+	// CARICO
+
+	@Override
+	public int getCarico() {
+		return md.getCarico();
+	}
+
+	public boolean puoPrendere(Artefatto artefatto) {
+		return puoPrendere(artefatto.getPeso());
+	}
+
+	public boolean puoPrendere(int quantita) {
+		return quantita <= getCaricoMassimo() - getCarico();
+	}
+
+	// CARICO MASSIMO
+
+	@Override
+	public int getCaricoMassimo() {
+		return get(PersonaggioMD::getCaricoMassimo, TipoAttributo.CARICO);
+	}
+
+	// SALUTE
 
 	@Override
 	public int getSalute() {
 		return md.getSalute();
 	}
 
-	@Override
-	public int getSaluteMassima() {
-		return get(PersonaggioMD::getSaluteMassima, TipoAttributo.SALUTE);
+	/**
+	 * La quantità che si può aggiungere è limitata dal valore massimo di base accresciuto da bonus da artefatti
+	 */
+	public void addSalute(int quantita) {
+		quantita = limitaEntroMassimi(md.getSalute(), getSaluteMassima(), quantita);
+		md.setSalute(md.getSalute() + quantita);
+		UI.variaSalute(this, quantita);
+	}
+
+	//FIXME sono convinto che questo metodo sia un po' troppo un pout-pourri
+	public void subSalute(int quantita, Personaggio avversario, Personaggio.NotificaFerite notificaFerite, Personaggio.NotificaMorte notificaMorte) {
+		int modificaDaArtefatti = getModificaDaArtefatti(TipoAttributo.PARATA);
+		quantita -= modificaDaArtefatti;
+		if (quantita <= 0) {
+			if (notificaFerite == Personaggio.NotificaFerite.SI) {
+				String sb = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+						" non ha riportato danni dall'attacco " +
+						avversario.getNome(OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
+						'.';
+				UI.notifica(sb);
+			}
+			return;
+		}
+
+		int salute = md.getSalute() - quantita;
+		if (salute <= 0) {
+			salute = 0;
+			if (!isImmortale()) {
+				md.setVivo(false);
+				StringBuilder sb;
+				if (notificaMorte == Personaggio.NotificaMorte.SI) {
+					sb = new StringBuilder();
+					if (md.getNome() == null) {
+						boolean isGruppoAvversario;
+						Gruppo gruppo;
+						if (GruppoGiocatore.getIstanza().contiene(this)) {
+							isGruppoAvversario = false;
+							gruppo = GruppoGiocatore.getIstanza();
+						} else {
+							isGruppoAvversario = true;
+							gruppo = GruppoAvversario.getIstanza();
+						}
+						if (gruppo.getNumeroPersonaggi() > 1 && isGruppoAvversario) {
+							if (getSesso() == Personaggio.Sesso.MASCHIO) {
+								sb.append(Misc.getOrdinaleM(ordinale, true));
+							} else {
+								sb.append(Misc.getOrdinaleF(ordinale, true));
+							}
+							sb.append(" ");
+							sb.setCharAt(0, Character.toUpperCase(sb.charAt(0)));
+						} else {
+							String ads = getADS();
+							sb.append(Character.toUpperCase(ads.charAt(0)));
+							sb.append(ads.substring(1));
+						}
+						sb.append(getNomeSingolare());
+					} else {
+						sb.append(md.getNome());
+					}
+					sb.append(" è mort");
+					sb.append(getLetteraFinaleAttributo());
+					sb.append(" per le ferite riportate.");
+					UI.notifica(sb.toString());
+					Logger.log("Notificata morte del personaggio");
+				}
+				if (avversario != null) {
+					md.setCausaTrapasso("Uccis" + getLetteraFinaleAttributo() + " " + avversario.getDa() + avversario.getNomeSingolare() + ".");
+				} else {
+					md.setCausaTrapasso("Mort" + getLetteraFinaleAttributo() + " per troppa codardia.");
+				}
+				muore(md.getCausaTrapasso());
+			}
+		} else {
+			if (notificaFerite == Personaggio.NotificaFerite.SI) {
+				String nome = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
+				String notifica = nome + " ha ancora " + salute + " punt" + (salute == 1 ? 'o' : 'i') +
+						" ferita su " + md.getSaluteMassima() + '.';
+				UI.notifica(notifica);
+			}
+		}
+		md.setSalute(salute);
+		UI.variaSalute(this, -quantita);
+
+		if ((md.getClasse() == ClassePersonaggio.GUERRIERO || md.getClasse() == ClassePersonaggio.GUERRIERA) &&
+				getFuria() > 0 && !hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
+			int sogliaBerserk = md.getSaluteMassima() / 3;
+			if (salute > 0 && salute <= sogliaBerserk) {
+				addEffettoDiStato(TipoEffettoDiStato.BERSERK, 1);
+			}
+		}
 	}
 
 	@Override
 	public int getRecuperoSalute() {
 		if (isPNG()) {
-			return getSaluteMassima() / 10 + getModificatore(TipoAttributo.SALUTE);
+			return getSaluteMassima() / 10 + getModificaDaArtefatti(TipoAttributo.SALUTE);
 		} else {
 			return getSaluteMassima() / 20;
 		}
 	}
 
-	protected void setMagia(int valore) {
-		md.setMagia(valore);
+	// SALUTE MASSIMA
+
+	/**
+	 * La quantità di base accresciuta da bonus da artefatti
+	 */
+	@Override
+	public int getSaluteMassima() {
+		return get(PersonaggioMD::getSaluteMassima, TipoAttributo.SALUTE);
 	}
+
+	public void addSaluteMassima(int quantita) {
+		md.setSaluteMassima(md.getSaluteMassima() + quantita);
+		UI.variaSaluteMassima(this, quantita);
+	}
+
+	// MAGIA
 
 	@Override
 	public int getMagia() {
 		return md.getMagia();
+	}
+
+	/**
+	 * La quantità che si può aggiungere è limitata dal valore massimo di base accresciuto da bonus da artefatti
+	 */
+	public void addMagia(int quantita) {
+		quantita = limitaEntroMassimi(md.getMagia(), getMagiaMassima(), quantita);
+		md.setMagia(md.getMagia() + quantita);
+		UI.variaMagia(this, quantita);
+	}
+
+	public void subMagia(int quantita) {
+		if (quantita > getMagia()) {
+			throw new IllegalStateException("Tentativo di utilizzo di più magia rispetto a quella disponibile");
+		}
+		md.setMagia(md.getMagia() - quantita);
+		UI.variaMagia(this, -quantita);
+	}
+
+	@Override
+	public int getRecuperoMagia() {
+		return 1 + getModificaDaArtefatti(TipoAttributo.MAGIA);
 	}
 
 	@Override
@@ -718,195 +733,699 @@ public abstract class PersonaggioBase implements Personaggio {
 		return get(PersonaggioMD::getMagiaMassima, TipoAttributo.MAGIA);
 	}
 
-	@Override
-	public int getRecuperoMagia() {
-		return 1 + getModificatore(TipoAttributo.MAGIA);
+	protected void setMagiaMassima(int magiaMassima) {
+		md.setMagiaMassima(magiaMassima);
 	}
 
-	@Override
-	public int getCarico() {
-		return md.getCarico();
+	public void addMagiaMassima(int quantita) {
+		md.setMagiaMassima(md.getMagiaMassima() + quantita);
+		UI.variaMagiaMassima(this, quantita);
 	}
 
-	@Override
-	public int getCaricoMassimo() {
-		return get(PersonaggioMD::getCaricoMassimo, TipoAttributo.CARICO);
-	}
-
-	protected void setForza(int valore) {
-		md.setForza(valore);
-	}
+	// FORZA
 
 	@Override
 	public int getForza() {
 		return get(PersonaggioMD::getForza, TipoAttributo.FORZA);
 	}
 
-	protected void setDestrezza(int valore) {
-		md.setDestrezza(valore);
+	public int getForzaMassima() {
+		return get(PersonaggioMD::getForzaMassima, TipoAttributo.FORZA);
 	}
+
+	// DESTREZZA
 
 	@Override
 	public int getDestrezza() {
 		return get(PersonaggioMD::getDestrezza, TipoAttributo.DESTREZZA);
 	}
 
-	protected void setCostituzione(int valore) {
-		md.setCostituzione(valore);
+	public void addDestrezza(int quantita) {
+		quantita = limitaEntroMassimi(md.getDestrezza(), md.getDestrezzaMassima(), quantita);
+		md.setDestrezza(md.getDestrezza() + quantita);
 	}
+
+	public int getDestrezzaMassima() {
+		return get(PersonaggioMD::getDestrezzaMassima, TipoAttributo.DESTREZZA);
+	}
+
+	// COSTITUZIONE
 
 	@Override
 	public int getCostituzione() {
 		return get(PersonaggioMD::getCostituzione, TipoAttributo.COSTITUZIONE);
 	}
 
-	protected void setIntelligenza(int valore) {
-		md.setIntelligenza(valore);
+	public void addCostituzione(int quantita) {
+		quantita = limitaEntroMassimi(md.getCostituzione(), md.getCostituzioneMassima(), quantita);
+		md.setCostituzione(md.getCostituzione() + quantita);
 	}
+
+	public int getCostituzioneMassima() {
+		return get(PersonaggioMD::getCostituzioneMassima, TipoAttributo.COSTITUZIONE);
+	}
+
+	// INTELLIGENZA
 
 	@Override
 	public int getIntelligenza() {
 		return get(PersonaggioMD::getIntelligenza, TipoAttributo.INTELLIGENZA);
 	}
 
-	protected void setSaggezza(int valore) {
-		md.setSaggezza(valore);
+	public void addIntelligenza(int quantita) {
+		quantita = limitaEntroMassimi(md.getIntelligenza(), md.getIntelligenzaMassima(), quantita);
+		md.setIntelligenza(md.getIntelligenza() + quantita);
 	}
+
+	public int getIntelligenzaMassima() {
+		return get(PersonaggioMD::getIntelligenzaMassima, TipoAttributo.INTELLIGENZA);
+	}
+
+	// SAGGEZZA
 
 	@Override
 	public int getSaggezza() {
 		return get(PersonaggioMD::getSaggezza, TipoAttributo.SAGGEZZA);
 	}
 
-	protected void setCarisma(int valore) {
-		md.setCarisma(valore);
+	public void addSaggezza(int quantita) {
+		quantita = limitaEntroMassimi(md.getSaggezza(), md.getSaggezzaMassima(), quantita);
+		md.setSaggezza(md.getSaggezza() + quantita);
 	}
+
+	public int getSaggezzaMassima() {
+		return get(PersonaggioMD::getSaggezzaMassima, TipoAttributo.SAGGEZZA);
+	}
+
+	// CARISMA
 
 	@Override
 	public int getCarisma() {
 		return get(PersonaggioMD::getCarisma, TipoAttributo.CARISMA);
 	}
 
-	protected void setFortuna(int valore) {
-		md.setFortuna(valore);
+	public void addCarisma(int quantita) {
+		quantita = limitaEntroMassimi(md.getCarisma(), getCarismaMassimo(), quantita);
+		md.setCarisma(md.getCarisma() + quantita);
+		UI.variaCarisma(this, quantita);
 	}
+
+	public void subCarisma(int quantita) {
+		md.setCarisma(Math.max(md.getCarisma() - quantita, 0));
+		UI.variaCarisma(this, -quantita);
+	}
+
+	public int getCarismaMassimo() {
+		return get(PersonaggioMD::getCarismaMassimo, TipoAttributo.CARISMA);
+	}
+
+	// FORTUNA
 
 	@Override
 	public int getFortuna() {
 		return get(PersonaggioMD::getFortuna, TipoAttributo.FORTUNA);
 	}
 
-	protected void setCritico(int valore) {
-		md.setCritico(valore);
+	public void addFortuna(int quantita) {
+		quantita = limitaEntroMassimi(md.getFortuna(), getFortunaMassima(), quantita);
+		md.setFortuna(md.getFortuna() + quantita);
 	}
+
+	public int getFortunaMassima() {
+		return get(PersonaggioMD::getFortunaMassima, TipoAttributo.FORTUNA);
+	}
+
+	// CRITICO
 
 	@Override
 	public int getCritico() {
 		return get(PersonaggioMD::getCritico, TipoAttributo.CRITICO);
 	}
 
-	protected void setPrecisione(int valore) {
-		md.setSaggezza(valore);
+	public void addCritico(int quantita) {
+		quantita = limitaEntroMassimi(md.getCritico(), getCriticoMassimo(), quantita);
+		md.setCritico(md.getCritico() + quantita);
 	}
+
+	public int getCriticoMassimo() {
+		return get(PersonaggioMD::getCriticoMassimo, TipoAttributo.CRITICO);
+	}
+
+	// PRECISIONE
 
 	@Override
 	public int getPrecisione() {
 		return get(PersonaggioMD::getPrecisione, TipoAttributo.PRECISIONE);
 	}
 
-	protected void setVelocita(int valore) {
-		md.setSaggezza(valore);
+	public void addPrecisione(int quantita) {
+		quantita = limitaEntroMassimi(md.getPrecisione(), getPrecisioneMassima(), quantita);
+		md.setPrecisione(md.getPrecisione() + quantita);
 	}
+
+	public int getPrecisioneMassima() {
+		return get(PersonaggioMD::getPrecisioneMassima, TipoAttributo.PRECISIONE);
+	}
+
+	// VELOCITA
 
 	@Override
 	public int getVelocita() {
 		return get(PersonaggioMD::getVelocita, TipoAttributo.VELOCITA);
 	}
 
-	protected void setFurtivita(int valore) {
-		md.setFurtivita(valore);
+	public void addVelocita(int quantita) {
+		quantita = limitaEntroMassimi(md.getVelocita(), getVelocitaMassima(), quantita);
+		md.setVelocita(md.getVelocita() + quantita);
 	}
+
+	public int getVelocitaMassima() {
+		return get(PersonaggioMD::getVelocitaMassima, TipoAttributo.VELOCITA);
+	}
+
+	// FURTIVITA
 
 	@Override
 	public int getFurtivita() {
 		return get(PersonaggioMD::getFurtivita, TipoAttributo.FURTIVITA);
 	}
 
-	protected void setParata(int valore) {
-		md.setParata(valore);
+	public void addFurtivita(int quantita) {
+		quantita = limitaEntroMassimi(md.getFurtivita(), getFurtivitaMassima(), quantita);
+		md.setFurtivita(md.getFurtivita() + quantita);
 	}
+
+	public int getFurtivitaMassima() {
+		return get(PersonaggioMD::getFurtivitaMassima, TipoAttributo.FURTIVITA);
+	}
+
+	// PARATA
 
 	@Override
 	public int getParata() {
 		return get(PersonaggioMD::getParata, TipoAttributo.PARATA);
 	}
 
-	protected void setResistenzaMagica(int valore) {
-		md.setResistenzaMagica(valore);
+	public void addParata(int quantita) {
+		quantita = limitaEntroMassimi(md.getParata(), getParataMassima(), quantita);
+		md.setParata(md.getParata() + quantita);
 	}
+
+	public int getParataMassima() {
+		return get(PersonaggioMD::getParataMassima, TipoAttributo.PARATA);
+	}
+
+	// RESISTENZA MAGICA
 
 	@Override
 	public int getResistenzaMagica() {
 		return get(PersonaggioMD::getResistenzaMagica, TipoAttributo.RESISTENZA_MAGICA);
 	}
 
-	protected void setPercezione(int valore) {
-		md.setPercezione(valore);
+	public void addResistenzaMagica(int quantita) {
+		quantita = limitaEntroMassimi(md.getResistenzaMagica(), getResistenzaMagicaMassima(), quantita);
+		md.setResistenzaMagica(md.getResistenzaMagica() + quantita);
 	}
+
+	public int getResistenzaMagicaMassima() {
+		return get(PersonaggioMD::getResistenzaMagicaMassima, TipoAttributo.RESISTENZA_MAGICA);
+	}
+
+	// PERCEZIONE
 
 	@Override
 	public int getPercezione() {
 		return get(PersonaggioMD::getPercezione, TipoAttributo.PERCEZIONE);
 	}
 
-	protected void setSoggezione(int valore) {
-		md.setSoggezione(valore);
+	public void addPercezione(int quantita) {
+		quantita = limitaEntroMassimi(md.getPercezione(), getPercezioneMassima(), quantita);
+		md.setPercezione(md.getPercezione() + quantita);
 	}
+
+	public int getPercezioneMassima() {
+		return get(PersonaggioMD::getPercezioneMassima, TipoAttributo.PERCEZIONE);
+	}
+
+	// SOGGEZIONE
 
 	@Override
 	public int getSoggezione() {
 		return get(PersonaggioMD::getSoggezione, TipoAttributo.SOGGEZIONE);
 	}
 
-	protected void setFuria(int valore) {
-		md.setFuria(valore);
+	public void addSoggezione(int quantita) {
+		quantita = limitaEntroMassimi(md.getSoggezione(), getSoggezioneMassima(), quantita);
+		md.setSoggezione(md.getSoggezione() + quantita);
 	}
+
+	public int getSoggezioneMassima() {
+		return get(PersonaggioMD::getSoggezioneMassima, TipoAttributo.SOGGEZIONE);
+	}
+
+	// FURIA
 
 	@Override
 	public int getFuria() {
 		return get(PersonaggioMD::getFuria, TipoAttributo.FURIA);
 	}
 
-	protected void setCoraggio(int valore) {
-		md.setCoraggio(valore);
+	public void addFuria(int quantita) {
+		quantita = limitaEntroMassimi(md.getFuria(), getFuriaMassima(), quantita);
+		md.setFuria(md.getFuria() + quantita);
 	}
+
+	public int getFuriaMassima() {
+		return get(PersonaggioMD::getFuriaMassima, TipoAttributo.FURIA);
+	}
+
+	// CORAGGIO
 
 	@Override
 	public int getCoraggio() {
 		return get(PersonaggioMD::getCoraggio, TipoAttributo.CORAGGIO);
 	}
 
+	public void addCoraggio(int quantita) {
+		quantita = limitaEntroMassimi(md.getCoraggio(), getCoraggioMassimo(), quantita);
+		md.setCoraggio(md.getCoraggio() + quantita);
+		UI.variaCoraggio(this, quantita);
+	}
+
+	public void subCoraggio(int quantita) {
+		md.setCoraggio(Math.max(md.getCoraggio() - quantita, 0));
+		UI.variaCoraggio(this, -quantita);
+	}
+
+	public int getCoraggioMassimo() {
+		return get(PersonaggioMD::getCoraggioMassimo, TipoAttributo.CORAGGIO);
+	}
+
+	// VALORE
+
 	@Override
-	public int getValoreEffettoDiStato() {
+	public int getQuantitaEffettoDiStato() {
 		return get(PersonaggioMD::getValore, TipoAttributo.VALORE);
 	}
 
-	protected void setStanchezza(int valore) {
-		md.setStanchezza(valore);
+	public void addValore(int quantita) {
+		quantita = limitaEntroMassimi(md.getCoraggio(), getCoraggioMassimo(), quantita);
+		md.setCoraggio(md.getCoraggio() + quantita);
+		UI.variaValore(this, quantita);
 	}
+
+	public void subValore(int quantita) {
+		md.setValore(Math.max(md.getValore() - quantita, 0));
+		UI.variaValore(this, -quantita);
+	}
+
+	public int getValoreMassimo() {
+		return get(PersonaggioMD::getValoreMassimo, TipoAttributo.VALORE);
+	}
+
+	// STANCHEZZA
 
 	@Override
 	public int getStanchezza() {
 		return get(PersonaggioMD::getStanchezza, TipoAttributo.STANCHEZZA);
 	}
 
-	private int get(Function<PersonaggioMD, Integer> getterAttributo, TipoAttributo tipoAttributo) {
-		return getterAttributo.apply(this.getModelloDati()) + getModificatore(tipoAttributo);
+	public void addStanchezza(int quantita) {
+		quantita = limitaEntroMassimi(md.getStanchezza(), Costanti.MAX_STANCHEZZA, quantita);
+		UI.variaStanchezza(this, quantita);
 	}
 
-	private int getModificatore(TipoAttributo tipoAttributo) {
+	public void subStanchezza(int quantita) {
+		md.setStanchezza(Math.max(md.getStanchezza() - quantita, 0));
+		UI.variaStanchezza(this, -quantita);
+	}
+
+	// Funzioni di calcolo per gli attributi derivati
+
+	protected void ricalcolaAttributiSecondari() {
+		md.setCaricoMassimo(calcolaCaricoMassimo());
+		md.setCritico(calcolaCritico());
+		md.setPrecisione(calcolaPrecisione());
+		md.setVelocita(calcolaVelocita());
+		md.setFurtivita(calcolaFurtivita());
+		md.setParata(calcolaParata());
+		md.setResistenzaMagica(calcolaResistenzaMagica());
+		md.setPercezione(calcolaPercezione());
+		md.setSoggezione(calcolaSoggezione());
+		md.setFuria(calcolaFuria());
+		md.setCoraggio(calcolaCoraggio());
+		md.setValore(calcolaValore());
+		//FIXME manca il numero bersagli
+		calcolaNumeroBersagli();
+	}
+
+	protected abstract double getMoltiplicatoreCarico();
+
+	/**
+	 * Calcola il carico massimo basandosi UNICAMENTE sulle statistiche primarie
+	 * e sul moltiplicatore della classe, mantenendo i rendimenti decrescenti.
+	 */
+	private int calcolaCaricoMassimo() {
+		// Per calcolare il CARICO massimo trasportabile in modo realistico, si attinge a due attributi primari fisici:
+		// FORZA (Peso Maggiore): La potenza muscolare determina la capacità di sollevare oggetti pesanti.
+		// COSTITUZIONE (Peso Minore): La struttura fisica e la tempra determinano la tolleranza a camminare a lungo
+		// sotto sforzo senza affaticarsi.
+		final double PESO_PER_RADICE_FORZA = 12.0;
+		final double PESO_PER_RADICE_COSTITUZIONE = 6.0;
+
+		// Applichiamo i diminishing returns grezzi tramite radice quadrata
+		double potenzaFisica = PESO_PER_RADICE_FORZA * Math.sqrt(getForza());
+		double resistenzaFisica = PESO_PER_RADICE_COSTITUZIONE * Math.sqrt(getCostituzione());
+
+		// Il potenziale di carico totale del corpo
+		double potenziale = potenzaFisica + resistenzaFisica;
+
+		// Applichiamo il filtro della classe (se 0.0, azzera tutto l'algoritmo)
+		double caricoFinale = potenziale * getMoltiplicatoreCarico();
+
+		return (int)caricoFinale;
+	}
+
+	protected abstract double getMoltiplicatoreCritico();
+
+	/**
+	 * Calcola il critico (0-100) basandosi UNICAMENTE sulle statistiche primarie
+	 * e sul moltiplicatore della classe, mantenendo i rendimenti decrescenti.
+	 */
+	private int calcolaCritico() {
+		// Costanti per calibrare la curva (es. con Destrezza 25 e Fortuna 25, il Ladro ha ~15% di critico)
+		// Critico deve essere alimentato da due forze distinte:
+		// DESTREZZA (Peso Maggiore - 70%): Rappresenta la precisione chirurgica nel colpire i punti vitali scoperti
+		// (giugulare, fessure dell'armatura).
+		// FORTUNA (Peso Minore - 30%): Rappresenta il fato favorevole che fa deviare il colpo all'ultimo millisecondo
+		// nel punto giusto.
+		final double COEFFICIENTE_DESTREZZA = 2.0;
+		final double COEFFICIENTE_FORTUNA = 0.8;
+
+		// Calcolo della precisione letale grezza con Diminishing Returns
+		double precisioneGrezza = (COEFFICIENTE_DESTREZZA * Math.sqrt(getDestrezza())) +
+				(COEFFICIENTE_FORTUNA * Math.sqrt(getFortuna()));
+
+		// Applicazione del moltiplicatore di archetipo
+		double criticoFinale = precisioneGrezza * getMoltiplicatoreCritico();
+
+		// Cap per evitare che superi il 100% (o il 95% se vuoi sempre un margine di fallimento)
+		if (criticoFinale > 100.0) {
+			criticoFinale = 100.0;
+		}
+
+		// Arrotondamento a due decimali
+		return (int)criticoFinale;
+	}
+
+	protected abstract double getMoltiplicatorePrecisione();
+
+	private int calcolaPrecisione() {
+		// Per rispecchiare la descrizione ("precisione oculare, stabilità della mano e coordinazione occhio-mano"),
+		// la Precisione deve essere alimentata da due forze distinte:
+		// DESTREZZA (Peso Maggiore - 80%): La coordinazione motoria fine, i riflessi e la fermezza muscolare.
+		// INTELLIGENZA (Peso Minore - 20%): La capacità logica di calcolare la traiettoria del bersaglio, anticiparne
+		// i movimenti e non farsi ingannare dalle illusioni.
+		final double COEFFICIENTE_DESTREZZA = 0.8;
+		final double COEFFICIENTE_INTELLIGENZA = 0.2;
+
+		// Calcolo della precisione grezza con Diminishing Returns
+		double precisioneGrezza = (COEFFICIENTE_DESTREZZA * Math.sqrt(getDestrezza())) +
+				(COEFFICIENTE_INTELLIGENZA * Math.sqrt(getIntelligenza()));
+
+		// Applicazione del moltiplicatore di archetipo
+		double precisioneFinale = precisioneGrezza * getMoltiplicatorePrecisione();
+
+		return (int)precisioneFinale;
+	}
+
+	protected abstract double getMoltiplicatoreVelocita();
+
+	private int calcolaVelocita() {
+		// Per rispecchiare la descrizione ("precisione oculare, stabilità della mano e coordinazione occhio-mano"),
+		// la Precisione deve essere alimentata da due forze distinte:
+		// DESTREZZA (Peso Maggiore - 80%): La coordinazione motoria fine, i riflessi e la fermezza muscolare.
+		// INTELLIGENZA (Peso Minore - 20%): La capacità logica di calcolare la traiettoria del bersaglio, anticiparne
+		// i movimenti e non farsi ingannare dalle illusioni.
+		final double COEFFICIENTE_DESTREZZA = 0.85;
+		final double COEFFICIENTE_FORTUNA = 0.15;
+
+		// Calcolo della precisione grezza con Diminishing Returns
+		double velocitaGrezza = (COEFFICIENTE_DESTREZZA * Math.sqrt(getDestrezza())) +
+				(COEFFICIENTE_FORTUNA * Math.sqrt(getFortuna()));
+
+		// Applicazione del moltiplicatore di archetipo
+		double velocitaFinale = velocitaGrezza * getMoltiplicatoreVelocita();
+
+		return (int)velocitaFinale;
+	}
+
+	protected abstract double getMoltiplicatoreFurtivita();
+
+	private int calcolaFurtivita() {
+		// Per rispecchiare il concetto di "muoversi senza farsi notare e agire nell'ombra", la Furtività deve
+		// attingere a due forze distinte:
+		// DESTREZZA (Peso Maggiore - 75%): La grazia nei movimenti, il controllo totale del corpo e la coordinazione
+		// millimetrica per non fare rumore (es. evitare rami secchi o passi pesanti).
+		// FORTUNA (Peso Minore - 25%): Il tempismo perfetto che fa muovere il personaggio proprio quando la guardia
+		// nemica si gira dall'altra parte o un rumore ambientale (es. un tuono o il vento) copre i suoi passi.
+		final double COEFFICIENTE_DESTREZZA = 0.75;
+		final double COEFFICIENTE_FORTUNA = 0.25;
+
+		// Calcolo della furtivita grezza con Diminishing Returns
+		double furtivitaGrezza = (COEFFICIENTE_DESTREZZA * Math.sqrt(getDestrezza())) +
+				(COEFFICIENTE_FORTUNA * Math.sqrt(getFortuna()));
+
+		// Applicazione del moltiplicatore di archetipo
+		double furtivitaFinale = furtivitaGrezza * getMoltiplicatoreFurtivita();
+
+		return (int)furtivitaFinale;
+	}
+
+	protected abstract double getMoltiplicatoreParata();
+
+	private int calcolaParata() {
+		// Per rispecchiare il concetto di "frapporre l'arma o lo scudo tra sé e il colpo nemico", la Parata
+		// deve attingere a due forze distinte:
+		// FORZA (Peso Maggiore - 70%): La potenza muscolare necessaria a reggere l'impatto di un colpo pesante senza
+		// farsi spezzare la guardia.
+		// DESTREZZA (Peso Minore - 30%): I riflessi e la coordinazione occhio-mano per posizionare lo scudo o la lama
+		// nell'angolo esatto prima dell'impatto.
+		final double COEFFICIENTE_FORZA = 0.70;
+		final double COEFFICIENTE_DESTREZZA = 0.30;
+
+		// Calcolo della precisione letale grezza con Diminishing Returns
+		double parataGrezza = (COEFFICIENTE_FORZA * Math.sqrt(getForza())) +
+				(COEFFICIENTE_DESTREZZA * Math.sqrt(getDestrezza()));
+
+		// Applicazione del moltiplicatore di archetipo
+		double parataFinale = parataGrezza * getMoltiplicatoreParata();
+
+		return (int)parataFinale;
+	}
+
+	protected abstract double getMoltiplicatoreResistenzaMagica();
+
+	private int calcolaResistenzaMagica() {
+		// Per rispecchiare una difesa basata sul controllo dei flussi energetici e sulla fermezza d'animo, la
+		// Resistenza Magica deve attingere a due forze della mente e dello spirito:
+		// SAGGEZZA (Peso Maggiore - 70%): La consapevolezza spirituale e la connessione con il divino che agiscono come
+		// uno scudo naturale contro le corruzioni dell'anima e gli anatemi.
+		// INTELLIGENZA (Peso Minore - 30%): La comprensione logica della struttura degli incantesimi, che permette di
+		// "dissipare" o deviare la trama magica prima dell'impatto.
+		final double COEFFICIENTE_SAGGEZZA = 0.70;
+		final double COEFFICIENTE_INTELLIGENZA = 0.30;
+
+		// Calcolo della resistenza magica grezza con Diminishing Returns
+		double resistenzaMagicaGrezza = (COEFFICIENTE_SAGGEZZA * Math.sqrt(getSaggezza())) +
+				(COEFFICIENTE_INTELLIGENZA * Math.sqrt(getIntelligenza()));
+
+		// Applicazione del moltiplicatore di archetipo
+		double resistenzaMagicaFinale = resistenzaMagicaGrezza * getMoltiplicatoreResistenzaMagica();
+
+		return (int)resistenzaMagicaFinale;
+	}
+
+	protected abstract double getMoltiplicatorePercezione();
+
+	private int calcolaPercezione() {
+		// Per rispecchiare fedelmente il concetto di "sensi acuti, vista sviluppata e udito sopraffino", la Percezione
+		// deve attingere a due forze distinte:
+		// SAGGEZZA (Peso Maggiore - 75%): La consapevolezza spirituale, l'intuito e la connessione con l'ambiente
+		// circostante (il "sesto senso").
+		// DESTREZZA (Peso Minore - 25%): La prontezza di riflessi oculari e la rapidità nel volgere lo sguardo o
+		// l'orecchio verso uno stimolo improvviso.
+		final double COEFFICIENTE_SAGGEZZA = 0.75;
+		final double COEFFICIENTE_DESTREZZA = 0.25;
+
+		// Calcolo della precisione letale grezza con Diminishing Returns
+		double percezioneGrezza = (COEFFICIENTE_SAGGEZZA * Math.sqrt(getSaggezza())) +
+				(COEFFICIENTE_DESTREZZA * Math.sqrt(getDestrezza()));
+
+		// Applicazione del moltiplicatore di archetipo
+		double percezioneFinale = percezioneGrezza * getMoltiplicatorePercezione();
+
+		return (int)percezioneFinale;
+	}
+
+	protected abstract double getMoltiplicatoreSoggezione();
+
+	private int calcolaSoggezione() {
+		// Per rispecchiare il concetto di "forza della personalità combinata all'aura di terrore", la Soggezione
+		// deve attingere a due forze distinte:
+		// CARISMA (Peso Maggiore - 70%): Il magnetismo, la forza della personalità e la capacità di imporre la propria
+		// volontà o presenza sugli altri.
+		// FORZA (Peso Minore - 30%): La stazza e la potenza muscolare visibile che intimidiscono fisicamente chiunque
+		// si trovi davanti.
+		final double COEFFICIENTE_CARISMA = 0.70;
+		final double COEFFICIENTE_FORZA = 0.30;
+
+		// Calcolo della precisione letale grezza con Diminishing Returns
+		double soggezioneGrezza = (COEFFICIENTE_CARISMA * Math.sqrt(getCarisma())) +
+				(COEFFICIENTE_FORZA * Math.sqrt(getForza()));
+
+		// Applicazione del moltiplicatore di archetipo
+		double soggezioneFinale = soggezioneGrezza * getMoltiplicatoreSoggezione();
+
+		return (int)soggezioneFinale;
+	}
+
+	protected abstract double getMoltiplicatoreFuria();
+
+	private int calcolaFuria() {
+		// Per rispecchiare una statistica basata sull'impulso distruttivo e sulla resistenza al dolore, la Furia
+		// deve attingere a due forze puramente fisiche ed emotive:
+		// FORZA (Peso Maggiore - 75%): La potenza muscolare grezza che alimenta la violenza dei colpi durante lo stato
+		// di rabbia.
+		// FORTUNA (Peso Minore - 25%): L'elemento caotico e imprevedibile del fato che premia l'audacia di chi attacca
+		// alla cieca senza difendersi.
+		final double COEFFICIENTE_FORZA = 0.75;
+		final double COEFFICIENTE_FORTUNA = 0.25;
+
+		// Calcolo della precisione letale grezza con Diminishing Returns
+		double furiaGrezza = (COEFFICIENTE_FORZA * Math.sqrt(getForza())) +
+				(COEFFICIENTE_FORTUNA * Math.sqrt(getFortuna()));
+
+		// Applicazione del moltiplicatore di archetipo
+		double furiaFinale = furiaGrezza * getMoltiplicatoreFuria();
+
+		return (int)furiaFinale;
+	}
+
+	protected abstract double getMoltiplicatoreCoraggio();
+
+	private int calcolaCoraggio() {
+		// Per rispecchiare il concetto di "forza della personalità e forza di volontà", il Coraggio deve attingere a
+		// due forze della mente e dell'identità:
+		// CARISMA (Peso Maggiore - 75%): La forza dell'ego e la stabilità della personalità, che impediscono al
+		// personaggio di farsi intimidire o manipolare.
+		// COSTITUZIONE (Peso Minore - 25%): La stabilità biologica (es. controllo del battito cardiaco e
+		// dell'adrenalina), che impedisce al corpo di cedere al panico fisico.
+		final double COEFFICIENTE_CARISMA = 0.75;
+		final double COEFFICIENTE_COSTITUZIONE = 0.25;
+
+		// Calcolo della precisione letale grezza con Diminishing Returns
+		double coraggioGrezzo = (COEFFICIENTE_CARISMA * Math.sqrt(getCarisma())) +
+				(COEFFICIENTE_COSTITUZIONE * Math.sqrt(getCostituzione()));
+
+		// Applicazione del moltiplicatore di archetipo
+		double coraggioFinale = coraggioGrezzo * getMoltiplicatoreCoraggio();
+
+		return (int)coraggioFinale;
+	}
+
+	protected abstract double getMoltiplicatoreValore();
+
+	private int calcolaValore() {
+		// Per rispecchiare il concetto di "spirito di sacrificio ed eroismo guidato dalla stabilità biologica", il
+		// Valore deve attingere a due forze distinte:
+		// SAGGEZZA (Peso Maggiore - 70%): La consapevolezza morale, la connessione spirituale e la rettitudine che
+		// spingono a compiere il gesto eroico o a difendere i deboli.
+		// COSTITUZIONE (Peso Minore - 30%): La riserva di salute e la tempra fisica necessarie a sopportare l'impatto
+		// dei danni mitigati o dei colpi intercettati per gli altri.
+		final double COEFFICIENTE_SAGGEZZA = 0.70;
+		final double COEFFICIENTE_COSTITUZIONE = 0.30;
+
+		// Calcolo del valore grezzo con Diminishing Returns
+		double valoreGrezzo = (COEFFICIENTE_SAGGEZZA * Math.sqrt(getSaggezza())) +
+				(COEFFICIENTE_COSTITUZIONE * Math.sqrt(getCostituzione()));
+
+		// Applicazione del moltiplicatore di archetipo
+		double valoreFinale = valoreGrezzo * getMoltiplicatoreValore();
+
+		return (int)valoreFinale;
+	}
+
+	protected abstract double getMoltiplicatoreNumeroBersagli();
+
+	private int calcolaNumeroBersagli() {
+		// Per rispecchiare sia la capacità fisica di spazzare un'area con la massa corporea sia il controllo mentale
+		// per gestire più minacce contemporaneamente, il Numero di Bersagli deve attingere a queste due forze:
+		// FORZA (Peso Maggiore - 70%): La potenza fisica e la stazza. Più si è forti e grandi, più le armi impugnate
+		// sono lunghe (spadoni, clave monumentali, colpi di coda), coprendo un arco di attacco più ampio.
+		// INTELLIGENZA (Peso Minore - 30%): La concentrazione mentale e il calcolo tattico, necessari sia per i maghi
+		// che concatenano incantesimi su più bersagli, sia per i guerrieri che mantengono il controllo su più
+		// nemici ingaggiati.
+		final double COEFFICIENTE_FORZA = 0.70;
+		final double COEFFICIENTE_INTELLIGENZA = 0.30;
+
+		// Calcolo del valore grezzo con Diminishing Returns
+		double numeroGrezzo = (COEFFICIENTE_FORZA * Math.sqrt(getSaggezza())) +
+				(COEFFICIENTE_INTELLIGENZA * Math.sqrt(getIntelligenza()));
+
+		// Applicazione del moltiplicatore di archetipo
+		double valoreFinale = numeroGrezzo * getMoltiplicatoreNumeroBersagli();
+
+		return (int)Math.max(1, Math.floor(valoreFinale));
+	}
+
+	protected abstract double getMoltiplicatoreStanchezza();
+
+	public double calcolaStanchezza(Comando comando) {
+		// Per calcolare quanta stanchezza accumula un personaggio alla fine di un turno di combattimento, dobbiamo
+		// guardare alla sua capacità di tollerare lo sforzo:
+		// COSTITUZIONE (Peso Maggiore - 80%): La tempra biologica e la riserva di salute. Più è alta, più il corpo
+		// recupera rapidamente e resiste alla fatica.
+		// FORZA (Peso Minore - 20%): La potenza muscolare. Un corpo forte fa meno fatica a compiere movimenti
+		// atletici pesanti.
+		final double COEFFICIENTE_COSTITUZIONE = 0.80;
+		final double COEFFICIENTE_FORZA = 0.20;
+
+		// Calcolo del valore grezzo con Diminishing Returns
+		double numeroGrezzo = (COEFFICIENTE_COSTITUZIONE * Math.sqrt(getCostituzione())) +
+				(COEFFICIENTE_FORZA * Math.sqrt(getForza()));
+
+		//FIXME
+		/*
+		1) Turno di Combattimento Fisico Base: 5.0
+		Rappresenta lo standard. Un fendente di spada, una parata reattiva o uno scatto di posizionamento. È lo sforzo muscolare regolare a cui un guerriero è addestrato.
+		2) Lancio di un Incantesimo Base (Utility / Trucchetto): 3.0
+		Piccole magie che richiedono pochissima concentrazione (es. accendere una luce, un piccolo dardo magico, una cura minore). Stanca meno di un turno di legnate fisiche.
+		3) Lancio di un Incantesimo Complesso (Medio / Avanzato): 8.0 - 10.0
+		Palle di fuoco, evocazioni o barriere mistiche. Canalizzare queste forze richiede di trattenere il fiato, sforzare la mente e subire il contraccolpo arcano.
+		 Stanca circa il doppio rispetto a un attacco fisico.
+		4) Lancio di una Magia Suprema (Ultimate / Cataclisma): 15.0 - 20.0
+		Tempeste di fulmini o incantesimi che alterano il tempo. Questo sforzo svuota quasi completamente le riserve fisiche del lanciatore, rischiando di portarlo in Sfinimento in due o tre turni se non gestito.
+		 */
+		double costoAzione = 1;
+
+		// Applicazione del moltiplicatore di archetipo
+		double valoreFinale = costoAzione / numeroGrezzo * getMoltiplicatoreStanchezza();
+
+		return (int)Math.max(1, Math.floor(valoreFinale));
+	}
+
+	// -- funzioni per calcolo modificatori
+
+	private int get(Function<PersonaggioMD, Integer> getterAttributo, TipoAttributo tipoAttributo) {
+		return getterAttributo.apply(md) + getModificaDaArtefatti(tipoAttributo);
+	}
+
+	private int getModificaDaArtefatti(TipoAttributo tipoAttributo) {
 		return md.getArtefatti().stream().mapToInt(a -> a.getModificatoreAttributo(tipoAttributo)).sum();
 	}
+
+	// EFFETTI DI STATO
 
 	public Collection<EffettoDiStato> getEffettiDiStato() {
 		return md.getEffettiDiStato();
@@ -916,16 +1435,16 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.getEffettiDiStato().add(new EffettoDiStato(tipoEffettoDiStato, valore));
 	}
 
+	public void removeEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
+		md.getEffettiDiStato().removeIf(e -> e.getTipoModificatoreAttributo() == tipoEffettoDiStato);
+	}
+
 	public boolean hasEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
 		return md.getEffettiDiStato().stream().anyMatch(e -> e.getTipoModificatoreAttributo() == tipoEffettoDiStato);
 	}
 
-	public int getValoreEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
+	public int getQuantitaEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
 		return md.getEffettiDiStato().stream().filter(e -> e.getTipoModificatoreAttributo() == tipoEffettoDiStato).mapToInt(EffettoDiStato::getValore).sum();
-	}
-
-	public void removeEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
-		md.getEffettiDiStato().removeIf(e -> e.getTipoModificatoreAttributo() == tipoEffettoDiStato);
 	}
 
 	// Artefatti
@@ -942,6 +1461,10 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	public void removeArtefatto(Artefatto a) {
 		md.getArtefatti().remove(a.getModelloDati());
+	}
+
+	public String stats() {
+		return md.stats();
 	}
 
 }

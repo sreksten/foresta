@@ -17,59 +17,59 @@ public class CalcolatoreCombattimento {
 
         // 0. CONTROLLO EFFETTI DI STATO CHE DETERMINANO AUTOMATICAMENTE LA RIUSCITA
         if (attaccante.hasEffettoDiStato(TipoEffettoDiStato.STORDITO)) {
-            Logger.log("L'attaccante è stordito e non può colpire.");
+            Logger.log("L'attaccante è STORDITO e non può colpire.");
             return false;
         }
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.ATTERRATO) ||
                 difensore.hasEffettoDiStato(TipoEffettoDiStato.CONGELATO) ||
                 difensore.hasEffettoDiStato(TipoEffettoDiStato.STORDITO)) {
-            Logger.log("Il difensore è stordito e viene colpito automaticamente.");
+            Logger.log("Il difensore è ATTERRATO/CONGELATO/STORDITO e viene colpito automaticamente.");
             return true;
         }
 
         // 1. CALCOLO DELLA PRECISIONE TOTALE DELL'ATTACCANTE
-        int precisioneTotale = attaccante.getPrecisione() + attaccante.getDestrezza();
-        Logger.log("Precisione totale dell'attaccante: " + precisioneTotale);
-
-        // 2. CALCOLO DELLA VELOCITÀ TOTALE DEL DIFENSORE
-        int velocitaTotale = difensore.getVelocita() + difensore.getDestrezza();
-        Logger.log("Velocità totale del difensore: " + velocitaTotale);
+        double precisioneTotale = attaccante.getPrecisione() + attaccante.getDestrezza();
+        Logger.log(String.format("Precisione totale dell'attaccante (PRECISIONE %d + DESTREZZA %d): %f", attaccante.getPrecisione(), attaccante.getDestrezza(), precisioneTotale));
 
         // 3. CONTROLLO EFFETTI DI STATO
         if (attaccante.hasEffettoDiStato(TipoEffettoDiStato.CONFUSO)) {
             // La SAGGEZZA aiuta a mantenere la lucidità nonostante la confusione
-            precisioneTotale = precisioneTotale * (8 + Math.min(2, attaccante.getSaggezza() / 20)) / 10;
-            Logger.log("Precisione totale dell'attaccante dopo effetto di stato CONFUSO: " + precisioneTotale);
+            precisioneTotale = precisioneTotale * (8.0d + Math.min(2, attaccante.getSaggezza() / 20.0d)) / 10.0d;
+            Logger.log(String.format("Precisione totale dell'attaccante dopo effetto di stato CONFUSO (mitigato da SAGGEZZA %d): %f", attaccante.getSaggezza(), precisioneTotale));
         }
         if (attaccante.hasEffettoDiStato(TipoEffettoDiStato.ACCECATO)) {
             // La PERCEZIONE aiuta a compensare la cecità trovando il bersaglio
-            double penalitaAccecato = (precisioneTotale / 2.0) * (1.0 - Math.min(1.0, attaccante.getPercezione() / 100.0));
-            precisioneTotale -= (int)penalitaAccecato;
-            Logger.log("Precisione totale dell'attaccante dopo effetto di stato ACCECATO: " + precisioneTotale);
+            double penalitaAccecato = (precisioneTotale / 2.0d) * (1.0d - Math.min(1.0d, attaccante.getPercezione() / 100.0d));
+            precisioneTotale -= penalitaAccecato;
+            Logger.log(String.format("Precisione totale dell'attaccante dopo effetto di stato ACCECATO (mitigato da PERCEZIONE %d): %f", attaccante.getPercezione(), precisioneTotale));
         }
 
         // Penalità di STANCHEZZA sull'attaccante
-        precisioneTotale -= attaccante.getStanchezza() * 2;
-        Logger.log("Precisione totale dell'attaccante dopo effetto di stato STANCHEZZA: " + precisioneTotale);
+        precisioneTotale -= attaccante.getStanchezza() * 2.0d;
+        Logger.log(String.format("Precisione totale dell'attaccante dopo effetto di stato stanchezza (STANCHEZZA %d): %f", attaccante.getStanchezza(), precisioneTotale));
+
+        // 2. CALCOLO DELLA VELOCITÀ TOTALE DEL DIFENSORE
+        double velocitaTotale = difensore.getVelocita() + difensore.getDestrezza();
+        Logger.log(String.format("Velocità totale del difensore (VELOCITA %d + DESTREZZA %d): %f", difensore.getVelocita(), difensore.getDestrezza(), velocitaTotale));
 
         // 4. APPLICAZIONE DEI MODIFICATORI DI STATO AL DIFENSORE
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.RALLENTATO)) {
             // Chi è rallentato fatica a schivare
-            velocitaTotale = velocitaTotale / 2;
+            velocitaTotale = velocitaTotale / 2.0d;
             Logger.log("Velocità totale del difensore dopo effetto di stato RALLENTATO: " + velocitaTotale);
         }
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO)) {
             // La paura blocca le gambe e riduce i riflessi; la SAGGEZZA e il CORAGGIO aiutano a resistervi
-            velocitaTotale = (int)(velocitaTotale * (9 + Math.min(1, difensore.getSaggezza() / 20) + Math.min(1, difensore.getCoraggio() / 100.0)) / 10);
-            Logger.log("Velocità totale del difensore dopo effetto di stato SPAVENTATO: " + velocitaTotale);
+            velocitaTotale = (int)(velocitaTotale * (9.0d + Math.min(1, difensore.getSaggezza() / 20.0d) + Math.min(1.0d, difensore.getCoraggio() / 100.0d)) / 10.0d);
+            Logger.log(String.format("Velocità totale del difensore dopo effetto di stato SPAVENTATO (mitigato da SAGGEZZA %d e CORAGGIO %d): %f", difensore.getSaggezza(), difensore.getCoraggio(), velocitaTotale));
         }
 
         // Penalità di STANCHEZZA sul difensore
-        velocitaTotale -= difensore.getStanchezza() * 2;
-        Logger.log("Velocità totale del difensore dopo effetto di stato STANCHEZZA: " + velocitaTotale);
+        velocitaTotale -= difensore.getStanchezza() * 2.0d;
+        Logger.log(String.format("Velocità totale del difensore dopo effetto di stato stanchezza (STANCHEZZA %d): %f", difensore.getStanchezza(), velocitaTotale));
 
         // 5. CALCOLO DELLA PROBABILITÀ FINALE DI COLPIRE (Formula GDR base: 75% +/- scarto)
-        int probabilitaFinale = 75 + (precisioneTotale - velocitaTotale) * 2;
+        int probabilitaFinale = 75 + (int)((precisioneTotale - velocitaTotale) * 2.0d);
         Logger.log("Probabilità finale di colpire: " + probabilitaFinale);
 
         // Applica i limiti minimi e massimi (Cap) per mantenere il bilanciamento
@@ -82,8 +82,7 @@ public class CalcolatoreCombattimento {
 
         // 6. TIRO DEL DADO (Generazione numero casuale da 1 a 100)
         int tiroDado = Dado.tira(100);
-        Logger.log("Tiro del dado: " + tiroDado);
-        Logger.log("Risultato sul COLPIRE: " + (tiroDado <= probabilitaFinale));
+        Logger.log("Risultato sul COLPIRE (tiro del dado = " + tiroDado + "): " + (tiroDado <= probabilitaFinale));
 
         return tiroDado <= probabilitaFinale;
 
@@ -98,40 +97,44 @@ public class CalcolatoreCombattimento {
         // Determina se l'attacco scala su FORZA (Fisico) o INTELLIGENZA (Magico/Elementale)
         int statOffensiva;
         boolean dannoNonFisico = tipoDanno.getSuperTipo() == SupertipoDanno.ELEMENTALE || tipoDanno.getSuperTipo() == SupertipoDanno.MAGICO;
+        Logger.log("tipoDanno = " + tipoDanno + ", dannoNonFisico = " + dannoNonFisico);
         if (dannoNonFisico) {
             statOffensiva = attaccante.getIntelligenza();
+            Logger.log("statOffensiva (INTELLIGENZA) = " + statOffensiva);
             // La SAGGEZZA potenzia i danni SACRO
             if (tipoDanno == TipoDanno.SACRO) {
                 statOffensiva += attaccante.getSaggezza() / 2;
+                Logger.log(String.format("statOffensiva modificata da SACRO (%d) = %d", attaccante.getSaggezza(), statOffensiva));
             }
         } else {
             statOffensiva = attaccante.getForza();
+            Logger.log("statOffensiva (FORZA) = " + statOffensiva);
         }
-        Logger.log("statOffensiva = " + statOffensiva);
 
         // Determina la difesa del bersaglio (COSTITUZIONE + PARATA per Fisico, RESISTENZA_MAGICA per Magico/Elementale)
         double statDifensiva;
         if (dannoNonFisico) {
             statDifensiva = difensore.getResistenzaMagica();
+            Logger.log("statDifensiva (RESISTENZA_MAGICA) = " + statDifensiva);
         } else {
             statDifensiva = difensore.getCostituzione() + difensore.getParata();
+            Logger.log(String.format("statDifensiva (COSTITUZIONE %d + PARATA %d) = %f", difensore.getCostituzione(), difensore.getParata(), statDifensiva));
         }
-        Logger.log("statDifensiva = " + statDifensiva);
 
         // 2. MATEMATICA DI BASE DEL DANNO (Con fattore di scala livello arma)
         int dannoBaseArma = arma.getDanni() * arma.getLivello();
 
-        Logger.log("dannoBaseArma = " + dannoBaseArma);
+        Logger.log(String.format("dannoBaseArma = danniBase %d + livello arma %d = %d", arma.getDanni(), arma.getLivello(), dannoBaseArma));
 
         // Rapporto di Efficacia dell'Arma per evitare exploit di armi liv. 1 su campioni liv. 20
         double rapportoEfficacia = (double) arma.getLivello() / (double) attaccante.getLivello();
         if (rapportoEfficacia > 1.0d) {
             rapportoEfficacia = 1.0d;
         }
-        Logger.log("rapportoEfficacia = " + rapportoEfficacia);
+        Logger.log(String.format("rapportoEfficacia (livello arma %d / livello attaccante %d) = %f", arma.getLivello(), attaccante.getLivello(), rapportoEfficacia));
 
         double contributoEroe = (double)(statOffensiva * attaccante.getLivello()) / 5.0d;
-        Logger.log("contributoEroe = " + contributoEroe);
+        Logger.log(String.format("contributoEroe (statOffensiva %d * livello attaccante %d / 5 = %f", statOffensiva, attaccante.getLivello(), contributoEroe));
         double dannoOffensivoGrezzo = dannoBaseArma + Math.floor(contributoEroe * rapportoEfficacia);
         Logger.log("dannoOffensivoGrezzo = " + dannoOffensivoGrezzo);
 
@@ -229,7 +232,7 @@ public class CalcolatoreCombattimento {
 
         // 4. MITIGAZIONE DELLA DIFESA DEL DIFENSORE (Formula Diminishing Returns)
         double fattoreMitigazione = 100.0d / (100.0d + statDifensiva);
-        Logger.log("fattoreMitigazione: " + fattoreMitigazione);
+        Logger.log("fattoreMitigazione: " + fattoreMitigazione + ", moltiplicatoreDannoStato = " + moltiplicatoreDannoStato);
         double dannoMitigato = Math.floor(dannoOffensivoGrezzo * fattoreMitigazione * moltiplicatoreDannoStato);
         Logger.log("dannoMitigato: " + dannoMitigato);
 
@@ -241,14 +244,14 @@ public class CalcolatoreCombattimento {
         int contromisuraCritico = difensore.getFortuna();
 
         double probabilitaCritico = Math.max(0.0d, 5.0d + intuitoCritico - contromisuraCritico);
-        Logger.log("probabilitaCritico: " + probabilitaCritico);
+        Logger.log(String.format("probabilitaCritico: %f = MAX(0, 5 + CRITICO attaccante %d - FORTUNA difensore %d)", probabilitaCritico, intuitoCritico, contromisuraCritico));
 
         double tiroDadoCritico = Dado.tira(100);
         Logger.log("tiroDadoCritico: " + tiroDadoCritico);
         if (tiroDadoCritico <= probabilitaCritico || criticoAutomatico) {
             // Il colpo critico raddoppia il danno finale calcolato
             dannoMitigato = dannoMitigato * 2.0d;
-            Logger.log("dannoMitigato raddoppiato: " + dannoMitigato);
+            Logger.log("dannoMitigato raddoppiato per CRITICO: " + dannoMitigato);
         }
 
         // 6. APPLICAZIONE DEI NUOVI STATI NATIVI DEL TIPO DI DANNO (Proc Rate)

@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Guerriero extends PersonaggioBase implements Personaggio {
 
@@ -29,30 +30,164 @@ public class Guerriero extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Guerriero.gif");
 		setIcona("icone/Guerriero.gif");
-		setSaluteMassima(Costanti.GUERRIERO_MAX_SALUTE);
-		setMagiaMassima(Costanti.GUERRIERO_MAX_MAGIA);
-		setValore(Costanti.GUERRIERO_MAX_VALORE);
-		setCoraggio(Costanti.GUERRIERO_MAX_CORAGGIO);
-		setCarisma(Costanti.GUERRIERO_MAX_CARISMA);
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_FORZA_MIN, Costanti.GUERRIERO_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_DESTREZZA_MIN, Costanti.GUERRIERO_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_COSTITUZIONE_MIN, Costanti.GUERRIERO_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_INTELLIGENZA_MIN, Costanti.GUERRIERO_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_SAGGEZZA_MIN, Costanti.GUERRIERO_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_FORTUNA_MIN, Costanti.GUERRIERO_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_CRITICO_MIN, Costanti.GUERRIERO_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_PRECISIONE_MIN, Costanti.GUERRIERO_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_VELOCITA_MIN, Costanti.GUERRIERO_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_PARATA_MIN, Costanti.GUERRIERO_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_RESISTENZA_MAGICA_MIN, Costanti.GUERRIERO_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_MAGIA_MIN, Costanti.GUERRIERO_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.GUERRIERO_FURIA_MIN, Costanti.GUERRIERO_FURIA_MAX));
+		md.setSaluteMassima(Costanti.GUERRIERO_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.GUERRIERO_MAX_MAGIA);
+		md.setForzaMassima(Costanti.GUERRIERO_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.GUERRIERO_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.GUERRIERO_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.GUERRIERO_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.GUERRIERO_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.GUERRIERO_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.GUERRIERO_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.GUERRIERO_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
+	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.GUERRIERO_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 }

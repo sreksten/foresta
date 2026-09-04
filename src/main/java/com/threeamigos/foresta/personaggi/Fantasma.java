@@ -2,8 +2,9 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Fantasma extends PersonaggioBase implements Personaggio {
 
@@ -25,29 +26,162 @@ public class Fantasma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Fantasma.gif");
-		setSaluteMassima(Costanti.FANTASMA_MAX_SALUTE);
-		setMagiaMassima(Costanti.FANTASMA_MAX_MAGIA);
-		setValore(Costanti.FANTASMA_MAX_VALORE);
-		setCoraggio(Costanti.FANTASMA_MAX_CORAGGIO);
-		setCarisma(Costanti.FANTASMA_MAX_CARISMA);
+
+		md.setSaluteMassima(Costanti.FANTASMA_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.FANTASMA_MAX_MAGIA);
+		md.setForzaMassima(Costanti.FANTASMA_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.FANTASMA_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.FANTASMA_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.FANTASMA_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.FANTASMA_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.FANTASMA_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.FANTASMA_MAX_FORTUNA);
+
 		setQuantitaMassima(Costanti.FANTASMA_MAX_NUMERO);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.FANTASMA_FORZA_MIN, Costanti.FANTASMA_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.FANTASMA_DESTREZZA_MIN, Costanti.FANTASMA_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.FANTASMA_COSTITUZIONE_MIN, Costanti.FANTASMA_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.FANTASMA_INTELLIGENZA_MIN, Costanti.FANTASMA_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.FANTASMA_SAGGEZZA_MIN, Costanti.FANTASMA_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.FANTASMA_FORTUNA_MIN, Costanti.FANTASMA_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.FANTASMA_CRITICO_MIN, Costanti.FANTASMA_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.FANTASMA_PRECISIONE_MIN, Costanti.FANTASMA_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.FANTASMA_VELOCITA_MIN, Costanti.FANTASMA_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.FANTASMA_PARATA_MIN, Costanti.FANTASMA_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.FANTASMA_RESISTENZA_MAGICA_MIN, Costanti.FANTASMA_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.FANTASMA_MAGIA_MIN, Costanti.FANTASMA_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.FANTASMA_FURIA_MIN, Costanti.FANTASMA_FURIA_MAX));
+		super.impostaValoriDiPartenza(funzione);
+	}
 
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.FANTASMA_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 
 	@Override

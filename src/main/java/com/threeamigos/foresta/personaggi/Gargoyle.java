@@ -2,8 +2,9 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Gargoyle extends PersonaggioBase implements Personaggio {
 
@@ -27,29 +28,162 @@ public class Gargoyle extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Gargoyle.gif");
-		setSaluteMassima(Costanti.GARGOYLE_MAX_SALUTE);
-		setMagiaMassima(Costanti.GARGOYLE_MAX_MAGIA);
-		setValore(Costanti.GARGOYLE_MAX_VALORE);
-		setCoraggio(Costanti.GARGOYLE_MAX_CORAGGIO);
-		setCarisma(Costanti.GARGOYLE_MAX_CARISMA);
+
+		md.setSaluteMassima(Costanti.GARGOYLE_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.GARGOYLE_MAX_MAGIA);
+		md.setForzaMassima(Costanti.GARGOYLE_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.GARGOYLE_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.GARGOYLE_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.GARGOYLE_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.GARGOYLE_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.GARGOYLE_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.GARGOYLE_MAX_FORTUNA);
+
 		setQuantitaMassima(Costanti.GARGOYLE_MAX_NUMERO);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_FORZA_MIN, Costanti.GARGOYLE_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_DESTREZZA_MIN, Costanti.GARGOYLE_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_COSTITUZIONE_MIN, Costanti.GARGOYLE_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_INTELLIGENZA_MIN, Costanti.GARGOYLE_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_SAGGEZZA_MIN, Costanti.GARGOYLE_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_FORTUNA_MIN, Costanti.GARGOYLE_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_CRITICO_MIN, Costanti.GARGOYLE_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_PRECISIONE_MIN, Costanti.GARGOYLE_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_VELOCITA_MIN, Costanti.GARGOYLE_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_PARATA_MIN, Costanti.GARGOYLE_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_RESISTENZA_MAGICA_MIN, Costanti.GARGOYLE_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_MAGIA_MIN, Costanti.GARGOYLE_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.GARGOYLE_FURIA_MIN, Costanti.GARGOYLE_FURIA_MAX));
+		super.impostaValoriDiPartenza(funzione);
+	}
 
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.GARGOYLE_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 
 	@Override

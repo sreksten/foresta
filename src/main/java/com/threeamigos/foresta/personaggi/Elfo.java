@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Elfo extends PersonaggioBase implements Personaggio {
 
@@ -31,30 +32,164 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Elfo.gif");
 		setIcona("icone/Elfo.gif");
-		setSaluteMassima(Costanti.ELFO_MAX_SALUTE);
-		setMagiaMassima(Costanti.ELFO_MAX_MAGIA);
-		setValore(Costanti.ELFO_MAX_VALORE);
-		setCoraggio(Costanti.ELFO_MAX_CORAGGIO);
-		setCarisma(Costanti.ELFO_MAX_CARISMA);
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.ELFO_FORZA_MIN, Costanti.ELFO_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.ELFO_DESTREZZA_MIN, Costanti.ELFO_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.ELFO_COSTITUZIONE_MIN, Costanti.ELFO_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.ELFO_INTELLIGENZA_MIN, Costanti.ELFO_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.ELFO_SAGGEZZA_MIN, Costanti.ELFO_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.ELFO_FORTUNA_MIN, Costanti.ELFO_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.ELFO_CRITICO_MIN, Costanti.ELFO_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.ELFO_PRECISIONE_MIN, Costanti.ELFO_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.ELFO_VELOCITA_MIN, Costanti.ELFO_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.ELFO_PARATA_MIN, Costanti.ELFO_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.ELFO_RESISTENZA_MAGICA_MIN, Costanti.ELFO_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.ELFO_MAGIA_MIN, Costanti.ELFO_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.ELFO_FURIA_MIN, Costanti.ELFO_FURIA_MAX));
+		md.setSaluteMassima(Costanti.ELFO_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.ELFO_MAX_MAGIA);
+		md.setForzaMassima(Costanti.ELFO_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.ELFO_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.ELFO_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.ELFO_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.ELFO_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.ELFO_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.ELFO_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.ELFO_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
+	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.ELFO_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.ELFO_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.ELFO_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.ELFO_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.ELFO_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.ELFO_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.ELFO_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.ELFO_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.ELFO_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.ELFO_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.ELFO_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.ELFO_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.ELFO_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.ELFO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.ELFO_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.ELFO_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.ELFO_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.ELFO_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.ELFO_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.ELFO_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.ELFO_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.ELFO_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.ELFO_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.ELFO_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.ELFO_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.ELFO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.ELFO_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.ELFO_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 }

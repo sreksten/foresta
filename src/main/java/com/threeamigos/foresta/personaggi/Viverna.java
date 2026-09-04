@@ -2,8 +2,9 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Viverna extends PersonaggioBase implements Personaggio {
 
@@ -26,29 +27,162 @@ public class Viverna extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Viverna.gif");
-		setSaluteMassima(Costanti.VIVERNA_MAX_SALUTE);
-		setMagiaMassima(Costanti.VIVERNA_MAX_MAGIA);
-		setValore(Costanti.VIVERNA_MAX_VALORE);
-		setCoraggio(Costanti.VIVERNA_MAX_CORAGGIO);
-		setCarisma(Costanti.VIVERNA_MAX_CARISMA);
+
+		md.setSaluteMassima(Costanti.VIVERNA_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.VIVERNA_MAX_MAGIA);
+		md.setForzaMassima(Costanti.VIVERNA_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.VIVERNA_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.VIVERNA_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.VIVERNA_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.VIVERNA_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.VIVERNA_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.VIVERNA_MAX_FORTUNA);
+
 		setQuantitaMassima(Costanti.VIVERNA_MAX_NUMERO);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_FORZA_MIN, Costanti.VIVERNA_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_DESTREZZA_MIN, Costanti.VIVERNA_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_COSTITUZIONE_MIN, Costanti.VIVERNA_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_INTELLIGENZA_MIN, Costanti.VIVERNA_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_SAGGEZZA_MIN, Costanti.VIVERNA_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_FORTUNA_MIN, Costanti.VIVERNA_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_CRITICO_MIN, Costanti.VIVERNA_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_PRECISIONE_MIN, Costanti.VIVERNA_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_VELOCITA_MIN, Costanti.VIVERNA_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_PARATA_MIN, Costanti.VIVERNA_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_RESISTENZA_MAGICA_MIN, Costanti.VIVERNA_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_MAGIA_MIN, Costanti.VIVERNA_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.VIVERNA_FURIA_MIN, Costanti.VIVERNA_FURIA_MAX));
+		super.impostaValoriDiPartenza(funzione);
+	}
 
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.VIVERNA_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 
 	@Override

@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Maga extends PersonaggioBase implements Personaggio {
 
@@ -32,30 +33,164 @@ public class Maga extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Maga.gif");
 		setIcona("icone/Maga.gif");
-		setSaluteMassima(Costanti.MAGA_MAX_SALUTE);
-		setMagiaMassima(Costanti.MAGA_MAX_MAGIA);
-		setValore(Costanti.MAGA_MAX_VALORE);
-		setCoraggio(Costanti.MAGA_MAX_CORAGGIO);
-		setCarisma(Costanti.MAGA_MAX_CARISMA);
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.MAGA_FORZA_MIN, Costanti.MAGA_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.MAGA_DESTREZZA_MIN, Costanti.MAGA_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.MAGA_COSTITUZIONE_MIN, Costanti.MAGA_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.MAGA_INTELLIGENZA_MIN, Costanti.MAGA_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.MAGA_SAGGEZZA_MIN, Costanti.MAGA_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.MAGA_FORTUNA_MIN, Costanti.MAGA_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.MAGA_CRITICO_MIN, Costanti.MAGA_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.MAGA_PRECISIONE_MIN, Costanti.MAGA_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.MAGA_VELOCITA_MIN, Costanti.MAGA_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.MAGA_PARATA_MIN, Costanti.MAGA_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.MAGA_RESISTENZA_MAGICA_MIN, Costanti.MAGA_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.MAGA_MAGIA_MIN, Costanti.MAGA_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.MAGA_FURIA_MIN, Costanti.MAGA_FURIA_MAX));
+		md.setSaluteMassima(Costanti.MAGA_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.MAGA_MAX_MAGIA);
+		md.setForzaMassima(Costanti.MAGA_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.MAGA_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.MAGA_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.MAGA_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.MAGA_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.MAGA_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.MAGA_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.MAGA_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
+	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.MAGA_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.MAGA_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.MAGA_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.MAGA_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.MAGA_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.MAGA_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.MAGA_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.MAGA_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.MAGA_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.MAGA_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.MAGA_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.MAGA_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.MAGA_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.MAGA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.MAGA_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.MAGA_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.MAGA_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.MAGA_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.MAGA_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.MAGA_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.MAGA_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.MAGA_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.MAGA_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.MAGA_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.MAGA_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.MAGA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.MAGA_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.MAGA_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 }

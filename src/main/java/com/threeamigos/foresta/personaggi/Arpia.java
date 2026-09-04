@@ -2,8 +2,9 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Arpia extends PersonaggioBase implements Personaggio {
 
@@ -25,29 +26,162 @@ public class Arpia extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Arpia.gif");
-		setSaluteMassima(Costanti.ARPIA_MAX_SALUTE);
-		setMagiaMassima(Costanti.ARPIA_MAX_MAGIA);
-		setValore(Costanti.ARPIA_MAX_VALORE);
-		setCoraggio(Costanti.ARPIA_MAX_CORAGGIO);
-		setCarisma(Costanti.ARPIA_MAX_CARISMA);
+
+		md.setSaluteMassima(Costanti.ARPIA_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.ARPIA_MAX_MAGIA);
+		md.setForzaMassima(Costanti.ARPIA_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.ARPIA_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.ARPIA_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.ARPIA_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.ARPIA_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.ARPIA_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.ARPIA_MAX_FORTUNA);
+
 		setQuantitaMassima(Costanti.ARPIA_MAX_NUMERO);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.ARPIA_FORZA_MIN, Costanti.ARPIA_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.ARPIA_DESTREZZA_MIN, Costanti.ARPIA_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.ARPIA_COSTITUZIONE_MIN, Costanti.ARPIA_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.ARPIA_INTELLIGENZA_MIN, Costanti.ARPIA_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.ARPIA_SAGGEZZA_MIN, Costanti.ARPIA_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.ARPIA_FORTUNA_MIN, Costanti.ARPIA_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.ARPIA_CRITICO_MIN, Costanti.ARPIA_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.ARPIA_PRECISIONE_MIN, Costanti.ARPIA_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.ARPIA_VELOCITA_MIN, Costanti.ARPIA_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.ARPIA_PARATA_MIN, Costanti.ARPIA_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.ARPIA_RESISTENZA_MAGICA_MIN, Costanti.ARPIA_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.ARPIA_MAGIA_MIN, Costanti.ARPIA_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.ARPIA_FURIA_MIN, Costanti.ARPIA_FURIA_MAX));
+		super.impostaValoriDiPartenza(funzione);
+	}
 
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.ARPIA_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.ARPIA_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.ARPIA_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.ARPIA_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.ARPIA_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.ARPIA_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.ARPIA_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.ARPIA_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.ARPIA_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.ARPIA_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.ARPIA_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.ARPIA_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.ARPIA_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.ARPIA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.ARPIA_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.ARPIA_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.ARPIA_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.ARPIA_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.ARPIA_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.ARPIA_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.ARPIA_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.ARPIA_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.ARPIA_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.ARPIA_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.ARPIA_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.ARPIA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.ARPIA_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.ARPIA_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 
 	@Override

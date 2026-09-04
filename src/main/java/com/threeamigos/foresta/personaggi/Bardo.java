@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Bardo extends PersonaggioBase implements Personaggio {
 
@@ -28,30 +29,162 @@ public class Bardo extends PersonaggioBase implements Personaggio {
 	}
 	
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Bardo.gif");
 		setIcona("icone/Bardo.gif");
-		setSaluteMassima(Costanti.BARDO_MAX_SALUTE);
-		setMagiaMassima(Costanti.BARDO_MAX_MAGIA);
-		setValore(Costanti.BARDO_MAX_VALORE);
-		setCoraggio(Costanti.BARDO_MAX_CORAGGIO);
-		setCarisma(Costanti.BARDO_MAX_CARISMA);
-		setCorrompibile(true);
-		setAmichevole(true);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.BARDO_FORZA_MIN, Costanti.BARDO_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.BARDO_DESTREZZA_MIN, Costanti.BARDO_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.BARDO_COSTITUZIONE_MIN, Costanti.BARDO_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.BARDO_INTELLIGENZA_MIN, Costanti.BARDO_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.BARDO_SAGGEZZA_MIN, Costanti.BARDO_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.BARDO_FORTUNA_MIN, Costanti.BARDO_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.BARDO_CRITICO_MIN, Costanti.BARDO_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.BARDO_PRECISIONE_MIN, Costanti.BARDO_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.BARDO_VELOCITA_MIN, Costanti.BARDO_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.BARDO_PARATA_MIN, Costanti.BARDO_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.BARDO_RESISTENZA_MAGICA_MIN, Costanti.BARDO_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.BARDO_MAGIA_MIN, Costanti.BARDO_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.BARDO_FURIA_MIN, Costanti.BARDO_FURIA_MAX));
+		md.setSaluteMassima(Costanti.BARDO_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.BARDO_MAX_MAGIA);
+		md.setForzaMassima(Costanti.BARDO_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.BARDO_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.BARDO_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.BARDO_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.BARDO_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.BARDO_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.BARDO_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.BARDO_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
+	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.BARDO_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.BARDO_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.BARDO_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.BARDO_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.BARDO_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.BARDO_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.BARDO_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.BARDO_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.BARDO_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.BARDO_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.BARDO_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.BARDO_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.BARDO_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.BARDO_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.BARDO_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.BARDO_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.BARDO_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.BARDO_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.BARDO_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.BARDO_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.BARDO_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.BARDO_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.BARDO_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.BARDO_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.BARDO_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.BARDO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.BARDO_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.BARDO_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 }

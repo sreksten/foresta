@@ -1,9 +1,10 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Hobgoblin extends PersonaggioBase implements Personaggio {
 
@@ -26,31 +27,164 @@ public class Hobgoblin extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Hobgoblin.gif");
 		setIcona("icone/Hobgoblin.gif");
-		setSaluteMassima(Costanti.HOBGOBLIN_MAX_SALUTE);
-		setMagiaMassima(Costanti.HOBGOBLIN_MAX_MAGIA);
-		setValore(Costanti.HOBGOBLIN_MAX_VALORE);
-		setCoraggio(Costanti.HOBGOBLIN_MAX_CORAGGIO);
-		setCarisma(Costanti.HOBGOBLIN_MAX_CARISMA);
-		setQuantitaMassima(Costanti.HOBGOBLIN_MAX_NUMERO);
 		setCorrompibile(true);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.HOBGOBLIN_FORZA_MIN, Costanti.HOBGOBLIN_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.HOBGOBLIN_DESTREZZA_MIN, Costanti.HOBGOBLIN_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.HOBGOBLIN_COSTITUZIONE_MIN, Costanti.HOBGOBLIN_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.HOBGOBLIN_INTELLIGENZA_MIN, Costanti.HOBGOBLIN_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.HOBGOBLIN_SAGGEZZA_MIN, Costanti.HOBGOBLIN_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.HOBGOBLIN_FORTUNA_MIN, Costanti.HOBGOBLIN_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.HOBGOBLIN_CRITICO_MIN, Costanti.HOBGOBLIN_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.HOBGOBLIN_PRECISIONE_MIN, Costanti.HOBGOBLIN_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.HOBGOBLIN_VELOCITA_MIN, Costanti.HOBGOBLIN_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.HOBGOBLIN_PARATA_MIN, Costanti.HOBGOBLIN_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.HOBGOBLIN_RESISTENZA_MAGICA_MIN, Costanti.HOBGOBLIN_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.HOBGOBLIN_MAGIA_MIN, Costanti.HOBGOBLIN_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.HOBGOBLIN_FURIA_MIN, Costanti.HOBGOBLIN_FURIA_MAX));
+		md.setSaluteMassima(Costanti.HOBGOBLIN_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.HOBGOBLIN_MAX_MAGIA);
+		md.setForzaMassima(Costanti.HOBGOBLIN_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.HOBGOBLIN_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.HOBGOBLIN_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.HOBGOBLIN_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.HOBGOBLIN_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.HOBGOBLIN_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.HOBGOBLIN_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.HOBGOBLIN_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
+	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.HOBGOBLIN_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 
 	@Override

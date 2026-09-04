@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Ladra extends PersonaggioBase implements Personaggio {
 
@@ -28,30 +29,164 @@ public class Ladra extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Ladra.gif");
 		setIcona("icone/Ladra.gif");
-		setSaluteMassima(Costanti.LADRA_MAX_SALUTE);
-		setMagiaMassima(Costanti.LADRA_MAX_MAGIA);
-		setValore(Costanti.LADRA_MAX_VALORE);
-		setCoraggio(Costanti.LADRA_MAX_CORAGGIO);
-		setCarisma(Costanti.LADRA_MAX_CARISMA);
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.LADRA_FORZA_MIN, Costanti.LADRA_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.LADRA_DESTREZZA_MIN, Costanti.LADRA_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.LADRA_COSTITUZIONE_MIN, Costanti.LADRA_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.LADRA_INTELLIGENZA_MIN, Costanti.LADRA_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.LADRA_SAGGEZZA_MIN, Costanti.LADRA_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.LADRA_FORTUNA_MIN, Costanti.LADRA_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.LADRA_CRITICO_MIN, Costanti.LADRA_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.LADRA_PRECISIONE_MIN, Costanti.LADRA_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.LADRA_VELOCITA_MIN, Costanti.LADRA_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.LADRA_PARATA_MIN, Costanti.LADRA_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.LADRA_RESISTENZA_MAGICA_MIN, Costanti.LADRA_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.LADRA_MAGIA_MIN, Costanti.LADRA_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.LADRA_FURIA_MIN, Costanti.LADRA_FURIA_MAX));
+		md.setSaluteMassima(Costanti.LADRA_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.LADRA_MAX_MAGIA);
+		md.setForzaMassima(Costanti.LADRA_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.LADRA_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.LADRA_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.LADRA_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.LADRA_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.LADRA_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.LADRA_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.LADRA_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
+	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.LADRA_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.LADRA_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.LADRA_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.LADRA_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.LADRA_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.LADRA_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.LADRA_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.LADRA_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.LADRA_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.LADRA_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.LADRA_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.LADRA_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.LADRA_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.LADRA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.LADRA_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.LADRA_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.LADRA_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.LADRA_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.LADRA_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.LADRA_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.LADRA_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.LADRA_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.LADRA_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.LADRA_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.LADRA_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.LADRA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.LADRA_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.LADRA_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 }

@@ -2,6 +2,7 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.Comando;
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.OggettoConArticoli;
 import com.threeamigos.foresta.motore.modellodati.EffettoDiStato;
@@ -455,7 +456,7 @@ public interface Personaggio extends OggettoConArticoli {
 	 * Il valore di un personaggio, somma del valore base e dei modificatori di valore degli artefatti.
 	 * Da 0 a 99
 	 */
-    int getValoreEffettoDiStato();
+    int getQuantitaEffettoDiStato();
 
 	/**
 	 * La stanchezza di un personaggio, somma della stanchezza base e dei modificatori di stanchezza degli artefatti.
@@ -483,7 +484,7 @@ public interface Personaggio extends OggettoConArticoli {
 	/**
 	 * Restituisce il valore di un effetto di stato
 	 */
-    int getValoreEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato);
+    int getQuantitaEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato);
 
 	/**
 	 * Rimuove un effetto di stato dal personaggio
@@ -509,6 +510,36 @@ public interface Personaggio extends OggettoConArticoli {
 	 */
     void removeArtefatto(Artefatto artefatto);
 
+	String getNoteMoltiplicatoreCarico();
+
+	String getNoteMoltiplicatoreCritico();
+
+	String getNoteMoltiplicatorePrecisione();
+
+	String getNoteMoltiplicatoreVelocita();
+
+	String getNoteMoltiplicatoreFurtivita();
+
+	String getNoteMoltiplicatoreParata();
+
+	String getNoteMoltiplicatoreResistenzaMagica();
+
+	String getNoteMoltiplicatorePercezione();
+
+	String getNoteMoltiplicatoreSoggezione();
+
+	String getNoteMoltiplicatoreFuria();
+
+	String getNoteMoltiplicatoreCoraggio();
+
+	String getNoteMoltiplicatoreValore();
+
+	String getNoteMoltiplicatoreNumeroBersagli();
+
+	String getNoteMoltiplicatoreStanchezza();
+
 	// Vari metodi
 
+	// Per debug bilanciamento combattimenti
+	String stats();
 }

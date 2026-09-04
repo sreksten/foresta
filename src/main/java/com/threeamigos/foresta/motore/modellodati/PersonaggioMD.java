@@ -13,23 +13,26 @@ import java.util.StringTokenizer;
 public class PersonaggioMD implements Serializzabile {
 
 	/**
-	 * Costante che indica che un PNG è entrato definitivamente nel gruppo di un giocatore
+	 * Costante che indica che un dato attributo non ha limite.
+	 * Per il tempo, indica che il personaggio è entrato definitivamente nel gruppo
+	 * di un giocatore.
 	 */
-	public static final int NO_TEMPO = -1;
+	public static final int SENZA_LIMITE = -1;
 
 	private ClassePersonaggio classe;
 	private String nome;
+
+	// Impostati da PersonaggioBase uguali per tutti i personaggi
 	private boolean vivo;
 	private int livello;
 	private int esperienza;
+	private int carico;
 
+	private int caricoMassimo;
 	private int salute;
 	private int saluteMassima;
 	private int magia;
 	private int magiaMassima;
-	private int carico;
-	private int caricoMassimo;
-
 	private int forza;
 	private int forzaMassima;
 	private int destrezza;
@@ -62,13 +65,15 @@ public class PersonaggioMD implements Serializzabile {
 	private int soggezioneMassima;
 	private int furia;
 	private int furiaMassima;
-
 	private int coraggio;
+	private int coraggioMassimo;
 	private int valore;
+	private int valoreMassimo;
 	private int stanchezza;
+	private int stanchezzaMassima;
 
 	private String causaTrapasso;
-	private int tempo = NO_TEMPO;
+	private int tempo = SENZA_LIMITE;
 
 	private List<EffettoDiStato> effettiDiStato = new ArrayList<>();
 
@@ -112,6 +117,22 @@ public class PersonaggioMD implements Serializzabile {
 
 	public void setEsperienza(int esperienza) {
 		this.esperienza = esperienza;
+	}
+
+	public int getCarico() {
+		return carico;
+	}
+
+	public void setCarico(int carico) {
+		this.carico = carico;
+	}
+
+	public int getCaricoMassimo() {
+		return caricoMassimo;
+	}
+
+	public void setCaricoMassimo(int caricoMassimo) {
+		this.caricoMassimo = caricoMassimo;
 	}
 
 	public int getSalute() {
@@ -386,22 +407,6 @@ public class PersonaggioMD implements Serializzabile {
 		this.furiaMassima = furiaMassima;
 	}
 
-	public int getCarico() {
-		return carico;
-	}
-
-	public void setCarico(int carico) {
-		this.carico = carico;
-	}
-
-	public int getCaricoMassimo() {
-		return caricoMassimo;
-	}
-
-	public void setCaricoMassimo(int caricoMassimo) {
-		this.caricoMassimo = caricoMassimo;
-	}
-
 	public int getMagia() {
 		return magia;
 	}
@@ -426,12 +431,28 @@ public class PersonaggioMD implements Serializzabile {
 		this.coraggio = coraggio;
 	}
 
+	public int getCoraggioMassimo() {
+		return coraggioMassimo;
+	}
+
+	public void setCoraggioMassimo(int coraggioMassimo) {
+		this.coraggioMassimo = coraggioMassimo;
+	}
+
 	public int getValore() {
 		return valore;
 	}
 
 	public void setValore(int valore) {
 		this.valore = valore;
+	}
+
+	public int getValoreMassimo() {
+		return valore;
+	}
+
+	public void setValoreMassimo(int valoreMassimo) {
+		this.valore = valoreMassimo;
 	}
 
 	public int getStanchezza() {
@@ -486,6 +507,10 @@ public class PersonaggioMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(esperienza);
 		stream.print(PIPE);
+		stream.print(carico);
+		stream.print(PIPE);
+		stream.print(caricoMassimo);
+		stream.print(PIPE);
 		stream.print(salute);
 		stream.print(PIPE);
 		stream.print(saluteMassima);
@@ -493,10 +518,6 @@ public class PersonaggioMD implements Serializzabile {
 		stream.print(magia);
 		stream.print(PIPE);
 		stream.print(magiaMassima);
-		stream.print(PIPE);
-		stream.print(carico);
-		stream.print(PIPE);
-		stream.print(caricoMassimo);
 		stream.print(PIPE);
 		stream.print(forza);
 		stream.print(PIPE);
@@ -562,12 +583,17 @@ public class PersonaggioMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(furiaMassima);
 		stream.print(PIPE);
-
 		stream.print(coraggio);
+		stream.print(PIPE);
+		stream.print(coraggioMassimo);
 		stream.print(PIPE);
 		stream.print(valore);
 		stream.print(PIPE);
+		stream.print(valoreMassimo);
+		stream.print(PIPE);
 		stream.print(stanchezza);
+		stream.print(PIPE);
+		stream.print(stanchezzaMassima);
 		stream.print(PIPE);
 		stream.print(tempo);
 		stream.print(PIPE);
@@ -610,12 +636,12 @@ public class PersonaggioMD implements Serializzabile {
 		}
 		livello = Integer.parseInt(st.nextToken());
 		esperienza = Integer.parseInt(st.nextToken());
+		carico = Integer.parseInt(st.nextToken());
+		caricoMassimo = Integer.parseInt(st.nextToken());
 		salute = Integer.parseInt(st.nextToken());
 		saluteMassima = Integer.parseInt(st.nextToken());
 		magia = Integer.parseInt(st.nextToken());
 		magiaMassima = Integer.parseInt(st.nextToken());
-		carico = Integer.parseInt(st.nextToken());
-		caricoMassimo = Integer.parseInt(st.nextToken());
 		forza = Integer.parseInt(st.nextToken());
 		forzaMassima = Integer.parseInt(st.nextToken());
 		destrezza = Integer.parseInt(st.nextToken());
@@ -649,8 +675,11 @@ public class PersonaggioMD implements Serializzabile {
 		furia = Integer.parseInt(st.nextToken());
 		furiaMassima = Integer.parseInt(st.nextToken());
 		coraggio = Integer.parseInt(st.nextToken());
+		coraggioMassimo = Integer.parseInt(st.nextToken());
 		valore = Integer.parseInt(st.nextToken());
+		valoreMassimo = Integer.parseInt(st.nextToken());
 		stanchezza = Integer.parseInt(st.nextToken());
+		stanchezzaMassima = Integer.parseInt(st.nextToken());
 		tempo = Integer.parseInt(st.nextToken());
 		int numeroArtefatti = Integer.parseInt(st.nextToken());
 
@@ -665,5 +694,17 @@ public class PersonaggioMD implements Serializzabile {
 			artefatto.leggi(stream);
 			artefatti.add(artefatto);
 		}
+	}
+
+	public String stats() {
+		return String.format("CLASSE=%15s, LIVELLO=%3d, SALUTE=%3d, MAGIA=%3d, CARICO=%3d, FORZA=%3d" +
+				", DESTREZZA=%3d, COSTITUZIONE=%3d, INTELLIGENZA=%3d" +
+				", SAGGEZZA=%3d, CARISMA=%3d, FORTUNA=%3d, CRITICO=%3d" +
+				", PRECISIONE=%3d, VELOCITA=%3d, FURTIVITA=%3d" +
+				", PARATA=%3d, RESISTENZA MAGICA=%3d, PERCEZIONE=%3d" +
+				", SOGGEZIONE=%3d, FURIA=%3d, CORAGGIO=%3d, VALORE=%3d" +
+				", STANCHEZZA=%3d", classe, livello, salute, magia, carico, forza, destrezza, costituzione, intelligenza,
+				saggezza, carisma, fortuna, critico, precisione, velocita, furtivita, parata, resistenzaMagica,
+				percezione, soggezione, furia, coraggio, valore, stanchezza);
 	}
 }

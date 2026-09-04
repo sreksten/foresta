@@ -1,9 +1,10 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Eremita extends PersonaggioBase implements Personaggio {
 
@@ -25,31 +26,163 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Eremita.gif");
 		setIcona("icone/Eremita.gif");
-		setSaluteMassima(Costanti.EREMITA_MAX_SALUTE);
-		setMagiaMassima(Costanti.EREMITA_MAX_MAGIA);
-		setValore(Costanti.EREMITA_MAX_VALORE);
-		setCoraggio(Costanti.EREMITA_MAX_CORAGGIO);
-		setCarisma(Costanti.EREMITA_MAX_CARISMA);
-		setCorrompibile(true);
-		setAmichevole(true);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.EREMITA_FORZA_MIN, Costanti.EREMITA_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.EREMITA_DESTREZZA_MIN, Costanti.EREMITA_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.EREMITA_COSTITUZIONE_MIN, Costanti.EREMITA_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.EREMITA_INTELLIGENZA_MIN, Costanti.EREMITA_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.EREMITA_SAGGEZZA_MIN, Costanti.EREMITA_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.EREMITA_FORTUNA_MIN, Costanti.EREMITA_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.EREMITA_CRITICO_MIN, Costanti.EREMITA_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.EREMITA_PRECISIONE_MIN, Costanti.EREMITA_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.EREMITA_VELOCITA_MIN, Costanti.EREMITA_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.EREMITA_PARATA_MIN, Costanti.EREMITA_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.EREMITA_RESISTENZA_MAGICA_MIN, Costanti.EREMITA_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.EREMITA_MAGIA_MIN, Costanti.EREMITA_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.EREMITA_FURIA_MIN, Costanti.EREMITA_FURIA_MAX));
+		md.setSaluteMassima(Costanti.EREMITA_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.EREMITA_MAX_MAGIA);
+		md.setForzaMassima(Costanti.EREMITA_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.EREMITA_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.EREMITA_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.EREMITA_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.EREMITA_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.EREMITA_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.EREMITA_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.EREMITA_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
+	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.EREMITA_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.EREMITA_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.EREMITA_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.EREMITA_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.EREMITA_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.EREMITA_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.EREMITA_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.EREMITA_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.EREMITA_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.EREMITA_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.EREMITA_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.EREMITA_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.EREMITA_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.EREMITA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.EREMITA_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.EREMITA_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.EREMITA_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.EREMITA_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.EREMITA_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.EREMITA_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.EREMITA_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.EREMITA_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.EREMITA_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.EREMITA_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.EREMITA_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.EREMITA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.EREMITA_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.EREMITA_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 
 	@Override

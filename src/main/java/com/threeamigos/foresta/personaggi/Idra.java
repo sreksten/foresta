@@ -2,8 +2,9 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class Idra extends PersonaggioBase implements Personaggio {
 
@@ -26,28 +27,162 @@ public class Idra extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Idra.gif");
-		setSaluteMassima(Costanti.IDRA_MAX_SALUTE);
-		setMagiaMassima(Costanti.IDRA_MAX_MAGIA);
-		setValore(Costanti.IDRA_MAX_VALORE);
-		setCoraggio(Costanti.IDRA_MAX_CORAGGIO);
-		setCarisma(Costanti.IDRA_MAX_CARISMA);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.IDRA_FORZA_MIN, Costanti.IDRA_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.IDRA_DESTREZZA_MIN, Costanti.IDRA_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.IDRA_COSTITUZIONE_MIN, Costanti.IDRA_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.IDRA_INTELLIGENZA_MIN, Costanti.IDRA_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.IDRA_SAGGEZZA_MIN, Costanti.IDRA_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.IDRA_FORTUNA_MIN, Costanti.IDRA_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.IDRA_CRITICO_MIN, Costanti.IDRA_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.IDRA_PRECISIONE_MIN, Costanti.IDRA_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.IDRA_VELOCITA_MIN, Costanti.IDRA_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.IDRA_PARATA_MIN, Costanti.IDRA_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.IDRA_RESISTENZA_MAGICA_MIN, Costanti.IDRA_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.IDRA_MAGIA_MIN, Costanti.IDRA_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.IDRA_FURIA_MIN, Costanti.IDRA_FURIA_MAX));
+		md.setSaluteMassima(Costanti.IDRA_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.IDRA_MAX_MAGIA);
+		md.setForzaMassima(Costanti.IDRA_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.IDRA_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.IDRA_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.IDRA_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.IDRA_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.IDRA_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.IDRA_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.IDRA_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
+	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.IDRA_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.IDRA_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.IDRA_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.IDRA_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.IDRA_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.IDRA_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.IDRA_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.IDRA_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.IDRA_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.IDRA_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.IDRA_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.IDRA_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.IDRA_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.IDRA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.IDRA_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.IDRA_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.IDRA_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.IDRA_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.IDRA_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.IDRA_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.IDRA_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.IDRA_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.IDRA_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.IDRA_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.IDRA_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.IDRA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.IDRA_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.IDRA_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 
 	@Override
@@ -60,4 +195,5 @@ public class Idra extends PersonaggioBase implements Personaggio {
 		return classeIncantesimo == ClassiIncantesimo.TERRA || 
 				classeIncantesimo == ClassiIncantesimo.ACQUA ||
 				classeIncantesimo == ClassiIncantesimo.ARIA;
-	}}
+	}
+}

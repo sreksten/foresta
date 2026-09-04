@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.function.Function;
 
 public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 
@@ -32,31 +33,165 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValori() {
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/OmbraFiamma.gif");
 		setIcona("icone/OmbraFiamma.gif");
-		setSaluteMassima(Costanti.OMBRAFIAMMA_MAX_SALUTE);
-		setMagiaMassima(Costanti.OMBRAFIAMMA_MAX_MAGIA);
-		setValore(Costanti.OMBRAFIAMMA_MAX_VALORE);
-		setCoraggio(Costanti.OMBRAFIAMMA_MAX_CORAGGIO);
-		setCarisma(Costanti.OMBRAFIAMMA_MAX_CARISMA);
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		setForza(Dado.tiraAncheSenzaRange(Costanti.OMBRAFIAMMA_FORZA_MIN, Costanti.OMBRAFIAMMA_FORZA_MAX));
-		setDestrezza(Dado.tiraAncheSenzaRange(Costanti.OMBRAFIAMMA_DESTREZZA_MIN, Costanti.OMBRAFIAMMA_DESTREZZA_MAX));
-		setCostituzione(Dado.tiraAncheSenzaRange(Costanti.OMBRAFIAMMA_COSTITUZIONE_MIN, Costanti.OMBRAFIAMMA_COSTITUZIONE_MAX));
-		setIntelligenza(Dado.tiraAncheSenzaRange(Costanti.OMBRAFIAMMA_INTELLIGENZA_MIN, Costanti.OMBRAFIAMMA_INTELLIGENZA_MAX));
-		setSaggezza(Dado.tiraAncheSenzaRange(Costanti.OMBRAFIAMMA_SAGGEZZA_MIN, Costanti.OMBRAFIAMMA_SAGGEZZA_MAX));
-		setFortuna(Dado.tiraAncheSenzaRange(Costanti.OMBRAFIAMMA_FORTUNA_MIN, Costanti.OMBRAFIAMMA_FORTUNA_MAX));
-		setCritico(Dado.tiraAncheSenzaRange(Costanti.OMBRAFIAMMA_CRITICO_MIN, Costanti.OMBRAFIAMMA_CRITICO_MAX));
-		setPrecisione(Dado.tiraAncheSenzaRange(Costanti.OMBRAFIAMMA_PRECISIONE_MIN, Costanti.OMBRAFIAMMA_PRECISIONE_MAX));
-		setVelocita(Dado.tiraAncheSenzaRange(Costanti.OMBRAFIAMMA_VELOCITA_MIN, Costanti.OMBRAFIAMMA_VELOCITA_MAX));
-		setParata(Dado.tiraAncheSenzaRange(Costanti.OMBRAFIAMMA_PARATA_MIN, Costanti.OMBRAFIAMMA_PARATA_MAX));
-		setResistenzaMagica(Dado.tiraAncheSenzaRange(Costanti.OMBRAFIAMMA_RESISTENZA_MAGICA_MIN, Costanti.OMBRAFIAMMA_RESISTENZA_MAGICA_MAX));
-		setMagia(Dado.tiraAncheSenzaRange(Costanti.OMBRAFIAMMA_MAGIA_MIN, Costanti.OMBRAFIAMMA_MAGIA_MAX));
-		setFuria(Dado.tiraAncheSenzaRange(Costanti.OMBRAFIAMMA_FURIA_MIN, Costanti.OMBRAFIAMMA_FURIA_MAX));
+		md.setSaluteMassima(Costanti.OMBRAFIAMMA_MAX_SALUTE);
+		md.setMagiaMassima(Costanti.OMBRAFIAMMA_MAX_MAGIA);
+		md.setForzaMassima(Costanti.OMBRAFIAMMA_MAX_FORZA);
+		md.setDestrezzaMassima(Costanti.OMBRAFIAMMA_MAX_DESTREZZA);
+		md.setCostituzioneMassima(Costanti.OMBRAFIAMMA_MAX_COSTITUZIONE);
+		md.setIntelligenzaMassima(Costanti.OMBRAFIAMMA_MAX_INTELLIGENZA);
+		md.setSaggezzaMassima(Costanti.OMBRAFIAMMA_MAX_SAGGEZZA);
+		md.setCarismaMassimo(Costanti.OMBRAFIAMMA_MAX_CARISMA);
+		md.setFortunaMassima(Costanti.OMBRAFIAMMA_MAX_FORTUNA);
 
+		setQuantitaMassima(Costanti.OMBRAFIAMMA_MAX_NUMERO);
+
+		super.impostaValoriDiPartenza(funzione);
+	}
+
+	@Override
+	protected double getMoltiplicatoreCarico() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_CARICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCarico() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_CARICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCritico() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_CRITICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCritico() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_CRITICO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePrecisione() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_PRECISIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePrecisione() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_PRECISIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreVelocita() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_VELOCITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreVelocita() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_VELOCITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFurtivita() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_FURTIVITA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFurtivita() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_FURTIVITA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreParata() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_PARATA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreParata() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_PARATA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreResistenzaMagica() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_RESISTENZA_MAGICA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreResistenzaMagica() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_RESISTENZA_MAGICA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatorePercezione() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_PERCEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatorePercezione() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_PERCEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreSoggezione() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_SOGGEZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreSoggezione() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_SOGGEZIONE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreFuria() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_FURIA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreFuria() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_FURIA_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreCoraggio() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_CORAGGIO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreCoraggio() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_CORAGGIO_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreValore() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_VALORE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreValore() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_VALORE_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreNumeroBersagli() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_NUMERO_BERSAGLI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreNumeroBersagli() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA;
+	}
+
+	@Override
+	protected double getMoltiplicatoreStanchezza() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_STANCHEZZA;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreStanchezza() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_STANCHEZZA_NOTA;
 	}
 
 	@Override
