@@ -5,10 +5,7 @@ import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
-import com.threeamigos.foresta.motore.modellodati.TipoDanno;
-import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
+import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
@@ -693,7 +690,7 @@ public abstract class LocazioneBase implements Locazione {
 				UI.notifica("Essendo il tesoro incustodito, " + gruppo.chi() + " se ne impossessa.");
 			}
 			if (tipoLocazione != TipoLocazione.MISSIONE_SECONDARIA) {
-				gruppo.riposa();
+				gruppo.riposa(getTipoRiposo());
 			}
 			completa = true;
 			return Stato.FINE_LOCAZIONE;
@@ -750,16 +747,14 @@ public abstract class LocazioneBase implements Locazione {
 					.setDanniBase(5)
 					.setCostoAcquisto(15)
 					.setPeso(2)
-					.setModificatore(TipoAttributo.FORZA, 1)
+					.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 20)
 					.costruisci();
 
 			Logger.log("Valutazione danno originale: danniBersaglio (" + bersaglio.getNome() + ") = " + danniBersaglio + ", danniCombattente (" + combattente.getNome() + ") = " + danniCombattente);
 			Logger.log("Valutazione combattente -> bersaglio");
-			Logger.log("Combattente: " + combattente.stats());
-			Logger.log("Difensore  : " + bersaglio.stats());
 			boolean colpirebbe = CalcolatoreCombattimento.colpisce(combattente, bersaglio);
 			if (colpirebbe) {
-				RisultatoDanno risultato = CalcolatoreCombattimento.calcolaDannoFinale(combattente, bersaglio, TipoDanno.TAGLIENTE, arma);
+				RisultatoCombattimento risultato = CalcolatoreCombattimento.calcolaDannoFinale(combattente, bersaglio, TipoDanno.TAGLIENTE, arma);
 				Logger.log("Con nuovo motore il combattente colpirebbe assegnando " + risultato.getDannoTotale() + " danni");
 			} else {
 				Logger.log("Con nuovo motore il combattente non colpisce");
@@ -767,7 +762,7 @@ public abstract class LocazioneBase implements Locazione {
 			Logger.log("Valutazione bersaglio -> combattente");
 			colpirebbe = CalcolatoreCombattimento.colpisce(bersaglio, combattente);
 			if (colpirebbe) {
-				RisultatoDanno risultato = CalcolatoreCombattimento.calcolaDannoFinale(bersaglio, combattente, TipoDanno.TAGLIENTE, arma);
+				RisultatoCombattimento risultato = CalcolatoreCombattimento.calcolaDannoFinale(bersaglio, combattente, TipoDanno.TAGLIENTE, arma);
 				Logger.log("Con nuovo motore il bersaglio colpirebbe assegnando " + risultato.getDannoTotale() + " danni");
 			} else {
 				Logger.log("Con nuovo motore il bersaglio non colpisce");

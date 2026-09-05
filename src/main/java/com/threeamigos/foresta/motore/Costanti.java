@@ -146,6 +146,10 @@ public class Costanti {
     public static final String BARDO_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Canalizza la magia attraverso l'arte e la musica; i suoi incantesimi d'attacco sono discreti, ma eccelle nei buff.";
     public static final double BARDO_MOLTIPLICATORE_DANNI_FISICI = 0.9;
     public static final String BARDO_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Si allena nel movimento e nella coordinazione, ma non focalizza il suo stile sullo sviluppo della forza bruta.";
+    public static final double BARDO_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
+    public static final String BARDO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "La sua stessa musica e il controllo del ritmo respiratorio ne accelerano leggermente il relax muscolare.";
+    public static final double BARDO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
+    public static final String BARDO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "La sua stessa musica funge da catalizzatore meditativo, accelerando il recupero energetico del party e di se stesso.";
 
     public static final int CANTASTORIE_MAX_SALUTE = 400;
     public static final int CANTASTORIE_MAX_MAGIA = 50;
@@ -212,6 +216,10 @@ public class Costanti {
     public static final String CANTASTORIE_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Canalizza la magia attraverso l'arte e la musica; i suoi incantesimi d'attacco sono discreti, ma eccelle nei buff.";
     public static final double CANTASTORIE_MOLTIPLICATORE_DANNI_FISICI = 0.9;
     public static final String CANTASTORIE_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Si allena nel movimento e nella coordinazione, ma non focalizza il suo stile sullo sviluppo della forza bruta.";
+    public static final double CANTASTORIE_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
+    public static final String CANTASTORIE_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "La sua stessa musica e il controllo del ritmo respiratorio ne accelerano leggermente il relax muscolare.";
+    public static final double CANTASTORIE_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
+    public static final String CANTASTORIE_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "La sua stessa musica funge da catalizzatore meditativo, accelerando il recupero energetico del party e di se stesso.";
 
     public static final int ELFA_MAX_SALUTE = 350;
     public static final int ELFA_MAX_MAGIA = 60;
@@ -277,10 +285,14 @@ public class Costanti {
     public static final String ELFA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Bilanciato: predilige l'accuratezza del colpo singolo, ma la sua grazia gli permette di gestire la linea di fronte.";
     public static final double ELFA_MOLTIPLICATORE_STANCHEZZA = 0.8;
     public static final String ELFA_MOLTIPLICATORE_STANCHEZZA_NOTA = "Passo leggero e atletico. La sua fisiologia superiore spreca pochissima energia nei movimenti.";
-    public static final double ELFA_MOLTIPLICATORE_DANNI_MAGICI = 1.2;
+    public static final double ELFA_MOLTIPLICATORE_DANNI_MAGICI = 1.4;
     public static final String ELFA_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Superiore alla media umana. Nelle sue vene scorre magia innata; un elfo farà sempre più danni magici di un guerriero o di un ladro.";
     public static final double ELFA_MOLTIPLICATORE_DANNI_FISICI = 0.9;
     public static final String ELFA_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Slanciato e agile. Nello scontro fisico predilige la destrezza e la precisione (Critico) rispetto alla potenza d'impatto.";
+    public static final double ELFA_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
+    public static final String ELFA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Struttura atletica, leggera e coordinata che spreca pochissima energia e si rigenera con grande efficienza.";
+    public static final double ELFA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.3;
+    public static final String ELFA_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "La \"trance\" elfica permette un riposo mentale e spirituale profondo, attingendo alla magia nativa delle sue vene.";
 
     public static final int ELFO_MAX_SALUTE = 350;
     public static final int ELFO_MAX_MAGIA = 60;
@@ -346,10 +358,14 @@ public class Costanti {
     public static final String ELFO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Bilanciato: predilige l'accuratezza del colpo singolo, ma la sua grazia gli permette di gestire la linea di fronte.";
     public static final double ELFO_MOLTIPLICATORE_STANCHEZZA = 0.8;
     public static final String ELFO_MOLTIPLICATORE_STANCHEZZA_NOTA = "Passo leggero e atletico. La sua fisiologia superiore spreca pochissima energia nei movimenti.";
-    public static final double ELFO_MOLTIPLICATORE_DANNI_MAGICI = 1.2;
+    public static final double ELFO_MOLTIPLICATORE_DANNI_MAGICI = 1.4;
     public static final String ELFO_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Superiore alla media umana. Nelle sue vene scorre magia innata; un elfo farà sempre più danni magici di un guerriero o di un ladro.";
     public static final double ELFO_MOLTIPLICATORE_DANNI_FISICI = 0.9;
     public static final String ELFO_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Slanciato e agile. Nello scontro fisico predilige la destrezza e la precisione (Critico) rispetto alla potenza d'impatto.";
+    public static final double ELFO_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
+    public static final String ELFO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Struttura atletica, leggera e coordinata che spreca pochissima energia e si rigenera con grande efficienza.";
+    public static final double ELFO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.3;
+    public static final String ELFO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "La \"trance\" elfica permette un riposo mentale e spirituale profondo, attingendo alla magia nativa delle sue vene.";
 
     public static final int GUERRIERA_MAX_SALUTE = 550;
     public static final int GUERRIERA_MAX_MAGIA = 30;
@@ -417,6 +433,10 @@ public class Costanti {
     public static final String GUERRIERA_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Il minimo per i viventi. Il suo addestramento è focalizzato al 100% sulla materia fisica e sull'acciaio; rigetta la canalizzazione arcana.";
     public static final double GUERRIERA_MOLTIPLICATORE_DANNI_FISICI = 1.3;
     public static final String GUERRIERA_MOLTIPLICATORE_DANNI_FISICI_NOTA = "L'eccellenza dell'addestramento umano. Muscolatura d'élite, addestrato a spaccare le armature con spade e mazze.";
+    public static final double GUERRIERA_MOLTIPLICATORE_RECUPERO_FISICO = 1.4;
+    public static final String GUERRIERA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Il vertice del condizionamento umano. Addestrato specificamente a ottimizzare i tempi di recupero e a rifatare sotto l'armatura.";
+    public static final double GUERRIERA_MOLTIPLICATORE_RECUPERO_MAGICO = 0.5;
+    public static final String GUERRIERA_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Il minimo per i viventi. Il suo addestramento rigetta l'arcano; la sua mente è focalizzata solo sull'acciaio e sulla tattica fisica.";
 
     public static final int GUERRIERO_MAX_SALUTE = 550;
     public static final int GUERRIERO_MAX_MAGIA = 30;
@@ -484,6 +504,10 @@ public class Costanti {
     public static final String GUERRIERO_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Il minimo per i viventi. Il suo addestramento è focalizzato al 100% sulla materia fisica e sull'acciaio; rigetta la canalizzazione arcana.";
     public static final double GUERRIERO_MOLTIPLICATORE_DANNI_FISICI = 1.3;
     public static final String GUERRIERO_MOLTIPLICATORE_DANNI_FISICI_NOTA = "L'eccellenza dell'addestramento umano. Muscolatura d'élite, addestrato a spaccare le armature con spade e mazze.";
+    public static final double GUERRIERO_MOLTIPLICATORE_RECUPERO_FISICO = 1.4;
+    public static final String GUERRIERO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Il vertice del condizionamento umano. Addestrato specificamente a ottimizzare i tempi di recupero e a rifatare sotto l'armatura.";
+    public static final double GUERRIERO_MOLTIPLICATORE_RECUPERO_MAGICO = 0.5;
+    public static final String GUERRIERO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Il minimo per i viventi. Il suo addestramento rigetta l'arcano; la sua mente è focalizzata solo sull'acciaio e sulla tattica fisica.";
 
     public static final int LADRA_MAX_SALUTE = 450;
     public static final int LADRA_MAX_MAGIA = 40;
@@ -550,6 +574,10 @@ public class Costanti {
     public static final String LADRA_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "La Linea di Base Umana. Rappresenta il potenziale magico di un umano comune che usa la magia solo come utility o trucco di supporto.";
     public static final double LADRA_MOLTIPLICATORE_DANNI_FISICI = 1.0;
     public static final String LADRA_MOLTIPLICATORE_DANNI_FISICI_NOTA = "La Linea di Base Umana. Forza fisica nella media; compensa il moltiplicatore standard cercando il punto debole (Critico).";
+    public static final double LADRA_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
+    public static final String LADRA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Professionista del movimento economico; sa come rilassare istantaneamente i muscoli e dosare il fiato.";
+    public static final double LADRA_MOLTIPLICATORE_RECUPERO_MAGICO = 0.9;
+    public static final String LADRA_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Individualista e pragmatico; usa piccoli trucchi di utilità ma non ha un canale spirituale aperto per grandi ricariche.";
 
     public static final int LADRO_MAX_SALUTE = 450;
     public static final int LADRO_MAX_MAGIA = 40;
@@ -616,6 +644,10 @@ public class Costanti {
     public static final String LADRO_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "La Linea di Base Umana. Rappresenta il potenziale magico di un umano comune che usa la magia solo come utility o trucco di supporto.";
     public static final double LADRO_MOLTIPLICATORE_DANNI_FISICI = 1.0;
     public static final String LADRO_MOLTIPLICATORE_DANNI_FISICI_NOTA = "La Linea di Base Umana. Forza fisica nella media; compensa il moltiplicatore standard cercando il punto debole (Critico).";
+    public static final double LADRO_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
+    public static final String LADRO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Professionista del movimento economico; sa come rilassare istantaneamente i muscoli e dosare il fiato.";
+    public static final double LADRO_MOLTIPLICATORE_RECUPERO_MAGICO = 0.9;
+    public static final String LADRO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Individualista e pragmatico; usa piccoli trucchi di utilità ma non ha un canale spirituale aperto per grandi ricariche.";
 
     public static final int MAGA_MAX_SALUTE = 350;
     public static final int MAGA_MAX_MAGIA = 70;
@@ -682,10 +714,14 @@ public class Costanti {
     public static final String MAGA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "I maestri dell'AoE. La loro intera dottrina si basa sul canalizzare incantesimi (es. Palle di fuoco o Catene di fulmini) su più nemici.";
     public static final double MAGA_MOLTIPLICATORE_STANCHEZZA = 1.4;
     public static final String MAGA_MOLTIPLICATORE_STANCHEZZA_NOTA = "Tra i più fragili. Fisico sedentario non abituato agli sforzi; lo stress di canalizzare l'arcano li sfinisce subito.";
-    public static final double MAGA_MOLTIPLICATORE_DANNI_MAGICI = 1.5;
+    public static final double MAGA_MOLTIPLICATORE_DANNI_MAGICI = 2.0;
     public static final String MAGA_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Il Re della Magia Mortale. Ha studiato tutta la vita la struttura matematica dell'arcano; massimizza il danno di ogni singola runa.";
     public static final double MAGA_MOLTIPLICATORE_DANNI_FISICI = 0.5;
     public static final String MAGA_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Fisico sedentario e debole; non ha alcun addestramento nell'imprimere forza tramite armi da mischia.";
+    public static final double MAGA_MOLTIPLICATORE_RECUPERO_FISICO = 0.7;
+    public static final String MAGA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Fisico sedentario, debole e non abituato agli sforzi atletici; richiede molto tempo per riprendere fiato.";
+    public static final double MAGA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.5;
+    public static final String MAGA_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Il Re della Magia Viva. Ha studiato tutta la vita la struttura matematica delle rune; sa esattamente come riallineare i flussi.";
 
     public static final int MAGO_MAX_SALUTE = 350;
     public static final int MAGO_MAX_MAGIA = 70;
@@ -752,10 +788,14 @@ public class Costanti {
     public static final String MAGO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "I maestri dell'AoE. La loro intera dottrina si basa sul canalizzare incantesimi (es. Palle di fuoco o Catene di fulmini) su più nemici.";
     public static final double MAGO_MOLTIPLICATORE_STANCHEZZA = 1.4;
     public static final String MAGO_MOLTIPLICATORE_STANCHEZZA_NOTA = "Tra i più fragili. Fisico sedentario non abituato agli sforzi; lo stress di canalizzare l'arcano li sfinisce subito.";
-    public static final double MAGO_MOLTIPLICATORE_DANNI_MAGICI = 1.5;
+    public static final double MAGO_MOLTIPLICATORE_DANNI_MAGICI = 2.0;
     public static final String MAGO_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Il Re della Magia Mortale. Ha studiato tutta la vita la struttura matematica dell'arcano; massimizza il danno di ogni singola runa.";
     public static final double MAGO_MOLTIPLICATORE_DANNI_FISICI = 0.5;
     public static final String MAGO_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Fisico sedentario e debole; non ha alcun addestramento nell'imprimere forza tramite armi da mischia.";
+    public static final double MAGO_MOLTIPLICATORE_RECUPERO_FISICO = 0.7;
+    public static final String MAGO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Fisico sedentario, debole e non abituato agli sforzi atletici; richiede molto tempo per riprendere fiato.";
+    public static final double MAGO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.5;
+    public static final String MAGO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Il Re della Magia Viva. Ha studiato tutta la vita la struttura matematica delle rune; sa esattamente come riallineare i flussi.";
 
     // Personaggio giocabile segreto per test
 
@@ -828,10 +868,13 @@ public class Costanti {
     public static final String OMBRAFIAMMA_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Essere sovrannaturale";
     public static final double OMBRAFIAMMA_MOLTIPLICATORE_DANNI_FISICI = 2.0;
     public static final String OMBRAFIAMMA_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Essere sovrannaturale";
+    public static final double OMBRAFIAMMA_MOLTIPLICATORE_RECUPERO_FISICO = 1.8;
+    public static final String OMBRAFIAMMA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Essere sovrannaturale intessuto di magia; la vitalità del fuoco gli permette una rigenerazione accelerata.";
+    public static final double OMBRAFIAMMA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.5;
+    public static final String OMBRAFIAMMA_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Essere sovrannaturale intessuto di magia del fuoco; assorbe i flussi energetici con eccezionale efficienza.";
 
     // Personaggi non giocabili (avversari). Alcuno possono essere amichevoli o corrompibili e offrire supporto
 
-    public static final int ARPIA_MAX_CARICO = 4;
     public static final int ARPIA_MAX_SALUTE = 30;
     public static final int ARPIA_MAX_MAGIA = 5;
     public static final int ARPIA_MAX_FORZA = 10;
@@ -886,6 +929,10 @@ public class Costanti {
     public static final String ARPIA_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "La sua natura è ferina e primitiva; lancia incantesimi istintivi ma privi di vera raffinatezza o potenza distruttiva.";
     public static final double ARPIA_MOLTIPLICATORE_DANNI_FISICI = 0.9;
     public static final String ARPIA_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Struttura ossea leggera adatta al volo; i suoi attacchi fisici (artigliate) sono rapidi ma privi di grande impatto di massa.";
+    public static final double ARPIA_MOLTIPLICATORE_RECUPERO_FISICO = 1.0;
+    public static final String ARPIA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Struttura leggera che recupera lo sforzo muscolare a ritmi normali.";
+    public static final double ARPIA_MOLTIPLICATORE_RECUPERO_MAGICO = 0.8;
+    public static final String ARPIA_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Natura ferina e primitiva; la sua mente è troppo caotica per concentrarsi sul ripristino dei flussi magici.";
 
     public static final int CENTAURO_MAX_SALUTE = 70;
     public static final int CENTAURO_MAX_MAGIA = 0;
@@ -952,6 +999,10 @@ public class Costanti {
     public static final String CENTAURO_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Razza fiera legata alla terra e alla caccia fisica; la sua connessione con l'arcano distruttivo è molto limitata.";
     public static final double CENTAURO_MOLTIPLICATORE_DANNI_FISICI = 1.3;
     public static final String CENTAURO_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Sfrutta l'immensa spinta cinetica e la potenza muscolare delle zampe equine durante le cariche con lancia o zoccoli.";
+    public static final double CENTAURO_MOLTIPLICATORE_RECUPERO_FISICO = 1.3;
+    public static final String CENTAURO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Fisiologia equina possente dotata di una capacità polmonare e cardiaca d'élite per smaltire la fatica.";
+    public static final double CENTAURO_MOLTIPLICATORE_RECUPERO_MAGICO = 0.7;
+    public static final String CENTAURO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Creatura legata alla terra e alla caccia fisica; ha una scarsissima attitudine a richiamare l'energia arcana.";
 
     public static final int CHIMERA_MAX_SALUTE = 45;
     public static final int CHIMERA_MAX_MAGIA = 0;
@@ -1018,6 +1069,10 @@ public class Costanti {
     public static final String CHIMERA_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Bestia magica che può sputare elementi (es. fuoco) grazie alle sue teste, ma manca di controllo logico sulla trama magica.";
     public static final double CHIMERA_MOLTIPLICATORE_DANNI_FISICI = 1.3;
     public static final String CHIMERA_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Grande predatore quadrupede; la combinazione di morsi e zampate feline infligge gravi danni laceranti.";
+    public static final double CHIMERA_MOLTIPLICATORE_RECUPERO_FISICO = 1.2;
+    public static final String CHIMERA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Grande predatore quadrupede; la presenza di tre teste permette di alternare parzialmente le fasi di vigilanza e riposo corporeo.";
+    public static final double CHIMERA_MOLTIPLICATORE_RECUPERO_MAGICO = 0.8;
+    public static final String CHIMERA_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Bestia selvaggia; possiede poteri elementali innati (sputare fuoco) ma non una vera rigenerazione mentale della trama magica.";
 
     public static final int CHIMERADRAGO_MAX_SALUTE = 80;
     public static final int CHIMERADRAGO_MAX_MAGIA = 30;
@@ -1084,6 +1139,10 @@ public class Costanti {
     public static final String CHIMERADRAGO_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Beneficia enormemente del sangue di drago infuso nella sua forma raddoppiata, che amplifica i danni elementali.";
     public static final double CHIMERADRAGO_MOLTIPLICATORE_DANNI_FISICI = 1.6;
     public static final String CHIMERADRAGO_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Raddoppiata nelle dimensioni; ogni suo attacco fisico sposta tonnellate di peso, schiacciando i difensori.";
+    public static final double CHIMERADRAGO_MOLTIPLICATORE_RECUPERO_FISICO = 1.3;
+    public static final String CHIMERADRAGO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "La mole raddoppiata è supportata dalla vitalità travolgente del sangue di drago, che accelera il ripristino muscolare.";
+    public static final double CHIMERADRAGO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
+    public static final String CHIMERADRAGO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Beneficia del sangue di drago infuso nella sua forma raddoppiata, che funge da enorme conduttore magico passivo.";
 
     public static final int EREMITA_MAX_SALUTE = 70;
     public static final int EREMITA_MAX_MAGIA = 0;
@@ -1150,6 +1209,10 @@ public class Costanti {
     public static final String EREMITA_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Anni di isolamento e profonda comunione con le forze occulte o naturali ne hanno potenziato la focalizzazione mistica.";
     public static final double EREMITA_MOLTIPLICATORE_DANNI_FISICI = 0.7;
     public static final String EREMITA_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Il corpo invecchiato e indebolito dalle privazioni ascetiche riduce drasticamente l'efficacia dei suoi colpi fisici.";
+    public static final double EREMITA_MOLTIPLICATORE_RECUPERO_FISICO = 0.9;
+    public static final String EREMITA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Corpo anziano e rallentato dagli anni; i suoi muscoli richiedono più tempo per riprendersi da uno sforzo intenso.";
+    public static final double EREMITA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.4;
+    public static final String EREMITA_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Anni di meditazione isolata e introspezione gli permettono di focalizzare la mente e canalizzare il mana con facilità.";
 
     public static final int FANTASMA_MAX_SALUTE = 50;
     public static final int FANTASMA_MAX_MAGIA = 0;
@@ -1184,8 +1247,8 @@ public class Costanti {
     public static final int FANTASMA_FURIA_MIN = 3;
     public static final int FANTASMA_FURIA_MAX = 8;
 
-    public static final double FANTASMA_MOLTIPLICATORE_CARICO = 0;
-    public static final String FANTASMA_MOLTIPLICATORE_CARICO_NOTA = "Trattandosi di uno spettro, azzera completamente la formula. Non ha un inventario fisico per gli oggetti del mondo materiale.";
+    public static final double FANTASMA_MOLTIPLICATORE_CARICO = 0.0;
+    public static final String FANTASMA_MOLTIPLICATORE_CARICO_NOTA = "Trattandosi di uno spettro, non ha un inventario fisico per gli oggetti del mondo materiale.";
     public static final double FANTASMA_MOLTIPLICATORE_CRITICO = 0.5;
     public static final String FANTASMA_MOLTIPLICATORE_CRITICO_NOTA = "Creature eteree che fluttuano. La loro parziale intangibilità rende difficile sferrare un colpo fisico concentrato sui punti vitali corporei.";
     public static final double FANTASMA_MOLTIPLICATORE_PRECISIONE = 0.8;
@@ -1216,6 +1279,10 @@ public class Costanti {
     public static final String FANTASMA_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Creatura spirituale che manipola facilmente le energie dell'oltretomba, infliggendo buoni danni da freddo o da logoramento.";
     public static final double FANTASMA_MOLTIPLICATORE_DANNI_FISICI = 0.2;
     public static final String FANTASMA_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Quasi incapace di interagire con il mondo materiale. I suoi attacchi fisici sono flebili carezze gelide.";
+    public static final double FANTASMA_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
+    public static final String FANTASMA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Incorporeo. Non ha una riserva di vigore fisico, non accumula acido lattico e non necessita di riposo muscolare.";
+    public static final double FANTASMA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.2;
+    public static final String FANTASMA_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Essendo un'entità spirituale pura, il suo legame con il piano energetico è nativo, permettendo un ottimo recupero.";
 
     public static final int FOLLETTO_MAX_SALUTE = 10;
     public static final int FOLLETTO_MAX_MAGIA = 1;
@@ -1282,6 +1349,10 @@ public class Costanti {
     public static final String FOLLETTO_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Piccolo ma intessuto di pura magia selvaggia (Fey); le sue magie sono imprevedibili ma sanno essere dolorosamente intense.";
     public static final double FOLLETTO_MOLTIPLICATORE_DANNI_FISICI = 0.3;
     public static final String FOLLETTO_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Troppo minuto. Anche imprimendo tutta la sua forza, la sua massa ridotta non genera danni fisici rilevanti.";
+    public static final double FOLLETTO_MOLTIPLICATORE_RECUPERO_FISICO = 0.8;
+    public static final String FOLLETTO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Troppo iperattivo e frenetico; fatica a rilassarsi e a calmare il battito cardiaco durante i turni di pausa.";
+    public static final double FOLLETTO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.3;
+    public static final String FOLLETTO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Creatura fatata intessuta di magia selvaggia (Fey); si ricarica rapidamente attingendo alla natura circostante.";
 
     public static final int GARGOYLE_MAX_SALUTE = 50;
     public static final int GARGOYLE_MAX_MAGIA = 20;
@@ -1350,6 +1421,10 @@ public class Costanti {
     public static final String GARGOYLE_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Creatura di pietra animata da costrutti; la sua natura rigida blocca lo scorrere fluido e distruttivo dell'energia magica.";
     public static final double GARGOYLE_MOLTIPLICATORE_DANNI_FISICI = 1.2;
     public static final String GARGOYLE_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Essendo fatto di pietra animata, i suoi pugni e le sue cariche hanno la durezza e il peso d'impatto di un masso.";
+    public static final double GARGOYLE_MOLTIPLICATORE_RECUPERO_FISICO = 1.4;
+    public static final String GARGOYLE_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Struttura di pietra. Quando torna immobile nella sua posa statuaria, canalizza le rune terrestri per riparare la sua massa.";
+    public static final double GARGOYLE_MOLTIPLICATORE_RECUPERO_MAGICO = 1.0;
+    public static final String GARGOYLE_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Linea di Base. Quando è immobile in forma di statua, le sue rune si allineano e assorbono energia a ritmi normali.";
 
     public static final int GIGANTE_MAX_SALUTE = 80;
     public static final int GIGANTE_MAX_MAGIA = 10;
@@ -1416,6 +1491,10 @@ public class Costanti {
     public static final String GIGANTE_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Troppo legato alla materia e alla massa fisica; la sua mente fatica a canalizzare incantesimi che vadano oltre piccoli impulsi.";
     public static final double GIGANTE_MOLTIPLICATORE_DANNI_FISICI = 1.6;
     public static final String GIGANTE_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Alto 5 metri; brandisce armi mastodontiche capaci di abbattere alberi. Forza d'urto spaventosa.";
+    public static final double GIGANTE_MOLTIPLICATORE_RECUPERO_FISICO = 1.3;
+    public static final String GIGANTE_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Muscoli colossali che, sebbene richiedano molta energia, beneficiano di riserve biologiche enormi.";
+    public static final double GIGANTE_MOLTIPLICATORE_RECUPERO_MAGICO = 0.5;
+    public static final String GIGANTE_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Troppo legato alla materia e alla massa fisica pesante; la sua mente è pigra nel richiamare le forze invisibili dell'arcano.";
 
     public static final int GOBLIN_MAX_SALUTE = 40;
     public static final int GOBLIN_MAX_MAGIA = 0;
@@ -1482,6 +1561,10 @@ public class Costanti {
     public static final String GOBLIN_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "La sua magia è grezza, instabile e spesso basata su trucchi dozzinali; i suoi incantesimi puri non hanno grande impatto.";
     public static final double GOBLIN_MOLTIPLICATORE_DANNI_FISICI = 0.8;
     public static final String GOBLIN_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Piccolo e debole rispetto a un umano. Deve compensare la mancanza di danno fisico con imboscate o veleni.";
+    public static final double GOBLIN_MOLTIPLICATORE_RECUPERO_FISICO = 0.9;
+    public static final String GOBLIN_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Fisiologia debole e metabolismo accelerato dalla paranoia; il suo riposo fisico è meno efficiente della media.";
+    public static final double GOBLIN_MOLTIPLICATORE_RECUPERO_MAGICO = 0.9;
+    public static final String GOBLIN_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Mente costantemente paranoica e superstiziosa, che fatica a trovare la calma necessaria per un riposo magico ottimale.";
 
     public static final int HOBGOBLIN_MAX_SALUTE = 65;
     public static final int HOBGOBLIN_MAX_MAGIA = 10;
@@ -1549,6 +1632,10 @@ public class Costanti {
     public static final String HOBGOBLIN_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Leggermente meglio del goblin per via della disciplina militare, ma preferisce di gran lunga la tattica di falange alla magia.";
     public static final double HOBGOBLIN_MOLTIPLICATORE_DANNI_FISICI = 1.2;
     public static final String HOBGOBLIN_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Più grosso e muscoloso del goblin comune, addestrato militarmente a colpire con precisione e forza marziale.";
+    public static final double HOBGOBLIN_MOLTIPLICATORE_RECUPERO_FISICO = 1.2;
+    public static final String HOBGOBLIN_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Disciplina militare rigida applicata alla respirazione e alla gestione dello sforzo fisico in battaglia.";
+    public static final double HOBGOBLIN_MOLTIPLICATORE_RECUPERO_MAGICO = 0.7;
+    public static final String HOBGOBLIN_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Leggermente più disciplinato del goblin, ma preferisce di gran lunga la logica di falange alla comprensione magica.";
 
     public static final int MINOTAURO_MAX_SALUTE = 70;
     public static final int MINOTAURO_MAX_MAGIA = 0;
@@ -1615,6 +1702,10 @@ public class Costanti {
     public static final String MINOTAURO_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "La sua mente è costantemente offuscata dalla rabbia bestiale; è biologicamente incapace di concentrarsi per fare danni magici.";
     public static final double MINOTAURO_MOLTIPLICATORE_DANNI_FISICI = 1.4;
     public static final String MINOTAURO_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Bipede taurino massiccio dotato di una densità muscolare spaventosa. Ogni colpo d'ascia è brutale.";
+    public static final double MINOTAURO_MOLTIPLICATORE_RECUPERO_FISICO = 1.3;
+    public static final String MINOTAURO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Fisionomia taurina robusta ed eccellente stabilità biologica per il ripristino delle forze muscolari.";
+    public static final double MINOTAURO_MOLTIPLICATORE_RECUPERO_MAGICO = 0.5;
+    public static final String MINOTAURO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Mente offuscata dalla bramosia di sangue e dall'istinto bestiale del labirinto; incapace di canalizzare energia mentale.";
 
     public static final int OMBRANERA_MAX_SALUTE = 100;
     public static final int OMBRANERA_MAX_MAGIA = 50;
@@ -1650,8 +1741,8 @@ public class Costanti {
     public static final int OMBRANERA_FURIA_MIN = 20;
     public static final int OMBRANERA_FURIA_MAX = 30;
 
-    public static final double OMBRANERA_MOLTIPLICATORE_CARICO = 0;
-    public static final String OMBRANERA_MOLTIPLICATORE_CARICO_NOTA = "Trattandosi di uno spettro, azzera completamente la formula. Non ha un inventario fisico per gli oggetti del mondo materiale.";
+    public static final double OMBRANERA_MOLTIPLICATORE_CARICO = 0.0;
+    public static final String OMBRANERA_MOLTIPLICATORE_CARICO_NOTA = "Trattandosi di uno spettro, non ha un inventario fisico per gli oggetti del mondo materiale.";
     public static final double OMBRANERA_MOLTIPLICATORE_CRITICO = 1.4;
     public static final String OMBRANERA_MOLTIPLICATORE_CRITICO_NOTA = "Non-morto irascibile ma letale; si materializza alle spalle della vittima colpendo direttamente l'essenza vitale con precisione maligna.";
     public static final double OMBRANERA_MOLTIPLICATORE_PRECISIONE = 1.2;
@@ -1682,6 +1773,10 @@ public class Costanti {
     public static final String OMBRANERA_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Composta di pura energia del Vuoto e delle Ombre; i suoi incantesimi oscuri corrodono i bersagli con spietata efficacia.";
     public static final double OMBRANERA_MOLTIPLICATORE_DANNI_FISICI = 1.0;
     public static final String OMBRANERA_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Sebbene sia un non-morto spettrale, la sua foga irascibile le permette di condensare la propria forma per graffiare con violenza.";
+    public static final double OMBRANERA_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
+    public static final String OMBRANERA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Non-Morto. Composta di oscurità e rancore immateriale; esente da affaticamento o riposo corporeo.";
+    public static final double OMBRANERA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.8;
+    public static final String OMBRANERA_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Non-morto irascibile composto di pura oscurità; assorbe e rigenera l'energia del Vuoto con spietata efficacia nell'ombra.";
 
     public static final int SCHELETRO_MAX_SALUTE = 50;
     public static final int SCHELETRO_MAX_MAGIA = 0;
@@ -1748,6 +1843,10 @@ public class Costanti {
     public static final String SCHELETRO_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Privo di cervello, anima o intelletto; può lanciare magie solo se animato temporaneamente da un padrone, ma con danni minimi.";
     public static final double SCHELETRO_MOLTIPLICATORE_DANNI_FISICI = 0.9;
     public static final String SCHELETRO_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Privo di muscoli, si muove solo per impulsi magici; sferra colpi discreti ma privi del peso della massa muscolare viva.";
+    public static final double SCHELETRO_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
+    public static final String SCHELETRO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Non-Morto. Pura struttura ossea animata da un impulso magico base. Non possiede muscoli da far riposare.";
+    public static final double SCHELETRO_MOLTIPLICATORE_RECUPERO_MAGICO = 0.6;
+    public static final String SCHELETRO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Un ammasso di ossa mosso da magia di basso livello. Non ha un'anima o un intelletto per rigenerare autonomamente grandi quantità di mana.";
 
     public static final int SPETTRO_MAX_SALUTE = 40;
     public static final int SPETTRO_MAX_MAGIA = 0;
@@ -1782,8 +1881,8 @@ public class Costanti {
     public static final int SPETTRO_FURIA_MIN = 5;
     public static final int SPETTRO_FURIA_MAX = 10;
 
-    public static final double SPETTRO_MOLTIPLICATORE_CARICO = 0;
-    public static final String SPETTRO_MOLTIPLICATORE_CARICO_NOTA = "Trattandosi di uno spettro, azzera completamente la formula. Non ha un inventario fisico per gli oggetti del mondo materiale.";
+    public static final double SPETTRO_MOLTIPLICATORE_CARICO = 0.0;
+    public static final String SPETTRO_MOLTIPLICATORE_CARICO_NOTA = "Trattandosi di uno spettro, non ha un inventario fisico per gli oggetti del mondo materiale.";
     public static final double SPETTRO_MOLTIPLICATORE_CRITICO = 0.5;
     public static final String SPETTRO_MOLTIPLICATORE_CRITICO_NOTA = "Creature eteree che fluttuano. La loro parziale intangibilità rende difficile sferrare un colpo fisico concentrato sui punti vitali corporei.";
     public static final double SPETTRO_MOLTIPLICATORE_PRECISIONE = 0.8;
@@ -1814,6 +1913,10 @@ public class Costanti {
     public static final String SPETTRO_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Variante aggressiva del fantasma; canalizza il suo eterno rancore in incantesimi necrotici e mentali estremamente dolorosi.";
     public static final double SPETTRO_MOLTIPLICATORE_DANNI_FISICI = 0.3;
     public static final String SPETTRO_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Leggermente più aggressivo del fantasma, ma comunque limitato dalla sua natura eterea nel generare danni da impatto solidi.";
+    public static final double SPETTRO_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
+    public static final String SPETTRO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Incorporeo. Manifestazione di odio ultraterreno priva di parametri fisici o biologici.";
+    public static final double SPETTRO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.4;
+    public static final String SPETTRO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Variante aggressiva del fantasma; canalizza il suo eterno e gelido rancore per strappare energia dall'ambiente circostante.";
 
     public static final int SPIRITO_MAX_SALUTE = 40;
     public static final int SPIRITO_MAX_MAGIA = 0;
@@ -1848,8 +1951,8 @@ public class Costanti {
     public static final int SPIRITO_FURIA_MIN = 3;
     public static final int SPIRITO_FURIA_MAX = 5;
 
-    public static final double SPIRITO_MOLTIPLICATORE_CARICO = 0;
-    public static final String SPIRITO_MOLTIPLICATORE_CARICO_NOTA = "Trattandosi di uno spettro, azzera completamente la formula. Non ha un inventario fisico per gli oggetti del mondo materiale.";
+    public static final double SPIRITO_MOLTIPLICATORE_CARICO = 0.0;
+    public static final String SPIRITO_MOLTIPLICATORE_CARICO_NOTA = "Trattandosi di uno spettro, non ha un inventario fisico per gli oggetti del mondo materiale.";
     public static final double SPIRITO_MOLTIPLICATORE_CRITICO = 0.5;
     public static final String SPIRITO_MOLTIPLICATORE_CRITICO_NOTA = "Creature eteree che fluttuano. La loro parziale intangibilità rende difficile sferrare un colpo fisico concentrato sui punti vitali corporei.";
     public static final double SPIRITO_MOLTIPLICATORE_PRECISIONE = 0.8;
@@ -1872,7 +1975,6 @@ public class Costanti {
     public static final String SPIRITO_MOLTIPLICATORE_CORAGGIO_NOTA = "Entità astratta e refrattaria ai condizionamenti psicologici e biologici standard legati alla sopravvivenza dei vivi.";
     public static final double SPIRITO_MOLTIPLICATORE_VALORE = 0.9;
     public static final String SPIRITO_MOLTIPLICATORE_VALORE_NOTA = "Entità astratta che può agire da custode o protettore a seconda della sua natura originaria o del patto stipulato; si posiziona appena sotto la media umana perché la sua ascesi lo rende leggermente distaccato dalle necessità puramente fisiche del party.";
-
     public static final double SPIRITO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
     public static final String SPIRITO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Può manifestare impulsi energetici che si irradiano in cerchio attorno alla sua forma fluttuante.";
     public static final double SPIRITO_MOLTIPLICATORE_STANCHEZZA = 0.0;
@@ -1881,6 +1983,10 @@ public class Costanti {
     public static final String SPIRITO_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Manifestazione energetica pura. Essendo composto di essenza mistica, i suoi attacchi energetici feriscono direttamente l'anima dei nemici.";
     public static final double SPIRITO_MOLTIPLICATORE_DANNI_FISICI = 0.2;
     public static final String SPIRITO_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Manifestazione energetica pura. Non ha un corpo per colpire fisicamente; il suo moltiplicatore è quasi nullo.";
+    public static final double SPIRITO_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
+    public static final String SPIRITO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Incorporeo. Essenza energetica pura priva di un corpo di carne e ossa soggetto a fatica muscolare.";
+    public static final double SPIRITO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.4;
+    public static final String SPIRITO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Manifestazione energetica pura. Essendo privo di un corpo di carne, il suo riposo coincide interamente con il riallineamento energetico.";
 
     public static final int TITANO_MAX_SALUTE = 100;
     public static final int TITANO_MAX_MAGIA = 15;
@@ -1947,6 +2053,10 @@ public class Costanti {
     public static final String TITANO_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Forza mitologica semidivina. Quando usa la magia, evoca le forze della creazione (terremoti, tempeste divine) con potenza immane.";
     public static final double TITANO_MOLTIPLICATORE_DANNI_FISICI = 2.0;
     public static final String TITANO_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Il Cataclisma Fisico. Forza semidivina. Un suo pugno ha la forza di un terremoto; ignora le difese fisiche dei mortali.";
+    public static final double TITANO_MOLTIPLICATORE_RECUPERO_FISICO = 1.5;
+    public static final String TITANO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Forza mitologica semidivina. Un suo singolo respiro profondo purifica i tessuti e resetta la stanchezza corporea.";
+    public static final double TITANO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.4;
+    public static final String TITANO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Creatura mitologica semidivina. Un suo singolo respiro ricalibra e purifica l'intera riserva magica del suo essere spirituale.";
 
     public static final int TROLL_MAX_SALUTE = 80;
     public static final int TROLL_MAX_MAGIA = 0;
@@ -2013,6 +2123,10 @@ public class Costanti {
     public static final String TROLL_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Intelletto primitivo e rigenerazione fisica; la sua biologia è completamente disconnessa dallo studio o dall'intuito arcano.";
     public static final double TROLL_MOLTIPLICATORE_DANNI_FISICI = 1.4;
     public static final String TROLL_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Braccia lunghissime e muscolatura massiccia. Colpisce con zampate selvagge e clave rudimentali di potenza devastante.";
+    public static final double TROLL_MOLTIPLICATORE_RECUPERO_FISICO = 1.5;
+    public static final String TROLL_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Condivide con l'Idra una rigenerazione cellulare spaventosa che elimina l'acido lattico dai muscoli in pochi secondi.";
+    public static final double TROLL_MOLTIPLICATORE_RECUPERO_MAGICO = 0.5;
+    public static final String TROLL_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "La sua biologia è completamente focalizzata al sulla rigenerazione della carne e dei muscoli; totalmente disconnesso dal mana.";
 
     public static final int VIVERNA_MAX_SALUTE = 120;
     public static final int VIVERNA_MAX_MAGIA = 50;
@@ -2080,6 +2194,10 @@ public class Costanti {
     public static final String VIVERNA_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Bestia predatrice alata; si affida al veleno fisico del suo pungiglione piuttosto che a incantesimi sovrannaturali.";
     public static final double VIVERNA_MOLTIPLICATORE_DANNI_FISICI = 1.2;
     public static final String VIVERNA_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Grande rettile predatore; possiede mascelle possenti e un pungiglione caudale in grado di perforare le corazze.";
+    public static final double VIVERNA_MOLTIPLICATORE_RECUPERO_FISICO = 1.1;
+    public static final String VIVERNA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Grande rettile predatore; una volta a terra, riposa e si ossigena con la stabilità di un animale robusto.";
+    public static final double VIVERNA_MOLTIPLICATORE_RECUPERO_MAGICO = 0.8;
+    public static final String VIVERNA_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Bestia predatrice alata; si affida al veleno del suo pungiglione biologico piuttosto che a riserve di energia magica.";
 
     // Boss
 
@@ -2140,7 +2258,6 @@ public class Costanti {
     public static final String IDRA_MOLTIPLICATORE_CORAGGIO_NOTA = "La sua natura primordiale e la mostruosa capacità rigenerativa la rendono estremamente ostinata: continua ad avanzare e a combattere finché ha almeno una testa attiva, ignorando gran parte dei debuff mentali da paura.";
     public static final double IDRA_MOLTIPLICATORE_VALORE = 0.5;
     public static final String IDRA_MOLTIPLICATORE_VALORE_NOTA = "Creatura primordiale mossa esclusivamente da un appetito caotico e selvaggio; non concepisce minimamente il concetto di alleanza, branco o sacrificio per gli altri.";
-
     public static final double IDRA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.9;
     public static final String IDRA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Il Massimo Potenziale Fisico. Con cinque o più teste indipendenti che scattano, è una macchina da multi-target naturale.";
     public static final double IDRA_MOLTIPLICATORE_STANCHEZZA = 0.9;
@@ -2149,6 +2266,10 @@ public class Costanti {
     public static final String IDRA_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Abominio antico con un'ottima resistenza, ma i suoi attacchi magici si limitano a sputi acidi o velenosi di natura biologica.";
     public static final double IDRA_MOLTIPLICATORE_DANNI_FISICI = 1.4;
     public static final String IDRA_MOLTIPLICATORE_DANNI_FISICI_NOTA = "La spinta coordinata di molteplici colli serpentini che mordono contemporaneamente lacera facilmente le carni dei nemici.";
+    public static final double IDRA_MOLTIPLICATORE_RECUPERO_FISICO = 1.5;
+    public static final String IDRA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Il vertice della rigenerazione. La sua biologia mostruosa azzera i micro-traumi del tessuto muscolare quasi istantaneamente.";
+    public static final double IDRA_MOLTIPLICATORE_RECUPERO_MAGICO = 0.8;
+    public static final String IDRA_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Abominio antico e rettiliano; le sue riserve mistiche sono ridotte rispetto alla sua strabiliante possanza fisica.";
 
     public static final int LICH_MAX_SALUTE = 700;
     public static final int LICH_MAX_MAGIA = 200;
@@ -2210,14 +2331,18 @@ public class Costanti {
     public static final String LICH_MOLTIPLICATORE_CORAGGIO_NOTA = "Volontà Immortale. Ha sconfitto la morte stessa tramite la necromanzia; la sua mente fredda è una fortezza inespugnabile.";
     public static final double LICH_MOLTIPLICATORE_VALORE = 0.2;
     public static final String LICH_MOLTIPLICATORE_VALORE_NOTA = "Ha sacrificato ogni briciolo di umanità ed empatia per ottenere l'immortalità; cinico e spietato al massimo grado.";
-    public static final double LICH_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.4;
+    public static final double LICH_MOLTIPLICATORE_NUMERO_BERSAGLI = 5.0;
     public static final String LICH_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Unisce un'Intelligenza immensa a magie ad area necrotiche capaci di ghermire le anime di interi plotoni.";
     public static final double LICH_MOLTIPLICATORE_STANCHEZZA = 0.0;
     public static final String LICH_MOLTIPLICATORE_STANCHEZZA_NOTA = "Immune. Sovrano non-morto mosso da pura necromanzia; ignora totalmente la stanchezza.";
-    public static final double LICH_MOLTIPLICATORE_DANNI_MAGICI = 1.5;
+    public static final double LICH_MOLTIPLICATORE_DANNI_MAGICI = 3;
     public static final String LICH_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "L'eccellenza non-morta. Ha sacrificato la sua vita mortale per padroneggiare la necromanzia e l'arcano; i suoi incantesimi di morte sono letali.";
     public static final double LICH_MOLTIPLICATORE_DANNI_FISICI = 0.5;
     public static final String LICH_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Corpo mummificato o scheletrico privo di muscoli vivi. Rigetta il combattimento fisico a favore di quello magico.";
+    public static final double LICH_MOLTIPLICATORE_RECUPERO_FISICO = 0.0;
+    public static final String LICH_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Non-Morto. Mosso da pura necromanzia e privo di organi o muscoli vivi. La fatica fisica per lui non esiste.";
+    public static final double LICH_MOLTIPLICATORE_RECUPERO_MAGICO = 1.6;
+    public static final String LICH_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Il Re del Mana. Ha sconfitto la morte stessa. La sua mente immortale e non-morta è un portale aperto sul Vuoto e sul Necrotico.";
 
     public static final int MINOTAUROGIGANTE_MAX_SALUTE = 700;
     public static final int MINOTAUROGIGANTE_MAX_MAGIA = 0;
@@ -2284,6 +2409,10 @@ public class Costanti {
     public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Una massa colossale di pura foga fisica. Il suo moltiplicatore magico è infimo: la sua unica \"magia\" sono i suoi pugni.";
     public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_DANNI_FISICI = 1.7;
     public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_DANNI_FISICI_NOTA = "La Devastazione Fisica. Unisce la stazza del gigante alla ferocia muscolare del minotauro. Danno d'impatto ai vertici.";
+    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_RECUPERO_FISICO = 1.4;
+    public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Abbina la robustezza del minotauro alla cubatura biologica del gigante, massimizzando il rientro energetico.";
+    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_RECUPERO_MAGICO = 0.4;
+    public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "La foga distruttiva esasperata dalla mole colossale lo rende quasi del tutto impermeabile al recupero di energia mistica.";
 
     public static final int STREGA_MAX_SALUTE = 800;
     public static final int STREGA_MAX_MAGIA = 350;
@@ -2345,14 +2474,18 @@ public class Costanti {
     public static final String STREGA_MOLTIPLICATORE_CORAGGIO_NOTA = "Abituata a trattare con forze oscure, patti occulti e spiriti, possiede una mente temprata contro i terrori mistici.";
     public static final double STREGA_MOLTIPLICATORE_VALORE = 0.8;
     public static final String STREGA_MOLTIPLICATORE_VALORE_NOTA = "Opportunista e legata a patti oscuri; raramente rischia la propria pelle per proteggere un alleato in fin di vita.";
-    public static final double STREGA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.3;
+    public static final double STREGA_MOLTIPLICATORE_NUMERO_BERSAGLI = 5.0;
     public static final String STREGA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "I Maestri dell'AoE. La loro intera dottrina si basa sul canalizzare incantesimi (es. Palle di fuoco o Catene di fulmini) su più nemici.";
     public static final double STREGA_MOLTIPLICATORE_STANCHEZZA = 1.4;
     public static final String STREGA_MOLTIPLICATORE_STANCHEZZA_NOTA = "Tra i più fragile. Fisico sedentario non abituato agli sforzi; lo stress di canalizzare l'arcano li sfinisce subito.";
-    public static final double STREGA_MOLTIPLICATORE_DANNI_MAGICI = 1.4;
+    public static final double STREGA_MOLTIPLICATORE_DANNI_MAGICI = 3.0;
     public static final String STREGA_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Maestra dei Malocchi. Poco sotto il Mago solo perché predilige la magia debilitante (debuff e DoT), ma i suoi anatemi sono devastanti.";
     public static final double STREGA_MOLTIPLICATORE_DANNI_FISICI = 0.6;
     public static final String STREGA_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Simile al mago; preferisce i malefici a distanza. La sua forza fisica diretta è minima.";
+    public static final double STREGA_MOLTIPLICATORE_RECUPERO_FISICO = 0.8;
+    public static final String STREGA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Simile al mago; preferisce non sforzarsi fisicamente e il suo corpo risente della mancanza di condizionamento atletico.";
+    public static final double STREGA_MOLTIPLICATORE_RECUPERO_MAGICO = 1.4;
+    public static final String STREGA_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Maestra dei Sortilegi. Al pari del mago, manipola i patti occulti e le correnti mistiche, possedendo una rigenerazione altissima.";
 
     // Boss finale
 
@@ -2416,48 +2549,18 @@ public class Costanti {
     public static final String DRAGO_MOLTIPLICATORE_CORAGGIO_NOTA = "Orgoglio Millenario. Consapevole della propria superiorità assoluta sul mondo. È praticamente immune alla paura dei mortali.";
     public static final double DRAGO_MOLTIPLICATORE_VALORE = 1.1;
     public static final String DRAGO_MOLTIPLICATORE_VALORE_NOTA = "Superbo e solitario, ma possiede un'immensa dignità e un orgoglio antico che gli impediscono di fuggire vigliaccamente.";
-    public static final double DRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.8;
+    public static final double DRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI = 5.0;
     public static final String DRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Il Signore delle Spazzate. Oltre all'intelligenza nel gestire il campo, un singolo colpo di coda o artiglio falcia interi gruppi.";
     public static final double DRAGO_MOLTIPLICATORE_STANCHEZZA = 0.7;
     public static final String DRAGO_MOLTIPLICATORE_STANCHEZZA_NOTA = "Creatura leggendaria supportata da un'immensa energia magica interna che previene la fatica fisica.";
-    public static final double DRAGO_MOLTIPLICATORE_DANNI_MAGICI = 1.6;
+    public static final double DRAGO_MOLTIPLICATORE_DANNI_MAGICI = 3.0;
     public static final String DRAGO_MOLTIPLICATORE_DANNI_MAGICI_NOTA = "Il vertice della magia naturale. Le sue parole e i suoi soffi elementali sono cataclismi magici devastanti.";
     public static final double DRAGO_MOLTIPLICATORE_DANNI_FISICI = 1.7;
     public static final String DRAGO_MOLTIPLICATORE_DANNI_FISICI_NOTA = "Il vertice della distruzione fisica naturale. I suoi artigli penetrano l'acciaio e i colpi di coda spezzano le mura.";
+    public static final double DRAGO_MOLTIPLICATORE_RECUPERO_FISICO = 1.4;
+    public static final String DRAGO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Creatura leggendaria dotata di un metabolismo mitologico. Un solo turno di riposo riossigena masse muscolari enormi.";
+    public static final double DRAGO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.5;
+    public static final String DRAGO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Regale. Unione perfetta di carne e magia pura. Il suo corpo millenario assorbe i flussi del mondo a ritmi catastrofici.";
 
-    /*
 
-    MOLTIPLICATORE RECUPERO FISICO
-
-    ARPIA 1.0 Struttura leggera che recupera lo sforzo muscolare a ritmi normali.
-    BARDO 1.1 La sua stessa musica e il controllo del ritmo respiratorio ne accelerano leggermente il relax muscolare.
-    CENTAURO 1.3 Fisiologia equina possente dotata di una capacità polmonare e cardiaca d'élite per smaltire la fatica.
-    CHIMERA 1.2 Grande predatore quadrupede; la presenza di tre teste permette di alternare parzialmente le fasi di vigilanza e riposo corporeo.
-    CHIMERA_DRAGO 1.3 La mole raddoppiata è supportata dalla vitalità travolgente del sangue di drago, che accelera il ripristino muscolare.
-    DRAGO 1.4 Creatura leggendaria dotata di un metabolismo mitologico. Un solo turno di riposo riossigena masse muscolari enormi.
-    ELFO 1.1 Struttura atletica, leggera e coordinata che spreca pochissima energia e si rigenera con grande efficienza.
-    EREMITA 0.9 Corpo anziano e rallentato dagli anni; i suoi muscoli richiedono più tempo per riprendersi da uno sforzo intenso.
-    FANTASMA 0.0 Incorporeo. Non ha una riserva di vigore fisico, non accumula acido lattico e non necessita di riposo muscolare.
-    FOLLETTO 0.8 Troppo iperattivo e frenetico; fatica a rilassarsi e a calmare il battito cardiaco durante i turni di pausa.
-    GARGOYLE 1.4 Struttura di pietra. Quando torna immobile nella sua posa statuaria, canalizza le rune terrestri per riparare la sua massa.
-    GIGANTE 1.3 Muscoli colossali che, sebbene richiedano molta energia, beneficiano di riserve biologiche enormi.
-    GOBLIN 0.9 Fisiologia debole e metabolismo accelerato dalla paranoia; il suo riposo fisico è meno efficiente della media.
-    GUERRIERO 1.4 Il vertice del condizionamento umano. Addestrato specificamente a ottimizzare i tempi di recupero e a rifatare sotto l'armatura.
-    HOBGOBLIN 1.2 Disciplina militare rigida applicata alla respirazione e alla gestione dello sforzo fisico in battaglia.
-    IDRA 1.5 Il vertice della rigenerazione. La sua biologia mostruosa azzera i micro-traumi del tessuto muscolare quasi istantaneamente.
-    LADRO 1.1 Professionista del movimento economico; sa come rilassare istantaneamente i muscoli e dosare il fiato.
-    LICH 0.0 Non-Morto. Mosso da pura necromanzia e privo di organi o muscoli vivi. La fatica fisica per lui non esiste.
-    MAGO 0.7 Fisico sedentario, debole e non abituato agli sforzi atletici; richiede molto tempo per riprendere fiato.
-    MINOTAURO 1.3 Fisionomia taurina robusta ed eccellente stabilità biologica per il ripristino delle forze muscolari.
-    MINOTAURO_GIGANTE 1.4 Abbina la robustezza del minotauro alla cubatura biologica del gigante, massimizzando il rientro energetico.
-    OMBRANERA 0.0 Non-Morto. Composta di oscurità e rancore immateriale; esente da affaticamento o riposo corporeo.
-    SCHELETRO 0.0 Non-Morto. Pura struttura ossea animata da un impulso magico base. Non possiede muscoli da far riposare.
-    SPETTRO 0.0 Incorporeo. Manifestazione di odio ultraterreno priva di parametri fisici o biologici.
-    SPIRITO 0.0 Incorporeo. Essenza energetica pura priva di un corpo di carne e ossa soggetto a fatica muscolare.
-    STREGA 0.8 Simile al mago; preferisce non sforzarsi fisicamente e il suo corpo risente della mancanza di condizionamento atletico.
-    TITANO 1.5 Forza mitologica semidivina. Un suo singolo respiro profondo purifica i tessuti e resetta la stanchezza corporea.
-    TROLL 1.5 Condivide con l'Idra una rigenerazione cellulare spaventosa che elimina l'acido lattico dai muscoli in pochi secondi.
-    VIVERNA 1.1 Grande rettile predatore; una volta a terra, riposa e si ossigena con la stabilità di un animale robusto.
-
-     */
 }

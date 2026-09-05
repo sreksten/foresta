@@ -46,7 +46,7 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCarico() {
+	public double getMoltiplicatoreCarico() {
 		return Costanti.EREMITA_MOLTIPLICATORE_CARICO;
 	}
 
@@ -56,7 +56,7 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCritico() {
+	public double getMoltiplicatoreCritico() {
 		return Costanti.EREMITA_MOLTIPLICATORE_CRITICO;
 	}
 
@@ -66,7 +66,7 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatorePrecisione() {
+	public double getMoltiplicatorePrecisione() {
 		return Costanti.EREMITA_MOLTIPLICATORE_PRECISIONE;
 	}
 
@@ -76,7 +76,7 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreVelocita() {
+	public double getMoltiplicatoreVelocita() {
 		return Costanti.EREMITA_MOLTIPLICATORE_VELOCITA;
 	}
 
@@ -86,7 +86,7 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreFurtivita() {
+	public double getMoltiplicatoreFurtivita() {
 		return Costanti.EREMITA_MOLTIPLICATORE_FURTIVITA;
 	}
 
@@ -96,7 +96,7 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreParata() {
+	public double getMoltiplicatoreParata() {
 		return Costanti.EREMITA_MOLTIPLICATORE_PARATA;
 	}
 
@@ -106,7 +106,7 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreResistenzaMagica() {
+	public double getMoltiplicatoreResistenzaMagica() {
 		return Costanti.EREMITA_MOLTIPLICATORE_RESISTENZA_MAGICA;
 	}
 
@@ -116,7 +116,7 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatorePercezione() {
+	public double getMoltiplicatorePercezione() {
 		return Costanti.EREMITA_MOLTIPLICATORE_PERCEZIONE;
 	}
 
@@ -126,7 +126,7 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreSoggezione() {
+	public double getMoltiplicatoreSoggezione() {
 		return Costanti.EREMITA_MOLTIPLICATORE_SOGGEZIONE;
 	}
 
@@ -136,7 +136,7 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreFuria() {
+	public double getMoltiplicatoreFuria() {
 		return Costanti.EREMITA_MOLTIPLICATORE_FURIA;
 	}
 
@@ -146,7 +146,7 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCoraggio() {
+	public double getMoltiplicatoreCoraggio() {
 		return Costanti.EREMITA_MOLTIPLICATORE_CORAGGIO;
 	}
 
@@ -156,7 +156,7 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreValore() {
+	public double getMoltiplicatoreValore() {
 		return Costanti.EREMITA_MOLTIPLICATORE_VALORE;
 	}
 
@@ -166,7 +166,7 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreNumeroBersagli() {
+	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.EREMITA_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}
 
@@ -176,13 +176,53 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreStanchezza() {
+	public double getMoltiplicatoreStanchezza() {
 		return Costanti.EREMITA_MOLTIPLICATORE_STANCHEZZA;
 	}
 
 	@Override
 	public String getNoteMoltiplicatoreStanchezza() {
 		return Costanti.EREMITA_MOLTIPLICATORE_STANCHEZZA_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniMagici() {
+		return Costanti.EREMITA_MOLTIPLICATORE_DANNI_MAGICI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreDanniMagici() {
+		return Costanti.EREMITA_MOLTIPLICATORE_DANNI_MAGICI_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniFisici() {
+		return Costanti.EREMITA_MOLTIPLICATORE_DANNI_FISICI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreDanniFisici() {
+		return Costanti.EREMITA_MOLTIPLICATORE_DANNI_FISICI_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoMagico() {
+		return Costanti.EREMITA_MOLTIPLICATORE_RECUPERO_MAGICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreRecuperoMagico() {
+		return Costanti.EREMITA_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoFisico() {
+		return Costanti.EREMITA_MOLTIPLICATORE_RECUPERO_FISICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreRecuperoFisico() {
+		return Costanti.EREMITA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA;
 	}
 
 	@Override

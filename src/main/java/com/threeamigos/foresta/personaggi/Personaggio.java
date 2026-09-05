@@ -2,12 +2,12 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.Comando;
-import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.OggettoConArticoli;
 import com.threeamigos.foresta.motore.modellodati.EffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
+import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 
@@ -176,7 +176,7 @@ public interface Personaggio extends OggettoConArticoli {
 	/**
 	 * Eventuali moltiplicatori ai danni del combattimento, normalmente 1
 	 */
-    int getModificaDanniForza();
+    int getModificaDanniFisici(int danniBase);
 	/**
 	 * Incrementa il livello di magia del personaggio; non puo' superare il livello massimo
 	 */
@@ -185,10 +185,6 @@ public interface Personaggio extends OggettoConArticoli {
 	 * Sottrae magia al personaggio
 	 */
     void subMagia(int quantita);
-	/**
-	 * Quanti avversari puo' bersagliare il personaggio con un singolo incantesimo
-	 */
-    int getBersagliPerIncantesimo();
 	/**
 	 *  Eventuali moltiplicatori ai danni derivanti da un incantesimo
 	 */
@@ -226,8 +222,9 @@ public interface Personaggio extends OggettoConArticoli {
 	 */
     void subCarisma(int quantita);
 	/**
-	 * Quanti avversari puo' impegnare un personaggio in combattimento
-	 * (combatte con uno ma impedisce agli altri di formulare incantesimi)
+	 * Quanti avversari può impegnare un personaggio in combattimento
+	 * (combatte con uno ma impedisce agli altri di formulare incantesimi, oppure cerca di colpire con un
+	 * incantesimo quel numero di bersagli)
 	 */
     int getBersagli();
 	/**
@@ -236,9 +233,9 @@ public interface Personaggio extends OggettoConArticoli {
     String getDescrizione();
 	/**
 	 * Il personaggio riposa per diminuire la stanchezza e aumentare la forza e la magia.
-	 * Se il personaggio riposa al coperto (locanda o citta') allora i valori aumentano.
+	 * Se il personaggio riposa al coperto (locanda o città) o davanti a un fuoco allora i valori aumentano.
 	 */
-    void riposa(int ore, boolean alCoperto);
+    void riposa(int ore, TipoRiposo tipoRiposo);
 	/**
 	 * Il personaggio fugge
 	 */
@@ -353,7 +350,7 @@ public interface Personaggio extends OggettoConArticoli {
 	/**
 	 * Il carico attuale di un personaggio
 	 */
-    int getCarico();
+    double getCarico();
 
 	/**
 	 * Il carico che un personaggio può portare, somma del carico base e dei modificatori di carico degli artefatti.
@@ -510,36 +507,76 @@ public interface Personaggio extends OggettoConArticoli {
 	 */
     void removeArtefatto(Artefatto artefatto);
 
+	double getMoltiplicatoreCarico();
+
 	String getNoteMoltiplicatoreCarico();
+
+	double getMoltiplicatoreCritico();
 
 	String getNoteMoltiplicatoreCritico();
 
+	double getMoltiplicatorePrecisione();
+
 	String getNoteMoltiplicatorePrecisione();
+
+	double getMoltiplicatoreVelocita();
 
 	String getNoteMoltiplicatoreVelocita();
 
+	double getMoltiplicatoreFurtivita();
+
 	String getNoteMoltiplicatoreFurtivita();
+
+	double getMoltiplicatoreParata();
 
 	String getNoteMoltiplicatoreParata();
 
+	double getMoltiplicatoreResistenzaMagica();
+
 	String getNoteMoltiplicatoreResistenzaMagica();
+
+	double getMoltiplicatorePercezione();
 
 	String getNoteMoltiplicatorePercezione();
 
+	double getMoltiplicatoreSoggezione();
+
 	String getNoteMoltiplicatoreSoggezione();
+
+	double getMoltiplicatoreFuria();
 
 	String getNoteMoltiplicatoreFuria();
 
+	double getMoltiplicatoreCoraggio();
+
 	String getNoteMoltiplicatoreCoraggio();
+
+	double getMoltiplicatoreValore();
 
 	String getNoteMoltiplicatoreValore();
 
+	double getMoltiplicatoreNumeroBersagli();
+
 	String getNoteMoltiplicatoreNumeroBersagli();
+
+	double getMoltiplicatoreStanchezza();
 
 	String getNoteMoltiplicatoreStanchezza();
 
-	// Vari metodi
+	double getMoltiplicatoreDanniMagici();
 
-	// Per debug bilanciamento combattimenti
-	String stats();
+	String getNoteMoltiplicatoreDanniMagici();
+
+	double getMoltiplicatoreDanniFisici();
+
+	String getNoteMoltiplicatoreDanniFisici();
+
+	double getMoltiplicatoreRecuperoMagico();
+
+	String getNoteMoltiplicatoreRecuperoMagico();
+
+	double getMoltiplicatoreRecuperoFisico();
+
+	String getNoteMoltiplicatoreRecuperoFisico();
+
 }

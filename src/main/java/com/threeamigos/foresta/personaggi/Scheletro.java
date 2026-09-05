@@ -45,7 +45,7 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCarico() {
+	public double getMoltiplicatoreCarico() {
 		return Costanti.SCHELETRO_MOLTIPLICATORE_CARICO;
 	}
 
@@ -55,7 +55,7 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCritico() {
+	public double getMoltiplicatoreCritico() {
 		return Costanti.SCHELETRO_MOLTIPLICATORE_CRITICO;
 	}
 
@@ -65,7 +65,7 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatorePrecisione() {
+	public double getMoltiplicatorePrecisione() {
 		return Costanti.SCHELETRO_MOLTIPLICATORE_PRECISIONE;
 	}
 
@@ -75,7 +75,7 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreVelocita() {
+	public double getMoltiplicatoreVelocita() {
 		return Costanti.SCHELETRO_MOLTIPLICATORE_VELOCITA;
 	}
 
@@ -85,7 +85,7 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreFurtivita() {
+	public double getMoltiplicatoreFurtivita() {
 		return Costanti.SCHELETRO_MOLTIPLICATORE_FURTIVITA;
 	}
 
@@ -95,7 +95,7 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreParata() {
+	public double getMoltiplicatoreParata() {
 		return Costanti.SCHELETRO_MOLTIPLICATORE_PARATA;
 	}
 
@@ -105,7 +105,7 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreResistenzaMagica() {
+	public double getMoltiplicatoreResistenzaMagica() {
 		return Costanti.SCHELETRO_MOLTIPLICATORE_RESISTENZA_MAGICA;
 	}
 
@@ -115,7 +115,7 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatorePercezione() {
+	public double getMoltiplicatorePercezione() {
 		return Costanti.SCHELETRO_MOLTIPLICATORE_PERCEZIONE;
 	}
 
@@ -125,7 +125,7 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreSoggezione() {
+	public double getMoltiplicatoreSoggezione() {
 		return Costanti.SCHELETRO_MOLTIPLICATORE_SOGGEZIONE;
 	}
 
@@ -135,7 +135,7 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreFuria() {
+	public double getMoltiplicatoreFuria() {
 		return Costanti.SCHELETRO_MOLTIPLICATORE_FURIA;
 	}
 
@@ -145,7 +145,7 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCoraggio() {
+	public double getMoltiplicatoreCoraggio() {
 		return Costanti.SCHELETRO_MOLTIPLICATORE_CORAGGIO;
 	}
 
@@ -155,7 +155,7 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreValore() {
+	public double getMoltiplicatoreValore() {
 		return Costanti.SCHELETRO_MOLTIPLICATORE_VALORE;
 	}
 
@@ -165,7 +165,7 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreNumeroBersagli() {
+	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.SCHELETRO_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}
 
@@ -175,13 +175,53 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreStanchezza() {
+	public double getMoltiplicatoreStanchezza() {
 		return Costanti.SCHELETRO_MOLTIPLICATORE_STANCHEZZA;
 	}
 
 	@Override
 	public String getNoteMoltiplicatoreStanchezza() {
 		return Costanti.SCHELETRO_MOLTIPLICATORE_STANCHEZZA_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniMagici() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_DANNI_MAGICI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreDanniMagici() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_DANNI_MAGICI_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniFisici() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_DANNI_FISICI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreDanniFisici() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_DANNI_FISICI_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoMagico() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_RECUPERO_MAGICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreRecuperoMagico() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoFisico() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_RECUPERO_FISICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreRecuperoFisico() {
+		return Costanti.SCHELETRO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA;
 	}
 
 	@Override

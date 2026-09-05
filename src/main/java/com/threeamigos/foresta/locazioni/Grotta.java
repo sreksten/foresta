@@ -3,6 +3,7 @@ package com.threeamigos.foresta.locazioni;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.Eremita;
 import com.threeamigos.foresta.personaggi.Viverna;
@@ -43,5 +44,9 @@ public class Grotta extends LocazioneBase {
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
 		UI.notifica("Qui, in una buia ed umida grotta, " + descrizioneMostriEOggetti(g, gng));
+	}
+
+	public TipoRiposo getTipoRiposo() {
+		return TipoRiposo.ALL_APERTO_CON_FUOCO;
 	}
 }

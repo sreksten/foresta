@@ -3,6 +3,7 @@ package com.threeamigos.foresta.tools;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
+import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
 import com.threeamigos.foresta.oggetti.Artefatto;
 
 /**
@@ -17,8 +18,7 @@ public class CostruttoreArtefattoImpl implements
         CostruttoreArtefatto.StepDanniBase,
         CostruttoreArtefatto.StepCostoAcquisto,
         CostruttoreArtefatto.StepPeso,
-        CostruttoreArtefatto.StepModificatore,
-        CostruttoreArtefatto.StepModificatore2 {
+        CostruttoreArtefatto.StepModificatore {
 
     private final ArtefattoMD artefattoMD;
 
@@ -63,14 +63,20 @@ public class CostruttoreArtefattoImpl implements
     }
 
     @Override
-    public CostruttoreArtefatto.StepModificatore setPeso(int peso) {
+    public CostruttoreArtefatto.StepModificatore setPeso(double peso) {
         artefattoMD.setPeso(peso);
         return this;
     }
 
     @Override
-    public CostruttoreArtefatto.StepModificatore2 setModificatore(TipoAttributo modificatore, int quantita) {
-        artefattoMD.addModificatoreAttributo(modificatore, quantita);
+    public CostruttoreArtefatto.StepModificatore setModificatore(TipoAttributo modificatore, TipoModificatore tipoModificatore, double quantita, String nota) {
+        artefattoMD.addModificatore(modificatore, tipoModificatore, quantita, nota);
+        return this;
+    }
+
+    @Override
+    public CostruttoreArtefatto.StepModificatore setModificatore(TipoAttributo modificatore, TipoModificatore tipoModificatore, double quantita) {
+        artefattoMD.addModificatore(modificatore, tipoModificatore, quantita, "");
         return this;
     }
 

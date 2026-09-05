@@ -2,6 +2,7 @@ package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.offerte.Informazioni;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
@@ -178,7 +179,7 @@ public class Locanda extends LocazioneBase {
 		case PERNOTTA:
 			if (azione == Comando.SI) {
 				gruppo.subMonete(Costanti.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggiVivi());
-				gruppo.pernotta();
+				gruppo.pernotta(TipoRiposo.AL_COPERTO);
 			} else {
 				UI.notifica("L'oste chiede di lasciare la locanda al più presto.");
 			}
@@ -233,5 +234,9 @@ public class Locanda extends LocazioneBase {
                     ", allontanandosi.";
 			UI.notifica(notifica);
 		}
+	}
+
+	public TipoRiposo getTipoRiposo() {
+		return TipoRiposo.AL_COPERTO;
 	}
 }

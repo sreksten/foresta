@@ -48,7 +48,7 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCarico() {
+	public double getMoltiplicatoreCarico() {
 		return Costanti.CENTAURO_MOLTIPLICATORE_CARICO;
 	}
 
@@ -58,7 +58,7 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCritico() {
+	public double getMoltiplicatoreCritico() {
 		return Costanti.CENTAURO_MOLTIPLICATORE_CRITICO;
 	}
 
@@ -68,7 +68,7 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatorePrecisione() {
+	public double getMoltiplicatorePrecisione() {
 		return Costanti.CENTAURO_MOLTIPLICATORE_PRECISIONE;
 	}
 
@@ -78,7 +78,7 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreVelocita() {
+	public double getMoltiplicatoreVelocita() {
 		return Costanti.CENTAURO_MOLTIPLICATORE_VELOCITA;
 	}
 
@@ -88,7 +88,7 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreFurtivita() {
+	public double getMoltiplicatoreFurtivita() {
 		return Costanti.CENTAURO_MOLTIPLICATORE_FURTIVITA;
 	}
 
@@ -98,7 +98,7 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreParata() {
+	public double getMoltiplicatoreParata() {
 		return Costanti.CENTAURO_MOLTIPLICATORE_PARATA;
 	}
 
@@ -108,7 +108,7 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreResistenzaMagica() {
+	public double getMoltiplicatoreResistenzaMagica() {
 		return Costanti.CENTAURO_MOLTIPLICATORE_RESISTENZA_MAGICA;
 	}
 
@@ -118,7 +118,7 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatorePercezione() {
+	public double getMoltiplicatorePercezione() {
 		return Costanti.CENTAURO_MOLTIPLICATORE_PERCEZIONE;
 	}
 
@@ -128,7 +128,7 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreSoggezione() {
+	public double getMoltiplicatoreSoggezione() {
 		return Costanti.CENTAURO_MOLTIPLICATORE_SOGGEZIONE;
 	}
 
@@ -138,7 +138,7 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreFuria() {
+	public double getMoltiplicatoreFuria() {
 		return Costanti.CENTAURO_MOLTIPLICATORE_FURIA;
 	}
 
@@ -148,7 +148,7 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCoraggio() {
+	public double getMoltiplicatoreCoraggio() {
 		return Costanti.CENTAURO_MOLTIPLICATORE_CORAGGIO;
 	}
 
@@ -158,7 +158,7 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreValore() {
+	public double getMoltiplicatoreValore() {
 		return Costanti.CENTAURO_MOLTIPLICATORE_VALORE;
 	}
 
@@ -168,7 +168,7 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreNumeroBersagli() {
+	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.CENTAURO_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}
 
@@ -178,13 +178,53 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreStanchezza() {
+	public double getMoltiplicatoreStanchezza() {
 		return Costanti.CENTAURO_MOLTIPLICATORE_STANCHEZZA;
 	}
 
 	@Override
 	public String getNoteMoltiplicatoreStanchezza() {
 		return Costanti.CENTAURO_MOLTIPLICATORE_STANCHEZZA_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniMagici() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_DANNI_MAGICI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreDanniMagici() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_DANNI_MAGICI_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniFisici() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_DANNI_FISICI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreDanniFisici() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_DANNI_FISICI_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoMagico() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_RECUPERO_MAGICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreRecuperoMagico() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoFisico() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_RECUPERO_FISICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreRecuperoFisico() {
+		return Costanti.CENTAURO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA;
 	}
 
 	@Override

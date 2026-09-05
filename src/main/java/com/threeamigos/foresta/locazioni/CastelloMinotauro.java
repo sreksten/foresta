@@ -4,6 +4,7 @@ import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.MinotauroGigante;
 import com.threeamigos.foresta.ui.UI;
@@ -46,5 +47,9 @@ public class CastelloMinotauro extends LocazioneUnica {
 			g.setLocazioneCorrenteVisitata();
 			Foresta.distruggiLocazioneUnica(getClasseLocazione(), ClassiLocazione.ROVINE);
 		}
+	}
+
+	public TipoRiposo getTipoRiposo() {
+		throw new IllegalArgumentException("Non si può riposare nel castello del Minotauro Gigante");
 	}
 }

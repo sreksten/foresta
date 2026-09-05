@@ -20,9 +20,6 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	public String getNomePlurale() { return "Streghe"; }
 	public String getPronome() { return Misc.ELLA; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
-	public int getRecuperoMagia() { return Costanti.STREGA_RECUPERO_MAGIA; }
-	public int getModificaDanniMagia(int danniBase) { return danniBase * Costanti.STREGA_MODIFICATORE_DANNI_MAGIA; }
-	public int getBersagliPerIncantesimo() { return Costanti.STREGA_BERSAGLI_PER_INCANTESIMO; }
 
 	public Strega() {
 		super(ClassePersonaggio.STREGA);
@@ -48,7 +45,7 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCarico() {
+	public double getMoltiplicatoreCarico() {
 		return Costanti.STREGA_MOLTIPLICATORE_CARICO;
 	}
 
@@ -58,7 +55,7 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCritico() {
+	public double getMoltiplicatoreCritico() {
 		return Costanti.STREGA_MOLTIPLICATORE_CRITICO;
 	}
 
@@ -68,7 +65,7 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatorePrecisione() {
+	public double getMoltiplicatorePrecisione() {
 		return Costanti.STREGA_MOLTIPLICATORE_PRECISIONE;
 	}
 
@@ -78,7 +75,7 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreVelocita() {
+	public double getMoltiplicatoreVelocita() {
 		return Costanti.STREGA_MOLTIPLICATORE_VELOCITA;
 	}
 
@@ -88,7 +85,7 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreFurtivita() {
+	public double getMoltiplicatoreFurtivita() {
 		return Costanti.STREGA_MOLTIPLICATORE_FURTIVITA;
 	}
 
@@ -98,7 +95,7 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreParata() {
+	public double getMoltiplicatoreParata() {
 		return Costanti.STREGA_MOLTIPLICATORE_PARATA;
 	}
 
@@ -108,7 +105,7 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreResistenzaMagica() {
+	public double getMoltiplicatoreResistenzaMagica() {
 		return Costanti.STREGA_MOLTIPLICATORE_RESISTENZA_MAGICA;
 	}
 
@@ -118,7 +115,7 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatorePercezione() {
+	public double getMoltiplicatorePercezione() {
 		return Costanti.STREGA_MOLTIPLICATORE_PERCEZIONE;
 	}
 
@@ -128,7 +125,7 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreSoggezione() {
+	public double getMoltiplicatoreSoggezione() {
 		return Costanti.STREGA_MOLTIPLICATORE_SOGGEZIONE;
 	}
 
@@ -138,7 +135,7 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreFuria() {
+	public double getMoltiplicatoreFuria() {
 		return Costanti.STREGA_MOLTIPLICATORE_FURIA;
 	}
 
@@ -148,7 +145,7 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCoraggio() {
+	public double getMoltiplicatoreCoraggio() {
 		return Costanti.STREGA_MOLTIPLICATORE_CORAGGIO;
 	}
 
@@ -158,7 +155,7 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreValore() {
+	public double getMoltiplicatoreValore() {
 		return Costanti.STREGA_MOLTIPLICATORE_VALORE;
 	}
 
@@ -168,7 +165,7 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreNumeroBersagli() {
+	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.STREGA_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}
 
@@ -178,13 +175,53 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreStanchezza() {
+	public double getMoltiplicatoreStanchezza() {
 		return Costanti.STREGA_MOLTIPLICATORE_STANCHEZZA;
 	}
 
 	@Override
 	public String getNoteMoltiplicatoreStanchezza() {
 		return Costanti.STREGA_MOLTIPLICATORE_STANCHEZZA_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniMagici() {
+		return Costanti.STREGA_MOLTIPLICATORE_DANNI_MAGICI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreDanniMagici() {
+		return Costanti.STREGA_MOLTIPLICATORE_DANNI_MAGICI_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniFisici() {
+		return Costanti.STREGA_MOLTIPLICATORE_DANNI_FISICI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreDanniFisici() {
+		return Costanti.STREGA_MOLTIPLICATORE_DANNI_FISICI_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoMagico() {
+		return Costanti.STREGA_MOLTIPLICATORE_RECUPERO_MAGICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreRecuperoMagico() {
+		return Costanti.STREGA_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoFisico() {
+		return Costanti.STREGA_MOLTIPLICATORE_RECUPERO_FISICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreRecuperoFisico() {
+		return Costanti.STREGA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA;
 	}
 
 	@Override

@@ -5,7 +5,6 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.UI;
@@ -42,12 +41,8 @@ public class Artefatto implements Oggetto {
 		return md.getCostoAcquisto();
 	}
 
-	public int getPeso() {
+	public double getPeso() {
 		return md.getPeso();
-	}
-
-	public final int getModificatoreAttributo(TipoAttributo tipoAttributo) {
-		return md.getModificatoreAttributo(tipoAttributo);
 	}
 
 	/**

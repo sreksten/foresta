@@ -5,6 +5,7 @@ import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.RegistroMissioni.TipoMissione;
+import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.personaggi.Ladra;
 import com.threeamigos.foresta.personaggi.Ladro;
 import com.threeamigos.foresta.ui.UI;
@@ -73,6 +74,10 @@ public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 			g.setLocazioneCorrenteVisitata();
 			Foresta.impostaLocazioneCorrente(ClassiLocazione.GROTTA);
 		}
+	}
+
+	public TipoRiposo getTipoRiposo() {
+		return TipoRiposo.ALL_APERTO_CON_FUOCO;
 	}
 
 }

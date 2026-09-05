@@ -11,7 +11,7 @@ import java.util.Collection;
  *
  * @author Stefano Reksten
  */
-public class RisultatoDanno {
+public class RisultatoCombattimento {
 
     private int danno;
     private final Collection<TipoInterazioneElementale> interazioniElementali = new ArrayList<>();
@@ -19,7 +19,7 @@ public class RisultatoDanno {
     private final Collection<TipoEffettoDiStato> effettiDiStatoDaRimuovere = new ArrayList<>();
     private boolean colpoDiGrazia = false;
 
-    public RisultatoDanno() {
+    public RisultatoCombattimento() {
         danno = 0;
     }
 

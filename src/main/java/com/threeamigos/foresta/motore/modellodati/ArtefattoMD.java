@@ -15,8 +15,7 @@ public class ArtefattoMD implements Serializzabile {
 	private int livello;
 	private int danni;
 	protected int costoAcquisto;
-	private int peso;
-
+	private double peso;
 	private final Collection<ModificatoreAttributo> modificatori = new ArrayList<>();
 
 	public TipoArtefatto getTipo() {
@@ -67,26 +66,25 @@ public class ArtefattoMD implements Serializzabile {
 		this.costoAcquisto = costoAcquisto;
 	}
 
-	public int getPeso() {
+	public double getPeso() {
 		return peso;
 	}
 
-	public void setPeso(int peso) {
+	public void setPeso(double peso) {
 		this.peso = peso;
 	}
 
-	public void addModificatoreAttributo(TipoAttributo tipoModificatoreAttributo, int valore) {
-		modificatori.add(new ModificatoreAttributo(tipoModificatoreAttributo, valore));
+	public Collection<ModificatoreAttributo> getModificatori() {
+		return modificatori;
 	}
 
-	public int getModificatoreAttributo(TipoAttributo tipoAttributo) {
-		int risultato = 0;
-		for (ModificatoreAttributo modificatore : modificatori) {
-			if (modificatore.getTipoModificatoreAttributo() == tipoAttributo) {
-				risultato += modificatore.getValore();
-			}
-		}
-		return risultato;
+	public void addModificatore(ModificatoreAttributo modificatore) {
+		modificatori.add(modificatore);
+	}
+
+	public void addModificatore(TipoAttributo tipoAttributo, TipoModificatore tipoModificatore,
+								double quantita, String nota) {
+		modificatori.add(new ModificatoreAttributo(tipoAttributo, tipoModificatore, quantita, nota));
 	}
 
 	@Override
@@ -105,13 +103,16 @@ public class ArtefattoMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(peso);
 		stream.print(PIPE);
+		stream.println(modificatori.size());
 		for (ModificatoreAttributo modificatore : modificatori) {
+			stream.print(modificatore.getTipoAttributo().name());
+			stream.print(PIPE);
 			stream.print(modificatore.getTipoModificatoreAttributo().name());
 			stream.print(PIPE);
-			stream.print(modificatore.getValore());
+			stream.print(modificatore.getQuantita());
 			stream.print(PIPE);
+			stream.println((modificatore.getNote() == null || modificatore.getNote().isEmpty()) ? "-" : modificatore.getNote());
 		}
-		stream.println();
 	}
 
 	@Override
@@ -124,9 +125,22 @@ public class ArtefattoMD implements Serializzabile {
 		livello = Integer.parseInt(st.nextToken());
 		danni = Integer.parseInt(st.nextToken());
 		costoAcquisto = Integer.parseInt(st.nextToken());
-		peso = Integer.parseInt(st.nextToken());
-		while (st.hasMoreTokens()) {
-			modificatori.add(new ModificatoreAttributo(TipoAttributo.valueOf(st.nextToken()), Integer.parseInt(st.nextToken())));
+		peso = Double.parseDouble(st.nextToken());
+		int numeroModificatori = Integer.parseInt(st.nextToken());
+		modificatori.clear();
+		for (int i = 0; i < numeroModificatori; i++) {
+			line = stream.readLine();
+			st = new StringTokenizer(line, PIPE);
+			while (st.hasMoreTokens()) {
+				TipoAttributo tipoAttributo = TipoAttributo.valueOf(st.nextToken());
+				TipoModificatore tipoModificatore = TipoModificatore.valueOf(st.nextToken());
+				Double quantita = Double.parseDouble(st.nextToken());
+				String note = st.nextToken();
+				if ("-".equals(note)) {
+					note = null;
+				}
+				modificatori.add(new ModificatoreAttributo(tipoAttributo, tipoModificatore, quantita, note));
+			}
 		}
 	}
 }

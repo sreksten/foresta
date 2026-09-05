@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoMortePersonaggio;
+import com.threeamigos.foresta.eventi.EventoVariazioneStatistichePersonaggio;
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
@@ -16,9 +19,7 @@ import com.threeamigos.foresta.ui.ImageCache;
 import com.threeamigos.foresta.ui.UI;
 
 import java.awt.image.BufferedImage;
-import java.util.Collection;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -49,8 +50,6 @@ public abstract class PersonaggioBase implements Personaggio {
 	public PersonaggioBase(ClassePersonaggio classe) {
 		md.setClasse(classe);
 		png = true;
-		md.setVivo(true);
-		md.setLivello(1);
 		Function<Integer, Integer> funzionePerValoriIniziali;
 		if (isParteConValoriMassimi()) {
 			funzionePerValoriIniziali = val -> val;
@@ -157,6 +156,8 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 		md.setVivo(false);
 		md.setCausaTrapasso(causaTrapasso);
+		BusEventi.pubblica(new EventoMortePersonaggio(this, causaTrapasso));
+		//FIXME da levare quando si passa alla notifica via bus
 		UI.notificaMorte(this);
 	}
 
@@ -167,35 +168,84 @@ public abstract class PersonaggioBase implements Personaggio {
 	public void resuscita() {
 		md.setVivo(true);
 		md.setCausaTrapasso(null);
-		md.setSalute(md.getSaluteMassima() / 10);
+		md.setSalute((int)(md.getSaluteMassima() / 10.0d));
 		md.setStanchezza(9);
+		BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE, getSalute()));
+		BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.STANCHEZZA, getStanchezza()));
 	}
 
+	//FIXME metodo da rimuovere quando passiamo al nuovo motore di combattimento
 	public int getDanniInCombattimento() {
 
-		int danni = Math.max(0, (getSalute() + getCoraggio()) / 10 + getQuantitaEffettoDiStato() - getStanchezza() - Dado.tira(-5, +5));
+		double danni = Math.max(0, (getSalute() + getCoraggio()) / 10 + getQuantitaEffettoDiStato() - getStanchezza() - Dado.tira(-5, +5));
+		danni = danni * getMoltiplicatoreDanniFisici();
 
 		Logger.log((getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)) + " (" + getSalute() + "/"
 				+ getSaluteMassima() + ") fa " + danni + " danni.");
-		return danni * getModificaDanniForza();
+		return (int)danni;
 	}
 
-	public int getModificaDanniForza() {
+	//FIXME metodo da rimuovere quando passiamo al nuovo motore di combattimento
+	public int getModificaDanniFisici(int danni) {
 		return 1;
 	}
 
-	public int getBersagliPerIncantesimo() {
-		int modificaDaArtefatti = getModificaDaArtefatti(TipoAttributo.NUMERO_BERSAGLI);
-		return 1 + modificaDaArtefatti;
-	}
-
-	public int getModificaDanniMagia(int danniBase) {
-		return danniBase;
-	}
-
 	public int getBersagli() {
-		int modificaDaArtefatti = getModificaDaArtefatti(TipoAttributo.NUMERO_BERSAGLI);
-		return 1 + modificaDaArtefatti;
+		double numeroBersagli = getQuantitaModificata(1 * getMoltiplicatoreNumeroBersagli(), TipoAttributo.NUMERO_BERSAGLI);
+		return (int)(Math.min(1, numeroBersagli));
+	}
+
+	/**
+	 * Prende il valore base dei danni di un incantesimo e lo moltiplica per il moltiplicatore di danni magia
+ 	 */
+	public int getModificaDanniMagia(int danniBase) {
+		double danniModificati = getQuantitaModificata(danniBase, TipoAttributo.MAGIA);
+		return (int)danniModificati;
+	}
+
+	/**
+	 * Calcola i Punti Vita (HP) rigenerati durante un turno di riposo.
+	 */
+	public int getRecuperoSalute() {
+
+		/* Metodologia precedente:
+		if (isPNG()) {
+			return getSaluteMassima() / 10 + getModificaDaArtefatti(TipoAttributo.SALUTE);
+		} else {
+			return getSaluteMassima() / 20;
+		}
+		 */
+
+		// Se la creatura è un non-morto o uno spettro, il moltiplicatore è 0.0, quindi guarisce 0
+		if (getMoltiplicatoreRecuperoFisico() == 0.0) {
+			return 0;
+		}
+
+		// 1. Base di partenza mista
+		double baseGrezza = getQuantitaModificata(5.0d, TipoAttributo.RIGENERAZIONE_SALUTE) + (getSaluteMassima() * 0.05);
+
+		// 2. Impatto dell'attributo Costituzione con Diminishing Returns
+		double bonusCostituzione = 1.0 + (Math.sqrt(getCostituzione()) / 10.0);
+
+		// 3. Calcolo finale combinato con il moltiplicatore di archetipo
+		double saluteFinale = (baseGrezza * bonusCostituzione) * getMoltiplicatoreRecuperoFisico();
+
+		// Arrotondamento a un decimale per la UI
+		return (int)Math.ceil(saluteFinale);
+	}
+
+	/**
+	 * Calcola il mana rigenerato durante un turno di riposo.
+	 */
+	public int getRecuperoMagia() {
+		// 1. Calcolo del recupero potenziale basato solo sulla capienza massima
+		double recuperoGrezzo = getQuantitaModificata(5.0d, TipoAttributo.RIGENERAZIONE_MAGIA) + getMagiaMassima() * 0.05d;
+
+		// 2. Applicazione del moltiplicatore di classe/razza
+		double manaRigenerato = recuperoGrezzo * getMoltiplicatoreRecuperoMagico();
+
+		// Arrotondamento a un decimale per l'interfaccia utente (UI)
+		return (int)Math.ceil(manaRigenerato);
 	}
 
 	public String getDescrizione() {
@@ -253,58 +303,25 @@ public abstract class PersonaggioBase implements Personaggio {
 			sb.append("ha molto carisma");
 		}
 		sb.append('.');
-		List<ArtefattoMD> artefatti = md.getArtefatti();
+		Collection<ArtefattoMD> artefatti = md.getArtefatti();
 		if (!artefatti.isEmpty()) {
 			sb.append(' ');
 			sb.append(getPronome());
 			sb.append(' ');
-			ArtefattoMD a;
-			for (int i = 0; i < artefatti.size(); i++) {
-				if (i > 0) {
-					sb.append(',');
-				}
-				a = artefatti.get(i);
-				sb.append(a.getTipo().getUtilizzo()).append(' ').append(a.getNome()).append(", ").append(a.getDescrizione());
-			}
+			sb.append(artefatti.stream()
+					.map(a -> a.getTipo().getUtilizzo() + ' ' + a.getNome() + ", " + a.getDescrizione())
+					.collect(Collectors.joining(", ")));
 			sb.append('.');
 		}
 		return sb.toString();
 	}
 
-	public void riposa(int ore, boolean alCoperto) {
-		int modifica;
-		// via la stanchezza
-		if (alCoperto) {
-			md.setStanchezza(0);
-		} else {
-			modifica = md.getStanchezza() / 2;
-			int modificaDaArtefatti = getModificaDaArtefatti(TipoAttributo.STANCHEZZA);
-			if (modificaDaArtefatti > 0) {
-				// Ci sono artefatti che aumentano la stanchezza, ma per pietà verso il giocatore non li consideriamo
-				modifica += modificaDaArtefatti;
-			}
-			subStanchezza(modifica);
-		}
-		// accresce la salute
-		modifica = getModificaDaArtefatti(TipoAttributo.SALUTE);
-		if (ore < 4) {
-			if (alCoperto) {
-				addSalute(getRecuperoSalute() * ore + modifica);
-			}
-		} else {
-			if (alCoperto) {
-				addSalute(100 + modifica);
-			} else {
-				int i = getRecuperoSalute() * ore;
-				if (i > 100) {
-					i = 100;
-				}
-				addSalute(i + modifica);
-			}
-		}
-		// torna la magia
-		modifica = getModificaDaArtefatti(TipoAttributo.MAGIA);
-		addMagia(getRecuperoMagia() * ore + modifica);
+	@Override
+	public void riposa(int ore, TipoRiposo tipoRiposo) {
+		RisultatoRiposo risultatoRiposo = CalcolatoreRiposo.calcolaRiposo(this, ore, tipoRiposo);
+		addSalute(risultatoRiposo.getRipristinoSalute());
+		addMagia(risultatoRiposo.getRipristinoMagia());
+		subStanchezza(risultatoRiposo.getAbbassamentoStanchezza());
 	}
 
 	public void fugge() {
@@ -358,9 +375,9 @@ public abstract class PersonaggioBase implements Personaggio {
 						.setDanniBase(5)
 						.setCostoAcquisto(15)
 						.setPeso(2)
-						.setModificatore(TipoAttributo.FORZA, 1)
+						.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 5)
 						.costruisci();
-                RisultatoDanno risultato = CalcolatoreCombattimento.calcolaDannoFinale(this, bersaglio, TipoDanno.TAGLIENTE, arma);
+                RisultatoCombattimento risultato = CalcolatoreCombattimento.calcolaDannoFinale(this, bersaglio, TipoDanno.TAGLIENTE, arma);
 				Logger.log("Con nuovo motore colpirebbe assegnando " + risultato.getDannoTotale() + " danni");
 			} else {
 				Logger.log("Con nuovo motore non colpisce");
@@ -508,7 +525,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.setVivo(true);
 		md.setLivello(1);
 		md.setEsperienza(0);
-		md.setCarico(0);
 		md.setSalute(funzione.apply(getSaluteMassima()));
 		md.setMagia(funzione.apply(getMagiaMassima()));
 		md.setForza(funzione.apply(getForzaMassima()));
@@ -557,23 +573,23 @@ public abstract class PersonaggioBase implements Personaggio {
 	// CARICO
 
 	@Override
-	public int getCarico() {
-		return md.getCarico();
+	public double getCarico() {
+		return md.getArtefatti().stream().mapToDouble(ArtefattoMD::getPeso).sum();
 	}
 
 	public boolean puoPrendere(Artefatto artefatto) {
 		return puoPrendere(artefatto.getPeso());
 	}
 
-	public boolean puoPrendere(int quantita) {
-		return quantita <= getCaricoMassimo() - getCarico();
+	public boolean puoPrendere(double quantita) {
+		return quantita <= calcolaCaricoMassimo() - getCarico();
 	}
 
 	// CARICO MASSIMO
 
 	@Override
 	public int getCaricoMassimo() {
-		return get(PersonaggioMD::getCaricoMassimo, TipoAttributo.CARICO);
+		return md.getCaricoMassimo();
 	}
 
 	// SALUTE
@@ -594,8 +610,6 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	//FIXME sono convinto che questo metodo sia un po' troppo un pout-pourri
 	public void subSalute(int quantita, Personaggio avversario, Personaggio.NotificaFerite notificaFerite, Personaggio.NotificaMorte notificaMorte) {
-		int modificaDaArtefatti = getModificaDaArtefatti(TipoAttributo.PARATA);
-		quantita -= modificaDaArtefatti;
 		if (quantita <= 0) {
 			if (notificaFerite == Personaggio.NotificaFerite.SI) {
 				String sb = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA) +
@@ -668,19 +682,10 @@ public abstract class PersonaggioBase implements Personaggio {
 
 		if ((md.getClasse() == ClassePersonaggio.GUERRIERO || md.getClasse() == ClassePersonaggio.GUERRIERA) &&
 				getFuria() > 0 && !hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
-			int sogliaBerserk = md.getSaluteMassima() / 3;
+			double sogliaBerserk = md.getSaluteMassima() / 3.0d;
 			if (salute > 0 && salute <= sogliaBerserk) {
 				addEffettoDiStato(TipoEffettoDiStato.BERSERK, 1);
 			}
-		}
-	}
-
-	@Override
-	public int getRecuperoSalute() {
-		if (isPNG()) {
-			return getSaluteMassima() / 10 + getModificaDaArtefatti(TipoAttributo.SALUTE);
-		} else {
-			return getSaluteMassima() / 20;
 		}
 	}
 
@@ -721,11 +726,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 		md.setMagia(md.getMagia() - quantita);
 		UI.variaMagia(this, -quantita);
-	}
-
-	@Override
-	public int getRecuperoMagia() {
-		return 1 + getModificaDaArtefatti(TipoAttributo.MAGIA);
 	}
 
 	@Override
@@ -1075,11 +1075,10 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.setFuria(calcolaFuria());
 		md.setCoraggio(calcolaCoraggio());
 		md.setValore(calcolaValore());
-		//FIXME manca il numero bersagli
-		calcolaNumeroBersagli();
+		md.setNumeroBersagli(calcolaNumeroBersagli());
 	}
 
-	protected abstract double getMoltiplicatoreCarico();
+	public abstract double getMoltiplicatoreCarico();
 
 	/**
 	 * Calcola il carico massimo basandosi UNICAMENTE sulle statistiche primarie
@@ -1101,12 +1100,12 @@ public abstract class PersonaggioBase implements Personaggio {
 		double potenziale = potenzaFisica + resistenzaFisica;
 
 		// Applichiamo il filtro della classe (se 0.0, azzera tutto l'algoritmo)
-		double caricoFinale = potenziale * getMoltiplicatoreCarico();
+		double caricoFinale = getQuantitaModificata(potenziale, TipoAttributo.CARICO_MASSIMO);
 
 		return (int)caricoFinale;
 	}
 
-	protected abstract double getMoltiplicatoreCritico();
+	public abstract double getMoltiplicatoreCritico();
 
 	/**
 	 * Calcola il critico (0-100) basandosi UNICAMENTE sulle statistiche primarie
@@ -1138,7 +1137,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int)criticoFinale;
 	}
 
-	protected abstract double getMoltiplicatorePrecisione();
+	public abstract double getMoltiplicatorePrecisione();
 
 	private int calcolaPrecisione() {
 		// Per rispecchiare la descrizione ("precisione oculare, stabilità della mano e coordinazione occhio-mano"),
@@ -1159,7 +1158,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int)precisioneFinale;
 	}
 
-	protected abstract double getMoltiplicatoreVelocita();
+	public abstract double getMoltiplicatoreVelocita();
 
 	private int calcolaVelocita() {
 		// Per rispecchiare la descrizione ("precisione oculare, stabilità della mano e coordinazione occhio-mano"),
@@ -1180,7 +1179,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int)velocitaFinale;
 	}
 
-	protected abstract double getMoltiplicatoreFurtivita();
+	public abstract double getMoltiplicatoreFurtivita();
 
 	private int calcolaFurtivita() {
 		// Per rispecchiare il concetto di "muoversi senza farsi notare e agire nell'ombra", la Furtività deve
@@ -1202,7 +1201,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int)furtivitaFinale;
 	}
 
-	protected abstract double getMoltiplicatoreParata();
+	public abstract double getMoltiplicatoreParata();
 
 	private int calcolaParata() {
 		// Per rispecchiare il concetto di "frapporre l'arma o lo scudo tra sé e il colpo nemico", la Parata
@@ -1224,7 +1223,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int)parataFinale;
 	}
 
-	protected abstract double getMoltiplicatoreResistenzaMagica();
+	public abstract double getMoltiplicatoreResistenzaMagica();
 
 	private int calcolaResistenzaMagica() {
 		// Per rispecchiare una difesa basata sul controllo dei flussi energetici e sulla fermezza d'animo, la
@@ -1246,7 +1245,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int)resistenzaMagicaFinale;
 	}
 
-	protected abstract double getMoltiplicatorePercezione();
+	public abstract double getMoltiplicatorePercezione();
 
 	private int calcolaPercezione() {
 		// Per rispecchiare fedelmente il concetto di "sensi acuti, vista sviluppata e udito sopraffino", la Percezione
@@ -1268,7 +1267,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int)percezioneFinale;
 	}
 
-	protected abstract double getMoltiplicatoreSoggezione();
+	public abstract double getMoltiplicatoreSoggezione();
 
 	private int calcolaSoggezione() {
 		// Per rispecchiare il concetto di "forza della personalità combinata all'aura di terrore", la Soggezione
@@ -1290,7 +1289,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int)soggezioneFinale;
 	}
 
-	protected abstract double getMoltiplicatoreFuria();
+	public abstract double getMoltiplicatoreFuria();
 
 	private int calcolaFuria() {
 		// Per rispecchiare una statistica basata sull'impulso distruttivo e sulla resistenza al dolore, la Furia
@@ -1312,7 +1311,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int)furiaFinale;
 	}
 
-	protected abstract double getMoltiplicatoreCoraggio();
+	public abstract double getMoltiplicatoreCoraggio();
 
 	private int calcolaCoraggio() {
 		// Per rispecchiare il concetto di "forza della personalità e forza di volontà", il Coraggio deve attingere a
@@ -1334,7 +1333,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int)coraggioFinale;
 	}
 
-	protected abstract double getMoltiplicatoreValore();
+	public abstract double getMoltiplicatoreValore();
 
 	private int calcolaValore() {
 		// Per rispecchiare il concetto di "spirito di sacrificio ed eroismo guidato dalla stabilità biologica", il
@@ -1356,7 +1355,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int)valoreFinale;
 	}
 
-	protected abstract double getMoltiplicatoreNumeroBersagli();
+	public abstract double getMoltiplicatoreNumeroBersagli();
 
 	private int calcolaNumeroBersagli() {
 		// Per rispecchiare sia la capacità fisica di spazzare un'area con la massa corporea sia il controllo mentale
@@ -1379,7 +1378,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int)Math.max(1, Math.floor(valoreFinale));
 	}
 
-	protected abstract double getMoltiplicatoreStanchezza();
+	public abstract double getMoltiplicatoreStanchezza();
 
 	public double calcolaStanchezza(Comando comando) {
 		// Per calcolare quanta stanchezza accumula un personaggio alla fine di un turno di combattimento, dobbiamo
@@ -1418,11 +1417,42 @@ public abstract class PersonaggioBase implements Personaggio {
 	// -- funzioni per calcolo modificatori
 
 	private int get(Function<PersonaggioMD, Integer> getterAttributo, TipoAttributo tipoAttributo) {
-		return getterAttributo.apply(md) + getModificaDaArtefatti(tipoAttributo);
+		return (int) getQuantitaModificata(getterAttributo.apply(md), tipoAttributo);
 	}
 
-	private int getModificaDaArtefatti(TipoAttributo tipoAttributo) {
-		return md.getArtefatti().stream().mapToInt(a -> a.getModificatoreAttributo(tipoAttributo)).sum();
+	private double getQuantitaModificata(double quantitaOriginale, TipoAttributo tipoAttributo) {
+		List<ModificatoreAttributo> modificatoriLocali = new ArrayList<>();
+
+		md.getModificatori()
+				.stream()
+				.filter(m -> m.getTipoAttributo() == tipoAttributo)
+				.forEach(modificatoriLocali::add);
+
+		md.getArtefatti()
+				.stream()
+				.flatMap(a -> a.getModificatori().stream())
+				.filter(m -> m.getTipoAttributo() == tipoAttributo)
+				.forEach(modificatoriLocali::add);
+
+		OptionalDouble modificatoreAssoluto = modificatoriLocali
+				.stream()
+				.filter(m -> m.getTipoModificatoreAttributo() == TipoModificatore.QUANTITA_ASSOLUTA)
+				.mapToDouble(ModificatoreAttributo::getQuantita).min();
+
+		if (modificatoreAssoluto.isPresent())
+			return modificatoreAssoluto.getAsDouble();
+
+		double quantitaFisse = modificatoriLocali.stream()
+				.filter(m -> m.getTipoModificatoreAttributo() == TipoModificatore.AUMENTO_FISSO)
+				.mapToDouble(ModificatoreAttributo::getQuantita).sum();
+
+		quantitaOriginale += quantitaFisse;
+
+		double quantitaPercentuali = modificatoriLocali.stream()
+				.filter(m -> m.getTipoModificatoreAttributo() == TipoModificatore.AUMENTO_PERCENTUALE)
+				.mapToDouble(ModificatoreAttributo::getQuantita).sum();
+
+		return quantitaOriginale * (1 + quantitaPercentuali / 100);
 	}
 
 	// EFFETTI DI STATO
@@ -1449,7 +1479,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	// Artefatti
 
-	//FIXME così fa un po' caà ma intanto facciamolo compilare
+	//FIXME così fa un po' ribrezzo ma intanto facciamolo compilare. Per poterlo eliminare del tutto occorre gestire correttamente l'inventario del gruppo.
 	@Override
 	public List<Artefatto> getInventario() {
 		return md.getArtefatti().stream().map(Artefatto::new).collect(Collectors.toList());
@@ -1462,9 +1492,4 @@ public abstract class PersonaggioBase implements Personaggio {
 	public void removeArtefatto(Artefatto a) {
 		md.getArtefatti().remove(a.getModelloDati());
 	}
-
-	public String stats() {
-		return md.stats();
-	}
-
 }

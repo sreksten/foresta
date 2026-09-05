@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
 
@@ -98,5 +99,9 @@ public abstract class Citta extends LocazioneUnica {
 			}
 		}
 		return Stato.IN_LOCAZIONE;
+	}
+
+	public TipoRiposo getTipoRiposo() {
+		throw new IllegalArgumentException("Non si può riposare all'aperto in città");
 	}
 }

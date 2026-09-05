@@ -4,6 +4,7 @@ import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Stato;
+import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.oggetti.Oggetto;
 
 /**
@@ -73,4 +74,6 @@ public interface Locazione {
 	 * Una volta preso, l'oggetto viene tolto dalla locazione (per evitare che venga preso due volte)
 	 */
     void rimuoviOggetto();
+
+	TipoRiposo getTipoRiposo();
 }

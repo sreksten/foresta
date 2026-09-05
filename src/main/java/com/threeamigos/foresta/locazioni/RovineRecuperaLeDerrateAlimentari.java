@@ -4,6 +4,7 @@ import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.RegistroMissioni.TipoMissione;
+import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.personaggi.Troll;
 import com.threeamigos.foresta.ui.UI;
 
@@ -52,6 +53,10 @@ public class RovineRecuperaLeDerrateAlimentari extends LocazioneUnica {
 		} else {
 			UI.notifica("Tra queste rovine si nascondeva la banda di Troll che aveva rubato il carico di derrate alimentari.");
 		}
+	}
+
+	public TipoRiposo getTipoRiposo() {
+		return TipoRiposo.ALL_APERTO_CON_FUOCO;
 	}
 
 }

@@ -19,10 +19,6 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	public String getNomePlurale() { return "OmbreFiamma"; }
 	public String getPronome() { return Misc.EGLI; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
-	public int getRecuperoMagia() { return Costanti.OMBRAFIAMMA_RECUPERO_MAGIA; }
-	public int getModificaDanniForza() { return Costanti.OMBRAFIAMMA_MODIFICATORE_DANNI_FORZA; }
-	public int getModificaDanniMagia(int danniBase) { return danniBase * Costanti.OMBRAFIAMMA_MODIFICATORE_DANNI_MAGIA; }
-	public int getBersagliPerIncantesimo() { return Costanti.OMBRAFIAMMA_BERSAGLI_PER_INCANTESIMO_BONUS + super.getBersagliPerIncantesimo(); }
 
 	public OmbraFiamma() {
 		super(ClassePersonaggio.OMBRAFIAMMA);
@@ -55,7 +51,7 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCarico() {
+	public double getMoltiplicatoreCarico() {
 		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_CARICO;
 	}
 
@@ -65,7 +61,7 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCritico() {
+	public double getMoltiplicatoreCritico() {
 		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_CRITICO;
 	}
 
@@ -75,7 +71,7 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatorePrecisione() {
+	public double getMoltiplicatorePrecisione() {
 		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_PRECISIONE;
 	}
 
@@ -85,7 +81,7 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreVelocita() {
+	public double getMoltiplicatoreVelocita() {
 		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_VELOCITA;
 	}
 
@@ -95,7 +91,7 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreFurtivita() {
+	public double getMoltiplicatoreFurtivita() {
 		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_FURTIVITA;
 	}
 
@@ -105,7 +101,7 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreParata() {
+	public double getMoltiplicatoreParata() {
 		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_PARATA;
 	}
 
@@ -115,7 +111,7 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreResistenzaMagica() {
+	public double getMoltiplicatoreResistenzaMagica() {
 		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_RESISTENZA_MAGICA;
 	}
 
@@ -125,7 +121,7 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatorePercezione() {
+	public double getMoltiplicatorePercezione() {
 		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_PERCEZIONE;
 	}
 
@@ -135,7 +131,7 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreSoggezione() {
+	public double getMoltiplicatoreSoggezione() {
 		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_SOGGEZIONE;
 	}
 
@@ -145,7 +141,7 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreFuria() {
+	public double getMoltiplicatoreFuria() {
 		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_FURIA;
 	}
 
@@ -155,7 +151,7 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCoraggio() {
+	public double getMoltiplicatoreCoraggio() {
 		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_CORAGGIO;
 	}
 
@@ -165,7 +161,7 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreValore() {
+	public double getMoltiplicatoreValore() {
 		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_VALORE;
 	}
 
@@ -175,7 +171,7 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreNumeroBersagli() {
+	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}
 
@@ -185,13 +181,53 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreStanchezza() {
+	public double getMoltiplicatoreStanchezza() {
 		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_STANCHEZZA;
 	}
 
 	@Override
 	public String getNoteMoltiplicatoreStanchezza() {
 		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_STANCHEZZA_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniMagici() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_DANNI_MAGICI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreDanniMagici() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_DANNI_MAGICI_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniFisici() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_DANNI_FISICI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreDanniFisici() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_DANNI_FISICI_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoMagico() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_RECUPERO_MAGICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreRecuperoMagico() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoFisico() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_RECUPERO_FISICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreRecuperoFisico() {
+		return Costanti.OMBRAFIAMMA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA;
 	}
 
 	@Override

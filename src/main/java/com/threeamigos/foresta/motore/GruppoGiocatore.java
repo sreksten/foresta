@@ -6,6 +6,7 @@ import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.GruppoGiocatoreMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
@@ -305,13 +306,13 @@ public class GruppoGiocatore extends Gruppo {
 		setCoordinate(new CoordinateMD(getX() - passi, getY()));
 	}
 
-	public final void riposa() {
-		getPersonaggiVivi().forEach(p -> p.riposa(1, false));
+	public final void riposa(TipoRiposo tipoRiposo) {
+		getPersonaggiVivi().forEach(p -> p.riposa(1, tipoRiposo));
 		UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 		UI.rinfresca();
 	}
 
-	public final void pernotta() {
+	public final void pernotta(TipoRiposo tipoRiposo) {
 		Logger.log("Inizio pernottamento");
 		ClassiLocazione classeLocazione = getClasseLocazioneCorrente();
 		int ore = LineaTemporale.oreFinoAlMattino();
@@ -351,7 +352,7 @@ public class GruppoGiocatore extends Gruppo {
 			sb.append(" per rimettersi in forze.");
 			UI.notifica(sb.toString());
 		}
-		getPersonaggiVivi().forEach(p -> p.riposa(ore, alCoperto));
+		getPersonaggiVivi().forEach(p -> p.riposa(ore, tipoRiposo));
 		UI.notifica("Il sole sorge e l'avventura ricomincia.");
 		UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 		UI.rinfresca();

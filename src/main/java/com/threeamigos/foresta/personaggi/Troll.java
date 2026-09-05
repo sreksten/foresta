@@ -46,7 +46,7 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCarico() {
+	public double getMoltiplicatoreCarico() {
 		return Costanti.TROLL_MOLTIPLICATORE_CARICO;
 	}
 
@@ -56,7 +56,7 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCritico() {
+	public double getMoltiplicatoreCritico() {
 		return Costanti.TROLL_MOLTIPLICATORE_CRITICO;
 	}
 
@@ -66,7 +66,7 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatorePrecisione() {
+	public double getMoltiplicatorePrecisione() {
 		return Costanti.TROLL_MOLTIPLICATORE_PRECISIONE;
 	}
 
@@ -76,7 +76,7 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreVelocita() {
+	public double getMoltiplicatoreVelocita() {
 		return Costanti.TROLL_MOLTIPLICATORE_VELOCITA;
 	}
 
@@ -86,7 +86,7 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreFurtivita() {
+	public double getMoltiplicatoreFurtivita() {
 		return Costanti.TROLL_MOLTIPLICATORE_FURTIVITA;
 	}
 
@@ -96,7 +96,7 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreParata() {
+	public double getMoltiplicatoreParata() {
 		return Costanti.TROLL_MOLTIPLICATORE_PARATA;
 	}
 
@@ -106,7 +106,7 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreResistenzaMagica() {
+	public double getMoltiplicatoreResistenzaMagica() {
 		return Costanti.TROLL_MOLTIPLICATORE_RESISTENZA_MAGICA;
 	}
 
@@ -116,7 +116,7 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatorePercezione() {
+	public double getMoltiplicatorePercezione() {
 		return Costanti.TROLL_MOLTIPLICATORE_PERCEZIONE;
 	}
 
@@ -126,7 +126,7 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreSoggezione() {
+	public double getMoltiplicatoreSoggezione() {
 		return Costanti.TROLL_MOLTIPLICATORE_SOGGEZIONE;
 	}
 
@@ -136,7 +136,7 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreFuria() {
+	public double getMoltiplicatoreFuria() {
 		return Costanti.TROLL_MOLTIPLICATORE_FURIA;
 	}
 
@@ -146,7 +146,7 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCoraggio() {
+	public double getMoltiplicatoreCoraggio() {
 		return Costanti.TROLL_MOLTIPLICATORE_CORAGGIO;
 	}
 
@@ -156,7 +156,7 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreValore() {
+	public double getMoltiplicatoreValore() {
 		return Costanti.TROLL_MOLTIPLICATORE_VALORE;
 	}
 
@@ -166,7 +166,7 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreNumeroBersagli() {
+	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.TROLL_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}
 
@@ -176,13 +176,53 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreStanchezza() {
+	public double getMoltiplicatoreStanchezza() {
 		return Costanti.TROLL_MOLTIPLICATORE_STANCHEZZA;
 	}
 
 	@Override
 	public String getNoteMoltiplicatoreStanchezza() {
 		return Costanti.TROLL_MOLTIPLICATORE_STANCHEZZA_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniMagici() {
+		return Costanti.TROLL_MOLTIPLICATORE_DANNI_MAGICI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreDanniMagici() {
+		return Costanti.TROLL_MOLTIPLICATORE_DANNI_MAGICI_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniFisici() {
+		return Costanti.TROLL_MOLTIPLICATORE_DANNI_FISICI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreDanniFisici() {
+		return Costanti.TROLL_MOLTIPLICATORE_DANNI_FISICI_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoMagico() {
+		return Costanti.TROLL_MOLTIPLICATORE_RECUPERO_MAGICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreRecuperoMagico() {
+		return Costanti.TROLL_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoFisico() {
+		return Costanti.TROLL_MOLTIPLICATORE_RECUPERO_FISICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreRecuperoFisico() {
+		return Costanti.TROLL_MOLTIPLICATORE_RECUPERO_FISICO_NOTA;
 	}
 
 	@Override

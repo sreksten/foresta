@@ -495,7 +495,7 @@ public class Automa implements ControlloreDiGioco {
 					processaAzione(null);
 					return;
 				case ACCAMPAMENTO:
-					gruppo.pernotta();
+					gruppo.pernotta(locazioneCorrente.getTipoRiposo());
 					LineaTemporale.mattinoSeguente();
 					LineaTemporale.eventi(gruppo);
 					UI.primoPiano(InterfacciaUtente.Finestra.STATO);

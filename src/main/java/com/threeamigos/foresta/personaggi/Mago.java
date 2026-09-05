@@ -19,10 +19,6 @@ public class Mago extends PersonaggioBase implements Personaggio {
 	public String getNomePlurale() { return "Maghi"; }
 	public String getPronome() { return Misc.EGLI; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
-	public int getRecuperoForza() { return Costanti.MAGO_RECUPERO_FORZA; }
-	public int getRecuperoMagia() { return Costanti.MAGO_RECUPERO_MAGIA; }
-	public int getModificaDanniMagia(int danniBase) { return danniBase * Costanti.MAGO_MODIFICATORE_DANNI_MAGIA; }
-	public int getBersagliPerIncantesimo() { return Costanti.MAGO_BERSAGLI_PER_INCANTESIMO_BONUS + super.getBersagliPerIncantesimo(); }
 
 	public Mago() {
 		super(ClassePersonaggio.MAGO);
@@ -55,7 +51,7 @@ public class Mago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCarico() {
+	public double getMoltiplicatoreCarico() {
 		return Costanti.MAGO_MOLTIPLICATORE_CARICO;
 	}
 
@@ -65,7 +61,7 @@ public class Mago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCritico() {
+	public double getMoltiplicatoreCritico() {
 		return Costanti.MAGO_MOLTIPLICATORE_CRITICO;
 	}
 
@@ -75,7 +71,7 @@ public class Mago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatorePrecisione() {
+	public double getMoltiplicatorePrecisione() {
 		return Costanti.MAGO_MOLTIPLICATORE_PRECISIONE;
 	}
 
@@ -85,7 +81,7 @@ public class Mago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreVelocita() {
+	public double getMoltiplicatoreVelocita() {
 		return Costanti.MAGO_MOLTIPLICATORE_VELOCITA;
 	}
 
@@ -95,7 +91,7 @@ public class Mago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreFurtivita() {
+	public double getMoltiplicatoreFurtivita() {
 		return Costanti.MAGO_MOLTIPLICATORE_FURTIVITA;
 	}
 
@@ -105,7 +101,7 @@ public class Mago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreParata() {
+	public double getMoltiplicatoreParata() {
 		return Costanti.MAGO_MOLTIPLICATORE_PARATA;
 	}
 
@@ -115,7 +111,7 @@ public class Mago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreResistenzaMagica() {
+	public double getMoltiplicatoreResistenzaMagica() {
 		return Costanti.MAGO_MOLTIPLICATORE_RESISTENZA_MAGICA;
 	}
 
@@ -125,7 +121,7 @@ public class Mago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatorePercezione() {
+	public double getMoltiplicatorePercezione() {
 		return Costanti.MAGO_MOLTIPLICATORE_PERCEZIONE;
 	}
 
@@ -135,7 +131,7 @@ public class Mago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreSoggezione() {
+	public double getMoltiplicatoreSoggezione() {
 		return Costanti.MAGO_MOLTIPLICATORE_SOGGEZIONE;
 	}
 
@@ -145,7 +141,7 @@ public class Mago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreFuria() {
+	public double getMoltiplicatoreFuria() {
 		return Costanti.MAGO_MOLTIPLICATORE_FURIA;
 	}
 
@@ -155,7 +151,7 @@ public class Mago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCoraggio() {
+	public double getMoltiplicatoreCoraggio() {
 		return Costanti.MAGO_MOLTIPLICATORE_CORAGGIO;
 	}
 
@@ -165,7 +161,7 @@ public class Mago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreValore() {
+	public double getMoltiplicatoreValore() {
 		return Costanti.MAGO_MOLTIPLICATORE_VALORE;
 	}
 
@@ -175,7 +171,7 @@ public class Mago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreNumeroBersagli() {
+	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.MAGO_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}
 
@@ -185,12 +181,52 @@ public class Mago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreStanchezza() {
+	public double getMoltiplicatoreStanchezza() {
 		return Costanti.MAGO_MOLTIPLICATORE_STANCHEZZA;
 	}
 
 	@Override
 	public String getNoteMoltiplicatoreStanchezza() {
 		return Costanti.MAGO_MOLTIPLICATORE_STANCHEZZA_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniMagici() {
+		return Costanti.MAGO_MOLTIPLICATORE_DANNI_MAGICI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreDanniMagici() {
+		return Costanti.MAGO_MOLTIPLICATORE_DANNI_MAGICI_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniFisici() {
+		return Costanti.MAGO_MOLTIPLICATORE_DANNI_FISICI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreDanniFisici() {
+		return Costanti.MAGO_MOLTIPLICATORE_DANNI_FISICI_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoMagico() {
+		return Costanti.MAGO_MOLTIPLICATORE_RECUPERO_MAGICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreRecuperoMagico() {
+		return Costanti.MAGO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoFisico() {
+		return Costanti.MAGO_MOLTIPLICATORE_RECUPERO_FISICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreRecuperoFisico() {
+		return Costanti.MAGO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA;
 	}
 }

@@ -19,9 +19,6 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	public String getNomePlurale() { return "Elfi"; }
 	public String getPronome() { return Misc.EGLI; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
-	public int getRecuperoMagia() { return Costanti.ELFO_RECUPERO_MAGIA; }
-	public int getModificaDanniMagia(int danniBase) { return danniBase * Costanti.ELFO_MODIFICATORE_DANNI_MAGIA; }
-	public int getBersagliPerIncantesimo() { return Costanti.ELFO_BERSAGLI_PER_INCANTESIMO_BONUS + super.getBersagliPerIncantesimo(); }
 
 	public Elfo() {
 		super(ClassePersonaggio.ELFO);
@@ -54,7 +51,7 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCarico() {
+	public double getMoltiplicatoreCarico() {
 		return Costanti.ELFO_MOLTIPLICATORE_CARICO;
 	}
 
@@ -64,7 +61,7 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCritico() {
+	public double getMoltiplicatoreCritico() {
 		return Costanti.ELFO_MOLTIPLICATORE_CRITICO;
 	}
 
@@ -74,7 +71,7 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatorePrecisione() {
+	public double getMoltiplicatorePrecisione() {
 		return Costanti.ELFO_MOLTIPLICATORE_PRECISIONE;
 	}
 
@@ -84,7 +81,7 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreVelocita() {
+	public double getMoltiplicatoreVelocita() {
 		return Costanti.ELFO_MOLTIPLICATORE_VELOCITA;
 	}
 
@@ -94,7 +91,7 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreFurtivita() {
+	public double getMoltiplicatoreFurtivita() {
 		return Costanti.ELFO_MOLTIPLICATORE_FURTIVITA;
 	}
 
@@ -104,7 +101,7 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreParata() {
+	public double getMoltiplicatoreParata() {
 		return Costanti.ELFO_MOLTIPLICATORE_PARATA;
 	}
 
@@ -114,7 +111,7 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreResistenzaMagica() {
+	public double getMoltiplicatoreResistenzaMagica() {
 		return Costanti.ELFO_MOLTIPLICATORE_RESISTENZA_MAGICA;
 	}
 
@@ -124,7 +121,7 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatorePercezione() {
+	public double getMoltiplicatorePercezione() {
 		return Costanti.ELFO_MOLTIPLICATORE_PERCEZIONE;
 	}
 
@@ -134,7 +131,7 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreSoggezione() {
+	public double getMoltiplicatoreSoggezione() {
 		return Costanti.ELFO_MOLTIPLICATORE_SOGGEZIONE;
 	}
 
@@ -144,7 +141,7 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreFuria() {
+	public double getMoltiplicatoreFuria() {
 		return Costanti.ELFO_MOLTIPLICATORE_FURIA;
 	}
 
@@ -154,7 +151,7 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCoraggio() {
+	public double getMoltiplicatoreCoraggio() {
 		return Costanti.ELFO_MOLTIPLICATORE_CORAGGIO;
 	}
 
@@ -164,7 +161,7 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreValore() {
+	public double getMoltiplicatoreValore() {
 		return Costanti.ELFO_MOLTIPLICATORE_VALORE;
 	}
 
@@ -174,7 +171,7 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreNumeroBersagli() {
+	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.ELFO_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}
 
@@ -184,12 +181,52 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreStanchezza() {
+	public double getMoltiplicatoreStanchezza() {
 		return Costanti.ELFO_MOLTIPLICATORE_STANCHEZZA;
 	}
 
 	@Override
 	public String getNoteMoltiplicatoreStanchezza() {
 		return Costanti.ELFO_MOLTIPLICATORE_STANCHEZZA_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniMagici() {
+		return Costanti.ELFO_MOLTIPLICATORE_DANNI_MAGICI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreDanniMagici() {
+		return Costanti.ELFO_MOLTIPLICATORE_DANNI_MAGICI_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniFisici() {
+		return Costanti.ELFO_MOLTIPLICATORE_DANNI_FISICI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreDanniFisici() {
+		return Costanti.ELFO_MOLTIPLICATORE_DANNI_FISICI_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoMagico() {
+		return Costanti.ELFO_MOLTIPLICATORE_RECUPERO_MAGICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreRecuperoMagico() {
+		return Costanti.ELFO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoFisico() {
+		return Costanti.ELFO_MOLTIPLICATORE_RECUPERO_FISICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreRecuperoFisico() {
+		return Costanti.ELFO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA;
 	}
 }

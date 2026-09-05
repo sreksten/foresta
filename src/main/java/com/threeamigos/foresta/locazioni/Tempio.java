@@ -3,6 +3,7 @@ package com.threeamigos.foresta.locazioni;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
@@ -49,5 +50,9 @@ public class Tempio extends LocazioneBase {
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
 		UI.notifica("Qui, in un tempio, " + descrizioneMostriEOggetti(g, gng));
+	}
+
+	public TipoRiposo getTipoRiposo() {
+		return TipoRiposo.ALL_APERTO_CON_FUOCO;
 	}
 }

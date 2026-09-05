@@ -79,7 +79,7 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Permette di indossare le armature più pesanti del gioco senza subire malus drastici alla
      * VELOCITA o alla schivata.</p>
      */
-    CARICO(SupertipoAttributo.SECONDARIO, "Capacità di trasporto e tolleranza al peso dell'armatura."),
+    CARICO_MASSIMO(SupertipoAttributo.SECONDARIO, "Capacità di trasporto e tolleranza al peso dell'armatura."),
 
     /**
      * Precisione millimetrica nel colpire i punti vitali scoperti.
@@ -182,6 +182,16 @@ public enum TipoAttributo {
      * Il numero massimo di bersagli che un personaggio può colpire in un turno.
      */
     NUMERO_BERSAGLI(SupertipoAttributo.PRIMARIO, "Numero massimo di bersagli che un personaggio può colpire in un turno."),
+
+    /**
+     * Abilità di rigenerazione della salute fisica.
+     */
+    RIGENERAZIONE_SALUTE(SupertipoAttributo.PRIMARIO, "Abilità di rigenerazione della salute fisica."),
+
+    /**
+     * Abilità di rigenerazione della magia.
+     */
+    RIGENERAZIONE_MAGIA(SupertipoAttributo.PRIMARIO, "Abilità di rigenerazione della magia."),
 
     /**
      * Salute fisica e resistenza complessiva. Quando la salute corrente scende a zero, il personaggio muore.

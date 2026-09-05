@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.ui.UI;
 
 public class Palude extends LocazioneBase {
@@ -36,7 +37,11 @@ public class Palude extends LocazioneBase {
 			return Stato.FINE_LOCAZIONE;
 		}
 		UI.notifica("Approfittando della quiete del posto, " + g.chi() + " riposerà un poco.");
-		g.riposa();
+		g.riposa(getTipoRiposo());
 		return Stato.FINE_LOCAZIONE;
+	}
+
+	public TipoRiposo getTipoRiposo() {
+		return TipoRiposo.ALL_APERTO_SENZA_FUOCO;
 	}
 }

@@ -47,7 +47,7 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 		Logger.log("IncantesimoGenerico::formula(formulante,gruppo)");
 		totale = gruppoBersaglio.getNumeroPersonaggi();
 		List<Personaggio> personaggiVivi = gruppoBersaglio.getPersonaggiVivi(); 
-		bersagli = formulante.getBersagliPerIncantesimo();
+		bersagli = formulante.getBersagli();
 		if (bersagli > personaggiVivi.size()) {
 			bersagli = personaggiVivi.size();
 		}
@@ -56,7 +56,7 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 			Logger.log("I danni vengono suddivisi tra i personaggi bersaglio");
 			danni /= bersagli;
 		}
-		Logger.log("Bersagli base: " + formulante.getBersagliPerIncantesimo() + ", vivi: " + personaggiVivi.size() + " -> bersagli: " + bersagli + ", danni=" + danni);
+		Logger.log("Bersagli base: " + formulante.getBersagli() + ", vivi: " + personaggiVivi.size() + " -> bersagli: " + bersagli + ", danni=" + danni);
 
 		for (int i = 0; i < bersagli; i++) {
 			Personaggio personaggioBersaglio = personaggiVivi.get(i);

@@ -5,10 +5,8 @@ import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.StringTokenizer;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class PersonaggioMD implements Serializzabile {
 
@@ -26,58 +24,15 @@ public class PersonaggioMD implements Serializzabile {
 	private boolean vivo;
 	private int livello;
 	private int esperienza;
-	private int carico;
-
-	private int caricoMassimo;
-	private int salute;
-	private int saluteMassima;
-	private int magia;
-	private int magiaMassima;
-	private int forza;
-	private int forzaMassima;
-	private int destrezza;
-	private int destrezzaMassima;
-	private int costituzione;
-	private int costituzioneMassima;
-	private int intelligenza;
-	private int intelligenzaMassima;
-	private int saggezza;
-	private int saggezzaMassima;
-	private int carisma;
-	private int carismaMassimo;
-	private int fortuna;
-	private int fortunaMassima;
-	private int critico;
-	private int criticoMassimo;
-	private int precisione;
-	private int precisioneMassima;
-	private int velocita;
-	private int velocitaMassima;
-	private int furtivita;
-	private int furtivitaMassima;
-	private int parata;
-	private int parataMassima;
-	private int resistenzaMagica;
-	private int resistenzaMagicaMassima;
-	private int percezione;
-	private int percezioneMassima;
-	private int soggezione;
-	private int soggezioneMassima;
-	private int furia;
-	private int furiaMassima;
-	private int coraggio;
-	private int coraggioMassimo;
-	private int valore;
-	private int valoreMassimo;
-	private int stanchezza;
-	private int stanchezzaMassima;
-
 	private String causaTrapasso;
 	private int tempo = SENZA_LIMITE;
 
-	private List<EffettoDiStato> effettiDiStato = new ArrayList<>();
-
-	private List<ArtefattoMD> artefatti = new ArrayList<>();
+	private final Map<TipoAttributo, Double> valoriMinimi = new HashMap<>();
+	private final Map<TipoAttributo, Double> valoriMassimi = new HashMap<>();
+	private final Map<TipoAttributo, Double> valoriAttributi = new HashMap<>();
+	private Collection<ModificatoreAttributo> modificatori = new ArrayList<>();
+	private Collection<EffettoDiStato> effettiDiStato = new ArrayList<>();
+	private Collection<ArtefattoMD> artefatti = new ArrayList<>();
 
 	public ClassePersonaggio getClasse() {
 		return classe;
@@ -119,348 +74,413 @@ public class PersonaggioMD implements Serializzabile {
 		this.esperienza = esperienza;
 	}
 
-	public int getCarico() {
-		return carico;
+	public void setMinimo(TipoAttributo tipo, Double valore) {
+		if (valore == null) {
+			valoriMinimi.remove(tipo);
+		} else {
+			this.valoriMinimi.put(tipo, valore);
+		}
 	}
 
-	public void setCarico(int carico) {
-		this.carico = carico;
+	public double getMinimo(TipoAttributo tipo) {
+		if (!valoriMinimi.containsKey(tipo)) {
+			return 0.0d;
+		}
+		return valoriMinimi.get(tipo);
+	}
+
+	public void setMassimo(TipoAttributo tipo, Double valore) {
+		if (valore == null) {
+			valoriMassimi.remove(tipo);
+		} else {
+			this.valoriMassimi.put(tipo, valore);
+		}
+	}
+
+	public double getMassimo(TipoAttributo tipo) {
+		if (!valoriMassimi.containsKey(tipo)) {
+			return 999_999.0d;
+		}
+		return valoriMassimi.get(tipo);
+	}
+
+	public void set(TipoAttributo tipo, double valore) {
+		double valoreMinimo = getMinimo(tipo);
+		if (valore < valoreMinimo) {
+			valore = valoreMinimo;
+		}
+		double valoreMassimo = getMassimo(tipo);
+		if (valore > valoreMassimo) {
+			valore = valoreMassimo;
+		}
+		valoriAttributi.put(tipo, valore);
+	}
+
+	public double get(TipoAttributo tipo) {
+		if (!valoriAttributi.containsKey(tipo)) {
+			return getMinimo(tipo);
+		}
+		return valoriAttributi.get(tipo);
+	}
+
+	public void setCaricoMassimo(double caricoMassimo) {
+		setMassimo(TipoAttributo.CARICO_MASSIMO, caricoMassimo);
 	}
 
 	public int getCaricoMassimo() {
-		return caricoMassimo;
+		return (int)get(TipoAttributo.CARICO_MASSIMO);
 	}
 
-	public void setCaricoMassimo(int caricoMassimo) {
-		this.caricoMassimo = caricoMassimo;
+	public void setSalute(double salute) {
+		set(TipoAttributo.SALUTE, salute);
 	}
 
 	public int getSalute() {
-		return salute;
+		return (int)get(TipoAttributo.SALUTE);
 	}
 
-	public void setSalute(int forza) {
-		this.salute = forza;
+	public void setSaluteMassima(double saluteMassima) {
+		setMassimo(TipoAttributo.SALUTE, saluteMassima);
 	}
 
 	public int getSaluteMassima() {
-		return saluteMassima;
+		return (int)getMassimo(TipoAttributo.SALUTE);
 	}
 
-	public void setSaluteMassima(int saluteMassima) {
-		this.saluteMassima = saluteMassima;
+	public void setForza(double forza) {
+		set(TipoAttributo.FORZA, forza);
 	}
 
 	public int getForza() {
-		return forza;
+		return (int)get(TipoAttributo.FORZA);
 	}
 
-	public void setForza(int forza) {
-		this.forza = forza;
+	public void setForzaMassima(double forzaMassima) {
+		valoriMassimi.put(TipoAttributo.FORZA, forzaMassima);
 	}
 
 	public int getForzaMassima() {
-		return forzaMassima;
-	}
-
-	public void setForzaMassima(int forzaMassima) {
-		this.forzaMassima = forzaMassima;
-	}
-
-	public int getDestrezza() {
-		return destrezza;
+		return (int)getMassimo(TipoAttributo.FORZA);
 	}
 
 	public void setDestrezza(int destrezza) {
-		this.destrezza = destrezza;
+		set(TipoAttributo.DESTREZZA, destrezza);
+	}
+
+	public int getDestrezza() {
+		return (int)get(TipoAttributo.DESTREZZA);
+	}
+
+	public void setDestrezzaMassima(double destrezzaMassima) {
+		setMassimo(TipoAttributo.DESTREZZA, destrezzaMassima);
 	}
 
 	public int getDestrezzaMassima() {
-		return destrezzaMassima;
-	}
-
-	public void setDestrezzaMassima(int destrezzaMassima) {
-		this.destrezzaMassima = destrezzaMassima;
-	}
-
-	public int getCostituzione() {
-		return costituzione;
+		return (int)getMassimo(TipoAttributo.DESTREZZA);
 	}
 
 	public void setCostituzione(int costituzione) {
-		this.costituzione = costituzione;
+		set(TipoAttributo.COSTITUZIONE, costituzione);
+	}
+
+	public int getCostituzione() {
+		return (int)get(TipoAttributo.COSTITUZIONE);
+	}
+
+	public void setCostituzioneMassima(double costituzioneMassima) {
+		setMassimo(TipoAttributo.COSTITUZIONE, costituzioneMassima);
 	}
 
 	public int getCostituzioneMassima() {
-		return costituzioneMassima;
+		return (int)getMassimo(TipoAttributo.COSTITUZIONE);
 	}
 
-	public void setCostituzioneMassima(int costituzioneMassima) {
-		this.costituzioneMassima = costituzioneMassima;
+	public void setIntelligenza(double intelligenza) {
+		set(TipoAttributo.INTELLIGENZA, intelligenza);
 	}
 
 	public int getIntelligenza() {
-		return intelligenza;
+		return (int)get(TipoAttributo.INTELLIGENZA);
 	}
 
-	public void setIntelligenza(int intelligenza) {
-		this.intelligenza = intelligenza;
+	public void setIntelligenzaMassima(double intelligenzaMassima) {
+		setMassimo(TipoAttributo.INTELLIGENZA, intelligenzaMassima);
 	}
 
 	public int getIntelligenzaMassima() {
-		return intelligenzaMassima;
+		return (int)getMassimo(TipoAttributo.INTELLIGENZA);
 	}
 
-	public void setIntelligenzaMassima(int intelligenzaMassima) {
-		this.intelligenzaMassima = intelligenzaMassima;
+	public void setSaggezza(double saggezza) {
+		set(TipoAttributo.SAGGEZZA, saggezza);
 	}
 
 	public int getSaggezza() {
-		return saggezza;
+		return (int)get(TipoAttributo.SAGGEZZA);
 	}
 
-	public void setSaggezza(int saggezza) {
-		this.saggezza = saggezza;
+	public void setSaggezzaMassima(double saggezzaMassima) {
+		setMassimo(TipoAttributo.SAGGEZZA, saggezzaMassima);
 	}
 
 	public int getSaggezzaMassima() {
-		return saggezzaMassima;
+		return (int)getMassimo(TipoAttributo.SAGGEZZA);
 	}
 
-	public void setSaggezzaMassima(int saggezzaMassima) {
-		this.saggezzaMassima = saggezzaMassima;
+	public void setCarisma(double carisma) {
+		set(TipoAttributo.CARISMA, carisma);
 	}
 
 	public int getCarisma() {
-		return carisma;
+		return (int)get(TipoAttributo.CARISMA);
 	}
 
-	public void setCarisma(int carisma) {
-		this.carisma = carisma;
+	public void setCarismaMassimo(double carismaMassimo) {
+		setMassimo(TipoAttributo.CARISMA, carismaMassimo);
 	}
 
 	public int getCarismaMassimo() {
-		return carismaMassimo;
+		return (int)getMassimo(TipoAttributo.CARISMA);
 	}
 
-	public void setCarismaMassimo(int carismaMassimo) {
-		this.carismaMassimo = carismaMassimo;
+	public void setFortuna(double fortuna) {
+		set(TipoAttributo.FORTUNA, fortuna);
 	}
 
 	public int getFortuna() {
-		return fortuna;
+		return (int)get(TipoAttributo.FORTUNA);
 	}
 
-	public void setFortuna(int fortuna) {
-		this.fortuna = fortuna;
+	public void setFortunaMassima(double fortunaMassima) {
+		setMassimo(TipoAttributo.FORTUNA, fortunaMassima);
 	}
 
 	public int getFortunaMassima() {
-		return fortunaMassima;
+		return (int)getMassimo(TipoAttributo.FORTUNA);
 	}
 
-	public void setFortunaMassima(int fortunaMassima) {
-		this.fortunaMassima = fortunaMassima;
+	public void setCritico(double  critico) {
+		set(TipoAttributo.CRITICO, critico);
 	}
 
 	public int getCritico() {
-		return critico;
+		return (int)get(TipoAttributo.CRITICO);
 	}
 
-	public void setCritico(int critico) {
-		this.critico = critico;
+	public void setCriticoMassimo(double criticoMassimo) {
+		setMassimo(TipoAttributo.CRITICO, criticoMassimo);
 	}
 
 	public int getCriticoMassimo() {
-		return criticoMassimo;
+		return (int)getMassimo(TipoAttributo.CRITICO);
 	}
 
-	public void setCriticoMassimo(int criticoMassimo) {
-		this.criticoMassimo = criticoMassimo;
+	public void setPrecisione(double precisione) {
+		set(TipoAttributo.PRECISIONE, precisione);
 	}
 
 	public int getPrecisione() {
-		return precisione;
+		return (int)get(TipoAttributo.PRECISIONE);
 	}
 
-	public void setPrecisione(int precisione) {
-		this.precisione = precisione;
+	public void setPrecisioneMassima(double precisioneMassima) {
+		setMassimo(TipoAttributo.PRECISIONE, precisioneMassima);
 	}
 
 	public int getPrecisioneMassima() {
-		return precisioneMassima;
+		return (int)getMassimo(TipoAttributo.PRECISIONE);
 	}
 
-	public void setPrecisioneMassima(int precisioneMassima) {
-		this.precisioneMassima = precisioneMassima;
+	public void setVelocita(double velocita) {
+		set(TipoAttributo.VELOCITA, velocita);
 	}
 
 	public int getVelocita() {
-		return velocita;
+		return (int)get(TipoAttributo.VELOCITA);
 	}
 
-	public void setVelocita(int velocita) {
-		this.velocita = velocita;
+	public void setVelocitaMassima(double velocitaMassima) {
+		setMassimo(TipoAttributo.VELOCITA, velocitaMassima);
 	}
 
 	public int getVelocitaMassima() {
-		return velocitaMassima;
+		return (int)getMassimo(TipoAttributo.VELOCITA);
 	}
 
-	public void setVelocitaMassima(int velocitaMassima) {
-		this.velocitaMassima = velocitaMassima;
+	public void setFurtivita(double furtivita) {
+		set(TipoAttributo.FURTIVITA, furtivita);
 	}
 
 	public int getFurtivita() {
-		return furtivita;
+		return (int)get(TipoAttributo.FURTIVITA);
 	}
 
-	public void setFurtivita(int furtivita) {
-		this.furtivita = furtivita;
+	public void setFurtivitaMassima(double furtivitaMassima) {
+		setMassimo(TipoAttributo.FURTIVITA, furtivitaMassima);
 	}
 
 	public int getFurtivitaMassima() {
-		return furtivitaMassima;
+		return (int)getMassimo(TipoAttributo.FURTIVITA);
 	}
 
-	public void setFurtivitaMassima(int furtivitaMassima) {
-		this.furtivitaMassima = furtivitaMassima;
+	public void setParata(double parata) {
+		set(TipoAttributo.PARATA, parata);
 	}
 
 	public int getParata() {
-		return parata;
+		return (int)get(TipoAttributo.PARATA);
 	}
 
-	public void setParata(int parata) {
-		this.parata = parata;
+	public void setParataMassima(double parataMassima) {
+		setMassimo(TipoAttributo.PARATA, parataMassima);
 	}
 
 	public int getParataMassima() {
-		return parataMassima;
+		return (int)getMassimo(TipoAttributo.PARATA);
 	}
 
-	public void setParataMassima(int parataMassima) {
-		this.parataMassima = parataMassima;
+	public void setResistenzaMagica(double resistenzaMagica) {
+		set(TipoAttributo.RESISTENZA_MAGICA, resistenzaMagica);
 	}
 
 	public int getResistenzaMagica() {
-		return resistenzaMagica;
+		return (int)get(TipoAttributo.RESISTENZA_MAGICA);
 	}
 
-	public void setResistenzaMagica(int resistenzaMagica) {
-		this.resistenzaMagica = resistenzaMagica;
+	public void setResistenzaMagicaMassima(double resistenzaMagicaMassima) {
+		setMassimo(TipoAttributo.RESISTENZA_MAGICA, resistenzaMagicaMassima);
 	}
 
 	public int getResistenzaMagicaMassima() {
-		return resistenzaMagicaMassima;
+		return (int)getMassimo(TipoAttributo.RESISTENZA_MAGICA);
 	}
 
-	public void setResistenzaMagicaMassima(int resistenzaMagicaMassima) {
-		this.resistenzaMagicaMassima = resistenzaMagicaMassima;
+	public void setPercezione(double percezione) {
+		set(TipoAttributo.PERCEZIONE, percezione);
 	}
 
 	public int getPercezione() {
-		return percezione;
+		return (int)get(TipoAttributo.PERCEZIONE);
 	}
 
-	public void setPercezione(int percezione) {
-		this.percezione = percezione;
+	public void setPercezioneMassima(double percezioneMassima) {
+		setMassimo(TipoAttributo.PERCEZIONE, percezioneMassima);
 	}
 
 	public int getPercezioneMassima() {
-		return percezioneMassima;
+		return (int)getMassimo(TipoAttributo.PERCEZIONE);
 	}
 
-	public void setPercezioneMassima(int percezioneMassima) {
-		this.percezioneMassima = percezioneMassima;
+	public void setSoggezione(double soggezione) {
+		set(TipoAttributo.SOGGEZIONE, soggezione);
 	}
 
 	public int getSoggezione() {
-		return soggezione;
+		return (int)get(TipoAttributo.SOGGEZIONE);
 	}
 
-	public void setSoggezione(int soggezione) {
-		this.soggezione = soggezione;
+	public void setSoggezioneMassima(double soggezioneMassima) {
+		setMassimo(TipoAttributo.SOGGEZIONE, soggezioneMassima);
 	}
 
 	public int getSoggezioneMassima() {
-		return soggezioneMassima;
+		return (int)getMassimo(TipoAttributo.SOGGEZIONE);
 	}
 
-	public void setSoggezioneMassima(int soggezioneMassima) {
-		this.soggezioneMassima = soggezioneMassima;
+	public void setFuria(double furia) {
+		set(TipoAttributo.FURIA, furia);
 	}
 
 	public int getFuria() {
-		return furia;
+		return (int)get(TipoAttributo.FURIA);
 	}
 
-	public void setFuria(int furia) {
-		this.furia = furia;
+	public void setFuriaMassima(double furiaMassima) {
+		setMassimo(TipoAttributo.FURIA, furiaMassima);
 	}
 
 	public int getFuriaMassima() {
-		return furiaMassima;
-	}
-
-	public void setFuriaMassima(int furiaMassima) {
-		this.furiaMassima = furiaMassima;
-	}
-
-	public int getMagia() {
-		return magia;
+		return (int)getMassimo(TipoAttributo.FURIA);
 	}
 
 	public void setMagia(int magia) {
-		this.magia = magia;
+		set(TipoAttributo.MAGIA, magia);
+	}
+
+	public int getMagia() {
+		return (int)get(TipoAttributo.MAGIA);
+	}
+
+	public void setMagiaMassima(double magiaMassima) {
+		setMassimo(TipoAttributo.MAGIA, magiaMassima);
 	}
 
 	public int getMagiaMassima() {
-		return magiaMassima;
+		return (int)getMassimo(TipoAttributo.MAGIA);
 	}
 
-	public void setMagiaMassima(int magiaMassima) {
-		this.magiaMassima = magiaMassima;
+	public void setCoraggio(double coraggio) {
+		set(TipoAttributo.CORAGGIO, coraggio);
 	}
 
 	public int getCoraggio() {
-		return coraggio;
+		return (int)get(TipoAttributo.CORAGGIO);
 	}
 
-	public void setCoraggio(int coraggio) {
-		this.coraggio = coraggio;
+	public void setCoraggioMassimo(double coraggioMassimo) {
+		setMassimo(TipoAttributo.CORAGGIO, coraggioMassimo);
 	}
 
 	public int getCoraggioMassimo() {
-		return coraggioMassimo;
+		return (int)getMassimo(TipoAttributo.CORAGGIO);
 	}
 
-	public void setCoraggioMassimo(int coraggioMassimo) {
-		this.coraggioMassimo = coraggioMassimo;
+	public void setValore(double valore) {
+		set(TipoAttributo.VALORE, valore);
 	}
 
 	public int getValore() {
-		return valore;
+		return (int)get(TipoAttributo.VALORE);
 	}
 
-	public void setValore(int valore) {
-		this.valore = valore;
+	public void setValoreMassimo(double valoreMassimo) {
+		setMassimo(TipoAttributo.VALORE, valoreMassimo);
 	}
 
 	public int getValoreMassimo() {
-		return valore;
+		return (int)getMassimo(TipoAttributo.VALORE);
 	}
 
-	public void setValoreMassimo(int valoreMassimo) {
-		this.valore = valoreMassimo;
+	public void setStanchezza(double stanchezza) {
+		set(TipoAttributo.STANCHEZZA, stanchezza);
 	}
 
 	public int getStanchezza() {
-		return stanchezza;
+		return (int)get(TipoAttributo.STANCHEZZA);
 	}
 
-	public void setStanchezza(int stanchezza) {
-		this.stanchezza = stanchezza;
+	public void setStanchezzaMassima(double stanchezzaMassima) {
+		setMassimo(TipoAttributo.STANCHEZZA, stanchezzaMassima);
+	}
+
+	public int getStanchezzaMassima() {
+		return (int)getMassimo(TipoAttributo.STANCHEZZA);
+	}
+
+	public void setNumeroBersagli(int numeroBersagli) {
+		set(TipoAttributo.NUMERO_BERSAGLI, numeroBersagli);
+	}
+
+	public int getNumeroBersagli() {
+		return (int)get(TipoAttributo.NUMERO_BERSAGLI);
+	}
+
+	public void setNumeroBersagliMassimo(double numeroBersagliMassimo) {
+		setMassimo(TipoAttributo.NUMERO_BERSAGLI, numeroBersagliMassimo);
+	}
+
+	public int getNumeroBersagliMassimo() {
+		return (int)getMassimo(TipoAttributo.NUMERO_BERSAGLI);
 	}
 
 	public String getCausaTrapasso() {
@@ -479,25 +499,33 @@ public class PersonaggioMD implements Serializzabile {
 		this.tempo = tempo;
 	}
 
-	public List<EffettoDiStato> getEffettiDiStato() {
+	public Collection<EffettoDiStato> getEffettiDiStato() {
 		return effettiDiStato;
 	}
 
-	public void setEffettiDiStato(List<EffettoDiStato> effettiDiStato) {
+	public void setEffettiDiStato(Collection<EffettoDiStato> effettiDiStato) {
 		this.effettiDiStato = effettiDiStato;
 	}
 
-	public List<ArtefattoMD> getArtefatti() {
+	public Collection<ArtefattoMD> getArtefatti() {
 		return artefatti;
 	}
 
-	public void setArtefatti(List<ArtefattoMD> artefatti) {
+	public void setArtefatti(Collection<ArtefattoMD> artefatti) {
 		this.artefatti = artefatti;
+	}
+
+	public Collection<ModificatoreAttributo> getModificatori() {
+		return modificatori;
+	}
+
+	public void setModificatori(Collection<ModificatoreAttributo> modificatori) {
+		this.modificatori = modificatori;
 	}
 
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
-		stream.print(classe.ordinal());
+		stream.print(classe.name());
 		stream.print(PIPE);
 		stream.print(nome);
 		stream.print(PIPE);
@@ -507,110 +535,16 @@ public class PersonaggioMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(esperienza);
 		stream.print(PIPE);
-		stream.print(carico);
-		stream.print(PIPE);
-		stream.print(caricoMassimo);
-		stream.print(PIPE);
-		stream.print(salute);
-		stream.print(PIPE);
-		stream.print(saluteMassima);
-		stream.print(PIPE);
-		stream.print(magia);
-		stream.print(PIPE);
-		stream.print(magiaMassima);
-		stream.print(PIPE);
-		stream.print(forza);
-		stream.print(PIPE);
-		stream.print(forzaMassima);
-		stream.print(PIPE);
-		stream.print(destrezza);
-		stream.print(PIPE);
-		stream.print(destrezzaMassima);
-		stream.print(PIPE);
-		stream.print(costituzione);
-		stream.print(PIPE);
-		stream.print(costituzioneMassima);
-		stream.print(PIPE);
-		stream.print(intelligenza);
-		stream.print(PIPE);
-		stream.print(intelligenzaMassima);
-		stream.print(PIPE);
-		stream.print(saggezza);
-		stream.print(PIPE);
-		stream.print(saggezzaMassima);
-		stream.print(PIPE);
-		stream.print(carisma);
-		stream.print(PIPE);
-		stream.print(carismaMassimo);
-		stream.print(PIPE);
-		stream.print(fortuna);
-		stream.print(PIPE);
-		stream.print(fortunaMassima);
-		stream.print(PIPE);
-		stream.print(critico);
-		stream.print(PIPE);
-		stream.print(criticoMassimo);
-		stream.print(PIPE);
-		stream.print(precisione);
-		stream.print(PIPE);
-		stream.print(precisioneMassima);
-		stream.print(PIPE);
-		stream.print(velocita);
-		stream.print(PIPE);
-		stream.print(velocitaMassima);
-		stream.print(PIPE);
-		stream.print(furtivita);
-		stream.print(PIPE);
-		stream.print(furtivitaMassima);
-		stream.print(PIPE);
-		stream.print(parata);
-		stream.print(PIPE);
-		stream.print(parataMassima);
-		stream.print(PIPE);
-		stream.print(resistenzaMagica);
-		stream.print(PIPE);
-		stream.print(resistenzaMagicaMassima);
-		stream.print(PIPE);
-		stream.print(percezione);
-		stream.print(PIPE);
-		stream.print(percezioneMassima);
-		stream.print(PIPE);
-		stream.print(soggezione);
-		stream.print(PIPE);
-		stream.print(soggezioneMassima);
-		stream.print(PIPE);
-		stream.print(furia);
-		stream.print(PIPE);
-		stream.print(furiaMassima);
-		stream.print(PIPE);
-		stream.print(coraggio);
-		stream.print(PIPE);
-		stream.print(coraggioMassimo);
-		stream.print(PIPE);
-		stream.print(valore);
-		stream.print(PIPE);
-		stream.print(valoreMassimo);
-		stream.print(PIPE);
-		stream.print(stanchezza);
-		stream.print(PIPE);
-		stream.print(stanchezzaMassima);
-		stream.print(PIPE);
 		stream.print(tempo);
 		stream.print(PIPE);
 		stream.print(artefatti.size());
-		stream.print(PIPE);
-
-		Iterator<EffettoDiStato> iterator = effettiDiStato.iterator();
-		while (iterator.hasNext()) {
-			EffettoDiStato effettoDiStato = iterator.next();
-			stream.print(effettoDiStato.getTipoModificatoreAttributo().name());
-			stream.print(PIPE);
-			stream.print(effettoDiStato.getValore());
-			if (iterator.hasNext()) {
-				stream.print(PIPE);
-			}
-		}
 		stream.println();
+
+		stream.println(valoriMinimi.entrySet().stream().map(e -> e.getKey().name() + ":" + e.getValue()).collect(Collectors.joining(PIPE)));
+		stream.println(valoriMassimi.entrySet().stream().map(e -> e.getKey().name() + ":" + e.getValue()).collect(Collectors.joining(PIPE)));
+		stream.println(valoriAttributi.entrySet().stream().map(e -> e.getKey().name() + ":" + e.getValue()).collect(Collectors.joining(PIPE)));
+		stream.println(modificatori.stream().map(m -> m.getTipoAttributo().name() + ":" + m.getTipoModificatoreAttributo().name() + ":" + m.getQuantita() + ":" + m.getNote()).collect(Collectors.joining(PIPE)));
+		stream.println(effettiDiStato.stream().map(e -> e.getTipoModificatoreAttributo().name() + ":" + e.getValore()).collect(Collectors.joining(PIPE)));
 
 		for (ArtefattoMD artefatto : artefatti) {
 			artefatto.salva(stream);
@@ -621,7 +555,7 @@ public class PersonaggioMD implements Serializzabile {
 	public void leggi(BufferedReader stream) throws IOException{
 		String line = stream.readLine();
 		StringTokenizer st = new StringTokenizer(line, PIPE);
-		classe = ClassePersonaggio.values()[Integer.parseInt(st.nextToken())];
+		classe = ClassePersonaggio.valueOf(st.nextToken());
 		nome = st.nextToken();
 		if ("null".equals(nome)) {
 			nome = null;
@@ -636,55 +570,46 @@ public class PersonaggioMD implements Serializzabile {
 		}
 		livello = Integer.parseInt(st.nextToken());
 		esperienza = Integer.parseInt(st.nextToken());
-		carico = Integer.parseInt(st.nextToken());
-		caricoMassimo = Integer.parseInt(st.nextToken());
-		salute = Integer.parseInt(st.nextToken());
-		saluteMassima = Integer.parseInt(st.nextToken());
-		magia = Integer.parseInt(st.nextToken());
-		magiaMassima = Integer.parseInt(st.nextToken());
-		forza = Integer.parseInt(st.nextToken());
-		forzaMassima = Integer.parseInt(st.nextToken());
-		destrezza = Integer.parseInt(st.nextToken());
-		destrezzaMassima = Integer.parseInt(st.nextToken());
-		costituzione = Integer.parseInt(st.nextToken());
-		costituzioneMassima = Integer.parseInt(st.nextToken());
-		intelligenza = Integer.parseInt(st.nextToken());
-		intelligenzaMassima = Integer.parseInt(st.nextToken());
-		saggezza = Integer.parseInt(st.nextToken());
-		saggezzaMassima = Integer.parseInt(st.nextToken());
-		carisma = Integer.parseInt(st.nextToken());
-		carismaMassimo = Integer.parseInt(st.nextToken());
-		fortuna = Integer.parseInt(st.nextToken());
-		fortunaMassima = Integer.parseInt(st.nextToken());
-		critico = Integer.parseInt(st.nextToken());
-		criticoMassimo = Integer.parseInt(st.nextToken());
-		precisione = Integer.parseInt(st.nextToken());
-		precisioneMassima = Integer.parseInt(st.nextToken());
-		velocita = Integer.parseInt(st.nextToken());
-		velocitaMassima = Integer.parseInt(st.nextToken());
-		furtivita = Integer.parseInt(st.nextToken());
-		furtivitaMassima = Integer.parseInt(st.nextToken());
-		parata = Integer.parseInt(st.nextToken());
-		parataMassima = Integer.parseInt(st.nextToken());
-		resistenzaMagica = Integer.parseInt(st.nextToken());
-		resistenzaMagicaMassima = Integer.parseInt(st.nextToken());
-		percezione = Integer.parseInt(st.nextToken());
-		percezioneMassima = Integer.parseInt(st.nextToken());
-		soggezione = Integer.parseInt(st.nextToken());
-		soggezioneMassima = Integer.parseInt(st.nextToken());
-		furia = Integer.parseInt(st.nextToken());
-		furiaMassima = Integer.parseInt(st.nextToken());
-		coraggio = Integer.parseInt(st.nextToken());
-		coraggioMassimo = Integer.parseInt(st.nextToken());
-		valore = Integer.parseInt(st.nextToken());
-		valoreMassimo = Integer.parseInt(st.nextToken());
-		stanchezza = Integer.parseInt(st.nextToken());
-		stanchezzaMassima = Integer.parseInt(st.nextToken());
 		tempo = Integer.parseInt(st.nextToken());
 		int numeroArtefatti = Integer.parseInt(st.nextToken());
 
+		line = stream.readLine();
+		st = new StringTokenizer(line, PIPE);
+		valoriMinimi.clear();
 		while (st.hasMoreTokens()) {
-			EffettoDiStato effettoDiStato = new EffettoDiStato(TipoEffettoDiStato.valueOf(st.nextToken()), Integer.parseInt(st.nextToken()));
+			String[] attributoValore = st.nextToken().split(":");
+			valoriMinimi.put(TipoAttributo.valueOf(attributoValore[0]), Double.parseDouble(attributoValore[1]));
+		}
+		line = stream.readLine();
+		st = new StringTokenizer(line, PIPE);
+		valoriMassimi.clear();
+		while (st.hasMoreTokens()) {
+			String[] attributoValore = st.nextToken().split(":");
+			valoriMassimi.put(TipoAttributo.valueOf(attributoValore[0]), Double.parseDouble(attributoValore[1]));
+		}
+		line = stream.readLine();
+		st = new StringTokenizer(line, PIPE);
+		valoriAttributi.clear();
+		while (st.hasMoreTokens()) {
+			String[] attributoValore = st.nextToken().split(":");
+			valoriAttributi.put(TipoAttributo.valueOf(attributoValore[0]), Double.parseDouble(attributoValore[1]));
+		}
+		line = stream.readLine();
+		st = new StringTokenizer(line, PIPE);
+		modificatori.clear();
+		while (st.hasMoreTokens()) {
+			String[] attributoValore = st.nextToken().split(":");
+			ModificatoreAttributo modificatore = new ModificatoreAttributo(TipoAttributo.valueOf(attributoValore[0]),
+					TipoModificatore.valueOf(attributoValore[1]), Double.parseDouble(attributoValore[2]),
+					attributoValore[3]);
+			modificatori.add(modificatore);
+		}
+		line = stream.readLine();
+		st = new StringTokenizer(line, PIPE);
+		effettiDiStato.clear();
+		while (st.hasMoreTokens()) {
+			String[] attributoValore = st.nextToken().split(":");
+			EffettoDiStato effettoDiStato = new EffettoDiStato(TipoEffettoDiStato.valueOf(attributoValore[0]), Integer.parseInt(attributoValore[1]));
 			effettiDiStato.add(effettoDiStato);
 		}
 
@@ -694,17 +619,5 @@ public class PersonaggioMD implements Serializzabile {
 			artefatto.leggi(stream);
 			artefatti.add(artefatto);
 		}
-	}
-
-	public String stats() {
-		return String.format("CLASSE=%15s, LIVELLO=%3d, SALUTE=%3d, MAGIA=%3d, CARICO=%3d, FORZA=%3d" +
-				", DESTREZZA=%3d, COSTITUZIONE=%3d, INTELLIGENZA=%3d" +
-				", SAGGEZZA=%3d, CARISMA=%3d, FORTUNA=%3d, CRITICO=%3d" +
-				", PRECISIONE=%3d, VELOCITA=%3d, FURTIVITA=%3d" +
-				", PARATA=%3d, RESISTENZA MAGICA=%3d, PERCEZIONE=%3d" +
-				", SOGGEZIONE=%3d, FURIA=%3d, CORAGGIO=%3d, VALORE=%3d" +
-				", STANCHEZZA=%3d", classe, livello, salute, magia, carico, forza, destrezza, costituzione, intelligenza,
-				saggezza, carisma, fortuna, critico, precisione, velocita, furtivita, parata, resistenzaMagica,
-				percezione, soggezione, furia, coraggio, valore, stanchezza);
 	}
 }

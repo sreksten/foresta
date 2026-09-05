@@ -3,6 +3,7 @@ package com.threeamigos.foresta.locazioni;
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
@@ -261,5 +262,9 @@ public class Alchimista extends LocazioneBase implements Locazione {
 			}
 		}
 		ComandiPossibili.add(Comando.NO_INCANTESIMO);
+	}
+
+	public TipoRiposo getTipoRiposo() {
+		throw new IllegalArgumentException("Non si può riposare nel negozio di un alchimista");
 	}
 }

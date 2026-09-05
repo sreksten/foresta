@@ -51,7 +51,7 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCarico() {
+	public double getMoltiplicatoreCarico() {
 		return Costanti.LADRO_MOLTIPLICATORE_CARICO;
 	}
 
@@ -61,7 +61,7 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCritico() {
+	public double getMoltiplicatoreCritico() {
 		return Costanti.LADRO_MOLTIPLICATORE_CRITICO;
 	}
 
@@ -71,7 +71,7 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatorePrecisione() {
+	public double getMoltiplicatorePrecisione() {
 		return Costanti.LADRO_MOLTIPLICATORE_PRECISIONE;
 	}
 
@@ -81,7 +81,7 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreVelocita() {
+	public double getMoltiplicatoreVelocita() {
 		return Costanti.LADRO_MOLTIPLICATORE_VELOCITA;
 	}
 
@@ -91,7 +91,7 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreFurtivita() {
+	public double getMoltiplicatoreFurtivita() {
 		return Costanti.LADRO_MOLTIPLICATORE_FURTIVITA;
 	}
 
@@ -101,7 +101,7 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreParata() {
+	public double getMoltiplicatoreParata() {
 		return Costanti.LADRO_MOLTIPLICATORE_PARATA;
 	}
 
@@ -111,7 +111,7 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreResistenzaMagica() {
+	public double getMoltiplicatoreResistenzaMagica() {
 		return Costanti.LADRO_MOLTIPLICATORE_RESISTENZA_MAGICA;
 	}
 
@@ -121,7 +121,7 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatorePercezione() {
+	public double getMoltiplicatorePercezione() {
 		return Costanti.LADRO_MOLTIPLICATORE_PERCEZIONE;
 	}
 
@@ -131,7 +131,7 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreSoggezione() {
+	public double getMoltiplicatoreSoggezione() {
 		return Costanti.LADRO_MOLTIPLICATORE_SOGGEZIONE;
 	}
 
@@ -141,7 +141,7 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreFuria() {
+	public double getMoltiplicatoreFuria() {
 		return Costanti.LADRO_MOLTIPLICATORE_FURIA;
 	}
 
@@ -151,7 +151,7 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreCoraggio() {
+	public double getMoltiplicatoreCoraggio() {
 		return Costanti.LADRO_MOLTIPLICATORE_CORAGGIO;
 	}
 
@@ -161,7 +161,7 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreValore() {
+	public double getMoltiplicatoreValore() {
 		return Costanti.LADRO_MOLTIPLICATORE_VALORE;
 	}
 
@@ -171,7 +171,7 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreNumeroBersagli() {
+	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.LADRO_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}
 
@@ -181,12 +181,52 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected double getMoltiplicatoreStanchezza() {
+	public double getMoltiplicatoreStanchezza() {
 		return Costanti.LADRO_MOLTIPLICATORE_STANCHEZZA;
 	}
 
 	@Override
 	public String getNoteMoltiplicatoreStanchezza() {
 		return Costanti.LADRO_MOLTIPLICATORE_STANCHEZZA_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniMagici() {
+		return Costanti.LADRO_MOLTIPLICATORE_DANNI_MAGICI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreDanniMagici() {
+		return Costanti.LADRO_MOLTIPLICATORE_DANNI_MAGICI_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreDanniFisici() {
+		return Costanti.LADRO_MOLTIPLICATORE_DANNI_FISICI;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreDanniFisici() {
+		return Costanti.LADRO_MOLTIPLICATORE_DANNI_FISICI_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoMagico() {
+		return Costanti.LADRO_MOLTIPLICATORE_RECUPERO_MAGICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreRecuperoMagico() {
+		return Costanti.LADRO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA;
+	}
+
+	@Override
+	public double getMoltiplicatoreRecuperoFisico() {
+		return Costanti.LADRO_MOLTIPLICATORE_RECUPERO_FISICO;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreRecuperoFisico() {
+		return Costanti.LADRO_MOLTIPLICATORE_RECUPERO_FISICO_NOTA;
 	}
 }
