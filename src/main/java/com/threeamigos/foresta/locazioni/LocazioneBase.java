@@ -851,15 +851,7 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		if (azione == Comando.FUGA) {
 			UI.infoCombattimento(false, null, null);
-			if (gruppo.getNumeroPersonaggiVivi() > 1) {
-				UI.notifica("Il gruppo è sicuro di voler fuggire?");
-			} else {
-				Personaggio capo = gruppo.getCapo();
-				String sb = capo.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + " è sicur" +
-						capo.getLetteraFinaleAttributo() +
-						" di voler fuggire?";
-				UI.notifica(sb);
-			}
+			chiediConfermaPerLaFuga();
 			statoLocazione = StatoLocazione.CONFERMA_FUGA;
 			ComandiPossibili.set(Comando.SI, Comando.NO);
 			return Stato.ATTESA_SI_NO;
@@ -917,16 +909,8 @@ public abstract class LocazioneBase implements Locazione {
 
 			case FUGA:
 			Logger.log("Azione.FUGA");
-			if (gruppo.getNumeroPersonaggiVivi() > 1) {
-				UI.notifica("Il gruppo è sicuro di voler fuggire?");
-			} else {
-				Personaggio capo = gruppo.getCapo();
-				String sb = capo.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + " è sicur" +
-						capo.getLetteraFinaleAttributo() +
-						" di voler fuggire?";
-				UI.notifica(sb);
-			}
-			statoLocazione = StatoLocazione.CONFERMA_FUGA;
+				chiediConfermaPerLaFuga();
+				statoLocazione = StatoLocazione.CONFERMA_FUGA;
 			ComandiPossibili.set(Comando.SI, Comando.NO);
 			return Stato.ATTESA_SI_NO;
 				
@@ -953,6 +937,18 @@ public abstract class LocazioneBase implements Locazione {
 			}
 		}
 		return null;
+	}
+
+	private void chiediConfermaPerLaFuga() {
+		if (gruppo.getNumeroPersonaggiVivi() > 1) {
+			UI.notifica("Il gruppo è sicuro di voler fuggire?");
+		} else {
+			Personaggio capo = gruppo.getCapo();
+			String sb = capo.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + " è sicur" +
+					capo.getLetteraFinaleAttributo() +
+					" di voler fuggire?";
+			UI.notifica(sb);
+		}
 	}
 
 	private void gestisciChiCombatte(Comando azione) {
