@@ -741,7 +741,7 @@ public class Automa implements ControlloreDiGioco {
 	 * altrimenti null e imposta le azioni per scegliere il personaggio
 	 */
 	private Comando scegliPersonaggio(boolean ancheSeMorto) {
-		if (gruppo.getNumeroPersonaggiVivi() == 1) {
+		if (gruppo.getNumeroPersonaggiVivi() == 1 && !ancheSeMorto) {
 			Logger.log("Automa::scegliPersonaggio(ancheMorto=" + ancheSeMorto + "): automaticamente PERSONAGGIO_1");
 			return Comando.PERSONAGGIO_1;
 		} else {
