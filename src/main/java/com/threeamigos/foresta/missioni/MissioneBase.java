@@ -73,25 +73,35 @@ public abstract class MissioneBase implements Missione {
 		return false;
 	}
 
+	@Override
 	public String ottieniProprieta(String nome) {
 		return md.ottieniProprieta(nome);
 	}
 
+	@Override
 	public void aggiungiProprieta(String nome, String valore) {
 		md.aggiungiProprieta(nome, valore);
 	}
 
+	@Override
 	public void rimuoviProprieta(String nome) {
 		md.rimuoviProprieta(nome);
 	}
 
+	@Override
 	public void aggiungiMissione(Missione missione) {
 		missioniSecondarie.add(missione);
 		md.aggiungiMissioneMD(missione.getModelloDati());
 	}
 
+	@Override
 	public void rimuoviMissione(Missione missione) {
 		missioniSecondarie.remove(missione);
 		md.rimuoviMissioneMD(missione.getModelloDati());
+	}
+
+	@Override
+	public List<Missione> getMissioniSecondarie() {
+		return missioniSecondarie;
 	}
 }

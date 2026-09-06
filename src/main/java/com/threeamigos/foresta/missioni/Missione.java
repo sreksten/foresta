@@ -2,6 +2,8 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.motore.modellodati.MissioneMD;
 
+import java.util.List;
+
 public interface Missione {
 
 	String getNome();
@@ -31,5 +33,17 @@ public interface Missione {
 	MissioneMD getModelloDati();
 	
 	void setModelloDati(MissioneMD modelloDati);
-	
+
+	String ottieniProprieta(String nome);
+
+	void aggiungiProprieta(String nome, String valore);
+
+	void rimuoviProprieta(String nome);
+
+	void aggiungiMissione(Missione missione);
+
+	void rimuoviMissione(Missione missione);
+
+	List<Missione> getMissioniSecondarie();
+
 }
