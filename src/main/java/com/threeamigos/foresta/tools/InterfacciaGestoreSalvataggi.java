@@ -4,28 +4,20 @@ import java.util.List;
 
 public interface InterfacciaGestoreSalvataggi {
 
-	public static final int NUMERO_MASSIMO = 5;
+	int NUMERO_MASSIMO = 5;
 
-	public interface InterfacciaTestataSalvataggio {
-
-		public String getId();
-
-		public String getDescrizione();
-
+	interface InterfacciaTestataSalvataggio {
+		 String getId();
+		 String getDescrizione();
 	}
 
-	public interface InterfacciaSalvataggio extends InterfacciaTestataSalvataggio {
-
-		public String getContenuto();
-
-		public void setContenuto(String contenuto);
-
+	interface InterfacciaSalvataggio extends InterfacciaTestataSalvataggio {
+		String getContenuto();
+		void setContenuto(String contenuto);
 	}
 
-	public List<InterfacciaTestataSalvataggio> getSalvataggiDisponibili();
-
-	public boolean leggi(String id);
-
-	public void salva(String id, String descrizione);
+	List<InterfacciaTestataSalvataggio> getSalvataggiDisponibili();
+	boolean leggi(String id);
+	void salva(String id, String descrizione);
 
 }
