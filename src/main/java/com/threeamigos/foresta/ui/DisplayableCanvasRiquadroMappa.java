@@ -4,20 +4,56 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.ui.sfx.CloudGenerator;
+import com.threeamigos.foresta.ui.sfx.CloudInstance;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.Random;
 
 class DisplayableCanvasRiquadroMappa {
 
-	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_MAPPA = 16;
+	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_MAPPA = 12;
 
 	private final int topLeftX;
 	private final int topLeftY;
 
+	private final int minOffsetPerNuvole;
+    private final int larghezzaRiquadroMappa;
+
+	// SFX
+	private final java.util.List<CloudInstance> clouds = new ArrayList<>();
+
 	DisplayableCanvasRiquadroMappa(int topLeftX, int topLeftY) {
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
+
+        int larghezzaSingolaIcona = ImageCache.mappa.get(ClassiLocazione.BOSCO).getWidth();
+		minOffsetPerNuvole = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_MAPPA;
+		larghezzaRiquadroMappa = 7 * larghezzaSingolaIcona;
+
+		// Generazione nuvolette
+		Random rand = new Random();
+
+		Rectangle clipRiquadro = new Rectangle(minOffsetPerNuvole, minOffsetPerNuvole, larghezzaRiquadroMappa, larghezzaRiquadroMappa);
+
+		for (int i = 0; i < 6; i++) {
+			// Dimensione della nuvola basata sulla larghezza del rettangolo (clipRiquadro.width)
+			int cloudWidth = (int)(clipRiquadro.width * 0.3) + rand.nextInt((int)(clipRiquadro.width * 0.3));
+			int cloudHeight = cloudWidth / 2;
+
+			BufferedImage singleCloudPattern = CloudGenerator.generateCloud(cloudWidth, cloudHeight);
+
+			// Posizione iniziale X e Y calcolate dentro i confini del rettangolo
+			float startX = clipRiquadro.x + rand.nextInt(clipRiquadro.width) - cloudWidth;
+			float startY = clipRiquadro.y + rand.nextInt(clipRiquadro.height - cloudHeight);
+
+			float speed = 0.2f + ((float) cloudWidth / clipRiquadro.width) * 0.8f;
+
+			// Passiamo il rettangolo direttamente al costruttore della nuvola
+			clouds.add(new CloudInstance(singleCloudPattern, startX, startY, speed, clipRiquadro));
+		}
 	}
 	
 	void disegnaMappa(Graphics2D graphics) {
@@ -69,6 +105,31 @@ class DisplayableCanvasRiquadroMappa {
 					}
 				}
 			}
+		}
+
+		// 2. Salva lo stato originale della Clip e del Composite
+		Shape originalClip = graphics.getClip();
+		Composite originalComposite = graphics.getComposite();
+
+		// 3. APPLICA LA CLIP: Da adesso in poi si colora SOLO dentro questo quadrato
+		graphics.clipRect(minOffsetPerNuvole, minOffsetPerNuvole, larghezzaRiquadroMappa, larghezzaRiquadroMappa);
+
+		// (Opzionale) Per vedere dove finisce il riquadro
+		//graphics.setColor(Color.RED); graphics.drawRect(minOffsetPerNuvole, minOffsetPerNuvole, larghezzaRiquadroMappa, larghezzaRiquadroMappa);
+
+		// 4. Imposta la trasparenza e disegna le nuvole
+		graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.45f));
+		for (CloudInstance cloud : clouds) {
+			graphics.drawImage(cloud.getImage(), cloud.getX(), cloud.getY(), null);
+		}
+
+		// 5. RIPRISTINA TUTTO: Rimuove la clip e la trasparenza per i disegni successivi
+		graphics.setComposite(originalComposite);
+		graphics.setClip(originalClip);
+
+		// Aggiorna la posizione delle nuvolette
+		for (CloudInstance cloud : clouds) {
+			cloud.update();
 		}
 	}
 
