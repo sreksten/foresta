@@ -42,6 +42,11 @@ public class Idra extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.IDRA_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.IDRA_SALUTE_BASE;
 	}

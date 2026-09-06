@@ -41,6 +41,11 @@ public class Spettro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.SPETTRO_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.SPETTRO_SALUTE_BASE;
 	}

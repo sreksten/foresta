@@ -41,6 +41,11 @@ public class Viverna extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.VIVERNA_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.VIVERNA_SALUTE_BASE;
 	}

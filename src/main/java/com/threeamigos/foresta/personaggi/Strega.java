@@ -41,6 +41,11 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.STREGA_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.STREGA_SALUTE_BASE;
 	}

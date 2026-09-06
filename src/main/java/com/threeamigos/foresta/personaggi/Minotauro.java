@@ -45,6 +45,11 @@ public class Minotauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.MINOTAURO_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public ClassiOfferta[] getOfferteCorruzione() {
 		return new ClassiOfferta[]{
 				ClassiOfferta.AIUTO_MERCENARIO,

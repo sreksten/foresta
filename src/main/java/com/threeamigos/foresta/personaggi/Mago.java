@@ -47,6 +47,11 @@ public class Mago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.MAGO_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.MAGO_SALUTE_BASE;
 	}

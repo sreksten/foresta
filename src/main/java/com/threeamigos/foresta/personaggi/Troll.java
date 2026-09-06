@@ -42,6 +42,11 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.TROLL_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.TROLL_SALUTE_BASE;
 	}

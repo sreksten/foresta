@@ -47,6 +47,11 @@ public class Elfa extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.ELFA_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.ELFA_SALUTE_BASE;
 	}

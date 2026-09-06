@@ -41,6 +41,11 @@ public class Gargoyle extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.GARGOYLE_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.GARGOYLE_SALUTE_BASE;
 	}

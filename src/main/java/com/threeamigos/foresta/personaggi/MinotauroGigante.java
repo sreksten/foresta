@@ -46,6 +46,11 @@ public class MinotauroGigante extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.MINOTAUROGIGANTE_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.MINOTAUROGIGANTE_SALUTE_BASE;
 	}

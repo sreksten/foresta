@@ -42,6 +42,11 @@ public class Spirito extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.SPIRITO_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.SPIRITO_SALUTE_BASE;
 	}

@@ -41,6 +41,11 @@ public class Drago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.DRAGO_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.DRAGO_SALUTE_BASE;
 	}

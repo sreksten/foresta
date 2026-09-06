@@ -77,9 +77,6 @@ public class Costanti {
 
     // Personaggio
     public static final int MAX_STANCHEZZA = 9;
-    public static final int MAX_CARISMA = 9;
-    public static final int MAX_VALORE = 99;
-    public static final int MAX_CORAGGIO = 99;
 
     // Statistiche dei vari tipi di personaggio
 
@@ -117,6 +114,7 @@ public class Costanti {
     public static final int BARDO_FURIA_MIN = 15;
     public static final int BARDO_FURIA_MAX = 20;
     public static final int BARDO_MAX_NUMERO = 1;
+    public static final int BARDO_PUNTI_ESPERIENZA = 25;
 
     public static final int BARDO_SALUTE_BASE = 105;
     public static final int BARDO_LIVELLAMENTO_SALUTE = 125;
@@ -191,6 +189,7 @@ public class Costanti {
     public static final int CANTASTORIE_FURIA_MIN = 15;
     public static final int CANTASTORIE_FURIA_MAX = 20;
     public static final int CANTASTORIE_MAX_NUMERO = 1;
+    public static final int CANTASTORIE_PUNTI_ESPERIENZA = 25;
 
     public static final int CANTASTORIE_SALUTE_BASE = 105;
     public static final int CANTASTORIE_LIVELLAMENTO_SALUTE = 125;
@@ -268,6 +267,7 @@ public class Costanti {
     public static final int ELFA_FURIA_MIN = 10;
     public static final int ELFA_FURIA_MAX = 15;
     public static final int ELFA_MAX_NUMERO = 1;
+    public static final int ELFA_PUNTI_ESPERIENZA = 25;
 
     public static final int ELFA_SALUTE_BASE = 105;
     public static final int ELFA_LIVELLAMENTO_SALUTE = 130;
@@ -345,6 +345,7 @@ public class Costanti {
     public static final int ELFO_FURIA_MIN = 10;
     public static final int ELFO_FURIA_MAX = 15;
     public static final int ELFO_MAX_NUMERO = 1;
+    public static final int ELFO_PUNTI_ESPERIENZA = 25;
 
     public static final int ELFO_SALUTE_BASE = 105;
     public static final int ELFO_LIVELLAMENTO_SALUTE = 130;
@@ -420,6 +421,7 @@ public class Costanti {
     public static final int GUERRIERA_FURIA_MIN = 25;
     public static final int GUERRIERA_FURIA_MAX = 35;
     public static final int GUERRIERA_MAX_NUMERO = 1;
+    public static final int GUERRIERA_PUNTI_ESPERIENZA = 25;
 
     public static final int GUERRIERA_SALUTE_BASE = 150;
     public static final int GUERRIERA_LIVELLAMENTO_SALUTE = 185;
@@ -495,6 +497,7 @@ public class Costanti {
     public static final int GUERRIERO_FURIA_MIN = 25;
     public static final int GUERRIERO_FURIA_MAX = 35;
     public static final int GUERRIERO_MAX_NUMERO = 1;
+    public static final int GUERRIERO_PUNTI_ESPERIENZA = 25;
 
     public static final int GUERRIERO_SALUTE_BASE = 150;
     public static final int GUERRIERO_LIVELLAMENTO_SALUTE = 185;
@@ -569,6 +572,7 @@ public class Costanti {
     public static final int LADRA_FURIA_MIN = 15;
     public static final int LADRA_FURIA_MAX = 25;
     public static final int LADRA_MAX_NUMERO = 1;
+    public static final int LADRA_PUNTI_ESPERIENZA = 25;
 
     public static final int LADRA_SALUTE_BASE = 100;
     public static final int LADRA_LIVELLAMENTO_SALUTE = 130;
@@ -643,6 +647,7 @@ public class Costanti {
     public static final int LADRO_FURIA_MIN = 15;
     public static final int LADRO_FURIA_MAX = 25;
     public static final int LADRO_MAX_NUMERO = 1;
+    public static final int LADRO_PUNTI_ESPERIENZA = 25;
 
     public static final int LADRO_SALUTE_BASE = 100;
     public static final int LADRO_LIVELLAMENTO_SALUTE = 130;
@@ -721,6 +726,7 @@ public class Costanti {
     public static final int MAGA_FURIA_MIN = 5;
     public static final int MAGA_FURIA_MAX = 10;
     public static final int MAGA_MAX_NUMERO = 1;
+    public static final int MAGA_PUNTI_ESPERIENZA = 25;
 
     public static final int MAGA_SALUTE_BASE = 80;
     public static final int MAGA_LIVELLAMENTO_SALUTE = 95;
@@ -799,6 +805,7 @@ public class Costanti {
     public static final int MAGO_FURIA_MIN = 5;
     public static final int MAGO_FURIA_MAX = 10;
     public static final int MAGO_MAX_NUMERO = 1;
+    public static final int MAGO_PUNTI_ESPERIENZA = 25;
 
     public static final int MAGO_SALUTE_BASE = 80;
     public static final int MAGO_LIVELLAMENTO_SALUTE = 95;
@@ -879,6 +886,7 @@ public class Costanti {
     public static final int OMBRAFIAMMA_FURIA_MIN = 30;
     public static final int OMBRAFIAMMA_FURIA_MAX = 40;
     public static final int OMBRAFIAMMA_MAX_NUMERO = 1;
+    public static final int OMBRAFIAMMA_PUNTI_ESPERIENZA = 100;
 
     public static final int OMBRAFIAMMA_SALUTE_BASE = 140;
     public static final int OMBRAFIAMMA_LIVELLAMENTO_SALUTE = 175;
@@ -944,6 +952,7 @@ public class Costanti {
     public static final int ARPIA_MAX_CORAGGIO = 30;
     public static final int ARPIA_MAX_VALORE = 30;
     public static final int ARPIA_MAX_NUMERO = 4;
+    public static final int ARPIA_PUNTI_ESPERIENZA = 15;
 
     public static final int ARPIA_SALUTE_BASE = 95;
     public static final int ARPIA_LIVELLAMENTO_SALUTE = 120;
@@ -1018,6 +1027,7 @@ public class Costanti {
     public static final int CENTAURO_MAGIA_MAX = 10;
     public static final int CENTAURO_FURIA_MIN = 15;
     public static final int CENTAURO_FURIA_MAX = 20;
+    public static final int CENTAURO_PUNTI_ESPERIENZA = 40;
 
     public static final int CENTAURO_SALUTE_BASE = 125;
     public static final int CENTAURO_LIVELLAMENTO_SALUTE = 150;
@@ -1092,6 +1102,7 @@ public class Costanti {
     public static final int CHIMERA_MAGIA_MAX = 5;
     public static final int CHIMERA_FURIA_MIN = 18;
     public static final int CHIMERA_FURIA_MAX = 25;
+    public static final int CHIMERA_PUNTI_ESPERIENZA = 40;
 
     public static final int CHIMERA_SALUTE_BASE = 120;
     public static final int CHIMERA_LIVELLAMENTO_SALUTE = 140;
@@ -1166,6 +1177,7 @@ public class Costanti {
     public static final int CHIMERADRAGO_MAGIA_MAX = 28;
     public static final int CHIMERADRAGO_FURIA_MIN = 35;
     public static final int CHIMERADRAGO_FURIA_MAX = 50;
+    public static final int CHIMERADRAGO_PUNTI_ESPERIENZA = 70;
 
     public static final int CHIMERADRAGO_SALUTE_BASE = 240;
     public static final int CHIMERADRAGO_LIVELLAMENTO_SALUTE = 280;
@@ -1240,6 +1252,7 @@ public class Costanti {
     public static final int EREMITA_FURIA_MIN = 10;
     public static final int EREMITA_FURIA_MAX = 20;
     public static final int EREMITA_MAX_NUMERO = 1;
+    public static final int EREMITA_PUNTI_ESPERIENZA = 15;
 
     public static final int EREMITA_SALUTE_BASE = 90;
     public static final int EREMITA_LIVELLAMENTO_SALUTE = 110;
@@ -1314,6 +1327,7 @@ public class Costanti {
     public static final int FANTASMA_MAGIA_MAX = 15;
     public static final int FANTASMA_FURIA_MIN = 3;
     public static final int FANTASMA_FURIA_MAX = 8;
+    public static final int FANTASMA_PUNTI_ESPERIENZA = 15;
 
     public static final int FANTASMA_SALUTE_BASE = 65;
     public static final int FANTASMA_LIVELLAMENTO_SALUTE = 75;
@@ -1388,6 +1402,7 @@ public class Costanti {
     public static final int FOLLETTO_MAGIA_MAX = 3;
     public static final int FOLLETTO_FURIA_MIN = 3;
     public static final int FOLLETTO_FURIA_MAX = 5;
+    public static final int FOLLETTO_PUNTI_ESPERIENZA = 15;
 
     public static final int FOLLETTO_SALUTE_BASE = 45;
     public static final int FOLLETTO_LIVELLAMENTO_SALUTE = 55;
@@ -1464,6 +1479,7 @@ public class Costanti {
     public static final int GARGOYLE_MAGIA_MAX = 18;
     public static final int GARGOYLE_FURIA_MIN = 15;
     public static final int GARGOYLE_FURIA_MAX = 20;
+    public static final int GARGOYLE_PUNTI_ESPERIENZA = 40;
 
     public static final int GARGOYLE_SALUTE_BASE = 135;
     public static final int GARGOYLE_LIVELLAMENTO_SALUTE = 145;
@@ -1538,6 +1554,7 @@ public class Costanti {
     public static final int GIGANTE_MAGIA_MAX = 10;
     public static final int GIGANTE_FURIA_MIN = 20;
     public static final int GIGANTE_FURIA_MAX = 30;
+    public static final int GIGANTE_PUNTI_ESPERIENZA = 70;
 
     public static final int GIGANTE_SALUTE_BASE = 250;
     public static final int GIGANTE_LIVELLAMENTO_SALUTE = 300;
@@ -1612,6 +1629,7 @@ public class Costanti {
     public static final int GOBLIN_MAGIA_MAX = 3;
     public static final int GOBLIN_FURIA_MIN = 10;
     public static final int GOBLIN_FURIA_MAX = 15;
+    public static final int GOBLIN_PUNTI_ESPERIENZA = 15;
 
     public static final int GOBLIN_SALUTE_BASE = 60;
     public static final int GOBLIN_LIVELLAMENTO_SALUTE = 75;
@@ -1687,6 +1705,7 @@ public class Costanti {
     public static final int HOBGOBLIN_MAGIA_MAX = 10;
     public static final int HOBGOBLIN_FURIA_MIN = 15;
     public static final int HOBGOBLIN_FURIA_MAX = 20;
+    public static final int HOBGOBLIN_PUNTI_ESPERIENZA = 15;
 
     public static final int HOBGOBLIN_SALUTE_BASE = 85;
     public static final int HOBGOBLIN_LIVELLAMENTO_SALUTE = 100;
@@ -1761,6 +1780,7 @@ public class Costanti {
     public static final int MINOTAURO_MAGIA_MAX = 5;
     public static final int MINOTAURO_FURIA_MIN = 25;
     public static final int MINOTAURO_FURIA_MAX = 35;
+    public static final int MINOTAURO_PUNTI_ESPERIENZA = 40;
 
     public static final int MINOTAURO_SALUTE_BASE = 160;
     public static final int MINOTAURO_LIVELLAMENTO_SALUTE = 200;
@@ -1836,6 +1856,7 @@ public class Costanti {
     public static final int OMBRANERA_MAGIA_MAX = 40;
     public static final int OMBRANERA_FURIA_MIN = 20;
     public static final int OMBRANERA_FURIA_MAX = 30;
+    public static final int OMBRANERA_PUNTI_ESPERIENZA = 40;
 
     public static final int OMBRANERA_SALUTE_BASE = 90;
     public static final int OMBRANERA_LIVELLAMENTO_SALUTE = 115;
@@ -1910,6 +1931,7 @@ public class Costanti {
     public static final int SCHELETRO_MAGIA_MAX = 3;
     public static final int SCHELETRO_FURIA_MIN = 10;
     public static final int SCHELETRO_FURIA_MAX = 15;
+    public static final int SCHELETRO_PUNTI_ESPERIENZA = 15;
 
     public static final int SCHELETRO_SALUTE_BASE = 70;
     public static final int SCHELETRO_LIVELLAMENTO_SALUTE = 85;
@@ -1984,6 +2006,7 @@ public class Costanti {
     public static final int SPETTRO_MAGIA_MAX = 10;
     public static final int SPETTRO_FURIA_MIN = 5;
     public static final int SPETTRO_FURIA_MAX = 10;
+    public static final int SPETTRO_PUNTI_ESPERIENZA = 15;
 
     public static final int SPETTRO_SALUTE_BASE = 70;
     public static final int SPETTRO_LIVELLAMENTO_SALUTE = 80;
@@ -2058,6 +2081,7 @@ public class Costanti {
     public static final int SPIRITO_MAGIA_MAX = 8;
     public static final int SPIRITO_FURIA_MIN = 3;
     public static final int SPIRITO_FURIA_MAX = 5;
+    public static final int SPIRITO_PUNTI_ESPERIENZA = 15;
 
     public static final int SPIRITO_SALUTE_BASE = 50;
     public static final int SPIRITO_LIVELLAMENTO_SALUTE = 60;
@@ -2132,6 +2156,7 @@ public class Costanti {
     public static final int TITANO_MAGIA_MAX = 12;
     public static final int TITANO_FURIA_MIN = 35;
     public static final int TITANO_FURIA_MAX = 50;
+    public static final int TITANO_PUNTI_ESPERIENZA = 100;
 
     public static final int TITANO_SALUTE_BASE = 300;
     public static final int TITANO_LIVELLAMENTO_SALUTE = 375;
@@ -2206,6 +2231,7 @@ public class Costanti {
     public static final int TROLL_MAGIA_MAX = 5;
     public static final int TROLL_FURIA_MIN = 30;
     public static final int TROLL_FURIA_MAX = 40;
+    public static final int TROLL_PUNTI_ESPERIENZA = 40;
 
     public static final int TROLL_SALUTE_BASE = 170;
     public static final int TROLL_LIVELLAMENTO_SALUTE = 210;
@@ -2281,6 +2307,7 @@ public class Costanti {
     public static final int VIVERNA_MAGIA_MAX = 40;
     public static final int VIVERNA_FURIA_MIN = 25;
     public static final int VIVERNA_FURIA_MAX = 35;
+    public static final int VIVERNA_PUNTI_ESPERIENZA = 40;
 
     public static final int VIVERNA_SALUTE_BASE = 130;
     public static final int VIVERNA_LIVELLAMENTO_SALUTE = 165;
@@ -2357,6 +2384,7 @@ public class Costanti {
     public static final int IDRA_FURIA_MIN = 45;
     public static final int IDRA_FURIA_MAX = 60;
     public static final int IDRA_MAX_NUMERO = 1;
+    public static final int IDRA_PUNTI_ESPERIENZA = 70;
 
     public static final int IDRA_SALUTE_BASE = 180;
     public static final int IDRA_LIVELLAMENTO_SALUTE = 220;
@@ -2434,6 +2462,7 @@ public class Costanti {
     public static final int LICH_FURIA_MIN = 15;
     public static final int LICH_FURIA_MAX = 25;
     public static final int LICH_MAX_NUMERO = 1;
+    public static final int LICH_PUNTI_ESPERIENZA = 100;
 
     public static final int LICH_SALUTE_BASE = 75;
     public static final int LICH_LIVELLAMENTO_SALUTE = 85;
@@ -2508,6 +2537,7 @@ public class Costanti {
     public static final int MINOTAUROGIGANTE_FURIA_MIN = 50;
     public static final int MINOTAUROGIGANTE_FURIA_MAX = 65;
     public static final int MINOTAUROGIGANTE_MAX_NUMERO = 1;
+    public static final int MINOTAUROGIGANTE_PUNTI_ESPERIENZA = 70;
 
     public static final int MINOTAUROGIGANTE_SALUTE_BASE = 230;
     public static final int MINOTAUROGIGANTE_LIVELLAMENTO_SALUTE = 275;
@@ -2585,6 +2615,7 @@ public class Costanti {
     public static final int STREGA_FURIA_MIN = 20;
     public static final int STREGA_FURIA_MAX = 30;
     public static final int STREGA_MAX_NUMERO = 1;
+    public static final int STREGA_PUNTI_ESPERIENZA = 100;
 
     public static final int STREGA_SALUTE_BASE = 85;
     public static final int STREGA_LIVELLAMENTO_SALUTE = 95;
@@ -2664,6 +2695,7 @@ public class Costanti {
     public static final int DRAGO_FURIA_MIN = 60;
     public static final int DRAGO_FURIA_MAX = 80;
     public static final int DRAGO_MAX_NUMERO = 1;
+    public static final int DRAGO_PUNTI_ESPERIENZA = 250;
 
     public static final int DRAGO_SALUTE_BASE = 200;
     public static final int DRAGO_LIVELLAMENTO_SALUTE = 250;

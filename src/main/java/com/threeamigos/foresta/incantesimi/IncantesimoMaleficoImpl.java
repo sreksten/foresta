@@ -82,7 +82,7 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 				if (GruppoGiocatore.getIstanza().contiene(formulante)) {
 					Statistiche.addMostroUcciso(personaggioBersaglio.getClasse());
 					Statistiche.addPunti(personaggioBersaglio.getSaluteMassima());
-					GruppoGiocatore.getIstanza().addPuntiEsperienza(personaggioBersaglio.getSaluteMassima());
+					GruppoGiocatore.getIstanza().addPuntiEsperienza(personaggioBersaglio.getPuntiEsperienza());
 				}
 			}
 		} else {

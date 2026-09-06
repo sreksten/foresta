@@ -44,6 +44,11 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.EREMITA_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.EREMITA_SALUTE_BASE;
 	}

@@ -40,6 +40,11 @@ public class Chimera extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.CHIMERA_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.CHIMERA_SALUTE_BASE;
 	}

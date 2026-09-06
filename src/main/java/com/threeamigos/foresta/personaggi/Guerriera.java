@@ -47,6 +47,11 @@ public class Guerriera extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.GUERRIERA_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.GUERRIERA_SALUTE_BASE;
 	}

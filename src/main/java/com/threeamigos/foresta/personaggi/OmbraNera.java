@@ -41,6 +41,11 @@ public class OmbraNera extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.OMBRANERA_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.OMBRANERA_SALUTE_BASE;
 	}

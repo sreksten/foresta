@@ -43,6 +43,11 @@ public class Hobgoblin extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.HOBGOBLIN_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.HOBGOBLIN_SALUTE_BASE;
 	}

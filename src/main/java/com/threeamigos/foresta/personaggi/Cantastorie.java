@@ -47,6 +47,11 @@ public class Cantastorie extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.CANTASTORIE_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.CANTASTORIE_SALUTE_BASE;
 	}

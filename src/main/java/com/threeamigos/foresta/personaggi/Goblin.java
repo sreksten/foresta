@@ -43,6 +43,11 @@ public class Goblin extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.GOBLIN_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.GOBLIN_SALUTE_BASE;
 	}

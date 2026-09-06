@@ -41,6 +41,11 @@ public class Fantasma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.FANTASMA_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.FANTASMA_SALUTE_BASE;
 	}

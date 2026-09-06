@@ -44,6 +44,11 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.CENTAURO_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.CENTAURO_SALUTE_BASE;
 	}

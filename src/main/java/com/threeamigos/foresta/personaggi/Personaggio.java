@@ -456,6 +456,11 @@ public interface Personaggio extends OggettoConArticoli {
 	 */
     int getStanchezza();
 
+	/**
+	 * Punti esperienza derivanti dalla sconfitta
+	 */
+	int getPuntiEsperienza();
+
 	// Modificatori di stato
 
 	/**

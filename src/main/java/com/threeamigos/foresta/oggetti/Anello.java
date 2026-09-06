@@ -127,7 +127,7 @@ public class Anello extends OggettoBase implements Oggetto {
 					p.addCarisma(Costanti.ANELLO_MAGICO_AGGIUNTA_CARISMA);
 				}
 				Statistiche.addPunti(Costanti.ANELLO_MAGICO_PUNTEGGIO);
-				GruppoGiocatore.getIstanza().addPuntiEsperienza(Costanti.ANELLO_MAGICO_PUNTEGGIO);
+				GestoreProgressione.acquisisciArtefattoMinore();
 			}
 		}
 		UI.primoPiano(InterfacciaUtente.Finestra.STATO);

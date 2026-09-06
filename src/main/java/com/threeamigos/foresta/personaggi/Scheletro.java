@@ -41,6 +41,11 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.SCHELETRO_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.SCHELETRO_SALUTE_BASE;
 	}

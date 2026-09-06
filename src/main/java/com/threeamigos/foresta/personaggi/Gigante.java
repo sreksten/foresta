@@ -44,6 +44,11 @@ public class Gigante extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.GIGANTE_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.GIGANTE_SALUTE_BASE;
 	}

@@ -802,7 +802,7 @@ public abstract class LocazioneBase implements Locazione {
 				if (GruppoGiocatore.getIstanza().contiene(combattente)) {
 					Statistiche.addMostroUcciso(bersaglio.getClasse());
 					Statistiche.addPunti(bersaglio.getSaluteMassima());
-					GruppoGiocatore.getIstanza().addPuntiEsperienza(bersaglio.getSaluteMassima());
+					GruppoGiocatore.getIstanza().addPuntiEsperienza(bersaglio.getPuntiEsperienza());
 				}
 				Personaggio nuovoBersaglio = gruppoAvversario.getPersonaggioVivo();
 				if (nuovoBersaglio != null) {

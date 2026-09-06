@@ -47,6 +47,11 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public int getPuntiEsperienza() {
+		return Costanti.OMBRAFIAMMA_PUNTI_ESPERIENZA;
+	}
+
+	@Override
 	public double getSaluteBase() {
 		return Costanti.OMBRAFIAMMA_SALUTE_BASE;
 	}
