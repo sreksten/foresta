@@ -55,6 +55,13 @@ public class UI {
 	}
 
 	/**
+	 * Inizia il gioco vero e proprio
+	 */
+	public static void iniziaGioco() {
+		interfacciaUtente.iniziaGioco();
+	}
+
+	/**
 	 * Mostra la mappa di gioco conosciuta
 	 */
 	public static void mappa() {
