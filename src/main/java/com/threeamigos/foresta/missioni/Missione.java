@@ -7,6 +7,10 @@ public interface Missione {
 	String getNome();
 	
 	String getDescrizione();
+
+	void mostraDescrizione();
+
+	void nascondiDescrizione();
 	
 	void controllaPreLocazione();
 	

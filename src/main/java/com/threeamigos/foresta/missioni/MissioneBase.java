@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.motore.modellodati.MissioneMD;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import com.threeamigos.foresta.motore.modellodati.MissioneMD;
 
 public abstract class MissioneBase implements Missione {
 
@@ -26,6 +26,26 @@ public abstract class MissioneBase implements Missione {
 	@Override
 	public void setModelloDati(MissioneMD modelloDati) {
 		this.md = modelloDati;
+	}
+
+	@Override
+	public String getNome() {
+		return md.getNome();
+	}
+
+	@Override
+	public String getDescrizione() {
+		return md.getDescrizione();
+	}
+
+	@Override
+	public void mostraDescrizione() {
+		md.setDescrizioneVisibile(true);
+	}
+
+	@Override
+	public void nascondiDescrizione() {
+		md.setDescrizioneVisibile(false);
 	}
 
 	@Override

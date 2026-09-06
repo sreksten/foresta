@@ -13,9 +13,6 @@ import com.threeamigos.foresta.ui.UI;
 public class SconfiggiIlDrago extends MissioneBase implements Missione {
 
 	private static final String DRAGO_APPARSO = "DRAGO_APPARSO";
-	
-	public SconfiggiIlDrago() {
-	}
 
 	@Override
 	public String getNome() {
@@ -26,7 +23,7 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 	public String getDescrizione() {
 		StringBuilder sb = new StringBuilder();
 		sb.append("La Foresta è minacciata da un temibile Drago. ");
-		if (!isDragoApparso()) {
+		if (isDragoNonApparso()) {
 			sb.append("Il Castello dove si trova è nascosto da un incantesimo. ");
 			sb.append(GruppoGiocatore.getIstanza().getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 			sb.append(" deve sconfiggere tutti i suoi alleati per poterlo affrontare!");			
@@ -51,7 +48,7 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 
 	@Override
 	public void controllaPostLocazione() {
-		if (!isDragoApparso() && castelliDistrutti()) {
+		if (isDragoNonApparso() && castelliDistrutti()) {
 			UI.notifica("L'incantesimo che nascondeva il castello del Drago è svanito! La missione è quasi giunta al termine!");
 			CoordinateMD coordinateCastelloDrago = Foresta.costruisciLocazioneUnica(ClassiLocazione.CASTELLO_DRAGO, false);
 			Foresta.setLocazioneVisitata(coordinateCastelloDrago, false);
@@ -83,8 +80,8 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 		return true;
 	}
 	
-	public boolean isDragoApparso() {
-		return md.ottieniProprieta(DRAGO_APPARSO) != null;
+	public boolean isDragoNonApparso() {
+		return md.ottieniProprieta(DRAGO_APPARSO) == null;
 	}
 	
 	public void setDragoApparso() {

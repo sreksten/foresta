@@ -1,0 +1,48 @@
+package com.threeamigos.foresta.missioni;
+
+import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.ui.UI;
+
+/**
+ *
+ * @author Stefano Reksten
+ */
+public class SconfiggiIlMinotauroGigante extends MissioneBase implements Missione {
+
+    @Override
+    public String getNome() {
+        return "Sconfiggi il Minotauro Gigante";
+    }
+
+    @Override
+    public String getDescrizione() {
+        return "Il Minotauro Gigante, alleato del Drago, infesta un castello e terrorizza gli abitanti.";
+    }
+
+    @Override
+    public void controllaPreLocazione() {
+        if (!isAttiva()) {
+            attivaMissione();
+        }
+    }
+
+    @Override
+    public void controllaInLocazione() {
+        // Non succede niente
+    }
+
+    @Override
+    public void controllaPostLocazione() {
+        GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
+        if (gruppo.getClasseLocazioneCorrente() == ClassiLocazione.CASTELLO_MINOTAURO && gruppo.getClasseLocazioneCorrente().getIstanza().isCompleta()) {
+            completaMissione();
+            UI.notifica("Il Minotauro è stato sconfitto!");
+        }
+    }
+
+    @Override
+    public boolean isPrimaria() {
+        return true;
+    }
+}
