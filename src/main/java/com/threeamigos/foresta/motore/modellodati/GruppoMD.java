@@ -21,6 +21,10 @@ public class GruppoMD implements Serializzabile {
 		return personaggiMD;
 	}
 
+	public void reimposta() {
+		personaggiMD.clear();
+	}
+
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stream.println(personaggiMD.size());

@@ -84,6 +84,12 @@ public class ModelloDati implements Serializzabile {
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		forestaMD.leggi(stream);
+		gruppoGiocatoreMD.reimposta();
+		statisticheMD.reimposta();
+		lineaTemporaleMD.reimposta();
+		registroPersonaggiMD.reimposta();
+		registroArtefattiMD.reimposta();
+		registroMissioniMD.reimposta();
 		gruppoGiocatoreMD.leggi(stream);
 		statisticheMD.leggi(stream);
 		lineaTemporaleMD.leggi(stream);

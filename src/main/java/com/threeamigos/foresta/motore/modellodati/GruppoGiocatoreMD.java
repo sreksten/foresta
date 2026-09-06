@@ -88,7 +88,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	////////////////////////////////
 
 	public void reimposta() {
-		gruppo.getPersonaggiMD().clear();
+		super.reimposta();
 		incantesimi = new int[ClassiIncantesimo.values().length];
 		monete = 0;
 		preziosi = 0;

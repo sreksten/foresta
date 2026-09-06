@@ -239,7 +239,7 @@ public class ForestaMD implements Serializzabile {
 		int stringOffset = 0;
 		for (int x = 0; x < dimensioneX; x++) {
 			for (int y = 0; y < dimensioneY; y++) {
-				impostaLocazioneVisitata(x, y, locazioniVisitate.charAt(stringOffset) == '0');
+				impostaLocazioneVisitata(x, y, locazioniVisitate.charAt(stringOffset++) == '1');
 			}
 		}
 	}
@@ -264,7 +264,7 @@ public class ForestaMD implements Serializzabile {
 		int stringOffset = 0;
 		for (int x = 0; x < dimensioneX; x++) {
 			for (int y = 0; y < dimensioneY; y++) {
-				if (locazioniConosciute.charAt(stringOffset) == '1') {
+				if (locazioniConosciute.charAt(stringOffset++) == '1') {
 					impostaLocazioneConosciuta(x, y);
 				}
 			}
