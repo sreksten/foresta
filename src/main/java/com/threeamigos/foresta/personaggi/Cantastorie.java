@@ -20,32 +20,50 @@ public class Cantastorie extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.ELLA; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 
-	public Cantastorie() {
-		super(ClassePersonaggio.CANTASTORIE);
+	public Cantastorie(int livello) {
+		super(ClassePersonaggio.CANTASTORIE, livello);
 	}
 
-	public Cantastorie(String nome) {
-		super(nome, ClassePersonaggio.CANTASTORIE);
+	public Cantastorie(String nome, int livello) {
+		super(nome, ClassePersonaggio.CANTASTORIE, livello);
 	}
 	
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Cantastorie.gif");
 		setIcona("icone/Cantastorie.gif");
+		setCorrompibile(true);
+		setAmichevole(true);
 
-		md.setSaluteMassima(Costanti.CANTASTORIE_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.CANTASTORIE_MAX_MAGIA);
-		md.setForzaMassima(Costanti.CANTASTORIE_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.CANTASTORIE_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.CANTASTORIE_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.CANTASTORIE_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.CANTASTORIE_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.CANTASTORIE_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.CANTASTORIE_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.CANTASTORIE_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.CANTASTORIE_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.CANTASTORIE_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.CANTASTORIE_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.CANTASTORIE_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.CANTASTORIE_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.CANTASTORIE_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.CANTASTORIE_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.CANTASTORIE_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.CANTASTORIE_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.CANTASTORIE_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.CANTASTORIE_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

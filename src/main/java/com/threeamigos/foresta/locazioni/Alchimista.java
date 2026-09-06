@@ -156,9 +156,25 @@ public class Alchimista extends LocazioneBase implements Locazione {
 				UI.rinfresca();
 				return Stato.IN_LOCAZIONE;
 
+			} else if (azione == Comando.POZIONE_SALUTE_GRANDE) {
+				gruppo.subMonete(Costanti.COSTO_POZIONE_SALUTE_GRANDE);
+				gruppo.addPozioniSaluteGrande(1);
+				UI.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI);
+				UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
+				UI.rinfresca();
+				return Stato.IN_LOCAZIONE;
+
 			} else if (azione == Comando.POZIONE_MAGIA) {
 				gruppo.subMonete(Costanti.COSTO_POZIONE_MAGIA);
 				gruppo.addPozioniMagia(1);
+				UI.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI);
+				UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
+				UI.rinfresca();
+				return Stato.IN_LOCAZIONE;
+
+			} else if (azione == Comando.POZIONE_MAGIA_GRANDE) {
+				gruppo.subMonete(Costanti.COSTO_POZIONE_MAGIA_GRANDE);
+				gruppo.addPozioniMagiaGrande(1);
 				UI.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI);
 				UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
 				UI.rinfresca();
@@ -248,8 +264,18 @@ public class Alchimista extends LocazioneBase implements Locazione {
 			ComandiPossibili.add(Comando.INCANTESIMO);
 		}
 		if (pozioniAcquistabili) {
-			ComandiPossibili.add(Comando.POZIONE_MAGIA);
-			ComandiPossibili.add(Comando.POZIONE_SALUTE);
+			if (gruppo.getMonete() >= Costanti.COSTO_POZIONE_SALUTE) {
+				ComandiPossibili.add(Comando.POZIONE_SALUTE);
+			}
+			if (gruppo.getMonete() >= Costanti.COSTO_POZIONE_SALUTE_GRANDE) {
+				ComandiPossibili.add(Comando.POZIONE_SALUTE_GRANDE);
+			}
+			if (gruppo.getMonete() >= Costanti.COSTO_POZIONE_MAGIA) {
+				ComandiPossibili.add(Comando.POZIONE_MAGIA);
+			}
+			if (gruppo.getMonete() >= Costanti.COSTO_POZIONE_MAGIA_GRANDE) {
+				ComandiPossibili.add(Comando.POZIONE_MAGIA_GRANDE);
+			}
 		}
 		ComandiPossibili.add(Comando.NO_INCANTESIMO);
 	}

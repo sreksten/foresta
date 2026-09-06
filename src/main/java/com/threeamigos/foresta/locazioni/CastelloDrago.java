@@ -1,9 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.motore.GruppoAvversario;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.LineaTemporale;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.personaggi.Drago;
 import com.threeamigos.foresta.ui.UI;
@@ -26,7 +23,7 @@ public class CastelloDrago extends LocazioneUnica {
 
 	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
-		gng.aggiungiPersonaggio(new Drago());
+		gng.aggiungiPersonaggio(new Drago(Statistiche.getLivello()));
 	}
 
 	@Override

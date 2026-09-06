@@ -71,8 +71,6 @@ public abstract class LocazioneBase implements Locazione {
 
 	// Chi sta combattendo
 	private Personaggio combattente;
-	// Per formulare un incantesimo
-	private Personaggio formulante;
 
     private Incantesimo incantesimo;
 	private Gruppo gruppoBersaglio;
@@ -85,6 +83,7 @@ public abstract class LocazioneBase implements Locazione {
 		CHI_BEVE_POZIONE_SALUTE,
 		CHI_BEVE_POZIONE_SALUTE_GRANDE,
 		CHI_BEVE_POZIONE_MAGIA,
+		CHI_BEVE_POZIONE_MAGIA_GRANDE,
 		CHI_FORMULA,
 		QUALE_FORMULA,
 		SU_CHI_FORMULA,
@@ -113,7 +112,7 @@ public abstract class LocazioneBase implements Locazione {
 		completa = false;
 		opzioneCorruzioneDisponibile = false;
 		opzioneAmiciziaDisponibile = false;
-		formulante = null;
+		gruppo.setFormulante(null);
 		combattente = null;
 		setOggetto(null);
 	}
@@ -137,7 +136,7 @@ public abstract class LocazioneBase implements Locazione {
 				Logger.log("Scelta da " + m.length + " personaggi la classe " + classePersonaggio + ", numero " + numero);
 				Personaggio p;
 				for (int i = 0; i < numero; i++) {
-					p = classePersonaggio.getIstanza();
+					p = classePersonaggio.getIstanza(Statistiche.getLivello());
 					p.setOrdinale(i + 1);
 					avversario.aggiungiPersonaggio(p);
 				}
@@ -187,8 +186,6 @@ public abstract class LocazioneBase implements Locazione {
 	@Override
 	public Stato impostaAzioni(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario, Comando azione) {
         Stato possibileStato;
-        // Per fare una azione generica
-        Personaggio chiAgisce;
         switch (statoLocazione) {
 		case NUOVA_LOCAZIONE:
 			possibileStato = gestisciNuovaLocazione();
@@ -220,27 +217,18 @@ public abstract class LocazioneBase implements Locazione {
 			break;
 
 		case CHI_BEVE_POZIONE_SALUTE:
-			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_CURATRICE");
+			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_SALUTE");
 			if (azione != Comando.ANNULLA) {
-				chiAgisce = gruppo.getPersonaggio(azione);
-				chiAgisce.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE);
-				gruppo.subPozioniSalute(1);
-				UI.notifica(chiAgisce.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-						" ha bevuto una pozione che fa riacquistare salute.");
+				gruppo.consumaPozioneSalute(azione);
 			}
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
 			impostaAzioni(gruppo, gruppoAvversario, null);
 			return Stato.IN_LOCAZIONE;
 
 		case CHI_BEVE_POZIONE_SALUTE_GRANDE:
-			Logger.log("LocazioneBase.CHI_BEVE_GRANDE_POZIONE_CURATRICE");
+			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_SALUTE_GRANDE");
 			if (azione != Comando.ANNULLA) {
-				chiAgisce = gruppo.getPersonaggio(azione);
-				chiAgisce.addSaluteMassima(Costanti.AUMENTO_SALUTE_DA_POZIONE_SALUTE_GRANDE);
-				chiAgisce.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE_GRANDE);
-				gruppo.subPozioniSaluteGrande(1);
-				UI.notifica(chiAgisce.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
-						" ha bevuto una pozione che recupera e fa aumentare la salute massima!");
+				gruppo.consumaPozioneSaluteGrande(azione);
 			}
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
 			impostaAzioni(gruppo, gruppoAvversario, null);
@@ -249,23 +237,28 @@ public abstract class LocazioneBase implements Locazione {
 		case CHI_BEVE_POZIONE_MAGIA:
 			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_MAGIA");
 			if (azione != Comando.ANNULLA) {
-				chiAgisce = gruppo.getPersonaggio(azione);
-				chiAgisce.addMagia(Costanti.RECUPERO_DA_POZIONE_MAGIA);
-				gruppo.subPozioniMagia(1);
-				UI.notifica(chiAgisce.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
-						" ha bevuto una pozione che fa riacquistare magia.");
+				gruppo.consumaPozioneMagia(azione);
 			}
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
 			impostaAzioni(gruppo, gruppoAvversario, null);
 			return Stato.IN_LOCAZIONE;
-			
+
+		case CHI_BEVE_POZIONE_MAGIA_GRANDE:
+			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_MAGIA_GRANDE");
+			if (azione != Comando.ANNULLA) {
+				gruppo.consumaPozioneMagiaGrande(azione);
+			}
+			statoLocazione = StatoLocazione.IN_LOCAZIONE;
+			impostaAzioni(gruppo, gruppoAvversario, null);
+			return Stato.IN_LOCAZIONE;
+
 		case CHI_FORMULA:
 			Logger.log("LocazioneBase.CHI_FORMULA");
 			if (azione == Comando.ANNULLA) {
 				statoLocazione = StatoLocazione.IN_LOCAZIONE;
 				break;
 			}
-			formulante = gruppo.getPersonaggio(azione);
+			gruppo.setFormulante(gruppo.getPersonaggio(azione));
 			statoLocazione = StatoLocazione.QUALE_FORMULA;
 			return Stato.SCELTA_INCANTESIMO_DA_LANCIARE;
 
@@ -278,7 +271,9 @@ public abstract class LocazioneBase implements Locazione {
 				opzioneCorruzioneDisponibile = false;
 				opzioneAmiciziaDisponibile = false;
 				incantesimo = ClassiIncantesimo.ofComando(azione);
+				Personaggio formulante = gruppo.getFormulante();
 				if (formulante.getMagia() < incantesimo.getCostoLancio()) {
+					// Non si dovrebbe più riuscire a entrare in questo ramo perché la scelta degli incantesimi è già stata filtrata
                     String sb = "Il livello di magia " + formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
                             " non permette di formulare questo incantesimo.";
 					UI.notifica(sb);
@@ -332,6 +327,7 @@ public abstract class LocazioneBase implements Locazione {
 			Logger.log("LocazioneBase.SU_CHI_FORMULA");
 			if (azione != Comando.ANNULLA) {
 				Personaggio personaggioBersaglio = gruppoBersaglio.getPersonaggio(azione);
+				Personaggio formulante = gruppo.getFormulante();
 				incantesimo.formula(formulante, personaggioBersaglio, null);
 				gruppo.subIncantesimi(incantesimo.getClasse(), 1);
 				rispostaAvversaria(formulante, gruppo, gruppoAvversario);
@@ -506,19 +502,17 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	private void impostaComandiPossibili() {
-
 		ComandiPossibili.reimposta();
 		// Possiamo combattere?
-		// Se stiamo combattendo no, ma in questo caso dovremmo aggiungere la possibilità di imterrompere il combattimento
-		// oppure lasciarla se i personaggi sono più di uno.
 		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO || gruppo.getNumeroPersonaggiVivi() > 1) {
 			ComandiPossibili.add(Comando.COMBATTIMENTO);
 		} else if (statoLocazione == StatoLocazione.IN_COMBATTIMENTO) {
 			ComandiPossibili.add(Comando.INTERRUZIONE_COMBATTIMENTO);
 		}
-		// Possiamo formulare incantesimi?
+		// Possiamo formulare incantesimi? Si se ne abbiamo almeno uno e se uno dei personaggi vivi può lanciarlo
 		for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
-			if (gruppo.getIncantesimi(classeIncantesimo) > 0) {
+			if (gruppo.getIncantesimi(classeIncantesimo) > 0 &&
+					gruppo.getPersonaggiVivi().stream().anyMatch(p -> p.getMagia() >= classeIncantesimo.getIstanza().getCostoLancio())) {
 				ComandiPossibili.add(Comando.INCANTESIMO);
 				break;
 			}
@@ -538,16 +532,18 @@ public abstract class LocazioneBase implements Locazione {
 			ComandiPossibili.add(Comando.POZIONE_SALUTE);
 		}
 		if (gruppo.getPozioniSaluteGrande() > 0) {
-			ComandiPossibili.add(Comando.GRANDE_POZIONE_SALUTE);
+			ComandiPossibili.add(Comando.POZIONE_SALUTE_GRANDE);
 		}
 		if (gruppo.getPozioniMagia() > 0) {
 			ComandiPossibili.add(Comando.POZIONE_MAGIA);
+		}
+		if (gruppo.getPozioniMagiaGrande() > 0) {
+			ComandiPossibili.add(Comando.POZIONE_MAGIA_GRANDE);
 		}
 		// Si puo' sempre ricorrere a una bella...
 		ComandiPossibili.add(Comando.FUGA);
 		// E possiamo sempre richiedere di descrivere di nuovo la locazione
 		ComandiPossibili.add(Comando.AIUTO);
-
 	}
 
 	/**
@@ -639,12 +635,14 @@ public abstract class LocazioneBase implements Locazione {
 	private void rispostaAvversaria(Personaggio personaggioBersaglio, GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
 		Personaggio avversarioAttaccante = null;
 		List<Personaggio> avversariVivi = gruppoAvversario.getPersonaggiVivi();
+		// Un avversario che può formulare incantesimi ha la precedenza
 		for (Personaggio avversarioCorrente : avversariVivi) {
 			if (avversarioCorrente.isMagico() && avversarioCorrente.getMagia() > 0) {
 				avversarioAttaccante = avversarioCorrente;
 				break;
 			}
 		}
+		// Altrimenti, l'avversario con più danni in combattimento
 		if (avversarioAttaccante == null) {
 			for (Personaggio avversarioCorrente : avversariVivi) {
 				if (avversarioAttaccante == null || avversarioCorrente.getDanniInCombattimento() > avversarioAttaccante.getDanniInCombattimento()) {
@@ -738,6 +736,8 @@ public abstract class LocazioneBase implements Locazione {
 
 
 			// Test per nuovo motore combattimento
+			Logger.log("---------- NUOVO MOTORE ----------");
+			Logger.log(combattente.getNome() + " attacca " + bersaglio.getNome());
 
 			Artefatto arma = CostruttoreArtefatto.istanza()
 					.setTipo(TipoArtefatto.ASCIA)
@@ -755,17 +755,17 @@ public abstract class LocazioneBase implements Locazione {
 			boolean colpirebbe = CalcolatoreCombattimento.colpisce(combattente, bersaglio);
 			if (colpirebbe) {
 				RisultatoCombattimento risultato = CalcolatoreCombattimento.calcolaDannoFinale(combattente, bersaglio, TipoDanno.TAGLIENTE, arma);
-				Logger.log("Con nuovo motore il combattente colpirebbe assegnando " + risultato.getDannoTotale() + " danni");
+				UI.notifica("Con nuovo motore " + combattente.getNome() + " colpirebbe " + bersaglio.getNome() + " assegnando " + risultato.getDannoTotale() + " danni");
 			} else {
-				Logger.log("Con nuovo motore il combattente non colpisce");
+				UI.notifica("Con nuovo motore " + combattente.getNome() + " non colpisce " + bersaglio.getNome());
 			}
 			Logger.log("Valutazione bersaglio -> combattente");
 			colpirebbe = CalcolatoreCombattimento.colpisce(bersaglio, combattente);
 			if (colpirebbe) {
 				RisultatoCombattimento risultato = CalcolatoreCombattimento.calcolaDannoFinale(bersaglio, combattente, TipoDanno.TAGLIENTE, arma);
-				Logger.log("Con nuovo motore il bersaglio colpirebbe assegnando " + risultato.getDannoTotale() + " danni");
+				UI.notifica("Con nuovo motore " + bersaglio.getNome() + " colpirebbe " + combattente.getNome() + " assegnando " + risultato.getDannoTotale() + " danni");
 			} else {
-				Logger.log("Con nuovo motore il bersaglio non colpisce");
+				UI.notifica("Con nuovo motore " + bersaglio.getNome() + " non colpisce " + combattente.getNome());
 			}
 
 			combattente.subSalute(danniBersaglio, bersaglio, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
@@ -782,6 +782,7 @@ public abstract class LocazioneBase implements Locazione {
 				if (GruppoGiocatore.getIstanza().contiene(combattente)) {
 					Statistiche.addMostroUcciso(bersaglio.getClasse());
 					Statistiche.addPunti(bersaglio.getSaluteMassima());
+					GruppoGiocatore.getIstanza().addPuntiEsperienza(bersaglio.getSaluteMassima());
 				}
 				Personaggio nuovoBersaglio = gruppoAvversario.getPersonaggioVivo();
 				if (nuovoBersaglio != null) {
@@ -812,23 +813,16 @@ public abstract class LocazioneBase implements Locazione {
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
-				Personaggio capo = gruppo.getCapo();
-				capo.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE);
-				gruppo.subPozioniSalute(1);
-				UI.notifica(capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ha bevuto una pozione che fa riacquistare salute.");
+				gruppo.consumaPozioneSalute(gruppo.getCapo());
 				return Stato.IN_COMBATTIMENTO;
 			}
 		}
-		if (azione == Comando.GRANDE_POZIONE_SALUTE) {
+		if (azione == Comando.POZIONE_SALUTE_GRANDE) {
 			if (gruppo.getNumeroPersonaggiVivi() > 1) {
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE_GRANDE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
-				Personaggio capo = gruppo.getCapo();
-				capo.addSaluteMassima(Costanti.AUMENTO_SALUTE_DA_POZIONE_SALUTE_GRANDE);
-				capo.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE_GRANDE);
-				gruppo.subPozioniSaluteGrande(1);
-				UI.notifica(capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ha bevuto una pozione che fa aumentare la salute!");
+				gruppo.consumaPozioneSaluteGrande(gruppo.getCapo());
 				return Stato.IN_COMBATTIMENTO;
 			}
 		}
@@ -837,10 +831,16 @@ public abstract class LocazioneBase implements Locazione {
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
-				Personaggio capo = gruppo.getCapo();
-				capo.addMagia(Costanti.RECUPERO_DA_POZIONE_MAGIA);
-				gruppo.subPozioniMagia(1);
-				UI.notifica(capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ha bevuto una pozione che fa riacquistare magia.");
+				gruppo.consumaPozioneMagia(gruppo.getCapo());
+				return Stato.IN_COMBATTIMENTO;
+			}
+		}
+		if (azione == Comando.POZIONE_MAGIA_GRANDE) {
+			if (gruppo.getNumeroPersonaggiVivi() > 1) {
+				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA_GRANDE;
+				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+			} else {
+				gruppo.consumaPozioneMagiaGrande(gruppo.getCapo());
 				return Stato.IN_COMBATTIMENTO;
 			}
 		}
@@ -896,12 +896,12 @@ public abstract class LocazioneBase implements Locazione {
 				return Stato.MAPPA;
 				
 			case POZIONE_SALUTE:
-				Logger.log("Azione.POZIONE_FORZA");
+				Logger.log("Azione.POZIONE_SALUTE");
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 				
-			case GRANDE_POZIONE_SALUTE:
-				Logger.log("Azione.POZIONE_GRANDE_FORZA");
+			case POZIONE_SALUTE_GRANDE:
+				Logger.log("Azione.POZIONE_SALUTE_GRANDE");
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE_GRANDE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 
@@ -909,21 +909,26 @@ public abstract class LocazioneBase implements Locazione {
 				Logger.log("Azione.POZIONE_MAGIA");
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-				
+
+			case POZIONE_MAGIA_GRANDE:
+				Logger.log("Azione.POZIONE_MAGIA_GRANDE");
+				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA_GRANDE;
+				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+
 			case FUGA:
-				Logger.log("Azione.FUGA");
-				if (gruppo.getNumeroPersonaggiVivi() > 1) {
-					UI.notifica("Il gruppo è sicuro di voler fuggire?");
-				} else {
-					Personaggio capo = gruppo.getCapo();
-                    String sb = capo.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + " è sicur" +
-                            capo.getLetteraFinaleAttributo() +
-                            " di voler fuggire?";
-					UI.notifica(sb);
-				}
-				statoLocazione = StatoLocazione.CONFERMA_FUGA;
-				ComandiPossibili.set(Comando.SI, Comando.NO);
-				return Stato.ATTESA_SI_NO;
+			Logger.log("Azione.FUGA");
+			if (gruppo.getNumeroPersonaggiVivi() > 1) {
+				UI.notifica("Il gruppo è sicuro di voler fuggire?");
+			} else {
+				Personaggio capo = gruppo.getCapo();
+				String sb = capo.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + " è sicur" +
+						capo.getLetteraFinaleAttributo() +
+						" di voler fuggire?";
+				UI.notifica(sb);
+			}
+			statoLocazione = StatoLocazione.CONFERMA_FUGA;
+			ComandiPossibili.set(Comando.SI, Comando.NO);
+			return Stato.ATTESA_SI_NO;
 				
 			case AIUTO:
 				Logger.log("Azione.AIUTO");

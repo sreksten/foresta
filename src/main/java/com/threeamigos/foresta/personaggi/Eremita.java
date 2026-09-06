@@ -21,28 +21,46 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.EGLI; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
-	public Eremita() {
-		super(ClassePersonaggio.EREMITA);
+	public Eremita(int livello) {
+		super(ClassePersonaggio.EREMITA, livello);
 	}
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Eremita.gif");
 		setIcona("icone/Eremita.gif");
+		setCorrompibile(true);
+		setAmichevole(true);
 
-		md.setSaluteMassima(Costanti.EREMITA_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.EREMITA_MAX_MAGIA);
-		md.setForzaMassima(Costanti.EREMITA_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.EREMITA_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.EREMITA_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.EREMITA_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.EREMITA_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.EREMITA_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.EREMITA_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.EREMITA_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.EREMITA_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.EREMITA_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.EREMITA_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.EREMITA_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.EREMITA_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.EREMITA_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.EREMITA_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.EREMITA_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.EREMITA_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.EREMITA_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.EREMITA_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

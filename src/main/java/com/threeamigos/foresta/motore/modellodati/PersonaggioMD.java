@@ -8,6 +8,9 @@ import java.io.PrintWriter;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Il modello dati per un personaggio.
+ */
 public class PersonaggioMD implements Serializzabile {
 
 	/**
@@ -24,6 +27,7 @@ public class PersonaggioMD implements Serializzabile {
 	private boolean vivo;
 	private int livello;
 	private int esperienza;
+	private int puntiAbilitaDisponibili;
 	private String causaTrapasso;
 	private int tempo = SENZA_LIMITE;
 
@@ -74,6 +78,14 @@ public class PersonaggioMD implements Serializzabile {
 		this.esperienza = esperienza;
 	}
 
+	public int getPuntiAbilitaDisponibili() {
+		return puntiAbilitaDisponibili;
+	}
+
+	public void setPuntiAbilitaDisponibili(int puntiAbilitaDisponibili) {
+		this.puntiAbilitaDisponibili = puntiAbilitaDisponibili;
+	}
+
 	public void setMinimo(TipoAttributo tipo, Double valore) {
 		if (valore == null) {
 			valoriMinimi.remove(tipo);
@@ -82,11 +94,11 @@ public class PersonaggioMD implements Serializzabile {
 		}
 	}
 
-	public double getMinimo(TipoAttributo tipo) {
+	public Optional<Double> getMinimo(TipoAttributo tipo) {
 		if (!valoriMinimi.containsKey(tipo)) {
-			return 0.0d;
+			return Optional.empty();
 		}
-		return valoriMinimi.get(tipo);
+		return Optional.of(valoriMinimi.get(tipo));
 	}
 
 	public void setMassimo(TipoAttributo tipo, Double valore) {
@@ -97,28 +109,38 @@ public class PersonaggioMD implements Serializzabile {
 		}
 	}
 
-	public double getMassimo(TipoAttributo tipo) {
+	public Optional<Double> getMassimo(TipoAttributo tipo) {
 		if (!valoriMassimi.containsKey(tipo)) {
-			return 999_999.0d;
+			return Optional.empty();
 		}
-		return valoriMassimi.get(tipo);
+		return Optional.of(valoriMassimi.get(tipo));
 	}
 
+	/**
+	 * Imposta un determinato attributo con un certo valore, limitandolo però ai valori minimo e massimo,
+	 * quando presenti.
+	 */
 	public void set(TipoAttributo tipo, double valore) {
-		double valoreMinimo = getMinimo(tipo);
-		if (valore < valoreMinimo) {
-			valore = valoreMinimo;
+		Optional<Double> valoreMinimoOpt = getMinimo(tipo);
+		if (valoreMinimoOpt.isPresent()) {
+			double valoreMinimo = valoreMinimoOpt.get();
+			if (valore < valoreMinimo) {
+				valore = valoreMinimo;
+			}
 		}
-		double valoreMassimo = getMassimo(tipo);
-		if (valore > valoreMassimo) {
-			valore = valoreMassimo;
+		Optional<Double> valoreMassimoOpt = getMassimo(tipo);
+		if (valoreMassimoOpt.isPresent()) {
+			double valoreMassimo = valoreMassimoOpt.get();
+			if (valore > valoreMassimo) {
+				valore = valoreMassimo;
+			}
 		}
 		valoriAttributi.put(tipo, valore);
 	}
 
 	public double get(TipoAttributo tipo) {
 		if (!valoriAttributi.containsKey(tipo)) {
-			return getMinimo(tipo);
+			throw new IllegalStateException("TipoAttributo " + tipo + " non presente");
 		}
 		return valoriAttributi.get(tipo);
 	}
@@ -143,8 +165,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.SALUTE, saluteMassima);
 	}
 
-	public int getSaluteMassima() {
-		return (int)getMassimo(TipoAttributo.SALUTE);
+	public Optional<Double> getSaluteMassima() {
+		return getMassimo(TipoAttributo.SALUTE);
 	}
 
 	public void setForza(double forza) {
@@ -159,8 +181,8 @@ public class PersonaggioMD implements Serializzabile {
 		valoriMassimi.put(TipoAttributo.FORZA, forzaMassima);
 	}
 
-	public int getForzaMassima() {
-		return (int)getMassimo(TipoAttributo.FORZA);
+	public Optional<Double> getForzaMassima() {
+		return getMassimo(TipoAttributo.FORZA);
 	}
 
 	public void setDestrezza(int destrezza) {
@@ -175,8 +197,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.DESTREZZA, destrezzaMassima);
 	}
 
-	public int getDestrezzaMassima() {
-		return (int)getMassimo(TipoAttributo.DESTREZZA);
+	public Optional<Double> getDestrezzaMassima() {
+		return getMassimo(TipoAttributo.DESTREZZA);
 	}
 
 	public void setCostituzione(int costituzione) {
@@ -191,8 +213,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.COSTITUZIONE, costituzioneMassima);
 	}
 
-	public int getCostituzioneMassima() {
-		return (int)getMassimo(TipoAttributo.COSTITUZIONE);
+	public Optional<Double> getCostituzioneMassima() {
+		return getMassimo(TipoAttributo.COSTITUZIONE);
 	}
 
 	public void setIntelligenza(double intelligenza) {
@@ -207,8 +229,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.INTELLIGENZA, intelligenzaMassima);
 	}
 
-	public int getIntelligenzaMassima() {
-		return (int)getMassimo(TipoAttributo.INTELLIGENZA);
+	public Optional<Double> getIntelligenzaMassima() {
+		return getMassimo(TipoAttributo.INTELLIGENZA);
 	}
 
 	public void setSaggezza(double saggezza) {
@@ -223,8 +245,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.SAGGEZZA, saggezzaMassima);
 	}
 
-	public int getSaggezzaMassima() {
-		return (int)getMassimo(TipoAttributo.SAGGEZZA);
+	public Optional<Double> getSaggezzaMassima() {
+		return getMassimo(TipoAttributo.SAGGEZZA);
 	}
 
 	public void setCarisma(double carisma) {
@@ -239,8 +261,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.CARISMA, carismaMassimo);
 	}
 
-	public int getCarismaMassimo() {
-		return (int)getMassimo(TipoAttributo.CARISMA);
+	public Optional<Double> getCarismaMassimo() {
+		return getMassimo(TipoAttributo.CARISMA);
 	}
 
 	public void setFortuna(double fortuna) {
@@ -255,8 +277,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.FORTUNA, fortunaMassima);
 	}
 
-	public int getFortunaMassima() {
-		return (int)getMassimo(TipoAttributo.FORTUNA);
+	public Optional<Double> getFortunaMassima() {
+		return getMassimo(TipoAttributo.FORTUNA);
 	}
 
 	public void setCritico(double  critico) {
@@ -271,8 +293,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.CRITICO, criticoMassimo);
 	}
 
-	public int getCriticoMassimo() {
-		return (int)getMassimo(TipoAttributo.CRITICO);
+	public Optional<Double> getCriticoMassimo() {
+		return getMassimo(TipoAttributo.CRITICO);
 	}
 
 	public void setPrecisione(double precisione) {
@@ -287,8 +309,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.PRECISIONE, precisioneMassima);
 	}
 
-	public int getPrecisioneMassima() {
-		return (int)getMassimo(TipoAttributo.PRECISIONE);
+	public Optional<Double> getPrecisioneMassima() {
+		return getMassimo(TipoAttributo.PRECISIONE);
 	}
 
 	public void setVelocita(double velocita) {
@@ -303,8 +325,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.VELOCITA, velocitaMassima);
 	}
 
-	public int getVelocitaMassima() {
-		return (int)getMassimo(TipoAttributo.VELOCITA);
+	public Optional<Double> getVelocitaMassima() {
+		return getMassimo(TipoAttributo.VELOCITA);
 	}
 
 	public void setFurtivita(double furtivita) {
@@ -319,8 +341,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.FURTIVITA, furtivitaMassima);
 	}
 
-	public int getFurtivitaMassima() {
-		return (int)getMassimo(TipoAttributo.FURTIVITA);
+	public Optional<Double> getFurtivitaMassima() {
+		return getMassimo(TipoAttributo.FURTIVITA);
 	}
 
 	public void setParata(double parata) {
@@ -335,8 +357,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.PARATA, parataMassima);
 	}
 
-	public int getParataMassima() {
-		return (int)getMassimo(TipoAttributo.PARATA);
+	public Optional<Double> getParataMassima() {
+		return getMassimo(TipoAttributo.PARATA);
 	}
 
 	public void setResistenzaMagica(double resistenzaMagica) {
@@ -351,8 +373,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.RESISTENZA_MAGICA, resistenzaMagicaMassima);
 	}
 
-	public int getResistenzaMagicaMassima() {
-		return (int)getMassimo(TipoAttributo.RESISTENZA_MAGICA);
+	public Optional<Double> getResistenzaMagicaMassima() {
+		return getMassimo(TipoAttributo.RESISTENZA_MAGICA);
 	}
 
 	public void setPercezione(double percezione) {
@@ -367,8 +389,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.PERCEZIONE, percezioneMassima);
 	}
 
-	public int getPercezioneMassima() {
-		return (int)getMassimo(TipoAttributo.PERCEZIONE);
+	public Optional<Double> getPercezioneMassima() {
+		return getMassimo(TipoAttributo.PERCEZIONE);
 	}
 
 	public void setSoggezione(double soggezione) {
@@ -383,8 +405,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.SOGGEZIONE, soggezioneMassima);
 	}
 
-	public int getSoggezioneMassima() {
-		return (int)getMassimo(TipoAttributo.SOGGEZIONE);
+	public Optional<Double> getSoggezioneMassima() {
+		return getMassimo(TipoAttributo.SOGGEZIONE);
 	}
 
 	public void setFuria(double furia) {
@@ -399,8 +421,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.FURIA, furiaMassima);
 	}
 
-	public int getFuriaMassima() {
-		return (int)getMassimo(TipoAttributo.FURIA);
+	public Optional<Double> getFuriaMassima() {
+		return getMassimo(TipoAttributo.FURIA);
 	}
 
 	public void setMagia(int magia) {
@@ -415,8 +437,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.MAGIA, magiaMassima);
 	}
 
-	public int getMagiaMassima() {
-		return (int)getMassimo(TipoAttributo.MAGIA);
+	public Optional<Double> getMagiaMassima() {
+		return getMassimo(TipoAttributo.MAGIA);
 	}
 
 	public void setCoraggio(double coraggio) {
@@ -431,8 +453,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.CORAGGIO, coraggioMassimo);
 	}
 
-	public int getCoraggioMassimo() {
-		return (int)getMassimo(TipoAttributo.CORAGGIO);
+	public Optional<Double> getCoraggioMassimo() {
+		return getMassimo(TipoAttributo.CORAGGIO);
 	}
 
 	public void setValore(double valore) {
@@ -447,8 +469,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.VALORE, valoreMassimo);
 	}
 
-	public int getValoreMassimo() {
-		return (int)getMassimo(TipoAttributo.VALORE);
+	public Optional<Double> getValoreMassimo() {
+		return getMassimo(TipoAttributo.VALORE);
 	}
 
 	public void setStanchezza(double stanchezza) {
@@ -463,8 +485,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.STANCHEZZA, stanchezzaMassima);
 	}
 
-	public int getStanchezzaMassima() {
-		return (int)getMassimo(TipoAttributo.STANCHEZZA);
+	public Optional<Double> getStanchezzaMassima() {
+		return getMassimo(TipoAttributo.STANCHEZZA);
 	}
 
 	public void setNumeroBersagli(int numeroBersagli) {
@@ -479,8 +501,8 @@ public class PersonaggioMD implements Serializzabile {
 		setMassimo(TipoAttributo.NUMERO_BERSAGLI, numeroBersagliMassimo);
 	}
 
-	public int getNumeroBersagliMassimo() {
-		return (int)getMassimo(TipoAttributo.NUMERO_BERSAGLI);
+	public Optional<Double> getNumeroBersagliMassimo() {
+		return getMassimo(TipoAttributo.NUMERO_BERSAGLI);
 	}
 
 	public String getCausaTrapasso() {
@@ -535,6 +557,8 @@ public class PersonaggioMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(esperienza);
 		stream.print(PIPE);
+		stream.print(puntiAbilitaDisponibili);
+		stream.print(PIPE);
 		stream.print(tempo);
 		stream.print(PIPE);
 		stream.print(artefatti.size());
@@ -570,6 +594,7 @@ public class PersonaggioMD implements Serializzabile {
 		}
 		livello = Integer.parseInt(st.nextToken());
 		esperienza = Integer.parseInt(st.nextToken());
+		puntiAbilitaDisponibili = Integer.parseInt(st.nextToken());
 		tempo = Integer.parseInt(st.nextToken());
 		int numeroArtefatti = Integer.parseInt(st.nextToken());
 

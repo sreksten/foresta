@@ -20,12 +20,12 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.EGLI; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
-	public Ladro() {
-		super(ClassePersonaggio.LADRO);
+	public Ladro(int livello) {
+		super(ClassePersonaggio.LADRO, livello);
 	}
 
-	public Ladro(String nome) {
-		super(nome, ClassePersonaggio.LADRO);
+	public Ladro(String nome, int livello) {
+		super(nome, ClassePersonaggio.LADRO, livello);
 	}
 
 	@Override
@@ -35,19 +35,35 @@ public class Ladro extends PersonaggioBase implements Personaggio {
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		md.setSaluteMassima(Costanti.LADRO_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.LADRO_MAX_MAGIA);
-		md.setForzaMassima(Costanti.LADRO_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.LADRO_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.LADRO_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.LADRO_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.LADRO_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.LADRO_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.LADRO_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.LADRO_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.LADRO_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.LADRO_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.LADRO_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.LADRO_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.LADRO_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.LADRO_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.LADRO_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.LADRO_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.LADRO_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.LADRO_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.LADRO_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

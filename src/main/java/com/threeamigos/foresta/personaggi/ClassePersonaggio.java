@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
-import java.util.function.Supplier;
+import java.util.function.Function;
 
 public enum ClassePersonaggio {
 
@@ -41,15 +41,15 @@ public enum ClassePersonaggio {
 	MAGO(Mago::new),
 	OMBRAFIAMMA(OmbraFiamma::new);
 
-	private final Supplier<Personaggio> supplier;
+	private final Function<Integer, Personaggio> supplier;
 	private int quantitaMassima = 1;
 
-	ClassePersonaggio(Supplier<Personaggio> supplier) {
+	ClassePersonaggio(Function<Integer, Personaggio> supplier) {
 		this.supplier = supplier;
 	}
 
-	public Personaggio getIstanza() {
-		return supplier.get();
+	public Personaggio getIstanza(int livello) {
+		return supplier.apply(livello);
 	}
 	
 	void setQuantitaMassima(int quantitaMassima) {

@@ -15,6 +15,7 @@ public enum TipoArtefatto {
     ELMO("indossa"),
     ARMATURA("indossa"),
 
+    ANELLO("indossa"),
     TALISMANO("possiede"),
 
     LIBRO_MAGICO("porta"),

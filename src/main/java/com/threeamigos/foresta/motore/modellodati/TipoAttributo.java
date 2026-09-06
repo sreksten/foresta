@@ -194,6 +194,11 @@ public enum TipoAttributo {
     RIGENERAZIONE_MAGIA(SupertipoAttributo.PRIMARIO, "Abilità di rigenerazione della magia."),
 
     /**
+     * Livello di esperienza raggiunto dal personaggio.
+     */
+    LIVELLO(SupertipoAttributo.RISORSA_DINAMICA, "Livello di esperienza raggiunto dal personaggio."),
+
+    /**
      * Salute fisica e resistenza complessiva. Quando la salute corrente scende a zero, il personaggio muore.
      */
     SALUTE(SupertipoAttributo.RISORSA_DINAMICA, "Salute fisica e resistenza complessiva."),

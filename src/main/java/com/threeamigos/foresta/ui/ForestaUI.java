@@ -221,7 +221,12 @@ public class ForestaUI implements InterfacciaUtente {
 	public void variaMagiaMassima(Personaggio personaggio, int variazione) {
 		displayableCanvas.variaMagiaMassima(personaggio, variazione);
 	}
-	
+
+	@Override
+	public void variaLivello(Personaggio personaggio, int variazione) {
+		displayableCanvas.variaLivello(personaggio, variazione);
+	}
+
 	@Override
 	public void variaCoraggio(Personaggio personaggio, int variazione) {
 		displayableCanvas.variaCoraggio(personaggio, variazione);
@@ -275,6 +280,11 @@ public class ForestaUI implements InterfacciaUtente {
 	@Override
 	public void variaPozioniMagia(int variazione) {
 		displayableCanvas.variaPozioniMagia(variazione);
+	}
+
+	@Override
+	public void variaPozioniMagiaGrande(int variazione) {
+		displayableCanvas.variaPozioniMagiaGrande(variazione);
 	}
 
 	@Override

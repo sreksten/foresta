@@ -3,6 +3,7 @@ package com.threeamigos.foresta.locazioni;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.Eremita;
@@ -31,9 +32,9 @@ public class Grotta extends LocazioneBase {
 		if (numero == 1) {
 			int classePersonaggio = Dado.tira(2);
 			if (classePersonaggio == 1) {
-				gng.aggiungiPersonaggio(new Viverna());
+				gng.aggiungiPersonaggio(new Viverna(Statistiche.getLivello()));
 			} else {
-				gng.aggiungiPersonaggio(new Eremita());
+				gng.aggiungiPersonaggio(new Eremita(Statistiche.getLivello()));
 			}
 		}
 		if (!isLocazioneVisitata()) {

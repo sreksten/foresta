@@ -17,6 +17,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	private int pozioniSalute;
 	private int pozioniSaluteGrande;
 	private int pozioniMagia;
+	private int pozioniMagiaGrande;
 	// Coordinate all'interno della Foresta
 	private CoordinateMD coordinate;
 
@@ -68,6 +69,14 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		this.pozioniMagia = pozioniMagia;
 	}
 
+	public int getPozioniMagiaGrande() {
+		return pozioniMagiaGrande;
+	}
+
+	public void setPozioniMagiaGrande(int pozioniMagiaGrande) {
+		this.pozioniMagiaGrande = pozioniMagiaGrande;
+	}
+
 	public CoordinateMD getCoordinate() {
 		return coordinate;
 	}
@@ -81,6 +90,12 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	public void reimposta() {
 		gruppo.getPersonaggiMD().clear();
 		incantesimi = new int[ClassiIncantesimo.values().length];
+		monete = 0;
+		preziosi = 0;
+		pozioniSalute = 0;
+		pozioniSaluteGrande = 0;
+		pozioniMagia = 0;
+		pozioniMagiaGrande = 0;
 	}
 
 	public void setIncantesimi(ClassiIncantesimo classeIncantesimo, int quantita) {
@@ -98,8 +113,8 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(preziosi);
 		stream.print(PIPE);
-        for (int j : incantesimi) {
-            stream.print(j);
+        for (int i : incantesimi) {
+            stream.print(i);
             stream.print(PIPE);
         }
 		stream.print(pozioniSalute);
@@ -107,6 +122,8 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		stream.print(pozioniSaluteGrande);
 		stream.print(PIPE);
 		stream.print(pozioniMagia);
+		stream.print(PIPE);
+		stream.print(pozioniMagiaGrande);
 		stream.print(PIPE);
 		stream.print(coordinate.getX());
 		stream.print(PIPE);
@@ -126,6 +143,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		pozioniSalute = Integer.parseInt(st.nextToken());
 		pozioniSaluteGrande = Integer.parseInt(st.nextToken());
 		pozioniMagia = Integer.parseInt(st.nextToken());
+		pozioniMagiaGrande = Integer.parseInt(st.nextToken());
 		coordinate = new CoordinateMD(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
 	}
 }

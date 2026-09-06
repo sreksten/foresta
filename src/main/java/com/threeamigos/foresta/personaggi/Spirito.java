@@ -21,8 +21,8 @@ public class Spirito extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.ESSO; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
-	public Spirito() {
-		super(ClassePersonaggio.SPIRITO);
+	public Spirito(int livello) {
+		super(ClassePersonaggio.SPIRITO, livello);
 	}
 
 	@Override
@@ -30,19 +30,35 @@ public class Spirito extends PersonaggioBase implements Personaggio {
 		setImmagine("personaggi/Spirito.gif");
 		setAmichevole(true);
 
-		md.setSaluteMassima(Costanti.SPIRITO_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.SPIRITO_MAX_MAGIA);
-		md.setForzaMassima(Costanti.SPIRITO_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.SPIRITO_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.SPIRITO_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.SPIRITO_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.SPIRITO_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.SPIRITO_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.SPIRITO_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.SPIRITO_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.SPIRITO_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.SPIRITO_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.SPIRITO_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.SPIRITO_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.SPIRITO_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.SPIRITO_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.SPIRITO_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.SPIRITO_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.SPIRITO_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.SPIRITO_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.SPIRITO_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

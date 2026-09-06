@@ -23,8 +23,25 @@ public class Minotauro extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.ESSO; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
-	public Minotauro() {
-		super(ClassePersonaggio.MINOTAURO);
+	public Minotauro(int livello) {
+		super(ClassePersonaggio.MINOTAURO, livello);
+	}
+
+	@Override
+	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
+		setImmagine("personaggi/Minotauro.gif");
+		setIcona("icone/Minotauro.gif");
+		setCorrompibile(true);
+
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAURO_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAURO_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAURO_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAURO_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAURO_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAURO_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAURO_MAX_FORTUNA)));
+
+		setQuantitaMassima(Costanti.MINOTAURO_MAX_NUMERO);
 	}
 
 	@Override
@@ -36,24 +53,23 @@ public class Minotauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Minotauro.gif");
-		setIcona("icone/Minotauro.gif");
-		setCorrompibile(true);
+	public double getSaluteBase() {
+		return Costanti.MINOTAURO_SALUTE_BASE;
+	}
 
-		md.setSaluteMassima(Costanti.MINOTAURO_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.MINOTAURO_MAX_MAGIA);
-		md.setForzaMassima(Costanti.MINOTAURO_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.MINOTAURO_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.MINOTAURO_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.MINOTAURO_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.MINOTAURO_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.MINOTAURO_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.MINOTAURO_MAX_FORTUNA);
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.MINOTAURO_LIVELLAMENTO_SALUTE;
+	}
 
-		setQuantitaMassima(Costanti.MINOTAURO_MAX_NUMERO);
+	@Override
+	public double getMagiaBase() {
+		return Costanti.MINOTAURO_MAGIA_BASE;
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.MINOTAURO_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

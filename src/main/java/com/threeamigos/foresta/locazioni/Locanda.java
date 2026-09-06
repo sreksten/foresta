@@ -62,6 +62,7 @@ public class Locanda extends LocazioneBase {
 		} else {
 			evento = RICEVE_INFORMAZIONI;
 		}
+		completa = true;
 	}
 
 	@Override

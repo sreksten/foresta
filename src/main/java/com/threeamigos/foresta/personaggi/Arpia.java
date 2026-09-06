@@ -21,27 +21,43 @@ public class Arpia extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.ESSA; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 
-	public Arpia() {
-		super(ClassePersonaggio.ARPIA);
+	public Arpia(int livello) {
+		super(ClassePersonaggio.ARPIA, livello);
 	}
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Arpia.gif");
 
-		md.setSaluteMassima(Costanti.ARPIA_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.ARPIA_MAX_MAGIA);
-		md.setForzaMassima(Costanti.ARPIA_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.ARPIA_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.ARPIA_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.ARPIA_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.ARPIA_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.ARPIA_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.ARPIA_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ARPIA_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ARPIA_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.ARPIA_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ARPIA_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ARPIA_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.ARPIA_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.ARPIA_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.ARPIA_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.ARPIA_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.ARPIA_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.ARPIA_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.ARPIA_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

@@ -20,12 +20,12 @@ public class Maga extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.ELLA; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 
-	public Maga() {
-		super(ClassePersonaggio.MAGA);
+	public Maga(int livello) {
+		super(ClassePersonaggio.MAGA, livello);
 	}
 
-	public Maga(String nome) {
-		super(nome, ClassePersonaggio.MAGA);
+	public Maga(String nome, int livello) {
+		super(nome, ClassePersonaggio.MAGA, livello);
 	}
 
 	@Override
@@ -35,19 +35,35 @@ public class Maga extends PersonaggioBase implements Personaggio {
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		md.setSaluteMassima(Costanti.MAGA_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.MAGA_MAX_MAGIA);
-		md.setForzaMassima(Costanti.MAGA_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.MAGA_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.MAGA_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.MAGA_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.MAGA_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.MAGA_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.MAGA_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.MAGA_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.MAGA_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.MAGA_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.MAGA_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.MAGA_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.MAGA_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.MAGA_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.MAGA_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.MAGA_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.MAGA_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.MAGA_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.MAGA_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.Graphics2D;
-
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Foresta;
@@ -9,10 +7,12 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 
+import java.awt.*;
+
 class DisplayableCanvasMappaATuttoSchermo {
 
-	private int width;
-	private int height;
+	private final int width;
+	private final int height;
 	private int mappaXOffset;
 	private int mappaYOffset;
 
@@ -79,10 +79,15 @@ class DisplayableCanvasMappaATuttoSchermo {
 			for (int y = infoMappa.daY; y <= infoMappa.aY; y++) {
 				CoordinateMD coordinateCorrenti = new CoordinateMD(x, y);
 				if (coordinateCorrenti.equals(coordinateGruppo)) {
-					graphics.drawImage(ImageCache.segnalino, coordinataSchermoX, coordinataSchermoY, null);
+					if ((System.currentTimeMillis() / 1000) % 2 == 0) {
+						graphics.drawImage(ImageCache.segnalino, coordinataSchermoX, coordinataSchermoY, null);
+					}
 				} else if (Foresta.isLocazioneConosciuta(coordinateCorrenti)) {
 					ClassiLocazione classeLocazione = Foresta.getLocazione(coordinateCorrenti);
 					graphics.drawImage(ImageCache.mappa.get(classeLocazione), coordinataSchermoX, coordinataSchermoY, null);
+					if (Foresta.isLocazioneVisitata(new CoordinateMD(x, y))) {
+						scurisci(graphics, coordinataSchermoX, coordinataSchermoY, infoMappa.larghezzaIcona, infoMappa.altezzaIcona, 50);
+					}
 				}
 				coordinataSchermoY += infoMappa.altezzaIcona;
 			}
@@ -90,13 +95,20 @@ class DisplayableCanvasMappaATuttoSchermo {
 		}
 	}
 
+	private void scurisci(Graphics2D g, int x, int y, int width, int height, int percentualeOscuramento) {
+		// Calcola alpha (0 = trasparente, 255 = nero opaco)
+		int alpha = (int) (percentualeOscuramento * 2.55f);
+		// Imposta il colore nero con la trasparenza calcolata
+		g.setColor(new java.awt.Color(0, 0, 0, alpha));
+		// Disegna il rettangolo sopra l'immagine
+		g.fillRect(x, y, width, height);
+	}
+
 	private class InfoMappa {
 
-		private int larghezzaIcona;
-		private int altezzaIcona;
-		private int quanteLocazioniLungoX;
-		private int quanteLocazioniLungoY;
-		private int daX;
+		private final int larghezzaIcona;
+		private final int altezzaIcona;
+        private int daX;
 		private int aX;
 		private int daY;
 		private int aY;
@@ -106,12 +118,12 @@ class DisplayableCanvasMappaATuttoSchermo {
 			larghezzaIcona = ImageCache.mappa.get(ClassiLocazione.BOSCO).getWidth();
 			altezzaIcona = ImageCache.mappa.get(ClassiLocazione.BOSCO).getHeight();
 
-			quanteLocazioniLungoX = width / larghezzaIcona;
+            int quanteLocazioniLungoX = width / larghezzaIcona;
 			if (quanteLocazioniLungoX >= Foresta.getDimensioneX()) {
 				quanteLocazioniLungoX = Foresta.getDimensioneX();
 			}
 
-			quanteLocazioniLungoY = height / altezzaIcona;
+            int quanteLocazioniLungoY = height / altezzaIcona;
 			if (quanteLocazioniLungoY >= Foresta.getDimensioneY()) {
 				quanteLocazioniLungoY = Foresta.getDimensioneY();
 			}

@@ -90,6 +90,14 @@ class DisplayableCanvasRiquadroIncantesimi {
 		graphics.drawImage(doomdark, nomePozioneX, locYOffset, null);
 		doomdark = DoomdarkTextProducer.getImage(g.getPozioniMagia(), fontMedium, color);
 		graphics.drawImage(doomdark, totalePozioneX - doomdark.getWidth(null), locYOffset, null);
+		locYOffset += fontMedium.getHeight();
+
+		BufferedImage iconaPozioneMagiaGrande = ImageCache.spritePozioneMagiaGrande;
+		graphics.drawImage(iconaPozioneMagia, iconaPozioneX, locYOffset - (iconaPozioneMagiaGrande.getHeight() - fontMedium.getHeight()) / 2, null);
+		doomdark = DoomdarkTextProducer.getImage("G. Magia", fontMedium, color);
+		graphics.drawImage(doomdark, nomePozioneX, locYOffset, null);
+		doomdark = DoomdarkTextProducer.getImage(g.getPozioniMagiaGrande(), fontMedium, color);
+		graphics.drawImage(doomdark, totalePozioneX - doomdark.getWidth(null), locYOffset, null);
 
 		graphics.setClip(null);		
 	}
@@ -131,6 +139,16 @@ class DisplayableCanvasRiquadroIncantesimi {
 		BufferedImage icona = ImageCache.spritePozioneMagia;
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + 2 * fontMedium.getHeight();
+		return new SpriteATempo(icona, variazione, fontMedium, totalePozioneX, y);
+	}
+
+	SpriteInterface variaPozioniMagiaGrande(int variazione) {
+		if (variazione == 0) {
+			return null;
+		}
+		BufferedImage icona = ImageCache.spritePozioneMagiaGrande;
+		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + 3 * fontMedium.getHeight();
 		return new SpriteATempo(icona, variazione, fontMedium, totalePozioneX, y);
 	}
 }

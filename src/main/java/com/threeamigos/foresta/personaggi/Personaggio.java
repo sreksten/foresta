@@ -55,17 +55,6 @@ public interface Personaggio extends OggettoConArticoli {
 		FEMMINA
     }
 
-	enum Caratteristica {
-		SALUTE,
-		SALUTE_MASSIMA,
-		MAGIA,
-		MAGIA_MASSIMA,
-		CORAGGIO,
-		VALORE,
-		STANCHEZZA,
-		CARISMA
-	}
-
 	/**
 	 * Di + articolo determinativo singolare
 	 */
@@ -168,19 +157,19 @@ public interface Personaggio extends OggettoConArticoli {
 	/**
 	 * Alcuni oggetti possono aumentare la salute massima di un personaggio
 	 */
-    void addSaluteMassima(int quantita);
+    void addSaluteMassima(int quantita, String note);
 	/**
 	 * Quanti danni fa normalmente il personaggio in combattimento
 	 */
     int getDanniInCombattimento();
 	/**
-	 * Eventuali moltiplicatori ai danni del combattimento, normalmente 1
-	 */
-    int getModificaDanniFisici(int danniBase);
-	/**
 	 * Incrementa il livello di magia del personaggio; non puo' superare il livello massimo
 	 */
     void addMagia(int quantita);
+	/**
+	 * Alcuni oggetti possono aumentare la salute massima di un personaggio
+	 */
+	void addMagiaMassima(int quantita, String note);
 	/**
 	 * Sottrae magia al personaggio
 	 */
@@ -316,6 +305,16 @@ public interface Personaggio extends OggettoConArticoli {
     int getEsperienza();
 
 	/**
+	 * Aggiunge punti esperienza a un personaggio.
+	 */
+	void addPuntiEsperienza(int puntiEsperienza);
+
+	/**
+	 * Restituisce il numero di punti abilità attribuibili
+	 */
+	int getPuntiAbilitaDisponibili();
+
+	/**
 	 * La salute attuale di un personaggio
 	 */
     int getSalute();
@@ -387,7 +386,6 @@ public interface Personaggio extends OggettoConArticoli {
 
 	/**
 	 * Il carisma di un personaggio, somma del carisma base e dei modificatori di carisma degli artefatti.
-	 * Da 0 in poi
 	 */
     int getCarisma();
 
@@ -445,19 +443,16 @@ public interface Personaggio extends OggettoConArticoli {
 
 	/**
 	 * Il coraggio di un personaggio, somma del coraggio base e dei modificatori di coraggio degli artefatti.
-	 * Da 0 a 99
 	 */
     int getCoraggio();
 
 	/**
 	 * Il valore di un personaggio, somma del valore base e dei modificatori di valore degli artefatti.
-	 * Da 0 a 99
 	 */
-    int getQuantitaEffettoDiStato();
+    int getValore();
 
 	/**
 	 * La stanchezza di un personaggio, somma della stanchezza base e dei modificatori di stanchezza degli artefatti.
-	 * Da 0 a 9
 	 */
     int getStanchezza();
 
@@ -506,6 +501,14 @@ public interface Personaggio extends OggettoConArticoli {
 	 * di stato del personaggio
 	 */
     void removeArtefatto(Artefatto artefatto);
+
+	double getSaluteBase();
+
+	double getLivellamentoSalute();
+
+	double getMagiaBase();
+
+	double getLivellamentoMagia();
 
 	double getMoltiplicatoreCarico();
 

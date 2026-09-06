@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.awt.*;
@@ -22,11 +23,14 @@ class DisplayableCanvasRiquadroGruppo {
 	private final int leftXOffsetLabelSalute;
 	private final int rightXOffsetSalute;
 	private final int leftXOffsetSeparatoreSalute;
-	private final int rightXOffsetForzaMassima;
+	private final int rightXOffsetSaluteMassima;
 	private final int leftXOffsetLabelMagia;
 	private final int rightXOffsetMagia;
 	private final int leftXOffsetSeparatoreMagia;
 	private final int rightXOffsetMagiaMassima;
+	private final int leftXOffsetLabelLivello;
+	private final int rightXOffsetLivello;
+
 	private final int leftXOffsetLabelCoraggio;
 	private final int rightXOffsetCoraggio;
 	private final int leftXOffsetLabelValore;
@@ -40,32 +44,36 @@ class DisplayableCanvasRiquadroGruppo {
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
 		innerWidth = ImageCache.corniceGrande.getWidth() - (DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE << 1);
-		lightGrayMap.put(Personaggio.Caratteristica.SALUTE, DoomdarkTextProducer.getImage("Sl:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
-		lightGrayMap.put(Personaggio.Caratteristica.MAGIA, DoomdarkTextProducer.getImage("Mg:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
-		lightGrayMap.put(Personaggio.Caratteristica.CORAGGIO, DoomdarkTextProducer.getImage("Cr:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
-		lightGrayMap.put(Personaggio.Caratteristica.VALORE, DoomdarkTextProducer.getImage("Vl:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
-		lightGrayMap.put(Personaggio.Caratteristica.STANCHEZZA, DoomdarkTextProducer.getImage("St:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
-		lightGrayMap.put(Personaggio.Caratteristica.CARISMA, DoomdarkTextProducer.getImage("Ca:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
+		lightGrayMap.put(TipoAttributo.SALUTE, DoomdarkTextProducer.getImage("Sl:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
+		lightGrayMap.put(TipoAttributo.MAGIA, DoomdarkTextProducer.getImage("Mg:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
+		lightGrayMap.put(TipoAttributo.LIVELLO, DoomdarkTextProducer.getImage("Lv:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
+		lightGrayMap.put(TipoAttributo.CORAGGIO, DoomdarkTextProducer.getImage("Cr:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
+		lightGrayMap.put(TipoAttributo.VALORE, DoomdarkTextProducer.getImage("Vl:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
+		lightGrayMap.put(TipoAttributo.STANCHEZZA, DoomdarkTextProducer.getImage("St:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
+		lightGrayMap.put(TipoAttributo.CARISMA, DoomdarkTextProducer.getImage("Ca:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
 		lightGrayMap.put("/", DoomdarkTextProducer.getImage("/", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
-		mediumGrayMap.put(Personaggio.Caratteristica.SALUTE, DoomdarkTextProducer.getImage("Sl:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
-		mediumGrayMap.put(Personaggio.Caratteristica.MAGIA, DoomdarkTextProducer.getImage("Mg:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
-		mediumGrayMap.put(Personaggio.Caratteristica.CORAGGIO, DoomdarkTextProducer.getImage("Cr:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
-		mediumGrayMap.put(Personaggio.Caratteristica.VALORE, DoomdarkTextProducer.getImage("Vl:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
-		mediumGrayMap.put(Personaggio.Caratteristica.STANCHEZZA, DoomdarkTextProducer.getImage("St:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
-		mediumGrayMap.put(Personaggio.Caratteristica.CARISMA, DoomdarkTextProducer.getImage("Ca:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
+		mediumGrayMap.put(TipoAttributo.SALUTE, DoomdarkTextProducer.getImage("Sl:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
+		mediumGrayMap.put(TipoAttributo.MAGIA, DoomdarkTextProducer.getImage("Mg:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
+		mediumGrayMap.put(TipoAttributo.LIVELLO, DoomdarkTextProducer.getImage("Lv:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
+		mediumGrayMap.put(TipoAttributo.CORAGGIO, DoomdarkTextProducer.getImage("Cr:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
+		mediumGrayMap.put(TipoAttributo.VALORE, DoomdarkTextProducer.getImage("Vl:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
+		mediumGrayMap.put(TipoAttributo.STANCHEZZA, DoomdarkTextProducer.getImage("St:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
+		mediumGrayMap.put(TipoAttributo.CARISMA, DoomdarkTextProducer.getImage("Ca:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
 		mediumGrayMap.put("/", DoomdarkTextProducer.getImage("/", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
 		
 		int glyph9Width = fontMedium.getGlyphWidth('9');
 		
-		 // Fr:999/999 Mg:99/99
+		 // Fr:999/999 Mg:99/99 Lv: 1
 		leftXOffsetLabelSalute = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE;
 		rightXOffsetSalute = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 6;
 		leftXOffsetSeparatoreSalute = rightXOffsetSalute;
-		rightXOffsetForzaMassima = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 10;
+		rightXOffsetSaluteMassima = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 10;
 		leftXOffsetLabelMagia = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 11;
 		rightXOffsetMagia = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 16;
 		leftXOffsetSeparatoreMagia = rightXOffsetMagia;
 		rightXOffsetMagiaMassima = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 19;
+		leftXOffsetLabelLivello = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 20;
+		rightXOffsetLivello = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 24;
 		
 		//Cr:99 Vl:99 St:99 Ca:99
 		leftXOffsetLabelCoraggio = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE;
@@ -111,34 +119,45 @@ class DisplayableCanvasRiquadroGruppo {
 				graphics.drawImage(doomdark, locXOffset, locYOffset, null);
 
 				locYOffset += fontMedium.getHeight();
-				graphics.drawImage(imageMap.get(Personaggio.Caratteristica.SALUTE), leftXOffsetLabelSalute, locYOffset, null);
+				graphics.drawImage(imageMap.get(TipoAttributo.SALUTE), leftXOffsetLabelSalute, locYOffset, null);
 				doomdark = DoomdarkTextProducer.getImage(p.getSalute(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetSalute - doomdark.getWidth(null), locYOffset, null);
 				graphics.drawImage(imageMap.get("/"), leftXOffsetSeparatoreSalute, locYOffset, null);
 				doomdark = DoomdarkTextProducer.getImage(p.getSaluteMassima(), fontMedium, color);
-				graphics.drawImage(doomdark, rightXOffsetForzaMassima - doomdark.getWidth(null), locYOffset, null);
+				graphics.drawImage(doomdark, rightXOffsetSaluteMassima - doomdark.getWidth(null), locYOffset, null);
 
-				graphics.drawImage(imageMap.get(Personaggio.Caratteristica.MAGIA), leftXOffsetLabelMagia, locYOffset, null);
+				graphics.drawImage(imageMap.get(TipoAttributo.MAGIA), leftXOffsetLabelMagia, locYOffset, null);
 				doomdark = DoomdarkTextProducer.getImage(p.getMagia(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetMagia - doomdark.getWidth(null), locYOffset, null);
 				graphics.drawImage(imageMap.get("/"), leftXOffsetSeparatoreMagia, locYOffset, null);
 				doomdark = DoomdarkTextProducer.getImage(p.getMagiaMassima(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetMagiaMassima - doomdark.getWidth(null), locYOffset, null);
 
+				graphics.drawImage(imageMap.get(TipoAttributo.MAGIA), leftXOffsetLabelMagia, locYOffset, null);
+				doomdark = DoomdarkTextProducer.getImage(p.getMagia(), fontMedium, color);
+				graphics.drawImage(doomdark, rightXOffsetMagia - doomdark.getWidth(null), locYOffset, null);
+				graphics.drawImage(imageMap.get("/"), leftXOffsetSeparatoreMagia, locYOffset, null);
+				doomdark = DoomdarkTextProducer.getImage(p.getMagiaMassima(), fontMedium, color);
+				graphics.drawImage(doomdark, rightXOffsetMagiaMassima - doomdark.getWidth(null), locYOffset, null);
+
+				graphics.drawImage(imageMap.get(TipoAttributo.LIVELLO), leftXOffsetLabelLivello, locYOffset, null);
+				doomdark = DoomdarkTextProducer.getImage(p.getLivello(), fontMedium, color);
+				graphics.drawImage(doomdark, rightXOffsetLivello - doomdark.getWidth(null), locYOffset, null);
+
 				locYOffset += fontMedium.getHeight();
-				graphics.drawImage(imageMap.get(Personaggio.Caratteristica.CORAGGIO), leftXOffsetLabelCoraggio, locYOffset, null);
+				graphics.drawImage(imageMap.get(TipoAttributo.CORAGGIO), leftXOffsetLabelCoraggio, locYOffset, null);
 				doomdark = DoomdarkTextProducer.getImage(p.getCoraggio(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetCoraggio - doomdark.getWidth(null), locYOffset, null);
 
-				graphics.drawImage(imageMap.get(Personaggio.Caratteristica.VALORE), leftXOffsetLabelValore, locYOffset, null);
-				doomdark = DoomdarkTextProducer.getImage(p.getQuantitaEffettoDiStato(), fontMedium, color);
+				graphics.drawImage(imageMap.get(TipoAttributo.VALORE), leftXOffsetLabelValore, locYOffset, null);
+				doomdark = DoomdarkTextProducer.getImage(p.getValore(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetValore - doomdark.getWidth(null), locYOffset, null);
 
-				graphics.drawImage(imageMap.get(Personaggio.Caratteristica.STANCHEZZA), leftXOffsetLabelStanchezza, locYOffset, null);
+				graphics.drawImage(imageMap.get(TipoAttributo.STANCHEZZA), leftXOffsetLabelStanchezza, locYOffset, null);
 				doomdark = DoomdarkTextProducer.getImage(p.getStanchezza(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetStanchezza - doomdark.getWidth(null), locYOffset, null);
 
-				graphics.drawImage(imageMap.get(Personaggio.Caratteristica.CARISMA), leftXOffsetLabelCarisma, locYOffset, null);
+				graphics.drawImage(imageMap.get(TipoAttributo.CARISMA), leftXOffsetLabelCarisma, locYOffset, null);
 				doomdark = DoomdarkTextProducer.getImage(p.getCarisma(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetCarisma - doomdark.getWidth(null), locYOffset, null);
 
@@ -170,7 +189,7 @@ class DisplayableCanvasRiquadroGruppo {
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetSalute, y);
 	}
 
-	SpriteInterface variaForzaMassima(Personaggio personaggio, int variazione) {
+	SpriteInterface variaSaluteMassima(Personaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
@@ -180,7 +199,7 @@ class DisplayableCanvasRiquadroGruppo {
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
-		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetForzaMassima, y);
+		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetSaluteMassima, y);
 	}
 
 	SpriteInterface variaMagia(Personaggio personaggio, int variazione) {
@@ -208,7 +227,20 @@ class DisplayableCanvasRiquadroGruppo {
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetMagiaMassima, y);
 	}
-	
+
+	SpriteInterface variaLivello(Personaggio personaggio, int variazione) {
+		if (variazione == 0) {
+			return null;
+		}
+		int ordinalePersonaggio = getOrdinalePersonaggio(personaggio);
+		if (ordinalePersonaggio == -1) {
+			return null;
+		}
+		BufferedImage icona = ImageCache.spriteAumentoLivello;
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
+		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetLivello, y);
+	}
+
 	SpriteInterface variaCoraggio(Personaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;

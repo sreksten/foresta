@@ -1,11 +1,6 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.AlphaComposite;
-import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
-import java.awt.Image;
-import java.awt.Transparency;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 
 class SpriteATempo implements SpriteInterface {
@@ -31,6 +26,7 @@ class SpriteATempo implements SpriteInterface {
 		DoomdarkColorModel.Color color;
 		StringBuilder sb = new StringBuilder();
 		if (variazione < 0) {
+			sb.append("-");
 			color = DoomdarkColorModel.Color.RED;
 		} else {
 			sb.append("+");
@@ -44,11 +40,12 @@ class SpriteATempo implements SpriteInterface {
 		StringBuilder sb = new StringBuilder();
 		if (variazione >= 0) {
 			sb.append("+");
+		} else {
+			sb.append("-");
 		}
 		sb.append(variazione);
 		init(icona, sb.toString(), font, color, x, y);
 	}
-	
 	
 	SpriteATempo(BufferedImage icona, String testo, DoomdarkFont font, DoomdarkColorModel.Color color, int x, int y) {
 		init(icona, testo, font, color, x, y);

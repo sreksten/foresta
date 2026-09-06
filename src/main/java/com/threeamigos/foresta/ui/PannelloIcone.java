@@ -123,9 +123,6 @@ public class PannelloIcone extends JPanel implements java.awt.event.ActionListen
 			case FLOPPY:
 				icona = ClassiIcona.FLOPPY;
 				break;
-			case POZIONE_SALUTE:
-				icona = ClassiIcona.POZIONE_SALUTE;
-				break;
 			case FUGA:
 				icona = ClassiIcona.FUGA;
 				break;
@@ -137,9 +134,6 @@ public class PannelloIcone extends JPanel implements java.awt.event.ActionListen
 				break;
 			case GIU:
 				icona = ClassiIcona.GIU;
-				break;
-			case GRANDE_POZIONE_SALUTE:
-				icona = ClassiIcona.GRANDE_POZIONE_SALUTE;
 				break;
 			case GRUPPO:
 				icona = ClassiIcona.GRUPPO;
@@ -165,8 +159,17 @@ public class PannelloIcone extends JPanel implements java.awt.event.ActionListen
 			case MAGA:
 				icona = ClassiIcona.MAGA;
 				break;
+			case POZIONE_SALUTE:
+				icona = ClassiIcona.POZIONE_SALUTE;
+				break;
+			case POZIONE_SALUTE_GRANDE:
+				icona = ClassiIcona.POZIONE_SALUTE_GRANDE;
+				break;
 			case POZIONE_MAGIA:
 				icona = ClassiIcona.POZIONE_MAGIA;
+				break;
+			case POZIONE_MAGIA_GRANDE:
+				icona = ClassiIcona.POZIONE_MAGIA_GRANDE;
 				break;
 			case MAGO:
 				icona = ClassiIcona.MAGO;

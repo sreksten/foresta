@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.tools;
 
+import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
@@ -39,6 +40,7 @@ public interface CostruttoreArtefatto {
         StepModificatore setPeso(double peso);
     }
     interface StepModificatore {
+        StepModificatore setModificatore(ModificatoreAttributo modificatore);
         StepModificatore setModificatore(TipoAttributo modificatore, TipoModificatore tipoModificatore, double quantita, String nota);
         StepModificatore setModificatore(TipoAttributo modificatore, TipoModificatore tipoModificatore, double quantita);
         Artefatto costruisci();

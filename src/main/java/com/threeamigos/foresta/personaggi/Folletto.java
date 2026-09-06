@@ -21,8 +21,8 @@ public class Folletto extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.EGLI; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
-	public Folletto() {
-		super(ClassePersonaggio.FOLLETTO);
+	public Folletto(int livello) {
+		super(ClassePersonaggio.FOLLETTO, livello);
 	}
 
 	@Override
@@ -31,19 +31,35 @@ public class Folletto extends PersonaggioBase implements Personaggio {
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		md.setSaluteMassima(Costanti.FOLLETTO_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.FOLLETTO_MAX_MAGIA);
-		md.setForzaMassima(Costanti.FOLLETTO_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.FOLLETTO_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.FOLLETTO_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.FOLLETTO_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.FOLLETTO_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.FOLLETTO_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.FOLLETTO_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.FOLLETTO_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.FOLLETTO_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.FOLLETTO_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.FOLLETTO_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.FOLLETTO_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.FOLLETTO_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.FOLLETTO_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.FOLLETTO_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.FOLLETTO_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.FOLLETTO_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.FOLLETTO_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.FOLLETTO_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

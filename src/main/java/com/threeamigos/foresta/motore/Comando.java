@@ -53,8 +53,9 @@ public enum Comando {
 	// Scelte possibili al completamento di una locazione
 	ACCAMPAMENTO,
 	POZIONE_SALUTE,
-	GRANDE_POZIONE_SALUTE,
+	POZIONE_SALUTE_GRANDE,
 	POZIONE_MAGIA,
+	POZIONE_MAGIA_GRANDE,
 	MAPPA,
 	FLOPPY,
 

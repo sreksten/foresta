@@ -21,8 +21,8 @@ public class Hobgoblin extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.ESSO; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
-	public Hobgoblin() {
-		super(ClassePersonaggio.HOBGOBLIN);
+	public Hobgoblin(int livello) {
+		super(ClassePersonaggio.HOBGOBLIN, livello);
 	}
 
 	@Override
@@ -31,19 +31,35 @@ public class Hobgoblin extends PersonaggioBase implements Personaggio {
 		setIcona("icone/Hobgoblin.gif");
 		setCorrompibile(true);
 
-		md.setSaluteMassima(Costanti.HOBGOBLIN_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.HOBGOBLIN_MAX_MAGIA);
-		md.setForzaMassima(Costanti.HOBGOBLIN_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.HOBGOBLIN_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.HOBGOBLIN_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.HOBGOBLIN_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.HOBGOBLIN_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.HOBGOBLIN_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.HOBGOBLIN_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.HOBGOBLIN_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.HOBGOBLIN_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.HOBGOBLIN_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.HOBGOBLIN_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.HOBGOBLIN_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.HOBGOBLIN_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.HOBGOBLIN_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.HOBGOBLIN_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.HOBGOBLIN_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.HOBGOBLIN_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.HOBGOBLIN_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.HOBGOBLIN_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

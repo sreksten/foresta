@@ -29,6 +29,7 @@ public abstract class OggettoBase implements Oggetto {
 	@Override
 	public boolean prendi(GruppoGiocatore gruppo, Comando azione) {
 		Statistiche.addPunti(getClasse().getValore() * quantita);
+		GruppoGiocatore.getIstanza().addPuntiEsperienza(getClasse().getValore() * quantita);
 		UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
 		UI.rinfresca();
 		return true;

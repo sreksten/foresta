@@ -1,9 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.motore.GruppoAvversario;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.RegistroMissioni;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.RegistroMissioni.TipoMissione;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.personaggi.Ladra;
@@ -38,19 +35,20 @@ public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
 		if (!isMissioneCompleta()) {
-			Ladro ladro = new Ladro();
+			int livello = Statistiche.getLivello();
+			Ladro ladro = new Ladro(livello);
 			ladro.setAmichevole(false);
 			ladro.setCorrompibile(false);
 			gng.aggiungiPersonaggio(ladro);
-			Ladra ladra = new Ladra();
+			Ladra ladra = new Ladra(livello + 1);
 			ladra.setAmichevole(false);
 			ladra.setCorrompibile(false);
 			gng.aggiungiPersonaggio(ladra);
-			ladro = new Ladro();
+			ladro = new Ladro(Math.min(1, livello - 1));
 			ladro.setAmichevole(false);
 			ladro.setCorrompibile(false);
 			gng.aggiungiPersonaggio(ladro);
-			ladro = new Ladro();
+			ladro = new Ladro(livello);
 			ladro.setAmichevole(false);
 			ladro.setCorrompibile(false);
 			gng.aggiungiPersonaggio(ladro);

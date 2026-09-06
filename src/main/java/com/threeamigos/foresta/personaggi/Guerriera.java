@@ -20,12 +20,12 @@ public class Guerriera extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.ELLA; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 
-	public Guerriera() {
-		super(ClassePersonaggio.GUERRIERA);
+	public Guerriera(int livello) {
+		super(ClassePersonaggio.GUERRIERA, livello);
 	}
 
-	public Guerriera(String nome) {
-		super(nome, ClassePersonaggio.GUERRIERA);
+	public Guerriera(String nome, int livello) {
+		super(nome, ClassePersonaggio.GUERRIERA, livello);
 	}
 
 	@Override
@@ -35,19 +35,35 @@ public class Guerriera extends PersonaggioBase implements Personaggio {
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		md.setSaluteMassima(Costanti.GUERRIERA_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.GUERRIERA_MAX_MAGIA);
-		md.setForzaMassima(Costanti.GUERRIERA_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.GUERRIERA_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.GUERRIERA_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.GUERRIERA_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.GUERRIERA_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.GUERRIERA_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.GUERRIERA_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GUERRIERA_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GUERRIERA_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.GUERRIERA_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GUERRIERA_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GUERRIERA_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.GUERRIERA_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.GUERRIERA_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.GUERRIERA_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.GUERRIERA_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.GUERRIERA_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.GUERRIERA_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.GUERRIERA_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

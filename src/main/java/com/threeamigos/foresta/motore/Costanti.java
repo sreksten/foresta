@@ -39,6 +39,8 @@ public class Costanti {
     public static final int RECUPERO_DA_POZIONE_SALUTE_GRANDE = 150;
     public static final int AUMENTO_SALUTE_DA_POZIONE_SALUTE_GRANDE = 10;
     public static final int RECUPERO_DA_POZIONE_MAGIA = 10;
+    public static final int AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE = 10;
+    public static final int RECUPERO_DA_POZIONE_MAGIA_GRANDE = 20;
 
     // Oggetti
     public static final int ANELLO_MAGICO_AGGIUNTA_VALORE = 5;
@@ -51,7 +53,9 @@ public class Costanti {
 
     // Dall'alchimista
     public static final int COSTO_POZIONE_SALUTE = 5;
+    public static final int COSTO_POZIONE_SALUTE_GRANDE = 15;
     public static final int COSTO_POZIONE_MAGIA = 10;
+    public static final int COSTO_POZIONE_MAGIA_GRANDE = 30;
     public static final int COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO = 10;
     public static final int AUMENTO_MAGIA_PERSONAGGIO = 20; //  Da pozione o alchimista
 
@@ -114,6 +118,10 @@ public class Costanti {
     public static final int BARDO_FURIA_MAX = 20;
     public static final int BARDO_MAX_NUMERO = 1;
 
+    public static final int BARDO_SALUTE_BASE = 105;
+    public static final int BARDO_LIVELLAMENTO_SALUTE = 125;
+    public static final int BARDO_MAGIA_BASE = 40;
+    public static final int BARDO_LIVELLAMENTO_MAGIA = 18;
     public static final double BARDO_MOLTIPLICATORE_CARICO = 0.9;
     public static final String BARDO_MOLTIPLICATORE_CARICO_NOTA = "Struttura slanciata ed elegante. Predilige la mobilità e l'armatura leggera rispetto alla pura massa da trasporto.";
     public static final double BARDO_MOLTIPLICATORE_CRITICO = 1.1;
@@ -184,6 +192,10 @@ public class Costanti {
     public static final int CANTASTORIE_FURIA_MAX = 20;
     public static final int CANTASTORIE_MAX_NUMERO = 1;
 
+    public static final int CANTASTORIE_SALUTE_BASE = 105;
+    public static final int CANTASTORIE_LIVELLAMENTO_SALUTE = 125;
+    public static final int CANTASTORIE_MAGIA_BASE = 40;
+    public static final int CANTASTORIE_LIVELLAMENTO_MAGIA = 18;
     public static final double CANTASTORIE_MOLTIPLICATORE_CARICO = 0.85;
     public static final String CANTASTORIE_MOLTIPLICATORE_CARICO_NOTA = "Struttura slanciata ed elegante. Predilige la mobilità e l'armatura leggera rispetto alla pura massa da trasporto.";
     public static final double CANTASTORIE_MOLTIPLICATORE_CRITICO = 1.15;
@@ -257,6 +269,10 @@ public class Costanti {
     public static final int ELFA_FURIA_MAX = 15;
     public static final int ELFA_MAX_NUMERO = 1;
 
+    public static final int ELFA_SALUTE_BASE = 105;
+    public static final int ELFA_LIVELLAMENTO_SALUTE = 130;
+    public static final int ELFA_MAGIA_BASE = 45;
+    public static final int ELFA_LIVELLAMENTO_MAGIA = 22;
     public static final double ELFA_MOLTIPLICATORE_CARICO = 0.85;
     public static final String ELFA_MOLTIPLICATORE_CARICO_NOTA = "Struttura slanciata ed elegante. Predilige la mobilità e l'armatura leggera rispetto alla pura massa da trasporto.";
     public static final double ELFA_MOLTIPLICATORE_CRITICO = 1.2;
@@ -330,6 +346,10 @@ public class Costanti {
     public static final int ELFO_FURIA_MAX = 15;
     public static final int ELFO_MAX_NUMERO = 1;
 
+    public static final int ELFO_SALUTE_BASE = 105;
+    public static final int ELFO_LIVELLAMENTO_SALUTE = 130;
+    public static final int ELFO_MAGIA_BASE = 45;
+    public static final int ELFO_LIVELLAMENTO_MAGIA = 22;
     public static final double ELFO_MOLTIPLICATORE_CARICO = 0.9;
     public static final String ELFO_MOLTIPLICATORE_CARICO_NOTA = "Struttura slanciata ed elegante. Predilige la mobilità e l'armatura leggera rispetto alla pura massa da trasporto.";
     public static final double ELFO_MOLTIPLICATORE_CRITICO = 1.2;
@@ -401,6 +421,10 @@ public class Costanti {
     public static final int GUERRIERA_FURIA_MAX = 35;
     public static final int GUERRIERA_MAX_NUMERO = 1;
 
+    public static final int GUERRIERA_SALUTE_BASE = 150;
+    public static final int GUERRIERA_LIVELLAMENTO_SALUTE = 185;
+    public static final int GUERRIERA_MAGIA_BASE = 20;
+    public static final int GUERRIERA_LIVELLAMENTO_MAGIA = 6;
     public static final double GUERRIERA_MOLTIPLICATORE_CARICO = 1.2;
     public static final String GUERRIERA_MOLTIPLICATORE_CARICO_NOTA = "L'archetipo del combattente addestrato a marciare per giorni con piastre d'acciaio addosso.";
     public static final double GUERRIERA_MOLTIPLICATORE_CRITICO = 1.0;
@@ -472,6 +496,10 @@ public class Costanti {
     public static final int GUERRIERO_FURIA_MAX = 35;
     public static final int GUERRIERO_MAX_NUMERO = 1;
 
+    public static final int GUERRIERO_SALUTE_BASE = 150;
+    public static final int GUERRIERO_LIVELLAMENTO_SALUTE = 185;
+    public static final int GUERRIERO_MAGIA_BASE = 20;
+    public static final int GUERRIERO_LIVELLAMENTO_MAGIA = 6;
     public static final double GUERRIERO_MOLTIPLICATORE_CARICO = 1.25;
     public static final String GUERRIERO_MOLTIPLICATORE_CARICO_NOTA = "L'archetipo del combattente addestrato a marciare per giorni con piastre d'acciaio addosso.";
     public static final double GUERRIERO_MOLTIPLICATORE_CRITICO = 1.0;
@@ -542,6 +570,10 @@ public class Costanti {
     public static final int LADRA_FURIA_MAX = 25;
     public static final int LADRA_MAX_NUMERO = 1;
 
+    public static final int LADRA_SALUTE_BASE = 100;
+    public static final int LADRA_LIVELLAMENTO_SALUTE = 130;
+    public static final int LADRA_MAGIA_BASE = 25;
+    public static final int LADRA_LIVELLAMENTO_MAGIA = 8;
     public static final double LADRA_MOLTIPLICATORE_CARICO = 0.95;
     public static final String LADRA_MOLTIPLICATORE_CARICO_NOTA = "Rappresenta il perfetto equilibrio umano per la reattività. Porta solo lo stretto necessario per non farsi sentire.";
     public static final double LADRA_MOLTIPLICATORE_CRITICO = 1.5;
@@ -612,6 +644,10 @@ public class Costanti {
     public static final int LADRO_FURIA_MAX = 25;
     public static final int LADRO_MAX_NUMERO = 1;
 
+    public static final int LADRO_SALUTE_BASE = 100;
+    public static final int LADRO_LIVELLAMENTO_SALUTE = 130;
+    public static final int LADRO_MAGIA_BASE = 25;
+    public static final int LADRO_LIVELLAMENTO_MAGIA = 8;
     public static final double LADRO_MOLTIPLICATORE_CARICO = 1.0;
     public static final String LADRO_MOLTIPLICATORE_CARICO_NOTA = "Rappresenta il perfetto equilibrio umano per la reattività. Porta solo lo stretto necessario per non farsi sentire.";
     public static final double LADRO_MOLTIPLICATORE_CRITICO = 1.5;
@@ -686,6 +722,10 @@ public class Costanti {
     public static final int MAGA_FURIA_MAX = 10;
     public static final int MAGA_MAX_NUMERO = 1;
 
+    public static final int MAGA_SALUTE_BASE = 80;
+    public static final int MAGA_LIVELLAMENTO_SALUTE = 95;
+    public static final int MAGA_MAGIA_BASE = 60;
+    public static final int MAGA_LIVELLAMENTO_MAGIA = 34;
     public static final double MAGA_MOLTIPLICATORE_CARICO = 0.75;
     public static final String MAGA_MOLTIPLICATORE_CARICO_NOTA = "Fisico non avvezzo agli sforzi prolungati; preferisce borse leggere per ingredienti alchemici e pergamene.";
     public static final double MAGA_MOLTIPLICATORE_CRITICO = 0.8;
@@ -760,6 +800,10 @@ public class Costanti {
     public static final int MAGO_FURIA_MAX = 10;
     public static final int MAGO_MAX_NUMERO = 1;
 
+    public static final int MAGO_SALUTE_BASE = 80;
+    public static final int MAGO_LIVELLAMENTO_SALUTE = 95;
+    public static final int MAGO_MAGIA_BASE = 60;
+    public static final int MAGO_LIVELLAMENTO_MAGIA = 34;
     public static final double MAGO_MOLTIPLICATORE_CARICO = 0.8;
     public static final String MAGO_MOLTIPLICATORE_CARICO_NOTA = "Fisico non avvezzo agli sforzi prolungati; preferisce borse leggere per ingredienti alchemici e pergamene.";
     public static final double MAGO_MOLTIPLICATORE_CRITICO = 0.8;
@@ -836,6 +880,10 @@ public class Costanti {
     public static final int OMBRAFIAMMA_FURIA_MAX = 40;
     public static final int OMBRAFIAMMA_MAX_NUMERO = 1;
 
+    public static final int OMBRAFIAMMA_SALUTE_BASE = 140;
+    public static final int OMBRAFIAMMA_LIVELLAMENTO_SALUTE = 175;
+    public static final int OMBRAFIAMMA_MAGIA_BASE = 50;
+    public static final int OMBRAFIAMMA_LIVELLAMENTO_MAGIA = 20;
     public static final double OMBRAFIAMMA_MOLTIPLICATORE_CARICO = 90;
     public static final String OMBRAFIAMMA_MOLTIPLICATORE_CARICO_NOTA = "Essere sovrannaturale";
     public static final double OMBRAFIAMMA_MOLTIPLICATORE_CRITICO = 1.5;
@@ -897,6 +945,10 @@ public class Costanti {
     public static final int ARPIA_MAX_VALORE = 30;
     public static final int ARPIA_MAX_NUMERO = 4;
 
+    public static final int ARPIA_SALUTE_BASE = 95;
+    public static final int ARPIA_LIVELLAMENTO_SALUTE = 120;
+    public static final int ARPIA_MAGIA_BASE = 35;
+    public static final int ARPIA_LIVELLAMENTO_MAGIA = 12;
     public static final double ARPIA_MOLTIPLICATORE_CARICO = 0.7;
     public static final String ARPIA_MOLTIPLICATORE_CARICO_NOTA = "Pur avendo dimensioni simili a un umano, la sua struttura ossea deve rimanere cava e leggera per consentirle il volo. Un sovraccarico le impedirebbe di decollare.";
     public static final double ARPIA_MOLTIPLICATORE_CRITICO = 1.3;
@@ -967,6 +1019,10 @@ public class Costanti {
     public static final int CENTAURO_FURIA_MIN = 15;
     public static final int CENTAURO_FURIA_MAX = 20;
 
+    public static final int CENTAURO_SALUTE_BASE = 125;
+    public static final int CENTAURO_LIVELLAMENTO_SALUTE = 150;
+    public static final int CENTAURO_MAGIA_BASE = 15;
+    public static final int CENTAURO_LIVELLAMENTO_MAGIA = 4;
     public static final double CENTAURO_MOLTIPLICATORE_CARICO = 2.0;
     public static final String CENTAURO_MOLTIPLICATORE_CARICO_NOTA = "Unisce la parte superiore umana a quella inferiore di un cavallo. Beneficia del bonus da quadrupede (molto stabile).";
     public static final double CENTAURO_MOLTIPLICATORE_CRITICO = 0.8;
@@ -1037,6 +1093,10 @@ public class Costanti {
     public static final int CHIMERA_FURIA_MIN = 18;
     public static final int CHIMERA_FURIA_MAX = 25;
 
+    public static final int CHIMERA_SALUTE_BASE = 120;
+    public static final int CHIMERA_LIVELLAMENTO_SALUTE = 140;
+    public static final int CHIMERA_MAGIA_BASE = 30;
+    public static final int CHIMERA_LIVELLAMENTO_MAGIA = 8;
     public static final double CHIMERA_MOLTIPLICATORE_CARICO = 2.5;
     public static final String CHIMERA_MOLTIPLICATORE_CARICO_NOTA = "Corpo da leone (quadrupede grande), con tre teste e code. Ha una base d'appoggio formidabile per caricare prede o fardelli sulla schiena.";
     public static final double CHIMERA_MOLTIPLICATORE_CRITICO = 1.1;
@@ -1107,6 +1167,10 @@ public class Costanti {
     public static final int CHIMERADRAGO_FURIA_MIN = 35;
     public static final int CHIMERADRAGO_FURIA_MAX = 50;
 
+    public static final int CHIMERADRAGO_SALUTE_BASE = 240;
+    public static final int CHIMERADRAGO_LIVELLAMENTO_SALUTE = 280;
+    public static final int CHIMERADRAGO_MAGIA_BASE = 60;
+    public static final int CHIMERADRAGO_LIVELLAMENTO_MAGIA = 16;
     public static final double CHIMERADRAGO_MOLTIPLICATORE_CARICO = 6.0;
     public static final String CHIMERADRAGO_MOLTIPLICATORE_CARICO_NOTA = "Essendo il doppio di una chimera normale, la sua massa volumetrica e la capacità di sollevamento scalano in modo esponenziale.";
     public static final double CHIMERADRAGO_MOLTIPLICATORE_CRITICO = 0.8;
@@ -1177,6 +1241,10 @@ public class Costanti {
     public static final int EREMITA_FURIA_MAX = 20;
     public static final int EREMITA_MAX_NUMERO = 1;
 
+    public static final int EREMITA_SALUTE_BASE = 90;
+    public static final int EREMITA_LIVELLAMENTO_SALUTE = 110;
+    public static final int EREMITA_MAGIA_BASE = 50;
+    public static final int EREMITA_LIVELLAMENTO_MAGIA = 25;
     public static final double EREMITA_MOLTIPLICATORE_CARICO = 0.8;
     public static final String EREMITA_MOLTIPLICATORE_CARICO_NOTA = "Fisico non avvezzo agli sforzi prolungati; preferisce borse leggere per ingredienti alchemici e pergamene.";
     public static final double EREMITA_MOLTIPLICATORE_CRITICO = 0.8;
@@ -1247,6 +1315,10 @@ public class Costanti {
     public static final int FANTASMA_FURIA_MIN = 3;
     public static final int FANTASMA_FURIA_MAX = 8;
 
+    public static final int FANTASMA_SALUTE_BASE = 65;
+    public static final int FANTASMA_LIVELLAMENTO_SALUTE = 75;
+    public static final int FANTASMA_MAGIA_BASE = 30;
+    public static final int FANTASMA_LIVELLAMENTO_MAGIA = 15;
     public static final double FANTASMA_MOLTIPLICATORE_CARICO = 0.0;
     public static final String FANTASMA_MOLTIPLICATORE_CARICO_NOTA = "Trattandosi di uno spettro, non ha un inventario fisico per gli oggetti del mondo materiale.";
     public static final double FANTASMA_MOLTIPLICATORE_CRITICO = 0.5;
@@ -1317,6 +1389,10 @@ public class Costanti {
     public static final int FOLLETTO_FURIA_MIN = 3;
     public static final int FOLLETTO_FURIA_MAX = 5;
 
+    public static final int FOLLETTO_SALUTE_BASE = 45;
+    public static final int FOLLETTO_LIVELLAMENTO_SALUTE = 55;
+    public static final int FOLLETTO_MAGIA_BASE = 65;
+    public static final int FOLLETTO_LIVELLAMENTO_MAGIA = 28;
     public static final double FOLLETTO_MOLTIPLICATORE_CARICO = 0.2;
     public static final String FOLLETTO_MOLTIPLICATORE_CARICO_NOTA = "Creatura minuscola e magica. Può trasportare solo oggetti leggerissimi (anelli, piccole fiale, aghi).";
     public static final double FOLLETTO_MOLTIPLICATORE_CRITICO = 1.2;
@@ -1389,6 +1465,10 @@ public class Costanti {
     public static final int GARGOYLE_FURIA_MIN = 15;
     public static final int GARGOYLE_FURIA_MAX = 20;
 
+    public static final int GARGOYLE_SALUTE_BASE = 135;
+    public static final int GARGOYLE_LIVELLAMENTO_SALUTE = 145;
+    public static final int GARGOYLE_MAGIA_BASE = 25;
+    public static final int GARGOYLE_LIVELLAMENTO_MAGIA = 6;
     public static final double GARGOYLE_MOLTIPLICATORE_CARICO = 1.4;
     public static final String GARGOYLE_MOLTIPLICATORE_CARICO_NOTA = "Essendo fatto di pietra animata, la sua struttura sopporta pesi elevati, ma le ali ne limitano la capacità estrema se vuole planare.";
     public static final double GARGOYLE_MOLTIPLICATORE_CRITICO = 0.8;
@@ -1459,6 +1539,10 @@ public class Costanti {
     public static final int GIGANTE_FURIA_MIN = 20;
     public static final int GIGANTE_FURIA_MAX = 30;
 
+    public static final int GIGANTE_SALUTE_BASE = 250;
+    public static final int GIGANTE_LIVELLAMENTO_SALUTE = 300;
+    public static final int GIGANTE_MAGIA_BASE = 0;
+    public static final int GIGANTE_LIVELLAMENTO_MAGIA = 0;
     public static final double GIGANTE_MOLTIPLICATORE_CARICO = 4.5;
     public static final String GIGANTE_MOLTIPLICATORE_CARICO_NOTA = "Supera facilmente i 4-5 metri d'altezza. Le sue armi base pesano quanto un intero soldato umano.";
     public static final double GIGANTE_MOLTIPLICATORE_CRITICO = 0.6;
@@ -1529,6 +1613,10 @@ public class Costanti {
     public static final int GOBLIN_FURIA_MIN = 10;
     public static final int GOBLIN_FURIA_MAX = 15;
 
+    public static final int GOBLIN_SALUTE_BASE = 60;
+    public static final int GOBLIN_LIVELLAMENTO_SALUTE = 75;
+    public static final int GOBLIN_MAGIA_BASE = 5;
+    public static final int GOBLIN_LIVELLAMENTO_MAGIA = 2;
     public static final double GOBLIN_MOLTIPLICATORE_CARICO = 0.6;
     public static final String GOBLIN_MOLTIPLICATORE_CARICO_NOTA = "Più piccolo di un umano e storicamente costretto ad arrangiarsi con equipaggiamento leggero e di fortuna.";
     public static final double GOBLIN_MOLTIPLICATORE_CRITICO = 1.2;
@@ -1600,6 +1688,10 @@ public class Costanti {
     public static final int HOBGOBLIN_FURIA_MIN = 15;
     public static final int HOBGOBLIN_FURIA_MAX = 20;
 
+    public static final int HOBGOBLIN_SALUTE_BASE = 85;
+    public static final int HOBGOBLIN_LIVELLAMENTO_SALUTE = 100;
+    public static final int HOBGOBLIN_MAGIA_BASE = 10;
+    public static final int HOBGOBLIN_LIVELLAMENTO_MAGIA = 4;
     public static final double HOBGOBLIN_MOLTIPLICATORE_CARICO = 1.1;
     public static final String HOBGOBLIN_MOLTIPLICATORE_CARICO_NOTA = "Variante più robusta, militare e massiccia del goblin comune.";
     public static final double HOBGOBLIN_MOLTIPLICATORE_CRITICO = 1.1;
@@ -1670,6 +1762,10 @@ public class Costanti {
     public static final int MINOTAURO_FURIA_MIN = 25;
     public static final int MINOTAURO_FURIA_MAX = 35;
 
+    public static final int MINOTAURO_SALUTE_BASE = 160;
+    public static final int MINOTAURO_LIVELLAMENTO_SALUTE = 200;
+    public static final int MINOTAURO_MAGIA_BASE = 0;
+    public static final int MINOTAURO_LIVELLAMENTO_MAGIA = 0;
     public static final double MINOTAURO_MOLTIPLICATORE_CARICO = 2.2;
     public static final String MINOTAURO_MOLTIPLICATORE_CARICO_NOTA = "Un bipede taurino massiccio, alto più di due metri e mezzo, con una densità muscolare spaventosa.";
     public static final double MINOTAURO_MOLTIPLICATORE_CRITICO = 0.7;
@@ -1741,6 +1837,10 @@ public class Costanti {
     public static final int OMBRANERA_FURIA_MIN = 20;
     public static final int OMBRANERA_FURIA_MAX = 30;
 
+    public static final int OMBRANERA_SALUTE_BASE = 90;
+    public static final int OMBRANERA_LIVELLAMENTO_SALUTE = 115;
+    public static final int OMBRANERA_MAGIA_BASE = 40;
+    public static final int OMBRANERA_LIVELLAMENTO_MAGIA = 20;
     public static final double OMBRANERA_MOLTIPLICATORE_CARICO = 0.0;
     public static final String OMBRANERA_MOLTIPLICATORE_CARICO_NOTA = "Trattandosi di uno spettro, non ha un inventario fisico per gli oggetti del mondo materiale.";
     public static final double OMBRANERA_MOLTIPLICATORE_CRITICO = 1.4;
@@ -1811,6 +1911,10 @@ public class Costanti {
     public static final int SCHELETRO_FURIA_MIN = 10;
     public static final int SCHELETRO_FURIA_MAX = 15;
 
+    public static final int SCHELETRO_SALUTE_BASE = 70;
+    public static final int SCHELETRO_LIVELLAMENTO_SALUTE = 85;
+    public static final int SCHELETRO_MAGIA_BASE = 0;
+    public static final int SCHELETRO_LIVELLAMENTO_MAGIA = 0;
     public static final double SCHELETRO_MOLTIPLICATORE_CARICO = 1.1;
     public static final String SCHELETRO_MOLTIPLICATORE_CARICO_NOTA = "Può sembrare strano (non ha muscoli), ma non avendo organi interni, pelle o grasso, la sua intera struttura ossea è \"carico utile vuoto\". Inoltre, essendo un non-morto, non risente del dolore da sforzo (può caricarsi finché le ossa non si spezzano fisicamente).";
     public static final double SCHELETRO_MOLTIPLICATORE_CRITICO = 1.1;
@@ -1881,6 +1985,10 @@ public class Costanti {
     public static final int SPETTRO_FURIA_MIN = 5;
     public static final int SPETTRO_FURIA_MAX = 10;
 
+    public static final int SPETTRO_SALUTE_BASE = 70;
+    public static final int SPETTRO_LIVELLAMENTO_SALUTE = 80;
+    public static final int SPETTRO_MAGIA_BASE = 50;
+    public static final int SPETTRO_LIVELLAMENTO_MAGIA = 25;
     public static final double SPETTRO_MOLTIPLICATORE_CARICO = 0.0;
     public static final String SPETTRO_MOLTIPLICATORE_CARICO_NOTA = "Trattandosi di uno spettro, non ha un inventario fisico per gli oggetti del mondo materiale.";
     public static final double SPETTRO_MOLTIPLICATORE_CRITICO = 0.5;
@@ -1951,6 +2059,10 @@ public class Costanti {
     public static final int SPIRITO_FURIA_MIN = 3;
     public static final int SPIRITO_FURIA_MAX = 5;
 
+    public static final int SPIRITO_SALUTE_BASE = 50;
+    public static final int SPIRITO_LIVELLAMENTO_SALUTE = 60;
+    public static final int SPIRITO_MAGIA_BASE = 45;
+    public static final int SPIRITO_LIVELLAMENTO_MAGIA = 20;
     public static final double SPIRITO_MOLTIPLICATORE_CARICO = 0.0;
     public static final String SPIRITO_MOLTIPLICATORE_CARICO_NOTA = "Trattandosi di uno spettro, non ha un inventario fisico per gli oggetti del mondo materiale.";
     public static final double SPIRITO_MOLTIPLICATORE_CRITICO = 0.5;
@@ -2021,6 +2133,10 @@ public class Costanti {
     public static final int TITANO_FURIA_MIN = 35;
     public static final int TITANO_FURIA_MAX = 50;
 
+    public static final int TITANO_SALUTE_BASE = 300;
+    public static final int TITANO_LIVELLAMENTO_SALUTE = 375;
+    public static final int TITANO_MAGIA_BASE = 0;
+    public static final int TITANO_LIVELLAMENTO_MAGIA = 0;
     public static final double TITANO_MOLTIPLICATORE_CARICO = 10.0;
     public static final String TITANO_MOLTIPLICATORE_CARICO_NOTA = "Forze semidivine o creature mitologiche capaci di spostare l'ambiente circostante. Per lui sollevare un masso o un'armatura pesante è indifferente.";
     public static final double TITANO_MOLTIPLICATORE_CRITICO = 0.4;
@@ -2091,6 +2207,10 @@ public class Costanti {
     public static final int TROLL_FURIA_MIN = 30;
     public static final int TROLL_FURIA_MAX = 40;
 
+    public static final int TROLL_SALUTE_BASE = 170;
+    public static final int TROLL_LIVELLAMENTO_SALUTE = 210;
+    public static final int TROLL_MAGIA_BASE = 0;
+    public static final int TROLL_LIVELLAMENTO_MAGIA = 0;
     public static final double TROLL_MOLTIPLICATORE_CARICO = 2.8;
     public static final String TROLL_MOLTIPLICATORE_CARICO_NOTA = "Corpo da leone (quadrupede grande), con tre teste e code. Ha una base d'appoggio formidabile per caricare prede o fardelli sulla schiena.";
     public static final double TROLL_MOLTIPLICATORE_CRITICO = 0.7;
@@ -2162,6 +2282,10 @@ public class Costanti {
     public static final int VIVERNA_FURIA_MIN = 25;
     public static final int VIVERNA_FURIA_MAX = 35;
 
+    public static final int VIVERNA_SALUTE_BASE = 130;
+    public static final int VIVERNA_LIVELLAMENTO_SALUTE = 165;
+    public static final int VIVERNA_MAGIA_BASE = 30;
+    public static final int VIVERNA_LIVELLAMENTO_MAGIA = 10;
     public static final double VIVERNA_MOLTIPLICATORE_CARICO = 3.5;
     public static final String VIVERNA_MOLTIPLICATORE_CARICO_NOTA = "Un rettile alato predatore di taglia grande. Può ghermire e trasportare in volo intero bestiame.";
     public static final double VIVERNA_MOLTIPLICATORE_CRITICO = 1.2;
@@ -2234,6 +2358,10 @@ public class Costanti {
     public static final int IDRA_FURIA_MAX = 60;
     public static final int IDRA_MAX_NUMERO = 1;
 
+    public static final int IDRA_SALUTE_BASE = 180;
+    public static final int IDRA_LIVELLAMENTO_SALUTE = 220;
+    public static final int IDRA_MAGIA_BASE = 10;
+    public static final int IDRA_LIVELLAMENTO_MAGIA = 4;
     public static final double IDRA_MOLTIPLICATORE_CARICO = 5.0;
     public static final String IDRA_MOLTIPLICATORE_CARICO_NOTA = "Scarica tutta la sua potenza muscolare rettiliana sul terreno, muovendosi come un cingolato biologico capace di trascinare pesi spaventosi.";
     public static final double IDRA_MOLTIPLICATORE_CRITICO = 0.6;
@@ -2307,6 +2435,10 @@ public class Costanti {
     public static final int LICH_FURIA_MAX = 25;
     public static final int LICH_MAX_NUMERO = 1;
 
+    public static final int LICH_SALUTE_BASE = 75;
+    public static final int LICH_LIVELLAMENTO_SALUTE = 85;
+    public static final int LICH_MAGIA_BASE = 80;
+    public static final int LICH_LIVELLAMENTO_MAGIA = 45;
     public static final double LICH_MOLTIPLICATORE_CARICO = 1.0;
     public static final String LICH_MOLTIPLICATORE_CARICO_NOTA = "Il suo corpo è mosso da pura energia magica e non soffre la fatica biologica o i dolori muscolari legati al trasporto di fardelli pesanti. Non arriva a 1.1 come lo Scheletro comune poiché la sua figura è votata esclusivamente all'intelletto e all'arcano, non alla manovalanza.";
     public static final double LICH_MOLTIPLICATORE_CRITICO = 1.0;
@@ -2377,6 +2509,10 @@ public class Costanti {
     public static final int MINOTAUROGIGANTE_FURIA_MAX = 65;
     public static final int MINOTAUROGIGANTE_MAX_NUMERO = 1;
 
+    public static final int MINOTAUROGIGANTE_SALUTE_BASE = 230;
+    public static final int MINOTAUROGIGANTE_LIVELLAMENTO_SALUTE = 275;
+    public static final int MINOTAUROGIGANTE_MAGIA_BASE = 0;
+    public static final int MINOTAUROGIGANTE_LIVELLAMENTO_MAGIA = 0;
     public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_CARICO = 4.0;
     public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_CARICO_NOTA = "Un bipede taurino massiccio, alto più di quattro metri, con una densità muscolare spaventosa.";
     public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_CRITICO = 0.5;
@@ -2450,6 +2586,10 @@ public class Costanti {
     public static final int STREGA_FURIA_MAX = 30;
     public static final int STREGA_MAX_NUMERO = 1;
 
+    public static final int STREGA_SALUTE_BASE = 85;
+    public static final int STREGA_LIVELLAMENTO_SALUTE = 95;
+    public static final int STREGA_MAGIA_BASE = 55;
+    public static final int STREGA_LIVELLAMENTO_MAGIA = 32;
     public static final double STREGA_MOLTIPLICATORE_CARICO = 0.95;
     public static final String STREGA_MOLTIPLICATORE_CARICO_NOTA = "Umano standard";
     public static final double STREGA_MOLTIPLICATORE_CRITICO = 0.8;
@@ -2525,6 +2665,10 @@ public class Costanti {
     public static final int DRAGO_FURIA_MAX = 80;
     public static final int DRAGO_MAX_NUMERO = 1;
 
+    public static final int DRAGO_SALUTE_BASE = 200;
+    public static final int DRAGO_LIVELLAMENTO_SALUTE = 250;
+    public static final int DRAGO_MAGIA_BASE = 30;
+    public static final int DRAGO_LIVELLAMENTO_MAGIA = 8;
     public static final double DRAGO_MOLTIPLICATORE_CARICO = 8.0;
     public static final String DRAGO_MOLTIPLICATORE_CARICO_NOTA = "Unisce i vantaggi di una struttura quadrupede immensa alla potenza innata della stirpe draconica.";
     public static final double DRAGO_MOLTIPLICATORE_CRITICO = 1.0;
@@ -2562,5 +2706,5 @@ public class Costanti {
     public static final double DRAGO_MOLTIPLICATORE_RECUPERO_MAGICO = 1.5;
     public static final String DRAGO_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "Regale. Unione perfetta di carne e magia pura. Il suo corpo millenario assorbe i flussi del mondo a ritmi catastrofici.";
 
-
+    
 }

@@ -1,7 +1,12 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
+import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
+import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
@@ -78,13 +83,51 @@ public class Anello extends OggettoBase implements Oggetto {
 				}
 				Personaggio p = gruppo.getPersonaggio(azione);
 				UI.notifica(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " indossa l'anello.");
-				if (tipo == 1)
+
+				String nome;
+				ModificatoreAttributo modificatore;
+				String descrizione;
+				if (tipo == 1) {
+					String[] appartenenzePossibili = new String[]{ "della Valchiria", "del Grifone", "del Paladino", "del Centurione", "della Manticora", "del Minotauro", "della Viverna" };
+					int indiceAppartenenza = (int) (Math.random() * appartenenzePossibili.length);
+					nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
+					modificatore = new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, Costanti.ANELLO_MAGICO_AGGIUNTA_VALORE);
+					descrizione = "che aumenta il Valore";
+				} else if (tipo == 2) {
+					String[] appartenenzePossibili = new String[]{ "del Berserker", "della Fenice", "del Pegaso", "della Salamandra", "del Gladiatore", "dell'Ippogrifo", "dell'Esploratore" };
+					int indiceAppartenenza = (int) (Math.random() * appartenenzePossibili.length);
+					nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
+					modificatore = new ModificatoreAttributo(TipoAttributo.CORAGGIO, TipoModificatore.AUMENTO_PERCENTUALE, Costanti.ANELLO_MAGICO_AGGIUNTA_CORAGGIO);
+					descrizione = "che aumenta il Coraggio";
+				} else {
+					String[] appartenenzePossibili = new String[]{ "della Sirena", "della Sfinge", "dell'Arcangelo", "della Gorgone", "del Dullahan", "della Lamia", "del Basilisco" };
+					int indiceAppartenenza = (int) (Math.random() * appartenenzePossibili.length);
+					nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
+					modificatore = new ModificatoreAttributo(TipoAttributo.CARISMA, TipoModificatore.AUMENTO_PERCENTUALE, Costanti.ANELLO_MAGICO_AGGIUNTA_CARISMA);
+					descrizione = "che aumenta il Carisma";
+				}
+
+				Artefatto anelloMagico = CostruttoreArtefatto.istanza()
+						.setTipo(TipoArtefatto.ANELLO)
+						.setNome(nome)
+						.setDescrizione(descrizione)
+						.setLivello(1)
+						.setDanniBase(0)
+						.setCostoAcquisto(20)
+						.setPeso(0.1)
+						.setModificatore(modificatore)
+						.costruisci();
+				p.addArtefatto(anelloMagico);
+
+				if (tipo == 1) {
 					p.addValore(Costanti.ANELLO_MAGICO_AGGIUNTA_VALORE);
-				else if (tipo == 2)
+				} else if (tipo == 2) {
 					p.addCoraggio(Costanti.ANELLO_MAGICO_AGGIUNTA_CORAGGIO);
-				else // CARISMA
+				} else {
 					p.addCarisma(Costanti.ANELLO_MAGICO_AGGIUNTA_CARISMA);
+				}
 				Statistiche.addPunti(Costanti.ANELLO_MAGICO_PUNTEGGIO);
+				GruppoGiocatore.getIstanza().addPuntiEsperienza(Costanti.ANELLO_MAGICO_PUNTEGGIO);
 			}
 		}
 		UI.primoPiano(InterfacciaUtente.Finestra.STATO);

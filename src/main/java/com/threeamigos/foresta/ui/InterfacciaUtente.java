@@ -134,7 +134,9 @@ public interface InterfacciaUtente {
 	void variaMagia(Personaggio personaggio, int variazione);
 	
 	void variaMagiaMassima(Personaggio personaggio, int variazione);
-	
+
+	void variaLivello(Personaggio personaggio, int variazione);
+
 	void variaCoraggio(Personaggio personaggio, int variazione);
 	
 	void variaValore(Personaggio personaggio, int variazione);
@@ -156,6 +158,8 @@ public interface InterfacciaUtente {
 	void variaPozioniSalute(int variazione);
 
 	void variaPozioniMagia(int variazione);
+
+	void variaPozioniMagiaGrande(int variazione);
 
 	void variaPozioniSaluteGrande(int variazione);
 

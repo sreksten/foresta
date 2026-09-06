@@ -36,7 +36,8 @@ public class GruppoMD implements Serializzabile {
 		for (int i = 0; i < numeroPersonaggi; i++) {
 			PersonaggioMD personaggioMD = new PersonaggioMD();
 			personaggioMD.leggi(stream);
-			Personaggio personaggio = personaggioMD.getClasse().getIstanza();
+			Personaggio personaggio = personaggioMD.getClasse().getIstanza(1);
+			// Ci pensa poi la rilettura a sistemare il livello del personaggio
 			personaggio.setModelloDati(personaggioMD);
 			GruppoGiocatore.getIstanza().aggiungiPersonaggioSenzaNotificare(personaggio);
 		}

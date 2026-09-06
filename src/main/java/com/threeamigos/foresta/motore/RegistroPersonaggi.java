@@ -16,25 +16,25 @@ public class RegistroPersonaggi {
 	static void reimposta() {
 		registroMD.reimposta();
 		
-		aggiungiPersonaggio(new Guerriero("Reginald"));
-		aggiungiPersonaggio(new Guerriera("Elleran"));
-		aggiungiPersonaggio(new Guerriero("Roderick"));
-		aggiungiPersonaggio(new Guerriera("Wendy"));
-		aggiungiPersonaggio(new Guerriero("Frederick"));
+		aggiungiPersonaggio(new Guerriero("Reginald", 1));
+		aggiungiPersonaggio(new Guerriera("Elleran", 1));
+		aggiungiPersonaggio(new Guerriero("Roderick", 1));
+		aggiungiPersonaggio(new Guerriera("Wendy", 1));
+		aggiungiPersonaggio(new Guerriero("Frederick", 1));
 
-		aggiungiPersonaggio(new Ladro("Gabriel"));
-		aggiungiPersonaggio(new Ladra("Filean"));
-		aggiungiPersonaggio(new Ladro("Raven"));
-		aggiungiPersonaggio(new Ladra("Wyan"));
+		aggiungiPersonaggio(new Ladro("Gabriel", 1));
+		aggiungiPersonaggio(new Ladra("Filean", 1));
+		aggiungiPersonaggio(new Ladro("Raven", 1));
+		aggiungiPersonaggio(new Ladra("Wyan", 1));
 
-		aggiungiPersonaggio(new Bardo("Samuel"));
-		aggiungiPersonaggio(new Cantastorie("Gwendolyn"));
+		aggiungiPersonaggio(new Bardo("Samuel", 1));
+		aggiungiPersonaggio(new Cantastorie("Gwendolyn", 1));
 
-		aggiungiPersonaggio(new Elfo("Lamiel"));
-		aggiungiPersonaggio(new Elfa("Yluviel"));
+		aggiungiPersonaggio(new Elfo("Lamiel", 1));
+		aggiungiPersonaggio(new Elfa("Yluviel", 1));
 
-		aggiungiPersonaggio(new Mago("Merlin"));
-		aggiungiPersonaggio(new Maga("LeFey"));
+		aggiungiPersonaggio(new Mago("Merlin", 1));
+		aggiungiPersonaggio(new Maga("LeFey", 1));
 	}
 
 	static Personaggio getPersonaggioDisponibile() {
@@ -65,7 +65,7 @@ public class RegistroPersonaggi {
 		if (modelloDati == null) {
 			return null;
 		}
-		Personaggio personaggio = modelloDati.getClasse().getIstanza();
+		Personaggio personaggio = modelloDati.getClasse().getIstanza(1);
 		personaggio.setModelloDati(modelloDati);
 		return personaggio;
 	}

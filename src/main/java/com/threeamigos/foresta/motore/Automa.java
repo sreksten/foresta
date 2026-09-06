@@ -65,7 +65,7 @@ public class Automa implements ControlloreDiGioco {
 			} else {
 				// Qui mettiamo il codice per i personaggi nascosti tipo:
 				if (s.equals("OmbraFiamma")) {
-					personaggio = new OmbraFiamma("Alakazam");
+					personaggio = new OmbraFiamma("Alakazam", 5);
 					stato = Stato.INIZIALIZZAZIONE_GIOCO;
 					processaAzione(null);
 					break;
@@ -187,34 +187,34 @@ public class Automa implements ControlloreDiGioco {
 			case PRE_GAME_ATTESA_CLASSE_PERSONAGGIO:
 				switch (azione) {
 				case GUERRIERA:
-					personaggio = new Guerriera(nomePersonaggio);
+					personaggio = new Guerriera(nomePersonaggio, 1);
 					break;
 				case GUERRIERO:
-					personaggio = new Guerriero(nomePersonaggio);
+					personaggio = new Guerriero(nomePersonaggio, 1);
 					break;
 				case LADRA:
-					personaggio = new Ladra(nomePersonaggio);
+					personaggio = new Ladra(nomePersonaggio, 1);
 					break;
 				case LADRO:
-					personaggio = new Ladro(nomePersonaggio);
+					personaggio = new Ladro(nomePersonaggio, 1);
 					break;
 				case CANTASTORIE:
-					personaggio = new Cantastorie(nomePersonaggio);
+					personaggio = new Cantastorie(nomePersonaggio, 1);
 					break;
 				case BARDO:
-					personaggio = new Bardo(nomePersonaggio);
+					personaggio = new Bardo(nomePersonaggio, 1);
 					break;
 				case ELFA:
-					personaggio = new Elfa(nomePersonaggio);
+					personaggio = new Elfa(nomePersonaggio, 1);
 					break;
 				case ELFO:
-					personaggio = new Elfo(nomePersonaggio);
+					personaggio = new Elfo(nomePersonaggio, 1);
 					break;
 				case MAGA:
-					personaggio = new Maga(nomePersonaggio);
+					personaggio = new Maga(nomePersonaggio, 1);
 					break;
 				case MAGO:
-					personaggio = new Mago(nomePersonaggio);
+					personaggio = new Mago(nomePersonaggio, 1);
 					break;
 				default:
 					throw new IllegalArgumentException();
@@ -349,8 +349,9 @@ public class Automa implements ControlloreDiGioco {
 
 			case SCELTA_INCANTESIMO_DA_LANCIARE:
 				ComandiPossibili.reimposta();
+				Personaggio formulante = gruppo.getFormulante();
 				for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
-					if (gruppo.getIncantesimi(classeIncantesimo) > 0) {
+					if (gruppo.getIncantesimi(classeIncantesimo) > 0 && formulante.getMagia() >= classeIncantesimo.getIstanza().getCostoLancio()) {
 						ComandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
 					}
 				}
@@ -390,7 +391,6 @@ public class Automa implements ControlloreDiGioco {
 				UI.infoCombattimento(false, null, null);
 				UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 
-				//FIXME come mai a volte non si prende l'oggetto? (Se non c'è nessuno)
 				// Recuperiamo l'oggetto se fattibile
 				if (locazioneCorrente.isCompleta()) {
 					if (!locazioneCorrente.isHaStrettoAmicizia()) {
@@ -473,10 +473,13 @@ public class Automa implements ControlloreDiGioco {
 					ComandiPossibili.add(Comando.POZIONE_SALUTE);
 				}
 				if (gruppo.getPozioniSaluteGrande() > 0) {
-					ComandiPossibili.add(Comando.GRANDE_POZIONE_SALUTE);
+					ComandiPossibili.add(Comando.POZIONE_SALUTE_GRANDE);
 				}
 				if (gruppo.getPozioniMagia() > 0) {
 					ComandiPossibili.add(Comando.POZIONE_MAGIA);
+				}
+				if (gruppo.getPozioniMagiaGrande() > 0) {
+					ComandiPossibili.add(Comando.POZIONE_MAGIA_GRANDE);
 				}
 				ComandiPossibili.add(Comando.FLOPPY);
 
@@ -507,13 +510,18 @@ public class Automa implements ControlloreDiGioco {
 					stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 					processaAzione(null);
 					return;
-				case GRANDE_POZIONE_SALUTE:
-					statoPrecedente = Stato.ATTESA_GRANDE_POZIONE_SALUTE;
+				case POZIONE_SALUTE_GRANDE:
+					statoPrecedente = Stato.ATTESA_POZIONE_SALUTE_GRANDE;
 					stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 					processaAzione(null);
 					return;
 				case POZIONE_MAGIA:
-					statoPrecedente = Stato.ATTESA_MAGIA;
+					statoPrecedente = Stato.ATTESA_POZIONE_MAGIA;
+					stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+					processaAzione(null);
+					return;
+				case POZIONE_MAGIA_GRANDE:
+					statoPrecedente = Stato.ATTESA_POZIONE_MAGIA_GRANDE;
 					stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 					processaAzione(null);
 					return;
@@ -573,35 +581,34 @@ public class Automa implements ControlloreDiGioco {
 
 			case ATTESA_POZIONE_SALUTE:
 				if (azione != null && azione != Comando.ANNULLA) {
-					personaggio = gruppo.getPersonaggio(azione);
-					personaggio.addSalute(100);
-					gruppo.subPozioniSalute(1);
-					UI.notifica(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ha bevuto una pozione che fa riacquistare salute.");
+					gruppo.consumaPozioneSalute(azione);
 				}
 				stato = Stato.ATTESA_DIREZIONE;
 				UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 				processaAzione(null);
 				break;
 
-			case ATTESA_GRANDE_POZIONE_SALUTE:
+			case ATTESA_POZIONE_SALUTE_GRANDE:
 				if (azione != null && azione != Comando.ANNULLA) {
-					personaggio = gruppo.getPersonaggio(azione);
-					personaggio.addSalute(personaggio.getSaluteMassima());
-					personaggio.addSaluteMassima(10);
-					gruppo.subPozioniSaluteGrande(1);
-					UI.notifica(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ha bevuto una pozione che fa aumentare la salute!");
+					gruppo.consumaPozioneSaluteGrande(azione);
 				}
 				stato = Stato.ATTESA_DIREZIONE;
 				UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 				processaAzione(null);
 				break;
 
-			case ATTESA_MAGIA:
+			case ATTESA_POZIONE_MAGIA:
 				if (azione != null && azione != Comando.ANNULLA) {
-					personaggio = gruppo.getPersonaggio(azione);
-					personaggio.addMagia(10);
-					gruppo.subPozioniMagia(1);
-					UI.notifica(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ha bevuto una pozione che fa acquistare magia.");
+					gruppo.consumaPozioneMagia(azione);
+				}
+				stato = Stato.ATTESA_DIREZIONE;
+				UI.primoPiano(InterfacciaUtente.Finestra.STATO);
+				processaAzione(null);
+				break;
+
+			case ATTESA_POZIONE_MAGIA_GRANDE:
+				if (azione != null && azione != Comando.ANNULLA) {
+					gruppo.consumaPozioneMagiaGrande(azione);
 				}
 				stato = Stato.ATTESA_DIREZIONE;
 				UI.primoPiano(InterfacciaUtente.Finestra.STATO);

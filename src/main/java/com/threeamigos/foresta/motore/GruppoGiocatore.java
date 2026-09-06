@@ -37,6 +37,10 @@ public class GruppoGiocatore extends Gruppo {
 	private final GruppoGiocatoreMD md = ModelloDati.getIstanza().getGruppoGiocatoreMD();
 	private Locazione locazioneCorrente;
 
+	// Serve per passare chi formula un incantesimo all'automa dalla locazione base.
+	// Certo si potrebbe usare un evento sul bus ... che però per ora non è usato.
+	private Personaggio formulante;
+
 	@Override
 	public final void reimposta() {
 		super.reimposta();
@@ -60,6 +64,7 @@ public class GruppoGiocatore extends Gruppo {
 		md.setPozioniSalute(99);
 		md.setPozioniSaluteGrande(99);
 		md.setPozioniMagia(99);
+		md.setPozioniMagiaGrande(99);
 		Foresta.ottieniMappa();
 	}
 
@@ -139,6 +144,17 @@ public class GruppoGiocatore extends Gruppo {
 		UI.variaPozioniSalute(-quantita);
 	}
 
+	public final void consumaPozioneSalute(Comando azione) {
+		consumaPozioneSalute(getPersonaggio(azione));
+	}
+
+	public final void consumaPozioneSalute(Personaggio personaggio) {
+		subPozioniSalute(1);
+		personaggio.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE);
+		UI.notifica(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+				" ha bevuto una pozione che fa riacquistare salute.");
+	}
+
 	public final int getPozioniSaluteGrande() {
 		return md.getPozioniSaluteGrande();
 	}
@@ -152,7 +168,19 @@ public class GruppoGiocatore extends Gruppo {
 		md.setPozioniSaluteGrande(md.getPozioniSaluteGrande() - quantita);
 		UI.variaPozioniSaluteGrande(-quantita);
 	}
-	
+
+	public final void consumaPozioneSaluteGrande(Comando azione) {
+		consumaPozioneSaluteGrande(getPersonaggio(azione));
+	}
+
+	public final void consumaPozioneSaluteGrande(Personaggio personaggio) {
+		subPozioniSaluteGrande(1);
+		personaggio.addSaluteMassima(Costanti.AUMENTO_SALUTE_DA_POZIONE_SALUTE_GRANDE, "POZIONE_SALUTE_GRANDE");
+		personaggio.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE_GRANDE);
+		UI.notifica(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+				" ha bevuto una pozione che recupera e fa aumentare la salute massima!");
+	}
+
 	public final int getPozioniMagia() {
 		return md.getPozioniMagia();
 	}
@@ -165,6 +193,43 @@ public class GruppoGiocatore extends Gruppo {
 	public final void subPozioniMagia(int quantita) {
 		md.setPozioniMagia(md.getPozioniMagia() - quantita);
 		UI.variaPozioniMagia(-quantita);
+	}
+
+	public final void consumaPozioneMagia(Comando azione) {
+		consumaPozioneMagia(getPersonaggio(azione));
+	}
+
+	public final void consumaPozioneMagia(Personaggio personaggio) {
+		subPozioniMagia(1);
+		personaggio.addMagia(Costanti.RECUPERO_DA_POZIONE_MAGIA);
+		UI.notifica(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+				" ha bevuto una pozione che fa riacquistare magia.");
+	}
+
+	public final int getPozioniMagiaGrande() {
+		return md.getPozioniMagiaGrande();
+	}
+
+	public final void addPozioniMagiaGrande(int quantita) {
+		md.setPozioniMagiaGrande(md.getPozioniMagiaGrande() + quantita);
+		UI.variaPozioniMagiaGrande(quantita);
+	}
+
+	public final void subPozioniMagiaGrande(int quantita) {
+		md.setPozioniMagiaGrande(md.getPozioniMagiaGrande() - quantita);
+		UI.variaPozioniMagiaGrande(-quantita);
+	}
+
+	public final void consumaPozioneMagiaGrande(Comando azione) {
+		consumaPozioneMagiaGrande(getPersonaggio(azione));
+	}
+
+	public final void consumaPozioneMagiaGrande(Personaggio personaggio) {
+		subPozioniMagiaGrande(1);
+		personaggio.addMagiaMassima(Costanti.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "POZIONE_MAGIA_GRANDE");
+		personaggio.addMagia(Costanti.RECUPERO_DA_POZIONE_MAGIA_GRANDE);
+		UI.notifica(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+				" ha bevuto una pozione che recupera e fa aumentare la magia massima!");
 	}
 
 	public final void setCoordinate(CoordinateMD coordinate) {
@@ -399,5 +464,20 @@ public class GruppoGiocatore extends Gruppo {
 
 	public boolean isInLocazioneUnica(ClassiLocazione classeLocazioneUnica) {
 		return getClasseLocazioneCorrente() == classeLocazioneUnica;
+	}
+
+	public void addPuntiEsperienza(int puntiEsperienza) {
+		Statistiche.addPuntiEsperienza(puntiEsperienza);
+		for (Personaggio personaggio : getPersonaggiVivi()) {
+			personaggio.addPuntiEsperienza(puntiEsperienza);
+		}
+	}
+
+	public Personaggio getFormulante() {
+		return formulante;
+	}
+
+	public void setFormulante(Personaggio formulante) {
+		this.formulante = formulante;
 	}
 }

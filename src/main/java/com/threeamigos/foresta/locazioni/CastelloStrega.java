@@ -1,9 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.motore.GruppoAvversario;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.Strega;
@@ -27,7 +24,7 @@ public class CastelloStrega extends LocazioneUnica {
 
 	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
-		gng.aggiungiPersonaggio(new Strega());
+		gng.aggiungiPersonaggio(new Strega(Statistiche.getLivello()));
 		setOggetto(new Cofano(Costanti.COFANI_IN_CASTELLO_STREGA));
 	}
 

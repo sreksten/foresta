@@ -1,11 +1,10 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 class DisplayableCanvasRiquadroStatistiche {
 
@@ -13,13 +12,13 @@ class DisplayableCanvasRiquadroStatistiche {
 
 	private final DoomdarkFontMedium fontMedium = DoomdarkFontMedium.getInstance();
 
-	private int topLeftX;
-	private int topLeftY;
-	private int moneteY;
-	private int gemmeY;
-	private int puntiY;
-	private int scrittaX;
-	private int totaleX;
+	private final int topLeftX;
+	private final int topLeftY;
+	private final int moneteY;
+	private final int gemmeY;
+	private final int puntiY;
+	private final int scrittaX;
+	private final int totaleX;
 	
 	DisplayableCanvasRiquadroStatistiche(int topLeftX, int topLeftY) {
 		this.topLeftX = topLeftX;
@@ -48,7 +47,9 @@ class DisplayableCanvasRiquadroStatistiche {
 
 		image = DoomdarkTextProducer.getImage("Punti", fontMedium);
 		graphics.drawImage(image, scrittaX, puntiY, null);
-		image = DoomdarkTextProducer.getImage(Statistiche.getPunti(), fontMedium);
+		int puntiEsperienza = Statistiche.getPuntiEsperienza();
+		int puntiPerProssimoLivello = Statistiche.getPuntiEsperienzaPerProssimoLivello();
+		image = DoomdarkTextProducer.getImage(puntiEsperienza + "/" + puntiPerProssimoLivello, fontMedium);
 		graphics.drawImage(image, totaleX - image.getWidth(null), puntiY, null);
 	}
 

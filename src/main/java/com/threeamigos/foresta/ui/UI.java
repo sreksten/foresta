@@ -202,7 +202,11 @@ public class UI {
 	public static void variaMagiaMassima(Personaggio personaggio, int variazione) {
 		interfacciaUtente.variaMagiaMassima(personaggio, variazione);
 	}
-	
+
+	public static void variaLivello(Personaggio personaggio, int variazione) {
+		interfacciaUtente.variaLivello(personaggio, variazione);
+	}
+
 	public static void variaCoraggio(Personaggio personaggio, int variazione) {
 		interfacciaUtente.variaCoraggio(personaggio, variazione);
 	}
@@ -243,12 +247,16 @@ public class UI {
 		interfacciaUtente.variaPozioniSalute(variazione);
 	}
 
+	public static void variaPozioniSaluteGrande(int variazione) {
+		interfacciaUtente.variaPozioniSaluteGrande(variazione);
+	}
+
 	public static void variaPozioniMagia(int variazione) {
 		interfacciaUtente.variaPozioniMagia(variazione);
 	}
 
-	public static void variaPozioniSaluteGrande(int variazione) {
-		interfacciaUtente.variaPozioniSaluteGrande(variazione);
+	public static void variaPozioniMagiaGrande(int variazione) {
+		interfacciaUtente.variaPozioniMagiaGrande(variazione);
 	}
 
 	public static void variaMappa() {

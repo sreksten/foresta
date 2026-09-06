@@ -21,8 +21,8 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.EGLI; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
-	public Centauro() {
-		super(ClassePersonaggio.CENTAURO);
+	public Centauro(int livello) {
+		super(ClassePersonaggio.CENTAURO, livello);
 	}
 
 	@Override
@@ -32,19 +32,35 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		md.setSaluteMassima(Costanti.CENTAURO_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.CENTAURO_MAX_MAGIA);
-		md.setForzaMassima(Costanti.CENTAURO_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.CENTAURO_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.CENTAURO_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.CENTAURO_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.CENTAURO_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.CENTAURO_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.CENTAURO_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.CENTAURO_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.CENTAURO_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.CENTAURO_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.CENTAURO_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.CENTAURO_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.CENTAURO_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.CENTAURO_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.CENTAURO_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.CENTAURO_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.CENTAURO_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.CENTAURO_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.CENTAURO_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

@@ -21,8 +21,8 @@ public class MinotauroGigante extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.ESSO; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
-	public MinotauroGigante() {
-		super(ClassePersonaggio.MINOTAURO_GIGANTE);
+	public MinotauroGigante(int livello) {
+		super(ClassePersonaggio.MINOTAURO_GIGANTE, livello);
 	}
 
 	@Override
@@ -34,19 +34,35 @@ public class MinotauroGigante extends PersonaggioBase implements Personaggio {
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/MinotauroGigante.gif");
 
-		md.setSaluteMassima(Costanti.MINOTAUROGIGANTE_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.MINOTAUROGIGANTE_MAX_MAGIA);
-		md.setForzaMassima(Costanti.MINOTAUROGIGANTE_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.MINOTAUROGIGANTE_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.MINOTAUROGIGANTE_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.MINOTAUROGIGANTE_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.MINOTAUROGIGANTE_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.MINOTAUROGIGANTE_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.MINOTAUROGIGANTE_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAUROGIGANTE_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAUROGIGANTE_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAUROGIGANTE_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAUROGIGANTE_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAUROGIGANTE_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAUROGIGANTE_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAUROGIGANTE_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.MINOTAUROGIGANTE_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.MINOTAUROGIGANTE_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.MINOTAUROGIGANTE_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.MINOTAUROGIGANTE_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.MINOTAUROGIGANTE_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

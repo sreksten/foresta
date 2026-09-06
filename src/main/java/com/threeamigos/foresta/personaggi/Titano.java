@@ -21,8 +21,8 @@ public class Titano extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.EGLI; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
-	public Titano() {
-		super(ClassePersonaggio.TITANO);
+	public Titano(int livello) {
+		super(ClassePersonaggio.TITANO, livello);
 	}
 
 	@Override
@@ -32,19 +32,35 @@ public class Titano extends PersonaggioBase implements Personaggio {
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		md.setSaluteMassima(Costanti.TITANO_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.TITANO_MAX_MAGIA);
-		md.setForzaMassima(Costanti.TITANO_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.TITANO_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.TITANO_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.TITANO_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.TITANO_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.TITANO_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.TITANO_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.TITANO_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.TITANO_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.TITANO_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.TITANO_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.TITANO_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.TITANO_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.TITANO_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.TITANO_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.TITANO_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.TITANO_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.TITANO_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.TITANO_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

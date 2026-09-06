@@ -73,6 +73,14 @@ class DisplayableCanvasRiquadroLocazione {
 		}
 		return new SpriteInDissolvenza(personaggio.getImmagine(), coordinate.getX(), coordinate.getY());
 	}
+
+	SpriteInterface variaLivello(Personaggio personaggio, int variazione) {
+		CoordinateMD coordinate = mappaCoordinate.get(personaggio);
+		if (coordinate == null) {
+			return null;
+		}
+		return new SpriteATempo(ImageCache.spriteAumentoLivello, variazione, DoomdarkFontMedium.getInstance(), coordinate.getX() + personaggio.getImmagine().getWidth(), coordinate.getY());
+	}
 	
 	SpriteInterface variaSalute(Personaggio personaggio, int variazione) {
 		CoordinateMD coordinate = mappaCoordinate.get(personaggio);

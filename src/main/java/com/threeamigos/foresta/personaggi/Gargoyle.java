@@ -21,27 +21,43 @@ public class Gargoyle extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.ESSO; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
-	public Gargoyle() {
-		super(ClassePersonaggio.GARGOYLE);
+	public Gargoyle(int livello) {
+		super(ClassePersonaggio.GARGOYLE, livello);
 	}
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Gargoyle.gif");
 
-		md.setSaluteMassima(Costanti.GARGOYLE_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.GARGOYLE_MAX_MAGIA);
-		md.setForzaMassima(Costanti.GARGOYLE_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.GARGOYLE_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.GARGOYLE_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.GARGOYLE_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.GARGOYLE_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.GARGOYLE_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.GARGOYLE_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GARGOYLE_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GARGOYLE_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.GARGOYLE_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GARGOYLE_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GARGOYLE_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.GARGOYLE_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.GARGOYLE_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.GARGOYLE_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.GARGOYLE_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.GARGOYLE_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.GARGOYLE_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.GARGOYLE_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

@@ -21,8 +21,8 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.ESSO; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
-	public Troll() {
-		super(ClassePersonaggio.TROLL);
+	public Troll(int livello) {
+		super(ClassePersonaggio.TROLL, livello);
 	}
 
 	@Override
@@ -30,19 +30,35 @@ public class Troll extends PersonaggioBase implements Personaggio {
 		setImmagine("personaggi/Troll.gif");
 		setCorrompibile(true);
 
-		md.setSaluteMassima(Costanti.TROLL_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.TROLL_MAX_MAGIA);
-		md.setForzaMassima(Costanti.TROLL_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.TROLL_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.TROLL_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.TROLL_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.TROLL_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.TROLL_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.TROLL_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.TROLL_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.TROLL_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.TROLL_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.TROLL_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.TROLL_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.TROLL_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.TROLL_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.TROLL_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.TROLL_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.TROLL_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.TROLL_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.TROLL_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

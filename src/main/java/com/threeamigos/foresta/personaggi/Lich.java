@@ -21,27 +21,43 @@ public class Lich extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.ESSO; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
-	public Lich() {
-		super(ClassePersonaggio.LICH);
+	public Lich(int livello) {
+		super(ClassePersonaggio.LICH, livello);
 	}
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Lich.gif");
 
-		md.setSaluteMassima(Costanti.LICH_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.LICH_MAX_MAGIA);
-		md.setForzaMassima(Costanti.LICH_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.LICH_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.LICH_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.LICH_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.LICH_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.LICH_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.LICH_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.LICH_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.LICH_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.LICH_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.LICH_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.LICH_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.LICH_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.LICH_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.LICH_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.LICH_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.LICH_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.LICH_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.LICH_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

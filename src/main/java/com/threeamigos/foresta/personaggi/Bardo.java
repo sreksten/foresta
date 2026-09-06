@@ -20,32 +20,50 @@ public class Bardo extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.EGLI; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
-	public Bardo() {
-		super(ClassePersonaggio.BARDO);
+	public Bardo(int livello) {
+		super(ClassePersonaggio.BARDO, livello);
 	}
 
-	public Bardo(String nome) {
-		super(nome, ClassePersonaggio.BARDO);
+	public Bardo(String nome, int livello) {
+		super(nome, ClassePersonaggio.BARDO, livello);
 	}
 	
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Bardo.gif");
 		setIcona("icone/Bardo.gif");
+		setCorrompibile(true);
+		setAmichevole(true);
 
-		md.setSaluteMassima(Costanti.BARDO_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.BARDO_MAX_MAGIA);
-		md.setForzaMassima(Costanti.BARDO_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.BARDO_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.BARDO_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.BARDO_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.BARDO_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.BARDO_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.BARDO_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.BARDO_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.BARDO_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.BARDO_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.BARDO_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.BARDO_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.BARDO_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.BARDO_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.BARDO_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.BARDO_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.BARDO_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.BARDO_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.BARDO_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

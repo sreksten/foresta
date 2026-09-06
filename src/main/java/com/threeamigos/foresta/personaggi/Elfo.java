@@ -20,12 +20,12 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.EGLI; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
-	public Elfo() {
-		super(ClassePersonaggio.ELFO);
+	public Elfo(int livello) {
+		super(ClassePersonaggio.ELFO, livello);
 	}
 
-	public Elfo(String nome) {
-		super(nome, ClassePersonaggio.ELFO);
+	public Elfo(String nome, int livello) {
+		super(nome, ClassePersonaggio.ELFO, livello);
 	}
 
 	@Override
@@ -35,19 +35,35 @@ public class Elfo extends PersonaggioBase implements Personaggio {
 		setCorrompibile(true);
 		setAmichevole(true);
 
-		md.setSaluteMassima(Costanti.ELFO_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.ELFO_MAX_MAGIA);
-		md.setForzaMassima(Costanti.ELFO_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.ELFO_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.ELFO_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.ELFO_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.ELFO_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.ELFO_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.ELFO_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFO_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFO_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFO_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFO_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFO_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFO_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.ELFO_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.ELFO_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.ELFO_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.ELFO_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.ELFO_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.ELFO_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

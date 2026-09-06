@@ -4,6 +4,7 @@ import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.RegistroMissioni.TipoMissione;
+import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.personaggi.Troll;
 import com.threeamigos.foresta.ui.UI;
@@ -37,7 +38,7 @@ public class RovineRecuperaLeDerrateAlimentari extends LocazioneUnica {
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
 		if (!isMissioneCompleta()) {
 			for (int i = 0; i < 7; i++) {
-				Troll troll = new Troll();
+				Troll troll = new Troll(Statistiche.getLivello());
 				troll.setCorrompibile(false);
 				gng.aggiungiPersonaggio(troll);
 			}

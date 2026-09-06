@@ -122,9 +122,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	public void run() {
 		animatoreInAzione = true;
 		while (animatoreInAzione) {
-			if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO) {
-				//gameUpdate();
-				//gameRender();
+			if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO || stato == StatoDisplayableCanvas.STATO_MAPPA) {
 				repaint();
 			}
 			try {
@@ -358,7 +356,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			aggiungiSprite(riquadroLocazione.notificaMorte(personaggio));
 		}
 	}
-	
+
 	public void variaSalute(Personaggio personaggio, int variazione) {
 		if (personaggio.isPNG()) {
 			aggiungiSprite(riquadroLocazione.variaSalute(personaggio, variazione));
@@ -368,7 +366,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	public void variaForzaMassima(Personaggio personaggio, int variazione) {
-		aggiungiSprite(riquadroGruppo.variaForzaMassima(personaggio, variazione));
+		aggiungiSprite(riquadroGruppo.variaSaluteMassima(personaggio, variazione));
 	}
 
 	public void variaMagia(Personaggio personaggio, int variazione) {
@@ -382,7 +380,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	public void variaMagiaMassima(Personaggio personaggio, int variazione) {
 		aggiungiSprite(riquadroGruppo.variaMagiaMassima(personaggio, variazione));
 	}
-	
+
+	public void variaLivello(Personaggio personaggio, int variazione) {
+		aggiungiSprite(riquadroGruppo.variaLivello(personaggio, variazione));
+	}
+
 	public void variaCoraggio(Personaggio personaggio, int variazione) {
 		aggiungiSprite(riquadroGruppo.variaCoraggio(personaggio, variazione));
 	}
@@ -423,12 +425,16 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		aggiungiSprite(riquadroIncantesimi.variaPozioniSalute(variazione));
 	}
 
+	public void variaPozioniSaluteGrande(int variazione) {
+		aggiungiSprite(riquadroIncantesimi.variaPozioniSaluteGrande(variazione));
+	}
+
 	public void variaPozioniMagia(int variazione) {
 		aggiungiSprite(riquadroIncantesimi.variaPozioniMagia(variazione));
 	}
 
-	public void variaPozioniSaluteGrande(int variazione) {
-		aggiungiSprite(riquadroIncantesimi.variaPozioniSaluteGrande(variazione));
+	public void variaPozioniMagiaGrande(int variazione) {
+		aggiungiSprite(riquadroIncantesimi.variaPozioniMagiaGrande(variazione));
 	}
 
 	public void variaMappa() {

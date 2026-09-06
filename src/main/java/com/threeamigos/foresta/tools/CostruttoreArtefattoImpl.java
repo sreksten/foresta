@@ -1,9 +1,6 @@
 package com.threeamigos.foresta.tools;
 
-import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
-import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
+import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 
 /**
@@ -65,6 +62,12 @@ public class CostruttoreArtefattoImpl implements
     @Override
     public CostruttoreArtefatto.StepModificatore setPeso(double peso) {
         artefattoMD.setPeso(peso);
+        return this;
+    }
+
+    @Override
+    public CostruttoreArtefatto.StepModificatore setModificatore(ModificatoreAttributo modificatore) {
+        artefattoMD.addModificatore(modificatore);
         return this;
     }
 

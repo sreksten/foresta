@@ -11,8 +11,24 @@ import java.util.StringTokenizer;
 
 public class StatisticheMD implements Serializzabile {
 
-	private int punti;
+	private int livello = 1;
+	private int puntiEsperienza = 0;
+	private int punti = 0;
 	private final Map<ClassePersonaggio, Integer> mostriUccisi = new EnumMap<>(ClassePersonaggio.class);
+
+	/**
+	 * Restituisce il livello corrente del gioco
+	 */
+	public int getLivello() {
+		return livello;
+	}
+
+	/**
+	 * Restituisce i punti esperienza totali accumulati
+	 */
+	public int getPuntiEsperienza() {
+		return puntiEsperienza;
+	}
 
 	public final int getPunti() {
 		return punti;
@@ -23,10 +39,20 @@ public class StatisticheMD implements Serializzabile {
 	public final void reimposta() {
 		mostriUccisi.clear();
 		punti = 0;
+		livello = 1;
+		puntiEsperienza = 0;
 	}
 
 	public final void addPunti(int quantita) {
 		punti += quantita;
+	}
+
+	public final void addPuntiEsperienza(int quantita) {
+		puntiEsperienza += quantita;
+	}
+
+	public final void setLivello(int livello) {
+		this.livello = livello;
 	}
 
 	public final void addMostroUcciso(ClassePersonaggio classe) {
@@ -43,6 +69,10 @@ public class StatisticheMD implements Serializzabile {
 
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
+		stream.print(livello);
+		stream.print(PIPE);
+		stream.print(puntiEsperienza);
+		stream.print(PIPE);
 		stream.println(punti);
 		for (ClassePersonaggio classePersonaggio : ClassePersonaggio.values()) {
 			stream.print(classePersonaggio.ordinal());
@@ -56,11 +86,14 @@ public class StatisticheMD implements Serializzabile {
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		String line = stream.readLine();
-		punti = Integer.parseInt(line);
+		StringTokenizer st = new StringTokenizer(line, PIPE);
+		livello = Integer.parseInt(st.nextToken());
+		puntiEsperienza = Integer.parseInt(st.nextToken());
+		punti = Integer.parseInt(st.nextToken());
 		mostriUccisi.clear();
 		ClassePersonaggio[] classi = ClassePersonaggio.values();
 		line = stream.readLine();
-		StringTokenizer st = new StringTokenizer(line, PIPE);
+		st = new StringTokenizer(line, PIPE);
 		for (int i = 0; i < classi.length; i++) {
 			mostriUccisi.put(classi[Integer.parseInt(st.nextToken())], Integer.parseInt(st.nextToken()));
 		}

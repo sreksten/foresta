@@ -22,27 +22,43 @@ public class Idra extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.ESSA; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 
-	public Idra() {
-		super(ClassePersonaggio.IDRA);
+	public Idra(int livello) {
+		super(ClassePersonaggio.IDRA, livello);
 	}
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/Idra.gif");
 
-		md.setSaluteMassima(Costanti.IDRA_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.IDRA_MAX_MAGIA);
-		md.setForzaMassima(Costanti.IDRA_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.IDRA_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.IDRA_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.IDRA_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.IDRA_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.IDRA_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.IDRA_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.IDRA_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.IDRA_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.IDRA_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.IDRA_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.IDRA_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.IDRA_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.IDRA_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.IDRA_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.IDRA_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.IDRA_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.IDRA_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.IDRA_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

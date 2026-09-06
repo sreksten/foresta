@@ -43,6 +43,7 @@ public abstract class Citta extends LocazioneUnica {
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
 		locanda.crea(g, gng);
 		alchimista.crea(g, gng);
+		completa = true;
 	}
 
 	public abstract String getNomeLocanda();

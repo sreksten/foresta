@@ -1,18 +1,19 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.Graphics2D;
-import java.awt.image.BufferedImage;
-
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+
+import java.awt.*;
+import java.awt.image.BufferedImage;
 
 class DisplayableCanvasRiquadroMappa {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_MAPPA = 16;
 
-	private int topLeftX;
-	private int topLeftY;
+	private final int topLeftX;
+	private final int topLeftY;
 
 	DisplayableCanvasRiquadroMappa(int topLeftX, int topLeftY) {
 		this.topLeftX = topLeftX;
@@ -52,17 +53,34 @@ class DisplayableCanvasRiquadroMappa {
 		for (int x = daX; x <= aX; x++) {
 			for (int y = daY; y <= aY; y++) {
 				classeLocazione = Foresta.getLocazione(x, y);
-				BufferedImage image = null;
+				int coordinateX = localXOffset + (x - daX) * mw;
+				int coordinateY = localYOffset + (y - daY) * mh;
+				BufferedImage image;
 				if (x == gruppoX && y == gruppoY) {
 					image = ImageCache.segnalino;
+					if ((System.currentTimeMillis() / 1000) % 2 == 0) {
+						graphics.drawImage(image, coordinateX, coordinateY, null);
+					}
 				} else {
 					image = ImageCache.mappa.get(classeLocazione);
+					graphics.drawImage(image, coordinateX, coordinateY, null);
+					if (Foresta.isLocazioneVisitata(new CoordinateMD(x, y))) {
+						scurisci(graphics, coordinateX, coordinateY, mw, mh, 50);
+					}
 				}
-				graphics.drawImage(image, localXOffset + (x - daX) * mw, localYOffset + (y - daY) * mh, null);
 			}
 		}
 	}
-	
+
+	private void scurisci(Graphics2D g, int x, int y, int width, int height, int percentualeOscuramento) {
+		// Calcola alpha (0 = trasparente, 255 = nero opaco)
+		int alpha = (int) (percentualeOscuramento * 2.55f);
+		// Imposta il colore nero con la trasparenza calcolata
+		g.setColor(new java.awt.Color(0, 0, 0, alpha));
+		// Disegna il rettangolo sopra l'immagine
+		g.fillRect(x, y, width, height);
+	}
+
 	SpriteInterface variaMappa() {
 		BufferedImage icona = ImageCache.spriteMappa;
 		int x = topLeftX + ((ImageCache.corniceMappa.getWidth() - ImageCache.spriteMappa.getWidth()) >> 1);

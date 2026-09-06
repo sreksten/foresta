@@ -39,10 +39,12 @@ public class ImageCache {
 	static BufferedImage spritePozioneSalute;
 	static BufferedImage spritePozioneSaluteGrande;
 	static BufferedImage spritePozioneMagia;
+	static BufferedImage spritePozioneMagiaGrande;
 	static BufferedImage spriteMappa;
 	static BufferedImage spriteMoneta;
 	static BufferedImage spriteGemma;
 	static BufferedImage spriteTempo;
+	static BufferedImage spriteAumentoLivello;
 
 	private static final Map<String, BufferedImage> imageMap = new HashMap<>();
 	
@@ -100,8 +102,9 @@ public class ImageCache {
 		icone[ClassiIcona.OVEST] = BufferedImageBuilder.buildBufferedImage("icone/Ovest.gif");
 		icone[ClassiIcona.ACCAMPAMENTO] = BufferedImageBuilder.buildBufferedImage("icone/Accampamento.gif");
 		icone[ClassiIcona.POZIONE_SALUTE] = BufferedImageBuilder.buildBufferedImage("icone/PozioneSalute.gif");
-		icone[ClassiIcona.GRANDE_POZIONE_SALUTE] = BufferedImageBuilder.buildBufferedImage("icone/PozioneSaluteGrande.gif");
+		icone[ClassiIcona.POZIONE_SALUTE_GRANDE] = BufferedImageBuilder.buildBufferedImage("icone/PozioneSaluteGrande.gif");
 		icone[ClassiIcona.POZIONE_MAGIA] = BufferedImageBuilder.buildBufferedImage("icone/PozioneMagia.gif");
+		icone[ClassiIcona.POZIONE_MAGIA_GRANDE] = BufferedImageBuilder.buildBufferedImage("icone/PozioneMagiaGrande.gif");
 		icone[ClassiIcona.MAPPA] = BufferedImageBuilder.buildBufferedImage("icone/Mappa.gif");
 		icone[ClassiIcona.FLOPPY] = BufferedImageBuilder.buildBufferedImage("icone/Floppy.gif");
 		icone[ClassiIcona.NUMERO_1] = BufferedImageBuilder.buildBufferedImage("icone/1.gif");
@@ -238,17 +241,19 @@ public class ImageCache {
 		spritePozioneSalute = BufferedImageBuilder.buildBufferedImage("icone/PozioneSalute-nobordo-piccolo.gif");
 		spritePozioneSaluteGrande = BufferedImageBuilder.buildBufferedImage("icone/PozioneSaluteGrande-nobordo-piccolo.gif");
 		spritePozioneMagia = BufferedImageBuilder.buildBufferedImage("icone/PozioneMagia-nobordo-piccolo.gif");
+		spritePozioneMagiaGrande = BufferedImageBuilder.buildBufferedImage("icone/PozioneMagiaGrande-nobordo-piccolo.gif");
 		spriteMappa = BufferedImageBuilder.buildBufferedImage("icone/Mappa-nobordo-piccolo.gif");
 		spriteMoneta = BufferedImageBuilder.buildBufferedImage("icone/Moneta-nobordo-piccolo.gif");
 		spriteGemma = BufferedImageBuilder.buildBufferedImage("icone/Gemma-nobordo-piccolo.gif");
 		spriteTempo = BufferedImageBuilder.buildBufferedImage("icone/Tempo-nobordo-piccolo.gif");
+		spriteAumentoLivello = BufferedImageBuilder.buildBufferedImage("icone/AumentoLivello-nobordo-piccolo.gif");
 
 	}
 	
 	static void init() {
 		if (!inited) {
 			for (ClassePersonaggio classePersonaggio : ClassePersonaggio.values()) {
-				classePersonaggio.getIstanza();
+				classePersonaggio.getIstanza(1);
 			}
 			inited = true;
 		}

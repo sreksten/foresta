@@ -34,10 +34,12 @@ public class Palude extends LocazioneBase {
 	public Stato impostaAzioni(GruppoGiocatore g, GruppoAvversario gng, Comando azione) {
 		if (isLocazioneVisitata() || Dado.tira(10) > 3) {
 			UI.notifica("Il posto però non promette nulla di buono e " + g.chi() + " decide di non restare.");
+			completa = true;
 			return Stato.FINE_LOCAZIONE;
 		}
 		UI.notifica("Approfittando della quiete del posto, " + g.chi() + " riposerà un poco.");
 		g.riposa(getTipoRiposo());
+		completa = true;
 		return Stato.FINE_LOCAZIONE;
 	}
 

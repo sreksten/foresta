@@ -21,8 +21,8 @@ public class Goblin extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.ESSO; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
-	public Goblin() {
-		super(ClassePersonaggio.GOBLIN);
+	public Goblin(int livello) {
+		super(ClassePersonaggio.GOBLIN, livello);
 	}
 
 	@Override
@@ -31,19 +31,35 @@ public class Goblin extends PersonaggioBase implements Personaggio {
 		setIcona("icone/Goblin.gif");
 		setCorrompibile(true);
 
-		md.setSaluteMassima(Costanti.GOBLIN_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.GOBLIN_MAX_MAGIA);
-		md.setForzaMassima(Costanti.GOBLIN_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.GOBLIN_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.GOBLIN_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.GOBLIN_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.GOBLIN_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.GOBLIN_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.GOBLIN_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GOBLIN_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GOBLIN_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.GOBLIN_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GOBLIN_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GOBLIN_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.GOBLIN_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.GOBLIN_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.GOBLIN_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.GOBLIN_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.GOBLIN_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.GOBLIN_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.GOBLIN_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override

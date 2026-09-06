@@ -21,27 +21,43 @@ public class ChimeraDrago extends PersonaggioBase implements Personaggio {
 	public String getPronome() { return Misc.ESSA; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 
-	public ChimeraDrago() {
-		super(ClassePersonaggio.CHIMERA_DRAGO);
+	public ChimeraDrago(int livello) {
+		super(ClassePersonaggio.CHIMERA_DRAGO, livello);
 	}
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setImmagine("personaggi/ChimeraDrago.gif");
 
-		md.setSaluteMassima(Costanti.CHIMERADRAGO_MAX_SALUTE);
-		md.setMagiaMassima(Costanti.CHIMERADRAGO_MAX_MAGIA);
-		md.setForzaMassima(Costanti.CHIMERADRAGO_MAX_FORZA);
-		md.setDestrezzaMassima(Costanti.CHIMERADRAGO_MAX_DESTREZZA);
-		md.setCostituzioneMassima(Costanti.CHIMERADRAGO_MAX_COSTITUZIONE);
-		md.setIntelligenzaMassima(Costanti.CHIMERADRAGO_MAX_INTELLIGENZA);
-		md.setSaggezzaMassima(Costanti.CHIMERADRAGO_MAX_SAGGEZZA);
-		md.setCarismaMassimo(Costanti.CHIMERADRAGO_MAX_CARISMA);
-		md.setFortunaMassima(Costanti.CHIMERADRAGO_MAX_FORTUNA);
+		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.CHIMERADRAGO_MAX_FORZA)));
+		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.CHIMERADRAGO_MAX_DESTREZZA)));
+		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.CHIMERADRAGO_MAX_COSTITUZIONE)));
+		md.setIntelligenza(funzione.apply(getAttributoAdeguatoALivello(Costanti.CHIMERADRAGO_MAX_INTELLIGENZA)));
+		md.setSaggezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.CHIMERADRAGO_MAX_SAGGEZZA)));
+		md.setCarisma(funzione.apply(getAttributoAdeguatoALivello(Costanti.CHIMERADRAGO_MAX_CARISMA)));
+		md.setFortuna(funzione.apply(getAttributoAdeguatoALivello(Costanti.CHIMERADRAGO_MAX_FORTUNA)));
 
 		setQuantitaMassima(Costanti.CHIMERADRAGO_MAX_NUMERO);
+	}
 
-		super.impostaValoriDiPartenza(funzione);
+	@Override
+	public double getSaluteBase() {
+		return Costanti.CHIMERADRAGO_SALUTE_BASE;
+	}
+
+	@Override
+	public double getLivellamentoSalute() {
+		return Costanti.CHIMERADRAGO_LIVELLAMENTO_SALUTE;
+	}
+
+	@Override
+	public double getMagiaBase() {
+		return Costanti.CHIMERADRAGO_MAGIA_BASE;
+	}
+
+	@Override
+	public double getLivellamentoMagia() {
+		return Costanti.CHIMERADRAGO_LIVELLAMENTO_MAGIA;
 	}
 
 	@Override
