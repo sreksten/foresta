@@ -503,10 +503,12 @@ public abstract class LocazioneBase implements Locazione {
 
 	private void impostaComandiPossibili() {
 		ComandiPossibili.reimposta();
-		// Possiamo combattere?
+		// Possiamo combattere? Oppure, vogliamo cambiare chi combatte?
 		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO || gruppo.getNumeroPersonaggiVivi() > 1) {
 			ComandiPossibili.add(Comando.COMBATTIMENTO);
-		} else if (statoLocazione == StatoLocazione.IN_COMBATTIMENTO) {
+		}
+		// Se stiamo combattendo possiamo interrompere la schermaglia
+		if (statoLocazione == StatoLocazione.IN_COMBATTIMENTO) {
 			ComandiPossibili.add(Comando.INTERRUZIONE_COMBATTIMENTO);
 		}
 		// Possiamo formulare incantesimi? Si se ne abbiamo almeno uno e se uno dei personaggi vivi può lanciarlo
@@ -723,7 +725,25 @@ public abstract class LocazioneBase implements Locazione {
 		if (azione == Comando.INTERRUZIONE_COMBATTIMENTO) {
 			UI.infoCombattimento(false, null, null);
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
+			combattente = null;
 			return Stato.IN_LOCAZIONE;
+		}
+		if (azione == Comando.PERSONAGGIO_1 || azione == Comando.PERSONAGGIO_2 || azione == Comando.PERSONAGGIO_3 ||
+			azione == Comando.PERSONAGGIO_4 || azione == Comando.PERSONAGGIO_5) {
+			combattente = gruppo.getPersonaggio(azione);
+			UI.infoCombattimento(true, combattente, gruppoAvversario.getPersonaggioVivo());
+			impostaComandiPossibili();
+			return Stato.IN_COMBATTIMENTO;
+		}
+		if (azione == Comando.COMBATTIMENTO && combattente != null) {
+			// Il combattente corrente non va azzerato: se la scelta viene annullata
+			// deve poter continuare a combattere lui.
+			return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+		}
+		if (azione == Comando.ANNULLA) {
+			// Scelta del nuovo combattente annullata: si continua con quello corrente
+			impostaComandiPossibili();
+			return Stato.IN_COMBATTIMENTO;
 		}
 		if (azione == Comando.COMBATTIMENTO || azione == Comando.TIMER) {
 			Personaggio bersaglio = gruppoAvversario.getPersonaggioVivo();

@@ -309,6 +309,10 @@ public class Automa implements ControlloreDiGioco {
 					break;
 				}
 				if (azione != Comando.TIMER) {
+					// Il battito del combattimento viene interrotto ogni volta che si
+					// esce da IN_COMBATTIMENTO (per esempio per scegliere chi combatte):
+					// qui lo si riavvia, dato che i round sono guidati da Comando.TIMER.
+					temporizzatore.inizia(1);
 					UI.impostaAzioni();
 				}
 				break;
