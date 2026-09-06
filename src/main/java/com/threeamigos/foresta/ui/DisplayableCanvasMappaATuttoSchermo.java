@@ -14,7 +14,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
 
-class DisplayableCanvasMappaATuttoSchermo {
+class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 
 	private final int width;
 	private final int height;

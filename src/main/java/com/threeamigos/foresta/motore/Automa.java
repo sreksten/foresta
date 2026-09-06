@@ -225,6 +225,7 @@ public class Automa implements ControlloreDiGioco {
 
 			case INIZIALIZZAZIONE_GIOCO:
 				UI.reinizializza();
+				UI.iniziaGioco();
 				gruppo.aggiungiPersonaggioSenzaNotificare(personaggio);
 				stato = Stato.INZIO_LOCAZIONE;
 				processaAzione(null);

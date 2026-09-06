@@ -20,8 +20,7 @@ public class FontTool {
 				width += font.getGlyphWidth(s.charAt(i)) + charSpacing;
 			} catch (UnsupportedCharacterException e) {
 				Logger.log(e);
-				continue;
-			}
+            }
 		}
 		return width;
 	}

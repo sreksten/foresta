@@ -6,7 +6,7 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-class DisplayableCanvasRiquadroIncantesimi {
+class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI = 16;
 

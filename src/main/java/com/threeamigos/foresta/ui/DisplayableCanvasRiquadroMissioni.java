@@ -1,20 +1,19 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
-
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 
-class DisplayableCanvasRiquadroMissioni {
+import java.awt.*;
+
+class DisplayableCanvasRiquadroMissioni implements Finestra {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE = 16;
 	private static final int SPACING = 4;
 
-	private int topLeftX;
-	private int topLeftY;
-	private int innerWidth;
-	private int innerHeight;
+	private final int topLeftX;
+	private final int topLeftY;
+	private final int innerWidth;
+	private final int innerHeight;
 
 	DisplayableCanvasRiquadroMissioni(int topLeftX, int topLeftY) {
 		this.topLeftX = topLeftX;
@@ -30,7 +29,7 @@ class DisplayableCanvasRiquadroMissioni {
 		int totalRenderedTextHeight = 0;
 		int locXOffset = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + SPACING;
 		int locYOffset = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + SPACING;
-		Image doomdark = null;
+		Image doomdark;
 		DoomdarkColorModel.Color color = DoomdarkColorModel.Color.MEDIUM_GRAY;
 		for (Missione missione : RegistroMissioni.getMissioniAttive()) {
 			if (missione.isAttiva() && !missione.isCompleta()) {

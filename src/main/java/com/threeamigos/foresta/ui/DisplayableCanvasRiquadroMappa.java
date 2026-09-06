@@ -12,7 +12,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Random;
 
-class DisplayableCanvasRiquadroMappa {
+class DisplayableCanvasRiquadroMappa implements Finestra {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_MAPPA = 12;
 

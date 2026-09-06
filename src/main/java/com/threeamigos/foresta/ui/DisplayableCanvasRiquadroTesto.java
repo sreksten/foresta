@@ -4,7 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
 
-class DisplayableCanvasRiquadroTesto {
+class DisplayableCanvasRiquadroTesto implements Finestra {
 
 	private final int topLeftX;
 	private final int topLeftY;

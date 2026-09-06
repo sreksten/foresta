@@ -103,87 +103,118 @@ public class ForestaUI implements InterfacciaUtente {
 		UI.setInterfacciaUtentePronta();
 	}
 
+	@Override
 	public void reinizializza() {
 		displayableCanvas.reinizializza();
 	}
 
+	@Override
 	public void intro() {
 		displayableCanvas.intro();
 	}
 
+	@Override
 	public void nuovoGiocoOCaricaPrecedente() {
 		displayableCanvas.nuovoGiocoOCaricaPrecedente();
 	}
 
+	@Override
 	public void selezioneSlotSalvataggioDaCaricare() {
 		displayableCanvas.selezioneSlotSalvataggioDaCaricare();
 	}
 
+	@Override
+	public void iniziaGioco() {
+		displayableCanvas.iniziaGioco();
+	}
+
+	@Override
 	public void mappa() {
 		displayableCanvas.mappa();
 	}
 
+	@Override
 	public void centraMappa() {
 		displayableCanvas.centraMappa();
 	}
 
+	@Override
 	public void selezioneSlotSalvataggioDaSalvare() {
 		displayableCanvas.selezioneSlotSalvataggioDaSalvare();
 	}
-	
+
+	@Override
 	public void confermaUscita() {
 		displayableCanvas.confermaUscita();
 	}
-	
+
+	@Override
 	public void muoviMappa(Comando direzione) {
 		displayableCanvas.muoviMappa(direzione);
 	}
 
+	@Override
 	public void perso() {
 		displayableCanvas.perso();
 	}
 
+	@Override
 	public void vinto() {
 		displayableCanvas.vinto();
 	}
 
+	@Override
 	public void statistiche() {
 		displayableCanvas.statistiche();
 	}
 
+	@Override
 	public void punteggi() {
 		displayableCanvas.hiscore();
 	}
 
+	@Override
 	public void scriviGrande(String messaggio) {
 		displayableCanvas.scriviGrande(messaggio);
 	}
 
+	@Override
 	public void notifica(String messaggio) {
 		displayableCanvas.notifica(messaggio);
 	}
 
+	@Override
 	public void primoPiano(InterfacciaUtente.Finestra finestra) {
 		displayableCanvas.primoPiano(finestra);
 	}
 
+	@Override
+	public void secondoPiano(InterfacciaUtente.Finestra finestra) {
+		displayableCanvas.secondoPiano(finestra);
+	}
+
+	@Override
 	public void chiediTesto() {
 		prompt.setVisible(true);
 	}
 
+	@Override
 	public void riceviTesto(String testo) {
 		prompt.setVisible(false);
 		Gioco.riceviTesto(testo);
 	}
 
+	@Override
 	public void impostaAzioni() {
 		pannelloIcone.impostaAzioni();
 	}
-	
+
+	@Override
 	public void preparaLocazione() {
 		displayableCanvas.preparaLocazione();
 	}
 
+	@Override
 	public void infoCombattimento(boolean mostra, Personaggio combattente, Personaggio avversario) {
 		Logger.log("ForestaApplet::infoCombattimento(" + mostra + ")");
 		if (!mostra) {
@@ -302,6 +333,7 @@ public class ForestaUI implements InterfacciaUtente {
 		displayableCanvas.raccogliOggetto();
 	}
 
+	@Override
 	public void rinfresca() {
 		Logger.log("ForestaApplet::rinfresca()");
 		jframe.invalidate();

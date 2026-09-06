@@ -17,7 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class DisplayableCanvasRiquadroLocazione {
+class DisplayableCanvasRiquadroLocazione implements Finestra {
 
 	private final int topLeftX;
 	private final int topLeftY;

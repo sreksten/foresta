@@ -10,7 +10,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
-class DisplayableCanvasRiquadroGruppo {
+class DisplayableCanvasRiquadroGruppo implements Finestra {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE = 16;
 

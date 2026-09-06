@@ -7,6 +7,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 public interface InterfacciaUtente {
 
 	enum Finestra {
+		INTRO_OUTRO,
 		GRAFICA,
 		STATO,
 		INCANTESIMI,
@@ -14,7 +15,8 @@ public interface InterfacciaUtente {
 		STATISTICHE,
 		TESTO,
 		MISSIONI,
-		INFO_COMBATTIMENTO
+		INFO_COMBATTIMENTO,
+		MAPPA_A_TUTTO_SCHERMO
     }
 	
 	/**
@@ -36,7 +38,12 @@ public interface InterfacciaUtente {
 	 * Richiama la schermata di selezione salvataggio
 	 */
     void selezioneSlotSalvataggioDaCaricare();
-	
+
+	/**
+	 * Dà il via al gioco vero e proprio
+	 */
+	void iniziaGioco();
+
 	/**
 	 * Mostra la mappa di gioco conosciuta
 	 */
@@ -98,6 +105,11 @@ public interface InterfacciaUtente {
 	 * Porta in primo piano una finestra di gioco (UI.FINESTRA_...)
 	 */
     void primoPiano(Finestra finestra);
+
+	/**
+	 * Porta in secondo piano una finestra di gioco (UI.FINESTRA_...)
+	 */
+	void secondoPiano(Finestra finestra);
 
 	/**
 	 * Mostra la richiesta di un testo da parte di un controllore di gioco

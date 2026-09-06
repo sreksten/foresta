@@ -9,9 +9,12 @@ import com.threeamigos.foresta.tools.Misc;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class DisplayableCanvas extends JPanel implements Runnable {
 
@@ -34,8 +37,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	private StatoDisplayableCanvas stato;
 	private final ArrayList<InterfacciaUtente.Finestra> stackElementiGrafici;
+
+	private final Map<Finestra, Rectangle> mappaCoordinateElementiGrafici = new HashMap<>();
 	
-	private final transient DisplayableCanvasIntroOutro introOutro;
+	private final transient DisplayableCanvasIntroOutro riquadroIntroOutro;
 	private final transient DisplayableCanvasRiquadroMappa riquadroMappa;
 	private final transient DisplayableCanvasRiquadroLocazione riquadroLocazione;
 	private final transient DisplayableCanvasRiquadroStatistiche riquadroStatistiche;
@@ -62,43 +67,110 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		stackElementiGrafici.add(InterfacciaUtente.Finestra.TESTO);
 		stackElementiGrafici.add(InterfacciaUtente.Finestra.MISSIONI);
 		stackElementiGrafici.add(InterfacciaUtente.Finestra.INFO_COMBATTIMENTO);
+		// INTRO_OUTRO e MAPPA_A_TUTTO_SCHERMO non appartengono allo stack: occupano
+		// da soli tutto lo schermo e sono scelti in base allo stato del canvas.
 		stato = StatoDisplayableCanvas.STATO_INTRO;
 		setSize(width, height);
 		setBackground(Color.black);
 		BufferedImage immagineLocazione = ImageCache.locazioni.get(ClassiLocazione.BOSCO);
 
-		introOutro = new DisplayableCanvasIntroOutro(width, height);
+		riquadroIntroOutro = new DisplayableCanvasIntroOutro(width, height);
+
+		Rectangle riquadroIntroOutroRect = new Rectangle(0, 0, width, height);
+		mappaCoordinateElementiGrafici.put(riquadroIntroOutro, riquadroIntroOutroRect);
+
+		int elementoX = ImageCache.SPACING;
+		int elementoY = ImageCache.SPACING;
+		int larghezzaElemento = ImageCache.corniceMappa.getWidth();
+		int altezzaElemento = ImageCache.corniceMappa.getHeight();
+
 		riquadroMappa = new DisplayableCanvasRiquadroMappa(
 				ImageCache.SPACING,
 				ImageCache.SPACING);
-		riquadroLocazione = new DisplayableCanvasRiquadroLocazione(
-				ImageCache.SPACING + ImageCache.corniceMappa.getWidth() + ImageCache.SPACING,
-				ImageCache.SPACING);
-		riquadroStatistiche = new DisplayableCanvasRiquadroStatistiche(
-				ImageCache.SPACING,
-				ImageCache.SPACING + ImageCache.corniceMappa.getHeight() + ImageCache.SPACING);
+
+		Rectangle riquadroMappaRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
+		mappaCoordinateElementiGrafici.put(riquadroMappa, riquadroMappaRect);
+
+		elementoX = ImageCache.SPACING + ImageCache.corniceMappa.getWidth() + ImageCache.SPACING;
+		elementoY = ImageCache.SPACING;
+		larghezzaElemento = immagineLocazione.getWidth();
+		altezzaElemento = immagineLocazione.getHeight();
+
+		riquadroLocazione = new DisplayableCanvasRiquadroLocazione(elementoX, elementoY);
+
+		Rectangle riquadroLocazioneRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
+		mappaCoordinateElementiGrafici.put(riquadroLocazione, riquadroLocazioneRect);
+
+		elementoX = ImageCache.SPACING;
+		elementoY = ImageCache.SPACING + ImageCache.corniceMappa.getHeight() + ImageCache.SPACING;
+		larghezzaElemento = ImageCache.cornicePiccola.getWidth();
+		altezzaElemento = ImageCache.cornicePiccola.getHeight();
+
+		riquadroStatistiche = new DisplayableCanvasRiquadroStatistiche(elementoX, elementoY);
+
+		Rectangle riquadroStatisticheRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
+		mappaCoordinateElementiGrafici.put(riquadroStatistiche, riquadroStatisticheRect);
+
 		riquadroCombattimento = new DisplayableCanvasRiquadroCombattimento(width, height);
-		riquadroTesto = new DisplayableCanvasRiquadroTesto(
-				ImageCache.SPACING,
-				ImageCache.SPACING + ImageCache.locazioni.get(ClassiLocazione.BOSCO).getHeight() + ImageCache.SPACING,
-				ImageCache.corniceMappa.getWidth() + ImageCache.SPACING + immagineLocazione.getWidth(),
-				height - ImageCache.SPACING - immagineLocazione.getHeight() - ImageCache.SPACING);
-		riquadroGruppo = new DisplayableCanvasRiquadroGruppo(
-				ImageCache.SPACING + ImageCache.corniceMappa.getWidth() +
-				ImageCache.SPACING + ImageCache.locazioni.get(ClassiLocazione.BOSCO).getWidth() + ImageCache.SPACING,
-				ImageCache.SPACING);
-		riquadroIncantesimi = new DisplayableCanvasRiquadroIncantesimi(
-				ImageCache.SPACING + ImageCache.corniceMappa.getWidth() +
-				ImageCache.SPACING + ImageCache.locazioni.get(ClassiLocazione.BOSCO).getWidth() + ImageCache.SPACING,
-				ImageCache.SPACING + ImageCache.corniceGrande.getHeight() +	ImageCache.SPACING);
-		riquadroMissioni = new DisplayableCanvasRiquadroMissioni(
-				ImageCache.SPACING + ImageCache.corniceMappa.getWidth() +
-				ImageCache.SPACING + ImageCache.locazioni.get(ClassiLocazione.BOSCO).getWidth() + ImageCache.SPACING,
-				ImageCache.SPACING + ImageCache.corniceGrande.getHeight() +
-				ImageCache.SPACING + ImageCache.corniceIncantesimi.getHeight() + ImageCache.SPACING);
+
+		// Lo calcola da solo perché è un elemento flottante a differenza degli altri che sono fissi
+		mappaCoordinateElementiGrafici.put(riquadroCombattimento, riquadroCombattimento.getRettangolo());
+
+		elementoX = ImageCache.SPACING;
+		elementoY = ImageCache.SPACING + immagineLocazione.getHeight() + ImageCache.SPACING;
+		larghezzaElemento = ImageCache.corniceMappa.getWidth() + ImageCache.SPACING + immagineLocazione.getWidth();
+		altezzaElemento = height - ImageCache.SPACING - immagineLocazione.getHeight() - ImageCache.SPACING;
+
+		riquadroTesto = new DisplayableCanvasRiquadroTesto(elementoX, elementoY, larghezzaElemento, altezzaElemento);
+
+		Rectangle riquadroTestoRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
+		mappaCoordinateElementiGrafici.put(riquadroTesto, riquadroTestoRect);
+
+		elementoX = ImageCache.SPACING + ImageCache.corniceMappa.getWidth() +
+				ImageCache.SPACING + immagineLocazione.getWidth() + ImageCache.SPACING;
+		elementoY = ImageCache.SPACING;
+		larghezzaElemento = ImageCache.corniceGrande.getWidth();
+		altezzaElemento = ImageCache.corniceGrande.getHeight();
+
+		riquadroGruppo = new DisplayableCanvasRiquadroGruppo(elementoX, elementoY);
+
+		Rectangle riquadroGruppoRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
+		mappaCoordinateElementiGrafici.put(riquadroGruppo, riquadroGruppoRect);
+
+		elementoX = ImageCache.SPACING + ImageCache.corniceMappa.getWidth() +
+				ImageCache.SPACING + immagineLocazione.getWidth() + ImageCache.SPACING;
+		elementoY = ImageCache.SPACING + ImageCache.corniceGrande.getHeight() +	ImageCache.SPACING;
+		larghezzaElemento = ImageCache.corniceIncantesimi.getWidth();
+		altezzaElemento = ImageCache.corniceIncantesimi.getHeight();
+
+		riquadroIncantesimi = new DisplayableCanvasRiquadroIncantesimi(elementoX, elementoY);
+
+		Rectangle riquadroIncantesimiRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
+		mappaCoordinateElementiGrafici.put(riquadroIncantesimi, riquadroIncantesimiRect);
+
+		elementoX = ImageCache.SPACING + ImageCache.corniceMappa.getWidth() +
+				ImageCache.SPACING + immagineLocazione.getWidth() + ImageCache.SPACING;
+		elementoY = ImageCache.SPACING + ImageCache.corniceGrande.getHeight() +
+				ImageCache.SPACING + ImageCache.corniceIncantesimi.getHeight() + ImageCache.SPACING;
+		larghezzaElemento = ImageCache.corniceGrande.getWidth();
+		altezzaElemento = ImageCache.corniceGrande.getHeight();
+
+		riquadroMissioni = new DisplayableCanvasRiquadroMissioni(elementoX, elementoY);
+
+		Rectangle riquadroMissioniRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
+		mappaCoordinateElementiGrafici.put(riquadroMissioni, riquadroMissioniRect);
+
 		mappaATuttoSchermo = new DisplayableCanvasMappaATuttoSchermo(width, height);
 
+		Rectangle mappaATuttoSchermoRect = new Rectangle(0, 0, width, height);
+		mappaCoordinateElementiGrafici.put(mappaATuttoSchermo, mappaATuttoSchermoRect);
+
 		sprites = new ArrayList<>();
+
+		GestoreMouse gestoreMouse = new GestoreMouse();
+		addMouseListener(gestoreMouse);
+		addMouseMotionListener(gestoreMouse);
+		addMouseWheelListener(gestoreMouse);
 	}
 	
 	@Override
@@ -114,11 +186,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			animatore.start();
 		}
 	}
-	
+
 	public void fermaThreadAnimazione() {
 		animatoreInAzione = false;
 	}
-	
+
 	public void run() {
 		animatoreInAzione = true;
 		while (animatoreInAzione) {
@@ -140,46 +212,25 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		riquadroTesto.clear();
 	}
 
-	public void primoPiano(InterfacciaUtente.Finestra finestra) {
-		stato = StatoDisplayableCanvas.STATO_IN_GIOCO;
-		switch(finestra) {
-		case GRAFICA:
-			stackElementiGrafici.remove(InterfacciaUtente.Finestra.GRAFICA);
-			stackElementiGrafici.add(InterfacciaUtente.Finestra.GRAFICA);
-			break;
-		case STATO:
-			stackElementiGrafici.remove(InterfacciaUtente.Finestra.STATO);
-			stackElementiGrafici.add(InterfacciaUtente.Finestra.STATO);
-			break;
-		case INCANTESIMI:
-			stackElementiGrafici.remove(InterfacciaUtente.Finestra.INCANTESIMI);
-			stackElementiGrafici.add(InterfacciaUtente.Finestra.INCANTESIMI);
-			break;
-		case MAPPA:
-			stackElementiGrafici.remove(InterfacciaUtente.Finestra.MAPPA);
-			stackElementiGrafici.add(InterfacciaUtente.Finestra.MAPPA);
-			break;
-		case STATISTICHE:
-			stackElementiGrafici.remove(InterfacciaUtente.Finestra.STATISTICHE);
-			stackElementiGrafici.add(InterfacciaUtente.Finestra.STATISTICHE);
-			break;
-		case MISSIONI:
-			stackElementiGrafici.remove(InterfacciaUtente.Finestra.MISSIONI);
-			stackElementiGrafici.add(InterfacciaUtente.Finestra.MISSIONI);
-			break;
-		case INFO_COMBATTIMENTO:
-			stackElementiGrafici.remove(InterfacciaUtente.Finestra.INFO_COMBATTIMENTO);
-			stackElementiGrafici.add(InterfacciaUtente.Finestra.INFO_COMBATTIMENTO);
-			break;
-		default:
-			throw new IllegalArgumentException();
+	public void secondoPiano(InterfacciaUtente.Finestra finestra) {
+		if (!stackElementiGrafici.remove(finestra)) {
+			throw new IllegalArgumentException("Elemento grafico non valido: " + finestra);
 		}
+		stackElementiGrafici.add(0, finestra);
+	}
+
+	public void primoPiano(InterfacciaUtente.Finestra finestra) {
+		if (!stackElementiGrafici.remove(finestra)) {
+			throw new IllegalArgumentException("Elemento grafico non valido: " + finestra);
+		}
+		stackElementiGrafici.add(finestra);
 	}
 
 	private void inGioco(Graphics gfx) {
 		Graphics2D graphics = (Graphics2D)gfx;
 		ArrayList<InterfacciaUtente.Finestra> copiaStack = new ArrayList<>(stackElementiGrafici.size());
 		copiaStack.addAll(stackElementiGrafici);
+
 		for (InterfacciaUtente.Finestra finestra : copiaStack) {
 			switch (finestra) {
 			case MAPPA:
@@ -210,7 +261,12 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 				throw new IllegalArgumentException();
 			}
 		}
-		
+
+//		gfx.setColor(Color.RED);
+//		for (Rectangle rectangle : mappaCoordinateElementiGrafici.values()) {
+//			gfx.drawRect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
+//		}
+
 		List<SpriteInterface> copiaSprites = new ArrayList<>(sprites);
 		List<SpriteInterface> inactiveSprites = new ArrayList<>();
 		for (SpriteInterface sprite : copiaSprites) {
@@ -237,40 +293,52 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private void aggiornaSchermo(Graphics2D graphics) {
 
 		if (stato == StatoDisplayableCanvas.STATO_INTRO) {
-			introOutro.intro(graphics);
+			riquadroIntroOutro.intro(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_SELEZIONE_NUOVO_GIOCO_O_CARICA) {
-			introOutro.selezioneNuovoGiocoOCarica(graphics);
+			riquadroIntroOutro.selezioneNuovoGiocoOCarica(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_SELEZIONE_SLOT_DA_CARICARE) {
-			introOutro.selezioneSlotDaCaricare(graphics);
+			riquadroIntroOutro.selezioneSlotDaCaricare(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_MESSAGGIO) {
-			introOutro.scrivi(graphics);
+			riquadroIntroOutro.scrivi(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO) {
 			inGioco(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_MAPPA) {
 			mappaATuttoSchermo.disegnaMappaATuttoSchermo(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_SELEZIONE_SLOT_DA_SALVARE) {
-			introOutro.selezioneSlotDaSalvare(graphics);
+			riquadroIntroOutro.selezioneSlotDaSalvare(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_CONFERMA_USCITA) {
-			introOutro.confermaUscita(graphics);
+			riquadroIntroOutro.confermaUscita(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_PERSO) {
-			introOutro.perso(graphics);
+			riquadroIntroOutro.perso(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_VINTO) {
-			introOutro.vinto(graphics);
+			riquadroIntroOutro.vinto(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_STATISTICHE) {
-			introOutro.statistiche(graphics);
+			riquadroIntroOutro.statistiche(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_PUNTEGGI) {
-			introOutro.hiscore(graphics);
+			riquadroIntroOutro.hiscore(graphics);
 		}
 	}
 	
+	/**
+	 * Riporta l'unico elemento grafico che occupa tutto lo schermo nello stato corrente,
+	 * oppure null se lo schermo è composto dallo stack degli elementi di gioco.
+	 * Rispecchia le scelte di aggiornaSchermo().
+	 */
+	private Finestra finestraATuttoSchermo() {
+		if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO) {
+			return null;
+		}
+		return stato == StatoDisplayableCanvas.STATO_MAPPA ? mappaATuttoSchermo : riquadroIntroOutro;
+	}
+
 	// Parte della interfaccia UI
 	public void intro() {
 		if (stato != StatoDisplayableCanvas.STATO_INTRO) {
 			stato = StatoDisplayableCanvas.STATO_INTRO;
-			introOutro.resettaSequenza();
+			riquadroIntroOutro.resettaSequenza();
 		} else {
 			// + 2 per permettere i titoli di testa e i punteggi
-			introOutro.incrementaSequenza(Misc.STORIA.length + 2);
+			riquadroIntroOutro.incrementaSequenza(Misc.STORIA.length + 2);
 		}
 		repaint();
 	}
@@ -282,6 +350,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void selezioneSlotSalvataggioDaCaricare() {
 		stato = StatoDisplayableCanvas.STATO_SELEZIONE_SLOT_DA_CARICARE;
+		repaint();
+	}
+
+	public void iniziaGioco() {
+		stato = StatoDisplayableCanvas.STATO_IN_GIOCO;
 		repaint();
 	}
 
@@ -312,9 +385,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	public void perso() {
 		if (stato != StatoDisplayableCanvas.STATO_PERSO) {
 			stato = StatoDisplayableCanvas.STATO_PERSO;
-			introOutro.resettaSequenza();
+			riquadroIntroOutro.resettaSequenza();
 		} else {
-			introOutro.incrementaSequenza(Misc.PERSO.length);
+			riquadroIntroOutro.incrementaSequenza(Misc.PERSO.length);
 		}
 		repaint();
 	}
@@ -322,9 +395,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	public void vinto() {
 		if (stato != StatoDisplayableCanvas.STATO_VINTO) {
 			stato = StatoDisplayableCanvas.STATO_VINTO;
-			introOutro.resettaSequenza();
+			riquadroIntroOutro.resettaSequenza();
 		} else {
-			introOutro.incrementaSequenza(Misc.VINTO.length);
+			riquadroIntroOutro.incrementaSequenza(Misc.VINTO.length);
 		}
 		repaint();
 	}
@@ -341,7 +414,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void scriviGrande(String messaggio) {
 		stato = StatoDisplayableCanvas.STATO_MESSAGGIO;
-		introOutro.impostaMessaggio(messaggio);
+		riquadroIntroOutro.impostaMessaggio(messaggio);
 		repaint();
 	}
 
@@ -448,6 +521,231 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private void aggiungiSprite(SpriteInterface sprite) {
 		if (sprite != null) {
 			sprites.add(sprite);
+		}
+	}
+
+	private Finestra recuperaFinestra(InterfacciaUtente.Finestra finestra) {
+		switch (finestra) {
+			case INTRO_OUTRO:
+				return riquadroIntroOutro;
+			case MAPPA:
+				return riquadroMappa;
+			case STATISTICHE:
+				return riquadroStatistiche;
+			case GRAFICA:
+				return riquadroLocazione;
+			case STATO:
+				return riquadroGruppo;
+			case INCANTESIMI:
+				return riquadroIncantesimi;
+			case TESTO:
+				return riquadroTesto;
+			case MISSIONI:
+				return riquadroMissioni;
+			case INFO_COMBATTIMENTO:
+				return riquadroCombattimento;
+			case MAPPA_A_TUTTO_SCHERMO:
+				return mappaATuttoSchermo;
+			default:
+				throw new IllegalArgumentException("Elemento grafico non valido: " + finestra);
+		}
+	}
+
+	private class GestoreMouse implements MouseListener, MouseMotionListener, MouseWheelListener {
+
+		// AWT segnala entrata e uscita solo per il canvas nel suo complesso: per averle
+		// per singolo riquadro va ricordato su quale si trovava il cursore.
+		private Finestra finestraSottoIlCursore;
+
+		private class RisultatoRicerca {
+			final Finestra finestra;
+			final int xRelativoAFinestra;
+			final int yRelativoAFinestra;
+			RisultatoRicerca(Finestra finestra, int xRelativoAFinestra, int yRelativoAFinestra) {
+				this.finestra = finestra;
+				this.xRelativoAFinestra = xRelativoAFinestra;
+				this.yRelativoAFinestra = yRelativoAFinestra;
+			}
+		}
+
+		private RisultatoRicerca trovaFinestra(MouseEvent e) {
+			int x = e.getX();
+			int y = e.getY();
+			// Fuori dal gioco lo schermo è occupato da un unico elemento grafico:
+			// non c'è nessuno stack da percorrere.
+			Finestra finestraATuttoSchermo = finestraATuttoSchermo();
+			if (finestraATuttoSchermo != null) {
+				return creaRisultato(finestraATuttoSchermo, x, y);
+			}
+			ArrayList<InterfacciaUtente.Finestra> copiaStack = new ArrayList<>(stackElementiGrafici.size());
+			copiaStack.addAll(stackElementiGrafici);
+			// Lo stack viene disegnato dal fondo (indice 0) verso il primo piano (ultimo
+			// indice), quindi va percorso al contrario: l'evento spetta all'elemento
+			// più in primo piano fra quelli che contengono il punto.
+			for (int indice = copiaStack.size() - 1; indice >= 0; indice--) {
+				RisultatoRicerca risultato = creaRisultato(recuperaFinestra(copiaStack.get(indice)), x, y);
+				if (risultato != null) {
+					return risultato;
+				}
+			}
+			return null;
+		}
+
+		private RisultatoRicerca creaRisultato(Finestra finestra, int x, int y) {
+			if (!finestra.isVisibile()) {
+				return null;
+			}
+			Rectangle rettangolo = mappaCoordinateElementiGrafici.get(finestra);
+			if (!rettangolo.contains(x, y)) {
+				return null;
+			}
+			return new RisultatoRicerca(finestra, x - rettangolo.x, y - rettangolo.y);
+		}
+
+		/**
+		 * Notifica uscita ed entrata quando il cursore passa da un riquadro a un altro.
+		 * Le coordinate assolute servono per l'uscita, che va comunicata al riquadro
+		 * precedente e cade quindi fuori dal suo rettangolo.
+		 */
+		private void aggiornaFinestraSottoIlCursore(RisultatoRicerca risultatoRicerca, int x, int y) {
+			Finestra nuovaFinestra = risultatoRicerca == null ? null : risultatoRicerca.finestra;
+			if (nuovaFinestra == finestraSottoIlCursore) {
+				return;
+			}
+			if (finestraSottoIlCursore != null) {
+				Rectangle rettangolo = mappaCoordinateElementiGrafici.get(finestraSottoIlCursore);
+				finestraSottoIlCursore.processaUscita(x - rettangolo.x, y - rettangolo.y);
+			}
+			finestraSottoIlCursore = nuovaFinestra;
+			if (risultatoRicerca != null) {
+				nuovaFinestra.processaEntrata(risultatoRicerca.xRelativoAFinestra, risultatoRicerca.yRelativoAFinestra);
+			}
+		}
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			RisultatoRicerca risultatoRicerca = trovaFinestra(e);
+			if (risultatoRicerca == null) {
+				return;
+			}
+			Finestra finestra = risultatoRicerca.finestra;
+			int x = risultatoRicerca.xRelativoAFinestra;
+			int y = risultatoRicerca.yRelativoAFinestra;
+
+			if (SwingUtilities.isLeftMouseButton(e)) {
+				if (e.getClickCount() == 2) {
+					finestra.processaDoppioClick(x, y, Finestra.Tasto.SINISTRO);
+				} else {
+					finestra.processaClick(x, y, Finestra.Tasto.SINISTRO);
+				}
+			} else if (SwingUtilities.isRightMouseButton(e)) {
+				if (e.getClickCount() == 2) {
+					finestra.processaDoppioClick(x, y, Finestra.Tasto.DESTRO);
+				} else {
+					finestra.processaClick(x, y, Finestra.Tasto.DESTRO);
+				}
+			} else if (SwingUtilities.isMiddleMouseButton(e)) {
+				if (e.getClickCount() == 2) {
+					finestra.processaDoppioClick(x, y, Finestra.Tasto.CENTRALE);
+				} else {
+					finestra.processaClick(x, y, Finestra.Tasto.CENTRALE);
+				}
+			}
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			RisultatoRicerca risultatoRicerca = trovaFinestra(e);
+			if (risultatoRicerca == null) {
+				return;
+			}
+			Finestra finestra = risultatoRicerca.finestra;
+			int x = risultatoRicerca.xRelativoAFinestra;
+			int y = risultatoRicerca.yRelativoAFinestra;
+
+			if (SwingUtilities.isLeftMouseButton(e)) {
+				finestra.processaPressione(x, y, Finestra.Tasto.SINISTRO);
+			} else if (SwingUtilities.isRightMouseButton(e)) {
+				finestra.processaPressione(x, y, Finestra.Tasto.DESTRO);
+			} else if (SwingUtilities.isMiddleMouseButton(e)) {
+				finestra.processaPressione(x, y, Finestra.Tasto.CENTRALE);
+			}
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			RisultatoRicerca risultatoRicerca = trovaFinestra(e);
+			if (risultatoRicerca == null) {
+				return;
+			}
+			Finestra finestra = risultatoRicerca.finestra;
+			int x = risultatoRicerca.xRelativoAFinestra;
+			int y = risultatoRicerca.yRelativoAFinestra;
+
+			if (SwingUtilities.isLeftMouseButton(e)) {
+				finestra.processaRilascio(x, y, Finestra.Tasto.SINISTRO);
+			} else if (SwingUtilities.isRightMouseButton(e)) {
+				finestra.processaRilascio(x, y, Finestra.Tasto.DESTRO);
+			} else if (SwingUtilities.isMiddleMouseButton(e)) {
+				finestra.processaRilascio(x, y, Finestra.Tasto.CENTRALE);
+			}
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// Entrando nel canvas si stabilisce su quale riquadro si trova il cursore
+			aggiornaFinestraSottoIlCursore(trovaFinestra(e), e.getX(), e.getY());
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// Uscendo dal canvas si esce anche dal riquadro su cui si era
+			aggiornaFinestraSottoIlCursore(null, e.getX(), e.getY());
+		}
+
+		@Override
+		public void mouseDragged(MouseEvent e) {
+			RisultatoRicerca risultatoRicerca = trovaFinestra(e);
+			if (risultatoRicerca == null) {
+				return;
+			}
+			Finestra finestra = risultatoRicerca.finestra;
+			int x = risultatoRicerca.xRelativoAFinestra;
+			int y = risultatoRicerca.yRelativoAFinestra;
+
+			finestra.processaTrascinamento(x, y);
+		}
+
+		@Override
+		public void mouseMoved(MouseEvent e) {
+			RisultatoRicerca risultatoRicerca = trovaFinestra(e);
+			aggiornaFinestraSottoIlCursore(risultatoRicerca, e.getX(), e.getY());
+			if (risultatoRicerca == null) {
+				return;
+			}
+			Finestra finestra = risultatoRicerca.finestra;
+			int x = risultatoRicerca.xRelativoAFinestra;
+			int y = risultatoRicerca.yRelativoAFinestra;
+
+			finestra.processaMovimento(x, y);
+		}
+
+		@Override
+		public void mouseWheelMoved(MouseWheelEvent e) {
+			RisultatoRicerca risultatoRicerca = trovaFinestra(e);
+			if (risultatoRicerca == null) {
+				return;
+			}
+			Finestra finestra = risultatoRicerca.finestra;
+			int x = risultatoRicerca.xRelativoAFinestra;
+			int y = risultatoRicerca.yRelativoAFinestra;
+
+			int rotazioni = e.getWheelRotation();
+			if (rotazioni < 0) {
+				finestra.processaRotella(x, y, -rotazioni, Finestra.MovimentoRotella.SU);
+			} else {
+				finestra.processaRotella(x, y, rotazioni, Finestra.MovimentoRotella.GIU);
+			}
 		}
 	}
 }

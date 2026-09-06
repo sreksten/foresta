@@ -6,7 +6,7 @@ import com.threeamigos.foresta.motore.Statistiche;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-class DisplayableCanvasRiquadroStatistiche {
+class DisplayableCanvasRiquadroStatistiche implements Finestra {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE = 6;
 

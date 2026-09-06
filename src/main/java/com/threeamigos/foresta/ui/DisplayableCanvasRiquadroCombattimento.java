@@ -1,31 +1,52 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.image.BufferedImage;
-import java.util.Optional;
-
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
-class DisplayableCanvasRiquadroCombattimento {
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.Optional;
+
+class DisplayableCanvasRiquadroCombattimento implements Finestra {
 
 	private boolean visible;
-	private int xOffset;
-	private int yOffset;
-	private BufferedImage cornice;
+	private final int xOffset;
+	private final int yOffset;
+	private final BufferedImage cornice;
+	private final Rectangle rettangolo;
 	private Personaggio combattente;
 	private Personaggio avversario;
 	private String nomeCombattente;
 	private String nomeAvversario;
-	private DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
+	private final DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 
 	DisplayableCanvasRiquadroCombattimento(int parentWidth, int parentHeight) {
 		cornice = ImageCache.cornicePiccola;
 		visible = false;
 		xOffset = (parentWidth - cornice.getWidth()) >> 1;
 		yOffset = (parentHeight - cornice.getHeight()) >> 1;
+
+		rettangolo = new Rectangle(xOffset, yOffset, cornice.getWidth(), cornice.getHeight());
 	}
+
+	public Rectangle getRettangolo() {
+		return rettangolo;
+	}
+
+	@Override
+	public boolean isVisibile() {
+		return visible;
+	}
+
+	public int getXOffset() {
+		return xOffset;
+	}
+
+	public int getYOffset() {
+		return yOffset;
+	}
+
+	public
 
 	void setVisible(boolean visible) {
 		this.visible = visible;
