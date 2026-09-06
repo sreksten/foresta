@@ -283,7 +283,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		} else if (salute < 400) {
 			sb.append("è davvero in salute");
 		} else {
-			sb.append("è sano come un pesce");
+			sb.append("è san").append(getLetteraFinaleAttributo()).append(" come un pesce");
 		}
 		sb.append(", ");
 		int coraggio = getCoraggio();
