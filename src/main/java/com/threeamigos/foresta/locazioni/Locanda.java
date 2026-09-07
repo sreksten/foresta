@@ -73,15 +73,20 @@ public class Locanda extends LocazioneBase {
 		} else {
 			evento = RICEVE_INFORMAZIONI;
 		}
-		setCompleta(true);
 	}
 
 	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
-		// Niente da fare
 		if (personaggioDisponibile != null) {
 			gng.aggiungiPersonaggio(personaggioDisponibile);
 		}
+		// Va fatto qui e non nel costruttore: a costruttore ancora in corso il
+		// modello dati è ancora quello provvisorio assegnato di default, non quello
+		// condiviso con la casella della Foresta che setModelloDati() installa subito
+		// dopo — altrimenti isCompleta() risulterebbe falso all'uscita dalla locanda,
+		// facendo saltare il controllo missioni di fine locazione (FINE_LOCAZIONE) per
+		// quel turno e rimandandolo di una locazione.
+		setCompleta(true);
 	}
 
 	public static void impostaDatiLocanda(LocazioneMD modelloDati, ProduttoreDiTestiCasuale.DatiLocanda datiLocanda) {
@@ -106,17 +111,17 @@ public class Locanda extends LocazioneBase {
 			md.aggiungiProprieta(LOCANDA_DIALOGO_LETTO, LocazioneMD.AFFERMATIVO);
 			String dialogo = md.ottieniProprieta(LOCANDA_DIALOGO);
 			if (dialogo != null && !dialogo.isEmpty()) {
-				return dialogo;
+				return '“' + dialogo + '"';
 			}
 		}
 		if (md.ottieniProprieta(LOCANDA_RECENSIONE_LETTA) == null) {
 			md.aggiungiProprieta(LOCANDA_RECENSIONE_LETTA, LocazioneMD.AFFERMATIVO);
 			String recensione = md.ottieniProprieta(LOCANDA_RECENSIONE);
 			if (recensione != null && !recensione.isEmpty()) {
-				return g.chiMaiuscolo() + " è a " + nome + ". A quanto si dice, " + recensione;
+				return g.chiMaiuscolo() + " è a “" + nome + "\". A quanto si dice, " + recensione + ".";
 			}
 		}
-		return g.chiMaiuscolo() + " è alla locanda " + nome;
+		return g.chiMaiuscolo() + " è alla locanda “" + nome + '"';
 	}
 
 	@Override
@@ -127,10 +132,23 @@ public class Locanda extends LocazioneBase {
 				UI.notifica("L'oste però non è disposto a fare credito...");
 				return Stato.FINE_LOCAZIONE;
 			}
+			UI.notifica("");
 			UI.notifica("Un cantastorie sta raccontando una vecchia storia locale.");
-			List<String> fiaba = ProduttoreDiTestiCasuale.fiaba();
-			for (String linea : fiaba) {
-				UI.notifica(linea);
+			try {
+				List<String> fiaba = ProduttoreDiTestiCasuale.fiaba();
+				int numeroLinea = 0;
+				for (String linea : fiaba) {
+					if (numeroLinea == 0) {
+						UI.notifica('“' + linea);
+					} else if (numeroLinea == fiaba.size() - 1) {
+						UI.notifica(linea + '"');
+					} else {
+						UI.notifica(linea);
+					}
+					numeroLinea++;
+				}
+			} catch (Exception e) {
+				Logger.log(e);
 			}
 			UI.impostaAzioni(Comando.PERGAMENA);
 			stato = StatoInLocanda.ENTRATO;
