@@ -1,0 +1,82 @@
+DATI_LOCANDA
+    [*NOME_LOCANDA]/RECENSIONE=[#RECENSIONE?]/DIALOGO=[#DIALOGO?]
+
+NOME_LOCANDA
+    [CINGHIALE_VEGANO] | [FURIA_DEL_GIORNO_DOPO] | [GUARDIA_ADDORMENTATA] | [DA_POCHI_SOLDI] | [MAGO_SENZA_TRUCCO]
+    [ULTIMO_BICCHIERE] | [ORSO_BALLERINO] | [ULTIMA_SPERANZA] | [FUNGO_ALLUCINOGENO] | [GOBLIN_CORTESE]
+    [ZANZARE_E_ZUCCHE] | [BIVIO_SBAGLIATO] | [RIPARO_DAL_DM] | [VEDI_TU] | [TOPO_SAGGIO] | [TAZZA_BUCATA]
+    [ELFO_ALTICCIO] | [FRASCA_DEL_LUPO_ASTEMIO] | [TRONCO_CAVO] | [DRAGO_VOMITANTE] | [BOCCALE_FORATO]
+    [CINGHIALE_SOBRIO] | [GOBLIN_ASTEMIO] | [ULTIMO_AVAMPOSTO] | [BOCCALE_CAPOVOLTO] | [DRAGO_SPENNATO]
+    [CACCIATORE_MANCINO] | [FUEGO_DEL_FUORILEGGE] | [RADURA_DEL_MAL_DI_PANCIA] | [CAVALLO_CHE_PARLA]
+    [ANONIMA_ALCOLISTI] | [FORZIERE_VUOTO] | [PANE_E_SPADA] | [ORCO_SENSIBILE] | [RE_FINTO]
+
+CINGHIALE_VEGANO$
+    [DIALOGO=Benvenuti al Cinghiale Vegano! Sì, l'insegna è giusta. No, non abbiamo pancetta. Sedetevi prima che i nani ricomincino a protestare.][RECENSIONE=è famoso per non servire carne, con grande disappunto dei nani]Il Cinghiale Vegano
+FURIA_DEL_GIORNO_DOPO$
+    [DIALOGO=Benvenuti alla Furia del Giorno Dopo. Parlate piano, camminate in punta di piedi e, per l'amor degli dei, non fate sbattere quei boccali di ferro. Qui dentro la luce del sole è bandita e il rumore è punito con la morte. Se siete qui per fare casino, andatevene. Se vi serve del brodo salato, dell'idromele sgasato o un angolo buio dove rimpiangere le vostre scelte di ieri sera... sedetevi e non respirate troppo forte.][RECENSIONE={un chiaro riferimento ai postumi|è un locale gestito da un oste burbero specializzato nel trattare i postumi da sbronza dei clienti}]La Furia del Giorno Dopo
+GUARDIA_ADDORMENTATA$
+    [DIALOGO=Chiudete quella porta! L'aria pulita fa scappare i clienti della Guardia Addormentata. Cosa vi serve? Oro sul bancone, domande al muro.] [RECENSIONE=il posto preferito dai ladri]La Guardia Addormentata
+DA_POCHI_SOLDI$
+    [DIALOGO=Entrate, entrate! Siete alla locanda Da Pochi Soldi, quindi non aspettatevi il tappeto rosso. Ma la birra costa meno dell'acqua, e fa quasi lo stesso effetto.] [RECENSIONE=onesta fin dal nome]Da Pochi Soldi
+MAGO_SENZA_TRUCCO$
+    [DIALOGO=Ah, facce nuove! Benvenuti al Mago Senza Trucco. Vi avviso: se cercate pozioni magiche avete sbagliato posto, ma se cercate un vino che fa vedere i draghi, siete nel posto giusto.] [RECENSIONE=il proprietario è solo un vecchio un po' eccentrico]Il Mago senza Trucco
+ULTIMO_BICCHIERE$
+    [DIALOGO=Benvenuti all'Ultimo Bicchiere (Promesso)! Ricordatevi la regola della casa: il penultimo bicchiere non esiste, si passa sempre all'ultimo. Di nuovo.] [RECENSIONE=la bugia più grande della storia del regno]L'Ultimo Bicchiere (Promesso)
+ORSO_BALLERINO$
+    [DIALOGO=Benvenuti all'Orso Ballerino. Scusate la pelliccia, un incantesimo di trasmutazione andato storto. Non badate ai peli nella minestra, fanno polpa.][RECENSIONE=il proprietario è un druido rimasto bloccato in forma animale]L'Orso Ballerino
+ULTIMA_SPERANZA$
+    [DIALOGO=Per tutti i numi, dei clienti vivi! Benvenuti alla Locanda dell'Ultima Speranza. Di solito serviamo solo spettri e cacciatori smarriti. Accomodatevi, prima che il fuoco si spenga o che i lupi fuori finiscano la pazienza.][RECENSIONE=l'unica decente nel raggio di chilometri]La Locanda dell'Ultima Speranza
+FUNGO_ALLUCINOGENO$
+    [DIALOGO=Benvenuti al Fungo Allucinogeno! Vi consiglio lo stufato del giorno. Se vedete il tavolo fluttuare dopo il primo cucchiaio, non vi preoccupate: è l'effetto del legno di pino. O del fungo. Più probabilmente del fungo.][RECENSIONE=la specialità della casa è un brodo molto... colorato]Al Fungo Allucinogeno
+GOBLIN_CORTESE$
+    [DIALOGO=Salute, viandanti! Benvenuti alla Tana del Goblin Cortese. Prego, pulitevi gli stivali, posate le armi e ignorate il fatto che stia usando una scimitarra per affettare il formaggio. Vi porto del sidro?][RECENSIONE=l'unico goblin dell'intera foresta che usa il tovagliolo]La Tana del Goblin Cortese
+ZANZARE_E_ZUCCHE$
+    [DIALOGO=Benvenuti a Zanzare e Zucche! Prendete una sedia e schiacciate gli insetti che trovate sul cuscino. Se sopravvivete alla zuppa d'ortica, la notte è gratis.][RECENSIONE=il nome descrive perfettamente i dintorni]Zanzare e Zucche
+BIVIO_SBAGLIATO$
+    [DIALOGO=Benvenuti alla locanda Il Bivio Sbagliato. Lo so, volevate andare a salvare la principessa a nord, e invece eccovi qui. Ormai siete dentro, tanto vale bere.][RECENSIONE=ci finisci solo se ti perdi]Il Bivio Sbagliato
+RIPARO_DAL_DM$
+    [DIALOGO=Benvenuti al Riparo dal DM! Rilassatevi, qui dentro non ci sono tiri salvezza, trappole nel pavimento o draghi millenari. C'è solo birra e una temporanea immunità alle decisioni sadiche del destino. Cosa vi spillo?]Al Riparo dal DM
+VEDI_TU$
+    [DIALOGO=Siete al Vedi Tu! Non chiedetemi cosa c'è sul menu, perché non lo so nemmeno io. Sedetevi, io vi porto qualcosa, voi mi date dell'oro e speriamo che a nessuno venga il mal di pancia.][RECENSIONE=non esiste un menu, decide l'oste]La Locanda del "Vedi Tu"
+TOPO_SAGGIO$
+    [DIALOGO=Benvenuti al Topo Saggio. No, non state allucinando per il troppo idromele, sono proprio io il proprietario. Vi prego di non fare battute sui gatti, sulle trappole o sul fatto che potrei finire nello stufato. Piuttosto, saltate sul bancone per ordinare o lasciate le monete direttamente a terra, all'altezza dei miei baffi. Cosa vi servo? E vi avviso, il formaggio della casa costa il doppio per i giganti come voi.][RECENSIONE=c'è chi giura che il proprietario sia davvero un roditore parlante]Il Topo Saggio
+TAZZA_BUCATA$
+    [DIALOGO=Benvenuti alla Tazza Bucata. Vi do un consiglio: non guardate troppo da vicino i boccali, non chiedete cosa c'è dentro la zuppa e, se vedete un buco sul fondo della tazza, tappatelo con il pollice come fanno tutti. Il servizio fa schifo, l'oste è di pessimo umore, ma la birra costa una sola moneta di rame al barile. Se vi sta bene è così, altrimenti la porta è quella da cui siete entrati][RECENSIONE=il servizio è pessimo, ma la birra è economica]La Tazza Bucata
+ELFO_ALTICCIO$
+    [DIALOGO=Salute, viandanti! Hic! Benvenuti all'... all'... aspettate, come si chiama questo posto? Ah sì, L'Elfo Alticcio! Che sarei io! Venite, entrate nel cerchio magico della sbronza! Gli umani dicono che noi elfi siamo creature aggraziate e mistiche... beh, non hanno mai visto me dopo sei calici di nettare di bosco! Sedetevi, oggi offro io! Cioè, pagate voi, ma verso io!][RECENSIONE=è raro da vedere, memorabile da sentire]L'Elfo Alticcio
+FRASCA_DEL_LUPO_ASTEMIO$
+    [DIALOGO=Ahaha, benvenuti alla Frasca del Lupo Astemio! Il nome è una barzelletta, ragazzi! Qui dentro l'unica cosa astemia è l'acqua nel pozzo, perché nessuno la tocca! Perfino le mosche volano storte in questa stanza. Forza, prendete un boccale e dateci dentro. Se riuscite a uscire camminando dritti, significa che non avete onorato il lupo!][RECENSIONE=ironico, visto quanto si beve dentro]La Frasca del Lupo Astemio
+TRONCO_CAVO$
+    [DIALOGO=Benvenuti nel Tronco Cavo, viaggiatori. Siete dentro trecento tonnellate di quercia millenaria. Vi prego solo di seguire tre semplici regole: non usate incantesimi di fuoco, non piantate i vostri pugnali nel muro per fare i fighi e non chiedete legno da ardere. Se avete sete, provate la nostra birra alla corteccia. Ha un sapore un po' terroso, ma vi garantisco che vi lascerà con le radici ben piantate a terra.][RECENSIONE=è letteralmente costruita dentro un albero millenario scavato]Il Tronco Cavo
+DRAGO_VOMITANTE$
+    [DIALOGO=Benvenuti al Drago Vomitante. Il nome non è una metafora poetica, è un avvertimento. Se dovete esagerare con l'idromele di fuoco, uscite sul retro o mirate ai vasi di piante. Chi sporca pulisce, e vi assicuro che il mio straccio ha visto cose che farebbero impallidire un necromante. Cosa vi porto, prima che vi passi l'appetito?][RECENSIONE=la birra di fuoco è ottima, ma l'odore di acido sul pavimento toglie la voglia di vivere prima ancora di ordinare lo stufato]Il Drago Vomitante
+BOCCALE_FORATO$
+    [DIALOGO=Benvenuti al Boccale Forato! Sbrigatevi a bere, ragazzi, qui il tempo è letteralmente oro! Se sorseggiate con calma vi ritrovate con le scarpe bagnate e il boccale vuoto. Mandate giù tutto d'un fiato, è l'unico modo per avere il controvalore dei vostri soldi. Allora, vi riempio questo colabrodo?][RECENSIONE=i prezzi sono stracciati ma occorre avere i piedi impermeabili]Il Boccale Forato
+CINGHIALE_SOBRIO$
+    [DIALOGO=Benvenuti al Cinghiale Sobrio. Sì, vendiamo alcolici, ma vi tengo d'occhio. Al primo segno di barcollamento, al primo 'hic' molesto o alla prima canzone intonata fuori tempo, sarete scaraventati fuori a calci. Qui si beve con dignità, autocontrollo e moderazione. Ora, volete una birra analcolica o rischiare la mia ira?][RECENSIONE=l'atmosfera è da funerale, ma il posto è pulito]Il Cinghiale Sobrio
+GOBLIN_ASTEMIO$
+    [DIALOGO=Salute e benvenuti alla Tana del Goblin Astemio! No, non vi ruberò il portafoglio e no, non ho sputato nella botte. Ho chiuso con i vecchi vizi della tribù: niente risse, niente funghi allucinogeni e solo succo di mela fermentato al minimo sindacale. Scommetto che non avete mai visto un locale gestito così bene da uno della mia specie, vero? Accomodatevi!][RECENSIONE=il locale è splendente e non cercano neanche di borseggiare il clienti]La Tana del Goblin Astemio
+ULTIMO_AVAMPOSTO$
+    [DIALOGO=Entrate pure all'Ultimo Avamposto Prima del Baratro... e vi prego, non fate movimenti bruschi tutti insieme sul lato est. Siamo letteralmente sospesi sul dirupo. Mandate giù qualcosa per farvi coraggio, perché se soffrite di vertigini, l'unico modo per uscire da questa foresta vivi è farlo da ubriachi. Cosa vi serve?][RECENSIONE=l'idromele è l'unica cosa che impedisce di svenire guardando fuori dalla finestra]L'Ultimo Avamposto Prima del Baratro
+BOCCALE_CAPOVOLTO$
+    [DIALOGO=Benvenuti al Boccale Capovolto! Trovatevi un posto a terra o sugli sgabelli nani. Qui non ci giriamo intorno: la nostra birra scura è così forte che entro mezz'ora sarete tutti sdraiati a terra a fissare il soffitto. Abbiamo eliminato le sedie alte per evitare che la gente si facesse male cadendo. Siete pronti a fare un ruzzolone?][RECENSIONE=i tavoli sono cortissimi e il pavimento è coperto di morbida paglia spessa trenta centimetri]Il Boccale Capovolto
+DRAGO_SPENNATO$
+    [DIALOGO=Benvenuti al Drago Spennato! Potete ridere dell'insegna, ma vi assicuro che la nostra cucina è letale quanto un soffio di fuoco. Abbiamo spennato i prezzi e rasato al suolo la concorrenza! Accomodatevi, ordinate un cosciotto di montone e non fate domande sulla provenienza della carne se vedete delle lucertole giganti senza pelle nel cortile dietro.][RECENSIONE=l'insegna mostra un drago tragicamente privo di squame]Il Drago Spennato
+CACCIATORE_MANCINO$
+    [DIALOGO=Benvenuti, viandanti! Siete al Cacciatore Mancino. Se cercate dello stufato di cervo fresco... beh, sperate che sia passato un altro cacciatore a vendermelo. Io ci provo, ma la foresta è densa e i miei occhi non sono più quelli di una volta. In compenso, non manco mai il colpo quando si tratta di versare il vino nel boccale!][RECENSIONE=il posto è gestita da un arciere che non ha mai preso una preda]Il Cacciatore Mancino
+FUEGO_DEL_FUORILEGGE$
+    [DIALOGO=Pst! Entrate e abbassate la testa! Benvenuti al Fuego del Fuorilegge. Se le guardie cittadine vi hanno chiesto dove stavate andando, spero abbiate inventato una buona scusa. Qui dentro non chiediamo nomi, non teniamo registri e accettiamo monete d'oro di qualsiasi regno, anche quelle palesemente contraffatte. Sedetevi e cercate di non farvi notare.][RECENSIONE=nascosta benissimo tra i cespugli]Il Fuego del Fuorilegge
+RADURA_DEL_MAL_DI_PANCIA$
+    [DIALOGO=Salute! Benvenuti alla Radura del Mal di Pancia! Il segreto della nostra cucina è lo strutto d'orso, lo usiamo anche nei dolci! Vi lascerà un ricordo indelebile nello stomaco per i prossimi tre giorni. Ma non temete: il nostro idromele è così forte e puro che disinfetta tutto prima che possiate pentirvene. Chi ordina il piatto della casa riceve un'erba digestiva in omaggio!][RECENSIONE=la cucina è un po' pesante, ma l'idromele è ottimo]La Radura del Mal Di Pancia
+CAVALLO_CHE_PARLA$
+    [DIALOGO=Benvenuti Al Cavallo che Parla! Forza, fate la vostra domanda a Fulmine, vi risponderà! Visto? È un miracolo della natura! Ora smettetela di fare domande all'animale e comprate della birra, che mantenere questo quadrupede ciarlatano mi costa un patrimonio.][RECENSIONE=il cavallo non parla, ma l'oste sa imitare il nitrito]Al Cavallo Che Parla
+ANONIMA_ALCOLISTI$
+    [DIALOGO=Entrate, entrate. Benvenuti alla Teverna dell'Anonima Alcolisti. Qui ci supportiamo tutti a vicenda. Io supporto voi vendendovi i migliori alcolici della contea, e voi supportate me pagando l'affitto del locale. Coraggio, unitevi al cerchio, alzatevi a turno, dite il vostro nome e quale liquore preferite dimenticare stasera.][RECENSIONE=è la terapia di gruppo migliore di sempre. Racconti i tuoi traumi d'infanzia, l'oste ti riempie il boccale e tutti brindano alle tue sventure. Ci sono andato per smettere di bere, sono uscito strisciando. Consigliatissimo]La Taverna dell'Anonima Alcolisti
+FORZIERE_VUOTO$
+    [DIALOGO=Benvenuti al Forziere Vuoto! Potete lasciare le vostre borse sul tavolo, qui i borseggiatori non entrano nemmeno: sanno che chi frequenta questo posto ha già speso l'ultimo rame prima di superare la soglia. Siamo la locanda dei disperati e dei fieri squattrinati! Se avete oro, spendetelo subito, così non avrete più l'ansia di farvelo rubare!][RECENSIONE=ottima per tenere alla larga i borseggiatori]Il Forziere Vuoto
+PANE_E_SPADA$
+    [DIALOGO=Siete da Pane e Spada. Qui non ci sono fronzoli, cameriere carine o tovaglioli di seta. C'è del pane raffermo per riempire lo stomaco, della birra calda per mandarlo giù e una lama se qualcuno si lamenta del servizio. Mangiate, bevete, pagate e andate a combattere da un'altra parte. Cosa vi serve?][RECENSIONE=essenziale, rozza, efficace]Pane e Spada
+ORCO_SENSIBILE$
+    [DIALOGO=Benvenuti... snif... all'Orco Sensibile. Scusate, ma quella ballata sulla caduta di Forte Grigio mi spezza sempre il cuore. Entrate con animo gentile, vi prego. Niente parole dure, niente insulti e se dovete sfidare qualcuno a duello, fate che sia una gara di poesia. Chi non rispetta i sentimenti altrui viene preso a pugni in faccia con molta, molta tristezza. Cosa vi porto da bere per affogare i dispiaceri?][RECENSIONE=all'interno si recitano poesie e si piange davanti alla birra]L'Orco Sensibile
+RE_FINTO$
+    [DIALOGO=Nobili viandanti, benvenuti alla Locanda del Re Finto! Qui ogni mendicante viene trattato come un duca e ogni avventuriero come un eroe leggendario! Inchinatevi davanti al bancone, ordinate il nostro 'Nettare Reale' (che in realtà è sidro di terza scelta corretto con miele) e godetevi l'illusione della ricchezza! L'oro che mi darete, purtroppo per me, deve essere vero. Cosa desiderano le vostre maestà?][RECENSIONE=arredata con corone di cartapesta e finti velluti]La Locanda del Re Finto
