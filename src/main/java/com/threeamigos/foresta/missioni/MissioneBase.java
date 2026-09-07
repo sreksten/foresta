@@ -93,6 +93,7 @@ public abstract class MissioneBase implements Missione {
 		} else {
 			GestoreProgressione.completaMissioneSecondaria();
 		}
+		md.setDescrizioneVisibile(false);
 		UI.notifica("");
 	}
 
