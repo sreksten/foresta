@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 /**
  * Il modello dati di una singola casella della Foresta. Ogni casella ha la sua
@@ -89,7 +88,7 @@ public class LocazioneMD implements Serializzabile {
 		stream.print(classe.name());
 		if (!proprieta.isEmpty()) {
 			stream.print(PIPE);
-			stream.print(proprieta.entrySet().stream().map(e -> e.getKey() + ":" + e.getValue()).collect(Collectors.joining(PIPE)));
+			stream.print(MappaProprieta.salva(proprieta));
 		}
 		stream.println();
 	}
@@ -100,11 +99,6 @@ public class LocazioneMD implements Serializzabile {
 		// Il limite -1 conserva gli eventuali campi vuoti in coda
 		String[] tokens = line.split("\\|", -1);
 		classe = ClassiLocazione.valueOf(tokens[0]);
-		proprieta.clear();
-		for (int i = 1; i < tokens.length; i++) {
-			// Limite 2: il valore può contenere ':' ed essere vuoto
-			String[] proprietaCorrente = tokens[i].split(":", 2);
-			proprieta.put(proprietaCorrente[0], proprietaCorrente.length > 1 ? proprietaCorrente[1] : "");
-		}
+		MappaProprieta.leggi(tokens, 1, proprieta);
 	}
 }

@@ -6,7 +6,6 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class MissioneMD implements Serializzabile {
 
@@ -108,7 +107,7 @@ public class MissioneMD implements Serializzabile {
 		stream.print(descrizioneVisibile);
 		stream.print(PIPE);
 		stream.println(missioniSecondarie.size());
-		stream.println(proprieta.entrySet().stream().map(e -> e.getKey() + ":" + e.getValue()).collect(Collectors.joining(PIPE)));
+		stream.println(MappaProprieta.salva(proprieta));
 		for (MissioneMD missioneMD : missioniSecondarie) {
 			missioneMD.salva(stream);
 		}
@@ -124,14 +123,9 @@ public class MissioneMD implements Serializzabile {
 		descrizione = tokens[3];
 		descrizioneVisibile = Boolean.parseBoolean(tokens[4]);
 		int dimensioneElencoMissioniSecondarie = Integer.parseInt(tokens[5]);
-		proprieta.clear();
 		line = stream.readLine();
-		StringTokenizer st = new StringTokenizer(line, PIPE);
-		while (st.hasMoreTokens()) {
-			// Limite 2: il valore può contenere ':' ed essere vuoto
-			tokens = st.nextToken().split(":", 2);
-			proprieta.put(tokens[0], tokens.length > 1 ? tokens[1] : "");
-		}
+		tokens = line.split("\\|", -1);
+		MappaProprieta.leggi(tokens, 0, proprieta);
 		missioniSecondarie.clear();
 		for (int i = 0; i < dimensioneElencoMissioniSecondarie; i++) {
 			MissioneMD missioneSecondaria = new MissioneMD();

@@ -92,7 +92,9 @@ public class Foresta {
 	 * Per uso da parte di un ControlloreDiGioco
 	 */
 	static void reimposta() {
-		
+		// Reset produzioni one-shot (nomi locande, fiabe, oroscopi) per la nuova partita
+		ProduttoreDiTestiCasuale.resetProduzioni();
+
 		RegistroPersonaggi.reimposta();
 		LineaTemporale.reimposta();
 		RegistroMissioni.reimposta();

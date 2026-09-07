@@ -564,11 +564,11 @@ public class PersonaggioMD implements Serializzabile {
 		stream.print(artefatti.size());
 		stream.println();
 
-		stream.println(valoriMinimi.entrySet().stream().map(e -> e.getKey().name() + ":" + e.getValue()).collect(Collectors.joining(PIPE)));
-		stream.println(valoriMassimi.entrySet().stream().map(e -> e.getKey().name() + ":" + e.getValue()).collect(Collectors.joining(PIPE)));
-		stream.println(valoriAttributi.entrySet().stream().map(e -> e.getKey().name() + ":" + e.getValue()).collect(Collectors.joining(PIPE)));
-		stream.println(modificatori.stream().map(m -> m.getTipoAttributo().name() + ":" + m.getTipoModificatoreAttributo().name() + ":" + m.getQuantita() + ":" + m.getNote()).collect(Collectors.joining(PIPE)));
-		stream.println(effettiDiStato.stream().map(e -> e.getTipoModificatoreAttributo().name() + ":" + e.getValore()).collect(Collectors.joining(PIPE)));
+		stream.println(valoriMinimi.entrySet().stream().map(e -> e.getKey().name() + MappaProprieta.SEPARATORE + e.getValue()).collect(Collectors.joining(PIPE)));
+		stream.println(valoriMassimi.entrySet().stream().map(e -> e.getKey().name() + MappaProprieta.SEPARATORE + e.getValue()).collect(Collectors.joining(PIPE)));
+		stream.println(valoriAttributi.entrySet().stream().map(e -> e.getKey().name() + MappaProprieta.SEPARATORE + e.getValue()).collect(Collectors.joining(PIPE)));
+		stream.println(modificatori.stream().map(m -> m.getTipoAttributo().name() + MappaProprieta.SEPARATORE + m.getTipoModificatoreAttributo().name() + MappaProprieta.SEPARATORE + m.getQuantita() + MappaProprieta.SEPARATORE + m.getNote()).collect(Collectors.joining(PIPE)));
+		stream.println(effettiDiStato.stream().map(e -> e.getTipoModificatoreAttributo().name() + MappaProprieta.SEPARATORE + e.getValore()).collect(Collectors.joining(PIPE)));
 
 		for (ArtefattoMD artefatto : artefatti) {
 			artefatto.salva(stream);
@@ -602,38 +602,39 @@ public class PersonaggioMD implements Serializzabile {
 		st = new StringTokenizer(line, PIPE);
 		valoriMinimi.clear();
 		while (st.hasMoreTokens()) {
-			String[] attributoValore = st.nextToken().split(":");
+			String[] attributoValore = st.nextToken().split(MappaProprieta.SEPARATORE);
 			valoriMinimi.put(TipoAttributo.valueOf(attributoValore[0]), Double.parseDouble(attributoValore[1]));
 		}
 		line = stream.readLine();
 		st = new StringTokenizer(line, PIPE);
 		valoriMassimi.clear();
 		while (st.hasMoreTokens()) {
-			String[] attributoValore = st.nextToken().split(":");
+			String[] attributoValore = st.nextToken().split(MappaProprieta.SEPARATORE);
 			valoriMassimi.put(TipoAttributo.valueOf(attributoValore[0]), Double.parseDouble(attributoValore[1]));
 		}
 		line = stream.readLine();
 		st = new StringTokenizer(line, PIPE);
 		valoriAttributi.clear();
 		while (st.hasMoreTokens()) {
-			String[] attributoValore = st.nextToken().split(":");
+			String[] attributoValore = st.nextToken().split(MappaProprieta.SEPARATORE);
 			valoriAttributi.put(TipoAttributo.valueOf(attributoValore[0]), Double.parseDouble(attributoValore[1]));
 		}
 		line = stream.readLine();
 		st = new StringTokenizer(line, PIPE);
 		modificatori.clear();
 		while (st.hasMoreTokens()) {
-			String[] attributoValore = st.nextToken().split(":");
+			// Limite 4: la nota può contenere il separatore
+			String[] attributoValore = st.nextToken().split(MappaProprieta.SEPARATORE, 4);
 			ModificatoreAttributo modificatore = new ModificatoreAttributo(TipoAttributo.valueOf(attributoValore[0]),
 					TipoModificatore.valueOf(attributoValore[1]), Double.parseDouble(attributoValore[2]),
-					attributoValore[3]);
+					attributoValore.length > 3 ? attributoValore[3] : "");
 			modificatori.add(modificatore);
 		}
 		line = stream.readLine();
 		st = new StringTokenizer(line, PIPE);
 		effettiDiStato.clear();
 		while (st.hasMoreTokens()) {
-			String[] attributoValore = st.nextToken().split(":");
+			String[] attributoValore = st.nextToken().split(MappaProprieta.SEPARATORE);
 			EffettoDiStato effettoDiStato = new EffettoDiStato(TipoEffettoDiStato.valueOf(attributoValore[0]), Integer.parseInt(attributoValore[1]));
 			effettiDiStato.add(effettoDiStato);
 		}
