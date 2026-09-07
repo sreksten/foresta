@@ -26,7 +26,9 @@ public class RegistroMissioni {
 		SCONFIGGI_LA_STREGA(ClasseMissione.SCONFIGGI_LA_STREGA),
 		MISSIONE_DI_PROVA(ClasseMissione.MISSIONE_DI_PROVA),
 		RECUPERA_IL_MEDAGLIONE(ClasseMissione.RECUPERA_IL_MEDAGLIONE),
-		RECUPERA_LE_DERRATE_ALIMENTARI(ClasseMissione.RECUPERA_LE_DERRATE_ALIMENTARI);
+		RECUPERA_LE_DERRATE_ALIMENTARI(ClasseMissione.RECUPERA_LE_DERRATE_ALIMENTARI),
+		CRONACHE_DI_UN_FEGATO_EROICO(ClasseMissione.CRONACHE_DI_UN_FEGATO_EROICO),
+		NESSUN_BOCCALE_LASCIATO_INDIETRO(ClasseMissione.NESSUN_BOCCALE_LASCIATO_INDIETRO);
 
 		TipoMissionePredefinita(ClasseMissione classeMissione) {
 			this.classeMissione = classeMissione;
@@ -97,7 +99,7 @@ public class RegistroMissioni {
 
 	/**
 	 * Riporta le missioni di primo livello non completate, attive e non. La discesa
-	 * nell'albero e' a carico del chiamante.
+	 * nell'albero è a carico del chiamante.
 	 */
 	public static List<Missione> getMissioni() {
 		List<Missione> missioni = new ArrayList<>();

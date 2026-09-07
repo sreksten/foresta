@@ -14,6 +14,9 @@ public abstract class Citta extends LocazioneUnica {
 	}
 
 	private StatoInCitta stato;
+	// La Locanda è un singleton condiviso da tutte le città: la visita va segnata
+	// qui, sulla città che l'ha ospitata, non sulla locanda.
+	private boolean locandaVisitata;
 	private final Locanda locanda = Locanda.getIstanza();
 	private final Alchimista alchimista = Alchimista.getIstanza();
 
@@ -23,6 +26,19 @@ public abstract class Citta extends LocazioneUnica {
 		locanda.reimposta();
 		alchimista.reimposta();
 		stato = StatoInCitta.IN_PIAZZA;
+		locandaVisitata = false;
+	}
+
+	/**
+	 * Vero se durante questa permanenza in città il gruppo è entrato nella locanda
+	 * e ne è poi uscito.
+	 */
+	public boolean isLocandaVisitata() {
+		return locandaVisitata;
+	}
+
+	private void registraUscitaDaLocanda() {
+		locandaVisitata = locandaVisitata || locanda.isEntrato();
 	}
 
 	public abstract String getNome();
@@ -48,6 +64,12 @@ public abstract class Citta extends LocazioneUnica {
 
 	public abstract String getNomeLocanda();
 
+	/**
+	 * Il solo nome della locanda, senza la preposizione che getNomeLocanda() aggiunge
+	 * per comporre una frase.
+	 */
+	public abstract String getNomeSempliceLocanda();
+
 	private void impostaAzioniCitta() {
 		ComandiPossibili.set(Comando.LOCANDA, Comando.ALCHIMISTA, Comando.ESCI_DA_CITTA);
 	}
@@ -66,6 +88,7 @@ public abstract class Citta extends LocazioneUnica {
 				if (statoRitorno == Stato.IN_LOCAZIONE) {
 					stato = StatoInCitta.IN_LOCANDA;
 				} else {
+					registraUscitaDaLocanda();
 					stato = StatoInCitta.IN_PIAZZA;
 					impostaAzioniCitta();
 				}
@@ -88,6 +111,7 @@ public abstract class Citta extends LocazioneUnica {
 		} else if (stato == StatoInCitta.IN_LOCANDA) {
 			statoRitorno = locanda.impostaAzioni(g, gng, azione);
 			if (statoRitorno == Stato.FINE_LOCAZIONE) {
+				registraUscitaDaLocanda();
 				impostaAzioniCitta();
 				stato = StatoInCitta.IN_PIAZZA;
 			}

@@ -123,7 +123,7 @@ public abstract class MissioneBase implements Missione {
 
 	@Override
 	public void sostituisciMissioniSecondarie(List<Missione> missioni) {
-		// Copia difensiva: la lista in ingresso puo' essere quella viva di questa
+		// Copia difensiva: la lista in ingresso può essere quella viva di questa
 		// stessa missione, e lo svuotamento la azzererebbe.
 		List<Missione> nuoveMissioni = new ArrayList<>(missioni);
 		missioniSecondarie.clear();

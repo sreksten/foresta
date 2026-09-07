@@ -3,6 +3,8 @@ package com.threeamigos.foresta.locazioni;
 public class CittaMalgaard extends Citta {
 
 	private static final CittaMalgaard istanza = new CittaMalgaard();
+
+	private static final String NOME_LOCANDA = "Aquila Nera";
 	
 	private CittaMalgaard() {
 	}
@@ -23,6 +25,11 @@ public class CittaMalgaard extends Citta {
 
 	@Override
 	public String getNomeLocanda() {
-		return "alla 'Aquila Nera'";
+		return "alla '" + NOME_LOCANDA + "'";
+	}
+
+	@Override
+	public String getNomeSempliceLocanda() {
+		return NOME_LOCANDA;
 	}
 }

@@ -3,6 +3,8 @@ package com.threeamigos.foresta.locazioni;
 public class CittaRuuna extends Citta {
 
 	private static final CittaRuuna istanza = new CittaRuuna();
+
+	private static final String NOME_LOCANDA = "Liocorno Rampante";
 	
 	private CittaRuuna() {
 	}
@@ -23,6 +25,11 @@ public class CittaRuuna extends Citta {
 
 	@Override
 	public String getNomeLocanda() {
-		return "al 'Liocorno Rampante'";
+		return "al '" + NOME_LOCANDA + "'";
+	}
+
+	@Override
+	public String getNomeSempliceLocanda() {
+		return NOME_LOCANDA;
 	}
 }

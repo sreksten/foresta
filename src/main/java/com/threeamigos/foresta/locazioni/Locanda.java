@@ -36,6 +36,7 @@ public class Locanda extends LocazioneBase {
 
 	private StatoInLocanda stato;
 	private int evento;
+	private boolean entrato;
 
 	/**
 	 * In città e nelle locande il gruppo puo' incontrare altri personaggi.
@@ -52,6 +53,7 @@ public class Locanda extends LocazioneBase {
 	public void reimposta() {
 		super.reimposta();
 		stato = StatoInLocanda.SULLA_PORTA;
+		entrato = false;
 		// O incontra un personaggio o riceve informazioni
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		if (gruppo.getNumeroPersonaggi() < Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE) {
@@ -63,6 +65,14 @@ public class Locanda extends LocazioneBase {
 			evento = RICEVE_INFORMAZIONI;
 		}
 		completa = true;
+	}
+
+	/**
+	 * Vero se il gruppo ha superato la porta. Chi viene respinto dall'oste per
+	 * mancanza di monete non è entrato, e non ha visitato la locanda.
+	 */
+	public boolean isEntrato() {
+		return entrato;
 	}
 
 	@Override
@@ -95,6 +105,7 @@ public class Locanda extends LocazioneBase {
 			}
 			UI.impostaAzioni(Comando.PERGAMENA);
 			stato = StatoInLocanda.ENTRATO;
+			entrato = true;
 			return Stato.IN_LOCAZIONE;
 
 		case ENTRATO:

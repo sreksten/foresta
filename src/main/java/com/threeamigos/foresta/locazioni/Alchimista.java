@@ -35,8 +35,8 @@ public class Alchimista extends LocazioneBase implements Locazione {
 
 	private StatoDaAlchimista stato;
 	private boolean benvenutoDato;
-	private boolean aumentareMagia;
-	private boolean aumentareMagiaGruppo;
+	private boolean ripristinareMagia;
+	private boolean ripristinareMagiaGruppo;
 	private int costoTotaleAumentoMagiaGruppo;
 	boolean incantesimiAcquistabili;
 	boolean pozioniAcquistabili;
@@ -58,17 +58,18 @@ public class Alchimista extends LocazioneBase implements Locazione {
 	private void reimpostaAcquistiPossibili() {
 		int monete = gruppo.getMonete();
 		pozioniAcquistabili = monete >= Costanti.COSTO_POZIONE_SALUTE;
-		aumentareMagia = monete >= Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO;
-		if (gruppo.getNumeroPersonaggiVivi() > 1) {
+		ripristinareMagia = monete >= Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO &&
+				gruppo.getPersonaggiVivi().stream().anyMatch(p -> p.getMagia() < p.getMagiaMassima());
+		if (gruppo.getPersonaggiVivi().stream().filter(p -> p.getMagia() < p.getMagiaMassima()).count() > 1) {
 			// Dopo il primo personaggio sconta del 25%. Molto generoso.
 			costoTotaleAumentoMagiaGruppo = Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO +
 					(Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO * (gruppo.getNumeroPersonaggiVivi() - 1)) * 75 / 100;
-			aumentareMagiaGruppo = monete >= costoTotaleAumentoMagiaGruppo;
+			ripristinareMagiaGruppo = monete >= costoTotaleAumentoMagiaGruppo;
 		} else {
-			aumentareMagiaGruppo = false;
+			ripristinareMagiaGruppo = false;
 		}
 		incantesimiAcquistabili = Arrays.stream(ClassiIncantesimo.values()).anyMatch(c -> c.getIstanza().getCostoAcquisto() <= monete);
-		nessunAcquistoEseguibile = !pozioniAcquistabili && !aumentareMagia && !aumentareMagiaGruppo && !incantesimiAcquistabili;
+		nessunAcquistoEseguibile = !pozioniAcquistabili && !ripristinareMagia && !ripristinareMagiaGruppo && !incantesimiAcquistabili;
 	}
 
 	@Override
@@ -115,6 +116,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 					Personaggio p = gruppo.getPersonaggio(azione);
 					gruppo.subMonete(Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO);
 					p.addMagia(Costanti.AUMENTO_MAGIA_PERSONAGGIO);
+					reimpostaAcquistiPossibili();
 					UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 					UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
 					UI.rinfresca();
@@ -131,6 +133,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 					for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
 						personaggio.addMagia(Costanti.AUMENTO_MAGIA_PERSONAGGIO);
 					}
+					reimpostaAcquistiPossibili();
 					UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 					UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
 					UI.rinfresca();
@@ -138,7 +141,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 					UI.notifica("'Non avete abbastanza monete per pagare i miei servigi.'" + DICE);
 					imposta();
                 }
-                return Stato.FINE_LOCAZIONE;
+                return Stato.IN_LOCAZIONE;
 
             } else if (azione == Comando.INCANTESIMO) {
 				stato = StatoDaAlchimista.INCANTESIMI;
@@ -231,12 +234,12 @@ public class Alchimista extends LocazioneBase implements Locazione {
 		if (incantesimiAcquistabili) {
 			sb.append(" o incantesimi");
 		}
-		if (aumentareMagia) {
-			sb.append(" o aumentare il tuo potere magico per ")
+		if (ripristinareMagia) {
+			sb.append(" o ripristinare il tuo potere magico per ")
 					.append(Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO)
 					.append(" monete");
-			if (aumentareMagiaGruppo) {
-				sb.append(", o aumentare quello di tutto il gruppo per ")
+			if (ripristinareMagiaGruppo) {
+				sb.append(", o ripristinare quello di tutto il gruppo per ")
 						.append(costoTotaleAumentoMagiaGruppo);
 			}
 		}
@@ -247,17 +250,17 @@ public class Alchimista extends LocazioneBase implements Locazione {
 
 	private void imposta() {
 		ComandiPossibili.reimposta();
-		if (aumentareMagia) {
+		if (ripristinareMagia) {
 			int l = gruppo.getNumeroPersonaggi();
 			Personaggio personaggio;
 			for (int i = 0; i < l; i++) {
 				personaggio = gruppo.getPersonaggio(i);
-				if (personaggio.isVivo()) {
+				if (personaggio.isVivo() && personaggio.getMagia() < personaggio.getMagiaMassima()) {
 					ComandiPossibili.add(Comando.ofPersonaggio(i));
 				}
 			}
 		}
-		if (aumentareMagiaGruppo) {
+		if (ripristinareMagiaGruppo) {
 			ComandiPossibili.add(Comando.GRUPPO);
 		}
 		if (incantesimiAcquistabili) {

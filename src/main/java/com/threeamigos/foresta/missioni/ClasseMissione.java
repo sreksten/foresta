@@ -3,7 +3,7 @@ package com.threeamigos.foresta.missioni;
 import java.util.function.Supplier;
 
 /**
- * Elenca le classi concrete di missione, cosi' che il modello dati possa
+ * Elenca le classi concrete di missione, così che il modello dati possa
  * dichiarare il tipo di ogni nodo dell'albero e la ricostruzione dopo un
  * caricamento sia polimorfica.
  */
@@ -17,11 +17,14 @@ public enum ClasseMissione {
 	MISSIONE_DI_PROVA(MissioneDIProva::new),
 	RECUPERA_IL_MEDAGLIONE(RecuperaIlMedaglione::new),
 	RECUPERA_LE_DERRATE_ALIMENTARI(RecuperaLeDerrateAlimentari::new),
+	CRONACHE_DI_UN_FEGATO_EROICO(CronacheDiUnFegatoEroico::new),
+	NESSUN_BOCCALE_LASCIATO_INDIETRO(NessunBoccaleLasciatoIndietro::new),
 
 	MISSIONE_DI_PROVA_SECONDARIA_UNO(MissioneDiProvaSecondariaUno::new),
 	MISSIONE_DI_PROVA_SECONDARIA_DUE(MissioneDiProvaSecondariaDue::new),
 	MISSIONE_DI_PROVA_TERZIARIA_UNO(MissioneDiProvaTerziariaUno::new),
 
+	VISITA_LOCANDA(VisitaLocanda::new),
 	MUOVI_A_LOCAZIONE(MuoviALocazione::new),
 	MISSIONE_SECONDARIA(MissioneSecondaria::new);
 
