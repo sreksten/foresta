@@ -652,6 +652,7 @@ public class Automa implements ControlloreDiGioco {
 
 			case SELEZIONE_SALVATAGGIO_DA_SCRIVERE:
 				if (azione == Comando.NO) {
+					UI.iniziaGioco();
 					UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
 					stato = Stato.ATTESA_DIREZIONE;
 					processaAzione(null);
@@ -669,6 +670,7 @@ public class Automa implements ControlloreDiGioco {
 				if (azione == Comando.SI) {
 					System.exit(0);
 				} else if (azione == Comando.NO) {
+					UI.iniziaGioco();
 					UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
 					stato = Stato.ATTESA_DIREZIONE;
 					processaAzione(null);
