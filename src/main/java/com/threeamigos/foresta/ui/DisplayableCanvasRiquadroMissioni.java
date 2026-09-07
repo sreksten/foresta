@@ -70,43 +70,6 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 		}
 	}
 
-	void disegnaMissioniOLD(Graphics2D graphics) {
-		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
-		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
-		DoomdarkFont fontSmall = DoomdarkFontSmall.getInstance();
-		int totalRenderedTextHeight = 0;
-		int locXOffset = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + SPACING;
-		int locYOffset = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + SPACING;
-		Image doomdark;
-		DoomdarkColorModel.Color color = DoomdarkColorModel.Color.MEDIUM_GRAY;
-		for (Missione missione : RegistroMissioni.getMissioniAttive()) {
-			if (missione.isAttiva() && !missione.isCompleta()) {
-				if (color == DoomdarkColorModel.Color.LIGHT_GRAY) {
-					color = DoomdarkColorModel.Color.MEDIUM_GRAY;
-				} else {
-					color = DoomdarkColorModel.Color.LIGHT_GRAY;
-				}
-				doomdark = DoomdarkTextProducer.getImage(missione.getNome(), fontMedium, color, innerWidth);
-				if (totalRenderedTextHeight + doomdark.getHeight(null) < innerHeight) {
-					graphics.drawImage(doomdark, locXOffset, locYOffset, null);
-					locYOffset += doomdark.getHeight(null);
-					totalRenderedTextHeight += doomdark.getHeight(null);
-					doomdark = DoomdarkTextProducer.getImage(missione.getDescrizione(), fontSmall, color, innerWidth);
-					if (totalRenderedTextHeight + doomdark.getHeight(null) < innerHeight) {
-						graphics.drawImage(doomdark, locXOffset, locYOffset, null);
-						locYOffset += doomdark.getHeight(null);
-						totalRenderedTextHeight += doomdark.getHeight(null);
-					} else {
-						return;
-					}
-				}
-				locYOffset += SPACING;
-			} else {
-				return;
-			}
-		}
-	}
-
 	@Override
 	public void processaClick(int x, int y, Tasto tasto) {
 		if (tasto != Tasto.SINISTRO) {
