@@ -594,8 +594,11 @@ public abstract class PersonaggioBase implements Personaggio {
 		if (nuovoLivello > livelloAttuale) {
 			int differenza = nuovoLivello - livelloAttuale;
 			md.setLivello(nuovoLivello);
-			UI.notifica("LEVELED UP! Ora " + getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + " è al livello " + nuovoLivello + "!");
-			UI.variaLivello(this, differenza);
+			if (!isPNG()) {
+				UI.notificaMissione("LEVEL UP!", getNome() + " A LIVELLO " + nuovoLivello + "!");
+				UI.notifica("LEVELED UP! Ora " + getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + " è al livello " + nuovoLivello + "!");
+				UI.variaLivello(this, differenza);
+			}
 			// QUI PUOI AGGANCIARE IL CODICE PRECEDENTE:
 			// 1. Ricalcola il nuovo budget di punti primari (con la tolleranza del 5%)
 			// 2. Aggiorna le statistiche nel modello md.setForza(...), ecc.
