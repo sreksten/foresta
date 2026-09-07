@@ -61,10 +61,16 @@ public class ProduttoreDiTestiCasuale {
 			String nomeLocanda = token[0];
 			String recensioneLocanda = token[1];
 			String dialogoLocanda = token[2];
-			if ("RECENSIONE=".equals(recensioneLocanda)) {
+			final String chiaveRecensione = "RECENSIONE=";
+			if (recensioneLocanda != null && recensioneLocanda.startsWith(chiaveRecensione)) {
+				recensioneLocanda = recensioneLocanda.substring(chiaveRecensione.length());
+			} else {
 				recensioneLocanda = "";
 			}
-			if ("DIALOGO=".equals(token[2])) {
+			final String chiaveDialogo = "DIALOGO=";
+			if (dialogoLocanda != null && dialogoLocanda.startsWith(chiaveDialogo)) {
+				dialogoLocanda = dialogoLocanda.substring(chiaveDialogo.length());
+			} else {
 				dialogoLocanda = "";
 			}
 			datiLocanda.add(new DatiLocanda(nomeLocanda, dialogoLocanda, recensioneLocanda));
