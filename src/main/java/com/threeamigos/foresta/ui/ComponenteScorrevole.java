@@ -48,23 +48,18 @@ public class ComponenteScorrevole {
         int altezzaImmagine = altezzaImmagine(nodiEspansi, altezzaMassima);
         offset = limitaOffset(altezzaImmagine, altezzaMassima, offset);
 
-        DoomdarkColorAlternante colore = new DoomdarkColorAlternante();
-
         BufferedImage risultato = new BufferedImage(larghezza, altezzaImmagine, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D g2d = risultato.createGraphics();
 
         int altezzaRaggiunta = 0;
         for (TestoDoomdark testoDoomdark : nodiEspansi) {
-            // Il colore va consumato per ogni riga, anche per quelle fuori dalla finestra,
-            // altrimenti l'alternanza si inverte man mano che si scorre.
-            DoomdarkColorModel.Color coloreRiga = colore.getColor();
             // Ogni riga viene disegnata alla propria posizione assoluta: si evita il
             // disegno di quelle che non intersecano la finestra ritagliata, non lo spazio
             // che occupano.
             if (altezzaRaggiunta + testoDoomdark.altezza > offset && altezzaRaggiunta < offset + altezzaMassima) {
                 Image image = DoomdarkTextProducer.getImage(testoDoomdark.testo, testoDoomdark.doomdarkFont,
-                        coloreRiga, larghezza - testoDoomdark.indentazione);
+                        testoDoomdark.colore, larghezza - testoDoomdark.indentazione);
                 g2d.drawImage(image, testoDoomdark.indentazione, altezzaRaggiunta, null);
             }
             altezzaRaggiunta += testoDoomdark.altezza;
@@ -87,20 +82,27 @@ public class ComponenteScorrevole {
 
     private List<TestoDoomdark> espandiNodi() {
         List<TestoDoomdark> listaRisultante = new ArrayList<>();
-        addNodi(nodi, listaRisultante);
+        // L'alternanza dei colori scandisce i soli nodi radice: figli e nipoti
+        // mantengono il colore del proprio nodo padre.
+        DoomdarkColorAlternante coloreAlternante = new DoomdarkColorAlternante();
+        for (Nodo nodo : nodi) {
+            addNodo(nodo, listaRisultante, coloreAlternante.getColor());
+        }
         return listaRisultante;
     }
 
-    private void addNodi(List<Nodo> nodiDaEspandere, List<TestoDoomdark> listaRisultante) {
-        for (Nodo nodo : nodiDaEspandere) {
-            for (String s : nodo.testo) {
-                listaRisultante.add(new TestoDoomdark(s, nodo.doomdarkFontTesto, nodo.indentazione));
+    private void addNodo(Nodo nodo, List<TestoDoomdark> listaRisultante, DoomdarkColorModel.Color colore) {
+        for (String s : nodo.testo) {
+            listaRisultante.add(new TestoDoomdark(s, nodo.doomdarkFontTesto, nodo.indentazione, colore));
+        }
+        if (nodo.isFigliVisibili()) {
+            // La descrizione è indentata come i nodi figli
+            int indentazioneDescrizione = nodo.indentazione + larghezzaIndentazione;
+            for (String s : nodo.descrizione) {
+                listaRisultante.add(new TestoDoomdark(s, nodo.doomdarkFontDescrizione, indentazioneDescrizione, colore));
             }
-            if (nodo.isFigliVisibili()) {
-                for (String s : nodo.descrizione) {
-                    listaRisultante.add(new TestoDoomdark(s, nodo.doomdarkFontDescrizione, nodo.indentazione));
-                }
-                addNodi(nodo.figli, listaRisultante);
+            for (Nodo figlio : nodo.figli) {
+                addNodo(figlio, listaRisultante, colore);
             }
         }
     }
@@ -118,12 +120,12 @@ public class ComponenteScorrevole {
              String descrizioneOriginale, DoomdarkFont doomdarkFontDescrizioneOriginale,
              int indentazione) {
             // Il testo va spezzato sulla larghezza effettivamente disponibile, che
-            // l'indentazione riduce.
+            // l'indentazione riduce. La descrizione è indentata di un livello in più.
             int larghezzaDisponibile = larghezza - indentazione;
             this.doomdarkFontTesto = doomdarkFontTestoOriginale;
             this.testo = FontTool.split(this.doomdarkFontTesto, testoOriginale, larghezzaDisponibile);
             this.doomdarkFontDescrizione = doomdarkFontDescrizioneOriginale;
-            this.descrizione = FontTool.split(this.doomdarkFontDescrizione, descrizioneOriginale, larghezzaDisponibile);
+            this.descrizione = FontTool.split(this.doomdarkFontDescrizione, descrizioneOriginale, larghezzaDisponibile - larghezzaIndentazione);
             this.indentazione = indentazione;
         }
 
@@ -165,12 +167,14 @@ public class ComponenteScorrevole {
         private final DoomdarkFont doomdarkFont;
         private final int altezza;
         private final int indentazione;
+        private final DoomdarkColorModel.Color colore;
 
-        public TestoDoomdark(String testo, DoomdarkFont doomdarkFont, int indentazione) {
+        public TestoDoomdark(String testo, DoomdarkFont doomdarkFont, int indentazione, DoomdarkColorModel.Color colore) {
             this.testo = testo;
             this.doomdarkFont = doomdarkFont;
             this.altezza = doomdarkFont.getHeight() + interlinea;
             this.indentazione = indentazione;
+            this.colore = colore;
         }
 
         @Override
@@ -179,9 +183,9 @@ public class ComponenteScorrevole {
         }
     }
 
-    private class DoomdarkColorAlternante {
+    private static class DoomdarkColorAlternante {
 
-        private DoomdarkColorModel.Color color = DoomdarkColorModel.Color.LIGHT_GRAY;
+        private DoomdarkColorModel.Color color = DoomdarkColorModel.Color.DARK_GRAY;
 
         public DoomdarkColorModel.Color getColor() {
             color = color == DoomdarkColorModel.Color.LIGHT_GRAY ? DoomdarkColorModel.Color.DARK_GRAY : DoomdarkColorModel.Color.LIGHT_GRAY;

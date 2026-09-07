@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 
 import java.awt.*;
@@ -30,7 +29,7 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 	void disegnaMissioni(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
 
-		ComponenteScorrevole componenteScorrevole = new ComponenteScorrevole(innerWidth, 10, SPACING);
+		ComponenteScorrevole componenteScorrevole = new ComponenteScorrevole(innerWidth, 10, 2);
 		for (Missione missione : RegistroMissioni.getMissioniAttive()) {
 				aggiungiAComponenteScorrevole(componenteScorrevole, missione);
 		}
@@ -99,12 +98,9 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 	@Override
 	public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
 		if (movimentoRotella == MovimentoRotella.SU) {
-			Logger.log("Scrolling up by " + numeroRotazioni + " units");
 			offsetY = Math.max(0, offsetY - numeroRotazioni * PASSO_SCORRIMENTO);
 		} else if (movimentoRotella == MovimentoRotella.GIU) {
-			Logger.log("Scrolling down by " + numeroRotazioni + " units");
 			offsetY += numeroRotazioni * PASSO_SCORRIMENTO;
 		}
-		// Il limite superiore dipende dall'altezza della lista e viene applicato al disegno
 	}
 }
