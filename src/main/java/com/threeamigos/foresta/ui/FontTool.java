@@ -19,6 +19,7 @@ public class FontTool {
 			try {
 				width += font.getGlyphWidth(s.charAt(i)) + charSpacing;
 			} catch (UnsupportedCharacterException e) {
+				Logger.log("Stringa con carattere non valido: " + s);
 				Logger.log(e);
             }
 		}
