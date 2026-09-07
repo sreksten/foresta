@@ -153,6 +153,8 @@ public class Automa implements ControlloreDiGioco {
 					gruppoAvversario = GruppoAvversario.getIstanza();
 					locazioneCorrente = gruppo.getClasseLocazioneCorrente().getIstanza();
 					locazioneCorrente.reimposta();
+					UI.reinizializza();
+					UI.iniziaGioco();
 					UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
 					UI.rinfresca();
 				} else {
