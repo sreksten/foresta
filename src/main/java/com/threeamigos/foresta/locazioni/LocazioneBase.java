@@ -712,6 +712,7 @@ public abstract class LocazioneBase implements Locazione {
 			setCompleta(true);
 			return Stato.FINE_LOCAZIONE;
 		} else {
+			setCompleta(false);
 			// Non possiamo fare amicizia o corrompere per completare le missioni secondarie!
 			//TODO il meccanismo delle missioni andrebbe gestito meglio
 			if (tipoLocazione != TipoLocazione.MISSIONE_SECONDARIA) {
