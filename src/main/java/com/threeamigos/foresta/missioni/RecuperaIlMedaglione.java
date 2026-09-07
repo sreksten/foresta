@@ -43,9 +43,9 @@ public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements M
 				attivaMissione();
 				Foresta.costruisciLocazioneUnica(ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE, true);
 			} else if (!isCompleta() && isBersaglioRecuperato()) {
-				UI.notifica("L'uomo è felicissimo di riavere il suo medaglione in cambio delle 20 monete promesse.");
 				gruppo.addMonete(20);
 				completaMissione();
+				UI.notifica("L'uomo è felicissimo di riavere il suo medaglione in cambio delle 20 monete promesse.");
 			}
 		}
 	}

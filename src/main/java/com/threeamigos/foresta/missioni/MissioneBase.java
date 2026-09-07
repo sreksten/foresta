@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.motore.GestoreProgressione;
 import com.threeamigos.foresta.motore.modellodati.MissioneMD;
+import com.threeamigos.foresta.ui.UI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -86,6 +88,12 @@ public abstract class MissioneBase implements Missione {
 	@Override
 	public void completaMissione() {
 		md.aggiungiProprieta(COMPLETA, "S");
+		if (isPrimaria()) {
+			GestoreProgressione.completaMissionePrincipale();
+		} else {
+			GestoreProgressione.completaMissioneSecondaria();
+		}
+		UI.notifica("");
 	}
 
 	@Override

@@ -44,9 +44,9 @@ public class RecuperaLeDerrateAlimentari extends MissioneRecuperaBersaglio imple
 				attivaMissione();
 				Foresta.costruisciLocazioneUnica(ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, true);
 			} else if (!isCompleta() && isBersaglioRecuperato()) {
-				UI.notifica("Il Borgomastro accoglie " + gruppo.chi() + ", che ha recuperato le derrate alimentari. La ricompensa promessa viene saldata: 20 monete.");
 				gruppo.addMonete(20);
 				completaMissione();
+				UI.notifica("Il Borgomastro accoglie " + gruppo.chi() + ", che ha recuperato le derrate alimentari. La ricompensa promessa viene saldata: 20 monete.");
 			}
 		}
 	}

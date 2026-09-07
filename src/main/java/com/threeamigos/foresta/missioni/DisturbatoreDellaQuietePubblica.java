@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.motore.GestoreProgressione;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -89,8 +88,6 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 	@Override
 	public void completaMissione() {
 		super.completaMissione();
-		GestoreProgressione.completaMissioneSecondaria();
-		UI.notifica("");
 		UI.notifica("Dieci Eremiti su dieci confermano che la Foresta era molto più tranquilla prima. " +
 				"Il titolo di Disturbatore della Quiete Pubblica è meritato.");
 	}

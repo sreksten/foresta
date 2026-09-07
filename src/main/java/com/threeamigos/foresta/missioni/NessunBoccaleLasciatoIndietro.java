@@ -2,7 +2,6 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
-import com.threeamigos.foresta.motore.GestoreProgressione;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.ui.UI;
@@ -96,8 +95,6 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 	@Override
 	public void completaMissione() {
 		super.completaMissione();
-		GestoreProgressione.completaMissioneSecondaria();
-		UI.notifica("");
 		UI.notifica("Dieci locande, dieci osti, un solo fegato. Nessun boccale è stato lasciato indietro, " +
 				"e la Foresta ha un nuovo esperto di birre a cui nessuno ha chiesto un parere.");
 	}

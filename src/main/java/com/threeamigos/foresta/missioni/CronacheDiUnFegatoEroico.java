@@ -54,13 +54,7 @@ public class CronacheDiUnFegatoEroico extends MissioneBase {
 		// l'ultima bevuta chiude anche la missione, nello stesso giro
 		if (getMissioniSecondarie().stream().allMatch(Missione::isCompleta)) {
 			completaMissione();
+			UI.notifica("Tutte le locande cittadine della Foresta sono state visitate. Le Cronache di un Fegato Eroico sono complete: un'impresa che nessun bardo oserà cantare.");
 		}
-	}
-
-	@Override
-	public void completaMissione() {
-		super.completaMissione();
-		UI.notifica("");
-		UI.notifica("Tutte le locande cittadine della Foresta sono state visitate. Le Cronache di un Fegato Eroico sono complete: un'impresa che nessun bardo oserà cantare.");
 	}
 }
