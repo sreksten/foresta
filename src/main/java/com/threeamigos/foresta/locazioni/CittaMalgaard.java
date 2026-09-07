@@ -2,16 +2,8 @@ package com.threeamigos.foresta.locazioni;
 
 public class CittaMalgaard extends Citta {
 
-	private static final CittaMalgaard istanza = new CittaMalgaard();
 
 	private static final String NOME_LOCANDA = "Aquila Nera";
-	
-	private CittaMalgaard() {
-	}
-	
-	public static CittaMalgaard getIstanza() {
-		return istanza;
-	}
 	
 	@Override
 	public ClassiLocazione getClasseLocazione() {

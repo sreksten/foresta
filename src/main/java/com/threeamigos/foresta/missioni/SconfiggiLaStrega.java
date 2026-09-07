@@ -39,7 +39,7 @@ public class SconfiggiLaStrega extends MissioneBase implements Missione {
     @Override
     public void controllaPostLocazione() {
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-        if (gruppo.getClasseLocazioneCorrente() == ClassiLocazione.CASTELLO_STREGA && gruppo.getClasseLocazioneCorrente().getIstanza().isCompleta()) {
+        if (gruppo.getClasseLocazioneCorrente() == ClassiLocazione.CASTELLO_STREGA && gruppo.getLocazioneCorrente().isCompleta()) {
             completaMissione();
             UI.notifica("La Strega è stata sconfitta!");
         }

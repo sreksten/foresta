@@ -7,37 +7,37 @@ public enum ClassiLocazione {
 	/*
 	 * Locazioni standard della Foresta
 	 */
-	RADURA(Radura::getIstanza, TipoLocazione.STANDARD),
-	BOSCO(Bosco::getIstanza, TipoLocazione.STANDARD),
-	PALUDE(Palude::getIstanza, TipoLocazione.STANDARD),
-	LOCANDA(Locanda::getIstanza, TipoLocazione.STANDARD),
-	ROVINE(Rovine::getIstanza, TipoLocazione.STANDARD),
-	TEMPIO(Tempio::getIstanza, TipoLocazione.STANDARD),
-	GROTTA(Grotta::getIstanza, TipoLocazione.STANDARD),
+	RADURA(Radura::new, TipoLocazione.STANDARD),
+	BOSCO(Bosco::new, TipoLocazione.STANDARD),
+	PALUDE(Palude::new, TipoLocazione.STANDARD),
+	LOCANDA(Locanda::new, TipoLocazione.STANDARD),
+	ROVINE(Rovine::new, TipoLocazione.STANDARD),
+	TEMPIO(Tempio::new, TipoLocazione.STANDARD),
+	GROTTA(Grotta::new, TipoLocazione.STANDARD),
 	/*
 	 * Locazioni per le missioni secondarie
 	 */
-	GROTTA_RECUPERA_IL_MEDAGLIONE(GrottaRecuperaIlMedaglione::getIstanza, TipoLocazione.MISSIONE_SECONDARIA),
-	ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI(RovineRecuperaLeDerrateAlimentari::getIstanza, TipoLocazione.MISSIONE_SECONDARIA),
+	GROTTA_RECUPERA_IL_MEDAGLIONE(GrottaRecuperaIlMedaglione::new, TipoLocazione.MISSIONE_SECONDARIA),
+	ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI(RovineRecuperaLeDerrateAlimentari::new, TipoLocazione.MISSIONE_SECONDARIA),
 	/*
 	 * Città
 	 */
-	CITTA_NYENA(CittaNyena::getIstanza, TipoLocazione.CITTA),
-	CITTA_MALGAARD(CittaMalgaard::getIstanza, TipoLocazione.CITTA),
-	CITTA_RUUNA(CittaRuuna::getIstanza, TipoLocazione.CITTA),
-	CITTA_FLEENA(CittaFleena::getIstanza, TipoLocazione.CITTA),
+	CITTA_NYENA(CittaNyena::new, TipoLocazione.CITTA),
+	CITTA_MALGAARD(CittaMalgaard::new, TipoLocazione.CITTA),
+	CITTA_RUUNA(CittaRuuna::new, TipoLocazione.CITTA),
+	CITTA_FLEENA(CittaFleena::new, TipoLocazione.CITTA),
 	/*
 	 * L'Alchimista si trova unicamente in città
 	 */
-	ALCHIMISTA(Alchimista::getIstanza, TipoLocazione.STANDARD),
+	ALCHIMISTA(Alchimista::new, TipoLocazione.STANDARD),
 	/*
 	 * Castelli
 	 */
-	CASTELLO_IDRA(CastelloIdra::getIstanza, TipoLocazione.CASTELLO),
-	CASTELLO_MINOTAURO(CastelloMinotauro::getIstanza, TipoLocazione.CASTELLO),
-	CASTELLO_LICH(CastelloLich::getIstanza, TipoLocazione.CASTELLO),
-	CASTELLO_STREGA(CastelloStrega::getIstanza, TipoLocazione.CASTELLO),
-	CASTELLO_DRAGO(CastelloDrago::getIstanza, TipoLocazione.CASTELLO);
+	CASTELLO_IDRA(CastelloIdra::new, TipoLocazione.CASTELLO),
+	CASTELLO_MINOTAURO(CastelloMinotauro::new, TipoLocazione.CASTELLO),
+	CASTELLO_LICH(CastelloLich::new, TipoLocazione.CASTELLO),
+	CASTELLO_STREGA(CastelloStrega::new, TipoLocazione.CASTELLO),
+	CASTELLO_DRAGO(CastelloDrago::new, TipoLocazione.CASTELLO);
 
 	private final Supplier<Locazione> supplier;
 	private final TipoLocazione tipoLocazione;
@@ -54,6 +54,11 @@ public enum ClassiLocazione {
 		MISSIONE_SECONDARIA
 	}
 
+	/**
+	 * Costruisce una nuova istanza della locazione, come fa
+	 * {@code ClassePersonaggio.getIstanza(livello)}. Chi la usa per una casella
+	 * della Foresta deve poi passarle il modello dati di quella casella.
+	 */
 	public final Locazione getIstanza() {
 		return supplier.get();
 	}

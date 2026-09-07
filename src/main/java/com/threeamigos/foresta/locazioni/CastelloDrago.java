@@ -7,15 +7,6 @@ import com.threeamigos.foresta.ui.UI;
 
 public class CastelloDrago extends LocazioneUnica {
 
-	private static final CastelloDrago istanza = new CastelloDrago();
-	
-	private CastelloDrago() {
-	}
-	
-	public static CastelloDrago getIstanza() {
-		return istanza;
-	}
-	
 	@Override
 	public ClassiLocazione getClasseLocazione() {
 		return ClassiLocazione.CASTELLO_DRAGO;
@@ -38,7 +29,7 @@ public class CastelloDrago extends LocazioneUnica {
 
 	@Override
 	public void azzeraLocazione(GruppoGiocatore g) {
-		if (completa) {
+		if (isCompleta()) {
 			LineaTemporale.setDragoSconfitto(true);
 			g.setLocazioneCorrenteVisitata();
 			Foresta.distruggiLocazioneUnica(getClasseLocazione(), ClassiLocazione.ROVINE);

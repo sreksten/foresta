@@ -54,7 +54,7 @@ public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements M
 	public void controllaPostLocazione() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		if (gruppo.isInLocazioneUnica(ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE) &&
-				gruppo.getClasseLocazioneCorrente().getIstanza().isCompleta() && !isBersaglioRecuperato()) {
+				gruppo.getLocazioneCorrente().isCompleta() && !isBersaglioRecuperato()) {
 			UI.notifica("Il medaglione è stato recuperato. Puoi tornare in città per reclamare la ricompensa.");
 			setBersaglioRecuperato();
 		}

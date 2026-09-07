@@ -9,15 +9,6 @@ import com.threeamigos.foresta.ui.UI;
 
 public class Rovine extends LocazioneBase {
 
-	private static final Rovine istanza = new Rovine();
-	
-	private Rovine() {
-	}
-	
-	public static Rovine getIstanza() {
-		return istanza;
-	}
-	
 	@Override
 	public ClassiLocazione getClasseLocazione() {
 		return ClassiLocazione.ROVINE;

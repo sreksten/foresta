@@ -9,15 +9,6 @@ import com.threeamigos.foresta.ui.UI;
 
 public class Bosco extends LocazioneBase {
 
-	private static final Bosco istanza = new Bosco();
-	
-	private Bosco() {
-	}
-	
-	public static Bosco getIstanza() {
-		return istanza;
-	}
-	
 	@Override
 	public ClassiLocazione getClasseLocazione() {
 		return ClassiLocazione.BOSCO;

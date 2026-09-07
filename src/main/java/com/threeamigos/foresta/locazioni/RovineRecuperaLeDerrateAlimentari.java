@@ -11,15 +11,6 @@ import com.threeamigos.foresta.ui.UI;
 
 public class RovineRecuperaLeDerrateAlimentari extends LocazioneUnica {
 
-	private static final RovineRecuperaLeDerrateAlimentari istanza = new RovineRecuperaLeDerrateAlimentari();
-	
-	private RovineRecuperaLeDerrateAlimentari() {
-	}
-	
-	public static RovineRecuperaLeDerrateAlimentari getIstanza() {
-		return istanza;
-	}
-	
 	@Override
 	public ClassiLocazione getClasseLocazione() {
 		return ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI;
@@ -43,7 +34,7 @@ public class RovineRecuperaLeDerrateAlimentari extends LocazioneUnica {
 				gng.aggiungiPersonaggio(troll);
 			}
 		} else {
-			Rovine.getIstanza().crea(g, gng);
+			new Rovine().crea(g, gng);
 		}
 	}
 

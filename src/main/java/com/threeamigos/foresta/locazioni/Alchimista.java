@@ -13,15 +13,6 @@ import java.util.List;
 
 public class Alchimista extends LocazioneBase implements Locazione {
 
-	private static final Alchimista istanza = new Alchimista();
-	
-	private Alchimista() {
-	}
-	
-	public static Alchimista getIstanza() {
-		return istanza;
-	}
-	
 	private enum StatoDaAlchimista {
 		SULLA_PORTA,
 		ENTRATO,
@@ -44,13 +35,10 @@ public class Alchimista extends LocazioneBase implements Locazione {
 
 	@Override
 	public ClassiLocazione getClasseLocazione() {
-		return ClassiLocazione.CITTA_FLEENA;
+		return ClassiLocazione.ALCHIMISTA;
 	}
 
-	@Override
-	public void reimposta() {
-		super.reimposta();
-		benvenutoDato = false;
+	public Alchimista() {
 		reimpostaAcquistiPossibili();
 		stato = StatoDaAlchimista.SULLA_PORTA;
 	}

@@ -2,6 +2,7 @@ package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.offerte.Informazioni;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -12,15 +13,6 @@ import java.util.List;
 
 public class Locanda extends LocazioneBase {
 
-	private static final Locanda istanza = new Locanda();
-	
-	private Locanda() {
-	}
-	
-	public static Locanda getIstanza() {
-		return istanza;
-	}
-	
 	private static final String NO_MONETE_PERNOTTAMENTO = "Il gruppo non ha abbastanza monete per pagare il pernottamento e l'oste chiede loro di lasciare la locanda al più presto.";
 
 	private enum StatoInLocanda {
@@ -34,9 +26,14 @@ public class Locanda extends LocazioneBase {
 	private static final int INCONTRA_PERSONAGGIO = 0;
 	private static final int RICEVE_INFORMAZIONI = 1;
 
+	/**
+	 * Segnata sulla casella quando il gruppo supera la porta: chi viene respinto
+	 * dall'oste per mancanza di monete non è entrato, e non ha visitato la locanda.
+	 */
+	public static final String LOCANDA_VISITATA = "LOCANDA_VISITATA";
+
 	private StatoInLocanda stato;
-	private int evento;
-	private boolean entrato;
+	private final int evento;
 
 	/**
 	 * In città e nelle locande il gruppo puo' incontrare altri personaggi.
@@ -49,30 +46,19 @@ public class Locanda extends LocazioneBase {
 		return ClassiLocazione.LOCANDA;
 	}
 
-	@Override
-	public void reimposta() {
-		super.reimposta();
+	public Locanda() {
 		stato = StatoInLocanda.SULLA_PORTA;
-		entrato = false;
 		// O incontra un personaggio o riceve informazioni
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		if (gruppo.getNumeroPersonaggi() < Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE) {
-			personaggioDisponibile = RegistroPersonaggi.getPersonaggioInLocazione(GruppoGiocatore.getIstanza().getCoordinate());
+			personaggioDisponibile = RegistroPersonaggi.getPersonaggioInLocazione(gruppo.getCoordinate());
 		}
 		if (personaggioDisponibile != null) {
 			evento = INCONTRA_PERSONAGGIO;
 		} else {
 			evento = RICEVE_INFORMAZIONI;
 		}
-		completa = true;
-	}
-
-	/**
-	 * Vero se il gruppo ha superato la porta. Chi viene respinto dall'oste per
-	 * mancanza di monete non è entrato, e non ha visitato la locanda.
-	 */
-	public boolean isEntrato() {
-		return entrato;
+		setCompleta(true);
 	}
 
 	@Override
@@ -105,7 +91,7 @@ public class Locanda extends LocazioneBase {
 			}
 			UI.impostaAzioni(Comando.PERGAMENA);
 			stato = StatoInLocanda.ENTRATO;
-			entrato = true;
+			getModelloDati().aggiungiProprieta(LOCANDA_VISITATA, LocazioneMD.AFFERMATIVO);
 			return Stato.IN_LOCAZIONE;
 
 		case ENTRATO:
@@ -240,7 +226,7 @@ public class Locanda extends LocazioneBase {
 			g.addPreziosi(Dado.tira(0, 10));
 			personaggioDisponibile = null;
 			UI.rinfresca();
-		} else {
+		} else if (personaggioDisponibile != null) {
             String notifica = "'Pazienza. Sarà per un'altra volta.' dice " +
                     personaggioDisponibile.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
                     ", allontanandosi.";

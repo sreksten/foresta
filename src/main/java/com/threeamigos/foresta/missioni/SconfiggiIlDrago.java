@@ -7,6 +7,7 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.ui.UI;
 
@@ -67,11 +68,19 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 		}
 	}
 
+	/**
+	 * Un castello è distrutto quando non è più sulla mappa, o quando la sua casella
+	 * si ricorda di essere stata portata a termine. Interrogare il modello dati
+	 * invece delle istanze regge anche dopo un caricamento.
+	 */
 	private boolean castelliDistrutti() {
 		boolean castelliDistrutti = true;
 		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
-			if (classeLocazione.getTipoLocazione() == TipoLocazione.CASTELLO && classeLocazione != ClassiLocazione.CASTELLO_DRAGO &&
-					!classeLocazione.getIstanza().isCompleta()) {
+			if (classeLocazione.getTipoLocazione() != TipoLocazione.CASTELLO || classeLocazione == ClassiLocazione.CASTELLO_DRAGO) {
+				continue;
+			}
+			CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(classeLocazione);
+			if (coordinate != null && Foresta.getLocazioneMD(coordinate).ottieniProprieta(LocazioneMD.COMPLETA) == null) {
 				Logger.log(classeLocazione.name() + " non ancora completata");
 				castelliDistrutti = false;
 			}

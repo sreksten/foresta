@@ -6,15 +6,6 @@ import com.threeamigos.foresta.ui.UI;
 
 public class Palude extends LocazioneBase {
 
-	private static final Palude istanza = new Palude();
-	
-	private Palude() {
-	}
-	
-	public static Palude getIstanza() {
-		return istanza;
-	}
-	
 	@Override
 	public ClassiLocazione getClasseLocazione() {
 		return ClassiLocazione.PALUDE;
@@ -34,12 +25,12 @@ public class Palude extends LocazioneBase {
 	public Stato impostaAzioni(GruppoGiocatore g, GruppoAvversario gng, Comando azione) {
 		if (isLocazioneVisitata() || Dado.tira(10) > 3) {
 			UI.notifica("Il posto però non promette nulla di buono e " + g.chi() + " decide di non restare.");
-			completa = true;
+			setCompleta(true);
 			return Stato.FINE_LOCAZIONE;
 		}
 		UI.notifica("Approfittando della quiete del posto, " + g.chi() + " riposerà un poco.");
 		g.riposa(getTipoRiposo());
-		completa = true;
+		setCompleta(true);
 		return Stato.FINE_LOCAZIONE;
 	}
 

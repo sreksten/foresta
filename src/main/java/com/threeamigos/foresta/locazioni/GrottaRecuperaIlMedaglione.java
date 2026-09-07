@@ -9,15 +9,6 @@ import com.threeamigos.foresta.ui.UI;
 
 public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 
-	private static final GrottaRecuperaIlMedaglione istanza = new GrottaRecuperaIlMedaglione();
-	
-	private GrottaRecuperaIlMedaglione() {
-	}
-	
-	public static GrottaRecuperaIlMedaglione getIstanza() {
-		return istanza;
-	}
-	
 	@Override
 	public ClassiLocazione getClasseLocazione() {
 		return ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE;
@@ -53,7 +44,7 @@ public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 			ladro.setCorrompibile(false);
 			gng.aggiungiPersonaggio(ladro);
 		} else {
-			Grotta.getIstanza().crea(g, gng);
+			new Grotta().crea(g, gng);
 		}
 	}
 
@@ -68,7 +59,7 @@ public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 	
 	@Override
 	public void azzeraLocazione(GruppoGiocatore g) {
-		if (completa) {
+		if (isCompleta()) {
 			g.setLocazioneCorrenteVisitata();
 			Foresta.impostaLocazioneCorrente(ClassiLocazione.GROTTA);
 		}

@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.offerte;
 
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.locazioni.LocazioneUnica;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
@@ -67,7 +66,7 @@ public class Informazioni implements Offerta {
 			ClassiLocazione classeLocazione = citta.get(indice);
 			CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(classeLocazione);
 			Foresta.setLocazioneConosciuta(coordinate);
-			sb.append(((LocazioneUnica)classeLocazione.getIstanza()).getNome());
+			sb.append(classeLocazione.getIstanza().getNome());
 			sb.append(" si trova ").append(Misc.getDirezione(gruppo, coordinate));
 		}
 	}
@@ -88,7 +87,7 @@ public class Informazioni implements Offerta {
 			coordinate = Foresta.getCoordinateLocazioneUnica(classeLocazione);
 		}
 		Foresta.setLocazioneConosciuta(coordinate);
-		sb.append(((LocazioneUnica)classeLocazione.getIstanza()).getNome());
+		sb.append(classeLocazione.getIstanza().getNome());
 		sb.append(" sorge ").append(Misc.getDirezione(gruppo, coordinate));
 	}
 

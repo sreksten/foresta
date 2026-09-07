@@ -4,6 +4,7 @@ import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Stato;
+import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.oggetti.Oggetto;
 
@@ -14,14 +15,21 @@ import com.threeamigos.foresta.oggetti.Oggetto;
 public interface Locazione {
 
 	ClassiLocazione getClasseLocazione();
-	
-	/**
-	 * Alcune locazioni possono aver bisogno di tenere traccia di uno stato;
-	 * occorre che tali locazioni che estendono LocazioneBase chiamino
-	 * super.reimposta().
-	 */
-    void reimposta();
 
+	/**
+	 * Il modello dati della casella su cui si trova questa locazione: vi vive
+	 * lo stato durevole, che sopravvive alla visita e al salvataggio.
+	 */
+    LocazioneMD getModelloDati();
+
+    void setModelloDati(LocazioneMD modelloDati);
+
+	/**
+	 * Il nome proprio della locazione. Le locazioni notevoli lo hanno cablato,
+	 * le altre lo prendono dalle proprietà del modello dati e possono non averlo.
+	 */
+    String getNome();
+	
 	/**
 	 * All'interno di una specifica locazione possono essere creati determinati
 	 * tipi di mostri e di oggetti

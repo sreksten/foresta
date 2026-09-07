@@ -9,15 +9,6 @@ import com.threeamigos.foresta.ui.UI;
 
 public class Radura extends LocazioneBase {
 
-	private static final Radura istanza = new Radura();
-	
-	private Radura() {
-	}
-	
-	public static Radura getIstanza() {
-		return istanza;
-	}
-	
 	@Override
 	public ClassiLocazione getClasseLocazione() {
 		return ClassiLocazione.RADURA;

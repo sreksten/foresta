@@ -154,8 +154,8 @@ public class Automa implements ControlloreDiGioco {
 					stato = Stato.ATTESA_DIREZIONE;
 					gruppo = GruppoGiocatore.getIstanza();
 					gruppoAvversario = GruppoAvversario.getIstanza();
-					locazioneCorrente = gruppo.getClasseLocazioneCorrente().getIstanza();
-					locazioneCorrente.reimposta();
+					locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
+					gruppo.setLocazioneCorrente(locazioneCorrente);
 					UI.reinizializza();
 					UI.iniziaGioco();
 					UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
@@ -248,8 +248,7 @@ public class Automa implements ControlloreDiGioco {
 					}
 				}
 				gruppoAvversario.reimposta();
-				locazioneCorrente = gruppo.getClasseLocazioneCorrente().getIstanza();
-				locazioneCorrente.reimposta();
+				locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
 				gruppo.setLocazioneCorrente(locazioneCorrente);
 				UI.notifica("");
 				locazioneCorrente.crea(gruppo, gruppoAvversario);

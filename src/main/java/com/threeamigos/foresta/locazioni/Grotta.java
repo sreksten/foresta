@@ -12,15 +12,6 @@ import com.threeamigos.foresta.ui.UI;
 
 public class Grotta extends LocazioneBase {
 
-	private static final Grotta istanza = new Grotta();
-	
-	private Grotta() {
-	}
-	
-	public static Grotta getIstanza() {
-		return istanza;
-	}
-	
 	@Override
 	public ClassiLocazione getClasseLocazione() {
 		return ClassiLocazione.GROTTA;

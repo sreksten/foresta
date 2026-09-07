@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.locazioni.LocazioneUnica;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
@@ -21,7 +20,7 @@ public class MuoviALocazione extends MissioneBase {
 		aggiungiProprieta(COORDINATA_X, String.valueOf(coordinate.getX()));
 		aggiungiProprieta(COORDINATA_Y, String.valueOf(coordinate.getY()));
 		StringBuilder sb = new StringBuilder();
-		sb.append("Raggiungi ").append(((LocazioneUnica)classeLocazione.getIstanza()).getNome());
+		sb.append("Raggiungi ").append(classeLocazione.getIstanza().getNome());
 		aggiungiProprieta(NOME, sb.toString());
 		sb = new StringBuilder();
 		sb.append("Raggiungi la locazione designata");

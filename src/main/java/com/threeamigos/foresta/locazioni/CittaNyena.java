@@ -2,16 +2,8 @@ package com.threeamigos.foresta.locazioni;
 
 public class CittaNyena extends Citta {
 
-	private static final CittaNyena istanza = new CittaNyena();
 
 	private static final String NOME_LOCANDA = "Leone Rosso";
-	
-	private CittaNyena() {
-	}
-	
-	public static CittaNyena getIstanza() {
-		return istanza;
-	}
 	
 	@Override
 	public ClassiLocazione getClasseLocazione() {

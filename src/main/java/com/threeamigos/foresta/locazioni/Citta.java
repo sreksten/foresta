@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
@@ -14,31 +15,36 @@ public abstract class Citta extends LocazioneUnica {
 	}
 
 	private StatoInCitta stato;
-	// La Locanda è un singleton condiviso da tutte le città: la visita va segnata
-	// qui, sulla città che l'ha ospitata, non sulla locanda.
-	private boolean locandaVisitata;
-	private final Locanda locanda = Locanda.getIstanza();
-	private final Alchimista alchimista = Alchimista.getIstanza();
+	// La locanda e la bottega dell'alchimista stanno sulla casella della città:
+	// ne condividono il modello dati, così quel che vi segnano resta lì.
+	private Locanda locanda;
+	private Alchimista alchimista;
+
+	protected Citta() {
+		stato = StatoInCitta.IN_PIAZZA;
+	}
 
 	@Override
-	public void reimposta() {
-		super.reimposta();
-		locanda.reimposta();
-		alchimista.reimposta();
-		stato = StatoInCitta.IN_PIAZZA;
-		locandaVisitata = false;
+	public void setModelloDati(LocazioneMD modelloDati) {
+		super.setModelloDati(modelloDati);
+		if (locanda != null) {
+			locanda.setModelloDati(modelloDati);
+		}
+		if (alchimista != null) {
+			alchimista.setModelloDati(modelloDati);
+		}
 	}
 
-	/**
-	 * Vero se durante questa permanenza in città il gruppo è entrato nella locanda
-	 * e ne è poi uscito.
-	 */
-	public boolean isLocandaVisitata() {
-		return locandaVisitata;
+	private Locanda nuovaLocanda() {
+		locanda = new Locanda();
+		locanda.setModelloDati(getModelloDati());
+		return locanda;
 	}
 
-	private void registraUscitaDaLocanda() {
-		locandaVisitata = locandaVisitata || locanda.isEntrato();
+	private Alchimista nuovoAlchimista() {
+		alchimista = new Alchimista();
+		alchimista.setModelloDati(getModelloDati());
+		return alchimista;
 	}
 
 	public abstract String getNome();
@@ -57,9 +63,9 @@ public abstract class Citta extends LocazioneUnica {
 
 	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
-		locanda.crea(g, gng);
-		alchimista.crea(g, gng);
-		completa = true;
+		nuovaLocanda().crea(g, gng);
+		nuovoAlchimista().crea(g, gng);
+		setCompleta(true);
 	}
 
 	public abstract String getNomeLocanda();
@@ -82,19 +88,18 @@ public abstract class Citta extends LocazioneUnica {
 				impostaAzioniCitta();
 
 			} else if (azione == Comando.LOCANDA) {
-				locanda.reimposta();
+				nuovaLocanda();
 				UI.notifica(g.chiMaiuscolo() + " è " + getNomeLocanda() + '.');
 				statoRitorno = locanda.impostaAzioni(g, gng, null);
 				if (statoRitorno == Stato.IN_LOCAZIONE) {
 					stato = StatoInCitta.IN_LOCANDA;
 				} else {
-					registraUscitaDaLocanda();
 					stato = StatoInCitta.IN_PIAZZA;
 					impostaAzioniCitta();
 				}
 
 			} else if (azione == Comando.ALCHIMISTA) {
-				alchimista.reimposta();
+				nuovoAlchimista();
 				alchimista.descrivi(g, gng);
 				statoRitorno = alchimista.impostaAzioni(g, gng, null);
 				if (statoRitorno == Stato.IN_LOCAZIONE) {
@@ -111,7 +116,6 @@ public abstract class Citta extends LocazioneUnica {
 		} else if (stato == StatoInCitta.IN_LOCANDA) {
 			statoRitorno = locanda.impostaAzioni(g, gng, azione);
 			if (statoRitorno == Stato.FINE_LOCAZIONE) {
-				registraUscitaDaLocanda();
 				impostaAzioniCitta();
 				stato = StatoInCitta.IN_PIAZZA;
 			}

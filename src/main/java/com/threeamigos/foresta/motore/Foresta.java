@@ -2,8 +2,10 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
+import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ForestaMD;
+import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -49,11 +51,27 @@ public class Foresta {
 	}
 
 	public static ClassiLocazione getLocazione(CoordinateMD coordinate) {
-		return forestaMD.ottieniCasseLocazione(coordinate);
+		return forestaMD.ottieniClasseLocazione(coordinate);
 	}
 	
 	public static ClassiLocazione getLocazione(int x, int y) {
 		return forestaMD.ottieniClasseLocazione(x, y);
+	}
+
+	public static LocazioneMD getLocazioneMD(CoordinateMD coordinate) {
+		return forestaMD.ottieniLocazioneMD(coordinate);
+	}
+
+	/**
+	 * Il punto unico dove nasce l'istanza di una casella: la classe la costruisce,
+	 * e il modello dati della casella le dice di quale casella si tratta.
+	 * L'istanza vive quanto la visita e poi si butta.
+	 */
+	public static Locazione costruisciIstanza(CoordinateMD coordinate) {
+		LocazioneMD locazioneMD = forestaMD.ottieniLocazioneMD(coordinate);
+		Locazione locazione = locazioneMD.getClasse().getIstanza();
+		locazione.setModelloDati(locazioneMD);
+		return locazione;
 	}
 	
 	public static CoordinateMD costruisciLocazioneUnica(ClassiLocazione classeLocazioneUnica, boolean conosciutaSuMappa) {
@@ -81,10 +99,6 @@ public class Foresta {
 		RegistroArtefatti.reimposta();
 		ModelloDati.getIstanza().getStatisticheMD().reimposta();
 		
-		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
-			classeLocazione.getIstanza().reimposta();
-		}
-		
 		//TODO quando tutti i modelli dati sono stati creati spostare reimposta su ModelloDati
 		final int dimensioneX = 20;
 		final int dimensioneY = 20;
@@ -101,9 +115,8 @@ public class Foresta {
 		costruisci(ClassiLocazione.PALUDE, media);
 		costruisci(ClassiLocazione.ROVINE, media);
 
-		GruppoGiocatore.getIstanza().reimposta();
-		GruppoAvversario.getIstanza().reimposta();
-
+		// Il resto della Foresta è bosco. Va posato prima di sistemare il gruppo,
+		// che appena arriva si guarda intorno e ha bisogno di caselle su cui farlo.
 		for (int x = 0; x < getDimensioneX(); x++) {
 			for (int y = 0; y < getDimensioneY(); y++) {
 				CoordinateMD coordinate = new CoordinateMD(x, y);
@@ -112,10 +125,13 @@ public class Foresta {
 				}
 			}
 		}
+
+		GruppoGiocatore.getIstanza().reimposta();
+		GruppoAvversario.getIstanza().reimposta();
 	}
 
 	private static void setLocazione(CoordinateMD coordinate, ClassiLocazione classeLocazione) {
-		forestaMD.impostaClasseLocazione(coordinate, classeLocazione);
+		forestaMD.impostaLocazione(coordinate, classeLocazione);
 	}
 	
 	/**

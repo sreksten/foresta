@@ -2,7 +2,9 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.locazioni.Citta;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.locazioni.Locanda;
+import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.ui.UI;
 
 /**
@@ -62,11 +64,10 @@ public class VisitaLocanda extends MissioneBase {
 		if (isCompleta() || classeCitta == null) {
 			return;
 		}
-		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		// La condizione sulla città corrente non è ridondante: la locanda è un
-		// singleton condiviso, e senza di essa la tappa di una città si chiuderebbe
-		// per una bevuta fatta in un'altra.
-		if (gruppo.isInLocazioneUnica(classeCitta) && ((Citta) classeCitta.getIstanza()).isLocandaVisitata()) {
+		// La casella della città si ricorda della bevuta, quindi non serve né
+		// trovarsi lì né sapere quale istanza l'ha ospitata.
+		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(classeCitta);
+		if (coordinate != null && Foresta.getLocazioneMD(coordinate).ottieniProprieta(Locanda.LOCANDA_VISITATA) != null) {
 			completaMissione();
 		}
 	}

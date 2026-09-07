@@ -13,15 +13,6 @@ import com.threeamigos.foresta.ui.UI;
 
 public class Tempio extends LocazioneBase {
 
-	private static final Tempio istanza = new Tempio();
-	
-	private Tempio() {
-	}
-	
-	public static Tempio getIstanza() {
-		return istanza;
-	}
-	
 	@Override
 	public ClassiLocazione getClasseLocazione() {
 		return ClassiLocazione.TEMPIO;

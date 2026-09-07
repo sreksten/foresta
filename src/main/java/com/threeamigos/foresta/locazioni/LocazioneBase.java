@@ -41,23 +41,19 @@ import java.util.List;
 
 public abstract class LocazioneBase implements Locazione {
 
-	/**
-	 * L'elenco dei mostri e degli oggetti che è possibile trovare
-	 * all'interno di questa locazione
-	 */
-	protected static ClassePersonaggio[] possibiliIncontri = {};
-	protected static ClassiOggetto[] possibiliOggetti = {};
+	private static final ClassePersonaggio[] NESSUN_INCONTRO = {};
+	private static final ClassiOggetto[] NESSUN_OGGETTO = {};
 
 	private final GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 	private final GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
-	
-	private Oggetto oggettoCorrente;
 
-	// Una locazione è completa se non vi sono più mostri e il gruppo non
-	// è fuggito; questo serve per sapere se si possono
-	// prendere gli oggetti o se i mostri dei castelli sono
-	// stati sconfitti.
-	protected boolean completa;
+	/**
+	 * Lo stato durevole della casella: nome, visitata, conosciuta, completa.
+	 * Sopravvive alla visita e al salvataggio.
+	 */
+	private LocazioneMD md = new LocazioneMD(getClasseLocazione());
+
+	private Oggetto oggettoCorrente;
 	// Se il gruppo può (ancora) tentare di corrompere gli avversari
 	private boolean opzioneCorruzioneDisponibile;
 	// Se il gruppo può (ancora) cercare di fare amicizia
@@ -93,29 +89,49 @@ public abstract class LocazioneBase implements Locazione {
 		CONFERMA_FUGA
 	}
 
+	/**
+	 * L'elenco dei mostri e degli oggetti che è possibile trovare all'interno di
+	 * questa locazione. Ogni locazione che ne ha sovrascrive questi due getter.
+	 */
 	protected ClassePersonaggio[] getPossibiliIncontri() {
-		return possibiliIncontri;
+		return NESSUN_INCONTRO;
 	}
 
 	protected ClassiOggetto[] getPossibiliOggetti() {
-		return possibiliOggetti;
+		return NESSUN_OGGETTO;
+	}
+
+	@Override
+	public LocazioneMD getModelloDati() {
+		return md;
+	}
+
+	@Override
+	public void setModelloDati(LocazioneMD modelloDati) {
+		this.md = modelloDati;
+	}
+
+	@Override
+	public String getNome() {
+		return md.getNome();
 	}
 
 	/**
-	 * Per risparmiare un po' di lavoro alla VM le locazioni vengono
-	 * costruite solo all'inizio (una per tipo), e quindi occorre reimpostare
-	 * l'automa allo stato iniziale ogni volta.
+	 * Una locazione è completa se non vi sono più mostri e il gruppo non
+	 * è fuggito; questo serve per sapere se si possono prendere gli oggetti
+	 * o se i mostri dei castelli sono stati sconfitti.
 	 */
-	public void reimposta() {
+	protected void setCompleta(boolean completa) {
+		if (completa) {
+			md.aggiungiProprieta(LocazioneMD.COMPLETA, LocazioneMD.AFFERMATIVO);
+		} else {
+			md.rimuoviProprieta(LocazioneMD.COMPLETA);
+		}
+	}
+
+	protected LocazioneBase() {
 		statoLocazione = StatoLocazione.NUOVA_LOCAZIONE;
-		offerta = null;
-		completa = false;
-		opzioneCorruzioneDisponibile = false;
-		opzioneAmiciziaDisponibile = false;
-		haStrettoAmicizia = false;
 		gruppo.setFormulante(null);
-		combattente = null;
-		setOggetto(null);
 	}
 
 	/**
@@ -297,7 +313,7 @@ public abstract class LocazioneBase implements Locazione {
 					}
 					gruppo.subIncantesimi(incantesimo.getClasse(), 1);
 					if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
-						completa = true;
+						setCompleta(true);
 						return Stato.FINE_LOCAZIONE;
 					}
 					rispostaAvversaria(formulante, gruppo, gruppoAvversario);
@@ -363,7 +379,7 @@ public abstract class LocazioneBase implements Locazione {
 				}
 				UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
 				UI.rinfresca();
-				completa = true;
+				setCompleta(true);
 				return Stato.FINE_LOCAZIONE;
 			} else {
 				Personaggio p = gruppo.getPersonaggio(azione);
@@ -406,7 +422,7 @@ public abstract class LocazioneBase implements Locazione {
 				} else {
 					Logger.log("Mancano i prerequisiti per l'offerta");
 				}
-				completa = true;
+				setCompleta(true);
 				return Stato.FINE_LOCAZIONE;
 			} else {
 				int spregio = Dado.tira(5);
@@ -472,12 +488,12 @@ public abstract class LocazioneBase implements Locazione {
 			if (azione == Comando.SI) {
 				offerta.accetta(gruppo, gruppoAvversario);
 			}
-			completa = true;
+			setCompleta(true);
 			return Stato.FINE_LOCAZIONE;
 
 		case CONFERMA_FUGA:
 			if (azione == Comando.SI) {
-				completa = false;
+				setCompleta(false);
 				setOggetto(null);
 				gruppo.fugge();
 				if (!gruppo.getCapo().isVivo()) {
@@ -493,7 +509,7 @@ public abstract class LocazioneBase implements Locazione {
 		}
 
 		Logger.log("LocazioneBase.impostaAzioni() continua...");
-		if (completa) {
+		if (isCompleta()) {
 			return Stato.FINE_LOCAZIONE;
 		}
 
@@ -553,7 +569,7 @@ public abstract class LocazioneBase implements Locazione {
 	 * Il giocatore ha portato in fondo la locazione o è fuggito?
 	 */
 	public boolean isCompleta() {
-		return completa;
+		return md.ottieniProprieta(LocazioneMD.COMPLETA) != null;
 	}
 
 	/**
@@ -562,7 +578,7 @@ public abstract class LocazioneBase implements Locazione {
 	 * appare quello del drago
 	 */
 	public void azzeraLocazione(GruppoGiocatore g) {
-		if (completa) {
+		if (isCompleta()) {
 			g.setLocazioneCorrenteVisitata();
 		}
 		for (Personaggio p : g.getPersonaggi()) {
@@ -693,7 +709,7 @@ public abstract class LocazioneBase implements Locazione {
 			if (tipoLocazione != TipoLocazione.MISSIONE_SECONDARIA) {
 				gruppo.riposa(getTipoRiposo());
 			}
-			completa = true;
+			setCompleta(true);
 			return Stato.FINE_LOCAZIONE;
 		} else {
 			// Non possiamo fare amicizia o corrompere per completare le missioni secondarie!
@@ -749,7 +765,7 @@ public abstract class LocazioneBase implements Locazione {
 		if (azione == Comando.COMBATTIMENTO || azione == Comando.TIMER) {
 			Personaggio bersaglio = gruppoAvversario.getPersonaggioVivo();
 			if (bersaglio == null) {
-				completa = true;
+				setCompleta(true);
 				return Stato.FINE_LOCAZIONE;
 			}
 			int danniBersaglio = bersaglio.getDanniInCombattimento();
@@ -809,7 +825,7 @@ public abstract class LocazioneBase implements Locazione {
 				if (nuovoBersaglio != null) {
 					bersaglio = nuovoBersaglio;
 				} else {
-					completa = true;
+					setCompleta(true);
 					return Stato.FINE_LOCAZIONE;
 				}
 			}

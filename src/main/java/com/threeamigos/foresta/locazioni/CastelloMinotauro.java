@@ -8,15 +8,6 @@ import com.threeamigos.foresta.ui.UI;
 
 public class CastelloMinotauro extends LocazioneUnica {
 
-	private static final CastelloMinotauro istanza = new CastelloMinotauro();
-	
-	private CastelloMinotauro() {
-	}
-	
-	public static CastelloMinotauro getIstanza() {
-		return istanza;
-	}
-	
 	@Override
 	public ClassiLocazione getClasseLocazione() {
 		return ClassiLocazione.CASTELLO_MINOTAURO;
@@ -40,7 +31,7 @@ public class CastelloMinotauro extends LocazioneUnica {
 	
 	@Override
 	public void azzeraLocazione(GruppoGiocatore g) {
-		if (completa) {
+		if (isCompleta()) {
 			g.setLocazioneCorrenteVisitata();
 			Foresta.distruggiLocazioneUnica(getClasseLocazione(), ClassiLocazione.ROVINE);
 		}
