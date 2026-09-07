@@ -228,7 +228,7 @@ public class GrammarBean {
 	 * grammar-load time and turned back into real brackets by {@link #postProduce}, once every
 	 * token has been expanded: this is what keeps an escaped bracket invisible to the
 	 * token scanners ({@link #checkTokensValidity}, {@link #collectReferencedProductions},
-	 * {@link #produceImpl(String, Map, Map)}), which all look for a bare {@code [}. Control
+	 * {@link #produceImpl(String, Map, Map, String)}), which all look for a bare {@code [}. Control
 	 * Private-use-area characters are used so that no plausible grammar text can collide with
 	 * them; a source file containing one is rejected outright (see
 	 * {@link #readSourceFileAndCreateProductionsMap}). They must stay above {@code U+0020},
@@ -278,7 +278,7 @@ public class GrammarBean {
 	 * character as {@link #WEIGHT_MARKER} but in the mirror position (before the bracket
 	 * rather than just inside it), so the two never occur at the same character position
 	 * and cannot be confused with one another. Resolved at production time, in
-	 * {@link #produceImpl(String, Map, Map)}.
+	 * {@link #produceImpl(String, Map, Map, String)}.
 	 */
 	private static final String CAPITALIZE_MARKER = "^";
 	/**
@@ -379,6 +379,33 @@ public class GrammarBean {
 	private int inlineProductionCounter = 0;
 
 	private Map<String, Collection<String>> derivedProductions = new HashMap<>();
+
+	/**
+	 * One frame per active (not yet returned) recursive call to
+	 * {@link #produceImpl(String, Map, Map, String)}: {@code label} names what is being
+	 * expanded (a production name, or the initial {@code [rootNode]} token) and
+	 * {@code steps} holds the successive values of that call's own {@code production}
+	 * variable, one per bracket resolved. Used by {@link #describeProductionTrace()} to
+	 * reconstruct the path the grammar engine followed, in case an exception is thrown
+	 * mid-production; see {@link #produce()}.
+	 */
+	private static final class TraceFrame {
+		private final String label;
+		private final List<String> steps = new ArrayList<>();
+
+		private TraceFrame(String label, String initialText) {
+			this.label = label;
+			steps.add(initialText);
+		}
+	}
+
+	/**
+	 * Innermost frame last, so that iterating it in insertion order (outermost first)
+	 * gives the path from the root of the expansion down to the point where it currently
+	 * is (or was, when an exception interrupted it). Not thread-safe, like the rest of
+	 * this class.
+	 */
+	private final Deque<TraceFrame> productionTrace = new ArrayDeque<>();
 
 	/**
 	 * An alternative's text together with its selection weight (see {@link #WEIGHT_MARKER},
@@ -1284,8 +1311,12 @@ public class GrammarBean {
 	 * @return the produced text, split into one entry per line
 	 */
 	public List<String> produce() {
+		productionTrace.clear();
 		try {
 			return produceImpl(OPENING_BRACKET + rootNode + CLOSING_BRACKET);
+		} catch (RuntimeException e) {
+			Logger.log("Grammar production failed. Trace:\n" + describeProductionTrace());
+			throw e;
 		} finally {
 			globalFixedProductions.clear();
 		}
@@ -1302,8 +1333,12 @@ public class GrammarBean {
 	 * @return the produced text, split into one entry per line
 	 */
 	public List<String> produce(String rootNode) {
+		productionTrace.clear();
 		try {
 			return produceImpl(OPENING_BRACKET + rootNode + CLOSING_BRACKET);
+		} catch (RuntimeException e) {
+			Logger.log("Grammar production failed. Trace:\n" + describeProductionTrace());
+			throw e;
 		} finally {
 			globalFixedProductions.clear();
 		}
@@ -1323,9 +1358,27 @@ public class GrammarBean {
 	 * @return the produced text, split into one entry per line
 	 */
 	List<String> produceImpl(String startNode) {
-		String firstResult = produceImpl(startNode, currentProductionsMap, globalFixedProductions);
+		String firstResult = produceImpl(startNode, currentProductionsMap, globalFixedProductions, startNode);
 		String intermediateResult = postProduce(firstResult);
         return new ArrayList<>(Arrays.asList(intermediateResult.split(LINE_BREAK_REGEX)));
+	}
+
+	/**
+	 * Describes {@link #productionTrace} as it currently stands, one line per active frame
+	 * (outermost first), each showing the successive values its own expansion went through.
+	 * Meant to be called right after an exception interrupts {@link #produce()}/
+	 * {@link #produce(String)}, when the frames left in {@link #productionTrace} are exactly
+	 * the path the grammar engine followed before failing; calling it at any other time (e.g.
+	 * after a successful production) returns an empty string, since every frame is popped on
+	 * normal return.
+	 * @return the trace, or an empty string if none is active
+	 */
+	String describeProductionTrace() {
+		StringBuilder sb = new StringBuilder();
+		for (TraceFrame frame : productionTrace) {
+			sb.append(frame.label).append(": ").append(String.join(" -> ", frame.steps)).append('\n');
+		}
+		return sb.toString();
 	}
 
 	/**
@@ -1336,15 +1389,19 @@ public class GrammarBean {
 	 *                            (the whole grammar's, or a one-shot-pruned copy of it)
 	 * @param superFixedProductions the fixed-production cache inherited from the caller
 	 *                              (global cache for a top-level call, or a subtree's local cache)
+	 * @param label names what is being expanded, for {@link #productionTrace}: a production
+	 *              name, or the initial {@code [rootNode]} token for the outermost call
 	 * @return the fully expanded text, with no {@code [...]} tokens left
 	 */
-	private String produceImpl(String production, Map<String, List<WeightedAlternative>> superProductionsMap, Map<String, String> superFixedProductions) {
+	private String produceImpl(String production, Map<String, List<WeightedAlternative>> superProductionsMap, Map<String, String> superFixedProductions, String label) {
 		// Seeded from the caller's cache rather than empty, so that a value fixed by a
 		// [!Name] higher up is visible to a [#Name] (or a further [!Name]) anywhere below
 		// it in the same subtree, at any depth. The copy is what keeps sibling branches
 		// independent: each inherits the same starting point but writes only into its own
 		// map, so nothing a branch fixes leaks back up or sideways.
 		Map<String, String> localFixedProductions = new HashMap<>(superFixedProductions);
+		TraceFrame frame = new TraceFrame(label, production);
+		productionTrace.addLast(frame);
 		int openingBracketIndex;
 		while ((openingBracketIndex = production.indexOf(OPENING_BRACKET)) >= 0) {
 			boolean capitalize = openingBracketIndex > 0
@@ -1359,7 +1416,12 @@ public class GrammarBean {
 				resolved = capitalizeFirstLetter(resolved);
 			}
 			production = prefix + resolved + postfix;
+			frame.steps.add(production);
 		}
+		// Only on the normal-return path: if an exception propagates out of this call
+		// (or one nested inside it), this frame is deliberately left in productionTrace,
+		// so that describeProductionTrace() can still report it.
+		productionTrace.removeLast();
 		return production;
 	}
 
@@ -1540,7 +1602,7 @@ public class GrammarBean {
 			if (resolved != null) {
 				return resolved;
 			}
-			return produceImpl(withDefault.fallback, productionsMap, localFixedProductions).trim();
+			return produceImpl(withDefault.fallback, productionsMap, localFixedProductions, withDefault.name + " (default)").trim();
 		}
 		if (tokenBody.startsWith(GLOBAL_FIXED_PRODUCTION_MARKER)) {
 			String name = tokenBody.substring(GLOBAL_FIXED_PRODUCTION_MARKER.length());
@@ -1625,7 +1687,7 @@ public class GrammarBean {
 		if (productions == null) {
 			throw new IllegalArgumentException(PRODUCTION + name + " is empty!");
 		}
-		String result = produceImpl(getProduction(productionsMap, name), productionsMap, superFixedProductions).trim();
+		String result = produceImpl(getProduction(productionsMap, name), productionsMap, superFixedProductions, name).trim();
 		fixedProductionsCache.put(name, result);
 		return result;
 	}
@@ -1642,7 +1704,7 @@ public class GrammarBean {
 		int equalsPosition = tokenBody.indexOf(ASSIGNMENT_MARKER);
 		String key = tokenBody.substring(0, equalsPosition);
 		String value = tokenBody.substring(equalsPosition + ASSIGNMENT_MARKER.length());
-		String resolvedValue = produceImpl(value, productionsMap, superFixedProductions);
+		String resolvedValue = produceImpl(value, productionsMap, superFixedProductions, key);
 		globalFixedProductions.put(key, resolvedValue);
 	}
 
@@ -1679,7 +1741,7 @@ public class GrammarBean {
 		if (productions == null) {
 			throw new IllegalArgumentException(PRODUCTION + name + " is empty!");
 		}
-		return produceImpl(getProduction(productionsMap, name), productionsMap, localFixedProductions).trim();
+		return produceImpl(getProduction(productionsMap, name), productionsMap, localFixedProductions, name).trim();
 	}
 
 	/**

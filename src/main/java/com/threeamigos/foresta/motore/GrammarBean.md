@@ -946,6 +946,23 @@ for (int i = 0; i < 100_000; i++) {
 | `X: not a valid production` | `setRootNode` con un nome inesistente |
 | `Missing ']' element after token …` | Parentesi sbilanciate emerse a runtime |
 
+### Traccia di produzione
+
+Quando `produce()`/`produce(String)` sollevano una `RuntimeException`, prima di rilanciarla
+viene loggato (via `Logger.log`) il percorso di espansione seguito fino a quel punto: una riga
+per ogni produzione ancora "aperta" nello stack di chiamate al momento dell'errore (dalla più
+esterna alla più interna), ciascuna con la sequenza dei testi intermedi che ha attraversato,
+separati da ` -> `. Esempio:
+
+```
+ROOT: [A]
+A: [X] [X] -> only [X]
+```
+
+qui `A` aveva già sostituito la prima `[X]` (con `only`) quando la seconda `[X]` ha fallito
+perché `X` era one-shot ed era già stata consumata. L'eccezione rilanciata resta invariata
+(stesso tipo, stesso messaggio): la traccia è solo un aiuto diagnostico nel log.
+
 ### Altri errori
 
 | Sintomo | Causa |

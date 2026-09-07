@@ -599,6 +599,29 @@ class GrammarBeanTest {
     }
 
     @Test
+    void productionTraceReflectsPathToDeepRuntimeError() throws Exception {
+        // ROOT -> A -> [X] [X], with X one-shot: the second [X] fails at runtime once X has
+        // been consumed by the first. The trace left behind must show, in outermost-to-innermost
+        // order, both the ROOT/A frames and the intermediate substitution A went through
+        // (the first [X] resolved to "only" while the second was still untouched) before the
+        // exception interrupted it.
+        GrammarBean bean = new GrammarBean("ROOT\n\t[A]\nA\n\t[X] [X]\nX$\n\tonly\n");
+        assertThrows(IllegalArgumentException.class, bean::produce);
+        String trace = bean.describeProductionTrace();
+        assertTrue(trace.contains("A: [X] [X] -> only [X]"));
+        int rootFrameIndex = trace.indexOf("[ROOT]:");
+        int aFrameIndex = trace.indexOf("A: [X] [X] -> only [X]");
+        assertTrue(rootFrameIndex >= 0 && rootFrameIndex < aFrameIndex);
+    }
+
+    @Test
+    void productionTraceIsEmptyAfterSuccessfulProduction() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\thello\n");
+        bean.produce();
+        assertEquals("", bean.describeProductionTrace());
+    }
+
+    @Test
     void assignmentValueCanReferenceAnotherProduction() throws Exception {
         // The assignment's value is itself a bracketed production reference: it must be fully
         // resolved before being cached under "k", so "[#k]" retrieves the resolved word, not
