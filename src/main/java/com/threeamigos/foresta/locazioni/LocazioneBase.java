@@ -112,6 +112,7 @@ public abstract class LocazioneBase implements Locazione {
 		completa = false;
 		opzioneCorruzioneDisponibile = false;
 		opzioneAmiciziaDisponibile = false;
+		haStrettoAmicizia = false;
 		gruppo.setFormulante(null);
 		combattente = null;
 		setOggetto(null);
