@@ -52,8 +52,10 @@ public class DisplayableCanvasIntroOutro implements Finestra{
 		this.messaggio = messaggio;
 	}
 
-	void scrivi(Graphics2D graphics) {
-		disegnaOmbraDelDrago(graphics);
+	void scrivi(Graphics2D graphics, boolean disegnaOmbraDelDrago) {
+		if (disegnaOmbraDelDrago) {
+			disegnaOmbraDelDrago(graphics);
+		}
 		if (messaggio != null && !messaggio.isEmpty())
 			disegnaStringaCentrataConACapoAutomatico(graphics, messaggio.toLowerCase(), 20);
 	}
@@ -93,7 +95,7 @@ public class DisplayableCanvasIntroOutro implements Finestra{
 			hiscore(graphics);
 		} else {
 			messaggio = Misc.STORIA[sequenza - 2];
-			scrivi(graphics);
+			scrivi(graphics, true);
 		}
 	}
 	
@@ -146,14 +148,14 @@ public class DisplayableCanvasIntroOutro implements Finestra{
 	void perso(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
 		messaggio = Misc.PERSO[sequenza];
-		scrivi(graphics);
+		scrivi(graphics, true);
 	}
 
 	void vinto(Graphics2D graphics) {
 		Image d = ImageCache.trionfo;
 		graphics.drawImage(d, (width - d.getWidth(null)) / 2, (height - d.getHeight(null)) / 2, null);
 		messaggio = Misc.VINTO[sequenza];
-		scrivi(graphics);
+		scrivi(graphics,false);
 	}
 
 	void hiscore(Graphics2D graphics) {

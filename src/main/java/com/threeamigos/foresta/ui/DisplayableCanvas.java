@@ -311,7 +311,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		} else if (stato == StatoDisplayableCanvas.STATO_SELEZIONE_SLOT_DA_CARICARE) {
 			riquadroIntroOutro.selezioneSlotDaCaricare(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_MESSAGGIO) {
-			riquadroIntroOutro.scrivi(graphics);
+			riquadroIntroOutro.scrivi(graphics, true);
 		} else if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO) {
 			inGioco(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_MAPPA) {
