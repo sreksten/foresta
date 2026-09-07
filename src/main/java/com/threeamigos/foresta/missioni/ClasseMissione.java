@@ -19,6 +19,7 @@ public enum ClasseMissione {
 	RECUPERA_LE_DERRATE_ALIMENTARI(RecuperaLeDerrateAlimentari::new),
 	CRONACHE_DI_UN_FEGATO_EROICO(CronacheDiUnFegatoEroico::new),
 	NESSUN_BOCCALE_LASCIATO_INDIETRO(NessunBoccaleLasciatoIndietro::new),
+	DISTURBATORE_DELLA_QUIETE_PUBBLICA(DisturbatoreDellaQuietePubblica::new),
 
 	MISSIONE_DI_PROVA_SECONDARIA_UNO(MissioneDiProvaSecondariaUno::new),
 	MISSIONE_DI_PROVA_SECONDARIA_DUE(MissioneDiProvaSecondariaDue::new),

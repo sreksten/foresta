@@ -1,0 +1,91 @@
+package com.threeamigos.foresta.missioni;
+
+import com.threeamigos.foresta.motore.GruppoAvversario;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.ui.UI;
+
+/**
+ * Dieci eremiti disturbati nel loro ritiro. Il conteggio avviene all'incontro, quando
+ * il gruppo avversario è appena stato popolato e descritto: quel che succede dopo -
+ * battaglia, amicizia, corruzione o fuga - non cambia il conto.
+ */
+public class DisturbatoreDellaQuietePubblica extends MissioneBase {
+
+	private static final int EREMITI_DA_INCONTRARE = 10;
+
+	private static final String DESCRIZIONE_BASE = "Vai ad angustiare 10 eremiti";
+	private static final String EREMITI_INCONTRATI = "EREMITI_INCONTRATI";
+
+	public DisturbatoreDellaQuietePubblica() {
+		super(ClasseMissione.DISTURBATORE_DELLA_QUIETE_PUBBLICA);
+	}
+
+	@Override
+	public String getNome() {
+		return "Disturbatore della quiete pubblica";
+	}
+
+	@Override
+	public String getDescrizione() {
+		if (isCompleta()) {
+			return DESCRIZIONE_BASE + ". Dieci ritiri spirituali interrotti sul nascere.";
+		}
+		int mancanti = EREMITI_DA_INCONTRARE - getEremitiIncontrati();
+		if (mancanti == 1) {
+			return DESCRIZIONE_BASE + ". Ne manca uno, e si sta già preoccupando.";
+		}
+		return DESCRIZIONE_BASE + ". Ne mancano " + mancanti + '.';
+	}
+
+	@Override
+	public void controllaPreLocazione() {
+		if (!isAttiva()) {
+			UI.notifica("Nella Foresta vivono uomini che hanno scelto la solitudine dopo lunga riflessione. " +
+					DESCRIZIONE_BASE + ", e fai in modo che se ne ricordino.");
+			attivaMissione();
+		}
+	}
+
+	@Override
+	public void controllaInLocazione() {
+		if (isCompleta()) {
+			return;
+		}
+		int eremiti = 0;
+		for (Personaggio personaggio : GruppoAvversario.getIstanza().getPersonaggi()) {
+			if (personaggio.getClasse() == ClassePersonaggio.EREMITA) {
+				eremiti++;
+			}
+		}
+		if (eremiti == 0) {
+			return;
+		}
+		// Si conta l'incontro, non il suo esito: qui la locazione è appena stata
+		// descritta e nessuno ha ancora alzato le mani
+		int incontrati = getEremitiIncontrati() + eremiti;
+		aggiungiProprieta(EREMITI_INCONTRATI, String.valueOf(incontrati));
+		if (incontrati >= EREMITI_DA_INCONTRARE) {
+			completaMissione();
+		} else {
+			UI.notifica("La quiete di un altro eremita è stata ufficialmente turbata. " + getDescrizione());
+		}
+	}
+
+	@Override
+	public void controllaPostLocazione() {
+		// L'incontro si conta all'arrivo, non alla fine
+	}
+
+	@Override
+	public void completaMissione() {
+		super.completaMissione();
+		UI.notifica("Dieci eremiti su dieci confermano che la Foresta era molto più tranquilla prima. " +
+				"Il titolo di Disturbatore della quiete pubblica è meritato.");
+	}
+
+	private int getEremitiIncontrati() {
+		String incontrati = ottieniProprieta(EREMITI_INCONTRATI);
+		return incontrati == null ? 0 : Integer.parseInt(incontrati);
+	}
+}
