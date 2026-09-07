@@ -47,12 +47,6 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 
 	@Override
 	public void controllaPreLocazione() {
-		if (!isAttiva()) {
-			UI.notifica("");
-			UI.notifica("Da qualche parte fra le paludi e i castelli ci sono osti che non hanno ancora conosciuto la tua sete. " +
-					DESCRIZIONE_BASE + ", e non lasciarne indietro nemmeno una.");
-			attivaMissione();
-		}
 	}
 
 	@Override
@@ -62,6 +56,14 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 
 	@Override
 	public void controllaPostLocazione() {
+		// Il giocatore inizia sempre nel bosco, non può essere in una locanda alla fine del primo turno
+		if (!isCompleta() && !isAttiva()) {
+			UI.notifica("");
+			UI.notifica("Da qualche parte fra le paludi e i castelli ci sono osti che non hanno ancora conosciuto la tua sete. " +
+					DESCRIZIONE_BASE + ", e non lasciarne indietro nemmeno una.");
+			attivaMissione();
+			return;
+		}
 		if (isCompleta()) {
 			return;
 		}
