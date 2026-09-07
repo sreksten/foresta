@@ -14,6 +14,7 @@ public class StatisticheMD implements Serializzabile {
 	private int livello = 1;
 	private int puntiEsperienza = 0;
 	private int punti = 0;
+	private int turniGiocati = 0;
 	private final Map<ClassePersonaggio, Integer> mostriUccisi = new EnumMap<>(ClassePersonaggio.class);
 
 	/**
@@ -30,17 +31,32 @@ public class StatisticheMD implements Serializzabile {
 		return puntiEsperienza;
 	}
 
+	/**
+	 * Restituisce il punteggio ottenuto
+	 */
 	public final int getPunti() {
 		return punti;
+	}
+
+	/**
+	 * Restituisce il numero di turni giocati (NON il tempo passato, quello è in LineaTemporale)
+	 */
+	public int getTurniGiocati() {
+		return turniGiocati;
 	}
 
 	////////////////////
 
 	public final void reimposta() {
 		mostriUccisi.clear();
-		punti = 0;
 		livello = 1;
 		puntiEsperienza = 0;
+		punti = 0;
+		turniGiocati = 0;
+	}
+
+	public final void setLivello(int livello) {
+		this.livello = livello;
 	}
 
 	public final void addPunti(int quantita) {
@@ -49,10 +65,6 @@ public class StatisticheMD implements Serializzabile {
 
 	public final void addPuntiEsperienza(int quantita) {
 		puntiEsperienza += quantita;
-	}
-
-	public final void setLivello(int livello) {
-		this.livello = livello;
 	}
 
 	public final void addMostroUcciso(ClassePersonaggio classe) {
@@ -74,6 +86,8 @@ public class StatisticheMD implements Serializzabile {
 		stream.print(puntiEsperienza);
 		stream.print(PIPE);
 		stream.println(punti);
+		stream.print(PIPE);
+		stream.println(turniGiocati);
 		for (ClassePersonaggio classePersonaggio : ClassePersonaggio.values()) {
 			stream.print(classePersonaggio.ordinal());
 			stream.print(PIPE);
@@ -90,6 +104,7 @@ public class StatisticheMD implements Serializzabile {
 		livello = Integer.parseInt(st.nextToken());
 		puntiEsperienza = Integer.parseInt(st.nextToken());
 		punti = Integer.parseInt(st.nextToken());
+		turniGiocati = Integer.parseInt(st.nextToken());
 		mostriUccisi.clear();
 		ClassePersonaggio[] classi = ClassePersonaggio.values();
 		line = stream.readLine();
