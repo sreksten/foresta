@@ -3,6 +3,7 @@ package com.threeamigos.foresta.missioni;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.UI;
 
 /**
@@ -14,7 +15,7 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 
 	private static final int EREMITI_DA_INCONTRARE = 10;
 
-	private static final String DESCRIZIONE_BASE = "Vai ad angustiare " + EREMITI_DA_INCONTRARE + " Eremiti";
+	private static final String DESCRIZIONE_BASE = "Angustia " + EREMITI_DA_INCONTRARE + " Eremiti";
 	private static final String EREMITI_INCONTRATI = "EREMITI_INCONTRATI";
 
 	public DisturbatoreDellaQuietePubblica() {
@@ -43,12 +44,8 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 
 	@Override
 	public void controllaPreLocazione() {
-		if (!isAttiva()) {
-			UI.notifica("");
-			UI.notifica("Nella Foresta vivono uomini che hanno scelto la solitudine dopo lunga riflessione. " +
-					DESCRIZIONE_BASE + ", e fai in modo che se ne ricordino.");
-			attivaMissione();
-		}
+		// L'attivazione avviene al primo incontro con un Eremita, non prima:
+		// vedi controllaInLocazione()
 	}
 
 	@Override
@@ -65,6 +62,12 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 		if (eremiti == 0) {
 			return;
 		}
+		if (!isAttiva()) {
+			UI.notifica("");
+			UI.notifica("Nella Foresta vivono uomini che hanno scelto la solitudine dopo lunga riflessione. " +
+					DESCRIZIONE_BASE + ", e fai in modo che se ne ricordino.");
+			attivaMissione();
+		}
 		// Si conta l'incontro, non il suo esito: qui la locazione è appena stata
 		// descritta e nessuno ha ancora alzato le mani
 		int incontrati = getEremitiIncontrati() + eremiti;
@@ -72,11 +75,8 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 		if (incontrati >= EREMITI_DA_INCONTRARE) {
 			completaMissione();
 		} else {
-			if (incontrati == 1) {
-				UI.notifica("La quiete del primo Eremita è stata ufficialmente turbata.");
-			} else {
-				UI.notifica("La quiete di un altro Eremita è stata ufficialmente turbata.");
-			}
+			UI.notifica("");
+			UI.notifica("La quiete del " + Misc.getOrdinaleM(incontrati) + " Eremita è stata ufficialmente turbata.");
 		}
 	}
 
