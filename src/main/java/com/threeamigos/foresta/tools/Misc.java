@@ -81,18 +81,7 @@ public class Misc {
 	}
 
 	public static String getOrdinaleM(int numero, boolean articolo) {
-		StringBuilder sb = new StringBuilder(15);
-		if (articolo) {
-			if (numero == 8 || numero == 11)
-				sb.append(L_APOSTROFO);
-			else
-				sb.append(IL);
-		}
-		sb.append(ordinali[numero]);
-		if (numero > 10)
-			sb.append(ESIM);
-		sb.append('o');
-		return sb.toString();
+		return getOrdinaleImpl(numero, articolo, 'o');
 	}
 
 	public static String getOrdinaleF(int numero) {
@@ -100,6 +89,10 @@ public class Misc {
 	}
 
 	public static String getOrdinaleF(int numero, boolean articolo) {
+		return getOrdinaleImpl(numero, articolo, 'a');
+	}
+
+	private static String getOrdinaleImpl(int numero, boolean articolo, char ultimaLettera) {
 		StringBuilder sb = new StringBuilder(15);
 		if (articolo) {
 			if (numero == 8 || numero == 11)
@@ -110,7 +103,7 @@ public class Misc {
 		sb.append(ordinali[numero]);
 		if (numero > 10)
 			sb.append(ESIM);
-		sb.append('a');
+		sb.append(ultimaLettera);
 		return sb.toString();
 	}
 
@@ -185,7 +178,6 @@ public class Misc {
 		sb.append('.');
 		return sb.toString();
 	}
-
 
 	public static final String[] STORIA = {
 			"molto, molto tempo fa, quando il mondo era da poco stato creato,",
