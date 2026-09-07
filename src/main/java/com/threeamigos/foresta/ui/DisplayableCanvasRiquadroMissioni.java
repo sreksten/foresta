@@ -10,6 +10,8 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE = 16;
 	private static final int SPACING = 4;
+	// Pixel di scorrimento per ogni scatto della rotella
+	private static final int PASSO_SCORRIMENTO = 1;
 
 	private final int topLeftX;
 	private final int topLeftY;
@@ -32,6 +34,8 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 		for (Missione missione : RegistroMissioni.getMissioniAttive()) {
 				aggiungiAComponenteScorrevole(componenteScorrevole, missione);
 		}
+		// L'elenco può essere cambiato dall'ultimo scorrimento: l'offset va rimesso nei limiti
+		offsetY = componenteScorrevole.limitaOffset(innerHeight, offsetY);
 		Image image = componenteScorrevole.produci(innerHeight, offsetY);
 		graphics.drawImage(image, topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE  + SPACING,
 				topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + SPACING, null);
@@ -96,10 +100,11 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 	public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
 		if (movimentoRotella == MovimentoRotella.SU) {
 			Logger.log("Scrolling up by " + numeroRotazioni + " units");
-			offsetY = Math.max(0, offsetY - numeroRotazioni);
+			offsetY = Math.max(0, offsetY - numeroRotazioni * PASSO_SCORRIMENTO);
 		} else if (movimentoRotella == MovimentoRotella.GIU) {
 			Logger.log("Scrolling down by " + numeroRotazioni + " units");
-			offsetY += 1;
+			offsetY += numeroRotazioni * PASSO_SCORRIMENTO;
 		}
+		// Il limite superiore dipende dall'altezza della lista e viene applicato al disegno
 	}
 }

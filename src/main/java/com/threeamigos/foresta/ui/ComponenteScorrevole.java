@@ -33,34 +33,56 @@ public class ComponenteScorrevole {
         nodi.add(nodo);
     }
 
+    /**
+     * Riporta l'offset di scorrimento entro i limiti della lista: non si scorre
+     * sopra la prima riga né oltre l'ultima.
+     */
+    public int limitaOffset(int altezzaMassima, int offset) {
+        return limitaOffset(altezzaImmagine(espandiNodi(), altezzaMassima), altezzaMassima, offset);
+    }
+
     public Image produci(int altezzaMassima, int offset) {
 
         List<TestoDoomdark> nodiEspansi = espandiNodi();
 
-        int conforto = 2 * nodiEspansi.stream().mapToInt(td -> td.altezza).max().orElse(0);
+        int altezzaImmagine = altezzaImmagine(nodiEspansi, altezzaMassima);
+        offset = limitaOffset(altezzaImmagine, altezzaMassima, offset);
 
         DoomdarkColorAlternante colore = new DoomdarkColorAlternante();
 
-        BufferedImage risultato = new BufferedImage(larghezza, altezzaMassima + conforto, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage risultato = new BufferedImage(larghezza, altezzaImmagine, BufferedImage.TYPE_INT_ARGB);
 
         Graphics2D g2d = risultato.createGraphics();
 
         int altezzaRaggiunta = 0;
         for (TestoDoomdark testoDoomdark : nodiEspansi) {
-            int altezzaTesto = testoDoomdark.altezza;
-            if (offset > altezzaTesto) {
-                offset -= altezzaTesto;
-                continue;
+            // Il colore va consumato per ogni riga, anche per quelle fuori dalla finestra,
+            // altrimenti l'alternanza si inverte man mano che si scorre.
+            DoomdarkColorModel.Color coloreRiga = colore.getColor();
+            // Ogni riga viene disegnata alla propria posizione assoluta: si evita il
+            // disegno di quelle che non intersecano la finestra ritagliata, non lo spazio
+            // che occupano.
+            if (altezzaRaggiunta + testoDoomdark.altezza > offset && altezzaRaggiunta < offset + altezzaMassima) {
+                Image image = DoomdarkTextProducer.getImage(testoDoomdark.testo, testoDoomdark.doomdarkFont,
+                        coloreRiga, larghezza - testoDoomdark.indentazione);
+                g2d.drawImage(image, testoDoomdark.indentazione, altezzaRaggiunta, null);
             }
-            Image image = DoomdarkTextProducer.getImage(testoDoomdark.testo, testoDoomdark.doomdarkFont, colore.getColor(), larghezza - testoDoomdark.indentazione);
-            g2d.drawImage(image, 0, altezzaRaggiunta, null);
-            altezzaRaggiunta += altezzaTesto;
-            if (altezzaRaggiunta + altezzaTesto > altezzaMassima) {
-                break;
-            }
+            altezzaRaggiunta += testoDoomdark.altezza;
         }
         g2d.dispose();
-        return risultato.getSubimage(0, offset, larghezza, altezzaMassima + offset);
+        return risultato.getSubimage(0, offset, larghezza, altezzaMassima);
+    }
+
+    /**
+     * L'immagine deve contenere tutta la lista, ma non essere più bassa della finestra
+     * ritagliata, altrimenti getSubimage() esce dal raster.
+     */
+    private int altezzaImmagine(List<TestoDoomdark> nodiEspansi, int altezzaMassima) {
+        return Math.max(nodiEspansi.stream().mapToInt(td -> td.altezza).sum(), altezzaMassima);
+    }
+
+    private int limitaOffset(int altezzaImmagine, int altezzaMassima, int offset) {
+        return Math.max(0, Math.min(offset, altezzaImmagine - altezzaMassima));
     }
 
     private List<TestoDoomdark> espandiNodi() {
@@ -95,10 +117,13 @@ public class ComponenteScorrevole {
         Nodo(String testoOriginale, DoomdarkFont doomdarkFontTestoOriginale,
              String descrizioneOriginale, DoomdarkFont doomdarkFontDescrizioneOriginale,
              int indentazione) {
+            // Il testo va spezzato sulla larghezza effettivamente disponibile, che
+            // l'indentazione riduce.
+            int larghezzaDisponibile = larghezza - indentazione;
             this.doomdarkFontTesto = doomdarkFontTestoOriginale;
-            this.testo = FontTool.split(this.doomdarkFontTesto, testoOriginale, larghezza);
+            this.testo = FontTool.split(this.doomdarkFontTesto, testoOriginale, larghezzaDisponibile);
             this.doomdarkFontDescrizione = doomdarkFontDescrizioneOriginale;
-            this.descrizione = FontTool.split(this.doomdarkFontDescrizione, descrizioneOriginale, larghezza);
+            this.descrizione = FontTool.split(this.doomdarkFontDescrizione, descrizioneOriginale, larghezzaDisponibile);
             this.indentazione = indentazione;
         }
 
