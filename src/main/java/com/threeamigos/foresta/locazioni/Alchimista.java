@@ -79,10 +79,22 @@ public class Alchimista extends LocazioneBase implements Locazione {
 				UI.notifica("'Buongiorno! Mi dispiace ma non posso fare credito.'" + DICE);
 				return Stato.FINE_LOCAZIONE;
 			}
-			UI.notifica("L'alchimista è intento a produrre l'oroscopo della giornata:");
-			List<String> oroscopo = ProduttoreDiTestiCasuale.oroscopo();
-			for (String linea : oroscopo) {
-				UI.notifica(linea);
+			UI.notifica("L'alchimista è intento a produrre l'oroscopo della giornata.");
+			try {
+				List<String> oroscopo = ProduttoreDiTestiCasuale.oroscopo();
+				int numeroLinea = 0;
+				for (String linea : oroscopo) {
+					if (numeroLinea == 0) {
+						UI.notifica('“' + linea);
+					} else if (numeroLinea == oroscopo.size() - 1) {
+						UI.notifica(linea + '"');
+					} else {
+						UI.notifica(linea);
+					}
+					numeroLinea++;
+				}
+			} catch (Exception e) {
+				Logger.log(e);
 			}
 			UI.notifica("");
 			UI.impostaAzioni(Comando.PERGAMENA);
