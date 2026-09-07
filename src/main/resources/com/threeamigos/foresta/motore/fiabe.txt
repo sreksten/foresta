@@ -240,90 +240,27 @@ ISTANTE_PRECISO_OOP
 
 TEMPO_PROEMIO_SURREALISTA
     quando i mulini erano bianchi
-    quando i gatti governavano le città
-    quando le ombre decisero di staccarsi dai corpi
-    quando le ombre camminavano da sole
     quando le nuvole erano fatte di zucchero filato
-    quando le nuvole iniziarono a giocare a scacchi
     quando le nuvole si misero a fare capriole
-    quando le nuvole iniziarono a distribuire caramelle
-    quando le nuvole organizzarono una gara di nuoto
-    quando gli asini volavano
-    quando le sedie decisero di scioperare
-    quando i cappelli iniziarono a pensare da soli
-    quando le porte si misero a cantare
-    quando le lumache vinsero la maratona
-    quando le ombre litigarono per un parcheggio
-    quando i libri iniziarono a leggersi da soli
-    quando le formiche organizzarono un concerto rock
-    quando gli orologi si misero a correre indietro per gioco
-    quando le tazze da tè si misero a ballare il tango
-    quando le biciclette iniziarono a correre senza nessuno sopra
-    quando le patate decisero di governare l'orto
-    quando le galline organizzarono un'elezione
-    quando le sveglie iniziarono a suonare canzoni napoletane
-    quando le zanzare organizzarono un sindacato
-    quando gli ombrelli iniziarono a fare previsioni del tempo
-    quando un cammello imparò a nuotare meglio di un pesce
-    quando i broccoli dichiararono guerra alle carote
-    quando le nuvole si travestirono da pecore
+    quando le sue galline organizzarono una rivolta
+    quando le nuvole arrivarono a pecorelle
     mentre la luna giocava a nascondino con le nuvole
-    mentre i pesci imparavano a volare
     un giorno qualunque
     proprio mentre il mondo sembrava fermarsi
     in un pomeriggio di fine autunno
-    durante la grande guerra delle tovaglie
-    quando i cani iniziarono a scrivere poesie incomprensibili
-    quando il formaggio si mise a urlare alla luna
-    quando i bottoni delle giacche dichiararono l'indipendenza dai vestiti
-    quando le carrozze iniziarono a muoversi di loro spontanea volontà
-    quando i funghi cominciarono a filosofeggiare sulla natura dell'esistenza
 
 ISTANTE_PRECISO_SURREALISTA
-    mentre gli specchi raccontavano bugie
-    mentre il tè cadeva verso l'alto
-    mentre le scarpe decisero di andare a passeggio da sole
-    mentre le pentole intonavano un coro
-    mentre le foglie cadevano verso il cielo
-    mentre le rane insegnavano geografia ai pesci
-    mentre le stelle si presero una pausa dal brillare
-    mentre gli ombrelli protestavano contro il sole
-    mentre le lavagne scrivevano da sole compiti sbagliati
-    mentre un pinguino tentò la scalata dell'Everest in pantofole
-    mentre i tappeti volanti chiedevano un aumento
-    mentre le stelle cadenti chiedevano indicazioni stradali
-    mentre le stagioni si scambiarono i vestiti per errore
-    mentre un orologio a cucù smise di lavorare per andare in ferie
-    mentre i gomitoli di lana tessevano da soli sciarpe per i lampioni
     in un momento di estrema confusione
     in un secondo di pura assurdità
     in un giorno che il calendario non ricordava
-    [NELL_ATTIMO_IN_CUI] il tempo decise di fare un pisolino
-    [NELL_ATTIMO_IN_CUI] il tè era ancora caldo
-    [NELL_ATTIMO_IN_CUI] i calzini scomparirono in un'altra dimensione
+    [NELL_ATTIMO_IN_CUI] il suo tè era ancora caldo
+    [NELL_ATTIMO_IN_CUI] i suoi calzini scomparirono in un'altra dimensione
     [NELL_ATTIMO_IN_CUI] il tempo si annodò su se stesso
     [NELL_ATTIMO_IN_CUI] due più due fece cinque
-    [NELL_ATTIMO_IN_CUI] i semafori si misero a discutere
-    [NELL_ATTIMO_IN_CUI] i gatti impararono a suonare il pianoforte
     [NELL_ATTIMO_IN_CUI] la luna si stancò di essere rotonda
-    [NELL_ATTIMO_IN_CUI] un elefante volò più leggero di una piuma
-    [NELL_ATTIMO_IN_CUI] i quadri iniziarono a chiacchierare tra loro
     [NELL_ATTIMO_IN_CUI] il sole decise di prendersi un giorno di riposo
-    [NELL_ATTIMO_IN_CUI] un cactus imparò a cantare l'opera
-    [NELL_ATTIMO_IN_CUI] i cappotti si scambiarono i proprietari da soli
-    [NELL_ATTIMO_IN_CUI] un gatto si laureò in matematica
-    [NELL_ATTIMO_IN_CUI] il vento si dimenticò come soffiare
-    [NELL_ATTIMO_IN_CUI] due ombre si scambiarono i corpi
-    [NELL_ATTIMO_IN_CUI] le porte iniziarono a bussare da sole
-    [NELL_ATTIMO_IN_CUI] un frigorifero si innamorò di un forno
-    [NELL_ATTIMO_IN_CUI] una lumaca vinse una gara di velocità contro un fulmine
+    [NELL_ATTIMO_IN_CUI] il vento smise di soffiare
     [NELL_ATTIMO_IN_CUI] un pinguino si travestì da fenicottero
-    [NELL_ATTIMO_IN_CUI] le sedie si misero in fila per ballare il valzer
-    [NELL_ATTIMO_IN_CUI] gli spaghetti dichiararono la guerra alle tagliatelle
-    [NELL_ATTIMO_IN_CUI] un paio di calzini organizzò una rivolta
-    [NELL_ATTIMO_IN_CUI] i botteghini iniziarono a vendere biglietti invisibili
-    [NELL_ATTIMO_IN_CUI] le maniglie delle porte si misero a fare versi di animali
-    [NELL_ATTIMO_IN_CUI] un termometro si innamorò di un barometro
 
 NELL_ATTIMO_IN_CUI
     nell'{ attimo | istante} { preciso | } in cui | Mentre | Allorché
@@ -483,7 +420,7 @@ MOTIVAZIONE
 
 DECISIONE_1
 	andare in culo a tutti | levarsi da tre passi | levarsi dai cosiddetti | prendere armi e bagagli
-	far fagotto | traslocare | sparire | far perdere le proprie tracce | scomparire come Kaiser Soze
+	far fagotto | traslocare | sparire | far perdere le proprie tracce | scomparire come Keyser Soze
 	spostarsi | svanire nel nulla | cambiare residenza | partire | evaporare | scomparire
 	sloggiare in tutta fretta | tagliare la corda | volatilizzarsi come un mago da fiera
 
@@ -697,20 +634,20 @@ BACIAMI
 	    [ATTRIBUTO_ANTAGONISTA].\""
 
 CREAZIONE_MAGO_CATTIVO
-	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Mago Merlino]MAGO_CATTIVO_AGGETTIVO=
-	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Maga Magò]MAGO_CATTIVO_AGGETTIVO=
-	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=fata]MAGO_CATTIVO_AGGETTIVO=molto permalosa
-	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=fata]MAGO_CATTIVO_AGGETTIVO=spregevole
-	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=mago]MAGO_CATTIVO_AGGETTIVO=
-	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=necromante]MAGO_CATTIVO_AGGETTIVO=
-	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=folletto]MAGO_CATTIVO_AGGETTIVO=dispettoso
-	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=malvagio stregone]MAGO_CATTIVO_AGGETTIVO=
-	[MAGO_CATTIVO_ARTDET=l'][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=occultista]MAGO_CATTIVO_AGGETTIVO=furioso
-	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=mago prestidigitatore]MAGO_CATTIVO_AGGETTIVO=
-	[MAGO_CATTIVO_ARTDET=l'][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=alieno]MAGO_CATTIVO_AGGETTIVO=proveniente dalla quinta dimensione
-	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=strega]MAGO_CATTIVO_AGGETTIVO=dal naso adunco
-	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=vecchio saggio]MAGO_CATTIVO_AGGETTIVO=dal pessimo carattere
-	[MAGO_CATTIVO_ARTDET=lo ][MAGO_CATTIVO_ARTINDET=uno ][MAGO_CATTIVO=gnomo permaloso]MAGO_CATTIVO_AGGETTIVO=permaloso
+	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Mago Merlino][MAGO_CATTIVO_AGGETTIVO=]
+	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Maga Magò][MAGO_CATTIVO_AGGETTIVO=]
+	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=fata][MAGO_CATTIVO_AGGETTIVO=molto permalosa]
+	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=fata][MAGO_CATTIVO_AGGETTIVO=spregevole]
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=mago][MAGO_CATTIVO_AGGETTIVO=]
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=necromante][MAGO_CATTIVO_AGGETTIVO=]
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=folletto][MAGO_CATTIVO_AGGETTIVO=dispettoso]
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=malvagio stregone][MAGO_CATTIVO_AGGETTIVO=]
+	[MAGO_CATTIVO_ARTDET=l'][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=occultista][MAGO_CATTIVO_AGGETTIVO=furioso]
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=mago prestidigitatore][MAGO_CATTIVO_AGGETTIVO=]
+	[MAGO_CATTIVO_ARTDET=l'][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=alieno][MAGO_CATTIVO_AGGETTIVO=proveniente dalla quinta dimensione]
+	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=strega][MAGO_CATTIVO_AGGETTIVO=dal naso adunco]
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=vecchio saggio][MAGO_CATTIVO_AGGETTIVO=dal pessimo carattere]
+	[MAGO_CATTIVO_ARTDET=lo ][MAGO_CATTIVO_ARTINDET=uno ][MAGO_CATTIVO=gnomo permaloso][MAGO_CATTIVO_AGGETTIVO=permaloso]
 
 MOTIVAZIONE_TRASFORMAZIONE
 	mi ero { bevuto | scolato } { tutto il suo [SOSTANZA_ALCOOLICA_MASCHILE] | tutta la sua [SOSTANZA_ALCOOLICA_FEMMINILE] }
@@ -886,7 +823,7 @@ ATTIVITA_SPREGEVOLE
 
 NOTIZIA
 	il re aveva chiesto aiuto per salvare sua figlia [*CREA_NOME_PRINCIPESSA], una principessa [*ATTRIBUTO_PRINCIPESSA]. [SVOLGIMENTO_PRINCIPESSA]
-	un orco aveva rapito la figlia del re, una principessa di nome [*NOME_PRINCIPESSA]. [SVOLGIMENTO_PRINCIPESSA]
+	un orco aveva rapito la figlia del re, una principessa [*ATTRIBUTO_PRINCIPESSA] di nome [*NOME_PRINCIPESSA]. [SVOLGIMENTO_PRINCIPESSA]
 	un malfattore aveva portato via nella notte l'erede al trono, la principessa [CREA_NOME_PRINCIPESSA]. [SVOLGIMENTO_PRINCIPESSA]
 
 ATTRIBUTO_PRINCIPESSA
@@ -939,8 +876,9 @@ SVOLGIMENTO_PRINCIPESSA_2
 	    a [ATTIVITA_CRIMINOSE], lasciando [*NOME_PRINCIPESSA] al suo triste destino.
 	Dopo aver combattuto con [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO], [*PROTAGONISTA] venne trasformato in un \
 	    [*ANIMALE] [*ATTRIBUTO_ANTAGONISTA].
-	Dopo aver corrotto [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO], [*PROTAGONISTA] sposò la [*ATTRIBUTO_PRINCIPESSA] \
+	Dopo aver corrotto [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO], [*PROTAGONISTA] sposò la principessa \
 	    [*NOME_PRINCIPESSA]. [LIETO_FINE]
+	Dopo aver visto bene in faccia [*NOME_PRINCIPESSA], [*PROTAGONISTA] preferì sposarsi con [#MAGO_CATTIVO_ARTDET][#MAGO_CATTIVO].
 
 30_DENARI
 	30 denari | una forma di cacio | un tozzo di pane | una somma considerevole di denaro | una mandria di buoi
