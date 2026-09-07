@@ -44,6 +44,23 @@ public class DoomdarkTextRectangle2x {
 		// La riga più in basso poggia a height - fontHeight, le altre a salire di passoRiga
 		righeVisibili = height < fontHeight ? 0 : (height - fontHeight) / passoRiga + 1;
 		textData = new int[width * height];
+		imbottisci();
+	}
+
+	/**
+	 * Mette in testa allo storico un cuscino di righe vuote. Serve allo scorrimento: la
+	 * parte alta del rettangolo è coperta da una sfumatura che spegne il testo, e senza
+	 * il cuscino le righe più vecchie resterebbero inchiodate lassù, illeggibili. Con
+	 * mezzo rettangolo di righe vuote sopra di loro, arrivano invece a metà altezza,
+	 * dove la sfumatura non le tocca più.
+	 * <p>
+	 * Le righe vuote fanno parte dello storico come le altre, quindi sono le prime a
+	 * essere dimenticate quando il testo cresce: sono un cuscino, non un ingombro fisso.
+	 */
+	private void imbottisci() {
+		for (int i = 0; i < righeVisibili / 2; i++) {
+			righe.add("");
+		}
 	}
 
 	// renderizza una stringa alla quota indicata
@@ -111,6 +128,7 @@ public class DoomdarkTextRectangle2x {
 
 	public final synchronized void clear() {
 		righe.clear();
+		imbottisci();
 		offsetRighe = 0;
 		daRidisegnare = true;
 	}
