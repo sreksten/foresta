@@ -9,6 +9,10 @@ import com.threeamigos.foresta.ui.UI;
 
 public class RecuperaLeDerrateAlimentari extends MissioneRecuperaBersaglio implements Missione {
 
+	public RecuperaLeDerrateAlimentari() {
+		super(ClasseMissione.RECUPERA_LE_DERRATE_ALIMENTARI);
+	}
+
 	@Override
 	public String getNome() {
 		return "Recupera le derrate alimentari";

@@ -8,6 +8,10 @@ import com.threeamigos.foresta.ui.UI;
  */
 public class MissioneDiProvaTerziariaUno extends MissioneBase implements Missione {
 
+	public MissioneDiProvaTerziariaUno() {
+		super(ClasseMissione.MISSIONE_DI_PROVA_TERZIARIA_UNO);
+	}
+
     @Override
     public String getNome() {
         return "Prova terziaria uno";

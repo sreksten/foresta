@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.MissioneMD;
 
 import java.util.ArrayList;
@@ -16,21 +15,18 @@ public abstract class MissioneBase implements Missione {
 
 	protected static final String AFFERMATIVO = "S";
 
-	protected MissioneMD md = new MissioneMD();
-	protected List<Missione> missioniSecondarie = new ArrayList<>();
+	protected MissioneMD md;
+	protected List<Missione> missioniSecondarie;
 
-	protected MissioneBase() {
+	protected MissioneBase(ClasseMissione classe) {
 		md = new MissioneMD();
+		md.setClasse(classe);
 		missioniSecondarie = new ArrayList<>();
 	}
 
 	@Override
 	public String getId() {
 		return md.getId();
-	}
-
-	protected void setId(RegistroMissioni.TipoMissionePredefinita tipoMissione) {
-		md.setId(tipoMissione.name());
 	}
 
 	@Override
@@ -41,6 +37,10 @@ public abstract class MissioneBase implements Missione {
 	@Override
 	public void setModelloDati(MissioneMD modelloDati) {
 		this.md = modelloDati;
+		// La struttura dell'albero appartiene al modello dati: i figli creati dal
+		// costruttore avrebbero identificativi diversi da quelli persistiti, e
+		// tenerli in lista farebbe sparire senza errori i progressi salvati.
+		missioniSecondarie.clear();
 	}
 
 	@Override
@@ -119,6 +119,15 @@ public abstract class MissioneBase implements Missione {
 	public void rimuoviMissione(Missione missione) {
 		missioniSecondarie.remove(missione);
 		md.rimuoviMissioneMD(missione.getModelloDati());
+	}
+
+	@Override
+	public void sostituisciMissioniSecondarie(List<Missione> missioni) {
+		// Copia difensiva: la lista in ingresso puo' essere quella viva di questa
+		// stessa missione, e lo svuotamento la azzererebbe.
+		List<Missione> nuoveMissioni = new ArrayList<>(missioni);
+		missioniSecondarie.clear();
+		missioniSecondarie.addAll(nuoveMissioni);
 	}
 
 	@Override

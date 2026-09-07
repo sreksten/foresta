@@ -26,10 +26,6 @@ public class RegistroMissioniMD implements Serializzabile {
 		missioni.put(id, missione);
 	}
 
-	public void aggiungiMissione(MissioneMD missione) {
-		missioni.put(missione.getId(), missione);
-	}
-
 	public MissioneMD getMissione(String id) {
 		return missioni.get(id);
 	}

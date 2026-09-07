@@ -12,6 +12,10 @@ import com.threeamigos.foresta.ui.UI;
 
 public class SconfiggiIlDrago extends MissioneBase implements Missione {
 
+	public SconfiggiIlDrago() {
+		super(ClasseMissione.SCONFIGGI_IL_DRAGO);
+	}
+
 	private static final String DRAGO_APPARSO = "DRAGO_APPARSO";
 
 	@Override

@@ -9,6 +9,10 @@ import com.threeamigos.foresta.ui.UI;
 
 public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements Missione {
 
+	public RecuperaIlMedaglione() {
+		super(ClasseMissione.RECUPERA_IL_MEDAGLIONE);
+	}
+
 	@Override
 	public String getNome() {
 		return "Recupera il medaglione";

@@ -28,7 +28,7 @@ public class FontTool {
 	// Spezza la frase in più stringhe per farla rientrare in una larghezza massima
 	public static List<String> split(DoomdarkFont font, String s, int width) {
 		List<String> list = new ArrayList<>();
-		StringTokenizer st = new StringTokenizer(s, " ");
+		StringTokenizer st = new StringTokenizer(s == null ? "" : s, " ");
 		int phraseWidth = 0;
 		int wordWidth;
 		StringBuilder phrase = new StringBuilder();

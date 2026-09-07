@@ -5,6 +5,10 @@ import com.threeamigos.foresta.ui.UI;
 
 public abstract class Combatti extends MissioneBase {
 
+	protected Combatti(ClasseMissione classe) {
+		super(classe);
+	}
+
 	@Override
 	public String getNome() {
 		return "Combatti";

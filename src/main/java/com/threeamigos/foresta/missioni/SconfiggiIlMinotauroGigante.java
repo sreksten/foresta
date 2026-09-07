@@ -10,6 +10,10 @@ import com.threeamigos.foresta.ui.UI;
  */
 public class SconfiggiIlMinotauroGigante extends MissioneBase implements Missione {
 
+	public SconfiggiIlMinotauroGigante() {
+		super(ClasseMissione.SCONFIGGI_IL_MINOTAURO_GIGANTE);
+	}
+
     @Override
     public String getNome() {
         return "Sconfiggi il Minotauro Gigante";

@@ -10,6 +10,10 @@ import com.threeamigos.foresta.ui.UI;
  */
 public class SconfiggiLaStrega extends MissioneBase implements Missione {
 
+	public SconfiggiLaStrega() {
+		super(ClasseMissione.SCONFIGGI_LA_STREGA);
+	}
+
     @Override
     public String getNome() {
         return "Sconfiggi la Strega";

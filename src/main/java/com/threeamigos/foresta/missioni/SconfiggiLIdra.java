@@ -10,6 +10,10 @@ import com.threeamigos.foresta.ui.UI;
  */
 public class SconfiggiLIdra extends MissioneBase implements Missione {
 
+	public SconfiggiLIdra() {
+		super(ClasseMissione.SCONFIGGI_L_IDRA);
+	}
+
     @Override
     public String getNome() {
         return "Sconfiggi l'Idra";

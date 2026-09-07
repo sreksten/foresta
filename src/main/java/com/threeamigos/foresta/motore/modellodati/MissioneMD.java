@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.missioni.ClasseMissione;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -9,6 +11,7 @@ import java.util.stream.Collectors;
 public class MissioneMD implements Serializzabile {
 
 	private String id = UUID.randomUUID().toString();
+	private ClasseMissione classe = ClasseMissione.MISSIONE_SECONDARIA;
 	private String nome;
 	private String descrizione;
 	private boolean descrizioneVisibile = true;
@@ -21,6 +24,14 @@ public class MissioneMD implements Serializzabile {
 
 	public void setId(String id) {
 		this.id = id;
+	}
+
+	public ClasseMissione getClasse() {
+		return classe;
+	}
+
+	public void setClasse(ClasseMissione classe) {
+		this.classe = classe;
 	}
 
 	public String getNome() {
@@ -65,6 +76,10 @@ public class MissioneMD implements Serializzabile {
 	}
 
 	public boolean aggiungiMissioneMD(MissioneMD missioneMD) {
+		if (missioneMD == this) {
+			// Un ciclo renderebbe infinite le ricorsioni di salva() e di ricostruzione
+			return false;
+		}
 		if (missioniSecondarie.stream().noneMatch(m -> m.getId().equals(missioneMD.getId()))) {
 			missioniSecondarie.add(missioneMD);
 			return true;
@@ -84,9 +99,11 @@ public class MissioneMD implements Serializzabile {
 	public void salva(PrintWriter stream) throws IOException {
 		stream.print(id);
 		stream.print(PIPE);
-		stream.print((nome == null || nome.isEmpty()) ? "-" : nome);
+		stream.print(classe.name());
 		stream.print(PIPE);
-		stream.print((descrizione == null || descrizione.isEmpty()) ? "-" : descrizione);
+		stream.print(nome == null ? "" : nome);
+		stream.print(PIPE);
+		stream.print(descrizione == null ? "" : descrizione);
 		stream.print(PIPE);
 		stream.print(descrizioneVisibile);
 		stream.print(PIPE);
@@ -102,16 +119,18 @@ public class MissioneMD implements Serializzabile {
 		String line = stream.readLine();
 		String[] tokens = line.split("\\|", -1);
 		id = tokens[0];
-		nome = tokens[1];
-		descrizione = tokens[2];
-		descrizioneVisibile = Boolean.parseBoolean(tokens[3]);
-		int dimensioneElencoMissioniSecondarie = Integer.parseInt(tokens[4]);
+		classe = ClasseMissione.valueOf(tokens[1]);
+		nome = tokens[2];
+		descrizione = tokens[3];
+		descrizioneVisibile = Boolean.parseBoolean(tokens[4]);
+		int dimensioneElencoMissioniSecondarie = Integer.parseInt(tokens[5]);
 		proprieta.clear();
 		line = stream.readLine();
 		StringTokenizer st = new StringTokenizer(line, PIPE);
 		while (st.hasMoreTokens()) {
-			tokens = st.nextToken().split(":");
-			proprieta.put(tokens[0], tokens[1]);
+			// Limite 2: il valore può contenere ':' ed essere vuoto
+			tokens = st.nextToken().split(":", 2);
+			proprieta.put(tokens[0], tokens.length > 1 ? tokens[1] : "");
 		}
 		missioniSecondarie.clear();
 		for (int i = 0; i < dimensioneElencoMissioniSecondarie; i++) {

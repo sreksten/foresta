@@ -9,8 +9,9 @@ import com.threeamigos.foresta.ui.UI;
 public class MissioneDIProva extends MissioneBase implements Missione {
 
     public MissioneDIProva() {
-        missioniSecondarie.add(new MissioneDiProvaSecondariaUno());
-        missioniSecondarie.add(new MissioneDiProvaSecondariaDue());
+        super(ClasseMissione.MISSIONE_DI_PROVA);
+        aggiungiMissione(new MissioneDiProvaSecondariaUno());
+        aggiungiMissione(new MissioneDiProvaSecondariaDue());
     }
 
     @Override

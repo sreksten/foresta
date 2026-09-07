@@ -97,14 +97,17 @@ public class ComponenteScorrevole<T> {
     }
 
     private void addNodo(Nodo nodo, List<TestoDoomdark> listaRisultante, DoomdarkColorModel.Color colore) {
+        // Il colore imposto sul nodo vale per il solo nodo: i figli continuano a
+        // ereditare quello del proprio ramo, e decidono a loro volta se sovrascriverlo.
+        DoomdarkColorModel.Color coloreNodo = nodo.colore != null ? nodo.colore : colore;
         for (String s : nodo.testo) {
-            listaRisultante.add(new TestoDoomdark(s, nodo.doomdarkFontTesto, nodo.indentazione, colore, nodo.riferimento, true));
+            listaRisultante.add(new TestoDoomdark(s, nodo.doomdarkFontTesto, nodo.indentazione, coloreNodo, nodo.riferimento, true));
         }
         if (nodo.isFigliVisibili()) {
             // La descrizione è indentata come i nodi figli
             int indentazioneDescrizione = nodo.indentazione + larghezzaIndentazione;
             for (String s : nodo.descrizione) {
-                listaRisultante.add(new TestoDoomdark(s, nodo.doomdarkFontDescrizione, indentazioneDescrizione, colore, nodo.riferimento, false));
+                listaRisultante.add(new TestoDoomdark(s, nodo.doomdarkFontDescrizione, indentazioneDescrizione, coloreNodo, nodo.riferimento, false));
             }
             for (Nodo figlio : nodo.figli) {
                 addNodo(figlio, listaRisultante, colore);
@@ -142,6 +145,8 @@ public class ComponenteScorrevole<T> {
         private final T riferimento;
         private final List<Nodo> figli = new ArrayList<>();
         private boolean figliVisibili = true;
+        // Se valorizzato, prevale sul colore ereditato dal ramo
+        private DoomdarkColorModel.Color colore;
 
         Nodo(String testoOriginale, DoomdarkFont doomdarkFontTestoOriginale,
              String descrizioneOriginale, DoomdarkFont doomdarkFontDescrizioneOriginale,
@@ -182,6 +187,10 @@ public class ComponenteScorrevole<T> {
             return figli;
         }
 
+        public void setColore(DoomdarkColorModel.Color colore) {
+            this.colore = colore;
+        }
+
         public void setFigliVisibili(boolean figliVisibili) {
             this.figliVisibili = figliVisibili;
         }
@@ -220,10 +229,10 @@ public class ComponenteScorrevole<T> {
 
     private static class DoomdarkColorAlternante {
 
-        private DoomdarkColorModel.Color color = DoomdarkColorModel.Color.DARK_GRAY;
+        private DoomdarkColorModel.Color color = DoomdarkColorModel.Color.MEDIUM_GRAY;
 
         public DoomdarkColorModel.Color getColor() {
-            color = color == DoomdarkColorModel.Color.LIGHT_GRAY ? DoomdarkColorModel.Color.DARK_GRAY : DoomdarkColorModel.Color.LIGHT_GRAY;
+            color = color == DoomdarkColorModel.Color.LIGHT_GRAY ? DoomdarkColorModel.Color.MEDIUM_GRAY : DoomdarkColorModel.Color.LIGHT_GRAY;
             return color;
         }
     }

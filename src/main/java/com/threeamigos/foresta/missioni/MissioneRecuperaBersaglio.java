@@ -3,6 +3,10 @@ package com.threeamigos.foresta.missioni;
 public abstract class MissioneRecuperaBersaglio extends MissioneBase {
 
 	private static final String BERSAGLIO_RECUPERATO = "BERSAGLIO_RECUPERATO";
+
+	protected MissioneRecuperaBersaglio(ClasseMissione classe) {
+		super(classe);
+	}
 	
 	@Override
 	public final boolean isPrimaria() {

@@ -9,6 +9,10 @@ import com.threeamigos.foresta.ui.UI;
 
 public class MuoviALocazione extends MissioneBase {
 
+	public MuoviALocazione() {
+		super(ClasseMissione.MUOVI_A_LOCAZIONE);
+	}
+
 	private static final String COORDINATA_X = "COORDINATA_X";
 	private static final String COORDINATA_Y = "COORDINATA_Y";
 

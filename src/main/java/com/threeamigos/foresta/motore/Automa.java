@@ -14,6 +14,9 @@ import com.threeamigos.foresta.tools.Temporizzatore;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
 
+import java.util.ArrayList;
+import java.util.function.Consumer;
+
 public class Automa implements ControlloreDiGioco {
 
 	private static final String SCEGLI_NOME_PERSONAGGIO = "Scegli il nome del tuo personaggio o lascialo vuoto per un personaggio casuale.";
@@ -234,9 +237,7 @@ public class Automa implements ControlloreDiGioco {
 				break;
 
 			case INZIO_LOCAZIONE:
-				for (Missione missione : RegistroMissioni.getMissioni()) {
-					missione.controllaPreLocazione();
-				}
+				controllaMissioni(Missione::controllaPreLocazione, OrdineVisita.PADRE_PRIMA);
 				String evento = LineaTemporale.getEvento();
 				if (evento != null) {
 					UI.notifica(evento);
@@ -256,9 +257,7 @@ public class Automa implements ControlloreDiGioco {
 				UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
 				UI.notifica(LineaTemporale.getDescrizioneOraDelGiorno());
 				locazioneCorrente.descrivi(gruppo, gruppoAvversario);
-				for (Missione missione : RegistroMissioni.getMissioni()) {
-					missione.controllaInLocazione();
-				}
+				controllaMissioni(Missione::controllaInLocazione, OrdineVisita.PADRE_PRIMA);
 				/*
 				 * Ogni locazione ha un metodo impostaAzioni; nel caso delle
 				 * locazioni di base imposterà le azioni combattimento,
@@ -418,9 +417,7 @@ public class Automa implements ControlloreDiGioco {
 						}
 					}
 					locazioneCorrente.azzeraLocazione(gruppo);
-					for (Missione missione : RegistroMissioni.getMissioni()) {
-						missione.controllaPostLocazione();
-					}
+					controllaMissioni(Missione::controllaPostLocazione, OrdineVisita.FIGLI_PRIMA);
 				}
 
 				if (LineaTemporale.isGiocoFinito()) {
@@ -741,6 +738,60 @@ public class Automa implements ControlloreDiGioco {
 
 			default:
 				throw new IllegalStateException("Stato " + stato + " non correttamente gestito!");
+		}
+	}
+
+	/**
+	 * L'ordine con cui un controllo percorre l'albero delle missioni. Non e' un
+	 * dettaglio di efficienza: decide quale stato una missione vede nell'altra meta'
+	 * dell'albero, e quindi quali cascate si chiudono nello stesso giro anziche' in
+	 * quello dopo.
+	 */
+	private enum OrdineVisita {
+		/**
+		 * Il padre viene controllato prima dei figli. L'attivazione scende: una missione
+		 * che si attiva adesso porta con se' le proprie figlie nello stesso giro, cosi'
+		 * un albero appena attivato compare completo invece di srotolarsi una riga per
+		 * volta.
+		 */
+		PADRE_PRIMA,
+		/**
+		 * I figli vengono controllati prima del padre. Il completamento sale: una
+		 * missione-contenitore che si completa quando tutte le figlie sono complete le
+		 * vede nello stato di questo giro, non del precedente.
+		 */
+		FIGLI_PRIMA
+	}
+
+	/**
+	 * Applica il controllo a tutto l'albero delle missioni, non solo ai nodi di primo
+	 * livello: le sotto-missioni si attivano e si completano da sole come le altre.
+	 */
+	private void controllaMissioni(Consumer<Missione> controllo, OrdineVisita ordineVisita) {
+		for (Missione missione : RegistroMissioni.getMissioni()) {
+			controllaMissione(missione, controllo, ordineVisita);
+		}
+	}
+
+	private void controllaMissione(Missione missione, Consumer<Missione> controllo, OrdineVisita ordineVisita) {
+		if (ordineVisita == OrdineVisita.PADRE_PRIMA) {
+			controllo.accept(missione);
+		}
+		// Nei rami spenti o gia' conclusi non si scende, e le figlie completate si
+		// saltano: e' lo stesso filtro che getMissioni() applica alle radici. Con
+		// FIGLI_PRIMA la condizione si valuta prima che il padre sia controllato,
+		// quindi una missione che si attiva adesso vedra' le proprie figlie al giro
+		// successivo.
+		if (missione.isAttiva() && !missione.isCompleta()) {
+			// Copia difensiva: un controllo puo' aggiungere sotto-missioni al nodo
+			for (Missione missioneSecondaria : new ArrayList<>(missione.getMissioniSecondarie())) {
+				if (!missioneSecondaria.isCompleta()) {
+					controllaMissione(missioneSecondaria, controllo, ordineVisita);
+				}
+			}
+		}
+		if (ordineVisita == OrdineVisita.FIGLI_PRIMA) {
+			controllo.accept(missione);
 		}
 	}
 

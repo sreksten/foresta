@@ -1,18 +1,13 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.motore.modellodati.MissioneMD;
-
 /**
  *
  * @author Stefano Reksten
  */
 public class MissioneSecondaria extends MissioneBase {
 
-    public MissioneSecondaria(MissioneMD missioneMD) {
-        setModelloDati(md);
-        for (MissioneMD missioneSecondariaMD : missioneMD.getMissioniMD()) {
-            aggiungiMissione(new MissioneSecondaria(missioneSecondariaMD));
-        }
+    public MissioneSecondaria() {
+        super(ClasseMissione.MISSIONE_SECONDARIA);
     }
 
     @Override

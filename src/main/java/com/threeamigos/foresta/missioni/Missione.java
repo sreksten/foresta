@@ -48,6 +48,8 @@ public interface Missione {
 
 	void rimuoviMissione(Missione missione);
 
+	void sostituisciMissioniSecondarie(List<Missione> missioni);
+
 	List<Missione> getMissioniSecondarie();
 
 }

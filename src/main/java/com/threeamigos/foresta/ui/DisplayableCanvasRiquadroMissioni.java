@@ -43,29 +43,30 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 	 */
 	private ComponenteScorrevole<Missione> costruisciComponenteScorrevole() {
 		ComponenteScorrevole<Missione> componenteScorrevole = new ComponenteScorrevole<>(innerWidth, 10, 2);
-		for (Missione missione : RegistroMissioni.getMissioniAttive()) {
-			aggiungiAComponenteScorrevole(componenteScorrevole, missione);
+		for (Missione missione : RegistroMissioni.getMissioniDaMostrare()) {
+			ComponenteScorrevole<Missione>.Nodo nodo = componenteScorrevole.creaNodo(missione.getNome(), DoomdarkFontMedium.getInstance(),
+					missione.getDescrizione(), DoomdarkFontSmall.getInstance(), missione);
+			configuraNodo(nodo, missione);
 		}
 		return componenteScorrevole;
 	}
 
-	private void aggiungiAComponenteScorrevole(ComponenteScorrevole<Missione> componenteScorrevole, Missione missione) {
-		ComponenteScorrevole<Missione>.Nodo nodo = componenteScorrevole.creaNodo(missione.getNome(), DoomdarkFontMedium.getInstance(),
-				missione.getDescrizione(), DoomdarkFontSmall.getInstance(), missione);
+	/**
+	 * Una missione completata resta in elenco ma spenta; una non ancora attivata non
+	 * viene mostrata. Vale a ogni livello dell'albero.
+	 */
+	private void configuraNodo(ComponenteScorrevole<Missione>.Nodo nodo, Missione missione) {
 		nodo.setFigliVisibili(missione.isDescrizioneVisibile());
-		java.util.List<Missione> missioniSecondarie = missione.getMissioniSecondarie();
-		for (Missione missioneSecondaria : missioniSecondarie) {
-				aggiungiANodo(nodo, missioneSecondaria);
+		if (missione.isCompleta()) {
+			nodo.setColore(DoomdarkColorModel.Color.DARK_GRAY);
 		}
-	}
-
-	private void aggiungiANodo(ComponenteScorrevole<Missione>.Nodo nodo, Missione missione) {
-		ComponenteScorrevole<Missione>.Nodo nodoFiglio = nodo.creaNodo(missione.getNome(), DoomdarkFontMedium.getInstance(),
-				missione.getDescrizione(), DoomdarkFontSmall.getInstance(), missione);
-		nodoFiglio.setFigliVisibili(missione.isDescrizioneVisibile());
-		java.util.List<Missione> missioniSecondarie = missione.getMissioniSecondarie();
-		for (Missione missioneSecondaria : missioniSecondarie) {
-			aggiungiANodo(nodoFiglio, missioneSecondaria);
+		for (Missione missioneSecondaria : missione.getMissioniSecondarie()) {
+			if (!RegistroMissioni.isDaMostrare(missioneSecondaria)) {
+				continue;
+			}
+			ComponenteScorrevole<Missione>.Nodo nodoFiglio = nodo.creaNodo(missioneSecondaria.getNome(), DoomdarkFontMedium.getInstance(),
+					missioneSecondaria.getDescrizione(), DoomdarkFontSmall.getInstance(), missioneSecondaria);
+			configuraNodo(nodoFiglio, missioneSecondaria);
 		}
 	}
 

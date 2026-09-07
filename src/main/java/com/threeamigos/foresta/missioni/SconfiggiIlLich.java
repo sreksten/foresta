@@ -10,6 +10,10 @@ import com.threeamigos.foresta.ui.UI;
  */
 public class SconfiggiIlLich extends MissioneBase implements Missione {
 
+	public SconfiggiIlLich() {
+		super(ClasseMissione.SCONFIGGI_IL_LICH);
+	}
+
     @Override
     public String getNome() {
         return "Sconfiggi il Lich";
