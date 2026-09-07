@@ -29,10 +29,7 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 	void disegnaMissioni(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
 
-		ComponenteScorrevole componenteScorrevole = new ComponenteScorrevole(innerWidth, 10, 2);
-		for (Missione missione : RegistroMissioni.getMissioniAttive()) {
-				aggiungiAComponenteScorrevole(componenteScorrevole, missione);
-		}
+		ComponenteScorrevole<Missione> componenteScorrevole = costruisciComponenteScorrevole();
 		// L'elenco può essere cambiato dall'ultimo scorrimento: l'offset va rimesso nei limiti
 		offsetY = componenteScorrevole.limitaOffset(innerHeight, offsetY);
 		Image image = componenteScorrevole.produci(innerHeight, offsetY);
@@ -40,18 +37,32 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 				topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + SPACING, null);
 	}
 
-	private void aggiungiAComponenteScorrevole(ComponenteScorrevole componenteScorrevole, Missione missione) {
-		ComponenteScorrevole.Nodo nodo = componenteScorrevole.creaNodo(missione.getNome(), DoomdarkFontMedium.getInstance(),
-				missione.getDescrizione(), DoomdarkFontSmall.getInstance());
+	/**
+	 * L'albero viene ricostruito a ogni disegno e a ogni click: lo stato di apertura
+	 * dei nodi non vive qui ma nel modello dati delle missioni.
+	 */
+	private ComponenteScorrevole<Missione> costruisciComponenteScorrevole() {
+		ComponenteScorrevole<Missione> componenteScorrevole = new ComponenteScorrevole<>(innerWidth, 10, 2);
+		for (Missione missione : RegistroMissioni.getMissioniAttive()) {
+			aggiungiAComponenteScorrevole(componenteScorrevole, missione);
+		}
+		return componenteScorrevole;
+	}
+
+	private void aggiungiAComponenteScorrevole(ComponenteScorrevole<Missione> componenteScorrevole, Missione missione) {
+		ComponenteScorrevole<Missione>.Nodo nodo = componenteScorrevole.creaNodo(missione.getNome(), DoomdarkFontMedium.getInstance(),
+				missione.getDescrizione(), DoomdarkFontSmall.getInstance(), missione);
+		nodo.setFigliVisibili(missione.isDescrizioneVisibile());
 		java.util.List<Missione> missioniSecondarie = missione.getMissioniSecondarie();
 		for (Missione missioneSecondaria : missioniSecondarie) {
 				aggiungiANodo(nodo, missioneSecondaria);
 		}
 	}
 
-	private void aggiungiANodo(ComponenteScorrevole.Nodo nodo, Missione missione) {
-		ComponenteScorrevole.Nodo nodoFiglio = nodo.creaNodo(missione.getNome(), DoomdarkFontMedium.getInstance(),
-				missione.getDescrizione(), DoomdarkFontSmall.getInstance());
+	private void aggiungiANodo(ComponenteScorrevole<Missione>.Nodo nodo, Missione missione) {
+		ComponenteScorrevole<Missione>.Nodo nodoFiglio = nodo.creaNodo(missione.getNome(), DoomdarkFontMedium.getInstance(),
+				missione.getDescrizione(), DoomdarkFontSmall.getInstance(), missione);
+		nodoFiglio.setFigliVisibili(missione.isDescrizioneVisibile());
 		java.util.List<Missione> missioniSecondarie = missione.getMissioniSecondarie();
 		for (Missione missioneSecondaria : missioniSecondarie) {
 			aggiungiANodo(nodoFiglio, missioneSecondaria);
@@ -92,6 +103,30 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 			} else {
 				return;
 			}
+		}
+	}
+
+	@Override
+	public void processaClick(int x, int y, Tasto tasto) {
+		if (tasto != Tasto.SINISTRO) {
+			return;
+		}
+		int bordo = DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + SPACING;
+		int xInterno = x - bordo;
+		int yInterno = y - bordo;
+		// Il click può cadere sulla cornice, fuori dall'elenco
+		if (xInterno < 0 || xInterno >= innerWidth || yInterno < 0 || yInterno >= innerHeight) {
+			return;
+		}
+		// La quota va espressa in coordinate della lista, non della finestra visibile
+		Missione missione = costruisciComponenteScorrevole().riferimentoTitoloAllaQuota(yInterno + offsetY);
+		if (missione == null) {
+			return;
+		}
+		if (missione.isDescrizioneVisibile()) {
+			missione.nascondiDescrizione();
+		} else {
+			missione.mostraDescrizione();
 		}
 	}
 

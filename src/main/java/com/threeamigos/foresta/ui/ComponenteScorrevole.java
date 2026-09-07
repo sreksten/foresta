@@ -6,10 +6,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * Elenco ad albero scorrevole. Ogni nodo può portarsi dietro un riferimento
+ * all'oggetto che rappresenta, per poter risalire dalla posizione di un click
+ * a quell'oggetto.
+ *
+ * @param <T> il tipo dell'oggetto rappresentato da ciascun nodo
  *
  * @author Stefano Reksten
  */
-public class ComponenteScorrevole {
+public class ComponenteScorrevole<T> {
 
     private final int larghezza;
     private final int larghezzaIndentazione;
@@ -23,8 +28,8 @@ public class ComponenteScorrevole {
     }
 
     public Nodo creaNodo(String testo, DoomdarkFont doomdarkFontTesto,
-                         String descrizione, DoomdarkFont doomdarkFontDescrizione) {
-        Nodo nodo = new Nodo(testo, doomdarkFontTesto, descrizione, doomdarkFontDescrizione, 0);
+                         String descrizione, DoomdarkFont doomdarkFontDescrizione, T riferimento) {
+        Nodo nodo = new Nodo(testo, doomdarkFontTesto, descrizione, doomdarkFontDescrizione, 0, riferimento);
         nodi.add(nodo);
         return nodo;
     }
@@ -93,18 +98,39 @@ public class ComponenteScorrevole {
 
     private void addNodo(Nodo nodo, List<TestoDoomdark> listaRisultante, DoomdarkColorModel.Color colore) {
         for (String s : nodo.testo) {
-            listaRisultante.add(new TestoDoomdark(s, nodo.doomdarkFontTesto, nodo.indentazione, colore));
+            listaRisultante.add(new TestoDoomdark(s, nodo.doomdarkFontTesto, nodo.indentazione, colore, nodo.riferimento, true));
         }
         if (nodo.isFigliVisibili()) {
             // La descrizione è indentata come i nodi figli
             int indentazioneDescrizione = nodo.indentazione + larghezzaIndentazione;
             for (String s : nodo.descrizione) {
-                listaRisultante.add(new TestoDoomdark(s, nodo.doomdarkFontDescrizione, indentazioneDescrizione, colore));
+                listaRisultante.add(new TestoDoomdark(s, nodo.doomdarkFontDescrizione, indentazioneDescrizione, colore, nodo.riferimento, false));
             }
             for (Nodo figlio : nodo.figli) {
                 addNodo(figlio, listaRisultante, colore);
             }
         }
+    }
+
+    /**
+     * Riporta il riferimento del nodo il cui titolo occupa la quota indicata, oppure null
+     * se a quella quota non c'è il titolo di un nodo (spazio vuoto, o riga di descrizione).
+     *
+     * @param quota espressa in coordinate della lista, quindi comprensiva dell'offset
+     *              di scorrimento con cui la lista è stata prodotta
+     */
+    public T riferimentoTitoloAllaQuota(int quota) {
+        if (quota < 0) {
+            return null;
+        }
+        int altezzaRaggiunta = 0;
+        for (TestoDoomdark testoDoomdark : espandiNodi()) {
+            if (quota < altezzaRaggiunta + testoDoomdark.altezza) {
+                return testoDoomdark.titolo ? testoDoomdark.riferimento : null;
+            }
+            altezzaRaggiunta += testoDoomdark.altezza;
+        }
+        return null;
     }
 
     public class Nodo {
@@ -113,12 +139,14 @@ public class ComponenteScorrevole {
         private final DoomdarkFont doomdarkFontDescrizione;
         private final List<String> descrizione;
         private final int indentazione;
+        private final T riferimento;
         private final List<Nodo> figli = new ArrayList<>();
         private boolean figliVisibili = true;
 
         Nodo(String testoOriginale, DoomdarkFont doomdarkFontTestoOriginale,
              String descrizioneOriginale, DoomdarkFont doomdarkFontDescrizioneOriginale,
-             int indentazione) {
+             int indentazione, T riferimento) {
+            this.riferimento = riferimento;
             // Il testo va spezzato sulla larghezza effettivamente disponibile, che
             // l'indentazione riduce. La descrizione è indentata di un livello in più.
             int larghezzaDisponibile = larghezza - indentazione;
@@ -130,8 +158,9 @@ public class ComponenteScorrevole {
         }
 
         public Nodo creaNodo(String testo, DoomdarkFont doomdarkFontTesto,
-                             String descrizione, DoomdarkFont doomdarkFontDescrizione) {
-            Nodo nodo = new Nodo(testo, doomdarkFontTesto, descrizione, doomdarkFontDescrizione, this.indentazione + larghezzaIndentazione);
+                             String descrizione, DoomdarkFont doomdarkFontDescrizione, T riferimento) {
+            Nodo nodo = new Nodo(testo, doomdarkFontTesto, descrizione, doomdarkFontDescrizione,
+                    this.indentazione + larghezzaIndentazione, riferimento);
             figli.add(nodo);
             return nodo;
         }
@@ -168,13 +197,19 @@ public class ComponenteScorrevole {
         private final int altezza;
         private final int indentazione;
         private final DoomdarkColorModel.Color colore;
+        private final T riferimento;
+        // Distingue le righe del titolo del nodo da quelle della sua descrizione
+        private final boolean titolo;
 
-        public TestoDoomdark(String testo, DoomdarkFont doomdarkFont, int indentazione, DoomdarkColorModel.Color colore) {
+        public TestoDoomdark(String testo, DoomdarkFont doomdarkFont, int indentazione,
+                             DoomdarkColorModel.Color colore, T riferimento, boolean titolo) {
             this.testo = testo;
             this.doomdarkFont = doomdarkFont;
             this.altezza = doomdarkFont.getHeight() + interlinea;
             this.indentazione = indentazione;
             this.colore = colore;
+            this.riferimento = riferimento;
+            this.titolo = titolo;
         }
 
         @Override

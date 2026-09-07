@@ -632,6 +632,7 @@ public class Automa implements ControlloreDiGioco {
 					switch (azione) {
 					case SI:
 						stato = statoPrecedente;
+						UI.iniziaGioco();
 						UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
 						processaAzione(null);
 						break;

@@ -54,6 +54,11 @@ public abstract class MissioneBase implements Missione {
 	}
 
 	@Override
+	public boolean isDescrizioneVisibile() {
+		return md.isDescrizioneVisibile();
+	}
+
+	@Override
 	public void mostraDescrizione() {
 		md.setDescrizioneVisibile(true);
 	}

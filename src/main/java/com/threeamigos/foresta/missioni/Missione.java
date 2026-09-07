@@ -12,6 +12,8 @@ public interface Missione {
 	
 	String getDescrizione();
 
+	boolean isDescrizioneVisibile();
+
 	void mostraDescrizione();
 
 	void nascondiDescrizione();
