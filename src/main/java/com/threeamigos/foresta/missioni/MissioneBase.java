@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.MissioneMD;
 
 import java.util.ArrayList;
@@ -17,6 +18,20 @@ public abstract class MissioneBase implements Missione {
 
 	protected MissioneMD md = new MissioneMD();
 	protected List<Missione> missioniSecondarie = new ArrayList<>();
+
+	protected MissioneBase() {
+		md = new MissioneMD();
+		missioniSecondarie = new ArrayList<>();
+	}
+
+	@Override
+	public String getId() {
+		return md.getId();
+	}
+
+	protected void setId(RegistroMissioni.TipoMissionePredefinita tipoMissione) {
+		md.setId(tipoMissione.name());
+	}
 
 	@Override
 	public MissioneMD getModelloDati() {
@@ -90,8 +105,9 @@ public abstract class MissioneBase implements Missione {
 
 	@Override
 	public void aggiungiMissione(Missione missione) {
-		missioniSecondarie.add(missione);
-		md.aggiungiMissioneMD(missione.getModelloDati());
+		if (md.aggiungiMissioneMD(missione.getModelloDati())) {
+			missioniSecondarie.add(missione);
+		}
 	}
 
 	@Override
@@ -103,5 +119,10 @@ public abstract class MissioneBase implements Missione {
 	@Override
 	public List<Missione> getMissioniSecondarie() {
 		return missioniSecondarie;
+	}
+
+	@Override
+	public String toString() {
+		return getNome();
 	}
 }

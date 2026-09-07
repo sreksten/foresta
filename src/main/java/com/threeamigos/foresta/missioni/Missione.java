@@ -6,6 +6,8 @@ import java.util.List;
 
 public interface Missione {
 
+	String getId();
+
 	String getNome();
 	
 	String getDescrizione();

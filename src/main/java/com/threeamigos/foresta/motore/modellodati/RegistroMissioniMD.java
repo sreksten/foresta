@@ -5,6 +5,7 @@ import com.threeamigos.foresta.motore.RegistroMissioni;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,12 +17,25 @@ public class RegistroMissioniMD implements Serializzabile {
 		missioni.clear();
 	}
 
+	/**
+	 * Per le missioni predefinite che hanno un ID noto (il valore nell'enumerato)
+	 * @param id
+	 * @param missione
+	 */
+	public void aggiungiMissione(String id, MissioneMD missione) {
+		missioni.put(id, missione);
+	}
+
 	public void aggiungiMissione(MissioneMD missione) {
 		missioni.put(missione.getId(), missione);
 	}
 
 	public MissioneMD getMissione(String id) {
 		return missioni.get(id);
+	}
+
+	public Collection<MissioneMD> getMissioni() {
+		return missioni.values();
 	}
 
 	@Override

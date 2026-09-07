@@ -4,18 +4,23 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class MissioneMD implements Serializzabile {
 
 	private String id = UUID.randomUUID().toString();
 	private String nome;
 	private String descrizione;
-	private boolean descrizioneVisibile;
-	private final Map<String, String> map = new HashMap<>();
+	private boolean descrizioneVisibile = true;
+	private final Map<String, String> proprieta = new HashMap<>();
 	private final List<MissioneMD> missioniSecondarie = new ArrayList<>();
 
 	public String getId() {
 		return id;
+	}
+
+	public void setId(String id) {
+		this.id = id;
 	}
 
 	public String getNome() {
@@ -43,49 +48,50 @@ public class MissioneMD implements Serializzabile {
 	}
 
 	public void reimposta() {
-		map.clear();
+		proprieta.clear();
 		missioniSecondarie.clear();
 	}
 
 	public void aggiungiProprieta(String nome, String valore) {
-		map.put(nome, valore);
+		proprieta.put(nome, valore);
 	}
 
 	public String ottieniProprieta(String nome) {
-		return map.get(nome);
+		return proprieta.get(nome);
 	}
 
 	public void rimuoviProprieta(String nome) {
-		map.remove(nome);
+		proprieta.remove(nome);
 	}
 
-	public void aggiungiMissioneMD(MissioneMD missioneMD) {
-		missioniSecondarie.add(missioneMD);
+	public boolean aggiungiMissioneMD(MissioneMD missioneMD) {
+		if (missioniSecondarie.stream().noneMatch(m -> m.getId().equals(missioneMD.getId()))) {
+			missioniSecondarie.add(missioneMD);
+			return true;
+		}
+		return false;
 	}
 
 	public void rimuoviMissioneMD(MissioneMD missioneMD) {
-		missioniSecondarie.remove(missioneMD);
+		missioniSecondarie.removeIf(m -> m.getId().equals(missioneMD.getId()));
+	}
+
+	public Collection<MissioneMD> getMissioniMD() {
+		return missioniSecondarie;
 	}
 
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stream.print(id);
 		stream.print(PIPE);
-		stream.print(nome == null ? "" : nome);
+		stream.print((nome == null || nome.isEmpty()) ? "-" : nome);
 		stream.print(PIPE);
-		stream.print(descrizione == null ? "" : descrizione);
+		stream.print((descrizione == null || descrizione.isEmpty()) ? "-" : descrizione);
 		stream.print(PIPE);
 		stream.print(descrizioneVisibile);
 		stream.print(PIPE);
-		stream.print(map.size());
-		stream.print(PIPE);
 		stream.println(missioniSecondarie.size());
-		for (Map.Entry<String, String> property : map.entrySet()) {
-			stream.print(property.getKey());
-			stream.print(PIPE);
-			stream.println(property.getValue());
-		}
-		stream.println(missioniSecondarie.size());
+		stream.println(proprieta.entrySet().stream().map(e -> e.getKey() + ":" + e.getValue()).collect(Collectors.joining(PIPE)));
 		for (MissioneMD missioneMD : missioniSecondarie) {
 			missioneMD.salva(stream);
 		}
@@ -94,17 +100,18 @@ public class MissioneMD implements Serializzabile {
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		String line = stream.readLine();
+		String[] tokens = line.split("\\|", -1);
+		id = tokens[0];
+		nome = tokens[1];
+		descrizione = tokens[2];
+		descrizioneVisibile = Boolean.parseBoolean(tokens[3]);
+		int dimensioneElencoMissioniSecondarie = Integer.parseInt(tokens[4]);
+		proprieta.clear();
+		line = stream.readLine();
 		StringTokenizer st = new StringTokenizer(line, PIPE);
-		id = st.nextToken();
-		nome = st.nextToken();
-		descrizione = st.nextToken();
-		descrizioneVisibile = Boolean.parseBoolean(st.nextToken());
-		int dimensioneElencoProprieta = Integer.parseInt(st.nextToken());
-		int dimensioneElencoMissioniSecondarie = Integer.parseInt(st.nextToken());
-		map.clear();
-		for (int i = 0; i < dimensioneElencoProprieta; i++) {
-			st = new StringTokenizer(stream.readLine(), PIPE);
-			map.put(st.nextToken(), st.nextToken());
+		while (st.hasMoreTokens()) {
+			tokens = st.nextToken().split(":");
+			proprieta.put(tokens[0], tokens[1]);
 		}
 		missioniSecondarie.clear();
 		for (int i = 0; i < dimensioneElencoMissioniSecondarie; i++) {

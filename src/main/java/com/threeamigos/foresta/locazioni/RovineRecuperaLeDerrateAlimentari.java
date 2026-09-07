@@ -3,7 +3,7 @@ package com.threeamigos.foresta.locazioni;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegistroMissioni;
-import com.threeamigos.foresta.motore.RegistroMissioni.TipoMissione;
+import com.threeamigos.foresta.motore.RegistroMissioni.TipoMissionePredefinita;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.personaggi.Troll;
@@ -31,7 +31,7 @@ public class RovineRecuperaLeDerrateAlimentari extends LocazioneUnica {
 	}	
 
 	private boolean isMissioneCompleta() {
-		return RegistroMissioni.getMissione(TipoMissione.RECUPERA_LE_DERRATE_ALIMENTARI).isCompleta(); 
+		return RegistroMissioni.getMissione(TipoMissionePredefinita.RECUPERA_LE_DERRATE_ALIMENTARI).isCompleta();
 	}
 	
 	@Override

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.motore.RegistroMissioni.TipoMissione;
+import com.threeamigos.foresta.motore.RegistroMissioni.TipoMissionePredefinita;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.personaggi.Ladra;
 import com.threeamigos.foresta.personaggi.Ladro;
@@ -29,7 +29,7 @@ public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 	}
 	
 	private boolean isMissioneCompleta() {
-		return RegistroMissioni.getMissione(TipoMissione.RECUPERA_IL_MEDAGLIONE).isCompleta(); 
+		return RegistroMissioni.getMissione(TipoMissionePredefinita.RECUPERA_IL_MEDAGLIONE).isCompleta();
 	}
 	
 	@Override

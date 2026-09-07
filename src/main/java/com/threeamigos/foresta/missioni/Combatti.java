@@ -3,7 +3,7 @@ package com.threeamigos.foresta.missioni;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.ui.UI;
 
-public class Combatti extends MissioneBase {
+public abstract class Combatti extends MissioneBase {
 
 	@Override
 	public String getNome() {

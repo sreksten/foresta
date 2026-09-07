@@ -1,13 +1,9 @@
 package com.threeamigos.foresta.tools;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
-
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+
+import java.io.*;
 
 public abstract class GestoreSalvataggiBase implements InterfacciaGestoreSalvataggi {
 
@@ -43,6 +39,7 @@ public abstract class GestoreSalvataggiBase implements InterfacciaGestoreSalvata
 		try {
 			ModelloDati.getIstanza().leggi(new BufferedReader(new StringReader(salvataggio.getContenuto())));
 		} catch (IOException e) {
+			Logger.log(e);
 			return false;
 		}
 		return true;

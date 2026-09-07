@@ -1,29 +1,35 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.missioni.*;
+import com.threeamigos.foresta.motore.modellodati.MissioneMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.motore.modellodati.RegistroMissioniMD;
 
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.function.Supplier;
-import java.util.stream.Collectors;
 
 public class RegistroMissioni {
+
+	private static final RegistroMissioniMD md;
+
+	static {
+		md = ModelloDati.getIstanza().getRegistroMissioniMD();
+	}
 
 	private RegistroMissioni() {
 	}
 
-	public enum TipoMissione {
+	public enum TipoMissionePredefinita {
 		SCONFIGGI_IL_DRAGO(SconfiggiIlDrago::new),
 		SCONFIGGI_IL_MINOTAURO_GIGANTE(SconfiggiIlMinotauroGigante::new),
 		SCONFIGGI_L_IDRA(SconfiggiLIdra::new),
 		SCONFIGGI_IL_LICH(SconfiggiIlLich::new),
 		SCONFIGGI_LA_STREGA(SconfiggiLaStrega::new),
+		MISSIONE_DI_PROVA(MissioneDIProva::new),
 		RECUPERA_IL_MEDAGLIONE(RecuperaIlMedaglione::new),
 		RECUPERA_LE_DERRATE_ALIMENTARI(RecuperaLeDerrateAlimentari::new);
 		
-		TipoMissione(Supplier<Missione> supplier) {
+		TipoMissionePredefinita(Supplier<Missione> supplier) {
 			this.supplier = supplier;
 		}
 
@@ -32,46 +38,73 @@ public class RegistroMissioni {
 		public Missione getIstanza() {
 			return supplier.get();
 		}
+
+		public static boolean contieneMissione(String id) {
+			return Arrays.stream(TipoMissionePredefinita.values()).anyMatch(m -> m.name().equals(id));
+		}
 	}
 
-	private static final Map<TipoMissione, Missione> elencoMissioni = new EnumMap<>(TipoMissione.class);
-	
+	private static final Map<TipoMissionePredefinita, Missione> elencoMissioniPredefinite = new EnumMap<>(TipoMissionePredefinita.class);
+	private static final List<Missione> elencoMissioniSecondarie = new ArrayList<>();
+
 	public static void reimposta() {
-		ModelloDati.getIstanza().getRegistroMissioniMD().reimposta();		
-		elencoMissioni.clear();
-		for (TipoMissione tipoMissione : TipoMissione.values()) {
-			Missione missione = tipoMissione.getIstanza();
-			elencoMissioni.put(tipoMissione, missione);
-			ModelloDati.getIstanza().getRegistroMissioniMD().aggiungiMissione(missione.getModelloDati());
+		md.reimposta();
+		elencoMissioniPredefinite.clear();
+		for (TipoMissionePredefinita tipoMissionePredefinita : TipoMissionePredefinita.values()) {
+			Missione missione = tipoMissionePredefinita.getIstanza();
+			missione.getModelloDati().setId(tipoMissionePredefinita.name());
+			elencoMissioniPredefinite.put(tipoMissionePredefinita, missione);
+			md.aggiungiMissione(tipoMissionePredefinita.name(), missione.getModelloDati());
 		}
 	}
 	
 	public static void aggiornaDopoRilettura() {
-		elencoMissioni.clear();
-		for (TipoMissione tipoMissione : TipoMissione.values()) {
-			Missione missione = tipoMissione.getIstanza();
-			elencoMissioni.put(tipoMissione, missione);
-			missione.setModelloDati(ModelloDati.getIstanza().getRegistroMissioniMD().getMissione(tipoMissione.name()));
+		elencoMissioniPredefinite.clear();
+		elencoMissioniSecondarie.clear();
+		for (MissioneMD missioneMD : md.getMissioni()) {
+			if (TipoMissionePredefinita.contieneMissione(missioneMD.getId())) {
+				TipoMissionePredefinita tipoMissionePredefinita = TipoMissionePredefinita.valueOf(missioneMD.getId());
+				Missione missione = tipoMissionePredefinita.getIstanza();
+				elencoMissioniPredefinite.put(tipoMissionePredefinita, missione);
+				missione.setModelloDati(md.getMissione(tipoMissionePredefinita.name()));
+			} else {
+				elencoMissioniSecondarie.add(new MissioneSecondaria(missioneMD));
+			}
 		}
 	}
 
-	public static Missione getMissione(TipoMissione tipoMissione) {
-		return elencoMissioni.get(tipoMissione);
-	}
-	
-	public static List<Missione> getMissioni() {
-		return elencoMissioni.values().stream().filter(m-> !m.isCompleta()).collect(Collectors.toList());
+	public static Missione getMissione(TipoMissionePredefinita tipoMissionePredefinita) {
+		return elencoMissioniPredefinite.get(tipoMissionePredefinita);
 	}
 
+	/**
+	 * Riporta tutte le missioni non completate, attive e non.
+	 */
+	public static List<Missione> getMissioni() {
+		List<Missione> missioni = new ArrayList<>();
+		elencoMissioniPredefinite.values().stream().filter(m-> !m.isCompleta()).forEach(missioni::add);
+		elencoMissioniSecondarie.stream().filter(m-> !m.isCompleta()).forEach(missioni::add);
+		return missioni;
+	}
+
+	/**
+	 * Riporta tutte le missioni attive.
+	 */
 	public static List<Missione> getMissioniAttive() {
-		return elencoMissioni.values().stream().filter(m -> m.isAttiva() && !m.isCompleta()).collect(Collectors.toList());
+		List<Missione> missioni = new ArrayList<>();
+		elencoMissioniPredefinite.values().stream().filter(m -> m.isAttiva() && !m.isCompleta()).forEach(missioni::add);
+		elencoMissioniSecondarie.stream().filter(m -> m.isAttiva() && !m.isCompleta()).forEach(missioni::add);
+		return missioni;
 	}
 
 	public static List<Missione> getMissioniCompletate() {
-		return elencoMissioni.values().stream().filter(Missione::isCompleta).collect(Collectors.toList());
+		List<Missione> missioni = new ArrayList<>();
+		elencoMissioniPredefinite.values().stream().filter(Missione::isCompleta).forEach(missioni::add);
+		elencoMissioniSecondarie.stream().filter(Missione::isCompleta).forEach(missioni::add);
+		return missioni;
 	}
 
 	public static SconfiggiIlDrago getMissionePrincipale() {
-		return (SconfiggiIlDrago)elencoMissioni.get(TipoMissione.SCONFIGGI_IL_DRAGO);
+		return (SconfiggiIlDrago) elencoMissioniPredefinite.get(TipoMissionePredefinita.SCONFIGGI_IL_DRAGO);
 	}
 }
