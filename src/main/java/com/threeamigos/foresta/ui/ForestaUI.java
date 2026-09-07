@@ -124,7 +124,7 @@ public class ForestaUI implements InterfacciaUtente {
 	}
 
 	@Override
-	public void iniziaGioco() {
+	public void mostraSchermataGioco() {
 		displayableCanvas.iniziaGioco();
 	}
 

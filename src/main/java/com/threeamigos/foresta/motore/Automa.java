@@ -157,7 +157,7 @@ public class Automa implements ControlloreDiGioco {
 					locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
 					gruppo.setLocazioneCorrente(locazioneCorrente);
 					UI.reinizializza();
-					UI.iniziaGioco();
+					UI.mostraSchermataGioco();
 					UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
 					UI.rinfresca();
 				} else {
@@ -230,7 +230,7 @@ public class Automa implements ControlloreDiGioco {
 
 			case INIZIALIZZAZIONE_GIOCO:
 				UI.reinizializza();
-				UI.iniziaGioco();
+				UI.mostraSchermataGioco();
 				gruppo.aggiungiPersonaggioSenzaNotificare(personaggio);
 				stato = Stato.INZIO_LOCAZIONE;
 				processaAzione(null);
@@ -633,7 +633,7 @@ public class Automa implements ControlloreDiGioco {
 					switch (azione) {
 					case SI:
 						stato = statoPrecedente;
-						UI.iniziaGioco();
+						UI.mostraSchermataGioco();
 						UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
 						processaAzione(null);
 						break;
@@ -652,7 +652,7 @@ public class Automa implements ControlloreDiGioco {
 
 			case SELEZIONE_SALVATAGGIO_DA_SCRIVERE:
 				if (azione == Comando.NO) {
-					UI.iniziaGioco();
+					UI.mostraSchermataGioco();
 					UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
 					stato = Stato.ATTESA_DIREZIONE;
 					processaAzione(null);
@@ -670,7 +670,7 @@ public class Automa implements ControlloreDiGioco {
 				if (azione == Comando.SI) {
 					System.exit(0);
 				} else if (azione == Comando.NO) {
-					UI.iniziaGioco();
+					UI.mostraSchermataGioco();
 					UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
 					stato = Stato.ATTESA_DIREZIONE;
 					processaAzione(null);

@@ -55,10 +55,10 @@ public class UI {
 	}
 
 	/**
-	 * Inizia il gioco vero e proprio
+	 * Va alla schermata di gioco vera e propria
 	 */
-	public static void iniziaGioco() {
-		interfacciaUtente.iniziaGioco();
+	public static void mostraSchermataGioco() {
+		interfacciaUtente.mostraSchermataGioco();
 	}
 
 	/**

@@ -40,9 +40,9 @@ public interface InterfacciaUtente {
     void selezioneSlotSalvataggioDaCaricare();
 
 	/**
-	 * Dà il via al gioco vero e proprio
+	 * Va alla schermata di gioco vera e propria
 	 */
-	void iniziaGioco();
+	void mostraSchermataGioco();
 
 	/**
 	 * Mostra la mappa di gioco conosciuta
