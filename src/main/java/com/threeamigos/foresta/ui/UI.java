@@ -193,6 +193,10 @@ public class UI {
 	public static void notificaMorte(Personaggio personaggio) {
 		interfacciaUtente.notificaMorte(personaggio);
 	}
+
+	public static void notificaMissione(String etichetta, String nomeMissione) {
+		interfacciaUtente.notificaMissione(etichetta, nomeMissione);
+	}
 	
 	public static void variaSalute(Personaggio personaggio, int variazione) {
 		interfacciaUtente.variaSalute(personaggio, variazione);

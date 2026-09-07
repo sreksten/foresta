@@ -138,6 +138,8 @@ public interface InterfacciaUtente {
     void infoCombattimento(boolean mostra, Personaggio combattente, Personaggio avversario);
 
 	void notificaMorte(Personaggio personaggio);
+
+	void notificaMissione(String etichetta, String nomeMissione);
 	
 	void variaSalute(Personaggio personaggio, int variazione);
 	

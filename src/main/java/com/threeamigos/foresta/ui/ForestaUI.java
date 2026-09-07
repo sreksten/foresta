@@ -232,6 +232,11 @@ public class ForestaUI implements InterfacciaUtente {
 	public void notificaMorte(Personaggio personaggio) {
 		displayableCanvas.notificaMorte(personaggio);
 	}
+
+	@Override
+	public void notificaMissione(String etichetta, String nomeMissione) {
+		displayableCanvas.notificaMissione(etichetta, nomeMissione);
+	}
 	
 	@Override
 	public void variaSalute(Personaggio personaggio, int variazione) {

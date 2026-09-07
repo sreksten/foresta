@@ -78,6 +78,7 @@ public abstract class MissioneBase implements Missione {
 	@Override
 	public void attivaMissione() {
 		md.aggiungiProprieta(ATTIVA, "S");
+		UI.notificaMissione("NUOVA MISSIONE", getNome());
 	}
 
 	@Override
@@ -88,6 +89,7 @@ public abstract class MissioneBase implements Missione {
 	@Override
 	public void completaMissione() {
 		md.aggiungiProprieta(COMPLETA, "S");
+		UI.notificaMissione("MISSIONE COMPLETATA", getNome());
 		if (isPrimaria()) {
 			GestoreProgressione.completaMissionePrincipale();
 		} else {

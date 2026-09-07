@@ -52,12 +52,18 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final transient DisplayableCanvasMappaATuttoSchermo mappaATuttoSchermo;
 	
 	private final ArrayList<SpriteInterface> sprites;
-	
+	private final List<SpriteMissione> codaMissioni = new ArrayList<>();
+
+	private final int larghezzaSchermo;
+	private final int altezzaSchermo;
+
 	private transient Thread animatore;
 	private boolean animatoreInAzione = false;
-	
+
 	public DisplayableCanvas(int width, int height) {
 		super();
+		larghezzaSchermo = width;
+		altezzaSchermo = height;
 		stackElementiGrafici = new ArrayList<>();
 		stackElementiGrafici.add(InterfacciaUtente.Finestra.INCANTESIMI);
 		stackElementiGrafici.add(InterfacciaUtente.Finestra.STATO);
@@ -228,6 +234,12 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	private void inGioco(Graphics gfx) {
 		Graphics2D graphics = (Graphics2D)gfx;
+
+		boolean spriteMissionePresente = sprites.stream().anyMatch(s -> s instanceof SpriteMissione);
+		if (!spriteMissionePresente && !codaMissioni.isEmpty()) {
+			aggiungiSprite(codaMissioni.remove(0));
+		}
+
 		ArrayList<InterfacciaUtente.Finestra> copiaStack = new ArrayList<>(stackElementiGrafici.size());
 		copiaStack.addAll(stackElementiGrafici);
 
@@ -517,7 +529,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	public void raccogliOggetto() {
 		aggiungiSprite(riquadroLocazione.raccogliOggetto());
 	}
-	
+
+	public void notificaMissione(String etichetta, String nomeMissione) {
+		codaMissioni.add(new SpriteMissione(etichetta, nomeMissione, larghezzaSchermo, altezzaSchermo));
+	}
+
 	private void aggiungiSprite(SpriteInterface sprite) {
 		if (sprite != null) {
 			sprites.add(sprite);
