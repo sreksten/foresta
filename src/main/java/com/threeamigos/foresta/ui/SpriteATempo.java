@@ -25,12 +25,11 @@ class SpriteATempo implements SpriteInterface {
 	SpriteATempo(BufferedImage icona, int variazione, DoomdarkFont font, int x, int y) {
 		DoomdarkColorModel.Color color;
 		StringBuilder sb = new StringBuilder();
-		if (variazione < 0) {
-			sb.append("-");
-			color = DoomdarkColorModel.Color.RED;
-		} else {
+		if (variazione >= 0) {
 			sb.append("+");
 			color = DoomdarkColorModel.Color.GREEN;
+		} else {
+			color = DoomdarkColorModel.Color.RED;
 		}
 		sb.append(variazione);
 		init(icona, sb.toString(), font, color, x, y);
@@ -40,8 +39,6 @@ class SpriteATempo implements SpriteInterface {
 		StringBuilder sb = new StringBuilder();
 		if (variazione >= 0) {
 			sb.append("+");
-		} else {
-			sb.append("-");
 		}
 		sb.append(variazione);
 		init(icona, sb.toString(), font, color, x, y);
