@@ -742,15 +742,15 @@ public class Automa implements ControlloreDiGioco {
 	}
 
 	/**
-	 * L'ordine con cui un controllo percorre l'albero delle missioni. Non e' un
-	 * dettaglio di efficienza: decide quale stato una missione vede nell'altra meta'
-	 * dell'albero, e quindi quali cascate si chiudono nello stesso giro anziche' in
+	 * L'ordine con cui un controllo percorre l'albero delle missioni. Non è un
+	 * dettaglio di efficienza: decide quale stato una missione vede nell'altra metà
+	 * dell'albero, e quindi quali cascate si chiudono nello stesso giro anziché in
 	 * quello dopo.
 	 */
 	private enum OrdineVisita {
 		/**
 		 * Il padre viene controllato prima dei figli. L'attivazione scende: una missione
-		 * che si attiva adesso porta con se' le proprie figlie nello stesso giro, cosi'
+		 * che si attiva adesso porta con sé le proprie figlie nello stesso giro, così
 		 * un albero appena attivato compare completo invece di srotolarsi una riga per
 		 * volta.
 		 */
@@ -777,13 +777,13 @@ public class Automa implements ControlloreDiGioco {
 		if (ordineVisita == OrdineVisita.PADRE_PRIMA) {
 			controllo.accept(missione);
 		}
-		// Nei rami spenti o gia' conclusi non si scende, e le figlie completate si
-		// saltano: e' lo stesso filtro che getMissioni() applica alle radici. Con
+		// Nei rami spenti o già conclusi non si scende, e le figlie completate si
+		// saltano: è lo stesso filtro che getMissioni() applica alle radici. Con
 		// FIGLI_PRIMA la condizione si valuta prima che il padre sia controllato,
-		// quindi una missione che si attiva adesso vedra' le proprie figlie al giro
+		// quindi una missione che si attiva adesso vedrà le proprie figlie al giro
 		// successivo.
 		if (missione.isAttiva() && !missione.isCompleta()) {
-			// Copia difensiva: un controllo puo' aggiungere sotto-missioni al nodo
+			// Copia difensiva: un controllo può aggiungere sotto-missioni al nodo
 			for (Missione missioneSecondaria : new ArrayList<>(missione.getMissioniSecondarie())) {
 				if (!missioneSecondaria.isCompleta()) {
 					controllaMissione(missioneSecondaria, controllo, ordineVisita);
