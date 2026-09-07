@@ -10,7 +10,7 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE = 16;
 	private static final int SPACING = 4;
 	// Pixel di scorrimento per ogni scatto della rotella
-	private static final int PASSO_SCORRIMENTO = 1;
+	private static final int PASSO_SCORRIMENTO = 2;
 
 	private final int topLeftX;
 	private final int topLeftY;

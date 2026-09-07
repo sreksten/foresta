@@ -4,13 +4,23 @@ import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.ui.DoomdarkFont.UnsupportedCharacterException;
 
 import java.awt.image.MemoryImageSource;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Rettangolo di testo scorrevole. Le righe già spezzate alla larghezza del rettangolo
+ * vengono conservate in uno storico, e il raster viene ridisegnato a partire da quello:
+ * è ciò che permette di tornare indietro con la rotella invece di limitarsi a far
+ * scorrere via il testo vecchio.
+ */
 public class DoomdarkTextRectangle2x {
 
-	// I testi contenuti
-	private final String[] strings;
+	/** Un centinaio di righe: oltre, le più vecchie vengono dimenticate. */
+	private static final int MASSIMO_RIGHE_STORICO = 100;
+
+	// Le righe già spezzate alla larghezza del rettangolo, dalla più vecchia alla più recente
+	private final List<String> righe = new ArrayList<>();
 	// buffer per l'immagine temporanea che tiene il testo prima del rendering
 	private final int[] textData;
 
@@ -19,29 +29,26 @@ public class DoomdarkTextRectangle2x {
 	private final int fontHeight = DoomdarkFontMedium.getInstance().getHeight();
 	private final int charPadding = DoomdarkFontMedium.getInstance().getPadding();
 	private final DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
+	// Distanza fra le basi di due righe consecutive
+	private final int passoRiga = fontHeight + 1;
+	private final int righeVisibili;
+
+	// Quante righe si è tornati indietro rispetto alla più recente
+	private int offsetRighe;
+	// Il raster va ricostruito solo quando il testo o lo scorrimento sono cambiati
+	private boolean daRidisegnare = true;
 
 	public DoomdarkTextRectangle2x(int width, int height) {
 		this.width = width;
 		this.height = height;
-		int maxStrings = height / fontHeight;
-		strings = new String[maxStrings];
+		// La riga più in basso poggia a height - fontHeight, le altre a salire di passoRiga
+		righeVisibili = height < fontHeight ? 0 : (height - fontHeight) / passoRiga + 1;
 		textData = new int[width * height];
 	}
 
-	// muove verso l'alto il buffer temporaneo
-	private void scrollUp() {
-		System.arraycopy(textData, (fontHeight + 1) * width, textData, 0, (height - fontHeight - 1) * width);
-		for (int i = (height - fontHeight) * width; i < textData.length; i++) {
-			textData[i] = 0x00;
-		}
-		for (int i = 0; i < strings.length - 1; i++) {
-			strings[i] = strings[i + 1];
-		}
-	}
-
-	// renderizza una stringa
-	private void render(String resource) {
-		int textDataIndex = width * (height - fontHeight) + charPadding; // punta alla prima cella in alto a sx dell'ultima riga di testo
+	// renderizza una stringa alla quota indicata
+	private void render(String resource, int quota) {
+		int textDataIndex = width * quota + charPadding; // punta alla prima cella in alto a sx della riga di testo
 		int rowDataIndex = 1; // scorre lungo la riga per scoprire quando siamo usciti
 		for (int charIndex = 0; charIndex < resource.length(); charIndex++) {
 			byte[] charData;
@@ -69,32 +76,65 @@ public class DoomdarkTextRectangle2x {
 		}
 	}
 
-	private void drawString(String s) {
-		scrollUp();
-		strings[strings.length - 1] = s;
-		render(s);
+	/**
+	 * Ridisegna il raster con la finestra di righe che lo scorrimento corrente inquadra:
+	 * la più recente in basso, le precedenti a salire.
+	 */
+	private void ridisegna() {
+		Arrays.fill(textData, 0);
+		// Indice della riga che va in fondo al rettangolo
+		int indiceUltimaRiga = righe.size() - 1 - offsetRighe;
+		for (int i = 0; i < righeVisibili; i++) {
+			int indiceRiga = indiceUltimaRiga - i;
+			if (indiceRiga < 0) {
+				break;
+			}
+			render(righe.get(indiceRiga), height - fontHeight - i * passoRiga);
+		}
+		daRidisegnare = false;
 	}
 
-	public final void addString(String s) {
+	public final synchronized void addString(String s) {
 		// Gestisce i \n letterali come vere newline
 		String[] lines = s.split("\\\\n");
 		for (String line : lines) {
-			List<String> substrings = FontTool.split(fontMedium, line, width);
-			for (String substring : substrings) {
-				drawString(substring);
-			}
+			righe.addAll(FontTool.split(fontMedium, line, width));
+		}
+		while (righe.size() > MASSIMO_RIGHE_STORICO) {
+			righe.remove(0);
+		}
+		// Un messaggio nuovo riporta in fondo: nel mezzo di una partita non deve poter
+		// passare inosservato perché si stava rileggendo il testo vecchio
+		offsetRighe = 0;
+		daRidisegnare = true;
+	}
+
+	public final synchronized void clear() {
+		righe.clear();
+		offsetRighe = 0;
+		daRidisegnare = true;
+	}
+
+	/**
+	 * Sposta indietro (o avanti) la finestra di righe inquadrata, senza uscire dallo
+	 * storico disponibile.
+	 *
+	 * @param righeIndietro positivo per tornare al testo più vecchio
+	 */
+	public final synchronized void scorri(int righeIndietro) {
+		int nuovoOffset = offsetRighe + righeIndietro;
+		int offsetMassimo = Math.max(0, righe.size() - righeVisibili);
+		nuovoOffset = Math.max(0, Math.min(nuovoOffset, offsetMassimo));
+		if (nuovoOffset != offsetRighe) {
+			offsetRighe = nuovoOffset;
+			daRidisegnare = true;
 		}
 	}
 
-	public final void clear() {
-        Arrays.fill(strings, "");
-		int l = textData.length;
-		for (int i = 0; i < l; i++) {
-			textData[i] = 0;
+	public synchronized MemoryImageSource getImageSource() {
+		if (daRidisegnare) {
+			ridisegna();
 		}
-	}
-
-	public MemoryImageSource getImageSource() {
 		return new MemoryImageSource(width, height, DoomdarkColorModel.getColorModel(DoomdarkColorModel.Color.WHITE), textData, 0, width);
 	}
 }

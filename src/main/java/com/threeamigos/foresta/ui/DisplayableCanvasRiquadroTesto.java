@@ -6,6 +6,9 @@ import java.awt.image.MemoryImageSource;
 
 class DisplayableCanvasRiquadroTesto implements Finestra {
 
+	// Righe di testo per ogni scatto della rotella
+	private static final int PASSO_SCORRIMENTO = 1;
+
 	private final int topLeftX;
 	private final int topLeftY;
 	private final DoomdarkTextRectangle2x doomdarkTextRectangle;
@@ -26,6 +29,15 @@ class DisplayableCanvasRiquadroTesto implements Finestra {
 	
 	MemoryImageSource getImageSource() {
 		return doomdarkTextRectangle.getImageSource();
+	}
+
+	@Override
+	public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
+		if (movimentoRotella == MovimentoRotella.SU) {
+			doomdarkTextRectangle.scorri(numeroRotazioni * PASSO_SCORRIMENTO);
+		} else {
+			doomdarkTextRectangle.scorri(-numeroRotazioni * PASSO_SCORRIMENTO);
+		}
 	}
 
 	void disegnaTesto(Graphics2D graphics, Image image) {
