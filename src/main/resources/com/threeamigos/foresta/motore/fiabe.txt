@@ -151,42 +151,6 @@ TEMPO_PROEMIO_STORICO_CRONOLOGICO
     nell'epoca dei primi trattati di pace tra le nazioni
     nelle crepe dello spazio-tempo
 
-TEMPO_PROEMIO_STORICO_CRONOLOGICO_OOP
-    dDurante l'era industriale
-    durante la dominazione romana
-    nell'epoca dei lanzichenecchi
-    durante l'epoca dei faraoni
-    nell'antica Grecia dei filosofi
-    al tempo della Repubblica Romana
-    al tempo dei primi mercanti veneziani
-    al tempo dei conquistadores
-    durante la rivoluzione industriale
-    al tempo delle guerre napoleoniche
-    durante la belle époque
-    nell'epoca dei telegrafi e delle prime ferrovie
-    durante gli anni del proibizionismo
-    nell'epoca della corsa allo spazio
-    al tempo della guerra fredda
-    al tempo delle grandi esposizioni universali
-    durante gli anni del boom economico
-    nell'epoca dei primi telefoni pubblici
-    al tempo delle dittature del secolo scorso
-    durante la caduta del muro di Berlino
-    nell'epoca dei primi computer
-    nell'epoca dei pionieri del West
-    al tempo delle repubbliche marinare
-    durante l'epoca giustinianea
-    al tempo dei primi imperatori cinesi
-    durante gli anni delle riforme protestanti
-    durante la costruzione delle grandi piramidi
-    al tempo delle guerre puniche
-    durante la dinastia Tudor
-    nell'epoca dei vichinghi
-    nell'epoca dei samurai
-    nell'epoca dell'Illuminismo
-    nell'epoca dei primi giornali stampati
-    durante il periodo delle signorie italiane
-    durante il lockdown mondiale
 
 ISTANTE_PRECISO
     nn lunedì mattina qualunque
@@ -733,20 +697,20 @@ BACIAMI
 	    [ATTRIBUTO_ANTAGONISTA].\""
 
 CREAZIONE_MAGO_CATTIVO
-	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Mago Merlino][MAGO_CATTIVO_AGGETTIVO=]
-	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Maga Magò][MAGO_CATTIVO_AGGETTIVO=]
-	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=fata][MAGO_CATTIVO_AGGETTIVO=molto permalosa]
-	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=fata][MAGO_CATTIVO_AGGETTIVO=spregevole]
-	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=mago][MAGO_CATTIVO_AGGETTIVO=]
-	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=necromante][MAGO_CATTIVO_AGGETTIVO=]
-	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=folletto][MAGO_CATTIVO_AGGETTIVO=dispettoso]
-	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=malvagio stregone][MAGO_CATTIVO_AGGETTIVO=]
-	[MAGO_CATTIVO_ARTDET=l'][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=occultista][MAGO_CATTIVO_AGGETTIVO=furioso]
-	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=mago prestidigitatore][MAGO_CATTIVO_AGGETTIVO=]
-	[MAGO_CATTIVO_ARTDET=l'][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=alieno][MAGO_CATTIVO_AGGETTIVO=proveniente dalla quinta dimensione]
-	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=strega][MAGO_CATTIVO_AGGETTIVO=dal naso adunco]
-	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=vecchio saggio][MAGO_CATTIVO_AGGETTIVO=dal pessimo carattere]
-	[MAGO_CATTIVO_ARTDET=lo ][MAGO_CATTIVO_ARTINDET=uno ][MAGO_CATTIVO=gnomo permaloso][MAGO_CATTIVO_AGGETTIVO=permaloso]
+	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Mago Merlino]MAGO_CATTIVO_AGGETTIVO=
+	[MAGO_CATTIVO_ARTDET=][MAGO_CATTIVO_ARTINDET=][MAGO_CATTIVO=Maga Magò]MAGO_CATTIVO_AGGETTIVO=
+	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=fata]MAGO_CATTIVO_AGGETTIVO=molto permalosa
+	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=fata]MAGO_CATTIVO_AGGETTIVO=spregevole
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=mago]MAGO_CATTIVO_AGGETTIVO=
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=necromante]MAGO_CATTIVO_AGGETTIVO=
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=folletto]MAGO_CATTIVO_AGGETTIVO=dispettoso
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=malvagio stregone]MAGO_CATTIVO_AGGETTIVO=
+	[MAGO_CATTIVO_ARTDET=l'][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=occultista]MAGO_CATTIVO_AGGETTIVO=furioso
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=mago prestidigitatore]MAGO_CATTIVO_AGGETTIVO=
+	[MAGO_CATTIVO_ARTDET=l'][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=alieno]MAGO_CATTIVO_AGGETTIVO=proveniente dalla quinta dimensione
+	[MAGO_CATTIVO_ARTDET=la ][MAGO_CATTIVO_ARTINDET=una ][MAGO_CATTIVO=strega]MAGO_CATTIVO_AGGETTIVO=dal naso adunco
+	[MAGO_CATTIVO_ARTDET=il ][MAGO_CATTIVO_ARTINDET=un ][MAGO_CATTIVO=vecchio saggio]MAGO_CATTIVO_AGGETTIVO=dal pessimo carattere
+	[MAGO_CATTIVO_ARTDET=lo ][MAGO_CATTIVO_ARTINDET=uno ][MAGO_CATTIVO=gnomo permaloso]MAGO_CATTIVO_AGGETTIVO=permaloso
 
 MOTIVAZIONE_TRASFORMAZIONE
 	mi ero { bevuto | scolato } { tutto il suo [SOSTANZA_ALCOOLICA_MASCHILE] | tutta la sua [SOSTANZA_ALCOOLICA_FEMMINILE] }
