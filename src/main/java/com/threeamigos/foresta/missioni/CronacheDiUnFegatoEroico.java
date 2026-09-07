@@ -34,6 +34,7 @@ public class CronacheDiUnFegatoEroico extends MissioneBase {
 	@Override
 	public void controllaPreLocazione() {
 		if (!isAttiva()) {
+			UI.notifica("");
 			UI.notifica(getDescrizione() + ": " + getNome() + " si scrive un boccale per volta.");
 			attivaMissione();
 		}
@@ -59,6 +60,7 @@ public class CronacheDiUnFegatoEroico extends MissioneBase {
 	@Override
 	public void completaMissione() {
 		super.completaMissione();
-		UI.notifica("Tutte le locande della Foresta sono state visitate. Le Cronache di un Fegato Eroico sono complete: un'impresa che nessun bardo oserà cantare.");
+		UI.notifica("");
+		UI.notifica("Tutte le locande cittadine della Foresta sono state visitate. Le Cronache di un Fegato Eroico sono complete: un'impresa che nessun bardo oserà cantare.");
 	}
 }

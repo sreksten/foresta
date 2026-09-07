@@ -2,6 +2,7 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
+import com.threeamigos.foresta.motore.GestoreProgressione;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.ui.UI;
@@ -19,7 +20,7 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 
 	private static final int LOCANDE_DA_VISITARE = 10;
 
-	private static final String DESCRIZIONE_BASE = "Visita 10 locande nel mezzo della Foresta";
+	private static final String DESCRIZIONE_BASE = "Visita " + LOCANDE_DA_VISITARE + " locande nel mezzo della Foresta";
 	private static final String LOCANDE_VISITATE = "LOCANDE_VISITATE";
 	// Il valore di una proprietà non può contenere il PIPE, che separa le proprietà fra loro
 	private static final String SEPARATORE = ",";
@@ -43,12 +44,17 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 		if (mancanti == 1) {
 			return DESCRIZIONE_BASE + ". Ne manca una, e il fegato lo sa.";
 		}
-		return DESCRIZIONE_BASE + ". Ne mancano " + mancanti + '.';
+		if (mancanti == LOCANDE_DA_VISITARE) {
+			return DESCRIZIONE_BASE + ".";
+		} else {
+			return DESCRIZIONE_BASE + ". Ne mancano " + mancanti + '.';
+		}
 	}
 
 	@Override
 	public void controllaPreLocazione() {
 		if (!isAttiva()) {
+			UI.notifica("");
 			UI.notifica("Da qualche parte fra le paludi e i castelli ci sono osti che non hanno ancora conosciuto la tua sete. " +
 					DESCRIZIONE_BASE + ", e non lasciarne indietro nemmeno una.");
 			attivaMissione();
@@ -83,13 +89,15 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 		if (visitate.size() >= LOCANDE_DA_VISITARE) {
 			completaMissione();
 		} else {
-			UI.notifica("Locanda numero " + visitate.size() + " debitamente censita. " + getDescrizione());
+			UI.notifica("Locanda numero " + visitate.size() + " debitamente censita.");
 		}
 	}
 
 	@Override
 	public void completaMissione() {
 		super.completaMissione();
+		GestoreProgressione.completaMissioneSecondaria();
+		UI.notifica("");
 		UI.notifica("Dieci locande, dieci osti, un solo fegato. Nessun boccale è stato lasciato indietro, " +
 				"e la Foresta ha un nuovo esperto di birre a cui nessuno ha chiesto un parere.");
 	}

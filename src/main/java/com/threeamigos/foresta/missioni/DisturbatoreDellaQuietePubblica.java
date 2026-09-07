@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.motore.GestoreProgressione;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -14,7 +15,7 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 
 	private static final int EREMITI_DA_INCONTRARE = 10;
 
-	private static final String DESCRIZIONE_BASE = "Vai ad angustiare 10 eremiti";
+	private static final String DESCRIZIONE_BASE = "Vai ad angustiare " + EREMITI_DA_INCONTRARE + " Eremiti";
 	private static final String EREMITI_INCONTRATI = "EREMITI_INCONTRATI";
 
 	public DisturbatoreDellaQuietePubblica() {
@@ -23,7 +24,7 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 
 	@Override
 	public String getNome() {
-		return "Disturbatore della quiete pubblica";
+		return "Disturbatore della Quiete Pubblica";
 	}
 
 	@Override
@@ -35,12 +36,16 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 		if (mancanti == 1) {
 			return DESCRIZIONE_BASE + ". Ne manca uno, e si sta già preoccupando.";
 		}
-		return DESCRIZIONE_BASE + ". Ne mancano " + mancanti + '.';
+		if (mancanti == 10) {
+			return DESCRIZIONE_BASE + ".";
+		}
+		return DESCRIZIONE_BASE + ". Ne mancano " + mancanti + ".";
 	}
 
 	@Override
 	public void controllaPreLocazione() {
 		if (!isAttiva()) {
+			UI.notifica("");
 			UI.notifica("Nella Foresta vivono uomini che hanno scelto la solitudine dopo lunga riflessione. " +
 					DESCRIZIONE_BASE + ", e fai in modo che se ne ricordino.");
 			attivaMissione();
@@ -68,7 +73,11 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 		if (incontrati >= EREMITI_DA_INCONTRARE) {
 			completaMissione();
 		} else {
-			UI.notifica("La quiete di un altro eremita è stata ufficialmente turbata. " + getDescrizione());
+			if (incontrati == 1) {
+				UI.notifica("La quiete del primo Eremita è stata ufficialmente turbata.");
+			} else {
+				UI.notifica("La quiete di un altro Eremita è stata ufficialmente turbata.");
+			}
 		}
 	}
 
@@ -80,8 +89,10 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 	@Override
 	public void completaMissione() {
 		super.completaMissione();
-		UI.notifica("Dieci eremiti su dieci confermano che la Foresta era molto più tranquilla prima. " +
-				"Il titolo di Disturbatore della quiete pubblica è meritato.");
+		GestoreProgressione.completaMissioneSecondaria();
+		UI.notifica("");
+		UI.notifica("Dieci Eremiti su dieci confermano che la Foresta era molto più tranquilla prima. " +
+				"Il titolo di Disturbatore della Quiete Pubblica è meritato.");
 	}
 
 	private int getEremitiIncontrati() {
