@@ -415,8 +415,12 @@ public class Automa implements ControlloreDiGioco {
 							}
 						}
 					}
-					locazioneCorrente.azzeraLocazione(gruppo);
+					// Le missioni vanno controllate prima di azzerare la locazione altrimenti la
+					// distruzione di un castello con sostituzione con rovine non fa completare le
+					// missioni. Potremmo anche salvare il tipo di locazione nelle missioni ma così
+					// mi pare più pulito.
 					controllaMissioni(Missione::controllaPostLocazione, OrdineVisita.FIGLI_PRIMA);
+					locazioneCorrente.azzeraLocazione(gruppo);
 				}
 
 				if (LineaTemporale.isGiocoFinito()) {
@@ -449,6 +453,7 @@ public class Automa implements ControlloreDiGioco {
 				break;
 
 			case ATTESA_DIREZIONE:
+				UI.notifica("");
 				UI.notifica(gruppo.chiMaiuscolo() + " se ne va. In quale direzione si incammina?");
 				ComandiPossibili.reimposta();
 				if (gruppo.getMaxPassiNord() > 0) {
