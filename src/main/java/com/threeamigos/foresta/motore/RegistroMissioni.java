@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.missioni.*;
+import com.threeamigos.foresta.missioni.ClasseMissione;
+import com.threeamigos.foresta.missioni.Missione;
+import com.threeamigos.foresta.missioni.SconfiggiIlDrago;
 import com.threeamigos.foresta.motore.modellodati.MissioneMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.RegistroMissioniMD;
@@ -24,7 +26,7 @@ public class RegistroMissioni {
 		SCONFIGGI_L_IDRA(ClasseMissione.SCONFIGGI_L_IDRA),
 		SCONFIGGI_IL_LICH(ClasseMissione.SCONFIGGI_IL_LICH),
 		SCONFIGGI_LA_STREGA(ClasseMissione.SCONFIGGI_LA_STREGA),
-		MISSIONE_DI_PROVA(ClasseMissione.MISSIONE_DI_PROVA),
+//		MISSIONE_DI_PROVA(ClasseMissione.MISSIONE_DI_PROVA),
 		RECUPERA_IL_MEDAGLIONE(ClasseMissione.RECUPERA_IL_MEDAGLIONE),
 		RECUPERA_LE_DERRATE_ALIMENTARI(ClasseMissione.RECUPERA_LE_DERRATE_ALIMENTARI),
 		CRONACHE_DI_UN_FEGATO_EROICO(ClasseMissione.CRONACHE_DI_UN_FEGATO_EROICO),
