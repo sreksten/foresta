@@ -50,6 +50,8 @@ class DoomdarkFontSmall implements DoomdarkFont {
 			return apostrofo[0];
 		} else if (c == '"') {
 			return virgolette[0];
+		} else if (c == '“') {
+			return virgolette_alte_doppie[0];
 		} else if (c == ',') {
 			return virgola[0];
 		} else if (c == '.') {
@@ -101,6 +103,8 @@ class DoomdarkFontSmall implements DoomdarkFont {
 			return apostrofo;
 		} else if (c == '"') {
 			return virgolette;
+		} else if (c == '“') {
+			return virgolette_alte_doppie;
 		} else if (c == ',') {
 			return virgola;
 		} else if (c == '.') {
@@ -129,7 +133,7 @@ class DoomdarkFontSmall implements DoomdarkFont {
 		throw new IllegalArgumentException();
 	}
 
-	private static final byte maiuscole[][] = {
+	private static final byte[][] maiuscole = {
 
 			new byte[] {
 					7, // A
@@ -895,10 +899,22 @@ class DoomdarkFontSmall implements DoomdarkFont {
 	};
 
 	private static final byte[] virgolette = {
-			7,
-			(byte)0b01100110,
-			(byte)0b01100110,
-			(byte)0b11001100,
+			6,
+			(byte)0b01101100,
+			(byte)0b01101100,
+			(byte)0b11011000,
+			(byte)0b00000000,
+			(byte)0b00000000,
+			(byte)0b00000000,
+			(byte)0b00000000,
+			(byte)0b00000000
+	};
+
+	private static final byte[] virgolette_alte_doppie = {
+			6,
+			(byte)0b11011000,
+			(byte)0b11011000,
+			(byte)0b01101100,
 			(byte)0b00000000,
 			(byte)0b00000000,
 			(byte)0b00000000,

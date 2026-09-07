@@ -623,25 +623,25 @@ ATTRIBUTO_ANTAGONISTA
 	con un'aria di chi ha appena fallito un'impresa | che borbotta invettive contro persone morte da secoli
 
 PENSIERO
-	"\"Sarà dura liberarsi di questo [*ANTAGONISTA]\""
-	"\"Che incontro fortunato!\""
-	"\"Quale fortuna inaspettata\""
-	"\"Questo è il cacio sui maccheroni, anzi, un [*ANTAGONISTA] [POSIZIONE_DISDICEVOLE]\""
-	"\"Non aspettavo altro!\""
-	"\"Che colpo di fortuna!\""
-	"\"La sorte mi è benigna\""
-	"\"La sorte mi è avversa\""
-	"\"Che triste destino\""
-	"\"Che incontro inaspettato!\""
-	"\"Qual buon vento lo porterà?\""
-	"\"Ecco la mia occasione di gloria!\""
-	"\"Ancora questa sfortuna!\""
-	"\"Uno sporco individuo, proprio come piace a me!\""
-	"\"Se riesco a truffarlo, mi gioco tutto ai dadi!\""
-	"\"Finalmente qualcuno più sfortunato di me!\""
-	"\"Che bel soggetto da sfruttare!\""
-	"\"Mi somiglia terribilmente, probabilmente siamo parenti!\""
-	"\"Ora sì che la fortuna mi guarda dal lato giusto!\""
+	"“Sarà dura liberarsi di questo [*ANTAGONISTA]\""
+	"“Che incontro fortunato!\""
+	"“Quale fortuna inaspettata\""
+	"“Questo è il cacio sui maccheroni, anzi, un [*ANTAGONISTA] [POSIZIONE_DISDICEVOLE]\""
+	"“Non aspettavo altro!\""
+	"“Che colpo di fortuna!\""
+	"“La sorte mi è benigna\""
+	"“La sorte mi è avversa\""
+	"“Che triste destino\""
+	"“Che incontro inaspettato!\""
+	"“Qual buon vento lo porterà?\""
+	"“Ecco la mia occasione di gloria!\""
+	"“Ancora questa sfortuna!\""
+	"“Uno sporco individuo, proprio come piace a me!\""
+	"“Se riesco a truffarlo, mi gioco tutto ai dadi!\""
+	"“Finalmente qualcuno più sfortunato di me!\""
+	"“Che bel soggetto da sfruttare!\""
+	"“Mi somiglia terribilmente, probabilmente siamo parenti!\""
+	"“Ora sì che la fortuna mi guarda dal lato giusto!\""
 
 POSIZIONE_DISDICEVOLE
 	nella brace | con la faccia sotto le mie scarpe | con i segni delle mie mani sul suo grugno
@@ -728,7 +728,7 @@ RACCONTO_P_6
 	^[RACCONTO_ECCO_CHE] un [*ANIMALE] [*ATTRIBUTO_ANTAGONISTA]. [BACIAMI] [REAZIONE_PROTAGONISTA]
 
 BACIAMI
-	"\"Sono stato trasformato in un [*ANIMALE] da [CREAZIONE_MAGO_CATTIVO][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO] [#MAGO_CATTIVO_AGGETTIVO]\
+	"“Sono stato trasformato in un [*ANIMALE] da [CREAZIONE_MAGO_CATTIVO][#MAGO_CATTIVO_ARTINDET][#MAGO_CATTIVO] [#MAGO_CATTIVO_AGGETTIVO]\
 	    perché [MOTIVAZIONE_TRASFORMAZIONE] ma se [BUONA_AZIONE] [MI_VEDRAI_TORNARE] un [PERSONAGGIO] \
 	    [ATTRIBUTO_ANTAGONISTA].\""
 
@@ -808,11 +808,11 @@ REAZIONE_PROTAGONISTA
 	    venne [RIDOTTO_COME].
 
 PENSIERO_PROTAGONISTA
-	"\"Mi sembra un buon affare\"" | "\"Col cavolo\"" | "\"Era una vita che aspettavo una occasione così\""
-	"\"Certo, come no?\""
-	"\"Ma ovviamente!\"" | "\"E' sempre stato il mio sogno!\"" | "\"Lo farò subito!\"" | "\"E' il sogno della mia vita!\""
-	"\"Non vedevo l'ora!\"" | "\"Non aspettavo altro!\""
-	"\"E chi se lo aspettava!\"" | "\"Meglio di niente!\""
+	"“Mi sembra un buon affare\"" | "“Col cavolo\"" | "“Era una vita che aspettavo una occasione così\""
+	"“Certo, come no?\""
+	"“Ma ovviamente!\"" | "“E' sempre stato il mio sogno!\"" | "“Lo farò subito!\"" | "“E' il sogno della mia vita!\""
+	"“Non vedevo l'ora!\"" | "“Non aspettavo altro!\""
+	"“E chi se lo aspettava!\"" | "“Meglio di niente!\""
 
 APPARIZIONE_MAGO_CATTIVO
 	Al che si materializzò | Ed ecco che apparve | Da sotto un { pietrone | tombino | albero } uscì
@@ -824,15 +824,15 @@ MAGO_CATTIVO_APOSTROFA
 	che lo apostrofò seccamente: | che sbuffò: | che urlò:
 
 FRASE_MAGO_CATTIVO
-	"\"Ecco che la tua cattiveria viene allo scoperto!\""
-	"\"Sei dunque così insensibile alle disgrazie altrui?\""
-	"\"Sei proprio un infingardo!\""
-	"\"Sei un farabutto e verrai punito!\""
-	"\"Come puoi parlare in questo modo!\""
-	"\"Sei la somma di tutto il male del mondo!\""
-	"\"Sei la persona più spregevole che io abbia mai visto!\""
-	"\"Sei veramente una persona pessima!\""
-	"\"Vedrai che imparerai il rispetto, prima o poi!\""
+	"“Ecco che la tua cattiveria viene allo scoperto!\""
+	"“Sei dunque così insensibile alle disgrazie altrui?\""
+	"“Sei proprio un infingardo!\""
+	"“Sei un farabutto e verrai punito!\""
+	"“Come puoi parlare in questo modo!\""
+	"“Sei la somma di tutto il male del mondo!\""
+	"“Sei la persona più spregevole che io abbia mai visto!\""
+	"“Sei veramente una persona pessima!\""
+	"“Vedrai che imparerai il rispetto, prima o poi!\""
 
 LIETO_FINE
 	I due si sposarono e vissero felici e contenti.
@@ -866,24 +866,24 @@ MORALE
 	[PENSIERO_PROFONDO], [CONCLUSE] [CHIOSA].
 
 PENSIERO_PROFONDO
-	"\"Non tutto il male vien per nuocere\""
-	"\"Tanto va la gatta al lardo che ci lascia lo zampino\""
-	"\"Non esistono più le mezze stagioni\""
-	"\"Piove, governo ladro\""
-	"\"Chi pecora si fa il lupo se la mangia\""
-	"\"Che mondo\""
-	"\"Cosa non tocca fare per campare\""
-	"\"Ride bene chi ride ultimo\""
-	"\"Non finisce qui, mi rivedrete\""
-	"\"Chi si contenta, gode\""
-	"\"Can che abbaia non morde\""
-	"\"Meglio un uovo oggi che una gallina domani, purché non sia rubata\""
-	"\"La vita è come un'osteria: piena di ubriachi e truffe\""
-	"\"Il denaro non è tutto, ma il niente è ancora meno\""
-	"\"Se puoi rubare, perché lavorare?\""
-	"\"La virtù è il rifugio dei mediocri\""
-	"\"Chi muore pagando debiti almeno muore coerente\""
-	"\"L'onestà è una malattia che si cura col tempo\""
+	"“Non tutto il male vien per nuocere\""
+	"“Tanto va la gatta al lardo che ci lascia lo zampino\""
+	"“Non esistono più le mezze stagioni\""
+	"“Piove, governo ladro\""
+	"“Chi pecora si fa il lupo se la mangia\""
+	"“Che mondo\""
+	"“Cosa non tocca fare per campare\""
+	"“Ride bene chi ride ultimo\""
+	"“Non finisce qui, mi rivedrete\""
+	"“Chi si contenta, gode\""
+	"“Can che abbaia non morde\""
+	"“Meglio un uovo oggi che una gallina domani, purché non sia rubata\""
+	"“La vita è come un'osteria: piena di ubriachi e truffe\""
+	"“Il denaro non è tutto, ma il niente è ancora meno\""
+	"“Se puoi rubare, perché lavorare?\""
+	"“La virtù è il rifugio dei mediocri\""
+	"“Chi muore pagando debiti almeno muore coerente\""
+	"“L'onestà è una malattia che si cura col tempo\""
 
 CONCLUSE
 	pensò tra se e se

@@ -50,6 +50,8 @@ class DoomdarkFontMedium implements DoomdarkFont {
 			return apostrofo[0];
 		} else if (c == '"') {
 			return virgolette[0];
+		} else if (c == '“') {
+			return virgolette_alte_doppie[0];
 		} else if (c == ',') {
 			return virgola[0];
 		} else if (c == '.') {
@@ -101,6 +103,8 @@ class DoomdarkFontMedium implements DoomdarkFont {
 			return apostrofo;
 		} else if (c == '"') {
 			return virgolette;
+		} else if (c == '“') {
+			return virgolette_alte_doppie;
 		} else if (c == ',') {
 			return virgola;
 		} else if (c == '.') {
@@ -129,7 +133,7 @@ class DoomdarkFontMedium implements DoomdarkFont {
 		throw new UnsupportedCharacterException(c);
 	}
 
-	private static final byte maiuscole[][] = {
+	private static final byte[][] maiuscole = {
 
 			new byte[] {
 					14, // A
@@ -1398,13 +1402,13 @@ class DoomdarkFontMedium implements DoomdarkFont {
 	};
 
 	private static final byte[] virgolette = {
-			14,
-			(byte)0b00111100, (byte)0b00111100,
-			(byte)0b00111100, (byte)0b00111100,
-			(byte)0b00111100, (byte)0b00111100,
-			(byte)0b01111100, (byte)0b01111100,
-			(byte)0b11111000, (byte)0b11111000,
-			(byte)0b11100000, (byte)0b11100000,
+			10,
+			(byte)0b00111001, (byte)0b11000000,
+			(byte)0b00111001, (byte)0b11000000,
+			(byte)0b00111001, (byte)0b11000000,
+			(byte)0b01110011, (byte)0b10000000,
+			(byte)0b01110011, (byte)0b00000000,
+			(byte)0b11100111, (byte)0b00000000,
 			(byte)0b00000000, (byte)0b00000000,
 			(byte)0b00000000, (byte)0b00000000,
 			(byte)0b00000000, (byte)0b00000000,
@@ -1416,6 +1420,27 @@ class DoomdarkFontMedium implements DoomdarkFont {
 			(byte)0b00000000, (byte)0b00000000,
 			(byte)0b00000000, (byte)0b00000000,
 	};
+
+	private static final byte[] virgolette_alte_doppie = {
+			10,
+			(byte)0b11100111, (byte)0b00000000,
+			(byte)0b11100111, (byte)0b00000000,
+			(byte)0b11100111, (byte)0b00000000,
+			(byte)0b01110011, (byte)0b10000000,
+			(byte)0b01110011, (byte)0b10000000,
+			(byte)0b00111001, (byte)0b11000000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00000000, (byte)0b00000000,
+			(byte)0b00000000, (byte)0b00000000,
+	};
+
 	private static final byte[] virgola = {
 			6,
 			(byte)0b00000000, (byte)0b00000000,
