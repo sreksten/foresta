@@ -2,6 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
+import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ForestaMD;
@@ -9,6 +10,8 @@ import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
+
+import java.util.List;
 
 /**
  * Contiene la mappa di una istanza della Foresta,
@@ -106,9 +109,18 @@ public class Foresta {
 		final int dimensioneY = 20;
 		forestaMD.reimposta(dimensioneX, dimensioneY);
 
-		costruisciCittaEPosizionaPersonaggi();
+		int numeroCitta = 0;
+		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
+			if (classeLocazione.getTipoLocazione() == TipoLocazione.CITTA) {
+				numeroCitta++;
+			}
+		}
+		int numeroLocandeMax = Math.max(RegistroPersonaggi.getNumeroPersonaggiDisponibili(), (getDimensioneX() + getDimensioneY()) >> 2);
+		List<ProduttoreDiTestiCasuale.DatiLocanda> poolDatiLocanda = ProduttoreDiTestiCasuale.getDatiLocanda(numeroCitta + numeroLocandeMax);
+
+		costruisciCittaEPosizionaPersonaggi(poolDatiLocanda);
 		costruisciCastelli();		
-		costruisciLocandeEPosizionaPersonaggi();
+		costruisciLocandeEPosizionaPersonaggi(poolDatiLocanda);
 		costruisciTempliEPosizionaArtefatti();
 		
 		int media = (getDimensioneX() + getDimensioneY()) / 2;
@@ -139,10 +151,11 @@ public class Foresta {
 	/**
 	 * Costruisce le città e ci piazza un personaggio a caso
 	 */
-	private static void costruisciCittaEPosizionaPersonaggi() {
+	private static void costruisciCittaEPosizionaPersonaggi(List<ProduttoreDiTestiCasuale.DatiLocanda> poolDatiLocanda) {
 		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
 			if (classeLocazione.getTipoLocazione() == TipoLocazione.CITTA) {
 				CoordinateMD coordinate = costruisciLocazioneUnica(classeLocazione, false);
+				Locanda.impostaDatiLocanda(getLocazioneMD(coordinate), poolDatiLocanda.remove(0));
 				Personaggio personaggioDisponibile = RegistroPersonaggi.getPersonaggioDisponibile();
 				if (personaggioDisponibile != null) {
 					RegistroPersonaggi.addPersonaggioInLocazione(personaggioDisponibile, coordinate);
@@ -165,16 +178,16 @@ public class Foresta {
 	/**
 	 * Costruisce le locande e piazza i rimanenti personaggi disponibili
 	 */
-	private static void costruisciLocandeEPosizionaPersonaggi() {
+	private static void costruisciLocandeEPosizionaPersonaggi(List<ProduttoreDiTestiCasuale.DatiLocanda> poolDatiLocanda) {
 		int locandeCostruite = 0;
 		Personaggio personaggioDisponibile;
 		while ((personaggioDisponibile = RegistroPersonaggi.getPersonaggioDisponibile()) != null) {
-			costruisci(ClassiLocazione.LOCANDA, personaggioDisponibile);
+			costruisci(ClassiLocazione.LOCANDA, personaggioDisponibile, poolDatiLocanda.remove(0));
 			locandeCostruite++;
 		}
 		int media = (getDimensioneX() + getDimensioneY()) >> 2;
-		if (media > locandeCostruite) {
-			costruisci(ClassiLocazione.LOCANDA, media - locandeCostruite);
+		for (int i = locandeCostruite; i < media; i++) {
+			costruisci(ClassiLocazione.LOCANDA, poolDatiLocanda.remove(0));
 		}
 	}
 
@@ -194,13 +207,23 @@ public class Foresta {
 		}
 	}
 
-	private static void costruisci(ClassiLocazione classeLocazione, Personaggio personaggio) {
+	private static void costruisci(ClassiLocazione classeLocazione, Personaggio personaggio, ProduttoreDiTestiCasuale.DatiLocanda datiLocanda) {
 		if (classeLocazione.isLocazioneUnica()) {
 			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + classeLocazione.name());
 		}
 		CoordinateMD coordinate = getCoordinateLibere();
 		setLocazione(coordinate, classeLocazione);
+		Locanda.impostaDatiLocanda(getLocazioneMD(coordinate), datiLocanda);
 		RegistroPersonaggi.addPersonaggioInLocazione(personaggio, coordinate);
+	}
+
+	private static void costruisci(ClassiLocazione classeLocazione, ProduttoreDiTestiCasuale.DatiLocanda datiLocanda) {
+		if (classeLocazione.isLocazioneUnica()) {
+			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + classeLocazione.name());
+		}
+		CoordinateMD coordinate = getCoordinateLibere();
+		setLocazione(coordinate, classeLocazione);
+		Locanda.impostaDatiLocanda(getLocazioneMD(coordinate), datiLocanda);
 	}
 	
 	private static void costruisci(ClassiLocazione classeLocazione, Artefatto artefatto) {

@@ -32,6 +32,21 @@ public class Locanda extends LocazioneBase {
 	 */
 	public static final String LOCANDA_VISITATA = "LOCANDA_VISITATA";
 
+	/**
+	 * Nome, recensione e dialogo pescati dal pool di ProduttoreDiTestiCasuale.DatiLocanda
+	 * quando la locanda (o la città che la ospita) viene costruita.
+	 */
+	public static final String LOCANDA_NOME = "LOCANDA_NOME";
+	public static final String LOCANDA_RECENSIONE = "LOCANDA_RECENSIONE";
+	public static final String LOCANDA_DIALOGO = "LOCANDA_DIALOGO";
+
+	/**
+	 * Segnate quando il dialogo/la recensione sono già stati mostrati, per non ripeterli
+	 * alle visite successive.
+	 */
+	public static final String LOCANDA_DIALOGO_LETTO = "LOCANDA_DIALOGO_LETTO";
+	public static final String LOCANDA_RECENSIONE_LETTA = "LOCANDA_RECENSIONE_LETTA";
+
 	private StatoInLocanda stato;
 	private final int evento;
 
@@ -69,11 +84,39 @@ public class Locanda extends LocazioneBase {
 		}
 	}
 
+	public static void impostaDatiLocanda(LocazioneMD modelloDati, ProduttoreDiTestiCasuale.DatiLocanda datiLocanda) {
+		modelloDati.aggiungiProprieta(LOCANDA_NOME, datiLocanda.getNome());
+		modelloDati.aggiungiProprieta(LOCANDA_RECENSIONE, datiLocanda.getRecensione());
+		modelloDati.aggiungiProprieta(LOCANDA_DIALOGO, datiLocanda.getDialogo());
+	}
+
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-        String sb = g.chiMaiuscolo() + " è arrivat" +
-                g.getCapo().getLetteraFinaleAttributo() + " ad una locanda.";
-		UI.notifica(sb);
+		UI.notifica(descrizioneLocanda(g));
+	}
+
+	/**
+	 * Alla prima visita racconta il dialogo della locanda, alla seconda la recensione,
+	 * dalla terza in poi si limita a nominarla.
+	 */
+	private String descrizioneLocanda(GruppoGiocatore g) {
+		LocazioneMD md = getModelloDati();
+		String nome = md.ottieniProprieta(LOCANDA_NOME);
+		if (md.ottieniProprieta(LOCANDA_DIALOGO_LETTO) == null) {
+			md.aggiungiProprieta(LOCANDA_DIALOGO_LETTO, LocazioneMD.AFFERMATIVO);
+			String dialogo = md.ottieniProprieta(LOCANDA_DIALOGO);
+			if (dialogo != null && !dialogo.isEmpty()) {
+				return dialogo;
+			}
+		}
+		if (md.ottieniProprieta(LOCANDA_RECENSIONE_LETTA) == null) {
+			md.aggiungiProprieta(LOCANDA_RECENSIONE_LETTA, LocazioneMD.AFFERMATIVO);
+			String recensione = md.ottieniProprieta(LOCANDA_RECENSIONE);
+			if (recensione != null && !recensione.isEmpty()) {
+				return g.chiMaiuscolo() + " è a " + nome + ". A quanto si dice, " + recensione;
+			}
+		}
+		return g.chiMaiuscolo() + " è alla locanda " + nome;
 	}
 
 	@Override

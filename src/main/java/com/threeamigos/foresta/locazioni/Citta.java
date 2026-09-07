@@ -68,14 +68,6 @@ public abstract class Citta extends LocazioneUnica {
 		setCompleta(true);
 	}
 
-	public abstract String getNomeLocanda();
-
-	/**
-	 * Il solo nome della locanda, senza la preposizione che getNomeLocanda() aggiunge
-	 * per comporre una frase.
-	 */
-	public abstract String getNomeSempliceLocanda();
-
 	private void impostaAzioniCitta() {
 		ComandiPossibili.set(Comando.LOCANDA, Comando.ALCHIMISTA, Comando.ESCI_DA_CITTA);
 	}
@@ -89,7 +81,7 @@ public abstract class Citta extends LocazioneUnica {
 
 			} else if (azione == Comando.LOCANDA) {
 				nuovaLocanda();
-				UI.notifica(g.chiMaiuscolo() + " è " + getNomeLocanda() + '.');
+				locanda.descrivi(g, gng);
 				statoRitorno = locanda.impostaAzioni(g, gng, null);
 				if (statoRitorno == Stato.IN_LOCAZIONE) {
 					stato = StatoInCitta.IN_LOCANDA;

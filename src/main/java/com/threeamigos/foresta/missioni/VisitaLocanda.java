@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.locazioni.Citta;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.motore.Foresta;
@@ -28,20 +27,27 @@ public class VisitaLocanda extends MissioneBase {
 		if (classeCitta.getTipoLocazione() != ClassiLocazione.TipoLocazione.CITTA) {
 			throw new IllegalArgumentException(classeCitta.name() + " non è una città");
 		}
-		Citta citta = (Citta) classeCitta.getIstanza();
 		aggiungiProprieta(CITTA, classeCitta.name());
-		aggiungiProprieta(NOME, "Visita '" + citta.getNomeSempliceLocanda() + '\'');
-		aggiungiProprieta(DESCRIZIONE, "Fatti servire almeno un boccale " + citta.getNomeLocanda() + '.');
 	}
 
 	@Override
 	public String getNome() {
-		return ottieniProprieta(NOME);
+		return "Visita '" + getNomeLocanda() + '\'';
 	}
 
 	@Override
 	public String getDescrizione() {
-		return ottieniProprieta(DESCRIZIONE);
+		return "Fatti servire almeno un boccale alla '" + getNomeLocanda() + "'.";
+	}
+
+	/**
+	 * Il nome della locanda è pescato dal pool quando la città viene costruita,
+	 * quindi qui va letto al momento (setCitta() viene chiamato quando la foresta
+	 * non esiste ancora).
+	 */
+	private String getNomeLocanda() {
+		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(getClasseCitta());
+		return Foresta.getLocazioneMD(coordinate).ottieniProprieta(Locanda.LOCANDA_NOME);
 	}
 
 	@Override

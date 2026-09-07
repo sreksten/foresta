@@ -41,6 +41,10 @@ public class RegistroPersonaggi {
 		return costruisciPersonaggio(registroMD.getPersonaggioDisponibile());
 	}
 
+	static int getNumeroPersonaggiDisponibili() {
+		return registroMD.getNumeroDisponibili();
+	}
+
 	static Personaggio getPersonaggioCasuale() {
 		return costruisciPersonaggio(registroMD.getPersonaggioCasuale());
 	}

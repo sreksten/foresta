@@ -26,6 +26,10 @@ public class RegistroPersonaggiMD implements Serializzabile {
 		return Dado.selezionaCasualmente(elencoIniziale);
 	}
 
+	public final int getNumeroDisponibili() {
+		return elencoIniziale.size();
+	}
+
 	public final PersonaggioMD getPersonaggioCasuale() {
 		if (!personaggiInLocazione.isEmpty()) {
             ArrayList<CoordinateMD> elencoCoordinate = new ArrayList<>(personaggiInLocazione.keySet());
