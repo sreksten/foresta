@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.ui.UI;
 
 /**
@@ -33,7 +34,7 @@ public class CronacheDiUnFegatoEroico extends MissioneBase {
 
 	@Override
 	public void controllaPreLocazione() {
-		if (!isAttiva()) {
+		if (!isAttiva() && GruppoGiocatore.getIstanza().getClasseLocazioneCorrente().getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA) {
 			UI.notifica("");
 			UI.notifica(getDescrizione() + ": " + getNome() + " si scrive un boccale per volta.");
 			attivaMissione();
