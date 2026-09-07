@@ -85,7 +85,7 @@ public class StatisticheMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(puntiEsperienza);
 		stream.print(PIPE);
-		stream.println(punti);
+		stream.print(punti);
 		stream.print(PIPE);
 		stream.println(turniGiocati);
 		for (ClassePersonaggio classePersonaggio : ClassePersonaggio.values()) {
