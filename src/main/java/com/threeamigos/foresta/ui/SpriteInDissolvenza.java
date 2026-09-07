@@ -1,19 +1,19 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.AlphaComposite;
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.ConvolveOp;
 import java.awt.image.Kernel;
+import java.util.Arrays;
 
 public class SpriteInDissolvenza implements SpriteInterface {
 
 	private static final int MAX_TICKS = 32;
 	
 	boolean active;
-	private BufferedImage image;
-	private int x;
-	private int y;
+	private final BufferedImage image;
+	private final int x;
+	private final int y;
 	private int ticks;
 	
 	SpriteInDissolvenza(BufferedImage image, int x, int y) {
@@ -30,15 +30,10 @@ public class SpriteInDissolvenza implements SpriteInterface {
 			AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency);
 			g.setComposite(ac);
 			int size = 3;
-			if ((size & 1) == 0) {
-				size++;
-			}
-			int numCoords = size * size;
+            int numCoords = size * size;
 			float blurFactor = 1.0f / (float)numCoords;
 			float[] blurKernel = new float[numCoords];
-			for (int i = 0; i < numCoords; i++) {
-				blurKernel[i] = blurFactor;
-			}
+            Arrays.fill(blurKernel, blurFactor);
 			ConvolveOp blurringOp = new ConvolveOp(new Kernel(size, size, blurKernel), ConvolveOp.EDGE_NO_OP, null);
 			g.drawImage(image, blurringOp, x, y);
 			ticks++;
