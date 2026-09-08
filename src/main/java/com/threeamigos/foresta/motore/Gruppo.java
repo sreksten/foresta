@@ -14,12 +14,17 @@ public abstract class Gruppo {
 	
 	// Caratteristiche del gruppo
 	protected List<Personaggio> personaggi = new ArrayList<>();
-	protected Personaggio capo; 
+	protected Personaggio capo;
 
 	protected void reimposta() {
 		personaggi.clear();
 		capo = null;
 	}
+
+	/**
+	 * Riporta se il gruppo sia quello del giocatore o il gruppo avversario
+	 */
+	public abstract boolean isGruppoGiocatore();
 
 	/**
 	 * Riporta il numero di tutti i personaggi, compresi eventualmente

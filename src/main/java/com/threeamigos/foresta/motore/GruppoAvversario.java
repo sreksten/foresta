@@ -10,11 +10,16 @@ public class GruppoAvversario extends Gruppo {
 	
 	private static GruppoAvversario gruppoAvversario;
 	
-	public static final GruppoAvversario getIstanza() {
+	public static GruppoAvversario getIstanza() {
 		if (gruppoAvversario == null) {
 			gruppoAvversario = new GruppoAvversario();
 		}
 		return gruppoAvversario;
+	}
+
+	@Override
+	public boolean isGruppoGiocatore() {
+		return false;
 	}
 
 	public Personaggio getPersonaggioVivo() {

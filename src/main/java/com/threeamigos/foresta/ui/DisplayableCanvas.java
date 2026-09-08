@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Logger;
@@ -504,7 +504,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		aggiungiSprite(riquadroStatistiche.variaPunti(variazione));
 	}
 
-	public void variaIncantesimi(ClassiIncantesimo classeIncantesimo, int variazione) {
+	public void variaIncantesimi(ClasseIncantesimo classeIncantesimo, int variazione) {
 		aggiungiSprite(riquadroIncantesimi.variaIncantesimi(classeIncantesimo, variazione));
 	}
 

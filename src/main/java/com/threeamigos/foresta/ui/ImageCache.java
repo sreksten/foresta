@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
@@ -229,16 +229,16 @@ public class ImageCache {
 		puntodd = BufferedImageBuilder.buildBufferedImage("alfabeto/PuntoDiDomanda.gif");
 		apostrofo = BufferedImageBuilder.buildBufferedImage("alfabeto/Apostrofo.gif");
 		
-		spriteIncantesimi = new BufferedImage[ClassiIncantesimo.values().length];
-		spriteIncantesimi[ClassiIncantesimo.ARIA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Aria-nobordo-piccolo.gif");
-		spriteIncantesimi[ClassiIncantesimo.ACQUA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Acqua-nobordo-piccolo.gif");
-		spriteIncantesimi[ClassiIncantesimo.TERRA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Terra-nobordo-piccolo.gif");
-		spriteIncantesimi[ClassiIncantesimo.FUOCO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Fuoco-nobordo-piccolo.gif");
-		spriteIncantesimi[ClassiIncantesimo.FULMINE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Fulmine-nobordo-piccolo.gif");
-		spriteIncantesimi[ClassiIncantesimo.GELO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Gelo-nobordo-piccolo.gif");
-		spriteIncantesimi[ClassiIncantesimo.VELENO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Veleno-nobordo-piccolo.gif");
-		spriteIncantesimi[ClassiIncantesimo.MORTE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Morte-nobordo-piccolo.gif");
-		spriteIncantesimi[ClassiIncantesimo.RESURREZIONE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Resurrezione-nobordo-piccolo.gif");
+		spriteIncantesimi = new BufferedImage[ClasseIncantesimo.values().length];
+		spriteIncantesimi[ClasseIncantesimo.ARIA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Aria-nobordo-piccolo.gif");
+		spriteIncantesimi[ClasseIncantesimo.ACQUA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Acqua-nobordo-piccolo.gif");
+		spriteIncantesimi[ClasseIncantesimo.TERRA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Terra-nobordo-piccolo.gif");
+		spriteIncantesimi[ClasseIncantesimo.FUOCO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Fuoco-nobordo-piccolo.gif");
+		spriteIncantesimi[ClasseIncantesimo.FULMINE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Fulmine-nobordo-piccolo.gif");
+		spriteIncantesimi[ClasseIncantesimo.GELO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Gelo-nobordo-piccolo.gif");
+		spriteIncantesimi[ClasseIncantesimo.VELENO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Veleno-nobordo-piccolo.gif");
+		spriteIncantesimi[ClasseIncantesimo.MORTE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Morte-nobordo-piccolo.gif");
+		spriteIncantesimi[ClasseIncantesimo.RESURREZIONE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Resurrezione-nobordo-piccolo.gif");
 
 		spriteAmicizia = BufferedImageBuilder.buildBufferedImage("icone/Amicizia-nobordo-piccolo.gif");
 		spriteCombattimento = BufferedImageBuilder.buildBufferedImage("icone/Combattimento-nobordo-piccolo.gif");

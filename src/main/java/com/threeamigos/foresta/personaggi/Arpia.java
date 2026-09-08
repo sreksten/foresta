@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -246,7 +246,7 @@ public class Arpia extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public boolean isImmuneAIncantesimo(ClassiIncantesimo classeIncantesimo) {
-		return classeIncantesimo == ClassiIncantesimo.ARIA;
+	public boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo) {
+		return classeIncantesimo == ClasseIncantesimo.ARIA;
 	}
 }

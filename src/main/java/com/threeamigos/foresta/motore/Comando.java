@@ -39,6 +39,8 @@ public enum Comando {
 	TERRA,
 	FUOCO,
 	FULMINE,
+	GELO,
+	VELENO,
 	MORTE,
 	RESURREZIONE,
 	// Annulla la scelta di un incantesimo
@@ -57,6 +59,7 @@ public enum Comando {
 	POZIONE_MAGIA,
 	POZIONE_MAGIA_GRANDE,
 	MAPPA,
+	INVENTARIO,
 	FLOPPY,
 
 	// Numero di passi di cui muoversi, o scelta di uno slot di salvataggio

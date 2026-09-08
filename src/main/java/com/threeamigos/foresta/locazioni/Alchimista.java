@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
-import com.threeamigos.foresta.incantesimi.Incantesimo;
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -56,7 +55,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 		} else {
 			ripristinareMagiaGruppo = false;
 		}
-		incantesimiAcquistabili = Arrays.stream(ClassiIncantesimo.values()).anyMatch(c -> c.getIstanza().getCostoAcquisto() <= monete);
+		incantesimiAcquistabili = Arrays.stream(ClasseIncantesimo.values()).anyMatch(c -> c.getCostoAcquisto() <= monete);
 		nessunAcquistoEseguibile = !pozioniAcquistabili && !ripristinareMagia && !ripristinareMagiaGruppo && !incantesimiAcquistabili;
 	}
 
@@ -198,13 +197,13 @@ public class Alchimista extends LocazioneBase implements Locazione {
 				return Stato.FINE_LOCAZIONE;
 			} else {
 				if (azione != null) {
-					Incantesimo i = ClassiIncantesimo.ofComando(azione);
-					int costo = i.getCostoAcquisto();
+					ClasseIncantesimo classe = ClasseIncantesimo.ofComando(azione);
+					int costo = classe.getCostoAcquisto();
 					if (gruppo.getMonete() < costo)
 						UI.notifica("'Questo incantesimo costa troppo per le tue tasche.'" + DICE);
 					else {
 						gruppo.subMonete(costo);
-						gruppo.addIncantesimi(i.getClasse(), 1);
+						gruppo.addIncantesimi(classe, 1);
 						UI.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI);
 						UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
 						UI.rinfresca();
@@ -285,9 +284,9 @@ public class Alchimista extends LocazioneBase implements Locazione {
 
 	private void impostaIncantesimi() {
 		ComandiPossibili.reimposta();
-		for (ClassiIncantesimo classiIncantesimo : ClassiIncantesimo.values()) {
-			if (classiIncantesimo.getIstanza().getCostoAcquisto() <= gruppo.getMonete()) {
-				ComandiPossibili.add(classiIncantesimo.getComandoDiAttivazione());
+		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
+			if (classeIncantesimo.getCostoAcquisto() <= gruppo.getMonete()) {
+				ComandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
 			}
 		}
 		ComandiPossibili.add(Comando.NO_INCANTESIMO);

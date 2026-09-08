@@ -4,7 +4,6 @@ import com.threeamigos.foresta.motore.modellodati.SupertipoDanno;
 import com.threeamigos.foresta.motore.modellodati.TipoDanno;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
-import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 /**
@@ -13,85 +12,122 @@ import com.threeamigos.foresta.personaggi.Personaggio;
  */
 public class CalcolatoreCombattimento {
 
-    public static boolean colpisce(Personaggio attaccante, Personaggio difensore) {
+    public static int calcolaProbabilitaDiColpire(Personaggio attaccante, Personaggio difensore, SupertipoDanno tipoDanno) {
 
         // 0. CONTROLLO EFFETTI DI STATO CHE DETERMINANO AUTOMATICAMENTE LA RIUSCITA
         if (attaccante.hasEffettoDiStato(TipoEffettoDiStato.STORDITO)) {
             Logger.log("L'attaccante è STORDITO e non può colpire.");
-            return false;
+            return 0;
         }
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.ATTERRATO) ||
                 difensore.hasEffettoDiStato(TipoEffettoDiStato.CONGELATO) ||
                 difensore.hasEffettoDiStato(TipoEffettoDiStato.STORDITO)) {
             Logger.log("Il difensore è ATTERRATO/CONGELATO/STORDITO e viene colpito automaticamente.");
-            return true;
+            return 100;
         }
 
-        // 1. CALCOLO DELLA PRECISIONE TOTALE DELL'ATTACCANTE
-        double precisioneTotale = attaccante.getPrecisione() + attaccante.getDestrezza();
-        Logger.log(String.format("Precisione totale dell'attaccante (PRECISIONE %d + DESTREZZA %d): %f", attaccante.getPrecisione(), attaccante.getDestrezza(), precisioneTotale));
+        double attaccoTotale = 0.0d;
+        double difesaTotale = 0.0d;
 
-        // 3. CONTROLLO EFFETTI DI STATO
+        // BIVIO LOGICO DI BILANCIAMENTO IN BASE AL TIPO DI DANNO
+        if (tipoDanno == SupertipoDanno.FISICO) {
+            // --- CALCOLO ASSE FISICO ---
+            // Attaccante usa la coordinazione occhio-mano (Precisione + Destrezza)
+            attaccoTotale = attaccante.getPrecisione() + attaccante.getDestrezza();
+            Logger.log(String.format("[FISICO] Attacco totale (PRECISIONE %d + DESTREZZA %d): %f",
+                    attaccante.getPrecisione(), attaccante.getDestrezza(), attaccoTotale));
+
+            // Il difensore contrasta fisicamente (Velocità + Destrezza) modificata dalla PARATA
+            difesaTotale = difensore.getVelocita() + difensore.getDestrezza() + (difensore.getParata() * 0.5d);
+            Logger.log(String.format("[FISICO] Difesa totale (VELOCITA %d + DESTREZZA %d + 50%% PARATA %d): %f",
+                    difensore.getVelocita(), difensore.getDestrezza(), difensore.getParata(), difesaTotale));
+
+        } else {
+            // --- CALCOLO ASSE MAGICO/ELEMENTALE ---
+            // Chi lancia magie si affida al controllo mentale e alla potenza magica (Intelligenza + Precisione)
+            attaccoTotale = attaccante.getPrecisione() + attaccante.getIntelligenza();
+            Logger.log(String.format("[MAGICO] Attacco totale (PRECISIONE %d + INTELLIGENZA %d): %f",
+                    attaccante.getPrecisione(), attaccante.getIntelligenza(), attaccoTotale));
+
+            // Chi subisce magie si affida al filtro difensivo mistico e alla stabilità mentale (Resistenza Magica + Saggezza)
+            difesaTotale = difensore.getResistenzaMagica() + difensore.getSaggezza();
+            Logger.log(String.format("[MAGICO] Difesa totale (RESISTENZA_MAGICA %d + SAGGEZZA %d): %f",
+                    difensore.getResistenzaMagica(), difensore.getSaggezza(), difesaTotale));
+        }
+
+        // 3. CONTROLLO EFFETTI DI STATO SULL'ATTACCANTE (CONFUSO / ACCECATO / STANCHEZZA)
         if (attaccante.hasEffettoDiStato(TipoEffettoDiStato.CONFUSO)) {
-            // La SAGGEZZA aiuta a mantenere la lucidità nonostante la confusione
-            precisioneTotale = precisioneTotale * (8.0d + Math.min(2, attaccante.getSaggezza() / 20.0d)) / 10.0d;
-            Logger.log(String.format("Precisione totale dell'attaccante dopo effetto di stato CONFUSO (mitigato da SAGGEZZA %d): %f", attaccante.getSaggezza(), precisioneTotale));
+            attaccoTotale = attaccoTotale * (8.0d + Math.min(2, attaccante.getSaggezza() / 20.0d)) / 10.0d;
+            Logger.log(String.format("Attacco dopo effetto CONFUSO (mitigato da SAGGEZZA %d): %f", attaccante.getSaggezza(), attaccoTotale));
         }
+
         if (attaccante.hasEffettoDiStato(TipoEffettoDiStato.ACCECATO)) {
-            // La PERCEZIONE aiuta a compensare la cecità trovando il bersaglio
-            double penalitaAccecato = (precisioneTotale / 2.0d) * (1.0d - Math.min(1.0d, attaccante.getPercezione() / 100.0d));
-            precisioneTotale -= penalitaAccecato;
-            Logger.log(String.format("Precisione totale dell'attaccante dopo effetto di stato ACCECATO (mitigato da PERCEZIONE %d): %f", attaccante.getPercezione(), precisioneTotale));
+            if (tipoDanno == SupertipoDanno.FISICO) {
+                // La cecità devasta la mira fisica
+                double penalitaAccecato = (attaccoTotale / 2.0d) * (1.0d - Math.min(1.0d, attaccante.getPercezione() / 100.0d));
+                attaccoTotale -= penalitaAccecato;
+            } else {
+                // Per le magie, la cecità influisce meno perché il mago si guida con la Percezione dei flussi magici
+                double penalitaAccecatoMagico = (attaccoTotale / 4.0d) * (1.0d - Math.min(1.0d, attaccante.getPercezione() / 100.0d));
+                attaccoTotale -= penalitaAccecatoMagico;
+            }
+            Logger.log(String.format("Attacco dopo effetto ACCECATO (mitigato da PERCEZIONE %d): %f", attaccante.getPercezione(), attaccoTotale));
         }
 
         // Penalità di STANCHEZZA sull'attaccante
-        precisioneTotale -= attaccante.getStanchezza() * 2.0d;
-        Logger.log(String.format("Precisione totale dell'attaccante dopo effetto di stato stanchezza (STANCHEZZA %d): %f", attaccante.getStanchezza(), precisioneTotale));
+        attaccoTotale -= attaccante.getStanchezza() * 2.0d;
+        Logger.log(String.format("Attacco totale dopo stanchezza (STANCHEZZA %d): %f", attaccante.getStanchezza(), attaccoTotale));
 
-        // 2. CALCOLO DELLA VELOCITÀ TOTALE DEL DIFENSORE
-        double velocitaTotale = difensore.getVelocita() + difensore.getDestrezza();
-        Logger.log(String.format("Velocità totale del difensore (VELOCITA %d + DESTREZZA %d): %f", difensore.getVelocita(), difensore.getDestrezza(), velocitaTotale));
 
         // 4. APPLICAZIONE DEI MODIFICATORI DI STATO AL DIFENSORE
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.RALLENTATO)) {
-            // Chi è rallentato fatica a schivare
-            velocitaTotale = velocitaTotale / 2.0d;
-            Logger.log("Velocità totale del difensore dopo effetto di stato RALLENTATO: " + velocitaTotale);
+            if (tipoDanno == SupertipoDanno.FISICO) {
+                difesaTotale = difesaTotale / 2.0d; // Rallentato distrugge la schivata fisica
+            } else {
+                // Rallentato influisce pochissimo sulla barriera mistica passiva (Resistenza Magica)
+                difesaTotale = difesaTotale * 0.9d;
+            }
+            Logger.log("Difesa totale dopo effetto RALLENTATO: " + difesaTotale);
         }
+
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO)) {
-            // La paura blocca le gambe e riduce i riflessi; la SAGGEZZA e il CORAGGIO aiutano a resistervi
-            velocitaTotale = (int)(velocitaTotale * (9.0d + Math.min(1, difensore.getSaggezza() / 20.0d) + Math.min(1.0d, difensore.getCoraggio() / 100.0d)) / 10.0d);
-            Logger.log(String.format("Velocità totale del difensore dopo effetto di stato SPAVENTATO (mitigato da SAGGEZZA %d e CORAGGIO %d): %f", difensore.getSaggezza(), difensore.getCoraggio(), velocitaTotale));
+            difesaTotale = (difesaTotale * (9.0d + Math.min(1, difensore.getSaggezza() / 20.0d) + Math.min(1.0d, difensore.getCoraggio() / 100.0d)) / 10.0d);
+            Logger.log(String.format("Difesa totale dopo effetto SPAVENTATO (mitigato da SAGGEZZA %d e CORAGGIO %d): %f", difensore.getSaggezza(), difensore.getCoraggio(), difesaTotale));
         }
 
-        // Penalità di STANCHEZZA sul difensore
-        velocitaTotale -= difensore.getStanchezza() * 2.0d;
-        Logger.log(String.format("Velocità totale del difensore dopo effetto di stato stanchezza (STANCHEZZA %d): %f", difensore.getStanchezza(), velocitaTotale));
+        // Penalità di STANCHEZZA sul difensore (La fatica logora sia i riflessi fisici che la concentrazione magica)
+        difesaTotale -= difensore.getStanchezza() * 2.0d;
+        Logger.log(String.format("Difesa totale dopo stanchezza (STANCHEZZA %d): %f", difensore.getStanchezza(), difesaTotale));
 
-        // 5. CALCOLO DELLA PROBABILITÀ FINALE DI COLPIRE (Formula GDR base: 75% +/- scarto)
-        int probabilitaFinale = 75 + (int)((precisioneTotale - velocitaTotale) * 2.0d);
+        // 5. CALCOLO DELLA PROBABILITÀ FINALE DI COLPIRE
+        int probabilitaFinale = 75 + (int)((attaccoTotale - difesaTotale) * 2.0d);
         Logger.log("Probabilità finale di colpire: " + probabilitaFinale);
 
-        // Applica i limiti minimi e massimi (Cap) per mantenere il bilanciamento
+        // Limiti minimi e massimi (Cap) per il bilanciamento
         if (probabilitaFinale < 5) {
             probabilitaFinale = 5;
         } else if (probabilitaFinale > 95) {
             probabilitaFinale = 95;
         }
         Logger.log("Probabilità finale di colpire dopo applicazione dei limiti: " + probabilitaFinale);
+        return probabilitaFinale;
+    }
+
+    public static boolean colpisce(Personaggio attaccante, Personaggio difensore, SupertipoDanno tipoDanno) {
+
+        int probabilitaFinale = calcolaProbabilitaDiColpire(attaccante, difensore, tipoDanno);
 
         // 6. TIRO DEL DADO (Generazione numero casuale da 1 a 100)
         int tiroDado = Dado.tira(100);
         Logger.log("Risultato sul COLPIRE (tiro del dado = " + tiroDado + "): " + (tiroDado <= probabilitaFinale));
 
         return tiroDado <= probabilitaFinale;
-
     }
 
-    public static RisultatoCombattimento calcolaDannoFinale(Personaggio attaccante, Personaggio difensore,
-                                                            TipoDanno tipoDanno, Artefatto arma) {
+    public static RisultatoCombattimento calcolaDannoFinale(Personaggio attaccante, Personaggio difensore, Arma arma) {
 
         RisultatoCombattimento risultatoCombattimento = new RisultatoCombattimento();
+        TipoDanno tipoDanno = arma.getTipoDanno();
 
         // 1. CALCOLO STATISTICHE EFFETTIVE
         // Determina se l'attacco scala su FORZA (Fisico) o INTELLIGENZA (Magico/Elementale)

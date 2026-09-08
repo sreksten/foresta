@@ -1,35 +1,25 @@
 package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.modellodati.TipoDanno;
 
 public class Fuoco extends IncantesimoMaleficoImpl implements Incantesimo {
 
-	public ClassiIncantesimo getClasse() {
-		return ClassiIncantesimo.FUOCO;
+	public Fuoco(int livello) {
+		super(livello);
 	}
 
-	public String getNomeAbbreviato() {
-		return "Fuoco";
-	}
-
-	public String getNomeSingolare() {
-		return "incantesimo del Fuoco";
-	}
-
-	public String getNomePlurale() {
-		return "incantesimi del Fuoco";
-	}
-
-	public PortataIncantesimo getPortata() {
-		return PortataIncantesimo.GRUPPO;
-	}
-
-	public int getCostoAcquisto() {
-		return Costanti.INCANTESIMO_FUOCO_COSTO_ACQUISTO;
+	public ClasseIncantesimo getClasse() {
+		return ClasseIncantesimo.FUOCO;
 	}
 
 	public int getCostoLancio() {
 		return Costanti.INCANTESIMO_FUOCO_COSTO_LANCIO;
+	}
+
+	@Override
+	public TipoDanno getTipoDanno() {
+		return TipoDanno.FUOCO;
 	}
 
 	public int getDanni() {

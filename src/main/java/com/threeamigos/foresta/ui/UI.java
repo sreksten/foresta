@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.ComandiPossibili;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -250,7 +250,7 @@ public class UI {
 		interfacciaUtente.variaPunti(variazione);
 	}
 
-	public static void variaIncantesimi(ClassiIncantesimo classeIncantesimo, int variazione) {
+	public static void variaIncantesimi(ClasseIncantesimo classeIncantesimo, int variazione) {
 		interfacciaUtente.variaIncantesimi(classeIncantesimo, variazione);
 	}
 

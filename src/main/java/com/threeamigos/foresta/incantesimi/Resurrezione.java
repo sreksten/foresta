@@ -7,32 +7,18 @@ import com.threeamigos.foresta.ui.UI;
 
 public class Resurrezione implements Incantesimo {
 
-	public ClassiIncantesimo getClasse() {
-		return ClassiIncantesimo.RESURREZIONE;
+	private final int livello;
+
+	public Resurrezione(int livello) {
+		this.livello = livello;
 	}
 
-	public String getNomeAbbreviato() {
-		return "Resurr.";
+	public ClasseIncantesimo getClasse() {
+		return ClasseIncantesimo.RESURREZIONE;
 	}
 
-	public String getNomeSingolare() {
-		return "incantesimo di Resurrezione";
-	}
-
-	public String getNomePlurale() {
-		return "incantesimi di Resurrezione";
-	}
-
-	public PortataIncantesimo getPortata() {
-		return PortataIncantesimo.SINGOLO_QUALSIASI;
-	}
-
-	public TipoIncantesimo getTipo() {
-		return TipoIncantesimo.BENEFICO;
-	}
-
-	public int getCostoAcquisto() {
-		return Costanti.INCANTESIMO_RESURREZIONE_COSTO_ACQUISTO;
+	public int getLivello() {
+		return livello;
 	}
 
 	public int getCostoLancio() {
@@ -40,7 +26,12 @@ public class Resurrezione implements Incantesimo {
 	}
 
 	public void formula(Personaggio formulante, Personaggio personaggioBersaglio, Gruppo gruppoBersaglio) {
-		String nome = personaggioBersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+		String nome = personaggioBersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+
+		UI.notifica(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " formula un " + getClasse().getNomeSingolare() +
+				" su " + nome + ".");
 
 		if (personaggioBersaglio.isVivo()) {
             String notifica = nome + " era già viv" + personaggioBersaglio.getLetteraFinaleAttributo() +

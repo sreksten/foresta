@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
@@ -280,10 +280,10 @@ public class Locanda extends LocazioneBase {
 			GruppoAvversario.getIstanza().rimuoviPersonaggio(personaggioDisponibile);
 			g.aggiungiPersonaggio(personaggioDisponibile);
 			g.addMonete(Dado.tira(5, 15));
-			g.addIncantesimi(ClassiIncantesimo.ARIA, Dado.tira(0, 3));
-			g.addIncantesimi(ClassiIncantesimo.ACQUA, Dado.tira(0, 3));
-			g.addIncantesimi(ClassiIncantesimo.TERRA, Dado.tira(0, 3));
-			g.addIncantesimi(ClassiIncantesimo.FUOCO, Dado.tira(0, 3));
+			g.addIncantesimi(ClasseIncantesimo.ARIA, Dado.tira(0, 3));
+			g.addIncantesimi(ClasseIncantesimo.ACQUA, Dado.tira(0, 3));
+			g.addIncantesimi(ClasseIncantesimo.TERRA, Dado.tira(0, 3));
+			g.addIncantesimi(ClasseIncantesimo.FUOCO, Dado.tira(0, 3));
 			g.addPreziosi(Dado.tira(0, 10));
 			personaggioDisponibile = null;
 			UI.rinfresca();

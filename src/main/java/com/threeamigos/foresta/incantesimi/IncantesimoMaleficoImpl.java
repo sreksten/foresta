@@ -19,17 +19,26 @@ import java.util.List;
 
 public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 
-	public TipoIncantesimo getTipo() {
-		return TipoIncantesimo.MALEFICO;
-	}
-
+	protected final int livello;
 	protected int totale;
 	protected int bersagli;
 	protected int feriti;
 	protected int uccisi;
 
+	protected IncantesimoMaleficoImpl(int livello) {
+		this.livello = livello;
+	}
+
+	public int getLivello() {
+		return livello;
+	}
+
+	public TipoIncantesimo getTipo() {
+		return TipoIncantesimo.MALEFICO;
+	}
+
 	public void formula(Personaggio formulante, Personaggio personaggioBersaglio, Gruppo gruppoBersaglio) {
-		if (getPortata() == PortataIncantesimo.GLOBALE) {
+		if (getClasse().getPortata() == PortataIncantesimo.GLOBALE) {
 			formula(formulante);
 		} else if (personaggioBersaglio != null) {
 			formula(formulante, personaggioBersaglio);
@@ -44,19 +53,34 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 	}
 
 	private void formula(Personaggio formulante, Gruppo gruppoBersaglio) {
-		Logger.log("IncantesimoGenerico::formula(formulante,gruppo)");
+
+		List<Personaggio> personaggiVivi = gruppoBersaglio.getPersonaggiVivi();
+
+		String nomeBersaglio;
+		if (personaggiVivi.size() > 1) {
+			nomeBersaglio = "il gruppo";
+		} else {
+			nomeBersaglio = gruppoBersaglio.getPersonaggiVivi().get(0)
+					.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+							Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+		}
+
+		String nomeFormulante = formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+
+		UI.notifica(nomeFormulante + " formula un " + getClasse().getNomeSingolare() + " contro " + nomeBersaglio + ".");
+
 		totale = gruppoBersaglio.getNumeroPersonaggi();
-		List<Personaggio> personaggiVivi = gruppoBersaglio.getPersonaggiVivi(); 
 		bersagli = formulante.getBersagli();
 		if (bersagli > personaggiVivi.size()) {
 			bersagli = personaggiVivi.size();
 		}
 		int danni = formulante.getModificaDanniMagia(getDanni());
-		if (getPortata() != PortataIncantesimo.GRUPPO && bersagli > 1) {
+		if (getClasse().getPortata() != PortataIncantesimo.GRUPPO && bersagli > 1) {
 			Logger.log("I danni vengono suddivisi tra i personaggi bersaglio");
 			danni /= bersagli;
 		}
-		Logger.log("Bersagli base: " + formulante.getBersagli() + ", vivi: " + personaggiVivi.size() + " -> bersagli: " + bersagli + ", danni=" + danni);
+		Logger.log("Bersagli vivi: " + personaggiVivi.size() + " -> bersagli: " + bersagli + ", danni=" + danni);
 
 		for (int i = 0; i < bersagli; i++) {
 			Personaggio personaggioBersaglio = personaggiVivi.get(i);
@@ -66,7 +90,12 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 	}
 
 	private void formula(Personaggio formulante, Personaggio personaggioBersaglio) {
-		Logger.log("IncantesimoGenerico::formula(formulante,personaggio)");
+		String nomeBersaglio = personaggioBersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+		UI.notifica(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " formula un " + getClasse().getNomeSingolare() + " contro " +
+				nomeBersaglio + ".");
+
 		int danni = formulante.getModificaDanniMagia(getDanni());
 		formulaImpl(formulante, personaggioBersaglio, danni, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
 		formulante.subMagia(getCostoLancio());
@@ -137,6 +166,7 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 	}
 
 	protected void formula(Personaggio formulante) {
-		Logger.log("Formula() implementazione base senza effetti!");
+		UI.notifica(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " formula un " + getClasse().getNomeSingolare() + ".");
 	}
 }

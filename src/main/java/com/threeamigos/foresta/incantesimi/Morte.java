@@ -2,37 +2,27 @@ package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Gruppo;
+import com.threeamigos.foresta.motore.modellodati.TipoDanno;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.ui.UI;
 
 public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 
-	public ClassiIncantesimo getClasse() {
-		return ClassiIncantesimo.MORTE;
+	public Morte(int livello) {
+		super(livello);
 	}
 
-	public String getNomeAbbreviato() {
-		return "Morte";
-	}
-
-	public String getNomeSingolare() {
-		return "incantesimo di Morte";
-	}
-
-	public String getNomePlurale() {
-		return "incantesimi di Morte";
-	}
-
-	public PortataIncantesimo getPortata() {
-		return PortataIncantesimo.GRUPPO;
-	}
-
-	public int getCostoAcquisto() {
-		return Costanti.INCANTESIMO_MORTE_COSTO_ACQUISTO;
+	public ClasseIncantesimo getClasse() {
+		return ClasseIncantesimo.MORTE;
 	}
 
 	public int getCostoLancio() {
 		return Costanti.INCANTESIMO_MORTE_COSTO_LANCIO;
+	}
+
+	@Override
+	public TipoDanno getTipoDanno() {
+		return TipoDanno.NECROTICO;
 	}
 
 	public int getDanni() {

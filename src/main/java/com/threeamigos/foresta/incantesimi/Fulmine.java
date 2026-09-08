@@ -1,35 +1,25 @@
 package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.modellodati.TipoDanno;
 
 public class Fulmine extends IncantesimoMaleficoImpl implements Incantesimo {
 
-	public ClassiIncantesimo getClasse() {
-		return ClassiIncantesimo.FULMINE;
+	public Fulmine(int livello) {
+		super(livello);
 	}
 
-	public String getNomeAbbreviato() {
-		return "Fulmine";
-	}
-
-	public String getNomeSingolare() {
-		return "incantesimo del Fulmine";
-	}
-
-	public String getNomePlurale() {
-		return "incantesimi del Fulmine";
-	}
-
-	public PortataIncantesimo getPortata() {
-		return PortataIncantesimo.GRUPPO;
-	}
-
-	public int getCostoAcquisto() {
-		return Costanti.INCANTESIMO_FULMINE_COSTO_ACQUISTO;
+	public ClasseIncantesimo getClasse() {
+		return ClasseIncantesimo.FULMINE;
 	}
 
 	public int getCostoLancio() {
 		return Costanti.INCANTESIMO_FULMINE_COSTO_LANCIO;
+	}
+
+	@Override
+	public TipoDanno getTipoDanno() {
+		return TipoDanno.FULMINE;
 	}
 
 	public int getDanni() {

@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 
 import java.awt.*;
@@ -10,33 +10,41 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI = 16;
 
+	private final ClasseIncantesimo[] colonnaSinistra = { ClasseIncantesimo.ARIA, ClasseIncantesimo.ACQUA, ClasseIncantesimo.TERRA,
+			ClasseIncantesimo.FUOCO, ClasseIncantesimo.FULMINE, ClasseIncantesimo.GELO, ClasseIncantesimo.VELENO };
+	private final ClasseIncantesimo[] colonnaDestra = { ClasseIncantesimo.MORTE, ClasseIncantesimo.RESURREZIONE };
+
 	private final int topLeftX;
 	private final int topLeftY;
-	private final int iconaIncantesimoX;
-	private final int nomeIncantesimoX;
-	private final int totaleIncantesimoX;
-	private final int iconaPozioneX;
-	private final int nomePozioneX;
-	private final int totalePozioneX;
+	private final int iconaSinistraX;
+	private final int nomeSinistraX;
+	private final int totaleSinistraX;
+	private final int iconaDestraX;
+	private final int nomeDestraX;
+	private final int totaleDestraX;
 
 	DisplayableCanvasRiquadroIncantesimi(int topLeftX, int topLeftY) {
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
 		int maxIconWidth = 0;
-		for (BufferedImage image : ImageCache.spriteIncantesimi) {
-			maxIconWidth = Math.max(maxIconWidth, image.getWidth());
+		for (ClasseIncantesimo classeIncantesimo : colonnaSinistra) {
+			maxIconWidth = Math.max(maxIconWidth, ImageCache.spriteIncantesimi[classeIncantesimo.ordinal()].getWidth());
 		}
-		iconaIncantesimoX = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI;
-		nomeIncantesimoX = iconaIncantesimoX + maxIconWidth + 2;
-		totaleIncantesimoX = topLeftX + (ImageCache.corniceIncantesimi.getWidth() / 2);
+		iconaSinistraX = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI;
+		nomeSinistraX = iconaSinistraX + maxIconWidth + 2;
+		totaleSinistraX = topLeftX + (ImageCache.corniceIncantesimi.getWidth() / 2);
 
 		maxIconWidth = 0;
+		for (ClasseIncantesimo classeIncantesimo : colonnaDestra) {
+			maxIconWidth = Math.max(maxIconWidth, ImageCache.spriteIncantesimi[classeIncantesimo.ordinal()].getWidth());
+		}
 		maxIconWidth = Math.max(maxIconWidth, ImageCache.spritePozioneSalute.getWidth());
 		maxIconWidth = Math.max(maxIconWidth, ImageCache.spritePozioneSaluteGrande.getWidth());
 		maxIconWidth = Math.max(maxIconWidth, ImageCache.spritePozioneMagia.getWidth());
-		iconaPozioneX = topLeftX + ImageCache.corniceIncantesimi.getWidth() / 2;
-		nomePozioneX = iconaPozioneX + maxIconWidth + 2;
-		totalePozioneX = topLeftX + ImageCache.corniceIncantesimi.getWidth() - DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI;		
+		maxIconWidth = Math.max(maxIconWidth, ImageCache.spritePozioneMagiaGrande.getWidth());
+		iconaDestraX = topLeftX + ImageCache.corniceIncantesimi.getWidth() / 2;
+		nomeDestraX = iconaDestraX + maxIconWidth + 2;
+		totaleDestraX = topLeftX + ImageCache.corniceIncantesimi.getWidth() - DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI;
 	}
 
 	void disegnaIncantesimi(Graphics2D graphics) {
@@ -50,66 +58,66 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 		GruppoGiocatore g = GruppoGiocatore.getIstanza();
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 		int locYOffset = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI;
-		Image doomdark = null;
-		DoomdarkColorModel.Color color = DoomdarkColorModel.Color.MEDIUM_GRAY;
-		for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
-			if (color == DoomdarkColorModel.Color.LIGHT_GRAY) {
-				color = DoomdarkColorModel.Color.MEDIUM_GRAY;
-			} else {
-				color = DoomdarkColorModel.Color.LIGHT_GRAY;
-			}
-			BufferedImage iconaIncantesimo = ImageCache.spriteIncantesimi[classeIncantesimo.ordinal()];
-			graphics.drawImage(iconaIncantesimo, iconaIncantesimoX, locYOffset - (iconaIncantesimo.getHeight() - fontMedium.getHeight()) / 2, null);
-			doomdark = DoomdarkTextProducer.getImage(classeIncantesimo.getIstanza().getNomeAbbreviato(), fontMedium, color);
-			graphics.drawImage(doomdark, nomeIncantesimoX, locYOffset, null);
-			doomdark = DoomdarkTextProducer.getImage(g.getIncantesimi(classeIncantesimo), fontMedium, color);
-			graphics.drawImage(doomdark, totaleIncantesimoX - doomdark.getWidth(null), locYOffset, null);
+		DoomdarkColorAlternante color = new DoomdarkColorAlternante();
+
+		for (ClasseIncantesimo classeIncantesimo : colonnaSinistra) {
+			disegnaIncantesimo(graphics, iconaSinistraX, nomeSinistraX, totaleSinistraX, locYOffset, classeIncantesimo, g.getIncantesimi(classeIncantesimo), color);
 			locYOffset += fontMedium.getHeight();
 		}
 		
 		locYOffset = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI;
-		BufferedImage iconaPozioneSalute = ImageCache.spritePozioneSalute;
-		graphics.drawImage(iconaPozioneSalute, iconaPozioneX, locYOffset - (iconaPozioneSalute.getHeight() - fontMedium.getHeight()) / 2, null);
-		doomdark = DoomdarkTextProducer.getImage("Salute", fontMedium, color);
-		graphics.drawImage(doomdark, nomePozioneX, locYOffset, null);
-		doomdark = DoomdarkTextProducer.getImage(g.getPozioniSalute(), fontMedium, color);
-		graphics.drawImage(doomdark, totalePozioneX - doomdark.getWidth(null), locYOffset, null);
+
+		for (ClasseIncantesimo classeIncantesimo : colonnaDestra) {
+			disegnaIncantesimo(graphics, iconaDestraX, nomeDestraX, totaleDestraX, locYOffset, classeIncantesimo, g.getIncantesimi(classeIncantesimo), color);
+			locYOffset += fontMedium.getHeight();
+		}
+
+		// Per lasciare spazio tra incantesimi e pozioni
 		locYOffset += fontMedium.getHeight();
 
-		BufferedImage iconaPozioneSaluteGrande = ImageCache.spritePozioneSaluteGrande;
-		graphics.drawImage(iconaPozioneSaluteGrande, iconaPozioneX, locYOffset - (iconaPozioneSaluteGrande.getHeight() - fontMedium.getHeight()) / 2, null);
-		doomdark = DoomdarkTextProducer.getImage("G. Salute", fontMedium, color);
-		graphics.drawImage(doomdark, nomePozioneX, locYOffset, null);
-		doomdark = DoomdarkTextProducer.getImage(g.getPozioniSaluteGrande(), fontMedium, color);
-		graphics.drawImage(doomdark, totalePozioneX - doomdark.getWidth(null), locYOffset, null);
+		disegnaOggetto(graphics, iconaDestraX, nomeDestraX, totaleDestraX, locYOffset, ImageCache.spritePozioneSalute, "Salute", g.getPozioniSalute(), color);
 		locYOffset += fontMedium.getHeight();
 
-		BufferedImage iconaPozioneMagia = ImageCache.spritePozioneMagia;
-		graphics.drawImage(iconaPozioneMagia, iconaPozioneX, locYOffset - (iconaPozioneMagia.getHeight() - fontMedium.getHeight()) / 2, null);
-		doomdark = DoomdarkTextProducer.getImage("Magia", fontMedium, color);
-		graphics.drawImage(doomdark, nomePozioneX, locYOffset, null);
-		doomdark = DoomdarkTextProducer.getImage(g.getPozioniMagia(), fontMedium, color);
-		graphics.drawImage(doomdark, totalePozioneX - doomdark.getWidth(null), locYOffset, null);
+		disegnaOggetto(graphics, iconaDestraX, nomeDestraX, totaleDestraX, locYOffset, ImageCache.spritePozioneSaluteGrande, "G. Salute", g.getPozioniSaluteGrande(), color);
 		locYOffset += fontMedium.getHeight();
 
-		BufferedImage iconaPozioneMagiaGrande = ImageCache.spritePozioneMagiaGrande;
-		graphics.drawImage(iconaPozioneMagia, iconaPozioneX, locYOffset - (iconaPozioneMagiaGrande.getHeight() - fontMedium.getHeight()) / 2, null);
-		doomdark = DoomdarkTextProducer.getImage("G. Magia", fontMedium, color);
-		graphics.drawImage(doomdark, nomePozioneX, locYOffset, null);
-		doomdark = DoomdarkTextProducer.getImage(g.getPozioniMagiaGrande(), fontMedium, color);
-		graphics.drawImage(doomdark, totalePozioneX - doomdark.getWidth(null), locYOffset, null);
+		disegnaOggetto(graphics, iconaDestraX, nomeDestraX, totaleDestraX, locYOffset, ImageCache.spritePozioneMagia, "Magia", g.getPozioniMagia(), color);
+		locYOffset += fontMedium.getHeight();
+
+		disegnaOggetto(graphics, iconaDestraX, nomeDestraX, totaleDestraX, locYOffset, ImageCache.spritePozioneMagiaGrande, "G. Magia", g.getPozioniMagiaGrande(), color);
 
 		graphics.setClip(null);		
 	}
 
-	SpriteInterface variaIncantesimi(ClassiIncantesimo classeIncantesimo, int variazione) {
+	private void disegnaIncantesimo(Graphics2D graphics, int iconaX, int nomeX, int totaleX, int y, ClasseIncantesimo classeIncantesimo, int quantita, DoomdarkColorAlternante color) {
+		disegnaOggetto(graphics, iconaX, nomeX, totaleX, y, ImageCache.spriteIncantesimi[classeIncantesimo.ordinal()], classeIncantesimo.getNomeAbbreviato(), quantita, color);
+	}
+
+	private void disegnaOggetto(Graphics2D graphics, int iconaX, int nomeX, int totaleX, int y, BufferedImage icona, String descrizione, int quantita, DoomdarkColorAlternante colorA) {
+        DoomdarkColorModel.Color color = colorA.getColor();
+		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
+		graphics.drawImage(icona, iconaX, y - (icona.getHeight() - fontMedium.getHeight()) / 2, null);
+		Image doomdark = DoomdarkTextProducer.getImage(descrizione, fontMedium, color);
+		graphics.drawImage(doomdark, nomeX, y, null);
+		doomdark = DoomdarkTextProducer.getImage(quantita, fontMedium, color);
+		graphics.drawImage(doomdark, totaleX - doomdark.getWidth(null), y, null);
+	}
+
+	SpriteInterface variaIncantesimi(ClasseIncantesimo classeIncantesimo, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteIncantesimi[classeIncantesimo.ordinal()];
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + classeIncantesimo.ordinal() * fontMedium.getHeight();
-		return new SpriteATempo(icona, variazione, fontMedium, totaleIncantesimoX, y);
+		int x = totaleSinistraX;
+		for (ClasseIncantesimo classeIncantesimoADestra : colonnaDestra) {
+            if (classeIncantesimo == classeIncantesimoADestra) {
+                x = totaleDestraX;
+                break;
+            }
+		}
+		return new SpriteATempo(icona, variazione, fontMedium, x, y);
 	}
 
 	SpriteInterface variaPozioniSalute(int variazione) {
@@ -119,7 +127,7 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 		BufferedImage icona = ImageCache.spritePozioneSalute;
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI;
-		return new SpriteATempo(icona, variazione, fontMedium, totalePozioneX, y);
+		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y);
 	}
 
 	SpriteInterface variaPozioniSaluteGrande(int variazione) {
@@ -129,7 +137,7 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 		BufferedImage icona = ImageCache.spritePozioneSaluteGrande;
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + fontMedium.getHeight();
-		return new SpriteATempo(icona, variazione, fontMedium, totalePozioneX, y);
+		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y);
 	}
 
 	SpriteInterface variaPozioniMagia(int variazione) {
@@ -139,7 +147,7 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 		BufferedImage icona = ImageCache.spritePozioneMagia;
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + 2 * fontMedium.getHeight();
-		return new SpriteATempo(icona, variazione, fontMedium, totalePozioneX, y);
+		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y);
 	}
 
 	SpriteInterface variaPozioniMagiaGrande(int variazione) {
@@ -149,6 +157,6 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 		BufferedImage icona = ImageCache.spritePozioneMagiaGrande;
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + 3 * fontMedium.getHeight();
-		return new SpriteATempo(icona, variazione, fontMedium, totalePozioneX, y);
+		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y);
 	}
 }

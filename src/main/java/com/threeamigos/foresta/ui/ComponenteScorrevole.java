@@ -226,14 +226,4 @@ public class ComponenteScorrevole<T> {
             return testo;
         }
     }
-
-    private static class DoomdarkColorAlternante {
-
-        private DoomdarkColorModel.Color color = DoomdarkColorModel.Color.MEDIUM_GRAY;
-
-        public DoomdarkColorModel.Color getColor() {
-            color = color == DoomdarkColorModel.Color.LIGHT_GRAY ? DoomdarkColorModel.Color.MEDIUM_GRAY : DoomdarkColorModel.Color.LIGHT_GRAY;
-            return color;
-        }
-    }
 }

@@ -34,6 +34,14 @@ public class Costanti {
     public static final int INCANTESIMO_TERRA_COSTO_LANCIO = 2;
     public static final int INCANTESIMO_TERRA_DANNI = 50;
 
+    public static final int INCANTESIMO_GELO_COSTO_ACQUISTO = 5;
+    public static final int INCANTESIMO_GELO_COSTO_LANCIO = 2;
+    public static final int INCANTESIMO_GELO_DANNI = 50;
+
+    public static final int INCANTESIMO_VELENO_COSTO_ACQUISTO = 5;
+    public static final int INCANTESIMO_VELENO_COSTO_LANCIO = 2;
+    public static final int INCANTESIMO_VELENO_DANNI = 50;
+
     // Pozioni
     public static final int RECUPERO_DA_POZIONE_SALUTE = 100;
     public static final int RECUPERO_DA_POZIONE_SALUTE_GRANDE = 150;

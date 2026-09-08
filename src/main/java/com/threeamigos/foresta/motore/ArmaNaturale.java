@@ -67,7 +67,6 @@ public class ArmaNaturale implements Arma {
                 return TipoAttaccoNaturale.ZANNE_DRACONICHE;
             case FANTASMA:
             case SPETTRO:
-            case EREMITA:
                 return TipoAttaccoNaturale.TOCCO_GELIDO;
             case SPIRITO:
             case OMBRA_NERA:

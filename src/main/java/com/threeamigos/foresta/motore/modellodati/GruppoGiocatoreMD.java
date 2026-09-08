@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,7 +13,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 
 	private int monete;
 	private int preziosi;
-	private int[] incantesimi = new int[ClassiIncantesimo.values().length];
+	private int[] incantesimi = new int[ClasseIncantesimo.values().length];
 	private int pozioniSalute;
 	private int pozioniSaluteGrande;
 	private int pozioniMagia;
@@ -89,7 +89,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 
 	public void reimposta() {
 		super.reimposta();
-		incantesimi = new int[ClassiIncantesimo.values().length];
+		incantesimi = new int[ClasseIncantesimo.values().length];
 		monete = 0;
 		preziosi = 0;
 		pozioniSalute = 0;
@@ -98,11 +98,11 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		pozioniMagiaGrande = 0;
 	}
 
-	public void setIncantesimi(ClassiIncantesimo classeIncantesimo, int quantita) {
+	public void setIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
 		incantesimi[classeIncantesimo.ordinal()] = quantita;
 	}
 
-	public int getIncantesimi(ClassiIncantesimo classeIncantesimo) {
+	public int getIncantesimi(ClasseIncantesimo classeIncantesimo) {
 		return incantesimi[classeIncantesimo.ordinal()];
 	}
 

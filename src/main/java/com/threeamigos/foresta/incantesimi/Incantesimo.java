@@ -14,22 +14,7 @@ public interface Incantesimo {
 	/**
 	 * La classe dell'incantesimo
 	 */
-    ClassiIncantesimo getClasse();
-
-	/**
-	 * Il nome abbreviato di un incantesimo (es. Aria)
-	 */
-    String getNomeAbbreviato();
-
-	/**
-	 * Il nome completo di un incantesimo al singolare (es. Incantesimo dell'Aria)
-	 */
-    String getNomeSingolare();
-
-	/**
-	 * Il nome completo di un incantesimo al plurale (es. Incantesimi dell'Aria)
-	 */
-    String getNomePlurale();
+    ClasseIncantesimo getClasse();
 
 	/**
 	 * Formula un incantesimo su un bersaglio
@@ -42,23 +27,12 @@ public interface Incantesimo {
     void formula(Personaggio formulante, Personaggio personaggioBersaglio, Gruppo gruppoBersaglio);
 
 	/**
-	 * Il tipo di questo incantesimo: BENEFICO, MALEFICO
+	 * Il livello a cui viene formulato l'incantesimo
 	 */
-    TipoIncantesimo getTipo();
-	
-	/**
-	 * La portata di questo incantesimo; GLOBALE, GRUPPO, SINGOLO_SOLO_VIVI, SINGOLO_QUALSIASI
-	 */
-    PortataIncantesimo getPortata();
-
-	/**
-	 * Quante monete costa acquistarlo
-	 */
-    int getCostoAcquisto();
+	int getLivello();
 
 	/**
 	 * Quanti punti di magia costa lanciarlo
 	 */
     int getCostoLancio();
-
 }

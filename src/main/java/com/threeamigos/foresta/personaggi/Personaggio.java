@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.OggettoConArticoli;
@@ -261,7 +261,7 @@ public interface Personaggio extends OggettoConArticoli {
 	/**
 	 * Un personaggio potrebbe essere immune a una certa classe di incantesimi (o più)
 	 */
-    boolean isImmuneAIncantesimo(ClassiIncantesimo classeIncantesimo);
+    boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo);
 
 	PersonaggioMD getModelloDati();
 

@@ -3,16 +3,15 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.EventoMortePersonaggio;
 import com.threeamigos.foresta.eventi.EventoVariazioneStatistichePersonaggio;
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
-import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
+import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.incantesimi.TipoIncantesimo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.BufferedImageBuilder;
 import com.threeamigos.foresta.ui.ImageCache;
@@ -145,7 +144,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return new ClassiOfferta[0];
 	}
 	
-	public boolean isImmuneAIncantesimo(ClassiIncantesimo classeIncantesimo) {
+	public boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo) {
 		return false;
 	}
 	
@@ -342,26 +341,10 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	public void attacca(Personaggio bersaglio) {
 		Logger.log(getNome() + " attacca " + bersaglio.getNome());
-		Incantesimo incantesimoScelto = null;
-		if (isMagico() && getMagia() > 0) {
-			Logger.log("Avversario magico, scelgo incantesimo");
-			for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
-				Incantesimo incantesimoCorrente = classeIncantesimo.getIstanza();
-				if (getMagia() >= incantesimoCorrente.getCostoLancio() && incantesimoCorrente.getTipo() == TipoIncantesimo.MALEFICO && (incantesimoScelto == null || Dado.tira(2) == 1)) {
-					incantesimoScelto = incantesimoCorrente;
-				}
-			}
-		}
+		Logger.log("------ Valutazione se usare incantesimo -----");
+		Incantesimo incantesimoScelto = scegliIncantesimoContro(bersaglio);
+		Logger.log("------ Fine Valutazione se usare incantesimo -----");
 		if (incantesimoScelto != null) {
-			StringBuilder sb = new StringBuilder("Un ").append(incantesimoScelto.getNomeSingolare())
-					.append(" viene formulato contro ");
-			if (incantesimoScelto.getPortata() == PortataIncantesimo.GRUPPO && GruppoGiocatore.getIstanza().getNumeroPersonaggiVivi() > 1) {
-				sb.append("il gruppo");
-			} else {
-				sb.append(bersaglio.getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
-			}
-			sb.append('.');
-			UI.notifica(sb.toString());
 			incantesimoScelto.formula(this, bersaglio, null);
 		} else {
 			OpzioniGetNome articoloDaIncludere = GruppoAvversario.getIstanza().getNumeroPersonaggiVivi() == 1 ?
@@ -376,19 +359,23 @@ public abstract class PersonaggioBase implements Personaggio {
 
 			Logger.log("---------- NUOVO MOTORE ----------");
 			Logger.log("Valutazione danno originale: " + danno);
-			boolean colpirebbe = CalcolatoreCombattimento.colpisce(this, bersaglio);
+			boolean colpirebbe = CalcolatoreCombattimento.colpisce(this, bersaglio, SupertipoDanno.FISICO);
 			if (colpirebbe) {
-				Artefatto arma = CostruttoreArtefatto.istanza()
-						.setTipo(TipoArtefatto.ASCIA)
-						.setNome("il budello di tu' ma' vestito da spada leggendaria")
-						.setDescrizione("si presta bene a picchiare")
-						.setLivello(1)
-						.setDanniBase(5)
-						.setCostoAcquisto(15)
-						.setPeso(2)
-						.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 5)
-						.costruisci();
-                RisultatoCombattimento risultato = CalcolatoreCombattimento.calcolaDannoFinale(this, bersaglio, TipoDanno.TAGLIENTE, arma);
+				Arma arma = new Arma() {
+					@Override
+					public int getDanni() {
+						return 5;
+					}
+					@Override
+					public int getLivello() {
+						return 1;
+					}
+					@Override
+					public TipoDanno getTipoDanno() {
+						return TipoDanno.TAGLIENTE;
+					}
+				};
+                RisultatoCombattimento risultato = CalcolatoreCombattimento.calcolaDannoFinale(this, bersaglio, arma);
 				UI.notifica("Con nuovo motore colpirebbe assegnando " + risultato.getDannoTotale() + " danni");
 			} else {
 				UI.notifica("Con nuovo motore " + getNome() + " non colpisce " + bersaglio.getNome());
@@ -427,6 +414,85 @@ public abstract class PersonaggioBase implements Personaggio {
 			return;
 		}
 		attacca(bersaglio);
+	}
+
+	private Incantesimo scegliIncantesimoContro(Personaggio personaggioBersaglio) {
+		// Se il personaggio non sa usare la magia, non lancio incantesimo
+		if (!isMagico()) {
+			Logger.log("Personaggio non magico");
+			return null;
+		}
+
+		// Se il personaggio non ha magia a disposizione, non lancio incantesimo
+		int magiaCorrente = getMagia();
+		if (getMagia() == 0) {
+			Logger.log("Personaggio che ha finito la scorta di magia");
+			return null;
+		}
+
+		List<IncantesimoMalefico> incantesimiDisponibili = Arrays.stream(ClasseIncantesimo.values())
+				.filter(i -> i.getCostoLancio() <= magiaCorrente && i.getTipo() == TipoIncantesimo.MALEFICO)
+				.map(i -> i.getIstanza(getLivello()))
+				.map(IncantesimoMalefico.class::cast)
+				.collect(Collectors.toList());
+
+		// Se non ci sono incantesimi possibili, non lancio incantesimo
+		if (incantesimiDisponibili.isEmpty()) {
+			Logger.log("Personaggio che non ha incantesimi a disposizione");
+			return null;
+		}
+
+		// Per qualche motivo suo il mostro potrebbe decidere di non tirare incantesimi
+		if (Dado.tira(3) == 1) {
+			Logger.log("Personaggio che decide di non tirare incantesimi");
+			return null;
+		}
+
+		int intelligenza = getIntelligenza();
+		// Un mostro stupido non sa mai cosa fare, quindi sceglie un incantesimo a caso
+		if (intelligenza < 5) {
+			Logger.log("Personaggio stupido (intelligenza < 5), sceglie incantesimo a caso");
+			return incantesimiDisponibili.get(Dado.tira(incantesimiDisponibili.size()) - 1);
+		}
+
+		Logger.log("Personaggio intelligente, sceglie incantesimo in base alla situazione");
+		incantesimiDisponibili.sort(Comparator.comparing(IncantesimoMalefico::getDanni).reversed());
+		IncantesimoMalefico piuPotente = incantesimiDisponibili.get(0);
+		if (intelligenza < 7) {
+			// Usa l'incantesimo più potente a disposizione
+			Logger.log("Personaggio intelligente (intelligenza < 7), sceglie incantesimo più potente: " + piuPotente.getClasse().getNomeSingolare());
+			return piuPotente;
+		}
+
+		// Ancora più intelligente, controlla se farebbe più danni tra fisico e non
+
+		Logger.log("------ Calcolo probabilità di colpire MAGICO -----");
+		int probabilitaDiColpireMagico = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(
+				this, personaggioBersaglio, SupertipoDanno.MAGICO);
+		Logger.log("------ Calcolo probabilità di colpire FISICO -----");
+		int probabilitaDiColpireFisico = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(
+				this, personaggioBersaglio, SupertipoDanno.FISICO);
+
+		Logger.log("------ Calcolo danni MAGICO -----");
+		int possibiliDanniMagici = CalcolatoreCombattimento.calcolaDannoFinale(this, personaggioBersaglio, piuPotente).getDannoTotale();
+
+		Optional<Artefatto> armaEquipaggiata = getInventario().stream().filter(a -> a.getTipo().getSupertipo() == SupertipoArtefatto.ARMA).findFirst();
+        Arma arma = armaEquipaggiata.map(artefatto -> (Arma) artefatto).orElseGet(() -> new ArmaNaturale(this));
+
+		Logger.log("------ Calcolo danni FISICO -----");
+		int possibiliDanniFisici = CalcolatoreCombattimento.calcolaDannoFinale(this, personaggioBersaglio, arma).getDannoTotale();
+
+		Logger.log("Personaggio intelligente, valuta probabilità di colpire FISICO " +
+				probabilitaDiColpireFisico + "% per " + possibiliDanniFisici + " danni e MAGICO " + probabilitaDiColpireMagico +
+				"% per " + possibiliDanniMagici + " danni.");
+
+		if (probabilitaDiColpireMagico * possibiliDanniMagici > probabilitaDiColpireFisico * possibiliDanniFisici) {
+			Logger.log("Personaggio intelligente, sceglie incantesimo più potente: " + piuPotente.getClasse().getNomeSingolare());
+			return piuPotente;
+		} else {
+			Logger.log("Personaggio intelligente, sceglie arma naturale");
+			return null;
+		}
 	}
 
 	public boolean isATempo() {
@@ -594,6 +660,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		if (nuovoLivello > livelloAttuale) {
 			int differenza = nuovoLivello - livelloAttuale;
 			md.setLivello(nuovoLivello);
+			md.setPuntiAbilitaDisponibili(differenza);
 			if (!isPNG()) {
 				UI.notificaMissione("LEVEL UP!", getNome() + " A LIVELLO " + nuovoLivello + "!");
 				UI.notifica("LEVELED UP! Ora " + getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + " è al livello " + nuovoLivello + "!");

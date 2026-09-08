@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
-import com.threeamigos.foresta.incantesimi.Incantesimo;
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Dado;
@@ -79,15 +78,13 @@ public class Cofano extends OggettoBase implements Oggetto {
 				sb.append("non trova nulla.");
 			} else if (tipo == 1) {
 				sb.append("trova una pergamena con un ");
-				ClassiIncantesimo classeIncantesimo = ClassiIncantesimo.casuale();
-				Incantesimo inc = classeIncantesimo.getIstanza();
-				sb.append(inc.getNomeSingolare()).append('.');
+				ClasseIncantesimo classeIncantesimo = ClasseIncantesimo.casuale();
+				sb.append(classeIncantesimo.getNomeSingolare()).append('.');
 				gruppo.addIncantesimi(classeIncantesimo, 1);
 			} else if (tipo == 2) {
 				sb.append("trova una pergamena con tre ");
-				ClassiIncantesimo classeIncantesimo = ClassiIncantesimo.casuale();
-				Incantesimo inc = classeIncantesimo.getIstanza();
-				sb.append(inc.getNomePlurale()).append('.');
+				ClasseIncantesimo classeIncantesimo = ClasseIncantesimo.casuale();
+				sb.append(classeIncantesimo.getNomePlurale()).append('.');
 				gruppo.addIncantesimi(classeIncantesimo, 3);
 			} else if (tipo == 3) {
 				sb.append("trova una pozione della salute.");

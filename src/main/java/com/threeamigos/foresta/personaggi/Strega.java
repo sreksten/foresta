@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -251,10 +251,10 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public boolean isImmuneAIncantesimo(ClassiIncantesimo classeIncantesimo) {
-		return classeIncantesimo == ClassiIncantesimo.ACQUA ||
-				classeIncantesimo == ClassiIncantesimo.ARIA ||
-				classeIncantesimo == ClassiIncantesimo.FUOCO ||
-				classeIncantesimo == ClassiIncantesimo.TERRA;
+	public boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo) {
+		return classeIncantesimo == ClasseIncantesimo.ACQUA ||
+				classeIncantesimo == ClasseIncantesimo.ARIA ||
+				classeIncantesimo == ClasseIncantesimo.FUOCO ||
+				classeIncantesimo == ClasseIncantesimo.TERRA;
 	}
 }

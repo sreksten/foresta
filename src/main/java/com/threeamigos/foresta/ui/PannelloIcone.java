@@ -132,6 +132,9 @@ public class PannelloIcone extends JPanel implements java.awt.event.ActionListen
 			case FUOCO:
 				icona = ClassiIcona.FUOCO;
 				break;
+			case GELO:
+				icona = ClassiIcona.GELO;
+				break;
 			case GIU:
 				icona = ClassiIcona.GIU;
 				break;
@@ -146,6 +149,9 @@ public class PannelloIcone extends JPanel implements java.awt.event.ActionListen
 				break;
 			case INCANTESIMO:
 				icona = ClassiIcona.INCANTESIMO;
+				break;
+			case INVENTARIO:
+				icona = ClassiIcona.INVENTARIO;
 				break;
 			case LADRA:
 				icona = ClassiIcona.LADRA;
@@ -254,6 +260,9 @@ public class PannelloIcone extends JPanel implements java.awt.event.ActionListen
 				break;
 			case TERRA:
 				icona = ClassiIcona.TERRA;
+				break;
+			case VELENO:
+				icona = ClassiIcona.VELENO;
 				break;
 			default:
 				throw new IllegalArgumentException("Icona non associata a " + possibiliAzioni.get(i));

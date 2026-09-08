@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Gioco;
@@ -304,7 +304,7 @@ public class ForestaUI implements InterfacciaUtente {
 	}
 
 	@Override
-	public void variaIncantesimi(ClassiIncantesimo classeIncantesimo, int variazione) {
+	public void variaIncantesimi(ClasseIncantesimo classeIncantesimo, int variazione) {
 		displayableCanvas.variaIncantesimi(classeIncantesimo, variazione);
 	}
 

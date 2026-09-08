@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.offerte;
 
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
-import com.threeamigos.foresta.incantesimi.Incantesimo;
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -12,14 +11,14 @@ import com.threeamigos.foresta.ui.UI;
 
 public class Incantesimi implements Offerta {
 
-	private final ClassiIncantesimo classeIncantesimo;
+	private final ClasseIncantesimo classeIncantesimo;
 	private final int quantita;
 	private final int costo;
 
 	public Incantesimi() {
-		classeIncantesimo = ClassiIncantesimo.casuale();
+		classeIncantesimo = ClasseIncantesimo.casuale();
 		quantita = Dado.tira(3);
-		costo = quantita * classeIncantesimo.getIstanza().getCostoAcquisto() / 2;
+		costo = quantita * classeIncantesimo.getCostoAcquisto() / 2;
 	}
 
 	@Override
@@ -65,11 +64,10 @@ public class Incantesimi implements Offerta {
 		} else {
 			sb.append(Misc.getCardinaleM(quantita)).append(' ');
 		}
-		Incantesimo i = classeIncantesimo.getIstanza();
 		if (quantita == 1) {
-			sb.append(i.getNomeSingolare());
+			sb.append(classeIncantesimo.getNomeSingolare());
 		} else {
-			sb.append(i.getNomePlurale());
+			sb.append(classeIncantesimo.getNomePlurale());
 		}
 		sb.append('.');
 		return sb.toString();

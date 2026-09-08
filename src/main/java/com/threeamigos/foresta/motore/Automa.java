@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
@@ -355,8 +355,8 @@ public class Automa implements ControlloreDiGioco {
 			case SCELTA_INCANTESIMO_DA_LANCIARE:
 				ComandiPossibili.reimposta();
 				Personaggio formulante = gruppo.getFormulante();
-				for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
-					if (gruppo.getIncantesimi(classeIncantesimo) > 0 && formulante.getMagia() >= classeIncantesimo.getIstanza().getCostoLancio()) {
+				for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
+					if (gruppo.getIncantesimi(classeIncantesimo) > 0 && formulante.getMagia() >= classeIncantesimo.getIstanza(formulante.getLivello()).getCostoLancio()) {
 						ComandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
 					}
 				}
@@ -368,7 +368,7 @@ public class Automa implements ControlloreDiGioco {
 
 			case ATTESA_INCANTESIMO_QUALSIASI:
 				ComandiPossibili.reimposta();
-				for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
+				for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
 					ComandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
 				}
 				ComandiPossibili.add(Comando.NO_INCANTESIMO);

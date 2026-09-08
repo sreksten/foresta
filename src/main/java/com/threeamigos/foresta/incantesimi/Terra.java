@@ -1,35 +1,25 @@
 package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.modellodati.TipoDanno;
 
 public class Terra extends IncantesimoMaleficoImpl implements Incantesimo {
 
-	public ClassiIncantesimo getClasse() {
-		return ClassiIncantesimo.TERRA;
+	public Terra(int livello) {
+		super(livello);
 	}
 
-	public String getNomeAbbreviato() {
-		return "Terra";
-	}
-
-	public String getNomeSingolare() {
-		return "incantesimo di Terra";
-	}
-
-	public String getNomePlurale() {
-		return "incantesimi di Terra";
-	}
-
-	public PortataIncantesimo getPortata() {
-		return PortataIncantesimo.GRUPPO;
-	}
-
-	public int getCostoAcquisto() {
-		return Costanti.INCANTESIMO_TERRA_COSTO_ACQUISTO;
+	public ClasseIncantesimo getClasse() {
+		return ClasseIncantesimo.TERRA;
 	}
 
 	public int getCostoLancio() {
 		return Costanti.INCANTESIMO_TERRA_COSTO_LANCIO;
+	}
+
+	@Override
+	public TipoDanno getTipoDanno() {
+		return TipoDanno.TERRA;
 	}
 
 	public int getDanni() {

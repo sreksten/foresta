@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
@@ -47,9 +47,9 @@ public class GruppoGiocatore extends Gruppo {
 		md.reimposta();
 		md.setMonete(100);
 		md.setPreziosi(5);
-		md.setIncantesimi(ClassiIncantesimo.ARIA, 3);
-		md.setIncantesimi(ClassiIncantesimo.ACQUA, 3);
-		md.setIncantesimi(ClassiIncantesimo.TERRA, 3);
+		md.setIncantesimi(ClasseIncantesimo.ARIA, 3);
+		md.setIncantesimi(ClasseIncantesimo.ACQUA, 3);
+		md.setIncantesimi(ClasseIncantesimo.TERRA, 3);
 		md.setPozioniSalute(0);
 		md.setPozioniSaluteGrande(0);
 		md.setPozioniMagia(0);
@@ -58,7 +58,7 @@ public class GruppoGiocatore extends Gruppo {
 
 		// FIXME questo è lecito solo finché stiamo debuggando...
 		md.setMonete(9999);
-		for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
+		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
 			md.setIncantesimi(classeIncantesimo, 99);
 		}
 		md.setPozioniSalute(99);
@@ -66,6 +66,11 @@ public class GruppoGiocatore extends Gruppo {
 		md.setPozioniMagia(99);
 		md.setPozioniMagiaGrande(99);
 		Foresta.ottieniMappa();
+	}
+
+	@Override
+	public boolean isGruppoGiocatore() {
+		return true;
 	}
 
 	@Override
@@ -116,16 +121,16 @@ public class GruppoGiocatore extends Gruppo {
 		UI.variaGemme(-quantita);
 	}
 
-	public final int getIncantesimi(ClassiIncantesimo classeIncantesimo) {
+	public final int getIncantesimi(ClasseIncantesimo classeIncantesimo) {
 		return md.getIncantesimi(classeIncantesimo);
 	}
 
-	public final void addIncantesimi(ClassiIncantesimo classeIncantesimo, int quantita) {
+	public final void addIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
 		md.setIncantesimi(classeIncantesimo, md.getIncantesimi(classeIncantesimo) + quantita);
 		UI.variaIncantesimi(classeIncantesimo, quantita);
 	}
 
-	public final void subIncantesimi(ClassiIncantesimo classeIncantesimo, int quantita) {
+	public final void subIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
 		md.setIncantesimi(classeIncantesimo, md.getIncantesimi(classeIncantesimo) - quantita);
 		UI.variaIncantesimi(classeIncantesimo, -quantita);
 	}
@@ -448,7 +453,7 @@ public class GruppoGiocatore extends Gruppo {
 
 		subMonete(calcolaPerdita.apply(md.getMonete()));
 		subPreziosi(calcolaPerdita.apply(md.getPreziosi()));
-		for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
+		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
 			int totaleIncantesimi = md.getIncantesimi(classeIncantesimo);
 			md.setIncantesimi(classeIncantesimo, calcolaPerdita.apply(totaleIncantesimi));
 		}

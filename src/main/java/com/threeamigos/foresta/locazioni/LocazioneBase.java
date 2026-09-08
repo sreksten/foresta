@@ -1,18 +1,20 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.incantesimi.ClassiIncantesimo;
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.motore.modellodati.*;
+import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
+import com.threeamigos.foresta.motore.modellodati.SupertipoDanno;
+import com.threeamigos.foresta.motore.modellodati.TipoDanno;
+import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
@@ -287,8 +289,9 @@ public abstract class LocazioneBase implements Locazione {
 			} else {
 				opzioneCorruzioneDisponibile = false;
 				opzioneAmiciziaDisponibile = false;
-				incantesimo = ClassiIncantesimo.ofComando(azione);
 				Personaggio formulante = gruppo.getFormulante();
+				ClasseIncantesimo classeIncantesimo = ClasseIncantesimo.ofComando(azione);
+				incantesimo = classeIncantesimo.getIstanza(formulante.getLivello());
 				if (formulante.getMagia() < incantesimo.getCostoLancio()) {
 					// Non si dovrebbe più riuscire a entrare in questo ramo perché la scelta degli incantesimi è già stata filtrata
                     String sb = "Il livello di magia " + formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
@@ -301,7 +304,7 @@ public abstract class LocazioneBase implements Locazione {
 					statoLocazione = StatoLocazione.IN_LOCAZIONE;
 					break;
 				}
-				PortataIncantesimo tipo = incantesimo.getPortata();
+				PortataIncantesimo tipo = classeIncantesimo.getPortata();
 				if (tipo == PortataIncantesimo.GLOBALE || tipo == PortataIncantesimo.GRUPPO) {
 					if (tipo == PortataIncantesimo.GLOBALE) {
 						incantesimo.formula(formulante, null, null);
@@ -429,10 +432,9 @@ public abstract class LocazioneBase implements Locazione {
 				String descrizione = null;
 				switch (spregio) {
 					case 1:
-						ClassiIncantesimo quale = ClassiIncantesimo.casuale();
-						Incantesimo qualeIncantesimo = quale.getIstanza();
+						ClasseIncantesimo quale = ClasseIncantesimo.casuale();
 						if (gruppo.getIncantesimi(quale) > 0) {
-							descrizione = "perde un " + qualeIncantesimo.getNomeSingolare() + '.';
+							descrizione = "perde un " + quale.getNomeSingolare() + '.';
 							gruppo.subIncantesimi(quale, 1);
 						}
 						break;
@@ -529,9 +531,9 @@ public abstract class LocazioneBase implements Locazione {
 			ComandiPossibili.add(Comando.INTERRUZIONE_COMBATTIMENTO);
 		}
 		// Possiamo formulare incantesimi? Si se ne abbiamo almeno uno e se uno dei personaggi vivi può lanciarlo
-		for (ClassiIncantesimo classeIncantesimo : ClassiIncantesimo.values()) {
+		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
 			if (gruppo.getIncantesimi(classeIncantesimo) > 0 &&
-					gruppo.getPersonaggiVivi().stream().anyMatch(p -> p.getMagia() >= classeIncantesimo.getIstanza().getCostoLancio())) {
+					gruppo.getPersonaggiVivi().stream().anyMatch(p -> p.getMagia() >= classeIncantesimo.getCostoLancio())) {
 				ComandiPossibili.add(Comando.INCANTESIMO);
 				break;
 			}
@@ -777,30 +779,33 @@ public abstract class LocazioneBase implements Locazione {
 			Logger.log("---------- NUOVO MOTORE ----------");
 			Logger.log(combattente.getNome() + " attacca " + bersaglio.getNome());
 
-			Artefatto arma = CostruttoreArtefatto.istanza()
-					.setTipo(TipoArtefatto.ASCIA)
-					.setNome("il budello di tu' ma' vestito da spada leggendaria")
-					.setDescrizione("si presta bene a picchiare")
-					.setLivello(1)
-					.setDanniBase(5)
-					.setCostoAcquisto(15)
-					.setPeso(2)
-					.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 20)
-					.costruisci();
-
+			Arma arma = new Arma() {
+				@Override
+				public int getDanni() {
+					return 5;
+				}
+				@Override
+				public int getLivello() {
+					return 1;
+				}
+				@Override
+				public TipoDanno getTipoDanno() {
+					return TipoDanno.TAGLIENTE;
+				}
+			};
 			Logger.log("Valutazione danno originale: danniBersaglio (" + bersaglio.getNome() + ") = " + danniBersaglio + ", danniCombattente (" + combattente.getNome() + ") = " + danniCombattente);
 			Logger.log("Valutazione combattente -> bersaglio");
-			boolean colpirebbe = CalcolatoreCombattimento.colpisce(combattente, bersaglio);
+			boolean colpirebbe = CalcolatoreCombattimento.colpisce(combattente, bersaglio, SupertipoDanno.FISICO);
 			if (colpirebbe) {
-				RisultatoCombattimento risultato = CalcolatoreCombattimento.calcolaDannoFinale(combattente, bersaglio, TipoDanno.TAGLIENTE, arma);
+				RisultatoCombattimento risultato = CalcolatoreCombattimento.calcolaDannoFinale(combattente, bersaglio, arma);
 				UI.notifica("Con nuovo motore " + combattente.getNome() + " colpirebbe " + bersaglio.getNome() + " assegnando " + risultato.getDannoTotale() + " danni");
 			} else {
 				UI.notifica("Con nuovo motore " + combattente.getNome() + " non colpisce " + bersaglio.getNome());
 			}
 			Logger.log("Valutazione bersaglio -> combattente");
-			colpirebbe = CalcolatoreCombattimento.colpisce(bersaglio, combattente);
+			colpirebbe = CalcolatoreCombattimento.colpisce(bersaglio, combattente, SupertipoDanno.FISICO);
 			if (colpirebbe) {
-				RisultatoCombattimento risultato = CalcolatoreCombattimento.calcolaDannoFinale(bersaglio, combattente, TipoDanno.TAGLIENTE, arma);
+				RisultatoCombattimento risultato = CalcolatoreCombattimento.calcolaDannoFinale(bersaglio, combattente, arma);
 				UI.notifica("Con nuovo motore " + bersaglio.getNome() + " colpirebbe " + combattente.getNome() + " assegnando " + risultato.getDannoTotale() + " danni");
 			} else {
 				UI.notifica("Con nuovo motore " + bersaglio.getNome() + " non colpisce " + combattente.getNome());
