@@ -20,22 +20,65 @@ public class PersonaggioMD implements Serializzabile {
 	 */
 	public static final int SENZA_LIMITE = -1;
 
+	/**
+	 * Classe del personaggio (Mago, Arpia, etc.)
+	 */
 	private ClassePersonaggio classe;
+	/**
+	 * Nome proprio del personaggio (quando presente)
+	 */
 	private String nome;
 
 	// Impostati da PersonaggioBase uguali per tutti i personaggi
+	/**
+	 * Se il personaggio sia sempre vivo
+	 */
 	private boolean vivo;
+	/**
+	 * Livello del personaggio
+	 */
 	private int livello;
+	/**
+	 * Punti esperienza accumulati dal personaggio
+	 */
 	private int esperienza;
+	/**
+	 * Punti abilità guadagnati da passaggio a livello successivo e non ancora assegnati
+	 */
 	private int puntiAbilitaDisponibili;
+	/**
+	 * La causa della morte del personaggio
+	 */
 	private String causaTrapasso;
+	/**
+	 * Tempo rimanente prima che il personaggio lasci il gruppo (per i personaggi amichevoli che si offrono di
+	 * accompagnare il gruppo)
+	 */
 	private int tempo = SENZA_LIMITE;
 
+	/**
+	 * Valori minimi per un dato attributo - solitamente non presenti
+	 */
 	private final Map<TipoAttributo, Double> valoriMinimi = new HashMap<>();
+	/**
+	 * Valori minimi per un dato attributo - solitamente non presenti
+	 */
 	private final Map<TipoAttributo, Double> valoriMassimi = new HashMap<>();
+	/**
+	 * Valori per i vari attributi dei personaggi
+	 */
 	private final Map<TipoAttributo, Double> valoriAttributi = new HashMap<>();
+	/**
+	 * Modificatori permanenti agli attributi dei personaggi
+	 */
 	private Collection<ModificatoreAttributo> modificatori = new ArrayList<>();
+	/**
+	 * Effetti di stato applicati al personaggio
+	 */
 	private Collection<EffettoDiStato> effettiDiStato = new ArrayList<>();
+	/**
+	 * Artefatti posseduti dal personaggio
+	 */
 	private Collection<ArtefattoMD> artefatti = new ArrayList<>();
 
 	public ClassePersonaggio getClasse() {
@@ -598,27 +641,10 @@ public class PersonaggioMD implements Serializzabile {
 		tempo = Integer.parseInt(st.nextToken());
 		int numeroArtefatti = Integer.parseInt(st.nextToken());
 
-		line = stream.readLine();
-		st = new StringTokenizer(line, PIPE);
-		valoriMinimi.clear();
-		while (st.hasMoreTokens()) {
-			String[] attributoValore = st.nextToken().split(MappaProprieta.SEPARATORE);
-			valoriMinimi.put(TipoAttributo.valueOf(attributoValore[0]), Double.parseDouble(attributoValore[1]));
-		}
-		line = stream.readLine();
-		st = new StringTokenizer(line, PIPE);
-		valoriMassimi.clear();
-		while (st.hasMoreTokens()) {
-			String[] attributoValore = st.nextToken().split(MappaProprieta.SEPARATORE);
-			valoriMassimi.put(TipoAttributo.valueOf(attributoValore[0]), Double.parseDouble(attributoValore[1]));
-		}
-		line = stream.readLine();
-		st = new StringTokenizer(line, PIPE);
-		valoriAttributi.clear();
-		while (st.hasMoreTokens()) {
-			String[] attributoValore = st.nextToken().split(MappaProprieta.SEPARATORE);
-			valoriAttributi.put(TipoAttributo.valueOf(attributoValore[0]), Double.parseDouble(attributoValore[1]));
-		}
+		impostaValori(valoriMinimi, stream.readLine());
+		impostaValori(valoriMassimi, stream.readLine());
+		impostaValori(valoriAttributi, stream.readLine());
+
 		line = stream.readLine();
 		st = new StringTokenizer(line, PIPE);
 		modificatori.clear();
@@ -644,6 +670,15 @@ public class PersonaggioMD implements Serializzabile {
 			ArtefattoMD artefatto = new ArtefattoMD();
 			artefatto.leggi(stream);
 			artefatti.add(artefatto);
+		}
+	}
+
+	private void impostaValori(Map<TipoAttributo, Double> mappa, String linea) {
+		StringTokenizer st = new StringTokenizer(linea, PIPE);
+		mappa.clear();
+		while (st.hasMoreTokens()) {
+			String[] attributoValore = st.nextToken().split(MappaProprieta.SEPARATORE);
+			mappa.put(TipoAttributo.valueOf(attributoValore[0]), Double.parseDouble(attributoValore[1]));
 		}
 	}
 }
