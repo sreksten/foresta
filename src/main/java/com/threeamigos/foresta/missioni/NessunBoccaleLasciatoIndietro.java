@@ -76,6 +76,7 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 		if (visitate >= LOCANDE_DA_VISITARE) {
 			completaMissione();
 		} else {
+			UI.notifica("");
 			UI.notifica("Locanda numero " + visitate + " debitamente censita.");
 		}
 	}

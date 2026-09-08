@@ -92,7 +92,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 		riquadroMappa = new DisplayableCanvasRiquadroMappa(
 				ImageCache.SPACING,
-				ImageCache.SPACING);
+				ImageCache.SPACING,
+				width,
+				height);
 
 		Rectangle riquadroMappaRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
 		mappaCoordinateElementiGrafici.put(riquadroMappa, riquadroMappaRect);
