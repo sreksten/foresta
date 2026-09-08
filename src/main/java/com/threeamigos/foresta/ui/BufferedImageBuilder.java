@@ -1,14 +1,11 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.Graphics2D;
-import java.awt.GraphicsConfiguration;
-import java.awt.GraphicsEnvironment;
-import java.awt.image.BufferedImage;
-import java.io.InputStream;
+import com.threeamigos.foresta.motore.Logger;
 
 import javax.imageio.ImageIO;
-
-import com.threeamigos.foresta.motore.Logger;
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.io.InputStream;
 
 public class BufferedImageBuilder {
 	
@@ -17,8 +14,8 @@ public class BufferedImageBuilder {
 
 	private static final GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 
-	public static final BufferedImage buildBufferedImage(String resource) {
-		if (resource != null && resource.length() > 0) {
+	public static BufferedImage buildBufferedImage(String resource) {
+		if (resource != null && !resource.isEmpty()) {
 			try {
 				InputStream in = BufferedImageBuilder.class.getResourceAsStream("/com/threeamigos/foresta/img/" + resource);
 				if (in == null) {

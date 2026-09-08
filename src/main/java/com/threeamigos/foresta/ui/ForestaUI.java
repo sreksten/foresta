@@ -56,7 +56,7 @@ public class ForestaUI implements InterfacciaUtente {
 						ImageCache.SPACING +
 						ImageCache.corniceGrande.getHeight() +
 						ImageCache.SPACING +
-						ImageCache.icone[0].getHeight() +
+						ClasseIcona.getAltezzaMassima() +
 						ImageCache.SPACING;
 				if (screenDimension.height< width) {
 					height = screenDimension.height;

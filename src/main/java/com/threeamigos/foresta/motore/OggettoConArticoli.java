@@ -9,18 +9,18 @@ public interface OggettoConArticoli {
     /**
      * Articolo indeterminativo singolare
      */
-    public String getAIS();
+    String getAIS();
     /**
      * Una sorta di "articolo indeterminativo plurale" (alcuni, alcune)
      */
-    public String getAIP();
+    String getAIP();
     /**
      * Articolo determinativo singolare
      */
-    public String getADS();
+    String getADS();
     /**
      * Articolo determinativo plurale
      */
-    public String getADP();
+    String getADP();
 
 }
