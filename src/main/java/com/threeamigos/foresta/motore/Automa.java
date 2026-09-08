@@ -489,6 +489,7 @@ public class Automa implements ControlloreDiGioco {
 				if (gruppo.getPozioniMagiaGrande() > 0) {
 					ComandiPossibili.add(Comando.POZIONE_MAGIA_GRANDE);
 				}
+				ComandiPossibili.add(Comando.AIUTO);
 				ComandiPossibili.add(Comando.FLOPPY);
 
 				stato = Stato.ATTESA_PASSI;
@@ -549,6 +550,15 @@ public class Automa implements ControlloreDiGioco {
 					direzione = Comando.OVEST;
 					impostaAzioniPerNumeroPassi(gruppo.getMaxPassiOvest());
 					break;
+				case AIUTO:
+					Logger.log("Azione.AIUTO");
+					for (Personaggio personaggio : gruppo.getPersonaggi()) {
+						UI.notifica(personaggio.getDescrizione());
+					}
+					UI.primoPiano(InterfacciaUtente.Finestra.STATO);
+					stato = Stato.ATTESA_DIREZIONE;
+					processaAzione(null);
+					return;
 				case FLOPPY:
 					stato = Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE;
 					UI.impostaAzioni(Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3, Comando.NUMERO_4, Comando.NUMERO_5, Comando.NO);
