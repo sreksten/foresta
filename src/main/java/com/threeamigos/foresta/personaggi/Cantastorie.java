@@ -30,8 +30,6 @@ public class Cantastorie extends PersonaggioBase implements Personaggio {
 	
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Cantastorie.gif");
-		setIcona("icone/Cantastorie.gif");
 		setCorrompibile(true);
 		setAmichevole(true);
 

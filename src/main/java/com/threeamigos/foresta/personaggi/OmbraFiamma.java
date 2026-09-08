@@ -30,8 +30,6 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/OmbraFiamma.gif");
-		setIcona("icone/OmbraFiamma.gif");
 		setCorrompibile(true);
 		setAmichevole(true);
 

@@ -27,8 +27,6 @@ public class Strega extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Strega.gif");
-
 		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.STREGA_MAX_FORZA)));
 		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.STREGA_MAX_DESTREZZA)));
 		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.STREGA_MAX_COSTITUZIONE)));

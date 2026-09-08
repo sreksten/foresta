@@ -27,8 +27,6 @@ public class Hobgoblin extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Hobgoblin.gif");
-		setIcona("icone/Hobgoblin.gif");
 		setCorrompibile(true);
 
 		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.HOBGOBLIN_MAX_FORZA)));

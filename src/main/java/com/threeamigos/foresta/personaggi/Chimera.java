@@ -26,8 +26,6 @@ public class Chimera extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Chimera.gif");
-
 		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.CHIMERA_MAX_FORZA)));
 		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.CHIMERA_MAX_DESTREZZA)));
 		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.CHIMERA_MAX_COSTITUZIONE)));

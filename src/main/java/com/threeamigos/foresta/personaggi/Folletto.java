@@ -27,7 +27,6 @@ public class Folletto extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Folletto.gif");
 		setCorrompibile(true);
 		setAmichevole(true);
 

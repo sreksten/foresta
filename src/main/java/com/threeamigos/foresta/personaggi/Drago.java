@@ -27,8 +27,6 @@ public class Drago extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Drago.gif");
-
 		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.DRAGO_MAX_FORZA)));
 		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.DRAGO_MAX_DESTREZZA)));
 		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.DRAGO_MAX_COSTITUZIONE)));

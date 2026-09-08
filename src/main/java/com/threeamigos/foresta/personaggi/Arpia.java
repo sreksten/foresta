@@ -27,8 +27,6 @@ public class Arpia extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Arpia.gif");
-
 		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ARPIA_MAX_FORZA)));
 		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.ARPIA_MAX_DESTREZZA)));
 		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.ARPIA_MAX_COSTITUZIONE)));

@@ -27,8 +27,6 @@ public class Titano extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Titano.gif");
-		setIcona("icone/Titano.gif");
 		setCorrompibile(true);
 		setAmichevole(true);
 

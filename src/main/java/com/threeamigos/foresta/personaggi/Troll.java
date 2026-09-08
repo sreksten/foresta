@@ -27,7 +27,6 @@ public class Troll extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Troll.gif");
 		setCorrompibile(true);
 
 		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.TROLL_MAX_FORZA)));

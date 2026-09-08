@@ -27,8 +27,6 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Eremita.gif");
-		setIcona("icone/Eremita.gif");
 		setCorrompibile(true);
 		setAmichevole(true);
 

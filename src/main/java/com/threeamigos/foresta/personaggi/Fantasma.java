@@ -27,8 +27,6 @@ public class Fantasma extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Fantasma.gif");
-
 		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.FANTASMA_MAX_FORZA)));
 		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.FANTASMA_MAX_DESTREZZA)));
 		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.FANTASMA_MAX_COSTITUZIONE)));

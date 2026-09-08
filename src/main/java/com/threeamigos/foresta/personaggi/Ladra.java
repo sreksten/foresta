@@ -30,8 +30,6 @@ public class Ladra extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Ladra.gif");
-		setIcona("icone/Ladra.gif");
 		setCorrompibile(true);
 		setAmichevole(true);
 

@@ -27,7 +27,6 @@ public class Spirito extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Spirito.gif");
 		setAmichevole(true);
 
 		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.SPIRITO_MAX_FORZA)));

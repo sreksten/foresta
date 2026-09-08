@@ -297,7 +297,7 @@ public class DisplayableCanvasIntroOutro implements Finestra{
 		int altezzaMinima = 999;
 		while (st.hasMoreTokens()) {
 			ClassePersonaggio classePersonaggio = ClassePersonaggio.values()[Integer.parseInt(st.nextToken())];
-			BufferedImage immagine = classePersonaggio.getIstanza(1).getImmagine();
+			BufferedImage immagine = ClassePersonaggioImmagine.getImmagine(classePersonaggio);
 			immagini.add(0, immagine);
 			coordinateX.add(0, coordinataX);
 			coordinataX += immagine.getWidth() * 2 / 3;

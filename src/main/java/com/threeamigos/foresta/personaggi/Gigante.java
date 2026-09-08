@@ -27,8 +27,6 @@ public class Gigante extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Gigante.gif");
-		setIcona("icone/Gigante.gif");
 		setCorrompibile(true);
 		setAmichevole(true);
 

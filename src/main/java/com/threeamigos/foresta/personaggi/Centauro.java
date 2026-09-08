@@ -27,8 +27,6 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Centauro.gif");
-		setIcona("icone/Centauro.gif");
 		setCorrompibile(true);
 		setAmichevole(true);
 

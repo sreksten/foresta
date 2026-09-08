@@ -4,7 +4,6 @@ import com.threeamigos.foresta.motore.ComandiPossibili;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Gioco;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import javax.swing.*;
@@ -48,11 +47,11 @@ public class PannelloIcone extends JPanel implements java.awt.event.ActionListen
 		setLayout(null);
 		if (orientamento == ORIENTAMENTO_ORIZZONTALE) {
 			setSize(1, 72);
-			bottonePrecedente = new ImageButton(ImageCache.icone[ClassiIcona.SINISTRA], this, Comando.SINISTRA.ordinal());
-			bottoneSuccessivo = new ImageButton(ImageCache.icone[ClassiIcona.DESTRA], this, Comando.DESTRA.ordinal());
+			bottonePrecedente = new ImageButton(ClasseIcona.SINISTRA.getIcona(), this, Comando.SINISTRA.ordinal());
+			bottoneSuccessivo = new ImageButton(ClasseIcona.DESTRA.getIcona(), this, Comando.DESTRA.ordinal());
 		} else {
-			bottonePrecedente = new ImageButton(ImageCache.icone[ClassiIcona.SU], this, Comando.SU.ordinal());
-			bottoneSuccessivo = new ImageButton(ImageCache.icone[ClassiIcona.GIU], this, Comando.GIU.ordinal());
+			bottonePrecedente = new ImageButton(ClasseIcona.SU.getIcona(), this, Comando.SU.ordinal());
+			bottoneSuccessivo = new ImageButton(ClasseIcona.GIU.getIcona(), this, Comando.GIU.ordinal());
 			setSize(72, 1);
 		}
 		setBackground(Color.black);
@@ -62,266 +61,34 @@ public class PannelloIcone extends JPanel implements java.awt.event.ActionListen
 		List<Comando> possibiliAzioni = ComandiPossibili.getComandi();
 		quanteScelte = possibiliAzioni.size();
 		bottoni = new ImageButton[quanteScelte];
-		int icona;
+		ClasseIcona classeIcona;
 		for (int i = 0; i < quanteScelte; i++) {
-			icona = -1;
-			switch (possibiliAzioni.get(i)) {
-			case ACCAMPAMENTO:
-				icona = ClassiIcona.ACCAMPAMENTO;
-				break;
-			case ACQUA:
-				icona = ClassiIcona.ACQUA;
-				break;
-			case AIUTO:
-				icona = ClassiIcona.AIUTO;
-				break;
-			case ALCHIMISTA:
-				icona = ClassiIcona.ALCHIMISTA;
-				break;
-			case AMICIZIA:
-				icona = ClassiIcona.AMICIZIA;
-				break;
-			case ANNULLA:
-				icona = ClassiIcona.ANNULLA;
-				break;
-			case ARIA:
-				icona = ClassiIcona.ARIA;
-				break;
-			case BARDO:
-				icona = ClassiIcona.BARDO;
-				break;
-			case CANTASTORIE:
-				icona = ClassiIcona.CANTASTORIE;
-				break;
-			case COMBATTIMENTO:
-				icona = ClassiIcona.COMBATTIMENTO;
-				break;
-			case INTERRUZIONE_COMBATTIMENTO:
-				icona = ClassiIcona.INTERRUZIONE_COMBATTIMENTO;
-				break;
-			case CORRUZIONE:
-				icona = ClassiIcona.CORRUZIONE;
-				break;
-			case DESTRA:
-				icona = ClassiIcona.DESTRA;
-				break;
-			case ELFA:
-				icona = ClassiIcona.ELFA;
-				break;
-			case ELFO:
-				icona = ClassiIcona.ELFO;
-				break;
-			case ESCI_DA_CITTA:
-				icona = ClassiIcona.ESCI_DA_CITTA;
-				break;
-			case EST:
-				icona = ClassiIcona.EST;
-				break;
-			case FEMMINA:
-				icona = ClassiIcona.FEMMINA;
-				break;
-			case FLOPPY:
-				icona = ClassiIcona.FLOPPY;
-				break;
-			case FUGA:
-				icona = ClassiIcona.FUGA;
-				break;
-			case FULMINE:
-				icona = ClassiIcona.FULMINE;
-				break;
-			case FUOCO:
-				icona = ClassiIcona.FUOCO;
-				break;
-			case GELO:
-				icona = ClassiIcona.GELO;
-				break;
-			case GIU:
-				icona = ClassiIcona.GIU;
-				break;
-			case GRUPPO:
-				icona = ClassiIcona.GRUPPO;
-				break;
-			case GUERRIERA:
-				icona = ClassiIcona.GUERRIERA;
-				break;
-			case GUERRIERO:
-				icona = ClassiIcona.GUERRIERO;
-				break;
-			case INCANTESIMO:
-				icona = ClassiIcona.INCANTESIMO;
-				break;
-			case INVENTARIO:
-				icona = ClassiIcona.INVENTARIO;
-				break;
-			case LADRA:
-				icona = ClassiIcona.LADRA;
-				break;
-			case LADRO:
-				icona = ClassiIcona.LADRO;
-				break;
-			case LOCANDA:
-				icona = ClassiIcona.LOCANDA;
-				break;
-			case MAGA:
-				icona = ClassiIcona.MAGA;
-				break;
-			case POZIONE_SALUTE:
-				icona = ClassiIcona.POZIONE_SALUTE;
-				break;
-			case POZIONE_SALUTE_GRANDE:
-				icona = ClassiIcona.POZIONE_SALUTE_GRANDE;
-				break;
-			case POZIONE_MAGIA:
-				icona = ClassiIcona.POZIONE_MAGIA;
-				break;
-			case POZIONE_MAGIA_GRANDE:
-				icona = ClassiIcona.POZIONE_MAGIA_GRANDE;
-				break;
-			case MAGO:
-				icona = ClassiIcona.MAGO;
-				break;
-			case MAPPA:
-				icona = ClassiIcona.MAPPA;
-				break;
-			case MASCHIO:
-				icona = ClassiIcona.MASCHIO;
-				break;
-			case MORTE:
-				icona = ClassiIcona.MORTE;
-				break;
-			case NO:
-				icona = ClassiIcona.NO;
-				break;
-			case NO_INCANTESIMO:
-				icona = ClassiIcona.NO_INCANTESIMO;
-				break;
-			case NORD:
-				icona = ClassiIcona.NORD;
-				break;
-			case NUMERO_1:
-				icona = ClassiIcona.NUMERO_1;
-				break;
-			case NUMERO_2:
-				icona = ClassiIcona.NUMERO_2;
-				break;
-			case NUMERO_3:
-				icona = ClassiIcona.NUMERO_3;
-				break;
-			case NUMERO_4:
-				icona = ClassiIcona.NUMERO_4;
-				break;
-			case NUMERO_5:
-				icona = ClassiIcona.NUMERO_5;
-				break;
-			case OVEST:
-				icona = ClassiIcona.OVEST;
-				break;
-			case PERGAMENA:
-				icona = ClassiIcona.PERGAMENA;
-				break;
-			case PERSONAGGIO_1:
-				icona = getIconaPersonaggio(0);
-				break;
-			case PERSONAGGIO_2:
-				icona = getIconaPersonaggio(1);
-				break;
-			case PERSONAGGIO_3:
-				icona = getIconaPersonaggio(2);
-				break;
-			case PERSONAGGIO_4:
-				icona = getIconaPersonaggio(3);
-				break;
-			case PERSONAGGIO_5:
-				icona = getIconaPersonaggio(4);
-				break;
-			case RESURREZIONE:
-				icona = ClassiIcona.RESURREZIONE;
-				break;
-			case RUTTOLOMEO:
-				icona = ClassiIcona.RUTTOLOMEO;
-				break;
-			case SI:
-				icona = ClassiIcona.SI;
-				break;
-			case SINGOLO:
-				icona = ClassiIcona.SINGOLO;
-				break;
-			case SINISTRA:
-				icona = ClassiIcona.SINISTRA;
-				break;
-			case STORPSGORBLIN:
-				icona = ClassiIcona.STORPSGORBLIN;
-				break;
-			case SU:
-				icona = ClassiIcona.SU;
-				break;
-			case SUD:
-				icona = ClassiIcona.SUD;
-				break;
-			case TERRA:
-				icona = ClassiIcona.TERRA;
-				break;
-			case VELENO:
-				icona = ClassiIcona.VELENO;
-				break;
-			default:
-				throw new IllegalArgumentException("Icona non associata a " + possibiliAzioni.get(i));
+
+			Comando comando = possibiliAzioni.get(i);
+
+			if (comando == null) {
+				throw new IllegalArgumentException("Comando nullo");
 			}
-			bottoni[i] = new ImageButton(ImageCache.icone[icona], this, possibiliAzioni.get(i).ordinal());
+
+			if (comando == Comando.PERSONAGGIO_1 || comando == Comando.PERSONAGGIO_2 ||
+					comando == Comando.PERSONAGGIO_3 || comando == Comando.PERSONAGGIO_4 ||
+					comando == Comando.PERSONAGGIO_5) {
+				classeIcona = getIconaPersonaggio(comando.ordinal() - Comando.PERSONAGGIO_1.ordinal());
+			} else {
+				classeIcona = ClasseIcona.ofComando(comando);
+			}
+			bottoni[i] = new ImageButton(classeIcona.getIcona(), this, possibiliAzioni.get(i).ordinal());
 		}
 		saltaPrimi = 0;
 		ridistribuisciScelte();
 	}
 
-	private int getIconaPersonaggio(int indice) {
+	private ClasseIcona getIconaPersonaggio(int indice) {
 		Personaggio personaggio = GruppoGiocatore.getIstanza().getPersonaggio(indice);
 		if (personaggio == null) {
-			throw new IllegalStateException("Personaggio no trovato con indice " + indice);
+			throw new IllegalStateException("Personaggio non trovato con indice " + indice);
 		}
-		return getIconaPersonaggio(personaggio.getClasse());
-	}
-
-	private int getIconaPersonaggio(ClassePersonaggio classe) {
-		switch (classe) {
-			case CENTAURO:
-				return ClassiIcona.CENTAURO;
-			case EREMITA:
-				return ClassiIcona.EREMITA;
-			case GIGANTE:
-				return ClassiIcona.GIGANTE;
-			case GOBLIN:
-				return ClassiIcona.GOBLIN;
-			case HOBGOBLIN:
-				return ClassiIcona.HOBGOBLIN;
-			case MINOTAURO:
-				return ClassiIcona.MINOTAURO;
-			case TITANO:
-				return ClassiIcona.TITANO;
-			case GUERRIERA:
-				return ClassiIcona.GUERRIERA;
-			case GUERRIERO:
-				return ClassiIcona.GUERRIERO;
-			case LADRA:
-				return ClassiIcona.LADRA;
-			case LADRO:
-				return ClassiIcona.LADRO;
-			case CANTASTORIE:
-				return ClassiIcona.CANTASTORIE;
-			case BARDO:
-				return ClassiIcona.BARDO;
-			case ELFA:
-				return ClassiIcona.ELFA;
-			case ELFO:
-				return ClassiIcona.ELFO;
-			case MAGA:
-				return ClassiIcona.MAGA;
-			case MAGO:
-				return ClassiIcona.MAGO;
-			case OMBRAFIAMMA:
-				return ClassiIcona.OMBRAFIAMMA;
-			default:
-				throw new IllegalArgumentException("Icona non associata a classe " + classe);
-		}
+		return ClasseIcona.ofClasse(personaggio.getClasse());
 	}
 
 	private void ridistribuisciScelte() {
@@ -360,7 +127,7 @@ public class PannelloIcone extends JPanel implements java.awt.event.ActionListen
 		int iconeDaSaltare = saltaPrimi;
 		if (orientamento == ORIENTAMENTO_ORIZZONTALE) {
 			int offset = (width - totaleIcone * 62) >> 1;
-				int offsetVerticale = height - ImageCache.icone[0].getHeight() >> 1;
+				int offsetVerticale = height - ClasseIcona.getAltezzaMassima() >> 1;
 				ImageButton b;
 				if (precedente) {
 					b = bottonePrecedente;

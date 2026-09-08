@@ -22,6 +22,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 	private final int topLeftY;
 
 	private final Map<Personaggio, CoordinateMD> mappaCoordinate = new HashMap<>();
+	private final Map<Personaggio, BufferedImage> mappaImmagini = new HashMap<>();
 	
 	DisplayableCanvasRiquadroLocazione(int topLeftX, int topLeftY) {
 		this.topLeftX = topLeftX;
@@ -30,10 +31,12 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 	
 	void assegnaCoordinateAgliAvversari() {
 		mappaCoordinate.clear();
+		mappaImmagini.clear();
 		GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
 		int i = 0;
 		for (Personaggio personaggioCorrente : gruppoAvversario.getPersonaggi()) {
-			BufferedImage d = personaggioCorrente.getImmagine();
+			BufferedImage d = ClassePersonaggioImmagine.getImmagine(personaggioCorrente.getClasse());
+			mappaImmagini.put(personaggioCorrente, d);
 			CoordinateMD coordinate = new CoordinateMD(topLeftX + i++ * 20 + Dado.tira(10),
 					ImageCache.SPACING + ImageCache.locazioni.get(ClassiLocazione.BOSCO).getHeight() - i * 6 - d.getHeight());
 			mappaCoordinate.put(personaggioCorrente, coordinate);
@@ -53,7 +56,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		gng.getPersonaggiVivi().forEach(p -> avversariDaDisegnare.add(0, p));
 
 		for (Personaggio personaggioCorrente : avversariDaDisegnare) {
-			BufferedImage d = personaggioCorrente.getImmagine();
+			BufferedImage d = mappaImmagini.get(personaggioCorrente);
 			CoordinateMD coordinate = mappaCoordinate.get(personaggioCorrente);
 			graphics.drawImage(d, coordinate.getX(), coordinate.getY(), null);
 		}
@@ -70,7 +73,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		if (coordinate == null) {
 			return null;
 		}
-		return new SpriteInDissolvenza(personaggio.getImmagine(), coordinate.getX(), coordinate.getY());
+		return new SpriteInDissolvenza(mappaImmagini.get(personaggio), coordinate.getX(), coordinate.getY());
 	}
 
 	SpriteInterface variaLivello(Personaggio personaggio, int variazione) {
@@ -78,7 +81,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		if (coordinate == null) {
 			return null;
 		}
-		return new SpriteATempo(ImageCache.spriteAumentoLivello, variazione, DoomdarkFontMedium.getInstance(), coordinate.getX() + personaggio.getImmagine().getWidth(), coordinate.getY());
+		return new SpriteATempo(ImageCache.spriteAumentoLivello, variazione, DoomdarkFontMedium.getInstance(), coordinate.getX() + mappaImmagini.get(personaggio).getWidth(), coordinate.getY());
 	}
 	
 	SpriteInterface variaSalute(Personaggio personaggio, int variazione) {
@@ -86,7 +89,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		if (coordinate == null) {
 			return null;
 		}
-		return new SpriteATempo(ImageCache.spriteCombattimento, variazione, DoomdarkFontMedium.getInstance(), coordinate.getX() + personaggio.getImmagine().getWidth(), coordinate.getY());
+		return new SpriteATempo(ImageCache.spriteCombattimento, variazione, DoomdarkFontMedium.getInstance(), coordinate.getX() + mappaImmagini.get(personaggio).getWidth(), coordinate.getY());
 	}
 	
 	SpriteInterface variaMagia(Personaggio personaggio, int variazione) {
@@ -94,7 +97,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		if (coordinate == null) {
 			return null;
 		}
-		return new SpriteATempo(ImageCache.spriteMagia, variazione, DoomdarkFontMedium.getInstance(), coordinate.getX() + personaggio.getImmagine().getWidth(), coordinate.getY());
+		return new SpriteATempo(ImageCache.spriteMagia, variazione, DoomdarkFontMedium.getInstance(), coordinate.getX() + mappaImmagini.get(personaggio).getWidth(), coordinate.getY());
 	}
 	
 	SpriteInterface raccogliOggetto() {

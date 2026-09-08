@@ -27,8 +27,6 @@ public class Goblin extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Goblin.gif");
-		setIcona("icone/Goblin.gif");
 		setCorrompibile(true);
 
 		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GOBLIN_MAX_FORZA)));

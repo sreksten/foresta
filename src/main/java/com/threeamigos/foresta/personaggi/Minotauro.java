@@ -29,8 +29,6 @@ public class Minotauro extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Minotauro.gif");
-		setIcona("icone/Minotauro.gif");
 		setCorrompibile(true);
 
 		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.MINOTAURO_MAX_FORZA)));

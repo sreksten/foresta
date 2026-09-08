@@ -30,8 +30,6 @@ public class Guerriera extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Guerriera.gif");
-		setIcona("icone/Guerriera.gif");
 		setCorrompibile(true);
 		setAmichevole(true);
 

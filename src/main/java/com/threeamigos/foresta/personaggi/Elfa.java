@@ -30,8 +30,6 @@ public class Elfa extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Elfa.gif");
-		setIcona("icone/Elfa.gif");
 		setCorrompibile(true);
 		setAmichevole(true);
 

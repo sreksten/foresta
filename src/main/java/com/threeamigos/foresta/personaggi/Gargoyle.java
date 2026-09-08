@@ -27,8 +27,6 @@ public class Gargoyle extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Gargoyle.gif");
-
 		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GARGOYLE_MAX_FORZA)));
 		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.GARGOYLE_MAX_DESTREZZA)));
 		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.GARGOYLE_MAX_COSTITUZIONE)));

@@ -27,8 +27,6 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Scheletro.gif");
-
 		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.SCHELETRO_MAX_FORZA)));
 		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.SCHELETRO_MAX_DESTREZZA)));
 		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.SCHELETRO_MAX_COSTITUZIONE)));

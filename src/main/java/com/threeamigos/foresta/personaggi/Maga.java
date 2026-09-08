@@ -30,8 +30,6 @@ public class Maga extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Maga.gif");
-		setIcona("icone/Maga.gif");
 		setCorrompibile(true);
 		setAmichevole(true);
 

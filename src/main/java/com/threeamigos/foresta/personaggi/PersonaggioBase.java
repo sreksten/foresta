@@ -13,11 +13,8 @@ import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tools.Misc;
-import com.threeamigos.foresta.ui.BufferedImageBuilder;
-import com.threeamigos.foresta.ui.ImageCache;
 import com.threeamigos.foresta.ui.UI;
 
-import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -33,36 +30,52 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	protected PersonaggioMD md = new PersonaggioMD();
 
+	/**
+	 * Posizione all'interno del gruppo
+	 */
 	private int ordinale;
+	/**
+	 * Personaggio Non Giocante (*solitamente*, un avversario)
+	 */
 	private boolean png;
+	/**
+	 * Suscettibile a corruzione da parte del gruppo del giocatore
+	 */
 	private boolean corrompibile;
+	/**
+	 * Amichevole nei confronti del gruppo del giocatore
+	 */
 	private boolean amichevole;
-	
-	private String nomeImmagine;
-	private String nomeIcona;
+	/**
+	 * QUantità massima per locazione
+	 */
 	private int quantitaMassima = 1;
 
-	public PersonaggioBase(PersonaggioMD personaggioMD) {
-		this.md = personaggioMD;
-	}
+//	public PersonaggioBase(PersonaggioMD personaggioMD) {
+//		this.md = personaggioMD;
+//	}
 
-	public PersonaggioBase(ClassePersonaggio classe) {
-		this(classe, 1);
-	}
+//	public PersonaggioBase(ClassePersonaggio classe) {
+//		this(classe, 1);
+//	}
 
 	public PersonaggioBase(ClassePersonaggio classe, int livello) {
 		md.setClasse(classe);
 		png = true;
+
+		// I boss partono con i valori impostati al massimo, gli altri personaggi partono con un pool di valori
+		// lievemente casuale, dal 75% al 100% dei valori massimi
 		Function<Integer, Integer> funzionePerValoriIniziali;
 		if (isParteConValoriMassimi()) {
 			funzionePerValoriIniziali = val -> val;
 		} else {
 			funzionePerValoriIniziali = (max) -> Dado.tiraAncheSenzaRange(max * 3 / 4, max);
 		}
-		//Questo imposta salure e magia
+
+		// Questo imposta salute, magia e stanchezza
 		impostaValoriDiPartenzaGenerali(funzionePerValoriIniziali, livello);
 
-		//Queste impostano il resto - LanciatoreDeiDadi sovrascrive
+		// Queste impostano il resto - LanciatoreDeiDadi sovrascrive
 		impostaValoriDiPartenza(funzionePerValoriIniziali);
 		if (!isParteConValoriMassimi()) {
 			LanciatoreDeiDadi.tiraDadiPer(classe, getLivello(), md);
@@ -83,25 +96,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		this(classe, livello);
 		md.setNome(nome);
 		png = false;
-	}
-	
-	protected void setImmagine(String nomeImmagine) {
-		this.nomeImmagine = nomeImmagine;
-		if (ImageCache.get(nomeImmagine) == null) {
-			ImageCache.set(nomeImmagine, BufferedImageBuilder.buildBufferedImage(nomeImmagine));
-		}
-	}
-	
-	public BufferedImage getImmagine() {
-		return ImageCache.get(nomeImmagine);
-	}
-
-	protected void setIcona(String nomeIcona) {
-		this.nomeIcona = nomeIcona;
-	}
-
-	public BufferedImage getIcona() {
-		return ImageCache.get(nomeIcona);
 	}
 
 	protected void setQuantitaMassima(int quantitaMassima) {
@@ -745,6 +739,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	//FIXME sono convinto che questo metodo sia un po' troppo un pout-pourri
+	//FIXME La quarto Centauro è morto per le ferite riportate.
 	public void subSalute(int quantita, Personaggio avversario, Personaggio.NotificaFerite notificaFerite, Personaggio.NotificaMorte notificaMorte) {
 		if (quantita <= 0) {
 			if (notificaFerite == Personaggio.NotificaFerite.SI) {

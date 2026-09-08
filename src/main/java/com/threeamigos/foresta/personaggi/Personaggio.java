@@ -11,7 +11,6 @@ import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 
-import java.awt.image.BufferedImage;
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -67,15 +66,6 @@ public interface Personaggio extends OggettoConArticoli {
 	 * Da (ucciso da)
 	 */
     String getDa();
-
-	/**
-	 * L'immagine che rappresenta il personaggio
-	 */
-    BufferedImage getImmagine();
-	/**
-	 * L'icona che rappresenta il personaggio
-	 */
-    BufferedImage getIcona();
 	/**
 	 * Il nome singolare della razza del personaggio
 	 */

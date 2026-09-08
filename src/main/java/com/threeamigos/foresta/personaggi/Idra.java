@@ -28,8 +28,6 @@ public class Idra extends PersonaggioBase implements Personaggio {
 
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
-		setImmagine("personaggi/Idra.gif");
-
 		md.setForza(funzione.apply(getAttributoAdeguatoALivello(Costanti.IDRA_MAX_FORZA)));
 		md.setDestrezza(funzione.apply(getAttributoAdeguatoALivello(Costanti.IDRA_MAX_DESTREZZA)));
 		md.setCostituzione(funzione.apply(getAttributoAdeguatoALivello(Costanti.IDRA_MAX_COSTITUZIONE)));
