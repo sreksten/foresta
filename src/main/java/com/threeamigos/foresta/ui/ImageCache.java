@@ -93,6 +93,8 @@ public class ImageCache {
 		icone[ClassiIcona.TERRA] = BufferedImageBuilder.buildBufferedImage("icone/Terra.gif");
 		icone[ClassiIcona.FUOCO] = BufferedImageBuilder.buildBufferedImage("icone/Fuoco.gif");
 		icone[ClassiIcona.FULMINE] = BufferedImageBuilder.buildBufferedImage("icone/Fulmine.gif");
+		icone[ClassiIcona.GELO] = BufferedImageBuilder.buildBufferedImage("icone/Gelo.gif");
+		icone[ClassiIcona.VELENO] = BufferedImageBuilder.buildBufferedImage("icone/Veleno.gif");
 		icone[ClassiIcona.MORTE] = BufferedImageBuilder.buildBufferedImage("icone/Morte.gif");
 		icone[ClassiIcona.RESURREZIONE] = BufferedImageBuilder.buildBufferedImage("icone/Resurrezione.gif");
 		icone[ClassiIcona.NO_INCANTESIMO] = BufferedImageBuilder.buildBufferedImage("icone/NoIncantesimo.gif");
@@ -106,6 +108,7 @@ public class ImageCache {
 		icone[ClassiIcona.POZIONE_MAGIA] = BufferedImageBuilder.buildBufferedImage("icone/PozioneMagia.gif");
 		icone[ClassiIcona.POZIONE_MAGIA_GRANDE] = BufferedImageBuilder.buildBufferedImage("icone/PozioneMagiaGrande.gif");
 		icone[ClassiIcona.MAPPA] = BufferedImageBuilder.buildBufferedImage("icone/Mappa.gif");
+		icone[ClassiIcona.INVENTARIO] = BufferedImageBuilder.buildBufferedImage("icone/Inventario.gif");
 		icone[ClassiIcona.FLOPPY] = BufferedImageBuilder.buildBufferedImage("icone/Floppy.gif");
 		icone[ClassiIcona.NUMERO_1] = BufferedImageBuilder.buildBufferedImage("icone/1.gif");
 		icone[ClassiIcona.NUMERO_2] = BufferedImageBuilder.buildBufferedImage("icone/2.gif");
@@ -232,6 +235,8 @@ public class ImageCache {
 		spriteIncantesimi[ClassiIncantesimo.TERRA.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Terra-nobordo-piccolo.gif");
 		spriteIncantesimi[ClassiIncantesimo.FUOCO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Fuoco-nobordo-piccolo.gif");
 		spriteIncantesimi[ClassiIncantesimo.FULMINE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Fulmine-nobordo-piccolo.gif");
+		spriteIncantesimi[ClassiIncantesimo.GELO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Gelo-nobordo-piccolo.gif");
+		spriteIncantesimi[ClassiIncantesimo.VELENO.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Veleno-nobordo-piccolo.gif");
 		spriteIncantesimi[ClassiIncantesimo.MORTE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Morte-nobordo-piccolo.gif");
 		spriteIncantesimi[ClassiIncantesimo.RESURREZIONE.ordinal()] = BufferedImageBuilder.buildBufferedImage("icone/Resurrezione-nobordo-piccolo.gif");
 
