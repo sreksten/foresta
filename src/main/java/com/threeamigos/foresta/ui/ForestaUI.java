@@ -9,6 +9,7 @@ import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
+import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import javax.swing.*;
@@ -30,12 +31,14 @@ public class ForestaUI implements InterfacciaUtente {
 		SwingUtilities.invokeLater(this::createAndShowGUI);
 
 		BusEventi.iscriviti(EventoAggiuntaModificatore.class, this::gestisciEventoAggiuntaModificatore);
-		// EventoCreazionePersonaggio non ci interessa
+		// EventoCreazionePersonaggio non ci interessa, riguarda il motore
+		// EventoCombattimento non ci interessa, solo mostrare i suoi effetti eventuali che vengono pubblicati dal personaggio interessato
+		BusEventi.iscriviti(EventoInterazioneElementale.class, this::gestisciEventoInterazioneElementale);
 		BusEventi.iscriviti(EventoMessaggio.class, this::gestisciEventoMessaggio);
+		// EventoValutazioneAttaccante non ci interessa, è il motore AI degli avversari che informa sul suo stato di progressione
 		BusEventi.iscriviti(EventoVariazioneEffettoDiStato.class, this::gestisciEventoVariazioneEffettoDiStato);
 		BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
 		BusEventi.iscriviti(EventoVariazioneStatoVitalePersonaggio.class, this::gestisciEventoVariazioneStatoVitalePersonaggio);
-
 	}
 	
 	private void createAndShowGUI() {
@@ -290,19 +293,43 @@ public class ForestaUI implements InterfacciaUtente {
 		}
 	}
 
+	private void gestisciEventoInterazioneElementale(EventoInterazioneElementale evento) {
+		Personaggio personaggio = evento.getPersonaggio();
+		TipoInterazioneElementale tipoInterazioneElementale = evento.getTipoInterazioneElementale();
+		switch (tipoInterazioneElementale) {
+			case ELETTROCUZIONE:
+			case CONGELAMENTO:
+			case VAPORIZZAZIONE:
+			case ESTINZIONE:
+			case SCIOGLIMENTO_TERMICO:
+			case ESPLOSIONE_DI_GAS:
+			case FRANTUMAZIONE_DEL_GHIACCO:
+			case DISGELO_VIOLENTO:
+			case MIETITURA:
+			case RIGETTO:
+			case PURIFICAZIONE:
+				displayableCanvas.aggiungiInterazioneElementale(personaggio, tipoInterazioneElementale);
+				break;
+			default:
+				throw new IllegalArgumentException("TipoInterazioneElementale non gestito: " + tipoInterazioneElementale);
+		}
+
+	}
+
 	//FIXME ancora non li gestiamo a livello grafico
 	private void gestisciEventoVariazioneEffettoDiStato(EventoVariazioneEffettoDiStato evento) {
 		Personaggio personaggio = evento.getPersonaggio();
 		TipoEffettoDiStato tipoEffettoDiStato = evento.getEffetto();
 		switch (evento.getTipo()) {
 			case AGGIUNTA:
-				break;
 			case VARIAZIONE:
+				displayableCanvas.aggiungiEffettoDiStato(personaggio, tipoEffettoDiStato);
 				break;
             case RIMOZIONE:
 				break;
+			default:
+				throw new IllegalArgumentException("TipoVariazioneEffettoDiStato non gestito: " + evento.getTipo());
 		}
-		//displayableCanvas.variaEffettoDiStato(personaggio, effetto);
 	}
 
 	@Override

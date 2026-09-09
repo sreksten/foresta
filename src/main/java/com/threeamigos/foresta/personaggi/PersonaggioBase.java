@@ -352,36 +352,43 @@ public abstract class PersonaggioBase implements Personaggio {
             String messaggio = getNome(articoloDaIncludere, OpzioniGetNome.INIZIALE_MAIUSCOLA) +
                     " attacca " + bersaglio.getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + '.';
 			BusEventi.pubblica(new EventoMessaggio(messaggio));
-			int danno = getDanniInCombattimento();
+
+//			int danno = getDanniInCombattimento();
+//			bersaglio.subSalute(danno, this, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
 
 			// Test per nuovo motore combattimento
 
-			Logger.log("---------- NUOVO MOTORE ----------");
-			Logger.log("Valutazione danno originale: " + danno);
-			boolean colpirebbe = CalcolatoreCombattimento.colpisce(this, bersaglio, SupertipoDanno.FISICO);
-			if (colpirebbe) {
-				Arma arma = new Arma() {
-					@Override
-					public int getDanni() {
-						return 5;
-					}
-					@Override
-					public int getLivello() {
-						return 1;
-					}
-					@Override
-					public TipoDanno getTipoDanno() {
-						return TipoDanno.TAGLIENTE;
-					}
-				};
+//			Logger.log("---------- NUOVO MOTORE ----------");
+//			Logger.log("Valutazione danno originale: " + danno);
+			boolean colpisce = CalcolatoreCombattimento.colpisce(this, bersaglio, SupertipoDanno.FISICO);
+			if (colpisce) {
+				Arma arma = getArmaEquipaggiata();
                 RisultatoCombattimento risultato = CalcolatoreCombattimento.calcolaDannoFinale(this, bersaglio, arma);
-				Logger.log("Con nuovo motore colpirebbe assegnando " + risultato.getDannoTotale() + " danni");
+				Logger.log("Con nuovo motore colpirebbe assegnando " + risultato.getDanno() + " danni");
 			} else {
 				Logger.log("Con nuovo motore " + getNome() + " non colpisce " + bersaglio.getNome());
 			}
-
-			bersaglio.subSalute(danno, this, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
 		}
+	}
+
+	@Override
+	public void applicaRisultatoCombattimento(RisultatoCombattimento risultato) {
+		subSalute(risultato.getDanno(), risultato.getAttaccante(), Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
+		for (EffettoDiStato effetto : risultato.getEffettiDiStatoDaAggiungere()) {
+			addEffettoDiStato(effetto.getTipoEffettoDiStato(), effetto.getValore());
+		}
+		for (TipoEffettoDiStato tipoEffettoDiStato: risultato.getEffettiDiStatoDaRimuovere()) {
+			rimuoviTuttiEffettiDiStato(tipoEffettoDiStato);
+		}
+		for (TipoInterazioneElementale interazione : risultato.getInterazioniElementali()) {
+			BusEventi.pubblica(new EventoInterazioneElementale(this, interazione));
+		}
+	}
+
+	@Override
+	public Arma getArmaEquipaggiata() {
+		Optional<Artefatto> armaEquipaggiata = getInventario().stream().filter(a -> a.getTipo().getSupertipo() == SupertipoArtefatto.ARMA).findFirst();
+        return armaEquipaggiata.map(artefatto -> (Arma) artefatto).orElseGet(() -> new ArmaNaturale(this));
 	}
 
 	private Incantesimo scegliIncantesimoContro(Personaggio personaggioBersaglio) {
@@ -445,11 +452,10 @@ public abstract class PersonaggioBase implements Personaggio {
 		int probabilitaDiColpireFisico = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(
 				this, personaggioBersaglio, SupertipoDanno.FISICO);
 
-		int possibiliDanniMagici = CalcolatoreCombattimento.calcolaDannoFinale(this, personaggioBersaglio, piuPotente).getDannoTotale();
+		int possibiliDanniMagici = CalcolatoreCombattimento.calcolaDannoFinale(this, personaggioBersaglio, piuPotente).getDanno();
 
-		Optional<Artefatto> armaEquipaggiata = getInventario().stream().filter(a -> a.getTipo().getSupertipo() == SupertipoArtefatto.ARMA).findFirst();
-        Arma arma = armaEquipaggiata.map(artefatto -> (Arma) artefatto).orElseGet(() -> new ArmaNaturale(this));
-		int possibiliDanniFisici = CalcolatoreCombattimento.calcolaDannoFinale(this, personaggioBersaglio, arma).getDannoTotale();
+        Arma arma = getArmaEquipaggiata();
+		int possibiliDanniFisici = CalcolatoreCombattimento.calcolaDannoFinale(this, personaggioBersaglio, arma).getDanno();
 
 		if (probabilitaDiColpireMagico * possibiliDanniMagici > probabilitaDiColpireFisico * possibiliDanniFisici) {
 			BusEventi.pubblica(new EventoValutazioneAttaccante(this, personaggioBersaglio,
@@ -1485,7 +1491,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	public void rimuoviTuttiEffettiDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
 		List<EffettoDiStato> effettiDiStatoDaRimuovere = getEffettiDiStato()
 				.stream()
-				.filter(e -> e.getTipoModificatoreAttributo() == tipoEffettoDiStato)
+				.filter(e -> e.getTipoEffettoDiStato() == tipoEffettoDiStato)
 				.collect(Collectors.toList());
 		effettiDiStatoDaRimuovere.forEach(effettoDiStato -> {
 			md.getEffettiDiStato().remove(effettoDiStato);
@@ -1496,11 +1502,11 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public boolean hasEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
-		return md.getEffettiDiStato().stream().anyMatch(e -> e.getTipoModificatoreAttributo() == tipoEffettoDiStato);
+		return md.getEffettiDiStato().stream().anyMatch(e -> e.getTipoEffettoDiStato() == tipoEffettoDiStato);
 	}
 
 	public int getQuantitaEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
-		return md.getEffettiDiStato().stream().filter(e -> e.getTipoModificatoreAttributo() == tipoEffettoDiStato).mapToInt(EffettoDiStato::getValore).sum();
+		return md.getEffettiDiStato().stream().filter(e -> e.getTipoEffettoDiStato() == tipoEffettoDiStato).mapToInt(EffettoDiStato::getValore).sum();
 	}
 
 	// Artefatti

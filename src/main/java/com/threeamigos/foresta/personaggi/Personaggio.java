@@ -1,9 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
-import com.threeamigos.foresta.motore.Comando;
-import com.threeamigos.foresta.motore.Gruppo;
-import com.threeamigos.foresta.motore.OggettoConArticoli;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
@@ -430,6 +428,8 @@ public interface Personaggio extends OggettoConArticoli {
 
 	// Modificatori di stato
 
+	void applicaRisultatoCombattimento(RisultatoCombattimento risultato);
+
 	/**
 	 * Effetti di stato attivi sul personaggio
 	 */
@@ -473,6 +473,8 @@ public interface Personaggio extends OggettoConArticoli {
 	 * di stato del personaggio
 	 */
     void removeArtefatto(Artefatto artefatto);
+
+	Arma getArmaEquipaggiata();
 
 	double getSaluteBase();
 

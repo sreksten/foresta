@@ -1,8 +1,10 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.motore.modellodati.EffettoDiStato;
+import com.threeamigos.foresta.motore.modellodati.TipoDanno;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
+import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -13,21 +15,41 @@ import java.util.Collection;
  */
 public class RisultatoCombattimento {
 
+    private final Personaggio attaccante;
+    private final Personaggio difensore;
+    private TipoDanno tipoDanno;
     private int danno;
     private final Collection<TipoInterazioneElementale> interazioniElementali = new ArrayList<>();
     private final Collection<EffettoDiStato> effettiDiStatoDaAggiungere = new ArrayList<>();
     private final Collection<TipoEffettoDiStato> effettiDiStatoDaRimuovere = new ArrayList<>();
     private boolean colpoDiGrazia = false;
 
-    public RisultatoCombattimento() {
-        danno = 0;
+    public RisultatoCombattimento(Personaggio attaccante, Personaggio bersaglio) {
+        this.attaccante = attaccante;
+        this.difensore = bersaglio;
     }
 
-    public void addDanno(int danno) {
-        this.danno += danno;
+    public Personaggio getAttaccante() {
+        return attaccante;
     }
 
-    public int getDannoTotale() {
+    public Personaggio getDifensore() {
+        return difensore;
+    }
+
+    public TipoDanno getTipoDanno() {
+        return tipoDanno;
+    }
+
+    public void setTipoDanno(TipoDanno tipoDanno) {
+        this.tipoDanno = tipoDanno;
+    }
+
+    public void setDanno(int danno) {
+        this.danno = danno;
+    }
+
+    public int getDanno() {
         return danno;
     }
 

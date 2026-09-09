@@ -5,6 +5,8 @@ import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
+import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -109,5 +111,25 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 			return new SpriteATempo(d, topLeftX + locazione.getWidth() - d.getWidth() - 5, ImageCache.SPACING + locazione.getHeight() - d.getHeight() - 5);
 		}
 		return null;
+	}
+
+	SpriteInterface aggiungiEffettoDiStato(Personaggio personaggio, TipoEffettoDiStato effettoDiStato) {
+		CoordinateMD coordinate = mappaCoordinate.get(personaggio);
+		if (coordinate == null) {
+			return null;
+		}
+		return new SpriteEffetto(effettoDiStato.name(), DoomdarkFontMedium.getInstance(),
+				DoomdarkColorModel.Color.YELLOW,
+				coordinate.getX() + mappaImmagini.get(personaggio).getWidth(), coordinate.getY());
+	}
+
+	SpriteInterface aggiungiInterazioneElementale(Personaggio personaggio, TipoInterazioneElementale interazioneElementale) {
+		CoordinateMD coordinate = mappaCoordinate.get(personaggio);
+		if (coordinate == null) {
+			return null;
+		}
+		return new SpriteEffetto(interazioneElementale.name(), DoomdarkFontMedium.getInstance(),
+				DoomdarkColorModel.Color.YELLOW,
+				coordinate.getX() + mappaImmagini.get(personaggio).getWidth(), coordinate.getY());
 	}
 }

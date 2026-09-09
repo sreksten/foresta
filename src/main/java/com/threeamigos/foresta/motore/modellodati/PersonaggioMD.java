@@ -608,7 +608,7 @@ public class PersonaggioMD implements Serializzabile {
 		stream.println(valoriMassimi.entrySet().stream().map(e -> e.getKey().name() + MappaProprieta.SEPARATORE + e.getValue()).collect(Collectors.joining(PIPE)));
 		stream.println(valoriAttributi.entrySet().stream().map(e -> e.getKey().name() + MappaProprieta.SEPARATORE + e.getValue()).collect(Collectors.joining(PIPE)));
 		stream.println(modificatori.stream().map(m -> m.getTipoAttributo().name() + MappaProprieta.SEPARATORE + m.getTipoModificatoreAttributo().name() + MappaProprieta.SEPARATORE + m.getQuantita() + MappaProprieta.SEPARATORE + m.getNote()).collect(Collectors.joining(PIPE)));
-		stream.println(effettiDiStato.stream().map(e -> e.getTipoModificatoreAttributo().name() + MappaProprieta.SEPARATORE + e.getValore()).collect(Collectors.joining(PIPE)));
+		stream.println(effettiDiStato.stream().map(e -> e.getTipoEffettoDiStato().name() + MappaProprieta.SEPARATORE + e.getValore()).collect(Collectors.joining(PIPE)));
 
 		for (ArtefattoMD artefatto : artefatti) {
 			artefatto.salva(stream);

@@ -4,6 +4,8 @@ import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Logger;
+import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
+import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -534,6 +536,14 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void notificaMissione(String etichetta, String nomeMissione) {
 		codaMissioni.add(new SpriteMissione(etichetta, nomeMissione, larghezzaSchermo, altezzaSchermo));
+	}
+
+	public void aggiungiEffettoDiStato(Personaggio personaggio, TipoEffettoDiStato effettoDiStato) {
+		aggiungiSprite(riquadroLocazione.aggiungiEffettoDiStato(personaggio, effettoDiStato));
+	}
+
+	public void aggiungiInterazioneElementale(Personaggio personaggio, TipoInterazioneElementale interazioneElementale) {
+		aggiungiSprite(riquadroLocazione.aggiungiInterazioneElementale(personaggio, interazioneElementale));
 	}
 
 	private void aggiungiSprite(SpriteInterface sprite) {

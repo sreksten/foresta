@@ -126,8 +126,9 @@ public class CalcolatoreCombattimento {
 
     public static RisultatoCombattimento calcolaDannoFinale(Personaggio attaccante, Personaggio difensore, Arma arma) {
 
-        RisultatoCombattimento risultatoCombattimento = new RisultatoCombattimento();
+        RisultatoCombattimento risultatoCombattimento = new RisultatoCombattimento(attaccante, difensore);
         TipoDanno tipoDanno = arma.getTipoDanno();
+        risultatoCombattimento.setTipoDanno(tipoDanno);
 
         // 1. CALCOLO STATISTICHE EFFETTIVE
         // Determina se l'attacco scala su FORZA (Fisico) o INTELLIGENZA (Magico/Elementale)
@@ -322,7 +323,7 @@ public class CalcolatoreCombattimento {
 
             int dannoFinale = Math.max(1, (int)dannoMitigato);
             Logger.log("dannoFinale: " + dannoFinale);
-            risultatoCombattimento.addDanno(dannoFinale);
+            risultatoCombattimento.setDanno(dannoFinale);
         }
 
         return risultatoCombattimento;

@@ -5,9 +5,8 @@ import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.motore.modellodati.EffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
-import com.threeamigos.foresta.motore.modellodati.SupertipoDanno;
-import com.threeamigos.foresta.motore.modellodati.TipoDanno;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
@@ -151,8 +150,22 @@ public abstract class LocazioneBase implements Locazione {
 			if (possibilitaIncontro <= 90) {
 				int ordinale = Dado.tiraAncheAUnaFaccia(m.length) - 1;
 				ClassePersonaggio classePersonaggio = m[ordinale];
-				int numero = Dado.tiraAncheAUnaFaccia(classePersonaggio.getQuantitaMassima());
-				Logger.log("Scelta da " + m.length + " personaggi la classe " + classePersonaggio + ", numero " + numero);
+
+				// FASE 1: Calcolo del CAP base in base al LIVELLO DEL GIOCATORE (Regola Principale)
+				int livelloGiocatore = g.getCapo().getLivello();
+				int capLivello;
+				if (livelloGiocatore <= 5) {
+					capLivello = 2;  // Massimo 2 mostri a inizio gioco per evitare il collasso immediato
+				} else if (livelloGiocatore <= 15) {
+					capLivello = 3;  // Massimo 3 mostri a metà gioco
+				} else {
+					capLivello = 5;  // Massimo 5 mostri per livelli alti / party completi
+				}
+
+				int limiteMassimoIncontro = Math.min(capLivello, classePersonaggio.getQuantitaMassima());
+
+				int numero = Dado.tiraAncheAUnaFaccia(limiteMassimoIncontro);
+				Logger.log("Scelta da " + m.length + " personaggi la classe " + classePersonaggio + ", numero " + numero + " con cap " + capLivello);
 				Personaggio p;
 				for (int i = 0; i < numero; i++) {
 					p = classePersonaggio.getIstanza(Statistiche.getLivello());
@@ -773,68 +786,65 @@ public abstract class LocazioneBase implements Locazione {
 			}
 			int danniBersaglio = bersaglio.getDanniInCombattimento();
 			int danniCombattente = combattente.getDanniInCombattimento();
+			Logger.log("Valutazione danno originale: danniBersaglio (" + bersaglio.getNome() + ") = " + danniBersaglio + ", danniCombattente (" + combattente.getNome() + ") = " + danniCombattente);
 
 
 			// Test per nuovo motore combattimento
 			Logger.log("---------- NUOVO MOTORE ----------");
 			Logger.log(combattente.getNome() + " attacca " + bersaglio.getNome());
 
-			Arma arma = new Arma() {
-				@Override
-				public int getDanni() {
-					return 5;
-				}
-				@Override
-				public int getLivello() {
-					return 1;
-				}
-				@Override
-				public TipoDanno getTipoDanno() {
-					return TipoDanno.TAGLIENTE;
-				}
-			};
-			Logger.log("Valutazione danno originale: danniBersaglio (" + bersaglio.getNome() + ") = " + danniBersaglio + ", danniCombattente (" + combattente.getNome() + ") = " + danniCombattente);
 			Logger.log("Valutazione combattente -> bersaglio");
-			boolean colpirebbe = CalcolatoreCombattimento.colpisce(combattente, bersaglio, SupertipoDanno.FISICO);
-			if (colpirebbe) {
+			Arma arma = combattente.getArmaEquipaggiata();
+			boolean colpisce = CalcolatoreCombattimento.colpisce(combattente, bersaglio, arma.getTipoDanno().getSuperTipo());
+			if (colpisce) {
 				RisultatoCombattimento risultato = CalcolatoreCombattimento.calcolaDannoFinale(combattente, bersaglio, arma);
-				UI.notifica("Con nuovo motore " + combattente.getNome() + " colpirebbe " + bersaglio.getNome() + " assegnando " + risultato.getDannoTotale() + " danni");
-			} else {
-				UI.notifica("Con nuovo motore " + combattente.getNome() + " non colpisce " + bersaglio.getNome());
+				bersaglio.subSalute(risultato.getDanno(), combattente, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
+				if (!bersaglio.isVivo()) {
+					if (GruppoGiocatore.getIstanza().contiene(combattente)) {
+						Statistiche.addMostroUcciso(bersaglio.getClasse());
+						Statistiche.addPunti(bersaglio.getSaluteMassima());
+						GruppoGiocatore.getIstanza().addPuntiEsperienza(bersaglio.getPuntiEsperienza());
+					}
+					Personaggio nuovoBersaglio = gruppoAvversario.getPersonaggioVivo();
+					if (nuovoBersaglio != null) {
+						bersaglio = nuovoBersaglio;
+					} else {
+						setCompleta(true);
+						return Stato.FINE_LOCAZIONE;
+					}
+				} else {
+					for (EffettoDiStato effetto : risultato.getEffettiDiStatoDaAggiungere()) {
+						bersaglio.addEffettoDiStato(effetto.getTipoEffettoDiStato(), effetto.getValore());
+					}
+					for (TipoEffettoDiStato tipoEffettoDiStato: risultato.getEffettiDiStatoDaRimuovere()) {
+						bersaglio.rimuoviTuttiEffettiDiStato(tipoEffettoDiStato);
+					}
+				}
 			}
 			Logger.log("Valutazione bersaglio -> combattente");
-			colpirebbe = CalcolatoreCombattimento.colpisce(bersaglio, combattente, SupertipoDanno.FISICO);
-			if (colpirebbe) {
+
+			arma = bersaglio.getArmaEquipaggiata();
+			colpisce = CalcolatoreCombattimento.colpisce(bersaglio, combattente, arma.getTipoDanno().getSuperTipo());
+			if (colpisce) {
 				RisultatoCombattimento risultato = CalcolatoreCombattimento.calcolaDannoFinale(bersaglio, combattente, arma);
-				UI.notifica("Con nuovo motore " + bersaglio.getNome() + " colpirebbe " + combattente.getNome() + " assegnando " + risultato.getDannoTotale() + " danni");
-			} else {
-				UI.notifica("Con nuovo motore " + bersaglio.getNome() + " non colpisce " + combattente.getNome());
+				combattente.subSalute(risultato.getDanno(), bersaglio, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
+				if (!combattente.isVivo()) {
+					if (gruppo.getCapo().isVivo()) {
+						statoLocazione = StatoLocazione.IN_LOCAZIONE;
+						return Stato.IN_LOCAZIONE;
+					} else {
+						return Stato.GIOCO_PERSO;
+					}
+				} else {
+					for (EffettoDiStato effetto : risultato.getEffettiDiStatoDaAggiungere()) {
+						combattente.addEffettoDiStato(effetto.getTipoEffettoDiStato(), effetto.getValore());
+					}
+					for (TipoEffettoDiStato tipoEffettoDiStato: risultato.getEffettiDiStatoDaRimuovere()) {
+						combattente.rimuoviTuttiEffettiDiStato(tipoEffettoDiStato);
+					}
+				}
 			}
 
-			combattente.subSalute(danniBersaglio, bersaglio, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
-			if (!combattente.isVivo()) {
-				if (gruppo.getCapo().isVivo()) {
-					statoLocazione = StatoLocazione.IN_LOCAZIONE;
-					return Stato.IN_LOCAZIONE;
-				} else {
-					return Stato.GIOCO_PERSO;
-				}
-			}
-			bersaglio.subSalute(danniCombattente, combattente, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
-			if (!bersaglio.isVivo()) {
-				if (GruppoGiocatore.getIstanza().contiene(combattente)) {
-					Statistiche.addMostroUcciso(bersaglio.getClasse());
-					Statistiche.addPunti(bersaglio.getSaluteMassima());
-					GruppoGiocatore.getIstanza().addPuntiEsperienza(bersaglio.getPuntiEsperienza());
-				}
-				Personaggio nuovoBersaglio = gruppoAvversario.getPersonaggioVivo();
-				if (nuovoBersaglio != null) {
-					bersaglio = nuovoBersaglio;
-				} else {
-					setCompleta(true);
-					return Stato.FINE_LOCAZIONE;
-				}
-			}
 			UI.infoCombattimento(true, combattente, bersaglio);
 
 			if (gruppoAvversario.getNumeroPersonaggiVivi() > gruppo.getNumeroPersonaggiVivi()) {

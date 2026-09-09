@@ -14,13 +14,14 @@ public class SnifferBusEventi {
 
     public SnifferBusEventi() {
         BusEventi.iscriviti(EventoAggiuntaModificatore.class, this::onEventoAggiuntaModificatore);
+        BusEventi.iscriviti(EventoCombattimento.class, this::onEventoCombattimento);
         BusEventi.iscriviti(EventoCreazionePersonaggio.class, this::onEventoCreazionePersonaggio);
+        BusEventi.iscriviti(EventoInterazioneElementale.class, this::onEventoInterazioneElementale);
         BusEventi.iscriviti(EventoMessaggio.class, this::onEventoMessaggio);
         BusEventi.iscriviti(EventoValutazioneAttaccante.class, this::onEventoValutazione);
         BusEventi.iscriviti(EventoVariazioneEffettoDiStato.class, this::onEventoVariazioneEffettoDiStato);
         BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::onEventoVariazioneStatistichePersonaggio);
         BusEventi.iscriviti(EventoVariazioneStatoVitalePersonaggio.class, this::onEventoVariazioneStatoVitalePersonaggio);
-
     }
 
     private void onEventoAggiuntaModificatore(EventoAggiuntaModificatore evento) {
@@ -29,9 +30,21 @@ public class SnifferBusEventi {
                 formattaStatistichePersonaggio(evento.getPersonaggio()));
     }
 
+    private void onEventoCombattimento(EventoCombattimento evento) {
+        Personaggio p = evento.getPersonaggio();
+        Personaggio bersaglio = evento.getBersaglio();
+        Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) +
+                formattaStatistichePersonaggio(bersaglio) + evento.formattaRisultatoCombattimento());
+    }
+
     private void onEventoCreazionePersonaggio(EventoCreazionePersonaggio evento) {
         Personaggio p  = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p));
+    }
+
+    private void onEventoInterazioneElementale(EventoInterazioneElementale evento) {
+        Personaggio p = evento.getPersonaggio();
+        Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getTipoInterazioneElementale());
     }
 
     private void onEventoMessaggio(EventoMessaggio evento) {

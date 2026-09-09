@@ -14,7 +14,7 @@ public class EffettoDiStato {
         this.valore = valore;
     }
 
-    public TipoEffettoDiStato getTipoModificatoreAttributo() {
+    public TipoEffettoDiStato getTipoEffettoDiStato() {
         return tipoEffettoDiStato;
     }
 
