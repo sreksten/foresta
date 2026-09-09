@@ -300,11 +300,13 @@ public class ForestaUI implements InterfacciaUtente {
 			case ELETTROCUZIONE:
 			case CONGELAMENTO:
 			case VAPORIZZAZIONE:
+			case ALIMENTAZIONE_FIAMMA:
 			case ESTINZIONE:
 			case SCIOGLIMENTO_TERMICO:
 			case ESPLOSIONE_DI_GAS:
 			case FRANTUMAZIONE_DEL_GHIACCO:
 			case DISGELO_VIOLENTO:
+			case SUPERCONDUZIONE:
 			case MIETITURA:
 			case RIGETTO:
 			case PURIFICAZIONE:
@@ -313,7 +315,6 @@ public class ForestaUI implements InterfacciaUtente {
 			default:
 				throw new IllegalArgumentException("TipoInterazioneElementale non gestito: " + tipoInterazioneElementale);
 		}
-
 	}
 
 	//FIXME ancora non li gestiamo a livello grafico

@@ -796,7 +796,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		} else {
 			if (notificaFerite == Personaggio.NotificaFerite.SI) {
 				String nome = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA);
-				String notifica = nome + " ha ancora " + salute + " punt" + (salute == 1 ? 'o' : 'i') +
+				String notifica = nome + " ha ancora " + (int)salute + " punt" + (salute == 1 ? 'o' : 'i') +
 						" ferita su " + (int)calcolaSaluteMassima() + '.';
 				BusEventi.pubblica(new EventoMessaggio(notifica));
 			}

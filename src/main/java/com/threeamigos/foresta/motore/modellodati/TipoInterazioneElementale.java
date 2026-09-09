@@ -8,38 +8,47 @@ public enum TipoInterazioneElementale {
 
     // Interazioni con BAGNATO
     // + FULMINE
-    ELETTROCUZIONE,
+    ELETTROCUZIONE("Elettrocuzione"),
     // + GELO
-    CONGELAMENTO,
+    CONGELAMENTO("Congelamento"),
     // + FUOCO
-    VAPORIZZAZIONE,
+    VAPORIZZAZIONE("Vaporizzazione"),
 
     // Interazioni con BRUCIATO
     // + ARIA
-    ALIMENTAZIONE_FIAMMA,
+    ALIMENTAZIONE_FIAMMA("Alimentazione fiamma"),
     // + ACQUA
-    ESTINZIONE,
+    ESTINZIONE("Estinzione"),
     // + GELO
-    SCIOGLIMENTO_TERMICO,
+    SCIOGLIMENTO_TERMICO("Scioglimento termico"),
     // + VELENO
-    ESPLOSIONE_DI_GAS,
+    ESPLOSIONE_DI_GAS("Esplosione di gas"),
 
     // Interazioni con CONGELATO
     // + CONTUNDENTE
-    FRANTUMAZIONE_DEL_GHIACCO,
+    FRANTUMAZIONE_DEL_GHIACCO("Frantumazione del ghiaccio"),
     // + FUOCO
-    DISGELO_VIOLENTO,
+    DISGELO_VIOLENTO("Disgelo violento"),
     // + FULMINE
-    SUPERCONDUZIONE,
+    SUPERCONDUZIONE("Superconduzione"),
 
     // Interazioni con MALEDETTO
     // + NECROTICO
-    MIETITURA,
+    MIETITURA("Mietitura"),
     // + SACRO
-    RIGETTO,
+    RIGETTO("Rigetto"),
 
     // Interazioni con INFETTATO
     // + SACRO
-    PURIFICAZIONE
+    PURIFICAZIONE("Purificazione");
 
+    private final String descrizione;
+
+    TipoInterazioneElementale(String descrizione) {
+        this.descrizione = descrizione;
+    }
+
+    public String getDescrizione() {
+        return descrizione;
+    }
 }

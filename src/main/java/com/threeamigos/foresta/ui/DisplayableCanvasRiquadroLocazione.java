@@ -118,9 +118,11 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		if (coordinate == null) {
 			return null;
 		}
-		return new SpriteEffetto(effettoDiStato.name(), DoomdarkFontMedium.getInstance(),
+
+		BufferedImage image = mappaImmagini.get(personaggio);
+		return new SpriteEffetto(effettoDiStato.getDescrizione(), DoomdarkFontMedium.getInstance(),
 				DoomdarkColorModel.Color.YELLOW,
-				coordinate.getX() + mappaImmagini.get(personaggio).getWidth(), coordinate.getY());
+				coordinate.getX() + image.getWidth(), coordinate.getY() + image.getHeight() / 3);
 	}
 
 	SpriteInterface aggiungiInterazioneElementale(Personaggio personaggio, TipoInterazioneElementale interazioneElementale) {
@@ -128,8 +130,9 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		if (coordinate == null) {
 			return null;
 		}
-		return new SpriteEffetto(interazioneElementale.name(), DoomdarkFontMedium.getInstance(),
-				DoomdarkColorModel.Color.YELLOW,
-				coordinate.getX() + mappaImmagini.get(personaggio).getWidth(), coordinate.getY());
+		BufferedImage image = mappaImmagini.get(personaggio);
+		return new SpriteEffetto(interazioneElementale.getDescrizione(), DoomdarkFontMedium.getInstance(),
+				DoomdarkColorModel.Color.GREEN,
+				coordinate.getX() + image.getWidth(), coordinate.getY() + image.getHeight() * 2 / 3);
 	}
 }
