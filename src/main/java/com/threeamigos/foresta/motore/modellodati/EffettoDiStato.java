@@ -7,7 +7,7 @@ package com.threeamigos.foresta.motore.modellodati;
 public class EffettoDiStato {
 
     private final TipoEffettoDiStato tipoEffettoDiStato;
-    private final int valore;
+    private int valore;
 
     public EffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int valore) {
         this.tipoEffettoDiStato = tipoEffettoDiStato;
@@ -20,5 +20,9 @@ public class EffettoDiStato {
 
     public int getValore() {
         return valore;
+    }
+
+    public void setValore(int valore) {
+    	this.valore = valore;
     }
 }

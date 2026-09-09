@@ -190,52 +190,8 @@ public class UI {
 		interfacciaUtente.infoCombattimento(mostra, combattente, avversario);
 	}
 
-	public static void notificaMorte(Personaggio personaggio) {
-		interfacciaUtente.notificaMorte(personaggio);
-	}
-
 	public static void notificaMissione(String etichetta, String nomeMissione) {
 		interfacciaUtente.notificaMissione(etichetta, nomeMissione);
-	}
-	
-	public static void variaSalute(Personaggio personaggio, int variazione) {
-		interfacciaUtente.variaSalute(personaggio, variazione);
-	}
-
-	public static void variaSaluteMassima(Personaggio personaggio, int variazione) {
-		interfacciaUtente.variaSaluteMassima(personaggio, variazione);
-	}
-
-	public static void variaMagia(Personaggio personaggio, int variazione) {
-		interfacciaUtente.variaMagia(personaggio, variazione);
-	}
-	
-	public static void variaMagiaMassima(Personaggio personaggio, int variazione) {
-		interfacciaUtente.variaMagiaMassima(personaggio, variazione);
-	}
-
-	public static void variaLivello(Personaggio personaggio, int variazione) {
-		interfacciaUtente.variaLivello(personaggio, variazione);
-	}
-
-	public static void variaCoraggio(Personaggio personaggio, int variazione) {
-		interfacciaUtente.variaCoraggio(personaggio, variazione);
-	}
-	
-	public static void variaValore(Personaggio personaggio, int variazione) {
-		interfacciaUtente.variaValore(personaggio, variazione);
-	}
-	
-	public static void variaCarisma(Personaggio personaggio, int variazione) {
-		interfacciaUtente.variaCarisma(personaggio, variazione);
-	}
-	
-	public static void variaStanchezza(Personaggio personaggio, int variazione) {
-		interfacciaUtente.variaStanchezza(personaggio, variazione);
-	}
-
-	public static void variaTempo(Personaggio personaggio, int variazione) {
-		interfacciaUtente.variaTempo(personaggio, variazione);
 	}
 
 	public static void variaGemme(int variazione) {

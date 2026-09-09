@@ -2,6 +2,7 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -246,5 +247,27 @@ public class Arpia extends PersonaggioBase implements Personaggio {
 	@Override
 	public boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo) {
 		return classeIncantesimo == ClasseIncantesimo.ARIA;
+	}
+
+	@Override
+	public double getMaxStatistica(TipoAttributo tipoAttributo) {
+		switch (tipoAttributo) {
+			case FORZA:
+				return Costanti.ARPIA_MAX_FORZA;
+			case DESTREZZA:
+				return Costanti.ARPIA_MAX_DESTREZZA;
+			case COSTITUZIONE:
+				return Costanti.ARPIA_MAX_COSTITUZIONE;
+			case INTELLIGENZA:
+				return Costanti.ARPIA_MAX_INTELLIGENZA;
+			case SAGGEZZA:
+				return Costanti.ARPIA_MAX_SAGGEZZA;
+			case CARISMA:
+				return Costanti.ARPIA_MAX_CARISMA;
+			case FORTUNA:
+				return Costanti.ARPIA_MAX_FORTUNA;
+			default:
+				throw new IllegalArgumentException(tipoAttributo + " non è un tipo primario");
+		}
 	}
 }

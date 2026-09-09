@@ -119,13 +119,6 @@ public class Anello extends OggettoBase implements Oggetto {
 						.costruisci();
 				p.addArtefatto(anelloMagico);
 
-				if (tipo == 1) {
-					p.addValore(Costanti.ANELLO_MAGICO_AGGIUNTA_VALORE);
-				} else if (tipo == 2) {
-					p.addCoraggio(Costanti.ANELLO_MAGICO_AGGIUNTA_CORAGGIO);
-				} else {
-					p.addCarisma(Costanti.ANELLO_MAGICO_AGGIUNTA_CARISMA);
-				}
 				Statistiche.addPunti(Costanti.ANELLO_MAGICO_PUNTEGGIO);
 				GestoreProgressione.acquisisciArtefattoMinore();
 			}

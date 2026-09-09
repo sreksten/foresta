@@ -199,6 +199,16 @@ public enum TipoAttributo {
     LIVELLO(SupertipoAttributo.RISORSA_DINAMICA, "Livello di esperienza raggiunto dal personaggio."),
 
     /**
+     * Punti abilità che il personaggio può usare per aumentare le sue statistiche.
+     */
+    PUNTI_ABILITA(SupertipoAttributo.RISORSA_DINAMICA, "Punti abilità disponibili"),
+
+    /**
+     * Esperienza totale accumulata dal personaggio
+     */
+    PUNTI_ESPERIENZA(SupertipoAttributo.RISORSA_DINAMICA, "Esperienza totale accumulata dal personaggio."),
+
+    /**
      * Salute fisica e resistenza complessiva. Quando la salute corrente scende a zero, il personaggio muore.
      */
     SALUTE(SupertipoAttributo.RISORSA_DINAMICA, "Salute fisica e resistenza complessiva."),
@@ -219,7 +229,12 @@ public enum TipoAttributo {
      * <p><b>In difesa:</b> Penalizza pesantemente il valore di Schivata e aumenta il tempo di recupero dagli stati di
      * stordimento o atterramento (il personaggio si rialza più lentamente).</p>
      */
-    STANCHEZZA(SupertipoAttributo.RISORSA_DINAMICA, "Livello di affaticamento che penalizza le prestazioni fisiche.");
+    STANCHEZZA(SupertipoAttributo.RISORSA_DINAMICA, "Livello di affaticamento che penalizza le prestazioni fisiche."),
+
+    /**
+     * Per i personaggi che rimangono nel gruppo un determinato periodo di tempo e poi lo lasciano.
+     */
+    TEMPO(SupertipoAttributo.RISORSA_DINAMICA, "Tempo rimanente nel gruppo.");
 
     private final SupertipoAttributo supertipo;
     private final String descrizione;

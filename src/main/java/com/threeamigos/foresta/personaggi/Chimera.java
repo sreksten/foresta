@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -240,5 +241,27 @@ public class Chimera extends PersonaggioBase implements Personaggio {
 	@Override
 	public String getNoteMoltiplicatoreRecuperoFisico() {
 		return Costanti.CHIMERA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA;
+	}
+
+	@Override
+	public double getMaxStatistica(TipoAttributo tipoAttributo) {
+		switch (tipoAttributo) {
+			case FORZA:
+				return Costanti.CHIMERA_MAX_FORZA;
+			case DESTREZZA:
+				return Costanti.CHIMERA_MAX_DESTREZZA;
+			case COSTITUZIONE:
+				return Costanti.CHIMERA_MAX_COSTITUZIONE;
+			case INTELLIGENZA:
+				return Costanti.CHIMERA_MAX_INTELLIGENZA;
+			case SAGGEZZA:
+				return Costanti.CHIMERA_MAX_SAGGEZZA;
+			case CARISMA:
+				return Costanti.CHIMERA_MAX_CARISMA;
+			case FORTUNA:
+				return Costanti.CHIMERA_MAX_FORTUNA;
+			default:
+				throw new IllegalArgumentException(tipoAttributo + " non è un tipo primario");
+		}
 	}
 }

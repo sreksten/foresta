@@ -126,7 +126,7 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 		}
 		BufferedImage icona = ImageCache.spritePozioneSalute;
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI;
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + fontMedium.getHeight();
 		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y);
 	}
 
@@ -136,7 +136,7 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 		}
 		BufferedImage icona = ImageCache.spritePozioneSaluteGrande;
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + fontMedium.getHeight();
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + 2 * fontMedium.getHeight();
 		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y);
 	}
 
@@ -146,7 +146,7 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 		}
 		BufferedImage icona = ImageCache.spritePozioneMagia;
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + 2 * fontMedium.getHeight();
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + 3 * fontMedium.getHeight();
 		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y);
 	}
 
@@ -156,7 +156,7 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 		}
 		BufferedImage icona = ImageCache.spritePozioneMagiaGrande;
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + 3 * fontMedium.getHeight();
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + 4 * fontMedium.getHeight();
 		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y);
 	}
 }

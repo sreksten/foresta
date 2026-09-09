@@ -16,8 +16,6 @@ import java.util.function.Consumer;
  */
 public class BusEventi {
 
-    private static final BusEventi ISTANZA = new BusEventi();
-
     private static final Map<Class<?>, List<Consumer<Object>>> sottoscrittori = new ConcurrentHashMap<>();
 
     private BusEventi() {

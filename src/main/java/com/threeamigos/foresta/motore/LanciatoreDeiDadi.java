@@ -241,7 +241,7 @@ public class LanciatoreDeiDadi {
                 saggezzaInt++;
             } else if (statisticaCasuale == 5) {
                 carismaInt++;
-            } else if (statisticaCasuale == 6) {
+            } else {
                 fortunaInt++;
             }
             poolMutazione--;

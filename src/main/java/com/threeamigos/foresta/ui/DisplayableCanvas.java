@@ -437,7 +437,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		Logger.log("Nuovo messaggio: " + messaggio);
 		repaint();
 	}
-	
+
 	public void notificaMorte(Personaggio personaggio) {
 		if (personaggio.isPNG()) {
 			aggiungiSprite(riquadroLocazione.notificaMorte(personaggio));
@@ -452,7 +452,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 	}
 
-	public void variaForzaMassima(Personaggio personaggio, int variazione) {
+	public void variaSaluteMassima(Personaggio personaggio, int variazione) {
 		aggiungiSprite(riquadroGruppo.variaSaluteMassima(personaggio, variazione));
 	}
 

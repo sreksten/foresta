@@ -1,10 +1,14 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Gioco;
 import com.threeamigos.foresta.motore.Logger;
+import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
+import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import javax.swing.*;
@@ -24,6 +28,14 @@ public class ForestaUI implements InterfacciaUtente {
 		this.orientamento = orientamento;
 		this.tuttoSchermo = tuttoSchermo;
 		SwingUtilities.invokeLater(this::createAndShowGUI);
+
+		BusEventi.iscriviti(EventoAggiuntaModificatore.class, this::gestisciEventoAggiuntaModificatore);
+		// EventoCreazionePersonaggio non ci interessa
+		BusEventi.iscriviti(EventoMessaggio.class, this::gestisciEventoMessaggio);
+		BusEventi.iscriviti(EventoVariazioneEffettoDiStato.class, this::gestisciEventoVariazioneEffettoDiStato);
+		BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
+		BusEventi.iscriviti(EventoVariazioneStatoVitalePersonaggio.class, this::gestisciEventoVariazioneStatoVitalePersonaggio);
+
 	}
 	
 	private void createAndShowGUI() {
@@ -228,64 +240,69 @@ public class ForestaUI implements InterfacciaUtente {
 		rinfresca();
 	}
 
-	@Override
-	public void notificaMorte(Personaggio personaggio) {
-		displayableCanvas.notificaMorte(personaggio);
+	private void gestisciEventoMessaggio(EventoMessaggio evento) {
+		displayableCanvas.notifica(evento.getMessaggio());
+	}
+
+	private void gestisciEventoVariazioneStatoVitalePersonaggio(EventoVariazioneStatoVitalePersonaggio evento) {
+		displayableCanvas.notificaMorte(evento.getPersonaggio());
 	}
 
 	@Override
 	public void notificaMissione(String etichetta, String nomeMissione) {
 		displayableCanvas.notificaMissione(etichetta, nomeMissione);
 	}
-	
-	@Override
-	public void variaSalute(Personaggio personaggio, int variazione) {
-		displayableCanvas.variaSalute(personaggio, variazione);
+
+	private void gestisciEventoVariazioneStatistichePersonaggio(EventoVariazioneStatistichePersonaggio evento) {
+		Personaggio personaggio = evento.getPersonaggio();
+		TipoAttributo tipo = evento.getTipoAttributo();
+		if (tipo == TipoAttributo.SALUTE) {
+			displayableCanvas.variaSalute(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));
+		} else if (tipo == TipoAttributo.MAGIA) {
+			displayableCanvas.variaMagia(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));
+		} else if (tipo == TipoAttributo.CARISMA) {
+			displayableCanvas.variaCarisma(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));
+		} else if (tipo == TipoAttributo.STANCHEZZA) {
+			displayableCanvas.variaStanchezza(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));
+		} else if (tipo == TipoAttributo.CORAGGIO) {
+			displayableCanvas.variaCoraggio(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));
+		} else if (tipo == TipoAttributo.VALORE) {
+			displayableCanvas.variaValore(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));
+		} else if (tipo == TipoAttributo.TEMPO) {
+			displayableCanvas.variaTempo(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));
+		} else if (tipo == TipoAttributo.LIVELLO) {
+			displayableCanvas.notificaMissione("LEVEL UP!", personaggio.getNome() + " A LIVELLO " + personaggio.getLivello() + "!");
+			displayableCanvas.notifica("LEVELED UP! Ora " + personaggio.getNome() + " è al livello " + personaggio.getLivello() + "!");
+			displayableCanvas.variaLivello(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));
+		}
 	}
 
-	@Override
-	public void variaSaluteMassima(Personaggio personaggio, int variazione) {
-		displayableCanvas.variaForzaMassima(personaggio, variazione);
+	private void gestisciEventoAggiuntaModificatore(EventoAggiuntaModificatore evento) {
+		Personaggio personaggio = evento.getPersonaggio();
+		ModificatoreAttributo modificatore = evento.getModificatore();
+		switch (modificatore.getTipoAttributo()) {
+			case SALUTE:
+				displayableCanvas.variaSaluteMassima(personaggio, (int)(modificatore.getQuantita()));
+				break;
+			case MAGIA:
+				displayableCanvas.variaMagiaMassima(personaggio, (int)(modificatore.getQuantita()));
+				break;
+		}
 	}
 
-	@Override
-	public void variaMagia(Personaggio personaggio, int variazione) {
-		displayableCanvas.variaMagia(personaggio, variazione);
-	}
-	
-	@Override
-	public void variaMagiaMassima(Personaggio personaggio, int variazione) {
-		displayableCanvas.variaMagiaMassima(personaggio, variazione);
-	}
-
-	@Override
-	public void variaLivello(Personaggio personaggio, int variazione) {
-		displayableCanvas.variaLivello(personaggio, variazione);
-	}
-
-	@Override
-	public void variaCoraggio(Personaggio personaggio, int variazione) {
-		displayableCanvas.variaCoraggio(personaggio, variazione);
-	}
-	
-	@Override
-	public void variaValore(Personaggio personaggio, int variazione) {
-		displayableCanvas.variaValore(personaggio, variazione);
-	}
-	
-	@Override
-	public void variaCarisma(Personaggio personaggio, int variazione) {
-		displayableCanvas.variaCarisma(personaggio, variazione);
-	}
-	
-	@Override
-	public void variaStanchezza(Personaggio personaggio, int variazione) {
-		displayableCanvas.variaStanchezza(personaggio, variazione);
-	}
-
-	@Override
-	public void variaTempo(Personaggio personaggio, int variazione) {
-		displayableCanvas.variaTempo(personaggio, variazione);
+	//FIXME ancora non li gestiamo a livello grafico
+	private void gestisciEventoVariazioneEffettoDiStato(EventoVariazioneEffettoDiStato evento) {
+		Personaggio personaggio = evento.getPersonaggio();
+		TipoEffettoDiStato tipoEffettoDiStato = evento.getEffetto();
+		switch (evento.getTipo()) {
+			case AGGIUNTA:
+				break;
+			case VARIAZIONE:
+				break;
+            case RIMOZIONE:
+				break;
+		}
+		//displayableCanvas.variaEffettoDiStato(personaggio, effetto);
 	}
 
 	@Override

@@ -585,7 +585,7 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		for (Personaggio p : g.getPersonaggi()) {
 			if (p.hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
-				p.removeEffettoDiStato(TipoEffettoDiStato.BERSERK);
+				p.rimuoviTuttiEffettiDiStato(TipoEffettoDiStato.BERSERK);
 			}
 		}
 	}

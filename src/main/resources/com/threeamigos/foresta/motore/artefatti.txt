@@ -11,7 +11,7 @@ ARTEFATTO
 SPADA
 #    { [SPADA_LIV_1] | [SPADA_LIV_2] | [SPADA_LIV_3] | [SPADA_LIV_4] } \
     [SPADA_LIV_3] \
-    "{ \"livello\": [#LIVELLO], \"tipo\": \"SPADA\"," \
+    "{ \"livello\": [#LIVELLO], \"tipoVariazione\": \"SPADA\"," \
     "\"nome\": \"[#NOME_PRE?]Spada[#NOME_POST?][#NOME_POST_2?][#NOME_DI?][#NOME_ULTERIORE?]\"," \
     "\"danniAggiuntivi\": \[[#DANNI?]\]," \
     "\"modificatori\": \[[#MODIFICATORI?]\] }"
@@ -191,21 +191,21 @@ ATTRIBUTO_PRE_O_POST_LIV_2 = ATTRIBUTO_PRE_O_POST_LIV_1
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"SOGGEZIONE\", \"quantita\": 4 }"]Leggendaria
 
 ATTRIBUTO_SOLO_POST_LIV_2 = ATTRIBUTO_SOLO_POST_LIV_1
-    [DANNI="[#DANNI?],{ \"tipo\": \"ARIA\", \"quantita\": 3 }"]{ Sibilante | Eolica | Tempestosa | Volatile | Alata | Ventosa | Sventolante | Spifferante | Asciugacapelli | Ciclonica | Tornado | Turbinante | Brezzolina | Sventola | Ventilatore | Sbuffante | Tramontana }
-    [DANNI="[#DANNI?],{ \"tipo\": \"ACQUA\", \"quantita\": 3 }"]{ Idrica | Marittima | Lacustre | Torrenziale | Ondosa | Umida | Bagnata | ad Idromassaggio | Fradicia | Brodosa | Abissale | Fluviale | Diluviante | Acquazzone | Inzuppata | Pozzanghera | Sciacquone }
-    [DANNI="[#DANNI?],{ \"tipo\": \"TERRA\", \"quantita\": 3 }"]{ Tellurica | Sismica | Geodetica | Rocciosa | Granitica | Terrosa | Infangata | Zappaterra | Mattone | Polverosa | Ancestrale | Sotterranea | Minerale | Zolla | Cantiere | Geometra | Lastricata }
-    [DANNI="[#DANNI?],{ \"tipo\": \"FUOCO\", \"quantita\": 3 }"]{ Fiammeggiante | Ardente | Vulcanica | Incendiaria | Piromane | Bruciante | Grigliata | Piccante | Accendino | Scottadito | Magmatica | Infernale | Ustionante | a Carbonella | Fornello | Caldarrosta | Lanterna | Fiammifero }
-    [DANNI="[#DANNI?],{ \"tipo\": \"FULMINE\", \"quantita\": 2 }"]{ Ronzante | Fulminante | Voltaica | Scintillante | Galvanica | Elettrica | Friggitrice | Scossa | Cortocircuito | Temporalesca | Ionica | Magnetica | Dinamo | Presa-di-corrente | Batteria | Cercafase | Elettroshock | Lampadina }
-    [DANNI="[#DANNI?],{ \"tipo\": \"GELO\", \"quantita\": 3 }"]{ Gelida | Artica | Glaciale | Invernale | Criogenica | Surgelata | Frigorifero | Ghiacciolo | Freddolosa | Pinguina | Polare | Iperborea | Brinata | Brivido | Ghiacciaia | Pupazzo-di-neve | Sottozero }
-    [DANNI="[#DANNI?],{ \"tipo\": \"ACIDO\", \"quantita\": 3 }"]{ Corrosiva | Caustica | Tossica | Dissolvente | Erosiva | Aspra | Limonosa | Sgorgante | Corrosiva | Brucia-stomaci | Alchemica | Velenosa | Putrescente | Marinata | Sottaceto | Acida | Basica | Solvente }
-    [DANNI="[#DANNI?],{ \"tipo\": \"SONICO\", \"quantita\": 3 }"]{ Tuonante | Risonante | Acustica | Vibrante | Supersonica | Rumorosa | Sbraitante | Amplificata | Caciara | Altoparlante | Ecoica | Vocale | Rimbombante | Megafono | Clacson | Trapano | Strillante | Disturbo-della-Quiete }
-    [DANNI="[#DANNI?],{ \"tipo\": \"VELENO\", \"quantita\": 3 }"]{ Letale | Tossica | Nociva | Venefica | Contaminata | Sibilante | Serpenta | Malmostosa | Vipera | Arsenica | Infetta | Malefica | Gorgonzola | Pungiglione | Suocera }
-    [DANNI="[#DANNI?],{ \"tipo\": \"NECROTICO\", \"quantita\": 4 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": -2 }"]{ Maledetta | Spettrale | Sepolcrale | Cadaverica | Tombale | Funesta | Macabra | Zombie | Spettrale | Spettrina | Ossuta | Riempi-cimiteri | Lumino | Rianimata | Necroforina | Scheletrica }
-    [DANNI="[#DANNI?],{ \"tipo\": \"SACRO\", \"quantita\": 4 }"]{ Benedetta | Divina | Radiosa | Celestiale | Consacrata | Angelica | Santificata | Chierica | Miracolosa | dei Pii Desideri | Gloriosa | Redentrice | Martire | Devota | Campanile | Incensata | Chierichetta | Sagrestana }
-    [DANNI="[#DANNI?],{ \"tipo\": \"PSICHICO\", \"quantita\": 4 }"]{ Allucinante | Mentale | Telepatica | Illusoria | Cerebrale | Schizzata | Paranoica | Cervellotica | Emicrania | Onirica | Ipnotica | Psicotica | Allucinogena | Esaurimento | Emicranica | Svitata }
-    [DANNI="[#DANNI?],{ \"tipo\": \"ARCANO\", \"quantita\": 4 }"]{ Mistica | Runica | Prodigiosa | Esoterica | Eterea | Magica | Fatata | Abracadabra | Tracotante | Astratta | Alchemica | Stellata | Scintillina | Evocatrice | Prestigiatrice | Circo | MagoZurlì }
-    [DANNI="[#DANNI?],{ \"tipo\": \"VUOTO\", \"quantita\": 4 }"]{ Astrale | Cosmica | Siderale | Gravitazionale | Infinita | Vacua | Spaziale | Dispersa | Nullafacente | Eclissata | Nebulosa | Interstellare | Abissale | Dispersa | Astronauta | Desolata | AriaFritta }
-    [DANNI="[#DANNI?],{ \"tipo\": \"MALEDIZIONE\", \"quantita\": 4 }"]{ Portasfiga | Sciagurata | Funesta | Infausta | Dannata | Iettatrice | Malocchia | Malefica | Disgraziata | Dannata | Funesta | Sciagurata | Malaugurio | GattoNero | Venerdì13 | Sventurata | Scalognata }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"ARIA\", \"quantita\": 3 }"]{ Sibilante | Eolica | Tempestosa | Volatile | Alata | Ventosa | Sventolante | Spifferante | Asciugacapelli | Ciclonica | Tornado | Turbinante | Brezzolina | Sventola | Ventilatore | Sbuffante | Tramontana }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"ACQUA\", \"quantita\": 3 }"]{ Idrica | Marittima | Lacustre | Torrenziale | Ondosa | Umida | Bagnata | ad Idromassaggio | Fradicia | Brodosa | Abissale | Fluviale | Diluviante | Acquazzone | Inzuppata | Pozzanghera | Sciacquone }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"TERRA\", \"quantita\": 3 }"]{ Tellurica | Sismica | Geodetica | Rocciosa | Granitica | Terrosa | Infangata | Zappaterra | Mattone | Polverosa | Ancestrale | Sotterranea | Minerale | Zolla | Cantiere | Geometra | Lastricata }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"FUOCO\", \"quantita\": 3 }"]{ Fiammeggiante | Ardente | Vulcanica | Incendiaria | Piromane | Bruciante | Grigliata | Piccante | Accendino | Scottadito | Magmatica | Infernale | Ustionante | a Carbonella | Fornello | Caldarrosta | Lanterna | Fiammifero }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"FULMINE\", \"quantita\": 2 }"]{ Ronzante | Fulminante | Voltaica | Scintillante | Galvanica | Elettrica | Friggitrice | Scossa | Cortocircuito | Temporalesca | Ionica | Magnetica | Dinamo | Presa-di-corrente | Batteria | Cercafase | Elettroshock | Lampadina }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"GELO\", \"quantita\": 3 }"]{ Gelida | Artica | Glaciale | Invernale | Criogenica | Surgelata | Frigorifero | Ghiacciolo | Freddolosa | Pinguina | Polare | Iperborea | Brinata | Brivido | Ghiacciaia | Pupazzo-di-neve | Sottozero }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"ACIDO\", \"quantita\": 3 }"]{ Corrosiva | Caustica | Tossica | Dissolvente | Erosiva | Aspra | Limonosa | Sgorgante | Corrosiva | Brucia-stomaci | Alchemica | Velenosa | Putrescente | Marinata | Sottaceto | Acida | Basica | Solvente }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"SONICO\", \"quantita\": 3 }"]{ Tuonante | Risonante | Acustica | Vibrante | Supersonica | Rumorosa | Sbraitante | Amplificata | Caciara | Altoparlante | Ecoica | Vocale | Rimbombante | Megafono | Clacson | Trapano | Strillante | Disturbo-della-Quiete }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"VELENO\", \"quantita\": 3 }"]{ Letale | Tossica | Nociva | Venefica | Contaminata | Sibilante | Serpenta | Malmostosa | Vipera | Arsenica | Infetta | Malefica | Gorgonzola | Pungiglione | Suocera }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"NECROTICO\", \"quantita\": 4 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": -2 }"]{ Maledetta | Spettrale | Sepolcrale | Cadaverica | Tombale | Funesta | Macabra | Zombie | Spettrale | Spettrina | Ossuta | Riempi-cimiteri | Lumino | Rianimata | Necroforina | Scheletrica }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"SACRO\", \"quantita\": 4 }"]{ Benedetta | Divina | Radiosa | Celestiale | Consacrata | Angelica | Santificata | Chierica | Miracolosa | dei Pii Desideri | Gloriosa | Redentrice | Martire | Devota | Campanile | Incensata | Chierichetta | Sagrestana }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"PSICHICO\", \"quantita\": 4 }"]{ Allucinante | Mentale | Telepatica | Illusoria | Cerebrale | Schizzata | Paranoica | Cervellotica | Emicrania | Onirica | Ipnotica | Psicotica | Allucinogena | Esaurimento | Emicranica | Svitata }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"ARCANO\", \"quantita\": 4 }"]{ Mistica | Runica | Prodigiosa | Esoterica | Eterea | Magica | Fatata | Abracadabra | Tracotante | Astratta | Alchemica | Stellata | Scintillina | Evocatrice | Prestigiatrice | Circo | MagoZurlì }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"VUOTO\", \"quantita\": 4 }"]{ Astrale | Cosmica | Siderale | Gravitazionale | Infinita | Vacua | Spaziale | Dispersa | Nullafacente | Eclissata | Nebulosa | Interstellare | Abissale | Dispersa | Astronauta | Desolata | AriaFritta }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"MALEDIZIONE\", \"quantita\": 4 }"]{ Portasfiga | Sciagurata | Funesta | Infausta | Dannata | Iettatrice | Malocchia | Malefica | Disgraziata | Dannata | Funesta | Sciagurata | Malaugurio | GattoNero | Venerdì13 | Sventurata | Scalognata }
 
 SPADA_LIV_3
     [LIVELLO=3] [NOME_PRE="[ATTRIBUTO_SOLO_PRE_LIV_3] "] [NOME_DI=" [ATTRIBUTO_DI]"]
@@ -769,38 +769,38 @@ ATTRIBUTO_DI
 # STANCHEZZA -2 / VELOCITÀ +1: Il massimo livello di iperattività. Il portatore è così privo di affaticamento e carico di adrenalina da muoversi a una velocità pazzesca, ideale per lanciare combo a ripetizione (del Caffè Doppio, del Turbocompressore).
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"STANCHEZZA\", \"quantita\": -2 }"] [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", \"quantita\": 1 }"]{ dell'Energia Pura | dell'Iperattivo | dell'Insonne | della Scossa | della Furia | del Caffè Doppio | dell'Energy Drink | delle Tre Scatole di Red Bull | del Rider all'Ultimo Minuto | del Turbocompressore }
 
-#    [DANNI="[#DANNI?],{ \"tipo\": \"CONTUNDENTE\", \"quantita\": 3 }"]{ del Maglio | della Roccia | del Ciclone | del Macigno | del Gigante | della Badilata | del Matterello | del Cazzotto | della Padellata | della Clava }
-#    [DANNI="[#DANNI?],{ \"tipo\": \"PERFORANTE\", \"quantita\": 3 }"]{ della Zanna | dello Spino | del Pungiglione | della Lancia | della Vespa | del Cavatappi | dello Stuzzicadenti | dello Spillone | della Zanzara | del Chiodo }
-#    [DANNI="[#DANNI?],{ \"tipo\": \"TAGLIENTE\", \"quantita\": 3 }"]{ del Rasoio | della Ghigliottina | della Falce | del Trinciapollo | della Mannaia | del Tagliacarte | dell'Affettatrice | della Lametta | del Gatto | della Forbice }
-    [DANNI="[#DANNI?],{ \"tipo\": \"ARIA\", \"quantita\": 3 }"]{ del Tornado | del Tifone | del Maestrale | della Brezza | del Ciclone | del Ventilatore | dello Sbuffo | del Sospiro | della Ventola }
-    [DANNI="[#DANNI?],{ \"tipo\": \"ACQUA\", \"quantita\": 3 }"]{ dell'Oceano | dell'Abisso | dello Tsunami | della Cascata | del Diluvio | della Pozzanghera | dello Sciacquone | del Gavettone | della Cannella }
-    [DANNI="[#DANNI?],{ \"tipo\": \"TERRA\", \"quantita\": 3 }"]{ del Terremoto | della Montagna | del Cataclisma | del Granito | della Faglia | della Zappa | del Cantiere | della Mattonella | della Talpa | del Mattone }
-    [DANNI="[#DANNI?],{ \"tipo\": \"FUOCO\", \"quantita\": 5 }"]{ del Vulcano | del Drago | dell'Inferno | del Falò | della Fenice | del Barbecue | del Fornello | del Fiammifero | del Drago Sdentato | dello Scottadito }
-    [DANNI="[#DANNI?],{ \"tipo\": \"FULMINE\", \"quantita\": 4 }"]{ della Tempesta | del Fulmine | della Saetta | del Tuono | dell'Atomo | del Cortocircuito | della Dinamo | della Scossa | della Presa Multipla }
-    [DANNI="[#DANNI?],{ \"tipo\": \"GELO\", \"quantita\": 4 }"]{ delle Nevi Eterne | del Ghiacciaio | dell'Artide | della Tormenta | del Criostato | del Frigorifero | del Calippo | del Ghiacciolo | del Cubetto | del Pinguino }
-    [DANNI="[#DANNI?],{ \"tipo\": \"ACIDO\", \"quantita\": 3 }"]{ della Palude | della Corrosione | della Lava | del Solfato | dell'Alchimista | del Sottaceto | dello Sgorgante | del Limone | della Batteria | del Vomito }
-    [DANNI="[#DANNI?],{ \"tipo\": \"VELENO\", \"quantita\": 3 }"]{ della Vipera | del Serpente | del Cobra | del Pesce Pietra | dello Scorpione | del Basilisco | della Viverna | del Ragno | del Wyrm | della Suocera | del Fungo | del Rosicone }
-    [DANNI="[#DANNI?],{ \"tipo\": \"NECROTICO\", \"quantita\": 3 }"]{ del Crepuscolo | della Cripta | del Necromante | della Piaga | della Tomba | dello Zombie | della Puzza di Piedi | del Cadavere | del Lumino | del Fantasma }
-    [DANNI="[#DANNI?],{ \"tipo\": \"SACRO\", \"quantita\": 3 }"]{ dell'Alba | dell'Aurora | del Paradiso | dell'Angelo | del Santo | del Chierichetto | del Campanile | del Miracolo | dei Pii Desideri | della Sagrestia }
-    [DANNI="[#DANNI?],{ \"tipo\": \"PSICHICO\", \"quantita\": 4 }"]{ dell'Illusione | dell'Incubo | della Mente | della Follia | dell'Ipnosi | del Matto | dell'Emicrania | dello Schizzato | dello Svitato }
-    [DANNI="[#DANNI?],{ \"tipo\": \"ARCANO\", \"quantita\": 4 }"]{ dell'Arcano | della Magia | delle Rune | del Portale | del Cosmo | del Mago Zurlì | del Trucchetto Magico | dell'Abracadabra | della Scintillina | del Circo }
-    [DANNI="[#DANNI?],{ \"tipo\": \"VUOTO\", \"quantita\": 4 }"]{ del Vuoto | dell'Eclissi | della Singolarità | dell'Abisso | del Buco Nero | dell'Aria Fritta | del Nulla | dell'Astronauta | del Divano | del Deserto }
-    [DANNI="[#DANNI?],{ \"tipo\": \"MALEDIZIONE\", \"quantita\": 4 }"]{ del Malocchio | della Sventura | della Jella | dell'Infausto | della Condanna | del Gatto Nero | del Venerdì 13 | della Scalogna | del Portasfiga }
+#    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"CONTUNDENTE\", \"quantita\": 3 }"]{ del Maglio | della Roccia | del Ciclone | del Macigno | del Gigante | della Badilata | del Matterello | del Cazzotto | della Padellata | della Clava }
+#    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"PERFORANTE\", \"quantita\": 3 }"]{ della Zanna | dello Spino | del Pungiglione | della Lancia | della Vespa | del Cavatappi | dello Stuzzicadenti | dello Spillone | della Zanzara | del Chiodo }
+#    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"TAGLIENTE\", \"quantita\": 3 }"]{ del Rasoio | della Ghigliottina | della Falce | del Trinciapollo | della Mannaia | del Tagliacarte | dell'Affettatrice | della Lametta | del Gatto | della Forbice }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"ARIA\", \"quantita\": 3 }"]{ del Tornado | del Tifone | del Maestrale | della Brezza | del Ciclone | del Ventilatore | dello Sbuffo | del Sospiro | della Ventola }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"ACQUA\", \"quantita\": 3 }"]{ dell'Oceano | dell'Abisso | dello Tsunami | della Cascata | del Diluvio | della Pozzanghera | dello Sciacquone | del Gavettone | della Cannella }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"TERRA\", \"quantita\": 3 }"]{ del Terremoto | della Montagna | del Cataclisma | del Granito | della Faglia | della Zappa | del Cantiere | della Mattonella | della Talpa | del Mattone }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"FUOCO\", \"quantita\": 5 }"]{ del Vulcano | del Drago | dell'Inferno | del Falò | della Fenice | del Barbecue | del Fornello | del Fiammifero | del Drago Sdentato | dello Scottadito }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"FULMINE\", \"quantita\": 4 }"]{ della Tempesta | del Fulmine | della Saetta | del Tuono | dell'Atomo | del Cortocircuito | della Dinamo | della Scossa | della Presa Multipla }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"GELO\", \"quantita\": 4 }"]{ delle Nevi Eterne | del Ghiacciaio | dell'Artide | della Tormenta | del Criostato | del Frigorifero | del Calippo | del Ghiacciolo | del Cubetto | del Pinguino }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"ACIDO\", \"quantita\": 3 }"]{ della Palude | della Corrosione | della Lava | del Solfato | dell'Alchimista | del Sottaceto | dello Sgorgante | del Limone | della Batteria | del Vomito }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"VELENO\", \"quantita\": 3 }"]{ della Vipera | del Serpente | del Cobra | del Pesce Pietra | dello Scorpione | del Basilisco | della Viverna | del Ragno | del Wyrm | della Suocera | del Fungo | del Rosicone }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"NECROTICO\", \"quantita\": 3 }"]{ del Crepuscolo | della Cripta | del Necromante | della Piaga | della Tomba | dello Zombie | della Puzza di Piedi | del Cadavere | del Lumino | del Fantasma }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"SACRO\", \"quantita\": 3 }"]{ dell'Alba | dell'Aurora | del Paradiso | dell'Angelo | del Santo | del Chierichetto | del Campanile | del Miracolo | dei Pii Desideri | della Sagrestia }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"PSICHICO\", \"quantita\": 4 }"]{ dell'Illusione | dell'Incubo | della Mente | della Follia | dell'Ipnosi | del Matto | dell'Emicrania | dello Schizzato | dello Svitato }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"ARCANO\", \"quantita\": 4 }"]{ dell'Arcano | della Magia | delle Rune | del Portale | del Cosmo | del Mago Zurlì | del Trucchetto Magico | dell'Abracadabra | della Scintillina | del Circo }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"VUOTO\", \"quantita\": 4 }"]{ del Vuoto | dell'Eclissi | della Singolarità | dell'Abisso | del Buco Nero | dell'Aria Fritta | del Nulla | dell'Astronauta | del Divano | del Deserto }
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"MALEDIZIONE\", \"quantita\": 4 }"]{ del Malocchio | della Sventura | della Jella | dell'Infausto | della Condanna | del Gatto Nero | del Venerdì 13 | della Scalogna | del Portasfiga }
 
 ATTRIBUTO_POST_NOME
     Volante
     Rotante con Rinterzo
-    [DANNI="[#DANNI?],{ \"tipo\": \"FULMINE\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Fulminante
-    [DANNI="[#DANNI?],{ \"tipo\": \"FULMINE\", \"quantita\": 5 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Strafulminante
-    [DANNI="[#DANNI?],{ \"tipo\": \"FUOCO\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Carbonizzante
-    [DANNI="[#DANNI?],{ \"tipo\": \"VELENO\", \"quantita\": 5 }"]al Plutonio
-    [DANNI="[#DANNI?],{ \"tipo\": \"VELENO\", \"quantita\": 6 }"]all'Uranio Impoverito
-    [DANNI="[#DANNI?],{ \"tipo\": \"SONICO\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Vibrante
-    [DANNI="[#DANNI?],{ \"tipo\": \"PSICHICO\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Ululante
-    [DANNI="[#DANNI?],{ \"tipo\": \"ACIDO\", \"quantita\": 4 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Corrosiva
-    [DANNI="[#DANNI?],{ \"tipo\": \"SACRO\", \"quantita\": 5 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Purificatrice
-    [DANNI="[#DANNI?],{ \"tipo\": \"NECROTICO\", \"quantita\": 5 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Divoratrice
-    [DANNI="[#DANNI?],{ \"tipo\": \"SANGUINAMENTO\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Dissanguante
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"FULMINE\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Fulminante
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"FULMINE\", \"quantita\": 5 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Strafulminante
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"FUOCO\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Carbonizzante
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"VELENO\", \"quantita\": 5 }"]al Plutonio
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"VELENO\", \"quantita\": 6 }"]all'Uranio Impoverito
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"SONICO\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Vibrante
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"PSICHICO\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Ululante
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"ACIDO\", \"quantita\": 4 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Corrosiva
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"SACRO\", \"quantita\": 5 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Purificatrice
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"NECROTICO\", \"quantita\": 5 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Divoratrice
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"SANGUINAMENTO\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Dissanguante
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FURTIVITA\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Silenziosa
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": 3 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Autoaffilante
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PARATA\", \"quantita\": 1 }"][ATTRIBUTO_POST_NOME_SEPARATORE="e "]Antiruggine
@@ -898,15 +898,15 @@ INCANTESIMI
     [UN_INCANTESIMO] [INCANTESIMI]
 
 UN_INCANTESIMO
-    [DANNI="[#DANNI?],{ \"tipo\": \"ARCANO\", \"quantita\": 2 }"]
-    [DANNI="[#DANNI?],{ \"tipo\": \"GELO\", \"quantita\": 4 }"]
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"ARCANO\", \"quantita\": 2 }"]
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"GELO\", \"quantita\": 4 }"]
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": 2 }"]
-    [DANNI="[#DANNI?],{ \"tipo\": \"SACRO\", \"quantita\": 3 }"]
-    [DANNI="[#DANNI?],{ \"tipo\": \"NECROTICO\", \"quantita\": 3 }"]
-    [DANNI="[#DANNI?],{ \"tipo\": \"ACIDO\", \"quantita\": 2 }"]
-    [DANNI="[#DANNI?],{ \"tipo\": \"PSICHICO\", \"quantita\": 4 }"]
-    [DANNI="[#DANNI?],{ \"tipo\": \"TENEBRA\", \"quantita\": 2 }"]
-    [DANNI="[#DANNI?],{ \"tipo\": \"SONICO\", \"quantita\": 2 }"]
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"SACRO\", \"quantita\": 3 }"]
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"NECROTICO\", \"quantita\": 3 }"]
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"ACIDO\", \"quantita\": 2 }"]
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"PSICHICO\", \"quantita\": 4 }"]
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"TENEBRA\", \"quantita\": 2 }"]
+    [DANNI="[#DANNI?],{ \"tipoVariazione\": \"SONICO\", \"quantita\": 2 }"]
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 2 }"]
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"COSTITUZIONE\", \"quantita\": 2 }"]
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", \"quantita\": 3 }"]

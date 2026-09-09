@@ -395,7 +395,7 @@ LUNGA
 ```
 ### 4.10 Riferimenti con valore di default: `[NOME? | ripiego]`
 
-Un riferimento di qualunque tipo può portare un **valore di ripiego**, scritto dopo il nome
+Un riferimento di qualunque tipoVariazione può portare un **valore di ripiego**, scritto dopo il nome
 come `?` seguito da `|` e dal testo da usare quando il valore non c'è:
 
 ```
@@ -961,7 +961,7 @@ A: [X] [X] -> only [X]
 
 qui `A` aveva già sostituito la prima `[X]` (con `only`) quando la seconda `[X]` ha fallito
 perché `X` era one-shot ed era già stata consumata. L'eccezione rilanciata resta invariata
-(stesso tipo, stesso messaggio): la traccia è solo un aiuto diagnostico nel log.
+(stesso tipoVariazione, stesso messaggio): la traccia è solo un aiuto diagnostico nel log.
 
 ### Altri errori
 

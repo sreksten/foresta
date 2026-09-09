@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -244,6 +245,28 @@ public class Eremita extends PersonaggioBase implements Personaggio {
 	@Override
 	public String getNoteMoltiplicatoreRecuperoFisico() {
 		return Costanti.EREMITA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA;
+	}
+
+	@Override
+	public double getMaxStatistica(TipoAttributo tipoAttributo) {
+		switch (tipoAttributo) {
+			case FORZA:
+				return Costanti.EREMITA_MAX_FORZA;
+			case DESTREZZA:
+				return Costanti.EREMITA_MAX_DESTREZZA;
+			case COSTITUZIONE:
+				return Costanti.EREMITA_MAX_COSTITUZIONE;
+			case INTELLIGENZA:
+				return Costanti.EREMITA_MAX_INTELLIGENZA;
+			case SAGGEZZA:
+				return Costanti.EREMITA_MAX_SAGGEZZA;
+			case CARISMA:
+				return Costanti.EREMITA_MAX_CARISMA;
+			case FORTUNA:
+				return Costanti.EREMITA_MAX_FORTUNA;
+			default:
+				throw new IllegalArgumentException(tipoAttributo + " non è un tipo primario");
+		}
 	}
 
 	@Override

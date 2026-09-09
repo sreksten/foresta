@@ -4,10 +4,7 @@ import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.OggettoConArticoli;
-import com.threeamigos.foresta.motore.modellodati.EffettoDiStato;
-import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
-import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
+import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 
@@ -132,7 +129,7 @@ public interface Personaggio extends OggettoConArticoli {
 	 */
     void resuscita();
 	/**
-	 * Aggiunge salute a un personaggio (non puo' superare la salute massima)
+	 * Aggiunge salute a un personaggio (non può superare la salute massima)
 	 */
     void addSalute(int quantita);
 	/**
@@ -169,22 +166,6 @@ public interface Personaggio extends OggettoConArticoli {
 	 */
     int getModificaDanniMagia(int danniBase);
 	/**
-	 * Aumenta il coraggio di un personaggio fino a 99
-	 */
-    void addCoraggio(int quantita);
-	/**
-	 * Diminuisce il coraggio di un personaggio fino a 0
-	 */
-    void subCoraggio(int quantita);
-	/**
-	 * Aumenta il valore di un personaggio fino a 99
-	 */
-    void addValore(int quantita);
-	/**
-	 * Diminuisce il valore di un personaggio fino a 0
-	 */
-    void subValore(int quantita);
-	/**
 	 * Aumenta la stanchezza di un personaggio fino a 9
 	 */
     void addStanchezza(int quantita);
@@ -196,10 +177,6 @@ public interface Personaggio extends OggettoConArticoli {
 	 * Aumenta il carisma di un personaggio
 	 */
     void addCarisma(int quantita);
-	/**
-	 * Diminuisce il carisma di un personaggio fino a 0
-	 */
-    void subCarisma(int quantita);
 	/**
 	 * Quanti avversari può impegnare un personaggio in combattimento
 	 * (combatte con uno ma impedisce agli altri di formulare incantesimi, oppure cerca di colpire con un
@@ -476,7 +453,7 @@ public interface Personaggio extends OggettoConArticoli {
 	/**
 	 * Rimuove un effetto di stato dal personaggio
 	 */
-    void removeEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato);
+    void rimuoviTuttiEffettiDiStato(TipoEffettoDiStato tipoEffettoDiStato);
 
 	// Artefatti
 
@@ -576,5 +553,7 @@ public interface Personaggio extends OggettoConArticoli {
 	double getMoltiplicatoreRecuperoFisico();
 
 	String getNoteMoltiplicatoreRecuperoFisico();
+
+	double getMaxStatistica(TipoAttributo tipoAttributo);
 
 }

@@ -137,30 +137,8 @@ public interface InterfacciaUtente {
 	 */
     void infoCombattimento(boolean mostra, Personaggio combattente, Personaggio avversario);
 
-	void notificaMorte(Personaggio personaggio);
-
 	void notificaMissione(String etichetta, String nomeMissione);
-	
-	void variaSalute(Personaggio personaggio, int variazione);
-	
-	void variaSaluteMassima(Personaggio personaggio, int variazione);
-	
-	void variaMagia(Personaggio personaggio, int variazione);
-	
-	void variaMagiaMassima(Personaggio personaggio, int variazione);
 
-	void variaLivello(Personaggio personaggio, int variazione);
-
-	void variaCoraggio(Personaggio personaggio, int variazione);
-	
-	void variaValore(Personaggio personaggio, int variazione);
-	
-	void variaCarisma(Personaggio personaggio, int variazione);
-	
-	void variaStanchezza(Personaggio personaggio, int variazione);
-
-	void variaTempo(Personaggio personaggio, int variazione);
-	
 	void variaGemme(int variazione);
 
 	void variaMonete(int variazione);

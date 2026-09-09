@@ -7,22 +7,29 @@ import com.threeamigos.foresta.personaggi.Personaggio;
  *
  * @author Stefano Reksten
  */
-public class EventoVariazioneStatistichePersonaggio extends EventoPersonaggio{
+public class EventoVariazioneStatistichePersonaggio extends EventoPersonaggio {
 
     private final TipoAttributo tipoAttributo;
-    private final int variazione;
+    private final double valorePrecedente;
+    private final double nuovoValore;
 
-    public EventoVariazioneStatistichePersonaggio(Personaggio personaggio, TipoAttributo tipoAttributo, int variazione) {
-        super(personaggio);
+    public EventoVariazioneStatistichePersonaggio(Personaggio personaggio, TipoAttributo tipoAttributo,
+                                                  double valorePrecedente, double nuovoValore) {
+        super(TipoEvento.PERSONAGGIO_VARIAZIONE_STATISTICHE, personaggio);
         this.tipoAttributo = tipoAttributo;
-        this.variazione = variazione;
+        this.valorePrecedente = valorePrecedente;
+        this.nuovoValore = nuovoValore;
     }
 
     public TipoAttributo getTipoAttributo() {
         return tipoAttributo;
     }
 
-    public int getVariazione() {
-        return variazione;
+    public double getValorePrecedente() {
+        return valorePrecedente;
+    }
+
+    public double getNuovoValore() {
+        return nuovoValore;
     }
 }

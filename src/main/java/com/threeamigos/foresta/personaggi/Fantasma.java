@@ -2,6 +2,7 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -241,6 +242,28 @@ public class Fantasma extends PersonaggioBase implements Personaggio {
 	@Override
 	public String getNoteMoltiplicatoreRecuperoFisico() {
 		return Costanti.FANTASMA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA;
+	}
+
+	@Override
+	public double getMaxStatistica(TipoAttributo tipoAttributo) {
+		switch (tipoAttributo) {
+			case FORZA:
+				return Costanti.FANTASMA_MAX_FORZA;
+			case DESTREZZA:
+				return Costanti.FANTASMA_MAX_DESTREZZA;
+			case COSTITUZIONE:
+				return Costanti.FANTASMA_MAX_COSTITUZIONE;
+			case INTELLIGENZA:
+				return Costanti.FANTASMA_MAX_INTELLIGENZA;
+			case SAGGEZZA:
+				return Costanti.FANTASMA_MAX_SAGGEZZA;
+			case CARISMA:
+				return Costanti.FANTASMA_MAX_CARISMA;
+			case FORTUNA:
+				return Costanti.FANTASMA_MAX_FORTUNA;
+			default:
+				throw new IllegalArgumentException(tipoAttributo + " non è un tipo primario");
+		}
 	}
 
 	@Override

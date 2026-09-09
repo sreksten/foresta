@@ -1,0 +1,21 @@
+package com.threeamigos.foresta.eventi;
+
+/**
+ *
+ * @author Stefano Reksten
+ */
+public enum TipoEvento {
+
+    MESSAGGIO,
+
+    PERSONAGGIO_CREAZIONE,
+    PERSONAGGIO_VARIAZIONE_STATO_VITALE,
+    PERSONAGGIO_VARIAZIONE_STATISTICHE,
+    PERSONAGGIO_VARIAZIONE_EFFETTO_DI_STATO,
+    PERSONAGGIO_AGGIUNTA_MODIFICATORE,
+
+    /**
+     * Un PNG prende una decisione
+     */
+    PERSONAGGIO_VALUTAZIONE
+}

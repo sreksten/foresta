@@ -1,5 +1,6 @@
 package com.threeamigos.foresta;
 
+import com.threeamigos.foresta.eventi.SnifferBusEventi;
 import com.threeamigos.foresta.motore.Automa;
 import com.threeamigos.foresta.motore.Gioco;
 import com.threeamigos.foresta.tools.*;
@@ -26,6 +27,7 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 		leggiArgomenti(args);
+		new SnifferBusEventi();
 		GestorePunteggi.impostaGestorePunteggi(new GestorePunteggiSuFile());
 		GestoreSalvataggi.impostaGestoreSalvataggi(new GestoreSalvataggiSuFile());
 		Gioco.impostaParametri(new TemporizzatoreJ2SE(), new Automa());

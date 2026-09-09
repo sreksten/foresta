@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -247,5 +248,27 @@ public class Guerriera extends PersonaggioBase implements Personaggio {
 	@Override
 	public String getNoteMoltiplicatoreRecuperoFisico() {
 		return Costanti.GUERRIERA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA;
+	}
+
+	@Override
+	public double getMaxStatistica(TipoAttributo tipoAttributo) {
+		switch (tipoAttributo) {
+			case FORZA:
+				return Costanti.GUERRIERA_MAX_FORZA;
+			case DESTREZZA:
+				return Costanti.GUERRIERA_MAX_DESTREZZA;
+			case COSTITUZIONE:
+				return Costanti.GUERRIERA_MAX_COSTITUZIONE;
+			case INTELLIGENZA:
+				return Costanti.GUERRIERA_MAX_INTELLIGENZA;
+			case SAGGEZZA:
+				return Costanti.GUERRIERA_MAX_SAGGEZZA;
+			case CARISMA:
+				return Costanti.GUERRIERA_MAX_CARISMA;
+			case FORTUNA:
+				return Costanti.GUERRIERA_MAX_FORTUNA;
+			default:
+				throw new IllegalArgumentException(tipoAttributo + " non è un tipo primario");
+		}
 	}
 }

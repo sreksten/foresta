@@ -1,17 +1,17 @@
 package com.threeamigos.foresta.eventi;
 
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.personaggi.PersonaggioBase;
 
 /**
  *
  * @author Stefano Reksten
  */
-public class EventoPersonaggio extends EventoBase {
+abstract class EventoPersonaggio extends EventoBase {
 
-    private final Personaggio personaggio;
+    protected final Personaggio personaggio;
 
-    protected EventoPersonaggio(Personaggio personaggio) {
+    protected EventoPersonaggio(TipoEvento tipoEvento, Personaggio personaggio) {
+        super(tipoEvento);
         this.personaggio = personaggio;
     }
 

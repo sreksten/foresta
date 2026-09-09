@@ -21,6 +21,11 @@ public class PersonaggioMD implements Serializzabile {
 	public static final int SENZA_LIMITE = -1;
 
 	/**
+	 * Un identificativo unico per il personaggio
+	 */
+	private String uuid = UUID.randomUUID().toString();
+
+	/**
 	 * Classe del personaggio (Mago, Arpia, etc.)
 	 */
 	private ClassePersonaggio classe;
@@ -54,7 +59,7 @@ public class PersonaggioMD implements Serializzabile {
 	 * Tempo rimanente prima che il personaggio lasci il gruppo (per i personaggi amichevoli che si offrono di
 	 * accompagnare il gruppo)
 	 */
-	private int tempo = SENZA_LIMITE;
+	private final int tempoZ = SENZA_LIMITE;
 
 	/**
 	 * Valori minimi per un dato attributo - solitamente non presenti
@@ -80,6 +85,10 @@ public class PersonaggioMD implements Serializzabile {
 	 * Artefatti posseduti dal personaggio
 	 */
 	private Collection<ArtefattoMD> artefatti = new ArrayList<>();
+
+	public String getUuid() {
+		return uuid;
+	}
 
 	public ClassePersonaggio getClasse() {
 		return classe;
@@ -186,10 +195,6 @@ public class PersonaggioMD implements Serializzabile {
 			throw new IllegalStateException("TipoAttributo " + tipo + " non presente");
 		}
 		return valoriAttributi.get(tipo);
-	}
-
-	public void setCaricoMassimo(double caricoMassimo) {
-		setMassimo(TipoAttributo.CARICO_MASSIMO, caricoMassimo);
 	}
 
 	public int getCaricoMassimo() {
@@ -556,14 +561,6 @@ public class PersonaggioMD implements Serializzabile {
 		this.causaTrapasso = causaTrapasso;
 	}
 
-	public int getTempo() {
-		return tempo;
-	}
-
-	public void setTempo(int tempo) {
-		this.tempo = tempo;
-	}
-
 	public Collection<EffettoDiStato> getEffettiDiStato() {
 		return effettiDiStato;
 	}
@@ -590,6 +587,8 @@ public class PersonaggioMD implements Serializzabile {
 
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
+		stream.print(uuid);
+		stream.print(PIPE);
 		stream.print(classe.name());
 		stream.print(PIPE);
 		stream.print(nome);
@@ -601,8 +600,6 @@ public class PersonaggioMD implements Serializzabile {
 		stream.print(esperienza);
 		stream.print(PIPE);
 		stream.print(puntiAbilitaDisponibili);
-		stream.print(PIPE);
-		stream.print(tempo);
 		stream.print(PIPE);
 		stream.print(artefatti.size());
 		stream.println();
@@ -622,6 +619,8 @@ public class PersonaggioMD implements Serializzabile {
 	public void leggi(BufferedReader stream) throws IOException{
 		String line = stream.readLine();
 		StringTokenizer st = new StringTokenizer(line, PIPE);
+
+		uuid = st.nextToken();
 		classe = ClassePersonaggio.valueOf(st.nextToken());
 		nome = st.nextToken();
 		if ("null".equals(nome)) {
@@ -638,7 +637,6 @@ public class PersonaggioMD implements Serializzabile {
 		livello = Integer.parseInt(st.nextToken());
 		esperienza = Integer.parseInt(st.nextToken());
 		puntiAbilitaDisponibili = Integer.parseInt(st.nextToken());
-		tempo = Integer.parseInt(st.nextToken());
 		int numeroArtefatti = Integer.parseInt(st.nextToken());
 
 		impostaValori(valoriMinimi, stream.readLine());
