@@ -363,7 +363,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			boolean colpisce = CalcolatoreCombattimento.colpisce(this, bersaglio, SupertipoDanno.FISICO);
 			if (colpisce) {
 				Arma arma = getArmaEquipaggiata();
-                RisultatoCombattimento risultato = CalcolatoreCombattimento.calcolaDannoFinale(this, bersaglio, arma);
+                DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(this, bersaglio, arma);
 				Logger.log("Con nuovo motore colpirebbe assegnando " + risultato.getDanno() + " danni");
 			} else {
 				Logger.log("Con nuovo motore " + getNome() + " non colpisce " + bersaglio.getNome());
@@ -372,7 +372,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public void applicaRisultatoCombattimento(RisultatoCombattimento risultato) {
+	public void applicaRisultatoCombattimento(DannoRisultante risultato) {
 		subSalute(risultato.getDanno(), risultato.getAttaccante(), Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
 		for (EffettoDiStato effetto : risultato.getEffettiDiStatoDaAggiungere()) {
 			addEffettoDiStato(effetto.getTipoEffettoDiStato(), effetto.getValore());
@@ -452,10 +452,10 @@ public abstract class PersonaggioBase implements Personaggio {
 		int probabilitaDiColpireFisico = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(
 				this, personaggioBersaglio, SupertipoDanno.FISICO);
 
-		int possibiliDanniMagici = CalcolatoreCombattimento.calcolaDannoFinale(this, personaggioBersaglio, piuPotente).getDanno();
+		int possibiliDanniMagici = CalcolatoreCombattimento.calcolaDannoRisultante(this, personaggioBersaglio, piuPotente).getDanno();
 
         Arma arma = getArmaEquipaggiata();
-		int possibiliDanniFisici = CalcolatoreCombattimento.calcolaDannoFinale(this, personaggioBersaglio, arma).getDanno();
+		int possibiliDanniFisici = CalcolatoreCombattimento.calcolaDannoRisultante(this, personaggioBersaglio, arma).getDanno();
 
 		if (probabilitaDiColpireMagico * possibiliDanniMagici > probabilitaDiColpireFisico * possibiliDanniFisici) {
 			BusEventi.pubblica(new EventoValutazioneAttaccante(this, personaggioBersaglio,

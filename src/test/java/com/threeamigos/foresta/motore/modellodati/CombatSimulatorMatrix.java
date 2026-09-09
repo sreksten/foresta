@@ -3,7 +3,7 @@ package com.threeamigos.foresta.motore.modellodati;
 import com.threeamigos.foresta.motore.Arma;
 import com.threeamigos.foresta.motore.ArmaNaturale;
 import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
-import com.threeamigos.foresta.motore.RisultatoCombattimento;
+import com.threeamigos.foresta.motore.DannoRisultante;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Personaggio.NotificaMorte;
@@ -111,7 +111,7 @@ public class CombatSimulatorMatrix {
         if (CalcolatoreCombattimento.colpisce(attaccante, difensore, superTipoDanno)) {
             statistiche.colpiti++;
 
-            RisultatoCombattimento risultato = CalcolatoreCombattimento.calcolaDannoFinale(attaccante, difensore, arma);
+            DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, difensore, arma);
 
             statistiche.dannoTotale += risultato.getDanno();
             difensore.subSalute(risultato.getDanno(), attaccante, Personaggio.NotificaFerite.NO, NotificaMorte.NO);

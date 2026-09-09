@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.eventi;
 
-import com.threeamigos.foresta.motore.RisultatoCombattimento;
+import com.threeamigos.foresta.motore.DannoRisultante;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.stream.Collectors;
@@ -12,15 +12,15 @@ import java.util.stream.Collectors;
 public class EventoCombattimento extends EventoPersonaggio {
 
     private final Personaggio bersaglio;
-    private final RisultatoCombattimento risultato;
+    private final DannoRisultante risultato;
 
-    public EventoCombattimento(Personaggio personaggio, Personaggio bersaglio, RisultatoCombattimento risultato) {
+    public EventoCombattimento(Personaggio personaggio, Personaggio bersaglio, DannoRisultante risultato) {
         super(TipoEvento.PERSONAGGIO_COMBATTIMENTO, personaggio);
         this.bersaglio = bersaglio;
         this.risultato = risultato;
     }
 
-    public RisultatoCombattimento getRisultato() {
+    public DannoRisultante getRisultato() {
         return risultato;
     }
 

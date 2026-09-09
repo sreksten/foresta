@@ -797,7 +797,7 @@ public abstract class LocazioneBase implements Locazione {
 			Arma arma = combattente.getArmaEquipaggiata();
 			boolean colpisce = CalcolatoreCombattimento.colpisce(combattente, bersaglio, arma.getTipoDanno().getSuperTipo());
 			if (colpisce) {
-				RisultatoCombattimento risultato = CalcolatoreCombattimento.calcolaDannoFinale(combattente, bersaglio, arma);
+				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(combattente, bersaglio, arma);
 				bersaglio.subSalute(risultato.getDanno(), combattente, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
 				if (!bersaglio.isVivo()) {
 					if (GruppoGiocatore.getIstanza().contiene(combattente)) {
@@ -826,7 +826,7 @@ public abstract class LocazioneBase implements Locazione {
 			arma = bersaglio.getArmaEquipaggiata();
 			colpisce = CalcolatoreCombattimento.colpisce(bersaglio, combattente, arma.getTipoDanno().getSuperTipo());
 			if (colpisce) {
-				RisultatoCombattimento risultato = CalcolatoreCombattimento.calcolaDannoFinale(bersaglio, combattente, arma);
+				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(bersaglio, combattente, arma);
 				combattente.subSalute(risultato.getDanno(), bersaglio, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
 				if (!combattente.isVivo()) {
 					if (gruppo.getCapo().isVivo()) {

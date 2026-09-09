@@ -13,7 +13,7 @@ import java.util.Collection;
  *
  * @author Stefano Reksten
  */
-public class RisultatoCombattimento {
+public class DannoRisultante {
 
     private final Personaggio attaccante;
     private final Personaggio difensore;
@@ -24,7 +24,7 @@ public class RisultatoCombattimento {
     private final Collection<TipoEffettoDiStato> effettiDiStatoDaRimuovere = new ArrayList<>();
     private boolean colpoDiGrazia = false;
 
-    public RisultatoCombattimento(Personaggio attaccante, Personaggio bersaglio) {
+    public DannoRisultante(Personaggio attaccante, Personaggio bersaglio) {
         this.attaccante = attaccante;
         this.difensore = bersaglio;
     }

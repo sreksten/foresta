@@ -428,7 +428,7 @@ public interface Personaggio extends OggettoConArticoli {
 
 	// Modificatori di stato
 
-	void applicaRisultatoCombattimento(RisultatoCombattimento risultato);
+	void applicaRisultatoCombattimento(DannoRisultante risultato);
 
 	/**
 	 * Effetti di stato attivi sul personaggio
