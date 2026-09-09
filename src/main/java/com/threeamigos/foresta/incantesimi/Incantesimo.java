@@ -20,9 +20,9 @@ public interface Incantesimo {
 	 * Formula un incantesimo su un bersaglio
 	 * @param formulante il personaggio che formula l'incantesimo
 	 * @param personaggioBersaglio il personaggio su cui viene formulato l'incantesimo,
-	 *        può essere null
+	 *        può essere null se la portata è GRUPPO o GLOBALE
 	 * @param gruppoBersaglio il gruppo su cui viene formulato l'incantesimo,
-	 *        può essere null
+	 *        può essere null se la portata è GLOBALE
 	 */
     void formula(Personaggio formulante, Personaggio personaggioBersaglio, Gruppo gruppoBersaglio);
 
