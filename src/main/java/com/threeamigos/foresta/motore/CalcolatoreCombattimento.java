@@ -12,6 +12,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
  */
 public class CalcolatoreCombattimento {
 
+
     public static int calcolaProbabilitaDiColpire(Personaggio attaccante, Personaggio difensore, SupertipoDanno tipoDanno) {
 
         // 0. CONTROLLO EFFETTI DI STATO CHE DETERMINANO AUTOMATICAMENTE LA RIUSCITA
@@ -194,7 +195,7 @@ public class CalcolatoreCombattimento {
                 dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.ELETTROCUZIONE);
             } else if (tipoDanno == TipoDanno.GELO) {
                 dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BAGNATO);
-                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.CONGELATO, 1);
+                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.CONGELATO, calcolaDurataStato(difensore, TipoEffettoDiStato.CONGELATO));
                 dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.CONGELAMENTO);
             } else if (tipoDanno == TipoDanno.FUOCO) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 0.5d;
@@ -205,18 +206,21 @@ public class CalcolatoreCombattimento {
 
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.BRUCIATO)) {
             Logger.log("difensore ha stato BRUCIATO");
-            if (tipoDanno == TipoDanno.ACQUA) {
+            if (tipoDanno == TipoDanno.ARIA) {
+                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
+                dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.ALIMENTAZIONE_FIAMMA);
+            } else if (tipoDanno == TipoDanno.ACQUA) {
                 dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BRUCIATO);
                 dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.ESTINZIONE);
             } else if (tipoDanno == TipoDanno.GELO) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
                 dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BRUCIATO);
-                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.BAGNATO, 1);
+                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.BAGNATO, calcolaDurataStato(difensore, TipoEffettoDiStato.BAGNATO));
                 dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.SCIOGLIMENTO_TERMICO);
             } else if (tipoDanno == TipoDanno.VELENO) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d; // Esplosione di gas
                 dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BRUCIATO);
-                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.AVVELENATO, 1);
+                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.AVVELENATO, calcolaDurataStato(difensore, TipoEffettoDiStato.AVVELENATO));
                 dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.ESPLOSIONE_DI_GAS);
             }
         }
@@ -233,7 +237,12 @@ public class CalcolatoreCombattimento {
                 dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.DISGELO_VIOLENTO);
             } else if (tipoDanno.getSuperTipo() == SupertipoDanno.FISICO) {
                 statDifensiva = statDifensiva * 1.5d; // Il guscio di ghiaccio fa da scudo ai colpi di lama/punta
+            } else if (tipoDanno == TipoDanno.FULMINE) {
+                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d;
+                statDifensiva = statDifensiva * 0.7d;
+                dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.SUPERCONDUZIONE);
             }
+
         }
 
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.MALEDETTO)) {
@@ -314,9 +323,7 @@ public class CalcolatoreCombattimento {
                 TipoEffettoDiStato effettoDiStato = tipoDanno.getTipoEffettoDiStatoCasuale();
                 Logger.log("Stato nativo applicato: " + effettoDiStato);
 
-                if (!difensore.hasEffettoDiStato(effettoDiStato)) {
-                    dannoRisultante.addEffettoDiStato(effettoDiStato, 1);
-                }
+                dannoRisultante.addEffettoDiStato(effettoDiStato, calcolaDurataStato(difensore, effettoDiStato));
             } else {
                 Logger.log("Stato nativo non applicato");
             }
@@ -327,5 +334,89 @@ public class CalcolatoreCombattimento {
         }
 
         return dannoRisultante;
+    }
+
+    private static int calcolaDurataStato(Personaggio difensore, TipoEffettoDiStato stato) {
+        // Gestione immediata dell'unico stato a 1 turno fisso (Azione per rialzarsi)
+        if (stato == TipoEffettoDiStato.ATTERRATO) {
+            return 1;
+        }
+
+        // Lo stato speciale BERSERK non ha turni, termina al cambio mappa
+        if (stato == TipoEffettoDiStato.BERSERK) {
+            return 1;
+        }
+
+        int durataBase;
+        int riduzione = 0;
+
+        // BIVIO LOGICO DI BILANCIAMENTO GENERALE
+        switch (stato) {
+
+            case STORDITO:
+                // --- CATEGORIA: TRAUMA FISICO (Base 2 turni, contrasta COSTITUZIONE) ---
+                durataBase = 2;
+                riduzione = (int) Math.floor(Math.sqrt(difensore.getCostituzione()) / 3.0d);
+                break;
+
+            case CONGELATO:
+                // --- CATEGORIA: BLOCCO MISTICO (Base 3 turni, contrasta SAGGEZZA) ---
+                durataBase = 3;
+                riduzione = (int) Math.floor(Math.sqrt(difensore.getSaggezza()) / 3.0d);
+                break;
+
+            case RALLENTATO:
+                // --- CATEGORIA: INTRALCIO MOTORIO (Base 3 turni, contrasta DESTREZZA) ---
+                durataBase = 3;
+                riduzione = (int) Math.floor(Math.sqrt(difensore.getDestrezza()) / 3.0d);
+                break;
+
+            case IMMOBILIZZATO:
+                // --- CATEGORIA: MORSA FISICA/TERRESTRE (Base 3 turni, contrasta FORZA) ---
+                durataBase = 3;
+                riduzione = (int) Math.floor(Math.sqrt(difensore.getForza()) / 3.0d);
+                break;
+
+            case SPAVENTATO:
+                // --- CATEGORIA: ATTACCO AL MORALE (Base 3 turni, contrasta CORAGGIO secondario) ---
+                durataBase = 3;
+                // Moltiplichiamo il moltiplicatore di Coraggio * 10 per portarlo sulla stessa scala degli attributi primari
+                riduzione = (int) Math.floor(Math.sqrt(difensore.getCoraggio() * 10.0d) / 3.0d);
+                break;
+
+            case SANGUINAMENTO:
+            case AVVELENATO:
+            case INFETTATO:
+                // --- CATEGORIA: TOSSINE E DEGENERAZIONI ORGANICHE (Base 4 turni, contrasta COSTITUZIONE) ---
+                durataBase = 4;
+                riduzione = (int) Math.floor(Math.sqrt(difensore.getCostituzione()) / 3.0d);
+                break;
+
+            case BRUCIATO:
+                // --- CATEGORIA: INCENDIO ELEMENTALE (Base 4 turni, contrasta SAGGEZZA/Controllo Energetico) ---
+                durataBase = 4;
+                riduzione = (int) Math.floor(Math.sqrt(difensore.getSaggezza()) / 3.0d);
+                break;
+
+            case CONFUSO:
+            case ACCECATO:
+            case ASSORDATO:
+            case SILENZIATO:
+            case MALEDETTO:
+            case BAGNATO:
+            default:
+                // --- CATEGORIA: DEBILITAZIONI MENTALI E SENSORIALI BASE (Base 3 turni, contrasta SAGGEZZA) ---
+                durataBase = 3;
+                riduzione = (int) Math.floor(Math.sqrt(difensore.getSaggezza()) / 3.0d);
+                break;
+        }
+
+        // CALCOLO FINALE E COMPUTAZIONE DEI LIMITI (CAP)
+        int durataFinale = durataBase - riduzione;
+
+        // BINDAGGIO ANTIPANICO: Qualsiasi stato applicato con successo deve durare
+        // almeno 1 turno (il turno corrente in cui viene consumato/subito)
+        // e non può mai superare la sua durata base naturale per evitare il perma-block.
+        return Math.max(1, Math.min(durataBase, durataFinale));
     }
 }
