@@ -197,6 +197,11 @@ public class PersonaggioMD implements Serializzabile {
 		return valoriAttributi.get(tipo);
 	}
 
+	// Piccola eccezione, TEMPO non è detto che ci sia.
+	public Optional<Double> getOptional(TipoAttributo tipo) {
+		return Optional.ofNullable(valoriAttributi.get(tipo));
+	}
+
 	public int getCaricoMassimo() {
 		return (int)get(TipoAttributo.CARICO_MASSIMO);
 	}
