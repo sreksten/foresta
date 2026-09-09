@@ -353,9 +353,17 @@ COGNOME_STOPPIONI
     Stoppioni | Scoppioni | Scorpioni | Scarponi
 
 NOME_PROTAGONISTA
-	Fabrizio | Ottavio | Ottaviano | Learco | Telemaco | Ulisse | Romualdo
+	Fabrizio | Ottavio | Ottaviano | Learco | Telemaco | Ulisse | Romualdo | Aurelio | Aureliano | Tedaldo
+	Aniceto | Aristofane | Asdrubale | Baldomero | Bonaventura | Crisostomo | Cuniberto | Dagoberto | Ermenegildo
+	Eustachio | Filiberto | Gaudenzio | Leocadio | Ninfidio | Odorico | Pancrazio | Pantaleone | Pellegrino
+	Teodorico | Teodolindo | Tristano | Valeriano | Zaccaria
 COGNOME_PROTAGONISTA
-	Sganga | Panzeri | Sbrodoloni | Sgangheroni | Sbrindelloni
+	Sganga | Panzeri | Sbrodoloni | Sgangheroni | Sbrindelloni | Pupazzi
+    Barbagianni | Bellimbusti | Bertucca Boccaloni | Capocotta | Carciofani | Cataratta | Cazzabubboli
+    Chiappalepri | Ciarlatano | Ciafardoni | Girelloni | Inciampati | Mangiapasta | Maremmani | Masticabrodo
+    Paciocchi | Pannoloni | Pantofolai | Paparazzi | Pappalardo | Patatracchi | Pasticciotti | Pizzicagnoli
+    Sbrindellati | Schiaccianoci | Sciancati | Scorramani | Smandrappati | Spaccatutto | Sparafrasche | Strambelli
+    Stropicciati | Tagliabrodo | Zampalesta
 
 SOPRANNOME_PROTAGONISTA
 	lo sventrapapere | il torvo | il losco | il Porco Gordo | il Massimo Fattore | il furtivendolo
