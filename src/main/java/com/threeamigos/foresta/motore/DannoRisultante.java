@@ -61,8 +61,8 @@ public class DannoRisultante {
         return interazioniElementali;
     }
 
-    public void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int valore) {
-        effettiDiStatoDaAggiungere.add(new EffettoDiStato(tipoEffettoDiStato, valore));
+    public void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int durata, int danniNelTempo) {
+        effettiDiStatoDaAggiungere.add(new EffettoDiStato(tipoEffettoDiStato, durata, danniNelTempo));
     }
 
     public Collection<EffettoDiStato> getEffettiDiStatoDaAggiungere() {

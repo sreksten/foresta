@@ -613,7 +613,7 @@ public class PersonaggioMD implements Serializzabile {
 		stream.println(valoriMassimi.entrySet().stream().map(e -> e.getKey().name() + MappaProprieta.SEPARATORE + e.getValue()).collect(Collectors.joining(PIPE)));
 		stream.println(valoriAttributi.entrySet().stream().map(e -> e.getKey().name() + MappaProprieta.SEPARATORE + e.getValue()).collect(Collectors.joining(PIPE)));
 		stream.println(modificatori.stream().map(m -> m.getTipoAttributo().name() + MappaProprieta.SEPARATORE + m.getTipoModificatoreAttributo().name() + MappaProprieta.SEPARATORE + m.getQuantita() + MappaProprieta.SEPARATORE + m.getNote()).collect(Collectors.joining(PIPE)));
-		stream.println(effettiDiStato.stream().map(e -> e.getTipoEffettoDiStato().name() + MappaProprieta.SEPARATORE + e.getValore()).collect(Collectors.joining(PIPE)));
+		stream.println(effettiDiStato.stream().map(e -> e.getTipoEffettoDiStato().name() + MappaProprieta.SEPARATORE + e.getDurata() + MappaProprieta.SEPARATORE + e.getDanniNelTempo()).collect(Collectors.joining(PIPE)));
 
 		for (ArtefattoMD artefatto : artefatti) {
 			artefatto.salva(stream);
@@ -664,7 +664,8 @@ public class PersonaggioMD implements Serializzabile {
 		effettiDiStato.clear();
 		while (st.hasMoreTokens()) {
 			String[] attributoValore = st.nextToken().split(MappaProprieta.SEPARATORE);
-			EffettoDiStato effettoDiStato = new EffettoDiStato(TipoEffettoDiStato.valueOf(attributoValore[0]), Integer.parseInt(attributoValore[1]));
+			EffettoDiStato effettoDiStato = new EffettoDiStato(TipoEffettoDiStato.valueOf(attributoValore[0]),
+					Integer.parseInt(attributoValore[1]), Integer.parseInt(attributoValore[2]));
 			effettiDiStato.add(effettoDiStato);
 		}
 

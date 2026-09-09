@@ -248,6 +248,7 @@ public class Automa implements ControlloreDiGioco {
 					}
 				}
 				gruppoAvversario.reimposta();
+				gruppo.getPersonaggiVivi().forEach(Personaggio::rimuoviTuttiGliEffettiDiStato);
 				locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
 				gruppo.setLocazioneCorrente(locazioneCorrente);
 				UI.notifica("");

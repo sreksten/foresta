@@ -438,7 +438,7 @@ public interface Personaggio extends OggettoConArticoli {
 	/**
 	 * Aggiunge un effetto di stato al personaggio
 	 */
-    void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int valore);
+    void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int durata, int danniNelTempo);
 
 	/**
 	 * Verifica se un personaggio ha un effetto di stato
@@ -446,14 +446,29 @@ public interface Personaggio extends OggettoConArticoli {
     boolean hasEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato);
 
 	/**
+	 * Applica danni da effeti di stato tipo sanguinamento
+	 */
+	void applicaDanniDaEffettiDiStato();
+
+	/**
+	 * Riduce la durata di un effetto di stato
+	 */
+	void riduciEffettiDiStato();
+
+	/**
 	 * Restituisce il valore di un effetto di stato
 	 */
     int getQuantitaEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato);
 
 	/**
+	 * Rimuove tutti gli effetti di stato da un personaggio
+	 */
+	void rimuoviTuttiGliEffettiDiStato();
+
+	/**
 	 * Rimuove un effetto di stato dal personaggio
 	 */
-    void rimuoviTuttiEffettiDiStato(TipoEffettoDiStato tipoEffettoDiStato);
+    void rimuoviEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato);
 
 	// Artefatti
 

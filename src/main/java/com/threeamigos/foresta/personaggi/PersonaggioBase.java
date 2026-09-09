@@ -375,10 +375,10 @@ public abstract class PersonaggioBase implements Personaggio {
 	public void applicaRisultatoCombattimento(DannoRisultante risultato) {
 		subSalute(risultato.getDanno(), risultato.getAttaccante(), Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
 		for (EffettoDiStato effetto : risultato.getEffettiDiStatoDaAggiungere()) {
-			addEffettoDiStato(effetto.getTipoEffettoDiStato(), effetto.getValore());
+			addEffettoDiStato(effetto.getTipoEffettoDiStato(), effetto.getDurata(), effetto.getDanniNelTempo());
 		}
 		for (TipoEffettoDiStato tipoEffettoDiStato: risultato.getEffettiDiStatoDaRimuovere()) {
-			rimuoviTuttiEffettiDiStato(tipoEffettoDiStato);
+			rimuoviEffettoDiStato(tipoEffettoDiStato);
 		}
 		for (TipoInterazioneElementale interazione : risultato.getInterazioniElementali()) {
 			BusEventi.pubblica(new EventoInterazioneElementale(this, interazione));
@@ -471,7 +471,8 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public boolean isATempo() {
-		return md.get(TipoAttributo.TEMPO) != PersonaggioMD.SENZA_LIMITE;
+		Optional<Double> tempoOpt = md.getOptional(TipoAttributo.TEMPO);
+		return tempoOpt.isPresent() && tempoOpt.get() != PersonaggioMD.SENZA_LIMITE;
 	}
 
 	public void setTempo(int tempo) {
@@ -731,7 +732,8 @@ public abstract class PersonaggioBase implements Personaggio {
 		BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE, salutePrecedente, saluteCorrente));
 	}
 
-	//FIXME sono convinto che questo metodo sia un po' troppo un pout-pourri
+	//FIXME sono convinto che questo metodo sia un po' troppo un pout-pourri. Include sia la morte che la notifica. Andrebbe spezzato
+	//perché in caso di danni nel tempo non c'è un attaccante e la morte risulterebbe per troppa codardia. Quantomeno va rivisto.
 	public void subSalute(int quantita, Personaggio avversario, Personaggio.NotificaFerite notificaFerite, Personaggio.NotificaMorte notificaMorte) {
 		if (quantita <= 0) {
 			if (notificaFerite == Personaggio.NotificaFerite.SI) {
@@ -786,6 +788,7 @@ public abstract class PersonaggioBase implements Personaggio {
 				if (avversario != null) {
 					md.setCausaTrapasso("Uccis" + getLetteraFinaleAttributo() + " " + avversario.getDa() + avversario.getNomeSingolare() + ".");
 				} else {
+					// FIXME se si muore per effetti di stato?
 					md.setCausaTrapasso("Mort" + getLetteraFinaleAttributo() + " per troppa codardia.");
 				}
 				muore(md.getCausaTrapasso());
@@ -805,7 +808,7 @@ public abstract class PersonaggioBase implements Personaggio {
 				getFuria() > 0 && !hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
 			double sogliaBerserk = calcolaSaluteMassima() / 3.0d;
 			if (salute > 0 && salute <= sogliaBerserk) {
-				addEffettoDiStato(TipoEffettoDiStato.BERSERK, 1);
+				addEffettoDiStato(TipoEffettoDiStato.BERSERK, 1, 0);
 			}
 		}
 	}
@@ -1459,54 +1462,99 @@ public abstract class PersonaggioBase implements Personaggio {
 		return md.getEffettiDiStato();
 	}
 
-	public void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int valore) {
-		if (valore <= 0) {
+	public void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int durata, int danniNelTempo) {
+		if (durata <= 0) {
 			throw new IllegalArgumentException("Valore effetto di stato non valido");
 		}
-		md.getEffettiDiStato().add(new EffettoDiStato(tipoEffettoDiStato, valore));
-		BusEventi.pubblica(new EventoVariazioneEffettoDiStato(this,
-				EventoVariazioneEffettoDiStato.TipoVariazione.AGGIUNTA, tipoEffettoDiStato, -1, valore));
-	}
-
-	public void riduciEffettiDiStato(TipoEffettoDiStato tipoEffettoDiStato, int valore) {
-		List<EffettoDiStato> effettiDiStatoDaRimuovere = new ArrayList<>();
-		for (EffettoDiStato effettoDiStato : getEffettiDiStato()) {
-			int valorePrecedente = effettoDiStato.getValore();
-			int valoreAttuale = valorePrecedente - 1;
-			if (valoreAttuale > 0) {
-				effettoDiStato.setValore(valoreAttuale);
+		Collection<EffettoDiStato> effettiDiStato = md.getEffettiDiStato();
+		Optional<EffettoDiStato> equivalenteOpt = effettiDiStato
+				.stream().
+				filter(e -> e.getTipoEffettoDiStato() == tipoEffettoDiStato)
+				.findFirst();
+		if (equivalenteOpt.isPresent()) {
+			EffettoDiStato equivalente = equivalenteOpt.get();
+			boolean duraDiPiu = equivalente.getDurata() < durata;
+			boolean aumentaDanni = equivalente.getDanniNelTempo() < danniNelTempo;
+			if (duraDiPiu || aumentaDanni) {
+				if (duraDiPiu) {
+					equivalente.setDurata(durata);
+				}
+				if (aumentaDanni) {
+					equivalente.setDanniNelTempo(danniNelTempo);
+				}
 				BusEventi.pubblica(new EventoVariazioneEffettoDiStato(this,
 						EventoVariazioneEffettoDiStato.TipoVariazione.VARIAZIONE, tipoEffettoDiStato,
+						equivalente.getDurata(), equivalente.getDanniNelTempo()));
+			}
+		} else {
+			md.getEffettiDiStato().add(new EffettoDiStato(tipoEffettoDiStato, durata, danniNelTempo));
+			BusEventi.pubblica(new EventoVariazioneEffettoDiStato(this,
+					EventoVariazioneEffettoDiStato.TipoVariazione.AGGIUNTA, tipoEffettoDiStato,
+					-1, durata));
+		}
+	}
+
+	@Override
+	public void applicaDanniDaEffettiDiStato() {
+		for (EffettoDiStato effettoDiStato : getEffettiDiStato()) {
+			if (effettoDiStato.getDanniNelTempo() > 0) {
+				subSalute(effettoDiStato.getDanniNelTempo(), null,
+						Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
+			}
+		}
+	}
+
+	@Override
+	public void riduciEffettiDiStato() {
+		List<EffettoDiStato> effettiDiStatoDaRimuovere = new ArrayList<>();
+		for (EffettoDiStato effettoDiStato : getEffettiDiStato()) {
+			int valorePrecedente = effettoDiStato.getDurata();
+			int valoreAttuale = valorePrecedente - 1;
+			if (valoreAttuale > 0) {
+				effettoDiStato.setDurata(valoreAttuale);
+				BusEventi.pubblica(new EventoVariazioneEffettoDiStato(this,
+						EventoVariazioneEffettoDiStato.TipoVariazione.VARIAZIONE,
+						effettoDiStato.getTipoEffettoDiStato(),
 						valorePrecedente, valoreAttuale));
 			} else {
 				effettiDiStatoDaRimuovere.add(effettoDiStato);
 			}
 		}
-		effettiDiStatoDaRimuovere.forEach(e -> md.getEffettiDiStato().remove(e));
-		BusEventi.pubblica(new EventoVariazioneEffettoDiStato(this,
-				EventoVariazioneEffettoDiStato.TipoVariazione.RIMOZIONE, tipoEffettoDiStato,
-				1, 0));
+		effettiDiStatoDaRimuovere.forEach(e -> {
+			md.getEffettiDiStato().remove(e);
+			BusEventi.pubblica(new EventoVariazioneEffettoDiStato(this,
+					EventoVariazioneEffettoDiStato.TipoVariazione.RIMOZIONE,
+					e.getTipoEffettoDiStato(), 1, 0));
+		});
 	}
 
-	public void rimuoviTuttiEffettiDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
+	@Override
+	public void rimuoviTuttiGliEffettiDiStato() {
+		rimuoviEffettoDiStato(null);
+	}
+
+	@Override
+	public void rimuoviEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
 		List<EffettoDiStato> effettiDiStatoDaRimuovere = getEffettiDiStato()
 				.stream()
-				.filter(e -> e.getTipoEffettoDiStato() == tipoEffettoDiStato)
+				.filter(e -> tipoEffettoDiStato == null || e.getTipoEffettoDiStato() == tipoEffettoDiStato)
 				.collect(Collectors.toList());
 		effettiDiStatoDaRimuovere.forEach(effettoDiStato -> {
 			md.getEffettiDiStato().remove(effettoDiStato);
 			BusEventi.pubblica(new EventoVariazioneEffettoDiStato(this,
 					EventoVariazioneEffettoDiStato.TipoVariazione.RIMOZIONE, tipoEffettoDiStato,
-					effettoDiStato.getValore(), 0));
+					effettoDiStato.getDurata(), 0));
 		});
 	}
 
+	@Override
 	public boolean hasEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
 		return md.getEffettiDiStato().stream().anyMatch(e -> e.getTipoEffettoDiStato() == tipoEffettoDiStato);
 	}
 
+	@Override
 	public int getQuantitaEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
-		return md.getEffettiDiStato().stream().filter(e -> e.getTipoEffettoDiStato() == tipoEffettoDiStato).mapToInt(EffettoDiStato::getValore).sum();
+		return md.getEffettiDiStato().stream().filter(e -> e.getTipoEffettoDiStato() == tipoEffettoDiStato).mapToInt(EffettoDiStato::getDurata).sum();
 	}
 
 	// Artefatti

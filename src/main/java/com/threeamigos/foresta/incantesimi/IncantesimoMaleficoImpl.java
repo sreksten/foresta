@@ -89,7 +89,7 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 		formulante.subMagia(getCostoLancio());
 	}
 
-	private void formula(Personaggio formulante, Personaggio personaggioBersaglio) {
+	public void formula(Personaggio formulante, Personaggio personaggioBersaglio) {
 		String nomeBersaglio = personaggioBersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		UI.notifica(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
@@ -165,7 +165,7 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 		return sb.toString();
 	}
 
-	protected void formula(Personaggio formulante) {
+	public void formula(Personaggio formulante) {
 		UI.notifica(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " formula un " + getClasse().getNomeSingolare() + ".");
 	}

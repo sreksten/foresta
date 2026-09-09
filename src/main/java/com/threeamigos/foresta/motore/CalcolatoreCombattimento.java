@@ -195,7 +195,9 @@ public class CalcolatoreCombattimento {
                 dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.ELETTROCUZIONE);
             } else if (tipoDanno == TipoDanno.GELO) {
                 dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BAGNATO);
-                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.CONGELATO, calcolaDurataStato(difensore, TipoEffettoDiStato.CONGELATO));
+                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.CONGELATO,
+                        calcolaDurataStato(difensore, TipoEffettoDiStato.CONGELATO),
+                        calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.CONGELATO));
                 dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.CONGELAMENTO);
             } else if (tipoDanno == TipoDanno.FUOCO) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 0.5d;
@@ -215,12 +217,16 @@ public class CalcolatoreCombattimento {
             } else if (tipoDanno == TipoDanno.GELO) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
                 dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BRUCIATO);
-                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.BAGNATO, calcolaDurataStato(difensore, TipoEffettoDiStato.BAGNATO));
+                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.BAGNATO,
+                        calcolaDurataStato(difensore, TipoEffettoDiStato.BAGNATO),
+                        calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.BAGNATO));
                 dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.SCIOGLIMENTO_TERMICO);
             } else if (tipoDanno == TipoDanno.VELENO) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d; // Esplosione di gas
                 dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BRUCIATO);
-                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.AVVELENATO, calcolaDurataStato(difensore, TipoEffettoDiStato.AVVELENATO));
+                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.AVVELENATO,
+                        calcolaDurataStato(difensore, TipoEffettoDiStato.AVVELENATO),
+                        calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.AVVELENATO));
                 dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.ESPLOSIONE_DI_GAS);
             }
         }
@@ -323,7 +329,9 @@ public class CalcolatoreCombattimento {
                 TipoEffettoDiStato effettoDiStato = tipoDanno.getTipoEffettoDiStatoCasuale();
                 Logger.log("Stato nativo applicato: " + effettoDiStato);
 
-                dannoRisultante.addEffettoDiStato(effettoDiStato, calcolaDurataStato(difensore, effettoDiStato));
+                dannoRisultante.addEffettoDiStato(effettoDiStato,
+                        calcolaDurataStato(difensore, effettoDiStato),
+                        calcolaDannoPeriodico(attaccante, difensore, effettoDiStato));
             } else {
                 Logger.log("Stato nativo non applicato");
             }
@@ -418,5 +426,54 @@ public class CalcolatoreCombattimento {
         // almeno 1 turno (il turno corrente in cui viene consumato/subito)
         // e non può mai superare la sua durata base naturale per evitare il perma-block.
         return Math.max(1, Math.min(durataBase, durataFinale));
+    }
+
+    /**
+     * Calcola il danno ad ogni tick
+     */
+    public static int calcolaDannoPeriodico(Personaggio attaccante, Personaggio difensore,
+                                            TipoEffettoDiStato stato) {
+
+        double dannoGrezzo = 0.0d;
+        double difesaFiltro = 0.0d;
+        int livelloAttaccante = attaccante.getLivello();
+
+        switch (stato) {
+            case SANGUINAMENTO:
+                // Danno fisico: scala su FORZA dell'attaccante e ignora metà COSTITUZIONE
+                dannoGrezzo = (attaccante.getForza() * livelloAttaccante) / 10.0d;
+                difesaFiltro = difensore.getCostituzione() / 4.0d;
+                Logger.log(String.format("[DoT] Elaborazione SANGUINAMENTO su %s. Attacco: %.2f, Difesa Filtro: %.2f",
+                        difensore.getNome(), dannoGrezzo, difesaFiltro));
+                break;
+
+            case BRUCIATO:
+                // Danno elementale: scala su INTELLIGENZA dell'attaccante, contrasta RESISTENZA MAGICA
+                dannoGrezzo = (attaccante.getIntelligenza() * livelloAttaccante) / 10.0d;
+                difesaFiltro = difensore.getResistenzaMagica() / 2.0d;
+                Logger.log(String.format("[DoT] Elaborazione BRUCIATO su %s. Attacco: %.2f, Difesa Filtro: %.2f",
+                        difensore.getNome(), dannoGrezzo, difesaFiltro));
+                break;
+
+            case AVVELENATO:
+                // Danno elementale: scala su INTELLIGENZA dell'attaccante, contrasta COSTITUZIONE
+                dannoGrezzo = (attaccante.getIntelligenza() * livelloAttaccante) / 10.0d;
+                difesaFiltro = difensore.getCostituzione() / 2.0d;
+                Logger.log(String.format("[DoT] Elaborazione AVVELENATO su %s.", difensore.getNome()));
+                break;
+
+            case INFETTATO:
+                // Danno necrotico: scala su INTELLIGENZA, contrasta RESISTENZA MAGICA
+                dannoGrezzo = (attaccante.getIntelligenza() * livelloAttaccante) / 12.0d; // Leggermente più lento ma blocca le cure
+                difesaFiltro = difensore.getResistenzaMagica() / 2.0d;
+                Logger.log(String.format("[DoT] Elaborazione INFETTATO su %s.", difensore.getNome()));
+                break;
+
+            default:
+                return 0;
+        }
+
+        // Calcolo finale del danno del singolo tick del timer
+        return (int) Math.max(1, Math.floor(dannoGrezzo - difesaFiltro));
     }
 }

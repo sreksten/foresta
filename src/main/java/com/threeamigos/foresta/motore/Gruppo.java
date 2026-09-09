@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.personaggi.Personaggio;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-
-import com.threeamigos.foresta.personaggi.Personaggio;
 
 /**
  * Un insieme di personaggi
@@ -15,10 +15,44 @@ public abstract class Gruppo {
 	// Caratteristiche del gruppo
 	protected List<Personaggio> personaggi = new ArrayList<>();
 	protected Personaggio capo;
+	private int ultimoIndiceSelezionato;
 
 	protected void reimposta() {
 		personaggi.clear();
 		capo = null;
+		ultimoIndiceSelezionato = -1;
+	}
+
+	/**
+	 * Seleziona in round-robin il prossimo personaggio idoneo o incapace a causa di stati alterati.
+	 * Esclude i personaggi morti/sconfitti.
+	 * @return Il Personaggio che deve agire in questo tick del timer, oppure null se sono tutti morti
+	 */
+	public Personaggio getProssimoAttaccante() {
+		int dimensioneLista = personaggi.size();
+
+		// Verifichiamo prima se c'è almeno un personaggio vivo nel gruppo per evitare loop infiniti
+		boolean almenoUnoVivo = !getPersonaggiVivi().isEmpty();
+		if (!almenoUnoVivo) {
+			Logger.log("[ROUND-ROBIN] Tutti i personaggi del gruppo sono stati sconfitti.");
+			return null;
+		}
+
+		// Cerchiamo il prossimo personaggio vivo facendo scorrere l'indice in cerchio (modulo)
+		for (int i = 0; i < dimensioneLista; i++) {
+			ultimoIndiceSelezionato = (ultimoIndiceSelezionato + 1) % dimensioneLista;
+			Personaggio candidato = personaggi.get(ultimoIndiceSelezionato);
+
+			// Se il personaggio è morto (sconfitto), viene saltato istantaneamente e si passa al prossimo
+			if (!candidato.isVivo()) {
+				continue;
+			}
+
+			// Se è vivo, è lui il personaggio designato dal round-robin per questo turno.
+			// Il motore comunque deve tenere di conto degli effeti di stato.
+			return candidato;
+		}
+		return null;
 	}
 
 	/**
@@ -51,7 +85,6 @@ public abstract class Gruppo {
 			capo = p;
 		}
 		personaggi.add(p);
-		
 	}
 
 	public final Personaggio getCapo() {

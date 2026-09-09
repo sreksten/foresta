@@ -39,7 +39,7 @@ public class EventoCombattimento extends EventoPersonaggio {
         risultato.getInterazioniElementali().stream().map(e -> "+" + e).collect(Collectors.joining(", ")) +
         ", Effetti di stato: " +
         risultato.getEffettiDiStatoDaAggiungere().stream().map(e -> "+" + e.getTipoEffettoDiStato()
-                + ":" + e.getValore()).collect(Collectors.joining(", ")) +
+                + ":" + e.getDurata()).collect(Collectors.joining(", ")) +
         risultato.getEffettiDiStatoDaRimuovere().stream().map(e -> "-" + e.name()).collect(Collectors.joining(", "));
     }
 }

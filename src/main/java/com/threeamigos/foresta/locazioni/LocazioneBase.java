@@ -1,11 +1,13 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoMessaggio;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
+import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.motore.modellodati.EffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.offerte.Offerta;
@@ -18,6 +20,7 @@ import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -306,39 +309,25 @@ public abstract class LocazioneBase implements Locazione {
 				ClasseIncantesimo classeIncantesimo = ClasseIncantesimo.ofComando(azione);
 				incantesimo = classeIncantesimo.getIstanza(formulante.getLivello());
 				if (formulante.getMagia() < incantesimo.getCostoLancio()) {
+
 					// Non si dovrebbe più riuscire a entrare in questo ramo perché la scelta degli incantesimi è già stata filtrata
                     String sb = "Il livello di magia " + formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
                             " non permette di formulare questo incantesimo.";
-					UI.notifica(sb);
+					BusEventi.pubblica(new EventoMessaggio(sb));
+
 					rispostaAvversaria(null, gruppo, gruppoAvversario);
+
 					if (!gruppo.getCapo().isVivo()) {
 						return Stato.GIOCO_PERSO;
 					}
+
 					statoLocazione = StatoLocazione.IN_LOCAZIONE;
 					break;
 				}
+
 				PortataIncantesimo tipo = classeIncantesimo.getPortata();
-				if (tipo == PortataIncantesimo.GLOBALE || tipo == PortataIncantesimo.GRUPPO) {
-					if (tipo == PortataIncantesimo.GLOBALE) {
-						incantesimo.formula(formulante, null, null);
-					} else {
-						incantesimo.formula(formulante, null, gruppoAvversario);
-					}
-					if (!gruppo.getCapo().isVivo()) {
-						return Stato.GIOCO_PERSO;
-					}
-					gruppo.subIncantesimi(incantesimo.getClasse(), 1);
-					if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
-						setCompleta(true);
-						return Stato.FINE_LOCAZIONE;
-					}
-					rispostaAvversaria(formulante, gruppo, gruppoAvversario);
-					if (!gruppo.getCapo().isVivo()) {
-						return Stato.GIOCO_PERSO;
-					}
-					statoLocazione = StatoLocazione.IN_LOCAZIONE;
-					break;
-				} else if (tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI || tipo == PortataIncantesimo.SINGOLO_QUALSIASI) {
+				// Se l'incantesimo ha bisogno di un bersaglio preciso, occorre chiedere quale sia
+				if (tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI || tipo == PortataIncantesimo.SINGOLO_QUALSIASI) {
 					Logger.log("Incantesimo di tipo " + (tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI ? "SINGOLO_SOLO_VIVI" : "SINGOLO_QUALSIASI"));
 					int l = gruppo.getNumeroPersonaggi();
 					Personaggio personaggio;
@@ -354,6 +343,47 @@ public abstract class LocazioneBase implements Locazione {
 					gruppoBersaglio = gruppo;
 					return Stato.SCELTA_PERSONAGGIO_QUALSIASI;
 				}
+
+				// Altrimenti, l'incantesimo può colpire tutti i bersagli del gruppo avversario o proprio tutti,
+				// a seconda della portata
+				List<Personaggio> bersagli = new ArrayList<>();
+				if (tipo == PortataIncantesimo.GLOBALE) {
+					bersagli.addAll(gruppo.getPersonaggiVivi());
+					bersagli.remove(formulante);
+					bersagli.addAll(gruppoAvversario.getPersonaggiVivi());
+					Logger.log("tipo == PortataIncantesimo.GLOBALE, applico a tutti i personaggi meno il formulante");
+				} else if (tipo == PortataIncantesimo.GRUPPO) {
+					bersagli.addAll(gruppoAvversario.getPersonaggiVivi());
+					Logger.log("tipo == PortataIncantesimo.GRUPPO, applico a tutti i personaggi del gruppo avversario");
+				}
+
+				for (Personaggio bersaglio : bersagli) {
+					IncantesimoMalefico incantesimoMalefico = (IncantesimoMalefico) incantesimo;
+					if (CalcolatoreCombattimento.colpisce(formulante, bersaglio, incantesimoMalefico.getTipoDanno().getSuperTipo())) {
+						DannoRisultante dannoRisultante = CalcolatoreCombattimento.calcolaDannoRisultante(formulante, bersaglio, incantesimoMalefico);
+						bersaglio.applicaRisultatoCombattimento(dannoRisultante);
+					}
+				}
+
+				if (!gruppo.getCapo().isVivo()) {
+					return Stato.GIOCO_PERSO;
+				}
+
+				gruppo.subIncantesimi(incantesimo.getClasse(), 1);
+
+				if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
+					setCompleta(true);
+					return Stato.FINE_LOCAZIONE;
+				}
+
+				rispostaAvversaria(formulante, gruppo, gruppoAvversario);
+
+				if (!gruppo.getCapo().isVivo()) {
+					return Stato.GIOCO_PERSO;
+				}
+
+				statoLocazione = StatoLocazione.IN_LOCAZIONE;
+				break;
 			}
 
 		case SU_CHI_FORMULA:
@@ -523,6 +553,24 @@ public abstract class LocazioneBase implements Locazione {
 			}
 		}
 
+		// Applica gli effetti di stato con danni nel tempo e li riduce
+
+		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
+			personaggio.applicaDanniDaEffettiDiStato();
+			personaggio.riduciEffettiDiStato();
+		}
+		if (!gruppo.getCapo().isVivo()) {
+			return Stato.GIOCO_PERSO;
+		}
+
+		for (Personaggio personaggio : gruppoAvversario.getPersonaggiVivi()) {
+			personaggio.applicaDanniDaEffettiDiStato();
+			personaggio.riduciEffettiDiStato();
+		}
+		if (gruppoAvversario.getPersonaggiVivi().isEmpty()) {
+			return Stato.FINE_LOCAZIONE;
+		}
+
 		Logger.log("LocazioneBase.impostaAzioni() continua...");
 		if (isCompleta()) {
 			return Stato.FINE_LOCAZIONE;
@@ -598,7 +646,7 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		for (Personaggio p : g.getPersonaggi()) {
 			if (p.hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
-				p.rimuoviTuttiEffettiDiStato(TipoEffettoDiStato.BERSERK);
+				p.rimuoviEffettoDiStato(TipoEffettoDiStato.BERSERK);
 			}
 		}
 	}
@@ -666,30 +714,21 @@ public abstract class LocazioneBase implements Locazione {
 		return sb.toString();
 	}
 
+	// La metodologia usata ora è un round-robin. Questo fa si che se il personaggio che dovrebbe attaccare non è in
+	// grado di farlo, salta il turno - e questo da un senso agli effetti di stato.
 	private void rispostaAvversaria(Personaggio personaggioBersaglio, GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
-		Personaggio avversarioAttaccante = null;
-		List<Personaggio> avversariVivi = gruppoAvversario.getPersonaggiVivi();
-		// Un avversario che può formulare incantesimi ha la precedenza
-		for (Personaggio avversarioCorrente : avversariVivi) {
-			if (avversarioCorrente.isMagico() && avversarioCorrente.getMagia() > 0) {
-				avversarioAttaccante = avversarioCorrente;
-				break;
-			}
+
+		Personaggio avversarioAttaccante = gruppoAvversario.getProssimoAttaccante();
+		if (avversarioAttaccante == null ||
+				avversarioAttaccante.hasEffettoDiStato(TipoEffettoDiStato.ATTERRATO) ||
+				avversarioAttaccante.hasEffettoDiStato(TipoEffettoDiStato.CONGELATO) ||
+				avversarioAttaccante.hasEffettoDiStato(TipoEffettoDiStato.STORDITO)) {
+			return;
 		}
-		// Altrimenti, l'avversario con più danni in combattimento
-		if (avversarioAttaccante == null) {
-			for (Personaggio avversarioCorrente : avversariVivi) {
-				if (avversarioAttaccante == null || avversarioCorrente.getDanniInCombattimento() > avversarioAttaccante.getDanniInCombattimento()) {
-					avversarioAttaccante = avversarioCorrente;
-				}
-			}
-		}
-		if (avversarioAttaccante != null) {
-			if (personaggioBersaglio == null) {
-				avversarioAttaccante.attacca(gruppo);
-			} else {
-				avversarioAttaccante.attacca(personaggioBersaglio);
-			}
+		if (personaggioBersaglio == null) {
+			avversarioAttaccante.attacca(gruppo);
+		} else {
+			avversarioAttaccante.attacca(personaggioBersaglio);
 		}
 	}
 
@@ -798,7 +837,7 @@ public abstract class LocazioneBase implements Locazione {
 			boolean colpisce = CalcolatoreCombattimento.colpisce(combattente, bersaglio, arma.getTipoDanno().getSuperTipo());
 			if (colpisce) {
 				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(combattente, bersaglio, arma);
-				bersaglio.subSalute(risultato.getDanno(), combattente, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
+				bersaglio.applicaRisultatoCombattimento(risultato);
 				if (!bersaglio.isVivo()) {
 					if (GruppoGiocatore.getIstanza().contiene(combattente)) {
 						Statistiche.addMostroUcciso(bersaglio.getClasse());
@@ -812,13 +851,6 @@ public abstract class LocazioneBase implements Locazione {
 						setCompleta(true);
 						return Stato.FINE_LOCAZIONE;
 					}
-				} else {
-					for (EffettoDiStato effetto : risultato.getEffettiDiStatoDaAggiungere()) {
-						bersaglio.addEffettoDiStato(effetto.getTipoEffettoDiStato(), effetto.getValore());
-					}
-					for (TipoEffettoDiStato tipoEffettoDiStato: risultato.getEffettiDiStatoDaRimuovere()) {
-						bersaglio.rimuoviTuttiEffettiDiStato(tipoEffettoDiStato);
-					}
 				}
 			}
 			Logger.log("Valutazione bersaglio -> combattente");
@@ -827,20 +859,13 @@ public abstract class LocazioneBase implements Locazione {
 			colpisce = CalcolatoreCombattimento.colpisce(bersaglio, combattente, arma.getTipoDanno().getSuperTipo());
 			if (colpisce) {
 				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(bersaglio, combattente, arma);
-				combattente.subSalute(risultato.getDanno(), bersaglio, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
+				combattente.applicaRisultatoCombattimento(risultato);
 				if (!combattente.isVivo()) {
 					if (gruppo.getCapo().isVivo()) {
 						statoLocazione = StatoLocazione.IN_LOCAZIONE;
 						return Stato.IN_LOCAZIONE;
 					} else {
 						return Stato.GIOCO_PERSO;
-					}
-				} else {
-					for (EffettoDiStato effetto : risultato.getEffettiDiStatoDaAggiungere()) {
-						combattente.addEffettoDiStato(effetto.getTipoEffettoDiStato(), effetto.getValore());
-					}
-					for (TipoEffettoDiStato tipoEffettoDiStato: risultato.getEffettiDiStatoDaRimuovere()) {
-						combattente.rimuoviTuttiEffettiDiStato(tipoEffettoDiStato);
 					}
 				}
 			}

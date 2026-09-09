@@ -370,11 +370,11 @@ SOPRANNOME_PROTAGONISTA
 	il battipaglia | l'insegnante di zerbinaggio | il professore del furto | il laido | il guercio | lo zoppo
 	il tritaporci | lo scannamuli | lo squartatore di gatti | il ladro di polli | il molestapaperi | lo spaventapassere
 	il ribaldo | il trombategami | il campione di bruttezza | il Signore delle Scorregge | il Signore del Male
-	l'autonominatosi Imperatore Galattico | il puzzone
+	l'autonominatosi Imperatore Galattico | il puzzone | Brancabeone da Norcia
 	il [TITOLO_NOBILIARE] { dei Piedi Sporchi | degli Spiccioli | della Sbronza | di Nessun Luogo }
 
 TITOLO_NOBILIARE
-    Cavaliere | Barone | Conte | Visconte | Duca
+    Cavaliere | Barone | Conte | Visconte | Duca | Marchese | Re
 
 RACCONTO
 	^[RACCONTO_P_1] [RACCONTO_P_2] [RACCONTO_P_3] [RACCONTO_P_4] [RACCONTO_P_5] [MORALE]
