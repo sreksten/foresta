@@ -739,7 +739,6 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	//FIXME sono convinto che questo metodo sia un po' troppo un pout-pourri
-	//FIXME La quarto Centauro è morto per le ferite riportate.
 	public void subSalute(int quantita, Personaggio avversario, Personaggio.NotificaFerite notificaFerite, Personaggio.NotificaMorte notificaMorte) {
 		if (quantita <= 0) {
 			if (notificaFerite == Personaggio.NotificaFerite.SI) {

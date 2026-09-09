@@ -81,7 +81,7 @@ public class Misc {
 	}
 
 	public static String getOrdinaleM(int numero, boolean articolo) {
-		return getOrdinaleImpl(numero, articolo, 'o');
+		return getOrdinaleImpl(numero, articolo, IL, "o");
 	}
 
 	public static String getOrdinaleF(int numero) {
@@ -89,21 +89,21 @@ public class Misc {
 	}
 
 	public static String getOrdinaleF(int numero, boolean articolo) {
-		return getOrdinaleImpl(numero, articolo, 'a');
+		return getOrdinaleImpl(numero, articolo, LA, "a");
 	}
 
-	private static String getOrdinaleImpl(int numero, boolean articolo, char ultimaLettera) {
+	private static String getOrdinaleImpl(int numero, boolean aggiungiArticolo, String qualeArticolo, String letteraFinale) {
 		StringBuilder sb = new StringBuilder(15);
-		if (articolo) {
+		if (aggiungiArticolo) {
 			if (numero == 8 || numero == 11)
 				sb.append(L_APOSTROFO);
 			else
-				sb.append(LA);
+				sb.append(qualeArticolo);
 		}
 		sb.append(ordinali[numero]);
 		if (numero > 10)
 			sb.append(ESIM);
-		sb.append(ultimaLettera);
+		sb.append(letteraFinale);
 		return sb.toString();
 	}
 
