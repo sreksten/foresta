@@ -1562,7 +1562,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	//FIXME così fa un po' ribrezzo ma intanto facciamolo compilare. Per poterlo eliminare del tutto occorre gestire correttamente l'inventario del gruppo.
 	@Override
 	public List<Artefatto> getInventario() {
-		return md.getArtefatti().stream().map(Artefatto::new).collect(Collectors.toList());
+		return md.getArtefatti().stream().map(Artefatto::di).collect(Collectors.toList());
 	}
 
 	public void addArtefatto(Artefatto a) {

@@ -4,6 +4,7 @@ import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
@@ -15,6 +16,17 @@ public class Artefatto implements Oggetto {
 
 	public Artefatto(ArtefattoMD artefattoMD) {
 		this.md = artefattoMD;
+	}
+
+	/**
+	 * Ricostruisce la sottoclasse corretta (es. ArmaFisica) in base al supertipo,
+	 * così da non perdere il tipo concreto quando un Artefatto viene rimaterializzato dal suo ArtefattoMD.
+	 */
+	public static Artefatto di(ArtefattoMD md) {
+		if (md.getTipo().getSupertipo() == SupertipoArtefatto.ARMA) {
+			return new ArmaFisica(md);
+		}
+		return new Artefatto(md);
 	}
 
 	public final TipoArtefatto getTipo() {
