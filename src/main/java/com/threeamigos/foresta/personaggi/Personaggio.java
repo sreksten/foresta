@@ -293,7 +293,7 @@ public interface Personaggio extends OggettoConArticoli {
 	 * La quantita' di salute che il personaggio riacquista riposando, somma del recupero base più
 	 * dei modificatori di salute degli artefatti.
 	 */
-    int getRecuperoSalute();
+    int getRigenerazioneSalute();
 
 	/**
 	 * La magia attuale di un personaggio
@@ -309,7 +309,7 @@ public interface Personaggio extends OggettoConArticoli {
 	 * La quantita' di magia che il personaggio riacquista riposando, somma del recupero base più
 	 * dei modificatori di magia degli artefatti.
 	 */
-    int getRecuperoMagia();
+    int getRigenerazioneMagia();
 
 	/**
 	 * Il carico attuale di un personaggio

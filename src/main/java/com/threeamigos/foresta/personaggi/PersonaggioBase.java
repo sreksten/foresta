@@ -200,7 +200,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	/**
 	 * Calcola i Punti Vita (HP) rigenerati durante un turno di riposo.
 	 */
-	public int getRecuperoSalute() {
+	public int getRigenerazioneSalute() {
 		// Se la creatura è un non-morto o uno spettro, il moltiplicatore è 0.0, quindi guarisce 0
 		if (getMoltiplicatoreRecuperoFisico() == 0.0) {
 			return 0;
@@ -218,7 +218,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	/**
 	 * Calcola il mana rigenerato durante un turno di riposo.
 	 */
-	public int getRecuperoMagia() {
+	public int getRigenerazioneMagia() {
 		// 1. Calcolo del recupero potenziale basato solo sulla capienza massima
 		double recuperoGrezzo = getQuantitaModificata(5.0d, TipoAttributo.RIGENERAZIONE_MAGIA) + getMagiaMassima() * 0.05d;
 		// 2. Applicazione del moltiplicatore di classe/razza
