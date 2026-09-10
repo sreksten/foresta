@@ -10,8 +10,8 @@ public class MissioneDIProva extends MissioneBase implements Missione {
 
     public MissioneDIProva() {
         super(ClasseMissione.MISSIONE_DI_PROVA);
-        aggiungiMissione(new MissioneDiProvaSecondariaUno());
-        aggiungiMissione(new MissioneDiProvaSecondariaDue());
+//        aggiungiMissione(new MissioneDiProvaSecondariaUno());
+//        aggiungiMissione(new MissioneDiProvaSecondariaDue());
     }
 
     @Override
@@ -39,6 +39,9 @@ public class MissioneDIProva extends MissioneBase implements Missione {
 
     @Override
     public void controllaPostLocazione() {
-
+        if (!isCompleta()) {
+            UI.notifica("Missione di prova completata");
+            completaMissione();
+        }
     }
 }

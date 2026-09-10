@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Elenco ad albero scorrevole. Ogni nodo può portarsi dietro un riferimento
  * all'oggetto che rappresenta, per poter risalire dalla posizione di un click
- * a quell'oggetto.
+ * a quell'oggetto. Inoltre può contenere una immagine di accompagnamento.
  *
  * @param <T> il tipo dell'oggetto rappresentato da ciascun nodo
  *
@@ -17,6 +17,7 @@ import java.util.List;
 public class ComponenteScorrevole<T> {
 
     private final int larghezza;
+
     private final int larghezzaIndentazione;
     private final int interlinea;
     private final List<Nodo> nodi = new ArrayList<>();
@@ -27,21 +28,45 @@ public class ComponenteScorrevole<T> {
         this.interlinea = interlinea;
     }
 
-    public Nodo creaNodo(String testo, DoomdarkFont doomdarkFontTesto,
-                         String descrizione, DoomdarkFont doomdarkFontDescrizione, T riferimento) {
-        return creaNodo(testo, doomdarkFontTesto, descrizione, doomdarkFontDescrizione, null, riferimento);
+    public Nodo creaNodo(String chiave, DoomdarkFont fontChiave, DoomdarkColorModel.Color coloreChiave,
+                         String descrizione, DoomdarkFont fontDescrizione, DoomdarkColorModel.Color coloreDescrizione,
+                         T riferimento) {
+        return creaNodo(chiave, fontChiave, coloreChiave,
+                null, null, null,
+                descrizione, fontDescrizione, coloreDescrizione,
+                null, riferimento);
     }
 
-    public Nodo creaNodo(String testo, DoomdarkFont doomdarkFontTesto,
-                         String descrizione, DoomdarkFont doomdarkFontDescrizione,
-                         BufferedImage immagine, T riferimento) {
-        Nodo nodo = new Nodo(testo, doomdarkFontTesto, descrizione, doomdarkFontDescrizione, immagine, 0, riferimento);
+    public Nodo creaNodo(String chiave, DoomdarkFont fontChiave, DoomdarkColorModel.Color coloreChiave,
+                         String descrizione, DoomdarkFont fontDescrizione, DoomdarkColorModel.Color coloreDescrizione,
+                         Image icona, T riferimento) {
+        return creaNodo(chiave, fontChiave, coloreChiave,
+                null, null, null,
+                descrizione, fontDescrizione, coloreDescrizione,
+                icona, riferimento);
+    }
+
+    public Nodo creaNodo(String chiave, DoomdarkFont fontChiave, DoomdarkColorModel.Color coloreChiave,
+                         String valore, DoomdarkFont fontValore, DoomdarkColorModel.Color coloreValore,
+                         String descrizione, DoomdarkFont fontDescrizione, DoomdarkColorModel.Color coloreDescrizione,
+                         Image icona, T riferimento) {
+        Nodo nodo = new Nodo(chiave, fontChiave, coloreChiave,
+                valore, fontValore, coloreValore,
+                descrizione, fontDescrizione, coloreDescrizione,
+                icona, 0, riferimento);
         nodi.add(nodo);
         return nodo;
     }
 
-    public void aggiungi(Nodo nodo) {
-        nodi.add(nodo);
+    public Nodo creaSeparatore() {
+        return creaNodo(null, null, null,
+                null, null, null,
+                null, null, null,
+                ImageCache.separatore, null);
+    }
+
+    private int calcolaAltezzaMassimaNodi() {
+        return nodi.stream().mapToInt(Nodo::getAltezza).sum();
     }
 
     /**
@@ -49,109 +74,86 @@ public class ComponenteScorrevole<T> {
      * sopra la prima riga né oltre l'ultima.
      */
     public int limitaOffset(int altezzaMassima, int offset) {
-        return limitaOffset(altezzaImmagine(espandiNodi().testi, altezzaMassima), altezzaMassima, offset);
-    }
-
-    public Image produci(int altezzaMassima, int offset) {
-
-        Contenuto contenuto = espandiNodi();
-        List<TestoDoomdark> nodiEspansi = contenuto.testi;
-
-        int altezzaImmagine = altezzaImmagine(nodiEspansi, altezzaMassima);
-        offset = limitaOffset(altezzaImmagine, altezzaMassima, offset);
-
-        BufferedImage risultato = new BufferedImage(larghezza, altezzaImmagine, BufferedImage.TYPE_INT_ARGB);
-
-        Graphics2D g2d = risultato.createGraphics();
-
-        for (ImmagineDoomdark immagineDoomdark : contenuto.immagini) {
-            // Stessa logica di clipping delle righe di testo: si evita di disegnare
-            // le immagini dei nodi che non intersecano la finestra ritagliata.
-            if (immagineDoomdark.altezza + immagineDoomdark.immagine.getHeight() > offset && immagineDoomdark.altezza < offset + altezzaMassima) {
-                g2d.drawImage(immagineDoomdark.immagine, immagineDoomdark.indentazione, immagineDoomdark.altezza, null);
-            }
-        }
-
-        int altezzaRaggiunta = 0;
-        for (TestoDoomdark testoDoomdark : nodiEspansi) {
-            // Ogni riga viene disegnata alla propria posizione assoluta: si evita il
-            // disegno di quelle che non intersecano la finestra ritagliata, non lo spazio
-            // che occupano.
-            if (testoDoomdark.testo != null && altezzaRaggiunta + testoDoomdark.altezza > offset && altezzaRaggiunta < offset + altezzaMassima) {
-                Image image = DoomdarkTextProducer.getImage(testoDoomdark.testo, testoDoomdark.doomdarkFont,
-                        testoDoomdark.colore, larghezza - testoDoomdark.indentazione);
-                g2d.drawImage(image, testoDoomdark.indentazione, altezzaRaggiunta, null);
-            }
-            altezzaRaggiunta += testoDoomdark.altezza;
-        }
-        g2d.dispose();
-        return risultato.getSubimage(0, offset, larghezza, altezzaMassima);
-    }
-
-    /**
-     * L'immagine deve contenere tutta la lista, ma non essere più bassa della finestra
-     * ritagliata, altrimenti getSubimage() esce dal raster.
-     */
-    private int altezzaImmagine(List<TestoDoomdark> nodiEspansi, int altezzaMassima) {
-        return Math.max(nodiEspansi.stream().mapToInt(td -> td.altezza).sum(), altezzaMassima);
+        return limitaOffset(calcolaAltezzaMassimaNodi(), altezzaMassima, offset);
     }
 
     private int limitaOffset(int altezzaImmagine, int altezzaMassima, int offset) {
         return Math.max(0, Math.min(offset, altezzaImmagine - altezzaMassima));
     }
 
-    private Contenuto espandiNodi() {
-        List<TestoDoomdark> listaRisultante = new ArrayList<>();
-        List<ImmagineDoomdark> immaginiRisultante = new ArrayList<>();
-        // L'alternanza dei colori scandisce i soli nodi radice: figli e nipoti
-        // mantengono il colore del proprio nodo padre.
-        DoomdarkColorAlternante coloreAlternante = new DoomdarkColorAlternante();
-        // Accumulatore mutabile: serve a conoscere la quota assoluta a cui inizia
-        // il titolo di ciascun nodo, per posizionarne l'eventuale immagine.
-        int[] altezzaAccumulata = {0};
-        for (Nodo nodo : nodi) {
-            addNodo(nodo, listaRisultante, immaginiRisultante, altezzaAccumulata, coloreAlternante.getColor());
+    public Image produci(int altezzaMassima, int offset) {
+
+        List<Nodo> contenuto = espandiNodi();
+
+        int altezzaImmagine = Math.max(calcolaAltezzaMassimaNodi(), altezzaMassima);
+        offset = limitaOffset(altezzaImmagine, altezzaMassima, offset);
+
+        BufferedImage risultato = new BufferedImage(larghezza, altezzaImmagine, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2d = risultato.createGraphics();
+
+        int altezzaRaggiunta = 0;
+        for (Nodo nodo : contenuto) {
+            // Ogni riga viene disegnata alla propria posizione assoluta: si evita il
+            // disegno di quelle che non intersecano la finestra ritagliata, non lo spazio
+            // che occupano.
+            int altezzaNodo = nodo.getAltezza();
+            if (altezzaRaggiunta + altezzaNodo > offset && altezzaRaggiunta < offset + altezzaMassima) {
+                int x = nodo.getIndentazione();
+                if (nodo.icona != null) {
+                    g2d.drawImage(nodo.icona, x, altezzaRaggiunta, null);
+                    x += nodo.icona.getWidth(null) + ImageCache.SPACING;
+                }
+                if (nodo.chiave != null) {
+                    g2d.drawImage(nodo.chiave, x, altezzaRaggiunta, null);
+                }
+                if (nodo.valore != null) {
+                    g2d.drawImage(nodo.valore, larghezza - nodo.valore.getWidth(null), altezzaRaggiunta, null);
+                }
+                if (nodo.isFigliVisibili() && nodo.descrizione != null) {
+                    int altezzaDescrizione = altezzaRaggiunta +
+                            (nodo.chiave != null ? nodo.chiave.getHeight(null) : 0) +
+                            interlinea;
+                    g2d.drawImage(nodo.descrizione, x + larghezzaIndentazione, altezzaDescrizione, null);
+                }
+            }
+            altezzaRaggiunta += altezzaNodo;
+
+//            if (altezzaRaggiunta > altezzaMassima) {
+//                break;
+//            }
         }
-        return new Contenuto(listaRisultante, immaginiRisultante);
+
+        int spacing = ImageCache.SPACING;
+        if (offset > 0) {
+            Image frecciaSu = ImageCache.componenteScorrevoleFrecciaSu;
+            g2d.drawImage(frecciaSu, larghezza - frecciaSu.getWidth(null) - spacing, offset + spacing,null);
+        }
+        if (altezzaRaggiunta - offset > altezzaMassima) {
+            Image frecciaGiu = ImageCache.componenteScorrevoleFrecciaGiu;
+            g2d.drawImage(frecciaGiu,
+                    larghezza - frecciaGiu.getWidth(null) - spacing,
+                    offset + altezzaMassima - spacing - frecciaGiu.getHeight(null),
+                    null);
+        }
+
+        g2d.dispose();
+        return risultato.getSubimage(0, offset, larghezza, altezzaMassima);
     }
 
-    private void addNodo(Nodo nodo, List<TestoDoomdark> listaRisultante, List<ImmagineDoomdark> immaginiRisultante,
-                          int[] altezzaAccumulata, DoomdarkColorModel.Color colore) {
-        // Il colore imposto sul nodo vale per il solo nodo: i figli continuano a
-        // ereditare quello del proprio ramo, e decidono a loro volta se sovrascriverlo.
-        DoomdarkColorModel.Color coloreNodo = nodo.colore != null ? nodo.colore : colore;
-        int altezzaInizioNodo = altezzaAccumulata[0];
-        if (nodo.immagine != null) {
-            immaginiRisultante.add(new ImmagineDoomdark(nodo.immagine, nodo.indentazione, altezzaInizioNodo));
+    private List<Nodo> espandiNodi() {
+        List<Nodo> listaRisultante = new ArrayList<>();
+        for (Nodo nodo : nodi) {
+            addNodoAListaRisultante(nodo, listaRisultante);
         }
-        for (String s : nodo.testo) {
-            TestoDoomdark testoDoomdark = new TestoDoomdark(s, nodo.doomdarkFontTesto, nodo.indentazioneTesto, coloreNodo, nodo.riferimento, true);
-            listaRisultante.add(testoDoomdark);
-            altezzaAccumulata[0] += testoDoomdark.altezza;
-        }
-        if (nodo.isFigliVisibili()) {
-            // La descrizione è indentata come i nodi figli
-            int indentazioneDescrizione = nodo.indentazioneTesto + larghezzaIndentazione;
-            for (String s : nodo.descrizione) {
-                TestoDoomdark testoDoomdark = new TestoDoomdark(s, nodo.doomdarkFontDescrizione, indentazioneDescrizione, coloreNodo, nodo.riferimento, false);
-                listaRisultante.add(testoDoomdark);
-                altezzaAccumulata[0] += testoDoomdark.altezza;
-            }
-        }
-        if (nodo.immagine != null) {
-            // Se l'immagine è più alta del testo/descrizione del nodo, deve determinare
-            // lei l'altezza del pezzetto: si aggiunge uno spaziatore per non far
-            // sovrapporre il contenuto successivo (figli o nodo seguente).
-            int altezzaPezzetto = altezzaAccumulata[0] - altezzaInizioNodo;
-            int spazioMancante = nodo.immagine.getHeight() - altezzaPezzetto;
-            if (spazioMancante > 0) {
-                listaRisultante.add(new TestoDoomdark(spazioMancante));
-                altezzaAccumulata[0] += spazioMancante;
-            }
-        }
+        return listaRisultante;
+    }
+
+    private void addNodoAListaRisultante(Nodo nodo, List<Nodo> listaRisultante) {
+        listaRisultante.add(nodo);
         if (nodo.isFigliVisibili()) {
             for (Nodo figlio : nodo.figli) {
-                addNodo(figlio, listaRisultante, immaginiRisultante, altezzaAccumulata, colore);
+                addNodoAListaRisultante(figlio, listaRisultante);
             }
         }
     }
@@ -168,89 +170,123 @@ public class ComponenteScorrevole<T> {
             return null;
         }
         int altezzaRaggiunta = 0;
-        for (TestoDoomdark testoDoomdark : espandiNodi().testi) {
-            if (quota < altezzaRaggiunta + testoDoomdark.altezza) {
-                return testoDoomdark.titolo ? testoDoomdark.riferimento : null;
+        for (Nodo nodo : espandiNodi()) {
+            int altezzaNodo = nodo.getAltezza();
+            if (quota < altezzaRaggiunta + altezzaNodo) {
+                return nodo.riferimento;
             }
-            altezzaRaggiunta += testoDoomdark.altezza;
+            altezzaRaggiunta += altezzaNodo;
         }
         return null;
     }
 
     public class Nodo {
-        private final DoomdarkFont doomdarkFontTesto;
-        private final List<String> testo;
-        private final DoomdarkFont doomdarkFontDescrizione;
-        private final List<String> descrizione;
-        private final BufferedImage immagine;
+        private final Image icona;
+        private final Image chiave;
+        private final Image valore;
+        private final Image descrizione;
+
         private final int indentazione;
         // Indentazione effettiva di testo/descrizione: se è presente un'immagine,
         // slitta fissa verso destra di (larghezza immagine + ImageCache.SPACING).
-        private final int indentazioneTesto;
+
         private final T riferimento;
         private final List<Nodo> figli = new ArrayList<>();
         private boolean figliVisibili = true;
-        // Se valorizzato, prevale sul colore ereditato dal ramo
-        private DoomdarkColorModel.Color colore;
 
-        Nodo(String testoOriginale, DoomdarkFont doomdarkFontTestoOriginale,
-             String descrizioneOriginale, DoomdarkFont doomdarkFontDescrizioneOriginale,
-             BufferedImage immagine, int indentazione, T riferimento) {
+        Nodo(String chiave, DoomdarkFont fontChiave, DoomdarkColorModel.Color coloreChiave,
+             String valore, DoomdarkFont fontValore, DoomdarkColorModel.Color coloreValore,
+             String descrizione, DoomdarkFont fontDescrizione, DoomdarkColorModel.Color coloreDescrizione,
+             Image immagineAccompagnamentoSinistra, int indentazione, T riferimento) {
             this.riferimento = riferimento;
-            this.immagine = immagine;
+            this.icona = immagineAccompagnamentoSinistra;
             this.indentazione = indentazione;
-            int larghezzaImmagine = immagine != null ? immagine.getWidth() + ImageCache.SPACING : 0;
-            this.indentazioneTesto = indentazione + larghezzaImmagine;
-            // Il testo va spezzato sulla larghezza effettivamente disponibile, che
-            // l'indentazione (e l'eventuale immagine) riducono. La descrizione è
-            // indentata di un livello in più, e il wrapping resta fisso su questa
-            // stessa X anche se il testo supera in altezza l'immagine.
-            int larghezzaDisponibile = larghezza - indentazioneTesto;
-            this.doomdarkFontTesto = doomdarkFontTestoOriginale;
-            this.testo = FontTool.split(this.doomdarkFontTesto, testoOriginale, larghezzaDisponibile);
-            this.doomdarkFontDescrizione = doomdarkFontDescrizioneOriginale;
-            this.descrizione = FontTool.split(this.doomdarkFontDescrizione, descrizioneOriginale, larghezzaDisponibile - larghezzaIndentazione);
+
+            int larghezzaMassimaChiave = larghezza - indentazione;
+            if (immagineAccompagnamentoSinistra != null) {
+                larghezzaMassimaChiave = larghezzaMassimaChiave - immagineAccompagnamentoSinistra.getWidth(null) - ImageCache.SPACING;
+            }
+
+            // La descrizione è indentata un livello in più
+            int larghezzaMassimaDescrizione = larghezzaMassimaChiave - indentazione;
+
+            // Se abbiamo anche un valore la larghezza massima per la chiave si riduce, ma per la descrizione rimane la stessa
+            if (valore != null) {
+                this.valore = ImageCache.get(valore, fontValore, coloreValore);
+                larghezzaMassimaChiave = larghezzaMassimaChiave - this.valore.getWidth(null) - ImageCache.SPACING;
+            } else {
+                this.valore = null;
+            }
+            if (chiave != null) {
+                this.chiave = creaImmagine(fontChiave, coloreChiave, chiave, larghezzaMassimaChiave);
+            } else {
+                this.chiave = null;
+            }
+            if (descrizione != null) {
+                this.descrizione = creaImmagine(fontDescrizione, coloreDescrizione, descrizione, larghezzaMassimaDescrizione);
+            } else {
+                this.descrizione = null;
+            }
         }
 
-        public Nodo creaNodo(String testo, DoomdarkFont doomdarkFontTesto,
-                             String descrizione, DoomdarkFont doomdarkFontDescrizione, T riferimento) {
-            return creaNodo(testo, doomdarkFontTesto, descrizione, doomdarkFontDescrizione, null, riferimento);
+        private Image creaImmagine(DoomdarkFont font, DoomdarkColorModel.Color color, String testo, int larghezza) {
+            List<String> testi = FontTool.split(font, testo, larghezza);
+            BufferedImage canvas = new BufferedImage(larghezza, (font.getHeight() + interlinea) * testi.size(), BufferedImage.TYPE_INT_ARGB);
+            Graphics2D g2d = canvas.createGraphics();
+            int y = 0;
+            for (String s : testi) {
+                Image image = DoomdarkTextProducer.getImage(s, font, color);
+                g2d.drawImage(image, 0, y, null);
+                y += font.getHeight() + interlinea;
+            }
+            g2d.dispose();
+            return canvas;
         }
 
-        public Nodo creaNodo(String testo, DoomdarkFont doomdarkFontTesto,
-                             String descrizione, DoomdarkFont doomdarkFontDescrizione,
-                             BufferedImage immagine, T riferimento) {
-            Nodo nodo = new Nodo(testo, doomdarkFontTesto, descrizione, doomdarkFontDescrizione, immagine,
-                    this.indentazione + larghezzaIndentazione, riferimento);
+        public Nodo creaNodo(String chiave, DoomdarkFont fontChiave, DoomdarkColorModel.Color coloreChiave,
+                             String descrizione, DoomdarkFont fontDescrizione, DoomdarkColorModel.Color coloreDescrizione,
+                             Image immagineAccompagnamentoSinistra, T riferimento) {
+            return creaNodo(chiave, fontChiave, coloreChiave,
+                    null, null, null,
+                    descrizione, fontDescrizione, coloreDescrizione,
+                    immagineAccompagnamentoSinistra, riferimento);
+        }
+
+        public Nodo creaNodo(String chiave, DoomdarkFont fontChiave, DoomdarkColorModel.Color coloreChiave,
+                             String valore, DoomdarkFont fontValore, DoomdarkColorModel.Color coloreValore,
+                             String descrizione, DoomdarkFont fontDescrizione, DoomdarkColorModel.Color coloreDescrizione,
+                             Image immagineAccompagnamentoSinistra, T riferimento) {
+            Nodo nodo = new Nodo(chiave, fontChiave, coloreChiave,
+                    valore, fontValore, coloreValore,
+                    descrizione, fontDescrizione, coloreDescrizione,
+                    immagineAccompagnamentoSinistra, this.indentazione + larghezzaIndentazione, riferimento);
             figli.add(nodo);
             return nodo;
         }
 
         public int getAltezza() {
-            int altezzaPezzetto = this.testo.size() * doomdarkFontTesto.getHeight() + interlinea;
+            int altezza = 0;
+            if (chiave != null) {
+                altezza = chiave.getHeight(null);
+            }
+            if (valore != null) {
+                altezza = Math.max(altezza, valore.getHeight(null));
+            }
             if (figliVisibili) {
-                altezzaPezzetto += this.descrizione.size() * doomdarkFontDescrizione.getHeight() + interlinea;
+                if (descrizione != null) {
+                    altezza += interlinea + descrizione.getHeight(null);
+                }
+                altezza += interlinea + figli.stream().mapToInt(Nodo::getAltezza).sum();
             }
-            if (immagine != null) {
-                altezzaPezzetto = Math.max(altezzaPezzetto, immagine.getHeight());
+            if (icona != null) {
+                altezza = Math.max(altezza, icona.getHeight(null));
             }
-            int altezza = altezzaPezzetto;
-            if (figliVisibili) {
-                altezza += figli.stream().mapToInt(Nodo::getAltezza).sum();
-            }
+            altezza += interlinea;
             return altezza;
         }
 
         public int getIndentazione() {
             return indentazione;
-        }
-
-        public List<Nodo> getFigli() {
-            return figli;
-        }
-
-        public void setColore(DoomdarkColorModel.Color colore) {
-            this.colore = colore;
         }
 
         public void setFigliVisibili(boolean figliVisibili) {
@@ -259,69 +295,6 @@ public class ComponenteScorrevole<T> {
 
         public boolean isFigliVisibili() {
             return figliVisibili;
-        }
-    }
-
-    private class TestoDoomdark {
-        private final String testo;
-        private final DoomdarkFont doomdarkFont;
-        private final int altezza;
-        private final int indentazione;
-        private final DoomdarkColorModel.Color colore;
-        private final T riferimento;
-        // Distingue le righe del titolo del nodo da quelle della sua descrizione
-        private final boolean titolo;
-
-        public TestoDoomdark(String testo, DoomdarkFont doomdarkFont, int indentazione,
-                             DoomdarkColorModel.Color colore, T riferimento, boolean titolo) {
-            this.testo = testo;
-            this.doomdarkFont = doomdarkFont;
-            this.altezza = doomdarkFont.getHeight() + interlinea;
-            this.indentazione = indentazione;
-            this.colore = colore;
-            this.riferimento = riferimento;
-            this.titolo = titolo;
-        }
-
-        /**
-         * Spaziatore senza testo, usato per far occupare a un'immagine più alta
-         * del testo/descrizione tutto lo spazio verticale che le compete.
-         */
-        public TestoDoomdark(int altezza) {
-            this.testo = null;
-            this.doomdarkFont = null;
-            this.altezza = altezza;
-            this.indentazione = 0;
-            this.colore = null;
-            this.riferimento = null;
-            this.titolo = false;
-        }
-
-        @Override
-        public String toString() {
-            return testo;
-        }
-    }
-
-    private class ImmagineDoomdark {
-        private final BufferedImage immagine;
-        private final int indentazione;
-        private final int altezza;
-
-        ImmagineDoomdark(BufferedImage immagine, int indentazione, int altezza) {
-            this.immagine = immagine;
-            this.indentazione = indentazione;
-            this.altezza = altezza;
-        }
-    }
-
-    private class Contenuto {
-        private final List<TestoDoomdark> testi;
-        private final List<ImmagineDoomdark> immagini;
-
-        Contenuto(List<TestoDoomdark> testi, List<ImmagineDoomdark> immagini) {
-            this.testi = testi;
-            this.immagini = immagini;
         }
     }
 }

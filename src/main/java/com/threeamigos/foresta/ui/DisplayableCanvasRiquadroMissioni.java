@@ -1,9 +1,12 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.missioni.CronacheDiUnFegatoEroico;
 import com.threeamigos.foresta.missioni.Missione;
+import com.threeamigos.foresta.missioni.NessunBoccaleLasciatoIndietro;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 
 import java.awt.*;
+import java.util.List;
 
 class DisplayableCanvasRiquadroMissioni implements Finestra {
 
@@ -11,6 +14,9 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 	private static final int SPACING = 4;
 	// Pixel di scorrimento per ogni scatto della rotella
 	private static final int PASSO_SCORRIMENTO = 2;
+
+	private static final DoomdarkFont fontNome = DoomdarkFontMedium.getInstance();
+	private static final DoomdarkFont fontDescrizione = DoomdarkFontSmall.getInstance();
 
 	private final int topLeftX;
 	private final int topLeftY;
@@ -43,10 +49,26 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 	 */
 	private ComponenteScorrevole<Missione> costruisciComponenteScorrevole() {
 		ComponenteScorrevole<Missione> componenteScorrevole = new ComponenteScorrevole<>(innerWidth, 10, 2);
-		for (Missione missione : RegistroMissioni.getMissioniDaMostrare()) {
-			ComponenteScorrevole<Missione>.Nodo nodo = componenteScorrevole.creaNodo(missione.getNome(), DoomdarkFontMedium.getInstance(),
-					missione.getDescrizione(), DoomdarkFontSmall.getInstance(), missione);
-			configuraNodo(nodo, missione);
+		DoomdarkColorAlternante coloreAlternante = new DoomdarkColorAlternante();
+		for (Missione missione : RegistroMissioni.getMissioniAttive()) {
+			DoomdarkColorModel.Color colore = coloreAlternante.getColor();
+			ComponenteScorrevole<Missione>.Nodo nodo = componenteScorrevole.creaNodo(
+					missione.getNome(), fontNome, colore,
+					missione.getDescrizione(), fontDescrizione, colore,
+					getIcona(missione), missione);
+			configuraNodo(nodo, missione, colore);
+		}
+		List<Missione> missioniCompletate = RegistroMissioni.getMissioniCompletate();
+		if (!missioniCompletate.isEmpty()) {
+			componenteScorrevole.creaSeparatore();
+			for (Missione missione : missioniCompletate) {
+				DoomdarkColorModel.Color colore = DoomdarkColorModel.Color.DARK_GRAY;
+				ComponenteScorrevole<Missione>.Nodo nodo = componenteScorrevole.creaNodo(
+						missione.getNome(), fontNome, colore,
+						missione.getDescrizione(), fontDescrizione, colore,
+						getIcona(missione), missione);
+				configuraNodo(nodo, missione, colore);
+			}
 		}
 		return componenteScorrevole;
 	}
@@ -55,18 +77,17 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 	 * Una missione completata resta in elenco ma spenta; una non ancora attivata non
 	 * viene mostrata. Vale a ogni livello dell'albero.
 	 */
-	private void configuraNodo(ComponenteScorrevole<Missione>.Nodo nodo, Missione missione) {
+	private void configuraNodo(ComponenteScorrevole<Missione>.Nodo nodo, Missione missione, DoomdarkColorModel.Color colore) {
 		nodo.setFigliVisibili(missione.isDescrizioneVisibile());
-		if (missione.isCompleta()) {
-			nodo.setColore(DoomdarkColorModel.Color.DARK_GRAY);
-		}
 		for (Missione missioneSecondaria : missione.getMissioniSecondarie()) {
-			if (!RegistroMissioni.isDaMostrare(missioneSecondaria)) {
+			if (!missioneSecondaria.isAttiva()) {
 				continue;
 			}
-			ComponenteScorrevole<Missione>.Nodo nodoFiglio = nodo.creaNodo(missioneSecondaria.getNome(), DoomdarkFontMedium.getInstance(),
-					missioneSecondaria.getDescrizione(), DoomdarkFontSmall.getInstance(), missioneSecondaria);
-			configuraNodo(nodoFiglio, missioneSecondaria);
+			ComponenteScorrevole<Missione>.Nodo nodoFiglio = nodo.creaNodo(
+					missioneSecondaria.getNome(), fontNome, colore,
+					missioneSecondaria.getDescrizione(), fontDescrizione, colore,
+					null, missioneSecondaria);
+			configuraNodo(nodoFiglio, missioneSecondaria, colore);
 		}
 	}
 
@@ -101,5 +122,13 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 		} else if (movimentoRotella == MovimentoRotella.GIU) {
 			offsetY += numeroRotazioni * PASSO_SCORRIMENTO;
 		}
+	}
+
+	private Image getIcona(Missione missione) {
+		if (NessunBoccaleLasciatoIndietro.class.isAssignableFrom(missione.getClass()) ||
+				CronacheDiUnFegatoEroico.class.isAssignableFrom(missione.getClass())) {
+			return ImageCache.missioneBirra;
+		}
+		return null;
 	}
 }

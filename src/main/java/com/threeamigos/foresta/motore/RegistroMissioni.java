@@ -26,7 +26,7 @@ public class RegistroMissioni {
 		SCONFIGGI_L_IDRA(ClasseMissione.SCONFIGGI_L_IDRA),
 		SCONFIGGI_IL_LICH(ClasseMissione.SCONFIGGI_IL_LICH),
 		SCONFIGGI_LA_STREGA(ClasseMissione.SCONFIGGI_LA_STREGA),
-//		MISSIONE_DI_PROVA(ClasseMissione.MISSIONE_DI_PROVA),
+		MISSIONE_DI_PROVA(ClasseMissione.MISSIONE_DI_PROVA),
 		RECUPERA_IL_MEDAGLIONE(ClasseMissione.RECUPERA_IL_MEDAGLIONE),
 		RECUPERA_LE_DERRATE_ALIMENTARI(ClasseMissione.RECUPERA_LE_DERRATE_ALIMENTARI),
 		CRONACHE_DI_UN_FEGATO_EROICO(ClasseMissione.CRONACHE_DI_UN_FEGATO_EROICO),
@@ -49,12 +49,21 @@ public class RegistroMissioni {
 	}
 
 	private static final Map<TipoMissionePredefinita, Missione> elencoMissioniPredefinite = new EnumMap<>(TipoMissionePredefinita.class);
+	private static final Map<TipoMissionePredefinita, Missione> elencoMissioniPredefiniteCompletate = new EnumMap<>(TipoMissionePredefinita.class);
 	private static final List<Missione> elencoMissioniSecondarie = new ArrayList<>();
+	private static final List<Missione> elencoMissioniSecondarieCompletate = new ArrayList<>();
+
+	private static void pulisciElenchi() {
+		elencoMissioniPredefinite.clear();
+		elencoMissioniPredefiniteCompletate.clear();
+		elencoMissioniSecondarie.clear();
+		elencoMissioniSecondarieCompletate.clear();
+	}
 
 	public static void reimposta() {
 		md.reimposta();
-		elencoMissioniPredefinite.clear();
-		elencoMissioniSecondarie.clear();
+		pulisciElenchi();
+
 		for (TipoMissionePredefinita tipoMissionePredefinita : TipoMissionePredefinita.values()) {
 			Missione missione = tipoMissionePredefinita.getIstanza();
 			missione.getModelloDati().setId(tipoMissionePredefinita.name());
@@ -64,16 +73,28 @@ public class RegistroMissioni {
 	}
 	
 	public static void aggiornaDopoRilettura() {
-		elencoMissioniPredefinite.clear();
-		elencoMissioniSecondarie.clear();
-		for (MissioneMD missioneMD : md.getMissioni()) {
+		pulisciElenchi();
+		aggiornaDopoRiletturaImpl(md.getMissioniAttive());
+		aggiornaDopoRiletturaImpl(md.getMissioniCompletate());
+	}
+
+	private static void aggiornaDopoRiletturaImpl(Collection<MissioneMD> missioni) {
+		for (MissioneMD missioneMD : missioni) {
 			if (TipoMissionePredefinita.contieneMissione(missioneMD.getId())) {
 				TipoMissionePredefinita tipoMissionePredefinita = TipoMissionePredefinita.valueOf(missioneMD.getId());
-				// Il tipo delle radici predefinite lo decide il codice, non il salvataggio:
-				// altrimenti un salvataggio manomesso farebbe esplodere getMissionePrincipale().
-				elencoMissioniPredefinite.put(tipoMissionePredefinita, ricostruisci(tipoMissionePredefinita.getIstanza(), missioneMD));
+				Missione missione = ricostruisci(tipoMissionePredefinita.getIstanza(), missioneMD);
+				if (missione.isCompleta()) {
+					elencoMissioniPredefiniteCompletate.put(tipoMissionePredefinita, missione);
+				} else {
+					elencoMissioniPredefinite.put(tipoMissionePredefinita, missione);
+				}
 			} else {
-				elencoMissioniSecondarie.add(ricostruisci(missioneMD));
+				Missione missione = ricostruisci(missioneMD);
+				if (missione.isCompleta()) {
+					elencoMissioniSecondarie.add(missione);
+				} else {
+					elencoMissioniSecondarieCompletate.add(missione);
+				}
 			}
 		}
 	}
@@ -96,58 +117,44 @@ public class RegistroMissioni {
 		return missione;
 	}
 
-	public static Missione getMissione(TipoMissionePredefinita tipoMissionePredefinita) {
-		return elencoMissioniPredefinite.get(tipoMissionePredefinita);
-	}
-
 	/**
-	 * Riporta le missioni di primo livello non completate, attive e non. La discesa
+	 * Riporta le missioni di primo livello non completate, attive e da attivare. La discesa
 	 * nell'albero è a carico del chiamante.
 	 */
-	public static List<Missione> getMissioni() {
-		List<Missione> missioni = new ArrayList<>();
-		elencoMissioniPredefinite.values().stream().filter(m-> !m.isCompleta()).forEach(missioni::add);
-		elencoMissioniSecondarie.stream().filter(m-> !m.isCompleta()).forEach(missioni::add);
+	public static List<Missione> getMissioniNonCompletate() {
+        List<Missione> missioni = new ArrayList<>(elencoMissioniPredefinite.values());
+		missioni.addAll(elencoMissioniSecondarie);
 		return missioni;
 	}
 
 	/**
-	 * Riporta tutte le missioni attive.
+	 * Riporta solo le missioni attive.
 	 */
 	public static List<Missione> getMissioniAttive() {
 		List<Missione> missioni = new ArrayList<>();
-		elencoMissioniPredefinite.values().stream().filter(m -> m.isAttiva() && !m.isCompleta()).forEach(missioni::add);
-		elencoMissioniSecondarie.stream().filter(m -> m.isAttiva() && !m.isCompleta()).forEach(missioni::add);
+		elencoMissioniPredefinite.values().stream().filter(Missione::isAttiva).forEach(missioni::add);
+		elencoMissioniSecondarie.stream().filter(Missione::isAttiva).forEach(missioni::add);
 		return missioni;
-	}
-
-	/**
-	 * Riporta le missioni da mostrare nel riquadro: quelle che sono state attivate,
-	 * completate o no. Le missioni non ancora attivate non vanno mostrate.
-	 */
-	public static List<Missione> getMissioniDaMostrare() {
-		List<Missione> missioni = new ArrayList<>();
-		elencoMissioniPredefinite.values().stream().filter(RegistroMissioni::isDaMostrare).forEach(missioni::add);
-		elencoMissioniSecondarie.stream().filter(RegistroMissioni::isDaMostrare).forEach(missioni::add);
-		return missioni;
-	}
-
-	/**
-	 * Completare una missione non ne azzera l'attivazione, ma non tutte le missioni
-	 * passano per attivaMissione(): entrambe le condizioni vanno controllate.
-	 */
-	public static boolean isDaMostrare(Missione missione) {
-		return missione.isAttiva() || missione.isCompleta();
 	}
 
 	public static List<Missione> getMissioniCompletate() {
-		List<Missione> missioni = new ArrayList<>();
-		elencoMissioniPredefinite.values().stream().filter(Missione::isCompleta).forEach(missioni::add);
-		elencoMissioniSecondarie.stream().filter(Missione::isCompleta).forEach(missioni::add);
+		List<Missione> missioni = new ArrayList<>(elencoMissioniPredefiniteCompletate.values());
+		missioni.addAll(elencoMissioniSecondarieCompletate);
 		return missioni;
 	}
 
 	public static SconfiggiIlDrago getMissionePrincipale() {
 		return (SconfiggiIlDrago) elencoMissioniPredefinite.get(TipoMissionePredefinita.SCONFIGGI_IL_DRAGO);
+	}
+
+	public static void completaMissione(Missione missione) {
+		if (TipoMissionePredefinita.contieneMissione(missione.getId())) {
+			TipoMissionePredefinita tipoMissione = TipoMissionePredefinita.valueOf(missione.getId());
+			elencoMissioniPredefinite.remove(tipoMissione);
+			elencoMissioniPredefiniteCompletate.put(tipoMissione, missione);
+		} else {
+			elencoMissioniSecondarie.removeIf(missione::equals);
+			elencoMissioniSecondarieCompletate.add(missione);
+		}
 	}
 }

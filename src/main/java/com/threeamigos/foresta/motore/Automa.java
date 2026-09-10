@@ -859,7 +859,7 @@ public class Automa implements ControlloreDiGioco {
 	 * livello: le sotto-missioni si attivano e si completano da sole come le altre.
 	 */
 	private void controllaMissioni(Consumer<Missione> controllo, OrdineVisita ordineVisita) {
-		for (Missione missione : RegistroMissioni.getMissioni()) {
+		for (Missione missione : RegistroMissioni.getMissioniNonCompletate()) {
 			controllaMissione(missione, controllo, ordineVisita);
 		}
 	}
@@ -869,7 +869,7 @@ public class Automa implements ControlloreDiGioco {
 			controllo.accept(missione);
 		}
 		// Nei rami spenti o già conclusi non si scende, e le figlie completate si
-		// saltano: è lo stesso filtro che getMissioni() applica alle radici. Con
+		// saltano: è lo stesso filtro che getMissioniNonCompletate() applica alle radici. Con
 		// FIGLI_PRIMA la condizione si valuta prima che il padre sia controllato,
 		// quindi una missione che si attiva adesso vedrà le proprie figlie al giro
 		// successivo.

@@ -1,7 +1,9 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.motore.RegistroMissioni.TipoMissionePredefinita;
+import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.motore.GruppoAvversario;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.personaggi.Ladra;
 import com.threeamigos.foresta.personaggi.Ladro;
@@ -18,14 +20,10 @@ public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 	public String getNome() {
 		return "la grotta dei ladri del Medaglione";
 	}
-	
-	private boolean isMissioneCompleta() {
-		return RegistroMissioni.getMissione(TipoMissionePredefinita.RECUPERA_IL_MEDAGLIONE).isCompleta();
-	}
-	
+
 	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
-		if (!isMissioneCompleta()) {
+		if (!isCompleta()) {
 			int livello = Statistiche.getLivello();
 			Ladro ladro = new Ladro(livello);
 			ladro.setAmichevole(false);
@@ -50,7 +48,7 @@ public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		if (!isMissioneCompleta()) {
+		if (!isCompleta()) {
 			UI.notifica("Questa è la grotta dove risiede la banda di ladri che ha rubato il Medaglione!");
 		} else {
 			UI.notifica("In questa grotta avevano il loro covo i ladri del medaglione.");
