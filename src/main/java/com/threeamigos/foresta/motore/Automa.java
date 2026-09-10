@@ -235,18 +235,32 @@ public class Automa implements ControlloreDiGioco {
 				gruppo.aggiungiPersonaggioSenzaNotificare(personaggio);
 
 				Artefatto cazzabubbolo = CostruttoreArtefatto.istanza()
-						.setTipo(TipoArtefatto.SPADA)
+						.setTipo(TipoArtefatto.NINNOLO)
 						.setNome("il cazzabubbolo a molla della morte alata perforante")
 						.setDescrizione("il cui potere è nel fancazzismo")
 						.setLivello(1)
 						.setDanniBase(5)
 						.setCostoAcquisto(10)
 						.setPeso(1)
-						.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 25)
-						.setModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_PERCENTUALE, 5)
-						.setModificatore(TipoAttributo.CORAGGIO, TipoModificatore.AUMENTO_PERCENTUALE, 5)
+						.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 500)
+						.setModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_PERCENTUALE, 500)
+						.setModificatore(TipoAttributo.CORAGGIO, TipoModificatore.AUMENTO_PERCENTUALE, 500)
 						.costruisci();
 				personaggio.addArtefatto(cazzabubbolo);
+
+				Artefatto megaspada = CostruttoreArtefatto.istanza()
+						.setTipo(TipoArtefatto.SPADA)
+						.setNome("la Spada della Morte alata con rinterzo laterale")
+						.setDescrizione("che massacra i porci")
+						.setLivello(5)
+						.setDanniBase(50)
+						.setCostoAcquisto(100)
+						.setPeso(3)
+						.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 5)
+						.setModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_PERCENTUALE, 2)
+						.setModificatore(TipoAttributo.CORAGGIO, TipoModificatore.AUMENTO_PERCENTUALE, 1)
+						.costruisci();
+				personaggio.addArtefatto(megaspada);
 
 				stato = Stato.INZIO_LOCAZIONE;
 				processaAzione(null);

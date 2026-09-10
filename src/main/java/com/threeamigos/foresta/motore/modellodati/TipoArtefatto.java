@@ -22,7 +22,9 @@ public enum TipoArtefatto {
 
     BASTONE_MAGICO(SupertipoArtefatto.ALTRO, "impugna"),
 
-    VESTE(SupertipoArtefatto.ARMATURA, "indossa");
+    VESTE(SupertipoArtefatto.ARMATURA, "indossa"),
+
+    NINNOLO(SupertipoArtefatto.ALTRO, "ha con se");
 
     private final SupertipoArtefatto supertipo;
     private final TipoDanno tipoDanno;

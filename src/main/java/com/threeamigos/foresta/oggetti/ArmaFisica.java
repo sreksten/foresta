@@ -14,6 +14,10 @@ public class ArmaFisica extends Artefatto implements Arma {
         super(md);
     }
 
+    public int getDanni() {
+        return md.getDanni();
+    }
+
     @Override
     public TipoDanno getTipoDanno() {
         return null;

@@ -11,7 +11,7 @@ import com.threeamigos.foresta.ui.UI;
 
 public class Artefatto implements Oggetto {
 
-	private final ArtefattoMD md;
+	protected final ArtefattoMD md;
 
 	public Artefatto(ArtefattoMD artefattoMD) {
 		this.md = artefattoMD;
@@ -31,10 +31,6 @@ public class Artefatto implements Oggetto {
 
 	public final int getLivello() {
 		return md.getLivello();
-	}
-
-	public int getDanni() {
-		return md.getDanni();
 	}
 
 	public final int getCostoAcquisto() {

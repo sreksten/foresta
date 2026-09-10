@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.tools;
 
 import com.threeamigos.foresta.motore.modellodati.*;
+import com.threeamigos.foresta.oggetti.ArmaFisica;
 import com.threeamigos.foresta.oggetti.Artefatto;
 
 /**
@@ -85,6 +86,10 @@ public class CostruttoreArtefattoImpl implements
 
     @Override
     public Artefatto costruisci() {
-        return new Artefatto(artefattoMD);
+        if (artefattoMD.getTipo().getSupertipo() == SupertipoArtefatto.ARMA) {
+            return new ArmaFisica(artefattoMD);
+        } else {
+            return new Artefatto(artefattoMD);
+        }
     }
 }
