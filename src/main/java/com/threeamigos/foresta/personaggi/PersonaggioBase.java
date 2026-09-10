@@ -1417,6 +1417,9 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	// -- funzioni per calcolo modificatori
 
+	/**
+	 * Riporta l'attributo del personaggio modificato sia dai modificatori locali che quelli degli artefatti
+	 */
 	private int get(Function<PersonaggioMD, Integer> getterAttributo, TipoAttributo tipoAttributo) {
 		return (int) getQuantitaModificata(getterAttributo.apply(md), tipoAttributo);
 	}

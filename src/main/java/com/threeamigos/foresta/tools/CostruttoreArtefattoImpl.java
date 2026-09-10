@@ -2,6 +2,7 @@ package com.threeamigos.foresta.tools;
 
 import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.Incantamento;
 
 /**
  *
@@ -15,7 +16,8 @@ public class CostruttoreArtefattoImpl implements
         CostruttoreArtefatto.StepDanniBase,
         CostruttoreArtefatto.StepCostoAcquisto,
         CostruttoreArtefatto.StepPeso,
-        CostruttoreArtefatto.StepModificatore {
+        CostruttoreArtefatto.StepModificatore,
+        CostruttoreArtefatto.StepIncantamento {
 
     private final ArtefattoMD artefattoMD;
 
@@ -80,6 +82,18 @@ public class CostruttoreArtefattoImpl implements
     @Override
     public CostruttoreArtefatto.StepModificatore setModificatore(TipoAttributo modificatore, TipoModificatore tipoModificatore, double quantita) {
         artefattoMD.addModificatore(modificatore, tipoModificatore, quantita, "");
+        return this;
+    }
+
+    @Override
+    public CostruttoreArtefatto.StepIncantamento setIncantamento(Incantamento incantamento) {
+        artefattoMD.addIncantamento(incantamento);
+        return this;
+    }
+
+    @Override
+    public CostruttoreArtefatto.StepIncantamento setIncantamento(String nomeIncantamento, TipoDanno tipoDannoElementale, int dannoBonusFisso, double coefficienteScala) {
+        artefattoMD.addIncantamento(nomeIncantamento, tipoDannoElementale, dannoBonusFisso, coefficienteScala);
         return this;
     }
 

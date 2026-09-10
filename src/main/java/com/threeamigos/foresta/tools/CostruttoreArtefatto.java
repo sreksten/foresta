@@ -1,10 +1,8 @@
 package com.threeamigos.foresta.tools;
 
-import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
-import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
+import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.Incantamento;
 
 /**
  *
@@ -43,6 +41,13 @@ public interface CostruttoreArtefatto {
         StepModificatore setModificatore(ModificatoreAttributo modificatore);
         StepModificatore setModificatore(TipoAttributo modificatore, TipoModificatore tipoModificatore, double quantita, String nota);
         StepModificatore setModificatore(TipoAttributo modificatore, TipoModificatore tipoModificatore, double quantita);
+        StepIncantamento setIncantamento(Incantamento incantamento);
+        StepIncantamento setIncantamento(String nomeIncantamento, TipoDanno tipoDannoElementale, int dannoBonusFisso, double coefficienteScala);
+        Artefatto costruisci();
+    }
+    interface StepIncantamento {
+        StepIncantamento setIncantamento(Incantamento incantamento);
+        StepIncantamento setIncantamento(String nomeIncantamento, TipoDanno tipoDannoElementale, int dannoBonusFisso, double coefficienteScala);
         Artefatto costruisci();
     }
 }

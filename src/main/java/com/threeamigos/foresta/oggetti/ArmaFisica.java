@@ -4,6 +4,8 @@ import com.threeamigos.foresta.motore.Arma;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.TipoDanno;
 
+import java.util.Collection;
+
 /**
  *
  * @author Stefano Reksten
@@ -21,5 +23,15 @@ public class ArmaFisica extends Artefatto implements Arma {
     @Override
     public TipoDanno getTipoDanno() {
         return md.getTipo().getTipoDanno();
+    }
+
+    @Override
+    public boolean isIncantata() {
+        return !md.getIncantamenti().isEmpty();
+    }
+
+    @Override
+    public Collection<Incantamento> getIncantamenti() {
+        return md.getIncantamenti();
     }
 }

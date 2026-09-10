@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.oggetti.Incantamento;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -17,6 +19,7 @@ public class ArtefattoMD implements Serializzabile {
 	protected int costoAcquisto;
 	private double peso;
 	private final Collection<ModificatoreAttributo> modificatori = new ArrayList<>();
+	private final Collection<Incantamento> incantamenti = new ArrayList<>();
 
 	public TipoArtefatto getTipo() {
 		return tipo;
@@ -87,6 +90,18 @@ public class ArtefattoMD implements Serializzabile {
 		modificatori.add(new ModificatoreAttributo(tipoAttributo, tipoModificatore, quantita, nota));
 	}
 
+	public Collection<Incantamento> getIncantamenti() {
+		return incantamenti;
+	}
+
+	public void addIncantamento(Incantamento incantamento) {
+		incantamenti.add(incantamento);
+	}
+
+	public void addIncantamento(String nomeIncantamento, TipoDanno tipoDanno, int dannoBonusFisso, double coefficienteScala) {
+		incantamenti.add(new Incantamento(nomeIncantamento, tipoDanno, dannoBonusFisso, coefficienteScala));
+	}
+
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stream.print(tipo.name());
@@ -103,7 +118,10 @@ public class ArtefattoMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(peso);
 		stream.print(PIPE);
-		stream.println(modificatori.size());
+		stream.print(modificatori.size());
+		stream.print(PIPE);
+		stream.println(incantamenti.size());
+
 		for (ModificatoreAttributo modificatore : modificatori) {
 			stream.print(modificatore.getTipoAttributo().name());
 			stream.print(PIPE);
@@ -112,6 +130,16 @@ public class ArtefattoMD implements Serializzabile {
 			stream.print(modificatore.getQuantita());
 			stream.print(PIPE);
 			stream.println((modificatore.getNote() == null || modificatore.getNote().isEmpty()) ? "-" : modificatore.getNote());
+		}
+
+		for (Incantamento incantamento : incantamenti) {
+			stream.print(incantamento.getNomeIncantamento());
+			stream.print(PIPE);
+			stream.print(incantamento.getTipoDannoElementale().name());
+			stream.print(PIPE);
+			stream.print(incantamento.getDannoBonusFisso());
+			stream.print(PIPE);
+			stream.println(incantamento.getCoefficienteScala());
 		}
 	}
 
@@ -127,6 +155,7 @@ public class ArtefattoMD implements Serializzabile {
 		costoAcquisto = Integer.parseInt(st.nextToken());
 		peso = Double.parseDouble(st.nextToken());
 		int numeroModificatori = Integer.parseInt(st.nextToken());
+		int numeroIncantamenti = Integer.parseInt(st.nextToken());
 		modificatori.clear();
 		for (int i = 0; i < numeroModificatori; i++) {
 			line = stream.readLine();
@@ -134,13 +163,23 @@ public class ArtefattoMD implements Serializzabile {
 			while (st.hasMoreTokens()) {
 				TipoAttributo tipoAttributo = TipoAttributo.valueOf(st.nextToken());
 				TipoModificatore tipoModificatore = TipoModificatore.valueOf(st.nextToken());
-				Double quantita = Double.parseDouble(st.nextToken());
+				double quantita = Double.parseDouble(st.nextToken());
 				String note = st.nextToken();
 				if ("-".equals(note)) {
 					note = null;
 				}
 				modificatori.add(new ModificatoreAttributo(tipoAttributo, tipoModificatore, quantita, note));
 			}
+		}
+		incantamenti.clear();
+		for (int i = 0; i < numeroIncantamenti; i++) {
+			line = stream.readLine();
+			st = new StringTokenizer(line, PIPE);
+			String nomeIncantamento = st.nextToken();
+			TipoDanno tipoDannoElementale = TipoDanno.valueOf(st.nextToken());
+			int dannoBonusFisso = Integer.parseInt(st.nextToken());
+			double coefficienteScala = Double.parseDouble(st.nextToken());
+			incantamenti.add(new Incantamento(nomeIncantamento, tipoDannoElementale, dannoBonusFisso, coefficienteScala));
 		}
 	}
 }

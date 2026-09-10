@@ -4,6 +4,7 @@ import com.threeamigos.foresta.motore.modellodati.SupertipoDanno;
 import com.threeamigos.foresta.motore.modellodati.TipoDanno;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
+import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 /**
@@ -288,6 +289,37 @@ public class CalcolatoreCombattimento {
         double dannoMitigato = Math.floor(dannoOffensivoGrezzo * fattoreMitigazione * moltiplicatoreDannoStato);
         Logger.log("dannoMitigato: " + dannoMitigato);
 
+        // 4.2 --- COMPONENTE ELEMENTALE INCANTATA CUMULATIVA ---
+        double dannoElementaleFinale = 0.0d;
+
+        if (arma.isIncantata()) {
+            for (Incantamento inc : arma.getIncantamenti()) {
+                TipoDanno elementoMagico = inc.getTipoDannoElementale();
+
+                // Il danno magico dell'arma scala sull'INTELLIGENZA dell'attaccante
+                double dannoGrezzoMagico = (inc.getDannoBonusFisso() * arma.getLivello()) +
+                        (attaccante.getIntelligenza() * inc.getCoefficienteScala());
+
+                // Viene mitigato dalla RESISTENZA MAGICA del difensore
+                double mitigazioneMagica = 100.0d / (100.0d + difensore.getResistenzaMagica());
+
+                double dannoQuestoIncantamento = Math.floor(dannoGrezzoMagico * mitigazioneMagica);
+
+                // Se il bersaglio era BAGNATO e la spada è di FUOCO, si attiva l'interazione Vaporizzazione
+                if (elementoMagico == TipoDanno.FUOCO && difensore.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
+                    dannoQuestoIncantamento = dannoQuestoIncantamento * 0.5d;
+                    dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.VAPORIZZAZIONE);
+                }
+
+                // SOMMA i danni invece di sovrascriverli
+                dannoElementaleFinale += dannoQuestoIncantamento;
+                Logger.log(String.format("[INCANTAMENTO] Danno bonus accumulato da %s: %.2f", elementoMagico, dannoQuestoIncantamento));
+            }
+        }
+
+        // Il danno totale combinato dell'attacco
+        double dannoTotaleCombinato = dannoMitigato + dannoElementaleFinale;
+
         // 5. DETERMINAZIONE DEL COLPO CRITICO (Come capire se il colpo raddoppia)
         // Formula di base: 5% fisso + 1% per ogni punto statistica CRITICO dell'attaccante,
         // contrastata dalla FORTUNA del difensore.
@@ -302,42 +334,58 @@ public class CalcolatoreCombattimento {
         Logger.log("tiroDadoCritico: " + tiroDadoCritico);
         if (tiroDadoCritico <= probabilitaCritico || criticoAutomatico) {
             // Il colpo critico raddoppia il danno finale calcolato
-            dannoMitigato = dannoMitigato * 2.0d;
-            Logger.log("dannoMitigato raddoppiato per CRITICO: " + dannoMitigato);
+            dannoTotaleCombinato = dannoTotaleCombinato * 2.0d;
+            Logger.log("dannoTotaleCombinato raddoppiato per CRITICO: " + dannoTotaleCombinato);
         }
 
-        // 6. APPLICAZIONE DEI NUOVI STATI NATIVI DEL TIPO DI DANNO (Proc Rate)
-        // Più danno si fa rispetto alla vita del difensore, più è facile infliggere lo stato (es. Veleno o Sanguinamento)
-        if (dannoMitigato > 0.0d || tipoDanno.hasEffettiDiStato()) {
-            Logger.log("Applicazione stati nativi");
-            int statAusiliariaProc;
+        // 6. APPLICAZIONE DEI NUOVI STATI NATIVI (Proc Rate)
+        if (dannoTotaleCombinato > 0.0d) {
+            Logger.log("Applicazione stati nativi per arma ibrida");
 
-            if (dannoNonFisico) {
-                statAusiliariaProc = attaccante.getMagia();
-            } else {
-                statAusiliariaProc = attaccante.getFuria();
-            }
-            Logger.log("statAusiliariaProc: " + statAusiliariaProc);
-
-            double probabilitaApplicareStato = ((dannoMitigato * 100.0d) / difensore.getForza()) + (statAusiliariaProc * 2.0d);
-            Logger.log("probabilitaApplicareStato: " + probabilitaApplicareStato);
-            double tiroDadoStato = Dado.tira(100);
-            Logger.log("tiroDadoStato: " + tiroDadoStato);
-
-            if (tiroDadoStato <= probabilitaApplicareStato) {
-                Logger.log("Possibilità di applicare stato nativo");
-                TipoEffettoDiStato effettoDiStato = tipoDanno.getTipoEffettoDiStatoCasuale();
-                Logger.log("Stato nativo applicato: " + effettoDiStato);
-
-                dannoRisultante.addEffettoDiStato(effettoDiStato,
-                        calcolaDurataStato(difensore, effettoDiStato),
-                        calcolaDannoPeriodico(attaccante, difensore, effettoDiStato));
-            } else {
-                Logger.log("Stato nativo non applicato");
+            // --- TRAGUARDO 1: Stato dell'arma Principale (es. TAGLIENTE ➔ SANGUINAMENTO) ---
+            if (tipoDanno.hasEffettiDiStato()) {
+                double probStatoFisico = ((dannoMitigato * 100.0d) / difensore.getForza()) + (attaccante.getFuria() * 2.0d);
+                if (Dado.tira(100) <= probStatoFisico) {
+                    TipoEffettoDiStato effettoFisico = tipoDanno.getTipoEffettoDiStatoCasuale();
+                    if (effettoFisico != null) {
+                        dannoRisultante.addEffettoDiStato(effettoFisico, calcolaDurataStato(difensore, effettoFisico),
+                                calcolaDannoPeriodico(attaccante, difensore, effettoFisico));
+                        Logger.log("Arma applica stato fisico: " + effettoFisico);
+                    }
+                }
             }
 
-            int dannoFinale = Math.max(1, (int)dannoMitigato);
-            Logger.log("dannoFinale: " + dannoFinale);
+            // --- TRAGUARDO 2: Stati degli Incantamenti (Multipli e Indipendenti) ---
+            if (arma.isIncantata()) {
+                for (Incantamento incantamento : arma.getIncantamenti()) {
+                    if (incantamento.getTipoDannoElementale().hasEffettiDiStato()) {
+                        TipoDanno elemento = incantamento.getTipoDannoElementale();
+
+                        // Ricalcola il danno specifico di QUESTO incantamento per un Proc Rate preciso
+                        double dannoGrezzoMagicoProc = (incantamento.getDannoBonusFisso() * arma.getLivello()) +
+                                (attaccante.getIntelligenza() * incantamento.getCoefficienteScala());
+                        double mitigazioneMagicaProc = 100.0d / (100.0d + difensore.getResistenzaMagica());
+                        double dannoQuestoIncantamentoProc = Math.floor(dannoGrezzoMagicoProc * mitigazioneMagicaProc);
+
+                        if (elemento == TipoDanno.FUOCO && difensore.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
+                            dannoQuestoIncantamentoProc = dannoQuestoIncantamentoProc * 0.5d;
+                        }
+
+                        // La probabilità del proc magico si basa sul danno reale di QUESTO elemento e sulla statistica MAGIA
+                        double probStatoMagico = ((dannoQuestoIncantamentoProc * 100.0d) / difensore.getForza()) + (attaccante.getMagia() * 2.0d);
+                        if (Dado.tira(100) <= probStatoMagico) {
+                            TipoEffettoDiStato effettoMagico = elemento.getTipoEffettoDiStatoCasuale();
+                            if (effettoMagico != null) {
+                                dannoRisultante.addEffettoDiStato(effettoMagico, calcolaDurataStato(difensore, effettoMagico),
+                                        calcolaDannoPeriodico(attaccante, difensore, effettoMagico));
+                                Logger.log("L'incantamento applica stato magico: " + effettoMagico.name());
+                            }
+                        }
+                    }
+                }
+            }
+
+            int dannoFinale = Math.max(1, (int)dannoTotaleCombinato);
             dannoRisultante.setDanno(dannoFinale);
         }
 

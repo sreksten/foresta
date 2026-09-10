@@ -4,11 +4,14 @@ import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.UI;
+
+import java.util.Collection;
 
 public class Artefatto implements Oggetto {
 
@@ -51,6 +54,20 @@ public class Artefatto implements Oggetto {
 
 	public double getPeso() {
 		return md.getPeso();
+	}
+
+	/**
+	 * Modificatori permanenti agli attributi dei personaggi
+	 */
+	public Collection<ModificatoreAttributo> getModificatori() {
+		return md.getModificatori();
+	}
+
+	/**
+	 * Incantamenti fatti sull'artefatto
+	 */
+	public Collection<Incantamento> getIncantamenti() {
+		return md.getIncantamenti();
 	}
 
 	/**

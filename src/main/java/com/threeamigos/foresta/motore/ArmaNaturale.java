@@ -1,8 +1,12 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.motore.modellodati.TipoDanno;
+import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio; // Presumo sia la tua Enum delle 30 classi
 import com.threeamigos.foresta.personaggi.Personaggio;
+
+import java.util.Collection;
+import java.util.Collections;
 
 /**
  * Rappresenta gli attacchi biologici, magici o spettrali innati delle creature
@@ -105,5 +109,15 @@ public class ArmaNaturale implements Arma {
     @Override
     public TipoDanno getTipoDanno() {
         return tipoAttacco.tipoDanno;
+    }
+
+    @Override
+    public boolean isIncantata() {
+        return false;
+    }
+
+    @Override
+    public Collection<Incantamento> getIncantamenti() {
+        return Collections.emptyList();
     }
 }
