@@ -2,6 +2,7 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.motore.AutomaInventario;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
@@ -34,7 +35,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		STATO_PERSO,
 		STATO_VINTO,
 		STATO_STATISTICHE,
-		STATO_PUNTEGGI
+		STATO_PUNTEGGI,
+		STATO_INVENTARIO
 	}
 
 	private StatoDisplayableCanvas stato;
@@ -52,6 +54,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final transient DisplayableCanvasRiquadroIncantesimi riquadroIncantesimi;
 	private final transient DisplayableCanvasRiquadroMissioni riquadroMissioni;
 	private final transient DisplayableCanvasMappaATuttoSchermo mappaATuttoSchermo;
+	private final transient DisplayableCanvasInventario inventario;
 	
 	private final ArrayList<SpriteInterface> sprites;
 	private final List<SpriteMissione> codaMissioni = new ArrayList<>();
@@ -175,6 +178,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		Rectangle mappaATuttoSchermoRect = new Rectangle(0, 0, width, height);
 		mappaCoordinateElementiGrafici.put(mappaATuttoSchermo, mappaATuttoSchermoRect);
 
+		inventario = new DisplayableCanvasInventario(width, height);
+
+		Rectangle inventarioRect = new Rectangle(0, 0, width, height);
+		mappaCoordinateElementiGrafici.put(inventario, inventarioRect);
+
 		sprites = new ArrayList<>();
 
 		GestoreMouse gestoreMouse = new GestoreMouse();
@@ -204,7 +212,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	public void run() {
 		animatoreInAzione = true;
 		while (animatoreInAzione) {
-			if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO || stato == StatoDisplayableCanvas.STATO_MAPPA) {
+			if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO || stato == StatoDisplayableCanvas.STATO_MAPPA
+					|| stato == StatoDisplayableCanvas.STATO_INVENTARIO) {
 				repaint();
 			}
 			try {
@@ -332,6 +341,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			riquadroIntroOutro.statistiche(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_PUNTEGGI) {
 			riquadroIntroOutro.hiscore(graphics);
+		} else if (stato == StatoDisplayableCanvas.STATO_INVENTARIO) {
+			inventario.disegnaInventario(graphics);
 		}
 	}
 	
@@ -344,7 +355,13 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO) {
 			return null;
 		}
-		return stato == StatoDisplayableCanvas.STATO_MAPPA ? mappaATuttoSchermo : riquadroIntroOutro;
+		if (stato == StatoDisplayableCanvas.STATO_MAPPA) {
+			return mappaATuttoSchermo;
+		}
+		if (stato == StatoDisplayableCanvas.STATO_INVENTARIO) {
+			return inventario;
+		}
+		return riquadroIntroOutro;
 	}
 
 	// Parte della interfaccia UI
@@ -376,6 +393,16 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void mappa() {
 		stato = StatoDisplayableCanvas.STATO_MAPPA;
+		repaint();
+	}
+
+	public void inventario() {
+		stato = StatoDisplayableCanvas.STATO_INVENTARIO;
+		repaint();
+	}
+
+	public void impostaAutomaInventario(AutomaInventario automaInventario) {
+		inventario.impostaAutoma(automaInventario);
 		repaint();
 	}
 
@@ -574,6 +601,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 				return riquadroCombattimento;
 			case MAPPA_A_TUTTO_SCHERMO:
 				return mappaATuttoSchermo;
+			case INVENTARIO:
+				return inventario;
 			default:
 				throw new IllegalArgumentException("Elemento grafico non valido: " + finestra);
 		}

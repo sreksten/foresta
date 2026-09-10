@@ -622,6 +622,10 @@ public abstract class LocazioneBase implements Locazione {
 		if (gruppo.getPozioniMagiaGrande() > 0) {
 			ComandiPossibili.add(Comando.POZIONE_MAGIA_GRANDE);
 		}
+		// Possiamo sempre controllare l'inventario
+		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO) {
+			ComandiPossibili.add(Comando.INVENTARIO);
+		}
 		// Si puo' sempre ricorrere a una bella...
 		ComandiPossibili.add(Comando.FUGA);
 		// E possiamo sempre richiedere di descrivere di nuovo la locazione
@@ -886,6 +890,9 @@ public abstract class LocazioneBase implements Locazione {
 		if (azione == Comando.MAPPA) {
 			return Stato.MAPPA;
 		}
+		if (azione == Comando.INVENTARIO) {
+			return Stato.INVENTARIO;
+		}
 		if (azione == Comando.POZIONE_SALUTE) {
 			if (gruppo.getNumeroPersonaggiVivi() > 1) {
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE;
@@ -964,7 +971,11 @@ public abstract class LocazioneBase implements Locazione {
 			case MAPPA:
 				Logger.log("Azione.MAPPA");
 				return Stato.MAPPA;
-				
+
+			case INVENTARIO:
+				Logger.log("Azione.INVENTARIO");
+				return Stato.INVENTARIO;
+
 			case POZIONE_SALUTE:
 				Logger.log("Azione.POZIONE_SALUTE");
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE;

@@ -3,6 +3,7 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.motore.AutomaInventario;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Gioco;
 import com.threeamigos.foresta.motore.Logger;
@@ -146,6 +147,16 @@ public class ForestaUI implements InterfacciaUtente {
 	@Override
 	public void mappa() {
 		displayableCanvas.mappa();
+	}
+
+	@Override
+	public void inventario() {
+		displayableCanvas.inventario();
+	}
+
+	@Override
+	public void impostaAutomaInventario(AutomaInventario automaInventario) {
+		displayableCanvas.impostaAutomaInventario(automaInventario);
 	}
 
 	@Override

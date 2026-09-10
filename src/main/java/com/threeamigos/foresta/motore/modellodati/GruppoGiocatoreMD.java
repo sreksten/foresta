@@ -5,6 +5,8 @@ import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.StringTokenizer;
 
 public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
@@ -20,6 +22,8 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	private int pozioniMagiaGrande;
 	// Coordinate all'interno della Foresta
 	private CoordinateMD coordinate;
+	// Artefatti disponibili al gruppo ma non in uso da un personaggio specifico
+	private final Collection<ArtefattoMD> artefatti = new ArrayList<>();
 
 	public int getMonete() {
 		return monete;
@@ -85,6 +89,10 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		this.coordinate = coordinate;
 	}
 
+	public Collection<ArtefattoMD> getArtefatti() {
+		return artefatti;
+	}
+
 	////////////////////////////////
 
 	public void reimposta() {
@@ -96,6 +104,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		pozioniSaluteGrande = 0;
 		pozioniMagia = 0;
 		pozioniMagiaGrande = 0;
+		artefatti.clear();
 	}
 
 	public void setIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
@@ -127,7 +136,13 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(coordinate.getX());
 		stream.print(PIPE);
-		stream.println(coordinate.getY());
+		stream.print(coordinate.getY());
+		stream.print(PIPE);
+		stream.println(artefatti.size());
+
+		for (ArtefattoMD artefatto : artefatti) {
+			artefatto.salva(stream);
+		}
 	}
 
 	@Override
@@ -145,5 +160,13 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		pozioniMagia = Integer.parseInt(st.nextToken());
 		pozioniMagiaGrande = Integer.parseInt(st.nextToken());
 		coordinate = new CoordinateMD(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+		int numeroArtefatti = Integer.parseInt(st.nextToken());
+
+		artefatti.clear();
+		for (int i = 0; i < numeroArtefatti; i++) {
+			ArtefattoMD artefatto = new ArtefattoMD();
+			artefatto.leggi(stream);
+			artefatti.add(artefatto);
+		}
 	}
 }

@@ -7,13 +7,16 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.GruppoGiocatoreMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
+import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
 
+import java.util.List;
 import java.util.function.Function;
+import java.util.stream.Collectors;
 
 /**
  * Un insieme di personaggi guidati da un giocatore
@@ -484,5 +487,20 @@ public class GruppoGiocatore extends Gruppo {
 
 	public void setFormulante(Personaggio formulante) {
 		this.formulante = formulante;
+	}
+
+	/**
+	 * Artefatti disponibili al gruppo ma non in uso da un personaggio specifico.
+	 */
+	public List<Artefatto> getArtefatti() {
+		return md.getArtefatti().stream().map(Artefatto::new).collect(Collectors.toList());
+	}
+
+	public void addArtefatto(Artefatto artefatto) {
+		md.getArtefatti().add(artefatto.getModelloDati());
+	}
+
+	public void removeArtefatto(Artefatto artefatto) {
+		md.getArtefatti().remove(artefatto.getModelloDati());
 	}
 }

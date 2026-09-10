@@ -5,12 +5,13 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.Missione;
+import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
+import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
+import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
+import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.*;
-import com.threeamigos.foresta.tools.GestorePunteggi;
-import com.threeamigos.foresta.tools.GestoreSalvataggi;
-import com.threeamigos.foresta.tools.InterfacciaGestoreSalvataggi;
-import com.threeamigos.foresta.tools.Temporizzatore;
+import com.threeamigos.foresta.tools.*;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
 
@@ -232,6 +233,21 @@ public class Automa implements ControlloreDiGioco {
 				UI.reinizializza();
 				UI.mostraSchermataGioco();
 				gruppo.aggiungiPersonaggioSenzaNotificare(personaggio);
+
+				Artefatto cazzabubbolo = CostruttoreArtefatto.istanza()
+						.setTipo(TipoArtefatto.SPADA)
+						.setNome("il cazzabubbolo a molla della morte alata perforante")
+						.setDescrizione("il cui potere è nel fancazzismo")
+						.setLivello(1)
+						.setDanniBase(5)
+						.setCostoAcquisto(10)
+						.setPeso(1)
+						.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 25)
+						.setModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_PERCENTUALE, 5)
+						.setModificatore(TipoAttributo.CORAGGIO, TipoModificatore.AUMENTO_PERCENTUALE, 5)
+						.costruisci();
+				personaggio.addArtefatto(cazzabubbolo);
+
 				stato = Stato.INZIO_LOCAZIONE;
 				processaAzione(null);
 				break;
@@ -490,6 +506,7 @@ public class Automa implements ControlloreDiGioco {
 				if (gruppo.getPozioniMagiaGrande() > 0) {
 					ComandiPossibili.add(Comando.POZIONE_MAGIA_GRANDE);
 				}
+				ComandiPossibili.add(Comando.INVENTARIO);
 				ComandiPossibili.add(Comando.AIUTO);
 				ComandiPossibili.add(Comando.FLOPPY);
 
@@ -505,6 +522,12 @@ public class Automa implements ControlloreDiGioco {
 					statoPrecedente = Stato.ATTESA_DIREZIONE;
 					stato = Stato.MAPPA;
 					UI.centraMappa();
+					processaAzione(null);
+					return;
+				case INVENTARIO:
+					statoPrecedente = Stato.ATTESA_DIREZIONE;
+					stato = Stato.INVENTARIO;
+					UI.inventario();
 					processaAzione(null);
 					return;
 				case ACCAMPAMENTO:
@@ -660,6 +683,41 @@ public class Automa implements ControlloreDiGioco {
 					}
 				}
 				break;
+
+			case INVENTARIO:
+				Logger.log("Stato INVENTARIO, azione " + azione);
+				if (azione == null) {
+					ComandiPossibili.reimposta();
+					int l = gruppo.getNumeroPersonaggi();
+					for (int i = 0; i < l; i++) {
+						ComandiPossibili.add(Comando.ofPersonaggio(i));
+					}
+					ComandiPossibili.add(Comando.ANNULLA);
+					UI.impostaAzioni();
+					UI.inventario();
+				} else {
+					switch (azione) {
+						case ANNULLA:
+							stato = statoPrecedente;
+							UI.mostraSchermataGioco();
+							UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
+							processaAzione(null);
+							break;
+						case PERSONAGGIO_1:
+						case PERSONAGGIO_2:
+						case PERSONAGGIO_3:
+						case PERSONAGGIO_4:
+						case PERSONAGGIO_5:
+							Personaggio personaggioScelto = gruppo.getPersonaggio(azione);
+							UI.impostaAutomaInventario(new AutomaInventario(personaggioScelto, gruppo.getArtefatti(),
+									gruppo::addArtefatto, gruppo::removeArtefatto));
+							break;
+						default:
+							throw new IllegalArgumentException();
+					}
+				}
+				break;
+
 
 			case SELEZIONE_SALVATAGGIO_DA_SCRIVERE:
 				if (azione == Comando.NO) {

@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.motore.AutomaInventario;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
@@ -16,7 +17,8 @@ public interface InterfacciaUtente {
 		TESTO,
 		MISSIONI,
 		INFO_COMBATTIMENTO,
-		MAPPA_A_TUTTO_SCHERMO
+		MAPPA_A_TUTTO_SCHERMO,
+		INVENTARIO
     }
 	
 	/**
@@ -58,6 +60,16 @@ public interface InterfacciaUtente {
 	 * ricezione di Comando.(NORD|SUD|EST|OVEST)
 	 */
     void muoviMappa(Comando direzione);
+
+	/**
+	 * Mostra l'inventario
+	 */
+	void inventario();
+
+	/**
+	 * Assegna l'automa che gestisce lo scambio di artefatti nella finestra di inventario
+	 */
+	void impostaAutomaInventario(AutomaInventario automaInventario);
 
 	/**
 	 * Richiama la schermata di selezione salvataggio
