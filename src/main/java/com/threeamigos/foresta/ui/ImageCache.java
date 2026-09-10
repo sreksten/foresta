@@ -4,6 +4,7 @@ import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.EnumMap;
 import java.util.HashMap;
@@ -22,6 +23,7 @@ public class ImageCache {
 	static BufferedImage corniceInventario;
 	static BufferedImage ombraDelDrago;
 	static BufferedImage trionfo;
+	static BufferedImage separatore;
 	static BufferedImage segnalino;
 	static BufferedImage punto;
 	static BufferedImage virgola;
@@ -46,8 +48,16 @@ public class ImageCache {
 	static BufferedImage spriteTempo;
 	static BufferedImage spriteAumentoLivello;
 
+	static BufferedImage missioneBirra;
+	static BufferedImage componenteScorrevoleFrecciaSu;
+	static BufferedImage componenteScorrevoleFrecciaGiu;
+
+
 	private static final Map<String, BufferedImage> imageMap = new HashMap<>();
-	
+
+	private static final Map<DoomdarkFont, Map<DoomdarkColorModel.Color, Map<String, Image>>> cache = new HashMap<>();
+	private static final DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
+
 	private static boolean inited = false;
 	
 	static {
@@ -61,6 +71,7 @@ public class ImageCache {
 		corniceInventario = BufferedImageBuilder.buildBufferedImage("fondi/CorniceInventario.gif");
 		ombraDelDrago = BufferedImageBuilder.buildBufferedImage("fondi/OmbraDelDrago.gif");
 		trionfo = BufferedImageBuilder.buildBufferedImage("fondi/Trionfo.gif");
+		separatore = BufferedImageBuilder.buildBufferedImage("fondi/Separatore.gif");
 
 		locazioni = new EnumMap<>(ClassiLocazione.class);
 		BufferedImage d;
@@ -183,6 +194,10 @@ public class ImageCache {
 		spriteTempo = BufferedImageBuilder.buildBufferedImage("icone/Tempo-nobordo-piccolo.gif");
 		spriteAumentoLivello = BufferedImageBuilder.buildBufferedImage("icone/AumentoLivello-nobordo-piccolo.gif");
 
+		missioneBirra = BufferedImageBuilder.buildBufferedImage("icone/Missione-birra.gif");
+
+		componenteScorrevoleFrecciaSu = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaSu.gif");
+		componenteScorrevoleFrecciaGiu = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaGiu.gif");
 	}
 	
 	static void init() {
@@ -200,6 +215,39 @@ public class ImageCache {
 	
 	public static BufferedImage get(String nomeImmagine) {
 		return imageMap.get(nomeImmagine);
+	}
+
+	/**
+	 * Metodo di utilità che costruisce e memorizza immagini utilizzate spessissimo (Ad esempio, nomi e statistiche)
+	 * usando il font DoomdarkFontMedium
+	 */
+	public static Image get(int valore, DoomdarkColorModel.Color colore) {
+		return get(Integer.toString(valore), fontMedium, colore);
+	}
+
+	/**
+	 * Metodo di utilità che costruisce e memorizza immagini utilizzate spessissimo (Ad esempio, nomi e statistiche)
+	 * usando il font DoomdarkFontMedium
+	 */
+	public static Image get(String testo, DoomdarkColorModel.Color colore) {
+		return get(testo, fontMedium, colore);
+	}
+
+	/**
+	 * Metodo di utilità che costruisce e memorizza immagini utilizzate spessissimo (Ad esempio, nomi e statistiche)
+	 */
+	public static Image get(int valore, DoomdarkFont font, DoomdarkColorModel.Color colore) {
+		return get(Integer.toString(valore), font, colore);
+	}
+
+	/**
+	 * Metodo di utilità che costruisce e memorizza immagini utilizzate spessissimo (Ad esempio, nomi e statistiche)
+	 */
+	public static Image get(String testo, DoomdarkFont font, DoomdarkColorModel.Color colore) {
+		return cache
+				.computeIfAbsent(font, k -> new HashMap<>())
+				.computeIfAbsent(colore, k -> new HashMap<>())
+				.computeIfAbsent(testo, k -> DoomdarkTextProducer.getImage(k, font, colore));
 	}
 }
 
