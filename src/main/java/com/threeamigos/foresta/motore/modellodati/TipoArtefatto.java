@@ -52,6 +52,10 @@ public enum TipoArtefatto {
         return supertipo;
     }
 
+    public TipoDanno getTipoDanno() {
+        return tipoDanno;
+    }
+
     public String getUtilizzo() {
         return utilizzo;
     }
