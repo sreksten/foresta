@@ -7,15 +7,20 @@ package com.threeamigos.foresta.ui;
  * le coordinate del mouse alla finestra sottostante.
  */
 interface Finestra {
+
+    int SPACING = ImageCache.SPACING;
+
     enum MovimentoRotella {
         SU,
         GIU
     }
+
     enum Tasto {
         SINISTRO,
         CENTRALE,
         DESTRO
     }
+
     default String getNome() {
         return getClass().getSimpleName();
     }
