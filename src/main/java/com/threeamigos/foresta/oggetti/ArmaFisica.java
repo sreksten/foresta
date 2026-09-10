@@ -20,6 +20,6 @@ public class ArmaFisica extends Artefatto implements Arma {
 
     @Override
     public TipoDanno getTipoDanno() {
-        return null;
+        return md.getTipo().getTipoDanno();
     }
 }
