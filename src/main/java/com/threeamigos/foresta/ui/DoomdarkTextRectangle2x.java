@@ -18,6 +18,8 @@ public class DoomdarkTextRectangle2x {
 
 	/** Un centinaio di righe: oltre, le più vecchie vengono dimenticate. */
 	private static final int MASSIMO_RIGHE_STORICO = 100;
+	// Pixel aggiuntivi fra la base di una riga e l'inizio della successiva
+	private static final int INTERLINEA = 4;
 
 	// Le righe già spezzate alla larghezza del rettangolo, dalla più vecchia alla più recente
 	private final List<String> righe = new ArrayList<>();
@@ -30,7 +32,7 @@ public class DoomdarkTextRectangle2x {
 	private final int charPadding = DoomdarkFontMedium.getInstance().getPadding();
 	private final DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 	// Distanza fra le basi di due righe consecutive
-	private final int passoRiga = fontHeight + 1;
+	private final int passoRiga = fontHeight + INTERLINEA;
 	private final int righeVisibili;
 
 	// Quante righe si è tornati indietro rispetto alla più recente
