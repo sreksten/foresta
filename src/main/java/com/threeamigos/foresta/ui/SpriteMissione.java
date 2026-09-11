@@ -13,7 +13,8 @@ import java.util.StringTokenizer;
  */
 class SpriteMissione implements SpriteInterface {
 
-	private static final long DURATA_MS = 3500L;
+	//private static final long DURATA_MS = 3500L;
+	private static final long DURATA_MS = 2000L;
 	private static final long DURATA_FADE_MS = DURATA_MS / 2;
 	private static final float SCALA_INIZIALE = 1.0f;
 	private static final float SCALA_FINALE = 1.8f;
