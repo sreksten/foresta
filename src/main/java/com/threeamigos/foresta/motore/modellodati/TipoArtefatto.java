@@ -6,45 +6,48 @@ package com.threeamigos.foresta.motore.modellodati;
  */
 public enum TipoArtefatto {
 
-    SPADA(SupertipoArtefatto.ARMA, TipoDanno.TAGLIENTE,"impugna"),
-    MAZZA(SupertipoArtefatto.ARMA, TipoDanno.CONTUNDENTE, "brandisce"),
-    ASCIA(SupertipoArtefatto.ARMA, TipoDanno.TAGLIENTE, "impugna"),
-    LANCIA(SupertipoArtefatto.ARMA, TipoDanno.PERFORANTE, "impugna"),
+    SPADA(SupertipoArtefatto.ARMA, TipoDanno.TAGLIENTE,"Spada", "impugna"),
+    MAZZA(SupertipoArtefatto.ARMA, TipoDanno.CONTUNDENTE, "Mazza", "brandisce"),
+    ASCIA(SupertipoArtefatto.ARMA, TipoDanno.TAGLIENTE, "Ascia", "impugna"),
+    LANCIA(SupertipoArtefatto.ARMA, TipoDanno.PERFORANTE, "Lancia", "impugna"),
 
-    SCUDO(SupertipoArtefatto.ARMATURA, "porta"),
-    ELMO(SupertipoArtefatto.ARMATURA, "indossa"),
-    ARMATURA(SupertipoArtefatto.ARMATURA, "indossa"),
+    SCUDO(SupertipoArtefatto.ARMATURA, "Scudo", "porta"),
+    ELMO(SupertipoArtefatto.ARMATURA, "Elmo", "indossa"),
+    ARMATURA(SupertipoArtefatto.ARMATURA, "Armatura", "indossa"),
 
-    ANELLO(SupertipoArtefatto.ALTRO, "indossa"),
-    TALISMANO(SupertipoArtefatto.ALTRO, "possiede"),
+    ANELLO(SupertipoArtefatto.ALTRO, "Anello", "indossa"),
+    TALISMANO(SupertipoArtefatto.ALTRO, "Talismano", "possiede"),
 
-    LIBRO_MAGICO(SupertipoArtefatto.ALTRO, "porta"),
+    LIBRO_MAGICO(SupertipoArtefatto.ALTRO, "Libro magico", "porta"),
 
-    BASTONE_MAGICO(SupertipoArtefatto.ALTRO, "impugna"),
+    BASTONE_MAGICO(SupertipoArtefatto.ALTRO, "Bastone magico", "impugna"),
 
-    VESTE(SupertipoArtefatto.ARMATURA, "indossa"),
+    VESTE(SupertipoArtefatto.ARMATURA, "Veste", "indossa"),
 
-    NINNOLO(SupertipoArtefatto.ALTRO, "ha con se");
+    NINNOLO(SupertipoArtefatto.ALTRO, "Ninnolo", "ha con se");
 
     private final SupertipoArtefatto supertipo;
     private final TipoDanno tipoDanno;
+    private final String descrizione;
     private final String utilizzo;
 
-    TipoArtefatto(SupertipoArtefatto supertipo, TipoDanno tipoDanno, String utilizzo) {
+    TipoArtefatto(SupertipoArtefatto supertipo, TipoDanno tipoDanno, String descrizione, String utilizzo) {
         if (supertipo != SupertipoArtefatto.ARMA) {
             throw new IllegalArgumentException("Il Supertipo per l'artefatto deve essere ARMA");
         }
         this.supertipo = supertipo;
         this.tipoDanno = tipoDanno;
+        this.descrizione = descrizione;
         this.utilizzo = utilizzo;
     }
 
-    TipoArtefatto(SupertipoArtefatto supertipo, String utilizzo) {
+    TipoArtefatto(SupertipoArtefatto supertipo, String descrizione, String utilizzo) {
         if (supertipo == SupertipoArtefatto.ARMA) {
             throw new IllegalArgumentException("Se il Supertipo per l'artefatto è ARMA occorre passare anche il TipoDanno");
         }
         this.supertipo = supertipo;
         this.tipoDanno = null;
+        this.descrizione = descrizione;
         this.utilizzo = utilizzo;
     }
 
@@ -54,6 +57,10 @@ public enum TipoArtefatto {
 
     public TipoDanno getTipoDanno() {
         return tipoDanno;
+    }
+
+    public String getDescrizione() {
+        return descrizione;
     }
 
     public String getUtilizzo() {
