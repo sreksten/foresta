@@ -3,47 +3,38 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
-import java.util.List;
-import java.util.function.Consumer;
+import java.util.Collection;
 
 /**
  * Gestisce lo scambio di artefatti tra l'inventario di un personaggio e un pool generico
- * di artefatti disponibili (tipicamente quelli del gruppo, in futuro anche quelli di un PNG).
- * Le due callback si occupano di rendere persistente ogni variazione del pool nella sua
- * sorgente reale, dato che artefattiDisponibili ne è solo una copia usata per il disegno.
+ * di artefatti disponibili (tipicamente quello del gruppo, in futuro anche quello di un PNG),
+ * appoggiandosi in entrambi i casi al contratto di ScambiatoreArtefatti.
  */
 public class AutomaInventario {
 
 	private final Personaggio personaggio;
-	private final List<Artefatto> artefattiDisponibili;
-	private final Consumer<Artefatto> aggiungiAlPool;
-	private final Consumer<Artefatto> rimuoviDalPool;
+	private final ScambiatoreArtefatti pool;
 
-	public AutomaInventario(Personaggio personaggio, List<Artefatto> artefattiDisponibili,
-							 Consumer<Artefatto> aggiungiAlPool, Consumer<Artefatto> rimuoviDalPool) {
+	public AutomaInventario(Personaggio personaggio, ScambiatoreArtefatti pool) {
 		this.personaggio = personaggio;
-		this.artefattiDisponibili = artefattiDisponibili;
-		this.aggiungiAlPool = aggiungiAlPool;
-		this.rimuoviDalPool = rimuoviDalPool;
+		this.pool = pool;
 	}
 
 	public Personaggio getPersonaggio() {
 		return personaggio;
 	}
 
-	public List<Artefatto> getArtefattiDisponibili() {
-		return artefattiDisponibili;
+	public Collection<Artefatto> getArtefattiDisponibili() {
+		return pool.getInventario();
 	}
 
 	public void spostaNelPersonaggio(Artefatto artefatto) {
-		artefattiDisponibili.remove(artefatto);
-		rimuoviDalPool.accept(artefatto);
+		pool.removeArtefatto(artefatto);
 		personaggio.addArtefatto(artefatto);
 	}
 
 	public void spostaNelPool(Artefatto artefatto) {
 		personaggio.removeArtefatto(artefatto);
-		aggiungiAlPool.accept(artefatto);
-		artefattiDisponibili.add(artefatto);
+		pool.addArtefatto(artefatto);
 	}
 }

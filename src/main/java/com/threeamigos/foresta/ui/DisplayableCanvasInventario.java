@@ -11,10 +11,8 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 /**
  *
@@ -245,7 +243,7 @@ public class DisplayableCanvasInventario implements Finestra {
         graphics.drawImage(i, centerBoxLimit - i.getWidth(null), y, null);
     }
 
-    private int disegnaElenco(Graphics2D graphics, List<Artefatto> artefatti, int x, int offset) {
+    private int disegnaElenco(Graphics2D graphics, Collection<Artefatto> artefatti, int x, int offset) {
 
         Artefatto evidenziato = trovaArtefatto(artefatti, x, offset, mouseX, mouseY);
         ComponenteScorrevole<Artefatto> componenteScorrevole = costruisciComponenteScorrevoleArtefatti(artefatti, evidenziato);
@@ -261,12 +259,12 @@ public class DisplayableCanvasInventario implements Finestra {
      * L'albero viene ricostruito a ogni disegno e a ogni click. L'artefatto passato in
      * evidenziato (se non null) viene disegnato in bianco invece che in grigio chiaro.
      */
-    private ComponenteScorrevole<Artefatto> costruisciComponenteScorrevoleArtefatti(List<Artefatto> artefatti, Artefatto evidenziato) {
+    private ComponenteScorrevole<Artefatto> costruisciComponenteScorrevoleArtefatti(Collection<Artefatto> artefatti, Artefatto evidenziato) {
 
         ComponenteScorrevole<Artefatto> componenteScorrevole = new ComponenteScorrevole<>(
                 LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, 10, 2);
 
-        List<Artefatto> artefattiDaDisegnare = ordinaArtifattiDaDisegnare(artefatti);
+        Collection<Artefatto> artefattiDaDisegnare = ordinaArtefattiDaDisegnare(artefatti);
 
         SupertipoArtefatto supertipoPrecedente = null;
         for (Artefatto artefatto : artefattiDaDisegnare) {
@@ -352,7 +350,7 @@ public class DisplayableCanvasInventario implements Finestra {
         return componenteScorrevole;
     }
 
-    private static List<Artefatto> ordinaArtifattiDaDisegnare(List<Artefatto> artefatti) {
+    private static Collection<Artefatto> ordinaArtefattiDaDisegnare(Collection<Artefatto> artefatti) {
         List<Artefatto> artefattiDaDisegnare = new ArrayList<>(artefatti);
         artefattiDaDisegnare.sort((a1, a2) -> {
             int ordinaleSupertipo1 = a1.getTipo().getSupertipo().ordinal();
@@ -375,7 +373,7 @@ public class DisplayableCanvasInventario implements Finestra {
      * finestra, oppure null se il punto non cade sull'elenco o non corrisponde al titolo
      * di un artefatto (es. una riga di modificatore/incantamento, o spazio vuoto).
      */
-    private Artefatto trovaArtefatto(List<Artefatto> artefatti, int boxX, int offset, int x, int y) {
+    private Artefatto trovaArtefatto(Collection<Artefatto> artefatti, int boxX, int offset, int x, int y) {
         int xInterno = x - (boxX + SPACING);
         int yInterno = y - (DIMENSIONE_BORDO_INTERNO + 2 * SPACING);
         if (xInterno < 0 || xInterno >= LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO
@@ -445,7 +443,7 @@ public class DisplayableCanvasInventario implements Finestra {
             automa.spostaNelPool(artefatto);
             return;
         }
-        List<Artefatto> disponibili = automa.getArtefattiDisponibili();
+        Collection<Artefatto> disponibili = automa.getArtefattiDisponibili();
         artefatto = trovaArtefatto(disponibili, rightBoxX, offsetYRightBox, x, y);
         if (artefatto != null) {
             automa.spostaNelPersonaggio(artefatto);

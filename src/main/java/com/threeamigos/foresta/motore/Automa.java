@@ -989,8 +989,7 @@ public class Automa implements ControlloreDiGioco {
 	private void apriInventarioPersonaggio(int indice) {
 		indicePersonaggioInventario = Math.max(0, Math.min(indice, gruppo.getNumeroPersonaggi() - 1));
 		Personaggio personaggioScelto = gruppo.getPersonaggio(indicePersonaggioInventario);
-		UI.impostaAutomaInventario(new AutomaInventario(personaggioScelto, gruppo.getArtefatti(),
-				gruppo::addArtefatto, gruppo::removeArtefatto));
+		UI.impostaAutomaInventario(new AutomaInventario(personaggioScelto, gruppo));
 	}
 
 	private Comando scegliPersonaggio(boolean ancheSeMorto) {

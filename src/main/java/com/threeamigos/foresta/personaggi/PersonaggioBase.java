@@ -1579,9 +1579,8 @@ public abstract class PersonaggioBase implements Personaggio {
 		return md.getEffettiDiStato().stream().filter(e -> e.getTipoEffettoDiStato() == tipoEffettoDiStato).mapToInt(EffettoDiStato::getDurata).sum();
 	}
 
-	// Artefatti
+	// Scambiatore Artefatti
 
-	//FIXME così fa un po' ribrezzo ma intanto facciamolo compilare. Per poterlo eliminare del tutto occorre gestire correttamente l'inventario del gruppo.
 	@Override
 	public List<Artefatto> getInventario() {
 		return md.getArtefatti().stream().map(Artefatto::di).collect(Collectors.toList());

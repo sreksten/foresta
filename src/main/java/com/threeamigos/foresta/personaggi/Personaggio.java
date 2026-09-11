@@ -4,13 +4,12 @@ import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.offerte.Offerta;
-import com.threeamigos.foresta.oggetti.Artefatto;
 
 import java.util.Collection;
 import java.util.Optional;
 import java.util.function.Supplier;
 
-public interface Personaggio extends OggettoConArticoli {
+public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
 
 	Supplier<IllegalArgumentException> PERSONAGGIO_SENZA_NOME = () -> new IllegalArgumentException("Personaggio senza nome!");
 
@@ -476,25 +475,6 @@ public interface Personaggio extends OggettoConArticoli {
 	 * Rimuove un effetto di stato dal personaggio
 	 */
     void rimuoviEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato);
-
-	// Artefatti
-
-	/**
-	 * Restituisce l'inventario del personaggio
-	 */
-    Collection<Artefatto> getInventario();
-
-	/**
-	 * Aggiunge un artefatto all'inventario del personaggio - questo si riflette in modo automatico sui modificatori
-	 * di stato del personaggio
-	 */
-    void addArtefatto(Artefatto artefatto);
-
-	/**
-	 * Rimuove un artefatto dall'inventario del personaggio - questo si riflette in modo automatico sui modificatori
-	 * di stato del personaggio
-	 */
-    void removeArtefatto(Artefatto artefatto);
 
 	Arma getArmaEquipaggiata();
 

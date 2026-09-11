@@ -14,7 +14,7 @@ import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
 
-import java.util.List;
+import java.util.Collection;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
  * Un insieme di personaggi guidati da un giocatore
  */
 
-public class GruppoGiocatore extends Gruppo {
+public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 
 	private GruppoGiocatore() {
 		super();
@@ -490,11 +490,13 @@ public class GruppoGiocatore extends Gruppo {
 		this.formulante = formulante;
 	}
 
+	// Scambiatore Artefatti
+
 	/**
 	 * Artefatti disponibili al gruppo ma non in uso da un personaggio specifico.
 	 */
-	public List<Artefatto> getArtefatti() {
-		return md.getArtefatti().stream().map(Artefatto::new).collect(Collectors.toList());
+	public Collection<Artefatto> getInventario() {
+		return md.getArtefatti().stream().map(Artefatto::di).collect(Collectors.toList());
 	}
 
 	public void addArtefatto(Artefatto artefatto) {
