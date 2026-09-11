@@ -252,7 +252,7 @@ public class DisplayableCanvasInventario implements Finestra {
                             null, artefatto);
                     nodo.creaNodo(
                             incantamento.getTipoDannoElementale().getNome(), font, coloreAttributi,
-                            incantamento.getDannoBonusFisso() + " + " + (int) (incantamento.getCoefficienteScala() * 100) + "%", font, colore,
+                            incantamento.getDannoBonusFisso() + " + " + (int) (incantamento.getCoefficienteScala() * 100) + "%", font, coloreAttributi,
                             null, null, null,
                             null, artefatto);
                 }
