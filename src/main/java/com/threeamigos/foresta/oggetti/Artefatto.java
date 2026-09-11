@@ -70,6 +70,18 @@ public class Artefatto implements Oggetto {
 		return md.getIncantamenti();
 	}
 
+	public boolean isFigliVisibili() {
+		return md.isFigliVisibili();
+	}
+
+	public void mostraFigli() {
+		md.setFigliVisibili(true);
+	}
+
+	public void nascondiFigli() {
+		md.setFigliVisibili(false);
+	}
+
 	/**
 	 * Interfaccia Oggetto
 	 */

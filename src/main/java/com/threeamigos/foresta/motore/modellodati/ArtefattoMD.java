@@ -18,6 +18,8 @@ public class ArtefattoMD implements Serializzabile {
 	private int danni;
 	protected int costoAcquisto;
 	private double peso;
+	// Stato per la UI: se false, l'elenco modificatori/incantamenti resta chiuso.
+	private boolean figliVisibili = true;
 	private final Collection<ModificatoreAttributo> modificatori = new ArrayList<>();
 	private final Collection<Incantamento> incantamenti = new ArrayList<>();
 
@@ -102,6 +104,14 @@ public class ArtefattoMD implements Serializzabile {
 		incantamenti.add(new Incantamento(nomeIncantamento, tipoDanno, dannoBonusFisso, coefficienteScala));
 	}
 
+	public boolean isFigliVisibili() {
+		return figliVisibili;
+	}
+
+	public void setFigliVisibili(boolean figliVisibili) {
+		this.figliVisibili = figliVisibili;
+	}
+
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stream.print(tipo.name());
@@ -117,6 +127,8 @@ public class ArtefattoMD implements Serializzabile {
 		stream.print(costoAcquisto);
 		stream.print(PIPE);
 		stream.print(peso);
+		stream.print(PIPE);
+		stream.print(figliVisibili);
 		stream.print(PIPE);
 		stream.print(modificatori.size());
 		stream.print(PIPE);
@@ -154,6 +166,7 @@ public class ArtefattoMD implements Serializzabile {
 		danni = Integer.parseInt(st.nextToken());
 		costoAcquisto = Integer.parseInt(st.nextToken());
 		peso = Double.parseDouble(st.nextToken());
+		figliVisibili = Boolean.parseBoolean(st.nextToken());
 		int numeroModificatori = Integer.parseInt(st.nextToken());
 		int numeroIncantamenti = Integer.parseInt(st.nextToken());
 		modificatori.clear();
