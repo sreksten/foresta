@@ -43,7 +43,6 @@ public class DisplayableCanvasInventario implements Finestra {
     private final int centerBoxLimit;
     private final int rightBoxX;
     private final int rightBoxLimit;
-    private final int boxY;
 
     private AutomaInventario automa;
     int offsetYLeftBox = 0;
@@ -99,8 +98,6 @@ public class DisplayableCanvasInventario implements Finestra {
 
         rightBoxX = width - SPACING - corniceInventarioWidth + DIMENSIONE_BORDO_INTERNO;
         rightBoxLimit = width - SPACING - DIMENSIONE_BORDO_INTERNO;
-
-        boxY = SPACING + DIMENSIONE_BORDO_INTERNO;
     }
 
     void impostaAutoma(AutomaInventario automa) {
@@ -116,7 +113,7 @@ public class DisplayableCanvasInventario implements Finestra {
             return;
         }
 
-        Personaggio p = automa.getPersonaggio();
+        Personaggio p = (Personaggio)automa.getParteAttiva();
 
         final int SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI = 20;
 
@@ -400,7 +397,7 @@ public class DisplayableCanvasInventario implements Finestra {
         if (tasto != Tasto.SINISTRO || automa == null) {
             return;
         }
-        Personaggio personaggio = automa.getPersonaggio();
+        Personaggio personaggio = (Personaggio)automa.getParteAttiva();
         TipoAttributo attributo = trovaAttributo(personaggio, x, y);
         if (attributo != null) {
             StatoAttributo stato = statoDi(attributo);
@@ -431,7 +428,7 @@ public class DisplayableCanvasInventario implements Finestra {
         if (automa == null) {
             return;
         }
-        Personaggio personaggio = automa.getPersonaggio();
+        Personaggio personaggio = (Personaggio)automa.getParteAttiva();
         TipoAttributo attributo = trovaAttributo(personaggio, x, y);
         if (attributo != null) {
             personaggio.spendiPuntoAbilita(attributo);
@@ -440,13 +437,13 @@ public class DisplayableCanvasInventario implements Finestra {
         List<Artefatto> inventarioPersonaggio = new ArrayList<>(personaggio.getInventario());
         Artefatto artefatto = trovaArtefatto(inventarioPersonaggio, leftBoxX, offsetYLeftBox, x, y);
         if (artefatto != null) {
-            automa.spostaNelPool(artefatto);
+            automa.spostaSuParteRemota(artefatto);
             return;
         }
         Collection<Artefatto> disponibili = automa.getArtefattiDisponibili();
         artefatto = trovaArtefatto(disponibili, rightBoxX, offsetYRightBox, x, y);
         if (artefatto != null) {
-            automa.spostaNelPersonaggio(artefatto);
+            automa.spostaSuParteAttiva(artefatto);
         }
     }
 

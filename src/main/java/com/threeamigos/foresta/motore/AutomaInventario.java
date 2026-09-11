@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.Collection;
 
@@ -12,29 +11,37 @@ import java.util.Collection;
  */
 public class AutomaInventario {
 
-	private final Personaggio personaggio;
-	private final ScambiatoreArtefatti pool;
+	/**
+	 * L'oggetto che attivamente decide di dare via o prelevare artefatti
+	 * (ad esempio, il giocatore che mette gli inventari nel gruppo generale, oppure
+	 * il gruppo generale che interagisce con un venditore)
+	 */
+	private final ScambiatoreArtefatti parteAttiva;
+	/**
+	 * L'oggetto che passivamente riceve o invia artefatti (può essere un venditore, un magazzino...)
+	 */
+	private final ScambiatoreArtefatti parteRemota;
 
-	public AutomaInventario(Personaggio personaggio, ScambiatoreArtefatti pool) {
-		this.personaggio = personaggio;
-		this.pool = pool;
+	public AutomaInventario(ScambiatoreArtefatti parteAttiva, ScambiatoreArtefatti parteRemota) {
+		this.parteAttiva = parteAttiva;
+		this.parteRemota = parteRemota;
 	}
 
-	public Personaggio getPersonaggio() {
-		return personaggio;
+	public ScambiatoreArtefatti getParteAttiva() {
+		return parteAttiva;
 	}
 
 	public Collection<Artefatto> getArtefattiDisponibili() {
-		return pool.getInventario();
+		return parteRemota.getInventario();
 	}
 
-	public void spostaNelPersonaggio(Artefatto artefatto) {
-		pool.removeArtefatto(artefatto);
-		personaggio.addArtefatto(artefatto);
+	public void spostaSuParteAttiva(Artefatto artefatto) {
+		parteRemota.removeArtefatto(artefatto);
+		parteAttiva.addArtefatto(artefatto);
 	}
 
-	public void spostaNelPool(Artefatto artefatto) {
-		personaggio.removeArtefatto(artefatto);
-		pool.addArtefatto(artefatto);
+	public void spostaSuParteRemota(Artefatto artefatto) {
+		parteAttiva.removeArtefatto(artefatto);
+		parteRemota.addArtefatto(artefatto);
 	}
 }
