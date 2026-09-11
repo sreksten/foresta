@@ -288,7 +288,7 @@ public class ComponenteScorrevole<T> {
                     altezza += interlinea + descrizione.getHeight(null);
                 }
                 if (inclusiNodiFigli) {
-                altezza += interlinea + figli.stream().mapToInt(Nodo::getAltezzaCompleta).sum();
+                    altezza += figli.stream().mapToInt(Nodo::getAltezzaCompleta).sum();
                 }
             }
             if (icona != null) {

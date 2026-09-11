@@ -20,6 +20,10 @@ public class DisplayableCanvasInventario implements Finestra {
 
     private static final int DIMENSIONE_BORDO_INTERNO = 16;
     private static final int corniceInventarioWidth = ImageCache.corniceInventario.getWidth(null);
+    private static final int ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO = ImageCache.corniceInventario.getHeight()
+            - 2 * (DIMENSIONE_BORDO_INTERNO + ImageCache.SPACING);
+    private static final int LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO = ImageCache.corniceInventario.getWidth()
+            - 2 * (DIMENSIONE_BORDO_INTERNO + ImageCache.SPACING);
     // Pixel di scorrimento per ogni scatto della rotella
     private static final int PASSO_SCORRIMENTO = 2;
 
@@ -135,15 +139,15 @@ public class DisplayableCanvasInventario implements Finestra {
         creaNodo(componenteScorrevole, colore, TipoAttributo.CORAGGIO, p.getCoraggio());
         creaNodo(componenteScorrevole, colore, TipoAttributo.VALORE, p.getValore());
 
-        offsetYBoxPersonaggio = componenteScorrevole.limitaOffset(height, offsetYBoxPersonaggio);
+        offsetYBoxPersonaggio = componenteScorrevole.limitaOffset(height - y, offsetYBoxPersonaggio);
         Image image = componenteScorrevole.produci(height - y, offsetYBoxPersonaggio);
         graphics.drawImage(image, corniceInventarioWidth + 2 * SPACING, y, null);
 
         final int width = corniceInventarioWidth - 2 * (SPACING + DIMENSIONE_BORDO_INTERNO);
         // Inventario personaggio
-        offsetYLeftBox = disegnaElenco(graphics, new ArrayList<>(p.getInventario()), leftBoxX, width, offsetYLeftBox);
+        offsetYLeftBox = disegnaElenco(graphics, new ArrayList<>(p.getInventario()), leftBoxX, offsetYLeftBox);
         // Inventario gruppo
-        offsetYRightBox = disegnaElenco(graphics, automa.getArtefattiDisponibili(), rightBoxX, width, offsetYRightBox);
+        offsetYRightBox = disegnaElenco(graphics, automa.getArtefattiDisponibili(), rightBoxX, offsetYRightBox);
     }
 
     private void creaNodo(ComponenteScorrevole<TipoAttributo> componenteScorrevole, DoomdarkColorModel.Color colore,
@@ -162,9 +166,10 @@ public class DisplayableCanvasInventario implements Finestra {
         graphics.drawImage(i, centerBoxLimit - i.getWidth(null), y, null);
     }
 
-    private int disegnaElenco(Graphics2D graphics, List<Artefatto> artefatti, int x, int width, int offset) {
+    private int disegnaElenco(Graphics2D graphics, List<Artefatto> artefatti, int x, int offset) {
 
-        ComponenteScorrevole<Artefatto> componenteScorrevole = new ComponenteScorrevole<>(width, 10, 2);
+        ComponenteScorrevole<Artefatto> componenteScorrevole = new ComponenteScorrevole<>(
+                LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, 10, 2);
 
         for (Artefatto artefatto : artefatti) {
             String nome = artefatto.getNome();
@@ -209,9 +214,8 @@ public class DisplayableCanvasInventario implements Finestra {
             }
         }
 
-        int altezzaMassima = ImageCache.corniceInventario.getHeight() - 2 * (DIMENSIONE_BORDO_INTERNO + SPACING);
-        int nuovoOffset = componenteScorrevole.limitaOffset(altezzaMassima, offset);
-        Image image = componenteScorrevole.produci(altezzaMassima, nuovoOffset);
+        int nuovoOffset = componenteScorrevole.limitaOffset(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, offset);
+        Image image = componenteScorrevole.produci(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, nuovoOffset);
         graphics.drawImage(image, x + SPACING, DIMENSIONE_BORDO_INTERNO + 2 * SPACING, null);
 
         return nuovoOffset;
