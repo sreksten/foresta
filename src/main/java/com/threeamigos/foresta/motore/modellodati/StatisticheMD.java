@@ -45,6 +45,10 @@ public class StatisticheMD implements Serializzabile {
 		return turniGiocati;
 	}
 
+	public void setTurniGiocati(int turniGiocati) {
+		this.turniGiocati = turniGiocati;
+	}
+
 	////////////////////
 
 	public final void reimposta() {

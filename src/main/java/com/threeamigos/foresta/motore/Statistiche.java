@@ -54,4 +54,13 @@ public class Statistiche {
 	public static int getMostriUccisi(ClassePersonaggio classe) {
 		return statisticheMD.getMostriUccisi(classe);
 	}
+
+	public static int getTurniGiocati() {
+		return statisticheMD.getTurniGiocati();
+	}
+
+	public static int incrementaTurniGiocati() {
+		statisticheMD.setTurniGiocati(statisticheMD.getTurniGiocati() + 1);
+		return statisticheMD.getTurniGiocati();
+	}
 }

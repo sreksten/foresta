@@ -542,6 +542,8 @@ public class Automa implements ControlloreDiGioco {
 					personaggioCorrente.addStanchezza(1);
 				}
 
+				Statistiche.incrementaTurniGiocati();
+
 				stato = Stato.ATTESA_DIREZIONE;
 				processaAzione(null);
 				break;
