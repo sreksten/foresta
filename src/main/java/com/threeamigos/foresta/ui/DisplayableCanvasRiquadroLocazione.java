@@ -20,20 +20,34 @@ import java.util.Map;
 
 class DisplayableCanvasRiquadroLocazione implements Finestra {
 
+	private static final int SOLLEVAMENTO_ANCORA = 8;
+	private static final int SCOSTAMENTO_SOVRAPPOSIZIONE = 20;
+
 	private final int topLeftX;
 	private final int topLeftY;
 
 	private final Map<Personaggio, CoordinateMD> mappaCoordinate = new HashMap<>();
 	private final Map<Personaggio, BufferedImage> mappaImmagini = new HashMap<>();
-	
+	private final List<EffettoAttivo> effettiAttivi = new ArrayList<>();
+
+	private static final class EffettoAttivo {
+		final int yIniziale;
+		final SpriteEffetto sprite;
+		EffettoAttivo(int yIniziale, SpriteEffetto sprite) {
+			this.yIniziale = yIniziale;
+			this.sprite = sprite;
+		}
+	}
+
 	DisplayableCanvasRiquadroLocazione(int topLeftX, int topLeftY) {
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
 	}
-	
+
 	void assegnaCoordinateAgliAvversari() {
 		mappaCoordinate.clear();
 		mappaImmagini.clear();
+		effettiAttivi.clear();
 		GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
 		int i = 0;
 		for (Personaggio personaggioCorrente : gruppoAvversario.getPersonaggi()) {
@@ -120,9 +134,12 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		}
 
 		BufferedImage image = mappaImmagini.get(personaggio);
-		return new SpriteEffetto(effettoDiStato.getDescrizione(), DoomdarkFontMedium.getInstance(),
-				DoomdarkColorModel.Color.YELLOW,
-				coordinate.getX() + image.getWidth(), coordinate.getY() + image.getHeight() / 3);
+		int x = coordinate.getX() + image.getWidth();
+		int yIniziale = coordinate.getY() + image.getHeight() / 3 - SOLLEVAMENTO_ANCORA;
+		SpriteEffetto sprite = new SpriteEffetto(effettoDiStato.getDescrizione(), DoomdarkFontMedium.getInstance(),
+				DoomdarkColorModel.Color.YELLOW, x, yIniziale + calcolaOffsetVerticale(yIniziale));
+		effettiAttivi.add(new EffettoAttivo(yIniziale, sprite));
+		return sprite;
 	}
 
 	SpriteInterface aggiungiInterazioneElementale(Personaggio personaggio, TipoInterazioneElementale interazioneElementale) {
@@ -131,8 +148,24 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 			return null;
 		}
 		BufferedImage image = mappaImmagini.get(personaggio);
-		return new SpriteEffetto(interazioneElementale.getDescrizione(), DoomdarkFontMedium.getInstance(),
-				DoomdarkColorModel.Color.GREEN,
-				coordinate.getX() + image.getWidth(), coordinate.getY() + image.getHeight() * 2 / 3);
+		int x = coordinate.getX() + image.getWidth();
+		int yIniziale = coordinate.getY() + image.getHeight() * 2 / 3 - SOLLEVAMENTO_ANCORA;
+		SpriteEffetto sprite = new SpriteEffetto(interazioneElementale.getDescrizione(), DoomdarkFontMedium.getInstance(),
+				DoomdarkColorModel.Color.GREEN, x, yIniziale + calcolaOffsetVerticale(yIniziale));
+		effettiAttivi.add(new EffettoAttivo(yIniziale, sprite));
+		return sprite;
+	}
+
+	private int calcolaOffsetVerticale(int yIniziale) {
+		effettiAttivi.removeIf(e -> !e.sprite.isActive());
+		long occupati = effettiAttivi.stream()
+				.filter(e -> Math.abs(e.yIniziale - yIniziale) < SCOSTAMENTO_SOVRAPPOSIZIONE)
+				.count();
+		if (occupati == 0) {
+			return 0;
+		}
+		int passo = (int) ((occupati + 1) / 2);
+		int segno = (occupati % 2 == 1) ? 1 : -1;
+		return segno * passo * SCOSTAMENTO_SOVRAPPOSIZIONE;
 	}
 }
