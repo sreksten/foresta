@@ -24,6 +24,10 @@ public class ImageCache {
 	static BufferedImage ombraDelDrago;
 	static BufferedImage trionfo;
 	static BufferedImage separatore;
+	static BufferedImage separatoreArmi;
+	static BufferedImage separatoreArmature;
+	static BufferedImage separatoreScudi;
+	static BufferedImage separatoreNinnoli;
 	static BufferedImage segnalino;
 	static BufferedImage punto;
 	static BufferedImage virgola;
@@ -72,6 +76,10 @@ public class ImageCache {
 		ombraDelDrago = BufferedImageBuilder.buildBufferedImage("fondi/OmbraDelDrago.gif");
 		trionfo = BufferedImageBuilder.buildBufferedImage("fondi/Trionfo.gif");
 		separatore = BufferedImageBuilder.buildBufferedImage("fondi/Separatore.gif");
+		separatoreArmi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Armi.gif");
+		separatoreArmature = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Armature.gif");
+		separatoreScudi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Scudi.gif");
+		separatoreNinnoli = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Ninnoli.gif");
 
 		locazioni = new EnumMap<>(ClassiLocazione.class);
 		BufferedImage d;
