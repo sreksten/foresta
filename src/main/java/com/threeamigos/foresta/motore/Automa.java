@@ -258,11 +258,67 @@ public class Automa implements ControlloreDiGioco {
 						.setCostoAcquisto(100)
 						.setPeso(3)
 						.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 5)
-						.setModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_PERCENTUALE, 2)
-						.setModificatore(TipoAttributo.CORAGGIO, TipoModificatore.AUMENTO_PERCENTUALE, 1)
+						.setModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, 2)
+						.setModificatore(TipoAttributo.CORAGGIO, TipoModificatore.QUANTITA_ASSOLUTA, 1)
 						.setIncantamento("Incantesimo di RomyJona", TipoDanno.NECROTICO, 10, 0.5)
 						.costruisci();
 				personaggio.addArtefatto(megaspada);
+
+				Artefatto superscudo = CostruttoreArtefatto.istanza()
+						.setTipo(TipoArtefatto.SCUDO)
+						.setNome("lo scudo del rimpasto di governo")
+						.setDescrizione("che tritura i tegami")
+						.setLivello(5)
+						.setDanniBase(50)
+						.setCostoAcquisto(100)
+						.setPeso(3)
+						.setModificatore(TipoAttributo.COSTITUZIONE, TipoModificatore.AUMENTO_PERCENTUALE, 5)
+						.setModificatore(TipoAttributo.RESISTENZA_MAGICA, TipoModificatore.AUMENTO_PERCENTUALE, 2)
+						.setModificatore(TipoAttributo.FORTUNA, TipoModificatore.AUMENTO_PERCENTUALE, 1)
+						.setIncantamento("La battuta del cavolo", TipoDanno.GELO, 10, 0.5)
+						.costruisci();
+				personaggio.addArtefatto(superscudo);
+
+				Artefatto scarponi = CostruttoreArtefatto.istanza()
+						.setTipo(TipoArtefatto.SCUDO)
+						.setNome("gli scarponi di RomyJona")
+						.setDescrizione("che tritura i tegami")
+						.setLivello(5)
+						.setDanniBase(50)
+						.setCostoAcquisto(100)
+						.setPeso(3)
+						.setModificatore(TipoAttributo.CARISMA, TipoModificatore.QUANTITA_ASSOLUTA, 0)
+						.costruisci();
+
+				Artefatto occhiali = CostruttoreArtefatto.istanza()
+						.setTipo(TipoArtefatto.NINNOLO)
+						.setNome("occhiali da sole del Ruttatore")
+						.setDescrizione("che tritura i tegami")
+						.setLivello(5)
+						.setDanniBase(50)
+						.setCostoAcquisto(100)
+						.setPeso(3)
+						.setModificatore(TipoAttributo.CARISMA, TipoModificatore.QUANTITA_ASSOLUTA, 5)
+						.setIncantamento("La serpe di Yalar", TipoDanno.VELENO, 10, 0.5)
+						.setIncantamento("La mazzata nel capo", TipoDanno.CONTUNDENTE, 10, 0.5)
+						.setIncantamento("Lo scherzo da prete", TipoDanno.SACRO, 10, 0.5)
+						.costruisci();
+				personaggio.addArtefatto(occhiali);
+
+				Artefatto portafogli = CostruttoreArtefatto.istanza()
+						.setTipo(TipoArtefatto.NINNOLO)
+						.setNome("portafogli di Samuele")
+						.setDescrizione("che tritura i tegami")
+						.setLivello(5)
+						.setDanniBase(50)
+						.setCostoAcquisto(100)
+						.setPeso(3)
+						.setModificatore(TipoAttributo.CARISMA, TipoModificatore.QUANTITA_ASSOLUTA, 5)
+						.setIncantamento("Il pelo di topa", TipoDanno.ARCANO, 10, 0.5)
+						.setIncantamento("Giocondo", TipoDanno.SONICO, 10, 0.5)
+						.setIncantamento("Il cervello di Tarlo", TipoDanno.VUOTO, 10, 0.5)
+						.costruisci();
+				personaggio.addArtefatto(occhiali);
 
 				stato = Stato.INZIO_LOCAZIONE;
 				processaAzione(null);

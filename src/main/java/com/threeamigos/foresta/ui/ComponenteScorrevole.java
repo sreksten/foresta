@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * Elenco ad albero scorrevole. Ogni nodo può portarsi dietro un riferimento
  * all'oggetto che rappresenta, per poter risalire dalla posizione di un click
- * a quell'oggetto. Inoltre può contenere una immagine di accompagnamento.
+ * a quell'oggetto. Inoltre può contenere una icona messa a sinistra.
  *
  * @param <T> il tipo dell'oggetto rappresentato da ciascun nodo
  *
@@ -66,7 +66,7 @@ public class ComponenteScorrevole<T> {
     }
 
     private int calcolaAltezzaMassimaNodi() {
-        return nodi.stream().mapToInt(Nodo::getAltezza).sum();
+        return nodi.stream().mapToInt(Nodo::getAltezzaCompleta).sum();
     }
 
     /**
@@ -92,17 +92,19 @@ public class ComponenteScorrevole<T> {
 
         Graphics2D g2d = risultato.createGraphics();
 
+        final int SPACING = ImageCache.SPACING;
+
         int altezzaRaggiunta = 0;
         for (Nodo nodo : contenuto) {
             // Ogni riga viene disegnata alla propria posizione assoluta: si evita il
             // disegno di quelle che non intersecano la finestra ritagliata, non lo spazio
             // che occupano.
-            int altezzaNodo = nodo.getAltezza();
+            int altezzaNodo = nodo.getAltezzaSenzaFigli();
             if (altezzaRaggiunta + altezzaNodo > offset && altezzaRaggiunta < offset + altezzaMassima) {
                 int x = nodo.getIndentazione();
                 if (nodo.icona != null) {
                     g2d.drawImage(nodo.icona, x, altezzaRaggiunta, null);
-                    x += nodo.icona.getWidth(null) + ImageCache.SPACING;
+                    x += nodo.icona.getWidth(null) + SPACING;
                 }
                 if (nodo.chiave != null) {
                     g2d.drawImage(nodo.chiave, x, altezzaRaggiunta, null);
@@ -118,22 +120,17 @@ public class ComponenteScorrevole<T> {
                 }
             }
             altezzaRaggiunta += altezzaNodo;
-
-//            if (altezzaRaggiunta > altezzaMassima) {
-//                break;
-//            }
         }
 
-        int spacing = ImageCache.SPACING;
         if (offset > 0) {
             Image frecciaSu = ImageCache.componenteScorrevoleFrecciaSu;
-            g2d.drawImage(frecciaSu, larghezza - frecciaSu.getWidth(null) - spacing, offset + spacing,null);
+            g2d.drawImage(frecciaSu, larghezza - frecciaSu.getWidth(null) - SPACING, offset + SPACING,null);
         }
         if (altezzaRaggiunta - offset > altezzaMassima) {
             Image frecciaGiu = ImageCache.componenteScorrevoleFrecciaGiu;
             g2d.drawImage(frecciaGiu,
-                    larghezza - frecciaGiu.getWidth(null) - spacing,
-                    offset + altezzaMassima - spacing - frecciaGiu.getHeight(null),
+                    larghezza - frecciaGiu.getWidth(null) - SPACING,
+                    offset + altezzaMassima - SPACING - frecciaGiu.getHeight(null),
                     null);
         }
 
@@ -171,7 +168,7 @@ public class ComponenteScorrevole<T> {
         }
         int altezzaRaggiunta = 0;
         for (Nodo nodo : espandiNodi()) {
-            int altezzaNodo = nodo.getAltezza();
+            int altezzaNodo = nodo.getAltezzaSenzaFigli();
             if (quota < altezzaRaggiunta + altezzaNodo) {
                 return nodo.riferimento;
             }
@@ -185,6 +182,7 @@ public class ComponenteScorrevole<T> {
         private final Image chiave;
         private final Image valore;
         private final Image descrizione;
+        private final String datiOriginali;
 
         private final int indentazione;
         // Indentazione effettiva di testo/descrizione: se è presente un'immagine,
@@ -197,14 +195,14 @@ public class ComponenteScorrevole<T> {
         Nodo(String chiave, DoomdarkFont fontChiave, DoomdarkColorModel.Color coloreChiave,
              String valore, DoomdarkFont fontValore, DoomdarkColorModel.Color coloreValore,
              String descrizione, DoomdarkFont fontDescrizione, DoomdarkColorModel.Color coloreDescrizione,
-             Image immagineAccompagnamentoSinistra, int indentazione, T riferimento) {
+             Image icona, int indentazione, T riferimento) {
             this.riferimento = riferimento;
-            this.icona = immagineAccompagnamentoSinistra;
+            this.icona = icona;
             this.indentazione = indentazione;
 
             int larghezzaMassimaChiave = larghezza - indentazione;
-            if (immagineAccompagnamentoSinistra != null) {
-                larghezzaMassimaChiave = larghezzaMassimaChiave - immagineAccompagnamentoSinistra.getWidth(null) - ImageCache.SPACING;
+            if (icona != null) {
+                larghezzaMassimaChiave = larghezzaMassimaChiave - icona.getWidth(null) - ImageCache.SPACING;
             }
 
             // La descrizione è indentata un livello in più
@@ -227,6 +225,11 @@ public class ComponenteScorrevole<T> {
             } else {
                 this.descrizione = null;
             }
+
+            String sb = "Chiave: " + chiave +
+                    " Valore: " + valore +
+                    " Descrizione: " + descrizione;
+            this.datiOriginali = sb;
         }
 
         private Image creaImmagine(DoomdarkFont font, DoomdarkColorModel.Color color, String testo, int larghezza) {
@@ -245,26 +248,34 @@ public class ComponenteScorrevole<T> {
 
         public Nodo creaNodo(String chiave, DoomdarkFont fontChiave, DoomdarkColorModel.Color coloreChiave,
                              String descrizione, DoomdarkFont fontDescrizione, DoomdarkColorModel.Color coloreDescrizione,
-                             Image immagineAccompagnamentoSinistra, T riferimento) {
+                             Image icona, T riferimento) {
             return creaNodo(chiave, fontChiave, coloreChiave,
                     null, null, null,
                     descrizione, fontDescrizione, coloreDescrizione,
-                    immagineAccompagnamentoSinistra, riferimento);
+                    icona, riferimento);
         }
 
         public Nodo creaNodo(String chiave, DoomdarkFont fontChiave, DoomdarkColorModel.Color coloreChiave,
                              String valore, DoomdarkFont fontValore, DoomdarkColorModel.Color coloreValore,
                              String descrizione, DoomdarkFont fontDescrizione, DoomdarkColorModel.Color coloreDescrizione,
-                             Image immagineAccompagnamentoSinistra, T riferimento) {
+                             Image icona, T riferimento) {
             Nodo nodo = new Nodo(chiave, fontChiave, coloreChiave,
                     valore, fontValore, coloreValore,
                     descrizione, fontDescrizione, coloreDescrizione,
-                    immagineAccompagnamentoSinistra, this.indentazione + larghezzaIndentazione, riferimento);
+                    icona, this.indentazione + larghezzaIndentazione, riferimento);
             figli.add(nodo);
             return nodo;
         }
 
-        public int getAltezza() {
+        public int getAltezzaCompleta() {
+            return getAltezza(true);
+        }
+
+        public int getAltezzaSenzaFigli() {
+            return getAltezza(false);
+        }
+
+        private int getAltezza(boolean inclusiNodiFigli) {
             int altezza = 0;
             if (chiave != null) {
                 altezza = chiave.getHeight(null);
@@ -276,7 +287,9 @@ public class ComponenteScorrevole<T> {
                 if (descrizione != null) {
                     altezza += interlinea + descrizione.getHeight(null);
                 }
-                altezza += interlinea + figli.stream().mapToInt(Nodo::getAltezza).sum();
+                if (inclusiNodiFigli) {
+                altezza += interlinea + figli.stream().mapToInt(Nodo::getAltezzaCompleta).sum();
+                }
             }
             if (icona != null) {
                 altezza = Math.max(altezza, icona.getHeight(null));
@@ -295,6 +308,11 @@ public class ComponenteScorrevole<T> {
 
         public boolean isFigliVisibili() {
             return figliVisibili;
+        }
+
+        @Override
+        public String toString() {
+            return datiOriginali;
         }
     }
 }
