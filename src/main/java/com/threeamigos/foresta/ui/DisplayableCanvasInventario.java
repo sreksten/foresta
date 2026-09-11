@@ -135,14 +135,15 @@ public class DisplayableCanvasInventario implements Finestra {
         creaNodo(componenteScorrevole, colore, TipoAttributo.CORAGGIO, p.getCoraggio());
         creaNodo(componenteScorrevole, colore, TipoAttributo.VALORE, p.getValore());
 
+        offsetYBoxPersonaggio = componenteScorrevole.limitaOffset(height, offsetYBoxPersonaggio);
         Image image = componenteScorrevole.produci(height - y, offsetYBoxPersonaggio);
         graphics.drawImage(image, corniceInventarioWidth + 2 * SPACING, y, null);
 
         final int width = corniceInventarioWidth - 2 * (SPACING + DIMENSIONE_BORDO_INTERNO);
         // Inventario personaggio
-        disegnaElenco(graphics, new ArrayList<>(p.getInventario()), leftBoxX, width, offsetYLeftBox);
+        offsetYLeftBox = disegnaElenco(graphics, new ArrayList<>(p.getInventario()), leftBoxX, width, offsetYLeftBox);
         // Inventario gruppo
-        disegnaElenco(graphics, automa.getArtefattiDisponibili(), rightBoxX, width, offsetYRightBox);
+        offsetYRightBox = disegnaElenco(graphics, automa.getArtefattiDisponibili(), rightBoxX, width, offsetYRightBox);
     }
 
     private void creaNodo(ComponenteScorrevole<TipoAttributo> componenteScorrevole, DoomdarkColorModel.Color colore,
@@ -161,7 +162,7 @@ public class DisplayableCanvasInventario implements Finestra {
         graphics.drawImage(i, centerBoxLimit - i.getWidth(null), y, null);
     }
 
-    private void disegnaElenco(Graphics2D graphics, List<Artefatto> artefatti, int x, int width, int offset) {
+    private int disegnaElenco(Graphics2D graphics, List<Artefatto> artefatti, int x, int width, int offset) {
 
         ComponenteScorrevole<Artefatto> componenteScorrevole = new ComponenteScorrevole<>(width, 10, 2);
 
@@ -208,9 +209,12 @@ public class DisplayableCanvasInventario implements Finestra {
             }
         }
 
-        Image image = componenteScorrevole.produci(ImageCache.corniceInventario.getHeight() - 2 * (DIMENSIONE_BORDO_INTERNO + SPACING), offset);
+        int altezzaMassima = ImageCache.corniceInventario.getHeight() - 2 * (DIMENSIONE_BORDO_INTERNO + SPACING);
+        int nuovoOffset = componenteScorrevole.limitaOffset(altezzaMassima, offset);
+        Image image = componenteScorrevole.produci(altezzaMassima, nuovoOffset);
         graphics.drawImage(image, x + SPACING, DIMENSIONE_BORDO_INTERNO + 2 * SPACING, null);
 
+        return nuovoOffset;
     }
 
     @Override
