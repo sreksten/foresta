@@ -11,8 +11,9 @@ public enum TipoArtefatto {
     ASCIA(SupertipoArtefatto.ARMA, TipoDanno.TAGLIENTE, "Ascia", "impugna"),
     LANCIA(SupertipoArtefatto.ARMA, TipoDanno.PERFORANTE, "Lancia", "impugna"),
 
-    LIBRO_MAGICO(SupertipoArtefatto.ARMA, "Libro magico", "porta"),
-    BASTONE_MAGICO(SupertipoArtefatto.ARMA, "Bastone magico", "impugna"),
+    // FIXME se si passa ARMA occorre passare il tipo di danno, ma questo dipenderebbe un po' dall'incantesimo...
+    LIBRO_MAGICO(SupertipoArtefatto.ALTRO, "Libro magico", "porta"),
+    BASTONE_MAGICO(SupertipoArtefatto.ALTRO, "Bastone magico", "impugna"),
 
     SCUDO(SupertipoArtefatto.SCUDO, "Scudo", "porta"),
 

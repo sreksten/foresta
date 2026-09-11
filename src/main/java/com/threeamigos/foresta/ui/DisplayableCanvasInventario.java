@@ -2,6 +2,7 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.motore.AutomaInventario;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Incantamento;
@@ -191,7 +192,20 @@ public class DisplayableCanvasInventario implements Finestra {
         ComponenteScorrevole<Artefatto> componenteScorrevole = new ComponenteScorrevole<>(
                 LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, 10, 2);
 
-        for (Artefatto artefatto : artefatti) {
+        List<Artefatto> artefattiDaDisegnare = ordinaArtifattiDaDisegnare(artefatti);
+
+        SupertipoArtefatto supertipoPrecedente = null;
+        for (Artefatto artefatto : artefattiDaDisegnare) {
+
+            if (supertipoPrecedente != artefatto.getTipo().getSupertipo()) {
+                supertipoPrecedente = artefatto.getTipo().getSupertipo();
+                componenteScorrevole.creaNodo(
+                        null, null, null,
+                        null, null, null,
+                        null, null, null,
+                        getImmagineSupertipo(supertipoPrecedente), null);
+            }
+
             DoomdarkColorModel.Color colore = artefatto == evidenziato
                     ? DoomdarkColorModel.Color.WHITE
                     : DoomdarkColorModel.Color.LIGHT_GRAY;
@@ -250,9 +264,11 @@ public class DisplayableCanvasInventario implements Finestra {
                             incantamento.getNomeIncantamento(), font, coloreAttributi,
                             null, null, null,
                             null, artefatto);
+                    int bonusFisso = incantamento.getDannoBonusFisso();
                     nodo.creaNodo(
                             incantamento.getTipoDannoElementale().getNome(), font, coloreAttributi,
-                            incantamento.getDannoBonusFisso() + " + " + (int) (incantamento.getCoefficienteScala() * 100) + "%", font, coloreAttributi,
+                            (bonusFisso < 0 ? "-" : "+") + bonusFisso +
+                                    " + " + (int) (incantamento.getCoefficienteScala() * 100) + "%", font, coloreAttributi,
                             null, null, null,
                             null, artefatto);
                 }
@@ -260,6 +276,24 @@ public class DisplayableCanvasInventario implements Finestra {
         }
 
         return componenteScorrevole;
+    }
+
+    private static List<Artefatto> ordinaArtifattiDaDisegnare(List<Artefatto> artefatti) {
+        List<Artefatto> artefattiDaDisegnare = new ArrayList<>(artefatti);
+        artefattiDaDisegnare.sort((a1, a2) -> {
+            int ordinaleSupertipo1 = a1.getTipo().getSupertipo().ordinal();
+            int ordinaleSupertipo2 = a2.getTipo().getSupertipo().ordinal();
+            if (ordinaleSupertipo1 == ordinaleSupertipo2) {
+                int ordinaleTipo1 = a1.getTipo().ordinal();
+                int ordinaleTipo2 = a2.getTipo().ordinal();
+                if (ordinaleTipo1 == ordinaleTipo2) {
+                    return a1.getNome().compareTo(a2.getNome());
+                }
+                return Integer.compare(ordinaleTipo1, ordinaleTipo2);
+            }
+            return Integer.compare(ordinaleSupertipo1, ordinaleSupertipo2);
+        });
+        return artefattiDaDisegnare;
     }
 
     /**
@@ -348,4 +382,18 @@ public class DisplayableCanvasInventario implements Finestra {
         }
     }
 
+    private Image getImmagineSupertipo(SupertipoArtefatto supertipo) {
+        switch (supertipo) {
+            case ARMA:
+                return ImageCache.separatoreArmi;
+            case ARMATURA:
+                return ImageCache.separatoreArmature;
+            case SCUDO:
+                return ImageCache.separatoreScudi;
+            case ALTRO:
+                return ImageCache.separatoreNinnoli;
+            default:
+                throw new IllegalArgumentException("SupertipoArtefatto senza immagine associata");
+        }
+    }
 }
