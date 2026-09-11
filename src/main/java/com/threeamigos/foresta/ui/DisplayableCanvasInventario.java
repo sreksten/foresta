@@ -195,6 +195,13 @@ public class DisplayableCanvasInventario implements Finestra {
             DoomdarkColorModel.Color colore = artefatto == evidenziato
                     ? DoomdarkColorModel.Color.WHITE
                     : DoomdarkColorModel.Color.LIGHT_GRAY;
+            DoomdarkColorModel.Color coloreAttributi = artefatto == evidenziato
+                    ? DoomdarkColorModel.Color.LIGHT_GRAY
+                    : DoomdarkColorModel.Color.MEDIUM_GRAY;
+            DoomdarkColorModel.Color coloreSeparatori = artefatto == evidenziato
+                    ? DoomdarkColorModel.Color.MEDIUM_GRAY
+                    : DoomdarkColorModel.Color.DARK_GRAY;
+
             String nome = artefatto.getNome();
             nome = nome.substring(0, 1).toUpperCase() + nome.substring(1);
             ComponenteScorrevole<Artefatto>.Nodo nodo = componenteScorrevole.creaNodo(
@@ -202,39 +209,53 @@ public class DisplayableCanvasInventario implements Finestra {
                     artefatto.getTipo().getDescrizione(), fontSmall, colore,
                     null, artefatto);
             nodo.setFigliVisibili(artefatto.isFigliVisibili());
-            for (ModificatoreAttributo modificatore : artefatto.getModificatori()) {
-                String valore;
-                switch (modificatore.getTipoModificatoreAttributo()) {
-                    case AUMENTO_FISSO:
-                        valore = (modificatore.getQuantita() < 0 ? "-" : "+") + (int)modificatore.getQuantita();
-                        break;
-                    case AUMENTO_PERCENTUALE:
-                        valore = (modificatore.getQuantita() < 0 ? "-" : "+") + (int)modificatore.getQuantita() + "%";
-                        break;
-                    case QUANTITA_ASSOLUTA:
-                        valore = "Porta a " + (int)modificatore.getQuantita();
-                        break;
-                    default:
-                        valore = "";
-                        break;
-                }
+            if (!artefatto.getModificatori().isEmpty()) {
                 nodo.creaNodo(
-                        modificatore.getTipoAttributo().getNome(), font, colore,
-                        valore, font, colore,
+                        "Modificatori:", font, coloreSeparatori,
+                        null, null, null,
                         null, null, null,
                         null, artefatto);
+                for (ModificatoreAttributo modificatore : artefatto.getModificatori()) {
+                    String valore;
+                    switch (modificatore.getTipoModificatoreAttributo()) {
+                        case AUMENTO_FISSO:
+                            valore = (modificatore.getQuantita() < 0 ? "-" : "+") + (int) modificatore.getQuantita();
+                            break;
+                        case AUMENTO_PERCENTUALE:
+                            valore = (modificatore.getQuantita() < 0 ? "-" : "+") + (int) modificatore.getQuantita() + "%";
+                            break;
+                        case QUANTITA_ASSOLUTA:
+                            valore = "Porta a " + (int) modificatore.getQuantita();
+                            break;
+                        default:
+                            valore = "";
+                            break;
+                    }
+                    nodo.creaNodo(
+                            modificatore.getTipoAttributo().getNome(), font, coloreAttributi,
+                            valore, font, coloreAttributi,
+                            null, null, null,
+                            null, artefatto);
 
+                }
             }
-            for (Incantamento incantamento : artefatto.getIncantamenti()) {
+            if (!artefatto.getIncantamenti().isEmpty()) {
                 nodo.creaNodo(
-                        incantamento.getNomeIncantamento(), font, colore,
+                        "Incantamenti:", font, coloreSeparatori,
+                        null, null, null,
                         null, null, null,
                         null, artefatto);
-                nodo.creaNodo(
-                        incantamento.getTipoDannoElementale().getNome(), font, colore,
-                        incantamento.getDannoBonusFisso() + " + " + (int)(incantamento.getCoefficienteScala() * 100) + "%", font, colore,
-                        null, null, null,
-                        null, artefatto);
+                for (Incantamento incantamento : artefatto.getIncantamenti()) {
+                    nodo.creaNodo(
+                            incantamento.getNomeIncantamento(), font, coloreAttributi,
+                            null, null, null,
+                            null, artefatto);
+                    nodo.creaNodo(
+                            incantamento.getTipoDannoElementale().getNome(), font, coloreAttributi,
+                            incantamento.getDannoBonusFisso() + " + " + (int) (incantamento.getCoefficienteScala() * 100) + "%", font, colore,
+                            null, null, null,
+                            null, artefatto);
+                }
             }
         }
 
