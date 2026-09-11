@@ -282,7 +282,7 @@ public class Automa implements ControlloreDiGioco {
 				personaggio.addArtefatto(superscudo);
 
 				Artefatto scarponi = CostruttoreArtefatto.istanza()
-						.setTipo(TipoArtefatto.SCUDO)
+						.setTipo(TipoArtefatto.ARMATURA)
 						.setNome("gli scarponi di RomyJona")
 						.setDescrizione("che tritura i tegami")
 						.setLivello(5)
