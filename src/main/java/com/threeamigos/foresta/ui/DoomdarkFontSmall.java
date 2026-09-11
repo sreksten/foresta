@@ -76,8 +76,10 @@ class DoomdarkFontSmall implements DoomdarkFont {
 			return parentesi_aperta[0];
 		} else if (c == ')') {
 			return parentesi_chiusa[0];
+		} else if (c == '%') {
+			return percentuale[0];
 		}
-		throw new IllegalArgumentException();
+		throw new UnsupportedCharacterException(c);
 	}
 
 	public final byte[] getGlyphData(char c) {
@@ -129,8 +131,10 @@ class DoomdarkFontSmall implements DoomdarkFont {
 			return parentesi_aperta;
 		} else if (c == ')') {
 			return parentesi_chiusa;
+		} else if (c == '%') {
+			return percentuale;
 		}
-		throw new IllegalArgumentException();
+		throw new UnsupportedCharacterException(c);
 	}
 
 	private static final byte[][] maiuscole = {
@@ -1116,7 +1120,7 @@ class DoomdarkFontSmall implements DoomdarkFont {
 	};
 
 	private static final byte[] parentesi_aperta = {
-			5, // ù
+			5,
 			(byte)0b00010000,
 			(byte)0b01100000,
 			(byte)0b11100000,
@@ -1128,7 +1132,7 @@ class DoomdarkFontSmall implements DoomdarkFont {
 	};
 
 	private static final byte[] parentesi_chiusa = {
-			5, // ù
+			5,
 			(byte)0b10000000,
 			(byte)0b01100000,
 			(byte)0b00111000,
@@ -1137,5 +1141,17 @@ class DoomdarkFontSmall implements DoomdarkFont {
 			(byte)0b00111000,
 			(byte)0b01100000,
 			(byte)0b10000000
+	};
+
+	private static final byte[] percentuale = {
+			8,
+			(byte) 0b01100001,
+			(byte) 0b10010010,
+			(byte) 0b10010100,
+			(byte) 0b01101000,
+			(byte) 0b00010110,
+			(byte) 0b00101001,
+			(byte) 0b01001001,
+			(byte) 0b10000110,
 	};
 }

@@ -76,6 +76,8 @@ class DoomdarkFontMedium implements DoomdarkFont {
 			return parentesi_aperta[0];
 		} else if (c == ')') {
 			return parentesi_chiusa[0];
+		} else if (c == '%') {
+			return percentuale[0];
 		}
 		throw new UnsupportedCharacterException(c);
 	}
@@ -129,6 +131,8 @@ class DoomdarkFontMedium implements DoomdarkFont {
 			return parentesi_aperta;
 		} else if (c == ')') {
 			return parentesi_chiusa;
+		} else if (c == '%') {
+			return percentuale;
 		}
 		throw new UnsupportedCharacterException(c);
 	}
@@ -1763,7 +1767,7 @@ class DoomdarkFontMedium implements DoomdarkFont {
 	};
 
 	private static final byte[] parentesi_aperta = {
-			7, // ù
+			7,
 			(byte)0b00000000, (byte)0b00000000,
 			(byte)0b00001100, (byte)0b00000000,
 			(byte)0b00111000, (byte)0b00000000,
@@ -1783,7 +1787,7 @@ class DoomdarkFontMedium implements DoomdarkFont {
 	};
 
 	private static final byte[] parentesi_chiusa = {
-			7, // ù
+			7,
 			(byte)0b00000000, (byte)0b00000000,
 			(byte)0b11000000, (byte)0b00000000,
 			(byte)0b01110000, (byte)0b00000000,
@@ -1800,5 +1804,26 @@ class DoomdarkFontMedium implements DoomdarkFont {
 			(byte)0b01110000, (byte)0b00000000,
 			(byte)0b11000000, (byte)0b00000000,
 			(byte)0b00000000, (byte)0b00000000
+	};
+
+
+	private static final byte[] percentuale = {
+			16,
+			(byte)0b00111100, (byte)0b00000011,
+			(byte)0b01100110, (byte)0b00000111,
+			(byte)0b11000011, (byte)0b00001110,
+			(byte)0b11000011, (byte)0b00011100,
+			(byte)0b11000011, (byte)0b00111000,
+			(byte)0b01100110, (byte)0b01110000,
+			(byte)0b00111100, (byte)0b11100000,
+			(byte)0b00000001, (byte)0b11000000,
+			(byte)0b00000011, (byte)0b10000000,
+			(byte)0b00000111, (byte)0b00111100,
+			(byte)0b00001110, (byte)0b01100110,
+			(byte)0b00011100, (byte)0b11000011,
+			(byte)0b00111000, (byte)0b11000011,
+			(byte)0b01110000, (byte)0b11000011,
+			(byte)0b11100000, (byte)0b01100110,
+			(byte)0b11000000, (byte)0b00111100
 	};
 }
