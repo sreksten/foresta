@@ -203,7 +203,7 @@ public class ImageCache {
 		spriteTempo = BufferedImageBuilder.buildBufferedImage("icone/Tempo-nobordo-piccolo.gif");
 		spriteAumentoLivello = BufferedImageBuilder.buildBufferedImage("icone/AumentoLivello-nobordo-piccolo.gif");
 
-		missioneBirra = BufferedImageBuilder.buildBufferedImage("icone/Missione-birra.gif");
+		missioneBirra = BufferedImageBuilder.buildBufferedImage("icone/Missione-birra-grande.gif");
 		missioneGallo = BufferedImageBuilder.buildBufferedImage("icone/Missione-gallo.gif");
 
 		componenteScorrevoleFrecciaSu = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaSu.gif");
