@@ -32,8 +32,9 @@ public class ForestaUI implements InterfacciaUtente {
 		SwingUtilities.invokeLater(this::createAndShowGUI);
 
 		BusEventi.iscriviti(EventoAggiuntaModificatore.class, this::gestisciEventoAggiuntaModificatore);
-		// EventoCreazionePersonaggio non ci interessa, riguarda il motore
 		// EventoCombattimento non ci interessa, solo mostrare i suoi effetti eventuali che vengono pubblicati dal personaggio interessato
+		BusEventi.iscriviti(EventoConsumoPuntoAbilita.class, this::gestisciEventoConsumoPuntoAbilita);
+		// EventoCreazionePersonaggio non ci interessa, riguarda il motore
 		BusEventi.iscriviti(EventoInterazioneElementale.class, this::gestisciEventoInterazioneElementale);
 		BusEventi.iscriviti(EventoMessaggio.class, this::gestisciEventoMessaggio);
 		// EventoValutazioneAttaccante non ci interessa, è il motore AI degli avversari che informa sul suo stato di progressione
@@ -302,6 +303,12 @@ public class ForestaUI implements InterfacciaUtente {
 				displayableCanvas.variaMagiaMassima(personaggio, (int)(modificatore.getQuantita()));
 				break;
 		}
+	}
+
+	private void gestisciEventoConsumoPuntoAbilita(EventoConsumoPuntoAbilita evento) {
+		Personaggio personaggio = evento.getPersonaggio();
+		TipoAttributo tipoAttributo = evento.getTipoAttributo();
+		displayableCanvas.notificaMissione("AUMENTO", tipoAttributo.getNome().toUpperCase());
 	}
 
 	private void gestisciEventoInterazioneElementale(EventoInterazioneElementale evento) {

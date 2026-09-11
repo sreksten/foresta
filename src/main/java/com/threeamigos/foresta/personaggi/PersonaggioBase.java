@@ -664,6 +664,20 @@ public abstract class PersonaggioBase implements Personaggio {
 		return md.getPuntiAbilitaDisponibili();
 	}
 
+	@Override
+	public void spendiPuntoAbilita(TipoAttributo tipoAttributo) {
+		if (!tipoAttributo.isPrimario() || md.getPuntiAbilitaDisponibili() <= 0) {
+			return;
+		}
+		add(tipoAttributo, 1);
+		int puntiAbilitaDisponibili = md.getPuntiAbilitaDisponibili();
+		int nuoviPuntiAbilitaDisponibili = puntiAbilitaDisponibili - 1;
+		md.setPuntiAbilitaDisponibili(nuoviPuntiAbilitaDisponibili);
+		BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.PUNTI_ABILITA,
+				puntiAbilitaDisponibili, nuoviPuntiAbilitaDisponibili));
+		BusEventi.pubblica(new EventoConsumoPuntoAbilita(this, tipoAttributo));
+	}
+
 	// CARICO
 
 	@Override

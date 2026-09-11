@@ -280,6 +280,13 @@ public interface Personaggio extends OggettoConArticoli {
 	int getPuntiAbilitaDisponibili();
 
 	/**
+	 * Se il tipo di attributo è primario e il personaggio dispone di punti abilità,
+	 * ne aumenta il valore di uno e sottrae un punto abilità disponibile. Non ha
+	 * effetto altrimenti.
+	 */
+	void spendiPuntoAbilita(TipoAttributo tipoAttributo);
+
+	/**
 	 * La salute attuale di un personaggio
 	 */
     int getSalute();

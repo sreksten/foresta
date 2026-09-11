@@ -15,6 +15,7 @@ public class SnifferBusEventi {
     public SnifferBusEventi() {
         BusEventi.iscriviti(EventoAggiuntaModificatore.class, this::onEventoAggiuntaModificatore);
         BusEventi.iscriviti(EventoCombattimento.class, this::onEventoCombattimento);
+        BusEventi.iscriviti(EventoConsumoPuntoAbilita.class, this::onEventoConsumoPuntoAbilita);
         BusEventi.iscriviti(EventoCreazionePersonaggio.class, this::onEventoCreazionePersonaggio);
         BusEventi.iscriviti(EventoInterazioneElementale.class, this::onEventoInterazioneElementale);
         BusEventi.iscriviti(EventoMessaggio.class, this::onEventoMessaggio);
@@ -35,6 +36,11 @@ public class SnifferBusEventi {
         Personaggio bersaglio = evento.getBersaglio();
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) +
                 formattaStatistichePersonaggio(bersaglio) + evento.formattaRisultatoCombattimento());
+    }
+
+    private void onEventoConsumoPuntoAbilita(EventoConsumoPuntoAbilita evento) {
+        Personaggio p = evento.getPersonaggio();
+        Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getTipoAttributo());
     }
 
     private void onEventoCreazionePersonaggio(EventoCreazionePersonaggio evento) {

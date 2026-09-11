@@ -12,7 +12,9 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -54,6 +56,38 @@ public class DisplayableCanvasInventario implements Finestra {
     // -1 significa "cursore fuori dalla finestra".
     private int mouseX = -1;
     private int mouseY = -1;
+
+    // Quota (in coordinate della finestra) a cui inizia l'elenco delle caratteristiche del
+    // personaggio, aggiornata a ogni disegnaInventario e usata per l'hit-test dei click.
+    private int yAttributi = 0;
+
+    /**
+     * Le caratteristiche di un personaggio, a differenza degli artefatti, non hanno un
+     * modello dati proprio: questa classe di appoggio associa a ogni TipoAttributo la
+     * visibilità della sua descrizione, replicando l'API isFigliVisibili/mostraFigli/
+     * nascondiFigli già usata da Artefatto.
+     */
+    private static final class StatoAttributo {
+        private boolean figliVisibili = true;
+
+        private boolean isFigliVisibili() {
+            return figliVisibili;
+        }
+
+        private void mostraFigli() {
+            figliVisibili = true;
+        }
+
+        private void nascondiFigli() {
+            figliVisibili = false;
+        }
+    }
+
+    private final Map<TipoAttributo, StatoAttributo> statiAttributi = new HashMap<>();
+
+    private StatoAttributo statoDi(TipoAttributo tipoAttributo) {
+        return statiAttributi.computeIfAbsent(tipoAttributo, t -> new StatoAttributo());
+    }
 
     DisplayableCanvasInventario(int width, int height) {
         this.width = width;
@@ -119,38 +153,9 @@ public class DisplayableCanvasInventario implements Finestra {
         y += separatore.getHeight() + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
         // Attributi personaggio
-        ComponenteScorrevole<TipoAttributo> componenteScorrevole = new ComponenteScorrevole<>(
-                width - 2 * corniceInventarioWidth - 4 * SPACING, 10, 2);
-
-        DoomdarkColorModel.Color colore;
-
-        colore = DoomdarkColorModel.Color.LIGHT_GRAY;
-
-        creaNodo(componenteScorrevole, colore, TipoAttributo.FORZA, p.getForza());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.DESTREZZA, p.getDestrezza());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.COSTITUZIONE, p.getCostituzione());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.INTELLIGENZA, p.getIntelligenza());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.SAGGEZZA, p.getSaggezza());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.CARISMA, p.getCarisma());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.FORTUNA, p.getFortuna());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.NUMERO_BERSAGLI, p.getBersagli());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.RIGENERAZIONE_SALUTE, p.getRigenerazioneSalute());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.RIGENERAZIONE_MAGIA, p.getRigenerazioneMagia());
-
-        colore = DoomdarkColorModel.Color.MEDIUM_GRAY;
-
-        creaNodo(componenteScorrevole, colore, TipoAttributo.CARICO_MASSIMO, p.getCaricoMassimo());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.CRITICO, p.getCritico());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.PRECISIONE, p.getPrecisione());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.VELOCITA, p.getVelocita());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.FURTIVITA, p.getFurtivita());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.PARATA, p.getParata());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.RESISTENZA_MAGICA, p.getResistenzaMagica());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.PERCEZIONE, p.getPercezione());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.SOGGEZIONE, p.getSoggezione());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.FURIA, p.getFuria());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.CORAGGIO, p.getCoraggio());
-        creaNodo(componenteScorrevole, colore, TipoAttributo.VALORE, p.getValore());
+        yAttributi = y;
+        TipoAttributo attributoEvidenziato = trovaAttributo(p, mouseX, mouseY);
+        ComponenteScorrevole<TipoAttributo> componenteScorrevole = costruisciComponenteScorrevoleAttributi(p, attributoEvidenziato);
 
         offsetYBoxPersonaggio = componenteScorrevole.limitaOffset(height - y, offsetYBoxPersonaggio);
         Image image = componenteScorrevole.produci(height - y, offsetYBoxPersonaggio);
@@ -162,13 +167,75 @@ public class DisplayableCanvasInventario implements Finestra {
         offsetYRightBox = disegnaElenco(graphics, automa.getArtefattiDisponibili(), rightBoxX, offsetYRightBox);
     }
 
+    /**
+     * L'albero viene ricostruito a ogni disegno e a ogni click. L'attributo passato in
+     * evidenziato (se non null ed è primario) viene disegnato in bianco invece che nel suo
+     * colore consueto.
+     */
+    private ComponenteScorrevole<TipoAttributo> costruisciComponenteScorrevoleAttributi(Personaggio p, TipoAttributo evidenziato) {
+
+        ComponenteScorrevole<TipoAttributo> componenteScorrevole = new ComponenteScorrevole<>(
+                width - 2 * corniceInventarioWidth - 4 * SPACING, 10, 2);
+
+        DoomdarkColorModel.Color colore;
+
+        colore = DoomdarkColorModel.Color.LIGHT_GRAY;
+
+        creaNodo(componenteScorrevole, colore, TipoAttributo.FORZA, p.getForza(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.DESTREZZA, p.getDestrezza(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.COSTITUZIONE, p.getCostituzione(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.INTELLIGENZA, p.getIntelligenza(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.SAGGEZZA, p.getSaggezza(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.CARISMA, p.getCarisma(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.FORTUNA, p.getFortuna(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.NUMERO_BERSAGLI, p.getBersagli(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.RIGENERAZIONE_SALUTE, p.getRigenerazioneSalute(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.RIGENERAZIONE_MAGIA, p.getRigenerazioneMagia(), evidenziato);
+
+        colore = DoomdarkColorModel.Color.MEDIUM_GRAY;
+
+        creaNodo(componenteScorrevole, colore, TipoAttributo.CARICO_MASSIMO, p.getCaricoMassimo(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.CRITICO, p.getCritico(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.PRECISIONE, p.getPrecisione(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.VELOCITA, p.getVelocita(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.FURTIVITA, p.getFurtivita(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.PARATA, p.getParata(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.RESISTENZA_MAGICA, p.getResistenzaMagica(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.PERCEZIONE, p.getPercezione(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.SOGGEZIONE, p.getSoggezione(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.FURIA, p.getFuria(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.CORAGGIO, p.getCoraggio(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.VALORE, p.getValore(), evidenziato);
+
+        return componenteScorrevole;
+    }
+
     private void creaNodo(ComponenteScorrevole<TipoAttributo> componenteScorrevole, DoomdarkColorModel.Color colore,
-                          TipoAttributo tipoAttributo, double valoreAttributo) {
-        componenteScorrevole.creaNodo(
-                tipoAttributo.getNome(), font, colore,
-                String.valueOf((int)valoreAttributo), font, colore,
-                tipoAttributo.getDescrizione(), fontSmall, colore,
+                          TipoAttributo tipoAttributo, double valoreAttributo, TipoAttributo evidenziato) {
+        DoomdarkColorModel.Color coloreEffettivo = tipoAttributo.isPrimario() && tipoAttributo == evidenziato
+                ? DoomdarkColorModel.Color.WHITE
+                : colore;
+        ComponenteScorrevole<TipoAttributo>.Nodo nodo = componenteScorrevole.creaNodo(
+                tipoAttributo.getNome(), font, coloreEffettivo,
+                String.valueOf((int)valoreAttributo), font, coloreEffettivo,
+                tipoAttributo.getDescrizione(), fontSmall, coloreEffettivo,
                 null, tipoAttributo);
+        nodo.setFigliVisibili(statoDi(tipoAttributo).isFigliVisibili());
+    }
+
+    /**
+     * Riporta l'attributo il cui titolo occupa la posizione (x, y) espressa in coordinate
+     * della finestra, oppure null se il punto non cade sull'elenco degli attributi o non
+     * corrisponde al titolo di un attributo.
+     */
+    private TipoAttributo trovaAttributo(Personaggio p, int x, int y) {
+        int larghezzaAttributi = width - 2 * corniceInventarioWidth - 4 * SPACING;
+        int xInterno = x - (corniceInventarioWidth + 2 * SPACING);
+        if (xInterno < 0 || xInterno >= larghezzaAttributi || y < yAttributi || y >= height) {
+            return null;
+        }
+        int yInterno = y - yAttributi + offsetYBoxPersonaggio;
+        return costruisciComponenteScorrevoleAttributi(p, null).riferimentoTitoloAllaQuota(yInterno);
     }
 
     private void disegna(TipoAttributo attributo, int valore, Graphics2D graphics, int y, DoomdarkColorModel.Color colore) {
@@ -335,7 +402,18 @@ public class DisplayableCanvasInventario implements Finestra {
         if (tasto != Tasto.SINISTRO || automa == null) {
             return;
         }
-        List<Artefatto> inventarioPersonaggio = new ArrayList<>(automa.getPersonaggio().getInventario());
+        Personaggio personaggio = automa.getPersonaggio();
+        TipoAttributo attributo = trovaAttributo(personaggio, x, y);
+        if (attributo != null) {
+            StatoAttributo stato = statoDi(attributo);
+            if (stato.isFigliVisibili()) {
+                stato.nascondiFigli();
+            } else {
+                stato.mostraFigli();
+            }
+            return;
+        }
+        List<Artefatto> inventarioPersonaggio = new ArrayList<>(personaggio.getInventario());
         Artefatto artefatto = trovaArtefatto(inventarioPersonaggio, leftBoxX, offsetYLeftBox, x, y);
         if (artefatto == null) {
             artefatto = trovaArtefatto(automa.getArtefattiDisponibili(), rightBoxX, offsetYRightBox, x, y);
@@ -355,7 +433,13 @@ public class DisplayableCanvasInventario implements Finestra {
         if (automa == null) {
             return;
         }
-        List<Artefatto> inventarioPersonaggio = new ArrayList<>(automa.getPersonaggio().getInventario());
+        Personaggio personaggio = automa.getPersonaggio();
+        TipoAttributo attributo = trovaAttributo(personaggio, x, y);
+        if (attributo != null) {
+            personaggio.spendiPuntoAbilita(attributo);
+            return;
+        }
+        List<Artefatto> inventarioPersonaggio = new ArrayList<>(personaggio.getInventario());
         Artefatto artefatto = trovaArtefatto(inventarioPersonaggio, leftBoxX, offsetYLeftBox, x, y);
         if (artefatto != null) {
             automa.spostaNelPool(artefatto);

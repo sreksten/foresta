@@ -325,6 +325,8 @@ public class Automa implements ControlloreDiGioco {
 						.costruisci();
 				personaggio.addArtefatto(portafogli);
 
+				personaggio.getModelloDati().setPuntiAbilitaDisponibili(10);
+
 				stato = Stato.INZIO_LOCAZIONE;
 				processaAzione(null);
 				break;
