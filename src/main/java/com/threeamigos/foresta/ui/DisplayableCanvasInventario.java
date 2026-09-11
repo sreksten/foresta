@@ -6,6 +6,7 @@ import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Incantamento;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.awt.*;
@@ -27,6 +28,8 @@ public class DisplayableCanvasInventario implements Finestra {
             - 2 * (DIMENSIONE_BORDO_INTERNO + ImageCache.SPACING);
     // Pixel di scorrimento per ogni scatto della rotella
     private static final int PASSO_SCORRIMENTO = 2;
+
+    private static final int ALTEZZA_LADRO = ClassePersonaggioImmagine.getImmagine(ClassePersonaggio.LADRO).getHeight(null);
 
     private final int width;
     private final int height;
@@ -96,8 +99,12 @@ public class DisplayableCanvasInventario implements Finestra {
 
         // Immagine personaggio
         BufferedImage immaginePersonaggio = ClassePersonaggioImmagine.getImmagine(p.getClasse());
-        graphics.drawImage(immaginePersonaggio, (width - immaginePersonaggio.getWidth()) / 2, y, null);
-        y += immaginePersonaggio.getHeight() + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+
+        // Per tenere i personaggi sullo stesso livello (se si passa da un personaggio all'altro)
+        // ed evitare sfarfallamenti, scegliamo il ladro come personaggio "base" per calcolare l'altezza a cui disegnare.
+        y += ALTEZZA_LADRO;
+        graphics.drawImage(immaginePersonaggio, (width - immaginePersonaggio.getWidth()) / 2, y - immaginePersonaggio.getHeight(), null);
+        y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
         // Livello, XP, punti disponibili
         disegna(TipoAttributo.LIVELLO, p.getLivello(), graphics, y, coloreTestata);
