@@ -11,19 +11,17 @@ public enum TipoArtefatto {
     ASCIA(SupertipoArtefatto.ARMA, TipoDanno.TAGLIENTE, "Ascia", "impugna"),
     LANCIA(SupertipoArtefatto.ARMA, TipoDanno.PERFORANTE, "Lancia", "impugna"),
 
-    SCUDO(SupertipoArtefatto.ARMATURA, "Scudo", "porta"),
+    LIBRO_MAGICO(SupertipoArtefatto.ARMA, "Libro magico", "porta"),
+    BASTONE_MAGICO(SupertipoArtefatto.ARMA, "Bastone magico", "impugna"),
+
+    SCUDO(SupertipoArtefatto.SCUDO, "Scudo", "porta"),
+
     ELMO(SupertipoArtefatto.ARMATURA, "Elmo", "indossa"),
     ARMATURA(SupertipoArtefatto.ARMATURA, "Armatura", "indossa"),
+    VESTE(SupertipoArtefatto.ARMATURA, "Veste", "indossa"),
 
     ANELLO(SupertipoArtefatto.ALTRO, "Anello", "indossa"),
     TALISMANO(SupertipoArtefatto.ALTRO, "Talismano", "possiede"),
-
-    LIBRO_MAGICO(SupertipoArtefatto.ALTRO, "Libro magico", "porta"),
-
-    BASTONE_MAGICO(SupertipoArtefatto.ALTRO, "Bastone magico", "impugna"),
-
-    VESTE(SupertipoArtefatto.ARMATURA, "Veste", "indossa"),
-
     NINNOLO(SupertipoArtefatto.ALTRO, "Ninnolo", "ha con se");
 
     private final SupertipoArtefatto supertipo;

@@ -7,6 +7,7 @@ package com.threeamigos.foresta.motore.modellodati;
 public enum SupertipoArtefatto {
 
     ARMA,
+    SCUDO,
     ARMATURA,
     ALTRO
 
