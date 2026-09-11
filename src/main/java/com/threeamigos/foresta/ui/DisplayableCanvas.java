@@ -57,7 +57,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final transient DisplayableCanvasInventario inventario;
 	
 	private final ArrayList<SpriteInterface> sprites;
-	private final List<SpriteMissione> codaMissioni = new ArrayList<>();
+	private final List<SpriteAnnuncioGlobale> codaAnnunciGlobali = new ArrayList<>();
+	private SpriteAnnuncioGlobale annuncioGlobaleAttivo;
 
 	private final int larghezzaSchermo;
 	private final int altezzaSchermo;
@@ -248,11 +249,6 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private void inGioco(Graphics gfx) {
 		Graphics2D graphics = (Graphics2D)gfx;
 
-		boolean spriteMissionePresente = sprites.stream().anyMatch(s -> s instanceof SpriteMissione);
-		if (!spriteMissionePresente && !codaMissioni.isEmpty()) {
-			aggiungiSprite(codaMissioni.remove(0));
-		}
-
 		ArrayList<InterfacciaUtente.Finestra> copiaStack = new ArrayList<>(stackElementiGrafici.size());
 		copiaStack.addAll(stackElementiGrafici);
 
@@ -311,6 +307,24 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		aggiornaSchermo((Graphics2D)graphics);
 	}
 
+	/**
+	 * A differenza degli altri sprite, ancorati a coordinate di riquadri validi solo in
+	 * STATO_IN_GIOCO, l'annuncio globale è centrato sull'intero schermo e va quindi disegnato
+	 * sopra il contenuto corrente indipendentemente dallo stato del canvas.
+	 */
+	private void disegnaAnnuncioGlobale(Graphics2D graphics) {
+		if (annuncioGlobaleAttivo == null && !codaAnnunciGlobali.isEmpty()) {
+			annuncioGlobaleAttivo = codaAnnunciGlobali.remove(0);
+		}
+		if (annuncioGlobaleAttivo == null) {
+			return;
+		}
+		annuncioGlobaleAttivo.animate(graphics);
+		if (!annuncioGlobaleAttivo.isActive()) {
+			annuncioGlobaleAttivo = null;
+		}
+	}
+
 	void preparaLocazione() {
 		riquadroLocazione.assegnaCoordinateAgliAvversari();
 	}
@@ -327,8 +341,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			riquadroIntroOutro.scrivi(graphics, true);
 		} else if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO) {
 			inGioco(graphics);
+			disegnaAnnuncioGlobale(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_MAPPA) {
 			mappaATuttoSchermo.disegnaMappaATuttoSchermo(graphics);
+			disegnaAnnuncioGlobale(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_SELEZIONE_SLOT_DA_SALVARE) {
 			riquadroIntroOutro.selezioneSlotDaSalvare(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_CONFERMA_USCITA) {
@@ -343,6 +359,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			riquadroIntroOutro.hiscore(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_INVENTARIO) {
 			inventario.disegnaInventario(graphics);
+			disegnaAnnuncioGlobale(graphics);
 		}
 	}
 	
@@ -561,8 +578,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		aggiungiSprite(riquadroLocazione.raccogliOggetto());
 	}
 
-	public void notificaMissione(String etichetta, String nomeMissione) {
-		codaMissioni.add(new SpriteMissione(etichetta, nomeMissione, larghezzaSchermo, altezzaSchermo));
+	public void notificaAnnuncioGlobale(String etichetta, String messaggio) {
+		codaAnnunciGlobali.add(new SpriteAnnuncioGlobale(etichetta, messaggio, larghezzaSchermo, altezzaSchermo));
 	}
 
 	public void aggiungiEffettoDiStato(Personaggio personaggio, TipoEffettoDiStato effettoDiStato) {

@@ -205,8 +205,8 @@ public class UI {
 		interfacciaUtente.infoCombattimento(mostra, combattente, avversario);
 	}
 
-	public static void notificaMissione(String etichetta, String nomeMissione) {
-		interfacciaUtente.notificaMissione(etichetta, nomeMissione);
+	public static void notificaAnnuncioGlobale(String etichetta, String messaggio) {
+		interfacciaUtente.notificaAnnuncioGlobale(etichetta, messaggio);
 	}
 
 	public static void variaGemme(int variazione) {

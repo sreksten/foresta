@@ -149,7 +149,7 @@ public interface InterfacciaUtente {
 	 */
     void infoCombattimento(boolean mostra, Personaggio combattente, Personaggio avversario);
 
-	void notificaMissione(String etichetta, String nomeMissione);
+	void notificaAnnuncioGlobale(String etichetta, String nomeMissione);
 
 	void variaGemme(int variazione);
 

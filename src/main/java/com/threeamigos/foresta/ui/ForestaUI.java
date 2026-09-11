@@ -264,8 +264,8 @@ public class ForestaUI implements InterfacciaUtente {
 	}
 
 	@Override
-	public void notificaMissione(String etichetta, String nomeMissione) {
-		displayableCanvas.notificaMissione(etichetta, nomeMissione);
+	public void notificaAnnuncioGlobale(String etichetta, String nomeMissione) {
+		displayableCanvas.notificaAnnuncioGlobale(etichetta, nomeMissione);
 	}
 
 	private void gestisciEventoVariazioneStatistichePersonaggio(EventoVariazioneStatistichePersonaggio evento) {
@@ -286,7 +286,7 @@ public class ForestaUI implements InterfacciaUtente {
 		} else if (tipo == TipoAttributo.TEMPO) {
 			displayableCanvas.variaTempo(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));
 		} else if (tipo == TipoAttributo.LIVELLO) {
-			displayableCanvas.notificaMissione("LEVEL UP!", personaggio.getNome() + " A LIVELLO " + personaggio.getLivello() + "!");
+			displayableCanvas.notificaAnnuncioGlobale("LEVEL UP!", personaggio.getNome() + " A LIVELLO " + personaggio.getLivello() + "!");
 			displayableCanvas.notifica("LEVELED UP! Ora " + personaggio.getNome() + " è al livello " + personaggio.getLivello() + "!");
 			displayableCanvas.variaLivello(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));
 		}
@@ -308,7 +308,7 @@ public class ForestaUI implements InterfacciaUtente {
 	private void gestisciEventoConsumoPuntoAbilita(EventoConsumoPuntoAbilita evento) {
 		Personaggio personaggio = evento.getPersonaggio();
 		TipoAttributo tipoAttributo = evento.getTipoAttributo();
-		displayableCanvas.notificaMissione("AUMENTO", tipoAttributo.getNome().toUpperCase());
+		displayableCanvas.notificaAnnuncioGlobale("AUMENTO", tipoAttributo.getNome().toUpperCase());
 	}
 
 	private void gestisciEventoInterazioneElementale(EventoInterazioneElementale evento) {

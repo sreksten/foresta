@@ -6,8 +6,8 @@ import java.awt.image.BufferedImage;
 /**
  * Notifica di interazione elementale o effetto di stato da sovrapporre a un nemico.
  * Il testo è costruito con il Doomdark font (come {@link SpriteATempo}) ma l'animazione
- * è quella di {@link SpriteMissione}: ingrandimento progressivo con dissolvenza finale.
- * A differenza di {@link SpriteMissione} non è centrato sullo schermo ma ancorato alle
+ * è quella di {@link SpriteAnnuncioGlobale}: ingrandimento progressivo con dissolvenza finale.
+ * A differenza di {@link SpriteAnnuncioGlobale} non è centrato sullo schermo ma ancorato alle
  * coordinate passate al costruttore. Il testo può essere colorato con un colore pieno
  * oppure con un pattern (bitmap tilata) al posto del colore.
  */

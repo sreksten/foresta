@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
  * disponibile o è stata completata. A differenza degli altri sprite non si sposta:
  * resta centrato sullo schermo e si ingrandisce mentre sfuma.
  */
-class SpriteMissione implements SpriteInterface {
+class SpriteAnnuncioGlobale implements SpriteInterface {
 
 	//private static final long DURATA_MS = 3500L;
 	private static final long DURATA_MS = 2000L;
@@ -32,7 +32,7 @@ class SpriteMissione implements SpriteInterface {
 	private long inizio = -1;
 	private boolean active;
 
-	SpriteMissione(String etichetta, String nomeMissione, int larghezzaSchermo, int altezzaSchermo) {
+	SpriteAnnuncioGlobale(String etichetta, String nomeMissione, int larghezzaSchermo, int altezzaSchermo) {
 		this.larghezzaSchermo = larghezzaSchermo;
 		this.altezzaSchermo = altezzaSchermo;
 		int larghezzaMassima = larghezzaSchermo / 2;
