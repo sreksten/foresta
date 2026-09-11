@@ -10,7 +10,7 @@ ARTEFATTO
 # porta la virgola davanti a sé; quella iniziale di troppo la toglie artefatti_pp.txt.
 SPADA
 #    { [SPADA_LIV_1] | [SPADA_LIV_2] | [SPADA_LIV_3] | [SPADA_LIV_4] } \
-    [SPADA_LIV_3] \
+    [SPADA_LIV_1] \
     "{ \"livello\": [#LIVELLO], \"tipoVariazione\": \"SPADA\"," \
     "\"nome\": \"[#NOME_PRE?]Spada[#NOME_POST?][#NOME_POST_2?][#NOME_DI?][#NOME_ULTERIORE?]\"," \
     "\"danniAggiuntivi\": \[[#DANNI?]\]," \
@@ -111,7 +111,7 @@ ATTRIBUTO_PRE_O_POST_LIV_1
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", "quantita": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", "quantita": 1 }"]{ Medium | Catalizzatrice | Sifone | Canale | Ripetitrice | Calamita | Prolunga | Wi-Fi | Aperta | Recettiva }
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "SAGGEZZA", "quantita": 1 }"]{ Templare | Devota | Santuaria | Stoica | Flemmatica | Passiva | Temperata | Calma | Protetta | Filtro }
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "COSTITUZIONE", "quantita": 1 }"]{ Piombata | Spessa | Bastiona | Quercia | Antiamanto | Isolante | Lastrona | Gomma | Carro Armato | Robusta }
-    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", "quantita": 2 }"]{ Antimagica | Schermata | Isolata | Incredula | Diffidente | No-Vax | Firewall | Sigillata | Bloccata | Refrattaria }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"RESISTENZA_MAGICA\", "quantita": 2 }"]{ Antimagica | Schermata | Isolata | Incredula | Diffidente | No-Vax | Sigillata | Bloccata | Refrattaria }
 
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", "quantita": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", "quantita": 1 }"]{ Talpa | Cieca | Sguercia | Orba | Notturna | Miracolata | Smemorata | Dormiente | Fortunata | Protetta }
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PERCEZIONE\", "quantita": -1 }"]{ Sbadata | Distratta | Miope | Confusa | Guercia | Turista | Appannata | Vaga | Nebbiosa | Stagista }
@@ -142,7 +142,7 @@ ATTRIBUTO_PRE_O_POST_LIV_1
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CARICO\", "quantita": 2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"VELOCITA\", "quantita": -1 }"]{ Caravan | Mammut | Cargo | Capiente | Stivata | Pesante | Ingombrante | Massiccia | Statica | Zavorrata }
 
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", "quantita": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "INTELLIGENZA", "quantita": -1 }"]{ Bloccata | Antimagica | Vuota | Cenerina | Arida | Burnout | Scioperante | Scarica | Persa | Inceppata }
-    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", "quantita": -1 }"]{ Profana | Terrena | Materiale | Arida | Rustica | Babbana | Scettica | Pallida | Cartone | Sempliciotta }
+    [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", "quantita": -1 }"]{ Profana | Terrena | Materiale | Arida | Rustica | Scettica | Pallida | Cartone | Sempliciotta }
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", "quantita": -1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "FORZA", "quantita": 1 }"]{ Barbarica | Bestiale | Ciclopica | Minotaurica | Spaccapietre | Scaricatrice | Bulldozer | Martella | Rozza | Massiccia }
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "INTELLIGENZA", "quantita": 1 }"]{ Alchemica | Scriba | Astrologica | Veggente | Cartografica | Sistemista | Smanettona | Nerd | Esperta | Tecnica }
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"MAGIA\", "quantita": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": "FORZA", "quantita": -1 }"]{ Scintillante | Fluida | Aura | Eterea | Incantata | Prolunga | Wi-Fi | Aperta | Recettiva | Sottile }
