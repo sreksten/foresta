@@ -56,6 +56,7 @@ public class GruppoGiocatore extends Gruppo {
 		md.setPozioniSalute(0);
 		md.setPozioniSaluteGrande(0);
 		md.setPozioniMagia(0);
+		md.setPozioniMagiaGrande(0);
 		md.setCoordinate(Foresta.getCoordinateLibere());
 		Foresta.aggiorna(this);
 
