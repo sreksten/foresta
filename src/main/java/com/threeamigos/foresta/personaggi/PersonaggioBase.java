@@ -1466,6 +1466,9 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int durata, int danniNelTempo) {
+		if (!isVivo()) {
+			return;
+		}
 		if (durata <= 0) {
 			throw new IllegalArgumentException("Valore effetto di stato non valido");
 		}
