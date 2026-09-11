@@ -1499,7 +1499,9 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public void applicaDanniDaEffettiDiStato() {
-		for (EffettoDiStato effettoDiStato : getEffettiDiStato()) {
+		// Copia perché subSalute() può a sua volta aggiungere un nuovo effetto di stato
+		// (es. BERSERK) alla stessa collezione che stiamo scorrendo.
+		for (EffettoDiStato effettoDiStato : new ArrayList<>(getEffettiDiStato())) {
 			if (effettoDiStato.getDanniNelTempo() > 0) {
 				subSalute(effettoDiStato.getDanniNelTempo(), null,
 						Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
