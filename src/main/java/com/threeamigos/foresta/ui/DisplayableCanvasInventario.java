@@ -46,6 +46,11 @@ public class DisplayableCanvasInventario implements Finestra {
     int offsetYBoxPersonaggio = 0;
     int offsetYRightBox = 0;
 
+    // Posizione del mouse, per evidenziare in bianco l'artefatto sotto il cursore.
+    // -1 significa "cursore fuori dalla finestra".
+    private int mouseX = -1;
+    private int mouseY = -1;
+
     DisplayableCanvasInventario(int width, int height) {
         this.width = width;
         this.height = height;
@@ -143,7 +148,6 @@ public class DisplayableCanvasInventario implements Finestra {
         Image image = componenteScorrevole.produci(height - y, offsetYBoxPersonaggio);
         graphics.drawImage(image, corniceInventarioWidth + 2 * SPACING, y, null);
 
-        final int width = corniceInventarioWidth - 2 * (SPACING + DIMENSIONE_BORDO_INTERNO);
         // Inventario personaggio
         offsetYLeftBox = disegnaElenco(graphics, new ArrayList<>(p.getInventario()), leftBoxX, offsetYLeftBox);
         // Inventario gruppo
@@ -168,16 +172,36 @@ public class DisplayableCanvasInventario implements Finestra {
 
     private int disegnaElenco(Graphics2D graphics, List<Artefatto> artefatti, int x, int offset) {
 
+        Artefatto evidenziato = trovaArtefatto(artefatti, x, offset, mouseX, mouseY);
+        ComponenteScorrevole<Artefatto> componenteScorrevole = costruisciComponenteScorrevoleArtefatti(artefatti, evidenziato);
+
+        int nuovoOffset = componenteScorrevole.limitaOffset(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, offset);
+        Image image = componenteScorrevole.produci(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, nuovoOffset);
+        graphics.drawImage(image, x + SPACING, DIMENSIONE_BORDO_INTERNO + 2 * SPACING, null);
+
+        return nuovoOffset;
+    }
+
+    /**
+     * L'albero viene ricostruito a ogni disegno e a ogni click. L'artefatto passato in
+     * evidenziato (se non null) viene disegnato in bianco invece che in grigio chiaro.
+     */
+    private ComponenteScorrevole<Artefatto> costruisciComponenteScorrevoleArtefatti(List<Artefatto> artefatti, Artefatto evidenziato) {
+
         ComponenteScorrevole<Artefatto> componenteScorrevole = new ComponenteScorrevole<>(
                 LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, 10, 2);
 
         for (Artefatto artefatto : artefatti) {
+            DoomdarkColorModel.Color colore = artefatto == evidenziato
+                    ? DoomdarkColorModel.Color.WHITE
+                    : DoomdarkColorModel.Color.LIGHT_GRAY;
             String nome = artefatto.getNome();
             nome = nome.substring(0, 1).toUpperCase() + nome.substring(1);
             ComponenteScorrevole<Artefatto>.Nodo nodo = componenteScorrevole.creaNodo(
-                    nome, font, DoomdarkColorModel.Color.LIGHT_GRAY,
-                    artefatto.getTipo().getDescrizione(), fontSmall, DoomdarkColorModel.Color.LIGHT_GRAY,
+                    nome, font, colore,
+                    artefatto.getTipo().getDescrizione(), fontSmall, colore,
                     null, artefatto);
+            nodo.setFigliVisibili(artefatto.isFigliVisibili());
             for (ModificatoreAttributo modificatore : artefatto.getModificatori()) {
                 String valore;
                 switch (modificatore.getTipoModificatoreAttributo()) {
@@ -195,30 +219,73 @@ public class DisplayableCanvasInventario implements Finestra {
                         break;
                 }
                 nodo.creaNodo(
-                        modificatore.getTipoAttributo().getNome(), font, DoomdarkColorModel.Color.LIGHT_GRAY,
-                        valore, font, DoomdarkColorModel.Color.LIGHT_GRAY,
+                        modificatore.getTipoAttributo().getNome(), font, colore,
+                        valore, font, colore,
                         null, null, null,
                         null, artefatto);
 
             }
             for (Incantamento incantamento : artefatto.getIncantamenti()) {
                 nodo.creaNodo(
-                        incantamento.getNomeIncantamento(), font, DoomdarkColorModel.Color.LIGHT_GRAY,
+                        incantamento.getNomeIncantamento(), font, colore,
                         null, null, null,
                         null, artefatto);
                 nodo.creaNodo(
-                        incantamento.getTipoDannoElementale().getNome(), font, DoomdarkColorModel.Color.LIGHT_GRAY,
-                        incantamento.getDannoBonusFisso() + " + " + (int)(incantamento.getCoefficienteScala() * 100) + "%", font, DoomdarkColorModel.Color.LIGHT_GRAY,
+                        incantamento.getTipoDannoElementale().getNome(), font, colore,
+                        incantamento.getDannoBonusFisso() + " + " + (int)(incantamento.getCoefficienteScala() * 100) + "%", font, colore,
                         null, null, null,
                         null, artefatto);
             }
         }
 
-        int nuovoOffset = componenteScorrevole.limitaOffset(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, offset);
-        Image image = componenteScorrevole.produci(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, nuovoOffset);
-        graphics.drawImage(image, x + SPACING, DIMENSIONE_BORDO_INTERNO + 2 * SPACING, null);
+        return componenteScorrevole;
+    }
 
-        return nuovoOffset;
+    /**
+     * Riporta l'artefatto disegnato alla posizione (x, y) espressa in coordinate della
+     * finestra, oppure null se il punto non cade sull'elenco o non corrisponde al titolo
+     * di un artefatto (es. una riga di modificatore/incantamento, o spazio vuoto).
+     */
+    private Artefatto trovaArtefatto(List<Artefatto> artefatti, int boxX, int offset, int x, int y) {
+        int xInterno = x - (boxX + SPACING);
+        int yInterno = y - (DIMENSIONE_BORDO_INTERNO + 2 * SPACING);
+        if (xInterno < 0 || xInterno >= LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO
+                || yInterno < 0 || yInterno >= ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO) {
+            return null;
+        }
+        return costruisciComponenteScorrevoleArtefatti(artefatti, null).riferimentoTitoloAllaQuota(yInterno + offset);
+    }
+
+    @Override
+    public void processaMovimento(int x, int y) {
+        mouseX = x;
+        mouseY = y;
+    }
+
+    @Override
+    public void processaUscita(int x, int y) {
+        mouseX = -1;
+        mouseY = -1;
+    }
+
+    @Override
+    public void processaClick(int x, int y, Tasto tasto) {
+        if (tasto != Tasto.SINISTRO || automa == null) {
+            return;
+        }
+        List<Artefatto> inventarioPersonaggio = new ArrayList<>(automa.getPersonaggio().getInventario());
+        Artefatto artefatto = trovaArtefatto(inventarioPersonaggio, leftBoxX, offsetYLeftBox, x, y);
+        if (artefatto == null) {
+            artefatto = trovaArtefatto(automa.getArtefattiDisponibili(), rightBoxX, offsetYRightBox, x, y);
+        }
+        if (artefatto == null) {
+            return;
+        }
+        if (artefatto.isFigliVisibili()) {
+            artefatto.nascondiFigli();
+        } else {
+            artefatto.mostraFigli();
+        }
     }
 
     @Override
@@ -226,20 +293,16 @@ public class DisplayableCanvasInventario implements Finestra {
         if (automa == null) {
             return;
         }
-        int riga = (y - DIMENSIONE_BORDO_INTERNO) / font.getHeight();
-        if (riga < 0) {
+        List<Artefatto> inventarioPersonaggio = new ArrayList<>(automa.getPersonaggio().getInventario());
+        Artefatto artefatto = trovaArtefatto(inventarioPersonaggio, leftBoxX, offsetYLeftBox, x, y);
+        if (artefatto != null) {
+            automa.spostaNelPool(artefatto);
             return;
         }
-        if (x < leftBoxLimit) {
-            List<Artefatto> inventarioPersonaggio = new ArrayList<>(automa.getPersonaggio().getInventario());
-            if (riga < inventarioPersonaggio.size()) {
-                automa.spostaNelPool(inventarioPersonaggio.get(riga));
-            }
-        } else {
-            List<Artefatto> disponibili = automa.getArtefattiDisponibili();
-            if (riga < disponibili.size()) {
-                automa.spostaNelPersonaggio(disponibili.get(riga));
-            }
+        List<Artefatto> disponibili = automa.getArtefattiDisponibili();
+        artefatto = trovaArtefatto(disponibili, rightBoxX, offsetYRightBox, x, y);
+        if (artefatto != null) {
+            automa.spostaNelPersonaggio(artefatto);
         }
     }
 

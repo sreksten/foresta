@@ -31,6 +31,8 @@ public class Automa implements ControlloreDiGioco {
 	private GruppoGiocatore gruppo;
 	private GruppoAvversario gruppoAvversario;
 	private Personaggio personaggio;
+	// Ultimo personaggio scelto nella schermata inventario: non salvato, si azzera a ogni avvio.
+	private int indicePersonaggioInventario = 0;
 	private Locazione locazioneCorrente;
 	private Comando direzione; // serve a memorizzare la direzione prima di chiedere il numero di passi
 
@@ -289,6 +291,7 @@ public class Automa implements ControlloreDiGioco {
 						.setPeso(3)
 						.setModificatore(TipoAttributo.CARISMA, TipoModificatore.QUANTITA_ASSOLUTA, 0)
 						.costruisci();
+				personaggio.addArtefatto(scarponi);
 
 				Artefatto occhiali = CostruttoreArtefatto.istanza()
 						.setTipo(TipoArtefatto.NINNOLO)
@@ -318,7 +321,7 @@ public class Automa implements ControlloreDiGioco {
 						.setIncantamento("Giocondo", TipoDanno.SONICO, 10, 0.5)
 						.setIncantamento("Il cervello di Tarlo", TipoDanno.VUOTO, 10, 0.5)
 						.costruisci();
-				personaggio.addArtefatto(occhiali);
+				personaggio.addArtefatto(portafogli);
 
 				stato = Stato.INZIO_LOCAZIONE;
 				processaAzione(null);
@@ -767,6 +770,7 @@ public class Automa implements ControlloreDiGioco {
 					ComandiPossibili.add(Comando.ANNULLA);
 					UI.impostaAzioni();
 					UI.inventario();
+					apriInventarioPersonaggio(indicePersonaggioInventario);
 				} else {
 					switch (azione) {
 						case ANNULLA:
@@ -780,9 +784,7 @@ public class Automa implements ControlloreDiGioco {
 						case PERSONAGGIO_3:
 						case PERSONAGGIO_4:
 						case PERSONAGGIO_5:
-							Personaggio personaggioScelto = gruppo.getPersonaggio(azione);
-							UI.impostaAutomaInventario(new AutomaInventario(personaggioScelto, gruppo.getArtefatti(),
-									gruppo::addArtefatto, gruppo::removeArtefatto));
+							apriInventarioPersonaggio(azione.ordinal() - Comando.PERSONAGGIO_1.ordinal());
 							break;
 						default:
 							throw new IllegalArgumentException();
@@ -946,6 +948,17 @@ public class Automa implements ControlloreDiGioco {
 	 * Riporta Azione.PERSONAGGIO_1 se un unico personaggio è disponibile,
 	 * altrimenti null e imposta le azioni per scegliere il personaggio
 	 */
+	/**
+	 * Apre l'inventario sul personaggio all'indice indicato e ricorda la scelta,
+	 * così che la prossima apertura dell'inventario riparta da lì.
+	 */
+	private void apriInventarioPersonaggio(int indice) {
+		indicePersonaggioInventario = Math.max(0, Math.min(indice, gruppo.getNumeroPersonaggi() - 1));
+		Personaggio personaggioScelto = gruppo.getPersonaggio(indicePersonaggioInventario);
+		UI.impostaAutomaInventario(new AutomaInventario(personaggioScelto, gruppo.getArtefatti(),
+				gruppo::addArtefatto, gruppo::removeArtefatto));
+	}
+
 	private Comando scegliPersonaggio(boolean ancheSeMorto) {
 		if (gruppo.getNumeroPersonaggiVivi() == 1 && !ancheSeMorto) {
 			Logger.log("Automa::scegliPersonaggio(ancheMorto=" + ancheSeMorto + "): automaticamente PERSONAGGIO_1");
