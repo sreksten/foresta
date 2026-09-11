@@ -614,6 +614,19 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		// per singolo riquadro va ricordato su quale si trovava il cursore.
 		private Finestra finestraSottoIlCursore;
 
+		// mouseClicked scatta una volta per ogni click: su un doppio click arrivano quindi
+		// sia un evento con clickCount 1 sia uno con clickCount 2. Il primo va quindi rimandato,
+		// per poterlo scartare se nel frattempo arriva il secondo (altrimenti processaClick e
+		// processaDoppioClick scatterebbero entrambi per un solo doppio click).
+		private final int intervalloDoppioClick = intervalloDoppioClick();
+		private Timer timerClickSingolo;
+
+		private int intervalloDoppioClick() {
+			return 175;
+//			Object valore = Toolkit.getDefaultToolkit().getDesktopProperty("awt.multiClickInterval");
+//			return valore instanceof Integer ? (Integer) valore : 500;
+		}
+
 		private class RisultatoRicerca {
 			final Finestra finestra;
 			final int xRelativoAFinestra;
@@ -689,24 +702,27 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			int x = risultatoRicerca.xRelativoAFinestra;
 			int y = risultatoRicerca.yRelativoAFinestra;
 
+			Finestra.Tasto tasto;
 			if (SwingUtilities.isLeftMouseButton(e)) {
-				if (e.getClickCount() == 2) {
-					finestra.processaDoppioClick(x, y, Finestra.Tasto.SINISTRO);
-				} else {
-					finestra.processaClick(x, y, Finestra.Tasto.SINISTRO);
-				}
+				tasto = Finestra.Tasto.SINISTRO;
 			} else if (SwingUtilities.isRightMouseButton(e)) {
-				if (e.getClickCount() == 2) {
-					finestra.processaDoppioClick(x, y, Finestra.Tasto.DESTRO);
-				} else {
-					finestra.processaClick(x, y, Finestra.Tasto.DESTRO);
-				}
+				tasto = Finestra.Tasto.DESTRO;
 			} else if (SwingUtilities.isMiddleMouseButton(e)) {
-				if (e.getClickCount() == 2) {
-					finestra.processaDoppioClick(x, y, Finestra.Tasto.CENTRALE);
-				} else {
-					finestra.processaClick(x, y, Finestra.Tasto.CENTRALE);
-				}
+				tasto = Finestra.Tasto.CENTRALE;
+			} else {
+				return;
+			}
+
+			if (timerClickSingolo != null) {
+				timerClickSingolo.stop();
+				timerClickSingolo = null;
+			}
+			if (e.getClickCount() >= 2) {
+				finestra.processaDoppioClick(x, y, tasto);
+			} else {
+				timerClickSingolo = new Timer(intervalloDoppioClick, evento -> finestra.processaClick(x, y, tasto));
+				timerClickSingolo.setRepeats(false);
+				timerClickSingolo.start();
 			}
 		}
 
