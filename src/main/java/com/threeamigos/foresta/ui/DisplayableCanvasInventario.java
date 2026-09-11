@@ -121,12 +121,10 @@ public class DisplayableCanvasInventario implements Finestra {
         // Attributi personaggio
         ComponenteScorrevole<TipoAttributo> componenteScorrevole = new ComponenteScorrevole<>(
                 width - 2 * corniceInventarioWidth - 4 * SPACING, 10, 2);
-        //FIXME offsetY = componenteScorrevole.limitaOffset(height - y, offsetY);
 
-        DoomdarkColorAlternante coloreAlternante = new DoomdarkColorAlternante();
         DoomdarkColorModel.Color colore;
 
-        colore = coloreAlternante.getColor();
+        colore = DoomdarkColorModel.Color.LIGHT_GRAY;
 
         creaNodo(componenteScorrevole, colore, TipoAttributo.FORZA, p.getForza());
         creaNodo(componenteScorrevole, colore, TipoAttributo.DESTREZZA, p.getDestrezza());
@@ -138,6 +136,8 @@ public class DisplayableCanvasInventario implements Finestra {
         creaNodo(componenteScorrevole, colore, TipoAttributo.NUMERO_BERSAGLI, p.getBersagli());
         creaNodo(componenteScorrevole, colore, TipoAttributo.RIGENERAZIONE_SALUTE, p.getRigenerazioneSalute());
         creaNodo(componenteScorrevole, colore, TipoAttributo.RIGENERAZIONE_MAGIA, p.getRigenerazioneMagia());
+
+        colore = DoomdarkColorModel.Color.MEDIUM_GRAY;
 
         creaNodo(componenteScorrevole, colore, TipoAttributo.CARICO_MASSIMO, p.getCaricoMassimo());
         creaNodo(componenteScorrevole, colore, TipoAttributo.CRITICO, p.getCritico());
