@@ -53,6 +53,7 @@ public class ImageCache {
 	static BufferedImage spriteAumentoLivello;
 
 	static BufferedImage missioneBirra;
+	static BufferedImage missioneGallo;
 	static BufferedImage componenteScorrevoleFrecciaSu;
 	static BufferedImage componenteScorrevoleFrecciaGiu;
 
@@ -203,6 +204,7 @@ public class ImageCache {
 		spriteAumentoLivello = BufferedImageBuilder.buildBufferedImage("icone/AumentoLivello-nobordo-piccolo.gif");
 
 		missioneBirra = BufferedImageBuilder.buildBufferedImage("icone/Missione-birra.gif");
+		missioneGallo = BufferedImageBuilder.buildBufferedImage("icone/Missione-gallo.gif");
 
 		componenteScorrevoleFrecciaSu = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaSu.gif");
 		componenteScorrevoleFrecciaGiu = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaGiu.gif");

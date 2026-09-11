@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.missioni.CronacheDiUnFegatoEroico;
+import com.threeamigos.foresta.missioni.DisturbatoreDellaQuietePubblica;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.NessunBoccaleLasciatoIndietro;
 import com.threeamigos.foresta.motore.RegistroMissioni;
@@ -128,6 +129,9 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 		if (NessunBoccaleLasciatoIndietro.class.isAssignableFrom(missione.getClass()) ||
 				CronacheDiUnFegatoEroico.class.isAssignableFrom(missione.getClass())) {
 			return ImageCache.missioneBirra;
+		}
+		if (DisturbatoreDellaQuietePubblica.class.isAssignableFrom(missione.getClass())) {
+			return ImageCache.missioneGallo;
 		}
 		return null;
 	}
