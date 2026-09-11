@@ -148,11 +148,22 @@ public abstract class LocazioneBase implements Locazione {
 	public void crea(GruppoGiocatore g, GruppoAvversario avversario) {
 		ClassePersonaggio[] m = getPossibiliIncontri();
 		if (m.length > 0) {
-			int possibilitaIncontro = Dado.tira(100);
-			// Non sempre si trovano mostri
-			if (possibilitaIncontro <= 90) {
+			// Non sempre si trovano mostri. Al primo turno però vogliamo sempre trovarne uno,
+			// un po' per non dare l'impressione che la foresta sia vuota, un po' per non far
+			// scattare immediatamente le missioni secondarie che scattano a fine locazione.
+			boolean possibilitaIncontro = Statistiche.getTurniGiocati() == 0 || Dado.tira(100) <= 90;
+			if (possibilitaIncontro) {
+				ClassePersonaggio classePersonaggio = null;
+
 				int ordinale = Dado.tiraAncheAUnaFaccia(m.length) - 1;
-				ClassePersonaggio classePersonaggio = m[ordinale];
+				classePersonaggio = m[ordinale];
+
+				// FIXME occorrerebbe gestire la cosa un po' più elegantemente...
+				// PEr non far apparire subito un Eremita che fa scattare la missione secondaria a inizio locazione
+				while (Statistiche.getTurniGiocati() == 0 && classePersonaggio == ClassePersonaggio.EREMITA) {
+					ordinale = Dado.tiraAncheAUnaFaccia(m.length) - 1;
+					classePersonaggio = m[ordinale];
+				}
 
 				// FASE 1: Calcolo del CAP base in base al LIVELLO DEL GIOCATORE (Regola Principale)
 				int livelloGiocatore = g.getCapo().getLivello();
