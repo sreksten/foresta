@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
@@ -17,6 +18,7 @@ import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.function.Consumer;
 
 public class Automa implements ControlloreDiGioco {
@@ -581,6 +583,9 @@ public class Automa implements ControlloreDiGioco {
 				if (gruppo.getPozioniMagiaGrande() > 0) {
 					ComandiPossibili.add(Comando.POZIONE_MAGIA_GRANDE);
 				}
+				if (isResurrezioneDisponibile()) {
+					ComandiPossibili.add(Comando.RESURREZIONE);
+				}
 				ComandiPossibili.add(Comando.INVENTARIO);
 				ComandiPossibili.add(Comando.AIUTO);
 				ComandiPossibili.add(Comando.FLOPPY);
@@ -631,6 +636,11 @@ public class Automa implements ControlloreDiGioco {
 				case POZIONE_MAGIA_GRANDE:
 					statoPrecedente = Stato.ATTESA_POZIONE_MAGIA_GRANDE;
 					stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+					processaAzione(null);
+					return;
+				case RESURREZIONE:
+					statoPrecedente = Stato.ATTESA_RESURREZIONE;
+					stato = Stato.SCELTA_BERSAGLIO_RESURREZIONE;
 					processaAzione(null);
 					return;
 				case NORD:
@@ -726,6 +736,26 @@ public class Automa implements ControlloreDiGioco {
 			case ATTESA_POZIONE_MAGIA_GRANDE:
 				if (azione != null && azione != Comando.ANNULLA) {
 					gruppo.consumaPozioneMagiaGrande(azione);
+				}
+				stato = Stato.ATTESA_DIREZIONE;
+				UI.primoPiano(InterfacciaUtente.Finestra.STATO);
+				processaAzione(null);
+				break;
+
+			case SCELTA_BERSAGLIO_RESURREZIONE:
+				// Come nella scelta del bersaglio quando si formula un incantesimo in
+				// combattimento (Stato.SCELTA_PERSONAGGIO_QUALSIASI): se c'è un solo
+				// personaggio morto lo si risuscita direttamente, altrimenti si chiede quale.
+				azione = scegliPersonaggioMorto();
+				if (azione != null) {
+					stato = statoPrecedente;
+					processaAzione(azione);
+				}
+				break;
+
+			case ATTESA_RESURREZIONE:
+				if (azione != null && azione != Comando.ANNULLA) {
+					eseguiResurrezione(gruppo.getPersonaggio(azione));
 				}
 				stato = Stato.ATTESA_DIREZIONE;
 				UI.primoPiano(InterfacciaUtente.Finestra.STATO);
@@ -977,6 +1007,69 @@ public class Automa implements ControlloreDiGioco {
 			UI.impostaAzioni();
 			return null;
 		}
+	}
+
+	/**
+	 * Riporta Azione.PERSONAGGIO_x se un solo personaggio è morto, altrimenti null
+	 * e imposta le azioni per scegliere quale dei personaggi morti risuscitare.
+	 */
+	private Comando scegliPersonaggioMorto() {
+		List<Integer> indiciMorti = new ArrayList<>();
+		int i = 0;
+		for (Personaggio personaggioCorrente : gruppo.getPersonaggi()) {
+			if (!personaggioCorrente.isVivo()) {
+				indiciMorti.add(i);
+			}
+			i++;
+		}
+		if (indiciMorti.size() == 1) {
+			return Comando.ofPersonaggio(indiciMorti.get(0));
+		}
+		ComandiPossibili.reimposta();
+		for (int indice : indiciMorti) {
+			ComandiPossibili.add(Comando.ofPersonaggio(indice));
+		}
+		ComandiPossibili.add(Comando.ANNULLA);
+		UI.impostaAzioni();
+		return null;
+	}
+
+	/**
+	 * Un personaggio vivo con abbastanza magia da formulare una Resurrezione,
+	 * o null se nessuno del gruppo può farlo.
+	 */
+	private Personaggio trovaFormulanteResurrezione() {
+		int costoLancio = ClasseIncantesimo.RESURREZIONE.getIstanza(1).getCostoLancio();
+		for (Personaggio personaggioCorrente : gruppo.getPersonaggiVivi()) {
+			if (personaggioCorrente.getMagia() >= costoLancio) {
+				return personaggioCorrente;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Se al termine di una locazione c'è almeno un personaggio morto, il gruppo possiede
+	 * un incantesimo di Resurrezione e c'è chi ha la magia per formularlo, la Resurrezione
+	 * diventa una delle azioni proponibili.
+	 */
+	private boolean isResurrezioneDisponibile() {
+		if (gruppo.getIncantesimi(ClasseIncantesimo.RESURREZIONE) <= 0) {
+			return false;
+		}
+		boolean cQualcunoMorto = gruppo.getPersonaggi().stream().anyMatch(p -> !p.isVivo());
+		return cQualcunoMorto && trovaFormulanteResurrezione() != null;
+	}
+
+	private void eseguiResurrezione(Personaggio personaggioBersaglio) {
+		Personaggio formulante = trovaFormulanteResurrezione();
+		if (formulante == null) {
+			// Non dovrebbe accadere: l'azione RESURREZIONE non sarebbe stata proposta.
+			return;
+		}
+		Incantesimo incantesimo = ClasseIncantesimo.RESURREZIONE.getIstanza(formulante.getLivello());
+		incantesimo.formula(formulante, personaggioBersaglio, null);
+		gruppo.subIncantesimi(ClasseIncantesimo.RESURREZIONE, 1);
 	}
 
 	private void impostaAzioniPerNumeroPassi(int numeroPassi) {
