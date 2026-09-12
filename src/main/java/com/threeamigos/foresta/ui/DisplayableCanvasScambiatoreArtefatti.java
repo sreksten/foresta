@@ -80,9 +80,6 @@ abstract class DisplayableCanvasScambiatoreArtefatti  implements Finestra {
 
         rightBoxX = width - SPACING - corniceInventarioWidth + DIMENSIONE_BORDO_INTERNO;
         rightBoxLimit = width - SPACING - DIMENSIONE_BORDO_INTERNO;
-
-        BusEventi.iscriviti(EventoRifiutoAcquisto.class, this::onEventoRifiutoAcquisto);
-        BusEventi.iscriviti(EventoRifiutoPrelievo.class, this::onEventoRifiutoPrelievo);
     }
 
     CoordinateFumetto getCoordinateFumetto() {
@@ -97,11 +94,11 @@ abstract class DisplayableCanvasScambiatoreArtefatti  implements Finestra {
         return COORDINATE_FUMETTO;
     }
 
-    private void onEventoRifiutoAcquisto(EventoRifiutoAcquisto evento) {
+    void onEventoRifiutoAcquisto(EventoRifiutoAcquisto evento) {
         displayableCanvas.notificaFumetto("Non hai abbastanza monete per comprare questo oggetto.", getCoordinateFumetto());
     }
 
-    private void onEventoRifiutoPrelievo(EventoRifiutoPrelievo evento) {
+    void onEventoRifiutoPrelievo(EventoRifiutoPrelievo evento) {
         displayableCanvas.notificaFumetto("Questo oggetto è troppo pesante.", getCoordinateFumetto());
     }
 

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoRifiutoPrelievo;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
@@ -45,6 +47,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
 
     DisplayableCanvasInventario(DisplayableCanvas displayableCanvas, int width, int height) {
         super(displayableCanvas, width, height);
+        BusEventi.iscriviti(EventoRifiutoPrelievo.class, this::onEventoRifiutoPrelievo);
     }
 
     @Override

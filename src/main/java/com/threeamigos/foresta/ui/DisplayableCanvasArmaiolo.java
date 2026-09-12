@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoRifiutoAcquisto;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 
 import java.awt.*;
@@ -13,6 +15,7 @@ public class DisplayableCanvasArmaiolo extends DisplayableCanvasScambiatoreArtef
 
     DisplayableCanvasArmaiolo(DisplayableCanvas displayableCanvas, int width, int height) {
         super(displayableCanvas, width, height);
+        BusEventi.iscriviti(EventoRifiutoAcquisto.class, this::onEventoRifiutoAcquisto);
     }
 
     @Override
