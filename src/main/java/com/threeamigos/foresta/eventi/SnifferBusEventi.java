@@ -1,7 +1,12 @@
 package com.threeamigos.foresta.eventi;
 
+import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Logger;
+import com.threeamigos.foresta.motore.OggettoConCosto;
+import com.threeamigos.foresta.motore.OggettoConPeso;
+import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.Date;
@@ -27,6 +32,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoInterazioneElementale.class, this::onEventoInterazioneElementale);
         BusEventi.iscriviti(EventoMessaggio.class, this::onEventoMessaggio);
         BusEventi.iscriviti(EventoNotificaGlobale.class, this::onEventoNotificaGlobale);
+        BusEventi.iscriviti(EventoParagrafo.class, this::onEventoParagrafo);
         // EventoPersonaggio è classe astratta
         BusEventi.iscriviti(EventoPuliziaCacheDinamicaImmagini.class, this::onEventoPuliziaCacheDinamicaImmagini);
         BusEventi.iscriviti(EventoRichiestaAcquisto.class, this::onEventoRichiestaAcquisto);
@@ -52,18 +58,35 @@ public class SnifferBusEventi {
     }
 
     private void onEventoApprovazioneAcquisto(EventoApprovazioneAcquisto evento) {
-
+        EventoRichiestaSpostamento<OggettoConCosto> richiesta = evento.getEventoRichiestaSpostamento();
+        OggettoConCosto oggetto = richiesta.getOggettoDaSpostare();
+        Logger.log(headerEvento(evento) + formattaParte(richiesta.getParteAttiva()) + " acquista "
+                + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") da "
+                + formattaParte(richiesta.getParteRemota()));
     }
 
     private void onEventoApprovazionePrelievo(EventoApprovazionePrelievo evento) {
-
+        EventoRichiestaSpostamento<OggettoConPeso> richiesta = evento.getEventoRichiestaSpostamento();
+        OggettoConPeso oggetto = richiesta.getOggettoDaSpostare();
+        Logger.log(headerEvento(evento) + formattaParte(richiesta.getParteAttiva()) + " preleva "
+                + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") da "
+                + formattaParte(richiesta.getParteRemota()));
     }
 
     private void onEventoApprovazioneStoccaggio(EventoApprovazioneStoccaggio evento) {
+        EventoRichiestaSpostamento<OggettoConPeso> richiesta = evento.getEventoRichiestaSpostamento();
+        OggettoConPeso oggetto = richiesta.getOggettoDaSpostare();
+        Logger.log(headerEvento(evento) + formattaParte(richiesta.getParteAttiva()) + " stocca "
+                + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") su "
+                + formattaParte(richiesta.getParteRemota()));
     }
 
     private void onEventoApprovazioneVendita(EventoApprovazioneVendita evento) {
-
+        EventoRichiestaSpostamento<OggettoConCosto> richiesta = evento.getEventoRichiestaSpostamento();
+        OggettoConCosto oggetto = richiesta.getOggettoDaSpostare();
+        Logger.log(headerEvento(evento) + formattaParte(richiesta.getParteAttiva()) + " vende "
+                + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") a "
+                + formattaParte(richiesta.getParteRemota()));
     }
 
     private void onEventoCombattimento(EventoCombattimento evento) {
@@ -100,6 +123,10 @@ public class SnifferBusEventi {
         Logger.log(String.format("%s - %s - %s - %s - %s", new Date(), evento.getTipoEvento(), evento.getEtichetta(), evento.getEtichetta(), evento.getMessaggio()));
     }
 
+    private void onEventoParagrafo(EventoParagrafo evento) {
+        Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggio()));
+    }
+
     private void onEventoPuliziaCacheDinamicaImmagini(EventoPuliziaCacheDinamicaImmagini evento) {
         int prima = evento.getElementiPrima();
         int dopo = evento.getElementiDopo();
@@ -107,35 +134,63 @@ public class SnifferBusEventi {
     }
 
     private void onEventoRichiestaAcquisto(EventoRichiestaAcquisto evento) {
-
+        OggettoConCosto oggetto = evento.getOggettoDaSpostare();
+        Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di acquistare "
+                + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") da "
+                + formattaParte(evento.getParteRemota()));
     }
 
     private void onEventoRichiestaPrelievo(EventoRichiestaPrelievo evento) {
-
+        OggettoConPeso oggetto = evento.getOggettoDaSpostare();
+        Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di prelevare "
+                + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") da "
+                + formattaParte(evento.getParteRemota()));
     }
 
     private void onEventoRichiestaStoccaggio(EventoRichiestaStoccaggio evento) {
-
+        OggettoConPeso oggetto = evento.getOggettoDaSpostare();
+        Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di stoccare "
+                + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") su "
+                + formattaParte(evento.getParteRemota()));
     }
 
     private void onEventoRichiestaVendita(EventoRichiestaVendita evento) {
-
+        OggettoConCosto oggetto = evento.getOggettoDaSpostare();
+        Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di vendere "
+                + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") a "
+                + formattaParte(evento.getParteRemota()));
     }
 
     private void onEventoRifiutoAcquisto(EventoRifiutoAcquisto evento) {
-
+        EventoRichiestaSpostamento<OggettoConCosto> richiesta = evento.getEventoRichiestaSpostamento();
+        OggettoConCosto oggetto = richiesta.getOggettoDaSpostare();
+        Logger.log(headerEvento(evento) + formattaParte(richiesta.getParteAttiva()) + " non può acquistare "
+                + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") da "
+                + formattaParte(richiesta.getParteRemota()) + ": fondi insufficienti");
     }
 
     private void onEventoRifiutoPrelievo(EventoRifiutoPrelievo evento) {
-
+        EventoRichiestaSpostamento<OggettoConPeso> richiesta = evento.getEventoRichiestaSpostamento();
+        OggettoConPeso oggetto = richiesta.getOggettoDaSpostare();
+        Logger.log(headerEvento(evento) + formattaParte(richiesta.getParteAttiva()) + " non può prelevare "
+                + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") da "
+                + formattaParte(richiesta.getParteRemota()) + ": carico eccessivo");
     }
 
     private void onEventoRifiutoStoccaggio(EventoRifiutoStoccaggio evento) {
-
+        EventoRichiestaSpostamento<OggettoConPeso> richiesta = evento.getEventoRichiestaSpostamento();
+        OggettoConPeso oggetto = richiesta.getOggettoDaSpostare();
+        Logger.log(headerEvento(evento) + formattaParte(richiesta.getParteAttiva()) + " non può stoccare "
+                + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") su "
+                + formattaParte(richiesta.getParteRemota()));
     }
 
     private void onEventoRifiutoVendita(EventoRifiutoVendita evento) {
-
+        EventoRichiestaSpostamento<OggettoConCosto> richiesta = evento.getEventoRichiestaSpostamento();
+        OggettoConCosto oggetto = richiesta.getOggettoDaSpostare();
+        Logger.log(headerEvento(evento) + formattaParte(richiesta.getParteAttiva()) + " non può vendere "
+                + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") a "
+                + formattaParte(richiesta.getParteRemota()));
     }
 
     private void onEventoValutazioneAttaccante(EventoValutazioneAttaccante evento) {
@@ -177,6 +232,20 @@ public class SnifferBusEventi {
 
     private String headerEvento(EventoBase evento) {
         return String.format("%s - %s - ", new Date(), evento.getTipoEvento());
+    }
+
+    private String formattaParte(ScambiatoreArtefatti parte) {
+        if (parte instanceof Personaggio) {
+            return ((Personaggio) parte).getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+        }
+        if (parte instanceof GruppoGiocatore) {
+            return "il gruppo";
+        }
+        return parte.getClass().getSimpleName();
+    }
+
+    private String nomeOggetto(Object oggetto) {
+        return oggetto instanceof Artefatto ? ((Artefatto) oggetto).getNome() : String.valueOf(oggetto);
     }
 
 }
