@@ -47,6 +47,11 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         super(width, height);
     }
 
+    @Override
+    void disegnaIntestazioniInventario(Graphics2D graphics) {
+        disegnaIntestazioniInventarioImpl(graphics, "Inventario personaggio", "Inventario gruppo");
+    }
+
     void disegnaColonnaPersonaggio(Graphics2D graphics) {
 
         final int SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI = 20;

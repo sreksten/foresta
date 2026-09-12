@@ -74,8 +74,6 @@ abstract class DisplayableCanvasScambiatoreArtefatti  implements Finestra {
         this.automa = automa;
     }
 
-    abstract void disegnaColonnaPersonaggio(Graphics2D graphics);
-
     void disegnaInventario(Graphics2D graphics) {
 
         graphics.drawImage(ImageCache.corniceInventario, SPACING, SPACING, null);
@@ -91,7 +89,29 @@ abstract class DisplayableCanvasScambiatoreArtefatti  implements Finestra {
         offsetYLeftBox = disegnaElenco(graphics, new ArrayList<>(automa.getParteAttiva().getInventario()), leftBoxX, offsetYLeftBox);
         // Inventario gruppo
         offsetYRightBox = disegnaElenco(graphics, automa.getParteRemota().getInventario(), rightBoxX, offsetYRightBox);
+
+        disegnaIntestazioniInventario(graphics);
     }
+
+    // Demandato alle sottoclassi che sanno cosa rappresentano i due rettangoli e che chiamano la impl
+    abstract void disegnaIntestazioniInventario(Graphics2D graphics);
+
+    protected void disegnaIntestazioniInventarioImpl(Graphics2D graphics, String intestazioneSinistra, String intestazioneDestra) {
+        Image image = ImageCache.get(intestazioneSinistra, DoomdarkColorModel.Color.BLACK);
+        int x = SPACING + corniceInventarioWidth / 2 - image.getWidth(null) / 2;
+        int y = SPACING;
+        graphics.drawImage(image, x + 2, y + 2, null);
+        image = ImageCache.get(intestazioneSinistra, DoomdarkColorModel.Color.LIGHT_GRAY);
+        graphics.drawImage(image, x, y, null);
+
+        image = ImageCache.get(intestazioneDestra, DoomdarkColorModel.Color.BLACK);
+        x = width - SPACING - corniceInventarioWidth / 2 - image.getWidth(null) / 2;
+        graphics.drawImage(image, x + 2, y + 2, null);
+        image = ImageCache.get(intestazioneDestra, DoomdarkColorModel.Color.LIGHT_GRAY);
+        graphics.drawImage(image, x, y, null);
+    }
+
+    abstract void disegnaColonnaPersonaggio(Graphics2D graphics);
 
     private int disegnaElenco(Graphics2D graphics, Collection<Artefatto> artefatti, int x, int offset) {
 

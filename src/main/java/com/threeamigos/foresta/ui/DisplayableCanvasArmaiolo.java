@@ -13,6 +13,11 @@ public class DisplayableCanvasArmaiolo extends DisplayableCanvasScambiatoreArtef
         super(width, height);
     }
 
+    @Override
+    void disegnaIntestazioniInventario(Graphics2D graphics) {
+        disegnaIntestazioniInventarioImpl(graphics, "Inventario gruppo", "Inventario armaiolo");
+    }
+
     void disegnaColonnaPersonaggio(Graphics2D graphics) {
 
         final int SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI = 20;
