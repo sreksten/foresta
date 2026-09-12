@@ -161,6 +161,16 @@ public class ForestaUI implements InterfacciaUtente {
 	}
 
 	@Override
+	public void armaiolo() {
+		displayableCanvas.armaiolo();
+	}
+
+	@Override
+	public void impostaAutomaArmaiolo(AutomaInventario automaInventario) {
+		displayableCanvas.impostaAutomaArmaiolo(automaInventario);
+	}
+
+	@Override
 	public void centraMappa() {
 		displayableCanvas.centraMappa();
 	}

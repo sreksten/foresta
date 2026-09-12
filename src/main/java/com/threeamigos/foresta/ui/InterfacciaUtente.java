@@ -72,6 +72,16 @@ public interface InterfacciaUtente {
 	void impostaAutomaInventario(AutomaInventario automaInventario);
 
 	/**
+	 * Mostra la finestra di scambio artefatti con l'armaiolo
+	 */
+	void armaiolo();
+
+	/**
+	 * Assegna l'automa che gestisce lo scambio di artefatti nella finestra dell'armaiolo
+	 */
+	void impostaAutomaArmaiolo(AutomaInventario automaInventario);
+
+	/**
 	 * Richiama la schermata di selezione salvataggio
 	 */
     void selezioneSlotSalvataggioDaSalvare();

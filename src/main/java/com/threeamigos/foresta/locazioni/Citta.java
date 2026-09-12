@@ -11,7 +11,8 @@ public abstract class Citta extends LocazioneUnica {
 	private enum StatoInCitta {
 		IN_PIAZZA,
 		IN_LOCANDA,
-		DA_ALCHIMISTA
+		DA_ALCHIMISTA,
+		DA_ARMAIOLO
 	}
 
 	private StatoInCitta stato;
@@ -69,7 +70,8 @@ public abstract class Citta extends LocazioneUnica {
 	}
 
 	private void impostaAzioniCitta() {
-		ComandiPossibili.set(Comando.LOCANDA, Comando.ALCHIMISTA, Comando.ESCI_DA_CITTA);
+		ComandiPossibili.set(Comando.LOCANDA, Comando.ALCHIMISTA, Comando.ARMAIOLO,
+				Comando.INVENTARIO, Comando.ESCI_DA_CITTA);
 	}
 	
 	@Override
@@ -101,6 +103,13 @@ public abstract class Citta extends LocazioneUnica {
 					impostaAzioniCitta();
 				}
 
+			} else if (azione == Comando.ARMAIOLO) {
+				ScambiatoreArtefatti scambiatoreArtefatti = RegistroArtefatti.getScambiatorePerLocazione(g.getCoordinate());
+				UI.impostaAutomaArmaiolo(new AutomaInventario(g, scambiatoreArtefatti));
+				ComandiPossibili.set(Comando.ANNULLA);
+				UI.armaiolo();
+				stato = StatoInCitta.DA_ARMAIOLO;
+
 			} else if (azione == Comando.ESCI_DA_CITTA) {
 				return Stato.FINE_LOCAZIONE;
 			}
@@ -115,6 +124,14 @@ public abstract class Citta extends LocazioneUnica {
 		} else if (stato == StatoInCitta.DA_ALCHIMISTA) {
 			statoRitorno = alchimista.impostaAzioni(g, gng, azione);
 			if (statoRitorno == Stato.FINE_LOCAZIONE) {
+				impostaAzioniCitta();
+				stato = StatoInCitta.IN_PIAZZA;
+			}
+
+		} else if (stato == StatoInCitta.DA_ARMAIOLO) {
+			if (azione == Comando.ANNULLA) {
+				UI.mostraSchermataGioco();
+				UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
 				impostaAzioniCitta();
 				stato = StatoInCitta.IN_PIAZZA;
 			}

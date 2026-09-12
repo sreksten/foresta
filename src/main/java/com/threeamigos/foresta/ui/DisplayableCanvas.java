@@ -36,7 +36,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		STATO_VINTO,
 		STATO_STATISTICHE,
 		STATO_PUNTEGGI,
-		STATO_INVENTARIO
+		STATO_INVENTARIO,
+		STATO_ARMAIOLO
 	}
 
 	private StatoDisplayableCanvas stato;
@@ -55,7 +56,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final transient DisplayableCanvasRiquadroMissioni riquadroMissioni;
 	private final transient DisplayableCanvasMappaATuttoSchermo mappaATuttoSchermo;
 	private final transient DisplayableCanvasInventario inventario;
-	
+	private final transient DisplayableCanvasArmaiolo armaiolo;
+
 	private final ArrayList<SpriteInterface> sprites;
 	private final List<SpriteAnnuncioGlobale> codaAnnunciGlobali = new ArrayList<>();
 	private SpriteAnnuncioGlobale annuncioGlobaleAttivo;
@@ -184,6 +186,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		Rectangle inventarioRect = new Rectangle(0, 0, width, height);
 		mappaCoordinateElementiGrafici.put(inventario, inventarioRect);
 
+		armaiolo = new DisplayableCanvasArmaiolo(width, height);
+
+		Rectangle armaioloRect = new Rectangle(0, 0, width, height);
+		mappaCoordinateElementiGrafici.put(armaiolo, armaioloRect);
+
 		sprites = new ArrayList<>();
 
 		GestoreMouse gestoreMouse = new GestoreMouse();
@@ -214,7 +221,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		animatoreInAzione = true;
 		while (animatoreInAzione) {
 			if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO || stato == StatoDisplayableCanvas.STATO_MAPPA
-					|| stato == StatoDisplayableCanvas.STATO_INVENTARIO) {
+					|| stato == StatoDisplayableCanvas.STATO_INVENTARIO || stato == StatoDisplayableCanvas.STATO_ARMAIOLO) {
 				repaint();
 			}
 			try {
@@ -360,6 +367,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		} else if (stato == StatoDisplayableCanvas.STATO_INVENTARIO) {
 			inventario.disegnaInventario(graphics);
 			disegnaAnnuncioGlobale(graphics);
+		} else if (stato == StatoDisplayableCanvas.STATO_ARMAIOLO) {
+			armaiolo.disegnaInventario(graphics);
+			disegnaAnnuncioGlobale(graphics);
 		}
 	}
 	
@@ -377,6 +387,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 		if (stato == StatoDisplayableCanvas.STATO_INVENTARIO) {
 			return inventario;
+		}
+		if (stato == StatoDisplayableCanvas.STATO_ARMAIOLO) {
+			return armaiolo;
 		}
 		return riquadroIntroOutro;
 	}
@@ -420,6 +433,16 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void impostaAutomaInventario(AutomaInventario automaInventario) {
 		inventario.impostaAutoma(automaInventario);
+		repaint();
+	}
+
+	public void armaiolo() {
+		stato = StatoDisplayableCanvas.STATO_ARMAIOLO;
+		repaint();
+	}
+
+	public void impostaAutomaArmaiolo(AutomaInventario automaInventario) {
+		armaiolo.impostaAutoma(automaInventario);
 		repaint();
 	}
 

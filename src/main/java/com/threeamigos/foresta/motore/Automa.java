@@ -376,6 +376,13 @@ public class Automa implements ControlloreDiGioco {
 				break;
 
 			case IN_LOCAZIONE:
+				if (azione == Comando.INVENTARIO) {
+					statoPrecedente = Stato.IN_LOCAZIONE;
+					stato = Stato.INVENTARIO;
+					UI.inventario();
+					processaAzione(null);
+					return;
+				}
 				statoPrecedente = stato;
 				/*
 				 * Continuiamo a fornire all'automa a stati finiti della

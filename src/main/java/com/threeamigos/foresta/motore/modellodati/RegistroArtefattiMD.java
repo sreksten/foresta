@@ -69,6 +69,7 @@ public class RegistroArtefattiMD implements Serializzabile {
 			stream.print(coordinate.getX());
 			stream.print(PIPE);
 			stream.print(coordinate.getY());
+			stream.print(PIPE);
 			stream.println(entry.getValue().size());
 			for (ArtefattoMD artefatto : entry.getValue()) {
 				artefatto.salva(stream);

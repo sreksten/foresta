@@ -84,6 +84,20 @@ public class UI {
 	}
 
 	/**
+	 * Va nella finestra di scambio artefatti con l'armaiolo
+	 */
+	public static void armaiolo() {
+		interfacciaUtente.armaiolo();
+	}
+
+	/**
+	 * Assegna l'automa che gestisce lo scambio di artefatti nella finestra dell'armaiolo
+	 */
+	public static void impostaAutomaArmaiolo(AutomaInventario automaInventario) {
+		interfacciaUtente.impostaAutomaArmaiolo(automaInventario);
+	}
+
+	/**
 	 * Centra la mappa dopo un eventuale spostamento se non ci stava tutta a schermo
 	 */
 	public static void centraMappa() {
