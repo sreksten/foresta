@@ -31,6 +31,10 @@ public class AutomaInventario {
 		return parteAttiva;
 	}
 
+	public ScambiatoreArtefatti getParteRemota() {
+		return parteRemota;
+	}
+
 	public Collection<Artefatto> getArtefattiDisponibili() {
 		return parteRemota.getInventario();
 	}
