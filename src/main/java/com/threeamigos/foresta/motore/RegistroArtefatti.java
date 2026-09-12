@@ -230,4 +230,8 @@ public class RegistroArtefatti {
 		}
 		return new Artefatto(modelloDati);
 	}
+
+	public static ScambiatoreArtefatti getScambiatorePerLocazione(CoordinateMD coordinate) {
+		return registroMD.getScambiatorePerLocazione(coordinate);
+	}
 }
