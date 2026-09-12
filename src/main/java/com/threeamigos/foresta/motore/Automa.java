@@ -979,10 +979,6 @@ public class Automa implements ControlloreDiGioco {
 	}
 
 	/**
-	 * Riporta Azione.PERSONAGGIO_1 se un unico personaggio è disponibile,
-	 * altrimenti null e imposta le azioni per scegliere il personaggio
-	 */
-	/**
 	 * Apre l'inventario sul personaggio all'indice indicato e ricorda la scelta,
 	 * così che la prossima apertura dell'inventario riparta da lì.
 	 */
