@@ -35,8 +35,10 @@ public class ForestaUI implements InterfacciaUtente {
 		// EventoCombattimento non ci interessa, solo mostrare i suoi effetti eventuali che vengono pubblicati dal personaggio interessato
 		BusEventi.iscriviti(EventoConsumoPuntoAbilita.class, this::gestisciEventoConsumoPuntoAbilita);
 		// EventoCreazionePersonaggio non ci interessa, riguarda il motore
+		BusEventi.iscriviti(EventoFumetto.class, this::gestisciEventoFumetto);
 		BusEventi.iscriviti(EventoInterazioneElementale.class, this::gestisciEventoInterazioneElementale);
 		BusEventi.iscriviti(EventoMessaggio.class, this::gestisciEventoMessaggio);
+		BusEventi.iscriviti(EventoNotificaGlobale.class, this::gestisciEventoNotificaGlobale);
 		// EventoValutazioneAttaccante non ci interessa, è il motore AI degli avversari che informa sul suo stato di progressione
 		BusEventi.iscriviti(EventoVariazioneEffettoDiStato.class, this::gestisciEventoVariazioneEffettoDiStato);
 		BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
@@ -265,17 +267,20 @@ public class ForestaUI implements InterfacciaUtente {
 		rinfresca();
 	}
 
+	private void gestisciEventoFumetto(EventoFumetto evento) {
+		displayableCanvas.notificaFumetto(evento.getTesto(), evento.getX(), evento.getY(), evento.getPointToX(), evento.getPointToY());
+	}
+
 	private void gestisciEventoMessaggio(EventoMessaggio evento) {
 		displayableCanvas.notifica(evento.getMessaggio());
 	}
 
-	private void gestisciEventoVariazioneStatoVitalePersonaggio(EventoVariazioneStatoVitalePersonaggio evento) {
-		displayableCanvas.notificaMorte(evento.getPersonaggio());
+	private void gestisciEventoNotificaGlobale(EventoNotificaGlobale evento) {
+		displayableCanvas.notificaAnnuncioGlobale(evento.getEtichetta(), evento.getMessaggio());
 	}
 
-	@Override
-	public void notificaAnnuncioGlobale(String etichetta, String nomeMissione) {
-		displayableCanvas.notificaAnnuncioGlobale(etichetta, nomeMissione);
+	private void gestisciEventoVariazioneStatoVitalePersonaggio(EventoVariazioneStatoVitalePersonaggio evento) {
+		displayableCanvas.notificaMorte(evento.getPersonaggio());
 	}
 
 	private void gestisciEventoVariazioneStatistichePersonaggio(EventoVariazioneStatistichePersonaggio evento) {

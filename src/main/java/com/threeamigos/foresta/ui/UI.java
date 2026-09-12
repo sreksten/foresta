@@ -219,10 +219,6 @@ public class UI {
 		interfacciaUtente.infoCombattimento(mostra, combattente, avversario);
 	}
 
-	public static void notificaAnnuncioGlobale(String etichetta, String messaggio) {
-		interfacciaUtente.notificaAnnuncioGlobale(etichetta, messaggio);
-	}
-
 	public static void variaGemme(int variazione) {
 		interfacciaUtente.variaGemme(variazione);
 	}

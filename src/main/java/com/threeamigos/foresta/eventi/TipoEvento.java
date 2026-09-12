@@ -7,6 +7,8 @@ package com.threeamigos.foresta.eventi;
 public enum TipoEvento {
 
     MESSAGGIO,
+    FUMETTO,
+    NOTIFICA_GLOBALE,
 
     PERSONAGGIO_CREAZIONE,
     PERSONAGGIO_VARIAZIONE_STATO_VITALE,

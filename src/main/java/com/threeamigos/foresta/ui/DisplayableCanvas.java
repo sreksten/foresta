@@ -61,6 +61,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final ArrayList<SpriteInterface> sprites;
 	private final List<SpriteAnnuncioGlobale> codaAnnunciGlobali = new ArrayList<>();
 	private SpriteAnnuncioGlobale annuncioGlobaleAttivo;
+	private final List<SpriteFumetto> codaFumetti = new ArrayList<>();
+	private SpriteFumetto fumettoAttivo;
 
 	private final int larghezzaSchermo;
 	private final int altezzaSchermo;
@@ -314,6 +316,20 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		aggiornaSchermo((Graphics2D)graphics);
 	}
 
+
+	private void disegnaFumetto(Graphics2D graphics) {
+		if (fumettoAttivo == null && !codaFumetti.isEmpty()) {
+			fumettoAttivo = codaFumetti.remove(0);
+		}
+		if (fumettoAttivo == null) {
+			return;
+		}
+		fumettoAttivo.animate(graphics);
+		if (!fumettoAttivo.isActive()) {
+			fumettoAttivo = null;
+		}
+	}
+
 	/**
 	 * A differenza degli altri sprite, ancorati a coordinate di riquadri validi solo in
 	 * STATO_IN_GIOCO, l'annuncio globale è centrato sull'intero schermo e va quindi disegnato
@@ -348,9 +364,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			riquadroIntroOutro.scrivi(graphics, true);
 		} else if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO) {
 			inGioco(graphics);
+			disegnaFumetto(graphics);
 			disegnaAnnuncioGlobale(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_MAPPA) {
 			mappaATuttoSchermo.disegnaMappaATuttoSchermo(graphics);
+			disegnaFumetto(graphics);
 			disegnaAnnuncioGlobale(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_SELEZIONE_SLOT_DA_SALVARE) {
 			riquadroIntroOutro.selezioneSlotDaSalvare(graphics);
@@ -366,9 +384,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			riquadroIntroOutro.hiscore(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_INVENTARIO) {
 			inventario.disegnaInventario(graphics);
+			disegnaFumetto(graphics);
 			disegnaAnnuncioGlobale(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_ARMAIOLO) {
 			armaiolo.disegnaInventario(graphics);
+			disegnaFumetto(graphics);
 			disegnaAnnuncioGlobale(graphics);
 		}
 	}
@@ -438,6 +458,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void armaiolo() {
 		stato = StatoDisplayableCanvas.STATO_ARMAIOLO;
+		notificaFumetto("Benvenuti. Come posso aiutarvi?", armaiolo.getCoordinateFumettoBenvenuto());
 		repaint();
 	}
 
@@ -599,6 +620,14 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void raccogliOggetto() {
 		aggiungiSprite(riquadroLocazione.raccogliOggetto());
+	}
+
+	private void notificaFumetto(String testo, CoordinateFumetto coordinateFumetto) {
+		notificaFumetto(testo, coordinateFumetto.getX(), coordinateFumetto.getY(), coordinateFumetto.getPointToX(), coordinateFumetto.getPointToY());
+	}
+
+	public void notificaFumetto(String testo, int x, int y, int pointToX, int pointToY) {
+		codaFumetti.add(new SpriteFumetto(testo, larghezzaSchermo / 5, x, y, DoomdarkFontMedium.getInstance(), DoomdarkColorModel.Color.BLACK, pointToX, pointToY));
 	}
 
 	public void notificaAnnuncioGlobale(String etichetta, String messaggio) {

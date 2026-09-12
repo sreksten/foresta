@@ -159,8 +159,6 @@ public interface InterfacciaUtente {
 	 */
     void infoCombattimento(boolean mostra, Personaggio combattente, Personaggio avversario);
 
-	void notificaAnnuncioGlobale(String etichetta, String nomeMissione);
-
 	void variaGemme(int variazione);
 
 	void variaMonete(int variazione);

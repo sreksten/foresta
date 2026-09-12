@@ -17,8 +17,10 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoCombattimento.class, this::onEventoCombattimento);
         BusEventi.iscriviti(EventoConsumoPuntoAbilita.class, this::onEventoConsumoPuntoAbilita);
         BusEventi.iscriviti(EventoCreazionePersonaggio.class, this::onEventoCreazionePersonaggio);
+        BusEventi.iscriviti(EventoFumetto.class, this::onEventoFumetto);
         BusEventi.iscriviti(EventoInterazioneElementale.class, this::onEventoInterazioneElementale);
         BusEventi.iscriviti(EventoMessaggio.class, this::onEventoMessaggio);
+        BusEventi.iscriviti(EventoNotificaGlobale.class, this::onEventoNotificaGlobale);
         BusEventi.iscriviti(EventoValutazioneAttaccante.class, this::onEventoValutazione);
         BusEventi.iscriviti(EventoVariazioneEffettoDiStato.class, this::onEventoVariazioneEffettoDiStato);
         BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::onEventoVariazioneStatistichePersonaggio);
@@ -48,6 +50,10 @@ public class SnifferBusEventi {
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p));
     }
 
+    private void onEventoFumetto(EventoFumetto evento) {
+        Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getTesto()));
+    }
+
     private void onEventoInterazioneElementale(EventoInterazioneElementale evento) {
         Personaggio p = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getTipoInterazioneElementale());
@@ -55,6 +61,10 @@ public class SnifferBusEventi {
 
     private void onEventoMessaggio(EventoMessaggio evento) {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggio()));
+    }
+
+    private void onEventoNotificaGlobale(EventoNotificaGlobale evento) {
+        Logger.log(String.format("%s - %s - %s - %s - %s", new Date(), evento.getTipoEvento(), evento.getEtichetta(), evento.getEtichetta(), evento.getMessaggio()));
     }
 
     private void onEventoValutazione(EventoValutazioneAttaccante evento) {

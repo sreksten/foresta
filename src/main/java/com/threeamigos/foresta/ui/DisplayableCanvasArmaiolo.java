@@ -9,6 +9,10 @@ import java.awt.image.BufferedImage;
  */
 public class DisplayableCanvasArmaiolo extends DisplayableCanvasScambiatoreArtefatti {
 
+    private static final int SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI = 20;
+
+    private static CoordinateFumetto COORDINATE_FUMETTO_BENVENUTO;
+
     DisplayableCanvasArmaiolo(int width, int height) {
         super(width, height);
     }
@@ -19,8 +23,6 @@ public class DisplayableCanvasArmaiolo extends DisplayableCanvasScambiatoreArtef
     }
 
     void disegnaColonnaPersonaggio(Graphics2D graphics) {
-
-        final int SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI = 20;
 
         Image doomdark;
         int y = SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
@@ -38,6 +40,18 @@ public class DisplayableCanvasArmaiolo extends DisplayableCanvasScambiatoreArtef
         // ed evitare sfarfallamenti, scegliamo il ladro come personaggio "base" per calcolare l'altezza a cui disegnare.
         y += ALTEZZA_LADRO;
         graphics.drawImage(immaginePersonaggio, (width - immaginePersonaggio.getWidth()) / 2, y - immaginePersonaggio.getHeight(), null);
+    }
+
+    CoordinateFumetto getCoordinateFumettoBenvenuto() {
+        if (COORDINATE_FUMETTO_BENVENUTO == null) {
+            COORDINATE_FUMETTO_BENVENUTO = new CoordinateFumetto(
+                    width / 2 + ImageCache.armaiolo.getWidth() + SPACING,
+                    SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + ImageCache.armaiolo.getHeight() / 2,
+                    width / 2 + ImageCache.armaiolo.getWidth() / 3,
+                    SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + ImageCache.armaiolo.getHeight() / 3
+                    );
+        }
+        return COORDINATE_FUMETTO_BENVENUTO;
     }
 
     @Override
