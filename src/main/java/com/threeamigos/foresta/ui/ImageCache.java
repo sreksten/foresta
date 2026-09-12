@@ -233,7 +233,7 @@ public class ImageCache {
 		avviaReaper(1, TimeUnit.MINUTES);
 		// Inietta un thread provvederà alla chiusura del reaper allo shutdown
 		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-			Logger.log("[SHUTDOWN] Intercettata chiusura del gioco. Arresto del Reaper...");
+			Logger.log("[SHUTDOWN] Intercettata chiusura del gioco. Arresto del Reaper.");
 			spegniReaper();
 		}, "ImageCache-Shutdown-Cleanup"));
 	}
