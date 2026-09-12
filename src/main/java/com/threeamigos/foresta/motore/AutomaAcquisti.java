@@ -17,7 +17,7 @@ public class AutomaAcquisti extends AutomaScambiatoreArtefatti {
 
     @Override
     public boolean mostraCostoSuParteAttiva() {
-        return false;
+        return true;
     }
 
     @Override
