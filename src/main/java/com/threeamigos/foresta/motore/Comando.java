@@ -72,6 +72,7 @@ public enum Comando {
 	// Scelte possibili all'interno di una città
 	LOCANDA,
 	ALCHIMISTA,
+	ARMAIOLO,
 	ESCI_DA_CITTA,
 
 	// Dall'alchimista, sceglie se agire su un personaggio o su tutto il gruppo
