@@ -53,7 +53,7 @@ public abstract class Citta extends LocazioneUnica {
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
         String sb = g.chiMaiuscolo() + " arriva al" + getNome() +
-                ". Qui è possibile cercare una locanda o il negozio di un alchimista prima di andare via.";
+                ". Qui è possibile cercare una locanda, il negozio di un alchimista o fare un salto dall'armaiolo prima di andare via.";
 		UI.notifica(sb);
 		if (g.getPreziosi() > 0) {
 			g.vendePreziosi();
