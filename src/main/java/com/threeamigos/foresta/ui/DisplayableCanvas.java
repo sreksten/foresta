@@ -2,6 +2,7 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.motore.AutomaAcquisti;
 import com.threeamigos.foresta.motore.AutomaInventario;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Logger;
@@ -183,12 +184,12 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		Rectangle mappaATuttoSchermoRect = new Rectangle(0, 0, width, height);
 		mappaCoordinateElementiGrafici.put(mappaATuttoSchermo, mappaATuttoSchermoRect);
 
-		inventario = new DisplayableCanvasInventario(width, height);
+		inventario = new DisplayableCanvasInventario(this, width, height);
 
 		Rectangle inventarioRect = new Rectangle(0, 0, width, height);
 		mappaCoordinateElementiGrafici.put(inventario, inventarioRect);
 
-		armaiolo = new DisplayableCanvasArmaiolo(width, height);
+		armaiolo = new DisplayableCanvasArmaiolo(this, width, height);
 
 		Rectangle armaioloRect = new Rectangle(0, 0, width, height);
 		mappaCoordinateElementiGrafici.put(armaiolo, armaioloRect);
@@ -458,12 +459,12 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void armaiolo() {
 		stato = StatoDisplayableCanvas.STATO_ARMAIOLO;
-		notificaFumetto("Benvenuti. Come posso aiutarvi?", armaiolo.getCoordinateFumettoBenvenuto());
+		notificaFumetto("Benvenuti. Come posso aiutarvi?", armaiolo.getCoordinateFumetto());
 		repaint();
 	}
 
-	public void impostaAutomaArmaiolo(AutomaInventario automaInventario) {
-		armaiolo.impostaAutoma(automaInventario);
+	public void impostaAutomaArmaiolo(AutomaAcquisti automaAcquisti) {
+		armaiolo.impostaAutoma(automaAcquisti);
 		repaint();
 	}
 
@@ -622,7 +623,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		aggiungiSprite(riquadroLocazione.raccogliOggetto());
 	}
 
-	private void notificaFumetto(String testo, CoordinateFumetto coordinateFumetto) {
+	void notificaFumetto(String testo, CoordinateFumetto coordinateFumetto) {
 		notificaFumetto(testo, coordinateFumetto.getX(), coordinateFumetto.getY(), coordinateFumetto.getPointToX(), coordinateFumetto.getPointToY());
 	}
 

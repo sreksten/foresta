@@ -1,9 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.motore.Comando;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.Logger;
-import com.threeamigos.foresta.motore.OggettoConCosto;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
@@ -14,7 +11,7 @@ import com.threeamigos.foresta.ui.UI;
 
 import java.util.Collection;
 
-public class Artefatto implements Oggetto, OggettoConCosto {
+public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 
 	protected final ArtefattoMD md;
 

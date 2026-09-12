@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
@@ -26,8 +27,12 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 
 	private GruppoGiocatore() {
 		super();
+		BusEventi.iscriviti(EventoRichiestaStoccaggio.class, this::onEventoRichiestaStoccaggio);
+		BusEventi.iscriviti(EventoRichiestaPrelievo.class, this::onEventoRichiestaPrelievo);
+		BusEventi.iscriviti(EventoRichiestaAcquisto.class, this::onEventoRichiestaAcquisto);
+		BusEventi.iscriviti(EventoRichiestaVendita.class, this::onEventoRichiestaVendita);
 	}
-	
+
 	private static GruppoGiocatore istanza;
 	
 	public static GruppoGiocatore getIstanza() {
@@ -505,5 +510,45 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 
 	public void removeArtefatto(Artefatto artefatto) {
 		md.getArtefatti().remove(artefatto.getModelloDati());
+	}
+
+	private void onEventoRichiestaStoccaggio(EventoRichiestaStoccaggio eventoRichiestaStoccaggio) {
+		Artefatto artefatto = (Artefatto) eventoRichiestaStoccaggio.getOggettoDaSpostare();
+		eventoRichiestaStoccaggio.getParteAttiva().removeArtefatto(artefatto);
+		addArtefatto(artefatto);
+		BusEventi.pubblica(new EventoApprovazioneStoccaggio(eventoRichiestaStoccaggio));
+	}
+
+	private void onEventoRichiestaPrelievo(EventoRichiestaPrelievo eventoRichiestaPrelievo) {
+		Artefatto artefatto = (Artefatto) eventoRichiestaPrelievo.getOggettoDaSpostare();
+		Personaggio personaggio = (Personaggio) eventoRichiestaPrelievo.getParteAttiva();
+		if (personaggio.getCarico() + eventoRichiestaPrelievo.getOggettoDaSpostare().getPeso() <= personaggio.getCaricoMassimo()) {
+			removeArtefatto(artefatto);
+			personaggio.addArtefatto(artefatto);
+			BusEventi.pubblica(new EventoApprovazionePrelievo(eventoRichiestaPrelievo));
+		} else {
+			BusEventi.pubblica(new EventoRifiutoPrelievo(eventoRichiestaPrelievo));
+		}
+	}
+
+	private void onEventoRichiestaAcquisto(EventoRichiestaAcquisto eventoRichiestaAcquisto) {
+		Artefatto artefatto = (Artefatto) eventoRichiestaAcquisto.getOggettoDaSpostare();
+		int costoOggetto = eventoRichiestaAcquisto.getOggettoDaSpostare().getCostoAcquisto();
+		if (getMonete() >= costoOggetto) {
+			addArtefatto(artefatto);
+			subMonete(artefatto.getCostoAcquisto());
+			eventoRichiestaAcquisto.getParteRemota().removeArtefatto(artefatto);
+			BusEventi.pubblica(new EventoApprovazioneAcquisto(eventoRichiestaAcquisto));
+		} else {
+			BusEventi.pubblica(new EventoRifiutoAcquisto(eventoRichiestaAcquisto));
+		}
+	}
+
+	private void onEventoRichiestaVendita(EventoRichiestaVendita eventoRichiestaVendita) {
+		Artefatto artefatto = (Artefatto) eventoRichiestaVendita.getOggettoDaSpostare();
+		removeArtefatto(artefatto);
+		addMonete(artefatto.getCostoAcquisto());
+		eventoRichiestaVendita.getParteRemota().addArtefatto(artefatto);
+		BusEventi.pubblica(new EventoApprovazioneVendita(eventoRichiestaVendita));
 	}
 }

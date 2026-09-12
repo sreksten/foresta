@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
@@ -9,12 +11,8 @@ import java.awt.image.BufferedImage;
  */
 public class DisplayableCanvasArmaiolo extends DisplayableCanvasScambiatoreArtefatti {
 
-    private static final int SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI = 20;
-
-    private static CoordinateFumetto COORDINATE_FUMETTO_BENVENUTO;
-
-    DisplayableCanvasArmaiolo(int width, int height) {
-        super(width, height);
+    DisplayableCanvasArmaiolo(DisplayableCanvas displayableCanvas, int width, int height) {
+        super(displayableCanvas, width, height);
     }
 
     @Override
@@ -40,18 +38,17 @@ public class DisplayableCanvasArmaiolo extends DisplayableCanvasScambiatoreArtef
         // ed evitare sfarfallamenti, scegliamo il ladro come personaggio "base" per calcolare l'altezza a cui disegnare.
         y += ALTEZZA_LADRO;
         graphics.drawImage(immaginePersonaggio, (width - immaginePersonaggio.getWidth()) / 2, y - immaginePersonaggio.getHeight(), null);
-    }
+        y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
-    CoordinateFumetto getCoordinateFumettoBenvenuto() {
-        if (COORDINATE_FUMETTO_BENVENUTO == null) {
-            COORDINATE_FUMETTO_BENVENUTO = new CoordinateFumetto(
-                    width / 2 + ImageCache.armaiolo.getWidth() + SPACING,
-                    SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + ImageCache.armaiolo.getHeight() / 2,
-                    width / 2 + ImageCache.armaiolo.getWidth() / 3,
-                    SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + ImageCache.armaiolo.getHeight() / 3
-                    );
-        }
-        return COORDINATE_FUMETTO_BENVENUTO;
+        Image i = ImageCache.get("Monete", coloreTestata);
+        graphics.drawImage(i, centerBoxX, y, null);
+        i = DoomdarkTextProducer.getImage(GruppoGiocatore.getIstanza().getMonete(), font, coloreTestata);
+        graphics.drawImage(i, centerBoxLimit - i.getWidth(null), y, null);
+
+        y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+
+        BufferedImage separatore = ImageCache.separatore;
+        graphics.drawImage(separatore, (width - separatore.getWidth()) / 2, y, null);
     }
 
     @Override
@@ -63,4 +60,5 @@ public class DisplayableCanvasArmaiolo extends DisplayableCanvasScambiatoreArtef
     protected boolean processaDoppioClickPersonaggio(int x, int y, Tasto tasto) {
         return false;
     }
+
 }

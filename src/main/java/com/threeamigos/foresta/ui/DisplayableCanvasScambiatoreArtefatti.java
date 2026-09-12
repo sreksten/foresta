@@ -1,6 +1,9 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.motore.AutomaInventario;
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoRifiutoAcquisto;
+import com.threeamigos.foresta.eventi.EventoRifiutoPrelievo;
+import com.threeamigos.foresta.motore.AutomaScambiatoreArtefatti;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
 import com.threeamigos.foresta.oggetti.Artefatto;
@@ -18,6 +21,13 @@ import java.util.List;
  */
 abstract class DisplayableCanvasScambiatoreArtefatti  implements Finestra {
 
+    protected static final int SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI = 20;
+
+    /**
+     * Le coordinate del fumetto sono a comune tra Inventario e Armaiolo perché entrambe comunque disegnano un personaggio a metà schermo
+     */
+    protected static CoordinateFumetto COORDINATE_FUMETTO;
+
     protected static final int DIMENSIONE_BORDO_INTERNO = 16;
     protected static final int corniceInventarioWidth = ImageCache.corniceInventario.getWidth(null);
     protected static final int ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO = ImageCache.corniceInventario.getHeight()
@@ -29,6 +39,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti  implements Finestra {
 
     protected static final int ALTEZZA_LADRO = ClassePersonaggioImmagine.getImmagine(ClassePersonaggio.LADRO).getHeight(null);
 
+    protected final DisplayableCanvas displayableCanvas;
     protected final int width;
     protected final int height;
     protected final DoomdarkFont font = DoomdarkFontMedium.getInstance();
@@ -42,7 +53,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti  implements Finestra {
     protected final int rightBoxX;
     protected final int rightBoxLimit;
 
-    protected AutomaInventario automa;
+    protected AutomaScambiatoreArtefatti automa;
     protected int offsetYLeftBox = 0;
     protected int offsetYBoxPersonaggio = 0;
     protected int offsetYRightBox = 0;
@@ -56,7 +67,8 @@ abstract class DisplayableCanvasScambiatoreArtefatti  implements Finestra {
     // personaggio, aggiornata a ogni disegnaInventario e usata per l'hit-test dei click.
     protected int yAttributi = 0;
 
-    DisplayableCanvasScambiatoreArtefatti(int width, int height) {
+    DisplayableCanvasScambiatoreArtefatti(DisplayableCanvas displayableCanvas, int width, int height) {
+        this.displayableCanvas = displayableCanvas;
         this.width = width;
         this.height = height;
 
@@ -68,9 +80,32 @@ abstract class DisplayableCanvasScambiatoreArtefatti  implements Finestra {
 
         rightBoxX = width - SPACING - corniceInventarioWidth + DIMENSIONE_BORDO_INTERNO;
         rightBoxLimit = width - SPACING - DIMENSIONE_BORDO_INTERNO;
+
+        BusEventi.iscriviti(EventoRifiutoAcquisto.class, this::onEventoRifiutoAcquisto);
+        BusEventi.iscriviti(EventoRifiutoPrelievo.class, this::onEventoRifiutoPrelievo);
     }
 
-    void impostaAutoma(AutomaInventario automa) {
+    CoordinateFumetto getCoordinateFumetto() {
+        if (COORDINATE_FUMETTO == null) {
+            COORDINATE_FUMETTO = new CoordinateFumetto(
+                    width / 2 + ImageCache.armaiolo.getWidth() + SPACING,
+                    SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + ImageCache.armaiolo.getHeight() / 2,
+                    width / 2 + ImageCache.armaiolo.getWidth() / 3,
+                    SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + ImageCache.armaiolo.getHeight() / 3
+            );
+        }
+        return COORDINATE_FUMETTO;
+    }
+
+    private void onEventoRifiutoAcquisto(EventoRifiutoAcquisto evento) {
+        displayableCanvas.notificaFumetto("Non hai abbastanza monete per comprare questo oggetto.", getCoordinateFumetto());
+    }
+
+    private void onEventoRifiutoPrelievo(EventoRifiutoPrelievo evento) {
+        displayableCanvas.notificaFumetto("Questo oggetto è troppo pesante.", getCoordinateFumetto());
+    }
+
+    void impostaAutoma(AutomaScambiatoreArtefatti automa) {
         this.automa = automa;
     }
 
@@ -86,9 +121,11 @@ abstract class DisplayableCanvasScambiatoreArtefatti  implements Finestra {
         disegnaColonnaPersonaggio(graphics);
 
         // Inventario personaggio
-        offsetYLeftBox = disegnaElenco(graphics, new ArrayList<>(automa.getParteAttiva().getInventario()), leftBoxX, offsetYLeftBox);
+        offsetYLeftBox = disegnaElenco(graphics, new ArrayList<>(automa.getParteAttiva().getInventario()), leftBoxX,
+                offsetYLeftBox, automa.mostraCostoSuParteAttiva());
         // Inventario gruppo
-        offsetYRightBox = disegnaElenco(graphics, automa.getParteRemota().getInventario(), rightBoxX, offsetYRightBox);
+        offsetYRightBox = disegnaElenco(graphics, automa.getParteRemota().getInventario(), rightBoxX, offsetYRightBox,
+                automa.mostraCostoSuParteRemota());
 
         disegnaIntestazioniInventario(graphics);
     }
@@ -113,10 +150,11 @@ abstract class DisplayableCanvasScambiatoreArtefatti  implements Finestra {
 
     abstract void disegnaColonnaPersonaggio(Graphics2D graphics);
 
-    private int disegnaElenco(Graphics2D graphics, Collection<Artefatto> artefatti, int x, int offset) {
+    private int disegnaElenco(Graphics2D graphics, Collection<Artefatto> artefatti, int x, int offset,
+                              boolean mostraCosto) {
 
         Artefatto evidenziato = trovaArtefatto(artefatti, x, offset, mouseX, mouseY);
-        ComponenteScorrevole<Artefatto> componenteScorrevole = costruisciComponenteScorrevoleArtefatti(artefatti, evidenziato);
+        ComponenteScorrevole<Artefatto> componenteScorrevole = costruisciComponenteScorrevoleArtefatti(artefatti, evidenziato, mostraCosto);
 
         int nuovoOffset = componenteScorrevole.limitaOffset(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, offset);
         Image image = componenteScorrevole.produci(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, nuovoOffset);
@@ -129,7 +167,8 @@ abstract class DisplayableCanvasScambiatoreArtefatti  implements Finestra {
      * L'albero viene ricostruito a ogni disegno e a ogni click. L'artefatto passato in
      * evidenziato (se non null) viene disegnato in bianco invece che in grigio chiaro.
      */
-    private ComponenteScorrevole<Artefatto> costruisciComponenteScorrevoleArtefatti(Collection<Artefatto> artefatti, Artefatto evidenziato) {
+    private ComponenteScorrevole<Artefatto> costruisciComponenteScorrevoleArtefatti(Collection<Artefatto> artefatti,
+                                                                                    Artefatto evidenziato, boolean mostraCosto) {
 
         ComponenteScorrevole<Artefatto> componenteScorrevole = new ComponenteScorrevole<>(
                 LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, 10, 2);
@@ -162,6 +201,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti  implements Finestra {
             nome = nome.substring(0, 1).toUpperCase() + nome.substring(1);
             ComponenteScorrevole<Artefatto>.Nodo nodo = componenteScorrevole.creaNodo(
                     nome, font, colore,
+                    mostraCosto ? String.valueOf(artefatto.getCostoAcquisto()) : null, fontSmall, DoomdarkColorModel.Color.YELLOW,
                     artefatto.getTipo().getDescrizione(), fontSmall, colore,
                     null, artefatto);
             nodo.setFigliVisibili(artefatto.isFigliVisibili());
@@ -250,7 +290,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti  implements Finestra {
                 || yInterno < 0 || yInterno >= ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO) {
             return null;
         }
-        return costruisciComponenteScorrevoleArtefatti(artefatti, null).riferimentoTitoloAllaQuota(yInterno + offset);
+        return costruisciComponenteScorrevoleArtefatti(artefatti, null, false).riferimentoTitoloAllaQuota(yInterno + offset);
     }
 
     @Override
@@ -303,13 +343,15 @@ abstract class DisplayableCanvasScambiatoreArtefatti  implements Finestra {
         List<Artefatto> inventarioPersonaggio = new ArrayList<>(automa.getParteAttiva().getInventario());
         Artefatto artefatto = trovaArtefatto(inventarioPersonaggio, leftBoxX, offsetYLeftBox, x, y);
         if (artefatto != null) {
-            automa.spostaSuParteRemota(artefatto);
+            automa.richiediSpostamentoSuParteRemota(artefatto);
+            //automa.spostaSuParteRemota(artefatto);
             return;
         }
         Collection<Artefatto> disponibili = automa.getArtefattiDisponibili();
         artefatto = trovaArtefatto(disponibili, rightBoxX, offsetYRightBox, x, y);
         if (artefatto != null) {
-            automa.spostaSuParteAttiva(artefatto);
+            automa.richiediSpostamentoSuParteAttiva(artefatto);
+            //automa.spostaSuParteAttiva(artefatto);
         }
     }
 

@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.motore.AutomaAcquisti;
 import com.threeamigos.foresta.motore.AutomaInventario;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -69,7 +70,7 @@ public interface InterfacciaUtente {
 	/**
 	 * Assegna l'automa che gestisce lo scambio di artefatti nella finestra di inventario
 	 */
-	void impostaAutomaInventario(AutomaInventario automaInventario);
+	void impostaAutomaInventario(AutomaInventario automaScambiatoreArtefatti);
 
 	/**
 	 * Mostra la finestra di scambio artefatti con l'armaiolo
@@ -79,7 +80,7 @@ public interface InterfacciaUtente {
 	/**
 	 * Assegna l'automa che gestisce lo scambio di artefatti nella finestra dell'armaiolo
 	 */
-	void impostaAutomaArmaiolo(AutomaInventario automaInventario);
+	void impostaAutomaArmaiolo(AutomaAcquisti automaScambiatoreArtefatti);
 
 	/**
 	 * Richiama la schermata di selezione salvataggio

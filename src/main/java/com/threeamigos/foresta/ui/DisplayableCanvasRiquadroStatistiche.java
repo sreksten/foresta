@@ -11,6 +11,7 @@ class DisplayableCanvasRiquadroStatistiche implements Finestra {
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE = 6;
 
 	private final DoomdarkFontMedium fontMedium = DoomdarkFontMedium.getInstance();
+	private final DoomdarkColorModel.Color coloreTestata = DoomdarkColorModel.Color.LIGHT_GRAY;
 
 	private final int topLeftX;
 	private final int topLeftY;
@@ -35,17 +36,17 @@ class DisplayableCanvasRiquadroStatistiche implements Finestra {
 		GruppoGiocatore gruppoGiocatore = GruppoGiocatore.getIstanza();
 		graphics.drawImage(ImageCache.cornicePiccola, topLeftX, topLeftY, null);
 		
-		Image image = DoomdarkTextProducer.getImage("Monete", fontMedium);
+		Image image = ImageCache.get("Monete", fontMedium, coloreTestata);
 		graphics.drawImage(image, scrittaX, moneteY, null);
 		image = DoomdarkTextProducer.getImage(gruppoGiocatore.getMonete(), fontMedium);
 		graphics.drawImage(image, totaleX - image.getWidth(null), moneteY, null);
 		
-		image = DoomdarkTextProducer.getImage("Gemme", fontMedium);
+		image = ImageCache.get("Gemme", fontMedium, coloreTestata);
 		graphics.drawImage(image, scrittaX, gemmeY, null);
 		image = DoomdarkTextProducer.getImage(gruppoGiocatore.getPreziosi(), fontMedium);
 		graphics.drawImage(image, totaleX - image.getWidth(null), gemmeY, null);
 
-		image = DoomdarkTextProducer.getImage("Punti", fontMedium);
+		image = ImageCache.get("Punti", fontMedium, coloreTestata);
 		graphics.drawImage(image, scrittaX, puntiY, null);
 		int puntiEsperienza = Statistiche.getPuntiEsperienza();
 		int puntiPerProssimoLivello = Statistiche.getPuntiEsperienzaPerProssimoLivello();

@@ -3,10 +3,7 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.motore.AutomaInventario;
-import com.threeamigos.foresta.motore.Comando;
-import com.threeamigos.foresta.motore.Gioco;
-import com.threeamigos.foresta.motore.Logger;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
@@ -168,8 +165,8 @@ public class ForestaUI implements InterfacciaUtente {
 	}
 
 	@Override
-	public void impostaAutomaArmaiolo(AutomaInventario automaInventario) {
-		displayableCanvas.impostaAutomaArmaiolo(automaInventario);
+	public void impostaAutomaArmaiolo(AutomaAcquisti automaAcquisti) {
+		displayableCanvas.impostaAutomaArmaiolo(automaAcquisti);
 	}
 
 	@Override

@@ -14,6 +14,12 @@ public class SnifferBusEventi {
 
     public SnifferBusEventi() {
         BusEventi.iscriviti(EventoAggiuntaModificatore.class, this::onEventoAggiuntaModificatore);
+        BusEventi.iscriviti(EventoApprovazioneAcquisto.class, this::onEventoApprovazioneAcquisto);
+        BusEventi.iscriviti(EventoApprovazionePrelievo.class, this::onEventoApprovazionePrelievo);
+        // EventoApprovazioneSpostamento è classe astratta
+        BusEventi.iscriviti(EventoApprovazioneStoccaggio.class, this::onEventoApprovazioneStoccaggio);
+        BusEventi.iscriviti(EventoApprovazioneVendita.class, this::onEventoApprovazioneVendita);
+        // EventoBase è classe astratta
         BusEventi.iscriviti(EventoCombattimento.class, this::onEventoCombattimento);
         BusEventi.iscriviti(EventoConsumoPuntoAbilita.class, this::onEventoConsumoPuntoAbilita);
         BusEventi.iscriviti(EventoCreazionePersonaggio.class, this::onEventoCreazionePersonaggio);
@@ -21,7 +27,18 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoInterazioneElementale.class, this::onEventoInterazioneElementale);
         BusEventi.iscriviti(EventoMessaggio.class, this::onEventoMessaggio);
         BusEventi.iscriviti(EventoNotificaGlobale.class, this::onEventoNotificaGlobale);
-        BusEventi.iscriviti(EventoValutazioneAttaccante.class, this::onEventoValutazione);
+        // EventoPersonaggio è classe astratta
+        BusEventi.iscriviti(EventoRichiestaAcquisto.class, this::onEventoRichiestaAcquisto);
+        BusEventi.iscriviti(EventoRichiestaPrelievo.class, this::onEventoRichiestaPrelievo);
+        // EventoRichiestaSpostamento è classe astratta
+        BusEventi.iscriviti(EventoRichiestaStoccaggio.class, this::onEventoRichiestaStoccaggio);
+        BusEventi.iscriviti(EventoRichiestaVendita.class, this::onEventoRichiestaVendita);
+        BusEventi.iscriviti(EventoRifiutoAcquisto.class, this::onEventoRifiutoAcquisto);
+        BusEventi.iscriviti(EventoRifiutoPrelievo.class, this::onEventoRifiutoPrelievo);
+        // EventoRifiutoSpostamento è classe astratta
+        BusEventi.iscriviti(EventoRifiutoStoccaggio.class, this::onEventoRifiutoStoccaggio);
+        BusEventi.iscriviti(EventoRifiutoVendita.class, this::onEventoRifiutoVendita);
+        BusEventi.iscriviti(EventoValutazioneAttaccante.class, this::onEventoValutazioneAttaccante);
         BusEventi.iscriviti(EventoVariazioneEffettoDiStato.class, this::onEventoVariazioneEffettoDiStato);
         BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::onEventoVariazioneStatistichePersonaggio);
         BusEventi.iscriviti(EventoVariazioneStatoVitalePersonaggio.class, this::onEventoVariazioneStatoVitalePersonaggio);
@@ -31,6 +48,21 @@ public class SnifferBusEventi {
         ModificatoreAttributo modificatore = evento.getModificatore();
         Logger.log(headerEvento(evento) + formattaModificatoreAttributo(modificatore) +
                 formattaStatistichePersonaggio(evento.getPersonaggio()));
+    }
+
+    private void onEventoApprovazioneAcquisto(EventoApprovazioneAcquisto evento) {
+
+    }
+
+    private void onEventoApprovazionePrelievo(EventoApprovazionePrelievo evento) {
+
+    }
+
+    private void onEventoApprovazioneStoccaggio(EventoApprovazioneStoccaggio evento) {
+    }
+
+    private void onEventoApprovazioneVendita(EventoApprovazioneVendita evento) {
+
     }
 
     private void onEventoCombattimento(EventoCombattimento evento) {
@@ -67,15 +99,47 @@ public class SnifferBusEventi {
         Logger.log(String.format("%s - %s - %s - %s - %s", new Date(), evento.getTipoEvento(), evento.getEtichetta(), evento.getEtichetta(), evento.getMessaggio()));
     }
 
-    private void onEventoValutazione(EventoValutazioneAttaccante evento) {
+    private void onEventoRichiestaAcquisto(EventoRichiestaAcquisto evento) {
+
+    }
+
+    private void onEventoRichiestaPrelievo(EventoRichiestaPrelievo evento) {
+
+    }
+
+    private void onEventoRichiestaStoccaggio(EventoRichiestaStoccaggio evento) {
+
+    }
+
+    private void onEventoRichiestaVendita(EventoRichiestaVendita evento) {
+
+    }
+
+    private void onEventoRifiutoAcquisto(EventoRifiutoAcquisto evento) {
+
+    }
+
+    private void onEventoRifiutoPrelievo(EventoRifiutoPrelievo evento) {
+
+    }
+
+    private void onEventoRifiutoStoccaggio(EventoRifiutoStoccaggio evento) {
+
+    }
+
+    private void onEventoRifiutoVendita(EventoRifiutoVendita evento) {
+
+    }
+
+    private void onEventoValutazioneAttaccante(EventoValutazioneAttaccante evento) {
         Personaggio p = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getRisultatoValutazione());
     }
 
-    private void onEventoVariazioneStatoVitalePersonaggio(EventoVariazioneStatoVitalePersonaggio evento) {
+    private void onEventoVariazioneEffettoDiStato(EventoVariazioneEffettoDiStato evento) {
         Personaggio p = evento.getPersonaggio();
-        Logger.log(headerEvento(evento) + String.format("Stato: -> %s, Causa trapasso: -> %s - ",
-                p.isVivo() ? "Vivo" : "Morto", p.getCausaTrapasso()) + formattaStatistichePersonaggio(p));
+        Logger.log(headerEvento(evento) + String.format("Tipo: %s, EffettoDiStato: %s - ",
+                evento.getTipo(), evento.getEffetto()) + formattaStatistichePersonaggio(p));
     }
 
     private void onEventoVariazioneStatistichePersonaggio(EventoVariazioneStatistichePersonaggio evento) {
@@ -85,11 +149,13 @@ public class SnifferBusEventi {
                 formattaStatistichePersonaggio(p));
     }
 
-    private void onEventoVariazioneEffettoDiStato(EventoVariazioneEffettoDiStato evento) {
+    private void onEventoVariazioneStatoVitalePersonaggio(EventoVariazioneStatoVitalePersonaggio evento) {
         Personaggio p = evento.getPersonaggio();
-        Logger.log(headerEvento(evento) + String.format("Tipo: %s, EffettoDiStato: %s - ",
-                evento.getTipo(), evento.getEffetto()) + formattaStatistichePersonaggio(p));
+        Logger.log(headerEvento(evento) + String.format("Stato: -> %s, Causa trapasso: -> %s - ",
+                p.isVivo() ? "Vivo" : "Morto", p.getCausaTrapasso()) + formattaStatistichePersonaggio(p));
     }
+
+    //--- Metodi generali di utilità
 
     private String formattaStatistichePersonaggio(Personaggio p) {
         return String.format("UUID: %s,Nome: %17s, Livello: %2d, Salute: %3d/%3d; Magia: %3d/%3d; Forza: %3d; Destrezza: %3d; Costituzione: %3d; Intelligenza: %3d; Saggezza: %3d; Carisma: %3d; Fortuna: %3d",

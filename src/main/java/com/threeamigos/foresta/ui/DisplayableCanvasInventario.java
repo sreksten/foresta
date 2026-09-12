@@ -43,8 +43,8 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         return statiAttributi.computeIfAbsent(tipoAttributo, t -> new StatoAttributo());
     }
 
-    DisplayableCanvasInventario(int width, int height) {
-        super(width, height);
+    DisplayableCanvasInventario(DisplayableCanvas displayableCanvas, int width, int height) {
+        super(displayableCanvas, width, height);
     }
 
     @Override
@@ -53,8 +53,6 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
     }
 
     void disegnaColonnaPersonaggio(Graphics2D graphics) {
-
-        final int SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI = 20;
 
         Image doomdark;
         int y = SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
