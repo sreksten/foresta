@@ -26,5 +26,10 @@ public enum TipoEvento {
     /**
      * Un PNG prende una decisione
      */
-    PERSONAGGIO_VALUTAZIONE
+    PERSONAGGIO_VALUTAZIONE,
+
+    /**
+     * Attività interna di pulizia cache dinamica immagini
+     */
+    PULIZIA_CACHE_IMMAGINI
 }

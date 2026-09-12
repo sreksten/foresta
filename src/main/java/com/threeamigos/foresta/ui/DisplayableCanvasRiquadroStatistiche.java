@@ -38,19 +38,19 @@ class DisplayableCanvasRiquadroStatistiche implements Finestra {
 		
 		Image image = ImageCache.get("Monete", fontMedium, coloreTestata);
 		graphics.drawImage(image, scrittaX, moneteY, null);
-		image = DoomdarkTextProducer.getImage(gruppoGiocatore.getMonete(), fontMedium);
+		image = ImageCache.get(gruppoGiocatore.getMonete(), fontMedium, coloreTestata);
 		graphics.drawImage(image, totaleX - image.getWidth(null), moneteY, null);
 		
 		image = ImageCache.get("Gemme", fontMedium, coloreTestata);
 		graphics.drawImage(image, scrittaX, gemmeY, null);
-		image = DoomdarkTextProducer.getImage(gruppoGiocatore.getPreziosi(), fontMedium);
+		image = ImageCache.get(gruppoGiocatore.getPreziosi(), fontMedium, coloreTestata);
 		graphics.drawImage(image, totaleX - image.getWidth(null), gemmeY, null);
 
 		image = ImageCache.get("Punti", fontMedium, coloreTestata);
 		graphics.drawImage(image, scrittaX, puntiY, null);
 		int puntiEsperienza = Statistiche.getPuntiEsperienza();
 		int puntiPerProssimoLivello = Statistiche.getPuntiEsperienzaPerProssimoLivello();
-		image = DoomdarkTextProducer.getImage(puntiEsperienza + "/" + puntiPerProssimoLivello, fontMedium);
+		image = ImageCache.get(puntiEsperienza + "/" + puntiPerProssimoLivello, fontMedium, coloreTestata);
 		graphics.drawImage(image, totaleX - image.getWidth(null), puntiY, null);
 	}
 

@@ -28,6 +28,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoMessaggio.class, this::onEventoMessaggio);
         BusEventi.iscriviti(EventoNotificaGlobale.class, this::onEventoNotificaGlobale);
         // EventoPersonaggio è classe astratta
+        BusEventi.iscriviti(EventoPuliziaCacheDinamicaImmagini.class, this::onEventoPuliziaCacheDinamicaImmagini);
         BusEventi.iscriviti(EventoRichiestaAcquisto.class, this::onEventoRichiestaAcquisto);
         BusEventi.iscriviti(EventoRichiestaPrelievo.class, this::onEventoRichiestaPrelievo);
         // EventoRichiestaSpostamento è classe astratta
@@ -97,6 +98,12 @@ public class SnifferBusEventi {
 
     private void onEventoNotificaGlobale(EventoNotificaGlobale evento) {
         Logger.log(String.format("%s - %s - %s - %s - %s", new Date(), evento.getTipoEvento(), evento.getEtichetta(), evento.getEtichetta(), evento.getMessaggio()));
+    }
+
+    private void onEventoPuliziaCacheDinamicaImmagini(EventoPuliziaCacheDinamicaImmagini evento) {
+        int prima = evento.getElementiPrima();
+        int dopo = evento.getElementiDopo();
+        Logger.log(headerEvento(evento) + "Eliminate " + (prima - dopo) + " immagini dalla cache. Rimanenti: " + dopo);
     }
 
     private void onEventoRichiestaAcquisto(EventoRichiestaAcquisto evento) {

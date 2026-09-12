@@ -1,14 +1,22 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoPuliziaCacheDinamicaImmagini;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.lang.ref.WeakReference;
 import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 
 public class ImageCache {
 
@@ -61,7 +69,17 @@ public class ImageCache {
 
 	private static final Map<String, BufferedImage> imageMap = new HashMap<>();
 
-	private static final Map<DoomdarkFont, Map<DoomdarkColorModel.Color, Map<String, Image>>> cache = new HashMap<>();
+	// Utilizziamo una mappa thread-safe che ospita riferimenti deboli alle immagini,
+	// in modo da tenere in cache le stringhe usate più di frequente ma potendo ripulire
+	// la memoria da quelle non usate da più tempo, per velocizzare le operazioni di rendering.
+	private static final Map<DoomdarkFont, Map<DoomdarkColorModel.Color, Map<String, WeakReference<Image>>>> cacheDinamica =
+			new ConcurrentHashMap<>();
+	// Il thread di background che gestisce il timer del reaper
+	private static final ScheduledExecutorService reaperExecutor = Executors.newSingleThreadScheduledExecutor(runnable -> {
+		Thread thread = new Thread(runnable, "ImageCache-Reaper");
+		thread.setDaemon(true);
+		return thread;
+	});
 	private static final DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 
 	private static boolean inited = false;
@@ -210,17 +228,62 @@ public class ImageCache {
 
 		componenteScorrevoleFrecciaSu = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaSu.gif");
 		componenteScorrevoleFrecciaGiu = BufferedImageBuilder.buildBufferedImage("icone/ComponenteScorrevole-FrecciaGiu.gif");
+
+		// Avvia il reaper in background ogni minuto
+		avviaReaper(1, TimeUnit.MINUTES);
+		// Inietta un thread provvederà alla chiusura del reaper allo shutdown
+		Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+			Logger.log("[SHUTDOWN] Intercettata chiusura del gioco. Arresto del Reaper...");
+			spegniReaper();
+		}, "ImageCache-Shutdown-Cleanup"));
 	}
-	
+
+	/**
+	 * Chiamare alla chiusura del gioco per spegnere il thread di pulizia della cache in modo pulito.
+	 */
+	public static void spegniReaper() {
+		reaperExecutor.shutdown();
+	}
+
 	static void init() {
 		if (!inited) {
+			// Forzo il caricamento delle immagini dei personaggi
 			for (ClassePersonaggio classePersonaggio : ClassePersonaggio.values()) {
 				classePersonaggio.getIstanza(1);
 			}
 			inited = true;
 		}
 	}
-	
+
+	private static void avviaReaper(long periodo, TimeUnit unitaTempo) {
+		reaperExecutor.scheduleAtFixedRate(() -> {
+			try {
+				int elementiPrima = 0;
+				int elementiDopo = 0;
+
+				// Rimuoviamo dalla mappa tutte le chiavi il cui valore interno (l'immagine)
+				// è stato reclamato dal Garbage Collector perché non più referenziato nella UI
+				for (DoomdarkFont font : cacheDinamica.keySet()) {
+					Map<DoomdarkColorModel.Color, Map<String, WeakReference<Image>>> mapPerColore =
+							cacheDinamica.get(font);
+					for (DoomdarkColorModel.Color colore : mapPerColore.keySet()) {
+						Map<String, WeakReference<Image>> mapPerString = mapPerColore.get(colore);
+						elementiPrima += mapPerString.size();
+						mapPerString.entrySet().removeIf(entry -> entry.getValue().get() == null);
+						elementiDopo += mapPerString.size();
+					}
+				}
+				int rimossi = elementiPrima - elementiDopo;
+				if (rimossi > 0) {
+					BusEventi.pubblica(new EventoPuliziaCacheDinamicaImmagini(elementiPrima, elementiDopo));
+				}
+			} catch (Exception e) {
+				// Protezione anti-crash per evitare che un errore blocchi i tick futuri del reaper
+				System.err.println("Errore durante l'esecuzione del reaper di ImageCache: " + e.getMessage());
+			}
+		}, periodo, periodo, unitaTempo);
+	}
+
 	public static void set(String nomeImmagine, BufferedImage displayable) {
 		imageMap.put(nomeImmagine, displayable);
 	}
@@ -256,10 +319,15 @@ public class ImageCache {
 	 * Metodo di utilità che costruisce e memorizza immagini utilizzate spessissimo (Ad esempio, nomi e statistiche)
 	 */
 	public static Image get(String testo, DoomdarkFont font, DoomdarkColorModel.Color colore) {
-		return cache
+		Map<String, WeakReference<Image>> stringToImageMap = cacheDinamica
 				.computeIfAbsent(font, k -> new HashMap<>())
-				.computeIfAbsent(colore, k -> new HashMap<>())
-				.computeIfAbsent(testo, k -> DoomdarkTextProducer.getImage(k, font, colore));
+				.computeIfAbsent(colore, k -> new HashMap<>());
+		WeakReference<Image> ref = stringToImageMap.get(testo);
+		Image img = (ref != null) ? ref.get() : null;
+		if (img == null) {
+			img = DoomdarkTextProducer.getImage(testo, font, colore);
+			stringToImageMap.put(testo, new WeakReference<>(img));
+		}
+		return img;
 	}
 }
-
