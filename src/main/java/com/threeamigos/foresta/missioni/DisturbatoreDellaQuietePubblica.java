@@ -1,10 +1,11 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoParagrafo;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
-import com.threeamigos.foresta.ui.UI;
 
 /**
  * Dieci eremiti disturbati nel loro ritiro. Il conteggio avviene all'incontro, quando
@@ -63,9 +64,8 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 			return;
 		}
 		if (!isAttiva()) {
-			UI.notifica("");
-			UI.notifica("Nella Foresta vivono uomini che hanno scelto la solitudine dopo lunga riflessione. " +
-					DESCRIZIONE_BASE + ", e fai in modo che se ne ricordino.");
+			BusEventi.pubblica(new EventoParagrafo("Nella Foresta vivono uomini che hanno scelto " +
+					"la solitudine dopo lunga riflessione. " + DESCRIZIONE_BASE + ", e fai in modo che se ne ricordino."));
 			attivaMissione();
 		}
 		// Si conta l'incontro, non il suo esito: qui la locazione è appena stata
@@ -74,22 +74,18 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 		aggiungiProprieta(EREMITI_INCONTRATI, String.valueOf(incontrati));
 		if (incontrati >= EREMITI_DA_INCONTRARE) {
 			completaMissione();
+			BusEventi.pubblica(new EventoParagrafo("Dieci Eremiti su dieci confermano che la Foresta era " +
+					"molto più tranquilla prima. " +
+					"Il titolo di Disturbatore della Quiete Pubblica è meritato."));
 		} else {
-			UI.notifica("");
-			UI.notifica("La quiete del " + Misc.getOrdinaleM(incontrati) + " Eremita è stata ufficialmente turbata.");
+			BusEventi.pubblica(new EventoParagrafo("La quiete del " + Misc.getOrdinaleM(incontrati) +
+					" Eremita è stata ufficialmente turbata."));
 		}
 	}
 
 	@Override
 	public void controllaPostLocazione() {
 		// L'incontro si conta all'arrivo, non alla fine
-	}
-
-	@Override
-	public void completaMissione() {
-		super.completaMissione();
-		UI.notifica("Dieci Eremiti su dieci confermano che la Foresta era molto più tranquilla prima. " +
-				"Il titolo di Disturbatore della Quiete Pubblica è meritato.");
 	}
 
 	private int getEremitiIncontrati() {

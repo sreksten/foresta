@@ -1,10 +1,11 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoParagrafo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.ui.UI;
 
 public class MuoviALocazione extends MissioneBase {
 
@@ -49,7 +50,7 @@ public class MuoviALocazione extends MissioneBase {
 	@Override
 	public void completaMissione() {
 		super.completaMissione();
-		UI.notifica("Hai raggiunto " + ottieniProprieta(NOME));
+		BusEventi.pubblica(new EventoParagrafo("Hai raggiunto " + ottieniProprieta(NOME)));
 	}
 
 	@Override

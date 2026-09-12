@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi;
 
 /**
- *
+ * La differenza con EventoParagrafo è che questo continua un paragrafo precedente.
  * @author Stefano Reksten
  */
 public class EventoMessaggio extends EventoBase {

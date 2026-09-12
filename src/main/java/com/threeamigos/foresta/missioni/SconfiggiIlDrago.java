@@ -1,15 +1,16 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoNotificaGlobale;
+import com.threeamigos.foresta.eventi.EventoParagrafo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
-import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.ui.UI;
 
 public class SconfiggiIlDrago extends MissioneBase implements Missione {
 
@@ -41,7 +42,7 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 	@Override
 	public void controllaPreLocazione() {
 		if (!isAttiva()) {
-			UI.notifica(getDescrizione());
+			BusEventi.pubblica(new EventoParagrafo(getDescrizione()));
 			attivaMissione();
 		}
 	}
@@ -54,7 +55,8 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 	@Override
 	public void controllaPostLocazione() {
 		if (isDragoNonApparso() && castelliDistrutti()) {
-			UI.notifica("L'incantesimo che nascondeva il castello del Drago è svanito! La missione è quasi giunta al termine!");
+			BusEventi.pubblica(new EventoParagrafo("L'incantesimo che nascondeva il castello del Drago " +
+					"è svanito! La missione è quasi giunta al termine!"));
 			CoordinateMD coordinateCastelloDrago = Foresta.costruisciLocazioneUnica(ClassiLocazione.CASTELLO_DRAGO, false);
 			Foresta.setLocazioneVisitata(coordinateCastelloDrago, false);
 			setDragoApparso();
@@ -62,8 +64,7 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 			GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 			if (gruppo.getClasseLocazioneCorrente() == ClassiLocazione.CASTELLO_DRAGO && gruppo.getLocazioneCorrente().isCompleta()) {
 				completaMissione();
-				UI.notifica("");
-				UI.notifica("Il Drago è morto!");
+				BusEventi.pubblica(new EventoNotificaGlobale("VITTORIA", "IL DRAGO E' MORTO"));
 				LineaTemporale.setGiocoFinito(true);
 			}
 		}
@@ -82,7 +83,6 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 			}
 			CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(classeLocazione);
 			if (coordinate != null && Foresta.getLocazioneMD(coordinate).ottieniProprieta(LocazioneMD.COMPLETA) == null) {
-				Logger.log(classeLocazione.name() + " non ancora completata");
 				castelliDistrutti = false;
 			}
 		}

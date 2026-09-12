@@ -1,10 +1,11 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoParagrafo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.ui.UI;
 
 /**
  * Sotto-missione di {@link CronacheDiUnFegatoEroico}: si conclude quando il gruppo
@@ -75,13 +76,8 @@ public class VisitaLocanda extends MissioneBase {
 		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(classeCitta);
 		if (coordinate != null && Foresta.getLocazioneMD(coordinate).ottieniProprieta(Locanda.LOCANDA_VISITATA) != null) {
 			completaMissione();
+			BusEventi.pubblica(new EventoParagrafo("Una tappa in meno: " + getNome() + " è cosa fatta."));
 		}
-	}
-
-	@Override
-	public void completaMissione() {
-		super.completaMissione();
-		UI.notifica("Una tappa in meno: " + getNome() + " è cosa fatta.");
 	}
 
 	private ClassiLocazione getClasseCitta() {

@@ -6,6 +6,7 @@ package com.threeamigos.foresta.eventi;
  */
 public enum TipoEvento {
 
+    PARAGRAFO,
     MESSAGGIO,
     FUMETTO,
     NOTIFICA_GLOBALE,

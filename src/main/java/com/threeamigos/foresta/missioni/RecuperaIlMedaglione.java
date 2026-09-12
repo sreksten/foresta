@@ -1,11 +1,12 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoParagrafo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.ui.UI;
 
 public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements Missione {
 
@@ -38,14 +39,15 @@ public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements M
 		if (gruppo.isInLocazioneUnica(ClassiLocazione.CITTA_FLEENA) &&
 				!LineaTemporale.isCittaDistrutta(ClassiLocazione.CITTA_FLEENA)) {
 			if (!isAttiva()) {
-				UI.notifica(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
-						" incontra un uomo che chiede aiuto per recuperare il suo prezioso medaglione rubato da una banda di ladri, che hanno il loro covo in una grotta. Offre 20 monete in cambio.");
+				BusEventi.pubblica(new EventoParagrafo(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
+						" incontra un uomo che chiede aiuto per recuperare il suo prezioso medaglione rubato da " +
+						"una banda di ladri, che hanno il loro covo in una grotta. Offre 20 monete in cambio."));
 				attivaMissione();
 				Foresta.costruisciLocazioneUnica(ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE, true);
 			} else if (!isCompleta() && isBersaglioRecuperato()) {
-				gruppo.addMonete(20);
 				completaMissione();
-				UI.notifica("L'uomo è felicissimo di riavere il suo medaglione in cambio delle 20 monete promesse.");
+				BusEventi.pubblica(new EventoParagrafo("L'uomo è felicissimo di riavere il suo medaglione in cambio delle 20 monete promesse."));
+				gruppo.addMonete(20);
 			}
 		}
 	}
@@ -55,7 +57,7 @@ public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements M
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		if (gruppo.isInLocazioneUnica(ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE) &&
 				gruppo.getLocazioneCorrente().isCompleta() && !isBersaglioRecuperato()) {
-			UI.notifica("Il medaglione è stato recuperato. Puoi tornare in città per reclamare la ricompensa.");
+			BusEventi.pubblica(new EventoParagrafo("Il medaglione è stato recuperato. Puoi tornare in città per reclamare la ricompensa."));
 			setBersaglioRecuperato();
 		}
 	}

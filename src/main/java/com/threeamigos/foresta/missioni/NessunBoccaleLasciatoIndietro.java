@@ -1,10 +1,11 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoParagrafo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.ui.UI;
 
 /**
  * Dieci locande sparse nella Foresta, quelle cittadine non contano. Tornare due volte
@@ -58,9 +59,9 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 	public void controllaPostLocazione() {
 		// Il giocatore inizia sempre nel bosco, non può essere in una locanda alla fine del primo turno
 		if (!isCompleta() && !isAttiva()) {
-			UI.notifica("");
-			UI.notifica("Da qualche parte fra le paludi e i castelli ci sono osti che non hanno ancora conosciuto la tua sete. " +
-					DESCRIZIONE_BASE + ", e non lasciarne indietro nemmeno una.");
+			BusEventi.pubblica(new EventoParagrafo("Da qualche parte fra le paludi e i castelli " +
+					"ci sono osti che non hanno ancora conosciuto la tua sete. " +
+					DESCRIZIONE_BASE + ", e non lasciarne indietro nemmeno una."));
 			attivaMissione();
 			return;
 		}
@@ -75,17 +76,11 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 		aggiungiProprieta(LOCANDE_CENSITE, String.valueOf(visitate));
 		if (visitate >= LOCANDE_DA_VISITARE) {
 			completaMissione();
+			BusEventi.pubblica(new EventoParagrafo("Dieci locande, dieci osti, un solo fegato. Nessun boccale" +
+					" è stato lasciato indietro, e la Foresta ha un nuovo esperto di birre a cui nessuno ha chiesto un parere."));
 		} else {
-			UI.notifica("");
-			UI.notifica("Locanda numero " + visitate + " debitamente censita.");
+			BusEventi.pubblica(new EventoParagrafo("Locanda numero " + visitate + " debitamente censita."));
 		}
-	}
-
-	@Override
-	public void completaMissione() {
-		super.completaMissione();
-		UI.notifica("Dieci locande, dieci osti, un solo fegato. Nessun boccale è stato lasciato indietro, " +
-				"e la Foresta ha un nuovo esperto di birre a cui nessuno ha chiesto un parere.");
 	}
 
 	/**

@@ -1,7 +1,8 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoMessaggio;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.ui.UI;
 
 public abstract class Combatti extends MissioneBase {
 
@@ -39,6 +40,6 @@ public abstract class Combatti extends MissioneBase {
 	@Override
 	public void completaMissione() {
 		super.completaMissione();
-		UI.notifica("La locazione e' stata ripulita.");
+		BusEventi.pubblica(new EventoMessaggio("La locazione è stata ripulita."));
 	}
 }

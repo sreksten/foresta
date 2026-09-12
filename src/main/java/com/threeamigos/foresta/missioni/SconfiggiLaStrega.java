@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoParagrafo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.ui.UI;
 
 /**
  *
@@ -21,7 +22,8 @@ public class SconfiggiLaStrega extends MissioneBase implements Missione {
 
     @Override
     public String getDescrizione() {
-        return "La Strega, Signora delle Arti Oscure ed alleata del Drago, ha preso possesso di un castello e sta facendo avvizzire il territorio circostante.";
+        return "La Strega, Signora delle Arti Oscure ed alleata del Drago, ha preso possesso di un castello e" +
+                " sta facendo avvizzire il territorio circostante.";
     }
 
     @Override
@@ -41,7 +43,7 @@ public class SconfiggiLaStrega extends MissioneBase implements Missione {
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
         if (gruppo.getClasseLocazioneCorrente() == ClassiLocazione.CASTELLO_STREGA && gruppo.getLocazioneCorrente().isCompleta()) {
             completaMissione();
-            UI.notifica("La Strega è stata sconfitta!");
+            BusEventi.pubblica(new EventoParagrafo("La Strega è stata sconfitta!"));
         }
     }
 

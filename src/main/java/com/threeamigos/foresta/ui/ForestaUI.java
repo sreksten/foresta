@@ -36,6 +36,7 @@ public class ForestaUI implements InterfacciaUtente {
 		BusEventi.iscriviti(EventoInterazioneElementale.class, this::gestisciEventoInterazioneElementale);
 		BusEventi.iscriviti(EventoMessaggio.class, this::gestisciEventoMessaggio);
 		BusEventi.iscriviti(EventoNotificaGlobale.class, this::gestisciEventoNotificaGlobale);
+		BusEventi.iscriviti(EventoParagrafo.class, this::gestisciEventoParagrafo);
 		// EventoValutazioneAttaccante non ci interessa, è il motore AI degli avversari che informa sul suo stato di progressione
 		BusEventi.iscriviti(EventoVariazioneEffettoDiStato.class, this::gestisciEventoVariazioneEffettoDiStato);
 		BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
@@ -274,6 +275,11 @@ public class ForestaUI implements InterfacciaUtente {
 
 	private void gestisciEventoNotificaGlobale(EventoNotificaGlobale evento) {
 		displayableCanvas.notificaAnnuncioGlobale(evento.getEtichetta(), evento.getMessaggio());
+	}
+
+	private void gestisciEventoParagrafo(EventoParagrafo evento) {
+		displayableCanvas.notifica("");
+		displayableCanvas.notifica(evento.getMessaggio());
 	}
 
 	private void gestisciEventoVariazioneStatoVitalePersonaggio(EventoVariazioneStatoVitalePersonaggio evento) {
