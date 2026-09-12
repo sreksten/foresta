@@ -58,8 +58,8 @@ public class ComponenteScorrevole<T> {
         return nodo;
     }
 
-    public Nodo creaSeparatore() {
-        return creaNodo(null, null, null,
+    public void creaSeparatore() {
+        creaNodo(null, null, null,
                 null, null, null,
                 null, null, null,
                 ImageCache.separatore, null);
@@ -226,10 +226,9 @@ public class ComponenteScorrevole<T> {
                 this.descrizione = null;
             }
 
-            String sb = "Chiave: " + chiave +
+            this.datiOriginali = "Chiave: " + chiave +
                     " Valore: " + valore +
                     " Descrizione: " + descrizione;
-            this.datiOriginali = sb;
         }
 
         private Image creaImmagine(DoomdarkFont font, DoomdarkColorModel.Color color, String testo, int larghezza) {
