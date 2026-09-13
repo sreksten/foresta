@@ -88,6 +88,10 @@ public enum ClasseIcona {
 	DESTRA(Comando.DESTRA, "icone/Destra.gif"),
 	SINISTRA(Comando.SINISTRA, "icone/Sinistra.gif"),
 
+	CARTA(Comando.CARTA, "icone/Carta.gif"),
+	FORBICE(Comando.FORBICE, "icone/Forbice.gif"),
+	SASSO(Comando.SASSO, "icone/Sasso.gif"),
+
 	RUTTOLOMEO(Comando.RUTTOLOMEO, "icone/Ruttolomeo.gif"),
 	STORPSGORBLIN(Comando.STORPSGORBLIN, "icone/Storpsgorblin.gif");
 

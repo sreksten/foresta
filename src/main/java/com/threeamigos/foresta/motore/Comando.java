@@ -95,6 +95,10 @@ public enum Comando {
 	DESTRA,
 	SINISTRA,
 
+	CARTA,
+	FORBICE,
+	SASSO,
+
 	// Azione automaticamente generata dal sistema quando si è in una locazione, per le animazioni
 	TIMER,
 
