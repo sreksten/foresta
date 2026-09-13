@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
-import com.threeamigos.foresta.motore.AutomaAcquisti;
+import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
 import com.threeamigos.foresta.motore.AutomaInventario;
 import com.threeamigos.foresta.motore.ComandiPossibili;
 import com.threeamigos.foresta.motore.Comando;
@@ -95,8 +95,8 @@ public class UI {
 	/**
 	 * Assegna l'automa che gestisce lo scambio di artefatti nella finestra dell'armaiolo
 	 */
-	public static void impostaAutomaArmaiolo(AutomaAcquisti automaAcquisti) {
-		interfacciaUtente.impostaAutomaArmaiolo(automaAcquisti);
+	public static void impostaAutomaArmaiolo(AutomaAcquistiArtefatti automaAcquistiArtefatti) {
+		interfacciaUtente.impostaAutomaArmaiolo(automaAcquistiArtefatti);
 	}
 
 	/**

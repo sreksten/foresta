@@ -106,7 +106,7 @@ public abstract class Citta extends LocazioneUnica {
 
 			} else if (azione == Comando.ARMAIOLO) {
 				ScambiatoreArtefatti scambiatoreArtefatti = RegistroArtefatti.getScambiatorePerLocazione(g.getCoordinate());
-				UI.impostaAutomaArmaiolo(new AutomaAcquisti(g, scambiatoreArtefatti));
+				UI.impostaAutomaArmaiolo(new AutomaAcquistiArtefatti(g, scambiatoreArtefatti));
 				ComandiPossibili.set(Comando.ANNULLA);
 				UI.armaiolo();
 				stato = StatoInCitta.DA_ARMAIOLO;

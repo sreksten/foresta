@@ -2,7 +2,7 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.motore.AutomaAcquisti;
+import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
 import com.threeamigos.foresta.motore.AutomaInventario;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Logger;
@@ -463,8 +463,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
-	public void impostaAutomaArmaiolo(AutomaAcquisti automaAcquisti) {
-		armaiolo.impostaAutoma(automaAcquisti);
+	public void impostaAutomaArmaiolo(AutomaAcquistiArtefatti automaAcquistiArtefatti) {
+		armaiolo.impostaAutoma(automaAcquistiArtefatti);
 		repaint();
 	}
 

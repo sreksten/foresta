@@ -1,17 +1,17 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoRichiestaAcquisto;
-import com.threeamigos.foresta.eventi.EventoRichiestaVendita;
+import com.threeamigos.foresta.eventi.EventoRichiestaAcquistoArtefatto;
+import com.threeamigos.foresta.eventi.EventoRichiestaVenditaArtefatto;
 import com.threeamigos.foresta.oggetti.Artefatto;
 
 /**
  *
  * @author Stefano Reksten
  */
-public class AutomaAcquisti extends AutomaScambiatoreArtefatti {
+public class AutomaAcquistiArtefatti extends AutomaScambiatoreArtefatti {
 
-    public AutomaAcquisti(ScambiatoreArtefatti parteAttiva, ScambiatoreArtefatti parteRemota) {
+    public AutomaAcquistiArtefatti(ScambiatoreArtefatti parteAttiva, ScambiatoreArtefatti parteRemota) {
         super(parteAttiva, parteRemota);
     }
 
@@ -27,11 +27,11 @@ public class AutomaAcquisti extends AutomaScambiatoreArtefatti {
 
     @Override
     public void richiediSpostamentoSuParteAttiva(Artefatto artefatto) {
-        BusEventi.pubblica(new EventoRichiestaAcquisto(getParteAttiva(), getParteRemota(), artefatto));
+        BusEventi.pubblica(new EventoRichiestaAcquistoArtefatto(getParteAttiva(), getParteRemota(), artefatto));
     }
 
     @Override
     public void richiediSpostamentoSuParteRemota(Artefatto artefatto) {
-        BusEventi.pubblica(new EventoRichiestaVendita(getParteAttiva(), getParteRemota(), artefatto));
+        BusEventi.pubblica(new EventoRichiestaVenditaArtefatto(getParteAttiva(), getParteRemota(), artefatto));
     }
 }

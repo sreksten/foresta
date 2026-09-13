@@ -159,7 +159,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 		md.setVivo(false);
 		md.setCausaTrapasso(causaTrapasso);
-		BusEventi.pubblica(new EventoVariazioneStatoVitalePersonaggio(this));
+		BusEventi.pubblica(new EventoVariazioneStatoVitalePersonaggio(this, false));
 	}
 
 	public String getCausaTrapasso() {
@@ -170,7 +170,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.set(TipoAttributo.SALUTE, (int)(calcolaSaluteMassima() / 10.0d));
 		md.set(TipoAttributo.STANCHEZZA, 9);
 		md.setVivo(true);
-		BusEventi.pubblica(new EventoVariazioneStatoVitalePersonaggio(this));
+		BusEventi.pubblica(new EventoVariazioneStatoVitalePersonaggio(this, true));
 	}
 
 	//FIXME metodo da rimuovere quando passiamo al nuovo motore di combattimento

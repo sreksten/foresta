@@ -27,10 +27,10 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 
 	private GruppoGiocatore() {
 		super();
-		BusEventi.iscriviti(EventoRichiestaStoccaggio.class, this::onEventoRichiestaStoccaggio);
-		BusEventi.iscriviti(EventoRichiestaPrelievo.class, this::onEventoRichiestaPrelievo);
-		BusEventi.iscriviti(EventoRichiestaAcquisto.class, this::onEventoRichiestaAcquisto);
-		BusEventi.iscriviti(EventoRichiestaVendita.class, this::onEventoRichiestaVendita);
+		BusEventi.iscriviti(EventoRichiestaStoccaggioArtefatto.class, this::suEventoRichiestaStoccaggioArtefatto);
+		BusEventi.iscriviti(EventoRichiestaPrelievoArtefatto.class, this::suEventoRichiestaPrelievoArtefatto);
+		BusEventi.iscriviti(EventoRichiestaAcquistoArtefatto.class, this::suEventoRichiestaAcquistoArtefatto);
+		BusEventi.iscriviti(EventoRichiestaVenditaArtefatto.class, this::suEventoRichiestaVenditaArtefatto);
 	}
 
 	private static GruppoGiocatore istanza;
@@ -521,43 +521,43 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		md.getArtefatti().remove(artefatto.getModelloDati());
 	}
 
-	private void onEventoRichiestaStoccaggio(EventoRichiestaStoccaggio eventoRichiestaStoccaggio) {
+	private void suEventoRichiestaStoccaggioArtefatto(EventoRichiestaStoccaggioArtefatto eventoRichiestaStoccaggio) {
 		Artefatto artefatto = (Artefatto) eventoRichiestaStoccaggio.getOggettoDaSpostare();
 		eventoRichiestaStoccaggio.getParteAttiva().removeArtefatto(artefatto);
 		addArtefatto(artefatto);
-		BusEventi.pubblica(new EventoApprovazioneStoccaggio(eventoRichiestaStoccaggio));
+		BusEventi.pubblica(new EventoApprovazioneStoccaggioArtefatto(eventoRichiestaStoccaggio));
 	}
 
-	private void onEventoRichiestaPrelievo(EventoRichiestaPrelievo eventoRichiestaPrelievo) {
-		Artefatto artefatto = (Artefatto) eventoRichiestaPrelievo.getOggettoDaSpostare();
-		Personaggio personaggio = (Personaggio) eventoRichiestaPrelievo.getParteAttiva();
-		if (personaggio.getCarico() + eventoRichiestaPrelievo.getOggettoDaSpostare().getPeso() <= personaggio.getCaricoMassimo()) {
+	private void suEventoRichiestaPrelievoArtefatto(EventoRichiestaPrelievoArtefatto eventoRichiestaPrelievoArtefatto) {
+		Artefatto artefatto = (Artefatto) eventoRichiestaPrelievoArtefatto.getOggettoDaSpostare();
+		Personaggio personaggio = (Personaggio) eventoRichiestaPrelievoArtefatto.getParteAttiva();
+		if (personaggio.getCarico() + eventoRichiestaPrelievoArtefatto.getOggettoDaSpostare().getPeso() <= personaggio.getCaricoMassimo()) {
 			removeArtefatto(artefatto);
 			personaggio.addArtefatto(artefatto);
-			BusEventi.pubblica(new EventoApprovazionePrelievo(eventoRichiestaPrelievo));
+			BusEventi.pubblica(new EventoApprovazionePrelievoArtefatto(eventoRichiestaPrelievoArtefatto));
 		} else {
-			BusEventi.pubblica(new EventoRifiutoPrelievo(eventoRichiestaPrelievo));
+			BusEventi.pubblica(new EventoRifiutoPrelievoArtefatto(eventoRichiestaPrelievoArtefatto));
 		}
 	}
 
-	private void onEventoRichiestaAcquisto(EventoRichiestaAcquisto eventoRichiestaAcquisto) {
-		Artefatto artefatto = (Artefatto) eventoRichiestaAcquisto.getOggettoDaSpostare();
-		int costoOggetto = eventoRichiestaAcquisto.getOggettoDaSpostare().getCostoAcquisto();
+	private void suEventoRichiestaAcquistoArtefatto(EventoRichiestaAcquistoArtefatto eventoRichiestaAcquistoArtefatto) {
+		Artefatto artefatto = (Artefatto) eventoRichiestaAcquistoArtefatto.getOggettoDaSpostare();
+		int costoOggetto = eventoRichiestaAcquistoArtefatto.getOggettoDaSpostare().getCostoAcquisto();
 		if (getMonete() >= costoOggetto) {
 			addArtefatto(artefatto);
 			subMonete(artefatto.getCostoAcquisto());
-			eventoRichiestaAcquisto.getParteRemota().removeArtefatto(artefatto);
-			BusEventi.pubblica(new EventoApprovazioneAcquisto(eventoRichiestaAcquisto));
+			eventoRichiestaAcquistoArtefatto.getParteRemota().removeArtefatto(artefatto);
+			BusEventi.pubblica(new EventoApprovazioneAcquistoArtefatto(eventoRichiestaAcquistoArtefatto));
 		} else {
-			BusEventi.pubblica(new EventoRifiutoAcquisto(eventoRichiestaAcquisto));
+			BusEventi.pubblica(new EventoRifiutoAcquistoArtefatto(eventoRichiestaAcquistoArtefatto));
 		}
 	}
 
-	private void onEventoRichiestaVendita(EventoRichiestaVendita eventoRichiestaVendita) {
+	private void suEventoRichiestaVenditaArtefatto(EventoRichiestaVenditaArtefatto eventoRichiestaVendita) {
 		Artefatto artefatto = (Artefatto) eventoRichiestaVendita.getOggettoDaSpostare();
 		removeArtefatto(artefatto);
 		addMonete(artefatto.getCostoAcquisto());
 		eventoRichiestaVendita.getParteRemota().addArtefatto(artefatto);
-		BusEventi.pubblica(new EventoApprovazioneVendita(eventoRichiestaVendita));
+		BusEventi.pubblica(new EventoApprovazioneVenditaArtefatto(eventoRichiestaVendita));
 	}
 }

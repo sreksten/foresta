@@ -5,10 +5,11 @@ import com.threeamigos.foresta.motore.modellodati.RisultatoValutazioneAttaccante
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 /**
+ * Un Personaggio attaccante fa una valutazione del comportamento da assumere per attaccare un Personaggio bersaglio.
  *
  * @author Stefano Reksten
  */
-public class EventoValutazioneAttaccante extends EventoPersonaggio{
+public class EventoValutazioneAttaccante extends EventoPersonaggio {
 
     private final Personaggio bersaglio;
     private final RisultatoValutazioneAttaccante valutazione;
@@ -18,6 +19,11 @@ public class EventoValutazioneAttaccante extends EventoPersonaggio{
     private final double possibiliDanniFisici;
     private final double possibiliDanniMagici;
 
+    /**
+     * @param personaggio il Personaggio che fa la valutazione
+     * @param bersaglio il Personaggio bersaglio
+     * @param valutazione il risultato della valutazione
+     */
     public EventoValutazioneAttaccante(Personaggio personaggio, Personaggio bersaglio,
                                        RisultatoValutazioneAttaccante valutazione) {
         super(TipoEvento.PERSONAGGIO_VALUTAZIONE, personaggio);
@@ -30,6 +36,12 @@ public class EventoValutazioneAttaccante extends EventoPersonaggio{
         possibiliDanniMagici = -1;
     }
 
+    /**
+     * @param personaggio il Personaggio che fa la valutazione
+     * @param bersaglio il Personaggio bersaglio
+     * @param valutazione il risultato della valutazione
+     * @param incantesimo l'Incantesimo che viene utilizzato per attaccare
+     */
     public EventoValutazioneAttaccante(Personaggio personaggio, Personaggio bersaglio,
                                        RisultatoValutazioneAttaccante valutazione, Incantesimo incantesimo) {
         super(TipoEvento.PERSONAGGIO_VALUTAZIONE, personaggio);
@@ -42,6 +54,16 @@ public class EventoValutazioneAttaccante extends EventoPersonaggio{
         possibiliDanniMagici = -1;
     }
 
+    /**
+     * @param personaggio il Personaggio che fa la valutazione
+     * @param bersaglio il Personaggio bersaglio
+     * @param valutazione il risultato della valutazione
+     * @param incantesimo l'Incantesimo che viene utilizzato per attaccare
+     * @param probabilitaColpireFisico la probabilità di colpire fisicamente
+     * @param probabilitaColpireMagico la probabilità di colpire magicamente
+     * @param possibiliDanniFisici i possibili danni fisici
+     * @param possibiliDanniMagici i possibili danni magici
+     */
     public EventoValutazioneAttaccante(Personaggio personaggio, Personaggio bersaglio,
                                        RisultatoValutazioneAttaccante valutazione, Incantesimo incantesimo,
                                        double probabilitaColpireFisico, double probabilitaColpireMagico,
@@ -56,30 +78,51 @@ public class EventoValutazioneAttaccante extends EventoPersonaggio{
         this.possibiliDanniMagici = possibiliDanniMagici;
     }
 
+    /**
+     * @return il Personaggio bersaglio della valutazione
+     */
     public Personaggio getBersaglio() {
         return bersaglio;
     }
 
+    /**
+     * @return il risultato della valutazione
+     */
     public RisultatoValutazioneAttaccante getValutazione() {
         return valutazione;
     }
 
+    /**
+     * @return l'Incantesimo che viene utilizzato per attaccare
+     */
     public Incantesimo getIncantesimo() {
         return incantesimo;
     }
 
+    /**
+     * @return la probabilità di colpire fisicamente
+     */
     public double getProbabilitaColpireFisico() {
         return probabilitaColpireFisico;
     }
 
+    /**
+     * @return la probabilità di colpire magicamente
+     */
     public double getProbabilitaColpireMagico() {
         return probabilitaColpireMagico;
     }
 
+    /**
+     * @return i possibili danni fisici che il Personaggio attaccante farebbe al Personaggio bersaglio
+     */
     public double getPossibiliDanniFisici() {
         return possibiliDanniFisici;
     }
 
+    /**
+     * @return i possibili danni magicamente che il Personaggio attaccante farebbe al Personaggio bersaglio
+     */
     public double getPossibiliDanniMagici() {
         return possibiliDanniMagici;
     }

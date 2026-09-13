@@ -1,8 +1,7 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoRifiutoAcquisto;
-import com.threeamigos.foresta.eventi.EventoRifiutoPrelievo;
+import com.threeamigos.foresta.eventi.EventoRifiutoAcquistoArtefatto;
+import com.threeamigos.foresta.eventi.EventoRifiutoPrelievoArtefatto;
 import com.threeamigos.foresta.motore.AutomaScambiatoreArtefatti;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
@@ -94,11 +93,11 @@ abstract class DisplayableCanvasScambiatoreArtefatti  implements Finestra {
         return COORDINATE_FUMETTO;
     }
 
-    void onEventoRifiutoAcquisto(EventoRifiutoAcquisto evento) {
+    void onEventoRifiutoAcquisto(EventoRifiutoAcquistoArtefatto evento) {
         displayableCanvas.notificaFumetto("Non hai abbastanza monete per comprare questo oggetto.", getCoordinateFumetto());
     }
 
-    void onEventoRifiutoPrelievo(EventoRifiutoPrelievo evento) {
+    void onEventoRifiutoPrelievo(EventoRifiutoPrelievoArtefatto evento) {
         displayableCanvas.notificaFumetto("Questo oggetto è troppo pesante.", getCoordinateFumetto());
     }
 

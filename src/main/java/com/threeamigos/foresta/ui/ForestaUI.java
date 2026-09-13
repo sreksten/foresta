@@ -166,8 +166,8 @@ public class ForestaUI implements InterfacciaUtente {
 	}
 
 	@Override
-	public void impostaAutomaArmaiolo(AutomaAcquisti automaAcquisti) {
-		displayableCanvas.impostaAutomaArmaiolo(automaAcquisti);
+	public void impostaAutomaArmaiolo(AutomaAcquistiArtefatti automaAcquistiArtefatti) {
+		displayableCanvas.impostaAutomaArmaiolo(automaAcquistiArtefatti);
 	}
 
 	@Override
