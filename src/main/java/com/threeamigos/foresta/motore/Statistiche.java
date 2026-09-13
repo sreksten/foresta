@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoMessaggio;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.StatisticheMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
@@ -27,7 +29,7 @@ public class Statistiche {
 
 		if (nuovoLivello > livelloAttuale) {
 			statisticheMD.setLivello(nuovoLivello);
-			UI.notifica("LEVELED UP! Ora il mondo è al livello " + nuovoLivello + "!");
+			BusEventi.pubblica(new EventoMessaggio("LEVELED UP! Ora il mondo è al livello " + nuovoLivello + "!"));
 		}
 	}
 

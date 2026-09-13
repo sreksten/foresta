@@ -1,10 +1,11 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoParagrafo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.Strega;
-import com.threeamigos.foresta.ui.UI;
 
 public class CastelloStrega extends LocazioneUnica {
 
@@ -26,7 +27,7 @@ public class CastelloStrega extends LocazioneUnica {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		UI.notifica(g.chiMaiuscolo() + " entra nel Maniero del Malefizio. Ecco arrivare, annunciata da un vento di tempesta, la più pericolosa alleata del Drago: la Signora della Magia Nera, la Strega!");
+		BusEventi.pubblica(new EventoParagrafo(g.chiMaiuscolo() + " entra nel Maniero del Malefizio. Ecco arrivare, annunciata da un vento di tempesta, la più pericolosa alleata del Drago: la Signora della Magia Nera, la Strega!"));
 	}
 	
 	@Override

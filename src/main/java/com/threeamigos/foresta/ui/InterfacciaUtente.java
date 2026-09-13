@@ -120,11 +120,6 @@ public interface InterfacciaUtente {
     void scriviGrande(String messaggio);
 
 	/**
-	 * Mostra un messaggio di gioco
-	 */
-    void notifica(String messaggio);
-
-	/**
 	 * Porta in primo piano una finestra di gioco (UI.FINESTRA_...)
 	 */
     void primoPiano(Finestra finestra);

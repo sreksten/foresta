@@ -166,13 +166,6 @@ public class UI {
 	}
 
 	/**
-	 * Mostra un messaggio di gioco
-	 */
-	public static void notifica(String messaggio) {
-		interfacciaUtente.notifica(messaggio);
-	}
-
-	/**
 	 * Porta in primo piano una finestra di gioco (UI.FINESTRA_...)
 	 */
 	public static void primoPiano(InterfacciaUtente.Finestra finestra) {

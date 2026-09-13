@@ -1,12 +1,13 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoMessaggio;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.tools.Misc;
-import com.threeamigos.foresta.ui.UI;
 
 public class Cofano extends OggettoBase implements Oggetto {
 
@@ -106,7 +107,7 @@ public class Cofano extends OggettoBase implements Oggetto {
 				sb.append(' ');
 			}
 		}
-		UI.notifica(sb.toString());
+		BusEventi.pubblica(new EventoMessaggio(sb.toString()));
 		return super.prendi(gruppo, azione);
 	}
 }

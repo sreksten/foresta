@@ -1,10 +1,11 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoParagrafo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.Idra;
-import com.threeamigos.foresta.ui.UI;
 
 public class CastelloIdra extends LocazioneUnica {
 
@@ -26,7 +27,7 @@ public class CastelloIdra extends LocazioneUnica {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		UI.notifica(g.chiMaiuscolo() + " arriva alla Rocca del Sangue. L'Idra a tre teste si para davanti sibilando minacciosa!");
+		BusEventi.pubblica(new EventoParagrafo(g.chiMaiuscolo() + " arriva alla Rocca del Sangue. L'Idra a tre teste si para davanti sibilando minacciosa!"));
 	}
 	
 	@Override

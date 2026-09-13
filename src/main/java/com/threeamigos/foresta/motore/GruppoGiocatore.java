@@ -86,7 +86,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	public final void aggiungiPersonaggio(Personaggio personaggio) {
 		super.aggiungiPersonaggio(personaggio);
 		String nome = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
-		UI.notifica(nome + " è felice di poter far parte del gruppo.");
+		BusEventi.pubblica(new EventoMessaggio(nome + " è felice di poter far parte del gruppo."));
 		md.addPersonaggioMD(personaggio.getModelloDati());
 	}
 
@@ -99,7 +99,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	public final void rimuoviPersonaggio(Personaggio p) {
 		super.rimuoviPersonaggio(p);
 		String nome = p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
-		UI.notifica(nome + " lascia il gruppo.");
+		BusEventi.pubblica(new EventoMessaggio(nome + " lascia il gruppo."));
 	}
 
 	public final int getMonete() {
@@ -165,8 +165,10 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	public final void consumaPozioneSalute(Personaggio personaggio) {
 		subPozioniSalute(1);
 		personaggio.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE);
-		UI.notifica(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-				" ha bevuto una pozione che fa riacquistare salute.");
+		BusEventi.pubblica(new EventoMessaggio(personaggio.getNome(
+				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+				" ha bevuto una pozione che fa riacquistare salute."));
 	}
 
 	public final int getPozioniSaluteGrande() {
@@ -191,8 +193,10 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		subPozioniSaluteGrande(1);
 		personaggio.addSaluteMassima(Costanti.AUMENTO_SALUTE_DA_POZIONE_SALUTE_GRANDE, "POZIONE_SALUTE_GRANDE");
 		personaggio.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE_GRANDE);
-		UI.notifica(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-				" ha bevuto una pozione che recupera e fa aumentare la salute massima!");
+		BusEventi.pubblica(new EventoMessaggio(personaggio.getNome(
+				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+				" ha bevuto una pozione che recupera e fa aumentare la salute massima!"));
 	}
 
 	public final int getPozioniMagia() {
@@ -216,8 +220,10 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	public final void consumaPozioneMagia(Personaggio personaggio) {
 		subPozioniMagia(1);
 		personaggio.addMagia(Costanti.RECUPERO_DA_POZIONE_MAGIA);
-		UI.notifica(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-				" ha bevuto una pozione che fa riacquistare magia.");
+		BusEventi.pubblica(new EventoMessaggio(personaggio.getNome(
+				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+				" ha bevuto una pozione che fa riacquistare magia."));
 	}
 
 	public final int getPozioniMagiaGrande() {
@@ -242,8 +248,10 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		subPozioniMagiaGrande(1);
 		personaggio.addMagiaMassima(Costanti.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "POZIONE_MAGIA_GRANDE");
 		personaggio.addMagia(Costanti.RECUPERO_DA_POZIONE_MAGIA_GRANDE);
-		UI.notifica(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-				" ha bevuto una pozione che recupera e fa aumentare la magia massima!");
+		BusEventi.pubblica(new EventoMessaggio(personaggio.getNome(
+				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+				" ha bevuto una pozione che recupera e fa aumentare la magia massima!"));
 	}
 
 	public final void setCoordinate(CoordinateMD coordinate) {
@@ -406,7 +414,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 				sb.append(capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 			}
 			sb.append(". La notte alla locanda trascorre placida e tranquilla.");
-			UI.notifica(sb.toString());
+			BusEventi.pubblica(new EventoMessaggio(sb.toString()));
 		} else {
 			StringBuilder sb = new StringBuilder("Il gruppo decide di accamparsi qui per riposare un po'. Dopo aver stabilito i turni di guardia, i ")
 					.append(Misc.getCardinaleM(personaggi.size())).append(" intrepidi avventurieri si godono un meritato riposo. ");
@@ -429,10 +437,10 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 				sb.append(" ha riposato abbastanza");
 			}
 			sb.append(" per rimettersi in forze.");
-			UI.notifica(sb.toString());
+			BusEventi.pubblica(new EventoMessaggio(sb.toString()));
 		}
 		getPersonaggiVivi().forEach(p -> p.riposa(ore, tipoRiposo));
-		UI.notifica("Il sole sorge e l'avventura ricomincia.");
+		BusEventi.pubblica(new EventoMessaggio("Il sole sorge e l'avventura ricomincia."));
 		UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 		UI.rinfresca();
 	}
@@ -449,14 +457,15 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
             String notifica = chiMaiuscolo() +
                     " ha venduto i preziosi raccolti, ricavandone " +
                     (quantita == 1 ? " una moneta." : (quantita + " monete."));
-			UI.notifica(notifica);
+			BusEventi.pubblica(new EventoMessaggio(notifica));
 			addMonete(quantita);
 			subPreziosi(md.getPreziosi());
 		}
 	}
 
 	public final void fugge() {
-		UI.notifica(chiMaiuscolo() + ", in preda al panico, cerca la salvezza nella fuga! Sfortunatamente riceve gravi ferite e perde molte delle cose in suo possesso!");
+		BusEventi.pubblica(new EventoMessaggio(chiMaiuscolo() + ", in preda al panico, cerca la salvezza nella fuga!" +
+				" Sfortunatamente riceve gravi ferite e perde molte delle cose in suo possesso!"));
 
 		Function<Integer, Integer> calcolaPerdita = m -> Dado.tiraAncheSenzaRange(0, m / 2);
 

@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoMessaggio;
+import com.threeamigos.foresta.eventi.EventoParagrafo;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
@@ -335,7 +338,7 @@ public class Automa implements ControlloreDiGioco {
 				controllaMissioni(Missione::controllaPreLocazione, OrdineVisita.PADRE_PRIMA);
 				String evento = LineaTemporale.getEvento();
 				if (evento != null) {
-					UI.notifica(evento);
+					BusEventi.pubblica(new EventoMessaggio(evento));
 					if (LineaTemporale.isGiocoFinito()) {
 						stato = Stato.GIOCO_PERSO;
 						processaAzione(null);
@@ -346,11 +349,10 @@ public class Automa implements ControlloreDiGioco {
 				gruppo.getPersonaggiVivi().forEach(Personaggio::rimuoviTuttiGliEffettiDiStato);
 				locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
 				gruppo.setLocazioneCorrente(locazioneCorrente);
-				UI.notifica("");
 				locazioneCorrente.crea(gruppo, gruppoAvversario);
 				UI.preparaLocazione();
 				UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
-				UI.notifica(LineaTemporale.getDescrizioneOraDelGiorno());
+				BusEventi.pubblica(new EventoParagrafo(LineaTemporale.getDescrizioneOraDelGiorno()));
 				locazioneCorrente.descrivi(gruppo, gruppoAvversario);
 				controllaMissioni(Missione::controllaInLocazione, OrdineVisita.PADRE_PRIMA);
 				/*
@@ -558,8 +560,7 @@ public class Automa implements ControlloreDiGioco {
 				break;
 
 			case ATTESA_DIREZIONE:
-				UI.notifica("");
-				UI.notifica(gruppo.chiMaiuscolo() + " se ne va. In quale direzione si incammina?");
+				BusEventi.pubblica(new EventoParagrafo(gruppo.chiMaiuscolo() + " se ne va. In quale direzione si incammina?"));
 				ComandiPossibili.reimposta();
 				if (gruppo.getMaxPassiNord() > 0) {
 					ComandiPossibili.add(Comando.NORD);
@@ -673,7 +674,7 @@ public class Automa implements ControlloreDiGioco {
 				case AIUTO:
 					Logger.log("Azione.AIUTO");
 					for (Personaggio personaggio : gruppo.getPersonaggi()) {
-						UI.notifica(personaggio.getDescrizione());
+						BusEventi.pubblica(new EventoParagrafo(personaggio.getDescrizione()));
 					}
 					UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 					stato = Stato.ATTESA_DIREZIONE;
@@ -777,7 +778,9 @@ public class Automa implements ControlloreDiGioco {
 				Logger.log("Stato MAPPA, azione " + azione);
 				if (azione == null) {
 					UI.impostaAzioni(Comando.SINISTRA, Comando.SU, Comando.GIU, Comando.DESTRA, Comando.SI);
-					UI.notifica(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " consulta la sua mappa della Foresta.");
+					BusEventi.pubblica(new EventoParagrafo(gruppo.getCapo().getNome(
+							Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+							Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " consulta la sua mappa della Foresta."));
 					UI.mappa();
 				} else {
 					switch (azione) {

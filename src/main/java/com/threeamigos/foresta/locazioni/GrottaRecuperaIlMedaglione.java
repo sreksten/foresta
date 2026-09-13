@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoMessaggio;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -7,7 +9,6 @@ import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.personaggi.Ladra;
 import com.threeamigos.foresta.personaggi.Ladro;
-import com.threeamigos.foresta.ui.UI;
 
 public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 
@@ -49,9 +50,9 @@ public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
 		if (!isCompleta()) {
-			UI.notifica("Questa è la grotta dove risiede la banda di ladri che ha rubato il Medaglione!");
+			BusEventi.pubblica(new EventoMessaggio("Questa è la grotta dove risiede la banda di ladri che ha rubato il Medaglione!"));
 		} else {
-			UI.notifica("In questa grotta avevano il loro covo i ladri del medaglione.");
+			BusEventi.pubblica(new EventoMessaggio("In questa grotta avevano il loro covo i ladri del medaglione."));
 		}
 	}
 	

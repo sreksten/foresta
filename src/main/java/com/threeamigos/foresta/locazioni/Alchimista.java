@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoMessaggio;
+import com.threeamigos.foresta.eventi.EventoParagrafo;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
@@ -18,7 +21,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 		INCANTESIMI
 	}
 
-	private static final String ARRIVEDERCI = "'Arrivederci, e buona fortuna!'";
+	private static final String ARRIVEDERCI = "“Arrivederci, e buona fortuna!\"";
 	private static final String DICE = ", dice l'alchimista.";
 	private static final String CHIEDE = ", chiede l'alchimista.";
 	private final GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
@@ -66,8 +69,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		UI.notifica("");
-		UI.notifica(g.chiMaiuscolo() + " arriva alla bottega di un alchimista.");
+		BusEventi.pubblica(new EventoParagrafo(g.chiMaiuscolo() + " arriva alla bottega di un alchimista."));
 	}
 
 	@Override
@@ -75,27 +77,26 @@ public class Alchimista extends LocazioneBase implements Locazione {
 		switch (stato) {
 		case SULLA_PORTA:
 			if (nessunAcquistoEseguibile) {
-				UI.notifica("'Buongiorno! Mi dispiace ma non posso fare credito.'" + DICE);
+				BusEventi.pubblica(new EventoMessaggio("“Buongiorno! Mi dispiace ma non posso fare credito.\"" + DICE));
 				return Stato.FINE_LOCAZIONE;
 			}
-			UI.notifica("L'alchimista è intento a produrre l'oroscopo della giornata.");
+			BusEventi.pubblica(new EventoMessaggio("L'alchimista è intento a produrre l'oroscopo della giornata."));
 			try {
 				List<String> oroscopo = ProduttoreDiTestiCasuale.oroscopo();
 				int numeroLinea = 0;
 				for (String linea : oroscopo) {
 					if (numeroLinea == 0) {
-						UI.notifica('“' + linea);
+						BusEventi.pubblica(new EventoMessaggio('“' + linea));
 					} else if (numeroLinea == oroscopo.size() - 1) {
-						UI.notifica(linea + '"');
+						BusEventi.pubblica(new EventoMessaggio(linea + '"'));
 					} else {
-						UI.notifica(linea);
+						BusEventi.pubblica(new EventoMessaggio(linea));
 					}
 					numeroLinea++;
 				}
 			} catch (Exception e) {
 				Logger.log(e);
 			}
-			UI.notifica("");
 			UI.impostaAzioni(Comando.PERGAMENA);
 			stato = StatoDaAlchimista.ENTRATO;
 			return Stato.IN_LOCAZIONE;
@@ -121,7 +122,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 					UI.rinfresca();
 					return Stato.IN_LOCAZIONE;
 				} else {
-					UI.notifica("'Non hai abbastanza monete per pagare i miei servigi.'" + DICE);
+					BusEventi.pubblica(new EventoMessaggio("“Non hai abbastanza monete per pagare i miei servigi.\"" + DICE));
 					imposta();
 					return Stato.FINE_LOCAZIONE;
 				}
@@ -137,7 +138,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 					UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
 					UI.rinfresca();
                 } else {
-					UI.notifica("'Non avete abbastanza monete per pagare i miei servigi.'" + DICE);
+					BusEventi.pubblica(new EventoMessaggio("“Non avete abbastanza monete per pagare i miei servigi.\"" + DICE));
 					imposta();
                 }
                 return Stato.IN_LOCAZIONE;
@@ -183,7 +184,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 				return Stato.IN_LOCAZIONE;
 
 			} else if (azione == Comando.NO_INCANTESIMO) {
-				UI.notifica(ARRIVEDERCI + DICE);
+				BusEventi.pubblica(new EventoMessaggio(ARRIVEDERCI + DICE));
 				return Stato.FINE_LOCAZIONE;
 
 			} else {
@@ -193,15 +194,15 @@ public class Alchimista extends LocazioneBase implements Locazione {
 
 		case INCANTESIMI:
 			if (azione == Comando.NO_INCANTESIMO) {
-				UI.notifica(ARRIVEDERCI + DICE);
+				BusEventi.pubblica(new EventoMessaggio(DICE));
 				return Stato.FINE_LOCAZIONE;
 			} else {
 				if (azione != null) {
 					ClasseIncantesimo classe = ClasseIncantesimo.ofComando(azione);
 					int costo = classe.getCostoAcquisto();
-					if (gruppo.getMonete() < costo)
-						UI.notifica("'Questo incantesimo costa troppo per le tue tasche.'" + DICE);
-					else {
+					if (gruppo.getMonete() < costo) {
+						BusEventi.pubblica(new EventoMessaggio("“Questo incantesimo costa troppo per le tue tasche.\"" + DICE));
+					} else {
 						gruppo.subMonete(costo);
 						gruppo.addIncantesimi(classe, 1);
 						UI.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI);
@@ -219,7 +220,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 	private void daiIlBenvenuto() {
 		StringBuilder sb = new StringBuilder();
 		int numeroPersonaggiVivi = gruppo.getNumeroPersonaggiVivi();
-		sb.append("'Benvenut");
+		sb.append("“Benvenut");
 		if (numeroPersonaggiVivi == 1) {
 			sb.append(gruppo.getCapo().getLetteraFinaleAttributo());
 		} else {
@@ -242,9 +243,8 @@ public class Alchimista extends LocazioneBase implements Locazione {
 						.append(costoTotaleAumentoMagiaGruppo);
 			}
 		}
-		sb.append(". Come posso aiutare?");
-		sb.append("'").append(CHIEDE);
-		UI.notifica(sb.toString());
+		sb.append(". Come posso aiutare?\"").append(CHIEDE);
+		BusEventi.pubblica(new EventoParagrafo(sb.toString()));
 	}
 
 	private void imposta() {

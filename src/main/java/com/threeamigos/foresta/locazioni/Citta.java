@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoParagrafo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
@@ -52,9 +54,8 @@ public abstract class Citta extends LocazioneUnica {
 	
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-        String sb = g.chiMaiuscolo() + " arriva al" + getNome() +
-                ". Qui è possibile cercare una locanda, il negozio di un alchimista o fare un salto dall'armaiolo prima di andare via.";
-		UI.notifica(sb);
+        BusEventi.pubblica(new EventoParagrafo(g.chiMaiuscolo() + " arriva al" + getNome() +
+                ". Qui è possibile cercare una locanda, il negozio di un alchimista o fare un salto dall'armaiolo prima di andare via."));
 		if (g.getPreziosi() > 0) {
 			g.vendePreziosi();
 			UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);

@@ -417,16 +417,16 @@ public abstract class LocazioneBase implements Locazione {
 			}
 			if (gruppo.getMonete() >= gruppo.getNumeroPersonaggi() * 2 && Dado.tira(10) > 3) {
 				gruppo.subMonete(gruppo.getNumeroPersonaggi() * 2);
-				UI.notifica(gruppo.chiMaiuscolo() + " ha ottenuto un passaggio sicuro.");
+				BusEventi.pubblica(new EventoMessaggio(gruppo.chiMaiuscolo() + " ha ottenuto un passaggio sicuro."));
 				setOggetto(null);
 
 				offerta = gruppoAvversario.getCapo().getOfferta(Comando.CORRUZIONE);
 				if (offerta != null && offerta.isFattibile(gruppo, gruppoAvversario)) {
-					UI.notifica(offerta.getDescrizione(gruppo, gruppoAvversario));
+					BusEventi.pubblica(new EventoMessaggio(offerta.getDescrizione(gruppo, gruppoAvversario)));
 					if (offerta.isGratuita(gruppo, gruppoAvversario)) {
 						offerta.accetta(gruppo, gruppoAvversario);
 					} else {
-						UI.notifica("Accetta?");
+						BusEventi.pubblica(new EventoMessaggio("Accetta?"));
 						ComandiPossibili.set(Comando.SI, Comando.NO);
 						statoLocazione = StatoLocazione.ACCETTA_OFFERTA;
 						return Stato.IN_LOCAZIONE;
@@ -440,9 +440,8 @@ public abstract class LocazioneBase implements Locazione {
 				return Stato.FINE_LOCAZIONE;
 			} else {
 				Personaggio p = gruppo.getPersonaggio(azione);
-                String sb = "Il tentativo di corruzione " + p.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
-                        " non ha avuto successo.";
-				UI.notifica(sb);
+				BusEventi.pubblica(new EventoMessaggio("Il tentativo di corruzione " + p.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
+						" non ha avuto successo."));
 				opzioneCorruzioneDisponibile = false;
 				opzioneAmiciziaDisponibile = false;
 				statoLocazione = StatoLocazione.IN_LOCAZIONE;
@@ -460,18 +459,17 @@ public abstract class LocazioneBase implements Locazione {
 			Logger.log("Carisma personaggio: " + personaggio.getCarisma() + "; tiro del dado: " + tiroDelDado);
 			if (personaggio.getCarisma() > tiroDelDado) {
 				personaggio.addCarisma(1);
-                String sb = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-                        " riesce a stringere amicizia.";
 				haStrettoAmicizia = true;
-				UI.notifica(sb);
+				BusEventi.pubblica(new EventoMessaggio(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+						Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " riesce a stringere amicizia."));
 
 				offerta = gruppoAvversario.getCapo().getOfferta(Comando.AMICIZIA);
 				if (offerta != null && offerta.isFattibile(gruppo, gruppoAvversario)) {
-					UI.notifica(offerta.getDescrizione(gruppo, gruppoAvversario));
+					BusEventi.pubblica(new EventoMessaggio(offerta.getDescrizione(gruppo, gruppoAvversario)));
 					if (offerta.isGratuita(gruppo, gruppoAvversario)) {
 						offerta.accetta(gruppo, gruppoAvversario);
 					} else {
-						UI.notifica("Accetta?");
+						BusEventi.pubblica(new EventoMessaggio("Accetta?"));
 						ComandiPossibili.set(Comando.SI, Comando.NO);
 						statoLocazione = StatoLocazione.ACCETTA_OFFERTA;
 						return Stato.IN_LOCAZIONE;
@@ -530,10 +528,10 @@ public abstract class LocazioneBase implements Locazione {
 
 				String s = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 				if (descrizione != null) {
-					UI.notifica("Non solo " + s + " non riesce a stringere amicizia, ma in una breve colluttazione " + descrizione);
+					BusEventi.pubblica(new EventoMessaggio("Non solo " + s + " non riesce a stringere amicizia, ma in una breve colluttazione " + descrizione));
 					UI.rinfresca();
 				} else {
-					UI.notifica(s + " non riesce a stringere amicizia.");
+					BusEventi.pubblica(new EventoMessaggio(s + " non riesce a stringere amicizia."));
 				}
 				opzioneAmiciziaDisponibile = false;
 				statoLocazione = StatoLocazione.IN_LOCAZIONE;
@@ -773,7 +771,8 @@ public abstract class LocazioneBase implements Locazione {
 		int numeroAvversari = gruppoAvversario.getNumeroPersonaggi();
 		if (numeroAvversari == 0) {
 			if (oggettoCorrente != null) {
-				UI.notifica("Essendo il tesoro incustodito, " + gruppo.chi() + " se ne impossessa.");
+				BusEventi.pubblica(new EventoMessaggio("Essendo il tesoro incustodito, " +
+						gruppo.chi() + " se ne impossessa."));
 			}
 			if (tipoLocazione != TipoLocazione.MISSIONE_SECONDARIA) {
 				gruppo.riposa(getTipoRiposo());
@@ -891,7 +890,7 @@ public abstract class LocazioneBase implements Locazione {
 				bersaglio = gruppoAvversario.getPersonaggioVivo();
                 String sb = bersaglio.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
                         " si disimpegna e attacca!";
-				UI.notifica(sb);
+				BusEventi.pubblica(new EventoMessaggio(sb));
 				bersaglio.attacca(gruppo);
 			}
 				if (!gruppo.getCapo().isVivo()) {
@@ -1017,7 +1016,7 @@ public abstract class LocazioneBase implements Locazione {
 			case AIUTO:
 				Logger.log("Azione.AIUTO");
 				for (Personaggio personaggio : gruppo.getPersonaggi()) {
-					UI.notifica(personaggio.getDescrizione());
+					BusEventi.pubblica(new EventoMessaggio(personaggio.getDescrizione()));
 				}
 				int numeroAvversari = gruppoAvversario.getNumeroPersonaggiVivi();
 				Personaggio p = gruppoAvversario.getCapo();
@@ -1028,7 +1027,7 @@ public abstract class LocazioneBase implements Locazione {
 					sb.append(Misc.getCardinaleM(numeroAvversari)).append(' ').append(p.getNomePlurale());
 				}
 				sb.append('.');
-				UI.notifica(sb.toString());
+				BusEventi.pubblica(new EventoMessaggio(sb.toString()));
 				UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 				break;
 
@@ -1041,13 +1040,13 @@ public abstract class LocazioneBase implements Locazione {
 
 	private void chiediConfermaPerLaFuga() {
 		if (gruppo.getNumeroPersonaggiVivi() > 1) {
-			UI.notifica("Il gruppo è sicuro di voler fuggire?");
+			BusEventi.pubblica(new EventoMessaggio("Il gruppo è sicuro di voler fuggire?"));
 		} else {
 			Personaggio capo = gruppo.getCapo();
 			String sb = capo.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + " è sicur" +
 					capo.getLetteraFinaleAttributo() +
 					" di voler fuggire?";
-			UI.notifica(sb);
+			BusEventi.pubblica(new EventoMessaggio(sb));
 		}
 	}
 
@@ -1059,7 +1058,7 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		combattente = gruppo.getPersonaggio(azione);
 		String nome = combattente.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
-		UI.notifica(nome + " si appresta al combattimento.");
+		BusEventi.pubblica(new EventoMessaggio(nome + " si appresta al combattimento."));
 		UI.infoCombattimento(true, combattente, gruppoAvversario.getPersonaggioVivo());
 		opzioneAmiciziaDisponibile = false;
 		opzioneCorruzioneDisponibile = false;

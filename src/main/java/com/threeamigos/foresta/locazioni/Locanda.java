@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoMessaggio;
+import com.threeamigos.foresta.eventi.EventoParagrafo;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
@@ -97,7 +100,7 @@ public class Locanda extends LocazioneBase {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		UI.notifica(descrizioneLocanda(g));
+		BusEventi.pubblica(new EventoMessaggio(descrizioneLocanda(g)));
 	}
 
 	/**
@@ -129,21 +132,20 @@ public class Locanda extends LocazioneBase {
 		switch (stato) {
 		case SULLA_PORTA:
 			if (gruppo.getMonete() < Costanti.COSTO_PASTO) {
-				UI.notifica("L'oste però non è disposto a fare credito...");
+				BusEventi.pubblica(new EventoMessaggio("L'oste però non è disposto a fare credito..."));
 				return Stato.FINE_LOCAZIONE;
 			}
-			UI.notifica("");
-			UI.notifica("Un cantastorie sta raccontando una vecchia storia locale.");
+			BusEventi.pubblica(new EventoParagrafo("Un cantastorie sta raccontando una vecchia storia locale."));
 			try {
 				List<String> fiaba = ProduttoreDiTestiCasuale.fiaba();
 				int numeroLinea = 0;
 				for (String linea : fiaba) {
 					if (numeroLinea == 0) {
-						UI.notifica('“' + linea);
+						BusEventi.pubblica(new EventoMessaggio('“' + linea));
 					} else if (numeroLinea == fiaba.size() - 1) {
-						UI.notifica(linea + '"');
+						BusEventi.pubblica(new EventoMessaggio(linea + '"'));
 					} else {
-						UI.notifica(linea);
+						BusEventi.pubblica(new EventoMessaggio(linea));
 					}
 					numeroLinea++;
 				}
@@ -156,9 +158,8 @@ public class Locanda extends LocazioneBase {
 			return Stato.IN_LOCAZIONE;
 
 		case ENTRATO:
-			UI.notifica("");
 			if (gruppo.getMonete() < Costanti.COSTO_PASTO * gruppo.getNumeroPersonaggiVivi()) {
-				UI.notifica("Non avendo monete sufficienti per tutto il gruppo, una sola persona consuma un pasto in gran fretta. Chi lo fa?");
+				BusEventi.pubblica(new EventoMessaggio("Non avendo monete sufficienti per tutto il gruppo, una sola persona consuma un pasto in gran fretta. Chi lo fa?"));
 				UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 				UI.rinfresca();
 				stato = StatoInLocanda.CHI_MANGIA;
@@ -173,7 +174,7 @@ public class Locanda extends LocazioneBase {
 				}
 				return Stato.IN_LOCAZIONE;
 			} else {
-				UI.notifica("Viene servito un pasto caldo, che fa riacquistare rapidamente le forze.");
+				BusEventi.pubblica(new EventoMessaggio("Viene servito un pasto caldo, che fa riacquistare rapidamente le forze."));
 				int personaggiCheHannoMangiato = 0;
 				for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
 					personaggio.addSalute(Costanti.RECUPERO_SALUTE_DA_PASTO);
@@ -183,7 +184,7 @@ public class Locanda extends LocazioneBase {
 
 				if (evento == RICEVE_INFORMAZIONI) {
 					Informazioni info = new Informazioni();
-					UI.notifica(info.getDescrizione(gruppo, gng));
+					BusEventi.pubblica(new EventoParagrafo(info.getDescrizione(gruppo, gng)));
 				}
 
 				if (incontra(gruppo)) {
@@ -192,10 +193,10 @@ public class Locanda extends LocazioneBase {
 					return Stato.IN_LOCAZIONE;
 				} else {
 					if (gruppo.getMonete() < Costanti.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggi()) {
-						UI.notifica(NO_MONETE_PERNOTTAMENTO);
+						BusEventi.pubblica(new EventoMessaggio(NO_MONETE_PERNOTTAMENTO));
 						return Stato.FINE_LOCAZIONE;
 					} else {
-						UI.notifica(gruppo.chiMaiuscolo() + " desidera pernottare alla locanda?");
+						BusEventi.pubblica(new EventoMessaggio(gruppo.chiMaiuscolo() + " desidera pernottare alla locanda?"));
 						UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 						UI.rinfresca();
 						stato = StatoInLocanda.PERNOTTA;
@@ -212,7 +213,7 @@ public class Locanda extends LocazioneBase {
 			String nome = p.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
             String sb = nome + " si è rifocillat" + p.getLetteraFinaleAttributo() +
                     " in gran fretta, ed il gruppo lascia la locanda dietro pressione dell'oste.";
-			UI.notifica(sb);
+			BusEventi.pubblica(new EventoMessaggio(sb));
 			return Stato.FINE_LOCAZIONE;
 			
 		case PERSONAGGIO:
@@ -224,10 +225,10 @@ public class Locanda extends LocazioneBase {
 				accetta(gruppo, false);
 			}
 			if (gruppo.getMonete() < Costanti.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggiVivi()) {
-				UI.notifica(NO_MONETE_PERNOTTAMENTO);
+				BusEventi.pubblica(new EventoMessaggio(NO_MONETE_PERNOTTAMENTO));
 				return Stato.FINE_LOCAZIONE;
 			} else {
-				UI.notifica(gruppo.chiMaiuscolo() + " desidera pernottare alla locanda?");
+				BusEventi.pubblica(new EventoMessaggio(gruppo.chiMaiuscolo() + " desidera pernottare alla locanda?"));
 				UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 				UI.rinfresca();
 				stato = StatoInLocanda.PERNOTTA;
@@ -240,7 +241,7 @@ public class Locanda extends LocazioneBase {
 				gruppo.subMonete(Costanti.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggiVivi());
 				gruppo.pernotta(TipoRiposo.AL_COPERTO);
 			} else {
-				UI.notifica("L'oste chiede di lasciare la locanda al più presto.");
+				BusEventi.pubblica(new EventoMessaggio("L'oste chiede di lasciare la locanda al più presto."));
 			}
 			return Stato.FINE_LOCAZIONE;
 
@@ -257,7 +258,7 @@ public class Locanda extends LocazioneBase {
 		Personaggio capo = g.getCapo();
 		personaggioDisponibile = RegistroPersonaggi.getPersonaggioInLocazione(g.getCoordinate());
 		if (personaggioDisponibile != null) {
-            String sb = "'Ehi, " + capo.getNome() + "!', urla una voce. " +
+            String sb = "“Ehi, " + capo.getNome() + "!\", urla una voce. " +
                     Character.toUpperCase(capo.getPronome().charAt(0)) + capo.getPronome().substring(1) +
 					" si volta e vede " + personaggioDisponibile.getNomeProprio().orElseThrow(Personaggio.PERSONAGGIO_SENZA_NOME) +
                     ", " + personaggioDisponibile.getAIS() + personaggioDisponibile.getNomeSingolare() +
@@ -265,8 +266,7 @@ public class Locanda extends LocazioneBase {
                     ' ' + capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
                     (personaggioDisponibile.getSesso() == Personaggio.Sesso.MASCHIO ? " lo" : " la") +
                     " vuole con se?";
-			UI.notifica("");
-			UI.notifica(sb);
+			BusEventi.pubblica(new EventoParagrafo(sb));
 			UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 			UI.rinfresca();
 			return true;
@@ -288,10 +288,10 @@ public class Locanda extends LocazioneBase {
 			personaggioDisponibile = null;
 			UI.rinfresca();
 		} else if (personaggioDisponibile != null) {
-            String notifica = "'Pazienza. Sarà per un'altra volta.' dice " +
+            String notifica = "“Pazienza. Sarà per un'altra volta.\" dice " +
                     personaggioDisponibile.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
                     ", allontanandosi.";
-			UI.notifica(notifica);
+			BusEventi.pubblica(new EventoMessaggio(notifica));
 		}
 	}
 

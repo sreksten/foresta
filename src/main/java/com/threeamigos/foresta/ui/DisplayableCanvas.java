@@ -628,6 +628,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	public void notificaFumetto(String testo, int x, int y, int pointToX, int pointToY) {
+		if (fumettoAttivo != null && testo.equals(fumettoAttivo.getTesto())) {
+			fumettoAttivo.resetTicks();
+			return;
+		}
 		codaFumetti.add(new SpriteFumetto(testo, larghezzaSchermo / 5, x, y, DoomdarkFontMedium.getInstance(), DoomdarkColorModel.Color.BLACK, pointToX, pointToY));
 	}
 

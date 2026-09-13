@@ -18,6 +18,7 @@ public class SpriteFumetto implements SpriteInterface {
 
     boolean active;
     private final Image image;
+    private final String testo;
     private final int x;
     private final int y;
     private final int width;
@@ -56,6 +57,7 @@ public class SpriteFumetto implements SpriteInterface {
         graphics.dispose();
 
         this.image = resultingImage;
+        this.testo = testo;
         this.x = x;
         this.y = y;
         this.width = maxLarghezza;
@@ -76,6 +78,7 @@ public class SpriteFumetto implements SpriteInterface {
         graphics.dispose();
 
         this.image = resultingImage;
+        this.testo = null;
         this.x = x;
         this.y = y;
         this.pointToX = pointToX;
@@ -191,5 +194,13 @@ public class SpriteFumetto implements SpriteInterface {
 
     public boolean isActive() {
         return active;
+    }
+
+    String getTesto() {
+        return testo;
+    }
+
+    void resetTicks() {
+        ticks = 0;
     }
 }

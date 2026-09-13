@@ -1,11 +1,12 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoMessaggio;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
-import com.threeamigos.foresta.ui.UI;
 
 public class Radura extends LocazioneBase {
 
@@ -45,7 +46,7 @@ public class Radura extends LocazioneBase {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		UI.notifica("Qui, in una radura, " + descrizioneMostriEOggetti(g, gng));
+		BusEventi.pubblica(new EventoMessaggio("Qui, in una radura, " + descrizioneMostriEOggetti(g, gng)));
 	}
 
 	public TipoRiposo getTipoRiposo() {

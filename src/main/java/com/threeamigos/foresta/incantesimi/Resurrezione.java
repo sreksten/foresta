@@ -1,9 +1,10 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoMessaggio;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.ui.UI;
 
 public class Resurrezione implements Incantesimo {
 
@@ -29,20 +30,20 @@ public class Resurrezione implements Incantesimo {
 		String nome = personaggioBersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 
-		UI.notifica(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+		BusEventi.pubblica(new EventoMessaggio(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " formula un " + getClasse().getNomeSingolare() +
-				" su " + nome + ".");
+				" su " + nome + "."));
 
 		if (personaggioBersaglio.isVivo()) {
             String notifica = nome + " era già viv" + personaggioBersaglio.getLetteraFinaleAttributo() +
                     ", per cui la sua salute è stata completamente reintegrata.";
-			UI.notifica(notifica);
+			BusEventi.pubblica(new EventoMessaggio(notifica));
 			personaggioBersaglio.addSalute(personaggioBersaglio.getSaluteMassima());
 			personaggioBersaglio.subStanchezza(Costanti.MAX_STANCHEZZA);
 		} else {
             String notifica = nome + " è risort" + personaggioBersaglio.getLetteraFinaleAttributo() +
                     " dalle proprie ceneri.";
-			UI.notifica(notifica);
+			BusEventi.pubblica(new EventoMessaggio(notifica));
 			personaggioBersaglio.resuscita();
 		}
 	}

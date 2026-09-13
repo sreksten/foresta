@@ -216,11 +216,6 @@ public class ForestaUI implements InterfacciaUtente {
 	}
 
 	@Override
-	public void notifica(String messaggio) {
-		displayableCanvas.notifica(messaggio);
-	}
-
-	@Override
 	public void primoPiano(InterfacciaUtente.Finestra finestra) {
 		displayableCanvas.primoPiano(finestra);
 	}

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoMessaggio;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
@@ -71,18 +73,18 @@ public class Anello extends OggettoBase implements Oggetto {
 				else
 					sb.append("il carisma");
 				sb.append("!");
-				UI.notifica(sb.toString());
+				BusEventi.pubblica(new EventoMessaggio(sb.toString()));
 				notificato = true;
 			}
 			if (gruppo.getNumeroPersonaggiVivi() > 1 && azione == null) {
-				UI.notifica("Chi lo vuole indossare?");
+				BusEventi.pubblica(new EventoMessaggio("Chi lo vuole indossare?"));
 				return false;
 			} else {
 				if (azione == null || azione == Comando.TIMER) {
 					return false;
 				}
 				Personaggio p = gruppo.getPersonaggio(azione);
-				UI.notifica(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " indossa l'anello.");
+				BusEventi.pubblica(new EventoMessaggio(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " indossa l'anello."));
 
 				String nome;
 				ModificatoreAttributo modificatore;

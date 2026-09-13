@@ -1,10 +1,11 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoParagrafo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.Lich;
-import com.threeamigos.foresta.ui.UI;
 
 public class CastelloLich extends LocazioneUnica {
 
@@ -26,7 +27,7 @@ public class CastelloLich extends LocazioneUnica {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		UI.notifica(g.chiMaiuscolo() + " giunge al Castello dell'Ombra. Da una nuvola di fumo nero ecco apparire il più spaventoso tra i non morti: il Lich!");
+		BusEventi.pubblica(new EventoParagrafo(g.chiMaiuscolo() + " giunge al Castello dell'Ombra. Da una nuvola di fumo nero ecco apparire il più spaventoso tra i non morti: il Lich!"));
 	}
 	
 	@Override
