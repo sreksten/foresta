@@ -206,7 +206,7 @@ public class ComponenteScorrevole<T> {
             }
 
             // La descrizione è indentata un livello in più
-            int larghezzaMassimaDescrizione = larghezzaMassimaChiave - indentazione;
+            int larghezzaMassimaDescrizione = larghezzaMassimaChiave - larghezzaIndentazione;
 
             // Se abbiamo anche un valore la larghezza massima per la chiave si riduce, ma per la descrizione rimane la stessa
             if (valore != null) {
