@@ -174,7 +174,7 @@ public class Locanda extends LocazioneBase {
 				}
 				return Stato.IN_LOCAZIONE;
 			} else {
-				BusEventi.pubblica(new EventoMessaggio("Viene servito un pasto caldo, che fa riacquistare rapidamente le forze."));
+				BusEventi.pubblica(new EventoParagrafo("Viene servito un pasto caldo, che fa riacquistare rapidamente le forze."));
 				int personaggiCheHannoMangiato = 0;
 				for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
 					personaggio.addSalute(Costanti.RECUPERO_SALUTE_DA_PASTO);

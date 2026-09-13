@@ -30,6 +30,7 @@ public class ImageCache {
 	static BufferedImage cornicePiccola;
 	static BufferedImage corniceInventario;
 	static BufferedImage armaiolo;
+	static BufferedImage alchimista;
 	static BufferedImage ombraDelDrago;
 	static BufferedImage trionfo;
 	static BufferedImage separatore;
@@ -97,6 +98,7 @@ public class ImageCache {
 		cornicePiccola = BufferedImageBuilder.buildBufferedImage("fondi/CornicePiccola.gif");
 		corniceInventario = BufferedImageBuilder.buildBufferedImage("fondi/CorniceInventario.gif");
 		armaiolo = BufferedImageBuilder.buildBufferedImage("personaggi/Armaiolo.gif");
+		alchimista = BufferedImageBuilder.buildBufferedImage("personaggi/Alchimista.gif");
 		ombraDelDrago = BufferedImageBuilder.buildBufferedImage("fondi/OmbraDelDrago.gif");
 		trionfo = BufferedImageBuilder.buildBufferedImage("fondi/Trionfo.gif");
 		separatore = BufferedImageBuilder.buildBufferedImage("fondi/Separatore.gif");

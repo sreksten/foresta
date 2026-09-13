@@ -171,6 +171,11 @@ public class ForestaUI implements InterfacciaUtente {
 	}
 
 	@Override
+	public void alchimista() {
+		displayableCanvas.alchimista();
+	}
+
+	@Override
 	public void centraMappa() {
 		displayableCanvas.centraMappa();
 	}

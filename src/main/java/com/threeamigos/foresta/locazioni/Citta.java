@@ -94,15 +94,9 @@ public abstract class Citta extends LocazioneUnica {
 				}
 
 			} else if (azione == Comando.ALCHIMISTA) {
-				nuovoAlchimista();
-				alchimista.descrivi(g, gng);
-				statoRitorno = alchimista.impostaAzioni(g, gng, null);
-				if (statoRitorno == Stato.IN_LOCAZIONE) {
-					stato = StatoInCitta.DA_ALCHIMISTA;
-				} else {
-					stato = StatoInCitta.IN_PIAZZA;
-					impostaAzioniCitta();
-				}
+				ComandiPossibili.set(Comando.ANNULLA);
+				UI.alchimista();
+				stato = StatoInCitta.DA_ALCHIMISTA;
 
 			} else if (azione == Comando.ARMAIOLO) {
 				ScambiatoreArtefatti scambiatoreArtefatti = RegistroArtefatti.getScambiatorePerLocazione(g.getCoordinate());
@@ -123,8 +117,9 @@ public abstract class Citta extends LocazioneUnica {
 			}
 
 		} else if (stato == StatoInCitta.DA_ALCHIMISTA) {
-			statoRitorno = alchimista.impostaAzioni(g, gng, azione);
-			if (statoRitorno == Stato.FINE_LOCAZIONE) {
+			if (azione == Comando.ANNULLA) {
+				UI.mostraSchermataGioco();
+				UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
 				impostaAzioniCitta();
 				stato = StatoInCitta.IN_PIAZZA;
 			}

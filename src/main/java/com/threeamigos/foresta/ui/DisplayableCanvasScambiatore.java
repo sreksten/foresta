@@ -1,8 +1,5 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoFumetto;
-import com.threeamigos.foresta.eventi.EventoRifiutoAcquistoArtefatto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
 import java.awt.*;
@@ -192,10 +189,6 @@ abstract class DisplayableCanvasScambiatore implements Finestra {
      * Il metodo che disegna la colonna centrale con il personaggio adatto (Personaggio, armaiolo, alchimista)
      */
     abstract void disegnaColonnaPersonaggio(Graphics2D graphics);
-
-    void onEventoRifiutoAcquisto(EventoRifiutoAcquistoArtefatto evento) {
-        BusEventi.pubblica(new EventoFumetto("Non hai abbastanza monete per comprare questo oggetto.", getCoordinateFumetto()));
-    }
 
     @Override
     public void processaMovimento(int x, int y) {

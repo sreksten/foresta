@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoRichiestaAcquistoConsumabile;
+import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -21,6 +20,16 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
 
     public DisplayableCanvasScambiatoreConsumabili(int width, int height) {
         super(width, height);
+        BusEventi.iscriviti(EventoApprovazioneAcquistoConsumabile.class, this::gestisciEventoApprovazioneAcquistoConsumabile);
+        BusEventi.iscriviti(EventoRifiutoAcquistoConsumabile.class, this::gestisciEventoRifiutoAcquistoConsumabile);
+    }
+
+    private void gestisciEventoApprovazioneAcquistoConsumabile(EventoApprovazioneAcquistoConsumabile eventoApprovazioneAcquistoConsumabile) {
+        BusEventi.pubblica(new EventoFumetto("Grazie per l'acquisto!", getCoordinateFumetto()));
+    }
+
+    private void gestisciEventoRifiutoAcquistoConsumabile(EventoRifiutoAcquistoConsumabile eventoRifiutoAcquistoConsumabile) {
+        BusEventi.pubblica(new EventoFumetto("Non hai abbastanza monete per comprare questo oggetto.", getCoordinateFumetto()));
     }
 
     @Override
@@ -40,7 +49,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
         // Immagine personaggio
-        BufferedImage immaginePersonaggio = ImageCache.armaiolo;
+        BufferedImage immaginePersonaggio = ImageCache.alchimista;
 
         // Per tenere i personaggi sullo stesso livello (se si passa da un personaggio all'altro)
         // ed evitare sfarfallamenti, scegliamo il ladro come personaggio "base" per calcolare l'altezza a cui disegnare.
@@ -76,7 +85,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
     private int disegnaElencoSinistro(Graphics2D graphics, int x, int offset) {
 
         List<Consumabile> consumabili = getElencoGruppo();
-        Consumabile evidenziato = trovaConsumabile(consumabili, x, offset, mouseX, mouseY);
+        Consumabile evidenziato = trovaConsumabile(consumabili, x, offset, mouseX, mouseY, false);
         ComponenteScorrevole<Consumabile> componenteScorrevole = costruisciComponenteScorrevoleConsumabili(consumabili, evidenziato, false);
 
         int nuovoOffset = componenteScorrevole.limitaOffset(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, offset);
@@ -89,7 +98,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
     private int disegnaElencoDestro(Graphics2D graphics, int x, int offset) {
 
         List<Consumabile> consumabili = getElencoVenditore();
-        Consumabile evidenziato = trovaConsumabile(consumabili, x, offset, mouseX, mouseY);
+        Consumabile evidenziato = trovaConsumabile(consumabili, x, offset, mouseX, mouseY, true);
         ComponenteScorrevole<Consumabile> componenteScorrevole = costruisciComponenteScorrevoleConsumabili(consumabili, evidenziato, true);
 
         int nuovoOffset = componenteScorrevole.limitaOffset(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, offset);
@@ -104,14 +113,14 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
      * finestra, oppure null se il punto non cade sull'elenco o non corrisponde al titolo
      * di un consumabile.
      */
-    private Consumabile trovaConsumabile(Collection<Consumabile> consumabili, int boxX, int offset, int x, int y) {
+    private Consumabile trovaConsumabile(Collection<Consumabile> consumabili, int boxX, int offset, int x, int y, boolean mostraCosto) {
         int xInterno = x - (boxX + SPACING);
         int yInterno = y - (DIMENSIONE_BORDO_INTERNO + 2 * SPACING);
         if (xInterno < 0 || xInterno >= LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO
                 || yInterno < 0 || yInterno >= ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO) {
             return null;
         }
-        return costruisciComponenteScorrevoleConsumabili(consumabili, null, false).riferimentoTitoloAllaQuota(yInterno + offset);
+        return costruisciComponenteScorrevoleConsumabili(consumabili, null, mostraCosto).riferimentoTitoloAllaQuota(yInterno + offset);
     }
 
     /**
@@ -124,7 +133,21 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         ComponenteScorrevole<Consumabile> componenteScorrevole = new ComponenteScorrevole<>(
                 LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, 10, 2);
 
+        TipoConsumabile tipoPrecedente = null;
+
         for (Consumabile consumabile : consumabili) {
+
+            if (tipoPrecedente != consumabile.tipo) {
+                tipoPrecedente = consumabile.tipo;
+                Image separatore = getSeparatoreConsumabile(tipoPrecedente);
+                if (separatore != null) {
+                    componenteScorrevole.creaNodo(
+                            null, null, null,
+                            null, null, null,
+                            null, null, null,
+                            getSeparatoreConsumabile(tipoPrecedente), null);
+                }
+            }
 
             DoomdarkColorModel.Color colore = consumabile == evidenziato
                     ? DoomdarkColorModel.Color.WHITE
@@ -137,7 +160,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
                     mostraCosto ? DoomdarkColorModel.Color.YELLOW : DoomdarkColorModel.Color.LIGHT_GRAY,
                     consumabile.descrizione, fontSmall, colore,
                     consumabile.icona, consumabile);
-            nodo.setFigliVisibili(true);
+            nodo.setFigliVisibili(statoDi(consumabile).isFigliVisibili());
         }
 
         return componenteScorrevole;
@@ -148,14 +171,14 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         if (tasto != Tasto.SINISTRO) {
             return;
         }
-        Consumabile consumabile = trovaConsumabile(getElencoGruppo(), xMinimaZonaSinistra, offsetYZonaSinistra, x, y);
+        Consumabile consumabile = trovaConsumabile(getElencoGruppo(), xMinimaZonaSinistra, offsetYZonaSinistra, x, y, false);
         if (consumabile == null) {
-            consumabile = trovaConsumabile(getElencoGruppo(), xMinimaZonaDestra, offsetYZonaDestra, x, y);
+            consumabile = trovaConsumabile(getElencoVenditore(), xMinimaZonaDestra, offsetYZonaDestra, x, y, true);
         }
         if (consumabile == null) {
             return;
         }
-        StatoAttributo statoAttributo = statoDi(consumabile.tipo);
+        StatoAttributo statoAttributo = statoDi(consumabile);
         if (statoAttributo.isFigliVisibili()) {
             statoAttributo.nascondiFigli();
         } else {
@@ -166,7 +189,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
     @Override
     public void processaDoppioClick(int x, int y, Tasto tasto) {
         Collection<Consumabile> disponibili = getElencoVenditore();
-        Consumabile consumabile = trovaConsumabile(disponibili, xMinimaZonaDestra, offsetYZonaDestra, x, y);
+        Consumabile consumabile = trovaConsumabile(disponibili, xMinimaZonaDestra, offsetYZonaDestra, x, y, true);
         if (consumabile != null) {
             BusEventi.pubblica(new EventoRichiestaAcquistoConsumabile(consumabile.tipo, consumabile.classeIncantesimo,
                     consumabile.personaggio, consumabile.costo));
@@ -217,7 +240,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
                         null,
                         personaggio,
                         Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO,
-                        ClasseIcona.ofClasse(personaggio.getClasse()).getIcona()
+                        ClassePersonaggioImmagine.getIcona(personaggio.getClasse())
                 );
                 elencoVenditore.add(consumabile);
             }
@@ -237,7 +260,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
                     null,
                     null,
                     (int)costo,
-                    ClasseIcona.GRUPPO.getIcona()
+                    ImageCache.spriteGruppo
             );
             elencoVenditore.add(consumabile);
         }
@@ -248,7 +271,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
                 null,
                 null,
                 Costanti.COSTO_MAPPA_DELLA_ZONA,
-                ClasseIcona.MAPPA.getIcona()
+                ImageCache.spriteMappa
         ));
         elencoVenditore.add(new Consumabile(TipoConsumabile.MAPPA_COMPLETA_FORESTA,
                 "Mappa della Foresta",
@@ -257,7 +280,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
                 null,
                 null,
                 Costanti.COSTO_MAPPA_DELLA_FORESTA,
-                ClasseIcona.MAPPA.getIcona()
+                ImageCache.spriteMappa
         ));
         return elencoVenditore;
     }
@@ -283,7 +306,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
                 null,
                 null,
                 Costanti.COSTO_POZIONE_SALUTE,
-                ClasseIcona.POZIONE_SALUTE.getIcona());
+                ImageCache.spritePozioneSalute);
     }
 
     private Consumabile costruisciPozioneSaluteGrande(int quantita) {
@@ -294,7 +317,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
                 null,
                 null,
                 Costanti.COSTO_POZIONE_SALUTE_GRANDE,
-                ClasseIcona.POZIONE_SALUTE_GRANDE.getIcona());
+                ImageCache.spritePozioneSaluteGrande);
     }
 
     private Consumabile costruisciPozioneMagia(int quantita) {
@@ -305,7 +328,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
                 null,
                 null,
                 Costanti.COSTO_POZIONE_MAGIA,
-                ClasseIcona.POZIONE_MAGIA.getIcona());
+                ImageCache.spritePozioneMagia);
     }
 
     private Consumabile costruisciPozioneMagiaGrande(int quantita) {
@@ -316,7 +339,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
                 null,
                 null,
                 Costanti.COSTO_POZIONE_MAGIA_GRANDE,
-                ClasseIcona.POZIONE_MAGIA_GRANDE.getIcona());
+                ImageCache.spritePozioneMagiaGrande);
     }
 
     private static class Consumabile {
@@ -344,10 +367,20 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         }
     }
 
+    private Image getSeparatoreConsumabile(TipoConsumabile tipoConsumabile) {
+        switch (tipoConsumabile) {
+            case INCANTESIMO:
+                return ImageCache.separatoreIncantesimi;
+            case POZIONE_SALUTE:
+                return ImageCache.separatorePozioni;
+            default:
+                return null;
+        }
+    }
     // --- CLASSE DI APPOGGIO per ricordare se gli attributi vanno tenuti aperti o chiusi
     /**
      * Le caratteristiche di un Consumabile, a differenza degli artefatti, non hanno un
-     * modello dati proprio: questa classe di appoggio associa a ogni TipoConsumabile la
+     * modello dati proprio: questa classe di appoggio associa a ogni voce la
      * visibilità della sua descrizione, replicando l'API isFigliVisibili/mostraFigli/
      * nascondiFigli già usata da Artefatto.
      */
@@ -368,10 +401,25 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         }
     }
 
-    private final Map<TipoConsumabile, StatoAttributo> statiAttributi = new HashMap<>();
+    private final Map<Object, StatoAttributo> statiAttributi = new HashMap<>();
 
-    private StatoAttributo statoDi(TipoConsumabile tipoAttributo) {
-        return statiAttributi.computeIfAbsent(tipoAttributo, t -> new StatoAttributo());
+    /**
+     * TipoConsumabile da solo non basta come chiave: INCANTESIMO è lo stesso valore per
+     * tutte le ClasseIncantesimo, e AUMENTO_MAGIA_SINGOLO è lo stesso per ogni personaggio.
+     * Usiamo quindi, quando presente, il tratto che distingue le singole voci dello stesso tipo.
+     */
+    private Object chiaveVisibilita(Consumabile consumabile) {
+        if (consumabile.classeIncantesimo != null) {
+            return consumabile.classeIncantesimo;
+        }
+        if (consumabile.personaggio != null) {
+            return consumabile.personaggio;
+        }
+        return consumabile.tipo;
+    }
+
+    private StatoAttributo statoDi(Consumabile consumabile) {
+        return statiAttributi.computeIfAbsent(chiaveVisibilita(consumabile), k -> new StatoAttributo());
     }
     // --- FINE classe di appoggio
 

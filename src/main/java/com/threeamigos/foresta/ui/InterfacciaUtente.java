@@ -83,6 +83,11 @@ public interface InterfacciaUtente {
 	void impostaAutomaArmaiolo(AutomaAcquistiArtefatti automaScambiatoreArtefatti);
 
 	/**
+	 * Mostra la finestra di scambio consumabili con l'alchimista
+	 */
+	void alchimista();
+
+	/**
 	 * Richiama la schermata di selezione salvataggio
 	 */
     void selezioneSlotSalvataggioDaSalvare();

@@ -100,6 +100,13 @@ public class UI {
 	}
 
 	/**
+	 * Va nella finestra di scambio consumabili con l'alchimista
+	 */
+	public static void alchimista() {
+		interfacciaUtente.alchimista();
+	}
+
+	/**
 	 * Centra la mappa dopo un eventuale spostamento se non ci stava tutta a schermo
 	 */
 	public static void centraMappa() {

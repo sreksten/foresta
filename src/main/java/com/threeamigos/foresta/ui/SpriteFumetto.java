@@ -59,7 +59,8 @@ public class SpriteFumetto implements SpriteInterface {
         this.image = resultingImage;
         this.testo = testo;
         this.x = x;
-        this.y = y;
+        // Il fumetto cresce verso l'alto partendo da y: non deve mai sforare oltre il margine superiore
+        this.y = Math.max(y, height + ImageCache.SPACING);
         this.width = maxLarghezza;
         this.pointToX = pointToX;
         this.pointToY = pointToY;
@@ -80,7 +81,8 @@ public class SpriteFumetto implements SpriteInterface {
         this.image = resultingImage;
         this.testo = null;
         this.x = x;
-        this.y = y;
+        // Il fumetto cresce verso l'alto partendo da y: non deve mai sforare oltre il margine superiore
+        this.y = Math.max(y, height + ImageCache.SPACING);
         this.pointToX = pointToX;
         this.pointToY = pointToY;
         ticks = 0;

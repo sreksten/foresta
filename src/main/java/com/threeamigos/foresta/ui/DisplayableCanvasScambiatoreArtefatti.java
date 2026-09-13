@@ -1,5 +1,9 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoApprovazioneAcquistoArtefatto;
+import com.threeamigos.foresta.eventi.EventoFumetto;
+import com.threeamigos.foresta.eventi.EventoRifiutoAcquistoArtefatto;
 import com.threeamigos.foresta.motore.AutomaScambiatoreArtefatti;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
@@ -25,6 +29,16 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
 
     DisplayableCanvasScambiatoreArtefatti(int width, int height) {
         super(width, height);
+        BusEventi.iscriviti(EventoApprovazioneAcquistoArtefatto.class, this::gestisciEventoApprovazioneAcquistoArtefatto);
+        BusEventi.iscriviti(EventoRifiutoAcquistoArtefatto.class, this::gestisciEventoRifiutoAcquistoArtefatto);
+    }
+
+    private void gestisciEventoApprovazioneAcquistoArtefatto(EventoApprovazioneAcquistoArtefatto eventoApprovazioneAcquistoArtefatto) {
+        BusEventi.pubblica(new EventoFumetto("Grazie per aver fatto acquisti da noi!", getCoordinateFumetto()));
+    }
+
+    private void gestisciEventoRifiutoAcquistoArtefatto(EventoRifiutoAcquistoArtefatto eventoRifiutoAcquistoArtefatto) {
+        BusEventi.pubblica(new EventoFumetto("Non hai abbastanza denaro per comprare questo oggetto.", getCoordinateFumetto()));
     }
 
     void impostaAutoma(AutomaScambiatoreArtefatti automa) {
@@ -77,6 +91,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         Collection<Artefatto> artefattiDaDisegnare = ordinaArtefattiDaDisegnare(artefatti);
 
         SupertipoArtefatto supertipoPrecedente = null;
+
         for (Artefatto artefatto : artefattiDaDisegnare) {
 
             if (supertipoPrecedente != artefatto.getTipo().getSupertipo()) {

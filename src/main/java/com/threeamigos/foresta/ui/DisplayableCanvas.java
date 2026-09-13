@@ -1,13 +1,8 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoFumetto;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
-import com.threeamigos.foresta.motore.AutomaInventario;
-import com.threeamigos.foresta.motore.Comando;
-import com.threeamigos.foresta.motore.Logger;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -40,7 +35,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		STATO_STATISTICHE,
 		STATO_PUNTEGGI,
 		STATO_INVENTARIO,
-		STATO_ARMAIOLO
+		STATO_ARMAIOLO,
+		STATO_ALCHIMISTA
 	}
 
 	private StatoDisplayableCanvas stato;
@@ -208,12 +204,6 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		addMouseListener(gestoreMouse);
 		addMouseMotionListener(gestoreMouse);
 		addMouseWheelListener(gestoreMouse);
-
-		BusEventi.iscriviti(EventoFumetto.class, this::onEventoFumetto);
-	}
-
-	private void onEventoFumetto(EventoFumetto evento) {
-		notificaFumetto(evento.getTesto(), evento.getCoordinateFumetto());
 	}
 
 	@Override
@@ -238,7 +228,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		animatoreInAzione = true;
 		while (animatoreInAzione) {
 			if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO || stato == StatoDisplayableCanvas.STATO_MAPPA
-					|| stato == StatoDisplayableCanvas.STATO_INVENTARIO || stato == StatoDisplayableCanvas.STATO_ARMAIOLO) {
+					|| stato == StatoDisplayableCanvas.STATO_INVENTARIO || stato == StatoDisplayableCanvas.STATO_ARMAIOLO
+					|| stato == StatoDisplayableCanvas.STATO_ALCHIMISTA) {
 				repaint();
 			}
 			try {
@@ -405,6 +396,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			armaiolo.disegnaInventario(graphics);
 			disegnaFumetto(graphics);
 			disegnaAnnuncioGlobale(graphics);
+		} else if (stato == StatoDisplayableCanvas.STATO_ALCHIMISTA) {
+			alchimista.disegnaInventario(graphics);
+			disegnaFumetto(graphics);
+			disegnaAnnuncioGlobale(graphics);
 		}
 	}
 	
@@ -425,6 +420,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 		if (stato == StatoDisplayableCanvas.STATO_ARMAIOLO) {
 			return armaiolo;
+		}
+		if (stato == StatoDisplayableCanvas.STATO_ALCHIMISTA) {
+			return alchimista;
 		}
 		return riquadroIntroOutro;
 	}
@@ -479,6 +477,14 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void impostaAutomaArmaiolo(AutomaAcquistiArtefatti automaAcquistiArtefatti) {
 		armaiolo.impostaAutoma(automaAcquistiArtefatti);
+		repaint();
+	}
+
+	public void alchimista() {
+		stato = StatoDisplayableCanvas.STATO_ALCHIMISTA;
+		String oroscopo = String.join(" ", ProduttoreDiTestiCasuale.oroscopo());
+		notificaFumetto(oroscopo, alchimista.getCoordinateFumetto());
+		notificaFumetto("Benvenuti. Cosa posso fare per voi?", alchimista.getCoordinateFumetto());
 		repaint();
 	}
 
@@ -642,9 +648,13 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	public void notificaFumetto(String testo, int x, int y, int pointToX, int pointToY) {
-		if (fumettoAttivo != null && testo.equals(fumettoAttivo.getTesto())) {
-			fumettoAttivo.resetTicks();
-			return;
+		if (fumettoAttivo != null) {
+			if (testo.equals(fumettoAttivo.getTesto())) {
+				fumettoAttivo.resetTicks();
+				return;
+			}
+			// Un fumetto diverso interrompe immediatamente quello in corso
+			fumettoAttivo = null;
 		}
 		codaFumetti.add(new SpriteFumetto(testo, larghezzaSchermo / 5, x, y, DoomdarkFontMedium.getInstance(), DoomdarkColorModel.Color.BLACK, pointToX, pointToY));
 	}
