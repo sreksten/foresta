@@ -7,13 +7,13 @@ package com.threeamigos.foresta.motore.modellodati;
  */
 public enum TipoConsumabile {
 
+    INCANTESIMO,
     POZIONE_SALUTE,
     POZIONE_SALUTE_GRANDE,
     POZIONE_MAGIA,
     POZIONE_MAGIA_GRANDE,
     AUMENTO_MAGIA_SINGOLO,
     AUMENTO_MAGIA_GRUPPO,
-    INCANTESIMO,
     MAPPA_PARZIALE_FORESTA,
     MAPPA_COMPLETA_FORESTA
 
