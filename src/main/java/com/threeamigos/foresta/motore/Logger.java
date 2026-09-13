@@ -9,7 +9,7 @@ import java.util.Date;
 
 public class Logger {
 
-	private static final PrintWriter fileWriter = apriFileDiLog();
+	private static final PrintWriter fileWriter = null; //apriFileDiLog();
 
 	private Logger() {
 	}
