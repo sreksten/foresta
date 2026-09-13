@@ -261,7 +261,7 @@ public class ForestaUI implements InterfacciaUtente {
 	}
 
 	private void gestisciEventoFumetto(EventoFumetto evento) {
-		displayableCanvas.notificaFumetto(evento.getTesto(), evento.getX(), evento.getY(), evento.getPointToX(), evento.getPointToY());
+		displayableCanvas.notificaFumetto(evento.getTesto(), evento.getCoordinateFumetto());
 	}
 
 	private void gestisciEventoMessaggio(EventoMessaggio evento) {

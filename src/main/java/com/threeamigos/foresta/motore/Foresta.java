@@ -295,8 +295,12 @@ public class Foresta {
 	 */
 	public static void ottieniMappaZona(int daX, int daY, int aX, int aY) {
 		for (int x = daX; x <= aX; x++) {
-			for (int y = daY; y <= aY; y++) {
-				setLocazioneConosciuta(new CoordinateMD(x, y));
+			if (x >= 0 && x < Foresta.getDimensioneX()) {
+				for (int y = daY; y <= aY; y++) {
+					if (y >= 0 && y < Foresta.getDimensioneY()) {
+						setLocazioneConosciuta(new CoordinateMD(x, y));
+					}
+				}
 			}
 		}
 	}

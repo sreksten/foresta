@@ -13,8 +13,8 @@ import java.awt.image.BufferedImage;
  */
 public class DisplayableCanvasArmaiolo extends DisplayableCanvasScambiatoreArtefatti {
 
-    DisplayableCanvasArmaiolo(DisplayableCanvas displayableCanvas, int width, int height) {
-        super(displayableCanvas, width, height);
+    DisplayableCanvasArmaiolo(int width, int height) {
+        super(width, height);
         BusEventi.iscriviti(EventoRifiutoAcquistoArtefatto.class, this::onEventoRifiutoAcquisto);
     }
 
@@ -44,9 +44,9 @@ public class DisplayableCanvasArmaiolo extends DisplayableCanvasScambiatoreArtef
         y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
         Image i = ImageCache.get("Monete", coloreTestata);
-        graphics.drawImage(i, centerBoxX, y, null);
+        graphics.drawImage(i, xMinimaZonaCentrale, y, null);
         i = DoomdarkTextProducer.getImage(GruppoGiocatore.getIstanza().getMonete(), font, coloreTestata);
-        graphics.drawImage(i, centerBoxLimit - i.getWidth(null), y, null);
+        graphics.drawImage(i, xMassimaZonaCentrale - i.getWidth(null), y, null);
 
         y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 

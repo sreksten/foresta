@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoFumetto;
 import com.threeamigos.foresta.eventi.EventoRifiutoPrelievoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -16,7 +17,7 @@ import java.util.Map;
  */
 public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArtefatti {
 
-
+    // --- CLASSE DI APPOGGIO per ricordare se gli attributi vanno tenuti aperti o chiusi
     /**
      * Le caratteristiche di un personaggio, a differenza degli artefatti, non hanno un
      * modello dati proprio: questa classe di appoggio associa a ogni TipoAttributo la
@@ -44,10 +45,15 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
     private StatoAttributo statoDi(TipoAttributo tipoAttributo) {
         return statiAttributi.computeIfAbsent(tipoAttributo, t -> new StatoAttributo());
     }
+    // --- FINE classe di appoggio
 
-    DisplayableCanvasInventario(DisplayableCanvas displayableCanvas, int width, int height) {
-        super(displayableCanvas, width, height);
+    DisplayableCanvasInventario(int width, int height) {
+        super(width, height);
         BusEventi.iscriviti(EventoRifiutoPrelievoArtefatto.class, this::onEventoRifiutoPrelievo);
+    }
+
+    void onEventoRifiutoPrelievo(EventoRifiutoPrelievoArtefatto evento) {
+        BusEventi.pubblica(new EventoFumetto("Questo oggetto è troppo pesante.", getCoordinateFumetto()));
     }
 
     @Override
@@ -77,11 +83,11 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
         // Livello, XP, punti disponibili
-        disegna(TipoAttributo.LIVELLO, p.getLivello(), graphics, y, coloreTestata);
+        disegnaAttributoEValore(TipoAttributo.LIVELLO, p.getLivello(), graphics, y, coloreTestata);
         y += fontHeight + SPACING;
-        disegna(TipoAttributo.PUNTI_ESPERIENZA, p.getPuntiEsperienza(), graphics, y, coloreTestata);
+        disegnaAttributoEValore(TipoAttributo.PUNTI_ESPERIENZA, p.getPuntiEsperienza(), graphics, y, coloreTestata);
         y += fontHeight + SPACING;
-        disegna(TipoAttributo.PUNTI_ABILITA, p.getPuntiAbilitaDisponibili(), graphics, y, coloreTestata);
+        disegnaAttributoEValore(TipoAttributo.PUNTI_ABILITA, p.getPuntiAbilitaDisponibili(), graphics, y, coloreTestata);
         y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
         BufferedImage separatore = ImageCache.separatore;
@@ -93,8 +99,8 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         TipoAttributo attributoEvidenziato = trovaAttributo(p, mouseX, mouseY);
         ComponenteScorrevole<TipoAttributo> componenteScorrevole = costruisciComponenteScorrevoleAttributi(p, attributoEvidenziato);
 
-        offsetYBoxPersonaggio = componenteScorrevole.limitaOffset(height - y, offsetYBoxPersonaggio);
-        Image image = componenteScorrevole.produci(height - y, offsetYBoxPersonaggio);
+        offsetYZonaCentrale = componenteScorrevole.limitaOffset(height - y, offsetYZonaCentrale);
+        Image image = componenteScorrevole.produci(height - y, offsetYZonaCentrale);
         graphics.drawImage(image, corniceInventarioWidth + 2 * SPACING, y, null);
 
     }
@@ -166,15 +172,15 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         if (xInterno < 0 || xInterno >= larghezzaAttributi || y < yAttributi || y >= height) {
             return null;
         }
-        int yInterno = y - yAttributi + offsetYBoxPersonaggio;
+        int yInterno = y - yAttributi + offsetYZonaCentrale;
         return costruisciComponenteScorrevoleAttributi(p, null).riferimentoTitoloAllaQuota(yInterno);
     }
 
-    private void disegna(TipoAttributo attributo, int valore, Graphics2D graphics, int y, DoomdarkColorModel.Color colore) {
+    private void disegnaAttributoEValore(TipoAttributo attributo, int valore, Graphics2D graphics, int y, DoomdarkColorModel.Color colore) {
         Image i = ImageCache.get(attributo.getNome(), colore);
-        graphics.drawImage(i, centerBoxX, y, null);
+        graphics.drawImage(i, xMinimaZonaCentrale, y, null);
         i = ImageCache.get(valore, colore);
-        graphics.drawImage(i, centerBoxLimit - i.getWidth(null), y, null);
+        graphics.drawImage(i, xMassimaZonaCentrale - i.getWidth(null), y, null);
     }
 
     protected boolean processaClickPersonaggio(int x, int y, Tasto tasto) {

@@ -31,6 +31,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		BusEventi.iscriviti(EventoRichiestaPrelievoArtefatto.class, this::suEventoRichiestaPrelievoArtefatto);
 		BusEventi.iscriviti(EventoRichiestaAcquistoArtefatto.class, this::suEventoRichiestaAcquistoArtefatto);
 		BusEventi.iscriviti(EventoRichiestaVenditaArtefatto.class, this::suEventoRichiestaVenditaArtefatto);
+		BusEventi.iscriviti(EventoRichiestaAcquistoConsumabile.class, this::suEventoRichiestaAcquistoConsumabile);
 	}
 
 	private static GruppoGiocatore istanza;
@@ -560,4 +561,53 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		eventoRichiestaVendita.getParteRemota().addArtefatto(artefatto);
 		BusEventi.pubblica(new EventoApprovazioneVenditaArtefatto(eventoRichiestaVendita));
 	}
+
+	private void suEventoRichiestaAcquistoConsumabile(EventoRichiestaAcquistoConsumabile eventoRichiestaAcquistoConsumabile) {
+		int costoOggetto = eventoRichiestaAcquistoConsumabile.getPrezzo();
+		if (getMonete() >= costoOggetto) {
+			switch (eventoRichiestaAcquistoConsumabile.getTipoConsumabile()) {
+				case POZIONE_SALUTE:
+					addPozioniSalute(1);
+					break;
+				case POZIONE_SALUTE_GRANDE:
+					addPozioniSaluteGrande(1);
+					break;
+				case POZIONE_MAGIA:
+					addPozioniMagia(1);
+					break;
+				case POZIONE_MAGIA_GRANDE:
+					addPozioniMagiaGrande(1);
+					break;
+				case AUMENTO_MAGIA_SINGOLO:
+					eventoRichiestaAcquistoConsumabile.getPersonaggio()
+							.addMagiaMassima(Costanti.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "ALCHIMISTA");
+					break;
+				case AUMENTO_MAGIA_GRUPPO:
+					for (Personaggio personaggio : getPersonaggiVivi()) {
+						if (!personaggio.isPNG()) {
+							personaggio.addMagiaMassima(Costanti.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "ALCHIMISTA");
+						}
+					}
+					break;
+				case INCANTESIMO:
+					addIncantesimi(eventoRichiestaAcquistoConsumabile.getClasseIncantesimo(), 1);
+					break;
+				case MAPPA_PARZIALE_FORESTA:
+					int x = getCoordinate().getX();
+					int y = getCoordinate().getY();
+					Foresta.ottieniMappaZona(x - 7, y - 7, x + 7, y + 7);
+					break;
+				case MAPPA_COMPLETA_FORESTA:
+					Foresta.ottieniMappa();
+					break;
+				default:
+					throw new IllegalArgumentException("Tipo consumabile non valido");
+			}
+			subMonete(eventoRichiestaAcquistoConsumabile.getPrezzo());
+			BusEventi.pubblica(new EventoApprovazioneAcquistoConsumabile(eventoRichiestaAcquistoConsumabile));
+		} else {
+			BusEventi.pubblica(new EventoRifiutoAcquistoConsumabile(eventoRichiestaAcquistoConsumabile));
+		}
+	}
+
 }

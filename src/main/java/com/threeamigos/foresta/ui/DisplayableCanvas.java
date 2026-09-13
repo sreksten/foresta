@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoFumetto;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
@@ -58,6 +60,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final transient DisplayableCanvasMappaATuttoSchermo mappaATuttoSchermo;
 	private final transient DisplayableCanvasInventario inventario;
 	private final transient DisplayableCanvasArmaiolo armaiolo;
+	private final transient DisplayableCanvasScambiatoreConsumabili alchimista;
 
 	private final ArrayList<SpriteInterface> sprites;
 	private final List<SpriteAnnuncioGlobale> codaAnnunciGlobali = new ArrayList<>();
@@ -184,15 +187,20 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		Rectangle mappaATuttoSchermoRect = new Rectangle(0, 0, width, height);
 		mappaCoordinateElementiGrafici.put(mappaATuttoSchermo, mappaATuttoSchermoRect);
 
-		inventario = new DisplayableCanvasInventario(this, width, height);
+		inventario = new DisplayableCanvasInventario(width, height);
 
 		Rectangle inventarioRect = new Rectangle(0, 0, width, height);
 		mappaCoordinateElementiGrafici.put(inventario, inventarioRect);
 
-		armaiolo = new DisplayableCanvasArmaiolo(this, width, height);
+		armaiolo = new DisplayableCanvasArmaiolo(width, height);
 
 		Rectangle armaioloRect = new Rectangle(0, 0, width, height);
 		mappaCoordinateElementiGrafici.put(armaiolo, armaioloRect);
+
+		alchimista = new DisplayableCanvasScambiatoreConsumabili(width, height);
+
+		Rectangle alchimistaRect = new Rectangle(0, 0, width, height);
+		mappaCoordinateElementiGrafici.put(alchimista, alchimistaRect);
 
 		sprites = new ArrayList<>();
 
@@ -200,8 +208,14 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		addMouseListener(gestoreMouse);
 		addMouseMotionListener(gestoreMouse);
 		addMouseWheelListener(gestoreMouse);
+
+		BusEventi.iscriviti(EventoFumetto.class, this::onEventoFumetto);
 	}
-	
+
+	private void onEventoFumetto(EventoFumetto evento) {
+		notificaFumetto(evento.getTesto(), evento.getCoordinateFumetto());
+	}
+
 	@Override
 	public void addNotify() {
 		super.addNotify();
