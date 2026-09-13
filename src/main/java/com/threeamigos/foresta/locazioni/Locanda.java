@@ -100,7 +100,7 @@ public class Locanda extends LocazioneBase {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		BusEventi.pubblica(new EventoMessaggio(descrizioneLocanda(g)));
+		BusEventi.pubblica(new EventoParagrafo(descrizioneLocanda(g)));
 	}
 
 	/**
