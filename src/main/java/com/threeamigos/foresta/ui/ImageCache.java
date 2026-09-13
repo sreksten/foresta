@@ -35,8 +35,10 @@ public class ImageCache {
 	static BufferedImage separatore;
 	static BufferedImage separatoreArmi;
 	static BufferedImage separatoreArmature;
+	static BufferedImage separatoreIncantesimi;
 	static BufferedImage separatoreScudi;
 	static BufferedImage separatoreNinnoli;
+	static BufferedImage separatorePozioni;
 	static BufferedImage segnalino;
 	static BufferedImage punto;
 	static BufferedImage virgola;
@@ -60,6 +62,7 @@ public class ImageCache {
 	static BufferedImage spriteGemma;
 	static BufferedImage spriteTempo;
 	static BufferedImage spriteAumentoLivello;
+	static BufferedImage spriteGruppo;
 
 	static BufferedImage missioneBirra;
 	static BufferedImage missioneGallo;
@@ -99,8 +102,10 @@ public class ImageCache {
 		separatore = BufferedImageBuilder.buildBufferedImage("fondi/Separatore.gif");
 		separatoreArmi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Armi.gif");
 		separatoreArmature = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Armature.gif");
+		separatoreIncantesimi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Incantesimi.gif");
 		separatoreScudi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Scudi.gif");
 		separatoreNinnoli = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Ninnoli.gif");
+		separatorePozioni = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Pozioni.gif");
 
 		locazioni = new EnumMap<>(ClassiLocazione.class);
 		BufferedImage d;
@@ -222,6 +227,7 @@ public class ImageCache {
 		spriteGemma = BufferedImageBuilder.buildBufferedImage("icone/Gemma-nobordo-piccolo.gif");
 		spriteTempo = BufferedImageBuilder.buildBufferedImage("icone/Tempo-nobordo-piccolo.gif");
 		spriteAumentoLivello = BufferedImageBuilder.buildBufferedImage("icone/AumentoLivello-nobordo-piccolo.gif");
+		spriteGruppo = BufferedImageBuilder.buildBufferedImage("icone/Gruppo-nobordo-piccolo.gif");
 
 		missioneBirra = BufferedImageBuilder.buildBufferedImage("icone/Missione-birra-grande.gif");
 		missioneGallo = BufferedImageBuilder.buildBufferedImage("icone/Missione-gallo.gif");
