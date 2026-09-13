@@ -81,7 +81,8 @@ public class Costanti {
     // Foresta
     public static final int MAX_DIMENSIONE_LATO_FORESTA = 80;
 
-    public static final int COSTO_MAPPA_DELLA_FORESTA = 10;
+    public static final int COSTO_MAPPA_DELLA_ZONA = 10;
+    public static final int COSTO_MAPPA_DELLA_FORESTA = 20;
 
     // Personaggio
     public static final int MAX_STANCHEZZA = 9;
