@@ -17,16 +17,16 @@ public enum ClasseIcona {
 	HOBGOBLIN(ClassePersonaggio.HOBGOBLIN, "icone/Hobgoblin.gif"),
 	MINOTAURO(ClassePersonaggio.MINOTAURO, "icone/Minotauro.gif"),
 	TITANO(ClassePersonaggio.TITANO, "icone/Titano.gif"),
-	GUERRIERA(ClassePersonaggio.GUERRIERA, "icone/Guerriera.gif"),
-	GUERRIERO(ClassePersonaggio.GUERRIERO, "icone/Guerriero.gif"),
-	LADRA(ClassePersonaggio.LADRA, "icone/Ladra.gif"),
-	LADRO(ClassePersonaggio.LADRO, "icone/Ladro.gif"),
-	BARDO(ClassePersonaggio.BARDO, "icone/Bardo.gif"),
-	CANTASTORIE(ClassePersonaggio.CANTASTORIE, "icone/Cantastorie.gif"),
-	ELFA(ClassePersonaggio.ELFA, "icone/Elfa.gif"),
-	ELFO(ClassePersonaggio.ELFO, "icone/Elfo.gif"),
-	MAGA(ClassePersonaggio.MAGA, "icone/Maga.gif"),
-	MAGO(ClassePersonaggio.MAGO, "icone/Mago.gif"),
+	GUERRIERA(Comando.GUERRIERA, ClassePersonaggio.GUERRIERA, "icone/Guerriera.gif"),
+	GUERRIERO(Comando.GUERRIERO, ClassePersonaggio.GUERRIERO, "icone/Guerriero.gif"),
+	LADRA(Comando.LADRA, ClassePersonaggio.LADRA, "icone/Ladra.gif"),
+	LADRO(Comando.LADRO, ClassePersonaggio.LADRO, "icone/Ladro.gif"),
+	BARDO(Comando.BARDO, ClassePersonaggio.BARDO, "icone/Bardo.gif"),
+	CANTASTORIE(Comando.CANTASTORIE, ClassePersonaggio.CANTASTORIE, "icone/Cantastorie.gif"),
+	ELFA(Comando.ELFA, ClassePersonaggio.ELFA, "icone/Elfa.gif"),
+	ELFO(Comando.ELFO, ClassePersonaggio.ELFO, "icone/Elfo.gif"),
+	MAGA(Comando.MAGA, ClassePersonaggio.MAGA, "icone/Maga.gif"),
+	MAGO(Comando.MAGO, ClassePersonaggio.MAGO, "icone/Mago.gif"),
 	OMBRAFIAMMA(ClassePersonaggio.OMBRAFIAMMA, "icone/OmbraFiamma.gif"),
 
 	COMBATTIMENTO(Comando.COMBATTIMENTO,"icone/Combattimento.gif"),
@@ -108,6 +108,12 @@ public enum ClasseIcona {
 
 	ClasseIcona(ClassePersonaggio classePersonaggio, String nomeRisorsa) {
 		this.comando = null;
+		this.classePersonaggio = classePersonaggio;
+		icona = BufferedImageBuilder.buildBufferedImage(nomeRisorsa);
+	}
+
+	ClasseIcona(Comando comando, ClassePersonaggio classePersonaggio, String nomeRisorsa) {
+		this.comando = comando;
 		this.classePersonaggio = classePersonaggio;
 		icona = BufferedImageBuilder.buildBufferedImage(nomeRisorsa);
 	}

@@ -482,6 +482,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void alchimista() {
 		stato = StatoDisplayableCanvas.STATO_ALCHIMISTA;
+		// FIXME: capire come gestire l'oroscopo a modo e se si possa allargare il fumetto dinamicamente.
+		// FIXME: inoltre, quando si esce dalla locazione alchimista/armaiolo occorre interrompere subito il fumetto,
+		// se sempre attivo.
+		// FIXME: fatto quello, si può dismettere tutto il vecchio flusso.
 		String oroscopo = String.join(" ", ProduttoreDiTestiCasuale.oroscopo());
 		notificaFumetto(oroscopo, alchimista.getCoordinateFumetto());
 		notificaFumetto("Benvenuti. Cosa posso fare per voi?", alchimista.getCoordinateFumetto());
