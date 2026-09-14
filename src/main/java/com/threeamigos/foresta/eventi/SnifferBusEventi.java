@@ -24,9 +24,11 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoCombattimento.class, this::onEventoCombattimento);
         BusEventi.iscriviti(EventoConsumoPuntoAbilita.class, this::onEventoConsumoPuntoAbilita);
         BusEventi.iscriviti(EventoCreazionePersonaggio.class, this::onEventoCreazionePersonaggio);
+        BusEventi.iscriviti(EventoException.class, this::onEventoException);
         BusEventi.iscriviti(EventoFumetto.class, this::onEventoFumetto);
         BusEventi.iscriviti(EventoInterazioneElementale.class, this::onEventoInterazioneElementale);
         BusEventi.iscriviti(EventoMessaggio.class, this::onEventoMessaggio);
+        BusEventi.iscriviti(EventoMessaggioInterno.class, this::onEventoMessaggioInterno);
         BusEventi.iscriviti(EventoNotificaGlobale.class, this::onEventoNotificaGlobale);
         BusEventi.iscriviti(EventoParagrafo.class, this::onEventoParagrafo);
         // EventoPersonaggio è classe astratta
@@ -102,6 +104,11 @@ public class SnifferBusEventi {
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p));
     }
 
+    private void onEventoException(EventoException evento) {
+        Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getException().getMessage()));
+        Logger.log(evento.getException());
+    }
+
     private void onEventoFumetto(EventoFumetto evento) {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getTesto()));
     }
@@ -113,6 +120,10 @@ public class SnifferBusEventi {
 
     private void onEventoMessaggio(EventoMessaggio evento) {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggio()));
+    }
+
+    private void onEventoMessaggioInterno(EventoMessaggioInterno evento) {
+        Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggioInterno()));
     }
 
     private void onEventoNotificaGlobale(EventoNotificaGlobale evento) {

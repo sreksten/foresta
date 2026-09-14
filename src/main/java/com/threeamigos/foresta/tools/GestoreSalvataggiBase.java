@@ -5,7 +5,7 @@ import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 
 import java.io.*;
 
-public abstract class GestoreSalvataggiBase implements InterfacciaGestoreSalvataggi {
+public abstract class GestoreSalvataggiBase extends GestoreSuFile implements InterfacciaGestoreSalvataggi {
 
 	public int getCardinalita() {
 		return NUMERO_MASSIMO;

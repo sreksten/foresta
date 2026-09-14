@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.tools;
 
-import com.threeamigos.foresta.motore.Logger;
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -21,13 +22,11 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 
 	private String nomeFile() {
 		if (nomeFile == null)
-			nomeFile = System.getProperty("user.home") +
-                    File.separatorChar + ".forestaHS";
+			nomeFile = recuperaDirectory().getPath() + File.separatorChar + "forestaHS";
 		return nomeFile;
 	}
 
 	public boolean carica() {
-		Logger.log("Leggo i punteggi dal file " + nomeFile);
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(nomeFile()))))) {
 			String line;
 			StringTokenizer st;
@@ -39,6 +38,7 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 				setPunteggio(posizione, nome, punteggio);
 			}
 		} catch (Exception e) {
+			BusEventi.pubblica(new EventoException(e));
 			return false;
 		}
 		return true;
@@ -54,6 +54,7 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 			}
 			writer.flush();
 		} catch (Exception e) {
+			BusEventi.pubblica(new EventoException(e));
 			return false;
 		}
 		return true;

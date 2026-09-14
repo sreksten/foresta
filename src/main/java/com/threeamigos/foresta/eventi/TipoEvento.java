@@ -36,5 +36,8 @@ public enum TipoEvento {
     /**
      * Attività interna di pulizia cache dinamica immagini
      */
-    PULIZIA_CACHE_IMMAGINI
+    PULIZIA_CACHE_IMMAGINI,
+    MESSAGGIO_INTERNO,
+    ERRORE_INTERNO
+
 }

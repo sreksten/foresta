@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.tools;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoException;
+import com.threeamigos.foresta.eventi.EventoMessaggioInterno;
 import com.threeamigos.foresta.motore.Logger;
 
 import java.io.*;
@@ -8,12 +11,11 @@ import java.util.List;
 
 public class GestoreSalvataggiSuFile extends GestoreSalvataggiBase {
 
-	private static final String NOME_DIRECTORY_SALVATAGGI = ".foresta";
 	private static final String POSTFISSO_FILE = ".TXT";
 
 	@Override
 	public List<InterfacciaTestataSalvataggio> getSalvataggiDisponibili() {
-		File directorySalvataggi = recuperaDirectorySalvataggi();
+		File directorySalvataggi = recuperaDirectory();
 		List<InterfacciaTestataSalvataggio> salvataggi = new ArrayList<>();
 		for (int i = 1; i <= NUMERO_MASSIMO; i++) {
 			File salvataggio = new File(directorySalvataggi.getPath() + File.separatorChar + i + POSTFISSO_FILE);
@@ -25,7 +27,7 @@ public class GestoreSalvataggiSuFile extends GestoreSalvataggiBase {
 					testataSalvataggio.setNome(line);
 					salvataggi.add(testataSalvataggio);
 				} catch (Exception e) {
-					Logger.log(e);
+					BusEventi.pubblica(new EventoException(e));
 				}
 			}
 		}
@@ -34,11 +36,12 @@ public class GestoreSalvataggiSuFile extends GestoreSalvataggiBase {
 
 	@Override
 	public InterfacciaGestoreSalvataggi.InterfacciaSalvataggio recuperaSalvataggio(String id) {
-		File directorySalvataggi = recuperaDirectorySalvataggi();
+		File directorySalvataggi = recuperaDirectory();
 		File fileSalvataggio = new File(directorySalvataggi.getPath() + File.separatorChar + id + POSTFISSO_FILE);
 		if (fileSalvataggio.exists()) {
 			try (BufferedReader reader = new BufferedReader(new FileReader(fileSalvataggio))) {
 				String line = reader.readLine();
+				BusEventi.pubblica(new EventoMessaggioInterno("Lettura file salvataggio " + line));
 				StringBuilder sb = new StringBuilder();
 				while ((line = reader.readLine()) != null) {
 					sb.append(line);
@@ -50,7 +53,7 @@ public class GestoreSalvataggiSuFile extends GestoreSalvataggiBase {
 				salvataggio.setContenuto(sb.toString());
 				return salvataggio;
 			} catch (Exception e) {
-				Logger.log(e);
+				BusEventi.pubblica(new EventoException(e));
 				return null;
 			}
 		} else {
@@ -61,7 +64,7 @@ public class GestoreSalvataggiSuFile extends GestoreSalvataggiBase {
 
 	@Override
 	public void salva(InterfacciaGestoreSalvataggi.InterfacciaSalvataggio salvataggio) {
-		File directorySalvataggi = recuperaDirectorySalvataggi();
+		File directorySalvataggi = recuperaDirectory();
 		File fileSalvataggio = new File(directorySalvataggi.getPath() + File.separatorChar + salvataggio.getId() + POSTFISSO_FILE);
 		try (PrintWriter writer = new PrintWriter(new FileWriter(fileSalvataggio))) {
 			writer.println(salvataggio.getDescrizione());
@@ -69,21 +72,6 @@ public class GestoreSalvataggiSuFile extends GestoreSalvataggiBase {
 			writer.flush();
 		} catch (IOException e) {
 			Logger.log(e);
-		}
-	}
-
-	private File recuperaDirectorySalvataggi() {
-		String homeName = System.getProperty("user.home");
-		File homeFile = new File(homeName);
-		if (homeFile.isDirectory()) {
-			File directorySalvataggi = new File(homeFile.getPath() + File.separatorChar + NOME_DIRECTORY_SALVATAGGI);
-			Logger.log("Directory salvataggi: " + directorySalvataggi.getPath());
-			if (!directorySalvataggi.exists()) {
-				directorySalvataggi.mkdirs();
-			}
-			return directorySalvataggi;
-		} else {
-			throw new IllegalArgumentException("user.home non e' una directory");
 		}
 	}
 }

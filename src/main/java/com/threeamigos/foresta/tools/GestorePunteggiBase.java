@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.tools;
 
-abstract class GestorePunteggiBase implements InterfacciaGestorePunteggi {
+abstract class GestorePunteggiBase extends GestoreSuFile implements InterfacciaGestorePunteggi {
 
 	private static final int NUMERO_MASSIMO = 10;
 

@@ -26,11 +26,15 @@ public class Main {
 	}
 
 	public static void main(String[] args) throws Exception {
-		leggiArgomenti(args);
+
+		// Ci registriamo per ascoltare qualsiasi evento venga generato
 		new SnifferBusEventi();
+
+		leggiArgomenti(args);
 		GestorePunteggi.impostaGestorePunteggi(new GestorePunteggiSuFile());
 		GestoreSalvataggi.impostaGestoreSalvataggi(new GestoreSalvataggiSuFile());
 		Gioco.impostaParametri(new TemporizzatoreJ2SE(), new Automa());
+		// FIXME l'ultima cosa che andrà levata quando si passa il tutto a eventi
 		UI.impostaInterfacciaUtente(new ForestaUI(orientamento, tuttoSchermo));
 		UI.aspettaInterfacciaUtentePronta();
 		Gioco.inizia();

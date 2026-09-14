@@ -1,8 +1,10 @@
 package com.threeamigos.foresta.tools;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoException;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.ControlloreDiGioco;
-import com.threeamigos.foresta.motore.Logger;
+
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
@@ -33,8 +35,7 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 				try {
 					controlloreDiGioco.processaAzione(Comando.TIMER);
 				} catch (RuntimeException e) {
-					Logger.log("Eccezione durante l'elaborazione di Comando.TIMER");
-					Logger.log(e);
+					BusEventi.pubblica(new EventoException(e));
 				}
 			},
                 secondi,
