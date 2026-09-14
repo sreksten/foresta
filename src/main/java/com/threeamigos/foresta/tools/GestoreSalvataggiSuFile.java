@@ -3,7 +3,6 @@ package com.threeamigos.foresta.tools;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.EventoException;
 import com.threeamigos.foresta.eventi.EventoMessaggioInterno;
-import com.threeamigos.foresta.motore.Logger;
 
 import java.io.*;
 import java.util.ArrayList;
@@ -57,7 +56,7 @@ public class GestoreSalvataggiSuFile extends GestoreSalvataggiBase {
 				return null;
 			}
 		} else {
-			Logger.log("Tentativo di lettura di file non esistente: " + id);
+			BusEventi.pubblica(new EventoMessaggioInterno("Tentativo di lettura di file non esistente: " + id));
 			return null;
 		}
 	}
@@ -71,7 +70,7 @@ public class GestoreSalvataggiSuFile extends GestoreSalvataggiBase {
 			writer.println(salvataggio.getContenuto());
 			writer.flush();
 		} catch (IOException e) {
-			Logger.log(e);
+			BusEventi.pubblica(new EventoException(e));
 		}
 	}
 }
