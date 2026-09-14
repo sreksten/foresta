@@ -56,6 +56,16 @@ public class PannelloIcone extends JPanel implements java.awt.event.ActionListen
 			setSize(72, 1);
 		}
 		setBackground(Color.black);
+
+		DoomdarkFont fontSmall = DoomdarkFontSmall.getInstance();
+		DoomdarkColorModel.Color color = DoomdarkColorModel.Color.VERY_DARK_GRAY;
+		copyrightImages[0] = DoomdarkTextProducer.getImage("La Foresta", fontSmall, color);
+		copyrightImages[1] = DoomdarkTextProducer.getImage("copyright 1984-2026", fontSmall, color);
+		copyrightImages[2] = DoomdarkTextProducer.getImage("Stefano Reksten", fontSmall, color);
+		for (int i = 0; i < 3; i++) {
+			copyrightImagesXOffset[i] = getWidth() - copyrightImages[i].getWidth(null) - 1;
+			copyrightImagesYOffset[i] = getHeight() - fontSmall.getHeight() * (3 - i) - 1;
+		}
 	}
 
 	public void impostaAzioni() {
@@ -216,25 +226,6 @@ public class PannelloIcone extends JPanel implements java.awt.event.ActionListen
 	}
 
 	private void copyright(Graphics2D graphics) {
-		if (copyrightImages[0] == null) {
-			DoomdarkFont fontSmall = DoomdarkFontSmall.getInstance();
-			copyrightImages[0] = DoomdarkTextProducer.getImage(
-					"La Foresta",
-					fontSmall,
-					DoomdarkColorModel.Color.VERY_DARK_GRAY);
-			copyrightImages[1] = DoomdarkTextProducer.getImage(
-					"copyright 1984-2026",
-					fontSmall,
-					DoomdarkColorModel.Color.VERY_DARK_GRAY);
-			copyrightImages[2] = DoomdarkTextProducer.getImage(
-					"Stefano Reksten",
-					fontSmall,
-					DoomdarkColorModel.Color.VERY_DARK_GRAY);
-			for (int i = 0; i < 3; i++) {
-				copyrightImagesXOffset[i] = getWidth() - copyrightImages[i].getWidth(null) - 1;
-				copyrightImagesYOffset[i] = getHeight() - fontSmall.getHeight() * (3 - i) - 1;
-			}
-		}
 		for (int i = 0; i < 3; i++) {
 			graphics.drawImage(copyrightImages[i], copyrightImagesXOffset[i], copyrightImagesYOffset[i], null);
 		}
