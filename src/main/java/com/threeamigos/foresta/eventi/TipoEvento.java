@@ -49,6 +49,10 @@ public enum TipoEvento {
      */
     STATO_DI_GIOCO,
     /**
+     * Interfaccia utente inizializzata
+     */
+    INTERFACCIA_UTENTE_PRONTA,
+    /**
      * Attività interna di pulizia cache dinamica immagini
      */
     PULIZIA_CACHE_IMMAGINI,

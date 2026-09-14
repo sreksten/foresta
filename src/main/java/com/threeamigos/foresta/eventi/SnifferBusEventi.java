@@ -28,6 +28,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoException.class, this::onEventoException);
         BusEventi.iscriviti(EventoFumetto.class, this::onEventoFumetto);
         BusEventi.iscriviti(EventoInterazioneElementale.class, this::onEventoInterazioneElementale);
+        BusEventi.iscriviti(EventoInterfacciaUtentePronta.class, this::onEventoInterfacciaUtentePronta);
         BusEventi.iscriviti(EventoMessaggio.class, this::onEventoMessaggio);
         BusEventi.iscriviti(EventoMessaggioInterno.class, this::onEventoMessaggioInterno);
         BusEventi.iscriviti(EventoNotificaGlobale.class, this::onEventoNotificaGlobale);
@@ -124,6 +125,10 @@ public class SnifferBusEventi {
     private void onEventoInterazioneElementale(EventoInterazioneElementale evento) {
         Personaggio p = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getTipoInterazioneElementale());
+    }
+
+    private void onEventoInterfacciaUtentePronta(EventoInterfacciaUtentePronta evento) {
+        Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
     }
 
     private void onEventoMessaggio(EventoMessaggio evento) {

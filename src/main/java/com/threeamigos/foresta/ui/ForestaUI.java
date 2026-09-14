@@ -9,6 +9,7 @@ import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tools.Temporizzatore;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,15 +18,18 @@ public class ForestaUI implements InterfacciaUtente {
 
 	private final Orientamento orientamento;
 	private final boolean tuttoSchermo;
+	private final Temporizzatore temporizzatore;
 
 	private JFrame jframe;
 	private Prompt prompt;
 	private DisplayableCanvas displayableCanvas;
 	private PannelloIcone pannelloIcone;
 
-	public ForestaUI(Orientamento orientamento, boolean tuttoSchermo) {
+	public ForestaUI(Orientamento orientamento, boolean tuttoSchermo, Temporizzatore temporizzatore) {
 		this.orientamento = orientamento;
 		this.tuttoSchermo = tuttoSchermo;
+		this.temporizzatore = temporizzatore;
+
 		SwingUtilities.invokeLater(this::createAndShowGUI);
 
 		BusEventi.iscriviti(EventoAggiuntaModificatore.class, this::gestisciEventoAggiuntaModificatore);
@@ -119,7 +123,8 @@ public class ForestaUI implements InterfacciaUtente {
 		jframe.setResizable(false);		
 		jframe.setLocation((screenDimension.width - jframe.getSize().width) / 2, (screenDimension.height - jframe.getSize().height) / 2);
 		jframe.setVisible(true);
-		UI.setInterfacciaUtentePronta();
+
+		BusEventi.pubblica(new EventoInterfacciaUtentePronta());
 	}
 
 	@Override

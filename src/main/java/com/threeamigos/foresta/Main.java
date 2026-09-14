@@ -1,5 +1,7 @@
 package com.threeamigos.foresta;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoInterfacciaUtentePronta;
 import com.threeamigos.foresta.eventi.SnifferBusEventi;
 import com.threeamigos.foresta.motore.Automa;
 import com.threeamigos.foresta.motore.Gioco;
@@ -27,16 +29,19 @@ public class Main {
 
 	public static void main(String[] args) throws Exception {
 
-		// Ci registriamo per ascoltare qualsiasi evento venga generato
+		// Si registra per ascoltare qualsiasi evento venga generato
 		new SnifferBusEventi();
 
 		leggiArgomenti(args);
 		GestorePunteggi.impostaGestorePunteggi(new GestorePunteggiSuFile());
 		GestoreSalvataggi.impostaGestoreSalvataggi(new GestoreSalvataggiSuFile());
-		Gioco.impostaParametri(new TemporizzatoreJ2SE(), new Automa());
-		// FIXME l'ultima cosa che andrà levata quando si passa il tutto a eventi
-		UI.impostaInterfacciaUtente(new ForestaUI(orientamento, tuttoSchermo));
-		UI.aspettaInterfacciaUtentePronta();
-		Gioco.inizia();
+		Temporizzatore temporizzatore = new TemporizzatoreJ2SE();
+		Gioco.impostaParametri(temporizzatore, new Automa());
+		ForestaUI forestaUI = new ForestaUI(orientamento, tuttoSchermo, temporizzatore);
+
+		// FIXME l'ultima cosa che andrà levata quando si passa il tutto a eventi lasciando solo il costruttore
+		UI.impostaInterfacciaUtente(forestaUI);
+
+		BusEventi.iscriviti(EventoInterfacciaUtentePronta.class, e -> Gioco.inizia());
 	}
 }
