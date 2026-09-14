@@ -41,6 +41,10 @@ public enum TipoEvento {
      * Il gioco riceve il testo
      */
     TESTO_DISPONIBILE,
+    /**
+     * Il giocatore invia un comando all'automa
+     */
+    COMANDO_DI_GIOCO,
 
     // Eventi interni per il funzionamento del gioco
 

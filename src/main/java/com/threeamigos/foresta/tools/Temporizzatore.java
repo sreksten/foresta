@@ -9,9 +9,9 @@ import com.threeamigos.foresta.motore.ControlloreDiGioco;
 
 public interface Temporizzatore {
 
-	public void setControlloreDiGioco(ControlloreDiGioco controlloreDiGioco);
+	void setConsumatore(ControlloreDiGioco controlloreDiGioco);
 
-	public void inizia(int secondi);
+	void inizia(int secondi);
 
-	public void termina();
+	void termina();
 }

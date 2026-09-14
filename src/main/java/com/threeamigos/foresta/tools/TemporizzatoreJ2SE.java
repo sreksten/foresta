@@ -21,9 +21,8 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 	private ScheduledFuture<?> timerTask;
 	private ControlloreDiGioco controlloreDiGioco;
 
-	public void setControlloreDiGioco(ControlloreDiGioco c) {
+	public void setConsumatore(ControlloreDiGioco c) {
 		this.controlloreDiGioco = c;
-		c.setTemporizzatore(this);
 	}
 
 	public void inizia(int secondi) {

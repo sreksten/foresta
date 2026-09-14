@@ -4,7 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.EventoInterfacciaUtentePronta;
 import com.threeamigos.foresta.eventi.SnifferBusEventi;
 import com.threeamigos.foresta.motore.Automa;
-import com.threeamigos.foresta.motore.Gioco;
+import com.threeamigos.foresta.motore.ControlloreDiGioco;
 import com.threeamigos.foresta.tools.*;
 import com.threeamigos.foresta.ui.ForestaUI;
 import com.threeamigos.foresta.ui.Orientamento;
@@ -35,13 +35,14 @@ public class Main {
 		leggiArgomenti(args);
 		GestorePunteggi.impostaGestorePunteggi(new GestorePunteggiSuFile());
 		GestoreSalvataggi.impostaGestoreSalvataggi(new GestoreSalvataggiSuFile());
+
 		Temporizzatore temporizzatore = new TemporizzatoreJ2SE();
-		Gioco.impostaParametri(temporizzatore, new Automa());
+		ControlloreDiGioco controlloreDiGioco = new Automa(temporizzatore);
 		ForestaUI forestaUI = new ForestaUI(orientamento, tuttoSchermo, temporizzatore);
 
 		// FIXME l'ultima cosa che andrà levata quando si passa il tutto a eventi lasciando solo il costruttore
 		UI.impostaInterfacciaUtente(forestaUI);
 
-		BusEventi.iscriviti(EventoInterfacciaUtentePronta.class, e -> Gioco.inizia());
+		BusEventi.iscriviti(EventoInterfacciaUtentePronta.class, e -> controlloreDiGioco.inizia());
 	}
 }

@@ -26,11 +26,12 @@ public class Automa implements ControlloreDiGioco {
 
 	private static final String SCEGLI_NOME_PERSONAGGIO = "Scegli il nome del tuo personaggio o lascialo vuoto per un personaggio casuale.";
 
+	private final Temporizzatore temporizzatore;
+
 	private String nomePersonaggio;
 	private Stato stato;
 	private Stato statoPrecedente;
 
-	private Temporizzatore temporizzatore;
 	private GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 	private GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
 	private Personaggio personaggio;
@@ -39,15 +40,12 @@ public class Automa implements ControlloreDiGioco {
 	private Locazione locazioneCorrente;
 	private Comando direzione; // serve a memorizzare la direzione prima di chiedere il numero di passi
 
-	public Automa() {
-		BusEventi.iscriviti(EventoTestoDisponibile.class, this::onEventoTestoDisponibile);
-	}
+	public Automa(Temporizzatore temporizzatore) {
+		this.temporizzatore = temporizzatore;
+		temporizzatore.setConsumatore(this);
 
-	public void setTemporizzatore(Temporizzatore temporizzatore) {
-		if (this.temporizzatore != temporizzatore) {
-			this.temporizzatore = temporizzatore;
-			temporizzatore.setControlloreDiGioco(this);
-		}
+		BusEventi.iscriviti(EventoComandoDiGioco.class, this::onEventoComandoDiGioco);
+		BusEventi.iscriviti(EventoTestoDisponibile.class, this::onEventoTestoDisponibile);
 	}
 
 	public void inizia() {
@@ -99,6 +97,10 @@ public class Automa implements ControlloreDiGioco {
 			default:
 				BusEventi.pubblica(new EventoErroreInterno("onEventoTestoDisponibile: Stato non gestito: " + stato));
 		}
+	}
+
+	private void onEventoComandoDiGioco(EventoComandoDiGioco evento) {
+		processaAzione(evento.getComando());
 	}
 
 	/**

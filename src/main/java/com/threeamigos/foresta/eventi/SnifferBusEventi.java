@@ -21,6 +21,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoApprovazioneStoccaggioArtefatto.class, this::onEventoApprovazioneStoccaggio);
         BusEventi.iscriviti(EventoApprovazioneVenditaArtefatto.class, this::onEventoApprovazioneVendita);
         // EventoBase è classe astratta
+        BusEventi.iscriviti(EventoComandoDiGioco.class, this::onEventoComandoDiGioco);
         BusEventi.iscriviti(EventoCombattimento.class, this::onEventoCombattimento);
         BusEventi.iscriviti(EventoConsumoPuntoAbilita.class, this::onEventoConsumoPuntoAbilita);
         BusEventi.iscriviti(EventoCreazionePersonaggio.class, this::onEventoCreazionePersonaggio);
@@ -90,6 +91,11 @@ public class SnifferBusEventi {
         Logger.log(headerEvento(evento) + formattaParte(richiesta.getParteAttiva()) + " vende "
                 + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") a "
                 + formattaParte(richiesta.getParteRemota()));
+    }
+
+    private void onEventoComandoDiGioco(EventoComandoDiGioco evento) {
+        Comando comando = evento.getComando();
+        Logger.log(headerEvento(evento) + "Comando: " + comando);
     }
 
     private void onEventoCombattimento(EventoCombattimento evento) {

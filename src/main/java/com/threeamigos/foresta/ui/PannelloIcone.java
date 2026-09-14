@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoComandoDiGioco;
 import com.threeamigos.foresta.motore.ComandiPossibili;
 import com.threeamigos.foresta.motore.Comando;
-import com.threeamigos.foresta.motore.Gioco;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
@@ -204,7 +205,7 @@ public class PannelloIcone extends JPanel implements java.awt.event.ActionListen
 				saltaPrimi = 2;
 			ridistribuisciScelte();
 		} else {
-			Gioco.processaAzione(azione);
+			BusEventi.pubblica(new EventoComandoDiGioco(azione));
 		}
 	}
 
