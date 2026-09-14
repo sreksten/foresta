@@ -1,13 +1,10 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
 import com.threeamigos.foresta.motore.AutomaInventario;
 import com.threeamigos.foresta.motore.ComandiPossibili;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.personaggi.Personaggio;
-
-import java.util.concurrent.CountDownLatch;
 
 public class UI {
 
@@ -15,18 +12,9 @@ public class UI {
 	}
 
 	private static InterfacciaUtente interfacciaUtente;
-	private static final CountDownLatch interfacciaUtentePronta = new CountDownLatch(1);
 
 	public static void impostaInterfacciaUtente(InterfacciaUtente userInterface) {
 		interfacciaUtente = userInterface;
-	}
-
-	public static void setInterfacciaUtentePronta() {
-		interfacciaUtentePronta.countDown();
-	}
-
-	public static void aspettaInterfacciaUtentePronta() throws InterruptedException {
-		interfacciaUtentePronta.await();
 	}
 
 	/**
@@ -212,42 +200,6 @@ public class UI {
 	 */
 	public static void infoCombattimento(boolean mostra, Personaggio combattente, Personaggio avversario) {
 		interfacciaUtente.infoCombattimento(mostra, combattente, avversario);
-	}
-
-	public static void variaGemme(int variazione) {
-		interfacciaUtente.variaGemme(variazione);
-	}
-
-	public static void variaMonete(int variazione) {
-		interfacciaUtente.variaMonete(variazione);
-	}
-
-	public static void variaPunti(int variazione) {
-		interfacciaUtente.variaPunti(variazione);
-	}
-
-	public static void variaIncantesimi(ClasseIncantesimo classeIncantesimo, int variazione) {
-		interfacciaUtente.variaIncantesimi(classeIncantesimo, variazione);
-	}
-
-	public static void variaPozioniSalute(int variazione) {
-		interfacciaUtente.variaPozioniSalute(variazione);
-	}
-
-	public static void variaPozioniSaluteGrande(int variazione) {
-		interfacciaUtente.variaPozioniSaluteGrande(variazione);
-	}
-
-	public static void variaPozioniMagia(int variazione) {
-		interfacciaUtente.variaPozioniMagia(variazione);
-	}
-
-	public static void variaPozioniMagiaGrande(int variazione) {
-		interfacciaUtente.variaPozioniMagiaGrande(variazione);
-	}
-
-	public static void variaMappa() {
-		interfacciaUtente.variaMappa();
 	}
 
 	public static void raccogliOggetto() {

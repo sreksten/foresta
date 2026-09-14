@@ -1,11 +1,13 @@
 package com.threeamigos.foresta.offerte;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoVariazioneDisponibilitaConsumabile;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Logger;
+import com.threeamigos.foresta.motore.modellodati.TipoConsumabile;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.ui.UI;
 
 public class MappaZona implements Offerta {
 
@@ -67,6 +69,6 @@ public class MappaZona implements Offerta {
 		}
 		Logger.log("MappaZona::accetta(), fx=" + fx + ",fy=" + fy + ",tx=" + tx + ",ty=" + ty);
 		Foresta.ottieniMappaZona(fx, fy, tx, ty);
-		UI.variaMappa();
+		BusEventi.pubblica(new EventoVariazioneDisponibilitaConsumabile(TipoConsumabile.MAPPA_PARZIALE_FORESTA, 0));
 	}
 }

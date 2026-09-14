@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
 import com.threeamigos.foresta.motore.AutomaInventario;
 import com.threeamigos.foresta.motore.Comando;
@@ -154,24 +153,6 @@ public interface InterfacciaUtente {
 	 * Mostra la forza in combattimento.
 	 */
     void infoCombattimento(boolean mostra, Personaggio combattente, Personaggio avversario);
-
-	void variaGemme(int variazione);
-
-	void variaMonete(int variazione);
-
-	void variaPunti(int variazione);
-
-	void variaIncantesimi(ClasseIncantesimo classeIncantesimo, int variazione);
-
-	void variaPozioniSalute(int variazione);
-
-	void variaPozioniMagia(int variazione);
-
-	void variaPozioniMagiaGrande(int variazione);
-
-	void variaPozioniSaluteGrande(int variazione);
-
-	void variaMappa();
 
 	void raccogliOggetto();
 

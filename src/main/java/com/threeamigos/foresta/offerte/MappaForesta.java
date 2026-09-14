@@ -1,11 +1,13 @@
 package com.threeamigos.foresta.offerte;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoVariazioneDisponibilitaConsumabile;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.modellodati.TipoConsumabile;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.ui.UI;
 
 public class MappaForesta implements Offerta {
 
@@ -42,6 +44,6 @@ public class MappaForesta implements Offerta {
 	public void accetta(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
 		gruppo.subMonete(Costanti.COSTO_MAPPA_DELLA_FORESTA);
 		Foresta.ottieniMappa();
-		UI.variaMappa();
+		BusEventi.pubblica(new EventoVariazioneDisponibilitaConsumabile(TipoConsumabile.MAPPA_COMPLETA_FORESTA, 0));
 	}
 }

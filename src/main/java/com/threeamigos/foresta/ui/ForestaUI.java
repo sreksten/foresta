@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.*;
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
@@ -44,6 +43,7 @@ public class ForestaUI implements InterfacciaUtente {
 		BusEventi.iscriviti(EventoRichiestaTesto.class, this::gestisciEventoRichiestaTesto);
 		// EventoValutazioneAttaccante non ci interessa, è il motore AI degli avversari che informa sul suo stato di progressione
 		BusEventi.iscriviti(EventoStatoDiGioco.class, this::gestisciEventoStatoDiGioco);
+		BusEventi.iscriviti(EventoVariazioneDisponibilitaConsumabile.class, this::gestisciEventoVariazioneDisponibilitaConsumabile);
 		BusEventi.iscriviti(EventoVariazioneEffettoDiStato.class, this::gestisciEventoVariazioneEffettoDiStato);
 		BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
 		BusEventi.iscriviti(EventoVariazioneStatoVitalePersonaggio.class, this::gestisciEventoVariazioneStatoVitalePersonaggio);
@@ -373,6 +373,42 @@ public class ForestaUI implements InterfacciaUtente {
 		}
 	}
 
+	private void gestisciEventoVariazioneDisponibilitaConsumabile(EventoVariazioneDisponibilitaConsumabile evento) {
+		int variazione = evento.getVariazione();
+		switch (evento.getTipoConsumabile()) {
+			case GEMME:
+				displayableCanvas.variaGemme(variazione);
+				break;
+			case MONETE:
+				displayableCanvas.variaMonete(variazione);
+				break;
+			case PUNTI_ESPERIENZA:
+				displayableCanvas.variaPunti(variazione);
+				break;
+			case INCANTESIMO:
+				displayableCanvas.variaIncantesimi(evento.getClasseIncantesimo(), variazione);
+				break;
+			case POZIONE_SALUTE:
+				displayableCanvas.variaPozioniSalute(variazione);
+				break;
+			case POZIONE_SALUTE_GRANDE:
+				displayableCanvas.variaPozioniSaluteGrande(variazione);
+				break;
+			case POZIONE_MAGIA:
+				displayableCanvas.variaPozioniMagia(variazione);
+				break;
+			case POZIONE_MAGIA_GRANDE:
+				displayableCanvas.variaPozioniMagiaGrande(variazione);
+				break;
+			case MAPPA_PARZIALE_FORESTA:
+			case MAPPA_COMPLETA_FORESTA:
+				displayableCanvas.variaMappa();
+				break;
+			default:
+				throw new IllegalArgumentException("TipoConsumabile non gestito: " + evento.getTipoConsumabile());
+		}
+	}
+
 	//FIXME ancora non li gestiamo a livello grafico
 	private void gestisciEventoVariazioneEffettoDiStato(EventoVariazioneEffettoDiStato evento) {
 		Personaggio personaggio = evento.getPersonaggio();
@@ -389,51 +425,6 @@ public class ForestaUI implements InterfacciaUtente {
 		}
 	}
 
-	@Override
-	public void variaGemme(int variazione) {
-		displayableCanvas.variaGemme(variazione);
-	}
-
-	@Override
-	public void variaMonete(int variazione) {
-		displayableCanvas.variaMonete(variazione);
-	}
-
-	@Override
-	public void variaPunti(int variazione) {
-		displayableCanvas.variaPunti(variazione);
-	}
-
-	@Override
-	public void variaIncantesimi(ClasseIncantesimo classeIncantesimo, int variazione) {
-		displayableCanvas.variaIncantesimi(classeIncantesimo, variazione);
-	}
-
-	@Override
-	public void variaPozioniSalute(int variazione) {
-		displayableCanvas.variaPozioniSalute(variazione);
-	}
-
-	@Override
-	public void variaPozioniMagia(int variazione) {
-		displayableCanvas.variaPozioniMagia(variazione);
-	}
-
-	@Override
-	public void variaPozioniMagiaGrande(int variazione) {
-		displayableCanvas.variaPozioniMagiaGrande(variazione);
-	}
-
-	@Override
-	public void variaPozioniSaluteGrande(int variazione) {
-		displayableCanvas.variaPozioniSaluteGrande(variazione);
-	}
-
-	@Override
-	public void variaMappa() {
-		displayableCanvas.variaMappa();
-	}
-	
 	@Override
 	public void raccogliOggetto() {
 		displayableCanvas.raccogliOggetto();

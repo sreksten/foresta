@@ -1,12 +1,17 @@
 package com.threeamigos.foresta.motore.modellodati;
 
 /**
- * Il tipo di consumabile che può essere acquistato da un alchimista.
+ * Il tipo di consumabili che il Gruppo ha a disposizione
  *
  * @author Stefano Reksten
  */
 public enum TipoConsumabile {
 
+    GEMME,
+    MONETE,
+    PUNTI_ESPERIENZA, // In realtà questi non vengono mai "consumati"
+
+    // Tipi acquistabili da un alchimista
     INCANTESIMO,
     POZIONE_SALUTE,
     POZIONE_SALUTE_GRANDE,

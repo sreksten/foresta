@@ -2,10 +2,11 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.EventoMessaggio;
+import com.threeamigos.foresta.eventi.EventoVariazioneDisponibilitaConsumabile;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.StatisticheMD;
+import com.threeamigos.foresta.motore.modellodati.TipoConsumabile;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
-import com.threeamigos.foresta.ui.UI;
 
 public class Statistiche {
 
@@ -16,7 +17,7 @@ public class Statistiche {
 
 	public static void addPunti(int quantita) {
 		statisticheMD.addPunti(quantita);
-		UI.variaPunti(quantita);
+		BusEventi.pubblica(new EventoVariazioneDisponibilitaConsumabile(TipoConsumabile.PUNTI_ESPERIENZA, quantita));
 	}
 
 	// Chiamato ogni volta che il personaggio completa una missione o uccide un mostro

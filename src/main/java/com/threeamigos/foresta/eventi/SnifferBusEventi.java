@@ -50,6 +50,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoStatoDiGioco.class, this::onEventoStatoDiGioco);
         BusEventi.iscriviti(EventoTestoDisponibile.class, this::onEventoTestoDisponibile);
         BusEventi.iscriviti(EventoValutazioneAttaccante.class, this::onEventoValutazioneAttaccante);
+        BusEventi.iscriviti(EventoVariazioneDisponibilitaConsumabile.class, this::onEventoVariazioneDisponibilitaConsumabile);
         BusEventi.iscriviti(EventoVariazioneEffettoDiStato.class, this::onEventoVariazioneEffettoDiStato);
         BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::onEventoVariazioneStatistichePersonaggio);
         BusEventi.iscriviti(EventoVariazioneStatoVitalePersonaggio.class, this::onEventoVariazioneStatoVitalePersonaggio);
@@ -234,6 +235,11 @@ public class SnifferBusEventi {
     private void onEventoValutazioneAttaccante(EventoValutazioneAttaccante evento) {
         Personaggio p = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getRisultatoValutazione());
+    }
+
+    private void onEventoVariazioneDisponibilitaConsumabile(EventoVariazioneDisponibilitaConsumabile evento) {
+        Logger.log(headerEvento(evento) + String.format("Tipo: %s, ClasseIncantesimo: %s, Variazione: %d",
+                evento.getTipoConsumabile(), evento.getClasseIncantesimo(), evento.getVariazione()));
     }
 
     private void onEventoVariazioneEffettoDiStato(EventoVariazioneEffettoDiStato evento) {
