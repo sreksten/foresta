@@ -12,11 +12,6 @@ public interface ControlloreDiGioco {
 
 	void inizia();
 
-	/**
-	 * Riceve un testo dall'interfaccia utente
-	 */
-	void riceviTesto(String s);
-
 	void processaAzione(Comando azione);
 
 }

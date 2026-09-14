@@ -1,8 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoMessaggio;
-import com.threeamigos.foresta.eventi.EventoParagrafo;
+import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
@@ -33,13 +31,17 @@ public class Automa implements ControlloreDiGioco {
 	private Stato statoPrecedente;
 
 	private Temporizzatore temporizzatore;
-	private GruppoGiocatore gruppo;
-	private GruppoAvversario gruppoAvversario;
+	private GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
+	private GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
 	private Personaggio personaggio;
 	// Ultimo personaggio scelto nella schermata inventario: non salvato, si azzera a ogni avvio.
 	private int indicePersonaggioInventario = 0;
 	private Locazione locazioneCorrente;
 	private Comando direzione; // serve a memorizzare la direzione prima di chiedere il numero di passi
+
+	public Automa() {
+		BusEventi.iscriviti(EventoTestoDisponibile.class, this::onEventoTestoDisponibile);
+	}
 
 	public void setTemporizzatore(Temporizzatore temporizzatore) {
 		if (this.temporizzatore != temporizzatore) {
@@ -50,57 +52,52 @@ public class Automa implements ControlloreDiGioco {
 
 	public void inizia() {
 		stato = Stato.INTRO;
-		UI.intro();
-		UI.impostaAzioni(Comando.PERGAMENA);
 		temporizzatore.inizia(5);
+		BusEventi.pubblica(new EventoStatoDiGioco(Stato.INTRO));
 	}
 
-	public void riceviTesto(String s) {
+	private void onEventoTestoDisponibile(EventoTestoDisponibile evento) {
+
+		String testoDisponibile = evento.getTesto();
+
 		switch (stato) {
 
-		case PRE_GAME_ATTESA_NOME_PERSONAGGIO:
-			Foresta.reimposta();
-			gruppo = GruppoGiocatore.getIstanza();
-			gruppoAvversario = GruppoAvversario.getIstanza();
+			case PRE_GAME_ATTESA_NOME_PERSONAGGIO:
+				Foresta.reimposta();
 
-			nomePersonaggio = s.trim();
-			if (nomePersonaggio.isEmpty()) {
-				personaggio = RegistroPersonaggi.getPersonaggioCasuale();
-				if (personaggio == null) {
-					UI.scriviGrande("Non ci sono personaggi disponibili. Occorre crearne uno specificando il nome.");
-					UI.chiediTesto();
-				} else {
-					stato = Stato.INIZIALIZZAZIONE_GIOCO;
-				}
-				processaAzione(null);
-				break;
-			} else {
-				// Qui mettiamo il codice per i personaggi nascosti tipo:
-				if (s.equals("OmbraFiamma")) {
-					personaggio = new OmbraFiamma("Alakazam", 5);
+				nomePersonaggio = testoDisponibile.trim();
+				if (nomePersonaggio.isEmpty()) {
+					personaggio = RegistroPersonaggi.getPersonaggioCasuale();
 					stato = Stato.INIZIALIZZAZIONE_GIOCO;
 					processaAzione(null);
 					break;
+				} else {
+					// Qui mettiamo il codice per i personaggi nascosti tipo:
+					if (testoDisponibile.equals("OmbraFiamma")) {
+						personaggio = new OmbraFiamma("Alakazam", 5);
+						stato = Stato.INIZIALIZZAZIONE_GIOCO;
+						processaAzione(null);
+						break;
+					}
+					UI.scriviGrande("Scegli il sesso e la classe di " + nomePersonaggio);
+					stato = Stato.PRE_GAME_ATTESA_SESSO_PERSONAGGIO;
+					UI.impostaAzioni(Comando.MASCHIO, Comando.FEMMINA);
 				}
-				UI.scriviGrande("Scegli il sesso e la classe di " + nomePersonaggio);
-				stato = Stato.PRE_GAME_ATTESA_SESSO_PERSONAGGIO;
-				UI.impostaAzioni(Comando.MASCHIO, Comando.FEMMINA);
-			}
-			break;
+				break;
 
-		case ATTESA_NOME_PUNTEGGI:
-			if (s.isEmpty()) {
-				s = GruppoGiocatore.getIstanza().getPersonaggio(0).getNomeProprio().orElseThrow(Personaggio.PERSONAGGIO_SENZA_NOME);
-			}
-			GestorePunteggi.addPunteggio(s, Statistiche.getPunti());
-			stato = Stato.PUNTEGGI;
-			UI.impostaAzioni(Comando.PERGAMENA);
-			UI.punteggi();
-			processaAzione(null);
-			break;
+			case ATTESA_NOME_PUNTEGGI:
+				if (testoDisponibile.isEmpty()) {
+					testoDisponibile = GruppoGiocatore.getIstanza().getPersonaggio(0).getNomeProprio().orElseThrow(Personaggio.PERSONAGGIO_SENZA_NOME);
+				}
+				GestorePunteggi.addPunteggio(testoDisponibile, Statistiche.getPunti());
+				stato = Stato.PUNTEGGI;
+				UI.impostaAzioni(Comando.PERGAMENA);
+				UI.punteggi();
+				processaAzione(null);
+				break;
 
-		default:
-			throw new IllegalArgumentException();
+			default:
+				BusEventi.pubblica(new EventoErroreInterno("onEventoTestoDisponibile: Stato non gestito: " + stato));
 		}
 	}
 
@@ -116,7 +113,7 @@ public class Automa implements ControlloreDiGioco {
 
 			case INTRO:
 				if (azione == Comando.TIMER) {
-					UI.intro();
+					BusEventi.pubblica(new EventoStatoDiGioco(Stato.INTRO));
 				} else if (azione == Comando.PERGAMENA) {
 					temporizzatore.termina();
 					if (GestoreSalvataggi.getSalvataggiDisponibili().isEmpty()) {

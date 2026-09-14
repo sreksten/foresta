@@ -37,7 +37,9 @@ public class ForestaUI implements InterfacciaUtente {
 		BusEventi.iscriviti(EventoMessaggio.class, this::gestisciEventoMessaggio);
 		BusEventi.iscriviti(EventoNotificaGlobale.class, this::gestisciEventoNotificaGlobale);
 		BusEventi.iscriviti(EventoParagrafo.class, this::gestisciEventoParagrafo);
+		BusEventi.iscriviti(EventoRichiestaTesto.class, this::gestisciEventoRichiestaTesto);
 		// EventoValutazioneAttaccante non ci interessa, è il motore AI degli avversari che informa sul suo stato di progressione
+		BusEventi.iscriviti(EventoStatoDiGioco.class, this::gestisciEventoStatoDiGioco);
 		BusEventi.iscriviti(EventoVariazioneEffettoDiStato.class, this::gestisciEventoVariazioneEffettoDiStato);
 		BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
 		BusEventi.iscriviti(EventoVariazioneStatoVitalePersonaggio.class, this::gestisciEventoVariazioneStatoVitalePersonaggio);
@@ -123,11 +125,6 @@ public class ForestaUI implements InterfacciaUtente {
 	@Override
 	public void reinizializza() {
 		displayableCanvas.reinizializza();
-	}
-
-	@Override
-	public void intro() {
-		displayableCanvas.intro();
 	}
 
 	@Override
@@ -230,6 +227,10 @@ public class ForestaUI implements InterfacciaUtente {
 		displayableCanvas.secondoPiano(finestra);
 	}
 
+	private void gestisciEventoRichiestaTesto(EventoRichiestaTesto evento) {
+		chiediTesto();
+	}
+
 	@Override
 	public void chiediTesto() {
 		prompt.setVisible(true);
@@ -238,7 +239,7 @@ public class ForestaUI implements InterfacciaUtente {
 	@Override
 	public void riceviTesto(String testo) {
 		prompt.setVisible(false);
-		Gioco.riceviTesto(testo);
+		BusEventi.pubblica(new EventoTestoDisponibile(testo));
 	}
 
 	@Override
@@ -280,6 +281,20 @@ public class ForestaUI implements InterfacciaUtente {
 	private void gestisciEventoParagrafo(EventoParagrafo evento) {
 		displayableCanvas.notifica("");
 		displayableCanvas.notifica(evento.getMessaggio());
+	}
+
+	private void gestisciEventoStatoDiGioco(EventoStatoDiGioco evento) {
+		switch(evento.getStato()) {
+			case INTRO:
+				 // Richiama la schermata o animazione di introduzione
+				displayableCanvas.intro();
+				ComandiPossibili.set(Comando.PERGAMENA);
+				impostaAzioni();
+				break;
+
+			default:
+				throw new IllegalArgumentException("Stato di gioco non ancora gestito: " + evento.getStato());
+		}
 	}
 
 	private void gestisciEventoVariazioneStatoVitalePersonaggio(EventoVariazioneStatoVitalePersonaggio evento) {

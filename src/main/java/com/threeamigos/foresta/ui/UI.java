@@ -37,13 +37,6 @@ public class UI {
 	}
 
 	/**
-	 * Richiama la schermata o animazione di introduzione
-	 */
-	public static void intro() {
-		interfacciaUtente.intro();
-	}
-
-	/**
 	 * Richiama la schermata di selezione nuovo gioco o caricamento di un salvataggio
 	 */
 	public static void nuovoGiocoOCaricaPrecedente() {

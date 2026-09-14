@@ -18,10 +18,6 @@ public class Gioco {
 		controlloreDiGioco.inizia();
 	}
 
-	public static void riceviTesto(String s) {
-		controlloreDiGioco.riceviTesto(s);
-	}
-
 	public static void processaAzione(Comando azione) {
 		controlloreDiGioco.processaAzione(azione);
 	}

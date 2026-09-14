@@ -24,6 +24,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoCombattimento.class, this::onEventoCombattimento);
         BusEventi.iscriviti(EventoConsumoPuntoAbilita.class, this::onEventoConsumoPuntoAbilita);
         BusEventi.iscriviti(EventoCreazionePersonaggio.class, this::onEventoCreazionePersonaggio);
+        BusEventi.iscriviti(EventoErroreInterno.class, this::onEventoErroreInterno);
         BusEventi.iscriviti(EventoException.class, this::onEventoException);
         BusEventi.iscriviti(EventoFumetto.class, this::onEventoFumetto);
         BusEventi.iscriviti(EventoInterazioneElementale.class, this::onEventoInterazioneElementale);
@@ -37,12 +38,15 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoRichiestaPrelievoArtefatto.class, this::onEventoRichiestaPrelievo);
         // EventoRichiestaSpostamento è classe astratta
         BusEventi.iscriviti(EventoRichiestaStoccaggioArtefatto.class, this::onEventoRichiestaStoccaggio);
+        BusEventi.iscriviti(EventoRichiestaTesto.class, this::onEventoRichiestaTesto);
         BusEventi.iscriviti(EventoRichiestaVenditaArtefatto.class, this::onEventoRichiestaVendita);
         BusEventi.iscriviti(EventoRifiutoAcquistoArtefatto.class, this::onEventoRifiutoAcquisto);
         BusEventi.iscriviti(EventoRifiutoPrelievoArtefatto.class, this::onEventoRifiutoPrelievo);
         // EventoRifiutoSpostamento è classe astratta
         BusEventi.iscriviti(EventoRifiutoStoccaggioArtefatto.class, this::onEventoRifiutoStoccaggio);
         BusEventi.iscriviti(EventoRifiutoVenditaArtefatto.class, this::onEventoRifiutoVendita);
+        BusEventi.iscriviti(EventoStatoDiGioco.class, this::onEventoStatoDiGioco);
+        BusEventi.iscriviti(EventoTestoDisponibile.class, this::onEventoTestoDisponibile);
         BusEventi.iscriviti(EventoValutazioneAttaccante.class, this::onEventoValutazioneAttaccante);
         BusEventi.iscriviti(EventoVariazioneEffettoDiStato.class, this::onEventoVariazioneEffettoDiStato);
         BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::onEventoVariazioneStatistichePersonaggio);
@@ -104,6 +108,10 @@ public class SnifferBusEventi {
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p));
     }
 
+    private void onEventoErroreInterno(EventoErroreInterno evento) {
+        Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggio()));
+    }
+
     private void onEventoException(EventoException evento) {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getException().getMessage()));
         Logger.log(evento.getException());
@@ -161,6 +169,10 @@ public class SnifferBusEventi {
                 + formattaParte(evento.getParteRemota()));
     }
 
+    private void onEventoRichiestaTesto(EventoRichiestaTesto evento) {
+        Logger.log(headerEvento(evento) + "Richiesta: " + evento.getRichiesta());
+    }
+
     private void onEventoRichiestaVendita(EventoRichiestaVenditaArtefatto evento) {
         OggettoConCosto oggetto = evento.getOggettoDaSpostare();
         Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di vendere "
@@ -198,6 +210,14 @@ public class SnifferBusEventi {
         Logger.log(headerEvento(evento) + formattaParte(richiesta.getParteAttiva()) + " non può vendere "
                 + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") a "
                 + formattaParte(richiesta.getParteRemota()));
+    }
+
+    private void onEventoStatoDiGioco(EventoStatoDiGioco evento) {
+        Logger.log(headerEvento(evento) + evento.getStato().toString());
+    }
+
+    private void onEventoTestoDisponibile(EventoTestoDisponibile evento) {
+        Logger.log(headerEvento(evento) + "Ricevuto testo: " + evento.getTesto());
     }
 
     private void onEventoValutazioneAttaccante(EventoValutazioneAttaccante evento) {

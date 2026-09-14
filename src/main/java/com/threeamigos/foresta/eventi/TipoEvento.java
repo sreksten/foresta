@@ -34,9 +34,27 @@ public enum TipoEvento {
     PERSONAGGIO_VALUTAZIONE,
 
     /**
+     * Il gioco chiede un testo (ad esempio il nome del personaggio)
+     */
+    RICHIESTA_TESTO,
+    /**
+     * Il gioco riceve il testo
+     */
+    TESTO_DISPONIBILE,
+
+    // Eventi interni per il funzionamento del gioco
+
+    /**
+     * Cambio di stato dell'automa principale
+     */
+    STATO_DI_GIOCO,
+    /**
      * Attività interna di pulizia cache dinamica immagini
      */
     PULIZIA_CACHE_IMMAGINI,
+    /**
+     * Messaggi di notifica interni al motore non destinati al giocatore
+     */
     MESSAGGIO_INTERNO,
     ERRORE_INTERNO
 

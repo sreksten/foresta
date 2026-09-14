@@ -28,11 +28,6 @@ public interface InterfacciaUtente {
     void reinizializza();
 	
 	/**
-	 * Richiama la schermata o animazione di introduzione
-	 */
-    void intro();
-
-	/**
 	 * Richiama la schermata di selezione nuovo gioco o caricamento di un salvataggio
 	 */
     void nuovoGiocoOCaricaPrecedente();
