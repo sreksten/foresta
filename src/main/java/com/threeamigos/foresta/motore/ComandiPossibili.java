@@ -1,10 +1,17 @@
 package com.threeamigos.foresta.motore;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
+/**
+ * Una classe che tiene traccia di quali siano tutti i comandi possibili.
+ *
+ * @author Stefano Reksten
+ */
+//FIXME occorrerebbe non avere una classe condivisa tra automa e UI, tutto dovrebbe arrivare via scambio eventi
 public class ComandiPossibili {
-	
+
 	private ComandiPossibili() {
 	}
 
@@ -26,7 +33,12 @@ public class ComandiPossibili {
 			add(comando);
 		}
 	}
-	
+
+	public static void set(Collection<Comando> comandi) {
+		reimposta();
+		comandiPossibili.addAll(comandi);
+	}
+
 	public static void set(Comando ... comandi) {
 		reimposta();
 		add(comandi);

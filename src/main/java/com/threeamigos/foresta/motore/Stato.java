@@ -8,20 +8,15 @@ public enum Stato {
 	INTRO, // Prima dell'inizio del gioco vero e proprio,
 	
 	CONTROLLO_SALVATAGGI,
-	SELEZIONE_NUOVO_GIOCO_O_CARICA,
 	SELEZIONE_SALVATAGGIO_DA_LEGGERE,
-	LETTURA_SALVATAGGIO,
-	
-	PRE_GAME_SELEZIONE_PERSONAGGIO,
+
 	PRE_GAME_ATTESA_NOME_PERSONAGGIO,
 	PRE_GAME_ATTESA_SESSO_PERSONAGGIO,
 	PRE_GAME_ATTESA_CLASSE_PERSONAGGIO,
-	
-	INIZIALIZZAZIONE_GIOCO,
 
-	INZIO_LOCAZIONE, // Crea una nuova locazione, crea i mostri, descrive
+	INZIO_LOCAZIONE, // Crea una nuova locazione, crea i mostri, descrive, controlla trigger pre-locazione
 	// e passa al successivo
-	IN_LOCAZIONE, // Stabilisce quali azioni possono essere intraprese
+	IN_LOCAZIONE, // Controlla trigger in-locazione, stabilisce quali azioni possono essere intraprese
 
 	SCELTA_AUTOMATICA_PERSONAGGIO,
 	SCELTA_PERSONAGGIO_QUALSIASI,
@@ -37,7 +32,7 @@ public enum Stato {
 
 	ATTESA_SI_NO,
 
-	FINE_LOCAZIONE,
+	FINE_LOCAZIONE, // Controlla trigger post-locazione
 	ATTESA_DIREZIONE,
 	ATTESA_PASSI,
 	

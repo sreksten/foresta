@@ -486,7 +486,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 		repaint();
 	}
-	
+
+	/**
+	 * Richiama la schermata di selezione nuovo gioco o caricamento di un salvataggio
+	 */
 	public void nuovoGiocoOCaricaPrecedente() {
 		stato = StatoDisplayableCanvas.STATO_SELEZIONE_NUOVO_GIOCO_O_CARICA;
 		repaint();

@@ -63,12 +63,15 @@ public class Statistiche {
 		return statisticheMD.getMostriUccisi(classe);
 	}
 
+	public static void incrementaTurniGiocati() {
+		statisticheMD.setTurniGiocati(statisticheMD.getTurniGiocati() + 1);
+	}
+
 	public static int getTurniGiocati() {
 		return statisticheMD.getTurniGiocati();
 	}
 
-	public static int incrementaTurniGiocati() {
-		statisticheMD.setTurniGiocati(statisticheMD.getTurniGiocati() + 1);
-		return statisticheMD.getTurniGiocati();
+	public static void reimposta() {
+		statisticheMD.reimposta();
 	}
 }

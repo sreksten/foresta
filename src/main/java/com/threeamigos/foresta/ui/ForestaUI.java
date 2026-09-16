@@ -12,7 +12,9 @@ import com.threeamigos.foresta.tools.Temporizzatore;
 import javax.swing.*;
 import java.awt.*;
 
-public class ForestaUI implements InterfacciaUtente {
+public class ForestaUI implements InterfacciaUtente, Temporizzabile {
+
+	private static final String SCEGLI_NOME_PERSONAGGIO = "Scegli il nome del tuo personaggio o lascialo vuoto per un personaggio casuale.";
 
 	private final Orientamento orientamento;
 	private final boolean tuttoSchermo;
@@ -27,10 +29,12 @@ public class ForestaUI implements InterfacciaUtente {
 		this.orientamento = orientamento;
 		this.tuttoSchermo = tuttoSchermo;
 		this.temporizzatore = temporizzatore;
+		temporizzatore.setTemporizzabile(this);
 
 		SwingUtilities.invokeLater(this::createAndShowGUI);
 
 		// EventoCombattimento non ci interessa, solo mostrare i suoi effetti eventuali che vengono pubblicati dal personaggio interessato
+		BusEventi.iscriviti(EventoComandiDisponibili.class, this::gestisciEventoComandiDisponibili);
 		BusEventi.iscriviti(EventoConsumoPuntoAbilita.class, this::gestisciEventoConsumoPuntoAbilita);
 		// EventoCreazionePersonaggio non ci interessa, riguarda il motore
 		BusEventi.iscriviti(EventoFumetto.class, this::gestisciEventoFumetto);
@@ -38,6 +42,7 @@ public class ForestaUI implements InterfacciaUtente {
 		BusEventi.iscriviti(EventoMessaggio.class, this::gestisciEventoMessaggio);
 		BusEventi.iscriviti(EventoNotificaGlobale.class, this::gestisciEventoNotificaGlobale);
 		BusEventi.iscriviti(EventoParagrafo.class, this::gestisciEventoParagrafo);
+		BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::gestisciEventoRichiestaReinizializzazioneUI);
 		BusEventi.iscriviti(EventoRichiestaTesto.class, this::gestisciEventoRichiestaTesto);
 		// EventoValutazioneAttaccante non ci interessa, è il motore AI degli avversari che informa sul suo stato di progressione
 		BusEventi.iscriviti(EventoStatoDiGioco.class, this::gestisciEventoStatoDiGioco);
@@ -124,14 +129,13 @@ public class ForestaUI implements InterfacciaUtente {
 		BusEventi.pubblica(new EventoInterfacciaUtentePronta());
 	}
 
-	@Override
-	public void reinizializza() {
-		displayableCanvas.reinizializza();
+	public void tick() {
+		// Per ora non fa niente, in realtà dovrebbe gestire la intro per adesso
 	}
 
 	@Override
-	public void nuovoGiocoOCaricaPrecedente() {
-		displayableCanvas.nuovoGiocoOCaricaPrecedente();
+	public void reinizializza() {
+		displayableCanvas.reinizializza();
 	}
 
 	@Override
@@ -285,12 +289,49 @@ public class ForestaUI implements InterfacciaUtente {
 		displayableCanvas.notifica(evento.getMessaggio());
 	}
 
+	private void gestisciEventoRichiestaReinizializzazioneUI(EventoRichiestaReinizializzazioneUI evento) {
+		reinizializza();
+		mostraSchermataGioco();
+		primoPiano(InterfacciaUtente.Finestra.GRAFICA);
+		rinfresca();
+	}
+
 	private void gestisciEventoStatoDiGioco(EventoStatoDiGioco evento) {
 		switch(evento.getStato()) {
 			case INTRO:
 				 // Richiama la schermata o animazione di introduzione
 				displayableCanvas.intro();
-				ComandiPossibili.set(Comando.PERGAMENA);
+				ComandiPossibili.set(evento.getComandiPossibili());
+				impostaAzioni();
+				break;
+
+			case SELEZIONE_SALVATAGGIO_DA_LEGGERE:
+				displayableCanvas.selezioneSlotSalvataggioDaCaricare();
+				ComandiPossibili.set(evento.getComandiPossibili());
+				impostaAzioni();
+				break;
+
+			case PRE_GAME_ATTESA_NOME_PERSONAGGIO:
+				displayableCanvas.scriviGrande(SCEGLI_NOME_PERSONAGGIO);
+				prompt.setVisible(true);
+				ComandiPossibili.reimposta();
+				impostaAzioni();
+				break;
+
+			case PRE_GAME_ATTESA_SESSO_PERSONAGGIO:
+				displayableCanvas.scriviGrande("Scegli il sesso di " + prompt.getText());
+				ComandiPossibili.set(evento.getComandiPossibili());
+				impostaAzioni();
+				break;
+
+			case PRE_GAME_ATTESA_CLASSE_PERSONAGGIO:
+				displayableCanvas.scriviGrande("Scegli la classe di " + prompt.getText());
+				ComandiPossibili.set(evento.getComandiPossibili());
+				impostaAzioni();
+				break;
+
+			case ATTESA_DIREZIONE:
+				ComandiPossibili.set(evento.getComandiPossibili());
 				impostaAzioni();
 				break;
 
@@ -316,8 +357,12 @@ public class ForestaUI implements InterfacciaUtente {
 		}
 	}
 
+	private void gestisciEventoComandiDisponibili(EventoComandiDisponibili evento) {
+		ComandiPossibili.set(evento.getComandiDisponibili());
+		pannelloIcone.impostaAzioni();
+	}
+
 	private void gestisciEventoConsumoPuntoAbilita(EventoConsumoPuntoAbilita evento) {
-		Personaggio personaggio = evento.getPersonaggio();
 		TipoAttributo tipoAttributo = evento.getTipoAttributo();
 		displayableCanvas.notificaAnnuncioGlobale("AUMENTO", tipoAttributo.getNome().toUpperCase());
 	}

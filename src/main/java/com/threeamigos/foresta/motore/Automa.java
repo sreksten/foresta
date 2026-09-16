@@ -19,12 +19,11 @@ import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.function.Consumer;
 
-public class Automa implements ControlloreDiGioco {
-
-	private static final String SCEGLI_NOME_PERSONAGGIO = "Scegli il nome del tuo personaggio o lascialo vuoto per un personaggio casuale.";
+public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private final Temporizzatore temporizzatore;
 
@@ -42,16 +41,23 @@ public class Automa implements ControlloreDiGioco {
 
 	public Automa(Temporizzatore temporizzatore) {
 		this.temporizzatore = temporizzatore;
-		temporizzatore.setConsumatore(this);
+		temporizzatore.setTemporizzabile(this);
 
 		BusEventi.iscriviti(EventoComandoDiGioco.class, this::onEventoComandoDiGioco);
 		BusEventi.iscriviti(EventoTestoDisponibile.class, this::onEventoTestoDisponibile);
 	}
 
+	public void tick() {
+		processaAzione(Comando.TIMER);
+	}
+
 	public void inizia() {
 		stato = Stato.INTRO;
-		temporizzatore.inizia(5);
-		BusEventi.pubblica(new EventoStatoDiGioco(Stato.INTRO));
+
+		//FIXME toglierlo di qui, non ha senso per l'intro, dovrebbe gestirla la UI
+		temporizzatore.inizia(5_000);
+
+		BusEventi.pubblica(new EventoStatoDiGioco(Stato.INTRO, getComandiPossibiliInStatoIntro()));
 	}
 
 	private void onEventoTestoDisponibile(EventoTestoDisponibile evento) {
@@ -62,25 +68,25 @@ public class Automa implements ControlloreDiGioco {
 
 			case PRE_GAME_ATTESA_NOME_PERSONAGGIO:
 				Foresta.reimposta();
+				personaggio = null;
 
 				nomePersonaggio = testoDisponibile.trim();
 				if (nomePersonaggio.isEmpty()) {
 					personaggio = RegistroPersonaggi.getPersonaggioCasuale();
-					stato = Stato.INIZIALIZZAZIONE_GIOCO;
-					processaAzione(null);
-					break;
 				} else {
 					// Qui mettiamo il codice per i personaggi nascosti tipo:
 					if (testoDisponibile.equals("OmbraFiamma")) {
 						personaggio = new OmbraFiamma("Alakazam", 5);
-						stato = Stato.INIZIALIZZAZIONE_GIOCO;
-						processaAzione(null);
-						break;
 					}
-					UI.scriviGrande("Scegli il sesso e la classe di " + nomePersonaggio);
-					stato = Stato.PRE_GAME_ATTESA_SESSO_PERSONAGGIO;
-					UI.impostaAzioni(Comando.MASCHIO, Comando.FEMMINA);
 				}
+
+				if (personaggio != null) {
+					inizializzaGioco();
+					processaAzione(null);
+					break;
+				}
+				stato = Stato.PRE_GAME_ATTESA_SESSO_PERSONAGGIO;
+				BusEventi.pubblica(new EventoStatoDiGioco(stato, Comando.MASCHIO, Comando.FEMMINA));
 				break;
 
 			case ATTESA_NOME_PUNTEGGI:
@@ -110,50 +116,23 @@ public class Automa implements ControlloreDiGioco {
 	 * lo stato stesso.
 	 */
 	public void processaAzione(Comando azione) {
-		Logger.log("Automa in stato " + stato.name() + "; processo azione " + azione);
+		BusEventi.pubblica(new EventoMessaggioInterno("Automa in stato " + stato.name() + "; processo azione " + azione));
 		switch (stato) {
 
 			case INTRO:
 				if (azione == Comando.TIMER) {
-					BusEventi.pubblica(new EventoStatoDiGioco(Stato.INTRO));
-				} else if (azione == Comando.PERGAMENA) {
+					//FIXME fa cagare, va messo comunque nel temporizzatore della UI.
+					BusEventi.pubblica(new EventoStatoDiGioco(Stato.INTRO, getComandiPossibiliInStatoIntro()));
+				} else if (azione == Comando.PERGAMENA || azione == Comando.FLOPPY) {
 					temporizzatore.termina();
-					if (GestoreSalvataggi.getSalvataggiDisponibili().isEmpty()) {
-						stato = Stato.PRE_GAME_SELEZIONE_PERSONAGGIO;
-						processaAzione(null);
+					if (azione == Comando.PERGAMENA) {
+						stato = Stato.PRE_GAME_ATTESA_NOME_PERSONAGGIO;
+						BusEventi.pubblica(new EventoStatoDiGioco(stato));
 					} else {
-						UI.nuovoGiocoOCaricaPrecedente();
-						UI.impostaAzioni(Comando.NUMERO_1, Comando.NUMERO_2);
-						stato = Stato.SELEZIONE_NUOVO_GIOCO_O_CARICA;
-						processaAzione(null);
+						stato = Stato.SELEZIONE_SALVATAGGIO_DA_LEGGERE;
+						Collection<Comando> comandiPossibili = getComandiPossibiliInStatoSelezioneSalvataggioDaLeggere();
+						BusEventi.pubblica(new EventoStatoDiGioco(stato, comandiPossibili));
 					}
-					UI.rinfresca();
-				}
-				break;
-
-			case SELEZIONE_NUOVO_GIOCO_O_CARICA:
-				if (azione == Comando.NUMERO_1) {
-					stato = Stato.PRE_GAME_SELEZIONE_PERSONAGGIO;
-					processaAzione(null);
-				} else if (azione == Comando.NUMERO_2) {
-					stato = Stato.SELEZIONE_SALVATAGGIO_DA_LEGGERE;
-					ComandiPossibili.reimposta();
-					for (InterfacciaGestoreSalvataggi.InterfacciaTestataSalvataggio testata : GestoreSalvataggi.getSalvataggiDisponibili()) {
-						String id = testata.getId();
-						if ("1".equals(id)) {
-							ComandiPossibili.add(Comando.NUMERO_1);
-						} else if ("2".equals(id)) {
-							ComandiPossibili.add(Comando.NUMERO_2);
-						} else if ("3".equals(id)) {
-							ComandiPossibili.add(Comando.NUMERO_3);
-						} else if ("4".equals(id)) {
-							ComandiPossibili.add(Comando.NUMERO_4);
-						} else if ("5".equals(id)) {
-							ComandiPossibili.add(Comando.NUMERO_5);
-						}
-					}
-					UI.impostaAzioni();
-					UI.selezioneSlotSalvataggioDaCaricare();
 				}
 				break;
 
@@ -164,10 +143,8 @@ public class Automa implements ControlloreDiGioco {
 					locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
 					gruppo.setLocazioneCorrente(locazioneCorrente);
 					stato = Stato.ATTESA_DIREZIONE;
-					UI.reinizializza();
-					UI.mostraSchermataGioco();
-					UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
-					UI.rinfresca();
+					BusEventi.pubblica(new EventoRichiestaReinizializzazioneUI());
+					BusEventi.pubblica(new EventoStatoDiGioco(stato, getComandiPossibiliInStatoAttesaDirezione()));
 				} else {
 					UI.scriviGrande("Problema nella lettura file");
 					stato = Stato.CONTROLLO_SALVATAGGI;
@@ -175,25 +152,14 @@ public class Automa implements ControlloreDiGioco {
 				processaAzione(null);
 				break;
 
-			case LETTURA_SALVATAGGIO:
-
-            case ATTESA_NOME_PUNTEGGI:
-                break;
-
-			case PRE_GAME_SELEZIONE_PERSONAGGIO:
-				ComandiPossibili.reimposta();
-				UI.impostaAzioni();
-				UI.scriviGrande(SCEGLI_NOME_PERSONAGGIO);
-				stato = Stato.PRE_GAME_ATTESA_NOME_PERSONAGGIO;
-				UI.chiediTesto();
-				break;
-
 			case PRE_GAME_ATTESA_SESSO_PERSONAGGIO:
 				stato = Stato.PRE_GAME_ATTESA_CLASSE_PERSONAGGIO;
 				if (azione == Comando.FEMMINA) {
-					UI.impostaAzioni(Comando.GUERRIERA, Comando.LADRA, Comando.CANTASTORIE, Comando.ELFA, Comando.MAGA);
+					BusEventi.pubblica(new EventoStatoDiGioco(stato, Comando.GUERRIERA, Comando.LADRA,
+							Comando.CANTASTORIE, Comando.ELFA, Comando.MAGA));
 				} else {
-					UI.impostaAzioni(Comando.GUERRIERO, Comando.LADRO, Comando.BARDO, Comando.ELFO, Comando.MAGO);
+					BusEventi.pubblica(new EventoStatoDiGioco(stato, Comando.GUERRIERO, Comando.LADRO,
+							Comando.BARDO, Comando.ELFO, Comando.MAGO));
 				}
 				break;
 
@@ -232,104 +198,7 @@ public class Automa implements ControlloreDiGioco {
 				default:
 					throw new IllegalArgumentException();
 				}
-				stato = Stato.INIZIALIZZAZIONE_GIOCO;
-				processaAzione(null);
-				break;
-
-			case INIZIALIZZAZIONE_GIOCO:
-				UI.reinizializza();
-				UI.mostraSchermataGioco();
-				gruppo.aggiungiPersonaggioSenzaNotificare(personaggio);
-
-				Artefatto cazzabubbolo = CostruttoreArtefatto.istanza()
-						.setTipo(TipoArtefatto.NINNOLO)
-						.setNome("il cazzabubbolo a molla della morte alata perforante")
-						.setDescrizione("il cui potere è nel fancazzismo")
-						.setLivello(1)
-						.setDanniBase(5)
-						.setCostoAcquisto(10)
-						.setPeso(1)
-						.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 500)
-						.setModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_PERCENTUALE, 400)
-						.setIncantamento("Il Peperoncino di Cayenna", TipoDanno.FUOCO, 10, 0.5)
-						.costruisci();
-				personaggio.addArtefatto(cazzabubbolo);
-
-				Artefatto megaspada = CostruttoreArtefatto.istanza()
-						.setTipo(TipoArtefatto.SPADA)
-						.setNome("la Spada della Morte alata con rinterzo laterale")
-						.setDescrizione("che massacra i porci")
-						.setLivello(5)
-						.setDanniBase(50)
-						.setCostoAcquisto(100)
-						.setPeso(3)
-						.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 5)
-						.setModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, 2)
-						.setModificatore(TipoAttributo.CORAGGIO, TipoModificatore.QUANTITA_ASSOLUTA, 1)
-						.setIncantamento("Incantesimo di RomyJona", TipoDanno.NECROTICO, 10, 0.5)
-						.costruisci();
-				personaggio.addArtefatto(megaspada);
-
-				Artefatto superscudo = CostruttoreArtefatto.istanza()
-						.setTipo(TipoArtefatto.SCUDO)
-						.setNome("lo scudo fiscale")
-						.setDescrizione("che si fa fare sconti sugli acquisti")
-						.setLivello(5)
-						.setDanniBase(50)
-						.setCostoAcquisto(100_000)
-						.setPeso(3000)
-						.setModificatore(TipoAttributo.COSTITUZIONE, TipoModificatore.AUMENTO_PERCENTUALE, 5)
-						.setModificatore(TipoAttributo.RESISTENZA_MAGICA, TipoModificatore.AUMENTO_PERCENTUALE, 2)
-						.setModificatore(TipoAttributo.FORTUNA, TipoModificatore.AUMENTO_PERCENTUALE, 1)
-						.setIncantamento("La battuta del cavolo", TipoDanno.GELO, 10, 0.5)
-						.costruisci();
-				personaggio.addArtefatto(superscudo);
-
-				Artefatto scarponi = CostruttoreArtefatto.istanza()
-						.setTipo(TipoArtefatto.ARMATURA)
-						.setNome("gli scarponi di RomyJona")
-						.setDescrizione("che tritura i tegami")
-						.setLivello(5)
-						.setDanniBase(50)
-						.setCostoAcquisto(100)
-						.setPeso(3)
-						.setModificatore(TipoAttributo.CARISMA, TipoModificatore.QUANTITA_ASSOLUTA, 0)
-						.costruisci();
-				personaggio.addArtefatto(scarponi);
-
-				Artefatto occhiali = CostruttoreArtefatto.istanza()
-						.setTipo(TipoArtefatto.NINNOLO)
-						.setNome("occhiali da sole del Ruttatore")
-						.setDescrizione("che tritura i tegami")
-						.setLivello(5)
-						.setDanniBase(50)
-						.setCostoAcquisto(100)
-						.setPeso(3)
-						.setModificatore(TipoAttributo.CARISMA, TipoModificatore.QUANTITA_ASSOLUTA, 5)
-						.setIncantamento("La serpe di Yalar", TipoDanno.VELENO, 10, 0.5)
-						.setIncantamento("La mazzata nel capo", TipoDanno.CONTUNDENTE, 10, 0.5)
-						.setIncantamento("Lo scherzo da prete", TipoDanno.SACRO, 10, 0.5)
-						.costruisci();
-				personaggio.addArtefatto(occhiali);
-
-				Artefatto portafogli = CostruttoreArtefatto.istanza()
-						.setTipo(TipoArtefatto.NINNOLO)
-						.setNome("portafogli di Samuele")
-						.setDescrizione("che tritura i tegami")
-						.setLivello(5)
-						.setDanniBase(50)
-						.setCostoAcquisto(100)
-						.setPeso(3)
-						.setModificatore(TipoAttributo.CARISMA, TipoModificatore.QUANTITA_ASSOLUTA, 5)
-						.setIncantamento("Il pelo di topa", TipoDanno.ARCANO, 10, 0.5)
-						.setIncantamento("Giocondo", TipoDanno.SONICO, 10, 0.5)
-						.setIncantamento("Il cervello di Tarlo", TipoDanno.VUOTO, 10, 0.5)
-						.costruisci();
-				personaggio.addArtefatto(portafogli);
-
-				personaggio.getModelloDati().setPuntiAbilitaDisponibili(10);
-
-				stato = Stato.INZIO_LOCAZIONE;
+				inizializzaGioco();
 				processaAzione(null);
 				break;
 
@@ -393,7 +262,7 @@ public class Automa implements ControlloreDiGioco {
 				stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, azione);
 				if (stato != Stato.IN_LOCAZIONE) {
 					if (stato == Stato.IN_COMBATTIMENTO) {
-						temporizzatore.inizia(1);
+						temporizzatore.inizia(1_000);
 					} else {
 						if (stato == Stato.GIOCO_PERSO || stato == Stato.GIOCO_VINTO || stato == Stato.FINE_LOCAZIONE) {
 							temporizzatore.termina();
@@ -417,7 +286,7 @@ public class Automa implements ControlloreDiGioco {
 					// Il battito del combattimento viene interrotto ogni volta che si
 					// esce da IN_COMBATTIMENTO (per esempio per scegliere chi combatte):
 					// qui lo si riavvia, dato che i round sono guidati da Comando.TIMER.
-					temporizzatore.inizia(1);
+					temporizzatore.inizia(1_000);
 					UI.impostaAzioni();
 				}
 				break;
@@ -560,50 +429,8 @@ public class Automa implements ControlloreDiGioco {
 
 			case ATTESA_DIREZIONE:
 				BusEventi.pubblica(new EventoParagrafo(gruppo.chiMaiuscolo() + " se ne va. In quale direzione si incammina?"));
-				ComandiPossibili.reimposta();
-				if (gruppo.getMaxPassiNord() > 0) {
-					ComandiPossibili.add(Comando.NORD);
-				}
-				if (gruppo.getMaxPassiEst() > 0) {
-					ComandiPossibili.add(Comando.EST);
-				}
-				if (gruppo.getMaxPassiSud() > 0) {
-					ComandiPossibili.add(Comando.SUD);
-				}
-				if (gruppo.getMaxPassiOvest() > 0) {
-					ComandiPossibili.add(Comando.OVEST);
-				}
-				ComandiPossibili.add(Comando.MAPPA);
-				if (gruppo.getNumeroPersonaggiVivi() > 1 && (LineaTemporale.getOra() > 20 || LineaTemporale.getOra() < 6)) {
-					ClassiLocazione classeLocazione = gruppo.getClasseLocazioneCorrente();
-					if (classeLocazione.getTipoLocazione() != TipoLocazione.CITTA &&
-							classeLocazione != ClassiLocazione.LOCANDA &&
-							classeLocazione != ClassiLocazione.PALUDE) {
-						ComandiPossibili.add(Comando.ACCAMPAMENTO);
-					}
-				}
-				if (gruppo.getPozioniSalute() > 0) {
-					ComandiPossibili.add(Comando.POZIONE_SALUTE);
-				}
-				if (gruppo.getPozioniSaluteGrande() > 0) {
-					ComandiPossibili.add(Comando.POZIONE_SALUTE_GRANDE);
-				}
-				if (gruppo.getPozioniMagia() > 0) {
-					ComandiPossibili.add(Comando.POZIONE_MAGIA);
-				}
-				if (gruppo.getPozioniMagiaGrande() > 0) {
-					ComandiPossibili.add(Comando.POZIONE_MAGIA_GRANDE);
-				}
-				if (isResurrezioneDisponibile()) {
-					ComandiPossibili.add(Comando.RESURREZIONE);
-				}
-				ComandiPossibili.add(Comando.INVENTARIO);
-				ComandiPossibili.add(Comando.AIUTO);
-				ComandiPossibili.add(Comando.FLOPPY);
-
 				stato = Stato.ATTESA_PASSI;
-				UI.impostaAzioni();
-				UI.rinfresca();
+				BusEventi.pubblica(new EventoComandiDisponibili(getComandiPossibiliInStatoAttesaDirezione()));
 				break;
 
 			case ATTESA_PASSI:
@@ -877,7 +704,7 @@ public class Automa implements ControlloreDiGioco {
 				if (azione == null) {
 					UI.impostaAzioni(Comando.PERGAMENA);
 					UI.perso();
-					temporizzatore.inizia(5);
+					temporizzatore.inizia(5_000);
 				} else if (azione == Comando.TIMER) {
 					UI.perso();
 				} else {
@@ -899,7 +726,7 @@ public class Automa implements ControlloreDiGioco {
 			case GIOCO_VINTO_2:
 				if (azione == null) {
 					UI.vinto();
-					temporizzatore.inizia(5);
+					temporizzatore.inizia(5_000);
 					UI.impostaAzioni(Comando.PERGAMENA);
 				} else if (azione == Comando.TIMER) {
 					UI.vinto();
@@ -924,6 +751,9 @@ public class Automa implements ControlloreDiGioco {
 				UI.impostaAzioni(Comando.PERGAMENA);
 				break;
 
+			case ATTESA_NOME_PUNTEGGI:
+				break;
+
             case PUNTEGGI:
 				inizia();
 				break;
@@ -931,6 +761,104 @@ public class Automa implements ControlloreDiGioco {
 			default:
 				throw new IllegalStateException("Stato " + stato + " non correttamente gestito!");
 		}
+	}
+
+	private void inizializzaGioco() {
+
+		gruppo.aggiungiPersonaggioSenzaNotificare(personaggio);
+
+		// PER TEST
+		Artefatto cazzabubbolo = CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.NINNOLO)
+				.setNome("il cazzabubbolo a molla della morte alata perforante")
+				.setDescrizione("il cui potere è nel fancazzismo")
+				.setLivello(1)
+				.setDanniBase(5)
+				.setCostoAcquisto(10)
+				.setPeso(1)
+				.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 500)
+				.setModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_PERCENTUALE, 400)
+				.setIncantamento("Il Peperoncino di Cayenna", TipoDanno.FUOCO, 10, 0.5)
+				.costruisci();
+		personaggio.addArtefatto(cazzabubbolo);
+
+		Artefatto megaspada = CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.SPADA)
+				.setNome("la Spada della Morte alata con rinterzo laterale")
+				.setDescrizione("che massacra i porci")
+				.setLivello(5)
+				.setDanniBase(50)
+				.setCostoAcquisto(100)
+				.setPeso(3)
+				.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 5)
+				.setModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, 2)
+				.setModificatore(TipoAttributo.CORAGGIO, TipoModificatore.QUANTITA_ASSOLUTA, 1)
+				.setIncantamento("Incantesimo di RomyJona", TipoDanno.NECROTICO, 10, 0.5)
+				.costruisci();
+		personaggio.addArtefatto(megaspada);
+
+		Artefatto superscudo = CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.SCUDO)
+				.setNome("lo scudo fiscale")
+				.setDescrizione("che si fa fare sconti sugli acquisti")
+				.setLivello(5)
+				.setDanniBase(50)
+				.setCostoAcquisto(100_000)
+				.setPeso(3000)
+				.setModificatore(TipoAttributo.COSTITUZIONE, TipoModificatore.AUMENTO_PERCENTUALE, 5)
+				.setModificatore(TipoAttributo.RESISTENZA_MAGICA, TipoModificatore.AUMENTO_PERCENTUALE, 2)
+				.setModificatore(TipoAttributo.FORTUNA, TipoModificatore.AUMENTO_PERCENTUALE, 1)
+				.setIncantamento("La battuta del cavolo", TipoDanno.GELO, 10, 0.5)
+				.costruisci();
+		personaggio.addArtefatto(superscudo);
+
+		Artefatto scarponi = CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.ARMATURA)
+				.setNome("gli scarponi di RomyJona")
+				.setDescrizione("che tritura i tegami")
+				.setLivello(5)
+				.setDanniBase(50)
+				.setCostoAcquisto(100)
+				.setPeso(3)
+				.setModificatore(TipoAttributo.CARISMA, TipoModificatore.QUANTITA_ASSOLUTA, 0)
+				.costruisci();
+		personaggio.addArtefatto(scarponi);
+
+		Artefatto occhiali = CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.NINNOLO)
+				.setNome("occhiali da sole del Ruttatore")
+				.setDescrizione("che tritura i tegami")
+				.setLivello(5)
+				.setDanniBase(50)
+				.setCostoAcquisto(100)
+				.setPeso(3)
+				.setModificatore(TipoAttributo.CARISMA, TipoModificatore.QUANTITA_ASSOLUTA, 5)
+				.setIncantamento("La serpe di Yalar", TipoDanno.VELENO, 10, 0.5)
+				.setIncantamento("La mazzata nel capo", TipoDanno.CONTUNDENTE, 10, 0.5)
+				.setIncantamento("Lo scherzo da prete", TipoDanno.SACRO, 10, 0.5)
+				.costruisci();
+		personaggio.addArtefatto(occhiali);
+
+		Artefatto portafogli = CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.NINNOLO)
+				.setNome("portafogli di Samuele")
+				.setDescrizione("che tritura i tegami")
+				.setLivello(5)
+				.setDanniBase(50)
+				.setCostoAcquisto(100)
+				.setPeso(3)
+				.setModificatore(TipoAttributo.CARISMA, TipoModificatore.QUANTITA_ASSOLUTA, 5)
+				.setIncantamento("Il pelo di topa", TipoDanno.ARCANO, 10, 0.5)
+				.setIncantamento("Giocondo", TipoDanno.SONICO, 10, 0.5)
+				.setIncantamento("Il cervello di Tarlo", TipoDanno.VUOTO, 10, 0.5)
+				.costruisci();
+		personaggio.addArtefatto(portafogli);
+
+		personaggio.getModelloDati().setPuntiAbilitaDisponibili(10);
+		// FINE PER TEST
+
+		stato = Stato.INZIO_LOCAZIONE;
+		BusEventi.pubblica(new EventoRichiestaReinizializzazioneUI());
 	}
 
 	/**
@@ -1139,4 +1067,89 @@ public class Automa implements ControlloreDiGioco {
 			GestoreSalvataggi.salva(id, sb.toString());
 		}
 	}
+
+	/**
+	 * I comandi possibili quando il gioco si trova in stato Intro:
+	 * inizio di una nuova partita o caricamento di una partita preesistente.
+	 */
+	private Collection<Comando> getComandiPossibiliInStatoIntro() {
+		Collection<Comando> comandiPossibili = new ArrayList<>();
+		comandiPossibili.add(Comando.PERGAMENA);
+		if (!GestoreSalvataggi.getSalvataggiDisponibili().isEmpty()) {
+			comandiPossibili.add(Comando.FLOPPY);
+		}
+		return comandiPossibili;
+	}
+
+	/**
+	 * I comandi possibili quando il gioco sta attendendo la scelta di un gioco da caricare.
+	 */
+	private List<Comando> getComandiPossibiliInStatoSelezioneSalvataggioDaLeggere() {
+		List<Comando> comandiPossibili = new ArrayList<>();
+		for (InterfacciaGestoreSalvataggi.InterfacciaTestataSalvataggio testata : GestoreSalvataggi.getSalvataggiDisponibili()) {
+			String id = testata.getId();
+			if ("1".equals(id)) {
+				comandiPossibili.add(Comando.NUMERO_1);
+			} else if ("2".equals(id)) {
+				comandiPossibili.add(Comando.NUMERO_2);
+			} else if ("3".equals(id)) {
+				comandiPossibili.add(Comando.NUMERO_3);
+			} else if ("4".equals(id)) {
+				comandiPossibili.add(Comando.NUMERO_4);
+			} else if ("5".equals(id)) {
+				comandiPossibili.add(Comando.NUMERO_5);
+			}
+		}
+		return comandiPossibili;
+	}
+
+	/**
+	 * I possibili comandi che il giocatore può dare quando la locazione è completata e sta andando via.
+	 */
+	private Collection<Comando> getComandiPossibiliInStatoAttesaDirezione() {
+		List<Comando> comandiPossibili = new ArrayList<>();
+		if (gruppo.getMaxPassiNord() > 0) {
+			comandiPossibili.add(Comando.NORD);
+		}
+		if (gruppo.getMaxPassiEst() > 0) {
+			comandiPossibili.add(Comando.EST);
+		}
+		if (gruppo.getMaxPassiSud() > 0) {
+			comandiPossibili.add(Comando.SUD);
+		}
+		if (gruppo.getMaxPassiOvest() > 0) {
+			comandiPossibili.add(Comando.OVEST);
+		}
+		comandiPossibili.add(Comando.MAPPA);
+		if (gruppo.getNumeroPersonaggiVivi() > 1 && (LineaTemporale.getOra() > 20 || LineaTemporale.getOra() < 6)) {
+			ClassiLocazione classeLocazione = gruppo.getClasseLocazioneCorrente();
+			if (classeLocazione.getTipoLocazione() != TipoLocazione.CITTA &&
+					classeLocazione != ClassiLocazione.LOCANDA &&
+					classeLocazione != ClassiLocazione.PALUDE) {
+				comandiPossibili.add(Comando.ACCAMPAMENTO);
+			}
+		}
+		if (gruppo.getPozioniSalute() > 0) {
+			comandiPossibili.add(Comando.POZIONE_SALUTE);
+		}
+		if (gruppo.getPozioniSaluteGrande() > 0) {
+			comandiPossibili.add(Comando.POZIONE_SALUTE_GRANDE);
+		}
+		if (gruppo.getPozioniMagia() > 0) {
+			comandiPossibili.add(Comando.POZIONE_MAGIA);
+		}
+		if (gruppo.getPozioniMagiaGrande() > 0) {
+			comandiPossibili.add(Comando.POZIONE_MAGIA_GRANDE);
+		}
+		if (isResurrezioneDisponibile()) {
+			comandiPossibili.add(Comando.RESURREZIONE);
+		}
+		comandiPossibili.add(Comando.INVENTARIO);
+		comandiPossibili.add(Comando.AIUTO);
+		comandiPossibili.add(Comando.FLOPPY);
+		return comandiPossibili;
+	}
+
+
 }
+

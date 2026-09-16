@@ -2,8 +2,7 @@ package com.threeamigos.foresta.tools;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.EventoException;
-import com.threeamigos.foresta.motore.Comando;
-import com.threeamigos.foresta.motore.ControlloreDiGioco;
+import com.threeamigos.foresta.motore.Temporizzabile;
 
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -19,27 +18,27 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 	});
 
 	private ScheduledFuture<?> timerTask;
-	private ControlloreDiGioco controlloreDiGioco;
+	private Temporizzabile temporizzabile;
 
-	public void setConsumatore(ControlloreDiGioco c) {
-		this.controlloreDiGioco = c;
+	public void setTemporizzabile(Temporizzabile temporizzabile) {
+		this.temporizzabile = temporizzabile;
 	}
 
-	public void inizia(int secondi) {
+	public void inizia(int millisecondi) {
 		if (timerTask != null) {
 			timerTask.cancel(false);
 		}
 		timerTask = executor.scheduleWithFixedDelay(
 			() -> {
 				try {
-					controlloreDiGioco.processaAzione(Comando.TIMER);
+					temporizzabile.tick();
 				} catch (RuntimeException e) {
 					BusEventi.pubblica(new EventoException(e));
 				}
 			},
-                secondi,
-                secondi,
-			TimeUnit.SECONDS
+                millisecondi,
+                millisecondi,
+			TimeUnit.MILLISECONDS
 		);
 	}
 

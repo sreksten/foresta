@@ -18,27 +18,6 @@ public class UI {
 	}
 
 	/**
-	 * Ripulisce eventuali dati da partite precedenti
-	 */
-	public static void reinizializza() {
-		interfacciaUtente.reinizializza();
-	}
-
-	/**
-	 * Richiama la schermata di selezione nuovo gioco o caricamento di un salvataggio
-	 */
-	public static void nuovoGiocoOCaricaPrecedente() {
-		interfacciaUtente.nuovoGiocoOCaricaPrecedente();
-	}
-
-	/**
-	 * Richiama la schermata di selezione salvataggio
-	 */
-	public static void selezioneSlotSalvataggioDaCaricare() {
-		interfacciaUtente.selezioneSlotSalvataggioDaCaricare();
-	}
-
-	/**
 	 * Va alla schermata di gioco vera e propria
 	 */
 	public static void mostraSchermataGioco() {

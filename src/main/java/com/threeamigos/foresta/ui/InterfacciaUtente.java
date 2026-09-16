@@ -20,21 +20,6 @@ public interface InterfacciaUtente {
 		MAPPA_A_TUTTO_SCHERMO,
 		INVENTARIO
     }
-	
-	/**
-	 * Ripulisce eventuali dati da partite precedenti
-	 */
-    void reinizializza();
-	
-	/**
-	 * Richiama la schermata di selezione nuovo gioco o caricamento di un salvataggio
-	 */
-    void nuovoGiocoOCaricaPrecedente();
-	
-	/**
-	 * Richiama la schermata di selezione salvataggio
-	 */
-    void selezioneSlotSalvataggioDaCaricare();
 
 	/**
 	 * Va alla schermata di gioco vera e propria

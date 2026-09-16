@@ -36,9 +36,11 @@ public class Main {
 		GestorePunteggi.impostaGestorePunteggi(new GestorePunteggiSuFile());
 		GestoreSalvataggi.impostaGestoreSalvataggi(new GestoreSalvataggiSuFile());
 
-		Temporizzatore temporizzatore = new TemporizzatoreJ2SE();
-		ControlloreDiGioco controlloreDiGioco = new Automa(temporizzatore);
-		ForestaUI forestaUI = new ForestaUI(orientamento, tuttoSchermo, temporizzatore);
+		Temporizzatore temporizzatoreAutoma = new TemporizzatoreJ2SE();
+		ControlloreDiGioco controlloreDiGioco = new Automa(temporizzatoreAutoma);
+
+		Temporizzatore temporizzatoreUI = new TemporizzatoreJ2SE();
+		ForestaUI forestaUI = new ForestaUI(orientamento, tuttoSchermo, temporizzatoreUI);
 
 		// FIXME l'ultima cosa che andrà levata quando si passa il tutto a eventi lasciando solo il costruttore
 		UI.impostaInterfacciaUtente(forestaUI);

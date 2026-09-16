@@ -64,13 +64,22 @@ public enum TipoEvento {
     // Eventi interni per il funzionamento del gioco
 
     /**
-     * Cambio di stato dell'automa principale
-     */
-    STATO_DI_GIOCO,
-    /**
-     * Interfaccia utente inizializzata
+     * Interfaccia utente inizializzata - segnala che il sistema è pronto per il gioco
      */
     INTERFACCIA_UTENTE_PRONTA,
+    /**
+     * Richiede una reinizializzazione dell'interfaccia grafica
+     */
+    REINIZIALIZZAZIONE,
+    /**
+     * Elenco dei possibili comandi che l'interfaccia deve mostrare
+     */
+    COMANDI_DISPONIBILI,
+    /**
+     * Cambio di stato dell'automa principale che informa la UI
+     */
+    STATO_DI_GIOCO,
+
     /**
      * Attività interna di pulizia cache dinamica immagini
      */

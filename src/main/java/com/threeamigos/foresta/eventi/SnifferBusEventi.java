@@ -23,6 +23,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoAumentoLivelloMondo.class, this::onEventoAumentoLivelloMondo);
         BusEventi.iscriviti(EventoAumentoLivelloPersonaggio.class, this::onEventoAumentoLivelloPersonaggio);
         // EventoBase è classe astratta
+        BusEventi.iscriviti(EventoComandiDisponibili.class, this::onEventoComandiDisponibili);
         BusEventi.iscriviti(EventoComandoDiGioco.class, this::onEventoComandoDiGioco);
         BusEventi.iscriviti(EventoCombattimento.class, this::onEventoCombattimento);
         BusEventi.iscriviti(EventoConsumoPuntoAbilita.class, this::onEventoConsumoPuntoAbilita);
@@ -118,6 +119,10 @@ public class SnifferBusEventi {
     private void onEventoAumentoLivelloPersonaggio(EventoAumentoLivelloPersonaggio evento) {
         Logger.log(headerEvento(evento) + "Aumento livello " + evento.getLivelloPrecedente() + " -> " +
                 evento.getLivelloAttuale() + " - " + formattaStatistichePersonaggio(evento.getPersonaggio()));
+    }
+
+    private void onEventoComandiDisponibili(EventoComandiDisponibili evento) {
+        Logger.log(headerEvento(evento) + "Comandi disponibili: " + evento.getComandiDisponibili());
     }
 
     private void onEventoComandoDiGioco(EventoComandoDiGioco evento) {
