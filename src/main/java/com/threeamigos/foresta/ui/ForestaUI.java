@@ -134,16 +134,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	@Override
-	public void reinizializza() {
-		displayableCanvas.reinizializza();
-	}
-
-	@Override
-	public void selezioneSlotSalvataggioDaCaricare() {
-		displayableCanvas.selezioneSlotSalvataggioDaCaricare();
-	}
-
-	@Override
 	public void mostraSchermataGioco() {
 		displayableCanvas.iniziaGioco();
 	}
@@ -290,7 +280,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	private void gestisciEventoRichiestaReinizializzazioneUI(EventoRichiestaReinizializzazioneUI evento) {
-		reinizializza();
+		displayableCanvas.reinizializza();
 		mostraSchermataGioco();
 		primoPiano(InterfacciaUtente.Finestra.GRAFICA);
 		rinfresca();
