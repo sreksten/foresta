@@ -16,15 +16,16 @@ public class SpriteFumetto implements SpriteInterface {
     private static final int TICK_LIMIT_BEFORE_FADING = MAX_TICKS >> 1;
     private static final int ROUND_BORDER_SIZE = 8;
 
-    boolean active;
-    private final Image image;
     private final String testo;
+    private final Image image;
     private final int x;
     private final int y;
     private final int width;
     private final int height;
     private final int pointToX;
     private final int pointToY;
+
+    boolean active;
     private int ticks;
 
     SpriteFumetto(String testo, int maxLarghezza, int x, int y, DoomdarkFont font, DoomdarkColorModel.Color color, int pointToX, int pointToY) {
@@ -198,7 +199,7 @@ public class SpriteFumetto implements SpriteInterface {
         return active;
     }
 
-    String getTesto() {
+    public String getTesto() {
         return testo;
     }
 

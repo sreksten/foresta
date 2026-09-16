@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
 
@@ -29,9 +30,16 @@ class DisplayableCanvasRiquadroStatistiche implements Finestra {
 		puntiY = gemmeY + fontMedium.getHeight() + 1;
 		scrittaX = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE + 4;
 		totaleX = topLeftX + ImageCache.cornicePiccola.getWidth() - DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE - 4;
-		
+
+		registratiAEventi();
 	}
-	
+
+	private void registratiAEventi() {
+        BusEventi.iscriviti(EventoVariazioneGemme.class, this::gestisciEventoVariazioneGemme);
+		BusEventi.iscriviti(EventoVariazioneMonete.class, this::gestisciEventoVariazioneMonete);
+		BusEventi.iscriviti(EventoVariazionePuntiEsperienza.class, this::gestisciEventoVariazionePuntiEsperienza);
+	}
+
 	void disegnaStatistiche(Graphics2D graphics) {
 		GruppoGiocatore gruppoGiocatore = GruppoGiocatore.getIstanza();
 		graphics.drawImage(ImageCache.cornicePiccola, topLeftX, topLeftY, null);
@@ -54,26 +62,50 @@ class DisplayableCanvasRiquadroStatistiche implements Finestra {
 		graphics.drawImage(image, totaleX - image.getWidth(null), puntiY, null);
 	}
 
-	SpriteATempo variaMonete(int variazione) {
-		if (variazione == 0) {
-			return null;
+	private void gestisciEventoVariazioneGemme(EventoVariazioneGemme evento) {
+		SpriteATempo sprite = costruisciSpritePerVariazioneGemme(
+				evento.getNuovoValore() - evento.getValorePrecedente());
+		if (sprite != null) {
+			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
 		}
-		BufferedImage icona = ImageCache.spriteMoneta;
-		return new SpriteATempo(icona, variazione, fontMedium, totaleX, moneteY);
 	}
-	
-	SpriteATempo variaGemme(int variazione) {
+
+	private SpriteATempo costruisciSpritePerVariazioneGemme(int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteGemma;
-		return new SpriteATempo(icona, variazione, fontMedium, totaleX, gemmeY);
+		return new SpriteATempo(icona, variazione, fontMedium, totaleX, gemmeY, "Gemme variate");
 	}
-	
-	SpriteATempo variaPunti(int variazione) {
+
+	private void gestisciEventoVariazioneMonete(EventoVariazioneMonete evento) {
+		SpriteATempo sprite = costruisciSpritePerVariazioneMonete(
+				evento.getNuovoValore() - evento.getValorePrecedente());
+		if (sprite != null) {
+			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+		}
+	}
+
+	private SpriteATempo costruisciSpritePerVariazioneMonete(int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
-		return new SpriteATempo(null, variazione, fontMedium, totaleX, puntiY);
+		BufferedImage icona = ImageCache.spriteMoneta;
+		return new SpriteATempo(icona, variazione, fontMedium, totaleX, moneteY, "Monete variate");
+	}
+
+	private void gestisciEventoVariazionePuntiEsperienza(EventoVariazionePuntiEsperienza evento) {
+		SpriteATempo sprite = costruisciSpritePerVariazionePuntiEsperienza(
+				evento.getNuovoValore() - evento.getValorePrecedente());
+		if (sprite != null) {
+			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+		}
+	}
+
+	private SpriteATempo costruisciSpritePerVariazionePuntiEsperienza(int variazione) {
+		if (variazione == 0) {
+			return null;
+		}
+		return new SpriteATempo(null, variazione, fontMedium, totaleX, puntiY, "Punti esperienza variati");
 	}
 }

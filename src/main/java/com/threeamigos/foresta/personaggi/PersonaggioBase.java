@@ -647,7 +647,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		if (nuovoLivello > livelloAttuale) {
 			int differenza = nuovoLivello - livelloAttuale;
 			md.setLivello(nuovoLivello);
-			BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.LIVELLO, livelloAttuale, nuovoLivello));
+			BusEventi.pubblica(new EventoAumentoLivelloPersonaggio(this, livelloAttuale, nuovoLivello));
 			int puntiAbilitaDisponibili = md.getPuntiAbilitaDisponibili();
 			int nuoviPuntiAbilitaDisponibili = puntiAbilitaDisponibili + differenza;
 			md.setPuntiAbilitaDisponibili(nuoviPuntiAbilitaDisponibili);
@@ -1091,7 +1091,21 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public void addModificatore(ModificatoreAttributo modificatore) {
+		int saluteMassimaPrecedente = getSaluteMassima();
+		int magiaMassimaPrecedente = getMagiaMassima();
+
 		md.getModificatori().add(modificatore);
+
+		int saluteMassimaRicalcolata = getSaluteMassima();
+		if (saluteMassimaPrecedente != saluteMassimaRicalcolata) {
+			BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE_MASSIMA, saluteMassimaPrecedente, saluteMassimaRicalcolata));
+		}
+
+		int magiaMassimaRicalcolata = getMagiaMassima();
+		if (magiaMassimaPrecedente != magiaMassimaRicalcolata) {
+			BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.MAGIA_MASSIMA, magiaMassimaPrecedente, magiaMassimaRicalcolata));
+		}
+
 		ricalcolaAttributiSecondari();
 		BusEventi.pubblica(new EventoAggiuntaModificatore(this, modificatore));
 	}
@@ -1103,19 +1117,32 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * parata, resistenza magica, percezione, soggezione, furia, coraggio, valore, numero bersagli
 	 */
 	protected void ricalcolaAttributiSecondari() {
-		md.setMassimo(TipoAttributo.CARICO_MASSIMO, calcolaCaricoMassimo());
-		md.set(TipoAttributo.CRITICO, calcolaCritico());
-		md.set(TipoAttributo.PRECISIONE, calcolaPrecisione());
-		md.set(TipoAttributo.VELOCITA, calcolaVelocita());
-		md.set(TipoAttributo.FURTIVITA, calcolaFurtivita());
-		md.set(TipoAttributo.PARATA, calcolaParata());
-		md.set(TipoAttributo.RESISTENZA_MAGICA, calcolaResistenzaMagica());
-		md.set(TipoAttributo.PERCEZIONE, calcolaPercezione());
-		md.set(TipoAttributo.SOGGEZIONE, calcolaSoggezione());
-		md.set(TipoAttributo.FURIA, calcolaFuria());
-		md.set(TipoAttributo.CORAGGIO, calcolaCoraggio());
-		md.set(TipoAttributo.VALORE, calcolaValore());
-		md.set(TipoAttributo.NUMERO_BERSAGLI, calcolaNumeroBersagli());
+		Optional<Double> valorePrecedente = md.getOptional(TipoAttributo.CARICO_MASSIMO);
+		double valoreAttuale = calcolaCaricoMassimo();
+		md.setMassimo(TipoAttributo.CARICO_MASSIMO, valoreAttuale);
+		if (valorePrecedente.isPresent() && valorePrecedente.get() != valoreAttuale) {
+			BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.CARICO_MASSIMO, valorePrecedente.get(), valoreAttuale));
+		}
+		ricalcolaAttributoSecondario(TipoAttributo.CRITICO, calcolaCritico());
+		ricalcolaAttributoSecondario(TipoAttributo.PRECISIONE, calcolaPrecisione());
+		ricalcolaAttributoSecondario(TipoAttributo.VELOCITA, calcolaVelocita());
+		ricalcolaAttributoSecondario(TipoAttributo.FURTIVITA, calcolaFurtivita());
+		ricalcolaAttributoSecondario(TipoAttributo.PARATA, calcolaParata());
+		ricalcolaAttributoSecondario(TipoAttributo.RESISTENZA_MAGICA, calcolaResistenzaMagica());
+		ricalcolaAttributoSecondario(TipoAttributo.PERCEZIONE, calcolaPercezione());
+		ricalcolaAttributoSecondario(TipoAttributo.SOGGEZIONE, calcolaSoggezione());
+		ricalcolaAttributoSecondario(TipoAttributo.FURIA, calcolaFuria());
+		ricalcolaAttributoSecondario(TipoAttributo.CORAGGIO, calcolaCoraggio());
+		ricalcolaAttributoSecondario(TipoAttributo.VALORE, calcolaValore());
+		ricalcolaAttributoSecondario(TipoAttributo.NUMERO_BERSAGLI, calcolaNumeroBersagli());
+	}
+
+	private void ricalcolaAttributoSecondario(TipoAttributo tipoAttributo, double valoreRicalcolato) {
+		Optional<Double> valorePrecedente = md.getOptional(tipoAttributo);
+		md.set(tipoAttributo, valoreRicalcolato);
+		if (valorePrecedente.isPresent() && valorePrecedente.get() != valoreRicalcolato) {
+			BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, tipoAttributo, valorePrecedente.get(), valoreRicalcolato));
+		}
 	}
 
 	public abstract double getMoltiplicatoreCarico();

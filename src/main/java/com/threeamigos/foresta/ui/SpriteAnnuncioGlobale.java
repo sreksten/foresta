@@ -11,7 +11,7 @@ import java.util.StringTokenizer;
  * disponibile o è stata completata. A differenza degli altri sprite non si sposta:
  * resta centrato sullo schermo e si ingrandisce mentre sfuma.
  */
-class SpriteAnnuncioGlobale implements SpriteInterface {
+public class SpriteAnnuncioGlobale implements SpriteInterface {
 
 	//private static final long DURATA_MS = 3500L;
 	private static final long DURATA_MS = 2000L;
@@ -26,20 +26,32 @@ class SpriteAnnuncioGlobale implements SpriteInterface {
 	private static final int OMBRA_SCOSTAMENTO = 2;
 	private static final Color OMBRA_COLORE = new Color(0, 0, 0, 160);
 
+	private final String titolo;
+	private final String descrizione;
 	private final BufferedImage image;
 	private final int larghezzaSchermo;
 	private final int altezzaSchermo;
 	private long inizio = -1;
 	private boolean active;
 
-	SpriteAnnuncioGlobale(String etichetta, String nomeMissione, int larghezzaSchermo, int altezzaSchermo) {
+	SpriteAnnuncioGlobale(String titolo, String descrizione, int larghezzaSchermo, int altezzaSchermo) {
+		this.titolo = titolo;
+		this.descrizione = descrizione;
 		this.larghezzaSchermo = larghezzaSchermo;
 		this.altezzaSchermo = altezzaSchermo;
 		int larghezzaMassima = larghezzaSchermo / 2;
-		List<String> righeEtichetta = spezzaInRighe(etichetta.toUpperCase(), larghezzaMassima);
-		List<String> righeNome = spezzaInRighe(nomeMissione.toUpperCase(), larghezzaMassima);
+		List<String> righeEtichetta = spezzaInRighe(this.titolo.toUpperCase(), larghezzaMassima);
+		List<String> righeNome = spezzaInRighe(descrizione.toUpperCase(), larghezzaMassima);
 		image = costruisciImmagine(righeEtichetta, righeNome);
 		active = true;
+	}
+
+	public String getTitolo() {
+		return titolo;
+	}
+
+	public String getDescrizione() {
+		return descrizione;
 	}
 
 	private static List<String> spezzaInRighe(String testo, int larghezzaMassima) {

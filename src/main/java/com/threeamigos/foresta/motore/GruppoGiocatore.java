@@ -4,7 +4,10 @@ import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
-import com.threeamigos.foresta.motore.modellodati.*;
+import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.motore.modellodati.GruppoGiocatoreMD;
+import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -105,13 +108,14 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	}
 
 	public final void addMonete(int quantita) {
-		md.setMonete(md.getMonete() + quantita);
-		BusEventi.pubblica(new EventoVariazioneDisponibilitaConsumabile(TipoConsumabile.MONETE, quantita));
+		int valorePrecedente = md.getMonete();
+		int valoreAttuale = valorePrecedente + quantita;
+		md.setMonete(valoreAttuale);
+		BusEventi.pubblica(new EventoVariazioneMonete(valorePrecedente, valoreAttuale));
 	}
 
 	public final void subMonete(int quantita) {
-		md.setMonete(md.getMonete() - quantita);
-		BusEventi.pubblica(new EventoVariazioneDisponibilitaConsumabile(TipoConsumabile.MONETE, -quantita));
+		addMonete(-quantita);
 	}
 
 	public final int getPreziosi() {
@@ -119,13 +123,14 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	}
 
 	public final void addPreziosi(int quantita) {
-		md.setPreziosi(md.getPreziosi() + quantita);
-		BusEventi.pubblica(new EventoVariazioneDisponibilitaConsumabile(TipoConsumabile.GEMME, quantita));
+		int valorePrecedente = md.getPreziosi();
+		int valoreAttuale = valorePrecedente + quantita;
+		md.setPreziosi(valoreAttuale);
+		BusEventi.pubblica(new EventoVariazioneGemme(valorePrecedente, valoreAttuale));
 	}
 
 	public final void subPreziosi(int quantita) {
-		md.setPreziosi(md.getPreziosi() - quantita);
-		BusEventi.pubblica(new EventoVariazioneDisponibilitaConsumabile(TipoConsumabile.GEMME, -quantita));
+		addPreziosi(-quantita);
 	}
 
 	public final int getIncantesimi(ClasseIncantesimo classeIncantesimo) {
@@ -133,13 +138,14 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	}
 
 	public final void addIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
-		md.setIncantesimi(classeIncantesimo, md.getIncantesimi(classeIncantesimo) + quantita);
-		BusEventi.pubblica(new EventoVariazioneDisponibilitaConsumabile(TipoConsumabile.INCANTESIMO, classeIncantesimo, quantita));
+		int valorePrecedente = md.getIncantesimi(classeIncantesimo);
+		int valoreAttuale = valorePrecedente + quantita;
+		md.setIncantesimi(classeIncantesimo, valoreAttuale);
+		BusEventi.pubblica(new EventoVariazioneIncantesimi(classeIncantesimo, valorePrecedente, valoreAttuale));
 	}
 
 	public final void subIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
-		md.setIncantesimi(classeIncantesimo, md.getIncantesimi(classeIncantesimo) - quantita);
-		BusEventi.pubblica(new EventoVariazioneDisponibilitaConsumabile(TipoConsumabile.INCANTESIMO, classeIncantesimo, -quantita));
+		addIncantesimi(classeIncantesimo, -quantita);
 	}
 	
 	public final int getPozioniSalute() {
@@ -147,13 +153,14 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	}
 
 	public final void addPozioniSalute(int quantita) {
-		md.setPozioniSalute(md.getPozioniSalute() + quantita);
-		BusEventi.pubblica(new EventoVariazioneDisponibilitaConsumabile(TipoConsumabile.POZIONE_SALUTE, quantita));
+		int valorePrecedente = md.getPozioniSalute();
+		int valoreAttuale = valorePrecedente + quantita;
+		md.setPozioniSalute(valoreAttuale);
+		BusEventi.pubblica(new EventoVariazionePozioniSalute(valorePrecedente, valoreAttuale));
 	}
 
 	public final void subPozioniSalute(int quantita) {
-		md.setPozioniSalute(md.getPozioniSalute() - quantita);
-		BusEventi.pubblica(new EventoVariazioneDisponibilitaConsumabile(TipoConsumabile.POZIONE_SALUTE, -quantita));
+		addPozioniSalute(-quantita);
 	}
 
 	public final void consumaPozioneSalute(Comando azione) {
@@ -174,13 +181,14 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	}
 	
 	public final void addPozioniSaluteGrande(int quantita) {
-		md.setPozioniSalute(md.getPozioniSaluteGrande() + quantita);
-		BusEventi.pubblica(new EventoVariazioneDisponibilitaConsumabile(TipoConsumabile.POZIONE_SALUTE_GRANDE, quantita));
+		int valorePrecedente = md.getPozioniSaluteGrande();
+		int valoreAttuale = valorePrecedente + quantita;
+		md.setPozioniSaluteGrande(valoreAttuale);
+		BusEventi.pubblica(new EventoVariazionePozioniSaluteGrandi(valorePrecedente, valoreAttuale));
 	}
 
 	public final void subPozioniSaluteGrande(int quantita) {
-		md.setPozioniSaluteGrande(md.getPozioniSaluteGrande() - quantita);
-		BusEventi.pubblica(new EventoVariazioneDisponibilitaConsumabile(TipoConsumabile.POZIONE_SALUTE_GRANDE, -quantita));
+		addPozioniSaluteGrande(-quantita);
 	}
 
 	public final void consumaPozioneSaluteGrande(Comando azione) {
@@ -202,13 +210,14 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	}
 
 	public final void addPozioniMagia(int quantita) {
-		md.setPozioniMagia(md.getPozioniMagia() + quantita);
-		BusEventi.pubblica(new EventoVariazioneDisponibilitaConsumabile(TipoConsumabile.POZIONE_MAGIA, quantita));
+		int valorePrecedente = md.getPozioniMagia();
+		int valoreAttuale = valorePrecedente + quantita;
+		md.setPozioniMagia(valoreAttuale);
+		BusEventi.pubblica(new EventoVariazionePozioniMagia(valorePrecedente, valoreAttuale));
 	}
 
 	public final void subPozioniMagia(int quantita) {
-		md.setPozioniMagia(md.getPozioniMagia() - quantita);
-		BusEventi.pubblica(new EventoVariazioneDisponibilitaConsumabile(TipoConsumabile.POZIONE_MAGIA, -quantita));
+		addPozioniMagia(-quantita);
 	}
 
 	public final void consumaPozioneMagia(Comando azione) {
@@ -229,13 +238,14 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	}
 
 	public final void addPozioniMagiaGrande(int quantita) {
-		md.setPozioniMagiaGrande(md.getPozioniMagiaGrande() + quantita);
-		BusEventi.pubblica(new EventoVariazioneDisponibilitaConsumabile(TipoConsumabile.POZIONE_MAGIA_GRANDE, quantita));
+		int valorePrecedente = md.getPozioniMagiaGrande();
+		int valoreAttuale = valorePrecedente + quantita;
+		md.setPozioniMagiaGrande(valoreAttuale);
+		BusEventi.pubblica(new EventoVariazionePozioniMagia(valorePrecedente, valoreAttuale));
 	}
 
 	public final void subPozioniMagiaGrande(int quantita) {
-		md.setPozioniMagiaGrande(md.getPozioniMagiaGrande() - quantita);
-		BusEventi.pubblica(new EventoVariazioneDisponibilitaConsumabile(TipoConsumabile.POZIONE_MAGIA_GRANDE, -quantita));
+		addPozioniMagiaGrande(-quantita);
 	}
 
 	public final void consumaPozioneMagiaGrande(Comando azione) {

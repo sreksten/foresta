@@ -3,26 +3,28 @@ package com.threeamigos.foresta.ui;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-class SpriteATempo implements SpriteInterface {
+public class SpriteATempo implements SpriteInterface {
 
 	private static final int MAX_TICKS = 16;
 	private static final int TICK_LIMIT_BEFORE_FADING = MAX_TICKS >> 1;
-	
+
+	private String descrizione;
 	boolean active;
 	private BufferedImage image;
 	private int x;
 	private int y;
 	private int ticks;
 	
-	SpriteATempo(BufferedImage image, int x, int y) {
+	SpriteATempo(BufferedImage image, int x, int y, String descrizione) {
 		this.image = image;
 		this.x = x;
 		this.y = y;
 		ticks = 0;
 		active = true;
+		this.descrizione = descrizione;
 	}
 
-	SpriteATempo(BufferedImage icona, int variazione, DoomdarkFont font, int x, int y) {
+	SpriteATempo(BufferedImage icona, int variazione, DoomdarkFont font, int x, int y, String descrizione) {
 		DoomdarkColorModel.Color color;
 		StringBuilder sb = new StringBuilder();
 		if (variazione >= 0) {
@@ -32,23 +34,26 @@ class SpriteATempo implements SpriteInterface {
 			color = DoomdarkColorModel.Color.RED;
 		}
 		sb.append(variazione);
-		init(icona, sb.toString(), font, color, x, y);
+		init(icona, sb.toString(), font, color, x, y, descrizione);
 	}
 
-	SpriteATempo(BufferedImage icona, int variazione, DoomdarkFont font, DoomdarkColorModel.Color color, int x, int y) {
+	SpriteATempo(BufferedImage icona, int variazione, DoomdarkFont font, DoomdarkColorModel.Color color, int x, int y,
+				 String descrizione) {
 		StringBuilder sb = new StringBuilder();
 		if (variazione >= 0) {
 			sb.append("+");
 		}
 		sb.append(variazione);
-		init(icona, sb.toString(), font, color, x, y);
+		init(icona, sb.toString(), font, color, x, y, descrizione);
 	}
-	
-	SpriteATempo(BufferedImage icona, String testo, DoomdarkFont font, DoomdarkColorModel.Color color, int x, int y) {
-		init(icona, testo, font, color, x, y);
+
+	public String getDescrizione() {
+		return descrizione;
 	}
-	
-	private void init(BufferedImage icona, String testo, DoomdarkFont font, DoomdarkColorModel.Color color, int x, int y) {
+
+	private void init(BufferedImage icona, String testo, DoomdarkFont font, DoomdarkColorModel.Color color,
+					  int x, int y, String descrizione) {
+		this.descrizione = descrizione;
 		Image doomdark = DoomdarkTextProducer.getImage(testo, font, color);
 		Image blackDoomdark = DoomdarkTextProducer.getImage(testo, font, DoomdarkColorModel.Color.BLACK);
 		int doomdarkHeight = doomdark.getHeight(null) + 2; // per il bordo nero

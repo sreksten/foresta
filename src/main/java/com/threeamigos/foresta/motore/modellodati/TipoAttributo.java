@@ -214,6 +214,11 @@ public enum TipoAttributo {
     SALUTE(SupertipoAttributo.RISORSA_DINAMICA, "Salute", "Salute fisica e resistenza complessiva"),
 
     /**
+     * Salute fisica e resistenza complessiva (massimo livello). Quando la salute corrente scende a zero, il personaggio muore.
+     */
+    SALUTE_MASSIMA(SupertipoAttributo.RISORSA_DINAMICA, "Salute massima", "Salute fisica e resistenza complessiva (massimo livello)"),
+
+    /**
      * Riserva di energia mistica e potenza magica accumulata.
      * <p><b>In attacco:</b> Determina la quantità massima di Punti Magia (MP/Mana) disponibili per lanciare incantesimi
      * devastanti e supporta la rigenerazione del mana durante il turno.</p>
@@ -221,6 +226,11 @@ public enum TipoAttributo {
      * subiti convertendoli in perdita di mana anziché di salute.</p>
      */
     MAGIA(SupertipoAttributo.RISORSA_DINAMICA, "Magia", "Riserva di mana ed energia magica canalizzabile"),
+
+    /**
+     * Riserva di energia mistica e potenza magica accumulata (massimo livello).
+     */
+    MAGIA_MASSIMA(SupertipoAttributo.RISORSA_DINAMICA, "Magia massima", "Riserva di mana ed energia magica canalizzabile (massimo livello)"),
 
     /**
      * Livello di affaticamento fisico e mentale accumulato durante l'azione.

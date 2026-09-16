@@ -11,7 +11,7 @@ import java.awt.image.BufferedImage;
  * coordinate passate al costruttore. Il testo può essere colorato con un colore pieno
  * oppure con un pattern (bitmap tilata) al posto del colore.
  */
-class SpriteEffetto implements SpriteInterface {
+public class SpriteEffetto implements SpriteInterface {
 
 	//private static final long DURATA_MS = 3500L;
 	private static final long DURATA_MS = 2000L;
@@ -21,6 +21,7 @@ class SpriteEffetto implements SpriteInterface {
 	private static final int OMBRA_SCOSTAMENTO = 2;
 	private static final Color OMBRA_COLORE = new Color(0, 0, 0, 160);
 
+	private final String testo;
 	private final BufferedImage image;
 	private final int x;
 	private final int y;
@@ -28,18 +29,23 @@ class SpriteEffetto implements SpriteInterface {
 	private boolean active;
 
 	SpriteEffetto(String testo, DoomdarkFont font, DoomdarkColorModel.Color color, int x, int y) {
-		this(costruisciTestoColorato(testo, font, color), x, y);
+		this(testo, costruisciTestoColorato(testo, font, color), x, y);
 	}
 
 	SpriteEffetto(String testo, DoomdarkFont font, BufferedImage pattern, int x, int y) {
-		this(costruisciTestoConPattern(testo, font, pattern), x, y);
+		this(testo, costruisciTestoConPattern(testo, font, pattern), x, y);
 	}
 
-	private SpriteEffetto(BufferedImage testo, int x, int y) {
-		this.image = aggiungiOmbra(testo);
+	private SpriteEffetto(String testo, BufferedImage testoRenderizzato, int x, int y) {
+		this.testo = testo;
+		this.image = aggiungiOmbra(testoRenderizzato);
 		this.x = x;
 		this.y = y;
 		active = true;
+	}
+
+	public String getTesto() {
+		return testo;
 	}
 
 	private static BufferedImage costruisciTestoColorato(String testo, DoomdarkFont font, DoomdarkColorModel.Color color) {

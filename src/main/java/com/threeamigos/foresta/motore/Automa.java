@@ -159,11 +159,11 @@ public class Automa implements ControlloreDiGioco {
 
 			case SELEZIONE_SALVATAGGIO_DA_LEGGERE:
 				if (leggi(azione)) {
-					stato = Stato.ATTESA_DIREZIONE;
 					gruppo = GruppoGiocatore.getIstanza();
 					gruppoAvversario = GruppoAvversario.getIstanza();
 					locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
 					gruppo.setLocazioneCorrente(locazioneCorrente);
+					stato = Stato.ATTESA_DIREZIONE;
 					UI.reinizializza();
 					UI.mostraSchermataGioco();
 					UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);

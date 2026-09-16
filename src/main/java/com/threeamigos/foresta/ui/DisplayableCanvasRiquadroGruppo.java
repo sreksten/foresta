@@ -1,5 +1,9 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoAumentoLivelloPersonaggio;
+import com.threeamigos.foresta.eventi.EventoCreazioneSpriteATempo;
+import com.threeamigos.foresta.eventi.EventoVariazioneStatistichePersonaggio;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -84,7 +88,15 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		rightXOffsetStanchezza = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 17;
 		leftXOffsetLabelCarisma = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 18;
 		rightXOffsetCarisma = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 23;
+
+		registratiAEventi();
 	}
+
+	private void registratiAEventi() {
+		BusEventi.iscriviti(EventoAumentoLivelloPersonaggio.class, this::gestisciEventoAumentoLivelloPersonaggio);
+		BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
+	}
+
 
 	void disegnaStatus(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
@@ -176,59 +188,12 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		return -1;
 	}
 
-	SpriteInterface variaSalute(Personaggio personaggio, int variazione) {
-		if (variazione == 0) {
-			return null;
-		}
-		int ordinalePersonaggio = getOrdinalePersonaggio(personaggio);
-		if (ordinalePersonaggio == -1) {
-			return null;
-		}
-		BufferedImage icona = ImageCache.spriteCombattimento;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
-		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetSalute, y);
+	private void gestisciEventoAumentoLivelloPersonaggio(EventoAumentoLivelloPersonaggio evento) {
+		BusEventi.pubblica(new EventoCreazioneSpriteATempo(costruisciSpritePerVariazioneLivello(evento.getPersonaggio(),
+				evento.getLivelloAttuale() - evento.getLivelloPrecedente())));
 	}
 
-	SpriteInterface variaSaluteMassima(Personaggio personaggio, int variazione) {
-		if (variazione == 0) {
-			return null;
-		}
-		int ordinalePersonaggio = getOrdinalePersonaggio(personaggio);
-		if (ordinalePersonaggio == -1) {
-			return null;
-		}
-		BufferedImage icona = ImageCache.spriteCombattimento;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
-		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetSaluteMassima, y);
-	}
-
-	SpriteInterface variaMagia(Personaggio personaggio, int variazione) {
-		if (variazione == 0) {
-			return null;
-		}
-		int ordinalePersonaggio = getOrdinalePersonaggio(personaggio);
-		if (ordinalePersonaggio == -1) {
-			return null;
-		}
-		BufferedImage icona = ImageCache.spriteMagia;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
-		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetMagia, y);
-	}
-	
-	SpriteInterface variaMagiaMassima(Personaggio personaggio, int variazione) {
-		if (variazione == 0) {
-			return null;
-		}
-		int ordinalePersonaggio = getOrdinalePersonaggio(personaggio);
-		if (ordinalePersonaggio == -1) {
-			return null;
-		}
-		BufferedImage icona = ImageCache.spriteMagia;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
-		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetMagiaMassima, y);
-	}
-
-	SpriteInterface variaLivello(Personaggio personaggio, int variazione) {
+	private SpriteATempo costruisciSpritePerVariazioneLivello(Personaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
@@ -238,10 +203,140 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 		BufferedImage icona = ImageCache.spriteAumentoLivello;
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
-		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetLivello, y);
+		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetLivello, y, "Livello variato");
 	}
 
-	SpriteInterface variaCoraggio(Personaggio personaggio, int variazione) {
+	private void gestisciEventoVariazioneStatistichePersonaggio(EventoVariazioneStatistichePersonaggio evento) {
+		if (!GruppoGiocatore.getIstanza().contiene(evento.getPersonaggio())) {
+			return;
+		}
+		switch (evento.getTipoAttributo()) {
+			case SALUTE:
+				gestisciEventoVariazioneSalute(evento);
+				break;
+			case SALUTE_MASSIMA:
+				gestisciEventoVariazioneSaluteMassima(evento);
+				break;
+			case MAGIA:
+				gestisciEventoVariazioneMagia(evento);
+				break;
+			case MAGIA_MASSIMA:
+				gestisciEventoVariazioneMagiaMassima(evento);
+				break;
+			case CORAGGIO:
+				gestisciEventoVariazioneCoraggio(evento);
+				break;
+			case VALORE:
+				gestisciEventoVariazioneValore(evento);
+				break;
+			case CARISMA:
+				gestisciEventoVariazioneCarisma(evento);
+				break;
+			case STANCHEZZA:
+				gestisciEventoVariazioneStanchezza(evento);
+				break;
+			case TEMPO:
+				gestisciEventoVariazioneTempo(evento);
+				break;
+			default:
+				//Altri attributi non sono gestiti da questa finestra
+				break;
+		}
+	}
+
+	private void gestisciEventoVariazioneSalute(EventoVariazioneStatistichePersonaggio evento) {
+		SpriteATempo sprite = costruisciSpritePerVariazioneSalute(evento.getPersonaggio(),
+				(int)(evento.getNuovoValore() - evento.getValorePrecedente()));
+		if (sprite != null) {
+			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+		}
+	}
+
+	private SpriteATempo costruisciSpritePerVariazioneSalute(Personaggio personaggio, int variazione) {
+		if (variazione == 0) {
+			return null;
+		}
+		int ordinalePersonaggio = getOrdinalePersonaggio(personaggio);
+		if (ordinalePersonaggio == -1) {
+			return null;
+		}
+		BufferedImage icona = ImageCache.spriteCombattimento;
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
+		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetSalute, y, "Salute variata");
+	}
+
+	private void gestisciEventoVariazioneSaluteMassima(EventoVariazioneStatistichePersonaggio evento) {
+		SpriteATempo sprite = costruisciSpritePerVariazioneSaluteMassima(evento.getPersonaggio(),
+				(int)(evento.getNuovoValore() - evento.getValorePrecedente()));
+		if (sprite != null) {
+			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+		}
+	}
+
+	private SpriteATempo costruisciSpritePerVariazioneSaluteMassima(Personaggio personaggio, int variazione) {
+		if (variazione == 0) {
+			return null;
+		}
+		int ordinalePersonaggio = getOrdinalePersonaggio(personaggio);
+		if (ordinalePersonaggio == -1) {
+			return null;
+		}
+		BufferedImage icona = ImageCache.spriteCombattimento;
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
+		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetSaluteMassima, y, "Salute massima variata");
+	}
+
+	private void gestisciEventoVariazioneMagia(EventoVariazioneStatistichePersonaggio evento) {
+		SpriteATempo sprite = costruisciSpritePerVariazioneMagia(evento.getPersonaggio(),
+				(int)(evento.getNuovoValore() - evento.getValorePrecedente()));
+		if (sprite != null) {
+			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+		}
+	}
+
+	private SpriteATempo costruisciSpritePerVariazioneMagia(Personaggio personaggio, int variazione) {
+		if (variazione == 0) {
+			return null;
+		}
+		int ordinalePersonaggio = getOrdinalePersonaggio(personaggio);
+		if (ordinalePersonaggio == -1) {
+			return null;
+		}
+		BufferedImage icona = ImageCache.spriteMagia;
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
+		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetMagia, y, "Magia variata");
+	}
+
+	private void gestisciEventoVariazioneMagiaMassima(EventoVariazioneStatistichePersonaggio evento) {
+		SpriteATempo sprite = costruisciSpritePerVariazioneMagiaMassima(evento.getPersonaggio(),
+				(int)(evento.getNuovoValore() - evento.getValorePrecedente()));
+		if (sprite != null) {
+			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+		}
+	}
+
+	private SpriteATempo costruisciSpritePerVariazioneMagiaMassima(Personaggio personaggio, int variazione) {
+		if (variazione == 0) {
+			return null;
+		}
+		int ordinalePersonaggio = getOrdinalePersonaggio(personaggio);
+		if (ordinalePersonaggio == -1) {
+			return null;
+		}
+		BufferedImage icona = ImageCache.spriteMagia;
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
+		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetMagiaMassima, y, "Magia massima variata");
+	}
+
+	private void gestisciEventoVariazioneCoraggio(EventoVariazioneStatistichePersonaggio evento) {
+		SpriteATempo sprite = costruisciSpritePerVariazioneCoraggio(evento.getPersonaggio(),
+				(int)(evento.getNuovoValore() - evento.getValorePrecedente()));
+		if (sprite != null) {
+			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+		}
+	}
+
+	private SpriteATempo costruisciSpritePerVariazioneCoraggio(Personaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
@@ -251,10 +346,18 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 2);
-		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetCoraggio, y);
+		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetCoraggio, y, "Coraggio variato");
 	}
-	
-	SpriteInterface variaValore(Personaggio personaggio, int variazione) {
+
+	private void gestisciEventoVariazioneValore(EventoVariazioneStatistichePersonaggio evento) {
+		SpriteATempo sprite = costruisciSpritePerVariazioneValore(evento.getPersonaggio(),
+				(int)(evento.getNuovoValore() - evento.getValorePrecedente()));
+		if (sprite != null) {
+			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+		}
+	}
+
+	private SpriteATempo costruisciSpritePerVariazioneValore(Personaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
@@ -264,10 +367,18 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
-		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetValore, y);
+		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetValore, y, "Valore variato");
 	}
-	
-	SpriteInterface variaCarisma(Personaggio personaggio, int variazione) {
+
+	private void gestisciEventoVariazioneCarisma(EventoVariazioneStatistichePersonaggio evento) {
+		SpriteATempo sprite = costruisciSpritePerVariazioneCarisma(evento.getPersonaggio(),
+				(int)(evento.getNuovoValore() - evento.getValorePrecedente()));
+		if (sprite != null) {
+			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+		}
+	}
+
+	private SpriteATempo costruisciSpritePerVariazioneCarisma(Personaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
@@ -277,10 +388,18 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 		BufferedImage icona = ImageCache.spriteAmicizia;
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
-		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetCarisma, y);
+		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetCarisma, y, "Carisma variato");
 	}
 
-	SpriteInterface variaStanchezza(Personaggio personaggio, int variazione) {
+	private void gestisciEventoVariazioneStanchezza(EventoVariazioneStatistichePersonaggio evento) {
+		SpriteATempo sprite = costruisciSpritePerVariazioneStanchezza(evento.getPersonaggio(),
+				(int)(evento.getNuovoValore() - evento.getValorePrecedente()));
+		if (sprite != null) {
+			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+		}
+	}
+
+	private SpriteATempo costruisciSpritePerVariazioneStanchezza(Personaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
@@ -291,10 +410,18 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		BufferedImage icona = ImageCache.spriteCombattimento;
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 2);
 		DoomdarkColorModel.Color color = variazione < 0 ? DoomdarkColorModel.Color.GREEN : DoomdarkColorModel.Color.RED;
-		return new SpriteATempo(icona, variazione, fontMedium, color, rightXOffsetStanchezza, y);
+		return new SpriteATempo(icona, variazione, fontMedium, color, rightXOffsetStanchezza, y, "Stanchezza variata");
 	}
 
-	SpriteInterface variaTempo(Personaggio personaggio, int variazione) {
+	private void gestisciEventoVariazioneTempo(EventoVariazioneStatistichePersonaggio evento) {
+		SpriteATempo sprite = costruisciSpritePerVariazioneTempo(evento.getPersonaggio(),
+				(int)(evento.getNuovoValore() - evento.getValorePrecedente()));
+		if (sprite != null) {
+			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+		}
+	}
+
+	private SpriteATempo costruisciSpritePerVariazioneTempo(Personaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
@@ -304,7 +431,8 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 		BufferedImage icona = ImageCache.spriteTempo;
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + ordinalePersonaggio * fontMedium.getHeight() * 3;
-		return new SpriteATempo(icona, variazione, fontMedium, topLeftX + ((ImageCache.corniceGrande.getWidth() - (DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE << 1)) >> 1), y);
+		return new SpriteATempo(icona, variazione, fontMedium,
+				topLeftX + ((ImageCache.corniceGrande.getWidth() - (DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE << 1)) >> 1),
+				y, "Tempo variato");
 	}
-
 }

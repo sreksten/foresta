@@ -20,11 +20,18 @@ public class SnifferBusEventi {
         // EventoApprovazioneSpostamento è classe astratta
         BusEventi.iscriviti(EventoApprovazioneStoccaggioArtefatto.class, this::onEventoApprovazioneStoccaggio);
         BusEventi.iscriviti(EventoApprovazioneVenditaArtefatto.class, this::onEventoApprovazioneVendita);
+        BusEventi.iscriviti(EventoAumentoLivelloMondo.class, this::onEventoAumentoLivelloMondo);
+        BusEventi.iscriviti(EventoAumentoLivelloPersonaggio.class, this::onEventoAumentoLivelloPersonaggio);
         // EventoBase è classe astratta
         BusEventi.iscriviti(EventoComandoDiGioco.class, this::onEventoComandoDiGioco);
         BusEventi.iscriviti(EventoCombattimento.class, this::onEventoCombattimento);
         BusEventi.iscriviti(EventoConsumoPuntoAbilita.class, this::onEventoConsumoPuntoAbilita);
         BusEventi.iscriviti(EventoCreazionePersonaggio.class, this::onEventoCreazionePersonaggio);
+        BusEventi.iscriviti(EventoCreazioneSpriteAnnuncioGlobale.class, this::onEventoCreazioneSpriteAnnuncioGlobale);
+        BusEventi.iscriviti(EventoCreazioneSpriteATempo.class, this::onEventoCreazioneSpriteATempo);
+        BusEventi.iscriviti(EventoCreazioneSpriteEffetto.class, this::onEventoCreazioneSpriteEffetto);
+        BusEventi.iscriviti(EventoCreazioneSpriteFumetto.class, this::onEventoCreazioneSpriteFumetto);
+        BusEventi.iscriviti(EventoCreazioneSpriteInDissolvenza.class, this::onEventoCreazioneSpriteInDissolvenza);
         BusEventi.iscriviti(EventoErroreInterno.class, this::onEventoErroreInterno);
         BusEventi.iscriviti(EventoException.class, this::onEventoException);
         BusEventi.iscriviti(EventoFumetto.class, this::onEventoFumetto);
@@ -50,8 +57,18 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoStatoDiGioco.class, this::onEventoStatoDiGioco);
         BusEventi.iscriviti(EventoTestoDisponibile.class, this::onEventoTestoDisponibile);
         BusEventi.iscriviti(EventoValutazioneAttaccante.class, this::onEventoValutazioneAttaccante);
-        BusEventi.iscriviti(EventoVariazioneDisponibilitaConsumabile.class, this::onEventoVariazioneDisponibilitaConsumabile);
         BusEventi.iscriviti(EventoVariazioneEffettoDiStato.class, this::onEventoVariazioneEffettoDiStato);
+        BusEventi.iscriviti(EventoVariazioneGemme.class, this::onEventoVariazioneGemme);
+        BusEventi.iscriviti(EventoVariazioneIncantesimi.class, this::onEventoVariazioneIncantesimi);
+        BusEventi.iscriviti(EventoVariazioneMappa.class, this::onEventoVariazioneMappa);
+        BusEventi.iscriviti(EventoVariazioneMonete.class, this::onEventoVariazioneMonete);
+        BusEventi.iscriviti(EventoVariazionePozioniMagia.class, this::onEventoVariazionePozioniMagia);
+        BusEventi.iscriviti(EventoVariazionePozioniMagiaGrandi.class, this::onEventoVariazionePozioniMagiaGrandi);
+        BusEventi.iscriviti(EventoVariazionePozioniSalute.class, this::onEventoVariazionePozioniSalute);
+        BusEventi.iscriviti(EventoVariazionePozioniSaluteGrandi.class, this::onEventoVariazionePozioniSaluteGrandi);
+        BusEventi.iscriviti(EventoVariazionePozioniMagia.class, this::onEventoVariazionePozioniMagia);
+        BusEventi.iscriviti(EventoVariazionePunti.class, this::onEventoVariazionePunti);
+        BusEventi.iscriviti(EventoVariazionePuntiEsperienza.class, this::onEventoVariazionePuntiEsperienza);
         BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::onEventoVariazioneStatistichePersonaggio);
         BusEventi.iscriviti(EventoVariazioneStatoVitalePersonaggio.class, this::onEventoVariazioneStatoVitalePersonaggio);
     }
@@ -94,6 +111,15 @@ public class SnifferBusEventi {
                 + formattaParte(richiesta.getParteRemota()));
     }
 
+    private void onEventoAumentoLivelloMondo(EventoAumentoLivelloMondo evento) {
+        Logger.log(headerEvento(evento) + "Mondo aumenta di livello a " + evento.getLivello());
+    }
+
+    private void onEventoAumentoLivelloPersonaggio(EventoAumentoLivelloPersonaggio evento) {
+        Logger.log(headerEvento(evento) + "Aumento livello " + evento.getLivelloPrecedente() + " -> " +
+                evento.getLivelloAttuale() + " - " + formattaStatistichePersonaggio(evento.getPersonaggio()));
+    }
+
     private void onEventoComandoDiGioco(EventoComandoDiGioco evento) {
         Comando comando = evento.getComando();
         Logger.log(headerEvento(evento) + "Comando: " + comando);
@@ -114,6 +140,27 @@ public class SnifferBusEventi {
     private void onEventoCreazionePersonaggio(EventoCreazionePersonaggio evento) {
         Personaggio p  = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p));
+    }
+
+    private void onEventoCreazioneSpriteAnnuncioGlobale(EventoCreazioneSpriteAnnuncioGlobale evento) {
+        Logger.log(headerEvento(evento) + "Titolo: " + evento.getSprite().getTitolo() +
+                ", Descrizione: " + evento.getSprite().getDescrizione());
+    }
+
+    private void onEventoCreazioneSpriteATempo(EventoCreazioneSpriteATempo evento) {
+        Logger.log(headerEvento(evento) + "Descrizione: " + evento.getSprite().getDescrizione());
+    }
+
+    private void onEventoCreazioneSpriteEffetto(EventoCreazioneSpriteEffetto evento) {
+        Logger.log(headerEvento(evento) + "Descrizione: " + evento.getSprite().getTesto());
+    }
+
+    private void onEventoCreazioneSpriteFumetto(EventoCreazioneSpriteFumetto evento) {
+        Logger.log(headerEvento(evento) + "Descrizione: " + evento.getSprite().getTesto());
+    }
+
+    private void onEventoCreazioneSpriteInDissolvenza(EventoCreazioneSpriteInDissolvenza evento) {
+        Logger.log(headerEvento(evento) + "Descrizione: " + evento.getSprite().getDescrizione());
     }
 
     private void onEventoErroreInterno(EventoErroreInterno evento) {
@@ -237,15 +284,60 @@ public class SnifferBusEventi {
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getRisultatoValutazione());
     }
 
-    private void onEventoVariazioneDisponibilitaConsumabile(EventoVariazioneDisponibilitaConsumabile evento) {
-        Logger.log(headerEvento(evento) + String.format("Tipo: %s, ClasseIncantesimo: %s, Variazione: %d",
-                evento.getTipoConsumabile(), evento.getClasseIncantesimo(), evento.getVariazione()));
-    }
-
     private void onEventoVariazioneEffettoDiStato(EventoVariazioneEffettoDiStato evento) {
         Personaggio p = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + String.format("Tipo: %s, EffettoDiStato: %s - ",
                 evento.getTipo(), evento.getEffetto()) + formattaStatistichePersonaggio(p));
+    }
+
+    public void onEventoVariazioneGemme(EventoVariazioneGemme evento) {
+        Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
+                evento.getValorePrecedente(), evento.getNuovoValore()));
+    }
+
+    public void onEventoVariazioneIncantesimi(EventoVariazioneIncantesimi evento) {
+        Logger.log(headerEvento(evento) + String.format("Tipo: %s, Variazione: %d -> %d",
+                evento.getClasseIncantesimo(), evento.getValorePrecedente(), evento.getNuovoValore()));
+    }
+
+    public void onEventoVariazioneMappa(EventoVariazioneMappa evento) {
+        Logger.log(headerEvento(evento) + String.format("Variazione: (%d, %d) -> (%d, %d)",
+                evento.getDaX(), evento.getDaY(), evento.getaX(), evento.getaY()));
+    }
+
+    public void onEventoVariazioneMonete(EventoVariazioneMonete evento) {
+        Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
+                evento.getValorePrecedente(), evento.getNuovoValore()));
+    }
+
+    public void onEventoVariazionePozioniMagia(EventoVariazionePozioniMagia evento) {
+        Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
+                evento.getValorePrecedente(), evento.getNuovoValore()));
+    }
+
+    public void onEventoVariazionePozioniMagiaGrandi(EventoVariazionePozioniMagiaGrandi evento) {
+        Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
+                evento.getValorePrecedente(), evento.getNuovoValore()));
+    }
+
+    public void onEventoVariazionePozioniSalute(EventoVariazionePozioniSalute evento) {
+        Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
+                evento.getValorePrecedente(), evento.getNuovoValore()));
+    }
+
+    public void onEventoVariazionePozioniSaluteGrandi(EventoVariazionePozioniSaluteGrandi evento) {
+        Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
+                evento.getValorePrecedente(), evento.getNuovoValore()));
+    }
+
+    public void onEventoVariazionePunti(EventoVariazionePunti evento) {
+        Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
+                evento.getValorePrecedente(), evento.getNuovoValore()));
+    }
+
+    public void onEventoVariazionePuntiEsperienza(EventoVariazionePuntiEsperienza evento) {
+        Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
+                evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
     private void onEventoVariazioneStatistichePersonaggio(EventoVariazioneStatistichePersonaggio evento) {

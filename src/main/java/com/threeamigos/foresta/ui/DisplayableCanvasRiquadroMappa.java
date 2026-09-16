@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoCreazioneSpriteATempo;
+import com.threeamigos.foresta.eventi.EventoVariazioneMappa;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -30,6 +33,12 @@ class DisplayableCanvasRiquadroMappa implements Finestra {
         int larghezzaSingolaIcona = ImageCache.mappa.get(ClassiLocazione.BOSCO).getWidth();
 		minOffsetPerNuvole = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_MAPPA;
 		larghezzaRiquadroMappa = 7 * larghezzaSingolaIcona;
+
+		registratiAEventi();
+	}
+
+	private void registratiAEventi() {
+		BusEventi.iscriviti(EventoVariazioneMappa.class, this::gestisciEventoVariazioneMappa);
 	}
 
 	void disegnaMappa(Graphics2D graphics) {
@@ -115,10 +124,14 @@ class DisplayableCanvasRiquadroMappa implements Finestra {
 		g.fillRect(x, y, width, height);
 	}
 
-	SpriteInterface variaMappa() {
+	private void gestisciEventoVariazioneMappa(EventoVariazioneMappa evento) {
+		BusEventi.pubblica(new EventoCreazioneSpriteATempo(variaMappa()));
+	}
+
+	private SpriteATempo variaMappa() {
 		BufferedImage icona = ImageCache.spriteMappa;
 		int x = topLeftX + ((ImageCache.corniceMappa.getWidth() - ImageCache.spriteMappa.getWidth()) >> 1);
 		int y = topLeftY + ((ImageCache.corniceMappa.getHeight() - ImageCache.spriteMappa.getHeight()) >> 1);
-		return new SpriteATempo(icona, x, y);
+		return new SpriteATempo(icona, x, y, "Mappa variata");
 	}
 }

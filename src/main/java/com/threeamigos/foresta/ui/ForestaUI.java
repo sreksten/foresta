@@ -3,7 +3,6 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
@@ -31,7 +30,6 @@ public class ForestaUI implements InterfacciaUtente {
 
 		SwingUtilities.invokeLater(this::createAndShowGUI);
 
-		BusEventi.iscriviti(EventoAggiuntaModificatore.class, this::gestisciEventoAggiuntaModificatore);
 		// EventoCombattimento non ci interessa, solo mostrare i suoi effetti eventuali che vengono pubblicati dal personaggio interessato
 		BusEventi.iscriviti(EventoConsumoPuntoAbilita.class, this::gestisciEventoConsumoPuntoAbilita);
 		// EventoCreazionePersonaggio non ci interessa, riguarda il motore
@@ -43,7 +41,6 @@ public class ForestaUI implements InterfacciaUtente {
 		BusEventi.iscriviti(EventoRichiestaTesto.class, this::gestisciEventoRichiestaTesto);
 		// EventoValutazioneAttaccante non ci interessa, è il motore AI degli avversari che informa sul suo stato di progressione
 		BusEventi.iscriviti(EventoStatoDiGioco.class, this::gestisciEventoStatoDiGioco);
-		BusEventi.iscriviti(EventoVariazioneDisponibilitaConsumabile.class, this::gestisciEventoVariazioneDisponibilitaConsumabile);
 		BusEventi.iscriviti(EventoVariazioneEffettoDiStato.class, this::gestisciEventoVariazioneEffettoDiStato);
 		BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
 		BusEventi.iscriviti(EventoVariazioneStatoVitalePersonaggio.class, this::gestisciEventoVariazioneStatoVitalePersonaggio);
@@ -308,38 +305,14 @@ public class ForestaUI implements InterfacciaUtente {
 
 	private void gestisciEventoVariazioneStatistichePersonaggio(EventoVariazioneStatistichePersonaggio evento) {
 		Personaggio personaggio = evento.getPersonaggio();
+		if (!personaggio.isPNG()) {
+			return;
+		}
 		TipoAttributo tipo = evento.getTipoAttributo();
 		if (tipo == TipoAttributo.SALUTE) {
 			displayableCanvas.variaSalute(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));
 		} else if (tipo == TipoAttributo.MAGIA) {
 			displayableCanvas.variaMagia(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));
-		} else if (tipo == TipoAttributo.CARISMA) {
-			displayableCanvas.variaCarisma(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));
-		} else if (tipo == TipoAttributo.STANCHEZZA) {
-			displayableCanvas.variaStanchezza(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));
-		} else if (tipo == TipoAttributo.CORAGGIO) {
-			displayableCanvas.variaCoraggio(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));
-		} else if (tipo == TipoAttributo.VALORE) {
-			displayableCanvas.variaValore(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));
-		} else if (tipo == TipoAttributo.TEMPO) {
-			displayableCanvas.variaTempo(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));
-		} else if (tipo == TipoAttributo.LIVELLO) {
-			displayableCanvas.notificaAnnuncioGlobale("LEVEL UP!", personaggio.getNome() + " A LIVELLO " + personaggio.getLivello() + "!");
-			displayableCanvas.notifica("LEVELED UP! Ora " + personaggio.getNome() + " è al livello " + personaggio.getLivello() + "!");
-			displayableCanvas.variaLivello(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));
-		}
-	}
-
-	private void gestisciEventoAggiuntaModificatore(EventoAggiuntaModificatore evento) {
-		Personaggio personaggio = evento.getPersonaggio();
-		ModificatoreAttributo modificatore = evento.getModificatore();
-		switch (modificatore.getTipoAttributo()) {
-			case SALUTE:
-				displayableCanvas.variaSaluteMassima(personaggio, (int)(modificatore.getQuantita()));
-				break;
-			case MAGIA:
-				displayableCanvas.variaMagiaMassima(personaggio, (int)(modificatore.getQuantita()));
-				break;
 		}
 	}
 
@@ -370,42 +343,6 @@ public class ForestaUI implements InterfacciaUtente {
 				break;
 			default:
 				throw new IllegalArgumentException("TipoInterazioneElementale non gestito: " + tipoInterazioneElementale);
-		}
-	}
-
-	private void gestisciEventoVariazioneDisponibilitaConsumabile(EventoVariazioneDisponibilitaConsumabile evento) {
-		int variazione = evento.getVariazione();
-		switch (evento.getTipoConsumabile()) {
-			case GEMME:
-				displayableCanvas.variaGemme(variazione);
-				break;
-			case MONETE:
-				displayableCanvas.variaMonete(variazione);
-				break;
-			case PUNTI_ESPERIENZA:
-				displayableCanvas.variaPunti(variazione);
-				break;
-			case INCANTESIMO:
-				displayableCanvas.variaIncantesimi(evento.getClasseIncantesimo(), variazione);
-				break;
-			case POZIONE_SALUTE:
-				displayableCanvas.variaPozioniSalute(variazione);
-				break;
-			case POZIONE_SALUTE_GRANDE:
-				displayableCanvas.variaPozioniSaluteGrande(variazione);
-				break;
-			case POZIONE_MAGIA:
-				displayableCanvas.variaPozioniMagia(variazione);
-				break;
-			case POZIONE_MAGIA_GRANDE:
-				displayableCanvas.variaPozioniMagiaGrande(variazione);
-				break;
-			case MAPPA_PARZIALE_FORESTA:
-			case MAPPA_COMPLETA_FORESTA:
-				displayableCanvas.variaMappa();
-				break;
-			default:
-				throw new IllegalArgumentException("TipoConsumabile non gestito: " + evento.getTipoConsumabile());
 		}
 	}
 

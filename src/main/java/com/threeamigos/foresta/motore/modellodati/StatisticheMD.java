@@ -63,12 +63,12 @@ public class StatisticheMD implements Serializzabile {
 		this.livello = livello;
 	}
 
-	public final void addPunti(int quantita) {
-		punti += quantita;
+	public final void setPunti(int punti) {
+		this.punti = punti;
 	}
 
-	public final void addPuntiEsperienza(int quantita) {
-		puntiEsperienza += quantita;
+	public final void setPuntiEsperienza(int puntiEsperienza) {
+		this.puntiEsperienza = puntiEsperienza;
 	}
 
 	public final void addMostroUcciso(ClassePersonaggio classe) {

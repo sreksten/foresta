@@ -20,6 +20,16 @@ public enum TipoEvento {
     RIFIUTO_ACQUISTO_CONSUMABILE,
 
     VARIAZIONE_DISPONIBILITA_CONSUMABILE,
+    VARIAZIONE_GEMME,
+    VARIAZIONE_MONETE,
+    VARIAZIONE_PUNTI,
+    VARIAZIONE_PUNTI_ESPERIENZA,
+    VARIAZIONE_INCANTESIMI,
+    VARIAZIONE_MAPPA,
+    VARIAZIONE_POZIONI_SALUTE,
+    VARIAZIONE_POZIONI_SALUTE_GRANDI,
+    VARIAZIONE_POZIONI_MAGIA,
+    VARIAZIONE_POZIONI_MAGIA_GRANDI,
 
     PERSONAGGIO_CREAZIONE,
     PERSONAGGIO_VARIAZIONE_STATO_VITALE,
@@ -29,6 +39,9 @@ public enum TipoEvento {
     PERSONAGGIO_CONSUMO_PUNTO_ABILITA,
     PERSONAGGIO_COMBATTIMENTO,
     PERSONAGGIO_INTERAZIONE_ELEMENTALE,
+    PERSONAGGIO_AUMENTO_LIVELLO,
+
+    MONDO_AUMENTO_LIVELLO,
 
     /**
      * Un PNG prende una decisione
@@ -66,6 +79,25 @@ public enum TipoEvento {
      * Messaggi di notifica interni al motore non destinati al giocatore
      */
     MESSAGGIO_INTERNO,
-    ERRORE_INTERNO
-
+    ERRORE_INTERNO,
+    /**
+     * Creazione di uno sprite "annuncio globale"
+     */
+    CREAZIONE_SPRITE_ANNUNCIO_GLOBALE,
+    /**
+     * Creazione di uno SpriteATempo
+     */
+    CREAZIONE_SPRITE_A_TEMPO,
+    /**
+     * Creazione di uno Sprite effetto
+     */
+    CREAZIONE_SPRITE_EFFETTO,
+    /**
+     * Creazione di uno Sprite fumetto
+     */
+    CREAZIONE_SPRITE_FUMETTO,
+    /**
+     * Creazione di uno Sprite in dissolvenza
+     */
+    CREAZIONE_SPRITE_IN_DISSOLVENZA
 }

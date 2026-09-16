@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
@@ -72,6 +72,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public DisplayableCanvas(int width, int height) {
 		super();
+
 		larghezzaSchermo = width;
 		altezzaSchermo = height;
 		stackElementiGrafici = new ArrayList<>();
@@ -204,6 +205,53 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		addMouseListener(gestoreMouse);
 		addMouseMotionListener(gestoreMouse);
 		addMouseWheelListener(gestoreMouse);
+
+		registratiAEventi();
+	}
+
+	private void registratiAEventi() {
+		BusEventi.iscriviti(EventoAumentoLivelloMondo.class, this::gestisciEventoAumentoLivelloMondo);
+		BusEventi.iscriviti(EventoAumentoLivelloPersonaggio.class, this::gestisciEventoAumentoLivelloPersonaggio);
+		BusEventi.iscriviti(EventoCreazioneSpriteAnnuncioGlobale.class, this::gestisciEventoCreazioneSpriteAnnuncioGlobale);
+		BusEventi.iscriviti(EventoCreazioneSpriteATempo.class, this::gestisciEventoCreazioneSpriteATempo);
+		BusEventi.iscriviti(EventoCreazioneSpriteEffetto.class, this::gestisciEventoCreazioneSpriteEffetto);
+		BusEventi.iscriviti(EventoCreazioneSpriteFumetto.class, this::gestisciEventoCreazioneSpriteFumetto);
+		BusEventi.iscriviti(EventoCreazioneSpriteInDissolvenza.class, this::gestisciEventoCreazioneSpriteInDissolvenza);
+	}
+
+	private void gestisciEventoAumentoLivelloMondo(EventoAumentoLivelloMondo evento) {
+		notifica("LEVEL UP! Ora il mondo è al livello " + evento.getLivello() + "!");
+	}
+
+	private void gestisciEventoAumentoLivelloPersonaggio(EventoAumentoLivelloPersonaggio evento) {
+		Personaggio personaggio = evento.getPersonaggio();
+		notificaAnnuncioGlobale("LEVEL UP!", personaggio.getNome() + " A LIVELLO " + personaggio.getLivello() + "!");
+		notifica("LEVEL UP! Ora " + personaggio.getNome() + " è al livello " + personaggio.getLivello() + "!");
+		// La notifica come iconcina è fatta dal riquadro del gruppo
+	}
+
+	private void gestisciEventoCreazioneSpriteAnnuncioGlobale(EventoCreazioneSpriteAnnuncioGlobale evento) {
+		if (evento.getSprite() != null) {
+			codaAnnunciGlobali.add(evento.getSprite());
+		}
+	}
+
+	private void gestisciEventoCreazioneSpriteATempo(EventoCreazioneSpriteATempo evento) {
+		aggiungiSprite(evento.getSprite());
+	}
+
+	private void gestisciEventoCreazioneSpriteEffetto(EventoCreazioneSpriteEffetto evento) {
+		aggiungiSprite(evento.getSprite());
+	}
+
+	private void gestisciEventoCreazioneSpriteFumetto(EventoCreazioneSpriteFumetto evento) {
+		if (evento.getSprite() != null) {
+			codaFumetti.add(evento.getSprite());
+		}
+	}
+
+	private void gestisciEventoCreazioneSpriteInDissolvenza(EventoCreazioneSpriteInDissolvenza evento) {
+		aggiungiSprite(evento.getSprite());
 	}
 
 	@Override
@@ -562,85 +610,13 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	public void variaSalute(Personaggio personaggio, int variazione) {
 		if (personaggio.isPNG()) {
 			aggiungiSprite(riquadroLocazione.variaSalute(personaggio, variazione));
-		} else {
-			aggiungiSprite(riquadroGruppo.variaSalute(personaggio, variazione));
 		}
-	}
-
-	public void variaSaluteMassima(Personaggio personaggio, int variazione) {
-		aggiungiSprite(riquadroGruppo.variaSaluteMassima(personaggio, variazione));
 	}
 
 	public void variaMagia(Personaggio personaggio, int variazione) {
 		if (personaggio.isPNG()) {
 			aggiungiSprite(riquadroLocazione.variaMagia(personaggio, variazione));
-		} else {
-			aggiungiSprite(riquadroGruppo.variaMagia(personaggio, variazione));
 		}
-	}
-	
-	public void variaMagiaMassima(Personaggio personaggio, int variazione) {
-		aggiungiSprite(riquadroGruppo.variaMagiaMassima(personaggio, variazione));
-	}
-
-	public void variaLivello(Personaggio personaggio, int variazione) {
-		aggiungiSprite(riquadroGruppo.variaLivello(personaggio, variazione));
-	}
-
-	public void variaCoraggio(Personaggio personaggio, int variazione) {
-		aggiungiSprite(riquadroGruppo.variaCoraggio(personaggio, variazione));
-	}
-	
-	public void variaValore(Personaggio personaggio, int variazione) {
-		aggiungiSprite(riquadroGruppo.variaValore(personaggio, variazione));
-	}
-	
-	public void variaCarisma(Personaggio personaggio, int variazione) {
-		aggiungiSprite(riquadroGruppo.variaCarisma(personaggio, variazione));
-	}
-	
-	public void variaStanchezza(Personaggio personaggio, int variazione) {
-		aggiungiSprite(riquadroGruppo.variaStanchezza(personaggio, variazione));
-	}
-
-	public void variaTempo(Personaggio personaggio, int variazione) {
-		aggiungiSprite(riquadroGruppo.variaTempo(personaggio, variazione));
-	}
-
-	public void variaMonete(int variazione) {
-		aggiungiSprite(riquadroStatistiche.variaMonete(variazione));
-	}
-	
-	public void variaGemme(int variazione) {
-		aggiungiSprite(riquadroStatistiche.variaGemme(variazione));
-	}
-
-	public void variaPunti(int variazione) {
-		aggiungiSprite(riquadroStatistiche.variaPunti(variazione));
-	}
-
-	public void variaIncantesimi(ClasseIncantesimo classeIncantesimo, int variazione) {
-		aggiungiSprite(riquadroIncantesimi.variaIncantesimi(classeIncantesimo, variazione));
-	}
-
-	public void variaPozioniSalute(int variazione) {
-		aggiungiSprite(riquadroIncantesimi.variaPozioniSalute(variazione));
-	}
-
-	public void variaPozioniSaluteGrande(int variazione) {
-		aggiungiSprite(riquadroIncantesimi.variaPozioniSaluteGrande(variazione));
-	}
-
-	public void variaPozioniMagia(int variazione) {
-		aggiungiSprite(riquadroIncantesimi.variaPozioniMagia(variazione));
-	}
-
-	public void variaPozioniMagiaGrande(int variazione) {
-		aggiungiSprite(riquadroIncantesimi.variaPozioniMagiaGrande(variazione));
-	}
-
-	public void variaMappa() {
-		aggiungiSprite(riquadroMappa.variaMappa());
 	}
 
 	public void raccogliOggetto() {

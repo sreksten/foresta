@@ -9,21 +9,27 @@ import java.util.Arrays;
 public class SpriteInDissolvenza implements SpriteInterface {
 
 	private static final int MAX_TICKS = 32;
-	
-	boolean active;
+
+	private final String descrizione;
 	private final BufferedImage image;
+	boolean active;
 	private final int x;
 	private final int y;
 	private int ticks;
 	
-	SpriteInDissolvenza(BufferedImage image, int x, int y) {
+	SpriteInDissolvenza(String descrizione, BufferedImage image, int x, int y) {
+		this.descrizione = descrizione;
 		this.image = image;
 		this.x = x;
 		this.y = y;
 		ticks = 0;
 		active = true;
 	}
-	
+
+	public String getDescrizione() {
+		return descrizione;
+	}
+
 	public void animate(Graphics2D g) {
 		if (active) {
 			float transparency = 1.0f / (float)(1 + ticks);

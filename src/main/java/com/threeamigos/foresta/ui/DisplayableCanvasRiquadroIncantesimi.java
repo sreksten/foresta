@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 
@@ -45,6 +46,16 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 		iconaDestraX = topLeftX + ImageCache.corniceIncantesimi.getWidth() / 2;
 		nomeDestraX = iconaDestraX + maxIconWidth + 2;
 		totaleDestraX = topLeftX + ImageCache.corniceIncantesimi.getWidth() - DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI;
+
+		registratiAEventi();
+	}
+
+	private void registratiAEventi() {
+		BusEventi.iscriviti(EventoVariazioneIncantesimi.class, this::gestisciEventoVariazioneIncantesimi);
+		BusEventi.iscriviti(EventoVariazionePozioniSalute.class, this::gestisciEventoVariazionePozioniSalute);
+		BusEventi.iscriviti(EventoVariazionePozioniSaluteGrandi.class, this::gestisciEventoVariazionePozioniSaluteGrandi);
+		BusEventi.iscriviti(EventoVariazionePozioniMagia.class, this::gestisciEventoVariazionePozioniMagia);
+		BusEventi.iscriviti(EventoVariazionePozioniMagiaGrandi.class, this::gestisciEventoVariazionePozioniMagiaGrandi);
 	}
 
 	void disegnaIncantesimi(Graphics2D graphics) {
@@ -103,7 +114,15 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 		graphics.drawImage(doomdark, totaleX - doomdark.getWidth(null), y, null);
 	}
 
-	SpriteInterface variaIncantesimi(ClasseIncantesimo classeIncantesimo, int variazione) {
+	private void gestisciEventoVariazioneIncantesimi(EventoVariazioneIncantesimi evento) {
+		SpriteATempo sprite = costruisciSpritePerVariazioneIncantesimi(evento.getClasseIncantesimo(),
+				evento.getNuovoValore() - evento.getValorePrecedente());
+		if (sprite != null) {
+			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+		}
+	}
+
+	private SpriteATempo costruisciSpritePerVariazioneIncantesimi(ClasseIncantesimo classeIncantesimo, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
@@ -117,46 +136,78 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
                 break;
             }
 		}
-		return new SpriteATempo(icona, variazione, fontMedium, x, y);
+		return new SpriteATempo(icona, variazione, fontMedium, x, y, "Incantesimo " + classeIncantesimo + " variato");
 	}
 
-	SpriteInterface variaPozioniSalute(int variazione) {
+	private void gestisciEventoVariazionePozioniSalute(EventoVariazionePozioniSalute evento) {
+		SpriteATempo sprite = costruisciSpritePerVariazionePozioniSalute(
+				evento.getNuovoValore() - evento.getValorePrecedente());
+		if (sprite != null) {
+			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+		}
+	}
+
+	private SpriteATempo costruisciSpritePerVariazionePozioniSalute(int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spritePozioneSalute;
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + fontMedium.getHeight();
-		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y);
+		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y, "Pozioni salute variate");
 	}
 
-	SpriteInterface variaPozioniSaluteGrande(int variazione) {
+	private void gestisciEventoVariazionePozioniSaluteGrandi(EventoVariazionePozioniSaluteGrandi evento) {
+		SpriteATempo sprite = costruisciSpritePerVariazionePozioniSaluteGrandi(
+				evento.getNuovoValore() - evento.getValorePrecedente());
+		if (sprite != null) {
+			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+		}
+	}
+
+	private SpriteATempo costruisciSpritePerVariazionePozioniSaluteGrandi(int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spritePozioneSaluteGrande;
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + 2 * fontMedium.getHeight();
-		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y);
+		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y, "Pozioni salute grande variate");
 	}
 
-	SpriteInterface variaPozioniMagia(int variazione) {
+	private void gestisciEventoVariazionePozioniMagia(EventoVariazionePozioniMagia evento) {
+		SpriteATempo sprite = costruisciSpritePerVariazionePozioniMagia(
+				evento.getNuovoValore() - evento.getValorePrecedente());
+		if (sprite != null) {
+			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+		}
+	}
+
+	private SpriteATempo costruisciSpritePerVariazionePozioniMagia(int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spritePozioneMagia;
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + 3 * fontMedium.getHeight();
-		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y);
+		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y, "Pozioni magia variate");
 	}
 
-	SpriteInterface variaPozioniMagiaGrande(int variazione) {
+	private void gestisciEventoVariazionePozioniMagiaGrandi(EventoVariazionePozioniMagiaGrandi evento) {
+		SpriteATempo sprite = costruisciSpritePerVariazionePozioniMagiaGrandi(
+				evento.getNuovoValore() - evento.getValorePrecedente());
+		if (sprite != null) {
+			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+		}
+	}
+
+	private SpriteATempo costruisciSpritePerVariazionePozioniMagiaGrandi(int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spritePozioneMagiaGrande;
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + 4 * fontMedium.getHeight();
-		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y);
+		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y, "Pozioni magia grande variate");
 	}
 }

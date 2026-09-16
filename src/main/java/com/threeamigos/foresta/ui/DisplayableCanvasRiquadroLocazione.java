@@ -89,7 +89,8 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		if (coordinate == null) {
 			return null;
 		}
-		return new SpriteInDissolvenza(mappaImmagini.get(personaggio), coordinate.getX(), coordinate.getY());
+		return new SpriteInDissolvenza(personaggio.getNome(), mappaImmagini.get(personaggio),
+				coordinate.getX(), coordinate.getY());
 	}
 
 	SpriteInterface variaLivello(Personaggio personaggio, int variazione) {
@@ -97,7 +98,9 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		if (coordinate == null) {
 			return null;
 		}
-		return new SpriteATempo(ImageCache.spriteAumentoLivello, variazione, DoomdarkFontMedium.getInstance(), coordinate.getX() + mappaImmagini.get(personaggio).getWidth(), coordinate.getY());
+		return new SpriteATempo(ImageCache.spriteAumentoLivello, variazione, DoomdarkFontMedium.getInstance(),
+				coordinate.getX() + mappaImmagini.get(personaggio).getWidth(), coordinate.getY(),
+				"Livello aumentato");
 	}
 	
 	SpriteInterface variaSalute(Personaggio personaggio, int variazione) {
@@ -105,7 +108,9 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		if (coordinate == null) {
 			return null;
 		}
-		return new SpriteATempo(ImageCache.spriteCombattimento, variazione, DoomdarkFontMedium.getInstance(), coordinate.getX() + mappaImmagini.get(personaggio).getWidth(), coordinate.getY());
+		return new SpriteATempo(ImageCache.spriteCombattimento, variazione, DoomdarkFontMedium.getInstance(),
+				coordinate.getX() + mappaImmagini.get(personaggio).getWidth(), coordinate.getY(),
+				"Salute modificata");
 	}
 	
 	SpriteInterface variaMagia(Personaggio personaggio, int variazione) {
@@ -113,7 +118,9 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		if (coordinate == null) {
 			return null;
 		}
-		return new SpriteATempo(ImageCache.spriteMagia, variazione, DoomdarkFontMedium.getInstance(), coordinate.getX() + mappaImmagini.get(personaggio).getWidth(), coordinate.getY());
+		return new SpriteATempo(ImageCache.spriteMagia, variazione, DoomdarkFontMedium.getInstance(),
+				coordinate.getX() + mappaImmagini.get(personaggio).getWidth(), coordinate.getY(),
+				"Magia modificata");
 	}
 	
 	SpriteInterface raccogliOggetto() {
@@ -122,7 +129,9 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		Oggetto oggetto = g.getLocazioneCorrente().getOggetto();
 		if (oggetto != null && oggetto.getClasse() != ClassiOggetto.ARTEFATTO) {
 			BufferedImage d = oggetto.getClasse().getImmagine();
-			return new SpriteATempo(d, topLeftX + locazione.getWidth() - d.getWidth() - 5, ImageCache.SPACING + locazione.getHeight() - d.getHeight() - 5);
+			return new SpriteATempo(d, topLeftX + locazione.getWidth() - d.getWidth() - 5,
+					ImageCache.SPACING + locazione.getHeight() - d.getHeight() - 5,
+					"Raccolto oggetto " + oggetto.getClasse());
 		}
 		return null;
 	}

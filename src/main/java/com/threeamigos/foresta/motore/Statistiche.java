@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoMessaggio;
-import com.threeamigos.foresta.eventi.EventoVariazioneDisponibilitaConsumabile;
+import com.threeamigos.foresta.eventi.EventoAumentoLivelloMondo;
+import com.threeamigos.foresta.eventi.EventoVariazionePunti;
+import com.threeamigos.foresta.eventi.EventoVariazionePuntiEsperienza;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.StatisticheMD;
-import com.threeamigos.foresta.motore.modellodati.TipoConsumabile;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
 public class Statistiche {
@@ -16,13 +16,18 @@ public class Statistiche {
 	private static final StatisticheMD statisticheMD = ModelloDati.getIstanza().getStatisticheMD();
 
 	public static void addPunti(int quantita) {
-		statisticheMD.addPunti(quantita);
-		BusEventi.pubblica(new EventoVariazioneDisponibilitaConsumabile(TipoConsumabile.PUNTI_ESPERIENZA, quantita));
+		int valorePrecedente = statisticheMD.getPunti();
+		int valoreAttuale = valorePrecedente + quantita;
+		statisticheMD.setPunti(valoreAttuale);
+		BusEventi.pubblica(new EventoVariazionePunti(valorePrecedente, valoreAttuale));
 	}
 
 	// Chiamato ogni volta che il personaggio completa una missione o uccide un mostro
-	public static void addPuntiEsperienza(int ammontareXp) {
-		statisticheMD.addPuntiEsperienza(ammontareXp);
+	public static void addPuntiEsperienza(int quantita) {
+		int valorePrecedente = statisticheMD.getPuntiEsperienza();
+		int valoreAttuale = valorePrecedente + quantita;
+		statisticheMD.setPuntiEsperienza(valoreAttuale);
+		BusEventi.pubblica(new EventoVariazionePuntiEsperienza(valorePrecedente, valoreAttuale));
 
 		// Verifichiamo se i nuovi XP accumulati determinano un salto di livello
 		int livelloAttuale = statisticheMD.getLivello();
@@ -30,7 +35,7 @@ public class Statistiche {
 
 		if (nuovoLivello > livelloAttuale) {
 			statisticheMD.setLivello(nuovoLivello);
-			BusEventi.pubblica(new EventoMessaggio("LEVELED UP! Ora il mondo è al livello " + nuovoLivello + "!"));
+			BusEventi.pubblica(new EventoAumentoLivelloMondo(nuovoLivello));
 		}
 	}
 
