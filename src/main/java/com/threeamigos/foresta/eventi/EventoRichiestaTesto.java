@@ -1,7 +1,8 @@
 package com.threeamigos.foresta.eventi;
 
 /**
- * Il gioco richiede un testo (ad esempio il nome del personaggio)
+ * Il gioco richiede un testo al giocatore (ad esempio il nome del personaggio).
+ *
  * @author Stefano Reksten
  */
 public class EventoRichiestaTesto extends EventoBase {

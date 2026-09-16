@@ -3,6 +3,8 @@ package com.threeamigos.foresta.eventi;
 import com.threeamigos.foresta.ui.SpriteEffetto;
 
 /**
+ * Evento interno alla UI che decide di rappresentare eventi di gioco come effetti grafici
+ * (ad esempio, un effetto di stato applicato su un Personaggio).
  *
  * @author Stefano Reksten
  */

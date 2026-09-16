@@ -1,7 +1,8 @@
 package com.threeamigos.foresta.eventi;
 
 /**
- * Gestisce una eccezione
+ * Gestisce una eccezione.
+ *
  * @author Stefano Reksten
  */
 public class EventoException extends EventoBase {

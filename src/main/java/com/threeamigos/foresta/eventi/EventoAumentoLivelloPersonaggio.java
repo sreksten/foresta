@@ -3,6 +3,7 @@ package com.threeamigos.foresta.eventi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 /**
+ * Il livello di un Personaggio è stato aumentato.
  *
  * @author Stefano Reksten
  */

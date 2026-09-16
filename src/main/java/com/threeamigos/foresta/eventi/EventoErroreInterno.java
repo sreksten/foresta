@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.eventi;
 
 /**
+ * Un errore interno del programma.
  *
  * @author Stefano Reksten
  */

@@ -3,6 +3,7 @@ package com.threeamigos.foresta.eventi;
 import com.threeamigos.foresta.motore.Comando;
 
 /**
+ * Informa l'automa che un giocatore ha scelto un determinato comando per proseguire il gioco.
  *
  * @author Stefano Reksten
  */

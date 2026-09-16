@@ -3,6 +3,8 @@ package com.threeamigos.foresta.eventi;
 import com.threeamigos.foresta.ui.SpriteATempo;
 
 /**
+ * Evento interno alla UI che decide di rappresentare eventi di gioco come sprite a tempo
+ * (ad esempio, l'aumento del numero di pozioni).
  *
  * @author Stefano Reksten
  */

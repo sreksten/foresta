@@ -3,6 +3,8 @@ package com.threeamigos.foresta.eventi;
 import com.threeamigos.foresta.ui.SpriteAnnuncioGlobale;
 
 /**
+ * Evento interno alla UI che decide di rappresentare eventi di gioco come annuncio globale
+ * (ad esempio, l'inizio di una nuova missione).
  *
  * @author Stefano Reksten
  */

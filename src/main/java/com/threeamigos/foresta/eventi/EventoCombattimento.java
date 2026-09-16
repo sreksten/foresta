@@ -6,12 +6,19 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import java.util.stream.Collectors;
 
 /**
+ * I risultati di un round di combattimento.
  *
  * @author Stefano Reksten
  */
 public class EventoCombattimento extends EventoPersonaggio {
 
+    /**
+     * IL bersaglio dell'azione di combattimento
+     */
     private final Personaggio bersaglio;
+    /**
+     * Il risultato dell'azione di combattimento
+     */
     private final DannoRisultante risultato;
 
     public EventoCombattimento(Personaggio personaggio, Personaggio bersaglio, DannoRisultante risultato) {

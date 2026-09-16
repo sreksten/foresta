@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.eventi;
 
 /**
+ * Un messaggio interno del sistema destinato a un sistema di logging.
  *
  * @author Stefano Reksten
  */

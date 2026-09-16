@@ -4,7 +4,7 @@ import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 /**
- * Un Personaggio subisce una variazione di un Effetto di Stato
+ * Un Personaggio subisce una variazione di un Effetto di Stato.
  *
  * @author Stefano Reksten
  */

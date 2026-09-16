@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi;
 
 /**
  * Evento interno del motore UI che segnala che lo sfoltimento della cache immagini generate dinamicamente
- * è stato effettuato
+ * è stato effettuato.
  *
  * @author Stefano Reksten
  */

@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.eventi;
 
 /**
+ * Notifica un cambiamento nella conoscenza della mappa della Foresta.
  *
  * @author Stefano Reksten
  */

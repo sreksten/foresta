@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi;
 
 /**
- * Il motore di gioco ha un testo a disposizione.
+ * Evento interno - il motore di gioco ha un testo a disposizione.
  *
  * @author Stefano Reksten
  */

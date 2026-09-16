@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.eventi;
 
 /**
+ * Evento iniziale che annuncia il completamento del caricamento del gioco e della preparazione
+ * della UI. Il gioco può iniziare.
  *
  * @author Stefano Reksten
  */

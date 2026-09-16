@@ -92,7 +92,7 @@ public class Foresta {
 	}
 
 	/**
-	 * Per uso da parte di un ControlloreDiGioco
+	 * Reimposta completamente il mondo
 	 */
 	static void reimposta() {
 		// Reset produzioni one-shot (nomi locande, fiabe, oroscopi) per la nuova partita
@@ -102,8 +102,8 @@ public class Foresta {
 		LineaTemporale.reimposta();
 		RegistroMissioni.reimposta();
 		RegistroArtefatti.reimposta();
-		ModelloDati.getIstanza().getStatisticheMD().reimposta();
-		
+		Statistiche.reimposta();
+
 		//TODO quando tutti i modelli dati sono stati creati spostare reimposta su ModelloDati
 		final int dimensioneX = 20;
 		final int dimensioneY = 20;

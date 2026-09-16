@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.eventi;
 
 /**
+ * Il livello generale del gioco è stato aumentato.
  *
  * @author Stefano Reksten
  */

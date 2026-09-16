@@ -5,7 +5,8 @@ import com.threeamigos.foresta.motore.modellodati.RisultatoValutazioneAttaccante
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 /**
- * Un Personaggio attaccante fa una valutazione del comportamento da assumere per attaccare un Personaggio bersaglio.
+ * Evento interno - un Personaggio attaccante fa una valutazione del comportamento da assumere per attaccare
+ * un Personaggio bersaglio.
  *
  * @author Stefano Reksten
  */
