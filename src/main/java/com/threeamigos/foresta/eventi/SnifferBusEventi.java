@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.eventi;
 
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.oggetti.Artefatto;
@@ -15,11 +16,12 @@ public class SnifferBusEventi {
 
     public SnifferBusEventi() {
         BusEventi.iscriviti(EventoAggiuntaModificatore.class, this::onEventoAggiuntaModificatore);
-        BusEventi.iscriviti(EventoApprovazioneAcquistoArtefatto.class, this::onEventoApprovazioneAcquisto);
-        BusEventi.iscriviti(EventoApprovazionePrelievoArtefatto.class, this::onEventoApprovazionePrelievo);
-        // EventoApprovazioneSpostamento è classe astratta
-        BusEventi.iscriviti(EventoApprovazioneStoccaggioArtefatto.class, this::onEventoApprovazioneStoccaggio);
-        BusEventi.iscriviti(EventoApprovazioneVenditaArtefatto.class, this::onEventoApprovazioneVendita);
+        BusEventi.iscriviti(EventoApprovazioneAcquistoArtefatto.class, this::onEventoApprovazioneAcquistoArtefatto);
+        BusEventi.iscriviti(EventoApprovazioneAcquistoConsumabile.class, this::onEventoApprovazioneAcquistoConsumabile);
+        BusEventi.iscriviti(EventoApprovazionePrelievoArtefatto.class, this::onEventoApprovazionePrelievoArtefatto);
+        // EventoApprovazioneSpostamentoArtefatto è classe astratta
+        BusEventi.iscriviti(EventoApprovazioneStoccaggioArtefatto.class, this::onEventoApprovazioneStoccaggioArtefatto);
+        BusEventi.iscriviti(EventoApprovazioneVenditaArtefatto.class, this::onEventoApprovazioneVenditaArtefatto);
         BusEventi.iscriviti(EventoAumentoLivelloMondo.class, this::onEventoAumentoLivelloMondo);
         BusEventi.iscriviti(EventoAumentoLivelloPersonaggio.class, this::onEventoAumentoLivelloPersonaggio);
         // EventoBase è classe astratta
@@ -44,17 +46,20 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoParagrafo.class, this::onEventoParagrafo);
         // EventoPersonaggio è classe astratta
         BusEventi.iscriviti(EventoPuliziaCacheDinamicaImmagini.class, this::onEventoPuliziaCacheDinamicaImmagini);
-        BusEventi.iscriviti(EventoRichiestaAcquistoArtefatto.class, this::onEventoRichiestaAcquisto);
-        BusEventi.iscriviti(EventoRichiestaPrelievoArtefatto.class, this::onEventoRichiestaPrelievo);
-        // EventoRichiestaSpostamento è classe astratta
-        BusEventi.iscriviti(EventoRichiestaStoccaggioArtefatto.class, this::onEventoRichiestaStoccaggio);
+        BusEventi.iscriviti(EventoRichiestaAcquistoArtefatto.class, this::onEventoRichiestaAcquistoArtefatto);
+        BusEventi.iscriviti(EventoRichiestaAcquistoConsumabile.class, this::onEventoRichiestaAcquistoConsumabile);
+        BusEventi.iscriviti(EventoRichiestaPrelievoArtefatto.class, this::onEventoRichiestaPrelievoArtefatto);
+        BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::onEventoRichiestaReinizializzazioneUI);
+        // EventoRichiestaSpostamentoArtefatto è classe astratta
+        BusEventi.iscriviti(EventoRichiestaStoccaggioArtefatto.class, this::onEventoRichiestaStoccaggioArtefatto);
         BusEventi.iscriviti(EventoRichiestaTesto.class, this::onEventoRichiestaTesto);
-        BusEventi.iscriviti(EventoRichiestaVenditaArtefatto.class, this::onEventoRichiestaVendita);
-        BusEventi.iscriviti(EventoRifiutoAcquistoArtefatto.class, this::onEventoRifiutoAcquisto);
-        BusEventi.iscriviti(EventoRifiutoPrelievoArtefatto.class, this::onEventoRifiutoPrelievo);
-        // EventoRifiutoSpostamento è classe astratta
-        BusEventi.iscriviti(EventoRifiutoStoccaggioArtefatto.class, this::onEventoRifiutoStoccaggio);
-        BusEventi.iscriviti(EventoRifiutoVenditaArtefatto.class, this::onEventoRifiutoVendita);
+        BusEventi.iscriviti(EventoRichiestaVenditaArtefatto.class, this::onEventoRichiestaVenditaArtefatto);
+        BusEventi.iscriviti(EventoRifiutoAcquistoArtefatto.class, this::onEventoRifiutoAcquistoArtefatto);
+        BusEventi.iscriviti(EventoRifiutoAcquistoConsumabile.class, this::onEventoRifiutoAcquistoConsumabile);
+        BusEventi.iscriviti(EventoRifiutoPrelievoArtefatto.class, this::onEventoRifiutoPrelievoArtefatto);
+        // EventoRifiutoSpostamentoArtgefatto è classe astratta
+        BusEventi.iscriviti(EventoRifiutoStoccaggioArtefatto.class, this::onEventoRifiutoStoccaggioArtefatto);
+        BusEventi.iscriviti(EventoRifiutoVenditaArtefatto.class, this::onEventoRifiutoVenditaArtefatto);
         BusEventi.iscriviti(EventoStatoDiGioco.class, this::onEventoStatoDiGioco);
         BusEventi.iscriviti(EventoTestoDisponibile.class, this::onEventoTestoDisponibile);
         BusEventi.iscriviti(EventoValutazioneAttaccante.class, this::onEventoValutazioneAttaccante);
@@ -67,7 +72,6 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoVariazionePozioniMagiaGrandi.class, this::onEventoVariazionePozioniMagiaGrandi);
         BusEventi.iscriviti(EventoVariazionePozioniSalute.class, this::onEventoVariazionePozioniSalute);
         BusEventi.iscriviti(EventoVariazionePozioniSaluteGrandi.class, this::onEventoVariazionePozioniSaluteGrandi);
-        BusEventi.iscriviti(EventoVariazionePozioniMagia.class, this::onEventoVariazionePozioniMagia);
         BusEventi.iscriviti(EventoVariazionePunti.class, this::onEventoVariazionePunti);
         BusEventi.iscriviti(EventoVariazionePuntiEsperienza.class, this::onEventoVariazionePuntiEsperienza);
         BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::onEventoVariazioneStatistichePersonaggio);
@@ -80,36 +84,24 @@ public class SnifferBusEventi {
                 formattaStatistichePersonaggio(evento.getPersonaggio()));
     }
 
-    private void onEventoApprovazioneAcquisto(EventoApprovazioneAcquistoArtefatto evento) {
-        EventoRichiestaSpostamentoArtefatto<OggettoConCosto> richiesta = evento.getEventoRichiestaSpostamentoArtefatto();
-        OggettoConCosto oggetto = richiesta.getOggettoDaSpostare();
-        Logger.log(headerEvento(evento) + formattaParte(richiesta.getParteAttiva()) + " acquista "
-                + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") da "
-                + formattaParte(richiesta.getParteRemota()));
+    private void onEventoApprovazioneAcquistoArtefatto(EventoApprovazioneAcquistoArtefatto evento) {
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamentoArtefatto().getUuid());
     }
 
-    private void onEventoApprovazionePrelievo(EventoApprovazionePrelievoArtefatto evento) {
-        EventoRichiestaSpostamentoArtefatto<OggettoConPeso> richiesta = evento.getEventoRichiestaSpostamentoArtefatto();
-        OggettoConPeso oggetto = richiesta.getOggettoDaSpostare();
-        Logger.log(headerEvento(evento) + formattaParte(richiesta.getParteAttiva()) + " preleva "
-                + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") da "
-                + formattaParte(richiesta.getParteRemota()));
+    private void onEventoApprovazioneAcquistoConsumabile(EventoApprovazioneAcquistoConsumabile evento) {
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaAcquistoConsumabile().getUuid());
     }
 
-    private void onEventoApprovazioneStoccaggio(EventoApprovazioneStoccaggioArtefatto evento) {
-        EventoRichiestaSpostamentoArtefatto<OggettoConPeso> richiesta = evento.getEventoRichiestaSpostamentoArtefatto();
-        OggettoConPeso oggetto = richiesta.getOggettoDaSpostare();
-        Logger.log(headerEvento(evento) + formattaParte(richiesta.getParteAttiva()) + " stocca "
-                + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") su "
-                + formattaParte(richiesta.getParteRemota()));
+    private void onEventoApprovazionePrelievoArtefatto(EventoApprovazionePrelievoArtefatto evento) {
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamentoArtefatto().getUuid());
     }
 
-    private void onEventoApprovazioneVendita(EventoApprovazioneVenditaArtefatto evento) {
-        EventoRichiestaSpostamentoArtefatto<OggettoConCosto> richiesta = evento.getEventoRichiestaSpostamentoArtefatto();
-        OggettoConCosto oggetto = richiesta.getOggettoDaSpostare();
-        Logger.log(headerEvento(evento) + formattaParte(richiesta.getParteAttiva()) + " vende "
-                + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") a "
-                + formattaParte(richiesta.getParteRemota()));
+    private void onEventoApprovazioneStoccaggioArtefatto(EventoApprovazioneStoccaggioArtefatto evento) {
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamentoArtefatto().getUuid());
+    }
+
+    private void onEventoApprovazioneVenditaArtefatto(EventoApprovazioneVenditaArtefatto evento) {
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamentoArtefatto().getUuid());
     }
 
     private void onEventoAumentoLivelloMondo(EventoAumentoLivelloMondo evento) {
@@ -212,21 +204,31 @@ public class SnifferBusEventi {
         Logger.log(headerEvento(evento) + "Eliminate " + (prima - dopo) + " immagini dalla cache. Rimanenti: " + dopo);
     }
 
-    private void onEventoRichiestaAcquisto(EventoRichiestaAcquistoArtefatto evento) {
+    private void onEventoRichiestaAcquistoArtefatto(EventoRichiestaAcquistoArtefatto evento) {
         OggettoConCosto oggetto = evento.getOggettoDaSpostare();
         Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di acquistare "
                 + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") da "
                 + formattaParte(evento.getParteRemota()));
     }
 
-    private void onEventoRichiestaPrelievo(EventoRichiestaPrelievoArtefatto evento) {
+    private void onEventoRichiestaAcquistoConsumabile(EventoRichiestaAcquistoConsumabile evento) {
+        ClasseIncantesimo incantesimo = evento.getClasseIncantesimo();
+        Logger.log(headerEvento(evento) + "Gruppo richiede di acquistare " + evento.getTipoConsumabile() +
+                (incantesimo != null ? (" " + incantesimo) : "") + ", Costo: " + evento.getPrezzo());
+    }
+
+    private void onEventoRichiestaPrelievoArtefatto(EventoRichiestaPrelievoArtefatto evento) {
         OggettoConPeso oggetto = evento.getOggettoDaSpostare();
         Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di prelevare "
                 + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") da "
                 + formattaParte(evento.getParteRemota()));
     }
 
-    private void onEventoRichiestaStoccaggio(EventoRichiestaStoccaggioArtefatto evento) {
+    private void onEventoRichiestaReinizializzazioneUI(EventoRichiestaReinizializzazioneUI evento) {
+        Logger.log(headerEvento(evento));
+    }
+
+    private void onEventoRichiestaStoccaggioArtefatto(EventoRichiestaStoccaggioArtefatto evento) {
         OggettoConPeso oggetto = evento.getOggettoDaSpostare();
         Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di stoccare "
                 + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") su "
@@ -237,43 +239,31 @@ public class SnifferBusEventi {
         Logger.log(headerEvento(evento) + "Richiesta: " + evento.getRichiesta());
     }
 
-    private void onEventoRichiestaVendita(EventoRichiestaVenditaArtefatto evento) {
+    private void onEventoRichiestaVenditaArtefatto(EventoRichiestaVenditaArtefatto evento) {
         OggettoConCosto oggetto = evento.getOggettoDaSpostare();
         Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di vendere "
                 + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") a "
                 + formattaParte(evento.getParteRemota()));
     }
 
-    private void onEventoRifiutoAcquisto(EventoRifiutoAcquistoArtefatto evento) {
-        EventoRichiestaSpostamentoArtefatto<OggettoConCosto> richiesta = evento.getEventoRichiestaSpostamento();
-        OggettoConCosto oggetto = richiesta.getOggettoDaSpostare();
-        Logger.log(headerEvento(evento) + formattaParte(richiesta.getParteAttiva()) + " non può acquistare "
-                + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") da "
-                + formattaParte(richiesta.getParteRemota()) + ": fondi insufficienti");
+    private void onEventoRifiutoAcquistoArtefatto(EventoRifiutoAcquistoArtefatto evento) {
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamento().getUuid());
     }
 
-    private void onEventoRifiutoPrelievo(EventoRifiutoPrelievoArtefatto evento) {
-        EventoRichiestaSpostamentoArtefatto<OggettoConPeso> richiesta = evento.getEventoRichiestaSpostamento();
-        OggettoConPeso oggetto = richiesta.getOggettoDaSpostare();
-        Logger.log(headerEvento(evento) + formattaParte(richiesta.getParteAttiva()) + " non può prelevare "
-                + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") da "
-                + formattaParte(richiesta.getParteRemota()) + ": carico eccessivo");
+    private void onEventoRifiutoAcquistoConsumabile(EventoRifiutoAcquistoConsumabile evento) {
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaAcquistoConsumabile().getUuid());
     }
 
-    private void onEventoRifiutoStoccaggio(EventoRifiutoStoccaggioArtefatto evento) {
-        EventoRichiestaSpostamentoArtefatto<OggettoConPeso> richiesta = evento.getEventoRichiestaSpostamento();
-        OggettoConPeso oggetto = richiesta.getOggettoDaSpostare();
-        Logger.log(headerEvento(evento) + formattaParte(richiesta.getParteAttiva()) + " non può stoccare "
-                + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") su "
-                + formattaParte(richiesta.getParteRemota()));
+    private void onEventoRifiutoPrelievoArtefatto(EventoRifiutoPrelievoArtefatto evento) {
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamento().getUuid());
     }
 
-    private void onEventoRifiutoVendita(EventoRifiutoVenditaArtefatto evento) {
-        EventoRichiestaSpostamentoArtefatto<OggettoConCosto> richiesta = evento.getEventoRichiestaSpostamento();
-        OggettoConCosto oggetto = richiesta.getOggettoDaSpostare();
-        Logger.log(headerEvento(evento) + formattaParte(richiesta.getParteAttiva()) + " non può vendere "
-                + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") a "
-                + formattaParte(richiesta.getParteRemota()));
+    private void onEventoRifiutoStoccaggioArtefatto(EventoRifiutoStoccaggioArtefatto evento) {
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamento().getUuid());
+    }
+
+    private void onEventoRifiutoVenditaArtefatto(EventoRifiutoVenditaArtefatto evento) {
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamento().getUuid());
     }
 
     private void onEventoStatoDiGioco(EventoStatoDiGioco evento) {
