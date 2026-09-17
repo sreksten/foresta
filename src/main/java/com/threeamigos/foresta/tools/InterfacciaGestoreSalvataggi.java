@@ -17,7 +17,9 @@ public interface InterfacciaGestoreSalvataggi {
 	}
 
 	List<InterfacciaTestataSalvataggio> getSalvataggiDisponibili();
+
 	boolean leggi(String id);
+
 	void salva(String id, String descrizione);
 
 }
