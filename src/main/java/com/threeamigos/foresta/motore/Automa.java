@@ -53,10 +53,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	public void inizia() {
 		stato = Stato.INTRO;
-
-		//FIXME toglierlo di qui, non ha senso per l'intro, dovrebbe gestirla la UI
-		temporizzatore.inizia(5_000);
-
 		BusEventi.pubblica(new EventoStatoDiGioco(Stato.INTRO, getComandiPossibiliInStatoIntro()));
 	}
 
@@ -109,6 +105,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		processaAzione(evento.getComando());
 	}
 
+	private void comandoNonValido(Comando comando) {
+		BusEventi.pubblica(new EventoErroreInterno("Stato: " + stato + " - Comando non valido: " + comando));
+	}
+
 	/**
 	 * Questa funzione in base allo stato del gruppo e alla azione ricevuta
 	 * è il motore di gioco vero e proprio, ed è quindi abbastanza monumentale.
@@ -120,19 +120,18 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		switch (stato) {
 
 			case INTRO:
-				if (azione == Comando.TIMER) {
-					//FIXME fa cagare, va messo comunque nel temporizzatore della UI.
-					BusEventi.pubblica(new EventoStatoDiGioco(Stato.INTRO, getComandiPossibiliInStatoIntro()));
-				} else if (azione == Comando.PERGAMENA || azione == Comando.FLOPPY) {
-					temporizzatore.termina();
-					if (azione == Comando.PERGAMENA) {
+				switch(azione) {
+					case PERGAMENA:
 						stato = Stato.PRE_GAME_ATTESA_NOME_PERSONAGGIO;
 						BusEventi.pubblica(new EventoStatoDiGioco(stato));
-					} else {
+						break;
+					case FLOPPY:
 						stato = Stato.SELEZIONE_SALVATAGGIO_DA_LEGGERE;
 						Collection<Comando> comandiPossibili = getComandiPossibiliInStatoSelezioneSalvataggioDaLeggere();
 						BusEventi.pubblica(new EventoStatoDiGioco(stato, comandiPossibili));
-					}
+						break;
+					default:
+						comandoNonValido(azione);
 				}
 				break;
 
@@ -146,8 +145,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					BusEventi.pubblica(new EventoRichiestaReinizializzazioneUI());
 					BusEventi.pubblica(new EventoStatoDiGioco(stato, getComandiPossibiliInStatoAttesaDirezione()));
 				} else {
-					UI.scriviGrande("Problema nella lettura file");
-					stato = Stato.CONTROLLO_SALVATAGGI;
+					stato = Stato.FILE_DI_SALVATAGGIO_NON_VALIDO;
+					BusEventi.pubblica(new EventoStatoDiGioco(stato, getComandiPossibiliInStatoIntro()));
 				}
 				processaAzione(null);
 				break;

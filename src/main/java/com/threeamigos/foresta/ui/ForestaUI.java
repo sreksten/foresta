@@ -14,8 +14,6 @@ import java.awt.*;
 
 public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
-	private static final String SCEGLI_NOME_PERSONAGGIO = "Scegli il nome del tuo personaggio o lascialo vuoto per un personaggio casuale.";
-
 	private final Orientamento orientamento;
 	private final boolean tuttoSchermo;
 	private final Temporizzatore temporizzatore;
@@ -24,6 +22,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	private Prompt prompt;
 	private DisplayableCanvas displayableCanvas;
 	private PannelloIcone pannelloIcone;
+	private Stato statoDiGioco;
 
 	public ForestaUI(Orientamento orientamento, boolean tuttoSchermo, Temporizzatore temporizzatore) {
 		this.orientamento = orientamento;
@@ -131,6 +130,9 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	public void tick() {
 		// Per ora non fa niente, in realtà dovrebbe gestire la intro per adesso
+		if (statoDiGioco == Stato.INTRO) {
+			displayableCanvas.intro();
+		}
 	}
 
 	@Override
@@ -287,22 +289,32 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	private void gestisciEventoStatoDiGioco(EventoStatoDiGioco evento) {
-		switch(evento.getStato()) {
+		statoDiGioco = evento.getStato();
+		switch(statoDiGioco) {
 			case INTRO:
 				 // Richiama la schermata o animazione di introduzione
 				displayableCanvas.intro();
+				temporizzatore.inizia(5_000);
 				ComandiPossibili.set(evento.getComandiPossibili());
 				impostaAzioni();
 				break;
 
 			case SELEZIONE_SALVATAGGIO_DA_LEGGERE:
+				temporizzatore.termina();
 				displayableCanvas.selezioneSlotSalvataggioDaCaricare();
 				ComandiPossibili.set(evento.getComandiPossibili());
 				impostaAzioni();
 				break;
 
+			case FILE_DI_SALVATAGGIO_NON_VALIDO:
+				displayableCanvas.scriviGrande("File di salvataggio non valido.");
+				ComandiPossibili.set(evento.getComandiPossibili());
+				impostaAzioni();
+				break;
+
 			case PRE_GAME_ATTESA_NOME_PERSONAGGIO:
-				displayableCanvas.scriviGrande(SCEGLI_NOME_PERSONAGGIO);
+				temporizzatore.termina();
+				displayableCanvas.scriviGrande("Scegli il nome del tuo personaggio o lascialo vuoto per un personaggio casuale.");
 				prompt.setVisible(true);
 				ComandiPossibili.reimposta();
 				impostaAzioni();

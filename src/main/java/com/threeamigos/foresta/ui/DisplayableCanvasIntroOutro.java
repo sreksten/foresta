@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoException;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.Statistiche;
@@ -109,7 +111,11 @@ public class DisplayableCanvasIntroOutro implements Finestra{
 		disegnaOmbraDelDrago(graphics);
 		disegnaStringaCentrataConACapoAutomatico(graphics, "seleziona lo slot da caricare", 50);
 		for (InterfacciaGestoreSalvataggi.InterfacciaTestataSalvataggio testata : GestoreSalvataggi.getSalvataggiDisponibili()) {
-			disegnaElencoPersonaggiDaElencoClassi(graphics, testata);
+			try {
+				disegnaElencoPersonaggiDaElencoClassi(graphics, testata);
+			} catch (Exception e) {
+				BusEventi.pubblica(new EventoException("Durante lettura intestazione del file di salvataggio " + testata.getId(), e));
+			}
 		}
 	}
 

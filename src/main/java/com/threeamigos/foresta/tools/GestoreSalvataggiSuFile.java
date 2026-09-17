@@ -17,17 +17,19 @@ public class GestoreSalvataggiSuFile extends GestoreSalvataggiBase {
 		File directorySalvataggi = recuperaDirectory();
 		List<InterfacciaTestataSalvataggio> salvataggi = new ArrayList<>();
 		for (int i = 1; i <= NUMERO_MASSIMO; i++) {
-			File salvataggio = new File(directorySalvataggi.getPath() + File.separatorChar + i + POSTFISSO_FILE);
-			if (salvataggio.exists()) {
-				try (BufferedReader reader = new BufferedReader(new FileReader(salvataggio))) {
-					String line = reader.readLine();
-					Salvataggio testataSalvataggio = new Salvataggio();
-					testataSalvataggio.setId(String.valueOf(i));
-					testataSalvataggio.setNome(line);
-					salvataggi.add(testataSalvataggio);
-				} catch (Exception e) {
-					BusEventi.pubblica(new EventoException(e));
+			try {
+				File salvataggio = new File(directorySalvataggi.getPath() + File.separatorChar + i + POSTFISSO_FILE);
+				if (salvataggio.exists()) {
+					try (BufferedReader reader = new BufferedReader(new FileReader(salvataggio))) {
+						String line = reader.readLine();
+						Salvataggio testataSalvataggio = new Salvataggio();
+						testataSalvataggio.setId(String.valueOf(i));
+						testataSalvataggio.setNome(line);
+						salvataggi.add(testataSalvataggio);
+					}
 				}
+			} catch (Exception e) {
+				BusEventi.pubblica(new EventoException("Durante lettura file di salvataggio " + i, e));
 			}
 		}
 		return salvataggi;
