@@ -36,7 +36,7 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 					BusEventi.pubblica(new EventoException(e));
 				}
 			},
-                millisecondi,
+                0,
                 millisecondi,
 			TimeUnit.MILLISECONDS
 		);
