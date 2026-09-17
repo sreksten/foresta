@@ -26,14 +26,28 @@ public abstract class GestoreSalvataggiBase extends GestoreSuFile implements Int
 			Logger.log(e);
 		}
 	}
-	
-	public boolean leggi(String id) {
+
+	public boolean leggiTestata(String id, ModelloDati modelloDati) {
 		Salvataggio salvataggio = recuperaSalvataggio(id);
 		if (salvataggio == null) {
 			return false;
 		}
 		try {
-			ModelloDati.getIstanza().leggi(new BufferedReader(new StringReader(salvataggio.getContenuto())));
+			modelloDati.leggiTestata(new BufferedReader(new StringReader(salvataggio.getContenuto())));
+		} catch (IOException e) {
+			Logger.log(e);
+			return false;
+		}
+		return true;
+	}
+
+	public boolean leggi(String id, ModelloDati modelloDati) {
+		Salvataggio salvataggio = recuperaSalvataggio(id);
+		if (salvataggio == null) {
+			return false;
+		}
+		try {
+			modelloDati.leggi(new BufferedReader(new StringReader(salvataggio.getContenuto())));
 		} catch (IOException e) {
 			Logger.log(e);
 			return false;

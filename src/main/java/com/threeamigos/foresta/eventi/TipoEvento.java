@@ -79,7 +79,10 @@ public enum TipoEvento {
      * Cambio di stato dell'automa principale che informa la UI
      */
     STATO_DI_GIOCO,
-
+    /**
+     * Errore di caricamento del gioco
+     */
+    ERRORE_CARICAMENTO,
     /**
      * Attività interna di pulizia cache dinamica immagini
      */

@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.tools;
 
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+
 import java.util.List;
 
 public interface InterfacciaGestoreSalvataggi {
@@ -9,6 +12,7 @@ public interface InterfacciaGestoreSalvataggi {
 	interface TestataSalvataggio {
 		 String getId();
 		 String getDescrizione();
+		 GruppoGiocatore getGruppoGiocatore();
 	}
 
 	interface Salvataggio extends TestataSalvataggio {
@@ -18,7 +22,9 @@ public interface InterfacciaGestoreSalvataggi {
 
 	List<TestataSalvataggio> getSalvataggiDisponibili();
 
-	boolean leggi(String id);
+	boolean leggiTestata(String id, ModelloDati modelloDati);
+
+	boolean leggi(String id, ModelloDati modelloDati);
 
 	void salva(String id, String descrizione);
 

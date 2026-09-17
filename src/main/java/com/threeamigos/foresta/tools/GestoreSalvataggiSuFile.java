@@ -19,7 +19,7 @@ public class GestoreSalvataggiSuFile extends GestoreSalvataggiBase {
 		for (int i = 1; i <= NUMERO_MASSIMO; i++) {
 			try {
 				File salvataggio = new File(directorySalvataggi.getPath() + File.separatorChar + i + POSTFISSO_FILE);
-				if (salvataggio.exists()) {
+				if (salvataggio.exists() && salvataggio.canRead()) {
 					try (BufferedReader reader = new BufferedReader(new FileReader(salvataggio))) {
 						String line = reader.readLine();
 						SalvataggioImpl testataSalvataggio = new SalvataggioImpl();

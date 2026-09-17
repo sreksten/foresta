@@ -1,26 +1,44 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoErroreCaricamento;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * Il modello dati del gioco. Comprende:
+ * <ul>
+ * <li>GruppoGiocatoreMD - il gruppo del giocatore con tutti i personaggi contenuti</li>
+ * <li>StatisticheMD - statistiche sul gioco</li>
+ * <li>LineaTemporaleMD - quel che è successo durante il gioco</li>
+ * <li>ForestaMD - informazioni sulla Foresta</li>
+ * <li>RegistroPersonaggiMD - i personaggi sparsi per la Foresta</li>
+ * <li>RegistroArtefattiMD - gli artefatti sparsi per la Foresta</li>
+ * <li>RegistroMissioniMD - le missioni del gioco</li>
+ * </ul>
+ */
 public class ModelloDati implements Serializzabile {
 
-	private static final ModelloDati istanza = new ModelloDati();
+	// L'istanza di modello dati su cui il gioco si basa
+	private static ModelloDati istanza = new ModelloDati();
 
-	private final ForestaMD forestaMD;
+	// Dati sufficienti per mostrare una situazione di salvataggio
 	private final GruppoGiocatoreMD gruppoGiocatoreMD;
+	// Tutto il resto dei dati di gioco
 	private final StatisticheMD statisticheMD;
 	private final LineaTemporaleMD lineaTemporaleMD;
+	private final ForestaMD forestaMD;
 	private final RegistroPersonaggiMD registroPersonaggiMD;
 	private final RegistroArtefattiMD registroArtefattiMD;
 	private final RegistroMissioniMD registroMissioniMD;
 
 	public ModelloDati() {
-		forestaMD = new ForestaMD();
 		gruppoGiocatoreMD = new GruppoGiocatoreMD();
 		statisticheMD = new StatisticheMD();
 		lineaTemporaleMD = new LineaTemporaleMD();
+		forestaMD = new ForestaMD();
 		registroPersonaggiMD = new RegistroPersonaggiMD();
 		registroArtefattiMD = new RegistroArtefattiMD();
 		registroMissioniMD = new RegistroMissioniMD();
@@ -28,10 +46,6 @@ public class ModelloDati implements Serializzabile {
 
 	public static ModelloDati getIstanza() {
 		return istanza;
-	}
-
-	public final ForestaMD getForestaMD() {
-		return forestaMD;
 	}
 
 	public final GruppoGiocatoreMD getGruppoGiocatoreMD() {
@@ -42,8 +56,12 @@ public class ModelloDati implements Serializzabile {
 		return statisticheMD;
 	}
 
-	public LineaTemporaleMD getLineaTemporaleMD() {
+	public final LineaTemporaleMD getLineaTemporaleMD() {
 		return lineaTemporaleMD;
+	}
+
+	public final ForestaMD getForestaMD() {
+		return forestaMD;
 	}
 
 	public RegistroPersonaggiMD getRegistroPersonaggiMD() {
@@ -61,10 +79,10 @@ public class ModelloDati implements Serializzabile {
 	///////////////////////////////////
 
 	public void reimposta(int dimensioneX, int dimensioneY) {
-		forestaMD.reimposta(dimensioneX, dimensioneY);
 		gruppoGiocatoreMD.reimposta();
 		statisticheMD.reimposta();
 		lineaTemporaleMD.reimposta();
+		forestaMD.reimposta(dimensioneX, dimensioneY);
 		registroPersonaggiMD.reimposta();
 		registroArtefattiMD.reimposta();
 		registroMissioniMD.reimposta();
@@ -72,10 +90,10 @@ public class ModelloDati implements Serializzabile {
 
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
-		forestaMD.salva(stream);
 		gruppoGiocatoreMD.salva(stream);
 		statisticheMD.salva(stream);
 		lineaTemporaleMD.salva(stream);
+		forestaMD.salva(stream);
 		registroPersonaggiMD.salva(stream);
 		registroArtefattiMD.salva(stream);
 		registroMissioniMD.salva(stream);
@@ -83,18 +101,33 @@ public class ModelloDati implements Serializzabile {
 
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
-		forestaMD.leggi(stream);
 		gruppoGiocatoreMD.reimposta();
 		statisticheMD.reimposta();
 		lineaTemporaleMD.reimposta();
 		registroPersonaggiMD.reimposta();
 		registroArtefattiMD.reimposta();
 		registroMissioniMD.reimposta();
+
 		gruppoGiocatoreMD.leggi(stream);
 		statisticheMD.leggi(stream);
 		lineaTemporaleMD.leggi(stream);
+		forestaMD.leggi(stream);
 		registroPersonaggiMD.leggi(stream);
 		registroArtefattiMD.leggi(stream);
 		registroMissioniMD.leggi(stream);
+	}
+
+	public boolean leggiTestata(BufferedReader stream) throws IOException {
+		try {
+			gruppoGiocatoreMD.leggi(stream);
+			return true;
+		} catch (Exception e) {
+			BusEventi.pubblica(new EventoErroreCaricamento(e));
+			return false;
+		}
+	}
+
+	public static void sostituisciIstanza(ModelloDati modelloDati) {
+		istanza = modelloDati;
 	}
 }

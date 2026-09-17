@@ -7,10 +7,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
-import com.threeamigos.foresta.motore.modellodati.TipoDanno;
-import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
+import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.*;
@@ -136,7 +133,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				break;
 
 			case SELEZIONE_SALVATAGGIO_DA_LEGGERE:
-				if (leggi(azione)) {
+				ModelloDati modelloDati = new ModelloDati();
+				if (leggi(azione, modelloDati)) {
+					ModelloDati.sostituisciIstanza(modelloDati);
 					gruppo = GruppoGiocatore.getIstanza();
 					gruppoAvversario = GruppoAvversario.getIstanza();
 					locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
@@ -1042,8 +1041,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 	}
 	
-	private boolean leggi(Comando azione) {
-		return GestoreSalvataggi.leggi(convertiComandoInSlotSalvataggio(azione));
+	private boolean leggi(Comando azione, ModelloDati modelloDati) {
+		return GestoreSalvataggi.leggi(convertiComandoInSlotSalvataggio(azione), modelloDati);
 	}
 
 	private void salva(Comando azione) {

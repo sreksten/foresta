@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.tools;
 
+import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.tools.InterfacciaGestoreSalvataggi.TestataSalvataggio;
 
 import java.util.List;
@@ -19,8 +20,12 @@ public class GestoreSalvataggi {
 		return interfacciaGestoreSalvataggi.getSalvataggiDisponibili();
 	}
 
-	public static boolean leggi(String id) {
-		return interfacciaGestoreSalvataggi.leggi(id);
+	public static boolean leggiTestata(String id, ModelloDati modelloDati) {
+		return interfacciaGestoreSalvataggi.leggiTestata(id, modelloDati);
+	}
+
+	public static boolean leggi(String id, ModelloDati modelloDati) {
+		return interfacciaGestoreSalvataggi.leggi(id, modelloDati);
 	}
 
 	public static void salva(String id, String descrizione) {

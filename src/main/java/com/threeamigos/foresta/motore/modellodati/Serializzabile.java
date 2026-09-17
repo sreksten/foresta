@@ -4,6 +4,11 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+/**
+ * Dichiara che un certo oggetto può essere scritto e riletto da un flusso di input/output
+ *
+ * @author Stefano Reksten
+ */
 interface Serializzabile {
 
 	String PIPE = "|";

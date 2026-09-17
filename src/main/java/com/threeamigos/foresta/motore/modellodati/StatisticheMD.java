@@ -93,7 +93,7 @@ public class StatisticheMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.println(turniGiocati);
 		for (ClassePersonaggio classePersonaggio : ClassePersonaggio.values()) {
-			stream.print(classePersonaggio.ordinal());
+			stream.print(classePersonaggio.name());
 			stream.print(PIPE);
 			stream.print(getMostriUccisi(classePersonaggio));
 			stream.print(PIPE);
@@ -114,7 +114,7 @@ public class StatisticheMD implements Serializzabile {
 		line = stream.readLine();
 		st = new StringTokenizer(line, PIPE);
 		for (int i = 0; i < classi.length; i++) {
-			mostriUccisi.put(classi[Integer.parseInt(st.nextToken())], Integer.parseInt(st.nextToken()));
+			mostriUccisi.put(ClassePersonaggio.valueOf(st.nextToken()), Integer.parseInt(st.nextToken()));
 		}
 	}
 }
