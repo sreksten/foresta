@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.tools;
 
-public class Salvataggio implements InterfacciaGestoreSalvataggi.InterfacciaSalvataggio {
+public class SalvataggioImpl implements InterfacciaGestoreSalvataggi.Salvataggio {
 
 	private String id;
 	private String nome;

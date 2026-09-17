@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.tools;
 
-import com.threeamigos.foresta.tools.InterfacciaGestoreSalvataggi.InterfacciaTestataSalvataggio;
+import com.threeamigos.foresta.tools.InterfacciaGestoreSalvataggi.TestataSalvataggio;
 
 import java.util.List;
 
@@ -15,7 +15,7 @@ public class GestoreSalvataggi {
 		interfacciaGestoreSalvataggi = gestoreSalvataggi;
 	}
 
-	public static List<InterfacciaTestataSalvataggio> getSalvataggiDisponibili() {
+	public static List<TestataSalvataggio> getSalvataggiDisponibili() {
 		return interfacciaGestoreSalvataggi.getSalvataggiDisponibili();
 	}
 

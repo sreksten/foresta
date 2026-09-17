@@ -7,13 +7,9 @@ import java.io.*;
 
 public abstract class GestoreSalvataggiBase extends GestoreSuFile implements InterfacciaGestoreSalvataggi {
 
-	public int getCardinalita() {
-		return NUMERO_MASSIMO;
-	}
+	protected abstract void salva(Salvataggio salvataggio);
 	
-	protected abstract void salva(InterfacciaGestoreSalvataggi.InterfacciaSalvataggio salvataggio);
-	
-	protected abstract InterfacciaGestoreSalvataggi.InterfacciaSalvataggio recuperaSalvataggio(String id);
+	protected abstract Salvataggio recuperaSalvataggio(String id);
 	
 	public final void salva(String id, String descrizione) {
 		try {
@@ -21,7 +17,7 @@ public abstract class GestoreSalvataggiBase extends GestoreSuFile implements Int
 			PrintWriter writer = new PrintWriter(out);
 			ModelloDati.getIstanza().salva(writer);
 			writer.flush();
-			Salvataggio salvataggio = new Salvataggio();
+			SalvataggioImpl salvataggio = new SalvataggioImpl();
 			salvataggio.setId(id);
 			salvataggio.setNome(descrizione);
 			salvataggio.setContenuto(out.toString());
@@ -32,7 +28,7 @@ public abstract class GestoreSalvataggiBase extends GestoreSuFile implements Int
 	}
 	
 	public boolean leggi(String id) {
-		InterfacciaGestoreSalvataggi.InterfacciaSalvataggio salvataggio = recuperaSalvataggio(id);
+		Salvataggio salvataggio = recuperaSalvataggio(id);
 		if (salvataggio == null) {
 			return false;
 		}

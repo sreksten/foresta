@@ -1085,7 +1085,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 */
 	private List<Comando> getComandiPossibiliInStatoSelezioneSalvataggioDaLeggere() {
 		List<Comando> comandiPossibili = new ArrayList<>();
-		for (InterfacciaGestoreSalvataggi.InterfacciaTestataSalvataggio testata : GestoreSalvataggi.getSalvataggiDisponibili()) {
+		for (InterfacciaGestoreSalvataggi.TestataSalvataggio testata : GestoreSalvataggi.getSalvataggiDisponibili()) {
 			String id = testata.getId();
 			if ("1".equals(id)) {
 				comandiPossibili.add(Comando.NUMERO_1);

@@ -6,17 +6,17 @@ public interface InterfacciaGestoreSalvataggi {
 
 	int NUMERO_MASSIMO = 5;
 
-	interface InterfacciaTestataSalvataggio {
+	interface TestataSalvataggio {
 		 String getId();
 		 String getDescrizione();
 	}
 
-	interface InterfacciaSalvataggio extends InterfacciaTestataSalvataggio {
+	interface Salvataggio extends TestataSalvataggio {
 		String getContenuto();
 		void setContenuto(String contenuto);
 	}
 
-	List<InterfacciaTestataSalvataggio> getSalvataggiDisponibili();
+	List<TestataSalvataggio> getSalvataggiDisponibili();
 
 	boolean leggi(String id);
 

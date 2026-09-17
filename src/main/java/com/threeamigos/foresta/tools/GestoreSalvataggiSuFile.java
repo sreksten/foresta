@@ -13,16 +13,16 @@ public class GestoreSalvataggiSuFile extends GestoreSalvataggiBase {
 	private static final String POSTFISSO_FILE = ".TXT";
 
 	@Override
-	public List<InterfacciaTestataSalvataggio> getSalvataggiDisponibili() {
+	public List<TestataSalvataggio> getSalvataggiDisponibili() {
 		File directorySalvataggi = recuperaDirectory();
-		List<InterfacciaTestataSalvataggio> salvataggi = new ArrayList<>();
+		List<TestataSalvataggio> salvataggi = new ArrayList<>();
 		for (int i = 1; i <= NUMERO_MASSIMO; i++) {
 			try {
 				File salvataggio = new File(directorySalvataggi.getPath() + File.separatorChar + i + POSTFISSO_FILE);
 				if (salvataggio.exists()) {
 					try (BufferedReader reader = new BufferedReader(new FileReader(salvataggio))) {
 						String line = reader.readLine();
-						Salvataggio testataSalvataggio = new Salvataggio();
+						SalvataggioImpl testataSalvataggio = new SalvataggioImpl();
 						testataSalvataggio.setId(String.valueOf(i));
 						testataSalvataggio.setNome(line);
 						salvataggi.add(testataSalvataggio);
@@ -36,7 +36,7 @@ public class GestoreSalvataggiSuFile extends GestoreSalvataggiBase {
 	}
 
 	@Override
-	public InterfacciaGestoreSalvataggi.InterfacciaSalvataggio recuperaSalvataggio(String id) {
+	public Salvataggio recuperaSalvataggio(String id) {
 		File directorySalvataggi = recuperaDirectory();
 		File fileSalvataggio = new File(directorySalvataggi.getPath() + File.separatorChar + id + POSTFISSO_FILE);
 		if (fileSalvataggio.exists()) {
@@ -48,7 +48,7 @@ public class GestoreSalvataggiSuFile extends GestoreSalvataggiBase {
 					sb.append(line);
 					sb.append('\n');
 				}
-				Salvataggio salvataggio = new Salvataggio();
+				SalvataggioImpl salvataggio = new SalvataggioImpl();
 				salvataggio.setId(fileSalvataggio.getPath());
 				salvataggio.setNome(line);
 				salvataggio.setContenuto(sb.toString());
@@ -64,7 +64,7 @@ public class GestoreSalvataggiSuFile extends GestoreSalvataggiBase {
 	}
 
 	@Override
-	public void salva(InterfacciaGestoreSalvataggi.InterfacciaSalvataggio salvataggio) {
+	public void salva(Salvataggio salvataggio) {
 		File directorySalvataggi = recuperaDirectory();
 		File fileSalvataggio = new File(directorySalvataggi.getPath() + File.separatorChar + salvataggio.getId() + POSTFISSO_FILE);
 		try (PrintWriter writer = new PrintWriter(new FileWriter(fileSalvataggio))) {

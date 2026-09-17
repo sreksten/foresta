@@ -110,7 +110,7 @@ public class DisplayableCanvasIntroOutro implements Finestra{
 	void selezioneSlotDaCaricare(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
 		disegnaStringaCentrataConACapoAutomatico(graphics, "seleziona lo slot da caricare", 50);
-		for (InterfacciaGestoreSalvataggi.InterfacciaTestataSalvataggio testata : GestoreSalvataggi.getSalvataggiDisponibili()) {
+		for (InterfacciaGestoreSalvataggi.TestataSalvataggio testata : GestoreSalvataggi.getSalvataggiDisponibili()) {
 			try {
 				disegnaElencoPersonaggiDaElencoClassi(graphics, testata);
 			} catch (Exception e) {
@@ -119,7 +119,7 @@ public class DisplayableCanvasIntroOutro implements Finestra{
 		}
 	}
 
-	private void disegnaElencoPersonaggiDaElencoClassi(Graphics2D graphics, InterfacciaGestoreSalvataggi.InterfacciaTestataSalvataggio testata) {
+	private void disegnaElencoPersonaggiDaElencoClassi(Graphics2D graphics, InterfacciaGestoreSalvataggi.TestataSalvataggio testata) {
 		int id = Integer.parseInt(testata.getId());
 		int coordinataY = getCoordinataY(id);
 		String descrizione = testata.getDescrizione();
@@ -137,7 +137,7 @@ public class DisplayableCanvasIntroOutro implements Finestra{
 		for (int i = 1; i <= InterfacciaGestoreSalvataggi.NUMERO_MASSIMO; i++) {
 			slotDisponibili.add(String.valueOf(i));
 		}
-		for (InterfacciaGestoreSalvataggi.InterfacciaTestataSalvataggio testata : GestoreSalvataggi.getSalvataggiDisponibili()) {
+		for (InterfacciaGestoreSalvataggi.TestataSalvataggio testata : GestoreSalvataggi.getSalvataggiDisponibili()) {
 			slotDisponibili.remove(testata.getId());
 			disegnaElencoPersonaggiDaElencoClassi(graphics, testata);
 		}
