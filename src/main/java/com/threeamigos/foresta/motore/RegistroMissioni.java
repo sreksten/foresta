@@ -60,21 +60,23 @@ public class RegistroMissioni {
 	}
 
 	public static void reimposta() {
-		getRegistroMissioni().reimposta();
+		RegistroMissioniMD md = getRegistroMissioni();
+		md.reimposta();
 		pulisciElenchi();
 
 		for (TipoMissionePredefinita tipoMissionePredefinita : TipoMissionePredefinita.values()) {
 			Missione missione = tipoMissionePredefinita.getIstanza();
 			missione.getModelloDati().setId(tipoMissionePredefinita.name());
 			elencoMissioniPredefinite.put(tipoMissionePredefinita, missione);
-			getRegistroMissioni().aggiungiMissione(tipoMissionePredefinita.name(), missione.getModelloDati());
+			md.aggiungiMissione(tipoMissionePredefinita.name(), missione.getModelloDati());
 		}
 	}
 	
 	public static void aggiornaDopoRilettura() {
+		RegistroMissioniMD md = getRegistroMissioni();
 		pulisciElenchi();
-		aggiornaDopoRiletturaImpl(getRegistroMissioni().getMissioniAttive());
-		aggiornaDopoRiletturaImpl(getRegistroMissioni().getMissioniCompletate());
+		aggiornaDopoRiletturaImpl(md.getMissioniAttive());
+		aggiornaDopoRiletturaImpl(md.getMissioniCompletate());
 	}
 
 	private static void aggiornaDopoRiletturaImpl(Collection<MissioneMD> missioni) {

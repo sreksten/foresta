@@ -24,47 +24,48 @@ public class Foresta {
 	private Foresta() {
 	}
 
-	private static ForestaMD forestaMD() {
+	private static ForestaMD getForestaMD() {
 		return ModelloDati.getIstanza().getForestaMD();
 	}
 	
 	public static int getDimensioneX() {
-		return forestaMD().getDimensioneX();
+		return getForestaMD().getDimensioneX();
 	}
 	
 	public static int getDimensioneY() {
-		return forestaMD().getDimensioneY();
+		return getForestaMD().getDimensioneY();
 	}
 	
 	public static void impostaLocazioneCorrente(ClassiLocazione classeLocazione) {
-		forestaMD().impostaLocazione(GruppoGiocatore.getIstanza().getCoordinate(), classeLocazione);
+		getForestaMD().impostaLocazione(GruppoGiocatore.getIstanza().getCoordinate(), classeLocazione);
 	}
 
 	public static CoordinateMD getCoordinateLocazioneUnica(ClassiLocazione classeLocazione) {
 		if (!classeLocazione.isLocazioneUnica()) {
 			throw new IllegalArgumentException();
 		}
-		return forestaMD().ottieniCoordinateLocazioneUnica(classeLocazione);
+		return getForestaMD().ottieniCoordinateLocazioneUnica(classeLocazione);
 	}
 	
 	public static void distruggiLocazioneUnica(ClassiLocazione classeLocazione, ClassiLocazione nuovaClasseLocazione) {
 		CoordinateMD coordinate = getCoordinateLocazioneUnica(classeLocazione);
 		if (coordinate != null) {
-			forestaMD().impostaLocazione(coordinate, nuovaClasseLocazione);
-			forestaMD().rimuoviLocazioneUnica(classeLocazione);
+			ForestaMD md = getForestaMD();
+			md.impostaLocazione(coordinate, nuovaClasseLocazione);
+			md.rimuoviLocazioneUnica(classeLocazione);
 		}
 	}
 
 	public static ClassiLocazione getLocazione(CoordinateMD coordinate) {
-		return forestaMD().ottieniClasseLocazione(coordinate);
+		return getForestaMD().ottieniClasseLocazione(coordinate);
 	}
 	
 	public static ClassiLocazione getLocazione(int x, int y) {
-		return forestaMD().ottieniClasseLocazione(x, y);
+		return getForestaMD().ottieniClasseLocazione(x, y);
 	}
 
 	public static LocazioneMD getLocazioneMD(CoordinateMD coordinate) {
-		return forestaMD().ottieniLocazioneMD(coordinate);
+		return getForestaMD().ottieniLocazioneMD(coordinate);
 	}
 
 	/**
@@ -73,7 +74,7 @@ public class Foresta {
 	 * L'istanza vive quanto la visita e poi si butta.
 	 */
 	public static Locazione costruisciIstanza(CoordinateMD coordinate) {
-		LocazioneMD locazioneMD = forestaMD().ottieniLocazioneMD(coordinate);
+		LocazioneMD locazioneMD = getForestaMD().ottieniLocazioneMD(coordinate);
 		Locazione locazione = locazioneMD.getClasse().getIstanza();
 		locazione.setModelloDati(locazioneMD);
 		return locazione;
@@ -86,7 +87,7 @@ public class Foresta {
 		Logger.log("Costruzione di " + classeLocazioneUnica);
 		CoordinateMD coordinate = getCoordinateLibere();
 		setLocazione(coordinate, classeLocazioneUnica);
-		forestaMD().aggiungiLocazioneUnica(classeLocazioneUnica, coordinate);
+		getForestaMD().aggiungiLocazioneUnica(classeLocazioneUnica, coordinate);
 		if (conosciutaSuMappa) {
 			setLocazioneConosciuta(coordinate);
 		}
@@ -109,7 +110,7 @@ public class Foresta {
 		//TODO quando tutti i modelli dati sono stati creati spostare reimposta su ModelloDati
 		final int dimensioneX = 20;
 		final int dimensioneY = 20;
-		forestaMD().reimposta(dimensioneX, dimensioneY);
+		getForestaMD().reimposta(dimensioneX, dimensioneY);
 
 		int numeroCitta = 0;
 		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
@@ -147,7 +148,7 @@ public class Foresta {
 	}
 
 	private static void setLocazione(CoordinateMD coordinate, ClassiLocazione classeLocazione) {
-		forestaMD().impostaLocazione(coordinate, classeLocazione);
+		getForestaMD().impostaLocazione(coordinate, classeLocazione);
 	}
 	
 	/**
@@ -261,35 +262,35 @@ public class Foresta {
 	 * Abbiamo appena visitato questa locazione
 	 */
 	static void setLocazioneVisitata(CoordinateMD coordinate) {
-		forestaMD().impostaLocazioneVisitata(coordinate);
+		getForestaMD().impostaLocazioneVisitata(coordinate);
 	}
 
 	public static void setLocazioneVisitata(CoordinateMD coordinate, boolean visitata) {
-		forestaMD().impostaLocazioneVisitata(coordinate, visitata);
+		getForestaMD().impostaLocazioneVisitata(coordinate, visitata);
 	}
 
 	/**
 	 * Siamo già passati da questa locazione?
 	 */
 	public static boolean isLocazioneVisitata(CoordinateMD coordinate) {
-		return forestaMD().isLocazioneVisitata(coordinate);
+		return getForestaMD().isLocazioneVisitata(coordinate);
 	}
 
 	/**
 	 * Sappiamo cosa ci sia in questa locazione
 	 */
 	public static void setLocazioneConosciuta(CoordinateMD coordinate) {
-		forestaMD().impostaLocazioneConosciuta(coordinate);
+		getForestaMD().impostaLocazioneConosciuta(coordinate);
 	}
 
 	public static boolean isLocazioneConosciuta(CoordinateMD coordinate) {
-		return forestaMD().isLocazioneConosciuta(coordinate);
+		return getForestaMD().isLocazioneConosciuta(coordinate);
 	}
 	/**
 	 * Un personaggio compra la mappa della foresta da un PNG
 	 */
 	public static void ottieniMappa() {
-		forestaMD().ottieniMappa();
+		getForestaMD().ottieniMappa();
 	}
 
 	/**
@@ -337,18 +338,18 @@ public class Foresta {
 	}
 	
 	public static int getMinXConosciuta() {
-		return forestaMD().getMinXConosciuta();
+		return getForestaMD().getMinXConosciuta();
 	}
 	
 	public static int getMaxXConosciuta() {
-		return forestaMD().getMaxXConosciuta();
+		return getForestaMD().getMaxXConosciuta();
 	}
 	
 	public static int getMinYConosciuta() {
-		return forestaMD().getMinYConosciuta();
+		return getForestaMD().getMinYConosciuta();
 	}
 	
 	public static int getMaxYConosciuta() {
-		return forestaMD().getMaxYConosciuta();
+		return getForestaMD().getMaxYConosciuta();
 	}
 }

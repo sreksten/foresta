@@ -79,21 +79,23 @@ public class LineaTemporale {
 	}
 
 	public static void mattinoSeguente() {
+		LineaTemporaleMD md = getLineaTemporaleMD();
 		if (getOra() >= LineaTemporaleMD.PRIMA_ORA_DEL_MATTINO) {
-			getLineaTemporaleMD().setOra(LineaTemporaleMD.PRIMA_ORA_DEL_MATTINO);
-			getLineaTemporaleMD().setGiorno(getLineaTemporaleMD().getGiorno() + 1);
+			md.setOra(LineaTemporaleMD.PRIMA_ORA_DEL_MATTINO);
+			md.setGiorno(getLineaTemporaleMD().getGiorno() + 1);
 		} else {
-			getLineaTemporaleMD().setOra(LineaTemporaleMD.PRIMA_ORA_DEL_MATTINO);
+			md.setOra(LineaTemporaleMD.PRIMA_ORA_DEL_MATTINO);
 		}
 	}
 
 	public static void aggiungiOre(int quantita) {
+		LineaTemporaleMD md = getLineaTemporaleMD();
 		int ora = getOra() + quantita;
 		if (ora >= 24) {
-			getLineaTemporaleMD().setOra(ora % 24);
-			getLineaTemporaleMD().setGiorno(getLineaTemporaleMD().getGiorno() + 1);
+			md.setOra(ora % 24);
+			md.setGiorno(getLineaTemporaleMD().getGiorno() + 1);
 		} else {
-			getLineaTemporaleMD().setOra(ora);
+			md.setOra(ora);
 		}
 	}
 

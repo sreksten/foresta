@@ -18,25 +18,27 @@ public class Statistiche {
 	}
 
 	public static void addPunti(int quantita) {
-		int valorePrecedente = getStatisticheMD().getPunti();
+		StatisticheMD md = getStatisticheMD();
+		int valorePrecedente = md.getPunti();
 		int valoreAttuale = valorePrecedente + quantita;
-		getStatisticheMD().setPunti(valoreAttuale);
+		md.setPunti(valoreAttuale);
 		BusEventi.pubblica(new EventoVariazionePunti(valorePrecedente, valoreAttuale));
 	}
 
 	// Chiamato ogni volta che il personaggio completa una missione o uccide un mostro
 	public static void addPuntiEsperienza(int quantita) {
-		int valorePrecedente = getStatisticheMD().getPuntiEsperienza();
+		StatisticheMD md = getStatisticheMD();
+		int valorePrecedente = md.getPuntiEsperienza();
 		int valoreAttuale = valorePrecedente + quantita;
-		getStatisticheMD().setPuntiEsperienza(valoreAttuale);
+		md.setPuntiEsperienza(valoreAttuale);
 		BusEventi.pubblica(new EventoVariazionePuntiEsperienza(valorePrecedente, valoreAttuale));
 
 		// Verifichiamo se i nuovi XP accumulati determinano un salto di livello
-		int livelloAttuale = getStatisticheMD().getLivello();
-		int nuovoLivello = GestoreProgressione.calcolaLivelloDaXp(getStatisticheMD().getPuntiEsperienza());
+		int livelloAttuale = md.getLivello();
+		int nuovoLivello = GestoreProgressione.calcolaLivelloDaXp(md.getPuntiEsperienza());
 
 		if (nuovoLivello > livelloAttuale) {
-			getStatisticheMD().setLivello(nuovoLivello);
+			md.setLivello(nuovoLivello);
 			BusEventi.pubblica(new EventoAumentoLivelloMondo(nuovoLivello));
 		}
 	}
@@ -66,7 +68,8 @@ public class Statistiche {
 	}
 
 	public static void incrementaTurniGiocati() {
-		getStatisticheMD().setTurniGiocati(getStatisticheMD().getTurniGiocati() + 1);
+		StatisticheMD md = getStatisticheMD();
+		md.setTurniGiocati(md.getTurniGiocati() + 1);
 	}
 
 	public static int getTurniGiocati() {
