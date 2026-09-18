@@ -5,6 +5,8 @@ import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
+import com.threeamigos.foresta.personaggi.PersonaggioBase;
 
 import java.util.List;
 
@@ -42,6 +44,9 @@ public class GestoreSalvataggi {
 	 * la vecchia istanza tramite ModelloDati.getIstanza().
 	 */
 	private static void ricostruisciModelloDati() {
+		for (PersonaggioMD personaggioMD : ModelloDati.getIstanza().getGruppoGiocatoreMD().getPersonaggiMD()) {
+			PersonaggioBase.ricalcolaAttributiSecondari(personaggioMD, personaggioMD.getClasse().getMoltiplicatoriDiClasse());
+		}
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		gruppo.setModelloDati(ModelloDati.getIstanza().getGruppoGiocatoreMD());
 		gruppo.setLocazioneCorrente(Foresta.costruisciIstanza(gruppo.getCoordinate()));
