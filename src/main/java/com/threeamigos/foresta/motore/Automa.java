@@ -732,8 +732,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				} else if (azione == Comando.PERGAMENA) {
 					if (GestorePunteggi.isPunteggioInClassifica(Statistiche.getPunti())) {
 						stato = Stato.ATTESA_NOME_PUNTEGGI;
-						UI.scriviGrande("congratulazioni! inserisci il tuo nome");
-						UI.chiediTesto();
+						BusEventi.pubblica(new EventoRichiestaTesto("congratulazioni! inserisci il tuo nome"));
 					} else {
 						stato = Stato.INTRO;
 					}

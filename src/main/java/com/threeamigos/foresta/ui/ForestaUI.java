@@ -228,11 +228,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	private void gestisciEventoRichiestaTesto(EventoRichiestaTesto evento) {
-		chiediTesto();
-	}
-
-	@Override
-	public void chiediTesto() {
+		scriviGrande(evento.getRichiesta());
 		prompt.setVisible(true);
 	}
 

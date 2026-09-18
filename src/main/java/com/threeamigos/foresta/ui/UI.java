@@ -140,20 +140,6 @@ public class UI {
 	}
 
 	/**
-	 * Mostra la richiesta di un testo da parte di un controllore di gioco
-	 */
-	public static void chiediTesto() {
-		interfacciaUtente.chiediTesto();
-	}
-
-	/**
-	 * Inoltra un testo ricevuto a un controllore di gioco
-	 */
-	public static void riceviTesto(String s) {
-		interfacciaUtente.riceviTesto(s);
-	}
-
-	/**
 	 * Propone al giocatore una serie di possibili azioni tra le quali scegliere per
 	 * poter continuare il gioco. L'elenco delle possibili azioni viene riempito con valori
 	 * provenienti dalla classe Comando

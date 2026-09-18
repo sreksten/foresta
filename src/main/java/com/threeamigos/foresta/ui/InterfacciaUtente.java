@@ -114,11 +114,6 @@ public interface InterfacciaUtente {
 	void secondoPiano(Finestra finestra);
 
 	/**
-	 * Mostra la richiesta di un testo da parte di un controllore di gioco
-	 */
-    void chiediTesto();
-
-	/**
 	 * Propone al giocatore una serie di possibili azioni tra le quali
 	 * scegliere per poter continuare il gioco.
 	 */
