@@ -6,103 +6,50 @@ package com.threeamigos.foresta.eventi;
  */
 public enum TipoEvento {
 
-    // Notifiche dal motore al giocatore
 
-    // Nuovo paragrafo con spaziatura antecedente
-    PARAGRAFO,
-    // Continuazione del paragrafo precedente
-    MESSAGGIO,
-    // Mostra un fumetto a video
-    FUMETTO,
-    // Mostra un annuncio in evidenza
-    NOTIFICA_GLOBALE,
-
-    // Azioni del giocatore
-
-    // Richiede di interagire con l'inventario
-    RICHIESTA_APERTURA_INVENTARIO_GRUPPO,
-    // Richiede di spostare un oggetto dall'inventario ad un personaggio
-    RICHIESTA_SPOSTAMENTO_OGGETTO,
-    // L'oggetto può essere spostato dall'inventario ad un personaggio
-    APPROVAZIONE_SPOSTAMENTO_OGGETTO,
-    // L'oggetto non può essere spostato dall'inventario ad un personaggio
-    RIFIUTO_SPOSTAMENTO_OGGETTO,
-
-    // Richiesta di interazione con un commerciante (es l'Alchimista)
-    RICHIESTA_APERTURA_INVENTARIO_COMMERCIANTE,
-    // Richiesta di acquisto di un Consumabile da un commerciante
-    RICHIESTA_ACQUISTO_CONSUMABILE,
-    // L'oggetto può essere acquistato da un commerciante
-    APPROVAZIONE_ACQUISTO_CONSUMABILE,
-    // L'oggetto non può essere acquistato da un commerciante
-    RIFIUTO_ACQUISTO_CONSUMABILE,
-
-    // Richiede di visualizzare la mappa conosciuta della foresta a schermo intero
-    RICHIESTA_VISUALIZZAZIONE_MAPPA,
-
-    // Notifiche dal motore all'interfaccia utente
-
-    // Variazione delle gemme disponibili al gruppo
-    VARIAZIONE_GEMME,
-    // Variazione delle monete disponibili al gruppo
-    VARIAZIONE_MONETE,
-    // Variazione del punteggio globale
-    VARIAZIONE_PUNTI,
-    // Vairazione dei punti esperienza di un singolo Personaggio
-    VARIAZIONE_PUNTI_ESPERIENZA,
-    // Variazione degli incantesimi disponibili al gruppo
-    VARIAZIONE_INCANTESIMI,
-    // Variazione della mappa conosciuta della foresta
-    VARIAZIONE_MAPPA,
-    // Variazione della quantità di pozioni salute disponibili
-    VARIAZIONE_POZIONI_SALUTE,
-    // Variazione della quantità di pozioni salute grandi disponibili
-    VARIAZIONE_POZIONI_SALUTE_GRANDI,
-    // Variazione della quantità di pozioni magia disponibili
-    VARIAZIONE_POZIONI_MAGIA,
-    // Variazione della quantità di pozioni magia grandi disponibili
-    VARIAZIONE_POZIONI_MAGIA_GRANDI,
-
-    PERSONAGGIO_CREAZIONE,
-    PERSONAGGIO_VARIAZIONE_STATO_VITALE,
-    PERSONAGGIO_VARIAZIONE_STATISTICHE,
-    PERSONAGGIO_VARIAZIONE_EFFETTO_DI_STATO,
-    PERSONAGGIO_AGGIUNTA_MODIFICATORE,
-    PERSONAGGIO_CONSUMO_PUNTO_ABILITA,
-    PERSONAGGIO_COMBATTIMENTO,
-    PERSONAGGIO_INTERAZIONE_ELEMENTALE,
-    PERSONAGGIO_AUMENTO_LIVELLO,
-
-    MONDO_AUMENTO_LIVELLO,
+    // Azioni che il giocatore vorrebbe intraprendere
 
     /**
-     * Un PNG prende una decisione
+     * Il giocatore invia un testo al motore
      */
-    PERSONAGGIO_VALUTAZIONE,
+    TESTO_DISPONIBILE,
+    /**
+     * Il giocatore invia un comando di gioco (generico) all'automa
+     */
+    COMANDO_DI_GIOCO,
+    /**
+     * Richiesta di interazione con l'inventario di gruppo
+     */
+    RICHIESTA_APERTURA_INVENTARIO_GRUPPO,
+    /**
+     * Richiesta di interazione con un commerciante col quale si può fare una compravendita (ad es., l'Armaiolo)
+     */
+    RICHIESTA_APERTURA_INVENTARIO_COMMERCIANTE,
+    /**
+     * Richiede di spostare un oggetto dall'inventario ad un personaggio
+     */
+    RICHIESTA_SPOSTAMENTO_OGGETTO,
+    /**
+     * Richiesta di interazione con un fornitore col quale si può fare un acquisto (ad es., l'Alchimista)
+     */
+    RICHIESTA_APERTURA_INVENTARIO_FORNITORE,
+    /**
+     * Richiesta di acquisto di un Consumabile da un commerciante
+     */
+    RICHIESTA_ACQUISTO_CONSUMABILE,
+    /**
+     * Richiede di visualizzare la mappa conosciuta della foresta a schermo intero
+     */
+    RICHIESTA_VISUALIZZAZIONE_MAPPA,
+
+
+    // Interazioni dirette che il motore può avere con un giocatore
+
 
     /**
      * Il gioco chiede un testo (ad esempio il nome del personaggio)
      */
     RICHIESTA_TESTO,
-    /**
-     * Il gioco riceve il testo
-     */
-    TESTO_DISPONIBILE,
-    /**
-     * Il giocatore invia un comando all'automa
-     */
-    COMANDO_DI_GIOCO,
-
-    // Eventi interni per il funzionamento del gioco
-
-    /**
-     * Interfaccia utente inizializzata - segnala che il sistema è pronto per il gioco
-     */
-    INTERFACCIA_UTENTE_PRONTA,
-    /**
-     * Richiede una reinizializzazione dell'interfaccia grafica
-     */
-    REINIZIALIZZAZIONE,
     /**
      * Richiesta di selezione di uno slot per effettuare un salvataggio
      */
@@ -111,6 +58,129 @@ public enum TipoEvento {
      * Richiesta di selezione di uno slot per effettuare una rilettura
      */
     RICHIESTA_SELEZIONE_SLOT_PER_RILETTURA,
+    /**
+     * Il motore approva lo spostamento di un oggetto da un inventario ad un altro
+     * (Personaggio <-> inventario di gruppo oppure inventario di gruppo <-> inventario di un commerciante)
+     */
+    APPROVAZIONE_SPOSTAMENTO_OGGETTO,
+    /**
+     * Il motore non approva lo spostamento di un oggetto da un inventario ad un altro
+     * (Personaggio <-> inventario di gruppo oppure inventario di gruppo <-> inventario di un commerciante)
+     */
+    RIFIUTO_SPOSTAMENTO_OGGETTO,
+    /**
+     * Il motore approva l'acquisto di un Consumabile da un Fornitore
+     */
+    APPROVAZIONE_ACQUISTO_CONSUMABILE,
+    /**
+     * Il motore non approva l'acquisto di un Consumabile da un Fornitore
+     */
+    RIFIUTO_ACQUISTO_CONSUMABILE,
+
+
+    // Notifiche dal motore al giocatore riguardanti l'avanzamento del gioco
+
+
+    /**
+     * Variazione delle gemme disponibili al gruppo
+     */
+    VARIAZIONE_GEMME,
+    /**
+     * Variazione delle monete disponibili al gruppo
+     */
+    VARIAZIONE_MONETE,
+    /**
+     * Variazione del punteggio globale
+     */
+    VARIAZIONE_PUNTI,
+    /**
+     * Variazione dei punti esperienza di un singolo Personaggio
+     */
+    VARIAZIONE_PUNTI_ESPERIENZA,
+    /**
+     * Variazione degli incantesimi disponibili al gruppo
+     */
+    VARIAZIONE_INCANTESIMI,
+    /**
+     * Variazione della mappa conosciuta della foresta
+     */
+    VARIAZIONE_MAPPA,
+    /**
+     * Variazione della quantità di pozioni salute disponibili
+     */
+    VARIAZIONE_POZIONI_SALUTE,
+    /**
+     * Variazione della quantità di pozioni salute grandi disponibili
+     */
+    VARIAZIONE_POZIONI_SALUTE_GRANDI,
+    /**
+     * Variazione della quantità di pozioni magia disponibili
+     */
+    VARIAZIONE_POZIONI_MAGIA,
+    /**
+     * Variazione della quantità di pozioni magia grandi disponibili
+     */
+    VARIAZIONE_POZIONI_MAGIA_GRANDI,
+    /**
+     * Un Personaggio aumenta di livello
+     */
+    PERSONAGGIO_AUMENTO_LIVELLO,
+    /**
+     * Un Personaggio muore o resuscita
+     */
+    PERSONAGGIO_VARIAZIONE_STATO_VITALE,
+    /**
+     * Un Personaggio acquisisce un Modificatore che ne cambia le statistiche
+     */
+    PERSONAGGIO_AGGIUNTA_MODIFICATORE,
+    /**
+     * Un Personaggio consuma un punto di abilità per aumentare uno dei suoi attributi primari
+     */
+    PERSONAGGIO_CONSUMO_PUNTO_ABILITA,
+    /**
+     * Un Personaggio subisce una variazione delle sue statistiche
+     */
+    PERSONAGGIO_VARIAZIONE_STATISTICHE,
+    /**
+     * Un Personaggio combatta con un altro Personaggio
+     */
+    PERSONAGGIO_COMBATTIMENTO,
+    /**
+     * Un Personaggio subisce una variazione di un effetto di stato come effetto collaterale di un combattimento
+     */
+    PERSONAGGIO_VARIAZIONE_EFFETTO_DI_STATO,
+    /**
+     * Un Personaggio subisce una interazione elementale come effetto collaterale di un combattimento
+     */
+    PERSONAGGIO_INTERAZIONE_ELEMENTALE,
+    /**
+     * Il gioco aumenta di difficoltà
+     */
+    MONDO_AUMENTO_LIVELLO,
+    /**
+     * Mostra un annuncio in evidenza (ad esempio l'inizio di una missione)
+     */
+    NOTIFICA_GLOBALE,
+    /**
+     * Nuovo paragrafo con spaziatura antecedente
+     */
+    PARAGRAFO,
+    /**
+     * Continuazione del paragrafo precedente
+     */
+    MESSAGGIO,
+    /**
+     * Mostra un fumetto a video
+     */
+    FUMETTO,
+
+
+    // Eventi interni per il funzionamento del gioco
+
+    /**
+     * Richiede una reinizializzazione dell'interfaccia grafica
+     */
+    REINIZIALIZZAZIONE,
     /**
      * Errore di caricamento del gioco
      */
@@ -124,6 +194,43 @@ public enum TipoEvento {
      */
     STATO_DI_GIOCO,
     /**
+     * Un nuovo Personaggio viene creato dal motore
+     */
+    PERSONAGGIO_CREAZIONE,
+    /**
+     * Un PNG prende una decisione riguardante un combattimento
+     */
+    PERSONAGGIO_VALUTAZIONE,
+
+
+    // Eventi interni del motore
+
+
+    /**
+     * Interfaccia utente inizializzata - segnala che il sistema è pronto per il gioco
+     */
+    INTERFACCIA_UTENTE_PRONTA,
+    /**
+     * Un componente interno crea uno sprite di "annuncio globale" e lo notifica al gestore grafico
+     */
+    CREAZIONE_SPRITE_ANNUNCIO_GLOBALE,
+    /**
+     * Un componente interno crea uno SpriteATempo e lo notifica al gestore grafico
+     */
+    CREAZIONE_SPRITE_A_TEMPO,
+    /**
+     * Un componente interno crea uno Sprite effetto e lo notifica al gestore grafico
+     */
+    CREAZIONE_SPRITE_EFFETTO,
+    /**
+     * Un componente interno crea uno Sprite fumetto e lo notifica al gestore grafico
+     */
+    CREAZIONE_SPRITE_FUMETTO,
+    /**
+     * Un componente interno crea uno Sprite in dissolvenza e lo notifica al gestore grafico
+     */
+    CREAZIONE_SPRITE_IN_DISSOLVENZA,
+    /**
      * Attività interna di pulizia cache dinamica immagini
      */
     PULIZIA_CACHE_IMMAGINI,
@@ -131,25 +238,9 @@ public enum TipoEvento {
      * Messaggi di notifica interni al motore non destinati al giocatore
      */
     MESSAGGIO_INTERNO,
+    /**
+     * Errore interno del motore
+     */
     ERRORE_INTERNO,
-    /**
-     * Creazione di uno sprite "annuncio globale"
-     */
-    CREAZIONE_SPRITE_ANNUNCIO_GLOBALE,
-    /**
-     * Creazione di uno SpriteATempo
-     */
-    CREAZIONE_SPRITE_A_TEMPO,
-    /**
-     * Creazione di uno Sprite effetto
-     */
-    CREAZIONE_SPRITE_EFFETTO,
-    /**
-     * Creazione di uno Sprite fumetto
-     */
-    CREAZIONE_SPRITE_FUMETTO,
-    /**
-     * Creazione di uno Sprite in dissolvenza
-     */
-    CREAZIONE_SPRITE_IN_DISSOLVENZA
+
 }
