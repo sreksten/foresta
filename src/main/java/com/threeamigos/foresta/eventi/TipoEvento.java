@@ -173,6 +173,14 @@ public enum TipoEvento {
      * Mostra un fumetto a video
      */
     FUMETTO,
+    /**
+     * Mostra al giocatore o chiude la finestra del combattimento
+     */
+    VISUALIZZA_FINESTRA_COMBATTIMENTO,
+    /**
+     * Fine della partita
+     */
+    FINE_GIOCO,
 
 
     // Eventi interni per il funzionamento del gioco

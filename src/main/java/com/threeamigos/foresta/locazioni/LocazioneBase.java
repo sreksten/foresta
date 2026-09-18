@@ -2,6 +2,8 @@ package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.EventoMessaggio;
+import com.threeamigos.foresta.eventi.EventoRichiestaAperturaFinestraCombattimento;
+import com.threeamigos.foresta.eventi.EventoRichiestaChiusuraFinestraCombattimento;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
@@ -809,7 +811,7 @@ public abstract class LocazioneBase implements Locazione {
 	private Stato gestisciCombattimento(Comando azione) {
 		Logger.log("LocazioneBase.IN_COMBATTIMENTO");
 		if (azione == Comando.INTERRUZIONE_COMBATTIMENTO) {
-			UI.infoCombattimento(false, null, null);
+			BusEventi.pubblica(new EventoRichiestaChiusuraFinestraCombattimento());
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
 			combattente = null;
 			return Stato.IN_LOCAZIONE;
@@ -817,7 +819,7 @@ public abstract class LocazioneBase implements Locazione {
 		if (azione == Comando.PERSONAGGIO_1 || azione == Comando.PERSONAGGIO_2 || azione == Comando.PERSONAGGIO_3 ||
 			azione == Comando.PERSONAGGIO_4 || azione == Comando.PERSONAGGIO_5) {
 			combattente = gruppo.getPersonaggio(azione);
-			UI.infoCombattimento(true, combattente, gruppoAvversario.getPersonaggioVivo());
+			BusEventi.pubblica(new EventoRichiestaAperturaFinestraCombattimento(combattente, gruppoAvversario.getPersonaggioVivo()));
 			impostaComandiPossibili();
 			return Stato.IN_COMBATTIMENTO;
 		}
@@ -884,7 +886,7 @@ public abstract class LocazioneBase implements Locazione {
 				}
 			}
 
-			UI.infoCombattimento(true, combattente, bersaglio);
+			BusEventi.pubblica(new EventoRichiestaAperturaFinestraCombattimento(combattente, bersaglio));
 
 			if (gruppoAvversario.getNumeroPersonaggiVivi() > gruppo.getNumeroPersonaggiVivi()) {
 				bersaglio = gruppoAvversario.getPersonaggioVivo();
@@ -940,12 +942,12 @@ public abstract class LocazioneBase implements Locazione {
 			}
 		}
 		if (azione == Comando.INCANTESIMO) {
-			UI.infoCombattimento(false, null, null);
+			BusEventi.pubblica(new EventoRichiestaChiusuraFinestraCombattimento());
 			statoLocazione = StatoLocazione.CHI_FORMULA;
 			return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 		}
 		if (azione == Comando.FUGA) {
-			UI.infoCombattimento(false, null, null);
+			BusEventi.pubblica(new EventoRichiestaChiusuraFinestraCombattimento());
 			chiediConfermaPerLaFuga();
 			statoLocazione = StatoLocazione.CONFERMA_FUGA;
 			ComandiPossibili.set(Comando.SI, Comando.NO);
@@ -1059,7 +1061,7 @@ public abstract class LocazioneBase implements Locazione {
 		combattente = gruppo.getPersonaggio(azione);
 		String nome = combattente.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 		BusEventi.pubblica(new EventoMessaggio(nome + " si appresta al combattimento."));
-		UI.infoCombattimento(true, combattente, gruppoAvversario.getPersonaggioVivo());
+		BusEventi.pubblica(new EventoRichiestaAperturaFinestraCombattimento(combattente, gruppoAvversario.getPersonaggioVivo()));
 		opzioneAmiciziaDisponibile = false;
 		opzioneCorruzioneDisponibile = false;
 		statoLocazione = StatoLocazione.IN_COMBATTIMENTO;

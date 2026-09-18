@@ -40,6 +40,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoErroreCaricamento.class, this::onEventoErroreCaricamento);
         BusEventi.iscriviti(EventoErroreInterno.class, this::onEventoErroreInterno);
         BusEventi.iscriviti(EventoException.class, this::onEventoException);
+        BusEventi.iscriviti(EventoFineGioco.class, this::onEventoFineGioco);
         BusEventi.iscriviti(EventoFumetto.class, this::onEventoFumetto);
         BusEventi.iscriviti(EventoInterazioneElementale.class, this::onEventoInterazioneElementale);
         BusEventi.iscriviti(EventoInterfacciaUtentePronta.class, this::onEventoInterfacciaUtentePronta);
@@ -51,14 +52,17 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoPuliziaCacheDinamicaImmagini.class, this::onEventoPuliziaCacheDinamicaImmagini);
         BusEventi.iscriviti(EventoRichiestaAcquistoArtefatto.class, this::onEventoRichiestaAcquistoArtefatto);
         BusEventi.iscriviti(EventoRichiestaAcquistoConsumabile.class, this::onEventoRichiestaAcquistoConsumabile);
+        BusEventi.iscriviti(EventoRichiestaAperturaFinestraCombattimento.class, this::onEventoRichiestaAperturaFinestraCombattimento);
         BusEventi.iscriviti(EventoRichiestaAperturaInventarioCommerciante.class, this::onEventoRichiestaAperturaInventarioCommerciante);
         BusEventi.iscriviti(EventoRichiestaAperturaInventarioFornitore.class, this::onEventoRichiestaAperturaInventarioFornitore);
         BusEventi.iscriviti(EventoRichiestaAperturaInventarioGruppo.class, this::onEventoRichiestaAperturaInventarioGruppo);
+        BusEventi.iscriviti(EventoRichiestaChiusuraFinestraCombattimento.class, this::onEventoRichiestaChiusuraFinestraCombattimento);
         BusEventi.iscriviti(EventoRichiestaPrelievoArtefatto.class, this::onEventoRichiestaPrelievoArtefatto);
         BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::onEventoRichiestaReinizializzazioneUI);
         // EventoRichiestaSpostamentoArtefatto è classe astratta
         BusEventi.iscriviti(EventoRichiestaStoccaggioArtefatto.class, this::onEventoRichiestaStoccaggioArtefatto);
         BusEventi.iscriviti(EventoRichiestaTesto.class, this::onEventoRichiestaTesto);
+        BusEventi.iscriviti(EventoRichiestaVenditaArtefatto.class, this::onEventoRichiestaVenditaArtefatto);
         BusEventi.iscriviti(EventoRichiestaVenditaArtefatto.class, this::onEventoRichiestaVenditaArtefatto);
         BusEventi.iscriviti(EventoRifiutoAcquistoArtefatto.class, this::onEventoRifiutoAcquistoArtefatto);
         BusEventi.iscriviti(EventoRifiutoAcquistoConsumabile.class, this::onEventoRifiutoAcquistoConsumabile);
@@ -183,6 +187,10 @@ public class SnifferBusEventi {
         Logger.log(evento.getException());
     }
 
+    private void onEventoFineGioco(EventoFineGioco evento) {
+        Logger.log(String.format("%s - %s - Completato con successo: %s", new Date(), evento.getTipoEvento(), evento.isCompletatoConSuccesso()));
+    }
+
     private void onEventoFumetto(EventoFumetto evento) {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getTesto()));
     }
@@ -231,6 +239,12 @@ public class SnifferBusEventi {
                 (incantesimo != null ? (" " + incantesimo) : "") + ", Costo: " + evento.getPrezzo());
     }
 
+    private void onEventoRichiestaAperturaFinestraCombattimento(EventoRichiestaAperturaFinestraCombattimento evento) {
+        String notifica = "Attiva - " + formattaStatistichePersonaggio(evento.getPersonaggio()) + " vs " +
+                formattaStatistichePersonaggio(evento.getAvversario());
+        Logger.log(headerEvento(evento) + notifica);
+    }
+
     private void onEventoRichiestaAperturaInventarioCommerciante(EventoRichiestaAperturaInventarioCommerciante evento) {
         Logger.log(headerEvento(evento));
     }
@@ -241,6 +255,10 @@ public class SnifferBusEventi {
 
     private void onEventoRichiestaAperturaInventarioGruppo(EventoRichiestaAperturaInventarioGruppo evento) {
         Logger.log(headerEvento(evento));
+    }
+
+    private void onEventoRichiestaChiusuraFinestraCombattimento(EventoRichiestaChiusuraFinestraCombattimento evento) {
+        Logger.log(headerEvento(evento) + "Chiusa");
     }
 
     private void onEventoRichiestaPrelievoArtefatto(EventoRichiestaPrelievoArtefatto evento) {

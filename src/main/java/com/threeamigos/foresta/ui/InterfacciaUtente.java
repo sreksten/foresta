@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.motore.Comando;
-import com.threeamigos.foresta.personaggi.Personaggio;
 
 public interface InterfacciaUtente {
 
@@ -38,16 +37,6 @@ public interface InterfacciaUtente {
 	 * Richiede se si vuole uscire dal gioco
 	 */
     void confermaUscita();
-	
-	/**
-	 * Richiama la schermata o animazione di sconfitta
-	 */
-    void perso();
-
-	/**
-	 * Richiama la schermata o animazione di vittoria
-	 */
-    void vinto();
 
 	/**
 	 * Richiama la schermata o animazione che mostra le statistiche
@@ -80,11 +69,6 @@ public interface InterfacciaUtente {
 	 * Prepara tutto quel che può servire per disegnare la locazione corrente
 	 */
     void preparaLocazione();
-	
-	/**
-	 * Mostra la forza in combattimento.
-	 */
-    void infoCombattimento(boolean mostra, Personaggio combattente, Personaggio avversario);
 
 	void raccogliOggetto();
 

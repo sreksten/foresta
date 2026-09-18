@@ -358,7 +358,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 			case FINE_LOCAZIONE:
 				temporizzatore.termina();
-				UI.infoCombattimento(false, null, null);
+				BusEventi.pubblica(new EventoRichiestaChiusuraFinestraCombattimento());
 				UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 
 				// Recuperiamo l'oggetto se fattibile
@@ -674,7 +674,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				break;
 
 			case GIOCO_PERSO:
-				UI.infoCombattimento(false, null, null);
+				BusEventi.pubblica(new EventoRichiestaChiusuraFinestraCombattimento());
 				if (azione == null) {
 					UI.impostaAzioni(Comando.PERGAMENA);
 				} else {
@@ -686,10 +686,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case GIOCO_PERSO_2:
 				if (azione == null) {
 					UI.impostaAzioni(Comando.PERGAMENA);
-					UI.perso();
+					BusEventi.pubblica(new EventoFineGioco(false));
 					temporizzatore.inizia(5_000);
 				} else if (azione == Comando.TIMER) {
-					UI.perso();
+					BusEventi.pubblica(new EventoFineGioco(false));
 				} else {
 					stato = Stato.STATISTICHE;
 					processaAzione(null);
@@ -697,7 +697,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				break;
 
 			case GIOCO_VINTO:
-				UI.infoCombattimento(false, null, null);
+				BusEventi.pubblica(new EventoRichiestaChiusuraFinestraCombattimento());
 				if (azione == null) {
 					UI.impostaAzioni(Comando.PERGAMENA);
 				} else {
@@ -708,11 +708,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 			case GIOCO_VINTO_2:
 				if (azione == null) {
-					UI.vinto();
+					BusEventi.pubblica(new EventoFineGioco(true));
 					temporizzatore.inizia(5_000);
 					UI.impostaAzioni(Comando.PERGAMENA);
 				} else if (azione == Comando.TIMER) {
-					UI.vinto();
+					BusEventi.pubblica(new EventoFineGioco(true));
 				} else {
 					stato = Stato.STATISTICHE;
 					processaAzione(null);

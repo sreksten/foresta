@@ -2,7 +2,6 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.motore.ComandiPossibili;
 import com.threeamigos.foresta.motore.Comando;
-import com.threeamigos.foresta.personaggi.Personaggio;
 
 public class UI {
 
@@ -42,20 +41,6 @@ public class UI {
 	 */
 	public static void confermaUscita() {
 		interfacciaUtente.confermaUscita();
-	}
-	
-	/**
-	 * Richiama la schermata o animazione di sconfitta
-	 */
-	public static void perso() {
-		interfacciaUtente.perso();
-	}
-
-	/**
-	 * Richiama la schermata o animazione di vittoria
-	 */
-	public static void vinto() {
-		interfacciaUtente.vinto();
 	}
 
 	/**
@@ -99,13 +84,6 @@ public class UI {
 
 	public static void preparaLocazione() {
 		interfacciaUtente.preparaLocazione();
-	}
-
-	/**
-	 * Mostra la forza in combattimento.
-	 */
-	public static void infoCombattimento(boolean mostra, Personaggio combattente, Personaggio avversario) {
-		interfacciaUtente.infoCombattimento(mostra, combattente, avversario);
 	}
 
 	public static void raccogliOggetto() {
