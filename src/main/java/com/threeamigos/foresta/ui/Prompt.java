@@ -1,17 +1,15 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.TextField;
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoTestoDisponibile;
+
+import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.image.BufferedImage;
-
-import javax.swing.JPanel;
 
 public class Prompt extends JPanel implements ActionListener {
 
@@ -24,7 +22,7 @@ public class Prompt extends JPanel implements ActionListener {
 		}
 	}
 
-	private TextField tf;
+	private final TextField tf;
 
 	public String getText() {
 		return tf.getText();
@@ -63,7 +61,8 @@ public class Prompt extends JPanel implements ActionListener {
 	 * ActionListener interface
 	 */
 	public void actionPerformed(ActionEvent e) {
-		UI.riceviTesto(tf.getText());
+		setVisible(false);
+		BusEventi.pubblica(new EventoTestoDisponibile(tf.getText()));
 	}
 
 	@Override

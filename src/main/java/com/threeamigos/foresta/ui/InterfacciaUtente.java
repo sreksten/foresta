@@ -119,11 +119,6 @@ public interface InterfacciaUtente {
     void chiediTesto();
 
 	/**
-	 * Inoltra un testo ricevuto a un controllore di gioco
-	 */
-    void riceviTesto(String s);
-
-	/**
 	 * Propone al giocatore una serie di possibili azioni tra le quali
 	 * scegliere per poter continuare il gioco.
 	 */

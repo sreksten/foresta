@@ -237,12 +237,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	@Override
-	public void riceviTesto(String testo) {
-		prompt.setVisible(false);
-		BusEventi.pubblica(new EventoTestoDisponibile(testo));
-	}
-
-	@Override
 	public void impostaAzioni() {
 		pannelloIcone.impostaAzioni();
 	}
