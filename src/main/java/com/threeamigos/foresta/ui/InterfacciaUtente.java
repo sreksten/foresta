@@ -55,11 +55,6 @@ public interface InterfacciaUtente {
     void primoPiano(Finestra finestra);
 
 	/**
-	 * Porta in secondo piano una finestra di gioco (UI.FINESTRA_...)
-	 */
-	void secondoPiano(Finestra finestra);
-
-	/**
 	 * Propone al giocatore una serie di possibili azioni tra le quali
 	 * scegliere per poter continuare il gioco.
 	 */

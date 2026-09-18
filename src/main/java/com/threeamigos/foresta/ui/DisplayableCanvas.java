@@ -300,13 +300,6 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		riquadroTesto.clear();
 	}
 
-	public void secondoPiano(InterfacciaUtente.Finestra finestra) {
-		if (!stackElementiGrafici.remove(finestra)) {
-			throw new IllegalArgumentException("Elemento grafico non valido: " + finestra);
-		}
-		stackElementiGrafici.add(0, finestra);
-	}
-
 	public void primoPiano(InterfacciaUtente.Finestra finestra) {
 		if (!stackElementiGrafici.remove(finestra)) {
 			throw new IllegalArgumentException("Elemento grafico non valido: " + finestra);

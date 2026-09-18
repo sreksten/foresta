@@ -176,11 +176,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		displayableCanvas.primoPiano(finestra);
 	}
 
-	@Override
-	public void secondoPiano(InterfacciaUtente.Finestra finestra) {
-		displayableCanvas.secondoPiano(finestra);
-	}
-
 	private void gestisciEventoRichiestaTesto(EventoRichiestaTesto evento) {
 		displayableCanvas.scriviGrande(evento.getRichiesta());
 		prompt.setVisible(true);
