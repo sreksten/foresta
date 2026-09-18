@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.motore.RegistroMissioni;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -55,7 +53,6 @@ public class RegistroMissioniMD implements Serializzabile {
 	public void leggi(BufferedReader stream) throws IOException {
 		leggiImpl(stream, missioniAttive);
 		leggiImpl(stream, missioniCompletate);
-		RegistroMissioni.aggiornaDopoRilettura();
 	}
 
 	private void leggiImpl(BufferedReader stream, Map<String, MissioneMD> missioni) throws IOException {

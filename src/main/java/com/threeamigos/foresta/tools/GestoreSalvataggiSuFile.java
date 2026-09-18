@@ -4,7 +4,6 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.EventoException;
 import com.threeamigos.foresta.eventi.EventoMessaggioInterno;
 import com.threeamigos.foresta.motore.Comando;
-import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.modellodati.GruppoGiocatoreMD;
@@ -50,10 +49,7 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements Interfacci
 				String line = reader.readLine();
 				ModelloDati md = new ModelloDati();
 				md.leggi(reader);
-				GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-				gruppo.setModelloDati(md.getGruppoGiocatoreMD());
 				ModelloDati.setIstanza(md);
-				gruppo.setLocazioneCorrente(Foresta.costruisciIstanza(gruppo.getCoordinate()));
 				return true;
 			} catch (Exception e) {
 				BusEventi.pubblica(new EventoException(e));
