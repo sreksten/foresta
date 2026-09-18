@@ -30,13 +30,6 @@ public class UI {
 	}
 
 	/**
-	 * Richiede se si vuole uscire dal gioco
-	 */
-	public static void confermaUscita() {
-		interfacciaUtente.confermaUscita();
-	}
-
-	/**
 	 * Propone al giocatore una serie di possibili azioni tra le quali scegliere per
 	 * poter continuare il gioco. L'elenco delle possibili azioni viene riempito con valori
 	 * provenienti dalla classe Comando

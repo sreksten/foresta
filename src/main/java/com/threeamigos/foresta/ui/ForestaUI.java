@@ -52,6 +52,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(EventoRichiestaAperturaInventarioGruppo.class, this::gestisciEventoRichiestaAperturaInventarioGruppo);
 		BusEventi.iscriviti(EventoRichiestaChiusuraFinestraCombattimento.class, this::gestisciEventoRichiestaChiusuraFinestraCombattimento);
 		BusEventi.iscriviti(EventoRaccoltaOggetti.class, this::gestisciEventoRaccoltaOggetti);
+		BusEventi.iscriviti(EventoRichiestaConfermaUscita.class, this::gestisciEventoRichiestaConfermaUscita);
 		BusEventi.iscriviti(EventoRichiestaRefreshUI.class, this::gestisciEventoRichiestaRefreshUI);
 		BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::gestisciEventoRichiestaReinizializzazioneUI);
 		BusEventi.iscriviti(EventoRichiestaTesto.class, this::gestisciEventoRichiestaTesto);
@@ -154,11 +155,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	@Override
-	public void confermaUscita() {
-		displayableCanvas.confermaUscita();
-	}
-
-	@Override
 	public void muoviMappa(Comando direzione) {
 		displayableCanvas.muoviMappa(direzione);
 	}
@@ -216,6 +212,13 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	private void gestisciEventoRaccoltaOggetti(EventoRaccoltaOggetti evento) {
 		displayableCanvas.raccogliOggetto();
+	}
+
+	private void gestisciEventoRichiestaConfermaUscita(EventoRichiestaConfermaUscita evento) {
+		ComandiPossibili.reimposta();
+		ComandiPossibili.set(evento.getComandiPossibili());
+		impostaAzioni();
+		displayableCanvas.confermaUscita();
 	}
 
 	private void gestisciEventoRichiestaAperturaInventarioCommerciante(EventoRichiestaAperturaInventarioCommerciante evento) {

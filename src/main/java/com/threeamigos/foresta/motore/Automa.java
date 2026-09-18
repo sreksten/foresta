@@ -652,8 +652,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				}
 				if (azione != null) {
 					salva(azione);
-					UI.confermaUscita();
-					UI.impostaAzioni(Comando.SI, Comando.NO);
+					BusEventi.pubblica(new EventoRichiestaConfermaUscita(Comando.SI, Comando.NO));
 					stato = Stato.CONFERMA_USCITA;
 					processaAzione(null);
 				}

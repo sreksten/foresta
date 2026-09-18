@@ -63,6 +63,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoRichiestaAperturaInventarioFornitore.class, this::onEventoRichiestaAperturaInventarioFornitore);
         BusEventi.iscriviti(EventoRichiestaAperturaInventarioGruppo.class, this::onEventoRichiestaAperturaInventarioGruppo);
         BusEventi.iscriviti(EventoRichiestaChiusuraFinestraCombattimento.class, this::onEventoRichiestaChiusuraFinestraCombattimento);
+        BusEventi.iscriviti(EventoRichiestaConfermaUscita.class, this::onEventoRichiestaConfermaUscita);
         BusEventi.iscriviti(EventoRichiestaPrelievoArtefatto.class, this::onEventoRichiestaPrelievoArtefatto);
         BusEventi.iscriviti(EventoRichiestaRefreshUI.class, this::onEventoRichiestaRefreshUI);
         BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::onEventoRichiestaReinizializzazioneUI);
@@ -290,6 +291,10 @@ public class SnifferBusEventi {
 
     private void onEventoRichiestaChiusuraFinestraCombattimento(EventoRichiestaChiusuraFinestraCombattimento evento) {
         Logger.log(headerEvento(evento) + "Chiusa");
+    }
+
+    private void onEventoRichiestaConfermaUscita(EventoRichiestaConfermaUscita evento) {
+        Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
     }
 
     private void onEventoRichiestaPrelievoArtefatto(EventoRichiestaPrelievoArtefatto evento) {

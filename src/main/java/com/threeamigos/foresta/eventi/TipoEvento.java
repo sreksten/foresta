@@ -76,6 +76,10 @@ public enum TipoEvento {
      * Il motore non approva l'acquisto di un Consumabile da un Fornitore
      */
     RIFIUTO_ACQUISTO_CONSUMABILE,
+    /**
+     * Il motore chiede conferma per l'uscita dal gioco
+     */
+    RICHIESTA_CONFERMA_USCITA,
 
 
     // Notifiche dal motore al giocatore riguardanti l'avanzamento del gioco
