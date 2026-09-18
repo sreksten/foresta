@@ -6,7 +6,7 @@ import com.threeamigos.foresta.motore.Comando;
 import java.util.Collection;
 
 /**
- *
+ * Il giocatore chiede al motore di accedere all'inventario del gruppo
  * @author Stefano Reksten
  */
 public class EventoRichiestaAperturaInventarioGruppo extends EventoBase {

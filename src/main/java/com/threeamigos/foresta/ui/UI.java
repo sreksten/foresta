@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
 import com.threeamigos.foresta.motore.ComandiPossibili;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -21,27 +20,6 @@ public class UI {
 	 */
 	public static void mostraSchermataGioco() {
 		interfacciaUtente.mostraSchermataGioco();
-	}
-
-	/**
-	 * Va nella finestra di scambio artefatti con l'armaiolo
-	 */
-	public static void armaiolo() {
-		interfacciaUtente.armaiolo();
-	}
-
-	/**
-	 * Assegna l'automa che gestisce lo scambio di artefatti nella finestra dell'armaiolo
-	 */
-	public static void impostaAutomaArmaiolo(AutomaAcquistiArtefatti automaAcquistiArtefatti) {
-		interfacciaUtente.impostaAutomaArmaiolo(automaAcquistiArtefatti);
-	}
-
-	/**
-	 * Va nella finestra di scambio consumabili con l'alchimista
-	 */
-	public static void alchimista() {
-		interfacciaUtente.alchimista();
 	}
 
 	/**

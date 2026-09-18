@@ -40,6 +40,8 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(EventoMessaggio.class, this::gestisciEventoMessaggio);
 		BusEventi.iscriviti(EventoNotificaGlobale.class, this::gestisciEventoNotificaGlobale);
 		BusEventi.iscriviti(EventoParagrafo.class, this::gestisciEventoParagrafo);
+		BusEventi.iscriviti(EventoRichiestaAperturaInventarioCommerciante.class, this::gestisciEventoRichiestaAperturaInventarioCommerciante);
+		BusEventi.iscriviti(EventoRichiestaAperturaInventarioFornitore.class, this::gestisciEventoRichiestaAperturaInventarioFornitore);
 		BusEventi.iscriviti(EventoRichiestaAperturaInventarioGruppo.class, this::gestisciEventoRichiestaAperturaInventarioGruppo);
 		BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::gestisciEventoRichiestaReinizializzazioneUI);
 		BusEventi.iscriviti(EventoRichiestaTesto.class, this::gestisciEventoRichiestaTesto);
@@ -142,21 +144,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	@Override
-	public void armaiolo() {
-		displayableCanvas.armaiolo();
-	}
-
-	@Override
-	public void impostaAutomaArmaiolo(AutomaAcquistiArtefatti automaAcquistiArtefatti) {
-		displayableCanvas.impostaAutomaArmaiolo(automaAcquistiArtefatti);
-	}
-
-	@Override
-	public void alchimista() {
-		displayableCanvas.alchimista();
-	}
-
-	@Override
 	public void centraMappa() {
 		displayableCanvas.centraMappa();
 	}
@@ -245,6 +232,21 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	private void gestisciEventoParagrafo(EventoParagrafo evento) {
 		displayableCanvas.notifica("");
 		displayableCanvas.notifica(evento.getMessaggio());
+	}
+
+	private void gestisciEventoRichiestaAperturaInventarioCommerciante(EventoRichiestaAperturaInventarioCommerciante evento) {
+		ComandiPossibili.reimposta();
+		ComandiPossibili.set(evento.getComandiPossibili());
+		impostaAzioni();
+		displayableCanvas.impostaAutomaArmaiolo(evento.getAutomaAcquistiArtefatti());
+		displayableCanvas.armaiolo();
+	}
+
+	private void gestisciEventoRichiestaAperturaInventarioFornitore(EventoRichiestaAperturaInventarioFornitore evento) {
+		ComandiPossibili.reimposta();
+		ComandiPossibili.set(evento.getComandiPossibili());
+		impostaAzioni();
+		displayableCanvas.alchimista();
 	}
 
 	private void gestisciEventoRichiestaAperturaInventarioGruppo(EventoRichiestaAperturaInventarioGruppo evento) {

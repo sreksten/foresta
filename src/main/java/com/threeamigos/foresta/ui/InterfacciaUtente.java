@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
@@ -34,21 +33,6 @@ public interface InterfacciaUtente {
 	 * ricezione di Comando.(NORD|SUD|EST|OVEST)
 	 */
     void muoviMappa(Comando direzione);
-
-	/**
-	 * Mostra la finestra di scambio artefatti con l'armaiolo
-	 */
-	void armaiolo();
-
-	/**
-	 * Assegna l'automa che gestisce lo scambio di artefatti nella finestra dell'armaiolo
-	 */
-	void impostaAutomaArmaiolo(AutomaAcquistiArtefatti automaScambiatoreArtefatti);
-
-	/**
-	 * Mostra la finestra di scambio consumabili con l'alchimista
-	 */
-	void alchimista();
 
 	/**
 	 * Richiede se si vuole uscire dal gioco

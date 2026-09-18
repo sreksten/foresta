@@ -2,11 +2,16 @@ package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.EventoParagrafo;
+import com.threeamigos.foresta.eventi.EventoRichiestaAperturaInventarioCommerciante;
+import com.threeamigos.foresta.eventi.EventoRichiestaAperturaInventarioFornitore;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class Citta extends LocazioneUnica {
 
@@ -94,16 +99,18 @@ public abstract class Citta extends LocazioneUnica {
 				}
 
 			} else if (azione == Comando.ALCHIMISTA) {
-				ComandiPossibili.set(Comando.ANNULLA);
-				UI.alchimista();
 				stato = StatoInCitta.DA_ALCHIMISTA;
+				List<Comando> comandiPossibili = new ArrayList<>();
+				comandiPossibili.add(Comando.ANNULLA);
+				BusEventi.pubblica(new EventoRichiestaAperturaInventarioFornitore(comandiPossibili));
 
 			} else if (azione == Comando.ARMAIOLO) {
-				ScambiatoreArtefatti scambiatoreArtefatti = RegistroArtefatti.getScambiatorePerLocazione(g.getCoordinate());
-				UI.impostaAutomaArmaiolo(new AutomaAcquistiArtefatti(g, scambiatoreArtefatti));
-				ComandiPossibili.set(Comando.ANNULLA);
-				UI.armaiolo();
 				stato = StatoInCitta.DA_ARMAIOLO;
+				List<Comando> comandiPossibili = new ArrayList<>();
+				comandiPossibili.add(Comando.ANNULLA);
+				ScambiatoreArtefatti scambiatoreArtefatti = RegistroArtefatti.getScambiatorePerLocazione(g.getCoordinate());
+				BusEventi.pubblica(new EventoRichiestaAperturaInventarioCommerciante(comandiPossibili,
+						new AutomaAcquistiArtefatti(g, scambiatoreArtefatti)));
 
 			} else if (azione == Comando.ESCI_DA_CITTA) {
 				return Stato.FINE_LOCAZIONE;

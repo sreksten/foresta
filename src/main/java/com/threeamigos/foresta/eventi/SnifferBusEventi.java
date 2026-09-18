@@ -51,6 +51,8 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoPuliziaCacheDinamicaImmagini.class, this::onEventoPuliziaCacheDinamicaImmagini);
         BusEventi.iscriviti(EventoRichiestaAcquistoArtefatto.class, this::onEventoRichiestaAcquistoArtefatto);
         BusEventi.iscriviti(EventoRichiestaAcquistoConsumabile.class, this::onEventoRichiestaAcquistoConsumabile);
+        BusEventi.iscriviti(EventoRichiestaAperturaInventarioCommerciante.class, this::onEventoRichiestaAperturaInventarioCommerciante);
+        BusEventi.iscriviti(EventoRichiestaAperturaInventarioFornitore.class, this::onEventoRichiestaAperturaInventarioFornitore);
         BusEventi.iscriviti(EventoRichiestaAperturaInventarioGruppo.class, this::onEventoRichiestaAperturaInventarioGruppo);
         BusEventi.iscriviti(EventoRichiestaPrelievoArtefatto.class, this::onEventoRichiestaPrelievoArtefatto);
         BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::onEventoRichiestaReinizializzazioneUI);
@@ -227,6 +229,14 @@ public class SnifferBusEventi {
         ClasseIncantesimo incantesimo = evento.getClasseIncantesimo();
         Logger.log(headerEvento(evento) + "Gruppo richiede di acquistare " + evento.getTipoConsumabile() +
                 (incantesimo != null ? (" " + incantesimo) : "") + ", Costo: " + evento.getPrezzo());
+    }
+
+    private void onEventoRichiestaAperturaInventarioCommerciante(EventoRichiestaAperturaInventarioCommerciante evento) {
+        Logger.log(headerEvento(evento));
+    }
+
+    private void onEventoRichiestaAperturaInventarioFornitore(EventoRichiestaAperturaInventarioFornitore evento) {
+        Logger.log(headerEvento(evento));
     }
 
     private void onEventoRichiestaAperturaInventarioGruppo(EventoRichiestaAperturaInventarioGruppo evento) {
