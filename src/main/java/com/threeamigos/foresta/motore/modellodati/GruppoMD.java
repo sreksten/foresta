@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.personaggi.Personaggio;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -39,9 +37,6 @@ public class GruppoMD implements Serializzabile {
 		for (int i = 0; i < numeroPersonaggi; i++) {
 			PersonaggioMD personaggioMD = new PersonaggioMD();
 			personaggioMD.leggi(stream);
-			Personaggio personaggio = personaggioMD.getClasse().getIstanza(1);
-			// Ci pensa poi la rilettura a sistemare il livello del personaggio
-			personaggio.setModelloDati(personaggioMD);
 			personaggiMD.add(personaggioMD);
 		}
 	}

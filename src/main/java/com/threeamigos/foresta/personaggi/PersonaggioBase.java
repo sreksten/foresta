@@ -185,7 +185,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public int getBersagli() {
-		double numeroBersagli = getQuantitaModificata(1 * getMoltiplicatoreNumeroBersagli(), TipoAttributo.NUMERO_BERSAGLI);
+		double numeroBersagli = getQuantitaModificata(md, 1 * getMoltiplicatoreNumeroBersagli(), TipoAttributo.NUMERO_BERSAGLI);
 		return (int)(Math.min(1, numeroBersagli));
 	}
 
@@ -193,7 +193,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * Prende il valore base dei danni di un incantesimo e lo moltiplica per il moltiplicatore di danni magia
  	 */
 	public int getModificaDanniMagia(int danniBase) {
-		double danniModificati = getQuantitaModificata(danniBase, TipoAttributo.MAGIA);
+		double danniModificati = getQuantitaModificata(md, danniBase, TipoAttributo.MAGIA);
 		return (int)danniModificati;
 	}
 
@@ -206,7 +206,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			return 0;
 		}
 		// 1. Base di partenza mista
-		double baseGrezza = getQuantitaModificata(5.0d, TipoAttributo.RIGENERAZIONE_SALUTE) + (getSaluteMassima() * 0.05);
+		double baseGrezza = getQuantitaModificata(md, 5.0d, TipoAttributo.RIGENERAZIONE_SALUTE) + (getSaluteMassima() * 0.05);
 		// 2. Impatto dell'attributo Costituzione con Diminishing Returns
 		double bonusCostituzione = 1.0 + (Math.sqrt(getCostituzione()) / 10.0);
 		// 3. Calcolo finale combinato con il moltiplicatore di archetipo
@@ -220,7 +220,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	 */
 	public int getRigenerazioneMagia() {
 		// 1. Calcolo del recupero potenziale basato solo sulla capienza massima
-		double recuperoGrezzo = getQuantitaModificata(5.0d, TipoAttributo.RIGENERAZIONE_MAGIA) + getMagiaMassima() * 0.05d;
+		double recuperoGrezzo = getQuantitaModificata(md, 5.0d, TipoAttributo.RIGENERAZIONE_MAGIA) + getMagiaMassima() * 0.05d;
 		// 2. Applicazione del moltiplicatore di classe/razza
 		double manaRigenerato = recuperoGrezzo * getMoltiplicatoreRecuperoMagico();
 		// Arrotondamento a un decimale per l'interfaccia utente (UI)
@@ -690,23 +690,23 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public boolean puoPrendere(double quantita) {
-		return quantita <= calcolaCaricoMassimo() - getCarico();
+		return quantita <= calcolaCaricoMassimo(md, this) - getCarico();
 	}
 
 	// CARICO MASSIMO
 
 	@Override
 	public int getCaricoMassimo() {
-		return (int)calcolaCaricoMassimo();
+		return (int)calcolaCaricoMassimo(md, this);
 	}
 
 	/**
 	 * Calcola il carico massimo basandosi UNICAMENTE sulle statistiche primarie
 	 * e sul moltiplicatore della classe, mantenendo i rendimenti decrescenti.
 	 */
-	private double calcolaCaricoMassimo() {
+	private static double calcolaCaricoMassimo(PersonaggioMD md, Personaggio moltiplicatori) {
 
-		if (getMoltiplicatoreCarico() == 0.0) {
+		if (moltiplicatori.getMoltiplicatoreCarico() == 0.0) {
 			// Fantasmi vari
 			return 0.0;
 		}
@@ -719,13 +719,13 @@ public abstract class PersonaggioBase implements Personaggio {
 		final double PESO_PER_RADICE_COSTITUZIONE = 6.0;
 
 		// Applichiamo i diminishing returns grezzi tramite radice quadrata
-		double potenzaFisica = PESO_PER_RADICE_FORZA * Math.sqrt(getForza());
-		double resistenzaFisica = PESO_PER_RADICE_COSTITUZIONE * Math.sqrt(getCostituzione());
+		double potenzaFisica = PESO_PER_RADICE_FORZA * Math.sqrt(get(md, PersonaggioMD::getForza, TipoAttributo.FORZA));
+		double resistenzaFisica = PESO_PER_RADICE_COSTITUZIONE * Math.sqrt(get(md, PersonaggioMD::getCostituzione, TipoAttributo.COSTITUZIONE));
 
 		// Il potenziale di carico totale del corpo
 		double potenziale = potenzaFisica + resistenzaFisica;
 
-        return getQuantitaModificata(potenziale, TipoAttributo.CARICO_MASSIMO);
+        return getQuantitaModificata(md, potenziale, TipoAttributo.CARICO_MASSIMO);
 	}
 
 	// SALUTE
@@ -839,7 +839,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	protected double calcolaSaluteMassima() {
 		double saluteMassima = getSaluteBase() + getLivellamentoSalute() * Math.sqrt(getLivello() - 1);
-		saluteMassima = getQuantitaModificata(saluteMassima, TipoAttributo.SALUTE);
+		saluteMassima = getQuantitaModificata(md, saluteMassima, TipoAttributo.SALUTE);
 		return saluteMassima;
 	}
 
@@ -892,7 +892,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			return 0.0d;
 		}
 		double magiaMassima = getMagiaBase() + getLivellamentoMagia() * Math.sqrt(getLivello() - 1);
-		magiaMassima = getQuantitaModificata(magiaMassima, TipoAttributo.MAGIA);
+		magiaMassima = getQuantitaModificata(md, magiaMassima, TipoAttributo.MAGIA);
 		return magiaMassima;
 	}
 
@@ -909,7 +909,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public int getForza() {
-		return get(PersonaggioMD::getForza, TipoAttributo.FORZA);
+		return get(md, PersonaggioMD::getForza, TipoAttributo.FORZA);
 	}
 
 	public void addForza(int quantita) {
@@ -920,7 +920,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public int getDestrezza() {
-		return get(PersonaggioMD::getDestrezza, TipoAttributo.DESTREZZA);
+		return get(md, PersonaggioMD::getDestrezza, TipoAttributo.DESTREZZA);
 	}
 
 	public void addDestrezza(int quantita) {
@@ -931,7 +931,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public int getCostituzione() {
-		return get(PersonaggioMD::getCostituzione, TipoAttributo.COSTITUZIONE);
+		return get(md, PersonaggioMD::getCostituzione, TipoAttributo.COSTITUZIONE);
 	}
 
 	public void addCostituzione(int quantita) {
@@ -942,7 +942,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public int getIntelligenza() {
-		return get(PersonaggioMD::getIntelligenza, TipoAttributo.INTELLIGENZA);
+		return get(md, PersonaggioMD::getIntelligenza, TipoAttributo.INTELLIGENZA);
 	}
 
 	public void addIntelligenza(int quantita) {
@@ -953,7 +953,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public int getSaggezza() {
-		return get(PersonaggioMD::getSaggezza, TipoAttributo.SAGGEZZA);
+		return get(md, PersonaggioMD::getSaggezza, TipoAttributo.SAGGEZZA);
 	}
 
 	public void addSaggezza(int quantita) {
@@ -964,7 +964,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public int getCarisma() {
-		return get(PersonaggioMD::getCarisma, TipoAttributo.CARISMA);
+		return get(md, PersonaggioMD::getCarisma, TipoAttributo.CARISMA);
 	}
 
 	public void addCarisma(int quantita) {
@@ -984,7 +984,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public int getFortuna() {
-		return get(PersonaggioMD::getFortuna, TipoAttributo.FORTUNA);
+		return get(md, PersonaggioMD::getFortuna, TipoAttributo.FORTUNA);
 	}
 
 	public void addFortuna(int quantita) {
@@ -995,84 +995,84 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public int getCritico() {
-		return get(PersonaggioMD::getCritico, TipoAttributo.CRITICO);
+		return get(md, PersonaggioMD::getCritico, TipoAttributo.CRITICO);
 	}
 
 	// PRECISIONE
 
 	@Override
 	public int getPrecisione() {
-		return get(PersonaggioMD::getPrecisione, TipoAttributo.PRECISIONE);
+		return get(md, PersonaggioMD::getPrecisione, TipoAttributo.PRECISIONE);
 	}
 
 	// VELOCITA
 
 	@Override
 	public int getVelocita() {
-		return get(PersonaggioMD::getVelocita, TipoAttributo.VELOCITA);
+		return get(md, PersonaggioMD::getVelocita, TipoAttributo.VELOCITA);
 	}
 
 	// FURTIVITA
 
 	@Override
 	public int getFurtivita() {
-		return get(PersonaggioMD::getFurtivita, TipoAttributo.FURTIVITA);
+		return get(md, PersonaggioMD::getFurtivita, TipoAttributo.FURTIVITA);
 	}
 
 	// PARATA
 
 	@Override
 	public int getParata() {
-		return get(PersonaggioMD::getParata, TipoAttributo.PARATA);
+		return get(md, PersonaggioMD::getParata, TipoAttributo.PARATA);
 	}
 
 	// RESISTENZA MAGICA
 
 	@Override
 	public int getResistenzaMagica() {
-		return get(PersonaggioMD::getResistenzaMagica, TipoAttributo.RESISTENZA_MAGICA);
+		return get(md, PersonaggioMD::getResistenzaMagica, TipoAttributo.RESISTENZA_MAGICA);
 	}
 
 	// PERCEZIONE
 
 	@Override
 	public int getPercezione() {
-		return get(PersonaggioMD::getPercezione, TipoAttributo.PERCEZIONE);
+		return get(md, PersonaggioMD::getPercezione, TipoAttributo.PERCEZIONE);
 	}
 
 	// SOGGEZIONE
 
 	@Override
 	public int getSoggezione() {
-		return get(PersonaggioMD::getSoggezione, TipoAttributo.SOGGEZIONE);
+		return get(md, PersonaggioMD::getSoggezione, TipoAttributo.SOGGEZIONE);
 	}
 
 	// FURIA
 
 	@Override
 	public int getFuria() {
-		return get(PersonaggioMD::getFuria, TipoAttributo.FURIA);
+		return get(md, PersonaggioMD::getFuria, TipoAttributo.FURIA);
 	}
 
 	// CORAGGIO
 
 	@Override
 	public int getCoraggio() {
-		return get(PersonaggioMD::getCoraggio, TipoAttributo.CORAGGIO);
+		return get(md, PersonaggioMD::getCoraggio, TipoAttributo.CORAGGIO);
 	}
 
 	// VALORE
 
 	@Override
 	public int getValore() {
-		return get(PersonaggioMD::getValore, TipoAttributo.VALORE);
+		return get(md, PersonaggioMD::getValore, TipoAttributo.VALORE);
 	}
 
 	// STANCHEZZA
 
 	@Override
 	public int getStanchezza() {
-		return get(PersonaggioMD::getStanchezza, TipoAttributo.STANCHEZZA);
+		return get(md, PersonaggioMD::getStanchezza, TipoAttributo.STANCHEZZA);
 	}
 
 	public void addStanchezza(int quantita) {
@@ -1117,31 +1117,45 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * parata, resistenza magica, percezione, soggezione, furia, coraggio, valore, numero bersagli
 	 */
 	protected void ricalcolaAttributiSecondari() {
-		Optional<Double> valorePrecedente = md.getOptional(TipoAttributo.CARICO_MASSIMO);
-		double valoreAttuale = calcolaCaricoMassimo();
-		md.setMassimo(TipoAttributo.CARICO_MASSIMO, valoreAttuale);
-		if (valorePrecedente.isPresent() && valorePrecedente.get() != valoreAttuale) {
-			BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.CARICO_MASSIMO, valorePrecedente.get(), valoreAttuale));
-		}
-		ricalcolaAttributoSecondario(TipoAttributo.CRITICO, calcolaCritico());
-		ricalcolaAttributoSecondario(TipoAttributo.PRECISIONE, calcolaPrecisione());
-		ricalcolaAttributoSecondario(TipoAttributo.VELOCITA, calcolaVelocita());
-		ricalcolaAttributoSecondario(TipoAttributo.FURTIVITA, calcolaFurtivita());
-		ricalcolaAttributoSecondario(TipoAttributo.PARATA, calcolaParata());
-		ricalcolaAttributoSecondario(TipoAttributo.RESISTENZA_MAGICA, calcolaResistenzaMagica());
-		ricalcolaAttributoSecondario(TipoAttributo.PERCEZIONE, calcolaPercezione());
-		ricalcolaAttributoSecondario(TipoAttributo.SOGGEZIONE, calcolaSoggezione());
-		ricalcolaAttributoSecondario(TipoAttributo.FURIA, calcolaFuria());
-		ricalcolaAttributoSecondario(TipoAttributo.CORAGGIO, calcolaCoraggio());
-		ricalcolaAttributoSecondario(TipoAttributo.VALORE, calcolaValore());
-		ricalcolaAttributoSecondario(TipoAttributo.NUMERO_BERSAGLI, calcolaNumeroBersagli());
+		ricalcolaAttributiSecondariCore(md, this, this);
 	}
 
-	private void ricalcolaAttributoSecondario(TipoAttributo tipoAttributo, double valoreRicalcolato) {
+	/**
+	 * Ricalcola gli attributi secondari (carico massimo, critico, precisione, velocità, furtività, parata,
+	 * resistenza magica, percezione, soggezione, furia, coraggio, valore, numero bersagli) direttamente su
+	 * {@code md}, usando i moltiplicatori di classe di {@code moltiplicatori}. Non pubblica eventi: da usare
+	 * in fase di caricamento, quando non esiste ancora un Personaggio vivo a cui riferirli.
+	 */
+	public static void ricalcolaAttributiSecondari(PersonaggioMD md, Personaggio moltiplicatori) {
+		ricalcolaAttributiSecondariCore(md, moltiplicatori, null);
+	}
+
+	private static void ricalcolaAttributiSecondariCore(PersonaggioMD md, Personaggio moltiplicatori, Personaggio sorgenteEvento) {
+		Optional<Double> valorePrecedente = md.getOptional(TipoAttributo.CARICO_MASSIMO);
+		double valoreAttuale = calcolaCaricoMassimo(md, moltiplicatori);
+		md.setMassimo(TipoAttributo.CARICO_MASSIMO, valoreAttuale);
+		if (sorgenteEvento != null && valorePrecedente.isPresent() && valorePrecedente.get() != valoreAttuale) {
+			BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(sorgenteEvento, TipoAttributo.CARICO_MASSIMO, valorePrecedente.get(), valoreAttuale));
+		}
+		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.CRITICO, calcolaCritico(md, moltiplicatori));
+		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.PRECISIONE, calcolaPrecisione(md, moltiplicatori));
+		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.VELOCITA, calcolaVelocita(md, moltiplicatori));
+		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.FURTIVITA, calcolaFurtivita(md, moltiplicatori));
+		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.PARATA, calcolaParata(md, moltiplicatori));
+		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.RESISTENZA_MAGICA, calcolaResistenzaMagica(md, moltiplicatori));
+		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.PERCEZIONE, calcolaPercezione(md, moltiplicatori));
+		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.SOGGEZIONE, calcolaSoggezione(md, moltiplicatori));
+		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.FURIA, calcolaFuria(md, moltiplicatori));
+		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.CORAGGIO, calcolaCoraggio(md, moltiplicatori));
+		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.VALORE, calcolaValore(md, moltiplicatori));
+		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.NUMERO_BERSAGLI, calcolaNumeroBersagli(md, moltiplicatori));
+	}
+
+	private static void ricalcolaAttributoSecondario(PersonaggioMD md, Personaggio sorgenteEvento, TipoAttributo tipoAttributo, double valoreRicalcolato) {
 		Optional<Double> valorePrecedente = md.getOptional(tipoAttributo);
 		md.set(tipoAttributo, valoreRicalcolato);
-		if (valorePrecedente.isPresent() && valorePrecedente.get() != valoreRicalcolato) {
-			BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, tipoAttributo, valorePrecedente.get(), valoreRicalcolato));
+		if (sorgenteEvento != null && valorePrecedente.isPresent() && valorePrecedente.get() != valoreRicalcolato) {
+			BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(sorgenteEvento, tipoAttributo, valorePrecedente.get(), valoreRicalcolato));
 		}
 	}
 
@@ -1153,7 +1167,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * Calcola il critico (0-100) basandosi UNICAMENTE sulle statistiche primarie
 	 * e sul moltiplicatore della classe, mantenendo i rendimenti decrescenti.
 	 */
-	private int calcolaCritico() {
+	private static int calcolaCritico(PersonaggioMD md, Personaggio moltiplicatori) {
 		// Costanti per calibrare la curva (es. con Destrezza 25 e Fortuna 25, il Ladro ha ~15% di critico)
 		// Critico deve essere alimentato da due forze distinte:
 		// DESTREZZA (Peso Maggiore - 70%): Rappresenta la precisione chirurgica nel colpire i punti vitali scoperti
@@ -1164,11 +1178,11 @@ public abstract class PersonaggioBase implements Personaggio {
 		final double COEFFICIENTE_FORTUNA = 0.8;
 
 		// Calcolo della precisione letale grezza con Diminishing Returns
-		double precisioneGrezza = (COEFFICIENTE_DESTREZZA * Math.sqrt(getDestrezza())) +
-				(COEFFICIENTE_FORTUNA * Math.sqrt(getFortuna()));
+		double precisioneGrezza = (COEFFICIENTE_DESTREZZA * Math.sqrt(get(md, PersonaggioMD::getDestrezza, TipoAttributo.DESTREZZA))) +
+				(COEFFICIENTE_FORTUNA * Math.sqrt(get(md, PersonaggioMD::getFortuna, TipoAttributo.FORTUNA)));
 
 		// Applicazione del moltiplicatore di archetipo
-		double criticoFinale = precisioneGrezza * getMoltiplicatoreCritico();
+		double criticoFinale = precisioneGrezza * moltiplicatori.getMoltiplicatoreCritico();
 
 		// Cap per evitare che superi il 100% (o il 95% se vuoi sempre un margine di fallimento)
 		if (criticoFinale > 100.0) {
@@ -1181,7 +1195,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	public abstract double getMoltiplicatorePrecisione();
 
-	private int calcolaPrecisione() {
+	private static int calcolaPrecisione(PersonaggioMD md, Personaggio moltiplicatori) {
 		// Per rispecchiare la descrizione ("precisione oculare, stabilità della mano e coordinazione occhio-mano"),
 		// la Precisione deve essere alimentata da due forze distinte:
 		// DESTREZZA (Peso Maggiore - 80%): La coordinazione motoria fine, i riflessi e la fermezza muscolare.
@@ -1191,18 +1205,18 @@ public abstract class PersonaggioBase implements Personaggio {
 		final double COEFFICIENTE_INTELLIGENZA = 0.2;
 
 		// Calcolo della precisione grezza con Diminishing Returns
-		double precisioneGrezza = (COEFFICIENTE_DESTREZZA * Math.sqrt(getDestrezza())) +
-				(COEFFICIENTE_INTELLIGENZA * Math.sqrt(getIntelligenza()));
+		double precisioneGrezza = (COEFFICIENTE_DESTREZZA * Math.sqrt(get(md, PersonaggioMD::getDestrezza, TipoAttributo.DESTREZZA))) +
+				(COEFFICIENTE_INTELLIGENZA * Math.sqrt(get(md, PersonaggioMD::getIntelligenza, TipoAttributo.INTELLIGENZA)));
 
 		// Applicazione del moltiplicatore di archetipo
-		double precisioneFinale = precisioneGrezza * getMoltiplicatorePrecisione();
+		double precisioneFinale = precisioneGrezza * moltiplicatori.getMoltiplicatorePrecisione();
 
 		return (int)precisioneFinale;
 	}
 
 	public abstract double getMoltiplicatoreVelocita();
 
-	private int calcolaVelocita() {
+	private static int calcolaVelocita(PersonaggioMD md, Personaggio moltiplicatori) {
 		// Per rispecchiare la descrizione ("precisione oculare, stabilità della mano e coordinazione occhio-mano"),
 		// la Precisione deve essere alimentata da due forze distinte:
 		// DESTREZZA (Peso Maggiore - 80%): La coordinazione motoria fine, i riflessi e la fermezza muscolare.
@@ -1212,18 +1226,18 @@ public abstract class PersonaggioBase implements Personaggio {
 		final double COEFFICIENTE_FORTUNA = 0.15;
 
 		// Calcolo della precisione grezza con Diminishing Returns
-		double velocitaGrezza = (COEFFICIENTE_DESTREZZA * Math.sqrt(getDestrezza())) +
-				(COEFFICIENTE_FORTUNA * Math.sqrt(getFortuna()));
+		double velocitaGrezza = (COEFFICIENTE_DESTREZZA * Math.sqrt(get(md, PersonaggioMD::getDestrezza, TipoAttributo.DESTREZZA))) +
+				(COEFFICIENTE_FORTUNA * Math.sqrt(get(md, PersonaggioMD::getFortuna, TipoAttributo.FORTUNA)));
 
 		// Applicazione del moltiplicatore di archetipo
-		double velocitaFinale = velocitaGrezza * getMoltiplicatoreVelocita();
+		double velocitaFinale = velocitaGrezza * moltiplicatori.getMoltiplicatoreVelocita();
 
 		return (int)velocitaFinale;
 	}
 
 	public abstract double getMoltiplicatoreFurtivita();
 
-	private int calcolaFurtivita() {
+	private static int calcolaFurtivita(PersonaggioMD md, Personaggio moltiplicatori) {
 		// Per rispecchiare il concetto di "muoversi senza farsi notare e agire nell'ombra", la Furtività deve
 		// attingere a due forze distinte:
 		// DESTREZZA (Peso Maggiore - 75%): La grazia nei movimenti, il controllo totale del corpo e la coordinazione
@@ -1234,18 +1248,18 @@ public abstract class PersonaggioBase implements Personaggio {
 		final double COEFFICIENTE_FORTUNA = 0.25;
 
 		// Calcolo della furtivita grezza con Diminishing Returns
-		double furtivitaGrezza = (COEFFICIENTE_DESTREZZA * Math.sqrt(getDestrezza())) +
-				(COEFFICIENTE_FORTUNA * Math.sqrt(getFortuna()));
+		double furtivitaGrezza = (COEFFICIENTE_DESTREZZA * Math.sqrt(get(md, PersonaggioMD::getDestrezza, TipoAttributo.DESTREZZA))) +
+				(COEFFICIENTE_FORTUNA * Math.sqrt(get(md, PersonaggioMD::getFortuna, TipoAttributo.FORTUNA)));
 
 		// Applicazione del moltiplicatore di archetipo
-		double furtivitaFinale = furtivitaGrezza * getMoltiplicatoreFurtivita();
+		double furtivitaFinale = furtivitaGrezza * moltiplicatori.getMoltiplicatoreFurtivita();
 
 		return (int)furtivitaFinale;
 	}
 
 	public abstract double getMoltiplicatoreParata();
 
-	private int calcolaParata() {
+	private static int calcolaParata(PersonaggioMD md, Personaggio moltiplicatori) {
 		// Per rispecchiare il concetto di "frapporre l'arma o lo scudo tra sé e il colpo nemico", la Parata
 		// deve attingere a due forze distinte:
 		// FORZA (Peso Maggiore - 70%): La potenza muscolare necessaria a reggere l'impatto di un colpo pesante senza
@@ -1256,18 +1270,18 @@ public abstract class PersonaggioBase implements Personaggio {
 		final double COEFFICIENTE_DESTREZZA = 0.30;
 
 		// Calcolo della precisione letale grezza con Diminishing Returns
-		double parataGrezza = (COEFFICIENTE_FORZA * Math.sqrt(getForza())) +
-				(COEFFICIENTE_DESTREZZA * Math.sqrt(getDestrezza()));
+		double parataGrezza = (COEFFICIENTE_FORZA * Math.sqrt(get(md, PersonaggioMD::getForza, TipoAttributo.FORZA))) +
+				(COEFFICIENTE_DESTREZZA * Math.sqrt(get(md, PersonaggioMD::getDestrezza, TipoAttributo.DESTREZZA)));
 
 		// Applicazione del moltiplicatore di archetipo
-		double parataFinale = parataGrezza * getMoltiplicatoreParata();
+		double parataFinale = parataGrezza * moltiplicatori.getMoltiplicatoreParata();
 
 		return (int)parataFinale;
 	}
 
 	public abstract double getMoltiplicatoreResistenzaMagica();
 
-	private int calcolaResistenzaMagica() {
+	private static int calcolaResistenzaMagica(PersonaggioMD md, Personaggio moltiplicatori) {
 		// Per rispecchiare una difesa basata sul controllo dei flussi energetici e sulla fermezza d'animo, la
 		// Resistenza Magica deve attingere a due forze della mente e dello spirito:
 		// SAGGEZZA (Peso Maggiore - 70%): La consapevolezza spirituale e la connessione con il divino che agiscono come
@@ -1278,18 +1292,18 @@ public abstract class PersonaggioBase implements Personaggio {
 		final double COEFFICIENTE_INTELLIGENZA = 0.30;
 
 		// Calcolo della resistenza magica grezza con Diminishing Returns
-		double resistenzaMagicaGrezza = (COEFFICIENTE_SAGGEZZA * Math.sqrt(getSaggezza())) +
-				(COEFFICIENTE_INTELLIGENZA * Math.sqrt(getIntelligenza()));
+		double resistenzaMagicaGrezza = (COEFFICIENTE_SAGGEZZA * Math.sqrt(get(md, PersonaggioMD::getSaggezza, TipoAttributo.SAGGEZZA))) +
+				(COEFFICIENTE_INTELLIGENZA * Math.sqrt(get(md, PersonaggioMD::getIntelligenza, TipoAttributo.INTELLIGENZA)));
 
 		// Applicazione del moltiplicatore di archetipo
-		double resistenzaMagicaFinale = resistenzaMagicaGrezza * getMoltiplicatoreResistenzaMagica();
+		double resistenzaMagicaFinale = resistenzaMagicaGrezza * moltiplicatori.getMoltiplicatoreResistenzaMagica();
 
 		return (int)resistenzaMagicaFinale;
 	}
 
 	public abstract double getMoltiplicatorePercezione();
 
-	private int calcolaPercezione() {
+	private static int calcolaPercezione(PersonaggioMD md, Personaggio moltiplicatori) {
 		// Per rispecchiare fedelmente il concetto di "sensi acuti, vista sviluppata e udito sopraffino", la Percezione
 		// deve attingere a due forze distinte:
 		// SAGGEZZA (Peso Maggiore - 75%): La consapevolezza spirituale, l'intuito e la connessione con l'ambiente
@@ -1300,18 +1314,18 @@ public abstract class PersonaggioBase implements Personaggio {
 		final double COEFFICIENTE_DESTREZZA = 0.25;
 
 		// Calcolo della precisione letale grezza con Diminishing Returns
-		double percezioneGrezza = (COEFFICIENTE_SAGGEZZA * Math.sqrt(getSaggezza())) +
-				(COEFFICIENTE_DESTREZZA * Math.sqrt(getDestrezza()));
+		double percezioneGrezza = (COEFFICIENTE_SAGGEZZA * Math.sqrt(get(md, PersonaggioMD::getSaggezza, TipoAttributo.SAGGEZZA))) +
+				(COEFFICIENTE_DESTREZZA * Math.sqrt(get(md, PersonaggioMD::getDestrezza, TipoAttributo.DESTREZZA)));
 
 		// Applicazione del moltiplicatore di archetipo
-		double percezioneFinale = percezioneGrezza * getMoltiplicatorePercezione();
+		double percezioneFinale = percezioneGrezza * moltiplicatori.getMoltiplicatorePercezione();
 
 		return (int)percezioneFinale;
 	}
 
 	public abstract double getMoltiplicatoreSoggezione();
 
-	private int calcolaSoggezione() {
+	private static int calcolaSoggezione(PersonaggioMD md, Personaggio moltiplicatori) {
 		// Per rispecchiare il concetto di "forza della personalità combinata all'aura di terrore", la Soggezione
 		// deve attingere a due forze distinte:
 		// CARISMA (Peso Maggiore - 70%): Il magnetismo, la forza della personalità e la capacità di imporre la propria
@@ -1322,18 +1336,18 @@ public abstract class PersonaggioBase implements Personaggio {
 		final double COEFFICIENTE_FORZA = 0.30;
 
 		// Calcolo della precisione letale grezza con Diminishing Returns
-		double soggezioneGrezza = (COEFFICIENTE_CARISMA * Math.sqrt(getCarisma())) +
-				(COEFFICIENTE_FORZA * Math.sqrt(getForza()));
+		double soggezioneGrezza = (COEFFICIENTE_CARISMA * Math.sqrt(get(md, PersonaggioMD::getCarisma, TipoAttributo.CARISMA))) +
+				(COEFFICIENTE_FORZA * Math.sqrt(get(md, PersonaggioMD::getForza, TipoAttributo.FORZA)));
 
 		// Applicazione del moltiplicatore di archetipo
-		double soggezioneFinale = soggezioneGrezza * getMoltiplicatoreSoggezione();
+		double soggezioneFinale = soggezioneGrezza * moltiplicatori.getMoltiplicatoreSoggezione();
 
 		return (int)soggezioneFinale;
 	}
 
 	public abstract double getMoltiplicatoreFuria();
 
-	private int calcolaFuria() {
+	private static int calcolaFuria(PersonaggioMD md, Personaggio moltiplicatori) {
 		// Per rispecchiare una statistica basata sull'impulso distruttivo e sulla resistenza al dolore, la Furia
 		// deve attingere a due forze puramente fisiche ed emotive:
 		// FORZA (Peso Maggiore - 75%): La potenza muscolare grezza che alimenta la violenza dei colpi durante lo stato
@@ -1344,18 +1358,18 @@ public abstract class PersonaggioBase implements Personaggio {
 		final double COEFFICIENTE_FORTUNA = 0.25;
 
 		// Calcolo della precisione letale grezza con Diminishing Returns
-		double furiaGrezza = (COEFFICIENTE_FORZA * Math.sqrt(getForza())) +
-				(COEFFICIENTE_FORTUNA * Math.sqrt(getFortuna()));
+		double furiaGrezza = (COEFFICIENTE_FORZA * Math.sqrt(get(md, PersonaggioMD::getForza, TipoAttributo.FORZA))) +
+				(COEFFICIENTE_FORTUNA * Math.sqrt(get(md, PersonaggioMD::getFortuna, TipoAttributo.FORTUNA)));
 
 		// Applicazione del moltiplicatore di archetipo
-		double furiaFinale = furiaGrezza * getMoltiplicatoreFuria();
+		double furiaFinale = furiaGrezza * moltiplicatori.getMoltiplicatoreFuria();
 
 		return (int)furiaFinale;
 	}
 
 	public abstract double getMoltiplicatoreCoraggio();
 
-	private int calcolaCoraggio() {
+	private static int calcolaCoraggio(PersonaggioMD md, Personaggio moltiplicatori) {
 		// Per rispecchiare il concetto di "forza della personalità e forza di volontà", il Coraggio deve attingere a
 		// due forze della mente e dell'identità:
 		// CARISMA (Peso Maggiore - 75%): La forza dell'ego e la stabilità della personalità, che impediscono al
@@ -1366,18 +1380,18 @@ public abstract class PersonaggioBase implements Personaggio {
 		final double COEFFICIENTE_COSTITUZIONE = 0.25;
 
 		// Calcolo della precisione letale grezza con Diminishing Returns
-		double coraggioGrezzo = (COEFFICIENTE_CARISMA * Math.sqrt(getCarisma())) +
-				(COEFFICIENTE_COSTITUZIONE * Math.sqrt(getCostituzione()));
+		double coraggioGrezzo = (COEFFICIENTE_CARISMA * Math.sqrt(get(md, PersonaggioMD::getCarisma, TipoAttributo.CARISMA))) +
+				(COEFFICIENTE_COSTITUZIONE * Math.sqrt(get(md, PersonaggioMD::getCostituzione, TipoAttributo.COSTITUZIONE)));
 
 		// Applicazione del moltiplicatore di archetipo
-		double coraggioFinale = coraggioGrezzo * getMoltiplicatoreCoraggio();
+		double coraggioFinale = coraggioGrezzo * moltiplicatori.getMoltiplicatoreCoraggio();
 
 		return (int)coraggioFinale;
 	}
 
 	public abstract double getMoltiplicatoreValore();
 
-	private int calcolaValore() {
+	private static int calcolaValore(PersonaggioMD md, Personaggio moltiplicatori) {
 		// Per rispecchiare il concetto di "spirito di sacrificio ed eroismo guidato dalla stabilità biologica", il
 		// Valore deve attingere a due forze distinte:
 		// SAGGEZZA (Peso Maggiore - 70%): La consapevolezza morale, la connessione spirituale e la rettitudine che
@@ -1388,18 +1402,18 @@ public abstract class PersonaggioBase implements Personaggio {
 		final double COEFFICIENTE_COSTITUZIONE = 0.30;
 
 		// Calcolo del valore grezzo con Diminishing Returns
-		double valoreGrezzo = (COEFFICIENTE_SAGGEZZA * Math.sqrt(getSaggezza())) +
-				(COEFFICIENTE_COSTITUZIONE * Math.sqrt(getCostituzione()));
+		double valoreGrezzo = (COEFFICIENTE_SAGGEZZA * Math.sqrt(get(md, PersonaggioMD::getSaggezza, TipoAttributo.SAGGEZZA))) +
+				(COEFFICIENTE_COSTITUZIONE * Math.sqrt(get(md, PersonaggioMD::getCostituzione, TipoAttributo.COSTITUZIONE)));
 
 		// Applicazione del moltiplicatore di archetipo
-		double valoreFinale = valoreGrezzo * getMoltiplicatoreValore();
+		double valoreFinale = valoreGrezzo * moltiplicatori.getMoltiplicatoreValore();
 
 		return (int)valoreFinale;
 	}
 
 	public abstract double getMoltiplicatoreNumeroBersagli();
 
-	private int calcolaNumeroBersagli() {
+	private static int calcolaNumeroBersagli(PersonaggioMD md, Personaggio moltiplicatori) {
 		// Per rispecchiare sia la capacità fisica di spazzare un'area con la massa corporea sia il controllo mentale
 		// per gestire più minacce contemporaneamente, il Numero di Bersagli deve attingere a queste due forze:
 		// FORZA (Peso Maggiore - 70%): La potenza fisica e la stazza. Più si è forti e grandi, più le armi impugnate
@@ -1411,11 +1425,11 @@ public abstract class PersonaggioBase implements Personaggio {
 		final double COEFFICIENTE_INTELLIGENZA = 0.30;
 
 		// Calcolo del valore grezzo con Diminishing Returns
-		double numeroGrezzo = (COEFFICIENTE_FORZA * Math.sqrt(getSaggezza())) +
-				(COEFFICIENTE_INTELLIGENZA * Math.sqrt(getIntelligenza()));
+		double numeroGrezzo = (COEFFICIENTE_FORZA * Math.sqrt(get(md, PersonaggioMD::getSaggezza, TipoAttributo.SAGGEZZA))) +
+				(COEFFICIENTE_INTELLIGENZA * Math.sqrt(get(md, PersonaggioMD::getIntelligenza, TipoAttributo.INTELLIGENZA)));
 
 		// Applicazione del moltiplicatore di archetipo
-		double valoreFinale = numeroGrezzo * getMoltiplicatoreNumeroBersagli();
+		double valoreFinale = numeroGrezzo * moltiplicatori.getMoltiplicatoreNumeroBersagli();
 
 		return (int)Math.max(1, Math.floor(valoreFinale));
 	}
@@ -1461,11 +1475,11 @@ public abstract class PersonaggioBase implements Personaggio {
 	/**
 	 * Riporta l'attributo del personaggio modificato sia dai modificatori locali che quelli degli artefatti
 	 */
-	private int get(Function<PersonaggioMD, Integer> getterAttributo, TipoAttributo tipoAttributo) {
-		return (int) getQuantitaModificata(getterAttributo.apply(md), tipoAttributo);
+	private static int get(PersonaggioMD md, Function<PersonaggioMD, Integer> getterAttributo, TipoAttributo tipoAttributo) {
+		return (int) getQuantitaModificata(md, getterAttributo.apply(md), tipoAttributo);
 	}
 
-	private double getQuantitaModificata(double quantitaOriginale, TipoAttributo tipoAttributo) {
+	private static double getQuantitaModificata(PersonaggioMD md, double quantitaOriginale, TipoAttributo tipoAttributo) {
 		List<ModificatoreAttributo> modificatoriLocali = new ArrayList<>();
 
 		md.getModificatori()

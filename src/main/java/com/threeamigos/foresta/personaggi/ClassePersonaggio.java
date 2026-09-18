@@ -43,6 +43,7 @@ public enum ClassePersonaggio {
 
 	private final Function<Integer, Personaggio> supplier;
 	private int quantitaMassima = 1;
+	private Personaggio moltiplicatoriDiClasse;
 
 	ClassePersonaggio(Function<Integer, Personaggio> supplier) {
 		this.supplier = supplier;
@@ -51,7 +52,20 @@ public enum ClassePersonaggio {
 	public Personaggio getIstanza(int livello) {
 		return supplier.apply(livello);
 	}
-	
+
+	/**
+	 * Istanza "modello" della classe, creata pigramente e riutilizzata, da usare unicamente per leggere i
+	 * moltiplicatori di classe (getMoltiplicatoreX()). Non va mai collegata a un PersonaggioMD reale né usata
+	 * per altro: serve a evitare di dover istanziare un Personaggio ad-hoc ogni volta che serve solo conoscere
+	 * i suoi coefficienti di classe (es. ricalcolo massivo degli attributi secondari in fase di caricamento).
+	 */
+	public Personaggio getMoltiplicatoriDiClasse() {
+		if (moltiplicatoriDiClasse == null) {
+			moltiplicatoriDiClasse = getIstanza(1);
+		}
+		return moltiplicatoriDiClasse;
+	}
+
 	void setQuantitaMassima(int quantitaMassima) {
 		this.quantitaMassima = quantitaMassima;
 	}
