@@ -67,11 +67,6 @@ public interface InterfacciaUtente {
 	void alchimista();
 
 	/**
-	 * Richiama la schermata di selezione salvataggio
-	 */
-    void selezioneSlotSalvataggioDaSalvare();
-	
-	/**
 	 * Richiede se si vuole uscire dal gioco
 	 */
     void confermaUscita();
@@ -96,12 +91,6 @@ public interface InterfacciaUtente {
 	 * Richiama la schermata o animazione che riporta la tabella dei punteggi
 	 */
     void punteggi();
-
-	/**
-	 * Mostra un messaggio di comunicazione prima/dopo il gioco
-	 * come ad esempio la richiesta di inserire il nome del giocatore
-	 */
-    void scriviGrande(String messaggio);
 
 	/**
 	 * Porta in primo piano una finestra di gioco (UI.FINESTRA_...)

@@ -138,6 +138,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case SELEZIONE_SALVATAGGIO_DA_LEGGERE:
 				if (leggi(azione)) {
 					stato = Stato.ATTESA_DIREZIONE;
+					processaAzione(null);
 				} else {
 					stato = Stato.INTRO;
 				}
@@ -499,10 +500,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					return;
 				case FLOPPY:
 					stato = Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE;
-					UI.impostaAzioni(Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3, Comando.NUMERO_4, Comando.NUMERO_5, Comando.NO);
-					UI.selezioneSlotSalvataggioDaSalvare();
-					UI.rinfresca();
-					processaAzione(null);
+					BusEventi.pubblica(new EventoStatoDiGioco(Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE,
+							Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3, Comando.NUMERO_4, Comando.NUMERO_5,
+							Comando.NO));
 					return;
 				default:
 					break;

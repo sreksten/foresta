@@ -178,11 +178,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	@Override
-	public void selezioneSlotSalvataggioDaSalvare() {
-		displayableCanvas.selezioneSlotSalvataggioDaSalvare();
-	}
-
-	@Override
 	public void confermaUscita() {
 		displayableCanvas.confermaUscita();
 	}
@@ -213,11 +208,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	@Override
-	public void scriviGrande(String messaggio) {
-		displayableCanvas.scriviGrande(messaggio);
-	}
-
-	@Override
 	public void primoPiano(InterfacciaUtente.Finestra finestra) {
 		displayableCanvas.primoPiano(finestra);
 	}
@@ -228,7 +218,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	private void gestisciEventoRichiestaTesto(EventoRichiestaTesto evento) {
-		scriviGrande(evento.getRichiesta());
+		displayableCanvas.scriviGrande(evento.getRichiesta());
 		prompt.setVisible(true);
 	}
 
@@ -329,6 +319,13 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 				ComandiPossibili.set(evento.getComandiPossibili());
 				impostaAzioni();
 				break;
+
+			case SELEZIONE_SALVATAGGIO_DA_SCRIVERE:
+				displayableCanvas.selezioneSlotSalvataggioDaSalvare();
+				ComandiPossibili.set(evento.getComandiPossibili());
+				impostaAzioni();
+				break;
+
 
 			default:
 				throw new IllegalArgumentException("Stato di gioco non ancora gestito: " + evento.getStato());

@@ -82,13 +82,6 @@ public class UI {
 	}
 
 	/**
-	 * Richiama la schermata di selezione salvataggio
-	 */
-	public static void selezioneSlotSalvataggioDaSalvare() {
-		interfacciaUtente.selezioneSlotSalvataggioDaSalvare();
-	}
-
-	/**
 	 * Richiede se si vuole uscire dal gioco
 	 */
 	public static void confermaUscita() {
@@ -122,14 +115,6 @@ public class UI {
 	 */
 	public static void punteggi() {
 		interfacciaUtente.punteggi();
-	}
-
-	/**
-	 * Mostra un messaggio di comunicazione prima/dopo il gioco come ad esempio la
-	 * richiesta di inserire il nome del giocatore
-	 */
-	public static void scriviGrande(String messaggio) {
-		interfacciaUtente.scriviGrande(messaggio);
 	}
 
 	/**
