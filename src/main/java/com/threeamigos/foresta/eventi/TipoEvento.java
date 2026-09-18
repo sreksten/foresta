@@ -219,6 +219,18 @@ public enum TipoEvento {
      */
     INTERFACCIA_UTENTE_PRONTA,
     /**
+     * Il motore chiede alla UI di mostrare la finestra principale di gioco
+     */
+    MOSTRA_SCHERMATA_GIOCO,
+    /**
+     * Il motore chiede alla UI di portare in primo piano una certa Finestra
+     */
+    MOSTRA_FINESTRA,
+    /**
+     * Chiede alla UI un refresh
+     */
+    REFRESH,
+    /**
      * Un componente interno crea uno sprite di "annuncio globale" e lo notifica al gestore grafico
      */
     CREAZIONE_SPRITE_ANNUNCIO_GLOBALE,

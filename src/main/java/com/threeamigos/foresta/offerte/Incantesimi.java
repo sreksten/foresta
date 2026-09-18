@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.offerte;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoMostraFinestra;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
@@ -7,7 +9,6 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
-import com.threeamigos.foresta.ui.UI;
 
 public class Incantesimi implements Offerta {
 
@@ -77,8 +78,6 @@ public class Incantesimi implements Offerta {
 	public void accetta(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
 		gruppo.subMonete(costo);
 		gruppo.addIncantesimi(classeIncantesimo, quantita);
-		UI.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI);
-		UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
-		UI.rinfresca();
+		BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.INCANTESIMI));
 	}
 }

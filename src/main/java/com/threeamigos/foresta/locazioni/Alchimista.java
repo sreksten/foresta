@@ -7,7 +7,6 @@ import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
 
 import java.util.Arrays;
@@ -117,9 +116,6 @@ public class Alchimista extends LocazioneBase implements Locazione {
 					gruppo.subMonete(Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO);
 					p.addMagia(Costanti.AUMENTO_MAGIA_PERSONAGGIO);
 					reimpostaAcquistiPossibili();
-					UI.primoPiano(InterfacciaUtente.Finestra.STATO);
-					UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
-					UI.rinfresca();
 					return Stato.IN_LOCAZIONE;
 				} else {
 					BusEventi.pubblica(new EventoMessaggio("“Non hai abbastanza monete per pagare i miei servigi.\"" + DICE));
@@ -134,9 +130,6 @@ public class Alchimista extends LocazioneBase implements Locazione {
 						personaggio.addMagia(Costanti.AUMENTO_MAGIA_PERSONAGGIO);
 					}
 					reimpostaAcquistiPossibili();
-					UI.primoPiano(InterfacciaUtente.Finestra.STATO);
-					UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
-					UI.rinfresca();
                 } else {
 					BusEventi.pubblica(new EventoMessaggio("“Non avete abbastanza monete per pagare i miei servigi.\"" + DICE));
 					imposta();
@@ -145,42 +138,27 @@ public class Alchimista extends LocazioneBase implements Locazione {
 
             } else if (azione == Comando.INCANTESIMO) {
 				stato = StatoDaAlchimista.INCANTESIMI;
-				UI.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI);
-				UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
-				UI.rinfresca();
 				impostaIncantesimi();
 				return Stato.IN_LOCAZIONE;
 
 			} else if (azione == Comando.POZIONE_SALUTE) {
 				gruppo.subMonete(Costanti.COSTO_POZIONE_SALUTE);
 				gruppo.addPozioniSalute(1);
-				UI.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI);
-				UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
-				UI.rinfresca();
 				return Stato.IN_LOCAZIONE;
 
 			} else if (azione == Comando.POZIONE_SALUTE_GRANDE) {
 				gruppo.subMonete(Costanti.COSTO_POZIONE_SALUTE_GRANDE);
 				gruppo.addPozioniSaluteGrande(1);
-				UI.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI);
-				UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
-				UI.rinfresca();
 				return Stato.IN_LOCAZIONE;
 
 			} else if (azione == Comando.POZIONE_MAGIA) {
 				gruppo.subMonete(Costanti.COSTO_POZIONE_MAGIA);
 				gruppo.addPozioniMagia(1);
-				UI.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI);
-				UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
-				UI.rinfresca();
 				return Stato.IN_LOCAZIONE;
 
 			} else if (azione == Comando.POZIONE_MAGIA_GRANDE) {
 				gruppo.subMonete(Costanti.COSTO_POZIONE_MAGIA_GRANDE);
 				gruppo.addPozioniMagiaGrande(1);
-				UI.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI);
-				UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
-				UI.rinfresca();
 				return Stato.IN_LOCAZIONE;
 
 			} else if (azione == Comando.NO_INCANTESIMO) {
@@ -205,9 +183,6 @@ public class Alchimista extends LocazioneBase implements Locazione {
 					} else {
 						gruppo.subMonete(costo);
 						gruppo.addIncantesimi(classe, 1);
-						UI.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI);
-						UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
-						UI.rinfresca();
 					}
 				}
 				impostaIncantesimi();

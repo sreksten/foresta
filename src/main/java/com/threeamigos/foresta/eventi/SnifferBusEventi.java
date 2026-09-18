@@ -46,6 +46,8 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoInterfacciaUtentePronta.class, this::onEventoInterfacciaUtentePronta);
         BusEventi.iscriviti(EventoMessaggio.class, this::onEventoMessaggio);
         BusEventi.iscriviti(EventoMessaggioInterno.class, this::onEventoMessaggioInterno);
+        BusEventi.iscriviti(EventoMostraFinestra.class, this::onEventoMostraFinestra);
+        BusEventi.iscriviti(EventoMostraSchermataGioco.class, this::onEventoMostraSchermataGioco);
         BusEventi.iscriviti(EventoNotificaGlobale.class, this::onEventoNotificaGlobale);
         BusEventi.iscriviti(EventoParagrafo.class, this::onEventoParagrafo);
         // EventoPersonaggio è classe astratta
@@ -58,6 +60,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoRichiestaAperturaInventarioGruppo.class, this::onEventoRichiestaAperturaInventarioGruppo);
         BusEventi.iscriviti(EventoRichiestaChiusuraFinestraCombattimento.class, this::onEventoRichiestaChiusuraFinestraCombattimento);
         BusEventi.iscriviti(EventoRichiestaPrelievoArtefatto.class, this::onEventoRichiestaPrelievoArtefatto);
+        BusEventi.iscriviti(EventoRichiestaRefreshUI.class, this::onEventoRichiestaRefreshUI);
         BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::onEventoRichiestaReinizializzazioneUI);
         // EventoRichiestaSpostamentoArtefatto è classe astratta
         BusEventi.iscriviti(EventoRichiestaStoccaggioArtefatto.class, this::onEventoRichiestaStoccaggioArtefatto);
@@ -212,6 +215,14 @@ public class SnifferBusEventi {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggioInterno()));
     }
 
+    private void onEventoMostraFinestra(EventoMostraFinestra evento) {
+        Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getFinestre()));
+    }
+
+    private void onEventoMostraSchermataGioco(EventoMostraSchermataGioco evento) {
+        Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
+    }
+
     private void onEventoNotificaGlobale(EventoNotificaGlobale evento) {
         Logger.log(String.format("%s - %s - %s - %s - %s", new Date(), evento.getTipoEvento(), evento.getEtichetta(), evento.getEtichetta(), evento.getMessaggio()));
     }
@@ -266,6 +277,10 @@ public class SnifferBusEventi {
         Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di prelevare "
                 + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") da "
                 + formattaParte(evento.getParteRemota()));
+    }
+
+    private void onEventoRichiestaRefreshUI(EventoRichiestaRefreshUI evento) {
+        Logger.log(headerEvento(evento));
     }
 
     private void onEventoRichiestaReinizializzazioneUI(EventoRichiestaReinizializzazioneUI evento) {

@@ -19,11 +19,6 @@ public interface InterfacciaUtente {
     }
 
 	/**
-	 * Va alla schermata di gioco vera e propria
-	 */
-	void mostraSchermataGioco();
-
-	/**
 	 * Centra la mappa dopo un eventuale spostamento se non ci stava tutta a schermo
 	 */
     void centraMappa();
@@ -50,11 +45,6 @@ public interface InterfacciaUtente {
     void punteggi();
 
 	/**
-	 * Porta in primo piano una finestra di gioco (UI.FINESTRA_...)
-	 */
-    void primoPiano(Finestra finestra);
-
-	/**
 	 * Propone al giocatore una serie di possibili azioni tra le quali
 	 * scegliere per poter continuare il gioco.
 	 */
@@ -66,10 +56,4 @@ public interface InterfacciaUtente {
     void preparaLocazione();
 
 	void raccogliOggetto();
-
-	/**
-	 * Rinfresca l'interfaccia utente (ad esempio dopo aver richiesto un
-	 * primo piano di una qualche finestra)
-	 */
-    void rinfresca();
 }

@@ -1,14 +1,10 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoParagrafo;
-import com.threeamigos.foresta.eventi.EventoRichiestaAperturaInventarioCommerciante;
-import com.threeamigos.foresta.eventi.EventoRichiestaAperturaInventarioFornitore;
+import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
-import com.threeamigos.foresta.ui.UI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,8 +59,7 @@ public abstract class Citta extends LocazioneUnica {
                 ". Qui è possibile cercare una locanda, il negozio di un alchimista o fare un salto dall'armaiolo prima di andare via."));
 		if (g.getPreziosi() > 0) {
 			g.vendePreziosi();
-			UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
-			UI.rinfresca();
+			BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATISTICHE));
 		}
 	}
 
@@ -123,18 +118,10 @@ public abstract class Citta extends LocazioneUnica {
 				stato = StatoInCitta.IN_PIAZZA;
 			}
 
-		} else if (stato == StatoInCitta.DA_ALCHIMISTA) {
+		} else if (stato == StatoInCitta.DA_ALCHIMISTA || stato == StatoInCitta.DA_ARMAIOLO) {
 			if (azione == Comando.ANNULLA) {
-				UI.mostraSchermataGioco();
-				UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
-				impostaAzioniCitta();
-				stato = StatoInCitta.IN_PIAZZA;
-			}
-
-		} else if (stato == StatoInCitta.DA_ARMAIOLO) {
-			if (azione == Comando.ANNULLA) {
-				UI.mostraSchermataGioco();
-				UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
+				BusEventi.pubblica(new EventoMostraSchermataGioco());
+				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.GRAFICA));
 				impostaAzioniCitta();
 				stato = StatoInCitta.IN_PIAZZA;
 			}

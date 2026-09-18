@@ -15,13 +15,6 @@ public class UI {
 	}
 
 	/**
-	 * Va alla schermata di gioco vera e propria
-	 */
-	public static void mostraSchermataGioco() {
-		interfacciaUtente.mostraSchermataGioco();
-	}
-
-	/**
 	 * Centra la mappa dopo un eventuale spostamento se non ci stava tutta a schermo
 	 */
 	public static void centraMappa() {
@@ -59,13 +52,6 @@ public class UI {
 	}
 
 	/**
-	 * Porta in primo piano una finestra di gioco (UI.FINESTRA_...)
-	 */
-	public static void primoPiano(InterfacciaUtente.Finestra finestra) {
-		interfacciaUtente.primoPiano(finestra);
-	}
-
-	/**
 	 * Propone al giocatore una serie di possibili azioni tra le quali scegliere per
 	 * poter continuare il gioco. L'elenco delle possibili azioni viene riempito con valori
 	 * provenienti dalla classe Comando
@@ -88,13 +74,5 @@ public class UI {
 
 	public static void raccogliOggetto() {
 		interfacciaUtente.raccogliOggetto();
-	}
-
-	/**
-	 * Rinfresca l'interfaccia utente (ad esempio dopo aver richiesto un primo piano
-	 * di una qualche finestra)
-	 */
-	public static void rinfresca() {
-		interfacciaUtente.rinfresca();
 	}
 }

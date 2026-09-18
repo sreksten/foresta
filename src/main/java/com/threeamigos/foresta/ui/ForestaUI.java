@@ -39,6 +39,8 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(EventoFumetto.class, this::gestisciEventoFumetto);
 		BusEventi.iscriviti(EventoInterazioneElementale.class, this::gestisciEventoInterazioneElementale);
 		BusEventi.iscriviti(EventoMessaggio.class, this::gestisciEventoMessaggio);
+		BusEventi.iscriviti(EventoMostraFinestra.class, this::gestisciEventoMostraFinestra);
+		BusEventi.iscriviti(EventoMostraSchermataGioco.class, this::gestisciEventoMostraSchermataGioco);
 		BusEventi.iscriviti(EventoNotificaGlobale.class, this::gestisciEventoNotificaGlobale);
 		BusEventi.iscriviti(EventoParagrafo.class, this::gestisciEventoParagrafo);
 		BusEventi.iscriviti(EventoRichiestaAperturaFinestraCombattimento.class, this::gestisciEventoRichiestaAperturaFinestraCombattimento);
@@ -46,6 +48,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(EventoRichiestaAperturaInventarioFornitore.class, this::gestisciEventoRichiestaAperturaInventarioFornitore);
 		BusEventi.iscriviti(EventoRichiestaAperturaInventarioGruppo.class, this::gestisciEventoRichiestaAperturaInventarioGruppo);
 		BusEventi.iscriviti(EventoRichiestaChiusuraFinestraCombattimento.class, this::gestisciEventoRichiestaChiusuraFinestraCombattimento);
+		BusEventi.iscriviti(EventoRichiestaRefreshUI.class, this::gestisciEventoRichiestaRefreshUI);
 		BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::gestisciEventoRichiestaReinizializzazioneUI);
 		BusEventi.iscriviti(EventoRichiestaTesto.class, this::gestisciEventoRichiestaTesto);
 		BusEventi.iscriviti(EventoRichiestaSelezioneSlotPerRilettura.class, this::gestisciEventoSelezioneSalvataggio);
@@ -142,11 +145,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	@Override
-	public void mostraSchermataGioco() {
-		displayableCanvas.iniziaGioco();
-	}
-
-	@Override
 	public void centraMappa() {
 		displayableCanvas.centraMappa();
 	}
@@ -171,11 +169,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		displayableCanvas.hiscore();
 	}
 
-	@Override
-	public void primoPiano(InterfacciaUtente.Finestra finestra) {
-		displayableCanvas.primoPiano(finestra);
-	}
-
 	private void gestisciEventoRichiestaTesto(EventoRichiestaTesto evento) {
 		displayableCanvas.scriviGrande(evento.getRichiesta());
 		prompt.setVisible(true);
@@ -197,6 +190,18 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	private void gestisciEventoMessaggio(EventoMessaggio evento) {
 		displayableCanvas.notifica(evento.getMessaggio());
+	}
+
+	private void gestisciEventoMostraFinestra(EventoMostraFinestra evento) {
+		for (InterfacciaUtente.Finestra finestra : evento.getFinestre()) {
+			displayableCanvas.primoPiano(finestra);
+		}
+		rinfresca();
+	}
+
+	private void gestisciEventoMostraSchermataGioco(EventoMostraSchermataGioco evento) {
+		displayableCanvas.iniziaGioco();
+		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
 	}
 
 	private void gestisciEventoNotificaGlobale(EventoNotificaGlobale evento) {
@@ -235,10 +240,14 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		displayableCanvas.getRiquadroCombattimento().setVisible(false);
 	}
 
+	private void gestisciEventoRichiestaRefreshUI(EventoRichiestaRefreshUI evento) {
+		rinfresca();
+	}
+
 	private void gestisciEventoRichiestaReinizializzazioneUI(EventoRichiestaReinizializzazioneUI evento) {
 		displayableCanvas.reinizializza();
-		mostraSchermataGioco();
-		primoPiano(InterfacciaUtente.Finestra.GRAFICA);
+		displayableCanvas.iniziaGioco();
+		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
 		rinfresca();
 	}
 
@@ -396,9 +405,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		displayableCanvas.raccogliOggetto();
 	}
 
-	@Override
-	public void rinfresca() {
-		Logger.log("ForestaApplet::rinfresca()");
+	private void rinfresca() {
 		jframe.invalidate();
 		jframe.repaint();
 	}

@@ -10,8 +10,6 @@ import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 import com.threeamigos.foresta.tools.Misc;
-import com.threeamigos.foresta.ui.InterfacciaUtente;
-import com.threeamigos.foresta.ui.UI;
 
 public class Anello extends OggettoBase implements Oggetto {
 
@@ -125,7 +123,6 @@ public class Anello extends OggettoBase implements Oggetto {
 				GestoreProgressione.acquisisciArtefattoMinore();
 			}
 		}
-		UI.primoPiano(InterfacciaUtente.Finestra.STATO);
 		return super.prendi(gruppo, azione);
 	}
 }

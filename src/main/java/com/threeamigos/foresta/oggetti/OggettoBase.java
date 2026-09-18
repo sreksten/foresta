@@ -1,11 +1,12 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoMostraFinestra;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
-import com.threeamigos.foresta.ui.UI;
 
 public abstract class OggettoBase implements Oggetto {
 	
@@ -29,8 +30,7 @@ public abstract class OggettoBase implements Oggetto {
 	@Override
 	public boolean prendi(GruppoGiocatore gruppo, Comando azione) {
 		Statistiche.addPunti(getClasse().getValore() * quantita);
-		UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
-		UI.rinfresca();
+		BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO, InterfacciaUtente.Finestra.STATISTICHE));
 		return true;
 	}
 }

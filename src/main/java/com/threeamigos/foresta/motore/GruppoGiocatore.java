@@ -10,7 +10,6 @@ import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
-import com.threeamigos.foresta.ui.UI;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -426,8 +425,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 
 	public final void riposa(TipoRiposo tipoRiposo) {
 		getPersonaggiVivi().forEach(p -> p.riposa(1, tipoRiposo));
-		UI.primoPiano(InterfacciaUtente.Finestra.STATO);
-		UI.rinfresca();
+		BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
 	}
 
 	public final void pernotta(TipoRiposo tipoRiposo) {
@@ -472,8 +470,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		}
 		getPersonaggiVivi().forEach(p -> p.riposa(ore, tipoRiposo));
 		BusEventi.pubblica(new EventoMessaggio("Il sole sorge e l'avventura ricomincia."));
-		UI.primoPiano(InterfacciaUtente.Finestra.STATO);
-		UI.rinfresca();
+		BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
 	}
 
 	/**
@@ -512,8 +509,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 
 		getPersonaggiVivi().forEach(Personaggio::fugge);
 
-		UI.primoPiano(InterfacciaUtente.Finestra.STATO);
-		UI.rinfresca();
+		BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
 	}
 
 	public boolean isInLocazioneUnica(ClassiLocazione classeLocazioneUnica) {

@@ -1,9 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoMessaggio;
-import com.threeamigos.foresta.eventi.EventoRichiestaAperturaFinestraCombattimento;
-import com.threeamigos.foresta.eventi.EventoRichiestaChiusuraFinestraCombattimento;
+import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
@@ -20,7 +17,6 @@ import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
-import com.threeamigos.foresta.ui.UI;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -436,8 +432,7 @@ public abstract class LocazioneBase implements Locazione {
 				} else {
 					Logger.log("Mancano i prerequisiti per l'offerta");
 				}
-				UI.primoPiano(InterfacciaUtente.Finestra.MAPPA);
-				UI.rinfresca();
+				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.MAPPA));
 				setCompleta(true);
 				return Stato.FINE_LOCAZIONE;
 			} else {
@@ -531,7 +526,8 @@ public abstract class LocazioneBase implements Locazione {
 				String s = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 				if (descrizione != null) {
 					BusEventi.pubblica(new EventoMessaggio("Non solo " + s + " non riesce a stringere amicizia, ma in una breve colluttazione " + descrizione));
-					UI.rinfresca();
+					// Non sapendo cosa andiamo a perdere rinfreschiamo tutto
+					BusEventi.pubblica(new EventoRichiestaRefreshUI());
 				} else {
 					BusEventi.pubblica(new EventoMessaggio(s + " non riesce a stringere amicizia."));
 				}
@@ -1030,7 +1026,7 @@ public abstract class LocazioneBase implements Locazione {
 				}
 				sb.append('.');
 				BusEventi.pubblica(new EventoMessaggio(sb.toString()));
-				UI.primoPiano(InterfacciaUtente.Finestra.STATO);
+				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
 				break;
 
 			default:
