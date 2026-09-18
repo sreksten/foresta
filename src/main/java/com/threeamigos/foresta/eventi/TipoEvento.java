@@ -72,6 +72,18 @@ public enum TipoEvento {
      */
     REINIZIALIZZAZIONE,
     /**
+     * Richiesta di selezione di uno slot per effettuare un salvataggio
+     */
+    RICHIESTA_SELEZIONE_SLOT_PER_SALVATAGGIO,
+    /**
+     * Richiesta di selezione di uno slot per effettuare una rilettura
+     */
+    RICHIESTA_SELEZIONE_SLOT_PER_RILETTURA,
+    /**
+     * Errore di caricamento del gioco
+     */
+    ERRORE_CARICAMENTO,
+    /**
      * Elenco dei possibili comandi che l'interfaccia deve mostrare
      */
     COMANDI_DISPONIBILI,
@@ -79,10 +91,6 @@ public enum TipoEvento {
      * Cambio di stato dell'automa principale che informa la UI
      */
     STATO_DI_GIOCO,
-    /**
-     * Errore di caricamento del gioco
-     */
-    ERRORE_CARICAMENTO,
     /**
      * Attività interna di pulizia cache dinamica immagini
      */

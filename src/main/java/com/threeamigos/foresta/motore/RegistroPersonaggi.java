@@ -10,11 +10,13 @@ public class RegistroPersonaggi {
 
 	private RegistroPersonaggi() {
 	}
-	
-	private static final RegistroPersonaggiMD registroMD = ModelloDati.getIstanza().getRegistroPersonaggiMD();
+
+	private static RegistroPersonaggiMD getRegistroMD() {
+		return ModelloDati.getIstanza().getRegistroPersonaggiMD();
+	}
 
 	static void reimposta() {
-		registroMD.reimposta();
+		getRegistroMD().reimposta();
 		
 		aggiungiPersonaggio(new Guerriero("Reginald", 1));
 		aggiungiPersonaggio(new Guerriera("Elleran", 1));
@@ -38,31 +40,31 @@ public class RegistroPersonaggi {
 	}
 
 	static Personaggio getPersonaggioDisponibile() {
-		return costruisciPersonaggio(registroMD.getPersonaggioDisponibile());
+		return costruisciPersonaggio(getRegistroMD().getPersonaggioDisponibile());
 	}
 
 	static int getNumeroPersonaggiDisponibili() {
-		return registroMD.getNumeroDisponibili();
+		return getRegistroMD().getNumeroDisponibili();
 	}
 
 	static Personaggio getPersonaggioCasuale() {
-		return costruisciPersonaggio(registroMD.getPersonaggioCasuale());
+		return costruisciPersonaggio(getRegistroMD().getPersonaggioCasuale());
 	}
 
 	public static void addPersonaggioInLocazione(Personaggio personaggio, CoordinateMD coordinate) {
-		registroMD.addPersonaggioInLocazione(personaggio.getModelloDati(), coordinate);
+		getRegistroMD().addPersonaggioInLocazione(personaggio.getModelloDati(), coordinate);
 	}
 	
 	public static Personaggio getPersonaggioInLocazione(CoordinateMD coordinate) {
-		return costruisciPersonaggio(registroMD.getPersonaggioInLocazione(coordinate));
+		return costruisciPersonaggio(getRegistroMD().getPersonaggioInLocazione(coordinate));
 	}
 
 	public static void rimuoviPersonaggioInLocazione(CoordinateMD coordinate) {
-		registroMD.rimuoviPersonaggioInLocazione(coordinate);
+		getRegistroMD().rimuoviPersonaggioInLocazione(coordinate);
 	}
 	
 	private static void aggiungiPersonaggio(Personaggio personaggio) {
-		registroMD.aggiungiPersonaggio(personaggio.getModelloDati());
+		getRegistroMD().aggiungiPersonaggio(personaggio.getModelloDati());
 	}
 	
 	private static Personaggio costruisciPersonaggio(PersonaggioMD modelloDati) {

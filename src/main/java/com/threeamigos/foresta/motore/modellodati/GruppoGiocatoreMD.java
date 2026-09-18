@@ -11,8 +11,6 @@ import java.util.StringTokenizer;
 
 public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 
-	private final GruppoMD gruppo = new GruppoMD();
-
 	private int monete;
 	private int preziosi;
 	private int[] incantesimi = new int[ClasseIncantesimo.values().length];

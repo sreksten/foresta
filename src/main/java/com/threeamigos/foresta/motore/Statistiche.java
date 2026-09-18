@@ -10,45 +10,47 @@ import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
 public class Statistiche {
 
+	private static StatisticheMD getStatisticheMD() {
+		return ModelloDati.getIstanza().getStatisticheMD();
+	}
+
 	private Statistiche() {
 	}
 
-	private static final StatisticheMD statisticheMD = ModelloDati.getIstanza().getStatisticheMD();
-
 	public static void addPunti(int quantita) {
-		int valorePrecedente = statisticheMD.getPunti();
+		int valorePrecedente = getStatisticheMD().getPunti();
 		int valoreAttuale = valorePrecedente + quantita;
-		statisticheMD.setPunti(valoreAttuale);
+		getStatisticheMD().setPunti(valoreAttuale);
 		BusEventi.pubblica(new EventoVariazionePunti(valorePrecedente, valoreAttuale));
 	}
 
 	// Chiamato ogni volta che il personaggio completa una missione o uccide un mostro
 	public static void addPuntiEsperienza(int quantita) {
-		int valorePrecedente = statisticheMD.getPuntiEsperienza();
+		int valorePrecedente = getStatisticheMD().getPuntiEsperienza();
 		int valoreAttuale = valorePrecedente + quantita;
-		statisticheMD.setPuntiEsperienza(valoreAttuale);
+		getStatisticheMD().setPuntiEsperienza(valoreAttuale);
 		BusEventi.pubblica(new EventoVariazionePuntiEsperienza(valorePrecedente, valoreAttuale));
 
 		// Verifichiamo se i nuovi XP accumulati determinano un salto di livello
-		int livelloAttuale = statisticheMD.getLivello();
-		int nuovoLivello = GestoreProgressione.calcolaLivelloDaXp(statisticheMD.getPuntiEsperienza());
+		int livelloAttuale = getStatisticheMD().getLivello();
+		int nuovoLivello = GestoreProgressione.calcolaLivelloDaXp(getStatisticheMD().getPuntiEsperienza());
 
 		if (nuovoLivello > livelloAttuale) {
-			statisticheMD.setLivello(nuovoLivello);
+			getStatisticheMD().setLivello(nuovoLivello);
 			BusEventi.pubblica(new EventoAumentoLivelloMondo(nuovoLivello));
 		}
 	}
 
 	public static int getPunti() {
-		return statisticheMD.getPunti();
+		return getStatisticheMD().getPunti();
 	}
 
 	public static int getPuntiEsperienza() {
-		return statisticheMD.getPuntiEsperienza();
+		return getStatisticheMD().getPuntiEsperienza();
 	}
 
 	public static int getLivello() {
-		return statisticheMD.getLivello();
+		return getStatisticheMD().getLivello();
 	}
 
 	public static int getPuntiEsperienzaPerProssimoLivello() {
@@ -56,22 +58,22 @@ public class Statistiche {
 	}
 
 	public static void addMostroUcciso(ClassePersonaggio classe) {
-		statisticheMD.addMostroUcciso(classe);
+		getStatisticheMD().addMostroUcciso(classe);
 	}
 
 	public static int getMostriUccisi(ClassePersonaggio classe) {
-		return statisticheMD.getMostriUccisi(classe);
+		return getStatisticheMD().getMostriUccisi(classe);
 	}
 
 	public static void incrementaTurniGiocati() {
-		statisticheMD.setTurniGiocati(statisticheMD.getTurniGiocati() + 1);
+		getStatisticheMD().setTurniGiocati(getStatisticheMD().getTurniGiocati() + 1);
 	}
 
 	public static int getTurniGiocati() {
-		return statisticheMD.getTurniGiocati();
+		return getStatisticheMD().getTurniGiocati();
 	}
 
 	public static void reimposta() {
-		statisticheMD.reimposta();
+		getStatisticheMD().reimposta();
 	}
 }

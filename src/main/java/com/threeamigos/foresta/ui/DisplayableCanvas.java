@@ -7,15 +7,15 @@ import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
+import com.threeamigos.foresta.tools.TestataSalvataggio;
 
 import javax.swing.*;
+import javax.swing.Timer;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class DisplayableCanvas extends JPanel implements Runnable {
 
@@ -23,7 +23,6 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	private enum StatoDisplayableCanvas {
 		STATO_INTRO,
-		STATO_SELEZIONE_NUOVO_GIOCO_O_CARICA,
 		STATO_SELEZIONE_SLOT_DA_CARICARE,
 		STATO_MESSAGGIO,
 		STATO_IN_GIOCO,
@@ -254,6 +253,12 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		aggiungiSprite(evento.getSprite());
 	}
 
+	public void selezioneSlotSalvataggioDaCaricare(Collection<TestataSalvataggio> salvataggiDisponibili) {
+		riquadroIntroOutro.setSalvataggiDisponibili(salvataggiDisponibili);
+		stato = StatoDisplayableCanvas.STATO_SELEZIONE_SLOT_DA_CARICARE;
+		repaint();
+	}
+
 	@Override
 	public void addNotify() {
 		super.addNotify();
@@ -410,8 +415,6 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 		if (stato == StatoDisplayableCanvas.STATO_INTRO) {
 			riquadroIntroOutro.intro(graphics);
-		} else if (stato == StatoDisplayableCanvas.STATO_SELEZIONE_NUOVO_GIOCO_O_CARICA) {
-			riquadroIntroOutro.selezioneNuovoGiocoOCarica(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_SELEZIONE_SLOT_DA_CARICARE) {
 			riquadroIntroOutro.selezioneSlotDaCaricare(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_MESSAGGIO) {
@@ -484,19 +487,6 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			// + 2 per permettere i titoli di testa e i punteggi
 			riquadroIntroOutro.incrementaSequenza(Misc.STORIA.length + 2);
 		}
-		repaint();
-	}
-
-	/**
-	 * Richiama la schermata di selezione nuovo gioco o caricamento di un salvataggio
-	 */
-	public void nuovoGiocoOCaricaPrecedente() {
-		stato = StatoDisplayableCanvas.STATO_SELEZIONE_NUOVO_GIOCO_O_CARICA;
-		repaint();
-	}
-
-	public void selezioneSlotSalvataggioDaCaricare() {
-		stato = StatoDisplayableCanvas.STATO_SELEZIONE_SLOT_DA_CARICARE;
 		repaint();
 	}
 

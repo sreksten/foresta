@@ -8,6 +8,7 @@ import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Temporizzatore;
+import com.threeamigos.foresta.tools.TestataSalvataggio;
 
 import javax.swing.*;
 import java.awt.*;
@@ -44,6 +45,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::gestisciEventoRichiestaReinizializzazioneUI);
 		BusEventi.iscriviti(EventoRichiestaTesto.class, this::gestisciEventoRichiestaTesto);
 		// EventoValutazioneAttaccante non ci interessa, è il motore AI degli avversari che informa sul suo stato di progressione
+		BusEventi.iscriviti(EventoRichiestaSelezioneSlotPerRilettura.class, this::gestisciEventoSelezioneSalvataggio);
 		BusEventi.iscriviti(EventoStatoDiGioco.class, this::gestisciEventoStatoDiGioco);
 		BusEventi.iscriviti(EventoVariazioneEffettoDiStato.class, this::gestisciEventoVariazioneEffettoDiStato);
 		BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
@@ -288,6 +290,14 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		rinfresca();
 	}
 
+	private void gestisciEventoSelezioneSalvataggio(EventoRichiestaSelezioneSlotPerRilettura evento) {
+		temporizzatore.termina();
+		ComandiPossibili.reimposta();
+		evento.getSalvataggiDisponibili().stream().map(TestataSalvataggio::getId).forEach(ComandiPossibili::add);
+		impostaAzioni();
+		displayableCanvas.selezioneSlotSalvataggioDaCaricare(evento.getSalvataggiDisponibili());
+	}
+
 	private void gestisciEventoStatoDiGioco(EventoStatoDiGioco evento) {
 		statoDiGioco = evento.getStato();
 		switch(statoDiGioco) {
@@ -295,13 +305,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 				 // Richiama la schermata o animazione di introduzione
 				displayableCanvas.intro();
 				temporizzatore.inizia(5_000);
-				ComandiPossibili.set(evento.getComandiPossibili());
-				impostaAzioni();
-				break;
-
-			case SELEZIONE_SALVATAGGIO_DA_LEGGERE:
-				temporizzatore.termina();
-				displayableCanvas.selezioneSlotSalvataggioDaCaricare();
 				ComandiPossibili.set(evento.getComandiPossibili());
 				impostaAzioni();
 				break;

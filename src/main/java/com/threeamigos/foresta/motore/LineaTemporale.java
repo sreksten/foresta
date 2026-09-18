@@ -12,20 +12,22 @@ public class LineaTemporale {
 	private LineaTemporale() {
 	}
 
-	private static final LineaTemporaleMD lineaTemporaleMD = ModelloDati.getIstanza().getLineaTemporaleMD();
+	private static LineaTemporaleMD getLineaTemporaleMD() {
+		return ModelloDati.getIstanza().getLineaTemporaleMD();
+	}
 
 	private static String evento;
 
 	public static int getOra() {
-		return lineaTemporaleMD.getOra();
+		return getLineaTemporaleMD().getOra();
 	}
 
 	public static int getGiorno() {
-		return lineaTemporaleMD.getGiorno();
+		return getLineaTemporaleMD().getGiorno();
 	}
 
 	public static void reimposta() {
-		lineaTemporaleMD.reimposta();
+		getLineaTemporaleMD().reimposta();
 	}
 
 	private static final String[] ore = {
@@ -78,20 +80,20 @@ public class LineaTemporale {
 
 	public static void mattinoSeguente() {
 		if (getOra() >= LineaTemporaleMD.PRIMA_ORA_DEL_MATTINO) {
-			lineaTemporaleMD.setOra(LineaTemporaleMD.PRIMA_ORA_DEL_MATTINO);
-			lineaTemporaleMD.setGiorno(lineaTemporaleMD.getGiorno() + 1);
+			getLineaTemporaleMD().setOra(LineaTemporaleMD.PRIMA_ORA_DEL_MATTINO);
+			getLineaTemporaleMD().setGiorno(getLineaTemporaleMD().getGiorno() + 1);
 		} else {
-			lineaTemporaleMD.setOra(LineaTemporaleMD.PRIMA_ORA_DEL_MATTINO);
+			getLineaTemporaleMD().setOra(LineaTemporaleMD.PRIMA_ORA_DEL_MATTINO);
 		}
 	}
 
 	public static void aggiungiOre(int quantita) {
 		int ora = getOra() + quantita;
 		if (ora >= 24) {
-			lineaTemporaleMD.setOra(ora % 24);
-			lineaTemporaleMD.setGiorno(lineaTemporaleMD.getGiorno() + 1);
+			getLineaTemporaleMD().setOra(ora % 24);
+			getLineaTemporaleMD().setGiorno(getLineaTemporaleMD().getGiorno() + 1);
 		} else {
-			lineaTemporaleMD.setOra(ora);
+			getLineaTemporaleMD().setOra(ora);
 		}
 	}
 
@@ -132,28 +134,28 @@ public class LineaTemporale {
 	}
 
 	public static boolean isGiocoFinito() {
-		return lineaTemporaleMD.isGiocoFinito();
+		return getLineaTemporaleMD().isGiocoFinito();
 	}
 
 	public static void setGiocoFinito(boolean finito) {
-		lineaTemporaleMD.setGiocoFinito(finito);
+		getLineaTemporaleMD().setGiocoFinito(finito);
 	}
 
 	public static boolean isCittaDistrutta(ClassiLocazione citta) {
 		if (citta.getTipoLocazione() != ClassiLocazione.TipoLocazione.CITTA) {
 			throw new IllegalArgumentException();
 		}
-		return lineaTemporaleMD.isCittaDistrutta(citta);
+		return getLineaTemporaleMD().isCittaDistrutta(citta);
 	}
 
 	public static void setCittaDistrutta(ClassiLocazione citta) {
 		if (citta.getTipoLocazione() != ClassiLocazione.TipoLocazione.CITTA) {
 			throw new IllegalArgumentException();
 		}
-		lineaTemporaleMD.addCittaDistrutta(citta);
+		getLineaTemporaleMD().addCittaDistrutta(citta);
 	}
 
 	public static void setDragoSconfitto(boolean dragoSconfitto) {
-		lineaTemporaleMD.setGiocoFinito(dragoSconfitto);
+		getLineaTemporaleMD().setGiocoFinito(dragoSconfitto);
 	}
 }

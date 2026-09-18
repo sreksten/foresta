@@ -6,10 +6,12 @@ import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 
 public class RegistroArtefatti {
 
-	private RegistroArtefatti() {
+	private static RegistroArtefattiMD getRegistroArtefatti() {
+		return ModelloDati.getIstanza().getRegistroArtefattiMD();
 	}
 
-	private static final RegistroArtefattiMD registroMD = ModelloDati.getIstanza().getRegistroArtefattiMD();
+	private RegistroArtefatti() {
+	}
 
 	private static final String COMBATTIMENTO = "il cui potere è nel combattimento";
 	private static final String PROTEZIONE = "che protegge dagli attacchi avversari";
@@ -17,7 +19,7 @@ public class RegistroArtefatti {
 	private static final String MAGIA = "che aumenta il potere magico";
 
 	static void reimposta() {
-		registroMD.reimposta();
+		getRegistroArtefatti().reimposta();
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.SPADA)
@@ -201,27 +203,27 @@ public class RegistroArtefatti {
 	}
 
 	static Artefatto getArtefattoDisponibile() {
-		return costruisciArtefatto(registroMD.getArtefattoDisponibile());
+		return costruisciArtefatto(getRegistroArtefatti().getArtefattoDisponibile());
 	}
 
 	public static RegistroArtefattiMD.ArtefattoESuaUbicazione getArtefattoCasuale() {
-		return registroMD.getArtefattoCasuale();
+		return getRegistroArtefatti().getArtefattoCasuale();
 	}
 
 	public static void addArtefattoInLocazione(Artefatto artefatto, CoordinateMD coordinate) {
-		registroMD.addArtefattoInLocazione(artefatto.getModelloDati(), coordinate);
+		getRegistroArtefatti().addArtefattoInLocazione(artefatto.getModelloDati(), coordinate);
 	}
 
 	public static Artefatto getArtefattoInLocazione(CoordinateMD coordinate) {
-		return costruisciArtefatto(registroMD.getArtefattoInLocazione(coordinate));
+		return costruisciArtefatto(getRegistroArtefatti().getArtefattoInLocazione(coordinate));
 	}
 
 	public static void rimuoviArtefattoInLocazione(CoordinateMD coordinate) {
-		registroMD.rimuoviArtefattoInLocazione(coordinate);
+		getRegistroArtefatti().rimuoviArtefattoInLocazione(coordinate);
 	}
 
 	private static void aggiungiArtefatto(Artefatto artefatto) {
-		registroMD.aggiungiArtefatto(artefatto.getModelloDati());
+		getRegistroArtefatti().aggiungiArtefatto(artefatto.getModelloDati());
 	}
 
 	private static Artefatto costruisciArtefatto(ArtefattoMD modelloDati) {
@@ -232,6 +234,6 @@ public class RegistroArtefatti {
 	}
 
 	public static ScambiatoreArtefatti getScambiatorePerLocazione(CoordinateMD coordinate) {
-		return registroMD.getScambiatorePerLocazione(coordinate);
+		return getRegistroArtefatti().getScambiatorePerLocazione(coordinate);
 	}
 }

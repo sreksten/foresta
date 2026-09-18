@@ -4,10 +4,7 @@ import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
-import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.modellodati.GruppoGiocatoreMD;
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
+import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -15,7 +12,9 @@ import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 import com.threeamigos.foresta.ui.UI;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -25,13 +24,8 @@ import java.util.stream.Collectors;
 
 public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 
-	private GruppoGiocatore() {
-		super();
-		BusEventi.iscriviti(EventoRichiestaStoccaggioArtefatto.class, this::suEventoRichiestaStoccaggioArtefatto);
-		BusEventi.iscriviti(EventoRichiestaPrelievoArtefatto.class, this::suEventoRichiestaPrelievoArtefatto);
-		BusEventi.iscriviti(EventoRichiestaAcquistoArtefatto.class, this::suEventoRichiestaAcquistoArtefatto);
-		BusEventi.iscriviti(EventoRichiestaVenditaArtefatto.class, this::suEventoRichiestaVenditaArtefatto);
-		BusEventi.iscriviti(EventoRichiestaAcquistoConsumabile.class, this::suEventoRichiestaAcquistoConsumabile);
+	public static GruppoGiocatore of(GruppoGiocatoreMD gruppoGiocatoreMD) {
+		return new GruppoGiocatore(gruppoGiocatoreMD);
 	}
 
 	private static GruppoGiocatore istanza;
@@ -43,7 +37,36 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		return istanza;
 	}
 
-	private final GruppoGiocatoreMD md = ModelloDati.getIstanza().getGruppoGiocatoreMD();
+	private GruppoGiocatore(GruppoGiocatoreMD gruppoGiocatoreMD) {
+		setModelloDati(gruppoGiocatoreMD);
+	}
+
+	public GruppoGiocatore() {
+		super();
+		BusEventi.iscriviti(EventoRichiestaStoccaggioArtefatto.class, this::suEventoRichiestaStoccaggioArtefatto);
+		BusEventi.iscriviti(EventoRichiestaPrelievoArtefatto.class, this::suEventoRichiestaPrelievoArtefatto);
+		BusEventi.iscriviti(EventoRichiestaAcquistoArtefatto.class, this::suEventoRichiestaAcquistoArtefatto);
+		BusEventi.iscriviti(EventoRichiestaVenditaArtefatto.class, this::suEventoRichiestaVenditaArtefatto);
+		BusEventi.iscriviti(EventoRichiestaAcquistoConsumabile.class, this::suEventoRichiestaAcquistoConsumabile);
+	}
+
+	/**
+	 * Serve per riagganciare al GruppoGiocatore istanze di Personaggio.
+	 */
+	public void setModelloDati(GruppoGiocatoreMD gruppoGiocatoreMD) {
+		this.md = gruppoGiocatoreMD;
+		capo = null;
+		personaggi.clear();
+		List<PersonaggioMD> personaggiDaAggiungere = new ArrayList<>(gruppoGiocatoreMD.getPersonaggiMD());
+		gruppoGiocatoreMD.getPersonaggiMD().clear();
+		for (PersonaggioMD personaggioMD : personaggiDaAggiungere) {
+			Personaggio personaggio = personaggioMD.getClasse().getIstanza(1);
+			personaggio.setModelloDati(personaggioMD);
+			aggiungiPersonaggioSenzaNotificare(personaggio);
+		}
+	}
+
+	private GruppoGiocatoreMD md = ModelloDati.getIstanza().getGruppoGiocatoreMD();
 	private Locazione locazioneCorrente;
 
 	// Serve per passare chi formula un incantesimo all'automa dalla locazione base.

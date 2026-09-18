@@ -1,20 +1,22 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoErroreInterno;
 import com.threeamigos.foresta.eventi.EventoException;
+import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.*;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.StringTokenizer;
 
-public class DisplayableCanvasIntroOutro implements Finestra{
+public class DisplayableCanvasIntroOutro implements Finestra {
 
 	private static final int CHAR_SPACING = 1;
 
@@ -24,6 +26,8 @@ public class DisplayableCanvasIntroOutro implements Finestra{
 	private final int xOffset;
 	private final int yOffset;
 	private String messaggio;
+
+	private Collection<TestataSalvataggio> salvataggiDisponibili;
 
 	DisplayableCanvasIntroOutro(int width, int height) {
 		this.width = width;
@@ -100,17 +104,15 @@ public class DisplayableCanvasIntroOutro implements Finestra{
 			scrivi(graphics, true);
 		}
 	}
-	
-	void selezioneNuovoGiocoOCarica(Graphics2D graphics) {
-		disegnaOmbraDelDrago(graphics);
-		disegnaStringaCentrataConACapoAutomatico(graphics, "1 - nuovo gioco", (height >> 1) - 50);
-		disegnaStringaCentrataConACapoAutomatico(graphics, "2 - carica partita precedente", (height >> 1) + 50);
+
+	void setSalvataggiDisponibili(Collection<TestataSalvataggio> salvataggiDisponibili) {
+		this.salvataggiDisponibili = salvataggiDisponibili;
 	}
 
 	void selezioneSlotDaCaricare(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
 		disegnaStringaCentrataConACapoAutomatico(graphics, "seleziona lo slot da caricare", 50);
-		for (InterfacciaGestoreSalvataggi.TestataSalvataggio testata : GestoreSalvataggi.getSalvataggiDisponibili()) {
+		for (TestataSalvataggio testata : salvataggiDisponibili) {
 			try {
 				disegnaElencoPersonaggiDaElencoClassi(graphics, testata);
 			} catch (Exception e) {
@@ -119,30 +121,44 @@ public class DisplayableCanvasIntroOutro implements Finestra{
 		}
 	}
 
-	private void disegnaElencoPersonaggiDaElencoClassi(Graphics2D graphics, InterfacciaGestoreSalvataggi.TestataSalvataggio testata) {
-		int id = Integer.parseInt(testata.getId());
+	private int numeroDaComando(Comando comando) {
+		if (comando == Comando.NUMERO_1) {
+			return 1;
+		} else if (comando == Comando.NUMERO_2) {
+			return 2;
+		} else if (comando == Comando.NUMERO_3) {
+			return 3;
+		} else if (comando == Comando.NUMERO_4) {
+			return 4;
+		} else if (comando == Comando.NUMERO_5) {
+			return 5;
+		} else {
+			BusEventi.pubblica(new EventoErroreInterno("Comando non valido: " + comando));
+			throw new IllegalStateException("Comando non valido: " + comando);
+		}
+	}
+
+	private void disegnaElencoPersonaggiDaElencoClassi(Graphics2D graphics, TestataSalvataggio testata) {
+		int id = numeroDaComando(testata.getId());
 		int coordinataY = getCoordinataY(id);
 		String descrizione = testata.getDescrizione();
-		StringTokenizer st = new StringTokenizer(descrizione, "|");
-		String elencoClassiPersonaggio = st.nextToken();
-		disegnaPersonaggi(graphics, id, elencoClassiPersonaggio, coordinataY);
-		descrizione = st.nextToken();
+        Collection<Personaggio> personaggi = testata.getGruppoGiocatore().getPersonaggi();
+		disegnaPersonaggi(graphics, id, personaggi, coordinataY);
 		disegnaStringaCentrataConACapoAutomatico(graphics, id + " - " + descrizione.toLowerCase(), coordinataY);
 	}
 
 	void selezioneSlotDaSalvare(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
 		disegnaStringaCentrataConACapoAutomatico(graphics, "seleziona lo slot per il salvataggio", 50);
-		List<String> slotDisponibili = new ArrayList<>();
-		for (int i = 1; i <= InterfacciaGestoreSalvataggi.NUMERO_MASSIMO; i++) {
-			slotDisponibili.add(String.valueOf(i));
-		}
-		for (InterfacciaGestoreSalvataggi.TestataSalvataggio testata : GestoreSalvataggi.getSalvataggiDisponibili()) {
-			slotDisponibili.remove(testata.getId());
+		List<Comando> comandi = new ArrayList<>(Arrays.asList(Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3, Comando.NUMERO_4,
+                Comando.NUMERO_5));
+		for (TestataSalvataggio testata : GestoreSalvataggi.getSalvataggiDisponibili()) {
+			comandi.remove(testata.getId());
 			disegnaElencoPersonaggiDaElencoClassi(graphics, testata);
 		}
-		for (String slotDisponibile : slotDisponibili) {
-			disegnaStringaCentrataConACapoAutomatico(graphics, slotDisponibile + " - slot disponibile", getCoordinataY(Integer.parseInt(slotDisponibile)));
+		for (Comando slotDisponibile : comandi) {
+			int numero = numeroDaComando(slotDisponibile);
+			disegnaStringaCentrataConACapoAutomatico(graphics, numero + " - slot disponibile", getCoordinataY(numero));
 		}
 	}
 
@@ -295,15 +311,13 @@ public class DisplayableCanvasIntroOutro implements Finestra{
 		return 50 + 100 * id;
 	}
 
-	private void disegnaPersonaggi(Graphics2D graphics, int id, String elenco, int coordinataY) {
-		StringTokenizer st = new StringTokenizer(elenco, ",");
+	private void disegnaPersonaggi(Graphics2D graphics, int id, Collection<Personaggio> personaggi, int coordinataY) {
 		List<BufferedImage> immagini = new ArrayList<>();
 		List<Integer> coordinateX = new ArrayList<>();
 		int coordinataX = (width >> 1) + 100 * (id - 3);
 		int altezzaMinima = 999;
-		while (st.hasMoreTokens()) {
-			ClassePersonaggio classePersonaggio = ClassePersonaggio.values()[Integer.parseInt(st.nextToken())];
-			BufferedImage immagine = ClassePersonaggioImmagine.getImmagine(classePersonaggio);
+		for (Personaggio personaggio : personaggi) {
+			BufferedImage immagine = ClassePersonaggioImmagine.getImmagine(personaggio.getClasse());
 			immagini.add(0, immagine);
 			coordinateX.add(0, coordinataX);
 			coordinataX += immagine.getWidth() * 2 / 3;

@@ -5,8 +5,10 @@ import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tools.TestataSalvataggio;
 
 import java.util.Date;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -58,9 +60,11 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoRifiutoAcquistoArtefatto.class, this::onEventoRifiutoAcquistoArtefatto);
         BusEventi.iscriviti(EventoRifiutoAcquistoConsumabile.class, this::onEventoRifiutoAcquistoConsumabile);
         BusEventi.iscriviti(EventoRifiutoPrelievoArtefatto.class, this::onEventoRifiutoPrelievoArtefatto);
-        // EventoRifiutoSpostamentoArtgefatto è classe astratta
+        // EventoRifiutoSpostamentoArtefatto è classe astratta
         BusEventi.iscriviti(EventoRifiutoStoccaggioArtefatto.class, this::onEventoRifiutoStoccaggioArtefatto);
         BusEventi.iscriviti(EventoRifiutoVenditaArtefatto.class, this::onEventoRifiutoVenditaArtefatto);
+        BusEventi.iscriviti(EventoRichiestaSelezioneSlotPerRilettura.class, this::onEventoRichiestaSelezioneSlotPerRilettura);
+        BusEventi.iscriviti(EventoRichiestaSelezioneSlotPerSalvataggio.class, this::onEventoRichiestaSelezioneSlotPerSalvataggio);
         BusEventi.iscriviti(EventoStatoDiGioco.class, this::onEventoStatoDiGioco);
         BusEventi.iscriviti(EventoTestoDisponibile.class, this::onEventoTestoDisponibile);
         BusEventi.iscriviti(EventoValutazioneAttaccante.class, this::onEventoValutazioneAttaccante);
@@ -232,6 +236,16 @@ public class SnifferBusEventi {
 
     private void onEventoRichiestaReinizializzazioneUI(EventoRichiestaReinizializzazioneUI evento) {
         Logger.log(headerEvento(evento));
+    }
+
+    private void onEventoRichiestaSelezioneSlotPerRilettura(EventoRichiestaSelezioneSlotPerRilettura evento) {
+        Logger.log(headerEvento(evento) + "Salvataggi disponibili: " + evento.getSalvataggiDisponibili()
+                .stream().map(TestataSalvataggio::getId).map(Comando::name).collect(Collectors.joining(", ")));
+    }
+
+    private void onEventoRichiestaSelezioneSlotPerSalvataggio(EventoRichiestaSelezioneSlotPerSalvataggio evento) {
+        Logger.log(headerEvento(evento) + "Salvataggi disponibili: " + evento.getSalvataggiDisponibili()
+                .stream().map(TestataSalvataggio::getId).map(Comando::name).collect(Collectors.joining(", ")));
     }
 
     private void onEventoRichiestaStoccaggioArtefatto(EventoRichiestaStoccaggioArtefatto evento) {

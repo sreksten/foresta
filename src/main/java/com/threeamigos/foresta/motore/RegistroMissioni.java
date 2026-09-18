@@ -11,10 +11,8 @@ import java.util.*;
 
 public class RegistroMissioni {
 
-	private static final RegistroMissioniMD md;
-
-	static {
-		md = ModelloDati.getIstanza().getRegistroMissioniMD();
+	private static RegistroMissioniMD getRegistroMissioni() {
+		return ModelloDati.getIstanza().getRegistroMissioniMD();
 	}
 
 	private RegistroMissioni() {
@@ -62,21 +60,21 @@ public class RegistroMissioni {
 	}
 
 	public static void reimposta() {
-		md.reimposta();
+		getRegistroMissioni().reimposta();
 		pulisciElenchi();
 
 		for (TipoMissionePredefinita tipoMissionePredefinita : TipoMissionePredefinita.values()) {
 			Missione missione = tipoMissionePredefinita.getIstanza();
 			missione.getModelloDati().setId(tipoMissionePredefinita.name());
 			elencoMissioniPredefinite.put(tipoMissionePredefinita, missione);
-			md.aggiungiMissione(tipoMissionePredefinita.name(), missione.getModelloDati());
+			getRegistroMissioni().aggiungiMissione(tipoMissionePredefinita.name(), missione.getModelloDati());
 		}
 	}
 	
 	public static void aggiornaDopoRilettura() {
 		pulisciElenchi();
-		aggiornaDopoRiletturaImpl(md.getMissioniAttive());
-		aggiornaDopoRiletturaImpl(md.getMissioniCompletate());
+		aggiornaDopoRiletturaImpl(getRegistroMissioni().getMissioniAttive());
+		aggiornaDopoRiletturaImpl(getRegistroMissioni().getMissioniCompletate());
 	}
 
 	private static void aggiornaDopoRiletturaImpl(Collection<MissioneMD> missioni) {

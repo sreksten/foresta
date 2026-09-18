@@ -1,8 +1,5 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoErroreCaricamento;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -46,6 +43,10 @@ public class ModelloDati implements Serializzabile {
 
 	public static ModelloDati getIstanza() {
 		return istanza;
+	}
+
+	public static void setIstanza(ModelloDati modelloDati) {
+		istanza = modelloDati;
 	}
 
 	public final GruppoGiocatoreMD getGruppoGiocatoreMD() {
@@ -115,19 +116,5 @@ public class ModelloDati implements Serializzabile {
 		registroPersonaggiMD.leggi(stream);
 		registroArtefattiMD.leggi(stream);
 		registroMissioniMD.leggi(stream);
-	}
-
-	public boolean leggiTestata(BufferedReader stream) throws IOException {
-		try {
-			gruppoGiocatoreMD.leggi(stream);
-			return true;
-		} catch (Exception e) {
-			BusEventi.pubblica(new EventoErroreCaricamento(e));
-			return false;
-		}
-	}
-
-	public static void sostituisciIstanza(ModelloDati modelloDati) {
-		istanza = modelloDati;
 	}
 }

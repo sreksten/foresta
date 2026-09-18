@@ -9,7 +9,7 @@ import java.io.PrintWriter;
  *
  * @author Stefano Reksten
  */
-interface Serializzabile {
+public interface Serializzabile {
 
 	String PIPE = "|";
 

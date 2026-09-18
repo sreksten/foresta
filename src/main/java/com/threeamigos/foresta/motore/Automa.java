@@ -7,7 +7,10 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.motore.modellodati.*;
+import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
+import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
+import com.threeamigos.foresta.motore.modellodati.TipoDanno;
+import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.*;
@@ -28,8 +31,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Stato stato;
 	private Stato statoPrecedente;
 
-	private GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-	private GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
+	private final GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
+	private final GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
 	private Personaggio personaggio;
 	// Ultimo personaggio scelto nella schermata inventario: non salvato, si azzera a ogni avvio.
 	private int indicePersonaggioInventario = 0;
@@ -124,8 +127,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 						break;
 					case FLOPPY:
 						stato = Stato.SELEZIONE_SALVATAGGIO_DA_LEGGERE;
-						Collection<Comando> comandiPossibili = getComandiPossibiliInStatoSelezioneSalvataggioDaLeggere();
-						BusEventi.pubblica(new EventoStatoDiGioco(stato, comandiPossibili));
+						Collection<TestataSalvataggio> salvataggiDisponibili = GestoreSalvataggi.getSalvataggiDisponibili();
+						BusEventi.pubblica(new EventoRichiestaSelezioneSlotPerRilettura(salvataggiDisponibili));
 						break;
 					default:
 						comandoNonValido(azione);
@@ -133,21 +136,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				break;
 
 			case SELEZIONE_SALVATAGGIO_DA_LEGGERE:
-				ModelloDati modelloDati = new ModelloDati();
-				if (leggi(azione, modelloDati)) {
-					ModelloDati.sostituisciIstanza(modelloDati);
-					gruppo = GruppoGiocatore.getIstanza();
-					gruppoAvversario = GruppoAvversario.getIstanza();
-					locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
-					gruppo.setLocazioneCorrente(locazioneCorrente);
+				if (leggi(azione)) {
 					stato = Stato.ATTESA_DIREZIONE;
-					BusEventi.pubblica(new EventoRichiestaReinizializzazioneUI());
-					BusEventi.pubblica(new EventoStatoDiGioco(stato, getComandiPossibiliInStatoAttesaDirezione()));
 				} else {
-					stato = Stato.FILE_DI_SALVATAGGIO_NON_VALIDO;
-					BusEventi.pubblica(new EventoStatoDiGioco(stato, getComandiPossibiliInStatoIntro()));
+					stato = Stato.INTRO;
 				}
-				processaAzione(null);
 				break;
 
 			case PRE_GAME_ATTESA_SESSO_PERSONAGGIO:
@@ -660,7 +653,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				}
 				break;
 
-
 			case SELEZIONE_SALVATAGGIO_DA_SCRIVERE:
 				if (azione == Comando.NO) {
 					UI.mostraSchermataGioco();
@@ -668,7 +660,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					stato = Stato.ATTESA_DIREZIONE;
 					processaAzione(null);
 				}
-				if (convertiComandoInSlotSalvataggio(azione) != null) {
+				if (azione != null) {
 					salva(azione);
 					UI.confermaUscita();
 					UI.impostaAzioni(Comando.SI, Comando.NO);
@@ -1024,45 +1016,25 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			ComandiPossibili.add(Comando.NUMERO_5);
 		}
 	}
-	
-	private String convertiComandoInSlotSalvataggio(Comando azione) {
-		if (azione == Comando.NUMERO_1) {
-			return "1";
-		} else if (azione == Comando.NUMERO_2) {
-			return "2";
-		} else if (azione == Comando.NUMERO_3) {
-			return "3";
-		} else if (azione == Comando.NUMERO_4) {
-			return "4";
-		} else if (azione == Comando.NUMERO_5) {
-			return "5";
-		} else {
-			return null;
+
+	private boolean leggi(Comando azione) {
+		if (azione == Comando.ANNULLA) {
+			return false;
 		}
-	}
-	
-	private boolean leggi(Comando azione, ModelloDati modelloDati) {
-		return GestoreSalvataggi.leggi(convertiComandoInSlotSalvataggio(azione), modelloDati);
+		if (GestoreSalvataggi.leggi(azione)) {
+			stato = Stato.ATTESA_DIREZIONE;
+			BusEventi.pubblica(new EventoStatoDiGioco(stato, getComandiPossibiliInStatoAttesaDirezione()));
+			UI.mostraSchermataGioco();
+			UI.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
+			return true;
+		}
+		//FIXME in questo caso che si fa?
+		return false;
 	}
 
 	private void salva(Comando azione) {
-		String id = convertiComandoInSlotSalvataggio(azione);
-		if (id != null) {
-			StringBuilder sb = new StringBuilder();
-			int numeroPersonaggi = gruppo.getNumeroPersonaggi();
-			for (int i = 0; i < numeroPersonaggi; i++) {
-				sb.append(gruppo.getPersonaggio(i).getClasse().ordinal());
-				if (i < numeroPersonaggi - 1) {
-					sb.append(",");
-				}
-			}
-			sb.append("|");
-			sb.append(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA))
-			.append(" - giorno ")
-			.append(LineaTemporale.getGiorno())
-			.append(", ora ")
-			.append(LineaTemporale.getOra());
-			GestoreSalvataggi.salva(id, sb.toString());
+		if (azione != Comando.ANNULLA) {
+			GestoreSalvataggi.salva(azione);
 		}
 	}
 
@@ -1075,28 +1047,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		comandiPossibili.add(Comando.PERGAMENA);
 		if (!GestoreSalvataggi.getSalvataggiDisponibili().isEmpty()) {
 			comandiPossibili.add(Comando.FLOPPY);
-		}
-		return comandiPossibili;
-	}
-
-	/**
-	 * I comandi possibili quando il gioco sta attendendo la scelta di un gioco da caricare.
-	 */
-	private List<Comando> getComandiPossibiliInStatoSelezioneSalvataggioDaLeggere() {
-		List<Comando> comandiPossibili = new ArrayList<>();
-		for (InterfacciaGestoreSalvataggi.TestataSalvataggio testata : GestoreSalvataggi.getSalvataggiDisponibili()) {
-			String id = testata.getId();
-			if ("1".equals(id)) {
-				comandiPossibili.add(Comando.NUMERO_1);
-			} else if ("2".equals(id)) {
-				comandiPossibili.add(Comando.NUMERO_2);
-			} else if ("3".equals(id)) {
-				comandiPossibili.add(Comando.NUMERO_3);
-			} else if ("4".equals(id)) {
-				comandiPossibili.add(Comando.NUMERO_4);
-			} else if ("5".equals(id)) {
-				comandiPossibili.add(Comando.NUMERO_5);
-			}
 		}
 		return comandiPossibili;
 	}
