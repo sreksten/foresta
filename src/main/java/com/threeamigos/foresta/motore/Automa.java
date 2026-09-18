@@ -92,7 +92,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				GestorePunteggi.addPunteggio(testoDisponibile, Statistiche.getPunti());
 				stato = Stato.PUNTEGGI;
 				UI.impostaAzioni(Comando.PERGAMENA);
-				UI.punteggi();
+				BusEventi.pubblica(new EventoMostraPunteggi());
 				processaAzione(null);
 				break;
 
@@ -717,7 +717,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 			case STATISTICHE:
 				if (azione == null) {
-					UI.statistiche();
+					BusEventi.pubblica(new EventoMostraStatistiche());
 				} else if (azione == Comando.PERGAMENA) {
 					if (GestorePunteggi.isPunteggioInClassifica(Statistiche.getPunti())) {
 						stato = Stato.ATTESA_NOME_PUNTEGGI;

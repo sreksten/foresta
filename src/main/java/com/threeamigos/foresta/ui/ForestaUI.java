@@ -40,7 +40,9 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(EventoInterazioneElementale.class, this::gestisciEventoInterazioneElementale);
 		BusEventi.iscriviti(EventoMessaggio.class, this::gestisciEventoMessaggio);
 		BusEventi.iscriviti(EventoMostraFinestra.class, this::gestisciEventoMostraFinestra);
+		BusEventi.iscriviti(EventoMostraPunteggi.class, this::gestisciEventoMostraPunteggi);
 		BusEventi.iscriviti(EventoMostraSchermataGioco.class, this::gestisciEventoMostraSchermataGioco);
+		BusEventi.iscriviti(EventoMostraStatistiche.class, this::gestisciEventoMostraStatistiche);
 		BusEventi.iscriviti(EventoNotificaGlobale.class, this::gestisciEventoNotificaGlobale);
 		BusEventi.iscriviti(EventoParagrafo.class, this::gestisciEventoParagrafo);
 		BusEventi.iscriviti(EventoPreparazioneLocazione.class, this::gestisciEventoPreparazioneLocazione);
@@ -161,16 +163,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		displayableCanvas.muoviMappa(direzione);
 	}
 
-	@Override
-	public void statistiche() {
-		displayableCanvas.statistiche();
-	}
-
-	@Override
-	public void punteggi() {
-		displayableCanvas.hiscore();
-	}
-
 	private void gestisciEventoRichiestaTesto(EventoRichiestaTesto evento) {
 		displayableCanvas.scriviGrande(evento.getRichiesta());
 		prompt.setVisible(true);
@@ -196,9 +188,17 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		rinfresca();
 	}
 
+	private void gestisciEventoMostraPunteggi(EventoMostraPunteggi evento) {
+		displayableCanvas.mostraPunteggi();
+	}
+
 	private void gestisciEventoMostraSchermataGioco(EventoMostraSchermataGioco evento) {
 		displayableCanvas.iniziaGioco();
 		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
+	}
+
+	private void gestisciEventoMostraStatistiche(EventoMostraStatistiche evento) {
+		displayableCanvas.mostraStatistiche();
 	}
 
 	private void gestisciEventoNotificaGlobale(EventoNotificaGlobale evento) {

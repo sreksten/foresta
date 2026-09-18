@@ -34,17 +34,6 @@ public interface InterfacciaUtente {
     void confermaUscita();
 
 	/**
-	 * Richiama la schermata o animazione che mostra le statistiche
-	 * sui mostri uccisi eccetera.
-	 */
-    void statistiche();
-
-	/**
-	 * Richiama la schermata o animazione che riporta la tabella dei punteggi
-	 */
-    void punteggi();
-
-	/**
 	 * Propone al giocatore una serie di possibili azioni tra le quali
 	 * scegliere per poter continuare il gioco.
 	 */

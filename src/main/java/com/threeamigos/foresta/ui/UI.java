@@ -37,21 +37,6 @@ public class UI {
 	}
 
 	/**
-	 * Richiama la schermata o animazione che mostra le statistiche sui mostri
-	 * uccisi eccetera.
-	 */
-	public static void statistiche() {
-		interfacciaUtente.statistiche();
-	}
-
-	/**
-	 * Richiama la schermata o animazione che riporta la tabella dei punteggi
-	 */
-	public static void punteggi() {
-		interfacciaUtente.punteggi();
-	}
-
-	/**
 	 * Propone al giocatore una serie di possibili azioni tra le quali scegliere per
 	 * poter continuare il gioco. L'elenco delle possibili azioni viene riempito con valori
 	 * provenienti dalla classe Comando

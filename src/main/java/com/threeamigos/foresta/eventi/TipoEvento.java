@@ -184,6 +184,14 @@ public enum TipoEvento {
      * Fine della partita
      */
     FINE_GIOCO,
+    /**
+     * Mostra le statistiche sulla partita appena conclusa
+     */
+    MOSTRA_STATISTICHE,
+    /**
+     * Mostra i migliori 10 giocatori di tutti i tempi
+     */
+    MOSTRA_PUNTEGGI,
 
 
     // Eventi interni per il funzionamento del gioco

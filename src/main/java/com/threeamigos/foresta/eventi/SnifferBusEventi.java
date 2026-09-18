@@ -47,7 +47,9 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoMessaggio.class, this::onEventoMessaggio);
         BusEventi.iscriviti(EventoMessaggioInterno.class, this::onEventoMessaggioInterno);
         BusEventi.iscriviti(EventoMostraFinestra.class, this::onEventoMostraFinestra);
+        BusEventi.iscriviti(EventoMostraPunteggi.class, this::onEventoMostraPunteggi);
         BusEventi.iscriviti(EventoMostraSchermataGioco.class, this::onEventoMostraSchermataGioco);
+        BusEventi.iscriviti(EventoMostraStatistiche.class, this::onEventoMostraStatistiche);
         BusEventi.iscriviti(EventoNotificaGlobale.class, this::onEventoNotificaGlobale);
         BusEventi.iscriviti(EventoParagrafo.class, this::onEventoParagrafo);
         // EventoPersonaggio è classe astratta
@@ -221,7 +223,15 @@ public class SnifferBusEventi {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getFinestre()));
     }
 
+    private void onEventoMostraPunteggi(EventoMostraPunteggi evento) {
+        Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
+    }
+
     private void onEventoMostraSchermataGioco(EventoMostraSchermataGioco evento) {
+        Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
+    }
+
+    private void onEventoMostraStatistiche(EventoMostraStatistiche evento) {
         Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
     }
 

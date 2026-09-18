@@ -565,12 +565,12 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
-	public void statistiche() {
+	public void mostraStatistiche() {
 		stato = StatoDisplayableCanvas.STATO_STATISTICHE;
 		repaint();
 	}
 
-	public void hiscore() {
+	public void mostraPunteggi() {
 		stato = StatoDisplayableCanvas.STATO_PUNTEGGI;
 		repaint();
 	}
