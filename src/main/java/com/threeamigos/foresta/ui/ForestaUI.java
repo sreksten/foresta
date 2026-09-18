@@ -40,7 +40,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(EventoMessaggio.class, this::gestisciEventoMessaggio);
 		BusEventi.iscriviti(EventoNotificaGlobale.class, this::gestisciEventoNotificaGlobale);
 		BusEventi.iscriviti(EventoParagrafo.class, this::gestisciEventoParagrafo);
-		BusEventi.iscriviti(EventoRichiestaInventario.class, this::gestisciEventoRichiestaInventario);
+		BusEventi.iscriviti(EventoRichiestaAperturaInventarioGruppo.class, this::gestisciEventoRichiestaAperturaInventarioGruppo);
 		BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::gestisciEventoRichiestaReinizializzazioneUI);
 		BusEventi.iscriviti(EventoRichiestaTesto.class, this::gestisciEventoRichiestaTesto);
 		BusEventi.iscriviti(EventoRichiestaSelezioneSlotPerRilettura.class, this::gestisciEventoSelezioneSalvataggio);
@@ -247,7 +247,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		displayableCanvas.notifica(evento.getMessaggio());
 	}
 
-	private void gestisciEventoRichiestaInventario(EventoRichiestaInventario evento) {
+	private void gestisciEventoRichiestaAperturaInventarioGruppo(EventoRichiestaAperturaInventarioGruppo evento) {
 		ComandiPossibili.reimposta();
 		ComandiPossibili.set(evento.getComandiPossibili());
 		impostaAzioni();

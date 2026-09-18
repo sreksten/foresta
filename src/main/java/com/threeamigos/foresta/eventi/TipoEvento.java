@@ -20,7 +20,7 @@ public enum TipoEvento {
     // Azioni del giocatore
 
     // Richiede di interagire con l'inventario
-    RICHIESTA_INVENTARIO,
+    RICHIESTA_APERTURA_INVENTARIO_GRUPPO,
     // Richiede di spostare un oggetto dall'inventario ad un personaggio
     RICHIESTA_SPOSTAMENTO_OGGETTO,
     // L'oggetto può essere spostato dall'inventario ad un personaggio
@@ -28,6 +28,8 @@ public enum TipoEvento {
     // L'oggetto non può essere spostato dall'inventario ad un personaggio
     RIFIUTO_SPOSTAMENTO_OGGETTO,
 
+    // Richiesta di interazione con un commerciante (es l'Alchimista)
+    RICHIESTA_APERTURA_INVENTARIO_COMMERCIANTE,
     // Richiesta di acquisto di un Consumabile da un commerciante
     RICHIESTA_ACQUISTO_CONSUMABILE,
     // L'oggetto può essere acquistato da un commerciante

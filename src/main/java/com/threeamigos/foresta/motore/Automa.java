@@ -241,7 +241,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				if (azione == Comando.INVENTARIO) {
 					statoPrecedente = Stato.IN_LOCAZIONE;
 					stato = Stato.INVENTARIO;
-					richiediAperturaInventario();
+					richiediAperturaInventarioGruppo();
 					processaAzione(null);
 					return;
 				}
@@ -437,7 +437,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				case INVENTARIO:
 					statoPrecedente = Stato.ATTESA_DIREZIONE;
 					stato = Stato.INVENTARIO;
-					richiediAperturaInventario();
+					richiediAperturaInventarioGruppo();
 					processaAzione(null);
 					return;
 				case ACCAMPAMENTO:
@@ -623,7 +623,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case INVENTARIO:
 				Logger.log("Stato INVENTARIO, azione " + azione);
 				if (azione == null) {
-					richiediAperturaInventario();
+					richiediAperturaInventarioGruppo();
 				} else {
 					switch (azione) {
 						case ANNULLA:
@@ -638,7 +638,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 						case PERSONAGGIO_4:
 						case PERSONAGGIO_5:
 							indicePersonaggioInventario = azione.ordinal() - Comando.PERSONAGGIO_1.ordinal();
-							richiediAperturaInventario();
+							richiediAperturaInventarioGruppo();
 							break;
 						default:
 							throw new IllegalArgumentException();
@@ -1081,10 +1081,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	/**
-	 * Apre l'inventario sul personaggio all'indice indicato e ricorda la scelta,
+	 * Apre l'inventario di gruppo sul Personaggio all'indice indicato e ricorda la scelta,
 	 * così che la prossima apertura dell'inventario riparta da lì.
 	 */
-	private void richiediAperturaInventario() {
+	private void richiediAperturaInventarioGruppo() {
 		Collection<Comando> comandiPossibili = new ArrayList<>();
 		int l = gruppo.getNumeroPersonaggi();
 		for (int i = 0; i < l; i++) {
@@ -1096,8 +1096,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		indicePersonaggioInventario = Math.max(0, Math.min(indicePersonaggioInventario, gruppo.getNumeroPersonaggi() - 1));
 		Personaggio personaggioScelto = gruppo.getPersonaggio(indicePersonaggioInventario);
 
-		BusEventi.pubblica(new EventoRichiestaInventario(comandiPossibili,
-				new AutomaInventario(personaggioScelto, gruppo), personaggioScelto));
+		BusEventi.pubblica(new EventoRichiestaAperturaInventarioGruppo(comandiPossibili,
+				new AutomaInventario(personaggioScelto, gruppo)));
 	}
 }
-

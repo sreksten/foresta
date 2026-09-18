@@ -51,7 +51,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoPuliziaCacheDinamicaImmagini.class, this::onEventoPuliziaCacheDinamicaImmagini);
         BusEventi.iscriviti(EventoRichiestaAcquistoArtefatto.class, this::onEventoRichiestaAcquistoArtefatto);
         BusEventi.iscriviti(EventoRichiestaAcquistoConsumabile.class, this::onEventoRichiestaAcquistoConsumabile);
-        BusEventi.iscriviti(EventoRichiestaInventario.class, this::onEventoRichiestaInventario);
+        BusEventi.iscriviti(EventoRichiestaAperturaInventarioGruppo.class, this::onEventoRichiestaAperturaInventarioGruppo);
         BusEventi.iscriviti(EventoRichiestaPrelievoArtefatto.class, this::onEventoRichiestaPrelievoArtefatto);
         BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::onEventoRichiestaReinizializzazioneUI);
         // EventoRichiestaSpostamentoArtefatto è classe astratta
@@ -229,7 +229,7 @@ public class SnifferBusEventi {
                 (incantesimo != null ? (" " + incantesimo) : "") + ", Costo: " + evento.getPrezzo());
     }
 
-    private void onEventoRichiestaInventario(EventoRichiestaInventario evento) {
+    private void onEventoRichiestaAperturaInventarioGruppo(EventoRichiestaAperturaInventarioGruppo evento) {
         Logger.log(headerEvento(evento));
     }
 
