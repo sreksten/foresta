@@ -1,9 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoMessaggio;
-import com.threeamigos.foresta.eventi.EventoMostraFinestra;
-import com.threeamigos.foresta.eventi.EventoParagrafo;
+import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
@@ -11,7 +8,6 @@ import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.offerte.Informazioni;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
-import com.threeamigos.foresta.ui.UI;
 
 import java.util.List;
 
@@ -153,7 +149,7 @@ public class Locanda extends LocazioneBase {
 			} catch (Exception e) {
 				Logger.log(e);
 			}
-			UI.impostaAzioni(Comando.PERGAMENA);
+			BusEventi.pubblica(new EventoComandiDisponibili(Comando.PERGAMENA));
 			stato = StatoInLocanda.ENTRATO;
 			getModelloDati().aggiungiProprieta(LOCANDA_VISITATA, LocazioneMD.AFFERMATIVO);
 			return Stato.IN_LOCAZIONE;

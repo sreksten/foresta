@@ -1,13 +1,13 @@
 package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.EventoComandiDisponibili;
 import com.threeamigos.foresta.eventi.EventoMessaggio;
 import com.threeamigos.foresta.eventi.EventoParagrafo;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.ui.UI;
 
 import java.util.Arrays;
 import java.util.List;
@@ -96,7 +96,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 			} catch (Exception e) {
 				Logger.log(e);
 			}
-			UI.impostaAzioni(Comando.PERGAMENA);
+			BusEventi.pubblica(new EventoComandiDisponibili(Comando.PERGAMENA));
 			stato = StatoDaAlchimista.ENTRATO;
 			return Stato.IN_LOCAZIONE;
 

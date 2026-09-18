@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.motore.ComandiPossibili;
 import com.threeamigos.foresta.motore.Comando;
 
 public class UI {
@@ -36,14 +35,6 @@ public class UI {
 	 */
 	public static void impostaAzioni() {
 		interfacciaUtente.impostaAzioni();
-	}
-
-	/**
-	 * Scorciatoia per impostare i comandi e modificare subito l'interfaccia utente
-	 */
-	public static void impostaAzioni(Comando... comandi) {
-		ComandiPossibili.set(comandi);
-		impostaAzioni();
 	}
 
 }

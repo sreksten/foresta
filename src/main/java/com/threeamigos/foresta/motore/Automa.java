@@ -91,7 +91,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				}
 				GestorePunteggi.addPunteggio(testoDisponibile, Statistiche.getPunti());
 				stato = Stato.PUNTEGGI;
-				UI.impostaAzioni(Comando.PERGAMENA);
+				BusEventi.pubblica(new EventoComandiDisponibili(Comando.PERGAMENA));
 				BusEventi.pubblica(new EventoMostraPunteggi());
 				processaAzione(null);
 				break;
@@ -349,7 +349,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 			case ATTESA_SI_NO:
 				if (azione == null) {
-					UI.impostaAzioni(Comando.SI, Comando.NO);
+					BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
 				} else if (azione != Comando.TIMER) {
 					stato = statoPrecedente;
 					processaAzione(azione);
@@ -594,7 +594,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case MAPPA:
 				Logger.log("Stato MAPPA, azione " + azione);
 				if (azione == null) {
-					UI.impostaAzioni(Comando.SINISTRA, Comando.SU, Comando.GIU, Comando.DESTRA, Comando.SI);
+					BusEventi.pubblica(new EventoComandiDisponibili(Comando.SINISTRA, Comando.SU, Comando.GIU,
+							Comando.DESTRA, Comando.SI));
 					BusEventi.pubblica(new EventoParagrafo(gruppo.getCapo().getNome(
 							Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 							Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " consulta la sua mappa della Foresta."));
@@ -671,7 +672,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case GIOCO_PERSO:
 				BusEventi.pubblica(new EventoRichiestaChiusuraFinestraCombattimento());
 				if (azione == null) {
-					UI.impostaAzioni(Comando.PERGAMENA);
+					BusEventi.pubblica(new EventoComandiDisponibili(Comando.PERGAMENA));
 				} else {
 					stato = Stato.GIOCO_PERSO_2;
 					processaAzione(null);
@@ -680,7 +681,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 			case GIOCO_PERSO_2:
 				if (azione == null) {
-					UI.impostaAzioni(Comando.PERGAMENA);
+					BusEventi.pubblica(new EventoComandiDisponibili(Comando.PERGAMENA));
 					BusEventi.pubblica(new EventoFineGioco(false));
 					temporizzatore.inizia(5_000);
 				} else if (azione == Comando.TIMER) {
@@ -694,7 +695,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case GIOCO_VINTO:
 				BusEventi.pubblica(new EventoRichiestaChiusuraFinestraCombattimento());
 				if (azione == null) {
-					UI.impostaAzioni(Comando.PERGAMENA);
+					BusEventi.pubblica(new EventoComandiDisponibili(Comando.PERGAMENA));
 				} else {
 					stato = Stato.GIOCO_VINTO_2;
 					processaAzione(null);
@@ -705,7 +706,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				if (azione == null) {
 					BusEventi.pubblica(new EventoFineGioco(true));
 					temporizzatore.inizia(5_000);
-					UI.impostaAzioni(Comando.PERGAMENA);
+					BusEventi.pubblica(new EventoComandiDisponibili(Comando.PERGAMENA));
 				} else if (azione == Comando.TIMER) {
 					BusEventi.pubblica(new EventoFineGioco(true));
 				} else {
@@ -725,7 +726,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 						stato = Stato.INTRO;
 					}
 				}
-				UI.impostaAzioni(Comando.PERGAMENA);
+				BusEventi.pubblica(new EventoComandiDisponibili(Comando.PERGAMENA));
 				break;
 
 			case ATTESA_NOME_PUNTEGGI:
@@ -894,20 +895,20 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Comando scegliPersonaggio(boolean ancheSeMorto) {
 		if (gruppo.getNumeroPersonaggiVivi() == 1 && !ancheSeMorto) {
-			Logger.log("Automa::scegliPersonaggio(ancheMorto=" + ancheSeMorto + "): automaticamente PERSONAGGIO_1");
+			BusEventi.pubblica(new EventoMessaggioInterno("Automa::scegliPersonaggio(ancheMorto=false): automaticamente PERSONAGGIO_1"));
 			return Comando.PERSONAGGIO_1;
 		} else {
-			ComandiPossibili.reimposta();
+			List<Comando> comandiPossibili = new ArrayList<>();
 			int i = 0;
 			for (Personaggio personaggioCorrente : gruppo.getPersonaggi()) {
 				if (ancheSeMorto || personaggioCorrente.isVivo()) {
-					ComandiPossibili.add(Comando.ofPersonaggio(i));
+					comandiPossibili.add(Comando.ofPersonaggio(i));
 				}
 				i++;
 			}
-			ComandiPossibili.add(Comando.ANNULLA);
-			Logger.log("Automa::scegliPersonaggio(ancheMorto=" + ancheSeMorto + "): imposto le azioni");
-			UI.impostaAzioni();
+			comandiPossibili.add(Comando.ANNULLA);
+			BusEventi.pubblica(new EventoMessaggioInterno("Automa::scegliPersonaggio(ancheMorto=" + ancheSeMorto + "): imposto le azioni"));
+			BusEventi.pubblica(new EventoComandiDisponibili(comandiPossibili));
 			return null;
 		}
 	}
@@ -928,12 +929,12 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (indiciMorti.size() == 1) {
 			return Comando.ofPersonaggio(indiciMorti.get(0));
 		}
-		ComandiPossibili.reimposta();
+		List<Comando> comandiPossibili = new ArrayList<>();
 		for (int indice : indiciMorti) {
-			ComandiPossibili.add(Comando.ofPersonaggio(indice));
+			comandiPossibili.add(Comando.ofPersonaggio(indice));
 		}
-		ComandiPossibili.add(Comando.ANNULLA);
-		UI.impostaAzioni();
+		comandiPossibili.add(Comando.ANNULLA);
+		BusEventi.pubblica(new EventoComandiDisponibili(comandiPossibili));
 		return null;
 	}
 
