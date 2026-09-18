@@ -241,7 +241,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				if (azione == Comando.INVENTARIO) {
 					statoPrecedente = Stato.IN_LOCAZIONE;
 					stato = Stato.INVENTARIO;
-					UI.inventario();
+					richiediAperturaInventario();
 					processaAzione(null);
 					return;
 				}
@@ -437,7 +437,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				case INVENTARIO:
 					statoPrecedente = Stato.ATTESA_DIREZIONE;
 					stato = Stato.INVENTARIO;
-					UI.inventario();
+					richiediAperturaInventario();
 					processaAzione(null);
 					return;
 				case ACCAMPAMENTO:
@@ -598,7 +598,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					BusEventi.pubblica(new EventoParagrafo(gruppo.getCapo().getNome(
 							Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 							Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " consulta la sua mappa della Foresta."));
-					UI.mappa();
+					BusEventi.pubblica(new EventoRichiestaVisualizzazioneMappa());
 				} else {
 					switch (azione) {
 					case SI:
@@ -623,15 +623,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case INVENTARIO:
 				Logger.log("Stato INVENTARIO, azione " + azione);
 				if (azione == null) {
-					ComandiPossibili.reimposta();
-					int l = gruppo.getNumeroPersonaggi();
-					for (int i = 0; i < l; i++) {
-						ComandiPossibili.add(Comando.ofPersonaggio(i));
-					}
-					ComandiPossibili.add(Comando.ANNULLA);
-					UI.impostaAzioni();
-					UI.inventario();
-					apriInventarioPersonaggio(indicePersonaggioInventario);
+					richiediAperturaInventario();
 				} else {
 					switch (azione) {
 						case ANNULLA:
@@ -645,7 +637,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 						case PERSONAGGIO_3:
 						case PERSONAGGIO_4:
 						case PERSONAGGIO_5:
-							apriInventarioPersonaggio(azione.ordinal() - Comando.PERSONAGGIO_1.ordinal());
+							indicePersonaggioInventario = azione.ordinal() - Comando.PERSONAGGIO_1.ordinal();
+							richiediAperturaInventario();
 							break;
 						default:
 							throw new IllegalArgumentException();
@@ -904,16 +897,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 	}
 
-	/**
-	 * Apre l'inventario sul personaggio all'indice indicato e ricorda la scelta,
-	 * così che la prossima apertura dell'inventario riparta da lì.
-	 */
-	private void apriInventarioPersonaggio(int indice) {
-		indicePersonaggioInventario = Math.max(0, Math.min(indice, gruppo.getNumeroPersonaggi() - 1));
-		Personaggio personaggioScelto = gruppo.getPersonaggio(indicePersonaggioInventario);
-		UI.impostaAutomaInventario(new AutomaInventario(personaggioScelto, gruppo));
-	}
-
 	private Comando scegliPersonaggio(boolean ancheSeMorto) {
 		if (gruppo.getNumeroPersonaggiVivi() == 1 && !ancheSeMorto) {
 			Logger.log("Automa::scegliPersonaggio(ancheMorto=" + ancheSeMorto + "): automaticamente PERSONAGGIO_1");
@@ -1097,6 +1080,24 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		return comandiPossibili;
 	}
 
+	/**
+	 * Apre l'inventario sul personaggio all'indice indicato e ricorda la scelta,
+	 * così che la prossima apertura dell'inventario riparta da lì.
+	 */
+	private void richiediAperturaInventario() {
+		Collection<Comando> comandiPossibili = new ArrayList<>();
+		int l = gruppo.getNumeroPersonaggi();
+		for (int i = 0; i < l; i++) {
+			comandiPossibili.add(Comando.ofPersonaggio(i));
+		}
+		comandiPossibili.add(Comando.ANNULLA);
 
+		// Ultimo personaggio selezionato
+		indicePersonaggioInventario = Math.max(0, Math.min(indicePersonaggioInventario, gruppo.getNumeroPersonaggi() - 1));
+		Personaggio personaggioScelto = gruppo.getPersonaggio(indicePersonaggioInventario);
+
+		BusEventi.pubblica(new EventoRichiestaInventario(comandiPossibili,
+				new AutomaInventario(personaggioScelto, gruppo), personaggioScelto));
+	}
 }
 

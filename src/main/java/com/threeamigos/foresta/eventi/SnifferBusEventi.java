@@ -51,6 +51,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoPuliziaCacheDinamicaImmagini.class, this::onEventoPuliziaCacheDinamicaImmagini);
         BusEventi.iscriviti(EventoRichiestaAcquistoArtefatto.class, this::onEventoRichiestaAcquistoArtefatto);
         BusEventi.iscriviti(EventoRichiestaAcquistoConsumabile.class, this::onEventoRichiestaAcquistoConsumabile);
+        BusEventi.iscriviti(EventoRichiestaInventario.class, this::onEventoRichiestaInventario);
         BusEventi.iscriviti(EventoRichiestaPrelievoArtefatto.class, this::onEventoRichiestaPrelievoArtefatto);
         BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::onEventoRichiestaReinizializzazioneUI);
         // EventoRichiestaSpostamentoArtefatto è classe astratta
@@ -65,6 +66,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoRifiutoVenditaArtefatto.class, this::onEventoRifiutoVenditaArtefatto);
         BusEventi.iscriviti(EventoRichiestaSelezioneSlotPerRilettura.class, this::onEventoRichiestaSelezioneSlotPerRilettura);
         BusEventi.iscriviti(EventoRichiestaSelezioneSlotPerSalvataggio.class, this::onEventoRichiestaSelezioneSlotPerSalvataggio);
+        BusEventi.iscriviti(EventoRichiestaVisualizzazioneMappa.class, this::onEventoRichiestaVisualizzazioneMappa);
         BusEventi.iscriviti(EventoStatoDiGioco.class, this::onEventoStatoDiGioco);
         BusEventi.iscriviti(EventoTestoDisponibile.class, this::onEventoTestoDisponibile);
         BusEventi.iscriviti(EventoValutazioneAttaccante.class, this::onEventoValutazioneAttaccante);
@@ -227,6 +229,10 @@ public class SnifferBusEventi {
                 (incantesimo != null ? (" " + incantesimo) : "") + ", Costo: " + evento.getPrezzo());
     }
 
+    private void onEventoRichiestaInventario(EventoRichiestaInventario evento) {
+        Logger.log(headerEvento(evento));
+    }
+
     private void onEventoRichiestaPrelievoArtefatto(EventoRichiestaPrelievoArtefatto evento) {
         OggettoConPeso oggetto = evento.getOggettoDaSpostare();
         Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di prelevare "
@@ -246,6 +252,10 @@ public class SnifferBusEventi {
     private void onEventoRichiestaSelezioneSlotPerSalvataggio(EventoRichiestaSelezioneSlotPerSalvataggio evento) {
         Logger.log(headerEvento(evento) + "Salvataggi disponibili: " + evento.getSalvataggiDisponibili()
                 .stream().map(TestataSalvataggio::getId).map(Comando::name).collect(Collectors.joining(", ")));
+    }
+
+    private void onEventoRichiestaVisualizzazioneMappa(EventoRichiestaVisualizzazioneMappa evento) {
+        Logger.log(headerEvento(evento));
     }
 
     private void onEventoRichiestaStoccaggioArtefatto(EventoRichiestaStoccaggioArtefatto evento) {

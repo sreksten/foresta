@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
-import com.threeamigos.foresta.motore.AutomaInventario;
 import com.threeamigos.foresta.motore.ComandiPossibili;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -22,27 +21,6 @@ public class UI {
 	 */
 	public static void mostraSchermataGioco() {
 		interfacciaUtente.mostraSchermataGioco();
-	}
-
-	/**
-	 * Mostra la mappa di gioco conosciuta
-	 */
-	public static void mappa() {
-		interfacciaUtente.mappa();
-	}
-
-	/**
-	 * Va nell'inventario
-	 */
-	public static void inventario() {
-		interfacciaUtente.inventario();
-	}
-
-	/**
-	 * Assegna l'automa che gestisce lo scambio di artefatti nella finestra di inventario
-	 */
-	public static void impostaAutomaInventario(AutomaInventario automaInventario) {
-		interfacciaUtente.impostaAutomaInventario(automaInventario);
 	}
 
 	/**

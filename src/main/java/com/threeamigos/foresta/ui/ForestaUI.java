@@ -33,19 +33,18 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 		SwingUtilities.invokeLater(this::createAndShowGUI);
 
-		// EventoCombattimento non ci interessa, solo mostrare i suoi effetti eventuali che vengono pubblicati dal personaggio interessato
 		BusEventi.iscriviti(EventoComandiDisponibili.class, this::gestisciEventoComandiDisponibili);
 		BusEventi.iscriviti(EventoConsumoPuntoAbilita.class, this::gestisciEventoConsumoPuntoAbilita);
-		// EventoCreazionePersonaggio non ci interessa, riguarda il motore
 		BusEventi.iscriviti(EventoFumetto.class, this::gestisciEventoFumetto);
 		BusEventi.iscriviti(EventoInterazioneElementale.class, this::gestisciEventoInterazioneElementale);
 		BusEventi.iscriviti(EventoMessaggio.class, this::gestisciEventoMessaggio);
 		BusEventi.iscriviti(EventoNotificaGlobale.class, this::gestisciEventoNotificaGlobale);
 		BusEventi.iscriviti(EventoParagrafo.class, this::gestisciEventoParagrafo);
+		BusEventi.iscriviti(EventoRichiestaInventario.class, this::gestisciEventoRichiestaInventario);
 		BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::gestisciEventoRichiestaReinizializzazioneUI);
 		BusEventi.iscriviti(EventoRichiestaTesto.class, this::gestisciEventoRichiestaTesto);
-		// EventoValutazioneAttaccante non ci interessa, è il motore AI degli avversari che informa sul suo stato di progressione
 		BusEventi.iscriviti(EventoRichiestaSelezioneSlotPerRilettura.class, this::gestisciEventoSelezioneSalvataggio);
+		BusEventi.iscriviti(EventoRichiestaVisualizzazioneMappa.class, this::gestisciEventoRichiestaVisualizzazioneMappa);
 		BusEventi.iscriviti(EventoStatoDiGioco.class, this::gestisciEventoStatoDiGioco);
 		BusEventi.iscriviti(EventoVariazioneEffettoDiStato.class, this::gestisciEventoVariazioneEffettoDiStato);
 		BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
@@ -140,21 +139,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	@Override
 	public void mostraSchermataGioco() {
 		displayableCanvas.iniziaGioco();
-	}
-
-	@Override
-	public void mappa() {
-		displayableCanvas.mappa();
-	}
-
-	@Override
-	public void inventario() {
-		displayableCanvas.inventario();
-	}
-
-	@Override
-	public void impostaAutomaInventario(AutomaInventario automaInventario) {
-		displayableCanvas.impostaAutomaInventario(automaInventario);
 	}
 
 	@Override
@@ -263,6 +247,14 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		displayableCanvas.notifica(evento.getMessaggio());
 	}
 
+	private void gestisciEventoRichiestaInventario(EventoRichiestaInventario evento) {
+		ComandiPossibili.reimposta();
+		ComandiPossibili.set(evento.getComandiPossibili());
+		impostaAzioni();
+		displayableCanvas.impostaAutomaInventario(evento.getAutomaInventario());
+		displayableCanvas.inventario();
+	}
+
 	private void gestisciEventoRichiestaReinizializzazioneUI(EventoRichiestaReinizializzazioneUI evento) {
 		displayableCanvas.reinizializza();
 		mostraSchermataGioco();
@@ -276,6 +268,10 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		evento.getSalvataggiDisponibili().stream().map(TestataSalvataggio::getId).forEach(ComandiPossibili::add);
 		impostaAzioni();
 		displayableCanvas.selezioneSlotSalvataggioDaCaricare(evento.getSalvataggiDisponibili());
+	}
+
+	private void gestisciEventoRichiestaVisualizzazioneMappa(EventoRichiestaVisualizzazioneMappa evento) {
+		displayableCanvas.mappa();
 	}
 
 	private void gestisciEventoStatoDiGioco(EventoStatoDiGioco evento) {

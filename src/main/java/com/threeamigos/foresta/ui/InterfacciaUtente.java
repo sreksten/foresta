@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
-import com.threeamigos.foresta.motore.AutomaInventario;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
@@ -27,11 +26,6 @@ public interface InterfacciaUtente {
 	void mostraSchermataGioco();
 
 	/**
-	 * Mostra la mappa di gioco conosciuta
-	 */
-    void mappa();
-	
-	/**
 	 * Centra la mappa dopo un eventuale spostamento se non ci stava tutta a schermo
 	 */
     void centraMappa();
@@ -40,16 +34,6 @@ public interface InterfacciaUtente {
 	 * ricezione di Comando.(NORD|SUD|EST|OVEST)
 	 */
     void muoviMappa(Comando direzione);
-
-	/**
-	 * Mostra l'inventario
-	 */
-	void inventario();
-
-	/**
-	 * Assegna l'automa che gestisce lo scambio di artefatti nella finestra di inventario
-	 */
-	void impostaAutomaInventario(AutomaInventario automaScambiatoreArtefatti);
 
 	/**
 	 * Mostra la finestra di scambio artefatti con l'armaiolo
