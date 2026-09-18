@@ -72,7 +72,4 @@ public class UI {
 		interfacciaUtente.preparaLocazione();
 	}
 
-	public static void raccogliOggetto() {
-		interfacciaUtente.raccogliOggetto();
-	}
 }

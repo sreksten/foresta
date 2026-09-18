@@ -52,6 +52,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoParagrafo.class, this::onEventoParagrafo);
         // EventoPersonaggio è classe astratta
         BusEventi.iscriviti(EventoPuliziaCacheDinamicaImmagini.class, this::onEventoPuliziaCacheDinamicaImmagini);
+        BusEventi.iscriviti(EventoRaccoltaOggetti.class, this::onEventoRaccoltaOggetti);
         BusEventi.iscriviti(EventoRichiestaAcquistoArtefatto.class, this::onEventoRichiestaAcquistoArtefatto);
         BusEventi.iscriviti(EventoRichiestaAcquistoConsumabile.class, this::onEventoRichiestaAcquistoConsumabile);
         BusEventi.iscriviti(EventoRichiestaAperturaFinestraCombattimento.class, this::onEventoRichiestaAperturaFinestraCombattimento);
@@ -63,19 +64,19 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoRichiestaRefreshUI.class, this::onEventoRichiestaRefreshUI);
         BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::onEventoRichiestaReinizializzazioneUI);
         // EventoRichiestaSpostamentoArtefatto è classe astratta
+        BusEventi.iscriviti(EventoRichiestaSelezioneSlotPerRilettura.class, this::onEventoRichiestaSelezioneSlotPerRilettura);
+        BusEventi.iscriviti(EventoRichiestaSelezioneSlotPerSalvataggio.class, this::onEventoRichiestaSelezioneSlotPerSalvataggio);
         BusEventi.iscriviti(EventoRichiestaStoccaggioArtefatto.class, this::onEventoRichiestaStoccaggioArtefatto);
         BusEventi.iscriviti(EventoRichiestaTesto.class, this::onEventoRichiestaTesto);
         BusEventi.iscriviti(EventoRichiestaVenditaArtefatto.class, this::onEventoRichiestaVenditaArtefatto);
         BusEventi.iscriviti(EventoRichiestaVenditaArtefatto.class, this::onEventoRichiestaVenditaArtefatto);
+        BusEventi.iscriviti(EventoRichiestaVisualizzazioneMappa.class, this::onEventoRichiestaVisualizzazioneMappa);
         BusEventi.iscriviti(EventoRifiutoAcquistoArtefatto.class, this::onEventoRifiutoAcquistoArtefatto);
         BusEventi.iscriviti(EventoRifiutoAcquistoConsumabile.class, this::onEventoRifiutoAcquistoConsumabile);
         BusEventi.iscriviti(EventoRifiutoPrelievoArtefatto.class, this::onEventoRifiutoPrelievoArtefatto);
         // EventoRifiutoSpostamentoArtefatto è classe astratta
         BusEventi.iscriviti(EventoRifiutoStoccaggioArtefatto.class, this::onEventoRifiutoStoccaggioArtefatto);
         BusEventi.iscriviti(EventoRifiutoVenditaArtefatto.class, this::onEventoRifiutoVenditaArtefatto);
-        BusEventi.iscriviti(EventoRichiestaSelezioneSlotPerRilettura.class, this::onEventoRichiestaSelezioneSlotPerRilettura);
-        BusEventi.iscriviti(EventoRichiestaSelezioneSlotPerSalvataggio.class, this::onEventoRichiestaSelezioneSlotPerSalvataggio);
-        BusEventi.iscriviti(EventoRichiestaVisualizzazioneMappa.class, this::onEventoRichiestaVisualizzazioneMappa);
         BusEventi.iscriviti(EventoStatoDiGioco.class, this::onEventoStatoDiGioco);
         BusEventi.iscriviti(EventoTestoDisponibile.class, this::onEventoTestoDisponibile);
         BusEventi.iscriviti(EventoValutazioneAttaccante.class, this::onEventoValutazioneAttaccante);
@@ -235,6 +236,10 @@ public class SnifferBusEventi {
         int prima = evento.getElementiPrima();
         int dopo = evento.getElementiDopo();
         Logger.log(headerEvento(evento) + "Eliminate " + (prima - dopo) + " immagini dalla cache. Rimanenti: " + dopo);
+    }
+
+    private void onEventoRaccoltaOggetti(EventoRaccoltaOggetti evento) {
+        Logger.log(headerEvento(evento));
     }
 
     private void onEventoRichiestaAcquistoArtefatto(EventoRichiestaAcquistoArtefatto evento) {

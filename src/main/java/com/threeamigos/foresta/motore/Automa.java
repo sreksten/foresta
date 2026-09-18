@@ -374,7 +374,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 								processaAzione(null);
 								break;
 							} else {
-								UI.raccogliOggetto();
+								BusEventi.pubblica(new EventoRaccoltaOggetti());
 								BusEventi.pubblica(new EventoMessaggioInterno("Oggetto raccolto."));
 								locazioneCorrente.rimuoviOggetto();
 							}

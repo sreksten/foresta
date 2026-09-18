@@ -80,7 +80,10 @@ public enum TipoEvento {
 
     // Notifiche dal motore al giocatore riguardanti l'avanzamento del gioco
 
-
+    /**
+     * Raccoglie gli oggetti vinti agli avversari
+     */
+    RACCOLTA_OGGETTI,
     /**
      * Variazione delle gemme disponibili al gruppo
      */

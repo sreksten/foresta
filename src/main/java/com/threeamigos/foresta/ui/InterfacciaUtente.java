@@ -55,5 +55,4 @@ public interface InterfacciaUtente {
 	 */
     void preparaLocazione();
 
-	void raccogliOggetto();
 }

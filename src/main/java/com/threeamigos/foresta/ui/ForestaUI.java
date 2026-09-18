@@ -48,6 +48,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(EventoRichiestaAperturaInventarioFornitore.class, this::gestisciEventoRichiestaAperturaInventarioFornitore);
 		BusEventi.iscriviti(EventoRichiestaAperturaInventarioGruppo.class, this::gestisciEventoRichiestaAperturaInventarioGruppo);
 		BusEventi.iscriviti(EventoRichiestaChiusuraFinestraCombattimento.class, this::gestisciEventoRichiestaChiusuraFinestraCombattimento);
+		BusEventi.iscriviti(EventoRaccoltaOggetti.class, this::gestisciEventoRaccoltaOggetti);
 		BusEventi.iscriviti(EventoRichiestaRefreshUI.class, this::gestisciEventoRichiestaRefreshUI);
 		BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::gestisciEventoRichiestaReinizializzazioneUI);
 		BusEventi.iscriviti(EventoRichiestaTesto.class, this::gestisciEventoRichiestaTesto);
@@ -211,6 +212,10 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	private void gestisciEventoParagrafo(EventoParagrafo evento) {
 		displayableCanvas.notifica("");
 		displayableCanvas.notifica(evento.getMessaggio());
+	}
+
+	private void gestisciEventoRaccoltaOggetti(EventoRaccoltaOggetti evento) {
+		displayableCanvas.raccogliOggetto();
 	}
 
 	private void gestisciEventoRichiestaAperturaInventarioCommerciante(EventoRichiestaAperturaInventarioCommerciante evento) {
@@ -398,11 +403,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 			default:
 				throw new IllegalArgumentException("TipoVariazioneEffettoDiStato non gestito: " + evento.getTipo());
 		}
-	}
-
-	@Override
-	public void raccogliOggetto() {
-		displayableCanvas.raccogliOggetto();
 	}
 
 	private void rinfresca() {
