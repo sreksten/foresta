@@ -68,8 +68,4 @@ public class UI {
 		impostaAzioni();
 	}
 
-	public static void preparaLocazione() {
-		interfacciaUtente.preparaLocazione();
-	}
-
 }

@@ -209,6 +209,10 @@ public enum TipoEvento {
      */
     PERSONAGGIO_CREAZIONE,
     /**
+     * PRepara la locazione corrente per il turno di gioco
+     */
+    PREPARAZIONE_LOCAZIONE,
+    /**
      * Un PNG prende una decisione riguardante un combattimento
      */
     PERSONAGGIO_VALUTAZIONE,

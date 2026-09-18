@@ -43,6 +43,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(EventoMostraSchermataGioco.class, this::gestisciEventoMostraSchermataGioco);
 		BusEventi.iscriviti(EventoNotificaGlobale.class, this::gestisciEventoNotificaGlobale);
 		BusEventi.iscriviti(EventoParagrafo.class, this::gestisciEventoParagrafo);
+		BusEventi.iscriviti(EventoPreparazioneLocazione.class, this::gestisciEventoPreparazioneLocazione);
 		BusEventi.iscriviti(EventoRichiestaAperturaFinestraCombattimento.class, this::gestisciEventoRichiestaAperturaFinestraCombattimento);
 		BusEventi.iscriviti(EventoRichiestaAperturaInventarioCommerciante.class, this::gestisciEventoRichiestaAperturaInventarioCommerciante);
 		BusEventi.iscriviti(EventoRichiestaAperturaInventarioFornitore.class, this::gestisciEventoRichiestaAperturaInventarioFornitore);
@@ -180,11 +181,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		pannelloIcone.impostaAzioni();
 	}
 
-	@Override
-	public void preparaLocazione() {
-		displayableCanvas.preparaLocazione();
-	}
-
 	private void gestisciEventoFumetto(EventoFumetto evento) {
 		displayableCanvas.notificaFumetto(evento.getTesto(), evento.getCoordinateFumetto());
 	}
@@ -212,6 +208,10 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	private void gestisciEventoParagrafo(EventoParagrafo evento) {
 		displayableCanvas.notifica("");
 		displayableCanvas.notifica(evento.getMessaggio());
+	}
+
+	private void gestisciEventoPreparazioneLocazione(EventoPreparazioneLocazione evento) {
+		displayableCanvas.preparaLocazione();
 	}
 
 	private void gestisciEventoRaccoltaOggetti(EventoRaccoltaOggetti evento) {

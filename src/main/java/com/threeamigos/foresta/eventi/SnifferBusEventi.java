@@ -51,6 +51,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoNotificaGlobale.class, this::onEventoNotificaGlobale);
         BusEventi.iscriviti(EventoParagrafo.class, this::onEventoParagrafo);
         // EventoPersonaggio è classe astratta
+        BusEventi.iscriviti(EventoPreparazioneLocazione.class, this::onEventoPreparazioneLocazione);
         BusEventi.iscriviti(EventoPuliziaCacheDinamicaImmagini.class, this::onEventoPuliziaCacheDinamicaImmagini);
         BusEventi.iscriviti(EventoRaccoltaOggetti.class, this::onEventoRaccoltaOggetti);
         BusEventi.iscriviti(EventoRichiestaAcquistoArtefatto.class, this::onEventoRichiestaAcquistoArtefatto);
@@ -230,6 +231,10 @@ public class SnifferBusEventi {
 
     private void onEventoParagrafo(EventoParagrafo evento) {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggio()));
+    }
+
+    private void onEventoPreparazioneLocazione(EventoPreparazioneLocazione evento) {
+        Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
     }
 
     private void onEventoPuliziaCacheDinamicaImmagini(EventoPuliziaCacheDinamicaImmagini evento) {

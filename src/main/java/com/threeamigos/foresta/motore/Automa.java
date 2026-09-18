@@ -210,7 +210,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
 				gruppo.setLocazioneCorrente(locazioneCorrente);
 				locazioneCorrente.crea(gruppo, gruppoAvversario);
-				UI.preparaLocazione();
+				BusEventi.pubblica(new EventoPreparazioneLocazione());
 				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.GRAFICA));
 				BusEventi.pubblica(new EventoParagrafo(LineaTemporale.getDescrizioneOraDelGiorno()));
 				locazioneCorrente.descrivi(gruppo, gruppoAvversario);

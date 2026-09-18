@@ -50,9 +50,4 @@ public interface InterfacciaUtente {
 	 */
     void impostaAzioni();
 
-	/**
-	 * Prepara tutto quel che può servire per disegnare la locazione corrente
-	 */
-    void preparaLocazione();
-
 }
