@@ -2,7 +2,10 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.motore.ComandiPossibili;
+import com.threeamigos.foresta.motore.Logger;
+import com.threeamigos.foresta.motore.Stato;
+import com.threeamigos.foresta.motore.Temporizzabile;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
@@ -147,16 +150,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		if (statoDiGioco == Stato.INTRO) {
 			displayableCanvas.intro();
 		}
-	}
-
-	@Override
-	public void centraMappa() {
-		displayableCanvas.centraMappa();
-	}
-
-	@Override
-	public void muoviMappa(Comando direzione) {
-		displayableCanvas.muoviMappa(direzione);
 	}
 
 	private void gestisciEventoRichiestaTesto(EventoRichiestaTesto evento) {

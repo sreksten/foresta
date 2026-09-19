@@ -86,7 +86,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		md.setPozioniMagia(0);
 		md.setPozioniMagiaGrande(0);
 		md.setCoordinate(Foresta.getCoordinateLibere());
-		Foresta.aggiorna(this);
+		Foresta.aggiornaMappaCircostante(this);
 
 		// FIXME questo è lecito solo finché stiamo debuggando...
 		md.setMonete(9999);
@@ -286,7 +286,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 
 	public final void setCoordinate(CoordinateMD coordinate) {
 		md.setCoordinate(coordinate);
-		Foresta.aggiorna(this);
+		Foresta.aggiornaMappaCircostante(this);
 	}
 
 	public final int getX() {

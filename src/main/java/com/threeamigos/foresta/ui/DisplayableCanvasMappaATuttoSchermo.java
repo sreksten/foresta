@@ -4,126 +4,101 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.ui.sfx.CloudManager;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 class DisplayableCanvasMappaATuttoSchermo implements Finestra {
+
+	private static final int LARGHEZZA_ICONA = ImageCache.mappa.get(ClassiLocazione.BOSCO).getWidth();
+	private static final int ALTEZZA_ICONA = ImageCache.mappa.get(ClassiLocazione.BOSCO).getHeight();
 
 	private final int width;
 	private final int height;
 	private int mappaXOffset;
 	private int mappaYOffset;
 
+	private boolean stoTrascinando;
+	private int ultimaXMouse;
+	private int ultimaYMouse;
+
 	DisplayableCanvasMappaATuttoSchermo(int width, int height) {
 		this.width = width;
 		this.height = height;
 	}
 
-	void centraMappa() {
-		Logger.log("Centro la mappa");
-		mappaXOffset = GruppoGiocatore.getIstanza().getX();
-		mappaYOffset = GruppoGiocatore.getIstanza().getY();
-		InfoMappa infoMappa = new InfoMappa();
-		mappaXOffset = (infoMappa.daX + infoMappa.aX) / 2;
-		mappaYOffset = (infoMappa.daY + infoMappa.aY) / 2;
+	void centraSuGiocatore() {
+		// Ho una mappa che può essere più o meno grande rispetto a uno schermo.
+		// Le dimensioni dello schermo sono width e height.
+		// L'immagine che rappresenta la mappa ha dimensioni:
+		int dimensioneMappaX = Foresta.getDimensioneX() * LARGHEZZA_ICONA;
+		int dimensioneMappaY = Foresta.getDimensioneY() * ALTEZZA_ICONA;
+		// Il giocatore rappresentato sulla mappa si trova in posizione:
+		int posizioneXGiocatoreSuMappa = GruppoGiocatore.getIstanza().getX() * LARGHEZZA_ICONA +
+				LARGHEZZA_ICONA / 2;
+		int posizioneYGiocatoreSuMappa = GruppoGiocatore.getIstanza().getY() * ALTEZZA_ICONA +
+				ALTEZZA_ICONA / 2;
+		// Vogliamo rappresentare la mappa a video inizialmente con il giocatore
+		// posizionato al centro.
+		if (dimensioneMappaX <= width) {
+			// Se la larghezza della mappa è inferiore a quella dello schermo allora
+			// l'offset x è centrato rispetto allo schermo.
+			mappaXOffset = (width - dimensioneMappaX) / 2;
+		} else {
+			// 1. Calcoliamo la posizione teorica per mettere il giocatore al centro esatto della width dello schermo
+			int offsetTeoricoX = (width / 2) - posizioneXGiocatoreSuMappa;
+
+			// 2. Blocchiamo l'offset in modo che non superi lo 0 (bordo sinistro)
+			// e non scenda sotto la differenza minima (bordo destro)
+			mappaXOffset = Math.max(width - dimensioneMappaX, Math.min(0, offsetTeoricoX));
+		}
+
+		if (dimensioneMappaY <= height) {
+			// Se l'altezza della mappa è inferiore a quella dello schermo allora
+			// l'offset y è centrato rispetto allo schermo.
+			mappaYOffset = (height - dimensioneMappaY) / 2;
+		} else {
+			// 1. Calcoliamo la posizione teorica per mettere il giocatore al centro esatto della height dello schermo
+			int offsetTeoricoY = (height / 2) - posizioneYGiocatoreSuMappa;
+
+			// 2. Blocchiamo l'offset in modo che non superi lo 0 (bordo superiore)
+			// e non scenda sotto la differenza minima (bordo inferiore)
+			mappaYOffset = Math.max(height - dimensioneMappaY, Math.min(0, offsetTeoricoY));
+		}
 	}
 
 	void muoviMappa(Comando direzione) {
-		InfoMappa infoMappa = new InfoMappa();
-		if (direzione == Comando.SINISTRA) {
-			Logger.log("Xoffset: " + mappaXOffset);
-			if (infoMappa.daX > Foresta.getMinXConosciuta()) {
-				mappaXOffset--;
-				Logger.log("infoMappa.daX = " + infoMappa.daX + ", mappa.getMinXConosciuta = " + Foresta.getMinXConosciuta() + ", posso andare a ovest. Nuovo Xoffset = " + mappaXOffset);
-			} else {
-				Logger.log("infoMappa.daX = " + infoMappa.daX + ", mappa.getMinXConosciuta = " + Foresta.getMinXConosciuta() + ", NON posso andare a ovest");
-			}
-		} else if (direzione == Comando.SU) {
-			Logger.log("Yoffset: " + mappaYOffset);
-			if (infoMappa.daY > Foresta.getMinYConosciuta()) {
-				mappaYOffset--;
-				Logger.log("infoMappa.daY = " + infoMappa.daY + ", mappa.getMinYConosciuta = " + Foresta.getMinYConosciuta() + ", posso andare a nord. Nuovo Yoffset = " + mappaYOffset);
-			} else {
-				Logger.log("infoMappa.daY = " + infoMappa.daY + ", mappa.getMinYConosciuta = " + Foresta.getMinYConosciuta() + ", NON posso andare a nord");
-			}
-		} else if (direzione == Comando.GIU) {
-			Logger.log("Yoffset: " + mappaYOffset);
-			if (infoMappa.aY < Foresta.getMaxYConosciuta()) {
-				mappaYOffset++;
-				Logger.log("infoMappa.aY = " + infoMappa.aY + ", mappa.getMaxYConosciuta = " + Foresta.getMaxYConosciuta() + ", posso andare a sud. Nuovo Yoffset = " + mappaYOffset);
-			} else {
-				Logger.log("infoMappa.aY = " + infoMappa.aY + ", mappa.getMaxYConosciuta = " + Foresta.getMaxYConosciuta() + ", NON posso andare a sud");
-			}
-		} else if (direzione == Comando.DESTRA) {
-			Logger.log("Xoffset: " + mappaXOffset);
-			if (infoMappa.aX < Foresta.getMaxXConosciuta()) {
-				mappaXOffset++;
-				Logger.log("infoMappa.aX = " + infoMappa.aX + ", mappa.getMaxXConosciuta = " + Foresta.getMaxXConosciuta() + ", posso andare a est. Nuovo Xoffset = " + mappaXOffset);
-			} else {
-				Logger.log("infoMappa.aX = " + infoMappa.aX + ", mappa.getMaxXConosciuta = " + Foresta.getMaxXConosciuta() + ", NON posso andare a est");
-			}
-		}
 	}
-	
-	void disegnaMappaATuttoSchermo(Graphics2D graphics) {
 
+	private Image costruisciMappa() {
+
+		BufferedImage image = new BufferedImage(Foresta.getDimensioneX() * LARGHEZZA_ICONA,
+				Foresta.getDimensioneY() * ALTEZZA_ICONA, BufferedImage.TYPE_INT_ARGB);
 		CoordinateMD coordinateGruppo = GruppoGiocatore.getIstanza().getCoordinate();
-		InfoMappa infoMappa = new InfoMappa();
 
-		CloudManager.assicuraGenerate(width, height, infoMappa.larghezzaIcona, infoMappa.altezzaIcona);
+		Graphics2D graphics = image.createGraphics();
 
-		int coordinataSchermoX = (width - (infoMappa.aX - infoMappa.daX + 1) * infoMappa.larghezzaIcona) >> 1;
-		int coordinataInizialeY = (height - (infoMappa.aY - infoMappa.daY + 1) * infoMappa.altezzaIcona) >> 1;
-
-		for (int x = infoMappa.daX; x <= infoMappa.aX; x++) {
-			int coordinataSchermoY = coordinataInizialeY;
-			for (int y = infoMappa.daY; y <= infoMappa.aY; y++) {
+		for (int x = 0; x < Foresta.getDimensioneX(); x++) {
+			for (int y = 0; y < Foresta.getDimensioneY(); y++) {
+				int coordinateX = x * LARGHEZZA_ICONA;
+				int coordinateY = y * ALTEZZA_ICONA;
 				CoordinateMD coordinateCorrenti = new CoordinateMD(x, y);
 				if (coordinateCorrenti.equals(coordinateGruppo)) {
 					if ((System.currentTimeMillis() / 1000) % 2 == 0) {
-						graphics.drawImage(ImageCache.segnalino, coordinataSchermoX, coordinataSchermoY, null);
+						graphics.drawImage(ImageCache.segnalino, coordinateX, coordinateY, null);
 					}
 				} else if (Foresta.isLocazioneConosciuta(coordinateCorrenti)) {
 					ClassiLocazione classeLocazione = Foresta.getLocazione(coordinateCorrenti);
-					graphics.drawImage(ImageCache.mappa.get(classeLocazione), coordinataSchermoX, coordinataSchermoY, null);
+					graphics.drawImage(ImageCache.mappa.get(classeLocazione), coordinateX, coordinateY, null);
 					if (Foresta.isLocazioneVisitata(new CoordinateMD(x, y))) {
-						scurisci(graphics, coordinataSchermoX, coordinataSchermoY, infoMappa.larghezzaIcona, infoMappa.altezzaIcona, 50);
+						scurisci(graphics, coordinateX, coordinateY, LARGHEZZA_ICONA, ALTEZZA_ICONA, 50);
 					}
 				}
-				coordinataSchermoY += infoMappa.altezzaIcona;
 			}
-			coordinataSchermoX += infoMappa.larghezzaIcona;
 		}
-
-		// (Opzionale) Per vedere visivamente dove finisce il riquadro
-		//graphics.setColor(Color.RED); graphics.drawRect(clipRiquadro.x, clipRiquadro.y, clipRiquadro.width, clipRiquadro.height);
-
-		// Salva lo stato originale della Clip e del Composite
-		Shape originalClip = graphics.getClip();
-		Composite originalComposite = graphics.getComposite();
-
-		// Applica la clip sulla mappa
-		int mappaWidth = (infoMappa.aX - infoMappa.daX + 1) * infoMappa.larghezzaIcona;
-		int mappaHeight = (infoMappa.aY - infoMappa.daY + 1) * infoMappa.altezzaIcona;
-		int mappaStartX = (width - mappaWidth) >> 1;
-		int mappaStartY = (height - mappaHeight) >> 1;
-		graphics.clipRect(mappaStartX, mappaStartY, mappaWidth, mappaHeight);
-
-		// Imposta la trasparenza e disegna le nuvole
-		graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.45f));
-
-		CloudManager.disegna(graphics, infoMappa.daX, infoMappa.daY, mappaStartX, mappaStartY,
-				infoMappa.larghezzaIcona, infoMappa.altezzaIcona);
-
-		// Ripristina la clip e il composite originali
-		graphics.setComposite(originalComposite);
-		graphics.setClip(originalClip);
-
-		// Aggiorna la posizione delle nuvolette
-		CloudManager.aggiorna();
+		graphics.dispose();
+		return image;
 	}
 
 	private void scurisci(Graphics2D g, int x, int y, int width, int height, int percentualeOscuramento) {
@@ -135,62 +110,72 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 		g.fillRect(x, y, width, height);
 	}
 
-	private class InfoMappa {
+	void disegnaMappaATuttoSchermo(Graphics2D graphics) {
 
-		private final int larghezzaIcona;
-		private final int altezzaIcona;
-        private int daX;
-		private int aX;
-		private int daY;
-		private int aY;
-		
-		InfoMappa() {
-			
-			larghezzaIcona = ImageCache.mappa.get(ClassiLocazione.BOSCO).getWidth();
-			altezzaIcona = ImageCache.mappa.get(ClassiLocazione.BOSCO).getHeight();
+		Image image = costruisciMappa();
 
-            int quanteLocazioniLungoX = width / larghezzaIcona;
-			if (quanteLocazioniLungoX >= Foresta.getDimensioneX()) {
-				quanteLocazioniLungoX = Foresta.getDimensioneX();
-			}
+		graphics.drawImage(image, mappaXOffset, mappaYOffset, null);
 
-            int quanteLocazioniLungoY = height / altezzaIcona;
-			if (quanteLocazioniLungoY >= Foresta.getDimensioneY()) {
-				quanteLocazioniLungoY = Foresta.getDimensioneY();
-			}
+	}
 
-			if (quanteLocazioniLungoX >= Foresta.getDimensioneX()) {
-				daX = Foresta.getMinXConosciuta();
-				aX = Foresta.getMaxXConosciuta();
+	@Override
+	public void processaPressione(int x, int y, Finestra.Tasto tasto) {
+		if (tasto == Tasto.SINISTRO) {
+			stoTrascinando = true;
+			ultimaXMouse = x;
+			ultimaYMouse = y;
+		}
+	}
+
+	@Override
+	public void processaRilascio(int x, int y, Finestra.Tasto tasto) {
+		if (tasto == Tasto.SINISTRO) {
+			stoTrascinando = false;
+		}
+	}
+
+	@Override
+	public void processaTrascinamento(int x, int y) {
+		if (stoTrascinando) {
+			// 1. Calcoliamo il delta (differenza rispetto alla posizione precedente)
+			int deltaX = x - ultimaXMouse;
+			int deltaY = y - ultimaYMouse;
+
+			// Aggiorniamo la posizione precedente
+			ultimaXMouse = x;
+			ultimaYMouse = y;
+
+			// 2. Applichiamo lo spostamento del mouse: il punto della mappa sotto il
+			// cursore deve restare sotto il cursore, quindi l'offset segue il delta.
+			mappaXOffset += deltaX;
+			mappaYOffset += deltaY;
+
+			// Ricalcoliamo al volo le dimensioni reali della mappa
+			int dimensioneMappaX = Foresta.getDimensioneX() * LARGHEZZA_ICONA;
+			int dimensioneMappaY = Foresta.getDimensioneY() * ALTEZZA_ICONA;
+
+			// 3. APPLICAZIONE DEL CLAMPING SULL'ASSE X
+			if (dimensioneMappaX <= width) {
+				// Se la mappa è più piccola dello schermo, costringiamo l'offset al centro fisso
+				mappaXOffset = (width - dimensioneMappaX) / 2;
 			} else {
-				daX = mappaXOffset - quanteLocazioniLungoX / 2;
-				if (daX < 0) {
-					daX = 0;
-					aY = quanteLocazioniLungoY - 1;
-				} else {
-					aX = daX + quanteLocazioniLungoX - 1;
-					if (aX >= Foresta.getDimensioneX()) {
-						aX = Foresta.getDimensioneX() - 1;
-						daX = aX - quanteLocazioniLungoX + 1; 				
-					}
-				}
+				// Se è più grande, impediamo di trascinare oltre il bordo sinistro (0) o destro (width - dimensioneMappaX)
+				mappaXOffset = Math.max(width - dimensioneMappaX, Math.min(0, mappaXOffset));
 			}
-			if (quanteLocazioniLungoY >= Foresta.getDimensioneY()) {
-				daY = Foresta.getMinYConosciuta();
-				aY = Foresta.getMaxYConosciuta();
+
+			// 4. APPLICAZIONE DEL CLAMPING SULL'ASSE Y
+			if (dimensioneMappaY <= height) {
+				// Se la mappa è più bassa dello schermo, la costringiamo al centro fisso
+				mappaYOffset = (height - dimensioneMappaY) / 2;
 			} else {
-				daY = mappaYOffset - (quanteLocazioniLungoY / 2);
-				if (daY < 0) {
-					daY = 0;
-					aY = quanteLocazioniLungoY - 1;
-				} else {
-					aY = daY + quanteLocazioniLungoY - 1;
-					if (aY >= Foresta.getDimensioneY()) {
-						aY = Foresta.getDimensioneY() - 1;
-						daY = aY - quanteLocazioniLungoY + 1;
-					}
-				}
+				// Se è più grande, impediamo di trascinare oltre il bordo superiore (0) o inferiore (height - dimensioneMappaY)
+				mappaYOffset = Math.max(height - dimensioneMappaY, Math.min(0, mappaYOffset));
 			}
 		}
+	}
+
+	@Override
+	public void processaDoppioClick(int x, int y, Finestra.Tasto tasto) {
+		centraSuGiocatore();
 	}
 }

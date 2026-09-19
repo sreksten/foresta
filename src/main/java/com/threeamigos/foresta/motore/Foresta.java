@@ -21,6 +21,9 @@ import java.util.List;
 
 public class Foresta {
 
+	private static final int DIMENSIONE_X = 50;
+	private static final int DIMENSIONE_Y = 50;
+
 	private Foresta() {
 	}
 
@@ -107,10 +110,7 @@ public class Foresta {
 		RegistroArtefatti.reimposta();
 		Statistiche.reimposta();
 
-		//TODO quando tutti i modelli dati sono stati creati spostare reimposta su ModelloDati
-		final int dimensioneX = 20;
-		final int dimensioneY = 20;
-		getForestaMD().reimposta(dimensioneX, dimensioneY);
+		getForestaMD().reimposta(DIMENSIONE_X, DIMENSIONE_Y);
 
 		int numeroCitta = 0;
 		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
@@ -311,7 +311,7 @@ public class Foresta {
 	/**
 	 * Questa funzione viene richiamata ogni volta che un gruppo si sposta
 	 */
-	public static void aggiorna(GruppoGiocatore gruppo) {
+	public static void aggiornaMappaCircostante(GruppoGiocatore gruppo) {
 		int x = gruppo.getX();
 		int y = gruppo.getY();
 		int daX = x - 3;

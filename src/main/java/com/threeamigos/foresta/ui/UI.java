@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.motore.Comando;
-
 public class UI {
 
 	private UI() {
@@ -11,21 +9,6 @@ public class UI {
 
 	public static void impostaInterfacciaUtente(InterfacciaUtente userInterface) {
 		interfacciaUtente = userInterface;
-	}
-
-	/**
-	 * Centra la mappa dopo un eventuale spostamento se non ci stava tutta a schermo
-	 */
-	public static void centraMappa() {
-		interfacciaUtente.centraMappa();
-	}
-
-	/**
-	 * Muove la visuale della mappa di gioco conosciuta su ricezione di
-	 * Comando.(NORD|SUD|EST|OVEST)
-	 */
-	public static void muoviMappa(Comando direzione) {
-		interfacciaUtente.muoviMappa(direzione);
 	}
 
 	/**

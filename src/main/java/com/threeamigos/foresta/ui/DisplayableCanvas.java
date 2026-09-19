@@ -2,7 +2,10 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
+import com.threeamigos.foresta.motore.AutomaInventario;
+import com.threeamigos.foresta.motore.Comando;
+import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -526,13 +529,13 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
-	public void muoviMappa(Comando direzione) {
+	public void spostaMappa(Comando direzione) {
 		mappaATuttoSchermo.muoviMappa(direzione);
 		repaint();
 	}
 
 	public void centraMappa() {
-		mappaATuttoSchermo.centraMappa();
+		mappaATuttoSchermo.centraSuGiocatore();
 	}
 
 	public void selezioneSlotSalvataggioDaSalvare() {
@@ -583,7 +586,6 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void notifica(String messaggio) {
 		riquadroTesto.addString(messaggio);
-		Logger.log("Nuovo messaggio: " + messaggio);
 		repaint();
 	}
 

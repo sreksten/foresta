@@ -238,6 +238,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				break;
 
 			case IN_LOCAZIONE:
+				Logger.log("Coordinate conosciute foresta: (" +
+						Foresta.getMinXConosciuta() + ", " + Foresta.getMinYConosciuta() + ") -> (" + Foresta.getMaxXConosciuta() + ", " + Foresta.getMaxYConosciuta() + ")");
 				if (azione == Comando.INVENTARIO) {
 					statoPrecedente = Stato.IN_LOCAZIONE;
 					stato = Stato.INVENTARIO;
@@ -432,7 +434,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				case MAPPA:
 					statoPrecedente = Stato.ATTESA_DIREZIONE;
 					stato = Stato.MAPPA;
-					UI.centraMappa();
 					processaAzione(null);
 					return;
 				case INVENTARIO:
@@ -594,29 +595,19 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case MAPPA:
 				Logger.log("Stato MAPPA, azione " + azione);
 				if (azione == null) {
-					BusEventi.pubblica(new EventoComandiDisponibili(Comando.SINISTRA, Comando.SU, Comando.GIU,
-							Comando.DESTRA, Comando.SI));
+					BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI));
 					BusEventi.pubblica(new EventoParagrafo(gruppo.getCapo().getNome(
 							Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 							Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " consulta la sua mappa della Foresta."));
 					BusEventi.pubblica(new EventoRichiestaVisualizzazioneMappa());
 				} else {
-					switch (azione) {
-					case SI:
-						stato = statoPrecedente;
-						BusEventi.pubblica(new EventoMostraSchermataGioco());
-						processaAzione(null);
-						break;
-					case SINISTRA:
-					case SU:
-					case GIU:
-					case DESTRA:
-						UI.muoviMappa(azione);
-						UI.impostaAzioni();
-						break;
-					default:
-						throw new IllegalArgumentException();
-					}
+                    if (azione == Comando.SI) {
+                        stato = statoPrecedente;
+                        BusEventi.pubblica(new EventoMostraSchermataGioco());
+                        processaAzione(null);
+                    } else {
+                        throw new IllegalArgumentException();
+                    }
 				}
 				break;
 

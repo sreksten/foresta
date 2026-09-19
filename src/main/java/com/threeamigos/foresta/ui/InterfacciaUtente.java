@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.motore.Comando;
-
 public interface InterfacciaUtente {
 
 	enum Finestra {
@@ -17,16 +15,6 @@ public interface InterfacciaUtente {
 		MAPPA_A_TUTTO_SCHERMO,
 		INVENTARIO
     }
-
-	/**
-	 * Centra la mappa dopo un eventuale spostamento se non ci stava tutta a schermo
-	 */
-    void centraMappa();
-
-	/** Muove la visuale della mappa di gioco conosciuta su
-	 * ricezione di Comando.(NORD|SUD|EST|OVEST)
-	 */
-    void muoviMappa(Comando direzione);
 
 	/**
 	 * Propone al giocatore una serie di possibili azioni tra le quali
