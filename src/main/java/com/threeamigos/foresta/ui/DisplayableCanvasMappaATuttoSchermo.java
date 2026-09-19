@@ -5,6 +5,7 @@ import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.ui.sfx.CloudManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -116,6 +117,30 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 
 		graphics.drawImage(image, mappaXOffset, mappaYOffset, null);
 
+		CloudManager.assicuraGenerate(width, height, LARGHEZZA_ICONA, ALTEZZA_ICONA);
+
+		// Salva lo stato originale della Clip e del Composite
+		Shape originalClip = graphics.getClip();
+		Composite originalComposite = graphics.getComposite();
+
+		// Applica la clip sull'area occupata dalla mappa, in modo che le nuvole non
+		// vengano disegnate al di fuori di essa quando la mappa è più piccola dello schermo
+		int dimensioneMappaX = Foresta.getDimensioneX() * LARGHEZZA_ICONA;
+		int dimensioneMappaY = Foresta.getDimensioneY() * ALTEZZA_ICONA;
+		graphics.clipRect(mappaXOffset, mappaYOffset, dimensioneMappaX, dimensioneMappaY);
+
+		// Imposta la trasparenza e disegna le nuvole condivise con il riquadro mappa,
+		// allineate rispetto alla cella (0,0) della foresta che qui corrisponde sempre
+		// all'angolo in alto a sinistra dell'immagine disegnata a (mappaXOffset, mappaYOffset)
+		graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.45f));
+		CloudManager.disegna(graphics, 0, 0, mappaXOffset, mappaYOffset, LARGHEZZA_ICONA, ALTEZZA_ICONA);
+
+		// Ripristina la clip e il composite originali
+		graphics.setComposite(originalComposite);
+		graphics.setClip(originalClip);
+
+		// Aggiorna la posizione delle nuvolette
+		CloudManager.aggiorna();
 	}
 
 	@Override
