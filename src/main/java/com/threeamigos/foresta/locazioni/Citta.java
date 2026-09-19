@@ -71,8 +71,8 @@ public abstract class Citta extends LocazioneUnica {
 	}
 
 	private void impostaAzioniCitta() {
-		ComandiPossibili.set(Comando.LOCANDA, Comando.ALCHIMISTA, Comando.ARMAIOLO,
-				Comando.INVENTARIO, Comando.ESCI_DA_CITTA);
+		BusEventi.pubblica(new EventoComandiDisponibili(Comando.LOCANDA, Comando.ALCHIMISTA, Comando.ARMAIOLO,
+				Comando.INVENTARIO, Comando.ESCI_DA_CITTA));
 	}
 	
 	@Override

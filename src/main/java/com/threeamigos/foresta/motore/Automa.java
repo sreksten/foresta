@@ -16,7 +16,6 @@ import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.tools.*;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
-import com.threeamigos.foresta.ui.UI;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -230,7 +229,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					processaAzione(null);
 					break;
 				}
-				UI.impostaAzioni();
 				/*
 				 * A questo punto il giocatore si trova davanti la scelta delle
 				 * azioni che puo' intraprendere.
@@ -265,7 +263,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 						break;
 					}
 				}
-				UI.impostaAzioni();
 				break;
 
 			case IN_COMBATTIMENTO:
@@ -281,7 +278,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					// esce da IN_COMBATTIMENTO (per esempio per scegliere chi combatte):
 					// qui lo si riavvia, dato che i round sono guidati da Comando.TIMER.
 					temporizzatore.inizia(1_000);
-					UI.impostaAzioni();
 				}
 				break;
 
@@ -430,6 +426,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 			case ATTESA_PASSI:
 				// Occorre memorizzare l'informazione sulla direzione
+				Collection<Comando> comandiPossibiliPerNumeroPassi = null;
 				switch (azione) {
 				case MAPPA:
 					statoPrecedente = Stato.ATTESA_DIREZIONE;
@@ -477,19 +474,19 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					return;
 				case NORD:
 					direzione = Comando.NORD;
-					impostaAzioniPerNumeroPassi(gruppo.getMaxPassiNord());
+					comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiNord());
 					break;
 				case EST:
 					direzione = Comando.EST;
-					impostaAzioniPerNumeroPassi(gruppo.getMaxPassiEst());
+					comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiEst());
 					break;
 				case SUD:
 					direzione = Comando.SUD;
-					impostaAzioniPerNumeroPassi(gruppo.getMaxPassiSud());
+					comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiSud());
 					break;
 				case OVEST:
 					direzione = Comando.OVEST;
-					impostaAzioniPerNumeroPassi(gruppo.getMaxPassiOvest());
+					comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiOvest());
 					break;
 				case AIUTO:
 					for (Personaggio personaggio : gruppo.getPersonaggi()) {
@@ -509,7 +506,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					break;
 				}
 				stato = Stato.IN_CAMMINO;
-				UI.impostaAzioni();
+				if (comandiPossibiliPerNumeroPassi != null) {
+					BusEventi.pubblica(new EventoComandiDisponibili(comandiPossibiliPerNumeroPassi));
+				}
 				break;
 
 			case IN_CAMMINO:
@@ -967,23 +966,24 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gruppo.subIncantesimi(ClasseIncantesimo.RESURREZIONE, 1);
 	}
 
-	private void impostaAzioniPerNumeroPassi(int numeroPassi) {
-		ComandiPossibili.reimposta();
+	private Collection<Comando> getComandiPossibiliPerNumeroPassi(int numeroPassi) {
+		List<Comando> comandiPossibili = new ArrayList<>();
 		if (numeroPassi > 0) {
-			ComandiPossibili.add(Comando.NUMERO_1);
+			comandiPossibili.add(Comando.NUMERO_1);
 		}
 		if (numeroPassi > 1) {
-			ComandiPossibili.add(Comando.NUMERO_2);
+			comandiPossibili.add(Comando.NUMERO_2);
 		}
 		if (numeroPassi > 2) {
-			ComandiPossibili.add(Comando.NUMERO_3);
+			comandiPossibili.add(Comando.NUMERO_3);
 		}
 		if (numeroPassi > 3) {
-			ComandiPossibili.add(Comando.NUMERO_4);
+			comandiPossibili.add(Comando.NUMERO_4);
 		}
 		if (numeroPassi > 4) {
-			ComandiPossibili.add(Comando.NUMERO_5);
+			comandiPossibili.add(Comando.NUMERO_5);
 		}
+		return comandiPossibili;
 	}
 
 	private boolean leggi(Comando azione) {

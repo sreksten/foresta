@@ -9,6 +9,7 @@ import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -223,48 +224,50 @@ public class Alchimista extends LocazioneBase implements Locazione {
 	}
 
 	private void imposta() {
-		ComandiPossibili.reimposta();
+		List<Comando> comandiPossibili = new ArrayList<>();
 		if (ripristinareMagia) {
 			int l = gruppo.getNumeroPersonaggi();
 			Personaggio personaggio;
 			for (int i = 0; i < l; i++) {
 				personaggio = gruppo.getPersonaggio(i);
 				if (personaggio.isVivo() && personaggio.getMagia() < personaggio.getMagiaMassima()) {
-					ComandiPossibili.add(Comando.ofPersonaggio(i));
+					comandiPossibili.add(Comando.ofPersonaggio(i));
 				}
 			}
 		}
 		if (ripristinareMagiaGruppo) {
-			ComandiPossibili.add(Comando.GRUPPO);
+			comandiPossibili.add(Comando.GRUPPO);
 		}
 		if (incantesimiAcquistabili) {
-			ComandiPossibili.add(Comando.INCANTESIMO);
+			comandiPossibili.add(Comando.INCANTESIMO);
 		}
 		if (pozioniAcquistabili) {
 			if (gruppo.getMonete() >= Costanti.COSTO_POZIONE_SALUTE) {
-				ComandiPossibili.add(Comando.POZIONE_SALUTE);
+				comandiPossibili.add(Comando.POZIONE_SALUTE);
 			}
 			if (gruppo.getMonete() >= Costanti.COSTO_POZIONE_SALUTE_GRANDE) {
-				ComandiPossibili.add(Comando.POZIONE_SALUTE_GRANDE);
+				comandiPossibili.add(Comando.POZIONE_SALUTE_GRANDE);
 			}
 			if (gruppo.getMonete() >= Costanti.COSTO_POZIONE_MAGIA) {
-				ComandiPossibili.add(Comando.POZIONE_MAGIA);
+				comandiPossibili.add(Comando.POZIONE_MAGIA);
 			}
 			if (gruppo.getMonete() >= Costanti.COSTO_POZIONE_MAGIA_GRANDE) {
-				ComandiPossibili.add(Comando.POZIONE_MAGIA_GRANDE);
+				comandiPossibili.add(Comando.POZIONE_MAGIA_GRANDE);
 			}
 		}
-		ComandiPossibili.add(Comando.NO_INCANTESIMO);
+		comandiPossibili.add(Comando.NO_INCANTESIMO);
+		BusEventi.pubblica(new EventoComandiDisponibili(comandiPossibili));
 	}
 
 	private void impostaIncantesimi() {
-		ComandiPossibili.reimposta();
+		List<Comando> comandiPossibili = new ArrayList<>();
 		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
 			if (classeIncantesimo.getCostoAcquisto() <= gruppo.getMonete()) {
-				ComandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
+				comandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
 			}
 		}
-		ComandiPossibili.add(Comando.NO_INCANTESIMO);
+		comandiPossibili.add(Comando.NO_INCANTESIMO);
+		BusEventi.pubblica(new EventoComandiDisponibili(comandiPossibili));
 	}
 
 	public TipoRiposo getTipoRiposo() {

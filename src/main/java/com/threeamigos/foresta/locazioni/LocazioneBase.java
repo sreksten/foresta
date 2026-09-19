@@ -340,14 +340,15 @@ public abstract class LocazioneBase implements Locazione {
 					Logger.log("Incantesimo di tipo " + (tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI ? "SINGOLO_SOLO_VIVI" : "SINGOLO_QUALSIASI"));
 					int l = gruppo.getNumeroPersonaggi();
 					Personaggio personaggio;
-					ComandiPossibili.reimposta();
+					List<Comando> comandiPossibiliBersaglio = new ArrayList<>();
 					for (int i = 0; i < l; i++) {
 						personaggio = gruppo.getPersonaggio(i);
 						Logger.log("tipo == Incantesimo.SINGOLO_QUALSIASI || p.isVivo() ? " + ((tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo())));
 						if (tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo()) {
-							ComandiPossibili.add(Comando.ofPersonaggio(i));
+							comandiPossibiliBersaglio.add(Comando.ofPersonaggio(i));
 						}
 					}
+					BusEventi.pubblica(new EventoComandiDisponibili(comandiPossibiliBersaglio));
 					statoLocazione = StatoLocazione.SU_CHI_FORMULA;
 					gruppoBersaglio = gruppo;
 					return Stato.SCELTA_PERSONAGGIO_QUALSIASI;
@@ -425,7 +426,7 @@ public abstract class LocazioneBase implements Locazione {
 						offerta.accetta(gruppo, gruppoAvversario);
 					} else {
 						BusEventi.pubblica(new EventoMessaggio("Accetta?"));
-						ComandiPossibili.set(Comando.SI, Comando.NO);
+						BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
 						statoLocazione = StatoLocazione.ACCETTA_OFFERTA;
 						return Stato.IN_LOCAZIONE;
 					}
@@ -467,7 +468,7 @@ public abstract class LocazioneBase implements Locazione {
 						offerta.accetta(gruppo, gruppoAvversario);
 					} else {
 						BusEventi.pubblica(new EventoMessaggio("Accetta?"));
-						ComandiPossibili.set(Comando.SI, Comando.NO);
+						BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
 						statoLocazione = StatoLocazione.ACCETTA_OFFERTA;
 						return Stato.IN_LOCAZIONE;
 					}
@@ -589,54 +590,55 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	private void impostaComandiPossibili() {
-		ComandiPossibili.reimposta();
+		List<Comando> comandiPossibili = new ArrayList<>();
 		// Possiamo combattere? Oppure, vogliamo cambiare chi combatte?
 		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO || gruppo.getNumeroPersonaggiVivi() > 1) {
-			ComandiPossibili.add(Comando.COMBATTIMENTO);
+			comandiPossibili.add(Comando.COMBATTIMENTO);
 		}
 		// Se stiamo combattendo possiamo interrompere la schermaglia
 		if (statoLocazione == StatoLocazione.IN_COMBATTIMENTO) {
-			ComandiPossibili.add(Comando.INTERRUZIONE_COMBATTIMENTO);
+			comandiPossibili.add(Comando.INTERRUZIONE_COMBATTIMENTO);
 		}
 		// Possiamo formulare incantesimi? Si se ne abbiamo almeno uno e se uno dei personaggi vivi può lanciarlo
 		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
 			if (gruppo.getIncantesimi(classeIncantesimo) > 0 &&
 					gruppo.getPersonaggiVivi().stream().anyMatch(p -> p.getMagia() >= classeIncantesimo.getCostoLancio())) {
-				ComandiPossibili.add(Comando.INCANTESIMO);
+				comandiPossibili.add(Comando.INCANTESIMO);
 				break;
 			}
 		}
 		// Possiamo corrompere gli avversari?
 		if (opzioneCorruzioneDisponibile) {
-			ComandiPossibili.add(Comando.CORRUZIONE);
+			comandiPossibili.add(Comando.CORRUZIONE);
 		}
 		// Possiamo fare amicizia?
 		if (opzioneAmiciziaDisponibile) {
-			ComandiPossibili.add(Comando.AMICIZIA);
+			comandiPossibili.add(Comando.AMICIZIA);
 		}
 		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO) {
-			ComandiPossibili.add(Comando.MAPPA);
+			comandiPossibili.add(Comando.MAPPA);
 		}
 		if (gruppo.getPozioniSalute() > 0) {
-			ComandiPossibili.add(Comando.POZIONE_SALUTE);
+			comandiPossibili.add(Comando.POZIONE_SALUTE);
 		}
 		if (gruppo.getPozioniSaluteGrande() > 0) {
-			ComandiPossibili.add(Comando.POZIONE_SALUTE_GRANDE);
+			comandiPossibili.add(Comando.POZIONE_SALUTE_GRANDE);
 		}
 		if (gruppo.getPozioniMagia() > 0) {
-			ComandiPossibili.add(Comando.POZIONE_MAGIA);
+			comandiPossibili.add(Comando.POZIONE_MAGIA);
 		}
 		if (gruppo.getPozioniMagiaGrande() > 0) {
-			ComandiPossibili.add(Comando.POZIONE_MAGIA_GRANDE);
+			comandiPossibili.add(Comando.POZIONE_MAGIA_GRANDE);
 		}
 		// Possiamo sempre controllare l'inventario
 		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO) {
-			ComandiPossibili.add(Comando.INVENTARIO);
+			comandiPossibili.add(Comando.INVENTARIO);
 		}
 		// Si puo' sempre ricorrere a una bella...
-		ComandiPossibili.add(Comando.FUGA);
+		comandiPossibili.add(Comando.FUGA);
 		// E possiamo sempre richiedere di descrivere di nuovo la locazione
-		ComandiPossibili.add(Comando.AIUTO);
+		comandiPossibili.add(Comando.AIUTO);
+		BusEventi.pubblica(new EventoComandiDisponibili(comandiPossibili));
 	}
 
 	/**
@@ -946,7 +948,7 @@ public abstract class LocazioneBase implements Locazione {
 			BusEventi.pubblica(new EventoRichiestaChiusuraFinestraCombattimento());
 			chiediConfermaPerLaFuga();
 			statoLocazione = StatoLocazione.CONFERMA_FUGA;
-			ComandiPossibili.set(Comando.SI, Comando.NO);
+			BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
 			return Stato.ATTESA_SI_NO;
 		}
 		return Stato.IN_COMBATTIMENTO;
@@ -1008,7 +1010,7 @@ public abstract class LocazioneBase implements Locazione {
 			Logger.log("Azione.FUGA");
 				chiediConfermaPerLaFuga();
 				statoLocazione = StatoLocazione.CONFERMA_FUGA;
-			ComandiPossibili.set(Comando.SI, Comando.NO);
+			BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
 			return Stato.ATTESA_SI_NO;
 				
 			case AIUTO:

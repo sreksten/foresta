@@ -16,10 +16,4 @@ public interface InterfacciaUtente {
 		INVENTARIO
     }
 
-	/**
-	 * Propone al giocatore una serie di possibili azioni tra le quali
-	 * scegliere per poter continuare il gioco.
-	 */
-    void impostaAzioni();
-
 }

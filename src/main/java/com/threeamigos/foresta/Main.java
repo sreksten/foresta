@@ -8,7 +8,6 @@ import com.threeamigos.foresta.motore.ControlloreDiGioco;
 import com.threeamigos.foresta.tools.*;
 import com.threeamigos.foresta.ui.ForestaUI;
 import com.threeamigos.foresta.ui.Orientamento;
-import com.threeamigos.foresta.ui.UI;
 
 public class Main {
 
@@ -40,10 +39,9 @@ public class Main {
 		ControlloreDiGioco controlloreDiGioco = new Automa(temporizzatoreAutoma);
 
 		Temporizzatore temporizzatoreUI = new TemporizzatoreJ2SE();
-		ForestaUI forestaUI = new ForestaUI(orientamento, tuttoSchermo, temporizzatoreUI);
+		new ForestaUI(orientamento, tuttoSchermo, temporizzatoreUI);
 
-		// FIXME l'ultima cosa che andrà levata quando si passa il tutto a eventi lasciando solo il costruttore
-		UI.impostaInterfacciaUtente(forestaUI);
+		//FIXME gestire l'elenco finestre togliendolo da InterfacciaUtente
 
 		BusEventi.iscriviti(EventoInterfacciaUtentePronta.class, e -> controlloreDiGioco.inizia());
 	}

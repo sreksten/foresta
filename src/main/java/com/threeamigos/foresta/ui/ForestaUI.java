@@ -157,7 +157,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		prompt.setVisible(true);
 	}
 
-	@Override
 	public void impostaAzioni() {
 		pannelloIcone.impostaAzioni();
 	}

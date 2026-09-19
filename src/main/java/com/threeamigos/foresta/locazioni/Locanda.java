@@ -9,6 +9,7 @@ import com.threeamigos.foresta.offerte.Informazioni;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Locanda extends LocazioneBase {
@@ -161,13 +162,14 @@ public class Locanda extends LocazioneBase {
 				stato = StatoInLocanda.CHI_MANGIA;
 				Personaggio p;
 				int l = gruppo.getNumeroPersonaggiVivi();
-				ComandiPossibili.reimposta();
+				List<Comando> comandiPossibiliChiMangia = new ArrayList<>();
 				for (int i = 0; i < l; i++) {
 					p = gruppo.getPersonaggio(i);
 					if (p.isVivo()) {
-						ComandiPossibili.add(Comando.ofPersonaggio(i));
+						comandiPossibiliChiMangia.add(Comando.ofPersonaggio(i));
 					}
 				}
+				BusEventi.pubblica(new EventoComandiDisponibili(comandiPossibiliChiMangia));
 				return Stato.IN_LOCAZIONE;
 			} else {
 				BusEventi.pubblica(new EventoParagrafo("Viene servito un pasto caldo, che fa riacquistare rapidamente le forze."));
@@ -185,7 +187,7 @@ public class Locanda extends LocazioneBase {
 
 				if (incontra(gruppo)) {
 					stato = StatoInLocanda.PERSONAGGIO;
-					ComandiPossibili.set(Comando.SI, Comando.NO);
+					BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
 					return Stato.IN_LOCAZIONE;
 				} else {
 					if (gruppo.getMonete() < Costanti.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggi()) {
@@ -195,7 +197,7 @@ public class Locanda extends LocazioneBase {
 						BusEventi.pubblica(new EventoMessaggio(gruppo.chiMaiuscolo() + " desidera pernottare alla locanda?"));
 						BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
 						stato = StatoInLocanda.PERNOTTA;
-						ComandiPossibili.set(Comando.SI, Comando.NO);
+						BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
 						return Stato.IN_LOCAZIONE;
 					}
 				}
@@ -225,10 +227,10 @@ public class Locanda extends LocazioneBase {
 				BusEventi.pubblica(new EventoMessaggio(gruppo.chiMaiuscolo() + " desidera pernottare alla locanda?"));
 				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
 				stato = StatoInLocanda.PERNOTTA;
-				ComandiPossibili.set(Comando.SI, Comando.NO);
+				BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
 				return Stato.IN_LOCAZIONE;
 			}
-			
+
 		case PERNOTTA:
 			if (azione == Comando.SI) {
 				gruppo.subMonete(Costanti.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggiVivi());
