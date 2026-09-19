@@ -493,6 +493,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void mappa() {
 		stato = StatoDisplayableCanvas.STATO_MAPPA;
+		mappaATuttoSchermo.centraSuGiocatore();
 		repaint();
 	}
 
