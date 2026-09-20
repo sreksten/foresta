@@ -166,7 +166,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 	}
 
 	private int calcolaOffsetVerticale(int yIniziale) {
-		effettiAttivi.removeIf(e -> !e.sprite.isActive());
+		effettiAttivi.removeIf(e -> !e.sprite.isAttivo());
 		long occupati = effettiAttivi.stream()
 				.filter(e -> Math.abs(e.yIniziale - yIniziale) < SCOSTAMENTO_SOVRAPPOSIZIONE)
 				.count();

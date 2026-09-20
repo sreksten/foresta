@@ -12,6 +12,7 @@ import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
+import com.threeamigos.foresta.tools.Temporizzatore;
 import com.threeamigos.foresta.tools.TestataSalvataggio;
 
 import javax.swing.*;
@@ -24,7 +25,8 @@ import java.util.List;
 
 /**
  * Classe che rappresenta il canvas grafico del gioco.
- * Le animazioni sono gestite dal metodo run() che gira ogni 100 ms.
+ * Le animazioni sono gestite dal metodo run() che gira a Temporizzatore.FRAME_PER_SECONDO
+ * fotogrammi al secondo.
  */
 public class DisplayableCanvas extends JPanel implements Runnable {
 
@@ -352,7 +354,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 				repaint();
 			}
 			try {
-				Thread.sleep(100);
+				Thread.sleep(Temporizzatore.DURATA_FRAME_IN_MILLISECONDI);
 			} catch (InterruptedException e) {
 			}
 		}
@@ -418,8 +420,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		List<SpriteInterface> copiaSprites = new ArrayList<>(sprites);
 		List<SpriteInterface> inactiveSprites = new ArrayList<>();
 		for (SpriteInterface sprite : copiaSprites) {
-			sprite.animate(graphics);
-			if (!sprite.isActive()) {
+			sprite.anima(graphics);
+			if (!sprite.isAttivo()) {
 				inactiveSprites.add(sprite);
 			}
 		}
@@ -442,8 +444,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		if (fumettoAttivo == null) {
 			return;
 		}
-		fumettoAttivo.animate(graphics);
-		if (!fumettoAttivo.isActive()) {
+		fumettoAttivo.anima(graphics);
+		if (!fumettoAttivo.isAttivo()) {
 			fumettoAttivo = null;
 		}
 	}
@@ -460,8 +462,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		if (annuncioGlobaleAttivo == null) {
 			return;
 		}
-		annuncioGlobaleAttivo.animate(graphics);
-		if (!annuncioGlobaleAttivo.isActive()) {
+		annuncioGlobaleAttivo.anima(graphics);
+		if (!annuncioGlobaleAttivo.isAttivo()) {
 			annuncioGlobaleAttivo = null;
 		}
 	}
@@ -685,7 +687,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	public void notificaFumetto(String testo, int x, int y, int pointToX, int pointToY) {
 		if (fumettoAttivo != null) {
 			if (testo.equals(fumettoAttivo.getTesto())) {
-				fumettoAttivo.resetTicks();
+				fumettoAttivo.resettaImpulsi();
 				return;
 			}
 			// Un fumetto diverso interrompe immediatamente quello in corso
@@ -695,11 +697,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	public void notificaAnnuncioGlobale(String etichetta, String messaggio) {
-		codaAnnunciGlobali.add(new SpriteAnnuncioGlobale(
-				// Il font globale non supporta il lower case
-				etichetta.toUpperCase(Locale.ROOT),
-				messaggio.toUpperCase(Locale.ROOT),
-				larghezzaSchermo, altezzaSchermo));
+		codaAnnunciGlobali.add(new SpriteAnnuncioGlobale(etichetta, messaggio, larghezzaSchermo, altezzaSchermo));
 	}
 
 	public void aggiungiEffettoDiStato(Personaggio personaggio, TipoEffettoDiStato effettoDiStato) {

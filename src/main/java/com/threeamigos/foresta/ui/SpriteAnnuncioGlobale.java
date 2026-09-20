@@ -13,26 +13,25 @@ import java.util.StringTokenizer;
  */
 public class SpriteAnnuncioGlobale implements SpriteInterface {
 
-	//private static final long DURATA_MS = 3500L;
-	private static final long DURATA_MS = 2000L;
-	private static final long DURATA_FADE_MS = DURATA_MS / 2;
+	private static final float DURATA_IN_SECONDI = 2.0f;
+	private static final float DURATA_FADE_IN_SECONDI = DURATA_IN_SECONDI / 2;
 	private static final float SCALA_INIZIALE = 1.0f;
 	private static final float SCALA_FINALE = 1.8f;
 
-	private static final int CHAR_SPACING = 1;
-	private static final int SPACE_WIDTH = 10;
-	private static final int RIGHE_GAP = 4;
-	private static final int GRUPPI_GAP = 12;
-	private static final int OMBRA_SCOSTAMENTO = 2;
-	private static final Color OMBRA_COLORE = new Color(0, 0, 0, 160);
+	private static final int SPAZIATURA_CARATTERI = 1;
+	private static final int LARGHEZZA_SPAZIO = 10;
+	private static final int DIVARIO_RIGHE = 4;
+	private static final int DIVARIO_GRUPPI = 12;
+	private static final int SCOSTAMENTO_OMBRA = 2;
+	private static final Color COLORE_OMBRA = new Color(0, 0, 0, 160);
 
 	private final String titolo;
 	private final String descrizione;
-	private final BufferedImage image;
+	private final BufferedImage immagine;
 	private final int larghezzaSchermo;
 	private final int altezzaSchermo;
-	private long inizio = -1;
-	private boolean active;
+	private float secondiTrascorsi;
+	private boolean attivo;
 
 	SpriteAnnuncioGlobale(String titolo, String descrizione, int larghezzaSchermo, int altezzaSchermo) {
 		this.titolo = titolo;
@@ -40,10 +39,11 @@ public class SpriteAnnuncioGlobale implements SpriteInterface {
 		this.larghezzaSchermo = larghezzaSchermo;
 		this.altezzaSchermo = altezzaSchermo;
 		int larghezzaMassima = larghezzaSchermo / 2;
+		// Il font non supporta i caratteri minuscoli
 		List<String> righeEtichetta = spezzaInRighe(this.titolo.toUpperCase(), larghezzaMassima);
 		List<String> righeNome = spezzaInRighe(descrizione.toUpperCase(), larghezzaMassima);
-		image = costruisciImmagine(righeEtichetta, righeNome);
-		active = true;
+		immagine = costruisciImmagine(righeEtichetta, righeNome);
+		attivo = true;
 	}
 
 	public String getTitolo() {
@@ -62,14 +62,14 @@ public class SpriteAnnuncioGlobale implements SpriteInterface {
 		while (st.hasMoreTokens()) {
 			String parola = st.nextToken();
 			int larghezzaParola = larghezzaParola(parola);
-			if (larghezzaRiga > 0 && larghezzaRiga + SPACE_WIDTH + larghezzaParola > larghezzaMassima) {
+			if (larghezzaRiga > 0 && larghezzaRiga + LARGHEZZA_SPAZIO + larghezzaParola > larghezzaMassima) {
 				righe.add(riga.toString());
 				riga = new StringBuilder();
 				larghezzaRiga = 0;
 			}
 			if (riga.length() > 0) {
 				riga.append(" ");
-				larghezzaRiga += SPACE_WIDTH;
+				larghezzaRiga += LARGHEZZA_SPAZIO;
 			}
 			riga.append(parola);
 			larghezzaRiga += larghezzaParola;
@@ -83,7 +83,7 @@ public class SpriteAnnuncioGlobale implements SpriteInterface {
 	private static int larghezzaParola(String parola) {
 		int larghezza = 0;
 		for (int i = 0; i < parola.length(); i++) {
-			larghezza += larghezzaCarattere(parola.charAt(i)) + CHAR_SPACING;
+			larghezza += larghezzaCarattere(parola.charAt(i)) + SPAZIATURA_CARATTERI;
 		}
 		return larghezza;
 	}
@@ -94,7 +94,7 @@ public class SpriteAnnuncioGlobale implements SpriteInterface {
 			return glifo.getWidth();
 		}
 		if (c == ' ') {
-			return SPACE_WIDTH;
+			return LARGHEZZA_SPAZIO;
 		}
 		return 1;
 	}
@@ -126,25 +126,25 @@ public class SpriteAnnuncioGlobale implements SpriteInterface {
 		tutteLeRighe.addAll(righeEtichetta);
 		tutteLeRighe.addAll(righeNome);
 
-		int altezzaRiga = altezzaMassimaGlifi(tutteLeRighe) + RIGHE_GAP;
+		int altezzaRiga = altezzaMassimaGlifi(tutteLeRighe) + DIVARIO_RIGHE;
 
 		int larghezzaTesto = 0;
 		for (String riga : tutteLeRighe) {
-			larghezzaTesto = Math.max(larghezzaTesto, larghezzaParola(riga.replace(" ", "")) + spaziInRiga(riga) * SPACE_WIDTH);
+			larghezzaTesto = Math.max(larghezzaTesto, larghezzaParola(riga.replace(" ", "")) + spaziInRiga(riga) * LARGHEZZA_SPAZIO);
 		}
-		int altezzaTesto = righeEtichetta.size() * altezzaRiga + GRUPPI_GAP + righeNome.size() * altezzaRiga;
+		int altezzaTesto = righeEtichetta.size() * altezzaRiga + DIVARIO_GRUPPI + righeNome.size() * altezzaRiga;
 
-		int larghezzaTotale = larghezzaTesto + OMBRA_SCOSTAMENTO * 2;
-		int altezzaTotale = altezzaTesto + OMBRA_SCOSTAMENTO * 2;
+		int larghezzaTotale = larghezzaTesto + SCOSTAMENTO_OMBRA * 2;
+		int altezzaTotale = altezzaTesto + SCOSTAMENTO_OMBRA * 2;
 
 		BufferedImage testo = new BufferedImage(larghezzaTotale, altezzaTotale, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D gTesto = testo.createGraphics();
-		int y = OMBRA_SCOSTAMENTO;
+		int y = SCOSTAMENTO_OMBRA;
 		for (int i = 0; i < righeEtichetta.size(); i++) {
 			disegnaRigaCentrata(gTesto, righeEtichetta.get(i), larghezzaTotale, y);
 			y += altezzaRiga;
 		}
-		y += GRUPPI_GAP - RIGHE_GAP;
+		y += DIVARIO_GRUPPI - DIVARIO_RIGHE;
 		for (int i = 0; i < righeNome.size(); i++) {
 			disegnaRigaCentrata(gTesto, righeNome.get(i), larghezzaTotale, y);
 			y += altezzaRiga;
@@ -155,7 +155,7 @@ public class SpriteAnnuncioGlobale implements SpriteInterface {
 
 		BufferedImage risultato = new BufferedImage(larghezzaTotale, altezzaTotale, BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = risultato.createGraphics();
-		int[] scostamenti = {-OMBRA_SCOSTAMENTO, 0, OMBRA_SCOSTAMENTO};
+		int[] scostamenti = {-SCOSTAMENTO_OMBRA, 0, SCOSTAMENTO_OMBRA};
 		for (int dx : scostamenti) {
 			for (int dy : scostamenti) {
 				if (dx != 0 || dy != 0) {
@@ -193,7 +193,7 @@ public class SpriteAnnuncioGlobale implements SpriteInterface {
 	}
 
 	private static void disegnaRigaCentrata(Graphics2D g, String riga, int larghezzaTotale, int y) {
-		int larghezzaRiga = larghezzaParola(riga.replace(" ", "")) + spaziInRiga(riga) * SPACE_WIDTH;
+		int larghezzaRiga = larghezzaParola(riga.replace(" ", "")) + spaziInRiga(riga) * LARGHEZZA_SPAZIO;
 		int x = (larghezzaTotale - larghezzaRiga) >> 1;
 		for (int i = 0; i < riga.length(); i++) {
 			char c = riga.charAt(i);
@@ -201,7 +201,7 @@ public class SpriteAnnuncioGlobale implements SpriteInterface {
 			if (glifo != null) {
 				g.drawImage(glifo, x, y, null);
 			}
-			x += larghezzaCarattere(c) + CHAR_SPACING;
+			x += larghezzaCarattere(c) + SPAZIATURA_CARATTERI;
 		}
 	}
 
@@ -210,34 +210,29 @@ public class SpriteAnnuncioGlobale implements SpriteInterface {
 		Graphics2D g = sagoma.createGraphics();
 		g.drawImage(sorgente, 0, 0, null);
 		g.setComposite(AlphaComposite.SrcIn);
-		g.setColor(OMBRA_COLORE);
+		g.setColor(COLORE_OMBRA);
 		g.fillRect(0, 0, sagoma.getWidth(), sagoma.getHeight());
 		g.dispose();
 		return sagoma;
 	}
 
 	@Override
-	public void animate(Graphics2D g) {
-		if (!active) {
+	public void anima(Graphics2D g) {
+		if (!attivo) {
 			return;
 		}
-		long adesso = System.currentTimeMillis();
-		if (inizio < 0) {
-			inizio = adesso;
-		}
-		long trascorsi = adesso - inizio;
-		if (trascorsi >= DURATA_MS) {
-			active = false;
+		if (secondiTrascorsi >= DURATA_IN_SECONDI) {
+			attivo = false;
 			return;
 		}
 
-		float progresso = trascorsi / (float) DURATA_MS;
+		float progresso = secondiTrascorsi / DURATA_IN_SECONDI;
 		float scala = SCALA_INIZIALE + (SCALA_FINALE - SCALA_INIZIALE) * progresso;
 		float alpha;
-		if (trascorsi <= DURATA_FADE_MS) {
+		if (secondiTrascorsi <= DURATA_FADE_IN_SECONDI) {
 			alpha = 1.0f;
 		} else {
-			alpha = Math.max(0.0f, 1.0f - (trascorsi - DURATA_FADE_MS) / (float) (DURATA_MS - DURATA_FADE_MS));
+			alpha = Math.max(0.0f, 1.0f - (secondiTrascorsi - DURATA_FADE_IN_SECONDI) / (DURATA_IN_SECONDI - DURATA_FADE_IN_SECONDI));
 		}
 
 		Composite compositeOriginale = g.getComposite();
@@ -245,20 +240,22 @@ public class SpriteAnnuncioGlobale implements SpriteInterface {
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
-		int larghezzaScalata = Math.round(image.getWidth() * scala);
-		int altezzaScalata = Math.round(image.getHeight() * scala);
+		int larghezzaScalata = Math.round(immagine.getWidth() * scala);
+		int altezzaScalata = Math.round(immagine.getHeight() * scala);
 		int x = (larghezzaSchermo - larghezzaScalata) >> 1;
 		int y = (altezzaSchermo - altezzaScalata) >> 1;
-		g.drawImage(image, x, y, larghezzaScalata, altezzaScalata, null);
+		g.drawImage(immagine, x, y, larghezzaScalata, altezzaScalata, null);
 
 		g.setComposite(compositeOriginale);
 		if (interpolazioneOriginale != null) {
 			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, interpolazioneOriginale);
 		}
+
+		secondiTrascorsi += 1f / 30;
 	}
 
 	@Override
-	public boolean isActive() {
-		return active;
+	public boolean isAttivo() {
+		return attivo;
 	}
 }

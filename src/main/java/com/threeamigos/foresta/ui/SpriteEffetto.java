@@ -13,19 +13,18 @@ import java.awt.image.BufferedImage;
  */
 public class SpriteEffetto implements SpriteInterface {
 
-	//private static final long DURATA_MS = 3500L;
-	private static final long DURATA_MS = 2000L;
-	private static final long DURATA_FADE_MS = DURATA_MS / 2;
+	private static final float DURATA_IN_SECONDI = 2.0f;
+	private static final float DURATA_FADE_IN_SECONDI = DURATA_IN_SECONDI / 2;
 	private static final float SCALA_INIZIALE = 1.0f;
 	private static final float SCALA_FINALE = 1.8f;
 	private static final int OMBRA_SCOSTAMENTO = 2;
 	private static final Color OMBRA_COLORE = new Color(0, 0, 0, 160);
 
 	private final String testo;
-	private final BufferedImage image;
+	private final BufferedImage immagine;
 	private final int x;
 	private final int y;
-	private long inizio = -1;
+	private float secondiTrascorsi;
 	private boolean active;
 
 	SpriteEffetto(String testo, DoomdarkFont font, DoomdarkColorModel.Color color, int x, int y) {
@@ -38,7 +37,7 @@ public class SpriteEffetto implements SpriteInterface {
 
 	private SpriteEffetto(String testo, BufferedImage testoRenderizzato, int x, int y) {
 		this.testo = testo;
-		this.image = aggiungiOmbra(testoRenderizzato);
+		this.immagine = aggiungiOmbra(testoRenderizzato);
 		this.x = x;
 		this.y = y;
 		active = true;
@@ -104,27 +103,22 @@ public class SpriteEffetto implements SpriteInterface {
 	}
 
 	@Override
-	public void animate(Graphics2D g) {
+	public void anima(Graphics2D g) {
 		if (!active) {
 			return;
 		}
-		long adesso = System.currentTimeMillis();
-		if (inizio < 0) {
-			inizio = adesso;
-		}
-		long trascorsi = adesso - inizio;
-		if (trascorsi >= DURATA_MS) {
+		if (secondiTrascorsi >= DURATA_IN_SECONDI) {
 			active = false;
 			return;
 		}
 
-		float progresso = trascorsi / (float) DURATA_MS;
+		float progresso = secondiTrascorsi / DURATA_IN_SECONDI;
 		float scala = SCALA_INIZIALE + (SCALA_FINALE - SCALA_INIZIALE) * progresso;
 		float alpha;
-		if (trascorsi <= DURATA_FADE_MS) {
+		if (secondiTrascorsi <= DURATA_FADE_IN_SECONDI) {
 			alpha = 1.0f;
 		} else {
-			alpha = Math.max(0.0f, 1.0f - (trascorsi - DURATA_FADE_MS) / (float) (DURATA_MS - DURATA_FADE_MS));
+			alpha = Math.max(0.0f, 1.0f - (secondiTrascorsi - DURATA_FADE_IN_SECONDI) / (DURATA_IN_SECONDI - DURATA_FADE_IN_SECONDI));
 		}
 
 		Composite compositeOriginale = g.getComposite();
@@ -132,20 +126,22 @@ public class SpriteEffetto implements SpriteInterface {
 		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 
-		int larghezzaScalata = Math.round(image.getWidth() * scala);
-		int altezzaScalata = Math.round(image.getHeight() * scala);
+		int larghezzaScalata = Math.round(immagine.getWidth() * scala);
+		int altezzaScalata = Math.round(immagine.getHeight() * scala);
 		int disegnaX = x - (larghezzaScalata >> 1);
 		int disegnaY = y - (altezzaScalata >> 1);
-		g.drawImage(image, disegnaX, disegnaY, larghezzaScalata, altezzaScalata, null);
+		g.drawImage(immagine, disegnaX, disegnaY, larghezzaScalata, altezzaScalata, null);
 
 		g.setComposite(compositeOriginale);
 		if (interpolazioneOriginale != null) {
 			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, interpolazioneOriginale);
 		}
+
+		secondiTrascorsi += 1f / 30;
 	}
 
 	@Override
-	public boolean isActive() {
+	public boolean isAttivo() {
 		return active;
 	}
 }

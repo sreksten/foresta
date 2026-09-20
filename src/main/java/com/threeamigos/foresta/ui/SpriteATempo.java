@@ -5,21 +5,21 @@ import java.awt.image.BufferedImage;
 
 public class SpriteATempo implements SpriteInterface {
 
-	private static final int MAX_TICKS = 16;
-	private static final int TICK_LIMIT_BEFORE_FADING = MAX_TICKS >> 1;
+	private static final float DURATA_IN_SECONDI = 1.6f;
+	private static final float LIMITE_PRE_DISSOLVENZA_IN_SECONDI = DURATA_IN_SECONDI / 2;
 
 	private String descrizione;
 	boolean active;
 	private BufferedImage image;
 	private int x;
-	private int y;
-	private int ticks;
-	
+	private float y;
+	private float secondiTrascorsi;
+
 	SpriteATempo(BufferedImage image, int x, int y, String descrizione) {
 		this.image = image;
 		this.x = x;
 		this.y = y;
-		ticks = 0;
+		secondiTrascorsi = 0;
 		active = true;
 		this.descrizione = descrizione;
 	}
@@ -105,30 +105,33 @@ public class SpriteATempo implements SpriteInterface {
 		
 		this.x = x - image.getWidth();
 		this.y = y - offsetYTesto;
-		ticks = 0;
+		secondiTrascorsi = 0;
 		active = true;
 	}
-	
-	public void animate(Graphics2D g) {
+
+	public void anima(Graphics2D g) {
 		if (active) {
-			if (ticks > TICK_LIMIT_BEFORE_FADING) {
-				float transparency = 1.0f / (float)(ticks - TICK_LIMIT_BEFORE_FADING);
+			if (secondiTrascorsi > LIMITE_PRE_DISSOLVENZA_IN_SECONDI) {
+				// La curva di dissolvenza era tarata sui tick storici da 0.1s (1/(ticks-limite)):
+				// moltiplicando per 10 i secondi oltre soglia si ottiene lo stesso andamento.
+				float transparency = Math.min(1.0f, 1.0f / ((secondiTrascorsi - LIMITE_PRE_DISSOLVENZA_IN_SECONDI) * 10));
 				AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency);
 				g.setComposite(ac);
 			} else {
 				AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 1.0f);
 				g.setComposite(ac);
 			}
-			g.drawImage(image, x, y, null);
-			y--;
-			ticks++;
-			if (ticks >= MAX_TICKS) {
+			g.drawImage(image, x, Math.round(y), null);
+			// 10 pixel al secondo, come nel vecchio loop a 10 fps (1 pixel per fotogramma).
+			y -= 10f / 30;
+			secondiTrascorsi += 1f / 30;
+			if (secondiTrascorsi >= DURATA_IN_SECONDI) {
 				active = false;
 			}
 		}
 	}
 	
-	public boolean isActive() {
+	public boolean isAttivo() {
 		return active;
 	}
 }

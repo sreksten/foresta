@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.ui;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 
 public interface SpriteInterface {
 
-	void animate(Graphics2D g);
-	
-	boolean isActive();
+	void anima(Graphics2D g);
+
+	boolean isAttivo();
 
 }

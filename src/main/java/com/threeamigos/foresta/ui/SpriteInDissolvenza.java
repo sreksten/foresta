@@ -8,49 +8,51 @@ import java.util.Arrays;
 
 public class SpriteInDissolvenza implements SpriteInterface {
 
-	private static final int MAX_TICKS = 32;
+	private static final float DURATA_IN_SECONDI = 3.2f;
 
 	private final String descrizione;
-	private final BufferedImage image;
-	boolean active;
+	private final BufferedImage immagine;
+	boolean attivo;
 	private final int x;
 	private final int y;
-	private int ticks;
-	
-	SpriteInDissolvenza(String descrizione, BufferedImage image, int x, int y) {
+	private float secondiTrascorsi;
+
+	SpriteInDissolvenza(String descrizione, BufferedImage immagine, int x, int y) {
 		this.descrizione = descrizione;
-		this.image = image;
+		this.immagine = immagine;
 		this.x = x;
 		this.y = y;
-		ticks = 0;
-		active = true;
+		secondiTrascorsi = 0;
+		attivo = true;
 	}
 
 	public String getDescrizione() {
 		return descrizione;
 	}
 
-	public void animate(Graphics2D g) {
-		if (active) {
-			float transparency = 1.0f / (float)(1 + ticks);
-			AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, transparency);
+	public void anima(Graphics2D g) {
+		if (attivo) {
+			// La curva era tarata sui tick storici da 0.1s (1/(1+ticks)): moltiplicando per 10
+			// i secondi trascorsi si ottiene lo stesso andamento.
+			float trasparenza = 1.0f / (1 + secondiTrascorsi * 10);
+			AlphaComposite ac = AlphaComposite.getInstance(AlphaComposite.SRC_OVER, trasparenza);
 			g.setComposite(ac);
-			int size = 3;
-            int numCoords = size * size;
-			float blurFactor = 1.0f / (float)numCoords;
-			float[] blurKernel = new float[numCoords];
-            Arrays.fill(blurKernel, blurFactor);
-			ConvolveOp blurringOp = new ConvolveOp(new Kernel(size, size, blurKernel), ConvolveOp.EDGE_NO_OP, null);
-			g.drawImage(image, blurringOp, x, y);
-			ticks++;
-			if (ticks >= MAX_TICKS) {
-				active = false;
+			int dimensione = 3;
+            int numeroCoordinate = dimensione * dimensione;
+			float fattoreSfocatura = 1.0f / (float)numeroCoordinate;
+			float[] kernelSfocatura = new float[numeroCoordinate];
+            Arrays.fill(kernelSfocatura, fattoreSfocatura);
+			ConvolveOp convoluzione = new ConvolveOp(new Kernel(dimensione, dimensione, kernelSfocatura), ConvolveOp.EDGE_NO_OP, null);
+			g.drawImage(immagine, convoluzione, x, y);
+			secondiTrascorsi += 1f / 30;
+			if (secondiTrascorsi >= DURATA_IN_SECONDI) {
+				attivo = false;
 			}
 		}
 	}
 	
-	public boolean isActive() {
-		return active;
+	public boolean isAttivo() {
+		return attivo;
 	}
 
 }
