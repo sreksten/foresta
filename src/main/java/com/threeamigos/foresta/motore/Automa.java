@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.interni.InternoMostraSchermataGioco;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioGruppo;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoDiGioco;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoInvioTesto;
@@ -57,9 +56,22 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		processaAzione(Comando.TIMER);
 	}
 
+	/**
+	 * Schermata introduttiva coi titoli. QUi è possibile scegliere se iniziare una nuova partita o
+	 * caricare una partita preesistente.
+	 */
 	public void inizia() {
 		stato = Stato.INTRO;
 		BusEventi.pubblica(new InternoStatoDiGioco(Stato.INTRO, getComandiPossibiliInStatoIntro()));
+	}
+
+	private Collection<Comando> getComandiPossibiliInStatoIntro() {
+		Collection<Comando> comandiPossibili = new ArrayList<>();
+		comandiPossibili.add(Comando.PERGAMENA);
+		if (!GestoreSalvataggi.getSalvataggiDisponibili().isEmpty()) {
+			comandiPossibili.add(Comando.FLOPPY);
+		}
+		return comandiPossibili;
 	}
 
 	private void onEventoTestoDisponibile(ComandoInvioTesto evento) {
@@ -132,7 +144,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 						BusEventi.pubblica(new InternoStatoDiGioco(stato));
 						break;
 					case FLOPPY:
-						stato = Stato.SELEZIONE_SALVATAGGIO_DA_LEGGERE;
+						stato = Stato.PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE;
 						Collection<TestataSalvataggio> salvataggiDisponibili = GestoreSalvataggi.getSalvataggiDisponibili();
 						BusEventi.pubblica(new RichiestaSelezioneSlotPerRilettura(salvataggiDisponibili));
 						break;
@@ -141,7 +153,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				}
 				break;
 
-			case SELEZIONE_SALVATAGGIO_DA_LEGGERE:
+			case PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE:
 				if (leggi(azione)) {
 					stato = Stato.ATTESA_DIREZIONE;
 					processaAzione(null);
@@ -430,80 +442,80 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				// Occorre memorizzare l'informazione sulla direzione
 				Collection<Comando> comandiPossibiliPerNumeroPassi = null;
 				switch (azione) {
-				case MAPPA:
-					statoPrecedente = Stato.ATTESA_DIREZIONE;
-					stato = Stato.MAPPA;
-					processaAzione(null);
-					return;
-				case INVENTARIO:
-					statoPrecedente = Stato.ATTESA_DIREZIONE;
-					stato = Stato.INVENTARIO;
-					richiediAperturaInventarioGruppo();
-					processaAzione(null);
-					return;
-				case ACCAMPAMENTO:
-					gruppo.pernotta(locazioneCorrente.getTipoRiposo());
-					LineaTemporale.mattinoSeguente();
-					LineaTemporale.eventi(gruppo);
-					stato = Stato.ATTESA_DIREZIONE;
-					processaAzione(null);
-					return;
-				case POZIONE_SALUTE:
-					statoPrecedente = Stato.ATTESA_POZIONE_SALUTE;
-					stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-					processaAzione(null);
-					return;
-				case POZIONE_SALUTE_GRANDE:
-					statoPrecedente = Stato.ATTESA_POZIONE_SALUTE_GRANDE;
-					stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-					processaAzione(null);
-					return;
-				case POZIONE_MAGIA:
-					statoPrecedente = Stato.ATTESA_POZIONE_MAGIA;
-					stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-					processaAzione(null);
-					return;
-				case POZIONE_MAGIA_GRANDE:
-					statoPrecedente = Stato.ATTESA_POZIONE_MAGIA_GRANDE;
-					stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-					processaAzione(null);
-					return;
-				case RESURREZIONE:
-					statoPrecedente = Stato.ATTESA_RESURREZIONE;
-					stato = Stato.SCELTA_BERSAGLIO_RESURREZIONE;
-					processaAzione(null);
-					return;
-				case NORD:
-					direzione = Comando.NORD;
-					comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiNord());
-					break;
-				case EST:
-					direzione = Comando.EST;
-					comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiEst());
-					break;
-				case SUD:
-					direzione = Comando.SUD;
-					comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiSud());
-					break;
-				case OVEST:
-					direzione = Comando.OVEST;
-					comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiOvest());
-					break;
-				case AIUTO:
-					for (Personaggio personaggio : gruppo.getPersonaggi()) {
-						BusEventi.pubblica(new NotificaTestoParagrafo(personaggio.getDescrizione()));
-					}
-					stato = Stato.ATTESA_DIREZIONE;
-					processaAzione(null);
-					return;
-				case FLOPPY:
-					stato = Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE;
-					BusEventi.pubblica(new InternoStatoDiGioco(Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE,
-							Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3, Comando.NUMERO_4, Comando.NUMERO_5,
-							Comando.NO));
-					return;
-				default:
-					break;
+					case MAPPA:
+						statoPrecedente = Stato.ATTESA_DIREZIONE;
+						stato = Stato.MAPPA;
+						processaAzione(null);
+						return;
+					case INVENTARIO:
+						statoPrecedente = Stato.ATTESA_DIREZIONE;
+						stato = Stato.INVENTARIO;
+						richiediAperturaInventarioGruppo();
+						processaAzione(null);
+						return;
+					case ACCAMPAMENTO:
+						gruppo.pernotta(locazioneCorrente.getTipoRiposo());
+						LineaTemporale.mattinoSeguente();
+						LineaTemporale.eventi(gruppo);
+						stato = Stato.ATTESA_DIREZIONE;
+						processaAzione(null);
+						return;
+					case POZIONE_SALUTE:
+						statoPrecedente = Stato.ATTESA_POZIONE_SALUTE;
+						stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+						processaAzione(null);
+						return;
+					case POZIONE_SALUTE_GRANDE:
+						statoPrecedente = Stato.ATTESA_POZIONE_SALUTE_GRANDE;
+						stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+						processaAzione(null);
+						return;
+					case POZIONE_MAGIA:
+						statoPrecedente = Stato.ATTESA_POZIONE_MAGIA;
+						stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+						processaAzione(null);
+						return;
+					case POZIONE_MAGIA_GRANDE:
+						statoPrecedente = Stato.ATTESA_POZIONE_MAGIA_GRANDE;
+						stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+						processaAzione(null);
+						return;
+					case RESURREZIONE:
+						statoPrecedente = Stato.ATTESA_RESURREZIONE;
+						stato = Stato.SCELTA_BERSAGLIO_RESURREZIONE;
+						processaAzione(null);
+						return;
+					case NORD:
+						direzione = Comando.NORD;
+						comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiNord());
+						break;
+					case EST:
+						direzione = Comando.EST;
+						comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiEst());
+						break;
+					case SUD:
+						direzione = Comando.SUD;
+						comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiSud());
+						break;
+					case OVEST:
+						direzione = Comando.OVEST;
+						comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiOvest());
+						break;
+					case AIUTO:
+						for (Personaggio personaggio : gruppo.getPersonaggi()) {
+							BusEventi.pubblica(new NotificaTestoParagrafo(personaggio.getDescrizione()));
+						}
+						stato = Stato.ATTESA_DIREZIONE;
+						processaAzione(null);
+						return;
+					case FLOPPY:
+						stato = Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE;
+						BusEventi.pubblica(new InternoStatoDiGioco(Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE,
+								Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3, Comando.NUMERO_4, Comando.NUMERO_5,
+								Comando.NO));
+						return;
+					default:
+						break;
 				}
 				stato = Stato.IN_CAMMINO;
 				if (comandiPossibiliPerNumeroPassi != null) {
@@ -1000,19 +1012,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (azione != Comando.ANNULLA) {
 			GestoreSalvataggi.salva(azione);
 		}
-	}
-
-	/**
-	 * I comandi possibili quando il gioco si trova in stato Intro:
-	 * inizio di una nuova partita o caricamento di una partita preesistente.
-	 */
-	private Collection<Comando> getComandiPossibiliInStatoIntro() {
-		Collection<Comando> comandiPossibili = new ArrayList<>();
-		comandiPossibili.add(Comando.PERGAMENA);
-		if (!GestoreSalvataggi.getSalvataggiDisponibili().isEmpty()) {
-			comandiPossibili.add(Comando.FLOPPY);
-		}
-		return comandiPossibili;
 	}
 
 	/**

@@ -5,18 +5,22 @@ package com.threeamigos.foresta.motore;
  */
 public enum Stato {
 
-	INTRO, // Prima dell'inizio del gioco vero e proprio,
-	
-	SELEZIONE_SALVATAGGIO_DA_LEGGERE,
-	FILE_DI_SALVATAGGIO_NON_VALIDO,
+	// Prima dell'inizio del gioco vero e proprio
+	INTRO,
 
+	// Inizio gioco - selezione partita precedente o creazione nuovo personaggio
+	PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE,
+	FILE_DI_SALVATAGGIO_NON_VALIDO,
 	PRE_GAME_ATTESA_NOME_PERSONAGGIO,
 	PRE_GAME_ATTESA_SESSO_PERSONAGGIO,
 	PRE_GAME_ATTESA_CLASSE_PERSONAGGIO,
 
-	INZIO_LOCAZIONE, // Crea una nuova locazione, crea i mostri, descrive, controlla trigger pre-locazione
-	// e passa al successivo
-	IN_LOCAZIONE, // Controlla trigger in-locazione, stabilisce quali azioni possono essere intraprese
+	// Eventi in gioco
+
+	// Crea una nuova locazione, crea i mostri, descrive, controlla trigger pre-locazione e passa al successivo
+	INZIO_LOCAZIONE,
+	// Controlla trigger in-locazione, stabilisce quali azioni possono essere intraprese
+	IN_LOCAZIONE,
 
 	SCELTA_AUTOMATICA_PERSONAGGIO,
 	SCELTA_PERSONAGGIO_QUALSIASI,
@@ -32,7 +36,8 @@ public enum Stato {
 
 	ATTESA_SI_NO,
 
-	FINE_LOCAZIONE, // Controlla trigger post-locazione
+	// Controlla trigger post-locazione
+	FINE_LOCAZIONE,
 	ATTESA_DIREZIONE,
 	ATTESA_PASSI,
 	
@@ -45,10 +50,12 @@ public enum Stato {
 	SCELTA_BERSAGLIO_RESURREZIONE,
 	ATTESA_RESURREZIONE,
 	MAPPA,
-	
+
+	// Gestione salvataggi
 	SELEZIONE_SALVATAGGIO_DA_SCRIVERE,
 	CONFERMA_USCITA,
 
+	// Fine del gioco
 	GIOCO_PERSO,
 	GIOCO_PERSO_2,
 	GIOCO_VINTO,
@@ -56,5 +63,5 @@ public enum Stato {
 	STATISTICHE,
 	ATTESA_NOME_PUNTEGGI,
 	PUNTEGGI
-	
+
 }
