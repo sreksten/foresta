@@ -161,9 +161,8 @@ public class Locanda extends LocazioneBase {
 				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
 				stato = StatoInLocanda.CHI_MANGIA;
 				Personaggio p;
-				int l = gruppo.getNumeroPersonaggiVivi();
 				List<Comando> comandiPossibiliChiMangia = new ArrayList<>();
-				for (int i = 0; i < l; i++) {
+				for (int i = 0; i < gruppo.getNumeroPersonaggi(); i++) {
 					p = gruppo.getPersonaggio(i);
 					if (p.isVivo()) {
 						comandiPossibiliChiMangia.add(Comando.ofPersonaggio(i));
@@ -190,16 +189,7 @@ public class Locanda extends LocazioneBase {
 					BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
 					return Stato.IN_LOCAZIONE;
 				} else {
-					if (gruppo.getMonete() < Costanti.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggi()) {
-						BusEventi.pubblica(new EventoMessaggio(NO_MONETE_PERNOTTAMENTO));
-						return Stato.FINE_LOCAZIONE;
-					} else {
-						BusEventi.pubblica(new EventoMessaggio(gruppo.chiMaiuscolo() + " desidera pernottare alla locanda?"));
-						BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
-						stato = StatoInLocanda.PERNOTTA;
-						BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
-						return Stato.IN_LOCAZIONE;
-					}
+					return richiediSePernottare(gruppo);
 				}
 			}
 
@@ -220,16 +210,7 @@ public class Locanda extends LocazioneBase {
 			} else {
 				accetta(gruppo, false);
 			}
-			if (gruppo.getMonete() < Costanti.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggiVivi()) {
-				BusEventi.pubblica(new EventoMessaggio(NO_MONETE_PERNOTTAMENTO));
-				return Stato.FINE_LOCAZIONE;
-			} else {
-				BusEventi.pubblica(new EventoMessaggio(gruppo.chiMaiuscolo() + " desidera pernottare alla locanda?"));
-				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
-				stato = StatoInLocanda.PERNOTTA;
-				BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
-				return Stato.IN_LOCAZIONE;
-			}
+			return richiediSePernottare(gruppo);
 
 		case PERNOTTA:
 			if (azione == Comando.SI) {
@@ -291,5 +272,18 @@ public class Locanda extends LocazioneBase {
 
 	public TipoRiposo getTipoRiposo() {
 		return TipoRiposo.AL_COPERTO;
+	}
+
+	private Stato richiediSePernottare(GruppoGiocatore gruppo) {
+		if (gruppo.getMonete() < Costanti.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggi()) {
+			BusEventi.pubblica(new EventoMessaggio(NO_MONETE_PERNOTTAMENTO));
+			return Stato.FINE_LOCAZIONE;
+		} else {
+			BusEventi.pubblica(new EventoMessaggio(gruppo.chiMaiuscolo() + " desidera pernottare alla locanda?"));
+			BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
+			stato = StatoInLocanda.PERNOTTA;
+			BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
+			return Stato.IN_LOCAZIONE;
+		}
 	}
 }

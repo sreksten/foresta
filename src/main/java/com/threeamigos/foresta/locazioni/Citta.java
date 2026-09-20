@@ -4,7 +4,6 @@ import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
-import com.threeamigos.foresta.ui.InterfacciaUtente;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -59,7 +58,6 @@ public abstract class Citta extends LocazioneUnica {
                 ". Qui è possibile cercare una locanda, il negozio di un alchimista o fare un salto dall'armaiolo prima di andare via."));
 		if (g.getPreziosi() > 0) {
 			g.vendePreziosi();
-			BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATISTICHE));
 		}
 	}
 
@@ -121,7 +119,6 @@ public abstract class Citta extends LocazioneUnica {
 		} else if (stato == StatoInCitta.DA_ALCHIMISTA || stato == StatoInCitta.DA_ARMAIOLO) {
 			if (azione == Comando.ANNULLA) {
 				BusEventi.pubblica(new EventoMostraSchermataGioco());
-				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.GRAFICA));
 				impostaAzioniCitta();
 				stato = StatoInCitta.IN_PIAZZA;
 			}

@@ -488,6 +488,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 			BusEventi.pubblica(new EventoMessaggio(notifica));
 			addMonete(quantita);
 			subPreziosi(md.getPreziosi());
+			BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATISTICHE));
 		}
 	}
 
