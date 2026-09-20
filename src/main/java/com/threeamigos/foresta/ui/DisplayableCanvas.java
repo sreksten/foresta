@@ -22,6 +22,10 @@ import java.awt.image.BufferedImage;
 import java.util.*;
 import java.util.List;
 
+/**
+ * Classe che rappresenta il canvas grafico del gioco.
+ * Le animazioni sono gestite dal metodo run() che gira ogni 100 ms.
+ */
 public class DisplayableCanvas extends JPanel implements Runnable {
 
 	private static final long serialVersionUID = 1L;
@@ -343,7 +347,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		while (animatoreInAzione) {
 			if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO || stato == StatoDisplayableCanvas.STATO_MAPPA
 					|| stato == StatoDisplayableCanvas.STATO_INVENTARIO || stato == StatoDisplayableCanvas.STATO_ARMAIOLO
-					|| stato == StatoDisplayableCanvas.STATO_ALCHIMISTA) {
+					|| stato == StatoDisplayableCanvas.STATO_ALCHIMISTA
+					|| annuncioGlobaleAttivo != null || !codaAnnunciGlobali.isEmpty()) {
 				repaint();
 			}
 			try {
