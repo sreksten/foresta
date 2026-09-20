@@ -80,3 +80,114 @@ ORCO_SENSIBILE$
     [DIALOGO=Benvenuti... snif... all'Orco Sensibile. Scusate, ma quella ballata sulla caduta di Forte Grigio mi spezza sempre il cuore. Entrate con animo gentile, vi prego. Niente parole dure, niente insulti e se dovete sfidare qualcuno a duello, fate che sia una gara di poesia. Chi non rispetta i sentimenti altrui viene preso a pugni in faccia con molta, molta tristezza. Cosa vi porto da bere per affogare i dispiaceri?][RECENSIONE=all'interno si recitano poesie e si piange davanti alla birra]L'Orco Sensibile
 RE_FINTO$
     [DIALOGO=Nobili viandanti, benvenuti alla Locanda del Re Finto! Qui ogni mendicante viene trattato come un duca e ogni avventuriero come un eroe leggendario! Inchinatevi davanti al bancone, ordinate il nostro 'Nettare Reale' (che in realtà è sidro di terza scelta corretto con miele) e godetevi l'illusione della ricchezza! L'oro che mi darete, purtroppo per me, deve essere vero. Cosa desiderano le vostre maestà?][RECENSIONE=arredata con corone di cartapesta e finti velluti]La Locanda del Re Finto
+
+GESTORE
+    [GESTORE_NOME] [GESTORE_COGNOME] | [GESTORE_TITOLO] [GESTORE_NOME] [GESTORE_DEGLI]
+
+GESTORE_NOME
+    Aniceto
+    Aristofane
+    Asdrubale
+    Baldomero
+    Bonaventura
+    Crisostomo
+    Cuniberto
+    Dagoberto
+    Ermenegildo
+    Eustachio
+    Filiberto
+    Gaudenzio
+    Leocadio
+    Ninfidio
+    Odorico
+    Pancrazio
+    Pantaleone
+    Pellegrino
+    Santippe
+    Teodolindo
+    Tristano
+    Valeriano
+    Zaccaria
+
+GESTORE_COGNOME
+    Barbagianni
+    Bellimbusti
+    Bertucca
+    Boccaloni
+    Capocotta
+    Carciofani
+    Cataratta
+    Cazzabubboli
+    Chiappalepri
+    Ciarlatano
+    Ciafardoni
+    Girelloni
+    Inciampati
+    Mangiapasta
+    Maremmani
+    Masticabrodo
+    Paciocchi
+    Pannoloni
+    Pantofolai
+    Paparazzi
+    Pappalardo
+    Patatracchi
+    Pasticciotti
+    Pizzicagnoli
+    Sbrindellati
+    Schiaccianoci
+    Sciancati
+    Scorramano
+    Smandrappati
+    Spaccatutto
+    Sparafrasche
+    Strambelli
+    Stropicciati
+    Tagliabrodo
+    Zampalesta
+
+GESTORE_TITOLO
+    Arciduca
+    Barone
+    Baronetto
+    Conte
+    Duca
+    Marchese
+    Visconte
+    Gran Visir
+    Granduca
+    Principe
+    Console
+    Vicario
+    Sire
+    Scudiero
+    Imperatore
+    Paladino
+    Custode
+    Soprintendente
+    Magnifico Rettore
+    Vescovo
+
+GESTORE_DEGLI
+    delle Mezze Maniche (Risparmia sulla stoffa delle divise)
+    dello Sbrindello (Sempre vestito di stracci finissimi)
+    del Bellimbusto (Specchi ovunque, servizio pessimo)
+    del Tagliabrodo (Famoso per diluire il brodo con l'acqua)
+    del Cazzabubbolo (Gestisce taverne minuscole ma caotiche)
+    dei Ciarlatani (Promette birre magiche, vende sidro sgasato)
+    degli Smandrappati (Il re dei locandieri squattrinati)
+    della Pantofola (Non si alza mai dalla sedia dietro al bancone)
+    dei Pizzicagnoli (Specializzato in taglieri durissimi)
+    dello Scorramano (Accetta scommesse clandestine sui dadi)
+    dei Barbagianni (Ha una collezione di gufi impagliati polverosi)
+    dello Schiaccianoci (Apre le noci direttamente con la testa)
+    delle Mezze Cartucce (Oste burbero che odia i clienti bassi)
+    dell'Inciampo (Cade sempre mentre porta i vassoi di ferro)
+    del Sacro Patatrac (Nel suo locale si spacca un boccale al minuto)
+    delle Stramberie (Serve lo stufato dentro vecchi stivali)
+    delle Paludi (La sua birra sa visibilmente di fango)
+    della Pasticciata (Sbaglia regolarmente i conti del resto)
+
+GESTORE_NOTE
+    Noto per i suoi modi raffinati e i locali freddi
+    Serve solo zuppe tiepide
