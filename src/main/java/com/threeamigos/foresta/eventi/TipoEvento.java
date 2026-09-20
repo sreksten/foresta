@@ -1,301 +1,335 @@
 package com.threeamigos.foresta.eventi;
 
 /**
+ * Gli eventi che accadono nel gioco si distinguono in:
+ * <ul>
+ *     <li>COMANDI che il giocatore invia al motore</li>
+ *     <li>RICHIESTE che il motore fa al giocatore</li>
+ *     <li>NOTIFICHE che il motore invia al giocatore</li>
+ *     <li>INTERNI</li>
+ * </ul>
  *
  * @author Stefano Reksten
  */
 public enum TipoEvento {
 
-
     // Azioni che il giocatore vorrebbe intraprendere
-
     /**
-     * Il giocatore invia un testo al motore
+     * Richiesta di acquisto di un Consumabile da un commerciante
      */
-    TESTO_DISPONIBILE,
+    COMANDO_ACQUISTO_ARTEFATTO,
+    /**
+     * Richiesta di acquisto di un Consumabile da un fornitore
+     */
+    COMANDO_ACQUISTO_CONSUMABILE,
+    /**
+     * Richiesta di interazione con un commerciante col quale si può fare una compravendita (ad es., l'Armaiolo)
+     */
+    COMANDO_APERTURA_INVENTARIO_COMMERCIANTE,
+    /**
+     * Richiesta di interazione con un fornitore col quale si può fare un acquisto (ad es., l'Alchimista)
+     */
+    COMANDO_APERTURA_INVENTARIO_FORNITORE,
+    /**
+     * Richiesta di interazione con l'inventario di gruppo
+     */
+    COMANDO_APERTURA_INVENTARIO_GRUPPO,
     /**
      * Il giocatore invia un comando di gioco (generico) all'automa
      */
     COMANDO_DI_GIOCO,
     /**
-     * Richiesta di interazione con l'inventario di gruppo
+     * Il giocatore invia un testo al motore
      */
-    RICHIESTA_APERTURA_INVENTARIO_GRUPPO,
+    COMANDO_INVIO_TESTO,
     /**
-     * Richiesta di interazione con un commerciante col quale si può fare una compravendita (ad es., l'Armaiolo)
+     * Richiesta di spostamento di un Artefatto dall'inventario del gruppo a un Personaggio
      */
-    RICHIESTA_APERTURA_INVENTARIO_COMMERCIANTE,
+    COMANDO_PRELIEVO_ARTEFATTO,
     /**
-     * Richiede di spostare un oggetto dall'inventario ad un personaggio
+     * Richiesta di spostamento di un Artefatto da un Personaggio all'inventario del gruppo
      */
-    RICHIESTA_SPOSTAMENTO_OGGETTO,
+    COMANDO_STOCCAGGIO_ARTEFATTO,
     /**
-     * Richiesta di interazione con un fornitore col quale si può fare un acquisto (ad es., l'Alchimista)
+     * Richiesta di vendita di un Artefatto dall'inventario del gruppo a n commerciante
      */
-    RICHIESTA_APERTURA_INVENTARIO_FORNITORE,
-    /**
-     * Richiesta di acquisto di un Consumabile da un commerciante
-     */
-    RICHIESTA_ACQUISTO_CONSUMABILE,
+    COMANDO_VENDITA_ARTEFATTO,
     /**
      * Richiede di visualizzare la mappa conosciuta della foresta a schermo intero
      */
-    RICHIESTA_VISUALIZZAZIONE_MAPPA,
+    COMANDO_VISUALIZZAZIONE_MAPPA,
 
 
-    // Interazioni dirette che il motore può avere con un giocatore
-
-
-    /**
-     * Il gioco chiede un testo (ad esempio il nome del personaggio)
-     */
-    RICHIESTA_TESTO,
-    /**
-     * Richiesta di selezione di uno slot per effettuare un salvataggio
-     */
-    RICHIESTA_SELEZIONE_SLOT_PER_SALVATAGGIO,
-    /**
-     * Richiesta di selezione di uno slot per effettuare una rilettura
-     */
-    RICHIESTA_SELEZIONE_SLOT_PER_RILETTURA,
-    /**
-     * Richiesta di scelta di un incantesimo da lanciare
-     */
-    RICHIESTA_SELEZIONE_INCANTESIMO_DA_LANCIARE,
+    // Richieste che il motore può fare ad un giocatore
     /**
      * Richiesta di scelta della direzione da seguire
      */
     RICHIESTA_SELEZIONE_DIREZIONE,
     /**
+     * Richiesta di scelta di un incantesimo da lanciare
+     */
+    RICHIESTA_SELEZIONE_INCANTESIMO_DA_LANCIARE,
+    /**
      * Richiesta di selezione si o no
      */
     RICHIESTA_SELEZIONE_SI_O_NO,
     /**
-     * Il motore approva lo spostamento di un oggetto da un inventario ad un altro
-     * (Personaggio <-> inventario di gruppo oppure inventario di gruppo <-> inventario di un commerciante)
+     * Richiesta di selezione di uno slot per effettuare una rilettura
      */
-    APPROVAZIONE_SPOSTAMENTO_OGGETTO,
+    RICHIESTA_SELEZIONE_SLOT_PER_RILETTURA,
     /**
-     * Il motore non approva lo spostamento di un oggetto da un inventario ad un altro
-     * (Personaggio <-> inventario di gruppo oppure inventario di gruppo <-> inventario di un commerciante)
+     * Richiesta di selezione di uno slot per effettuare un salvataggio
      */
-    RIFIUTO_SPOSTAMENTO_OGGETTO,
+    RICHIESTA_SELEZIONE_SLOT_PER_SALVATAGGIO,
     /**
-     * Il motore approva l'acquisto di un Consumabile da un Fornitore
+     * Il gioco chiede un testo (ad esempio il nome del personaggio)
      */
-    APPROVAZIONE_ACQUISTO_CONSUMABILE,
-    /**
-     * Il motore non approva l'acquisto di un Consumabile da un Fornitore
-     */
-    RIFIUTO_ACQUISTO_CONSUMABILE,
+    RICHIESTA_TESTO,
     /**
      * Il motore chiede conferma per l'uscita dal gioco
      */
-    SELEZIONE_CONFERMA_USCITA,
+    RICHIESTA_USCITA_DAL_GIOCO,
 
 
     // Notifiche dal motore al giocatore riguardanti l'avanzamento del gioco
-
-    /**
-     * Raccoglie gli oggetti vinti agli avversari
-     */
-    RACCOLTA_OGGETTI,
-    /**
-     * Variazione delle gemme disponibili al gruppo
-     */
-    VARIAZIONE_GEMME,
-    /**
-     * Variazione delle monete disponibili al gruppo
-     */
-    VARIAZIONE_MONETE,
-    /**
-     * Variazione del punteggio globale
-     */
-    VARIAZIONE_PUNTI,
-    /**
-     * Variazione dei punti esperienza di un singolo Personaggio
-     */
-    VARIAZIONE_PUNTI_ESPERIENZA,
-    /**
-     * Variazione degli incantesimi disponibili al gruppo
-     */
-    VARIAZIONE_INCANTESIMI,
-    /**
-     * Variazione della mappa conosciuta della foresta
-     */
-    VARIAZIONE_MAPPA,
-    /**
-     * Variazione della quantità di pozioni salute disponibili
-     */
-    VARIAZIONE_POZIONI_SALUTE,
-    /**
-     * Variazione della quantità di pozioni salute grandi disponibili
-     */
-    VARIAZIONE_POZIONI_SALUTE_GRANDI,
-    /**
-     * Variazione della quantità di pozioni magia disponibili
-     */
-    VARIAZIONE_POZIONI_MAGIA,
-    /**
-     * Variazione della quantità di pozioni magia grandi disponibili
-     */
-    VARIAZIONE_POZIONI_MAGIA_GRANDI,
-    /**
-     * Un Personaggio aumenta di livello
-     */
-    PERSONAGGIO_AUMENTO_LIVELLO,
-    /**
-     * Un Personaggio muore o resuscita
-     */
-    PERSONAGGIO_VARIAZIONE_STATO_VITALE,
-    /**
-     * Un Personaggio acquisisce un Modificatore che ne cambia le statistiche
-     */
-    PERSONAGGIO_AGGIUNTA_MODIFICATORE,
-    /**
-     * Un Personaggio consuma un punto di abilità per aumentare uno dei suoi attributi primari
-     */
-    PERSONAGGIO_CONSUMO_PUNTO_ABILITA,
-    /**
-     * Un Personaggio subisce una variazione delle sue statistiche
-     */
-    PERSONAGGIO_VARIAZIONE_STATISTICHE,
-    /**
-     * Un Personaggio combatta con un altro Personaggio
-     */
-    PERSONAGGIO_COMBATTIMENTO,
-    /**
-     * Un Personaggio subisce una variazione di un effetto di stato come effetto collaterale di un combattimento
-     */
-    PERSONAGGIO_VARIAZIONE_EFFETTO_DI_STATO,
-    /**
-     * Un Personaggio subisce una interazione elementale come effetto collaterale di un combattimento
-     */
-    PERSONAGGIO_INTERAZIONE_ELEMENTALE,
-    /**
-     * Il gioco aumenta di difficoltà
-     */
-    MONDO_AUMENTO_LIVELLO,
     /**
      * Notifica sull'aggiornamento di uno stato missione
      */
-    AGGIORNAMENTO_STATO_MISSIONE,
+    NOTIFICA_AGGIORNAMENTO_STATO_MISSIONE,
+    /**
+     * Un Personaggio acquisisce un Modificatore che ne cambia le statistiche
+     */
+    NOTIFICA_AGGIUNTA_MODIFICATORE_PERSONAGGIO,
+    /**
+     * Notifica sull'approvazione di una richiesta di acquisto di un Artefatto
+     */
+    NOTIFICA_APPROVAZIONE_ACQUISTO_ARTEFATTO,
+    /**
+     * Notifica sull'approvazione di una richiesta di acquisto di un Consumabile
+     */
+    NOTIFICA_APPROVAZIONE_ACQUISTO_CONSUMABILE,
+    /**
+     * Notifica sull'approvazione di una richiesta di prelievo di un Artefatto
+     */
+    NOTIFICA_APPROVAZIONE_PRELIEVO_ARTEFATTO,
+    /**
+     * Notifica sull'approvazione di una richiesta di stoccaggio di un Artefatto
+     */
+    NOTIFICA_APPROVAZIONE_STOCCAGGIO_ARTEFATTO,
+    /**
+     * Notifica sull'approvazione di una richiesta di vendita di un Artefatto
+     */
+    NOTIFICA_APPROVAZIONE_VENDITA_ARTEFATTO,
+    /**
+     * Il gioco aumenta di difficoltà
+     */
+    NOTIFICA_AUMENTO_LIVELLO_MONDO,
+    /**
+     * Un Personaggio aumenta di livello
+     */
+    NOTIFICA_AUMENTO_LIVELLO_PERSONAGGIO,
+    /**
+     * Un Personaggio consuma un punto di abilità per aumentare uno dei suoi attributi primari
+     */
+    NOTIFICA_CONSUMO_PUNTO_ABILITA_PERSONAGGIO,
+    /**
+     * Errore di caricamento del gioco
+     */
+    NOTIFICA_ERRORE_CARICAMENTO,
+    /**
+     * Fine della partita
+     */
+    NOTIFICA_FINE_GIOCO,
     /**
      * Mostra un annuncio in evidenza (ad esempio l'inizio di una missione)
      */
     NOTIFICA_GLOBALE,
     /**
-     * Nuovo paragrafo con spaziatura antecedente
+     * Un Personaggio inizia a combattere con un altro Personaggio
      */
-    PARAGRAFO,
+    NOTIFICA_INIZIO_COMBATTIMENTO_PERSONAGGIO,
     /**
-     * Continuazione del paragrafo precedente
+     * Un Personaggio subisce una interazione elementale come effetto collaterale di un combattimento
      */
-    MESSAGGIO,
+    NOTIFICA_INTERAZIONE_ELEMENTALE_PERSONAGGIO,
     /**
-     * Mostra un fumetto a video
+     * Mostra la finestra con i migliori 10 giocatori di tutti i tempi
      */
-    FUMETTO,
+    NOTIFICA_MOSTRA_PUNTEGGI_MIGLIORI,
     /**
-     * Mostra al giocatore o chiude la finestra del combattimento
+     * Mostra la finestra con le statistiche sulla partita appena conclusa
      */
-    VISUALIZZA_FINESTRA_COMBATTIMENTO,
+    NOTIFICA_MOSTRA_STATISTICHE_FINE_GIOCO,
     /**
-     * Fine della partita
+     * Raccoglie gli oggetti vinti agli avversari
      */
-    FINE_GIOCO,
+    NOTIFICA_RACCOLTA_OGGETTI,
     /**
-     * Mostra le statistiche sulla partita appena conclusa
+     * Notifica sul rifiuto di una richiesta di acquisto di un Artefatto
      */
-    MOSTRA_STATISTICHE,
+    NOTIFICA_RIFIUTO_ACQUISTO_ARTEFATTO,
     /**
-     * Mostra i migliori 10 giocatori di tutti i tempi
+     * Notifica sul rifiuto di una richiesta di acquisto di un Consumabile
      */
-    MOSTRA_PUNTEGGI,
+    NOTIFICA_RIFIUTO_ACQUISTO_CONSUMABILE,
+    /**
+     * Notifica sul rifiuto di una richiesta di prelievo di un Artefatto
+     */
+    NOTIFICA_RIFIUTO_PRELIEVO_ARTEFATTO,
+    /**
+     * Notifica sul rifiuto di una richiesta di stoccaggio di un Artefatto
+     */
+    NOTIFICA_RIFIUTO_STOCCAGGIO_ARTEFATTO,
+    /**
+     * Notifica sul rifiuto di una richiesta di vendita di un Artefatto
+     */
+    NOTIFICA_RIFIUTO_VENDITA_ARTEFATTO,
+    /**
+     * Un messaggio viene inviato dal motore al giocatore. Nuovo paragrafo con spaziatura antecedente
+     */
+    NOTIFICA_TESTO_PARAGRAFO,
+    /**
+     * Un messaggio viene inviato dal motore al giocatore. Continuazione del paragrafo precedente
+     */
+    NOTIFICA_TESTO_FRASE,
+    /**
+     * Variazione della mappa conosciuta della foresta
+     */
+    NOTIFICA_VARIAZIONE_CONOSCENZA_MAPPA,
+    /**
+     * Variazione delle gemme disponibili al gruppo
+     */
+    NOTIFICA_VARIAZIONE_DISPONIBILITA_GEMME,
+    /**
+     * Variazione degli incantesimi disponibili al gruppo
+     */
+    NOTIFICA_VARIAZIONE_DISPONIBILITA_INCANTESIMI,
+    /**
+     * Variazione delle monete disponibili al gruppo
+     */
+    NOTIFICA_VARIAZIONE_DISPONIBILITA_MONETE,
+    /**
+     * Variazione della quantità di pozioni salute disponibili
+     */
+    NOTIFICA_VARIAZIONE_DISPONIBILITA_POZIONI_SALUTE,
+    /**
+     * Variazione della quantità di pozioni salute grandi disponibili
+     */
+    NOTIFICA_VARIAZIONE_DISPONIBILITA_POZIONI_SALUTE_GRANDI,
+    /**
+     * Variazione della quantità di pozioni magia disponibili
+     */
+    NOTIFICA_VARIAZIONE_DISPONIBILITA_POZIONI_MAGIA,
+    /**
+     * Variazione della quantità di pozioni magia grandi disponibili
+     */
+    NOTIFICA_VARIAZIONE_DISPONIBILITA_POZIONI_MAGIA_GRANDI,
+    /**
+     * Un Personaggio subisce una variazione di un effetto di stato come effetto collaterale di un combattimento
+     */
+    NOTIFICA_VARIAZIONE_EFFETTO_DI_STATO_PERSONAGGIO,
+    /**
+     * Variazione del punteggio globale
+     */
+    NOTIFICA_VARIAZIONE_PUNTEGGIO,
+    /**
+     * Variazione dei punti esperienza di un singolo Personaggio
+     */
+    NOTIFICA_VARIAZIONE_PUNTI_ESPERIENZA_PERSONAGGIO,
+    /**
+     * Un Personaggio subisce una variazione delle sue statistiche
+     */
+    NOTIFICA_VARIAZIONE_STATISTICHE_PERSONAGGIO,
+    /**
+     * Un Personaggio muore o resuscita
+     */
+    NOTIFICA_VARIAZIONE_STATO_VITALE_PERSONAGGIO,
 
 
     // Eventi interni per il funzionamento del gioco
-
-    /**
-     * Richiede una reinizializzazione dell'interfaccia grafica
-     */
-    REINIZIALIZZAZIONE,
-    /**
-     * Errore di caricamento del gioco
-     */
-    ERRORE_CARICAMENTO,
     /**
      * Elenco dei possibili comandi che l'interfaccia deve mostrare
      */
-    COMANDI_DISPONIBILI,
-    /**
-     * Cambio di stato dell'automa principale che informa la UI
-     */
-    STATO_DI_GIOCO,
+    INTERNO_AGGIORNAMENTO_COMANDI_DISPONIBILI,
     /**
      * Un nuovo Personaggio viene creato dal motore
      */
-    PERSONAGGIO_CREAZIONE,
-    /**
-     * PRepara la locazione corrente per il turno di gioco
-     */
-    PREPARAZIONE_LOCAZIONE,
-    /**
-     * Un PNG prende una decisione riguardante un combattimento
-     */
-    PERSONAGGIO_VALUTAZIONE,
-
-
-    // Eventi interni del motore
-
-
-    /**
-     * Interfaccia utente inizializzata - segnala che il sistema è pronto per il gioco
-     */
-    INTERFACCIA_UTENTE_PRONTA,
-    /**
-     * Il motore chiede alla UI di mostrare la finestra principale di gioco
-     */
-    MOSTRA_SCHERMATA_GIOCO,
-    /**
-     * Il motore chiede alla UI di portare in primo piano una certa Finestra
-     */
-    MOSTRA_FINESTRA,
-    /**
-     * Chiede alla UI un refresh
-     */
-    REFRESH,
+    INTERNO_CREAZIONE_PERSONAGGIO,
     /**
      * Un componente interno crea uno sprite di "annuncio globale" e lo notifica al gestore grafico
      */
-    CREAZIONE_SPRITE_ANNUNCIO_GLOBALE,
+    INTERNO_CREAZIONE_SPRITE_ANNUNCIO_GLOBALE,
     /**
      * Un componente interno crea uno SpriteATempo e lo notifica al gestore grafico
      */
-    CREAZIONE_SPRITE_A_TEMPO,
+    INTERNO_CREAZIONE_SPRITE_A_TEMPO,
     /**
-     * Un componente interno crea uno Sprite effetto e lo notifica al gestore grafico
+     * Un componente interno crea uno SpriteEffettoDiStato e lo notifica al gestore grafico
      */
-    CREAZIONE_SPRITE_EFFETTO,
+    INTERNO_CREAZIONE_SPRITE_EFFETTO_DI_STATO,
     /**
-     * Un componente interno crea uno Sprite fumetto e lo notifica al gestore grafico
+     * Un componente interno crea uno SpriteFumettoATempo e lo notifica al gestore grafico
      */
-    CREAZIONE_SPRITE_FUMETTO,
+    INTERNO_CREAZIONE_SPRITE_FUMETTO_A_TEMPO,
     /**
-     * Un componente interno crea uno Sprite in dissolvenza e lo notifica al gestore grafico
+     * Un componente interno crea uno SpriteInDissolvenza e lo notifica al gestore grafico
      */
-    CREAZIONE_SPRITE_IN_DISSOLVENZA,
-    /**
-     * Attività interna di pulizia cache dinamica immagini
-     */
-    PULIZIA_CACHE_IMMAGINI,
-    /**
-     * Messaggi di notifica interni al motore non destinati al giocatore
-     */
-    MESSAGGIO_INTERNO,
+    INTERNO_CREAZIONE_SPRITE_IN_DISSOLVENZA,
     /**
      * Errore interno del motore
      */
-    ERRORE_INTERNO,
+    INTERNO_ERRORE,
+    /**
+     * Eccezione sollevata all'interno del motore
+     */
+    INTERNO_ECCEZIONE,
+    /**
+     * Interfaccia utente inizializzata - il sistema è pronto per il gioco
+     */
+    INTERNO_INTERFACCIA_UTENTE_PRONTA,
+    /**
+     * Messaggi di notifica interni al motore non destinati al giocatore
+     */
+    INTERNO_MESSAGGIO,
+    /**
+     * Il motore chiede alla UI di mostrare la finestra principale di gioco
+     */
+    INTERNO_MOSTRA_SCHERMATA_GIOCO,
+    /**
+     * Chiede di effettuare una notifica al giocatore via fumetto a tempo a video invece che come messaggio
+     */
+    INTERNO_NOTIFICA_VIA_FUMETTO_A_TEMPO,
+    /**
+     * Il motore chiede alla UI di portare in primo piano una certa Finestra
+     */
+    INTERNO_PORTA_IN_PRIMO_PIANO,
+    /**
+     * Prepara la locazione corrente per il turno di gioco
+     */
+    INTERNO_PREPARAZIONE_LOCAZIONE,
+    /**
+     * Attività interna di pulizia cache dinamica immagini
+     */
+    INTERNO_PULIZIA_CACHE_DINAMICA_IMMAGINI,
+    /**
+     * Chiede alla UI un refresh
+     */
+    INTERNO_RICHIESTA_REFRESH_UI,
+    /**
+     * Richiede una reinizializzazione dell'interfaccia grafica
+     */
+    INTERNO_RICHIESTA_REINIZIALIZZAZIONE_UI,
+    /**
+     * Un PNG prende una decisione riguardante un combattimento
+     */
+    INTERNO_RISULTATO_VALUTAZIONE_PERSONAGGIO_ATTACCANTE,
+    /**
+     * Mostra al giocatore o chiude la finestra del combattimento
+     */
+    INTERNO_STATO_FINESTRA_COMBATTIMENTO,
+    /**
+     * Cambio di stato dell'automa principale che informa la UI
+     */
+    INTERNO_STATO_DI_GIOCO
 
 }

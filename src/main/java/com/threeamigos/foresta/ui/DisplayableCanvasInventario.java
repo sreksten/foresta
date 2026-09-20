@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoFumetto;
-import com.threeamigos.foresta.eventi.EventoRifiutoPrelievoArtefatto;
+import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoPrelievoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
@@ -49,11 +49,11 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
 
     DisplayableCanvasInventario(int width, int height) {
         super(width, height);
-        BusEventi.iscriviti(EventoRifiutoPrelievoArtefatto.class, this::onEventoRifiutoPrelievo);
+        BusEventi.iscriviti(NotificaRifiutoPrelievoArtefatto.class, this::onEventoRifiutoPrelievo);
     }
 
-    void onEventoRifiutoPrelievo(EventoRifiutoPrelievoArtefatto evento) {
-        BusEventi.pubblica(new EventoFumetto("Questo oggetto è troppo pesante.", getCoordinateFumetto()));
+    void onEventoRifiutoPrelievo(NotificaRifiutoPrelievoArtefatto evento) {
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Questo oggetto è troppo pesante.", getCoordinateFumetto()));
     }
 
     @Override

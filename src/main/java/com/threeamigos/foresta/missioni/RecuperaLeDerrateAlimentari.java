@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoParagrafo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -40,7 +40,7 @@ public class RecuperaLeDerrateAlimentari extends MissioneRecuperaBersaglio imple
 		if (gruppo.isInLocazioneUnica(ClassiLocazione.CITTA_RUUNA) &&
 				!LineaTemporale.isCittaDistrutta(ClassiLocazione.CITTA_RUUNA)) {
 			if (!isAttiva()) {
-				BusEventi.pubblica(new EventoParagrafo("Il Borgomastro chiede a " +
+				BusEventi.pubblica(new NotificaTestoParagrafo("Il Borgomastro chiede a " +
 						gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
 						" aiuto per recuperare un carico di derrate alimentari che è stato rubato da una banda di Troll, " +
 						"che si nascondono in alcune rovine. Offre 20 monete in cambio."));
@@ -48,7 +48,7 @@ public class RecuperaLeDerrateAlimentari extends MissioneRecuperaBersaglio imple
 				Foresta.costruisciLocazioneUnica(ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, true);
 			} else if (!isCompleta() && isBersaglioRecuperato()) {
 				completaMissione();
-				BusEventi.pubblica(new EventoParagrafo("Il Borgomastro accoglie " + gruppo.chi() +
+				BusEventi.pubblica(new NotificaTestoParagrafo("Il Borgomastro accoglie " + gruppo.chi() +
 						", che ha recuperato le derrate alimentari. La ricompensa promessa viene saldata: 20 monete."));
 				gruppo.addMonete(20);
 			}
@@ -60,7 +60,7 @@ public class RecuperaLeDerrateAlimentari extends MissioneRecuperaBersaglio imple
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		if (gruppo.isInLocazioneUnica(ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI) &&
 				gruppo.getLocazioneCorrente().isCompleta() && !isBersaglioRecuperato()) {
-			BusEventi.pubblica(new EventoParagrafo("Le derrate alimentari sono state recuperate. " +
+			BusEventi.pubblica(new NotificaTestoParagrafo("Le derrate alimentari sono state recuperate. " +
 					gruppo.chiMaiuscolo() + " può tornare in città per reclamare la ricompensa."));
 			setBersaglioRecuperato();
 		}

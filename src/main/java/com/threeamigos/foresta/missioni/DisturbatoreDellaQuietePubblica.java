@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoParagrafo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -64,7 +64,7 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 			return;
 		}
 		if (!isAttiva()) {
-			BusEventi.pubblica(new EventoParagrafo("Nella Foresta vivono uomini che hanno scelto " +
+			BusEventi.pubblica(new NotificaTestoParagrafo("Nella Foresta vivono uomini che hanno scelto " +
 					"la solitudine dopo lunga riflessione. " + DESCRIZIONE_BASE + ", e fai in modo che se ne ricordino."));
 			attivaMissione();
 		}
@@ -74,11 +74,11 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 		aggiungiProprieta(EREMITI_INCONTRATI, String.valueOf(incontrati));
 		if (incontrati >= EREMITI_DA_INCONTRARE) {
 			completaMissione();
-			BusEventi.pubblica(new EventoParagrafo("Dieci Eremiti su dieci confermano che la Foresta era " +
+			BusEventi.pubblica(new NotificaTestoParagrafo("Dieci Eremiti su dieci confermano che la Foresta era " +
 					"molto più tranquilla prima. " +
 					"Il titolo di Disturbatore della Quiete Pubblica è meritato."));
 		} else {
-			BusEventi.pubblica(new EventoParagrafo("La quiete del " + Misc.getOrdinaleM(incontrati) +
+			BusEventi.pubblica(new NotificaTestoParagrafo("La quiete del " + Misc.getOrdinaleM(incontrati) +
 					" Eremita è stata ufficialmente turbata."));
 		}
 	}

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoMessaggio;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
@@ -36,9 +36,9 @@ public class RovineRecuperaLeDerrateAlimentari extends LocazioneUnica {
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
 		if (!isCompleta()) {
-			BusEventi.pubblica(new EventoMessaggio("Tra queste rovine si nasconde la banda di Troll che ha rubato il carico di derrate alimentari!"));
+			BusEventi.pubblica(new NotificaTestoFrase("Tra queste rovine si nasconde la banda di Troll che ha rubato il carico di derrate alimentari!"));
 		} else {
-			BusEventi.pubblica(new EventoMessaggio("Tra queste rovine si nascondeva la banda di Troll che aveva rubato il carico di derrate alimentari."));
+			BusEventi.pubblica(new NotificaTestoFrase("Tra queste rovine si nascondeva la banda di Troll che aveva rubato il carico di derrate alimentari."));
 		}
 	}
 

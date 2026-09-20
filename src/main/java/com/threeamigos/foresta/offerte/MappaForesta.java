@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.offerte;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoVariazioneMappa;
+import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneConoscenzaMappa;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoAvversario;
@@ -43,6 +43,6 @@ public class MappaForesta implements Offerta {
 	public void accetta(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
 		gruppo.subMonete(Costanti.COSTO_MAPPA_DELLA_FORESTA);
 		Foresta.ottieniMappa();
-		BusEventi.pubblica(new EventoVariazioneMappa(0, 0, Foresta.getDimensioneX(), Foresta.getDimensioneY()));
+		BusEventi.pubblica(new NotificaVariazioneConoscenzaMappa(0, 0, Foresta.getDimensioneX(), Foresta.getDimensioneY()));
 	}
 }

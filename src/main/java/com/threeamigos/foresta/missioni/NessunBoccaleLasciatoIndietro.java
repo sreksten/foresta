@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoParagrafo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.motore.Foresta;
@@ -59,7 +59,7 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 	public void controllaPostLocazione() {
 		// Il giocatore inizia sempre nel bosco, non può essere in una locanda alla fine del primo turno
 		if (!isCompleta() && !isAttiva()) {
-			BusEventi.pubblica(new EventoParagrafo("Da qualche parte fra le paludi e i castelli " +
+			BusEventi.pubblica(new NotificaTestoParagrafo("Da qualche parte fra le paludi e i castelli " +
 					"ci sono osti che non hanno ancora conosciuto la tua sete. " +
 					DESCRIZIONE_BASE + ", e non lasciarne indietro nemmeno una."));
 			attivaMissione();
@@ -76,10 +76,10 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 		aggiungiProprieta(LOCANDE_CENSITE, String.valueOf(visitate));
 		if (visitate >= LOCANDE_DA_VISITARE) {
 			completaMissione();
-			BusEventi.pubblica(new EventoParagrafo("Dieci locande, dieci osti, un solo fegato. Nessun boccale" +
+			BusEventi.pubblica(new NotificaTestoParagrafo("Dieci locande, dieci osti, un solo fegato. Nessun boccale" +
 					" è stato lasciato indietro, e la Foresta ha un nuovo esperto di birre a cui nessuno ha chiesto un parere."));
 		} else {
-			BusEventi.pubblica(new EventoParagrafo("Locanda numero " + visitate + " debitamente censita."));
+			BusEventi.pubblica(new NotificaTestoParagrafo("Locanda numero " + visitate + " debitamente censita."));
 		}
 	}
 

@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoApprovazioneAcquistoArtefatto;
-import com.threeamigos.foresta.eventi.EventoFumetto;
-import com.threeamigos.foresta.eventi.EventoRifiutoAcquistoArtefatto;
+import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
+import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto;
 import com.threeamigos.foresta.motore.AutomaScambiatoreArtefatti;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
@@ -29,16 +29,16 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
 
     DisplayableCanvasScambiatoreArtefatti(int width, int height) {
         super(width, height);
-        BusEventi.iscriviti(EventoApprovazioneAcquistoArtefatto.class, this::gestisciEventoApprovazioneAcquistoArtefatto);
-        BusEventi.iscriviti(EventoRifiutoAcquistoArtefatto.class, this::gestisciEventoRifiutoAcquistoArtefatto);
+        BusEventi.iscriviti(NotificaApprovazioneAcquistoArtefatto.class, this::gestisciEventoApprovazioneAcquistoArtefatto);
+        BusEventi.iscriviti(NotificaRifiutoAcquistoArtefatto.class, this::gestisciEventoRifiutoAcquistoArtefatto);
     }
 
-    private void gestisciEventoApprovazioneAcquistoArtefatto(EventoApprovazioneAcquistoArtefatto eventoApprovazioneAcquistoArtefatto) {
-        BusEventi.pubblica(new EventoFumetto("Grazie per aver fatto acquisti da noi!", getCoordinateFumetto()));
+    private void gestisciEventoApprovazioneAcquistoArtefatto(NotificaApprovazioneAcquistoArtefatto notificaApprovazioneAcquistoArtefatto) {
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Grazie per aver fatto acquisti da noi!", getCoordinateFumetto()));
     }
 
-    private void gestisciEventoRifiutoAcquistoArtefatto(EventoRifiutoAcquistoArtefatto eventoRifiutoAcquistoArtefatto) {
-        BusEventi.pubblica(new EventoFumetto("Non hai abbastanza denaro per comprare questo oggetto.", getCoordinateFumetto()));
+    private void gestisciEventoRifiutoAcquistoArtefatto(NotificaRifiutoAcquistoArtefatto notificaRifiutoAcquistoArtefatto) {
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Non hai abbastanza denaro per comprare questo oggetto.", getCoordinateFumetto()));
     }
 
     void impostaAutoma(AutomaScambiatoreArtefatti automa) {

@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoCreazioneSpriteATempo;
-import com.threeamigos.foresta.eventi.EventoVariazioneMappa;
+import com.threeamigos.foresta.eventi.interni.InternoCreazioneSpriteATempo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneConoscenzaMappa;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -38,7 +38,7 @@ class DisplayableCanvasRiquadroMappa implements Finestra {
 	}
 
 	private void registratiAEventi() {
-		BusEventi.iscriviti(EventoVariazioneMappa.class, this::gestisciEventoVariazioneMappa);
+		BusEventi.iscriviti(NotificaVariazioneConoscenzaMappa.class, this::gestisciEventoVariazioneMappa);
 	}
 
 	void disegnaMappa(Graphics2D graphics) {
@@ -124,8 +124,8 @@ class DisplayableCanvasRiquadroMappa implements Finestra {
 		g.fillRect(x, y, width, height);
 	}
 
-	private void gestisciEventoVariazioneMappa(EventoVariazioneMappa evento) {
-		BusEventi.pubblica(new EventoCreazioneSpriteATempo(variaMappa()));
+	private void gestisciEventoVariazioneMappa(NotificaVariazioneConoscenzaMappa evento) {
+		BusEventi.pubblica(new InternoCreazioneSpriteATempo(variaMappa()));
 	}
 
 	private SpriteATempo variaMappa() {

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoMessaggio;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -42,7 +42,7 @@ public class Tempio extends LocazioneBase {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		BusEventi.pubblica(new EventoMessaggio("Qui, in un tempio, " + descrizioneMostriEOggetti(g, gng)));
+		BusEventi.pubblica(new NotificaTestoFrase("Qui, in un tempio, " + descrizioneMostriEOggetti(g, gng)));
 	}
 
 	public TipoRiposo getTipoRiposo() {

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoParagrafo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.personaggi.Drago;
@@ -25,7 +25,7 @@ public class CastelloDrago extends LocazioneUnica {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		BusEventi.pubblica(new EventoParagrafo(g.chi() + " entra al Castello della Morte Alata, per lo scontro finale. Con uno sbatter d'ali simile al rombo di tuono, la Grande Minaccia si erge ora davanti al gruppo: il Drago è qui!"));
+		BusEventi.pubblica(new NotificaTestoParagrafo(g.chi() + " entra al Castello della Morte Alata, per lo scontro finale. Con uno sbatter d'ali simile al rombo di tuono, la Grande Minaccia si erge ora davanti al gruppo: il Drago è qui!"));
 	}
 
 	@Override

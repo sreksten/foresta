@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoAumentoLivelloPersonaggio;
-import com.threeamigos.foresta.eventi.EventoCreazioneSpriteATempo;
-import com.threeamigos.foresta.eventi.EventoVariazioneStatistichePersonaggio;
+import com.threeamigos.foresta.eventi.interni.InternoCreazioneSpriteATempo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloPersonaggio;
+import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneStatistichePersonaggio;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -180,8 +180,8 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		return -1;
 	}
 
-	void gestisciEventoAumentoLivelloPersonaggio(EventoAumentoLivelloPersonaggio evento) {
-		BusEventi.pubblica(new EventoCreazioneSpriteATempo(costruisciSpritePerVariazioneLivello(evento.getPersonaggio(),
+	void gestisciEventoAumentoLivelloPersonaggio(NotificaAumentoLivelloPersonaggio evento) {
+		BusEventi.pubblica(new InternoCreazioneSpriteATempo(costruisciSpritePerVariazioneLivello(evento.getPersonaggio(),
 				evento.getLivelloAttuale() - evento.getLivelloPrecedente())));
 	}
 
@@ -198,7 +198,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetLivello, y, "Livello variato");
 	}
 
-	void gestisciEventoVariazioneStatistichePersonaggio(EventoVariazioneStatistichePersonaggio evento) {
+	void gestisciEventoVariazioneStatistichePersonaggio(NotificaVariazioneStatistichePersonaggio evento) {
 		if (!GruppoGiocatore.getIstanza().contiene(evento.getPersonaggio())) {
 			return;
 		}
@@ -236,11 +236,11 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 	}
 
-	private void gestisciEventoVariazioneSalute(EventoVariazioneStatistichePersonaggio evento) {
+	private void gestisciEventoVariazioneSalute(NotificaVariazioneStatistichePersonaggio evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazioneSalute(evento.getPersonaggio(),
 				(int)(evento.getNuovoValore() - evento.getValorePrecedente()));
 		if (sprite != null) {
-			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}
 	}
 
@@ -257,11 +257,11 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetSalute, y, "Salute variata");
 	}
 
-	private void gestisciEventoVariazioneSaluteMassima(EventoVariazioneStatistichePersonaggio evento) {
+	private void gestisciEventoVariazioneSaluteMassima(NotificaVariazioneStatistichePersonaggio evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazioneSaluteMassima(evento.getPersonaggio(),
 				(int)(evento.getNuovoValore() - evento.getValorePrecedente()));
 		if (sprite != null) {
-			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}
 	}
 
@@ -278,11 +278,11 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetSaluteMassima, y, "Salute massima variata");
 	}
 
-	private void gestisciEventoVariazioneMagia(EventoVariazioneStatistichePersonaggio evento) {
+	private void gestisciEventoVariazioneMagia(NotificaVariazioneStatistichePersonaggio evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazioneMagia(evento.getPersonaggio(),
 				(int)(evento.getNuovoValore() - evento.getValorePrecedente()));
 		if (sprite != null) {
-			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}
 	}
 
@@ -299,11 +299,11 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetMagia, y, "Magia variata");
 	}
 
-	private void gestisciEventoVariazioneMagiaMassima(EventoVariazioneStatistichePersonaggio evento) {
+	private void gestisciEventoVariazioneMagiaMassima(NotificaVariazioneStatistichePersonaggio evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazioneMagiaMassima(evento.getPersonaggio(),
 				(int)(evento.getNuovoValore() - evento.getValorePrecedente()));
 		if (sprite != null) {
-			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}
 	}
 
@@ -320,11 +320,11 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetMagiaMassima, y, "Magia massima variata");
 	}
 
-	private void gestisciEventoVariazioneCoraggio(EventoVariazioneStatistichePersonaggio evento) {
+	private void gestisciEventoVariazioneCoraggio(NotificaVariazioneStatistichePersonaggio evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazioneCoraggio(evento.getPersonaggio(),
 				(int)(evento.getNuovoValore() - evento.getValorePrecedente()));
 		if (sprite != null) {
-			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}
 	}
 
@@ -341,11 +341,11 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetCoraggio, y, "Coraggio variato");
 	}
 
-	private void gestisciEventoVariazioneValore(EventoVariazioneStatistichePersonaggio evento) {
+	private void gestisciEventoVariazioneValore(NotificaVariazioneStatistichePersonaggio evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazioneValore(evento.getPersonaggio(),
 				(int)(evento.getNuovoValore() - evento.getValorePrecedente()));
 		if (sprite != null) {
-			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}
 	}
 
@@ -362,11 +362,11 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetValore, y, "Valore variato");
 	}
 
-	private void gestisciEventoVariazioneCarisma(EventoVariazioneStatistichePersonaggio evento) {
+	private void gestisciEventoVariazioneCarisma(NotificaVariazioneStatistichePersonaggio evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazioneCarisma(evento.getPersonaggio(),
 				(int)(evento.getNuovoValore() - evento.getValorePrecedente()));
 		if (sprite != null) {
-			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}
 	}
 
@@ -383,11 +383,11 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetCarisma, y, "Carisma variato");
 	}
 
-	private void gestisciEventoVariazioneStanchezza(EventoVariazioneStatistichePersonaggio evento) {
+	private void gestisciEventoVariazioneStanchezza(NotificaVariazioneStatistichePersonaggio evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazioneStanchezza(evento.getPersonaggio(),
 				(int)(evento.getNuovoValore() - evento.getValorePrecedente()));
 		if (sprite != null) {
-			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}
 	}
 
@@ -405,11 +405,11 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, color, rightXOffsetStanchezza, y, "Stanchezza variata");
 	}
 
-	private void gestisciEventoVariazioneTempo(EventoVariazioneStatistichePersonaggio evento) {
+	private void gestisciEventoVariazioneTempo(NotificaVariazioneStatistichePersonaggio evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazioneTempo(evento.getPersonaggio(),
 				(int)(evento.getNuovoValore() - evento.getValorePrecedente()));
 		if (sprite != null) {
-			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}
 	}
 

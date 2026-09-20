@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoParagrafo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 
@@ -42,7 +42,7 @@ public class SconfiggiLIdra extends MissioneBase implements Missione {
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
         if (gruppo.getClasseLocazioneCorrente() == ClassiLocazione.CASTELLO_IDRA && gruppo.getLocazioneCorrente().isCompleta()) {
             completaMissione();
-            BusEventi.pubblica(new EventoParagrafo("L'Idra è stato sconfitta!"));
+            BusEventi.pubblica(new NotificaTestoParagrafo("L'Idra è stato sconfitta!"));
         }
     }
 

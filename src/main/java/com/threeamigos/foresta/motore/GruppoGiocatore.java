@@ -1,6 +1,9 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.eventi.*;
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
+import com.threeamigos.foresta.eventi.comandigiocatore.*;
+import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
@@ -42,11 +45,11 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 
 	public GruppoGiocatore() {
 		super();
-		BusEventi.iscriviti(EventoRichiestaStoccaggioArtefatto.class, this::suEventoRichiestaStoccaggioArtefatto);
-		BusEventi.iscriviti(EventoRichiestaPrelievoArtefatto.class, this::suEventoRichiestaPrelievoArtefatto);
-		BusEventi.iscriviti(EventoRichiestaAcquistoArtefatto.class, this::suEventoRichiestaAcquistoArtefatto);
-		BusEventi.iscriviti(EventoRichiestaVenditaArtefatto.class, this::suEventoRichiestaVenditaArtefatto);
-		BusEventi.iscriviti(EventoRichiestaAcquistoConsumabile.class, this::suEventoRichiestaAcquistoConsumabile);
+		BusEventi.iscriviti(ComandoStoccaggioArtefatto.class, this::suEventoRichiestaStoccaggioArtefatto);
+		BusEventi.iscriviti(ComandoPrelievoArtefatto.class, this::suEventoRichiestaPrelievoArtefatto);
+		BusEventi.iscriviti(ComandoAcquistoArtefatto.class, this::suEventoRichiestaAcquistoArtefatto);
+		BusEventi.iscriviti(ComandoVenditaArtefatto.class, this::suEventoRichiestaVenditaArtefatto);
+		BusEventi.iscriviti(ComandoAcquistoConsumabile.class, this::suEventoRichiestaAcquistoConsumabile);
 	}
 
 	/**
@@ -109,7 +112,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	public final void aggiungiPersonaggio(Personaggio personaggio) {
 		super.aggiungiPersonaggio(personaggio);
 		String nome = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
-		BusEventi.pubblica(new EventoMessaggio(nome + " è felice di poter far parte del gruppo."));
+		BusEventi.pubblica(new NotificaTestoFrase(nome + " è felice di poter far parte del gruppo."));
 		md.addPersonaggioMD(personaggio.getModelloDati());
 	}
 
@@ -122,7 +125,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	public final void rimuoviPersonaggio(Personaggio p) {
 		super.rimuoviPersonaggio(p);
 		String nome = p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
-		BusEventi.pubblica(new EventoMessaggio(nome + " lascia il gruppo."));
+		BusEventi.pubblica(new NotificaTestoFrase(nome + " lascia il gruppo."));
 	}
 
 	public final int getMonete() {
@@ -133,7 +136,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		int valorePrecedente = md.getMonete();
 		int valoreAttuale = valorePrecedente + quantita;
 		md.setMonete(valoreAttuale);
-		BusEventi.pubblica(new EventoVariazioneMonete(valorePrecedente, valoreAttuale));
+		BusEventi.pubblica(new NotificaVariazioneDisponibilitaMonete(valorePrecedente, valoreAttuale));
 	}
 
 	public final void subMonete(int quantita) {
@@ -148,7 +151,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		int valorePrecedente = md.getPreziosi();
 		int valoreAttuale = valorePrecedente + quantita;
 		md.setPreziosi(valoreAttuale);
-		BusEventi.pubblica(new EventoVariazioneGemme(valorePrecedente, valoreAttuale));
+		BusEventi.pubblica(new NotificaVariazioneDisponibilitaGemme(valorePrecedente, valoreAttuale));
 	}
 
 	public final void subPreziosi(int quantita) {
@@ -163,7 +166,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		int valorePrecedente = md.getIncantesimi(classeIncantesimo);
 		int valoreAttuale = valorePrecedente + quantita;
 		md.setIncantesimi(classeIncantesimo, valoreAttuale);
-		BusEventi.pubblica(new EventoVariazioneIncantesimi(classeIncantesimo, valorePrecedente, valoreAttuale));
+		BusEventi.pubblica(new NotificaVariazioneDisponibilitaIncantesimi(classeIncantesimo, valorePrecedente, valoreAttuale));
 	}
 
 	public final void subIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
@@ -178,7 +181,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		int valorePrecedente = md.getPozioniSalute();
 		int valoreAttuale = valorePrecedente + quantita;
 		md.setPozioniSalute(valoreAttuale);
-		BusEventi.pubblica(new EventoVariazionePozioniSalute(valorePrecedente, valoreAttuale));
+		BusEventi.pubblica(new NotificaVariazioneDisponibilitaPozioniSalute(valorePrecedente, valoreAttuale));
 	}
 
 	public final void subPozioniSalute(int quantita) {
@@ -192,7 +195,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	public final void consumaPozioneSalute(Personaggio personaggio) {
 		subPozioniSalute(1);
 		personaggio.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE);
-		BusEventi.pubblica(new EventoMessaggio(personaggio.getNome(
+		BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(
 				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
 				" ha bevuto una pozione che fa riacquistare salute."));
@@ -206,7 +209,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		int valorePrecedente = md.getPozioniSaluteGrande();
 		int valoreAttuale = valorePrecedente + quantita;
 		md.setPozioniSaluteGrande(valoreAttuale);
-		BusEventi.pubblica(new EventoVariazionePozioniSaluteGrandi(valorePrecedente, valoreAttuale));
+		BusEventi.pubblica(new NotificaVariazioneDisponibilitaPozioniSaluteGrandi(valorePrecedente, valoreAttuale));
 	}
 
 	public final void subPozioniSaluteGrande(int quantita) {
@@ -221,7 +224,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		subPozioniSaluteGrande(1);
 		personaggio.addSaluteMassima(Costanti.AUMENTO_SALUTE_DA_POZIONE_SALUTE_GRANDE, "POZIONE_SALUTE_GRANDE");
 		personaggio.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE_GRANDE);
-		BusEventi.pubblica(new EventoMessaggio(personaggio.getNome(
+		BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(
 				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
 				" ha bevuto una pozione che recupera e fa aumentare la salute massima!"));
@@ -235,7 +238,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		int valorePrecedente = md.getPozioniMagia();
 		int valoreAttuale = valorePrecedente + quantita;
 		md.setPozioniMagia(valoreAttuale);
-		BusEventi.pubblica(new EventoVariazionePozioniMagia(valorePrecedente, valoreAttuale));
+		BusEventi.pubblica(new NotificaVariazioneDisponibilitaPozioniMagia(valorePrecedente, valoreAttuale));
 	}
 
 	public final void subPozioniMagia(int quantita) {
@@ -249,7 +252,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	public final void consumaPozioneMagia(Personaggio personaggio) {
 		subPozioniMagia(1);
 		personaggio.addMagia(Costanti.RECUPERO_DA_POZIONE_MAGIA);
-		BusEventi.pubblica(new EventoMessaggio(personaggio.getNome(
+		BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(
 				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
 				" ha bevuto una pozione che fa riacquistare magia."));
@@ -263,7 +266,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		int valorePrecedente = md.getPozioniMagiaGrande();
 		int valoreAttuale = valorePrecedente + quantita;
 		md.setPozioniMagiaGrande(valoreAttuale);
-		BusEventi.pubblica(new EventoVariazionePozioniMagia(valorePrecedente, valoreAttuale));
+		BusEventi.pubblica(new NotificaVariazioneDisponibilitaPozioniMagia(valorePrecedente, valoreAttuale));
 	}
 
 	public final void subPozioniMagiaGrande(int quantita) {
@@ -278,7 +281,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		subPozioniMagiaGrande(1);
 		personaggio.addMagiaMassima(Costanti.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "POZIONE_MAGIA_GRANDE");
 		personaggio.addMagia(Costanti.RECUPERO_DA_POZIONE_MAGIA_GRANDE);
-		BusEventi.pubblica(new EventoMessaggio(personaggio.getNome(
+		BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(
 				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
 				" ha bevuto una pozione che recupera e fa aumentare la magia massima!"));
@@ -425,7 +428,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 
 	public final void riposa(TipoRiposo tipoRiposo) {
 		getPersonaggiVivi().forEach(p -> p.riposa(1, tipoRiposo));
-		BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
+		BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
 	}
 
 	public final void pernotta(TipoRiposo tipoRiposo) {
@@ -443,7 +446,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 				sb.append(capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 			}
 			sb.append(". La notte alla locanda trascorre placida e tranquilla.");
-			BusEventi.pubblica(new EventoMessaggio(sb.toString()));
+			BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
 		} else {
 			StringBuilder sb = new StringBuilder("Il gruppo decide di accamparsi qui per riposare un po'. Dopo aver stabilito i turni di guardia, i ")
 					.append(Misc.getCardinaleM(personaggi.size())).append(" intrepidi avventurieri si godono un meritato riposo. ");
@@ -466,10 +469,10 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 				sb.append(" ha riposato abbastanza");
 			}
 			sb.append(" per rimettersi in forze.");
-			BusEventi.pubblica(new EventoMessaggio(sb.toString()));
+			BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
 		}
 		getPersonaggiVivi().forEach(p -> p.riposa(ore, tipoRiposo));
-		BusEventi.pubblica(new EventoMessaggio("Il sole sorge e l'avventura ricomincia."));
+		BusEventi.pubblica(new NotificaTestoFrase("Il sole sorge e l'avventura ricomincia."));
 	}
 
 	/**
@@ -484,15 +487,15 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
             String notifica = chiMaiuscolo() +
                     " ha venduto i preziosi raccolti, ricavandone " +
                     (quantita == 1 ? " una moneta." : (quantita + " monete."));
-			BusEventi.pubblica(new EventoMessaggio(notifica));
+			BusEventi.pubblica(new NotificaTestoFrase(notifica));
 			addMonete(quantita);
 			subPreziosi(md.getPreziosi());
-			BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATISTICHE));
+			BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATISTICHE));
 		}
 	}
 
 	public final void fugge() {
-		BusEventi.pubblica(new EventoMessaggio(chiMaiuscolo() + ", in preda al panico, cerca la salvezza nella fuga!" +
+		BusEventi.pubblica(new NotificaTestoFrase(chiMaiuscolo() + ", in preda al panico, cerca la salvezza nella fuga!" +
 				" Sfortunatamente riceve gravi ferite e perde molte delle cose in suo possesso!"));
 
 		Function<Integer, Integer> calcolaPerdita = m -> Dado.tiraAncheSenzaRange(0, m / 2);
@@ -509,7 +512,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 
 		getPersonaggiVivi().forEach(Personaggio::fugge);
 
-		BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
+		BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
 	}
 
 	public boolean isInLocazioneUnica(ClassiLocazione classeLocazioneUnica) {
@@ -548,50 +551,50 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		md.getArtefatti().remove(artefatto.getModelloDati());
 	}
 
-	private void suEventoRichiestaStoccaggioArtefatto(EventoRichiestaStoccaggioArtefatto eventoRichiestaStoccaggio) {
+	private void suEventoRichiestaStoccaggioArtefatto(ComandoStoccaggioArtefatto eventoRichiestaStoccaggio) {
 		Artefatto artefatto = (Artefatto) eventoRichiestaStoccaggio.getOggettoDaSpostare();
 		eventoRichiestaStoccaggio.getParteAttiva().removeArtefatto(artefatto);
 		addArtefatto(artefatto);
-		BusEventi.pubblica(new EventoApprovazioneStoccaggioArtefatto(eventoRichiestaStoccaggio));
+		BusEventi.pubblica(new NotificaApprovazioneStoccaggioArtefatto(eventoRichiestaStoccaggio));
 	}
 
-	private void suEventoRichiestaPrelievoArtefatto(EventoRichiestaPrelievoArtefatto eventoRichiestaPrelievoArtefatto) {
+	private void suEventoRichiestaPrelievoArtefatto(ComandoPrelievoArtefatto eventoRichiestaPrelievoArtefatto) {
 		Artefatto artefatto = (Artefatto) eventoRichiestaPrelievoArtefatto.getOggettoDaSpostare();
 		Personaggio personaggio = (Personaggio) eventoRichiestaPrelievoArtefatto.getParteAttiva();
 		if (personaggio.getCarico() + eventoRichiestaPrelievoArtefatto.getOggettoDaSpostare().getPeso() <= personaggio.getCaricoMassimo()) {
 			removeArtefatto(artefatto);
 			personaggio.addArtefatto(artefatto);
-			BusEventi.pubblica(new EventoApprovazionePrelievoArtefatto(eventoRichiestaPrelievoArtefatto));
+			BusEventi.pubblica(new NotificaApprovazionePrelievoArtefatto(eventoRichiestaPrelievoArtefatto));
 		} else {
-			BusEventi.pubblica(new EventoRifiutoPrelievoArtefatto(eventoRichiestaPrelievoArtefatto));
+			BusEventi.pubblica(new NotificaRifiutoPrelievoArtefatto(eventoRichiestaPrelievoArtefatto));
 		}
 	}
 
-	private void suEventoRichiestaAcquistoArtefatto(EventoRichiestaAcquistoArtefatto eventoRichiestaAcquistoArtefatto) {
-		Artefatto artefatto = (Artefatto) eventoRichiestaAcquistoArtefatto.getOggettoDaSpostare();
-		int costoOggetto = eventoRichiestaAcquistoArtefatto.getOggettoDaSpostare().getCostoAcquisto();
+	private void suEventoRichiestaAcquistoArtefatto(ComandoAcquistoArtefatto comandoAcquistoArtefatto) {
+		Artefatto artefatto = (Artefatto) comandoAcquistoArtefatto.getOggettoDaSpostare();
+		int costoOggetto = comandoAcquistoArtefatto.getOggettoDaSpostare().getCostoAcquisto();
 		if (getMonete() >= costoOggetto) {
 			addArtefatto(artefatto);
 			subMonete(artefatto.getCostoAcquisto());
-			eventoRichiestaAcquistoArtefatto.getParteRemota().removeArtefatto(artefatto);
-			BusEventi.pubblica(new EventoApprovazioneAcquistoArtefatto(eventoRichiestaAcquistoArtefatto));
+			comandoAcquistoArtefatto.getParteRemota().removeArtefatto(artefatto);
+			BusEventi.pubblica(new NotificaApprovazioneAcquistoArtefatto(comandoAcquistoArtefatto));
 		} else {
-			BusEventi.pubblica(new EventoRifiutoAcquistoArtefatto(eventoRichiestaAcquistoArtefatto));
+			BusEventi.pubblica(new NotificaRifiutoAcquistoArtefatto(comandoAcquistoArtefatto));
 		}
 	}
 
-	private void suEventoRichiestaVenditaArtefatto(EventoRichiestaVenditaArtefatto eventoRichiestaVendita) {
+	private void suEventoRichiestaVenditaArtefatto(ComandoVenditaArtefatto eventoRichiestaVendita) {
 		Artefatto artefatto = (Artefatto) eventoRichiestaVendita.getOggettoDaSpostare();
 		removeArtefatto(artefatto);
 		addMonete(artefatto.getCostoAcquisto());
 		eventoRichiestaVendita.getParteRemota().addArtefatto(artefatto);
-		BusEventi.pubblica(new EventoApprovazioneVenditaArtefatto(eventoRichiestaVendita));
+		BusEventi.pubblica(new NotificaApprovazioneVenditaArtefatto(eventoRichiestaVendita));
 	}
 
-	private void suEventoRichiestaAcquistoConsumabile(EventoRichiestaAcquistoConsumabile eventoRichiestaAcquistoConsumabile) {
-		int costoOggetto = eventoRichiestaAcquistoConsumabile.getPrezzo();
+	private void suEventoRichiestaAcquistoConsumabile(ComandoAcquistoConsumabile comandoAcquistoConsumabile) {
+		int costoOggetto = comandoAcquistoConsumabile.getPrezzo();
 		if (getMonete() >= costoOggetto) {
-			switch (eventoRichiestaAcquistoConsumabile.getTipoConsumabile()) {
+			switch (comandoAcquistoConsumabile.getTipoConsumabile()) {
 				case POZIONE_SALUTE:
 					addPozioniSalute(1);
 					break;
@@ -605,7 +608,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 					addPozioniMagiaGrande(1);
 					break;
 				case AUMENTO_MAGIA_SINGOLO:
-					eventoRichiestaAcquistoConsumabile.getPersonaggio()
+					comandoAcquistoConsumabile.getPersonaggio()
 							.addMagiaMassima(Costanti.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "ALCHIMISTA");
 					break;
 				case AUMENTO_MAGIA_GRUPPO:
@@ -616,7 +619,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 					}
 					break;
 				case INCANTESIMO:
-					addIncantesimi(eventoRichiestaAcquistoConsumabile.getClasseIncantesimo(), 1);
+					addIncantesimi(comandoAcquistoConsumabile.getClasseIncantesimo(), 1);
 					break;
 				case MAPPA_PARZIALE_FORESTA:
 					int x = getCoordinate().getX();
@@ -629,10 +632,10 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 				default:
 					throw new IllegalArgumentException("Tipo consumabile non valido");
 			}
-			subMonete(eventoRichiestaAcquistoConsumabile.getPrezzo());
-			BusEventi.pubblica(new EventoApprovazioneAcquistoConsumabile(eventoRichiestaAcquistoConsumabile));
+			subMonete(comandoAcquistoConsumabile.getPrezzo());
+			BusEventi.pubblica(new NotificaApprovazioneAcquistoConsumabile(comandoAcquistoConsumabile));
 		} else {
-			BusEventi.pubblica(new EventoRifiutoAcquistoConsumabile(eventoRichiestaAcquistoConsumabile));
+			BusEventi.pubblica(new NotificaRifiutoAcquistoConsumabile(comandoAcquistoConsumabile));
 		}
 	}
 

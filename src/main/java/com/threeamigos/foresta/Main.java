@@ -1,8 +1,8 @@
 package com.threeamigos.foresta;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoInterfacciaUtentePronta;
 import com.threeamigos.foresta.eventi.SnifferBusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoInterfacciaUtentePronta;
 import com.threeamigos.foresta.motore.Automa;
 import com.threeamigos.foresta.motore.ControlloreDiGioco;
 import com.threeamigos.foresta.tools.*;
@@ -43,6 +43,6 @@ public class Main {
 
 		//FIXME gestire l'elenco finestre togliendolo da InterfacciaUtente
 
-		BusEventi.iscriviti(EventoInterfacciaUtentePronta.class, e -> controlloreDiGioco.inizia());
+		BusEventi.iscriviti(InternoInterfacciaUtentePronta.class, e -> controlloreDiGioco.inizia());
 	}
 }

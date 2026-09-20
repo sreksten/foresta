@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoPuliziaCacheDinamicaImmagini;
+import com.threeamigos.foresta.eventi.interni.InternoPuliziaCacheDinamicaImmagini;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Logger;
@@ -283,7 +283,7 @@ public class ImageCache {
 				}
 				int rimossi = elementiPrima - elementiDopo;
 				if (rimossi > 0) {
-					BusEventi.pubblica(new EventoPuliziaCacheDinamicaImmagini(elementiPrima, elementiDopo));
+					BusEventi.pubblica(new InternoPuliziaCacheDinamicaImmagini(elementiPrima, elementiDopo));
 				}
 			} catch (Exception e) {
 				// Protezione anti-crash per evitare che un errore blocchi i tick futuri del reaper

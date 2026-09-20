@@ -1,6 +1,10 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.eventi.*;
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
+import com.threeamigos.foresta.eventi.interni.*;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
+import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
@@ -322,7 +326,7 @@ public abstract class LocazioneBase implements Locazione {
 					// Non si dovrebbe più riuscire a entrare in questo ramo perché la scelta degli incantesimi è già stata filtrata
                     String sb = "Il livello di magia " + formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
                             " non permette di formulare questo incantesimo.";
-					BusEventi.pubblica(new EventoMessaggio(sb));
+					BusEventi.pubblica(new NotificaTestoFrase(sb));
 
 					rispostaAvversaria(null, gruppo, gruppoAvversario);
 
@@ -348,7 +352,7 @@ public abstract class LocazioneBase implements Locazione {
 							comandiPossibiliBersaglio.add(Comando.ofPersonaggio(i));
 						}
 					}
-					BusEventi.pubblica(new EventoComandiDisponibili(comandiPossibiliBersaglio));
+					BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibiliBersaglio));
 					statoLocazione = StatoLocazione.SU_CHI_FORMULA;
 					gruppoBersaglio = gruppo;
 					return Stato.SCELTA_PERSONAGGIO_QUALSIASI;
@@ -416,17 +420,17 @@ public abstract class LocazioneBase implements Locazione {
 			}
 			if (gruppo.getMonete() >= gruppo.getNumeroPersonaggi() * 2 && Dado.tira(10) > 3) {
 				gruppo.subMonete(gruppo.getNumeroPersonaggi() * 2);
-				BusEventi.pubblica(new EventoMessaggio(gruppo.chiMaiuscolo() + " ha ottenuto un passaggio sicuro."));
+				BusEventi.pubblica(new NotificaTestoFrase(gruppo.chiMaiuscolo() + " ha ottenuto un passaggio sicuro."));
 				setOggetto(null);
 
 				offerta = gruppoAvversario.getCapo().getOfferta(Comando.CORRUZIONE);
 				if (offerta != null && offerta.isFattibile(gruppo, gruppoAvversario)) {
-					BusEventi.pubblica(new EventoMessaggio(offerta.getDescrizione(gruppo, gruppoAvversario)));
+					BusEventi.pubblica(new NotificaTestoFrase(offerta.getDescrizione(gruppo, gruppoAvversario)));
 					if (offerta.isGratuita(gruppo, gruppoAvversario)) {
 						offerta.accetta(gruppo, gruppoAvversario);
 					} else {
-						BusEventi.pubblica(new EventoMessaggio("Accetta?"));
-						BusEventi.pubblica(new EventoSelezioneSiNo());
+						BusEventi.pubblica(new NotificaTestoFrase("Accetta?"));
+						BusEventi.pubblica(new RichiestaSelezioneSiNo());
 						statoLocazione = StatoLocazione.ACCETTA_OFFERTA;
 						return Stato.IN_LOCAZIONE;
 					}
@@ -437,7 +441,7 @@ public abstract class LocazioneBase implements Locazione {
 				return Stato.FINE_LOCAZIONE;
 			} else {
 				Personaggio p = gruppo.getPersonaggio(azione);
-				BusEventi.pubblica(new EventoMessaggio("Il tentativo di corruzione " + p.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
+				BusEventi.pubblica(new NotificaTestoFrase("Il tentativo di corruzione " + p.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
 						" non ha avuto successo."));
 				opzioneCorruzioneDisponibile = false;
 				opzioneAmiciziaDisponibile = false;
@@ -457,17 +461,17 @@ public abstract class LocazioneBase implements Locazione {
 			if (personaggio.getCarisma() > tiroDelDado) {
 				personaggio.addCarisma(1);
 				haStrettoAmicizia = true;
-				BusEventi.pubblica(new EventoMessaggio(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 						Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " riesce a stringere amicizia."));
 
 				offerta = gruppoAvversario.getCapo().getOfferta(Comando.AMICIZIA);
 				if (offerta != null && offerta.isFattibile(gruppo, gruppoAvversario)) {
-					BusEventi.pubblica(new EventoMessaggio(offerta.getDescrizione(gruppo, gruppoAvversario)));
+					BusEventi.pubblica(new NotificaTestoFrase(offerta.getDescrizione(gruppo, gruppoAvversario)));
 					if (offerta.isGratuita(gruppo, gruppoAvversario)) {
 						offerta.accetta(gruppo, gruppoAvversario);
 					} else {
-						BusEventi.pubblica(new EventoMessaggio("Accetta?"));
-						BusEventi.pubblica(new EventoSelezioneSiNo());
+						BusEventi.pubblica(new NotificaTestoFrase("Accetta?"));
+						BusEventi.pubblica(new RichiestaSelezioneSiNo());
 						statoLocazione = StatoLocazione.ACCETTA_OFFERTA;
 						return Stato.IN_LOCAZIONE;
 					}
@@ -525,11 +529,11 @@ public abstract class LocazioneBase implements Locazione {
 
 				String s = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 				if (descrizione != null) {
-					BusEventi.pubblica(new EventoMessaggio("Non solo " + s + " non riesce a stringere amicizia, ma in una breve colluttazione " + descrizione));
+					BusEventi.pubblica(new NotificaTestoFrase("Non solo " + s + " non riesce a stringere amicizia, ma in una breve colluttazione " + descrizione));
 					// Non sapendo cosa andiamo a perdere rinfreschiamo tutto
-					BusEventi.pubblica(new EventoRichiestaRefreshUI());
+					BusEventi.pubblica(new InternoRichiestaRefreshUI());
 				} else {
-					BusEventi.pubblica(new EventoMessaggio(s + " non riesce a stringere amicizia."));
+					BusEventi.pubblica(new NotificaTestoFrase(s + " non riesce a stringere amicizia."));
 				}
 				opzioneAmiciziaDisponibile = false;
 				statoLocazione = StatoLocazione.IN_LOCAZIONE;
@@ -637,7 +641,7 @@ public abstract class LocazioneBase implements Locazione {
 		comandiPossibili.add(Comando.FUGA);
 		// E possiamo sempre richiedere di descrivere di nuovo la locazione
 		comandiPossibili.add(Comando.AIUTO);
-		BusEventi.pubblica(new EventoComandiDisponibili(comandiPossibili));
+		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibili));
 	}
 
 	/**
@@ -770,7 +774,7 @@ public abstract class LocazioneBase implements Locazione {
 		int numeroAvversari = gruppoAvversario.getNumeroPersonaggi();
 		if (numeroAvversari == 0) {
 			if (oggettoCorrente != null) {
-				BusEventi.pubblica(new EventoMessaggio("Essendo il tesoro incustodito, " +
+				BusEventi.pubblica(new NotificaTestoFrase("Essendo il tesoro incustodito, " +
 						gruppo.chi() + " se ne impossessa."));
 			}
 			if (tipoLocazione != TipoLocazione.MISSIONE_SECONDARIA) {
@@ -808,7 +812,7 @@ public abstract class LocazioneBase implements Locazione {
 	private Stato gestisciCombattimento(Comando azione) {
 		Logger.log("LocazioneBase.IN_COMBATTIMENTO");
 		if (azione == Comando.INTERRUZIONE_COMBATTIMENTO) {
-			BusEventi.pubblica(new EventoRichiestaChiusuraFinestraCombattimento());
+			BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
 			combattente = null;
 			return Stato.IN_LOCAZIONE;
@@ -816,7 +820,7 @@ public abstract class LocazioneBase implements Locazione {
 		if (azione == Comando.PERSONAGGIO_1 || azione == Comando.PERSONAGGIO_2 || azione == Comando.PERSONAGGIO_3 ||
 			azione == Comando.PERSONAGGIO_4 || azione == Comando.PERSONAGGIO_5) {
 			combattente = gruppo.getPersonaggio(azione);
-			BusEventi.pubblica(new EventoRichiestaAperturaFinestraCombattimento(combattente, gruppoAvversario.getPersonaggioVivo()));
+			BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(combattente, gruppoAvversario.getPersonaggioVivo()));
 			impostaComandiPossibili();
 			return Stato.IN_COMBATTIMENTO;
 		}
@@ -883,13 +887,13 @@ public abstract class LocazioneBase implements Locazione {
 				}
 			}
 
-			BusEventi.pubblica(new EventoRichiestaAperturaFinestraCombattimento(combattente, bersaglio));
+			BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(combattente, bersaglio));
 
 			if (gruppoAvversario.getNumeroPersonaggiVivi() > gruppo.getNumeroPersonaggiVivi()) {
 				bersaglio = gruppoAvversario.getPersonaggioVivo();
                 String sb = bersaglio.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
                         " si disimpegna e attacca!";
-				BusEventi.pubblica(new EventoMessaggio(sb));
+				BusEventi.pubblica(new NotificaTestoFrase(sb));
 				bersaglio.attacca(gruppo);
 			}
 				if (!gruppo.getCapo().isVivo()) {
@@ -939,22 +943,22 @@ public abstract class LocazioneBase implements Locazione {
 			}
 		}
 		if (azione == Comando.INCANTESIMO) {
-			BusEventi.pubblica(new EventoRichiestaChiusuraFinestraCombattimento());
+			BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 			statoLocazione = StatoLocazione.CHI_FORMULA;
 			return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 		}
 		if (azione == Comando.FUGA) {
-			BusEventi.pubblica(new EventoRichiestaChiusuraFinestraCombattimento());
+			BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 			chiediConfermaPerLaFuga();
 			statoLocazione = StatoLocazione.CONFERMA_FUGA;
-			BusEventi.pubblica(new EventoSelezioneSiNo());
+			BusEventi.pubblica(new RichiestaSelezioneSiNo());
 			return Stato.ATTESA_SI_NO;
 		}
 		return Stato.IN_COMBATTIMENTO;
 	}
 	
 	private Stato gestisciInLocazione(Comando azione) {
-		BusEventi.pubblica(new EventoMessaggioInterno("LocazioneBase.IN_LOCAZIONE, Comando: " + azione));
+		BusEventi.pubblica(new InternoMessaggio("LocazioneBase.IN_LOCAZIONE, Comando: " + azione));
 		if (azione != null) {
 			switch (azione) {
 			case COMBATTIMENTO:
@@ -998,12 +1002,12 @@ public abstract class LocazioneBase implements Locazione {
 			case FUGA:
 				chiediConfermaPerLaFuga();
 				statoLocazione = StatoLocazione.CONFERMA_FUGA;
-				BusEventi.pubblica(new EventoSelezioneSiNo());
+				BusEventi.pubblica(new RichiestaSelezioneSiNo());
 				return Stato.ATTESA_SI_NO;
 				
 			case AIUTO:
 				for (Personaggio personaggio : gruppo.getPersonaggi()) {
-					BusEventi.pubblica(new EventoMessaggio(personaggio.getDescrizione()));
+					BusEventi.pubblica(new NotificaTestoFrase(personaggio.getDescrizione()));
 				}
 				int numeroAvversari = gruppoAvversario.getNumeroPersonaggiVivi();
 				Personaggio p = gruppoAvversario.getCapo();
@@ -1014,8 +1018,8 @@ public abstract class LocazioneBase implements Locazione {
 					sb.append(Misc.getCardinaleM(numeroAvversari)).append(' ').append(p.getNomePlurale());
 				}
 				sb.append('.');
-				BusEventi.pubblica(new EventoMessaggio(sb.toString()));
-				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
+				BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
+				BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
 				break;
 
 			default:
@@ -1027,13 +1031,13 @@ public abstract class LocazioneBase implements Locazione {
 
 	private void chiediConfermaPerLaFuga() {
 		if (gruppo.getNumeroPersonaggiVivi() > 1) {
-			BusEventi.pubblica(new EventoMessaggio("Il gruppo è sicuro di voler fuggire?"));
+			BusEventi.pubblica(new NotificaTestoFrase("Il gruppo è sicuro di voler fuggire?"));
 		} else {
 			Personaggio capo = gruppo.getCapo();
 			String sb = capo.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + " è sicur" +
 					capo.getLetteraFinaleAttributo() +
 					" di voler fuggire?";
-			BusEventi.pubblica(new EventoMessaggio(sb));
+			BusEventi.pubblica(new NotificaTestoFrase(sb));
 		}
 	}
 
@@ -1045,8 +1049,8 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		combattente = gruppo.getPersonaggio(azione);
 		String nome = combattente.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
-		BusEventi.pubblica(new EventoMessaggio(nome + " si appresta al combattimento."));
-		BusEventi.pubblica(new EventoRichiestaAperturaFinestraCombattimento(combattente, gruppoAvversario.getPersonaggioVivo()));
+		BusEventi.pubblica(new NotificaTestoFrase(nome + " si appresta al combattimento."));
+		BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(combattente, gruppoAvversario.getPersonaggioVivo()));
 		opzioneAmiciziaDisponibile = false;
 		opzioneCorruzioneDisponibile = false;
 		statoLocazione = StatoLocazione.IN_COMBATTIMENTO;

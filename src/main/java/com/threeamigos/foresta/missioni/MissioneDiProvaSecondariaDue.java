@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoParagrafo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 
 /**
  *
@@ -26,7 +26,7 @@ public class MissioneDiProvaSecondariaDue extends MissioneBase implements Missio
     @Override
     public void controllaPreLocazione() {
         if (!isAttiva()) {
-            BusEventi.pubblica(new EventoParagrafo(getDescrizione()));
+            BusEventi.pubblica(new NotificaTestoParagrafo(getDescrizione()));
             attivaMissione();
         }
     }

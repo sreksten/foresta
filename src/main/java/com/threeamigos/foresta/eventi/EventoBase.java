@@ -3,6 +3,7 @@ package com.threeamigos.foresta.eventi;
 import java.util.UUID;
 
 /**
+ * Classe base astratta per eventi che accadono all'interno del motore.
  *
  * @author Stefano Reksten
  */

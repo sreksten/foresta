@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoMessaggio;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.modellodati.TipoDanno;
@@ -44,7 +44,7 @@ public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 			}
 		}
 		if (!formulante.isPNG()) {
-			BusEventi.pubblica(new EventoMessaggio(risultato(formulante)));
+			BusEventi.pubblica(new NotificaTestoFrase(risultato(formulante)));
 		}
 	}
 
@@ -55,12 +55,12 @@ public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 			return;
 		if (bersaglio.getSalute() < bersaglio.getSaluteMassima() / 4) {
 			String s = bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
-			BusEventi.pubblica(new EventoMessaggio("L'incantesimo ha ucciso " + s + "."));
+			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo ha ucciso " + s + "."));
 			bersaglio.muore((bersaglio.getSesso() == Personaggio.Sesso.MASCHIO ? "Ucciso " : "Uccisa ") + " da un incantesimo di Morte");
 			uccisi++;
 		} else {
 			String s = formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
-			BusEventi.pubblica(new EventoMessaggio("L'incantesimo non ha avuto successo e si è ritorto contro " + s + "."));
+			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo non ha avuto successo e si è ritorto contro " + s + "."));
 			formulante.subSalute(formulante.getSalute() / 4, bersaglio, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
 		}
 	}

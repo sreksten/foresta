@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoMessaggio;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.OggettoConCosto;
@@ -91,7 +91,7 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 	public boolean prendi(GruppoGiocatore gruppo, Comando comando) {
 		if (comando == null) {
 			if (gruppo.getNumeroPersonaggiVivi() > 1) {
-				BusEventi.pubblica(new EventoMessaggio("Chi raccoglie " + getNome() + "?"));
+				BusEventi.pubblica(new NotificaTestoFrase("Chi raccoglie " + getNome() + "?"));
 				return false;
 			} else {
 				comando = Comando.PERSONAGGIO_1;
@@ -99,7 +99,7 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 		}
 		Personaggio p = gruppo.getPersonaggio(comando);
 		p.addArtefatto(this);
-		BusEventi.pubblica(new EventoMessaggio(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " raccoglie " + md.getNome() + '.'));
+		BusEventi.pubblica(new NotificaTestoFrase(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " raccoglie " + md.getNome() + '.'));
 		return true;
 	}
 

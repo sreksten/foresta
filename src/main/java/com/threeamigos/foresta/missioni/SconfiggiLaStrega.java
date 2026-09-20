@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoParagrafo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 
@@ -43,7 +43,7 @@ public class SconfiggiLaStrega extends MissioneBase implements Missione {
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
         if (gruppo.getClasseLocazioneCorrente() == ClassiLocazione.CASTELLO_STREGA && gruppo.getLocazioneCorrente().isCompleta()) {
             completaMissione();
-            BusEventi.pubblica(new EventoParagrafo("La Strega è stata sconfitta!"));
+            BusEventi.pubblica(new NotificaTestoParagrafo("La Strega è stata sconfitta!"));
         }
     }
 

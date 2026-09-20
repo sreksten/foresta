@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.tools;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoException;
+import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.motore.Temporizzabile;
 
 import java.util.concurrent.Executors;
@@ -33,7 +33,7 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 				try {
 					temporizzabile.tick();
 				} catch (RuntimeException e) {
-					BusEventi.pubblica(new EventoException(e));
+					BusEventi.pubblica(new InternoException(e));
 				}
 			},
                 0,

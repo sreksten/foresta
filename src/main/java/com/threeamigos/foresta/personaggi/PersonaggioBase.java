@@ -1,6 +1,9 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.eventi.*;
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoCreazionePersonaggio;
+import com.threeamigos.foresta.eventi.interni.InternoRisultatoValutazionePersonaggioAttaccante;
+import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
@@ -72,7 +75,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 		ricalcolaAttributiSecondari();
 		classe.setQuantitaMassima(quantitaMassima);
-		BusEventi.pubblica(new EventoCreazionePersonaggio(this));
+		BusEventi.pubblica(new InternoCreazionePersonaggio(this));
 	}
 
 	/**
@@ -151,7 +154,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 		md.setVivo(false);
 		md.setCausaTrapasso(causaTrapasso);
-		BusEventi.pubblica(new EventoVariazioneStatoVitalePersonaggio(this, false));
+		BusEventi.pubblica(new NotificaVariazioneStatoVitalePersonaggio(this, false));
 	}
 
 	public String getCausaTrapasso() {
@@ -162,7 +165,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.set(TipoAttributo.SALUTE, (int)(calcolaSaluteMassima() / 10.0d));
 		md.set(TipoAttributo.STANCHEZZA, 9);
 		md.setVivo(true);
-		BusEventi.pubblica(new EventoVariazioneStatoVitalePersonaggio(this, true));
+		BusEventi.pubblica(new NotificaVariazioneStatoVitalePersonaggio(this, true));
 	}
 
 	//FIXME metodo da rimuovere quando passiamo al nuovo motore di combattimento
@@ -343,7 +346,7 @@ public abstract class PersonaggioBase implements Personaggio {
 					OpzioniGetNome.INCLUDI_ARTICOLO_INDETERMINATIVO_SINGOLARE;
             String messaggio = getNome(articoloDaIncludere, OpzioniGetNome.INIZIALE_MAIUSCOLA) +
                     " attacca " + bersaglio.getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + '.';
-			BusEventi.pubblica(new EventoMessaggio(messaggio));
+			BusEventi.pubblica(new NotificaTestoFrase(messaggio));
 
 			boolean colpisce = CalcolatoreCombattimento.colpisce(this, bersaglio, SupertipoDanno.FISICO);
 			if (colpisce) {
@@ -366,7 +369,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			rimuoviEffettoDiStato(tipoEffettoDiStato);
 		}
 		for (TipoInterazioneElementale interazione : risultato.getInterazioniElementali()) {
-			BusEventi.pubblica(new EventoInterazioneElementale(this, interazione));
+			BusEventi.pubblica(new NotificaInterazioneElementalePersonaggio(this, interazione));
 		}
 	}
 
@@ -379,7 +382,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	private Incantesimo scegliIncantesimoContro(Personaggio personaggioBersaglio) {
 		// Se il personaggio non sa usare la magia, non lancio incantesimo
 		if (!isMagico()) {
-			BusEventi.pubblica(new EventoValutazioneAttaccante(this, personaggioBersaglio,
+			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
 					RisultatoValutazioneAttaccante.NON_USA_MAGIA));
 			return null;
 		}
@@ -387,7 +390,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		// Se il personaggio non ha magia a sua disposizione, non lancio incantesimo
 		int magiaCorrente = getMagia();
 		if (getMagia() == 0) {
-			BusEventi.pubblica(new EventoValutazioneAttaccante(this, personaggioBersaglio,
+			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
 					RisultatoValutazioneAttaccante.SENZA_MAGIA_A_DISPOSIZIONE));
 			return null;
 		}
@@ -400,14 +403,14 @@ public abstract class PersonaggioBase implements Personaggio {
 
 		// Se non ci sono incantesimi possibili, non lancio incantesimo
 		if (incantesimiDisponibili.isEmpty()) {
-			BusEventi.pubblica(new EventoValutazioneAttaccante(this, personaggioBersaglio,
+			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
 					RisultatoValutazioneAttaccante.SENZA_INCANTESIMI_A_DISPOSIZIONE));
 			return null;
 		}
 
 		// Per qualche motivo suo il mostro potrebbe decidere di non tirare incantesimi
 		if (Dado.tira(3) == 1) {
-			BusEventi.pubblica(new EventoValutazioneAttaccante(this, personaggioBersaglio,
+			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
 					RisultatoValutazioneAttaccante.CASUALMENTE_NON_LANCIA_INCANTESIMO));
 			return null;
 		}
@@ -416,7 +419,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		// Un mostro stupido non sa mai cosa fare, quindi sceglie un incantesimo a caso
 		if (intelligenza < 5) {
 			Incantesimo incantesimo = incantesimiDisponibili.get(Dado.tira(incantesimiDisponibili.size()) - 1);
-			BusEventi.pubblica(new EventoValutazioneAttaccante(this, personaggioBersaglio,
+			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
 					RisultatoValutazioneAttaccante.SCEGLIE_A_CASO, incantesimo));
 			return incantesimo;
 		}
@@ -425,7 +428,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		IncantesimoMalefico piuPotente = incantesimiDisponibili.get(0);
 		if (intelligenza < 7) {
 			// Usa l'incantesimo più potente a disposizione
-			BusEventi.pubblica(new EventoValutazioneAttaccante(this, personaggioBersaglio,
+			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
 					RisultatoValutazioneAttaccante.SCEGLIE_IL_PIU_POTENTE, piuPotente));
 			return piuPotente;
 		}
@@ -443,12 +446,12 @@ public abstract class PersonaggioBase implements Personaggio {
 		int possibiliDanniFisici = CalcolatoreCombattimento.calcolaDannoRisultante(this, personaggioBersaglio, arma).getDanno();
 
 		if (probabilitaDiColpireMagico * possibiliDanniMagici > probabilitaDiColpireFisico * possibiliDanniFisici) {
-			BusEventi.pubblica(new EventoValutazioneAttaccante(this, personaggioBersaglio,
+			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
 					RisultatoValutazioneAttaccante.PREFERISCE_ATTACCO_MAGICO, piuPotente,
 					probabilitaDiColpireFisico, probabilitaDiColpireMagico, possibiliDanniFisici, possibiliDanniMagici));
 			return piuPotente;
 		} else {
-			BusEventi.pubblica(new EventoValutazioneAttaccante(this, personaggioBersaglio,
+			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
 					RisultatoValutazioneAttaccante.PREFERISCE_ATTACCO_FISICO, piuPotente,
 					probabilitaDiColpireFisico, probabilitaDiColpireMagico, possibiliDanniFisici, possibiliDanniMagici));
 			return null;
@@ -463,7 +466,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	public void setTempo(int tempo) {
 		double quantitaPrecedente = md.get(TipoAttributo.TEMPO);
 		md.set(TipoAttributo.TEMPO, tempo);
-		BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.TEMPO, quantitaPrecedente, tempo));
+		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.TEMPO, quantitaPrecedente, tempo));
 	}
 
 	public int decrementaTempo() {
@@ -474,7 +477,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		double quantitaPrecedente = tempo;
 		tempo--;
 		md.set(TipoAttributo.TEMPO, tempo);
-		BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.TEMPO, quantitaPrecedente, tempo));
+		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.TEMPO, quantitaPrecedente, tempo));
 		return (int)tempo;
 	}
 
@@ -621,7 +624,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		int quantitaPrecedente = md.getEsperienza();
 		int nuovaQuantita = quantitaPrecedente + esperienza;
 		md.setEsperienza(nuovaQuantita);
-		BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.PUNTI_ESPERIENZA,
+		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.PUNTI_ESPERIENZA,
 				quantitaPrecedente, nuovaQuantita));
 
 		// Verifichiamo se i nuovi XP accumulati determinano un salto di livello
@@ -631,11 +634,11 @@ public abstract class PersonaggioBase implements Personaggio {
 		if (nuovoLivello > livelloAttuale) {
 			int differenza = nuovoLivello - livelloAttuale;
 			md.setLivello(nuovoLivello);
-			BusEventi.pubblica(new EventoAumentoLivelloPersonaggio(this, livelloAttuale, nuovoLivello));
+			BusEventi.pubblica(new NotificaAumentoLivelloPersonaggio(this, livelloAttuale, nuovoLivello));
 			int puntiAbilitaDisponibili = md.getPuntiAbilitaDisponibili();
 			int nuoviPuntiAbilitaDisponibili = puntiAbilitaDisponibili + differenza;
 			md.setPuntiAbilitaDisponibili(nuoviPuntiAbilitaDisponibili);
-			BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.PUNTI_ABILITA, puntiAbilitaDisponibili, nuoviPuntiAbilitaDisponibili));
+			BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.PUNTI_ABILITA, puntiAbilitaDisponibili, nuoviPuntiAbilitaDisponibili));
 		}
 		// QUI PUOI AGGANCIARE IL CODICE PRECEDENTE:
 		// 1. Ricalcola il nuovo budget di punti primari (con la tolleranza del 5%)
@@ -657,9 +660,9 @@ public abstract class PersonaggioBase implements Personaggio {
 		int puntiAbilitaDisponibili = md.getPuntiAbilitaDisponibili();
 		int nuoviPuntiAbilitaDisponibili = puntiAbilitaDisponibili - 1;
 		md.setPuntiAbilitaDisponibili(nuoviPuntiAbilitaDisponibili);
-		BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.PUNTI_ABILITA,
+		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.PUNTI_ABILITA,
 				puntiAbilitaDisponibili, nuoviPuntiAbilitaDisponibili));
-		BusEventi.pubblica(new EventoConsumoPuntoAbilita(this, tipoAttributo));
+		BusEventi.pubblica(new NotificaConsumoPuntoAbilitaPersonaggio(this, tipoAttributo));
 	}
 
 	// CARICO
@@ -727,7 +730,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		quantita = limitaEntroMassimi(salutePrecedente, getSaluteMassima(), quantita);
 		int saluteCorrente = salutePrecedente + quantita;
 		md.set(TipoAttributo.SALUTE, saluteCorrente);
-		BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE, salutePrecedente, saluteCorrente));
+		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE, salutePrecedente, saluteCorrente));
 	}
 
 	//FIXME sono convinto che questo metodo sia un po' troppo un pout-pourri. Include sia la morte che la notifica. Andrebbe spezzato
@@ -737,7 +740,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			if (notificaFerite == Personaggio.NotificaFerite.SI) {
 				String sb = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA) +
 						" non ha riportato danni dall'attacco " + avversario.getNome(OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) + '.';
-				BusEventi.pubblica(new EventoMessaggio(sb));
+				BusEventi.pubblica(new NotificaTestoFrase(sb));
 			}
 			return;
 		}
@@ -781,7 +784,7 @@ public abstract class PersonaggioBase implements Personaggio {
 					sb.append(" è mort");
 					sb.append(getLetteraFinaleAttributo());
 					sb.append(" per le ferite riportate.");
-					BusEventi.pubblica(new EventoMessaggio(sb.toString()));
+					BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
 				}
 				if (avversario != null) {
 					md.setCausaTrapasso("Uccis" + getLetteraFinaleAttributo() + " " + avversario.getDa() + avversario.getNomeSingolare() + ".");
@@ -796,11 +799,11 @@ public abstract class PersonaggioBase implements Personaggio {
 				String nome = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA);
 				String notifica = nome + " ha ancora " + (int)salute + " punt" + (salute == 1 ? 'o' : 'i') +
 						" ferita su " + (int)calcolaSaluteMassima() + '.';
-				BusEventi.pubblica(new EventoMessaggio(notifica));
+				BusEventi.pubblica(new NotificaTestoFrase(notifica));
 			}
 		}
 		md.setSalute(salute);
-		BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE, saluteOriginale, salute));
+		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE, saluteOriginale, salute));
 
 		if ((md.getClasse() == ClassePersonaggio.GUERRIERO || md.getClasse() == ClassePersonaggio.GUERRIERA) &&
 				getFuria() > 0 && !hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
@@ -847,7 +850,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		quantita = limitaEntroMassimi(quantitaPrecedente, getMagiaMassima(), quantita);
 		int quantitaAttuale = quantitaPrecedente + quantita;
 		md.setMagia(quantitaAttuale);
-		BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.MAGIA, quantitaPrecedente, quantitaAttuale));
+		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.MAGIA, quantitaPrecedente, quantitaAttuale));
 	}
 
 	public void subMagia(int quantita) {
@@ -857,7 +860,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 		int quantitaAttuale = quantitaPrecedente - quantita;
 		md.setMagia(quantitaAttuale);
-		BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.MAGIA, quantitaPrecedente, quantitaAttuale));
+		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.MAGIA, quantitaPrecedente, quantitaAttuale));
 	}
 
 	@Override
@@ -886,7 +889,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		double valorePrecedente = md.get(tipoAttributo);
 		double valoreAttuale = valorePrecedente + quantita;
 		md.set(tipoAttributo, valoreAttuale);
-		BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, tipoAttributo, valorePrecedente, valoreAttuale));
+		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, tipoAttributo, valorePrecedente, valoreAttuale));
 	}
 
 	// FORZA
@@ -1064,14 +1067,14 @@ public abstract class PersonaggioBase implements Personaggio {
 		quantita = limitaEntroMassimi(quantitaPrecedente, Costanti.MAX_STANCHEZZA, quantita);
 		int quantitaAttuale = quantitaPrecedente + quantita;
 		md.setStanchezza(md.getStanchezza() + quantita);
-		BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.STANCHEZZA, quantitaPrecedente, quantitaAttuale));
+		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.STANCHEZZA, quantitaPrecedente, quantitaAttuale));
 	}
 
 	public void subStanchezza(int quantita) {
 		int quantitaPrecedente = md.getStanchezza();
 		int quantitaAttuale = quantitaPrecedente - quantita;
 		md.setStanchezza(Math.max(quantitaAttuale, 0));
-		BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.STANCHEZZA, quantitaPrecedente, quantitaAttuale));
+		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.STANCHEZZA, quantitaPrecedente, quantitaAttuale));
 	}
 
 	public void addModificatore(ModificatoreAttributo modificatore) {
@@ -1082,16 +1085,16 @@ public abstract class PersonaggioBase implements Personaggio {
 
 		int saluteMassimaRicalcolata = getSaluteMassima();
 		if (saluteMassimaPrecedente != saluteMassimaRicalcolata) {
-			BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE_MASSIMA, saluteMassimaPrecedente, saluteMassimaRicalcolata));
+			BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE_MASSIMA, saluteMassimaPrecedente, saluteMassimaRicalcolata));
 		}
 
 		int magiaMassimaRicalcolata = getMagiaMassima();
 		if (magiaMassimaPrecedente != magiaMassimaRicalcolata) {
-			BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(this, TipoAttributo.MAGIA_MASSIMA, magiaMassimaPrecedente, magiaMassimaRicalcolata));
+			BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.MAGIA_MASSIMA, magiaMassimaPrecedente, magiaMassimaRicalcolata));
 		}
 
 		ricalcolaAttributiSecondari();
-		BusEventi.pubblica(new EventoAggiuntaModificatore(this, modificatore));
+		BusEventi.pubblica(new NotificaAggiuntaModificatorePersonaggio(this, modificatore));
 	}
 
 	// Funzioni di calcolo per gli attributi derivati
@@ -1119,7 +1122,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		double valoreAttuale = calcolaCaricoMassimo(md, moltiplicatori);
 		md.setMassimo(TipoAttributo.CARICO_MASSIMO, valoreAttuale);
 		if (sorgenteEvento != null && valorePrecedente.isPresent() && valorePrecedente.get() != valoreAttuale) {
-			BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(sorgenteEvento, TipoAttributo.CARICO_MASSIMO, valorePrecedente.get(), valoreAttuale));
+			BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(sorgenteEvento, TipoAttributo.CARICO_MASSIMO, valorePrecedente.get(), valoreAttuale));
 		}
 		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.CRITICO, calcolaCritico(md, moltiplicatori));
 		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.PRECISIONE, calcolaPrecisione(md, moltiplicatori));
@@ -1139,7 +1142,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		Optional<Double> valorePrecedente = md.getOptional(tipoAttributo);
 		md.set(tipoAttributo, valoreRicalcolato);
 		if (sorgenteEvento != null && valorePrecedente.isPresent() && valorePrecedente.get() != valoreRicalcolato) {
-			BusEventi.pubblica(new EventoVariazioneStatistichePersonaggio(sorgenteEvento, tipoAttributo, valorePrecedente.get(), valoreRicalcolato));
+			BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(sorgenteEvento, tipoAttributo, valorePrecedente.get(), valoreRicalcolato));
 		}
 	}
 
@@ -1527,14 +1530,14 @@ public abstract class PersonaggioBase implements Personaggio {
 				if (aumentaDanni) {
 					equivalente.setDanniNelTempo(danniNelTempo);
 				}
-				BusEventi.pubblica(new EventoVariazioneEffettoDiStato(this,
-						EventoVariazioneEffettoDiStato.TipoVariazione.VARIAZIONE, tipoEffettoDiStato,
+				BusEventi.pubblica(new NotificaVariazioneEffettoDiStatoPersonaggio(this,
+						NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.VARIAZIONE, tipoEffettoDiStato,
 						equivalente.getDurata(), equivalente.getDanniNelTempo()));
 			}
 		} else {
 			md.getEffettiDiStato().add(new EffettoDiStato(tipoEffettoDiStato, durata, danniNelTempo));
-			BusEventi.pubblica(new EventoVariazioneEffettoDiStato(this,
-					EventoVariazioneEffettoDiStato.TipoVariazione.AGGIUNTA, tipoEffettoDiStato,
+			BusEventi.pubblica(new NotificaVariazioneEffettoDiStatoPersonaggio(this,
+					NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.AGGIUNTA, tipoEffettoDiStato,
 					-1, durata));
 		}
 	}
@@ -1559,8 +1562,8 @@ public abstract class PersonaggioBase implements Personaggio {
 			int valoreAttuale = valorePrecedente - 1;
 			if (valoreAttuale > 0) {
 				effettoDiStato.setDurata(valoreAttuale);
-				BusEventi.pubblica(new EventoVariazioneEffettoDiStato(this,
-						EventoVariazioneEffettoDiStato.TipoVariazione.VARIAZIONE,
+				BusEventi.pubblica(new NotificaVariazioneEffettoDiStatoPersonaggio(this,
+						NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.VARIAZIONE,
 						effettoDiStato.getTipoEffettoDiStato(),
 						valorePrecedente, valoreAttuale));
 			} else {
@@ -1569,8 +1572,8 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 		effettiDiStatoDaRimuovere.forEach(e -> {
 			md.getEffettiDiStato().remove(e);
-			BusEventi.pubblica(new EventoVariazioneEffettoDiStato(this,
-					EventoVariazioneEffettoDiStato.TipoVariazione.RIMOZIONE,
+			BusEventi.pubblica(new NotificaVariazioneEffettoDiStatoPersonaggio(this,
+					NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.RIMOZIONE,
 					e.getTipoEffettoDiStato(), 1, 0));
 		});
 	}
@@ -1588,8 +1591,8 @@ public abstract class PersonaggioBase implements Personaggio {
 				.collect(Collectors.toList());
 		effettiDiStatoDaRimuovere.forEach(effettoDiStato -> {
 			md.getEffettiDiStato().remove(effettoDiStato);
-			BusEventi.pubblica(new EventoVariazioneEffettoDiStato(this,
-					EventoVariazioneEffettoDiStato.TipoVariazione.RIMOZIONE, tipoEffettoDiStato,
+			BusEventi.pubblica(new NotificaVariazioneEffettoDiStatoPersonaggio(this,
+					NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.RIMOZIONE, tipoEffettoDiStato,
 					effettoDiStato.getDurata(), 0));
 		});
 	}

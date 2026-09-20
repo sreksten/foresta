@@ -1,6 +1,11 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.eventi.*;
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoMostraSchermataGioco;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioCommerciante;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioFornitore;
+import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
@@ -54,7 +59,7 @@ public abstract class Citta extends LocazioneUnica {
 	
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-        BusEventi.pubblica(new EventoParagrafo(g.chiMaiuscolo() + " arriva al" + getNome() +
+        BusEventi.pubblica(new NotificaTestoParagrafo(g.chiMaiuscolo() + " arriva al" + getNome() +
                 ". Qui è possibile cercare una locanda, il negozio di un alchimista o fare un salto dall'armaiolo prima di andare via."));
 		if (g.getPreziosi() > 0) {
 			g.vendePreziosi();
@@ -69,7 +74,7 @@ public abstract class Citta extends LocazioneUnica {
 	}
 
 	private void impostaAzioniCitta() {
-		BusEventi.pubblica(new EventoComandiDisponibili(Comando.LOCANDA, Comando.ALCHIMISTA, Comando.ARMAIOLO,
+		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.LOCANDA, Comando.ALCHIMISTA, Comando.ARMAIOLO,
 				Comando.INVENTARIO, Comando.ESCI_DA_CITTA));
 	}
 	
@@ -95,14 +100,14 @@ public abstract class Citta extends LocazioneUnica {
 				stato = StatoInCitta.DA_ALCHIMISTA;
 				List<Comando> comandiPossibili = new ArrayList<>();
 				comandiPossibili.add(Comando.ANNULLA);
-				BusEventi.pubblica(new EventoRichiestaAperturaInventarioFornitore(comandiPossibili));
+				BusEventi.pubblica(new ComandoAperturaInventarioFornitore(comandiPossibili));
 
 			} else if (azione == Comando.ARMAIOLO) {
 				stato = StatoInCitta.DA_ARMAIOLO;
 				List<Comando> comandiPossibili = new ArrayList<>();
 				comandiPossibili.add(Comando.ANNULLA);
 				ScambiatoreArtefatti scambiatoreArtefatti = RegistroArtefatti.getScambiatorePerLocazione(g.getCoordinate());
-				BusEventi.pubblica(new EventoRichiestaAperturaInventarioCommerciante(comandiPossibili,
+				BusEventi.pubblica(new ComandoAperturaInventarioCommerciante(comandiPossibili,
 						new AutomaAcquistiArtefatti(g, scambiatoreArtefatti)));
 
 			} else if (azione == Comando.ESCI_DA_CITTA) {
@@ -118,7 +123,7 @@ public abstract class Citta extends LocazioneUnica {
 
 		} else if (stato == StatoInCitta.DA_ALCHIMISTA || stato == StatoInCitta.DA_ARMAIOLO) {
 			if (azione == Comando.ANNULLA) {
-				BusEventi.pubblica(new EventoMostraSchermataGioco());
+				BusEventi.pubblica(new InternoMostraSchermataGioco());
 				impostaAzioniCitta();
 				stato = StatoInCitta.IN_PIAZZA;
 			}

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.offerte;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoMostraFinestra;
+import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
@@ -44,7 +44,7 @@ public class Pasto implements Offerta {
 			for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
 				personaggio.addSalute(Costanti.RECUPERO_SALUTE_DA_PASTO);
 			}
-			BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
+			BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
 		}
 	}
 }

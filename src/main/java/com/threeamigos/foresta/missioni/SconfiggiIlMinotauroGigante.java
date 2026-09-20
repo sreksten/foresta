@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoParagrafo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 
@@ -42,7 +42,7 @@ public class SconfiggiIlMinotauroGigante extends MissioneBase implements Mission
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
         if (gruppo.getClasseLocazioneCorrente() == ClassiLocazione.CASTELLO_MINOTAURO && gruppo.getLocazioneCorrente().isCompleta()) {
             completaMissione();
-            BusEventi.pubblica(new EventoParagrafo("Il Minotauro è stato sconfitto!"));
+            BusEventi.pubblica(new NotificaTestoParagrafo("Il Minotauro è stato sconfitto!"));
         }
     }
 

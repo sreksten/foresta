@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.tools;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoException;
+import com.threeamigos.foresta.eventi.interni.InternoException;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -38,7 +38,7 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 				setPunteggio(posizione, nome, punteggio);
 			}
 		} catch (Exception e) {
-			BusEventi.pubblica(new EventoException(e));
+			BusEventi.pubblica(new InternoException(e));
 			return false;
 		}
 		return true;
@@ -54,7 +54,7 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 			}
 			writer.flush();
 		} catch (Exception e) {
-			BusEventi.pubblica(new EventoException(e));
+			BusEventi.pubblica(new InternoException(e));
 			return false;
 		}
 		return true;

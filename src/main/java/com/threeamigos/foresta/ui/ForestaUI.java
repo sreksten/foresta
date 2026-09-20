@@ -1,6 +1,15 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.eventi.*;
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoMostraSchermataGioco;
+import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioCommerciante;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioFornitore;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioGruppo;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoVisualizzazioneMappa;
+import com.threeamigos.foresta.eventi.interni.*;
+import com.threeamigos.foresta.eventi.notifiche.*;
+import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
@@ -36,38 +45,38 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 		SwingUtilities.invokeLater(this::creaEMostraInterfacciaUtente);
 
-		BusEventi.iscriviti(EventoComandiDisponibili.class, this::gestisciEventoComandiDisponibili);
-		BusEventi.iscriviti(EventoConsumoPuntoAbilita.class, this::gestisciEventoConsumoPuntoAbilita);
-		BusEventi.iscriviti(EventoFineGioco.class, this::gestisciEventoFineGioco);
-		BusEventi.iscriviti(EventoFumetto.class, this::gestisciEventoFumetto);
-		BusEventi.iscriviti(EventoInterazioneElementale.class, this::gestisciEventoInterazioneElementale);
-		BusEventi.iscriviti(EventoMessaggio.class, this::gestisciEventoMessaggio);
-		BusEventi.iscriviti(EventoMostraFinestra.class, this::gestisciEventoMostraFinestra);
-		BusEventi.iscriviti(EventoMostraPunteggi.class, this::gestisciEventoMostraPunteggi);
-		BusEventi.iscriviti(EventoMostraSchermataGioco.class, this::gestisciEventoMostraSchermataGioco);
-		BusEventi.iscriviti(EventoMostraStatistiche.class, this::gestisciEventoMostraStatistiche);
-		BusEventi.iscriviti(EventoNotificaGlobale.class, this::gestisciEventoNotificaGlobale);
-		BusEventi.iscriviti(EventoParagrafo.class, this::gestisciEventoParagrafo);
-		BusEventi.iscriviti(EventoPreparazioneLocazione.class, this::gestisciEventoPreparazioneLocazione);
-		BusEventi.iscriviti(EventoRichiestaAperturaFinestraCombattimento.class, this::gestisciEventoRichiestaAperturaFinestraCombattimento);
-		BusEventi.iscriviti(EventoRichiestaAperturaInventarioCommerciante.class, this::gestisciEventoRichiestaAperturaInventarioCommerciante);
-		BusEventi.iscriviti(EventoRichiestaAperturaInventarioFornitore.class, this::gestisciEventoRichiestaAperturaInventarioFornitore);
-		BusEventi.iscriviti(EventoRichiestaAperturaInventarioGruppo.class, this::gestisciEventoRichiestaAperturaInventarioGruppo);
-		BusEventi.iscriviti(EventoRichiestaChiusuraFinestraCombattimento.class, this::gestisciEventoRichiestaChiusuraFinestraCombattimento);
-		BusEventi.iscriviti(EventoRaccoltaOggetti.class, this::gestisciEventoRaccoltaOggetti);
-		BusEventi.iscriviti(EventoSelezioneConfermaUscita.class, this::gestisciEventoRichiestaConfermaUscita);
-		BusEventi.iscriviti(EventoRichiestaRefreshUI.class, this::gestisciEventoRichiestaRefreshUI);
-		BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::gestisciEventoRichiestaReinizializzazioneUI);
-		BusEventi.iscriviti(EventoRichiestaTesto.class, this::gestisciEventoRichiestaTesto);
-		BusEventi.iscriviti(EventoRichiestaSelezioneSlotPerRilettura.class, this::gestisciEventoSelezioneSalvataggio);
-		BusEventi.iscriviti(EventoRichiestaVisualizzazioneMappa.class, this::gestisciEventoRichiestaVisualizzazioneMappa);
-		BusEventi.iscriviti(EventoSelezioneDirezione.class, this::gestisciEventoSelezioneDirezione);
-		BusEventi.iscriviti(EventoSelezioneIncantesimoDaLanciare.class, this::gestisciEventoSelezioneIncantesimoDaLanciare);
-		BusEventi.iscriviti(EventoSelezioneSiNo.class, this::gestisciEventoSelezioneSiNo);
-		BusEventi.iscriviti(EventoStatoDiGioco.class, this::gestisciEventoStatoDiGioco);
-		BusEventi.iscriviti(EventoVariazioneEffettoDiStato.class, this::gestisciEventoVariazioneEffettoDiStato);
-		BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
-		BusEventi.iscriviti(EventoVariazioneStatoVitalePersonaggio.class, this::gestisciEventoVariazioneStatoVitalePersonaggio);
+		BusEventi.iscriviti(InternoAggiornamentoComandiDisponibili.class, this::gestisciEventoComandiDisponibili);
+		BusEventi.iscriviti(NotificaConsumoPuntoAbilitaPersonaggio.class, this::gestisciEventoConsumoPuntoAbilita);
+		BusEventi.iscriviti(NotificaFineGioco.class, this::gestisciEventoFineGioco);
+		BusEventi.iscriviti(InternoNotificaViaFumettoATempo.class, this::gestisciEventoFumetto);
+		BusEventi.iscriviti(NotificaInterazioneElementalePersonaggio.class, this::gestisciEventoInterazioneElementale);
+		BusEventi.iscriviti(NotificaTestoFrase.class, this::gestisciEventoMessaggio);
+		BusEventi.iscriviti(InternoPortaInPrimoPiano.class, this::gestisciEventoMostraFinestra);
+		BusEventi.iscriviti(NotificaMostraPunteggiMigliori.class, this::gestisciEventoMostraPunteggi);
+		BusEventi.iscriviti(InternoMostraSchermataGioco.class, this::gestisciEventoMostraSchermataGioco);
+		BusEventi.iscriviti(NotificaMostraStatisticheFineGioco.class, this::gestisciEventoMostraStatistiche);
+		BusEventi.iscriviti(NotificaGlobale.class, this::gestisciEventoNotificaGlobale);
+		BusEventi.iscriviti(NotificaTestoParagrafo.class, this::gestisciEventoParagrafo);
+		BusEventi.iscriviti(InternoPreparazioneLocazione.class, this::gestisciEventoPreparazioneLocazione);
+		BusEventi.iscriviti(InternoRichiestaAperturaFinestraCombattimento.class, this::gestisciEventoRichiestaAperturaFinestraCombattimento);
+		BusEventi.iscriviti(ComandoAperturaInventarioCommerciante.class, this::gestisciEventoRichiestaAperturaInventarioCommerciante);
+		BusEventi.iscriviti(ComandoAperturaInventarioFornitore.class, this::gestisciEventoRichiestaAperturaInventarioFornitore);
+		BusEventi.iscriviti(ComandoAperturaInventarioGruppo.class, this::gestisciEventoRichiestaAperturaInventarioGruppo);
+		BusEventi.iscriviti(InternoRichiestaChiusuraFinestraCombattimento.class, this::gestisciEventoRichiestaChiusuraFinestraCombattimento);
+		BusEventi.iscriviti(NotificaRaccoltaOggetti.class, this::gestisciEventoRaccoltaOggetti);
+		BusEventi.iscriviti(RichiestaUscitaDalGioco.class, this::gestisciEventoRichiestaConfermaUscita);
+		BusEventi.iscriviti(InternoRichiestaRefreshUI.class, this::gestisciEventoRichiestaRefreshUI);
+		BusEventi.iscriviti(InternoRichiestaReinizializzazioneUI.class, this::gestisciEventoRichiestaReinizializzazioneUI);
+		BusEventi.iscriviti(RichiestaTesto.class, this::gestisciEventoRichiestaTesto);
+		BusEventi.iscriviti(RichiestaSelezioneSlotPerRilettura.class, this::gestisciEventoSelezioneSalvataggio);
+		BusEventi.iscriviti(ComandoVisualizzazioneMappa.class, this::gestisciEventoRichiestaVisualizzazioneMappa);
+		BusEventi.iscriviti(RichiestaSelezioneDirezione.class, this::gestisciEventoSelezioneDirezione);
+		BusEventi.iscriviti(RichiestaSelezioneIncantesimoDaLanciare.class, this::gestisciEventoSelezioneIncantesimoDaLanciare);
+		BusEventi.iscriviti(RichiestaSelezioneSiNo.class, this::gestisciEventoSelezioneSiNo);
+		BusEventi.iscriviti(InternoStatoDiGioco.class, this::gestisciEventoStatoDiGioco);
+		BusEventi.iscriviti(NotificaVariazioneEffettoDiStatoPersonaggio.class, this::gestisciEventoVariazioneEffettoDiStato);
+		BusEventi.iscriviti(NotificaVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
+		BusEventi.iscriviti(NotificaVariazioneStatoVitalePersonaggio.class, this::gestisciEventoVariazioneStatoVitalePersonaggio);
 	}
 	
 	private void creaEMostraInterfacciaUtente() {
@@ -145,7 +154,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		jframe.setLocation((screenDimension.width - jframe.getSize().width) / 2, (screenDimension.height - jframe.getSize().height) / 2);
 		jframe.setVisible(true);
 
-		BusEventi.pubblica(new EventoInterfacciaUtentePronta());
+		BusEventi.pubblica(new InternoInterfacciaUtentePronta());
 	}
 
 	public void tick() {
@@ -154,7 +163,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		}
 	}
 
-	private void gestisciEventoRichiestaTesto(EventoRichiestaTesto evento) {
+	private void gestisciEventoRichiestaTesto(RichiestaTesto evento) {
 		displayableCanvas.scriviGrande(evento.getRichiesta());
 		prompt.setVisible(true);
 	}
@@ -164,96 +173,96 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		pannelloIcone.impostaAzioni();
 	}
 
-	private void gestisciEventoFumetto(EventoFumetto evento) {
+	private void gestisciEventoFumetto(InternoNotificaViaFumettoATempo evento) {
 		displayableCanvas.notificaFumetto(evento.getTesto(), evento.getCoordinateFumetto());
 	}
 
-	private void gestisciEventoMessaggio(EventoMessaggio evento) {
+	private void gestisciEventoMessaggio(NotificaTestoFrase evento) {
 		displayableCanvas.notifica(evento.getMessaggio());
 	}
 
-	private void gestisciEventoMostraFinestra(EventoMostraFinestra evento) {
+	private void gestisciEventoMostraFinestra(InternoPortaInPrimoPiano evento) {
 		for (InterfacciaUtente.Finestra finestra : evento.getFinestre()) {
 			displayableCanvas.primoPiano(finestra);
 		}
 		rinfresca();
 	}
 
-	private void gestisciEventoMostraPunteggi(EventoMostraPunteggi evento) {
+	private void gestisciEventoMostraPunteggi(NotificaMostraPunteggiMigliori evento) {
 		displayableCanvas.mostraPunteggi();
 	}
 
-	private void gestisciEventoMostraSchermataGioco(EventoMostraSchermataGioco evento) {
+	private void gestisciEventoMostraSchermataGioco(InternoMostraSchermataGioco evento) {
 		displayableCanvas.iniziaGioco();
 		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
 	}
 
-	private void gestisciEventoMostraStatistiche(EventoMostraStatistiche evento) {
+	private void gestisciEventoMostraStatistiche(NotificaMostraStatisticheFineGioco evento) {
 		displayableCanvas.mostraStatistiche();
 	}
 
-	private void gestisciEventoNotificaGlobale(EventoNotificaGlobale evento) {
+	private void gestisciEventoNotificaGlobale(NotificaGlobale evento) {
 		displayableCanvas.notificaAnnuncioGlobale(evento.getEtichetta(), evento.getMessaggio());
 	}
 
-	private void gestisciEventoParagrafo(EventoParagrafo evento) {
+	private void gestisciEventoParagrafo(NotificaTestoParagrafo evento) {
 		displayableCanvas.notifica("");
 		displayableCanvas.notifica(evento.getMessaggio());
 	}
 
-	private void gestisciEventoPreparazioneLocazione(EventoPreparazioneLocazione evento) {
+	private void gestisciEventoPreparazioneLocazione(InternoPreparazioneLocazione evento) {
 		displayableCanvas.preparaLocazione();
 	}
 
-	private void gestisciEventoRaccoltaOggetti(EventoRaccoltaOggetti evento) {
+	private void gestisciEventoRaccoltaOggetti(NotificaRaccoltaOggetti evento) {
 		displayableCanvas.raccogliOggetto();
 	}
 
-	private void gestisciEventoRichiestaConfermaUscita(EventoSelezioneConfermaUscita evento) {
+	private void gestisciEventoRichiestaConfermaUscita(RichiestaUscitaDalGioco evento) {
 		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.confermaUscita();
 	}
 
-	private void gestisciEventoRichiestaAperturaInventarioCommerciante(EventoRichiestaAperturaInventarioCommerciante evento) {
+	private void gestisciEventoRichiestaAperturaInventarioCommerciante(ComandoAperturaInventarioCommerciante evento) {
 		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.impostaAutomaArmaiolo(evento.getAutomaAcquistiArtefatti());
 		displayableCanvas.armaiolo();
 	}
 
-	private void gestisciEventoRichiestaAperturaInventarioFornitore(EventoRichiestaAperturaInventarioFornitore evento) {
+	private void gestisciEventoRichiestaAperturaInventarioFornitore(ComandoAperturaInventarioFornitore evento) {
 		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.alchimista();
 	}
 
-	private void gestisciEventoRichiestaAperturaInventarioGruppo(EventoRichiestaAperturaInventarioGruppo evento) {
+	private void gestisciEventoRichiestaAperturaInventarioGruppo(ComandoAperturaInventarioGruppo evento) {
 		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.impostaAutomaInventario(evento.getAutomaInventario());
 		displayableCanvas.inventario();
 	}
 
-	private void gestisciEventoRichiestaChiusuraFinestraCombattimento(EventoRichiestaChiusuraFinestraCombattimento evento) {
+	private void gestisciEventoRichiestaChiusuraFinestraCombattimento(InternoRichiestaChiusuraFinestraCombattimento evento) {
 		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.STATO);
 		displayableCanvas.getRiquadroCombattimento().setVisible(false);
 	}
 
-	private void gestisciEventoRichiestaRefreshUI(EventoRichiestaRefreshUI evento) {
+	private void gestisciEventoRichiestaRefreshUI(InternoRichiestaRefreshUI evento) {
 		rinfresca();
 	}
 
-	private void gestisciEventoRichiestaReinizializzazioneUI(EventoRichiestaReinizializzazioneUI evento) {
+	private void gestisciEventoRichiestaReinizializzazioneUI(InternoRichiestaReinizializzazioneUI evento) {
 		displayableCanvas.reinizializza();
 		displayableCanvas.iniziaGioco();
 		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
 		rinfresca();
 	}
 
-	private void gestisciEventoSelezioneSalvataggio(EventoRichiestaSelezioneSlotPerRilettura evento) {
+	private void gestisciEventoSelezioneSalvataggio(RichiestaSelezioneSlotPerRilettura evento) {
 		temporizzatore.termina();
 		impostaAzioni(evento.getSalvataggiDisponibili().stream().map(TestataSalvataggio::getId).collect(Collectors.toList()));
 		displayableCanvas.selezioneSlotSalvataggioDaCaricare(evento.getSalvataggiDisponibili());
 	}
 
-	private void gestisciEventoRichiestaAperturaFinestraCombattimento(EventoRichiestaAperturaFinestraCombattimento evento) {
+	private void gestisciEventoRichiestaAperturaFinestraCombattimento(InternoRichiestaAperturaFinestraCombattimento evento) {
 		DisplayableCanvasRiquadroCombattimento infoCombattimento = displayableCanvas.getRiquadroCombattimento();
 		infoCombattimento.setCombattente(evento.getPersonaggio());
 		infoCombattimento.setAvversario(evento.getAvversario());
@@ -261,26 +270,26 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		rinfresca();
 	}
 
-	private void gestisciEventoRichiestaVisualizzazioneMappa(EventoRichiestaVisualizzazioneMappa evento) {
+	private void gestisciEventoRichiestaVisualizzazioneMappa(ComandoVisualizzazioneMappa evento) {
 		displayableCanvas.mappa();
 	}
 
-	private void gestisciEventoSelezioneDirezione(EventoSelezioneDirezione evento) {
+	private void gestisciEventoSelezioneDirezione(RichiestaSelezioneDirezione evento) {
 		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.MAPPA);
 	}
 
-	private void gestisciEventoSelezioneIncantesimoDaLanciare(EventoSelezioneIncantesimoDaLanciare evento) {
+	private void gestisciEventoSelezioneIncantesimoDaLanciare(RichiestaSelezioneIncantesimoDaLanciare evento) {
 		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
 	}
 
-	private void gestisciEventoSelezioneSiNo(EventoSelezioneSiNo evento) {
+	private void gestisciEventoSelezioneSiNo(RichiestaSelezioneSiNo evento) {
 		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.STATO);
 	}
 
-	private void gestisciEventoStatoDiGioco(EventoStatoDiGioco evento) {
+	private void gestisciEventoStatoDiGioco(InternoStatoDiGioco evento) {
 		statoDiGioco = evento.getStato();
 		switch(statoDiGioco) {
 			case INTRO:
@@ -313,7 +322,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 				break;
 
 			case ATTESA_DIREZIONE:
-				BusEventi.pubblica(new EventoErroreInterno("Non dovrei arrivare in gestisciEventoStatoDiGioco in stato ATTESA_DIREZIONE"));
+				BusEventi.pubblica(new InternoErrore("Non dovrei arrivare in gestisciEventoStatoDiGioco in stato ATTESA_DIREZIONE"));
 				impostaAzioni(evento.getComandiPossibili());
 				break;
 
@@ -327,11 +336,11 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		}
 	}
 
-	private void gestisciEventoVariazioneStatoVitalePersonaggio(EventoVariazioneStatoVitalePersonaggio evento) {
+	private void gestisciEventoVariazioneStatoVitalePersonaggio(NotificaVariazioneStatoVitalePersonaggio evento) {
 		displayableCanvas.notificaVariazioneStatoVitale(evento.getPersonaggio());
 	}
 
-	private void gestisciEventoVariazioneStatistichePersonaggio(EventoVariazioneStatistichePersonaggio evento) {
+	private void gestisciEventoVariazioneStatistichePersonaggio(NotificaVariazioneStatistichePersonaggio evento) {
 		Personaggio personaggio = evento.getPersonaggio();
 		if (!personaggio.isPNG()) {
 			return;
@@ -344,17 +353,17 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		}
 	}
 
-	private void gestisciEventoComandiDisponibili(EventoComandiDisponibili evento) {
+	private void gestisciEventoComandiDisponibili(InternoAggiornamentoComandiDisponibili evento) {
 		ComandiPossibili.set(evento.getPossibilita());
 		pannelloIcone.impostaAzioni();
 	}
 
-	private void gestisciEventoConsumoPuntoAbilita(EventoConsumoPuntoAbilita evento) {
+	private void gestisciEventoConsumoPuntoAbilita(NotificaConsumoPuntoAbilitaPersonaggio evento) {
 		TipoAttributo tipoAttributo = evento.getTipoAttributo();
 		displayableCanvas.notificaAnnuncioGlobale("AUMENTO", tipoAttributo.getNome().toUpperCase());
 	}
 
-	private void gestisciEventoFineGioco(EventoFineGioco evento) {
+	private void gestisciEventoFineGioco(NotificaFineGioco evento) {
 		if (evento.isCompletatoConSuccesso()) {
 			displayableCanvas.vinto();
 		} else {
@@ -362,7 +371,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		}
 	}
 
-	private void gestisciEventoInterazioneElementale(EventoInterazioneElementale evento) {
+	private void gestisciEventoInterazioneElementale(NotificaInterazioneElementalePersonaggio evento) {
 		Personaggio personaggio = evento.getPersonaggio();
 		TipoInterazioneElementale tipoInterazioneElementale = evento.getTipoInterazioneElementale();
 		switch (tipoInterazioneElementale) {
@@ -386,7 +395,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		}
 	}
 
-	private void gestisciEventoVariazioneEffettoDiStato(EventoVariazioneEffettoDiStato evento) {
+	private void gestisciEventoVariazioneEffettoDiStato(NotificaVariazioneEffettoDiStatoPersonaggio evento) {
 		Personaggio personaggio = evento.getPersonaggio();
 		TipoEffettoDiStato tipoEffettoDiStato = evento.getEffetto();
 		switch (evento.getTipo()) {

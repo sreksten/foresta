@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoTestoDisponibile;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoInvioTesto;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,7 +62,7 @@ public class Prompt extends JPanel implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent e) {
 		setVisible(false);
-		BusEventi.pubblica(new EventoTestoDisponibile(tf.getText()));
+		BusEventi.pubblica(new ComandoInvioTesto(tf.getText()));
 	}
 
 	@Override

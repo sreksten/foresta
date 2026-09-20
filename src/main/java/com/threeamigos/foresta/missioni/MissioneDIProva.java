@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoParagrafo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 
 /**
  *
@@ -28,7 +28,7 @@ public class MissioneDIProva extends MissioneBase implements Missione {
     @Override
     public void controllaPreLocazione() {
         if (!isAttiva()) {
-            BusEventi.pubblica(new EventoParagrafo(getDescrizione()));
+            BusEventi.pubblica(new NotificaTestoParagrafo(getDescrizione()));
             attivaMissione();
         }
     }
@@ -41,7 +41,7 @@ public class MissioneDIProva extends MissioneBase implements Missione {
     @Override
     public void controllaPostLocazione() {
         if (!isCompleta()) {
-            BusEventi.pubblica(new EventoParagrafo("Missione di prova completata"));
+            BusEventi.pubblica(new NotificaTestoParagrafo("Missione di prova completata"));
             completaMissione();
         }
     }

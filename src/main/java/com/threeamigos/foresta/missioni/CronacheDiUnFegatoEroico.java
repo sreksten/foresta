@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoParagrafo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 
@@ -36,7 +36,7 @@ public class CronacheDiUnFegatoEroico extends MissioneBase {
 	@Override
 	public void controllaPreLocazione() {
 		if (!isAttiva() && GruppoGiocatore.getIstanza().getClasseLocazioneCorrente().getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA) {
-			BusEventi.pubblica(new EventoParagrafo(getDescrizione() + ": " + getNome() + " si scrive un boccale per volta."));
+			BusEventi.pubblica(new NotificaTestoParagrafo(getDescrizione() + ": " + getNome() + " si scrive un boccale per volta."));
 			attivaMissione();
 		}
 	}
@@ -55,7 +55,7 @@ public class CronacheDiUnFegatoEroico extends MissioneBase {
 		// l'ultima bevuta chiude anche la missione, nello stesso giro
 		if (getMissioniSecondarie().stream().allMatch(Missione::isCompleta)) {
 			completaMissione();
-			BusEventi.pubblica(new EventoParagrafo("Tutte le locande cittadine della Foresta sono state visitate. Le Cronache di un Fegato Eroico sono complete: un'impresa che nessun bardo oserà mai cantare."));
+			BusEventi.pubblica(new NotificaTestoParagrafo("Tutte le locande cittadine della Foresta sono state visitate. Le Cronache di un Fegato Eroico sono complete: un'impresa che nessun bardo oserà mai cantare."));
 		}
 	}
 }

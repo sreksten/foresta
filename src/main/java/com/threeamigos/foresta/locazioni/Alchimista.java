@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoComandiDisponibili;
-import com.threeamigos.foresta.eventi.EventoMessaggio;
-import com.threeamigos.foresta.eventi.EventoParagrafo;
+import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
@@ -69,7 +69,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-		BusEventi.pubblica(new EventoParagrafo(g.chiMaiuscolo() + " arriva alla bottega di un alchimista."));
+		BusEventi.pubblica(new NotificaTestoParagrafo(g.chiMaiuscolo() + " arriva alla bottega di un alchimista."));
 	}
 
 	@Override
@@ -77,27 +77,27 @@ public class Alchimista extends LocazioneBase implements Locazione {
 		switch (stato) {
 		case SULLA_PORTA:
 			if (nessunAcquistoEseguibile) {
-				BusEventi.pubblica(new EventoMessaggio("“Buongiorno! Mi dispiace ma non posso fare credito.\"" + DICE));
+				BusEventi.pubblica(new NotificaTestoFrase("“Buongiorno! Mi dispiace ma non posso fare credito.\"" + DICE));
 				return Stato.FINE_LOCAZIONE;
 			}
-			BusEventi.pubblica(new EventoMessaggio("L'alchimista è intento a produrre l'oroscopo della giornata."));
+			BusEventi.pubblica(new NotificaTestoFrase("L'alchimista è intento a produrre l'oroscopo della giornata."));
 			try {
 				List<String> oroscopo = ProduttoreDiTestiCasuale.oroscopo();
 				int numeroLinea = 0;
 				for (String linea : oroscopo) {
 					if (numeroLinea == 0) {
-						BusEventi.pubblica(new EventoMessaggio('“' + linea));
+						BusEventi.pubblica(new NotificaTestoFrase('“' + linea));
 					} else if (numeroLinea == oroscopo.size() - 1) {
-						BusEventi.pubblica(new EventoMessaggio(linea + '"'));
+						BusEventi.pubblica(new NotificaTestoFrase(linea + '"'));
 					} else {
-						BusEventi.pubblica(new EventoMessaggio(linea));
+						BusEventi.pubblica(new NotificaTestoFrase(linea));
 					}
 					numeroLinea++;
 				}
 			} catch (Exception e) {
 				Logger.log(e);
 			}
-			BusEventi.pubblica(new EventoComandiDisponibili(Comando.PERGAMENA));
+			BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
 			stato = StatoDaAlchimista.ENTRATO;
 			return Stato.IN_LOCAZIONE;
 
@@ -119,7 +119,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 					reimpostaAcquistiPossibili();
 					return Stato.IN_LOCAZIONE;
 				} else {
-					BusEventi.pubblica(new EventoMessaggio("“Non hai abbastanza monete per pagare i miei servigi.\"" + DICE));
+					BusEventi.pubblica(new NotificaTestoFrase("“Non hai abbastanza monete per pagare i miei servigi.\"" + DICE));
 					imposta();
 					return Stato.FINE_LOCAZIONE;
 				}
@@ -132,7 +132,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 					}
 					reimpostaAcquistiPossibili();
                 } else {
-					BusEventi.pubblica(new EventoMessaggio("“Non avete abbastanza monete per pagare i miei servigi.\"" + DICE));
+					BusEventi.pubblica(new NotificaTestoFrase("“Non avete abbastanza monete per pagare i miei servigi.\"" + DICE));
 					imposta();
                 }
                 return Stato.IN_LOCAZIONE;
@@ -163,7 +163,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 				return Stato.IN_LOCAZIONE;
 
 			} else if (azione == Comando.NO_INCANTESIMO) {
-				BusEventi.pubblica(new EventoMessaggio(ARRIVEDERCI + DICE));
+				BusEventi.pubblica(new NotificaTestoFrase(ARRIVEDERCI + DICE));
 				return Stato.FINE_LOCAZIONE;
 
 			} else {
@@ -173,14 +173,14 @@ public class Alchimista extends LocazioneBase implements Locazione {
 
 		case INCANTESIMI:
 			if (azione == Comando.NO_INCANTESIMO) {
-				BusEventi.pubblica(new EventoMessaggio(DICE));
+				BusEventi.pubblica(new NotificaTestoFrase(DICE));
 				return Stato.FINE_LOCAZIONE;
 			} else {
 				if (azione != null) {
 					ClasseIncantesimo classe = ClasseIncantesimo.ofComando(azione);
 					int costo = classe.getCostoAcquisto();
 					if (gruppo.getMonete() < costo) {
-						BusEventi.pubblica(new EventoMessaggio("“Questo incantesimo costa troppo per le tue tasche.\"" + DICE));
+						BusEventi.pubblica(new NotificaTestoFrase("“Questo incantesimo costa troppo per le tue tasche.\"" + DICE));
 					} else {
 						gruppo.subMonete(costo);
 						gruppo.addIncantesimi(classe, 1);
@@ -220,7 +220,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 			}
 		}
 		sb.append(". Come posso aiutare?\"").append(CHIEDE);
-		BusEventi.pubblica(new EventoParagrafo(sb.toString()));
+		BusEventi.pubblica(new NotificaTestoParagrafo(sb.toString()));
 	}
 
 	private void imposta() {
@@ -256,7 +256,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 			}
 		}
 		comandiPossibili.add(Comando.NO_INCANTESIMO);
-		BusEventi.pubblica(new EventoComandiDisponibili(comandiPossibili));
+		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibili));
 	}
 
 	private void impostaIncantesimi() {
@@ -267,7 +267,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 			}
 		}
 		comandiPossibili.add(Comando.NO_INCANTESIMO);
-		BusEventi.pubblica(new EventoComandiDisponibili(comandiPossibili));
+		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibili));
 	}
 
 	public TipoRiposo getTipoRiposo() {

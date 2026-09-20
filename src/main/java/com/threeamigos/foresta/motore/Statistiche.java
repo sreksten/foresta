@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoAumentoLivelloMondo;
-import com.threeamigos.foresta.eventi.EventoVariazionePunti;
-import com.threeamigos.foresta.eventi.EventoVariazionePuntiEsperienza;
+import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloMondo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaVariazionePunteggio;
+import com.threeamigos.foresta.eventi.notifiche.NotificaVariazionePuntiEsperienzaPersonaggio;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.StatisticheMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
@@ -22,7 +22,7 @@ public class Statistiche {
 		int valorePrecedente = md.getPunti();
 		int valoreAttuale = valorePrecedente + quantita;
 		md.setPunti(valoreAttuale);
-		BusEventi.pubblica(new EventoVariazionePunti(valorePrecedente, valoreAttuale));
+		BusEventi.pubblica(new NotificaVariazionePunteggio(valorePrecedente, valoreAttuale));
 	}
 
 	// Chiamato ogni volta che il personaggio completa una missione o uccide un mostro
@@ -31,7 +31,7 @@ public class Statistiche {
 		int valorePrecedente = md.getPuntiEsperienza();
 		int valoreAttuale = valorePrecedente + quantita;
 		md.setPuntiEsperienza(valoreAttuale);
-		BusEventi.pubblica(new EventoVariazionePuntiEsperienza(valorePrecedente, valoreAttuale));
+		BusEventi.pubblica(new NotificaVariazionePuntiEsperienzaPersonaggio(valorePrecedente, valoreAttuale));
 
 		// Verifichiamo se i nuovi XP accumulati determinano un salto di livello
 		int livelloAttuale = md.getLivello();
@@ -39,7 +39,7 @@ public class Statistiche {
 
 		if (nuovoLivello > livelloAttuale) {
 			md.setLivello(nuovoLivello);
-			BusEventi.pubblica(new EventoAumentoLivelloMondo(nuovoLivello));
+			BusEventi.pubblica(new NotificaAumentoLivelloMondo(nuovoLivello));
 		}
 	}
 

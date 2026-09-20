@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.offerte;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoMostraFinestra;
+import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -79,6 +79,6 @@ public class AiutoMercenario implements Offerta {
 		personaggio.setTempo(costo + 1);
 		gruppo.aggiungiPersonaggio(personaggio);
 		gruppo.subMonete(costo);
-		BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
+		BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
 	}
 }

@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.eventi.*;
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.*;
+import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
 import com.threeamigos.foresta.motore.AutomaInventario;
@@ -213,60 +215,60 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	private void registratiAEventi() {
 		// Eventi globali
-		BusEventi.iscriviti(EventoAumentoLivelloMondo.class, this::gestisciEventoAumentoLivelloMondo);
+		BusEventi.iscriviti(NotificaAumentoLivelloMondo.class, this::gestisciEventoAumentoLivelloMondo);
 		// Eventi interni del motore grafico - i sottopannelli potrebbero richiedere la creazione di sprite da gestire qui
-		BusEventi.iscriviti(EventoCreazioneSpriteAnnuncioGlobale.class, this::gestisciEventoCreazioneSpriteAnnuncioGlobale);
-		BusEventi.iscriviti(EventoCreazioneSpriteATempo.class, this::gestisciEventoCreazioneSpriteATempo);
-		BusEventi.iscriviti(EventoCreazioneSpriteEffetto.class, this::gestisciEventoCreazioneSpriteEffetto);
-		BusEventi.iscriviti(EventoCreazioneSpriteFumetto.class, this::gestisciEventoCreazioneSpriteFumetto);
-		BusEventi.iscriviti(EventoCreazioneSpriteInDissolvenza.class, this::gestisciEventoCreazioneSpriteInDissolvenza);
+		BusEventi.iscriviti(InternoCreazioneSpriteAnnuncioGlobale.class, this::gestisciEventoCreazioneSpriteAnnuncioGlobale);
+		BusEventi.iscriviti(InternoCreazioneSpriteATempo.class, this::gestisciEventoCreazioneSpriteATempo);
+		BusEventi.iscriviti(InternoCreazioneSpriteEffettoDiStato.class, this::gestisciEventoCreazioneSpriteEffetto);
+		BusEventi.iscriviti(InternoCreazioneSpriteFumettoATempo.class, this::gestisciEventoCreazioneSpriteFumetto);
+		BusEventi.iscriviti(InternoCreazioneSpriteInDissolvenza.class, this::gestisciEventoCreazioneSpriteInDissolvenza);
 		// Eventi del riquadro gruppo
-		BusEventi.iscriviti(EventoAumentoLivelloPersonaggio.class, this::gestisciEventoAumentoLivelloPersonaggio);
-		BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
+		BusEventi.iscriviti(NotificaAumentoLivelloPersonaggio.class, this::gestisciEventoAumentoLivelloPersonaggio);
+		BusEventi.iscriviti(NotificaVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
 		// Eventi del riquadro incantesimi
-		BusEventi.iscriviti(EventoVariazioneIncantesimi.class, this::gestisciEventoVariazioneIncantesimi);
-		BusEventi.iscriviti(EventoVariazionePozioniSalute.class, this::gestisciEventoVariazionePozioniSalute);
-		BusEventi.iscriviti(EventoVariazionePozioniSaluteGrandi.class, this::gestisciEventoVariazionePozioniSaluteGrandi);
-		BusEventi.iscriviti(EventoVariazionePozioniMagia.class, this::gestisciEventoVariazionePozioniMagia);
-		BusEventi.iscriviti(EventoVariazionePozioniMagiaGrandi.class, this::gestisciEventoVariazionePozioniMagiaGrandi);
+		BusEventi.iscriviti(NotificaVariazioneDisponibilitaIncantesimi.class, this::gestisciEventoVariazioneIncantesimi);
+		BusEventi.iscriviti(NotificaVariazioneDisponibilitaPozioniSalute.class, this::gestisciEventoVariazionePozioniSalute);
+		BusEventi.iscriviti(NotificaVariazioneDisponibilitaPozioniSaluteGrandi.class, this::gestisciEventoVariazionePozioniSaluteGrandi);
+		BusEventi.iscriviti(NotificaVariazioneDisponibilitaPozioniMagia.class, this::gestisciEventoVariazionePozioniMagia);
+		BusEventi.iscriviti(NotificaVariazioneDisponibilitaPozioniMagiaGrandi.class, this::gestisciEventoVariazionePozioniMagiaGrandi);
 		// Eventi del riquadro missioni
-		BusEventi.iscriviti(EventoAggiornamentoStatoMissione.class, this::gestisciEventoAggiornamentoStatoMissione);
+		BusEventi.iscriviti(NotificaAggiornamentoStatoMissione.class, this::gestisciEventoAggiornamentoStatoMissione);
 
 	}
 
 	// Eventi globali
 
-	private void gestisciEventoAumentoLivelloMondo(EventoAumentoLivelloMondo evento) {
+	private void gestisciEventoAumentoLivelloMondo(NotificaAumentoLivelloMondo evento) {
 		notifica("LEVEL UP! Ora il mondo è al livello " + evento.getLivello() + "!");
 	}
 
-	private void gestisciEventoCreazioneSpriteAnnuncioGlobale(EventoCreazioneSpriteAnnuncioGlobale evento) {
+	private void gestisciEventoCreazioneSpriteAnnuncioGlobale(InternoCreazioneSpriteAnnuncioGlobale evento) {
 		if (evento.getSprite() != null) {
 			codaAnnunciGlobali.add(evento.getSprite());
 		}
 	}
 
-	private void gestisciEventoCreazioneSpriteATempo(EventoCreazioneSpriteATempo evento) {
+	private void gestisciEventoCreazioneSpriteATempo(InternoCreazioneSpriteATempo evento) {
 		aggiungiSprite(evento.getSprite());
 	}
 
-	private void gestisciEventoCreazioneSpriteEffetto(EventoCreazioneSpriteEffetto evento) {
+	private void gestisciEventoCreazioneSpriteEffetto(InternoCreazioneSpriteEffettoDiStato evento) {
 		aggiungiSprite(evento.getSprite());
 	}
 
-	private void gestisciEventoCreazioneSpriteFumetto(EventoCreazioneSpriteFumetto evento) {
+	private void gestisciEventoCreazioneSpriteFumetto(InternoCreazioneSpriteFumettoATempo evento) {
 		if (evento.getSprite() != null) {
 			codaFumetti.add(evento.getSprite());
 		}
 	}
 
-	private void gestisciEventoCreazioneSpriteInDissolvenza(EventoCreazioneSpriteInDissolvenza evento) {
+	private void gestisciEventoCreazioneSpriteInDissolvenza(InternoCreazioneSpriteInDissolvenza evento) {
 		aggiungiSprite(evento.getSprite());
 	}
 
 	// Eventi del riquadro del gruppo
 
-	private void gestisciEventoAumentoLivelloPersonaggio(EventoAumentoLivelloPersonaggio evento) {
+	private void gestisciEventoAumentoLivelloPersonaggio(NotificaAumentoLivelloPersonaggio evento) {
 		Personaggio personaggio = evento.getPersonaggio();
 		notificaAnnuncioGlobale("LEVEL UP!", personaggio.getNome() + " A LIVELLO " + personaggio.getLivello() + "!");
 		notifica("LEVEL UP! Ora " + personaggio.getNome() + " è al livello " + personaggio.getLivello() + "!");
@@ -275,39 +277,39 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		riquadroGruppo.gestisciEventoAumentoLivelloPersonaggio(evento);
 	}
 
-	private void gestisciEventoVariazioneStatistichePersonaggio(EventoVariazioneStatistichePersonaggio evento) {
+	private void gestisciEventoVariazioneStatistichePersonaggio(NotificaVariazioneStatistichePersonaggio evento) {
 		primoPiano(InterfacciaUtente.Finestra.STATO);
 		riquadroGruppo.gestisciEventoVariazioneStatistichePersonaggio(evento);
 	}
 
 	// Eventi del riquadro incantesimi
 
-	private void gestisciEventoVariazioneIncantesimi(EventoVariazioneIncantesimi evento) {
+	private void gestisciEventoVariazioneIncantesimi(NotificaVariazioneDisponibilitaIncantesimi evento) {
 		primoPiano(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
 		riquadroIncantesimiEPozioni.gestisciEventoVariazioneIncantesimi(evento);
 	}
 
-	private void gestisciEventoVariazionePozioniSalute(EventoVariazionePozioniSalute evento) {
+	private void gestisciEventoVariazionePozioniSalute(NotificaVariazioneDisponibilitaPozioniSalute evento) {
 		primoPiano(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
 		riquadroIncantesimiEPozioni.gestisciEventoVariazionePozioniSalute(evento);
 	}
 
-	private void gestisciEventoVariazionePozioniSaluteGrandi(EventoVariazionePozioniSaluteGrandi evento) {
+	private void gestisciEventoVariazionePozioniSaluteGrandi(NotificaVariazioneDisponibilitaPozioniSaluteGrandi evento) {
 		primoPiano(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
 		riquadroIncantesimiEPozioni.gestisciEventoVariazionePozioniSaluteGrandi(evento);
 	}
 
-	private void gestisciEventoVariazionePozioniMagia(EventoVariazionePozioniMagia evento) {
+	private void gestisciEventoVariazionePozioniMagia(NotificaVariazioneDisponibilitaPozioniMagia evento) {
 		primoPiano(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
 		riquadroIncantesimiEPozioni.gestisciEventoVariazionePozioniMagia(evento);
 	}
 
-	private void gestisciEventoVariazionePozioniMagiaGrandi(EventoVariazionePozioniMagiaGrandi evento) {
+	private void gestisciEventoVariazionePozioniMagiaGrandi(NotificaVariazioneDisponibilitaPozioniMagiaGrandi evento) {
 		primoPiano(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
 		riquadroIncantesimiEPozioni.gestisciEventoVariazionePozioniMagiaGrandi(evento);
 	}
 
-	private void gestisciEventoAggiornamentoStatoMissione(EventoAggiornamentoStatoMissione evento) {
+	private void gestisciEventoAggiornamentoStatoMissione(NotificaAggiornamentoStatoMissione evento) {
 		primoPiano(InterfacciaUtente.Finestra.MISSIONI);
 		notificaAnnuncioGlobale(evento.getEtichetta(), evento.getDescrizione());
 	}

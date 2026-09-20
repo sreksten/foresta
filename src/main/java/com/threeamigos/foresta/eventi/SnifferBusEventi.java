@@ -1,5 +1,9 @@
 package com.threeamigos.foresta.eventi;
 
+import com.threeamigos.foresta.eventi.comandigiocatore.*;
+import com.threeamigos.foresta.eventi.interni.*;
+import com.threeamigos.foresta.eventi.notifiche.*;
+import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
@@ -17,176 +21,176 @@ import java.util.stream.Collectors;
 public class SnifferBusEventi {
 
     public SnifferBusEventi() {
-        BusEventi.iscriviti(EventoAggiornamentoStatoMissione.class, this::onEventoAggiornamentoStatoMissione);
-        BusEventi.iscriviti(EventoAggiuntaModificatore.class, this::onEventoAggiuntaModificatore);
-        BusEventi.iscriviti(EventoApprovazioneAcquistoArtefatto.class, this::onEventoApprovazioneAcquistoArtefatto);
-        BusEventi.iscriviti(EventoApprovazioneAcquistoConsumabile.class, this::onEventoApprovazioneAcquistoConsumabile);
-        BusEventi.iscriviti(EventoApprovazionePrelievoArtefatto.class, this::onEventoApprovazionePrelievoArtefatto);
+        BusEventi.iscriviti(NotificaAggiornamentoStatoMissione.class, this::onEventoAggiornamentoStatoMissione);
+        BusEventi.iscriviti(NotificaAggiuntaModificatorePersonaggio.class, this::onEventoAggiuntaModificatore);
+        BusEventi.iscriviti(NotificaApprovazioneAcquistoArtefatto.class, this::onEventoApprovazioneAcquistoArtefatto);
+        BusEventi.iscriviti(NotificaApprovazioneAcquistoConsumabile.class, this::onEventoApprovazioneAcquistoConsumabile);
+        BusEventi.iscriviti(NotificaApprovazionePrelievoArtefatto.class, this::onEventoApprovazionePrelievoArtefatto);
         // EventoApprovazioneSpostamentoArtefatto è classe astratta
-        BusEventi.iscriviti(EventoApprovazioneStoccaggioArtefatto.class, this::onEventoApprovazioneStoccaggioArtefatto);
-        BusEventi.iscriviti(EventoApprovazioneVenditaArtefatto.class, this::onEventoApprovazioneVenditaArtefatto);
-        BusEventi.iscriviti(EventoAumentoLivelloMondo.class, this::onEventoAumentoLivelloMondo);
-        BusEventi.iscriviti(EventoAumentoLivelloPersonaggio.class, this::onEventoAumentoLivelloPersonaggio);
+        BusEventi.iscriviti(NotificaApprovazioneStoccaggioArtefatto.class, this::onEventoApprovazioneStoccaggioArtefatto);
+        BusEventi.iscriviti(NotificaApprovazioneVenditaArtefatto.class, this::onEventoApprovazioneVenditaArtefatto);
+        BusEventi.iscriviti(NotificaAumentoLivelloMondo.class, this::onEventoAumentoLivelloMondo);
+        BusEventi.iscriviti(NotificaAumentoLivelloPersonaggio.class, this::onEventoAumentoLivelloPersonaggio);
         // EventoBase è classe astratta
-        BusEventi.iscriviti(EventoComandiDisponibili.class, this::onEventoComandiDisponibili);
-        BusEventi.iscriviti(EventoComandoDiGioco.class, this::onEventoComandoDiGioco);
-        BusEventi.iscriviti(EventoCombattimento.class, this::onEventoCombattimento);
-        BusEventi.iscriviti(EventoConsumoPuntoAbilita.class, this::onEventoConsumoPuntoAbilita);
-        BusEventi.iscriviti(EventoCreazionePersonaggio.class, this::onEventoCreazionePersonaggio);
-        BusEventi.iscriviti(EventoCreazioneSpriteAnnuncioGlobale.class, this::onEventoCreazioneSpriteAnnuncioGlobale);
-        BusEventi.iscriviti(EventoCreazioneSpriteATempo.class, this::onEventoCreazioneSpriteATempo);
-        BusEventi.iscriviti(EventoCreazioneSpriteEffetto.class, this::onEventoCreazioneSpriteEffetto);
-        BusEventi.iscriviti(EventoCreazioneSpriteFumetto.class, this::onEventoCreazioneSpriteFumetto);
-        BusEventi.iscriviti(EventoCreazioneSpriteInDissolvenza.class, this::onEventoCreazioneSpriteInDissolvenza);
+        BusEventi.iscriviti(InternoAggiornamentoComandiDisponibili.class, this::onEventoComandiDisponibili);
+        BusEventi.iscriviti(ComandoDiGioco.class, this::onEventoComandoDiGioco);
+        BusEventi.iscriviti(NotificaInizioCombattimentoPersonaggio.class, this::onEventoCombattimento);
+        BusEventi.iscriviti(NotificaConsumoPuntoAbilitaPersonaggio.class, this::onEventoConsumoPuntoAbilita);
+        BusEventi.iscriviti(InternoCreazionePersonaggio.class, this::onEventoCreazionePersonaggio);
+        BusEventi.iscriviti(InternoCreazioneSpriteAnnuncioGlobale.class, this::onEventoCreazioneSpriteAnnuncioGlobale);
+        BusEventi.iscriviti(InternoCreazioneSpriteATempo.class, this::onEventoCreazioneSpriteATempo);
+        BusEventi.iscriviti(InternoCreazioneSpriteEffettoDiStato.class, this::onEventoCreazioneSpriteEffetto);
+        BusEventi.iscriviti(InternoCreazioneSpriteFumettoATempo.class, this::onEventoCreazioneSpriteFumetto);
+        BusEventi.iscriviti(InternoCreazioneSpriteInDissolvenza.class, this::onEventoCreazioneSpriteInDissolvenza);
         BusEventi.iscriviti(EventoErroreCaricamento.class, this::onEventoErroreCaricamento);
-        BusEventi.iscriviti(EventoErroreInterno.class, this::onEventoErroreInterno);
-        BusEventi.iscriviti(EventoException.class, this::onEventoException);
-        BusEventi.iscriviti(EventoFineGioco.class, this::onEventoFineGioco);
-        BusEventi.iscriviti(EventoFumetto.class, this::onEventoFumetto);
-        BusEventi.iscriviti(EventoInterazioneElementale.class, this::onEventoInterazioneElementale);
-        BusEventi.iscriviti(EventoInterfacciaUtentePronta.class, this::onEventoInterfacciaUtentePronta);
-        BusEventi.iscriviti(EventoMessaggio.class, this::onEventoMessaggio);
-        BusEventi.iscriviti(EventoMessaggioInterno.class, this::onEventoMessaggioInterno);
-        BusEventi.iscriviti(EventoMostraFinestra.class, this::onEventoMostraFinestra);
-        BusEventi.iscriviti(EventoMostraPunteggi.class, this::onEventoMostraPunteggi);
-        BusEventi.iscriviti(EventoMostraSchermataGioco.class, this::onEventoMostraSchermataGioco);
-        BusEventi.iscriviti(EventoMostraStatistiche.class, this::onEventoMostraStatistiche);
-        BusEventi.iscriviti(EventoNotificaGlobale.class, this::onEventoNotificaGlobale);
-        BusEventi.iscriviti(EventoParagrafo.class, this::onEventoParagrafo);
+        BusEventi.iscriviti(InternoErrore.class, this::onEventoErroreInterno);
+        BusEventi.iscriviti(InternoException.class, this::onEventoException);
+        BusEventi.iscriviti(NotificaFineGioco.class, this::onEventoFineGioco);
+        BusEventi.iscriviti(InternoNotificaViaFumettoATempo.class, this::onEventoFumetto);
+        BusEventi.iscriviti(NotificaInterazioneElementalePersonaggio.class, this::onEventoInterazioneElementale);
+        BusEventi.iscriviti(InternoInterfacciaUtentePronta.class, this::onEventoInterfacciaUtentePronta);
+        BusEventi.iscriviti(ComandoInvioTesto.class, this::onEventoInvioTesto);
+        BusEventi.iscriviti(NotificaTestoFrase.class, this::onEventoMessaggio);
+        BusEventi.iscriviti(InternoMessaggio.class, this::onEventoMessaggioInterno);
+        BusEventi.iscriviti(InternoPortaInPrimoPiano.class, this::onEventoMostraFinestra);
+        BusEventi.iscriviti(NotificaMostraPunteggiMigliori.class, this::onEventoMostraPunteggi);
+        BusEventi.iscriviti(InternoMostraSchermataGioco.class, this::onEventoMostraSchermataGioco);
+        BusEventi.iscriviti(NotificaMostraStatisticheFineGioco.class, this::onEventoMostraStatistiche);
+        BusEventi.iscriviti(NotificaGlobale.class, this::onEventoNotificaGlobale);
+        BusEventi.iscriviti(NotificaTestoParagrafo.class, this::onEventoParagrafo);
         // EventoPersonaggio è classe astratta
-        BusEventi.iscriviti(EventoPreparazioneLocazione.class, this::onEventoPreparazioneLocazione);
-        BusEventi.iscriviti(EventoPuliziaCacheDinamicaImmagini.class, this::onEventoPuliziaCacheDinamicaImmagini);
-        BusEventi.iscriviti(EventoRaccoltaOggetti.class, this::onEventoRaccoltaOggetti);
-        BusEventi.iscriviti(EventoRichiestaAcquistoArtefatto.class, this::onEventoRichiestaAcquistoArtefatto);
-        BusEventi.iscriviti(EventoRichiestaAcquistoConsumabile.class, this::onEventoRichiestaAcquistoConsumabile);
-        BusEventi.iscriviti(EventoRichiestaAperturaFinestraCombattimento.class, this::onEventoRichiestaAperturaFinestraCombattimento);
-        BusEventi.iscriviti(EventoRichiestaAperturaInventarioCommerciante.class, this::onEventoRichiestaAperturaInventarioCommerciante);
-        BusEventi.iscriviti(EventoRichiestaAperturaInventarioFornitore.class, this::onEventoRichiestaAperturaInventarioFornitore);
-        BusEventi.iscriviti(EventoRichiestaAperturaInventarioGruppo.class, this::onEventoRichiestaAperturaInventarioGruppo);
-        BusEventi.iscriviti(EventoRichiestaChiusuraFinestraCombattimento.class, this::onEventoRichiestaChiusuraFinestraCombattimento);
-        BusEventi.iscriviti(EventoRichiestaPrelievoArtefatto.class, this::onEventoRichiestaPrelievoArtefatto);
-        BusEventi.iscriviti(EventoRichiestaRefreshUI.class, this::onEventoRichiestaRefreshUI);
-        BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::onEventoRichiestaReinizializzazioneUI);
+        BusEventi.iscriviti(InternoPreparazioneLocazione.class, this::onEventoPreparazioneLocazione);
+        BusEventi.iscriviti(InternoPuliziaCacheDinamicaImmagini.class, this::onEventoPuliziaCacheDinamicaImmagini);
+        BusEventi.iscriviti(NotificaRaccoltaOggetti.class, this::onEventoRaccoltaOggetti);
+        BusEventi.iscriviti(ComandoAcquistoArtefatto.class, this::onEventoRichiestaAcquistoArtefatto);
+        BusEventi.iscriviti(ComandoAcquistoConsumabile.class, this::onEventoRichiestaAcquistoConsumabile);
+        BusEventi.iscriviti(InternoRichiestaAperturaFinestraCombattimento.class, this::onEventoRichiestaAperturaFinestraCombattimento);
+        BusEventi.iscriviti(ComandoAperturaInventarioCommerciante.class, this::onEventoRichiestaAperturaInventarioCommerciante);
+        BusEventi.iscriviti(ComandoAperturaInventarioFornitore.class, this::onEventoRichiestaAperturaInventarioFornitore);
+        BusEventi.iscriviti(ComandoAperturaInventarioGruppo.class, this::onEventoRichiestaAperturaInventarioGruppo);
+        BusEventi.iscriviti(InternoRichiestaChiusuraFinestraCombattimento.class, this::onEventoRichiestaChiusuraFinestraCombattimento);
+        BusEventi.iscriviti(ComandoPrelievoArtefatto.class, this::onEventoRichiestaPrelievoArtefatto);
+        BusEventi.iscriviti(InternoRichiestaRefreshUI.class, this::onEventoRichiestaRefreshUI);
+        BusEventi.iscriviti(InternoRichiestaReinizializzazioneUI.class, this::onEventoRichiestaReinizializzazioneUI);
         // EventoRichiestaSpostamentoArtefatto è classe astratta
-        BusEventi.iscriviti(EventoRichiestaSelezioneSlotPerRilettura.class, this::onEventoRichiestaSelezioneSlotPerRilettura);
-        BusEventi.iscriviti(EventoRichiestaSelezioneSlotPerSalvataggio.class, this::onEventoRichiestaSelezioneSlotPerSalvataggio);
-        BusEventi.iscriviti(EventoRichiestaStoccaggioArtefatto.class, this::onEventoRichiestaStoccaggioArtefatto);
-        BusEventi.iscriviti(EventoRichiestaTesto.class, this::onEventoRichiestaTesto);
-        BusEventi.iscriviti(EventoRichiestaVenditaArtefatto.class, this::onEventoRichiestaVenditaArtefatto);
-        BusEventi.iscriviti(EventoRichiestaVenditaArtefatto.class, this::onEventoRichiestaVenditaArtefatto);
-        BusEventi.iscriviti(EventoRichiestaVisualizzazioneMappa.class, this::onEventoRichiestaVisualizzazioneMappa);
-        BusEventi.iscriviti(EventoRifiutoAcquistoArtefatto.class, this::onEventoRifiutoAcquistoArtefatto);
-        BusEventi.iscriviti(EventoRifiutoAcquistoConsumabile.class, this::onEventoRifiutoAcquistoConsumabile);
-        BusEventi.iscriviti(EventoRifiutoPrelievoArtefatto.class, this::onEventoRifiutoPrelievoArtefatto);
+        BusEventi.iscriviti(RichiestaSelezioneSlotPerRilettura.class, this::onEventoRichiestaSelezioneSlotPerRilettura);
+        BusEventi.iscriviti(RichiestaSelezioneSlotPerSalvataggio.class, this::onEventoRichiestaSelezioneSlotPerSalvataggio);
+        BusEventi.iscriviti(ComandoStoccaggioArtefatto.class, this::onEventoRichiestaStoccaggioArtefatto);
+        BusEventi.iscriviti(RichiestaTesto.class, this::onEventoRichiestaTesto);
+        BusEventi.iscriviti(ComandoVenditaArtefatto.class, this::onEventoRichiestaVenditaArtefatto);
+        BusEventi.iscriviti(ComandoVenditaArtefatto.class, this::onEventoRichiestaVenditaArtefatto);
+        BusEventi.iscriviti(ComandoVisualizzazioneMappa.class, this::onEventoRichiestaVisualizzazioneMappa);
+        BusEventi.iscriviti(NotificaRifiutoAcquistoArtefatto.class, this::onEventoRifiutoAcquistoArtefatto);
+        BusEventi.iscriviti(NotificaRifiutoAcquistoConsumabile.class, this::onEventoRifiutoAcquistoConsumabile);
+        BusEventi.iscriviti(NotificaRifiutoPrelievoArtefatto.class, this::onEventoRifiutoPrelievoArtefatto);
         // EventoRifiutoSpostamentoArtefatto è classe astratta
-        BusEventi.iscriviti(EventoRifiutoStoccaggioArtefatto.class, this::onEventoRifiutoStoccaggioArtefatto);
-        BusEventi.iscriviti(EventoRifiutoVenditaArtefatto.class, this::onEventoRifiutoVenditaArtefatto);
-        BusEventi.iscriviti(EventoSelezioneConfermaUscita.class, this::onEventoSelezioneConfermaUscita);
-        BusEventi.iscriviti(EventoSelezioneDirezione.class, this::onEventoSelezioneDirezione);
-        BusEventi.iscriviti(EventoSelezioneIncantesimoDaLanciare.class, this::onEventoSelezioneIncantesimoDaLanciare);
-        BusEventi.iscriviti(EventoSelezioneSiNo.class, this::onEventoSelezioneSiNo);
-        BusEventi.iscriviti(EventoStatoDiGioco.class, this::onEventoStatoDiGioco);
-        BusEventi.iscriviti(EventoTestoDisponibile.class, this::onEventoTestoDisponibile);
-        BusEventi.iscriviti(EventoValutazioneAttaccante.class, this::onEventoValutazioneAttaccante);
-        BusEventi.iscriviti(EventoVariazioneEffettoDiStato.class, this::onEventoVariazioneEffettoDiStato);
-        BusEventi.iscriviti(EventoVariazioneGemme.class, this::onEventoVariazioneGemme);
-        BusEventi.iscriviti(EventoVariazioneIncantesimi.class, this::onEventoVariazioneIncantesimi);
-        BusEventi.iscriviti(EventoVariazioneMappa.class, this::onEventoVariazioneMappa);
-        BusEventi.iscriviti(EventoVariazioneMonete.class, this::onEventoVariazioneMonete);
-        BusEventi.iscriviti(EventoVariazionePozioniMagia.class, this::onEventoVariazionePozioniMagia);
-        BusEventi.iscriviti(EventoVariazionePozioniMagiaGrandi.class, this::onEventoVariazionePozioniMagiaGrandi);
-        BusEventi.iscriviti(EventoVariazionePozioniSalute.class, this::onEventoVariazionePozioniSalute);
-        BusEventi.iscriviti(EventoVariazionePozioniSaluteGrandi.class, this::onEventoVariazionePozioniSaluteGrandi);
-        BusEventi.iscriviti(EventoVariazionePunti.class, this::onEventoVariazionePunti);
-        BusEventi.iscriviti(EventoVariazionePuntiEsperienza.class, this::onEventoVariazionePuntiEsperienza);
-        BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::onEventoVariazioneStatistichePersonaggio);
-        BusEventi.iscriviti(EventoVariazioneStatoVitalePersonaggio.class, this::onEventoVariazioneStatoVitalePersonaggio);
+        BusEventi.iscriviti(NotificaRifiutoStoccaggioArtefatto.class, this::onEventoRifiutoStoccaggioArtefatto);
+        BusEventi.iscriviti(NotificaRifiutoVenditaArtefatto.class, this::onEventoRifiutoVenditaArtefatto);
+        BusEventi.iscriviti(RichiestaUscitaDalGioco.class, this::onEventoSelezioneConfermaUscita);
+        BusEventi.iscriviti(RichiestaSelezioneDirezione.class, this::onEventoSelezioneDirezione);
+        BusEventi.iscriviti(RichiestaSelezioneIncantesimoDaLanciare.class, this::onEventoSelezioneIncantesimoDaLanciare);
+        BusEventi.iscriviti(RichiestaSelezioneSiNo.class, this::onEventoSelezioneSiNo);
+        BusEventi.iscriviti(InternoStatoDiGioco.class, this::onEventoStatoDiGioco);
+        BusEventi.iscriviti(InternoRisultatoValutazionePersonaggioAttaccante.class, this::onEventoValutazioneAttaccante);
+        BusEventi.iscriviti(NotificaVariazioneEffettoDiStatoPersonaggio.class, this::onEventoVariazioneEffettoDiStato);
+        BusEventi.iscriviti(NotificaVariazioneDisponibilitaGemme.class, this::onEventoVariazioneGemme);
+        BusEventi.iscriviti(NotificaVariazioneDisponibilitaIncantesimi.class, this::onEventoVariazioneIncantesimi);
+        BusEventi.iscriviti(NotificaVariazioneConoscenzaMappa.class, this::onEventoVariazioneMappa);
+        BusEventi.iscriviti(NotificaVariazioneDisponibilitaMonete.class, this::onEventoVariazioneMonete);
+        BusEventi.iscriviti(NotificaVariazioneDisponibilitaPozioniMagia.class, this::onEventoVariazionePozioniMagia);
+        BusEventi.iscriviti(NotificaVariazioneDisponibilitaPozioniMagiaGrandi.class, this::onEventoVariazionePozioniMagiaGrandi);
+        BusEventi.iscriviti(NotificaVariazioneDisponibilitaPozioniSalute.class, this::onEventoVariazionePozioniSalute);
+        BusEventi.iscriviti(NotificaVariazioneDisponibilitaPozioniSaluteGrandi.class, this::onEventoVariazionePozioniSaluteGrandi);
+        BusEventi.iscriviti(NotificaVariazionePunteggio.class, this::onEventoVariazionePunti);
+        BusEventi.iscriviti(NotificaVariazionePuntiEsperienzaPersonaggio.class, this::onEventoVariazionePuntiEsperienza);
+        BusEventi.iscriviti(NotificaVariazioneStatistichePersonaggio.class, this::onEventoVariazioneStatistichePersonaggio);
+        BusEventi.iscriviti(NotificaVariazioneStatoVitalePersonaggio.class, this::onEventoVariazioneStatoVitalePersonaggio);
     }
 
-    private void onEventoAggiornamentoStatoMissione(EventoAggiornamentoStatoMissione evento) {
+    private void onEventoAggiornamentoStatoMissione(NotificaAggiornamentoStatoMissione evento) {
         Logger.log(headerEvento(evento) + "Missione " + evento.getMissione().getNome() + " - " +
                 evento.getEtichetta() + " - " + evento.getDescrizione());
     }
 
-    private void onEventoAggiuntaModificatore(EventoAggiuntaModificatore evento) {
+    private void onEventoAggiuntaModificatore(NotificaAggiuntaModificatorePersonaggio evento) {
         ModificatoreAttributo modificatore = evento.getModificatore();
         Logger.log(headerEvento(evento) + formattaModificatoreAttributo(modificatore) +
                 formattaStatistichePersonaggio(evento.getPersonaggio()));
     }
 
-    private void onEventoApprovazioneAcquistoArtefatto(EventoApprovazioneAcquistoArtefatto evento) {
+    private void onEventoApprovazioneAcquistoArtefatto(NotificaApprovazioneAcquistoArtefatto evento) {
         Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamentoArtefatto().getUuid());
     }
 
-    private void onEventoApprovazioneAcquistoConsumabile(EventoApprovazioneAcquistoConsumabile evento) {
+    private void onEventoApprovazioneAcquistoConsumabile(NotificaApprovazioneAcquistoConsumabile evento) {
         Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaAcquistoConsumabile().getUuid());
     }
 
-    private void onEventoApprovazionePrelievoArtefatto(EventoApprovazionePrelievoArtefatto evento) {
+    private void onEventoApprovazionePrelievoArtefatto(NotificaApprovazionePrelievoArtefatto evento) {
         Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamentoArtefatto().getUuid());
     }
 
-    private void onEventoApprovazioneStoccaggioArtefatto(EventoApprovazioneStoccaggioArtefatto evento) {
+    private void onEventoApprovazioneStoccaggioArtefatto(NotificaApprovazioneStoccaggioArtefatto evento) {
         Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamentoArtefatto().getUuid());
     }
 
-    private void onEventoApprovazioneVenditaArtefatto(EventoApprovazioneVenditaArtefatto evento) {
+    private void onEventoApprovazioneVenditaArtefatto(NotificaApprovazioneVenditaArtefatto evento) {
         Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamentoArtefatto().getUuid());
     }
 
-    private void onEventoAumentoLivelloMondo(EventoAumentoLivelloMondo evento) {
+    private void onEventoAumentoLivelloMondo(NotificaAumentoLivelloMondo evento) {
         Logger.log(headerEvento(evento) + "Mondo aumenta di livello a " + evento.getLivello());
     }
 
-    private void onEventoAumentoLivelloPersonaggio(EventoAumentoLivelloPersonaggio evento) {
+    private void onEventoAumentoLivelloPersonaggio(NotificaAumentoLivelloPersonaggio evento) {
         Logger.log(headerEvento(evento) + "Aumento livello " + evento.getLivelloPrecedente() + " -> " +
                 evento.getLivelloAttuale() + " - " + formattaStatistichePersonaggio(evento.getPersonaggio()));
     }
 
-    private void onEventoComandiDisponibili(EventoComandiDisponibili evento) {
+    private void onEventoComandiDisponibili(InternoAggiornamentoComandiDisponibili evento) {
         Logger.log(headerEvento(evento) + "Comandi disponibili: " + evento.getPossibilita());
     }
 
-    private void onEventoComandoDiGioco(EventoComandoDiGioco evento) {
+    private void onEventoComandoDiGioco(ComandoDiGioco evento) {
         Comando comando = evento.getComando();
         Logger.log(headerEvento(evento) + "Comando: " + comando);
     }
 
-    private void onEventoCombattimento(EventoCombattimento evento) {
+    private void onEventoCombattimento(NotificaInizioCombattimentoPersonaggio evento) {
         Personaggio p = evento.getPersonaggio();
         Personaggio bersaglio = evento.getBersaglio();
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) +
                 formattaStatistichePersonaggio(bersaglio) + evento.formattaRisultatoCombattimento());
     }
 
-    private void onEventoConsumoPuntoAbilita(EventoConsumoPuntoAbilita evento) {
+    private void onEventoConsumoPuntoAbilita(NotificaConsumoPuntoAbilitaPersonaggio evento) {
         Personaggio p = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getTipoAttributo());
     }
 
-    private void onEventoCreazionePersonaggio(EventoCreazionePersonaggio evento) {
+    private void onEventoCreazionePersonaggio(InternoCreazionePersonaggio evento) {
         Personaggio p  = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p));
     }
 
-    private void onEventoCreazioneSpriteAnnuncioGlobale(EventoCreazioneSpriteAnnuncioGlobale evento) {
+    private void onEventoCreazioneSpriteAnnuncioGlobale(InternoCreazioneSpriteAnnuncioGlobale evento) {
         Logger.log(headerEvento(evento) + "Titolo: " + evento.getSprite().getTitolo() +
                 ", Descrizione: " + evento.getSprite().getDescrizione());
     }
 
-    private void onEventoCreazioneSpriteATempo(EventoCreazioneSpriteATempo evento) {
+    private void onEventoCreazioneSpriteATempo(InternoCreazioneSpriteATempo evento) {
         Logger.log(headerEvento(evento) + "Descrizione: " + evento.getSprite().getDescrizione());
     }
 
-    private void onEventoCreazioneSpriteEffetto(EventoCreazioneSpriteEffetto evento) {
+    private void onEventoCreazioneSpriteEffetto(InternoCreazioneSpriteEffettoDiStato evento) {
         Logger.log(headerEvento(evento) + "Descrizione: " + evento.getSprite().getTesto());
     }
 
-    private void onEventoCreazioneSpriteFumetto(EventoCreazioneSpriteFumetto evento) {
+    private void onEventoCreazioneSpriteFumetto(InternoCreazioneSpriteFumettoATempo evento) {
         Logger.log(headerEvento(evento) + "Descrizione: " + evento.getSprite().getTesto());
     }
 
-    private void onEventoCreazioneSpriteInDissolvenza(EventoCreazioneSpriteInDissolvenza evento) {
+    private void onEventoCreazioneSpriteInDissolvenza(InternoCreazioneSpriteInDissolvenza evento) {
         Logger.log(headerEvento(evento) + "Descrizione: " + evento.getSprite().getDescrizione());
     }
 
@@ -195,273 +199,273 @@ public class SnifferBusEventi {
         Logger.log(evento.getException());
     }
 
-    private void onEventoErroreInterno(EventoErroreInterno evento) {
+    private void onEventoErroreInterno(InternoErrore evento) {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggio()));
     }
 
-    private void onEventoException(EventoException evento) {
+    private void onEventoException(InternoException evento) {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getException().getMessage()));
         Logger.log(evento.getException());
     }
 
-    private void onEventoFineGioco(EventoFineGioco evento) {
+    private void onEventoFineGioco(NotificaFineGioco evento) {
         Logger.log(String.format("%s - %s - Completato con successo: %s", new Date(), evento.getTipoEvento(), evento.isCompletatoConSuccesso()));
     }
 
-    private void onEventoFumetto(EventoFumetto evento) {
+    private void onEventoFumetto(InternoNotificaViaFumettoATempo evento) {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getTesto()));
     }
 
-    private void onEventoInterazioneElementale(EventoInterazioneElementale evento) {
+    private void onEventoInterazioneElementale(NotificaInterazioneElementalePersonaggio evento) {
         Personaggio p = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getTipoInterazioneElementale());
     }
 
-    private void onEventoInterfacciaUtentePronta(EventoInterfacciaUtentePronta evento) {
+    private void onEventoInterfacciaUtentePronta(InternoInterfacciaUtentePronta evento) {
         Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
     }
 
-    private void onEventoMessaggio(EventoMessaggio evento) {
+    private void onEventoInvioTesto(ComandoInvioTesto evento) {
+        Logger.log(headerEvento(evento) + "Ricevuto testo: " + evento.getTesto());
+    }
+
+    private void onEventoMessaggio(NotificaTestoFrase evento) {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggio()));
     }
 
-    private void onEventoMessaggioInterno(EventoMessaggioInterno evento) {
+    private void onEventoMessaggioInterno(InternoMessaggio evento) {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggioInterno()));
     }
 
-    private void onEventoMostraFinestra(EventoMostraFinestra evento) {
+    private void onEventoMostraFinestra(InternoPortaInPrimoPiano evento) {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getFinestre()));
     }
 
-    private void onEventoMostraPunteggi(EventoMostraPunteggi evento) {
+    private void onEventoMostraPunteggi(NotificaMostraPunteggiMigliori evento) {
         Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
     }
 
-    private void onEventoMostraSchermataGioco(EventoMostraSchermataGioco evento) {
+    private void onEventoMostraSchermataGioco(InternoMostraSchermataGioco evento) {
         Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
     }
 
-    private void onEventoMostraStatistiche(EventoMostraStatistiche evento) {
+    private void onEventoMostraStatistiche(NotificaMostraStatisticheFineGioco evento) {
         Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
     }
 
-    private void onEventoNotificaGlobale(EventoNotificaGlobale evento) {
+    private void onEventoNotificaGlobale(NotificaGlobale evento) {
         Logger.log(String.format("%s - %s - %s - %s - %s", new Date(), evento.getTipoEvento(), evento.getEtichetta(), evento.getEtichetta(), evento.getMessaggio()));
     }
 
-    private void onEventoParagrafo(EventoParagrafo evento) {
+    private void onEventoParagrafo(NotificaTestoParagrafo evento) {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggio()));
     }
 
-    private void onEventoPreparazioneLocazione(EventoPreparazioneLocazione evento) {
+    private void onEventoPreparazioneLocazione(InternoPreparazioneLocazione evento) {
         Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
     }
 
-    private void onEventoPuliziaCacheDinamicaImmagini(EventoPuliziaCacheDinamicaImmagini evento) {
+    private void onEventoPuliziaCacheDinamicaImmagini(InternoPuliziaCacheDinamicaImmagini evento) {
         int prima = evento.getElementiPrima();
         int dopo = evento.getElementiDopo();
         Logger.log(headerEvento(evento) + "Eliminate " + (prima - dopo) + " immagini dalla cache. Rimanenti: " + dopo);
     }
 
-    private void onEventoRaccoltaOggetti(EventoRaccoltaOggetti evento) {
+    private void onEventoRaccoltaOggetti(NotificaRaccoltaOggetti evento) {
         Logger.log(headerEvento(evento));
     }
 
-    private void onEventoRichiestaAcquistoArtefatto(EventoRichiestaAcquistoArtefatto evento) {
+    private void onEventoRichiestaAcquistoArtefatto(ComandoAcquistoArtefatto evento) {
         OggettoConCosto oggetto = evento.getOggettoDaSpostare();
         Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di acquistare "
                 + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") da "
                 + formattaParte(evento.getParteRemota()));
     }
 
-    private void onEventoRichiestaAcquistoConsumabile(EventoRichiestaAcquistoConsumabile evento) {
+    private void onEventoRichiestaAcquistoConsumabile(ComandoAcquistoConsumabile evento) {
         ClasseIncantesimo incantesimo = evento.getClasseIncantesimo();
         Logger.log(headerEvento(evento) + "Gruppo richiede di acquistare " + evento.getTipoConsumabile() +
                 (incantesimo != null ? (" " + incantesimo) : "") + ", Costo: " + evento.getPrezzo());
     }
 
-    private void onEventoRichiestaAperturaFinestraCombattimento(EventoRichiestaAperturaFinestraCombattimento evento) {
+    private void onEventoRichiestaAperturaFinestraCombattimento(InternoRichiestaAperturaFinestraCombattimento evento) {
         String notifica = "Attiva - " + formattaStatistichePersonaggio(evento.getPersonaggio()) + " vs " +
                 formattaStatistichePersonaggio(evento.getAvversario());
         Logger.log(headerEvento(evento) + notifica);
     }
 
-    private void onEventoRichiestaAperturaInventarioCommerciante(EventoRichiestaAperturaInventarioCommerciante evento) {
+    private void onEventoRichiestaAperturaInventarioCommerciante(ComandoAperturaInventarioCommerciante evento) {
         Logger.log(headerEvento(evento));
     }
 
-    private void onEventoRichiestaAperturaInventarioFornitore(EventoRichiestaAperturaInventarioFornitore evento) {
+    private void onEventoRichiestaAperturaInventarioFornitore(ComandoAperturaInventarioFornitore evento) {
         Logger.log(headerEvento(evento));
     }
 
-    private void onEventoRichiestaAperturaInventarioGruppo(EventoRichiestaAperturaInventarioGruppo evento) {
+    private void onEventoRichiestaAperturaInventarioGruppo(ComandoAperturaInventarioGruppo evento) {
         Logger.log(headerEvento(evento));
     }
 
-    private void onEventoRichiestaChiusuraFinestraCombattimento(EventoRichiestaChiusuraFinestraCombattimento evento) {
+    private void onEventoRichiestaChiusuraFinestraCombattimento(InternoRichiestaChiusuraFinestraCombattimento evento) {
         Logger.log(headerEvento(evento) + "Chiusa");
     }
 
-    private void onEventoRichiestaPrelievoArtefatto(EventoRichiestaPrelievoArtefatto evento) {
+    private void onEventoRichiestaPrelievoArtefatto(ComandoPrelievoArtefatto evento) {
         OggettoConPeso oggetto = evento.getOggettoDaSpostare();
         Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di prelevare "
                 + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") da "
                 + formattaParte(evento.getParteRemota()));
     }
 
-    private void onEventoRichiestaRefreshUI(EventoRichiestaRefreshUI evento) {
+    private void onEventoRichiestaRefreshUI(InternoRichiestaRefreshUI evento) {
         Logger.log(headerEvento(evento));
     }
 
-    private void onEventoRichiestaReinizializzazioneUI(EventoRichiestaReinizializzazioneUI evento) {
+    private void onEventoRichiestaReinizializzazioneUI(InternoRichiestaReinizializzazioneUI evento) {
         Logger.log(headerEvento(evento));
     }
 
-    private void onEventoRichiestaSelezioneSlotPerRilettura(EventoRichiestaSelezioneSlotPerRilettura evento) {
+    private void onEventoRichiestaSelezioneSlotPerRilettura(RichiestaSelezioneSlotPerRilettura evento) {
         Logger.log(headerEvento(evento) + "Salvataggi disponibili: " + evento.getSalvataggiDisponibili()
                 .stream().map(TestataSalvataggio::getId).map(Comando::name).collect(Collectors.joining(", ")));
     }
 
-    private void onEventoRichiestaSelezioneSlotPerSalvataggio(EventoRichiestaSelezioneSlotPerSalvataggio evento) {
+    private void onEventoRichiestaSelezioneSlotPerSalvataggio(RichiestaSelezioneSlotPerSalvataggio evento) {
         Logger.log(headerEvento(evento) + "Salvataggi disponibili: " + evento.getSalvataggiDisponibili()
                 .stream().map(TestataSalvataggio::getId).map(Comando::name).collect(Collectors.joining(", ")));
     }
 
-    private void onEventoRichiestaVisualizzazioneMappa(EventoRichiestaVisualizzazioneMappa evento) {
+    private void onEventoRichiestaVisualizzazioneMappa(ComandoVisualizzazioneMappa evento) {
         Logger.log(headerEvento(evento));
     }
 
-    private void onEventoRichiestaStoccaggioArtefatto(EventoRichiestaStoccaggioArtefatto evento) {
+    private void onEventoRichiestaStoccaggioArtefatto(ComandoStoccaggioArtefatto evento) {
         OggettoConPeso oggetto = evento.getOggettoDaSpostare();
         Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di stoccare "
                 + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") su "
                 + formattaParte(evento.getParteRemota()));
     }
 
-    private void onEventoRichiestaTesto(EventoRichiestaTesto evento) {
+    private void onEventoRichiestaTesto(RichiestaTesto evento) {
         Logger.log(headerEvento(evento) + "Richiesta: " + evento.getRichiesta());
     }
 
-    private void onEventoRichiestaVenditaArtefatto(EventoRichiestaVenditaArtefatto evento) {
+    private void onEventoRichiestaVenditaArtefatto(ComandoVenditaArtefatto evento) {
         OggettoConCosto oggetto = evento.getOggettoDaSpostare();
         Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di vendere "
                 + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") a "
                 + formattaParte(evento.getParteRemota()));
     }
 
-    private void onEventoRifiutoAcquistoArtefatto(EventoRifiutoAcquistoArtefatto evento) {
+    private void onEventoRifiutoAcquistoArtefatto(NotificaRifiutoAcquistoArtefatto evento) {
         Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamento().getUuid());
     }
 
-    private void onEventoRifiutoAcquistoConsumabile(EventoRifiutoAcquistoConsumabile evento) {
+    private void onEventoRifiutoAcquistoConsumabile(NotificaRifiutoAcquistoConsumabile evento) {
         Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaAcquistoConsumabile().getUuid());
     }
 
-    private void onEventoRifiutoPrelievoArtefatto(EventoRifiutoPrelievoArtefatto evento) {
+    private void onEventoRifiutoPrelievoArtefatto(NotificaRifiutoPrelievoArtefatto evento) {
         Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamento().getUuid());
     }
 
-    private void onEventoRifiutoStoccaggioArtefatto(EventoRifiutoStoccaggioArtefatto evento) {
+    private void onEventoRifiutoStoccaggioArtefatto(NotificaRifiutoStoccaggioArtefatto evento) {
         Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamento().getUuid());
     }
 
-    private void onEventoRifiutoVenditaArtefatto(EventoRifiutoVenditaArtefatto evento) {
+    private void onEventoRifiutoVenditaArtefatto(NotificaRifiutoVenditaArtefatto evento) {
         Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamento().getUuid());
     }
 
-    private void onEventoSelezioneConfermaUscita(EventoSelezioneConfermaUscita evento) {
+    private void onEventoSelezioneConfermaUscita(RichiestaUscitaDalGioco evento) {
         Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
     }
 
-    private void onEventoSelezioneDirezione(EventoSelezioneDirezione evento) {
+    private void onEventoSelezioneDirezione(RichiestaSelezioneDirezione evento) {
         Logger.log(headerEvento(evento) + evento.getPossibilita());
     }
 
-    private void onEventoSelezioneIncantesimoDaLanciare(EventoSelezioneIncantesimoDaLanciare evento) {
+    private void onEventoSelezioneIncantesimoDaLanciare(RichiestaSelezioneIncantesimoDaLanciare evento) {
         Logger.log(headerEvento(evento) + evento.getPossibilita());
     }
 
-    private void onEventoSelezioneSiNo(EventoSelezioneSiNo evento) {
+    private void onEventoSelezioneSiNo(RichiestaSelezioneSiNo evento) {
         Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
     }
 
-    private void onEventoStatoDiGioco(EventoStatoDiGioco evento) {
+    private void onEventoStatoDiGioco(InternoStatoDiGioco evento) {
         Logger.log(headerEvento(evento) + evento.getStato().toString());
     }
 
-    private void onEventoTestoDisponibile(EventoTestoDisponibile evento) {
-        Logger.log(headerEvento(evento) + "Ricevuto testo: " + evento.getTesto());
-    }
-
-    private void onEventoValutazioneAttaccante(EventoValutazioneAttaccante evento) {
+    private void onEventoValutazioneAttaccante(InternoRisultatoValutazionePersonaggioAttaccante evento) {
         Personaggio p = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getRisultatoValutazione());
     }
 
-    private void onEventoVariazioneEffettoDiStato(EventoVariazioneEffettoDiStato evento) {
+    private void onEventoVariazioneEffettoDiStato(NotificaVariazioneEffettoDiStatoPersonaggio evento) {
         Personaggio p = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + String.format("Tipo: %s, EffettoDiStato: %s - ",
                 evento.getTipo(), evento.getEffetto()) + formattaStatistichePersonaggio(p));
     }
 
-    public void onEventoVariazioneGemme(EventoVariazioneGemme evento) {
+    public void onEventoVariazioneGemme(NotificaVariazioneDisponibilitaGemme evento) {
         Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
-    public void onEventoVariazioneIncantesimi(EventoVariazioneIncantesimi evento) {
+    public void onEventoVariazioneIncantesimi(NotificaVariazioneDisponibilitaIncantesimi evento) {
         Logger.log(headerEvento(evento) + String.format("Tipo: %s, Variazione: %d -> %d",
                 evento.getClasseIncantesimo(), evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
-    public void onEventoVariazioneMappa(EventoVariazioneMappa evento) {
+    public void onEventoVariazioneMappa(NotificaVariazioneConoscenzaMappa evento) {
         Logger.log(headerEvento(evento) + String.format("Variazione: (%d, %d) -> (%d, %d)",
                 evento.getDaX(), evento.getDaY(), evento.getaX(), evento.getaY()));
     }
 
-    public void onEventoVariazioneMonete(EventoVariazioneMonete evento) {
+    public void onEventoVariazioneMonete(NotificaVariazioneDisponibilitaMonete evento) {
         Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
-    public void onEventoVariazionePozioniMagia(EventoVariazionePozioniMagia evento) {
+    public void onEventoVariazionePozioniMagia(NotificaVariazioneDisponibilitaPozioniMagia evento) {
         Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
-    public void onEventoVariazionePozioniMagiaGrandi(EventoVariazionePozioniMagiaGrandi evento) {
+    public void onEventoVariazionePozioniMagiaGrandi(NotificaVariazioneDisponibilitaPozioniMagiaGrandi evento) {
         Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
-    public void onEventoVariazionePozioniSalute(EventoVariazionePozioniSalute evento) {
+    public void onEventoVariazionePozioniSalute(NotificaVariazioneDisponibilitaPozioniSalute evento) {
         Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
-    public void onEventoVariazionePozioniSaluteGrandi(EventoVariazionePozioniSaluteGrandi evento) {
+    public void onEventoVariazionePozioniSaluteGrandi(NotificaVariazioneDisponibilitaPozioniSaluteGrandi evento) {
         Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
-    public void onEventoVariazionePunti(EventoVariazionePunti evento) {
+    public void onEventoVariazionePunti(NotificaVariazionePunteggio evento) {
         Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
-    public void onEventoVariazionePuntiEsperienza(EventoVariazionePuntiEsperienza evento) {
+    public void onEventoVariazionePuntiEsperienza(NotificaVariazionePuntiEsperienzaPersonaggio evento) {
         Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }
 
-    private void onEventoVariazioneStatistichePersonaggio(EventoVariazioneStatistichePersonaggio evento) {
+    private void onEventoVariazioneStatistichePersonaggio(NotificaVariazioneStatistichePersonaggio evento) {
         Personaggio p = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + String.format("Attributo: %s, Variazione: %7.2f -> %7.2f - ",
                 evento.getTipoAttributo(), evento.getValorePrecedente(), evento.getNuovoValore()) +
                 formattaStatistichePersonaggio(p));
     }
 
-    private void onEventoVariazioneStatoVitalePersonaggio(EventoVariazioneStatoVitalePersonaggio evento) {
+    private void onEventoVariazioneStatoVitalePersonaggio(NotificaVariazioneStatoVitalePersonaggio evento) {
         Personaggio p = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + String.format("Stato: -> %s, Causa trapasso: -> %s - ",
                 p.isVivo() ? "Vivo" : "Morto", p.getCausaTrapasso()) + formattaStatistichePersonaggio(p));

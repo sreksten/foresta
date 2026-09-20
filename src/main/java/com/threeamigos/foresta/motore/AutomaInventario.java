@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoRichiestaPrelievoArtefatto;
-import com.threeamigos.foresta.eventi.EventoRichiestaStoccaggioArtefatto;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoPrelievoArtefatto;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoStoccaggioArtefatto;
 import com.threeamigos.foresta.oggetti.Artefatto;
 
 /**
@@ -27,12 +27,12 @@ public class AutomaInventario extends AutomaScambiatoreArtefatti {
 
     @Override
     public void richiediSpostamentoSuParteAttiva(Artefatto artefatto) {
-        BusEventi.pubblica(new EventoRichiestaPrelievoArtefatto(getParteAttiva(), getParteRemota(), artefatto));
+        BusEventi.pubblica(new ComandoPrelievoArtefatto(getParteAttiva(), getParteRemota(), artefatto));
     }
 
     @Override
     public void richiediSpostamentoSuParteRemota(Artefatto artefatto) {
-        BusEventi.pubblica(new EventoRichiestaStoccaggioArtefatto(getParteAttiva(), getParteRemota(), artefatto));
+        BusEventi.pubblica(new ComandoStoccaggioArtefatto(getParteAttiva(), getParteRemota(), artefatto));
     }
 
 }

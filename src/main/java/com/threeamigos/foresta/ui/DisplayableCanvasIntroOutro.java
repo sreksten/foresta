@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoErroreInterno;
-import com.threeamigos.foresta.eventi.EventoException;
+import com.threeamigos.foresta.eventi.interni.InternoErrore;
+import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.Logger;
@@ -116,7 +116,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 			try {
 				disegnaElencoPersonaggiDaElencoClassi(graphics, testata);
 			} catch (Exception e) {
-				BusEventi.pubblica(new EventoException("Durante lettura intestazione del file di salvataggio " + testata.getId(), e));
+				BusEventi.pubblica(new InternoException("Durante lettura intestazione del file di salvataggio " + testata.getId(), e));
 			}
 		}
 	}
@@ -133,7 +133,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		} else if (comando == Comando.NUMERO_5) {
 			return 5;
 		} else {
-			BusEventi.pubblica(new EventoErroreInterno("Comando non valido: " + comando));
+			BusEventi.pubblica(new InternoErrore("Comando non valido: " + comando));
 			throw new IllegalStateException("Comando non valido: " + comando);
 		}
 	}

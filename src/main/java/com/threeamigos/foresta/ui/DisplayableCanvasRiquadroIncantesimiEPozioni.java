@@ -1,6 +1,8 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.eventi.*;
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoCreazioneSpriteATempo;
+import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 
@@ -104,11 +106,11 @@ class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		graphics.drawImage(doomdark, totaleX - doomdark.getWidth(null), y, null);
 	}
 
-	void gestisciEventoVariazioneIncantesimi(EventoVariazioneIncantesimi evento) {
+	void gestisciEventoVariazioneIncantesimi(NotificaVariazioneDisponibilitaIncantesimi evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazioneIncantesimi(evento.getClasseIncantesimo(),
 				evento.getNuovoValore() - evento.getValorePrecedente());
 		if (sprite != null) {
-			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}
 	}
 
@@ -129,11 +131,11 @@ class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, x, y, "Incantesimo " + classeIncantesimo + " variato");
 	}
 
-	void gestisciEventoVariazionePozioniSalute(EventoVariazionePozioniSalute evento) {
+	void gestisciEventoVariazionePozioniSalute(NotificaVariazioneDisponibilitaPozioniSalute evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazionePozioniSalute(
 				evento.getNuovoValore() - evento.getValorePrecedente());
 		if (sprite != null) {
-			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}
 	}
 
@@ -147,11 +149,11 @@ class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y, "Pozioni salute variate");
 	}
 
-	void gestisciEventoVariazionePozioniSaluteGrandi(EventoVariazionePozioniSaluteGrandi evento) {
+	void gestisciEventoVariazionePozioniSaluteGrandi(NotificaVariazioneDisponibilitaPozioniSaluteGrandi evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazionePozioniSaluteGrandi(
 				evento.getNuovoValore() - evento.getValorePrecedente());
 		if (sprite != null) {
-			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}
 	}
 
@@ -165,11 +167,11 @@ class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y, "Pozioni salute grande variate");
 	}
 
-	void gestisciEventoVariazionePozioniMagia(EventoVariazionePozioniMagia evento) {
+	void gestisciEventoVariazionePozioniMagia(NotificaVariazioneDisponibilitaPozioniMagia evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazionePozioniMagia(
 				evento.getNuovoValore() - evento.getValorePrecedente());
 		if (sprite != null) {
-			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}
 	}
 
@@ -183,11 +185,11 @@ class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y, "Pozioni magia variate");
 	}
 
-	void gestisciEventoVariazionePozioniMagiaGrandi(EventoVariazionePozioniMagiaGrandi evento) {
+	void gestisciEventoVariazionePozioniMagiaGrandi(NotificaVariazioneDisponibilitaPozioniMagiaGrandi evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazionePozioniMagiaGrandi(
 				evento.getNuovoValore() - evento.getValorePrecedente());
 		if (sprite != null) {
-			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}
 	}
 

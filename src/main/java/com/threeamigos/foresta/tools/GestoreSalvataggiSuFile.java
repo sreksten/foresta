@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.tools;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoException;
-import com.threeamigos.foresta.eventi.EventoMessaggioInterno;
+import com.threeamigos.foresta.eventi.interni.InternoException;
+import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
@@ -33,7 +33,7 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements Interfacci
 					salvataggi.add(testata);
 				}
 			} catch (Exception e) {
-				BusEventi.pubblica(new EventoException("Durante lettura file di salvataggio " + id, e));
+				BusEventi.pubblica(new InternoException("Durante lettura file di salvataggio " + id, e));
 			}
 		}
 		return salvataggi;
@@ -52,10 +52,10 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements Interfacci
 				ModelloDati.setIstanza(md);
 				return true;
 			} catch (Exception e) {
-				BusEventi.pubblica(new EventoException(e));
+				BusEventi.pubblica(new InternoException(e));
 			}
 		} else {
-			BusEventi.pubblica(new EventoMessaggioInterno("Tentativo di lettura di file non esistente: " + id));
+			BusEventi.pubblica(new InternoMessaggio("Tentativo di lettura di file non esistente: " + id));
 		}
 		return false;
 	}
@@ -65,7 +65,7 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements Interfacci
 		File directorySalvataggi = recuperaDirectory();
 		File fileSalvataggio = new File(directorySalvataggi.getPath() + File.separatorChar + id.name() + POSTFISSO_FILE);
 		if (fileSalvataggio.exists() && !fileSalvataggio.canWrite()) {
-			BusEventi.pubblica(new EventoMessaggioInterno("Tentativo di scrittura su file non scrivibile: " + id));
+			BusEventi.pubblica(new InternoMessaggio("Tentativo di scrittura su file non scrivibile: " + id));
 		}
 		try (PrintWriter writer = new PrintWriter(new FileWriter(fileSalvataggio))) {
 			// Intestazione
@@ -82,7 +82,7 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements Interfacci
 			ModelloDati.getIstanza().salva(writer);
 
 		} catch (IOException e) {
-			BusEventi.pubblica(new EventoException(e));
+			BusEventi.pubblica(new InternoException(e));
 		}
 	}
 

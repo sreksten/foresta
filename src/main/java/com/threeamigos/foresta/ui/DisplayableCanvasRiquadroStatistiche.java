@@ -1,6 +1,10 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.eventi.*;
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoCreazioneSpriteATempo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneDisponibilitaGemme;
+import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneDisponibilitaMonete;
+import com.threeamigos.foresta.eventi.notifiche.NotificaVariazionePuntiEsperienzaPersonaggio;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
 
@@ -35,9 +39,9 @@ class DisplayableCanvasRiquadroStatistiche implements Finestra {
 	}
 
 	private void registratiAEventi() {
-        BusEventi.iscriviti(EventoVariazioneGemme.class, this::gestisciEventoVariazioneGemme);
-		BusEventi.iscriviti(EventoVariazioneMonete.class, this::gestisciEventoVariazioneMonete);
-		BusEventi.iscriviti(EventoVariazionePuntiEsperienza.class, this::gestisciEventoVariazionePuntiEsperienza);
+        BusEventi.iscriviti(NotificaVariazioneDisponibilitaGemme.class, this::gestisciEventoVariazioneGemme);
+		BusEventi.iscriviti(NotificaVariazioneDisponibilitaMonete.class, this::gestisciEventoVariazioneMonete);
+		BusEventi.iscriviti(NotificaVariazionePuntiEsperienzaPersonaggio.class, this::gestisciEventoVariazionePuntiEsperienza);
 	}
 
 	void disegnaStatistiche(Graphics2D graphics) {
@@ -62,11 +66,11 @@ class DisplayableCanvasRiquadroStatistiche implements Finestra {
 		graphics.drawImage(image, totaleX - image.getWidth(null), puntiY, null);
 	}
 
-	private void gestisciEventoVariazioneGemme(EventoVariazioneGemme evento) {
+	private void gestisciEventoVariazioneGemme(NotificaVariazioneDisponibilitaGemme evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazioneGemme(
 				evento.getNuovoValore() - evento.getValorePrecedente());
 		if (sprite != null) {
-			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}
 	}
 
@@ -78,11 +82,11 @@ class DisplayableCanvasRiquadroStatistiche implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, totaleX, gemmeY, "Gemme variate");
 	}
 
-	private void gestisciEventoVariazioneMonete(EventoVariazioneMonete evento) {
+	private void gestisciEventoVariazioneMonete(NotificaVariazioneDisponibilitaMonete evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazioneMonete(
 				evento.getNuovoValore() - evento.getValorePrecedente());
 		if (sprite != null) {
-			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}
 	}
 
@@ -94,11 +98,11 @@ class DisplayableCanvasRiquadroStatistiche implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, totaleX, moneteY, "Monete variate");
 	}
 
-	private void gestisciEventoVariazionePuntiEsperienza(EventoVariazionePuntiEsperienza evento) {
+	private void gestisciEventoVariazionePuntiEsperienza(NotificaVariazionePuntiEsperienzaPersonaggio evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazionePuntiEsperienza(
 				evento.getNuovoValore() - evento.getValorePrecedente());
 		if (sprite != null) {
-			BusEventi.pubblica(new EventoCreazioneSpriteATempo(sprite));
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}
 	}
 

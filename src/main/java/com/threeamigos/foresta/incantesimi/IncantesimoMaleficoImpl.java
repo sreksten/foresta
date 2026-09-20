@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoMessaggio;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Logger;
@@ -49,7 +49,7 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 			throw new IllegalArgumentException("Non so come formulare questo incantesimo!");
 		}
 		if (!formulante.isPNG()) {
-			BusEventi.pubblica(new EventoMessaggio(risultato(formulante)));
+			BusEventi.pubblica(new NotificaTestoFrase(risultato(formulante)));
 		}
 	}
 
@@ -69,7 +69,7 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 		String nomeFormulante = formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 
-		BusEventi.pubblica(new EventoMessaggio(nomeFormulante + " formula un " + getClasse().getNomeSingolare() + " contro " + nomeBersaglio + "."));
+		BusEventi.pubblica(new NotificaTestoFrase(nomeFormulante + " formula un " + getClasse().getNomeSingolare() + " contro " + nomeBersaglio + "."));
 
 		totale = gruppoBersaglio.getNumeroPersonaggi();
 		bersagli = formulante.getBersagli();
@@ -93,7 +93,7 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 	public void formula(Personaggio formulante, Personaggio personaggioBersaglio) {
 		String nomeBersaglio = personaggioBersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
-		BusEventi.pubblica(new EventoMessaggio(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " formula un " + getClasse().getNomeSingolare() + " contro " +
 				nomeBersaglio + "."));
 
@@ -167,7 +167,7 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 	}
 
 	public void formula(Personaggio formulante) {
-		BusEventi.pubblica(new EventoMessaggio(formulante.getNome(
+		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(
 				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
 				" formula un " + getClasse().getNomeSingolare() + "."));

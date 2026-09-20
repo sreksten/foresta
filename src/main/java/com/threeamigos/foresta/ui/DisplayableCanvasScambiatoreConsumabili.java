@@ -1,6 +1,10 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.eventi.*;
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
+import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoConsumabile;
+import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoConsumabile;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -20,16 +24,16 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
 
     public DisplayableCanvasScambiatoreConsumabili(int width, int height) {
         super(width, height);
-        BusEventi.iscriviti(EventoApprovazioneAcquistoConsumabile.class, this::gestisciEventoApprovazioneAcquistoConsumabile);
-        BusEventi.iscriviti(EventoRifiutoAcquistoConsumabile.class, this::gestisciEventoRifiutoAcquistoConsumabile);
+        BusEventi.iscriviti(NotificaApprovazioneAcquistoConsumabile.class, this::gestisciEventoApprovazioneAcquistoConsumabile);
+        BusEventi.iscriviti(NotificaRifiutoAcquistoConsumabile.class, this::gestisciEventoRifiutoAcquistoConsumabile);
     }
 
-    private void gestisciEventoApprovazioneAcquistoConsumabile(EventoApprovazioneAcquistoConsumabile eventoApprovazioneAcquistoConsumabile) {
-        BusEventi.pubblica(new EventoFumetto("Grazie per l'acquisto!", getCoordinateFumetto()));
+    private void gestisciEventoApprovazioneAcquistoConsumabile(NotificaApprovazioneAcquistoConsumabile notificaApprovazioneAcquistoConsumabile) {
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Grazie per l'acquisto!", getCoordinateFumetto()));
     }
 
-    private void gestisciEventoRifiutoAcquistoConsumabile(EventoRifiutoAcquistoConsumabile eventoRifiutoAcquistoConsumabile) {
-        BusEventi.pubblica(new EventoFumetto("Non hai abbastanza monete per comprare questo oggetto.", getCoordinateFumetto()));
+    private void gestisciEventoRifiutoAcquistoConsumabile(NotificaRifiutoAcquistoConsumabile notificaRifiutoAcquistoConsumabile) {
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Non hai abbastanza monete per comprare questo oggetto.", getCoordinateFumetto()));
     }
 
     @Override
@@ -191,7 +195,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         Collection<Consumabile> disponibili = getElencoVenditore();
         Consumabile consumabile = trovaConsumabile(disponibili, xMinimaZonaDestra, offsetYZonaDestra, x, y, true);
         if (consumabile != null) {
-            BusEventi.pubblica(new EventoRichiestaAcquistoConsumabile(consumabile.tipo, consumabile.classeIncantesimo,
+            BusEventi.pubblica(new ComandoAcquistoConsumabile(consumabile.tipo, consumabile.classeIncantesimo,
                     consumabile.personaggio, consumabile.costo));
         }
     }
