@@ -64,7 +64,6 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoRichiestaAperturaInventarioFornitore.class, this::onEventoRichiestaAperturaInventarioFornitore);
         BusEventi.iscriviti(EventoRichiestaAperturaInventarioGruppo.class, this::onEventoRichiestaAperturaInventarioGruppo);
         BusEventi.iscriviti(EventoRichiestaChiusuraFinestraCombattimento.class, this::onEventoRichiestaChiusuraFinestraCombattimento);
-        BusEventi.iscriviti(EventoRichiestaConfermaUscita.class, this::onEventoRichiestaConfermaUscita);
         BusEventi.iscriviti(EventoRichiestaPrelievoArtefatto.class, this::onEventoRichiestaPrelievoArtefatto);
         BusEventi.iscriviti(EventoRichiestaRefreshUI.class, this::onEventoRichiestaRefreshUI);
         BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::onEventoRichiestaReinizializzazioneUI);
@@ -82,6 +81,10 @@ public class SnifferBusEventi {
         // EventoRifiutoSpostamentoArtefatto è classe astratta
         BusEventi.iscriviti(EventoRifiutoStoccaggioArtefatto.class, this::onEventoRifiutoStoccaggioArtefatto);
         BusEventi.iscriviti(EventoRifiutoVenditaArtefatto.class, this::onEventoRifiutoVenditaArtefatto);
+        BusEventi.iscriviti(EventoSelezioneConfermaUscita.class, this::onEventoSelezioneConfermaUscita);
+        BusEventi.iscriviti(EventoSelezioneDirezione.class, this::onEventoSelezioneDirezione);
+        BusEventi.iscriviti(EventoSelezioneIncantesimoDaLanciare.class, this::onEventoSelezioneIncantesimoDaLanciare);
+        BusEventi.iscriviti(EventoSelezioneSiNo.class, this::onEventoSelezioneSiNo);
         BusEventi.iscriviti(EventoStatoDiGioco.class, this::onEventoStatoDiGioco);
         BusEventi.iscriviti(EventoTestoDisponibile.class, this::onEventoTestoDisponibile);
         BusEventi.iscriviti(EventoValutazioneAttaccante.class, this::onEventoValutazioneAttaccante);
@@ -141,7 +144,7 @@ public class SnifferBusEventi {
     }
 
     private void onEventoComandiDisponibili(EventoComandiDisponibili evento) {
-        Logger.log(headerEvento(evento) + "Comandi disponibili: " + evento.getComandiDisponibili());
+        Logger.log(headerEvento(evento) + "Comandi disponibili: " + evento.getPossibilita());
     }
 
     private void onEventoComandoDiGioco(EventoComandoDiGioco evento) {
@@ -299,10 +302,6 @@ public class SnifferBusEventi {
         Logger.log(headerEvento(evento) + "Chiusa");
     }
 
-    private void onEventoRichiestaConfermaUscita(EventoRichiestaConfermaUscita evento) {
-        Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
-    }
-
     private void onEventoRichiestaPrelievoArtefatto(EventoRichiestaPrelievoArtefatto evento) {
         OggettoConPeso oggetto = evento.getOggettoDaSpostare();
         Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di prelevare "
@@ -368,6 +367,22 @@ public class SnifferBusEventi {
 
     private void onEventoRifiutoVenditaArtefatto(EventoRifiutoVenditaArtefatto evento) {
         Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamento().getUuid());
+    }
+
+    private void onEventoSelezioneConfermaUscita(EventoSelezioneConfermaUscita evento) {
+        Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
+    }
+
+    private void onEventoSelezioneDirezione(EventoSelezioneDirezione evento) {
+        Logger.log(headerEvento(evento) + evento.getPossibilita());
+    }
+
+    private void onEventoSelezioneIncantesimoDaLanciare(EventoSelezioneIncantesimoDaLanciare evento) {
+        Logger.log(headerEvento(evento) + evento.getPossibilita());
+    }
+
+    private void onEventoSelezioneSiNo(EventoSelezioneSiNo evento) {
+        Logger.log(String.format("%s - %s", new Date(), evento.getTipoEvento()));
     }
 
     private void onEventoStatoDiGioco(EventoStatoDiGioco evento) {

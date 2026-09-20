@@ -9,19 +9,13 @@ import java.util.Collection;
  * Il giocatore chiede al motore di accedere all'inventario del gruppo
  * @author Stefano Reksten
  */
-public class EventoRichiestaAperturaInventarioGruppo extends EventoBase {
+public class EventoRichiestaAperturaInventarioGruppo extends EventoConComandi {
 
-    private final Collection<Comando> comandiPossibili;
     private final AutomaInventario automaInventario;
 
-    public EventoRichiestaAperturaInventarioGruppo(Collection<Comando> comandiPossibili, AutomaInventario automaInventario) {
-        super(TipoEvento.RICHIESTA_APERTURA_INVENTARIO_GRUPPO);
-        this.comandiPossibili = comandiPossibili;
+    public EventoRichiestaAperturaInventarioGruppo(Collection<Comando> possibilita, AutomaInventario automaInventario) {
+        super(TipoEvento.RICHIESTA_APERTURA_INVENTARIO_GRUPPO, possibilita);
         this.automaInventario = automaInventario;
-    }
-
-    public Collection<Comando> getComandiPossibili() {
-        return comandiPossibili;
     }
 
     public AutomaInventario getAutomaInventario() {

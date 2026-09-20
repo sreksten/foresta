@@ -15,7 +15,6 @@ import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.tools.*;
-import com.threeamigos.foresta.ui.InterfacciaUtente;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -210,7 +209,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				gruppo.setLocazioneCorrente(locazioneCorrente);
 				locazioneCorrente.crea(gruppo, gruppoAvversario);
 				BusEventi.pubblica(new EventoPreparazioneLocazione());
-				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.GRAFICA));
 				BusEventi.pubblica(new EventoParagrafo(LineaTemporale.getDescrizioneOraDelGiorno()));
 				locazioneCorrente.descrivi(gruppo, gruppoAvversario);
 				controllaMissioni(Missione::controllaInLocazione, OrdineVisita.PADRE_PRIMA);
@@ -324,8 +322,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					}
 				}
 				comandiPossibili.add(Comando.NO_INCANTESIMO);
-				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI));
-				BusEventi.pubblica(new EventoComandiDisponibili(comandiPossibili));
+				BusEventi.pubblica(new EventoSelezioneIncantesimoDaLanciare(comandiPossibili));
 				stato = Stato.INCANTESIMO_SCELTO;
 				break;
 
@@ -335,8 +332,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					comandiPossibili2.add(classeIncantesimo.getComandoDiAttivazione());
 				}
 				comandiPossibili2.add(Comando.NO_INCANTESIMO);
-				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI));
-				BusEventi.pubblica(new EventoComandiDisponibili(comandiPossibili2));
+				BusEventi.pubblica(new EventoSelezioneIncantesimoDaLanciare(comandiPossibili2));
 				stato = Stato.INCANTESIMO_SCELTO;
 				break;
 
@@ -347,7 +343,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 			case ATTESA_SI_NO:
 				if (azione == null) {
-					BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
+					BusEventi.pubblica(new EventoSelezioneSiNo());
 				} else if (azione != Comando.TIMER) {
 					stato = statoPrecedente;
 					processaAzione(azione);
@@ -357,7 +353,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case FINE_LOCAZIONE:
 				temporizzatore.termina();
 				BusEventi.pubblica(new EventoRichiestaChiusuraFinestraCombattimento());
-				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
 
 				// Recuperiamo l'oggetto se fattibile
 				if (locazioneCorrente.isCompleta()) {
@@ -418,10 +413,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				break;
 
 			case ATTESA_DIREZIONE:
-				BusEventi.pubblica(new EventoParagrafo(gruppo.chiMaiuscolo() + " se ne va. In quale direzione si incammina?"));
-				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.MAPPA));
 				stato = Stato.ATTESA_PASSI;
-				BusEventi.pubblica(new EventoComandiDisponibili(getComandiPossibiliInStatoAttesaDirezione()));
+				BusEventi.pubblica(new EventoParagrafo(gruppo.chiMaiuscolo() + " se ne va. In quale direzione si incammina?"));
+				BusEventi.pubblica(new EventoSelezioneDirezione(getComandiPossibiliInStatoAttesaDirezione()));
 				break;
 
 			case ATTESA_PASSI:
@@ -443,7 +437,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					gruppo.pernotta(locazioneCorrente.getTipoRiposo());
 					LineaTemporale.mattinoSeguente();
 					LineaTemporale.eventi(gruppo);
-					BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
 					stato = Stato.ATTESA_DIREZIONE;
 					processaAzione(null);
 					return;
@@ -492,7 +485,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					for (Personaggio personaggio : gruppo.getPersonaggi()) {
 						BusEventi.pubblica(new EventoParagrafo(personaggio.getDescrizione()));
 					}
-					BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
 					stato = Stato.ATTESA_DIREZIONE;
 					processaAzione(null);
 					return;
@@ -540,7 +532,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					gruppo.consumaPozioneSalute(azione);
 				}
 				stato = Stato.ATTESA_DIREZIONE;
-				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
 				processaAzione(null);
 				break;
 
@@ -549,7 +540,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					gruppo.consumaPozioneSaluteGrande(azione);
 				}
 				stato = Stato.ATTESA_DIREZIONE;
-				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
 				processaAzione(null);
 				break;
 
@@ -558,7 +548,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					gruppo.consumaPozioneMagia(azione);
 				}
 				stato = Stato.ATTESA_DIREZIONE;
-				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
 				processaAzione(null);
 				break;
 
@@ -567,7 +556,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					gruppo.consumaPozioneMagiaGrande(azione);
 				}
 				stato = Stato.ATTESA_DIREZIONE;
-				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
 				processaAzione(null);
 				break;
 
@@ -587,7 +575,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					eseguiResurrezione(gruppo.getPersonaggio(azione));
 				}
 				stato = Stato.ATTESA_DIREZIONE;
-				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
 				processaAzione(null);
 				break;
 
@@ -643,7 +630,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				}
 				if (azione != null) {
 					salva(azione);
-					BusEventi.pubblica(new EventoRichiestaConfermaUscita(Comando.SI, Comando.NO));
+					BusEventi.pubblica(new EventoSelezioneConfermaUscita());
 					stato = Stato.CONFERMA_USCITA;
 					processaAzione(null);
 				}
@@ -992,8 +979,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 		if (GestoreSalvataggi.leggi(azione)) {
 			stato = Stato.ATTESA_DIREZIONE;
-			BusEventi.pubblica(new EventoStatoDiGioco(stato, getComandiPossibiliInStatoAttesaDirezione()));
 			BusEventi.pubblica(new EventoMostraSchermataGioco());
+
+			BusEventi.pubblica(new EventoSelezioneDirezione(getComandiPossibiliInStatoAttesaDirezione()));
 			return true;
 		}
 		//FIXME in questo caso che si fa?

@@ -10,21 +10,13 @@ import java.util.Collection;
  *
  * @author Stefano Reksten
  */
-public class EventoComandiDisponibili extends EventoBase {
+public class EventoComandiDisponibili extends EventoConComandi {
 
-    private final Collection<Comando> comandiDisponibili;
-
-    public EventoComandiDisponibili(Comando ... comandiDisponibili) {
-        super(TipoEvento.COMANDI_DISPONIBILI);
-        this.comandiDisponibili = Arrays.asList(comandiDisponibili);
+    public EventoComandiDisponibili(Comando ... possibilita) {
+        super(TipoEvento.COMANDI_DISPONIBILI, Arrays.asList(possibilita));
     }
 
-    public EventoComandiDisponibili(Collection<Comando> comandiDisponibili) {
-        super(TipoEvento.COMANDI_DISPONIBILI);
-        this.comandiDisponibili = comandiDisponibili;
-    }
-
-    public Collection<Comando> getComandiDisponibili() {
-        return comandiDisponibili;
+    public EventoComandiDisponibili(Collection<Comando> possibilita) {
+        super(TipoEvento.COMANDI_DISPONIBILI, possibilita);
     }
 }

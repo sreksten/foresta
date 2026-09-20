@@ -184,7 +184,7 @@ public class Locanda extends LocazioneBase {
 
 				if (incontra(gruppo)) {
 					stato = StatoInLocanda.PERSONAGGIO;
-					BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
+					BusEventi.pubblica(new EventoSelezioneSiNo());
 					return Stato.IN_LOCAZIONE;
 				} else {
 					return richiediSePernottare(gruppo);
@@ -281,7 +281,7 @@ public class Locanda extends LocazioneBase {
 			BusEventi.pubblica(new EventoMessaggio(gruppo.chiMaiuscolo() + " desidera pernottare alla locanda?"));
 			BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
 			stato = StatoInLocanda.PERNOTTA;
-			BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
+			BusEventi.pubblica(new EventoSelezioneSiNo());
 			return Stato.IN_LOCAZIONE;
 		}
 	}

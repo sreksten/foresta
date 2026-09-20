@@ -10,19 +10,13 @@ import java.util.Collection;
  *
  * @author Stefano Reksten
  */
-public class EventoRichiestaAperturaInventarioCommerciante extends EventoBase {
+public class EventoRichiestaAperturaInventarioCommerciante extends EventoConComandi {
 
-    private final Collection<Comando> comandiPossibili;
     private final AutomaAcquistiArtefatti automaAcquistiArtefatti;
 
-    public EventoRichiestaAperturaInventarioCommerciante(Collection<Comando> comandiPossibili, AutomaAcquistiArtefatti automaAcquistiArtefatti) {
-        super(TipoEvento.RICHIESTA_APERTURA_INVENTARIO_COMMERCIANTE);
-        this.comandiPossibili = comandiPossibili;
+    public EventoRichiestaAperturaInventarioCommerciante(Collection<Comando> possibilita, AutomaAcquistiArtefatti automaAcquistiArtefatti) {
+        super(TipoEvento.RICHIESTA_APERTURA_INVENTARIO_COMMERCIANTE, possibilita);
         this.automaAcquistiArtefatti = automaAcquistiArtefatti;
-    }
-
-    public Collection<Comando> getComandiPossibili() {
-        return comandiPossibili;
     }
 
     public AutomaAcquistiArtefatti getAutomaAcquistiArtefatti() {

@@ -59,6 +59,18 @@ public enum TipoEvento {
      */
     RICHIESTA_SELEZIONE_SLOT_PER_RILETTURA,
     /**
+     * Richiesta di scelta di un incantesimo da lanciare
+     */
+    RICHIESTA_SELEZIONE_INCANTESIMO_DA_LANCIARE,
+    /**
+     * Richiesta di scelta della direzione da seguire
+     */
+    RICHIESTA_SELEZIONE_DIREZIONE,
+    /**
+     * Richiesta di selezione si o no
+     */
+    RICHIESTA_SELEZIONE_SI_O_NO,
+    /**
      * Il motore approva lo spostamento di un oggetto da un inventario ad un altro
      * (Personaggio <-> inventario di gruppo oppure inventario di gruppo <-> inventario di un commerciante)
      */
@@ -79,7 +91,7 @@ public enum TipoEvento {
     /**
      * Il motore chiede conferma per l'uscita dal gioco
      */
-    RICHIESTA_CONFERMA_USCITA,
+    SELEZIONE_CONFERMA_USCITA,
 
 
     // Notifiche dal motore al giocatore riguardanti l'avanzamento del gioco

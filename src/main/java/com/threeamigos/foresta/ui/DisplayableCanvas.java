@@ -460,6 +460,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	void preparaLocazione() {
+		primoPiano(InterfacciaUtente.Finestra.GRAFICA);
 		riquadroLocazione.assegnaCoordinateAgliAvversari();
 	}
 

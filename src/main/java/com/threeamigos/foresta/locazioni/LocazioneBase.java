@@ -426,14 +426,13 @@ public abstract class LocazioneBase implements Locazione {
 						offerta.accetta(gruppo, gruppoAvversario);
 					} else {
 						BusEventi.pubblica(new EventoMessaggio("Accetta?"));
-						BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
+						BusEventi.pubblica(new EventoSelezioneSiNo());
 						statoLocazione = StatoLocazione.ACCETTA_OFFERTA;
 						return Stato.IN_LOCAZIONE;
 					}
 				} else {
 					Logger.log("Mancano i prerequisiti per l'offerta");
 				}
-				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.MAPPA));
 				setCompleta(true);
 				return Stato.FINE_LOCAZIONE;
 			} else {
@@ -468,7 +467,7 @@ public abstract class LocazioneBase implements Locazione {
 						offerta.accetta(gruppo, gruppoAvversario);
 					} else {
 						BusEventi.pubblica(new EventoMessaggio("Accetta?"));
-						BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
+						BusEventi.pubblica(new EventoSelezioneSiNo());
 						statoLocazione = StatoLocazione.ACCETTA_OFFERTA;
 						return Stato.IN_LOCAZIONE;
 					}
@@ -948,73 +947,61 @@ public abstract class LocazioneBase implements Locazione {
 			BusEventi.pubblica(new EventoRichiestaChiusuraFinestraCombattimento());
 			chiediConfermaPerLaFuga();
 			statoLocazione = StatoLocazione.CONFERMA_FUGA;
-			BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
+			BusEventi.pubblica(new EventoSelezioneSiNo());
 			return Stato.ATTESA_SI_NO;
 		}
 		return Stato.IN_COMBATTIMENTO;
 	}
 	
 	private Stato gestisciInLocazione(Comando azione) {
-		Logger.log("LocazioneBase.IN_LOCAZIONE");
+		BusEventi.pubblica(new EventoMessaggioInterno("LocazioneBase.IN_LOCAZIONE, Comando: " + azione));
 		if (azione != null) {
 			switch (azione) {
 			case COMBATTIMENTO:
-				Logger.log("Azione.COMBATTIMENTO");
 				statoLocazione = StatoLocazione.CHI_COMBATTE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 				
 			case INCANTESIMO:
-				Logger.log("Azione.INCANTESIMO");
 				statoLocazione = StatoLocazione.CHI_FORMULA;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 				
 			case CORRUZIONE:
-				Logger.log("Azione.CORRUZIONE");
 				statoLocazione = StatoLocazione.CHI_CORROMPE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 				
 			case AMICIZIA:
-				Logger.log("Azione.AMICIZIA");
 				statoLocazione = StatoLocazione.CHI_FA_AMICIZIA;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 
 			case MAPPA:
-				Logger.log("Azione.MAPPA");
 				return Stato.MAPPA;
 
 			case INVENTARIO:
-				Logger.log("Azione.INVENTARIO");
 				return Stato.INVENTARIO;
 
 			case POZIONE_SALUTE:
-				Logger.log("Azione.POZIONE_SALUTE");
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 				
 			case POZIONE_SALUTE_GRANDE:
-				Logger.log("Azione.POZIONE_SALUTE_GRANDE");
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE_GRANDE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 
 			case POZIONE_MAGIA:
-				Logger.log("Azione.POZIONE_MAGIA");
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 
 			case POZIONE_MAGIA_GRANDE:
-				Logger.log("Azione.POZIONE_MAGIA_GRANDE");
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA_GRANDE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 
 			case FUGA:
-			Logger.log("Azione.FUGA");
 				chiediConfermaPerLaFuga();
 				statoLocazione = StatoLocazione.CONFERMA_FUGA;
-			BusEventi.pubblica(new EventoComandiDisponibili(Comando.SI, Comando.NO));
-			return Stato.ATTESA_SI_NO;
+				BusEventi.pubblica(new EventoSelezioneSiNo());
+				return Stato.ATTESA_SI_NO;
 				
 			case AIUTO:
-				Logger.log("Azione.AIUTO");
 				for (Personaggio personaggio : gruppo.getPersonaggi()) {
 					BusEventi.pubblica(new EventoMessaggio(personaggio.getDescrizione()));
 				}

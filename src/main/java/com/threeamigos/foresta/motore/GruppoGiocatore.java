@@ -470,7 +470,6 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		}
 		getPersonaggiVivi().forEach(p -> p.riposa(ore, tipoRiposo));
 		BusEventi.pubblica(new EventoMessaggio("Il sole sorge e l'avventura ricomincia."));
-		BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.STATO));
 	}
 
 	/**

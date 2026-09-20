@@ -2,10 +2,7 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.*;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.motore.ComandiPossibili;
-import com.threeamigos.foresta.motore.Logger;
-import com.threeamigos.foresta.motore.Stato;
-import com.threeamigos.foresta.motore.Temporizzabile;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
@@ -15,6 +12,9 @@ import com.threeamigos.foresta.tools.TestataSalvataggio;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
@@ -34,7 +34,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		this.temporizzatore = temporizzatore;
 		temporizzatore.setTemporizzabile(this);
 
-		SwingUtilities.invokeLater(this::createAndShowGUI);
+		SwingUtilities.invokeLater(this::creaEMostraInterfacciaUtente);
 
 		BusEventi.iscriviti(EventoComandiDisponibili.class, this::gestisciEventoComandiDisponibili);
 		BusEventi.iscriviti(EventoConsumoPuntoAbilita.class, this::gestisciEventoConsumoPuntoAbilita);
@@ -55,19 +55,22 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(EventoRichiestaAperturaInventarioGruppo.class, this::gestisciEventoRichiestaAperturaInventarioGruppo);
 		BusEventi.iscriviti(EventoRichiestaChiusuraFinestraCombattimento.class, this::gestisciEventoRichiestaChiusuraFinestraCombattimento);
 		BusEventi.iscriviti(EventoRaccoltaOggetti.class, this::gestisciEventoRaccoltaOggetti);
-		BusEventi.iscriviti(EventoRichiestaConfermaUscita.class, this::gestisciEventoRichiestaConfermaUscita);
+		BusEventi.iscriviti(EventoSelezioneConfermaUscita.class, this::gestisciEventoRichiestaConfermaUscita);
 		BusEventi.iscriviti(EventoRichiestaRefreshUI.class, this::gestisciEventoRichiestaRefreshUI);
 		BusEventi.iscriviti(EventoRichiestaReinizializzazioneUI.class, this::gestisciEventoRichiestaReinizializzazioneUI);
 		BusEventi.iscriviti(EventoRichiestaTesto.class, this::gestisciEventoRichiestaTesto);
 		BusEventi.iscriviti(EventoRichiestaSelezioneSlotPerRilettura.class, this::gestisciEventoSelezioneSalvataggio);
 		BusEventi.iscriviti(EventoRichiestaVisualizzazioneMappa.class, this::gestisciEventoRichiestaVisualizzazioneMappa);
+		BusEventi.iscriviti(EventoSelezioneDirezione.class, this::gestisciEventoSelezioneDirezione);
+		BusEventi.iscriviti(EventoSelezioneIncantesimoDaLanciare.class, this::gestisciEventoSelezioneIncantesimoDaLanciare);
+		BusEventi.iscriviti(EventoSelezioneSiNo.class, this::gestisciEventoSelezioneSiNo);
 		BusEventi.iscriviti(EventoStatoDiGioco.class, this::gestisciEventoStatoDiGioco);
 		BusEventi.iscriviti(EventoVariazioneEffettoDiStato.class, this::gestisciEventoVariazioneEffettoDiStato);
 		BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
 		BusEventi.iscriviti(EventoVariazioneStatoVitalePersonaggio.class, this::gestisciEventoVariazioneStatoVitalePersonaggio);
 	}
 	
-	private void createAndShowGUI() {
+	private void creaEMostraInterfacciaUtente() {
 		ImageCache.init();
 
 		Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
@@ -146,7 +149,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	public void tick() {
-		// Per ora non fa niente, in realtà dovrebbe gestire la intro per adesso
 		if (statoDiGioco == Stato.INTRO) {
 			displayableCanvas.intro();
 		}
@@ -157,7 +159,8 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		prompt.setVisible(true);
 	}
 
-	public void impostaAzioni() {
+	public void impostaAzioni(Collection<Comando> possibilita) {
+		ComandiPossibili.set(possibilita);
 		pannelloIcone.impostaAzioni();
 	}
 
@@ -206,37 +209,30 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		displayableCanvas.raccogliOggetto();
 	}
 
-	private void gestisciEventoRichiestaConfermaUscita(EventoRichiestaConfermaUscita evento) {
-		ComandiPossibili.reimposta();
-		ComandiPossibili.set(evento.getComandiPossibili());
-		impostaAzioni();
+	private void gestisciEventoRichiestaConfermaUscita(EventoSelezioneConfermaUscita evento) {
+		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.confermaUscita();
 	}
 
 	private void gestisciEventoRichiestaAperturaInventarioCommerciante(EventoRichiestaAperturaInventarioCommerciante evento) {
-		ComandiPossibili.reimposta();
-		ComandiPossibili.set(evento.getComandiPossibili());
-		impostaAzioni();
+		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.impostaAutomaArmaiolo(evento.getAutomaAcquistiArtefatti());
 		displayableCanvas.armaiolo();
 	}
 
 	private void gestisciEventoRichiestaAperturaInventarioFornitore(EventoRichiestaAperturaInventarioFornitore evento) {
-		ComandiPossibili.reimposta();
-		ComandiPossibili.set(evento.getComandiPossibili());
-		impostaAzioni();
+		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.alchimista();
 	}
 
 	private void gestisciEventoRichiestaAperturaInventarioGruppo(EventoRichiestaAperturaInventarioGruppo evento) {
-		ComandiPossibili.reimposta();
-		ComandiPossibili.set(evento.getComandiPossibili());
-		impostaAzioni();
+		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.impostaAutomaInventario(evento.getAutomaInventario());
 		displayableCanvas.inventario();
 	}
 
 	private void gestisciEventoRichiestaChiusuraFinestraCombattimento(EventoRichiestaChiusuraFinestraCombattimento evento) {
+		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.STATO);
 		displayableCanvas.getRiquadroCombattimento().setVisible(false);
 	}
 
@@ -253,9 +249,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	private void gestisciEventoSelezioneSalvataggio(EventoRichiestaSelezioneSlotPerRilettura evento) {
 		temporizzatore.termina();
-		ComandiPossibili.reimposta();
-		evento.getSalvataggiDisponibili().stream().map(TestataSalvataggio::getId).forEach(ComandiPossibili::add);
-		impostaAzioni();
+		impostaAzioni(evento.getSalvataggiDisponibili().stream().map(TestataSalvataggio::getId).collect(Collectors.toList()));
 		displayableCanvas.selezioneSlotSalvataggioDaCaricare(evento.getSalvataggiDisponibili());
 	}
 
@@ -271,6 +265,21 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		displayableCanvas.mappa();
 	}
 
+	private void gestisciEventoSelezioneDirezione(EventoSelezioneDirezione evento) {
+		impostaAzioni(evento.getPossibilita());
+		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.MAPPA);
+	}
+
+	private void gestisciEventoSelezioneIncantesimoDaLanciare(EventoSelezioneIncantesimoDaLanciare evento) {
+		impostaAzioni(evento.getPossibilita());
+		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
+	}
+
+	private void gestisciEventoSelezioneSiNo(EventoSelezioneSiNo evento) {
+		impostaAzioni(evento.getPossibilita());
+		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.STATO);
+	}
+
 	private void gestisciEventoStatoDiGioco(EventoStatoDiGioco evento) {
 		statoDiGioco = evento.getStato();
 		switch(statoDiGioco) {
@@ -278,47 +287,40 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 				 // Richiama la schermata o animazione di introduzione
 				displayableCanvas.intro();
 				temporizzatore.inizia(5_000);
-				ComandiPossibili.set(evento.getComandiPossibili());
-				impostaAzioni();
+				impostaAzioni(evento.getComandiPossibili());
 				break;
 
 			case FILE_DI_SALVATAGGIO_NON_VALIDO:
 				displayableCanvas.scriviGrande("File di salvataggio non valido.");
-				ComandiPossibili.set(evento.getComandiPossibili());
-				impostaAzioni();
+				impostaAzioni(evento.getComandiPossibili());
 				break;
 
 			case PRE_GAME_ATTESA_NOME_PERSONAGGIO:
 				temporizzatore.termina();
 				displayableCanvas.scriviGrande("Scegli il nome del tuo personaggio o lascialo vuoto per un personaggio casuale.");
 				prompt.setVisible(true);
-				ComandiPossibili.reimposta();
-				impostaAzioni();
+				impostaAzioni(Collections.emptyList());
 				break;
 
 			case PRE_GAME_ATTESA_SESSO_PERSONAGGIO:
 				displayableCanvas.scriviGrande("Scegli il sesso di " + prompt.getText());
-				ComandiPossibili.set(evento.getComandiPossibili());
-				impostaAzioni();
+				impostaAzioni(evento.getComandiPossibili());
 				break;
 
 			case PRE_GAME_ATTESA_CLASSE_PERSONAGGIO:
 				displayableCanvas.scriviGrande("Scegli la classe di " + prompt.getText());
-				ComandiPossibili.set(evento.getComandiPossibili());
-				impostaAzioni();
+				impostaAzioni(evento.getComandiPossibili());
 				break;
 
 			case ATTESA_DIREZIONE:
-				ComandiPossibili.set(evento.getComandiPossibili());
-				impostaAzioni();
+				BusEventi.pubblica(new EventoErroreInterno("Non dovrei arrivare in gestisciEventoStatoDiGioco in stato ATTESA_DIREZIONE"));
+				impostaAzioni(evento.getComandiPossibili());
 				break;
 
 			case SELEZIONE_SALVATAGGIO_DA_SCRIVERE:
 				displayableCanvas.selezioneSlotSalvataggioDaSalvare();
-				ComandiPossibili.set(evento.getComandiPossibili());
-				impostaAzioni();
+				impostaAzioni(evento.getComandiPossibili());
 				break;
-
 
 			default:
 				throw new IllegalArgumentException("Stato di gioco non ancora gestito: " + evento.getStato());
@@ -343,7 +345,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	private void gestisciEventoComandiDisponibili(EventoComandiDisponibili evento) {
-		ComandiPossibili.set(evento.getComandiDisponibili());
+		ComandiPossibili.set(evento.getPossibilita());
 		pannelloIcone.impostaAzioni();
 	}
 
@@ -384,7 +386,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		}
 	}
 
-	//FIXME ancora non li gestiamo a livello grafico
 	private void gestisciEventoVariazioneEffettoDiStato(EventoVariazioneEffettoDiStato evento) {
 		Personaggio personaggio = evento.getPersonaggio();
 		TipoEffettoDiStato tipoEffettoDiStato = evento.getEffetto();
@@ -394,6 +395,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 				displayableCanvas.aggiungiEffettoDiStato(personaggio, tipoEffettoDiStato);
 				break;
             case RIMOZIONE:
+				// L'effetto è terminato.
 				break;
 			default:
 				throw new IllegalArgumentException("TipoVariazioneEffettoDiStato non gestito: " + evento.getTipo());
