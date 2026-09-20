@@ -165,6 +165,10 @@ public enum TipoEvento {
      */
     MONDO_AUMENTO_LIVELLO,
     /**
+     * Notifica sull'aggiornamento di uno stato missione
+     */
+    AGGIORNAMENTO_STATO_MISSIONE,
+    /**
      * Mostra un annuncio in evidenza (ad esempio l'inizio di una missione)
      */
     NOTIFICA_GLOBALE,

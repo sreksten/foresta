@@ -6,7 +6,7 @@ public interface InterfacciaUtente {
 		INTRO_OUTRO,
 		GRAFICA,
 		STATO,
-		INCANTESIMI,
+		INCANTESIMI_E_POZIONI,
 		MAPPA,
 		STATISTICHE,
 		TESTO,

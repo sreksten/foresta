@@ -44,17 +44,9 @@ public abstract class PersonaggioBase implements Personaggio {
 	 */
 	private boolean amichevole;
 	/**
-	 * QUantità massima per locazione
+	 * Quantità massima per locazione
 	 */
 	private int quantitaMassima = 1;
-
-//	public PersonaggioBase(PersonaggioMD personaggioMD) {
-//		this.md = personaggioMD;
-//	}
-
-//	public PersonaggioBase(ClassePersonaggio classe) {
-//		this(classe, 1);
-//	}
 
 	public PersonaggioBase(ClassePersonaggio classe, int livello) {
 		md.setClasse(classe);
@@ -353,13 +345,6 @@ public abstract class PersonaggioBase implements Personaggio {
                     " attacca " + bersaglio.getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + '.';
 			BusEventi.pubblica(new EventoMessaggio(messaggio));
 
-//			int danno = getDanniInCombattimento();
-//			bersaglio.subSalute(danno, this, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
-
-			// Test per nuovo motore combattimento
-
-//			Logger.log("---------- NUOVO MOTORE ----------");
-//			Logger.log("Valutazione danno originale: " + danno);
 			boolean colpisce = CalcolatoreCombattimento.colpisce(this, bersaglio, SupertipoDanno.FISICO);
 			if (colpisce) {
 				Arma arma = getArmaEquipaggiata();
@@ -628,7 +613,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		return md.getEsperienza();
 	}
 
-	//FIXME aggiungendo esperienza si dovrebbe poter salire di livello e aumentare alcune statistiche
 	public void addPuntiEsperienza(int esperienza) {
 		if (isPNG()) {
 			return;

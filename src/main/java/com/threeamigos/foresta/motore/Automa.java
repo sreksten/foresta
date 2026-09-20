@@ -324,7 +324,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					}
 				}
 				comandiPossibili.add(Comando.NO_INCANTESIMO);
-				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.INCANTESIMI));
+				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI));
 				BusEventi.pubblica(new EventoComandiDisponibili(comandiPossibili));
 				stato = Stato.INCANTESIMO_SCELTO;
 				break;
@@ -335,7 +335,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					comandiPossibili2.add(classeIncantesimo.getComandoDiAttivazione());
 				}
 				comandiPossibili2.add(Comando.NO_INCANTESIMO);
-				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.INCANTESIMI));
+				BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI));
 				BusEventi.pubblica(new EventoComandiDisponibili(comandiPossibili2));
 				stato = Stato.INCANTESIMO_SCELTO;
 				break;

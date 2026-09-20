@@ -7,7 +7,7 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 
-class DisplayableCanvasRiquadroIncantesimi implements Finestra {
+class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI = 16;
 
@@ -24,7 +24,7 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 	private final int nomeDestraX;
 	private final int totaleDestraX;
 
-	DisplayableCanvasRiquadroIncantesimi(int topLeftX, int topLeftY) {
+	DisplayableCanvasRiquadroIncantesimiEPozioni(int topLeftX, int topLeftY) {
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
 		int maxIconWidth = 0;
@@ -46,16 +46,6 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 		iconaDestraX = topLeftX + ImageCache.corniceIncantesimi.getWidth() / 2;
 		nomeDestraX = iconaDestraX + maxIconWidth + 2;
 		totaleDestraX = topLeftX + ImageCache.corniceIncantesimi.getWidth() - DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI;
-
-		registratiAEventi();
-	}
-
-	private void registratiAEventi() {
-		BusEventi.iscriviti(EventoVariazioneIncantesimi.class, this::gestisciEventoVariazioneIncantesimi);
-		BusEventi.iscriviti(EventoVariazionePozioniSalute.class, this::gestisciEventoVariazionePozioniSalute);
-		BusEventi.iscriviti(EventoVariazionePozioniSaluteGrandi.class, this::gestisciEventoVariazionePozioniSaluteGrandi);
-		BusEventi.iscriviti(EventoVariazionePozioniMagia.class, this::gestisciEventoVariazionePozioniMagia);
-		BusEventi.iscriviti(EventoVariazionePozioniMagiaGrandi.class, this::gestisciEventoVariazionePozioniMagiaGrandi);
 	}
 
 	void disegnaIncantesimi(Graphics2D graphics) {
@@ -114,7 +104,7 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 		graphics.drawImage(doomdark, totaleX - doomdark.getWidth(null), y, null);
 	}
 
-	private void gestisciEventoVariazioneIncantesimi(EventoVariazioneIncantesimi evento) {
+	void gestisciEventoVariazioneIncantesimi(EventoVariazioneIncantesimi evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazioneIncantesimi(evento.getClasseIncantesimo(),
 				evento.getNuovoValore() - evento.getValorePrecedente());
 		if (sprite != null) {
@@ -139,7 +129,7 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, x, y, "Incantesimo " + classeIncantesimo + " variato");
 	}
 
-	private void gestisciEventoVariazionePozioniSalute(EventoVariazionePozioniSalute evento) {
+	void gestisciEventoVariazionePozioniSalute(EventoVariazionePozioniSalute evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazionePozioniSalute(
 				evento.getNuovoValore() - evento.getValorePrecedente());
 		if (sprite != null) {
@@ -157,7 +147,7 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y, "Pozioni salute variate");
 	}
 
-	private void gestisciEventoVariazionePozioniSaluteGrandi(EventoVariazionePozioniSaluteGrandi evento) {
+	void gestisciEventoVariazionePozioniSaluteGrandi(EventoVariazionePozioniSaluteGrandi evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazionePozioniSaluteGrandi(
 				evento.getNuovoValore() - evento.getValorePrecedente());
 		if (sprite != null) {
@@ -175,7 +165,7 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y, "Pozioni salute grande variate");
 	}
 
-	private void gestisciEventoVariazionePozioniMagia(EventoVariazionePozioniMagia evento) {
+	void gestisciEventoVariazionePozioniMagia(EventoVariazionePozioniMagia evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazionePozioniMagia(
 				evento.getNuovoValore() - evento.getValorePrecedente());
 		if (sprite != null) {
@@ -193,7 +183,7 @@ class DisplayableCanvasRiquadroIncantesimi implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, totaleDestraX, y, "Pozioni magia variate");
 	}
 
-	private void gestisciEventoVariazionePozioniMagiaGrandi(EventoVariazionePozioniMagiaGrandi evento) {
+	void gestisciEventoVariazionePozioniMagiaGrandi(EventoVariazionePozioniMagiaGrandi evento) {
 		SpriteATempo sprite = costruisciSpritePerVariazionePozioniMagiaGrandi(
 				evento.getNuovoValore() - evento.getValorePrecedente());
 		if (sprite != null) {

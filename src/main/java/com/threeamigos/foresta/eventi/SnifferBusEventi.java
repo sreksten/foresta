@@ -17,6 +17,7 @@ import java.util.stream.Collectors;
 public class SnifferBusEventi {
 
     public SnifferBusEventi() {
+        BusEventi.iscriviti(EventoAggiornamentoStatoMissione.class, this::onEventoAggiornamentoStatoMissione);
         BusEventi.iscriviti(EventoAggiuntaModificatore.class, this::onEventoAggiuntaModificatore);
         BusEventi.iscriviti(EventoApprovazioneAcquistoArtefatto.class, this::onEventoApprovazioneAcquistoArtefatto);
         BusEventi.iscriviti(EventoApprovazioneAcquistoConsumabile.class, this::onEventoApprovazioneAcquistoConsumabile);
@@ -97,6 +98,11 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(EventoVariazionePuntiEsperienza.class, this::onEventoVariazionePuntiEsperienza);
         BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::onEventoVariazioneStatistichePersonaggio);
         BusEventi.iscriviti(EventoVariazioneStatoVitalePersonaggio.class, this::onEventoVariazioneStatoVitalePersonaggio);
+    }
+
+    private void onEventoAggiornamentoStatoMissione(EventoAggiornamentoStatoMissione evento) {
+        Logger.log(headerEvento(evento) + "Missione " + evento.getMissione().getNome() + " - " +
+                evento.getEtichetta() + " - " + evento.getDescrizione());
     }
 
     private void onEventoAggiuntaModificatore(EventoAggiuntaModificatore evento) {

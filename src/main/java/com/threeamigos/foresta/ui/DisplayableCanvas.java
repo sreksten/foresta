@@ -53,7 +53,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final transient DisplayableCanvasRiquadroCombattimento riquadroCombattimento;
 	private final transient DisplayableCanvasRiquadroTesto riquadroTesto;
 	private final transient DisplayableCanvasRiquadroGruppo riquadroGruppo;
-	private final transient DisplayableCanvasRiquadroIncantesimi riquadroIncantesimi;
+	private final transient DisplayableCanvasRiquadroIncantesimiEPozioni riquadroIncantesimiEPozioni;
 	private final transient DisplayableCanvasRiquadroMissioni riquadroMissioni;
 	private final transient DisplayableCanvasMappaATuttoSchermo mappaATuttoSchermo;
 	private final transient DisplayableCanvasInventario inventario;
@@ -78,7 +78,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		larghezzaSchermo = width;
 		altezzaSchermo = height;
 		stackElementiGrafici = new ArrayList<>();
-		stackElementiGrafici.add(InterfacciaUtente.Finestra.INCANTESIMI);
+		stackElementiGrafici.add(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
 		stackElementiGrafici.add(InterfacciaUtente.Finestra.STATO);
 		stackElementiGrafici.add(InterfacciaUtente.Finestra.MAPPA);
 		stackElementiGrafici.add(InterfacciaUtente.Finestra.STATISTICHE);
@@ -164,10 +164,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		larghezzaElemento = ImageCache.corniceIncantesimi.getWidth();
 		altezzaElemento = ImageCache.corniceIncantesimi.getHeight();
 
-		riquadroIncantesimi = new DisplayableCanvasRiquadroIncantesimi(elementoX, elementoY);
+		riquadroIncantesimiEPozioni = new DisplayableCanvasRiquadroIncantesimiEPozioni(elementoX, elementoY);
 
 		Rectangle riquadroIncantesimiRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
-		mappaCoordinateElementiGrafici.put(riquadroIncantesimi, riquadroIncantesimiRect);
+		mappaCoordinateElementiGrafici.put(riquadroIncantesimiEPozioni, riquadroIncantesimiRect);
 
 		elementoX = ImageCache.SPACING + ImageCache.corniceMappa.getWidth() +
 				ImageCache.SPACING + immagineLocazione.getWidth() + ImageCache.SPACING;
@@ -212,24 +212,32 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	private void registratiAEventi() {
+		// Eventi globali
 		BusEventi.iscriviti(EventoAumentoLivelloMondo.class, this::gestisciEventoAumentoLivelloMondo);
-		BusEventi.iscriviti(EventoAumentoLivelloPersonaggio.class, this::gestisciEventoAumentoLivelloPersonaggio);
+		// Eventi interni del motore grafico - i sottopannelli potrebbero richiedere la creazione di sprite da gestire qui
 		BusEventi.iscriviti(EventoCreazioneSpriteAnnuncioGlobale.class, this::gestisciEventoCreazioneSpriteAnnuncioGlobale);
 		BusEventi.iscriviti(EventoCreazioneSpriteATempo.class, this::gestisciEventoCreazioneSpriteATempo);
 		BusEventi.iscriviti(EventoCreazioneSpriteEffetto.class, this::gestisciEventoCreazioneSpriteEffetto);
 		BusEventi.iscriviti(EventoCreazioneSpriteFumetto.class, this::gestisciEventoCreazioneSpriteFumetto);
 		BusEventi.iscriviti(EventoCreazioneSpriteInDissolvenza.class, this::gestisciEventoCreazioneSpriteInDissolvenza);
+		// Eventi del riquadro gruppo
+		BusEventi.iscriviti(EventoAumentoLivelloPersonaggio.class, this::gestisciEventoAumentoLivelloPersonaggio);
+		BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
+		// Eventi del riquadro incantesimi
+		BusEventi.iscriviti(EventoVariazioneIncantesimi.class, this::gestisciEventoVariazioneIncantesimi);
+		BusEventi.iscriviti(EventoVariazionePozioniSalute.class, this::gestisciEventoVariazionePozioniSalute);
+		BusEventi.iscriviti(EventoVariazionePozioniSaluteGrandi.class, this::gestisciEventoVariazionePozioniSaluteGrandi);
+		BusEventi.iscriviti(EventoVariazionePozioniMagia.class, this::gestisciEventoVariazionePozioniMagia);
+		BusEventi.iscriviti(EventoVariazionePozioniMagiaGrandi.class, this::gestisciEventoVariazionePozioniMagiaGrandi);
+		// Eventi del riquadro missioni
+		BusEventi.iscriviti(EventoAggiornamentoStatoMissione.class, this::gestisciEventoAggiornamentoStatoMissione);
+
 	}
+
+	// Eventi globali
 
 	private void gestisciEventoAumentoLivelloMondo(EventoAumentoLivelloMondo evento) {
 		notifica("LEVEL UP! Ora il mondo è al livello " + evento.getLivello() + "!");
-	}
-
-	private void gestisciEventoAumentoLivelloPersonaggio(EventoAumentoLivelloPersonaggio evento) {
-		Personaggio personaggio = evento.getPersonaggio();
-		notificaAnnuncioGlobale("LEVEL UP!", personaggio.getNome() + " A LIVELLO " + personaggio.getLivello() + "!");
-		notifica("LEVEL UP! Ora " + personaggio.getNome() + " è al livello " + personaggio.getLivello() + "!");
-		// La notifica come iconcina è fatta dal riquadro del gruppo
 	}
 
 	private void gestisciEventoCreazioneSpriteAnnuncioGlobale(EventoCreazioneSpriteAnnuncioGlobale evento) {
@@ -254,6 +262,54 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	private void gestisciEventoCreazioneSpriteInDissolvenza(EventoCreazioneSpriteInDissolvenza evento) {
 		aggiungiSprite(evento.getSprite());
+	}
+
+	// Eventi del riquadro del gruppo
+
+	private void gestisciEventoAumentoLivelloPersonaggio(EventoAumentoLivelloPersonaggio evento) {
+		Personaggio personaggio = evento.getPersonaggio();
+		notificaAnnuncioGlobale("LEVEL UP!", personaggio.getNome() + " A LIVELLO " + personaggio.getLivello() + "!");
+		notifica("LEVEL UP! Ora " + personaggio.getNome() + " è al livello " + personaggio.getLivello() + "!");
+		// La notifica come iconcina è fatta dal riquadro del gruppo
+		primoPiano(InterfacciaUtente.Finestra.STATO);
+		riquadroGruppo.gestisciEventoAumentoLivelloPersonaggio(evento);
+	}
+
+	private void gestisciEventoVariazioneStatistichePersonaggio(EventoVariazioneStatistichePersonaggio evento) {
+		primoPiano(InterfacciaUtente.Finestra.STATO);
+		riquadroGruppo.gestisciEventoVariazioneStatistichePersonaggio(evento);
+	}
+
+	// Eventi del riquadro incantesimi
+
+	private void gestisciEventoVariazioneIncantesimi(EventoVariazioneIncantesimi evento) {
+		primoPiano(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
+		riquadroIncantesimiEPozioni.gestisciEventoVariazioneIncantesimi(evento);
+	}
+
+	private void gestisciEventoVariazionePozioniSalute(EventoVariazionePozioniSalute evento) {
+		primoPiano(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
+		riquadroIncantesimiEPozioni.gestisciEventoVariazionePozioniSalute(evento);
+	}
+
+	private void gestisciEventoVariazionePozioniSaluteGrandi(EventoVariazionePozioniSaluteGrandi evento) {
+		primoPiano(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
+		riquadroIncantesimiEPozioni.gestisciEventoVariazionePozioniSaluteGrandi(evento);
+	}
+
+	private void gestisciEventoVariazionePozioniMagia(EventoVariazionePozioniMagia evento) {
+		primoPiano(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
+		riquadroIncantesimiEPozioni.gestisciEventoVariazionePozioniMagia(evento);
+	}
+
+	private void gestisciEventoVariazionePozioniMagiaGrandi(EventoVariazionePozioniMagiaGrandi evento) {
+		primoPiano(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
+		riquadroIncantesimiEPozioni.gestisciEventoVariazionePozioniMagiaGrandi(evento);
+	}
+
+	private void gestisciEventoAggiornamentoStatoMissione(EventoAggiornamentoStatoMissione evento) {
+		primoPiano(InterfacciaUtente.Finestra.MISSIONI);
+		notificaAnnuncioGlobale(evento.getEtichetta(), evento.getDescrizione());
 	}
 
 	public void selezioneSlotSalvataggioDaCaricare(Collection<TestataSalvataggio> salvataggiDisponibili) {
@@ -330,8 +386,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			case STATO:
 				riquadroGruppo.disegnaStatus(graphics);
 				break;
-			case INCANTESIMI:
-				riquadroIncantesimi.disegnaIncantesimi(graphics);
+			case INCANTESIMI_E_POZIONI:
+				riquadroIncantesimiEPozioni.disegnaIncantesimi(graphics);
 				break;
 			case TESTO:
 				riquadroTesto.disegnaTesto(graphics, createImage(riquadroTesto.getImageSource()));
@@ -590,21 +646,27 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
-	public void notificaMorte(Personaggio personaggio) {
+	public void notificaVariazioneStatoVitale(Personaggio personaggio) {
 		if (personaggio.isPNG()) {
 			aggiungiSprite(riquadroLocazione.notificaMorte(personaggio));
+		} else {
+			primoPiano(InterfacciaUtente.Finestra.STATO);
 		}
 	}
 
 	public void variaSalute(Personaggio personaggio, int variazione) {
 		if (personaggio.isPNG()) {
 			aggiungiSprite(riquadroLocazione.variaSalute(personaggio, variazione));
+		} else {
+			primoPiano(InterfacciaUtente.Finestra.STATO);
 		}
 	}
 
 	public void variaMagia(Personaggio personaggio, int variazione) {
 		if (personaggio.isPNG()) {
 			aggiungiSprite(riquadroLocazione.variaMagia(personaggio, variazione));
+		} else {
+			primoPiano(InterfacciaUtente.Finestra.STATO);
 		}
 	}
 
@@ -658,8 +720,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 				return riquadroLocazione;
 			case STATO:
 				return riquadroGruppo;
-			case INCANTESIMI:
-				return riquadroIncantesimi;
+			case INCANTESIMI_E_POZIONI:
+				return riquadroIncantesimiEPozioni;
 			case TESTO:
 				return riquadroTesto;
 			case MISSIONI:

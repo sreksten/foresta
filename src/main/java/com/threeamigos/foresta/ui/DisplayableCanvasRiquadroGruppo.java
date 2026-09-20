@@ -88,15 +88,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		rightXOffsetStanchezza = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 17;
 		leftXOffsetLabelCarisma = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 18;
 		rightXOffsetCarisma = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 23;
-
-		registratiAEventi();
 	}
-
-	private void registratiAEventi() {
-		BusEventi.iscriviti(EventoAumentoLivelloPersonaggio.class, this::gestisciEventoAumentoLivelloPersonaggio);
-		BusEventi.iscriviti(EventoVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
-	}
-
 
 	void disegnaStatus(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
@@ -188,7 +180,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		return -1;
 	}
 
-	private void gestisciEventoAumentoLivelloPersonaggio(EventoAumentoLivelloPersonaggio evento) {
+	void gestisciEventoAumentoLivelloPersonaggio(EventoAumentoLivelloPersonaggio evento) {
 		BusEventi.pubblica(new EventoCreazioneSpriteATempo(costruisciSpritePerVariazioneLivello(evento.getPersonaggio(),
 				evento.getLivelloAttuale() - evento.getLivelloPrecedente())));
 	}
@@ -206,7 +198,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetLivello, y, "Livello variato");
 	}
 
-	private void gestisciEventoVariazioneStatistichePersonaggio(EventoVariazioneStatistichePersonaggio evento) {
+	void gestisciEventoVariazioneStatistichePersonaggio(EventoVariazioneStatistichePersonaggio evento) {
 		if (!GruppoGiocatore.getIstanza().contiene(evento.getPersonaggio())) {
 			return;
 		}

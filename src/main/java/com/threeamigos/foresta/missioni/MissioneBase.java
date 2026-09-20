@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.EventoNotificaGlobale;
+import com.threeamigos.foresta.eventi.EventoAggiornamentoStatoMissione;
 import com.threeamigos.foresta.motore.GestoreProgressione;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.MissioneMD;
@@ -80,7 +80,7 @@ public abstract class MissioneBase implements Missione {
 	@Override
 	public void attivaMissione() {
 		md.aggiungiProprieta(ATTIVA, "S");
-		BusEventi.pubblica(new EventoNotificaGlobale("NUOVA MISSIONE", getNome()));
+		BusEventi.pubblica(new EventoAggiornamentoStatoMissione(this, "NUOVA MISSIONE", getNome()));
 	}
 
 	@Override
@@ -92,7 +92,7 @@ public abstract class MissioneBase implements Missione {
 	public void completaMissione() {
 		md.aggiungiProprieta(COMPLETA, "S");
 		RegistroMissioni.completaMissione(this);
-		BusEventi.pubblica(new EventoNotificaGlobale("MISSIONE COMPLETATA", getNome()));
+		BusEventi.pubblica(new EventoAggiornamentoStatoMissione(this, "MISSIONE COMPLETATA", getNome()));
 		if (isPrimaria()) {
 			GestoreProgressione.completaMissionePrincipale();
 		} else {

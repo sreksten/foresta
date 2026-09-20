@@ -78,6 +78,6 @@ public class Incantesimi implements Offerta {
 	public void accetta(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
 		gruppo.subMonete(costo);
 		gruppo.addIncantesimi(classeIncantesimo, quantita);
-		BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.INCANTESIMI));
+		BusEventi.pubblica(new EventoMostraFinestra(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI));
 	}
 }

@@ -326,7 +326,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	private void gestisciEventoVariazioneStatoVitalePersonaggio(EventoVariazioneStatoVitalePersonaggio evento) {
-		displayableCanvas.notificaMorte(evento.getPersonaggio());
+		displayableCanvas.notificaVariazioneStatoVitale(evento.getPersonaggio());
 	}
 
 	private void gestisciEventoVariazioneStatistichePersonaggio(EventoVariazioneStatistichePersonaggio evento) {
