@@ -14,8 +14,6 @@ import java.util.List;
 
 public class Locanda extends LocazioneBase {
 
-	private static final String NO_MONETE_PERNOTTAMENTO = "Il gruppo non ha abbastanza monete per pagare il pernottamento e l'oste chiede loro di lasciare la locanda al più presto.";
-
 	private enum StatoInLocanda {
 		SULLA_PORTA,
 		ENTRATO,
@@ -276,7 +274,8 @@ public class Locanda extends LocazioneBase {
 
 	private Stato richiediSePernottare(GruppoGiocatore gruppo) {
 		if (gruppo.getMonete() < Costanti.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggi()) {
-			BusEventi.pubblica(new EventoMessaggio(NO_MONETE_PERNOTTAMENTO));
+			BusEventi.pubblica(new EventoMessaggio(gruppo.chiMaiuscolo() +
+					" non ha abbastanza monete per pagare il pernottamento e l'oste chiede di lasciare la locanda al più presto."));
 			return Stato.FINE_LOCAZIONE;
 		} else {
 			BusEventi.pubblica(new EventoMessaggio(gruppo.chiMaiuscolo() + " desidera pernottare alla locanda?"));
