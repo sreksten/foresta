@@ -8,6 +8,6 @@ public interface ControlloreDiGioco {
 
 	void inizia();
 
-	void processaAzione(Comando azione);
+	void processaComando(Comando azione);
 
 }

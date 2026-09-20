@@ -1,8 +1,6 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.interni.InternoMostraSchermataGioco;
-import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioCommerciante;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioFornitore;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioGruppo;
@@ -21,9 +19,9 @@ import com.threeamigos.foresta.tools.TestataSalvataggio;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.stream.Collectors;
 
 public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
@@ -45,6 +43,8 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 		SwingUtilities.invokeLater(this::creaEMostraInterfacciaUtente);
 
+		BusEventi.iscriviti(NotificaErroreCaricamento.class, this::gestisciEventoErroreCaricamento);
+		BusEventi.iscriviti(NotificaGlobale.class, this::gestisciEventoNotificaGlobale);
 		BusEventi.iscriviti(InternoAggiornamentoComandiDisponibili.class, this::gestisciEventoComandiDisponibili);
 		BusEventi.iscriviti(NotificaConsumoPuntoAbilitaPersonaggio.class, this::gestisciEventoConsumoPuntoAbilita);
 		BusEventi.iscriviti(NotificaFineGioco.class, this::gestisciEventoFineGioco);
@@ -55,7 +55,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(NotificaMostraPunteggiMigliori.class, this::gestisciEventoMostraPunteggi);
 		BusEventi.iscriviti(InternoMostraSchermataGioco.class, this::gestisciEventoMostraSchermataGioco);
 		BusEventi.iscriviti(NotificaMostraStatisticheFineGioco.class, this::gestisciEventoMostraStatistiche);
-		BusEventi.iscriviti(NotificaGlobale.class, this::gestisciEventoNotificaGlobale);
 		BusEventi.iscriviti(NotificaTestoParagrafo.class, this::gestisciEventoParagrafo);
 		BusEventi.iscriviti(InternoPreparazioneLocazione.class, this::gestisciEventoPreparazioneLocazione);
 		BusEventi.iscriviti(InternoRichiestaAperturaFinestraCombattimento.class, this::gestisciEventoRichiestaAperturaFinestraCombattimento);
@@ -201,6 +200,10 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		displayableCanvas.mostraStatistiche();
 	}
 
+	private void gestisciEventoErroreCaricamento(NotificaErroreCaricamento evento) {
+		displayableCanvas.notificaAnnuncioGlobale("Errore", "File caricamento corrotto");
+	}
+
 	private void gestisciEventoNotificaGlobale(NotificaGlobale evento) {
 		displayableCanvas.notificaAnnuncioGlobale(evento.getEtichetta(), evento.getMessaggio());
 	}
@@ -258,7 +261,10 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	private void gestisciEventoSelezioneSalvataggio(RichiestaSelezioneSlotPerRilettura evento) {
 		temporizzatore.termina();
-		impostaAzioni(evento.getSalvataggiDisponibili().stream().map(TestataSalvataggio::getId).collect(Collectors.toList()));
+		Collection<Comando> possibilita = new ArrayList<>();
+		evento.getSalvataggiDisponibili().stream().map(TestataSalvataggio::getId).forEach(possibilita::add);
+		possibilita.add(Comando.ANNULLA);
+		impostaAzioni(possibilita);
 		displayableCanvas.selezioneSlotSalvataggioDaCaricare(evento.getSalvataggiDisponibili());
 	}
 

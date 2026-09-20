@@ -64,7 +64,7 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 			GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 			if (gruppo.getClasseLocazioneCorrente() == ClassiLocazione.CASTELLO_DRAGO && gruppo.getLocazioneCorrente().isCompleta()) {
 				completaMissione();
-				BusEventi.pubblica(new NotificaGlobale("VITTORIA", "IL DRAGO E' MORTO"));
+				BusEventi.pubblica(new NotificaGlobale("Vittoria", "Il drago e' morto"));
 				LineaTemporale.setGiocoFinito(true);
 			}
 		}

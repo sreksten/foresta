@@ -42,7 +42,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(InternoCreazioneSpriteEffettoDiStato.class, this::onEventoCreazioneSpriteEffetto);
         BusEventi.iscriviti(InternoCreazioneSpriteFumettoATempo.class, this::onEventoCreazioneSpriteFumetto);
         BusEventi.iscriviti(InternoCreazioneSpriteInDissolvenza.class, this::onEventoCreazioneSpriteInDissolvenza);
-        BusEventi.iscriviti(EventoErroreCaricamento.class, this::onEventoErroreCaricamento);
+        BusEventi.iscriviti(NotificaErroreCaricamento.class, this::onEventoErroreCaricamento);
         BusEventi.iscriviti(InternoErrore.class, this::onEventoErroreInterno);
         BusEventi.iscriviti(InternoException.class, this::onEventoException);
         BusEventi.iscriviti(NotificaFineGioco.class, this::onEventoFineGioco);
@@ -194,7 +194,7 @@ public class SnifferBusEventi {
         Logger.log(headerEvento(evento) + "Descrizione: " + evento.getSprite().getDescrizione());
     }
 
-    private void onEventoErroreCaricamento(EventoErroreCaricamento evento) {
+    private void onEventoErroreCaricamento(NotificaErroreCaricamento evento) {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getException().getMessage()));
         Logger.log(evento.getException());
     }

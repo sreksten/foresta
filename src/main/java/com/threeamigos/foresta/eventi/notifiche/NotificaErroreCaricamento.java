@@ -7,11 +7,11 @@ import com.threeamigos.foresta.eventi.TipoEvento;
  *
  * @author Stefano Reksten
  */
-public class EventoErroreCaricamento extends EventoBase {
+public class NotificaErroreCaricamento extends EventoBase {
 
     private final Exception exception;
 
-    public EventoErroreCaricamento(Exception exception) {
+    public NotificaErroreCaricamento(Exception exception) {
         super(TipoEvento.NOTIFICA_ERRORE_CARICAMENTO);
         this.exception = exception;
     }

@@ -53,7 +53,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	public void tick() {
-		processaAzione(Comando.TIMER);
+		processaComando(Comando.TIMER);
 	}
 
 	/**
@@ -96,7 +96,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 				if (personaggio != null) {
 					inizializzaGioco();
-					processaAzione(null);
+					processaComando(null);
 					break;
 				}
 				stato = Stato.PRE_GAME_ATTESA_SESSO_PERSONAGGIO;
@@ -111,7 +111,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				stato = Stato.PUNTEGGI;
 				BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
 				BusEventi.pubblica(new NotificaMostraPunteggiMigliori());
-				processaAzione(null);
+				processaComando(null);
 				break;
 
 			default:
@@ -120,7 +120,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private void onEventoComandoDiGioco(ComandoDiGioco evento) {
-		processaAzione(evento.getComando());
+		processaComando(evento.getComando());
 	}
 
 	private void comandoNonValido(Comando comando) {
@@ -130,41 +130,24 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	/**
 	 * Questa funzione in base allo stato del gruppo e alla azione ricevuta
 	 * è il motore di gioco vero e proprio, ed è quindi abbastanza monumentale.
-	 * Per alcuni stati l'azione ricevuta non serve a nulla, giusto per cambiare
+	 * Per alcuni stati il comando ricevuta non serve a nulla, giusto per cambiare
 	 * lo stato stesso.
 	 */
-	public void processaAzione(Comando azione) {
-		BusEventi.pubblica(new InternoMessaggio("Automa in stato " + stato.name() + "; processo azione " + azione));
+	public void processaComando(Comando comando) {
+		BusEventi.pubblica(new InternoMessaggio("Automa in stato " + stato.name() + "; processo Comando " + comando));
 		switch (stato) {
 
 			case INTRO:
-				switch(azione) {
-					case PERGAMENA:
-						stato = Stato.PRE_GAME_ATTESA_NOME_PERSONAGGIO;
-						BusEventi.pubblica(new InternoStatoDiGioco(stato));
-						break;
-					case FLOPPY:
-						stato = Stato.PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE;
-						Collection<TestataSalvataggio> salvataggiDisponibili = GestoreSalvataggi.getSalvataggiDisponibili();
-						BusEventi.pubblica(new RichiestaSelezioneSlotPerRilettura(salvataggiDisponibili));
-						break;
-					default:
-						comandoNonValido(azione);
-				}
+				processaComandoInStatoIntro(comando);
 				break;
 
 			case PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE:
-				if (leggi(azione)) {
-					stato = Stato.ATTESA_DIREZIONE;
-					processaAzione(null);
-				} else {
-					stato = Stato.INTRO;
-				}
+				processaComandoInStatoPreGameSelezionaSalvataggioDaLeggere(comando);
 				break;
 
 			case PRE_GAME_ATTESA_SESSO_PERSONAGGIO:
 				stato = Stato.PRE_GAME_ATTESA_CLASSE_PERSONAGGIO;
-				if (azione == Comando.FEMMINA) {
+				if (comando == Comando.FEMMINA) {
 					BusEventi.pubblica(new InternoStatoDiGioco(stato, Comando.GUERRIERA, Comando.LADRA,
 							Comando.CANTASTORIE, Comando.ELFA, Comando.MAGA));
 				} else {
@@ -174,7 +157,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				break;
 
 			case PRE_GAME_ATTESA_CLASSE_PERSONAGGIO:
-				switch (azione) {
+				switch (comando) {
 				case GUERRIERA:
 					personaggio = new Guerriera(nomePersonaggio, 1);
 					break;
@@ -209,7 +192,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					throw new IllegalArgumentException();
 				}
 				inizializzaGioco();
-				processaAzione(null);
+				processaComando(null);
 				break;
 
 			case INZIO_LOCAZIONE:
@@ -219,7 +202,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					BusEventi.pubblica(new NotificaTestoFrase(evento));
 					if (LineaTemporale.isGiocoFinito()) {
 						stato = Stato.GIOCO_PERSO;
-						processaAzione(null);
+						processaComando(null);
 						break;
 					}
 				}
@@ -244,7 +227,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				 */
 				stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, null);
 				if (stato == Stato.FINE_LOCAZIONE) {
-					processaAzione(null);
+					processaComando(null);
 					break;
 				}
 				/*
@@ -256,11 +239,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case IN_LOCAZIONE:
 				Logger.log("Coordinate conosciute foresta: (" +
 						Foresta.getMinXConosciuta() + ", " + Foresta.getMinYConosciuta() + ") -> (" + Foresta.getMaxXConosciuta() + ", " + Foresta.getMaxYConosciuta() + ")");
-				if (azione == Comando.INVENTARIO) {
+				if (comando == Comando.INVENTARIO) {
 					statoPrecedente = Stato.IN_LOCAZIONE;
 					stato = Stato.INVENTARIO;
 					richiediAperturaInventarioGruppo();
-					processaAzione(null);
+					processaComando(null);
 					return;
 				}
 				statoPrecedente = stato;
@@ -269,7 +252,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				 * locazione la possibilità di andare avanti fino a
 				 * LOCAZIONE_COMPLETA
 				 */
-				stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, azione);
+				stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, comando);
 				if (stato != Stato.IN_LOCAZIONE) {
 					if (stato == Stato.IN_COMBATTIMENTO) {
 						temporizzatore.inizia(1_000);
@@ -277,7 +260,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 						if (stato == Stato.GIOCO_PERSO || stato == Stato.GIOCO_VINTO || stato == Stato.FINE_LOCAZIONE) {
 							temporizzatore.termina();
 						}
-						processaAzione(null);
+						processaComando(null);
 						break;
 					}
 				}
@@ -285,13 +268,13 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 			case IN_COMBATTIMENTO:
 				statoPrecedente = stato;
-				stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, azione);
+				stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, comando);
 				if (stato != Stato.IN_COMBATTIMENTO) {
 					temporizzatore.termina();
-					processaAzione(null);
+					processaComando(null);
 					break;
 				}
-				if (azione != Comando.TIMER) {
+				if (comando != Comando.TIMER) {
 					// Il battito del combattimento viene interrotto ogni volta che si
 					// esce da IN_COMBATTIMENTO (per esempio per scegliere chi combatte):
 					// qui lo si riavvia, dato che i round sono guidati da Comando.TIMER.
@@ -300,36 +283,36 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				break;
 
 			case SCELTA_AUTOMATICA_PERSONAGGIO:
-				azione = scegliPersonaggio(false);
-				if (azione != null) {
+				comando = scegliPersonaggio(false);
+				if (comando != null) {
 					Logger.log(Stato.SCELTA_AUTOMATICA_PERSONAGGIO.name() + ": Torno allo stato " + statoPrecedente.name());
 					stato = statoPrecedente;
-					processaAzione(azione);
+					processaComando(comando);
 					break;
 				} else {
 					stato = Stato.SCELTA_MANUALE_PERSONAGGIO;
-					processaAzione(null);
+					processaComando(null);
 				}
 				break;
 
 			case SCELTA_PERSONAGGIO_QUALSIASI:
-				azione = scegliPersonaggio(true);
-				if (azione != null) {
+				comando = scegliPersonaggio(true);
+				if (comando != null) {
 					Logger.log(Stato.SCELTA_PERSONAGGIO_QUALSIASI.name() + ": Torno allo stato " + statoPrecedente.name());
 					stato = statoPrecedente;
-					processaAzione(azione);
+					processaComando(comando);
 					break;
 				} else {
 					stato = Stato.SCELTA_MANUALE_PERSONAGGIO;
-					processaAzione(null);
+					processaComando(null);
 				}
 				break;
 
 			case SCELTA_MANUALE_PERSONAGGIO:
-				if (azione != null) {
+				if (comando != null) {
 					Logger.log(Stato.SCELTA_MANUALE_PERSONAGGIO.name() + ": Torno allo stato " + statoPrecedente.name());
 					stato = statoPrecedente;
-					processaAzione(azione);
+					processaComando(comando);
 				}
 				break;
 
@@ -358,15 +341,15 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 			case INCANTESIMO_SCELTO:
 				stato = Stato.IN_LOCAZIONE;
-				processaAzione(azione);
+				processaComando(comando);
 				break;
 
 			case ATTESA_SI_NO:
-				if (azione == null) {
+				if (comando == null) {
 					BusEventi.pubblica(new RichiestaSelezioneSiNo());
-				} else if (azione != Comando.TIMER) {
+				} else if (comando != Comando.TIMER) {
 					stato = statoPrecedente;
-					processaAzione(azione);
+					processaComando(comando);
 				}
 				break;
 
@@ -379,12 +362,12 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					if (!locazioneCorrente.isHaStrettoAmicizia()) {
 						Oggetto oggetto = locazioneCorrente.getOggetto();
 						if (oggetto != null) {
-							BusEventi.pubblica(new InternoMessaggio("Tentativo di recupero oggetto utilizzando l'azione " + azione));
-							if (!oggetto.prendi(gruppo, azione)) {
-								BusEventi.pubblica(new InternoMessaggio("L'oggetto non si lascia prendere con l'azione " + azione));
+							BusEventi.pubblica(new InternoMessaggio("Tentativo di recupero oggetto utilizzando l'azione " + comando));
+							if (!oggetto.prendi(gruppo, comando)) {
+								BusEventi.pubblica(new InternoMessaggio("L'oggetto non si lascia prendere con l'azione " + comando));
 								statoPrecedente = Stato.FINE_LOCAZIONE;
 								stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-								processaAzione(null);
+								processaComando(null);
 								break;
 							} else {
 								BusEventi.pubblica(new NotificaRaccoltaOggetti());
@@ -407,7 +390,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					} else {
 						stato = Stato.GIOCO_PERSO;
 					}
-					processaAzione(null);
+					processaComando(null);
 					break;
 				}
 
@@ -429,7 +412,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				Statistiche.incrementaTurniGiocati();
 
 				stato = Stato.ATTESA_DIREZIONE;
-				processaAzione(null);
+				processaComando(null);
 				break;
 
 			case ATTESA_DIREZIONE:
@@ -441,49 +424,49 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case ATTESA_PASSI:
 				// Occorre memorizzare l'informazione sulla direzione
 				Collection<Comando> comandiPossibiliPerNumeroPassi = null;
-				switch (azione) {
+				switch (comando) {
 					case MAPPA:
 						statoPrecedente = Stato.ATTESA_DIREZIONE;
 						stato = Stato.MAPPA;
-						processaAzione(null);
+						processaComando(null);
 						return;
 					case INVENTARIO:
 						statoPrecedente = Stato.ATTESA_DIREZIONE;
 						stato = Stato.INVENTARIO;
 						richiediAperturaInventarioGruppo();
-						processaAzione(null);
+						processaComando(null);
 						return;
 					case ACCAMPAMENTO:
 						gruppo.pernotta(locazioneCorrente.getTipoRiposo());
 						LineaTemporale.mattinoSeguente();
 						LineaTemporale.eventi(gruppo);
 						stato = Stato.ATTESA_DIREZIONE;
-						processaAzione(null);
+						processaComando(null);
 						return;
 					case POZIONE_SALUTE:
 						statoPrecedente = Stato.ATTESA_POZIONE_SALUTE;
 						stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-						processaAzione(null);
+						processaComando(null);
 						return;
 					case POZIONE_SALUTE_GRANDE:
 						statoPrecedente = Stato.ATTESA_POZIONE_SALUTE_GRANDE;
 						stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-						processaAzione(null);
+						processaComando(null);
 						return;
 					case POZIONE_MAGIA:
 						statoPrecedente = Stato.ATTESA_POZIONE_MAGIA;
 						stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-						processaAzione(null);
+						processaComando(null);
 						return;
 					case POZIONE_MAGIA_GRANDE:
 						statoPrecedente = Stato.ATTESA_POZIONE_MAGIA_GRANDE;
 						stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-						processaAzione(null);
+						processaComando(null);
 						return;
 					case RESURREZIONE:
 						statoPrecedente = Stato.ATTESA_RESURREZIONE;
 						stato = Stato.SCELTA_BERSAGLIO_RESURREZIONE;
-						processaAzione(null);
+						processaComando(null);
 						return;
 					case NORD:
 						direzione = Comando.NORD;
@@ -506,7 +489,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 							BusEventi.pubblica(new NotificaTestoParagrafo(personaggio.getDescrizione()));
 						}
 						stato = Stato.ATTESA_DIREZIONE;
-						processaAzione(null);
+						processaComando(null);
 						return;
 					case FLOPPY:
 						stato = Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE;
@@ -524,7 +507,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				break;
 
 			case IN_CAMMINO:
-				int passi = azione.ordinal() - Comando.NUMERO_1.ordinal() + 1;
+				int passi = comando.ordinal() - Comando.NUMERO_1.ordinal() + 1;
 				switch(direzione) {
 				case NORD:
 					gruppo.muoveNord(passi);
@@ -544,73 +527,73 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				LineaTemporale.aggiungiOre(passi);
 				LineaTemporale.eventi(gruppo);
 				stato = Stato.INZIO_LOCAZIONE;
-				processaAzione(null);
+				processaComando(null);
 				break;
 
 			case ATTESA_POZIONE_SALUTE:
-				if (azione != null && azione != Comando.ANNULLA) {
-					gruppo.consumaPozioneSalute(azione);
+				if (comando != null && comando != Comando.ANNULLA) {
+					gruppo.consumaPozioneSalute(comando);
 				}
 				stato = Stato.ATTESA_DIREZIONE;
-				processaAzione(null);
+				processaComando(null);
 				break;
 
 			case ATTESA_POZIONE_SALUTE_GRANDE:
-				if (azione != null && azione != Comando.ANNULLA) {
-					gruppo.consumaPozioneSaluteGrande(azione);
+				if (comando != null && comando != Comando.ANNULLA) {
+					gruppo.consumaPozioneSaluteGrande(comando);
 				}
 				stato = Stato.ATTESA_DIREZIONE;
-				processaAzione(null);
+				processaComando(null);
 				break;
 
 			case ATTESA_POZIONE_MAGIA:
-				if (azione != null && azione != Comando.ANNULLA) {
-					gruppo.consumaPozioneMagia(azione);
+				if (comando != null && comando != Comando.ANNULLA) {
+					gruppo.consumaPozioneMagia(comando);
 				}
 				stato = Stato.ATTESA_DIREZIONE;
-				processaAzione(null);
+				processaComando(null);
 				break;
 
 			case ATTESA_POZIONE_MAGIA_GRANDE:
-				if (azione != null && azione != Comando.ANNULLA) {
-					gruppo.consumaPozioneMagiaGrande(azione);
+				if (comando != null && comando != Comando.ANNULLA) {
+					gruppo.consumaPozioneMagiaGrande(comando);
 				}
 				stato = Stato.ATTESA_DIREZIONE;
-				processaAzione(null);
+				processaComando(null);
 				break;
 
 			case SCELTA_BERSAGLIO_RESURREZIONE:
 				// Come nella scelta del bersaglio quando si formula un incantesimo in
 				// combattimento (Stato.SCELTA_PERSONAGGIO_QUALSIASI): se c'è un solo
 				// personaggio morto lo si risuscita direttamente, altrimenti si chiede quale.
-				azione = scegliPersonaggioMorto();
-				if (azione != null) {
+				comando = scegliPersonaggioMorto();
+				if (comando != null) {
 					stato = statoPrecedente;
-					processaAzione(azione);
+					processaComando(comando);
 				}
 				break;
 
 			case ATTESA_RESURREZIONE:
-				if (azione != null && azione != Comando.ANNULLA) {
-					eseguiResurrezione(gruppo.getPersonaggio(azione));
+				if (comando != null && comando != Comando.ANNULLA) {
+					eseguiResurrezione(gruppo.getPersonaggio(comando));
 				}
 				stato = Stato.ATTESA_DIREZIONE;
-				processaAzione(null);
+				processaComando(null);
 				break;
 
 			case MAPPA:
-				Logger.log("Stato MAPPA, azione " + azione);
-				if (azione == null) {
+				Logger.log("Stato MAPPA, azione " + comando);
+				if (comando == null) {
 					BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.SI));
 					BusEventi.pubblica(new NotificaTestoParagrafo(gruppo.getCapo().getNome(
 							Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 							Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " consulta la sua mappa della Foresta."));
 					BusEventi.pubblica(new ComandoVisualizzazioneMappa());
 				} else {
-                    if (azione == Comando.SI) {
+                    if (comando == Comando.SI) {
                         stato = statoPrecedente;
                         BusEventi.pubblica(new InternoMostraSchermataGioco());
-                        processaAzione(null);
+                        processaComando(null);
                     } else {
                         throw new IllegalArgumentException();
                     }
@@ -618,22 +601,22 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				break;
 
 			case INVENTARIO:
-				Logger.log("Stato INVENTARIO, azione " + azione);
-				if (azione == null) {
+				Logger.log("Stato INVENTARIO, azione " + comando);
+				if (comando == null) {
 					richiediAperturaInventarioGruppo();
 				} else {
-					switch (azione) {
+					switch (comando) {
 						case ANNULLA:
 							stato = statoPrecedente;
 							BusEventi.pubblica(new InternoMostraSchermataGioco());
-							processaAzione(null);
+							processaComando(null);
 							break;
 						case PERSONAGGIO_1:
 						case PERSONAGGIO_2:
 						case PERSONAGGIO_3:
 						case PERSONAGGIO_4:
 						case PERSONAGGIO_5:
-							indicePersonaggioInventario = azione.ordinal() - Comando.PERSONAGGIO_1.ordinal();
+							indicePersonaggioInventario = comando.ordinal() - Comando.PERSONAGGIO_1.ordinal();
 							richiediAperturaInventarioGruppo();
 							break;
 						default:
@@ -643,79 +626,79 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				break;
 
 			case SELEZIONE_SALVATAGGIO_DA_SCRIVERE:
-				if (azione == Comando.NO) {
+				if (comando == Comando.NO) {
 					BusEventi.pubblica(new InternoMostraSchermataGioco());
 					stato = Stato.ATTESA_DIREZIONE;
-					processaAzione(null);
+					processaComando(null);
 				}
-				if (azione != null) {
-					salva(azione);
+				if (comando != null) {
+					salva(comando);
 					BusEventi.pubblica(new RichiestaUscitaDalGioco());
 					stato = Stato.CONFERMA_USCITA;
-					processaAzione(null);
+					processaComando(null);
 				}
 				break;
 
 			case CONFERMA_USCITA:
-				if (azione == Comando.SI) {
+				if (comando == Comando.SI) {
 					System.exit(0);
-				} else if (azione == Comando.NO) {
+				} else if (comando == Comando.NO) {
 					BusEventi.pubblica(new InternoMostraSchermataGioco());
 					stato = Stato.ATTESA_DIREZIONE;
-					processaAzione(null);
+					processaComando(null);
 				}
 				break;
 
 			case GIOCO_PERSO:
 				BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
-				if (azione == null) {
+				if (comando == null) {
 					BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
 				} else {
 					stato = Stato.GIOCO_PERSO_2;
-					processaAzione(null);
+					processaComando(null);
 				}
 				break;
 
 			case GIOCO_PERSO_2:
-				if (azione == null) {
+				if (comando == null) {
 					BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
 					BusEventi.pubblica(new NotificaFineGioco(false));
 					temporizzatore.inizia(5_000);
-				} else if (azione == Comando.TIMER) {
+				} else if (comando == Comando.TIMER) {
 					BusEventi.pubblica(new NotificaFineGioco(false));
 				} else {
 					stato = Stato.STATISTICHE;
-					processaAzione(null);
+					processaComando(null);
 				}
 				break;
 
 			case GIOCO_VINTO:
 				BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
-				if (azione == null) {
+				if (comando == null) {
 					BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
 				} else {
 					stato = Stato.GIOCO_VINTO_2;
-					processaAzione(null);
+					processaComando(null);
 				}
 				break;
 
 			case GIOCO_VINTO_2:
-				if (azione == null) {
+				if (comando == null) {
 					BusEventi.pubblica(new NotificaFineGioco(true));
 					temporizzatore.inizia(5_000);
 					BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
-				} else if (azione == Comando.TIMER) {
+				} else if (comando == Comando.TIMER) {
 					BusEventi.pubblica(new NotificaFineGioco(true));
 				} else {
 					stato = Stato.STATISTICHE;
-					processaAzione(null);
+					processaComando(null);
 				}
 				break;
 
 			case STATISTICHE:
-				if (azione == null) {
+				if (comando == null) {
 					BusEventi.pubblica(new NotificaMostraStatisticheFineGioco());
-				} else if (azione == Comando.PERGAMENA) {
+				} else if (comando == Comando.PERGAMENA) {
 					if (GestorePunteggi.isPunteggioInClassifica(Statistiche.getPunti())) {
 						stato = Stato.ATTESA_NOME_PUNTEGGI;
 						BusEventi.pubblica(new RichiestaTesto("congratulazioni! inserisci il tuo nome"));
@@ -735,6 +718,33 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 			default:
 				throw new IllegalStateException("Stato " + stato + " non correttamente gestito!");
+		}
+	}
+
+	private void processaComandoInStatoIntro(Comando comando) {
+		switch(comando) {
+			case PERGAMENA:
+				stato = Stato.PRE_GAME_ATTESA_NOME_PERSONAGGIO;
+				BusEventi.pubblica(new InternoStatoDiGioco(stato));
+				break;
+			case FLOPPY:
+				stato = Stato.PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE;
+				Collection<TestataSalvataggio> salvataggiDisponibili = GestoreSalvataggi.getSalvataggiDisponibili();
+				BusEventi.pubblica(new RichiestaSelezioneSlotPerRilettura(salvataggiDisponibili));
+				break;
+			default:
+				comandoNonValido(comando);
+		}
+	}
+
+	private void processaComandoInStatoPreGameSelezionaSalvataggioDaLeggere(Comando comando) {
+		if (comando != Comando.ANNULLA && GestoreSalvataggi.leggi(comando)) {
+			stato = Stato.ATTESA_DIREZIONE;
+			BusEventi.pubblica(new InternoMostraSchermataGioco());
+			BusEventi.pubblica(new RichiestaSelezioneDirezione(getComandiPossibiliInStatoAttesaDirezione()));
+		} else {
+			BusEventi.pubblica(new InternoStatoDiGioco(Stato.INTRO, getComandiPossibiliInStatoIntro()));
+			stato = Stato.INTRO;
 		}
 	}
 
@@ -991,21 +1001,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			comandiPossibili.add(Comando.NUMERO_5);
 		}
 		return comandiPossibili;
-	}
-
-	private boolean leggi(Comando azione) {
-		if (azione == Comando.ANNULLA) {
-			return false;
-		}
-		if (GestoreSalvataggi.leggi(azione)) {
-			stato = Stato.ATTESA_DIREZIONE;
-			BusEventi.pubblica(new InternoMostraSchermataGioco());
-
-			BusEventi.pubblica(new RichiestaSelezioneDirezione(getComandiPossibiliInStatoAttesaDirezione()));
-			return true;
-		}
-		//FIXME in questo caso che si fa?
-		return false;
 	}
 
 	private void salva(Comando azione) {

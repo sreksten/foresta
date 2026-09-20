@@ -477,11 +477,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		} else if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO) {
 			inGioco(graphics);
 			disegnaFumetto(graphics);
-			disegnaAnnuncioGlobale(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_MAPPA) {
 			mappaATuttoSchermo.disegnaMappaATuttoSchermo(graphics);
 			disegnaFumetto(graphics);
-			disegnaAnnuncioGlobale(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_SELEZIONE_SLOT_DA_SALVARE) {
 			riquadroIntroOutro.selezioneSlotDaSalvare(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_CONFERMA_USCITA) {
@@ -497,16 +495,14 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		} else if (stato == StatoDisplayableCanvas.STATO_INVENTARIO) {
 			inventario.disegnaInventario(graphics);
 			disegnaFumetto(graphics);
-			disegnaAnnuncioGlobale(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_ARMAIOLO) {
 			armaiolo.disegnaInventario(graphics);
 			disegnaFumetto(graphics);
-			disegnaAnnuncioGlobale(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_ALCHIMISTA) {
 			alchimista.disegnaInventario(graphics);
 			disegnaFumetto(graphics);
-			disegnaAnnuncioGlobale(graphics);
 		}
+		disegnaAnnuncioGlobale(graphics);
 	}
 	
 	/**
@@ -694,7 +690,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	public void notificaAnnuncioGlobale(String etichetta, String messaggio) {
-		codaAnnunciGlobali.add(new SpriteAnnuncioGlobale(etichetta, messaggio, larghezzaSchermo, altezzaSchermo));
+		codaAnnunciGlobali.add(new SpriteAnnuncioGlobale(
+				// Il font globale non supporta il lower case
+				etichetta.toUpperCase(Locale.ROOT),
+				messaggio.toUpperCase(Locale.ROOT),
+				larghezzaSchermo, altezzaSchermo));
 	}
 
 	public void aggiungiEffettoDiStato(Personaggio personaggio, TipoEffettoDiStato effettoDiStato) {
