@@ -255,7 +255,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	private void gestisciEventoCreazioneSpriteATempo(InternoCreazioneSpriteATempo evento) {
-		aggiungiSprite(evento.getSprite());
+		if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO) {
+			aggiungiSprite(evento.getSprite());
+		}
 	}
 
 	private void gestisciEventoCreazioneSpriteEffetto(InternoCreazioneSpriteEffettoDiStato evento) {
@@ -550,6 +552,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void iniziaGioco() {
 		stato = StatoDisplayableCanvas.STATO_IN_GIOCO;
+		abortisciFumetto();
 		repaint();
 	}
 
@@ -583,8 +586,6 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	public void alchimista() {
 		stato = StatoDisplayableCanvas.STATO_ALCHIMISTA;
 		// FIXME: capire come gestire l'oroscopo a modo e se si possa allargare il fumetto dinamicamente.
-		// FIXME: inoltre, quando si esce dalla locazione alchimista/armaiolo occorre interrompere subito il fumetto,
-		// se sempre attivo.
 		// FIXME: fatto quello, si può dismettere tutto il vecchio flusso.
 		String oroscopo = String.join(" ", ProduttoreDiTestiCasuale.oroscopo());
 		notificaFumetto(oroscopo, alchimista.getCoordinateFumetto());
@@ -690,10 +691,17 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 				fumettoAttivo.resettaImpulsi();
 				return;
 			}
-			// Un fumetto diverso interrompe immediatamente quello in corso
+			// Un fumetto diverso interrompe immediatamente quello in corso, scartando
+			// anche eventuali fumetti già in coda dietro di lui
 			fumettoAttivo = null;
+			codaFumetti.clear();
 		}
 		codaFumetti.add(new SpriteFumetto(testo, larghezzaSchermo / 5, x, y, DoomdarkFontMedium.getInstance(), DoomdarkColorModel.Color.BLACK, pointToX, pointToY));
+	}
+
+	private void abortisciFumetto() {
+		fumettoAttivo = null;
+		codaFumetti.clear();
 	}
 
 	public void notificaAnnuncioGlobale(String etichetta, String messaggio) {

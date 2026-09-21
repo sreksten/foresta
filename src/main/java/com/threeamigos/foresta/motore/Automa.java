@@ -28,6 +28,11 @@ import java.util.function.Consumer;
 
 // FIXME conosciuti: l'incantesimo di resurrezione prende il primo personaggio morto e lo fa resuscitare dal primo personaggio che può farlo senza dare possibilità di scelta
 
+// TODO: implementare un meccanismo per le cutscene
+// TODO: implementare il nome dei gestori delle locande
+// TODO: implementare nella schermata della mappa le ForestaNews
+// TODO: implementare sistema di aiuto
+
 public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private final Map<Stato, Consumer<Comando>> gestoriComando;

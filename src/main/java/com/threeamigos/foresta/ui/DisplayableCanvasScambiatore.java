@@ -3,6 +3,8 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
 import java.awt.*;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * La base per disegnare una interazione tra due elenchi di oggetti scambiabili:
@@ -114,6 +116,36 @@ abstract class DisplayableCanvasScambiatore implements Finestra {
      */
     protected int mouseX = -1;
     protected int mouseY = -1;
+
+    /**
+     * Sprite temporanei (es. monete spese/acquisite, incantesimo acquistato) disegnati
+     * localmente da questa finestra, sempre attiva quando è in primo piano. A differenza
+     * degli {@code SpriteATempo} pubblicati via {@code InternoCreazioneSpriteATempo}, non
+     * dipendono dal ciclo di disegno di {@code DisplayableCanvas.inGioco()}.
+     */
+    private final List<SpriteInterface> spriteLocali = new ArrayList<>();
+
+    protected void aggiungiSpriteLocale(SpriteInterface sprite) {
+        spriteLocali.add(sprite);
+    }
+
+    protected void disegnaSpriteLocali(Graphics2D graphics) {
+        List<SpriteInterface> copia = new ArrayList<>(spriteLocali);
+        for (SpriteInterface sprite : copia) {
+            sprite.anima(graphics);
+            if (!sprite.isAttivo()) {
+                spriteLocali.remove(sprite);
+            }
+        }
+    }
+
+    /**
+     * Quota (in coordinate della finestra) a cui le sottoclassi disegnano la riga "Monete"
+     * in disegnaColonnaPersonaggio, usata per ancorare gli sprite locali a quella riga.
+     */
+    protected int yRigaMonete() {
+        return 3 * SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + fontHeight + ALTEZZA_LADRO;
+    }
 
     protected DisplayableCanvasScambiatore(int width, int height) {
         // Imposta la dimensione della finestra e calcola l'ampiezza delle tre colonne sinistra, centrale, destra

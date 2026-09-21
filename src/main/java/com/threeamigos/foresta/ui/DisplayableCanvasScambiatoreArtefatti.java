@@ -3,6 +3,7 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
+import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto;
 import com.threeamigos.foresta.motore.AutomaScambiatoreArtefatti;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
@@ -31,10 +32,23 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         super(width, height);
         BusEventi.iscriviti(NotificaApprovazioneAcquistoArtefatto.class, this::gestisciEventoApprovazioneAcquistoArtefatto);
         BusEventi.iscriviti(NotificaRifiutoAcquistoArtefatto.class, this::gestisciEventoRifiutoAcquistoArtefatto);
+        BusEventi.iscriviti(NotificaApprovazioneVenditaArtefatto.class, this::gestisciEventoApprovazioneVenditaArtefatto);
     }
 
     private void gestisciEventoApprovazioneAcquistoArtefatto(NotificaApprovazioneAcquistoArtefatto notificaApprovazioneAcquistoArtefatto) {
-        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Grazie per aver fatto acquisti da noi!", getCoordinateFumetto()));
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Grazie per il vostro acquisto!", getCoordinateFumetto()));
+
+        int costo = notificaApprovazioneAcquistoArtefatto.getEventoRichiestaSpostamentoArtefatto().getOggettoDaSpostare().getCostoAcquisto();
+        aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteMoneta, -costo, font,
+                xMassimaZonaCentrale, yRigaMonete(), "Monete spese"));
+    }
+
+    private void gestisciEventoApprovazioneVenditaArtefatto(NotificaApprovazioneVenditaArtefatto notificaApprovazioneVenditaArtefatto) {
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Grazie di aver fatto affari con noi!", getCoordinateFumetto()));
+
+        int costo = notificaApprovazioneVenditaArtefatto.getEventoRichiestaSpostamentoArtefatto().getOggettoDaSpostare().getCostoAcquisto();
+        aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteMoneta, costo, font,
+                xMassimaZonaCentrale, yRigaMonete(), "Monete acquisite"));
     }
 
     private void gestisciEventoRifiutoAcquistoArtefatto(NotificaRifiutoAcquistoArtefatto notificaRifiutoAcquistoArtefatto) {
@@ -63,6 +77,8 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
                 automa.mostraCostoSuParteRemota());
 
         disegnaIntestazioniInventario(graphics);
+
+        disegnaSpriteLocali(graphics);
     }
 
     private int disegnaElenco(Graphics2D graphics, Collection<Artefatto> artefatti, int x, int offset,

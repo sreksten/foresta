@@ -30,6 +30,17 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
 
     private void gestisciEventoApprovazioneAcquistoConsumabile(NotificaApprovazioneAcquistoConsumabile notificaApprovazioneAcquistoConsumabile) {
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Grazie per l'acquisto!", getCoordinateFumetto()));
+
+        ComandoAcquistoConsumabile comando = notificaApprovazioneAcquistoConsumabile.getEventoRichiestaAcquistoConsumabile();
+
+        aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteMoneta, -comando.getPrezzo(), font,
+                xMassimaZonaCentrale, yRigaMonete(), "Monete spese"));
+
+        if (comando.getTipoConsumabile() == TipoConsumabile.INCANTESIMO) {
+            ClasseIncantesimo classe = comando.getClasseIncantesimo();
+            aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteIncantesimi[classe.ordinal()],
+                    xMinimaZonaCentrale, yRigaMonete(), "Incantesimo acquistato: " + classe.getNomeSingolare()));
+        }
     }
 
     private void gestisciEventoRifiutoAcquistoConsumabile(NotificaRifiutoAcquistoConsumabile notificaRifiutoAcquistoConsumabile) {
@@ -84,6 +95,8 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         offsetYZonaDestra = disegnaElencoDestro(graphics, xMinimaZonaDestra, offsetYZonaDestra);
 
         disegnaIntestazioniInventario(graphics);
+
+        disegnaSpriteLocali(graphics);
     }
 
     private int disegnaElencoSinistro(Graphics2D graphics, int x, int offset) {
