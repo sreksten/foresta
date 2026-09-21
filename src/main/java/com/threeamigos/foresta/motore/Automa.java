@@ -23,13 +23,14 @@ import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.tools.*;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
 import java.util.function.Consumer;
+
+// FIXME conosciuti: l'incantesimo di resurrezione prende il primo personaggio morto e lo fa resuscitare dal primo personaggio che può farlo senza dare possibilità di scelta
 
 public class Automa implements ControlloreDiGioco, Temporizzabile {
 
+	private final Map<Stato, Consumer<Comando>> gestoriComando;
 	private final Temporizzatore temporizzatore;
 
 	private String nomePersonaggio;
@@ -50,6 +51,42 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 		BusEventi.iscriviti(ComandoDiGioco.class, this::onEventoComandoDiGioco);
 		BusEventi.iscriviti(ComandoInvioTesto.class, this::onEventoTestoDisponibile);
+
+		gestoriComando = new EnumMap<>(Stato.class);
+		gestoriComando.put(Stato.INTRO, this::processaComandoInStatoIntro);
+		gestoriComando.put(Stato.PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE, this::processaComandoInStatoPreGameSelezionaSalvataggioDaLeggere);
+		gestoriComando.put(Stato.PRE_GAME_ATTESA_SESSO_PERSONAGGIO, this::processaComandoInStatoPreGameAttesaSessoPersonaggio);
+		gestoriComando.put(Stato.PRE_GAME_ATTESA_CLASSE_PERSONAGGIO, this::processaComandoInStatoPreGameAttesaClassePersonaggio);
+		gestoriComando.put(Stato.INZIO_LOCAZIONE, this::processaComandoInStatoInizioLocazione);
+		gestoriComando.put(Stato.IN_LOCAZIONE, this::processaComandoInStatoInLocazione);
+		gestoriComando.put(Stato.IN_COMBATTIMENTO, this::processaComandoInStatoInCombattimento);
+		gestoriComando.put(Stato.SCELTA_AUTOMATICA_PERSONAGGIO, this::processaComandoInStatoSceltaAutomaticaPersonaggio);
+		gestoriComando.put(Stato.SCELTA_PERSONAGGIO_QUALSIASI, this::processaComandoInStatoSceltaPersonaggioQualsiasi);
+		gestoriComando.put(Stato.SCELTA_MANUALE_PERSONAGGIO, this::processaComandoInStatoSceltaManualePersonaggio);
+		gestoriComando.put(Stato.SCELTA_INCANTESIMO_DA_LANCIARE, this::processaComandoInStatoSceltaIncantesimoDaLanciare);
+		gestoriComando.put(Stato.ATTESA_INCANTESIMO_QUALSIASI, this::processaComandoInStatoAttesaIncantesimoQualsiasi);
+		gestoriComando.put(Stato.INCANTESIMO_SCELTO, this::processaComandoInStatoIncantesimoScelto);
+		gestoriComando.put(Stato.ATTESA_SI_NO, this::processaComandoInStatoAttesaSiNo);
+		gestoriComando.put(Stato.FINE_LOCAZIONE, this::processaComandoInStatoFineLocazione);
+		gestoriComando.put(Stato.ATTESA_DIREZIONE, this::processaComandoInStatoAttesaDirezione);
+		gestoriComando.put(Stato.ATTESA_PASSI, this::processaComandoInStatoAttesaPassi);
+		gestoriComando.put(Stato.IN_CAMMINO, this::processaComandoInStatoInCammino);
+		gestoriComando.put(Stato.ATTESA_POZIONE_SALUTE, this::processaComandoInStatoAttesaPozioneSalute);
+		gestoriComando.put(Stato.ATTESA_POZIONE_SALUTE_GRANDE, this::processaComandoInStatoAttesaPozioneSaluteGrande);
+		gestoriComando.put(Stato.ATTESA_POZIONE_MAGIA, this::processaComandoInStatoAttesaPozioneMagia);
+		gestoriComando.put(Stato.ATTESA_POZIONE_MAGIA_GRANDE, this::processaComandoInStatoAttesaPozioneMagiaGrande);
+		gestoriComando.put(Stato.SCELTA_BERSAGLIO_RESURREZIONE, this::processaComandoInStatoSceltaBersaglioResurrezione);
+		gestoriComando.put(Stato.ESEECUZIONE_RESURREZIONE, this::processaComandoInStatoEsecuzioneResurrezione);
+		gestoriComando.put(Stato.MAPPA, this::processaComandoInStatoMappa);
+		gestoriComando.put(Stato.INVENTARIO, this::processaComandoInStatoInventario);
+		gestoriComando.put(Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE, this::processaComandoInStatoSelezioneSalvataggioDaScrivere);
+		gestoriComando.put(Stato.CONFERMA_USCITA, this::processaComandoInStatoConfermaUscita);
+		gestoriComando.put(Stato.GIOCO_PERSO, this::processaComandoInStatoGiocoPerso);
+		gestoriComando.put(Stato.GIOCO_PERSO_2, this::processaComandoInStatoGiocoPerso2);
+		gestoriComando.put(Stato.GIOCO_VINTO, this::processaComandoInStatoGiocoVinto);
+		gestoriComando.put(Stato.GIOCO_VINTO_2, this::processaComandoInStatoGiocoVinto2);
+		gestoriComando.put(Stato.STATISTICHE, this::processaComandoInStatoStatistiche);
+		gestoriComando.put(Stato.PUNTEGGI, this::processaComandoInStatoPunteggi);
 	}
 
 	public void tick() {
@@ -81,37 +118,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		switch (stato) {
 
 			case PRE_GAME_ATTESA_NOME_PERSONAGGIO:
-				Foresta.reimposta();
-				personaggio = null;
-
-				nomePersonaggio = testoDisponibile.trim();
-				if (nomePersonaggio.isEmpty()) {
-					personaggio = RegistroPersonaggi.getPersonaggioCasuale();
-				} else {
-					// Qui mettiamo il codice per i personaggi nascosti tipo:
-					if (testoDisponibile.equals("OmbraFiamma")) {
-						personaggio = new OmbraFiamma("Alakazam", 5);
-					}
-				}
-
-				if (personaggio != null) {
-					inizializzaGioco();
-					processaComando(null);
-					break;
-				}
-				stato = Stato.PRE_GAME_ATTESA_SESSO_PERSONAGGIO;
-				BusEventi.pubblica(new InternoStatoDiGioco(stato, Comando.MASCHIO, Comando.FEMMINA));
+				processaComandoInStatoPreGameAttesaNomePersonaggio(testoDisponibile);
 				break;
 
 			case ATTESA_NOME_PUNTEGGI:
-				if (testoDisponibile.isEmpty()) {
-					testoDisponibile = GruppoGiocatore.getIstanza().getPersonaggio(0).getNomeProprio().orElseThrow(Personaggio.PERSONAGGIO_SENZA_NOME);
-				}
-				GestorePunteggi.addPunteggio(testoDisponibile, Statistiche.getPunti());
-				stato = Stato.PUNTEGGI;
-				BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
-				BusEventi.pubblica(new NotificaMostraPunteggiMigliori());
-				processaComando(null);
+				processaComandoInStatoPostGameAttesaNomePerPunteggio(testoDisponibile);
 				break;
 
 			default:
@@ -135,589 +146,12 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 */
 	public void processaComando(Comando comando) {
 		BusEventi.pubblica(new InternoMessaggio("Automa in stato " + stato.name() + "; processo Comando " + comando));
-		switch (stato) {
-
-			case INTRO:
-				processaComandoInStatoIntro(comando);
-				break;
-
-			case PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE:
-				processaComandoInStatoPreGameSelezionaSalvataggioDaLeggere(comando);
-				break;
-
-			case PRE_GAME_ATTESA_SESSO_PERSONAGGIO:
-				stato = Stato.PRE_GAME_ATTESA_CLASSE_PERSONAGGIO;
-				if (comando == Comando.FEMMINA) {
-					BusEventi.pubblica(new InternoStatoDiGioco(stato, Comando.GUERRIERA, Comando.LADRA,
-							Comando.CANTASTORIE, Comando.ELFA, Comando.MAGA));
-				} else {
-					BusEventi.pubblica(new InternoStatoDiGioco(stato, Comando.GUERRIERO, Comando.LADRO,
-							Comando.BARDO, Comando.ELFO, Comando.MAGO));
-				}
-				break;
-
-			case PRE_GAME_ATTESA_CLASSE_PERSONAGGIO:
-				switch (comando) {
-				case GUERRIERA:
-					personaggio = new Guerriera(nomePersonaggio, 1);
-					break;
-				case GUERRIERO:
-					personaggio = new Guerriero(nomePersonaggio, 1);
-					break;
-				case LADRA:
-					personaggio = new Ladra(nomePersonaggio, 1);
-					break;
-				case LADRO:
-					personaggio = new Ladro(nomePersonaggio, 1);
-					break;
-				case CANTASTORIE:
-					personaggio = new Cantastorie(nomePersonaggio, 1);
-					break;
-				case BARDO:
-					personaggio = new Bardo(nomePersonaggio, 1);
-					break;
-				case ELFA:
-					personaggio = new Elfa(nomePersonaggio, 1);
-					break;
-				case ELFO:
-					personaggio = new Elfo(nomePersonaggio, 1);
-					break;
-				case MAGA:
-					personaggio = new Maga(nomePersonaggio, 1);
-					break;
-				case MAGO:
-					personaggio = new Mago(nomePersonaggio, 1);
-					break;
-				default:
-					throw new IllegalArgumentException();
-				}
-				inizializzaGioco();
-				processaComando(null);
-				break;
-
-			case INZIO_LOCAZIONE:
-				controllaMissioni(Missione::controllaPreLocazione, OrdineVisita.PADRE_PRIMA);
-				String evento = LineaTemporale.getEvento();
-				if (evento != null) {
-					BusEventi.pubblica(new NotificaTestoFrase(evento));
-					if (LineaTemporale.isGiocoFinito()) {
-						stato = Stato.GIOCO_PERSO;
-						processaComando(null);
-						break;
-					}
-				}
-				gruppoAvversario.reimposta();
-				gruppo.getPersonaggiVivi().forEach(Personaggio::rimuoviTuttiGliEffettiDiStato);
-				locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
-				gruppo.setLocazioneCorrente(locazioneCorrente);
-				locazioneCorrente.crea(gruppo, gruppoAvversario);
-				BusEventi.pubblica(new InternoPreparazioneLocazione());
-				BusEventi.pubblica(new NotificaTestoParagrafo(LineaTemporale.getDescrizioneOraDelGiorno()));
-				locazioneCorrente.descrivi(gruppo, gruppoAvversario);
-				controllaMissioni(Missione::controllaInLocazione, OrdineVisita.PADRE_PRIMA);
-				/*
-				 * Ogni locazione ha un metodo impostaAzioni; nel caso delle
-				 * locazioni di base imposterà le azioni combattimento,
-				 * incantesimo, corruzione, amicizia... Mentre per alcune
-				 * locazioni specifiche permetterà di accettare la proposta
-				 * di aggregazione di altri personaggi eccetera. Se la locazione
-				 * è automaticamente completata il metodo torna LOCAZIONE_COMPLETA.
-				 * Altrimenti ogni locazione è in effetti un automa a stati finiti
-				 * che tiene traccia del suo stato.
-				 */
-				stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, null);
-				if (stato == Stato.FINE_LOCAZIONE) {
-					processaComando(null);
-					break;
-				}
-				/*
-				 * A questo punto il giocatore si trova davanti la scelta delle
-				 * azioni che puo' intraprendere.
-				 */
-				break;
-
-			case IN_LOCAZIONE:
-				Logger.log("Coordinate conosciute foresta: (" +
-						Foresta.getMinXConosciuta() + ", " + Foresta.getMinYConosciuta() + ") -> (" + Foresta.getMaxXConosciuta() + ", " + Foresta.getMaxYConosciuta() + ")");
-				if (comando == Comando.INVENTARIO) {
-					statoPrecedente = Stato.IN_LOCAZIONE;
-					stato = Stato.INVENTARIO;
-					richiediAperturaInventarioGruppo();
-					processaComando(null);
-					return;
-				}
-				statoPrecedente = stato;
-				/*
-				 * Continuiamo a fornire all'automa a stati finiti della
-				 * locazione la possibilità di andare avanti fino a
-				 * LOCAZIONE_COMPLETA
-				 */
-				stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, comando);
-				if (stato != Stato.IN_LOCAZIONE) {
-					if (stato == Stato.IN_COMBATTIMENTO) {
-						temporizzatore.inizia(1_000);
-					} else {
-						if (stato == Stato.GIOCO_PERSO || stato == Stato.GIOCO_VINTO || stato == Stato.FINE_LOCAZIONE) {
-							temporizzatore.termina();
-						}
-						processaComando(null);
-						break;
-					}
-				}
-				break;
-
-			case IN_COMBATTIMENTO:
-				statoPrecedente = stato;
-				stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, comando);
-				if (stato != Stato.IN_COMBATTIMENTO) {
-					temporizzatore.termina();
-					processaComando(null);
-					break;
-				}
-				if (comando != Comando.TIMER) {
-					// Il battito del combattimento viene interrotto ogni volta che si
-					// esce da IN_COMBATTIMENTO (per esempio per scegliere chi combatte):
-					// qui lo si riavvia, dato che i round sono guidati da Comando.TIMER.
-					temporizzatore.inizia(1_000);
-				}
-				break;
-
-			case SCELTA_AUTOMATICA_PERSONAGGIO:
-				comando = scegliPersonaggio(false);
-				if (comando != null) {
-					Logger.log(Stato.SCELTA_AUTOMATICA_PERSONAGGIO.name() + ": Torno allo stato " + statoPrecedente.name());
-					stato = statoPrecedente;
-					processaComando(comando);
-					break;
-				} else {
-					stato = Stato.SCELTA_MANUALE_PERSONAGGIO;
-					processaComando(null);
-				}
-				break;
-
-			case SCELTA_PERSONAGGIO_QUALSIASI:
-				comando = scegliPersonaggio(true);
-				if (comando != null) {
-					Logger.log(Stato.SCELTA_PERSONAGGIO_QUALSIASI.name() + ": Torno allo stato " + statoPrecedente.name());
-					stato = statoPrecedente;
-					processaComando(comando);
-					break;
-				} else {
-					stato = Stato.SCELTA_MANUALE_PERSONAGGIO;
-					processaComando(null);
-				}
-				break;
-
-			case SCELTA_MANUALE_PERSONAGGIO:
-				if (comando != null) {
-					Logger.log(Stato.SCELTA_MANUALE_PERSONAGGIO.name() + ": Torno allo stato " + statoPrecedente.name());
-					stato = statoPrecedente;
-					processaComando(comando);
-				}
-				break;
-
-			case SCELTA_INCANTESIMO_DA_LANCIARE:
-				List<Comando> comandiPossibili = new ArrayList<>();
-				Personaggio formulante = gruppo.getFormulante();
-				for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
-					if (gruppo.getIncantesimi(classeIncantesimo) > 0 && formulante.getMagia() >= classeIncantesimo.getIstanza(formulante.getLivello()).getCostoLancio()) {
-						comandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
-					}
-				}
-				comandiPossibili.add(Comando.NO_INCANTESIMO);
-				BusEventi.pubblica(new RichiestaSelezioneIncantesimoDaLanciare(comandiPossibili));
-				stato = Stato.INCANTESIMO_SCELTO;
-				break;
-
-			case ATTESA_INCANTESIMO_QUALSIASI:
-				List<Comando> comandiPossibili2 = new ArrayList<>();
-				for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
-					comandiPossibili2.add(classeIncantesimo.getComandoDiAttivazione());
-				}
-				comandiPossibili2.add(Comando.NO_INCANTESIMO);
-				BusEventi.pubblica(new RichiestaSelezioneIncantesimoDaLanciare(comandiPossibili2));
-				stato = Stato.INCANTESIMO_SCELTO;
-				break;
-
-			case INCANTESIMO_SCELTO:
-				stato = Stato.IN_LOCAZIONE;
-				processaComando(comando);
-				break;
-
-			case ATTESA_SI_NO:
-				if (comando == null) {
-					BusEventi.pubblica(new RichiestaSelezioneSiNo());
-				} else if (comando != Comando.TIMER) {
-					stato = statoPrecedente;
-					processaComando(comando);
-				}
-				break;
-
-			case FINE_LOCAZIONE:
-				temporizzatore.termina();
-				BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
-
-				// Recuperiamo l'oggetto se fattibile
-				if (locazioneCorrente.isCompleta()) {
-					if (!locazioneCorrente.isHaStrettoAmicizia()) {
-						Oggetto oggetto = locazioneCorrente.getOggetto();
-						if (oggetto != null) {
-							BusEventi.pubblica(new InternoMessaggio("Tentativo di recupero oggetto utilizzando l'azione " + comando));
-							if (!oggetto.prendi(gruppo, comando)) {
-								BusEventi.pubblica(new InternoMessaggio("L'oggetto non si lascia prendere con l'azione " + comando));
-								statoPrecedente = Stato.FINE_LOCAZIONE;
-								stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-								processaComando(null);
-								break;
-							} else {
-								BusEventi.pubblica(new NotificaRaccoltaOggetti());
-								BusEventi.pubblica(new InternoMessaggio("Oggetto raccolto."));
-								locazioneCorrente.rimuoviOggetto();
-							}
-						}
-					}
-					// Le missioni vanno controllate prima di azzerare la locazione altrimenti la
-					// distruzione di un castello con sostituzione con rovine non fa completare le
-					// missioni. Potremmo anche salvare il tipo di locazione nelle missioni ma così
-					// mi pare più pulito.
-					controllaMissioni(Missione::controllaPostLocazione, OrdineVisita.FIGLI_PRIMA);
-					locazioneCorrente.azzeraLocazione(gruppo);
-				}
-
-				if (LineaTemporale.isGiocoFinito()) {
-					if (RegistroMissioni.getMissionePrincipale().isCompleta()) {
-						stato = Stato.GIOCO_VINTO;
-					} else {
-						stato = Stato.GIOCO_PERSO;
-					}
-					processaComando(null);
-					break;
-				}
-
-				// Controlliamo i personaggi "a tempo"
-				for (Personaggio personaggioCorrente : gruppo.getPersonaggiVivi()) {
-					if (personaggioCorrente.isATempo()) {
-						int tempo = personaggioCorrente.decrementaTempo();
-						if (tempo == 0) {
-							gruppo.rimuoviPersonaggio(personaggioCorrente);
-						}
-					}
-				}
-
-				// Aumentiamo la stanchezza
-				for (Personaggio personaggioCorrente : gruppo.getPersonaggiVivi()) {
-					personaggioCorrente.addStanchezza(1);
-				}
-
-				Statistiche.incrementaTurniGiocati();
-
-				stato = Stato.ATTESA_DIREZIONE;
-				processaComando(null);
-				break;
-
-			case ATTESA_DIREZIONE:
-				stato = Stato.ATTESA_PASSI;
-				BusEventi.pubblica(new NotificaTestoParagrafo(gruppo.chiMaiuscolo() + " se ne va. In quale direzione si incammina?"));
-				BusEventi.pubblica(new RichiestaSelezioneDirezione(getComandiPossibiliInStatoAttesaDirezione()));
-				break;
-
-			case ATTESA_PASSI:
-				// Occorre memorizzare l'informazione sulla direzione
-				Collection<Comando> comandiPossibiliPerNumeroPassi = null;
-				switch (comando) {
-					case MAPPA:
-						statoPrecedente = Stato.ATTESA_DIREZIONE;
-						stato = Stato.MAPPA;
-						processaComando(null);
-						return;
-					case INVENTARIO:
-						statoPrecedente = Stato.ATTESA_DIREZIONE;
-						stato = Stato.INVENTARIO;
-						richiediAperturaInventarioGruppo();
-						processaComando(null);
-						return;
-					case ACCAMPAMENTO:
-						gruppo.pernotta(locazioneCorrente.getTipoRiposo());
-						LineaTemporale.mattinoSeguente();
-						LineaTemporale.eventi(gruppo);
-						stato = Stato.ATTESA_DIREZIONE;
-						processaComando(null);
-						return;
-					case POZIONE_SALUTE:
-						statoPrecedente = Stato.ATTESA_POZIONE_SALUTE;
-						stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-						processaComando(null);
-						return;
-					case POZIONE_SALUTE_GRANDE:
-						statoPrecedente = Stato.ATTESA_POZIONE_SALUTE_GRANDE;
-						stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-						processaComando(null);
-						return;
-					case POZIONE_MAGIA:
-						statoPrecedente = Stato.ATTESA_POZIONE_MAGIA;
-						stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-						processaComando(null);
-						return;
-					case POZIONE_MAGIA_GRANDE:
-						statoPrecedente = Stato.ATTESA_POZIONE_MAGIA_GRANDE;
-						stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-						processaComando(null);
-						return;
-					case RESURREZIONE:
-						statoPrecedente = Stato.ATTESA_RESURREZIONE;
-						stato = Stato.SCELTA_BERSAGLIO_RESURREZIONE;
-						processaComando(null);
-						return;
-					case NORD:
-						direzione = Comando.NORD;
-						comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiNord());
-						break;
-					case EST:
-						direzione = Comando.EST;
-						comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiEst());
-						break;
-					case SUD:
-						direzione = Comando.SUD;
-						comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiSud());
-						break;
-					case OVEST:
-						direzione = Comando.OVEST;
-						comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiOvest());
-						break;
-					case AIUTO:
-						for (Personaggio personaggio : gruppo.getPersonaggi()) {
-							BusEventi.pubblica(new NotificaTestoParagrafo(personaggio.getDescrizione()));
-						}
-						stato = Stato.ATTESA_DIREZIONE;
-						processaComando(null);
-						return;
-					case FLOPPY:
-						stato = Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE;
-						BusEventi.pubblica(new InternoStatoDiGioco(Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE,
-								Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3, Comando.NUMERO_4, Comando.NUMERO_5,
-								Comando.NO));
-						return;
-					default:
-						break;
-				}
-				stato = Stato.IN_CAMMINO;
-				if (comandiPossibiliPerNumeroPassi != null) {
-					BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibiliPerNumeroPassi));
-				}
-				break;
-
-			case IN_CAMMINO:
-				int passi = comando.ordinal() - Comando.NUMERO_1.ordinal() + 1;
-				switch(direzione) {
-				case NORD:
-					gruppo.muoveNord(passi);
-					break;
-				case EST:
-					gruppo.muoveEst(passi);
-					break;
-				case SUD:
-					gruppo.muoveSud(passi);
-					break;
-				case OVEST:
-					gruppo.muoveOvest(passi);
-					break;
-				default:
-					throw new IllegalArgumentException();
-				}
-				LineaTemporale.aggiungiOre(passi);
-				LineaTemporale.eventi(gruppo);
-				stato = Stato.INZIO_LOCAZIONE;
-				processaComando(null);
-				break;
-
-			case ATTESA_POZIONE_SALUTE:
-				if (comando != null && comando != Comando.ANNULLA) {
-					gruppo.consumaPozioneSalute(comando);
-				}
-				stato = Stato.ATTESA_DIREZIONE;
-				processaComando(null);
-				break;
-
-			case ATTESA_POZIONE_SALUTE_GRANDE:
-				if (comando != null && comando != Comando.ANNULLA) {
-					gruppo.consumaPozioneSaluteGrande(comando);
-				}
-				stato = Stato.ATTESA_DIREZIONE;
-				processaComando(null);
-				break;
-
-			case ATTESA_POZIONE_MAGIA:
-				if (comando != null && comando != Comando.ANNULLA) {
-					gruppo.consumaPozioneMagia(comando);
-				}
-				stato = Stato.ATTESA_DIREZIONE;
-				processaComando(null);
-				break;
-
-			case ATTESA_POZIONE_MAGIA_GRANDE:
-				if (comando != null && comando != Comando.ANNULLA) {
-					gruppo.consumaPozioneMagiaGrande(comando);
-				}
-				stato = Stato.ATTESA_DIREZIONE;
-				processaComando(null);
-				break;
-
-			case SCELTA_BERSAGLIO_RESURREZIONE:
-				// Come nella scelta del bersaglio quando si formula un incantesimo in
-				// combattimento (Stato.SCELTA_PERSONAGGIO_QUALSIASI): se c'è un solo
-				// personaggio morto lo si risuscita direttamente, altrimenti si chiede quale.
-				comando = scegliPersonaggioMorto();
-				if (comando != null) {
-					stato = statoPrecedente;
-					processaComando(comando);
-				}
-				break;
-
-			case ATTESA_RESURREZIONE:
-				if (comando != null && comando != Comando.ANNULLA) {
-					eseguiResurrezione(gruppo.getPersonaggio(comando));
-				}
-				stato = Stato.ATTESA_DIREZIONE;
-				processaComando(null);
-				break;
-
-			case MAPPA:
-				Logger.log("Stato MAPPA, azione " + comando);
-				if (comando == null) {
-					BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.SI));
-					BusEventi.pubblica(new NotificaTestoParagrafo(gruppo.getCapo().getNome(
-							Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-							Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " consulta la sua mappa della Foresta."));
-					BusEventi.pubblica(new ComandoVisualizzazioneMappa());
-				} else {
-                    if (comando == Comando.SI) {
-                        stato = statoPrecedente;
-                        BusEventi.pubblica(new InternoMostraSchermataGioco());
-                        processaComando(null);
-                    } else {
-                        throw new IllegalArgumentException();
-                    }
-				}
-				break;
-
-			case INVENTARIO:
-				Logger.log("Stato INVENTARIO, azione " + comando);
-				if (comando == null) {
-					richiediAperturaInventarioGruppo();
-				} else {
-					switch (comando) {
-						case ANNULLA:
-							stato = statoPrecedente;
-							BusEventi.pubblica(new InternoMostraSchermataGioco());
-							processaComando(null);
-							break;
-						case PERSONAGGIO_1:
-						case PERSONAGGIO_2:
-						case PERSONAGGIO_3:
-						case PERSONAGGIO_4:
-						case PERSONAGGIO_5:
-							indicePersonaggioInventario = comando.ordinal() - Comando.PERSONAGGIO_1.ordinal();
-							richiediAperturaInventarioGruppo();
-							break;
-						default:
-							throw new IllegalArgumentException();
-					}
-				}
-				break;
-
-			case SELEZIONE_SALVATAGGIO_DA_SCRIVERE:
-				if (comando == Comando.NO) {
-					BusEventi.pubblica(new InternoMostraSchermataGioco());
-					stato = Stato.ATTESA_DIREZIONE;
-					processaComando(null);
-				}
-				if (comando != null) {
-					salva(comando);
-					BusEventi.pubblica(new RichiestaUscitaDalGioco());
-					stato = Stato.CONFERMA_USCITA;
-					processaComando(null);
-				}
-				break;
-
-			case CONFERMA_USCITA:
-				if (comando == Comando.SI) {
-					System.exit(0);
-				} else if (comando == Comando.NO) {
-					BusEventi.pubblica(new InternoMostraSchermataGioco());
-					stato = Stato.ATTESA_DIREZIONE;
-					processaComando(null);
-				}
-				break;
-
-			case GIOCO_PERSO:
-				BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
-				if (comando == null) {
-					BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
-				} else {
-					stato = Stato.GIOCO_PERSO_2;
-					processaComando(null);
-				}
-				break;
-
-			case GIOCO_PERSO_2:
-				if (comando == null) {
-					BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
-					BusEventi.pubblica(new NotificaFineGioco(false));
-					temporizzatore.inizia(5_000);
-				} else if (comando == Comando.TIMER) {
-					BusEventi.pubblica(new NotificaFineGioco(false));
-				} else {
-					stato = Stato.STATISTICHE;
-					processaComando(null);
-				}
-				break;
-
-			case GIOCO_VINTO:
-				BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
-				if (comando == null) {
-					BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
-				} else {
-					stato = Stato.GIOCO_VINTO_2;
-					processaComando(null);
-				}
-				break;
-
-			case GIOCO_VINTO_2:
-				if (comando == null) {
-					BusEventi.pubblica(new NotificaFineGioco(true));
-					temporizzatore.inizia(5_000);
-					BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
-				} else if (comando == Comando.TIMER) {
-					BusEventi.pubblica(new NotificaFineGioco(true));
-				} else {
-					stato = Stato.STATISTICHE;
-					processaComando(null);
-				}
-				break;
-
-			case STATISTICHE:
-				if (comando == null) {
-					BusEventi.pubblica(new NotificaMostraStatisticheFineGioco());
-				} else if (comando == Comando.PERGAMENA) {
-					if (GestorePunteggi.isPunteggioInClassifica(Statistiche.getPunti())) {
-						stato = Stato.ATTESA_NOME_PUNTEGGI;
-						BusEventi.pubblica(new RichiestaTesto("congratulazioni! inserisci il tuo nome"));
-					} else {
-						stato = Stato.INTRO;
-					}
-				}
-				BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
-				break;
-
-			case ATTESA_NOME_PUNTEGGI:
-				break;
-
-            case PUNTEGGI:
-				inizia();
-				break;
-
-			default:
-				throw new IllegalStateException("Stato " + stato + " non correttamente gestito!");
+		Consumer<Comando> gestore = gestoriComando.get(stato);
+		if (gestore != null) {
+			gestore.accept(comando);
+		} else {
+			comandoNonValido(comando);
+			throw new IllegalStateException("Stato " + stato + " non correttamente gestito!");
 		}
 	}
 
@@ -741,11 +175,611 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (comando != Comando.ANNULLA && GestoreSalvataggi.leggi(comando)) {
 			stato = Stato.ATTESA_DIREZIONE;
 			BusEventi.pubblica(new InternoMostraSchermataGioco());
-			BusEventi.pubblica(new RichiestaSelezioneDirezione(getComandiPossibiliInStatoAttesaDirezione()));
+			processaComando(null);
 		} else {
 			BusEventi.pubblica(new InternoStatoDiGioco(Stato.INTRO, getComandiPossibiliInStatoIntro()));
 			stato = Stato.INTRO;
 		}
+	}
+
+	private void processaComandoInStatoPreGameAttesaNomePersonaggio(String testoDisponibile) {
+		Foresta.reimposta();
+		personaggio = null;
+
+		nomePersonaggio = testoDisponibile.trim();
+		if (nomePersonaggio.isEmpty()) {
+			personaggio = RegistroPersonaggi.getPersonaggioCasuale();
+		} else {
+			// Qui mettiamo il codice per i personaggi nascosti tipo:
+			if (testoDisponibile.equals("OmbraFiamma")) {
+				personaggio = new OmbraFiamma("Alakazam", 5);
+			}
+		}
+
+		if (personaggio != null) {
+			inizializzaGioco();
+			// Questo mi sa che serve per poter impostare i comando possibili. Solo che in INIZIO_LOCAZIONE non ce ne dovrebbero essere.
+			processaComando(null);
+			return;
+		}
+
+		stato = Stato.PRE_GAME_ATTESA_SESSO_PERSONAGGIO;
+		BusEventi.pubblica(new InternoStatoDiGioco(stato, Comando.MASCHIO, Comando.FEMMINA));
+	}
+
+	private void processaComandoInStatoPreGameAttesaSessoPersonaggio(Comando comando) {
+		stato = Stato.PRE_GAME_ATTESA_CLASSE_PERSONAGGIO;
+		if (comando == Comando.FEMMINA) {
+			BusEventi.pubblica(new InternoStatoDiGioco(stato, Comando.GUERRIERA, Comando.LADRA,
+					Comando.CANTASTORIE, Comando.ELFA, Comando.MAGA));
+		} else {
+			BusEventi.pubblica(new InternoStatoDiGioco(stato, Comando.GUERRIERO, Comando.LADRO,
+					Comando.BARDO, Comando.ELFO, Comando.MAGO));
+		}
+	}
+
+	private void processaComandoInStatoPreGameAttesaClassePersonaggio(Comando comando) {
+		switch (comando) {
+			case GUERRIERA:
+				personaggio = new Guerriera(nomePersonaggio, 1);
+				break;
+			case GUERRIERO:
+				personaggio = new Guerriero(nomePersonaggio, 1);
+				break;
+			case LADRA:
+				personaggio = new Ladra(nomePersonaggio, 1);
+				break;
+			case LADRO:
+				personaggio = new Ladro(nomePersonaggio, 1);
+				break;
+			case CANTASTORIE:
+				personaggio = new Cantastorie(nomePersonaggio, 1);
+				break;
+			case BARDO:
+				personaggio = new Bardo(nomePersonaggio, 1);
+				break;
+			case ELFA:
+				personaggio = new Elfa(nomePersonaggio, 1);
+				break;
+			case ELFO:
+				personaggio = new Elfo(nomePersonaggio, 1);
+				break;
+			case MAGA:
+				personaggio = new Maga(nomePersonaggio, 1);
+				break;
+			case MAGO:
+				personaggio = new Mago(nomePersonaggio, 1);
+				break;
+			default:
+				throw new IllegalArgumentException();
+		}
+		inizializzaGioco();
+		processaComando(null);
+	}
+
+	private void processaComandoInStatoInizioLocazione(Comando comando) {
+		controllaMissioni(Missione::controllaPreLocazione, OrdineVisita.PADRE_PRIMA);
+		String evento = LineaTemporale.getEvento();
+		if (evento != null) {
+			BusEventi.pubblica(new NotificaTestoFrase(evento));
+			if (LineaTemporale.isGiocoFinito()) {
+				stato = Stato.GIOCO_PERSO;
+				processaComando(null);
+				return;
+			}
+		}
+		gruppoAvversario.reimposta();
+		gruppo.getPersonaggiVivi().forEach(Personaggio::rimuoviTuttiGliEffettiDiStato);
+		locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
+		gruppo.setLocazioneCorrente(locazioneCorrente);
+		locazioneCorrente.crea(gruppo, gruppoAvversario);
+		BusEventi.pubblica(new InternoPreparazioneLocazione());
+		BusEventi.pubblica(new NotificaTestoParagrafo(LineaTemporale.getDescrizioneOraDelGiorno()));
+		locazioneCorrente.descrivi(gruppo, gruppoAvversario);
+		controllaMissioni(Missione::controllaInLocazione, OrdineVisita.PADRE_PRIMA);
+		/*
+		 * Ogni locazione ha un metodo impostaAzioni; nel caso delle
+		 * locazioni di base imposterà le azioni combattimento,
+		 * incantesimo, corruzione, amicizia... Mentre per alcune
+		 * locazioni specifiche permetterà di accettare la proposta
+		 * di aggregazione di altri personaggi eccetera. Se la locazione
+		 * è automaticamente completata il metodo torna LOCAZIONE_COMPLETA.
+		 * Altrimenti ogni locazione è in effetti un automa a stati finiti
+		 * che tiene traccia del suo stato.
+		 */
+		stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, null);
+		if (stato == Stato.FINE_LOCAZIONE) {
+			processaComando(null);
+		}
+		/*
+		 * A questo punto il giocatore si trova davanti la scelta delle
+		 * azioni che puo' intraprendere.
+		 */
+	}
+
+	private void processaComandoInStatoInLocazione(Comando comando) {
+		if (comando == Comando.INVENTARIO) {
+			statoPrecedente = Stato.IN_LOCAZIONE;
+			stato = Stato.INVENTARIO;
+			richiediAperturaInventarioGruppo();
+			processaComando(null);
+			return;
+		}
+		statoPrecedente = stato;
+		/*
+		 * Continuiamo a fornire all'automa a stati finiti della
+		 * locazione la possibilità di andare avanti fino a
+		 * LOCAZIONE_COMPLETA
+		 */
+		stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, comando);
+		if (stato != Stato.IN_LOCAZIONE) {
+			if (stato == Stato.IN_COMBATTIMENTO) {
+				temporizzatore.inizia(1_000);
+			} else {
+				if (stato == Stato.GIOCO_PERSO || stato == Stato.GIOCO_VINTO || stato == Stato.FINE_LOCAZIONE) {
+					temporizzatore.termina();
+				}
+				processaComando(null);
+			}
+		}
+	}
+
+	private void processaComandoInStatoInCombattimento(Comando comando) {
+		statoPrecedente = stato;
+		stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, comando);
+		if (stato != Stato.IN_COMBATTIMENTO) {
+			temporizzatore.termina();
+			processaComando(null);
+			return;
+		}
+		if (comando != Comando.TIMER) {
+			// Il battito del combattimento viene interrotto ogni volta che si
+			// esce da IN_COMBATTIMENTO (per esempio per scegliere chi combatte):
+			// qui lo si riavvia, dato che i round sono guidati da Comando.TIMER.
+			temporizzatore.inizia(1_000);
+		}
+	}
+
+	private void processaComandoInStatoSceltaAutomaticaPersonaggio(Comando comando) {
+		comando = scegliPersonaggio(false);
+		if (comando != null) {
+			Logger.log(Stato.SCELTA_AUTOMATICA_PERSONAGGIO.name() + ": Torno allo stato " + statoPrecedente.name());
+			stato = statoPrecedente;
+			processaComando(comando);
+		} else {
+			stato = Stato.SCELTA_MANUALE_PERSONAGGIO;
+			processaComando(null);
+		}
+	}
+
+	private void processaComandoInStatoSceltaPersonaggioQualsiasi(Comando comando) {
+		comando = scegliPersonaggio(true);
+		if (comando != null) {
+			Logger.log(Stato.SCELTA_PERSONAGGIO_QUALSIASI.name() + ": Torno allo stato " + statoPrecedente.name());
+			stato = statoPrecedente;
+			processaComando(comando);
+		} else {
+			stato = Stato.SCELTA_MANUALE_PERSONAGGIO;
+			processaComando(null);
+		}
+	}
+
+	private void processaComandoInStatoSceltaManualePersonaggio(Comando comando) {
+		if (comando != null) {
+			Logger.log(Stato.SCELTA_MANUALE_PERSONAGGIO.name() + ": Torno allo stato " + statoPrecedente.name());
+			stato = statoPrecedente;
+			processaComando(comando);
+		}
+	}
+
+	private void processaComandoInStatoSceltaIncantesimoDaLanciare(Comando comando) {
+		List<Comando> comandiPossibili = new ArrayList<>();
+		Personaggio formulante = gruppo.getFormulante();
+		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
+			if (gruppo.getIncantesimi(classeIncantesimo) > 0 && formulante.getMagia() >= classeIncantesimo.getIstanza(formulante.getLivello()).getCostoLancio()) {
+				comandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
+			}
+		}
+		comandiPossibili.add(Comando.NO_INCANTESIMO);
+		BusEventi.pubblica(new RichiestaSelezioneIncantesimoDaLanciare(comandiPossibili));
+		stato = Stato.INCANTESIMO_SCELTO;
+	}
+
+	private void processaComandoInStatoAttesaIncantesimoQualsiasi(Comando comando) {
+		List<Comando> comandiPossibili = new ArrayList<>();
+		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
+			comandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
+		}
+		comandiPossibili.add(Comando.NO_INCANTESIMO);
+		BusEventi.pubblica(new RichiestaSelezioneIncantesimoDaLanciare(comandiPossibili));
+		stato = Stato.INCANTESIMO_SCELTO;
+	}
+
+	private void processaComandoInStatoIncantesimoScelto(Comando comando) {
+		stato = Stato.IN_LOCAZIONE;
+		processaComando(comando);
+	}
+
+	private void processaComandoInStatoAttesaSiNo(Comando comando) {
+		if (comando == null) {
+			BusEventi.pubblica(new RichiestaSelezioneSiNo());
+		} else if (comando != Comando.TIMER) {
+			stato = statoPrecedente;
+			processaComando(comando);
+		}
+	}
+
+	private void processaComandoInStatoFineLocazione(Comando comando) {
+		temporizzatore.termina();
+		BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
+
+		// Recuperiamo l'oggetto se fattibile
+		if (locazioneCorrente.isCompleta()) {
+			if (!locazioneCorrente.isHaStrettoAmicizia()) {
+				Oggetto oggetto = locazioneCorrente.getOggetto();
+				if (oggetto != null) {
+					BusEventi.pubblica(new InternoMessaggio("Tentativo di recupero oggetto utilizzando l'azione " + comando));
+					if (!oggetto.prendi(gruppo, comando)) {
+						BusEventi.pubblica(new InternoMessaggio("L'oggetto non si lascia prendere con l'azione " + comando));
+						statoPrecedente = Stato.FINE_LOCAZIONE;
+						stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+						processaComando(null);
+						return;
+					} else {
+						BusEventi.pubblica(new NotificaRaccoltaOggetti());
+						BusEventi.pubblica(new InternoMessaggio("Oggetto raccolto."));
+						locazioneCorrente.rimuoviOggetto();
+					}
+				}
+			}
+			// Le missioni vanno controllate prima di azzerare la locazione altrimenti la
+			// distruzione di un castello con sostituzione con rovine non fa completare le
+			// missioni. Potremmo anche salvare il tipo di locazione nelle missioni ma così
+			// mi pare più pulito.
+			controllaMissioni(Missione::controllaPostLocazione, OrdineVisita.FIGLI_PRIMA);
+			locazioneCorrente.azzeraLocazione(gruppo);
+		}
+
+		if (LineaTemporale.isGiocoFinito()) {
+			if (RegistroMissioni.getMissionePrincipale().isCompleta()) {
+				stato = Stato.GIOCO_VINTO;
+			} else {
+				stato = Stato.GIOCO_PERSO;
+			}
+			processaComando(null);
+			return;
+		}
+
+		// Controlliamo i personaggi "a tempo"
+		for (Personaggio personaggioCorrente : gruppo.getPersonaggiVivi()) {
+			if (personaggioCorrente.isATempo()) {
+				int tempo = personaggioCorrente.decrementaTempo();
+				if (tempo == 0) {
+					gruppo.rimuoviPersonaggio(personaggioCorrente);
+				}
+			}
+		}
+
+		// Aumentiamo la stanchezza
+		for (Personaggio personaggioCorrente : gruppo.getPersonaggiVivi()) {
+			personaggioCorrente.addStanchezza(1);
+		}
+
+		Statistiche.incrementaTurniGiocati();
+
+		stato = Stato.ATTESA_DIREZIONE;
+		processaComando(null);
+	}
+
+	private void processaComandoInStatoAttesaDirezione(Comando comando) {
+		stato = Stato.ATTESA_PASSI;
+		BusEventi.pubblica(new NotificaTestoParagrafo(gruppo.chiMaiuscolo() + " se ne va. In quale direzione si incammina?"));
+		BusEventi.pubblica(new RichiestaSelezioneDirezione(getComandiPossibiliInStatoAttesaDirezione()));
+	}
+
+	private void processaComandoInStatoAttesaPassi(Comando comando) {
+		// Occorre memorizzare l'informazione sulla direzione
+		Collection<Comando> comandiPossibiliPerNumeroPassi = null;
+		switch (comando) {
+			case MAPPA:
+				statoPrecedente = Stato.ATTESA_DIREZIONE;
+				stato = Stato.MAPPA;
+				processaComando(null);
+				return;
+			case INVENTARIO:
+				statoPrecedente = Stato.ATTESA_DIREZIONE;
+				stato = Stato.INVENTARIO;
+				richiediAperturaInventarioGruppo();
+				processaComando(null);
+				return;
+			case ACCAMPAMENTO:
+				gruppo.pernotta(locazioneCorrente.getTipoRiposo());
+				LineaTemporale.mattinoSeguente();
+				LineaTemporale.eventi(gruppo);
+				stato = Stato.ATTESA_DIREZIONE;
+				processaComando(null);
+				return;
+			case POZIONE_SALUTE:
+				statoPrecedente = Stato.ATTESA_POZIONE_SALUTE;
+				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+				processaComando(null);
+				return;
+			case POZIONE_SALUTE_GRANDE:
+				statoPrecedente = Stato.ATTESA_POZIONE_SALUTE_GRANDE;
+				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+				processaComando(null);
+				return;
+			case POZIONE_MAGIA:
+				statoPrecedente = Stato.ATTESA_POZIONE_MAGIA;
+				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+				processaComando(null);
+				return;
+			case POZIONE_MAGIA_GRANDE:
+				statoPrecedente = Stato.ATTESA_POZIONE_MAGIA_GRANDE;
+				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+				processaComando(null);
+				return;
+			case RESURREZIONE:
+				statoPrecedente = Stato.ESEECUZIONE_RESURREZIONE;
+				stato = Stato.SCELTA_BERSAGLIO_RESURREZIONE;
+				processaComando(null);
+				return;
+			case NORD:
+				direzione = Comando.NORD;
+				comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiNord());
+				break;
+			case EST:
+				direzione = Comando.EST;
+				comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiEst());
+				break;
+			case SUD:
+				direzione = Comando.SUD;
+				comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiSud());
+				break;
+			case OVEST:
+				direzione = Comando.OVEST;
+				comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiOvest());
+				break;
+			case AIUTO:
+				for (Personaggio personaggio : gruppo.getPersonaggi()) {
+					BusEventi.pubblica(new NotificaTestoParagrafo(personaggio.getDescrizione()));
+				}
+				stato = Stato.ATTESA_DIREZIONE;
+				processaComando(null);
+				return;
+			case FLOPPY:
+				stato = Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE;
+				BusEventi.pubblica(new InternoStatoDiGioco(Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE,
+						Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3, Comando.NUMERO_4, Comando.NUMERO_5,
+						Comando.NO));
+				return;
+			default:
+				break;
+		}
+		stato = Stato.IN_CAMMINO;
+		if (comandiPossibiliPerNumeroPassi != null) {
+			BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibiliPerNumeroPassi));
+		}
+	}
+
+	private void processaComandoInStatoInCammino(Comando comando) {
+		int passi = comando.ordinal() - Comando.NUMERO_1.ordinal() + 1;
+		switch(direzione) {
+			case NORD:
+				gruppo.muoveNord(passi);
+				break;
+			case EST:
+				gruppo.muoveEst(passi);
+				break;
+			case SUD:
+				gruppo.muoveSud(passi);
+				break;
+			case OVEST:
+				gruppo.muoveOvest(passi);
+				break;
+			default:
+				throw new IllegalArgumentException();
+		}
+		LineaTemporale.aggiungiOre(passi);
+		LineaTemporale.eventi(gruppo);
+		stato = Stato.INZIO_LOCAZIONE;
+		processaComando(null);
+	}
+
+	private void processaComandoInStatoAttesaPozioneSalute(Comando comando) {
+		if (comando != null && comando != Comando.ANNULLA) {
+			gruppo.consumaPozioneSalute(comando);
+		}
+		stato = Stato.ATTESA_DIREZIONE;
+		processaComando(null);
+	}
+
+	private void processaComandoInStatoAttesaPozioneSaluteGrande(Comando comando) {
+		if (comando != null && comando != Comando.ANNULLA) {
+			gruppo.consumaPozioneSaluteGrande(comando);
+		}
+		stato = Stato.ATTESA_DIREZIONE;
+		processaComando(null);
+	}
+
+	private void processaComandoInStatoAttesaPozioneMagia(Comando comando) {
+		if (comando != null && comando != Comando.ANNULLA) {
+			gruppo.consumaPozioneMagia(comando);
+		}
+		stato = Stato.ATTESA_DIREZIONE;
+		processaComando(null);
+	}
+
+	private void processaComandoInStatoAttesaPozioneMagiaGrande(Comando comando) {
+		if (comando != null && comando != Comando.ANNULLA) {
+			gruppo.consumaPozioneMagiaGrande(comando);
+		}
+		stato = Stato.ATTESA_DIREZIONE;
+		processaComando(null);
+	}
+
+	private void processaComandoInStatoSceltaBersaglioResurrezione(Comando comando) {
+		// Come nella scelta del bersaglio quando si formula un incantesimo in
+		// combattimento (Stato.SCELTA_PERSONAGGIO_QUALSIASI): se c'è un solo
+		// personaggio morto lo si risuscita direttamente, altrimenti si chiede quale.
+		comando = scegliPersonaggioMorto();
+		if (comando != null) {
+			stato = statoPrecedente;
+			processaComando(comando);
+		}
+	}
+
+	private void processaComandoInStatoEsecuzioneResurrezione(Comando comando) {
+		if (comando != null && comando != Comando.ANNULLA) {
+			eseguiResurrezione(gruppo.getPersonaggio(comando));
+		}
+		stato = Stato.ATTESA_DIREZIONE;
+		processaComando(null);
+	}
+
+	private void processaComandoInStatoMappa(Comando comando) {
+		Logger.log("Stato MAPPA, azione " + comando);
+		if (comando == null) {
+			BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.SI));
+			BusEventi.pubblica(new NotificaTestoParagrafo(gruppo.getCapo().getNome(
+					Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+					Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " consulta la sua mappa della Foresta."));
+			BusEventi.pubblica(new ComandoVisualizzazioneMappa());
+		} else {
+			if (comando == Comando.SI) {
+				stato = statoPrecedente;
+				BusEventi.pubblica(new InternoMostraSchermataGioco());
+				processaComando(null);
+			} else {
+				throw new IllegalArgumentException();
+			}
+		}
+	}
+
+	private void processaComandoInStatoInventario(Comando comando) {
+		Logger.log("Stato INVENTARIO, azione " + comando);
+		if (comando == null) {
+			richiediAperturaInventarioGruppo();
+		} else {
+			switch (comando) {
+				case ANNULLA:
+					stato = statoPrecedente;
+					BusEventi.pubblica(new InternoMostraSchermataGioco());
+					processaComando(null);
+					break;
+				case PERSONAGGIO_1:
+				case PERSONAGGIO_2:
+				case PERSONAGGIO_3:
+				case PERSONAGGIO_4:
+				case PERSONAGGIO_5:
+					indicePersonaggioInventario = comando.ordinal() - Comando.PERSONAGGIO_1.ordinal();
+					richiediAperturaInventarioGruppo();
+					break;
+				default:
+					throw new IllegalArgumentException();
+			}
+		}
+	}
+
+	private void processaComandoInStatoSelezioneSalvataggioDaScrivere(Comando comando) {
+		if (comando == Comando.NO) {
+			BusEventi.pubblica(new InternoMostraSchermataGioco());
+			stato = Stato.ATTESA_DIREZIONE;
+			processaComando(null);
+		}
+		if (comando != null) {
+			salva(comando);
+			BusEventi.pubblica(new RichiestaUscitaDalGioco());
+			stato = Stato.CONFERMA_USCITA;
+			processaComando(null);
+		}
+	}
+
+	private void processaComandoInStatoConfermaUscita(Comando comando) {
+		if (comando == Comando.SI) {
+			System.exit(0);
+		} else if (comando == Comando.NO) {
+			BusEventi.pubblica(new InternoMostraSchermataGioco());
+			stato = Stato.ATTESA_DIREZIONE;
+			processaComando(null);
+		}
+	}
+
+	private void processaComandoInStatoGiocoPerso(Comando comando) {
+		BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
+		if (comando == null) {
+			BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
+		} else {
+			stato = Stato.GIOCO_PERSO_2;
+			processaComando(null);
+		}
+	}
+
+	private void processaComandoInStatoGiocoPerso2(Comando comando) {
+		if (comando == null) {
+			BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
+			BusEventi.pubblica(new NotificaFineGioco(false));
+			temporizzatore.inizia(5_000);
+		} else if (comando == Comando.TIMER) {
+			BusEventi.pubblica(new NotificaFineGioco(false));
+		} else {
+			temporizzatore.termina();
+			stato = Stato.STATISTICHE;
+			processaComando(null);
+		}
+	}
+
+	private void processaComandoInStatoGiocoVinto(Comando comando) {
+		BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
+		if (comando == null) {
+			BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
+		} else {
+			stato = Stato.GIOCO_VINTO_2;
+			processaComando(null);
+		}
+	}
+
+	private void processaComandoInStatoGiocoVinto2(Comando comando) {
+		if (comando == null) {
+			BusEventi.pubblica(new NotificaFineGioco(true));
+			temporizzatore.inizia(5_000);
+			BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
+		} else if (comando == Comando.TIMER) {
+			BusEventi.pubblica(new NotificaFineGioco(true));
+		} else {
+			temporizzatore.termina();
+			stato = Stato.STATISTICHE;
+			processaComando(null);
+		}
+	}
+
+	private void processaComandoInStatoStatistiche(Comando comando) {
+		if (comando == null) {
+			BusEventi.pubblica(new NotificaMostraStatisticheFineGioco());
+		} else if (comando == Comando.PERGAMENA) {
+			if (GestorePunteggi.isPunteggioInClassifica(Statistiche.getPunti())) {
+				stato = Stato.ATTESA_NOME_PUNTEGGI;
+				BusEventi.pubblica(new RichiestaTesto("congratulazioni! inserisci il tuo nome"));
+			} else {
+				stato = Stato.INTRO;
+			}
+		}
+		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
+	}
+
+	private void processaComandoInStatoPostGameAttesaNomePerPunteggio(String testoDisponibile) {
+		if (testoDisponibile.isEmpty()) {
+			testoDisponibile = GruppoGiocatore.getIstanza().getPersonaggio(0).getNomeProprio().orElseThrow(Personaggio.PERSONAGGIO_SENZA_NOME);
+		}
+		GestorePunteggi.addPunteggio(testoDisponibile, Statistiche.getPunti());
+		stato = Stato.PUNTEGGI;
+		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
+		BusEventi.pubblica(new NotificaMostraPunteggiMigliori());
+		processaComando(null);
+	}
+
+	private void processaComandoInStatoPunteggi(Comando comando) {
+		inizia();
 	}
 
 	private void inizializzaGioco() {
@@ -946,20 +980,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	/**
-	 * Un personaggio vivo con abbastanza magia da formulare una Resurrezione,
-	 * o null se nessuno del gruppo può farlo.
-	 */
-	private Personaggio trovaFormulanteResurrezione() {
-		int costoLancio = ClasseIncantesimo.RESURREZIONE.getIstanza(1).getCostoLancio();
-		for (Personaggio personaggioCorrente : gruppo.getPersonaggiVivi()) {
-			if (personaggioCorrente.getMagia() >= costoLancio) {
-				return personaggioCorrente;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * Se al termine di una locazione c'è almeno un personaggio morto, il gruppo possiede
 	 * un incantesimo di Resurrezione e c'è chi ha la magia per formularlo, la Resurrezione
 	 * diventa una delle azioni proponibili.
@@ -968,8 +988,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (gruppo.getIncantesimi(ClasseIncantesimo.RESURREZIONE) <= 0) {
 			return false;
 		}
-		boolean cQualcunoMorto = gruppo.getPersonaggi().stream().anyMatch(p -> !p.isVivo());
-		return cQualcunoMorto && trovaFormulanteResurrezione() != null;
+		boolean qualcunoMorto = gruppo.getPersonaggi().stream().anyMatch(p -> !p.isVivo());
+		return qualcunoMorto && trovaFormulanteResurrezione() != null;
 	}
 
 	private void eseguiResurrezione(Personaggio personaggioBersaglio) {
@@ -981,6 +1001,20 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		Incantesimo incantesimo = ClasseIncantesimo.RESURREZIONE.getIstanza(formulante.getLivello());
 		incantesimo.formula(formulante, personaggioBersaglio, null);
 		gruppo.subIncantesimi(ClasseIncantesimo.RESURREZIONE, 1);
+	}
+
+	/**
+	 * Un personaggio vivo con abbastanza magia da formulare una Resurrezione,
+	 * o null se nessuno del gruppo può farlo.
+	 */
+	private Personaggio trovaFormulanteResurrezione() {
+		int costoLancio = ClasseIncantesimo.RESURREZIONE.getIstanza(1).getCostoLancio();
+		for (Personaggio personaggioCorrente : gruppo.getPersonaggiVivi()) {
+			if (personaggioCorrente.getMagia() >= costoLancio) {
+				return personaggioCorrente;
+			}
+		}
+		return null;
 	}
 
 	private Collection<Comando> getComandiPossibiliPerNumeroPassi(int numeroPassi) {
