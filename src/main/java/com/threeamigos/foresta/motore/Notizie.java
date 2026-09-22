@@ -35,7 +35,7 @@ public class Notizie {
 	public static void registrati() {
 		BusEventi.iscriviti(NotificaTestoFrase.class, evento -> aggiungiMessaggio(evento.getMessaggio()));
 		BusEventi.iscriviti(NotificaTestoParagrafo.class, evento -> aggiungiMessaggio(evento.getMessaggio()));
-		BusEventi.iscriviti(NotificaNotizia.class, evento -> aggiungiNotizia(new Notizia(evento.getId(), evento.getCorpo())));
+		BusEventi.iscriviti(NotificaNotizia.class, evento -> aggiungiNotizia(evento.getNotizia()));
 	}
 
 	private static void aggiungiMessaggio(String messaggio) {

@@ -1,5 +1,5 @@
 DATI_LOCANDA
-    [*NOME_LOCANDA]/[*IDENTIFICATIVO]/RECENSIONE=[#RECENSIONE?]/DIALOGO=[#DIALOGO?]
+    [*NOME_LOCANDA]/[*IDENTIFICATIVO]/[*NOME_LOCANDIERE]/RECENSIONE=[#RECENSIONE?]/DIALOGO=[#DIALOGO?]
 
 NOME_LOCANDA
     [CINGHIALE_VEGANO] | [FURIA_DEL_GIORNO_DOPO] | [GUARDIA_ADDORMENTATA] | [DA_POCHI_SOLDI] | [MAGO_SENZA_TRUCCO]
@@ -15,213 +15,301 @@ CINGHIALE_VEGANO$
     [DIALOGO=Benvenuti al Cinghiale Vegano! Sì, l'insegna è giusta. No, non abbiamo pancetta. Sedetevi prima che i nani ricomincino a protestare.]\
     [RECENSIONE=è famoso per non servire carne, con grande disappunto dei nani]\
     [NOME_LOCANDA=Il Cinghiale Vegano]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 FURIA_DEL_GIORNO_DOPO$
     [IDENTIFICATIVO=FURIA_DEL_GIORNO_DOPO]\
     [DIALOGO=Benvenuti alla Furia del Giorno Dopo. Parlate piano, camminate in punta di piedi e, per l'amor degli dei, non fate sbattere quei boccali di ferro. Qui dentro la luce del sole è bandita e il rumore è punito con la morte. Se siete qui per fare casino, andatevene. Se vi serve del brodo salato, dell'idromele sgasato o un angolo buio dove rimpiangere le vostre scelte di ieri sera... sedetevi e non respirate troppo forte.]\
     [RECENSIONE={un chiaro riferimento ai postumi|è un locale gestito da un oste burbero specializzato nel trattare i postumi da sbronza dei clienti}]\
     [NOME_LOCANDA=La Furia del Giorno Dopo]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 GUARDIA_ADDORMENTATA$
     [IDENTIFICATIVO=GUARDIA_ADDORMENTATA]\
     [DIALOGO=Chiudete quella porta! L'aria pulita fa scappare i clienti della Guardia Addormentata. Cosa vi serve? Oro sul bancone, domande al muro.]\
     [RECENSIONE=il posto preferito dai ladri]\
     [NOME_LOCANDA=La Guardia Addormentata]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 DA_POCHI_SOLDI$
     [IDENTIFICATIVO=DA_POCHI_SOLDI]\
     [DIALOGO=Entrate, entrate! Siete alla locanda Da Pochi Soldi, quindi non aspettatevi il tappeto rosso. Ma la birra costa meno dell'acqua, e fa quasi lo stesso effetto.]\
     [RECENSIONE=onesta fin dal nome]\
-    Da Pochi Soldi
+    [NOME_LOCANDA=Da Pochi Soldi]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 MAGO_SENZA_TRUCCO$
     [IDENTIFICATIVO=MAGO_SENZA_TRUCCO]\
     [DIALOGO=Ah, facce nuove! Benvenuti al Mago Senza Trucco. Vi avviso: se cercate pozioni magiche avete sbagliato posto, ma se cercate un vino che fa vedere i draghi, siete nel posto giusto.]\
     [RECENSIONE=il proprietario è solo un vecchio un po' eccentrico]\
-    Il Mago senza Trucco
+    [NOME_LOCANDA=Il Mago senza Trucco]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 ULTIMO_BICCHIERE$
     [IDENTIFICATIVO=ULTIMO_BICCHIERE]\
     [DIALOGO=Benvenuti all'Ultimo Bicchiere (Promesso)! Ricordatevi la regola della casa: il penultimo bicchiere non esiste, si passa sempre all'ultimo. Di nuovo.]\
     [RECENSIONE=la bugia più grande della storia del regno]\
-    L'Ultimo Bicchiere (Promesso)
+    [NOME_LOCANDA=L'Ultimo Bicchiere (Promesso)]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 ORSO_BALLERINO$
     [IDENTIFICATIVO=ORSO_BALLERINO]\
     [DIALOGO=Benvenuti all'Orso Ballerino. Scusate la pelliccia, un incantesimo di trasmutazione andato storto. Non badate ai peli nella minestra, fanno polpa.]\
     [RECENSIONE=il proprietario è un druido rimasto bloccato in forma animale]\
-    L'Orso Ballerino
+    [NOME_LOCANDA=L'Orso Ballerino]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 ULTIMA_SPERANZA$
     [IDENTIFICATIVO=ULTIMA_SPERANZA]\
     [DIALOGO=Per tutti i numi, dei clienti vivi! Benvenuti alla Locanda dell'Ultima Speranza. Di solito serviamo solo spettri e cacciatori smarriti. Accomodatevi, prima che il fuoco si spenga o che i lupi fuori finiscano la pazienza.]\
     [RECENSIONE=l'unica decente nel raggio di chilometri]\
-    La Locanda dell'Ultima Speranza
+    [NOME_LOCANDA=La Locanda dell'Ultima Speranza]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 FUNGO_ALLUCINOGENO$
     [IDENTIFICATIVO=FUNGO_ALLUCINOGENO]\
     [DIALOGO=Benvenuti al Fungo Allucinogeno! Vi consiglio lo stufato del giorno. Se vedete il tavolo fluttuare dopo il primo cucchiaio, non vi preoccupate: è l'effetto del legno di pino. O del fungo. Più probabilmente del fungo.]\
     [RECENSIONE=la specialità della casa è un brodo molto... colorato]\
-    Al Fungo Allucinogeno
+    [NOME_LOCANDA=Al Fungo Allucinogeno]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 GOBLIN_CORTESE$
     [IDENTIFICATIVO=GOBLIN_CORTESE]\
     [DIALOGO=Salute, viandanti! Benvenuti alla Tana del Goblin Cortese. Prego, pulitevi gli stivali, posate le armi e ignorate il fatto che stia usando una scimitarra per affettare il formaggio. Vi porto del sidro?]\
     [RECENSIONE=l'unico goblin dell'intera foresta che usa il tovagliolo]\
-    La Tana del Goblin Cortese
+    [NOME_LOCANDA=La Tana del Goblin Cortese]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 ZANZARE_E_ZUCCHE$
     [IDENTIFICATIVO=ZANZARE_E_ZUCCHE]\
     [DIALOGO=Benvenuti a Zanzare e Zucche! Prendete una sedia e schiacciate gli insetti che trovate sul cuscino. Se sopravvivete alla zuppa d'ortica, la notte è gratis.]\
     [RECENSIONE=il nome descrive perfettamente i dintorni]\
-    Zanzare e Zucche
+    [NOME_LOCANDA=Zanzare e Zucche]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 BIVIO_SBAGLIATO$
     [IDENTIFICATIVO=BIVIO_SBAGLIATO]\
     [DIALOGO=Benvenuti alla locanda Il Bivio Sbagliato. Lo so, volevate andare a salvare la principessa a nord, e invece eccovi qui. Ormai siete dentro, tanto vale bere.]\
     [RECENSIONE=ci finisci solo se ti perdi]\
-    Il Bivio Sbagliato
+    [NOME_LOCANDA=Il Bivio Sbagliato]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 RIPARO_DAL_DM$
     [IDENTIFICATIVO=RIPARO_DAL_DM]\
     [DIALOGO=Benvenuti al Riparo dal DM! Rilassatevi, qui dentro non ci sono tiri salvezza, trappole nel pavimento o draghi millenari. C'è solo birra e una temporanea immunità alle decisioni sadiche del destino. Cosa vi spillo?]\
     [RECENSIONE=un porto sicuro dove l'oste non ti costringe a fare un tiro salvezza sulla Costituzione prima di toccare il cibo]\
-    Al Riparo dal DM
+    [NOME_LOCANDA=Al Riparo dal DM]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 VEDI_TU$
     [IDENTIFICATIVO=VEDI_TU]\
     [DIALOGO=Siete al Vedi Tu! Non chiedetemi cosa c'è sul menu, perché non lo so nemmeno io. Sedetevi, io vi porto qualcosa, voi mi date dell'oro e speriamo che a nessuno venga il mal di pancia.]\
     [RECENSIONE=non esiste un menu, decide l'oste]\
-    La Locanda del "Vedi Tu"
+    [NOME_LOCANDA=La Locanda del "Vedi Tu"]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 TOPO_SAGGIO$
     [IDENTIFICATIVO=TOPO_SAGGIO]\
     [DIALOGO=Benvenuti al Topo Saggio. No, non state allucinando per il troppo idromele, sono proprio io il proprietario. Vi prego di non fare battute sui gatti, sulle trappole o sul fatto che potrei finire nello stufato. Piuttosto, saltate sul bancone per ordinare o lasciate le monete direttamente a terra, all'altezza dei miei baffi. Cosa vi servo? E vi avviso, il formaggio della casa costa il doppio per i giganti come voi.]\
     [RECENSIONE=c'è chi giura che il proprietario sia davvero un roditore parlante]\
-    Il Topo Saggio
+    [NOME_LOCANDA=Il Topo Saggio]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 TAZZA_BUCATA$
     [IDENTIFICATIVO=TAZZA_BUCATA]\
     [DIALOGO=Benvenuti alla Tazza Bucata. Vi do un consiglio: non guardate troppo da vicino i boccali, non chiedete cosa c'è dentro la zuppa e, se vedete un buco sul fondo della tazza, tappatelo con il pollice come fanno tutti. Il servizio fa schifo, l'oste è di pessimo umore, ma la birra costa una sola moneta di rame al barile. Se vi sta bene è così, altrimenti la porta è quella da cui siete entrati]\
     [RECENSIONE=il servizio è pessimo, ma la birra è economica]\
-    La Tazza Bucata
+    [NOME_LOCANDA=La Tazza Bucata]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 ELFO_ALTICCIO$
     [IDENTIFICATIVO=ELFO_ALTICCIO]\
     [DIALOGO=Salute, viandanti! Hic! Benvenuti all'... all'... aspettate, come si chiama questo posto? Ah sì, L'Elfo Alticcio! Che sarei io! Venite, entrate nel cerchio magico della sbronza! Gli umani dicono che noi elfi siamo creature aggraziate e mistiche... beh, non hanno mai visto me dopo sei calici di nettare di bosco! Sedetevi, oggi offro io! Cioè, pagate voi, ma verso io!]\
     [RECENSIONE=è raro da vedere, memorabile da sentire]\
-    L'Elfo Alticcio
+    [NOME_LOCANDA=L'Elfo Alticcio]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 FRASCA_DEL_LUPO_ASTEMIO$
     [IDENTIFICATIVO=FRASCA_DEL_LUPO_ASTEMIO]\
     [DIALOGO=Ahaha, benvenuti alla Frasca del Lupo Astemio! Il nome è una barzelletta, ragazzi! Qui dentro l'unica cosa astemia è l'acqua nel pozzo, perché nessuno la tocca! Perfino le mosche volano storte in questa stanza. Forza, prendete un boccale e dateci dentro. Se riuscite a uscire camminando dritti, significa che non avete onorato il lupo!]\
     [RECENSIONE=ironico, visto quanto si beve dentro]\
-    La Frasca del Lupo Astemio
+    [NOME_LOCANDA=La Frasca del Lupo Astemio]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 TRONCO_CAVO$
     [IDENTIFICATIVO=TRONCO_CAVO]\
     [DIALOGO=Benvenuti nel Tronco Cavo, viaggiatori. Siete dentro trecento tonnellate di quercia millenaria. Vi prego solo di seguire tre semplici regole: non usate incantesimi di fuoco, non piantate i vostri pugnali nel muro per fare i fighi e non chiedete legno da ardere. Se avete sete, provate la nostra birra alla corteccia. Ha un sapore un po' terroso, ma vi garantisco che vi lascerà con le radici ben piantate a terra.]\
     [RECENSIONE=è letteralmente costruita dentro un albero millenario scavato]\
-    Il Tronco Cavo
+    [NOME_LOCANDA=Il Tronco Cavo]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 DRAGO_VOMITANTE$
     [IDENTIFICATIVO=DRAGO_VOMITANTE]\
     [DIALOGO=Benvenuti al Drago Vomitante. Il nome non è una metafora poetica, è un avvertimento. Se dovete esagerare con l'idromele di fuoco, uscite sul retro o mirate ai vasi di piante. Chi sporca pulisce, e vi assicuro che il mio straccio ha visto cose che farebbero impallidire un necromante. Cosa vi porto, prima che vi passi l'appetito?]\
     [RECENSIONE=la birra di fuoco è ottima, ma l'odore di acido sul pavimento toglie la voglia di vivere prima ancora di ordinare lo stufato]\
-    Il Drago Vomitante
+    [NOME_LOCANDA=Il Drago Vomitante]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 BOCCALE_FORATO$
     [IDENTIFICATIVO=BOCCALE_FORATO]\
     [DIALOGO=Benvenuti al Boccale Forato! Sbrigatevi a bere, ragazzi, qui il tempo è letteralmente oro! Se sorseggiate con calma vi ritrovate con le scarpe bagnate e il boccale vuoto. Mandate giù tutto d'un fiato, è l'unico modo per avere il controvalore dei vostri soldi. Allora, vi riempio questo colabrodo?]\
     [RECENSIONE=i prezzi sono stracciati ma occorre avere i piedi impermeabili]\
-    Il Boccale Forato
+    [NOME_LOCANDA=Il Boccale Forato]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 CINGHIALE_SOBRIO$
     [IDENTIFICATIVO=CINGHIALE_SOBRIO]\
     [DIALOGO=Benvenuti al Cinghiale Sobrio. Sì, vendiamo alcolici, ma vi tengo d'occhio. Al primo segno di barcollamento, al primo 'hic' molesto o alla prima canzone intonata fuori tempo, sarete scaraventati fuori a calci. Qui si beve con dignità, autocontrollo e moderazione. Ora, volete una birra analcolica o rischiare la mia ira?]\
     [RECENSIONE=l'atmosfera è da funerale, ma il posto è pulito]\
-    Il Cinghiale Sobrio
+    [NOME_LOCANDA=Il Cinghiale Sobrio]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 GOBLIN_ASTEMIO$
     [IDENTIFICATIVO=GOBLIN_ASTEMIO]\
     [DIALOGO=Salute e benvenuti alla Tana del Goblin Astemio! No, non vi ruberò il portafoglio e no, non ho sputato nella botte. Ho chiuso con i vecchi vizi della tribù: niente risse, niente funghi allucinogeni e solo succo di mela fermentato al minimo sindacale. Scommetto che non avete mai visto un locale gestito così bene da uno della mia specie, vero? Accomodatevi!]\
     [RECENSIONE=il locale è splendente e non cercano neanche di borseggiare il clienti]\
-    La Tana del Goblin Astemio
+    [NOME_LOCANDA=La Tana del Goblin Astemio]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 ULTIMO_AVAMPOSTO$
     [IDENTIFICATIVO=ULTIMO_AVAMPOSTO]\
     [DIALOGO=Entrate pure all'Ultimo Avamposto Prima del Baratro... e vi prego, non fate movimenti bruschi tutti insieme sul lato est. Siamo letteralmente sospesi sul dirupo. Mandate giù qualcosa per farvi coraggio, perché se soffrite di vertigini, l'unico modo per uscire da questa foresta vivi è farlo da ubriachi. Cosa vi serve?]\
     [RECENSIONE=l'idromele è l'unica cosa che impedisce di svenire guardando fuori dalla finestra]\
-    L'Ultimo Avamposto Prima del Baratro
+    [NOME_LOCANDA=L'Ultimo Avamposto Prima del Baratro]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 BOCCALE_CAPOVOLTO$
     [IDENTIFICATIVO=BOCCALE_CAPOVOLTO]\
     [DIALOGO=Benvenuti al Boccale Capovolto! Trovatevi un posto a terra o sugli sgabelli nani. Qui non ci giriamo intorno: la nostra birra scura è così forte che entro mezz'ora sarete tutti sdraiati a terra a fissare il soffitto. Abbiamo eliminato le sedie alte per evitare che la gente si facesse male cadendo. Siete pronti a fare un ruzzolone?]\
     [RECENSIONE=i tavoli sono cortissimi e il pavimento è coperto di morbida paglia spessa trenta centimetri]\
-    Il Boccale Capovolto
+    [NOME_LOCANDA=Il Boccale Capovolto]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 DRAGO_SPENNATO$
     [IDENTIFICATIVO=DRAGO_SPENNATO]\
     [DIALOGO=Benvenuti al Drago Spennato! Potete ridere dell'insegna, ma vi assicuro che la nostra cucina è letale quanto un soffio di fuoco. Abbiamo spennato i prezzi e rasato al suolo la concorrenza! Accomodatevi, ordinate un cosciotto di montone e non fate domande sulla provenienza della carne se vedete delle lucertole giganti senza pelle nel cortile dietro.]\
     [RECENSIONE=l'insegna mostra un drago tragicamente privo di squame]\
-    Il Drago Spennato
+    [NOME_LOCANDA=Il Drago Spennato]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 CACCIATORE_MANCINO$
     [IDENTIFICATIVO=CACCIATORE_MANCINO]\
     [DIALOGO=Benvenuti, viandanti! Siete al Cacciatore Mancino. Se cercate dello stufato di cervo fresco... beh, sperate che sia passato un altro cacciatore a vendermelo. Io ci provo, ma la foresta è densa e i miei occhi non sono più quelli di una volta. In compenso, non manco mai il colpo quando si tratta di versare il vino nel boccale!]\
     [RECENSIONE=il posto è gestita da un arciere che non ha mai preso una preda]\
-    Il Cacciatore Mancino
+    [NOME_LOCANDA=Il Cacciatore Mancino]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 FUEGO_DEL_FUORILEGGE$
     [IDENTIFICATIVO=FUEGO_DEL_FUORILEGGE]\
     [DIALOGO=Pst! Entrate e abbassate la testa! Benvenuti al Fuego del Fuorilegge. Se le guardie cittadine vi hanno chiesto dove stavate andando, spero abbiate inventato una buona scusa. Qui dentro non chiediamo nomi, non teniamo registri e accettiamo monete d'oro di qualsiasi regno, anche quelle palesemente contraffatte. Sedetevi e cercate di non farvi notare.]\
     [RECENSIONE=nascosta benissimo tra i cespugli]\
-    Il Fuego del Fuorilegge
+    [NOME_LOCANDA=Il Fuego del Fuorilegge]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 RADURA_DEL_MAL_DI_PANCIA$
     [IDENTIFICATIVO=RADURA_DEL_MAL_DI_PANCIA]\
     [DIALOGO=Salute! Benvenuti alla Radura del Mal di Pancia! Il segreto della nostra cucina è lo strutto d'orso, lo usiamo anche nei dolci! Vi lascerà un ricordo indelebile nello stomaco per i prossimi tre giorni. Ma non temete: il nostro idromele è così forte e puro che disinfetta tutto prima che possiate pentirvene. Chi ordina il piatto della casa riceve un'erba digestiva in omaggio!]\
     [RECENSIONE=la cucina è un po' pesante, ma l'idromele è ottimo]\
-    La Radura del Mal Di Pancia
+    [NOME_LOCANDA=La Radura del Mal Di Pancia]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 CAVALLO_CHE_PARLA$
     [IDENTIFICATIVO=CAVALLO_CHE_PARLA]\
     [DIALOGO=Benvenuti Al Cavallo che Parla! Forza, fate la vostra domanda a Fulmine, vi risponderà! Visto? E' un miracolo della natura! Ora smettetela di fare domande all'animale e comprate della birra, che mantenere questo quadrupede ciarlatano mi costa un patrimonio.]\
     [RECENSIONE=il cavallo non parla, ma l'oste sa imitare il nitrito]\
-    Al Cavallo Che Parla
+    [NOME_LOCANDA=Al Cavallo Che Parla]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 ANONIMA_ALCOLISTI$
     [IDENTIFICATIVO=ANONIMA_ALCOLISTI]\
     [DIALOGO=Entrate, entrate. Benvenuti alla Teverna dell'Anonima Alcolisti. Qui ci supportiamo tutti a vicenda. Io supporto voi vendendovi i migliori alcolici della contea, e voi supportate me pagando l'affitto del locale. Coraggio, unitevi al cerchio, alzatevi a turno, dite il vostro nome e quale liquore preferite dimenticare stasera.]\
     [RECENSIONE=è la terapia di gruppo migliore di sempre. Racconti i tuoi traumi d'infanzia, l'oste ti riempie il boccale e tutti brindano alle tue sventure. Ci sono andato per smettere di bere, sono uscito strisciando. Consigliatissimo]\
-    La Taverna dell'Anonima Alcolisti
+    [NOME_LOCANDA=La Taverna dell'Anonima Alcolisti]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 FORZIERE_VUOTO$
     [IDENTIFICATIVO=FORZIERE_VUOTO]\
     [DIALOGO=Benvenuti al Forziere Vuoto! Potete lasciare le vostre borse sul tavolo, qui i borseggiatori non entrano nemmeno: sanno che chi frequenta questo posto ha già speso l'ultimo rame prima di superare la soglia. Siamo la locanda dei disperati e dei fieri squattrinati! Se avete oro, spendetelo subito, così non avrete più l'ansia di farvelo rubare!]\
     [RECENSIONE=ottima per tenere alla larga i borseggiatori]\
-    Il Forziere Vuoto
+    [NOME_LOCANDA=Il Forziere Vuoto]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 PANE_E_SPADA$
     [IDENTIFICATIVO=PANE_E_SPADA]\
     [DIALOGO=Siete da Pane e Spada. Qui non ci sono fronzoli, cameriere carine o tovaglioli di seta. C'è del pane raffermo per riempire lo stomaco, della birra calda per mandarlo giù e una lama se qualcuno si lamenta del servizio. Mangiate, bevete, pagate e andate a combattere da un'altra parte. Cosa vi serve?]\
     [RECENSIONE=essenziale, rozza, efficace]\
-    Pane e Spada
+    [NOME_LOCANDA=Pane e Spada]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 ORCO_SENSIBILE$
     [IDENTIFICATIVO=ORCO_SENSIBILE]\
     [DIALOGO=Benvenuti... snif... all'Orco Sensibile. Scusate, ma quella ballata sulla caduta di Forte Grigio mi spezza sempre il cuore. Entrate con animo gentile, vi prego. Niente parole dure, niente insulti e se dovete sfidare qualcuno a duello, fate che sia una gara di poesia. Chi non rispetta i sentimenti altrui viene preso a pugni in faccia con molta, molta tristezza. Cosa vi porto da bere per affogare i dispiaceri?]\
     [RECENSIONE=all'interno si recitano poesie e si piange davanti alla birra]\
-    L'Orco Sensibile
+    [NOME_LOCANDA=L'Orco Sensibile]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 RE_FINTO$
     [IDENTIFICATIVO=RE_FINTO]\
     [DIALOGO=Nobili viandanti, benvenuti alla Locanda del Re Finto! Qui ogni mendicante viene trattato come un duca e ogni avventuriero come un eroe leggendario! Inchinatevi davanti al bancone, ordinate il nostro 'Nettare Reale' (che in realtà è sidro di terza scelta corretto con miele) e godetevi l'illusione della ricchezza! L'oro che mi darete, purtroppo per me, deve essere vero. Cosa desiderano le vostre maestà?]\
     [RECENSIONE=arredata con corone di cartapesta e finti velluti]\
-    La Locanda del Re Finto
+    [NOME_LOCANDA=La Locanda del Re Finto]\
+    [NOME_LOCANDIERE=[NOME_CASUALE]]\
+    [#NOME_LOCANDA]
 
-GESTORE
-    [GESTORE_NOME] [GESTORE_COGNOME] | [GESTORE_TITOLO] [GESTORE_NOME] [GESTORE_DEGLI]
+NOME_CASUALE
+    [NOME] [COGNOME] | [NOME] [ATTRIBUTO] | [TITOLO] [NOME] [COGNOME] | [TITOLO] [NOME] [DEGLI]
 
-GESTORE_NOME
+NOME
+    Adelmo
+    Amilcare
+    Anacleto
     Aniceto
+    Archimede
     Aristofane
+    Aristogitone
+    Aroldo
     Asdrubale
     Baldomero
+    Baldovino
     Bonaventura
+    Clodoveo
     Crisostomo
     Cuniberto
     Dagoberto
+    Doroteo
+    Ennodio
     Ermenegildo
     Eustachio
     Filiberto
+    Gaspare
     Gaudenzio
     Leocadio
+    Nepomuceno
     Ninfidio
+    Odoacre
     Odorico
+    Onofrio
+    Oronzo
     Pancrazio
     Pantaleone
     Pellegrino
-    Santippe
+    Sulpicio
     Teodolindo
+    Torquato
     Tristano
+    Ubaldo
     Valeriano
+    Vespasiano
     Zaccaria
 
-GESTORE_COGNOME
+COGNOME
     Barbagianni
+    Barlafus
     Bellimbusti
     Bertucca
     Boccaloni
+    Broccolo
+    Caciotta
     Capocotta
     Carciofani
     Cataratta
@@ -229,54 +317,102 @@ GESTORE_COGNOME
     Chiappalepri
     Ciarlatano
     Ciafardoni
+    Fagioli
     Girelloni
     Inciampati
     Mangiapasta
     Maremmani
     Masticabrodo
     Paciocchi
+    Paciocconi
+    Pannocchia
     Pannoloni
     Pantofolai
     Paparazzi
     Pappalardo
     Patatracchi
+    Pastafrolla
     Pasticciotti
     Pizzicagnoli
     Sbrindellati
+    Sbrodolati
+    Scatarozzi
     Schiaccianoci
     Sciancati
     Scorramano
+    Sganganelli
+    Sgangheroni
+    Sgorbati
     Smandrappati
     Spaccatutto
     Sparafrasche
     Strambelli
     Stropicciati
     Tagliabrodo
+    Trinciapolli
     Zampalesta
 
-GESTORE_TITOLO
-    Arciduca
-    Barone
-    Baronetto
-    Conte
-    Duca
-    Marchese
-    Visconte
-    Gran Visir
-    Granduca
-    Principe
-    Console
-    Vicario
-    Sire
-    Scudiero
-    Imperatore
-    Paladino
-    Custode
-    Soprintendente
-    Magnifico Rettore
-    Vescovo
+ATTRIBUTO
+    [ATTRIBUTO_POSITIVO] | [ATTRIBUTO_NEGATIVO]
 
-GESTORE_DEGLI
+ATTRIBUTO_POSITIVO
+    il Raffinato
+    l'Elegante
+    il Magniloquente
+    l'Inappuntabile
+    il Cortese
+    il Premuroso
+    il Galante
+    l'Ospitale
+    il Generoso
+    il Solerte
+
+ATTRIBUTO_NEGATIVO
+    lo Zozzo
+    lo Zozzone
+    il Sudicio
+    il Lercio
+    lo Sgangherato
+    il Rissoso
+    l'Avaro
+    il Maleducato
+    lo Scurrile
+    il Puzzolente
+    il Losco
+    il Latitante
+    il Tirchio
+    il Bisbetico
+    il Borioso
+    il Mellifluo
+    l'Incompetente
+    il Melenso
+    lo Scurrile
+    il Pasticcione
+
+TITOLO
+    l'Arciduca
+    il Barone
+    il Baronetto
+    il Conte
+    il Duca
+    il Marchese
+    il Visconte
+    il Granduca
+    il Principe
+    il Console
+    il Vicario
+    il Sire
+    lo Scudiero
+    il Paladino
+    il Custode
+    il Soprintendente
+    il Magnifico Rettore
+    il Vescovo
+    l'Arcivescovo
+    il Prelato
+    il Cavaliere
+
+DEGLI
     delle Mezze Maniche (Risparmia sulla stoffa delle divise)
     dello Sbrindello (Sempre vestito di stracci finissimi)
     del Bellimbusto (Specchi ovunque, servizio pessimo)
@@ -303,14 +439,14 @@ GESTORE_NOTE
 
 NOTIZIE_CINGHIALE_VEGANO
     CV1-Incidente Diplomatico - EROE ha chiesto una bistecca al sangue al Cinghiale Vegano, scatenando una rivolta di elfi attivisti armati di sedano selvatico.
-    CV2-Lamentele della Locanda - L'oste del Cinghiale Vegano esprime costernazione. EROE ha nascosto una salsiccia vera dentro il tortino di rape della casa, scatenando una crisi mistica a tre elfi druidi.
-    CV3-Lamentele della Locanda - L'oste del Cinghiale Vegano esprime profondo sdegno. EROE è statLETTERA_FINALE sorpresLETTERA_FINALE a grigliare di nascosto spiedini di topo dietro la legnaia, violando lo statuto morale del locale.
+    CV2-Lamentele della Locanda - L'oste del Cinghiale Vegano, NOME_GESTORE, esprime costernazione. EROE ha nascosto una salsiccia vera dentro il tortino di rape della casa, scatenando una crisi mistica a tre elfi druidi.
+    CV3-Lamentele della Locanda - L'oste del Cinghiale Vegano, NOME_GESTORE, esprime profondo sdegno. EROE è statLETTERA_FINALE sorpresLETTERA_FINALE a grigliare di nascosto spiedini di topo dietro la legnaia, violando lo statuto morale del locale.
     CV4-Protesta Verde - Gli elfi attivisti del Cinghiale Vegano denunciano EROE per aver masticato una foglia di insalata decorativa fingendo che fosse un pezzo di cicciolo di maiale.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_FURIA_DEL_GIORNO_DOPO
     FGD1-Rissa da Postumi - Un risveglio burrascoso alla Furia del Giorno Dopo: EROE ha starnutito così forte da far scattare i tiri salvezza contro lo stordimento a tutti i presenti.
-    FGD2-Violazione del Silenzio - L'oste burbero della Furia del Giorno Dopo chiede di mettere una taglia su EROE, reLETTERA_FINALE di aver ordinato il brodo salato imitando ad altissima voce il barrito di un mammut.
+    FGD2-Violazione del Silenzio - Il burbero oste della Furia del Giorno Dopo, NOME_GESTORE, chiede di mettere una taglia su EROE, reLETTERA_FINALE di aver ordinato il brodo salato imitando ad altissima voce il barrito di un mammut.
     FGD3-Attentato ai Postumi - Panico alla Furia del Giorno Dopo: MAGO ha lanciato un trucco di Luce pura nella sala buia, provocando il collasso istantaneo per emicrania a quattordici avventori.
     FGD4-Boccali molesti - EROE espulsLETTERA_FINALE con disonore dalla Furia del Giorno Dopo, dopo essere statLETTERA_FINALE sorpresLETTERA_FINALE a far tintinnare volontariamente due forchette di ferro per infastidire i clienti con l'idromele sgasato.
     [NOTIZIE_LOCANDA]
@@ -319,18 +455,18 @@ NOTIZIE_GUARDIA_ADDORMENTATA
     GUA1-Disastro Igienico - Chiusa per bonifica la taverna La Guardia Addormentata: EROE ha scambiato il pozzo dell'acqua potabile per una vasca da bagno termale, lavandoci dentro le calze di lana da battaglia.
     GUA2-Domande al Muro - ArrestatLETTERA_FINALE EROE davanti alla Guardia Addormentata per aver preso alla lettera il cartello dell'oste, passando sei ore a confessare i suoi crimini contro una parete di mattoni.
     GUA3-Tappa del Ladro - Un picco insolito di borseggi alla Guardia Addormentata mette in allarme le guardie vere; LADRO è statLETTERA_FINALE vistLETTERA_FINALE contare monete d'oro nello spazio sul retro.
-    GUA4-Porta Aperta - L'oste della Guardia Addormentata accusa EROE di aver lasciato la porta spalancata, facendo entrare un blocco di aria pulita che ha fatto fuggire l'intera clientela di furfanti.
+    GUA4-Porta Aperta - L'oste della Guardia Addormentata, NOME_GESTORE, accusa EROE di aver lasciato la porta spalancata, facendo entrare un blocco di aria pulita che ha fatto fuggire l'intera clientela di furfanti.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_DA_POCHI_SOLDI
     PS1-Disastro Strutturale - Chiuso per restauri il locale Da Pochi Soldi: EROE ha tentato di pulirsi gli stivali strofinandoli contro una colonna portante marcia, causandone il parziale collasso.
     PS2-Danni al Patrimonio Immobiliare - Crepato l'architrave della locanda Da Pochi Soldi. EROE ha tentato di testare la resistenza della muratura tirandoci una testata a vuoto in preda ai fumi dell'idromele.
     PS3-Birra Economica - Rivolta dei clienti Da Pochi Soldi: EROE ha fatto notare che l'acqua piovana filtrata dal soffitto finiva direttamente nella botte della birra da un rame, alterando il gusto del risparmio.
-    PS4-Falsa Eleganza - L'oste Da Pochi Soldi esprime profondo sdegno: CANTASTORIE ha steso un fazzoletto di seta sul tavolo marcio, offendendo la gloriosa reputazione pezzente del locale.
+    PS4-Falsa Eleganza - L'oste Da Pochi Soldi, NOME_GESTORE, esprime profondo sdegno: CANTASTORIE ha steso un fazzoletto di seta sul tavolo marcio, offendendo la gloriosa reputazione pezzente del locale.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_MAGO_SENZA_TRUCCO
-    MST1-Lamentele d'Igiene Mentale - L'oste del Mago Senza Trucco denuncia lo smarrimento del gatto nero della locanda, avvistato l'ultima volta mentre EROE tentava di usarlo come parrucchino magico d'emergenza.
+    MST1-Lamentele d'Igiene Mentale - L'oste del Mago Senza Trucco, NOME_GESTORE, denuncia lo smarrimento del gatto nero della locanda, avvistato l'ultima volta mentre EROE tentava di usarlo come parrucchino magico d'emergenza.
     MST2-Illusioni Ottiche - Un vino corretto di troppo al Mago Senza Trucco spinge EROE a sfidare a duello una sedia, convinto che si trattasse di un'Idra millenaria travestita da arredamento.
     MST3-Trucchi Svelati - Parapiglia al Mago Senza Trucco: MAGO ha dimostrato che il trucco del cilindro dell'oste era solo un doppio fondo di cartone, distruggendo i sogni d'infanzia dei presenti.
     MST4-Pozioni di Vite - L'alchimista locale protesta contro il Mago Senza Trucco dopo che EROE ha tentato di curarsi una ferita da taglio versandosi un intero calice di vino barricato sul braccio.
@@ -338,20 +474,20 @@ NOTIZIE_MAGO_SENZA_TRUCCO
 
 NOTIZIE_ULTIMO_BICCHIERE
     UB1-La Bugia Suprema - L'istituto del Tempo della Foresta accusa la locanda L'Ultimo Bicchiere (Promesso!) di alterazione dello spazio-tempo: EROE è bloccatLETTERA_FINALE al bancone da tre giorni sul ventiduesimo "ultimo calice".
-    UB2-Il Penultimo Bandito - Rissa furiosa all'Ultimo Bicchiere (Promesso!): LADRO ha tentato di ordinare un "“penultimo sorso\"", violando la sacra regola della casa e venendo preso a colpi di brocca dall'oste.
+    UB2-Il Penultimo Bandito - Rissa furiosa all'Ultimo Bicchiere (Promesso!): LADRO ha tentato di ordinare un "“penultimo sorso\"", violando la sacra regola della casa e venendo preso a colpi di brocca dall'oste, NOME_GESTORE.
     UB3-Promesse Infrante - EROE ha tentato di firmare un pagherò all'Ultimo Bicchiere (Promesso!) scrivendo “pago all'ultimo giro", costringendo la gestione a cambiare l'insegna in “L'Ultimo Bicchiere (Scordatelo)".
     UB4-Botti Infinite - MAGO ha lanciato un incantesimo d'Acqua dentro la botte dell'Ultimo Bicchiere (Promesso!), trasformando la birra scura in un idromele infinito che ha allagato la cantina.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_ORSO_BALLERINO
     OB1-Orrore in Cucina - L'ispezione della contea multa l'oste dell'Orso Ballerino. EROE ha dimostrato che il "“misterioso spezzatino della casa\"" conteneva percentuali moleste di stivali di cuoio tritati.
-    OB2-Peli nella Minestra - Un cliente dell'Orso Ballerino trova una zampa intera nella zuppa; il druido proprietario si difende sostenendo che si tratti solo di un grosso grumo di farina di castagne.
+    OB2-Peli nella Minestra - Un cliente dell'Orso Ballerino trova una zampa intera nella zuppa; il druido proprietario, NOME_GESTORE, si difende sostenendo che si tratti solo di un grosso grumo di farina di castagne.
     OB3-Licantropia Gastronomica - BARDO inizia a ruggire dopo aver mangiato lo stufato dell'Orso Ballerino, costringendo l'alchimista locale a un intervento d'urgenza a base di erba gatta.
     OB4-Ballo Sghembo - EROE ha tentato di insegnare una danza militare al druido in forma di Orso Ballerino, provocando il crollo del tavolo dei nani a causa di una zampata fuori tempo.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_ULTIMA_SPERANZA
-    US1-Fuga di Capitali - L'oste dell'Ultima Speranza dichiara la bancarotta: EROE ha bevuto a credito promettendo di pagare con il tesoro del Drago.
+    US1-Fuga di Capitali - L'oste dell'Ultima Speranza, NOME_GESTORE, dichiara la bancarotta: EROE ha bevuto a credito promettendo di pagare con il tesoro del Drago.
     US2-Clienti Vivi - Panico alla Locanda dell'Ultima Speranza: l'arrivo di EROE in carne ed ossa ha terrorizzato gli spettri residenti, che hanno abbandonato il camino lamentando la mancanza di rispetto per i defunti.
     US3-Fuoco Spento - Un incantesimo d'Aria errato spegne il focolare dell'Ultima Speranza; dodici spettri clienti si sono liquefatti per il freddo, lasciando l'oste a pulire il pavimento di ectoplasma.
     US4-Lupi Pazienti - I lupi fuori dalla Locanda dell'Ultima Speranza ringraziano EROE per aver lanciato dalla finestra lo stufato avanzato, definendolo "“più tenero dei cacciatori smarriti\"".
@@ -359,44 +495,44 @@ NOTIZIE_ULTIMA_SPERANZA
 
 NOTIZIE_FUNGO_ALLUCINOGENO
     FA1-Tavoli Volanti - Spettacolo al Fungo Allucinogeno: EROE sale su un tavolo fluttuante convinto di volare verso il castello del Drago, precipitando rovinosamente sul calderone del brodo colorato.
-    FA2-Allucinazione Tattica - GUERRIERO, sotto l'effetto della zuppa del Fungo Allucinogeno, scambia l'oste per un Lich e tenta di purificarlo versandogli in testa un barile di sidro di mele.
+    FA2-Allucinazione Tattica - GUERRIERO, sotto l'effetto della zuppa del Fungo Allucinogeno, scambia l'oste NOME_GESTORE per un Lich e tenta di purificarlo versandogli in testa un barile di sidro di mele.
     FA3-Pino Speziato - EROE tenta di masticare una gamba del tavolo del Fungo Allucinogeno, sostenendo che il legno di pino allucinogeno sia l'ingrediente segreto della profezia.
     FA4-Funghi Pelosi - L'ispezione medica chiude il Fungo Allucinogeno dopo che EROE ha scovato delle spore fosforescenti che cantavano ballate barde dentro la dispensa.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_GOBLIN_CORTESE
     GC1-Danni Burocratici - Il vicario del regno avvia un'indagine: EROE ha firmato il registro degli ospiti illustri usando il sangue del Goblin Cortese, il quale ha protestato perché macchiava il suo tovagliolo pulito.
-    GC2-Scimitarra da Taglio - Tensione alla Tana del Goblin Cortese: EROE ha accusato l'oste di aver usato troppa Destrezza nell'affettare il formaggio, chiedendo un tiro salvezza preventivo sulla cena.
+    GC2-Scimitarra da Taglio - Tensione alla Tana del Goblin Cortese: EROE ha accusato l'oste, NOME_GESTORE, di aver usato troppa Destrezza nell'affettare il formaggio, chiedendo un tiro salvezza preventivo sulla cena.
     GC3-Formaggio di Spada - LADRO tenta di rubare la scimitarra affetta-formaggio del Goblin Cortese, venendo però punitLETTERA_FINALE con una severa lezione di galateo e l'obbligo di usare il tovagliolo.
     GC4-Sidro di Tana - EROE lascia una recensione orribile sulla corteccia della Tana del Goblin Cortese: "“Il sidro è buono, ma l'oste pulisce il bancone troppo spesso per i miei standard avventurosi\"".
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_ZANZARE_E_ZUCCHE
-    ZZ1-Disastro Finanziario - Il gestore di Zanzare e Zucche dichiara il fallimento economico: EROE ha pagato il pernotto con un pagherò cambiario firmato a nome di un finto cugino del Lich.
+    ZZ1-Disastro Finanziario - Il gestore di Zanzare e Zucche, NOME_GESTORE, dichiara il fallimento economico: EROE ha pagato il pernotto con un pagherò cambiario firmato a nome di un finto cugino del Lich.
     ZZ2-Zuppa d'Ortica - EROE viene ricoverato dall'alchimista dopo aver tentato di bere alla goccia la zuppa d'ortica di Zanzare e Zucche per dimostrare la sua alta Costituzione alle guardie.
     ZZ3-Cuscini Animati - Rivolta a Zanzare e Zucche: EROE ha usato una magia di Fuoco per eliminare gli insetti sul cuscino, carbonizzando l'intera camera e tre zucche ornamentali.
-    ZZ4-Notte Gratis - EROE sopravvive miracolosamente alla cena di Zanzare e Zucche, pretendendo la notte gratis e costringendo l'oste a cedergli la sua stanza privata.
+    ZZ4-Notte Gratis - EROE sopravvive miracolosamente alla cena di Zanzare e Zucche, pretendendo la notte gratis e costringendo l'oste, NOME_GESTORE, a cedergli la sua stanza privata.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_BIVIO_SBAGLIATO
     BS1-Fuga Rocambolesca - EROE abbandona il Bivio Sbagliato volando via aggrappato a una Viverna addomesticata sul momento con due salsicce nane, lasciando il conto da pagare sulla corteccia di un pino vicino.
     BS2-Principessa a Nord - Un cavaliere accusa EROE alla locanda Il Bivio Sbagliato di aver invertito i cartelli stradali della Foresta, spedendo l'intero esercito reale dritto nella tana dell'Idra.
     BS3-Bivio di Birra - EROE si siede al Bivio Sbagliato sostenendo che perdersi nella Foresta fosse una strategia di posizionamento consigliata dal suo manuale di Furtività.
-    BS4-Conto Errato - L'oste del Bivio Sbagliato insegue il gruppo: EROE ha pagato la cena lasciando sul tavolo una mappa stradale scarabocchiata con la scritta "“La principessa è nell'altro castello\"".
+    BS4-Conto Errato - L'oste del Bivio Sbagliato, NOME_GESTORE, insegue il gruppo: EROE ha pagato la cena lasciando sul tavolo una mappa stradale scarabocchiata con la scritta "“La principessa è nell'altro castello\"".
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_RIPARO_DAL_DM
     RDM1-Immunità Temporanea - Un Drago millenario tenta di incendiare il Riparo dal DM, ma l'incantesimo sbatte contro l'insegna protettiva e si trasforma in una pioggia di noccioline salate.
     RDM2-Trappole nel Parquet - EROE passa la notte a picchiare il pavimento del Riparo dal DM con un martello, convintLETTERA_FINALE che l'oste nascondesse una trappola a botola sotto il tavolo dei nani.
     RDM3-Tiri Salvezza - MAGO tenta di lanciare una Maledizione dentro il Riparo dal DM, ma la magia viene convertita all'istante in un boccale di birra calda analcolica.
-    RDM4-Arbitrio Divino - EROE accusa l'oste del Riparo dal DM di essere un'estensione sadica del destino, ordinando una pozione di salute per curarsi dall'ansia dei dadi a cento facce.
+    RDM4-Arbitrio Divino - EROE accusa l'oste del Riparo dal DM, NOME_GESTORE, di essere un'estensione sadica del destino, ordinando una pozione di salute per curarsi dall'ansia dei dadi a cento facce.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_VEDI_TU
     VT1-Menu Misterioso - Colica di gruppo dopo una cena alla Locanda del "“Vedi Tu\"": EROE ha accettato la specialità dello chef, che si è rivelata essere uno stufato di radici di pino corretto all'acido.
     VT2-Monete e Misteri - EROE tenta di pagare alla locanda "“Vedi Tu\"" lasciando un sacchetto chiuso con la scritta "“Vedi Tu quanto c'è dentro\"", scatenando una rissa con l'oste armato di mattarello.
     VT3-Mal di Pancia Preventivo - L'alchimista cittadino esaurisce le pozioni dopo che l'intera clientela del "“Vedi Tu\"" ha chiesto un lavaggio gastrico preventivo prima ancora di ordinare da bere.
-    VT4-Oste Indeciso - GUERRIERO distrugge un tavolo del "“Vedi Tu\"" dopo che l'oste, alla domanda "“Cosa c'è da mangiare?\"", ha risposto alzando le spalle per quattro turni di timer di fila.
+    VT4-Oste Indeciso - GUERRIERO distrugge un tavolo del "“Vedi Tu\"" dopo che l'oste NOME_GESTORE, alla domanda "“Cosa c'è da mangiare?\"", ha risposto alzando le spalle per quattro turni di timer di fila.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_TOPO_SAGGIO
@@ -407,9 +543,9 @@ NOTIZIE_TOPO_SAGGIO
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_TAZZA_BUCATA
-    TB1-Fuga Rocambolesca - EROE abbandona la Tazza Bucata calandosi da una corda fatta interamente di salsicce nane annodate, lasciando l'oste con un buco nel bilancio e tre metri di carne in meno.
+    TB1-Fuga Rocambolesca - EROE abbandona la Tazza Bucata calandosi da una corda fatta interamente di salsicce nane annodate, lasciando l'oste, NOME_GESTORE, con un buco nel bilancio e tre metri di carne in meno.
     TB2-Pollice da Tazza - LADRO ha riportato un crampo severo alla Tazza Bucata dopo aver passato quattro ore con il pollice premuto sul fondo del boccale per non perdere la birra da un rame.
-    TB3-Boccale Ispezionato - EROE viene preso a pugni dall'oste della Tazza Bucata per aver usato una lente d'ingrandimento alchemica per identificare i grumi neri dentro la zuppa del giorno.
+    TB3-Boccale Ispezionato - EROE viene preso a pugni dall'oste della Tazza Bucata, NOME_GESTORE, per aver usato una lente d'ingrandimento alchemica per identificare i grumi neri dentro la zuppa del giorno.
     TB4-Rame al Barile - EROE si presenta alla Tazza Bucata con un intero carretto di barili vuoti, pretendendo di riempirli tutti spendendo un'unica moneta di rame contraffatta dell'Impero del Vuoto.
     [NOTIZIE_LOCANDA]
 
@@ -439,11 +575,11 @@ NOTIZIE_DRAGO_VOMITANTE
     DV1-Incidente di Pulizia - Il Drago Vomitante chiude per tre giorni: EROE ha rovesciato un barile di acido dell'alchimista nel tentativo di pulire una macchia di sugo.
     DV2-Odore di Acido - EROE sviene all'ingresso del Drago Vomitante, abbattuto dalle esalazioni corrosive del pavimento che hanno azzerato i suoi tiri salvezza sulla Costituzione.
     DV3-Retro del Drago - LADRO viene sorpreso sul retro del Drago Vomitante mentre usava l'idromele di fuoco avanzato per fabbricare ordigni fumogeni clandestini contro le guardie.
-    DV4-Straccio del Necromante - L'oste del Drago Vomitante usa il suo leggendario straccio nero contro EROE, applicandogli lo stato INFETTATO per aver barcollato troppo vicino ai vasi di piante.
+    DV4-Straccio del Necromante - L'oste del Drago Vomitante, NOME_GESTORE, usa il suo leggendario straccio nero contro EROE, applicandogli lo stato INFETTATO per aver barcollato troppo vicino ai vasi di piante.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_BOCCALE_FORATO
-    BF1-Orrore in Cantina - L'oste del Boccale Forato sporge denuncia. EROE ha tentato di tappare i buchi delle botti storiche usando gomme da masticare al gusto di menta selvatica, rovinando l'idromele.
+    BF1-Orrore in Cantina - L'oste del Boccale Forato, NOME_GESTORE, sporge denuncia: EROE ha tentato di tappare i buchi delle botti storiche usando gomme da masticare al gusto di menta selvatica, rovinando l'idromele.
     BF2-Scarpe Bagnate - MAGO esce dal Boccale Forato con lo stato BAGNATO ai piedi, avendo tentato di sorseggiare l'idromele con calma invece di mandarlo giù alla goccia.
     BF3-Colabrodo Reale - EROE accusa la gestione del Boccale Forato di truffa elementale, chiedendo che il foro sul fondo del boccale venga riparato con un incantesimo di Terra.
     BF4-Piedi Impermeabili - L'alchimista cittadino vende stivali di cuoio speciali marchiati "“Approvati dal Boccale Forato\"" dopo che EROE si è presentato con un principio di congelamento alle dita dei piedi.
@@ -459,40 +595,40 @@ NOTIZIE_CINGHIALE_SOBRIO
 NOTIZIE_GOBLIN_ASTEMIO
     GAS1-Borseggio Fallito - LADRO esce frustrato dalla Tana del Goblin Astemio: ha perquisito dodici clienti senza trovare un solo rame, confermando che il posto è fin troppo pulito.
     GAS2-Succo Fermentato - MAGO lancia una Maledizione sul succo di mela del Goblin Astemio, tentando di farlo fermentare all'istante per movimentare la serata ed avviare una rissa.
-    GAS3-Tribù Pulita - EROE denuncia la Tana del Goblin Astemio al sindacato dei mostri comuni, accusando l'oste di aver rinnegato le gloriose e sudicie tradizioni della razza Goblin.
-    GAS4-Vizi Passati - Un vecchio compagno di tribù dell'oste si presenta alla Tana del Goblin Astemio con un cesto di funghi allucinogeni, venendo cacciato a colpi di tovagliolo pulito da EROE.
+    GAS3-Tribù Pulita - EROE denuncia la Tana del Goblin Astemio al sindacato dei mostri comuni, accusando l'oste, NOME_GESTORE, di aver rinnegato le gloriose e sudicie tradizioni della razza Goblin.
+    GAS4-Vizi Passati - Un vecchio compagno di tribù dell'oste NOME_GESTORE si presenta alla Tana del Goblin Astemio con un cesto di funghi allucinogeni, venendo cacciato a colpi di tovagliolo pulito da EROE.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_ULTIMO_AVAMPOSTO
-    UA1-Disastro Immobiliare - L'oste dell'Ultimo Avamposto dichiara lo stato di calamità. EROE si è sportLETTERA_FINALE troppo dalla finestra per guardare il fondo del baratro, sbilanciando la struttura e facendo slittare la locanda di due metri verso il dirupo.
+    UA1-Disastro Immobiliare - L'oste dell'Ultimo Avamposto NOME_GESTORE dichiara lo stato di calamità. EROE si è sportLETTERA_FINALE troppo dalla finestra per guardare il fondo del baratro, sbilanciando la struttura e facendo slittare la locanda di due metri verso il dirupo.
     UA2-Lato Est Pericoloso - GUERRIERO si siede pesantemente sul lato est dell'Ultimo Avamposto, facendo scricchiolare le travi sul baratro e scatenando il panico tra gli avventori terrorizzati.
     UA3-Vertigine da Idromele - LADRO, affetto da vertigini, viene curato dall'oste dell'Ultimo Avamposto con sei boccali di idromele scuro prima di poter guardare fuori dalla finestra.
     UA4-Baratro sul Timer - EROE lancia un boccale vuoto fuori dalla finestra dell'Ultimo Avamposto, calcolando sul timer del secondo che il fondo del burrone è profondo almeno tre livelli di gioco.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_BOCCALE_CAPOVOLTO
-    BC1-Orrore in Cantina - Il gestore del Boccale Capovolto sporge denuncia. EROE ha scambiato le botti di idromele d'élite per un set di tamburi nanici, sfondandone tre a colpi di mattarello.
+    BC1-Orrore in Cantina - Il gestore del Boccale Capovolto NOME_GESTORE sporge denuncia. EROE ha scambiato le botti di idromele d'élite per un set di tamburi nanici, sfondandone tre a colpi di mattarello.
     BC2-Paglia Morbida - EROE viene trovato a dormire sotto trenta centimetri di paglia spessa al Boccale Capovolto, convinto di essersi nascosto usando la Furtività di LADRO.
     BC3-Senza Sedie - GUERRIERO si lamenta del Boccale Capovolto: l'assenza di sedie alte gli impedisce di fare parata con lo scudo in modo coreografico durante le discussioni al bancone.
     BC4-Ruzzolone di Gruppo - Scontro generale al Boccale Capovolto: l'intera clientela è caduta a terra in sincrono dopo che MAGO ha fatto assaggiare la sua birra scura modificata alchemicamente.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_DRAGO_SPENNATO
-    DS1-Rissa per Futili Motivi - Volano boccali dopo che EROE ha sostenuto che l'insegna del Drago Spennato assomigliasse più a una gallina gigante con problemi cutanei.
+    DS1-Rissa per Futili Motivi - Volano [VOLANO] dopo che EROE ha sostenuto che l'insegna del Drago Spennato assomigliasse più a una gallina gigante con problemi cutanei.
     DS2-Lucertole nel Cortile - LADRO scopre una cesta di lucertole giganti senza pelle dietro il Drago Spennato, cercando di venderle come cuccioli di Viverna d'élite pronti al combattimento.
     DS3-Montone Letale - GUERRIERO accusa la cucina del Drago Spennato di aver confezionato un cosciotto di montone così duro da poter essere usato come arma contundente contro i boss.
-    DS4-Prezzi Rasati - EROE tenta di contrattare sul prezzo del cibo al Drago Spennato, venendo inseguito dall'oste armato di mannaia che gli ricorda che i prezzi sono già tragicamente spennati.
+    DS4-Prezzi Rasati - EROE tenta di contrattare sul prezzo del cibo al Drago Spennato, venendo inseguito dall'oste NOME_GESTORE armato di mannaia, che gli ricorda che i prezzi sono già tragicamente spennati.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_CACCIATORE_MANCINO
     CM1-Mancato Cervo - EROE passa la notte a digiuno al Cacciatore Mancino, attendendo che l'arciere proprietario colpisca la sua prima preda nella foresta fitta con l'arco storto.
-    CM2-Mirata di Vino - Spettacolo al Cacciatore Mancino. L'oste arciere tenta di versare il vino nel boccale di EROE da tre metri di distanza, bagnando completamente l'armatura di GUERRIERO.
-    CM3-Occhi Vecchi - MAGO regala un paio di occhiali magici al proprietario del Cacciatore Mancino, che però scambia l'oggetto per una trappola esplosiva elementale.
+    CM2-Mirata di Vino - Spettacolo al Cacciatore Mancino. L'oste arciere NOME_GESTORE tenta di versare il vino nel boccale di EROE da tre metri di distanza, bagnando completamente l'armatura di GUERRIERO.
+    CM3-Occhi Vecchi - MAGO regala un paio di occhiali magici al proprietario del Cacciatore Mancino NOME_GESTORE che però scambia l'oggetto per una trappola esplosiva elementale.
     CM4-Arciere a Vuoto - EROE lascia una recensione sul Cacciatore Mancino: "“Ottimo vino, ma se aspettate che l'oste prenda un cervo morirete di fame prima di raggiungere il livello 2\"".
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_FUEGO_DEL_FUORILEGGE
-    FF1-Monete Contraffatte - EROE paga il conto al Fuego del Fuorilegge usando monete palesemente di cartapesta, venendo premiato dall'oste con una stretta di mano per l'eccellente spirito criminale.
+    FF1-Monete Contraffatte - EROE paga il conto al Fuego del Fuorilegge usando monete palesemente di cartapesta, venendo premiato dall'oste NOME_GESTORE con una stretta di mano per l'eccellente spirito criminale.
     FF2-Niente Nomi - Le guardie cittadine fanno irruzione al Fuego del Fuorilegge, ma EROE si salva nascondendosi sotto il bancone e fingendo di essere un barile di acido dell'alchimista.
     FF3-Cespugli Spia - LADRO usa la Furtività per mimetizzarsi tra i cespugli del Fuego del Fuorilegge, scoprendo una cassa di oggetti di supporto nascosta dai contrabbandieri.
     FF4-Scusa Pronta - EROE viene fermato fuori dal Fuego del Fuorilegge da una pattuglia, salvandosi con la scusa di essere un bardo itinerante alla ricerca dell'ispirazione per l'Orco Sensibile.
@@ -500,23 +636,23 @@ NOTIZIE_FUEGO_DEL_FUORILEGGE
 
 NOTIZIE_RADURA_DEL_MAL_DI_PANCIA
     RMP1-Maledizione dei Postumi - Risveglio burrascoso alla Radura del Mal di Pancia: MAGO ha lanciato un incantesimo d'Aria nel sonno, spazzando via il tetto di paglia e lasciando dodici avventori a dormire sotto la pioggia.
-    RMP2-Disastro Strutturale - Il gestore della Radura del Mal di Pancia dichiara lo stato di calamità. EROE ha tentato di fare una capriola coreografica sul tetto di paglia, sfondandolo e cadendo direttamente nel calderone del brodo.
+    RMP2-Disastro Strutturale - Il gestore della Radura del Mal di Pancia NOME_GESTORE dichiara lo stato di calamità. EROE ha tentato di fare una capriola coreografica sul tetto di paglia, sfondandolo e cadendo direttamente nel calderone del brodo.
     RMP3-Strutto d'Orso - EROE accusa la Radura del Mal di Pancia di tentato avvelenamento alchemico dopo aver scoperto che lo strutto d'orso era stato inserito anche nella torta di mele della casa.
     RMP4-Erba Omaggio - L'alchimista cittadino protesta contro la Radura del Mal di Pancia dopo che EROE ha rivenduto l'erba digestiva in omaggio spacciandola per un ingrediente per pozioni magiche.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_CAVALLO_CHE_PARLA
-    CCP1-Rissa per Futili Motivi - Volano tavoli e sgabelli dopo che EROE ha accusato un mezzorco di aver fatto un "“nitrito asimmetrico\"" imitando il Cavallo che Parla.
-    CCP2-Rissa da Spettatori - Pugni e morsi tra i clienti dopo che EROE ha scommesso cento monete che il Cavallo che Parla avrebbe saputo recitare un sonetto in perfetto elfico.
+    CCP1-Rissa per Futili Motivi - Volano [VOLANO] dopo che EROE ha accusato un mezzorco di aver fatto un "“nitrito asimmetrico\"" imitando il Cavallo che Parla.
+    CCP2-Rissa da Spettatori - Volano [VOLANO] tra i clienti dopo che EROE ha scommesso cento monete che il Cavallo che Parla avrebbe saputo recitare un sonetto in perfetto elfico.
     CCP3-Rissa da Scommessa - Scontro totale nato dopo che EROE ha scommesso venti monete che il Cavallo che Parla avrebbe saputo risolvere un'equazione lineare meglio del vicario del regno.
-    CCP4-Quadrupede Ciarlatano - EROE scopre l'oste del Cavallo che Parla nascosto dietro la paglia con un megafono d'ottone, scatenando il panico tra i creduloni della taverna.
+    CCP4-Quadrupede Ciarlatano - EROE scopre l'oste del Cavallo che Parla NOME_GESTORE nascosto dietro la paglia con un megafono d'ottone, scatenando il panico tra i creduloni della taverna.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_ANONIMA_ALCOLISTI
     AA1-Danni al Patrimonio Storico - Crepato il pilastro centrale della Taverna dell'Anonima Alcolisti. EROE ha tentato di fare una mossa di lotta libera su un barile vuoto, mancando il bersaglio e impattando contro la muratura.
     AA2-Liquore dell'Oblio - MAGO beve il liquore per dimenticare dell'Anonima Alcolisti, scordandosi completamente tutte le sue magie e le formule per il ricalcolo degli attributi dei personaggi per tre turni.
     AA3-Terapia di Gruppo - GUERRIERO scoppia in lacrime all'Anonima Alcolisti raccontando di come l'Idra lo abbia sconfitto a livello 1, ricevendo il conforto e il brindisi di dodici nani solidali.
-    AA4-Affitto della Taverna - L'oste dell'Anonima Alcolisti ringrazia EROE per aver consumato l'equivalente di tre mesi di affitto del locale in una sola notte di postumi da idromele.
+    AA4-Affitto della Taverna - L'oste dell'Anonima Alcolisti, NOME_GESTORE, ringrazia EROE per aver consumato l'equivalente di tre mesi di affitto del locale in una sola notte di postumi da idromele.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_FORZIERE_VUOTO
@@ -527,8 +663,8 @@ NOTIZIE_FORZIERE_VUOTO
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_PANE_E_SPADA
-    PS1-Pane Raffermo - GUERRIERO rompe lo scudo tentando di tagliare il pane raffermo di Pane e Spada, chiedendo all'oste un risarcimento in monete d'oro del regno.
-    PS2-Lama del Servizio - Tensione al Pane e Spada: EROE si lamenta della birra calda e l'oste risponde estraendo una scimitarra arrugginita dal bancone per aggiornare il livello di gradimento del cliente.
+    PS1-Pane Raffermo - GUERRIERO rompe lo scudo tentando di tagliare il pane raffermo di Pane e Spada, chiedendo all'oste NOME_GESTORE un risarcimento in monete d'oro del regno.
+    PS2-Lama del Servizio - Tensione al Pane e Spada: EROE si lamenta della birra calda e l'oste NOME_GESTORE risponde estraendo una scimitarra arrugginita dal bancone per aggiornare il livello di gradimento del cliente.
     PS3-Niente Fronzoli - BARDO viene cacciatLETTERA_FINALE a calci da Pane e Spada dopo aver chiesto un tovagliolo di seta pulito per asciugarsi la schiuma della birra calda dalla bocca.
     PS4-Mangia e Combatti - EROE viene scaraventatLETTERA_FINALE fuori da Pane e Spada direttamente sul timer del round, con l'ordine tassativo di andare a fare rissa con i Goblin nella foresta vicina.
     [NOTIZIE_LOCANDA]
@@ -544,60 +680,91 @@ NOTIZIE_RE_FINTO
     RF1-Finta Corona - EROE viene incoronatLETTERA_FINALE 'Governante dei Pannoloni' alla Locanda del Re Finto con una corona di cartapesta, pretendendo che gli elfi della retroguardia servano il sidro in ginocchio.
     RF2-Nettare Reale - MAGO scopre che il Nettare Reale del Re Finto è solo aceto di mele corretto con miele vecchio, chiedendo un rimborso immediato all'alchimista della città.
     RF3-Mendicanti e Duchi - Un mendicante della Foresta viene scambiato da EROE per il duca dei Castelli alla Locanda del Re Finto, prestandogli cento monete d'oro mai più riviste sulla mappa.
-    RF4-Finti Velluti - LADRO appicca il fuoco per errore ai finti velluti di cartapesta del Re Finto, costringendo l'oste a sfoltire i prezzi e a scappare dalla finestra sul retro.
-    RF5-Rissa d'Invidia - Volano sedie dopo che EROE ha sfoggiato una corona di cartapesta vinta alla locanda del Re Finto, pretendendo che tutti gli elfi presenti si inchinassero al suo passaggio verso le latrine.
+    RF4-Finti Velluti - LADRO appicca il fuoco per errore ai finti velluti di cartapesta del Re Finto, costringendo l'oste NOME_GESTORE a sfoltire i prezzi e a scappare dalla finestra sul retro.
+    RF5-Rissa d'Invidia - Volano [VOLANO] dopo che EROE ha sfoggiato una corona di cartapesta vinta alla locanda del Re Finto, pretendendo che tutti gli elfi presenti si inchinassero al suo passaggio verso le latrine.
     [NOTIZIE_LOCANDA]
 
 NOTIZIE_LOCANDA
-    LG1-Rissa Leggendaria - Devastata la locanda "“[#NOME_LOCANDA]\"" per una disputa teologica sul sesso dei folletti. EROE ha usato una sedia nanesca come argomento principale.
-    LG2-Lamentele dell'Oste - Il proprietario della locanda "“[#NOME_LOCANDA]\"" esprime profondo sdegno per "“questi eroi della domenica\"" che ordinano un solo brodo in quattro e rubano i tovaglioli di lino.
-    LG3-Grave Incidente d'Arte - Un bardo locale, avventore della locanda "“[#NOME_LOCANDA]\"", ha riportato la frattura del liuto sulla testa dopo aver tentato di intonare una ballata celebrativa sulle ascelle dell'eroe.
-    LG4-Rissa da Bar - Scatenato un putiferio alla locanda "“[#NOME_LOCANDA]\"" a causa di un avventore che guardava il boccale dell'eroe "con evidente intenzione di sminuirne la schiuma".
-    LG5-Conto Insoluto - Caccia all'uomo nella contea. EROE è fuggitLETTERA_FINALE dal retro della locanda "“[#NOME_LOCANDA]\"" spacciando tre bottoni di rame lucido per antiche monete dell'Impero del Vuoto.
-    LG6-Disastro Igienico - L'alchimista locale esaurisce le scorte di carbone vegetale dopo che lo stufato misterioso della locanda "“[#NOME_LOCANDA]\"" ha causato una colica sinfonica agli avventori.
-    LG7-Orrore in Cucina - Trovata una ciocca di peli d'orso nella minestra; l'oste della locanda "“[#NOME_LOCANDA]\"" ha tentato di spacciarla come "fibra dietetica ad alta resistenza".
-    LG8-Danni Collaterali - Un incantesimo di Fuoco lanciato per accendere una pipa ha accidentalmente carbonizzato le sopracciglia di tutti i nani nel raggio di tre metri alla locanda "“[#NOME_LOCANDA]\"".
-    LG9-Lamentele Nazionali - I sindacati dei minatori nani protestano ufficialmente contro EROE per aver occupato l'unico tavolo vicino al camino per sei ore senza consumare alla locanda "“[#NOME_LOCANDA]\"".
-    LG10-Rissa sul Timer - Scontro totale tra gli avventori della locanda "“[#NOME_LOCANDA]\"" e EROE, reLETTERA_FINALE di aver "bloccato il timer della conversazione" mentre cercava di decidere se ordinare sidro o acqua.
-    LG11-Fuga di Notizie - Le guardie cittadine indagano su un sospetto picco di furti di cucchiaini da brodo avvenuto subito dopo la partenza di LADRO dalla locanda "“[#NOME_LOCANDA]\"".
-    LG12-Maledizione della Domenica - MAGO ha risposto a un saluto cordiale dell'oste della locanda "“[#NOME_LOCANDA]\"" lanciando un anatema arcano per errore, sintonizzando la voce del locandiere sulle frequenze di un'arpia.
-    LG13-Rissa per Gelosia - Scoppiato il caos quando LADRO ha tentato di borseggiare il proprietario della locanda "“[#NOME_LOCANDA]\"", scoprendo che le tasche di quest'ultimo erano piene di trappole per topi vive.
-    LG14-Recensione Negativa: L'oste della locanda "“[#NOME_LOCANDA]\"" dichiara alla stampa locale: "“L'eroe della profezia ha l'eleganza di un troll in un negozio di ampolle dell'alchimista. Non torni più\"".
-    LG15-Stato d'Emergenza - Bandita la vendita di idromele di fuoco alla locanda "“[#NOME_LOCANDA]\"" dopo che EROE, in preda ai postumi, ha tentato di scambiare il castello del Drago per una gigantesca locanda a due piani.
-    LG16-Lamentele d'Igiene - L'ispezione cittadina sigilla la cucina della locanda "“[#NOME_LOCANDA]\"". EROE ha fatto notare che il "“brodo primordiale\"" bolliva ininterrottamente dal lontano impero precedente.
-    LG17-Panico Finanziario - Sgominata una banda di falsari nella locanda "“[#NOME_LOCANDA]\"". EROE ha tentato di pagare un pernottamento usando scaglie di Viverna dipinte con l'oro finto dell'alchimista.
-    LG18-Rissa per Futili Motivi - Tavoli divelti alla locanda "“[#NOME_LOCANDA]\"" dopo che MAGO ha usato un trucco da baraccone per far sparire la dentiera di un veterano, scordandosi poi dove l'aveva nascosta.
-    LG19-Rissa d'Iniziativa - Scoppiata una mega rissa alla locanda "“[#NOME_LOCANDA]\"" perché LADRO ha rubato la sedia a un Barbaro sul timer del secondo, sostenendo di avere un valore di Velocità superiore.
-    LG20-Orrore Magico - Un incantesimo d'Aria lanciato all'interno della locanda "“[#NOME_LOCANDA]\"" ha invertito la gravità dei parrucchini di tutti i nobili decaduti presenti.
-    LG21-Truffa Assurda - EROE è ricercatLETTERA_FINALE per aver venduto a un avventore della locanda "“[#NOME_LOCANDA]\"" una "“Pergamena della Conoscenza Suprema\"" che conteneva solo la ricetta segreta dello strutto d'orso.
+    LG1-Rissa Leggendaria - Devastata la locanda NOME_LOCANDA per una disputa teologica sul sesso dei folletti. EROE ha usato una sedia nanesca come argomento principale.
+    LG2-Lamentele dell'Oste - Il proprietario della locanda NOME_LOCANDA, NOME_GESTORE, esprime profondo sdegno per "“questi eroi della domenica\"" che ordinano un solo brodo in quattro e rubano i tovaglioli di lino.
+    LG3-Grave Incidente d'Arte - Un bardo locale, avventore della locanda NOME_LOCANDA, ha riportato la frattura del liuto sulla testa dopo aver tentato di intonare una ballata celebrativa sulle ascelle di EROE.
+    LG4-Rissa da Bar - Scatenato un putiferio alla locanda NOME_LOCANDA a causa di un avventore che guardava il boccale dell'eroe "con evidente intenzione di sminuirne la schiuma".
+    LG5-Conto Insoluto - Caccia all'uomo nella contea. EROE è fuggitLETTERA_FINALE dal retro della locanda NOME_LOCANDA spacciando tre bottoni di rame lucido per antiche monete dell'Impero del Vuoto.
+    LG6-Disastro Igienico - L'alchimista locale esaurisce le scorte di carbone vegetale dopo che lo stufato misterioso della locanda NOME_LOCANDA ha causato una colica sinfonica agli avventori.
+    LG7-Orrore in Cucina - Trovata una ciocca di peli d'orso nella minestra; l'oste della locanda NOME_LOCANDA ha tentato di spacciarla come "fibra dietetica ad alta resistenza".
+    LG8-Danni Collaterali - Un incantesimo di Fuoco lanciato per accendere una pipa ha accidentalmente carbonizzato le sopracciglia di tutti i nani nel raggio di tre metri alla locanda NOME_LOCANDA.
+    LG9-Lamentele Nazionali - I sindacati dei minatori nani protestano ufficialmente contro EROE per aver occupato l'unico tavolo vicino al camino per sei ore senza consumare alla locanda NOME_LOCANDA.
+    LG10-Rissa sul Timer - Scontro totale tra gli avventori della locanda NOME_LOCANDA e EROE, reLETTERA_FINALE di aver "bloccato il timer della conversazione" mentre cercava di decidere se ordinare sidro o acqua.
+    LG11-Fuga di Notizie - Le guardie cittadine indagano su un sospetto picco di furti di cucchiaini da brodo avvenuto subito dopo la partenza di LADRO dalla locanda NOME_LOCANDA.
+    LG12-Maledizione della Domenica - MAGO ha risposto a un saluto cordiale dell'oste della locanda NOME_LOCANDA lanciando un anatema arcano per errore, sintonizzando la voce del locandiere sulle frequenze di un'arpia.
+    LG13-Rissa per Gelosia - Scoppiato il caos quando LADRO ha tentato di borseggiare il proprietario della locanda NOME_LOCANDA, scoprendo che le tasche di quest'ultimo erano piene di trappole per topi vive.
+    LG14-Recensione Negativa: L'oste della locanda NOME_LOCANDA dichiara alla stampa locale: "“L'eroe della profezia ha l'eleganza di un troll in un negozio di ampolle dell'alchimista. Non torni più\"".
+    LG15-Stato d'Emergenza - Bandita la vendita di idromele di fuoco alla locanda NOME_LOCANDA dopo che EROE, in preda ai postumi, ha tentato di scambiare il castello del Drago per una gigantesca locanda a due piani.
+    LG16-Lamentele d'Igiene - L'ispezione cittadina sigilla la cucina della locanda NOME_LOCANDA. EROE ha fatto notare che il "“brodo primordiale\"" bolliva ininterrottamente dal lontano impero precedente.
+    LG17-Panico Finanziario - Sgominata una banda di falsari nella locanda NOME_LOCANDA. EROE ha tentato di pagare un pernottamento usando scaglie di Viverna dipinte con l'oro finto dell'alchimista.
+    LG18-Rissa per Futili Motivi - Tavoli divelti alla locanda NOME_LOCANDA dopo che MAGO ha usato un trucco da baraccone per far sparire la dentiera di un veterano, scordandosi poi dove l'aveva nascosta.
+    LG19-Rissa d'Iniziativa - Scoppiata una mega rissa alla locanda NOME_LOCANDA perché LADRO ha rubato la sedia a un Barbaro sul timer del secondo, sostenendo di avere un valore di Velocità superiore.
+    LG20-Orrore Magico - Un incantesimo d'Aria lanciato all'interno della locanda NOME_LOCANDA ha invertito la gravità dei parrucchini di tutti i nobili decaduti presenti.
+    LG21-Truffa Assurda - EROE è ricercatLETTERA_FINALE per aver venduto a un avventore della locanda NOME_LOCANDA una "“Pergamena della Conoscenza Suprema\"" che conteneva solo la ricetta segreta dello strutto d'orso.
     LG22-Protesta dei Sindacati - Gli osti della Foresta firmano una petizione per vietare l'ingresso a EROE, definito "“un flagello per le scorte di noccioline salate\"".
-    LG23-Rissa d'Orgoglio - Scontro totale scatenato alla locanda "“[#NOME_LOCANDA]\"" da EROE che ha osato definire l'idromele della casa "“un onesto disinfettante per zoccoli di Centauro\"".
-    LG24-Maledizione della Locanda - Un anatema maldestro scagliato da MAGO alla locanda "“[#NOME_LOCANDA]\"" ha fuso insieme gli sgabelli di tre avventori, costringendoli a muoversi in sincrono come un bizzarro mostro a sei gambe.
-    LG25-Lamentele sul Servizio: EROE lascia una recensione pessima sulla porta di legno della locanda "“[#NOME_LOCANDA]\"": "“L'oste ha lo sguardo truce e la zuppa sembrava volermi mordere. Una stella\"".
-    LG26-Rissa per Mancata Igiene: Devastata la sala comune alla locanda "“[#NOME_LOCANDA]\"" dopo che GUERRIERO ha usato lo scudo come piatto da portata, accusando l'oste di lavare i vassoi solo durante gli anni bisesti.
-    LG27-Incidente Alchemico - EROE ha scambiato una fiala di fertilizzante concentrato dell'Alchimista per uno sciroppo d'acero, causando la crescita istantanea di muschio lussureggiante sulla lingua del bardo della locanda "“[#NOME_LOCANDA]\"".
-    LG28-Rissa per Futili Motivi - Volano panche e tavoli alla locanda "“[#NOME_LOCANDA]\"" dopo che LADRO ha affermato che la birra della casa fosse in realtà acqua piovana filtrata attraverso i calzini usati di un Centauro.
-    LG29-Rissa d'Orgoglio - Violento scontro scatenato da MAGO, che ha tentato di pagare il conto alla locanda "“[#NOME_LOCANDA]\"" dimostrando matematicamente che l'oro richiesto dall'oste fosse un'illusione ottica creata dal fumo della cucina.
-    LG30-Rissa da Spettacolo - Pugni e morsi tra gli avventori alla locanda "“[#NOME_LOCANDA]\"" quando EROE, annoiato dalle ballate locali, ha pagato un folletto per fare lo sgambetto al bardo ufficiale nel bel mezzo dell'acuto finale.
+    LG23-Rissa d'Orgoglio - Scontro totale scatenato alla locanda NOME_LOCANDA da EROE che ha osato definire l'idromele della casa "“un onesto disinfettante per zoccoli di Centauro\"".
+    LG24-Maledizione della Locanda - Un anatema maldestro scagliato da MAGO alla locanda NOME_LOCANDA ha fuso insieme gli sgabelli di tre avventori, costringendoli a muoversi in sincrono come un bizzarro mostro a sei gambe.
+    LG25-Lamentele sul Servizio: EROE lascia una recensione pessima sulla porta di legno della locanda NOME_LOCANDA: "“L'oste ha lo sguardo truce e la zuppa sembrava volermi mordere. Una stella\"".
+    LG26-Rissa per Mancata Igiene: Devastata la sala comune alla locanda NOME_LOCANDA dopo che GUERRIERO ha usato lo scudo come piatto da portata, accusando l'oste di lavare i vassoi solo durante gli anni bisesti.
+    LG27-Incidente Alchemico - EROE ha scambiato una fiala di fertilizzante concentrato dell'Alchimista per uno sciroppo d'acero, causando la crescita istantanea di muschio lussureggiante sulla lingua del bardo della locanda NOME_LOCANDA.
+    LG28-Rissa per Futili Motivi - Volano [VOLANO] alla locanda NOME_LOCANDA dopo che LADRO ha affermato che la birra della casa fosse in realtà acqua piovana filtrata attraverso i calzini usati di un Centauro.
+    LG29-Rissa d'Orgoglio - Violento scontro scatenato da MAGO, che ha tentato di pagare il conto alla locanda NOME_LOCANDA dimostrando matematicamente che l'oro richiesto dall'oste fosse un'illusione ottica creata dal fumo della cucina.
+    LG30-Rissa da Spettacolo - Volano [VOLANO] tra gli avventori alla locanda NOME_LOCANDA quando EROE, annoiatLETTERA_FINALE dalle ballate locali, ha pagato un folletto per fare lo sgambetto al bardo ufficiale nel bel mezzo dell'acuto finale.
     LG31-Lamentele Nazionali - L'associazione dei cacciatori mancini esprime profondo sdegno verso EROE che ha utilizzato le loro frecce di riserva come spiedini per arrostire lucertole giganti nel cortile.
-    LG32-Incidente di Trasmutazione - Un incantesimo di Gelo maldestro ha trasformato l'intero bucato steso sul retro della locanda "“[#NOME_LOCANDA]\"" in una serie di sculture di ghiaccio taglienti, ferendo il cane dell'oste.
-    LG33-Incidente di Trasmutazione - Un incantesimo d'Acqua maldestro ha trasformato l'intero pavimento in parquet della  in una palude scivolosa, provocando la frattura dell'orgoglio a tre cavalieri.
-    LG34-Lamentele sul Menu - EROE restituisce lo stufato del giorno alla locanda "“[#NOME_LOCANDA]\"" lamentando che "le verdure all'interno stanno palesemente tentando di organizzare una coalizione sindacale contro il mio stomaco".
-    LG35-Rissa per Mancato Rispetto - Volano panche e brocche alla locanda "“[#NOME_LOCANDA]\"" dopo che EROE ha accusato un pacifico bardo itinerante di usare un "“font tipografico poco epico\"" sul cartello delle mance.
-    LG36-Incidente di Trasmutazione - Un incantesimo di Terra maldestro ha trasformato l'idromele nei boccali di tutti i clienti della locanda "“[#NOME_LOCANDA]\"" in un blocco di fango compatto, spezzando i denti a un Barbaro che stava bevendo alla goccia.
-    LG37-Maledizione Strutturale - Un anatema maldestro ha fatto sì che tutti i boccali della locanda "“[#NOME_LOCANDA]\"" si attaccassero magneticamente alle mani dei clienti, costringendo dodici avventori a vivere in simbiosi con la birra.
-    LG38-Rissa d'Invidia Tattica - Volano sedie alla locanda "“[#NOME_LOCANDA]\"" dopo che LADRO ha esibito un finto titolo di Arciduca dei Pannoloni comprato da un ciarlatano, pretendendo il tavolo imperiale.
-    LG39-Rissa per Incomprensione - Scoppiato il caos totale perché EROE ha scambiato il gatto della locanda "“[#NOME_LOCANDA]\"" per un rarissimo minion demoniaco, tentandone l'esorcismo con un boccale di sidro benedetto sul momento.
-    LG40-Lamentele sul Menu - EROE ha tentato di restituire lo stufato del giorno alla locanda "“[#NOME_LOCANDA]\"" lamentando che "“la carne si muoveva a un ritmo incompatibile con le leggi della fisica e del buon gusto\"".
-    LG41-Rissa per Futili Motivi - Scoppiato un putiferio quando MAGO ha spento il camino della sala comune alla locanda "“[#NOME_LOCANDA]\"" con un incantesimo d'Acqua, sostenendo che le scintille stessero attentando all'integrità del suo mantello di seta sintetica.
-    LG42-Rissa d'Iniziativa - Violento scontro scatenato da LADRO che ha occupato contemporaneamente tre sgabelli al bancone della locanda "“[#NOME_LOCANDA]\"", sostenendo che la sua alta Velocità gli permettesse di sedersi ovunque prima degli altri.
-    LG43-Rissa per Incomprensione - Scoppiata una mega rissa perché EROE ha scambiato l'armatura decorativa del salone della locanda "“[#NOME_LOCANDA]\"" per un mostro di pietra, prendendola a colpi di sedia prima che l'oste potesse spiegare l'equivoco.
-    LG44-Lamentele sul Menu - Alla locanda "“[#NOME_LOCANDA]\"" EROE restituisce lo stufato lamentando la presenza di un "artiglio biologico non identificato che tentava di fare parata contro il mio cucchiaio".
-    LG45-Maledizione Strutturale - Un anatema maldestro ha invertito la polarità delle porte della locanda "“[#NOME_LOCANDA]\"". Ora si aprono solo se insultate pesantemente in lingua orchesca, esasperando la clientela.
-    LG46-Rissa d'Invidia - Volano sedie alla locanda "“[#NOME_LOCANDA]\"" dopo che LADRO ha esibito un finto anello reale acquistato da un ciarlatano, pretendendo che l'oste gli servisse il sidro in ginocchio.
-    LG47-Rissa per Mancato Tempismo - Scontro totale nella sala comune della locanda "“[#NOME_LOCANDA]\"" dopo che LADRO ha tentato di rubare le stringhe delle scarpe a un paladino sul timer del secondo scatto.
-    LG48-Rissa per Futili Motivi - Volano panche e boccali alla locanda "“[#NOME_LOCANDA]\"" dopo che GUERRIERO ha affermato che lo stufato di cervo della casa fosse in realtà topo di fogna marinato nel sidro sgasato.
-    LG49-Rissa d'Orgoglio Marziale - Violento scontro alla locanda "“[#NOME_LOCANDA]\"" scatenato da GUERRIERO che ha occupato l'unico tavolo vicino al camino, sostenendo che il suo valore di Costituzione gli desse la precedenza assoluta sul riscaldamento corporeo.
+    LG32-Incidente di Trasmutazione - Un incantesimo di Gelo maldestro ha trasformato l'intero bucato steso sul retro della locanda NOME_LOCANDA in una serie di sculture di ghiaccio taglienti, ferendo il cane dell'oste.
+    LG33-Incidente di Trasmutazione - Un incantesimo d'Acqua maldestro ha trasformato l'intero pavimento in parquet della locanda NOME_LOCANDA in una palude scivolosa, provocando la frattura dell'orgoglio a tre cavalieri.
+    LG34-Lamentele sul Menu - EROE restituisce lo stufato del giorno alla locanda NOME_LOCANDA lamentando che "le verdure all'interno stanno palesemente tentando di organizzare una coalizione sindacale contro il mio stomaco".
+    LG35-Rissa per Mancato Rispetto - Volano [VOLANO] alla locanda NOME_LOCANDA dopo che EROE ha accusato un pacifico bardo itinerante di usare un "“font tipografico poco epico\"" sul cartello delle mance.
+    LG36-Incidente di Trasmutazione - Un incantesimo di Terra maldestro ha trasformato l'idromele nei boccali di tutti i clienti della locanda NOME_LOCANDA in un blocco di fango compatto, spezzando i denti a un Barbaro che stava bevendo alla goccia.
+    LG37-Maledizione Strutturale - Un anatema maldestro ha fatto sì che tutti i boccali della locanda NOME_LOCANDA si attaccassero magneticamente alle mani dei clienti, costringendo dodici avventori a vivere in simbiosi con la birra.
+    LG38-Rissa d'Invidia Tattica - Volano [VOLANO] alla locanda NOME_LOCANDA dopo che LADRO ha esibito un finto titolo di Arciduca dei Pannoloni comprato da un ciarlatano, pretendendo il tavolo imperiale.
+    LG39-Rissa per Incomprensione - Scoppiato il caos totale perché EROE ha scambiato il gatto della locanda NOME_LOCANDA per un rarissimo minion demoniaco, tentandone l'esorcismo con un boccale di sidro benedetto sul momento.
+    LG40-Lamentele sul Menu - EROE ha tentato di restituire lo stufato del giorno alla locanda NOME_LOCANDA lamentando che "“la carne si muoveva a un ritmo incompatibile con le leggi della fisica e del buon gusto\"".
+    LG41-Rissa per Futili Motivi - Scoppiato un putiferio quando MAGO ha spento il camino della sala comune alla locanda NOME_LOCANDA con un incantesimo d'Acqua, sostenendo che le scintille stessero attentando all'integrità del suo mantello di seta sintetica.
+    LG42-Rissa d'Iniziativa - Violento scontro scatenato da LADRO che ha occupato contemporaneamente tre sgabelli al bancone della locanda NOME_LOCANDA, sostenendo che la sua alta Velocità gli permettesse di sedersi ovunque prima degli altri.
+    LG43-Rissa per Incomprensione - Scoppiata una mega rissa perché EROE ha scambiato l'armatura decorativa del salone della locanda NOME_LOCANDA per un mostro di pietra, prendendola a colpi di sedia prima che l'oste potesse spiegare l'equivoco.
+    LG44-Lamentele sul Menu - Alla locanda NOME_LOCANDA EROE restituisce lo stufato lamentando la presenza di un "artiglio biologico non identificato che tentava di fare parata contro il suo cucchiaio".
+    LG45-Maledizione Strutturale - Un anatema maldestro ha invertito la polarità delle porte della locanda NOME_LOCANDA. Ora si aprono solo se insultate pesantemente in lingua orchesca, esasperando la clientela.
+    LG46-Rissa d'Invidia - Volano [VOLANO] alla locanda NOME_LOCANDA dopo che LADRO ha esibito un finto anello reale acquistato da un ciarlatano, pretendendo che l'oste gli servisse il sidro in ginocchio.
+    LG47-Rissa per Mancato Tempismo - Scontro totale nella sala comune della locanda NOME_LOCANDA dopo che LADRO ha tentato di rubare le stringhe delle scarpe a un paladino sul timer del secondo scatto.
+    LG48-Rissa per Futili Motivi - Volano [VOLANO] alla locanda NOME_LOCANDA dopo che GUERRIERO ha affermato che lo stufato di cervo della casa fosse in realtà topo di fogna marinato nel sidro sgasato.
+    LG49-Rissa d'Orgoglio Marziale - Violento scontro alla locanda NOME_LOCANDA scatenato da GUERRIERO che ha occupato l'unico tavolo vicino al camino, sostenendo che il suo valore di Costituzione gli desse la precedenza assoluta sul riscaldamento corporeo.
+
+VOLANO
+    [VOLANO_PUGNI] | [VOLANO_OGGETTI] | [VOLANO_OGGETTO]
+
+VOLANO_OGGETTO
+    sedie
+    brocche
+    panche
+    tavoli
+    sgabelli
+    boccali
+
+VOLANO_OGGETTI
+    sedie e brocche
+    sedie e panche
+    sedie e tavoli
+    sedie e sgabelli
+    sedie e boccali
+    brocche e panche
+    brocche e tavoli
+    brocche e sgabelli
+    brocche e boccali
+    panche e tavoli
+    panche e sgabelli
+    panche e boccali
+
+VOLANO_PUGNI
+    pugni
+    morsi
+    pugni e morsi
+
 
 NOTIZIE_CITTA
     CG1-Rissa da Spettacolo - Pugni e morsi tra i mercanti quando EROE ha pagato un folletto per fare boccacce alle guardie cittadine nel bel mezzo della lettura del bando reale.

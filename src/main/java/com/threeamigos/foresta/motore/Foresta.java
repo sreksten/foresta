@@ -21,8 +21,8 @@ import java.util.List;
 
 public class Foresta {
 
-	private static final int DIMENSIONE_X = 50;
-	private static final int DIMENSIONE_Y = 50;
+	private static final int DIMENSIONE_X = 20;
+	private static final int DIMENSIONE_Y = 20;
 
 	private Foresta() {
 	}

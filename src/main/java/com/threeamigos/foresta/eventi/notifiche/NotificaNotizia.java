@@ -2,6 +2,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.motore.modellodati.Notizia;
 
 /**
  * Una notizia che il motore di gioco invia al giocatore, destinata a essere mostrata
@@ -13,24 +14,14 @@ import com.threeamigos.foresta.eventi.TipoEvento;
  */
 public class NotificaNotizia extends EventoBase {
 
-    private final String id;
-    private final String corpo;
+    private final Notizia notizia;
 
-    /**
-     * @param id    identificativo della notizia
-     * @param corpo corpo della notizia
-     */
-    public NotificaNotizia(String id, String corpo) {
+    public NotificaNotizia(Notizia notizia) {
         super(TipoEvento.NOTIFICA_NOTIZIA);
-        this.id = id;
-        this.corpo = corpo;
+        this.notizia = notizia;
     }
 
-    public String getId() {
-        return id;
-    }
-
-    public String getCorpo() {
-        return corpo;
+    public Notizia getNotizia() {
+        return notizia;
     }
 }
