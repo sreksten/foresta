@@ -5,7 +5,7 @@
 
 ## 1. Bootstrap e loop principale
 
-Il motore vive interamente nella classe `Automa` (`motore/Automa.java`, 1118 righe), unica implementazione dell'interfaccia `ControlloreDiGioco`:
+Il motore vive interamente nella classe `Automa` (`motore/Automa.java`, ~1240 righe), unica implementazione dell'interfaccia `ControlloreDiGioco`:
 
 ```java
 public interface ControlloreDiGioco {
@@ -31,48 +31,33 @@ Il `Temporizzatore` (interfaccia in `tools/Temporizzatore.java`) è implementato
 - **Fine partita**: `GIOCO_PERSO`/`GIOCO_PERSO_2`, `GIOCO_VINTO`/`GIOCO_VINTO_2`, `STATISTICHE`, `ATTESA_NOME_PUNTEGGI`, `PUNTEGGI`.
 - **Meta**: `INVENTARIO`, `MAPPA`, `SELEZIONE_SALVATAGGIO_DA_SCRIVERE`, `CONFERMA_USCITA`.
 
-Nel costruttore di `Automa` (righe 61-95) ogni `Stato` è mappato a un handler dedicato in una `Map<Stato, Consumer<Comando>> gestoriComando` (un `EnumMap`, dispatch O(1)):
+Nel costruttore di `Automa` (righe 105-149) ogni `Stato` è mappato a uno o due handler dedicati, distribuiti su **due `EnumMap`**:
 
 ```java
-gestoriComando.put(Stato.IN_LOCAZIONE, this::processaComandoInStatoInLocazione);
-gestoriComando.put(Stato.IN_COMBATTIMENTO, this::processaComandoInStatoInCombattimento);
-// ... ~30 entry
+private final Map<Stato, Supplier<Esito>> gestoriIngresso;       // ingresso automatico, nessun input reale
+private final Map<Stato, Function<Comando, Esito>> gestoriComando; // reazione a un comando reale del giocatore
+
+gestoriComando.put(Stato.IN_LOCAZIONE, this::gestisciComandoInStatoInLocazione);
+gestoriIngresso.put(Stato.INZIO_LOCAZIONE, this::entraInStatoInizioLocazione);
+// ... 18 entry in gestoriIngresso, 27 in gestoriComando (alcuni stati compaiono in entrambe)
 ```
 
-`processaComando(Comando)` (righe 153-162) è il dispatcher: logga il comando, recupera l'handler per lo stato corrente, lo esegue. Se manca un handler per lo stato corrente lancia `IllegalStateException` — quindi **ogni stato deve avere un gestore registrato esplicitamente**, non c'è comportamento di default. Ogni handler:
+`processaComando(Comando)` (righe 216-231) non è il singolo dispatcher che invoca un handler e basta: è un **ciclo** che continua a chiamare `eseguiPasso(...)` finché lo stato risultante non decide di fermarsi e aspettare un input reale. `eseguiPasso` (righe 233-249) sceglie quale delle due mappe consultare in base a se il comando corrente è `null` (ingresso automatico) o reale, e ogni handler:
 
-- legge/valida il `Comando` ricevuto rispetto a ciò che è lecito in quello stato (altrimenti chiama `comandoNonValido`, che pubblica un `InternoErrore`),
-- muta direttamente il campo `stato` dell'automa (assegnazione diretta, es. `Automa.java:167`: `stato = Stato.PRE_GAME_ATTESA_NOME_PERSONAGGIO;`),
+- legge/valida il `Comando` ricevuto rispetto a ciò che è lecito in quello stato (altrimenti chiama `comandoNonValido`, che pubblica un `InternoErrore`, e se manca del tutto un gestore per lo stato corrente lancia `IllegalStateException`),
+- muta direttamente il campo `stato` dell'automa (assegnazione diretta),
+- restituisce un `Esito`: `Esito.FERMATI` per fermarsi ad aspettare un comando reale, `Esito.continuaConIngresso()` per far scattare subito la logica di ingresso del nuovo stato, o `Esito.continuaCon(comando)` per inoltrare un comando (reale o risolto automaticamente, es. la scelta automatica del personaggio bersaglio) come se fosse appena arrivato per il nuovo stato,
 - pubblica sul bus eventi le conseguenze (una `InternoStatoDiGioco` per far sapere alla UI quale schermata mostrare e quali comandi sono ora disponibili, oppure `Notifica*`/`Richiesta*` più specifiche).
 
-Non esiste una funzione di transizione centralizzata che validi "da quale stato a quale stato è lecito andare": le regole sono distribuite negli ~30 metodi `processaComandoInStato*`. È un design pragmatico ma con superficie di manutenzione ampia (già segnalato dagli stessi commenti dell'autore in testa al file, righe 29-35, come lista di `FIXME`/`TODO` aperti: gestione della resurrezione senza scelta esplicita, fumetti che attendono chiusura, cutscene, nome dei gestori delle locande, "ForestaNews" nella mappa, sistema di aiuto).
+Non esiste una funzione di transizione centralizzata che validi "da quale stato a quale stato è lecito andare": le regole restano distribuite nei singoli metodi `entraInStatoX`/`gestisciComandoInStatoX`. È un design pragmatico ma con superficie di manutenzione ampia (già segnalato dagli stessi commenti dell'autore in testa al file, come lista di `FIXME`/`TODO` aperti: gestione della resurrezione senza scelta esplicita, fumetti che attendono chiusura, cutscene, nome dei gestori delle locande, "ForestaNews" nella mappa, sistema di aiuto).
 
-### Il trucco di `processaComando(null)`
+### Avanzamento automatico: `Esito` invece di ricorsione su `null`
 
-38 dei punti di richiamo a `processaComando` nel file passano `null` come `Comando`. La ragione è strutturale: il dispatcher instrada **sul campo `stato`**, non sull'argomento, e non esiste un metodo separato tipo `entraNelloStato(Stato)`. "Entrare in uno stato" ed "eseguire un comando" sono la stessa identica operazione. Quindi, quando un handler decide di passare a un nuovo stato che deve subito eseguire della logica (pubblicare un evento, valutare se proseguire ancora) **senza aspettare un click reale del giocatore**, l'unico modo per far scattare quella logica è richiamare di nuovo `processaComando` — e `null` è la convenzione per "non è un comando vero, sto solo facendo entrare l'automa nel nuovo stato".
+Fino a una versione precedente di questo assessment, l'automa usava una singola mappa `Stato → Consumer<Comando>` e simulava l'"ingresso in uno stato senza input reale" richiamando **ricorsivamente** `processaComando(null)` da dentro gli stessi handler (38 punti di richiamo), distinguendo i due casi con un `if (comando == null)` scritto a mano in ogni handler che ne aveva bisogno. Il difetto: nessun limite alla profondità di ricorsione (rischio di `StackOverflowError` silenzioso su un ipotetico ciclo tra stati), un contratto solo convenzionale (non imposto dal compilatore), e la stessa verifica duplicata in ogni handler.
 
-Molti handler usano `null` come valore di prima classe, con un `if` esplicito che distingue le due situazioni — un "on-enter" fatto in casa:
+Il codice attuale sostituisce questo con il meccanismo `Esito` descritto sopra: **nessun handler richiama più `processaComando` o sé stesso** — si limita a restituire un `Esito`, e un solo ciclo in `processaComando` lo interpreta e decide se continuare. Questo elimina completamente la ricorsione per l'avanzamento di stato (non solo per il caso "ingresso automatico", ma anche per l'inoltro di un comando risolto a un altro stato, es. `SCELTA_AUTOMATICA_PERSONAGGIO` → il personaggio scelto viene inoltrato come comando reale allo stato precedente) e aggiunge una rete di sicurezza esplicita: un contatore (`MAX_TRANSIZIONI_AUTOMATICHE = 100`, riga 47) che fa fallire rumorosamente un'eventuale cascata ciclica tra stati invece di un crash silenzioso.
 
-```java
-// Automa.java:665-688, Stato.INVENTARIO
-private void processaComandoInStatoInventario(Comando comando) {
-    if (comando == null) {
-        richiediAperturaInventarioGruppo();      // "sono appena entrato, mostrami i dati"
-    } else {
-        switch (comando) { ... }                  // "il giocatore ha cliccato qualcosa"
-    }
-}
-```
-
-Lo stesso pattern ricorre in `processaComandoInStatoMappa`, `processaComandoInStatoGiocoPerso`, `processaComandoInStatoGiocoPerso2` (righe 646-736). Altri handler per stati puramente di passaggio (`processaComandoInStatoInizioLocazione`, `processaComandoInStatoInCammino`) ignorano semplicemente `comando`: fanno sempre la stessa cosa a prescindere da cosa arriva. I quattro `switch(comando)` presenti nel file (righe 165, 228, 489, 670) sono invece tutti su stati che aspettano davvero un input del giocatore (es. `ATTESA_PASSI`, `PRE_GAME_ATTESA_CLASSE_PERSONAGGIO`) e infatti non vengono **mai** auto-invocati con `null` — una proprietà verificata nel codice attuale, ma che regge per disciplina dell'autore, non per garanzia del compilatore (uno `switch` su un `Comando` enum `null` lancerebbe `NullPointerException` in Java, mentre i confronti `==`/`!=` con `null` usati altrove sono sicuri).
-
-Tre rischi concreti di questo design:
-
-1. **Ricorsione non limitata invece di un loop**: ogni "avanzamento automatico" è una vera chiamata Java ricorsiva. Catene di stati di passaggio (es. `GIOCO_PERSO` → `GIOCO_PERSO_2` → `STATISTICHE`) impilano frame; non c'è nessuna protezione esplicita, quindi un futuro bug che crei un ciclo tra due stati (A imposta B e si auto-richiama, B torna ad A e si auto-richiama) produrrebbe uno `StackOverflowError` silenzioso.
-2. **Contratto solo convenzionale**: "`null` = ingresso automatico" non è imposto né dalla firma del metodo né dal tipo. Basta che un domani si aggiunga uno `switch(comando)` a uno stato che viene anche auto-invocato con `null` per introdurre un bug silente.
-3. **Duplicazione**: il controllo `if (comando == null) {...} else {...}` è ripetuto a mano in ogni handler che ne ha bisogno, invece di essere un concetto centralizzato in un unico punto.
-
-**Possibile miglioramento**: separare esplicitamente le due responsabilità oggi sovrapposte su `processaComando(Comando)` — un hook di ingresso-stato (`onEnter()`) distinto da un handler di comando reale (`onComando(Comando)`) — e trasformare la cascata di richiami ricorsivi in un loop esplicito centralizzato (un handler segnala "prosegui automaticamente" invece di richiamare da solo `processaComando`). Questo eliminerebbe la ricorsione non limitata, renderebbe il contratto esplicito nel tipo invece che per convenzione su `null`, e concentrerebbe in un solo posto la logica di quante transizioni automatiche possono avvenire in cascata.
+Nel farlo è stato anche corretto un bug preesistente in `gestisciComandoInStatoSelezioneSalvataggioDaScrivere` (riga 794): due `if` indipendenti (non un `if/else`) facevano sì che rispondere "no" alla richiesta di slot di salvataggio innescasse comunque anche un salvataggio spurio (in uno slot "NO" inesistente) e una richiesta di conferma-uscita dal gioco non voluta.
 
 ## 2. Il bus eventi — spina dorsale architetturale
 
@@ -263,7 +248,8 @@ Caratteristiche notevoli documentate: sistema di pesi a due contributi (peso dic
 
 ## 10. Osservazioni per un eventuale refactoring
 
-- **FSM monolitica**: `Automa` concentra ~1100 righe e ~30 handler di stato in un'unica classe; ogni nuova feature di gioco tende ad aggiungere sia un nuovo `Stato` sia un nuovo ramo di `switch`/handler, con rischio di crescita non lineare della complessità ciclomatica.
+- **FSM monolitica**: `Automa` concentra ~1240 righe e oltre 40 handler di stato in un'unica classe; ogni nuova feature di gioco tende ad aggiungere sia un nuovo `Stato` sia un nuovo handler, con rischio di crescita non lineare della complessità ciclomatica. La ricorsione non limitata sull'avanzamento automatico (descritta più sopra) è stata eliminata a favore di un ciclo esplicito basato su `Esito`, ma la dimensione/il numero di responsabilità della classe restano gli stessi.
+- **Nessun test automatico su `Automa`**: `src/test` copre `GestoreProgressione`, `GrammarBean`, il modello dati e `PersonaggioBase`, ma non la macchina a stati. Qualunque intervento su questa classe (incluso il refactoring del ciclo di dispatch sopra descritto) è verificabile solo per lettura attenta del codice e compilazione/smoke-test manuale, non da una suite che ne certifichi il comportamento — un investimento a cui pensare prima del prossimo intervento strutturale su `Automa`.
 - **RNG non seedabile** (`Dado` usa `Math.random()` direttamente): preclude repliche deterministiche di partite per debug/test automatizzati del bilanciamento.
 - **Dipendenza Gson dichiarata ma non usata**: zero import in tutto `src/main/java`. La pipeline che la richiederebbe (`artefatti.txt` → JSON → Gson → `CostruttoreArtefatto`) è documentata in dettaglio in `GrammarBean.md` §5.3 ma non è mai invocata da `ProduttoreDiTestiCasuale` né da altre classi: è un esempio didattico rimasto isolato dal codice di gioco, non una feature attiva. Da chiarire se rimuovere la dipendenza o completare l'integrazione.
 - **Persistenza in formato proprietario pipe-delimited** anziché un formato standard (JSON/altro): funziona, ma rende più fragile l'evoluzione dello schema di salvataggio (nessuna versione/migrazione esplicita visibile nei file letti).
