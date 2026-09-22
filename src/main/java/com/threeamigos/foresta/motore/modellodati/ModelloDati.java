@@ -14,6 +14,7 @@ import java.io.PrintWriter;
  * <li>RegistroPersonaggiMD - i personaggi sparsi per la Foresta</li>
  * <li>RegistroArtefattiMD - gli artefatti sparsi per la Foresta</li>
  * <li>RegistroMissioniMD - le missioni del gioco</li>
+ * <li>NotizieMD - ultimi messaggi mostrati al giocatore e ultime notizie per la mappa</li>
  * </ul>
  */
 public class ModelloDati implements Serializzabile {
@@ -30,6 +31,7 @@ public class ModelloDati implements Serializzabile {
 	private final RegistroPersonaggiMD registroPersonaggiMD;
 	private final RegistroArtefattiMD registroArtefattiMD;
 	private final RegistroMissioniMD registroMissioniMD;
+	private final NotizieMD notizieMD;
 
 	public ModelloDati() {
 		gruppoGiocatoreMD = new GruppoGiocatoreMD();
@@ -39,6 +41,7 @@ public class ModelloDati implements Serializzabile {
 		registroPersonaggiMD = new RegistroPersonaggiMD();
 		registroArtefattiMD = new RegistroArtefattiMD();
 		registroMissioniMD = new RegistroMissioniMD();
+		notizieMD = new NotizieMD();
 	}
 
 	public static ModelloDati getIstanza() {
@@ -77,6 +80,10 @@ public class ModelloDati implements Serializzabile {
 		return registroMissioniMD;
 	}
 
+	public NotizieMD getNotizieMD() {
+		return notizieMD;
+	}
+
 	///////////////////////////////////
 
 	public void reimposta(int dimensioneX, int dimensioneY) {
@@ -87,6 +94,7 @@ public class ModelloDati implements Serializzabile {
 		registroPersonaggiMD.reimposta();
 		registroArtefattiMD.reimposta();
 		registroMissioniMD.reimposta();
+		notizieMD.reimposta();
 	}
 
 	@Override
@@ -98,6 +106,7 @@ public class ModelloDati implements Serializzabile {
 		registroPersonaggiMD.salva(stream);
 		registroArtefattiMD.salva(stream);
 		registroMissioniMD.salva(stream);
+		notizieMD.salva(stream);
 	}
 
 	@Override
@@ -108,6 +117,7 @@ public class ModelloDati implements Serializzabile {
 		registroPersonaggiMD.reimposta();
 		registroArtefattiMD.reimposta();
 		registroMissioniMD.reimposta();
+		notizieMD.reimposta();
 
 		gruppoGiocatoreMD.leggi(stream);
 		statisticheMD.leggi(stream);
@@ -116,5 +126,6 @@ public class ModelloDati implements Serializzabile {
 		registroPersonaggiMD.leggi(stream);
 		registroArtefattiMD.leggi(stream);
 		registroMissioniMD.leggi(stream);
+		notizieMD.leggi(stream);
 	}
 }

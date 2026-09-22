@@ -653,6 +653,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
+	public void ripristinaMessaggi(List<String> messaggiDalPiuRecenteAlPiuVecchio) {
+		riquadroTesto.ripristina(messaggiDalPiuRecenteAlPiuVecchio);
+		repaint();
+	}
+
 	public void notificaVariazioneStatoVitale(Personaggio personaggio) {
 		if (personaggio.isPNG()) {
 			aggiungiSprite(riquadroLocazione.notificaMorte(personaggio));

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.ui.DoomdarkFont.UnsupportedCharacterException;
 
@@ -12,12 +13,12 @@ import java.util.List;
  * Rettangolo di testo scorrevole. Le righe già spezzate alla larghezza del rettangolo
  * vengono conservate in uno storico, e il raster viene ridisegnato a partire da quello:
  * è ciò che permette di tornare indietro con la rotella invece di limitarsi a far
- * scorrere via il testo vecchio.
+ * scorrere via il testo vecchio. Lo storico condivide il limite con quanto ricordato
+ * da {@link com.threeamigos.foresta.motore.Notizie} (vedi {@link Costanti#MASSIMO_MESSAGGI_RICORDATI}),
+ * così che dopo un ricaricamento il pannello possa essere ripopolato per intero.
  */
 public class DoomdarkTextRectangle2x {
 
-	/** Un centinaio di righe: oltre, le più vecchie vengono dimenticate. */
-	private static final int MASSIMO_RIGHE_STORICO = 100;
 	// Pixel aggiuntivi fra la base di una riga e l'inizio della successiva
 	private static final int INTERLINEA = 4;
 
@@ -119,13 +120,27 @@ public class DoomdarkTextRectangle2x {
 		for (String line : lines) {
 			righe.addAll(FontTool.split(fontMedium, line, width));
 		}
-		while (righe.size() > MASSIMO_RIGHE_STORICO) {
+		while (righe.size() > Costanti.MASSIMO_MESSAGGI_RICORDATI) {
 			righe.remove(0);
 		}
 		// Un messaggio nuovo riporta in fondo: nel mezzo di una partita non deve poter
 		// passare inosservato perché si stava rileggendo il testo vecchio
 		offsetRighe = 0;
 		daRidisegnare = true;
+	}
+
+	/**
+	 * Svuota lo storico e lo ripopola con i messaggi indicati, dal più vecchio al
+	 * più recente (l'ordine cronologico che {@link #addString} si aspetta) — usato
+	 * per ripristinare il pannello dopo un caricamento, invece che ripartire vuoto.
+	 *
+	 * @param messaggiDalPiuRecenteAlPiuVecchio come li restituisce {@code Notizie.getUltimiMessaggi()}
+	 */
+	public final synchronized void ripristina(List<String> messaggiDalPiuRecenteAlPiuVecchio) {
+		clear();
+		for (int i = messaggiDalPiuRecenteAlPiuVecchio.size() - 1; i >= 0; i--) {
+			addString(messaggiDalPiuRecenteAlPiuVecchio.get(i));
+		}
 	}
 
 	public final synchronized void clear() {

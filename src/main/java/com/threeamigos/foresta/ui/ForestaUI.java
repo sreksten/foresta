@@ -43,6 +43,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 		SwingUtilities.invokeLater(this::creaEMostraInterfacciaUtente);
 
+		BusEventi.iscriviti(InternoCaricamentoCompletato.class, this::gestisciEventoCaricamentoCompletato);
 		BusEventi.iscriviti(NotificaErroreCaricamento.class, this::gestisciEventoErroreCaricamento);
 		BusEventi.iscriviti(NotificaGlobale.class, this::gestisciEventoNotificaGlobale);
 		BusEventi.iscriviti(InternoAggiornamentoComandiDisponibili.class, this::gestisciEventoComandiDisponibili);
@@ -198,6 +199,10 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	private void gestisciEventoMostraStatistiche(NotificaMostraStatisticheFineGioco evento) {
 		displayableCanvas.mostraStatistiche();
+	}
+
+	private void gestisciEventoCaricamentoCompletato(InternoCaricamentoCompletato evento) {
+		displayableCanvas.ripristinaMessaggi(evento.getUltimiMessaggi());
 	}
 
 	private void gestisciEventoErroreCaricamento(NotificaErroreCaricamento evento) {

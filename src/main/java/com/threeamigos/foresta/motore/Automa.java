@@ -269,6 +269,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (comando != Comando.ANNULLA && GestoreSalvataggi.leggi(comando)) {
 			stato = Stato.ATTESA_DIREZIONE;
 			BusEventi.pubblica(new InternoMostraSchermataGioco());
+			BusEventi.pubblica(new InternoCaricamentoCompletato(Notizie.getUltimiMessaggi()));
 			return Esito.continuaConIngresso();
 		} else {
 			BusEventi.pubblica(new InternoStatoDiGioco(Stato.INTRO, getComandiPossibiliInStatoIntro()));

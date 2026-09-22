@@ -5,6 +5,7 @@ import com.threeamigos.foresta.eventi.SnifferBusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoInterfacciaUtentePronta;
 import com.threeamigos.foresta.motore.Automa;
 import com.threeamigos.foresta.motore.ControlloreDiGioco;
+import com.threeamigos.foresta.motore.Notizie;
 import com.threeamigos.foresta.tools.*;
 import com.threeamigos.foresta.ui.ForestaUI;
 import com.threeamigos.foresta.ui.Orientamento;
@@ -30,6 +31,8 @@ public class Main {
 
 		// Si registra per ascoltare qualsiasi evento venga generato
 		new SnifferBusEventi();
+		// Si registra per ricordare gli ultimi messaggi e le ultime notizie
+		Notizie.registrati();
 
 		leggiArgomenti(args);
 		GestorePunteggi.impostaGestorePunteggi(new GestorePunteggiSuFile());

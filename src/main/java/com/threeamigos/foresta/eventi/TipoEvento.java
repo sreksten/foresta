@@ -193,6 +193,10 @@ public enum TipoEvento {
      */
     NOTIFICA_TESTO_FRASE,
     /**
+     * Una notizia viene inviata dal motore al giocatore, per essere mostrata in seguito nella schermata della mappa
+     */
+    NOTIFICA_NOTIZIA,
+    /**
      * Variazione della mappa conosciuta della foresta
      */
     NOTIFICA_VARIAZIONE_CONOSCENZA_MAPPA,
@@ -251,6 +255,10 @@ public enum TipoEvento {
      * Elenco dei possibili comandi che l'interfaccia deve mostrare
      */
     INTERNO_AGGIORNAMENTO_COMANDI_DISPONIBILI,
+    /**
+     * Un salvataggio è stato riletto con successo: porta gli ultimi messaggi da ripristinare nel pannello di testo
+     */
+    INTERNO_CARICAMENTO_COMPLETATO,
     /**
      * Un nuovo Personaggio viene creato dal motore
      */
