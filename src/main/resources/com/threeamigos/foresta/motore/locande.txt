@@ -478,7 +478,7 @@ NOTIZIE_RE_FINTO
     Finti Velluti - LADRO appicca il fuoco per errore ai finti velluti di cartapesta del Re Finto, costringendo l'oste a sfoltire i prezzi e a scappare dalla finestra sul retro.
     Rissa d'Invidia - Volano sedie dopo che EROE ha sfoggiato una corona di cartapesta vinta alla locanda del Re Finto, pretendendo che tutti gli elfi presenti si inchinassero al suo passaggio verso le latrine.
 
-NOTIZIE$
+NOTIZIE_LOCANDA
     Rissa Leggendaria - Devastata la locanda "“[#NOME_LOCANDA]\"" per una disputa teologica sul sesso dei folletti. EROE ha usato una sedia nanesca come argomento principale.
     Lamentele dell'Oste - Il proprietario della locanda "“[#NOME_LOCANDA]\"" esprime profondo sdegno per "“questi eroi della domenica\"" che ordinano un solo brodo in quattro e rubano i tovaglioli di lino.
     Grave Incidente d'Arte - Un bardo locale, avventore della locanda "“[#NOME_LOCANDA]\"", ha riportato la frattura del liuto sulla testa dopo aver tentato di intonare una ballata celebrativa sulle ascelle dell'eroe.
@@ -508,37 +508,37 @@ NOTIZIE$
     Incidente Alchemico - EROE ha scambiato una fiala di fertilizzante concentrato dell'Alchimista per uno sciroppo d'acero, causando la crescita istantanea di muschio lussureggiante sulla lingua del bardo della locanda "“[#NOME_LOCANDA]\"".
     Rissa per Futili Motivi - Volano panche e tavoli alla locanda "“[#NOME_LOCANDA]\"" dopo che LADRO ha affermato che la birra della casa fosse in realtà acqua piovana filtrata attraverso i calzini usati di un Centauro.
     Rissa d'Orgoglio - Violento scontro scatenato da MAGO, che ha tentato di pagare il conto alla locanda "“[#NOME_LOCANDA]\"" dimostrando matematicamente che l'oro richiesto dall'oste fosse un'illusione ottica creata dal fumo della cucina.
-    Rissa da Spettacolo: Pugni e morsi tra gli avventori alla locanda "“[#NOME_LOCANDA]\"" quando EROE, annoiato dalle ballate locali, ha pagato un folletto per fare lo sgambetto al bardo ufficiale nel bel mezzo dell'acuto finale.
+    Rissa da Spettacolo - Pugni e morsi tra gli avventori alla locanda "“[#NOME_LOCANDA]\"" quando EROE, annoiato dalle ballate locali, ha pagato un folletto per fare lo sgambetto al bardo ufficiale nel bel mezzo dell'acuto finale.
+    Lamentele Nazionali - L'associazione dei cacciatori mancini esprime profondo sdegno verso EROE che ha utilizzato le loro frecce di riserva come spiedini per arrostire lucertole giganti nel cortile.
+    Incidente di Trasmutazione - Un incantesimo di Gelo maldestro ha trasformato l'intero bucato steso sul retro della locanda "“[#NOME_LOCANDA]\"" in una serie di sculture di ghiaccio taglienti, ferendo il cane dell'oste.
+    Incidente di Trasmutazione - Un incantesimo d'Acqua maldestro ha trasformato l'intero pavimento in parquet della  in una palude scivolosa, provocando la frattura dell'orgoglio a tre cavalieri.
+    Lamentele sul Menu - EROE restituisce lo stufato del giorno alla locanda "“[#NOME_LOCANDA]\"" lamentando che "le verdure all'interno stanno palesemente tentando di organizzare una coalizione sindacale contro il mio stomaco".
+    Rissa per Mancato Rispetto - Volano panche e brocche alla locanda "“[#NOME_LOCANDA]\"" dopo che EROE ha accusato un pacifico bardo itinerante di usare un "“font tipografico poco epico\"" sul cartello delle mance.
+    Incidente di Trasmutazione - Un incantesimo di Terra maldestro ha trasformato l'idromele nei boccali di tutti i clienti della locanda "“[#NOME_LOCANDA]\"" in un blocco di fango compatto, spezzando i denti a un Barbaro che stava bevendo alla goccia.
+    Maledizione Strutturale - Un anatema maldestro ha fatto sì che tutti i boccali della locanda "“[#NOME_LOCANDA]\"" si attaccassero magneticamente alle mani dei clienti, costringendo dodici avventori a vivere in simbiosi con la birra.
+    Rissa d'Invidia Tattica - Volano sedie alla locanda "“[#NOME_LOCANDA]\"" dopo che LADRO ha esibito un finto titolo di Arciduca dei Pannoloni comprato da un ciarlatano, pretendendo il tavolo imperiale.
+    Rissa per Incomprensione - Scoppiato il caos totale perché EROE ha scambiato il gatto della locanda "“[#NOME_LOCANDA]\"" per un rarissimo minion demoniaco, tentandone l'esorcismo con un boccale di sidro benedetto sul momento.
+    Lamentele sul Menu - EROE ha tentato di restituire lo stufato del giorno alla locanda "“[#NOME_LOCANDA]\"" lamentando che "“la carne si muoveva a un ritmo incompatibile con le leggi della fisica e del buon gusto\"".
+    Rissa per Futili Motivi - Scoppiato un putiferio quando MAGO ha spento il camino della sala comune alla locanda "“[#NOME_LOCANDA]\"" con un incantesimo d'Acqua, sostenendo che le scintille stessero attentando all'integrità del suo mantello di seta sintetica.
+    Rissa d'Iniziativa - Violento scontro scatenato da LADRO che ha occupato contemporaneamente tre sgabelli al bancone della locanda "“[#NOME_LOCANDA]\"", sostenendo che la sua alta Velocità gli permettesse di sedersi ovunque prima degli altri.
+    Rissa per Incomprensione - Scoppiata una mega rissa perché EROE ha scambiato l'armatura decorativa del salone della locanda "“[#NOME_LOCANDA]\"" per un mostro di pietra, prendendola a colpi di sedia prima che l'oste potesse spiegare l'equivoco.
+    Lamentele sul Menu - Alla locanda "“[#NOME_LOCANDA]\"" EROE restituisce lo stufato lamentando la presenza di un "artiglio biologico non identificato che tentava di fare parata contro il mio cucchiaio".
+    Maledizione Strutturale - Un anatema maldestro ha invertito la polarità delle porte della locanda "“[#NOME_LOCANDA]\"". Ora si aprono solo se insultate pesantemente in lingua orchesca, esasperando la clientela.
+    Rissa d'Invidia - Volano sedie alla locanda "“[#NOME_LOCANDA]\"" dopo che LADRO ha esibito un finto anello reale acquistato da un ciarlatano, pretendendo che l'oste gli servisse il sidro in ginocchio.
+    Rissa per Mancato Tempismo - Scontro totale nella sala comune della locanda "“[#NOME_LOCANDA]\"" dopo che LADRO ha tentato di rubare le stringhe delle scarpe a un paladino sul timer del secondo scatto.
+    Rissa per Futili Motivi - Volano panche e boccali alla locanda "“[#NOME_LOCANDA]\"" dopo che GUERRIERO ha affermato che lo stufato di cervo della casa fosse in realtà topo di fogna marinato nel sidro sgasato.
+    Rissa d'Orgoglio Marziale - Violento scontro alla locanda "“[#NOME_LOCANDA]\"" scatenato da GUERRIERO che ha occupato l'unico tavolo vicino al camino, sostenendo che il suo valore di Costituzione gli desse la precedenza assoluta sul riscaldamento corporeo.
 
-    Lamentele Nazionali: L'associazione dei cacciatori mancini esprime profondo sdegno per l'eroe che ha utilizzato le loro frecce di riserva come spiedini per arrostire lucertole giganti nel cortile.
-    Incidente di Trasmutazione: Un incantesimo di Gelo maldestro ha trasformato l'intero bucato steso sul retro della locanda in una serie di sculture di ghiaccio taglienti, ferendo il cane dell'oste.
-    Rissa per Incomprensione: Scoppiato il caos totale perché l'eroe ha scambiato il gatto della locanda per un rarissimo minion demoniaco, tentandone l'esorcismo con un boccale di sidro benedetto sul momento.
-    Rissa da Scommessa: Scontro violento nato dopo che il protagonista ha scommesso dieci monete che il Guerriero del party avrebbe potuto inghiottire un intero uovo di Viverna senza masticarlo.
-    Lamentele sul Menu: Il protagonista ha tentato di restituire lo stufato del giorno lamentando che "la carne si muoveva a un ritmo incompatibile con le leggi della fisica e del buon gusto".
-    Rissa per Mancato Rispetto: Volano panche e brocche dopo che l'eroe ha accusato un pacifico bardo itinerante di usare un "font tipografico poco epico" sul cartello delle mance.
-    Incidente di Rifornimento: L'Alchimista cittadino esprime profondo sdegno. L'eroe ha svuotato l'intera cisterna dell'acqua distillata per farsi un pediluvio rilassante dopo una camminata nella Palude.
-    Rissa per Futili Motivi: Scoppiato un putiferio quando il Mago del party ha spento il camino della sala comune con un incantesimo d'Acqua, sostenendo che le scintille stessero attentando all'integrità del suo mantello di seta sintetica.
-    Lamentele dei Nani: I carpentieri nani del borgo aprono una vertenza formale: L'eroe ha usato i loro preziosi strumenti di precisione per aprirsi una scatola di fagioli stufati risalente all'era precedente.
-    Rissa d'Iniziativa: Violento scontro scatenato dal Ladro che ha occupato contemporaneamente tre sgabelli al bancone, sostenendo che la sua alta Velocità gli permettesse di sedersi ovunque prima degli altri.
-    Truffa d'End-Game: Ricercato un truffatore nella Foresta. L'eroe ha venduto a un viandante un uovo di gallina dipinto di verde, spacciandolo per un rarissimo cucciolo di Drago tascabile da guardia.
-    Rissa da Spettatori: Pugni e morsi tra i nani dopo che il Bardo del party ha interrotto una solenne ballata militare per intonare un jingle commerciale sulle pozioni di salute dell'Alchimista.
-    Incidente di Trasmutazione: Un incantesimo di Terra maldestro ha trasformato l'idromele nei boccali di tutti i clienti in un blocco di fango compatto, spezzando i denti a un Barbaro che stava bevendo alla goccia.
-    Rissa per Incomprensione: Scoppiata una mega rissa perché l'eroe ha scambiato l'armatura decorativa della sala per un mostro di pietra, prendendola a colpi di sedia prima che l'oste potesse spiegare l'equivoco.
-    Lamentele sul Menu: Il protagonista restituisce lo stufato lamentando la presenza di un "artiglio biologico non identificato che tentava di fare parata contro il mio cucchiaio".
-    Maledizione Strutturale: Un anatema maldestro ha invertito la polarità delle porte della locanda. Ora si aprono solo se insultate pesantemente in lingua orchesca, esasperando la clientela.
-    Rissa d'Invidia: Volano sedie dopo che il Ladro del party ha esibito un finto anello reale acquistato da un ciarlatano, pretendendo che l'oste gli servisse il sidro in ginocchio.
-    Rissa per Mancato Tempismo: Scontro totale nella sala comune dopo che il Ladro ha tentato di rubare le stringhe delle scarpe a un paladino sul timer del secondo scatto.
-    Incidente Alchemico: L'eroe ha scambiato una lozione per capelli dell'Alchimista per un elisir di cura magico, provocando la crescita istantanea di una folta pelliccia di lupo sulle gengive del Mago.
-    Rissa per Futili Motivi: Volano panche e boccali dopo che il Guerriero ha affermato che lo stufato di cervo della casa fosse in realtà topo di fogna marinato nel sidro sgasato.
-    Lamentele dei Chierici: I chierici del borgo aprono una vertenza formale. L'eroe ha usato i paramenti sacri del tempio come stracci improvvisati per lucidare la sua armatura pesante.
-    Rissa d'Orgoglio Marziale: Violento scontro scatenato dal Guerriero che ha occupato l'unico tavolo vicino al camino, sostenendo che il suo valore di Costituzione gli desse la precedenza assoluta sul riscaldamento corporeo.
-    Truffa Leggendaria: Ricercato un avventuriero nella Foresta. L'eroe ha venduto a un viandante un pezzo di vetro colorato spacciandolo per un frammento dell'anima disintegrata dell'OmbraFiamma.
-    Rissa da Spettacolo: Pugni e morsi tra i mercanti quando l'eroe ha pagato un folletto per fare boccacce alle guardie cittadine nel bel mezzo della lettura del bando reale.
-    Incidente di Trasmutazione: Un incantesimo d'Acqua maldestro ha trasformato l'intero pavimento in parquet della locanda in una palude scivolosa, provocando la frattura dell'orgoglio a tre cavalieri.
-    Rissa per Incomprensione: Scoppiata una mega rissa perché l'eroe ha scambiato lo specchio della sala comune per un portale dimensionale maledetto, frantumandolo a colpi di scudo nanico.
-    Lamentele sul Menu: Il protagonista restituisce lo stufato del giorno lamentando che "le verdure all'interno stanno palesemente tentando di organizzare una coalizione sindacale contro il mio stomaco".
-    Maledizione Strutturale: Un anatema maldestro ha fatto sì che tutti i boccali della taverna si attaccassero magneticamente alle mani dei clienti, costringendo dodici avventori a vivere in simbiosi con la birra.
-    Rissa d'Invidia Tattica: Volano sedie dopo che il Ladro del party ha esibito un finto titolo di Arciduca dei Pannoloni comprato da un ciarlatano, pretendendo il tavolo imperiale.
-
+NOTIZIE_CITTA
+    Rissa da Spettacolo - Pugni e morsi tra i mercanti quando EROE ha pagato un folletto per fare boccacce alle guardie cittadine nel bel mezzo della lettura del bando reale.
+    Rissa per Incomprensione - Scoppiata una mega rissa perché EROE ha scambiato lo specchio della sala comune per un portale dimensionale maledetto, frantumandolo a colpi di scudo nanico.
+    Lamentele dei Chierici - I chierici del borgo aprono una vertenza formale. EROE ha usato i paramenti sacri del tempio come stracci improvvisati per lucidare la sua armatura pesante.
+    Incidente Alchemico - EROE ha scambiato una lozione per capelli dell'Alchimista per un elisir di cura magico, provocando la crescita istantanea di una folta pelliccia di lupo sulle gengive di MAGO.
+    Truffa d'End-Game - Ricercato un truffatore nella Foresta. EROE ha venduto a un viandante un uovo di gallina dipinto di verde, spacciandolo per un rarissimo cucciolo di Drago tascabile da guardia.
+    Lamentele dei Nani - I carpentieri nani del borgo aprono una vertenza formale: EROE ha usato i loro preziosi strumenti di precisione per aprirsi una scatola di fagioli stufati risalente all'era precedente.
+    Incidente di Rifornimento - L'Alchimista cittadino esprime profondo sdegno. EROE ha svuotato l'intera cisterna dell'acqua distillata per farsi un pediluvio rilassante dopo una camminata nella Palude.
     Lamentele di Vicinato - Gli abitanti del borgo protestano ufficialmente. EROE ha tentato di accordare un liuto usando una morsa da fabbro, producendo ultrasuoni che hanno terrorizzato i pipistrelli delle Rovine.
     Lamentele della Guardia - Le pattuglie cittadine denunciano il furto di tre elmi d'ordinanza, usati da EROE la sera prima come pentoloni improvvisati per uno stufato di funghi allucinogeni clandestino.
+    Truffa Leggendaria - Ricercato un avventuriero nella Foresta. EROE ha venduto a un viandante un pezzo di vetro colorato spacciandolo per un frammento dell'anima disintegrata dell'OmbraFiamma.
+    Rissa da Scommessa - Scontro violento nato dopo che EROE ha scommesso dieci monete che GUERRIERO avrebbe potuto inghiottire un intero uovo di Viverna senza masticarlo.
+    Rissa da Spettatori - Pugni e morsi tra i nani dopo che BARDO ha interrotto una solenne ballata militare per intonare un jingle commerciale sulle pozioni di salute dell'Alchimista.
