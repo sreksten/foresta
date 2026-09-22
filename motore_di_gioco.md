@@ -1,0 +1,270 @@
+# Motore di gioco
+
+> Assessment tecnico della logica di gioco pura: `motore`, `motore.modellodati`, `eventi`, `personaggi`, `locazioni`, `missioni`, `oggetti`, `offerte`, `tools`.
+> Per la parte grafica/rendering vedi [`motore_grafico.md`](motore_grafico.md). Per una visione d'insieme vedi [`foresta.md`](foresta.md).
+
+## 1. Bootstrap e loop principale
+
+Il motore vive interamente nella classe `Automa` (`motore/Automa.java`, 1118 righe), unica implementazione dell'interfaccia `ControlloreDiGioco`:
+
+```java
+public interface ControlloreDiGioco {
+    void inizia();
+    void processaComando(Comando azione);
+}
+```
+
+`Automa` non ha un "game loop" nel senso classico (nessun `while(true)` che aggiorna lo stato a ogni frame): è una **macchina a stati finiti reattiva**, che avanza solo in risposta a due tipi di stimolo:
+
+1. **Comandi del giocatore** — eventi `ComandoDiGioco` pubblicati dalla UI quando l'utente clicca un'icona/azione, consegnati a `processaComando(Comando)`.
+2. **Tick di un timer** — quando serve un ritardo (es. l'animazione di intro, l'attesa prima di un attacco nemico), `Automa` chiama `temporizzatore.inizia(millisecondi)`; allo scadere il `Temporizzatore` invoca `tick()` (interfaccia `Temporizzabile`), che internamente chiama `processaComando(Comando.TIMER)` (`Automa.java:98-100`).
+
+Il `Temporizzatore` (interfaccia in `tools/Temporizzatore.java`) è implementato da `TemporizzatoreJ2SE` (`tools/TemporizzatoreJ2SE.java`), che usa uno `ScheduledExecutorService` a thread singolo daemon. È importante notare che il tick viene **rimbalzato sull'Event Dispatch Thread di Swing** (`SwingUtilities.invokeLater`, righe 32-43): un commento nel codice spiega perché — `processaComando()` pubblica eventi via `BusEventi`, che se chiamato fuori dall'EDT li accoda con `invokeLater`, aprendo una finestra in cui lo stato di gioco è già cambiato ma la UI non l'ha ancora saputo (causando flicker, es. un mostro morto ma ancora disegnato vivo per un frame). Conclusione architetturale: **tutta la logica di gioco gira sull'EDT**, non su un thread separato — solo il *timing* dei tick è schedulato fuori.
+
+### La state machine (`Stato`)
+
+`motore/Stato.java` enumera ~40 stati, organizzati per fase di gioco:
+
+- **Pre-partita**: `INTRO`, `PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE`, `FILE_DI_SALVATAGGIO_NON_VALIDO`, `PRE_GAME_ATTESA_NOME_PERSONAGGIO`, `PRE_GAME_ATTESA_SESSO_PERSONAGGIO`, `PRE_GAME_ATTESA_CLASSE_PERSONAGGIO`.
+- **Ciclo di gioco**: `INZIO_LOCAZIONE` → `IN_LOCAZIONE` → (combattimento/incantesimi/inventario/mappa) → `FINE_LOCAZIONE` → `ATTESA_DIREZIONE` → `ATTESA_PASSI` → `IN_CAMMINO` → di nuovo `INZIO_LOCAZIONE`.
+- **Sotto-stati di combattimento e scelte**: `IN_COMBATTIMENTO`, `SCELTA_AUTOMATICA_PERSONAGGIO`, `SCELTA_PERSONAGGIO_QUALSIASI`, `SCELTA_MANUALE_PERSONAGGIO`, `SCELTA_INCANTESIMO_DA_LANCIARE`, `ATTESA_INCANTESIMO_QUALSIASI`, `INCANTESIMO_SCELTO`, `ATTESA_SI_NO`, `ATTESA_POZIONE_*`, `SCELTA_BERSAGLIO_RESURREZIONE`, `ESEECUZIONE_RESURREZIONE` (sic).
+- **Fine partita**: `GIOCO_PERSO`/`GIOCO_PERSO_2`, `GIOCO_VINTO`/`GIOCO_VINTO_2`, `STATISTICHE`, `ATTESA_NOME_PUNTEGGI`, `PUNTEGGI`.
+- **Meta**: `INVENTARIO`, `MAPPA`, `SELEZIONE_SALVATAGGIO_DA_SCRIVERE`, `CONFERMA_USCITA`.
+
+Nel costruttore di `Automa` (righe 61-95) ogni `Stato` è mappato a un handler dedicato in una `Map<Stato, Consumer<Comando>> gestoriComando` (un `EnumMap`, dispatch O(1)):
+
+```java
+gestoriComando.put(Stato.IN_LOCAZIONE, this::processaComandoInStatoInLocazione);
+gestoriComando.put(Stato.IN_COMBATTIMENTO, this::processaComandoInStatoInCombattimento);
+// ... ~30 entry
+```
+
+`processaComando(Comando)` (righe 153-162) è il dispatcher: logga il comando, recupera l'handler per lo stato corrente, lo esegue. Se manca un handler per lo stato corrente lancia `IllegalStateException` — quindi **ogni stato deve avere un gestore registrato esplicitamente**, non c'è comportamento di default. Ogni handler:
+
+- legge/valida il `Comando` ricevuto rispetto a ciò che è lecito in quello stato (altrimenti chiama `comandoNonValido`, che pubblica un `InternoErrore`),
+- muta direttamente il campo `stato` dell'automa (assegnazione diretta, es. `Automa.java:167`: `stato = Stato.PRE_GAME_ATTESA_NOME_PERSONAGGIO;`),
+- pubblica sul bus eventi le conseguenze (una `InternoStatoDiGioco` per far sapere alla UI quale schermata mostrare e quali comandi sono ora disponibili, oppure `Notifica*`/`Richiesta*` più specifiche).
+
+Non esiste una funzione di transizione centralizzata che validi "da quale stato a quale stato è lecito andare": le regole sono distribuite negli ~30 metodi `processaComandoInStato*`. È un design pragmatico ma con superficie di manutenzione ampia (già segnalato dagli stessi commenti dell'autore in testa al file, righe 29-35, come lista di `FIXME`/`TODO` aperti: gestione della resurrezione senza scelta esplicita, fumetti che attendono chiusura, cutscene, nome dei gestori delle locande, "ForestaNews" nella mappa, sistema di aiuto).
+
+### Il trucco di `processaComando(null)`
+
+38 dei punti di richiamo a `processaComando` nel file passano `null` come `Comando`. La ragione è strutturale: il dispatcher instrada **sul campo `stato`**, non sull'argomento, e non esiste un metodo separato tipo `entraNelloStato(Stato)`. "Entrare in uno stato" ed "eseguire un comando" sono la stessa identica operazione. Quindi, quando un handler decide di passare a un nuovo stato che deve subito eseguire della logica (pubblicare un evento, valutare se proseguire ancora) **senza aspettare un click reale del giocatore**, l'unico modo per far scattare quella logica è richiamare di nuovo `processaComando` — e `null` è la convenzione per "non è un comando vero, sto solo facendo entrare l'automa nel nuovo stato".
+
+Molti handler usano `null` come valore di prima classe, con un `if` esplicito che distingue le due situazioni — un "on-enter" fatto in casa:
+
+```java
+// Automa.java:665-688, Stato.INVENTARIO
+private void processaComandoInStatoInventario(Comando comando) {
+    if (comando == null) {
+        richiediAperturaInventarioGruppo();      // "sono appena entrato, mostrami i dati"
+    } else {
+        switch (comando) { ... }                  // "il giocatore ha cliccato qualcosa"
+    }
+}
+```
+
+Lo stesso pattern ricorre in `processaComandoInStatoMappa`, `processaComandoInStatoGiocoPerso`, `processaComandoInStatoGiocoPerso2` (righe 646-736). Altri handler per stati puramente di passaggio (`processaComandoInStatoInizioLocazione`, `processaComandoInStatoInCammino`) ignorano semplicemente `comando`: fanno sempre la stessa cosa a prescindere da cosa arriva. I quattro `switch(comando)` presenti nel file (righe 165, 228, 489, 670) sono invece tutti su stati che aspettano davvero un input del giocatore (es. `ATTESA_PASSI`, `PRE_GAME_ATTESA_CLASSE_PERSONAGGIO`) e infatti non vengono **mai** auto-invocati con `null` — una proprietà verificata nel codice attuale, ma che regge per disciplina dell'autore, non per garanzia del compilatore (uno `switch` su un `Comando` enum `null` lancerebbe `NullPointerException` in Java, mentre i confronti `==`/`!=` con `null` usati altrove sono sicuri).
+
+Tre rischi concreti di questo design:
+
+1. **Ricorsione non limitata invece di un loop**: ogni "avanzamento automatico" è una vera chiamata Java ricorsiva. Catene di stati di passaggio (es. `GIOCO_PERSO` → `GIOCO_PERSO_2` → `STATISTICHE`) impilano frame; non c'è nessuna protezione esplicita, quindi un futuro bug che crei un ciclo tra due stati (A imposta B e si auto-richiama, B torna ad A e si auto-richiama) produrrebbe uno `StackOverflowError` silenzioso.
+2. **Contratto solo convenzionale**: "`null` = ingresso automatico" non è imposto né dalla firma del metodo né dal tipo. Basta che un domani si aggiunga uno `switch(comando)` a uno stato che viene anche auto-invocato con `null` per introdurre un bug silente.
+3. **Duplicazione**: il controllo `if (comando == null) {...} else {...}` è ripetuto a mano in ogni handler che ne ha bisogno, invece di essere un concetto centralizzato in un unico punto.
+
+**Possibile miglioramento**: separare esplicitamente le due responsabilità oggi sovrapposte su `processaComando(Comando)` — un hook di ingresso-stato (`onEnter()`) distinto da un handler di comando reale (`onComando(Comando)`) — e trasformare la cascata di richiami ricorsivi in un loop esplicito centralizzato (un handler segnala "prosegui automaticamente" invece di richiamare da solo `processaComando`). Questo eliminerebbe la ricorsione non limitata, renderebbe il contratto esplicito nel tipo invece che per convenzione su `null`, e concentrerebbe in un solo posto la logica di quante transizioni automatiche possono avvenire in cascata.
+
+## 2. Il bus eventi — spina dorsale architetturale
+
+`eventi/BusEventi.java` (49 righe) implementa un **publish/subscribe sincrono**, dichiaratamente semplice:
+
+```java
+private static final Map<Class<?>, List<Consumer<Object>>> sottoscrittori = new ConcurrentHashMap<>();
+
+public static <T> void iscriviti(Class<T> eventType, Consumer<T> listener) { ... }
+public static void pubblica(Object evento) {
+    List<Consumer<Object>> list = sottoscrittori.get(evento.getClass());
+    if (SwingUtilities.isEventDispatchThread()) {
+        list.forEach(c -> c.accept(evento));
+    } else {
+        SwingUtilities.invokeLater(() -> list.forEach(c -> c.accept(evento)));
+    }
+}
+```
+
+Punti chiave:
+
+- **Dispatch per classe esatta** (`evento.getClass()`, non gerarchia/polimorfismo): iscriversi a una superclasse non intercetta le sottoclassi.
+- **Consegna sull'EDT**: se `pubblica()` è chiamato già sull'EDT, esegue subito i listener (sincrono, in-place); altrimenti li accoda con `invokeLater`. Questo garantisce che **tutti gli handler di eventi girino sull'Event Dispatch Thread**, l'unico thread su cui sia motore che UI leggono/scrivono stato condiviso — evitando quasi ogni classe di race condition tipica delle UI Swing multi-thread.
+- Sottoscrittori mantenuti in `CopyOnWriteArrayList` (sicuro rispetto a iscrizioni/cancellazioni concorrenti durante l'iterazione).
+- Nessuna garanzia d'ordine tra sottoscrittori multipli sullo stesso tipo di evento, nessuna gestione di eccezioni nei listener (un'eccezione in un consumer propaga e interrompe gli altri della lista).
+
+### Le quattro famiglie di eventi
+
+Gli eventi sono organizzati per **direzione e intento della comunicazione**, non per dominio (combattimento, mappa, ecc.) — una scelta di naming che rende immediatamente leggibile *chi parla a chi*:
+
+| Package | Conteggio file | Direzione | Esempio |
+| :--- | :---: | :--- | :--- |
+| `eventi.comandigiocatore` | 12 | UI → motore | `ComandoDiGioco`, `ComandoAcquistoArtefatto`, `ComandoVisualizzazioneMappa` |
+| `eventi.notifiche` | 40 | motore → UI, informativi (fatto compiuto) | `NotificaVariazioneStatisticheePersonaggio`, `NotificaFineGioco`, `NotificaRaccoltaOggetti` |
+| `eventi.richieste` | 7 | motore → UI, richieste di input | `RichiestaSelezioneDirezione`, `RichiestaSelezioneSiNo`, `RichiestaTesto` |
+| `eventi.interni` | 22 | bidirezionale/tecnico, non user-facing | `InternoStatoDiGioco`, `InternoErrore`, `InternoCreazioneSprite*` |
+
+Classi base comuni:
+- `EventoBase` (`eventi/EventoBase.java`) — UUID generato e `TipoEvento`, usata come radice per eventi "che accadono nel motore".
+- `EventoSuPersonaggio` — probabile estensione per eventi che portano un riferimento a `Personaggio` (usata da gran parte delle `Notifica*VariazioneXPersonaggio`).
+
+Il flusso tipico di un'azione giocatore:
+
+```
+Click su icona (UI)                     →  BusEventi.pubblica(new ComandoDiGioco(Comando.COMBATTIMENTO))
+Automa.onEventoComandoDiGioco()          →  processaComando(Comando.COMBATTIMENTO)
+Automa.processaComandoInStatoInLocazione →  stato = Stato.IN_COMBATTIMENTO; BusEventi.pubblica(new InternoStatoDiGioco(...))
+ForestaUI.gestisciEventoStatoDiGioco()   →  displayableCanvas.primoPiano(...); pannelloIcone.impostaAzioni()
+```
+
+`ComandiPossibili`/`Comando.java` (`motore/Comando.java`, 135 righe) è l'enum di tutte le azioni pilotabili: scelte iniziali (sesso/classe), azioni in locazione (`COMBATTIMENTO`, `INCANTESIMO`, `CORRUZIONE`, `AMICIZIA`, `FUGA`), selezione personaggio (`PERSONAGGIO_1..5`), elementi magici (`ARIA`, `ACQUA`, `TERRA`, `FUOCO`, ...), più comandi meta (salvataggio, uscita, timer). Ogni stato dell'automa espone solo un sottoinsieme di `Comando` come "possibili" (`ComandiPossibili.set(...)`), che la UI traduce in icone/bottoni cliccabili in `PannelloIcone`.
+
+## 3. Modello dati (`modellodati`) vs logica di comportamento (`motore`)
+
+Il progetto separa nettamente **dati persistibili** da **comportamento**, con una convenzione di naming esplicita: le classi in `motore/modellodati/` hanno suffisso **`MD`** (ModelloDati) e sono essenzialmente bean serializzabili senza logica di gioco, mentre le classi in `motore/` (senza suffisso, es. `Personaggio`, `Foresta`, `Gruppo`) espongono API di comportamento che **operano su** un `*MD` sottostante.
+
+`ModelloDati` (`motore/modellodati/ModelloDati.java`) è il contenitore radice, **singleton statico** (`private static ModelloDati istanza`, righe 22, 44-50), che aggrega:
+
+```java
+GruppoGiocatoreMD gruppoGiocatoreMD;     // party del giocatore
+StatisticheMD statisticheMD;             // statistiche di partita
+LineaTemporaleMD lineaTemporaleMD;       // log storico degli eventi di gioco
+ForestaMD forestaMD;                     // la mappa e il suo stato
+RegistroPersonaggiMD registroPersonaggiMD;  // NPC/mostri sparsi per la Foresta
+RegistroArtefattiMD registroArtefattiMD;    // oggetti sparsi per la Foresta
+RegistroMissioniMD registroMissioniMD;      // stato delle missioni
+```
+
+Tutti implementano l'interfaccia `Serializzabile` (`motore/modellodati/Serializzabile.java`):
+
+```java
+public interface Serializzabile {
+    String PIPE = "|";
+    void salva(PrintWriter stream) throws IOException;
+    void leggi(BufferedReader stream) throws IOException;
+}
+```
+
+`ModelloDati.salva()`/`leggi()` delegano in cascata a ciascun componente — è un formato **testuale proprietario, non JSON**, con `|` come separatore di campo dichiarato nella costante `PIPE` (nonostante Gson sia una dipendenza dichiarata nel `pom.xml`, non risulta usata: vedi [`foresta.md`](foresta.md)).
+
+Altre classi `*MD` rilevanti: `PersonaggioMD`, `ArtefattoMD`, `LocazioneMD`, `MissioneMD`, `GruppoMD`/`GruppoGiocatoreMD`, `CoordinateMD` (posizione x/y nella Foresta), `MappaProprieta` (probabile store chiave-valore per proprietà dinamiche). Le classi di logica (`Personaggio`, `Gruppo`, `Foresta`, `Automa`) leggono/scrivono questi bean ma incapsulano le regole: es. `Foresta` (statica, `motore/Foresta.java`) espone `getLocazione(x,y)`, `impostaLocazioneCorrente(...)`, `distruggiLocazioneUnica(...)` delegando sempre a `ModelloDati.getIstanza().getForestaMD()` (righe 30-64).
+
+### Persistenza su file
+
+`tools/GestoreSalvataggiSuFile.java` implementa `InterfacciaGestoreSalvataggi`:
+
+- 5 slot di salvataggio fissi (`Comando.NUMERO_1`..`NUMERO_5`), un file `.TXT` per slot.
+- La prima riga del file è un'intestazione leggibile (`id|nome capo del gruppo|giorno N, ora N`), usata da `getSalvataggiDisponibili()` per mostrare l'elenco senza dover leggere tutto il file (`leggiTestataSalvataggio`, righe 90-99).
+- Il corpo del file è prodotto da `ModelloDati.getIstanza().salva(writer)` — una cascata di chiamate `Serializzabile.salva()`.
+- In lettura, `ModelloDati.setIstanza(new ModelloDati())` sostituisce l'istanza singleton globale — quindi caricare una partita **rimpiazza interamente lo stato di gioco corrente**.
+- Errori di I/O e file corrotti sono comunicati alla UI via eventi (`NotificaErroreCaricamento`, `InternoException`), mai eccezioni propagate al chiamante.
+- Dopo l'installazione del nuovo `ModelloDati`, `GestoreSalvataggi.ricostruisciModelloDati()` (`tools/GestoreSalvataggi.java:46-54`) è il "punto unico" che ricalcola lo **stato derivato** non salvato esplicitamente: attributi secondari dei personaggi, il riferimento al `ModelloDati` dentro `GruppoGiocatore`, la locazione corrente ricostruita da `Foresta.costruisciIstanza(...)`, lo stato delle missioni — un commento nel codice avverte esplicitamente di non spostare questa chiamata prima dell'installazione, altrimenti le classi di dominio leggerebbero ancora la vecchia istanza.
+- Nessuna cifratura: i file `NUMERO_N.TXT` in `~/.foresta/` sono testo semplice leggibile, e nessuna versione/migrazione di schema è prevista nel formato.
+
+Analogamente `GestorePunteggi`/`GestorePunteggiSuFile`/`GestorePunteggiBase` gestiscono una classifica persistente di punteggi: file di testo `forestaHS` in `~/.foresta/`, una riga per voce nel formato `nome#punteggio` (separatore `#`, diverso dal `|` usato per i salvataggi).
+
+## 4. Sistema di combattimento
+
+Il combattimento **non usa un tiro di dado classico "d20 vs CA"**: è un modello a **probabilità percentuale derivata dagli attributi**, calcolato in `CalcolatoreCombattimento.calcolaProbabilitaDiColpire()` (`motore/CalcolatoreCombattimento.java`, 527 righe):
+
+1. **Controlli automatici sugli effetti di stato**: un attaccante `STORDITO` fallisce sempre (0%); un difensore `ATTERRATO`/`CONGELATO`/`STORDITO` viene colpito sempre (100%) — righe 20-29.
+2. **Biforcazione per tipo di danno** (`SupertipoDanno.FISICO` vs magico/elementale):
+   - Fisico: attacco = `Precisione + Destrezza`; difesa = `Velocità + Destrezza + 50% Parata`.
+   - Magico: attacco = `Precisione + Intelligenza`; difesa = `Resistenza Magica + Saggezza`.
+3. **Modificatori da effetti di stato** applicati in cascata: `CONFUSO` riduce l'attacco (mitigato dalla Saggezza), `ACCECATO` penalizza di più il danno fisico che quello magico (mitigato dalla Percezione), la `STANCHEZZA` penalizza linearmente, `RALLENTATO` dimezza la difesa fisica ma solo -10% quella magica.
+4. Il risultato finale è un **valore percentuale 0-100** confrontato con un'estrazione `Math.random()`-based (`Dado`, vedi sotto) per determinare colpito/mancato.
+
+Il **danno risultante** (`CalcolatoreCombattimento.calcolaDannoRisultante`, righe 129-393) parte da `danniArma × livelloArma`, scalato dalla statistica offensiva pertinente (Forza per il fisico, Intelligenza per il magico, con bonus Saggezza sul danno SACRO) moltiplicata per il livello dell'attaccante, e mitigato da un "rapporto di efficacia" `livelloArma / livelloAttaccante` (per impedire che un'arma di basso livello resti efficace su un bersaglio di alto livello). Un bonus BERSERK scala con la percentuale di salute persa dall'attaccante. La difesa del bersaglio mitiga il danno con una formula a **rendimenti decrescenti** (`100 / (100 + statisticaDifensiva)`), e un colpo critico (probabilità = 5% base + Critico attaccante − Fortuna difensore) raddoppia il danno.
+
+**Interazioni elementali**: `TipoInterazioneElementale` implementa circa una ventina di combinazioni cross-elementali attivate quando un attacco di un certo tipo colpisce un bersaglio che porta già un certo `TipoEffettoDiStato`, es. BAGNATO+FULMINE → ELETTROCUZIONE (+50% danno), BAGNATO+GELO → CONGELATO, BAGNATO+FUOCO → VAPORIZZAZIONE (−50%), CONGELATO+CONTUNDENTE → FRANTUMAZIONE (danno ×2), MALEDETTO+SACRO → effetto rimosso. Ogni colpo può inoltre "proccare" probabilisticamente un nuovo effetto di stato (sanguinamento, veleno, ecc.), sia dall'arma fisica sia da ciascun `Incantamento` magico indipendentemente. Per gli effetti a danno nel tempo, `calcolaDurataStato`/`calcolaDannoPeriodico` riducono la durata base con una radice quadrata della statistica di resistenza del difensore (di nuovo rendimenti decrescenti) e scalano il danno per-tick sulle statistiche offensive/difensive.
+
+Classi correlate: `DannoRisultante` (esito del danno calcolato), `RisultatoValutazioneAttaccante` (in `modellodati/`), `Arma`/`ArmaNaturale` (armi equipaggiate vs attacchi naturali dei mostri), `SupertipoDanno`/`TipoDanno` (fisico, elementale: fuoco/ghiaccio/aria/ecc.).
+
+Turno e selezione bersaglio: `Gruppo` (astratta, estesa da `GruppoGiocatore` e `GruppoAvversario`, entrambe singleton statici — `getIstanza()`) implementa `getProssimoAttaccante()` (`motore/Gruppo.java:31-56`) con **selezione round-robin circolare** che salta i personaggi morti, e restituisce `null` se il gruppo è interamente sconfitto. Il combattimento avanza a un round al secondo, battuto dal `Comando.TIMER` che `Automa` inietta periodicamente mentre `stato == IN_COMBATTIMENTO` (vedi §1).
+
+### Dadi e RNG
+
+`Dado` (`motore/Dado.java`) è un wrapper statico su `Math.random()` — **non un vero PRNG con seed configurabile**, quindi partite non riproducibili deterministicamente:
+
+- `tira(N)` / `tira(min, max)` — lancio dado classico, con validazione degli argomenti e log di errore fatale su input invalidi.
+- `tiraAncheAUnaFaccia(N)` / `tiraAncheSenzaRange(min, max)` — varianti tolleranti per i casi limite (liste con un solo elemento), per evitare eccezioni quando si estrae da collezioni filtrate.
+- `selezionaCasualmente(List<T>)` — estrae **e rimuove** un elemento casuale da una lista (usato per pescare senza ripetizione, es. selezione mostri/bottino).
+
+`LanciatoreDeiDadi` (238 righe, non ispezionato in dettaglio) è presumibilmente un livello più alto sopra `Dado`, forse per lanci compositi (es. `3d6`, danno con più dadi).
+
+## 5. Personaggi
+
+`personaggi/Personaggio.java` (interfaccia/contratto, 563 righe) e `PersonaggioBase.java` (implementazione, **1624 righe** — la classe più grande del motore) definiscono il modello del personaggio giocante/NPC. Ogni classe giocabile e ogni tipo di mostro è una sottoclasse concreta: `Guerriero`/`Guerriera`, `Ladro`/`Ladra`, `Bardo`/`Cantastorie`, `Elfo`/`Elfa`, `Mago`/`Maga` per il giocatore; **oltre 25 mostri/NPC** (`Drago`, `Idra`, `Lich`, `Minotauro`/`MinotauroGigante`, `Strega`, `Troll`, `Goblin`, `Hobgoblin`, `Scheletro`, `Spettro`, `Spirito`, `Fantasma`, `Gargoyle`, `Gigante`, `Titano`, `Centauro`, `Chimera`/`ChimeraDrago`, `Arpia`, `Viverna`, `Folletto`, `Eremita`, `OmbraFiamma`, `OmbraNera`, ...) per popolare il mondo.
+
+Il sistema di attributi (`motore/modellodati/TipoAttributo.java`, 278 righe, enum riccamente documentato) definisce almeno 5 attributi primari — **Forza**, **Destrezza**, **Costituzione**, **Intelligenza**, **Saggezza** (dedotta dall'uso in `CalcolatoreCombattimento`) — ciascuno con effetto esplicito sia in attacco sia in difesa, documentato nel Javadoc dell'enum stesso (es. Forza: danno mischia + resistenza a respingimenti; Intelligenza: danno magico + riserva MP + contrasto controincantesimi). Ne derivano attributi secondari calcolati: Precisione, Parata, Velocità, Resistenza Magica, Percezione, Stanchezza.
+
+`Statistiche`/`StatisticheMD`, `TipoAttributo`, `ModificatoreAttributo`, `TipoModificatore` compongono un sistema di **modificatori stackabili** (es. bonus da equipaggiamento/incantesimo che si sommano/moltiplicano agli attributi base).
+
+Effetti di stato (`EffettoDiStato`, `TipoEffettoDiStato`): almeno `STORDITO`, `ATTERRATO`, `CONGELATO`, `CONFUSO`, `ACCECATO`, `RALLENTATO` sono referenziati dal combattimento; il ciclo di vita (aggiunta/variazione/rimozione) è notificato alla UI via `NotificaVariazioneEffettoDiStatoPersonaggio` con un sotto-tipo `AGGIUNTA`/`VARIAZIONE`/`RIMOZIONE`.
+
+Progressione (`GestoreProgressione.java`, 77 righe): curva di esperienza **quadratica** — `xpNecessari(livello) = 100 × (livello-1)²` — con cap a livello 50 e formula inversa per calcolare il livello dagli XP totali (`calcolaLivelloDaXp`, con `Math.sqrt`). Fonti di XP con percentuali fisse rispetto al prossimo livello: artefatto minore 5%, missione secondaria 20%, missione principale 50% (righe 54-73) — un bilanciamento a percentuale-del-gap piuttosto che a valore assoluto, che si autoadatta al livello corrente del personaggio. Le costanti stesse sono commentate esplicitamente dall'autore come la leva "da toccare per rallentare/velocizzare il gioco".
+
+**Riposo** (`CalcolatoreRiposo.calcolaRiposo(Personaggio, ore, TipoRiposo)`): il recupero di salute/magia/stanchezza scala con un fattore tempo **non lineare** (`√ore`, rendimenti decrescenti sul riposare a lungo) moltiplicato per un fattore ambientale che dipende dal `TipoRiposo` (es. locanda più efficace di un accampamento di fortuna). Personaggi non-vivi/spettrali hanno moltiplicatori di recupero fisico/stanchezza pari a 0 nelle loro costanti di razza, quindi saltano di fatto quella componente del riposo.
+
+## 6. Il mondo di gioco
+
+`Foresta` (statica, `motore/Foresta.java`, 355 righe) rappresenta la mappa: griglia fissa **50×50** (`DIMENSIONE_X/Y`, righe 24-25), con locazioni indicizzate per coordinate (`CoordinateMD`) e classe di locazione (`ClassiLocazione`, enum). Espone concetti come "locazioni uniche" (`isLocazioneUnica()`, `ottieniCoordinateLocazioneUnica`, `distruggiLocazioneUnica`) — presumibilmente i castelli dei boss, che esistono una sola volta sulla mappa e possono essere "consumati"/trasformati dopo l'evento che rappresentano.
+
+`RegistroPersonaggi` (facade statica su `RegistroPersonaggiMD`) popola, a inizio partita, un pool fisso di personaggi giocabili "disponibili" (5 guerrieri, 4 ladri, 2 bardi, 2 elfi, 2 maghi) sparsi casualmente per la mappa dentro locande e città (`Foresta.reimposta()`): è così che il giocatore recluta compagni visitando le locazioni, invece che scegliere l'intero party all'inizio.
+
+### Tempo di gioco (`LineaTemporale`)
+
+Facade statica su `LineaTemporaleMD`. Tiene un'ora del giorno (0-23, con 24 descrizioni testuali associate, es. "è l'alba") e un contatore di giorni; muoversi (`aggiungiOre`) e riposare (`mattinoSeguente`) fanno avanzare il tempo. Oltre il **giorno 40** il gioco termina automaticamente in sconfitta — il Drago vince per esaurimento del tempo a disposizione (`motore/LineaTemporale.java:105-130`). A giorni fissi (20/25/30/35), se il giocatore non l'ha impedito, una città viene "distrutta" (evento narrativo one-shot per città): è il meccanismo che dà urgenza/pressione temporale alla partita, oltre alla progressione lineare per missioni.
+
+`locazioni/` (24 file) definisce i tipi di luogo visitabile: `Bosco`, `Grotta`, `Palude`, `Radura`, `Rovine`, `Tempio` (locazioni generiche, ripetute sulla mappa), `Citta`/`CittaFleena`/`CittaMalgaard`/`CittaNyena`/`CittaRuuna` (città nominate), `Locanda`, `Alchimista` (i due "negozi" visti anche dal lato UI), e locazioni uniche legate a missioni/boss: `CastelloDrago`, `CastelloIdra`, `CastelloLich`, `CastelloMinotauro`, `CastelloStrega`, `GrottaRecuperaIlMedaglione`, `RovineRecuperaLeDerrateAlimentari`. La gerarchia `LocazioneBase`/`Locazione`/`LocazioneUnica` rispecchia questa distinzione locazione-comune vs locazione-narrativa-unica.
+
+## 7. Missioni
+
+`missioni/` (24 file) implementa missioni concrete sopra una gerarchia `MissioneBase`/`Missione`/`SupertipoMissione`/`TipoMissione`/`ClasseMissione`. Pattern osservabili dai nomi:
+
+- Missioni **generiche/parametriche** riusabili: `Combatti`, `MuoviALocazione`, `VisitaLocanda`, `MissioneRecuperaBersaglio` — presumibilmente classi-motore che una missione concreta configura con parametri (bersaglio, locazione).
+- Missioni **principali con boss dedicato**: `SconfiggiIlDrago` (l'obiettivo finale del gioco), `SconfiggiLIdra`, `SconfiggiIlLich`, `SconfiggiIlMinotauroGigante`, `SconfiggiLaStrega`, `RecuperaIlMedaglione`, `RecuperaLeDerrateAlimentari`.
+- Missioni **secondarie** con nomi narrativi: `CronacheDiUnFegatoEroico`, `DisturbatoreDellaQuietePubblica`, `NessunBoccaleLasciatoIndietro` — il tono scherzoso richiama i "quest" collaterali di gioco RPG comici.
+- Missioni di test/sviluppo: `MissioneDIProva`, `MissioneDiProvaSecondariaUno/Due`, `MissioneDiProvaTerziariaUno`.
+
+Il registro (`RegistroMissioni`/`RegistroMissioniMD`) traccia stato di avanzamento, notificato alla UI con `NotificaAggiornamentoStatoMissione`.
+
+## 8. Economia: oggetti e offerte
+
+`oggetti/` (13 file): gerarchia `Oggetto`/`OggettoBase`, con `Artefatto` come tipo principale equipaggiabile (`ArmaFisica`, `Spada`, `Scudo`, `Anello`, `Corona`, `Gemma`, `Cofano`, `Moneta`, `Incantamento` — un incantamento è un potenziamento elementale applicabile a un'arma, sommato nel calcolo del danno da `CalcolatoreCombattimento`, vedi §4). `CostruttoreArtefatto`/`CostruttoreArtefattoImpl` (`tools/`) è un **Builder** fluente (`setTipo → setNome → ... → costruisci()`); nel codice attuale è usato solo per istanziare a mano un piccolo set di artefatti "di prova" in `Automa.inizializzaGioco()` (vedi §9 per la discrepanza con la pipeline JSON/Gson documentata ma non attiva).
+
+`RegistroArtefatti`/`RegistroArtefattiMD` gestisce gli artefatti sparsi per la Foresta; `AutomaAcquistiArtefatti` e `ScambiatoreArtefatti`/`AutomaScambiatoreArtefatti` implementano rispettivamente l'automa di acquisto (armaiolo) e lo scambio/inventario tra membri del gruppo — entrambi guidati da comandi giocatore dedicati (`ComandoAcquistoArtefatto`, `ComandoVenditaArtefatto`, `ComandoSpostamentoArtefatto`, `ComandoStoccaggioArtefatto`, `ComandoPrelievoArtefatto`), ciascuno con coppie di eventi `Notifica*Approvazione*`/`Notifica*Rifiuto*` — un pattern **richiesta/verdetto esplicito** invece di eccezioni, per comunicare alla UI se un'operazione economica è stata accettata o respinta (es. fondi insufficienti, inventario pieno).
+
+Architetturalmente `AutomaScambiatoreArtefatti` è una classe astratta (pattern **Strategy/Template Method**) che modella *qualunque* scambio fra una `parteAttiva` (chi decide) e una `parteRemota` (chi riceve/fornisce), entrambe tipizzate dall'interfaccia `ScambiatoreArtefatti` (`getInventario`/`addArtefatto`/`removeArtefatto`, implementata sia da `Personaggio` sia da `Gruppo` sia dai negozianti). Le sottoclassi concrete (`AutomaInventario`, `AutomaAcquistiArtefatti`) differiscono solo su: se mostrare il costo su ciascun lato, e quale evento pubblicare quando l'utente sposta un oggetto in una direzione o nell'altra — lo spostamento fisico avviene solo dopo l'approvazione del motore (round-trip comando → notifica).
+
+`offerte/` (9 file) modella i "servizi" disponibili nelle locazioni sociali (locande, città): `AiutoGratuito`, `AiutoMercenario`, `Incantesimi`, `Informazioni`, `MappaForesta`/`MappaZona`, `Pasto`, tutte sottotipi di `Offerta`/`ClassiOfferta` — presumibilmente un menu di opzioni acquistabili con moneta/reputazione quando si visita una locanda.
+
+`AutomaInventario` (`motore/AutomaInventario.java`) governa lo stato della schermata inventario condiviso dal gruppo, letto dalla UI (`DisplayableCanvasInventario`).
+
+## 9. Generazione procedurale di testo (`GrammarBean`)
+
+Uno dei sottosistemi più sofisticati del motore, con **documentazione dedicata** (`motore/GrammarBean.md`, ~1080 righe — un manuale + un self-assessment con difetti noti numerati `Dn`/limiti `Qn`). `GrammarBean` è un **motore di grammatiche generative** (produzioni con alternative pesate, riferimenti annidati, variabili, span letterali, produzioni one-shot).
+
+A runtime, `ProduttoreDiTestiCasuale` (`motore/ProduttoreDiTestiCasuale.java:18-29`) istanzia **solo tre grammatiche**, ciascuna con lo stesso file di post-produzione condiviso (`preposizioni_articolate_pp.txt`, per correggere preposizioni articolate italiane tipo "a il" → "al"):
+
+- **Fiabe** (`fiabe.txt`) — testo narrativo casuale (`fiaba()`).
+- **Oroscopi** (`oroscopo.txt`) — testo casuale (`oroscopo()`).
+- **Descrizioni di locande** (`locande.txt`, nome/recensione/dialogo — `getDatiLocanda()`) — coerente con l'ultimo commit del repository ("Miglioramenti file locande.txt").
+
+**Correzione rispetto a una prima ipotesi**: `artefatti.txt`/`artefatti_pp.txt` (una grammatica che emette JSON di artefatti, con span letterali per proteggere `{`/`}`/`|`) **sono documentati in `GrammarBean.md` §5.3 come caso di studio, ma non sono referenziati da nessuna classe `.java`** — non c'è `getResourceAsStream("...artefatti.txt")` nel codice sorgente, e Gson non è importato in nessun file (`grep -r "gson\|Gson" src/main/java` non produce risultati). Gli artefatti effettivamente creati nel motore sono invece istanziati **a mano** in `Automa.inizializzaGioco()` (`motore/Automa.java:790-880`) tramite il builder `CostruttoreArtefatto`, con nomi palesemente segnaposto/di test ("cazzabubbolo", "megaspada", "superscudo"...). La pipeline grammatica→JSON→Gson→`CostruttoreArtefatto` è quindi **un esempio didattico nella documentazione, non una feature attiva nel gioco** — un candidato o per essere rimosso (assieme alla dipendenza Gson) o per essere effettivamente completato in un refactoring futuro.
+
+Caratteristiche notevoli documentate: sistema di pesi a due contributi (peso dichiarato `[^N]` + un **boost automatico proporzionale alla ricchezza del sottoalbero referenziato**, `peso_effettivo = peso_dichiarato + 0.33 × Σ peso_aggregato(referenziate)`), produzioni "fissate" globalmente (`[*Nome]`) o per sottoalbero (`[!Nome]`) per mantenere coerenza narrativa (stesso nome di personaggio ripetuto in una storia), produzioni one-shot (`Nome$`) per evitare ripetizioni in una serie. Il documento stesso segnala un difetto aperto non risolto (**D5**: nessun limite di profondità di ricorsione, può causare `StackOverflowError`) e due limiti di progetto (**Q3**: il boost automatico non è disattivabile/configurabile; **Q5**: le assegnazioni `[chiave=valore]` sono sempre globali anche quando dichiarate come locali).
+
+## 10. Osservazioni per un eventuale refactoring
+
+- **FSM monolitica**: `Automa` concentra ~1100 righe e ~30 handler di stato in un'unica classe; ogni nuova feature di gioco tende ad aggiungere sia un nuovo `Stato` sia un nuovo ramo di `switch`/handler, con rischio di crescita non lineare della complessità ciclomatica.
+- **RNG non seedabile** (`Dado` usa `Math.random()` direttamente): preclude repliche deterministiche di partite per debug/test automatizzati del bilanciamento.
+- **Dipendenza Gson dichiarata ma non usata**: zero import in tutto `src/main/java`. La pipeline che la richiederebbe (`artefatti.txt` → JSON → Gson → `CostruttoreArtefatto`) è documentata in dettaglio in `GrammarBean.md` §5.3 ma non è mai invocata da `ProduttoreDiTestiCasuale` né da altre classi: è un esempio didattico rimasto isolato dal codice di gioco, non una feature attiva. Da chiarire se rimuovere la dipendenza o completare l'integrazione.
+- **Persistenza in formato proprietario pipe-delimited** anziché un formato standard (JSON/altro): funziona, ma rende più fragile l'evoluzione dello schema di salvataggio (nessuna versione/migrazione esplicita visibile nei file letti).
+- **`GrammarBean.md` è già un self-assessment** dell'autore con difetti verificati sperimentalmente (D5, Q3, Q5): è probabilmente il documento di riferimento più maturo del repository e un buon modello di cosa intendere per "assessment" andando avanti sugli altri moduli.
