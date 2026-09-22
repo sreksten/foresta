@@ -267,278 +267,279 @@ GESTORE_NOTE
 
 
 NOTIZIE_CINGHIALE_VEGANO
-    Incidente Diplomatico - EROE ha chiesto una bistecca al sangue al Cinghiale Vegano, scatenando una rivolta di elfi attivisti armati di sedano selvatico.
-    Lamentele della Locanda - L'oste del Cinghiale Vegano esprime costernazione. EROE ha nascosto una salsiccia vera dentro il tortino di rape della casa, scatenando una crisi mistica a tre elfi druidi.
-    Lamentele della Locanda - L'oste del Cinghiale Vegano esprime profondo sdegno. EROE è statLETTERA_FINALE sorpresLETTERA_FINALE a grigliare di nascosto spiedini di topo dietro la legnaia, violando lo statuto morale del locale.
-    Protesta Verde - Gli elfi attivisti del Cinghiale Vegano denunciano EROE per aver masticato una foglia di insalata decorativa fingendo che fosse un pezzo di cicciolo di maiale.
+    CV1-Incidente Diplomatico - EROE ha chiesto una bistecca al sangue al Cinghiale Vegano, scatenando una rivolta di elfi attivisti armati di sedano selvatico.
+    CV2-Lamentele della Locanda - L'oste del Cinghiale Vegano esprime costernazione. EROE ha nascosto una salsiccia vera dentro il tortino di rape della casa, scatenando una crisi mistica a tre elfi druidi.
+    CV3-Lamentele della Locanda - L'oste del Cinghiale Vegano esprime profondo sdegno. EROE è statLETTERA_FINALE sorpresLETTERA_FINALE a grigliare di nascosto spiedini di topo dietro la legnaia, violando lo statuto morale del locale.
+    CV4-Protesta Verde - Gli elfi attivisti del Cinghiale Vegano denunciano EROE per aver masticato una foglia di insalata decorativa fingendo che fosse un pezzo di cicciolo di maiale.
 
 NOTIZIE_FURIA_DEL_GIORNO_DOPO
-    Rissa da Postumi - Un risveglio burrascoso alla Furia del Giorno Dopo: EROE ha starnutito così forte da far scattare i tiri salvezza contro lo stordimento a tutti i presenti.
-    Violazione del Silenzio - L'oste burbero della Furia del Giorno Dopo chiede di mettere una taglia su EROE, reLETTERA_FINALE di aver ordinato il brodo salato imitando ad altissima voce il barrito di un mammut.
-    Attentato ai Postumi - Panico alla Furia del Giorno Dopo: MAGO ha lanciato un trucco di Luce pura nella sala buia, provocando il collasso istantaneo per emicrania a quattordici avventori.
-    Boccali molesti - EROE espulsLETTERA_FINALE con disonore dalla Furia del Giorno Dopo, dopo essere statLETTERA_FINALE sorpresLETTERA_FINALE a far tintinnare volontariamente due forchette di ferro per infastidire i clienti con l'idromele sgasato.
+    FGD1-Rissa da Postumi - Un risveglio burrascoso alla Furia del Giorno Dopo: EROE ha starnutito così forte da far scattare i tiri salvezza contro lo stordimento a tutti i presenti.
+    FGD2-Violazione del Silenzio - L'oste burbero della Furia del Giorno Dopo chiede di mettere una taglia su EROE, reLETTERA_FINALE di aver ordinato il brodo salato imitando ad altissima voce il barrito di un mammut.
+    FGD3-Attentato ai Postumi - Panico alla Furia del Giorno Dopo: MAGO ha lanciato un trucco di Luce pura nella sala buia, provocando il collasso istantaneo per emicrania a quattordici avventori.
+    FGD4-Boccali molesti - EROE espulsLETTERA_FINALE con disonore dalla Furia del Giorno Dopo, dopo essere statLETTERA_FINALE sorpresLETTERA_FINALE a far tintinnare volontariamente due forchette di ferro per infastidire i clienti con l'idromele sgasato.
 
 NOTIZIE_GUARDIA_ADDORMENTATA
-    Disastro Igienico - Chiusa per bonifica la taverna La Guardia Addormentata: EROE ha scambiato il pozzo dell'acqua potabile per una vasca da bagno termale, lavandoci dentro le calze di lana da battaglia.
-    Domande al Muro - ArrestatLETTERA_FINALE EROE davanti alla Guardia Addormentata per aver preso alla lettera il cartello dell'oste, passando sei ore a confessare i suoi crimini contro una parete di mattoni.
-    Tappa del Ladro - Un picco insolito di borseggi alla Guardia Addormentata mette in allarme le guardie vere; LADRO è statLETTERA_FINALE vistLETTERA_FINALE contare monete d'oro nello spazio sul retro.
-    Porta Aperta - L'oste della Guardia Addormentata accusa EROE di aver lasciato la porta spalancata, facendo entrare un blocco di aria pulita che ha fatto fuggire l'intera clientela di furfanti.
+    GA1-Disastro Igienico - Chiusa per bonifica la taverna La Guardia Addormentata: EROE ha scambiato il pozzo dell'acqua potabile per una vasca da bagno termale, lavandoci dentro le calze di lana da battaglia.
+    GA2-Domande al Muro - ArrestatLETTERA_FINALE EROE davanti alla Guardia Addormentata per aver preso alla lettera il cartello dell'oste, passando sei ore a confessare i suoi crimini contro una parete di mattoni.
+    GA3-Tappa del Ladro - Un picco insolito di borseggi alla Guardia Addormentata mette in allarme le guardie vere; LADRO è statLETTERA_FINALE vistLETTERA_FINALE contare monete d'oro nello spazio sul retro.
+    GA4-Porta Aperta - L'oste della Guardia Addormentata accusa EROE di aver lasciato la porta spalancata, facendo entrare un blocco di aria pulita che ha fatto fuggire l'intera clientela di furfanti.
 
 NOTIZIE_DA_POCHI_SOLDI
-    Disastro Strutturale - Chiuso per restauri il locale Da Pochi Soldi: EROE ha tentato di pulirsi gli stivali strofinandoli contro una colonna portante marcia, causandone il parziale collasso.
-    Danni al Patrimonio Immobiliare - Crepato l'architrave della locanda Da Pochi Soldi. EROE ha tentato di testare la resistenza della muratura tirandoci una testata a vuoto in preda ai fumi dell'idromele.
-    Birra Economica - Rivolta dei clienti Da Pochi Soldi: EROE ha fatto notare che l'acqua piovana filtrata dal soffitto finiva direttamente nella botte della birra da un rame, alterando il gusto del risparmio.
-    Falsa Eleganza - L'oste Da Pochi Soldi esprime profondo sdegno: CANTASTORIE ha steso un fazzoletto di seta sul tavolo marcio, offendendo la gloriosa reputazione pezzente del locale.
+    PS1-Disastro Strutturale - Chiuso per restauri il locale Da Pochi Soldi: EROE ha tentato di pulirsi gli stivali strofinandoli contro una colonna portante marcia, causandone il parziale collasso.
+    PS2-Danni al Patrimonio Immobiliare - Crepato l'architrave della locanda Da Pochi Soldi. EROE ha tentato di testare la resistenza della muratura tirandoci una testata a vuoto in preda ai fumi dell'idromele.
+    PS3-Birra Economica - Rivolta dei clienti Da Pochi Soldi: EROE ha fatto notare che l'acqua piovana filtrata dal soffitto finiva direttamente nella botte della birra da un rame, alterando il gusto del risparmio.
+    PS4-Falsa Eleganza - L'oste Da Pochi Soldi esprime profondo sdegno: CANTASTORIE ha steso un fazzoletto di seta sul tavolo marcio, offendendo la gloriosa reputazione pezzente del locale.
 
 NOTIZIE_MAGO_SENZA_TRUCCO
-    Lamentele d'Igiene Mentale - L'oste del Mago Senza Trucco denuncia lo smarrimento del gatto nero della locanda, avvistato l'ultima volta mentre EROE tentava di usarlo come parrucchino magico d'emergenza.
-    Illusioni Ottiche - Un vino corretto di troppo al Mago Senza Trucco spinge EROE a sfidare a duello una sedia, convinto che si trattasse di un'Idra millenaria travestita da arredamento.
-    Trucchi Svelati - Parapiglia al Mago Senza Trucco: MAGO ha dimostrato che il trucco del cilindro dell'oste era solo un doppio fondo di cartone, distruggendo i sogni d'infanzia dei presenti.
-    Pozioni di Vite - L'alchimista locale protesta contro il Mago Senza Trucco dopo che EROE ha tentato di curarsi una ferita da taglio versandosi un intero calice di vino barricato sul braccio.
+    MST1-Lamentele d'Igiene Mentale - L'oste del Mago Senza Trucco denuncia lo smarrimento del gatto nero della locanda, avvistato l'ultima volta mentre EROE tentava di usarlo come parrucchino magico d'emergenza.
+    MST2-Illusioni Ottiche - Un vino corretto di troppo al Mago Senza Trucco spinge EROE a sfidare a duello una sedia, convinto che si trattasse di un'Idra millenaria travestita da arredamento.
+    MST3-Trucchi Svelati - Parapiglia al Mago Senza Trucco: MAGO ha dimostrato che il trucco del cilindro dell'oste era solo un doppio fondo di cartone, distruggendo i sogni d'infanzia dei presenti.
+    MST4-Pozioni di Vite - L'alchimista locale protesta contro il Mago Senza Trucco dopo che EROE ha tentato di curarsi una ferita da taglio versandosi un intero calice di vino barricato sul braccio.
 
 NOTIZIE_ULTIMO_BICCHIERE
-    La Bugia Suprema - L'istituto del Tempo della Foresta accusa la locanda L'Ultimo Bicchiere (Promesso!) di alterazione dello spazio-tempo: EROE è bloccatLETTERA_FINALE al bancone da tre giorni sul ventiduesimo "ultimo calice".
-    Il Penultimo Bandito - Rissa furiosa all'Ultimo Bicchiere (Promesso!): LADRO ha tentato di ordinare un "“penultimo sorso\"", violando la sacra regola della casa e venendo preso a colpi di brocca dall'oste.
-    Promesse Infrante - EROE ha tentato di firmare un pagherò all'Ultimo Bicchiere (Promesso!) scrivendo “pago all'ultimo giro", costringendo la gestione a cambiare l'insegna in “L'Ultimo Bicchiere (Scordatelo)".
-    Botti Infinite - MAGO ha lanciato un incantesimo d'Acqua dentro la botte dell'Ultimo Bicchiere (Promesso!), trasformando la birra scura in un idromele infinito che ha allagato la cantina.
+    UB1-La Bugia Suprema - L'istituto del Tempo della Foresta accusa la locanda L'Ultimo Bicchiere (Promesso!) di alterazione dello spazio-tempo: EROE è bloccatLETTERA_FINALE al bancone da tre giorni sul ventiduesimo "ultimo calice".
+    UB2-Il Penultimo Bandito - Rissa furiosa all'Ultimo Bicchiere (Promesso!): LADRO ha tentato di ordinare un "“penultimo sorso\"", violando la sacra regola della casa e venendo preso a colpi di brocca dall'oste.
+    UB3-Promesse Infrante - EROE ha tentato di firmare un pagherò all'Ultimo Bicchiere (Promesso!) scrivendo “pago all'ultimo giro", costringendo la gestione a cambiare l'insegna in “L'Ultimo Bicchiere (Scordatelo)".
+    UB4-Botti Infinite - MAGO ha lanciato un incantesimo d'Acqua dentro la botte dell'Ultimo Bicchiere (Promesso!), trasformando la birra scura in un idromele infinito che ha allagato la cantina.
 
 NOTIZIE_ORSO_BALLERINO
-    Orrore in Cucina - L'ispezione della contea multa l'oste dell'Orso Ballerino. EROE ha dimostrato che il "“misterioso spezzatino della casa\"" conteneva percentuali moleste di stivali di cuoio tritati.
-    Peli nella Minestra - Un cliente dell'Orso Ballerino trova una zampa intera nella zuppa; il druido proprietario si difende sostenendo che si tratti solo di un grosso grumo di farina di castagne.
-    Licantropia Gastronomica - BARDO inizia a ruggire dopo aver mangiato lo stufato dell'Orso Ballerino, costringendo l'alchimista locale a un intervento d'urgenza a base di erba gatta.
-    Ballo Sghembo - EROE ha tentato di insegnare una danza militare al druido in forma di Orso Ballerino, provocando il crollo del tavolo dei nani a causa di una zampata fuori tempo.
+    OB1-Orrore in Cucina - L'ispezione della contea multa l'oste dell'Orso Ballerino. EROE ha dimostrato che il "“misterioso spezzatino della casa\"" conteneva percentuali moleste di stivali di cuoio tritati.
+    OB2-Peli nella Minestra - Un cliente dell'Orso Ballerino trova una zampa intera nella zuppa; il druido proprietario si difende sostenendo che si tratti solo di un grosso grumo di farina di castagne.
+    OB3-Licantropia Gastronomica - BARDO inizia a ruggire dopo aver mangiato lo stufato dell'Orso Ballerino, costringendo l'alchimista locale a un intervento d'urgenza a base di erba gatta.
+    OB4-Ballo Sghembo - EROE ha tentato di insegnare una danza militare al druido in forma di Orso Ballerino, provocando il crollo del tavolo dei nani a causa di una zampata fuori tempo.
 
 NOTIZIE_ULTIMA_SPERANZA
-    Fuga di Capitali - L'oste dell'Ultima Speranza dichiara la bancarotta: EROE ha bevuto a credito promettendo di pagare con il tesoro del Drago.
-    Clienti Vivi - Panico alla Locanda dell'Ultima Speranza: l'arrivo di EROE in carne ed ossa ha terrorizzato gli spettri residenti, che hanno abbandonato il camino lamentando la mancanza di rispetto per i defunti.
-    Fuoco Spento - Un incantesimo d'Aria errato spegne il focolare dell'Ultima Speranza; dodici spettri clienti si sono liquefatti per il freddo, lasciando l'oste a pulire il pavimento di ectoplasma.
-    Lupi Pazienti - I lupi fuori dalla Locanda dell'Ultima Speranza ringraziano EROE per aver lanciato dalla finestra lo stufato avanzato, definendolo "“più tenero dei cacciatori smarriti\"".
+    US1-Fuga di Capitali - L'oste dell'Ultima Speranza dichiara la bancarotta: EROE ha bevuto a credito promettendo di pagare con il tesoro del Drago.
+    US2-Clienti Vivi - Panico alla Locanda dell'Ultima Speranza: l'arrivo di EROE in carne ed ossa ha terrorizzato gli spettri residenti, che hanno abbandonato il camino lamentando la mancanza di rispetto per i defunti.
+    US3-Fuoco Spento - Un incantesimo d'Aria errato spegne il focolare dell'Ultima Speranza; dodici spettri clienti si sono liquefatti per il freddo, lasciando l'oste a pulire il pavimento di ectoplasma.
+    US4-Lupi Pazienti - I lupi fuori dalla Locanda dell'Ultima Speranza ringraziano EROE per aver lanciato dalla finestra lo stufato avanzato, definendolo "“più tenero dei cacciatori smarriti\"".
 
 NOTIZIE_FUNGO_ALLUCINOGENO
-    Tavoli Volanti - Spettacolo al Fungo Allucinogeno: EROE sale su un tavolo fluttuante convinto di volare verso il castello del Drago, precipitando rovinosamente sul calderone del brodo colorato.
-    Allucinazione Tattica - GUERRIERO, sotto l'effetto della zuppa del Fungo Allucinogeno, scambia l'oste per un Lich e tenta di purificarlo versandogli in testa un barile di sidro di mele.
-    Pino Speziato - EROE tenta di masticare una gamba del tavolo del Fungo Allucinogeno, sostenendo che il legno di pino allucinogeno sia l'ingrediente segreto della profezia.
-    Funghi Pelosi - L'ispezione medica chiude il Fungo Allucinogeno dopo che EROE ha scovato delle spore fosforescenti che cantavano ballate barde dentro la dispensa.
+    FA1-Tavoli Volanti - Spettacolo al Fungo Allucinogeno: EROE sale su un tavolo fluttuante convinto di volare verso il castello del Drago, precipitando rovinosamente sul calderone del brodo colorato.
+    FA2-Allucinazione Tattica - GUERRIERO, sotto l'effetto della zuppa del Fungo Allucinogeno, scambia l'oste per un Lich e tenta di purificarlo versandogli in testa un barile di sidro di mele.
+    FA3-Pino Speziato - EROE tenta di masticare una gamba del tavolo del Fungo Allucinogeno, sostenendo che il legno di pino allucinogeno sia l'ingrediente segreto della profezia.
+    FA4-Funghi Pelosi - L'ispezione medica chiude il Fungo Allucinogeno dopo che EROE ha scovato delle spore fosforescenti che cantavano ballate barde dentro la dispensa.
 
 NOTIZIE_GOBLIN_CORTESE
-    Danni Burocratici - Il vicario del regno avvia un'indagine: EROE ha firmato il registro degli ospiti illustri usando il sangue del Goblin Cortese, il quale ha protestato perché macchiava il suo tovagliolo pulito.
-    Scimitarra da Taglio - Tensione alla Tana del Goblin Cortese: EROE ha accusato l'oste di aver usato troppa Destrezza nell'affettare il formaggio, chiedendo un tiro salvezza preventivo sulla cena.
-    Formaggio di Spada - LADRO tenta di rubare la scimitarra affetta-formaggio del Goblin Cortese, venendo però punitLETTERA_FINALE con una severa lezione di galateo e l'obbligo di usare il tovagliolo.
-    Sidro di Tana - EROE lascia una recensione orribile sulla corteccia della Tana del Goblin Cortese: "“Il sidro è buono, ma l'oste pulisce il bancone troppo spesso per i miei standard avventurosi\"".
+    GC1-Danni Burocratici - Il vicario del regno avvia un'indagine: EROE ha firmato il registro degli ospiti illustri usando il sangue del Goblin Cortese, il quale ha protestato perché macchiava il suo tovagliolo pulito.
+    GC2-Scimitarra da Taglio - Tensione alla Tana del Goblin Cortese: EROE ha accusato l'oste di aver usato troppa Destrezza nell'affettare il formaggio, chiedendo un tiro salvezza preventivo sulla cena.
+    GC3-Formaggio di Spada - LADRO tenta di rubare la scimitarra affetta-formaggio del Goblin Cortese, venendo però punitLETTERA_FINALE con una severa lezione di galateo e l'obbligo di usare il tovagliolo.
+    GC4-Sidro di Tana - EROE lascia una recensione orribile sulla corteccia della Tana del Goblin Cortese: "“Il sidro è buono, ma l'oste pulisce il bancone troppo spesso per i miei standard avventurosi\"".
 
 NOTIZIE_ZANZARE_E_ZUCCHE
-    Disastro Finanziario - Il gestore di Zanzare e Zucche dichiara il fallimento economico: EROE ha pagato il pernotto con un pagherò cambiario firmato a nome di un finto cugino del Lich.
-    Zuppa d'Ortica - EROE viene ricoverato dall'alchimista dopo aver tentato di bere alla goccia la zuppa d'ortica di Zanzare e Zucche per dimostrare la sua alta Costituzione alle guardie.
-    Cuscini Animati - Rivolta a Zanzare e Zucche: EROE ha usato una magia di Fuoco per eliminare gli insetti sul cuscino, carbonizzando l'intera camera e tre zucche ornamentali.
-    Notte Gratis - EROE sopravvive miracolosamente alla cena di Zanzare e Zucche, pretendendo la notte gratis e costringendo l'oste a cedergli la sua stanza privata.
+    ZZ1-Disastro Finanziario - Il gestore di Zanzare e Zucche dichiara il fallimento economico: EROE ha pagato il pernotto con un pagherò cambiario firmato a nome di un finto cugino del Lich.
+    ZZ2-Zuppa d'Ortica - EROE viene ricoverato dall'alchimista dopo aver tentato di bere alla goccia la zuppa d'ortica di Zanzare e Zucche per dimostrare la sua alta Costituzione alle guardie.
+    ZZ3-Cuscini Animati - Rivolta a Zanzare e Zucche: EROE ha usato una magia di Fuoco per eliminare gli insetti sul cuscino, carbonizzando l'intera camera e tre zucche ornamentali.
+    ZZ4-Notte Gratis - EROE sopravvive miracolosamente alla cena di Zanzare e Zucche, pretendendo la notte gratis e costringendo l'oste a cedergli la sua stanza privata.
 
 NOTIZIE_BIVIO_SBAGLIATO
-    Fuga Rocambolesca - EROE abbandona il Bivio Sbagliato volando via aggrappato a una Viverna addomesticata sul momento con due salsicce nane, lasciando il conto da pagare sulla corteccia di un pino vicino.
-    Principessa a Nord - Un cavaliere accusa EROE alla locanda Il Bivio Sbagliato di aver invertito i cartelli stradali della Foresta, spedendo l'intero esercito reale dritto nella tana dell'Idra.
-    Bivio di Birra - EROE si siede al Bivio Sbagliato sostenendo che perdersi nella Foresta fosse una strategia di posizionamento consigliata dal suo manuale di Furtività.
-    Conto Errato - L'oste del Bivio Sbagliato insegue il gruppo: EROE ha pagato la cena lasciando sul tavolo una mappa stradale scarabocchiata con la scritta "“La principessa è nell'altro castello\"".
+    BS1-Fuga Rocambolesca - EROE abbandona il Bivio Sbagliato volando via aggrappato a una Viverna addomesticata sul momento con due salsicce nane, lasciando il conto da pagare sulla corteccia di un pino vicino.
+    BS2-Principessa a Nord - Un cavaliere accusa EROE alla locanda Il Bivio Sbagliato di aver invertito i cartelli stradali della Foresta, spedendo l'intero esercito reale dritto nella tana dell'Idra.
+    BS3-Bivio di Birra - EROE si siede al Bivio Sbagliato sostenendo che perdersi nella Foresta fosse una strategia di posizionamento consigliata dal suo manuale di Furtività.
+    BS4-Conto Errato - L'oste del Bivio Sbagliato insegue il gruppo: EROE ha pagato la cena lasciando sul tavolo una mappa stradale scarabocchiata con la scritta "“La principessa è nell'altro castello\"".
 
 NOTIZIE_RIPARO_DAL_DM
-    Immunità Temporanea - Un Drago millenario tenta di incendiare il Riparo dal DM, ma l'incantesimo sbatte contro l'insegna protettiva e si trasforma in una pioggia di noccioline salate.
-    Trappole nel Parquet - EROE passa la notte a picchiare il pavimento del Riparo dal DM con un martello, convintLETTERA_FINALE che l'oste nascondesse una trappola a botola sotto il tavolo dei nani.
-    Tiri Salvezza - MAGO tenta di lanciare una Maledizione dentro il Riparo dal DM, ma la magia viene convertita all'istante in un boccale di birra calda analcolica.
-    Arbitrio Divino - EROE accusa l'oste del Riparo dal DM di essere un'estensione sadica del destino, ordinando una pozione di salute per curarsi dall'ansia dei dadi a cento facce.
+    RDM1-Immunità Temporanea - Un Drago millenario tenta di incendiare il Riparo dal DM, ma l'incantesimo sbatte contro l'insegna protettiva e si trasforma in una pioggia di noccioline salate.
+    RDM2-Trappole nel Parquet - EROE passa la notte a picchiare il pavimento del Riparo dal DM con un martello, convintLETTERA_FINALE che l'oste nascondesse una trappola a botola sotto il tavolo dei nani.
+    RDM3-Tiri Salvezza - MAGO tenta di lanciare una Maledizione dentro il Riparo dal DM, ma la magia viene convertita all'istante in un boccale di birra calda analcolica.
+    RDM4-Arbitrio Divino - EROE accusa l'oste del Riparo dal DM di essere un'estensione sadica del destino, ordinando una pozione di salute per curarsi dall'ansia dei dadi a cento facce.
 
 NOTIZIE_VEDI_TU
-    Menu Misterioso - Colica di gruppo dopo una cena alla Locanda del "“Vedi Tu\"": EROE ha accettato la specialità dello chef, che si è rivelata essere uno stufato di radici di pino corretto all'acido.
-    Monete e Misteri - EROE tenta di pagare alla locanda "“Vedi Tu\"" lasciando un sacchetto chiuso con la scritta "“Vedi Tu quanto c'è dentro\"", scatenando una rissa con l'oste armato di mattarello.
-    Mal di Pancia Preventivo - L'alchimista cittadino esaurisce le pozioni dopo che l'intera clientela del "“Vedi Tu\"" ha chiesto un lavaggio gastrico preventivo prima ancora di ordinare da bere.
-    Oste Indeciso - GUERRIERO distrugge un tavolo del "“Vedi Tu\"" dopo che l'oste, alla domanda "“Cosa c'è da mangiare?\"", ha risposto alzando le spalle per quattro turni di timer di fila.
+    VT1-Menu Misterioso - Colica di gruppo dopo una cena alla Locanda del "“Vedi Tu\"": EROE ha accettato la specialità dello chef, che si è rivelata essere uno stufato di radici di pino corretto all'acido.
+    VT2-Monete e Misteri - EROE tenta di pagare alla locanda "“Vedi Tu\"" lasciando un sacchetto chiuso con la scritta "“Vedi Tu quanto c'è dentro\"", scatenando una rissa con l'oste armato di mattarello.
+    VT3-Mal di Pancia Preventivo - L'alchimista cittadino esaurisce le pozioni dopo che l'intera clientela del "“Vedi Tu\"" ha chiesto un lavaggio gastrico preventivo prima ancora di ordinare da bere.
+    VT4-Oste Indeciso - GUERRIERO distrugge un tavolo del "“Vedi Tu\"" dopo che l'oste, alla domanda "“Cosa c'è da mangiare?\"", ha risposto alzando le spalle per quattro turni di timer di fila.
 
 NOTIZIE_TOPO_SAGGIO
-    Scommessa Clandestina - EROE perde l'armatura pesante ai dadi contro un topolino parlante, ed è statLETTERA_FINALE vistLETTERA_FINALE allontanarsi coperto solo da un barile di birra bucato.
-    Incidente Diplomatico - EROE ha chiesto del formaggio stagionato al Topo Saggio, provocando una crisi diplomatica e il lancio di gusci di noce da parte dello staff.
-    Formaggio da Giganti - Il Topo Saggio accusa GUERRIERO di aver consumato mezza forma di parmigiano d'élite senza pagare il sovrapprezzo per creature di taglia colossale.
-    Baffi Calpestati - Un incidente diplomatico al Topo Saggio: LADRO ha calpestato per errore i baffi del proprietario sul bancone, venendo bandito dal locale per i prossimi tre livelli.
+    TS1-Scommessa Clandestina - EROE perde l'armatura pesante ai dadi contro un topolino parlante, ed è statLETTERA_FINALE vistLETTERA_FINALE allontanarsi coperto solo da un barile di birra bucato.
+    TS2-Incidente Diplomatico - EROE ha chiesto del formaggio stagionato al Topo Saggio, provocando una crisi diplomatica e il lancio di gusci di noce da parte dello staff.
+    TS3-Formaggio da Giganti - Il Topo Saggio accusa GUERRIERO di aver consumato mezza forma di parmigiano d'élite senza pagare il sovrapprezzo per creature di taglia colossale.
+    TS4-Baffi Calpestati - Un incidente diplomatico al Topo Saggio: LADRO ha calpestato per errore i baffi del proprietario sul bancone, venendo bandito dal locale per i prossimi tre livelli.
 
 NOTIZIE_TAZZA_BUCATA
-    Fuga Rocambolesca - EROE abbandona la Tazza Bucata calandosi da una corda fatta interamente di salsicce nane annodate, lasciando l'oste con un buco nel bilancio e tre metri di carne in meno.
-    Pollice da Tazza - LADRO ha riportato un crampo severo alla Tazza Bucata dopo aver passato quattro ore con il pollice premuto sul fondo del boccale per non perdere la birra da un rame.
-    Boccale Ispezionato - EROE viene preso a pugni dall'oste della Tazza Bucata per aver usato una lente d'ingrandimento alchemica per identificare i grumi neri dentro la zuppa del giorno.
-    Rame al Barile - EROE si presenta alla Tazza Bucata con un intero carretto di barili vuoti, pretendendo di riempirli tutti spendendo un'unica moneta di rame contraffatta dell'Impero del Vuoto.
+    TB1-Fuga Rocambolesca - EROE abbandona la Tazza Bucata calandosi da una corda fatta interamente di salsicce nane annodate, lasciando l'oste con un buco nel bilancio e tre metri di carne in meno.
+    TB2-Pollice da Tazza - LADRO ha riportato un crampo severo alla Tazza Bucata dopo aver passato quattro ore con il pollice premuto sul fondo del boccale per non perdere la birra da un rame.
+    TB3-Boccale Ispezionato - EROE viene preso a pugni dall'oste della Tazza Bucata per aver usato una lente d'ingrandimento alchemica per identificare i grumi neri dentro la zuppa del giorno.
+    TB4-Rame al Barile - EROE si presenta alla Tazza Bucata con un intero carretto di barili vuoti, pretendendo di riempirli tutti spendendo un'unica moneta di rame contraffatta dell'Impero del Vuoto.
 
 NOTIZIE_ELFO_ALTICCIO
-    Cerchio Magico - MAGO rimane intrappolato nell'Elfo Alticcio dopo che il proprietario ubriaco ha tracciato un cerchio magico sul bancone usando il nettare di bosco versato.
-    Nettare di Bosco - L'Elfo Alticcio offre da bere a tutta la clientela, scoprendo solo alla fine di non avere oro nella borsa e costringendo EROE a pagare il conto sotto la minaccia di una scimitarra.
-    Grazia Perduta - EROE documenta la fine del mito dell'eleganza elfica: l'Elfo Alticcio è caduto rovinosamente da uno sgabello nanico mentre tentava di intonare un'ode alla Luna.
-    Sei Calici - Un risveglio difficile all'Elfo Alticcio: EROE si sveglia travestito da druido della foresta dopo aver accettato la sfida dei sei calici di nettare fermentato.
+    EA1-Cerchio Magico - MAGO rimane intrappolato nell'Elfo Alticcio dopo che il proprietario ubriaco ha tracciato un cerchio magico sul bancone usando il nettare di bosco versato.
+    EA2-Nettare di Bosco - L'Elfo Alticcio offre da bere a tutta la clientela, scoprendo solo alla fine di non avere oro nella borsa e costringendo EROE a pagare il conto sotto la minaccia di una scimitarra.
+    EA3-Grazia Perduta - EROE documenta la fine del mito dell'eleganza elfica: l'Elfo Alticcio è caduto rovinosamente da uno sgabello nanico mentre tentava di intonare un'ode alla Luna.
+    EA4-Sei Calici - Un risveglio difficile all'Elfo Alticcio: EROE si sveglia travestito da druido della foresta dopo aver accettato la sfida dei sei calici di nettare fermentato.
 
 NOTIZIE_FRASCA_DEL_LUPO_ASTEMIO
-    Disastro Igienico - Chiusa per bonifica la Frasca del Lupo Astemio. EROE ha scambiato la botte dell'aceto pregiato per un orinatoio d'emergenza, distruggendo l'economia del locale.
-    Acqua del Pozzo - Un bizzarro fenomeno alla Frasca del Lupo Astemio: EROE ha tentato di bere dell'acqua dal pozzo, provocando lo sbigottimento dei clienti che lo hanno accusato di eresia elementale.
-    Mosche Storte - LADRO cattura tre mosche che volavano storte dentro la Frasca del Lupo Astemio, rivendendole all'alchimista come ingredienti per una pozione di Confusione.
-    Onore al Lupo - GUERRIERO crolla sul pavimento della Frasca del Lupo Astemio dopo aver tentato di uscire camminando dritto, venendo deriso dall'intera clientela di lupi di mare.
+    DI1-Disastro Igienico - Chiusa per bonifica la Frasca del Lupo Astemio. EROE ha scambiato la botte dell'aceto pregiato per un orinatoio d'emergenza, distruggendo l'economia del locale.
+    DI2-Acqua del Pozzo - Un bizzarro fenomeno alla Frasca del Lupo Astemio: EROE ha tentato di bere dell'acqua dal pozzo, provocando lo sbigottimento dei clienti che lo hanno accusato di eresia elementale.
+    DI3-Mosche Storte - LADRO cattura tre mosche che volavano storte dentro la Frasca del Lupo Astemio, rivendendole all'alchimista come ingredienti per una pozione di Confusione.
+    DI4-Onore al Lupo - GUERRIERO crolla sul pavimento della Frasca del Lupo Astemio dopo aver tentato di uscire camminando dritto, venendo deriso dall'intera clientela di lupi di mare.
 
 NOTIZIE_TRONCO_CAVO
-    Atto Vandalico - GUERRIERO ha conficcato la sua spada a due mani nel bancone di quercia millenaria solo per testare il bilanciamento del polso, spaccandolo in due.
-    Lamentele Ecologiche - Gli Elfi della Foresta protestano ufficialmente: EROE ha scambiato un antico albero sacro per una bizzarra latrina da campo.
-    Disastro Strutturale - Crolla il soffitto del Tronco Cavo: EROE ha tentato di scalare le pareti interne per recuperare una moneta di rame incastrata nel soffitto.
-    Incendio della Quercia - MAGO rischia il linciaggio nel Tronco Cavo dopo aver lanciato un incantesimo di Fuoco per scaldare la birra alla corteccia, surriscaldando trecento tonnellate di legno millenario.
-    Truffa d'Altri Tempi - EROE ha venduto a un mercante credulone un "“feticcio anti-maledizione\"" che si è rivelato essere solo un pezzo di corteccia del Tronco Cavo con disegnata sopra una faccina buffa.
+    TC1-Atto Vandalico - GUERRIERO ha conficcato la sua spada a due mani nel bancone di quercia millenaria solo per testare il bilanciamento del polso, spaccandolo in due.
+    TC2-Lamentele Ecologiche - Gli Elfi della Foresta protestano ufficialmente: EROE ha scambiato un antico albero sacro per una bizzarra latrina da campo.
+    TC3-Disastro Strutturale - Crolla il soffitto del Tronco Cavo: EROE ha tentato di scalare le pareti interne per recuperare una moneta di rame incastrata nel soffitto.
+    TC4-Incendio della Quercia - MAGO rischia il linciaggio nel Tronco Cavo dopo aver lanciato un incantesimo di Fuoco per scaldare la birra alla corteccia, surriscaldando trecento tonnellate di legno millenario.
+    TC5-Truffa d'Altri Tempi - EROE ha venduto a un mercante credulone un "“feticcio anti-maledizione\"" che si è rivelato essere solo un pezzo di corteccia del Tronco Cavo con disegnata sopra una faccina buffa.
 
 NOTIZIE_DRAGO_VOMITANTE
-    Incidente di Pulizia - Il Drago Vomitante chiude per tre giorni: EROE ha rovesciato un barile di acido dell'alchimista nel tentativo di pulire una macchia di sugo.
-    Odore di Acido - EROE sviene all'ingresso del Drago Vomitante, abbattuto dalle esalazioni corrosive del pavimento che hanno azzerato i suoi tiri salvezza sulla Costituzione.
-    Retro del Drago - LADRO viene sorpreso sul retro del Drago Vomitante mentre usava l'idromele di fuoco avanzato per fabbricare ordigni fumogeni clandestini contro le guardie.
-    Straccio del Necromante - L'oste del Drago Vomitante usa il suo leggendario straccio nero contro EROE, applicandogli lo stato INFETTATO per aver barcollato troppo vicino ai vasi di piante.
+    DV1-Incidente di Pulizia - Il Drago Vomitante chiude per tre giorni: EROE ha rovesciato un barile di acido dell'alchimista nel tentativo di pulire una macchia di sugo.
+    DV2-Odore di Acido - EROE sviene all'ingresso del Drago Vomitante, abbattuto dalle esalazioni corrosive del pavimento che hanno azzerato i suoi tiri salvezza sulla Costituzione.
+    DV3-Retro del Drago - LADRO viene sorpreso sul retro del Drago Vomitante mentre usava l'idromele di fuoco avanzato per fabbricare ordigni fumogeni clandestini contro le guardie.
+    DV4-Straccio del Necromante - L'oste del Drago Vomitante usa il suo leggendario straccio nero contro EROE, applicandogli lo stato INFETTATO per aver barcollato troppo vicino ai vasi di piante.
 
 NOTIZIE_BOCCALE_FORATO
-    Orrore in Cantina - L'oste del Boccale Forato sporge denuncia. EROE ha tentato di tappare i buchi delle botti storiche usando gomme da masticare al gusto di menta selvatica, rovinando l'idromele.
-    Scarpe Bagnate - MAGO esce dal Boccale Forato con lo stato BAGNATO ai piedi, avendo tentato di sorseggiare l'idromele con calma invece di mandarlo giù alla goccia.
-    Colabrodo Reale - EROE accusa la gestione del Boccale Forato di truffa elementale, chiedendo che il foro sul fondo del boccale venga riparato con un incantesimo di Terra.
-    Piedi Impermeabili - L'alchimista cittadino vende stivali di cuoio speciali marchiati "“Approvati dal Boccale Forato\"" dopo che EROE si è presentato con un principio di congelamento alle dita dei piedi.
+    BF1-Orrore in Cantina - L'oste del Boccale Forato sporge denuncia. EROE ha tentato di tappare i buchi delle botti storiche usando gomme da masticare al gusto di menta selvatica, rovinando l'idromele.
+    BF2-Scarpe Bagnate - MAGO esce dal Boccale Forato con lo stato BAGNATO ai piedi, avendo tentato di sorseggiare l'idromele con calma invece di mandarlo giù alla goccia.
+    BF3-Colabrodo Reale - EROE accusa la gestione del Boccale Forato di truffa elementale, chiedendo che il foro sul fondo del boccale venga riparato con un incantesimo di Terra.
+    BF4-Piedi Impermeabili - L'alchimista cittadino vende stivali di cuoio speciali marchiati "“Approvati dal Boccale Forato\"" dopo che EROE si è presentato con un principio di congelamento alle dita dei piedi.
 
 NOTIZIE_CINGHIALE_SOBRIO
-    Danni al Patrimonio - EROE ha tentato di fare una spaccata coreografica sul bancone del Cinghiale Sobrio, sfondandolo e rimanendo incastratLETTERA_FINALE fino dell'arrivo delle guardie.
-    Hic Molesto - BARDO viene bandito a vita dal Cinghiale Sobrio per aver emesso un "“hic\"" fuori tempo durante una discussione sul Carisma dei nani.
-    Canzone Fuori Tempo - Rissa sfiorata al Cinghiale Sobrio: GUERRIERO tenta di intonare un canto di battaglia, venendo respinto con ferocia dall'oste armato di un cartello con scritto "“Moderazione\"".
-    Dignità Analcolica - EROE tenta di contrabbandare una fiala di idromele di fuoco dentro il Cinghiale Sobrio, nascondendola dentro una finta pozione di cura della magia dell'alchimista.
+    CS1-Danni al Patrimonio - EROE ha tentato di fare una spaccata coreografica sul bancone del Cinghiale Sobrio, sfondandolo e rimanendo incastratLETTERA_FINALE fino dell'arrivo delle guardie.
+    CS2-Hic Molesto - BARDO viene bandito a vita dal Cinghiale Sobrio per aver emesso un "“hic\"" fuori tempo durante una discussione sul Carisma dei nani.
+    CS3-Canzone Fuori Tempo - Rissa sfiorata al Cinghiale Sobrio: GUERRIERO tenta di intonare un canto di battaglia, venendo respinto con ferocia dall'oste armato di un cartello con scritto "“Moderazione\"".
+    CS4-Dignità Analcolica - EROE tenta di contrabbandare una fiala di idromele di fuoco dentro il Cinghiale Sobrio, nascondendola dentro una finta pozione di cura della magia dell'alchimista.
 
 NOTIZIE_GOBLIN_ASTEMIO
-    Borseggio Fallito - LADRO esce frustrato dalla Tana del Goblin Astemio: ha perquisito dodici clienti senza trovare un solo rame, confermando che il posto è fin troppo pulito.
-    Succo Fermentato - MAGO lancia una Maledizione sul succo di mela del Goblin Astemio, tentando di farlo fermentare all'istante per movimentare la serata ed avviare una rissa.
-    Tribù Pulita - EROE denuncia la Tana del Goblin Astemio al sindacato dei mostri comuni, accusando l'oste di aver rinnegato le gloriose e sudicie tradizioni della razza Goblin.
-    Vizi Passati - Un vecchio compagno di tribù dell'oste si presenta alla Tana del Goblin Astemio con un cesto di funghi allucinogeni, venendo cacciato a colpi di tovagliolo pulito da EROE.
+    GA1-Borseggio Fallito - LADRO esce frustrato dalla Tana del Goblin Astemio: ha perquisito dodici clienti senza trovare un solo rame, confermando che il posto è fin troppo pulito.
+    GA2-Succo Fermentato - MAGO lancia una Maledizione sul succo di mela del Goblin Astemio, tentando di farlo fermentare all'istante per movimentare la serata ed avviare una rissa.
+    GA3-Tribù Pulita - EROE denuncia la Tana del Goblin Astemio al sindacato dei mostri comuni, accusando l'oste di aver rinnegato le gloriose e sudicie tradizioni della razza Goblin.
+    GA4-Vizi Passati - Un vecchio compagno di tribù dell'oste si presenta alla Tana del Goblin Astemio con un cesto di funghi allucinogeni, venendo cacciato a colpi di tovagliolo pulito da EROE.
 
 NOTIZIE_ULTIMO_AVAMPOSTO
-    Disastro Immobiliare - L'oste dell'Ultimo Avamposto dichiara lo stato di calamità. EROE si è sportLETTERA_FINALE troppo dalla finestra per guardare il fondo del baratro, sbilanciando la struttura e facendo slittare la locanda di due metri verso il dirupo.
-    Lato Est Pericoloso - GUERRIERO si siede pesantemente sul lato est dell'Ultimo Avamposto, facendo scricchiolare le travi sul baratro e scatenando il panico tra gli avventori terrorizzati.
-    Vertigine da Idromele - LADRO, affetto da vertigini, viene curato dall'oste dell'Ultimo Avamposto con sei boccali di idromele scuro prima di poter guardare fuori dalla finestra.
-    Baratro sul Timer - EROE lancia un boccale vuoto fuori dalla finestra dell'Ultimo Avamposto, calcolando sul timer del secondo che il fondo del burrone è profondo almeno tre livelli di gioco.
+    UA1-Disastro Immobiliare - L'oste dell'Ultimo Avamposto dichiara lo stato di calamità. EROE si è sportLETTERA_FINALE troppo dalla finestra per guardare il fondo del baratro, sbilanciando la struttura e facendo slittare la locanda di due metri verso il dirupo.
+    UA2-Lato Est Pericoloso - GUERRIERO si siede pesantemente sul lato est dell'Ultimo Avamposto, facendo scricchiolare le travi sul baratro e scatenando il panico tra gli avventori terrorizzati.
+    UA3-Vertigine da Idromele - LADRO, affetto da vertigini, viene curato dall'oste dell'Ultimo Avamposto con sei boccali di idromele scuro prima di poter guardare fuori dalla finestra.
+    UA4-Baratro sul Timer - EROE lancia un boccale vuoto fuori dalla finestra dell'Ultimo Avamposto, calcolando sul timer del secondo che il fondo del burrone è profondo almeno tre livelli di gioco.
 
 NOTIZIE_BOCCALE_CAPOVOLTO
-    Orrore in Cantina - Il gestore del Boccale Capovolto sporge denuncia. EROE ha scambiato le botti di idromele d'élite per un set di tamburi nanici, sfondandone tre a colpi di mattarello.
-    Paglia Morbida - EROE viene trovato a dormire sotto trenta centimetri di paglia spessa al Boccale Capovolto, convinto di essersi nascosto usando la Furtività di LADRO.
-    Senza Sedie - GUERRIERO si lamenta del Boccale Capovolto: l'assenza di sedie alte gli impedisce di fare parata con lo scudo in modo coreografico durante le discussioni al bancone.
-    Ruzzolone di Gruppo - Scontro generale al Boccale Capovolto: l'intera clientela è caduta a terra in sincrono dopo che MAGO ha fatto assaggiare la sua birra scura modificata alchemicamente.
+    BC1-Orrore in Cantina - Il gestore del Boccale Capovolto sporge denuncia. EROE ha scambiato le botti di idromele d'élite per un set di tamburi nanici, sfondandone tre a colpi di mattarello.
+    BC2-Paglia Morbida - EROE viene trovato a dormire sotto trenta centimetri di paglia spessa al Boccale Capovolto, convinto di essersi nascosto usando la Furtività di LADRO.
+    BC3-Senza Sedie - GUERRIERO si lamenta del Boccale Capovolto: l'assenza di sedie alte gli impedisce di fare parata con lo scudo in modo coreografico durante le discussioni al bancone.
+    BC4-Ruzzolone di Gruppo - Scontro generale al Boccale Capovolto: l'intera clientela è caduta a terra in sincrono dopo che MAGO ha fatto assaggiare la sua birra scura modificata alchemicamente.
 
 NOTIZIE_DRAGO_SPENNATO
-    Rissa per Futili Motivi - Volano boccali dopo che EROE ha sostenuto che l'insegna del Drago Spennato assomigliasse più a una gallina gigante con problemi cutanei.
-    Lucertole nel Cortile - LADRO scopre una cesta di lucertole giganti senza pelle dietro il Drago Spennato, cercando di venderle come cuccioli di Viverna d'élite pronti al combattimento.
-    Montone Letale - GUERRIERO accusa la cucina del Drago Spennato di aver confezionato un cosciotto di montone così duro da poter essere usato come arma contundente contro i boss.
-    Prezzi Rasati - EROE tenta di contrattare sul prezzo del cibo al Drago Spennato, venendo inseguito dall'oste armato di mannaia che gli ricorda che i prezzi sono già tragicamente spennati.
+    DS1-Rissa per Futili Motivi - Volano boccali dopo che EROE ha sostenuto che l'insegna del Drago Spennato assomigliasse più a una gallina gigante con problemi cutanei.
+    DS2-Lucertole nel Cortile - LADRO scopre una cesta di lucertole giganti senza pelle dietro il Drago Spennato, cercando di venderle come cuccioli di Viverna d'élite pronti al combattimento.
+    DS3-Montone Letale - GUERRIERO accusa la cucina del Drago Spennato di aver confezionato un cosciotto di montone così duro da poter essere usato come arma contundente contro i boss.
+    DS4-Prezzi Rasati - EROE tenta di contrattare sul prezzo del cibo al Drago Spennato, venendo inseguito dall'oste armato di mannaia che gli ricorda che i prezzi sono già tragicamente spennati.
 
 NOTIZIE_CACCIATORE_MANCINO
-    Mancato Cervo - EROE passa la notte a digiuno al Cacciatore Mancino, attendendo che l'arciere proprietario colpisca la sua prima preda nella foresta fitta con l'arco storto.
-    Mirata di Vino - Spettacolo al Cacciatore Mancino. L'oste arciere tenta di versare il vino nel boccale di EROE da tre metri di distanza, bagnando completamente l'armatura di GUERRIERO.
-    Occhi Vecchi - MAGO regala un paio di occhiali magici al proprietario del Cacciatore Mancino, che però scambia l'oggetto per una trappola esplosiva elementale.
-    Arciere a Vuoto - EROE lascia una recensione sul Cacciatore Mancino: "“Ottimo vino, ma se aspettate che l'oste prenda un cervo morirete di fame prima di raggiungere il livello 2\"".
+    CM1-Mancato Cervo - EROE passa la notte a digiuno al Cacciatore Mancino, attendendo che l'arciere proprietario colpisca la sua prima preda nella foresta fitta con l'arco storto.
+    CM2-Mirata di Vino - Spettacolo al Cacciatore Mancino. L'oste arciere tenta di versare il vino nel boccale di EROE da tre metri di distanza, bagnando completamente l'armatura di GUERRIERO.
+    CM3-Occhi Vecchi - MAGO regala un paio di occhiali magici al proprietario del Cacciatore Mancino, che però scambia l'oggetto per una trappola esplosiva elementale.
+    CM4-Arciere a Vuoto - EROE lascia una recensione sul Cacciatore Mancino: "“Ottimo vino, ma se aspettate che l'oste prenda un cervo morirete di fame prima di raggiungere il livello 2\"".
 
 NOTIZIE_FUEGO_DEL_FUORILEGGE
-    Monete Contraffatte - EROE paga il conto al Fuego del Fuorilegge usando monete palesemente di cartapesta, venendo premiato dall'oste con una stretta di mano per l'eccellente spirito criminale.
-    Niente Nomi - Le guardie cittadine fanno irruzione al Fuego del Fuorilegge, ma EROE si salva nascondendosi sotto il bancone e fingendo di essere un barile di acido dell'alchimista.
-    Cespugli Spia - LADRO usa la Furtività per mimetizzarsi tra i cespugli del Fuego del Fuorilegge, scoprendo una cassa di oggetti di supporto nascosta dai contrabbandieri.
-    Scusa Pronta - EROE viene fermato fuori dal Fuego del Fuorilegge da una pattuglia, salvandosi con la scusa di essere un bardo itinerante alla ricerca dell'ispirazione per l'Orco Sensibile.
+    FF1-Monete Contraffatte - EROE paga il conto al Fuego del Fuorilegge usando monete palesemente di cartapesta, venendo premiato dall'oste con una stretta di mano per l'eccellente spirito criminale.
+    FF2-Niente Nomi - Le guardie cittadine fanno irruzione al Fuego del Fuorilegge, ma EROE si salva nascondendosi sotto il bancone e fingendo di essere un barile di acido dell'alchimista.
+    FF3-Cespugli Spia - LADRO usa la Furtività per mimetizzarsi tra i cespugli del Fuego del Fuorilegge, scoprendo una cassa di oggetti di supporto nascosta dai contrabbandieri.
+    FF4-Scusa Pronta - EROE viene fermato fuori dal Fuego del Fuorilegge da una pattuglia, salvandosi con la scusa di essere un bardo itinerante alla ricerca dell'ispirazione per l'Orco Sensibile.
 
 NOTIZIE_RADURA_DEL_MAL_DI_PANCIA
-    Maledizione dei Postumi - Risveglio burrascoso alla Radura del Mal di Pancia: MAGO ha lanciato un incantesimo d'Aria nel sonno, spazzando via il tetto di paglia e lasciando dodici avventori a dormire sotto la pioggia.
-    Disastro Strutturale - Il gestore della Radura del Mal di Pancia dichiara lo stato di calamità. EROE ha tentato di fare una capriola coreografica sul tetto di paglia, sfondandolo e cadendo direttamente nel calderone del brodo.
-    Strutto d'Orso - EROE accusa la Radura del Mal di Pancia di tentato avvelenamento alchemico dopo aver scoperto che lo strutto d'orso era stato inserito anche nella torta di mele della casa.
-    Erba Omaggio - L'alchimista cittadino protesta contro la Radura del Mal di Pancia dopo che EROE ha rivenduto l'erba digestiva in omaggio spacciandola per un ingrediente per pozioni magiche.
+    RMP1-Maledizione dei Postumi - Risveglio burrascoso alla Radura del Mal di Pancia: MAGO ha lanciato un incantesimo d'Aria nel sonno, spazzando via il tetto di paglia e lasciando dodici avventori a dormire sotto la pioggia.
+    RMP2-Disastro Strutturale - Il gestore della Radura del Mal di Pancia dichiara lo stato di calamità. EROE ha tentato di fare una capriola coreografica sul tetto di paglia, sfondandolo e cadendo direttamente nel calderone del brodo.
+    RMP3-Strutto d'Orso - EROE accusa la Radura del Mal di Pancia di tentato avvelenamento alchemico dopo aver scoperto che lo strutto d'orso era stato inserito anche nella torta di mele della casa.
+    RMP4-Erba Omaggio - L'alchimista cittadino protesta contro la Radura del Mal di Pancia dopo che EROE ha rivenduto l'erba digestiva in omaggio spacciandola per un ingrediente per pozioni magiche.
 
 NOTIZIE_CAVALLO_CHE_PARLA
-    Rissa per Futili Motivi - Volano tavoli e sgabelli dopo che EROE ha accusato un mezzorco di aver fatto un "“nitrito asimmetrico\"" imitando il Cavallo che Parla.
-    Rissa da Spettatori - Pugni e morsi tra i clienti dopo che EROE ha scommesso cento monete che il Cavallo che Parla avrebbe saputo recitare un sonetto in perfetto elfico.
-    Rissa da Scommessa - Scontro totale nato dopo che EROE ha scommesso venti monete che il Cavallo che Parla avrebbe saputo risolvere un'equazione lineare meglio del vicario del regno.
-    Quadrupede Ciarlatano - EROE scopre l'oste del Cavallo che Parla nascosto dietro la paglia con un megafono d'ottone, scatenando il panico tra i creduloni della taverna.
+    CCP1-Rissa per Futili Motivi - Volano tavoli e sgabelli dopo che EROE ha accusato un mezzorco di aver fatto un "“nitrito asimmetrico\"" imitando il Cavallo che Parla.
+    CCP2-Rissa da Spettatori - Pugni e morsi tra i clienti dopo che EROE ha scommesso cento monete che il Cavallo che Parla avrebbe saputo recitare un sonetto in perfetto elfico.
+    CCP3-Rissa da Scommessa - Scontro totale nato dopo che EROE ha scommesso venti monete che il Cavallo che Parla avrebbe saputo risolvere un'equazione lineare meglio del vicario del regno.
+    CCP4-Quadrupede Ciarlatano - EROE scopre l'oste del Cavallo che Parla nascosto dietro la paglia con un megafono d'ottone, scatenando il panico tra i creduloni della taverna.
 
 NOTIZIE_ANONIMA_ALCOLISTI
-    Danni al Patrimonio Storico - Crepato il pilastro centrale della Taverna dell'Anonima Alcolisti. EROE ha tentato di fare una mossa di lotta libera su un barile vuoto, mancando il bersaglio e impattando contro la muratura.
-    Liquore dell'Oblio - MAGO beve il liquore per dimenticare dell'Anonima Alcolisti, scordandosi completamente tutte le sue magie e le formule per il ricalcolo degli attributi dei personaggi per tre turni.
-    Terapia di Gruppo - GUERRIERO scoppia in lacrime all'Anonima Alcolisti raccontando di come l'Idra lo abbia sconfitto a livello 1, ricevendo il conforto e il brindisi di dodici nani solidali.
-    Affitto della Taverna - L'oste dell'Anonima Alcolisti ringrazia EROE per aver consumato l'equivalente di tre mesi di affitto del locale in una sola notte di postumi da idromele.
+    AA1-Danni al Patrimonio Storico - Crepato il pilastro centrale della Taverna dell'Anonima Alcolisti. EROE ha tentato di fare una mossa di lotta libera su un barile vuoto, mancando il bersaglio e impattando contro la muratura.
+    AA2-Liquore dell'Oblio - MAGO beve il liquore per dimenticare dell'Anonima Alcolisti, scordandosi completamente tutte le sue magie e le formule per il ricalcolo degli attributi dei personaggi per tre turni.
+    AA3-Terapia di Gruppo - GUERRIERO scoppia in lacrime all'Anonima Alcolisti raccontando di come l'Idra lo abbia sconfitto a livello 1, ricevendo il conforto e il brindisi di dodici nani solidali.
+    AA4-Affitto della Taverna - L'oste dell'Anonima Alcolisti ringrazia EROE per aver consumato l'equivalente di tre mesi di affitto del locale in una sola notte di postumi da idromele.
 
 NOTIZIE_FORZIERE_VUOTO
-    Borseggiatori Asciutti - Un borseggiatore professionista esce in lacrime dal Forziere Vuoto dopo aver frugato nelle tasche di EROE, trovando solo tre bottoni di rame e un foglio di recensioni.
-    Rame Ben Speso - EROE dichiara la pace dei sensi al Forziere Vuoto, avendo speso l'ultimo rame in magazzino e non avendo più l'ansia di farsi derubare dalle spie della Foresta.
-    Borsa sul Tavolo - LADRO lascia la borsa aperta sul tavolo del Forziere Vuoto come esca, ma nessun cliente si avvicina sapendo che dentro ci sono solo debiti alchemici.
-    Fieri Squattrinati - Scontro di orgoglio al Forziere Vuoto: EROE organizza una gara a chi possiede meno monete d'oro nella borsa, venendo battuto da un bardo fallito.
+    FV1-Borseggiatori Asciutti - Un borseggiatore professionista esce in lacrime dal Forziere Vuoto dopo aver frugato nelle tasche di EROE, trovando solo tre bottoni di rame e un foglio di recensioni.
+    FV2-Rame Ben Speso - EROE dichiara la pace dei sensi al Forziere Vuoto, avendo speso l'ultimo rame in magazzino e non avendo più l'ansia di farsi derubare dalle spie della Foresta.
+    FV3-Borsa sul Tavolo - LADRO lascia la borsa aperta sul tavolo del Forziere Vuoto come esca, ma nessun cliente si avvicina sapendo che dentro ci sono solo debiti alchemici.
+    FV4-Fieri Squattrinati - Scontro di orgoglio al Forziere Vuoto: EROE organizza una gara a chi possiede meno monete d'oro nella borsa, venendo battuto da un bardo fallito.
 
 NOTIZIE_PANE_E_SPADA
-    Pane Raffermo - GUERRIERO rompe lo scudo tentando di tagliare il pane raffermo di Pane e Spada, chiedendo all'oste un risarcimento in monete d'oro del regno.
-    Lama del Servizio - Tensione al Pane e Spada: EROE si lamenta della birra calda e l'oste risponde estraendo una scimitarra arrugginita dal bancone per aggiornare il livello di gradimento del cliente.
-    Niente Fronzoli - BARDO viene cacciatLETTERA_FINALE a calci da Pane e Spada dopo aver chiesto un tovagliolo di seta pulito per asciugarsi la schiuma della birra calda dalla bocca.
-    Mangia e Combatti - EROE viene scaraventatLETTERA_FINALE fuori da Pane e Spada direttamente sul timer del round, con l'ordine tassativo di andare a fare rissa con i Goblin nella foresta vicina.
+    PS1-Pane Raffermo - GUERRIERO rompe lo scudo tentando di tagliare il pane raffermo di Pane e Spada, chiedendo all'oste un risarcimento in monete d'oro del regno.
+    PS2-Lama del Servizio - Tensione al Pane e Spada: EROE si lamenta della birra calda e l'oste risponde estraendo una scimitarra arrugginita dal bancone per aggiornare il livello di gradimento del cliente.
+    PS3-Niente Fronzoli - BARDO viene cacciatLETTERA_FINALE a calci da Pane e Spada dopo aver chiesto un tovagliolo di seta pulito per asciugarsi la schiuma della birra calda dalla bocca.
+    PS4-Mangia e Combatti - EROE viene scaraventatLETTERA_FINALE fuori da Pane e Spada direttamente sul timer del round, con l'ordine tassativo di andare a fare rissa con i Goblin nella foresta vicina.
 
 NOTIZIE_ORCO_SENSIBILE
-    Sfida Poetica Finita Male - L'Orco Sensibile è scoppiato in lacrime e ha preso a pugni il muro dopo che EROE ha fatto una rima baciata usando la parola "“pasticciotto\"".
-    Rissa per Plagio - Scoppiato un parapiglia dopo che BARDO ha tentato di spacciare una poesia d'amore dell'Orco Sensibile come sua, cambiando solo le rime con "“strutto\"".
-    Rissa da Scommessa - Scontro totale nato dopo che EROE ha scommesso cento monete che l'Orco Sensibile avrebbe pianto ascoltando una ricetta di cucina letta con tono drammatico.
-    Gara di Poesia - GUERRIERO sfida l'Orco Sensibile a una gara di sonetti marziali, finendo per prenderlo a pugni in faccia con molta malinconia a causa di una metafora mal riuscita sulla parata.
+    OS1-Sfida Poetica Finita Male - L'Orco Sensibile è scoppiato in lacrime e ha preso a pugni il muro dopo che EROE ha fatto una rima baciata usando la parola "“pasticciotto\"".
+    OS2-Rissa per Plagio - Scoppiato un parapiglia dopo che BARDO ha tentato di spacciare una poesia d'amore dell'Orco Sensibile come sua, cambiando solo le rime con "“strutto\"".
+    OS3-Rissa da Scommessa - Scontro totale nato dopo che EROE ha scommesso cento monete che l'Orco Sensibile avrebbe pianto ascoltando una ricetta di cucina letta con tono drammatico.
+    OS4-Gara di Poesia - GUERRIERO sfida l'Orco Sensibile a una gara di sonetti marziali, finendo per prenderlo a pugni in faccia con molta malinconia a causa di una metafora mal riuscita sulla parata.
 
 NOTIZIE_RE_FINTO
-    Finta Corona - EROE viene incoronatLETTERA_FINALE 'Governante dei Pannoloni' alla Locanda del Re Finto con una corona di cartapesta, pretendendo che gli elfi della retroguardia servano il sidro in ginocchio.
-    Nettare Reale - MAGO scopre che il Nettare Reale del Re Finto è solo aceto di mele corretto con miele vecchio, chiedendo un rimborso immediato all'alchimista della città.
-    Mendicanti e Duchi - Un mendicante della Foresta viene scambiato da EROE per il duca dei Castelli alla Locanda del Re Finto, prestandogli cento monete d'oro mai più riviste sulla mappa.
-    Finti Velluti - LADRO appicca il fuoco per errore ai finti velluti di cartapesta del Re Finto, costringendo l'oste a sfoltire i prezzi e a scappare dalla finestra sul retro.
-    Rissa d'Invidia - Volano sedie dopo che EROE ha sfoggiato una corona di cartapesta vinta alla locanda del Re Finto, pretendendo che tutti gli elfi presenti si inchinassero al suo passaggio verso le latrine.
+    RF1-Finta Corona - EROE viene incoronatLETTERA_FINALE 'Governante dei Pannoloni' alla Locanda del Re Finto con una corona di cartapesta, pretendendo che gli elfi della retroguardia servano il sidro in ginocchio.
+    RF2-Nettare Reale - MAGO scopre che il Nettare Reale del Re Finto è solo aceto di mele corretto con miele vecchio, chiedendo un rimborso immediato all'alchimista della città.
+    RF3-Mendicanti e Duchi - Un mendicante della Foresta viene scambiato da EROE per il duca dei Castelli alla Locanda del Re Finto, prestandogli cento monete d'oro mai più riviste sulla mappa.
+    RF4-Finti Velluti - LADRO appicca il fuoco per errore ai finti velluti di cartapesta del Re Finto, costringendo l'oste a sfoltire i prezzi e a scappare dalla finestra sul retro.
+    RF5-Rissa d'Invidia - Volano sedie dopo che EROE ha sfoggiato una corona di cartapesta vinta alla locanda del Re Finto, pretendendo che tutti gli elfi presenti si inchinassero al suo passaggio verso le latrine.
 
 NOTIZIE_LOCANDA
-    Rissa Leggendaria - Devastata la locanda "“[#NOME_LOCANDA]\"" per una disputa teologica sul sesso dei folletti. EROE ha usato una sedia nanesca come argomento principale.
-    Lamentele dell'Oste - Il proprietario della locanda "“[#NOME_LOCANDA]\"" esprime profondo sdegno per "“questi eroi della domenica\"" che ordinano un solo brodo in quattro e rubano i tovaglioli di lino.
-    Grave Incidente d'Arte - Un bardo locale, avventore della locanda "“[#NOME_LOCANDA]\"", ha riportato la frattura del liuto sulla testa dopo aver tentato di intonare una ballata celebrativa sulle ascelle dell'eroe.
-    Rissa da Bar - Scatenato un putiferio alla locanda "“[#NOME_LOCANDA]\"" a causa di un avventore che guardava il boccale dell'eroe "con evidente intenzione di sminuirne la schiuma".
-    Conto Insoluto - Caccia all'uomo nella contea. EROE è fuggitLETTERA_FINALE dal retro della locanda "“[#NOME_LOCANDA]\"" spacciando tre bottoni di rame lucido per antiche monete dell'Impero del Vuoto.
-    Disastro Igienico - L'alchimista locale esaurisce le scorte di carbone vegetale dopo che lo stufato misterioso della locanda "“[#NOME_LOCANDA]\"" ha causato una colica sinfonica agli avventori.
-    Orrore in Cucina - Trovata una ciocca di peli d'orso nella minestra; l'oste della locanda "“[#NOME_LOCANDA]\"" ha tentato di spacciarla come "fibra dietetica ad alta resistenza".
-    Danni Collaterali - Un incantesimo di Fuoco lanciato per accendere una pipa ha accidentalmente carbonizzato le sopracciglia di tutti i nani nel raggio di tre metri alla locanda "“[#NOME_LOCANDA]\"".
-    Lamentele Nazionali - I sindacati dei minatori nani protestano ufficialmente contro EROE per aver occupato l'unico tavolo vicino al camino per sei ore senza consumare alla locanda "“[#NOME_LOCANDA]\"".
-    Rissa sul Timer - Scontro totale tra gli avventori della locanda "“[#NOME_LOCANDA]\"" e EROE, reLETTERA_FINALE di aver "bloccato il timer della conversazione" mentre cercava di decidere se ordinare sidro o acqua.
-    Fuga di Notizie - Le guardie cittadine indagano su un sospetto picco di furti di cucchiaini da brodo avvenuto subito dopo la partenza di LADRO dalla locanda "“[#NOME_LOCANDA]\"".
-    Maledizione della Domenica - MAGO ha risposto a un saluto cordiale dell'oste della locanda "“[#NOME_LOCANDA]\"" lanciando un anatema arcano per errore, sintonizzando la voce del locandiere sulle frequenze di un'arpia.
-    Rissa per Gelosia - Scoppiato il caos quando LADRO ha tentato di borseggiare il proprietario della locanda "“[#NOME_LOCANDA]\"", scoprendo che le tasche di quest'ultimo erano piene di trappole per topi vive.
-    Recensione Negativa: L'oste della locanda "“[#NOME_LOCANDA]\"" dichiara alla stampa locale: "“L'eroe della profezia ha l'eleganza di un troll in un negozio di ampolle dell'alchimista. Non torni più\"".
-    Stato d'Emergenza - Bandita la vendita di idromele di fuoco alla locanda "“[#NOME_LOCANDA]\"" dopo che EROE, in preda ai postumi, ha tentato di scambiare il castello del Drago per una gigantesca locanda a due piani.
-    Lamentele d'Igiene - L'ispezione cittadina sigilla la cucina della locanda "“[#NOME_LOCANDA]\"". EROE ha fatto notare che il "“brodo primordiale\"" bolliva ininterrottamente dal lontano impero precedente.
-    Panico Finanziario - Sgominata una banda di falsari nella locanda "“[#NOME_LOCANDA]\"". EROE ha tentato di pagare un pernottamento usando scaglie di Viverna dipinte con l'oro finto dell'alchimista.
-    Rissa per Futili Motivi - Tavoli divelti alla locanda "“[#NOME_LOCANDA]\"" dopo che MAGO ha usato un trucco da baraccone per far sparire la dentiera di un veterano, scordandosi poi dove l'aveva nascosta.
-    Rissa d'Iniziativa - Scoppiata una mega rissa alla locanda "“[#NOME_LOCANDA]\"" perché LADRO ha rubato la sedia a un Barbaro sul timer del secondo, sostenendo di avere un valore di Velocità superiore.
-    Orrore Magico - Un incantesimo d'Aria lanciato all'interno della locanda "“[#NOME_LOCANDA]\"" ha invertito la gravità dei parrucchini di tutti i nobili decaduti presenti.
-    Truffa Assurda - EROE è ricercatLETTERA_FINALE per aver venduto a un avventore della locanda "“[#NOME_LOCANDA]\"" una "“Pergamena della Conoscenza Suprema\"" che conteneva solo la ricetta segreta dello strutto d'orso.
-    Protesta dei Sindacati - Gli osti della Foresta firmano una petizione per vietare l'ingresso a EROE, definito "“un flagello per le scorte di noccioline salate\"".
-    Rissa d'Orgoglio - Scontro totale scatenato alla locanda "“[#NOME_LOCANDA]\"" da EROE che ha osato definire l'idromele della casa "“un onesto disinfettante per zoccoli di Centauro\"".
-    Maledizione della Locanda - Un anatema maldestro scagliato da MAGO alla locanda "“[#NOME_LOCANDA]\"" ha fuso insieme gli sgabelli di tre avventori, costringendoli a muoversi in sincrono come un bizzarro mostro a sei gambe.
-    Lamentele sul Servizio: EROE lascia una recensione pessima sulla porta di legno della locanda "“[#NOME_LOCANDA]\"": "“L'oste ha lo sguardo truce e la zuppa sembrava volermi mordere. Una stella\"".
-    Rissa per Mancata Igiene: Devastata la sala comune alla locanda "“[#NOME_LOCANDA]\"" dopo che GUERRIERO ha usato lo scudo come piatto da portata, accusando l'oste di lavare i vassoi solo durante gli anni bisesti.
-    Incidente Alchemico - EROE ha scambiato una fiala di fertilizzante concentrato dell'Alchimista per uno sciroppo d'acero, causando la crescita istantanea di muschio lussureggiante sulla lingua del bardo della locanda "“[#NOME_LOCANDA]\"".
-    Rissa per Futili Motivi - Volano panche e tavoli alla locanda "“[#NOME_LOCANDA]\"" dopo che LADRO ha affermato che la birra della casa fosse in realtà acqua piovana filtrata attraverso i calzini usati di un Centauro.
-    Rissa d'Orgoglio - Violento scontro scatenato da MAGO, che ha tentato di pagare il conto alla locanda "“[#NOME_LOCANDA]\"" dimostrando matematicamente che l'oro richiesto dall'oste fosse un'illusione ottica creata dal fumo della cucina.
-    Rissa da Spettacolo - Pugni e morsi tra gli avventori alla locanda "“[#NOME_LOCANDA]\"" quando EROE, annoiato dalle ballate locali, ha pagato un folletto per fare lo sgambetto al bardo ufficiale nel bel mezzo dell'acuto finale.
-    Lamentele Nazionali - L'associazione dei cacciatori mancini esprime profondo sdegno verso EROE che ha utilizzato le loro frecce di riserva come spiedini per arrostire lucertole giganti nel cortile.
-    Incidente di Trasmutazione - Un incantesimo di Gelo maldestro ha trasformato l'intero bucato steso sul retro della locanda "“[#NOME_LOCANDA]\"" in una serie di sculture di ghiaccio taglienti, ferendo il cane dell'oste.
-    Incidente di Trasmutazione - Un incantesimo d'Acqua maldestro ha trasformato l'intero pavimento in parquet della  in una palude scivolosa, provocando la frattura dell'orgoglio a tre cavalieri.
-    Lamentele sul Menu - EROE restituisce lo stufato del giorno alla locanda "“[#NOME_LOCANDA]\"" lamentando che "le verdure all'interno stanno palesemente tentando di organizzare una coalizione sindacale contro il mio stomaco".
-    Rissa per Mancato Rispetto - Volano panche e brocche alla locanda "“[#NOME_LOCANDA]\"" dopo che EROE ha accusato un pacifico bardo itinerante di usare un "“font tipografico poco epico\"" sul cartello delle mance.
-    Incidente di Trasmutazione - Un incantesimo di Terra maldestro ha trasformato l'idromele nei boccali di tutti i clienti della locanda "“[#NOME_LOCANDA]\"" in un blocco di fango compatto, spezzando i denti a un Barbaro che stava bevendo alla goccia.
-    Maledizione Strutturale - Un anatema maldestro ha fatto sì che tutti i boccali della locanda "“[#NOME_LOCANDA]\"" si attaccassero magneticamente alle mani dei clienti, costringendo dodici avventori a vivere in simbiosi con la birra.
-    Rissa d'Invidia Tattica - Volano sedie alla locanda "“[#NOME_LOCANDA]\"" dopo che LADRO ha esibito un finto titolo di Arciduca dei Pannoloni comprato da un ciarlatano, pretendendo il tavolo imperiale.
-    Rissa per Incomprensione - Scoppiato il caos totale perché EROE ha scambiato il gatto della locanda "“[#NOME_LOCANDA]\"" per un rarissimo minion demoniaco, tentandone l'esorcismo con un boccale di sidro benedetto sul momento.
-    Lamentele sul Menu - EROE ha tentato di restituire lo stufato del giorno alla locanda "“[#NOME_LOCANDA]\"" lamentando che "“la carne si muoveva a un ritmo incompatibile con le leggi della fisica e del buon gusto\"".
-    Rissa per Futili Motivi - Scoppiato un putiferio quando MAGO ha spento il camino della sala comune alla locanda "“[#NOME_LOCANDA]\"" con un incantesimo d'Acqua, sostenendo che le scintille stessero attentando all'integrità del suo mantello di seta sintetica.
-    Rissa d'Iniziativa - Violento scontro scatenato da LADRO che ha occupato contemporaneamente tre sgabelli al bancone della locanda "“[#NOME_LOCANDA]\"", sostenendo che la sua alta Velocità gli permettesse di sedersi ovunque prima degli altri.
-    Rissa per Incomprensione - Scoppiata una mega rissa perché EROE ha scambiato l'armatura decorativa del salone della locanda "“[#NOME_LOCANDA]\"" per un mostro di pietra, prendendola a colpi di sedia prima che l'oste potesse spiegare l'equivoco.
-    Lamentele sul Menu - Alla locanda "“[#NOME_LOCANDA]\"" EROE restituisce lo stufato lamentando la presenza di un "artiglio biologico non identificato che tentava di fare parata contro il mio cucchiaio".
-    Maledizione Strutturale - Un anatema maldestro ha invertito la polarità delle porte della locanda "“[#NOME_LOCANDA]\"". Ora si aprono solo se insultate pesantemente in lingua orchesca, esasperando la clientela.
-    Rissa d'Invidia - Volano sedie alla locanda "“[#NOME_LOCANDA]\"" dopo che LADRO ha esibito un finto anello reale acquistato da un ciarlatano, pretendendo che l'oste gli servisse il sidro in ginocchio.
-    Rissa per Mancato Tempismo - Scontro totale nella sala comune della locanda "“[#NOME_LOCANDA]\"" dopo che LADRO ha tentato di rubare le stringhe delle scarpe a un paladino sul timer del secondo scatto.
-    Rissa per Futili Motivi - Volano panche e boccali alla locanda "“[#NOME_LOCANDA]\"" dopo che GUERRIERO ha affermato che lo stufato di cervo della casa fosse in realtà topo di fogna marinato nel sidro sgasato.
-    Rissa d'Orgoglio Marziale - Violento scontro alla locanda "“[#NOME_LOCANDA]\"" scatenato da GUERRIERO che ha occupato l'unico tavolo vicino al camino, sostenendo che il suo valore di Costituzione gli desse la precedenza assoluta sul riscaldamento corporeo.
+    LG1-Rissa Leggendaria - Devastata la locanda "“[#NOME_LOCANDA]\"" per una disputa teologica sul sesso dei folletti. EROE ha usato una sedia nanesca come argomento principale.
+    LG2-Lamentele dell'Oste - Il proprietario della locanda "“[#NOME_LOCANDA]\"" esprime profondo sdegno per "“questi eroi della domenica\"" che ordinano un solo brodo in quattro e rubano i tovaglioli di lino.
+    LG3-Grave Incidente d'Arte - Un bardo locale, avventore della locanda "“[#NOME_LOCANDA]\"", ha riportato la frattura del liuto sulla testa dopo aver tentato di intonare una ballata celebrativa sulle ascelle dell'eroe.
+    LG4-Rissa da Bar - Scatenato un putiferio alla locanda "“[#NOME_LOCANDA]\"" a causa di un avventore che guardava il boccale dell'eroe "con evidente intenzione di sminuirne la schiuma".
+    LG5-Conto Insoluto - Caccia all'uomo nella contea. EROE è fuggitLETTERA_FINALE dal retro della locanda "“[#NOME_LOCANDA]\"" spacciando tre bottoni di rame lucido per antiche monete dell'Impero del Vuoto.
+    LG6-Disastro Igienico - L'alchimista locale esaurisce le scorte di carbone vegetale dopo che lo stufato misterioso della locanda "“[#NOME_LOCANDA]\"" ha causato una colica sinfonica agli avventori.
+    LG7-Orrore in Cucina - Trovata una ciocca di peli d'orso nella minestra; l'oste della locanda "“[#NOME_LOCANDA]\"" ha tentato di spacciarla come "fibra dietetica ad alta resistenza".
+    LG8-Danni Collaterali - Un incantesimo di Fuoco lanciato per accendere una pipa ha accidentalmente carbonizzato le sopracciglia di tutti i nani nel raggio di tre metri alla locanda "“[#NOME_LOCANDA]\"".
+    LG9-Lamentele Nazionali - I sindacati dei minatori nani protestano ufficialmente contro EROE per aver occupato l'unico tavolo vicino al camino per sei ore senza consumare alla locanda "“[#NOME_LOCANDA]\"".
+    LG10-Rissa sul Timer - Scontro totale tra gli avventori della locanda "“[#NOME_LOCANDA]\"" e EROE, reLETTERA_FINALE di aver "bloccato il timer della conversazione" mentre cercava di decidere se ordinare sidro o acqua.
+    LG11-Fuga di Notizie - Le guardie cittadine indagano su un sospetto picco di furti di cucchiaini da brodo avvenuto subito dopo la partenza di LADRO dalla locanda "“[#NOME_LOCANDA]\"".
+    LG12-Maledizione della Domenica - MAGO ha risposto a un saluto cordiale dell'oste della locanda "“[#NOME_LOCANDA]\"" lanciando un anatema arcano per errore, sintonizzando la voce del locandiere sulle frequenze di un'arpia.
+    LG13-Rissa per Gelosia - Scoppiato il caos quando LADRO ha tentato di borseggiare il proprietario della locanda "“[#NOME_LOCANDA]\"", scoprendo che le tasche di quest'ultimo erano piene di trappole per topi vive.
+    LG14-Recensione Negativa: L'oste della locanda "“[#NOME_LOCANDA]\"" dichiara alla stampa locale: "“L'eroe della profezia ha l'eleganza di un troll in un negozio di ampolle dell'alchimista. Non torni più\"".
+    LG15-Stato d'Emergenza - Bandita la vendita di idromele di fuoco alla locanda "“[#NOME_LOCANDA]\"" dopo che EROE, in preda ai postumi, ha tentato di scambiare il castello del Drago per una gigantesca locanda a due piani.
+    LG16-Lamentele d'Igiene - L'ispezione cittadina sigilla la cucina della locanda "“[#NOME_LOCANDA]\"". EROE ha fatto notare che il "“brodo primordiale\"" bolliva ininterrottamente dal lontano impero precedente.
+    LG17-Panico Finanziario - Sgominata una banda di falsari nella locanda "“[#NOME_LOCANDA]\"". EROE ha tentato di pagare un pernottamento usando scaglie di Viverna dipinte con l'oro finto dell'alchimista.
+    LG18-Rissa per Futili Motivi - Tavoli divelti alla locanda "“[#NOME_LOCANDA]\"" dopo che MAGO ha usato un trucco da baraccone per far sparire la dentiera di un veterano, scordandosi poi dove l'aveva nascosta.
+    LG19-Rissa d'Iniziativa - Scoppiata una mega rissa alla locanda "“[#NOME_LOCANDA]\"" perché LADRO ha rubato la sedia a un Barbaro sul timer del secondo, sostenendo di avere un valore di Velocità superiore.
+    LG20-Orrore Magico - Un incantesimo d'Aria lanciato all'interno della locanda "“[#NOME_LOCANDA]\"" ha invertito la gravità dei parrucchini di tutti i nobili decaduti presenti.
+    LG21-Truffa Assurda - EROE è ricercatLETTERA_FINALE per aver venduto a un avventore della locanda "“[#NOME_LOCANDA]\"" una "“Pergamena della Conoscenza Suprema\"" che conteneva solo la ricetta segreta dello strutto d'orso.
+    LG22-Protesta dei Sindacati - Gli osti della Foresta firmano una petizione per vietare l'ingresso a EROE, definito "“un flagello per le scorte di noccioline salate\"".
+    LG23-Rissa d'Orgoglio - Scontro totale scatenato alla locanda "“[#NOME_LOCANDA]\"" da EROE che ha osato definire l'idromele della casa "“un onesto disinfettante per zoccoli di Centauro\"".
+    LG24-Maledizione della Locanda - Un anatema maldestro scagliato da MAGO alla locanda "“[#NOME_LOCANDA]\"" ha fuso insieme gli sgabelli di tre avventori, costringendoli a muoversi in sincrono come un bizzarro mostro a sei gambe.
+    LG25-Lamentele sul Servizio: EROE lascia una recensione pessima sulla porta di legno della locanda "“[#NOME_LOCANDA]\"": "“L'oste ha lo sguardo truce e la zuppa sembrava volermi mordere. Una stella\"".
+    LG26-Rissa per Mancata Igiene: Devastata la sala comune alla locanda "“[#NOME_LOCANDA]\"" dopo che GUERRIERO ha usato lo scudo come piatto da portata, accusando l'oste di lavare i vassoi solo durante gli anni bisesti.
+    LG27-Incidente Alchemico - EROE ha scambiato una fiala di fertilizzante concentrato dell'Alchimista per uno sciroppo d'acero, causando la crescita istantanea di muschio lussureggiante sulla lingua del bardo della locanda "“[#NOME_LOCANDA]\"".
+    LG28-Rissa per Futili Motivi - Volano panche e tavoli alla locanda "“[#NOME_LOCANDA]\"" dopo che LADRO ha affermato che la birra della casa fosse in realtà acqua piovana filtrata attraverso i calzini usati di un Centauro.
+    LG29-Rissa d'Orgoglio - Violento scontro scatenato da MAGO, che ha tentato di pagare il conto alla locanda "“[#NOME_LOCANDA]\"" dimostrando matematicamente che l'oro richiesto dall'oste fosse un'illusione ottica creata dal fumo della cucina.
+    LG30-Rissa da Spettacolo - Pugni e morsi tra gli avventori alla locanda "“[#NOME_LOCANDA]\"" quando EROE, annoiato dalle ballate locali, ha pagato un folletto per fare lo sgambetto al bardo ufficiale nel bel mezzo dell'acuto finale.
+    LG31-Lamentele Nazionali - L'associazione dei cacciatori mancini esprime profondo sdegno verso EROE che ha utilizzato le loro frecce di riserva come spiedini per arrostire lucertole giganti nel cortile.
+    LG32-Incidente di Trasmutazione - Un incantesimo di Gelo maldestro ha trasformato l'intero bucato steso sul retro della locanda "“[#NOME_LOCANDA]\"" in una serie di sculture di ghiaccio taglienti, ferendo il cane dell'oste.
+    LG33-Incidente di Trasmutazione - Un incantesimo d'Acqua maldestro ha trasformato l'intero pavimento in parquet della  in una palude scivolosa, provocando la frattura dell'orgoglio a tre cavalieri.
+    LG34-Lamentele sul Menu - EROE restituisce lo stufato del giorno alla locanda "“[#NOME_LOCANDA]\"" lamentando che "le verdure all'interno stanno palesemente tentando di organizzare una coalizione sindacale contro il mio stomaco".
+    LG35-Rissa per Mancato Rispetto - Volano panche e brocche alla locanda "“[#NOME_LOCANDA]\"" dopo che EROE ha accusato un pacifico bardo itinerante di usare un "“font tipografico poco epico\"" sul cartello delle mance.
+    LG36-Incidente di Trasmutazione - Un incantesimo di Terra maldestro ha trasformato l'idromele nei boccali di tutti i clienti della locanda "“[#NOME_LOCANDA]\"" in un blocco di fango compatto, spezzando i denti a un Barbaro che stava bevendo alla goccia.
+    LG37-Maledizione Strutturale - Un anatema maldestro ha fatto sì che tutti i boccali della locanda "“[#NOME_LOCANDA]\"" si attaccassero magneticamente alle mani dei clienti, costringendo dodici avventori a vivere in simbiosi con la birra.
+    LG38-Rissa d'Invidia Tattica - Volano sedie alla locanda "“[#NOME_LOCANDA]\"" dopo che LADRO ha esibito un finto titolo di Arciduca dei Pannoloni comprato da un ciarlatano, pretendendo il tavolo imperiale.
+    LG39-Rissa per Incomprensione - Scoppiato il caos totale perché EROE ha scambiato il gatto della locanda "“[#NOME_LOCANDA]\"" per un rarissimo minion demoniaco, tentandone l'esorcismo con un boccale di sidro benedetto sul momento.
+    LG40-Lamentele sul Menu - EROE ha tentato di restituire lo stufato del giorno alla locanda "“[#NOME_LOCANDA]\"" lamentando che "“la carne si muoveva a un ritmo incompatibile con le leggi della fisica e del buon gusto\"".
+    LG41-Rissa per Futili Motivi - Scoppiato un putiferio quando MAGO ha spento il camino della sala comune alla locanda "“[#NOME_LOCANDA]\"" con un incantesimo d'Acqua, sostenendo che le scintille stessero attentando all'integrità del suo mantello di seta sintetica.
+    LG42-Rissa d'Iniziativa - Violento scontro scatenato da LADRO che ha occupato contemporaneamente tre sgabelli al bancone della locanda "“[#NOME_LOCANDA]\"", sostenendo che la sua alta Velocità gli permettesse di sedersi ovunque prima degli altri.
+    LG43-Rissa per Incomprensione - Scoppiata una mega rissa perché EROE ha scambiato l'armatura decorativa del salone della locanda "“[#NOME_LOCANDA]\"" per un mostro di pietra, prendendola a colpi di sedia prima che l'oste potesse spiegare l'equivoco.
+    LG44-Lamentele sul Menu - Alla locanda "“[#NOME_LOCANDA]\"" EROE restituisce lo stufato lamentando la presenza di un "artiglio biologico non identificato che tentava di fare parata contro il mio cucchiaio".
+    LG45-Maledizione Strutturale - Un anatema maldestro ha invertito la polarità delle porte della locanda "“[#NOME_LOCANDA]\"". Ora si aprono solo se insultate pesantemente in lingua orchesca, esasperando la clientela.
+    LG46-Rissa d'Invidia - Volano sedie alla locanda "“[#NOME_LOCANDA]\"" dopo che LADRO ha esibito un finto anello reale acquistato da un ciarlatano, pretendendo che l'oste gli servisse il sidro in ginocchio.
+    LG47-Rissa per Mancato Tempismo - Scontro totale nella sala comune della locanda "“[#NOME_LOCANDA]\"" dopo che LADRO ha tentato di rubare le stringhe delle scarpe a un paladino sul timer del secondo scatto.
+    LG48-Rissa per Futili Motivi - Volano panche e boccali alla locanda "“[#NOME_LOCANDA]\"" dopo che GUERRIERO ha affermato che lo stufato di cervo della casa fosse in realtà topo di fogna marinato nel sidro sgasato.
+    LG49-Rissa d'Orgoglio Marziale - Violento scontro alla locanda "“[#NOME_LOCANDA]\"" scatenato da GUERRIERO che ha occupato l'unico tavolo vicino al camino, sostenendo che il suo valore di Costituzione gli desse la precedenza assoluta sul riscaldamento corporeo.
 
 NOTIZIE_CITTA
-    Rissa da Spettacolo - Pugni e morsi tra i mercanti quando EROE ha pagato un folletto per fare boccacce alle guardie cittadine nel bel mezzo della lettura del bando reale.
-    Rissa per Incomprensione - Scoppiata una mega rissa perché EROE ha scambiato lo specchio della sala comune per un portale dimensionale maledetto, frantumandolo a colpi di scudo nanico.
-    Lamentele dei Chierici - I chierici del borgo aprono una vertenza formale. EROE ha usato i paramenti sacri del tempio come stracci improvvisati per lucidare la sua armatura pesante.
-    Incidente Alchemico - EROE ha scambiato una lozione per capelli dell'Alchimista per un elisir di cura magico, provocando la crescita istantanea di una folta pelliccia di lupo sulle gengive di MAGO.
-    Truffa d'End-Game - Ricercato un truffatore nella Foresta. EROE ha venduto a un viandante un uovo di gallina dipinto di verde, spacciandolo per un rarissimo cucciolo di Drago tascabile da guardia.
-    Lamentele dei Nani - I carpentieri nani del borgo aprono una vertenza formale: EROE ha usato i loro preziosi strumenti di precisione per aprirsi una scatola di fagioli stufati risalente all'era precedente.
-    Incidente di Rifornimento - L'Alchimista cittadino esprime profondo sdegno. EROE ha svuotato l'intera cisterna dell'acqua distillata per farsi un pediluvio rilassante dopo una camminata nella Palude.
-    Lamentele di Vicinato - Gli abitanti del borgo protestano ufficialmente. EROE ha tentato di accordare un liuto usando una morsa da fabbro, producendo ultrasuoni che hanno terrorizzato i pipistrelli delle Rovine.
-    Lamentele della Guardia - Le pattuglie cittadine denunciano il furto di tre elmi d'ordinanza, usati da EROE la sera prima come pentoloni improvvisati per uno stufato di funghi allucinogeni clandestino.
-    Truffa Leggendaria - Ricercato un avventuriero nella Foresta. EROE ha venduto a un viandante un pezzo di vetro colorato spacciandolo per un frammento dell'anima disintegrata dell'OmbraFiamma.
-    Rissa da Scommessa - Scontro violento nato dopo che EROE ha scommesso dieci monete che GUERRIERO avrebbe potuto inghiottire un intero uovo di Viverna senza masticarlo.
-    Rissa da Spettatori - Pugni e morsi tra i nani dopo che BARDO ha interrotto una solenne ballata militare per intonare un jingle commerciale sulle pozioni di salute dell'Alchimista.
+    CG1-Rissa da Spettacolo - Pugni e morsi tra i mercanti quando EROE ha pagato un folletto per fare boccacce alle guardie cittadine nel bel mezzo della lettura del bando reale.
+    CG2-Rissa per Incomprensione - Scoppiata una mega rissa perché EROE ha scambiato lo specchio della sala comune per un portale dimensionale maledetto, frantumandolo a colpi di scudo nanico.
+    CG3-Lamentele dei Chierici - I chierici del borgo aprono una vertenza formale. EROE ha usato i paramenti sacri del tempio come stracci improvvisati per lucidare la sua armatura pesante.
+    CG4-Incidente Alchemico - EROE ha scambiato una lozione per capelli dell'Alchimista per un elisir di cura magico, provocando la crescita istantanea di una folta pelliccia di lupo sulle gengive di MAGO.
+    CG5-Truffa d'End-Game - Ricercato un truffatore nella Foresta. EROE ha venduto a un viandante un uovo di gallina dipinto di verde, spacciandolo per un rarissimo cucciolo di Drago tascabile da guardia.
+    CG6-Lamentele dei Nani - I carpentieri nani del borgo aprono una vertenza formale: EROE ha usato i loro preziosi strumenti di precisione per aprirsi una scatola di fagioli stufati risalente all'era precedente.
+    CG7-Incidente di Rifornimento - L'Alchimista cittadino esprime profondo sdegno. EROE ha svuotato l'intera cisterna dell'acqua distillata per farsi un pediluvio rilassante dopo una camminata nella Palude.
+    CG8-Lamentele di Vicinato - Gli abitanti del borgo protestano ufficialmente. EROE ha tentato di accordare un liuto usando una morsa da fabbro, producendo ultrasuoni che hanno terrorizzato i pipistrelli delle Rovine.
+    CG9Lamentele della Guardia - Le pattuglie cittadine denunciano il furto di tre elmi d'ordinanza, usati da EROE la sera prima come pentoloni improvvisati per uno stufato di funghi allucinogeni clandestino.
+    CG10-Truffa Leggendaria - Ricercato un avventuriero nella Foresta. EROE ha venduto a un viandante un pezzo di vetro colorato spacciandolo per un frammento dell'anima disintegrata dell'OmbraFiamma.
+    CG11-Rissa da Scommessa - Scontro violento nato dopo che EROE ha scommesso dieci monete che GUERRIERO avrebbe potuto inghiottire un intero uovo di Viverna senza masticarlo.
+    CG12-Rissa da Spettatori - Pugni e morsi tra i nani dopo che BARDO ha interrotto una solenne ballata militare per intonare un jingle commerciale sulle pozioni di salute dell'Alchimista.
+
