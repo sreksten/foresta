@@ -38,9 +38,34 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
 
         if (comando.getTipoConsumabile() == TipoConsumabile.INCANTESIMO) {
             ClasseIncantesimo classe = comando.getClasseIncantesimo();
-            aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteIncantesimi[classe.ordinal()],
-                    xMinimaZonaCentrale, yRigaMonete(), "Incantesimo acquistato: " + classe.getNomeSingolare()));
+            String descrizione = "Incantesimo acquistato: " + classe.getNomeSingolare();
+            Point posizione = posizioneIncantesimoNellElencoSinistro(classe);
+            if (posizione != null) {
+                aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteIncantesimi[classe.ordinal()], 1, font,
+                        posizione.x, posizione.y, true, descrizione));
+            } else {
+                aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteIncantesimi[classe.ordinal()], 1, font,
+                        xMinimaZonaCentrale, yRigaMonete(), true, descrizione));
+            }
         }
+    }
+
+    /**
+     * Cerca la posizione a schermo, nell'elenco di sinistra (inventario del gruppo), dell'icona
+     * relativa all'incantesimo indicato, se attualmente visibile nella porzione scrollata a video.
+     */
+    private Point posizioneIncantesimoNellElencoSinistro(ClasseIncantesimo classeIncantesimo) {
+        List<Consumabile> consumabili = getElencoGruppo();
+        ComponenteScorrevole<Consumabile> componenteScorrevole = costruisciComponenteScorrevoleConsumabili(consumabili, null, false);
+        Point posizione = componenteScorrevole.posizioneTitolo(c -> c.classeIncantesimo == classeIncantesimo);
+        if (posizione == null) {
+            return null;
+        }
+        int relativo = posizione.y - offsetYZonaSinistra;
+        if (relativo < 0 || relativo >= ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO) {
+            return null;
+        }
+        return new Point(xMinimaZonaSinistra + SPACING + posizione.x, DIMENSIONE_BORDO_INTERNO + 2 * SPACING + relativo);
     }
 
     private void gestisciEventoRifiutoAcquistoConsumabile(NotificaRifiutoAcquistoConsumabile notificaRifiutoAcquistoConsumabile) {

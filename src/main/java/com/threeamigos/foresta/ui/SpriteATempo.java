@@ -20,6 +20,7 @@ public class SpriteATempo extends SpriteBase {
 	private String testoVariazione;
 	private DoomdarkFont font;
 	private DoomdarkColorModel.Color color;
+	private boolean ancoraSinistra;
 
 	/**
 	 * Coordinate di appoggio, mutabili: {@link #buildImage()} le corregge in base alle
@@ -39,13 +40,29 @@ public class SpriteATempo extends SpriteBase {
 	}
 
 	SpriteATempo(BufferedImage icona, int variazione, DoomdarkFont font, int xIniziale, int yIniziale, String descrizione) {
+		this(icona, variazione, font, xIniziale, yIniziale, false, descrizione);
+	}
+
+	/**
+	 * @param ancoraSinistra se {@code true}, {@code xIniziale} è il bordo sinistro dell'icona
+	 *                       (l'immagine composta icona+testo si estende verso destra); se
+	 *                       {@code false} (comportamento storico) è il bordo destro del testo
+	 *                       (l'immagine composta si estende verso sinistra).
+	 */
+	SpriteATempo(BufferedImage icona, int variazione, DoomdarkFont font, int xIniziale, int yIniziale,
+				 boolean ancoraSinistra, String descrizione) {
 		this(icona, variazione, font,
 				variazione >= 0 ? DoomdarkColorModel.Color.GREEN : DoomdarkColorModel.Color.RED,
-				xIniziale, yIniziale, descrizione);
+				xIniziale, yIniziale, ancoraSinistra, descrizione);
 	}
 
 	SpriteATempo(BufferedImage icona, int variazione, DoomdarkFont font, DoomdarkColorModel.Color color,
 				 int xIniziale, int yIniziale, String descrizione) {
+		this(icona, variazione, font, color, xIniziale, yIniziale, false, descrizione);
+	}
+
+	SpriteATempo(BufferedImage icona, int variazione, DoomdarkFont font, DoomdarkColorModel.Color color,
+				 int xIniziale, int yIniziale, boolean ancoraSinistra, String descrizione) {
 		this.descrizione = descrizione;
 		this.icona = icona;
 		this.testoVariazione = testoVariazione(variazione);
@@ -53,6 +70,7 @@ public class SpriteATempo extends SpriteBase {
 		this.color = color;
 		this.x = xIniziale;
 		this.y = yIniziale;
+		this.ancoraSinistra = ancoraSinistra;
 		completaCostruzione();
 	}
 
@@ -134,7 +152,9 @@ public class SpriteATempo extends SpriteBase {
 		g2d.drawImage(doomdark, offsetXTesto + 1, offsetYTesto + 1, null);
 		g2d.dispose();
 
-		this.x -= image.getWidth();
+		if (!ancoraSinistra) {
+			this.x -= image.getWidth();
+		}
 		this.y -= offsetYTesto;
 		return image;
 	}

@@ -4,6 +4,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Predicate;
 
 /**
  * Elenco ad albero scorrevole. Ogni nodo può portarsi dietro un riferimento
@@ -173,6 +174,23 @@ public class ComponenteScorrevole<T> {
                 return nodo.riferimento;
             }
             altezzaRaggiunta += altezzaNodo;
+        }
+        return null;
+    }
+
+    /**
+     * Riporta la posizione (indentazione come x, quota assoluta nelle coordinate della lista
+     * come y, prima di sottrarre l'offset di scorrimento) a cui viene disegnata l'icona/il
+     * titolo del primo nodo il cui riferimento soddisfa il predicato indicato, oppure null se
+     * nessun nodo corrisponde.
+     */
+    public Point posizioneTitolo(Predicate<T> predicato) {
+        int altezzaRaggiunta = 0;
+        for (Nodo nodo : espandiNodi()) {
+            if (nodo.riferimento != null && predicato.test(nodo.riferimento)) {
+                return new Point(nodo.getIndentazione(), altezzaRaggiunta);
+            }
+            altezzaRaggiunta += nodo.getAltezzaSenzaFigli();
         }
         return null;
     }
