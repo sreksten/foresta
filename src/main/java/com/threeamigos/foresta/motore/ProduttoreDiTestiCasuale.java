@@ -137,11 +137,11 @@ public class ProduttoreDiTestiCasuale {
 	private static String sostituisci(String contenuto, ClassePersonaggio classe1, ClassePersonaggio classe2) {
 		if (contenuto.contains(classe1.name())) {
 			Personaggio p = trova(classe1, classe2);
-			contenuto.replace(classe1.name(), p.getNomeProprio().orElseThrow(() -> new IllegalStateException("Personaggio senza nome proprio")));
+			contenuto = contenuto.replace(classe1.name(), p.getNomeProprio().orElseThrow(() -> new IllegalStateException("Personaggio senza nome proprio")));
 		}
 		if (contenuto.contains(classe2.name())) {
 			Personaggio p = trova(classe2, classe1);
-			contenuto.replace(classe2.name(), p.getNomeProprio().orElseThrow(() -> new IllegalStateException("Personaggio senza nome proprio")));
+			contenuto = contenuto.replace(classe2.name(), p.getNomeProprio().orElseThrow(() -> new IllegalStateException("Personaggio senza nome proprio")));
 		}
 		return contenuto;
 	}
