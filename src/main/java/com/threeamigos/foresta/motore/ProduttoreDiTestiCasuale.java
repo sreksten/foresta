@@ -59,8 +59,9 @@ public class ProduttoreDiTestiCasuale {
 			}
 			String[] token = produzioni.get(0).split("/");
 			String nomeLocanda = token[0];
-			String recensioneLocanda = token[1];
-			String dialogoLocanda = token[2];
+			String identificativoLocanda = token[1];
+			String recensioneLocanda = token[2];
+			String dialogoLocanda = token[3];
 			final String chiaveRecensione = "RECENSIONE=";
 			if (recensioneLocanda != null && recensioneLocanda.startsWith(chiaveRecensione)) {
 				recensioneLocanda = recensioneLocanda.substring(chiaveRecensione.length());
@@ -73,23 +74,29 @@ public class ProduttoreDiTestiCasuale {
 			} else {
 				dialogoLocanda = "";
 			}
-			datiLocanda.add(new DatiLocanda(nomeLocanda, dialogoLocanda, recensioneLocanda));
+			datiLocanda.add(new DatiLocanda(nomeLocanda, identificativoLocanda, dialogoLocanda, recensioneLocanda));
 		}
 		return datiLocanda;
 	}
 
 	public static class DatiLocanda {
 		private final String nome;
+		private final String identificativo;
 		private final String dialogo;
 		private final String recensione;
-		DatiLocanda(String nome, String dialogo, String recensione) {
+		DatiLocanda(String nome, String identificativo, String dialogo, String recensione) {
 			this.nome = nome;
+			this.identificativo = identificativo;
 			this.dialogo = dialogo;
 			this.recensione = recensione;
 		}
 
 		public String getNome() {
 			return nome;
+		}
+
+		public String getIdentificativo() {
+			return identificativo;
 		}
 
 		public String getDialogo() {

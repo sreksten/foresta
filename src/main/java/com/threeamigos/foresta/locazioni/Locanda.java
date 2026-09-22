@@ -37,10 +37,15 @@ public class Locanda extends LocazioneBase {
 	public static final String LOCANDA_VISITATA = "LOCANDA_VISITATA";
 
 	/**
-	 * Nome, recensione e dialogo pescati dal pool di ProduttoreDiTestiCasuale.DatiLocanda
-	 * quando la locanda (o la città che la ospita) viene costruita.
+	 * Nome, identificativo, recensione e dialogo pescati dal pool di
+	 * ProduttoreDiTestiCasuale.DatiLocanda quando la locanda (o la città che la ospita)
+	 * viene costruita. L'identificativo è quello assegnato nella grammatica (es.
+	 * CINGHIALE_VEGANO) e resta lo stesso indipendentemente dal nome pubblicato: serve
+	 * a collegare questa istanza di locanda alle sue notizie proprie (NOTIZIE_<IDENTIFICATIVO>
+	 * in locande.txt), non a essere mostrato al giocatore.
 	 */
 	public static final String LOCANDA_NOME = "LOCANDA_NOME";
+	public static final String LOCANDA_IDENTIFICATIVO = "LOCANDA_IDENTIFICATIVO";
 	public static final String LOCANDA_RECENSIONE = "LOCANDA_RECENSIONE";
 	public static final String LOCANDA_DIALOGO = "LOCANDA_DIALOGO";
 
@@ -95,8 +100,18 @@ public class Locanda extends LocazioneBase {
 
 	public static void impostaDatiLocanda(LocazioneMD modelloDati, ProduttoreDiTestiCasuale.DatiLocanda datiLocanda) {
 		modelloDati.aggiungiProprieta(LOCANDA_NOME, datiLocanda.getNome());
+		modelloDati.aggiungiProprieta(LOCANDA_IDENTIFICATIVO, datiLocanda.getIdentificativo());
 		modelloDati.aggiungiProprieta(LOCANDA_RECENSIONE, datiLocanda.getRecensione());
 		modelloDati.aggiungiProprieta(LOCANDA_DIALOGO, datiLocanda.getDialogo());
+	}
+
+	/**
+	 * L'identificativo di questa locanda (es. CINGHIALE_VEGANO), assegnato dalla
+	 * grammatica in locande.txt: disponibile mentre il gruppo si trova in questa
+	 * locazione, per collegarla alle sue notizie proprie.
+	 */
+	public String getIdentificativo() {
+		return getModelloDati().ottieniProprieta(LOCANDA_IDENTIFICATIVO);
 	}
 
 	@Override
