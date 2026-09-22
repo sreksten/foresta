@@ -15,6 +15,12 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 
 	private static final int LARGHEZZA_ICONA = ImageCache.mappa.get(ClassiLocazione.BOSCO).getWidth();
 	private static final int ALTEZZA_ICONA = ImageCache.mappa.get(ClassiLocazione.BOSCO).getHeight();
+	// Il notiziario si ferma a metà della larghezza della sfera magica: l'altra
+	// metà è coperta dalla sfera stessa (disegnata in primo piano sull'angolo
+	// inferiore sinistro di tutto il canvas, vedi ForestaUI.creaEMostraInterfacciaUtente),
+	// ma essendo un'immagine con trasparenza le notizie continuano a intravedersi
+	// dietro di essa fino al centro, dove l'immagine diventa opaca.
+	private static final int LARGHEZZA_SFERA_MAGICA_COPERTA = ImageCache.sferaMagica.getWidth() / 2;
 
 	private final int width;
 	private final int height;
@@ -29,7 +35,7 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 	DisplayableCanvasMappaATuttoSchermo(int width, int height) {
 		this.width = width;
 		this.height = height;
-		this.notiziario = new Notiziario(width, ALTEZZA_ICONA);
+		this.notiziario = new Notiziario(width - LARGHEZZA_SFERA_MAGICA_COPERTA, ALTEZZA_ICONA);
 	}
 
 	// La fascia del notiziario occupa spazio solo quando ci sono effettivamente
@@ -168,7 +174,7 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 		CloudManager.aggiorna();
 
 		if (altezzaMappa < height) {
-			notiziario.disegna(graphics, 0, altezzaMappa);
+			notiziario.disegna(graphics, LARGHEZZA_SFERA_MAGICA_COPERTA, altezzaMappa);
 		}
 	}
 
