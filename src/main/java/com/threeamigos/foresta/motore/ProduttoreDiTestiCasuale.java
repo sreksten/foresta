@@ -15,6 +15,8 @@ import java.util.stream.Collectors;
 
 public class ProduttoreDiTestiCasuale {
 
+	private static final int MASSIMO_TENTATIVI_NOTIZIA_LOCANDA = 20;
+
 	private static GrammarBean fiabe;
 	private static GrammarBean oroscopi;
 	private static GrammarBean locande;
@@ -52,21 +54,28 @@ public class ProduttoreDiTestiCasuale {
 	}
 
 	public static Notizia getNotiziaLocanda(String identificativoLocanda, String nomeLocanda, String nomeLocandiere) {
+		return getNotiziaLocanda(identificativoLocanda, nomeLocanda, nomeLocandiere, 0);
+	}
+
+	private static Notizia getNotiziaLocanda(String identificativoLocanda, String nomeLocanda, String nomeLocandiere, int tentativo) {
+		if (tentativo >= MASSIMO_TENTATIVI_NOTIZIA_LOCANDA) {
+			throw new IllegalStateException("Non è stato possibile trovare una notizia applicabile e non recente per la locanda " + identificativoLocanda);
+		}
 		List<String> notizie = locande.produce("NOTIZIE_" + identificativoLocanda);
 		String notizia = notizie.get(0);
 		int posizioneSeparatore = notizia.indexOf("-");
 		String identificativo = notizia.substring(0, posizioneSeparatore);
 		if (ModelloDati.getIstanza().getNotizieMD().getUltimeNotizie().stream().anyMatch(n -> n.getId().equals(identificativo))) {
 			// La notizia è già stata pubblicata tra le ultime, ne scegliamo un'altra
-			return getNotiziaLocanda(identificativoLocanda, nomeLocanda, nomeLocandiere);
+			return getNotiziaLocanda(identificativoLocanda, nomeLocanda, nomeLocandiere, tentativo + 1);
 		}
 		String contenuto = validaNotizia(notizia.substring(posizioneSeparatore + 1));
 		if (contenuto == null) {
-			return getNotiziaLocanda(identificativoLocanda, nomeLocanda, nomeLocandiere);
+			return getNotiziaLocanda(identificativoLocanda, nomeLocanda, nomeLocandiere, tentativo + 1);
 		}
 		contenuto = contenuto.replace("NOME_LOCANDA", nomeLocanda);
 		contenuto = contenuto.replace("NOME_LOCANDIERE", nomeLocandiere);
-		return new Notizia(identificativoLocanda, contenuto);
+		return new Notizia(identificativo, contenuto);
 	}
 
 	/**

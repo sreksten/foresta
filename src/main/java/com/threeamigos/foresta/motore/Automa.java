@@ -32,7 +32,6 @@ import java.util.function.Supplier;
 
 // TODO: implementare fumetto che attende chiusura
 // TODO: implementare un meccanismo per le cutscene
-// TODO: implementare nella schermata della mappa le ForestaNews
 // TODO: implementare sistema di aiuto
 
 public class Automa implements ControlloreDiGioco, Temporizzabile {
@@ -57,6 +56,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 */
 	private static final class Esito {
 		static final Esito FERMATI = new Esito(false, null);
+		static final Esito CONTINUA_CON_INGRESSO = new Esito(true, null);
 
 		final boolean continua;
 		final Comando prossimoComando;
@@ -64,10 +64,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		private Esito(boolean continua, Comando prossimoComando) {
 			this.continua = continua;
 			this.prossimoComando = prossimoComando;
-		}
-
-		static Esito continuaConIngresso() {
-			return new Esito(true, null);
 		}
 
 		static Esito continuaCon(Comando comando) {
@@ -114,6 +110,14 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriIngresso.put(Stato.SCELTA_BERSAGLIO_RESURREZIONE, this::entraInStatoSceltaBersaglioResurrezione);
 		gestoriIngresso.put(Stato.MAPPA, this::entraInStatoMappa);
 		gestoriIngresso.put(Stato.INVENTARIO, this::entraInStatoInventario);
+		// Uscendo da MAPPA o INVENTARIO aperti mentre si era IN_LOCAZIONE si torna qui
+		// tramite CONTINUA_CON_INGRESSO (statoPrecedente vale IN_LOCAZIONE), con comando
+		// nullo: serve quindi rifare esattamente ciò che fa INIZIO_LOCAZIONE dopo aver
+		// scelto un'azione, altrimenti i comandi disponibili della locazione (impostati
+		// da impostaAzioni/impostaComandiPossibili) restano quelli dell'ultima chiamata
+		// prima di aprire la mappa, e il giocatore deve cliccare due volte perché la UI
+		// si aggiorni davvero.
+		gestoriIngresso.put(Stato.IN_LOCAZIONE, this::entraInStatoInLocazione);
 		gestoriIngresso.put(Stato.CONFERMA_USCITA, () -> Esito.FERMATI);
 		gestoriIngresso.put(Stato.GIOCO_PERSO, this::entraInStatoGiocoPerso);
 		gestoriIngresso.put(Stato.GIOCO_PERSO_2, this::entraInStatoGiocoPerso2);
@@ -269,7 +273,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			stato = Stato.ATTESA_DIREZIONE;
 			BusEventi.pubblica(new InternoMostraSchermataGioco());
 			BusEventi.pubblica(new InternoCaricamentoCompletato(Notizie.getUltimiMessaggi()));
-			return Esito.continuaConIngresso();
+			return Esito.CONTINUA_CON_INGRESSO;
 		} else {
 			BusEventi.pubblica(new InternoStatoDiGioco(Stato.INTRO, getComandiPossibiliInStatoIntro()));
 			stato = Stato.INTRO;
@@ -350,7 +354,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				throw new IllegalArgumentException();
 		}
 		inizializzaGioco();
-		return Esito.continuaConIngresso();
+		return Esito.CONTINUA_CON_INGRESSO;
 	}
 
 	private Esito entraInStatoInizioLocazione() {
@@ -360,7 +364,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			BusEventi.pubblica(new NotificaTestoFrase(evento));
 			if (LineaTemporale.isGiocoFinito()) {
 				stato = Stato.GIOCO_PERSO;
-				return Esito.continuaConIngresso();
+				return Esito.CONTINUA_CON_INGRESSO;
 			}
 		}
 		gruppoAvversario.reimposta();
@@ -384,7 +388,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		 */
 		stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, null);
 		if (stato == Stato.FINE_LOCAZIONE) {
-			return Esito.continuaConIngresso();
+			return Esito.CONTINUA_CON_INGRESSO;
 		}
 		/*
 		 * A questo punto il giocatore si trova davanti la scelta delle
@@ -393,12 +397,27 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		return Esito.FERMATI;
 	}
 
+	private Esito entraInStatoInLocazione() {
+		stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, null);
+		if (stato != Stato.IN_LOCAZIONE) {
+			if (stato == Stato.IN_COMBATTIMENTO) {
+				temporizzatore.inizia(1_000);
+			} else {
+				if (stato == Stato.GIOCO_PERSO || stato == Stato.GIOCO_VINTO || stato == Stato.FINE_LOCAZIONE) {
+					temporizzatore.termina();
+				}
+				return Esito.CONTINUA_CON_INGRESSO;
+			}
+		}
+		return Esito.FERMATI;
+	}
+
 	private Esito gestisciComandoInStatoInLocazione(Comando comando) {
 		if (comando == Comando.INVENTARIO) {
 			statoPrecedente = Stato.IN_LOCAZIONE;
 			stato = Stato.INVENTARIO;
 			richiediAperturaInventarioGruppo();
-			return Esito.continuaConIngresso();
+			return Esito.CONTINUA_CON_INGRESSO;
 		}
 		statoPrecedente = stato;
 		/*
@@ -414,7 +433,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				if (stato == Stato.GIOCO_PERSO || stato == Stato.GIOCO_VINTO || stato == Stato.FINE_LOCAZIONE) {
 					temporizzatore.termina();
 				}
-				return Esito.continuaConIngresso();
+				return Esito.CONTINUA_CON_INGRESSO;
 			}
 		}
 		return Esito.FERMATI;
@@ -425,7 +444,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, comando);
 		if (stato != Stato.IN_COMBATTIMENTO) {
 			temporizzatore.termina();
-			return Esito.continuaConIngresso();
+			return Esito.CONTINUA_CON_INGRESSO;
 		}
 		if (comando != Comando.TIMER) {
 			// Il battito del combattimento viene interrotto ogni volta che si
@@ -444,7 +463,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			return Esito.continuaCon(comandoRisolto);
 		} else {
 			stato = Stato.SCELTA_MANUALE_PERSONAGGIO;
-			return Esito.continuaConIngresso();
+			return Esito.CONTINUA_CON_INGRESSO;
 		}
 	}
 
@@ -456,7 +475,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			return Esito.continuaCon(comandoRisolto);
 		} else {
 			stato = Stato.SCELTA_MANUALE_PERSONAGGIO;
-			return Esito.continuaConIngresso();
+			return Esito.CONTINUA_CON_INGRESSO;
 		}
 	}
 
@@ -532,7 +551,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 						BusEventi.pubblica(new InternoMessaggio("L'oggetto non si lascia prendere con l'azione " + comando));
 						statoPrecedente = Stato.FINE_LOCAZIONE;
 						stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-						return Esito.continuaConIngresso();
+						return Esito.CONTINUA_CON_INGRESSO;
 					} else {
 						BusEventi.pubblica(new NotificaRaccoltaOggetti());
 						BusEventi.pubblica(new InternoMessaggio("Oggetto raccolto."));
@@ -554,7 +573,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			} else {
 				stato = Stato.GIOCO_PERSO;
 			}
-			return Esito.continuaConIngresso();
+			return Esito.CONTINUA_CON_INGRESSO;
 		}
 
 		// Controlliamo i personaggi "a tempo"
@@ -575,7 +594,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		Statistiche.incrementaTurniGiocati();
 
 		stato = Stato.ATTESA_DIREZIONE;
-		return Esito.continuaConIngresso();
+		return Esito.CONTINUA_CON_INGRESSO;
 	}
 
 	private Esito entraInStatoAttesaDirezione() {
@@ -592,38 +611,38 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case MAPPA:
 				statoPrecedente = Stato.ATTESA_DIREZIONE;
 				stato = Stato.MAPPA;
-				return Esito.continuaConIngresso();
+				return Esito.CONTINUA_CON_INGRESSO;
 			case INVENTARIO:
 				statoPrecedente = Stato.ATTESA_DIREZIONE;
 				stato = Stato.INVENTARIO;
 				richiediAperturaInventarioGruppo();
-				return Esito.continuaConIngresso();
+				return Esito.CONTINUA_CON_INGRESSO;
 			case ACCAMPAMENTO:
 				gruppo.pernotta(locazioneCorrente.getTipoRiposo());
 				LineaTemporale.mattinoSeguente();
 				LineaTemporale.eventi(gruppo);
 				stato = Stato.ATTESA_DIREZIONE;
-				return Esito.continuaConIngresso();
+				return Esito.CONTINUA_CON_INGRESSO;
 			case POZIONE_SALUTE:
 				statoPrecedente = Stato.ATTESA_POZIONE_SALUTE;
 				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-				return Esito.continuaConIngresso();
+				return Esito.CONTINUA_CON_INGRESSO;
 			case POZIONE_SALUTE_GRANDE:
 				statoPrecedente = Stato.ATTESA_POZIONE_SALUTE_GRANDE;
 				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-				return Esito.continuaConIngresso();
+				return Esito.CONTINUA_CON_INGRESSO;
 			case POZIONE_MAGIA:
 				statoPrecedente = Stato.ATTESA_POZIONE_MAGIA;
 				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-				return Esito.continuaConIngresso();
+				return Esito.CONTINUA_CON_INGRESSO;
 			case POZIONE_MAGIA_GRANDE:
 				statoPrecedente = Stato.ATTESA_POZIONE_MAGIA_GRANDE;
 				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-				return Esito.continuaConIngresso();
+				return Esito.CONTINUA_CON_INGRESSO;
 			case RESURREZIONE:
 				statoPrecedente = Stato.ESEECUZIONE_RESURREZIONE;
 				stato = Stato.SCELTA_BERSAGLIO_RESURREZIONE;
-				return Esito.continuaConIngresso();
+				return Esito.CONTINUA_CON_INGRESSO;
 			case NORD:
 				direzione = Comando.NORD;
 				comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiNord());
@@ -645,7 +664,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					BusEventi.pubblica(new NotificaTestoParagrafo(personaggio.getDescrizione()));
 				}
 				stato = Stato.ATTESA_DIREZIONE;
-				return Esito.continuaConIngresso();
+				return Esito.CONTINUA_CON_INGRESSO;
 			case FLOPPY:
 				stato = Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE;
 				BusEventi.pubblica(new InternoStatoDiGioco(Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE,
@@ -683,7 +702,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		LineaTemporale.aggiungiOre(passi);
 		LineaTemporale.eventi(gruppo);
 		stato = Stato.INZIO_LOCAZIONE;
-		return Esito.continuaConIngresso();
+		return Esito.CONTINUA_CON_INGRESSO;
 	}
 
 	private Esito gestisciComandoInStatoAttesaPozioneSalute(Comando comando) {
@@ -691,7 +710,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			gruppo.consumaPozioneSalute(comando);
 		}
 		stato = Stato.ATTESA_DIREZIONE;
-		return Esito.continuaConIngresso();
+		return Esito.CONTINUA_CON_INGRESSO;
 	}
 
 	private Esito gestisciComandoInStatoAttesaPozioneSaluteGrande(Comando comando) {
@@ -699,7 +718,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			gruppo.consumaPozioneSaluteGrande(comando);
 		}
 		stato = Stato.ATTESA_DIREZIONE;
-		return Esito.continuaConIngresso();
+		return Esito.CONTINUA_CON_INGRESSO;
 	}
 
 	private Esito gestisciComandoInStatoAttesaPozioneMagia(Comando comando) {
@@ -707,7 +726,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			gruppo.consumaPozioneMagia(comando);
 		}
 		stato = Stato.ATTESA_DIREZIONE;
-		return Esito.continuaConIngresso();
+		return Esito.CONTINUA_CON_INGRESSO;
 	}
 
 	private Esito gestisciComandoInStatoAttesaPozioneMagiaGrande(Comando comando) {
@@ -715,7 +734,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			gruppo.consumaPozioneMagiaGrande(comando);
 		}
 		stato = Stato.ATTESA_DIREZIONE;
-		return Esito.continuaConIngresso();
+		return Esito.CONTINUA_CON_INGRESSO;
 	}
 
 	private Esito entraInStatoSceltaBersaglioResurrezione() {
@@ -735,7 +754,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			eseguiResurrezione(gruppo.getPersonaggio(comando));
 		}
 		stato = Stato.ATTESA_DIREZIONE;
-		return Esito.continuaConIngresso();
+		return Esito.CONTINUA_CON_INGRESSO;
 	}
 
 	private Esito entraInStatoMappa() {
@@ -753,7 +772,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (comando == Comando.SI) {
 			stato = statoPrecedente;
 			BusEventi.pubblica(new InternoMostraSchermataGioco());
-			return Esito.continuaConIngresso();
+			return Esito.CONTINUA_CON_INGRESSO;
 		} else {
 			throw new IllegalArgumentException();
 		}
@@ -771,7 +790,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case ANNULLA:
 				stato = statoPrecedente;
 				BusEventi.pubblica(new InternoMostraSchermataGioco());
-				return Esito.continuaConIngresso();
+				return Esito.CONTINUA_CON_INGRESSO;
 			case PERSONAGGIO_1:
 			case PERSONAGGIO_2:
 			case PERSONAGGIO_3:
@@ -795,12 +814,12 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (comando == Comando.NO) {
 			BusEventi.pubblica(new InternoMostraSchermataGioco());
 			stato = Stato.ATTESA_DIREZIONE;
-			return Esito.continuaConIngresso();
+			return Esito.CONTINUA_CON_INGRESSO;
 		} else if (comando != null) {
 			salva(comando);
 			BusEventi.pubblica(new RichiestaUscitaDalGioco());
 			stato = Stato.CONFERMA_USCITA;
-			return Esito.continuaConIngresso();
+			return Esito.CONTINUA_CON_INGRESSO;
 		}
 		return Esito.FERMATI;
 	}
@@ -811,7 +830,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		} else if (comando == Comando.NO) {
 			BusEventi.pubblica(new InternoMostraSchermataGioco());
 			stato = Stato.ATTESA_DIREZIONE;
-			return Esito.continuaConIngresso();
+			return Esito.CONTINUA_CON_INGRESSO;
 		}
 		return Esito.FERMATI;
 	}
@@ -825,7 +844,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Esito gestisciComandoInStatoGiocoPerso(Comando comando) {
 		BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 		stato = Stato.GIOCO_PERSO_2;
-		return Esito.continuaConIngresso();
+		return Esito.CONTINUA_CON_INGRESSO;
 	}
 
 	private Esito entraInStatoGiocoPerso2() {
@@ -842,7 +861,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 		temporizzatore.termina();
 		stato = Stato.STATISTICHE;
-		return Esito.continuaConIngresso();
+		return Esito.CONTINUA_CON_INGRESSO;
 	}
 
 	private Esito entraInStatoGiocoVinto() {
@@ -854,7 +873,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Esito gestisciComandoInStatoGiocoVinto(Comando comando) {
 		BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 		stato = Stato.GIOCO_VINTO_2;
-		return Esito.continuaConIngresso();
+		return Esito.CONTINUA_CON_INGRESSO;
 	}
 
 	private Esito entraInStatoGiocoVinto2() {
@@ -871,7 +890,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 		temporizzatore.termina();
 		stato = Stato.STATISTICHE;
-		return Esito.continuaConIngresso();
+		return Esito.CONTINUA_CON_INGRESSO;
 	}
 
 	private Esito entraInStatoStatistiche() {

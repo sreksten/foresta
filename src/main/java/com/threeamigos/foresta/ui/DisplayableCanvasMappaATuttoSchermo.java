@@ -4,6 +4,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.Notizie;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.ui.sfx.CloudManager;
 
@@ -17,6 +18,7 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 
 	private final int width;
 	private final int height;
+	private final Notiziario notiziario;
 	private int mappaXOffset;
 	private int mappaYOffset;
 
@@ -27,6 +29,13 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 	DisplayableCanvasMappaATuttoSchermo(int width, int height) {
 		this.width = width;
 		this.height = height;
+		this.notiziario = new Notiziario(width, ALTEZZA_ICONA);
+	}
+
+	// La fascia del notiziario occupa spazio solo quando ci sono effettivamente
+	// notizie da mostrare: altrimenti la mappa può usare tutta l'altezza disponibile.
+	private int altezzaMappa() {
+		return Notizie.getUltimeNotizie().isEmpty() ? height : height - ALTEZZA_ICONA;
 	}
 
 	void centraSuGiocatore() {
@@ -55,17 +64,18 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 			mappaXOffset = Math.max(width - dimensioneMappaX, Math.min(0, offsetTeoricoX));
 		}
 
-		if (dimensioneMappaY <= height) {
-			// Se l'altezza della mappa è inferiore a quella dello schermo allora
-			// l'offset y è centrato rispetto allo schermo.
-			mappaYOffset = (height - dimensioneMappaY) / 2;
+		int altezzaMappa = altezzaMappa();
+		if (dimensioneMappaY <= altezzaMappa) {
+			// Se l'altezza della mappa è inferiore a quella dell'area disponibile allora
+			// l'offset y è centrato rispetto ad essa.
+			mappaYOffset = (altezzaMappa - dimensioneMappaY) / 2;
 		} else {
-			// 1. Calcoliamo la posizione teorica per mettere il giocatore al centro esatto della height dello schermo
-			int offsetTeoricoY = (height / 2) - posizioneYGiocatoreSuMappa;
+			// 1. Calcoliamo la posizione teorica per mettere il giocatore al centro esatto dell'area disponibile
+			int offsetTeoricoY = (altezzaMappa / 2) - posizioneYGiocatoreSuMappa;
 
 			// 2. Blocchiamo l'offset in modo che non superi lo 0 (bordo superiore)
 			// e non scenda sotto la differenza minima (bordo inferiore)
-			mappaYOffset = Math.max(height - dimensioneMappaY, Math.min(0, offsetTeoricoY));
+			mappaYOffset = Math.max(altezzaMappa - dimensioneMappaY, Math.min(0, offsetTeoricoY));
 		}
 	}
 
@@ -113,20 +123,35 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 
 	void disegnaMappaATuttoSchermo(Graphics2D graphics) {
 
+		int altezzaMappa = altezzaMappa();
+		int dimensioneMappaX = Foresta.getDimensioneX() * LARGHEZZA_ICONA;
+		int dimensioneMappaY = Foresta.getDimensioneY() * ALTEZZA_ICONA;
+
+		// L'altezza disponibile può essere cambiata da un frame all'altro (es. è appena
+		// arrivata la prima notizia, o si è svuotato il notiziario): l'offset va rivalidato
+		// prima di disegnare, con lo stesso clamping usato durante il trascinamento.
+		if (dimensioneMappaY <= altezzaMappa) {
+			mappaYOffset = (altezzaMappa - dimensioneMappaY) / 2;
+		} else {
+			mappaYOffset = Math.max(altezzaMappa - dimensioneMappaY, Math.min(0, mappaYOffset));
+		}
+
 		Image image = costruisciMappa();
-
-		graphics.drawImage(image, mappaXOffset, mappaYOffset, null);
-
-		CloudManager.assicuraGenerate(width, height, LARGHEZZA_ICONA, ALTEZZA_ICONA);
 
 		// Salva lo stato originale della Clip e del Composite
 		Shape originalClip = graphics.getClip();
 		Composite originalComposite = graphics.getComposite();
 
+		// Limita il disegno della mappa (immagine + nuvole) alla sola fascia sopra il
+		// notiziario, così non può mai debordare nella fascia in basso
+		graphics.clipRect(0, 0, width, altezzaMappa);
+
+		graphics.drawImage(image, mappaXOffset, mappaYOffset, null);
+
+		CloudManager.assicuraGenerate(width, height, LARGHEZZA_ICONA, ALTEZZA_ICONA);
+
 		// Applica la clip sull'area occupata dalla mappa, in modo che le nuvole non
 		// vengano disegnate al di fuori di essa quando la mappa è più piccola dello schermo
-		int dimensioneMappaX = Foresta.getDimensioneX() * LARGHEZZA_ICONA;
-		int dimensioneMappaY = Foresta.getDimensioneY() * ALTEZZA_ICONA;
 		graphics.clipRect(mappaXOffset, mappaYOffset, dimensioneMappaX, dimensioneMappaY);
 
 		// Imposta la trasparenza e disegna le nuvole condivise con il riquadro mappa,
@@ -141,11 +166,15 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 
 		// Aggiorna la posizione delle nuvolette
 		CloudManager.aggiorna();
+
+		if (altezzaMappa < height) {
+			notiziario.disegna(graphics, 0, altezzaMappa);
+		}
 	}
 
 	@Override
 	public void processaPressione(int x, int y, Finestra.Tasto tasto) {
-		if (tasto == Tasto.SINISTRO) {
+		if (tasto == Tasto.SINISTRO && y < altezzaMappa()) {
 			stoTrascinando = true;
 			ultimaXMouse = x;
 			ultimaYMouse = y;
@@ -189,12 +218,13 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 			}
 
 			// 4. APPLICAZIONE DEL CLAMPING SULL'ASSE Y
-			if (dimensioneMappaY <= height) {
-				// Se la mappa è più bassa dello schermo, la costringiamo al centro fisso
-				mappaYOffset = (height - dimensioneMappaY) / 2;
+			int altezzaMappa = altezzaMappa();
+			if (dimensioneMappaY <= altezzaMappa) {
+				// Se la mappa è più bassa dell'area disponibile, la costringiamo al centro fisso
+				mappaYOffset = (altezzaMappa - dimensioneMappaY) / 2;
 			} else {
-				// Se è più grande, impediamo di trascinare oltre il bordo superiore (0) o inferiore (height - dimensioneMappaY)
-				mappaYOffset = Math.max(height - dimensioneMappaY, Math.min(0, mappaYOffset));
+				// Se è più grande, impediamo di trascinare oltre il bordo superiore (0) o inferiore (altezzaMappa - dimensioneMappaY)
+				mappaYOffset = Math.max(altezzaMappa - dimensioneMappaY, Math.min(0, mappaYOffset));
 			}
 		}
 	}

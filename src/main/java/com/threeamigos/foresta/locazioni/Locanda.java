@@ -1,14 +1,16 @@
 package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
 import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
+import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
+import com.threeamigos.foresta.eventi.notifiche.NotificaNotizia;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
+import com.threeamigos.foresta.motore.modellodati.Notizia;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 import com.threeamigos.foresta.offerte.Informazioni;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -46,6 +48,7 @@ public class Locanda extends LocazioneBase {
 	 */
 	public static final String LOCANDA_NOME = "LOCANDA_NOME";
 	public static final String LOCANDA_IDENTIFICATIVO = "LOCANDA_IDENTIFICATIVO";
+	public static final String LOCANDA_NOME_LOCANDIERE = "LOCANDA_NOME_LOCANDIERE";
 	public static final String LOCANDA_RECENSIONE = "LOCANDA_RECENSIONE";
 	public static final String LOCANDA_DIALOGO = "LOCANDA_DIALOGO";
 
@@ -101,6 +104,7 @@ public class Locanda extends LocazioneBase {
 	public static void impostaDatiLocanda(LocazioneMD modelloDati, ProduttoreDiTestiCasuale.DatiLocanda datiLocanda) {
 		modelloDati.aggiungiProprieta(LOCANDA_NOME, datiLocanda.getNome());
 		modelloDati.aggiungiProprieta(LOCANDA_IDENTIFICATIVO, datiLocanda.getIdentificativo());
+		modelloDati.aggiungiProprieta(LOCANDA_NOME_LOCANDIERE, datiLocanda.getNomeLocandiere());
 		modelloDati.aggiungiProprieta(LOCANDA_RECENSIONE, datiLocanda.getRecensione());
 		modelloDati.aggiungiProprieta(LOCANDA_DIALOGO, datiLocanda.getDialogo());
 	}
@@ -112,6 +116,14 @@ public class Locanda extends LocazioneBase {
 	 */
 	public String getIdentificativo() {
 		return getModelloDati().ottieniProprieta(LOCANDA_IDENTIFICATIVO);
+	}
+
+	public String getNome() {
+		return getModelloDati().ottieniProprieta(LOCANDA_NOME);
+	}
+
+	private String getNomeLocandiere() {
+		return getModelloDati().ottieniProprieta(LOCANDA_NOME_LOCANDIERE);
 	}
 
 	@Override
@@ -219,8 +231,9 @@ public class Locanda extends LocazioneBase {
             String sb = nome + " si è rifocillat" + p.getLetteraFinaleAttributo() +
                     " in gran fretta, ed il gruppo lascia la locanda dietro pressione dell'oste.";
 			BusEventi.pubblica(new NotificaTestoFrase(sb));
+			generaNotizia();
 			return Stato.FINE_LOCAZIONE;
-			
+
 		case PERSONAGGIO:
 			if (azione == Comando.SI) {
 				accetta(gruppo, true);
@@ -237,6 +250,7 @@ public class Locanda extends LocazioneBase {
 			} else {
 				BusEventi.pubblica(new NotificaTestoFrase("L'oste chiede di lasciare la locanda al più presto."));
 			}
+			generaNotizia();
 			return Stato.FINE_LOCAZIONE;
 
 		default:
@@ -292,10 +306,22 @@ public class Locanda extends LocazioneBase {
 		return TipoRiposo.AL_COPERTO;
 	}
 
+	/**
+	 * Chiamato quando il gruppo esce dalla locanda dopo avervi effettivamente
+	 * fatto sosta (non quando viene respinto sulla porta per mancanza di monete).
+	 */
+	private void generaNotizia() {
+		Notizia notizia = ProduttoreDiTestiCasuale.getNotiziaLocanda(getIdentificativo(), getNome(), getNomeLocandiere());
+		Logger.log("NOTIZIONA!!! -> " + notizia.getId() + notizia.getCorpo());
+		BusEventi.pubblica(new NotificaTestoParagrafo(notizia.getCorpo()));
+		BusEventi.pubblica(new NotificaNotizia(notizia));
+	}
+
 	private Stato richiediSePernottare(GruppoGiocatore gruppo) {
 		if (gruppo.getMonete() < Costanti.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggi()) {
 			BusEventi.pubblica(new NotificaTestoFrase(gruppo.chiMaiuscolo() +
 					" non ha abbastanza monete per pagare il pernottamento e l'oste chiede di lasciare la locanda al più presto."));
+			generaNotizia();
 			return Stato.FINE_LOCAZIONE;
 		} else {
 			BusEventi.pubblica(new NotificaTestoFrase(gruppo.chiMaiuscolo() + " desidera pernottare alla locanda?"));
