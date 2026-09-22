@@ -32,7 +32,6 @@ import java.util.function.Supplier;
 
 // TODO: implementare fumetto che attende chiusura
 // TODO: implementare un meccanismo per le cutscene
-// TODO: implementare il nome dei gestori delle locande
 // TODO: implementare nella schermata della mappa le ForestaNews
 // TODO: implementare sistema di aiuto
 
