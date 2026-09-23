@@ -131,8 +131,6 @@ class Notiziario {
 			return;
 		}
 
-		boolean primaCostruzione = immagineCorrente == null;
-
 		GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment()
 				.getDefaultScreenDevice().getDefaultConfiguration();
 		BufferedImage immagine = gc.createCompatibleImage(larghezzaTotale, FONT.getHeight(), Transparency.TRANSLUCENT);
@@ -145,12 +143,11 @@ class Notiziario {
 		g2d.dispose();
 		immagineCorrente = immagine;
 
-		// L'ingresso "da destra" con dissolvenza si applica solo alla primissima
-		// notizia mai mostrata: le costruzioni successive (nuova notizia arrivata,
-		// o lista svuotata e ripopolata) proseguono lo scroll già in corso.
-		if (primaCostruzione) {
-			x = larghezza;
-		}
+		// La notizia più recente è sempre il primo segmento della striscia (vedi
+		// Notizie.aggiungiNotizia, che inserisce in testa): facendo ripartire lo
+		// scroll da destra ad ogni ricostruzione, si vede subito, senza aspettare
+		// che il giro precedente finisca.
+		x = larghezza;
 	}
 
 	private BufferedImage costruisciSeparatore() {
