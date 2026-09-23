@@ -437,7 +437,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 				riquadroIncantesimiEPozioni.disegnaIncantesimi(graphics);
 				break;
 			case TESTO:
-				riquadroTesto.disegnaTesto(graphics, createImage(riquadroTesto.getImageSource()));
+				riquadroTesto.disegnaTesto(graphics);
 				break;
 			case MISSIONI:
 				riquadroMissioni.disegnaMissioni(graphics);
@@ -621,6 +621,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void mappa() {
 		stato = StatoDisplayableCanvas.STATO_MAPPA;
+		mappaATuttoSchermo.preparaMappa();
 		mappaATuttoSchermo.centraSuGiocatore();
 		repaint();
 	}

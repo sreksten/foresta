@@ -25,6 +25,8 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 	private final int width;
 	private final int height;
 	private final Notiziario notiziario;
+	// Le caselle della mappa, senza quella del gruppo (vedi preparaMappa)
+	private BufferedImage immagineMappa;
 	private int mappaXOffset;
 	private int mappaYOffset;
 
@@ -88,13 +90,20 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 	void muoviMappa(Comando direzione) {
 	}
 
-	private Image costruisciMappa() {
-
-		BufferedImage image = new BufferedImage(Foresta.getDimensioneX() * LARGHEZZA_ICONA,
+	/**
+	 * Ricostruisce l'immagine delle caselle. Va chiamato a ogni apertura della mappa:
+	 * mentre la mappa è mostrata l'automa attende solo di chiuderla, quindi né le
+	 * caselle conosciute né la posizione del gruppo possono cambiare.
+	 * <p>
+	 * La casella del gruppo resta vuota: il segnalino lampeggia, e viene disegnato
+	 * sopra l'immagine a ogni frame (vedi disegnaSegnalino).
+	 */
+	void preparaMappa() {
+		immagineMappa = new BufferedImage(Foresta.getDimensioneX() * LARGHEZZA_ICONA,
 				Foresta.getDimensioneY() * ALTEZZA_ICONA, BufferedImage.TYPE_INT_ARGB);
 		CoordinateMD coordinateGruppo = GruppoGiocatore.getIstanza().getCoordinate();
 
-		Graphics2D graphics = image.createGraphics();
+		Graphics2D graphics = immagineMappa.createGraphics();
 
 		for (int x = 0; x < Foresta.getDimensioneX(); x++) {
 			for (int y = 0; y < Foresta.getDimensioneY(); y++) {
@@ -102,10 +111,9 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 				int coordinateY = y * ALTEZZA_ICONA;
 				CoordinateMD coordinateCorrenti = new CoordinateMD(x, y);
 				if (coordinateCorrenti.equals(coordinateGruppo)) {
-					if ((System.currentTimeMillis() / 1000) % 2 == 0) {
-						graphics.drawImage(ImageCache.segnalino, coordinateX, coordinateY, null);
-					}
-				} else if (Foresta.isLocazioneConosciuta(coordinateCorrenti)) {
+					continue;
+				}
+				if (Foresta.isLocazioneConosciuta(coordinateCorrenti)) {
 					ClassiLocazione classeLocazione = Foresta.getLocazione(coordinateCorrenti);
 					graphics.drawImage(ImageCache.mappa.get(classeLocazione), coordinateX, coordinateY, null);
 					if (Foresta.isLocazioneVisitata(new CoordinateMD(x, y))) {
@@ -115,7 +123,19 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 			}
 		}
 		graphics.dispose();
-		return image;
+	}
+
+	/**
+	 * Il segnalino del gruppo, acceso un secondo sì e uno no, sulla casella lasciata
+	 * vuota nell'immagine della mappa.
+	 */
+	private void disegnaSegnalino(Graphics2D graphics) {
+		if ((System.currentTimeMillis() / 1000) % 2 == 0) {
+			GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
+			graphics.drawImage(ImageCache.segnalino,
+					mappaXOffset + gruppo.getX() * LARGHEZZA_ICONA,
+					mappaYOffset + gruppo.getY() * ALTEZZA_ICONA, null);
+		}
 	}
 
 	private void scurisci(Graphics2D g, int x, int y, int width, int height, int percentualeOscuramento) {
@@ -142,7 +162,9 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 			mappaYOffset = Math.max(altezzaMappa - dimensioneMappaY, Math.min(0, mappaYOffset));
 		}
 
-		Image image = costruisciMappa();
+		if (immagineMappa == null) {
+			preparaMappa();
+		}
 
 		// Salva lo stato originale della Clip e del Composite
 		Shape originalClip = graphics.getClip();
@@ -152,7 +174,8 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 		// notiziario, così non può mai debordare nella fascia in basso
 		graphics.clipRect(0, 0, width, altezzaMappa);
 
-		graphics.drawImage(image, mappaXOffset, mappaYOffset, null);
+		graphics.drawImage(immagineMappa, mappaXOffset, mappaYOffset, null);
+		disegnaSegnalino(graphics);
 
 		CloudManager.assicuraGenerate(width, height, LARGHEZZA_ICONA, ALTEZZA_ICONA);
 

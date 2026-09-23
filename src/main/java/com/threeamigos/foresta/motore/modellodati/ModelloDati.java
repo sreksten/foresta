@@ -15,6 +15,7 @@ import java.io.PrintWriter;
  * <li>RegistroArtefattiMD - gli artefatti sparsi per la Foresta</li>
  * <li>RegistroMissioniMD - le missioni del gioco</li>
  * <li>NotizieMD - ultimi messaggi mostrati al giocatore e ultime notizie per la mappa</li>
+ * <li>IntermezziMD - gli intermezzi già mostrati</li>
  * </ul>
  */
 public class ModelloDati implements Serializzabile {
@@ -32,6 +33,7 @@ public class ModelloDati implements Serializzabile {
 	private final RegistroArtefattiMD registroArtefattiMD;
 	private final RegistroMissioniMD registroMissioniMD;
 	private final NotizieMD notizieMD;
+	private final IntermezziMD intermezziMD;
 
 	public ModelloDati() {
 		gruppoGiocatoreMD = new GruppoGiocatoreMD();
@@ -42,6 +44,7 @@ public class ModelloDati implements Serializzabile {
 		registroArtefattiMD = new RegistroArtefattiMD();
 		registroMissioniMD = new RegistroMissioniMD();
 		notizieMD = new NotizieMD();
+		intermezziMD = new IntermezziMD();
 	}
 
 	public static ModelloDati getIstanza() {
@@ -84,6 +87,10 @@ public class ModelloDati implements Serializzabile {
 		return notizieMD;
 	}
 
+	public IntermezziMD getIntermezziMD() {
+		return intermezziMD;
+	}
+
 	///////////////////////////////////
 
 	public void reimposta(int dimensioneX, int dimensioneY) {
@@ -95,6 +102,7 @@ public class ModelloDati implements Serializzabile {
 		registroArtefattiMD.reimposta();
 		registroMissioniMD.reimposta();
 		notizieMD.reimposta();
+		intermezziMD.reimposta();
 	}
 
 	@Override
@@ -107,6 +115,7 @@ public class ModelloDati implements Serializzabile {
 		registroArtefattiMD.salva(stream);
 		registroMissioniMD.salva(stream);
 		notizieMD.salva(stream);
+		intermezziMD.salva(stream);
 	}
 
 	@Override
@@ -118,6 +127,7 @@ public class ModelloDati implements Serializzabile {
 		registroArtefattiMD.reimposta();
 		registroMissioniMD.reimposta();
 		notizieMD.reimposta();
+		intermezziMD.reimposta();
 
 		gruppoGiocatoreMD.leggi(stream);
 		statisticheMD.leggi(stream);
@@ -127,5 +137,6 @@ public class ModelloDati implements Serializzabile {
 		registroArtefattiMD.leggi(stream);
 		registroMissioniMD.leggi(stream);
 		notizieMD.leggi(stream);
+		intermezziMD.leggi(stream);
 	}
 }

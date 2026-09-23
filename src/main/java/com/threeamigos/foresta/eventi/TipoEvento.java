@@ -197,6 +197,10 @@ public enum TipoEvento {
      */
     NOTIFICA_NOTIZIA,
     /**
+     * Una pagina di un intermezzo da mostrare a tutto schermo
+     */
+    NOTIFICA_PAGINA_INTERMEZZO,
+    /**
      * Variazione della mappa conosciuta della foresta
      */
     NOTIFICA_VARIAZIONE_CONOSCENZA_MAPPA,

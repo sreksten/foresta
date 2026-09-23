@@ -14,7 +14,17 @@ public interface Temporizzatore {
 
 	void setTemporizzabile(Temporizzabile temporizzabile);
 
+	/**
+	 * Avvia gli impulsi: il primo subito, poi uno ogni millisecondi. Adatto a ciò che
+	 * deve partire immediatamente, come il primo round di un combattimento.
+	 */
 	void inizia(int millisecondi);
+
+	/**
+	 * Avvia gli impulsi: il primo dopo millisecondi, poi uno ogni millisecondi. Adatto
+	 * alle sequenze di schermate, dove la prima deve restare visibile per un periodo intero.
+	 */
+	void iniziaDopo(int millisecondi);
 
 	void termina();
 }

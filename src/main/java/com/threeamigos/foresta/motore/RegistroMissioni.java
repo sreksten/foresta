@@ -92,9 +92,9 @@ public class RegistroMissioni {
 			} else {
 				Missione missione = ricostruisci(missioneMD);
 				if (missione.isCompleta()) {
-					elencoMissioniSecondarie.add(missione);
-				} else {
 					elencoMissioniSecondarieCompletate.add(missione);
+				} else {
+					elencoMissioniSecondarie.add(missione);
 				}
 			}
 		}

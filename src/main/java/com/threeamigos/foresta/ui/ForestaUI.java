@@ -56,6 +56,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(InternoMostraSchermataGioco.class, this::gestisciEventoMostraSchermataGioco);
 		BusEventi.iscriviti(NotificaMostraStatisticheFineGioco.class, this::gestisciEventoMostraStatistiche);
 		BusEventi.iscriviti(NotificaTestoParagrafo.class, this::gestisciEventoParagrafo);
+		BusEventi.iscriviti(NotificaPaginaIntermezzo.class, this::gestisciEventoPaginaIntermezzo);
 		BusEventi.iscriviti(InternoPreparazioneLocazione.class, this::gestisciEventoPreparazioneLocazione);
 		BusEventi.iscriviti(InternoRichiestaAperturaFinestraCombattimento.class, this::gestisciEventoRichiestaAperturaFinestraCombattimento);
 		BusEventi.iscriviti(ComandoAperturaInventarioCommerciante.class, this::gestisciEventoRichiestaAperturaInventarioCommerciante);
@@ -201,6 +202,12 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		displayableCanvas.notificaAnnuncioGlobale(evento.getEtichetta(), evento.getMessaggio());
 	}
 
+	private void gestisciEventoPaginaIntermezzo(NotificaPaginaIntermezzo evento) {
+		// A tutto schermo sull'ombra del drago, come i messaggi grandi; il ritorno al
+		// gioco arriva con InternoMostraSchermataGioco dopo l'ultima pagina
+		displayableCanvas.scriviGrande(evento.getTesto());
+	}
+
 	private void gestisciEventoParagrafo(NotificaTestoParagrafo evento) {
 		displayableCanvas.notificaParagrafo(evento.getMessaggio());
 	}
@@ -293,7 +300,8 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 			case INTRO:
 				 // Richiama la schermata o animazione di introduzione
 				displayableCanvas.avviaIntro();
-				temporizzatore.inizia(5_000);
+				// La prima schermata (loghi o classifica) deve restare per un periodo intero
+				temporizzatore.iniziaDopo(5_000);
 				impostaAzioni(evento.getComandiPossibili());
 				break;
 

@@ -90,6 +90,10 @@ public class Costanti {
     public static final int MASSIMO_MESSAGGI_RICORDATI = 100;
     public static final int MASSIMO_NOTIZIE_RICORDATE = 10;
 
+    // Intermezzi (vedi intermezzi.Intermezzo): secondi dopo cui una pagina avanza da sola;
+    // con 0 avanza solo al click sulla pergamena
+    public static final int SECONDI_PER_PAGINA_INTERMEZZO = 8;
+
     // Personaggio
     public static final int MAX_STANCHEZZA = 9;
 

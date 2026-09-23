@@ -19,6 +19,10 @@ public enum Stato {
 
 	// Crea una nuova locazione, crea i mostri, descrive, controlla trigger pre-locazione e passa al successivo
 	INZIO_LOCAZIONE,
+	// Mostra le pagine di un intermezzo e attende il click o il timer per avanzare
+	INTERMEZZO,
+	// Costruisce la locazione, la descrive e ne imposta le azioni
+	PREPARAZIONE_LOCAZIONE,
 	// Controlla trigger in-locazione, stabilisce quali azioni possono essere intraprese
 	IN_LOCAZIONE,
 

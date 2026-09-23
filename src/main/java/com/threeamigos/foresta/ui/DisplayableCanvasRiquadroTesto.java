@@ -2,7 +2,6 @@ package com.threeamigos.foresta.ui;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.awt.image.MemoryImageSource;
 
 class DisplayableCanvasRiquadroTesto implements Finestra {
 
@@ -12,6 +11,10 @@ class DisplayableCanvasRiquadroTesto implements Finestra {
 	private final int topLeftX;
 	private final int topLeftY;
 	private final DoomdarkTextRectangle2x doomdarkTextRectangle;
+	// L'immagine finita del riquadro (ombra del drago + testo sfumato), rifatta solo
+	// quando cambia la versione del testo
+	private BufferedImage immagineTesto;
+	private int versioneDisegnata;
 
 	DisplayableCanvasRiquadroTesto(int topLeftX, int topLeftY, int width, int height) {
 		this.topLeftX = topLeftX;
@@ -27,10 +30,6 @@ class DisplayableCanvasRiquadroTesto implements Finestra {
 		doomdarkTextRectangle.addString(messaggio);
 	}
 
-	
-	MemoryImageSource getImageSource() {
-		return doomdarkTextRectangle.getImageSource();
-	}
 
 	@Override
 	public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
@@ -41,7 +40,21 @@ class DisplayableCanvasRiquadroTesto implements Finestra {
 		}
 	}
 
-	void disegnaTesto(Graphics2D graphics, Image image) {
+	void disegnaTesto(Graphics2D graphics) {
+		int versione = doomdarkTextRectangle.getVersione();
+		if (immagineTesto == null || versione != versioneDisegnata) {
+			Image raster = Toolkit.getDefaultToolkit().createImage(doomdarkTextRectangle.getImageSource());
+			immagineTesto = componi(raster);
+			versioneDisegnata = versione;
+		}
+		graphics.drawImage(immagineTesto, topLeftX, topLeftY, null);
+	}
+
+	/**
+	 * Compone il raster del testo sull'ombra del drago, schiarendo le righe dall'alto
+	 * verso il basso così che il testo più vecchio sfumi.
+	 */
+	private BufferedImage componi(Image image) {
 
 		int imageWidth = image.getWidth(null);
 		int imageHeight = image.getHeight(null);
@@ -76,8 +89,8 @@ class DisplayableCanvasRiquadroTesto implements Finestra {
 
 		backgroundG2d.drawImage(copy, 0, 0, null);
 		backgroundG2d.dispose();
-		
-		graphics.drawImage(background, topLeftX, topLeftY, null);
+
+		return background;
 	}
 
 }

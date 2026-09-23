@@ -26,6 +26,14 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 	}
 
 	public void inizia(int millisecondi) {
+		pianifica(0, millisecondi);
+	}
+
+	public void iniziaDopo(int millisecondi) {
+		pianifica(millisecondi, millisecondi);
+	}
+
+	private void pianifica(int ritardoIniziale, int millisecondi) {
 		if (timerTask != null) {
 			timerTask.cancel(false);
 		}
@@ -41,7 +49,7 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 					BusEventi.pubblica(new InternoException(e));
 				}
 			}),
-                0,
+                ritardoIniziale,
                 millisecondi,
 			TimeUnit.MILLISECONDS
 		);

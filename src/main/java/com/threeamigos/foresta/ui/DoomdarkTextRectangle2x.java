@@ -40,6 +40,8 @@ public class DoomdarkTextRectangle2x {
 	private int offsetRighe;
 	// Il raster va ricostruito solo quando il testo o lo scorrimento sono cambiati
 	private boolean daRidisegnare = true;
+	// Cresce a ogni cambiamento: chi conserva un'immagine del testo sa quando rifarla
+	private int versione;
 
 	public DoomdarkTextRectangle2x(int width, int height) {
 		this.width = width;
@@ -126,14 +128,14 @@ public class DoomdarkTextRectangle2x {
 		// Un messaggio nuovo riporta in fondo: nel mezzo di una partita non deve poter
 		// passare inosservato perché si stava rileggendo il testo vecchio
 		offsetRighe = 0;
-		daRidisegnare = true;
+		segnaCambiato();
 	}
 
 	public final synchronized void clear() {
 		righe.clear();
 		imbottisci();
 		offsetRighe = 0;
-		daRidisegnare = true;
+		segnaCambiato();
 	}
 
 	/**
@@ -148,8 +150,22 @@ public class DoomdarkTextRectangle2x {
 		nuovoOffset = Math.max(0, Math.min(nuovoOffset, offsetMassimo));
 		if (nuovoOffset != offsetRighe) {
 			offsetRighe = nuovoOffset;
-			daRidisegnare = true;
+			segnaCambiato();
 		}
+	}
+
+	private void segnaCambiato() {
+		daRidisegnare = true;
+		versione++;
+	}
+
+	/**
+	 * Un numero che cambia ogni volta che il contenuto visibile cambia (testo aggiunto,
+	 * svuotato o fatto scorrere): finché resta uguale, getImageSource() darebbe lo
+	 * stesso raster.
+	 */
+	public synchronized int getVersione() {
+		return versione;
 	}
 
 	public synchronized MemoryImageSource getImageSource() {

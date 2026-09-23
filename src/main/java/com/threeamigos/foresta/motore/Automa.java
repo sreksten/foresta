@@ -9,6 +9,8 @@ import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.intermezzi.Intermezzo;
+import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
@@ -29,7 +31,6 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 // TODO: implementare fumetto che attende chiusura
-// TODO: implementare un meccanismo per le cutscene
 // TODO: implementare sistema di aiuto
 
 public class Automa implements ControlloreDiGioco, Temporizzabile {
@@ -89,6 +90,13 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Comando direzione; // serve a memorizzare la direzione prima di chiedere il numero di passi
 	private Personaggio formulanteResurrezione; // chi lancerà la Resurrezione, scelto prima del bersaglio
 
+	// L'intermezzo in corso, la pagina mostrata, e dove riprendere quando non ce ne sono altri
+	private Intermezzo intermezzoCorrente;
+	private List<String> pagineIntermezzo;
+	private int paginaIntermezzo;
+	private MomentoIntermezzo momentoIntermezzo;
+	private Stato statoDopoIntermezzi;
+
 	public Automa(Temporizzatore temporizzatore) {
 		this.temporizzatore = temporizzatore;
 		temporizzatore.setTemporizzabile(this);
@@ -98,6 +106,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 		gestoriIngresso = new EnumMap<>(Stato.class);
 		gestoriIngresso.put(Stato.INZIO_LOCAZIONE, this::entraInStatoInizioLocazione);
+		gestoriIngresso.put(Stato.INTERMEZZO, this::entraInStatoIntermezzo);
+		gestoriIngresso.put(Stato.PREPARAZIONE_LOCAZIONE, this::entraInStatoPreparazioneLocazione);
 		gestoriIngresso.put(Stato.SCELTA_AUTOMATICA_PERSONAGGIO, this::entraInStatoSceltaAutomaticaPersonaggio);
 		gestoriIngresso.put(Stato.SCELTA_PERSONAGGIO_QUALSIASI, this::entraInStatoSceltaPersonaggioQualsiasi);
 		gestoriIngresso.put(Stato.SCELTA_MANUALE_PERSONAGGIO, this::entraInStatoSceltaManualePersonaggio);
@@ -125,6 +135,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 		gestoriComando = new EnumMap<>(Stato.class);
 		gestoriComando.put(Stato.INTRO, this::gestisciComandoInStatoIntro);
+		gestoriComando.put(Stato.INTERMEZZO, this::gestisciComandoInStatoIntermezzo);
 		gestoriComando.put(Stato.PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE, this::gestisciComandoInStatoPreGameSelezionaSalvataggioDaLeggere);
 		gestoriComando.put(Stato.PRE_GAME_ATTESA_SESSO_PERSONAGGIO, this::gestisciComandoInStatoPreGameAttesaSessoPersonaggio);
 		gestoriComando.put(Stato.PRE_GAME_ATTESA_CLASSE_PERSONAGGIO, this::gestisciComandoInStatoPreGameAttesaClassePersonaggio);
@@ -383,6 +394,81 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				return Esito.CONTINUA_CON_INGRESSO;
 			}
 		}
+		// Missioni ed eventi del tempo sono aggiornati e la partita non è persa: è il
+		// momento degli intermezzi, prima che la locazione venga costruita
+		return avviaProssimoIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, Stato.PREPARAZIONE_LOCAZIONE);
+	}
+
+	/**
+	 * Mostra il prossimo intermezzo che deve scattare nel momento indicato; se non ce
+	 * ne sono (più) prosegue con statoDopo. Dopo ogni intermezzo si torna qui, così più
+	 * intermezzi scattati nello stesso momento vengono mostrati uno dopo l'altro.
+	 */
+	private Esito avviaProssimoIntermezzo(MomentoIntermezzo momento, Stato statoDopo) {
+		Intermezzo intermezzo;
+		List<String> pagine;
+		do {
+			intermezzo = RegistroIntermezzi.getProssimoIntermezzo(momento);
+			if (intermezzo == null) {
+				stato = statoDopo;
+				return Esito.CONTINUA_CON_INGRESSO;
+			}
+			// Segnato subito, così non viene riproposto: né dopo essere stato mostrato,
+			// né se non ha pagine (in quel caso si passa semplicemente al successivo)
+			RegistroIntermezzi.segnaScattato(intermezzo);
+			pagine = intermezzo.getPagine();
+		} while (pagine == null || pagine.isEmpty());
+		intermezzoCorrente = intermezzo;
+		pagineIntermezzo = pagine;
+		paginaIntermezzo = 0;
+		momentoIntermezzo = momento;
+		statoDopoIntermezzi = statoDopo;
+		stato = Stato.INTERMEZZO;
+		return Esito.CONTINUA_CON_INGRESSO;
+	}
+
+	private Esito entraInStatoIntermezzo() {
+		mostraPaginaIntermezzo();
+		return Esito.FERMATI;
+	}
+
+	private void mostraPaginaIntermezzo() {
+		BusEventi.pubblica(new NotificaPaginaIntermezzo(pagineIntermezzo.get(paginaIntermezzo),
+				paginaIntermezzo + 1, pagineIntermezzo.size()));
+		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
+		int secondi = intermezzoCorrente.getSecondiPerPagina();
+		if (secondi > 0) {
+			// Riavviato a ogni pagina: un click riporta a zero il conto alla rovescia
+			temporizzatore.iniziaDopo(secondi * 1_000);
+		}
+	}
+
+	/**
+	 * La pagina avanza con la pergamena o con il timer; dopo l'ultima si passa al
+	 * prossimo intermezzo o si riprende il gioco.
+	 */
+	private Esito gestisciComandoInStatoIntermezzo(Comando comando) {
+		if (comando != Comando.PERGAMENA && comando != Comando.TIMER) {
+			comandoNonValido(comando);
+			return Esito.FERMATI;
+		}
+		paginaIntermezzo++;
+		if (paginaIntermezzo < pagineIntermezzo.size()) {
+			mostraPaginaIntermezzo();
+			return Esito.FERMATI;
+		}
+		temporizzatore.termina();
+		intermezzoCorrente = null;
+		pagineIntermezzo = null;
+		Esito esito = avviaProssimoIntermezzo(momentoIntermezzo, statoDopoIntermezzi);
+		if (stato != Stato.INTERMEZZO) {
+			// Nessun altro intermezzo in coda: la UI torna alla schermata di gioco
+			BusEventi.pubblica(new InternoMostraSchermataGioco());
+		}
+		return esito;
+	}
+
+	private Esito entraInStatoPreparazioneLocazione() {
 		gruppoAvversario.reimposta();
 		gruppo.getPersonaggiVivi().forEach(Personaggio::rimuoviTuttiGliEffettiDiStato);
 		locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
