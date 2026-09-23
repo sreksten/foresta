@@ -698,7 +698,7 @@ NOTIZIE_LOCANDA
     LG10-Rissa sul Timer - Scontro totale tra gli avventori della locanda NOME_LOCANDA e EROE, reLETTERA_FINALE di aver "bloccato il timer della conversazione" mentre cercava di decidere se ordinare sidro o acqua.
     LG11-Fuga di Notizie - Le guardie cittadine indagano su un sospetto picco di furti di cucchiaini da brodo avvenuto subito dopo la partenza di LADRO dalla locanda NOME_LOCANDA.
     LG12-Maledizione della Domenica - MAGO ha risposto a un saluto cordiale dell'oste della locanda NOME_LOCANDA lanciando un anatema arcano per errore, sintonizzando la voce del locandiere sulle frequenze di un'arpia.
-    LG13-Rissa per Gelosia - Scoppiato il caos quando LADRO ha tentato di borseggiare il proprietario della locanda NOME_LOCANDA, scoprendo che le tasche di quest'ultimo erano piene di trappole per topi vive.
+    LG13-Rissa per Gelosia - Scoppiato il caos quando LADRO ha tentato di borseggiare il proprietario della locanda NOME_LOCANDA, scoprendo che le tasche di quest'ultimo erano piene di trappole per topi.
     LG14-Recensione Negativa - L'oste della locanda NOME_LOCANDA dichiara alla stampa locale: "“L'eroe della profezia ha l'eleganza di un troll in un negozio di ampolle dell'alchimista. Non torni più\"".
     LG15-Stato d'Emergenza - Bandita la vendita di idromele di fuoco alla locanda NOME_LOCANDA dopo che EROE, in preda ai postumi, ha tentato di scambiare il castello del Drago per una gigantesca locanda a due piani.
     LG16-Lamentele d'Igiene - L'ispezione cittadina sigilla la cucina della locanda NOME_LOCANDA. EROE ha fatto notare che il "“brodo primordiale\"" bolliva ininterrottamente dal lontano impero precedente.
