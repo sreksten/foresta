@@ -2,7 +2,6 @@ package com.threeamigos.foresta.intermezzi;
 
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
@@ -24,7 +23,7 @@ public class IntermezzoDiProva implements Intermezzo {
 
 	@Override
 	public boolean deveScattare(MomentoIntermezzo momento) {
-		return momento == MomentoIntermezzo.INIZIO_LOCAZIONE && Statistiche.getTurniGiocati() == 0;
+		return momento == MomentoIntermezzo.INIZIO_GIOCO;
 	}
 
 	@Override

@@ -14,6 +14,8 @@ public enum Stato {
 	PRE_GAME_ATTESA_NOME_PERSONAGGIO,
 	PRE_GAME_ATTESA_SESSO_PERSONAGGIO,
 	PRE_GAME_ATTESA_CLASSE_PERSONAGGIO,
+	// Personaggio creato: mostra gli intermezzi di inizio partita e passa a INZIO_LOCAZIONE
+	INIZIO_GIOCO,
 
 	// Eventi in gioco
 

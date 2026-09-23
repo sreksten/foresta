@@ -106,6 +106,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		BusEventi.iscriviti(ComandoInvioTesto.class, this::onEventoTestoDisponibile);
 
 		gestoriIngresso = new EnumMap<>(Stato.class);
+		gestoriIngresso.put(Stato.INIZIO_GIOCO, this::entraInStatoInizioGioco);
 		gestoriIngresso.put(Stato.INZIO_LOCAZIONE, this::entraInStatoInizioLocazione);
 		gestoriIngresso.put(Stato.INTERMEZZO, this::entraInStatoIntermezzo);
 		gestoriIngresso.put(Stato.PREPARAZIONE_LOCAZIONE, this::entraInStatoPreparazioneLocazione);
@@ -383,6 +384,14 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 		inizializzaGioco();
 		return Esito.CONTINUA_CON_INGRESSO;
+	}
+
+	/**
+	 * Gli intermezzi di apertura vanno mostrati prima di INZIO_LOCAZIONE: lì partono i
+	 * controlli delle missioni, le cui notifiche comparirebbero già durante l'intermezzo.
+	 */
+	private Esito entraInStatoInizioGioco() {
+		return avviaProssimoIntermezzo(MomentoIntermezzo.INIZIO_GIOCO, Stato.INZIO_LOCAZIONE);
 	}
 
 	private Esito entraInStatoInizioLocazione() {
@@ -1185,7 +1194,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		personaggio.getModelloDati().setPuntiAbilitaDisponibili(10);
 		// FINE PER TEST
 
-		stato = Stato.INZIO_LOCAZIONE;
+		stato = Stato.INIZIO_GIOCO;
 		BusEventi.pubblica(new InternoRichiestaReinizializzazioneUI());
 	}
 
