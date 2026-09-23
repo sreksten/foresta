@@ -202,8 +202,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	private void gestisciEventoParagrafo(NotificaTestoParagrafo evento) {
-		displayableCanvas.notifica("");
-		displayableCanvas.notifica(evento.getMessaggio());
+		displayableCanvas.notificaParagrafo(evento.getMessaggio());
 	}
 
 	private void gestisciEventoPreparazioneLocazione(InternoPreparazioneLocazione evento) {

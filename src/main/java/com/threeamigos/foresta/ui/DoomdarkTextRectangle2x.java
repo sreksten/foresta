@@ -129,20 +129,6 @@ public class DoomdarkTextRectangle2x {
 		daRidisegnare = true;
 	}
 
-	/**
-	 * Svuota lo storico e lo ripopola con i messaggi indicati, dal più vecchio al
-	 * più recente (l'ordine cronologico che {@link #addString} si aspetta) — usato
-	 * per ripristinare il pannello dopo un caricamento, invece che ripartire vuoto.
-	 *
-	 * @param messaggiDalPiuRecenteAlPiuVecchio come li restituisce {@code Notizie.getUltimiMessaggi()}
-	 */
-	public final synchronized void ripristina(List<String> messaggiDalPiuRecenteAlPiuVecchio) {
-		clear();
-		for (int i = messaggiDalPiuRecenteAlPiuVecchio.size() - 1; i >= 0; i--) {
-			addString(messaggiDalPiuRecenteAlPiuVecchio.get(i));
-		}
-	}
-
 	public final synchronized void clear() {
 		righe.clear();
 		imbottisci();

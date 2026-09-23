@@ -18,10 +18,10 @@ import java.util.List;
 public class NotizieMD implements Serializzabile {
 
 	// Le più recenti in testa, le più vecchie in coda.
-	private final List<String> ultimiMessaggi = new ArrayList<>();
+	private final List<Messaggio> ultimiMessaggi = new ArrayList<>();
 	private final List<Notizia> ultimeNotizie = new ArrayList<>();
 
-	public List<String> getUltimiMessaggi() {
+	public List<Messaggio> getUltimiMessaggi() {
 		return ultimiMessaggi;
 	}
 
@@ -37,8 +37,8 @@ public class NotizieMD implements Serializzabile {
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stream.println(ultimiMessaggi.size());
-		for (String messaggio : ultimiMessaggi) {
-			stream.println(messaggio);
+		for (Messaggio messaggio : ultimiMessaggi) {
+			messaggio.salva(stream);
 		}
 		stream.println(ultimeNotizie.size());
 		for (Notizia notizia : ultimeNotizie) {
@@ -51,7 +51,9 @@ public class NotizieMD implements Serializzabile {
 		ultimiMessaggi.clear();
 		int numeroMessaggi = Integer.parseInt(stream.readLine());
 		for (int i = 0; i < numeroMessaggi; i++) {
-			ultimiMessaggi.add(stream.readLine());
+			Messaggio messaggio = new Messaggio();
+			messaggio.leggi(stream);
+			ultimiMessaggi.add(messaggio);
 		}
 		ultimeNotizie.clear();
 		int numeroNotizie = Integer.parseInt(stream.readLine());

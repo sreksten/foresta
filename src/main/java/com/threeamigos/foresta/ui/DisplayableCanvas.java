@@ -8,6 +8,7 @@ import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
 import com.threeamigos.foresta.motore.AutomaInventario;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.motore.modellodati.Messaggio;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -722,8 +723,36 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
-	public void ripristinaMessaggi(List<String> messaggiDalPiuRecenteAlPiuVecchio) {
-		riquadroTesto.ripristina(messaggiDalPiuRecenteAlPiuVecchio);
+	/**
+	 * Un nuovo paragrafo è separato dal testo precedente da una riga vuota.
+	 */
+	public void notificaParagrafo(String messaggio) {
+		aggiungiParagrafo(messaggio);
+		repaint();
+	}
+
+	private void aggiungiParagrafo(String messaggio) {
+		riquadroTesto.addString("");
+		riquadroTesto.addString(messaggio);
+	}
+
+	/**
+	 * Ripopola il pannello di testo dopo un caricamento, dal più vecchio al più recente
+	 * e con la stessa impaginazione (paragrafi o continuazioni) con cui i messaggi erano
+	 * stati mostrati.
+	 *
+	 * @param messaggiDalPiuRecenteAlPiuVecchio come li restituisce {@code Notizie.getUltimiMessaggi()}
+	 */
+	public void ripristinaMessaggi(List<Messaggio> messaggiDalPiuRecenteAlPiuVecchio) {
+		riquadroTesto.clear();
+		for (int i = messaggiDalPiuRecenteAlPiuVecchio.size() - 1; i >= 0; i--) {
+			Messaggio messaggio = messaggiDalPiuRecenteAlPiuVecchio.get(i);
+			if (messaggio.isParagrafo()) {
+				aggiungiParagrafo(messaggio.getTesto());
+			} else {
+				riquadroTesto.addString(messaggio.getTesto());
+			}
+		}
 		repaint();
 	}
 

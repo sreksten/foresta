@@ -3,7 +3,6 @@ package com.threeamigos.foresta.ui;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.awt.image.MemoryImageSource;
-import java.util.List;
 
 class DisplayableCanvasRiquadroTesto implements Finestra {
 
@@ -28,9 +27,6 @@ class DisplayableCanvasRiquadroTesto implements Finestra {
 		doomdarkTextRectangle.addString(messaggio);
 	}
 
-	void ripristina(List<String> messaggiDalPiuRecenteAlPiuVecchio) {
-		doomdarkTextRectangle.ripristina(messaggiDalPiuRecenteAlPiuVecchio);
-	}
 	
 	MemoryImageSource getImageSource() {
 		return doomdarkTextRectangle.getImageSource();

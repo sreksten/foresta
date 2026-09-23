@@ -2,6 +2,7 @@ package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.motore.modellodati.Messaggio;
 
 import java.util.List;
 
@@ -14,17 +15,17 @@ import java.util.List;
  */
 public class InternoCaricamentoCompletato extends EventoBase {
 
-    private final List<String> ultimiMessaggi;
+    private final List<Messaggio> ultimiMessaggi;
 
     /**
      * @param ultimiMessaggi gli ultimi messaggi da ripristinare, dal più recente al più vecchio
      */
-    public InternoCaricamentoCompletato(List<String> ultimiMessaggi) {
+    public InternoCaricamentoCompletato(List<Messaggio> ultimiMessaggi) {
         super(TipoEvento.INTERNO_CARICAMENTO_COMPLETATO);
         this.ultimiMessaggi = ultimiMessaggi;
     }
 
-    public List<String> getUltimiMessaggi() {
+    public List<Messaggio> getUltimiMessaggi() {
         return ultimiMessaggi;
     }
 }

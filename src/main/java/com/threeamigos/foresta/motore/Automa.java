@@ -28,8 +28,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-// FIXME conosciuti: l'incantesimo di resurrezione prende il primo personaggio morto e lo fa resuscitare dal primo personaggio che può farlo senza dare possibilità di scelta
-// FIXME: al ricaricamento si è persa traccia dei paragrafi. Occorrerebbe ricordare l'informazione durante il salvataggio
 // TODO: implementare fumetto che attende chiusura
 // TODO: implementare un meccanismo per le cutscene
 // TODO: implementare sistema di aiuto
@@ -89,6 +87,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private int indicePersonaggioInventario = 0;
 	private Locazione locazioneCorrente;
 	private Comando direzione; // serve a memorizzare la direzione prima di chiedere il numero di passi
+	private Personaggio formulanteResurrezione; // chi lancerà la Resurrezione, scelto prima del bersaglio
 
 	public Automa(Temporizzatore temporizzatore) {
 		this.temporizzatore = temporizzatore;
@@ -107,6 +106,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriIngresso.put(Stato.ATTESA_SI_NO, this::entraInStatoAttesaSiNo);
 		gestoriIngresso.put(Stato.FINE_LOCAZIONE, () -> eseguiFineLocazione(null));
 		gestoriIngresso.put(Stato.ATTESA_DIREZIONE, this::entraInStatoAttesaDirezione);
+		gestoriIngresso.put(Stato.SCELTA_FORMULANTE_RESURREZIONE, this::entraInStatoSceltaFormulanteResurrezione);
 		gestoriIngresso.put(Stato.SCELTA_BERSAGLIO_RESURREZIONE, this::entraInStatoSceltaBersaglioResurrezione);
 		gestoriIngresso.put(Stato.MAPPA, this::entraInStatoMappa);
 		gestoriIngresso.put(Stato.INVENTARIO, this::entraInStatoInventario);
@@ -140,6 +140,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriComando.put(Stato.ATTESA_POZIONE_SALUTE_GRANDE, this::gestisciComandoInStatoAttesaPozioneSaluteGrande);
 		gestoriComando.put(Stato.ATTESA_POZIONE_MAGIA, this::gestisciComandoInStatoAttesaPozioneMagia);
 		gestoriComando.put(Stato.ATTESA_POZIONE_MAGIA_GRANDE, this::gestisciComandoInStatoAttesaPozioneMagiaGrande);
+		gestoriComando.put(Stato.SCELTA_FORMULANTE_RESURREZIONE, this::gestisciComandoInStatoSceltaFormulanteResurrezione);
+		gestoriComando.put(Stato.SCELTA_BERSAGLIO_RESURREZIONE, this::gestisciComandoInStatoSceltaBersaglioResurrezione);
 		gestoriComando.put(Stato.ESEECUZIONE_RESURREZIONE, this::gestisciComandoInStatoEsecuzioneResurrezione);
 		gestoriComando.put(Stato.MAPPA, this::gestisciComandoInStatoMappa);
 		gestoriComando.put(Stato.INVENTARIO, this::gestisciComandoInStatoInventario);
@@ -284,7 +286,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (comando != Comando.ANNULLA && GestoreSalvataggi.leggi(comando)) {
 			stato = Stato.ATTESA_DIREZIONE;
 			BusEventi.pubblica(new InternoMostraSchermataGioco());
-			BusEventi.pubblica(new InternoCaricamentoCompletato(Notizie.getUltimiMessaggi()));
+			// Copia: la lista viva continua a ricevere i messaggi pubblicati da qui in poi
+			BusEventi.pubblica(new InternoCaricamentoCompletato(new ArrayList<>(Notizie.getUltimiMessaggi())));
 			return Esito.CONTINUA_CON_INGRESSO;
 		} else {
 			BusEventi.pubblica(new InternoStatoDiGioco(Stato.INTRO, getComandiPossibiliInStatoIntro()));
@@ -656,8 +659,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 				return Esito.CONTINUA_CON_INGRESSO;
 			case RESURREZIONE:
-				statoPrecedente = Stato.ESEECUZIONE_RESURREZIONE;
-				stato = Stato.SCELTA_BERSAGLIO_RESURREZIONE;
+				stato = Stato.SCELTA_FORMULANTE_RESURREZIONE;
 				return Esito.CONTINUA_CON_INGRESSO;
 			case NORD:
 				direzione = Comando.NORD;
@@ -759,22 +761,60 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		return Esito.CONTINUA_CON_INGRESSO;
 	}
 
+	/**
+	 * Come per gli incantesimi nelle locazioni (LocazioneBase, CHI_FORMULA), prima si
+	 * sceglie chi formula: se un solo personaggio ha la magia sufficiente lo si prende
+	 * direttamente, altrimenti si chiede quale fra quelli che possono.
+	 */
+	private Esito entraInStatoSceltaFormulanteResurrezione() {
+		List<Personaggio> formulanti = trovaFormulantiResurrezione();
+		if (formulanti.size() == 1) {
+			formulanteResurrezione = formulanti.get(0);
+			stato = Stato.SCELTA_BERSAGLIO_RESURREZIONE;
+			return Esito.CONTINUA_CON_INGRESSO;
+		}
+		List<Comando> comandiPossibili = new ArrayList<>();
+		for (Personaggio formulante : formulanti) {
+			comandiPossibili.add(Comando.ofPersonaggio(gruppo.getPersonaggi().indexOf(formulante)));
+		}
+		comandiPossibili.add(Comando.ANNULLA);
+		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibili));
+		return Esito.FERMATI;
+	}
+
+	private Esito gestisciComandoInStatoSceltaFormulanteResurrezione(Comando comando) {
+		if (comando == Comando.ANNULLA) {
+			stato = Stato.ATTESA_DIREZIONE;
+			return Esito.CONTINUA_CON_INGRESSO;
+		}
+		formulanteResurrezione = gruppo.getPersonaggio(comando);
+		stato = Stato.SCELTA_BERSAGLIO_RESURREZIONE;
+		return Esito.CONTINUA_CON_INGRESSO;
+	}
+
 	private Esito entraInStatoSceltaBersaglioResurrezione() {
 		// Come nella scelta del bersaglio quando si formula un incantesimo in
 		// combattimento (Stato.SCELTA_PERSONAGGIO_QUALSIASI): se c'è un solo
 		// personaggio morto lo si risuscita direttamente, altrimenti si chiede quale.
 		Comando comandoRisolto = scegliPersonaggioMorto();
 		if (comandoRisolto != null) {
-			stato = statoPrecedente;
+			stato = Stato.ESEECUZIONE_RESURREZIONE;
 			return Esito.continuaCon(comandoRisolto);
 		}
 		return Esito.FERMATI;
 	}
 
+	private Esito gestisciComandoInStatoSceltaBersaglioResurrezione(Comando comando) {
+		// Il bersaglio scelto (o ANNULLA) passa all'esecuzione
+		stato = Stato.ESEECUZIONE_RESURREZIONE;
+		return Esito.continuaCon(comando);
+	}
+
 	private Esito gestisciComandoInStatoEsecuzioneResurrezione(Comando comando) {
-		if (comando != null && comando != Comando.ANNULLA) {
-			eseguiResurrezione(gruppo.getPersonaggio(comando));
+		if (comando != Comando.ANNULLA) {
+			eseguiResurrezione(formulanteResurrezione, gruppo.getPersonaggio(comando));
 		}
+		formulanteResurrezione = null;
 		stato = Stato.ATTESA_DIREZIONE;
 		return Esito.CONTINUA_CON_INGRESSO;
 	}
@@ -1165,32 +1205,28 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			return false;
 		}
 		boolean qualcunoMorto = gruppo.getPersonaggi().stream().anyMatch(p -> !p.isVivo());
-		return qualcunoMorto && trovaFormulanteResurrezione() != null;
+		return qualcunoMorto && !trovaFormulantiResurrezione().isEmpty();
 	}
 
-	private void eseguiResurrezione(Personaggio personaggioBersaglio) {
-		Personaggio formulante = trovaFormulanteResurrezione();
-		if (formulante == null) {
-			// Non dovrebbe accadere: l'azione RESURREZIONE non sarebbe stata proposta.
-			return;
-		}
+	private void eseguiResurrezione(Personaggio formulante, Personaggio personaggioBersaglio) {
 		Incantesimo incantesimo = ClasseIncantesimo.RESURREZIONE.getIstanza(formulante.getLivello());
 		incantesimo.formula(formulante, personaggioBersaglio, null);
 		gruppo.subIncantesimi(ClasseIncantesimo.RESURREZIONE, 1);
 	}
 
 	/**
-	 * Un personaggio vivo con abbastanza magia da formulare una Resurrezione,
-	 * o null se nessuno del gruppo può farlo.
+	 * I personaggi vivi con abbastanza magia da formulare una Resurrezione,
+	 * nell'ordine del gruppo; vuota se nessuno può farlo.
 	 */
-	private Personaggio trovaFormulanteResurrezione() {
+	private List<Personaggio> trovaFormulantiResurrezione() {
 		int costoLancio = ClasseIncantesimo.RESURREZIONE.getIstanza(1).getCostoLancio();
+		List<Personaggio> formulanti = new ArrayList<>();
 		for (Personaggio personaggioCorrente : gruppo.getPersonaggiVivi()) {
 			if (personaggioCorrente.getMagia() >= costoLancio) {
-				return personaggioCorrente;
+				formulanti.add(personaggioCorrente);
 			}
 		}
-		return null;
+		return formulanti;
 	}
 
 	private Collection<Comando> getComandiPossibiliPerNumeroPassi(int numeroPassi) {
