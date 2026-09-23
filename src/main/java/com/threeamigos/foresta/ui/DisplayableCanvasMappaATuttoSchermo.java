@@ -17,7 +17,7 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 	private static final int ALTEZZA_ICONA = ImageCache.mappa.get(ClassiLocazione.BOSCO).getHeight();
 	// Il notiziario si ferma a metà della larghezza della sfera magica: l'altra
 	// metà è coperta dalla sfera stessa (disegnata in primo piano sull'angolo
-	// inferiore sinistro di tutto il canvas, vedi ForestaUI.creaEMostraInterfacciaUtente),
+	// inferiore sinistro di tutto il canvas, vedi DisplayableCanvas.disegnaSferaMagica),
 	// ma essendo un'immagine con trasparenza le notizie continuano a intravedersi
 	// dietro di essa fino al centro, dove l'immagine diventa opaca.
 	private static final int LARGHEZZA_SFERA_MAGICA_COPERTA = ImageCache.sferaMagica.getWidth() / 2;

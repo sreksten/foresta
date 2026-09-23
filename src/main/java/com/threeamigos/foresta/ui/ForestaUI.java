@@ -32,8 +32,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	private JFrame jframe;
 	private Prompt prompt;
 	private DisplayableCanvas displayableCanvas;
-	private PannelloIcone pannelloIcone;
-	private PannelloSferaMagica pannelloSferaMagica;
 	private Stato statoDiGioco;
 
 	public ForestaUI(Orientamento orientamento, boolean tuttoSchermo, Temporizzatore temporizzatore) {
@@ -130,44 +128,14 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		jframe.add(prompt);
 		prompt.setLocation((width - prompt.getSize().width) / 2, (height - prompt.getSize().height) / 2);
 
-		// Aggiunta alla layered pane del frame (non al content pane, dove vivono
-		// prompt/displayableCanvas/pannelloIcone) apposta: essendo più alta della
-		// sola fascia di pannelloIcone, ancorata all'angolo inferiore sinistro del
-		// jframe copre anche l'angolo inferiore sinistro di displayableCanvas (e
-		// con esso il notiziario, che per questo lascia libera una fascia a
-		// sinistra da disegnare). Il content pane ha layout nullo e assume che i
-		// suoi figli non si sovrappongano (isOptimizedDrawingEnabled) quindi, se la
-		// sfera fosse un suo figlio come gli altri, l'animazione continua di
-		// displayableCanvas (thread animatore, vedi DisplayableCanvas.run) la
-		// ridisegnerebbe sopra alla sfera senza che questa venga più ridisegnata
-		// a sua volta, "tagliandone" la parte sovrapposta. La layered pane invece
-		// gestisce correttamente lo z-order e il repaint di componenti sovrapposti.
-		pannelloSferaMagica = new PannelloSferaMagica();
-		jframe.getLayeredPane().add(pannelloSferaMagica, JLayeredPane.PALETTE_LAYER);
-		pannelloSferaMagica.setLocation(0, height - pannelloSferaMagica.getHeight());
-		// Visibile solo quando la mappa a tutto schermo è mostrata: vedi
-		// gestisciEventoRichiestaVisualizzazioneMappa e gestisciEventoMostraSchermataGioco.
-		pannelloSferaMagica.setVisible(false);
-
 		Logger.log("Orientamento: " + orientamento);
 		int altezzaIconPanel = 72;
-		if (orientamento == Orientamento.ORIZZONTALE) {
-			displayableCanvas = new DisplayableCanvas(width, height - altezzaIconPanel);
-			jframe.add(displayableCanvas);
-			displayableCanvas.setLocation(0, 0);
-			pannelloIcone = new PannelloIcone(PannelloIcone.ORIENTAMENTO_ORIZZONTALE);
-			jframe.add(pannelloIcone);
-			pannelloIcone.setSize(width, altezzaIconPanel);
-			pannelloIcone.setLocation(0, height - altezzaIconPanel - 1);
-		} else {
-			displayableCanvas = new DisplayableCanvas(640, height);
-			jframe.add(displayableCanvas);
-			displayableCanvas.setLocation(0, 0);
-			pannelloIcone = new PannelloIcone(PannelloIcone.ORIENTAMENTO_VERTICALE);
-			jframe.add(pannelloIcone);
-			pannelloIcone.setSize(altezzaIconPanel, height);
-			pannelloIcone.setLocation(width - altezzaIconPanel - 1, 0);
-		}
+		int orientamentoCanvas = orientamento == Orientamento.ORIZZONTALE
+				? DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE
+				: DisplayableCanvas.ORIENTAMENTO_VERTICALE;
+		displayableCanvas = new DisplayableCanvas(width, height, orientamentoCanvas, altezzaIconPanel);
+		jframe.add(displayableCanvas);
+		displayableCanvas.setLocation(0, 0);
 
 		jframe.pack();
 		jframe.setResizable(false);		
@@ -190,7 +158,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	public void impostaAzioni(Collection<Comando> possibilita) {
 		ComandiPossibili.set(possibilita);
-		pannelloIcone.impostaAzioni();
+		displayableCanvas.impostaAzioniIcone();
 	}
 
 	private void gestisciEventoFumetto(InternoNotificaViaFumettoATempo evento) {
@@ -215,7 +183,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	private void gestisciEventoMostraSchermataGioco(InternoMostraSchermataGioco evento) {
 		displayableCanvas.iniziaGioco();
 		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
-		pannelloSferaMagica.setVisible(false);
 	}
 
 	private void gestisciEventoMostraStatistiche(NotificaMostraStatisticheFineGioco evento) {
@@ -304,7 +271,6 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	private void gestisciEventoRichiestaVisualizzazioneMappa(ComandoVisualizzazioneMappa evento) {
 		displayableCanvas.mappa();
-		pannelloSferaMagica.setVisible(true);
 	}
 
 	private void gestisciEventoSelezioneDirezione(RichiestaSelezioneDirezione evento) {
@@ -388,7 +354,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	private void gestisciEventoComandiDisponibili(InternoAggiornamentoComandiDisponibili evento) {
 		ComandiPossibili.set(evento.getPossibilita());
-		pannelloIcone.impostaAzioni();
+		displayableCanvas.impostaAzioniIcone();
 	}
 
 	private void gestisciEventoConsumoPuntoAbilita(NotificaConsumoPuntoAbilitaPersonaggio evento) {

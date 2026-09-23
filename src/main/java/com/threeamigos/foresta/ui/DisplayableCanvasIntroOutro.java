@@ -90,7 +90,6 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 
 	void intro(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
-		Logger.log("INTRO: Sequenza = " + sequenza);
 		if (sequenza == 0) {
 			BufferedImage d;
 			d = ImageCache.logo3AM;

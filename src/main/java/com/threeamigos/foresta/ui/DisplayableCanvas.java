@@ -32,6 +32,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	private static final long serialVersionUID = 1L;
 
+	public static final int ORIENTAMENTO_ORIZZONTALE = 0;
+	public static final int ORIENTAMENTO_VERTICALE = 1;
+
 	private enum StatoDisplayableCanvas {
 		STATO_INTRO,
 		STATO_SELEZIONE_SLOT_DA_CARICARE,
@@ -67,6 +70,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final transient DisplayableCanvasInventario inventario;
 	private final transient DisplayableCanvasArmaiolo armaiolo;
 	private final transient DisplayableCanvasScambiatoreConsumabili alchimista;
+	private final transient DisplayableCanvasBarraIcone barraIcone;
 
 	private final ArrayList<SpriteInterface> sprites;
 	private final List<SpriteAnnuncioGlobale> codaAnnunciGlobali = new ArrayList<>();
@@ -80,11 +84,20 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private transient Thread animatore;
 	private boolean animatoreInAzione = false;
 
-	public DisplayableCanvas(int width, int height) {
+	public DisplayableCanvas(int width, int height, int orientamento, int dimensioneBarraIcone) {
 		super();
 
-		larghezzaSchermo = width;
-		altezzaSchermo = height;
+		int larghezzaContenuto;
+		int altezzaContenuto;
+		if (orientamento == ORIENTAMENTO_ORIZZONTALE) {
+			larghezzaContenuto = width;
+			altezzaContenuto = height - dimensioneBarraIcone;
+		} else {
+			larghezzaContenuto = 640;
+			altezzaContenuto = height;
+		}
+		larghezzaSchermo = larghezzaContenuto;
+		altezzaSchermo = altezzaContenuto;
 		stackElementiGrafici = new ArrayList<>();
 		stackElementiGrafici.add(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
 		stackElementiGrafici.add(InterfacciaUtente.Finestra.STATO);
@@ -101,9 +114,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		setBackground(Color.black);
 		BufferedImage immagineLocazione = ImageCache.locazioni.get(ClassiLocazione.BOSCO);
 
-		riquadroIntroOutro = new DisplayableCanvasIntroOutro(width, height);
+		riquadroIntroOutro = new DisplayableCanvasIntroOutro(larghezzaContenuto, altezzaContenuto);
 
-		Rectangle riquadroIntroOutroRect = new Rectangle(0, 0, width, height);
+		Rectangle riquadroIntroOutroRect = new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto);
 		mappaCoordinateElementiGrafici.put(riquadroIntroOutro, riquadroIntroOutroRect);
 
 		int elementoX = ImageCache.SPACING;
@@ -114,8 +127,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		riquadroMappa = new DisplayableCanvasRiquadroMappa(
 				ImageCache.SPACING,
 				ImageCache.SPACING,
-				width,
-				height);
+				larghezzaContenuto,
+				altezzaContenuto);
 
 		Rectangle riquadroMappaRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
 		mappaCoordinateElementiGrafici.put(riquadroMappa, riquadroMappaRect);
@@ -140,7 +153,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		Rectangle riquadroStatisticheRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
 		mappaCoordinateElementiGrafici.put(riquadroStatistiche, riquadroStatisticheRect);
 
-		riquadroCombattimento = new DisplayableCanvasRiquadroCombattimento(width, height);
+		riquadroCombattimento = new DisplayableCanvasRiquadroCombattimento(larghezzaContenuto, altezzaContenuto);
 
 		// Lo calcola da solo perché è un elemento flottante a differenza degli altri che sono fissi
 		mappaCoordinateElementiGrafici.put(riquadroCombattimento, riquadroCombattimento.getRettangolo());
@@ -148,7 +161,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		elementoX = ImageCache.SPACING;
 		elementoY = ImageCache.SPACING + immagineLocazione.getHeight() + ImageCache.SPACING;
 		larghezzaElemento = ImageCache.corniceMappa.getWidth() + ImageCache.SPACING + immagineLocazione.getWidth();
-		altezzaElemento = height - ImageCache.SPACING - immagineLocazione.getHeight() - ImageCache.SPACING;
+		altezzaElemento = altezzaContenuto - ImageCache.SPACING - immagineLocazione.getHeight() - ImageCache.SPACING;
 
 		riquadroTesto = new DisplayableCanvasRiquadroTesto(elementoX, elementoY, larghezzaElemento, altezzaElemento);
 
@@ -189,25 +202,45 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		Rectangle riquadroMissioniRect = new Rectangle(elementoX, elementoY, larghezzaElemento, altezzaElemento);
 		mappaCoordinateElementiGrafici.put(riquadroMissioni, riquadroMissioniRect);
 
-		mappaATuttoSchermo = new DisplayableCanvasMappaATuttoSchermo(width, height);
+		mappaATuttoSchermo = new DisplayableCanvasMappaATuttoSchermo(larghezzaContenuto, altezzaContenuto);
 
-		Rectangle mappaATuttoSchermoRect = new Rectangle(0, 0, width, height);
+		Rectangle mappaATuttoSchermoRect = new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto);
 		mappaCoordinateElementiGrafici.put(mappaATuttoSchermo, mappaATuttoSchermoRect);
 
-		inventario = new DisplayableCanvasInventario(width, height);
+		inventario = new DisplayableCanvasInventario(larghezzaContenuto, altezzaContenuto);
 
-		Rectangle inventarioRect = new Rectangle(0, 0, width, height);
+		Rectangle inventarioRect = new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto);
 		mappaCoordinateElementiGrafici.put(inventario, inventarioRect);
 
-		armaiolo = new DisplayableCanvasArmaiolo(width, height);
+		armaiolo = new DisplayableCanvasArmaiolo(larghezzaContenuto, altezzaContenuto);
 
-		Rectangle armaioloRect = new Rectangle(0, 0, width, height);
+		Rectangle armaioloRect = new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto);
 		mappaCoordinateElementiGrafici.put(armaiolo, armaioloRect);
 
-		alchimista = new DisplayableCanvasScambiatoreConsumabili(width, height);
+		alchimista = new DisplayableCanvasScambiatoreConsumabili(larghezzaContenuto, altezzaContenuto);
 
-		Rectangle alchimistaRect = new Rectangle(0, 0, width, height);
+		Rectangle alchimistaRect = new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto);
 		mappaCoordinateElementiGrafici.put(alchimista, alchimistaRect);
+
+		int barraLarghezza;
+		int barraAltezza;
+		int barraX;
+		int barraY;
+		if (orientamento == ORIENTAMENTO_ORIZZONTALE) {
+			barraLarghezza = width;
+			barraAltezza = dimensioneBarraIcone;
+			barraX = 0;
+			barraY = altezzaContenuto;
+		} else {
+			barraLarghezza = dimensioneBarraIcone;
+			barraAltezza = height;
+			barraX = width - dimensioneBarraIcone;
+			barraY = 0;
+		}
+		barraIcone = new DisplayableCanvasBarraIcone(orientamento, barraX, barraY, barraLarghezza, barraAltezza);
+
+		Rectangle barraIconeRect = new Rectangle(barraX, barraY, barraLarghezza, barraAltezza);
+		mappaCoordinateElementiGrafici.put(barraIcone, barraIconeRect);
 
 		sprites = new ArrayList<>();
 
@@ -475,6 +508,14 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		riquadroLocazione.assegnaCoordinateAgliAvversari();
 	}
 
+	// Sprite decorativo statico, visibile solo mentre è mostrata la mappa a
+	// tutto schermo, ancorato all'angolo inferiore sinistro.
+	private void disegnaSferaMagica(Graphics2D graphics) {
+		if (stato == StatoDisplayableCanvas.STATO_MAPPA) {
+			graphics.drawImage(ImageCache.sferaMagica, 0, altezzaSchermo - ImageCache.sferaMagica.getHeight(), null);
+		}
+	}
+
 	private void aggiornaSchermo(Graphics2D graphics) {
 
 		if (stato == StatoDisplayableCanvas.STATO_INTRO) {
@@ -512,8 +553,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			disegnaFumetto(graphics);
 		}
 		disegnaAnnuncioGlobale(graphics);
+		barraIcone.disegna(graphics);
+		disegnaSferaMagica(graphics);
 	}
-	
+
 	/**
 	 * Riporta l'unico elemento grafico che occupa tutto lo schermo nello stato corrente,
 	 * oppure null se lo schermo è composto dallo stack degli elementi di gioco.
@@ -600,6 +643,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void centraMappa() {
 		mappaATuttoSchermo.centraSuGiocatore();
+	}
+
+	public void impostaAzioniIcone() {
+		barraIcone.impostaAzioni();
+		repaint();
 	}
 
 	public void selezioneSlotSalvataggioDaSalvare() {
@@ -789,6 +837,12 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		private RisultatoRicerca trovaFinestra(MouseEvent e) {
 			int x = e.getX();
 			int y = e.getY();
+			// La barra delle icone è sempre disegnata in primo piano sopra a tutto
+			// il resto (vedi aggiornaSchermo), quindi va controllata per prima.
+			RisultatoRicerca risultatoBarraIcone = creaRisultato(barraIcone, x, y);
+			if (risultatoBarraIcone != null) {
+				return risultatoBarraIcone;
+			}
 			// Fuori dal gioco lo schermo è occupato da un unico elemento grafico:
 			// non c'è nessuno stack da percorrere.
 			Finestra finestraATuttoSchermo = finestraATuttoSchermo();
@@ -867,8 +921,12 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			}
 			if (e.getClickCount() >= 2) {
 				finestra.processaDoppioClick(x, y, tasto);
+				repaint();
 			} else {
-				timerClickSingolo = new Timer(intervalloDoppioClick, evento -> finestra.processaClick(x, y, tasto));
+				timerClickSingolo = new Timer(intervalloDoppioClick, evento -> {
+					finestra.processaClick(x, y, tasto);
+					repaint();
+				});
 				timerClickSingolo.setRepeats(false);
 				timerClickSingolo.start();
 			}
@@ -891,6 +949,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			} else if (SwingUtilities.isMiddleMouseButton(e)) {
 				finestra.processaPressione(x, y, Finestra.Tasto.CENTRALE);
 			}
+			repaint();
 		}
 
 		@Override
@@ -910,18 +969,21 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			} else if (SwingUtilities.isMiddleMouseButton(e)) {
 				finestra.processaRilascio(x, y, Finestra.Tasto.CENTRALE);
 			}
+			repaint();
 		}
 
 		@Override
 		public void mouseEntered(MouseEvent e) {
 			// Entrando nel canvas si stabilisce su quale riquadro si trova il cursore
 			aggiornaFinestraSottoIlCursore(trovaFinestra(e), e.getX(), e.getY());
+			repaint();
 		}
 
 		@Override
 		public void mouseExited(MouseEvent e) {
 			// Uscendo dal canvas si esce anche dal riquadro su cui si era
 			aggiornaFinestraSottoIlCursore(null, e.getX(), e.getY());
+			repaint();
 		}
 
 		@Override
@@ -935,6 +997,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			int y = risultatoRicerca.yRelativoAFinestra;
 
 			finestra.processaTrascinamento(x, y);
+			repaint();
 		}
 
 		@Override
@@ -942,6 +1005,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			RisultatoRicerca risultatoRicerca = trovaFinestra(e);
 			aggiornaFinestraSottoIlCursore(risultatoRicerca, e.getX(), e.getY());
 			if (risultatoRicerca == null) {
+				repaint();
 				return;
 			}
 			Finestra finestra = risultatoRicerca.finestra;
@@ -949,6 +1013,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			int y = risultatoRicerca.yRelativoAFinestra;
 
 			finestra.processaMovimento(x, y);
+			repaint();
 		}
 
 		@Override
@@ -967,6 +1032,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			} else {
 				finestra.processaRotella(x, y, rotazioni, Finestra.MovimentoRotella.GIU);
 			}
+			repaint();
 		}
 	}
 }

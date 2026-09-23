@@ -29,7 +29,7 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 // FIXME conosciuti: l'incantesimo di resurrezione prende il primo personaggio morto e lo fa resuscitare dal primo personaggio che può farlo senza dare possibilità di scelta
-
+// FIXME: al ricaricamento si è persa traccia dei paragrafi. Occorrerebbe ricordare l'informazione durante il salvataggio
 // TODO: implementare fumetto che attende chiusura
 // TODO: implementare un meccanismo per le cutscene
 // TODO: implementare sistema di aiuto
