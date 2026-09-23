@@ -91,16 +91,17 @@ public abstract class SpriteBase implements SpriteInterface {
 		// Calcola la scala da applicare in base al tempo trascorso
 		float scala = interpola(scalaIniziale, scalaFinale, progresso);
 
-		Composite compositeOriginale = g.getComposite();
-		Object interpolazioneOriginale = g.getRenderingHint(RenderingHints.KEY_INTERPOLATION);
-		g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
-		g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-
-		disegna(g, x, y, scala);
-
-		g.setComposite(compositeOriginale);
-		if (interpolazioneOriginale != null) {
-			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, interpolazioneOriginale);
+		// Copia del contesto, così composite, hint e colori impostati qui o in disegna()
+		// non ricadono su chi disegna dopo: su un Graphics2D nuovo l'hint di interpolazione
+		// vale null e non si potrebbe ripristinare, lasciando il bilineare (su Retina,
+		// dove c'è già una scala 2x, sfoca e scurisce tutto quello che segue).
+		Graphics2D gSprite = (Graphics2D) g.create();
+		try {
+			gSprite.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+			gSprite.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			disegna(gSprite, x, y, scala);
+		} finally {
+			gSprite.dispose();
 		}
 
 		long ora = System.nanoTime();

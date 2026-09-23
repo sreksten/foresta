@@ -10,6 +10,7 @@ import com.threeamigos.foresta.motore.AutomaInventario;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.modellodati.Messaggio;
+import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -84,6 +85,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	private final int larghezzaSchermo;
 	private final int altezzaSchermo;
+	private final int altezzaTotaleSchermo;
 
 	private transient Thread animatore;
 	private boolean animatoreInAzione = false;
@@ -103,7 +105,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public DisplayableCanvas(int width, int height, int orientamento, int dimensioneBarraIcone) {
 		super();
-
+		altezzaTotaleSchermo = height;
 		Dimension areaDiContenuto = calcolaAreaDiContenuto(width, height, orientamento, dimensioneBarraIcone);
 		int larghezzaContenuto = areaDiContenuto.width;
 		int altezzaContenuto = areaDiContenuto.height;
@@ -526,8 +528,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	// Sprite decorativo statico, visibile solo mentre è mostrata la mappa a
 	// tutto schermo, ancorato all'angolo inferiore sinistro.
 	private void disegnaSferaMagica(Graphics2D graphics) {
-		if (stato == StatoDisplayableCanvas.STATO_MAPPA) {
-			graphics.drawImage(ImageCache.sferaMagica, 0, altezzaSchermo - ImageCache.sferaMagica.getHeight(), null);
+		if (stato == StatoDisplayableCanvas.STATO_MAPPA && !ModelloDati.getIstanza().getNotizieMD().getUltimeNotizie().isEmpty()) {
+			graphics.drawImage(ImageCache.sferaMagica, 0, altezzaTotaleSchermo - ImageCache.sferaMagica.getHeight(), null);
 		}
 	}
 

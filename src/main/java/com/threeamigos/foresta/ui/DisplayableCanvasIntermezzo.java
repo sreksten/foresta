@@ -94,19 +94,19 @@ class DisplayableCanvasIntermezzo implements Finestra {
 			return;
 		}
 
-		Object interpolazioneOriginale = graphics.getRenderingHint(RenderingHints.KEY_INTERPOLATION);
-		Composite compositeOriginale = graphics.getComposite();
-		graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-
-		disegnaSfondo(graphics, secondi);
-		posizioni.clear();
-		versi.clear();
-		for (ElementoIntermezzo elemento : pagina.getElementi()) {
-			disegnaElemento(graphics, elemento, elemento.getStatoAl(secondi), secondi);
-		}
-		graphics.setComposite(compositeOriginale);
-		if (interpolazioneOriginale != null) {
-			graphics.setRenderingHint(RenderingHints.KEY_INTERPOLATION, interpolazioneOriginale);
+		// Copia del contesto: su un Graphics2D nuovo l'hint di interpolazione vale null
+		// e non si può ripristinare, lascerebbe il bilineare a chi disegna dopo.
+		Graphics2D graphicsImmagini = (Graphics2D) graphics.create();
+		try {
+			graphicsImmagini.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+			disegnaSfondo(graphicsImmagini, secondi);
+			posizioni.clear();
+			versi.clear();
+			for (ElementoIntermezzo elemento : pagina.getElementi()) {
+				disegnaElemento(graphicsImmagini, elemento, elemento.getStatoAl(secondi), secondi);
+			}
+		} finally {
+			graphicsImmagini.dispose();
 		}
 
 		testo.scriviTestoCentrato(graphics, pagina.getTesto());
