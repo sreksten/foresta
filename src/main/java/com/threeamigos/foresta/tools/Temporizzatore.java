@@ -9,8 +9,10 @@ import com.threeamigos.foresta.motore.Temporizzabile;
 
 public interface Temporizzatore {
 
-	int FRAME_PER_SECONDO = 30;
-	int DURATA_FRAME_IN_MILLISECONDI = 1000 / FRAME_PER_SECONDO;
+	// Le animazioni avanzano in base al tempo reale, non per fotogramma: alzarlo le rende
+	// più fluide senza cambiarne la velocità. A 30 lo scorrimento del notiziario scattava
+	// visibilmente, perché ogni fotogramma lo spostava di diversi pixel.
+	int FRAME_PER_SECONDO = 60;
 
 	void setTemporizzabile(Temporizzabile temporizzabile);
 

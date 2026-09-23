@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.ui.sfx;
 
-import com.threeamigos.foresta.tools.Temporizzatore;
-
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Random;
@@ -10,7 +8,7 @@ public class CloudInstance {
     private final BufferedImage image;
     private float x;
     private float y;
-    private final float speed; // pixel per fotogramma, a Temporizzatore.FRAME_PER_SECONDO
+    private final float speed; // pixel al secondo
     private final Rectangle clipBounds; // Il riquadro in cui la nuvola può muoversi
     private final Random rand = new Random();
 
@@ -26,7 +24,7 @@ public class CloudInstance {
     // tempo reale trascorso dall'ultimo update(), non un passo fisso per chiamata: update()
     // può essere invocato anche da un repaint() estraneo all'animatore (es. hover del mouse).
     public void update(float secondiTrascorsi) {
-        x += speed * Temporizzatore.FRAME_PER_SECONDO * secondiTrascorsi;
+        x += speed * secondiTrascorsi;
 
         // Confine destro del riquadro (X + larghezza)
         int maxRight = clipBounds.x + clipBounds.width;

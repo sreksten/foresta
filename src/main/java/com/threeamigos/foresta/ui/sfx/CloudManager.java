@@ -110,7 +110,8 @@ public class CloudManager {
 			float startX = clipCanonico.x + rand.nextInt(clipCanonico.width) - cloudWidth;
 			float startY = clipCanonico.y + rand.nextInt(clipCanonico.height - cloudHeight);
 
-			float speed = 0.2f + ((float) cloudWidth / clipCanonico.width) * 0.8f;
+			// Pixel al secondo: le nuvole più grandi (quindi più vicine) scorrono più veloci
+			float speed = 6f + ((float) cloudWidth / clipCanonico.width) * 24f;
 
 			clouds.add(new CloudInstance(singleCloudPattern, startX, startY, speed, clipCanonico));
 		}

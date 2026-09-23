@@ -3,7 +3,6 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.Notizie;
 import com.threeamigos.foresta.motore.modellodati.Notizia;
-import com.threeamigos.foresta.tools.Temporizzatore;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -25,7 +24,7 @@ import java.util.List;
  */
 class Notiziario {
 
-	private static final int VELOCITA_SCROLL_PX_PER_FRAME = 3;
+	private static final int VELOCITA_SCROLL_PX_PER_SECONDO = 90;
 	private static final int LARGHEZZA_ZONA_FADE = 60;
 	private static final int LARGHEZZA_MARGINE_SEPARATORE_NOTIZIE = 16;
 	private static final Color COLORE_SFONDO = new Color(20, 40, 120);
@@ -80,7 +79,7 @@ class Notiziario {
 			long ora = System.nanoTime();
 			if (ultimoAggiornamentoNanos >= 0) {
 				float secondiTrascorsi = (ora - ultimoAggiornamentoNanos) / 1_000_000_000f;
-				x -= VELOCITA_SCROLL_PX_PER_FRAME * Temporizzatore.FRAME_PER_SECONDO * secondiTrascorsi;
+				x -= VELOCITA_SCROLL_PX_PER_SECONDO * secondiTrascorsi;
 			}
 			ultimoAggiornamentoNanos = ora;
 			while (x <= -larghezzaTotale) {

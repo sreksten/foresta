@@ -397,6 +397,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void run() {
 		animatoreInAzione = true;
+		// Cadenza fissa: la scadenza del fotogramma successivo si calcola dalla precedente,
+		// non da quando finisce il sonno, altrimenti i ritardi di sleep() si accumulano e
+		// il ritmo effettivo scende sotto FRAME_PER_SECONDO (e diventa irregolare).
+		long periodoNanos = 1_000_000_000L / Temporizzatore.FRAME_PER_SECONDO;
+		long prossimoFotogramma = System.nanoTime();
 		while (animatoreInAzione) {
 			if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO || stato == StatoDisplayableCanvas.STATO_MAPPA
 					|| stato == StatoDisplayableCanvas.STATO_INVENTARIO || stato == StatoDisplayableCanvas.STATO_ARMAIOLO
@@ -405,8 +410,16 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 					|| annuncioGlobaleAttivo != null || !codaAnnunciGlobali.isEmpty()) {
 				repaint();
 			}
+			prossimoFotogramma += periodoNanos;
+			long attesaNanos = prossimoFotogramma - System.nanoTime();
+			if (attesaNanos <= 0) {
+				// In ritardo di oltre un fotogramma (es. il sistema era sospeso): si riparte
+				// da adesso invece di tentare di recuperare con una raffica di repaint().
+				prossimoFotogramma = System.nanoTime();
+				continue;
+			}
 			try {
-				Thread.sleep(Temporizzatore.DURATA_FRAME_IN_MILLISECONDI);
+				Thread.sleep(attesaNanos / 1_000_000L, (int) (attesaNanos % 1_000_000L));
 			} catch (InterruptedException e) {
 			}
 		}
