@@ -147,7 +147,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	public void tick() {
 		if (statoDiGioco == Stato.INTRO) {
-			displayableCanvas.intro();
+			displayableCanvas.avanzaIntro();
 		}
 	}
 
@@ -293,7 +293,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		switch(statoDiGioco) {
 			case INTRO:
 				 // Richiama la schermata o animazione di introduzione
-				displayableCanvas.intro();
+				displayableCanvas.avviaIntro();
 				temporizzatore.inizia(5_000);
 				impostaAzioni(evento.getComandiPossibili());
 				break;

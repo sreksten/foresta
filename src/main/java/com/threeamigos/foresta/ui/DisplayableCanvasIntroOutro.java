@@ -47,6 +47,19 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		sequenza = 0;
 	}
 
+	/**
+	 * Porta l'intro all'ultimo passo, la classifica: da lì il passo successivo
+	 * riparte dai loghi.
+	 */
+	void posizionaSuPunteggi() {
+		sequenza = lunghezzaIntro() - 1;
+	}
+
+	/** Loghi, una pagina per ogni paragrafo della storia, classifica. */
+	int lunghezzaIntro() {
+		return Misc.STORIA.length + 2;
+	}
+
 	void incrementaSequenza(int lunghezzaMassima) {
 		sequenza++;
 		if (sequenza >= lunghezzaMassima) {
@@ -96,11 +109,12 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 			graphics.drawImage(d, (width - d.getWidth()) >> 1, yOffset + 20, null);
 			d = ImageCache.logoForesta;
 			graphics.drawImage(d, (width - d.getWidth()) >> 1, yOffset + 80, null);
-		} else if (sequenza == 1) {
-			hiscore(graphics);
-		} else {
-			messaggio = Misc.STORIA[sequenza - 2];
+		} else if (sequenza <= Misc.STORIA.length) {
+			messaggio = Misc.STORIA[sequenza - 1];
 			scrivi(graphics, true);
+		} else {
+			// I punteggi chiudono la sequenza, dopo l'ultima pagina della storia
+			hiscore(graphics);
 		}
 	}
 

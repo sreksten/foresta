@@ -83,6 +83,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	private transient Thread animatore;
 	private boolean animatoreInAzione = false;
+	// La prossima intro deve partire dalla classifica invece che dai loghi (vedi mostraPunteggi)
+	private boolean introDallaClassifica = false;
 
 	public DisplayableCanvas(int width, int height, int orientamento, int dimensioneBarraIcone) {
 		super();
@@ -582,14 +584,31 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	// Parte della interfaccia UI
-	public void intro() {
-		if (stato != StatoDisplayableCanvas.STATO_INTRO) {
-			stato = StatoDisplayableCanvas.STATO_INTRO;
-			riquadroIntroOutro.resettaSequenza();
+	/**
+	 * Fa ripartire l'intro: dai loghi, oppure dalla classifica se è appena stato
+	 * registrato un punteggio. Va chiamato anche quando il canvas è già in
+	 * STATO_INTRO (è lo stato iniziale del canvas, all'avvio del gioco).
+	 */
+	public void avviaIntro() {
+		stato = StatoDisplayableCanvas.STATO_INTRO;
+		if (introDallaClassifica) {
+			riquadroIntroOutro.posizionaSuPunteggi();
+			introDallaClassifica = false;
 		} else {
-			// + 2 per permettere i titoli di testa e i punteggi
-			riquadroIntroOutro.incrementaSequenza(Misc.STORIA.length + 2);
+			riquadroIntroOutro.resettaSequenza();
 		}
+		repaint();
+	}
+
+	/**
+	 * Passa alla schermata successiva dell'intro, a ogni battito del temporizzatore della UI.
+	 */
+	public void avanzaIntro() {
+		if (stato != StatoDisplayableCanvas.STATO_INTRO) {
+			avviaIntro();
+			return;
+		}
+		riquadroIntroOutro.incrementaSequenza(riquadroIntroOutro.lunghezzaIntro());
 		repaint();
 	}
 
@@ -687,6 +706,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void mostraPunteggi() {
 		stato = StatoDisplayableCanvas.STATO_PUNTEGGI;
+		// Il motore torna subito all'intro: che parta dalla classifica appena aggiornata
+		introDallaClassifica = true;
 		repaint();
 	}
 

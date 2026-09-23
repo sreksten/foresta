@@ -179,19 +179,24 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 		String testoDisponibile = evento.getTesto();
 
+		Esito esito;
 		switch (stato) {
 
 			case PRE_GAME_ATTESA_NOME_PERSONAGGIO:
-				processaComandoInStatoPreGameAttesaNomePersonaggio(testoDisponibile);
+				esito = gestisciTestoInStatoPreGameAttesaNomePersonaggio(testoDisponibile);
 				break;
 
 			case ATTESA_NOME_PUNTEGGI:
-				processaComandoInStatoPostGameAttesaNomePerPunteggio(testoDisponibile);
+				esito = gestisciTestoInStatoPostGameAttesaNomePerPunteggio(testoDisponibile);
 				break;
 
 			default:
 				BusEventi.pubblica(new InternoErrore("onEventoTestoDisponibile: Stato non gestito: " + stato));
+				return;
 		}
+		// Il testo arriva con un evento diverso da ComandoDiGioco, ma le transizioni
+		// che ne seguono passano dallo stesso ciclo dei comandi.
+		prosegui(esito);
 	}
 
 	private void onEventoComandoDiGioco(ComandoDiGioco evento) {
@@ -214,19 +219,29 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 * stato non decide di fermarsi e aspettare un comando reale del giocatore.
 	 */
 	public void processaComando(Comando comando) {
-		Comando prossimo = comando;
+		if (comando == null) {
+			// null è riservato al ciclo interno, dove indica l'ingresso in uno stato
+			throw new IllegalArgumentException("processaComando richiede un comando reale");
+		}
+		BusEventi.pubblica(new InternoMessaggio("Automa in stato " + stato.name() + "; processo Comando " + comando));
+		prosegui(eseguiPasso(comando));
+	}
+
+	/**
+	 * Prosegue le transizioni automatiche a partire dall'esito di un primo passo, finché
+	 * uno stato non decide di fermarsi e aspettare un input reale del giocatore.
+	 */
+	private void prosegui(Esito primoEsito) {
+		Esito esito = primoEsito;
 		int iterazioni = 0;
-		while (true) {
-			BusEventi.pubblica(new InternoMessaggio("Automa in stato " + stato.name() + "; processo Comando " + prossimo));
-			Esito esito = eseguiPasso(prossimo);
-			if (!esito.continua) {
-				return;
-			}
-			prossimo = esito.prossimoComando;
+		while (esito.continua) {
 			if (++iterazioni > MAX_TRANSIZIONI_AUTOMATICHE) {
 				throw new IllegalStateException(
 						"Troppe transizioni automatiche consecutive (possibile ciclo tra stati) — ultimo stato: " + stato);
 			}
+			Comando prossimo = esito.prossimoComando;
+			BusEventi.pubblica(new InternoMessaggio("Automa in stato " + stato.name() + "; processo Comando " + prossimo));
+			esito = eseguiPasso(prossimo);
 		}
 	}
 
@@ -278,7 +293,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 	}
 
-	private void processaComandoInStatoPreGameAttesaNomePersonaggio(String testoDisponibile) {
+	private Esito gestisciTestoInStatoPreGameAttesaNomePersonaggio(String testoDisponibile) {
 		Foresta.reimposta();
 		personaggio = null;
 
@@ -293,14 +308,15 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 
 		if (personaggio != null) {
+			// Personaggio casuale o nascosto: si salta la scelta di sesso e classe e,
+			// come dopo la scelta della classe, si entra subito nella prima locazione.
 			inizializzaGioco();
-			// Questo mi sa che serve per poter impostare i comando possibili. Solo che in INIZIO_LOCAZIONE non ce ne dovrebbero essere.
-			processaComando(null);
-			return;
+			return Esito.CONTINUA_CON_INGRESSO;
 		}
 
 		stato = Stato.PRE_GAME_ATTESA_SESSO_PERSONAGGIO;
 		BusEventi.pubblica(new InternoStatoDiGioco(stato, Comando.MASCHIO, Comando.FEMMINA));
+		return Esito.FERMATI;
 	}
 
 	private Esito gestisciComandoInStatoPreGameAttesaSessoPersonaggio(Comando comando) {
@@ -906,19 +922,22 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Esito gestisciComandoInStatoStatistiche(Comando comando) {
+		if (comando == Comando.PERGAMENA && !GestorePunteggi.isPunteggioInClassifica(Statistiche.getPunti())) {
+			// Nessun punteggio da registrare: si torna all'intro, che riparte dai loghi.
+			// inizia() pubblica anche lo stato INTRO, senza il quale la UI resterebbe
+			// sulle statistiche.
+			inizia();
+			return Esito.FERMATI;
+		}
 		if (comando == Comando.PERGAMENA) {
-			if (GestorePunteggi.isPunteggioInClassifica(Statistiche.getPunti())) {
-				stato = Stato.ATTESA_NOME_PUNTEGGI;
-				BusEventi.pubblica(new RichiestaTesto("congratulazioni! inserisci il tuo nome"));
-			} else {
-				stato = Stato.INTRO;
-			}
+			stato = Stato.ATTESA_NOME_PUNTEGGI;
+			BusEventi.pubblica(new RichiestaTesto("congratulazioni! inserisci il tuo nome"));
 		}
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
 		return Esito.FERMATI;
 	}
 
-	private void processaComandoInStatoPostGameAttesaNomePerPunteggio(String testoDisponibile) {
+	private Esito gestisciTestoInStatoPostGameAttesaNomePerPunteggio(String testoDisponibile) {
 		if (testoDisponibile.isEmpty()) {
 			testoDisponibile = GruppoGiocatore.getIstanza().getPersonaggio(0).getNomeProprio().orElseThrow(Personaggio.PERSONAGGIO_SENZA_NOME);
 		}
@@ -926,7 +945,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		stato = Stato.PUNTEGGI;
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
 		BusEventi.pubblica(new NotificaMostraPunteggiMigliori());
-		processaComando(null);
+		return Esito.CONTINUA_CON_INGRESSO;
 	}
 
 	/**
