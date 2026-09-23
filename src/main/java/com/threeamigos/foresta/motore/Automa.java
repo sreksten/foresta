@@ -437,7 +437,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		BusEventi.pubblica(new NotificaPaginaIntermezzo(pagineIntermezzo.get(paginaIntermezzo),
 				paginaIntermezzo + 1, pagineIntermezzo.size()));
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
-		double secondi = secondiPaginaIntermezzo(pagineIntermezzo.get(paginaIntermezzo));
+		double secondi = pagineIntermezzo.get(paginaIntermezzo).getSecondiPrimaDiAvanzare(intermezzoCorrente.getSecondiPerPagina());
 		if (secondi > 0) {
 			// Riavviato a ogni pagina: un click riporta a zero il conto alla rovescia
 			temporizzatore.iniziaDopo((int) Math.ceil(secondi * 1_000));
@@ -447,21 +447,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 	}
 
-	/**
-	 * Dopo quanti secondi la pagina avanza da sola (0 = solo al click): la durata fissata
-	 * dalla pagina se c'è; altrimenti, se l'intermezzo avanza da solo, almeno il tempo per
-	 * pagina dell'intermezzo e comunque non prima che dialoghi e animazioni siano finiti.
-	 */
-	private double secondiPaginaIntermezzo(PaginaIntermezzo pagina) {
-		if (pagina.hasDurata()) {
-			return pagina.getDurata();
-		}
-		int secondiPerPagina = intermezzoCorrente.getSecondiPerPagina();
-		if (secondiPerPagina <= 0) {
-			return 0;
-		}
-		return Math.max(secondiPerPagina, pagina.getDurataContenuto());
-	}
 
 	/**
 	 * La pagina avanza con la pergamena o con il timer; dopo l'ultima si passa al

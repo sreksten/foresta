@@ -102,6 +102,24 @@ public class PaginaIntermezzo {
 	}
 
 	/**
+	 * Dopo quanti secondi la pagina avanza da sola (0 = solo al click): la durata fissata
+	 * con {@link #perSecondi(double)} se c'è; altrimenti, se l'intermezzo avanza da solo,
+	 * almeno il suo tempo per pagina e comunque non prima che dialoghi e animazioni
+	 * siano finiti.
+	 *
+	 * @param secondiPerPagina come da {@link Intermezzo#getSecondiPerPagina()}
+	 */
+	public double getSecondiPrimaDiAvanzare(int secondiPerPagina) {
+		if (hasDurata()) {
+			return getDurata();
+		}
+		if (secondiPerPagina <= 0) {
+			return 0;
+		}
+		return Math.max(secondiPerPagina, getDurataContenuto());
+	}
+
+	/**
 	 * Le battute con il loro intervallo effettivo: quelle senza inizio indicato partono
 	 * alla fine della precedente, più una breve pausa.
 	 */

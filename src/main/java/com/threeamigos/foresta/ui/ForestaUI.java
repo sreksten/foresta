@@ -29,6 +29,9 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	private final boolean tuttoSchermo;
 	private final Temporizzatore temporizzatore;
 
+	// Spessore della fascia (o della colonna) della barra icone
+	static final int SPESSORE_BARRA_ICONE = 72;
+
 	private JFrame jframe;
 	private Prompt prompt;
 	private DisplayableCanvas displayableCanvas;
@@ -79,46 +82,52 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(NotificaVariazioneStatoVitalePersonaggio.class, this::gestisciEventoVariazioneStatoVitalePersonaggio);
 	}
 	
+	/**
+	 * Le dimensioni della finestra di gioco: lo schermo intero, oppure quelle date dalle
+	 * cornici dei riquadri, senza superare lo schermo. Richiede ImageCache già inizializzata.
+	 */
+	static Dimension calcolaDimensioniFinestra(Orientamento orientamento, boolean tuttoSchermo) {
+		Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
+		if (tuttoSchermo) {
+			return new Dimension(screenDimension.width, screenDimension.height);
+		}
+		if (orientamento != Orientamento.ORIZZONTALE) {
+			return new Dimension(Math.min(screenDimension.width, 400), Math.min(screenDimension.height, 640));
+		}
+		int width = ImageCache.SPACING +
+				ImageCache.corniceMappa.getWidth() +
+				ImageCache.SPACING +
+				ImageCache.locazioni.get(ClassiLocazione.BOSCO).getWidth() +
+				ImageCache.SPACING +
+				ImageCache.corniceGrande.getWidth() +
+				ImageCache.SPACING;
+		int height = ImageCache.SPACING +
+				ImageCache.corniceGrande.getHeight() +
+				ImageCache.SPACING +
+				ImageCache.corniceIncantesimi.getHeight() +
+				ImageCache.SPACING +
+				ImageCache.corniceGrande.getHeight() +
+				ImageCache.SPACING +
+				ClasseIcona.getAltezzaMassima() +
+				ImageCache.SPACING;
+		return new Dimension(Math.min(width, screenDimension.width), Math.min(height, screenDimension.height));
+	}
+
+	static int orientamentoCanvas(Orientamento orientamento) {
+		return orientamento == Orientamento.ORIZZONTALE
+				? DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE
+				: DisplayableCanvas.ORIENTAMENTO_VERTICALE;
+	}
+
 	private void creaEMostraInterfacciaUtente() {
 		ImageCache.init();
 
 		Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
 		jframe = new JFrame("La Foresta");
 		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		int width;
-		int height;
-		if (tuttoSchermo) {
-			width = screenDimension.width;
-			height = screenDimension.height;
-		} else {
-			if (orientamento == Orientamento.ORIZZONTALE) {
-				width = ImageCache.SPACING +
-						ImageCache.corniceMappa.getWidth() +
-						ImageCache.SPACING + 
-						ImageCache.locazioni.get(ClassiLocazione.BOSCO).getWidth() +
-						ImageCache.SPACING +
-						ImageCache.corniceGrande.getWidth() +
-						ImageCache.SPACING;
-				if (screenDimension.width < width) {
-					width = screenDimension.width;
-				}
-				height = ImageCache.SPACING +
-						ImageCache.corniceGrande.getHeight() +
-						ImageCache.SPACING +
-						ImageCache.corniceIncantesimi.getHeight() +
-						ImageCache.SPACING +
-						ImageCache.corniceGrande.getHeight() +
-						ImageCache.SPACING +
-						ClasseIcona.getAltezzaMassima() +
-						ImageCache.SPACING;
-				if (screenDimension.height< width) {
-					height = screenDimension.height;
-				}
-			} else {
-				width = Math.min(screenDimension.width, 400);
-				height = Math.min(screenDimension.height, 640);
-			}
-		}
+		Dimension dimensioniFinestra = calcolaDimensioniFinestra(orientamento, tuttoSchermo);
+		int width = dimensioniFinestra.width;
+		int height = dimensioniFinestra.height;
 
 		jframe.setLayout(null);
 		Container c = jframe.getContentPane();
@@ -130,11 +139,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		prompt.setLocation((width - prompt.getSize().width) / 2, (height - prompt.getSize().height) / 2);
 
 		Logger.log("Orientamento: " + orientamento);
-		int altezzaIconPanel = 72;
-		int orientamentoCanvas = orientamento == Orientamento.ORIZZONTALE
-				? DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE
-				: DisplayableCanvas.ORIENTAMENTO_VERTICALE;
-		displayableCanvas = new DisplayableCanvas(width, height, orientamentoCanvas, altezzaIconPanel);
+		displayableCanvas = new DisplayableCanvas(width, height, orientamentoCanvas(orientamento), SPESSORE_BARRA_ICONE);
 		jframe.add(displayableCanvas);
 		displayableCanvas.setLocation(0, 0);
 

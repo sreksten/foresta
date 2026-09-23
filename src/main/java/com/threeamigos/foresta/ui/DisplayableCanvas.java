@@ -90,18 +90,23 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	// La prossima intro deve partire dalla classifica invece che dai loghi (vedi mostraPunteggi)
 	private boolean introDallaClassifica = false;
 
+	/**
+	 * La parte della finestra in cui si disegnano riquadri e schermate a tutto schermo,
+	 * esclusa la barra icone.
+	 */
+	static Dimension calcolaAreaDiContenuto(int width, int height, int orientamento, int dimensioneBarraIcone) {
+		if (orientamento == ORIENTAMENTO_ORIZZONTALE) {
+			return new Dimension(width, height - dimensioneBarraIcone);
+		}
+		return new Dimension(640, height);
+	}
+
 	public DisplayableCanvas(int width, int height, int orientamento, int dimensioneBarraIcone) {
 		super();
 
-		int larghezzaContenuto;
-		int altezzaContenuto;
-		if (orientamento == ORIENTAMENTO_ORIZZONTALE) {
-			larghezzaContenuto = width;
-			altezzaContenuto = height - dimensioneBarraIcone;
-		} else {
-			larghezzaContenuto = 640;
-			altezzaContenuto = height;
-		}
+		Dimension areaDiContenuto = calcolaAreaDiContenuto(width, height, orientamento, dimensioneBarraIcone);
+		int larghezzaContenuto = areaDiContenuto.width;
+		int altezzaContenuto = areaDiContenuto.height;
 		larghezzaSchermo = larghezzaContenuto;
 		altezzaSchermo = altezzaContenuto;
 		stackElementiGrafici = new ArrayList<>();
