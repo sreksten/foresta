@@ -290,6 +290,7 @@ NOME
     Odorico
     Onofrio
     Oronzo
+    Osvaldo
     Pancrazio
     Pantaleone
     Pellegrino
