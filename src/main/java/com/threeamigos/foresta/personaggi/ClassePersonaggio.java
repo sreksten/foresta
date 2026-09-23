@@ -54,16 +54,25 @@ public enum ClassePersonaggio {
 	}
 
 	/**
-	 * Istanza "modello" della classe, creata pigramente e riutilizzata, da usare unicamente per leggere i
-	 * moltiplicatori di classe (getMoltiplicatoreX()). Non va mai collegata a un PersonaggioMD reale né usata
-	 * per altro: serve a evitare di dover istanziare un Personaggio ad-hoc ogni volta che serve solo conoscere
-	 * i suoi coefficienti di classe (es. ricalcolo massivo degli attributi secondari in fase di caricamento).
+	 * Istanza "modello" della classe, creata pigramente e riutilizzata, da usare unicamente per leggere ciò
+	 * che dipende solo dalla classe: i moltiplicatori (getMoltiplicatoreX()) e i nomi (vedi getNomeSingolare()
+	 * e getNomePlurale()). Non va mai collegata a un PersonaggioMD reale né usata per altro: serve a evitare di
+	 * dover istanziare un Personaggio ad-hoc ogni volta che serve solo conoscere questi dati (es. ricalcolo
+	 * massivo degli attributi secondari in fase di caricamento, o le statistiche ridisegnate a ogni frame).
 	 */
 	public Personaggio getMoltiplicatoriDiClasse() {
 		if (moltiplicatoriDiClasse == null) {
 			moltiplicatoriDiClasse = getIstanza(1);
 		}
 		return moltiplicatoriDiClasse;
+	}
+
+	public String getNomeSingolare() {
+		return getMoltiplicatoriDiClasse().getNomeSingolare();
+	}
+
+	public String getNomePlurale() {
+		return getMoltiplicatoriDiClasse().getNomePlurale();
 	}
 
 	void setQuantitaMassima(int quantitaMassima) {
