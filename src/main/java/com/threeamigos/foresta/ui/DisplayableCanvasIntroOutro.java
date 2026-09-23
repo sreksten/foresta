@@ -79,6 +79,17 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 			disegnaStringaCentrataConACapoAutomatico(graphics, messaggio.toLowerCase(), 20);
 	}
 
+	/**
+	 * Testo centrato in alto, con a capo automatico, nell'alfabeto grande dei messaggi:
+	 * per chi compone una schermata attorno al testo (vedi DisplayableCanvasIntermezzo).
+	 * Non tocca il messaggio corrente di questo riquadro.
+	 */
+	void scriviTestoCentrato(Graphics2D graphics, String testo) {
+		if (testo != null && !testo.isEmpty()) {
+			disegnaStringaCentrataConACapoAutomatico(graphics, testo.toLowerCase(), 20);
+		}
+	}
+
 	void statistiche(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
 		int locXOffset = xOffset;
@@ -219,7 +230,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		}
 	}
 
-	private void disegnaOmbraDelDrago(Graphics2D graphics) {
+	void disegnaOmbraDelDrago(Graphics2D graphics) {
 		Image d = ImageCache.ombraDelDrago;
 		graphics.drawImage(d, (width - d.getWidth(null)) >> 1, (height - d.getHeight(null)) >> 1, null);
 	}

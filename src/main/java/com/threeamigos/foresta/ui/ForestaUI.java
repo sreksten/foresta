@@ -203,9 +203,9 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	private void gestisciEventoPaginaIntermezzo(NotificaPaginaIntermezzo evento) {
-		// A tutto schermo sull'ombra del drago, come i messaggi grandi; il ritorno al
-		// gioco arriva con InternoMostraSchermataGioco dopo l'ultima pagina
-		displayableCanvas.scriviGrande(evento.getTesto());
+		// A tutto schermo, testo e personaggi; il ritorno al gioco arriva con
+		// InternoMostraSchermataGioco dopo l'ultima pagina
+		displayableCanvas.mostraPaginaIntermezzo(evento.getPagina());
 	}
 
 	private void gestisciEventoParagrafo(NotificaTestoParagrafo evento) {

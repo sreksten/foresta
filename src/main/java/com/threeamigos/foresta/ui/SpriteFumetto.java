@@ -62,6 +62,16 @@ public class SpriteFumetto extends SpriteBase {
 
     @Override
     protected BufferedImage buildImage() {
+        BufferedImage nuvola = costruisciNuvola(testo, larghezza, font, colore);
+        this.altezza = nuvola.getHeight();
+        return nuvola;
+    }
+
+    /**
+     * La nuvola del fumetto, senza la punta: un rettangolo bianco smussato con il testo
+     * spezzato su più righe entro la larghezza massima.
+     */
+    static BufferedImage costruisciNuvola(String testo, int larghezza, DoomdarkFont font, DoomdarkColorModel.Color colore) {
         // Costruzione del rettangolo
         final int larghezzaInterna = larghezza - 2 * DIMENSIONE_SMUSSAMENTO_BORDO;
         List<String> parti = FontTool.split(font, testo, larghezzaInterna);
@@ -89,7 +99,6 @@ public class SpriteFumetto extends SpriteBase {
         }
         graphics.dispose();
 
-        this.altezza = altezzaCostruita;
         return immagineRisultante;
     }
 
@@ -104,6 +113,15 @@ public class SpriteFumetto extends SpriteBase {
         final int y = Math.round(yf);
         g.drawImage(immagine, x, y - immagine.getHeight(null), null);
 
+        disegnaPunta(g, x, y, larghezza, altezza, puntaVersoX, puntaVersoY);
+    }
+
+    /**
+     * La punta del fumetto, dal bordo della nuvola verso il punto indicato. (x, y) è
+     * l'angolo IN BASSO a sinistra della nuvola, come in CoordinateFumetto; se il punto
+     * cade dentro la nuvola la punta non viene disegnata.
+     */
+    static void disegnaPunta(Graphics2D g, int x, int y, int larghezza, int altezza, int puntaVersoX, int puntaVersoY) {
         final int limiteSinistro = x;
         final int limiteDestro = x + larghezza;
         final int limiteSuperiore = y - altezza;

@@ -3,6 +3,7 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
+import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
 import com.threeamigos.foresta.motore.AutomaInventario;
@@ -50,7 +51,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		STATO_PUNTEGGI,
 		STATO_INVENTARIO,
 		STATO_ARMAIOLO,
-		STATO_ALCHIMISTA
+		STATO_ALCHIMISTA,
+		STATO_INTERMEZZO
 	}
 
 	private StatoDisplayableCanvas stato;
@@ -72,6 +74,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final transient DisplayableCanvasArmaiolo armaiolo;
 	private final transient DisplayableCanvasScambiatoreConsumabili alchimista;
 	private final transient DisplayableCanvasBarraIcone barraIcone;
+	private final transient DisplayableCanvasIntermezzo intermezzo;
 
 	private final ArrayList<SpriteInterface> sprites;
 	private final List<SpriteAnnuncioGlobale> codaAnnunciGlobali = new ArrayList<>();
@@ -121,6 +124,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 		Rectangle riquadroIntroOutroRect = new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto);
 		mappaCoordinateElementiGrafici.put(riquadroIntroOutro, riquadroIntroOutroRect);
+
+		intermezzo = new DisplayableCanvasIntermezzo(larghezzaContenuto, altezzaContenuto, riquadroIntroOutro);
+		mappaCoordinateElementiGrafici.put(intermezzo, new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto));
 
 		int elementoX = ImageCache.SPACING;
 		int elementoY = ImageCache.SPACING;
@@ -388,6 +394,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO || stato == StatoDisplayableCanvas.STATO_MAPPA
 					|| stato == StatoDisplayableCanvas.STATO_INVENTARIO || stato == StatoDisplayableCanvas.STATO_ARMAIOLO
 					|| stato == StatoDisplayableCanvas.STATO_ALCHIMISTA
+					|| stato == StatoDisplayableCanvas.STATO_INTERMEZZO
 					|| annuncioGlobaleAttivo != null || !codaAnnunciGlobali.isEmpty()) {
 				repaint();
 			}
@@ -554,6 +561,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		} else if (stato == StatoDisplayableCanvas.STATO_ALCHIMISTA) {
 			alchimista.disegnaInventario(graphics);
 			disegnaFumetto(graphics);
+		} else if (stato == StatoDisplayableCanvas.STATO_INTERMEZZO) {
+			intermezzo.disegna(graphics);
+			disegnaFumetto(graphics);
 		}
 		disegnaAnnuncioGlobale(graphics);
 		barraIcone.disegna(graphics);
@@ -580,6 +590,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 		if (stato == StatoDisplayableCanvas.STATO_ALCHIMISTA) {
 			return alchimista;
+		}
+		if (stato == StatoDisplayableCanvas.STATO_INTERMEZZO) {
+			return intermezzo;
 		}
 		return riquadroIntroOutro;
 	}
@@ -614,6 +627,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	public void iniziaGioco() {
+		// Se si torna al gioco da un intermezzo, le sue immagini non servono più
+		intermezzo.svuota();
 		stato = StatoDisplayableCanvas.STATO_IN_GIOCO;
 		abortisciFumetto();
 		repaint();
@@ -710,6 +725,12 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		stato = StatoDisplayableCanvas.STATO_PUNTEGGI;
 		// Il motore torna subito all'intro: che parta dalla classifica appena aggiornata
 		introDallaClassifica = true;
+		repaint();
+	}
+
+	public void mostraPaginaIntermezzo(PaginaIntermezzo pagina) {
+		stato = StatoDisplayableCanvas.STATO_INTERMEZZO;
+		intermezzo.mostra(pagina);
 		repaint();
 	}
 

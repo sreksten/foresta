@@ -11,6 +11,7 @@ import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
+import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
@@ -92,7 +93,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	// L'intermezzo in corso, la pagina mostrata, e dove riprendere quando non ce ne sono altri
 	private Intermezzo intermezzoCorrente;
-	private List<String> pagineIntermezzo;
+	private List<PaginaIntermezzo> pagineIntermezzo;
 	private int paginaIntermezzo;
 	private MomentoIntermezzo momentoIntermezzo;
 	private Stato statoDopoIntermezzi;
@@ -406,7 +407,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 */
 	private Esito avviaProssimoIntermezzo(MomentoIntermezzo momento, Stato statoDopo) {
 		Intermezzo intermezzo;
-		List<String> pagine;
+		List<PaginaIntermezzo> pagine;
 		do {
 			intermezzo = RegistroIntermezzi.getProssimoIntermezzo(momento);
 			if (intermezzo == null) {
@@ -436,11 +437,30 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		BusEventi.pubblica(new NotificaPaginaIntermezzo(pagineIntermezzo.get(paginaIntermezzo),
 				paginaIntermezzo + 1, pagineIntermezzo.size()));
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
-		int secondi = intermezzoCorrente.getSecondiPerPagina();
+		double secondi = secondiPaginaIntermezzo(pagineIntermezzo.get(paginaIntermezzo));
 		if (secondi > 0) {
 			// Riavviato a ogni pagina: un click riporta a zero il conto alla rovescia
-			temporizzatore.iniziaDopo(secondi * 1_000);
+			temporizzatore.iniziaDopo((int) Math.ceil(secondi * 1_000));
+		} else {
+			// Pagina che avanza solo al click: non deve scattare il timer della precedente
+			temporizzatore.termina();
 		}
+	}
+
+	/**
+	 * Dopo quanti secondi la pagina avanza da sola (0 = solo al click): la durata fissata
+	 * dalla pagina se c'è; altrimenti, se l'intermezzo avanza da solo, almeno il tempo per
+	 * pagina dell'intermezzo e comunque non prima che dialoghi e animazioni siano finiti.
+	 */
+	private double secondiPaginaIntermezzo(PaginaIntermezzo pagina) {
+		if (pagina.hasDurata()) {
+			return pagina.getDurata();
+		}
+		int secondiPerPagina = intermezzoCorrente.getSecondiPerPagina();
+		if (secondiPerPagina <= 0) {
+			return 0;
+		}
+		return Math.max(secondiPerPagina, pagina.getDurataContenuto());
 	}
 
 	/**
@@ -998,7 +1018,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Esito entraInStatoGiocoPerso2() {
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
 		BusEventi.pubblica(new NotificaFineGioco(false));
-		temporizzatore.inizia(5_000);
+		// La prima pagina deve restare per un periodo intero, come nell'intro
+		temporizzatore.iniziaDopo(5_000);
 		return Esito.FERMATI;
 	}
 
@@ -1026,7 +1047,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito entraInStatoGiocoVinto2() {
 		BusEventi.pubblica(new NotificaFineGioco(true));
-		temporizzatore.inizia(5_000);
+		// La prima pagina deve restare per un periodo intero, come nell'intro
+		temporizzatore.iniziaDopo(5_000);
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
 		return Esito.FERMATI;
 	}

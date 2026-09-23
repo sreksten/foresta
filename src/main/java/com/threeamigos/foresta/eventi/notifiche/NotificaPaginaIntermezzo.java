@@ -2,6 +2,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 
 /**
  * Una pagina di un intermezzo, da mostrare a tutto schermo finché non arriva la
@@ -11,22 +12,22 @@ import com.threeamigos.foresta.eventi.TipoEvento;
  */
 public class NotificaPaginaIntermezzo extends EventoBase {
 
-    private final String testo;
+    private final PaginaIntermezzo pagina;
     private final int numeroPagina;
     private final int totalePagine;
 
     /**
      * @param numeroPagina da 1 a totalePagine
      */
-    public NotificaPaginaIntermezzo(String testo, int numeroPagina, int totalePagine) {
+    public NotificaPaginaIntermezzo(PaginaIntermezzo pagina, int numeroPagina, int totalePagine) {
         super(TipoEvento.NOTIFICA_PAGINA_INTERMEZZO);
-        this.testo = testo;
+        this.pagina = pagina;
         this.numeroPagina = numeroPagina;
         this.totalePagine = totalePagine;
     }
 
-    public String getTesto() {
-        return testo;
+    public PaginaIntermezzo getPagina() {
+        return pagina;
     }
 
     public int getNumeroPagina() {

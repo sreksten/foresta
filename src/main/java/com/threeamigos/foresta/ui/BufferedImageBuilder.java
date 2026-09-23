@@ -14,7 +14,26 @@ public class BufferedImageBuilder {
 
 	private static final GraphicsConfiguration gc = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice().getDefaultConfiguration();
 
+	/**
+	 * Carica una risorsa grafica all'avvio: un'immagine mancante è un errore fatale.
+	 */
 	public static BufferedImage buildBufferedImage(String resource) {
+		if (resource != null && !resource.isEmpty()) {
+			BufferedImage immagine = provaACaricare(resource);
+			if (immagine == null) {
+				System.exit(0);
+			}
+			return immagine;
+		}
+		return null;
+	}
+
+	/**
+	 * Carica una risorsa grafica senza fermare il gioco se manca o non è leggibile:
+	 * l'errore viene registrato e si ottiene null. Adatto alle risorse caricate al volo,
+	 * come quelle degli intermezzi.
+	 */
+	public static BufferedImage provaACaricare(String resource) {
 		if (resource != null && !resource.isEmpty()) {
 			try {
 				InputStream in = BufferedImageBuilder.class.getResourceAsStream("/com/threeamigos/foresta/img/" + resource);
@@ -30,7 +49,6 @@ public class BufferedImageBuilder {
 				return copy;
 			} catch (Exception e) {
 				Logger.log(e);
-				System.exit(0);
 			}
 		}
 		return null;
