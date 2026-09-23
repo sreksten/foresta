@@ -11,19 +11,25 @@ public enum TipoArtefatto {
     ASCIA(SupertipoArtefatto.ARMA, TipoDanno.TAGLIENTE, "Ascia", "impugna"),
     LANCIA(SupertipoArtefatto.ARMA, TipoDanno.PERFORANTE, "Lancia", "impugna"),
 
-    // FIXME se si passa ARMA occorre passare il tipo di danno, ma questo dipenderebbe un po' dall'incantesimo...
+    BASTONE_MAGICO(SupertipoArtefatto.ARMA, TipoDanno.CONTUNDENTE, "Bastone magico", "impugna"),
+    /**
+     * FIXME se si passa ARMA occorre passare il tipo di danno, ma questo dipenderebbe un po' dall'incantesimo...
+     * Ad ogni modo potrebbe essere considerato un'arma secondaria.
+     */
     LIBRO_MAGICO(SupertipoArtefatto.ALTRO, "Libro magico", "porta"),
-    BASTONE_MAGICO(SupertipoArtefatto.ALTRO, "Bastone magico", "impugna"),
 
     SCUDO(SupertipoArtefatto.SCUDO, "Scudo", "porta"),
 
-    ELMO(SupertipoArtefatto.ARMATURA, "Elmo", "indossa"),
+    ELMO(SupertipoArtefatto.ELMO, "Elmo", "indossa"),
+
     ARMATURA(SupertipoArtefatto.ARMATURA, "Armatura", "indossa"),
     VESTE(SupertipoArtefatto.ARMATURA, "Veste", "indossa"),
 
     ANELLO(SupertipoArtefatto.ALTRO, "Anello", "indossa"),
     TALISMANO(SupertipoArtefatto.ALTRO, "Talismano", "possiede"),
-    NINNOLO(SupertipoArtefatto.ALTRO, "Ninnolo", "ha con se");
+    NINNOLO(SupertipoArtefatto.ALTRO, "Ninnolo", "ha con se"),
+
+    INCANTAMENTO(SupertipoArtefatto.INCANTAMENTO, "Incantamento", "porta con se");
 
     private final SupertipoArtefatto supertipo;
     private final TipoDanno tipoDanno;
