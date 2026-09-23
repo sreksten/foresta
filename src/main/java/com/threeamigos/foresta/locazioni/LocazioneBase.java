@@ -266,39 +266,47 @@ public abstract class LocazioneBase implements Locazione {
 
 		case CHI_BEVE_POZIONE_SALUTE:
 			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_SALUTE");
-			if (azione != Comando.ANNULLA) {
-				gruppo.consumaPozioneSalute(azione);
-			}
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
-			impostaAzioni(gruppo, gruppoAvversario, null);
-			return Stato.IN_LOCAZIONE;
+			if (azione == Comando.ANNULLA) {
+				// Rinunciare alla pozione non è un'azione: nessun turno trascorre,
+				// si ripresentano solo i comandi della locazione.
+				ripresentaComandi();
+				return Stato.IN_LOCAZIONE;
+			}
+			gruppo.consumaPozioneSalute(azione);
+			// Bere la pozione fa trascorrere un turno: il suo esito (per esempio la morte del
+			// capo o dell'ultimo avversario per un effetto di stato) va restituito all'automa.
+			return impostaAzioni(gruppo, gruppoAvversario, null);
 
 		case CHI_BEVE_POZIONE_SALUTE_GRANDE:
 			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_SALUTE_GRANDE");
-			if (azione != Comando.ANNULLA) {
-				gruppo.consumaPozioneSaluteGrande(azione);
-			}
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
-			impostaAzioni(gruppo, gruppoAvversario, null);
-			return Stato.IN_LOCAZIONE;
+			if (azione == Comando.ANNULLA) {
+				ripresentaComandi();
+				return Stato.IN_LOCAZIONE;
+			}
+			gruppo.consumaPozioneSaluteGrande(azione);
+			return impostaAzioni(gruppo, gruppoAvversario, null);
 
 		case CHI_BEVE_POZIONE_MAGIA:
 			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_MAGIA");
-			if (azione != Comando.ANNULLA) {
-				gruppo.consumaPozioneMagia(azione);
-			}
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
-			impostaAzioni(gruppo, gruppoAvversario, null);
-			return Stato.IN_LOCAZIONE;
+			if (azione == Comando.ANNULLA) {
+				ripresentaComandi();
+				return Stato.IN_LOCAZIONE;
+			}
+			gruppo.consumaPozioneMagia(azione);
+			return impostaAzioni(gruppo, gruppoAvversario, null);
 
 		case CHI_BEVE_POZIONE_MAGIA_GRANDE:
 			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_MAGIA_GRANDE");
-			if (azione != Comando.ANNULLA) {
-				gruppo.consumaPozioneMagiaGrande(azione);
-			}
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
-			impostaAzioni(gruppo, gruppoAvversario, null);
-			return Stato.IN_LOCAZIONE;
+			if (azione == Comando.ANNULLA) {
+				ripresentaComandi();
+				return Stato.IN_LOCAZIONE;
+			}
+			gruppo.consumaPozioneMagiaGrande(azione);
+			return impostaAzioni(gruppo, gruppoAvversario, null);
 
 		case CHI_FORMULA:
 			Logger.log("LocazioneBase.CHI_FORMULA");
@@ -590,6 +598,11 @@ public abstract class LocazioneBase implements Locazione {
 		impostaComandiPossibili();
 
 		return statoLocazione == StatoLocazione.IN_COMBATTIMENTO ? Stato.IN_COMBATTIMENTO : Stato.IN_LOCAZIONE;
+	}
+
+	@Override
+	public void ripresentaComandi() {
+		impostaComandiPossibili();
 	}
 
 	private void impostaComandiPossibili() {
@@ -1020,7 +1033,9 @@ public abstract class LocazioneBase implements Locazione {
 				sb.append('.');
 				BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
 				BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
-				break;
+				// Ridescrivere la locazione non è un'azione: si torna subito, senza passare
+				// dalla coda di impostaAzioni che farebbe trascorrere un turno.
+				return Stato.IN_LOCAZIONE;
 
 			default:
 				break;

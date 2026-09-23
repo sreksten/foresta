@@ -72,6 +72,16 @@ public class Alchimista extends LocazioneBase implements Locazione {
 		BusEventi.pubblica(new NotificaTestoParagrafo(g.chiMaiuscolo() + " arriva alla bottega di un alchimista."));
 	}
 
+	/**
+	 * La bottega non offre né mappa né inventario, quindi il gruppo non può tornarci da
+	 * una schermata interrotta. Il comportamento ereditato da LocazioneBase pubblicherebbe
+	 * i comandi di una locazione comune (combattimento, fuga...), qui privi di senso.
+	 */
+	@Override
+	public void ripresentaComandi() {
+		throw new IllegalStateException("Alchimista::ripresentaComandi(): la bottega non offre mappa né inventario");
+	}
+
 	@Override
 	public Stato impostaAzioni(GruppoGiocatore ignorato, GruppoAvversario ignorato2, Comando azione) {
 		switch (stato) {

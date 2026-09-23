@@ -131,6 +131,18 @@ public abstract class Citta extends LocazioneUnica {
 		return Stato.IN_LOCAZIONE;
 	}
 
+	/**
+	 * Mappa e inventario sono raggiungibili solo dalla piazza: dentro la locanda o
+	 * dalle botteghe la città non offre quei comandi.
+	 */
+	@Override
+	public void ripresentaComandi() {
+		if (stato != StatoInCitta.IN_PIAZZA) {
+			throw new IllegalStateException("Citta::ripresentaComandi(): la città non è in piazza ma in " + stato);
+		}
+		impostaAzioniCitta();
+	}
+
 	public TipoRiposo getTipoRiposo() {
 		throw new IllegalArgumentException("Non si può riposare all'aperto in città");
 	}

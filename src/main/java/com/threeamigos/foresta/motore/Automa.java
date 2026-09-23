@@ -112,11 +112,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriIngresso.put(Stato.INVENTARIO, this::entraInStatoInventario);
 		// Uscendo da MAPPA o INVENTARIO aperti mentre si era IN_LOCAZIONE si torna qui
 		// tramite CONTINUA_CON_INGRESSO (statoPrecedente vale IN_LOCAZIONE), con comando
-		// nullo: serve quindi rifare esattamente ciò che fa INIZIO_LOCAZIONE dopo aver
-		// scelto un'azione, altrimenti i comandi disponibili della locazione (impostati
-		// da impostaAzioni/impostaComandiPossibili) restano quelli dell'ultima chiamata
-		// prima di aprire la mappa, e il giocatore deve cliccare due volte perché la UI
-		// si aggiorni davvero.
+		// nullo: bisogna ripubblicare i comandi della locazione, altrimenti restano quelli
+		// della mappa e il giocatore deve cliccare due volte perché la UI si aggiorni.
 		gestoriIngresso.put(Stato.IN_LOCAZIONE, this::entraInStatoInLocazione);
 		gestoriIngresso.put(Stato.CONFERMA_USCITA, () -> Esito.FERMATI);
 		gestoriIngresso.put(Stato.GIOCO_PERSO, this::entraInStatoGiocoPerso);
@@ -137,8 +134,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriComando.put(Stato.INCANTESIMO_SCELTO, this::gestisciComandoInStatoIncantesimoScelto);
 		gestoriComando.put(Stato.ATTESA_SI_NO, this::gestisciComandoInStatoAttesaSiNo);
 		gestoriComando.put(Stato.FINE_LOCAZIONE, this::eseguiFineLocazione);
-		gestoriComando.put(Stato.ATTESA_PASSI, this::gestisciComandoInStatoAttesaPassi);
-		gestoriComando.put(Stato.IN_CAMMINO, this::gestisciComandoInStatoInCammino);
+		gestoriComando.put(Stato.SCELTA_DIREZIONE, this::gestisciComandoInStatoSceltaDirezione);
+		gestoriComando.put(Stato.SCELTA_PASSI, this::gestisciComandoInStatoSceltaPassi);
 		gestoriComando.put(Stato.ATTESA_POZIONE_SALUTE, this::gestisciComandoInStatoAttesaPozioneSalute);
 		gestoriComando.put(Stato.ATTESA_POZIONE_SALUTE_GRANDE, this::gestisciComandoInStatoAttesaPozioneSaluteGrande);
 		gestoriComando.put(Stato.ATTESA_POZIONE_MAGIA, this::gestisciComandoInStatoAttesaPozioneMagia);
@@ -387,28 +384,21 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		 * che tiene traccia del suo stato.
 		 */
 		stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, null);
-		if (stato == Stato.FINE_LOCAZIONE) {
-			return Esito.CONTINUA_CON_INGRESSO;
-		}
 		/*
-		 * A questo punto il giocatore si trova davanti la scelta delle
-		 * azioni che puo' intraprendere.
+		 * Se si resta IN_LOCAZIONE il giocatore si trova davanti la scelta
+		 * delle azioni che puo' intraprendere.
 		 */
-		return Esito.FERMATI;
+		return esitoDaStatoLocazione(stato);
 	}
 
+	/**
+	 * Il ritorno da mappa o inventario non è un'azione del giocatore: la locazione va solo
+	 * ripresentata, non fatta avanzare. Per questo non si usa impostaAzioni(..., null), che
+	 * in LocazioneBase fa trascorrere un turno (danni da effetti di stato, possibile fine
+	 * della locazione o del gioco) e nelle altre locazioni può eseguire il passo successivo.
+	 */
 	private Esito entraInStatoInLocazione() {
-		stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, null);
-		if (stato != Stato.IN_LOCAZIONE) {
-			if (stato == Stato.IN_COMBATTIMENTO) {
-				temporizzatore.inizia(1_000);
-			} else {
-				if (stato == Stato.GIOCO_PERSO || stato == Stato.GIOCO_VINTO || stato == Stato.FINE_LOCAZIONE) {
-					temporizzatore.termina();
-				}
-				return Esito.CONTINUA_CON_INGRESSO;
-			}
-		}
+		locazioneCorrente.ripresentaComandi();
 		return Esito.FERMATI;
 	}
 
@@ -426,17 +416,27 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		 * LOCAZIONE_COMPLETA
 		 */
 		stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, comando);
-		if (stato != Stato.IN_LOCAZIONE) {
-			if (stato == Stato.IN_COMBATTIMENTO) {
-				temporizzatore.inizia(1_000);
-			} else {
-				if (stato == Stato.GIOCO_PERSO || stato == Stato.GIOCO_VINTO || stato == Stato.FINE_LOCAZIONE) {
-					temporizzatore.termina();
-				}
-				return Esito.CONTINUA_CON_INGRESSO;
-			}
+		return esitoDaStatoLocazione(stato);
+	}
+
+	/**
+	 * Traduce lo stato restituito da Locazione.impostaAzioni nel passo successivo
+	 * dell'automa: IN_LOCAZIONE attende il giocatore, IN_COMBATTIMENTO avvia il battito
+	 * dei round e attende, qualunque altro stato viene eseguito subito (fermando il
+	 * battito se la locazione o il gioco sono finiti).
+	 */
+	private Esito esitoDaStatoLocazione(Stato statoLocazione) {
+		if (statoLocazione == Stato.IN_LOCAZIONE) {
+			return Esito.FERMATI;
 		}
-		return Esito.FERMATI;
+		if (statoLocazione == Stato.IN_COMBATTIMENTO) {
+			temporizzatore.inizia(1_000);
+			return Esito.FERMATI;
+		}
+		if (statoLocazione == Stato.GIOCO_PERSO || statoLocazione == Stato.GIOCO_VINTO || statoLocazione == Stato.FINE_LOCAZIONE) {
+			temporizzatore.termina();
+		}
+		return Esito.CONTINUA_CON_INGRESSO;
 	}
 
 	private Esito gestisciComandoInStatoInCombattimento(Comando comando) {
@@ -598,13 +598,13 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Esito entraInStatoAttesaDirezione() {
-		stato = Stato.ATTESA_PASSI;
+		stato = Stato.SCELTA_DIREZIONE;
 		BusEventi.pubblica(new NotificaTestoParagrafo(gruppo.chiMaiuscolo() + " se ne va. In quale direzione si incammina?"));
 		BusEventi.pubblica(new RichiestaSelezioneDirezione(getComandiPossibiliInStatoAttesaDirezione()));
 		return Esito.FERMATI;
 	}
 
-	private Esito gestisciComandoInStatoAttesaPassi(Comando comando) {
+	private Esito gestisciComandoInStatoSceltaDirezione(Comando comando) {
 		// Occorre memorizzare l'informazione sulla direzione
 		Collection<Comando> comandiPossibiliPerNumeroPassi = null;
 		switch (comando) {
@@ -674,14 +674,20 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			default:
 				break;
 		}
-		stato = Stato.IN_CAMMINO;
+		stato = Stato.SCELTA_PASSI;
 		if (comandiPossibiliPerNumeroPassi != null) {
 			BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibiliPerNumeroPassi));
 		}
 		return Esito.FERMATI;
 	}
 
-	private Esito gestisciComandoInStatoInCammino(Comando comando) {
+	private Esito gestisciComandoInStatoSceltaPassi(Comando comando) {
+		if (comando == Comando.ANNULLA) {
+			// Scegliere la direzione ha solo memorizzato il campo direzione, che verrà
+			// riscritto alla prossima scelta: si può tornare indietro senza nulla da disfare.
+			stato = Stato.ATTESA_DIREZIONE;
+			return Esito.CONTINUA_CON_INGRESSO;
+		}
 		int passi = comando.ordinal() - Comando.NUMERO_1.ordinal() + 1;
 		switch (direzione) {
 			case NORD:
@@ -1185,6 +1191,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (numeroPassi > 4) {
 			comandiPossibili.add(Comando.NUMERO_5);
 		}
+		// Permette di tornare alla scelta della direzione (vedi gestisciComandoInStatoSceltaPassi)
+		comandiPossibili.add(Comando.ANNULLA);
 		return comandiPossibili;
 	}
 

@@ -698,7 +698,7 @@ NOTIZIE_LOCANDA
     LG11-Fuga di Notizie - Le guardie cittadine indagano su un sospetto picco di furti di cucchiaini da brodo avvenuto subito dopo la partenza di LADRO dalla locanda NOME_LOCANDA.
     LG12-Maledizione della Domenica - MAGO ha risposto a un saluto cordiale dell'oste della locanda NOME_LOCANDA lanciando un anatema arcano per errore, sintonizzando la voce del locandiere sulle frequenze di un'arpia.
     LG13-Rissa per Gelosia - Scoppiato il caos quando LADRO ha tentato di borseggiare il proprietario della locanda NOME_LOCANDA, scoprendo che le tasche di quest'ultimo erano piene di trappole per topi vive.
-    LG14-Recensione Negativa: L'oste della locanda NOME_LOCANDA dichiara alla stampa locale: "“L'eroe della profezia ha l'eleganza di un troll in un negozio di ampolle dell'alchimista. Non torni più\"".
+    LG14-Recensione Negativa - L'oste della locanda NOME_LOCANDA dichiara alla stampa locale: "“L'eroe della profezia ha l'eleganza di un troll in un negozio di ampolle dell'alchimista. Non torni più\"".
     LG15-Stato d'Emergenza - Bandita la vendita di idromele di fuoco alla locanda NOME_LOCANDA dopo che EROE, in preda ai postumi, ha tentato di scambiare il castello del Drago per una gigantesca locanda a due piani.
     LG16-Lamentele d'Igiene - L'ispezione cittadina sigilla la cucina della locanda NOME_LOCANDA. EROE ha fatto notare che il "“brodo primordiale\"" bolliva ininterrottamente dal lontano impero precedente.
     LG17-Panico Finanziario - Sgominata una banda di falsari nella locanda NOME_LOCANDA. EROE ha tentato di pagare un pernottamento usando scaglie di Viverna dipinte con l'oro finto dell'alchimista.
@@ -709,8 +709,8 @@ NOTIZIE_LOCANDA
     LG22-Protesta dei Sindacati - Gli osti della Foresta firmano una petizione per vietare l'ingresso a EROE, definito "“un flagello per le scorte di noccioline salate\"".
     LG23-Rissa d'Orgoglio - Scontro totale scatenato alla locanda NOME_LOCANDA da EROE che ha osato definire l'idromele della casa "“un onesto disinfettante per zoccoli di Centauro\"".
     LG24-Maledizione della Locanda - Un anatema maldestro scagliato da MAGO alla locanda NOME_LOCANDA ha fuso insieme gli sgabelli di tre avventori, costringendoli a muoversi in sincrono come un bizzarro mostro a sei gambe.
-    LG25-Lamentele sul Servizio: EROE lascia una recensione pessima sulla porta di legno della locanda NOME_LOCANDA: "“L'oste ha lo sguardo truce e la zuppa sembrava volermi mordere. Una stella\"".
-    LG26-Rissa per Mancata Igiene: Devastata la sala comune alla locanda NOME_LOCANDA dopo che GUERRIERO ha usato lo scudo come piatto da portata, accusando l'oste di lavare i vassoi solo durante gli anni bisesti.
+    LG25-Lamentele sul Servizio - EROE lascia una recensione pessima sulla porta di legno della locanda NOME_LOCANDA: "“L'oste ha lo sguardo truce e la zuppa sembrava volermi mordere. Una stella\"".
+    LG26-Rissa per Mancata Igiene - Devastata la sala comune alla locanda NOME_LOCANDA dopo che GUERRIERO ha usato lo scudo come piatto da portata, accusando l'oste di lavare i vassoi solo durante gli anni bisesti.
     LG27-Incidente Alchemico - EROE ha scambiato una fiala di fertilizzante concentrato dell'Alchimista per uno sciroppo d'acero, causando la crescita istantanea di muschio lussureggiante sulla lingua del bardo della locanda NOME_LOCANDA.
     LG28-Rissa per Futili Motivi - Volano [VOLANO] alla locanda NOME_LOCANDA dopo che LADRO ha affermato che la birra della casa fosse in realtà acqua piovana filtrata attraverso i calzini usati di un Centauro.
     LG29-Rissa d'Orgoglio - Violento scontro scatenato da MAGO, che ha tentato di pagare il conto alla locanda NOME_LOCANDA dimostrando matematicamente che l'oro richiesto dall'oste fosse un'illusione ottica creata dal fumo della cucina.
@@ -775,7 +775,7 @@ NOTIZIE_CITTA
     CG6-Lamentele dei Nani - I carpentieri nani del borgo aprono una vertenza formale: EROE ha usato i loro preziosi strumenti di precisione per aprirsi una scatola di fagioli stufati risalente all'era precedente.
     CG7-Incidente di Rifornimento - L'Alchimista cittadino esprime profondo sdegno. EROE ha svuotato l'intera cisterna dell'acqua distillata per farsi un pediluvio rilassante dopo una camminata nella Palude.
     CG8-Lamentele di Vicinato - Gli abitanti del borgo protestano ufficialmente. EROE ha tentato di accordare un liuto usando una morsa da fabbro, producendo ultrasuoni che hanno terrorizzato i pipistrelli delle Rovine.
-    CG9Lamentele della Guardia - Le pattuglie cittadine denunciano il furto di tre elmi d'ordinanza, usati da EROE la sera prima come pentoloni improvvisati per uno stufato di funghi allucinogeni clandestino.
+    CG9-Lamentele della Guardia - Le pattuglie cittadine denunciano il furto di tre elmi d'ordinanza, usati da EROE la sera prima come pentoloni improvvisati per uno stufato di funghi allucinogeni clandestino.
     CG10-Truffa Leggendaria - Ricercato un avventuriero nella Foresta. EROE ha venduto a un viandante un pezzo di vetro colorato spacciandolo per un frammento dell'anima disintegrata dell'OmbraFiamma.
     CG11-Rissa da Scommessa - Scontro violento nato dopo che EROE ha scommesso dieci monete che GUERRIERO avrebbe potuto inghiottire un intero uovo di Viverna senza masticarlo.
     CG12-Rissa da Spettatori - Pugni e morsi tra i nani dopo che BARDO ha interrotto una solenne ballata militare per intonare un jingle commerciale sulle pozioni di salute dell'Alchimista.

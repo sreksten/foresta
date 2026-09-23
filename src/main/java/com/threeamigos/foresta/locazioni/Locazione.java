@@ -57,6 +57,14 @@ public interface Locazione {
     Stato impostaAzioni(GruppoGiocatore g, GruppoAvversario gng, Comando azione);
 
 	/**
+	 * Ripubblica i comandi disponibili nello stato corrente della locazione, senza farla
+	 * avanzare: a differenza di impostaAzioni(..., null) non trascorre alcun turno (niente
+	 * danni da effetti di stato, niente cambi di stato). Serve all'automa quando il gruppo
+	 * torna alla locazione da una schermata che l'ha solo interrotta, come la mappa o l'inventario.
+	 */
+    void ripresentaComandi();
+
+	/**
 	 * Il giocatore ha portato in fondo la locazione o è fuggito?
 	 */
     boolean isCompleta();

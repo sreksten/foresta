@@ -155,6 +155,16 @@ public class Locanda extends LocazioneBase {
 		return g.chiMaiuscolo() + " è alla locanda “" + nome + '"';
 	}
 
+	/**
+	 * La locanda non offre né mappa né inventario, quindi il gruppo non può tornarci da
+	 * una schermata interrotta. Il comportamento ereditato da LocazioneBase pubblicherebbe
+	 * i comandi di una locazione comune (combattimento, fuga...), qui privi di senso.
+	 */
+	@Override
+	public void ripresentaComandi() {
+		throw new IllegalStateException("Locanda::ripresentaComandi(): la locanda non offre mappa né inventario");
+	}
+
 	@Override
 	public Stato impostaAzioni(GruppoGiocatore gruppo, GruppoAvversario gng, Comando azione) {
 		switch (stato) {

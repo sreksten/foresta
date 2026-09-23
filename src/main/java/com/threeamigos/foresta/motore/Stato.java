@@ -38,10 +38,12 @@ public enum Stato {
 
 	// Controlla trigger post-locazione
 	FINE_LOCAZIONE,
+	// Pubblica la richiesta della direzione e passa subito a SCELTA_DIREZIONE
 	ATTESA_DIREZIONE,
-	ATTESA_PASSI,
-	
-	IN_CAMMINO,
+	// Attende la direzione (o pozioni, mappa, inventario, accampamento...)
+	SCELTA_DIREZIONE,
+	// Attende il numero di passi; ANNULLA riporta ad ATTESA_DIREZIONE
+	SCELTA_PASSI,
 
 	ATTESA_POZIONE_SALUTE,
 	ATTESA_POZIONE_SALUTE_GRANDE,
