@@ -135,7 +135,10 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		c.setPreferredSize(new Dimension(width, height));
 
 		prompt = new Prompt();
-		jframe.add(prompt);
+		// Nel layered pane, non nel content pane: da fratello del canvas la sua cornice
+		// verrebbe coperta a ogni repaint() del canvas (es. al movimento del mouse), perché
+		// il content pane presume che i figli non si sovrappongano e ridisegna solo il canvas.
+		jframe.getLayeredPane().add(prompt, JLayeredPane.PALETTE_LAYER);
 		prompt.setLocation((width - prompt.getSize().width) / 2, (height - prompt.getSize().height) / 2);
 
 		Logger.log("Orientamento: " + orientamento);
