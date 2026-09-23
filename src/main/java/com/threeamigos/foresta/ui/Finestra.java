@@ -33,6 +33,16 @@ interface Finestra {
         return true;
     }
 
+    /**
+     * Se true, un click viene ritardato di {@code intervalloDoppioClick} millisecondi
+     * per poter distinguere un singolo click da un doppio click (necessario solo a chi
+     * dà un significato diverso a {@link #processaDoppioClick}). Le finestre che non lo
+     * fanno (default) ricevono {@link #processaClick} subito, senza attesa.
+     */
+    default boolean gestisceDoppioClick() {
+        return false;
+    }
+
     default void processaEntrata(int x, int y) {
 //        System.out.println(getNome() + ": processaEntrata(" + x + ", " + y + ")");
     }

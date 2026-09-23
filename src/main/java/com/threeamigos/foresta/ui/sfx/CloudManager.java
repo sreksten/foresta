@@ -19,6 +19,9 @@ public class CloudManager {
 	private static final int NUMERO_NUVOLE = 12;
 
 	private static List<CloudInstance> clouds;
+	// -1 = nessuna chiamata precedente ad aggiorna(): il prossimo impulso non fa
+	// avanzare le nuvole, si limita a registrare il timestamp.
+	private static long ultimoAggiornamentoNanos = -1;
 	private static Rectangle clipCanonico;
 	// Cella della foresta (colonna/riga) a cui corrisponde l'angolo in alto a sinistra di clipCanonico
 	private static int daXCanonico;
@@ -36,11 +39,17 @@ public class CloudManager {
 	}
 
 	public static void aggiorna() {
-		if (clouds != null) {
+		if (clouds == null) {
+			return;
+		}
+		long ora = System.nanoTime();
+		if (ultimoAggiornamentoNanos >= 0) {
+			float secondiTrascorsi = (ora - ultimoAggiornamentoNanos) / 1_000_000_000f;
 			for (CloudInstance cloud : clouds) {
-				cloud.update();
+				cloud.update(secondiTrascorsi);
 			}
 		}
+		ultimoAggiornamentoNanos = ora;
 	}
 
 	/**

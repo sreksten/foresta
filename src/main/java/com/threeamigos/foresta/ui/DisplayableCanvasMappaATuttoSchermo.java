@@ -259,6 +259,11 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 	}
 
 	@Override
+	public boolean gestisceDoppioClick() {
+		return true;
+	}
+
+	@Override
 	public void processaDoppioClick(int x, int y, Finestra.Tasto tasto) {
 		centraSuGiocatore();
 	}

@@ -3,6 +3,7 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.Notizie;
 import com.threeamigos.foresta.motore.modellodati.Notizia;
+import com.threeamigos.foresta.tools.Temporizzatore;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -16,9 +17,11 @@ import java.util.List;
  * separate da un "-" con margini di {@value #LARGHEZZA_MARGINE_SEPARATORE_NOTIZIE}px,
  * incluso dopo l'ultima per un loop continuo), disegnata più volte affiancata (tiling) così che una
  * notizia comincia a comparire da destra mentre la precedente sta ancora
- * uscendo da sinistra, senza mai fermarsi. Nessun parametro di delta-time:
- * come il resto della UI (vedi {@link SpriteBase}), avanza di un passo
- * fisso a ogni chiamata di {@link #disegna}, invocata una volta per repaint.
+ * uscendo da sinistra, senza mai fermarsi. Lo scroll avanza in base al tempo
+ * reale trascorso tra una chiamata di {@link #disegna} e la successiva (non
+ * a un passo fisso per chiamata): {@link #disegna} può essere invocato anche
+ * da un repaint() estraneo all'animatore (es. per l'hover del mouse), quindi
+ * non a un ritmo garantito di una volta per fotogramma.
  */
 class Notiziario {
 
@@ -35,6 +38,9 @@ class Notiziario {
 	private List<Notizia> notizieCostruite = new ArrayList<>();
 	private BufferedImage immagineCorrente;
 	private float x;
+	// -1 = nessuna chiamata precedente (o il notiziario era vuoto): il prossimo
+	// disegna() non fa avanzare lo scroll, si limita a registrare il timestamp.
+	private long ultimoAggiornamentoNanos = -1;
 
 	Notiziario(int larghezza, int altezza) {
 		this.larghezza = larghezza;
@@ -44,6 +50,7 @@ class Notiziario {
 	void disegna(Graphics2D g, int xBanda, int yBanda) {
 		List<Notizia> notizieAttuali = Notizie.getUltimeNotizie();
 		if (notizieAttuali.isEmpty()) {
+			ultimoAggiornamentoNanos = -1;
 			return;
 		}
 
@@ -70,7 +77,12 @@ class Notiziario {
 			}
 			g.setClip(clipOriginale);
 
-			x -= VELOCITA_SCROLL_PX_PER_FRAME;
+			long ora = System.nanoTime();
+			if (ultimoAggiornamentoNanos >= 0) {
+				float secondiTrascorsi = (ora - ultimoAggiornamentoNanos) / 1_000_000_000f;
+				x -= VELOCITA_SCROLL_PX_PER_FRAME * Temporizzatore.FRAME_PER_SECONDO * secondiTrascorsi;
+			}
+			ultimoAggiornamentoNanos = ora;
 			while (x <= -larghezzaTotale) {
 				x += larghezzaTotale;
 			}

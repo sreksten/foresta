@@ -214,6 +214,6 @@ public class SpriteFumetto extends SpriteBase {
     }
 
     void resettaImpulsi() {
-        secondiTrascorsi = 0;
+        resettaTempoTrascorso();
     }
 }

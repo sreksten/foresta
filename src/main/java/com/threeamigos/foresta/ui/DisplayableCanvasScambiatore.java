@@ -223,6 +223,11 @@ abstract class DisplayableCanvasScambiatore implements Finestra {
     abstract void disegnaColonnaPersonaggio(Graphics2D graphics);
 
     @Override
+    public boolean gestisceDoppioClick() {
+        return true;
+    }
+
+    @Override
     public void processaMovimento(int x, int y) {
         mouseX = x;
         mouseY = y;

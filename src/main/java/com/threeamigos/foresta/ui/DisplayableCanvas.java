@@ -992,6 +992,14 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 				return;
 			}
 
+			if (!finestra.gestisceDoppioClick()) {
+				// Nessuna attesa: questa finestra non distingue il doppio click dal singolo,
+				// quindi ogni click va processato subito.
+				finestra.processaClick(x, y, tasto);
+				repaint();
+				return;
+			}
+
 			if (timerClickSingolo != null) {
 				timerClickSingolo.stop();
 				timerClickSingolo = null;

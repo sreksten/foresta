@@ -16,6 +16,12 @@ public abstract class SpriteBase implements SpriteInterface {
 	private float scalaFinale;
 	protected float secondiTrascorsi;
 	protected boolean attivo = true;
+	// -1 = nessuna chiamata precedente ad anima(): il primo impulso non fa avanzare
+	// secondiTrascorsi (idem al comportamento storico a passo fisso), i successivi
+	// misurano il tempo reale trascorso invece di assumere una chiamata ogni 1/30 di
+	// secondo, assunzione non più valida da quando anima() può essere invocato anche
+	// da un repaint() estraneo all'animatore (es. per l'hover del mouse).
+	private long ultimoAggiornamentoNanos = -1;
 
 	/**
 	 * Va richiamato dal costruttore della sottoclasse, dopo {@link #buildImage()},
@@ -97,7 +103,23 @@ public abstract class SpriteBase implements SpriteInterface {
 			g.setRenderingHint(RenderingHints.KEY_INTERPOLATION, interpolazioneOriginale);
 		}
 
-		secondiTrascorsi += 1f / 30;
+		long ora = System.nanoTime();
+		if (ultimoAggiornamentoNanos >= 0) {
+			secondiTrascorsi += (ora - ultimoAggiornamentoNanos) / 1_000_000_000f;
+		}
+		ultimoAggiornamentoNanos = ora;
+	}
+
+	/**
+	 * Azzera il tempo trascorso, per far ripartire da capo dissolvenze/interpolazioni
+	 * (es. un nuovo impulso dello stesso fumetto). Va usato al posto di assegnare
+	 * direttamente {@link #secondiTrascorsi}, perché deve anche invalidare l'ultimo
+	 * timestamp reale registrato: altrimenti la prossima {@link #anima} misurerebbe
+	 * il tempo trascorso da una chiamata precedente al reset, non da esso.
+	 */
+	protected final void resettaTempoTrascorso() {
+		secondiTrascorsi = 0;
+		ultimoAggiornamentoNanos = -1;
 	}
 
 	protected abstract float calcolaAlpha(float secondiTrascorsi);
