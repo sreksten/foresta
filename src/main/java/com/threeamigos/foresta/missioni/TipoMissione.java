@@ -809,7 +809,7 @@ public enum TipoMissione {
 
     ;
 
-    private SupertipoMissione supertipoMissione;
+    private final SupertipoMissione supertipoMissione;
 
     TipoMissione(SupertipoMissione supertipoMissione) {
         this.supertipoMissione = supertipoMissione;
