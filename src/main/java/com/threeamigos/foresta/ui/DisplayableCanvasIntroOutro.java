@@ -105,7 +105,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 			int m = Statistiche.getMostriUccisi(classePersonaggio);
 			if (m > 0) {
 				color = (color == DoomdarkColorModel.Color.MEDIUM_GRAY ? DoomdarkColorModel.Color.LIGHT_GRAY : DoomdarkColorModel.Color.MEDIUM_GRAY); 
-				doomdark = DoomdarkTextProducer.getImage(m + " " + (m == 1 ? classePersonaggio.getIstanza(1).getNomeSingolare() : classePersonaggio.getIstanza(1).getNomePlurale()), fontMedium, color);
+				doomdark = DoomdarkTextProducer.getImage(m + " " + (m == 1 ? classePersonaggio.getNomeSingolare() : classePersonaggio.getNomePlurale()), fontMedium, color);
 				graphics.drawImage(doomdark, locXOffset + 9, locYOffset, null);
 				locYOffset += fontMedium.getHeight();
 			}
@@ -176,7 +176,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		disegnaStringaCentrataConACapoAutomatico(graphics, "seleziona lo slot per il salvataggio", 50);
 		List<Comando> comandi = new ArrayList<>(Arrays.asList(Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3, Comando.NUMERO_4,
                 Comando.NUMERO_5));
-		for (TestataSalvataggio testata : GestoreSalvataggi.getSalvataggiDisponibili()) {
+		for (TestataSalvataggio testata : salvataggiDisponibili) {
 			comandi.remove(testata.getId());
 			disegnaElencoPersonaggiDaElencoClassi(graphics, testata);
 		}
