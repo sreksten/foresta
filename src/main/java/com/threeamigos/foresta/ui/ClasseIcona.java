@@ -45,6 +45,8 @@ public enum ClasseIcona {
 	VELENO(Comando.VELENO, "icone/Veleno.gif"),
 	MORTE(Comando.MORTE, "icone/Morte.gif"),
 	RESURREZIONE(Comando.RESURREZIONE, "icone/Resurrezione.gif"),
+	// TODO per ora l'icona generica degli incantesimi: quella del dardo arcano è da disegnare
+	DARDO_ARCANO(Comando.DARDO_ARCANO, "icone/Incantesimo.gif"),
 	NO_INCANTESIMO(Comando.NO_INCANTESIMO, "icone/NoIncantesimo.gif"),
 
 	NORD(Comando.NORD, "icone/Nord.gif"),

@@ -43,6 +43,8 @@ public enum Comando {
 	VELENO,
 	MORTE,
 	RESURREZIONE,
+	// L'incantesimo innato di Mago ed Elfo, che non consuma pergamene
+	DARDO_ARCANO,
 	// Annulla la scelta di un incantesimo
 	NO_INCANTESIMO,
 

@@ -2,17 +2,32 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.SlotArtefatto;
+import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
 
 import java.util.Collection;
+import java.util.EnumSet;
+import java.util.Set;
 
 /**
  * Regole a slot per l'equipaggiamento di un personaggio (vedi artefatti_e_incantamenti.md, §2 "Equipaggiamento"):
  * al massimo un artefatto per testa, corpo e ciascuna mano, accessori senza limite, pergamene mai,
  * arma in mano secondaria solo per Ladro/Ladra ed Elfo/Elfa, armi a due mani solo con entrambe le mani libere.
- * Il peso non è controllato qui, ma in {@link PersonaggioBase#puoEquipaggiare}.
+ * Ogni classe giocabile usa solo le armi, lo scudo e il libro adatti a lei ({@link #puoUsare}).
+ * Peso e FORZA per l'armatura non sono controllati qui, ma in {@link PersonaggioBase#puoEquipaggiare}.
  */
 final class RegoleEquipaggiamento {
+
+	// Armi, scudo e libro che ogni classe giocabile sa usare (vedi artefatti_e_incantamenti.md, §2,
+	// "Equipaggiamento secondo la classe"). Elmo, armature, vesti e accessori li portano tutti; l'armatura
+	// chiede una FORZA minima. Le classi che non sono qui (i mostri, l'Ombrafiamma) non hanno limiti.
+	private static final Set<TipoArtefatto> GUERRIERO = EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.SPADONE,
+			TipoArtefatto.MAZZA, TipoArtefatto.ASCIA, TipoArtefatto.LANCIA, TipoArtefatto.SCUDO);
+	private static final Set<TipoArtefatto> LADRO = EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.MAZZA, TipoArtefatto.ASCIA);
+	private static final Set<TipoArtefatto> ELFO = EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.MAZZA, TipoArtefatto.ASCIA,
+			TipoArtefatto.LANCIA);
+	private static final Set<TipoArtefatto> BARDO = EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.SCUDO);
+	private static final Set<TipoArtefatto> MAGO = EnumSet.of(TipoArtefatto.BASTONE_MAGICO, TipoArtefatto.LIBRO_MAGICO);
 
 	/**
 	 * Lo slot che l'artefatto occuperebbe, oppure il motivo per cui non si può prendere.
@@ -52,6 +67,9 @@ final class RegoleEquipaggiamento {
 		SlotArtefatto slotDelTipo = tipo.getSlotArtefatto();
 		if (slotDelTipo == SlotArtefatto.NUCLEO) {
 			return Esito.rifiuto(MotivoRifiutoEquipaggiamento.PERGAMENA);
+		}
+		if (!puoUsare(classe, tipo)) {
+			return Esito.rifiuto(MotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE);
 		}
 		if (artefatto.getLivello() > livelloPersonaggio) {
 			return Esito.rifiuto(MotivoRifiutoEquipaggiamento.LIVELLO_TROPPO_ALTO);
@@ -118,6 +136,42 @@ final class RegoleEquipaggiamento {
 	 */
 	private static boolean isArmaDaManoSecondaria(TipoArtefatto tipo) {
 		return tipo == TipoArtefatto.SPADA || tipo == TipoArtefatto.MAZZA || tipo == TipoArtefatto.ASCIA;
+	}
+
+	/**
+	 * @return true se la classe sa usare quel tipo di artefatto. La tabella vale per armi, scudo e libro:
+	 * tutto il resto lo possono portare tutti.
+	 */
+	static boolean puoUsare(ClassePersonaggio classe, TipoArtefatto tipo) {
+		boolean daTabella = tipo.getSupertipo() == SupertipoArtefatto.ARMA || tipo == TipoArtefatto.SCUDO
+				|| tipo == TipoArtefatto.LIBRO_MAGICO;
+		if (!daTabella) {
+			return true;
+		}
+		Set<TipoArtefatto> ammessi = ammessi(classe);
+		return ammessi == null || ammessi.contains(tipo);
+	}
+
+	private static Set<TipoArtefatto> ammessi(ClassePersonaggio classe) {
+		switch (classe) {
+			case GUERRIERO:
+			case GUERRIERA:
+				return GUERRIERO;
+			case LADRO:
+			case LADRA:
+				return LADRO;
+			case ELFO:
+			case ELFA:
+				return ELFO;
+			case BARDO:
+			case CANTASTORIE:
+				return BARDO;
+			case MAGO:
+			case MAGA:
+				return MAGO;
+			default:
+				return null;
+		}
 	}
 
 	static boolean puoImpugnareDueArmi(ClassePersonaggio classe) {

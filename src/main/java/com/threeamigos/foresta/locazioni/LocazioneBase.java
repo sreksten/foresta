@@ -6,6 +6,7 @@ import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
@@ -323,6 +324,13 @@ public abstract class LocazioneBase implements Locazione {
 			if (azione == Comando.NO_INCANTESIMO) {
 				statoLocazione = StatoLocazione.IN_LOCAZIONE;
 				break;
+			} else if (azione == Comando.DARDO_ARCANO) {
+				Stato statoDopoIlDardo = lanciaDardoArcano(gruppo.getFormulante(), gruppo, gruppoAvversario);
+				if (statoDopoIlDardo != null) {
+					return statoDopoIlDardo;
+				}
+				statoLocazione = StatoLocazione.IN_LOCAZIONE;
+				break;
 			} else {
 				opzioneCorruzioneDisponibile = false;
 				opzioneAmiciziaDisponibile = false;
@@ -391,6 +399,8 @@ public abstract class LocazioneBase implements Locazione {
 					return Stato.GIOCO_PERSO;
 				}
 
+				// Come per gli incantesimi su un solo bersaglio (IncantesimoMaleficoImpl.formula), il lancio costa MAGIA
+				formulante.subMagia(incantesimo.getCostoLancio());
 				gruppo.subIncantesimi(incantesimo.getClasse(), 1);
 
 				if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
@@ -605,6 +615,37 @@ public abstract class LocazioneBase implements Locazione {
 		impostaComandiPossibili();
 	}
 
+	/**
+	 * Il dardo arcano di Mago ed Elfo contro il primo avversario vivo: costa MAGIA, non consuma pergamene.
+	 *
+	 * @return lo stato in cui passare se lo scontro finisce (avversari tutti morti o gioco perso), altrimenti null
+	 */
+	private Stato lanciaDardoArcano(Personaggio formulante, GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
+		opzioneCorruzioneDisponibile = false;
+		opzioneAmiciziaDisponibile = false;
+		Personaggio bersaglio = gruppoAvversario.getPersonaggioVivo();
+		if (bersaglio == null || !DardoArcano.puoLanciarlo(formulante)) {
+			return null;
+		}
+		DardoArcano dardo = new DardoArcano(formulante);
+		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " scaglia un dardo arcano contro "
+				+ bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + "."));
+		if (CalcolatoreCombattimento.colpisce(formulante, bersaglio, dardo.getTipoDanno().getSuperTipo())) {
+			bersaglio.applicaRisultatoCombattimento(CalcolatoreCombattimento.calcolaDannoRisultante(formulante, bersaglio, dardo));
+		}
+		formulante.subMagia(dardo.getCostoLancio());
+		if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
+			setCompleta(true);
+			return Stato.FINE_LOCAZIONE;
+		}
+		rispostaAvversaria(formulante, gruppo, gruppoAvversario);
+		if (!gruppo.getCapo().isVivo()) {
+			return Stato.GIOCO_PERSO;
+		}
+		return null;
+	}
+
 	private void impostaComandiPossibili() {
 		List<Comando> comandiPossibili = new ArrayList<>();
 		// Possiamo combattere? Oppure, vogliamo cambiare chi combatte?
@@ -615,13 +656,18 @@ public abstract class LocazioneBase implements Locazione {
 		if (statoLocazione == StatoLocazione.IN_COMBATTIMENTO) {
 			comandiPossibili.add(Comando.INTERRUZIONE_COMBATTIMENTO);
 		}
-		// Possiamo formulare incantesimi? Si se ne abbiamo almeno uno e se uno dei personaggi vivi può lanciarlo
+		// Possiamo formulare incantesimi? Si se ne abbiamo almeno uno e se uno dei personaggi vivi può lanciarlo,
+		// oppure se un Mago o un Elfo vivo ha la MAGIA per il dardo arcano
+		boolean incantesimoPossibile = gruppo.getPersonaggiVivi().stream().anyMatch(DardoArcano::puoLanciarlo);
 		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
 			if (gruppo.getIncantesimi(classeIncantesimo) > 0 &&
 					gruppo.getPersonaggiVivi().stream().anyMatch(p -> p.getMagia() >= classeIncantesimo.getCostoLancio())) {
-				comandiPossibili.add(Comando.INCANTESIMO);
+				incantesimoPossibile = true;
 				break;
 			}
+		}
+		if (incantesimoPossibile) {
+			comandiPossibili.add(Comando.INCANTESIMO);
 		}
 		// Possiamo corrompere gli avversari?
 		if (opzioneCorruzioneDisponibile) {

@@ -704,6 +704,9 @@ public abstract class PersonaggioBase implements Personaggio {
 		if (esito.getMotivo() != null) {
 			return Optional.of(esito.getMotivo());
 		}
+		if (artefatto.getTipo() == TipoArtefatto.ARMATURA && getForza() < Costanti.ARMATURA_FORZA_MINIMA) {
+			return Optional.of(MotivoRifiutoEquipaggiamento.FORZA_INSUFFICIENTE);
+		}
 		if (!puoPrendere(artefatto)) {
 			return Optional.of(MotivoRifiutoEquipaggiamento.TROPPO_CARICO);
 		}

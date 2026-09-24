@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.SupertipoDanno;
@@ -185,6 +186,10 @@ public class CalcolatoreCombattimento {
 
         // 2. MATEMATICA DI BASE DEL DANNO (Con fattore di scala livello arma)
         int dannoBaseArma = arma.getDanni() * arma.getLivello();
+        if (isIncantesimo(arma)) {
+            // Il danno proprio dell'incantesimo: il resto lo fanno l'INTELLIGENZA e il moltiplicatore magico di chi la lancia
+            dannoBaseArma = (int) Math.round(dannoBaseArma * Costanti.INCANTESIMO_FATTORE_DANNI);
+        }
 
         Logger.log(String.format("dannoBaseArma = danniBase %d + livello arma %d = %d", arma.getDanni(), arma.getLivello(), dannoBaseArma));
 
@@ -197,8 +202,10 @@ public class CalcolatoreCombattimento {
 
         double contributoEroe = (double)(statOffensiva * attaccante.getLivello()) / 5.0d;
         Logger.log(String.format("contributoEroe (statOffensiva %d * livello attaccante %d / 5 = %f", statOffensiva, attaccante.getLivello(), contributoEroe));
-        double dannoOffensivoGrezzo = (dannoBaseArma + Math.floor(contributoEroe * rapportoEfficacia)) * fattore;
-        Logger.log("dannoOffensivoGrezzo = " + dannoOffensivoGrezzo + " (fattore " + fattore + ")");
+        // Il carattere della classe: il guerriero picchia, il mago incanta (Costanti.*_MOLTIPLICATORE_DANNI_*)
+        double moltiplicatoreClasse = dannoNonFisico ? attaccante.getMoltiplicatoreDanniMagici() : attaccante.getMoltiplicatoreDanniFisici();
+        double dannoOffensivoGrezzo = (dannoBaseArma + Math.floor(contributoEroe * rapportoEfficacia)) * fattore * moltiplicatoreClasse;
+        Logger.log("dannoOffensivoGrezzo = " + dannoOffensivoGrezzo + " (fattore " + fattore + ", moltiplicatore di classe " + moltiplicatoreClasse + ")");
 
         // 2.5 APPLICAZIONE DEL BONUS BERSERK (Esclusivo ai Guerrieri con FURIA)
         // Solo sul danno fisico (vedi TipoEffettoDiStato.BERSERK): la condizione era negata al
@@ -321,7 +328,7 @@ public class CalcolatoreCombattimento {
             for (Incantamento inc : arma.getIncantamenti()) {
                 TipoDanno elementoMagico = inc.getTipoDannoElementale();
 
-                double dannoQuestoIncantamento = dannoIncantamento(attaccante, difensore, inc, arma.getLivello(), fattore);
+                double dannoQuestoIncantamento = dannoIncantamento(attaccante, difensore, inc, arma.getLivello(), fattore, 1.0d);
 
                 // Se il bersaglio era BAGNATO e la spada è di FUOCO, si attiva l'interazione Vaporizzazione
                 if (elementoMagico == TipoDanno.FUOCO && difensore.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
@@ -335,11 +342,12 @@ public class CalcolatoreCombattimento {
         }
 
         // 4.3 --- LIBRO MAGICO: bonus al danno degli incantesimi di chi lo porta ---
-        if (arma instanceof IncantesimoMalefico) {
+        if (isIncantesimo(arma)) {
             Optional<Artefatto> libro = libroMagico(attaccante);
             if (libro.isPresent()) {
+                // Il bonus del libro è danno dell'incantesimo: prende tutto il moltiplicatore magico della classe
                 double dannoLibro = dannoIncantamento(attaccante, difensore, bonusLibroMagico(libro.get(), tipoDanno),
-                        libro.get().getLivello(), 1.0d);
+                        libro.get().getLivello(), 1.0d, attaccante.getMoltiplicatoreDanniMagici());
                 dannoElementaleFinale += dannoLibro;
                 Logger.log(String.format("[LIBRO MAGICO] Danno bonus: %.2f", dannoLibro));
             }
@@ -391,7 +399,7 @@ public class CalcolatoreCombattimento {
 
                         // Ricalcola il danno specifico di QUESTO incantamento per un Proc Rate preciso
                         double dannoQuestoIncantamentoProc = dannoIncantamento(attaccante, difensore, incantamento,
-                                arma.getLivello(), fattore);
+                                arma.getLivello(), fattore, 1.0d);
 
                         // La probabilità del proc magico si basa sul danno reale di QUESTO elemento e sulla statistica MAGIA
                         double probStatoMagico = ((dannoQuestoIncantamentoProc * 100.0d) / difensore.getForza()) + (attaccante.getMagia() * 2.0d);
@@ -416,13 +424,14 @@ public class CalcolatoreCombattimento {
 
     /**
      * Il danno di un incantamento, mitigato dalla difesa del bersaglio contro il suo tipo di danno.
-     * La parte fissa scala con il livello dell'oggetto, quella percentuale con l'INTELLIGENZA di chi colpisce.
-     * Contro un bersaglio BAGNATO il fuoco fa la metà.
+     * La parte fissa scala con il livello dell'oggetto (e per moltiplicatoreParteFissa), quella percentuale
+     * con l'INTELLIGENZA e il moltiplicatore di danno magico di chi colpisce: una spada di fuoco rende di più
+     * in mano a un elfo che a un guerriero. Contro un bersaglio BAGNATO il fuoco fa la metà.
      */
     private static double dannoIncantamento(Personaggio attaccante, Personaggio difensore, Incantamento incantamento,
-                                            int livelloOggetto, double fattore) {
-        double dannoGrezzo = ((incantamento.getDannoBonusFisso() * livelloOggetto) +
-                (attaccante.getIntelligenza() * incantamento.getCoefficienteScala())) * fattore;
+                                            int livelloOggetto, double fattore, double moltiplicatoreParteFissa) {
+        double dannoGrezzo = ((incantamento.getDannoBonusFisso() * livelloOggetto * moltiplicatoreParteFissa) +
+                (attaccante.getIntelligenza() * incantamento.getCoefficienteScala() * attaccante.getMoltiplicatoreDanniMagici())) * fattore;
         double mitigazione = 100.0d / (100.0d + difesaContro(difensore, incantamento.getTipoDannoElementale()));
         double danno = Math.floor(dannoGrezzo * mitigazione);
         if (incantamento.getTipoDannoElementale() == TipoDanno.FUOCO && difensore.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
@@ -463,6 +472,14 @@ public class CalcolatoreCombattimento {
         SupertipoArtefatto supertipo = artefatto.getTipo().getSupertipo();
         return supertipo == SupertipoArtefatto.SCUDO || supertipo == SupertipoArtefatto.ELMO
                 || supertipo == SupertipoArtefatto.ARMATURA;
+    }
+
+    /**
+     * Le pergamene di incantesimi e il dardo arcano: il loro danno segue le regole degli incantesimi
+     * (INCANTESIMO_FATTORE_DANNI, bonus del libro magico)
+     */
+    private static boolean isIncantesimo(Arma arma) {
+        return arma instanceof IncantesimoMalefico || arma instanceof DardoArcano;
     }
 
     private static Optional<Artefatto> libroMagico(Personaggio personaggio) {

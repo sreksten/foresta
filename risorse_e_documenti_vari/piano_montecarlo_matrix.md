@@ -297,6 +297,10 @@ nome e una lista di `Pezzo`: un `TipoArtefatto`, facoltativamente con un incanta
   Ogni equipaggiamento moltiplica il tempo: per una passata veloce basta lasciarne uno o due.
 - Per lanciare un test `@Disabled` da Maven:
   `mvn test -Dtest='TestMonteCarloMatrix#testConfrontoEquipaggiamenti' -Djunit.jupiter.conditions.deactivate='org.junit.*DisabledCondition'`.
+- **Dopo aver cambiato un valore in `Costanti`, prima dei test serve `mvn clean`.** Java copia nel codice che le usa
+  le costanti `static final` al momento della compilazione, e Maven ricompila i test solo se cambia il loro
+  sorgente: un test può così girare con il valore vecchio (è successo con `CalcolatoreCombattimentoClassiTest`).
+  Il codice del gioco invece si ricompila per intero a ogni modifica.
 
 ### 11.4 Primo giro e bilanciamento (2026-09-24)
 
@@ -401,26 +405,143 @@ solito combatte con due armi, e per lui la scelta è fra una spada e due. Vittor
 - **Contro la Viverna** l'armatura spoglia non aiuta (il suo morso è elementale): serve la resistenza al
   veleno (`CORAZZATO_CONTRO_VELENO`: Guerriero 96,8%, Ladro 92,8%).
 
-## 12. Da fare: bilanciamento delle classi
+## 12. Bilanciamento delle classi: piano
 
-Oltre all'equipaggiamento andrebbero livellate un po' anche le classi giocabili. Bisogna capire cosa
-potrebbe portare un giocatore a preferire un Guerriero, un Ladro, un Elfo, un Bardo o un Mago: ognuno
-dovrebbe avere un motivo per essere scelto, non solo numeri più alti o più bassi.
+Cosa potrebbe portare un giocatore a preferire un Guerriero, un Ladro, un Elfo, un Bardo o un Mago, a parte i
+gusti personali? Ognuno dovrebbe avere un motivo per essere scelto, non solo numeri più alti o più bassi.
+L'idea di fondo:
+- **tutti lanciano incantesimi**, perché basta consumare la pergamena su cui sono scritti; ma il **Mago** deve
+  fare con la magia danni di gran lunga superiori a quelli di chiunque altro;
+- l'**Elfo** combatte con più agilità del Mago ed è un po' meno bravo con la magia;
+- il **Guerriero** con gli incantesimi, salvo colpi di fortuna, fa poco, ma in mischia con spada e scudo o
+  spadone è il più forte;
+- il **Ladro** agisce con destrezza: doppia arma, niente armature pesanti;
+- il **Bardo** fa da supporto al gruppo.
 
-Cosa dicono già i numeri del §11.4 (livello 5, 1 contro 1, stesso equipaggiamento):
-- **Il Guerriero è avanti in mischia**: con spada e scudo vince contro la Viverna il 76%, il Ladro il 59%,
-  l'Elfa il 62%. In più ha lo spadone, che rende come la doppia arma di Ladro ed Elfo.
-- **Ladro ed Elfa** si somigliano molto (colpiscono più spesso del Guerriero, ma fanno meno danno e
-  reggono meno). La doppia arma, che il Guerriero non ha, non basta a distinguerli da lui.
-- **Il Mago** in mischia non regge, com'è giusto, ma il simulatore non gli fa lanciare incantesimi, quindi
-  oggi non si sa quanto valga davvero (§4, "Fase 2").
-- **Il Bardo** (e il Cantastorie) non è ancora stato misurato.
+Passi:
+1. **Ruoli** (fatto): la tabella di armi, scudo e libro per classe è in `artefatti_e_incantamenti.md`, §2,
+   "Equipaggiamento secondo la classe".
+2. **Blocchi di equipaggiamento** (fatto): tabella per classe in `RegoleEquipaggiamento` e `FORZA` minima 16 per
+   l'armatura.
+3. **Moltiplicatori di danno delle classi** (fatto): `CalcolatoreCombattimento` usa `*_MOLTIPLICATORE_DANNI_FISICI`
+   e `_MAGICI`, che c'erano ma non leggeva.
+4. **Incantesimi nel simulatore** (fatto): `ScortaDiPergamene` (§13).
+5. **Dotazioni tipiche per classe nel simulatore** (fatto): `Equipaggiamento.tipiciPer` (§13).
+6. **Obiettivi e ritocchi** (in corso): il dardo arcano per Mago ed Elfo (§13.3) è fatto; i ritocchi del §13.4
+   sono da misurare, e gli obiettivi per classe da fissare.
 
-Domande da chiarire prima di toccare i numeri:
-- Che ruolo ha ciascuna classe: chi regge i colpi, chi fa tanto danno in fretta, chi colpisce più bersagli,
-  chi aiuta il gruppo (incantesimi, carisma nelle trattative, furtività)?
-- Quali di questi ruoli si vedono nel combattimento 1 contro 1 del simulatore e quali no (gruppi di mostri,
-  magia, abilità fuori dal combattimento)?
+## 13. Classi, pergamene e dotazioni tipiche
 
-Per misurare serve prima la "Fase 2" del simulatore (incantesimi per i PG magici) e un giro della matrice
-completa con più classi, livelli ed equipaggiamenti.
+### 13.1 Nel simulatore
+
+- **`ScortaDiPergamene`**: quante pergamene di quale incantesimo malefico porta il PG in uno scontro. Finché ne ha
+  una e abbastanza `MAGIA` per il costo di lancio, a ogni turno lancia l'incantesimo invece di attaccare con le
+  armi; poi combatte con le armi. Come nel gioco, un incantesimo di portata `GRUPPO` colpisce tutti i mostri vivi,
+  e ogni bersaglio si colpisce o si manca per conto suo. I mostri combattono solo con le armi.
+- **Dardo arcano**: Mago ed Elfo, quando non hanno pergamene (o non hanno la `MAGIA` per lanciarle), lanciano il
+  dardo arcano se promette più danno delle armi: probabilità di colpire per danno, come fanno i mostri quando
+  scelgono fra magia e armi.
+- **Scenari**: `SCENARI_CONFRONTO_CLASSI` dice quanti mostri e di quanti livelli sopra il PG: oggi 1, 2 e 3 mostri
+  alla pari, e 1 mostro di un livello sopra. Una quantità oltre il massimo per locazione del mostro si salta.
+  Attenzione: nel gioco il gruppo ha più personaggi, mentre nel simulatore un PG combatte da solo contro tutti i
+  mostri. Tre mostri contro un PG solo sono quindi più duri del vero: servono a vedere le differenze fra le
+  classi, non come obiettivo. I mostri del gioco stanno al livello del mondo, cioè del capo del gruppo, e il
+  gioco è fracassone: non deve essere frustrante.
+- **`Equipaggiamento.tipiciPer(classe)`**: le dotazioni che ogni classe userebbe davvero:
+
+  | Classe | Dotazioni |
+  | :--- | :--- |
+  | Guerriero | `CAVALIERE` (spada, scudo, elmo, armatura), `SPADONE_E_ARMATURA` (spadone, elmo, armatura) |
+  | Ladro | `DUE_SPADE_E_VESTE` (due spade, elmo, veste) |
+  | Elfo | `DUE_SPADE_E_VESTE`, `LANCIA_E_VESTE` (lancia, elmo, veste) |
+  | Bardo | `SPADA_SCUDO_E_VESTE` (spada, scudo, elmo, veste) |
+  | Mago | `BASTONE_LIBRO_E_VESTE` (bastone, libro, veste) |
+
+- **Test**: `conLePergameneIlMagoVincePiuSpesso` e `ogniClassePuoPortareLeSueDotazioniTipiche` nella suite
+  normale; `testConfrontoClassi` (`@Disabled`, circa 2 minuti) prova ogni classe con le sue dotazioni e con
+  0, 2 o 5 pergamene di fuoco, contro Goblin, Troll, Minotauro e Viverna, negli scenari qui sopra, ai livelli 1,
+  5 e 10, e scrive `REPORT_BILANCIAMENTO_CLASSI.csv`. Dura circa 5 minuti e mezzo.
+
+### 13.2 Primo giro (2026-09-25)
+
+Con i moltiplicatori di classe collegati, i blocchi di equipaggiamento e i valori dei §11.5-§11.6. Vittorie
+del PG, 1 contro 1:
+
+| Livello | PG | Dotazione | Pergamene | Troll | Viverna |
+| ---: | :--- | :--- | :--- | ---: | ---: |
+| 1 | Guerriero | `CAVALIERE` | nessuna | 97,4% | 90,9% |
+| 1 | Guerriero | `SPADONE_E_ARMATURA` | nessuna | 97,0% | 97,5% |
+| 1 | Ladro | `DUE_SPADE_E_VESTE` | nessuna | 68,8% | 83,2% |
+| 1 | Ladro | `DUE_SPADE_E_VESTE` | 2 di fuoco | 94,2% | 96,6% |
+| 1 | Elfo | `DUE_SPADE_E_VESTE` | nessuna | 55,2% | 78,9% |
+| 1 | Elfo | `LANCIA_E_VESTE` | nessuna | 30,1% | 50,1% |
+| 1 | Bardo | `SPADA_SCUDO_E_VESTE` | nessuna | 21,8% | 37,6% |
+| 1 | Bardo | `SPADA_SCUDO_E_VESTE` | 2 di fuoco | 86,7% | 90,7% |
+| 1 | Mago | `BASTONE_LIBRO_E_VESTE` | nessuna | 0,0% | 0,0% |
+| 1 | Mago | `BASTONE_LIBRO_E_VESTE` | 2 di fuoco | 89,2% | 97,8% |
+| 5 | Ladro | `DUE_SPADE_E_VESTE` | nessuna | 91,8% | 98,4% |
+| 5 | Elfo | `LANCIA_E_VESTE` | nessuna | 71,2% | 86,6% |
+| 5 | Bardo | `SPADA_SCUDO_E_VESTE` | nessuna | 76,5% | 84,0% |
+| 5 | Mago | `BASTONE_LIBRO_E_VESTE` | nessuna | 0,0% | 0,0% |
+| 5 | Mago | `BASTONE_LIBRO_E_VESTE` | 2 di fuoco | 99,3% | 98,0% |
+
+Cosa se ne ricava:
+- **Il Guerriero domina la mischia**, come voluto: quasi sempre oltre il 97%, senza bisogno di pergamene.
+- **Le pergamene decidono lo scontro per tutti.** Con due pergamene di fuoco quasi ogni classe vince oltre il
+  90%, anche il Bardo e il Guerriero, che pure ha il moltiplicatore magico più basso (0,5). Un incantesimo di
+  fuoco fa 60 × livello di danno base: oggi una pergamena vale più di un'arma intera.
+- **Il Mago senza pergamene non vince mai**: con il bastone fa metà danno (moltiplicatore fisico 0,5) e regge poco.
+  Con le pergamene vince, ma non più delle altre classi, che in più sanno anche combattere.
+- **La Viverna è più debole di prima**: il suo morso è di veleno, elementale, e il suo moltiplicatore magico
+  è 0,8.
+- **Dal livello 5 in su, 1 contro 1, quasi tutti vincono oltre il 90%**: per distinguere le classi servono
+  scontri più duri (più mostri, o mostri di livello più alto).
+
+### 13.3 Pergamene e dardo arcano (2026-09-25)
+
+**Danno delle pergamene.** Abbassare il danno di tutte le pergamene (`Costanti.INCANTESIMO_FATTORE_DANNI`)
+punisce soprattutto il Mago, che vive di pergamene. Con 2 pergamene di fuoco contro un Troll a livello 1:
+
+| Fattore | Mago | Ladro | Guerriero |
+| ---: | ---: | ---: | ---: |
+| 1,0 | 89% | 94% | 99% |
+| 0,5 | 64% | 80% | 97% |
+| 0,3 | 5% | 68% | 95% |
+
+Il fattore resta a 1,0: le pergamene sono poche, e il loro peso va rivisto con l'economia.
+
+**Dardo arcano** (30 × livello di danno base, 2 di `MAGIA`, per Mago ed Elfo). Media delle vittorie su Goblin,
+Troll, Minotauro e Viverna, a livello 5, mostri alla pari, prima dotazione tipica di ogni classe:
+
+| Classe | Pergamene | 1 mostro | 2 mostri | 3 mostri |
+| :--- | :--- | ---: | ---: | ---: |
+| Guerriero | nessuna | 99,3% | 79,5% | 57,1% |
+| Guerriero | 2 di fuoco | 99,5% | 90,9% | 72,8% |
+| Ladro | nessuna | 95,9% | 44,2% | 23,6% |
+| Ladro | 2 di fuoco | 98,8% | 95,9% | 90,0% |
+| Elfo | nessuna | 99,7% | 80,2% | 41,0% |
+| Elfo | 2 di fuoco | 100% | 99,1% | 97,7% |
+| Bardo | nessuna | 85,7% | 31,5% | 12,3% |
+| Bardo | 2 di fuoco | 98,6% | 95,9% | 91,0% |
+| Mago | nessuna | 98,9% | 68,8% | 42,0% |
+| Mago | 2 di fuoco | 99,8% | 99,4% | 99,2% |
+
+Senza il dardo, il Mago senza pergamene vinceva lo 0,6% contro un mostro solo.
+
+### 13.4 Cosa resta da sistemare
+
+- **L'Elfo è la classe più forte**: con il dardo arcano e le due armi vince senza pergamene quanto il Guerriero
+  (80% contro 2 mostri), più del Mago (69%); a livello 1, uno contro uno, vince il 99,6% (il Guerriero il 96%).
+  Doveva essere "un po' meno bravo con la magia" del Mago, e meno forte del Guerriero in mischia.
+- **Il Mago non è ancora "di gran lunga" il migliore con la magia**: con le pergamene vince quanto l'Elfo.
+- **Ladro e Bardo senza pergamene reggono poco contro i gruppi** (23% e 12% contro 3 mostri). Per il Bardo
+  manca nel simulatore il suo ruolo di supporto.
+- **Il Guerriero con le pergamene** migliora poco (73% contro 3 mostri, gli altri oltre il 90%), come voluto.
+
+Ritocchi decisi dopo questo giro (2026-09-25), **non ancora misurati**: la prova è stata interrotta, va
+rilanciata `testConfrontoClassi` e aggiornata questa sezione.
+- **Elfo:** il dardo arcano gli costa 4 di `MAGIA` invece di 2 (`Costanti.DARDO_ARCANO_COSTO_LANCIO_ELFO`).
+- **Mago:** il suo dardo fa 40 × livello invece di 30 (`Costanti.DARDO_ARCANO_DANNI_MAGO`).
+- **Ladro e Bardo:** i moltiplicatori fisici restano quelli di prima (1,0 e 0,9); si sistemeranno più avanti, in
+  altro modo.
+- Restano da fissare gli obiettivi per classe, e da dare al Bardo il suo ruolo di supporto.

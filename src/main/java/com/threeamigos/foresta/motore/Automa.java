@@ -9,6 +9,7 @@ import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
@@ -674,6 +675,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			if (gruppo.getIncantesimi(classeIncantesimo) > 0 && formulante.getMagia() >= classeIncantesimo.getIstanza(formulante.getLivello()).getCostoLancio()) {
 				comandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
 			}
+		}
+		// Mago ed Elfo hanno anche il dardo arcano, che non consuma pergamene
+		if (DardoArcano.puoLanciarlo(formulante)) {
+			comandiPossibili.add(Comando.DARDO_ARCANO);
 		}
 		comandiPossibili.add(Comando.NO_INCANTESIMO);
 		BusEventi.pubblica(new RichiestaSelezioneIncantesimoDaLanciare(comandiPossibili));

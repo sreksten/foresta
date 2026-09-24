@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.incantesimi.DardoArcano;
+import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
+import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
 import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
 import com.threeamigos.foresta.motore.DannoRisultante;
 import com.threeamigos.foresta.motore.FaseDiAttacco;
@@ -18,6 +21,11 @@ import java.util.Optional;
  * Il PG può avere un {@link Equipaggiamento} (armi, scudo, elmo, armatura, incantamenti): ogni attacco
  * passa dalle fasi di {@link CalcolatoreCombattimento#fasiDiAttacco}, come nel gioco, quindi conta anche
  * la seconda arma. Senza equipaggiamento il PG combatte con l'arma naturale, come nella prima versione.
+ * <p>
+ * Il PG può avere anche una {@link ScortaDiPergamene}: finché ne ha una e abbastanza MAGIA, a ogni turno lancia
+ * l'incantesimo invece di attaccare con le armi. Mago ed Elfo, senza pergamene, lanciano il dardo arcano se promette
+ * più danno delle armi (probabilità di colpire per danno, come fanno i mostri quando scelgono fra magia e armi).
+ * I mostri combattono solo con le armi.
  */
 public class CombatSimulatorMatrix {
 
@@ -36,6 +44,28 @@ public class CombatSimulatorMatrix {
     public static RisultatoMatrice simulaScontroGruppo(ClassePersonaggio classePg, Equipaggiamento equipaggiamento,
                                                        ClassePersonaggio classeMostro, int quantitaMostri,
                                                        int livello, int iterazioni) {
+        return simulaScontroGruppo(classePg, equipaggiamento, ScortaDiPergamene.NESSUNA, classeMostro, quantitaMostri,
+                livello, iterazioni);
+    }
+
+    /**
+     * @param pergamene gli incantesimi che il PG può lanciare nello scontro
+     */
+    public static RisultatoMatrice simulaScontroGruppo(ClassePersonaggio classePg, Equipaggiamento equipaggiamento,
+                                                       ScortaDiPergamene pergamene, ClassePersonaggio classeMostro,
+                                                       int quantitaMostri, int livello, int iterazioni) {
+        return simulaScontroGruppo(classePg, equipaggiamento, pergamene, classeMostro, quantitaMostri, livello, livello,
+                iterazioni);
+    }
+
+    /**
+     * @param livello        il livello del PG (e del suo equipaggiamento)
+     * @param livelloMostri  il livello dei mostri, per scontri più duri di quelli alla pari
+     */
+    public static RisultatoMatrice simulaScontroGruppo(ClassePersonaggio classePg, Equipaggiamento equipaggiamento,
+                                                       ScortaDiPergamene pergamene, ClassePersonaggio classeMostro,
+                                                       int quantitaMostri, int livello, int livelloMostri,
+                                                       int iterazioni) {
         int vittoriePg = 0;
         int sconfittePg = 0;
         int stalli = 0;
@@ -53,12 +83,13 @@ public class CombatSimulatorMatrix {
 
             List<Personaggio> mostri = new ArrayList<>();
             for (int m = 0; m < quantitaMostri; m++) {
-                mostri.add(classeMostro.getIstanza(livello));
+                mostri.add(classeMostro.getIstanza(livelloMostri));
             }
 
             boolean vittoria = false;
             boolean sconfitta = false;
             int turni = 0;
+            int pergameneRimaste = pergamene.getQuantita();
 
             while (turni < TURNI_MASSIMI) {
                 turni++;
@@ -66,15 +97,28 @@ public class CombatSimulatorMatrix {
                 // FIX CRITICO: Forza il valore minimo di bersagli a 1 per evitare che
                 // il turno del giocatore venga saltato a causa di statistiche non caricate.
                 int bersagli = Math.min(Math.max(1, pg.getBersagli()), mostri.size());
-                for (int b = 0; b < bersagli; b++) {
-                    // Come nel gioco, la seconda arma colpisce lo stesso bersaglio della prima,
-                    // o il prossimo vivo se la prima l'ha ucciso
-                    for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(pg)) {
-                        Personaggio bersaglio = bersaglioVivo(mostri, b);
-                        if (bersaglio == null) {
-                            break;
+                IncantesimoMalefico incantesimo = pergameneRimaste > 0
+                        ? (IncantesimoMalefico) pergamene.getIncantesimo().getIstanza(pg.getLivello())
+                        : null;
+                Personaggio primoVivo = bersaglioVivo(mostri, 0);
+                if (incantesimo != null && pg.getMagia() >= incantesimo.getCostoLancio()) {
+                    pergameneRimaste--;
+                    lancia(pg, incantesimo, mostri, statistichePg);
+                } else if (primoVivo != null && conviene(pg, primoVivo)) {
+                    DardoArcano dardo = new DardoArcano(pg);
+                    attacca(pg, primoVivo, new FaseDiAttacco(dardo, 1.0d), statistichePg);
+                    pg.subMagia(dardo.getCostoLancio());
+                } else {
+                    for (int b = 0; b < bersagli; b++) {
+                        // Come nel gioco, la seconda arma colpisce lo stesso bersaglio della prima,
+                        // o il prossimo vivo se la prima l'ha ucciso
+                        for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(pg)) {
+                            Personaggio bersaglio = bersaglioVivo(mostri, b);
+                            if (bersaglio == null) {
+                                break;
+                            }
+                            attacca(pg, bersaglio, fase, statistichePg);
                         }
-                        attacca(pg, bersaglio, fase, statistichePg);
                     }
                 }
 
@@ -123,6 +167,46 @@ public class CombatSimulatorMatrix {
                 statistichePg.dannoMedio(),
                 statisticheMostro.dannoMedio()
         );
+    }
+
+    /**
+     * Come nel gioco: un incantesimo di portata GRUPPO colpisce tutti i mostri vivi, gli altri il primo vivo.
+     * Ogni bersaglio si colpisce o si manca per conto suo.
+     */
+    private static void lancia(Personaggio pg, IncantesimoMalefico incantesimo, List<Personaggio> mostri,
+                               StatisticheAttacco statistiche) {
+        List<Personaggio> bersagli = new ArrayList<>();
+        for (Personaggio mostro : mostri) {
+            if (mostro.isVivo()) {
+                bersagli.add(mostro);
+                if (incantesimo.getClasse().getPortata() != PortataIncantesimo.GRUPPO) {
+                    break;
+                }
+            }
+        }
+        for (Personaggio bersaglio : bersagli) {
+            attacca(pg, bersaglio, new FaseDiAttacco(incantesimo, 1.0d), statistiche);
+        }
+        pg.subMagia(incantesimo.getCostoLancio());
+    }
+
+    /**
+     * Se al PG conviene il dardo arcano invece delle armi: deve poterlo lanciare, e la probabilità di colpire per
+     * il danno deve essere maggiore di quella delle sue fasi di attacco con le armi.
+     */
+    private static boolean conviene(Personaggio pg, Personaggio bersaglio) {
+        if (!DardoArcano.puoLanciarlo(pg)) {
+            return false;
+        }
+        DardoArcano dardo = new DardoArcano(pg);
+        double conDardo = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(pg, bersaglio, dardo.getTipoDanno().getSuperTipo())
+                * CalcolatoreCombattimento.calcolaDannoRisultante(pg, bersaglio, dardo).getDanno();
+        double conArmi = 0.0d;
+        for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(pg)) {
+            conArmi += CalcolatoreCombattimento.calcolaProbabilitaDiColpire(pg, bersaglio, fase.getArma().getTipoDanno().getSuperTipo())
+                    * CalcolatoreCombattimento.calcolaDannoRisultante(pg, bersaglio, fase.getArma(), fase.getFattore()).getDanno();
+        }
+        return conDardo > conArmi;
     }
 
     /**

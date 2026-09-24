@@ -22,6 +22,9 @@ public class Costanti {
     public static final int ELMO_PARATA_PER_LIVELLO = 1;
     public static final int ARMATURA_PARATA_MINIMA = 3;
     public static final int ARMATURA_PARATA_PER_LIVELLO = 1;
+    // FORZA minima per indossare un'armatura: il Guerriero ce l'ha sempre (17 a livello 1), Ladro, Elfo e
+    // Bardo solo se forzuti ai livelli alti (11-14 a livello 1, fino a 19 a livello 10), il Mago mai (5-11)
+    public static final int ARMATURA_FORZA_MINIMA = 16;
     // RESISTENZA_MAGICA intrinseca dello scudo per ogni suo livello: di più se è raro (o leggendario)
     public static final int SCUDO_RESISTENZA_MAGICA_PER_LIVELLO = 1;
     public static final int SCUDO_RARO_RESISTENZA_MAGICA_PER_LIVELLO = 2;
@@ -34,6 +37,17 @@ public class Costanti {
     public static final double RESISTENZA_FATTORE_PERCENTUALE = 0.5;
     // Il libro magico dà al danno degli incantesimi un bonus come un incantamento del suo grado, più il 25%
     public static final double LIBRO_MAGICO_MAGGIORAZIONE = 0.25;
+
+    // Quota del danno base di un incantesimo (INCANTESIMO_*_DANNI × livello) che vale in combattimento: una pergamena
+    // deve aiutare chiunque la lanci, ma essere devastante solo in mano al Mago (moltiplicatore magico 2,0)
+    public static final double INCANTESIMO_FATTORE_DANNI = 1.0;
+    // Il dardo arcano, l'incantesimo innato di Mago ed Elfo: su un solo bersaglio, per poca MAGIA e senza consumare
+    // pergamene. Al Mago rende di più (una pergamena di fuoco fa 60) e costa meno che all'Elfo, che è
+    // un po' meno bravo con la magia e in cambio sa combattere
+    public static final int DARDO_ARCANO_DANNI_MAGO = 40;
+    public static final int DARDO_ARCANO_DANNI_ELFO = 30;
+    public static final int DARDO_ARCANO_COSTO_LANCIO_MAGO = 2;
+    public static final int DARDO_ARCANO_COSTO_LANCIO_ELFO = 4;
 
     // Fusione dall'incantatore: 10 monete più 5 per ogni effetto trasferito
     public static final int FUSIONE_COSTO_BASE = 10;

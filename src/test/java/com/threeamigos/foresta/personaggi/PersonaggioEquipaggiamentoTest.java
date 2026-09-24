@@ -5,6 +5,9 @@ import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.SlotArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
+import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
+import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
+import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.ArmaNaturale;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,7 +53,47 @@ class PersonaggioEquipaggiamentoTest {
         guerriero.addArtefatto(artefatto(TipoArtefatto.SCUDO, 1));
         assertRifiuto(MotivoRifiutoEquipaggiamento.SLOT_OCCUPATO, guerriero, artefatto(TipoArtefatto.ELMO, 1));
         assertRifiuto(MotivoRifiutoEquipaggiamento.SLOT_OCCUPATO, guerriero, artefatto(TipoArtefatto.VESTE, 1));
-        assertRifiuto(MotivoRifiutoEquipaggiamento.SLOT_OCCUPATO, guerriero, artefatto(TipoArtefatto.LIBRO_MAGICO, 1));
+        assertRifiuto(MotivoRifiutoEquipaggiamento.SLOT_OCCUPATO, guerriero, artefatto(TipoArtefatto.SCUDO, 1));
+    }
+
+    // --- Equipaggiamento secondo la classe
+
+    @Test
+    void ogniClasseUsaLeSueArmi() {
+        assertRifiuto(MotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Mago("Merlino", 1), artefatto(TipoArtefatto.SPADONE, 1));
+        assertRifiuto(MotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Mago("Merlino", 1), artefatto(TipoArtefatto.SPADA, 1));
+        assertRifiuto(MotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Bardo("Pippo", 1), artefatto(TipoArtefatto.SPADONE, 1));
+        assertRifiuto(MotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Ladro("Pippo", 1), artefatto(TipoArtefatto.SPADONE, 1));
+        assertRifiuto(MotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Ladro("Pippo", 1), artefatto(TipoArtefatto.SCUDO, 1));
+        assertRifiuto(MotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Guerriero("Pippo", 1), artefatto(TipoArtefatto.LIBRO_MAGICO, 1));
+        assertEquals(Optional.empty(), new Guerriero("Pippo", 1).puoEquipaggiare(artefatto(TipoArtefatto.SPADONE, 1)));
+        assertEquals(Optional.empty(), new Elfa("Pippa", 1).puoEquipaggiare(artefatto(TipoArtefatto.LANCIA, 1)));
+    }
+
+    @Test
+    void ilMagoUsaBastoneELibro() {
+        Personaggio maga = new Maga("Morgana", 1);
+        maga.addArtefatto(artefatto(TipoArtefatto.BASTONE_MAGICO, 1));
+        assertEquals(Optional.empty(), maga.puoEquipaggiare(artefatto(TipoArtefatto.LIBRO_MAGICO, 1)));
+        assertEquals(Optional.empty(), maga.puoEquipaggiare(artefatto(TipoArtefatto.VESTE, 1)));
+    }
+
+    @Test
+    void ilBardoPortaSpadaEScudo() {
+        Personaggio bardo = new Bardo("Pippo", 1);
+        bardo.addArtefatto(artefatto(TipoArtefatto.SPADA, 1));
+        assertEquals(Optional.empty(), bardo.puoEquipaggiare(artefatto(TipoArtefatto.SCUDO, 1)));
+    }
+
+    @Test
+    void lArmaturaChiedeForza() {
+        assertRifiuto(MotivoRifiutoEquipaggiamento.FORZA_INSUFFICIENTE, new Ladro("Pippo", 1), artefatto(TipoArtefatto.ARMATURA, 1));
+        assertRifiuto(MotivoRifiutoEquipaggiamento.FORZA_INSUFFICIENTE, new Mago("Merlino", 1), artefatto(TipoArtefatto.ARMATURA, 1));
+        assertEquals(Optional.empty(), new Guerriero("Pippo", 1).puoEquipaggiare(artefatto(TipoArtefatto.ARMATURA, 1)));
+        // Con un anello della forza anche il ladro la indossa
+        Ladro forzuto = new Ladro("Pippo", 1);
+        forzuto.addModificatore(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 10));
+        assertEquals(Optional.empty(), forzuto.puoEquipaggiare(artefatto(TipoArtefatto.ARMATURA, 1)));
     }
 
     @Test
@@ -83,11 +126,11 @@ class PersonaggioEquipaggiamentoTest {
     }
 
     @Test
-    void lanciaEBastoneNonVannoNellaManoSecondaria() {
-        Personaggio ladro = new Ladro("Pippo", 1);
-        ladro.addArtefatto(artefatto(TipoArtefatto.SPADA, 1));
-        assertRifiuto(MotivoRifiutoEquipaggiamento.SLOT_OCCUPATO, ladro, artefatto(TipoArtefatto.LANCIA, 1));
-        assertRifiuto(MotivoRifiutoEquipaggiamento.SLOT_OCCUPATO, ladro, artefatto(TipoArtefatto.BASTONE_MAGICO, 1));
+    void laLanciaNonVaNellaManoSecondaria() {
+        // L'Elfo sa usare la lancia e combatte con due armi, ma la lancia resta nella mano principale
+        Personaggio elfo = new Elfo("Pippo", 1);
+        elfo.addArtefatto(artefatto(TipoArtefatto.SPADA, 1));
+        assertRifiuto(MotivoRifiutoEquipaggiamento.SLOT_OCCUPATO, elfo, artefatto(TipoArtefatto.LANCIA, 1));
     }
 
     @Test
@@ -110,14 +153,13 @@ class PersonaggioEquipaggiamentoTest {
 
     @Test
     void conUnArmaADueManiNonSiPrendonoOggettiDaMano() {
-        Personaggio ladro = new Ladro("Pippo", 1);
-        ladro.addArtefatto(artefatto(TipoArtefatto.SPADONE, 1));
-        assertRifiuto(MotivoRifiutoEquipaggiamento.ARMA_A_DUE_MANI_IMPUGNATA, ladro, artefatto(TipoArtefatto.SCUDO, 1));
-        assertRifiuto(MotivoRifiutoEquipaggiamento.ARMA_A_DUE_MANI_IMPUGNATA, ladro, artefatto(TipoArtefatto.LIBRO_MAGICO, 1));
-        assertRifiuto(MotivoRifiutoEquipaggiamento.ARMA_A_DUE_MANI_IMPUGNATA, ladro, artefatto(TipoArtefatto.SPADA, 1));
-        assertRifiuto(MotivoRifiutoEquipaggiamento.ARMA_A_DUE_MANI_IMPUGNATA, ladro, artefatto(TipoArtefatto.SPADONE, 1));
+        Personaggio guerriero = new Guerriero("Pippo", 1);
+        guerriero.addArtefatto(artefatto(TipoArtefatto.SPADONE, 1));
+        assertRifiuto(MotivoRifiutoEquipaggiamento.ARMA_A_DUE_MANI_IMPUGNATA, guerriero, artefatto(TipoArtefatto.SCUDO, 1));
+        assertRifiuto(MotivoRifiutoEquipaggiamento.ARMA_A_DUE_MANI_IMPUGNATA, guerriero, artefatto(TipoArtefatto.SPADA, 1));
+        assertRifiuto(MotivoRifiutoEquipaggiamento.ARMA_A_DUE_MANI_IMPUGNATA, guerriero, artefatto(TipoArtefatto.SPADONE, 1));
         // L'elmo non è un oggetto da mano
-        assertEquals(Optional.empty(), ladro.puoEquipaggiare(artefatto(TipoArtefatto.ELMO, 1)));
+        assertEquals(Optional.empty(), guerriero.puoEquipaggiare(artefatto(TipoArtefatto.ELMO, 1)));
     }
 
     // --- Slot di equipaggiamento

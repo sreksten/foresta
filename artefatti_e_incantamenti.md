@@ -1,13 +1,13 @@
 # Artefatti, pergamene e incantatore: piano di lavoro
 
-> Stato: aggiornato al 2026-09-24. Tutte le fasi (1-7) fatte; resta quel che è in "Da fare", qui sotto. Poi le decisioni prese, quel che è fatto, le fasi di lavoro, i bug trovati e i prezzi delle pergamene.
+> Stato: aggiornato al 2026-09-25. Tutte le fasi (1-7) fatte, bilanciamento delle classi in corso; resta quel che è in "Da fare", qui sotto. Poi le decisioni prese, quel che è fatto, le fasi di lavoro, i bug trovati e i prezzi delle pergamene.
 > I salvataggi **non** devono restare retrocompatibili: il formato si cambia liberamente, ma ogni modifica va coperta da test di salva/rileggi.
 
 ## Da fare
 
 ### Bilanciamento del combattimento
 
-Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`, vedi `risorse_e_documenti_vari/piano_montecarlo_matrix.md`, §11).
+Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti` per armi e armature, `testConfrontoClassi` per le classi; vedi `risorse_e_documenti_vari/piano_montecarlo_matrix.md`, §11-§13).
 
 - [ ] **Incantamenti:** uno di grado medio alza il danno del 66%, e la spada di fuoco batte ogni altro equipaggiamento (`piano_montecarlo_matrix.md`, §11.4).
 - [ ] **Classi:** capire cosa porterebbe un giocatore a preferire un Guerriero, un Ladro, un Elfo, un Bardo o un Mago (a parte i gusti personali), e bilanciarle fra loro. Oggi il Guerriero è avanti in mischia e Ladro ed Elfa si somigliano (`piano_montecarlo_matrix.md`, §12). L'idea di fondo:
@@ -15,14 +15,20 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
   - l'**Elfo** combatte con più agilità del Mago ed è un po' meno bravo con la magia;
   - il **Guerriero** con gli incantesimi, salvo colpi di fortuna, fa poco, ma in mischia con spada e scudo o spadone è il più forte;
   - il **Ladro** agisce con destrezza: doppia arma, niente armature pesanti;
-  - il **Bardo** è ancora da definire.
-- [ ] **Moltiplicatori di danno delle classi:** ogni classe ha in `Costanti` un `*_MOLTIPLICATORE_DANNI_FISICI` e un `*_MOLTIPLICATORE_DANNI_MAGICI` (Mago 0,5 e 2,0, Guerriero 1,3 e 0,5, Elfo 0,9 e 1,4…), ma il nuovo motore di combattimento non li usa: quello magico non lo legge nessuno, quello fisico solo la vecchia `getDanniInCombattimento` (FIXME, da togliere). Sono la leva più naturale per dare a ogni classe il suo carattere.
-- [ ] **Equipaggiamento secondo la classe (lore):** oggi chiunque porta qualsiasi cosa, salvo la doppia arma (solo Ladro ed Elfo). Andrebbero aggiunti dei blocchi, come nuovi motivi di rifiuto in `RegoleEquipaggiamento`:
-  - il Guerriero usa spada e scudo o spadone;
-  - un Mago o un Bardo con lo spadone ha poco senso;
-  - un Ladro in armatura pesante nemmeno: dovrebbe agire con destrezza, e magari non ha nemmeno la forza per indossarla (un requisito di `FORZA`, o il carico massimo, potrebbe bastare).
-  Il bastone e la spada di Gandalf restano un'eccezione epica: i personaggi del gioco non lo sono.
-- [ ] **Incantesimi nel simulatore** ("Fase 2" di `piano_montecarlo_matrix.md`, §4): senza, non si misura il valore della magia per nessuna classe.
+  - il **Bardo** fa da supporto al gruppo.
+
+  Il gioco è fracassone: non deve essere frustrante, e i mostri stanno al livello del mondo, cioè del capo del gruppo.
+
+  Fatto finora (dettagli in "Fatto" e in `piano_montecarlo_matrix.md`, §12-§13): blocchi di equipaggiamento per classe e `FORZA` minima per l'armatura, moltiplicatori di danno delle classi collegati al combattimento, dardo arcano per Mago ed Elfo, e nel simulatore incantesimi, dotazioni tipiche e scenari più duri. Ultimi ritocchi (2026-09-25), **non ancora misurati**: il dardo costa all'Elfo 4 di `MAGIA` invece di 2, e al Mago fa 40 × livello invece di 30. I moltiplicatori fisici di Ladro e Bardo restano quelli di prima (1,0 e 0,9).
+
+  Da fare:
+  - [ ] **Rilanciare `testConfrontoClassi`** con gli ultimi ritocchi (la prova è stata interrotta) e aggiornare `piano_montecarlo_matrix.md`, §13.
+  - [ ] **Elfo:** era diventato la classe più forte (dardo arcano più due armi); vedere se il dardo più caro basta.
+  - [ ] **Mago:** deve essere "di gran lunga" il migliore con la magia; vedere se basta il dardo più forte.
+  - [ ] **Ladro:** senza pergamene regge poco contro i gruppi. Il suo moltiplicatore fisico resta allo standard, 1,0: si sistemerà più avanti, in altro modo. Idem il Bardo, che resta a 0,9.
+  - [ ] **Bardo:** il suo ruolo di supporto del gruppo (magia su più bersagli, recupero magico, carisma) nel combattimento non c'è ancora, e il simulatore non lo vede.
+  - [ ] **Obiettivi:** fissare per ogni classe, con la sua dotazione, una fascia di vittorie negli scenari alla pari; tre mostri contro un PG solo servono solo a vedere le differenze, perché nel gioco il gruppo ha più personaggi.
+  - [ ] **Ombrafiamma:** per ora senza limiti di equipaggiamento; il suo ruolo è da definire.
 - [ ] **Guerrieri:** tenerli d'occhio, perché il BERSERK ora funziona davvero (§5.6) e i guerrieri feriti colpiscono più forte.
 
 ### Economia
@@ -42,6 +48,8 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
 
 ### Grafica e interfaccia
 
+- [ ] **Immagini degli oggetti per terra:** spada e scudo si trovano nelle locazioni, ma elmo e armatura sono commentati nel `Bosco` finché mancano `oggetti/Elmo.gif` e `oggetti/Armatura.gif`, e lo spadone non ha nemmeno un oggetto (potrebbe riusare l'immagine della spada). Oggi questi pezzi si hanno solo dai cofani (5% di artefatto casuale), dall'armaiolo e dai templi: le dotazioni tipiche del simulatore sono più complete di quel che un giocatore trova davvero.
+- [ ] **Icona del dardo arcano:** per ora il comando `DARDO_ARCANO` usa l'icona generica degli incantesimi (`icone/Incantesimo.gif`, TODO in `ClasseIcona`).
 - [ ] **Immagine dell'incantatore** (`img/personaggi/Incantatore.gif`): è 31×70, metà delle altre (il venditore è 62×140), va ingrandita.
 - [ ] **Nome proprio nell'inventario:** come presentarlo, da riguardare con la resa grafica.
 - [ ] **Rarità a video:** come mostrare nell'inventario che un artefatto è raro o leggendario (colore, dicitura…).
@@ -86,6 +94,18 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
   - `ENTRAMBE_LE_MANI` (nuovo valore di `SlotArtefatto`), per le **armi a due mani**: occupa sia la mano principale sia la secondaria.
     - Chi impugna un'arma a due mani non può equipaggiare scudo, libro magico o seconda arma finché non la ripone nell'inventario del gruppo. Viceversa, non può prendere un'arma a due mani se ha qualcosa in una delle due mani.
     - Il rifiuto si avverte con un fumetto.
+- **Equipaggiamento secondo la classe.** Armi, scudo e libro seguono una tabella per classe (`RegoleEquipaggiamento.puoUsare`); le versioni femminili seguono le maschili, le classi fuori tabella (i mostri, l'Ombrafiamma) non hanno limiti. Elmo, veste e accessori li portano tutti.
+
+  | Classe | Armi, scudo e libro |
+  | :--- | :--- |
+  | Guerriero/Guerriera | spada, spadone, mazza, ascia, lancia, scudo |
+  | Ladro/Ladra | spada, mazza, ascia (anche due insieme) |
+  | Elfo/Elfa | spada, mazza, ascia (anche due insieme), lancia |
+  | Bardo/Cantastorie | spada, scudo |
+  | Mago/Maga | bastone magico, libro magico |
+
+  Il rifiuto è `MotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE` ("non sa usare questo genere di oggetti").
+- **Armatura e FORZA.** L'armatura chiede una `FORZA` di almeno 16 (`Costanti.ARMATURA_FORZA_MINIMA`), invece di un divieto per classe: il Guerriero ce l'ha sempre (17 a livello 1), Ladro, Elfo e Bardo solo se forzuti ai livelli alti (11-14 a livello 1, fino a 19 a livello 10), il Mago mai (5-11). Il rifiuto è `FORZA_INSUFFICIENTE`.
 - **Arma in `MANO_SECONDARIA`.** Oltre a scudo e libro, anche **spada, mazza o ascia**, ma solo per **Ladro/Ladra ed Elfo/Elfa**. Lancia e bastone magico restano solo nella mano principale.
 - **Armi a due mani.** Nuovo `TipoArtefatto.SPADONE` (supertipo `ARMA`, slot `ENTRAMBE_LE_MANI`, danno `TAGLIENTE`, "impugna"), che per ora riusa la grafica della spada.
   - **+50% di danno base** rispetto a un'arma a una mano dello stesso livello.
@@ -131,6 +151,9 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
 
 ### Combattimento
 
+- **Dardo arcano.** L'incantesimo innato di Mago ed Elfo (`DardoArcano`): danno `ARCANO` su un solo bersaglio, che non consuma pergamene. Al Mago fa 40 × livello di danno base e costa 2 di `MAGIA`; all'Elfo, un po' meno bravo con la magia e in cambio capace di combattere, fa 30 × livello e costa 4 (`Costanti.DARDO_ARCANO_*`). Una pergamena di fuoco fa 60 × livello. Il danno segue le regole degli incantesimi: moltiplicatore magico della classe (il Mago fa più dell'Elfo), bonus del libro magico. Non è fra le `ClasseIncantesimo`, perché non è una pergamena: non si compra, non si trova e non si conta nell'inventario del gruppo. In combattimento si lancia con il comando degli incantesimi: chi lo conosce e ha la `MAGIA` trova `DARDO_ARCANO` fra le scelte, e colpisce il primo avversario vivo.
+- **Danno delle pergamene.** `Costanti.INCANTESIMO_FATTORE_DANNI` (oggi 1,0) scala il danno base di tutti gli incantesimi, dardo compreso. Abbassarlo punisce soprattutto il Mago, che vive di pergamene: le pergamene sono poche, quindi restano forti, e il loro peso va rivisto con l'economia.
+- **Moltiplicatori di classe.** Il danno base si moltiplica per il `*_MOLTIPLICATORE_DANNI_FISICI` della classe di chi colpisce se l'attacco è fisico, per il `*_MOLTIPLICATORE_DANNI_MAGICI` se è elementale o magico (incantesimi compresi, e gli attacchi naturali di mostri come Spettro o Viverna). Negli incantamenti delle armi il moltiplicatore magico vale solo per la parte percentuale, che scala sull'`INTELLIGENZA`: la parte fissa è dell'arma e vale per tutti. Il bonus del libro magico prende tutto il moltiplicatore magico, perché è danno dell'incantesimo. Valori: Mago 0,5 fisico e 2,0 magico, Guerriero 1,3 e 0,5, Elfo 0,9 e 1,4, Bardo 0,9 e 1,1, Ladro 1,0 e 1,0. Ladro e Bardo reggono poco contro i gruppi, ma i loro moltiplicatori restano questi: si sistemeranno più avanti, in altro modo.
 - **Resistenze.** Entrano nella formula a rendimenti decrescenti che c'è già, `danno × 100 / (100 + difesa)`, senza un tetto separato: la difesa non porta mai all'immunità.
   - La somma è su tutti gli incantamenti di tipo T di elmo, scudo e armatura del difensore. La difesa base è quella di oggi: `COSTITUZIONE + PARATA` per il danno fisico, `RESISTENZA_MAGICA` per quello elementale o magico.
   - `difesa_T` si usa nella mitigazione del danno base (se l'arma è di tipo T) e in quella di ogni incantamento di tipo T dell'attaccante.
@@ -266,6 +289,14 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
   - **Bilanciamento di doppia arma e scudo** (2026-09-24). Al primo giro l'attacco rendeva molto più della difesa: il Ladro vinceva contro la Viverna il 39% con spada e scudo e l'82% con due spade. Seconda arma dal 60% al 40%, `PARATA` dello scudo da +1 a +3 per livello, e allo scudo una `RESISTENZA_MAGICA` di +1 per livello (+2 se raro), perché contro gli attacchi elementali la `PARATA` non serve. Ora a livello 5 il Ladro vince contro il Troll il 98% con spada e scudo e il 96% con due spade (in 7,5 e 5,5 turni); contro la Viverna il 59% (73% con lo scudo raro) e il 71%. La guardia aperta resta al −25%, anche se pesa poco perché la `PARATA` di base è piccola.
 - [x] **Danno delle armi di livello basso.** Prima a livello 1 una spada faceva 6, meno delle mani nude di un PG (4 + 1,5 × √Forza, cioè 9-10). Ora fa `max(4 + 2 × livello, 11 + livello)` (`GeneratoreArtefatti.danniMediArma`): 12 a livello 1, 16 a livello 5, come prima dal 7 in su. Test in `GeneratoreArtefattiTest`; simulazione in `piano_montecarlo_matrix.md`, §11.5.
 - [x] **`PARATA` minima di scudo, elmo e armatura** (2026-09-24). Senza, elmo e armatura spogli non servivano quasi a nulla (il loro +5% di `PARATA` per livello moltiplica una `PARATA` di base di 2-6), e ai livelli bassi lo scudo rendeva poco (+3 a livello 1). Ora: scudo 6 + 2 per livello (era 3 per livello), elmo 2 + 1, armatura 3 + 1; la veste dà lo stesso minimo dell'armatura in `RESISTENZA_MAGICA`. Test in `CalcolatoreCombattimentoEquipaggiamentoTest` (18); tutta la suite è verde (328 test). Simulazione in `piano_montecarlo_matrix.md`, §11.6.
+- [x] **Classi: blocchi di equipaggiamento, moltiplicatori di danno, incantesimi nel simulatore** (2026-09-25). I moltiplicatori `*_MOLTIPLICATORE_DANNI_FISICI` e `_MAGICI` c'erano dal 5 settembre (`d48d476`), ma il nuovo motore di combattimento (`3b557cf`, 31 agosto) non li ha mai letti: quello fisico lo usava solo la vecchia `getDanniInCombattimento`, quello magico nessuno. Ora li usa `CalcolatoreCombattimento` (vedi §2, "Combattimento"). Blocchi di equipaggiamento per classe e `FORZA` minima per l'armatura (§2, "Equipaggiamento"). Nel simulatore: `ScortaDiPergamene` e dotazioni tipiche per classe (`piano_montecarlo_matrix.md`, §13). Test: `CalcolatoreCombattimentoClassiTest` (5), 4 nuovi in `PersonaggioEquipaggiamentoTest`, 2 in `TestMonteCarloMatrix`; tutta la suite è verde (340 test).
+- [x] **Dardo arcano, scenari più duri e primi ritocchi alle classi** (2026-09-25).
+  - `DardoArcano` (§2, "Combattimento"): nel gioco è fra le scelte del comando incantesimi (`Comando.DARDO_ARCANO`, icona provvisoria), nel simulatore Mago ed Elfo lo lanciano quando promette più danno delle armi. Test: `DardoArcanoTest` (5).
+  - Corretto il bug della `MAGIA` degli incantesimi di gruppo (§5.7).
+  - `Costanti.INCANTESIMO_FATTORE_DANNI` (1,0): abbassarlo puniva soprattutto il Mago, quindi resta così.
+  - Nel simulatore: livello dei mostri separato da quello del PG, scenari con 1, 2 e 3 mostri e con un mostro di un livello sopra (`SCENARI_CONFRONTO_CLASSI`).
+  - Ritocchi: dardo dell'Elfo a 4 di `MAGIA`, dardo del Mago a 40 × livello. Non ancora misurati (vedi "Da fare"). Provato e tolto +0,1 di danno fisico a Ladro e Bardo: i loro moltiplicatori restano quelli di prima.
+  - Tutta la suite è verde (345 test).
 - [x] **Tetti degli effetti a 3/4/5** (comune/raro/leggendario) al posto di 5/6/7.
 - [x] **Il `|` sparisce dai testi** alla fonte (§5.5).
 - [x] **Rarità degli artefatti.** `RaritaArtefatto` con posti e tetti (§2, "Rarità"), salvata in `ArtefattoMD`. Il generatore fa rari il 10% degli artefatti incantabili e non genera mai leggendari; gli artefatti che nascono incantati hanno al massimo 3 incantamenti e almeno un posto libero. Test in `ArtefattoMDTest`, `ArtefattoIncantabileTest` e `GeneratoreArtefattiTest`; tutta la suite è verde (271 test).
@@ -350,6 +381,7 @@ Le regole sono in §2, "Combattimento". Da fare in `CalcolatoreCombattimento.cal
    - Test: `LettoreCampiTest`, `ModelloDatiSalvataggioTest` (salva e rilegge in fila gruppo, statistiche, linea temporale, registri e notizie) e un test sui testi vuoti in `ArtefattoMDTest`.
    - **Classifica (fatto):** per coerenza anche `GestorePunteggiSuFile` usa il `|` al posto del `#`, e legge le righe con `LettoreCampi`. `GestorePunteggiBase.pulisciNome` toglie il `|` dai nomi; un nome vuoto diventa "nessun nome" (`Serializzabile.NESSUN_NOME`). Un file dei punteggi vecchio, con il `#`, non si legge più e il gioco riparte dalla classifica di default. Test in `GestorePunteggiTest`.
 6. ~~**BERSERK applicato al contrario.**~~ Corretto. In `CalcolatoreCombattimento.calcolaDannoRisultante`, §2.5, la condizione era `dannoNonFisico && …`, mentre `TipoEffettoDiStato.BERSERK` e il commento dicono che scala il danno **fisico**. Ora è `!dannoNonFisico`, coperto da `CalcolatoreCombattimentoBerserkTest`. Siccome i guerrieri usano quasi sempre armi fisiche, finora il BERSERK non si applicava praticamente mai: ora che funziona, il combattimento dei guerrieri feriti diventa più forte, e conviene tenerlo presente nel bilanciamento.
+7. ~~**Gli incantesimi di gruppo in combattimento non costavano `MAGIA`.**~~ Corretto. In `LocazioneBase` (`QUALE_FORMULA`) il costo di lancio si controllava ma non si toglieva; lo toglieva solo il ramo degli incantesimi su un solo bersaglio (`IncantesimoMaleficoImpl.formula`). Ora si toglie in tutti e due.
 
 Non sono bug ma scelte da rivedere: l'armaiolo **ricompra a prezzo pieno**, e c'è del codice di debug da togliere (vedi "Da fare").
 

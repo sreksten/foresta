@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -54,6 +55,16 @@ public class TestMonteCarloMatrix {
             ClassePersonaggio.LADRO, ClassePersonaggio.ELFA, ClassePersonaggio.GUERRIERO, ClassePersonaggio.MAGO);
     private static final List<ClassePersonaggio> MOSTRI_CONFRONTO = Arrays.asList(
             ClassePersonaggio.GOBLIN, ClassePersonaggio.TROLL, ClassePersonaggio.MINOTAURO, ClassePersonaggio.VIVERNA);
+
+    // Per il confronto fra classi: ogni classe con le sue dotazioni tipiche e scorte di pergamene diverse
+    private static final List<ClassePersonaggio> CLASSI_TIPICHE = Arrays.asList(ClassePersonaggio.GUERRIERO,
+            ClassePersonaggio.LADRO, ClassePersonaggio.ELFO, ClassePersonaggio.BARDO, ClassePersonaggio.MAGO);
+    private static final List<ScortaDiPergamene> SCORTE_CONFRONTO = Arrays.asList(ScortaDiPergamene.NESSUNA,
+            ScortaDiPergamene.di(ClasseIncantesimo.FUOCO, 2), ScortaDiPergamene.di(ClasseIncantesimo.FUOCO, 5));
+    private static final int[] LIVELLI_CONFRONTO_CLASSI = {1, 5, 10};
+    // Gli scenari del confronto fra classi: {quantità di mostri, livelli dei mostri sopra il PG}. Uno contro uno dal
+    // livello 5 quasi tutti vincono: per distinguere le classi servono gruppi di mostri e mostri più forti.
+    private static final int[][] SCENARI_CONFRONTO_CLASSI = {{1, 0}, {2, 0}, {3, 0}, {1, 1}};
 
     private static final PrintStream NULL_STREAM = new PrintStream(new OutputStream() {
         @Override
@@ -117,6 +128,68 @@ public class TestMonteCarloMatrix {
         assertTrue(Equipaggiamento.DUE_SPADE.motivoRifiuto(ClassePersonaggio.GUERRIERO, LIVELLO).isPresent());
         assertThrows(IllegalArgumentException.class, () -> simulaConLoggerMuto(ClassePersonaggio.GUERRIERO,
                 Equipaggiamento.DUE_SPADE, ClassePersonaggio.GOBLIN, 1, LIVELLO, 1));
+    }
+
+    @Test
+    void conLePergameneIlMagoVincePiuSpesso() {
+        RisultatoMatrice senza = simulaConLoggerMuto(ClassePersonaggio.MAGO, Equipaggiamento.BASTONE_LIBRO_E_VESTE,
+                ScortaDiPergamene.NESSUNA, ClassePersonaggio.TROLL, 1, 5, 2_000);
+        RisultatoMatrice con = simulaConLoggerMuto(ClassePersonaggio.MAGO, Equipaggiamento.BASTONE_LIBRO_E_VESTE,
+                ScortaDiPergamene.di(ClasseIncantesimo.FUOCO, 5), ClassePersonaggio.TROLL, 1, 5, 2_000);
+        System.out.printf("MAGO vs 1 TROLL, livello 5 -> senza pergamene win=%.2f%%, con 5 di fuoco win=%.2f%%%n",
+                senza.winRatePg, con.winRatePg);
+        assertTrue(con.winRatePg > senza.winRatePg, "con " + con.winRatePg + ", senza " + senza.winRatePg);
+    }
+
+    @Test
+    void ogniClassePuoPortareLeSueDotazioniTipiche() {
+        for (ClassePersonaggio classe : CLASSI_TIPICHE) {
+            for (Equipaggiamento equipaggiamento : Equipaggiamento.tipiciPer(classe)) {
+                // Il Guerriero di livello 1 ha già la FORZA per l'armatura
+                assertEquals(Optional.empty(), equipaggiamento.motivoRifiuto(classe, 1), classe + " con " + equipaggiamento);
+            }
+        }
+    }
+
+    /**
+     * Confronta le classi, ognuna con le sue dotazioni tipiche e con scorte di pergamene diverse, a più livelli e
+     * negli scenari di SCENARI_CONFRONTO_CLASSI (quantità e livello dei mostri), e scrive
+     * REPORT_BILANCIAMENTO_CLASSI.csv. Una quantità oltre il massimo per locazione di un mostro si salta.
+     */
+    @Disabled("Da eseguire manualmente per confrontare le classi")
+    @Test
+    void testConfrontoClassi() throws IOException {
+        int iterazioni = 1_000;
+        try (FileWriter writer = new FileWriter("REPORT_BILANCIAMENTO_CLASSI.csv")) {
+            writer.write("PG,EQUIPAGGIAMENTO,PERGAMENE,MOSTRO,QUANTITA_MOSTRI,LIVELLO,LIVELLO_MOSTRI,WIN_RATE,LOSE_RATE,"
+                    + "STALLO_RATE,TURNI_MEDI,TASSO_COLPIRE_PG,TASSO_COLPIRE_MOSTRO,DANNO_MEDIO_PG,DANNO_MEDIO_MOSTRO\n");
+            for (int livello : LIVELLI_CONFRONTO_CLASSI) {
+                for (ClassePersonaggio classePg : CLASSI_TIPICHE) {
+                    for (Equipaggiamento equipaggiamento : Equipaggiamento.tipiciPer(classePg)) {
+                        for (ScortaDiPergamene pergamene : SCORTE_CONFRONTO) {
+                            for (ClassePersonaggio classeMostro : MOSTRI_CONFRONTO) {
+                                for (int[] scenario : SCENARI_CONFRONTO_CLASSI) {
+                                    int quantita = scenario[0];
+                                    int livelloMostri = livello + scenario[1];
+                                    if (quantita > quantitaMassima(classeMostro)) {
+                                        continue;
+                                    }
+                                    RisultatoMatrice r = simulaConLoggerMuto(classePg, equipaggiamento, pergamene,
+                                            classeMostro, quantita, livello, livelloMostri, iterazioni);
+                                    System.out.printf("L%-2d %-10s %-22s %-8s vs %dx%-10s L%-2d win=%6.2f%% turni=%5.2f%n",
+                                            livello, classePg, equipaggiamento, pergamene, quantita, classeMostro,
+                                            livelloMostri, r.winRatePg, r.mediaTurni);
+                                    writer.write(String.format("%s,%s,%s,%s,%d,%d,%d,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f,%.2f%n",
+                                            classePg, equipaggiamento, pergamene, classeMostro, quantita, livello,
+                                            livelloMostri, r.winRatePg, r.loseRatePg, r.stalloRate, r.mediaTurni,
+                                            r.tassoColpirePg, r.tassoColpireMostro, r.dannoMedioPg, r.dannoMedioMostro));
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     /**
@@ -206,6 +279,21 @@ public class TestMonteCarloMatrix {
         }
     }
 
+    /**
+     * Quanti mostri di quella classe possono stare in una locazione. Il valore lo imposta il costruttore del
+     * mostro, quindi prima ne serve un'istanza (vedi piano_montecarlo_matrix.md, §6.3).
+     */
+    private static int quantitaMassima(ClassePersonaggio classeMostro) {
+        PrintStream originale = System.out;
+        System.setOut(NULL_STREAM);
+        try {
+            classeMostro.getIstanza(1);
+        } finally {
+            System.setOut(originale);
+        }
+        return classeMostro.getQuantitaMassima();
+    }
+
     private static RisultatoMatrice simulaConLoggerMuto(ClassePersonaggio classePg, ClassePersonaggio classeMostro,
                                                           int quantitaMostri, int livello, int iterazioni) {
         return simulaConLoggerMuto(classePg, Equipaggiamento.NESSUNO, classeMostro, quantitaMostri, livello, iterazioni);
@@ -214,11 +302,26 @@ public class TestMonteCarloMatrix {
     private static RisultatoMatrice simulaConLoggerMuto(ClassePersonaggio classePg, Equipaggiamento equipaggiamento,
                                                           ClassePersonaggio classeMostro, int quantitaMostri,
                                                           int livello, int iterazioni) {
+        return simulaConLoggerMuto(classePg, equipaggiamento, ScortaDiPergamene.NESSUNA, classeMostro, quantitaMostri,
+                livello, iterazioni);
+    }
+
+    private static RisultatoMatrice simulaConLoggerMuto(ClassePersonaggio classePg, Equipaggiamento equipaggiamento,
+                                                          ScortaDiPergamene pergamene, ClassePersonaggio classeMostro,
+                                                          int quantitaMostri, int livello, int iterazioni) {
+        return simulaConLoggerMuto(classePg, equipaggiamento, pergamene, classeMostro, quantitaMostri, livello, livello,
+                iterazioni);
+    }
+
+    private static RisultatoMatrice simulaConLoggerMuto(ClassePersonaggio classePg, Equipaggiamento equipaggiamento,
+                                                          ScortaDiPergamene pergamene, ClassePersonaggio classeMostro,
+                                                          int quantitaMostri, int livello, int livelloMostri,
+                                                          int iterazioni) {
         PrintStream originale = System.out;
         System.setOut(NULL_STREAM);
         try {
-            return CombatSimulatorMatrix.simulaScontroGruppo(classePg, equipaggiamento, classeMostro, quantitaMostri,
-                    livello, iterazioni);
+            return CombatSimulatorMatrix.simulaScontroGruppo(classePg, equipaggiamento, pergamene, classeMostro,
+                    quantitaMostri, livello, livelloMostri, iterazioni);
         } finally {
             System.setOut(originale);
         }

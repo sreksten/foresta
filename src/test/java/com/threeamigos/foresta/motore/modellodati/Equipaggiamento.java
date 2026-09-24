@@ -72,6 +72,50 @@ public final class Equipaggiamento {
 			Pezzo.di(TipoArtefatto.SPADA), Pezzo.di(TipoArtefatto.SCUDO),
 			Pezzo.di(TipoArtefatto.ELMO), Pezzo.di(TipoArtefatto.ARMATURA).incantato(TipoDanno.VELENO));
 
+	// Le dotazioni tipiche delle classi (vedi artefatti_e_incantamenti.md, §2, "Equipaggiamento secondo la
+	// classe"): quel che ogni classe userebbe davvero, con elmo e armatura o veste
+	public static final Equipaggiamento CAVALIERE = di("CAVALIERE",
+			Pezzo.di(TipoArtefatto.SPADA), Pezzo.di(TipoArtefatto.SCUDO),
+			Pezzo.di(TipoArtefatto.ELMO), Pezzo.di(TipoArtefatto.ARMATURA));
+	public static final Equipaggiamento SPADONE_E_ARMATURA = di("SPADONE_E_ARMATURA",
+			Pezzo.di(TipoArtefatto.SPADONE), Pezzo.di(TipoArtefatto.ELMO), Pezzo.di(TipoArtefatto.ARMATURA));
+	public static final Equipaggiamento DUE_SPADE_E_VESTE = di("DUE_SPADE_E_VESTE",
+			Pezzo.di(TipoArtefatto.SPADA), Pezzo.di(TipoArtefatto.SPADA),
+			Pezzo.di(TipoArtefatto.ELMO), Pezzo.di(TipoArtefatto.VESTE));
+	public static final Equipaggiamento LANCIA_E_VESTE = di("LANCIA_E_VESTE",
+			Pezzo.di(TipoArtefatto.LANCIA), Pezzo.di(TipoArtefatto.ELMO), Pezzo.di(TipoArtefatto.VESTE));
+	public static final Equipaggiamento SPADA_SCUDO_E_VESTE = di("SPADA_SCUDO_E_VESTE",
+			Pezzo.di(TipoArtefatto.SPADA), Pezzo.di(TipoArtefatto.SCUDO),
+			Pezzo.di(TipoArtefatto.ELMO), Pezzo.di(TipoArtefatto.VESTE));
+	public static final Equipaggiamento BASTONE_LIBRO_E_VESTE = di("BASTONE_LIBRO_E_VESTE",
+			Pezzo.di(TipoArtefatto.BASTONE_MAGICO), Pezzo.di(TipoArtefatto.LIBRO_MAGICO), Pezzo.di(TipoArtefatto.VESTE));
+
+	/**
+	 * Le dotazioni tipiche di una classe giocabile (le versioni femminili come le maschili), o NESSUNO
+	 * per le altre
+	 */
+	public static List<Equipaggiamento> tipiciPer(ClassePersonaggio classe) {
+		switch (classe) {
+			case GUERRIERO:
+			case GUERRIERA:
+				return Arrays.asList(CAVALIERE, SPADONE_E_ARMATURA);
+			case LADRO:
+			case LADRA:
+				return Collections.singletonList(DUE_SPADE_E_VESTE);
+			case ELFO:
+			case ELFA:
+				return Arrays.asList(DUE_SPADE_E_VESTE, LANCIA_E_VESTE);
+			case BARDO:
+			case CANTASTORIE:
+				return Collections.singletonList(SPADA_SCUDO_E_VESTE);
+			case MAGO:
+			case MAGA:
+				return Collections.singletonList(BASTONE_LIBRO_E_VESTE);
+			default:
+				return Collections.singletonList(NESSUNO);
+		}
+	}
+
 	/**
 	 * Tutti gli equipaggiamenti già pronti, nell'ordine in cui compaiono nei report
 	 */

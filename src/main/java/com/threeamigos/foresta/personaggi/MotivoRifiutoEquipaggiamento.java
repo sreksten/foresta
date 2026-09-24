@@ -15,6 +15,14 @@ public enum MotivoRifiutoEquipaggiamento {
 	PERGAMENA("non può portare le pergamene, che restano nel gruppo"),
 	LIVELLO_TROPPO_ALTO("non ha ancora il livello per usare questo oggetto"),
 	/**
+	 * Ogni classe usa solo certe armi, lo scudo e il libro (es. niente spadone per il mago)
+	 */
+	NON_ADATTO_ALLA_CLASSE("non sa usare questo genere di oggetti"),
+	/**
+	 * L'armatura chiede una FORZA minima (Costanti.ARMATURA_FORZA_MINIMA)
+	 */
+	FORZA_INSUFFICIENTE("non ha la forza per portarlo"),
+	/**
 	 * Solo Ladro/Ladra ed Elfo/Elfa possono impugnare un'arma nella mano secondaria
 	 */
 	SECONDA_ARMA_NON_CONSENTITA("non sa combattere con due armi"),
