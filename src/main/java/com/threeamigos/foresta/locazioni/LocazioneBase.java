@@ -730,7 +730,7 @@ public abstract class LocazioneBase implements Locazione {
 				if (numeroOggetti == 1) {
 					if (o.getClasse() == ClassiOggetto.ARTEFATTO) {
 						Artefatto artefatto = (Artefatto)o;
-						sb.append(artefatto.getNome()).append(", ").append(artefatto.getDescrizione());
+						sb.append(artefatto.getNomeCompleto());
 					} else {
 						sb.append(o.getAIS()).append(o.getNomeSingolare());
 					}

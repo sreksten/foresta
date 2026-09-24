@@ -71,8 +71,8 @@ public class RegistroPersonaggiMD implements Serializzabile {
 		int numeroPersonaggi = Integer.parseInt(line);
 		for (int i = 0; i < numeroPersonaggi; i++) {
 			line = stream.readLine();
-			StringTokenizer st = new StringTokenizer(line, PIPE);
-			CoordinateMD coordinate = new CoordinateMD(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+			LettoreCampi st = new LettoreCampi(line);
+			CoordinateMD coordinate = new CoordinateMD(Integer.parseInt(st.testo()), Integer.parseInt(st.testo()));
 			PersonaggioMD personaggio = new PersonaggioMD();
 			personaggio.leggi(stream);
 			personaggiInLocazione.put(coordinate, personaggio);

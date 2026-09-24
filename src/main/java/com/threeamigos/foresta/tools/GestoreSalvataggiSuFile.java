@@ -9,13 +9,13 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.modellodati.GruppoGiocatoreMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.motore.modellodati.LettoreCampi;
 import com.threeamigos.foresta.motore.modellodati.Serializzabile;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 public class GestoreSalvataggiSuFile extends GestoreSuFile implements InterfacciaGestoreSalvataggi {
 
@@ -89,9 +89,9 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements Interfacci
 
 	private TestataSalvataggio leggiTestataSalvataggio(BufferedReader reader) throws Exception {
 		String line = reader.readLine();
-		StringTokenizer st = new StringTokenizer(line, Serializzabile.PIPE);
-		String id = st.nextToken();
-		String descrizione = st.nextToken();
+		LettoreCampi st = new LettoreCampi(line);
+		String id = st.testo();
+		String descrizione = st.testo();
 		GruppoGiocatoreMD md = new GruppoGiocatoreMD();
 		md.leggi(reader);
 		GruppoGiocatore gruppoGiocatore = GruppoGiocatore.of(md);

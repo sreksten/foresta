@@ -231,7 +231,7 @@ public class RegistroArtefatti {
 			return null;
 		}
 		// Artefatto.di e non new Artefatto: un'arma deve tornare un ArmaFisica, altrimenti
-		// getArmaEquipaggiata() (che fa il cast ad Arma del primo artefatto di supertipo ARMA)
+		// getArmaEquipaggiata() (che fa il cast ad Arma dell'arma impugnata)
 		// fallisce con ClassCastException per le armi raccolte nei templi.
 		return Artefatto.di(modelloDati);
 	}

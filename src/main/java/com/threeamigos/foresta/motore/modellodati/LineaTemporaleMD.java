@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.StringTokenizer;
 
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 
@@ -82,12 +81,12 @@ public class LineaTemporaleMD implements Serializzabile {
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		String line = stream.readLine();
-		StringTokenizer st = new StringTokenizer(line, PIPE);
-		ora = Integer.parseInt(st.nextToken());
-		giorno = Integer.parseInt(st.nextToken());
+		LettoreCampi st = new LettoreCampi(line);
+		ora = Integer.parseInt(st.testo());
+		giorno = Integer.parseInt(st.testo());
 		cittaDistrutte.clear();
-		while (st.hasMoreTokens()) {
-			cittaDistrutte.add(ClassiLocazione.values()[Integer.parseInt(st.nextToken())]);
+		while (st.haAltriCampi()) {
+			cittaDistrutte.add(ClassiLocazione.values()[Integer.parseInt(st.testo())]);
 		}
 	}
 }

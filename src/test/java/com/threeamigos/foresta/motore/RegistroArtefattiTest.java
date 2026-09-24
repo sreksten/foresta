@@ -28,7 +28,7 @@ class RegistroArtefattiTest {
         RegistroArtefatti.addArtefattoInLocazione(Artefatto.di(artefatto(TipoArtefatto.SPADA)), tempio);
         // When
         Artefatto artefatto = RegistroArtefatti.getArtefattoInLocazione(tempio);
-        // Then: getArmaEquipaggiata() fa il cast ad Arma del primo artefatto di supertipo ARMA
+        // Then: getArmaEquipaggiata() fa il cast ad Arma dell'arma impugnata
         assertInstanceOf(ArmaFisica.class, artefatto);
     }
 

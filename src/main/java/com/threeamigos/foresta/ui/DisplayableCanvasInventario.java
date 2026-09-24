@@ -53,7 +53,8 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
     }
 
     void onEventoRifiutoPrelievo(NotificaRifiutoPrelievoArtefatto evento) {
-        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Questo oggetto è troppo pesante.", getCoordinateFumetto()));
+        Personaggio personaggio = (Personaggio) evento.getEventoRichiestaSpostamento().getParteAttiva();
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo(evento.getMotivo().getFrase(personaggio), getCoordinateFumetto()));
     }
 
     @Override

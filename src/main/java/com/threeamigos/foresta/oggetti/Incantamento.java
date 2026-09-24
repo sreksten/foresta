@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.motore.modellodati.Serializzabile;
 import com.threeamigos.foresta.motore.modellodati.TipoDanno;
 
 /**
@@ -14,7 +16,8 @@ public class Incantamento {
     private final double coefficienteScala;       // es. 0.2 (scala su Intelligenza)
 
     public Incantamento(String nomeIncantamento, TipoDanno tipoDannoElementale, int dannoBonusFisso, double coefficienteScala) {
-        this.nomeIncantamento = nomeIncantamento;
+        String pulito = Serializzabile.senzaPipe(nomeIncantamento);
+        this.nomeIncantamento = pulito == null || pulito.trim().isEmpty() ? ArtefattoMD.NESSUN_NOME : pulito;
         this.tipoDannoElementale = tipoDannoElementale;
         this.dannoBonusFisso = dannoBonusFisso;
         this.coefficienteScala = coefficienteScala;

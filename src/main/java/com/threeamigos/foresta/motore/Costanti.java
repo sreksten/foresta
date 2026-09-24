@@ -6,6 +6,36 @@ package com.threeamigos.foresta.motore;
  */
 public class Costanti {
 
+    // Artefatti
+    // Tetto al numero di effetti (incantamenti più modificatori) di un artefatto, qualunque sia il suo livello,
+    // secondo la rarità (vedi RaritaArtefatto)
+    public static final int ARTEFATTO_MASSIMO_EFFETTI_COMUNE = 3;
+    public static final int ARTEFATTO_MASSIMO_EFFETTI_RARO = 4;
+    public static final int ARTEFATTO_MASSIMO_EFFETTI_LEGGENDARIO = 5;
+
+    // Gradi delle pergamene (vedi GradoIncantamento): fino al livello 3 minore, da 4 a 7 medio, da 8 maggiore
+    public static final int GRADO_INCANTAMENTO_MEDIO_DAL_LIVELLO = 4;
+    public static final int GRADO_INCANTAMENTO_MAGGIORE_DAL_LIVELLO = 8;
+
+    // Prezzi delle pergamene (vedi ListinoPergamene)
+    public static final int PERGAMENA_PREZZO_PER_PUNTO_FISSO = 2;
+    public static final int PERGAMENA_PREZZO_PER_PUNTO_PERCENTUALE = 1;
+    public static final int PERGAMENA_PREZZO_PER_PUNTO_ASSOLUTO = 5;
+    public static final double PERGAMENA_MAGGIORAZIONE_EFFETTI_DI_STATO = 0.25;
+
+    // Generatore di artefatti (vedi GeneratoreArtefattiTabelle)
+    public static final double ARTEFATTO_PROBABILITA_NOME_PROPRIO = 0.05;
+    public static final double ARTEFATTO_MOLTIPLICATORE_DUE_MANI = 1.5;
+    // Probabilità che un artefatto incantabile generato nasca già incantato: 5% per ogni livello oltre il primo, fino al 60%
+    public static final double ARTEFATTO_PROBABILITA_INCANTATO_PER_LIVELLO = 0.05;
+    public static final double ARTEFATTO_PROBABILITA_INCANTATO_MASSIMA = 0.6;
+    // Incantamenti al massimo con cui un artefatto nasce; ne resta sempre almeno un posto libero per la fusione
+    public static final int ARTEFATTO_MASSIMO_INCANTAMENTI_IN_NASCITA = 3;
+    // Probabilità che un artefatto incantabile generato sia raro (i leggendari non si generano)
+    public static final double ARTEFATTO_PROBABILITA_RARO = 0.1;
+    // Livello (e quindi numero di effetti) di una pergamena
+    public static final int PERGAMENA_LIVELLO_MASSIMO = 3;
+
     // Incantesimi
     public static final int INCANTESIMO_ACQUA_COSTO_ACQUISTO = 5;
     public static final int INCANTESIMO_ACQUA_COSTO_LANCIO = 1;

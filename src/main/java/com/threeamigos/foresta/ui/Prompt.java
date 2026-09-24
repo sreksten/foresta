@@ -2,6 +2,7 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoInvioTesto;
+import com.threeamigos.foresta.motore.modellodati.Serializzabile;
 
 import javax.swing.*;
 import java.awt.*;
@@ -9,6 +10,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 
 public class Prompt extends JPanel implements ActionListener {
@@ -25,7 +28,7 @@ public class Prompt extends JPanel implements ActionListener {
 	private final TextField tf;
 
 	public String getText() {
-		return tf.getText();
+		return Serializzabile.senzaPipe(tf.getText());
 	}
 
 	public Prompt() {
@@ -35,6 +38,15 @@ public class Prompt extends JPanel implements ActionListener {
 		setLayout(null);
 		tf = new TextField();
 		tf.addFocusListener(new MyFocusListener());
+		// Il "|" separa i campi dei salvataggi: non si lascia nemmeno scrivere
+		tf.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyTyped(KeyEvent e) {
+				if (e.getKeyChar() == '|') {
+					e.consume();
+				}
+			}
+		});
 		tf.setSize(cornice.getWidth() - 20, cornice.getHeight() - 10);
 		tf.setLocation(10, (cornice.getHeight() - tf.getSize().height) / 2);
 		tf.setBackground(Color.white);
@@ -62,7 +74,8 @@ public class Prompt extends JPanel implements ActionListener {
 	 */
 	public void actionPerformed(ActionEvent e) {
 		setVisible(false);
-		BusEventi.pubblica(new ComandoInvioTesto(tf.getText()));
+		// Il testo incollato può ancora contenere un "|"
+		BusEventi.pubblica(new ComandoInvioTesto(getText()));
 	}
 
 	@Override

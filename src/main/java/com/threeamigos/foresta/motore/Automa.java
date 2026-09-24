@@ -1118,8 +1118,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Esito gestisciTestoInStatoPostGameAttesaNomePerPunteggio(String testoDisponibile) {
-		if (testoDisponibile.isEmpty()) {
-			testoDisponibile = GruppoGiocatore.getIstanza().getPersonaggio(0).getNomeProprio().orElseThrow(Personaggio.PERSONAGGIO_SENZA_NOME);
+		// Senza nome (o con soli spazi) si usa quello del personaggio; se non ne ha uno, quello della sua classe
+		if (testoDisponibile.trim().isEmpty()) {
+			Personaggio primo = GruppoGiocatore.getIstanza().getPersonaggio(0);
+			testoDisponibile = primo.getNomeProprio()
+					.orElseGet(() -> primo.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
 		}
 		GestorePunteggi.addPunteggio(testoDisponibile, Statistiche.getPunti());
 		stato = Stato.PUNTEGGI;

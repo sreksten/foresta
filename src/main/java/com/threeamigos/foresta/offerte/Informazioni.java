@@ -97,7 +97,7 @@ public class Informazioni implements Offerta {
 			sb.append(" tutti gli artefatti sono stati recuperati da intrepidi eroi.");
 		} else {
 			ArtefattoMD artefatto = informazioni.getArtefattoMD();
-			sb.append(artefatto.getNome()).append(", ").append(artefatto.getDescrizione())
+			sb.append(artefatto.getNomeCompleto())
 			.append(", si trova in un tempio ")
 			.append(Misc.getDirezione(gruppo, informazioni.getCoordinate()));
 		}

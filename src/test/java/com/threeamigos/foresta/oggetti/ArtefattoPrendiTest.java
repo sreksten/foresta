@@ -58,6 +58,32 @@ class ArtefattoPrendiTest {
     }
 
     @Test
+    void unArtefattoDiLivelloTroppoAltoFinisceNellInventarioDelGruppo() {
+        // Given
+        Artefatto spada = artefatto(1);
+        spada.getModelloDati().setLivello(2);
+        // When
+        boolean preso = spada.prendi(gruppo, Comando.PERSONAGGIO_1);
+        // Then
+        assertTrue(preso);
+        assertTrue(guerriero.getInventario().isEmpty());
+        assertEquals(1, gruppo.getInventario().size());
+    }
+
+    @Test
+    void unaSecondaSpadaPerIlGuerrieroFinisceNellInventarioDelGruppo() {
+        // Given
+        artefatto(1).prendi(gruppo, Comando.PERSONAGGIO_1);
+        // When
+        boolean preso = artefatto(1).prendi(gruppo, Comando.PERSONAGGIO_1);
+        // Then
+        assertTrue(preso);
+        assertEquals(1, guerriero.getInventario().size());
+        assertEquals(1, gruppo.getInventario().size());
+        assertEquals(null, gruppo.getInventario().iterator().next().getModelloDati().getSlotEquipaggiamento());
+    }
+
+    @Test
     void senzaComandoLaSceltaVieneLasciataAllAutoma() {
         // When
         boolean preso = artefatto(1).prendi(gruppo, null);

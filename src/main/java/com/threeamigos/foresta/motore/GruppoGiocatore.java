@@ -10,6 +10,7 @@ import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.MotivoRifiutoEquipaggiamento;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
@@ -17,6 +18,7 @@ import com.threeamigos.foresta.ui.InterfacciaUtente;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -548,6 +550,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	}
 
 	public void addArtefatto(Artefatto artefatto) {
+		// Nell'inventario del gruppo nessun artefatto è equipaggiato
+		artefatto.getModelloDati().setSlotEquipaggiamento(null);
 		md.getArtefatti().add(artefatto.getModelloDati());
 	}
 
@@ -565,12 +569,13 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	private void suEventoRichiestaPrelievoArtefatto(ComandoPrelievoArtefatto eventoRichiestaPrelievoArtefatto) {
 		Artefatto artefatto = (Artefatto) eventoRichiestaPrelievoArtefatto.getOggettoDaSpostare();
 		Personaggio personaggio = (Personaggio) eventoRichiestaPrelievoArtefatto.getParteAttiva();
-		if (personaggio.puoPrendere(artefatto)) {
+		Optional<MotivoRifiutoEquipaggiamento> motivoRifiuto = personaggio.puoEquipaggiare(artefatto);
+		if (motivoRifiuto.isPresent()) {
+			BusEventi.pubblica(new NotificaRifiutoPrelievoArtefatto(eventoRichiestaPrelievoArtefatto, motivoRifiuto.get()));
+		} else {
 			removeArtefatto(artefatto);
 			personaggio.addArtefatto(artefatto);
 			BusEventi.pubblica(new NotificaApprovazionePrelievoArtefatto(eventoRichiestaPrelievoArtefatto));
-		} else {
-			BusEventi.pubblica(new NotificaRifiutoPrelievoArtefatto(eventoRichiestaPrelievoArtefatto));
 		}
 	}
 

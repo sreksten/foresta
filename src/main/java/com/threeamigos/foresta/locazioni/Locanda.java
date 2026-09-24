@@ -278,8 +278,9 @@ public class Locanda extends LocazioneBase {
 		if (personaggioDisponibile != null) {
             String sb = "“Ehi, " + capo.getNome() + "!\", urla una voce. " +
                     Character.toUpperCase(capo.getPronome().charAt(0)) + capo.getPronome().substring(1) +
-					" si volta e vede " + personaggioDisponibile.getNomeProprio().orElseThrow(Personaggio.PERSONAGGIO_SENZA_NOME) +
-                    ", " + personaggioDisponibile.getAIS() + personaggioDisponibile.getNomeSingolare() +
+					// Senza nome proprio: "vede un guerriero, sua vecchia amicizia"
+					" si volta e vede " + personaggioDisponibile.getNomeProprio().map(nome -> nome + ", ").orElse("") +
+                    personaggioDisponibile.getAIS() + personaggioDisponibile.getNomeSingolare() +
                     ", sua vecchia amicizia. " + personaggioDisponibile.getDescrizione() +
                     ' ' + capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
                     (personaggioDisponibile.getSesso() == Personaggio.Sesso.MASCHIO ? " lo" : " la") +

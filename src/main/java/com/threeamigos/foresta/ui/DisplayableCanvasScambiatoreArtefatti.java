@@ -129,12 +129,14 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
                     ? DoomdarkColorModel.Color.MEDIUM_GRAY
                     : DoomdarkColorModel.Color.DARK_GRAY;
 
-            String nome = artefatto.getNome();
+            // In grande il nome proprio (o il nome), in piccolo la descrizione
+            // TODO da riguardare con la resa grafica
+            String nome = artefatto.getModelloDati().getNomeBreve();
             nome = nome.substring(0, 1).toUpperCase() + nome.substring(1);
             ComponenteScorrevole<Artefatto>.Nodo nodo = componenteScorrevole.creaNodo(
                     nome, font, colore,
                     mostraCosto ? String.valueOf(artefatto.getCostoAcquisto()) : null, fontSmall, DoomdarkColorModel.Color.YELLOW,
-                    artefatto.getTipo().getDescrizione(), fontSmall, colore,
+                    artefatto.getModelloDati().getDescrizioneBreve(), fontSmall, colore,
                     null, artefatto);
             nodo.setFigliVisibili(artefatto.isFigliVisibili());
             if (!artefatto.getModificatori().isEmpty()) {

@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 public class ForestaMD implements Serializzabile {
 
@@ -195,9 +194,9 @@ public class ForestaMD implements Serializzabile {
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		String line = stream.readLine();
-		StringTokenizer st = new StringTokenizer(line, PIPE);
-		dimensioneX = Integer.parseInt(st.nextToken());
-		dimensioneY = Integer.parseInt(st.nextToken());
+		LettoreCampi st = new LettoreCampi(line);
+		dimensioneX = Integer.parseInt(st.testo());
+		dimensioneY = Integer.parseInt(st.testo());
 		reimposta(dimensioneX, dimensioneY);
 		for (int indice = 0; indice < arrayLocazioni.length; indice++) {
 			LocazioneMD locazioneMD = new LocazioneMD();

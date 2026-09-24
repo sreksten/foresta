@@ -284,7 +284,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			sb.append(getPronome());
 			sb.append(' ');
 			sb.append(artefatti.stream()
-					.map(a -> a.getTipo().getUtilizzo() + ' ' + a.getNome() + ", " + a.getDescrizione())
+					.map(a -> a.getTipo().getUtilizzo() + ' ' + a.getNomeCompleto())
 					.collect(Collectors.joining(", ")));
 			sb.append('.');
 		}
@@ -373,10 +373,30 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 	}
 
+	/**
+	 * L'arma impugnata nella mano principale (o a due mani); senza, l'arma naturale.
+	 */
 	@Override
 	public Arma getArmaEquipaggiata() {
-		Optional<Artefatto> armaEquipaggiata = getInventario().stream().filter(a -> a.getTipo().getSupertipo() == SupertipoArtefatto.ARMA).findFirst();
-        return armaEquipaggiata.map(artefatto -> (Arma) artefatto).orElseGet(() -> new ArmaNaturale(this));
+		return armaInSlot(SlotArtefatto.MANO_PRINCIPALE, SlotArtefatto.ENTRAMBE_LE_MANI)
+				.orElseGet(() -> new ArmaNaturale(this));
+	}
+
+	/**
+	 * L'arma nella mano secondaria, per chi combatte con due armi (Ladro/Ladra, Elfo/Elfa).
+	 */
+	@Override
+	public Optional<Arma> getArmaSecondaria() {
+		return armaInSlot(SlotArtefatto.MANO_SECONDARIA);
+	}
+
+	private Optional<Arma> armaInSlot(SlotArtefatto... slot) {
+		List<SlotArtefatto> slotAmmessi = Arrays.asList(slot);
+		return md.getArtefatti().stream()
+				.filter(a -> a.getTipo().getSupertipo() == SupertipoArtefatto.ARMA)
+				.filter(a -> slotAmmessi.contains(RegoleEquipaggiamento.slotOccupato(a)))
+				.findFirst()
+				.map(a -> (Arma) Artefatto.di(a));
 	}
 
 	private Incantesimo scegliIncantesimoContro(Personaggio personaggioBersaglio) {
@@ -675,6 +695,19 @@ public abstract class PersonaggioBase implements Personaggio {
 	@Override
 	public boolean puoPrendere(Artefatto artefatto) {
 		return puoPrendere(artefatto.getPeso());
+	}
+
+	@Override
+	public Optional<MotivoRifiutoEquipaggiamento> puoEquipaggiare(Artefatto artefatto) {
+		RegoleEquipaggiamento.Esito esito = RegoleEquipaggiamento.valuta(getClasse(), getLivello(),
+				md.getArtefatti(), artefatto.getModelloDati());
+		if (esito.getMotivo() != null) {
+			return Optional.of(esito.getMotivo());
+		}
+		if (!puoPrendere(artefatto)) {
+			return Optional.of(MotivoRifiutoEquipaggiamento.TROPPO_CARICO);
+		}
+		return Optional.empty();
 	}
 
 	public boolean puoPrendere(double quantita) {
@@ -1615,11 +1648,20 @@ public abstract class PersonaggioBase implements Personaggio {
 		return md.getArtefatti().stream().map(Artefatto::di).collect(Collectors.toList());
 	}
 
+	/**
+	 * Aggiunge l'artefatto all'equipaggiamento e ne imposta lo slot occupato. I controlli
+	 * ({@link #puoEquipaggiare}) spettano a chi chiama: se l'artefatto non passerebbe le regole,
+	 * occupa lo slot del suo tipo.
+	 */
 	public void addArtefatto(Artefatto a) {
-		md.getArtefatti().add(a.getModelloDati());
+		ArtefattoMD artefattoMD = a.getModelloDati();
+		SlotArtefatto slot = RegoleEquipaggiamento.valuta(getClasse(), getLivello(), md.getArtefatti(), artefattoMD).getSlot();
+		artefattoMD.setSlotEquipaggiamento(slot != null ? slot : artefattoMD.getTipo().getSlotArtefatto());
+		md.getArtefatti().add(artefattoMD);
 	}
 
 	public void removeArtefatto(Artefatto a) {
 		md.getArtefatti().remove(a.getModelloDati());
+		a.getModelloDati().setSlotEquipaggiamento(null);
 	}
 }

@@ -102,8 +102,12 @@ public class PersonaggioMD implements Serializzabile {
 		return nome;
 	}
 
+	/**
+	 * Il "|" si toglie; un nome vuoto vale come nessun nome (null): il personaggio si chiama allora con la sua classe.
+	 */
 	public void setNome(String nome) {
-		this.nome = nome;
+		String pulito = Serializzabile.senzaPipe(nome);
+		this.nome = pulito == null || pulito.trim().isEmpty() ? null : pulito;
 	}
 
 	public boolean isVivo() {
@@ -563,7 +567,7 @@ public class PersonaggioMD implements Serializzabile {
 	}
 
 	public void setCausaTrapasso(String causaTrapasso) {
-		this.causaTrapasso = causaTrapasso;
+		this.causaTrapasso = Serializzabile.senzaPipe(causaTrapasso);
 	}
 
 	public Collection<EffettoDiStato> getEffettiDiStato() {
@@ -596,9 +600,9 @@ public class PersonaggioMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(classe.name());
 		stream.print(PIPE);
-		stream.print(nome);
+		stream.print(Serializzabile.facoltativo(nome));
 		stream.print(PIPE);
-		stream.print(vivo ? "vivo" : causaTrapasso);
+		stream.print(vivo ? "vivo" : Serializzabile.facoltativo(causaTrapasso));
 		stream.print(PIPE);
 		stream.print(livello);
 		stream.print(PIPE);
@@ -622,48 +626,42 @@ public class PersonaggioMD implements Serializzabile {
 
 	@Override
 	public void leggi(BufferedReader stream) throws IOException{
-		String line = stream.readLine();
-		StringTokenizer st = new StringTokenizer(line, PIPE);
+		LettoreCampi campi = new LettoreCampi(stream.readLine());
 
-		uuid = st.nextToken();
-		classe = ClassePersonaggio.valueOf(st.nextToken());
-		nome = st.nextToken();
-		if ("null".equals(nome)) {
-			nome = null;
-		}
-		String vivoOMorto = st.nextToken();
+		uuid = campi.testo();
+		classe = campi.enumerato(ClassePersonaggio.class);
+		nome = campi.testoFacoltativo();
+		String vivoOMorto = campi.testo();
 		if ("vivo".equals(vivoOMorto)) {
 			vivo = true;
 			causaTrapasso = null;
 		} else {
 			vivo = false;
-			causaTrapasso = vivoOMorto;
+			causaTrapasso = vivoOMorto.isEmpty() ? null : vivoOMorto;
 		}
-		livello = Integer.parseInt(st.nextToken());
-		esperienza = Integer.parseInt(st.nextToken());
-		puntiAbilitaDisponibili = Integer.parseInt(st.nextToken());
-		int numeroArtefatti = Integer.parseInt(st.nextToken());
+		livello = campi.intero();
+		esperienza = campi.intero();
+		puntiAbilitaDisponibili = campi.intero();
+		int numeroArtefatti = campi.intero();
 
 		impostaValori(valoriMinimi, stream.readLine());
 		impostaValori(valoriMassimi, stream.readLine());
 		impostaValori(valoriAttributi, stream.readLine());
 
-		line = stream.readLine();
-		st = new StringTokenizer(line, PIPE);
+		campi = new LettoreCampi(stream.readLine());
 		modificatori.clear();
-		while (st.hasMoreTokens()) {
+		while (campi.haAltriCampi()) {
 			// Limite 4: la nota può contenere il separatore
-			String[] attributoValore = st.nextToken().split(MappaProprieta.SEPARATORE, 4);
+			String[] attributoValore = campi.testo().split(MappaProprieta.SEPARATORE, 4);
 			ModificatoreAttributo modificatore = new ModificatoreAttributo(TipoAttributo.valueOf(attributoValore[0]),
 					TipoModificatore.valueOf(attributoValore[1]), Double.parseDouble(attributoValore[2]),
 					attributoValore.length > 3 ? attributoValore[3] : "");
 			modificatori.add(modificatore);
 		}
-		line = stream.readLine();
-		st = new StringTokenizer(line, PIPE);
+		campi = new LettoreCampi(stream.readLine());
 		effettiDiStato.clear();
-		while (st.hasMoreTokens()) {
-			String[] attributoValore = st.nextToken().split(MappaProprieta.SEPARATORE);
+		while (campi.haAltriCampi()) {
+			String[] attributoValore = campi.testo().split(MappaProprieta.SEPARATORE);
 			EffettoDiStato effettoDiStato = new EffettoDiStato(TipoEffettoDiStato.valueOf(attributoValore[0]),
 					Integer.parseInt(attributoValore[1]), Integer.parseInt(attributoValore[2]));
 			effettiDiStato.add(effettoDiStato);
@@ -677,11 +675,11 @@ public class PersonaggioMD implements Serializzabile {
 		}
 	}
 
-	private void impostaValori(Map<TipoAttributo, Double> mappa, String linea) {
-		StringTokenizer st = new StringTokenizer(linea, PIPE);
+	private void impostaValori(Map<TipoAttributo, Double> mappa, String linea) throws IOException {
+		LettoreCampi campi = new LettoreCampi(linea);
 		mappa.clear();
-		while (st.hasMoreTokens()) {
-			String[] attributoValore = st.nextToken().split(MappaProprieta.SEPARATORE);
+		while (campi.haAltriCampi()) {
+			String[] attributoValore = campi.testo().split(MappaProprieta.SEPARATORE);
 			mappa.put(TipoAttributo.valueOf(attributoValore[0]), Double.parseDouble(attributoValore[1]));
 		}
 	}

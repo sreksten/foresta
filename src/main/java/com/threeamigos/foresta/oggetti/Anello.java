@@ -120,7 +120,7 @@ public class Anello extends OggettoBase implements Oggetto {
 				} else {
 					Personaggio p = gruppo.getPersonaggio(azione);
 					if (Artefatto.consegna(gruppo, p, anelloMagico)) {
-						BusEventi.pubblica(new NotificaTestoFrase(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " indossa l'anello."));
+						BusEventi.pubblica(new NotificaTestoFrase(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " indossa " + anelloMagico.getNomeCompleto() + '.'));
 					}
 				}
 

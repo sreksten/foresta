@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.StringTokenizer;
 
 public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 
@@ -147,18 +146,18 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	public void leggi(BufferedReader stream) throws IOException {
 		super.leggi(stream);
 		String line = stream.readLine();
-		StringTokenizer st = new StringTokenizer(line, PIPE);
-		monete = Integer.parseInt(st.nextToken());
-		preziosi = Integer.parseInt(st.nextToken());
+		LettoreCampi st = new LettoreCampi(line);
+		monete = Integer.parseInt(st.testo());
+		preziosi = Integer.parseInt(st.testo());
 		for (int i = 0; i < incantesimi.length; i++) {
-			incantesimi[i] = Integer.parseInt(st.nextToken());
+			incantesimi[i] = Integer.parseInt(st.testo());
 		}
-		pozioniSalute = Integer.parseInt(st.nextToken());
-		pozioniSaluteGrande = Integer.parseInt(st.nextToken());
-		pozioniMagia = Integer.parseInt(st.nextToken());
-		pozioniMagiaGrande = Integer.parseInt(st.nextToken());
-		coordinate = new CoordinateMD(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
-		int numeroArtefatti = Integer.parseInt(st.nextToken());
+		pozioniSalute = Integer.parseInt(st.testo());
+		pozioniSaluteGrande = Integer.parseInt(st.testo());
+		pozioniMagia = Integer.parseInt(st.testo());
+		pozioniMagiaGrande = Integer.parseInt(st.testo());
+		coordinate = new CoordinateMD(Integer.parseInt(st.testo()), Integer.parseInt(st.testo()));
+		int numeroArtefatti = Integer.parseInt(st.testo());
 
 		artefatti.clear();
 		for (int i = 0; i < numeroArtefatti; i++) {

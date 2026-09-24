@@ -83,8 +83,8 @@ public class RegistroArtefattiMD implements Serializzabile {
 		int numeroPersonaggi = Integer.parseInt(line);
 		for (int i = 0; i < numeroPersonaggi; i++) {
 			line = stream.readLine();
-			StringTokenizer st = new StringTokenizer(line, PIPE);
-			CoordinateMD coordinate = new CoordinateMD(Integer.parseInt(st.nextToken()), Integer.parseInt(st.nextToken()));
+			LettoreCampi st = new LettoreCampi(line);
+			CoordinateMD coordinate = new CoordinateMD(Integer.parseInt(st.testo()), Integer.parseInt(st.testo()));
 			ArtefattoMD artefatto = new ArtefattoMD();
 			artefatto.leggi(stream);
 			artefattiSmarriti.put(coordinate, artefatto);
@@ -93,10 +93,10 @@ public class RegistroArtefattiMD implements Serializzabile {
 		int locazioni = Integer.parseInt(line);
 		for (int i = 0; i < locazioni; i++) {
 			line = stream.readLine();
-			StringTokenizer st = new StringTokenizer(line, PIPE);
-			int x = Integer.parseInt(st.nextToken());
-			int y = Integer.parseInt(st.nextToken());
-			int totale = Integer.parseInt(st.nextToken());
+			LettoreCampi st = new LettoreCampi(line);
+			int x = Integer.parseInt(st.testo());
+			int y = Integer.parseInt(st.testo());
+			int totale = Integer.parseInt(st.testo());
 			CoordinateMD coordinate = new CoordinateMD(x, y);
 			for (int j = 0; j < totale; j++) {
 				ArtefattoMD artefatto = new ArtefattoMD();

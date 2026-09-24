@@ -2,6 +2,8 @@ package com.threeamigos.foresta.tools;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoException;
+import com.threeamigos.foresta.motore.modellodati.LettoreCampi;
+import com.threeamigos.foresta.motore.modellodati.Serializzabile;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -9,11 +11,9 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
-import java.util.StringTokenizer;
 
 public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 
-	private static final String SEPARATORE = "#";
 	private String nomeFile;
 
 	public GestorePunteggiSuFile() { 
@@ -28,13 +28,10 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 
 	public boolean carica() {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(nomeFile()))))) {
-			String line;
-			StringTokenizer st;
 			for (int posizione = 0; posizione < getConteggio(); posizione++) {
-				line = reader.readLine();
-				st = new StringTokenizer(line, SEPARATORE);
-				String nome = st.nextToken();
-				int punteggio = Integer.parseInt(st.nextToken());
+				LettoreCampi campi = new LettoreCampi(reader.readLine());
+				String nome = campi.testo();
+				int punteggio = campi.intero();
 				setPunteggio(posizione, nome, punteggio);
 			}
 		} catch (Exception e) {
@@ -49,7 +46,7 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 			for (int posizione = 0; posizione < getConteggio(); posizione++) {
 				Punteggio punteggio = getPunteggio(posizione);
 				writer.print(punteggio.getNome());
-				writer.print(SEPARATORE);
+				writer.print(Serializzabile.PIPE);
 				writer.println(punteggio.getPunteggio());
 			}
 			writer.flush();

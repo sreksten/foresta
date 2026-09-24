@@ -23,6 +23,10 @@ public enum SlotArtefatto {
      */
     MANO_SECONDARIA,
     /**
+     * Armi a due mani (Spadone): occupa sia la mano principale sia la secondaria
+     */
+    ENTRAMBE_LE_MANI,
+    /**
      * Per ora niente massimo (Anelli, Talismani, Ninnoli - non occupano le mani)
      */
     ACCESSORIO,

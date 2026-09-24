@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.tools;
 
+import com.threeamigos.foresta.motore.modellodati.Serializzabile;
+
 abstract class GestorePunteggiBase extends GestoreSuFile implements InterfacciaGestorePunteggi {
 
 	private static final int NUMERO_MASSIMO = 10;
@@ -54,13 +56,21 @@ abstract class GestorePunteggiBase extends GestoreSuFile implements InterfacciaG
 			nomi[i] = nomi[i - 1];
 		}
 		punteggi[posizione] = punteggio;
-		nomi[posizione] = nome;
+		nomi[posizione] = pulisciNome(nome);
 		salva();
 	}
 	
 	protected void setPunteggio(int posizione, String nome, int punteggio) {
 		punteggi[posizione] = punteggio;
-		nomi[posizione] = nome;
+		nomi[posizione] = pulisciNome(nome);
+	}
+
+	/**
+	 * Toglie in silenzio il separatore "|", come per i salvataggi; un nome vuoto diventa "nessun nome".
+	 */
+	static String pulisciNome(String nome) {
+		String pulito = nome == null ? "" : Serializzabile.senzaPipe(nome);
+		return pulito.trim().isEmpty() ? Serializzabile.NESSUN_NOME : pulito;
 	}
 	
 	private static class PunteggioImpl implements Punteggio {

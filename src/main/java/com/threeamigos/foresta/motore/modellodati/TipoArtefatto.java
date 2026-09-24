@@ -9,6 +9,8 @@ public enum TipoArtefatto {
     SPADA(SupertipoArtefatto.ARMA, SlotArtefatto.MANO_PRINCIPALE, TipoDanno.TAGLIENTE,"Spada", "impugna"),
     MAZZA(SupertipoArtefatto.ARMA, SlotArtefatto.MANO_PRINCIPALE, TipoDanno.CONTUNDENTE, "Mazza", "brandisce"),
     ASCIA(SupertipoArtefatto.ARMA, SlotArtefatto.MANO_PRINCIPALE, TipoDanno.TAGLIENTE, "Ascia", "impugna"),
+    // Arma a due mani. TODO per ora riusa la grafica della spada
+    SPADONE(SupertipoArtefatto.ARMA, SlotArtefatto.ENTRAMBE_LE_MANI, TipoDanno.TAGLIENTE, "Spadone", "impugna"),
     LANCIA(SupertipoArtefatto.ARMA, SlotArtefatto.MANO_PRINCIPALE, TipoDanno.PERFORANTE, "Lancia", "impugna"),
 
     BASTONE_MAGICO(SupertipoArtefatto.ARMA, SlotArtefatto.MANO_PRINCIPALE, TipoDanno.CONTUNDENTE, "Bastone magico", "impugna"),
@@ -29,7 +31,7 @@ public enum TipoArtefatto {
     TALISMANO(SupertipoArtefatto.ALTRO, SlotArtefatto.ACCESSORIO, "Talismano", "possiede"),
     NINNOLO(SupertipoArtefatto.ALTRO, SlotArtefatto.ACCESSORIO, "Ninnolo", "ha con se"),
 
-    INCANTAMENTO(SupertipoArtefatto.INCANTAMENTO, SlotArtefatto.NUCLEO, "Incantamento", "porta con se");
+    INCANTAMENTO(SupertipoArtefatto.INCANTAMENTO, SlotArtefatto.NUCLEO, "Pergamena", "porta con se");
 
     private final SupertipoArtefatto supertipo;
     private final SlotArtefatto slotArtefatto;

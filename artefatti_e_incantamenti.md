@@ -1,6 +1,6 @@
 # Artefatti, pergamene e incantatore: piano di lavoro
 
-> Stato: aggiornato al 2026-09-24. Prossimo passo: fase 1. Raccoglie le decisioni prese, le fasi di lavoro, i TODO e i dubbi ancora aperti.
+> Stato: aggiornato al 2026-09-24. Fasi 1, 2 e 3 fatte; prossimo passo: fase 4. Raccoglie le decisioni prese, le fasi di lavoro, i TODO e i dubbi ancora aperti.
 > I salvataggi **non** devono restare retrocompatibili: il formato si cambia liberamente, ma ogni modifica va coperta da test di salva/rileggi.
 
 ## 1. Obiettivo
@@ -13,7 +13,7 @@
 
 ### Modello
 
-- **Pergamena.** Un incantamento-oggetto è un `Artefatto` di tipo `TipoArtefatto.INCANTAMENTO` (supertipo `INCANTAMENTO`, slot `NUCLEO`), chiamato per ora "Pergamena". La sua lista `incantamenti` contiene gli effetti che trasferisce. `Incantamento` resta l'oggetto valore che descrive l'effetto: nome, `TipoDanno`, bonus fisso, coefficiente. Così la pergamena riusa inventari, compravendita e salvataggio degli artefatti.
+- **Pergamena.** Un incantamento-oggetto è un `Artefatto` di tipo `TipoArtefatto.INCANTAMENTO` (supertipo `INCANTAMENTO`, slot `NUCLEO`), chiamato per ora "Pergamena". Come ogni artefatto porta sia una lista di `ModificatoreAttributo` sia una lista di `Incantamento`: sono gli effetti che trasferisce (verificato con `ArtefattoMDTest.salvaERicaricaPergamenaConModificatoriEIncantamenti`). Finché resta nel gruppo i suoi modificatori non si applicano a nessuno, perché contano solo quelli dell'inventario personale. `Incantamento` resta l'oggetto valore che descrive l'effetto: nome, `TipoDanno`, bonus fisso, coefficiente. Così la pergamena riusa inventari, compravendita e salvataggio degli artefatti.
 - **Nome proprio.** Facoltativo, su `ArtefattoMD`. Se lo sceglie il giocatore si normalizza con le iniziali maiuscole (es. "lama del drago" → "Lama Del Drago"), nel momento in cui il testo è disponibile. Se lo costruisce il codice resta com'è scritto.
   - È **un solo campo in più** (`nomeProprio`). La forma completa si compone con i campi che ogni artefatto ha già, `nome` (es. "la spada di fuoco", con l'articolo) e `descrizione` (es. "che brucia i nemici"): "Diavolina, la spada di fuoco, che brucia i nemici". Senza nome proprio resta com'è oggi: "la spada di fuoco, che brucia i nemici".
   - **Nei testi** si usa sempre la forma completa:
@@ -23,8 +23,8 @@
     - i messaggi di azione ("Pippo raccoglie Diavolina, la spada di fuoco, che brucia i nemici.").
   - **Nell'inventario** (`DisplayableCanvasScambiatoreArtefatti`) il nodo dell'artefatto mostra in grande il nome proprio, oppure il `nome` se non c'è. La descrizione compare in piccolo, come nodo secondario. Con il nome proprio conviene che il nodo piccolo sia "la spada di fuoco, che brucia i nemici", così il nome generico non si perde. Da riguardare con la resa grafica.
   - La **grammatica** che genera le armi a caso passa anche il nome proprio, facoltativo.
-- **Pergamene generate a caso.** Possono avere solo la parte fissa, solo la parte percentuale, o entrambe.
-- **Livello di una pergamena.** Non ne limita l'uso: il limite sta sull'oggetto incantato (numero massimo di incantamenti).
+- **Pergamene generate a caso.** Hanno un livello da 1 a 3 e **tanti effetti quanto il loro livello**. Ogni incantamento può avere solo la parte fissa, solo la parte percentuale, o entrambe.
+- **Livello di una pergamena.** Non ne limita l'uso: il limite sta sull'oggetto incantato (numero massimo di effetti, cioè incantamenti più modificatori).
 
 ### Equipaggiamento
 
@@ -94,10 +94,12 @@ Vedi la tabella dei gradi in §8. Formula: `2 × bonus fisso + percentuale`; +25
 
 ### Fusione (incantatore)
 
-- **Costo.** 10 monete + 5 per incantamento trasferito.
-- **Limite.** Un artefatto ha al massimo `min(5, livello − 1)` incantamenti **in totale**. A livello 1 non se ne hanno. Una spada di livello 3 con già 1 incantamento ne può ricevere al più un altro.
-- **Conteggio.** Si contano gli **incantamenti**, non le pergamene: una pergamena che ne porta due vale due, per il costo e per i limiti.
-- **Controlli.** La schermata impedisce di mettere sul banco più incantamenti di quanti l'artefatto ne possa ricevere (rifiuto con fumetto), e il motore ricontrolla tutto alla conferma.
+- **Cosa si trasferisce.** Tutti gli effetti della pergamena: gli incantamenti **e** i modificatori di attributo (`ModificatoreAttributo`). Nel seguito "effetto" vuol dire l'uno o l'altro.
+- **Costo.** 10 monete + 5 per ogni effetto trasferito (incantamento o modificatore).
+- **Limite.** Un artefatto ha un numero massimo di effetti **in totale** che dipende dalla sua rarità (vedi "Rarità"): per un comune `min(3, livello − 1)`. Si contano incantamenti e modificatori, **compresi** quelli che l'artefatto ha già di suo (es. i modificatori degli artefatti dei templi). A livello 1 non se ne hanno. Una spada di livello 3 con già 1 incantamento ne può ricevere al più un altro.
+- **Conteggio.** Si contano gli **effetti**, non le pergamene: una pergamena con un incantamento e un modificatore vale due, per il costo e per i limiti.
+- **Accessori.** Non si incantano, quindi non ricevono nemmeno i modificatori di una pergamena: la fusione vale solo per gli artefatti incantabili (`isIncantabile()`).
+- **Controlli.** La schermata impedisce di mettere sul banco più effetti di quanti l'artefatto ne possa ricevere (rifiuto con fumetto), e il motore ricontrolla tutto alla conferma.
 - **Rifiuti.** Nessun artefatto sul banco, più di un artefatto, nessuna pergamena, limite superato, monete insufficienti.
 - **Incantamenti uguali.** Restano **distinti** anche se hanno lo stesso `TipoDanno`, così non si aggira il limite; i bonus si sommano comunque. Le pergamene usate vengono distrutte.
 - **Nome proprio.** Si chiede a **ogni** fusione con il `Prompt`, proponendo come valore predefinito quello che l'artefatto aveva già, se ce l'aveva.
@@ -109,6 +111,26 @@ Vedi la tabella dei gradi in §8. Formula: `2 × bonus fisso + percentuale`; +25
 - **Dove.** In città: armaiolo, alchimista, venditore di pergamene (per ora con l'immagine dell'alchimista) e incantatore. I negozi sparsi nella foresta vengono dopo.
 - **Magazzini.** La chiave diventa (coordinate, tipo di inventario), perché più negozi della stessa città hanno la stessa coordinata.
 - **Generatore.** `GeneratoreArtefatti`: per ora uno scheletro generale, poi una grammatica sul modello delle locande (formato da definire).
+- **Riempimento dei negozi** (venditore di pergamene e armaiolo). Per ora il magazzino si genera **una volta sola, alla creazione del mondo**. Si potrà passare poi a una rigenerazione periodica in base al livello del gruppo.
+- **Gradi per livello.** Livelli 1-3 minore, 4-7 medio, dall'8 in su maggiore (`Costanti.GRADO_INCANTAMENTO_*`, da riaggiustare).
+- **Pergamene generate.** Per ora, per le prove, incantamenti e modificatori a caso; poi ci penserà la grammatica. Il livello della pergamena è quello di riferimento limitato a 3, e dà il numero di effetti; il grado dipende dal livello di riferimento.
+- **Artefatti che nascono incantati.** Ogni tanto il generatore produce un artefatto incantabile già incantato, tanto più spesso quanto più è alto il livello: 5% per ogni livello oltre il primo, fino al 60% (`Costanti.ARTEFATTO_PROBABILITA_INCANTATO_*`). Gli incantamenti sono del grado del livello e rispettano il limite di effetti, che conta anche i modificatori dell'artefatto. Il prezzo cresce come quello delle pergamene.
+- **Artefatti che nascono incantati: tetto.** Al massimo 3 incantamenti, e sempre almeno un posto libero nel limite di effetti, così il giocatore ha modo di migliorare l'artefatto con la fusione (gli incantamenti casuali non si tolgono). Quindi un comune nasce incantato solo dal livello 4 (dal 3 se è raro).
+
+### Rarità
+
+- **`RaritaArtefatto`** (`COMUNE`, `RARO`, `LEGGENDARIO`), campo di `ArtefattoMD`, salvato e riletto. Di default `COMUNE`.
+- **Posti per gli effetti** (incantamenti più modificatori, `Artefatto.getEffettiMassimi()`):
+
+  | Rarità | Posti | Tetto |
+  | :--- | :--- | ---: |
+  | Comune | livello − 1 | 3 |
+  | Raro | livello | 4 |
+  | Leggendario | livello + 1 | 5 |
+
+  I tetti stanno in `Costanti.ARTEFATTO_MASSIMO_EFFETTI_*`: più di 5 effetti su un solo artefatto sarebbero troppi. Siccome si contano anche i modificatori propri, un comune che nasce con un modificatore può ricevere al più 2 incantamenti.
+- **Dove si trovano.** Nel loot e nei negozi i comuni sono i più probabili, e un artefatto incantabile su dieci è raro (`Costanti.ARTEFATTO_PROBABILITA_RARO`). Gli accessori restano comuni, perché la rarità conta solo per i posti. I **leggendari non escono mai nel loot**: si trovano nei templi o come premio di una missione.
+- **Leggendari** (da fare). Spade, scudi, elmi e altre armi di livello alto, scritti a mano come quelli dei templi, con un nome del tipo "La Leggendaria Spada del Fulmine con Rinterzo". Nascono con modificatori e incantamenti particolarmente potenti, anche oltre il grado maggiore e oltre i posti della loro rarità. Se hanno ancora posti liberi si possono incantare come gli altri.
 
 ## 3. Fatto
 
@@ -126,17 +148,49 @@ Vedi la tabella dei gradi in §8. Formula: `2 × bonus fisso + percentuale`; +25
 - [x] **Pozioni di magia grandi** (bug §5.2-§5.4): notifica giusta in `addPozioniMagiaGrande`, voce corretta nell'inventario dell'alchimista, e anche loro si perdono nella fuga. In `GruppoGiocatore.fugge` c'è un TODO per rivedere la fuga, oggi troppo penalizzante.
 - [x] **BERSERK sul danno fisico** (bug §5.6), con `CalcolatoreCombattimentoBerserkTest`: il guerriero ferito passa da 58 a 80 danni con un'arma fisica, e il danno resta uguale con un'arma elementale. Il critico è neutralizzato per rendere il test deterministico.
 - [x] **Test:** `ArtefattoPrendiTest` (5), che copre `GRUPPO`, personaggio, troppo carico, scelta lasciata all'automa e `isPersonaggio`. In tutto 18 test su artefatti e raccolta, tutti verdi.
+- [x] **Fase 1 (modello).**
+  - `ArtefattoMD.nomeProprio` (null se manca, oggi salvato come campo vuoto), con `normalizzaNomeProprio` per i nomi scelti dal giocatore (iniziali maiuscole, il resto com'è; vuoto → nessun nome). Da chiamare quando arriverà il `Prompt`.
+  - Presentazione: `getNomeCompleto()` (forma completa, usata in `LocazioneBase`, `Informazioni`, `PersonaggioBase`, `Artefatto.prendi`/`riponiNelGruppo`/`consegna` e `Anello.prendi`), `getNomeBreve()` e `getDescrizioneBreve()` per l'inventario. Nei messaggi in cui l'artefatto è soggetto l'inciso si chiude con una virgola.
+  - Nell'inventario il testo piccolo ora è la descrizione (o "nome, descrizione" con il nome proprio) al posto del tipo ("Spada"): da riguardare con la resa grafica.
+  - `Artefatto.isIncantabile()` e `getEffettiMassimi()`, oggi secondo la rarità (vedi §2, "Rarità").
+  - `SlotArtefatto.ENTRAMBE_LE_MANI`, `TipoArtefatto.SPADONE`; `TipoArtefatto.INCANTAMENTO` si presenta come "Pergamena".
+  - `ArtefattoMD.slotEquipaggiamento` (null se non equipaggiato, oggi salvato come campo vuoto). Per ora nessuno lo imposta: è la fase 2.
+  - Test: 10 nuovi in `ArtefattoMDTest` (salva/rileggi di nome proprio, slot, pergamene; forma completa; normalizzazione) e `ArtefattoIncantabileTest` (5). Tutta la suite è verde.
+- [x] **Fase 2 (equipaggiamento a slot e livello).**
+  - `Personaggio.puoEquipaggiare(Artefatto)` restituisce un `Optional<MotivoRifiutoEquipaggiamento>`: `TROPPO_CARICO`, `SLOT_OCCUPATO`, `PERGAMENA`, `LIVELLO_TROPPO_ALTO`, `SECONDA_ARMA_NON_CONSENTITA`, `MANI_OCCUPATE`, `ARMA_A_DUE_MANI_IMPUGNATA`. Ogni motivo ha la sua spiegazione ("Pippo non sa combattere con due armi.").
+  - Le regole a slot stanno in `RegoleEquipaggiamento` (package `personaggi`); il peso lo controlla `PersonaggioBase`.
+  - Lo usano il prelievo (`GruppoGiocatore`: la `NotificaRifiutoPrelievoArtefatto` porta il motivo, e il fumetto dell'inventario lo mostra) e `Artefatto.consegna` (messaggio "… resta nell'inventario del gruppo: Pippo …").
+  - `PersonaggioBase.addArtefatto` imposta `slotEquipaggiamento`; `removeArtefatto` e `GruppoGiocatore.addArtefatto` lo azzerano. Se si aggiunge un artefatto senza controlli (es. gli artefatti "PER TEST" dell'`Automa`), prende lo slot del suo tipo.
+  - `getArmaEquipaggiata()` legge l'arma in `MANO_PRINCIPALE` o `ENTRAMBE_LE_MANI`; nuovo `getArmaSecondaria()`. Riponendo l'arma principale la secondaria resta dov'è: la prossima arma presa va nella principale.
+  - Il filtro dei candidati per il loot resta alla fase 4, quando il loot genererà l'artefatto prima della scelta: per ora chi non può prenderlo lo lascia nel gruppo, con il messaggio.
+  - Test: `PersonaggioEquipaggiamentoTest` (17) e 2 nuovi in `ArtefattoPrendiTest` (livello troppo alto, seconda spada del guerriero). Tutta la suite è verde (255 test).
+- [x] **Fase 3 (scheletro del generatore).**
+  - Interfaccia `GeneratoreArtefatti` (`oggetti`), con `istanza()`, `generaArtefatto(tipo, livello)`, `generaArtefattoCasuale(livello)` (pergamene escluse) e `generaPergamena(livello)`. Chi chiama passa il livello di riferimento, `Statistiche.getLivello()`.
+  - Implementazione `GeneratoreArtefattiTabelle`, con un `Random` iniettabile per i test. Nomi da tabelle ("la spada d'argento"); nome proprio nel 5% dei casi. Valori tarati sui templi:
+    - costo `5 + 5 × livello`;
+    - armi: danno `4 + 2 × livello ± 1`; lo spadone fa +50% di danno e di prezzo; il bastone fa metà danno e dà +5% di `MAGIA` per livello;
+    - pezzi difensivi: +5% di `PARATA` per livello (la veste dà `RESISTENZA_MAGICA`);
+    - libro magico: +5% di `MAGIA` per livello;
+    - accessori: +livello fisso a un attributo (carisma, coraggio, valore, fortuna, percezione).
+  - Pergamene: livello da 1 a 3 (quello di riferimento, limitato a 3) e tanti effetti quanto il livello, del grado del livello di riferimento, ciascuno a caso un incantamento (elementale o magico: solo fisso, solo percentuale o entrambi) o un modificatore di attributo (fisso di 1/2/3 secondo il grado, oppure percentuale come il coefficiente del grado).
+  - `GradoIncantamento` (bonus, coefficiente, prezzo base, soglie) e `ListinoPergamene.prezzo(...)`, che applica le regole di §8 a incantamenti e modificatori. I valori stanno in `Costanti`.
+  - Artefatti incantabili che nascono già incantati: probabilità `0,05 × (livello − 1)`, al massimo 0,6; da 1 incantamento fino allo spazio libero nel limite di effetti. A livello 2 non succede mai, perché il modificatore che l'artefatto ha di suo occupa già l'unico posto.
+  - Nessuno lo chiama ancora: lo useranno il loot (fase 4) e i negozi (fase 5).
+  - Test: `GeneratoreArtefattiTest` (11). Tutta la suite è verde (267 test).
+- [x] **Tetti degli effetti a 3/4/5** (comune/raro/leggendario) al posto di 5/6/7.
+- [x] **Il `|` sparisce dai testi** alla fonte (§5.5).
+- [x] **Rarità degli artefatti.** `RaritaArtefatto` con posti e tetti (§2, "Rarità"), salvata in `ArtefattoMD`. Il generatore fa rari il 10% degli artefatti incantabili e non genera mai leggendari; gli artefatti che nascono incantati hanno al massimo 3 incantamenti e almeno un posto libero. Test in `ArtefattoMDTest`, `ArtefattoIncantabileTest` e `GeneratoreArtefattiTest`; tutta la suite è verde (271 test).
 
 ## 4. Fasi
 
 Ogni fase si può provare e committare da sola.
 
 ### Fase 1: modello
-- `ArtefattoMD.nomeProprio` facoltativo, salvato come `-` quando manca.
+- `ArtefattoMD.nomeProprio` facoltativo, salvato come campo vuoto quando manca.
 - Un metodo di presentazione unico per la forma completa (§2, "Nome proprio"), usato in `LocazioneBase`, `Informazioni`, `PersonaggioBase` e `Artefatto.prendi`/`Anello.prendi`, dove oggi `nome + ", " + descrizione` è ripetuto a mano. Nell'inventario: nome proprio (o nome) in grande, descrizione nel nodo secondario.
-- `Artefatto.isIncantabile()` (armi, scudi, elmi, armature) e `getIncantamentiMassimi()` = `min(5, livello − 1)`.
+- `Artefatto.isIncantabile()` (armi, scudi, elmi, armature) e `getEffettiMassimi()` = `min(5, livello − 1)`.
 - `SlotArtefatto.ENTRAMBE_LE_MANI` e `TipoArtefatto.SPADONE`.
-- `ArtefattoMD.slotEquipaggiamento`, salvato come `-` quando è `null`.
+- `ArtefattoMD.slotEquipaggiamento`, salvato come campo vuoto quando è `null`.
 - Test di salva/rileggi di `nomeProprio`, `slotEquipaggiamento` e delle pergamene.
 
 ### Fase 2: equipaggiamento a slot e livello
@@ -177,7 +231,7 @@ Ogni fase si può provare e committare da sola.
   - a sinistra l'inventario del gruppo;
   - a destra il banco di lavoro, con al massimo 1 artefatto incantabile e le pergamene, fino al limite dell'artefatto.
   - Uscendo, quello che resta sul banco torna nel gruppo: il banco non si salva.
-- **Conferma** → `ComandoIncantatura`. `GruppoGiocatore` ricontrolla le regole (§2), fa pagare, copia gli incantamenti, distrugge le pergamene e risponde con `NotificaApprovazioneIncantatura` o `NotificaRifiutoIncantatura` (con il motivo).
+- **Conferma** → `ComandoIncantatura`. `GruppoGiocatore` ricontrolla le regole (§2), fa pagare, copia incantamenti e modificatori, distrugge le pergamene e risponde con `NotificaApprovazioneIncantatura` o `NotificaRifiutoIncantatura` (con il motivo).
 - **Nome proprio** chiesto con il `Prompt`, già compilato con quello attuale.
 - **Test:** fusione riuscita; ciascun rifiuto; il caso "livello 3 con 1 incantamento → al più 1 in più"; il tetto di 5.
 
@@ -198,25 +252,25 @@ Le regole sono in §2, "Combattimento". Da fare in `CalcolatoreCombattimento.cal
 2. ~~**`addPozioniMagiaGrande` pubblica la notifica delle pozioni normali.**~~ Corretto. Lo sprite +/− compariva sull'icona delle pozioni normali.
 3. ~~**Inventario dell'alchimista:** le pozioni di magia grandi dipendevano da quelle normali.~~ Corretto.
 4. ~~**La fuga non faceva perdere le pozioni di magia grandi.**~~ Corretto, con un TODO in `GruppoGiocatore.fugge` perché la fuga è troppo penalizzante.
-5. **Formato di salvataggio fragile** (rimandato; la correzione qui sotto è quella scelta). `StringTokenizer` salta i campi vuoti e usa `|` come separatore: un nome o una descrizione vuoti, o che contengono `|`, spostano tutti i campi seguenti. Correzione proposta, in due pezzi piccoli:
-   - **alla fonte:** il `Prompt` (e poi il generatore) non accetta `|` nei testi, e un nome vuoto diventa "nessun nome". Copre tutto ciò che arriva dal giocatore.
-   - **in lettura:** un piccolo helper in `modellodati` (es. `LettoreCampi`) che divide la riga con `split("\\|", -1)`, che conserva i campi vuoti, al posto di `StringTokenizer`; e un `scriviTesto`/`leggiTesto` che rappresenta il testo vuoto con `-`, come già si fa per le note.
-   - Non serve l'escape di `|`, se alla fonte non entra.
+5. ~~**Formato di salvataggio fragile.**~~ Corretto. `StringTokenizer` salta i campi vuoti e usa `|` come separatore: un nome o una descrizione vuoti, o che contengono `|`, spostano tutti i campi seguenti. Correzione proposta, in due pezzi piccoli:
+   - **alla fonte (fatto):** il `|` sparisce in silenzio, con `Serializzabile.senzaPipe`. Il `Prompt` non lo lascia scrivere e lo toglie anche dal testo incollato. Lo tolgono anche i setter dei testi che finiscono nei salvataggi: `ArtefattoMD` (nome, nome proprio, descrizione), `PersonaggioMD.setNome`, le note di `ModificatoreAttributo` e il nome di `Incantamento`. Test in `ArtefattoMDTest`.
+   - **nomi vuoti (fatto):** un artefatto o un incantamento con il nome vuoto si chiama "nessun nome" (`ArtefattoMD.NESSUN_NOME`); un personaggio con il nome vuoto non ha nome (null) e si chiama con la sua classe.
+   - **in lettura (fatto):** `LettoreCampi` in `modellodati` divide la riga con `split` conservando i campi vuoti, e ha preso il posto di `StringTokenizer` in tutti i salvataggi (`ArtefattoMD`, `PersonaggioMD`, `GruppoGiocatoreMD`, `StatisticheMD`, `LineaTemporaleMD`, `ForestaMD`, `RegistroArtefattiMD`, `RegistroPersonaggiMD`, `Notizia`, la testata in `GestoreSalvataggiSuFile`). `LocazioneMD` e `MissioneMD` usavano già `split`. Un campo facoltativo che manca si scrive vuoto (`Serializzabile.facoltativo`) e si rilegge come null: niente più `-` né `"null"`.
+   - Non serve l'escape di `|`, perché alla fonte non entra.
+   - Test: `LettoreCampiTest`, `ModelloDatiSalvataggioTest` (salva e rilegge in fila gruppo, statistiche, linea temporale, registri e notizie) e un test sui testi vuoti in `ArtefattoMDTest`.
+   - **Classifica (fatto):** per coerenza anche `GestorePunteggiSuFile` usa il `|` al posto del `#`, e legge le righe con `LettoreCampi`. `GestorePunteggiBase.pulisciNome` toglie il `|` dai nomi; un nome vuoto diventa "nessun nome" (`Serializzabile.NESSUN_NOME`). Un file dei punteggi vecchio, con il `#`, non si legge più e il gioco riparte dalla classifica di default. Test in `GestorePunteggiTest`.
 6. ~~**BERSERK applicato al contrario.**~~ Corretto. In `CalcolatoreCombattimento.calcolaDannoRisultante`, §2.5, la condizione era `dannoNonFisico && …`, mentre `TipoEffettoDiStato.BERSERK` e il commento dicono che scala il danno **fisico**. Ora è `!dannoNonFisico`, coperto da `CalcolatoreCombattimentoBerserkTest`. Siccome i guerrieri usano quasi sempre armi fisiche, finora il BERSERK non si applicava praticamente mai: ora che funziona, il combattimento dei guerrieri feriti diventa più forte, e conviene tenerlo presente nel bilanciamento.
 
 Non sono bug ma scelte da rivedere: l'armaiolo **ricompra a prezzo pieno** (vedi TODO) e ha il magazzino vuoto. Il blocco di debug con 9999 monete in `GruppoGiocatore.reimposta` e gli artefatti "PER TEST" in `Automa.inizializzaGioco` sono già segnati con FIXME.
 
 ## 6. Dubbi ancora aperti
 
-- **Riempimento dei negozi** (venditore di pergamene e armaiolo). Oggi un negozio nuovo parte vuoto e vende solo ciò che gli vende il giocatore. Si decide dopo aver scritto `GeneratoreArtefatti` (fase 3). Le possibilità:
-  - generare il magazzino una volta sola, alla creazione del mondo;
-  - rigenerarlo periodicamente (es. ogni N giorni) in base al livello del gruppo.
 - **Valori di partenza da proporre durante l'implementazione**, da scrivere qui e poi correggere in gioco:
   - quanta `PARATA` intrinseca dà lo scudo per ogni livello;
   - la probabilità che un cofano dia una pergamena o un artefatto (es. 5% ciascuno);
-  - da quale livello il generatore passa dal grado minore al medio e al maggiore;
   - se la seconda arma colpisce lo stesso bersaglio della prima o uno a caso.
 - **Da riguardare con la resa grafica:** la presentazione del nome proprio nell'inventario.
+- **Rarità a video.** Come mostrare nell'inventario che un artefatto è raro o leggendario (colore, dicitura…). Da riguardare con la resa grafica.
 
 ## 7. TODO
 
@@ -231,6 +285,7 @@ Non sono bug ma scelte da rivedere: l'armaiolo **ricompra a prezzo pieno** (vedi
 - [ ] Rivedere **tutti** i prezzi del gioco (artefatti, pozioni, incantesimi, pergamene, fusione) alla luce del loot che ora si può trovare: con spade, scudi, anelli e pergamene raccolti in giro, l'economia cambia.
 - [ ] Rivedere la fuga, oggi troppo penalizzante (TODO in `GruppoGiocatore.fugge`).
 - [ ] Nuove idee per incantare gli accessori (per ora non si incantano).
+- [ ] Artefatti leggendari, scritti a mano, da mettere nei templi e come premi delle missioni (§2, "Rarità").
 
 ## 8. Gradi e prezzi delle pergamene
 
@@ -249,6 +304,7 @@ I bonus vanno a gradini, come proposto:
 | Maggiore | +15 | +20% | 50 |
 
 - **Formula del prezzo:** `2 × bonus fisso + coefficiente in punti percentuali`, che dà esattamente i prezzi della tabella (2 × 5 + 5 = 15, 2 × 10 + 10 = 30, 2 × 15 + 20 = 50).
+- **Modificatori di attributo:** si prezzano come gli incantamenti. Un `AUMENTO_FISSO` di q vale `2 × q`, un `AUMENTO_PERCENTUALE` di q% vale `q`, una `QUANTITA_ASSOLUTA` ("porta a q") vale `5 × q` (valore di partenza, da riaggiustare). Il prezzo della pergamena è la somma dei prezzi dei suoi effetti.
 - **Effetti di stato:** +25% di prezzo per i `TipoDanno` che li hanno (`hasEffettiDiStato()`: FUOCO, GELO, VELENO…).
 - **Rivendita** (anche per l'armaiolo): 50% del prezzo.
 - **Solo fisso o solo percentuale:** una pergamena generata a caso può avere una sola delle due parti, e la formula funziona lo stesso. Per esempio una "media" con solo +10 costa 20, una con solo +10% costa 10.
@@ -258,7 +314,7 @@ I bonus vanno a gradini, come proposto:
 
 Conti di esempio con la fusione:
 - una spada di livello 3 con un incantamento medio: 30 (pergamena) + 15 (fusione) = 45 monete;
-- una di livello 6 con cinque maggiori: 250 + 35 = 285 monete.
+- una spada comune di livello 6 senza modificatori propri, con tre incantamenti maggiori (il tetto dei comuni): 150 + 25 = 175 monete.
 
 Il bonus fisso scala con il livello dell'arma (`bonus × livello`), il coefficiente con l'Intelligenza di chi colpisce. Per questo il fisso rende di più sulle armi alte e il percentuale sui maghi.
 

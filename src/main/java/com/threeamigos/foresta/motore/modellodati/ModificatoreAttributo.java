@@ -18,7 +18,7 @@ public class ModificatoreAttributo {
         this.tipoAttributo = tipoAttributo;
         this.tipoModificatore = tipoModificatore;
         this.quantita = quantita;
-        this.note = note;
+        this.note = Serializzabile.senzaPipe(note);
     }
 
     public ModificatoreAttributo(TipoAttributo tipoAttributo, TipoModificatore tipoModificatore,

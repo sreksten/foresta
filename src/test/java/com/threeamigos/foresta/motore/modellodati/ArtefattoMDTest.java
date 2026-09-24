@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore.modellodati;
 
 import com.threeamigos.foresta.oggetti.Incantamento;
+import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
@@ -201,6 +202,202 @@ class ArtefattoMDTest {
         assertTrue(secondoRicaricato.getModificatori().contains(new ModificatoreAttributo(TipoAttributo.CARISMA, TipoModificatore.AUMENTO_FISSO, 1, "Carisma")));
         assertTrue(secondoRicaricato.getIncantamenti().isEmpty());
         assertNull(reader.readLine());
+    }
+
+    @Test
+    void salvaERicaricaNomeProprio() throws IOException {
+        // Given
+        ArtefattoMD artefatto = creaArtefatto(TipoArtefatto.SPADA, "la spada di fuoco", "che brucia i nemici");
+        artefatto.setNomeProprio("Diavolina");
+        // When
+        ArtefattoMD ricaricato = salvaERileggi(artefatto);
+        // Then
+        assertEquals("Diavolina", ricaricato.getNomeProprio());
+        assertEquals("la spada di fuoco", ricaricato.getNome());
+        assertEquals("che brucia i nemici", ricaricato.getDescrizione());
+    }
+
+    @Test
+    void salvaERicaricaSenzaNomeProprio() throws IOException {
+        // Given
+        ArtefattoMD artefatto = creaArtefatto(TipoArtefatto.SPADA, "la spada di fuoco", "che brucia i nemici");
+        // When
+        ArtefattoMD ricaricato = salvaERileggi(artefatto);
+        // Then
+        assertNull(ricaricato.getNomeProprio());
+        assertEquals("la spada di fuoco", ricaricato.getNome());
+    }
+
+    @Test
+    void salvaERicaricaRarita() throws IOException {
+        // Given
+        ArtefattoMD artefatto = creaArtefatto(TipoArtefatto.SPADA, "la Leggendaria Spada del Fulmine con Rinterzo", "che non perdona");
+        artefatto.setRarita(RaritaArtefatto.LEGGENDARIO);
+        // When
+        ArtefattoMD ricaricato = salvaERileggi(artefatto);
+        // Then
+        assertEquals(RaritaArtefatto.LEGGENDARIO, ricaricato.getRarita());
+    }
+
+    @Test
+    void ilPipeSparisceDaiTesti() throws IOException {
+        // Given
+        ArtefattoMD artefatto = creaArtefatto(TipoArtefatto.SPADA, "la spada | di fuoco", "che | brucia");
+        artefatto.setNomeProprio("Dia|volina");
+        artefatto.addModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 1, "no|ta");
+        artefatto.addIncantamento("Fiam|ma", TipoDanno.FUOCO, 5, 0.05);
+        // When
+        ArtefattoMD ricaricato = salvaERileggi(artefatto);
+        // Then
+        assertEquals("Diavolina", ricaricato.getNomeProprio());
+        assertEquals("la spada  di fuoco", ricaricato.getNome());
+        assertEquals("che  brucia", ricaricato.getDescrizione());
+        assertTrue(ricaricato.getModificatori().contains(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 1, "nota")));
+        assertEquals("Fiamma", ricaricato.getIncantamenti().iterator().next().getNomeIncantamento());
+        assertNull(ArtefattoMD.normalizzaNomeProprio("|"));
+    }
+
+    @Test
+    void testiVuotiSiSalvanoESiRileggono() throws IOException {
+        // Given: descrizione e nota vuote, nome vuoto che diventa "nessun nome"
+        ArtefattoMD artefatto = creaArtefatto(TipoArtefatto.SPADA, "", "");
+        artefatto.addModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 1, "");
+        artefatto.addIncantamento(" ", TipoDanno.FUOCO, 5, 0.05);
+        assertEquals(ArtefattoMD.NESSUN_NOME, artefatto.getNome());
+        // When
+        ArtefattoMD ricaricato = salvaERileggi(artefatto);
+        // Then: i campi vuoti non spostano quelli che seguono
+        assertEquals(ArtefattoMD.NESSUN_NOME, ricaricato.getNome());
+        assertEquals("", ricaricato.getDescrizione());
+        assertEquals(3, ricaricato.getLivello());
+        assertEquals(7, ricaricato.getDanni());
+        assertTrue(ricaricato.getModificatori().contains(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 1)));
+        assertEquals(ArtefattoMD.NESSUN_NOME, ricaricato.getIncantamenti().iterator().next().getNomeIncantamento());
+    }
+
+    @Test
+    void unArtefattoNuovoEComune() {
+        assertEquals(RaritaArtefatto.COMUNE, new ArtefattoMD().getRarita());
+    }
+
+    @Test
+    void nomeProprioVuotoValeComeNessunNome() {
+        // Given
+        ArtefattoMD artefatto = creaArtefatto(TipoArtefatto.SPADA, "la spada di fuoco", "che brucia i nemici");
+        // When
+        artefatto.setNomeProprio("   ");
+        // Then
+        assertNull(artefatto.getNomeProprio());
+    }
+
+    @Test
+    void salvaERicaricaSlotEquipaggiamento() throws IOException {
+        // Given: la spada di un Ladro nella mano secondaria
+        ArtefattoMD artefatto = creaArtefatto(TipoArtefatto.SPADA, "la spada corta", "che punge");
+        artefatto.setSlotEquipaggiamento(SlotArtefatto.MANO_SECONDARIA);
+        // When
+        ArtefattoMD ricaricato = salvaERileggi(artefatto);
+        // Then
+        assertEquals(SlotArtefatto.MANO_SECONDARIA, ricaricato.getSlotEquipaggiamento());
+    }
+
+    @Test
+    void salvaERicaricaArtefattoNonEquipaggiato() throws IOException {
+        // Given
+        ArtefattoMD artefatto = creaArtefatto(TipoArtefatto.SPADONE, "lo spadone del gigante", "che spacca le rocce");
+        // When
+        ArtefattoMD ricaricato = salvaERileggi(artefatto);
+        // Then
+        assertEquals(TipoArtefatto.SPADONE, ricaricato.getTipo());
+        assertNull(ricaricato.getSlotEquipaggiamento());
+    }
+
+    @Test
+    void salvaERicaricaPergamena() throws IOException {
+        // Given: una pergamena che porta due incantamenti
+        ArtefattoMD pergamena = creaArtefatto(TipoArtefatto.INCANTAMENTO, "una pergamena del fuoco", "che arde di magia");
+        pergamena.setDanni(0);
+        pergamena.addIncantamento("Fiamma", TipoDanno.FUOCO, 10, 0.1);
+        pergamena.addIncantamento("Brina", TipoDanno.GELO, 0, 0.05);
+        // When
+        ArtefattoMD ricaricato = salvaERileggi(pergamena);
+        // Then
+        assertEquals(TipoArtefatto.INCANTAMENTO, ricaricato.getTipo());
+        assertEquals(SlotArtefatto.NUCLEO, ricaricato.getTipo().getSlotArtefatto());
+        assertEquals("una pergamena del fuoco", ricaricato.getNome());
+        assertTrue(ricaricato.getModificatori().isEmpty());
+        List<Incantamento> incantamenti = new ArrayList<>(ricaricato.getIncantamenti());
+        assertEquals(2, incantamenti.size());
+        verificaIncantamento(incantamenti, "Fiamma", TipoDanno.FUOCO, 10, 0.1);
+        verificaIncantamento(incantamenti, "Brina", TipoDanno.GELO, 0, 0.05);
+    }
+
+    @Test
+    void salvaERicaricaPergamenaConModificatoriEIncantamenti() throws IOException {
+        // Given: una pergamena è un artefatto, quindi porta sia modificatori sia incantamenti
+        ArtefattoMD pergamena = CostruttoreArtefatto.istanza()
+                .setTipo(TipoArtefatto.INCANTAMENTO)
+                .setNome("il Sigillo della Fiamma Eterna")
+                .setDescrizione("che arde di magia")
+                .setLivello(3)
+                .setCostoAcquisto(50)
+                .setPeso(0.1)
+                .setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 2)
+                .setModificatore(TipoAttributo.CORAGGIO, TipoModificatore.AUMENTO_PERCENTUALE, 10)
+                .setIncantamento("Fiamma", TipoDanno.FUOCO, 15, 0.2)
+                .setIncantamento("Brina", TipoDanno.GELO, 5, 0.05)
+                .costruisci()
+                .getModelloDati();
+        // When
+        ArtefattoMD ricaricato = salvaERileggi(pergamena);
+        // Then
+        assertEquals(TipoArtefatto.INCANTAMENTO, ricaricato.getTipo());
+        Collection<ModificatoreAttributo> modificatori = ricaricato.getModificatori();
+        assertEquals(2, modificatori.size());
+        assertTrue(modificatori.contains(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 2)));
+        assertTrue(modificatori.contains(new ModificatoreAttributo(TipoAttributo.CORAGGIO, TipoModificatore.AUMENTO_PERCENTUALE, 10)));
+        List<Incantamento> incantamenti = new ArrayList<>(ricaricato.getIncantamenti());
+        assertEquals(2, incantamenti.size());
+        verificaIncantamento(incantamenti, "Fiamma", TipoDanno.FUOCO, 15, 0.2);
+        verificaIncantamento(incantamenti, "Brina", TipoDanno.GELO, 5, 0.05);
+    }
+
+    @Test
+    void nomeCompletoConNomeProprio() {
+        // Given
+        ArtefattoMD artefatto = creaArtefatto(TipoArtefatto.SPADA, "la spada di fuoco", "che brucia i nemici");
+        artefatto.setNomeProprio("Diavolina");
+        // Then
+        assertEquals("Diavolina, la spada di fuoco, che brucia i nemici", artefatto.getNomeCompleto());
+        assertEquals("Diavolina", artefatto.getNomeBreve());
+        assertEquals("la spada di fuoco, che brucia i nemici", artefatto.getDescrizioneBreve());
+    }
+
+    @Test
+    void nomeCompletoSenzaNomeProprio() {
+        // Given
+        ArtefattoMD artefatto = creaArtefatto(TipoArtefatto.SPADA, "la spada di fuoco", "che brucia i nemici");
+        // Then
+        assertEquals("la spada di fuoco, che brucia i nemici", artefatto.getNomeCompleto());
+        assertEquals("la spada di fuoco", artefatto.getNomeBreve());
+        assertEquals("che brucia i nemici", artefatto.getDescrizioneBreve());
+    }
+
+    @Test
+    void nomeCompletoSenzaDescrizione() {
+        // Given
+        ArtefattoMD artefatto = creaArtefatto(TipoArtefatto.SPADA, "la spada di fuoco", "");
+        artefatto.setNomeProprio("Diavolina");
+        // Then
+        assertEquals("Diavolina, la spada di fuoco", artefatto.getNomeCompleto());
+    }
+
+    @Test
+    void normalizzaNomeProprioScelto() {
+        assertEquals("Lama Del Drago", ArtefattoMD.normalizzaNomeProprio("lama del drago"));
+        assertEquals("Lama Del Drago", ArtefattoMD.normalizzaNomeProprio("  lama   del drago "));
+        assertNull(ArtefattoMD.normalizzaNomeProprio("  "));
+        assertNull(ArtefattoMD.normalizzaNomeProprio(null));
     }
 
     static ArtefattoMD creaArtefatto(TipoArtefatto tipo, String nome, String descrizione) {

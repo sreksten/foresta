@@ -8,11 +8,8 @@ import com.threeamigos.foresta.oggetti.Artefatto;
 
 import java.util.Collection;
 import java.util.Optional;
-import java.util.function.Supplier;
 
 public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
-
-	Supplier<IllegalArgumentException> PERSONAGGIO_SENZA_NOME = () -> new IllegalArgumentException("Personaggio senza nome!");
 
 	enum OpzioniGetNome {
 		/**
@@ -334,6 +331,13 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
     boolean puoPrendere(Artefatto artefatto);
 
 	/**
+	 * Se il personaggio può prendere l'artefatto nel suo equipaggiamento: vuoto se può, altrimenti il motivo
+	 * del rifiuto (troppo carico, slot occupato, pergamena, livello troppo alto, seconda arma non consentita,
+	 * mani occupate o arma a due mani impugnata).
+	 */
+	Optional<MotivoRifiutoEquipaggiamento> puoEquipaggiare(Artefatto artefatto);
+
+	/**
 	 * La forza di un personaggio, somma della forza base e dei modificatori di forza degli artefatti.
 	 */
     int getForza();
@@ -483,6 +487,8 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
     void rimuoviEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato);
 
 	Arma getArmaEquipaggiata();
+
+	Optional<Arma> getArmaSecondaria();
 
 	double getSaluteBase();
 

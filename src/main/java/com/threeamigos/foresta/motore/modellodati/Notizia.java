@@ -3,7 +3,6 @@ package com.threeamigos.foresta.motore.modellodati;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.StringTokenizer;
 
 /**
  * Una notizia destinata alla schermata della mappa: un identificativo e un corpo
@@ -21,8 +20,8 @@ public class Notizia implements Serializzabile {
 	}
 
 	public Notizia(String id, String corpo) {
-		this.id = id;
-		this.corpo = corpo;
+		this.id = Serializzabile.senzaPipe(id);
+		this.corpo = Serializzabile.senzaPipe(corpo);
 	}
 
 	public String getId() {
@@ -30,7 +29,7 @@ public class Notizia implements Serializzabile {
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		this.id = Serializzabile.senzaPipe(id);
 	}
 
 	public String getCorpo() {
@@ -38,7 +37,7 @@ public class Notizia implements Serializzabile {
 	}
 
 	public void setCorpo(String corpo) {
-		this.corpo = corpo;
+		this.corpo = Serializzabile.senzaPipe(corpo);
 	}
 
 	@Override
@@ -51,8 +50,8 @@ public class Notizia implements Serializzabile {
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		String line = stream.readLine();
-		StringTokenizer st = new StringTokenizer(line, PIPE);
-		id = st.nextToken();
-		corpo = st.nextToken();
+		LettoreCampi st = new LettoreCampi(line);
+		id = st.testo();
+		corpo = st.testo();
 	}
 }

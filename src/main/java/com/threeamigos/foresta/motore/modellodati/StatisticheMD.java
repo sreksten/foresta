@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.StringTokenizer;
 
 public class StatisticheMD implements Serializzabile {
 
@@ -104,17 +103,17 @@ public class StatisticheMD implements Serializzabile {
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		String line = stream.readLine();
-		StringTokenizer st = new StringTokenizer(line, PIPE);
-		livello = Integer.parseInt(st.nextToken());
-		puntiEsperienza = Integer.parseInt(st.nextToken());
-		punti = Integer.parseInt(st.nextToken());
-		turniGiocati = Integer.parseInt(st.nextToken());
+		LettoreCampi st = new LettoreCampi(line);
+		livello = Integer.parseInt(st.testo());
+		puntiEsperienza = Integer.parseInt(st.testo());
+		punti = Integer.parseInt(st.testo());
+		turniGiocati = Integer.parseInt(st.testo());
 		mostriUccisi.clear();
 		ClassePersonaggio[] classi = ClassePersonaggio.values();
 		line = stream.readLine();
-		st = new StringTokenizer(line, PIPE);
+		st = new LettoreCampi(line);
 		for (int i = 0; i < classi.length; i++) {
-			mostriUccisi.put(ClassePersonaggio.valueOf(st.nextToken()), Integer.parseInt(st.nextToken()));
+			mostriUccisi.put(ClassePersonaggio.valueOf(st.testo()), Integer.parseInt(st.testo()));
 		}
 	}
 }
