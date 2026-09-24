@@ -344,7 +344,7 @@ Cosa se ne ricava:
 - **Le resistenze funzionano**: contro la Viverna l'armatura contro il veleno porta le vittorie del Ladro dal
   59% all'87%.
 - **Elmo e armatura spogli non servono quasi a nulla**: `CORAZZATO` vince come `SPADA_E_SCUDO`, perché il
-  loro +5% di `PARATA` per livello moltiplica una `PARATA` di base piccola.
+  loro +5% di `PARATA` per livello moltiplica una `PARATA` di base piccola (corretto nel §11.6).
 - **A livello 1 una spada faceva meno delle mani nude** di un PG (6 contro 4 + 1,5 × √Forza, cioè 9-10).
   Per questo `testSingoloScontroLadroConDueSpadeVsGoblin` confronta le due spade con una spada sola.
   Dopo questo giro il danno delle armi basse è stato alzato (vedi sotto).
@@ -370,8 +370,36 @@ Le armi generate facevano `4 + 2 × livello` di danno: 6 a livello 1, meno delle
 
 Un'arma ora conta a ogni livello. A livello 5 i rapporti fra scudo e doppia arma restano quelli del §11.4
 (contro la Viverna il Ladro vince il 69% con spada e scudo e il 78% con due spade). Ai livelli 1-2 invece
-lo scudo resta indietro, perché la sua `PARATA` cresce con il livello: da rivedere, per esempio dandogli
-anche una parte fissa.
+lo scudo resta indietro, perché la sua `PARATA` cresce con il livello (corretto nel §11.6).
+
+### 11.6 Parata minima di scudo, elmo e armatura (2026-09-24)
+
+Scudo, elmo e armatura hanno ora una `PARATA` intrinseca con una parte fissa: scudo 6 + 2 per livello
+(era 3 per livello), elmo 2 + 1, armatura 3 + 1; la veste dà lo stesso minimo dell'armatura in
+`RESISTENZA_MAGICA`. I valori sono stati scelti provando lo scudo a 4, 6 e 8 di parte fissa: oltre 6 non
+cambia quasi nulla.
+
+Il confronto che conta per lo scudo è quello del Guerriero (spada e scudo contro spadone): il Ladro di
+solito combatte con due armi, e per lui la scelta è fra una spada e due. Vittorie e turni medi:
+
+| PG | Equipaggiamento | Troll, livello 1 | Troll, livello 5 | Viverna, livello 5 |
+| :--- | :--- | ---: | ---: | ---: |
+| Guerriero | `SPADA_E_SCUDO` | 97,7% (13,4) | 99,9% (7,3) | 82,7% |
+| Guerriero | `SPADONE` | 98,3% (9,9) | 99,6% (5,3) | 89,2% |
+| Guerriero | `CORAZZATO` | 98,4% | 100% | 81,5% |
+| Ladro | `SPADA` | 63,8% | 89,4% | 51,2% |
+| Ladro | `DUE_SPADE` | 89,4% | 98,0% (5,0) | 78,5% |
+| Ladro | `CORAZZATO` | 93,6% | 100% | 66,2% |
+| Mago | `SPADA_E_SCUDO` | | 25,4% | 18,2% |
+| Mago | `CORAZZATO` | | 56,7% | 18,7% |
+
+- **Il Guerriero con lo scudo** ora pareggia lo spadone contro i mostri fisici anche a livello 1: è più
+  lento ma altrettanto sicuro. Contro gli elementali lo spadone resta avanti, come deciso: lì conta la
+  `RESISTENZA_MAGICA`, e uno scudo va incantato (o raro).
+- **Elmo e armatura contano**: il Ladro corazzato a livello 1 vince contro il Troll più che con due spade,
+  e il Mago corazzato a livello 5 passa dal 25% al 57%.
+- **Contro la Viverna** l'armatura spoglia non aiuta (il suo morso è elementale): serve la resistenza al
+  veleno (`CORAZZATO_CONTRO_VELENO`: Guerriero 96,8%, Ladro 92,8%).
 
 ## 12. Da fare: bilanciamento delle classi
 

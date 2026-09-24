@@ -1,7 +1,57 @@
 # Artefatti, pergamene e incantatore: piano di lavoro
 
-> Stato: aggiornato al 2026-09-24. Tutte le fasi (1-7) fatte; restano i TODO e il bilanciamento. Raccoglie le decisioni prese, le fasi di lavoro, i TODO e i dubbi ancora aperti.
+> Stato: aggiornato al 2026-09-24. Tutte le fasi (1-7) fatte; resta quel che è in "Da fare", qui sotto. Poi le decisioni prese, quel che è fatto, le fasi di lavoro, i bug trovati e i prezzi delle pergamene.
 > I salvataggi **non** devono restare retrocompatibili: il formato si cambia liberamente, ma ogni modifica va coperta da test di salva/rileggi.
+
+## Da fare
+
+### Bilanciamento del combattimento
+
+Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`, vedi `risorse_e_documenti_vari/piano_montecarlo_matrix.md`, §11).
+
+- [ ] **Incantamenti:** uno di grado medio alza il danno del 66%, e la spada di fuoco batte ogni altro equipaggiamento (`piano_montecarlo_matrix.md`, §11.4).
+- [ ] **Classi:** capire cosa porterebbe un giocatore a preferire un Guerriero, un Ladro, un Elfo, un Bardo o un Mago (a parte i gusti personali), e bilanciarle fra loro. Oggi il Guerriero è avanti in mischia e Ladro ed Elfa si somigliano (`piano_montecarlo_matrix.md`, §12). L'idea di fondo:
+  - **tutti lanciano incantesimi**, perché basta consumare la pergamena su cui sono scritti; ma il **Mago** deve fare con la magia danni di gran lunga superiori a quelli di chiunque altro;
+  - l'**Elfo** combatte con più agilità del Mago ed è un po' meno bravo con la magia;
+  - il **Guerriero** con gli incantesimi, salvo colpi di fortuna, fa poco, ma in mischia con spada e scudo o spadone è il più forte;
+  - il **Ladro** agisce con destrezza: doppia arma, niente armature pesanti;
+  - il **Bardo** è ancora da definire.
+- [ ] **Moltiplicatori di danno delle classi:** ogni classe ha in `Costanti` un `*_MOLTIPLICATORE_DANNI_FISICI` e un `*_MOLTIPLICATORE_DANNI_MAGICI` (Mago 0,5 e 2,0, Guerriero 1,3 e 0,5, Elfo 0,9 e 1,4…), ma il nuovo motore di combattimento non li usa: quello magico non lo legge nessuno, quello fisico solo la vecchia `getDanniInCombattimento` (FIXME, da togliere). Sono la leva più naturale per dare a ogni classe il suo carattere.
+- [ ] **Equipaggiamento secondo la classe (lore):** oggi chiunque porta qualsiasi cosa, salvo la doppia arma (solo Ladro ed Elfo). Andrebbero aggiunti dei blocchi, come nuovi motivi di rifiuto in `RegoleEquipaggiamento`:
+  - il Guerriero usa spada e scudo o spadone;
+  - un Mago o un Bardo con lo spadone ha poco senso;
+  - un Ladro in armatura pesante nemmeno: dovrebbe agire con destrezza, e magari non ha nemmeno la forza per indossarla (un requisito di `FORZA`, o il carico massimo, potrebbe bastare).
+  Il bastone e la spada di Gandalf restano un'eccezione epica: i personaggi del gioco non lo sono.
+- [ ] **Incantesimi nel simulatore** ("Fase 2" di `piano_montecarlo_matrix.md`, §4): senza, non si misura il valore della magia per nessuna classe.
+- [ ] **Guerrieri:** tenerli d'occhio, perché il BERSERK ora funziona davvero (§5.6) e i guerrieri feriti colpiscono più forte.
+
+### Economia
+
+- [ ] **Pergamene:** bilanciare prezzi e gradi (§6).
+- [ ] **Tutti i prezzi del gioco** (artefatti, pozioni, incantesimi, pergamene, fusione), alla luce del loot che ora si trova in giro: con spade, scudi, anelli e pergamene raccolti per strada l'economia cambia.
+- [ ] **Magazzini dei negozi:** rifornimento periodico (oggi si riempiono una volta sola, alla creazione del mondo), e rivendita a prezzo ridotto invece che pieno (oggi l'armaiolo ricompra a prezzo pieno).
+- [ ] **Scudi rari** più frequenti (oggi il 10% degli artefatti incantabili è raro), e forse scudi con `RESISTENZA_MAGICA` come modificatore.
+
+### Contenuti nuovi
+
+- [ ] **Artefatti leggendari**, scritti a mano, da mettere nei templi e come premi delle missioni (§2, "Rarità").
+- [ ] **Negozi sparsi nella foresta:** un paio per tipo, tra armaiolo, alchimista e incantatore.
+- [ ] **Grammatica per `GeneratoreArtefatti`** (formato da definire), sul modello delle locande.
+- [ ] **Nome delle pergamene:** "Pergamena" va generato a caso come i nomi delle locande (runa, sigillo, …).
+- [ ] **Accessori:** nuove idee per incantarli (per ora non si incantano).
+
+### Grafica e interfaccia
+
+- [ ] **Immagine dell'incantatore** (`img/personaggi/Incantatore.gif`): è 31×70, metà delle altre (il venditore è 62×140), va ingrandita.
+- [ ] **Nome proprio nell'inventario:** come presentarlo, da riguardare con la resa grafica.
+- [ ] **Rarità a video:** come mostrare nell'inventario che un artefatto è raro o leggendario (colore, dicitura…).
+- [ ] **Rifiuti sui personaggi:** i personaggi del gruppo non si vedono a video. Quando ci saranno, i rifiuti (peso, slot, livello) andranno mostrati anche lì, per esempio con un fumetto sul personaggio. C'è un TODO in `Artefatto.consegna`.
+
+### Altro
+
+- [ ] **Fuga:** oggi troppo penalizzante (TODO in `GruppoGiocatore.fugge`).
+- [ ] **Codice di debug** da togliere: il blocco con 9999 monete in `GruppoGiocatore.reimposta` e gli artefatti "PER TEST" in `Automa.inizializzaGioco` (segnati con FIXME).
+
 
 ## 1. Obiettivo
 
@@ -89,12 +139,13 @@
   - La seconda è con l'arma secondaria, al **40%**: sia il danno base sia i suoi incantamenti (era 60%, abbassato col bilanciamento). Colpisce lo **stesso bersaglio** della prima, o il prossimo vivo se la prima l'ha ucciso.
   - L'arma secondaria occupa lo slot `MANO_SECONDARIA` (`slotEquipaggiamento`), anche se il suo `TipoArtefatto` dice `MANO_PRINCIPALE`.
   - "Guardia aperta": **−25% di `PARATA`** finché si impugnano due armi. Senza scudo, poi, non si ha la parata dello scudo.
-- **Scudo.** Oltre ai modificatori scritti sull'artefatto, ha una **`PARATA` intrinseca** di +3 per livello (`Costanti.SCUDO_PARATA_PER_LIVELLO`) e una **`RESISTENZA_MAGICA` intrinseca** di +1 per livello, +2 se è raro o leggendario (`Costanti.SCUDO_*RESISTENZA_MAGICA_PER_LIVELLO`). Così la scelta tra scudo e seconda arma conta sempre, anche con scudi "spogli", e anche contro gli attacchi elementali e magici, che la `PARATA` non ferma. Per una protezione magica forte lo scudo è un ottimo candidato per un incantamento.
+- **Scudo.** Oltre ai modificatori scritti sull'artefatto, ha una **`PARATA` intrinseca** di 6 + 2 per livello (`Costanti.SCUDO_PARATA_*`) e una **`RESISTENZA_MAGICA` intrinseca** di +1 per livello, +2 se è raro o leggendario (`Costanti.SCUDO_*RESISTENZA_MAGICA_PER_LIVELLO`). Così la scelta tra scudo e seconda arma conta sempre, anche con scudi "spogli", e anche contro gli attacchi elementali e magici, che la `PARATA` non ferma. Per una protezione magica forte lo scudo è un ottimo candidato per un incantamento.
+- **Elmo e armatura.** Anche loro hanno una **`PARATA` intrinseca** con una parte fissa, perché servano anche ai livelli bassi e senza incantamenti: elmo 2 + 1 per livello, armatura 3 + 1 per livello (`Costanti.ELMO_PARATA_*`, `Costanti.ARMATURA_PARATA_*`). La veste, l'armatura di chi usa la magia, dà lo stesso minimo dell'armatura in `RESISTENZA_MAGICA` invece che in `PARATA`. Il +5% di `PARATA` per livello che il generatore scrive sui pezzi difensivi resta, ma su una `PARATA` di base di 2-6 pesa poco.
 - **Libro magico.** Bonus al **danno degli incantesimi** di chi lo porta, con parte fissa e parte percentuale come un incantamento del `GradoIncantamento` del livello del libro, **+25%**, del tipo di danno dell'incantesimo. La parte fissa scala con il livello del libro. Non dà effetti di stato in più e non aiuta le armi. Occupa `MANO_SECONDARIA`, quindi il mago sceglie tra libro e scudo.
 
 ### Prezzi delle pergamene
 
-Vedi la tabella dei gradi in §8. Formula: `2 × bonus fisso + percentuale`; +25% per i tipi di danno con effetti di stato; rivendita al 50%. I numeri sono di partenza e vanno bilanciati (TODO).
+Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25% per i tipi di danno con effetti di stato; rivendita al 50%. I numeri sono di partenza e vanno bilanciati (vedi "Da fare").
 
 ### Fusione (incantatore)
 
@@ -178,7 +229,7 @@ Vedi la tabella dei gradi in §8. Formula: `2 × bonus fisso + percentuale`; +25
     - libro magico: +5% di `MAGIA` per livello;
     - accessori: +livello fisso a un attributo (carisma, coraggio, valore, fortuna, percezione).
   - Pergamene: livello da 1 a 3 (quello di riferimento, limitato a 3) e tanti effetti quanto il livello, del grado del livello di riferimento, ciascuno a caso un incantamento (elementale o magico: solo fisso, solo percentuale o entrambi) o un modificatore di attributo (fisso di 1/2/3 secondo il grado, oppure percentuale come il coefficiente del grado).
-  - `GradoIncantamento` (bonus, coefficiente, prezzo base, soglie) e `ListinoPergamene.prezzo(...)`, che applica le regole di §8 a incantamenti e modificatori. I valori stanno in `Costanti`.
+  - `GradoIncantamento` (bonus, coefficiente, prezzo base, soglie) e `ListinoPergamene.prezzo(...)`, che applica le regole di §6 a incantamenti e modificatori. I valori stanno in `Costanti`.
   - Artefatti incantabili che nascono già incantati: probabilità `0,05 × (livello − 1)`, al massimo 0,6; da 1 incantamento fino allo spazio libero nel limite di effetti. A livello 2 non succede mai, perché il modificatore che l'artefatto ha di suo occupa già l'unico posto.
   - Nessuno lo chiama ancora: lo useranno il loot (fase 4) e i negozi (fase 5).
   - Test: `GeneratoreArtefattiTest` (11). Tutta la suite è verde (267 test).
@@ -207,12 +258,14 @@ Vedi la tabella dei gradi in §8. Formula: `2 × bonus fisso + percentuale`; +25
 - [x] **Fase 7 (combattimento).**
   - `CalcolatoreCombattimento.difesaContro(difensore, tipo)`: la difesa contro un tipo di danno, con le resistenze di elmo, scudo e armatura (percentuale dimezzata). La usano la mitigazione del danno base e quella di ogni incantamento dell'arma, che prima usava sempre la `RESISTENZA_MAGICA`.
   - Doppia arma: `CalcolatoreCombattimento.fasiDiAttacco` dà l'arma principale e, per chi ne ha una, la secondaria al 40% (`FaseDiAttacco`). `calcolaDannoRisultante` ha un nuovo parametro `fattore`, che scala danno base e incantamenti. In `LocazioneBase` il turno di mischia fa tutte le fasi, per il giocatore e per l'avversario.
-  - `PersonaggioBase.getParata()`: +3 per livello dello scudo, e −25% ("guardia aperta") con due armi o un'arma a due mani. Vale sia per la probabilità di essere colpiti sia per la mitigazione. `getResistenzaMagica()`: +1 per livello dello scudo, +2 se è raro.
+  - `PersonaggioBase.getParata()`: la `PARATA` intrinseca di scudo, elmo e armatura (vedi sotto), e −25% ("guardia aperta") con due armi o un'arma a due mani. Vale sia per la probabilità di essere colpiti sia per la mitigazione. `getResistenzaMagica()`: +1 per livello dello scudo, +2 se è raro.
   - Libro magico: `bonusLibroMagico`, sommato al danno degli `IncantesimoMalefico`.
   - Valori in `Costanti` (sezione "Combattimento").
   - Test: `CalcolatoreCombattimentoEquipaggiamentoTest` (15). Tutta la suite è verde (324 test).
   - Simulazione: `CombatSimulatorMatrix` e `TestMonteCarloMatrix` ora danno ai PG un equipaggiamento (armi, scudo, elmo, armatura, incantamenti) e seguono le fasi di attacco del gioco. Come si usano e i numeri sono in `risorse_e_documenti_vari/piano_montecarlo_matrix.md`, §11.
   - **Bilanciamento di doppia arma e scudo** (2026-09-24). Al primo giro l'attacco rendeva molto più della difesa: il Ladro vinceva contro la Viverna il 39% con spada e scudo e l'82% con due spade. Seconda arma dal 60% al 40%, `PARATA` dello scudo da +1 a +3 per livello, e allo scudo una `RESISTENZA_MAGICA` di +1 per livello (+2 se raro), perché contro gli attacchi elementali la `PARATA` non serve. Ora a livello 5 il Ladro vince contro il Troll il 98% con spada e scudo e il 96% con due spade (in 7,5 e 5,5 turni); contro la Viverna il 59% (73% con lo scudo raro) e il 71%. La guardia aperta resta al −25%, anche se pesa poco perché la `PARATA` di base è piccola.
+- [x] **Danno delle armi di livello basso.** Prima a livello 1 una spada faceva 6, meno delle mani nude di un PG (4 + 1,5 × √Forza, cioè 9-10). Ora fa `max(4 + 2 × livello, 11 + livello)` (`GeneratoreArtefatti.danniMediArma`): 12 a livello 1, 16 a livello 5, come prima dal 7 in su. Test in `GeneratoreArtefattiTest`; simulazione in `piano_montecarlo_matrix.md`, §11.5.
+- [x] **`PARATA` minima di scudo, elmo e armatura** (2026-09-24). Senza, elmo e armatura spogli non servivano quasi a nulla (il loro +5% di `PARATA` per livello moltiplica una `PARATA` di base di 2-6), e ai livelli bassi lo scudo rendeva poco (+3 a livello 1). Ora: scudo 6 + 2 per livello (era 3 per livello), elmo 2 + 1, armatura 3 + 1; la veste dà lo stesso minimo dell'armatura in `RESISTENZA_MAGICA`. Test in `CalcolatoreCombattimentoEquipaggiamentoTest` (18); tutta la suite è verde (328 test). Simulazione in `piano_montecarlo_matrix.md`, §11.6.
 - [x] **Tetti degli effetti a 3/4/5** (comune/raro/leggendario) al posto di 5/6/7.
 - [x] **Il `|` sparisce dai testi** alla fonte (§5.5).
 - [x] **Rarità degli artefatti.** `RaritaArtefatto` con posti e tetti (§2, "Rarità"), salvata in `ArtefattoMD`. Il generatore fa rari il 10% degli artefatti incantabili e non genera mai leggendari; gli artefatti che nascono incantati hanno al massimo 3 incantamenti e almeno un posto libero. Test in `ArtefattoMDTest`, `ArtefattoIncantabileTest` e `GeneratoreArtefattiTest`; tutta la suite è verde (271 test).
@@ -298,35 +351,9 @@ Le regole sono in §2, "Combattimento". Da fare in `CalcolatoreCombattimento.cal
    - **Classifica (fatto):** per coerenza anche `GestorePunteggiSuFile` usa il `|` al posto del `#`, e legge le righe con `LettoreCampi`. `GestorePunteggiBase.pulisciNome` toglie il `|` dai nomi; un nome vuoto diventa "nessun nome" (`Serializzabile.NESSUN_NOME`). Un file dei punteggi vecchio, con il `#`, non si legge più e il gioco riparte dalla classifica di default. Test in `GestorePunteggiTest`.
 6. ~~**BERSERK applicato al contrario.**~~ Corretto. In `CalcolatoreCombattimento.calcolaDannoRisultante`, §2.5, la condizione era `dannoNonFisico && …`, mentre `TipoEffettoDiStato.BERSERK` e il commento dicono che scala il danno **fisico**. Ora è `!dannoNonFisico`, coperto da `CalcolatoreCombattimentoBerserkTest`. Siccome i guerrieri usano quasi sempre armi fisiche, finora il BERSERK non si applicava praticamente mai: ora che funziona, il combattimento dei guerrieri feriti diventa più forte, e conviene tenerlo presente nel bilanciamento.
 
-Non sono bug ma scelte da rivedere: l'armaiolo **ricompra a prezzo pieno** (vedi TODO). Il blocco di debug con 9999 monete in `GruppoGiocatore.reimposta` e gli artefatti "PER TEST" in `Automa.inizializzaGioco` sono già segnati con FIXME.
+Non sono bug ma scelte da rivedere: l'armaiolo **ricompra a prezzo pieno**, e c'è del codice di debug da togliere (vedi "Da fare").
 
-## 6. Dubbi ancora aperti
-
-- **Da riguardare con la resa grafica:** la presentazione del nome proprio nell'inventario.
-- **Rarità a video.** Come mostrare nell'inventario che un artefatto è raro o leggendario (colore, dicitura…). Da riguardare con la resa grafica.
-
-## 7. TODO
-
-- [ ] Rifornimento periodico dei magazzini di armaiolo e venditore di pergamene (oggi si riempiono una volta sola, alla creazione del mondo); rivendita a prezzo ridotto invece che pieno.
-- [ ] Tenere d'occhio il bilanciamento dei guerrieri: il BERSERK ora funziona davvero (§5.6), e i guerrieri feriti colpiscono più forte.
-- [ ] Il nome "Pergamena" va generato a caso come i nomi delle locande (runa, sigillo, …).
-- [ ] Grammatica per `GeneratoreArtefatti` (formato da definire), sul modello delle locande.
-- [ ] I personaggi del gruppo non si vedono a video: quando ci saranno, i rifiuti (peso, slot, livello) andranno mostrati anche lì, per esempio con un fumetto sul personaggio. C'è un TODO in `Artefatto.consegna`.
-- [ ] L'immagine dell'incantatore (`img/personaggi/Incantatore.gif`) è 31×70, metà delle altre (il venditore è 62×140): va ingrandita.
-- [ ] Negozi sparsi nella foresta: un paio per tipo, tra armaiolo, alchimista e incantatore.
-- [ ] Bilanciamento di prezzi e gradi delle pergamene (§8).
-- [ ] Bilanciamento degli incantamenti: un incantamento medio alza il danno del 66%, e la spada di fuoco batte ogni altro equipaggiamento (`piano_montecarlo_matrix.md`, §11.4; si rilancia con `TestMonteCarloMatrix.testConfrontoEquipaggiamenti`).
-- [ ] Elmo e armatura senza incantamenti non servono quasi a nulla: danno +5% di `PARATA` per livello, ma su una `PARATA` di base di 2-6 (`CORAZZATO` e `SPADA_E_SCUDO` vincono uguale). Si potrebbe dar loro una `PARATA` fissa per livello, come lo scudo.
-- [x] Danno delle armi di livello basso alzato: prima a livello 1 una spada faceva 6, meno delle mani nude di un PG (4 + 1,5 × √Forza, cioè 9-10). Ora fa `max(4 + 2 × livello, 11 + livello)`: 12 a livello 1, 16 a livello 5, come prima dal 7 in su. Test in `GeneratoreArtefattiTest`.
-- [ ] Ai livelli 1-2 lo scudo rende poco rispetto a doppia arma e spadone, perché la sua `PARATA` cresce con il livello (+3 a livello 1). Con le nuove armi, a livello 1 contro il Troll il Ladro vince il 70% con spada e scudo e l'89% con due spade, il Guerriero il 93% con spada e scudo e il 99% con lo spadone. Si potrebbe dare allo scudo anche una parte fissa.
-- [ ] Capire cosa porterebbe un giocatore a preferire un Guerriero, un Ladro, un Elfo, un Bardo o un Mago, e livellare un po' anche le classi: oggi il Guerriero è avanti in mischia e Ladro ed Elfa si somigliano (`piano_montecarlo_matrix.md`, §12).
-- [ ] Generare più spesso scudi rari (oggi il 10% degli artefatti incantabili è raro), e forse scudi con `RESISTENZA_MAGICA` come modificatore.
-- [ ] Rivedere **tutti** i prezzi del gioco (artefatti, pozioni, incantesimi, pergamene, fusione) alla luce del loot che ora si può trovare: con spade, scudi, anelli e pergamene raccolti in giro, l'economia cambia.
-- [ ] Rivedere la fuga, oggi troppo penalizzante (TODO in `GruppoGiocatore.fugge`).
-- [ ] Nuove idee per incantare gli accessori (per ora non si incantano).
-- [ ] Artefatti leggendari, scritti a mano, da mettere nei templi e come premi delle missioni (§2, "Rarità").
-
-## 8. Gradi e prezzi delle pergamene
+## 6. Gradi e prezzi delle pergamene
 
 Riferimenti dell'economia attuale:
 - artefatti dei templi 10-25 monete;
@@ -357,4 +384,4 @@ Conti di esempio con la fusione:
 
 Il bonus fisso scala con il livello dell'arma (`bonus × livello`), il coefficiente con l'Intelligenza di chi colpisce. Per questo il fisso rende di più sulle armi alte e il percentuale sui maghi.
 
-I numeri sono di partenza: il bilanciamento è un TODO (§7), e i valori stanno in `Costanti`, quindi si cambiano senza toccare la logica.
+I numeri sono di partenza: il bilanciamento è in "Da fare", e i valori stanno in `Costanti`, quindi si cambiano senza toccare la logica.

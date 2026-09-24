@@ -3,7 +3,7 @@ package com.threeamigos.foresta.oggetti;
 import com.threeamigos.foresta.motore.Costanti;
 
 /**
- * I gradini degli effetti di una pergamena (vedi artefatti_e_incantamenti.md, §8).
+ * I gradini degli effetti di una pergamena (vedi artefatti_e_incantamenti.md, §6).
  * Il prezzo base è quello di un incantamento con entrambe le parti, fissa e percentuale.
  */
 public enum GradoIncantamento {

@@ -5,7 +5,7 @@ import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 
 /**
- * Prezzo di una pergamena come somma dei prezzi dei suoi effetti (vedi artefatti_e_incantamenti.md, §8):
+ * Prezzo di una pergamena come somma dei prezzi dei suoi effetti (vedi artefatti_e_incantamenti.md, §6):
  * <ul>
  * <li>incantamento: 2 × bonus fisso + coefficiente in punti percentuali, +25% se il tipo di danno ha effetti di stato;</li>
  * <li>modificatore AUMENTO_FISSO di q: 2 × q; AUMENTO_PERCENTUALE di q%: q; QUANTITA_ASSOLUTA ("porta a q"): 5 × q.</li>

@@ -1043,21 +1043,37 @@ public abstract class PersonaggioBase implements Personaggio {
 	// PARATA
 
 	/**
-	 * La PARATA con l'equipaggiamento: lo scudo ne aggiunge per ogni suo livello, mentre chi impugna
-	 * due armi o un'arma a due mani ha la guardia aperta e ne perde un quarto.
+	 * La PARATA con l'equipaggiamento: scudo, elmo e armatura ne aggiungono una parte fissa più una per ogni
+	 * loro livello, mentre chi impugna due armi o un'arma a due mani ha la guardia aperta e ne perde un quarto.
 	 */
 	@Override
 	public int getParata() {
 		double parata = get(md, PersonaggioMD::getParata, TipoAttributo.PARATA);
 		for (ArtefattoMD artefatto : md.getArtefatti()) {
-			if (artefatto.getTipo() == TipoArtefatto.SCUDO) {
-				parata += Costanti.SCUDO_PARATA_PER_LIVELLO * artefatto.getLivello();
-			}
+			parata += parataIntrinseca(artefatto);
 		}
 		if (haGuardiaAperta()) {
 			parata *= Costanti.GUARDIA_APERTA_FATTORE_PARATA;
 		}
 		return (int) parata;
+	}
+
+	/**
+	 * La PARATA che un pezzo difensivo dà di suo, oltre ai modificatori scritti sull'artefatto.
+	 * La veste non para: dà lo stesso minimo in RESISTENZA_MAGICA (vedi getResistenzaMagica).
+	 */
+	private static int parataIntrinseca(ArtefattoMD artefatto) {
+		int livello = artefatto.getLivello();
+		switch (artefatto.getTipo()) {
+			case SCUDO:
+				return Costanti.SCUDO_PARATA_MINIMA + Costanti.SCUDO_PARATA_PER_LIVELLO * livello;
+			case ELMO:
+				return Costanti.ELMO_PARATA_MINIMA + Costanti.ELMO_PARATA_PER_LIVELLO * livello;
+			case ARMATURA:
+				return Costanti.ARMATURA_PARATA_MINIMA + Costanti.ARMATURA_PARATA_PER_LIVELLO * livello;
+			default:
+				return 0;
+		}
 	}
 
 	private boolean haGuardiaAperta() {
@@ -1070,7 +1086,8 @@ public abstract class PersonaggioBase implements Personaggio {
 	// RESISTENZA MAGICA
 
 	/**
-	 * La RESISTENZA_MAGICA con l'equipaggiamento: lo scudo ne aggiunge per ogni suo livello, di più se è raro.
+	 * La RESISTENZA_MAGICA con l'equipaggiamento: lo scudo ne aggiunge per ogni suo livello, di più se è raro;
+	 * la veste, l'armatura di chi usa la magia, ne dà quanto un'armatura dà di PARATA.
 	 */
 	@Override
 	public int getResistenzaMagica() {
@@ -1081,6 +1098,8 @@ public abstract class PersonaggioBase implements Personaggio {
 						? Costanti.SCUDO_RESISTENZA_MAGICA_PER_LIVELLO
 						: Costanti.SCUDO_RARO_RESISTENZA_MAGICA_PER_LIVELLO;
 				resistenza += perLivello * artefatto.getLivello();
+			} else if (artefatto.getTipo() == TipoArtefatto.VESTE) {
+				resistenza += Costanti.ARMATURA_PARATA_MINIMA + Costanti.ARMATURA_PARATA_PER_LIVELLO * artefatto.getLivello();
 			}
 		}
 		return resistenza;

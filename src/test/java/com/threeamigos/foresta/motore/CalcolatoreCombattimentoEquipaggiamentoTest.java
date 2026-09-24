@@ -126,10 +126,27 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
     // --- Parata
 
     @Test
-    void loScudoDaParataPerOgniLivello() {
+    void loScudoDaUnaParataMinimaPiuUnaPerLivello() {
         Guerriero guerriero = conParata(new Guerriero("Pippo", 5), 20);
         guerriero.addArtefatto(artefatto(TipoArtefatto.SCUDO, 4));
-        assertEquals(20 + 4 * Costanti.SCUDO_PARATA_PER_LIVELLO, guerriero.getParata());
+        assertEquals(20 + Costanti.SCUDO_PARATA_MINIMA + 4 * Costanti.SCUDO_PARATA_PER_LIVELLO, guerriero.getParata());
+    }
+
+    @Test
+    void ancheElmoEArmaturaDannoUnaParataMinima() {
+        Guerriero guerriero = conParata(new Guerriero("Pippo", 5), 20);
+        guerriero.addArtefatto(artefatto(TipoArtefatto.ELMO, 1));
+        guerriero.addArtefatto(artefatto(TipoArtefatto.ARMATURA, 3));
+        assertEquals(20 + Costanti.ELMO_PARATA_MINIMA + Costanti.ELMO_PARATA_PER_LIVELLO
+                + Costanti.ARMATURA_PARATA_MINIMA + 3 * Costanti.ARMATURA_PARATA_PER_LIVELLO, guerriero.getParata());
+    }
+
+    @Test
+    void laVesteDaResistenzaMagicaInveceDiParata() {
+        Mago mago = conParata(conResistenzaMagica(new Mago("Merlino", 5), 20), 20);
+        mago.addArtefatto(artefatto(TipoArtefatto.VESTE, 3));
+        assertEquals(20, mago.getParata());
+        assertEquals(20 + Costanti.ARMATURA_PARATA_MINIMA + 3 * Costanti.ARMATURA_PARATA_PER_LIVELLO, mago.getResistenzaMagica());
     }
 
     @Test
