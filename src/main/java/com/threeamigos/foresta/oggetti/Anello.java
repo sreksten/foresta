@@ -81,7 +81,6 @@ public class Anello extends OggettoBase implements Oggetto {
 				if (azione == null || azione == Comando.TIMER) {
 					return false;
 				}
-				Personaggio p = gruppo.getPersonaggio(azione);
 
 				String nome;
 				ModificatoreAttributo modificatore;
@@ -116,8 +115,13 @@ public class Anello extends OggettoBase implements Oggetto {
 						.setPeso(0.1)
 						.setModificatore(modificatore)
 						.costruisci();
-				if (Artefatto.consegna(gruppo, p, anelloMagico)) {
-					BusEventi.pubblica(new NotificaTestoFrase(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " indossa l'anello."));
+				if (azione == Comando.GRUPPO) {
+					Artefatto.riponiNelGruppo(gruppo, anelloMagico);
+				} else {
+					Personaggio p = gruppo.getPersonaggio(azione);
+					if (Artefatto.consegna(gruppo, p, anelloMagico)) {
+						BusEventi.pubblica(new NotificaTestoFrase(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " indossa l'anello."));
+					}
 				}
 
 				Statistiche.addPunti(Costanti.ANELLO_MAGICO_PUNTEGGIO);

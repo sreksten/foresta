@@ -91,18 +91,32 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 	@Override
 	public boolean prendi(GruppoGiocatore gruppo, Comando comando) {
 		if (comando == null) {
+			// Chi lo prende lo sceglie l'automa (Stato.SCELTA_DESTINATARIO_OGGETTO), che con
+			// un solo personaggio vivo risponde da solo
 			if (gruppo.getNumeroPersonaggiVivi() > 1) {
 				BusEventi.pubblica(new NotificaTestoFrase("Chi raccoglie " + getNome() + "?"));
-				return false;
-			} else {
-				comando = Comando.PERSONAGGIO_1;
 			}
+			return false;
+		}
+		if (comando == Comando.GRUPPO) {
+			riponiNelGruppo(gruppo, this);
+			return true;
 		}
 		Personaggio p = gruppo.getPersonaggio(comando);
 		if (consegna(gruppo, p, this)) {
 			BusEventi.pubblica(new NotificaTestoFrase(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " raccoglie " + md.getNome() + '.'));
 		}
 		return true;
+	}
+
+	/**
+	 * Mette l'artefatto raccolto nell'inventario del gruppo, per scelta del giocatore.
+	 */
+	public static void riponiNelGruppo(GruppoGiocatore gruppo, Artefatto artefatto) {
+		gruppo.addArtefatto(artefatto);
+		String nome = artefatto.getNome();
+		BusEventi.pubblica(new NotificaTestoFrase(nome.substring(0, 1).toUpperCase() + nome.substring(1)
+				+ " viene messo nell'inventario del gruppo."));
 	}
 
 	/**

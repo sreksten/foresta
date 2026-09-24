@@ -178,7 +178,9 @@ public class CalcolatoreCombattimento {
         Logger.log("dannoOffensivoGrezzo = " + dannoOffensivoGrezzo);
 
         // 2.5 APPLICAZIONE DEL BONUS BERSERK (Esclusivo ai Guerrieri con FURIA)
-        if (dannoNonFisico && attaccante.hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
+        // Solo sul danno fisico (vedi TipoEffettoDiStato.BERSERK): la condizione era negata al
+        // contrario, e il bonus valeva solo per gli attacchi elementali e magici.
+        if (!dannoNonFisico && attaccante.hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
             // Il danno fisico scala con la salute persa: più è ferito, più forte colpisce
             double percentualeSalutePerduta = 1.0d - ((double)attaccante.getSalute() / (double)attaccante.getSaluteMassima());
             dannoOffensivoGrezzo = dannoOffensivoGrezzo * (1.0d + percentualeSalutePerduta * 0.5d);

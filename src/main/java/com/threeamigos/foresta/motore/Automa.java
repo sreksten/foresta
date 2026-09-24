@@ -115,6 +115,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriIngresso.put(Stato.SCELTA_AUTOMATICA_PERSONAGGIO, this::entraInStatoSceltaAutomaticaPersonaggio);
 		gestoriIngresso.put(Stato.SCELTA_PERSONAGGIO_QUALSIASI, this::entraInStatoSceltaPersonaggioQualsiasi);
 		gestoriIngresso.put(Stato.SCELTA_MANUALE_PERSONAGGIO, this::entraInStatoSceltaManualePersonaggio);
+		gestoriIngresso.put(Stato.SCELTA_DESTINATARIO_OGGETTO, this::entraInStatoSceltaDestinatarioOggetto);
 		gestoriIngresso.put(Stato.SCELTA_INCANTESIMO_DA_LANCIARE, this::entraInStatoSceltaIncantesimoDaLanciare);
 		gestoriIngresso.put(Stato.ATTESA_INCANTESIMO_QUALSIASI, this::entraInStatoAttesaIncantesimoQualsiasi);
 		gestoriIngresso.put(Stato.ATTESA_SI_NO, this::entraInStatoAttesaSiNo);
@@ -146,6 +147,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriComando.put(Stato.IN_LOCAZIONE, this::gestisciComandoInStatoInLocazione);
 		gestoriComando.put(Stato.IN_COMBATTIMENTO, this::gestisciComandoInStatoInCombattimento);
 		gestoriComando.put(Stato.SCELTA_MANUALE_PERSONAGGIO, this::gestisciComandoInStatoSceltaManualePersonaggio);
+		gestoriComando.put(Stato.SCELTA_DESTINATARIO_OGGETTO, this::gestisciComandoInStatoSceltaDestinatarioOggetto);
 		gestoriComando.put(Stato.INCANTESIMO_SCELTO, this::gestisciComandoInStatoIncantesimoScelto);
 		gestoriComando.put(Stato.ATTESA_SI_NO, this::gestisciComandoInStatoAttesaSiNo);
 		gestoriComando.put(Stato.FINE_LOCAZIONE, this::eseguiFineLocazione);
@@ -610,6 +612,40 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		return Esito.continuaCon(comando);
 	}
 
+	/**
+	 * Come SCELTA_AUTOMATICA_PERSONAGGIO, ma al posto di ANNULLA c'è GRUPPO: rinunciare
+	 * all'oggetto non ha senso, mentre lo si può riporre nell'inventario del gruppo.
+	 * Con ANNULLA, per giunta, Oggetto.prendi riceveva un comando che non indica nessun
+	 * personaggio e Gruppo.getPersonaggio andava fuori dalla lista.
+	 */
+	private Esito entraInStatoSceltaDestinatarioOggetto() {
+		List<Comando> comandiPossibili = new ArrayList<>();
+		int i = 0;
+		for (Personaggio personaggioCorrente : gruppo.getPersonaggi()) {
+			if (personaggioCorrente.isVivo()) {
+				comandiPossibili.add(Comando.ofPersonaggio(i));
+			}
+			i++;
+		}
+		if (comandiPossibili.size() == 1) {
+			// Un solo personaggio vivo: lo prende lui, come finora
+			stato = statoPrecedente;
+			return Esito.continuaCon(comandiPossibili.get(0));
+		}
+		comandiPossibili.add(Comando.GRUPPO);
+		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibili));
+		return Esito.FERMATI;
+	}
+
+	private Esito gestisciComandoInStatoSceltaDestinatarioOggetto(Comando comando) {
+		if (comando != Comando.GRUPPO && !comando.isPersonaggio()) {
+			comandoNonValido(comando);
+			return Esito.FERMATI;
+		}
+		stato = statoPrecedente;
+		return Esito.continuaCon(comando);
+	}
+
 	private Esito entraInStatoSceltaIncantesimoDaLanciare() {
 		List<Comando> comandiPossibili = new ArrayList<>();
 		Personaggio formulante = gruppo.getFormulante();
@@ -671,7 +707,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					if (!oggetto.prendi(gruppo, comando)) {
 						BusEventi.pubblica(new InternoMessaggio("L'oggetto non si lascia prendere con l'azione " + comando));
 						statoPrecedente = Stato.FINE_LOCAZIONE;
-						stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+						stato = Stato.SCELTA_DESTINATARIO_OGGETTO;
 						return Esito.CONTINUA_CON_INGRESSO;
 					} else {
 						BusEventi.pubblica(new NotificaRaccoltaOggetti());

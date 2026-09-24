@@ -266,7 +266,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		int valorePrecedente = md.getPozioniMagiaGrande();
 		int valoreAttuale = valorePrecedente + quantita;
 		md.setPozioniMagiaGrande(valoreAttuale);
-		BusEventi.pubblica(new NotificaVariazioneDisponibilitaPozioniMagia(valorePrecedente, valoreAttuale));
+		BusEventi.pubblica(new NotificaVariazioneDisponibilitaPozioniMagiaGrandi(valorePrecedente, valoreAttuale));
 	}
 
 	public final void subPozioniMagiaGrande(int quantita) {
@@ -494,6 +494,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		}
 	}
 
+	// TODO riguardare la fuga, oggi troppo penalizzante: oltre a perdere fino a metà di
+	// monete, preziosi, incantesimi e pozioni, ogni personaggio vivo subisce da 50 a 100
+	// danni (PersonaggioBase.fugge), e se muore il capo la partita è persa.
 	public final void fugge() {
 		BusEventi.pubblica(new NotificaTestoFrase(chiMaiuscolo() + ", in preda al panico, cerca la salvezza nella fuga!" +
 				" Sfortunatamente riceve gravi ferite e perde molte delle cose in suo possesso!"));
@@ -509,6 +512,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		subPozioniSalute(calcolaPerdita.apply(md.getPozioniSalute()));
 		subPozioniSaluteGrande(calcolaPerdita.apply(md.getPozioniSaluteGrande()));
 		subPozioniMagia(calcolaPerdita.apply(md.getPozioniMagia()));
+		subPozioniMagiaGrande(calcolaPerdita.apply(md.getPozioniMagiaGrande()));
 
 		getPersonaggiVivi().forEach(Personaggio::fugge);
 

@@ -31,6 +31,8 @@ public enum Stato {
 	SCELTA_AUTOMATICA_PERSONAGGIO,
 	SCELTA_PERSONAGGIO_QUALSIASI,
 	SCELTA_MANUALE_PERSONAGGIO,
+	// Chi raccoglie l'oggetto di fine locazione: uno dei personaggi vivi o l'inventario del gruppo
+	SCELTA_DESTINATARIO_OGGETTO,
 
 	IN_COMBATTIMENTO,
 

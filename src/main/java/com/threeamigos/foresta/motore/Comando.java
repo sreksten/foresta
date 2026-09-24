@@ -117,6 +117,13 @@ public enum Comando {
 		throw new IllegalArgumentException();
 	}
 	
+	/**
+	 * Se il comando indica uno dei personaggi del gruppo (PERSONAGGIO_1 ... PERSONAGGIO_5).
+	 */
+	public boolean isPersonaggio() {
+		return ordinal() >= PERSONAGGIO_1.ordinal() && ordinal() <= PERSONAGGIO_5.ordinal();
+	}
+
 	public static Comando ofPersonaggio(int personaggio) {
 		if (personaggio == 0) {
 			return PERSONAGGIO_1;

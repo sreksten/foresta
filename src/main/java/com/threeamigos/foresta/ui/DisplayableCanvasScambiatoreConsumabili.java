@@ -256,7 +256,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         if (gruppoGiocatore.getPozioniMagia() > 0) {
             elencoGruppo.add(costruisciPozioneMagia(gruppoGiocatore.getPozioniMagia()));
         }
-        if (gruppoGiocatore.getPozioniMagia() > 0) {
+        if (gruppoGiocatore.getPozioniMagiaGrande() > 0) {
             elencoGruppo.add(costruisciPozioneMagiaGrande(gruppoGiocatore.getPozioniMagiaGrande()));
         }
         return elencoGruppo;
