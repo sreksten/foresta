@@ -774,6 +774,13 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	public void rimuoviOggetto() {
+		if (oggettoCorrente instanceof Artefatto) {
+			// L'unico artefatto che una locazione può offrire è quello del registro (vedi crea):
+			// una volta raccolto va tolto, altrimenti a ogni nuova visita si ripresenta e se
+			// ne ottengono infinite copie. Corruzione e fuga usano setOggetto(null), che invece
+			// lo lascia al suo posto.
+			RegistroArtefatti.rimuoviArtefattoInLocazione(gruppo.getCoordinate());
+		}
 		oggettoCorrente = null;
 	}
 

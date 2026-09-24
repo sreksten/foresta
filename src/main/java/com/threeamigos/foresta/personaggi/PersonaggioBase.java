@@ -672,6 +672,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return md.getArtefatti().stream().mapToDouble(ArtefattoMD::getPeso).sum();
 	}
 
+	@Override
 	public boolean puoPrendere(Artefatto artefatto) {
 		return puoPrendere(artefatto.getPeso());
 	}

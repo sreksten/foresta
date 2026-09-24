@@ -2,6 +2,7 @@ package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.OggettoConCosto;
@@ -98,9 +99,30 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 			}
 		}
 		Personaggio p = gruppo.getPersonaggio(comando);
-		p.addArtefatto(this);
-		BusEventi.pubblica(new NotificaTestoFrase(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " raccoglie " + md.getNome() + '.'));
+		if (consegna(gruppo, p, this)) {
+			BusEventi.pubblica(new NotificaTestoFrase(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " raccoglie " + md.getNome() + '.'));
+		}
 		return true;
+	}
+
+	/**
+	 * Dà l'artefatto al personaggio se il suo carico lo permette, altrimenti lo mette
+	 * nell'inventario del gruppo. Restituisce true se l'ha preso il personaggio.
+	 */
+	public static boolean consegna(GruppoGiocatore gruppo, Personaggio personaggio, Artefatto artefatto) {
+		if (personaggio.puoPrendere(artefatto)) {
+			personaggio.addArtefatto(artefatto);
+			return true;
+		}
+		gruppo.addArtefatto(artefatto);
+		// TODO oggi i personaggi del gruppo non si vedono a video: quando ci saranno, il
+		// rifiuto andrà mostrato anche lì (es. un fumetto sul personaggio troppo carico).
+		String nome = artefatto.getNome();
+		BusEventi.pubblica(new NotificaTestoParagrafo(nome.substring(0, 1).toUpperCase() + nome.substring(1)
+				+ " è troppo pesante per "
+				+ personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)
+				+ " che è troppo carico. Messo nell'inventario del gruppo."));
+		return false;
 	}
 
 	public int getQuantita() {

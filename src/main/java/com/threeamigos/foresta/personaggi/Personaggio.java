@@ -4,6 +4,7 @@ import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.offerte.Offerta;
+import com.threeamigos.foresta.oggetti.Artefatto;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -326,6 +327,11 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
 	 * Il carico che un personaggio può portare, somma del carico base e dei modificatori di carico degli artefatti.
 	 */
     int getCaricoMassimo();
+
+	/**
+	 * Se il personaggio può aggiungere l'artefatto al proprio carico senza superare il carico massimo.
+	 */
+    boolean puoPrendere(Artefatto artefatto);
 
 	/**
 	 * La forza di un personaggio, somma della forza base e dei modificatori di forza degli artefatti.

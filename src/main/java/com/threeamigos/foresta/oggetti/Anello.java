@@ -82,7 +82,6 @@ public class Anello extends OggettoBase implements Oggetto {
 					return false;
 				}
 				Personaggio p = gruppo.getPersonaggio(azione);
-				BusEventi.pubblica(new NotificaTestoFrase(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " indossa l'anello."));
 
 				String nome;
 				ModificatoreAttributo modificatore;
@@ -91,7 +90,7 @@ public class Anello extends OggettoBase implements Oggetto {
 					String[] appartenenzePossibili = new String[]{ "della Valchiria", "del Grifone", "del Paladino", "del Centurione", "della Manticora", "del Minotauro", "della Viverna" };
 					int indiceAppartenenza = (int) (Math.random() * appartenenzePossibili.length);
 					nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
-					modificatore = new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, Costanti.ANELLO_MAGICO_AGGIUNTA_VALORE);
+					modificatore = new ModificatoreAttributo(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, Costanti.ANELLO_MAGICO_AGGIUNTA_VALORE);
 					descrizione = "che aumenta il Valore";
 				} else if (tipo == 2) {
 					String[] appartenenzePossibili = new String[]{ "del Berserker", "della Fenice", "del Pegaso", "della Salamandra", "del Gladiatore", "dell'Ippogrifo", "dell'Esploratore" };
@@ -117,7 +116,9 @@ public class Anello extends OggettoBase implements Oggetto {
 						.setPeso(0.1)
 						.setModificatore(modificatore)
 						.costruisci();
-				p.addArtefatto(anelloMagico);
+				if (Artefatto.consegna(gruppo, p, anelloMagico)) {
+					BusEventi.pubblica(new NotificaTestoFrase(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " indossa l'anello."));
+				}
 
 				Statistiche.addPunti(Costanti.ANELLO_MAGICO_PUNTEGGIO);
 				GestoreProgressione.acquisisciArtefattoMinore();

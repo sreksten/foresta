@@ -87,7 +87,8 @@ public interface Locazione {
     Oggetto getOggetto();
 	
 	/**
-	 * Una volta preso, l'oggetto viene tolto dalla locazione (per evitare che venga preso due volte)
+	 * Una volta preso, l'oggetto viene tolto dalla locazione (per evitare che venga preso due volte);
+	 * se è l'artefatto del registro, viene tolto anche dal registro.
 	 */
     void rimuoviOggetto();
 

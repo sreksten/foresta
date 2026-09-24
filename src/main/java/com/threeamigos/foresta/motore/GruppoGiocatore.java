@@ -561,7 +561,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	private void suEventoRichiestaPrelievoArtefatto(ComandoPrelievoArtefatto eventoRichiestaPrelievoArtefatto) {
 		Artefatto artefatto = (Artefatto) eventoRichiestaPrelievoArtefatto.getOggettoDaSpostare();
 		Personaggio personaggio = (Personaggio) eventoRichiestaPrelievoArtefatto.getParteAttiva();
-		if (personaggio.getCarico() + eventoRichiestaPrelievoArtefatto.getOggettoDaSpostare().getPeso() <= personaggio.getCaricoMassimo()) {
+		if (personaggio.puoPrendere(artefatto)) {
 			removeArtefatto(artefatto);
 			personaggio.addArtefatto(artefatto);
 			BusEventi.pubblica(new NotificaApprovazionePrelievoArtefatto(eventoRichiestaPrelievoArtefatto));

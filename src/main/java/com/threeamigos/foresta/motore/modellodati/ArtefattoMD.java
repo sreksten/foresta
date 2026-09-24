@@ -178,8 +178,11 @@ public class ArtefattoMD implements Serializzabile {
 				TipoModificatore tipoModificatore = TipoModificatore.valueOf(st.nextToken());
 				double quantita = Double.parseDouble(st.nextToken());
 				String note = st.nextToken();
+				// "-" sta per nota vuota (StringTokenizer salterebbe un campo vuoto). Si rilegge
+				// come "", come la mette il costruttore a tre argomenti di ModificatoreAttributo:
+				// con null il modificatore riletto non sarebbe più equals all'originale.
 				if ("-".equals(note)) {
-					note = null;
+					note = "";
 				}
 				modificatori.add(new ModificatoreAttributo(tipoAttributo, tipoModificatore, quantita, note));
 			}
