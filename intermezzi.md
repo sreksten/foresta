@@ -5,7 +5,10 @@
 
 Un intermezzo è una sequenza di **pagine** mostrate a tutto schermo quando si verificano certe condizioni di gioco. Ogni pagina può avere uno sfondo, delle immagini (anche animate e in movimento), un testo in alto e dei dialoghi a fumetti. Un intermezzo scatta **una sola volta per partita**; lo stato "già visto" viene salvato con la partita.
 
-Oggi c'è un solo momento di innesco: **all'arrivo in una nuova locazione**, dopo i controlli delle missioni e gli eventi del tempo, prima che la locazione venga costruita e descritta. Se la partita è persa, nessun intermezzo parte.
+Ci sono due momenti di innesco (enum `MomentoIntermezzo`):
+
+- **`INIZIO_GIOCO`**: una volta sola, all'inizio di una partita nuova, subito dopo la creazione del personaggio e **prima** dei controlli delle missioni. È il posto degli intermezzi d'apertura: le notifiche delle missioni non si sovrappongono all'intermezzo. Caricando un salvataggio non scatta.
+- **`INIZIO_LOCAZIONE`**: all'arrivo in una nuova locazione, dopo i controlli delle missioni e gli eventi del tempo, prima che la locazione venga costruita e descritta. Se la partita è persa, nessun intermezzo parte.
 
 ---
 
@@ -55,11 +58,11 @@ Quando non serve più, togli `INTERMEZZO_DI_PROVA` da `ClasseIntermezzo` (è seg
 
 ### Scrivere l'innesco
 
-`deveScattare` viene chiamato a ogni inizio locazione finché l'intermezzo non è scattato. Può leggere tutto lo stato di gioco. Alcuni esempi:
+`deveScattare` viene chiamato a ogni momento di innesco (all'inizio della partita e a ogni inizio locazione) finché l'intermezzo non è scattato. Può leggere tutto lo stato di gioco. Alcuni esempi:
 
 | Condizione | Codice |
 | :--- | :--- |
-| Primo turno della partita | `Statistiche.getTurniGiocati() == 0` |
+| Apertura della partita | `momento == MomentoIntermezzo.INIZIO_GIOCO` |
 | Dal giorno N in poi | `LineaTemporale.getGiorno() >= N` |
 | Missione principale completata | `RegistroMissioni.getMissionePrincipale().isCompleta()` |
 | Il gruppo sta per entrare in un tipo di locazione | `GruppoGiocatore.getIstanza().getClasseLocazioneCorrente() == ClassiLocazione.X` |
@@ -378,5 +381,5 @@ Gli errori (immagini mancanti, caratteri non supportati nei fumetti) vengono sta
 - **Prova sempre con l'anteprima**, anche con classi e nomi diversi (`--classe`, `--nome`): nomi lunghi allungano i fumetti, e classi diverse hanno immagini di larghezza diversa.
 - **Lascia spazio sopra i personaggi** che parlano: il fumetto va sopra la loro testa. Con i personaggi a y = 0.7 c'è spazio per 3-4 righe.
 - **Tieni le pagine brevi**: il giocatore può saltarle con un click. Le informazioni importanti per il gioco vanno anche nel testo normale o nelle missioni, non solo in un intermezzo.
-- **Un solo momento di innesco per ora** (`INIZIO_LOCAZIONE`). Altri momenti, per esempio dentro una locazione con i mostri già presenti, si aggiungono all'enum `MomentoIntermezzo` e a un punto di controllo nell'automa.
+- **Due momenti di innesco per ora** (`INIZIO_GIOCO` e `INIZIO_LOCAZIONE`). Altri momenti, per esempio dentro una locazione con i mostri già presenti, si aggiungono all'enum `MomentoIntermezzo` e a un punto di controllo nell'automa.
 - **Se il timer scatta nello stesso istante di un click** la pagina può avanzare di due. Succede solo se i due eventi cadono a pochi millesimi di secondo l'uno dall'altro.
