@@ -230,7 +230,10 @@ public class RegistroArtefatti {
 		if (modelloDati == null) {
 			return null;
 		}
-		return new Artefatto(modelloDati);
+		// Artefatto.di e non new Artefatto: un'arma deve tornare un ArmaFisica, altrimenti
+		// getArmaEquipaggiata() (che fa il cast ad Arma del primo artefatto di supertipo ARMA)
+		// fallisce con ClassCastException per le armi raccolte nei templi.
+		return Artefatto.di(modelloDati);
 	}
 
 	public static ScambiatoreArtefatti getScambiatorePerLocazione(CoordinateMD coordinate) {
