@@ -177,11 +177,11 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 	}
 
 	/**
-	 * Danno base 4 + 2 × livello, con uno scarto di ±1. Lo spadone fa il 50% in più (e costa il 50% in più),
+	 * Danno base {@link GeneratoreArtefatti#danniMediArma}, con uno scarto di ±1. Lo spadone fa il 50% in più (e costa il 50% in più),
 	 * il bastone magico la metà ma aumenta la magia.
 	 */
 	private void completaArma(ArtefattoMD md, int livello) {
-		int danni = 4 + 2 * livello + random.nextInt(3) - 1;
+		int danni = GeneratoreArtefatti.danniMediArma(livello) + random.nextInt(3) - 1;
 		if (md.getTipo() == TipoArtefatto.SPADONE) {
 			danni = (int) Math.round(danni * Costanti.ARTEFATTO_MOLTIPLICATORE_DUE_MANI);
 			md.setCostoAcquisto((int) Math.round(md.getCostoAcquisto() * Costanti.ARTEFATTO_MOLTIPLICATORE_DUE_MANI));

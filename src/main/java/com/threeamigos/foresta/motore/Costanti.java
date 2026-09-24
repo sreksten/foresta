@@ -46,6 +46,12 @@ public class Costanti {
     // Generatore di artefatti (vedi GeneratoreArtefattiTabelle)
     public static final double ARTEFATTO_PROBABILITA_NOME_PROPRIO = 0.05;
     public static final double ARTEFATTO_MOLTIPLICATORE_DUE_MANI = 1.5;
+    // Danno medio di un'arma generata: 4 + 2 × livello, ma almeno 11 + livello, così ai livelli bassi un'arma
+    // fa più delle mani nude di un PG (4 + 1,5 × √FORZA, cioè 9-10). Le due curve si incontrano al livello 7.
+    public static final int ARMA_DANNI_BASE = 4;
+    public static final int ARMA_DANNI_PER_LIVELLO = 2;
+    public static final int ARMA_DANNI_MINIMI_BASE = 11;
+    public static final int ARMA_DANNI_MINIMI_PER_LIVELLO = 1;
     // Probabilità che un artefatto incantabile generato nasca già incantato: 5% per ogni livello oltre il primo, fino al 60%
     public static final double ARTEFATTO_PROBABILITA_INCANTATO_PER_LIVELLO = 0.05;
     public static final double ARTEFATTO_PROBABILITA_INCANTATO_MASSIMA = 0.6;

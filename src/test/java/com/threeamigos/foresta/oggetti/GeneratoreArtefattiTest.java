@@ -9,6 +9,9 @@ import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoDanno;
 import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
+import com.threeamigos.foresta.motore.ArmaNaturale;
+import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.personaggi.Guerriero;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
@@ -59,6 +62,27 @@ class GeneratoreArtefattiTest {
         ArtefattoMD spadone = new GeneratoreArtefattiTabelle(new Random(3)).generaArtefatto(TipoArtefatto.SPADONE, 5).getModelloDati();
         assertEquals(Math.round(spada.getDanni() * 1.5), spadone.getDanni());
         assertTrue(spadone.getCostoAcquisto() > spada.getCostoAcquisto());
+    }
+
+    @Test
+    void aiLivelliBassiLeArmiFannoAlmenoUndicePiuIlLivello() {
+        assertEquals(12, GeneratoreArtefatti.danniMediArma(1));
+        assertEquals(13, GeneratoreArtefatti.danniMediArma(2));
+        assertEquals(16, GeneratoreArtefatti.danniMediArma(5));
+        // Dal livello 7 vale di nuovo 4 + 2 × livello
+        assertEquals(18, GeneratoreArtefatti.danniMediArma(7));
+        assertEquals(24, GeneratoreArtefatti.danniMediArma(10));
+    }
+
+    @Test
+    void unaSpadaDiLivelloUnoFaPiuDelleManiNudeDiUnGuerriero() {
+        ModelloDati.setIstanza(new ModelloDati());
+        int maniNude = new ArmaNaturale(new Guerriero("Pippo", 1)).getDanni();
+        GeneratoreArtefatti generatore = new GeneratoreArtefattiTabelle(new Random(5));
+        for (int i = 0; i < GIRI; i++) {
+            int danni = generatore.generaArtefatto(TipoArtefatto.SPADA, 1).getModelloDati().getDanni();
+            assertTrue(danni > maniNude, "spada " + danni + ", mani nude " + maniNude);
+        }
     }
 
     @Test

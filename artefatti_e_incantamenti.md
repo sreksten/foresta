@@ -173,7 +173,7 @@ Vedi la tabella dei gradi in §8. Formula: `2 × bonus fisso + percentuale`; +25
   - Interfaccia `GeneratoreArtefatti` (`oggetti`), con `istanza()`, `generaArtefatto(tipo, livello)`, `generaArtefattoCasuale(livello)` (pergamene escluse) e `generaPergamena(livello)`. Chi chiama passa il livello di riferimento, `Statistiche.getLivello()`.
   - Implementazione `GeneratoreArtefattiTabelle`, con un `Random` iniettabile per i test. Nomi da tabelle ("la spada d'argento"); nome proprio nel 5% dei casi. Valori tarati sui templi:
     - costo `5 + 5 × livello`;
-    - armi: danno `4 + 2 × livello ± 1`; lo spadone fa +50% di danno e di prezzo; il bastone fa metà danno e dà +5% di `MAGIA` per livello;
+    - armi: danno `max(4 + 2 × livello, 11 + livello) ± 1` (`GeneratoreArtefatti.danniMediArma`), così ai livelli bassi un'arma fa più delle mani nude di un PG, che fanno 9-10 a ogni livello; dal livello 7 vale `4 + 2 × livello` come prima; lo spadone fa +50% di danno e di prezzo; il bastone fa metà danno e dà +5% di `MAGIA` per livello;
     - pezzi difensivi: +5% di `PARATA` per livello (la veste dà `RESISTENZA_MAGICA`);
     - libro magico: +5% di `MAGIA` per livello;
     - accessori: +livello fisso a un attributo (carisma, coraggio, valore, fortuna, percezione).
@@ -317,7 +317,8 @@ Non sono bug ma scelte da rivedere: l'armaiolo **ricompra a prezzo pieno** (vedi
 - [ ] Bilanciamento di prezzi e gradi delle pergamene (§8).
 - [ ] Bilanciamento degli incantamenti: un incantamento medio alza il danno del 66%, e la spada di fuoco batte ogni altro equipaggiamento (`piano_montecarlo_matrix.md`, §11.4; si rilancia con `TestMonteCarloMatrix.testConfrontoEquipaggiamenti`).
 - [ ] Elmo e armatura senza incantamenti non servono quasi a nulla: danno +5% di `PARATA` per livello, ma su una `PARATA` di base di 2-6 (`CORAZZATO` e `SPADA_E_SCUDO` vincono uguale). Si potrebbe dar loro una `PARATA` fissa per livello, come lo scudo.
-- [ ] A livello 1 una spada (danno 6) fa meno dell'arma naturale di un PG (4 + 1,5 × √Forza): conviene alzare il danno delle armi di livello basso nel generatore.
+- [x] Danno delle armi di livello basso alzato: prima a livello 1 una spada faceva 6, meno delle mani nude di un PG (4 + 1,5 × √Forza, cioè 9-10). Ora fa `max(4 + 2 × livello, 11 + livello)`: 12 a livello 1, 16 a livello 5, come prima dal 7 in su. Test in `GeneratoreArtefattiTest`.
+- [ ] Ai livelli 1-2 lo scudo rende poco rispetto a doppia arma e spadone, perché la sua `PARATA` cresce con il livello (+3 a livello 1). Con le nuove armi, a livello 1 contro il Troll il Ladro vince il 70% con spada e scudo e l'89% con due spade, il Guerriero il 93% con spada e scudo e il 99% con lo spadone. Si potrebbe dare allo scudo anche una parte fissa.
 - [ ] Capire cosa porterebbe un giocatore a preferire un Guerriero, un Ladro, un Elfo, un Bardo o un Mago, e livellare un po' anche le classi: oggi il Guerriero è avanti in mischia e Ladro ed Elfa si somigliano (`piano_montecarlo_matrix.md`, §12).
 - [ ] Generare più spesso scudi rari (oggi il 10% degli artefatti incantabili è raro), e forse scudi con `RESISTENZA_MAGICA` come modificatore.
 - [ ] Rivedere **tutti** i prezzi del gioco (artefatti, pozioni, incantesimi, pergamene, fusione) alla luce del loot che ora si può trovare: con spade, scudi, anelli e pergamene raccolti in giro, l'economia cambia.

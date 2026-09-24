@@ -240,7 +240,7 @@ nome e una lista di `Pezzo`: un `TipoArtefatto`, facoltativamente con un incanta
 
 - **Costruzione dei pezzi.** Al livello del PG, con i valori medi di `GeneratoreArtefattiTabelle` ma
   senza la parte casuale, così due equipaggiamenti si confrontano senza rumore:
-  - armi: danno `4 + 2 × livello`; lo spadone +50%, il bastone metà e +5% di `MAGIA` per livello;
+  - armi: danno `GeneratoreArtefatti.danniMediArma(livello)`, cioè `max(4 + 2 × livello, 11 + livello)`; lo spadone +50%, il bastone metà e +5% di `MAGIA` per livello;
   - scudo, elmo, armatura: +5% di `PARATA` per livello (la veste di `RESISTENZA_MAGICA`);
   - libro magico: +5% di `MAGIA` per livello;
   - pesi come nel generatore;
@@ -345,10 +345,33 @@ Cosa se ne ricava:
   59% all'87%.
 - **Elmo e armatura spogli non servono quasi a nulla**: `CORAZZATO` vince come `SPADA_E_SCUDO`, perché il
   loro +5% di `PARATA` per livello moltiplica una `PARATA` di base piccola.
-- **A livello 1 una spada fa meno delle mani nude** di un PG (6 contro 4 + 1,5 × √Forza): per questo
-  `testSingoloScontroLadroConDueSpadeVsGoblin` confronta le due spade con una spada sola.
+- **A livello 1 una spada faceva meno delle mani nude** di un PG (6 contro 4 + 1,5 × √Forza, cioè 9-10).
+  Per questo `testSingoloScontroLadroConDueSpadeVsGoblin` confronta le due spade con una spada sola.
+  Dopo questo giro il danno delle armi basse è stato alzato (vedi sotto).
 - **Il Mago in mischia** resta debole anche armato, come previsto: combatte con gli incantesimi, che il
   simulatore non usa (§9.3).
+
+### 11.5 Danno delle armi di livello basso (2026-09-24)
+
+Le armi generate facevano `4 + 2 × livello` di danno: 6 a livello 1, meno delle mani nude di un PG
+(9-10 a ogni livello, 7 per il Mago). Ora fanno `max(4 + 2 × livello, 11 + livello)`: 12 a livello 1,
+16 a livello 5, e dal livello 7 come prima. Vittorie contro il Troll, 1 contro 1:
+
+| PG | Equipaggiamento | Livello 1 | Livello 2 | Livello 5 |
+| :--- | :--- | ---: | ---: | ---: |
+| Ladro | `NESSUNO` | 31,9% | 50,1% | 51,2% |
+| Ladro | `SPADA` | 65,0% | 77,6% | 88,4% |
+| Ladro | `SPADA_E_SCUDO` | 70,1% | 87,6% | 98,8% |
+| Ladro | `DUE_SPADE` | 89,3% | 94,3% | 97,4% |
+| Guerriero | `NESSUNO` | 81,2% | 84,2% | 87,9% |
+| Guerriero | `SPADA` | 91,4% | 94,9% | 98,0% |
+| Guerriero | `SPADA_E_SCUDO` | 93,0% | 97,6% | 99,8% |
+| Guerriero | `SPADONE` | 98,6% | 99,5% | 99,4% |
+
+Un'arma ora conta a ogni livello. A livello 5 i rapporti fra scudo e doppia arma restano quelli del §11.4
+(contro la Viverna il Ladro vince il 69% con spada e scudo e il 78% con due spade). Ai livelli 1-2 invece
+lo scudo resta indietro, perché la sua `PARATA` cresce con il livello: da rivedere, per esempio dandogli
+anche una parte fissa.
 
 ## 12. Da fare: bilanciamento delle classi
 

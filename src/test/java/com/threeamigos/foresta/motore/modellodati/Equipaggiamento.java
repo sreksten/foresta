@@ -2,6 +2,7 @@ package com.threeamigos.foresta.motore.modellodati;
 
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.GradoIncantamento;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.MotivoRifiutoEquipaggiamento;
@@ -169,7 +170,7 @@ public final class Equipaggiamento {
 		}
 
 		/**
-		 * I valori medi di GeneratoreArtefattiTabelle: armi con danno 4 + 2 × livello (lo spadone +50%,
+		 * I valori medi di GeneratoreArtefattiTabelle: armi con danno GeneratoreArtefatti.danniMediArma (lo spadone +50%,
 		 * il bastone metà e +5% di MAGIA per livello), pezzi difensivi con +5% di PARATA per livello
 		 * (la veste di RESISTENZA_MAGICA), libro con +5% di MAGIA per livello.
 		 */
@@ -183,7 +184,7 @@ public final class Equipaggiamento {
 			md.setRarita(rarita);
 			switch (tipo.getSupertipo()) {
 				case ARMA:
-					int danni = 4 + 2 * livello;
+					int danni = GeneratoreArtefatti.danniMediArma(livello);
 					if (tipo == TipoArtefatto.SPADONE) {
 						danni = (int) Math.round(danni * Costanti.ARTEFATTO_MOLTIPLICATORE_DUE_MANI);
 					} else if (tipo == TipoArtefatto.BASTONE_MAGICO) {

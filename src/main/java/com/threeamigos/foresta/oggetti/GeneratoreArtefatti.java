@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
 
 /**
@@ -13,6 +14,16 @@ public interface GeneratoreArtefatti {
 
 	static GeneratoreArtefatti istanza() {
 		return GeneratoreArtefattiTabelle.ISTANZA;
+	}
+
+	/**
+	 * Il danno medio di un'arma di quel livello, prima dello scarto casuale e delle correzioni per tipo
+	 * (spadone, bastone): 4 + 2 × livello, ma almeno 11 + livello, perché ai livelli bassi un'arma deve fare
+	 * più delle mani nude.
+	 */
+	static int danniMediArma(int livello) {
+		return Math.max(Costanti.ARMA_DANNI_BASE + Costanti.ARMA_DANNI_PER_LIVELLO * livello,
+				Costanti.ARMA_DANNI_MINIMI_BASE + Costanti.ARMA_DANNI_MINIMI_PER_LIVELLO * livello);
 	}
 
 	/**
