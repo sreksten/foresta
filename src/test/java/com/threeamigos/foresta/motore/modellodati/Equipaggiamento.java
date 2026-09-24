@@ -49,6 +49,11 @@ public final class Equipaggiamento {
 	public static final Equipaggiamento SPADA_E_SCUDO = di("SPADA_E_SCUDO",
 			Pezzo.di(TipoArtefatto.SPADA), Pezzo.di(TipoArtefatto.SCUDO));
 	/**
+	 * Lo scudo raro dà più RESISTENZA_MAGICA di quello comune
+	 */
+	public static final Equipaggiamento SPADA_E_SCUDO_RARO = di("SPADA_E_SCUDO_RARO",
+			Pezzo.di(TipoArtefatto.SPADA), Pezzo.di(TipoArtefatto.SCUDO).raro());
+	/**
 	 * Solo Ladro/Ladra ed Elfo/Elfa
 	 */
 	public static final Equipaggiamento DUE_SPADE = di("DUE_SPADE",
@@ -70,7 +75,7 @@ public final class Equipaggiamento {
 	 * Tutti gli equipaggiamenti già pronti, nell'ordine in cui compaiono nei report
 	 */
 	public static final List<Equipaggiamento> TUTTI = Collections.unmodifiableList(Arrays.asList(
-			NESSUNO, SPADA, SPADA_E_SCUDO, DUE_SPADE, SPADONE, SPADA_DI_FUOCO, CORAZZATO, CORAZZATO_CONTRO_VELENO));
+			NESSUNO, SPADA, SPADA_E_SCUDO, SPADA_E_SCUDO_RARO, DUE_SPADE, SPADONE, SPADA_DI_FUOCO, CORAZZATO, CORAZZATO_CONTRO_VELENO));
 
 	private final String nome;
 	private final List<Pezzo> pezzi;
@@ -130,27 +135,33 @@ public final class Equipaggiamento {
 
 	/**
 	 * Un pezzo dell'equipaggiamento: un tipo di artefatto, facoltativamente con un incantamento del grado
-	 * adatto al livello (danno aggiuntivo sulle armi, resistenza su elmo, scudo e armatura).
+	 * adatto al livello (danno aggiuntivo sulle armi, resistenza su elmo, scudo e armatura) e raro.
 	 */
 	public static final class Pezzo {
 
 		private final TipoArtefatto tipo;
 		private final TipoDanno incantamento;
+		private final RaritaArtefatto rarita;
 
-		private Pezzo(TipoArtefatto tipo, TipoDanno incantamento) {
+		private Pezzo(TipoArtefatto tipo, TipoDanno incantamento, RaritaArtefatto rarita) {
 			this.tipo = tipo;
 			this.incantamento = incantamento;
+			this.rarita = rarita;
 		}
 
 		public static Pezzo di(TipoArtefatto tipo) {
 			if (!PESI.containsKey(tipo)) {
 				throw new IllegalArgumentException("Nel simulatore non si equipaggia " + tipo);
 			}
-			return new Pezzo(tipo, null);
+			return new Pezzo(tipo, null, RaritaArtefatto.COMUNE);
 		}
 
 		public Pezzo incantato(TipoDanno tipoDanno) {
-			return new Pezzo(tipo, tipoDanno);
+			return new Pezzo(tipo, tipoDanno, rarita);
+		}
+
+		public Pezzo raro() {
+			return new Pezzo(tipo, incantamento, RaritaArtefatto.RARO);
 		}
 
 		public TipoArtefatto getTipo() {
@@ -169,6 +180,7 @@ public final class Equipaggiamento {
 			md.setDescrizione(tipo.name());
 			md.setLivello(livello);
 			md.setPeso(PESI.get(tipo));
+			md.setRarita(rarita);
 			switch (tipo.getSupertipo()) {
 				case ARMA:
 					int danni = 4 + 2 * livello;

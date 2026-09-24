@@ -1069,9 +1069,21 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	// RESISTENZA MAGICA
 
+	/**
+	 * La RESISTENZA_MAGICA con l'equipaggiamento: lo scudo ne aggiunge per ogni suo livello, di più se è raro.
+	 */
 	@Override
 	public int getResistenzaMagica() {
-		return get(md, PersonaggioMD::getResistenzaMagica, TipoAttributo.RESISTENZA_MAGICA);
+		int resistenza = get(md, PersonaggioMD::getResistenzaMagica, TipoAttributo.RESISTENZA_MAGICA);
+		for (ArtefattoMD artefatto : md.getArtefatti()) {
+			if (artefatto.getTipo() == TipoArtefatto.SCUDO) {
+				int perLivello = artefatto.getRarita() == RaritaArtefatto.COMUNE
+						? Costanti.SCUDO_RESISTENZA_MAGICA_PER_LIVELLO
+						: Costanti.SCUDO_RARO_RESISTENZA_MAGICA_PER_LIVELLO;
+				resistenza += perLivello * artefatto.getLivello();
+			}
+		}
+		return resistenza;
 	}
 
 	// PERCEZIONE

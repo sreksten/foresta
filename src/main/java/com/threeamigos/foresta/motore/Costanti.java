@@ -15,11 +15,14 @@ public class Costanti {
 
     // Combattimento (vedi artefatti_e_incantamenti.md, §2 "Combattimento")
     // PARATA intrinseca dello scudo per ogni suo livello
-    public static final int SCUDO_PARATA_PER_LIVELLO = 1;
+    public static final int SCUDO_PARATA_PER_LIVELLO = 3;
+    // RESISTENZA_MAGICA intrinseca dello scudo per ogni suo livello: di più se è raro (o leggendario)
+    public static final int SCUDO_RESISTENZA_MAGICA_PER_LIVELLO = 1;
+    public static final int SCUDO_RARO_RESISTENZA_MAGICA_PER_LIVELLO = 2;
     // "Guardia aperta": chi impugna due armi o un'arma a due mani perde un quarto della PARATA
     public static final double GUARDIA_APERTA_FATTORE_PARATA = 0.75;
-    // La seconda fase di attacco, con l'arma nella mano secondaria, fa il 60% (danno base e incantamenti)
-    public static final double DOPPIA_ARMA_FATTORE_SECONDA_ARMA = 0.6;
+    // La seconda fase di attacco, con l'arma nella mano secondaria, fa il 40% (danno base e incantamenti)
+    public static final double DOPPIA_ARMA_FATTORE_SECONDA_ARMA = 0.4;
     // Su elmo, scudo e armatura la parte percentuale di un incantamento vale la metà, perché moltiplica
     // una difesa che cresce già con il livello
     public static final double RESISTENZA_FATTORE_PERCENTUALE = 0.5;

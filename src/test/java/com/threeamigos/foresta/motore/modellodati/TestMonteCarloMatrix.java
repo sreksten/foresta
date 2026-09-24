@@ -98,17 +98,17 @@ public class TestMonteCarloMatrix {
     void testSingoloScontroLadroConDueSpadeVsGoblin() {
         RisultatoMatrice conDueSpade = simulaConLoggerMuto(ClassePersonaggio.LADRO, Equipaggiamento.DUE_SPADE,
                 ClassePersonaggio.GOBLIN, 1, LIVELLO, 5_000);
-        RisultatoMatrice disarmato = simulaConLoggerMuto(ClassePersonaggio.LADRO, Equipaggiamento.NESSUNO,
+        RisultatoMatrice conUnaSpada = simulaConLoggerMuto(ClassePersonaggio.LADRO, Equipaggiamento.SPADA,
                 ClassePersonaggio.GOBLIN, 1, LIVELLO, 5_000);
 
-        System.out.printf("LADRO con DUE_SPADE vs 1 GOBLIN -> win=%.2f%% lose=%.2f%% stallo=%.2f%% turni medi=%.2f (disarmato: win=%.2f%% turni medi=%.2f)%n",
+        System.out.printf("LADRO con DUE_SPADE vs 1 GOBLIN -> win=%.2f%% lose=%.2f%% stallo=%.2f%% turni medi=%.2f (con una spada: win=%.2f%% turni medi=%.2f)%n",
                 conDueSpade.winRatePg, conDueSpade.loseRatePg, conDueSpade.stalloRate, conDueSpade.mediaTurni,
-                disarmato.winRatePg, disarmato.mediaTurni);
+                conUnaSpada.winRatePg, conUnaSpada.mediaTurni);
 
         assertEquals(0, conDueSpade.stalloRate, "Non dovrebbero esistere stalli, sono un difetto di bilanciamento");
-        // Due fasi di attacco a turno: lo scontro si chiude prima che a mani nude
-        assertTrue(conDueSpade.mediaTurni < disarmato.mediaTurni,
-                "con due spade " + conDueSpade.mediaTurni + " turni, disarmato " + disarmato.mediaTurni);
+        // Due fasi di attacco a turno: lo scontro si chiude prima che con una spada sola
+        assertTrue(conDueSpade.mediaTurni < conUnaSpada.mediaTurni,
+                "con due spade " + conDueSpade.mediaTurni + " turni, con una " + conUnaSpada.mediaTurni);
     }
 
     @Test

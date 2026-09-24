@@ -5,6 +5,7 @@ import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.motore.modellodati.RaritaArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoDanno;
@@ -57,8 +58,9 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
     void siSommanoLeResistenzeDiElmoScudoEArmatura() {
         difensore.addArtefatto(pezzoIncantato(TipoArtefatto.ELMO, 2, TipoDanno.FUOCO, 5, 0.10));
         difensore.addArtefatto(pezzoIncantato(TipoArtefatto.SCUDO, 1, TipoDanno.FUOCO, 5, 0.10));
-        // (30 + 5 × 2 + 5 × 1) × (1 + 0,05 + 0,05)
-        assertEquals(45.0 * 1.1, CalcolatoreCombattimento.difesaContro(difensore, TipoDanno.FUOCO), DELTA);
+        // (30 + resistenza magica dello scudo + 5 × 2 + 5 × 1) × (1 + 0,05 + 0,05)
+        double base = 30 + Costanti.SCUDO_RESISTENZA_MAGICA_PER_LIVELLO;
+        assertEquals((base + 15) * 1.1, CalcolatoreCombattimento.difesaContro(difensore, TipoDanno.FUOCO), DELTA);
     }
 
     @Test
@@ -93,7 +95,7 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
     // --- Doppia arma
 
     @Test
-    void chiImpugnaDueArmiAttaccaDueVolteLaSecondaAlSessantaPerCento() {
+    void chiImpugnaDueArmiAttaccaDueVolteLaSecondaRidotta() {
         Ladro ladro = new Ladro("Pippo", 3);
         ladro.addArtefatto(arma(TipoArtefatto.SPADA, 3));
         ladro.addArtefatto(arma(TipoArtefatto.MAZZA, 3));
@@ -111,7 +113,7 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
     }
 
     @Test
-    void laSecondaArmaFaIlSessantaPerCentoDelDanno() {
+    void laSecondaArmaFaUnaQuotaDelDanno() {
         Guerriero attaccante = attaccante();
         Arma spada = arma(TipoDanno.TAGLIENTE);
         int pieno = CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, difensore, spada, 1.0).getDanno();
@@ -128,6 +130,19 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
         Guerriero guerriero = conParata(new Guerriero("Pippo", 5), 20);
         guerriero.addArtefatto(artefatto(TipoArtefatto.SCUDO, 4));
         assertEquals(20 + 4 * Costanti.SCUDO_PARATA_PER_LIVELLO, guerriero.getParata());
+    }
+
+    @Test
+    void loScudoDaResistenzaMagicaDiPiuSeERaro() {
+        Guerriero comune = conResistenzaMagica(new Guerriero("Pippo", 5), 20);
+        comune.addArtefatto(artefatto(TipoArtefatto.SCUDO, 4));
+        assertEquals(20 + 4 * Costanti.SCUDO_RESISTENZA_MAGICA_PER_LIVELLO, comune.getResistenzaMagica());
+
+        Guerriero raro = conResistenzaMagica(new Guerriero("Pippo", 5), 20);
+        Artefatto scudoRaro = artefatto(TipoArtefatto.SCUDO, 4);
+        scudoRaro.getModelloDati().setRarita(RaritaArtefatto.RARO);
+        raro.addArtefatto(scudoRaro);
+        assertEquals(20 + 4 * Costanti.SCUDO_RARO_RESISTENZA_MAGICA_PER_LIVELLO, raro.getResistenzaMagica());
     }
 
     @Test
@@ -188,6 +203,11 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
 
     private static <P extends PersonaggioBase> P conParata(P personaggio, int parata) {
         personaggio.addModificatore(new ModificatoreAttributo(TipoAttributo.PARATA, TipoModificatore.QUANTITA_ASSOLUTA, parata));
+        return personaggio;
+    }
+
+    private static <P extends PersonaggioBase> P conResistenzaMagica(P personaggio, int resistenza) {
+        personaggio.addModificatore(new ModificatoreAttributo(TipoAttributo.RESISTENZA_MAGICA, TipoModificatore.QUANTITA_ASSOLUTA, resistenza));
         return personaggio;
     }
 

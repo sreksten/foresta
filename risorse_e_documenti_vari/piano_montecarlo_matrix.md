@@ -257,13 +257,14 @@ nome e una lista di `Pezzo`: un `TipoArtefatto`, facoltativamente con un incanta
   | `NESSUNO` | nessuno: arma naturale, come nella prima versione |
   | `SPADA` | spada |
   | `SPADA_E_SCUDO` | spada, scudo |
+  | `SPADA_E_SCUDO_RARO` | spada, scudo raro (più `RESISTENZA_MAGICA`) |
   | `DUE_SPADE` | due spade (solo Ladro/Ladra, Elfo/Elfa) |
   | `SPADONE` | spadone |
   | `SPADA_DI_FUOCO` | spada con un incantamento di fuoco |
   | `CORAZZATO` | spada, scudo, elmo, armatura |
   | `CORAZZATO_CONTRO_VELENO` | come `CORAZZATO`, con l'armatura incantata contro il veleno |
 
-  Per altre prove: `Equipaggiamento.di("NOME", Pezzo.di(TipoArtefatto.SCUDO).incantato(TipoDanno.GELO), ...)`.
+  Per altre prove: `Equipaggiamento.di("NOME", Pezzo.di(TipoArtefatto.SCUDO).incantato(TipoDanno.GELO).raro(), ...)`.
 
 ### 11.2 Simulatore
 
@@ -271,7 +272,7 @@ nome e una lista di `Pezzo`: un `TipoArtefatto`, facoltativamente con un incanta
   Lancia `IllegalArgumentException` se la classe non può portare l'equipaggiamento. La firma di prima resta
   e usa `Equipaggiamento.NESSUNO`: dà gli stessi risultati di prima.
 - Ogni attacco passa da `CalcolatoreCombattimento.fasiDiAttacco`, come nel turno di mischia del gioco: la
-  seconda arma fa una seconda fase al 60%, sullo stesso bersaglio o sul prossimo vivo se la prima l'ha
+  seconda arma fa una seconda fase al 40% (`Costanti.DOPPIA_ARMA_FATTORE_SECONDA_ARMA`), sullo stesso bersaglio o sul prossimo vivo se la prima l'ha
   ucciso. Anche i mostri attaccano per fasi (oggi ne hanno sempre una sola, l'arma naturale).
 - Limite: i PG non lanciano incantesimi (la "Fase 2" del §4 non c'è ancora), quindi il libro magico non
   ha effetto e non c'è fra gli equipaggiamenti pronti.
@@ -279,7 +280,7 @@ nome e una lista di `Pezzo`: un `TipoArtefatto`, facoltativamente con un incanta
 ### 11.3 Test in `TestMonteCarloMatrix`
 
 - `testSingoloScontroLadroConDueSpadeVsGoblin` (nella suite normale): nessuno stallo, e con due spade lo
-  scontro dura meno che a mani nude.
+  scontro dura meno che con una spada sola.
 - `unaClasseCheNonPuoPortareLEquipaggiamentoVieneRifiutata` (nella suite normale): il Guerriero con
   `DUE_SPADE`.
 - `testConfrontoEquipaggiamenti` (`@Disabled`, circa 2 minuti): tutti gli equipaggiamenti per Ladro, Elfa,
@@ -297,31 +298,78 @@ nome e una lista di `Pezzo`: un `TipoArtefatto`, facoltativamente con un incanta
 - Per lanciare un test `@Disabled` da Maven:
   `mvn test -Dtest='TestMonteCarloMatrix#testConfrontoEquipaggiamenti' -Djunit.jupiter.conditions.deactivate='org.junit.*DisabledCondition'`.
 
-### 11.4 Primo giro (2026-09-24)
+### 11.4 Primo giro e bilanciamento (2026-09-24)
 
-Vittorie del PG a livello 5, 1 contro 1:
+**Primo giro** (seconda arma al 60%, scudo +1 di `PARATA` per livello, niente `RESISTENZA_MAGICA`). Vittorie
+del PG a livello 5, 1 contro 1:
 
 | PG | Equipaggiamento | Goblin | Troll | Viverna |
 | :--- | :--- | ---: | ---: | ---: |
-| Ladro | `NESSUNO` | 99,8% | 52,8% | 12,1% |
-| Ladro | `SPADA` | 99,9% | 84,2% | 41,8% |
 | Ladro | `SPADA_E_SCUDO` | 100% | 91,7% | 39,2% |
 | Ladro | `DUE_SPADE` | 100% | 98,3% | 81,7% |
-| Ladro | `SPADONE` | 100% | 96,1% | 71,1% |
-| Ladro | `SPADA_DI_FUOCO` | 100% | 98,7% | 81,1% |
-| Ladro | `CORAZZATO` | 100% | 92,6% | 39,7% |
-| Ladro | `CORAZZATO_CONTRO_VELENO` | 100% | 94,1% | 75,9% |
 | Guerriero | `SPADA_E_SCUDO` | 100% | 98,2% | 61,2% |
-| Mago | `SPADONE` | 88,3% | 15,9% | 20,9% |
-| Mago | `SPADA_DI_FUOCO` | 91,8% | 31,7% | 29,3% |
 
-Cosa se ne ricava (da rivedere nel bilanciamento):
-- **L'attacco rende più della difesa.** Due spade, spadone e spada di fuoco fanno più di scudo e armatura
-  completa: accorciano gli scontri, e contro la Viverna è l'unico modo di vincere spesso. Il −25% di
-  `PARATA` della guardia aperta pesa poco, perché la `PARATA` è piccola.
-- **Un incantamento medio vale moltissimo**: la spada di fuoco porta il danno medio del Ladro da 83 a 138
-  per colpo (+66%).
-- **Le resistenze funzionano**: contro il morso velenoso della Viverna l'armatura contro il veleno porta il
-  danno medio subito da 107 a 71, e le vittorie dal 40% al 76%.
+L'attacco rendeva molto più della difesa. In più, contro la Viverna lo scudo non serviva a nulla: il suo
+morso è di veleno, elementale, e contro il danno elementale o magico contano `RESISTENZA_MAGICA` e
+`SAGGEZZA`, non la `PARATA`. Il −25% di `PARATA` della guardia aperta non spostava i risultati con nessun
+valore, perché la `PARATA` di base è di 2-6.
+
+**Bilanciamento.** Seconda arma al 40%, scudo +3 di `PARATA` per livello e +1 di `RESISTENZA_MAGICA` per
+livello (+2 se raro), guardia aperta al −25%. Secondo giro, stesse condizioni (vittorie e turni medi):
+
+| PG | Equipaggiamento | Goblin | Troll | Minotauro | Viverna |
+| :--- | :--- | ---: | ---: | ---: | ---: |
+| Ladro | `NESSUNO` | 99,5% | 53,7% | 57,1% | 13,1% |
+| Ladro | `SPADA` | 99,9% | 84,4% | 86,7% | 38,9% |
+| Ladro | `SPADA_E_SCUDO` | 100% | 97,8% (7,5) | 97,7% | 59,0% |
+| Ladro | `SPADA_E_SCUDO_RARO` | 100% | 97,2% | 97,9% | 73,4% |
+| Ladro | `DUE_SPADE` | 100% | 96,4% (5,5) | 96,8% | 70,5% |
+| Ladro | `SPADONE` | 100% | 96,1% | 97,3% | 69,7% |
+| Ladro | `SPADA_DI_FUOCO` | 100% | 98,6% | 99,0% | 81,0% |
+| Ladro | `CORAZZATO` | 100% | 98,1% | 97,9% | 58,8% |
+| Ladro | `CORAZZATO_CONTRO_VELENO` | 100% | 98,3% | 98,6% | 87,2% |
+| Guerriero | `SPADA_E_SCUDO` | 100% | 99,5% (8,1) | 99,7% | 76,4% |
+| Guerriero | `SPADA_E_SCUDO_RARO` | 100% | 99,7% | 99,6% | 86,6% |
+| Guerriero | `SPADONE` | 100% | 99,1% (6,0) | 99,0% | 83,0% |
+| Guerriero | `CORAZZATO_CONTRO_VELENO` | 100% | 99,9% | 99,8% | 94,2% |
+| Mago | `SPADA_E_SCUDO` | 87,7% | 15,4% | 18,3% | 12,1% |
+| Mago | `SPADA_DI_FUOCO` | 92,3% | 31,8% | 33,8% | 30,1% |
+
+Cosa se ne ricava:
+- **Scudo e doppia arma ora si equivalgono.** Contro i mostri fisici lo scudo è un po' più sicuro, la
+  doppia arma e lo spadone chiudono prima (5,5 turni contro 7,5). Contro i mostri elementali l'attacco resta
+  avanti con lo scudo comune e si pareggia con quello raro, oppure con un incantamento sullo scudo.
+- **Un incantamento medio vale moltissimo**: la spada di fuoco batte ogni altro equipaggiamento, e porta il
+  danno medio del Ladro da 83 a 138 per colpo (+66%).
+- **Le resistenze funzionano**: contro la Viverna l'armatura contro il veleno porta le vittorie del Ladro dal
+  59% all'87%.
+- **Elmo e armatura spogli non servono quasi a nulla**: `CORAZZATO` vince come `SPADA_E_SCUDO`, perché il
+  loro +5% di `PARATA` per livello moltiplica una `PARATA` di base piccola.
+- **A livello 1 una spada fa meno delle mani nude** di un PG (6 contro 4 + 1,5 × √Forza): per questo
+  `testSingoloScontroLadroConDueSpadeVsGoblin` confronta le due spade con una spada sola.
 - **Il Mago in mischia** resta debole anche armato, come previsto: combatte con gli incantesimi, che il
   simulatore non usa (§9.3).
+
+## 12. Da fare: bilanciamento delle classi
+
+Oltre all'equipaggiamento andrebbero livellate un po' anche le classi giocabili. Bisogna capire cosa
+potrebbe portare un giocatore a preferire un Guerriero, un Ladro, un Elfo, un Bardo o un Mago: ognuno
+dovrebbe avere un motivo per essere scelto, non solo numeri più alti o più bassi.
+
+Cosa dicono già i numeri del §11.4 (livello 5, 1 contro 1, stesso equipaggiamento):
+- **Il Guerriero è avanti in mischia**: con spada e scudo vince contro la Viverna il 76%, il Ladro il 59%,
+  l'Elfa il 62%. In più ha lo spadone, che rende come la doppia arma di Ladro ed Elfo.
+- **Ladro ed Elfa** si somigliano molto (colpiscono più spesso del Guerriero, ma fanno meno danno e
+  reggono meno). La doppia arma, che il Guerriero non ha, non basta a distinguerli da lui.
+- **Il Mago** in mischia non regge, com'è giusto, ma il simulatore non gli fa lanciare incantesimi, quindi
+  oggi non si sa quanto valga davvero (§4, "Fase 2").
+- **Il Bardo** (e il Cantastorie) non è ancora stato misurato.
+
+Domande da chiarire prima di toccare i numeri:
+- Che ruolo ha ciascuna classe: chi regge i colpi, chi fa tanto danno in fretta, chi colpisce più bersagli,
+  chi aiuta il gruppo (incantesimi, carisma nelle trattative, furtività)?
+- Quali di questi ruoli si vedono nel combattimento 1 contro 1 del simulatore e quali no (gruppi di mostri,
+  magia, abilità fuori dal combattimento)?
+
+Per misurare serve prima la "Fase 2" del simulatore (incantesimi per i PG magici) e un giro della matrice
+completa con più classi, livelli ed equipaggiamenti.

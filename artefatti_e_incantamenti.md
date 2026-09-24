@@ -86,10 +86,10 @@
   - `difesa_T` si usa nella mitigazione del danno base (se l'arma è di tipo T) e in quella di ogni incantamento di tipo T dell'attaccante.
   - Sui pezzi difensivi la parte percentuale vale la **metà** (`Costanti.RESISTENZA_FATTORE_PERCENTUALE`), perché moltiplica una difesa che cresce già con il livello. Quindi `difesa_T = (difesa base + Σ fisso_T × livello del pezzo) × (1 + Σ percentuale_T / 2)`.
 - **Doppia arma** (Ladro/Ladra, Elfo/Elfa con un'arma in `MANO_SECONDARIA`): **due fasi di attacco** per turno.
-  - La seconda è con l'arma secondaria, al **60%**: sia il danno base sia i suoi incantamenti. Colpisce lo **stesso bersaglio** della prima, o il prossimo vivo se la prima l'ha ucciso.
+  - La seconda è con l'arma secondaria, al **40%**: sia il danno base sia i suoi incantamenti (era 60%, abbassato col bilanciamento). Colpisce lo **stesso bersaglio** della prima, o il prossimo vivo se la prima l'ha ucciso.
   - L'arma secondaria occupa lo slot `MANO_SECONDARIA` (`slotEquipaggiamento`), anche se il suo `TipoArtefatto` dice `MANO_PRINCIPALE`.
   - "Guardia aperta": **−25% di `PARATA`** finché si impugnano due armi. Senza scudo, poi, non si ha la parata dello scudo.
-- **Scudo.** Oltre ai modificatori scritti sull'artefatto, ha una **`PARATA` intrinseca** di +1 per livello (`Costanti.SCUDO_PARATA_PER_LIVELLO`). Così la scelta tra scudo e seconda arma conta sempre, anche con scudi "spogli".
+- **Scudo.** Oltre ai modificatori scritti sull'artefatto, ha una **`PARATA` intrinseca** di +3 per livello (`Costanti.SCUDO_PARATA_PER_LIVELLO`) e una **`RESISTENZA_MAGICA` intrinseca** di +1 per livello, +2 se è raro o leggendario (`Costanti.SCUDO_*RESISTENZA_MAGICA_PER_LIVELLO`). Così la scelta tra scudo e seconda arma conta sempre, anche con scudi "spogli", e anche contro gli attacchi elementali e magici, che la `PARATA` non ferma. Per una protezione magica forte lo scudo è un ottimo candidato per un incantamento.
 - **Libro magico.** Bonus al **danno degli incantesimi** di chi lo porta, con parte fissa e parte percentuale come un incantamento del `GradoIncantamento` del livello del libro, **+25%**, del tipo di danno dell'incantesimo. La parte fissa scala con il livello del libro. Non dà effetti di stato in più e non aiuta le armi. Occupa `MANO_SECONDARIA`, quindi il mago sceglie tra libro e scudo.
 
 ### Prezzi delle pergamene
@@ -206,12 +206,13 @@ Vedi la tabella dei gradi in §8. Formula: `2 × bonus fisso + percentuale`; +25
   - Test: `NegoziTest` (4) e uno nuovo in `RegistroArtefattiMDTest`. Tutta la suite è verde (306 test). Da provare a mano nel gioco.
 - [x] **Fase 7 (combattimento).**
   - `CalcolatoreCombattimento.difesaContro(difensore, tipo)`: la difesa contro un tipo di danno, con le resistenze di elmo, scudo e armatura (percentuale dimezzata). La usano la mitigazione del danno base e quella di ogni incantamento dell'arma, che prima usava sempre la `RESISTENZA_MAGICA`.
-  - Doppia arma: `CalcolatoreCombattimento.fasiDiAttacco` dà l'arma principale e, per chi ne ha una, la secondaria al 60% (`FaseDiAttacco`). `calcolaDannoRisultante` ha un nuovo parametro `fattore`, che scala danno base e incantamenti. In `LocazioneBase` il turno di mischia fa tutte le fasi, per il giocatore e per l'avversario.
-  - `PersonaggioBase.getParata()`: +1 per livello dello scudo, e −25% ("guardia aperta") con due armi o un'arma a due mani. Vale sia per la probabilità di essere colpiti sia per la mitigazione.
+  - Doppia arma: `CalcolatoreCombattimento.fasiDiAttacco` dà l'arma principale e, per chi ne ha una, la secondaria al 40% (`FaseDiAttacco`). `calcolaDannoRisultante` ha un nuovo parametro `fattore`, che scala danno base e incantamenti. In `LocazioneBase` il turno di mischia fa tutte le fasi, per il giocatore e per l'avversario.
+  - `PersonaggioBase.getParata()`: +3 per livello dello scudo, e −25% ("guardia aperta") con due armi o un'arma a due mani. Vale sia per la probabilità di essere colpiti sia per la mitigazione. `getResistenzaMagica()`: +1 per livello dello scudo, +2 se è raro.
   - Libro magico: `bonusLibroMagico`, sommato al danno degli `IncantesimoMalefico`.
   - Valori in `Costanti` (sezione "Combattimento").
-  - Test: `CalcolatoreCombattimentoEquipaggiamentoTest` (14). Tutta la suite è verde (320 test).
-  - Simulazione: `CombatSimulatorMatrix` e `TestMonteCarloMatrix` ora danno ai PG un equipaggiamento (armi, scudo, elmo, armatura, incantamenti) e seguono le fasi di attacco del gioco. Come si usano e i numeri del primo giro sono in `risorse_e_documenti_vari/piano_montecarlo_matrix.md`, §11. In breve, a livello 5 **l'attacco rende più della difesa**: il Ladro vince contro il Troll il 92% con spada e scudo, il 98% con due spade; contro la Viverna il 39% e l'82%. Il −25% di `PARATA` pesa poco, perché la `PARATA` è piccola (2-6 senza scudo). Da bilanciare (§7).
+  - Test: `CalcolatoreCombattimentoEquipaggiamentoTest` (15). Tutta la suite è verde (324 test).
+  - Simulazione: `CombatSimulatorMatrix` e `TestMonteCarloMatrix` ora danno ai PG un equipaggiamento (armi, scudo, elmo, armatura, incantamenti) e seguono le fasi di attacco del gioco. Come si usano e i numeri sono in `risorse_e_documenti_vari/piano_montecarlo_matrix.md`, §11.
+  - **Bilanciamento di doppia arma e scudo** (2026-09-24). Al primo giro l'attacco rendeva molto più della difesa: il Ladro vinceva contro la Viverna il 39% con spada e scudo e l'82% con due spade. Seconda arma dal 60% al 40%, `PARATA` dello scudo da +1 a +3 per livello, e allo scudo una `RESISTENZA_MAGICA` di +1 per livello (+2 se raro), perché contro gli attacchi elementali la `PARATA` non serve. Ora a livello 5 il Ladro vince contro il Troll il 98% con spada e scudo e il 96% con due spade (in 7,5 e 5,5 turni); contro la Viverna il 59% (73% con lo scudo raro) e il 71%. La guardia aperta resta al −25%, anche se pesa poco perché la `PARATA` di base è piccola.
 - [x] **Tetti degli effetti a 3/4/5** (comune/raro/leggendario) al posto di 5/6/7.
 - [x] **Il `|` sparisce dai testi** alla fonte (§5.5).
 - [x] **Rarità degli artefatti.** `RaritaArtefatto` con posti e tetti (§2, "Rarità"), salvata in `ArtefattoMD`. Il generatore fa rari il 10% degli artefatti incantabili e non genera mai leggendari; gli artefatti che nascono incantati hanno al massimo 3 incantamenti e almeno un posto libero. Test in `ArtefattoMDTest`, `ArtefattoIncantabileTest` e `GeneratoreArtefattiTest`; tutta la suite è verde (271 test).
@@ -276,7 +277,7 @@ Ogni fase si può provare e committare da sola.
 Le regole sono in §2, "Combattimento". Da fare in `CalcolatoreCombattimento.calcolaDannoRisultante`:
 - **Resistenze:** calcolo di `difesa_T` e suo uso nella mitigazione del danno base e degli incantamenti di tipo T.
   - Esempio atteso per il test: difesa base 30; armatura di livello 3 con un incantamento di fuoco "medio" (+10, +10%). Con la percentuale dimezzata `difesa_FUOCO` = (30 + 30) × 1,05 = 63, e il danno di fuoco passa dal 77% al 61%.
-- **Doppia arma:** seconda fase di attacco al 60% (danno base e incantamenti) e −25% di `PARATA`.
+- **Doppia arma:** seconda fase di attacco al 40% (danno base e incantamenti) e −25% di `PARATA`.
 - **Armi a due mani:** −25% di `PARATA` (il +50% di danno base sta nei valori dell'arma, dati dal generatore).
 - **Scudo:** `PARATA` intrinseca in base al livello.
 - **Libro magico:** bonus al danno degli incantesimi. Si applica dove gli incantesimi calcolano il danno (`LocazioneBase` → `calcolaDannoRisultante` con `IncantesimoMalefico`).
@@ -314,7 +315,11 @@ Non sono bug ma scelte da rivedere: l'armaiolo **ricompra a prezzo pieno** (vedi
 - [ ] L'immagine dell'incantatore (`img/personaggi/Incantatore.gif`) è 31×70, metà delle altre (il venditore è 62×140): va ingrandita.
 - [ ] Negozi sparsi nella foresta: un paio per tipo, tra armaiolo, alchimista e incantatore.
 - [ ] Bilanciamento di prezzi e gradi delle pergamene (§8).
-- [ ] Bilanciamento di doppia arma, spadone e scudo, e del valore degli incantamenti: oggi l'attacco rende più della difesa, e un incantamento medio alza il danno del 66% (`piano_montecarlo_matrix.md`, §11.4; si rilancia con `TestMonteCarloMatrix.testConfrontoEquipaggiamenti`). Leve possibili in `Costanti`: seconda arma al 50%, più `PARATA` per livello dallo scudo, guardia aperta più severa.
+- [ ] Bilanciamento degli incantamenti: un incantamento medio alza il danno del 66%, e la spada di fuoco batte ogni altro equipaggiamento (`piano_montecarlo_matrix.md`, §11.4; si rilancia con `TestMonteCarloMatrix.testConfrontoEquipaggiamenti`).
+- [ ] Elmo e armatura senza incantamenti non servono quasi a nulla: danno +5% di `PARATA` per livello, ma su una `PARATA` di base di 2-6 (`CORAZZATO` e `SPADA_E_SCUDO` vincono uguale). Si potrebbe dar loro una `PARATA` fissa per livello, come lo scudo.
+- [ ] A livello 1 una spada (danno 6) fa meno dell'arma naturale di un PG (4 + 1,5 × √Forza): conviene alzare il danno delle armi di livello basso nel generatore.
+- [ ] Capire cosa porterebbe un giocatore a preferire un Guerriero, un Ladro, un Elfo, un Bardo o un Mago, e livellare un po' anche le classi: oggi il Guerriero è avanti in mischia e Ladro ed Elfa si somigliano (`piano_montecarlo_matrix.md`, §12).
+- [ ] Generare più spesso scudi rari (oggi il 10% degli artefatti incantabili è raro), e forse scudi con `RESISTENZA_MAGICA` come modificatore.
 - [ ] Rivedere **tutti** i prezzi del gioco (artefatti, pozioni, incantesimi, pergamene, fusione) alla luce del loot che ora si può trovare: con spade, scudi, anelli e pergamene raccolti in giro, l'economia cambia.
 - [ ] Rivedere la fuga, oggi troppo penalizzante (TODO in `GruppoGiocatore.fugge`).
 - [ ] Nuove idee per incantare gli accessori (per ora non si incantano).
