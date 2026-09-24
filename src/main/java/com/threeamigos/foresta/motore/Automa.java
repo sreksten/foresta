@@ -32,8 +32,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+// TODO: carta, forbice e sasso
 // TODO: mostrare in locazione anche i personaggi del gruppo.
-// TODO: se prendono un oggetto che è troppo pesante e questo va nell'inventario del gruppo dovrà apparire un fumetto "è troppo pesante" oltre al messaggio
+// TODO: (dovrebbe essere stato fatto) se prendono un oggetto che è troppo pesante e questo va nell'inventario del gruppo dovrà apparire un fumetto "è troppo pesante" oltre al messaggio
 // TODO: implementare fumetto che attende chiusura
 // TODO: implementare sistema di aiuto
 
