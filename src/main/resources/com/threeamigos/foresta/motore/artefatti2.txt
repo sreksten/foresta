@@ -1,0 +1,548 @@
+# Nomi ed effetti degli artefatti generati a caso (vedi GrammaticaArtefatti e GrammarBean.md).
+#
+# FORMATO DEL RISULTATO
+#
+# Ogni produzione radice restituisce una sola riga: il nome dell'artefatto, con dentro dei
+# marcatori <chiave:valore> che GrammaticaArtefatti toglie dal testo e trasforma in dati:
+#
+#   <mod:FORZA+1>             un modificatore di attributo (un TipoAttributo) e la sua intensità,
+#                             da -3 a +3; il generatore la moltiplica per il gradino del livello
+#   <danno:FUOCO>             un incantamento di quel TipoDanno, del grado del livello
+#   <soprannome:Diavolina>    il nome proprio; se ce n'è più d'uno vale il primo
+#   <descrizione:che brucia>  la descrizione; se ce n'è più d'una vale la prima
+#
+# Esempio:
+#   @la spada ardente<danno:FUOCO><descrizione:che brucia i nemici><soprannome:Barbecue> del Monaco Distratto<mod:SAGGEZZA-1>
+# diventa "la spada ardente del Monaco Distratto", detta Barbecue, "che brucia i nemici", con un
+# incantamento di fuoco e un malus alla Saggezza.
+#
+# Ogni marcatore <mod> o <danno> è un effetto e occupa un posto nel limite di effetti
+# dell'artefatto (RaritaArtefatto). Per questo il marcatore sta attaccato alla parola che lo
+# giustifica, e ogni parte del nome porta UN solo effetto: il numero di parti è il numero di effetti.
+#
+# PRODUZIONI RADICE
+#
+# <TIPO>_<n>, dove TIPO è un TipoArtefatto e n il numero di effetti: SPADA_0 ... SPADA_3.
+# Il generatore chiede la radice con tanti effetti quanti ne ammette l'artefatto meno uno, lasciando
+# un posto libero per la fusione, e ripiega sulla più grande disponibile.
+#
+# ARTICOLO
+#
+# "@la " a inizio riga è l'articolo: artefatti2_pp.txt lo elide davanti a vocale, così un
+# prefisso può cominciare con qualunque lettera ("l'immane spada", "la terribile spada").
+#
+# Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean) e < > @ (marcatori).
+
+SPADA_0
+    @la spada [COSMETICO]
+
+SPADA_1
+    @la [PREFISSO] spada
+    @la spada [AGGETTIVO]
+    @la spada [COMPLEMENTO]
+    @la spada [AGGETTIVO_ELEMENTALE]
+    @la spada [COMPLEMENTO_ELEMENTALE]
+
+SPADA_2
+    @la [PREFISSO] spada [AGGETTIVO]
+    @la [PREFISSO] spada [COMPLEMENTO]
+    @la spada [AGGETTIVO] [COMPLEMENTO]
+    @la spada [COMPLEMENTO] [DETTAGLIO]
+    @la [PREFISSO] spada [AGGETTIVO_ELEMENTALE]
+    @la spada [AGGETTIVO_ELEMENTALE] [COMPLEMENTO]
+    @la [PREFISSO] spada [COMPLEMENTO_ELEMENTALE]
+    @la spada [AGGETTIVO] [COMPLEMENTO_ELEMENTALE]
+
+SPADA_3
+    @la [PREFISSO] spada [AGGETTIVO] [COMPLEMENTO]
+    @la [PREFISSO] spada [COMPLEMENTO] [DETTAGLIO]
+    @la spada [AGGETTIVO] [COMPLEMENTO] [DETTAGLIO]
+    @la [PREFISSO] spada [AGGETTIVO_ELEMENTALE] [COMPLEMENTO]
+    @la spada [AGGETTIVO_ELEMENTALE] [COMPLEMENTO] [DETTAGLIO]
+    @la [PREFISSO] spada [AGGETTIVO] [COMPLEMENTO_ELEMENTALE]
+
+# Senza effetti: solo colore
+COSMETICO
+    volante | rotante con rinterzo | d'ordinanza | del nonno | di latta | da collezione
+    in offerta speciale | fatta in casa | comprata al mercato | da souvenir | d'allenamento
+    con l'etichetta ancora attaccata | ancora nella confezione | da cerimonia | usata una volta sola
+    presa in prestito | senza lode e senza infamia | di ferro dolce | del rigattiere | di scorta
+
+# ---------------------------------------------------------------------------------------------
+# Parti con un modificatore di attributo. La stessa parola compare una volta sola in tutto il
+# file, così dal nome si capisce sempre che cosa fa la spada.
+# ---------------------------------------------------------------------------------------------
+
+# Aggettivi che stanno bene prima del nome: "la terribile spada"
+PREFISSO
+    { immane | smisurata | sovrumana | inenarrabile | generosa | indomabile | mastodontica | formidabile | cruenta | poderosa }<mod:FORZA+2>
+    { valente | fiera | temuta | blasonata | promettente | conclamata | autentica | franca | gagliarda | subitanea | pronta | impetuosa | fulminea | vigorosa | smanettona | scalpitante | calibrata | istantanea | rozza | severa | bruta | massiccia | dura | grezza | tosta | fabbrile | orsina | bestiale | ciclopica | ferina | spaccapietre | picchiatrice | violenta | disordinata | minotaurica | barbarica | bulldozer | scaricatrice }<mod:FORZA+1>
+    { misera | meschina | vile | modesta | sottostimata | ordinaria | comune | infelice | tapina }<mod:FORZA-1>
+    { lesta | scaltra | schiva | svelta | snella | fuggitiva | scaltrita | fluida }<mod:DESTREZZA+2>
+    { sottilissima | fugace | svanente | minuta | impalpabile | invisibile | sgattaiolante | libera | accurata | mirata | orologiaia | rigorosa | sacra | regolamentare | chiara | pignola | nitida | lieve | piumosa | minima | sobria | semplice | nuda | schietta | essenziale | volatile | agile | cristallina | saponetta | mosca | saltimbanca | farfallina | colibrì | fresca | riposata | scattante | risvegliata | mattiniera | motivata }<mod:DESTREZZA+1>
+    { maldestra | incolta | pigra | tarda | pesante | rallentata | sghemba | rigida | sventata }<mod:DESTREZZA-1>
+    { ferma | immobile | fissa | salda | perenne | statica | piombata | monumentale | quadrata | antica | vetusta | secolare | immortale | ferrea | invincibile | integra | eterna | ottusa | mattona | cementizia | trattorina | divanata }<mod:COSTITUZIONE+2>
+    { grata | onesta | sicura | solida | capiente | tollerante | ampia | comoda | fornita | grave | lenta | saggia | flemmatica | calma | soporifera | ancorata | golemica | montana }<mod:COSTITUZIONE+1>
+    { precaria | instabile | fragile | triste | pallida | malata | breve }<mod:COSTITUZIONE-1>
+    { acuta | lucida | fina | geniale | logica | direttoriale | architettata }<mod:INTELLIGENZA+2>
+    { dotta | sapiente | sottile | arguta | ragionata | contabile | filosofica | archivistica | accademica | calcolata | arcana | veggente | pratica | esperta | tecnica | riflessiva | poetica | teorica | secchiona | esile }<mod:INTELLIGENZA+1>
+    { stolta | cruda | grossolana | povera | smemorata | matricola | cieca }<mod:INTELLIGENZA-1>
+    { retta | giusta | illuminata | santa | profonda | moderata | misurata | maestra }<mod:SAGGEZZA+2>
+    { accorta | attenta | ispettiva | sentinella | portinaia | rilevatrice | meditativa | anziana | stoica | paziente | penitente | rassegnata | ottimista | incassatrice | passiva | serena | equilibrata | zen | buddista | distaccata }<mod:SAGGEZZA+1>
+    { vana | folle | ceca | distratta | confusa | sconsiderata | disorientata }<mod:SAGGEZZA-1>
+    { vaga | bella | splendida | nobile | illustre | magnifica | regale | carismatica }<mod:CARISMA+2>
+    { propizia | simpatica | ammiccante | paracula | raccomandata | sanremese | leggera | fine | specchiata | narcisista | modaiola | vanitosa | diva }<mod:CARISMA+1>
+    { mesta | cupa | ruvida | scontrosa | goffa | solitaria | burbera }<mod:CARISMA-1>
+    { muta | umile | bassa | piccola | anonima | timida | introversa | ragioniera | stagista }<mod:CARISMA-2>
+    { beata | intoccabile | sfacciata | protetta }<mod:FORTUNA+2>
+    { effimera | vetrosa | porcellanata | delicata | fortunata | miracolata | temeraria | incosciente | spensierata | sognatrice | kamikaze | buona | fidata | auspicabile | truccata | premiata | opportuna | tempestiva | fatidica | presaga | cruciale | jolly | vincente | spietata | oculata | decisiva | notturna | dormiente | coniglia | codarda | disertrice | invertebrata | panica | traditrice | rinnegata | giuda | scaricabarile | voltafaccia }<mod:FORTUNA+1>
+    { sinistra | macumbata | iettatoria }<mod:FORTUNA-1>
+    { zavorrata | caravan | mammut | cargo | stivata }<mod:CARICO_MASSIMO+2>
+    { facchina | mulesca | asinina | camalla | portapacchi | trasloco | scolastica | sollevatrice | tiro | custode | portatrice | trekking }<mod:CARICO_MASSIMO+1>
+    { minimalista | inconsistente | bucata | svasata }<mod:CARICO_MASSIMO-1>
+    { vuota | velina | guscia | esaurita | piena }<mod:CARICO_MASSIMO-2>
+    { feroce | devastante | lacerante | macellaia | brutale }<mod:CRITICO+2>
+    { penetrante | incisiva | boia | rasoio | fatalistica | potente | spaccatutto | dirompente | mannaia | fratturante | martellante }<mod:CRITICO+1>
+    { stanca | fiacca | smussata | arrotondata | logora | consumata | innocua }<mod:CRITICO-1>
+    { fallimentare | difettosa | inefficace | low-cost }<mod:CRITICO-2>
+    { infallibile | chirurgica | centrata }<mod:PRECISIONE+2>
+    { cacciatrice | sarta | calibratrice | schermistica | matematica | grafologica }<mod:PRECISIONE+1>
+    { storta | frettolosa | sbadata | approssimativa | cialtrona | casuale }<mod:PRECISIONE-1>
+    { guercia | orba | miope | talpa | sguercia | ubriaca | pendola }<mod:PRECISIONE-2>
+    { rapida | celere | volante }<mod:VELOCITA+2>
+    { rondinina | leprina | libellula | giocoliera | frecciata | slanciata | soffio | aerea | energetica | iperattiva | insonne | indefessa }<mod:VELOCITA+1>
+    { bradipica | abbioccata | tardiva }<mod:VELOCITA-1>
+    { lumaca | intasata | bloccata | buroocratica }<mod:VELOCITA-2>
+    { cheta | acquetta | silenziosa | ombra | occulta | segreta }<mod:FURTIVITA+2>
+    { felina | sguizzante | seta | scalza | discreta | infiltrata | scout | pipistrello | spia | volpina | ladruncola | scroccona }<mod:FURTIVITA+1>
+    { elefantesca | pasticciona | cascamorta | sguaiata | sgargiante | squillante | boato | sirena | sonaglio }<mod:FURTIVITA-1>
+    { chiusa | invalicabile | inespugnabile | baluarda | lucchetto | portiera | cancello }<mod:PARATA+2>
+    { cauta | prudente | guardinga | coperta | difensiva | protettiva | vigilante | arroccata | schermata | guardiana | scuda | palizzata | fortezza | vigile | robusta | paladina | protettrice | testuggine | quercia | corazzata | aziendale | cassaforte | inerte | apatica | letargica | scioperante | statale | airbag | cuscina }<mod:PARATA+1>
+    { scoperta | sbilanciata | esposta | vulnerabile | cartone | aperta }<mod:PARATA-1>
+    { refrattaria | sorda | isolata | diffidente | antimagica | incredula | no-vax | firewall }<mod:RESISTENZA_MAGICA+2>
+    { templare | santuaria | temperata | spessa | bastiona | isolante | lastrona }<mod:RESISTENZA_MAGICA+1>
+    { porosa | sensibile | ricettiva | conduttrice | candina }<mod:RESISTENZA_MAGICA-1>
+    { condannata | trance | pezza | credulona | marketing | complottista }<mod:RESISTENZA_MAGICA-2>
+    { lincina | falchina | civettina }<mod:PERCEZIONE+2>
+    { falconica | laser | meticolosa | controllore | cecchina | sciamanica | eremita | consulente | investigativa }<mod:PERCEZIONE+1>
+    { nebbiosa | turista | appannata }<mod:PERCEZIONE-1>
+    { terribile | tremenda | terrificante | mortale | inevitabile | apocalittica | caotica | ruinosa | licenziatrice | sconvolgente }<mod:SOGGEZIONE+2>
+    { oscura | fiscale | inquisitoria | spaventosa | tirannica | intimidatoria | disastrosa | calamitosa | catastrofica | plateale | clamorosa | roboante | teatrale | esplosiva | banda | spoileratrice | allarme | bombardiera | favolosa | mitica | fantasmagorica | leggendaria | imperiale | conquistatrice | dittatoriale | padronale | spauracchio | furtiva | predatrice | buttafuori | legale | minacciosa }<mod:SOGGEZIONE+1>
+    { mansueta | buffona | giullara | macchietta | pagliaccia }<mod:SOGGEZIONE-1>
+    { catastale | comunale | bollata | condominiale | amministrativa | noiosa }<mod:SOGGEZIONE-2>
+    { rabbiosa | furiosa | esasperata }<mod:FURIA+2>
+    { furente | fanatica | zelota | caricante | arrabbiata | impazzita | scatenata | permalosa | berserker | iraconda | nervosa | isterica | impulsiva | vendicativa | rinocerontica | calda | tesa | agitata | ringhiosa | adrenalinica | reattiva }<mod:FURIA+1>
+    { mita | pacifica }<mod:FURIA-1>
+    { leonina | intrepida | audace | impavida | fegatosa | sfrontata | spavalda }<mod:CORAGGIO+2>
+    { crociata | gladiatoria | vendicatrice }<mod:CORAGGIO+1>
+    { esitante | musona }<mod:CORAGGIO-1>
+    { virtuosa | eroica | onorevole | meritocratica | medagliata | cavalleresca }<mod:VALORE+2>
+    { bodyguard | leader | campione | popolare | comandante | splendente | benefica }<mod:VALORE+1>
+    { neutrale | egoista | freelance | esterna | indifferente | spettatrice | autonoma }<mod:VALORE-1>
+    { stregata | canalizzatrice | focalizzata | manatizia | fattucchiera | illusionista | svuotapozioni }<mod:MAGIA+2>
+    { medium | catalizzatrice | sifone | canale | ripetitrice | calamita | recettiva | scriba | astrologica | cartografica | sistemista | aura | wi-fi }<mod:MAGIA+1>
+    { arida | profana | terrena | materiale | rustica | babbana | scettica }<mod:MAGIA-1>
+    { cenerina | burnout | scarica }<mod:MAGIA-2>
+    { estenuante | logorante | faticosa | spossante | sonnolenta }<mod:STANCHEZZA+2>
+    { sonnecchiante | sbadigliante | rilassata | anfibia | tassina | postale | memory }<mod:STANCHEZZA+1>
+    { attiva | giornaliera | ricaricata }<mod:STANCHEZZA-1>
+
+# Aggettivi dopo il nome: "la spada mozzarella"
+AGGETTIVO
+    { titanica | colossale | pesantissima | monolitica }<mod:FORZA+2>
+    { muscolare | forzuta | sgobbona | impattante | dinamica | lanciata | aggressiva | cinghialesca | palettatrice | culturista | martella }<mod:FORZA+1>
+    { debole | gracile | flessibile | sedentaria | flaccida | impiegatizia | mozzarella }<mod:FORZA-1>
+    { evasiva | sfuggente | anguilla | bilanciata }<mod:DESTREZZA+2>
+    { leggerissima | sgusciante | geometrica | estiva | scontrina | svestita | disarmata }<mod:DESTREZZA+1>
+    { impacciata | incriccata | sabatina | antinfortunistica }<mod:DESTREZZA-1>
+    { incrollabile | tank | indistruttibile | blindata | stagnante | trollesca | caprina }<mod:COSTITUZIONE+2>
+    { portante | carica | attrezzata | spesa | tartarughesca | trichechina | frenata }<mod:COSTITUZIONE+1>
+    { malaticcia | cedevole | tenera | febbricitante | sciatalgia }<mod:COSTITUZIONE-1>
+    { cervellona | ingegneristica | computerizzata }<mod:INTELLIGENZA+2>
+    { erudita | progettuale | nerd | intellettuale | teologica }<mod:INTELLIGENZA+1>
+    { ignorante | novizia | neofita | inesperta | somara | negata }<mod:INTELLIGENZA-1>
+    { patriarcale | ragionevole | mentore | guru | spirituale }<mod:SAGGEZZA+2>
+    { ispettrice | ascetica | pensatrice | ritardata | resiliente | deserta }<mod:SAGGEZZA+1>
+    { fake | smarrita }<mod:SAGGEZZA-1>
+    { autorevole | influencer | politica | dominante }<mod:CARISMA+2>
+    { affascinante | seduttiva | persuasiva | fascina | damerina | modella | estetica | figlia di papà | belloccia }<mod:CARISMA+1>
+    { villana | mutanghera | asociale }<mod:CARISMA-1>
+    { antipatica | guastafeste }<mod:CARISMA-2>
+    { prescelta | fortunatissima | baciata }<mod:FORTUNA+2>
+    { fragilissima | sopravvissuta | sorteggiata | salta-fila }<mod:FORTUNA+1>
+    { sfigata | sfortunata }<mod:FORTUNA-1>
+    ingombrante<mod:CARICO_MASSIMO+2>
+    { spezzata | alberghiera }<mod:CARICO_MASSIMO+1>
+    ridotta<mod:CARICO_MASSIMO-1>
+    zero<mod:CARICO_MASSIMO-2>
+    autoaffilante<mod:CRITICO+3>
+    affilatissima<mod:CRITICO+2>
+    { affilata | tagliente | occasionale }<mod:CRITICO+1>
+    { gomma | giocattolo | usurata }<mod:CRITICO-1>
+    { usata | ricondizionata }<mod:CRITICO-2>
+    { millimetrica | perfetta }<mod:PRECISIONE+2>
+    { zanzara | ordinata | truccatrice }<mod:PRECISIONE+1>
+    { disattenta | rugginosa }<mod:PRECISIONE-1>
+    { sbandata | disallineata }<mod:PRECISIONE-2>
+    { fibra | jet }<mod:VELOCITA+2>
+    { cameriere | fuggiasca | caffè | energy | turbocompressa }<mod:VELOCITA+1>
+    { inceppata | registro | a batteria scarica }<mod:VELOCITA-2>
+    { camaleontica | ninja | guardona | sussurrante }<mod:FURTIVITA+2>
+    { velata | origliatrice | curiosa | microspia | furba | fantasma }<mod:FURTIVITA+1>
+    palese<mod:FURTIVITA-1>
+    { sbarra | trincerata | sospesa | certificata a norma di legge | antiruggine }<mod:PARATA+1>
+    ammaccata<mod:PARATA-1>
+    sigillata<mod:RESISTENZA_MAGICA+2>
+    { filtro | antiamanto | carro armato }<mod:RESISTENZA_MAGICA+1>
+    apertura<mod:RESISTENZA_MAGICA-1>
+    vedetta<mod:PERCEZIONE+2>
+    guardalinee<mod:PERCEZIONE+1>
+    { zsciagurata | sfigatissima | nera | urlante | suprema }<mod:SOGGEZIONE+1>
+    { cucciola | divertente }<mod:SOGGEZIONE-1>
+    burocratica<mod:SOGGEZIONE-2>
+    irritata<mod:FURIA+1>
+    cuor-di-leone<mod:CORAGGIO+2>
+    { sindacale | rappresentante | trascinatrice }<mod:VALORE+1>
+    individualista<mod:VALORE-1>
+    sempliciotta<mod:MAGIA-1>
+    persa<mod:MAGIA-2>
+    { calante | copertina }<mod:STANCHEZZA+1>
+
+# Complementi: "la spada del Monaco Distratto"
+COMPLEMENTO
+    { del Cinghiale Furioso | del Golem d'Argilla | del Rinoceronte Caricante | del Berserker Cieco | del Fabbro Pesante | del Trattore | del Blocco di Cemento | del Sollevatore di Pesi | del Bulldozer | del Ghiottone Rampante }<mod:FORZA+2>
+    { della Vittoria | del Campione | del Titano | del Toro | del Minotauro | del Braccio di Ferro | dello Smanettone | dello Scaricatore di Porto | del Traslocatore | del Culturista | del Ghepardo Corazzato | della Pantera | del Centauro | del Cavaliere d'Assalto | della Valanga | dello Smanettone del Lunedì | dell'Atleta dell'Ultimo Minuto | del Corridore con la Spesa | della Furia del Casello | dello Scatto Felino | dell'Orso | del Tasso del Miele | del Cinghiale | del Fabbro | del Palettatore | del Sollevatore | del Buttafuori | dello Scaricatore | del Fusto di Birra | del Bestione | del Ciclope | del Barbaro | dello Spaccapietre | del Picchiatore | del Martello | del Macigno | dello Smanettone Cieco | dello Scaricatore Distratto | della Spaccata | del Sasso nel Buio | della Foga Bruta }<mod:FORZA+1>
+    { del Debole | del Novizio | del Fuscello | della Foglia | del Vetro | del Fisico da Scrivania | del Segretario | del Flautista | della Mozzarella | della Piuma }<mod:FORZA-1>
+    { della Lucertola | del Ghepardo | del Giocoliere | della Libellula | del Ladro d'Anime | del Gatto di Marmo | dell'Anguilla | dell'Evasore Fiscale }<mod:DESTREZZA+2>
+    { del Grillo | della Zanzara | dello Spirito Volante | della Seta | del Ladruncolo | dell'Impiegato Agile | dell'Apprendista Fuggiasco | della Saponetta | della Mosca | del Saltimbanco | del Falco | del Cecchino | dell'Arciere | della Lince | del Chirurgo | del Geometra | dell'Orologiaio | del Sarto | del Contabile Pignolo | del Vento leggero | dello Spettro | del Guardaroba Estivo | del Bagaglio a Mano | dello Scontrino | della Bolla di Sapone | dello Stagista senza fissa dimora | della Farfalla | del Colibrì | dello Spirito | della Sgattaiolata | del Fuggiasco | della Lama Fragile | del Fioretto Leggero | dello Schermidore Folle | dello Stagista Disarmato | del Riposato | dello Scattante | del Fresco | del Risveglio | dello Smanettone del Mattino | del Caffè Espresso | dello Stagista Motivato | del Gatto Felino | del Mattiniero }<mod:DESTREZZA+1>
+    { dell'Inciampo | del Golem | dell'Ancora | del Masso | del Piombo | del Cantiere | del Pavimento Cerato | del Branzino Surgelato | delle Scarpe Antinfortunistiche | del Sabato Sera }<mod:DESTREZZA-1>
+    { della Montagna | del Bastione | della Fortezza | della Quercia | del Muro Portante | del Divano | della Riunione di Condominio | del Carro Armato | della Montagna Impervia | della Quercia Secolare | dello Stomaco di Ferro | della Corazza | del Golem di Granito | del Troll | della Roccia | della Capra | del Mattone }<mod:COSTITUZIONE+2>
+    { del Facchino | del Mulo | dell'Asino | del Cavallo da Tiro | del Guardiano | del Portapacchi | della Spesa del Sabato | del Camallo | dello Zaino da Trekking | del Facchino d'Albergo | della Lumaca Corazzata | della Tartaruga | del Tricheco | del Cuor di Pietra | dell'Incudine | della Coda alle Poste | del Freno a Mano | del Cantiere Stradale | del Lunedì Mattina | della Corazza Pesante }<mod:COSTITUZIONE+1>
+    { del Malaticcio | della Canna al Vento | della Foglia d'Autunno | della Cariatide | dello Stagista Pallido | della Linea di Febbre | della Sciatalgia }<mod:COSTITUZIONE-1>
+    { dell'Arcimago | del Saggio | del Filosofo | dell'Erudito | del Genio | del Cervellone | dell'Ingegnere | del Capoprogetto | del Grande Capo | del Computer }<mod:INTELLIGENZA+2>
+    { dello Scriba | del Filosofo Esile | del Veggente | dell'Astrologo | del Poeta | del Secchione | del Progettista | dell'Ingegnere Clinico | del Nerd da Tastiera | del Contabile | del Cartografo | del Nerd | del Sistemista | dell'Esperto | del Pensatore | dello Studioso | del Teologo | dell'Accademico | del Topo di Biblioteca }<mod:INTELLIGENZA+1>
+    { dell'Apprendista | dello Stolto | dell'Ignorante | del Neofita | del Somaro | del Negato | dello Smemorato | della Matricola | del Cervello in Sciopero }<mod:INTELLIGENZA-1>
+    { del Mentore | dell'Illuminato | dell'Eremita Santo | del Patriarca | del Saggio del Villaggio | del Saggio Supremo | del Guru | del Capo Carismatico | della Voce della Ragione }<mod:SAGGEZZA+2>
+    { del Guardiano del Tempio | della Civetta | del Monaco Saggio | dello Sciamano | del Capoufficio Attento | della Suocera | dell'Ispettore | della Sentinella | del Vecchio Saggio | del Filosofo Meditativo | dell'Anziano | del Guru Calmo | dell'Asceta | della Lumaca Pensatrice | della Riunione Infinita | del Registro Lento | del Filosofo Resiliente | dello Stoico | del Monaco Paziente | del Penitente | dell'Eremita Sfortunato | di Quello che non molla | del Ragioniere Ottimista | del Burocrate Calmo | del Reietto | dello Zen | del Monaco Buddista | della Meditazione | del Distaccato | della Riunione di Condominio Deserta | del Firewall Calmo | del Venerdì Pomeriggio | della Pace dei Sensi }<mod:SAGGEZZA+1>
+    { del Monaco Distratto | del Frate Distratto | del Parroco Distratto | dell'Eremita Cieco | del Veggente Confuso | del Guru Fake | del Filosofo Ubriaco | del Distratto | del Confuso | della Testa tra le Nuvole }<mod:SAGGEZZA-1>
+    { del Cavaliere Senza Macchia | del Re Saggio | del Leader Nato | del Paladino Splendente | dell'Eroe Popolare | dell'Influencer | del Venditore di Tappeti | del Politico | del Padrone di Casa }<mod:CARISMA+2>
+    { del Visconte | del Millantatore | del Bardo | del Seduttore | del Nobile | del Paraculo | del Raccomandato | del Vincitore di Sanremo | del Cugino Simpatico | del Re del Quiz | del Damerino | del Narcisista | del Dandy | del Modello | del Poeta di Corte | del Figlio di Papà | dello Specchiato | del Modaiolo | del Belloccio esile | del Divo }<mod:CARISMA+1>
+    { del Goffo | dello Scontroso | del Rozzo | del Villano | del Solitario | del Mutanghero | del Pesante | del Musone | del Timido | dello Sbadato }<mod:CARISMA-1>
+    { del Reparto Acquisti | del Burocrate | dello Stagista Muto | del Cugino Timido | dell'Introverso | del Nerd Solitario | dell'Antipatico | del Guastafeste | del Ragioniere | del Supervisore }<mod:CARISMA-2>
+    { del Sopravvissuto | dell'Intoccabile | del Prescelto | del Fato Favorevole | del Re del Poker | dell'Abbonato al Culo | dello Sfacciato | del Turista Fortunato | della Buona Stella }<mod:FORTUNA+2>
+    { del Cristallo | del Vetro di Murano | della Porcellana | dello Specchio | del Miracolato | del Sopravvissuto per Caso | del Gratta e Vinci | della Carta Velina | del Guscio d'Uovo | dello Sconsiderato | del Folle | dello Sventato | dell'Incosciente | del Kamikaze | del Turista Fai-da-Te | del Sognatore Spensierato | del Quadrifoglio | della Scommessa | del Fato | della Dea Bendata | del Colpo di Fortuna | della Fortuna Sfacciata | della Lotteria | della Moneta Truccata | dell'Ultimo Secondo | dell'Auspicio | del Presagio | della Svolta | del Destino Letale | della Ruota della Fortuna | del Gratta e Vinci d'Oro | della Scommessa Vinta | del Colpo Gobbo | del Jolly | del Tredici al Totocalcio | del Cieco | dell'Orbo | della Notte Fonda | del Dormiente | del Coniglio | del Codardo | del Fuggitivo | del Disertore | dell'Invertebrato | dell'Attacco di Panico | della Sindrome da Burnout | dello Scaricabarile | della Riunione Deserta | del Traditore | del Rinnegato | del Giuda | del Vile | del Voltafaccia | del Salta-Fila | del Sopravvissuto Egoista }<mod:FORTUNA+1>
+    { dello Sventurato | del Disgraziata | dello Scalognato | della Sfortuna | dello Specchio Rotto | del Venerdì 13 | della Macumba }<mod:FORTUNA-1>
+    { del Caravan | del Carro da Trasporto | del Camallo dei Docks | della Chiatta | del Mammut | del Tir in Autostrada | della Nave Cargo | della Valigia da Stiva | del Furgone dei Traslochi | del Trasloco Intercontinentale }<mod:CARICO_MASSIMO+2>
+    { del Trasloco | dello Zaino di Scuola | della Valigia di Cartone | del Carrello Spezzato | del Custode | del Portatore del Tempio | del Pallet di Ghisa | dello Stivatore | del Superequipaggiato }<mod:CARICO_MASSIMO+1>
+    { del Minimalista | del Leggero | del Viandante Scalzo | della Tasca Bucata | dello Zainetto | della Scatola di Scarpe | del Marsupio }<mod:CARICO_MASSIMO-1>
+    { della Piuma Fragile | dell'Inconsistente | dell'Involucro Vuoto | del Portafoglio a Fine Mese | dello Spazio Esaurito | del Cloud Pieno | dell'Armadio Esploso | del Saldo Zero }<mod:CARICO_MASSIMO-2>
+    { del Colpo Devastante | del Macellaio | della Spaccatura | dell'Anatomista | del Mietitore | del Tutto o Niente | della Sventola | della Pallonata | del Sasso in un Occhio | del Braccio di Ferro Impazzito }<mod:CRITICO+2>
+    { del Rasoio | del Colpo Letale | del Carnefice | della Ghigliottina | dell'Occasione | del Colpo secco | del Punto Debole | della Fatalità | della Sfortuna Altrui | del Maglio Spaccatutto | della Frattura | della Mannaia Pesante | del Tritacarne | dello Spacca-Scrivanie | della Martellata | del Pugno di Ghisa | del Fusto di Birra Cadente }<mod:CRITICO+1>
+    { dello Smussato | dell'Arrotondato | del Logoro | del Filo Perso | dell'Innocuo | del Coltello da Burro | della Spada di Gomma | del Giocattolo | della Lama di Cartone | del Cucchiaio }<mod:CRITICO-1>
+    { del Disastro | della Sfortuna Nera | del Colpo a Vuoto | del Fiacco | della Lama Sghemba | di Seconda Mano | del Controllo Qualità Fallito | del Model Difettoso | del Fabbro Distratto | del Fornitore Al Risparmio }<mod:CRITICO-2>
+    { dell'Aquila | della Mosca sul Muro | del Geometra Pignolo | del Laser | del Mirino | del Centromirato }<mod:PRECISIONE+2>
+    { del Cacciatore | del Perito | del Revisore dei Conti | dell'Amministratore Meticoloso | del Perito Calibratore | dello Schermidore | del Matematico | dello Scacchista | del Maestro d'Armi | del Grafologo | del Disegnatore Tecnico | del Truccatore | dell'Impiegato Esile }<mod:PRECISIONE+1>
+    { dell'Approssimativo | del Frettoloso | del Cialtrone | del Tira-a-Campare | dell'Occhio Storto | del Vetro Appannato | dello Sguardo Vago | della Fretta }<mod:PRECISIONE-1>
+    { del Fabbro Ubriaco | dell'Arciere Cieco | del Guercio | del Miope | del Cecato | dello Sguercio | del Cecchino della Domenica | della Mira Storta | del Pendolo }<mod:PRECISIONE-2>
+    { della Luce | della Tromba d'Aria | della Fibra Ottica | del Centometrista | del Jet | del Millisecondo }<mod:VELOCITA+2>
+    { della Rondine | della Lepre | del Vento | del Cameriere Esperto | del Rider in Ritardo | della Freccia | del Giavellotto | del Proiettile | della Scintilla | del Fruscio | della Piuma al Vento | del Peso Piuma | del Foglio Volante | dell'Aeroplanino di Carta | del Soffio | dell'Energia Pura | dell'Iperattivo | dell'Insonne | del Caffè Doppio | dell'Energy Drink | delle Tre Scatole di Red Bull | del Rider all'Ultimo Minuto | del Turbocompressore }<mod:VELOCITA+1>
+    { del Bradipo | del Peso Massimo | della Zavorra | dell'Abbiocco Pomeridiano | dello Sbadiglio | del Sonnellino }<mod:VELOCITA-1>
+    { della Lumaca | della Coda in Autostrada | del Traffico | della Burocrazia | del Registro Elettronico | del Download Lento | a Batteria Scarica }<mod:VELOCITA-2>
+    { dell'Ombra | del Ladro | della Volpe | del Gufo | della Spia | del Camaleonte | del Ninja | del Guardone }<mod:FURTIVITA+2>
+    { del Gatto | del furetto | del Passista | del Passetto | dello Scalzista | del Mago dei Pacchi | del Sosia | dell'Infiltrato | dello Scout | del Pipistrello | della Talpa del Reparto | dello Psicoanalista | dell'Origliatore | del Curioso | della Microspia | del Disertore Scaltro | dello Scroccone | dello Sgattaiolatore | del Cugino Furbo | dello Stagista Fantasma }<mod:FURTIVITA+1>
+    { del Rumoroso | dell'Elefante | del Tira-i-Piedi | del Saltatore di Poio | del Cascamorto | del Sonaglio | della Campanella | della Sirena | del Grido | del Boato | del Portavoce | del Megafono | del Clacson | del Trapano del Sabato | della Caciara }<mod:FURTIVITA-1>
+    { del Golem di Ferro | del Muro Invalicabile | del Guardiano Eterno | della Fortezza Inespugnabile | del Baluardo | del Lucchetto Rustico | della Sbarra del Passaggio a Livello | del Portiere di Notte | del Cancello Chiuso | del Buttafuori della Discoteca }<mod:PARATA+2>
+    { dello Scudo della Guardia | del Paladino Calmo | del Protettore | della Difesa Chiara | del Buttafuori Prudente | del Vigile Urbano | del Cuscino delle Poste | dell'Airbag | della Cautela | dello Scudo | della Palizzata | del Portiere | del Vigile | della Sbarra | della Trionea | del Paladino | del Protettore Imperiale | della Testuggine | dell'Armatura Aziendale | del Muro del Pianto | del Blocco Portante | della Cassaforte | della Calma Piatta | della Pace Eterna | del Letargo | dell'Inerte | dell'Apatia | dello Sciopero dei Mezzi | dell'Impiegato Statale | della Batteria Scarica | della Richiesta in Sospeso }<mod:PARATA+1>
+    { dello Scoperto | dello Sbilanciato | del Temerario | dell'Assalitore | del Guardrail di Plastica | della Difesa di Cartone | della Porta Aperta | dello Specchietto Retrovisore | del Ciao Ciao }<mod:PARATA-1>
+    { dell'Antimagia | del Firewall | del Sigillo Runico | del Golem di Pietra | dello Schermo Mistico | della Nonna Diffidente | del No-Vax | dell'Incredulo | del Blocco Mentale | dell'Isolante }<mod:RESISTENZA_MAGICA+2>
+    { del Monaco Calmo | del Templare | del Devoto | del Santuario | del Vetro Temperato | del Ragioniere Passivo | della Flemma | del Filtro Spam | del Golem di Piombo | della Piastra | del Muro Spesso | del Blocco di Piombo | della Gomma | della Tuta di Amianto | del Lastrone }<mod:RESISTENZA_MAGICA+1>
+    { del Sensibile | del Ricettivo | dell'Instabile | del Conduttore | del Fluido | della Spugna | dell'Abbonato | del Segnale Libero | dell'Antenna | dell'Anima Candila }<mod:RESISTENZA_MAGICA-1>
+    { del Condannato | della Bambola di Pezza | del Trance | del Vulnerabile | dell'Anima Nuda | del Credulone | dell'Orecchiante | del Reparto Marketing | del Fan dei Complotti | della Foglia al Vento }<mod:RESISTENZA_MAGICA-2>
+    { del Grifone | della Vedetta | del Capoufficio }<mod:PERCEZIONE+2>
+    { del Contabile Meticoloso | del Controllore | del Guardalinee | dell'Eremita | della Portinaia | del Consulente Senior | del Rilevatore | dell'Investigatore | del Consulente }<mod:PERCEZIONE+1>
+    dello Stagista<mod:PERCEZIONE-1>
+    { della Morte | del Tristo Mietitore | del Destino Inevitabile | della Fine | dell'Eternità | del Capolinea | dell'Ultima Ora | dell'Oltretomba | del Giudizio Universale | della Perdizione | dell'Apocalisse | del Caos | della Rovina | del Debito Pubblico | della Scadenza | del Licenziamento | del Fallimento | della Finanziaria }<mod:SOGGEZIONE+2>
+    { del Tiranno Silenzioso | del Boia | del Monarca Oscuro | dell'Inquisitore | dello Spauracchio | del Direttore Generale | del Fisco | del Controllore sul Bus | dell'Ispettore del Lavoro | del Martire della Sfiga | della Calamità | della Sciagura Animata | del Gatto Nero in Autostrada | della Marca da Bollo Smarrita | del Controllore alle Poste | del Disastro Ambulante | dell'Elefante in una Cristalleria | del Cinghiale nel Sottobosco | della Banda di Paese | del Temporale | del Cannone | dell'Annunciatore Generale | della Notifica a Tutto Volume | dello Spoileratore | del Direttore al Microfono | della Sirena d'Allarme | dei Sette Regni | del Tiranno | del Trono Oscuro | dell'Imperatore | del Conquistatore | del Padrone | del Capo Supremo | del Dittatore | dell'Ombra Lunga | del Lupo Solitario | del Predatore | della Notifica Legale | dell'Avis di Scadenza | del Richiamo Scritto }<mod:SOGGEZIONE+1>
+    { del Buffone | del Giullare | del Simpatico | della Macchietta | dello Stagista Timido | del Cugino Scalzo | del Pagliaccio | della Barzelletta | del Cucciolo }<mod:SOGGEZIONE-1>
+    { del Catasto | dell'Impiegato Comunale | dello Sportello Chiuso | della Marca da Bollo | del Modulo 3B | della Fila alle Poste | dell'Amministratore | della TARI }<mod:SOGGEZIONE-2>
+    { della Furia | della Tempesta di Sangue | della Connessione Persa | del Cane Malato }<mod:FURIA+2>
+    { del Fanatico | dello Zelota | del Berserker | del Cane Sciolto | del Crociato | dell'Automobilista nell'Ingorgo | del Cliente Arrabbiato | del Capo Furioso | del Toro Scatenato | dello Smanettone Impazzito | della Tempesta di Spade | del Cliente Furente | del Guidatore Nervoso | del Computer Bloccato | dello Smanettone Furioso | dell'Isterico | del Guerriero Iracondo | della Vendetta | del Sangue Caldo | della Carica | del Rinoceronte | del Commesso Esasperato | del Lunedì Mattina senza Caffè | del Clacson Impazzito | dell'Uscita Anticipata Negata | del Nervoso | del Ringhio | dell'Adrenalina | del Battito accelerato | del Tipo Permaloso | dello Sfogato | della Tastiera Presa a Pugni | del Cane che Abbaia }<mod:FURIA+1>
+    { del Calmo | del Mansueto | della Pazienza | del Pacifico | dello Stagista Rassegnato | del Budino | del Camomillato | del Gatto che Dorme }<mod:FURIA-1>
+    { del Leone | dell'Eroe | della Spavalderia | del Fegato | della Faccia Tosta | del Coraggioso }<mod:CORAGGIO+2>
+    { del Caricatore | del Gladiatore | del Vendicatore }<mod:CORAGGIO+1>
+    { del Prudente | del Cauto | del Guardingo | dell'Esitante }<mod:CORAGGIO-1>
+    { dell'Onore | del Cavaliere | della Corona | della Medaglia | dello Sponsor | del Supereroe | dei Punti Esperienza }<mod:VALORE+2>
+    { del Martire | del Guardiano Celato | del Difensore | del Muro d'Acciaio | del Bodyguard | del Primo Turno | della Resistenza Sindacale | del Comandante | dell'Influencer Benefico | del Rappresentante | del Vincitore | del Trascinatore }<mod:VALORE+1>
+    { dell'Individualista | del Neutrale | dell'Egoista | del Freelance | del Consulente Esterno | del Contratto a Chiamata | dell'Indifferente | dello Spettatore }<mod:VALORE-1>
+    { del Mana | del Mago | dell'Incantatore | della Congrega | della Riserva | della Pozione | dello Stregone | del Grimorio | del Mago di Oz }<mod:MAGIA+2>
+    { dell'Apprendista Stregone | del Canale Aperto | del Catalizzatore | del Sifone | del Medium | del Wi-Fi Aperto | del Ripetitore | dell'Infuocato | della Calamita | della Prolunga | dell'Aura | dell'Etere | dell'Incanto | del Trucchetto }<mod:MAGIA+1>
+    { del Profano | del Terreno | del Materiale | dell'Arido | del Rustico | del Babbani | dello Scettico | del Cartone | del Sempliciotto }<mod:MAGIA-1>
+    { del Blocco Runico | del Vuoto Mistico | della Cenere | dell'Aridità | del Burnout | del Modulo Perso }<mod:MAGIA-2>
+    { dell'Abbiocco | della Fiacca | del Sonno | della Pigrizia | del Lunedì | della Controra | del Turno di Notte }<mod:STANCHEZZA+2>
+    { del Sonnecchiante | del Rallentato | del Pigro | dell'Occhio Chiuso | della Pausa Sigaretta | del Calo idrosalino | del Letargico | dell'Anfibio | del Tasso | dell'Orso in Inverno | del Materasso Memory | dello Smart Working passivo | della Copertina | del Riposino Corazzato }<mod:STANCHEZZA+1>
+    { della Sveglia | dell'Attento | del Pronto | dell'Attivo | del Turno di Giorno | della Ricarica | del Lunedì Pomeriggio | dell'Occhio Aperto | dello Slancio }<mod:STANCHEZZA-1>
+
+# Il dettaglio da catalogo in fondo al nome: "(con Camomilla in Omaggio)"
+DETTAGLIO
+    { (con { Bulloni Allentati | Struttura Cedevole | Manico di Plastica | Impugnatura Usurata | Lama Piegata | Sconto del 50% | Difetto di Fabbrica | Gioco sul Pomolo | Struttura Fragile }) | (senza { Rinforzo Strutturale | Struttura Portante | Telaio Rinforzato | Contrappeso in Acciaio | Supporto Rigido | Metallo Denso | Perni di Tenuta | Anima d'Acciaio | Spessore Interno | Bilanciamento di Massa | Pistone Idraulico | Lega Pesante | Impugnatura Solida | Nucleo Denso | Molla Potenziata | Innesto Muscolare | Struttura Monoblocco }) }<mod:FORZA-1>
+    (con { Rinforzo Strutturale | Struttura Portante | Telaio Rinforzato | Contrappeso in Acciaio | Supporto Rigido | Metallo Denso | Perni di Tenuta | Anima d'Acciaio | Spessore Interno | Bilanciamento di Massa | Pistone Idraulico | Lega Pesante | Impugnatura Solida | Nucleo Denso | Molla Potenziata | Innesto Muscolare | Struttura Monoblocco })<mod:FORZA+1>
+    { (con { Peso Sbilanciato | Impugnatura Incollata | Manico Unto | Assetto Goffo | Ergonomia Bocciata | Finitura Grezza | Peso Eccessivo | Bilanciamento Sghembo | Vernice Fresca | Grip Scadente }) | (senza { Grip Ergonomico | Impugnatura Antiscivolo | Bilanciamento Dinamico | Assetto Aerodinamico | Rivestimento in Gomma | Profilo Snello | Finitura Calibrata | Ergonomia | Distribuzione del Peso | Impugnatura Curva | Impugnatura Sagomata | Peso Fluido | Finitura Ultra-Leggera | Bilanciere di Precisione }) }<mod:DESTREZZA-1>
+    (con { Grip Ergonomico | Impugnatura Antiscivolo | Bilanciamento Dinamico | Assetto Aerodinamico | Rivestimento in Gomma | Profilo Snello | Finitura Calibrata | Ergonomia | Distribuzione del Peso | Impugnatura Curva | Impugnatura Sagomata | Peso Fluido | Finitura Ultra-Leggera | Bilanciere di Precisione })<mod:DESTREZZA+1>
+    { (con { Segni di Cedimento | Crepa sulla Lama | Microfratture | Metallo Poroso | Ruggine Interna | Scadenza a Breve | Saldatura Debole | Difetto Strutturale | Materiale Riciclato | Sottile Spessore }) | (senza { Giunto di Sicurezza | Certificato di Resilienza | Rivestimento Antishock | Sigillo di Durata | Spessore Maggiorato | Piastra di Rinforzo | Collaudo Strutturale | Trattamento Termico | Garanzia sui Materiali | Lega Antirottura | Lega Temperata | Protezione Termica | Anima di Ghisa }) }<mod:COSTITUZIONE-1>
+    (con { Giunto di Sicurezza | Certificato di Resilienza | Rivestimento Antishock | Sigillo di Durata | Spessore Maggiorato | Piastra di Rinforzo | Collaudo Strutturale | Trattamento Termico | Garanzia sui Materiali | Lega Antirottura | Lega Temperata | Protezione Termica | Anima di Ghisa })<mod:COSTITUZIONE+1>
+    { (con { Cervello in Sciopero | Nebbia Mentale | Errori di Battitura | Logica Mancante | Bug di Sistema | Memoria Piena | Cortocircuito Logico | Dati Corrotti | Traduzione Imbarazzante | Schermo Nero }) | (senza { Manuale di Istruzioni | Guida Rapida | Scheda Tecnica | Tutorial Cartaceo | Istruzioni di Montaggio | Schema Logico | Assistenza dello Sviluppatore | Note del Produttore | Etichetta | Traduzione dei Testi | Bino di Note | Mappa dei Flussi | Note a Margine | Glossario Tecnico | FAQ Incluse }) }<mod:INTELLIGENZA-1>
+    (con { Manuale di Istruzioni | Guida Rapida | Scheda Tecnica | Tutorial Cartaceo | Istruzioni di Montaggio | Schema Logico | Assistenza dello Sviluppatore | Note del Produttore | Etichetta | Traduzione dei Testi | Bino di Note | Mappa dei Flussi | Note a Margine | Glossario Tecnico | FAQ Incluse })<mod:INTELLIGENZA+1>
+    { (con { Crisi d'Ansia | Impulsività | Attacco di Panico | Distrazione Totale | Crisi Esistenziale | Cattive Intenzioni | Sconsideratezza | Arroganza | Testa tra le Nuvole | Follia Transitoria }) | (senza { Santino Incluso | Benedizione Standard | Clausola di Coscienza | Nota Spirituale | Vademecum Etico | Principi Morali | Consapevolezza | Moderazione | Autocontrollo | Senso della Misura | Consigli del Mentore | Consigli del Consulente | Buone Intenzioni | Pensiero del Giorno | Scuse Formali | Autocertificazione Spirituale }) }<mod:SAGGEZZA-1>
+    (con { Santino Incluso | Benedizione Standard | Clausola di Coscienza | Nota Spirituale | Vademecum Etico | Principi Morali | Consapevolezza | Moderazione | Autocontrollo | Senso della Misura | Consigli del Mentore | Consigli del Consulente | Buone Intenzioni | Pensiero del Giorno | Scuse Formali | Autocertificazione Spirituale })<mod:SAGGEZZA+1>
+    { (con { Cattivo Odore | Colore Sbiadito | Design Imbarazzante | Finitura Grezza | Ruggine Visibile | Bave di Colla | Aspetto Anonimo | Linee Goffe | Rivestimento Spellato | Dettagli Trascurati }) | (senza { Logo Aziendale | Design di Tendenza | Finitura Lucida | Look Accattivante | Bollino di Qualità | Confezione Estetica | Sponsor in Evidenza | Cura del Dettaglio | Verniciatura | Elementi Grafici | Effetto Instagram | Confezione Regalo | Fiocchetto Rosso | Stile Unico }) }<mod:CARISMA-1>
+    (con { Logo Aziendale | Design di Tendenza | Finitura Lucida | Look Accattivante | Bollino di Qualità | Confezione Estetica | Sponsor in Evidenza | Cura del Dettaglio | Verniciatura | Elementi Grafici | Effetto Instagram | Confezione Regalo | Fiocchetto Rosso | Stile Unico })<mod:CARISMA+1>
+    { (in { Comodato d'Uso | Leasing | Subappalto | Sfratto | Regime di Proroga | Amministrazione Controllata | Liquidazione | Pegno | Franchigia | Contratto a Termine }) | (senza { Garanzia Biennale | Garanzia Triennale | Garanzia Estesa | Assicurazione Kasko | Assicurazione Infortuni | Clausola di Recesso | Rimborso Garantito | Polizza Vetri | Tutela Legale | Copertura Imprevisti | Fondo di Riserva | Paracadute Finanziario | Scudo Fiscale | Biglietto della Lotteria | Opzione Soddisfatti o Rimborsati }) }<mod:FORTUNA-1>
+    (con { Garanzia Biennale | Garanzia Triennale | Garanzia Estesa | Assicurazione Kasko | Assicurazione Infortuni | Clausola di Recesso | Rimborso Garantito | Polizza Vetri | Tutela Legale | Copertura Imprevisti | Fondo di Riserva | Paracadute Finanziario | Scudo Fiscale | Biglietto della Lotteria | Opzione Soddisfatti o Rimborsati })<mod:FORTUNA+1>
+    { (con { Usata | di Seconda Mano | Ricondizionata | da Esposizione | Km Zero | di Fine Serie | da Stock | Fallimentare | Fuori Catalogo | da Cesto delle Offerte }) | (senza { Lama Autoaffilante | Filo al Diamante | Profilo a Rasoio | Angolo di Taglio Ottimale | Intaglio di Precisione | Tempra Laser | Punta Spillo | Profilo Dentellato | Smussatura al Micrometro | Geometria Letale | Affilatura | Controllo del Filo | Rifinitura della Lama }) }<mod:CRITICO-1>
+    (con { Lama Autoaffilante | Filo al Diamante | Profilo a Rasoio | Angolo di Taglio Ottimale | Intaglio di Precisione | Tempra Laser | Punta Spillo | Profilo Dentellato | Smussatura al Micrometro | Geometria Letale | Affilatura | Controllo del Filo | Rifinitura della Lama })<mod:CRITICO+1>
+    { (con { Lama Sghemba | Mirino Storto | Angolazione Fallata | Lente Incrinata | Vibrazione Strutturale | Gioco sul Perno | Assemblaggio Approssimativo | Bilanciamento Difettoso | Ottica Graffiata | Calibrazione Mancata }) | (senza { Allineamento Ottico | Taratura Laser | Centratura di Fabbrica | Collaudo Finale | Certificato di Calibrazione | Controllo Qualità | Mirino Regolabile | Squadratura Millimetrica | Assistenza Tecnica | Revisione | Regolazione Basale | Livella a Bolla | Calibratore Automatico | Ottica di Puntamento | Sistema di Allineamento }) }<mod:PRECISIONE-1>
+    (con { Allineamento Ottico | Taratura Laser | Centratura di Fabbrica | Collaudo Finale | Certificato di Calibrazione | Controllo Qualità | Mirino Regolabile | Squadratura Millimetrica | Assistenza Tecnica | Revisione | Regolazione Basale | Livella a Bolla | Calibratore Automatico | Ottica di Puntamento | Sistema di Allineamento })<mod:PRECISIONE+1>
+    { (con { Freno di Stazionamento | Limitatore di Giri | Batteria Scarica | Alimentatore Lento | Connessione 3G | Sistema Inceppato | Peso Morto | Trasmissione Grippata | Attrito Elevato | Blocco di Sicurezza | Zavorra | Attrito | Viscosità | Resistenza Meccanica | Rallentatore Innato }) | (senza { Alleggerimento di Massa | Cuscinetto a Sfera | Struttura Traforata | Lega Aeronautica | Svuotamento Interno | Cinetica Fluida | Risposta Rapida | Scatto Meccanico | Profilo Svasato | Riduzione d'Attrito }) }<mod:VELOCITA-1>
+    (con { Alleggerimento di Massa | Cuscinetto a Sfera | Struttura Traforata | Lega Aeronautica | Svuotamento Interno | Cinetica Fluida | Risposta Rapida | Scatto Meccanico | Profilo Svasato | Riduzione d'Attrito })<mod:VELOCITA+1>
+    { (con { Sonaglio di Serie | Allarme Acustico | Led Lampeggiante | Sirena Incorporata | Vernice Catarifrangente | Cassa Bluetooth | Campanellino | Finitura Neon | Tracciamento GPS | Avviso Sonoro }) | (senza { Silenziatore in Feltro | Rivestimento Opaco | Vernice Antiriflesso | Fodero Felpato | Impugnatura Sorda | Finitura Ombra | Isolamento Acustico | Camuffamento Mimetico | Profilo Antirisonante | Assorbitore di Vibrazioni | Opacizzazione }) }<mod:FURTIVITA-1>
+    (con { Silenziatore in Feltro | Rivestimento Opaco | Vernice Antiriflesso | Fodero Felpato | Impugnatura Sorda | Finitura Ombra | Isolamento Acustico | Camuffamento Mimetico | Profilo Antirisonante | Assorbitore di Vibrazioni | Opacizzazione })<mod:FURTIVITA+1>
+    { (con { Elsa Fragile | Paramano Mancante | Guardia Allentata | Impugnatura Corta | Protezione Assente | Manico Scheggiato | Struttura Aperta | Profilo Sottile | Nessuno Schermo | Gioco sul Blocco }) | (senza { Paramano Rinforzato | Elsa a Cesto | Guardia Maggiorata | Scudo da Pugno | Blocco di Sicurezza | Protezione Dita | Guardia d'Acciaio | Arresto di Battuta | Staffa di Protezione | Contrappeso Difensivo | Barriera Fisica | Croce d'Arresto | Copertura Laterale }) }<mod:PARATA-1>
+    (con { Paramano Rinforzato | Elsa a Cesto | Guardia Maggiorata | Scudo da Pugno | Blocco di Sicurezza | Protezione Dita | Guardia d'Acciaio | Arresto di Battuta | Staffa di Protezione | Contrappeso Difensivo | Barriera Fisica | Croce d'Arresto | Copertura Laterale })<mod:PARATA+1>
+    { (con { Antenna Arcana | Canale Aperto | Firewall Bucato | Vulnerabilità Zero-Day | Connessione Non Protetta | Sensibilità Mistica | Sigillo Infranto | Bug di Sistema | Ripetitore Runico | Calamita per Anatemi }) | (senza { Schermatura Mistica | Isolamento Arcano | Protezione Antivirus | Firewall Attivo | Filtro Malefici | Barriera Elementale | Sigillo di Sicurezza | Blindatura Runica | Messa a Terra | Protezione della Privacy }) }<mod:RESISTENZA_MAGICA-1>
+    (con { Schermatura Mistica | Isolamento Arcano | Protezione Antivirus | Firewall Attivo | Filtro Malefici | Barriera Elementale | Sigillo di Sicurezza | Blindatura Runica | Messa a Terra | Protezione della Privacy })<mod:RESISTENZA_MAGICA+1>
+    { (con { Visiera Opaca | Vetro Graffiato | Lente Appannata | Sensore Sporco | Angolo Cieco | Display Rotto | Indicatori Spenti | Copertura Mancante | Filtro Notturno Fallato | Visuale Ridotta }) | (senza { Visiera Chiara | Lente di Ingrandimento | Sensore Rilevatore | Visore Notturno | Indicatore Luminoso | Display di Stato | Filtro di Contrasto | Rilevatore d'Impronte | Scanner Ambientale | Tracciatore Ottico | Segnale Sonoro }) }<mod:PERCEZIONE-1>
+    (con { Visiera Chiara | Lente di Ingrandimento | Sensore Rilevatore | Visore Notturno | Indicatore Luminoso | Display di Stato | Filtro di Contrasto | Rilevatore d'Impronte | Scanner Ambientale | Tracciatore Ottico | Segnale Sonoro })<mod:PERCEZIONE+1>
+    { (con { Aspetto Ridicolo | Colore Rosa | Stampa Cartoon | Finitura Clown | Vernice Pastello | Adesivi di Gattini | Suono Divertente | Design Simpatico | Look Amichevole | Sagoma Buffa }) | (senza { Intaglio a Teschio | Aura d'Ombra | Finitura Spaventosa | Design Gotico | Profilo Aggressivo | Incisione Minacciosa | Estetica Oscura | Silhouette Demoniaca | Effetto Terrore | Aspetto Intimidatorio | Linee Spigolose }) }<mod:SOGGEZIONE-1>
+    (con { Intaglio a Teschio | Aura d'Ombra | Finitura Spaventosa | Design Gotico | Profilo Aggressivo | Incisione Minacciosa | Estetica Oscura | Silhouette Demoniaca | Effetto Terrore | Look Intimidatorio | Linee Spigolose })<mod:SOGGEZIONE+1>
+    { (con { Valvola di Sfogo | Sedativo Incluso | Camomilla in Omaggio | Modalità Relax | Sistema Antistress | Filtro Calma | Stabilizzatore d'Umore | Tappo di Sicurezza | Blocco Agonistico | Modalità Eco }) | (senza { Iniettore d'Adrenalina | Molla di Scatto | Canalizzatore di Rabbia | Amplificatore di Impatto | Innesco Chimico | Valvola di Sovrapressione | Modulo Frenetico | Risonatore d'Umore | Sensore di Battito | Condensatore Agonistico | Regolatore di Flusso | Limitatore d'Impulso | Controllo di Spinta | Moderatore }) }<mod:FURIA-1>
+    (con { Iniettore d'Adrenalina | Molla di Scatto | Canalizzatore di Rabbia | Amplificatore di Impatto | Innesco Chimico | Valvola di Sovrapressione | Modulo Frenetico | Risonatore d'Umore | Sensore di Battito | Condensatore Agonistico | Regolatore di Flusso | Limitatore d'Impulso | Controllo di Spinta | Moderatore })<mod:FURIA+1>
+    { (con { Cerniera Rotta | Tracolla Sfilacciata | Tessuto Strappato | Gancio Allentato | Scatola Umida | Manico Spezzato | Cuciture Cedevoli | Plastica Crepata | Vano Ostruito | Chiusura Difettosa }) | (senza { Custodia Rigida | Sacca da Trasporto | Tracolla Imbottita | Gancio da Cintura | Custodia Morbida | Scatola Originale | Supporto da Muro | Valigetta di Plastica | Marsupio Dedicato | Imbracatura di Tela | Vano Dedicato | Contenitore | Custodia Rigida in Omaggio }) }<mod:CARICO_MASSIMO-1>
+    (con { Custodia Rigida | Sacca da Trasporto | Tracolla Imbottita | Gancio da Cintura | Custodia Morbida | Scatola Originale | Supporto da Muro | Valigetta di Plastica | Marsupio Dedicato | Imbracatura di Tela | Vano Dedicato | Contenitore | Custodia Rigida in Omaggio })<mod:CARICO_MASSIMO+1>
+    { (con { Serbatoio Vuoto | Filtro Mana Intasato | Canali Ostruiti | Assenza di Carica | Isolamento Misto | Spina Staccata | Condensatore Fuso | Zero Risonanza | Flusso Interrotto | Batteria Runica Scarica }) | (senza { Cristallo di Risonanza | Serbatoio di Mana | Batteria Runica | Canale Aperto | Condensatore di Flusso | Antenna Arcana | Filtro Energetico | Sifone Attivo | Cavità per Gemme | Circuito di Flusso }) }<mod:MAGIA-1>
+    (con { Cristallo di Risonanza | Serbatoio di Mana | Batteria Runica | Canale Aperto | Condensatore di Flusso | Antenna Arcana | Filtro Energetico | Sifone Attivo | Cavità per Gemme | Circuito di Flusso })<mod:MAGIA+1>
+    { (con { Sistema di Fuga Automatico | Espulsione Rapida | Specchietto Retrovisore | Modalità Prudenza | Sensore di Pericolo | Avviso di Ritiro | Paracadute | Pulsante Panico | Localizzatore per Soccorsi | Manuale d'Emergenza }) | (senza { Piastra dell'Orgoglio | Sigillo dell'Audace | Stemma del Leone | Incisione del Patrono | Amuleto del Fegato | Blocco dell'Esitazione | Scudo Mentale | Modulo di Fermezza | Emblema del Combattente | Ancora Emotiva | Protezione Volitiva | Simbolo Tutelare }) }<mod:CORAGGIO-1>
+    (con { Piastra dell'Orgoglio | Sigillo dell'Audace | Stemma del Leone | Incisione del Patrono | Amuleto del Fegato | Blocco dell'Esitazione | Scudo Mentale | Modulo di Fermezza | Emblema del Combattente | Ancora Emotiva | Protezione Volitiva | Simbolo Tutelare })<mod:CORAGGIO+1>
+    { (con { Clausola di Manleva | Scarico di Responsabilità | Contratto Subappaltato | Nota di Credito | Copertura Assicurativa Parziale | Patto di Non Concorrenza | Clausola Arbitrale | Scrittura Privata | Rinuncia ai Diritti | Delega di Funzioni }) | (senza { Blocco Altruista | Scudo di Intercettazione | Placcatura d'Onore | Modulo di Protezione | Incisione Eroica | Sigillo del Martire | Giuramento Vincolante | Patto di Difesa | Custodia Condivisa | Copertura Esecutiva | Vincolo di Supporto | Sistema Tutelare }) }<mod:VALORE-1>
+    (con { Blocco Altruista | Scudo di Intercettazione | Placcatura d'Onore | Modulo di Protezione | Incisione Eroica | Sigillo del Martire | Giuramento Vincolante | Patto di Difesa | Custodia Condivisa | Copertura Esecutiva | Vincolo di Supporto | Sistema Tutelare })<mod:VALORE+1>
+    { (con { Calo Idrosalino | Flemma Innata | Peso Soporifero | Effetto Lunedì | Abbiocco Pomeridiano | Stanchezza Cronica | Palpebra Calante | Ritmo Rallentato | Mancanza di Caffeina | Flusso Pigro }) | (senza { Cuscino Incorporato | Modalità Riposino | Sensazione di Sonno | Effetto Amaca | Materassino Gonfiabile | Sconto Caffè | Rilevatore di Sbadigli | Modalità Divano | Copertina da Viaggio | Tappo per Orecchie | Imbottitura Relax | Appoggio Cervicale }) }<mod:STANCHEZZA+1>
+    (con { Cuscino Incorporato | Modalità Riposino | Sensazione di Sonno | Effetto Amaca | Materassino Gonfiabile | Sconto Caffè | Rilevatore di Sbadigli | Modalità Divano | Copertina da Viaggio | Tappo per Orecchie | Imbottitura Relax | Appoggio Cervicale })<mod:STANCHEZZA-1>
+
+# ---------------------------------------------------------------------------------------------
+# Parti elementali: un incantamento del tipo di danno, la descrizione che lo dice e, spesso, un
+# soprannome. Ogni elemento ha le sue produzioni, così aggettivo, soprannome e descrizione non
+# possono contraddirsi.
+# ---------------------------------------------------------------------------------------------
+
+AGGETTIVO_ELEMENTALE
+    [AGGETTIVO_ARIA][EFFETTO_ARIA]
+    [AGGETTIVO_ACQUA][EFFETTO_ACQUA]
+    [AGGETTIVO_TERRA][EFFETTO_TERRA]
+    [AGGETTIVO_FUOCO][EFFETTO_FUOCO]
+    [AGGETTIVO_FULMINE][EFFETTO_FULMINE]
+    [AGGETTIVO_GELO][EFFETTO_GELO]
+    [AGGETTIVO_ACIDO][EFFETTO_ACIDO]
+    [AGGETTIVO_SONICO][EFFETTO_SONICO]
+    [AGGETTIVO_VELENO][EFFETTO_VELENO]
+    [AGGETTIVO_NECROTICO][EFFETTO_NECROTICO]
+    [AGGETTIVO_SACRO][EFFETTO_SACRO]
+    [AGGETTIVO_PSICHICO][EFFETTO_PSICHICO]
+    [AGGETTIVO_ARCANO][EFFETTO_ARCANO]
+    [AGGETTIVO_VUOTO][EFFETTO_VUOTO]
+    [AGGETTIVO_MALEDIZIONE][EFFETTO_MALEDIZIONE]
+
+COMPLEMENTO_ELEMENTALE
+    [COMPLEMENTO_ARIA][EFFETTO_ARIA]
+    [COMPLEMENTO_ACQUA][EFFETTO_ACQUA]
+    [COMPLEMENTO_TERRA][EFFETTO_TERRA]
+    [COMPLEMENTO_FUOCO][EFFETTO_FUOCO]
+    [COMPLEMENTO_FULMINE][EFFETTO_FULMINE]
+    [COMPLEMENTO_GELO][EFFETTO_GELO]
+    [COMPLEMENTO_ACIDO][EFFETTO_ACIDO]
+    [COMPLEMENTO_SONICO][EFFETTO_SONICO]
+    [COMPLEMENTO_VELENO][EFFETTO_VELENO]
+    [COMPLEMENTO_NECROTICO][EFFETTO_NECROTICO]
+    [COMPLEMENTO_SACRO][EFFETTO_SACRO]
+    [COMPLEMENTO_PSICHICO][EFFETTO_PSICHICO]
+    [COMPLEMENTO_ARCANO][EFFETTO_ARCANO]
+    [COMPLEMENTO_VUOTO][EFFETTO_VUOTO]
+    [COMPLEMENTO_MALEDIZIONE][EFFETTO_MALEDIZIONE]
+
+# ARIA
+AGGETTIVO_ARIA
+    sibilante | eolica | tempestosa | alata | ventosa | sventolante | spifferante | ciclonica | turbinante | sbuffante | burrascosa | svolazzante
+COMPLEMENTO_ARIA
+    del Tornado | del Tifone | del Maestrale | della Brezza | del Ciclone | dello Sbuffo | del Sospiro | della Tramontana | dello Spiffero
+EFFETTO_ARIA
+    <danno:ARIA><descrizione:[DESCRIZIONE_ARIA]>{ <soprannome:[SOPRANNOME_ARIA]> | [^2.5] }
+SOPRANNOME_ARIA
+    Ventilatore | Asciugacapelli | Tramontana | Brezzolina | Sventola | Spiffero | Girandola | Mulinello | Aquilone | Soffione
+DESCRIZIONE_ARIA
+    che solleva i nemici come foglie secche | che scompiglia i capelli a chiunque | che fischia a ogni fendente
+
+# ACQUA
+AGGETTIVO_ACQUA
+    idrica | marittima | lacustre | torrenziale | ondosa | umida | bagnata | ad idromassaggio | fradicia | brodosa | fluviale | diluviante | inzuppata | gocciolante
+COMPLEMENTO_ACQUA
+    dell'Oceano | dello Tsunami | della Cascata | del Diluvio | della Pozzanghera | del Gavettone | della Marea | del Nubifragio | della Cannella
+EFFETTO_ACQUA
+    <danno:ACQUA><descrizione:[DESCRIZIONE_ACQUA]>{ <soprannome:[SOPRANNOME_ACQUA]> | [^2.5] }
+SOPRANNOME_ACQUA
+    Sciacquone | Pozzanghera | Acquazzone | Gavettone | Spugna | Annaffiatoio | Rubinetta | Idrante | Scroscio | Bagnomaria
+DESCRIZIONE_ACQUA
+    che lascia i nemici fradici | che gocciola sempre sul tappeto | che non si asciuga mai
+
+# TERRA
+AGGETTIVO_TERRA
+    tellurica | sismica | rocciosa | granitica | terrosa | infangata | polverosa | ancestrale | sotterranea | minerale | lastricata | franosa
+COMPLEMENTO_TERRA
+    del Terremoto | della Frana | del Cataclisma | del Granito | della Faglia | della Zappa | della Mattonella | della Talpa | della Cava
+EFFETTO_TERRA
+    <danno:TERRA><descrizione:[DESCRIZIONE_TERRA]>{ <soprannome:[SOPRANNOME_TERRA]> | [^2.5] }
+SOPRANNOME_TERRA
+    Mattone | Zolla | Zappaterra | Cazzuola | Betoniera | Frana | Sassolina | Ghiaia | Macigno | Geometra
+DESCRIZIONE_TERRA
+    che fa tremare il terreno | che lascia ovunque terra e sassolini | che entra nel nemico come in un campo arato
+
+# FUOCO
+AGGETTIVO_FUOCO
+    fiammeggiante | ardente | vulcanica | incendiaria | piromane | bruciante | grigliata | piccante | scottadito | magmatica | infernale | ustionante | a carbonella | carbonizzante | rovente
+COMPLEMENTO_FUOCO
+    del Vulcano | del Drago | dell'Inferno | del Falò | della Fenice | del Barbecue | del Drago Sdentato | della Brace
+EFFETTO_FUOCO
+    <danno:FUOCO><descrizione:[DESCRIZIONE_FUOCO]>{ <soprannome:[SOPRANNOME_FUOCO]> | [^2.5] }
+SOPRANNOME_FUOCO
+    Diavolina | Fiammifero | Barbecue | Accendino | Caldarrosta | Fornello | Lanterna | Brace | Salamandra | Braciola | Grigliata Mista | Zolfanello | Tizzone
+DESCRIZIONE_FUOCO
+    che brucia i nemici | che profuma di grigliata | che scotta anche il fodero | che accende il camino con un fendente
+
+# FULMINE
+AGGETTIVO_FULMINE
+    ronzante | fulminante | strafulminante | voltaica | scintillante | galvanica | elettrica | temporalesca | ionica | magnetica | elettrizzante
+COMPLEMENTO_FULMINE
+    della Tempesta | del Fulmine | della Saetta | del Tuono | dell'Atomo | del Cortocircuito | della Scossa | della Presa Multipla
+EFFETTO_FULMINE
+    <danno:FULMINE><descrizione:[DESCRIZIONE_FULMINE]>{ <soprannome:[SOPRANNOME_FULMINE]> | [^2.5] }
+SOPRANNOME_FULMINE
+    Friggitrice | Dinamo | Cercafase | Lampadina | Batteria | Saetta | Scossa | Cortocircuito | Elettroshock | Prolunga | Ciabatta Elettrica
+DESCRIZIONE_FULMINE
+    che fulmina i nemici | che fa rizzare i capelli | che dà la scossa anche a chi la impugna
+
+# GELO
+AGGETTIVO_GELO
+    gelida | artica | glaciale | invernale | criogenica | surgelata | freddolosa | polare | iperborea | brinata | sottozero | ghiacciata
+COMPLEMENTO_GELO
+    delle Nevi Eterne | del Ghiacciaio | dell'Artide | della Tormenta | del Criostato | del Pinguino | della Bufera | del Congelatore
+EFFETTO_GELO
+    <danno:GELO><descrizione:[DESCRIZIONE_GELO]>{ <soprannome:[SOPRANNOME_GELO]> | [^2.5] }
+SOPRANNOME_GELO
+    Ghiacciolo | Frigorifero | Sorbetto | Granita | Calippo | Pinguina | Ghiacciaia | Cubetto | Brivido | Morsofreddo | Surgelato | Pupazzo di Neve
+DESCRIZIONE_GELO
+    che congela i nemici | che tiene fresca la birra | che fa venire i geloni
+
+# ACIDO
+AGGETTIVO_ACIDO
+    corrosiva | caustica | dissolvente | erosiva | aspra | limonosa | sgorgante | brucia-stomaci | alchemica | putrescente | marinata | acida | basica | solvente
+COMPLEMENTO_ACIDO
+    della Palude | della Corrosione | del Solfato | dell'Alchimista | del Limone | della Batteria d'Auto | del Vomito
+EFFETTO_ACIDO
+    <danno:ACIDO><descrizione:[DESCRIZIONE_ACIDO]>{ <soprannome:[SOPRANNOME_ACIDO]> | [^2.5] }
+SOPRANNOME_ACIDO
+    Sottaceto | Limoncella | Candeggina | Sgorgatubi | Aceto | Anticalcare | Varechina | Citrosodina | Giardiniera
+DESCRIZIONE_ACIDO
+    che corrode le armature | che scioglie la ruggine e i nemici | che puzza di aceto
+
+# SONICO
+AGGETTIVO_SONICO
+    tuonante | risonante | acustica | vibrante | supersonica | rumorosa | sbraitante | amplificata | ecoica | rimbombante | strillante | assordante
+COMPLEMENTO_SONICO
+    del Gong | della Grancassa | del Tamburo | dell'Eco | del Ruggito | della Fanfara | del Karaoke | della Banda del Paese
+EFFETTO_SONICO
+    <danno:SONICO><descrizione:[DESCRIZIONE_SONICO]>{ <soprannome:[SOPRANNOME_SONICO]> | [^2.5] }
+SOPRANNOME_SONICO
+    Caciara | Megafono | Clacson | Trapano | Altoparlante | Fischietto | Trombetta | Grancassa | Vuvuzela | Sveglia | Ultrasuono
+DESCRIZIONE_SONICO
+    che assorda i nemici | che rimbomba come una campana | che fa abbaiare tutti i cani del vicinato
+
+# VELENO
+AGGETTIVO_VELENO
+    letale | tossica | nociva | venefica | contaminata | serpenta | malmostosa | arsenica | infetta | velenosa | al plutonio | all'uranio impoverito
+COMPLEMENTO_VELENO
+    della Vipera | del Serpente | del Cobra | del Pesce Pietra | dello Scorpione | del Basilisco | della Viverna | del Ragno | del Wyrm | del Fungo | del Rosicone
+EFFETTO_VELENO
+    <danno:VELENO><descrizione:[DESCRIZIONE_VELENO]>{ <soprannome:[SOPRANNOME_VELENO]> | [^2.5] }
+SOPRANNOME_VELENO
+    Suocera | Gorgonzola | Pungiglione | Vipera | Vedova Nera | Cicuta | Tarantola | Ortica | Amanita | Mamba
+DESCRIZIONE_VELENO
+    che avvelena i nemici | che lascia un retrogusto amaro | che va maneggiata coi guanti
+
+# NECROTICO
+AGGETTIVO_NECROTICO
+    spettrale | sepolcrale | cadaverica | tombale | macabra | ossuta | rianimata | necroforina | scheletrica | putrefatta | cimiteriale | divoratrice
+COMPLEMENTO_NECROTICO
+    del Crepuscolo | della Cripta | del Necromante | della Piaga | della Tomba | dello Zombie | della Puzza di Piedi | del Cadavere | del Fantasma
+EFFETTO_NECROTICO
+    <danno:NECROTICO><descrizione:[DESCRIZIONE_NECROTICO]>{ <soprannome:[SOPRANNOME_NECROTICO]> | [^2.5] }
+SOPRANNOME_NECROTICO
+    Spettrina | Lumino | Riempicimiteri | Becchina | Ossobuco | Zombie | Lapide | Crisantemo | Mortella | Teschietto
+DESCRIZIONE_NECROTICO
+    che fa appassire la carne | che odora di cantina chiusa | che risveglia i vicini del cimitero
+
+# SACRO
+AGGETTIVO_SACRO
+    benedetta | divina | radiosa | celestiale | consacrata | angelica | santificata | chierica | miracolosa | gloriosa | redentrice | martire | devota | incensata | purificatrice
+COMPLEMENTO_SACRO
+    dell'Alba | dell'Aurora | del Paradiso | dell'Angelo | del Santo | del Chierichetto | del Miracolo | dei Pii Desideri | della Sagrestia
+EFFETTO_SACRO
+    <danno:SACRO><descrizione:[DESCRIZIONE_SACRO]>{ <soprannome:[SOPRANNOME_SACRO]> | [^2.5] }
+SOPRANNOME_SACRO
+    Campanile | Chierichetta | Sagrestana | Aureola | Acquasanta | Incensiera | Beghina | Candelotta | Santina | Perpetua
+DESCRIZIONE_SACRO
+    che scaccia i non morti | che canta in latino nelle notti di luna | che brilla di luce divina
+
+# PSICHICO
+AGGETTIVO_PSICHICO
+    allucinante | mentale | telepatica | illusoria | cerebrale | schizzata | paranoica | cervellotica | onirica | ipnotica | psicotica | allucinogena | emicranica | svitata | ululante
+COMPLEMENTO_PSICHICO
+    dell'Illusione | dell'Incubo | della Mente | della Follia | dell'Ipnosi | del Matto | dell'Emicrania | dello Schizzato | dello Svitato
+EFFETTO_PSICHICO
+    <danno:PSICHICO><descrizione:[DESCRIZIONE_PSICHICO]>{ <soprannome:[SOPRANNOME_PSICHICO]> | [^2.5] }
+SOPRANNOME_PSICHICO
+    Emicrania | Esaurimento | Paturnia | Tarlo | Chiodo Fisso | Pensierina | Lunatica | Incubo | Cefalea | Ossessione
+DESCRIZIONE_PSICHICO
+    che confonde i nemici | che sussurra cose strane di notte | che fa venire il mal di testa a chi la guarda
+
+# ARCANO
+AGGETTIVO_ARCANO
+    mistica | runica | prodigiosa | esoterica | eterea | magica | fatata | astratta | stellata | evocatrice | prestigiatrice | incantata
+COMPLEMENTO_ARCANO
+    dell'Arcano | della Magia | delle Rune | del Portale | del Cosmo | del Mago Zurlì | del Trucchetto Magico | dell'Abracadabra | della Scintillina | del Circo
+EFFETTO_ARCANO
+    <danno:ARCANO><descrizione:[DESCRIZIONE_ARCANO]>{ <soprannome:[SOPRANNOME_ARCANO]> | [^2.5] }
+SOPRANNOME_ARCANO
+    Abracadabra | Scintillina | Bacchetta | Cilindro | Coniglietta | Zurlina | Sim Sala Bim | Prestigio | Mandragola | Cartomante
+DESCRIZIONE_ARCANO
+    che crepita di energia arcana | che tira fuori conigli dal fodero | che sa di zolfo e di polvere di stelle
+
+# VUOTO
+AGGETTIVO_VUOTO
+    astrale | cosmica | siderale | gravitazionale | infinita | vacua | spaziale | dispersa | nullafacente | eclissata | nebulosa | interstellare | abissale | desolata
+COMPLEMENTO_VUOTO
+    del Vuoto | dell'Eclissi | della Singolarità | dell'Abisso | del Buco Nero | dell'Aria Fritta | del Nulla | dell'Astronauta | del Deserto
+EFFETTO_VUOTO
+    <danno:VUOTO><descrizione:[DESCRIZIONE_VUOTO]>{ <soprannome:[SOPRANNOME_VUOTO]> | [^2.5] }
+SOPRANNOME_VUOTO
+    Aria Fritta | Buco Nero | Astronauta | Nullità | Cometa | Galassia | Lunedì Mattina | Vuoto a Rendere | Meteorite | Calzino Spaiato
+DESCRIZIONE_VUOTO
+    che risucchia la luce | che pesa meno di niente | che fa sparire i nemici e i calzini
+
+# MALEDIZIONE
+AGGETTIVO_MALEDIZIONE
+    maledetta | sciagurata | funesta | infausta | dannata | iettatrice | malocchia | malefica | disgraziata | sventurata | scalognata
+COMPLEMENTO_MALEDIZIONE
+    del Malocchio | della Sventura | della Jella | dell'Infausto | della Condanna | del Gatto Nero | del Venerdì 17 | della Scalogna | del Portasfiga
+EFFETTO_MALEDIZIONE
+    <danno:MALEDIZIONE><descrizione:[DESCRIZIONE_MALEDIZIONE]>{ <soprannome:[SOPRANNOME_MALEDIZIONE]> | [^2.5] }
+SOPRANNOME_MALEDIZIONE
+    Portasfiga | Malaugurio | Gatto Nero | Venerdì Diciassette | Iella | Civetta | Specchio Rotto | Scala Aperta | Menagramo | Cornetto
+DESCRIZIONE_MALEDIZIONE
+    che porta sfortuna a chi colpisce | che nessuno vuole prendere in prestito | che fa cadere il pane dalla parte imburrata

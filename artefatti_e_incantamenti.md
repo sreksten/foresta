@@ -1,6 +1,6 @@
 # Artefatti, pergamene e incantatore: piano di lavoro
 
-> Stato: aggiornato al 2026-09-25. Tutte le fasi (1-7) fatte, bilanciamento delle classi in corso; resta quel che è in "Da fare", qui sotto. Poi le decisioni prese, quel che è fatto, le fasi di lavoro, i bug trovati e i prezzi delle pergamene.
+> Stato: aggiornato al 2026-09-25. Tutte le fasi (1-7) fatte, bilanciamento delle classi in corso, prima grammatica degli artefatti (solo spade, §7) in prova; resta quel che è in "Da fare", qui sotto. Poi le decisioni prese, quel che è fatto, le fasi di lavoro, i bug trovati e i prezzi delle pergamene.
 > I salvataggi **non** devono restare retrocompatibili: il formato si cambia liberamente, ma ogni modifica va coperta da test di salva/rileggi.
 
 ## Da fare
@@ -42,7 +42,12 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
 
 - [ ] **Artefatti leggendari**, scritti a mano, da mettere nei templi e come premi delle missioni (§2, "Rarità").
 - [ ] **Negozi sparsi nella foresta:** un paio per tipo, tra armaiolo, alchimista e incantatore.
-- [ ] **Grammatica per `GeneratoreArtefatti`** (formato da definire), sul modello delle locande.
+- [ ] **Grammatica per `GeneratoreArtefatti`:** formato definito e prima versione per la spada (§7), metà delle spade generate vengono da lì. Da fare:
+  - [ ] **Rileggere le liste** di `artefatti2.txt`: alcune parole ereditate da `artefatti.txt` non reggono come prefisso o aggettivo ("la rasoio spada", "la postale spada", "la spada tank").
+  - [ ] **Stesso attributo due volte** (es. `SOGGEZIONE` +2 e +1): sommarli in `generaDaGrammatica` o evitarli nella grammatica.
+  - [ ] **Bilanciamento:** i modificatori sono intensità × gradino, quindi +6 al livello 10 per un'intensità +2; da misurare insieme alla quota di spade da grammatica (`Costanti.ARTEFATTO_PROBABILITA_DA_GRAMMATICA`, 0,5 per provarla) e ai prezzi.
+  - [ ] **Altri tipi:** spadone, mazza, ascia, scudo… (basta aggiungere le radici `<TIPO>_<n>`, §7), e poi le pergamene.
+  - [ ] **`artefatti.txt`** resta com'è, come banco di prova di `GrammarBean` (`GrammarBean.md`, §5.3): da togliere quando `artefatti2.txt` l'avrà sostituito.
 - [ ] **Nome delle pergamene:** "Pergamena" va generato a caso come i nomi delle locande (runa, sigillo, …).
 - [ ] **Accessori:** nuove idee per incantarli (per ora non si incantano).
 
@@ -189,7 +194,7 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
 - **Dove.** In città, in quest'ordine nella barra delle icone: locanda, alchimista, armaiolo, venditore di pergamene, incantatore. I negozi sparsi nella foresta vengono dopo.
 - **Cosa trattano.** L'armaiolo compra e vende tutto tranne le pergamene; il venditore di pergamene solo quelle (`TipoNegozio.tratta`). Un rifiuto si avverte con un fumetto.
 - **Magazzini.** La chiave è (coordinate, `TipoNegozio`), perché più negozi della stessa città hanno la stessa coordinata.
-- **Generatore.** `GeneratoreArtefatti`: per ora uno scheletro generale, poi una grammatica sul modello delle locande (formato da definire).
+- **Generatore.** `GeneratoreArtefatti`: nomi ed effetti dalle tabelle di `GeneratoreArtefattiTabelle` e, per i tipi che la conosce (per ora la spada), in parte da una grammatica (§7).
 - **Riempimento dei negozi** (venditore di pergamene e armaiolo). Per ora il magazzino si genera **una volta sola, alla creazione del mondo**: 6 artefatti e 6 pergamene per città, con livelli a rotazione da 1 a 3 (`Costanti.MAGAZZINO_*`), perché alla creazione il livello di riferimento è sempre 1. Si potrà passare poi a una rigenerazione periodica in base al livello del gruppo.
 - **Gradi per livello.** Livelli 1-3 minore, 4-7 medio, dall'8 in su maggiore (`Costanti.GRADO_INCANTAMENTO_*`, da riaggiustare).
 - **Pergamene generate.** Per ora, per le prove, incantamenti e modificatori a caso; poi ci penserà la grammatica. Il livello della pergamena è quello di riferimento limitato a 3, e dà il numero di effetti; il grado dipende dal livello di riferimento.
@@ -297,6 +302,7 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
   - Nel simulatore: livello dei mostri separato da quello del PG, scenari con 1, 2 e 3 mostri e con un mostro di un livello sopra (`SCENARI_CONFRONTO_CLASSI`).
   - Ritocchi: dardo dell'Elfo a 4 di `MAGIA`, dardo del Mago a 40 × livello. Non ancora misurati (vedi "Da fare"). Provato e tolto +0,1 di danno fisico a Ladro e Bardo: i loro moltiplicatori restano quelli di prima.
   - Tutta la suite è verde (345 test).
+- [x] **Grammatica degli artefatti, prima versione** (2026-09-25). `artefatti2.txt` con `artefatti2_pp.txt`, letti da `GrammaticaArtefatti`; formato e scelte in §7. `GeneratoreArtefattiTabelle` la usa per metà delle spade; il costruttore con il solo `Random` resta a sole tabelle, così i test di prima non cambiano. `artefatti.txt` non è stato toccato. Test: `GrammaticaArtefattiTest` (7); `TestArtefatti2` stampa 40 spade come le genera il gioco. Tutta la suite è verde (352 test).
 - [x] **Tetti degli effetti a 3/4/5** (comune/raro/leggendario) al posto di 5/6/7.
 - [x] **Il `|` sparisce dai testi** alla fonte (§5.5).
 - [x] **Rarità degli artefatti.** `RaritaArtefatto` con posti e tetti (§2, "Rarità"), salvata in `ArtefattoMD`. Il generatore fa rari il 10% degli artefatti incantabili e non genera mai leggendari; gli artefatti che nascono incantati hanno al massimo 3 incantamenti e almeno un posto libero. Test in `ArtefattoMDTest`, `ArtefattoIncantabileTest` e `GeneratoreArtefattiTest`; tutta la suite è verde (271 test).
@@ -417,3 +423,70 @@ Conti di esempio con la fusione:
 Il bonus fisso scala con il livello dell'arma (`bonus × livello`), il coefficiente con l'Intelligenza di chi colpisce. Per questo il fisso rende di più sulle armi alte e il percentuale sui maghi.
 
 I numeri sono di partenza: il bilanciamento è in "Da fare", e i valori stanno in `Costanti`, quindi si cambiano senza toccare la logica.
+
+## 7. Grammatica degli artefatti
+
+La grammatica sceglie **che cosa** ha un artefatto (nome, soprannome, descrizione, quali modificatori e incantamenti); **quanto** valgono lo decide il generatore, in base al livello. Così la grammatica non contiene numeri da bilanciare.
+
+### File e classi
+
+- `src/main/resources/.../motore/artefatti2.txt`: la grammatica, con il formato spiegato in testa al file.
+- `artefatti2_pp.txt`: post-produzione, solo per l'articolo (sotto).
+- `oggetti/GrammaticaArtefatti`: carica la grammatica, sceglie la radice, toglie i marcatori e restituisce un `Risultato`. Se il file non si carica lo scrive nel log e il gioco resta alle tabelle.
+- `GeneratoreArtefattiTabelle.generaDaGrammatica`: trasforma il `Risultato` in un `ArtefattoMD`.
+
+### Formato del risultato
+
+Ogni radice produce una riga sola: il nome, con dentro dei marcatori `<chiave:valore>` che `GrammaticaArtefatti` toglie dal testo.
+
+| Marcatore | Significato |
+| :--- | :--- |
+| `<mod:FORZA+1>` | un modificatore: un `TipoAttributo` e un'intensità da −3 a +3 |
+| `<danno:FUOCO>` | un incantamento di quel `TipoDanno` |
+| `<soprannome:Diavolina>` | il nome proprio; se ce n'è più d'uno vale il primo |
+| `<descrizione:che brucia i nemici>` | la descrizione; se ce n'è più d'una vale la prima |
+
+Esempio:
+
+```
+@la spada ardente<danno:FUOCO><descrizione:che brucia i nemici><soprannome:Barbecue> del Monaco Distratto<mod:SAGGEZZA-1>
+```
+
+diventa "Barbecue, la spada ardente del Monaco Distratto, che brucia i nemici", con un incantamento di fuoco e un malus alla `SAGGEZZA`. Un marcatore sconosciuto, un attributo o un tipo di danno che non esiste sono un errore (`IllegalArgumentException`), così li trovano i test invece di passare in silenzio.
+
+Perché marcatori nel testo e non JSON, come in `artefatti.txt`: il JSON costringeva a escapare ogni virgoletta (e novanta righe di `artefatti.txt` escono malformate proprio per questo), ad accumulare le collezioni in variabili e a togliere con la post-produzione la virgola di troppo. Un marcatore invece sta attaccato alla parola che lo giustifica, e parola ed effetto non possono separarsi.
+
+### Radici e numero di effetti
+
+- Le radici si chiamano `<TIPO>_<n>`: un `TipoArtefatto` e il numero di effetti. Per ora `SPADA_0` … `SPADA_3`. `GrammaticaArtefatti` scopre da sola quali tipi e quanti effetti ci sono: per aggiungere un tipo basta scriverne le radici.
+- **Ogni parte del nome porta un solo effetto**, quindi il numero di parti è il numero di effetti, e il limite di `RaritaArtefatto` si rispetta senza tentativi. Dove in `artefatti.txt` una parola dava due effetti (un bonus e un malus) si è tenuto il bonus.
+- Il generatore chiede tanti effetti quanti ne ammette l'artefatto **meno uno**, come per gli artefatti che nascono incantati, così resta un posto per la fusione; se la grammatica non ne prevede tanti, prende la radice più grande. Quindi un comune di livello 1-2 esce da `SPADA_0`, che ha solo aggettivi di colore ("la spada di latta").
+
+### Valori e prezzo
+
+- Un modificatore è un `AUMENTO_FISSO` di intensità × gradino del livello (1, 2 o 3, `GradoIncantamento.getGradino`).
+- Un incantamento è del grado del livello, con parte fissa e percentuale, e si chiama come quelli generati a caso ("Fuoco medio").
+- Il prezzo parte da quello base e sale del prezzo di pergamena (§6) di incantamenti e modificatori positivi, scende di quello dei modificatori negativi, ma non va sotto la metà del prezzo base.
+- Le spade da grammatica non ricevono incantamenti a caso (`incantaForse`): contraddirebbero il nome.
+
+### Contenuto
+
+- **Parti con un modificatore:** `PREFISSO` ("la terribile spada"), `AGGETTIVO` ("la spada mozzarella"), `COMPLEMENTO` ("del Monaco Distratto"), `DETTAGLIO` ("(con Camomilla in Omaggio)"). Vengono da `artefatti.txt`; ogni parola compare una volta sola in tutto il file, così dal nome si capisce che cosa fa la spada.
+- **Parti elementali:** per ognuno dei quindici tipi di danno non fisici un aggettivo o un complemento, l'incantamento, una descrizione e, due volte su tre, un soprannome (Diavolina, Fiammifero e Barbecue per il fuoco, Ghiacciolo e Sorbetto per il gelo…). Ogni elemento ha produzioni sue, quindi aggettivo, soprannome e descrizione non si contraddicono. Una spada ha al più una parte elementale.
+- **Articolo.** Il nome segue lo stile delle tabelle ("la spada di ferro"): la grammatica scrive `@la ` a inizio riga e `artefatti2_pp.txt` lo elide davanti a vocale ("l'immane spada").
+- Rispetto a `artefatti.txt`: tolti gli attributi e i danni che nel gioco non esistono (`CARICO` è diventato `CARICO_MASSIMO`; tolti `SONICO` e `NECROTICO` come attributi, `SANGUINAMENTO` e `TENEBRA` come danni), i doppioni e qualche refuso; i nomi comuni usati come aggettivi (Accendino, Frigorifero, Suocera…) sono diventati soprannomi.
+
+### Frequenze misurate
+
+Su 20.000 generazioni per radice (cambiano quando si aggiungono parole, per il boost dei pesi di `GrammarBean`, `GrammarBean.md` §5.2):
+
+| Radice | Spade elementali | Con soprannome | Modificatori positivi |
+| :--- | ---: | ---: | ---: |
+| `SPADA_1` | 19% | 12% | 71% |
+| `SPADA_2` | 40% | 26% | 69% |
+| `SPADA_3` | 46% | 29% | 67% |
+
+### Come vederle
+
+- Nel gioco, dall'armaiolo e nei cofani: metà delle spade viene dalla grammatica.
+- Senza avviare il gioco: `TestArtefatti2` (nei test) stampa 40 spade dal livello 1 al 10, con prezzo, danno, modificatori e incantamenti.

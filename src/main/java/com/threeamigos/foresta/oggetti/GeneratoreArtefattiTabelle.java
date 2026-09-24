@@ -2,7 +2,9 @@ package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.RaritaArtefatto;
+import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.SupertipoDanno;
 import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
@@ -18,12 +20,13 @@ import java.util.stream.Collectors;
 
 /**
  * Scheletro del generatore: nomi da piccole tabelle interne e valori da formule semplici,
- * tarate sugli artefatti dei templi (RegistroArtefatti). Tutto va bilanciato, e i nomi
- * passeranno a una grammatica.
+ * tarate sugli artefatti dei templi (RegistroArtefatti). Tutto va bilanciato. Per i tipi che la
+ * grammatica degli artefatti conosce (per ora la spada), una parte degli artefatti prende da lì
+ * nome ed effetti (vedi {@link GrammaticaArtefatti}).
  */
 public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 
-	static final GeneratoreArtefatti ISTANZA = new GeneratoreArtefattiTabelle(new Random());
+	static final GeneratoreArtefatti ISTANZA = new GeneratoreArtefattiTabelle(new Random(), GrammaticaArtefatti.caricaOppureNull());
 
 	private static final Map<TipoArtefatto, String> NOMI = new EnumMap<>(TipoArtefatto.class);
 	private static final Map<TipoArtefatto, Double> PESI = new EnumMap<>(TipoArtefatto.class);
@@ -92,9 +95,21 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 			.collect(Collectors.toList());
 
 	private final Random random;
+	/**
+	 * Null se non si usa: allora tutti gli artefatti vengono dalle tabelle
+	 */
+	private final GrammaticaArtefatti grammatica;
 
+	/**
+	 * Un generatore che usa solo le tabelle.
+	 */
 	public GeneratoreArtefattiTabelle(Random random) {
+		this(random, null);
+	}
+
+	GeneratoreArtefattiTabelle(Random random, GrammaticaArtefatti grammatica) {
 		this.random = random;
+		this.grammatica = grammatica;
 	}
 
 	private static void nomeEPeso(TipoArtefatto tipo, String nome, double peso) {
@@ -114,6 +129,9 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		md.setLivello(livelloEffettivo);
 		md.setPeso(PESI.get(tipo));
 		md.setCostoAcquisto(5 + 5 * livelloEffettivo);
+		if (grammatica != null && grammatica.supporta(tipo) && random.nextDouble() < Costanti.ARTEFATTO_PROBABILITA_DA_GRAMMATICA) {
+			return generaDaGrammatica(md, livelloEffettivo);
+		}
 		if (random.nextDouble() < Costanti.ARTEFATTO_PROBABILITA_NOME_PROPRIO) {
 			md.setNomeProprio(scegli(NOMI_PROPRI));
 		}
@@ -169,6 +187,49 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 			md.addIncantamento(incantamento);
 			md.setCostoAcquisto(md.getCostoAcquisto() + (int) Math.round(ListinoPergamene.prezzo(incantamento)));
 		}
+	}
+
+	/**
+	 * Nome, soprannome, descrizione ed effetti vengono dalla grammatica, che ne sceglie tanti quanti ne ammette
+	 * l'artefatto meno uno, lasciando come {@link #incantaForse} un posto libero per la fusione. Gli effetti sono
+	 * del grado del livello: un modificatore vale la sua intensità per il gradino, un incantamento ha sia la parte
+	 * fissa sia la percentuale. Il prezzo sale per i modificatori positivi e gli incantamenti e scende per i
+	 * modificatori negativi, ma non sotto la metà del prezzo base. Niente incantaForse: un incantamento a caso
+	 * contraddirebbe il nome.
+	 */
+	private Artefatto generaDaGrammatica(ArtefattoMD md, int livello) {
+		TipoArtefatto tipo = md.getTipo();
+		if (Artefatto.di(md).isIncantabile() && random.nextDouble() < Costanti.ARTEFATTO_PROBABILITA_RARO) {
+			md.setRarita(RaritaArtefatto.RARO);
+		}
+		md.setNome(NOMI.get(tipo));
+		if (tipo.getSupertipo() == SupertipoArtefatto.ARMA) {
+			completaArma(md, livello);
+		}
+		int effetti = Artefatto.di(md).getEffettiMassimi() - md.getModificatori().size() - md.getIncantamenti().size() - 1;
+		GrammaticaArtefatti.Risultato risultato = grammatica.genera(tipo, effetti);
+		md.setNome(risultato.getNome());
+		md.setNomeProprio(risultato.getSoprannome());
+		if (risultato.getDescrizione() != null) {
+			md.setDescrizione(risultato.getDescrizione());
+		}
+		GradoIncantamento grado = GradoIncantamento.perLivello(livello);
+		int costoBase = md.getCostoAcquisto();
+		double costo = costoBase;
+		for (GrammaticaArtefatti.Modificatore modificatore : risultato.getModificatori()) {
+			ModificatoreAttributo aggiunto = new ModificatoreAttributo(modificatore.getAttributo(), TipoModificatore.AUMENTO_FISSO,
+					modificatore.getIntensita() * grado.getGradino(), "");
+			md.addModificatore(aggiunto);
+			costo += Math.signum(modificatore.getIntensita()) * ListinoPergamene.prezzo(aggiunto);
+		}
+		for (TipoDanno tipoDanno : risultato.getDanni()) {
+			Incantamento incantamento = new Incantamento(tipoDanno.getNome() + ' ' + grado.getNome(), tipoDanno,
+					grado.getBonusFisso(), grado.getCoefficiente());
+			md.addIncantamento(incantamento);
+			costo += ListinoPergamene.prezzo(incantamento);
+		}
+		md.setCostoAcquisto((int) Math.round(Math.max(costoBase / 2.0, costo)));
+		return Artefatto.di(md);
 	}
 
 	static double probabilitaIncantato(int livello) {

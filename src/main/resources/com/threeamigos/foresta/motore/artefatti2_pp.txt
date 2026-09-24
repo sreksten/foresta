@@ -1,0 +1,8 @@
+# "@la " è l'articolo che artefatti2.txt mette a inizio riga: davanti a vocale si elide.
+# Le regole sono in ordine: l'ultima, generica, vale per tutte le consonanti.
+@la a:l'a
+@la e:l'e
+@la i:l'i
+@la o:l'o
+@la u:l'u
+@la :la 

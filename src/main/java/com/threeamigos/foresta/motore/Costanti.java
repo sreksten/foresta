@@ -65,6 +65,9 @@ public class Costanti {
 
     // Generatore di artefatti (vedi GeneratoreArtefattiTabelle)
     public static final double ARTEFATTO_PROBABILITA_NOME_PROPRIO = 0.05;
+    // Quota degli artefatti che prendono nome ed effetti dalla grammatica (artefatti2.txt), per i tipi che conosce.
+    // Metà per provarla accanto alle tabelle: da rivedere quando sarà bilanciata
+    public static final double ARTEFATTO_PROBABILITA_DA_GRAMMATICA = 0.5;
     public static final double ARTEFATTO_MOLTIPLICATORE_DUE_MANI = 1.5;
     // Danno medio di un'arma generata: 4 + 2 × livello, ma almeno 11 + livello, così ai livelli bassi un'arma
     // fa più delle mani nude di un PG (4 + 1,5 × √FORZA, cioè 9-10). Le due curve si incontrano al livello 7.
