@@ -5,8 +5,10 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Comando;
+import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Cofano extends OggettoBase implements Oggetto {
@@ -63,6 +65,8 @@ public class Cofano extends OggettoBase implements Oggetto {
 		StringBuilder sb = new StringBuilder();
 		for (int i = 0; i < quantita; i++) {
 			tipo = Dado.tira(min, max);
+			// Di rado, al posto dell'esito solito, una pergamena o un artefatto casuale, che vanno nel gruppo
+			Artefatto trovato = artefattoRaro();
 			sb.append("Aprendo il");
 			if (quantita > 1) {
 				sb.append(' ').append(Misc.getOrdinaleM(i + 1, false));
@@ -75,7 +79,10 @@ public class Cofano extends OggettoBase implements Oggetto {
 			if (i == 0) {
 				sb.append(gruppo.chi()).append(' ');
 			}
-			if (tipo == 0) {
+			if (trovato != null) {
+				gruppo.addArtefatto(trovato);
+				sb.append("trova ").append(trovato.getNomeCompleto()).append(": finisce nell'inventario del gruppo.");
+			} else if (tipo == 0) {
 				sb.append("non trova nulla.");
 			} else if (tipo == 1) {
 				sb.append("trova una pergamena con un ");
@@ -109,5 +116,22 @@ public class Cofano extends OggettoBase implements Oggetto {
 		}
 		BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
 		return super.prendi(gruppo, azione);
+	}
+
+	/**
+	 * Con probabilità 5% una pergamena, con un altro 5% un artefatto casuale, altrimenti null.
+	 */
+	static Artefatto artefattoRaro(double tiro, GeneratoreArtefatti generatore, int livello) {
+		if (tiro < Costanti.COFANO_PROBABILITA_PERGAMENA) {
+			return generatore.generaPergamena(livello);
+		}
+		if (tiro < Costanti.COFANO_PROBABILITA_PERGAMENA + Costanti.COFANO_PROBABILITA_ARTEFATTO) {
+			return generatore.generaArtefattoCasuale(livello);
+		}
+		return null;
+	}
+
+	private static Artefatto artefattoRaro() {
+		return artefattoRaro(Math.random(), GeneratoreArtefatti.istanza(), Statistiche.getLivello());
 	}
 }

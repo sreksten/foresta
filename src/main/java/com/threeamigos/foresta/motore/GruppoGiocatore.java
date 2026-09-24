@@ -51,6 +51,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		BusEventi.iscriviti(ComandoPrelievoArtefatto.class, this::suEventoRichiestaPrelievoArtefatto);
 		BusEventi.iscriviti(ComandoAcquistoArtefatto.class, this::suEventoRichiestaAcquistoArtefatto);
 		BusEventi.iscriviti(ComandoVenditaArtefatto.class, this::suEventoRichiestaVenditaArtefatto);
+		BusEventi.iscriviti(ComandoIncantatura.class, this::suEventoIncantatura);
 		BusEventi.iscriviti(ComandoAcquistoConsumabile.class, this::suEventoRichiestaAcquistoConsumabile);
 	}
 
@@ -598,6 +599,31 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		addMonete(artefatto.getCostoAcquisto());
 		eventoRichiestaVendita.getParteRemota().addArtefatto(artefatto);
 		BusEventi.pubblica(new NotificaApprovazioneVenditaArtefatto(eventoRichiestaVendita));
+	}
+
+	private void suEventoIncantatura(ComandoIncantatura comandoIncantatura) {
+		incanta(comandoIncantatura.getBanco(), comandoIncantatura.getNomeProprio());
+	}
+
+	/**
+	 * La fusione dall'incantatore: ricontrolla le regole (RegoleIncantatura), fa pagare, copia sull'artefatto
+	 * gli effetti delle pergamene, che spariscono, e rimette l'artefatto nell'inventario del gruppo.
+	 * Pubblica NotificaApprovazioneIncantatura o NotificaRifiutoIncantatura.
+	 *
+	 * @return il motivo del rifiuto, oppure vuoto se la fusione è riuscita
+	 */
+	public Optional<MotivoRifiutoIncantatura> incanta(BancoDiLavoro banco, String nomeProprio) {
+		Optional<MotivoRifiutoIncantatura> motivo = RegoleIncantatura.verifica(banco.getInventario(), getMonete());
+		if (motivo.isPresent()) {
+			BusEventi.pubblica(new NotificaRifiutoIncantatura(motivo.get()));
+			return motivo;
+		}
+		int costo = RegoleIncantatura.costo(banco.getInventario());
+		Artefatto incantato = RegoleIncantatura.fondi(banco, nomeProprio);
+		subMonete(costo);
+		addArtefatto(incantato);
+		BusEventi.pubblica(new NotificaApprovazioneIncantatura(incantato, costo));
+		return Optional.empty();
 	}
 
 	private void suEventoRichiestaAcquistoConsumabile(ComandoAcquistoConsumabile comandoAcquistoConsumabile) {

@@ -13,6 +13,10 @@ public class Costanti {
     public static final int ARTEFATTO_MASSIMO_EFFETTI_RARO = 4;
     public static final int ARTEFATTO_MASSIMO_EFFETTI_LEGGENDARIO = 5;
 
+    // Fusione dall'incantatore: 10 monete più 5 per ogni effetto trasferito
+    public static final int FUSIONE_COSTO_BASE = 10;
+    public static final int FUSIONE_COSTO_PER_EFFETTO = 5;
+
     // Gradi delle pergamene (vedi GradoIncantamento): fino al livello 3 minore, da 4 a 7 medio, da 8 maggiore
     public static final int GRADO_INCANTAMENTO_MEDIO_DAL_LIVELLO = 4;
     public static final int GRADO_INCANTAMENTO_MAGGIORE_DAL_LIVELLO = 8;
@@ -33,6 +37,9 @@ public class Costanti {
     public static final int ARTEFATTO_MASSIMO_INCANTAMENTI_IN_NASCITA = 3;
     // Probabilità che un artefatto incantabile generato sia raro (i leggendari non si generano)
     public static final double ARTEFATTO_PROBABILITA_RARO = 0.1;
+    // Esiti rari di ogni cofano aperto: 5% una pergamena, 5% un artefatto casuale (10% in tutto)
+    public static final double COFANO_PROBABILITA_PERGAMENA = 0.05;
+    public static final double COFANO_PROBABILITA_ARTEFATTO = 0.05;
     // Livello (e quindi numero di effetti) di una pergamena
     public static final int PERGAMENA_LIVELLO_MASSIMO = 3;
 

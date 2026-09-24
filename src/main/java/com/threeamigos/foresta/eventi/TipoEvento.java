@@ -35,6 +35,14 @@ public enum TipoEvento {
      */
     COMANDO_APERTURA_INVENTARIO_GRUPPO,
     /**
+     * Richiesta di interazione con l'incantatore: inventario del gruppo e banco di lavoro per la fusione
+     */
+    COMANDO_APERTURA_INCANTATORE,
+    /**
+     * Richiesta di fondere sull'artefatto del banco di lavoro le pergamene che vi stanno
+     */
+    COMANDO_INCANTATURA,
+    /**
      * Il giocatore invia un comando di gioco (generico) all'automa
      */
     COMANDO_DI_GIOCO,
@@ -184,6 +192,14 @@ public enum TipoEvento {
      * Notifica sul rifiuto di una richiesta di vendita di un Artefatto
      */
     NOTIFICA_RIFIUTO_VENDITA_ARTEFATTO,
+    /**
+     * Notifica di una fusione riuscita dall'incantatore
+     */
+    NOTIFICA_APPROVAZIONE_INCANTATURA,
+    /**
+     * Notifica del rifiuto dell'incantatore (sul banco o alla fusione), con il motivo
+     */
+    NOTIFICA_RIFIUTO_INCANTATURA,
     /**
      * Un messaggio viene inviato dal motore al giocatore. Nuovo paragrafo con spaziatura antecedente
      */

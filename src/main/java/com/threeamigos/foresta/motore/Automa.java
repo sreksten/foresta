@@ -209,6 +209,12 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				esito = gestisciTestoInStatoPostGameAttesaNomePerPunteggio(testoDisponibile);
 				break;
 
+			case IN_LOCAZIONE:
+				// Una locazione che ha chiesto un testo (es. l'incantatore, per il nome dell'artefatto)
+				stato = locazioneCorrente.riceviTesto(gruppo, testoDisponibile);
+				esito = esitoDaStatoLocazione(stato);
+				break;
+
 			default:
 				BusEventi.pubblica(new InternoErrore("onEventoTestoDisponibile: Stato non gestito: " + stato));
 				return;
@@ -617,28 +623,43 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 * all'oggetto non ha senso, mentre lo si può riporre nell'inventario del gruppo.
 	 * Con ANNULLA, per giunta, Oggetto.prendi riceveva un comando che non indica nessun
 	 * personaggio e Gruppo.getPersonaggio andava fuori dalla lista.
+	 * Si propongono solo i candidati (vedi comandiDestinatarioOggetto); di solito ce ne sono
+	 * almeno due, perché con uno solo o nessuno ci pensa già Artefatto.raccogli.
 	 */
 	private Esito entraInStatoSceltaDestinatarioOggetto() {
-		List<Comando> comandiPossibili = new ArrayList<>();
-		int i = 0;
-		for (Personaggio personaggioCorrente : gruppo.getPersonaggi()) {
-			if (personaggioCorrente.isVivo()) {
-				comandiPossibili.add(Comando.ofPersonaggio(i));
-			}
-			i++;
-		}
-		if (comandiPossibili.size() == 1) {
-			// Un solo personaggio vivo: lo prende lui, come finora
+		List<Comando> comandiPossibili = comandiDestinatarioOggetto();
+		if (comandiPossibili.size() <= 1) {
 			stato = statoPrecedente;
-			return Esito.continuaCon(comandiPossibili.get(0));
+			return Esito.continuaCon(comandiPossibili.isEmpty() ? Comando.GRUPPO : comandiPossibili.get(0));
 		}
 		comandiPossibili.add(Comando.GRUPPO);
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibili));
 		return Esito.FERMATI;
 	}
 
+	/**
+	 * I personaggi a cui si può dare l'oggetto della locazione: se porta un artefatto, quelli che
+	 * possono equipaggiarlo (Artefatto.candidati), altrimenti tutti i vivi.
+	 */
+	private List<Comando> comandiDestinatarioOggetto() {
+		Oggetto oggetto = locazioneCorrente.getOggetto();
+		Optional<Artefatto> artefatto = oggetto == null ? Optional.empty() : oggetto.getArtefatto();
+		if (artefatto.isPresent()) {
+			return Artefatto.candidati(gruppo, artefatto.get());
+		}
+		List<Comando> vivi = new ArrayList<>();
+		int i = 0;
+		for (Personaggio personaggioCorrente : gruppo.getPersonaggi()) {
+			if (personaggioCorrente.isVivo()) {
+				vivi.add(Comando.ofPersonaggio(i));
+			}
+			i++;
+		}
+		return vivi;
+	}
+
 	private Esito gestisciComandoInStatoSceltaDestinatarioOggetto(Comando comando) {
-		if (comando != Comando.GRUPPO && !comando.isPersonaggio()) {
+		if (comando != Comando.GRUPPO && !comandiDestinatarioOggetto().contains(comando)) {
 			comandoNonValido(comando);
 			return Esito.FERMATI;
 		}

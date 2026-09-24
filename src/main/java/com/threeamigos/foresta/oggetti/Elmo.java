@@ -3,14 +3,18 @@ package com.threeamigos.foresta.oggetti;
 import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
 import com.threeamigos.foresta.tools.Misc;
 
-public class Scudo extends OggettoArtefatto {
+/**
+ * Loot a sé, come spada e scudo. TODO per ora non si genera: manca l'immagine
+ * (vedi ClassiOggetto.ELMO e l'elenco degli oggetti del Bosco).
+ */
+public class Elmo extends OggettoArtefatto {
 
-	public Scudo() {
-		super(TipoArtefatto.SCUDO);
+	public Elmo() {
+		super(TipoArtefatto.ELMO);
 	}
 
 	public String getAIS() {
-		return Misc.UNO;
+		return Misc.UN;
 	}
 
 	public String getAIP() {
@@ -18,7 +22,7 @@ public class Scudo extends OggettoArtefatto {
 	}
 
 	public String getADS() {
-		return Misc.LO;
+		return Misc.L_APOSTROFO;
 	}
 
 	public String getADP() {
@@ -26,14 +30,14 @@ public class Scudo extends OggettoArtefatto {
 	}
 
 	public String getNomeSingolare() {
-		return "scudo";
+		return "elmo";
 	}
 
 	public String getNomePlurale() {
-		return "scudi";
+		return "elmi";
 	}
 
 	public ClassiOggetto getClasse() {
-		return ClassiOggetto.SCUDO;
+		return ClassiOggetto.ELMO;
 	}
 }

@@ -7,14 +7,17 @@ import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
-import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 import com.threeamigos.foresta.tools.Misc;
+
+import java.util.Optional;
 
 public class Anello extends OggettoBase implements Oggetto {
 
 	private final boolean anelloMagico;
 	private final int tipo;
+	// Se è magico, l'artefatto nasce con l'anello: serve già per scegliere chi lo prende
+	private final Artefatto artefatto;
 	private boolean notificato;
 
 	public Anello() {
@@ -25,10 +28,53 @@ public class Anello extends OggettoBase implements Oggetto {
 			anelloMagico = true;
 			tipo = Dado.tira(3);
 			Logger.log("Anello magico di tipo " + tipo);
+			artefatto = creaAnelloMagico(tipo);
 		} else {
+			// Gli anelli non magici restano senza effetto. TODO più avanti si potranno vendere come gemme
 			anelloMagico = false;
 			tipo = -1;
+			artefatto = null;
 		}
+	}
+
+	private static Artefatto creaAnelloMagico(int tipo) {
+		String nome;
+		ModificatoreAttributo modificatore;
+		String descrizione;
+		if (tipo == 1) {
+			String[] appartenenzePossibili = new String[]{ "della Valchiria", "del Grifone", "del Paladino", "del Centurione", "della Manticora", "del Minotauro", "della Viverna" };
+			int indiceAppartenenza = (int) (Math.random() * appartenenzePossibili.length);
+			nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
+			modificatore = new ModificatoreAttributo(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, Costanti.ANELLO_MAGICO_AGGIUNTA_VALORE);
+			descrizione = "che aumenta il Valore";
+		} else if (tipo == 2) {
+			String[] appartenenzePossibili = new String[]{ "del Berserker", "della Fenice", "del Pegaso", "della Salamandra", "del Gladiatore", "dell'Ippogrifo", "dell'Esploratore" };
+			int indiceAppartenenza = (int) (Math.random() * appartenenzePossibili.length);
+			nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
+			modificatore = new ModificatoreAttributo(TipoAttributo.CORAGGIO, TipoModificatore.AUMENTO_PERCENTUALE, Costanti.ANELLO_MAGICO_AGGIUNTA_CORAGGIO);
+			descrizione = "che aumenta il Coraggio";
+		} else {
+			String[] appartenenzePossibili = new String[]{ "della Sirena", "della Sfinge", "dell'Arcangelo", "della Gorgone", "del Dullahan", "della Lamia", "del Basilisco" };
+			int indiceAppartenenza = (int) (Math.random() * appartenenzePossibili.length);
+			nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
+			modificatore = new ModificatoreAttributo(TipoAttributo.CARISMA, TipoModificatore.AUMENTO_PERCENTUALE, Costanti.ANELLO_MAGICO_AGGIUNTA_CARISMA);
+			descrizione = "che aumenta il Carisma";
+		}
+		return CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.ANELLO)
+				.setNome(nome)
+				.setDescrizione(descrizione)
+				.setLivello(1)
+				.setDanniBase(0)
+				.setCostoAcquisto(20)
+				.setPeso(0.1)
+				.setModificatore(modificatore)
+				.costruisci();
+	}
+
+	@Override
+	public Optional<Artefatto> getArtefatto() {
+		return Optional.ofNullable(artefatto);
 	}
 
 	public String getAIS() {
@@ -74,59 +120,11 @@ public class Anello extends OggettoBase implements Oggetto {
 				BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
 				notificato = true;
 			}
-			if (gruppo.getNumeroPersonaggiVivi() > 1 && azione == null) {
-				BusEventi.pubblica(new NotificaTestoFrase("Chi lo vuole indossare?"));
+			if (!Artefatto.raccogli(gruppo, azione, artefatto)) {
 				return false;
-			} else {
-				if (azione == null || azione == Comando.TIMER) {
-					return false;
-				}
-
-				String nome;
-				ModificatoreAttributo modificatore;
-				String descrizione;
-				if (tipo == 1) {
-					String[] appartenenzePossibili = new String[]{ "della Valchiria", "del Grifone", "del Paladino", "del Centurione", "della Manticora", "del Minotauro", "della Viverna" };
-					int indiceAppartenenza = (int) (Math.random() * appartenenzePossibili.length);
-					nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
-					modificatore = new ModificatoreAttributo(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, Costanti.ANELLO_MAGICO_AGGIUNTA_VALORE);
-					descrizione = "che aumenta il Valore";
-				} else if (tipo == 2) {
-					String[] appartenenzePossibili = new String[]{ "del Berserker", "della Fenice", "del Pegaso", "della Salamandra", "del Gladiatore", "dell'Ippogrifo", "dell'Esploratore" };
-					int indiceAppartenenza = (int) (Math.random() * appartenenzePossibili.length);
-					nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
-					modificatore = new ModificatoreAttributo(TipoAttributo.CORAGGIO, TipoModificatore.AUMENTO_PERCENTUALE, Costanti.ANELLO_MAGICO_AGGIUNTA_CORAGGIO);
-					descrizione = "che aumenta il Coraggio";
-				} else {
-					String[] appartenenzePossibili = new String[]{ "della Sirena", "della Sfinge", "dell'Arcangelo", "della Gorgone", "del Dullahan", "della Lamia", "del Basilisco" };
-					int indiceAppartenenza = (int) (Math.random() * appartenenzePossibili.length);
-					nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
-					modificatore = new ModificatoreAttributo(TipoAttributo.CARISMA, TipoModificatore.AUMENTO_PERCENTUALE, Costanti.ANELLO_MAGICO_AGGIUNTA_CARISMA);
-					descrizione = "che aumenta il Carisma";
-				}
-
-				Artefatto anelloMagico = CostruttoreArtefatto.istanza()
-						.setTipo(TipoArtefatto.ANELLO)
-						.setNome(nome)
-						.setDescrizione(descrizione)
-						.setLivello(1)
-						.setDanniBase(0)
-						.setCostoAcquisto(20)
-						.setPeso(0.1)
-						.setModificatore(modificatore)
-						.costruisci();
-				if (azione == Comando.GRUPPO) {
-					Artefatto.riponiNelGruppo(gruppo, anelloMagico);
-				} else {
-					Personaggio p = gruppo.getPersonaggio(azione);
-					if (Artefatto.consegna(gruppo, p, anelloMagico)) {
-						BusEventi.pubblica(new NotificaTestoFrase(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " indossa " + anelloMagico.getNomeCompleto() + '.'));
-					}
-				}
-
-				Statistiche.addPunti(Costanti.ANELLO_MAGICO_PUNTEGGIO);
-				GestoreProgressione.acquisisciArtefattoMinore();
 			}
+			Statistiche.addPunti(Costanti.ANELLO_MAGICO_PUNTEGGIO);
+			GestoreProgressione.acquisisciArtefattoMinore();
 		}
 		return super.prendi(gruppo, azione);
 	}

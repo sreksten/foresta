@@ -40,6 +40,9 @@ public class Bosco extends LocazioneBase {
 			ClassiOggetto.MONETA,
 			ClassiOggetto.SCUDO,
 			ClassiOggetto.SPADA
+			// TODO da aggiungere quando ci saranno le immagini
+			// ClassiOggetto.ELMO,
+			// ClassiOggetto.ARMATURA
 	};
 
 	@Override

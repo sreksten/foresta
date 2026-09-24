@@ -3,10 +3,14 @@ package com.threeamigos.foresta.oggetti;
 import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
 import com.threeamigos.foresta.tools.Misc;
 
-public class Spada extends OggettoArtefatto {
+/**
+ * Loot a sé, come spada e scudo. TODO per ora non si genera: manca l'immagine
+ * (vedi ClassiOggetto.ARMATURA e l'elenco degli oggetti del Bosco).
+ */
+public class Armatura extends OggettoArtefatto {
 
-	public Spada() {
-		super(TipoArtefatto.SPADA);
+	public Armatura() {
+		super(TipoArtefatto.ARMATURA);
 	}
 
 	public String getAIS() {
@@ -18,7 +22,7 @@ public class Spada extends OggettoArtefatto {
 	}
 
 	public String getADS() {
-		return Misc.LA;
+		return Misc.L_APOSTROFO;
 	}
 
 	public String getADP() {
@@ -26,14 +30,14 @@ public class Spada extends OggettoArtefatto {
 	}
 
 	public String getNomeSingolare() {
-		return "spada";
+		return "armatura";
 	}
 
 	public String getNomePlurale() {
-		return "spade";
+		return "armature";
 	}
 
 	public ClassiOggetto getClasse() {
-		return ClassiOggetto.SPADA;
+		return ClassiOggetto.ARMATURA;
 	}
 }

@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaIncantatore;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioCommerciante;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioFornitore;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioGruppo;
@@ -63,6 +64,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(InternoPreparazioneLocazione.class, this::gestisciEventoPreparazioneLocazione);
 		BusEventi.iscriviti(InternoRichiestaAperturaFinestraCombattimento.class, this::gestisciEventoRichiestaAperturaFinestraCombattimento);
 		BusEventi.iscriviti(ComandoAperturaInventarioCommerciante.class, this::gestisciEventoRichiestaAperturaInventarioCommerciante);
+		BusEventi.iscriviti(ComandoAperturaIncantatore.class, this::gestisciEventoRichiestaAperturaIncantatore);
 		BusEventi.iscriviti(ComandoAperturaInventarioFornitore.class, this::gestisciEventoRichiestaAperturaInventarioFornitore);
 		BusEventi.iscriviti(ComandoAperturaInventarioGruppo.class, this::gestisciEventoRichiestaAperturaInventarioGruppo);
 		BusEventi.iscriviti(InternoRichiestaChiusuraFinestraCombattimento.class, this::gestisciEventoRichiestaChiusuraFinestraCombattimento);
@@ -162,7 +164,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	private void gestisciEventoRichiestaTesto(RichiestaTesto evento) {
 		displayableCanvas.scriviGrande(evento.getRichiesta());
-		prompt.setVisible(true);
+		prompt.mostra(evento.getTestoPredefinito());
 	}
 
 	public void impostaAzioni(Collection<Comando> possibilita) {
@@ -237,6 +239,12 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.impostaAutomaArmaiolo(evento.getAutomaAcquistiArtefatti());
 		displayableCanvas.armaiolo();
+	}
+
+	private void gestisciEventoRichiestaAperturaIncantatore(ComandoAperturaIncantatore evento) {
+		impostaAzioni(evento.getPossibilita());
+		displayableCanvas.impostaAutomaIncantatore(evento.getAutomaIncantatore());
+		displayableCanvas.incantatore(evento.getMessaggio());
 	}
 
 	private void gestisciEventoRichiestaAperturaInventarioFornitore(ComandoAperturaInventarioFornitore evento) {

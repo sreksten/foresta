@@ -1,6 +1,6 @@
 # Artefatti, pergamene e incantatore: piano di lavoro
 
-> Stato: aggiornato al 2026-09-24. Fasi 1, 2 e 3 fatte; prossimo passo: fase 4. Raccoglie le decisioni prese, le fasi di lavoro, i TODO e i dubbi ancora aperti.
+> Stato: aggiornato al 2026-09-24. Fasi 1-4 e 6 fatte; la fase 5 (venditore di pergamene) aspetta la sua icona. Raccoglie le decisioni prese, le fasi di lavoro, i TODO e i dubbi ancora aperti.
 > I salvataggi **non** devono restare retrocompatibili: il formato si cambia liberamente, ma ogni modifica va coperta da test di salva/rileggi.
 
 ## 1. Obiettivo
@@ -59,11 +59,16 @@
   - Per una spada, un Ladro o un Elfo con la mano principale occupata ma la secondaria libera **è** un candidato: la prende nella secondaria.
   - Chi impugna un'arma a due mani non è candidato per scudo, libro o seconda arma. Per prendere un'arma a due mani servono entrambe le mani libere.
 - **Anello e accessori.** Candidati: tutti i personaggi vivi (salvo il vincolo di livello).
+- **Anelli non magici.** Restano come oggi, senza effetto. Più avanti si potranno trattare come gemme, da vendere.
+- **Elmo e armatura.** Diventano loot a sé, come spada e scudo. Per ora però non si generano, perché mancano le immagini: il codice c'è ma resta commentato.
 - **Morti.** Sempre esclusi, come già oggi.
-- **Scelta.** Si propongono i candidati più **`GRUPPO`** (comando e icona esistono già, usati dall'alchimista). Se non c'è nessun candidato, l'oggetto va direttamente nell'inventario del gruppo, con un messaggio.
+- **Scelta.** Si propongono i candidati più **`GRUPPO`** (comando e icona esistono già, usati dall'alchimista).
+  - **Un solo candidato:** l'oggetto va direttamente a lui, senza domanda.
+  - **Nessun candidato:** l'oggetto va direttamente nell'inventario del gruppo, con un messaggio. È anche il caso di chi avrebbe già occupato lo slot (spada, scudo, elmo, armatura): niente sostituzioni automatiche, per non dargli robaccia.
 - **Troppo carico.** Se il personaggio scelto è troppo carico, l'oggetto va nel gruppo con il messaggio già in uso (fatto).
 - **Pergamene.** Vanno sempre nel gruppo (slot `NUCLEO`).
-- **Cofano.** Raramente produce una pergamena o un artefatto casuale.
+- **Cofano.** Per ogni cofano aperto: 5% una pergamena, 5% un artefatto casuale, quindi il 10% delle volte si trova l'uno o l'altro. Gli altri esiti restano quelli di oggi.
+- **Nomi.** Il cofano trova già delle "pergamene" di incantesimi: nessun problema, perché con la grammatica gli incantamenti non si chiameranno più "Pergamena".
 - **Monete e gemme.** Restano risorse del gruppo.
 
 ### Incantamenti ed effetti
@@ -177,6 +182,20 @@ Vedi la tabella dei gradi in §8. Formula: `2 × bonus fisso + percentuale`; +25
   - Artefatti incantabili che nascono già incantati: probabilità `0,05 × (livello − 1)`, al massimo 0,6; da 1 incantamento fino allo spazio libero nel limite di effetti. A livello 2 non succede mai, perché il modificatore che l'artefatto ha di suo occupa già l'unico posto.
   - Nessuno lo chiama ancora: lo useranno il loot (fase 4) e i negozi (fase 5).
   - Test: `GeneratoreArtefattiTest` (11). Tutta la suite è verde (267 test).
+- [x] **Fase 4 (loot).**
+  - `Spada` e `Scudo` estendono il nuovo `OggettoArtefatto`, che genera l'artefatto nel costruttore, al livello di riferimento: così è già noto quando si sceglie chi lo prende. `Elmo` e `Armatura` ci sono, con le loro voci in `ClassiOggetto` (immagine `null`), ma restano commentati nell'elenco degli oggetti del `Bosco` finché mancano le immagini.
+  - L'anello magico costruisce il suo artefatto nel costruttore; quelli non magici restano senza effetto.
+  - Una sola logica di raccolta, `Artefatto.raccogli`, per loot, anelli e artefatti dei templi. I candidati sono i personaggi vivi che possono equipaggiare l'artefatto (`Artefatto.candidati`, con `puoEquipaggiare`). Nessun candidato: va nel gruppo con un messaggio (anche le pergamene); uno solo: va a lui; più di uno: sceglie il giocatore. Il messaggio usa il verbo del tipo ("Pippo impugna la spada d'argento, …").
+  - `Oggetto.getArtefatto()` dice quale artefatto porta un oggetto; l'`Automa` lo usa per proporre in `SCELTA_DESTINATARIO_OGGETTO` solo i candidati più `GRUPPO`, e rifiuta un personaggio che non è fra i candidati.
+  - `Cofano`: per ogni cofano, 5% una pergamena e 5% un artefatto casuale, che vanno nel gruppo (`Costanti.COFANO_PROBABILITA_*`).
+  - Test: `LootTest` (10) e `ArtefattoPrendiTest` aggiornato. Tutta la suite è verde (291 test).
+- [x] **Fase 6 (incantatore)**, fatta prima della 5 perché l'icona `Fusione` c'era già.
+  - In città il comando `FUSIONE` (icona `img/icone/Fusione.gif`, in `ClasseIcona`) apre la bottega: `DisplayableCanvasIncantatore`, per ora con l'immagine dell'alchimista. A sinistra l'inventario del gruppo, a destra il `BancoDiLavoro`, che non si salva. Nella colonna centrale monete, costo della fusione e posti dell'artefatto ("Effetti 2/3").
+  - Dentro, `FUSIONE` fonde e `ANNULLA` esce, rimettendo nel gruppo quel che è rimasto sul banco.
+  - `AutomaIncantatore`: con il doppio clic si sposta dal gruppo al banco secondo `RegoleIncantatura.puoMettereSulBanco` (un solo artefatto, incantabile, mai oltre i posti), e un rifiuto è un fumetto (`NotificaRifiutoIncantatura`). Dal banco al gruppo si sposta sempre.
+  - `FUSIONE`: `Citta` controlla le regole (`RegoleIncantatura.verifica`); se va, chiede il nome proprio con il `Prompt`, già compilato con quello attuale (`RichiestaTesto` con testo predefinito, `Prompt.mostra`). Il testo arriva alla città con il nuovo `Locazione.riceviTesto`, che pubblica `ComandoIncantatura`.
+  - `GruppoGiocatore.incanta` ricontrolla, fa pagare (`Costanti.FUSIONE_COSTO_*`), copia incantamenti e modificatori, distrugge le pergamene, rimette l'artefatto nel gruppo e risponde con `NotificaApprovazioneIncantatura` ("Ecco fatto! …") o `NotificaRifiutoIncantatura`. Un nome vuoto vuol dire nessun nome proprio.
+  - Test: `IncantatoreTest` (11). Tutta la suite è verde (301 test). Da provare a mano nel gioco: la schermata e il giro del `Prompt`.
 - [x] **Tetti degli effetti a 3/4/5** (comune/raro/leggendario) al posto di 5/6/7.
 - [x] **Il `|` sparisce dai testi** alla fonte (§5.5).
 - [x] **Rarità degli artefatti.** `RaritaArtefatto` con posti e tetti (§2, "Rarità"), salvata in `ArtefattoMD`. Il generatore fa rari il 10% degli artefatti incantabili e non genera mai leggendari; gli artefatti che nascono incantati hanno al massimo 3 incantamenti e almeno un posto libero. Test in `ArtefattoMDTest`, `ArtefattoIncantabileTest` e `GeneratoreArtefattiTest`; tutta la suite è verde (271 test).
@@ -216,13 +235,14 @@ Ogni fase si può provare e committare da sola.
 - Livello di riferimento: `Statistiche.getLivello()` (lo stesso dei mostri).
 
 ### Fase 4: loot
-- **Candidati.** `Spada`, `Scudo`, `Anello` (e i nuovi `Elmo` e `Armatura`, se si vogliono come loot a sé) generano l'artefatto e propongono i candidati secondo §2, più `GRUPPO`.
-- **Filtro dei candidati.** Lo stato `SCELTA_DESTINATARIO_OGGETTO` esiste già (vivi + `GRUPPO`). Resta da filtrare i personaggi con `puoEquipaggiare(artefatto)`. Oggi con un solo personaggio vivo lo sceglie da sé: con il filtro, "un solo candidato" non basterà più a saltare la domanda, perché c'è sempre anche `GRUPPO`.
-- **Nessun candidato:** l'oggetto va direttamente nel gruppo.
-- **Cofano:** nuovi esiti rari, una pergamena o un artefatto.
+- **Candidati.** `Spada`, `Scudo` e `Anello` (se magico) generano l'artefatto **prima** della scelta e propongono i candidati secondo §2, più `GRUPPO`. I nuovi `Elmo` e `Armatura` si scrivono ma restano commentati finché non ci sono le immagini.
+- **Filtro dei candidati.** Lo stato `SCELTA_DESTINATARIO_OGGETTO` esiste già (vivi + `GRUPPO`). Resta da filtrare i personaggi con `puoEquipaggiare(artefatto)`.
+- **Un solo candidato:** l'oggetto va a lui senza domanda.
+- **Nessun candidato:** l'oggetto va direttamente nel gruppo, anche quando chi c'è ha già occupato lo slot.
+- **Cofano:** 5% pergamena, 5% artefatto casuale (10% in tutto).
 - **Test:** il loot finisce nel posto giusto; candidati esclusi per slot, livello, morte; nessun candidato → gruppo.
 
-### Fase 5: venditore di pergamene e magazzini
+### Fase 5: venditore di pergamene e magazzini (aspetta l'icona)
 - Nuovo stato di `Citta`, come `DA_ARMAIOLO`, che riusa `AutomaAcquistiArtefatti` e `DisplayableCanvasScambiatoreArtefatti` ma tratta solo pergamene.
 - `RegistroArtefattiMD.artefattiPerLocazione` diventa una mappa per (coordinate, tipo di inventario), con salvataggio e test.
 
@@ -267,7 +287,6 @@ Non sono bug ma scelte da rivedere: l'armaiolo **ricompra a prezzo pieno** (vedi
 
 - **Valori di partenza da proporre durante l'implementazione**, da scrivere qui e poi correggere in gioco:
   - quanta `PARATA` intrinseca dà lo scudo per ogni livello;
-  - la probabilità che un cofano dia una pergamena o un artefatto (es. 5% ciascuno);
   - se la seconda arma colpisce lo stesso bersaglio della prima o uno a caso.
 - **Da riguardare con la resa grafica:** la presentazione del nome proprio nell'inventario.
 - **Rarità a video.** Come mostrare nell'inventario che un artefatto è raro o leggendario (colore, dicitura…). Da riguardare con la resa grafica.
@@ -279,7 +298,8 @@ Non sono bug ma scelte da rivedere: l'armaiolo **ricompra a prezzo pieno** (vedi
 - [ ] Il nome "Pergamena" va generato a caso come i nomi delle locande (runa, sigillo, …).
 - [ ] Grammatica per `GeneratoreArtefatti` (formato da definire), sul modello delle locande.
 - [ ] I personaggi del gruppo non si vedono a video: quando ci saranno, i rifiuti (peso, slot, livello) andranno mostrati anche lì, per esempio con un fumetto sul personaggio. C'è un TODO in `Artefatto.consegna`.
-- [ ] Immagine del venditore di pergamene (per ora quella dell'alchimista).
+- [ ] Icona e immagine del venditore di pergamene (per ora quella dell'alchimista); poi la fase 5.
+- [ ] Immagine dell'incantatore (per ora quella dell'alchimista).
 - [ ] Negozi sparsi nella foresta: un paio per tipo, tra armaiolo, alchimista e incantatore.
 - [ ] Bilanciamento di prezzi e gradi delle pergamene (§8).
 - [ ] Rivedere **tutti** i prezzi del gioco (artefatti, pozioni, incantesimi, pergamene, fusione) alla luce del loot che ora si può trovare: con spade, scudi, anelli e pergamene raccolti in giro, l'economia cambia.

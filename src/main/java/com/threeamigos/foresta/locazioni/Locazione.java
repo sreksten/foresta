@@ -65,6 +65,14 @@ public interface Locazione {
     void ripresentaComandi();
 
 	/**
+	 * Il testo scritto dal giocatore nel Prompt mentre il gruppo è nella locazione (es. il nome proprio
+	 * di un artefatto dall'incantatore). Di norma la locazione non ne chiede e lo ignora.
+	 */
+	default Stato riceviTesto(GruppoGiocatore g, String testo) {
+		return Stato.IN_LOCAZIONE;
+	}
+
+	/**
 	 * Il giocatore ha portato in fondo la locazione o è fuggito?
 	 */
     boolean isCompleta();

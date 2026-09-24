@@ -6,6 +6,7 @@ import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
+import com.threeamigos.foresta.motore.AutomaIncantatore;
 import com.threeamigos.foresta.motore.AutomaInventario;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
@@ -54,6 +55,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		STATO_INVENTARIO,
 		STATO_ARMAIOLO,
 		STATO_ALCHIMISTA,
+		STATO_INCANTATORE,
 		STATO_INTERMEZZO
 	}
 
@@ -75,6 +77,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final transient DisplayableCanvasInventario inventario;
 	private final transient DisplayableCanvasArmaiolo armaiolo;
 	private final transient DisplayableCanvasScambiatoreConsumabili alchimista;
+	private final transient DisplayableCanvasIncantatore incantatore;
 	private final transient DisplayableCanvasBarraIcone barraIcone;
 	private final transient DisplayableCanvasIntermezzo intermezzo;
 
@@ -238,6 +241,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 		Rectangle alchimistaRect = new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto);
 		mappaCoordinateElementiGrafici.put(alchimista, alchimistaRect);
+
+		incantatore = new DisplayableCanvasIncantatore(larghezzaContenuto, altezzaContenuto);
+
+		Rectangle incantatoreRect = new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto);
+		mappaCoordinateElementiGrafici.put(incantatore, incantatoreRect);
 
 		int barraLarghezza;
 		int barraAltezza;
@@ -407,6 +415,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO || stato == StatoDisplayableCanvas.STATO_MAPPA
 					|| stato == StatoDisplayableCanvas.STATO_INVENTARIO || stato == StatoDisplayableCanvas.STATO_ARMAIOLO
 					|| stato == StatoDisplayableCanvas.STATO_ALCHIMISTA
+					|| stato == StatoDisplayableCanvas.STATO_INCANTATORE
 					|| stato == StatoDisplayableCanvas.STATO_INTERMEZZO
 					|| annuncioGlobaleAttivo != null || !codaAnnunciGlobali.isEmpty()) {
 				repaint();
@@ -582,6 +591,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		} else if (stato == StatoDisplayableCanvas.STATO_ALCHIMISTA) {
 			alchimista.disegnaInventario(graphics);
 			disegnaFumetto(graphics);
+		} else if (stato == StatoDisplayableCanvas.STATO_INCANTATORE) {
+			incantatore.disegnaInventario(graphics);
+			disegnaFumetto(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_INTERMEZZO) {
 			intermezzo.disegna(graphics);
 			disegnaFumetto(graphics);
@@ -611,6 +623,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 		if (stato == StatoDisplayableCanvas.STATO_ALCHIMISTA) {
 			return alchimista;
+		}
+		if (stato == StatoDisplayableCanvas.STATO_INCANTATORE) {
+			return incantatore;
 		}
 		if (stato == StatoDisplayableCanvas.STATO_INTERMEZZO) {
 			return intermezzo;
@@ -680,6 +695,22 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void impostaAutomaArmaiolo(AutomaAcquistiArtefatti automaAcquistiArtefatti) {
 		armaiolo.impostaAutoma(automaAcquistiArtefatti);
+		repaint();
+	}
+
+	/**
+	 * @param messaggio il fumetto con cui accoglie l'incantatore, o null per nessuno
+	 */
+	public void incantatore(String messaggio) {
+		stato = StatoDisplayableCanvas.STATO_INCANTATORE;
+		if (messaggio != null) {
+			notificaFumetto(messaggio, incantatore.getCoordinateFumetto());
+		}
+		repaint();
+	}
+
+	public void impostaAutomaIncantatore(AutomaIncantatore automaIncantatore) {
+		incantatore.impostaAutoma(automaIncantatore);
 		repaint();
 	}
 

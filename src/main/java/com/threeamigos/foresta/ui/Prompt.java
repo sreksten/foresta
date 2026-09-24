@@ -70,6 +70,15 @@ public class Prompt extends JPanel implements ActionListener {
 	}
 
 	/**
+	 * Mostra il Prompt già compilato con un testo, con il cursore in fondo.
+	 */
+	public void mostra(String testoPredefinito) {
+		setVisible(true);
+		tf.setText(testoPredefinito);
+		tf.setCaretPosition(testoPredefinito.length());
+	}
+
+	/**
 	 * ActionListener interface
 	 */
 	public void actionPerformed(ActionEvent e) {

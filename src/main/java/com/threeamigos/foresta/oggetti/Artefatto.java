@@ -16,7 +16,9 @@ import com.threeamigos.foresta.personaggi.MotivoRifiutoEquipaggiamento;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Optional;
 
 public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
@@ -135,23 +137,67 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 	 */
 	@Override
 	public boolean prendi(GruppoGiocatore gruppo, Comando comando) {
-		if (comando == null) {
-			// Chi lo prende lo sceglie l'automa (Stato.SCELTA_DESTINATARIO_OGGETTO), che con
-			// un solo personaggio vivo risponde da solo
-			if (gruppo.getNumeroPersonaggiVivi() > 1) {
-				BusEventi.pubblica(new NotificaTestoFrase("Chi raccoglie " + getNome() + "?"));
+		return raccogli(gruppo, comando, this);
+	}
+
+	@Override
+	public Optional<Artefatto> getArtefatto() {
+		return Optional.of(this);
+	}
+
+	/**
+	 * Chi raccoglie un artefatto (vedi artefatti_e_incantamenti.md, §2 "Loot"). Senza comando si guardano
+	 * i candidati, cioè i personaggi vivi che possono equipaggiarlo ({@link #candidati}):
+	 * <ul>
+	 * <li>nessuno (anche perché chi c'è ha già occupato quello slot, o è una pergamena): va nel gruppo;</li>
+	 * <li>uno solo: va direttamente a lui;</li>
+	 * <li>più di uno: sceglie il giocatore (Stato.SCELTA_DESTINATARIO_OGGETTO) e si restituisce false.</li>
+	 * </ul>
+	 * Con GRUPPO va nell'inventario del gruppo, con un personaggio a quel personaggio.
+	 *
+	 * @return true se l'artefatto è stato raccolto
+	 */
+	public static boolean raccogli(GruppoGiocatore gruppo, Comando comando, Artefatto artefatto) {
+		if (comando == null || comando == Comando.TIMER) {
+			List<Comando> candidati = candidati(gruppo, artefatto);
+			if (candidati.isEmpty()) {
+				gruppo.addArtefatto(artefatto);
+				BusEventi.pubblica(new NotificaTestoFrase(comeSoggetto(artefatto)
+						+ " viene messo nell'inventario del gruppo: nessuno può prenderlo."));
+				return true;
 			}
-			return false;
+			if (candidati.size() > 1) {
+				BusEventi.pubblica(new NotificaTestoFrase("Chi prende " + artefatto.getNomeCompleto() + "?"));
+				return false;
+			}
+			comando = candidati.get(0);
 		}
 		if (comando == Comando.GRUPPO) {
-			riponiNelGruppo(gruppo, this);
+			riponiNelGruppo(gruppo, artefatto);
 			return true;
 		}
 		Personaggio p = gruppo.getPersonaggio(comando);
-		if (consegna(gruppo, p, this)) {
-			BusEventi.pubblica(new NotificaTestoFrase(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " raccoglie " + getNomeCompleto() + '.'));
+		if (consegna(gruppo, p, artefatto)) {
+			BusEventi.pubblica(new NotificaTestoFrase(p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA)
+					+ ' ' + artefatto.getTipo().getUtilizzo() + ' ' + artefatto.getNomeCompleto() + '.'));
 		}
 		return true;
+	}
+
+	/**
+	 * I comandi dei personaggi vivi che possono equipaggiare l'artefatto: slot libero, livello
+	 * sufficiente, mani libere, carico. Le pergamene non hanno mai candidati.
+	 */
+	public static List<Comando> candidati(GruppoGiocatore gruppo, Artefatto artefatto) {
+		List<Comando> candidati = new ArrayList<>();
+		List<Personaggio> personaggi = gruppo.getPersonaggi();
+		for (int i = 0; i < personaggi.size(); i++) {
+			Personaggio personaggio = personaggi.get(i);
+			if (personaggio.isVivo() && !personaggio.puoEquipaggiare(artefatto).isPresent()) {
+				candidati.add(Comando.ofPersonaggio(i));
+			}
+		}
+		return candidati;
 	}
 
 	/**

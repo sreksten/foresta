@@ -73,6 +73,8 @@ public enum Comando {
 	LOCANDA,
 	ALCHIMISTA,
 	ARMAIOLO,
+	// Entra nella bottega dell'incantatore e, dentro, conferma la fusione
+	FUSIONE,
 	ESCI_DA_CITTA,
 
 	// Dall'alchimista, sceglie se agire su un personaggio o su tutto il gruppo

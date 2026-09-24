@@ -84,12 +84,12 @@ class ArtefattoPrendiTest {
     }
 
     @Test
-    void senzaComandoLaSceltaVieneLasciataAllAutoma() {
+    void senzaComandoEConUnSoloCandidatoLoPrendeLui() {
         // When
         boolean preso = artefatto(1).prendi(gruppo, null);
         // Then
-        assertFalse(preso);
-        assertTrue(guerriero.getInventario().isEmpty());
+        assertTrue(preso);
+        assertEquals(1, guerriero.getInventario().size());
         assertTrue(gruppo.getInventario().isEmpty());
     }
 

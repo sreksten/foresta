@@ -42,6 +42,18 @@ public enum ClassiOggetto {
 			.setQuantitaMassima(1)
 			.setValore(100)
 			),
+	// TODO manca l'immagine "oggetti/Elmo.gif": finché non c'è, l'elmo non va tra gli oggetti delle locazioni
+	ELMO(Elmo::new, builder()
+			.setImmagine(null)
+			.setQuantitaMassima(1)
+			.setValore(100)
+			),
+	// TODO manca l'immagine "oggetti/Armatura.gif": finché non c'è, l'armatura non va tra gli oggetti delle locazioni
+	ARMATURA(Armatura::new, builder()
+			.setImmagine(null)
+			.setQuantitaMassima(1)
+			.setValore(100)
+			),
 	// Gli artefatti non vanno mai restituiti tra gli oggetti che una locazione può nascondere!
 	ARTEFATTO(null, builder()
 			.setImmagine(null)
