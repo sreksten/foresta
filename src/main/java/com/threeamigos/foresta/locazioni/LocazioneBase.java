@@ -870,39 +870,45 @@ public abstract class LocazioneBase implements Locazione {
 			Logger.log(combattente.getNome() + " attacca " + bersaglio.getNome());
 
 			Logger.log("Valutazione combattente -> bersaglio");
-			Arma arma = combattente.getArmaEquipaggiata();
-			boolean colpisce = CalcolatoreCombattimento.colpisce(combattente, bersaglio, arma.getTipoDanno().getSuperTipo());
-			if (colpisce) {
-				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(combattente, bersaglio, arma);
-				bersaglio.applicaRisultatoCombattimento(risultato);
-				if (!bersaglio.isVivo()) {
-					if (GruppoGiocatore.getIstanza().contiene(combattente)) {
-						Statistiche.addMostroUcciso(bersaglio.getClasse());
-						Statistiche.addPunti(bersaglio.getSaluteMassima());
-						GruppoGiocatore.getIstanza().addPuntiEsperienza(bersaglio.getPuntiEsperienza());
-					}
-					Personaggio nuovoBersaglio = gruppoAvversario.getPersonaggioVivo();
-					if (nuovoBersaglio != null) {
-						bersaglio = nuovoBersaglio;
-					} else {
-						setCompleta(true);
-						return Stato.FINE_LOCAZIONE;
+			// Chi combatte con due armi ha una seconda fase, con l'arma secondaria, sullo stesso bersaglio
+			// (o sul prossimo vivo, se la prima l'ha ucciso)
+			for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(combattente)) {
+				Arma arma = fase.getArma();
+				boolean colpisce = CalcolatoreCombattimento.colpisce(combattente, bersaglio, arma.getTipoDanno().getSuperTipo());
+				if (colpisce) {
+					DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(combattente, bersaglio, arma, fase.getFattore());
+					bersaglio.applicaRisultatoCombattimento(risultato);
+					if (!bersaglio.isVivo()) {
+						if (GruppoGiocatore.getIstanza().contiene(combattente)) {
+							Statistiche.addMostroUcciso(bersaglio.getClasse());
+							Statistiche.addPunti(bersaglio.getSaluteMassima());
+							GruppoGiocatore.getIstanza().addPuntiEsperienza(bersaglio.getPuntiEsperienza());
+						}
+						Personaggio nuovoBersaglio = gruppoAvversario.getPersonaggioVivo();
+						if (nuovoBersaglio != null) {
+							bersaglio = nuovoBersaglio;
+						} else {
+							setCompleta(true);
+							return Stato.FINE_LOCAZIONE;
+						}
 					}
 				}
 			}
 			Logger.log("Valutazione bersaglio -> combattente");
 
-			arma = bersaglio.getArmaEquipaggiata();
-			colpisce = CalcolatoreCombattimento.colpisce(bersaglio, combattente, arma.getTipoDanno().getSuperTipo());
-			if (colpisce) {
-				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(bersaglio, combattente, arma);
-				combattente.applicaRisultatoCombattimento(risultato);
-				if (!combattente.isVivo()) {
-					if (gruppo.getCapo().isVivo()) {
-						statoLocazione = StatoLocazione.IN_LOCAZIONE;
-						return Stato.IN_LOCAZIONE;
-					} else {
-						return Stato.GIOCO_PERSO;
+			for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(bersaglio)) {
+				Arma arma = fase.getArma();
+				boolean colpisce = CalcolatoreCombattimento.colpisce(bersaglio, combattente, arma.getTipoDanno().getSuperTipo());
+				if (colpisce) {
+					DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(bersaglio, combattente, arma, fase.getFattore());
+					combattente.applicaRisultatoCombattimento(risultato);
+					if (!combattente.isVivo()) {
+						if (gruppo.getCapo().isVivo()) {
+							statoLocazione = StatoLocazione.IN_LOCAZIONE;
+							return Stato.IN_LOCAZIONE;
+						} else {
+							return Stato.GIOCO_PERSO;
+						}
 					}
 				}
 			}

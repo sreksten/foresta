@@ -1042,9 +1042,29 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	// PARATA
 
+	/**
+	 * La PARATA con l'equipaggiamento: lo scudo ne aggiunge per ogni suo livello, mentre chi impugna
+	 * due armi o un'arma a due mani ha la guardia aperta e ne perde un quarto.
+	 */
 	@Override
 	public int getParata() {
-		return get(md, PersonaggioMD::getParata, TipoAttributo.PARATA);
+		double parata = get(md, PersonaggioMD::getParata, TipoAttributo.PARATA);
+		for (ArtefattoMD artefatto : md.getArtefatti()) {
+			if (artefatto.getTipo() == TipoArtefatto.SCUDO) {
+				parata += Costanti.SCUDO_PARATA_PER_LIVELLO * artefatto.getLivello();
+			}
+		}
+		if (haGuardiaAperta()) {
+			parata *= Costanti.GUARDIA_APERTA_FATTORE_PARATA;
+		}
+		return (int) parata;
+	}
+
+	private boolean haGuardiaAperta() {
+		return md.getArtefatti().stream()
+				.filter(a -> a.getTipo().getSupertipo() == SupertipoArtefatto.ARMA)
+				.map(RegoleEquipaggiamento::slotOccupato)
+				.anyMatch(slot -> slot == SlotArtefatto.ENTRAMBE_LE_MANI || slot == SlotArtefatto.MANO_SECONDARIA);
 	}
 
 	// RESISTENZA MAGICA

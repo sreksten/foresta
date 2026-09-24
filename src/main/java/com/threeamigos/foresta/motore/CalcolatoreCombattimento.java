@@ -1,11 +1,20 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
+import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.SupertipoDanno;
+import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoDanno;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
+import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.GradoIncantamento;
 import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.personaggi.Personaggio;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
 
 /**
  *
@@ -127,6 +136,26 @@ public class CalcolatoreCombattimento {
     }
 
     public static DannoRisultante calcolaDannoRisultante(Personaggio attaccante, Personaggio difensore, Arma arma) {
+        return calcolaDannoRisultante(attaccante, difensore, arma, 1.0d);
+    }
+
+    /**
+     * Le fasi di attacco di un turno: l'arma principale e, per chi combatte con due armi, quella nella
+     * mano secondaria, al 60% (Costanti.DOPPIA_ARMA_FATTORE_SECONDA_ARMA).
+     */
+    public static List<FaseDiAttacco> fasiDiAttacco(Personaggio attaccante) {
+        List<FaseDiAttacco> fasi = new ArrayList<>();
+        fasi.add(new FaseDiAttacco(attaccante.getArmaEquipaggiata(), 1.0d));
+        attaccante.getArmaSecondaria()
+                .ifPresent(arma -> fasi.add(new FaseDiAttacco(arma, Costanti.DOPPIA_ARMA_FATTORE_SECONDA_ARMA)));
+        return fasi;
+    }
+
+    /**
+     * @param fattore la quota del danno (base e incantamenti) che l'arma fa in questa fase: 1 per l'arma
+     *                principale, meno per la seconda arma
+     */
+    public static DannoRisultante calcolaDannoRisultante(Personaggio attaccante, Personaggio difensore, Arma arma, double fattore) {
 
         DannoRisultante dannoRisultante = new DannoRisultante(attaccante, difensore);
         TipoDanno tipoDanno = arma.getTipoDanno();
@@ -150,15 +179,9 @@ public class CalcolatoreCombattimento {
             Logger.log("statOffensiva (FORZA) = " + statOffensiva);
         }
 
-        // Determina la difesa del bersaglio (COSTITUZIONE + PARATA per Fisico, RESISTENZA_MAGICA per Magico/Elementale)
-        double statDifensiva;
-        if (dannoNonFisico) {
-            statDifensiva = difensore.getResistenzaMagica();
-            Logger.log("statDifensiva (RESISTENZA_MAGICA) = " + statDifensiva);
-        } else {
-            statDifensiva = difensore.getCostituzione() + difensore.getParata();
-            Logger.log(String.format("statDifensiva (COSTITUZIONE %d + PARATA %d) = %f", difensore.getCostituzione(), difensore.getParata(), statDifensiva));
-        }
+        // Determina la difesa del bersaglio (COSTITUZIONE + PARATA per Fisico, RESISTENZA_MAGICA per Magico/Elementale),
+        // con le resistenze di elmo, scudo e armatura contro questo tipo di danno
+        double statDifensiva = difesaContro(difensore, tipoDanno);
 
         // 2. MATEMATICA DI BASE DEL DANNO (Con fattore di scala livello arma)
         int dannoBaseArma = arma.getDanni() * arma.getLivello();
@@ -174,8 +197,8 @@ public class CalcolatoreCombattimento {
 
         double contributoEroe = (double)(statOffensiva * attaccante.getLivello()) / 5.0d;
         Logger.log(String.format("contributoEroe (statOffensiva %d * livello attaccante %d / 5 = %f", statOffensiva, attaccante.getLivello(), contributoEroe));
-        double dannoOffensivoGrezzo = dannoBaseArma + Math.floor(contributoEroe * rapportoEfficacia);
-        Logger.log("dannoOffensivoGrezzo = " + dannoOffensivoGrezzo);
+        double dannoOffensivoGrezzo = (dannoBaseArma + Math.floor(contributoEroe * rapportoEfficacia)) * fattore;
+        Logger.log("dannoOffensivoGrezzo = " + dannoOffensivoGrezzo + " (fattore " + fattore + ")");
 
         // 2.5 APPLICAZIONE DEL BONUS BERSERK (Esclusivo ai Guerrieri con FURIA)
         // Solo sul danno fisico (vedi TipoEffettoDiStato.BERSERK): la condizione era negata al
@@ -298,24 +321,27 @@ public class CalcolatoreCombattimento {
             for (Incantamento inc : arma.getIncantamenti()) {
                 TipoDanno elementoMagico = inc.getTipoDannoElementale();
 
-                // Il danno magico dell'arma scala sull'INTELLIGENZA dell'attaccante
-                double dannoGrezzoMagico = (inc.getDannoBonusFisso() * arma.getLivello()) +
-                        (attaccante.getIntelligenza() * inc.getCoefficienteScala());
-
-                // Viene mitigato dalla RESISTENZA MAGICA del difensore
-                double mitigazioneMagica = 100.0d / (100.0d + difensore.getResistenzaMagica());
-
-                double dannoQuestoIncantamento = Math.floor(dannoGrezzoMagico * mitigazioneMagica);
+                double dannoQuestoIncantamento = dannoIncantamento(attaccante, difensore, inc, arma.getLivello(), fattore);
 
                 // Se il bersaglio era BAGNATO e la spada è di FUOCO, si attiva l'interazione Vaporizzazione
                 if (elementoMagico == TipoDanno.FUOCO && difensore.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
-                    dannoQuestoIncantamento = dannoQuestoIncantamento * 0.5d;
                     dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.VAPORIZZAZIONE);
                 }
 
                 // SOMMA i danni invece di sovrascriverli
                 dannoElementaleFinale += dannoQuestoIncantamento;
                 Logger.log(String.format("[INCANTAMENTO] Danno bonus accumulato da %s: %.2f", elementoMagico, dannoQuestoIncantamento));
+            }
+        }
+
+        // 4.3 --- LIBRO MAGICO: bonus al danno degli incantesimi di chi lo porta ---
+        if (arma instanceof IncantesimoMalefico) {
+            Optional<Artefatto> libro = libroMagico(attaccante);
+            if (libro.isPresent()) {
+                double dannoLibro = dannoIncantamento(attaccante, difensore, bonusLibroMagico(libro.get(), tipoDanno),
+                        libro.get().getLivello(), 1.0d);
+                dannoElementaleFinale += dannoLibro;
+                Logger.log(String.format("[LIBRO MAGICO] Danno bonus: %.2f", dannoLibro));
             }
         }
 
@@ -364,14 +390,8 @@ public class CalcolatoreCombattimento {
                         TipoDanno elemento = incantamento.getTipoDannoElementale();
 
                         // Ricalcola il danno specifico di QUESTO incantamento per un Proc Rate preciso
-                        double dannoGrezzoMagicoProc = (incantamento.getDannoBonusFisso() * arma.getLivello()) +
-                                (attaccante.getIntelligenza() * incantamento.getCoefficienteScala());
-                        double mitigazioneMagicaProc = 100.0d / (100.0d + difensore.getResistenzaMagica());
-                        double dannoQuestoIncantamentoProc = Math.floor(dannoGrezzoMagicoProc * mitigazioneMagicaProc);
-
-                        if (elemento == TipoDanno.FUOCO && difensore.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
-                            dannoQuestoIncantamentoProc = dannoQuestoIncantamentoProc * 0.5d;
-                        }
+                        double dannoQuestoIncantamentoProc = dannoIncantamento(attaccante, difensore, incantamento,
+                                arma.getLivello(), fattore);
 
                         // La probabilità del proc magico si basa sul danno reale di QUESTO elemento e sulla statistica MAGIA
                         double probStatoMagico = ((dannoQuestoIncantamentoProc * 100.0d) / difensore.getForza()) + (attaccante.getMagia() * 2.0d);
@@ -392,6 +412,74 @@ public class CalcolatoreCombattimento {
         }
 
         return dannoRisultante;
+    }
+
+    /**
+     * Il danno di un incantamento, mitigato dalla difesa del bersaglio contro il suo tipo di danno.
+     * La parte fissa scala con il livello dell'oggetto, quella percentuale con l'INTELLIGENZA di chi colpisce.
+     * Contro un bersaglio BAGNATO il fuoco fa la metà.
+     */
+    private static double dannoIncantamento(Personaggio attaccante, Personaggio difensore, Incantamento incantamento,
+                                            int livelloOggetto, double fattore) {
+        double dannoGrezzo = ((incantamento.getDannoBonusFisso() * livelloOggetto) +
+                (attaccante.getIntelligenza() * incantamento.getCoefficienteScala())) * fattore;
+        double mitigazione = 100.0d / (100.0d + difesaContro(difensore, incantamento.getTipoDannoElementale()));
+        double danno = Math.floor(dannoGrezzo * mitigazione);
+        if (incantamento.getTipoDannoElementale() == TipoDanno.FUOCO && difensore.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
+            danno = danno * 0.5d;
+        }
+        return danno;
+    }
+
+    /**
+     * La difesa del bersaglio contro un tipo di danno T:
+     * (difesa base + Σ fisso_T × livello del pezzo) × (1 + Σ percentuale_T / 2), sugli incantamenti di tipo T
+     * di elmo, scudo e armatura. La difesa base è COSTITUZIONE + PARATA per il danno fisico,
+     * RESISTENZA_MAGICA per quello elementale o magico.
+     */
+    public static double difesaContro(Personaggio difensore, TipoDanno tipoDanno) {
+        boolean fisico = tipoDanno.getSuperTipo() == SupertipoDanno.FISICO;
+        double difesaBase = fisico ? difensore.getCostituzione() + difensore.getParata() : difensore.getResistenzaMagica();
+        double fisso = 0.0d;
+        double percentuale = 0.0d;
+        for (Artefatto pezzo : difensore.getInventario()) {
+            if (!isPezzoDifensivo(pezzo)) {
+                continue;
+            }
+            for (Incantamento incantamento : pezzo.getIncantamenti()) {
+                if (incantamento.getTipoDannoElementale() == tipoDanno) {
+                    fisso += incantamento.getDannoBonusFisso() * pezzo.getLivello();
+                    percentuale += incantamento.getCoefficienteScala() * Costanti.RESISTENZA_FATTORE_PERCENTUALE;
+                }
+            }
+        }
+        double difesa = (difesaBase + fisso) * (1.0d + percentuale);
+        Logger.log(String.format("difesa contro %s = (base %.0f + fisso %.0f) x (1 + %.3f) = %.2f",
+                tipoDanno, difesaBase, fisso, percentuale, difesa));
+        return difesa;
+    }
+
+    private static boolean isPezzoDifensivo(Artefatto artefatto) {
+        SupertipoArtefatto supertipo = artefatto.getTipo().getSupertipo();
+        return supertipo == SupertipoArtefatto.SCUDO || supertipo == SupertipoArtefatto.ELMO
+                || supertipo == SupertipoArtefatto.ARMATURA;
+    }
+
+    private static Optional<Artefatto> libroMagico(Personaggio personaggio) {
+        return personaggio.getInventario().stream()
+                .filter(a -> a.getTipo() == TipoArtefatto.LIBRO_MAGICO)
+                .findFirst();
+    }
+
+    /**
+     * Il bonus del libro magico come un incantamento del tipo di danno dell'incantesimo: parte fissa e
+     * percentuale del grado adatto al livello del libro, più il 25%.
+     */
+    static Incantamento bonusLibroMagico(Artefatto libro, TipoDanno tipoDanno) {
+        GradoIncantamento grado = GradoIncantamento.perLivello(libro.getLivello());
+        double maggiorazione = 1.0d + Costanti.LIBRO_MAGICO_MAGGIORAZIONE;
+        return new Incantamento("Libro magico", tipoDanno,
+                (int) Math.round(grado.getBonusFisso() * maggiorazione), grado.getCoefficiente() * maggiorazione);
     }
 
     private static int calcolaDurataStato(Personaggio difensore, TipoEffettoDiStato stato) {

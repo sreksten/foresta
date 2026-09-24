@@ -226,3 +226,102 @@ oltre ai numeri grezzi.
 4. Estendere alla matrice completa (tutti i PG x tutti i mostri) con scrittura CSV.
 5. Eseguire con iterazioni basse (es. 100-1.000) per verificare i tempi di esecuzione
    totali, poi eventualmente alzare a 10.000 per il report definitivo.
+
+## 11. Equipaggiamento del PG
+
+Dalla fase 7 di `artefatti_e_incantamenti.md` il combattimento dipende dall'equipaggiamento: resistenze di
+elmo, scudo e armatura, doppia arma, spadone, parata dello scudo. Con la sola `ArmaNaturale` il simulatore
+non le vedeva, quindi al PG si può dare un equipaggiamento.
+
+### 11.1 `Equipaggiamento`
+
+Classe di supporto in `src/test/.../motore/modellodati`, accanto al simulatore. Un equipaggiamento ha un
+nome e una lista di `Pezzo`: un `TipoArtefatto`, facoltativamente con un incantamento di un `TipoDanno`.
+
+- **Costruzione dei pezzi.** Al livello del PG, con i valori medi di `GeneratoreArtefattiTabelle` ma
+  senza la parte casuale, così due equipaggiamenti si confrontano senza rumore:
+  - armi: danno `4 + 2 × livello`; lo spadone +50%, il bastone metà e +5% di `MAGIA` per livello;
+  - scudo, elmo, armatura: +5% di `PARATA` per livello (la veste di `RESISTENZA_MAGICA`);
+  - libro magico: +5% di `MAGIA` per livello;
+  - pesi come nel generatore;
+  - incantamento: del `GradoIncantamento` del livello (a livello 5, medio: +10 e +10%). Danno aggiuntivo
+    sulle armi, resistenza su elmo, scudo e armatura. Il limite di effetti della rarità non si controlla.
+- **Regole vere.** `equipaggia(pg)` fa prendere i pezzi uno alla volta passando da
+  `Personaggio.puoEquipaggiare`. Se una classe non può portare l'equipaggiamento (il Guerriero con due
+  spade, chi è troppo carico) non prende nessun pezzo e si ha il motivo. `motivoRifiuto(classe, livello)`
+  fa lo stesso controllo su un PG nuovo.
+- **Equipaggiamenti pronti** (`Equipaggiamento.TUTTI`, in quest'ordine):
+
+  | Nome | Pezzi |
+  | :--- | :--- |
+  | `NESSUNO` | nessuno: arma naturale, come nella prima versione |
+  | `SPADA` | spada |
+  | `SPADA_E_SCUDO` | spada, scudo |
+  | `DUE_SPADE` | due spade (solo Ladro/Ladra, Elfo/Elfa) |
+  | `SPADONE` | spadone |
+  | `SPADA_DI_FUOCO` | spada con un incantamento di fuoco |
+  | `CORAZZATO` | spada, scudo, elmo, armatura |
+  | `CORAZZATO_CONTRO_VELENO` | come `CORAZZATO`, con l'armatura incantata contro il veleno |
+
+  Per altre prove: `Equipaggiamento.di("NOME", Pezzo.di(TipoArtefatto.SCUDO).incantato(TipoDanno.GELO), ...)`.
+
+### 11.2 Simulatore
+
+- Nuova variante `simulaScontroGruppo(classePg, equipaggiamento, classeMostro, quantita, livello, iterazioni)`.
+  Lancia `IllegalArgumentException` se la classe non può portare l'equipaggiamento. La firma di prima resta
+  e usa `Equipaggiamento.NESSUNO`: dà gli stessi risultati di prima.
+- Ogni attacco passa da `CalcolatoreCombattimento.fasiDiAttacco`, come nel turno di mischia del gioco: la
+  seconda arma fa una seconda fase al 60%, sullo stesso bersaglio o sul prossimo vivo se la prima l'ha
+  ucciso. Anche i mostri attaccano per fasi (oggi ne hanno sempre una sola, l'arma naturale).
+- Limite: i PG non lanciano incantesimi (la "Fase 2" del §4 non c'è ancora), quindi il libro magico non
+  ha effetto e non c'è fra gli equipaggiamenti pronti.
+
+### 11.3 Test in `TestMonteCarloMatrix`
+
+- `testSingoloScontroLadroConDueSpadeVsGoblin` (nella suite normale): nessuno stallo, e con due spade lo
+  scontro dura meno che a mani nude.
+- `unaClasseCheNonPuoPortareLEquipaggiamentoVieneRifiutata` (nella suite normale): il Guerriero con
+  `DUE_SPADE`.
+- `testConfrontoEquipaggiamenti` (`@Disabled`, circa 2 minuti): tutti gli equipaggiamenti per Ladro, Elfa,
+  Guerriero e Mago, contro Goblin, Troll, Minotauro e Viverna, 1 contro 1, a livello 5 (`LIVELLO_CONFRONTO`),
+  3.000 iterazioni. Stampa una riga per combinazione e scrive `REPORT_BILANCIAMENTO_EQUIPAGGIAMENTI.csv`:
+
+  ```
+  PG,EQUIPAGGIAMENTO,MOSTRO,LIVELLO,WIN_RATE,LOSE_RATE,STALLO_RATE,TURNI_MEDI,TASSO_COLPIRE_PG,TASSO_COLPIRE_MOSTRO,DANNO_MEDIO_PG,DANNO_MEDIO_MOSTRO
+  ```
+
+  Le combinazioni che una classe non può portare si saltano, con un avviso sulla console.
+- `testMatriceCompletaBilanciamento` ha la colonna `EQUIPAGGIAMENTO` dopo `PG` e gira su
+  `EQUIPAGGIAMENTI_MATRICE` (di default `Equipaggiamento.TUTTI`, senza le combinazioni impossibili).
+  Ogni equipaggiamento moltiplica il tempo: per una passata veloce basta lasciarne uno o due.
+- Per lanciare un test `@Disabled` da Maven:
+  `mvn test -Dtest='TestMonteCarloMatrix#testConfrontoEquipaggiamenti' -Djunit.jupiter.conditions.deactivate='org.junit.*DisabledCondition'`.
+
+### 11.4 Primo giro (2026-09-24)
+
+Vittorie del PG a livello 5, 1 contro 1:
+
+| PG | Equipaggiamento | Goblin | Troll | Viverna |
+| :--- | :--- | ---: | ---: | ---: |
+| Ladro | `NESSUNO` | 99,8% | 52,8% | 12,1% |
+| Ladro | `SPADA` | 99,9% | 84,2% | 41,8% |
+| Ladro | `SPADA_E_SCUDO` | 100% | 91,7% | 39,2% |
+| Ladro | `DUE_SPADE` | 100% | 98,3% | 81,7% |
+| Ladro | `SPADONE` | 100% | 96,1% | 71,1% |
+| Ladro | `SPADA_DI_FUOCO` | 100% | 98,7% | 81,1% |
+| Ladro | `CORAZZATO` | 100% | 92,6% | 39,7% |
+| Ladro | `CORAZZATO_CONTRO_VELENO` | 100% | 94,1% | 75,9% |
+| Guerriero | `SPADA_E_SCUDO` | 100% | 98,2% | 61,2% |
+| Mago | `SPADONE` | 88,3% | 15,9% | 20,9% |
+| Mago | `SPADA_DI_FUOCO` | 91,8% | 31,7% | 29,3% |
+
+Cosa se ne ricava (da rivedere nel bilanciamento):
+- **L'attacco rende più della difesa.** Due spade, spadone e spada di fuoco fanno più di scudo e armatura
+  completa: accorciano gli scontri, e contro la Viverna è l'unico modo di vincere spesso. Il −25% di
+  `PARATA` della guardia aperta pesa poco, perché la `PARATA` è piccola.
+- **Un incantamento medio vale moltissimo**: la spada di fuoco porta il danno medio del Ladro da 83 a 138
+  per colpo (+66%).
+- **Le resistenze funzionano**: contro il morso velenoso della Viverna l'armatura contro il veleno porta il
+  danno medio subito da 107 a 71, e le vittorie dal 40% al 76%.
+- **Il Mago in mischia** resta debole anche armato, come previsto: combatte con gli incantesimi, che il
+  simulatore non usa (§9.3).

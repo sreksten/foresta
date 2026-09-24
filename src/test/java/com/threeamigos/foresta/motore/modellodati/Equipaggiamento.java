@@ -1,0 +1,200 @@
+package com.threeamigos.foresta.motore.modellodati;
+
+import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.GradoIncantamento;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.MotivoRifiutoEquipaggiamento;
+import com.threeamigos.foresta.personaggi.Personaggio;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
+
+/**
+ * Un equipaggiamento da dare al PG nel simulatore (vedi CombatSimulatorMatrix e piano_montecarlo_matrix.md, §11):
+ * armi, scudo, elmo, armatura, anche incantati. I pezzi si costruiscono al livello del PG con i valori medi di
+ * GeneratoreArtefattiTabelle, senza la parte casuale, così i confronti fra equipaggiamenti sono puliti.
+ * Passano dalle regole vere (Personaggio.puoEquipaggiare): una classe che non può portare un equipaggiamento
+ * (es. il Guerriero con due spade, o chi è troppo carico) lo rifiuta.
+ */
+public final class Equipaggiamento {
+
+	// Pesi come in GeneratoreArtefattiTabelle
+	private static final Map<TipoArtefatto, Double> PESI = new EnumMap<>(TipoArtefatto.class);
+
+	static {
+		PESI.put(TipoArtefatto.SPADA, 1.0);
+		PESI.put(TipoArtefatto.SPADONE, 3.0);
+		PESI.put(TipoArtefatto.MAZZA, 2.0);
+		PESI.put(TipoArtefatto.ASCIA, 2.0);
+		PESI.put(TipoArtefatto.LANCIA, 2.0);
+		PESI.put(TipoArtefatto.BASTONE_MAGICO, 1.0);
+		PESI.put(TipoArtefatto.LIBRO_MAGICO, 1.0);
+		PESI.put(TipoArtefatto.SCUDO, 2.0);
+		PESI.put(TipoArtefatto.ELMO, 1.0);
+		PESI.put(TipoArtefatto.ARMATURA, 3.0);
+		PESI.put(TipoArtefatto.VESTE, 1.0);
+	}
+
+	/**
+	 * Nessun artefatto: il PG combatte con l'arma naturale, come nella prima versione del simulatore
+	 */
+	public static final Equipaggiamento NESSUNO = di("NESSUNO");
+	public static final Equipaggiamento SPADA = di("SPADA", Pezzo.di(TipoArtefatto.SPADA));
+	public static final Equipaggiamento SPADA_E_SCUDO = di("SPADA_E_SCUDO",
+			Pezzo.di(TipoArtefatto.SPADA), Pezzo.di(TipoArtefatto.SCUDO));
+	/**
+	 * Solo Ladro/Ladra ed Elfo/Elfa
+	 */
+	public static final Equipaggiamento DUE_SPADE = di("DUE_SPADE",
+			Pezzo.di(TipoArtefatto.SPADA), Pezzo.di(TipoArtefatto.SPADA));
+	public static final Equipaggiamento SPADONE = di("SPADONE", Pezzo.di(TipoArtefatto.SPADONE));
+	public static final Equipaggiamento SPADA_DI_FUOCO = di("SPADA_DI_FUOCO",
+			Pezzo.di(TipoArtefatto.SPADA).incantato(TipoDanno.FUOCO));
+	public static final Equipaggiamento CORAZZATO = di("CORAZZATO",
+			Pezzo.di(TipoArtefatto.SPADA), Pezzo.di(TipoArtefatto.SCUDO),
+			Pezzo.di(TipoArtefatto.ELMO), Pezzo.di(TipoArtefatto.ARMATURA));
+	/**
+	 * Come CORAZZATO, con l'armatura incantata contro il veleno (il morso di Drago, Viverna e Chimera Drago)
+	 */
+	public static final Equipaggiamento CORAZZATO_CONTRO_VELENO = di("CORAZZATO_CONTRO_VELENO",
+			Pezzo.di(TipoArtefatto.SPADA), Pezzo.di(TipoArtefatto.SCUDO),
+			Pezzo.di(TipoArtefatto.ELMO), Pezzo.di(TipoArtefatto.ARMATURA).incantato(TipoDanno.VELENO));
+
+	/**
+	 * Tutti gli equipaggiamenti già pronti, nell'ordine in cui compaiono nei report
+	 */
+	public static final List<Equipaggiamento> TUTTI = Collections.unmodifiableList(Arrays.asList(
+			NESSUNO, SPADA, SPADA_E_SCUDO, DUE_SPADE, SPADONE, SPADA_DI_FUOCO, CORAZZATO, CORAZZATO_CONTRO_VELENO));
+
+	private final String nome;
+	private final List<Pezzo> pezzi;
+
+	private Equipaggiamento(String nome, List<Pezzo> pezzi) {
+		this.nome = nome;
+		this.pezzi = pezzi;
+	}
+
+	/**
+	 * Un equipaggiamento nuovo, per le prove che i preset non coprono
+	 */
+	public static Equipaggiamento di(String nome, Pezzo... pezzi) {
+		return new Equipaggiamento(nome, Collections.unmodifiableList(Arrays.asList(pezzi)));
+	}
+
+	public String getNome() {
+		return nome;
+	}
+
+	public List<Pezzo> getPezzi() {
+		return pezzi;
+	}
+
+	/**
+	 * Costruisce i pezzi al livello del PG e glieli fa prendere uno alla volta, con le regole vere.
+	 *
+	 * @return il motivo per cui il PG non può portare l'equipaggiamento (e allora non ne prende nessun pezzo),
+	 * oppure vuoto se l'ha preso tutto
+	 */
+	public Optional<String> equipaggia(Personaggio pg) {
+		List<Artefatto> presi = new ArrayList<>();
+		for (Pezzo pezzo : pezzi) {
+			Artefatto artefatto = pezzo.costruisci(pg.getLivello());
+			Optional<MotivoRifiutoEquipaggiamento> motivo = pg.puoEquipaggiare(artefatto);
+			if (motivo.isPresent()) {
+				presi.forEach(pg::removeArtefatto);
+				return Optional.of(pezzo.getTipo() + ": " + motivo.get());
+			}
+			pg.addArtefatto(artefatto);
+			presi.add(artefatto);
+		}
+		return Optional.empty();
+	}
+
+	/**
+	 * @return il motivo per cui la classe, a quel livello, non può portare l'equipaggiamento, o vuoto se può
+	 */
+	public Optional<String> motivoRifiuto(ClassePersonaggio classe, int livello) {
+		return equipaggia(classe.getIstanza(livello));
+	}
+
+	@Override
+	public String toString() {
+		return nome;
+	}
+
+	/**
+	 * Un pezzo dell'equipaggiamento: un tipo di artefatto, facoltativamente con un incantamento del grado
+	 * adatto al livello (danno aggiuntivo sulle armi, resistenza su elmo, scudo e armatura).
+	 */
+	public static final class Pezzo {
+
+		private final TipoArtefatto tipo;
+		private final TipoDanno incantamento;
+
+		private Pezzo(TipoArtefatto tipo, TipoDanno incantamento) {
+			this.tipo = tipo;
+			this.incantamento = incantamento;
+		}
+
+		public static Pezzo di(TipoArtefatto tipo) {
+			if (!PESI.containsKey(tipo)) {
+				throw new IllegalArgumentException("Nel simulatore non si equipaggia " + tipo);
+			}
+			return new Pezzo(tipo, null);
+		}
+
+		public Pezzo incantato(TipoDanno tipoDanno) {
+			return new Pezzo(tipo, tipoDanno);
+		}
+
+		public TipoArtefatto getTipo() {
+			return tipo;
+		}
+
+		/**
+		 * I valori medi di GeneratoreArtefattiTabelle: armi con danno 4 + 2 × livello (lo spadone +50%,
+		 * il bastone metà e +5% di MAGIA per livello), pezzi difensivi con +5% di PARATA per livello
+		 * (la veste di RESISTENZA_MAGICA), libro con +5% di MAGIA per livello.
+		 */
+		Artefatto costruisci(int livello) {
+			ArtefattoMD md = new ArtefattoMD();
+			md.setTipo(tipo);
+			md.setNome("l'artefatto del simulatore");
+			md.setDescrizione(tipo.name());
+			md.setLivello(livello);
+			md.setPeso(PESI.get(tipo));
+			switch (tipo.getSupertipo()) {
+				case ARMA:
+					int danni = 4 + 2 * livello;
+					if (tipo == TipoArtefatto.SPADONE) {
+						danni = (int) Math.round(danni * Costanti.ARTEFATTO_MOLTIPLICATORE_DUE_MANI);
+					} else if (tipo == TipoArtefatto.BASTONE_MAGICO) {
+						danni = danni / 2;
+						md.addModificatore(TipoAttributo.MAGIA, TipoModificatore.AUMENTO_PERCENTUALE, 5.0 * livello, "");
+					}
+					md.setDanni(danni);
+					break;
+				case SCUDO:
+				case ELMO:
+				case ARMATURA:
+					md.addModificatore(tipo == TipoArtefatto.VESTE ? TipoAttributo.RESISTENZA_MAGICA : TipoAttributo.PARATA,
+							TipoModificatore.AUMENTO_PERCENTUALE, 5.0 * livello, "");
+					break;
+				default:
+					md.addModificatore(TipoAttributo.MAGIA, TipoModificatore.AUMENTO_PERCENTUALE, 5.0 * livello, "");
+					break;
+			}
+			if (incantamento != null) {
+				GradoIncantamento grado = GradoIncantamento.perLivello(livello);
+				md.addIncantamento("Incantamento " + grado.getNome(), incantamento, grado.getBonusFisso(), grado.getCoefficiente());
+			}
+			return Artefatto.di(md);
+		}
+	}
+}

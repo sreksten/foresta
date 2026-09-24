@@ -13,6 +13,19 @@ public class Costanti {
     public static final int ARTEFATTO_MASSIMO_EFFETTI_RARO = 4;
     public static final int ARTEFATTO_MASSIMO_EFFETTI_LEGGENDARIO = 5;
 
+    // Combattimento (vedi artefatti_e_incantamenti.md, §2 "Combattimento")
+    // PARATA intrinseca dello scudo per ogni suo livello
+    public static final int SCUDO_PARATA_PER_LIVELLO = 1;
+    // "Guardia aperta": chi impugna due armi o un'arma a due mani perde un quarto della PARATA
+    public static final double GUARDIA_APERTA_FATTORE_PARATA = 0.75;
+    // La seconda fase di attacco, con l'arma nella mano secondaria, fa il 60% (danno base e incantamenti)
+    public static final double DOPPIA_ARMA_FATTORE_SECONDA_ARMA = 0.6;
+    // Su elmo, scudo e armatura la parte percentuale di un incantamento vale la metà, perché moltiplica
+    // una difesa che cresce già con il livello
+    public static final double RESISTENZA_FATTORE_PERCENTUALE = 0.5;
+    // Il libro magico dà al danno degli incantesimi un bonus come un incantamento del suo grado, più il 25%
+    public static final double LIBRO_MAGICO_MAGGIORAZIONE = 0.25;
+
     // Fusione dall'incantatore: 10 monete più 5 per ogni effetto trasferito
     public static final int FUSIONE_COSTO_BASE = 10;
     public static final int FUSIONE_COSTO_PER_EFFETTO = 5;
