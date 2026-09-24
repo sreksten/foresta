@@ -237,8 +237,8 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	private void gestisciEventoRichiestaAperturaInventarioCommerciante(ComandoAperturaInventarioCommerciante evento) {
 		impostaAzioni(evento.getPossibilita());
-		displayableCanvas.impostaAutomaArmaiolo(evento.getAutomaAcquistiArtefatti());
-		displayableCanvas.armaiolo();
+		displayableCanvas.impostaAutomaCommerciante(evento.getNegozio(), evento.getAutomaAcquistiArtefatti());
+		displayableCanvas.commerciante();
 	}
 
 	private void gestisciEventoRichiestaAperturaIncantatore(ComandoAperturaIncantatore evento) {

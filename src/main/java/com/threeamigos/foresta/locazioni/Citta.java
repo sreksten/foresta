@@ -13,6 +13,7 @@ import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponi
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
+import com.threeamigos.foresta.motore.modellodati.TipoNegozio;
 import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
 
 import java.util.ArrayList;
@@ -27,6 +28,7 @@ public abstract class Citta extends LocazioneUnica {
 		IN_LOCANDA,
 		DA_ALCHIMISTA,
 		DA_ARMAIOLO,
+		DA_VENDITORE_DI_PERGAMENE,
 		DA_INCANTATORE,
 		// Dall'incantatore, in attesa del nome proprio dell'artefatto da fondere
 		NOME_ARTEFATTO_DA_FONDERE
@@ -72,7 +74,7 @@ public abstract class Citta extends LocazioneUnica {
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
         BusEventi.pubblica(new NotificaTestoParagrafo(g.chiMaiuscolo() + " arriva al" + getNome() +
-                ". Qui è possibile cercare una locanda, il negozio di un alchimista, fare un salto dall'armaiolo o far incantare un artefatto prima di andare via."));
+                ". Qui è possibile cercare una locanda, il negozio di un alchimista, fare un salto dall'armaiolo o dal venditore di pergamene, o far incantare un artefatto prima di andare via."));
 		if (g.getPreziosi() > 0) {
 			g.vendePreziosi();
 		}
@@ -86,8 +88,9 @@ public abstract class Citta extends LocazioneUnica {
 	}
 
 	private void impostaAzioniCitta() {
+		// I negozi in fila: locanda, alchimista, armaiolo, venditore di pergamene, incantatore
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.LOCANDA, Comando.ALCHIMISTA, Comando.ARMAIOLO,
-				Comando.FUSIONE, Comando.INVENTARIO, Comando.ESCI_DA_CITTA));
+				Comando.VENDITORE_DI_PERGAMENE, Comando.INCANTATORE, Comando.INVENTARIO, Comando.ESCI_DA_CITTA));
 	}
 	
 	@Override
@@ -116,13 +119,13 @@ public abstract class Citta extends LocazioneUnica {
 
 			} else if (azione == Comando.ARMAIOLO) {
 				stato = StatoInCitta.DA_ARMAIOLO;
-				List<Comando> comandiPossibili = new ArrayList<>();
-				comandiPossibili.add(Comando.ANNULLA);
-				ScambiatoreArtefatti scambiatoreArtefatti = RegistroArtefatti.getScambiatorePerLocazione(g.getCoordinate());
-				BusEventi.pubblica(new ComandoAperturaInventarioCommerciante(comandiPossibili,
-						new AutomaAcquistiArtefatti(g, scambiatoreArtefatti)));
+				apriNegozio(g, TipoNegozio.ARMAIOLO);
 
-			} else if (azione == Comando.FUSIONE) {
+			} else if (azione == Comando.VENDITORE_DI_PERGAMENE) {
+				stato = StatoInCitta.DA_VENDITORE_DI_PERGAMENE;
+				apriNegozio(g, TipoNegozio.VENDITORE_DI_PERGAMENE);
+
+			} else if (azione == Comando.INCANTATORE) {
 				stato = StatoInCitta.DA_INCANTATORE;
 				incantatore = new AutomaIncantatore(g, new BancoDiLavoro());
 				apriIncantatore("Benvenuti. Mettete sul banco un artefatto e le pergamene da fondere.");
@@ -138,7 +141,8 @@ public abstract class Citta extends LocazioneUnica {
 				stato = StatoInCitta.IN_PIAZZA;
 			}
 
-		} else if (stato == StatoInCitta.DA_ALCHIMISTA || stato == StatoInCitta.DA_ARMAIOLO) {
+		} else if (stato == StatoInCitta.DA_ALCHIMISTA || stato == StatoInCitta.DA_ARMAIOLO
+				|| stato == StatoInCitta.DA_VENDITORE_DI_PERGAMENE) {
 			if (azione == Comando.ANNULLA) {
 				BusEventi.pubblica(new InternoMostraSchermataGioco());
 				impostaAzioniCitta();
@@ -158,6 +162,14 @@ public abstract class Citta extends LocazioneUnica {
 			}
 		}
 		return Stato.IN_LOCAZIONE;
+	}
+
+	private void apriNegozio(GruppoGiocatore g, TipoNegozio negozio) {
+		List<Comando> comandiPossibili = new ArrayList<>();
+		comandiPossibili.add(Comando.ANNULLA);
+		ScambiatoreArtefatti magazzino = RegistroArtefatti.getScambiatorePerNegozio(g.getCoordinate(), negozio);
+		BusEventi.pubblica(new ComandoAperturaInventarioCommerciante(comandiPossibili, negozio,
+				new AutomaAcquistiArtefatti(g, magazzino)));
 	}
 
 	private void apriIncantatore(String messaggio) {

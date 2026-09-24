@@ -2,6 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 
 public class RegistroArtefatti {
@@ -236,7 +237,27 @@ public class RegistroArtefatti {
 		return Artefatto.di(modelloDati);
 	}
 
-	public static ScambiatoreArtefatti getScambiatorePerLocazione(CoordinateMD coordinate) {
-		return getRegistroArtefatti().getScambiatorePerLocazione(coordinate);
+	public static ScambiatoreArtefatti getScambiatorePerNegozio(CoordinateMD coordinate, TipoNegozio negozio) {
+		return getRegistroArtefatti().getScambiatorePerNegozio(coordinate, negozio);
+	}
+
+	/**
+	 * Riempie i magazzini dei negozi di una città: armi ed equipaggiamento per l'armaiolo, pergamene
+	 * per il venditore. Per ora si fa una volta sola, alla creazione del mondo, con livelli a rotazione
+	 * da 1 a Costanti.MAGAZZINO_LIVELLO_MASSIMO, così c'è qualcosa anche per quando il gruppo sarà cresciuto.
+	 */
+	static void riempiMagazzini(CoordinateMD coordinate, GeneratoreArtefatti generatore) {
+		ScambiatoreArtefatti armaiolo = getScambiatorePerNegozio(coordinate, TipoNegozio.ARMAIOLO);
+		for (int i = 0; i < Costanti.MAGAZZINO_ARTEFATTI_ARMAIOLO; i++) {
+			armaiolo.addArtefatto(generatore.generaArtefattoCasuale(livelloInMagazzino(i)));
+		}
+		ScambiatoreArtefatti venditoreDiPergamene = getScambiatorePerNegozio(coordinate, TipoNegozio.VENDITORE_DI_PERGAMENE);
+		for (int i = 0; i < Costanti.MAGAZZINO_PERGAMENE; i++) {
+			venditoreDiPergamene.addArtefatto(generatore.generaPergamena(livelloInMagazzino(i)));
+		}
+	}
+
+	private static int livelloInMagazzino(int indice) {
+		return 1 + indice % Costanti.MAGAZZINO_LIVELLO_MASSIMO;
 	}
 }

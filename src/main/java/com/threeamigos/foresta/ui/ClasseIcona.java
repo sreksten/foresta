@@ -70,6 +70,8 @@ public enum ClasseIcona {
 	LOCANDA(Comando.LOCANDA, "icone/Locanda.gif"),
 	ALCHIMISTA(Comando.ALCHIMISTA, "icone/Alchimista.gif"),
 	ARMAIOLO(Comando.ARMAIOLO, "icone/Armaiolo.gif"),
+	VENDITORE_DI_PERGAMENE(Comando.VENDITORE_DI_PERGAMENE, "icone/VenditoreDiPergamene.gif"),
+	INCANTATORE(Comando.INCANTATORE, "icone/Incantatore.gif"),
 	FUSIONE(Comando.FUSIONE, "icone/Fusione.gif"),
 	ESCI_DA_CITTA(Comando.ESCI_DA_CITTA, "icone/EsciDaCitta.gif"),
 

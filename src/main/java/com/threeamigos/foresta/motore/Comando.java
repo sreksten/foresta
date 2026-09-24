@@ -73,7 +73,9 @@ public enum Comando {
 	LOCANDA,
 	ALCHIMISTA,
 	ARMAIOLO,
-	// Entra nella bottega dell'incantatore e, dentro, conferma la fusione
+	VENDITORE_DI_PERGAMENE,
+	INCANTATORE,
+	// Nella bottega dell'incantatore, conferma la fusione
 	FUSIONE,
 	ESCI_DA_CITTA,
 

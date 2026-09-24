@@ -32,6 +32,8 @@ public class ImageCache {
 	static BufferedImage sferaMagica;
 	static BufferedImage armaiolo;
 	static BufferedImage alchimista;
+	static BufferedImage venditoreDiPergamene;
+	static BufferedImage incantatore;
 	static BufferedImage ombraDelDrago;
 	static BufferedImage trionfo;
 	static BufferedImage separatore;
@@ -101,6 +103,8 @@ public class ImageCache {
 		sferaMagica = BufferedImageBuilder.buildBufferedImage("fondi/SferaMagica.gif");
 		armaiolo = BufferedImageBuilder.buildBufferedImage("personaggi/Armaiolo.gif");
 		alchimista = BufferedImageBuilder.buildBufferedImage("personaggi/Alchimista.gif");
+		venditoreDiPergamene = BufferedImageBuilder.buildBufferedImage("personaggi/VenditoreDiPergamene.gif");
+		incantatore = BufferedImageBuilder.buildBufferedImage("personaggi/Incantatore.gif");
 		ombraDelDrago = BufferedImageBuilder.buildBufferedImage("fondi/OmbraDelDrago.gif");
 		trionfo = BufferedImageBuilder.buildBufferedImage("fondi/Trionfo.gif");
 		separatore = BufferedImageBuilder.buildBufferedImage("fondi/Separatore.gif");

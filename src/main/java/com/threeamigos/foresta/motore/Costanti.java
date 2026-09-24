@@ -42,6 +42,11 @@ public class Costanti {
     public static final double COFANO_PROBABILITA_ARTEFATTO = 0.05;
     // Livello (e quindi numero di effetti) di una pergamena
     public static final int PERGAMENA_LIVELLO_MASSIMO = 3;
+    // Magazzini dei negozi di città, riempiti una volta sola alla creazione del mondo: quanti artefatti
+    // per negozio, con livelli a rotazione da 1 a MAGAZZINO_LIVELLO_MASSIMO
+    public static final int MAGAZZINO_ARTEFATTI_ARMAIOLO = 6;
+    public static final int MAGAZZINO_PERGAMENE = 6;
+    public static final int MAGAZZINO_LIVELLO_MASSIMO = 3;
 
     // Incantesimi
     public static final int INCANTESIMO_ACQUA_COSTO_ACQUISTO = 5;

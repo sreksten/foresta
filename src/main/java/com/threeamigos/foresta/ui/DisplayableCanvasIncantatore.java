@@ -50,8 +50,7 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
         graphics.drawImage(doomdark, (width - doomdark.getWidth(null)) / 2, y, null);
         y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
-        // TODO per ora l'incantatore ha l'immagine dell'alchimista
-        BufferedImage immaginePersonaggio = ImageCache.alchimista;
+        BufferedImage immaginePersonaggio = ImageCache.incantatore;
 
         // Come per l'armaiolo, il ladro fa da altezza di riferimento per non far sfarfallare l'immagine
         y += ALTEZZA_LADRO;

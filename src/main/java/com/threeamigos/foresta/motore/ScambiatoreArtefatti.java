@@ -16,4 +16,11 @@ public interface ScambiatoreArtefatti {
 
     void removeArtefatto(Artefatto artefatto);
 
+    /**
+     * @return true se questa parte accetta l'artefatto: un negozio, per esempio, tratta solo certi tipi
+     */
+    default boolean tratta(Artefatto artefatto) {
+        return true;
+    }
+
 }

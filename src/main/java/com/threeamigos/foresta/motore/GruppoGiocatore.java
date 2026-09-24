@@ -594,11 +594,27 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	}
 
 	private void suEventoRichiestaVenditaArtefatto(ComandoVenditaArtefatto eventoRichiestaVendita) {
+		vende(eventoRichiestaVendita);
+	}
+
+	/**
+	 * Vende un artefatto del gruppo al commerciante, che lo compra solo se tratta quel genere di oggetti:
+	 * l'armaiolo niente pergamene, il venditore di pergamene solo quelle.
+	 * Pubblica NotificaApprovazioneVenditaArtefatto o NotificaRifiutoVenditaArtefatto.
+	 *
+	 * @return true se la vendita è riuscita
+	 */
+	boolean vende(ComandoVenditaArtefatto eventoRichiestaVendita) {
 		Artefatto artefatto = (Artefatto) eventoRichiestaVendita.getOggettoDaSpostare();
+		if (!eventoRichiestaVendita.getParteRemota().tratta(artefatto)) {
+			BusEventi.pubblica(new NotificaRifiutoVenditaArtefatto(eventoRichiestaVendita));
+			return false;
+		}
 		removeArtefatto(artefatto);
 		addMonete(artefatto.getCostoAcquisto());
 		eventoRichiestaVendita.getParteRemota().addArtefatto(artefatto);
 		BusEventi.pubblica(new NotificaApprovazioneVenditaArtefatto(eventoRichiestaVendita));
+		return true;
 	}
 
 	private void suEventoIncantatura(ComandoIncantatura comandoIncantatura) {

@@ -5,10 +5,10 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoVenditaArtefatto;
 import com.threeamigos.foresta.motore.OggettoConCosto;
 
 /**
- * Il GruppoGiocatore (che "fa da banchiere" controllando le disponibilità economiche del commerciante e il costo
- * dell'Artefatto) rifiuta la vendita di un Artefatto verso un commerciante per mancanza di fondi.
+ * Il GruppoGiocatore rifiuta la vendita di un Artefatto a un commerciante che non tratta quel genere di
+ * oggetti (l'armaiolo non compra pergamene, il venditore di pergamene compra solo quelle).
  * <p>
- * NOTA: in questo momento i commercianti hanno fondi infiniti, per cui questo evento non può verificarsi.
+ * NOTA: in questo momento i commercianti hanno fondi infiniti, per cui non rifiutano mai per mancanza di denaro.
  *
  * @author Stefano Reksten
  */

@@ -1,6 +1,6 @@
 # Artefatti, pergamene e incantatore: piano di lavoro
 
-> Stato: aggiornato al 2026-09-24. Fasi 1-4 e 6 fatte; la fase 5 (venditore di pergamene) aspetta la sua icona. Raccoglie le decisioni prese, le fasi di lavoro, i TODO e i dubbi ancora aperti.
+> Stato: aggiornato al 2026-09-24. Fasi 1-6 fatte; resta la fase 7 (combattimento). Raccoglie le decisioni prese, le fasi di lavoro, i TODO e i dubbi ancora aperti.
 > I salvataggi **non** devono restare retrocompatibili: il formato si cambia liberamente, ma ogni modifica va coperta da test di salva/rileggi.
 
 ## 1. Obiettivo
@@ -109,14 +109,15 @@ Vedi la tabella dei gradi in §8. Formula: `2 × bonus fisso + percentuale`; +25
 - **Incantamenti uguali.** Restano **distinti** anche se hanno lo stesso `TipoDanno`, così non si aggira il limite; i bonus si sommano comunque. Le pergamene usate vengono distrutte.
 - **Nome proprio.** Si chiede a **ogni** fusione con il `Prompt`, proponendo come valore predefinito quello che l'artefatto aveva già, se ce l'aveva.
 - **Da dove si prende l'artefatto.** Solo dall'inventario del gruppo: se ce l'ha un personaggio, prima va riposto.
-- **Comando.** Un nuovo `Comando.FUSIONE` di conferma, con l'icona `img/icone/Fusione.gif` (già nelle risorse), registrata in `ClasseIcona` come le altre.
+- **Comandi.** In città `Comando.INCANTATORE` (icona `img/icone/Incantatore.gif`) apre la bottega; dentro, `Comando.FUSIONE` (icona `img/icone/Fusione.gif`) conferma la fusione.
 
 ### Negozi e generatore
 
-- **Dove.** In città: armaiolo, alchimista, venditore di pergamene (per ora con l'immagine dell'alchimista) e incantatore. I negozi sparsi nella foresta vengono dopo.
-- **Magazzini.** La chiave diventa (coordinate, tipo di inventario), perché più negozi della stessa città hanno la stessa coordinata.
+- **Dove.** In città, in quest'ordine nella barra delle icone: locanda, alchimista, armaiolo, venditore di pergamene, incantatore. I negozi sparsi nella foresta vengono dopo.
+- **Cosa trattano.** L'armaiolo compra e vende tutto tranne le pergamene; il venditore di pergamene solo quelle (`TipoNegozio.tratta`). Un rifiuto si avverte con un fumetto.
+- **Magazzini.** La chiave è (coordinate, `TipoNegozio`), perché più negozi della stessa città hanno la stessa coordinata.
 - **Generatore.** `GeneratoreArtefatti`: per ora uno scheletro generale, poi una grammatica sul modello delle locande (formato da definire).
-- **Riempimento dei negozi** (venditore di pergamene e armaiolo). Per ora il magazzino si genera **una volta sola, alla creazione del mondo**. Si potrà passare poi a una rigenerazione periodica in base al livello del gruppo.
+- **Riempimento dei negozi** (venditore di pergamene e armaiolo). Per ora il magazzino si genera **una volta sola, alla creazione del mondo**: 6 artefatti e 6 pergamene per città, con livelli a rotazione da 1 a 3 (`Costanti.MAGAZZINO_*`), perché alla creazione il livello di riferimento è sempre 1. Si potrà passare poi a una rigenerazione periodica in base al livello del gruppo.
 - **Gradi per livello.** Livelli 1-3 minore, 4-7 medio, dall'8 in su maggiore (`Costanti.GRADO_INCANTAMENTO_*`, da riaggiustare).
 - **Pergamene generate.** Per ora, per le prove, incantamenti e modificatori a caso; poi ci penserà la grammatica. Il livello della pergamena è quello di riferimento limitato a 3, e dà il numero di effetti; il grado dipende dal livello di riferimento.
 - **Artefatti che nascono incantati.** Ogni tanto il generatore produce un artefatto incantabile già incantato, tanto più spesso quanto più è alto il livello: 5% per ogni livello oltre il primo, fino al 60% (`Costanti.ARTEFATTO_PROBABILITA_INCANTATO_*`). Gli incantamenti sono del grado del livello e rispettano il limite di effetti, che conta anche i modificatori dell'artefatto. Il prezzo cresce come quello delle pergamene.
@@ -196,6 +197,14 @@ Vedi la tabella dei gradi in §8. Formula: `2 × bonus fisso + percentuale`; +25
   - `FUSIONE`: `Citta` controlla le regole (`RegoleIncantatura.verifica`); se va, chiede il nome proprio con il `Prompt`, già compilato con quello attuale (`RichiestaTesto` con testo predefinito, `Prompt.mostra`). Il testo arriva alla città con il nuovo `Locazione.riceviTesto`, che pubblica `ComandoIncantatura`.
   - `GruppoGiocatore.incanta` ricontrolla, fa pagare (`Costanti.FUSIONE_COSTO_*`), copia incantamenti e modificatori, distrugge le pergamene, rimette l'artefatto nel gruppo e risponde con `NotificaApprovazioneIncantatura` ("Ecco fatto! …") o `NotificaRifiutoIncantatura`. Un nome vuoto vuol dire nessun nome proprio.
   - Test: `IncantatoreTest` (11). Tutta la suite è verde (301 test). Da provare a mano nel gioco: la schermata e il giro del `Prompt`.
+- [x] **Fase 5 (venditore di pergamene e magazzini).**
+  - In città due nuovi comandi, `VENDITORE_DI_PERGAMENE` e `INCANTATORE`, con le loro icone. `FUSIONE` resta solo dentro la bottega dell'incantatore. Ordine dei negozi: locanda, alchimista, armaiolo, venditore di pergamene, incantatore.
+  - `TipoNegozio` (`ARMAIOLO`, `VENDITORE_DI_PERGAMENE`) in `modellodati`, con `tratta(TipoArtefatto)`. `RegistroArtefattiMD` tiene i magazzini per (coordinate, negozio), salvati come `x|y|NEGOZIO|numero`.
+  - `ScambiatoreArtefatti.tratta(Artefatto)` (di default vero); `GruppoGiocatore.vende` rifiuta con `NotificaRifiutoVenditaArtefatto` la vendita di quel che il negozio non tratta.
+  - `DisplayableCanvasArmaiolo` è diventato `DisplayableCanvasCommerciante`: una sola schermata per armaiolo e venditore, che cambia nome, immagine e intestazione secondo il `TipoNegozio` portato da `ComandoAperturaInventarioCommerciante`.
+  - Immagini vere per il venditore di pergamene e per l'incantatore (`img/personaggi/VenditoreDiPergamene.gif`, `Incantatore.gif`).
+  - `RegistroArtefatti.riempiMagazzini`, chiamato da `Foresta` quando costruisce le città.
+  - Test: `NegoziTest` (4) e uno nuovo in `RegistroArtefattiMDTest`. Tutta la suite è verde (306 test). Da provare a mano nel gioco.
 - [x] **Tetti degli effetti a 3/4/5** (comune/raro/leggendario) al posto di 5/6/7.
 - [x] **Il `|` sparisce dai testi** alla fonte (§5.5).
 - [x] **Rarità degli artefatti.** `RaritaArtefatto` con posti e tetti (§2, "Rarità"), salvata in `ArtefattoMD`. Il generatore fa rari il 10% degli artefatti incantabili e non genera mai leggendari; gli artefatti che nascono incantati hanno al massimo 3 incantamenti e almeno un posto libero. Test in `ArtefattoMDTest`, `ArtefattoIncantabileTest` e `GeneratoreArtefattiTest`; tutta la suite è verde (271 test).
@@ -242,7 +251,7 @@ Ogni fase si può provare e committare da sola.
 - **Cofano:** 5% pergamena, 5% artefatto casuale (10% in tutto).
 - **Test:** il loot finisce nel posto giusto; candidati esclusi per slot, livello, morte; nessun candidato → gruppo.
 
-### Fase 5: venditore di pergamene e magazzini (aspetta l'icona)
+### Fase 5: venditore di pergamene e magazzini
 - Nuovo stato di `Citta`, come `DA_ARMAIOLO`, che riusa `AutomaAcquistiArtefatti` e `DisplayableCanvasScambiatoreArtefatti` ma tratta solo pergamene.
 - `RegistroArtefattiMD.artefattiPerLocazione` diventa una mappa per (coordinate, tipo di inventario), con salvataggio e test.
 
@@ -281,7 +290,7 @@ Le regole sono in §2, "Combattimento". Da fare in `CalcolatoreCombattimento.cal
    - **Classifica (fatto):** per coerenza anche `GestorePunteggiSuFile` usa il `|` al posto del `#`, e legge le righe con `LettoreCampi`. `GestorePunteggiBase.pulisciNome` toglie il `|` dai nomi; un nome vuoto diventa "nessun nome" (`Serializzabile.NESSUN_NOME`). Un file dei punteggi vecchio, con il `#`, non si legge più e il gioco riparte dalla classifica di default. Test in `GestorePunteggiTest`.
 6. ~~**BERSERK applicato al contrario.**~~ Corretto. In `CalcolatoreCombattimento.calcolaDannoRisultante`, §2.5, la condizione era `dannoNonFisico && …`, mentre `TipoEffettoDiStato.BERSERK` e il commento dicono che scala il danno **fisico**. Ora è `!dannoNonFisico`, coperto da `CalcolatoreCombattimentoBerserkTest`. Siccome i guerrieri usano quasi sempre armi fisiche, finora il BERSERK non si applicava praticamente mai: ora che funziona, il combattimento dei guerrieri feriti diventa più forte, e conviene tenerlo presente nel bilanciamento.
 
-Non sono bug ma scelte da rivedere: l'armaiolo **ricompra a prezzo pieno** (vedi TODO) e ha il magazzino vuoto. Il blocco di debug con 9999 monete in `GruppoGiocatore.reimposta` e gli artefatti "PER TEST" in `Automa.inizializzaGioco` sono già segnati con FIXME.
+Non sono bug ma scelte da rivedere: l'armaiolo **ricompra a prezzo pieno** (vedi TODO). Il blocco di debug con 9999 monete in `GruppoGiocatore.reimposta` e gli artefatti "PER TEST" in `Automa.inizializzaGioco` sono già segnati con FIXME.
 
 ## 6. Dubbi ancora aperti
 
@@ -293,13 +302,12 @@ Non sono bug ma scelte da rivedere: l'armaiolo **ricompra a prezzo pieno** (vedi
 
 ## 7. TODO
 
-- [ ] Rifornimento dei magazzini di armaiolo e venditore di pergamene, dopo `GeneratoreArtefatti` (§6); rivendita a prezzo ridotto invece che pieno.
+- [ ] Rifornimento periodico dei magazzini di armaiolo e venditore di pergamene (oggi si riempiono una volta sola, alla creazione del mondo); rivendita a prezzo ridotto invece che pieno.
 - [ ] Tenere d'occhio il bilanciamento dei guerrieri: il BERSERK ora funziona davvero (§5.6), e i guerrieri feriti colpiscono più forte.
 - [ ] Il nome "Pergamena" va generato a caso come i nomi delle locande (runa, sigillo, …).
 - [ ] Grammatica per `GeneratoreArtefatti` (formato da definire), sul modello delle locande.
 - [ ] I personaggi del gruppo non si vedono a video: quando ci saranno, i rifiuti (peso, slot, livello) andranno mostrati anche lì, per esempio con un fumetto sul personaggio. C'è un TODO in `Artefatto.consegna`.
-- [ ] Icona e immagine del venditore di pergamene (per ora quella dell'alchimista); poi la fase 5.
-- [ ] Immagine dell'incantatore (per ora quella dell'alchimista).
+- [ ] L'immagine dell'incantatore (`img/personaggi/Incantatore.gif`) è 31×70, metà delle altre (il venditore è 62×140): va ingrandita.
 - [ ] Negozi sparsi nella foresta: un paio per tipo, tra armaiolo, alchimista e incantatore.
 - [ ] Bilanciamento di prezzi e gradi delle pergamene (§8).
 - [ ] Rivedere **tutti** i prezzi del gioco (artefatti, pozioni, incantesimi, pergamene, fusione) alla luce del loot che ora si può trovare: con spade, scudi, anelli e pergamene raccolti in giro, l'economia cambia.

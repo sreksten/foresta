@@ -295,7 +295,7 @@ public class SnifferBusEventi {
     }
 
     private void onEventoRichiestaAperturaInventarioCommerciante(ComandoAperturaInventarioCommerciante evento) {
-        Logger.log(headerEvento(evento));
+        Logger.log(headerEvento(evento) + evento.getNegozio());
     }
 
     private void onEventoRichiestaAperturaInventarioFornitore(ComandoAperturaInventarioFornitore evento) {

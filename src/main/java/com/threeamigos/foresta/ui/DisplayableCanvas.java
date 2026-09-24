@@ -14,6 +14,7 @@ import com.threeamigos.foresta.motore.modellodati.Messaggio;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
+import com.threeamigos.foresta.motore.modellodati.TipoNegozio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.tools.GestoreSalvataggi;
@@ -53,7 +54,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		STATO_STATISTICHE,
 		STATO_PUNTEGGI,
 		STATO_INVENTARIO,
-		STATO_ARMAIOLO,
+		STATO_COMMERCIANTE,
 		STATO_ALCHIMISTA,
 		STATO_INCANTATORE,
 		STATO_INTERMEZZO
@@ -75,7 +76,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final transient DisplayableCanvasRiquadroMissioni riquadroMissioni;
 	private final transient DisplayableCanvasMappaATuttoSchermo mappaATuttoSchermo;
 	private final transient DisplayableCanvasInventario inventario;
-	private final transient DisplayableCanvasArmaiolo armaiolo;
+	// Armaiolo e venditore di pergamene: una sola schermata, che cambia secondo il negozio
+	private final transient DisplayableCanvasCommerciante commerciante;
 	private final transient DisplayableCanvasScambiatoreConsumabili alchimista;
 	private final transient DisplayableCanvasIncantatore incantatore;
 	private final transient DisplayableCanvasBarraIcone barraIcone;
@@ -232,10 +234,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		Rectangle inventarioRect = new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto);
 		mappaCoordinateElementiGrafici.put(inventario, inventarioRect);
 
-		armaiolo = new DisplayableCanvasArmaiolo(larghezzaContenuto, altezzaContenuto);
+		commerciante = new DisplayableCanvasCommerciante(larghezzaContenuto, altezzaContenuto);
 
-		Rectangle armaioloRect = new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto);
-		mappaCoordinateElementiGrafici.put(armaiolo, armaioloRect);
+		Rectangle commercianteRect = new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto);
+		mappaCoordinateElementiGrafici.put(commerciante, commercianteRect);
 
 		alchimista = new DisplayableCanvasScambiatoreConsumabili(larghezzaContenuto, altezzaContenuto);
 
@@ -413,7 +415,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		long prossimoFotogramma = System.nanoTime();
 		while (animatoreInAzione) {
 			if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO || stato == StatoDisplayableCanvas.STATO_MAPPA
-					|| stato == StatoDisplayableCanvas.STATO_INVENTARIO || stato == StatoDisplayableCanvas.STATO_ARMAIOLO
+					|| stato == StatoDisplayableCanvas.STATO_INVENTARIO || stato == StatoDisplayableCanvas.STATO_COMMERCIANTE
 					|| stato == StatoDisplayableCanvas.STATO_ALCHIMISTA
 					|| stato == StatoDisplayableCanvas.STATO_INCANTATORE
 					|| stato == StatoDisplayableCanvas.STATO_INTERMEZZO
@@ -585,8 +587,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		} else if (stato == StatoDisplayableCanvas.STATO_INVENTARIO) {
 			inventario.disegnaInventario(graphics);
 			disegnaFumetto(graphics);
-		} else if (stato == StatoDisplayableCanvas.STATO_ARMAIOLO) {
-			armaiolo.disegnaInventario(graphics);
+		} else if (stato == StatoDisplayableCanvas.STATO_COMMERCIANTE) {
+			commerciante.disegnaInventario(graphics);
 			disegnaFumetto(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_ALCHIMISTA) {
 			alchimista.disegnaInventario(graphics);
@@ -618,8 +620,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		if (stato == StatoDisplayableCanvas.STATO_INVENTARIO) {
 			return inventario;
 		}
-		if (stato == StatoDisplayableCanvas.STATO_ARMAIOLO) {
-			return armaiolo;
+		if (stato == StatoDisplayableCanvas.STATO_COMMERCIANTE) {
+			return commerciante;
 		}
 		if (stato == StatoDisplayableCanvas.STATO_ALCHIMISTA) {
 			return alchimista;
@@ -687,14 +689,15 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
-	public void armaiolo() {
-		stato = StatoDisplayableCanvas.STATO_ARMAIOLO;
-		notificaFumetto("Benvenuti. Come posso aiutarvi?", armaiolo.getCoordinateFumetto());
+	public void commerciante() {
+		stato = StatoDisplayableCanvas.STATO_COMMERCIANTE;
+		notificaFumetto("Benvenuti. Come posso aiutarvi?", commerciante.getCoordinateFumetto());
 		repaint();
 	}
 
-	public void impostaAutomaArmaiolo(AutomaAcquistiArtefatti automaAcquistiArtefatti) {
-		armaiolo.impostaAutoma(automaAcquistiArtefatti);
+	public void impostaAutomaCommerciante(TipoNegozio negozio, AutomaAcquistiArtefatti automaAcquistiArtefatti) {
+		commerciante.impostaNegozio(negozio);
+		commerciante.impostaAutoma(automaAcquistiArtefatti);
 		repaint();
 	}
 

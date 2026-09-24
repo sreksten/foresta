@@ -15,12 +15,13 @@ public class RegistroArtefattiMD implements Serializzabile {
 	private final List<ArtefattoMD> elencoIniziale = new ArrayList<>();
 
 	private final Map<CoordinateMD, ArtefattoMD> artefattiSmarriti = new HashMap<>();
-	private final Map<CoordinateMD, Collection<ArtefattoMD>> artefattiPerLocazione = new HashMap<>();
+	// I magazzini dei negozi: più negozi della stessa città hanno la stessa coordinata
+	private final Map<TipoNegozio, Map<CoordinateMD, Collection<ArtefattoMD>>> magazzini = new EnumMap<>(TipoNegozio.class);
 
 	public void reimposta() {
 		elencoIniziale.clear();
 		artefattiSmarriti.clear();
-		artefattiPerLocazione.clear();
+		magazzini.clear();
 	}
 
 	public void aggiungiArtefatto(ArtefattoMD artefattoMD) {
@@ -63,16 +64,20 @@ public class RegistroArtefattiMD implements Serializzabile {
 			stream.println(entry.getKey().getY());
 			entry.getValue().salva(stream);
 		}
-		stream.println(artefattiPerLocazione.size());
-		for (Map.Entry<CoordinateMD, Collection<ArtefattoMD>> entry : artefattiPerLocazione.entrySet()) {
-			CoordinateMD coordinate = entry.getKey();
-			stream.print(coordinate.getX());
-			stream.print(PIPE);
-			stream.print(coordinate.getY());
-			stream.print(PIPE);
-			stream.println(entry.getValue().size());
-			for (ArtefattoMD artefatto : entry.getValue()) {
-				artefatto.salva(stream);
+		stream.println(magazzini.values().stream().mapToInt(Map::size).sum());
+		for (Map.Entry<TipoNegozio, Map<CoordinateMD, Collection<ArtefattoMD>>> negozio : magazzini.entrySet()) {
+			for (Map.Entry<CoordinateMD, Collection<ArtefattoMD>> entry : negozio.getValue().entrySet()) {
+				CoordinateMD coordinate = entry.getKey();
+				stream.print(coordinate.getX());
+				stream.print(PIPE);
+				stream.print(coordinate.getY());
+				stream.print(PIPE);
+				stream.print(negozio.getKey().name());
+				stream.print(PIPE);
+				stream.println(entry.getValue().size());
+				for (ArtefattoMD artefatto : entry.getValue()) {
+					artefatto.salva(stream);
+				}
 			}
 		}
 	}
@@ -90,43 +95,49 @@ public class RegistroArtefattiMD implements Serializzabile {
 			artefattiSmarriti.put(coordinate, artefatto);
 		}
 		line = stream.readLine();
-		int locazioni = Integer.parseInt(line);
-		for (int i = 0; i < locazioni; i++) {
+		int numeroMagazzini = Integer.parseInt(line);
+		for (int i = 0; i < numeroMagazzini; i++) {
 			line = stream.readLine();
 			LettoreCampi st = new LettoreCampi(line);
 			int x = Integer.parseInt(st.testo());
 			int y = Integer.parseInt(st.testo());
+			TipoNegozio negozio = TipoNegozio.valueOf(st.testo());
 			int totale = Integer.parseInt(st.testo());
-			CoordinateMD coordinate = new CoordinateMD(x, y);
+			Collection<ArtefattoMD> magazzino = getMagazzino(new CoordinateMD(x, y), negozio);
 			for (int j = 0; j < totale; j++) {
 				ArtefattoMD artefatto = new ArtefattoMD();
 				artefatto.leggi(stream);
-				artefattiPerLocazione.computeIfAbsent(coordinate, k-> new ArrayList<>()).add(artefatto);
+				magazzino.add(artefatto);
 			}
 		}
 	}
 
-	public ScambiatoreArtefatti getScambiatorePerLocazione(CoordinateMD coordinate) {
+	private Collection<ArtefattoMD> getMagazzino(CoordinateMD coordinate, TipoNegozio negozio) {
+		return magazzini
+				.computeIfAbsent(negozio, k -> new HashMap<>())
+				.computeIfAbsent(coordinate, k -> new ArrayList<>());
+	}
+
+	public ScambiatoreArtefatti getScambiatorePerNegozio(CoordinateMD coordinate, TipoNegozio negozio) {
 		return new ScambiatoreArtefatti() {
 			@Override
 			public Collection<Artefatto> getInventario() {
-				return artefattiPerLocazione
-						.computeIfAbsent(coordinate, k-> new ArrayList<>())
+				return getMagazzino(coordinate, negozio)
 						.stream()
 						.map(Artefatto::di)
 						.collect(Collectors.toList());
 			}
 			@Override
 			public void addArtefatto(Artefatto artefatto) {
-				artefattiPerLocazione
-						.computeIfAbsent(coordinate, k-> new ArrayList<>())
-						.add(artefatto.getModelloDati());
+				getMagazzino(coordinate, negozio).add(artefatto.getModelloDati());
 			}
 			@Override
 			public void removeArtefatto(Artefatto artefatto) {
-				artefattiPerLocazione
-						.computeIfAbsent(coordinate, k-> new ArrayList<>())
-						.remove(artefatto.getModelloDati());
+				getMagazzino(coordinate, negozio).remove(artefatto.getModelloDati());
+			}
+			@Override
+			public boolean tratta(Artefatto artefatto) {
+				return negozio.tratta(artefatto.getTipo());
 			}
 		};
 	}

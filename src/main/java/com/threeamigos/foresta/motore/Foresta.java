@@ -9,6 +9,7 @@ import com.threeamigos.foresta.motore.modellodati.ForestaMD;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.List;
@@ -159,6 +160,7 @@ public class Foresta {
 			if (classeLocazione.getTipoLocazione() == TipoLocazione.CITTA) {
 				CoordinateMD coordinate = costruisciLocazioneUnica(classeLocazione, false);
 				Locanda.impostaDatiLocanda(getLocazioneMD(coordinate), poolDatiLocanda.remove(0));
+				RegistroArtefatti.riempiMagazzini(coordinate, GeneratoreArtefatti.istanza());
 				Personaggio personaggioDisponibile = RegistroPersonaggi.getPersonaggioDisponibile();
 				if (personaggioDisponibile != null) {
 					RegistroPersonaggi.addPersonaggioInLocazione(personaggioDisponibile, coordinate);
