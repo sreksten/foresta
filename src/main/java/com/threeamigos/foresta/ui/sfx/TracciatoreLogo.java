@@ -1,21 +1,22 @@
 package com.threeamigos.foresta.ui.sfx;
 
-import javax.imageio.ImageIO;
-import javax.swing.*;
-import javax.swing.Timer;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.*;
 import java.util.List;
 
 /**
+ * Traccia il contorno di un logo con uno o piu' punti luminosi ("corridori") che lo rivelano man mano, poi lo
+ * fa apparire per intero con una dissolvenza. Si imposta con il {@link Costruttore}
+ * ({@code TracciatoreLogo.costruttore(logo)...costruisci()}), poi si fa avanzare di un fotogramma alla volta con
+ * {@link #avanza()} e si disegna con {@link #disegna(Graphics2D)}: chi lo usa decide dove e quando, per
+ * esempio con un Timer ogni {@link #INTERVALLO_FOTOGRAMMA_MS} millisecondi.
+ * <p>
+ * Da riga di comando lo si prova con TracciatoreLogoDaRigaDiComando, tra i sorgenti dei test.
+ *
  * ============================================================================
  *  PRINCIPIO DI FUNZIONAMENTO
  * ============================================================================
@@ -35,12 +36,12 @@ import java.util.List;
  *    booleana maschera[y][x] = true se il pixel appartiene al logo (primo piano),
  *    false se va scartato (sfondo).
  *
- * 1bis) AREA DI SCANSIONE (opzionale, --region=x,y,w,h)
+ * 1bis) AREA DI SCANSIONE (opzionale, {@link Costruttore#regione})
  *    -----------------------------------------------------------------------
  *    Se il logo e' solo un dettaglio dentro un disegno molto piu' grande
  *    (es. la scritta "3AM" nera dentro un'illustrazione con sfondo marrone
  *    chiaro), si puo' limitare la ricerca a un rettangolo con
- *    {@code --region=x,y,w,h}: maschera, tracciamento e buchi vengono
+ *    {@link Costruttore#regione}: maschera, tracciamento e buchi vengono
  *    calcolati SOLO su {@code logo.getSubimage(x, y, w, h)} — una vista che
  *    condivide i pixel dell'immagine originale ma ha origine locale (0,0) —
  *    cosi' il resto del disegno (che magari contiene altri elementi con lo
@@ -103,8 +104,8 @@ import java.util.List;
  *    Da qui si costruiscono due liste di punti per ciascuna forma: quella
  *    naturale e la sua inversa (stesso contorno, verso opposto), così ogni
  *    singolo corridore puo' scegliere il proprio verso (vedi
- *    {@link ContornoForma} e {@code --dir}, che accetta un valore per
- *    corridore, es. {@code --dir=cw;ccw;cw}).
+ *    {@link ContornoForma}, {@link Costruttore#corridore} e
+ *    {@link Costruttore#versi}, che accetta un valore per corridore).
  *
  * 5) PUNTI DI PARTENZA / ARRIVO E "CORRIDORI" MULTIPLI
  *    -----------------------------------------------------------------------
@@ -114,20 +115,20 @@ import java.util.List;
  *    partenza), un verso (vedi punto 4) e un ritardo (vedi punto 6bis). Il
  *    punto di partenza viene "agganciato" prima alla forma (contorno
  *    esterno o buco) il cui contorno ha il punto piu' vicino, poi, dentro
- *    quella forma, al punto del contorno piu' vicino. Se non viene passato
- *    nessun --start esplicito, viene creato automaticamente un corridore a
+ *    quella forma, al punto del contorno piu' vicino. Se non viene indicato
+ *    nessun corridore esplicito ({@link Costruttore#corridore}), viene creato automaticamente un corridore a
  *    giro completo per OGNI forma rilevata (contorni esterni e buchi
  *    inclusi).
  *
- * 6) SINCRONIZZAZIONE DI PIU' CORRIDORI (quando --start ne definisce piu' di uno)
+ * 6) SINCRONIZZAZIONE DI PIU' CORRIDORI (quando ce n'e' piu' di uno)
  *    -----------------------------------------------------------------------
  *    Con più corridori di lunghezza diversa (lettere/buchi diversi, o archi
- *    parziali via --end) c'è un'unica domanda che conta: "quando si
+ *    parziali con un arrivo) c'è un'unica domanda che conta: "quando si
  *    considera completato il giro nel suo insieme?". La risposta è sempre
  *    la stessa in questo programma — SOLO quando OGNI corridore ha raggiunto
  *    la fine del proprio percorso (vedi {@link #avanza}, fase TRACCIAMENTO: un
  *    corridore che finisce prima si ferma lì e aspetta gli altri). Quello che
- *    cambia con {@code --sync=matched} è SOLO la velocita' di ciascun
+ *    cambia con {@link Costruttore#velocitaAllineata} è SOLO la velocita' di ciascun
  *    corridore:
  *      - predefinito (indipendente): tutti i corridori avanzano alla stessa
  *        velocità "di riferimento", quindi un percorso più corto finisce
@@ -136,10 +137,10 @@ import java.util.List;
  *        lunghezza del proprio percorso, così tutti raggiungono la fine
  *        esattamente nello stesso fotogramma.
  *
- * 6bis) PARTENZA POSTICIPATA (--delay)
+ * 6bis) PARTENZA POSTICIPATA (ritardo)
  *    -----------------------------------------------------------------------
  *    Ogni {@link SpecificaCorridore} può avere un ritardo iniziale, in fotogrammi o
- *    in secondi (vedi {@code --delay}). Finché il ritardo non è scaduto il
+ *    in secondi (vedi {@link Costruttore#ritardi} e {@link Costruttore#corridore}). Finché il ritardo non è scaduto il
  *    corridore è semplicemente invisibile: {@link #avanza} lo tiene fermo a
  *    inizio percorso e ne decrementa il contatore invece di farlo avanzare,
  *    e {@link #disegnaFotogramma}/{@link #rivelaLogoConTorcia} saltano del
@@ -170,105 +171,28 @@ import java.util.List;
  *                    {@code fotogrammiDissolvenza} fotogrammi (un semplice
  *                    AlphaComposite globale, non più localizzato).
  *      PAUSA        -> il logo resta visibile a piena opacità per una pausa.
- *      (torna a TRACCIAMENTO, azzerando i corridori, per un ciclo continuo).
- *    La modalità "torcia" è quella predefinita; con {@code --reveal=full}
+ *      Poi, se il Costruttore ha chiesto di ripetere ({@link Costruttore#ripeti}), si
+ *      torna a TRACCIAMENTO azzerando i corridori; altrimenti l'effetto resta
+ *      fermo in PAUSA e {@link #isFinito()} diventa vero.
+ *    La modalità "torcia" è quella predefinita; con {@code rivelaConTorcia(false)}
  *    si va al comportamento più semplice (logo sempre visibile).
  *
- * Uso da riga di comando:
- *   javac TracciatoreLogo.java
- *   java TracciatoreLogo logo.png [opzioni]
- *
- * Opzioni (tutte facoltative):
- *   --alpha=N            soglia alpha 0-255 per il criterio di trasparenza
- *                         (predefinito 128; usata solo se --bgcolor non è dato)
- *   --bgcolor=RRGGBB      invece dell'alpha, scarta i pixel simili a questo
- *                         colore di sfondo (scontorno per colore), es. --bgcolor=FFFFFF
- *   --tol=N                tolleranza per --bgcolor, per canale RGB (predefinito 30)
- *   --region=x,y,w,h         limita la ricerca del logo a questo rettangolo
- *                         dell'immagine (vedi punto 1bis); il rendering usa
- *                         comunque sempre l'immagine originale per intero
- *   --start=x,y[;x,y...]   uno o più punti di partenza (pixel), uno per corridore
- *   --end=x,y[;x,y...]     punti di arrivo corrispondenti, stesso ordine dei
- *                         --start (se un corridore non ha un end associato, fa
- *                         un giro completo)
- *   --delay=d[;d...]       ritardo iniziale di ciascun corridore (vedi punto 6bis),
- *                         stesso ordine dei --start (o delle forme rilevate se
- *                         --start è omesso); un numero puro è in fotogrammi
- *                         (es. "30"), con suffisso "s" è in secondi
- *                         (es. "1.5s"); predefinito 0 (nessun ritardo)
- *   --dir=cw|ccw[;cw|ccw...] verso di percorrenza (vedi punto 4): un solo
- *                         valore si applica a TUTTI i corridori (predefinito cw);
- *                         più valori separati da ";" si applicano uno per
- *                         corridore, stesso ordine dei --start (o delle forme
- *                         rilevate se --start è omesso) — se i valori sono
- *                         meno dei corridori, agli ultimi si applica il primo
- *                         valore della lista
- *   --lap=ms                 durata di riferimento di un giro completo (predefinito 4000)
- *   --sync=independent|matched  velocità dei corridori multipli (predefinito independent,
- *                         vedi punto 6); in entrambi i casi si aspetta sempre
- *                         che TUTTI abbiano finito prima di procedere
- *   --reveal=spotlight|full     modalità di rivelazione del logo (predefinito spotlight,
- *                         vedi punto 7)
- *   --spot=N              raggio in pixel della torcia (predefinito ~10% del lato più corto dell'immagine)
- *   --fade=N              durata in fotogrammi della dissolvenza finale (predefinito 40)
- *   --dump=<dir> [--frames=N] [--scale=N]  anteprima senza schermo su PNG, senza finestra
- *
- * Se non si passa --start, si ottiene il comportamento "semplice": un
- * corridore a giro completo per ogni forma rilevata (contorni esterni e buchi),
- * nel verso richiesto da --dir.
- *
- * Esempi (da eseguire dopo "javac TracciatoreLogo.java"), utili anche come
- * checklist per riprovare le varie funzionalita' una per volta:
- *
- *   // comportamento base: un corridore a giro completo per ogni lettera/buco
- *   // rilevati automaticamente da un PNG con canale alpha (fase 1, 2, 2bis)
- *   java TracciatoreLogo logo.png
- *
- *   // stessa cosa, ma mostrando la finestra Swing a piena visibilita' invece
- *   // che con la torcia (utile per "vedere" subito tutti i contorni trovati)
- *   java TracciatoreLogo logo.png --reveal=full
- *
- *   // logo su sfondo opaco a tinta unita (scontorno per colore) invece che trasparente (fase 1)
- *   java TracciatoreLogo scena.png --bgcolor=DEB887 --tol=15
- *
- *   // limita la ricerca del logo a un dettaglio dentro un disegno piu' grande (fase 1bis)
- *   java TracciatoreLogo scena.png --bgcolor=DEB887 --region=100,200,260,140
- *
- *   // punti di partenza/arrivo espliciti per due corridori, ognuno su un arco parziale (fase 5)
- *   java TracciatoreLogo logo.png --start=10,50;150,10 --end=60,90;160,80
- *
- *   // stessi due corridori, ma con velocità calibrata perché arrivino insieme (punto 6)
- *   java TracciatoreLogo logo.png --start=10,50;150,10 --end=60,90;160,80 --sync=matched
- *
- *   // partenze scaglionate: un corridore ogni mezzo secondo (fase 6bis; attenzione
- *   // a quotare l'argomento nella shell, ";" è un separatore di comandi)
- *   java TracciatoreLogo logo.png "--delay=0;0.5s;1s"
- *
- *   // verso diverso per ciascun corridore (fase 4): "3" orario, "A" antiorario, "M" orario
- *   java TracciatoreLogo logo.png "--dir=cw;ccw;cw"
- *
- *   // raggio della torcia più stretto/largo e dissolvenza finale più lenta (fase 7)
- *   java TracciatoreLogo logo.png --spot=15 --fade=80 --lap=6000
- *
- *   // anteprima senza schermo su PNG (nessuna finestra, utile via SSH senza display):
- *   // salva 8 fotogrammi in ./anteprima, ingranditi 4x
- *   java -Djava.awt.headless=true TracciatoreLogo logo.png --dump=./anteprima --frames=8 --scale=4
  */
-public class TracciatoreLogo {
+public final class TracciatoreLogo {
 
     // ---- parametri regolabili ----------------------------------------------
-    // Costanti globali usate in piu' punti del programma: raggruppate qui in
-    // cima per essere facili da ritrovare e modificare senza dover cercare
-    // "numeri magici" sparsi nel codice.
-    private static final int SOGLIA_ALPHA_PREDEFINITA = 128;   // soglia alpha predefinito (0-255)
-    private static final int TOLLERANZA_COLORE_PREDEFINITA = 30;    // tolleranza per-canale predefinito per --bgcolor
-    private static final int DURATA_GIRO_MS_PREDEFINITA = 4000;  // durata di riferimento di un giro completo
-    private static final int PUNTI_RICAMPIONAMENTO = 900;     // punti equidistanti in cui viene ricampionato ogni contorno
-    private static final int INTERVALLO_FOTOGRAMMA_MS = 16;             // intervallo del Timer Swing: 16ms ~= 60 fotogrammi al secondo
-    private static final int FOTOGRAMMI_PAUSA_FINALE = 45;         // quanti fotogrammi restare fermi in fase PAUSA (logo completo acceso)
-    private static final int ALPHA_MASSIMA_TORCIA = 200;      // 0-255: opacità massima del logo sotto la torcia ("si intravede" e basta)
-    private static final int FOTOGRAMMI_DISSOLVENZA_PREDEFINITI = 40;        // durata predefinita della dissolvenza finale, in fotogrammi
-    private static final Color COLORE_SFONDO = new Color(30, 30, 34); // colore di sfondo mostrato quando il logo è nascosto
+    // I valori predefiniti del Costruttore, raggruppati qui in cima per essere
+    // facili da ritrovare e modificare senza dover cercare "numeri magici"
+    // sparsi nel codice.
+    static final int SOGLIA_ALPHA_PREDEFINITA = 128;              // soglia alpha predefinita (0-255)
+    static final int DURATA_GIRO_MS_PREDEFINITA = 4000;           // durata di riferimento di un giro completo
+    private static final int PUNTI_RICAMPIONAMENTO = 900;         // punti equidistanti in cui viene ricampionato ogni contorno
+    /** L'intervallo tra due fotogrammi a cui l'effetto e' pensato: 16ms ~= 60 fotogrammi al secondo. */
+    public static final int INTERVALLO_FOTOGRAMMA_MS = 16;
+    static final int FOTOGRAMMI_PAUSA_PREDEFINITI = 45;           // quanti fotogrammi restare fermi in fase PAUSA (logo completo acceso)
+    private static final int ALPHA_MASSIMA_TORCIA = 200;          // 0-255: opacità massima del logo sotto la torcia ("si intravede" e basta)
+    static final int FOTOGRAMMI_DISSOLVENZA_PREDEFINITI = 40;     // durata predefinita della dissolvenza finale, in fotogrammi
+    static final Color COLORE_SFONDO_PREDEFINITO = new Color(30, 30, 34); // colore di sfondo mostrato quando il logo è nascosto
 
     // =========================================================================
     //  Criterio "pixel da scartare"
@@ -332,392 +256,380 @@ public class TracciatoreLogo {
     }
 
     // =========================================================================
-    //  main / CLI
+    //  L'effetto
     // =========================================================================
 
-    public static void main(String[] argomenti) {
-        // args[0] e' obbligatorio: il percorso del file immagine. Tutto il resto
-        // sono opzioni "--chiave=valore" facoltative, interpretate da leggiOpzioni.
-        if (argomenti.length < 1) {
-            stampaUso();
-            System.exit(1);
-        }
+    private final BufferedImage logo;
+    private final List<Corridore> corridori;
+    private final int fotogrammiPerGiro;
+    private final int fotogrammiDissolvenza;
+    private final int fotogrammiPausa;
+    private final boolean rivelaConTorcia;
+    private final int raggioTorcia;
+    private final boolean ripeti;
+    private final Color coloreSfondo;
+    private final List<String> diagnostica;
+    private final StatoAnimazione stato = new StatoAnimazione();
 
-        Map<String, String> opzioni = leggiOpzioni(argomenti, 1);
-
-        // --- caricamento immagine -------------------------------------------
-        BufferedImage logo;
-        try {
-            logo = ImageIO.read(new File(argomenti[0]));
-        } catch (Exception e) {
-            System.err.println("Impossibile leggere l'immagine: " + e.getMessage());
-            return;
-        }
-        if (logo == null) {
-            // ImageIO.read torna null (invece di lanciare) se il formato non è riconosciuto
-            System.err.println("Formato immagine non riconosciuto.");
-            return;
-        }
-
-        // --- scelta del criterio "pixel di sfondo" (fase 1 della pipeline) -----
-        PredicatoSfondo predicatoSfondo;
-        if (opzioni.containsKey("bgcolor")) {
-            // modalita' scontorno per colore: interpreta "RRGGBB" come intero esadecimale e
-            // lo usa direttamente come colore RGB (il costruttore Color(int) legge
-            // i bit 16-23/8-15/0-7 come R/G/B, esattamente il formato "RRGGBB")
-            Color sfondo = new Color(Integer.parseInt(opzioni.get("bgcolor"), 16));
-            int tolleranzaColore = Integer.parseInt(opzioni.getOrDefault("tol", String.valueOf(TOLLERANZA_COLORE_PREDEFINITA)));
-            predicatoSfondo = PredicatoSfondo.perColore(sfondo, tolleranzaColore);
-            System.out.println("Modalita' sfondo a colore: " + coloreInEsadecimale(sfondo) + " (tolleranza " + tolleranzaColore + ")");
-        } else {
-            // modalita' predefinita: trasparenza (canale alpha)
-            int soglia = Integer.parseInt(opzioni.getOrDefault("alpha", String.valueOf(SOGLIA_ALPHA_PREDEFINITA)));
-            if (!logo.getColorModel().hasAlpha()) {
-                System.err.println("Attenzione: l'immagine non ha canale alpha; usa --bgcolor per tracciarla correttamente.");
-            }
-            predicatoSfondo = PredicatoSfondo.perAlpha(soglia);
-            System.out.println("Modalita' alpha: soglia " + soglia);
-        }
-
-        // --- area di scansione opzionale (fase 1bis) ----------------------------
-        Rectangle regione;
-        try {
-            regione = leggiRegione(opzioni.get("region"), logo.getWidth(), logo.getHeight());
-        } catch (IllegalArgumentException e) {
-            System.err.println("Regione non valida: " + e.getMessage());
-            return;
-        }
-        // getSubimage() NON copia i pixel: restituisce una "vista" che condivide
-        // lo stesso array di dati dell'immagine originale, ma la cui coordinata
-        // (0,0) corrisponde a (region.x, region.y) nell'immagine intera. Per
-        // questo, dopo aver trovato i contorni su questa vista, dovremo poi
-        // sommare (scostamentoX, scostamentoY) per riportarli nel sistema di coordinate
-        // dell'immagine originale (usata invece per il rendering finale).
-        BufferedImage immagineScansione = regione != null ? logo.getSubimage(regione.x, regione.y, regione.width, regione.height) : logo;
-        int scostamentoX = regione != null ? regione.x : 0;
-        int scostamentoY = regione != null ? regione.y : 0;
-        if (regione != null) {
-            System.out.println("Area di scansione: " + regione.width + "x" + regione.height
-                    + " a partire da (" + regione.x + "," + regione.y + "); il rendering userà comunque l'immagine intera.");
-        }
-
-        // --- fase 1: maschera primo piano/sfondo, calcolata SOLO sull'area di scansione ---
-        boolean[][] maschera = costruisciMaschera(immagineScansione, predicatoSfondo);
-
-        // --- fase 2 e 2bis: tracciamento dei contorni esterni e dei buchi interni ---
-        List<List<Point>> contorniEsterni = tracciaTuttiIContorni(maschera);
-        boolean[][] mascheraBuchi = estraiBuchiRacchiusi(maschera);
-        List<List<Point>> contorniBuchi = tracciaTuttiIContorni(mascheraBuchi);
-
-        // uniamo i due elenchi: da qui in poi un contorno esterno e un buco sono
-        // trattati esattamente allo stesso modo (entrambi diventano una "forma")
-        List<List<Point>> tuttiIContorni = new ArrayList<>(contorniEsterni);
-        tuttiIContorni.addAll(contorniBuchi);
-        if (tuttiIContorni.isEmpty()) {
-            System.err.println("Nessun contorno trovato: controlla la soglia/il colore di sfondo, l'immagine o la regione.");
-            return;
-        }
-
-        // --- fase 3 e 4: ricampionamento a distanza costante + verso naturale ---
-        List<ContornoForma> forme = new ArrayList<>();
-        for (List<Point> contorno : tuttiIContorni) {
-            List<Point2D.Double> naturale = ricampiona(contorno, PUNTI_RICAMPIONAMENTO);
-            // se si stava usando --region, i punti sono ancora in coordinate LOCALI
-            // al ritaglio: li riportiamo nel sistema di coordinate dell'immagine intera
-            if (scostamentoX != 0 || scostamentoY != 0) {
-                for (Point2D.Double p : naturale) {
-                    p.x += scostamentoX;
-                    p.y += scostamentoY;
-                }
-            }
-            // il verso naturale (orario/antiorario) è invariante per traslazione,
-            // quindi non importa se lo calcoliamo prima o dopo aver sommato l'offset
-            boolean orario = areaConSegno(naturale) > 0;
-            List<Point2D.Double> invertito = new ArrayList<>(naturale);
-            Collections.reverse(invertito); // stesso contorno, ma percorso in verso opposto
-            forme.add(new ContornoForma(naturale, invertito, orario));
-        }
-
-        // diagnostica a console: utile per calibrare le coordinate di --start/--end
-        // a tentativi, senza dover indovinare "a occhio" dove cade ogni forma
-        System.out.println(forme.size() + " forma/e rilevate (" + contorniEsterni.size()
-                + " contorni esterni, " + contorniBuchi.size() + " buchi interni):");
-        for (int i = 0; i < forme.size(); i++) {
-            ContornoForma forma = forme.get(i);
-            String tipo = i < contorniEsterni.size() ? "esterno" : "buco";
-            System.out.println("  forma " + i + " (" + tipo + "): verso naturale "
-                    + (forma.naturaleOrario ? "orario" : "antiorario")
-                    + ", partenza naturale " + formattaPunto(forma.percorsoNaturale.get(0)) + ", " + forma.percorsoNaturale.size() + " punti.");
-        }
-
-        // --- fase 5: costruzione delle "specifiche" di ciascun corridore -----------
-        // Le liste --start/--end/--delay/--dir sono tutte "parallele": l'i-esimo
-        // valore di ciascuna si applica all'i-esimo corridore. leggiVersi gestisce
-        // anche il caso "un solo valore per tutti".
-        List<Point2D.Double> partenze = leggiPunti(opzioni.get("start"));
-        List<Point2D.Double> arrivi = leggiPunti(opzioni.get("end"));
-        List<Integer> ritardi = leggiRitardi(opzioni.get("delay"));
-        List<Verso> versi = leggiVersi(opzioni.get("dir"));
-        // se non è stato specificato nessun --dir, o è stato dato un solo valore,
-        // quel valore (o il verso orario predefinito) fa da "riserva" per i corridori in eccesso
-        Verso versoDiRiserva = versi.isEmpty() ? Verso.ORARIO : versi.get(0);
-
-        List<SpecificaCorridore> specifiche = new ArrayList<>();
-        if (partenze.isEmpty()) {
-            // nessun punto esplicito: un corridore a giro completo per ogni forma rilevata,
-            // ciascuno con il proprio ritardo/verso se --delay/--dir ne definiscono uno
-            for (int i = 0; i < forme.size(); i++) {
-                int ritardo = i < ritardi.size() ? ritardi.get(i) : 0;
-                Verso direzione = i < versi.size() ? versi.get(i) : versoDiRiserva;
-                specifiche.add(new SpecificaCorridore(forme.get(i).percorsoNaturale.get(0), null, direzione, ritardo));
-            }
-        } else {
-            for (int i = 0; i < partenze.size(); i++) {
-                Point2D.Double arrivo = i < arrivi.size() ? arrivi.get(i) : null;
-                int ritardo = i < ritardi.size() ? ritardi.get(i) : 0;
-                Verso direzione = i < versi.size() ? versi.get(i) : versoDiRiserva;
-                specifiche.add(new SpecificaCorridore(partenze.get(i), arrivo, direzione, ritardo));
-            }
-        }
-
-        // --- calcolo della velocita' di riferimento e costruzione dei Corridore veri e propri ---
-        int durataGiroMs = Integer.parseInt(opzioni.getOrDefault("lap", String.valueOf(DURATA_GIRO_MS_PREDEFINITA)));
-        // fotogrammiPerGiro = quanti impulsi del Timer servono per completare un giro
-        // di riferimento (un giro completo alla velocita' "di riferimento" impiega
-        // circa questo numero di fotogrammi)
-        int fotogrammiPerGiro = Math.max(1, durataGiroMs / INTERVALLO_FOTOGRAMMA_MS);
-        boolean velocitaAllineata = "matched".equalsIgnoreCase(opzioni.get("sync"));
-
-        List<Corridore> corridori = new ArrayList<>();
-        for (SpecificaCorridore specifica : specifiche) {
-            // trasforma la "specifica astratta" (punti pixel) in un percorso concreto
-            // di punti ricampionati, agganciato alla forma giusta (vedi punto 5)
-            List<Point2D.Double> percorso = costruisciPercorsoCorridore(forme, specifica);
-            double puntiPerFotogramma = velocitaAllineata
-                    // velocità "su misura": lunghezza del percorso diviso il numero di
-                    // fotogrammi disponibili, così ogni corridore arriva in fondo esattamente
-                    // allo stesso impulso (vedi punto 6 della documentazione)
-                    ? (double) percorso.size() / fotogrammiPerGiro
-                    // velocità "di riferimento" uguale per tutti: un percorso più corto
-                    // del giro di riferimento (PUNTI_RICAMPIONAMENTO) finisce prima e resta
-                    // fermo ad aspettare gli altri (vedi avanza())
-                    : (double) PUNTI_RICAMPIONAMENTO / fotogrammiPerGiro;
-            corridori.add(new Corridore(percorso, puntiPerFotogramma, specifica.fotogrammiRitardo));
-            System.out.println("Corridore: partenza agganciata a " + formattaPunto(percorso.get(0))
-                    + (specifica.arrivo != null ? ", arrivo agganciato a " + formattaPunto(percorso.get(percorso.size() - 1)) : ", giro completo")
-                    + ", verso " + (specifica.verso == Verso.ORARIO ? "orario" : "antiorario")
-                    + ", " + percorso.size() + " punti" + (velocitaAllineata ? " (velocita' sincronizzata)" : "")
-                    + (specifica.fotogrammiRitardo > 0 ? String.format(", ritardo %d fotogrammi (~%.2fs)",
-                            specifica.fotogrammiRitardo, specifica.fotogrammiRitardo * INTERVALLO_FOTOGRAMMA_MS / 1000.0) : "") + ".");
-        }
-
-        // --- opzioni di resa grafica (fase 7) -----------------------------------
-        boolean rivelaConTorcia = !"full".equalsIgnoreCase(opzioni.get("reveal"));
-        // il raggio della torcia è proporzionato alle dimensioni dell'immagine:
-        // un raggio fisso (pensato per loghi grandi) coprirebbe quasi tutto un
-        // logo piccolo come "3AM" (100px di altezza), facendo sembrare la torcia
-        // "sempre spenta" perché rivela l'intera lettera in un colpo solo.
-        int raggioTorciaPredefinito = Math.max(6, Math.min(logo.getWidth(), logo.getHeight()) / 10);
-        int raggioTorcia = Integer.parseInt(opzioni.getOrDefault("spot", String.valueOf(raggioTorciaPredefinito)));
-        int fotogrammiDissolvenza = Integer.parseInt(opzioni.getOrDefault("fade", String.valueOf(FOTOGRAMMI_DISSOLVENZA_PREDEFINITI)));
-
-        if (opzioni.containsKey("dump")) {
-            // modalità senza schermo: nessuna finestra, salva alcuni fotogrammi come PNG
-            // (utile per generare un'anteprima quando non c'è un display disponibile,
-            // es. una sessione SSH senza server X).
-            int numeroFotogrammi = Integer.parseInt(opzioni.getOrDefault("frames", "8"));
-            int scala = Integer.parseInt(opzioni.getOrDefault("scale", "1"));
-            try {
-                salvaFotogrammi(logo, corridori, fotogrammiPerGiro, fotogrammiDissolvenza, rivelaConTorcia, raggioTorcia,
-                        opzioni.get("dump"), numeroFotogrammi, scala);
-            } catch (IOException e) {
-                System.err.println("Errore salvando i fotogrammi: " + e.getMessage());
-            }
-            return;
-        }
-
-        // --- modalita' normale: apre una finestra Swing con l'animazione dal vivo ---
-        // invokeLater è d'obbligo per qualunque cosa tocchi componenti Swing: li
-        // fa creare/aggiornare sull'Event Dispatch Thread, il thread unico dedicato
-        // al disegno e agli eventi dell'interfaccia grafica.
-        SwingUtilities.invokeLater(() -> {
-            JFrame finestra = new JFrame("Tracciatore del logo");
-            PannelloAnimazione pannello = new PannelloAnimazione(logo, corridori, fotogrammiDissolvenza, rivelaConTorcia, raggioTorcia);
-            finestra.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-            finestra.setContentPane(pannello);
-            finestra.pack(); // dimensiona la finestra in base alla preferredSize del pannello
-            finestra.setLocationRelativeTo(null); // centra la finestra sullo schermo
-            finestra.setVisible(true);
-            pannello.avvia(); // avvia il Timer dell'animazione solo ora che la finestra è visibile
-        });
+    private TracciatoreLogo(Costruttore c, List<Corridore> corridori, int fotogrammiPerGiro, int raggioTorcia,
+                            List<String> diagnostica) {
+        this.logo = c.logo;
+        this.corridori = corridori;
+        this.fotogrammiPerGiro = fotogrammiPerGiro;
+        this.fotogrammiDissolvenza = c.fotogrammiDissolvenza;
+        this.fotogrammiPausa = c.fotogrammiPausa;
+        this.rivelaConTorcia = c.rivelaConTorcia;
+        this.raggioTorcia = raggioTorcia;
+        this.ripeti = c.ripeti;
+        this.coloreSfondo = c.coloreSfondo;
+        this.diagnostica = Collections.unmodifiableList(diagnostica);
     }
 
     /**
-     * Renderizza {@code numeroFotogrammi} istantanee equidistanti di un intero ciclo
-     * dell'animazione (tracciamento + dissolvenza + pausa), senza aprire alcuna
-     * finestra, e le salva come PNG in {@code dir}. Comodo per verificare
-     * l'effetto quando non e' disponibile un display (es. server senza schermo).
+     * Comincia a impostare l'effetto per quel logo. Il logo viene sempre disegnato per intero; dove cercarne il
+     * contorno lo decidono il criterio di sfondo e l'eventuale regione.
      */
-    private static void salvaFotogrammi(BufferedImage logo, List<Corridore> corridori, int fotogrammiPerGiro, int fotogrammiDissolvenza,
-                                    boolean rivelaConTorcia, int raggioTorcia,
-                                    String nomeCartella, int numeroFotogrammi, int scala) throws IOException {
-        File cartella = new File(nomeCartella);
-        cartella.mkdirs();
+    public static Costruttore costruttore(BufferedImage logo) {
+        return new Costruttore(logo);
+    }
 
-        // Stima (per eccesso) di quanti impulsi dura un intero ciclo dell'animazione,
-        // per poter distribuire gli istantanei richiesti su tutto il ciclo:
-        // fase TRACCIAMENTO (il corridore piu' lento, in genere un giro completo, ci mette
-        // circa fotogrammiPerGiro impulsi, PIU' l'eventuale ritardo iniziale del corridore
-        // piu' "tardivo") + fase DISSOLVENZA (fotogrammiDissolvenza impulsi) + fase PAUSA.
+    /** Fa avanzare l'animazione di un fotogramma. Finito l'effetto (vedi {@link #isFinito()}) non cambia piu' nulla. */
+    public void avanza() {
+        avanza(corridori, stato, fotogrammiDissolvenza, fotogrammiPausa, ripeti);
+    }
+
+    /**
+     * Disegna il fotogramma corrente con l'angolo in alto a sinistra del logo in (0, 0) e alla sua dimensione:
+     * per spostarlo o ingrandirlo si trasforma prima {@code g2} (translate, scale).
+     */
+    public void disegna(Graphics2D g2) {
+        Graphics2D g = (Graphics2D) g2.create();
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
+        double opacita = !rivelaConTorcia ? 1.0 : opacitaDissolvenza(stato, fotogrammiDissolvenza);
+        disegnaFotogramma(g, logo, corridori, stato.fase, opacita, rivelaConTorcia, raggioTorcia, coloreSfondo);
+        g.dispose();
+    }
+
+    /** Vero quando, senza ripetizione, tracciamento, dissolvenza e pausa finale sono terminati. */
+    public boolean isFinito() {
+        return stato.finito;
+    }
+
+    /** Riporta l'effetto all'inizio, come appena costruito. */
+    public void ricomincia() {
+        for (Corridore c : corridori) {
+            c.avanzamento = 0;
+            c.fotogrammiRitardo = c.fotogrammiRitardoIniziale;
+        }
+        stato.fase = Fase.TRACCIAMENTO;
+        stato.fotogrammaDissolvenza = 0;
+        stato.fotogrammaPausa = 0;
+        stato.finito = false;
+    }
+
+    public int getLarghezza() {
+        return logo.getWidth();
+    }
+
+    public int getAltezza() {
+        return logo.getHeight();
+    }
+
+    /** Il nome della fase corrente (TRACCIAMENTO, DISSOLVENZA, PAUSA), per la diagnostica. */
+    public String getNomeFase() {
+        return stato.fase.name();
+    }
+
+    /**
+     * Quanti fotogrammi dura (per eccesso) un ciclo intero: il tracciamento del corridore piu' lento, in genere un
+     * giro completo, piu' il ritardo del corridore piu' "tardivo", la dissolvenza e la pausa finale.
+     */
+    public int stimaFotogrammiCiclo() {
         int ritardoMassimo = 0;
-        for (Corridore r : corridori) ritardoMassimo = Math.max(ritardoMassimo, r.fotogrammiRitardoIniziale);
-        int impulsiTotali = fotogrammiPerGiro + ritardoMassimo + 3 + fotogrammiDissolvenza + FOTOGRAMMI_PAUSA_FINALE;
+        for (Corridore c : corridori) {
+            ritardoMassimo = Math.max(ritardoMassimo, c.fotogrammiRitardoIniziale);
+        }
+        return fotogrammiPerGiro + ritardoMassimo + 3 + fotogrammiDissolvenza + fotogrammiPausa;
+    }
 
-        // calcola in anticipo A QUALE impulso va salvato ciascuno degli numeroFotogrammi
-        // istantanei, distribuendoli in modo uniforme lungo tutta la durata stimata
-        int[] impulsiIstantanee = new int[numeroFotogrammi];
-        for (int i = 0; i < numeroFotogrammi; i++) {
-            impulsiIstantanee[i] = (int) Math.round((double) i * impulsiTotali / (numeroFotogrammi - 1));
+    /** Cosa ha trovato e deciso il Costruttore (forme, corridori, avvertimenti): utile per calibrare i parametri. */
+    public List<String> getDiagnostica() {
+        return diagnostica;
+    }
+
+    // =========================================================================
+    //  Costruttore
+    // =========================================================================
+
+    /**
+     * Imposta l'effetto: tutti i parametri sono facoltativi, con i valori predefiniti in cima alla classe.
+     * {@link #costruisci()} esegue le fasi 1-5 della pipeline (maschera, contorni, buchi, ricampionamento,
+     * corridori).
+     */
+    public static final class Costruttore {
+
+        private final BufferedImage logo;
+        private PredicatoSfondo sfondo;
+        private Rectangle regione;
+        private final List<SpecificaCorridore> corridoriEspliciti = new ArrayList<>();
+        private List<Verso> versi = Collections.emptyList();
+        private List<Integer> ritardi = Collections.emptyList();
+        private int durataGiroMs = DURATA_GIRO_MS_PREDEFINITA;
+        private boolean velocitaAllineata;
+        private boolean rivelaConTorcia = true;
+        private Integer raggioTorcia;
+        private int fotogrammiDissolvenza = FOTOGRAMMI_DISSOLVENZA_PREDEFINITI;
+        private int fotogrammiPausa = FOTOGRAMMI_PAUSA_PREDEFINITI;
+        private boolean ripeti;
+        private Color coloreSfondo = COLORE_SFONDO_PREDEFINITO;
+
+        private Costruttore(BufferedImage logo) {
+            this.logo = Objects.requireNonNull(logo, "logo");
         }
 
-        int w = logo.getWidth() * scala, h = logo.getHeight() * scala;
-        // StatoAnimazione e' lo stesso oggetto usato dalla finestra Swing: qui lo si fa
-        // avanzare "a mano", un impulso alla volta, invece che tramite un Timer reale
-        StatoAnimazione stato = new StatoAnimazione();
-        int indiceIstantanea = 0;
-        for (int impulso = 0; impulso <= impulsiTotali && indiceIstantanea < numeroFotogrammi; impulso++) {
-            if (impulso == impulsiIstantanee[indiceIstantanea]) {
-                // ogni istantanea e' un'immagine ARGB indipendente: la creiamo,
-                // disegniamo un fotogramma completo con disegnaFotogramma() e la salviamo
-                BufferedImage fotogramma = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
-                Graphics2D g2 = fotogramma.createGraphics();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-                // scale() applica una trasformazione affine al contesto grafico: tutto
-                // cio' che viene disegnato DOPO (incluse le larghezze dei tratti) viene
-                // automaticamente ingrandito, senza dover moltiplicare ogni coordinata a mano
-                g2.scale(scala, scala);
-                double fadeAlpha = !rivelaConTorcia ? 1.0 : opacitaDissolvenza(stato, fotogrammiDissolvenza);
-                disegnaFotogramma(g2, logo, corridori, stato.fase, fadeAlpha, rivelaConTorcia, raggioTorcia);
-                g2.dispose();
+        /** Sono sfondo i pixel con alpha minore o uguale alla soglia (predefinito: trasparenza con soglia 128). */
+        public Costruttore sfondoPerAlpha(int soglia) {
+            this.sfondo = PredicatoSfondo.perAlpha(soglia);
+            return this;
+        }
 
-                File file = new File(cartella, String.format("fotogramma_%02d.png", indiceIstantanea));
-                ImageIO.write(fotogramma, "png", file);
-                System.out.println("Salvato " + file.getPath() + "  [fase=" + stato.fase + "]");
-                indiceIstantanea++;
+        /** Sono sfondo i pixel di colore vicino a questo, entro la tolleranza per canale (scontorno per colore). */
+        public Costruttore sfondoPerColore(Color colore, int tolleranza) {
+            this.sfondo = PredicatoSfondo.perColore(colore, tolleranza);
+            return this;
+        }
+
+        /** Un criterio di sfondo qualsiasi. */
+        public Costruttore sfondo(PredicatoSfondo sfondo) {
+            this.sfondo = Objects.requireNonNull(sfondo, "sfondo");
+            return this;
+        }
+
+        /** Cerca il logo solo in questo rettangolo dell'immagine (vedi punto 1bis); null per tutta l'immagine. */
+        public Costruttore regione(Rectangle regione) {
+            this.regione = regione;
+            return this;
+        }
+
+        /**
+         * Aggiunge un corridore esplicito: parte dal punto del contorno piu' vicino a {@code partenza} e arriva a
+         * quello piu' vicino ad {@code arrivo}, oppure fa un giro completo se {@code arrivo} e' null. Se non se ne
+         * aggiunge nessuno, c'e' un corridore a giro completo per ogni forma trovata.
+         */
+        public Costruttore corridore(Point2D.Double partenza, Point2D.Double arrivo, Verso verso, int fotogrammiRitardo) {
+            corridoriEspliciti.add(new SpecificaCorridore(partenza, arrivo, verso, Math.max(0, fotogrammiRitardo)));
+            return this;
+        }
+
+        /** Il verso di tutti i corridori automatici (predefinito orario). */
+        public Costruttore verso(Verso verso) {
+            return versi(Collections.singletonList(verso));
+        }
+
+        /**
+         * Il verso dei corridori automatici, uno per forma nell'ordine in cui sono trovate; alle forme in piu' si
+         * applica il primo.
+         */
+        public Costruttore versi(List<Verso> versi) {
+            this.versi = new ArrayList<>(versi);
+            return this;
+        }
+
+        /** Il ritardo di partenza dei corridori automatici, in fotogrammi, uno per forma (le altre partono subito). */
+        public Costruttore ritardi(List<Integer> ritardi) {
+            this.ritardi = new ArrayList<>(ritardi);
+            return this;
+        }
+
+        /** Durata di riferimento di un giro completo, in millisecondi. */
+        public Costruttore durataGiroMs(int durataGiroMs) {
+            this.durataGiroMs = durataGiroMs;
+            return this;
+        }
+
+        /** Vero perche' tutti i corridori arrivino in fondo insieme (vedi punto 6); predefinito falso. */
+        public Costruttore velocitaAllineata(boolean velocitaAllineata) {
+            this.velocitaAllineata = velocitaAllineata;
+            return this;
+        }
+
+        /** Falso per mostrare subito il logo intero invece di rivelarlo con la torcia (vedi punto 7). */
+        public Costruttore rivelaConTorcia(boolean rivelaConTorcia) {
+            this.rivelaConTorcia = rivelaConTorcia;
+            return this;
+        }
+
+        /** Raggio della torcia in pixel (predefinito circa il 10% del lato piu' corto del logo). */
+        public Costruttore raggioTorcia(int raggioTorcia) {
+            this.raggioTorcia = raggioTorcia;
+            return this;
+        }
+
+        /** Durata della dissolvenza finale, in fotogrammi. */
+        public Costruttore fotogrammiDissolvenza(int fotogrammiDissolvenza) {
+            this.fotogrammiDissolvenza = Math.max(1, fotogrammiDissolvenza);
+            return this;
+        }
+
+        /** Quanti fotogrammi resta acceso il logo intero alla fine. */
+        public Costruttore fotogrammiPausa(int fotogrammiPausa) {
+            this.fotogrammiPausa = Math.max(0, fotogrammiPausa);
+            return this;
+        }
+
+        /** Vero per ricominciare da capo dopo la pausa, all'infinito; predefinito falso (una volta sola). */
+        public Costruttore ripeti(boolean ripeti) {
+            this.ripeti = ripeti;
+            return this;
+        }
+
+        /** Il colore con cui riempire il rettangolo del logo prima di disegnarlo; null per non riempirlo. */
+        public Costruttore coloreSfondo(Color coloreSfondo) {
+            this.coloreSfondo = coloreSfondo;
+            return this;
+        }
+
+        /**
+         * Esegue la pipeline e restituisce l'effetto, fermo al primo fotogramma.
+         *
+         * @throws IllegalArgumentException se la regione esce dall'immagine
+         * @throws IllegalStateException se non si trova nessun contorno
+         */
+        public TracciatoreLogo costruisci() {
+            List<String> diagnostica = new ArrayList<>();
+            PredicatoSfondo predicatoSfondo = sfondo;
+            if (predicatoSfondo == null) {
+                if (!logo.getColorModel().hasAlpha()) {
+                    diagnostica.add("Attenzione: l'immagine non ha canale alpha; va indicato un colore di sfondo per tracciarla correttamente.");
+                }
+                predicatoSfondo = PredicatoSfondo.perAlpha(SOGLIA_ALPHA_PREDEFINITA);
             }
-            avanza(corridori, stato, fotogrammiDissolvenza); // fa avanzare di un impulso lo stato dell'animazione
-        }
-    }
 
-    private static void stampaUso() {
-        System.err.println("Uso: java TracciatoreLogo <logo.png> [opzioni]");
-        System.err.println("Opzioni: --alpha=N | --bgcolor=RRGGBB --tol=N | --region=x,y,w,h | --start=x,y[;x,y...]");
-        System.err.println("         --end=x,y[;x,y...] | --delay=d[;d...] (fotogrammi o \"1.5s\") | --dir=cw|ccw[;cw|ccw...]");
-        System.err.println("         --lap=ms | --sync=independent|matched | --reveal=spotlight|full | --spot=N | --fade=N");
-        System.err.println("         --dump=<dir> [--frames=N] [--scale=N]  (anteprima headless su PNG, senza finestra)");
-    }
+            // --- area di scansione opzionale (fase 1bis) ----------------------------
+            if (regione != null && (regione.x < 0 || regione.y < 0 || regione.width <= 0 || regione.height <= 0
+                    || regione.x + regione.width > logo.getWidth() || regione.y + regione.height > logo.getHeight())) {
+                throw new IllegalArgumentException("il rettangolo (" + regione.x + "," + regione.y + "," + regione.width
+                        + "," + regione.height + ") esce dai limiti dell'immagine (" + logo.getWidth() + "x" + logo.getHeight() + ")");
+            }
+            // getSubimage() NON copia i pixel: restituisce una "vista" che condivide
+            // lo stesso array di dati dell'immagine originale, ma la cui coordinata
+            // (0,0) corrisponde a (regione.x, regione.y) nell'immagine intera. Per
+            // questo, dopo aver trovato i contorni su questa vista, dovremo poi
+            // sommare (scostamentoX, scostamentoY) per riportarli nel sistema di coordinate
+            // dell'immagine originale (usata invece per la resa finale).
+            BufferedImage immagineScansione = regione != null ? logo.getSubimage(regione.x, regione.y, regione.width, regione.height) : logo;
+            int scostamentoX = regione != null ? regione.x : 0;
+            int scostamentoY = regione != null ? regione.y : 0;
+            if (regione != null) {
+                diagnostica.add("Area di scansione: " + regione.width + "x" + regione.height
+                        + " a partire da (" + regione.x + "," + regione.y + "); la resa userà comunque l'immagine intera.");
+            }
 
-    /** Interpreta "--region=x,y,w,h"; restituisce null se non specificata. Lancia se fuori dai limiti dell'immagine. */
-    private static Rectangle leggiRegione(String specifica, int larghezzaImmagine, int altezzaImmagine) {
-        if (specifica == null || specifica.isEmpty()) return null;
-        String[] parti = specifica.split(",");
-        if (parti.length != 4) {
-            throw new IllegalArgumentException("atteso il formato x,y,w,h, ricevuto \"" + specifica + "\"");
+            // --- fase 1: maschera primo piano/sfondo, calcolata SOLO sull'area di scansione ---
+            boolean[][] maschera = costruisciMaschera(immagineScansione, predicatoSfondo);
+
+            // --- fase 2 e 2bis: tracciamento dei contorni esterni e dei buchi interni ---
+            List<List<Point>> contorniEsterni = tracciaTuttiIContorni(maschera);
+            boolean[][] mascheraBuchi = estraiBuchiRacchiusi(maschera);
+            List<List<Point>> contorniBuchi = tracciaTuttiIContorni(mascheraBuchi);
+
+            // uniamo i due elenchi: da qui in poi un contorno esterno e un buco sono
+            // trattati esattamente allo stesso modo (entrambi diventano una "forma")
+            List<List<Point>> tuttiIContorni = new ArrayList<>(contorniEsterni);
+            tuttiIContorni.addAll(contorniBuchi);
+            if (tuttiIContorni.isEmpty()) {
+                throw new IllegalStateException("Nessun contorno trovato: controlla la soglia/il colore di sfondo, l'immagine o la regione.");
+            }
+
+            // --- fase 3 e 4: ricampionamento a distanza costante + verso naturale ---
+            List<ContornoForma> forme = new ArrayList<>();
+            for (List<Point> contorno : tuttiIContorni) {
+                List<Point2D.Double> naturale = ricampiona(contorno, PUNTI_RICAMPIONAMENTO);
+                // con una regione, i punti sono ancora in coordinate LOCALI al
+                // ritaglio: li riportiamo nel sistema di coordinate dell'immagine intera
+                if (scostamentoX != 0 || scostamentoY != 0) {
+                    for (Point2D.Double p : naturale) {
+                        p.x += scostamentoX;
+                        p.y += scostamentoY;
+                    }
+                }
+                // il verso naturale (orario/antiorario) è invariante per traslazione,
+                // quindi non importa se lo calcoliamo prima o dopo aver sommato lo scostamento
+                boolean orario = areaConSegno(naturale) > 0;
+                List<Point2D.Double> invertito = new ArrayList<>(naturale);
+                Collections.reverse(invertito); // stesso contorno, ma percorso in verso opposto
+                forme.add(new ContornoForma(naturale, invertito, orario));
+            }
+
+            // diagnostica: utile per calibrare le coordinate di partenza e arrivo dei
+            // corridori a tentativi, senza dover indovinare "a occhio" dove cade ogni forma
+            diagnostica.add(forme.size() + " forma/e rilevate (" + contorniEsterni.size()
+                    + " contorni esterni, " + contorniBuchi.size() + " buchi interni):");
+            for (int i = 0; i < forme.size(); i++) {
+                ContornoForma forma = forme.get(i);
+                String tipo = i < contorniEsterni.size() ? "esterno" : "buco";
+                diagnostica.add("  forma " + i + " (" + tipo + "): verso naturale "
+                        + (forma.naturaleOrario ? "orario" : "antiorario")
+                        + ", partenza naturale " + formattaPunto(forma.percorsoNaturale.get(0)) + ", " + forma.percorsoNaturale.size() + " punti.");
+            }
+
+            // --- fase 5: costruzione delle "specifiche" di ciascun corridore -----------
+            // Senza corridori espliciti ce n'e' uno a giro completo per ogni forma rilevata,
+            // ciascuno con il proprio ritardo/verso se ritardi/versi ne definiscono uno; il
+            // primo verso (o quello orario) fa da "riserva" per i corridori in eccesso
+            List<SpecificaCorridore> specifiche = new ArrayList<>(corridoriEspliciti);
+            if (specifiche.isEmpty()) {
+                Verso versoDiRiserva = versi.isEmpty() ? Verso.ORARIO : versi.get(0);
+                for (int i = 0; i < forme.size(); i++) {
+                    int ritardo = i < ritardi.size() ? Math.max(0, ritardi.get(i)) : 0;
+                    Verso direzione = i < versi.size() ? versi.get(i) : versoDiRiserva;
+                    specifiche.add(new SpecificaCorridore(forme.get(i).percorsoNaturale.get(0), null, direzione, ritardo));
+                }
+            }
+
+            // --- calcolo della velocita' di riferimento e costruzione dei Corridore veri e propri ---
+            // fotogrammiPerGiro = quanti fotogrammi servono per completare un giro di
+            // riferimento alla velocita' "di riferimento"
+            int fotogrammiPerGiro = Math.max(1, durataGiroMs / INTERVALLO_FOTOGRAMMA_MS);
+
+            List<Corridore> corridori = new ArrayList<>();
+            for (SpecificaCorridore specifica : specifiche) {
+                // trasforma la "specifica astratta" (punti pixel) in un percorso concreto
+                // di punti ricampionati, agganciato alla forma giusta (vedi punto 5)
+                List<Point2D.Double> percorso = costruisciPercorsoCorridore(forme, specifica);
+                double puntiPerFotogramma = velocitaAllineata
+                        // velocità "su misura": lunghezza del percorso diviso il numero di
+                        // fotogrammi disponibili, così ogni corridore arriva in fondo esattamente
+                        // allo stesso fotogramma (vedi punto 6 della documentazione)
+                        ? (double) percorso.size() / fotogrammiPerGiro
+                        // velocità "di riferimento" uguale per tutti: un percorso più corto
+                        // del giro di riferimento (PUNTI_RICAMPIONAMENTO) finisce prima e resta
+                        // fermo ad aspettare gli altri (vedi avanza())
+                        : (double) PUNTI_RICAMPIONAMENTO / fotogrammiPerGiro;
+                corridori.add(new Corridore(percorso, puntiPerFotogramma, specifica.fotogrammiRitardo));
+                diagnostica.add("Corridore: partenza agganciata a " + formattaPunto(percorso.get(0))
+                        + (specifica.arrivo != null ? ", arrivo agganciato a " + formattaPunto(percorso.get(percorso.size() - 1)) : ", giro completo")
+                        + ", verso " + (specifica.verso == Verso.ORARIO ? "orario" : "antiorario")
+                        + ", " + percorso.size() + " punti" + (velocitaAllineata ? " (velocita' sincronizzata)" : "")
+                        + (specifica.fotogrammiRitardo > 0 ? String.format(", ritardo %d fotogrammi (~%.2fs)",
+                                specifica.fotogrammiRitardo, specifica.fotogrammiRitardo * INTERVALLO_FOTOGRAMMA_MS / 1000.0) : "") + ".");
+            }
+
+            // --- resa grafica (fase 7) -----------------------------------------------
+            // il raggio della torcia è proporzionato alle dimensioni dell'immagine:
+            // un raggio fisso (pensato per loghi grandi) coprirebbe quasi tutto un
+            // logo piccolo come "3AM" (100px di altezza), facendo sembrare la torcia
+            // "sempre spenta" perché rivela l'intera lettera in un colpo solo.
+            int raggio = raggioTorcia != null ? raggioTorcia : Math.max(6, Math.min(logo.getWidth(), logo.getHeight()) / 10);
+
+            return new TracciatoreLogo(this, corridori, fotogrammiPerGiro, raggio, diagnostica);
         }
-        int x = Integer.parseInt(parti[0].trim());
-        int y = Integer.parseInt(parti[1].trim());
-        int w = Integer.parseInt(parti[2].trim());
-        int h = Integer.parseInt(parti[3].trim());
-        // il rettangolo deve stare interamente dentro l'immagine: niente coordinate
-        // negative e niente bordo destro/inferiore che esce dai limiti
-        if (x < 0 || y < 0 || w <= 0 || h <= 0 || x + w > larghezzaImmagine || y + h > altezzaImmagine) {
-            throw new IllegalArgumentException("il rettangolo (" + x + "," + y + "," + w + "," + h
-                    + ") esce dai limiti dell'immagine (" + larghezzaImmagine + "x" + altezzaImmagine + ")");
-        }
-        return new Rectangle(x, y, w, h);
     }
 
     /** Formatta un punto per i messaggi diagnostici a console, arrotondato al pixel. */
     private static String formattaPunto(Point2D.Double p) {
         return "(" + Math.round(p.x) + "," + Math.round(p.y) + ")";
-    }
-
-    /** Formatta un colore come stringa esadecimale "#RRGGBB", per i messaggi diagnostici. */
-    private static String coloreInEsadecimale(Color c) {
-        return String.format("#%02X%02X%02X", c.getRed(), c.getGreen(), c.getBlue());
-    }
-
-    /**
-     * Interpreta gli argomenti della riga di comando dopo il primo (il percorso
-     * dell'immagine) come coppie "--chiave=valore". Un argomento senza "=" (es.
-     * "--foo") viene registrato con valore "true" (utile per flag booleani, anche
-     * se qui non ne usiamo nessuno). Argomenti che non iniziano con "--" vengono
-     * ignorati silenziosamente.
-     */
-    private static Map<String, String> leggiOpzioni(String[] argomenti, int daIndice) {
-        // LinkedHashMap mantiene l'ordine di inserimento: non e' strettamente
-        // necessario qui, ma rende piu' prevedibile un eventuale debug
-        Map<String, String> mappa = new LinkedHashMap<>();
-        for (int i = daIndice; i < argomenti.length; i++) {
-            String a = argomenti[i];
-            if (a.startsWith("--")) {
-                int posizioneUguale = a.indexOf('=');
-                if (posizioneUguale > 0) mappa.put(a.substring(2, posizioneUguale), a.substring(posizioneUguale + 1));
-                else mappa.put(a.substring(2), "true");
-            }
-        }
-        return mappa;
-    }
-
-    /** Interpreta "x1,y1;x2,y2;..." in una lista di punti; lista vuota se spec e' null/vuota. */
-    private static List<Point2D.Double> leggiPunti(String specifica) {
-        List<Point2D.Double> punti = new ArrayList<>();
-        if (specifica == null || specifica.isEmpty()) return punti;
-        for (String elemento : specifica.split(";")) {
-            String[] xy = elemento.split(",");
-            punti.add(new Point2D.Double(Double.parseDouble(xy[0].trim()), Double.parseDouble(xy[1].trim())));
-        }
-        return punti;
-    }
-
-    /** Interpreta "d1;d2;..." (vedi {@link #leggiRitardo}) in una lista di ritardi in fotogrammi. */
-    private static List<Integer> leggiRitardi(String specifica) {
-        List<Integer> ritardi = new ArrayList<>();
-        if (specifica == null || specifica.isEmpty()) return ritardi;
-        for (String elemento : specifica.split(";")) {
-            ritardi.add(leggiRitardo(elemento.trim()));
-        }
-        return ritardi;
-    }
-
-    /** Un numero puro e' in fotogrammi (es. "30"); con suffisso "s" e' in secondi (es. "1.5s"). */
-    private static int leggiRitardo(String elemento) {
-        if (elemento.isEmpty()) return 0;
-        int fotogrammi;
-        if (elemento.endsWith("s") || elemento.endsWith("S")) {
-            // rimuove la "s" finale, interpreta il resto come numero di secondi
-            // (con la virgola/punto decimale) e lo converte in fotogrammi
-            double secondi = Double.parseDouble(elemento.substring(0, elemento.length() - 1));
-            fotogrammi = (int) Math.round(secondi * 1000.0 / INTERVALLO_FOTOGRAMMA_MS);
-        } else {
-            fotogrammi = Integer.parseInt(elemento);
-        }
-        return Math.max(0, fotogrammi); // un ritardo negativo non ha senso: lo azzeriamo
-    }
-
-    /**
-     * Interpreta "cw" / "ccw" o una lista "cw;ccw;cw;..." (un verso per corridore).
-     * Lista vuota se spec e' null/vuota: in quel caso il chiamante usa il verso
-     * orario predefinito per tutti i corridori (vedi {@code versoDiRiserva} in main()).
-     */
-    private static List<Verso> leggiVersi(String specifica) {
-        List<Verso> versi = new ArrayList<>();
-        if (specifica == null || specifica.isEmpty()) return versi;
-        for (String elemento : specifica.split(";")) {
-            versi.add("ccw".equalsIgnoreCase(elemento.trim()) ? Verso.ANTIORARIO : Verso.ORARIO);
-        }
-        return versi;
     }
 
     // =========================================================================
@@ -956,12 +868,12 @@ public class TracciatoreLogo {
     // =========================================================================
 
     /**
-     * Riduce un contorno pixel-per-pixel a {@code count} punti equidistanti
+     * Riduce un contorno pixel-per-pixel a {@code quanti} punti equidistanti
      * lungo il suo perimetro (parametrizzazione per lunghezza d'arco), così
      * la velocità del punto luminoso è indipendente dalla risoluzione o
      * dalla forma dei tratti (dritti, diagonali, curvi) del contorno originale.
      */
-    private static List<Point2D.Double> ricampiona(List<Point> contorno, int count) {
+    private static List<Point2D.Double> ricampiona(List<Point> contorno, int quanti) {
         int n = contorno.size();
         // lunghezzaCumulata[i] = lunghezza totale percorsa dal punto 0 fino al punto i
         // (compreso il tratto di chiusura contour[n-1] -> contour[0], che serve
@@ -974,11 +886,11 @@ public class TracciatoreLogo {
         }
         double totale = lunghezzaCumulata[n]; // perimetro totale del contorno
 
-        List<Point2D.Double> risultato = new ArrayList<>(count);
+        List<Point2D.Double> risultato = new ArrayList<>(quanti);
         int segmento = 0; // indice del segmento del contorno originale attualmente in esame
-        for (int k = 0; k < count; k++) {
+        for (int k = 0; k < quanti; k++) {
             // distanza (lungo il perimetro) del k-esimo punto equidistante che vogliamo generare
-            double obiettivo = totale * k / count;
+            double obiettivo = totale * k / quanti;
             // avanza "seg" finché il segmento [seg, seg+1] non contiene "target"
             // (lunghezzaCumulata è crescente, quindi questo ciclo scorre in avanti senza mai tornare indietro)
             while (segmento < n && lunghezzaCumulata[segmento + 1] < obiettivo) segmento++;
@@ -1150,6 +1062,7 @@ public class TracciatoreLogo {
         Fase fase = Fase.TRACCIAMENTO;
         int fotogrammaDissolvenza = 0; // quanti fotogrammi sono trascorsi dall'inizio della fase DISSOLVENZA
         int fotogrammaPausa = 0; // quanti fotogrammi sono trascorsi dall'inizio della fase PAUSA
+        boolean finito = false;  // vero quando, senza ripetizione, la pausa finale e' terminata
     }
 
     /**
@@ -1157,10 +1070,10 @@ public class TracciatoreLogo {
      * In fase TRACCIAMENTO un corridore che raggiunge la fine del proprio percorso
      * si ferma e aspetta: si passa a DISSOLVENZA solo quando TUTTI hanno
      * finito (vedi punto 6 della documentazione in testa alla classe).
-     * Chiamata sia dal Timer Swing (un impulso reale ogni INTERVALLO_FOTOGRAMMA_MS ms)
-     * sia da {@link #salvaFotogrammi} (tanti impulsi "simulati" quanti servono).
+     * Senza ripetizione, alla fine della pausa l'effetto si ferma (vedi {@link #isFinito()}).
      */
-    private static void avanza(List<Corridore> corridori, StatoAnimazione stato, int fotogrammiDissolvenza) {
+    private static void avanza(List<Corridore> corridori, StatoAnimazione stato, int fotogrammiDissolvenza,
+                               int fotogrammiPausa, boolean ripeti) {
         switch (stato.fase) {
             case TRACCIAMENTO: {
                 // tuttiFiniti diventa false appena un corridore qualsiasi non ha ancora
@@ -1202,7 +1115,12 @@ public class TracciatoreLogo {
             }
             case PAUSA: {
                 stato.fotogrammaPausa++;
-                if (stato.fotogrammaPausa >= FOTOGRAMMI_PAUSA_FINALE) {
+                if (stato.fotogrammaPausa >= fotogrammiPausa && !stato.finito) {
+                    if (!ripeti) {
+                        // una volta sola: il logo resta acceso e l'effetto e' finito
+                        stato.finito = true;
+                        break;
+                    }
                     // fine della pausa: si ricomincia un nuovo ciclo, riportando ogni
                     // corridore all'inizio del proprio percorso E ripristinando il ritardo
                     // iniziale (altrimenti al secondo giro partirebbero tutti insieme)
@@ -1237,23 +1155,23 @@ public class TracciatoreLogo {
     }
 
     // =========================================================================
-    //  Resa grafica condivisa (finestra Swing e salvataggio su PNG)
+    //  Resa grafica
     // =========================================================================
 
     /**
      * Disegna un fotogramma completo: sfondo, logo (a torcia oppure a piena
      * opacita' con dissolvenza, a seconda della fase/modalita'), scia e
-     * punto luminoso di ogni corridore. Chiamata sia da
-     * {@link PannelloAnimazione#paintComponent} sia da {@link #salvaFotogrammi}, cosi'
-     * la logica di disegno e' scritta e mantenuta in un solo posto.
+     * punto luminoso di ogni corridore.
      */
-    private static void disegnaFotogramma(Graphics2D g2, BufferedImage logo, List<Corridore> corridori,
-                                     Fase fase, double fadeAlpha, boolean rivelaConTorcia, int raggioTorcia) {
+    private static void disegnaFotogramma(Graphics2D g2, BufferedImage logo, List<Corridore> corridori, Fase fase,
+                                          double opacita, boolean rivelaConTorcia, int raggioTorcia, Color coloreSfondo) {
         int w = logo.getWidth(), h = logo.getHeight();
-        // riempie sempre lo sfondo per primo: qualunque cosa venga disegnata dopo
-        // (logo, torcia, scia) vi si sovrappone
-        g2.setColor(COLORE_SFONDO);
-        g2.fillRect(0, 0, w, h);
+        // riempie lo sfondo per primo (se ce n'e' uno): qualunque cosa venga
+        // disegnata dopo (logo, torcia, scia) vi si sovrappone
+        if (coloreSfondo != null) {
+            g2.setColor(coloreSfondo);
+            g2.fillRect(0, 0, w, h);
+        }
 
         if (rivelaConTorcia && fase == Fase.TRACCIAMENTO) {
             // modalità torcia, e siamo ancora nella fase di tracciamento:
@@ -1266,7 +1184,7 @@ public class TracciatoreLogo {
             // temporaneo (che viene ripristinato subito dopo, per non alterare
             // il composito con cui verranno disegnati scia e punto luminoso)
             Composite compositoPrecedente = g2.getComposite();
-            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) fadeAlpha));
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) opacita));
             g2.drawImage(logo, 0, 0, null);
             g2.setComposite(compositoPrecedente);
         }
@@ -1401,69 +1319,5 @@ public class TracciatoreLogo {
         // riconoscibile, invece di un semplice sfumato senza centro definito
         g2.setColor(Color.WHITE);
         g2.fill(new Ellipse2D.Double(p.x - 3, p.y - 3, 6, 6));
-    }
-
-    // =========================================================================
-    //  Finestra Swing
-    // =========================================================================
-
-    /**
-     * Pannello Swing che mostra l'animazione dal vivo. Un {@link Timer} Swing
-     * (NON un java.util.Timer: quello Swing consegna i suoi eventi sull'Event
-     * Dispatch Thread, l'unico su cui è sicuro toccare componenti grafici)
-     * scandisce i fotogrammi a INTERVALLO_FOTOGRAMMA_MS di distanza: ad ogni impulso fa
-     * avanzare lo stato dell'animazione ({@link #avanza}) e chiede un
-     * ridisegno ({@code repaint()}), che Swing effettuerà chiamando
-     * {@link #paintComponent} il prima possibile.
-     */
-    private static class PannelloAnimazione extends JPanel implements ActionListener {
-        private final BufferedImage logo;
-        private final List<Corridore> corridori;
-        private final int fotogrammiDissolvenza;
-        private final boolean rivelaConTorcia;
-        private final int raggioTorcia;
-        private final StatoAnimazione stato = new StatoAnimazione(); // stato della macchina a stati (vedi avanza())
-        private Timer temporizzatore;
-
-        PannelloAnimazione(BufferedImage logo, List<Corridore> corridori, int fotogrammiDissolvenza,
-                        boolean rivelaConTorcia, int raggioTorcia) {
-            this.logo = logo;
-            this.corridori = corridori;
-            this.fotogrammiDissolvenza = fotogrammiDissolvenza;
-            this.rivelaConTorcia = rivelaConTorcia;
-            this.raggioTorcia = raggioTorcia;
-            // la finestra (tramite finestra.pack()) si dimensionerà esattamente
-            // quanto il logo, senza margini né ridimensionamenti indesiderati
-            setPreferredSize(new Dimension(logo.getWidth(), logo.getHeight()));
-            setBackground(COLORE_SFONDO);
-        }
-
-        /** Avvia il Timer dell'animazione; va chiamato solo dopo che la finestra è visibile. */
-        void avvia() {
-            temporizzatore = new Timer(INTERVALLO_FOTOGRAMMA_MS, this);
-            temporizzatore.start();
-        }
-
-        /** Richiamata dal Timer: un impulso dell'animazione, invocato ogni INTERVALLO_FOTOGRAMMA_MS millisecondi. */
-        @Override
-        public void actionPerformed(ActionEvent e) {
-            avanza(corridori, stato, fotogrammiDissolvenza);
-            repaint(); // richiede un nuovo disegno; Swing lo pianifica sull'EDT
-        }
-
-        /** Disegna un singolo fotogramma; chiamato da Swing ogni volta che il pannello va ridisegnato. */
-        @Override
-        protected void paintComponent(Graphics g) {
-            super.paintComponent(g); // pulisce lo sfondo secondo setBackground()
-            // g.create() clona il contesto grafico: le modifiche fatte qui sotto
-            // (rendering hints, stroke, colore...) non "sporcano" l'oggetto Graphics
-            // originale ricevuto da Swing, buona norma quando si fanno molte modifiche
-            Graphics2D g2 = (Graphics2D) g.create();
-            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-            g2.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-            double fadeAlpha = !rivelaConTorcia ? 1.0 : opacitaDissolvenza(stato, fotogrammiDissolvenza);
-            disegnaFotogramma(g2, logo, corridori, stato.fase, fadeAlpha, rivelaConTorcia, raggioTorcia);
-            g2.dispose(); // libera le risorse del contesto clonato
-        }
     }
 }
