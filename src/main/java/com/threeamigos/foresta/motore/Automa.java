@@ -18,11 +18,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.motore.modellodati.RaritaArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
-import com.threeamigos.foresta.motore.modellodati.TipoDanno;
-import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
+import com.threeamigos.foresta.motore.modellodati.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.Oggetto;
@@ -44,6 +40,7 @@ import java.util.function.Supplier;
 // Bug noti ancora da correggere (dall'indagine sul codice): si spuntano togliendo la riga quando sono corretti.
 //
 // Combattimento e personaggi
+// FIXME Personaggi a livello 5 pesantemente armati non riescono neanche lontanamente a scalfire un boss come la Strega o il Lich
 // FIXME Morte (rimandata): LocazioneBase.impostaAzioni, per le portate SINGOLO_* i bersagli sono il gruppo del giocatore,
 //  quindi Morte (SINGOLO_SOLO_VIVI) si lancia solo sui propri compagni
 // FIXME Morte (rimandata): Morte.formulaImpl ignora le immunita' (Lich, Fantasma, Scheletro, Spettro, Spirito, Ombra Nera)
