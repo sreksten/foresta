@@ -24,11 +24,13 @@ import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoDanno;
 import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.tools.*;
 
 import java.util.*;
+import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
@@ -88,6 +90,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Stato stato;
 	private Stato statoPrecedente;
 
+	private final Executor esecutorePrecaricamento;
+	// Il logo iniziale lascia il posto all'INTRO quando la UI e il motore hanno finito entrambi
+	private boolean logoInizialeMostrato;
+	private boolean motorePrecaricato;
 	private final GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 	private final GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
 	private Personaggio personaggio;
@@ -105,11 +111,28 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Stato statoDopoIntermezzi;
 
 	public Automa(Temporizzatore temporizzatore) {
+		this(temporizzatore, Automa::precaricaInBackground);
+	}
+
+	/**
+	 * @param esecutorePrecaricamento dove eseguire, durante il logo iniziale, il caricamento delle risorse del motore:
+	 *                                nel gioco un thread a parte, nei test lo stesso thread ({@code Runnable::run})
+	 */
+	Automa(Temporizzatore temporizzatore, Executor esecutorePrecaricamento) {
 		this.temporizzatore = temporizzatore;
+		this.esecutorePrecaricamento = esecutorePrecaricamento;
 		temporizzatore.setTemporizzabile(this);
 
 		BusEventi.iscriviti(ComandoDiGioco.class, this::onEventoComandoDiGioco);
 		BusEventi.iscriviti(ComandoInvioTesto.class, this::onEventoTestoDisponibile);
+		BusEventi.iscriviti(InternoFineLogoIniziale.class, e -> {
+			logoInizialeMostrato = true;
+			passaAllIntroSePronto();
+		});
+		BusEventi.iscriviti(InternoPrecaricamentoMotoreCompletato.class, e -> {
+			motorePrecaricato = true;
+			passaAllIntroSePronto();
+		});
 
 		gestoriIngresso = new EnumMap<>(Stato.class);
 		gestoriIngresso.put(Stato.INIZIO_GIOCO, this::entraInStatoInizioGioco);
@@ -143,6 +166,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriIngresso.put(Stato.PUNTEGGI, this::entraOGestisciStatoPunteggi);
 
 		gestoriComando = new EnumMap<>(Stato.class);
+		// Il logo iniziale non si salta: i comandi (e gli impulsi) si ignorano
+		gestoriComando.put(Stato.LOGO_INIZIALE, comando -> Esito.FERMATI);
 		gestoriComando.put(Stato.INTRO, this::gestisciComandoInStatoIntro);
 		gestoriComando.put(Stato.INTERMEZZO, this::gestisciComandoInStatoIntermezzo);
 		gestoriComando.put(Stato.PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE, this::gestisciComandoInStatoPreGameSelezionaSalvataggioDaLeggere);
@@ -188,10 +213,39 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	/**
+	 * L'avvio del gioco: il primissimo stato, LOGO_INIZIALE. La UI traccia il logo 3AM e intanto carica le sue
+	 * risorse; qui si caricano quelle del motore (grammatiche, generatore di artefatti). Quando entrambi hanno
+	 * finito si passa all'INTRO, e al logo non si torna piu'.
+	 */
+	public void inizia() {
+		stato = Stato.LOGO_INIZIALE;
+		logoInizialeMostrato = false;
+		motorePrecaricato = false;
+		BusEventi.pubblica(new InternoStatoDiGioco(Stato.LOGO_INIZIALE));
+		esecutorePrecaricamento.execute(() -> {
+			ProduttoreDiTestiCasuale.precarica();
+			GeneratoreArtefatti.precarica();
+			BusEventi.pubblica(new InternoPrecaricamentoMotoreCompletato());
+		});
+	}
+
+	private static void precaricaInBackground(Runnable precaricamento) {
+		Thread thread = new Thread(precaricamento, "Precaricamento motore");
+		thread.setDaemon(true);
+		thread.start();
+	}
+
+	private void passaAllIntroSePronto() {
+		if (stato == Stato.LOGO_INIZIALE && logoInizialeMostrato && motorePrecaricato) {
+			mostraIntro();
+		}
+	}
+
+	/**
 	 * Schermata introduttiva coi titoli. QUi è possibile scegliere se iniziare una nuova partita o
 	 * caricare una partita preesistente.
 	 */
-	public void inizia() {
+	private void mostraIntro() {
 		stato = Stato.INTRO;
 		BusEventi.pubblica(new InternoStatoDiGioco(Stato.INTRO, getComandiPossibiliInStatoIntro()));
 	}
@@ -1140,9 +1194,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Esito gestisciComandoInStatoStatistiche(Comando comando) {
 		if (comando == Comando.PERGAMENA && !GestorePunteggi.isPunteggioInClassifica(Statistiche.getPunti())) {
 			// Nessun punteggio da registrare: si torna all'intro, che riparte dai loghi.
-			// inizia() pubblica anche lo stato INTRO, senza il quale la UI resterebbe
-			// sulle statistiche.
-			inizia();
+			// mostraIntro() pubblica anche lo stato INTRO, senza il quale la UI resterebbe
+			// sulle statistiche. Al logo iniziale non si torna.
+			mostraIntro();
 			return Esito.FERMATI;
 		}
 		if (comando == Comando.PERGAMENA) {
@@ -1173,7 +1227,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 * schermata iniziale.
 	 */
 	private Esito entraOGestisciStatoPunteggi() {
-		inizia();
+		mostraIntro();
 		return Esito.FERMATI;
 	}
 

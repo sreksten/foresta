@@ -57,6 +57,24 @@ class ScenarioPartitaTest {
 	}
 
 	@Test
+	void siParteDalLogoInizialeESiArrivaAllIntro() {
+		try (PartitaDiTest partita = PartitaDiTest.nuovaAlLogoIniziale(5)) {
+			partita.assertStato(Stato.LOGO_INIZIALE);
+			// Il logo non si salta: i comandi si ignorano
+			partita.comando(Comando.PERGAMENA);
+			partita.assertStato(Stato.LOGO_INIZIALE);
+
+			partita.fineLogoIniziale();
+			partita.assertStato(Stato.INTRO);
+			partita.assertComandoDisponibile(Comando.PERGAMENA);
+
+			// Al logo non si torna
+			partita.fineLogoIniziale();
+			partita.assertStato(Stato.INTRO);
+		}
+	}
+
+	@Test
 	void gliIntermezziSiFermanoSeNonSiSaltano() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(3)) {
 			partita.nonSaltareIntermezzi();

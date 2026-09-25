@@ -22,6 +22,14 @@ public class ImageCache {
 
 	static final int SPACING = 4;
 	
+	// Le risorse di cui serve la dimensione prima di caricare le immagini (vedi ForestaUI.calcolaDimensioniFinestra):
+	// sono costanti, quindi usarle non inizializza ImageCache
+	static final String RISORSA_LOGO_3AM = "Logo3AM.png";
+	static final String RISORSA_CORNICE_GRANDE = "fondi/CorniceGrande.gif";
+	static final String RISORSA_CORNICE_INCANTESIMI = "fondi/CorniceIncantesimi.gif";
+	static final String RISORSA_CORNICE_MAPPA = "fondi/CorniceMappa.gif";
+	static final String RISORSA_BOSCO = "locazioni/Foresta.gif";
+
 	static BufferedImage logo3AM;
 	static BufferedImage logoForesta;
 	static BufferedImage corniceGrande;
@@ -94,12 +102,12 @@ public class ImageCache {
 	private static boolean inited = false;
 	
 	static {
-		logo3AM = BufferedImageBuilder.buildBufferedImage("Logo3AM.png");
+		logo3AM = BufferedImageBuilder.buildBufferedImage(RISORSA_LOGO_3AM);
 		logoForesta = BufferedImageBuilder.buildBufferedImage("LogoForesta.png");
 
-		corniceGrande = BufferedImageBuilder.buildBufferedImage("fondi/CorniceGrande.gif");
-		corniceIncantesimi = BufferedImageBuilder.buildBufferedImage("fondi/CorniceIncantesimi.gif");
-		corniceMappa = BufferedImageBuilder.buildBufferedImage("fondi/CorniceMappa.gif");
+		corniceGrande = BufferedImageBuilder.buildBufferedImage(RISORSA_CORNICE_GRANDE);
+		corniceIncantesimi = BufferedImageBuilder.buildBufferedImage(RISORSA_CORNICE_INCANTESIMI);
+		corniceMappa = BufferedImageBuilder.buildBufferedImage(RISORSA_CORNICE_MAPPA);
 		cornicePiccola = BufferedImageBuilder.buildBufferedImage("fondi/CornicePiccola.gif");
 		corniceInventario = BufferedImageBuilder.buildBufferedImage("fondi/CorniceInventario.gif");
 		sferaMagica = BufferedImageBuilder.buildBufferedImage("fondi/SferaMagica.gif");
@@ -121,7 +129,7 @@ public class ImageCache {
 
 		locazioni = new EnumMap<>(ClassiLocazione.class);
 		BufferedImage d;
-		locazioni.put(ClassiLocazione.BOSCO, BufferedImageBuilder.buildBufferedImage("locazioni/Foresta.gif"));
+		locazioni.put(ClassiLocazione.BOSCO, BufferedImageBuilder.buildBufferedImage(RISORSA_BOSCO));
 		d = BufferedImageBuilder.buildBufferedImage("locazioni/Castello.gif");
 		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
 			if (classeLocazione.getTipoLocazione() == ClassiLocazione.TipoLocazione.CASTELLO) {
@@ -271,6 +279,8 @@ public class ImageCache {
 			}
 			// ...e quelle degli oggetti, che il motore non carica (vedi ClassiOggettoImmagine)
 			ClassiOggettoImmagine.values();
+			// ...e le icone, che si caricano al primo uso (vedi ClasseIcona)
+			ClasseIcona.precarica();
 			inited = true;
 		}
 	}

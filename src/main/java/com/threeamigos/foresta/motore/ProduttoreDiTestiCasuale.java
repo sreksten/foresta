@@ -24,6 +24,14 @@ public class ProduttoreDiTestiCasuale {
 	private ProduttoreDiTestiCasuale() {
 	}
 
+	/**
+	 * Non fa nulla: chiamarlo basta a caricare subito le grammatiche, che il blocco statico legge al primo uso della
+	 * classe (vedi Automa, stato LOGO_INIZIALE).
+	 */
+	static void precarica() {
+		// il lavoro lo fa il blocco statico
+	}
+
 	static {
 		try {
 			fiabe = new GrammarBean(

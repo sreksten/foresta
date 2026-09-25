@@ -5,6 +5,10 @@ package com.threeamigos.foresta.motore;
  */
 public enum Stato {
 
+	// Il primissimo stato, solo all'avvio: il logo 3AM tracciato una volta mentre si caricano le risorse.
+	// Non ci si torna piu': dopo la partita si riparte da INTRO.
+	LOGO_INIZIALE,
+
 	// Prima dell'inizio del gioco vero e proprio
 	INTRO,
 

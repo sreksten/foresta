@@ -17,6 +17,14 @@ public interface GeneratoreArtefatti {
 	}
 
 	/**
+	 * Carica subito il generatore del gioco e la sua grammatica, che altrimenti si caricherebbero al primo artefatto
+	 * (vedi Automa, stato LOGO_INIZIALE).
+	 */
+	static void precarica() {
+		istanza();
+	}
+
+	/**
 	 * Il danno medio di un'arma di quel livello, prima dello scarto casuale e delle correzioni per tipo
 	 * (spadone, bastone): 4 + 2 × livello, ma almeno 11 + livello, perché ai livelli bassi un'arma deve fare
 	 * più delle mani nude.

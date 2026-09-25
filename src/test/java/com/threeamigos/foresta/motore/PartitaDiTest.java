@@ -9,6 +9,7 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoInvioTesto;
 import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
 import com.threeamigos.foresta.eventi.interni.InternoErrore;
 import com.threeamigos.foresta.eventi.interni.InternoException;
+import com.threeamigos.foresta.eventi.interni.InternoFineLogoIniziale;
 import com.threeamigos.foresta.eventi.interni.InternoStatoDiGioco;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
@@ -78,16 +79,36 @@ final class PartitaDiTest implements AutoCloseable {
 		BusEventi.iscriviti(ComandoAperturaInventarioCommerciante.class, this::aggiornaComandi);
 		BusEventi.iscriviti(ComandoAperturaInventarioFornitore.class, this::aggiornaComandi);
 
-		automa = new Automa(temporizzatore);
+		// Il precaricamento del motore sullo stesso thread, cosi' finisce prima che inizia() ritorni
+		automa = new Automa(temporizzatore, Runnable::run);
 		automa.inizia();
 		verificaNessunErrore();
 	}
 
 	/**
-	 * Una partita nuova, ferma alla schermata iniziale.
+	 * Una partita nuova, ferma alla schermata iniziale (INTRO): il logo iniziale e' gia' passato, come se la UI
+	 * avesse finito l'animazione.
 	 */
 	static PartitaDiTest nuova(long seme) {
+		PartitaDiTest partita = new PartitaDiTest(seme);
+		partita.fineLogoIniziale();
+		return partita;
+	}
+
+	/**
+	 * Una partita nuova ferma al primissimo stato, LOGO_INIZIALE, in attesa che la UI finisca l'animazione.
+	 */
+	static PartitaDiTest nuovaAlLogoIniziale(long seme) {
 		return new PartitaDiTest(seme);
+	}
+
+	/**
+	 * Quello che fa la UI quando l'animazione del logo e' finita e le sue risorse sono caricate.
+	 */
+	PartitaDiTest fineLogoIniziale() {
+		BusEventi.pubblica(new InternoFineLogoIniziale());
+		verificaNessunErrore();
+		return this;
 	}
 
 	private void aggiornaComandi(RichiestaConComandi richiesta) {

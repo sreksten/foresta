@@ -316,6 +316,14 @@ public enum TipoEvento {
      */
     INTERNO_INTERFACCIA_UTENTE_PRONTA,
     /**
+     * L'animazione del logo iniziale e' finita e la UI ha caricato le sue risorse
+     */
+    INTERNO_FINE_LOGO_INIZIALE,
+    /**
+     * Il motore ha finito di caricare in background grammatiche e generatore di artefatti
+     */
+    INTERNO_PRECARICAMENTO_MOTORE_COMPLETATO,
+    /**
      * Messaggi di notifica interni al motore non destinati al giocatore
      */
     INTERNO_MESSAGGIO,

@@ -9,9 +9,9 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoVisualizzazioneMap
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
+import com.threeamigos.foresta.ui.sfx.TracciatoreLogo;
 import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -36,6 +36,11 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	private JFrame jframe;
 	private Prompt prompt;
 	private DisplayableCanvas displayableCanvas;
+	private int larghezza;
+	private int altezza;
+	// Solo durante lo stato LOGO_INIZIALE; poi il posto passa al displayableCanvas
+	private PannelloLogoIniziale pannelloLogoIniziale;
+	private volatile boolean interfacciaCompleta;
 	private Stato statoDiGioco;
 
 	public ForestaUI(Orientamento orientamento, boolean tuttoSchermo, Temporizzatore temporizzatore) {
@@ -86,7 +91,8 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	
 	/**
 	 * Le dimensioni della finestra di gioco: lo schermo intero, oppure quelle date dalle
-	 * cornici dei riquadri, senza superare lo schermo. Richiede ImageCache già inizializzata.
+	 * cornici dei riquadri, senza superare lo schermo. Le legge dalle intestazioni dei file
+	 * (DimensioniRisorsa), senza caricare le immagini: la finestra si apre subito, col logo iniziale.
 	 */
 	static Dimension calcolaDimensioniFinestra(Orientamento orientamento, boolean tuttoSchermo) {
 		Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
@@ -96,19 +102,23 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		if (orientamento != Orientamento.ORIZZONTALE) {
 			return new Dimension(Math.min(screenDimension.width, 400), Math.min(screenDimension.height, 640));
 		}
+		Dimension corniceMappa = DimensioniRisorsa.di(ImageCache.RISORSA_CORNICE_MAPPA);
+		Dimension bosco = DimensioniRisorsa.di(ImageCache.RISORSA_BOSCO);
+		Dimension corniceGrande = DimensioniRisorsa.di(ImageCache.RISORSA_CORNICE_GRANDE);
+		Dimension corniceIncantesimi = DimensioniRisorsa.di(ImageCache.RISORSA_CORNICE_INCANTESIMI);
 		int width = ImageCache.SPACING +
-				ImageCache.corniceMappa.getWidth() +
+				corniceMappa.width +
 				ImageCache.SPACING +
-				ImageCache.locazioni.get(ClassiLocazione.BOSCO).getWidth() +
+				bosco.width +
 				ImageCache.SPACING +
-				ImageCache.corniceGrande.getWidth() +
+				corniceGrande.width +
 				ImageCache.SPACING;
 		int height = ImageCache.SPACING +
-				ImageCache.corniceGrande.getHeight() +
+				corniceGrande.height +
 				ImageCache.SPACING +
-				ImageCache.corniceIncantesimi.getHeight() +
+				corniceIncantesimi.height +
 				ImageCache.SPACING +
-				ImageCache.corniceGrande.getHeight() +
+				corniceGrande.height +
 				ImageCache.SPACING +
 				ClasseIcona.getAltezzaMassima() +
 				ImageCache.SPACING;
@@ -121,43 +131,87 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 				: DisplayableCanvas.ORIENTAMENTO_VERTICALE;
 	}
 
+	/**
+	 * Apre subito la finestra con il solo logo iniziale: prompt e DisplayableCanvas, e le immagini di cui hanno
+	 * bisogno, arrivano durante l'animazione (vedi avviaLogoIniziale).
+	 */
 	private void creaEMostraInterfacciaUtente() {
-		ImageCache.init();
-
 		Dimension screenDimension = Toolkit.getDefaultToolkit().getScreenSize();
 		jframe = new JFrame("La Foresta");
 		jframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		Dimension dimensioniFinestra = calcolaDimensioniFinestra(orientamento, tuttoSchermo);
-		int width = dimensioniFinestra.width;
-		int height = dimensioniFinestra.height;
+		larghezza = dimensioniFinestra.width;
+		altezza = dimensioniFinestra.height;
 
 		jframe.setLayout(null);
 		Container c = jframe.getContentPane();
 		c.setBackground(Color.BLACK);
-		c.setPreferredSize(new Dimension(width, height));
+		c.setPreferredSize(new Dimension(larghezza, altezza));
 
-		prompt = new Prompt();
-		// Nel layered pane, non nel content pane: da fratello del canvas la sua cornice
-		// verrebbe coperta a ogni repaint() del canvas (es. al movimento del mouse), perché
-		// il content pane presume che i figli non si sovrappongano e ridisegna solo il canvas.
-		jframe.getLayeredPane().add(prompt, JLayeredPane.PALETTE_LAYER);
-		prompt.setLocation((width - prompt.getSize().width) / 2, (height - prompt.getSize().height) / 2);
-
-		Logger.log("Orientamento: " + orientamento);
-		displayableCanvas = new DisplayableCanvas(width, height, orientamentoCanvas(orientamento), SPESSORE_BARRA_ICONE);
-		jframe.add(displayableCanvas);
-		displayableCanvas.setLocation(0, 0);
+		pannelloLogoIniziale = new PannelloLogoIniziale(larghezza, altezza);
+		jframe.add(pannelloLogoIniziale);
+		pannelloLogoIniziale.setLocation(0, 0);
 
 		jframe.pack();
-		jframe.setResizable(false);		
+		jframe.setResizable(false);
 		jframe.setLocation((screenDimension.width - jframe.getSize().width) / 2, (screenDimension.height - jframe.getSize().height) / 2);
 		jframe.setVisible(true);
 
 		BusEventi.pubblica(new InternoInterfacciaUtentePronta());
 	}
 
+	/**
+	 * Stato LOGO_INIZIALE: fa partire l'animazione e, in un altro thread, il caricamento delle immagini; poi, di
+	 * nuovo sull'EDT, costruisce prompt e DisplayableCanvas (vedi completaInterfacciaUtente).
+	 */
+	private void avviaLogoIniziale() {
+		temporizzatore.inizia(TracciatoreLogo.INTERVALLO_FOTOGRAMMA_MS);
+		Thread caricamento = new Thread(() -> {
+			ImageCache.init();
+			SwingUtilities.invokeLater(this::completaInterfacciaUtente);
+		}, "Precaricamento immagini");
+		caricamento.setDaemon(true);
+		caricamento.start();
+	}
+
+	private void completaInterfacciaUtente() {
+		prompt = new Prompt();
+		prompt.setLocation((larghezza - prompt.getSize().width) / 2, (altezza - prompt.getSize().height) / 2);
+
+		Logger.log("Orientamento: " + orientamento);
+		displayableCanvas = new DisplayableCanvas(larghezza, altezza, orientamentoCanvas(orientamento), SPESSORE_BARRA_ICONE);
+		interfacciaCompleta = true;
+	}
+
+	/**
+	 * Un fotogramma del logo iniziale. Quando l'animazione e' finita e l'interfaccia e' completa, il logo lascia il
+	 * posto al DisplayableCanvas e l'Automa viene avvisato.
+	 */
+	private void avanzaLogoIniziale() {
+		if (pannelloLogoIniziale == null) {
+			return;
+		}
+		pannelloLogoIniziale.avanza();
+		if (pannelloLogoIniziale.isFinito() && interfacciaCompleta) {
+			temporizzatore.termina();
+			jframe.remove(pannelloLogoIniziale);
+			pannelloLogoIniziale = null;
+			// Nel layered pane, non nel content pane: da fratello del canvas la sua cornice
+			// verrebbe coperta a ogni repaint() del canvas (es. al movimento del mouse), perché
+			// il content pane presume che i figli non si sovrappongano e ridisegna solo il canvas.
+			jframe.getLayeredPane().add(prompt, JLayeredPane.PALETTE_LAYER);
+			jframe.add(displayableCanvas);
+			displayableCanvas.setLocation(0, 0);
+			jframe.revalidate();
+			jframe.repaint();
+			BusEventi.pubblica(new InternoFineLogoIniziale());
+		}
+	}
+
 	public void tick() {
-		if (statoDiGioco == Stato.INTRO) {
+		if (statoDiGioco == Stato.LOGO_INIZIALE) {
+			avanzaLogoIniziale();
+		} else if (statoDiGioco == Stato.INTRO) {
 			displayableCanvas.avanzaIntro();
 		}
 	}
@@ -313,6 +367,10 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	private void gestisciEventoStatoDiGioco(InternoStatoDiGioco evento) {
 		statoDiGioco = evento.getStato();
 		switch(statoDiGioco) {
+			case LOGO_INIZIALE:
+				avviaLogoIniziale();
+				break;
+
 			case INTRO:
 				 // Richiama la schermata o animazione di introduzione
 				displayableCanvas.avviaIntro();

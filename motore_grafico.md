@@ -9,12 +9,12 @@ Tutto il rendering è **Java2D/Swing/AWT puro** — nessuna libreria grafica est
 
 `Main.main()` (`Main.java:29-50`) avvia il motore grafico in parallelo al motore di gioco, ciascuno con il proprio `Temporizzatore` indipendente. `ForestaUI` (`ui/ForestaUI.java`, 417 righe) è la classe radice della UI: il suo costruttore chiama `SwingUtilities.invokeLater(this::creaEMostraInterfacciaUtente)` (riga 42) per costruire la finestra sull'Event Dispatch Thread, poi si iscrive a **34 tipi di evento** sul bus (righe 44-78) prima ancora che la finestra esista.
 
-`creaEMostraInterfacciaUtente()` (righe 81-146):
-1. `ImageCache.init()` precarica tutte le risorse grafiche.
-2. Calcola le dimensioni della finestra sommando gli ingombri delle cornici in cache (`ImageCache.corniceMappa`, `corniceGrande`, `corniceIncantesimi`, ecc.), con limite alla risoluzione dello schermo e due layout alternativi per `Orientamento.ORIZZONTALE`/`VERTICALE`.
-3. Crea un `JFrame` ("La Foresta") con `setLayout(null)` — **posizionamento manuale a coordinate assolute**, niente `LayoutManager` Swing.
-4. Vi aggiunge **due soli componenti Swing/AWT**: `Prompt` (input testuale overlay, centrato) e `DisplayableCanvas` (il canvas di gioco), a cui passa l'orientamento e lo spessore della barra icone (72 px). Fino al commit `5fb3be5` c'era un terzo componente, `PannelloIcone` (un `JPanel` con dentro dei bottoni `ImageButton`): ora la barra icone è una `Finestra` disegnata dentro il canvas come tutte le altre (vedi §2).
-5. A fine setup pubblica `InternoInterfacciaUtentePronta` (riga 145) — è il segnale che sblocca l'avvio del motore di gioco (vedi `Main.java:49`).
+`creaEMostraInterfacciaUtente()` apre subito la finestra, prima di caricare le immagini:
+1. Calcola le dimensioni della finestra sommando gli ingombri delle cornici (`fondi/CorniceMappa.gif`, `CorniceGrande`, `CorniceIncantesimi`, `locazioni/Foresta.gif`) e dell'icona più alta, lette dalle sole intestazioni dei file (`DimensioniRisorsa`), con limite alla risoluzione dello schermo e due layout alternativi per `Orientamento.ORIZZONTALE`/`VERTICALE`.
+2. Crea un `JFrame` ("La Foresta") con `setLayout(null)` — **posizionamento manuale a coordinate assolute**, niente `LayoutManager` Swing — e vi mette il solo `PannelloLogoIniziale`.
+3. Pubblica `InternoInterfacciaUtentePronta` — è il segnale che sblocca l'avvio del motore di gioco (vedi `Main.java`). L'`Automa` entra nel suo primissimo stato, `LOGO_INIZIALE`, e intanto precarica in un altro thread grammatiche e generatore di artefatti.
+
+Nello stato `LOGO_INIZIALE` la UI anima il `TracciatoreLogo` del logo 3AM, centrato, una volta sola e senza possibilità di saltarlo (temporizzatore a `TracciatoreLogo.INTERVALLO_FOTOGRAMMA_MS`). Nel frattempo un thread esegue `ImageCache.init()` (cornici, locazioni, personaggi, oggetti, icone di `ClasseIcona`, che si caricano al primo uso) e poi, sull'EDT, si costruiscono i **due soli componenti Swing/AWT** del gioco: `Prompt` (input testuale overlay, centrato, nel layered pane) e `DisplayableCanvas` (il canvas di gioco), a cui passa l'orientamento e lo spessore della barra icone (72 px). Quando l'animazione è finita e l'interfaccia è pronta, il canvas prende il posto del logo e la UI pubblica `InternoFineLogoIniziale`; con quello e con il precaricamento del motore l'`Automa` passa a `INTRO`. A `LOGO_INIZIALE` non si torna: a fine partita si riparte da `INTRO`. Fino al commit `5fb3be5` c'era un terzo componente, `PannelloIcone` (un `JPanel` con dentro dei bottoni `ImageButton`): ora la barra icone è una `Finestra` disegnata dentro il canvas come tutte le altre (vedi §2).
 
 ## 2. Sistema di "finestre" componibili: `DisplayableCanvas`
 
@@ -211,7 +211,7 @@ Le immagini dei personaggi, degli oggetti e delle locazioni vengono da `ClassePe
 
 ## 9. Gestione immagini
 
-`ImageCache` (statica, inizializzata via `ImageCache.init()` all'avvio della UI) precarica **decine di `BufferedImage`** e mappe indicizzate per enum (cornici, sprite di stato, `Map<ClassiLocazione, BufferedImage>` per le illustrazioni di ogni tipo di locazione, icone per `ClassePersonaggio`) da risorse in `/com/threeamigos/foresta/img/`.
+`ImageCache` (statica, inizializzata via `ImageCache.init()` in background durante il logo iniziale) precarica **decine di `BufferedImage`** e mappe indicizzate per enum (cornici, sprite di stato, `Map<ClassiLocazione, BufferedImage>` per le illustrazioni di ogni tipo di locazione, icone per `ClassePersonaggio`) da risorse in `/com/threeamigos/foresta/img/`.
 
 `BufferedImageBuilder.buildBufferedImage(resource)` (`ui/BufferedImageBuilder.java:17-37`) carica via `ImageIO.read`, poi crea esplicitamente una copia **compatibile con la configurazione grafica dello schermo corrente** (`GraphicsConfiguration.createCompatibleImage`) — un'ottimizzazione classica Java2D che evita conversioni di formato pixel a ogni `drawImage`, a costo di duplicare temporaneamente l'immagine in memoria durante il caricamento. Eventuali errori di caricamento risorsa sono fatali (`System.exit(0)` dopo il log, righe 31-34) — coerente con la filosofia "fail fast all'avvio" per asset mancanti, diversa dalla gestione tollerante via eventi usata altrove nel motore.
 

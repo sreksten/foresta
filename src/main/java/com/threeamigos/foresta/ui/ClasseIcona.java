@@ -101,35 +101,57 @@ public enum ClasseIcona {
 
 	private final Comando comando;
 	private final ClassePersonaggio classePersonaggio;
-	private final BufferedImage icona;
+	private final String nomeRisorsa;
+	// Caricata al primo uso, o da precarica(): cosi' la dimensione della finestra si calcola senza caricarle tutte
+	private volatile BufferedImage icona;
 	private static int altezzaMassima = -1;
 
 	ClasseIcona(Comando comando, String nomeRisorsa) {
 		this.comando = comando;
 		this.classePersonaggio = null;
-		icona = BufferedImageBuilder.buildBufferedImage(nomeRisorsa);
+		this.nomeRisorsa = nomeRisorsa;
 	}
 
 	ClasseIcona(ClassePersonaggio classePersonaggio, String nomeRisorsa) {
 		this.comando = null;
 		this.classePersonaggio = classePersonaggio;
-		icona = BufferedImageBuilder.buildBufferedImage(nomeRisorsa);
+		this.nomeRisorsa = nomeRisorsa;
 	}
 
 	ClasseIcona(Comando comando, ClassePersonaggio classePersonaggio, String nomeRisorsa) {
 		this.comando = comando;
 		this.classePersonaggio = classePersonaggio;
-		icona = BufferedImageBuilder.buildBufferedImage(nomeRisorsa);
+		this.nomeRisorsa = nomeRisorsa;
 	}
 
 	public BufferedImage getIcona() {
-		return icona;
+		BufferedImage caricata = icona;
+		if (caricata == null) {
+			synchronized (this) {
+				caricata = icona;
+				if (caricata == null) {
+					caricata = BufferedImageBuilder.buildBufferedImage(nomeRisorsa);
+					icona = caricata;
+				}
+			}
+		}
+		return caricata;
+	}
+
+	/**
+	 * Carica subito tutte le icone (durante il logo iniziale, in background).
+	 */
+	static void precarica() {
+		for (ClasseIcona corrente : values()) {
+			corrente.getIcona();
+		}
 	}
 
 	public static int getAltezzaMassima() {
 		if (altezzaMassima == -1) {
 			for (ClasseIcona corrente : values()) {
-				altezzaMassima = Math.max(altezzaMassima, corrente.icona.getHeight());
+				// Dall'intestazione del file: non serve caricare le icone per saperlo
+				altezzaMassima = Math.max(altezzaMassima, DimensioniRisorsa.di(corrente.nomeRisorsa).height);
 			}
 		}
 		return altezzaMassima;
