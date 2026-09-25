@@ -45,11 +45,13 @@ public class Main {
 		Temporizzatore temporizzatoreAutoma = new TemporizzatoreJ2SE();
 		ControlloreDiGioco controlloreDiGioco = new Automa(temporizzatoreAutoma);
 
+		// Ci si iscrive prima di creare la UI: ForestaUI pubblica InternoInterfacciaUtentePronta sull'EDT,
+		// e un evento senza iscritti andrebbe perso lasciando il gioco sulla finestra nera
+		BusEventi.iscriviti(InternoInterfacciaUtentePronta.class, e -> controlloreDiGioco.inizia());
+
 		Temporizzatore temporizzatoreUI = new TemporizzatoreJ2SE();
 		new ForestaUI(orientamento, tuttoSchermo, saltaLogo, temporizzatoreUI);
 
 		//FIXME gestire l'elenco finestre togliendolo da InterfacciaUtente
-
-		BusEventi.iscriviti(InternoInterfacciaUtentePronta.class, e -> controlloreDiGioco.inizia());
 	}
 }

@@ -72,7 +72,7 @@ public class AiutoMercenario implements Offerta {
 		if (gruppo.getNumeroPersonaggiVivi() > 1) {
 			sb.append("il gruppo");
 		} else {
-			sb.append(gruppo.getCapo().getNomeProprio());
+			sb.append(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 		}
 		sb.append(" per un po'.");
 		return sb.toString();

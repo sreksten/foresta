@@ -58,15 +58,6 @@ import java.util.function.Supplier;
 // FIXME PersonaggioBase.attacca(Gruppo) fa get(0) su una lista che potrebbe essere vuota
 // FIXME LanciatoreDeiDadi.getPercentualiPer: le percentuali di alcune classi sommano a 110 (Ombrafiamma, Titano, Drago), 95 (Goblin), 90 (Arpia)
 //
-// Missioni, locazioni, offerte
-// FIXME testi: "Optional[...]" in LineaTemporale.eventi (sconfitta a tempo) e in AiutoMercenario.getDescrizione (getNomeProprio)
-//
-// Automa e avvio
-// FIXME Main: si iscrive a InternoInterfacciaUtentePronta dopo aver creato ForestaUI, che la pubblica sull'EDT: in teoria puo'
-//  arrivare prima dell'iscrizione, e il gioco resterebbe sulla finestra nera
-// FIXME latente: gestisciComandoInStatoSceltaDirezione, un comando inatteso (default) passa in silenzio a SCELTA_PASSI, dove
-//  i passi si ricavano dall'ordinale del comando senza controllarlo
-//
 // Salvataggi e dati
 // FIXME GestoreSalvataggiSuFile.salva: scrivere su uno slot lo svuota subito (una RuntimeException fa perdere il vecchio
 //  salvataggio) e gli errori di PrintWriter (checkError) vengono ignorati
@@ -138,6 +129,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private int indicePersonaggioInventario = 0;
 	private Locazione locazioneCorrente;
 	private Comando direzione; // serve a memorizzare la direzione prima di chiedere il numero di passi
+	private Collection<Comando> comandiPossibiliPerNumeroPassi; // i passi consentiti in quella direzione, più ANNULLA
 	private Personaggio formulanteResurrezione; // chi lancerà la Resurrezione, scelto prima del bersaglio
 
 	// L'intermezzo in corso, la pagina mostrata, e dove riprendere quando non ce ne sono altri
@@ -892,7 +884,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito gestisciComandoInStatoSceltaDirezione(Comando comando) {
 		// Occorre memorizzare l'informazione sulla direzione
-		Collection<Comando> comandiPossibiliPerNumeroPassi = null;
 		switch (comando) {
 			case MAPPA:
 				statoPrecedente = Stato.ATTESA_DIREZIONE;
@@ -959,12 +950,12 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 						Comando.NO));
 				return Esito.FERMATI;
 			default:
-				break;
+				// Comando inatteso: si resta ad aspettare la direzione
+				BusEventi.pubblica(new InternoMessaggio("Automa in stato " + stato.name() + ": ignoro il Comando " + comando));
+				return Esito.FERMATI;
 		}
 		stato = Stato.SCELTA_PASSI;
-		if (comandiPossibiliPerNumeroPassi != null) {
-			BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibiliPerNumeroPassi));
-		}
+		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibiliPerNumeroPassi));
 		return Esito.FERMATI;
 	}
 
@@ -974,6 +965,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			// riscritto alla prossima scelta: si può tornare indietro senza nulla da disfare.
 			stato = Stato.ATTESA_DIREZIONE;
 			return Esito.CONTINUA_CON_INGRESSO;
+		}
+		if (!comandiPossibiliPerNumeroPassi.contains(comando)) {
+			// Solo NUMERO_1 .. NUMERO_n, dove n sono i passi possibili in quella direzione
+			BusEventi.pubblica(new InternoMessaggio("Automa in stato " + stato.name() + ": ignoro il Comando " + comando));
+			return Esito.FERMATI;
 		}
 		int passi = comando.ordinal() - Comando.NUMERO_1.ordinal() + 1;
 		switch (direzione) {
