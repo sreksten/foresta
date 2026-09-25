@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import org.junit.jupiter.api.Test;
 
@@ -8,8 +10,10 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
  * Salva e rilegge in fila, sullo stesso flusso, le parti del modello dati lette con LettoreCampi
@@ -41,6 +45,10 @@ class ModelloDatiSalvataggioTest {
         modello.getGruppoGiocatoreMD().addPersonaggioMD(morto);
         modello.getGruppoGiocatoreMD().getArtefatti().add(
                 ArtefattoMDTest.creaArtefatto(TipoArtefatto.INCANTAMENTO, "la pergamena minore", "che trasmette un effetto"));
+        modello.getGruppoGiocatoreMD().setIncantesimi(ClasseIncantesimo.FUOCO, 4);
+        modello.getLineaTemporaleMD().setGiocoFinito(true);
+        modello.getLineaTemporaleMD().setEvento("Gwendolyn vede levarsi una colonna di fumo a nord");
+        modello.getLineaTemporaleMD().addCittaDistrutta(ClassiLocazione.CITTA_RUUNA);
         String primo = salva(modello);
         // When
         ModelloDati riletto = new ModelloDati();
@@ -50,6 +58,10 @@ class ModelloDatiSalvataggioTest {
         }
         // Then
         assertEquals(primo, salva(riletto));
+        assertEquals(4, riletto.getGruppoGiocatoreMD().getIncantesimi(ClasseIncantesimo.FUOCO));
+        assertTrue(riletto.getLineaTemporaleMD().isGiocoFinito());
+        assertEquals("Gwendolyn vede levarsi una colonna di fumo a nord", riletto.getLineaTemporaleMD().getEvento());
+        assertEquals(Collections.singletonList(ClassiLocazione.CITTA_RUUNA), riletto.getLineaTemporaleMD().getCittaDistrutte());
     }
 
     private static Serializzabile[] parti(ModelloDati modello) {

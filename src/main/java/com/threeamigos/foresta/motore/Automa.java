@@ -33,7 +33,6 @@ import java.util.function.Supplier;
 
 // TODO: carta, forbice e sasso
 // TODO: mostrare in locazione anche i personaggi del gruppo.
-// TODO: (dovrebbe essere stato fatto) se prendono un oggetto che è troppo pesante e questo va nell'inventario del gruppo dovrà apparire un fumetto "è troppo pesante" oltre al messaggio
 // TODO: implementare fumetto che attende chiusura
 // TODO: implementare sistema di aiuto
 // TODO: se carino e non costa troppo, sarebbe bello nel pannello icone fare tipo la barra dele applicazioni di macos che si ingrandisce sull'icona corrente e scala leggermente quelle vicine.
@@ -50,8 +49,6 @@ import java.util.function.Supplier;
 // FIXME Morte (rimandata): Morte.formulaImpl ignora le immunita' (Lich, Fantasma, Scheletro, Spettro, Spirito, Ombra Nera)
 // FIXME Morte (rimandata): Morte.formula non imposta mai "totale", quindi IncantesimoMaleficoImpl.risultato con il lancio fallito
 //  stampa "ha ferito tutti i suoi avversari"
-// FIXME CalcolatoreCombattimento (SPAVENTATO): il moltiplicatore della difesa arriva a 1.1 con SAGGEZZA >= 20, cosi' un boss
-//  spaventato si difende meglio; CORAGGIO e PERCEZIONE (valori ~2-10) vi sono divisi per 100, quindi non mitigano quasi nulla
 // FIXME PersonaggioBase.getModificaDanniMagia: i danni degli incantesimi usano i modificatori della riserva di MAGIA
 //  (un anello +20 MAGIA massima da' +20 danni a ogni incantesimo)
 // FIXME getBersagli() ignora il NUMERO_BERSAGLI calcolato e salvato
@@ -75,19 +72,12 @@ import java.util.function.Supplier;
 // Salvataggi e dati
 // FIXME GestoreSalvataggiSuFile.salva: scrivere su uno slot lo svuota subito (una RuntimeException fa perdere il vecchio
 //  salvataggio) e gli errori di PrintWriter (checkError) vengono ignorati
-// FIXME GestorePunteggiBase: se il file della classifica non si legge viene sovrascritto con la classifica predefinita
-// FIXME stream non chiusi: GestoreSalvataggiSuFile.getSalvataggiDisponibili (FileReader) e BufferedImageBuilder.provaACaricare
-// FIXME i file (salvataggi, classifica) usano il charset predefinito del sistema: gli accenti cambiano tra sistemi diversi
-// FIXME LineaTemporaleMD non salva giocoFinito ne' l'evento in corso (la "colonna di fumo" si perde se si salva subito dopo)
-// FIXME formato dei salvataggi senza versione e in parte per ordinale (citta' distrutte, incantesimi, statistiche per classe):
-//  aggiungere o togliere una costante di enum rende illeggibili i vecchi salvataggi
 // FIXME IntermezziMD.leggi non si accorge di un file troncato (aggiunge null)
 // FIXME MissioneMD e LocazioneMD non tolgono il carattere "|" dai valori (oggi sono solo testi generati)
 //
 // UI
 // FIXME modalita' VERTICALE: DisplayableCanvasBarraIcone avanza di 32 con icone alte 64, e la finestra e' larga al massimo 400
 // FIXME schermi alti meno di 804 px: la barra delle icone copre il fondo del riquadro delle missioni
-// FIXME DisplayableCanvasMappaATuttoSchermo: il trascinamento resta attivo se si rilascia il tasto sopra la barra icone o fuori
 // FIXME DisplayableCanvas: il click singolo differito (Timer da 175 ms) puo' scattare su una schermata gia' chiusa
 // FIXME latente: ClassiOggettoImmagine restituisce null per Elmo e Armatura (oggi non compaiono tra gli oggetti delle locazioni)
 

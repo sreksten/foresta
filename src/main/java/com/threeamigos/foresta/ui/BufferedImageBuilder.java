@@ -35,12 +35,15 @@ public class BufferedImageBuilder {
 	 */
 	public static BufferedImage provaACaricare(String resource) {
 		if (resource != null && !resource.isEmpty()) {
-			try {
-				InputStream in = BufferedImageBuilder.class.getResourceAsStream("/com/threeamigos/foresta/img/" + resource);
+			// ImageIO.read(InputStream) non chiude lo stream: lo chiude il try
+			try (InputStream in = BufferedImageBuilder.class.getResourceAsStream("/com/threeamigos/foresta/img/" + resource)) {
 				if (in == null) {
 					throw new IllegalArgumentException("Non trovo il file " + resource);
 				}
 				BufferedImage img = ImageIO.read(in);
+				if (img == null) {
+					throw new IllegalArgumentException("Formato non riconosciuto per il file " + resource);
+				}
 				BufferedImage copy = gc.createCompatibleImage(img.getWidth(), img.getHeight(), img.getTransparency());
 				Graphics2D g2d = copy.createGraphics();
 				g2d.drawImage(img, 0, 0, null);

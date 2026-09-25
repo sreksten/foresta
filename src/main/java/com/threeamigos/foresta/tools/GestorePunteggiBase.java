@@ -9,6 +9,11 @@ abstract class GestorePunteggiBase extends GestoreSuFile implements InterfacciaG
 	private final String[] nomi = new String[NUMERO_MASSIMO];
 	private final int[] punteggi = new int[NUMERO_MASSIMO];
 
+	/**
+	 * Se la classifica non si riesce a leggere (file assente, ma anche rovinato o troncato) si riparte da
+	 * quella predefinita e la si salva subito, sovrascrivendo il file illeggibile: è voluto, perché da un
+	 * file rovinato non c'è niente da recuperare e la classifica non è un dato prezioso come un salvataggio.
+	 */
 	public GestorePunteggiBase() {
 		if (!carica()) {
 			punteggi[0] = 10000;

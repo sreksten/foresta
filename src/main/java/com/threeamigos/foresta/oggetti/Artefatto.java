@@ -162,8 +162,13 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 			List<Comando> candidati = candidati(gruppo, artefatto);
 			if (candidati.isEmpty()) {
 				gruppo.addArtefatto(artefatto);
-				BusEventi.pubblica(new NotificaTestoFrase(comeSoggetto(artefatto)
-						+ " viene messo nell'inventario del gruppo: nessuno può prenderlo."));
+				if (troppoPesante(gruppo, artefatto)) {
+					BusEventi.pubblica(new NotificaTestoParagrafo(comeSoggetto(artefatto)
+							+ " è troppo pesante da portare, quindi viene messo nell'inventario del gruppo."));
+				} else {
+					BusEventi.pubblica(new NotificaTestoFrase(comeSoggetto(artefatto)
+							+ " viene messo nell'inventario del gruppo: nessuno può utilizzarlo in questo momento."));
+				}
 				return true;
 			}
 			if (candidati.size() > 1) {
@@ -198,6 +203,20 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 			}
 		}
 		return candidati;
+	}
+
+	/**
+	 * true se almeno un personaggio vivo potrebbe equipaggiare l'artefatto e ne è impedito solo dal peso
+	 * (TROPPO_CARICO è l'ultimo controllo di {@link Personaggio#puoEquipaggiare}).
+	 */
+	private static boolean troppoPesante(GruppoGiocatore gruppo, Artefatto artefatto) {
+		for (Personaggio personaggio : gruppo.getPersonaggi()) {
+			if (personaggio.isVivo() && personaggio.puoEquipaggiare(artefatto)
+					.filter(motivo -> motivo == MotivoRifiutoEquipaggiamento.TROPPO_CARICO).isPresent()) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	/**

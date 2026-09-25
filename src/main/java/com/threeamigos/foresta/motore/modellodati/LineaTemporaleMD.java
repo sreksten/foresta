@@ -16,6 +16,8 @@ public class LineaTemporaleMD implements Serializzabile {
 	private int giorno;
 	private List<ClassiLocazione> cittaDistrutte = new ArrayList<>();
 	private boolean giocoFinito;
+	// Il messaggio dell'ultimo evento (es. la colonna di fumo), non ancora mostrato al giocatore
+	private String evento;
 	
 	public int getOra() {
 		return ora;
@@ -49,12 +51,21 @@ public class LineaTemporaleMD implements Serializzabile {
 		this.giocoFinito = giocoFinito;
 	}
 
+	public String getEvento() {
+		return evento;
+	}
+
+	public void setEvento(String evento) {
+		this.evento = evento;
+	}
+
 	/////////////////////////
 
 	public void reimposta() {
 		ora = 8;
 		giorno = 1;
 		giocoFinito = false;
+		evento = null;
 		cittaDistrutte.clear();
 	}
 
@@ -71,9 +82,13 @@ public class LineaTemporaleMD implements Serializzabile {
 		stream.print(ora);
 		stream.print(PIPE);
 		stream.print(giorno);
+		stream.print(PIPE);
+		stream.print(giocoFinito);
+		stream.print(PIPE);
+		stream.print(Serializzabile.facoltativo(Serializzabile.senzaPipe(evento)));
 		for (ClassiLocazione cittaDistrutta : cittaDistrutte) {
 			stream.print(PIPE);
-			stream.print(cittaDistrutta.ordinal());
+			stream.print(cittaDistrutta.name());
 		}
 		stream.println("");
 	}
@@ -84,9 +99,11 @@ public class LineaTemporaleMD implements Serializzabile {
 		LettoreCampi st = new LettoreCampi(line);
 		ora = Integer.parseInt(st.testo());
 		giorno = Integer.parseInt(st.testo());
+		giocoFinito = st.booleano();
+		evento = st.testoFacoltativo();
 		cittaDistrutte.clear();
 		while (st.haAltriCampi()) {
-			cittaDistrutte.add(ClassiLocazione.values()[Integer.parseInt(st.testo())]);
+			cittaDistrutte.add(st.enumerato(ClassiLocazione.class));
 		}
 	}
 }

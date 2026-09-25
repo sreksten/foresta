@@ -16,8 +16,6 @@ public class LineaTemporale {
 		return ModelloDati.getIstanza().getLineaTemporaleMD();
 	}
 
-	private static String evento;
-
 	public static int getOra() {
 		return getLineaTemporaleMD().getOra();
 	}
@@ -105,7 +103,7 @@ public class LineaTemporale {
 	public static void eventi(GruppoGiocatore gruppo) {
 		int giorno = getGiorno();
 		if (giorno > 40) {
-			evento = "Sventura! " + gruppo.getPersonaggi().get(0).getNomeProprio() + " ha invano tentato di fermare il Drago, che col tempo ha abbattuto l'ultimo baluardo della resistenza... tutto e' perduto!";
+			setEvento("Sventura! " + gruppo.getPersonaggi().get(0).getNomeProprio() + " ha invano tentato di fermare il Drago, che col tempo ha abbattuto l'ultimo baluardo della resistenza... tutto e' perduto!");
 			setGiocoFinito(true);
 		} else {
 			String nome = gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
@@ -129,16 +127,24 @@ public class LineaTemporale {
 	private static void distruggiCitta(ClassiLocazione citta, GruppoGiocatore gruppo, String nome) {
 		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(citta);
 		if (coordinate != null) {
-			evento = nome + COLONNA + Misc.getDirezione(gruppo, coordinate);
+			setEvento(nome + COLONNA + Misc.getDirezione(gruppo, coordinate));
 		}
 		setCittaDistrutta(citta);
 		Foresta.distruggiLocazioneUnica(citta, ClassiLocazione.ROVINE);
 	}
 
+	/**
+	 * L'ultimo evento non ancora mostrato, che viene consumato. Sta nel modello dati così un
+	 * salvataggio fatto prima di mostrarlo non lo perde.
+	 */
 	public static String getEvento() {
-		String e = evento;
-		evento = null;
+		String e = getLineaTemporaleMD().getEvento();
+		getLineaTemporaleMD().setEvento(null);
 		return e;
+	}
+
+	private static void setEvento(String evento) {
+		getLineaTemporaleMD().setEvento(evento);
 	}
 
 	public static boolean isGiocoFinito() {

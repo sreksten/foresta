@@ -103,7 +103,12 @@ public class CalcolatoreCombattimento {
         }
 
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO)) {
-            difesaTotale = (difesaTotale * (9.0d + Math.min(1, difensore.getSaggezza() / 20.0d) + Math.min(1.0d, difensore.getCoraggio() / 100.0d)) / 10.0d);
+            // Penalità base del 20%: SAGGEZZA e CORAGGIO (portato ×10 sulla scala dei primari, come per la
+            // durata) ne recuperano al massimo metà, così chi è spaventato si difende sempre peggio
+            // (moltiplicatore fra 0.8 e 0.9, mai sopra).
+            double mitigazioneSpavento = (Math.min(1.0d, difensore.getSaggezza() / 40.0d)
+                    + Math.min(1.0d, difensore.getCoraggio() * 10.0d / 40.0d)) / 2.0d;
+            difesaTotale = difesaTotale * (0.8d + 0.1d * mitigazioneSpavento);
             Logger.log(String.format("Difesa totale dopo effetto SPAVENTATO (mitigato da SAGGEZZA %d e CORAGGIO %d): %f", difensore.getSaggezza(), difensore.getCoraggio(), difesaTotale));
         }
 

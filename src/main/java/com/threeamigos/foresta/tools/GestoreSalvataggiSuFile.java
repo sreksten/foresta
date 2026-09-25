@@ -14,6 +14,7 @@ import com.threeamigos.foresta.motore.modellodati.Serializzabile;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -30,8 +31,9 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements Interfacci
 			try {
 				File fileSalvataggio = new File(directorySalvataggi.getPath() + File.separatorChar + id.name() + POSTFISSO_FILE);
 				if (fileSalvataggio.exists() && fileSalvataggio.canRead()) {
-					TestataSalvataggio testata = leggiTestataSalvataggio(new BufferedReader(new FileReader(fileSalvataggio)));
-					salvataggi.add(testata);
+					try (BufferedReader reader = apriInLettura(fileSalvataggio)) {
+						salvataggi.add(leggiTestataSalvataggio(reader));
+					}
 				}
 			} catch (Exception e) {
 				BusEventi.pubblica(new InternoException("Durante lettura file di salvataggio " + id, e));
@@ -45,7 +47,7 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements Interfacci
 		File directorySalvataggi = recuperaDirectory();
 		File fileSalvataggio = new File(directorySalvataggi.getPath() + File.separatorChar + id.name() + POSTFISSO_FILE);
 		if (fileSalvataggio.exists() && fileSalvataggio.canRead()) {
-			try (BufferedReader reader = new BufferedReader(new FileReader(fileSalvataggio))) {
+			try (BufferedReader reader = apriInLettura(fileSalvataggio)) {
 				// La prima riga è l'intestazione e la saltiamo
 				reader.readLine();
 				ModelloDati md = new ModelloDati();
@@ -68,7 +70,8 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements Interfacci
 		if (fileSalvataggio.exists() && !fileSalvataggio.canWrite()) {
 			BusEventi.pubblica(new InternoMessaggio("Tentativo di scrittura su file non scrivibile: " + id));
 		}
-		try (PrintWriter writer = new PrintWriter(new FileWriter(fileSalvataggio))) {
+		try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
+				new FileOutputStream(fileSalvataggio), StandardCharsets.UTF_8)))) {
 			// Intestazione
 			GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
             String sb = id +
@@ -85,6 +88,13 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements Interfacci
 		} catch (IOException e) {
 			BusEventi.pubblica(new InternoException(e));
 		}
+	}
+
+	/**
+	 * I salvataggi sono sempre in UTF-8, qualunque sia il charset predefinito del sistema.
+	 */
+	private static BufferedReader apriInLettura(File file) throws IOException {
+		return new BufferedReader(new InputStreamReader(new FileInputStream(file), StandardCharsets.UTF_8));
 	}
 
 	private TestataSalvataggio leggiTestataSalvataggio(BufferedReader reader) throws Exception {

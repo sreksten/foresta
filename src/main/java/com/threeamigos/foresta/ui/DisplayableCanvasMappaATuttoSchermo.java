@@ -218,7 +218,18 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 	}
 
 	@Override
+	public void processaUscita(int x, int y) {
+		// Uscendo dal riquadro (sulla barra icone o fuori dal canvas) il rilascio del tasto potrebbe
+		// arrivare a un'altra finestra o andare perso: si chiude il trascinamento come se fosse avvenuto qui
+		stoTrascinando = false;
+	}
+
+	@Override
 	public void processaTrascinamento(int x, int y) {
+		if (stoTrascinando && y >= altezzaMappa()) {
+			// Sceso sul notiziario: si esce dalla zona della mappa, come per processaUscita
+			stoTrascinando = false;
+		}
 		if (stoTrascinando) {
 			// 1. Calcoliamo il delta (differenza rispetto alla posizione precedente)
 			int deltaX = x - ultimaXMouse;

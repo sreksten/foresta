@@ -1128,7 +1128,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		@Override
 		public void mouseDragged(MouseEvent e) {
 			RisultatoRicerca risultatoRicerca = trovaFinestra(e);
+			// Anche trascinando si può passare da un riquadro all'altro: chi viene lasciato riceve processaUscita
+			aggiornaFinestraSottoIlCursore(risultatoRicerca, e.getX(), e.getY());
 			if (risultatoRicerca == null) {
+				repaint();
 				return;
 			}
 			Finestra finestra = risultatoRicerca.finestra;

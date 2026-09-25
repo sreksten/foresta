@@ -4,6 +4,7 @@ import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.Disabled;
 
 import java.io.FileWriter;
 import java.io.IOException;
@@ -22,6 +23,7 @@ public class TestGenerazionePersonaggi {
      * @throws IOException
      */
     @Test
+    @Disabled("Da eseguire manualmente: rigenera PERSONAGGI_VALORI_MEDI.csv")
     public void testValoriMedi() throws IOException {
         final int NUMERO_ISTANZE = 10000;
         final String CSV_FILE = "PERSONAGGI_VALORI_MEDI.csv";

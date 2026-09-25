@@ -8,7 +8,9 @@ import com.threeamigos.foresta.motore.modellodati.Serializzabile;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
@@ -27,7 +29,7 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 	}
 
 	public boolean carica() {
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(nomeFile()))))) {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(nomeFile())), StandardCharsets.UTF_8))) {
 			for (int posizione = 0; posizione < getConteggio(); posizione++) {
 				LettoreCampi campi = new LettoreCampi(reader.readLine());
 				String nome = campi.testo();
@@ -42,7 +44,7 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 	}
 
 	public boolean salva() {
-		try (PrintWriter writer = new PrintWriter(Files.newOutputStream(Paths.get(nomeFile())))) {
+		try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(Files.newOutputStream(Paths.get(nomeFile())), StandardCharsets.UTF_8))) {
 			for (int posizione = 0; posizione < getConteggio(); posizione++) {
 				Punteggio punteggio = getPunteggio(posizione);
 				writer.print(punteggio.getNome());

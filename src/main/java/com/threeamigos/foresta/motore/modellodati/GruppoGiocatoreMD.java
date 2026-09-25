@@ -7,12 +7,14 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.EnumMap;
+import java.util.Map;
 
 public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 
 	private int monete;
 	private int preziosi;
-	private int[] incantesimi = new int[ClasseIncantesimo.values().length];
+	private final Map<ClasseIncantesimo, Integer> incantesimi = new EnumMap<>(ClasseIncantesimo.class);
 	private int pozioniSalute;
 	private int pozioniSaluteGrande;
 	private int pozioniMagia;
@@ -36,14 +38,6 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 
 	public void setPreziosi(int preziosi) {
 		this.preziosi = preziosi;
-	}
-
-	public int[] getIncantesimi() {
-		return incantesimi;
-	}
-
-	public void setIncantesimi(int[] incantesimi) {
-		this.incantesimi = incantesimi;
 	}
 
 	public int getPozioniSalute() {
@@ -94,7 +88,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 
 	public void reimposta() {
 		super.reimposta();
-		incantesimi = new int[ClasseIncantesimo.values().length];
+		incantesimi.clear();
 		monete = 0;
 		preziosi = 0;
 		pozioniSalute = 0;
@@ -105,11 +99,11 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	}
 
 	public void setIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
-		incantesimi[classeIncantesimo.ordinal()] = quantita;
+		incantesimi.put(classeIncantesimo, quantita);
 	}
 
 	public int getIncantesimi(ClasseIncantesimo classeIncantesimo) {
-		return incantesimi[classeIncantesimo.ordinal()];
+		return incantesimi.getOrDefault(classeIncantesimo, 0);
 	}
 
 	@Override
@@ -119,10 +113,14 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(preziosi);
 		stream.print(PIPE);
-        for (int i : incantesimi) {
-            stream.print(i);
-            stream.print(PIPE);
-        }
+		stream.print(incantesimi.size());
+		stream.print(PIPE);
+		for (Map.Entry<ClasseIncantesimo, Integer> incantesimo : incantesimi.entrySet()) {
+			stream.print(incantesimo.getKey().name());
+			stream.print(PIPE);
+			stream.print(incantesimo.getValue());
+			stream.print(PIPE);
+		}
 		stream.print(pozioniSalute);
 		stream.print(PIPE);
 		stream.print(pozioniSaluteGrande);
@@ -149,8 +147,10 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		LettoreCampi st = new LettoreCampi(line);
 		monete = Integer.parseInt(st.testo());
 		preziosi = Integer.parseInt(st.testo());
-		for (int i = 0; i < incantesimi.length; i++) {
-			incantesimi[i] = Integer.parseInt(st.testo());
+		incantesimi.clear();
+		int numeroIncantesimi = st.intero();
+		for (int i = 0; i < numeroIncantesimi; i++) {
+			incantesimi.put(st.enumerato(ClasseIncantesimo.class), st.intero());
 		}
 		pozioniSalute = Integer.parseInt(st.testo());
 		pozioniSaluteGrande = Integer.parseInt(st.testo());

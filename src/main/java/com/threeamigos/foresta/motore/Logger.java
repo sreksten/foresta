@@ -1,9 +1,11 @@
 package com.threeamigos.foresta.motore;
 
 import java.io.File;
-import java.io.FileWriter;
+import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -24,7 +26,8 @@ public class Logger {
 			File cartella = new File("logs");
 			cartella.mkdirs();
 			String nomeFile = new SimpleDateFormat("yyyyMMdd-HHmmss").format(new Date()) + ".log";
-			return new PrintWriter(new FileWriter(new File(cartella, nomeFile), true), true);
+			return new PrintWriter(new OutputStreamWriter(
+					new FileOutputStream(new File(cartella, nomeFile), true), StandardCharsets.UTF_8), true);
 		} catch (IOException e) {
 			e.printStackTrace(System.err);
 			return null;
