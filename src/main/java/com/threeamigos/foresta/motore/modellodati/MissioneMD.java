@@ -38,7 +38,7 @@ public class MissioneMD implements Serializzabile {
 	}
 
 	public void setNome(String nome) {
-		this.nome = nome;
+		this.nome = Serializzabile.senzaPipe(nome);
 	}
 
 	public String getDescrizione() {
@@ -46,7 +46,7 @@ public class MissioneMD implements Serializzabile {
 	}
 
 	public void setDescrizione(String descrizione) {
-		this.descrizione = descrizione;
+		this.descrizione = Serializzabile.senzaPipe(descrizione);
 	}
 
 	public boolean isDescrizioneVisibile() {
@@ -63,7 +63,7 @@ public class MissioneMD implements Serializzabile {
 	}
 
 	public void aggiungiProprieta(String nome, String valore) {
-		proprieta.put(nome, valore);
+		proprieta.put(nome, Serializzabile.senzaPipe(valore));
 	}
 
 	public String ottieniProprieta(String nome) {

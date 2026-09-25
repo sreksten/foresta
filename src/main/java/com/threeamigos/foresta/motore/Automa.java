@@ -62,7 +62,6 @@ import java.util.function.Supplier;
 // FIXME GestoreSalvataggiSuFile.salva: scrivere su uno slot lo svuota subito (una RuntimeException fa perdere il vecchio
 //  salvataggio) e gli errori di PrintWriter (checkError) vengono ignorati
 // FIXME IntermezziMD.leggi non si accorge di un file troncato (aggiunge null)
-// FIXME MissioneMD e LocazioneMD non tolgono il carattere "|" dai valori (oggi sono solo testi generati)
 //
 // UI
 // FIXME modalita' VERTICALE: DisplayableCanvasBarraIcone avanza di 32 con icone alte 64, e la finestra e' larga al massimo 400

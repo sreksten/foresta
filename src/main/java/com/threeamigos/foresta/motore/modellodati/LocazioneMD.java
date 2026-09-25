@@ -60,7 +60,7 @@ public class LocazioneMD implements Serializzabile {
 	}
 
 	public void aggiungiProprieta(String nome, String valore) {
-		proprieta.put(nome, valore);
+		proprieta.put(nome, Serializzabile.senzaPipe(valore));
 	}
 
 	public String ottieniProprieta(String nome) {
@@ -79,7 +79,7 @@ public class LocazioneMD implements Serializzabile {
 		if (nome == null) {
 			proprieta.remove(NOME);
 		} else {
-			proprieta.put(NOME, nome);
+			proprieta.put(NOME, Serializzabile.senzaPipe(nome));
 		}
 	}
 
