@@ -59,8 +59,6 @@ import java.util.function.Supplier;
 // FIXME LanciatoreDeiDadi.getPercentualiPer: le percentuali di alcune classi sommano a 110 (Ombrafiamma, Titano, Drago), 95 (Goblin), 90 (Arpia)
 //
 // Missioni, locazioni, offerte
-// FIXME RegistroMissioni.completaMissione: una sotto-missione completata finisce anche nell'elenco di primo livello delle
-//  completate (e dopo un caricamento non piu'): nella finestra delle missioni compare due volte
 // FIXME testi: "Optional[...]" in LineaTemporale.eventi (sconfitta a tempo) e in AiutoMercenario.getDescrizione (getNomeProprio)
 //
 // Automa e avvio

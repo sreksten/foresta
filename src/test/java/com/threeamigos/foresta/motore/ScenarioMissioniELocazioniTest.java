@@ -6,6 +6,8 @@ import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.CronacheDiUnFegatoEroico;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneCheFallisce;
+import com.threeamigos.foresta.missioni.MissioneDiProvaSecondariaDue;
+import com.threeamigos.foresta.missioni.SconfiggiIlMinotauroGigante;
 import com.threeamigos.foresta.missioni.RecuperaIlMedaglione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.EffettoDiStato;
@@ -52,6 +54,35 @@ class ScenarioMissioniELocazioniTest {
 			assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_3));
 			assertTrue(RegistroMissioni.getMissioniFallite().stream().anyMatch(m -> m instanceof MissioneCheFallisce),
 					"dopo il caricamento non e' piu' tra le fallite");
+		}
+	}
+
+	@Test
+	void unaSottoMissioneCompletataStaSoloTraLeCompletateEPoiSottoLaSuaMissione() {
+		try (PartitaDiTest partita = PartitaDiTest.nuova(21)) {
+			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
+					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+			Missione principale = RegistroMissioni.getMissioniNonCompletate().stream()
+					.filter(m -> m instanceof SconfiggiIlMinotauroGigante).findFirst().orElseThrow(AssertionError::new);
+			principale.aggiungiMissione(new MissioneDiProvaSecondariaDue());
+
+			principale.getMissioniSecondarie().get(0).completaMissione();
+
+			assertEquals(1, RegistroMissioni.getMissioniCompletate().stream()
+					.filter(m -> m instanceof MissioneDiProvaSecondariaDue).count(), "compare una volta tra le completate");
+			GestoreSalvataggi.salva(Comando.NUMERO_3);
+			assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_3));
+			assertEquals(1, RegistroMissioni.getMissioniCompletate().stream()
+					.filter(m -> m instanceof MissioneDiProvaSecondariaDue).count(), "anche dopo un caricamento");
+
+			principale = RegistroMissioni.getMissioniNonCompletate().stream()
+					.filter(m -> m instanceof SconfiggiIlMinotauroGigante).findFirst().orElseThrow(AssertionError::new);
+			principale.completaMissione();
+
+			assertTrue(RegistroMissioni.getMissioniCompletate().contains(principale));
+			assertFalse(RegistroMissioni.getMissioniCompletate().stream().anyMatch(m -> m instanceof MissioneDiProvaSecondariaDue),
+					"completata la principale, la sotto-missione compare solo sotto di lei");
+			assertTrue(principale.getMissioniSecondarie().stream().anyMatch(m -> m instanceof MissioneDiProvaSecondariaDue));
 		}
 	}
 

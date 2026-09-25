@@ -149,10 +149,28 @@ public class RegistroMissioni {
 		return missioni;
 	}
 
+	/**
+	 * Le missioni di primo livello completate, seguite dalle sotto-missioni completate di quelle ancora in corso.
+	 * Quando si completa anche la missione che le contiene, le sotto-missioni non compaiono più qui da sole ma
+	 * sotto di lei, perché la missione passa tra le completate con tutto il suo albero.
+	 */
 	public static List<Missione> getMissioniCompletate() {
 		List<Missione> missioni = new ArrayList<>(elencoMissioniPredefiniteCompletate.values());
 		missioni.addAll(elencoMissioniSecondarieCompletate);
+		for (Missione missione : getMissioniNonCompletate()) {
+			aggiungiSottoMissioniCompletate(missione, missioni);
+		}
 		return missioni;
+	}
+
+	private static void aggiungiSottoMissioniCompletate(Missione missione, List<Missione> completate) {
+		for (Missione missioneSecondaria : missione.getMissioniSecondarie()) {
+			if (missioneSecondaria.isCompleta()) {
+				completate.add(missioneSecondaria);
+			} else if (!missioneSecondaria.isFallita()) {
+				aggiungiSottoMissioniCompletate(missioneSecondaria, completate);
+			}
+		}
 	}
 
 	/**
@@ -190,13 +208,16 @@ public class RegistroMissioni {
 		return (SconfiggiIlDrago) missione;
 	}
 
+	/**
+	 * Sposta tra le completate una missione di primo livello. Una sotto-missione completata resta dentro la sua
+	 * missione, con la sua proprieta' COMPLETA (vedi getMissioniCompletate).
+	 */
 	public static void completaMissione(Missione missione) {
 		if (TipoMissionePredefinita.contieneMissione(missione.getId())) {
 			TipoMissionePredefinita tipoMissione = TipoMissionePredefinita.valueOf(missione.getId());
 			elencoMissioniPredefinite.remove(tipoMissione);
 			elencoMissioniPredefiniteCompletate.put(tipoMissione, missione);
-		} else {
-			elencoMissioniSecondarie.removeIf(missione::equals);
+		} else if (elencoMissioniSecondarie.removeIf(missione::equals)) {
 			elencoMissioniSecondarieCompletate.add(missione);
 		}
 	}

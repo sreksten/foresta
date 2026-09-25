@@ -57,7 +57,7 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 					missione.getNome(), fontNome, colore,
 					missione.getDescrizione(), fontDescrizione, colore,
 					getIcona(missione), missione);
-			configuraNodo(nodo, missione, colore);
+			configuraNodo(nodo, missione, colore, true);
 		}
 		List<Missione> missioniCompletate = RegistroMissioni.getMissioniCompletate();
 		if (!missioniCompletate.isEmpty()) {
@@ -68,7 +68,7 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 						missione.getNome(), fontNome, colore,
 						missione.getDescrizione(), fontDescrizione, colore,
 						getIcona(missione), missione);
-				configuraNodo(nodo, missione, colore);
+				configuraNodo(nodo, missione, colore, false);
 			}
 		}
 		// Le fallite per ultime, dopo un altro separatore, in rosso
@@ -81,27 +81,29 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 						missione.getNome(), fontNome, colore,
 						missione.getDescrizione(), fontDescrizione, colore,
 						getIcona(missione), missione);
-				configuraNodo(nodo, missione, colore);
+				configuraNodo(nodo, missione, colore, false);
 			}
 		}
 		return componenteScorrevole;
 	}
 
 	/**
-	 * Una missione completata resta in elenco ma spenta; una non ancora attivata non
-	 * viene mostrata. Vale a ogni livello dell'albero.
+	 * Una sotto-missione non ancora attivata non viene mostrata. Fra le missioni in corso si nascondono anche le
+	 * sotto-missioni completate, che compaiono fra le completate (vedi RegistroMissioni.getMissioniCompletate).
+	 * Vale a ogni livello dell'albero.
 	 */
-	private void configuraNodo(ComponenteScorrevole<Missione>.Nodo nodo, Missione missione, DoomdarkColorModel.Color colore) {
+	private void configuraNodo(ComponenteScorrevole<Missione>.Nodo nodo, Missione missione, DoomdarkColorModel.Color colore,
+			boolean nascondiCompletate) {
 		nodo.setFigliVisibili(missione.isDescrizioneVisibile());
 		for (Missione missioneSecondaria : missione.getMissioniSecondarie()) {
-			if (!missioneSecondaria.isAttiva()) {
+			if (!missioneSecondaria.isAttiva() || (nascondiCompletate && missioneSecondaria.isCompleta())) {
 				continue;
 			}
 			ComponenteScorrevole<Missione>.Nodo nodoFiglio = nodo.creaNodo(
 					missioneSecondaria.getNome(), fontNome, colore,
 					missioneSecondaria.getDescrizione(), fontDescrizione, colore,
 					null, missioneSecondaria);
-			configuraNodo(nodoFiglio, missioneSecondaria, colore);
+			configuraNodo(nodoFiglio, missioneSecondaria, colore, nascondiCompletate);
 		}
 	}
 
