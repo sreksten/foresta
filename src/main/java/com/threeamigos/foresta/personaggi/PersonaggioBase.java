@@ -1472,7 +1472,19 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int)coraggioFinale;
 	}
 
-	public abstract double getMoltiplicatoreContrattazione();
+	/**
+	 * Solo chi può entrare nel gruppo (eroi e i pochi mostri che si uniscono per amicizia o per denaro) tratta con i
+	 * mercanti: gli altri non hanno CONTRATTAZIONE e non ridefiniscono questo metodo.
+	 */
+	@Override
+	public double getMoltiplicatoreContrattazione() {
+		return 0;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreContrattazione() {
+		return "Non entra mai nel gruppo: non tratta con i mercanti.";
+	}
 
 	private static int calcolaContrattazione(PersonaggioMD md, Personaggio moltiplicatori) {
 		// Per rispecchiare il concetto di "strappare un prezzo migliore a chi vende o compra", la Contrattazione

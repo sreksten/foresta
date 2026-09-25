@@ -187,16 +187,6 @@ public class Troll extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getMoltiplicatoreContrattazione() {
-		return Costanti.TROLL_MOLTIPLICATORE_CONTRATTAZIONE;
-	}
-
-	@Override
-	public String getNoteMoltiplicatoreContrattazione() {
-		return Costanti.TROLL_MOLTIPLICATORE_CONTRATTAZIONE_NOTA;
-	}
-
-	@Override
 	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.TROLL_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}

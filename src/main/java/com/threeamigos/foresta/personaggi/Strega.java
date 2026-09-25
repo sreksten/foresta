@@ -185,16 +185,6 @@ public class Strega extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getMoltiplicatoreContrattazione() {
-		return Costanti.STREGA_MOLTIPLICATORE_CONTRATTAZIONE;
-	}
-
-	@Override
-	public String getNoteMoltiplicatoreContrattazione() {
-		return Costanti.STREGA_MOLTIPLICATORE_CONTRATTAZIONE_NOTA;
-	}
-
-	@Override
 	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.STREGA_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}

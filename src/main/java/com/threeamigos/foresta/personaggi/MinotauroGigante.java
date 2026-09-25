@@ -190,16 +190,6 @@ public class MinotauroGigante extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getMoltiplicatoreContrattazione() {
-		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_CONTRATTAZIONE;
-	}
-
-	@Override
-	public String getNoteMoltiplicatoreContrattazione() {
-		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_CONTRATTAZIONE_NOTA;
-	}
-
-	@Override
 	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.MINOTAUROGIGANTE_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}

@@ -185,16 +185,6 @@ public class Gargoyle extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getMoltiplicatoreContrattazione() {
-		return Costanti.GARGOYLE_MOLTIPLICATORE_CONTRATTAZIONE;
-	}
-
-	@Override
-	public String getNoteMoltiplicatoreContrattazione() {
-		return Costanti.GARGOYLE_MOLTIPLICATORE_CONTRATTAZIONE_NOTA;
-	}
-
-	@Override
 	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.GARGOYLE_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}

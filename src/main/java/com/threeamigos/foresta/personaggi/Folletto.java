@@ -188,16 +188,6 @@ public class Folletto extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getMoltiplicatoreContrattazione() {
-		return Costanti.FOLLETTO_MOLTIPLICATORE_CONTRATTAZIONE;
-	}
-
-	@Override
-	public String getNoteMoltiplicatoreContrattazione() {
-		return Costanti.FOLLETTO_MOLTIPLICATORE_CONTRATTAZIONE_NOTA;
-	}
-
-	@Override
 	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.FOLLETTO_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}
