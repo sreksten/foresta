@@ -31,7 +31,11 @@ public class RecuperaLeDerrateAlimentari extends MissioneRecuperaBersaglio imple
 
 	@Override
 	public void controllaPreLocazione() {
-		// Non succede nulla
+		// Se la citta' della consegna e' stata distrutta, la missione non si puo' piu' concludere
+		if (isAttiva() && !isCompleta() && !isFallita() && LineaTemporale.isCittaDistrutta(ClassiLocazione.CITTA_RUUNA)) {
+			BusEventi.pubblica(new NotificaTestoParagrafo("Ruuna è stata distrutta: le derrate alimentari non potranno più essere consegnate al Borgomastro."));
+			fallisciMissione();
+		}
 	}
 	
 	@Override

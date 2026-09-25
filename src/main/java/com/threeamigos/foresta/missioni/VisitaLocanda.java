@@ -5,6 +5,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 
 /**
@@ -19,6 +20,8 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 public class VisitaLocanda extends MissioneBase {
 
 	private static final String CITTA = "CITTA";
+	// Il nome della locanda, ricordato finche' la citta' esiste: distrutta la citta', la casella non lo sa piu'
+	private static final String NOME_LOCANDA = "NOME_LOCANDA";
 
 	public VisitaLocanda() {
 		super(ClasseMissione.VISITA_LOCANDA);
@@ -47,8 +50,19 @@ public class VisitaLocanda extends MissioneBase {
 	 * non esiste ancora).
 	 */
 	private String getNomeLocanda() {
+		String nome = ottieniProprieta(NOME_LOCANDA);
+		if (nome != null) {
+			return nome;
+		}
 		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(getClasseCitta());
-		return Foresta.getLocazioneMD(coordinate).ottieniProprieta(Locanda.LOCANDA_NOME);
+		if (coordinate == null) {
+			return "locanda perduta";
+		}
+		nome = Foresta.getLocazioneMD(coordinate).ottieniProprieta(Locanda.LOCANDA_NOME);
+		if (nome != null) {
+			aggiungiProprieta(NOME_LOCANDA, nome);
+		}
+		return nome;
 	}
 
 	@Override
@@ -56,7 +70,12 @@ public class VisitaLocanda extends MissioneBase {
 		if (!isAttiva()) {
 			// Nessuna notifica: le quattro tappe si attivano tutte insieme con la
 			// missione che le contiene, ed è quella ad annunciarsi
+			getNomeLocanda();
 			attivaMissione();
+		} else if (!isCompleta() && getClasseCitta() != null && LineaTemporale.isCittaDistrutta(getClasseCitta())) {
+			// Distrutta la citta', la sua locanda non c'e' piu'
+			BusEventi.pubblica(new NotificaTestoParagrafo("La '" + getNomeLocanda() + "' è andata distrutta con la sua città: una tappa che non si potrà più fare."));
+			fallisciMissione();
 		}
 	}
 

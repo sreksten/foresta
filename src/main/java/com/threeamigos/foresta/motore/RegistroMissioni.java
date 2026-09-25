@@ -26,6 +26,8 @@ public class RegistroMissioni {
 		SCONFIGGI_LA_STREGA(ClasseMissione.SCONFIGGI_LA_STREGA),
 		//FIXME va levata dopo le prove
 		MISSIONE_DI_PROVA(ClasseMissione.MISSIONE_DI_PROVA),
+		//FIXME va levata dopo le prove: serve a vedere una missione fallita nella finestra delle missioni
+		MISSIONE_CHE_FALLISCE(ClasseMissione.MISSIONE_CHE_FALLISCE),
 		RECUPERA_IL_MEDAGLIONE(ClasseMissione.RECUPERA_IL_MEDAGLIONE),
 		RECUPERA_LE_DERRATE_ALIMENTARI(ClasseMissione.RECUPERA_LE_DERRATE_ALIMENTARI),
 		CRONACHE_DI_UN_FEGATO_EROICO(ClasseMissione.CRONACHE_DI_UN_FEGATO_EROICO),
@@ -51,12 +53,17 @@ public class RegistroMissioni {
 	private static final Map<TipoMissionePredefinita, Missione> elencoMissioniPredefiniteCompletate = new EnumMap<>(TipoMissionePredefinita.class);
 	private static final List<Missione> elencoMissioniSecondarie = new ArrayList<>();
 	private static final List<Missione> elencoMissioniSecondarieCompletate = new ArrayList<>();
+	// Le missioni concluse senza successo (vedi Missione.fallisciMissione)
+	private static final Map<TipoMissionePredefinita, Missione> elencoMissioniPredefiniteFallite = new EnumMap<>(TipoMissionePredefinita.class);
+	private static final List<Missione> elencoMissioniSecondarieFallite = new ArrayList<>();
 
 	private static void pulisciElenchi() {
 		elencoMissioniPredefinite.clear();
 		elencoMissioniPredefiniteCompletate.clear();
 		elencoMissioniSecondarie.clear();
 		elencoMissioniSecondarieCompletate.clear();
+		elencoMissioniPredefiniteFallite.clear();
+		elencoMissioniSecondarieFallite.clear();
 	}
 
 	public static void reimposta() {
@@ -84,14 +91,18 @@ public class RegistroMissioni {
 			if (TipoMissionePredefinita.contieneMissione(missioneMD.getId())) {
 				TipoMissionePredefinita tipoMissionePredefinita = TipoMissionePredefinita.valueOf(missioneMD.getId());
 				Missione missione = ricostruisci(tipoMissionePredefinita.getIstanza(), missioneMD);
-				if (missione.isCompleta()) {
+				if (missione.isFallita()) {
+					elencoMissioniPredefiniteFallite.put(tipoMissionePredefinita, missione);
+				} else if (missione.isCompleta()) {
 					elencoMissioniPredefiniteCompletate.put(tipoMissionePredefinita, missione);
 				} else {
 					elencoMissioniPredefinite.put(tipoMissionePredefinita, missione);
 				}
 			} else {
 				Missione missione = ricostruisci(missioneMD);
-				if (missione.isCompleta()) {
+				if (missione.isFallita()) {
+					elencoMissioniSecondarieFallite.add(missione);
+				} else if (missione.isCompleta()) {
 					elencoMissioniSecondarieCompletate.add(missione);
 				} else {
 					elencoMissioniSecondarie.add(missione);
@@ -142,6 +153,29 @@ public class RegistroMissioni {
 		List<Missione> missioni = new ArrayList<>(elencoMissioniPredefiniteCompletate.values());
 		missioni.addAll(elencoMissioniSecondarieCompletate);
 		return missioni;
+	}
+
+	/**
+	 * Le missioni di primo livello concluse senza successo.
+	 */
+	public static List<Missione> getMissioniFallite() {
+		List<Missione> missioni = new ArrayList<>(elencoMissioniPredefiniteFallite.values());
+		missioni.addAll(elencoMissioniSecondarieFallite);
+		return missioni;
+	}
+
+	/**
+	 * Sposta tra le fallite una missione di primo livello. Una sotto-missione fallita resta dov'e', dentro la sua
+	 * missione, con la sua proprieta' FALLITA.
+	 */
+	public static void fallisciMissione(Missione missione) {
+		if (TipoMissionePredefinita.contieneMissione(missione.getId())) {
+			TipoMissionePredefinita tipoMissione = TipoMissionePredefinita.valueOf(missione.getId());
+			elencoMissioniPredefinite.remove(tipoMissione);
+			elencoMissioniPredefiniteFallite.put(tipoMissione, missione);
+		} else if (elencoMissioniSecondarie.removeIf(missione::equals)) {
+			elencoMissioniSecondarieFallite.add(missione);
+		}
 	}
 
 	/**

@@ -43,12 +43,30 @@ public class CronacheDiUnFegatoEroico extends MissioneBase {
 
 	@Override
 	public void controllaInLocazione() {
-		// Non succede nulla: contano solo le tappe
+		// Le tappe falliscono nel controllo di inizio locazione, che viene prima di questo nello stesso turno
+		fallisceSeUnaTappaEFallita();
+	}
+
+	/**
+	 * Se una tappa e' fallita (la sua citta' e' stata distrutta) le Cronache non si possono piu' completare.
+	 *
+	 * @return vero se la missione e' fallita adesso
+	 */
+	private boolean fallisceSeUnaTappaEFallita() {
+		if (!isAttiva() || isCompleta() || isFallita() || getMissioniSecondarie().stream().noneMatch(Missione::isFallita)) {
+			return false;
+		}
+		BusEventi.pubblica(new NotificaTestoParagrafo("Una delle locande cittadine non esiste più: le Cronache di un Fegato Eroico resteranno incompiute."));
+		fallisciMissione();
+		return true;
 	}
 
 	@Override
 	public void controllaPostLocazione() {
-		if (isCompleta() || getMissioniSecondarie().isEmpty()) {
+		if (isCompleta() || isFallita() || getMissioniSecondarie().isEmpty()) {
+			return;
+		}
+		if (fallisceSeUnaTappaEFallita()) {
 			return;
 		}
 		// Le tappe vengono controllate prima di qui (OrdineVisita.FIGLI_PRIMA), quindi

@@ -34,6 +34,17 @@ public interface Missione {
 	
 	void completaMissione();
 
+	/**
+	 * Vero se la missione non puo' piu' essere completata (per esempio la citta' in cui andava conclusa e' stata
+	 * distrutta): e' finita, ma senza successo.
+	 */
+	boolean isFallita();
+
+	/**
+	 * La missione termina senza successo: esce dalle attive e passa tra le fallite, senza esperienza.
+	 */
+	void fallisciMissione();
+
 	MissioneMD getModelloDati();
 	
 	void setModelloDati(MissioneMD modelloDati);

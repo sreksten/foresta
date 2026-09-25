@@ -168,6 +168,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriComando = new EnumMap<>(Stato.class);
 		// Il logo iniziale non si salta: i comandi (e gli impulsi) si ignorano
 		gestoriComando.put(Stato.LOGO_INIZIALE, comando -> Esito.FERMATI);
+		// In attesa del nome per la classifica non c'e' nessuna icona: un comando arrivato comunque si ignora
+		gestoriComando.put(Stato.ATTESA_NOME_PUNTEGGI, comando -> Esito.FERMATI);
 		gestoriComando.put(Stato.INTRO, this::gestisciComandoInStatoIntro);
 		gestoriComando.put(Stato.INTERMEZZO, this::gestisciComandoInStatoIntermezzo);
 		gestoriComando.put(Stato.PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE, this::gestisciComandoInStatoPreGameSelezionaSalvataggioDaLeggere);
@@ -1202,10 +1204,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			return Esito.FERMATI;
 		}
 		if (comando == Comando.PERGAMENA) {
-			// FIXME ATTESA_NOME_PUNTEGGI non ha un gestore in gestoriComando, ma in questo stato resta disponibile
-			//  l'icona PERGAMENA (il prompt non e' modale): cliccarla fa lanciare IllegalStateException da eseguiPasso.
 			stato = Stato.ATTESA_NOME_PUNTEGGI;
 			BusEventi.pubblica(new RichiestaTesto("congratulazioni! inserisci il tuo nome"));
+			// Si aspetta solo il nome: nessuna icona
+			BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili());
+			return Esito.FERMATI;
 		}
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
 		return Esito.FERMATI;
@@ -1376,10 +1379,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		// FIGLI_PRIMA la condizione si valuta prima che il padre sia controllato,
 		// quindi una missione che si attiva adesso vedrà le proprie figlie al giro
 		// successivo.
-		if (missione.isAttiva() && !missione.isCompleta()) {
+		if (missione.isAttiva() && !missione.isCompleta() && !missione.isFallita()) {
 			// Copia difensiva: un controllo può aggiungere sotto-missioni al nodo
 			for (Missione missioneSecondaria : new ArrayList<>(missione.getMissioniSecondarie())) {
-				if (!missioneSecondaria.isCompleta()) {
+				if (!missioneSecondaria.isCompleta() && !missioneSecondaria.isFallita()) {
 					controllaMissione(missioneSecondaria, controllo, ordineVisita);
 				}
 			}

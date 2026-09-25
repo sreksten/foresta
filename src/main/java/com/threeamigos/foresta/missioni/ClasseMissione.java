@@ -15,6 +15,7 @@ public enum ClasseMissione {
 	SCONFIGGI_IL_LICH(SconfiggiIlLich::new),
 	SCONFIGGI_LA_STREGA(SconfiggiLaStrega::new),
 	MISSIONE_DI_PROVA(MissioneDIProva::new),
+	MISSIONE_CHE_FALLISCE(MissioneCheFallisce::new),
 	RECUPERA_IL_MEDAGLIONE(RecuperaIlMedaglione::new),
 	RECUPERA_LE_DERRATE_ALIMENTARI(RecuperaLeDerrateAlimentari::new),
 	CRONACHE_DI_UN_FEGATO_EROICO(CronacheDiUnFegatoEroico::new),

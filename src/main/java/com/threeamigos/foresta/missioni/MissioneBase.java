@@ -16,6 +16,7 @@ public abstract class MissioneBase implements Missione {
 
 	private static final String ATTIVA = "ATTIVA";
 	private static final String COMPLETA = "COMPLETA";
+	private static final String FALLITA = "FALLITA";
 
 	protected static final String AFFERMATIVO = "S";
 
@@ -98,6 +99,22 @@ public abstract class MissioneBase implements Missione {
 		} else {
 			GestoreProgressione.completaMissioneSecondaria();
 		}
+		md.setDescrizioneVisibile(false);
+	}
+
+	@Override
+	public boolean isFallita() {
+		return md.ottieniProprieta(FALLITA) != null;
+	}
+
+	@Override
+	public void fallisciMissione() {
+		if (isCompleta() || isFallita()) {
+			return;
+		}
+		md.aggiungiProprieta(FALLITA, AFFERMATIVO);
+		RegistroMissioni.fallisciMissione(this);
+		BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "MISSIONE FALLITA", getNome()));
 		md.setDescrizioneVisibile(false);
 	}
 

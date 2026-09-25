@@ -34,7 +34,8 @@ public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 			ladra.setAmichevole(false);
 			ladra.setCorrompibile(false);
 			gng.aggiungiPersonaggio(ladra);
-			ladro = new Ladro(Math.min(1, livello - 1));
+			// Un livello sotto gli altri, ma almeno il primo
+			ladro = new Ladro(Math.max(1, livello - 1));
 			ladro.setAmichevole(false);
 			ladro.setCorrompibile(false);
 			gng.aggiungiPersonaggio(ladro);
@@ -60,7 +61,8 @@ public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 	public void azzeraLocazione(GruppoGiocatore g) {
 		if (isCompleta()) {
 			g.setLocazioneCorrenteVisitata();
-			Foresta.impostaLocazioneCorrente(ClassiLocazione.GROTTA);
+			// Come per i castelli: la casella diventa una grotta qualsiasi e la locazione unica sparisce dall'elenco
+			Foresta.distruggiLocazioneUnica(getClasseLocazione(), ClassiLocazione.GROTTA);
 		}
 	}
 

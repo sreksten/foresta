@@ -1768,11 +1768,32 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.getArtefatti().add(artefattoMD);
 		// I modificatori dell'artefatto sui primari cambiano anche i secondari che ne derivano
 		ricalcolaAttributiSecondari();
+		limitaAiMassimi();
 	}
 
 	public void removeArtefatto(Artefatto a) {
 		md.getArtefatti().remove(a.getModelloDati());
 		a.getModelloDati().setSlotEquipaggiamento(null);
 		ricalcolaAttributiSecondari();
+		limitaAiMassimi();
+	}
+
+	/**
+	 * Togliendo un artefatto che dava SALUTE o MAGIA massima, i valori attuali possono superare i nuovi massimi: si
+	 * riportano subito entro il limite (voluto: chi toglie l'artefatto ne perde il vantaggio).
+	 */
+	private void limitaAiMassimi() {
+		int salute = md.getSalute();
+		int saluteMassima = getSaluteMassima();
+		if (salute > saluteMassima) {
+			md.setSalute(saluteMassima);
+			BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE, salute, saluteMassima));
+		}
+		int magia = md.getMagia();
+		int magiaMassima = getMagiaMassima();
+		if (magia > magiaMassima) {
+			md.setMagia(magiaMassima);
+			BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.MAGIA, magia, magiaMassima));
+		}
 	}
 }

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.motore.GrammarBean.InvalidGrammarException;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.Notizia;
@@ -12,6 +14,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import javax.swing.SwingUtilities;
 
 public class ProduttoreDiTestiCasuale {
 
@@ -44,8 +48,11 @@ public class ProduttoreDiTestiCasuale {
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/locande.txt"),
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
 		} catch (InvalidGrammarException | IOException e) {
+			// Senza grammatiche il gioco non puo' andare avanti: si segnala l'errore e si esce. L'uscita va in coda
+			// sull'EDT dopo la notifica, cosi' chi ascolta le InternoException la riceve prima.
 			Logger.log(e);
-			System.exit(0);
+			BusEventi.pubblica(new InternoException("Grammatiche dei testi non valide o mancanti", e));
+			SwingUtilities.invokeLater(() -> System.exit(1));
 		}
 	}
 

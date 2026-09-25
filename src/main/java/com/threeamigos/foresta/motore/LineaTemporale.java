@@ -110,23 +110,29 @@ public class LineaTemporale {
 		} else {
 			String nome = gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 			if (giorno >= 35 && !isCittaDistrutta(ClassiLocazione.CITTA_MALGAARD)) {
-				CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_MALGAARD);
-				evento = nome + COLONNA + Misc.getDirezione(gruppo, coordinate);
-				setCittaDistrutta(ClassiLocazione.CITTA_MALGAARD);
+				distruggiCitta(ClassiLocazione.CITTA_MALGAARD, gruppo, nome);
 			} else if (giorno >= 30 && !isCittaDistrutta(ClassiLocazione.CITTA_FLEENA)) {
-				CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_FLEENA);
-				evento = nome + COLONNA + Misc.getDirezione(gruppo, coordinate);
-				setCittaDistrutta(ClassiLocazione.CITTA_FLEENA);
+				distruggiCitta(ClassiLocazione.CITTA_FLEENA, gruppo, nome);
 			} else if (giorno >= 25 && !isCittaDistrutta(ClassiLocazione.CITTA_NYENA)) {
-				CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA);
-				evento = nome + COLONNA + Misc.getDirezione(gruppo, coordinate);
-				setCittaDistrutta(ClassiLocazione.CITTA_NYENA);
+				distruggiCitta(ClassiLocazione.CITTA_NYENA, gruppo, nome);
 			} else if (giorno >= 20 && !isCittaDistrutta(ClassiLocazione.CITTA_RUUNA)) {
-				CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_RUUNA);
-				evento = nome + COLONNA + Misc.getDirezione(gruppo, coordinate);
-				setCittaDistrutta(ClassiLocazione.CITTA_RUUNA);
+				distruggiCitta(ClassiLocazione.CITTA_RUUNA, gruppo, nome);
 			}
 		}
+	}
+
+	/**
+	 * Il drago distrugge una citta': al suo posto restano delle rovine. La direzione del fumo si calcola prima, finche'
+	 * la citta' e' ancora sulla mappa. Le missioni che andavano concluse li' falliscono al turno successivo (vedi
+	 * isCittaDistrutta).
+	 */
+	private static void distruggiCitta(ClassiLocazione citta, GruppoGiocatore gruppo, String nome) {
+		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(citta);
+		if (coordinate != null) {
+			evento = nome + COLONNA + Misc.getDirezione(gruppo, coordinate);
+		}
+		setCittaDistrutta(citta);
+		Foresta.distruggiLocazioneUnica(citta, ClassiLocazione.ROVINE);
 	}
 
 	public static String getEvento() {

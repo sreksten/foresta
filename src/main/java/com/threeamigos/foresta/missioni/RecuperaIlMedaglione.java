@@ -30,7 +30,11 @@ public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements M
 
 	@Override
 	public void controllaPreLocazione() {
-		// Non succede nulla
+		// Se la citta' della consegna e' stata distrutta, la missione non si puo' piu' concludere
+		if (isAttiva() && !isCompleta() && !isFallita() && LineaTemporale.isCittaDistrutta(ClassiLocazione.CITTA_FLEENA)) {
+			BusEventi.pubblica(new NotificaTestoParagrafo("Fleena è stata distrutta: il medaglione non potrà più essere restituito al suo proprietario."));
+			fallisciMissione();
+		}
 	}
 	
 	@Override

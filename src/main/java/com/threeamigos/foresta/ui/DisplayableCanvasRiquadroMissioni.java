@@ -71,6 +71,19 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 				configuraNodo(nodo, missione, colore);
 			}
 		}
+		// Le fallite per ultime, dopo un altro separatore, in rosso
+		List<Missione> missioniFallite = RegistroMissioni.getMissioniFallite();
+		if (!missioniFallite.isEmpty()) {
+			componenteScorrevole.creaSeparatore();
+			for (Missione missione : missioniFallite) {
+				DoomdarkColorModel.Color colore = DoomdarkColorModel.Color.RED;
+				ComponenteScorrevole<Missione>.Nodo nodo = componenteScorrevole.creaNodo(
+						missione.getNome(), fontNome, colore,
+						missione.getDescrizione(), fontDescrizione, colore,
+						getIcona(missione), missione);
+				configuraNodo(nodo, missione, colore);
+			}
+		}
 		return componenteScorrevole;
 	}
 

@@ -262,6 +262,10 @@ public abstract class LocazioneBase implements Locazione {
 			break;
 
 		case CHI_COMBATTE:
+			if (azione == Comando.ANNULLA) {
+				// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
+				return annullaScelta();
+			}
 			gestisciChiCombatte(azione);
 			break;
 
@@ -312,8 +316,8 @@ public abstract class LocazioneBase implements Locazione {
 		case CHI_FORMULA:
 			Logger.log("LocazioneBase.CHI_FORMULA");
 			if (azione == Comando.ANNULLA) {
-				statoLocazione = StatoLocazione.IN_LOCAZIONE;
-				break;
+				// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
+				return annullaScelta();
 			}
 			gruppo.setFormulante(gruppo.getPersonaggio(azione));
 			statoLocazione = StatoLocazione.QUALE_FORMULA;
@@ -322,8 +326,8 @@ public abstract class LocazioneBase implements Locazione {
 		case QUALE_FORMULA:
 			Logger.log("LocazioneBase.QUALE_FORMULA: " + azione);
 			if (azione == Comando.NO_INCANTESIMO) {
-				statoLocazione = StatoLocazione.IN_LOCAZIONE;
-				break;
+				// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
+				return annullaScelta();
 			} else if (azione == Comando.DARDO_ARCANO) {
 				Stato statoDopoIlDardo = lanciaDardoArcano(gruppo.getFormulante(), gruppo, gruppoAvversario);
 				if (statoDopoIlDardo != null) {
@@ -421,15 +425,17 @@ public abstract class LocazioneBase implements Locazione {
 
 		case SU_CHI_FORMULA:
 			Logger.log("LocazioneBase.SU_CHI_FORMULA");
-			if (azione != Comando.ANNULLA) {
-				Personaggio personaggioBersaglio = gruppoBersaglio.getPersonaggio(azione);
-				Personaggio formulante = gruppo.getFormulante();
-				incantesimo.formula(formulante, personaggioBersaglio, null);
-				gruppo.subIncantesimi(incantesimo.getClasse(), 1);
-				rispostaAvversaria(formulante, gruppo, gruppoAvversario);
-				if (!gruppo.getCapo().isVivo()) {
-					return Stato.GIOCO_PERSO;
-				}
+			if (azione == Comando.ANNULLA) {
+				// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
+				return annullaScelta();
+			}
+			Personaggio personaggioBersaglio = gruppoBersaglio.getPersonaggio(azione);
+			Personaggio formulanteScelto = gruppo.getFormulante();
+			incantesimo.formula(formulanteScelto, personaggioBersaglio, null);
+			gruppo.subIncantesimi(incantesimo.getClasse(), 1);
+			rispostaAvversaria(formulanteScelto, gruppo, gruppoAvversario);
+			if (!gruppo.getCapo().isVivo()) {
+				return Stato.GIOCO_PERSO;
 			}
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
 			break;
@@ -437,8 +443,8 @@ public abstract class LocazioneBase implements Locazione {
 		case CHI_CORROMPE:
 			Logger.log("LocazioneBase.CHI_CORROMPE");
 			if (azione == Comando.ANNULLA) {
-				statoLocazione = StatoLocazione.IN_LOCAZIONE;
-				break;
+				// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
+				return annullaScelta();
 			}
 			if (gruppo.getMonete() >= gruppo.getNumeroPersonaggi() * 2 && Dado.tira(10) > 3) {
 				gruppo.subMonete(gruppo.getNumeroPersonaggi() * 2);
@@ -474,8 +480,8 @@ public abstract class LocazioneBase implements Locazione {
 		case CHI_FA_AMICIZIA:
 			Logger.log("LocazioneBase.CHI_FA_AMICIZIA (azione " + azione + ")");
 			if (azione == Comando.ANNULLA) {
-				statoLocazione = StatoLocazione.IN_LOCAZIONE;
-				break;
+				// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
+				return annullaScelta();
 			}
 			Personaggio personaggio = gruppo.getPersonaggio(azione);
 			int tiroDelDado = Dado.tira(12);
@@ -580,9 +586,11 @@ public abstract class LocazioneBase implements Locazione {
 					return Stato.FINE_LOCAZIONE;
 				}
 			} else if (azione == Comando.NO) {
-				statoLocazione = StatoLocazione.IN_LOCAZIONE;
-			} else if (azione == Comando.TIMER) {
-				return Stato.IN_LOCAZIONE;
+				// Rinunciare alla fuga non fa trascorrere il turno
+				return annullaScelta();
+			} else {
+				// Qualunque altro comando: si attende ancora il si' o il no
+				return Stato.ATTESA_SI_NO;
 			}
 		}
 
@@ -604,6 +612,16 @@ public abstract class LocazioneBase implements Locazione {
 	@Override
 	public void ripresentaComandi() {
 		impostaComandiPossibili();
+	}
+
+	/**
+	 * Una scelta annullata (chi combatte, chi formula, quale incantesimo, su chi, chi corrompe, chi fa amicizia, la
+	 * conferma della fuga): si torna in locazione senza far trascorrere un turno di effetti di stato.
+	 */
+	private Stato annullaScelta() {
+		statoLocazione = StatoLocazione.IN_LOCAZIONE;
+		ripresentaComandi();
+		return Stato.IN_LOCAZIONE;
 	}
 
 	/**
@@ -1032,6 +1050,8 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		if (azione == Comando.POZIONE_SALUTE) {
 			if (gruppo.getNumeroPersonaggiVivi() > 1) {
+				// Bere interrompe la mischia (come l'incantesimo): la sua finestra si chiude
+				BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
@@ -1041,6 +1061,8 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		if (azione == Comando.POZIONE_SALUTE_GRANDE) {
 			if (gruppo.getNumeroPersonaggiVivi() > 1) {
+				// Bere interrompe la mischia (come l'incantesimo): la sua finestra si chiude
+				BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE_GRANDE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
@@ -1050,6 +1072,8 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		if (azione == Comando.POZIONE_MAGIA) {
 			if (gruppo.getNumeroPersonaggiVivi() > 1) {
+				// Bere interrompe la mischia (come l'incantesimo): la sua finestra si chiude
+				BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
@@ -1059,6 +1083,8 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		if (azione == Comando.POZIONE_MAGIA_GRANDE) {
 			if (gruppo.getNumeroPersonaggiVivi() > 1) {
+				// Bere interrompe la mischia (come l'incantesimo): la sua finestra si chiude
+				BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA_GRANDE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
@@ -1169,10 +1195,6 @@ public abstract class LocazioneBase implements Locazione {
 
 	private void gestisciChiCombatte(Comando azione) {
 		Logger.log("LocazioneBase.CHI_COMBATTE");
-		if (azione == Comando.ANNULLA) {
-			statoLocazione = StatoLocazione.IN_LOCAZIONE;
-			return;
-		}
 		combattente = gruppo.getPersonaggio(azione);
 		String nome = combattente.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 		BusEventi.pubblica(new NotificaTestoFrase(nome + " si appresta al combattimento."));
