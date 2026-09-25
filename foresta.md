@@ -51,7 +51,7 @@ Nessuno dei due sottosistemi ha un riferimento diretto all'altro: il motore non 
 `Main.main()` (`src/main/java/com/threeamigos/foresta/Main.java:29-47`):
 
 1. Registra `SnifferBusEventi`, un logger che si iscrive a *tutti* gli eventi pubblicati (utile per debug).
-2. Legge gli argomenti da riga di comando (`ORIZZONTALE`/`VERTICALE`/`TUTTOSCHERMO`).
+2. Legge gli argomenti da riga di comando (`ORIZZONTALE`/`VERTICALE`/`TUTTOSCHERMO`, e `SALTALOGO` per non mostrare il logo iniziale nelle partite di prova).
 3. Crea `Automa` (il motore, `ControlloreDiGioco`) con il proprio `Temporizzatore`.
 4. Crea `ForestaUI` (la UI) con un secondo `Temporizzatore` indipendente.
 5. Si iscrive all'evento `InternoInterfacciaUtentePronta`, pubblicato da `ForestaUI` a fine setup della finestra Swing: solo a quel punto il motore riceve `inizia()` e la state machine entra nello stato `INTRO`.

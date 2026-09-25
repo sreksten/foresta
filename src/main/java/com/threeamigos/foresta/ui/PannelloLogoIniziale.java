@@ -8,10 +8,13 @@ import java.awt.image.BufferedImage;
 
 /**
  * Il primo contenuto della finestra, nello stato LOGO_INIZIALE: il logo 3AM tracciato una volta dal
- * {@link TracciatoreLogo}, centrato sulla finestra, su fondo nero. Non usa ImageCache: il logo lo carica da se',
+ * {@link TracciatoreLogo}, ingrandito del doppio e centrato sulla finestra, su fondo nero. Non usa ImageCache: il logo lo carica da se',
  * mentre le altre immagini si caricano in background.
  */
 final class PannelloLogoIniziale extends JComponent {
+
+	// Il logo 3AM e' piccolo (212x100) rispetto alla finestra: lo si disegna ingrandito
+	private static final int SCALA = 2;
 
 	private final TracciatoreLogo effetto;
 
@@ -38,7 +41,8 @@ final class PannelloLogoIniziale extends JComponent {
 		Graphics2D g2 = (Graphics2D) g.create();
 		g2.setColor(Color.BLACK);
 		g2.fillRect(0, 0, getWidth(), getHeight());
-		g2.translate((getWidth() - effetto.getLarghezza()) / 2, (getHeight() - effetto.getAltezza()) / 2);
+		g2.translate((getWidth() - SCALA * effetto.getLarghezza()) / 2, (getHeight() - SCALA * effetto.getAltezza()) / 2);
+		g2.scale(SCALA, SCALA);
 		effetto.disegna(g2);
 		g2.dispose();
 	}

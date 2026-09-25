@@ -28,6 +28,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	private final Orientamento orientamento;
 	private final boolean tuttoSchermo;
+	private final boolean saltaLogoIniziale;
 	private final Temporizzatore temporizzatore;
 
 	// Spessore della fascia (o della colonna) della barra icone
@@ -41,11 +42,21 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	// Solo durante lo stato LOGO_INIZIALE; poi il posto passa al displayableCanvas
 	private PannelloLogoIniziale pannelloLogoIniziale;
 	private volatile boolean interfacciaCompleta;
+	private boolean logoInizialeConcluso;
 	private Stato statoDiGioco;
 
 	public ForestaUI(Orientamento orientamento, boolean tuttoSchermo, Temporizzatore temporizzatore) {
+		this(orientamento, tuttoSchermo, false, temporizzatore);
+	}
+
+	/**
+	 * @param saltaLogoIniziale vero per non mostrare il logo iniziale (per esempio nelle partite di prova): si
+	 *                          aspetta solo il caricamento delle risorse e si passa subito all'INTRO
+	 */
+	public ForestaUI(Orientamento orientamento, boolean tuttoSchermo, boolean saltaLogoIniziale, Temporizzatore temporizzatore) {
 		this.orientamento = orientamento;
 		this.tuttoSchermo = tuttoSchermo;
+		this.saltaLogoIniziale = saltaLogoIniziale;
 		this.temporizzatore = temporizzatore;
 		temporizzatore.setTemporizzabile(this);
 
@@ -148,9 +159,11 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		c.setBackground(Color.BLACK);
 		c.setPreferredSize(new Dimension(larghezza, altezza));
 
-		pannelloLogoIniziale = new PannelloLogoIniziale(larghezza, altezza);
-		jframe.add(pannelloLogoIniziale);
-		pannelloLogoIniziale.setLocation(0, 0);
+		if (!saltaLogoIniziale) {
+			pannelloLogoIniziale = new PannelloLogoIniziale(larghezza, altezza);
+			jframe.add(pannelloLogoIniziale);
+			pannelloLogoIniziale.setLocation(0, 0);
+		}
 
 		jframe.pack();
 		jframe.setResizable(false);
@@ -184,18 +197,24 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	/**
-	 * Un fotogramma del logo iniziale. Quando l'animazione e' finita e l'interfaccia e' completa, il logo lascia il
-	 * posto al DisplayableCanvas e l'Automa viene avvisato.
+	 * Un fotogramma del logo iniziale. Quando l'animazione e' finita (subito, se il logo va saltato) e l'interfaccia
+	 * e' completa, il logo lascia il posto al DisplayableCanvas e l'Automa viene avvisato.
 	 */
 	private void avanzaLogoIniziale() {
-		if (pannelloLogoIniziale == null) {
+		if (logoInizialeConcluso) {
 			return;
 		}
-		pannelloLogoIniziale.avanza();
-		if (pannelloLogoIniziale.isFinito() && interfacciaCompleta) {
+		if (pannelloLogoIniziale != null) {
+			pannelloLogoIniziale.avanza();
+		}
+		boolean animazioneFinita = pannelloLogoIniziale == null || pannelloLogoIniziale.isFinito();
+		if (animazioneFinita && interfacciaCompleta) {
+			logoInizialeConcluso = true;
 			temporizzatore.termina();
-			jframe.remove(pannelloLogoIniziale);
-			pannelloLogoIniziale = null;
+			if (pannelloLogoIniziale != null) {
+				jframe.remove(pannelloLogoIniziale);
+				pannelloLogoIniziale = null;
+			}
 			// Nel layered pane, non nel content pane: da fratello del canvas la sua cornice
 			// verrebbe coperta a ogni repaint() del canvas (es. al movimento del mouse), perché
 			// il content pane presume che i figli non si sovrappongano e ridisegna solo il canvas.

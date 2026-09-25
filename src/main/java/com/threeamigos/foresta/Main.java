@@ -14,6 +14,8 @@ public class Main {
 
 	private static Orientamento orientamento = Orientamento.ORIZZONTALE;
 	private static boolean tuttoSchermo = false;
+	// Per le partite di prova: niente logo iniziale, si va dritti all'INTRO
+	private static boolean saltaLogo = false;
 
 	private static void leggiArgomenti(String[] args) {
         for (String arg : args) {
@@ -23,6 +25,8 @@ public class Main {
 				orientamento = Orientamento.VERTICALE;
             } else if (arg.equalsIgnoreCase("TUTTOSCHERMO")) {
                 tuttoSchermo = true;
+            } else if (arg.equalsIgnoreCase("SALTALOGO")) {
+                saltaLogo = true;
             }
         }
 	}
@@ -42,7 +46,7 @@ public class Main {
 		ControlloreDiGioco controlloreDiGioco = new Automa(temporizzatoreAutoma);
 
 		Temporizzatore temporizzatoreUI = new TemporizzatoreJ2SE();
-		new ForestaUI(orientamento, tuttoSchermo, temporizzatoreUI);
+		new ForestaUI(orientamento, tuttoSchermo, saltaLogo, temporizzatoreUI);
 
 		//FIXME gestire l'elenco finestre togliendolo da InterfacciaUtente
 
