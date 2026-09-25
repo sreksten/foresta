@@ -136,6 +136,8 @@ public class LanciatoreDeiDadi {
             case GUERRIERO:
             case LADRA:
             case LADRO:
+            case MAGA:
+            case MAGO:
                 // CORRETTO: Budget PG a livello 1 = 35 punti extra (+4 punti per ogni livello successivo)
                 return 35 + (livelloModificato * 4);
             default:

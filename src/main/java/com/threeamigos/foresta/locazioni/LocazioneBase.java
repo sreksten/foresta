@@ -392,6 +392,7 @@ public abstract class LocazioneBase implements Locazione {
 					if (CalcolatoreCombattimento.colpisce(formulante, bersaglio, incantesimoMalefico.getTipoDanno().getSuperTipo())) {
 						DannoRisultante dannoRisultante = CalcolatoreCombattimento.calcolaDannoRisultante(formulante, bersaglio, incantesimoMalefico);
 						bersaglio.applicaRisultatoCombattimento(dannoRisultante);
+						registraUccisione(formulante, bersaglio);
 					}
 				}
 
@@ -426,6 +427,9 @@ public abstract class LocazioneBase implements Locazione {
 				incantesimo.formula(formulante, personaggioBersaglio, null);
 				gruppo.subIncantesimi(incantesimo.getClasse(), 1);
 				rispostaAvversaria(formulante, gruppo, gruppoAvversario);
+				if (!gruppo.getCapo().isVivo()) {
+					return Stato.GIOCO_PERSO;
+				}
 			}
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
 			break;
@@ -582,22 +586,9 @@ public abstract class LocazioneBase implements Locazione {
 			}
 		}
 
-		// Applica gli effetti di stato con danni nel tempo e li riduce
-
-		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
-			personaggio.applicaDanniDaEffettiDiStato();
-			personaggio.riduciEffettiDiStato();
-		}
-		if (!gruppo.getCapo().isVivo()) {
-			return Stato.GIOCO_PERSO;
-		}
-
-		for (Personaggio personaggio : gruppoAvversario.getPersonaggiVivi()) {
-			personaggio.applicaDanniDaEffettiDiStato();
-			personaggio.riduciEffettiDiStato();
-		}
-		if (gruppoAvversario.getPersonaggiVivi().isEmpty()) {
-			return Stato.FINE_LOCAZIONE;
+		Stato dopoGliEffetti = trascorriTurnoEffettiDiStato();
+		if (dopoGliEffetti != null) {
+			return dopoGliEffetti;
 		}
 
 		Logger.log("LocazioneBase.impostaAzioni() continua...");
@@ -633,6 +624,7 @@ public abstract class LocazioneBase implements Locazione {
 				+ bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + "."));
 		if (CalcolatoreCombattimento.colpisce(formulante, bersaglio, dardo.getTipoDanno().getSuperTipo())) {
 			bersaglio.applicaRisultatoCombattimento(CalcolatoreCombattimento.calcolaDannoRisultante(formulante, bersaglio, dardo));
+			registraUccisione(formulante, bersaglio);
 		}
 		formulante.subMagia(dardo.getCostoLancio());
 		if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
@@ -875,6 +867,66 @@ public abstract class LocazioneBase implements Locazione {
 		return null;
 	}
 	
+	/**
+	 * Un turno di effetti di stato: i danni nel tempo vengono inflitti e le durate scendono, prima per il gruppo e
+	 * poi per gli avversari. Fuori dal combattimento a ogni passo della locazione, in combattimento a ogni round.
+	 *
+	 * @return GIOCO_PERSO se muore il capo, FINE_LOCAZIONE se muoiono tutti gli avversari, altrimenti null
+	 */
+	/**
+	 * Se il colpo appena subito ha ucciso un avversario per mano di un personaggio del gruppo, lo conta nelle
+	 * statistiche e ne da' i punti esperienza al gruppo: in mischia, con gli incantesimi di gruppo e con il dardo.
+	 * I compagni colpiti da un incantesimo globale non contano.
+	 */
+	private void registraUccisione(Personaggio uccisore, Personaggio vittima) {
+		if (!vittima.isVivo() && gruppo.contiene(uccisore) && !gruppo.contiene(vittima)) {
+			Statistiche.addMostroUcciso(vittima.getClasse());
+			Statistiche.addPunti(vittima.getSaluteMassima());
+			gruppo.addPuntiEsperienza(vittima.getPuntiEsperienza());
+		}
+	}
+
+	private Stato trascorriTurnoEffettiDiStato() {
+		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
+			personaggio.applicaDanniDaEffettiDiStato();
+			personaggio.riduciEffettiDiStato();
+		}
+		if (!gruppo.getCapo().isVivo()) {
+			return Stato.GIOCO_PERSO;
+		}
+
+		for (Personaggio personaggio : gruppoAvversario.getPersonaggiVivi()) {
+			personaggio.applicaDanniDaEffettiDiStato();
+			personaggio.riduciEffettiDiStato();
+		}
+		if (gruppoAvversario.getPersonaggiVivi().isEmpty()) {
+			return Stato.FINE_LOCAZIONE;
+		}
+		return null;
+	}
+
+	/**
+	 * Alla fine di un round di mischia passa anche un turno di effetti di stato (altrimenti, dato che il
+	 * combattimento non esce mai da gestisciCombattimento, veleni e stordimenti non avanzerebbero mai). Se ne muore
+	 * il combattente la mischia si interrompe, come quando lo uccide un colpo.
+	 *
+	 * @return lo stato con cui chiudere il round, oppure null se il combattimento continua
+	 */
+	private Stato dopoIlRound() {
+		Stato dopoGliEffetti = trascorriTurnoEffettiDiStato();
+		if (dopoGliEffetti == Stato.FINE_LOCAZIONE) {
+			setCompleta(true);
+		}
+		if (dopoGliEffetti != null) {
+			return dopoGliEffetti;
+		}
+		if (!combattente.isVivo()) {
+			statoLocazione = StatoLocazione.IN_LOCAZIONE;
+			return Stato.IN_LOCAZIONE;
+		}
+		return null;
+	}
+
 	private Stato gestisciCombattimento(Comando azione) {
 		Logger.log("LocazioneBase.IN_COMBATTIMENTO");
 		if (azione == Comando.INTERRUZIONE_COMBATTIMENTO) {
@@ -925,11 +977,7 @@ public abstract class LocazioneBase implements Locazione {
 					DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(combattente, bersaglio, arma, fase.getFattore());
 					bersaglio.applicaRisultatoCombattimento(risultato);
 					if (!bersaglio.isVivo()) {
-						if (GruppoGiocatore.getIstanza().contiene(combattente)) {
-							Statistiche.addMostroUcciso(bersaglio.getClasse());
-							Statistiche.addPunti(bersaglio.getSaluteMassima());
-							GruppoGiocatore.getIstanza().addPuntiEsperienza(bersaglio.getPuntiEsperienza());
-						}
+						registraUccisione(combattente, bersaglio);
 						Personaggio nuovoBersaglio = gruppoAvversario.getPersonaggioVivo();
 						if (nuovoBersaglio != null) {
 							bersaglio = nuovoBersaglio;
@@ -968,8 +1016,12 @@ public abstract class LocazioneBase implements Locazione {
 				BusEventi.pubblica(new NotificaTestoFrase(sb));
 				bersaglio.attacca(gruppo);
 			}
-				if (!gruppo.getCapo().isVivo()) {
-					return Stato.GIOCO_PERSO;
+			if (!gruppo.getCapo().isVivo()) {
+				return Stato.GIOCO_PERSO;
+			}
+			Stato dopoIlRound = dopoIlRound();
+			if (dopoIlRound != null) {
+				return dopoIlRound;
 			}
 		}
 		if (azione == Comando.MAPPA) {

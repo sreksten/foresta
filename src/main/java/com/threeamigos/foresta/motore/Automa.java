@@ -865,7 +865,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				richiediAperturaInventarioGruppo();
 				return Esito.CONTINUA_CON_INGRESSO;
 			case ACCAMPAMENTO:
-				gruppo.pernotta(locazioneCorrente.getTipoRiposo());
+				// Dalla casella, non da locazioneCorrente: dopo un caricamento questa e' null, e dopo un castello
+				// completato e' ancora il castello mentre sulla casella ci sono le rovine
+				gruppo.pernotta(Foresta.costruisciIstanza(gruppo.getCoordinate()).getTipoRiposo());
 				LineaTemporale.mattinoSeguente();
 				LineaTemporale.eventi(gruppo);
 				stato = Stato.ATTESA_DIREZIONE;
@@ -1200,6 +1202,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			return Esito.FERMATI;
 		}
 		if (comando == Comando.PERGAMENA) {
+			// FIXME ATTESA_NOME_PUNTEGGI non ha un gestore in gestoriComando, ma in questo stato resta disponibile
+			//  l'icona PERGAMENA (il prompt non e' modale): cliccarla fa lanciare IllegalStateException da eseguiPasso.
 			stato = Stato.ATTESA_NOME_PUNTEGGI;
 			BusEventi.pubblica(new RichiestaTesto("congratulazioni! inserisci il tuo nome"));
 		}
@@ -1512,7 +1516,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		comandiPossibili.add(Comando.MAPPA);
 		if (gruppo.getNumeroPersonaggiVivi() > 1 && (LineaTemporale.getOra() > 20 || LineaTemporale.getOra() < 6)) {
 			ClassiLocazione classeLocazione = gruppo.getClasseLocazioneCorrente();
+			// Nei castelli non si riposa (getTipoRiposo lancia un'eccezione): ci si resta dopo una fuga
 			if (classeLocazione.getTipoLocazione() != TipoLocazione.CITTA &&
+					classeLocazione.getTipoLocazione() != TipoLocazione.CASTELLO &&
 					classeLocazione != ClassiLocazione.LOCANDA &&
 					classeLocazione != ClassiLocazione.PALUDE) {
 				comandiPossibili.add(Comando.ACCAMPAMENTO);

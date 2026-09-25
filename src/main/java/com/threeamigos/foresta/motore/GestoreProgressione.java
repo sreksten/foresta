@@ -73,6 +73,7 @@ public class GestoreProgressione {
     }
 
     private static void aggiungiPercentuale(int percentuale) {
-        GruppoGiocatore.getIstanza().addPuntiEsperienza(getXpPerProssimoLivello(Statistiche.getLivello() * percentuale / 100));
+        // La percentuale e' degli XP che separano il livello attuale dal successivo (non del livello)
+        GruppoGiocatore.getIstanza().addPuntiEsperienza(getXpRichiestiPerProssimoLivello(Statistiche.getLivello()) * percentuale / 100);
     }
 }

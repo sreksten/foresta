@@ -9,6 +9,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class TemporizzatoreJ2SE implements Temporizzatore {
 
@@ -19,6 +20,10 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 	});
 
 	private ScheduledFuture<?> timerTask;
+	// Cambia a ogni inizia/iniziaDopo/termina. cancel() ferma i prossimi impulsi ma non quelli gia' accodati
+	// sull'EDT con invokeLater: ognuno ricorda la pianificazione da cui viene e, se non e' piu' quella corrente,
+	// non fa nulla. Cosi' nessun TIMER arriva all'automa dopo un cambio di stato.
+	private final AtomicInteger pianificazione = new AtomicInteger();
 	private Temporizzabile temporizzabile;
 
 	public void setTemporizzabile(Temporizzabile temporizzabile) {
@@ -37,12 +42,16 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 		if (timerTask != null) {
 			timerTask.cancel(false);
 		}
+		int questaPianificazione = pianificazione.incrementAndGet();
 		timerTask = executor.scheduleWithFixedDelay(
 			// Il tick va eseguito sull'EDT: processaComando() pubblica eventi via BusEventi, che
 			// se chiamato da un thread diverso dall'EDT li accoda con invokeLater. Questo apre una
 			// finestra in cui lo stato di gioco è già cambiato (es. un personaggio è morto) ma la
 			// UI non l'ha ancora saputo, causando artefatti visivi (es. flicker alla morte di un mostro).
 			() -> SwingUtilities.invokeLater(() -> {
+				if (pianificazione.get() != questaPianificazione) {
+					return;
+				}
 				try {
 					temporizzabile.tick();
 				} catch (RuntimeException e) {
@@ -56,6 +65,7 @@ public class TemporizzatoreJ2SE implements Temporizzatore {
 	}
 
 	public void termina() {
+		pianificazione.incrementAndGet();
 		if (timerTask != null) {
 			timerTask.cancel(false);
 		}

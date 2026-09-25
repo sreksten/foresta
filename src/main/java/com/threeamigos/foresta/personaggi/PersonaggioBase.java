@@ -181,7 +181,8 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	public int getBersagli() {
 		double numeroBersagli = getQuantitaModificata(md, 1 * getMoltiplicatoreNumeroBersagli(), TipoAttributo.NUMERO_BERSAGLI);
-		return (int)(Math.min(1, numeroBersagli));
+		// Almeno un bersaglio: con un moltiplicatore sotto 1 il troncamento darebbe 0
+		return (int)(Math.max(1, numeroBersagli));
 	}
 
 	/**
@@ -352,9 +353,10 @@ public abstract class PersonaggioBase implements Personaggio {
 			if (colpisce) {
 				Arma arma = getArmaEquipaggiata();
                 DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(this, bersaglio, arma);
-				Logger.log("Con nuovo motore colpirebbe assegnando " + risultato.getDanno() + " danni");
+				Logger.log(getNome() + " colpisce " + bersaglio.getNome() + " assegnando " + risultato.getDanno() + " danni");
+				bersaglio.applicaRisultatoCombattimento(risultato);
 			} else {
-				Logger.log("Con nuovo motore " + getNome() + " non colpisce " + bersaglio.getNome());
+				Logger.log(getNome() + " non colpisce " + bersaglio.getNome());
 			}
 		}
 	}
@@ -507,6 +509,12 @@ public abstract class PersonaggioBase implements Personaggio {
 			offerte = getOfferteAmicizia();
 		} else {
 			offerte = getOfferteCorruzione();
+		}
+		// A gruppo pieno nessuno si puo' unire: le offerte di aiuto non si propongono
+		if (GruppoGiocatore.getIstanza().getNumeroPersonaggi() >= Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE) {
+			offerte = Arrays.stream(offerte)
+					.filter(o -> o != ClassiOfferta.AIUTO_GRATUITO && o != ClassiOfferta.AIUTO_MERCENARIO)
+					.toArray(ClassiOfferta[]::new);
 		}
 		if (offerte.length > 0) {
 			int indice = Dado.tiraAncheAUnaFaccia(offerte.length) - 1;
@@ -680,6 +688,8 @@ public abstract class PersonaggioBase implements Personaggio {
 		int puntiAbilitaDisponibili = md.getPuntiAbilitaDisponibili();
 		int nuoviPuntiAbilitaDisponibili = puntiAbilitaDisponibili - 1;
 		md.setPuntiAbilitaDisponibili(nuoviPuntiAbilitaDisponibili);
+		// I secondari (precisione, critico, velocita'...) si ricavano dai primari
+		ricalcolaAttributiSecondari();
 		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.PUNTI_ABILITA,
 				puntiAbilitaDisponibili, nuoviPuntiAbilitaDisponibili));
 		BusEventi.pubblica(new NotificaConsumoPuntoAbilitaPersonaggio(this, tipoAttributo));
@@ -1541,6 +1551,8 @@ public abstract class PersonaggioBase implements Personaggio {
 		final double COEFFICIENTE_FORZA = 0.70;
 		final double COEFFICIENTE_INTELLIGENZA = 0.30;
 
+		// DA RICONTROLLARE: il commento e il nome del coefficiente dicono FORZA, ma qui si legge SAGGEZZA
+		// (voluto o no? con FORZA i bersagli dipenderebbero dalla stazza, con SAGGEZZA dalla lucidità).
 		// Calcolo del valore grezzo con Diminishing Returns
 		double numeroGrezzo = (COEFFICIENTE_FORZA * Math.sqrt(get(md, PersonaggioMD::getSaggezza, TipoAttributo.SAGGEZZA))) +
 				(COEFFICIENTE_INTELLIGENZA * Math.sqrt(get(md, PersonaggioMD::getIntelligenza, TipoAttributo.INTELLIGENZA)));
@@ -1754,10 +1766,13 @@ public abstract class PersonaggioBase implements Personaggio {
 		SlotArtefatto slot = RegoleEquipaggiamento.valuta(getClasse(), getLivello(), md.getArtefatti(), artefattoMD).getSlot();
 		artefattoMD.setSlotEquipaggiamento(slot != null ? slot : artefattoMD.getTipo().getSlotArtefatto());
 		md.getArtefatti().add(artefattoMD);
+		// I modificatori dell'artefatto sui primari cambiano anche i secondari che ne derivano
+		ricalcolaAttributiSecondari();
 	}
 
 	public void removeArtefatto(Artefatto a) {
 		md.getArtefatti().remove(a.getModelloDati());
 		a.getModelloDati().setSlotEquipaggiamento(null);
+		ricalcolaAttributiSecondari();
 	}
 }

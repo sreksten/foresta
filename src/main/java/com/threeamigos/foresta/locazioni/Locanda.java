@@ -329,7 +329,8 @@ public class Locanda extends LocazioneBase {
 	}
 
 	private Stato richiediSePernottare(GruppoGiocatore gruppo) {
-		if (gruppo.getMonete() < Costanti.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggi()) {
+		// Pagano i vivi, come in PERNOTTA
+		if (gruppo.getMonete() < Costanti.COSTO_PERNOTTAMENTO * gruppo.getNumeroPersonaggiVivi()) {
 			BusEventi.pubblica(new NotificaTestoFrase(gruppo.chiMaiuscolo() +
 					" non ha abbastanza monete per pagare il pernottamento e l'oste chiede di lasciare la locanda al più presto."));
 			generaNotizia();

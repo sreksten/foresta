@@ -5,7 +5,6 @@ import com.threeamigos.foresta.eventi.interni.InternoPuliziaCacheDinamicaImmagin
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Logger;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -273,10 +272,8 @@ public class ImageCache {
 
 	static void init() {
 		if (!inited) {
-			// Forzo il caricamento delle immagini dei personaggi
-			for (ClassePersonaggio classePersonaggio : ClassePersonaggio.values()) {
-				classePersonaggio.getIstanza(1);
-			}
+			// Forzo il caricamento delle immagini dei personaggi, che stanno in ClassePersonaggioImmagine
+			ClassePersonaggioImmagine.values();
 			// ...e quelle degli oggetti, che il motore non carica (vedi ClassiOggettoImmagine)
 			ClassiOggettoImmagine.values();
 			// ...e le icone, che si caricano al primo uso (vedi ClasseIcona)
@@ -350,8 +347,9 @@ public class ImageCache {
 	 */
 	public static Image get(String testo, DoomdarkFont font, DoomdarkColorModel.Color colore) {
 		Map<String, WeakReference<Image>> stringToImageMap = cacheDinamica
-				.computeIfAbsent(font, k -> new HashMap<>())
-				.computeIfAbsent(colore, k -> new HashMap<>());
+				// Mappe concorrenti anche all'interno: il reaper le ripulisce dal suo thread mentre l'EDT le usa
+				.computeIfAbsent(font, k -> new ConcurrentHashMap<>())
+				.computeIfAbsent(colore, k -> new ConcurrentHashMap<>());
 		WeakReference<Image> ref = stringToImageMap.get(testo);
 		Image img = (ref != null) ? ref.get() : null;
 		if (img == null) {

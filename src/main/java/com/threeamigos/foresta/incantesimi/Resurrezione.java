@@ -46,5 +46,7 @@ public class Resurrezione implements Incantesimo {
 			BusEventi.pubblica(new NotificaTestoFrase(notifica));
 			personaggioBersaglio.resuscita();
 		}
+		// Come gli altri incantesimi (IncantesimoMaleficoImpl.formula), il lancio costa MAGIA
+		formulante.subMagia(getCostoLancio());
 	}
 }

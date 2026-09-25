@@ -74,7 +74,7 @@ public class LineaTemporale {
 		if (ora >= 8) {
 			return 32 - ora; // 24 ore - ora corrente + 8 ore
 		} else {
-			return ora;
+			return 8 - ora; // dopo mezzanotte: fino alle 8 dello stesso giorno
 		}
 	}
 

@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.eventi;
 
+import com.threeamigos.foresta.eventi.interni.InternoException;
+import com.threeamigos.foresta.motore.Logger;
+
 import javax.swing.*;
 import java.util.List;
 import java.util.Map;
@@ -54,7 +57,23 @@ public class BusEventi {
         if (list == null || list.isEmpty()) {
             return;
         }
-        consegna.accept(() -> list.forEach(c -> c.accept(evento)));
+        consegna.accept(() -> list.forEach(c -> consegnaA(c, evento)));
+    }
+
+    /**
+     * Consegna a un solo iscritto: se fallisce, gli altri ricevono comunque l'evento (la UI resta aggiornata, le
+     * notizie registrate) e chi ha pubblicato non si trova l'eccezione a meta' di una transizione. L'errore
+     * finisce nel log e sul bus come InternoException, tranne quando a fallire e' proprio chi ascolta quelle.
+     */
+    private static void consegnaA(Consumer<Object> iscritto, Object evento) {
+        try {
+            iscritto.accept(evento);
+        } catch (RuntimeException e) {
+            Logger.log(e);
+            if (!(evento instanceof InternoException)) {
+                pubblica(new InternoException("Durante la consegna di " + evento.getClass().getSimpleName(), e));
+            }
+        }
     }
 
     /**

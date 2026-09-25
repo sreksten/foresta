@@ -144,8 +144,16 @@ public class RegistroMissioni {
 		return missioni;
 	}
 
+	/**
+	 * La missione principale, attiva o gia' completata: completandola (drago sconfitto) passa tra le completate,
+	 * ma e' proprio allora che l'Automa chiede se lo sia per decidere tra vittoria e sconfitta.
+	 */
 	public static SconfiggiIlDrago getMissionePrincipale() {
-		return (SconfiggiIlDrago) elencoMissioniPredefinite.get(TipoMissionePredefinita.SCONFIGGI_IL_DRAGO);
+		Missione missione = elencoMissioniPredefinite.get(TipoMissionePredefinita.SCONFIGGI_IL_DRAGO);
+		if (missione == null) {
+			missione = elencoMissioniPredefiniteCompletate.get(TipoMissionePredefinita.SCONFIGGI_IL_DRAGO);
+		}
+		return (SconfiggiIlDrago) missione;
 	}
 
 	public static void completaMissione(Missione missione) {

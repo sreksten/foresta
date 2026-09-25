@@ -135,6 +135,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	@Override
 	public final void rimuoviPersonaggio(Personaggio p) {
 		super.rimuoviPersonaggio(p);
+		// Anche dal modello dati, altrimenti ricomparirebbe dopo un salvataggio
+		md.getPersonaggiMD().remove(p.getModelloDati());
 		String nome = p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		BusEventi.pubblica(new NotificaTestoFrase(nome + " lascia il gruppo."));
 	}
@@ -545,8 +547,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		subMonete(calcolaPerdita.apply(md.getMonete()));
 		subPreziosi(calcolaPerdita.apply(md.getPreziosi()));
 		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
-			int totaleIncantesimi = md.getIncantesimi(classeIncantesimo);
-			md.setIncantesimi(classeIncantesimo, calcolaPerdita.apply(totaleIncantesimi));
+			subIncantesimi(classeIncantesimo, calcolaPerdita.apply(md.getIncantesimi(classeIncantesimo)));
 		}
 		subPozioniSalute(calcolaPerdita.apply(md.getPozioniSalute()));
 		subPozioniSaluteGrande(calcolaPerdita.apply(md.getPozioniSaluteGrande()));

@@ -49,13 +49,14 @@ final class PartitaDiTest implements AutoCloseable {
 
 	private final Automa automa;
 	private final TemporizzatoreManuale temporizzatore = new TemporizzatoreManuale();
-	private final GestoreSalvataggiInMemoria salvataggi = new GestoreSalvataggiInMemoria();
+	private final GestoreSalvataggiInMemoria salvataggi;
 	private final RegistratoreEventi registratore = new RegistratoreEventi();
 	private Collection<Comando> comandiDisponibili = new ArrayList<>();
 	private int erroriVisti;
 	private boolean saltaIntermezzi = true;
 
-	private PartitaDiTest(long seme) {
+	private PartitaDiTest(long seme, GestoreSalvataggiInMemoria salvataggi) {
+		this.salvataggi = salvataggi;
 		BusEventi.azzera();
 		BusEventi.impostaConsegna(Runnable::run);
 		Dado.ripristina();
@@ -90,7 +91,15 @@ final class PartitaDiTest implements AutoCloseable {
 	 * avesse finito l'animazione.
 	 */
 	static PartitaDiTest nuova(long seme) {
-		PartitaDiTest partita = new PartitaDiTest(seme);
+		return nuovaConSalvataggi(seme, new GestoreSalvataggiInMemoria());
+	}
+
+	/**
+	 * Una partita nuova, ferma all'INTRO, che trova i salvataggi fatti in un'altra: come riavviare il gioco e
+	 * caricare una partita.
+	 */
+	static PartitaDiTest nuovaConSalvataggi(long seme, GestoreSalvataggiInMemoria salvataggi) {
+		PartitaDiTest partita = new PartitaDiTest(seme, salvataggi);
 		partita.fineLogoIniziale();
 		return partita;
 	}
@@ -99,7 +108,7 @@ final class PartitaDiTest implements AutoCloseable {
 	 * Una partita nuova ferma al primissimo stato, LOGO_INIZIALE, in attesa che la UI finisca l'animazione.
 	 */
 	static PartitaDiTest nuovaAlLogoIniziale(long seme) {
-		return new PartitaDiTest(seme);
+		return new PartitaDiTest(seme, new GestoreSalvataggiInMemoria());
 	}
 
 	/**

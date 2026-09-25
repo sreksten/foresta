@@ -51,8 +51,10 @@ class ScenarioArmaioloTest {
 		assertEquals(moneteIniziali - prezzo, partita.gruppo().getMonete());
 		assertTrue(PartitaDiTest.contiene(partita.gruppo().getInventario(), scelto));
 		assertFalse(PartitaDiTest.contiene(bottega.getParteRemota().getInventario(), scelto));
-		// Il Ladro porta lo Scudo Fiscale: tratta al massimo, lo sconto è il 20% pieno
-		assertEquals(RegoleContrattazione.prezzoAcquisto(scelto.getCostoAcquisto(), 20), prezzo);
+		// Il Ladro porta lo Scudo Fiscale (+16): lo sconto e' quello della sua contrattazione, vicino al massimo
+		int contrattazione = partita.gruppo().getContrattazione();
+		assertTrue(contrattazione >= 16, "contrattazione " + contrattazione);
+		assertEquals(RegoleContrattazione.prezzoAcquisto(scelto.getCostoAcquisto(), contrattazione), prezzo);
 	}
 
 	@Test

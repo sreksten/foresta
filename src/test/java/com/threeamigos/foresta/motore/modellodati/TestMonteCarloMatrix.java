@@ -132,11 +132,13 @@ public class TestMonteCarloMatrix {
 
     @Test
     void conLePergameneIlMagoVincePiuSpesso() {
+        // Contro tre troll: contro uno solo il Mago (con il budget degli eroi) vince praticamente sempre anche senza
+        // pergamene, e il confronto non misurerebbe piu' nulla
         RisultatoMatrice senza = simulaConLoggerMuto(ClassePersonaggio.MAGO, Equipaggiamento.BASTONE_LIBRO_E_VESTE,
-                ScortaDiPergamene.NESSUNA, ClassePersonaggio.TROLL, 1, 5, 2_000);
+                ScortaDiPergamene.NESSUNA, ClassePersonaggio.TROLL, 3, 5, 2_000);
         RisultatoMatrice con = simulaConLoggerMuto(ClassePersonaggio.MAGO, Equipaggiamento.BASTONE_LIBRO_E_VESTE,
-                ScortaDiPergamene.di(ClasseIncantesimo.FUOCO, 5), ClassePersonaggio.TROLL, 1, 5, 2_000);
-        System.out.printf("MAGO vs 1 TROLL, livello 5 -> senza pergamene win=%.2f%%, con 5 di fuoco win=%.2f%%%n",
+                ScortaDiPergamene.di(ClasseIncantesimo.FUOCO, 5), ClassePersonaggio.TROLL, 3, 5, 2_000);
+        System.out.printf("MAGO vs 3 TROLL, livello 5 -> senza pergamene win=%.2f%%, con 5 di fuoco win=%.2f%%%n",
                 senza.winRatePg, con.winRatePg);
         assertTrue(con.winRatePg > senza.winRatePg, "con " + con.winRatePg + ", senza " + senza.winRatePg);
     }

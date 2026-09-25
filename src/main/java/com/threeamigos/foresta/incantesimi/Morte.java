@@ -46,6 +46,8 @@ public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 		if (!formulante.isPNG()) {
 			BusEventi.pubblica(new NotificaTestoFrase(risultato(formulante)));
 		}
+		// Come gli altri incantesimi (IncantesimoMaleficoImpl.formula), il lancio costa MAGIA
+		formulante.subMagia(getCostoLancio());
 	}
 
 	private void formulaImpl(Personaggio formulante, Personaggio bersaglio) {
