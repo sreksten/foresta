@@ -35,7 +35,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-// TODO: mancano le immagini per il supertipo artefatto elmo e incantamento
 // TODO: carta, forbice e sasso
 // TODO: mostrare in locazione anche i personaggi del gruppo.
 // TODO: (dovrebbe essere stato fatto) se prendono un oggetto che è troppo pesante e questo va nell'inventario del gruppo dovrà apparire un fumetto "è troppo pesante" oltre al messaggio
