@@ -1256,7 +1256,7 @@ class GrammarBeanTest {
         // Regression: rnd used to be seeded from System.currentTimeMillis(), whose resolution is
         // a millisecond, so two beans built one after another (exactly what
         // ProduttoreDiTestiCasuale's static initializer does) drew the identical sequence.
-        // Random's own no-argument seeding mixes in a per-instance uniquifier, so it cannot.
+        // Now every bean draws from Dado's single source, so interleaved draws differ anyway.
         GrammarBean first = new GrammarBean("ROOT\n\ta|b|c|d|e|f|g|h\n");
         GrammarBean second = new GrammarBean("ROOT\n\ta|b|c|d|e|f|g|h\n");
         StringBuilder fromFirst = new StringBuilder();
@@ -1267,6 +1267,26 @@ class GrammarBeanTest {
         }
         assertNotEquals(fromFirst.toString(), fromSecond.toString(),
                 "Two beans built back to back must not draw the same sequence");
+    }
+
+    @Test
+    void theSameDadoSeedGivesTheSameProductions() throws Exception {
+        GrammarBean bean = new GrammarBean("ROOT\n\ta|b|c|d|e|f|g|h\n");
+        try {
+            Dado.impostaSeme(2024);
+            StringBuilder first = new StringBuilder();
+            for (int i = 0; i < 40; i++) {
+                first.append(bean.produce().get(0));
+            }
+            Dado.impostaSeme(2024);
+            StringBuilder second = new StringBuilder();
+            for (int i = 0; i < 40; i++) {
+                second.append(bean.produce().get(0));
+            }
+            assertEquals(first.toString(), second.toString());
+        } finally {
+            Dado.impostaSeme(System.nanoTime());
+        }
     }
 
     @Test

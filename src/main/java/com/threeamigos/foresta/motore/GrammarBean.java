@@ -173,7 +173,7 @@ import java.util.*;
  * The catch is that {@link #produce()} looks like a read but is not: it consumes one-shot
  * alternatives out of {@link #currentProductionsMap} (cascading through
  * {@link #removeProduction}), fills and then clears {@link #globalFixedProductions}, and
- * draws from a shared {@link Random}. Two threads calling {@code produce()} on the same
+ * draws from the shared {@link Dado#sorgente()}. Two threads calling {@code produce()} on the same
  * instance can therefore lose one another's fixed values, consume the same one-shot
  * alternative twice, or leave the productions map half-pruned. {@link #reset()},
  * {@link #addFixedProduction}, {@link #setRootNode} and {@link #setProductionMode} mutate
@@ -354,13 +354,15 @@ public class GrammarBean {
 	 */
 	private final Map<String, String> postProductions = new LinkedHashMap<>();
 	/**
-	 * To randomly choose a production. Left to {@link Random}'s own no-argument seeding
-	 * rather than seeded from {@link System#currentTimeMillis()}: the latter has
-	 * millisecond granularity, so two {@code GrammarBean}s built within the same
-	 * millisecond — as happens when several grammars are loaded one after another in a
-	 * single static initializer — ended up drawing the very same sequence.
+	 * To randomly choose a production: the game's single random source, {@link Dado#sorgente()},
+	 * so that a seed set with {@link Dado#impostaSeme} makes the produced texts — and the
+	 * artifacts generated from a grammar — repeatable too. Drawing from it directly does not
+	 * consume the rolls rigged with {@link Dado#trucca}, which are left to game decisions.
+	 * (It used to be a private {@link Random}; one seeded from {@link System#currentTimeMillis()}
+	 * would make two beans built within the same millisecond draw the same sequence, which a
+	 * shared source cannot do.)
 	 */
-	private final Random rnd = new Random();
+	private final Random rnd = Dado.sorgente();
 	/**
 	 * Controls how a production's alternative is picked; see {@link ProductionModeEnum}.
 	 * Defaults to {@link ProductionModeEnum#RANDOM}. Setting it to {@link ProductionModeEnum#FIRST}

@@ -11,8 +11,8 @@ import java.util.concurrent.ConcurrentLinkedDeque;
  *     <li>fissare il seme ({@link #impostaSeme}) per rendere ripetibile una partita intera;</li>
  *     <li>truccare i prossimi lanci ({@link #trucca}) per provare un caso preciso.</li>
  * </ul>
- * Il generatore di artefatti usa direttamente {@link #sorgente()}: segue il seme ma non consuma i lanci truccati,
- * che restano per le decisioni. Le grammatiche (GrammarBean) hanno un loro Random e non seguono il seme.
+ * Il generatore di artefatti e le grammatiche (GrammarBean) usano direttamente {@link #sorgente()}: seguono il seme
+ * ma non consumano i lanci truccati, che restano per le decisioni.
  *
  * @author Stefano Reksten
  */
