@@ -79,7 +79,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 
 		Oggetto oggetto = g.getLocazioneCorrente().getOggetto();
 		if (oggetto != null && oggetto.getClasse() != ClassiOggetto.ARTEFATTO) {
-			BufferedImage d = oggetto.getClasse().getImmagine();
+			BufferedImage d = ClassiOggettoImmagine.getImmagine(oggetto.getClasse());
 			graphics.drawImage(d, locXOffset + locazione.getWidth() - d.getWidth() - 5, ImageCache.SPACING + locazione.getHeight() - d.getHeight() - 5, null);
 		}
 	}
@@ -128,7 +128,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		BufferedImage locazione = ImageCache.locazioni.get(g.getClasseLocazioneCorrente());
 		Oggetto oggetto = g.getLocazioneCorrente().getOggetto();
 		if (oggetto != null && oggetto.getClasse() != ClassiOggetto.ARTEFATTO) {
-			BufferedImage d = oggetto.getClasse().getImmagine();
+			BufferedImage d = ClassiOggettoImmagine.getImmagine(oggetto.getClasse());
 			return new SpriteATempo(d, topLeftX + locazione.getWidth() - d.getWidth() - 5,
 					ImageCache.SPACING + locazione.getHeight() - d.getHeight() - 5,
 					"Raccolto oggetto " + oggetto.getClasse());

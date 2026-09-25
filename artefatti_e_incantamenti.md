@@ -263,7 +263,7 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
   - Nessuno lo chiama ancora: lo useranno il loot (fase 4) e i negozi (fase 5).
   - Test: `GeneratoreArtefattiTest` (11). Tutta la suite è verde (267 test).
 - [x] **Fase 4 (loot).**
-  - `Spada` e `Scudo` estendono il nuovo `OggettoArtefatto`, che genera l'artefatto nel costruttore, al livello di riferimento: così è già noto quando si sceglie chi lo prende. `Elmo` e `Armatura` ci sono, con le loro voci in `ClassiOggetto` (immagine `null`), ma restano commentati nell'elenco degli oggetti del `Bosco` finché mancano le immagini.
+  - `Spada` e `Scudo` estendono il nuovo `OggettoArtefatto`, che genera l'artefatto nel costruttore, al livello di riferimento: così è già noto quando si sceglie chi lo prende. `Elmo` e `Armatura` ci sono, con le loro voci in `ClassiOggetto` e in `ClassiOggettoImmagine` (immagine `null`), ma restano commentati nell'elenco degli oggetti del `Bosco` finché mancano le immagini.
   - L'anello magico costruisce il suo artefatto nel costruttore; quelli non magici restano senza effetto.
   - Una sola logica di raccolta, `Artefatto.raccogli`, per loot, anelli e artefatti dei templi. I candidati sono i personaggi vivi che possono equipaggiare l'artefatto (`Artefatto.candidati`, con `puoEquipaggiare`). Nessun candidato: va nel gruppo con un messaggio (anche le pergamene); uno solo: va a lui; più di uno: sceglie il giocatore. Il messaggio usa il verbo del tipo ("Pippo impugna la spada d'argento, …").
   - `Oggetto.getArtefatto()` dice quale artefatto porta un oggetto; l'`Automa` lo usa per proporre in `SCELTA_DESTINATARIO_OGGETTO` solo i candidati più `GRUPPO`, e rifiuta un personaggio che non è fra i candidati.

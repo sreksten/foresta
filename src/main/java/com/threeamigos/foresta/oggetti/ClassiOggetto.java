@@ -1,84 +1,65 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.ui.BufferedImageBuilder;
-
-import java.awt.image.BufferedImage;
 import java.util.function.Supplier;
 
 public enum ClassiOggetto {
 
 	ANELLO(Anello::new, builder()
-			.setImmagine("oggetti/Anello.gif")
 			.setQuantitaMassima(1)
 			.setValore(100)
 			),
 	COFANO(Cofano::new, builder()
-			.setImmagine("oggetti/Cofano.gif")
 			.setQuantitaMassima(1)
 			.setValore(150)
 			),
 	CORONA(Corona::new, builder()
-			.setImmagine("oggetti/Corona.gif")
 			.setQuantitaMassima(2)
 			.setValore(100)
 			),
 	GEMMA(Gemma::new, builder()
-			.setImmagine("oggetti/Gemma.gif")
 			.setQuantitaMassima(2)
 			.setValore(75)
 			),
 	MONETA(Moneta::new, builder()
-			.setImmagine("oggetti/Moneta.gif")
 			.setQuantitaMassima(2)
 			.setValore(50)
 			),
 	SCUDO(Scudo::new, builder()
-			.setImmagine("oggetti/Scudo.gif")
 			.setQuantitaMassima(1)
 			.setValore(100)
 			),
 	SPADA(Spada::new, builder()
-			.setImmagine("oggetti/Spada.gif")
 			.setQuantitaMassima(1)
 			.setValore(100)
 			),
-	// TODO manca l'immagine "oggetti/Elmo.gif": finché non c'è, l'elmo non va tra gli oggetti delle locazioni
+	// Senza immagine (vedi ClassiOggettoImmagine): l'elmo non va tra gli oggetti delle locazioni
 	ELMO(Elmo::new, builder()
-			.setImmagine(null)
 			.setQuantitaMassima(1)
 			.setValore(100)
 			),
-	// TODO manca l'immagine "oggetti/Armatura.gif": finché non c'è, l'armatura non va tra gli oggetti delle locazioni
+	// Senza immagine (vedi ClassiOggettoImmagine): l'armatura non va tra gli oggetti delle locazioni
 	ARMATURA(Armatura::new, builder()
-			.setImmagine(null)
 			.setQuantitaMassima(1)
 			.setValore(100)
 			),
 	// Gli artefatti non vanno mai restituiti tra gli oggetti che una locazione può nascondere!
 	ARTEFATTO(null, builder()
-			.setImmagine(null)
 			.setQuantitaMassima(1)
 			.setValore(100)
 			);
 
 	private final Supplier<Oggetto> supplier;
-	private final BufferedImage immagine;
 	private final int quantitaMassima;
 	private final int valore;
 	
 	ClassiOggetto(Supplier<Oggetto> supplier, Builder builder) {
 		this.supplier = supplier;
-		this.immagine = BufferedImageBuilder.buildBufferedImage(builder.getImmagine());
 		this.quantitaMassima = builder.getQuantitaMassima();
 		this.valore = builder.getValore();
 	}
 	
 	public Oggetto getIstanza() {
 		return supplier.get();
-	}
-	
-	public BufferedImage getImmagine() {
-		return immagine;
 	}
 	
 	public final int getQuantitaMassima() {
@@ -89,12 +70,8 @@ public enum ClassiOggetto {
 		return valore;
 	}
 
-	private static BuilderStep0 builder() {
+	private static BuilderStep1 builder() {
 		return Builder.istanza();
-	}
-	
-	interface BuilderStep0 {
-		BuilderStep1 setImmagine(String immagine);
 	}
 	
 	interface BuilderStep1 {
@@ -105,17 +82,12 @@ public enum ClassiOggetto {
 		Builder setValore(int valore);
 	}
 	
-	static class Builder implements BuilderStep0, BuilderStep1, BuilderStep2 {
-		private String immagine;
+	static class Builder implements BuilderStep1, BuilderStep2 {
 		private int quantitaMassima;
 		private int valore;
 		private Builder() {}
-		public static BuilderStep0 istanza() {
+		public static BuilderStep1 istanza() {
 			return new Builder();
-		}
-		public BuilderStep1 setImmagine(String immagine) {
-			this.immagine = immagine;
-			return this;
 		}
 		public BuilderStep2 setQuantitaMassima(int quantitaMassima) {
 			this.quantitaMassima = quantitaMassima;
@@ -124,9 +96,6 @@ public enum ClassiOggetto {
 		public Builder setValore(int valore) {
 			this.valore = valore;
 			return this;
-		}
-		public String getImmagine() {
-			return immagine;
 		}
 		public int getQuantitaMassima() {
 			return quantitaMassima;

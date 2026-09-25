@@ -269,6 +269,8 @@ public class ImageCache {
 			for (ClassePersonaggio classePersonaggio : ClassePersonaggio.values()) {
 				classePersonaggio.getIstanza(1);
 			}
+			// ...e quelle degli oggetti, che il motore non carica (vedi ClassiOggettoImmagine)
+			ClassiOggettoImmagine.values();
 			inited = true;
 		}
 	}
