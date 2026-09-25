@@ -42,6 +42,59 @@ import java.util.function.Supplier;
 // TODO: implementare fumetto che attende chiusura
 // TODO: implementare sistema di aiuto
 
+// Bug noti ancora da correggere (dall'indagine sul codice): si spuntano togliendo la riga quando sono corretti.
+//
+// Combattimento e personaggi
+// FIXME Morte (rimandata): LocazioneBase.impostaAzioni, per le portate SINGOLO_* i bersagli sono il gruppo del giocatore,
+//  quindi Morte (SINGOLO_SOLO_VIVI) si lancia solo sui propri compagni
+// FIXME Morte (rimandata): Morte.formulaImpl ignora le immunita' (Lich, Fantasma, Scheletro, Spettro, Spirito, Ombra Nera)
+// FIXME Morte (rimandata): Morte.formula non imposta mai "totale", quindi IncantesimoMaleficoImpl.risultato con il lancio fallito
+//  stampa "ha ferito tutti i suoi avversari"
+// FIXME CalcolatoreCombattimento (SPAVENTATO): il moltiplicatore della difesa arriva a 1.1 con SAGGEZZA >= 20, cosi' un boss
+//  spaventato si difende meglio; CORAGGIO e PERCEZIONE (valori ~2-10) vi sono divisi per 100, quindi non mitigano quasi nulla
+// FIXME PersonaggioBase.getModificaDanniMagia: i danni degli incantesimi usano i modificatori della riserva di MAGIA
+//  (un anello +20 MAGIA massima da' +20 danni a ogni incantesimo)
+// FIXME DA RICONTROLLARE PersonaggioBase.calcolaNumeroBersagli legge SAGGEZZA dove commento e coefficiente dicono FORZA;
+//  inoltre getBersagli() ignora il NUMERO_BERSAGLI calcolato e salvato
+// FIXME LocazioneBase.trascorriTurnoEffettiDiStato: i mostri uccisi da veleno, sanguinamento ecc. non danno esperienza
+//  ne' entrano nelle statistiche (registraUccisione non viene chiamato)
+// FIXME PersonaggioBase: la notifica di variazione del CARICO_MASSIMO non parte mai (si scrive con setMassimo, si legge con getOptional)
+// FIXME latente: PersonaggioBase.scegliIncantesimoContro, con INTELLIGENZA < 5 e un solo incantesimo Dado.tira(1) lancia un'eccezione
+//  (va usato tiraAncheAUnaFaccia); PersonaggioBase.attacca(Gruppo) fa get(0) su una lista che potrebbe essere vuota
+// FIXME LanciatoreDeiDadi.getPercentualiPer: le percentuali di alcune classi sommano a 110 (Ombrafiamma, Titano, Drago), 95 (Goblin), 90 (Arpia)
+//
+// Missioni, locazioni, offerte
+// FIXME RegistroMissioni.completaMissione: una sotto-missione completata finisce anche nell'elenco di primo livello delle
+//  completate (e dopo un caricamento non piu'): nella finestra delle missioni compare due volte
+// FIXME testi: "Optional[...]" in LineaTemporale.eventi (sconfitta a tempo) e in AiutoMercenario.getDescrizione (getNomeProprio)
+// FIXME testi: MappaZona.getDescrizione ha il genere invertito ("Una" per MASCHIO); MappaForesta dice "dieci monete" ma
+//  COSTO_MAPPA_DELLA_FORESTA vale 20; RecuperaIlMedaglione.getDescrizione ha le due frasi invertite
+//
+// Automa e avvio
+// FIXME Main: si iscrive a InternoInterfacciaUtentePronta dopo aver creato ForestaUI, che la pubblica sull'EDT: in teoria puo'
+//  arrivare prima dell'iscrizione, e il gioco resterebbe sulla finestra nera
+// FIXME latente: gestisciComandoInStatoSceltaDirezione, un comando inatteso (default) passa in silenzio a SCELTA_PASSI, dove
+//  i passi si ricavano dall'ordinale del comando senza controllarlo
+//
+// Salvataggi e dati
+// FIXME GestoreSalvataggiSuFile.salva: scrivere su uno slot lo svuota subito (una RuntimeException fa perdere il vecchio
+//  salvataggio) e gli errori di PrintWriter (checkError) vengono ignorati
+// FIXME GestorePunteggiBase: se il file della classifica non si legge viene sovrascritto con la classifica predefinita
+// FIXME stream non chiusi: GestoreSalvataggiSuFile.getSalvataggiDisponibili (FileReader) e BufferedImageBuilder.provaACaricare
+// FIXME i file (salvataggi, classifica) usano il charset predefinito del sistema: gli accenti cambiano tra sistemi diversi
+// FIXME LineaTemporaleMD non salva giocoFinito ne' l'evento in corso (la "colonna di fumo" si perde se si salva subito dopo)
+// FIXME formato dei salvataggi senza versione e in parte per ordinale (citta' distrutte, incantesimi, statistiche per classe):
+//  aggiungere o togliere una costante di enum rende illeggibili i vecchi salvataggi
+// FIXME IntermezziMD.leggi non si accorge di un file troncato (aggiunge null)
+// FIXME MissioneMD e LocazioneMD non tolgono il carattere "|" dai valori (oggi sono solo testi generati)
+//
+// UI
+// FIXME modalita' VERTICALE: DisplayableCanvasBarraIcone avanza di 32 con icone alte 64, e la finestra e' larga al massimo 400
+// FIXME schermi alti meno di 804 px: la barra delle icone copre il fondo del riquadro delle missioni
+// FIXME DisplayableCanvasMappaATuttoSchermo: il trascinamento resta attivo se si rilascia il tasto sopra la barra icone o fuori
+// FIXME DisplayableCanvas: il click singolo differito (Timer da 175 ms) puo' scattare su una schermata gia' chiusa
+// FIXME latente: ClassiOggettoImmagine restituisce null per Elmo e Armatura (oggi non compaiono tra gli oggetti delle locazioni)
+
 public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	/**
