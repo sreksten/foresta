@@ -38,11 +38,13 @@ public class ImageCache {
 	static BufferedImage trionfo;
 	static BufferedImage separatore;
 	static BufferedImage separatoreArmi;
+	static BufferedImage separatoreElmi;
 	static BufferedImage separatoreArmature;
-	static BufferedImage separatoreIncantesimi;
 	static BufferedImage separatoreScudi;
-	static BufferedImage separatoreNinnoli;
+	static BufferedImage separatoreIncantesimi;
 	static BufferedImage separatorePozioni;
+	static BufferedImage separatoreIncantamenti;
+	static BufferedImage separatoreNinnoli;
 	static BufferedImage segnalino;
 	static BufferedImage punto;
 	static BufferedImage virgola;
@@ -109,11 +111,13 @@ public class ImageCache {
 		trionfo = BufferedImageBuilder.buildBufferedImage("fondi/Trionfo.gif");
 		separatore = BufferedImageBuilder.buildBufferedImage("fondi/Separatore.gif");
 		separatoreArmi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Armi.gif");
+		separatoreElmi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Elmi.gif");
 		separatoreArmature = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Armature.gif");
-		separatoreIncantesimi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Incantesimi.gif");
 		separatoreScudi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Scudi.gif");
-		separatoreNinnoli = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Ninnoli.gif");
+		separatoreIncantesimi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Incantesimi.gif");
 		separatorePozioni = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Pozioni.gif");
+		separatoreIncantamenti = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Incantamenti.gif");
+		separatoreNinnoli = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Ninnoli.gif");
 
 		locazioni = new EnumMap<>(ClassiLocazione.class);
 		BufferedImage d;

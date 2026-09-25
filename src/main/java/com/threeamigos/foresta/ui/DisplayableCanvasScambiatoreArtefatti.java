@@ -112,11 +112,14 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
 
             if (supertipoPrecedente != artefatto.getTipo().getSupertipo()) {
                 supertipoPrecedente = artefatto.getTipo().getSupertipo();
-                componenteScorrevole.creaNodo(
-                        null, null, null,
-                        null, null, null,
-                        null, null, null,
-                        getImmagineSupertipo(supertipoPrecedente), null);
+                Image immagineSupertipo = getImmagineSupertipo(supertipoPrecedente);
+                if (immagineSupertipo != null) {
+                    componenteScorrevole.creaNodo(
+                            null, null, null,
+                            null, null, null,
+                            null, null, null,
+                            immagineSupertipo, null);
+                }
             }
 
             DoomdarkColorModel.Color colore = artefatto == evidenziato
@@ -275,14 +278,22 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         }
     }
 
+    /**
+     * L'immagine che separa nell'elenco un supertipo dal precedente, oppure null se il
+     * supertipo non ne ha una (es. ELMO, INCANTAMENTO): in quel caso il separatore si omette.
+     */
     protected Image getImmagineSupertipo(SupertipoArtefatto supertipo) {
         switch (supertipo) {
             case ARMA:
                 return ImageCache.separatoreArmi;
+            case ELMO:
+                return ImageCache.separatoreElmi;
             case ARMATURA:
                 return ImageCache.separatoreArmature;
             case SCUDO:
                 return ImageCache.separatoreScudi;
+            case INCANTAMENTO:
+                return ImageCache.separatoreIncantamenti;
             case ALTRO:
                 return ImageCache.separatoreNinnoli;
             default:
