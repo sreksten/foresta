@@ -207,7 +207,7 @@ public class PersonaggioMD implements Serializzabile {
 	}
 
 	public int getCaricoMassimo() {
-		return (int)get(TipoAttributo.CARICO_MASSIMO);
+		return getMassimo(TipoAttributo.CARICO_MASSIMO).orElse(0.0d).intValue();
 	}
 
 	public void setSalute(double salute) {

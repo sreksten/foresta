@@ -897,7 +897,17 @@ public abstract class LocazioneBase implements Locazione {
 	 * I compagni colpiti da un incantesimo globale non contano.
 	 */
 	private void registraUccisione(Personaggio uccisore, Personaggio vittima) {
-		if (!vittima.isVivo() && gruppo.contiene(uccisore) && !gruppo.contiene(vittima)) {
+		if (gruppo.contiene(uccisore)) {
+			registraMorteAvversario(vittima);
+		}
+	}
+
+	/**
+	 * Un avversario morto conta nelle statistiche e da' i punti esperienza al gruppo: per mano di un personaggio
+	 * del gruppo (vedi registraUccisione) o per veleno, sanguinamento e gli altri effetti di stato.
+	 */
+	private void registraMorteAvversario(Personaggio vittima) {
+		if (!vittima.isVivo() && !gruppo.contiene(vittima)) {
 			Statistiche.addMostroUcciso(vittima.getClasse());
 			Statistiche.addPunti(vittima.getSaluteMassima());
 			gruppo.addPuntiEsperienza(vittima.getPuntiEsperienza());
@@ -916,6 +926,7 @@ public abstract class LocazioneBase implements Locazione {
 		for (Personaggio personaggio : gruppoAvversario.getPersonaggiVivi()) {
 			personaggio.applicaDanniDaEffettiDiStato();
 			personaggio.riduciEffettiDiStato();
+			registraMorteAvversario(personaggio);
 		}
 		if (gruppoAvversario.getPersonaggiVivi().isEmpty()) {
 			return Stato.FINE_LOCAZIONE;

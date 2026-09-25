@@ -52,11 +52,7 @@ import java.util.function.Supplier;
 // FIXME PersonaggioBase.getModificaDanniMagia: i danni degli incantesimi usano i modificatori della riserva di MAGIA
 //  (un anello +20 MAGIA massima da' +20 danni a ogni incantesimo)
 // FIXME getBersagli() ignora il NUMERO_BERSAGLI calcolato e salvato
-// FIXME LocazioneBase.trascorriTurnoEffettiDiStato: i mostri uccisi da veleno, sanguinamento ecc. non danno esperienza
-//  ne' entrano nelle statistiche (registraUccisione non viene chiamato)
-// FIXME PersonaggioBase: la notifica di variazione del CARICO_MASSIMO non parte mai (si scrive con setMassimo, si legge con getOptional)
 // FIXME PersonaggioBase.attacca(Gruppo) fa get(0) su una lista che potrebbe essere vuota
-// FIXME LanciatoreDeiDadi.getPercentualiPer: le percentuali di alcune classi sommano a 110 (Ombrafiamma, Titano, Drago), 95 (Goblin), 90 (Arpia)
 //
 // Salvataggi e dati
 // FIXME GestoreSalvataggiSuFile.salva: scrivere su uno slot lo svuota subito (una RuntimeException fa perdere il vecchio

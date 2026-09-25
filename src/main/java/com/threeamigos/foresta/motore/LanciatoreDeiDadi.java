@@ -25,14 +25,14 @@ public class LanciatoreDeiDadi {
     // Focus [] = {Intelligenza e Saggezza
     private static final int[] MAGO = { 5, 10, 10, 30, 25, 15, 5 };
     // Equilibrato ed intelligente
-    private static final int[] OMBRAFIAMMA = { 24, 12, 22, 16, 14, 18, 4 };
+    private static final int[] OMBRAFIAMMA = { 22, 11, 20, 14, 13, 16, 4 };
 
     // Umanoidi e Piccole Creature (Budget Mostro Comune [] = {50 Punti a Livello 1)
 
-    private static final int[] ARPIA = { 10, 25, 10, 10, 15, 10, 10 };
+    private static final int[] ARPIA = { 12, 28, 12, 10, 15, 10, 13 };
     private static final int[] EREMITA = { 8, 8, 14, 20, 25, 15, 10 };
     private static final int[] FOLLETTO = { 5, 30, 5, 15, 10, 10, 25 };
-    private static final int[] GOBLIN = { 10, 25, 10, 10, 8, 7, 25 };
+    private static final int[] GOBLIN = { 10, 25, 12, 10, 10, 8, 25 };
     private static final int[] HOBGOBLIN = { 22, 15, 20, 12, 11, 15, 5 };
     // (Alta Costituzione/Ossa, zero Mente)
     private static final int[] SCHELETRO = { 20, 20, 25, 5, 5, 5, 20 };
@@ -60,7 +60,7 @@ public class LanciatoreDeiDadi {
     // Molto equilibrato e intelligente
     private static final int[] GIGANTE = { 35, 8, 30, 5, 8, 9, 5 };
     private static final int[] OMBRANERA = { 15, 25, 15, 10, 10, 20, 5 };
-    private static final int[] TITANO = { 30, 10, 25, 12, 13, 15, 5 };
+    private static final int[] TITANO = { 27, 9, 23, 11, 12, 13, 5 };
 
     // Boss leggendari
 
@@ -70,9 +70,9 @@ public class LanciatoreDeiDadi {
     // Il Mago Supremo dei non-morti
     private static final int[] LICH = { 5, 10, 15, 30, 20, 15, 5 };
     private static final int[] STREGA = { 7, 13, 10, 25, 20, 20, 5 };
-    private static final int[] DRAGO = { 24, 12, 22, 16, 14, 18, 4 };
+    private static final int[] DRAGO = { 22, 11, 20, 14, 13, 16, 4 };
 
-    private static int[] getPercentualiPer(ClassePersonaggio classePersonaggio) {
+    static int[] getPercentualiPer(ClassePersonaggio classePersonaggio) {
         switch (classePersonaggio) {
             case ARPIA: return ARPIA;
             case BARDO:

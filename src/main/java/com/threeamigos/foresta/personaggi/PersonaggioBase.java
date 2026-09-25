@@ -1223,7 +1223,8 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	private static void ricalcolaAttributiSecondariCore(PersonaggioMD md, Personaggio moltiplicatori, Personaggio sorgenteEvento) {
-		Optional<Double> valorePrecedente = md.getOptional(TipoAttributo.CARICO_MASSIMO);
+		// Il carico massimo è un massimo, non un valore: si legge e si scrive con getMassimo/setMassimo
+		Optional<Double> valorePrecedente = md.getMassimo(TipoAttributo.CARICO_MASSIMO);
 		double valoreAttuale = calcolaCaricoMassimo(md, moltiplicatori);
 		md.setMassimo(TipoAttributo.CARICO_MASSIMO, valoreAttuale);
 		if (sorgenteEvento != null && valorePrecedente.isPresent() && valorePrecedente.get() != valoreAttuale) {
