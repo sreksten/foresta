@@ -50,8 +50,8 @@ Ci sono due momenti di innesco (enum `MomentoIntermezzo`):
 3. **Provala** con l'anteprima (§9), senza giocare fino al punto in cui scatta:
 
    ```
-   mvn -q compile
-   java -cp target/classes com.threeamigos.foresta.ui.AnteprimaIntermezzo INCONTRO_CON_L_EREMITA
+   mvn -q test-compile
+   java -cp target/test-classes:target/classes com.threeamigos.foresta.ui.AnteprimaIntermezzo INCONTRO_CON_L_EREMITA
    ```
 
 Quando non serve più, togli `INTERMEZZO_DI_PROVA` da `ClasseIntermezzo` (è segnato con un `FIXME`): scatta a ogni nuova partita.
@@ -287,11 +287,11 @@ Qualche regola:
 
 ## 9. Provare un intermezzo: l'anteprima
 
-`ui/AnteprimaIntermezzo` mostra un intermezzo senza dover giocare fino al punto in cui scatta. Prepara una partita minima, con una foresta nuova e il solo protagonista nel gruppo, e disegna le pagine con la stessa finestra e alla stessa dimensione del gioco. **L'innesco non viene controllato**: l'intermezzo viene mostrato comunque.
+`ui/AnteprimaIntermezzo` (tra i sorgenti dei test, come `motore/PartitaDiAnteprima`) mostra un intermezzo senza dover giocare fino al punto in cui scatta. Prepara una partita minima, con una foresta nuova e il solo protagonista nel gruppo, e disegna le pagine con la stessa finestra e alla stessa dimensione del gioco. **L'innesco non viene controllato**: l'intermezzo viene mostrato comunque.
 
 ```
-mvn -q compile
-java -cp target/classes com.threeamigos.foresta.ui.AnteprimaIntermezzo [INTERMEZZO] [opzioni]
+mvn -q test-compile
+java -cp target/test-classes:target/classes com.threeamigos.foresta.ui.AnteprimaIntermezzo [INTERMEZZO] [opzioni]
 ```
 
 | Opzione | Significato | Default |
@@ -317,7 +317,7 @@ java -cp target/classes com.threeamigos.foresta.ui.AnteprimaIntermezzo [INTERMEZ
 **Con `--png`** ottieni un'immagine da guardare con calma, per esempio per controllare dove cadono i fumetti in istanti precisi:
 
 ```
-java -cp target/classes com.threeamigos.foresta.ui.AnteprimaIntermezzo INTERMEZZO_DI_PROVA \
+java -cp target/test-classes:target/classes com.threeamigos.foresta.ui.AnteprimaIntermezzo INTERMEZZO_DI_PROVA \
      --classe maga --nome Lyra --pagina 3 --png anteprima.png --istanti 1,3,6,9
 ```
 

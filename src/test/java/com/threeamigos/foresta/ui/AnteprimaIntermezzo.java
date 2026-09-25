@@ -28,9 +28,9 @@ import java.util.Locale;
  * indicato, chiede le pagine all'intermezzo e le disegna con la stessa finestra e alla
  * stessa dimensione del gioco. L'innesco (deveScattare) non viene interrogato.
  * <p>
- * Uso, dalla radice del progetto dopo {@code mvn compile}:
+ * Uso, dalla radice del progetto dopo {@code mvn test-compile}:
  * <pre>
- *     java -cp target/classes com.threeamigos.foresta.ui.AnteprimaIntermezzo [INTERMEZZO] [opzioni]
+ *     java -cp target/test-classes:target/classes com.threeamigos.foresta.ui.AnteprimaIntermezzo [INTERMEZZO] [opzioni]
  *
  *     INTERMEZZO            un valore di ClasseIntermezzo (default: il primo)
  *     --classe CLASSE       classe del protagonista, un valore di ClassePersonaggio (default GUERRIERO)
