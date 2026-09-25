@@ -181,6 +181,13 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	/**
+	 * Lo stato corrente, per i test.
+	 */
+	Stato getStato() {
+		return stato;
+	}
+
+	/**
 	 * Schermata introduttiva coi titoli. QUi è possibile scegliere se iniziare una nuova partita o
 	 * caricare una partita preesistente.
 	 */

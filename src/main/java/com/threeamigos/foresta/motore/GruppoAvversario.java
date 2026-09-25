@@ -17,6 +17,13 @@ public class GruppoAvversario extends Gruppo {
 		return gruppoAvversario;
 	}
 
+	/**
+	 * Dimentica il gruppo avversario corrente. Serve ai test (vedi GruppoGiocatore.azzeraIstanza).
+	 */
+	static void azzeraIstanza() {
+		gruppoAvversario = null;
+	}
+
 	@Override
 	public boolean isGruppoGiocatore() {
 		return false;

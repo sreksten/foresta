@@ -41,6 +41,14 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		return istanza;
 	}
 
+	/**
+	 * Dimentica il gruppo corrente: il prossimo getIstanza() ne crea uno nuovo sul ModelloDati installato.
+	 * Serve ai test, che ricostruiscono una partita da zero a ogni prova.
+	 */
+	static void azzeraIstanza() {
+		istanza = null;
+	}
+
 	private GruppoGiocatore(GruppoGiocatoreMD gruppoGiocatoreMD) {
 		setModelloDati(gruppoGiocatoreMD);
 	}
