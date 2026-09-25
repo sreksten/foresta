@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpostamentoArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
@@ -35,7 +36,23 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         BusEventi.iscriviti(NotificaApprovazioneVenditaArtefatto.class, this::gestisciEventoApprovazioneVenditaArtefatto);
     }
 
+    /**
+     * Ogni schermata di scambio (inventario, commerciante, incantatore...) è iscritta alle
+     * stesse notifiche: deve reagire solo a quelle dei comandi pubblicati dal proprio automa,
+     * altrimenti un solo acquisto produce un fumetto e uno sprite per ciascuna schermata.
+     * Il comando porta le stesse parti dell'automa che lo ha pubblicato, quindi basta
+     * confrontarle per identità.
+     */
+    private boolean riguardaQuestaSchermata(ComandoSpostamentoArtefatto<?> comando) {
+        return automa != null
+                && comando.getParteAttiva() == automa.getParteAttiva()
+                && comando.getParteRemota() == automa.getParteRemota();
+    }
+
     private void gestisciEventoApprovazioneAcquistoArtefatto(NotificaApprovazioneAcquistoArtefatto notificaApprovazioneAcquistoArtefatto) {
+        if (!riguardaQuestaSchermata(notificaApprovazioneAcquistoArtefatto.getEventoRichiestaSpostamentoArtefatto())) {
+            return;
+        }
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Grazie per il vostro acquisto!", getCoordinateFumetto()));
 
         int costo = notificaApprovazioneAcquistoArtefatto.getEventoRichiestaSpostamentoArtefatto().getOggettoDaSpostare().getCostoAcquisto();
@@ -44,6 +61,9 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
     }
 
     private void gestisciEventoApprovazioneVenditaArtefatto(NotificaApprovazioneVenditaArtefatto notificaApprovazioneVenditaArtefatto) {
+        if (!riguardaQuestaSchermata(notificaApprovazioneVenditaArtefatto.getEventoRichiestaSpostamentoArtefatto())) {
+            return;
+        }
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Grazie di aver fatto affari con noi!", getCoordinateFumetto()));
 
         int costo = notificaApprovazioneVenditaArtefatto.getEventoRichiestaSpostamentoArtefatto().getOggettoDaSpostare().getCostoAcquisto();
@@ -52,6 +72,9 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
     }
 
     private void gestisciEventoRifiutoAcquistoArtefatto(NotificaRifiutoAcquistoArtefatto notificaRifiutoAcquistoArtefatto) {
+        if (!riguardaQuestaSchermata(notificaRifiutoAcquistoArtefatto.getEventoRichiestaSpostamento())) {
+            return;
+        }
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Non hai abbastanza denaro per comprare questo oggetto.", getCoordinateFumetto()));
     }
 
