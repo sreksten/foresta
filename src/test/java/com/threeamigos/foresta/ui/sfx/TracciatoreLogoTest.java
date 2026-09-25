@@ -79,6 +79,74 @@ class TracciatoreLogoTest {
     }
 
     @Test
+    void conLeScieSfumateInPausaSiVedeSoloIlLogo() {
+        TracciatoreLogo effetto = TracciatoreLogo.costruttore(logo3AM).sfumaScie(true).fotogrammiScomparsa(40).costruisci();
+        while (!"PAUSA".equals(effetto.getNomeFase())) {
+            effetto.avanza();
+        }
+        BufferedImage atteso = new BufferedImage(logo3AM.getWidth(), logo3AM.getHeight(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g = atteso.createGraphics();
+        g.setColor(TracciatoreLogo.COLORE_SFONDO_PREDEFINITO);
+        g.fillRect(0, 0, atteso.getWidth(), atteso.getHeight());
+        g.drawImage(logo3AM, 0, 0, null);
+        g.dispose();
+        assertTrue(uguali(atteso, disegna(effetto)), "in pausa restano scie o teste");
+    }
+
+    @Test
+    void conLaScomparsaAllaFineRestaSoloLoSfondo() {
+        TracciatoreLogo effetto = TracciatoreLogo.costruttore(logo3AM).sfumaScie(true).fotogrammiPausa(10)
+                .fotogrammiScomparsa(20).costruisci();
+        int fotogrammi = 0;
+        while (!effetto.isFinito()) {
+            effetto.avanza();
+            assertTrue(++fotogrammi <= effetto.stimaFotogrammiCiclo(), "non finisce entro la stima");
+        }
+        assertEquals("SCOMPARSA", effetto.getNomeFase());
+        BufferedImage fotogramma = disegna(effetto);
+        int sfondo = TracciatoreLogo.COLORE_SFONDO_PREDEFINITO.getRGB();
+        for (int y = 0; y < fotogramma.getHeight(); y++) {
+            for (int x = 0; x < fotogramma.getWidth(); x++) {
+                assertEquals(sfondo, fotogramma.getRGB(x, y), "pixel (" + x + "," + y + ") non e' sfondo");
+            }
+        }
+    }
+
+    @Test
+    void conLaScomparsaELaRipetizioneSiRicomincia() {
+        TracciatoreLogo effetto = TracciatoreLogo.costruttore(logo3AM).fotogrammiScomparsa(5).ripeti(true).costruisci();
+        boolean scomparso = false;
+        for (int i = 0; i < 2 * effetto.stimaFotogrammiCiclo(); i++) {
+            effetto.avanza();
+            if ("SCOMPARSA".equals(effetto.getNomeFase())) {
+                scomparso = true;
+            } else if (scomparso && "TRACCIAMENTO".equals(effetto.getNomeFase())) {
+                return;
+            }
+        }
+        throw new AssertionError("dopo la scomparsa non ricomincia");
+    }
+
+    private static BufferedImage disegna(TracciatoreLogo effetto) {
+        BufferedImage fotogramma = new BufferedImage(effetto.getLarghezza(), effetto.getAltezza(), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2 = fotogramma.createGraphics();
+        effetto.disegna(g2);
+        g2.dispose();
+        return fotogramma;
+    }
+
+    private static boolean uguali(BufferedImage a, BufferedImage b) {
+        for (int y = 0; y < a.getHeight(); y++) {
+            for (int x = 0; x < a.getWidth(); x++) {
+                if (a.getRGB(x, y) != b.getRGB(x, y)) {
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
+
+    @Test
     void unaRegioneFuoriDallImmagineERifiutata() {
         assertThrows(IllegalArgumentException.class,
                 () -> TracciatoreLogo.costruttore(logo3AM).regione(new Rectangle(200, 0, 50, 50)).costruisci());

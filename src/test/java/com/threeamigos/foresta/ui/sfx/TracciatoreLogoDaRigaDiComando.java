@@ -56,6 +56,12 @@ import java.util.List;
  *                         vedi il punto 7 in TracciatoreLogo)
  *   --spot=N              raggio in pixel della torcia (predefinito ~10% del lato più corto dell'immagine)
  *   --fade=N              durata in fotogrammi della dissolvenza finale (predefinito 40)
+ *   --trails=keep|fade    scie e teste dei corridori: restano per tutto il ciclo (keep,
+ *                         predefinito) oppure svaniscono mentre il logo compare, lasciandolo
+ *                         da solo (fade)
+ *   --hold=N              durata della pausa col logo acceso; come --delay, un numero puro
+ *                         e' in fotogrammi, con suffisso "s" in secondi (predefinito 45 fotogrammi)
+ *   --fadeout=N           dopo la pausa il logo svanisce in N fotogrammi (predefinito 0: resta acceso)
  *   --dump=<dir> [--frames=N] [--scale=N]  anteprima senza schermo su PNG, senza finestra
  *
  * Se non si passa --start, si ottiene il comportamento "semplice": un
@@ -91,6 +97,10 @@ import java.util.List;
  *
  *   // verso diverso per ciascun corridore (fase 4): "3" orario, "A" antiorario, "M" orario
  *   java TracciatoreLogo logo.png "--dir=cw;ccw;cw"
+ *
+ *   // come il logo iniziale del gioco: le scie svaniscono mentre il logo compare, poi
+ *   // 2 secondi col logo da solo e infine la sua scomparsa (fase 7)
+ *   java TracciatoreLogo logo.png --trails=fade --hold=2s --fadeout=40
  *
  *   // raggio della torcia più stretto/largo e dissolvenza finale più lenta (fase 7)
  *   java TracciatoreLogo logo.png --spot=15 --fade=80 --lap=6000
@@ -186,6 +196,11 @@ public final class TracciatoreLogoDaRigaDiComando {
             costruttore.raggioTorcia(Integer.parseInt(opzioni.get("spot")));
         }
         costruttore.fotogrammiDissolvenza(Integer.parseInt(opzioni.getOrDefault("fade", String.valueOf(TracciatoreLogo.FOTOGRAMMI_DISSOLVENZA_PREDEFINITI))));
+        costruttore.sfumaScie("fade".equalsIgnoreCase(opzioni.get("trails")));
+        if (opzioni.containsKey("hold")) {
+            costruttore.fotogrammiPausa(leggiRitardo(opzioni.get("hold").trim()));
+        }
+        costruttore.fotogrammiScomparsa(Integer.parseInt(opzioni.getOrDefault("fadeout", "0")));
 
         TracciatoreLogo effetto;
         try {
@@ -275,6 +290,7 @@ public final class TracciatoreLogoDaRigaDiComando {
         System.err.println("Opzioni: --alpha=N | --bgcolor=RRGGBB --tol=N | --region=x,y,w,h | --start=x,y[;x,y...]");
         System.err.println("         --end=x,y[;x,y...] | --delay=d[;d...] (fotogrammi o \"1.5s\") | --dir=cw|ccw[;cw|ccw...]");
         System.err.println("         --lap=ms | --sync=independent|matched | --reveal=spotlight|full | --spot=N | --fade=N");
+        System.err.println("         --trails=keep|fade | --hold=N (fotogrammi o \"2s\") | --fadeout=N");
         System.err.println("         --dump=<dir> [--frames=N] [--scale=N]  (anteprima headless su PNG, senza finestra)");
     }
 

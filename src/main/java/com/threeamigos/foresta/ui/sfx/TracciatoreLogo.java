@@ -171,9 +171,15 @@ import java.util.List;
  *                    {@code fotogrammiDissolvenza} fotogrammi (un semplice
  *                    AlphaComposite globale, non più localizzato).
  *      PAUSA        -> il logo resta visibile a piena opacità per una pausa.
+ *      SCOMPARSA    -> solo se richiesta ({@link Costruttore#fotogrammiScomparsa}): il logo
+ *                    svanisce in trasparenza, all'inverso della dissolvenza.
+ *    Con {@link Costruttore#sfumaScie} le scie svaniscono durante la dissolvenza, mentre
+ *    il logo compare, e le teste luminose non si disegnano piu' dalla fine del
+ *    tracciamento: in pausa e in scomparsa si vede il logo da solo.
  *      Poi, se il Costruttore ha chiesto di ripetere ({@link Costruttore#ripeti}), si
  *      torna a TRACCIAMENTO azzerando i corridori; altrimenti l'effetto resta
- *      fermo in PAUSA e {@link #isFinito()} diventa vero.
+ *      fermo sull'ultimo fotogramma (logo acceso in PAUSA, o spento dopo la
+ *      SCOMPARSA) e {@link #isFinito()} diventa vero.
  *    La modalità "torcia" è quella predefinita; con {@code rivelaConTorcia(false)}
  *    si va al comportamento più semplice (logo sempre visibile).
  *
@@ -264,6 +270,8 @@ public final class TracciatoreLogo {
     private final int fotogrammiPerGiro;
     private final int fotogrammiDissolvenza;
     private final int fotogrammiPausa;
+    private final int fotogrammiScomparsa;
+    private final boolean sfumaScie;
     private final boolean rivelaConTorcia;
     private final int raggioTorcia;
     private final boolean ripeti;
@@ -278,6 +286,8 @@ public final class TracciatoreLogo {
         this.fotogrammiPerGiro = fotogrammiPerGiro;
         this.fotogrammiDissolvenza = c.fotogrammiDissolvenza;
         this.fotogrammiPausa = c.fotogrammiPausa;
+        this.fotogrammiScomparsa = c.fotogrammiScomparsa;
+        this.sfumaScie = c.sfumaScie;
         this.rivelaConTorcia = c.rivelaConTorcia;
         this.raggioTorcia = raggioTorcia;
         this.ripeti = c.ripeti;
@@ -295,7 +305,7 @@ public final class TracciatoreLogo {
 
     /** Fa avanzare l'animazione di un fotogramma. Finito l'effetto (vedi {@link #isFinito()}) non cambia piu' nulla. */
     public void avanza() {
-        avanza(corridori, stato, fotogrammiDissolvenza, fotogrammiPausa, ripeti);
+        avanza(corridori, stato, fotogrammiDissolvenza, fotogrammiPausa, fotogrammiScomparsa, ripeti);
     }
 
     /**
@@ -306,12 +316,16 @@ public final class TracciatoreLogo {
         Graphics2D g = (Graphics2D) g2.create();
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g.setRenderingHint(RenderingHints.KEY_STROKE_CONTROL, RenderingHints.VALUE_STROKE_PURE);
-        double opacita = !rivelaConTorcia ? 1.0 : opacitaDissolvenza(stato, fotogrammiDissolvenza);
-        disegnaFotogramma(g, logo, corridori, stato.fase, opacita, rivelaConTorcia, raggioTorcia, coloreSfondo);
+        double opacita = opacitaLogo(stato, fotogrammiDissolvenza, fotogrammiScomparsa, rivelaConTorcia);
+        double opacitaScie = opacitaScie(stato, fotogrammiDissolvenza, fotogrammiScomparsa, sfumaScie);
+        // Con le scie sfumate le teste luminose spariscono appena finisce il tracciamento
+        boolean conTeste = !sfumaScie || stato.fase == Fase.TRACCIAMENTO;
+        disegnaFotogramma(g, logo, corridori, stato.fase, opacita, opacitaScie, conTeste, rivelaConTorcia, raggioTorcia,
+                coloreSfondo);
         g.dispose();
     }
 
-    /** Vero quando, senza ripetizione, tracciamento, dissolvenza e pausa finale sono terminati. */
+    /** Vero quando, senza ripetizione, tracciamento, dissolvenza, pausa ed eventuale scomparsa sono terminati. */
     public boolean isFinito() {
         return stato.finito;
     }
@@ -325,6 +339,7 @@ public final class TracciatoreLogo {
         stato.fase = Fase.TRACCIAMENTO;
         stato.fotogrammaDissolvenza = 0;
         stato.fotogrammaPausa = 0;
+        stato.fotogrammaScomparsa = 0;
         stato.finito = false;
     }
 
@@ -336,21 +351,21 @@ public final class TracciatoreLogo {
         return logo.getHeight();
     }
 
-    /** Il nome della fase corrente (TRACCIAMENTO, DISSOLVENZA, PAUSA), per la diagnostica. */
+    /** Il nome della fase corrente (TRACCIAMENTO, DISSOLVENZA, PAUSA, SCOMPARSA), per la diagnostica. */
     public String getNomeFase() {
         return stato.fase.name();
     }
 
     /**
      * Quanti fotogrammi dura (per eccesso) un ciclo intero: il tracciamento del corridore piu' lento, in genere un
-     * giro completo, piu' il ritardo del corridore piu' "tardivo", la dissolvenza e la pausa finale.
+     * giro completo, piu' il ritardo del corridore piu' "tardivo", la dissolvenza, la pausa finale e la scomparsa.
      */
     public int stimaFotogrammiCiclo() {
         int ritardoMassimo = 0;
         for (Corridore c : corridori) {
             ritardoMassimo = Math.max(ritardoMassimo, c.fotogrammiRitardoIniziale);
         }
-        return fotogrammiPerGiro + ritardoMassimo + 3 + fotogrammiDissolvenza + fotogrammiPausa;
+        return fotogrammiPerGiro + ritardoMassimo + 3 + fotogrammiDissolvenza + fotogrammiPausa + fotogrammiScomparsa;
     }
 
     /** Cosa ha trovato e deciso il Costruttore (forme, corridori, avvertimenti): utile per calibrare i parametri. */
@@ -381,6 +396,8 @@ public final class TracciatoreLogo {
         private Integer raggioTorcia;
         private int fotogrammiDissolvenza = FOTOGRAMMI_DISSOLVENZA_PREDEFINITI;
         private int fotogrammiPausa = FOTOGRAMMI_PAUSA_PREDEFINITI;
+        private int fotogrammiScomparsa;
+        private boolean sfumaScie;
         private boolean ripeti;
         private Color coloreSfondo = COLORE_SFONDO_PREDEFINITO;
 
@@ -475,6 +492,25 @@ public final class TracciatoreLogo {
         /** Quanti fotogrammi resta acceso il logo intero alla fine. */
         public Costruttore fotogrammiPausa(int fotogrammiPausa) {
             this.fotogrammiPausa = Math.max(0, fotogrammiPausa);
+            return this;
+        }
+
+        /**
+         * Vero perche', mentre il logo compare in dissolvenza, le scie dei corridori svaniscono insieme e le loro
+         * teste luminose non si disegnino piu': alla fine resta il logo da solo. Predefinito falso (scie e teste
+         * restano fino alla fine del ciclo).
+         */
+        public Costruttore sfumaScie(boolean sfumaScie) {
+            this.sfumaScie = sfumaScie;
+            return this;
+        }
+
+        /**
+         * Dopo la pausa, il logo (con quel che resta delle scie) svanisce in questi fotogrammi, e solo allora il
+         * ciclo e' finito. Predefinito 0: nessuna scomparsa, il logo resta acceso.
+         */
+        public Costruttore fotogrammiScomparsa(int fotogrammiScomparsa) {
+            this.fotogrammiScomparsa = Math.max(0, fotogrammiScomparsa);
             return this;
         }
 
@@ -1052,17 +1088,18 @@ public final class TracciatoreLogo {
     }
 
     // =========================================================================
-    //  7. Macchina a stati dell'animazione (tracciamento -> dissolvenza -> pausa)
+    //  7. Macchina a stati dell'animazione (tracciamento -> dissolvenza -> pausa -> scomparsa)
     // =========================================================================
 
-    private enum Fase { TRACCIAMENTO, DISSOLVENZA, PAUSA }
+    private enum Fase { TRACCIAMENTO, DISSOLVENZA, PAUSA, SCOMPARSA }
 
     /** Stato mutabile della macchina a stati: fase corrente + contatori delle fasi temporizzate. */
     private static class StatoAnimazione {
         Fase fase = Fase.TRACCIAMENTO;
         int fotogrammaDissolvenza = 0; // quanti fotogrammi sono trascorsi dall'inizio della fase DISSOLVENZA
         int fotogrammaPausa = 0; // quanti fotogrammi sono trascorsi dall'inizio della fase PAUSA
-        boolean finito = false;  // vero quando, senza ripetizione, la pausa finale e' terminata
+        int fotogrammaScomparsa = 0; // quanti fotogrammi sono trascorsi dall'inizio della fase SCOMPARSA
+        boolean finito = false;  // vero quando, senza ripetizione, l'ultima fase del ciclo e' terminata
     }
 
     /**
@@ -1070,10 +1107,11 @@ public final class TracciatoreLogo {
      * In fase TRACCIAMENTO un corridore che raggiunge la fine del proprio percorso
      * si ferma e aspetta: si passa a DISSOLVENZA solo quando TUTTI hanno
      * finito (vedi punto 6 della documentazione in testa alla classe).
-     * Senza ripetizione, alla fine della pausa l'effetto si ferma (vedi {@link #isFinito()}).
+     * Dopo la pausa, se c'e', viene la scomparsa del logo; alla fine del ciclo l'effetto si ferma
+     * (vedi {@link #isFinito()}) oppure, con la ripetizione, ricomincia.
      */
     private static void avanza(List<Corridore> corridori, StatoAnimazione stato, int fotogrammiDissolvenza,
-                               int fotogrammiPausa, boolean ripeti) {
+                               int fotogrammiPausa, int fotogrammiScomparsa, boolean ripeti) {
         switch (stato.fase) {
             case TRACCIAMENTO: {
                 // tuttiFiniti diventa false appena un corridore qualsiasi non ha ancora
@@ -1116,19 +1154,21 @@ public final class TracciatoreLogo {
             case PAUSA: {
                 stato.fotogrammaPausa++;
                 if (stato.fotogrammaPausa >= fotogrammiPausa && !stato.finito) {
-                    if (!ripeti) {
-                        // una volta sola: il logo resta acceso e l'effetto e' finito
-                        stato.finito = true;
-                        break;
+                    if (fotogrammiScomparsa > 0) {
+                        stato.fase = Fase.SCOMPARSA;
+                        stato.fotogrammaScomparsa = 0;
+                    } else {
+                        fineCiclo(corridori, stato, ripeti);
                     }
-                    // fine della pausa: si ricomincia un nuovo ciclo, riportando ogni
-                    // corridore all'inizio del proprio percorso E ripristinando il ritardo
-                    // iniziale (altrimenti al secondo giro partirebbero tutti insieme)
-                    for (Corridore r : corridori) {
-                        r.avanzamento = 0;
-                        r.fotogrammiRitardo = r.fotogrammiRitardoIniziale;
-                    }
-                    stato.fase = Fase.TRACCIAMENTO;
+                }
+                break;
+            }
+            case SCOMPARSA: {
+                if (stato.fotogrammaScomparsa < fotogrammiScomparsa) {
+                    stato.fotogrammaScomparsa++;
+                }
+                if (stato.fotogrammaScomparsa >= fotogrammiScomparsa && !stato.finito) {
+                    fineCiclo(corridori, stato, ripeti);
                 }
                 break;
             }
@@ -1136,22 +1176,67 @@ public final class TracciatoreLogo {
     }
 
     /**
+     * Alla fine del ciclo: una volta sola l'effetto e' finito e resta fermo sull'ultimo fotogramma (il logo acceso,
+     * o spento dopo la scomparsa); con la ripetizione si ricomincia, riportando ogni corridore all'inizio del proprio
+     * percorso E ripristinando il ritardo iniziale (altrimenti al secondo giro partirebbero tutti insieme).
+     */
+    private static void fineCiclo(List<Corridore> corridori, StatoAnimazione stato, boolean ripeti) {
+        if (!ripeti) {
+            stato.finito = true;
+            return;
+        }
+        for (Corridore r : corridori) {
+            r.avanzamento = 0;
+            r.fotogrammiRitardo = r.fotogrammiRitardoIniziale;
+        }
+        stato.fase = Fase.TRACCIAMENTO;
+    }
+
+    /**
      * Calcola l'opacita' (0.0-1.0) a cui disegnare il logo intero, in base
      * alla fase corrente: invisibile durante il tracciamento (la torcia
      * pensa a rivelarlo localmente), in transizione lineare durante la
-     * dissolvenza, piena durante la pausa finale.
+     * dissolvenza, piena durante la pausa finale, di nuovo in transizione
+     * (all'indietro) durante la scomparsa. Senza torcia il logo e' pieno fin
+     * dall'inizio e cambia solo nella scomparsa.
      */
-    private static double opacitaDissolvenza(StatoAnimazione stato, int fotogrammiDissolvenza) {
+    private static double opacitaLogo(StatoAnimazione stato, int fotogrammiDissolvenza, int fotogrammiScomparsa,
+                                      boolean rivelaConTorcia) {
         switch (stato.fase) {
             case TRACCIAMENTO:
-                return 0.0;
+                return rivelaConTorcia ? 0.0 : 1.0;
             case DISSOLVENZA:
                 // rapporto lineare tra 0 e 1 in base a quanti fotogrammi di
                 // dissolvenza sono gia' trascorsi
-                return Math.min(1.0, (double) stato.fotogrammaDissolvenza / fotogrammiDissolvenza);
+                return rivelaConTorcia ? Math.min(1.0, (double) stato.fotogrammaDissolvenza / fotogrammiDissolvenza) : 1.0;
+            case SCOMPARSA:
+                return 1.0 - Math.min(1.0, (double) stato.fotogrammaScomparsa / fotogrammiScomparsa);
             default: // PAUSA
                 return 1.0;
         }
+    }
+
+    /**
+     * L'opacita' (0.0-1.0) delle scie e delle teste dei corridori. Senza sfumatura sono piene per tutto il ciclo,
+     * e svaniscono solo con la scomparsa del logo; con la sfumatura svaniscono durante la dissolvenza, mentre il
+     * logo compare, e da li' in poi non si vedono piu'.
+     */
+    private static double opacitaScie(StatoAnimazione stato, int fotogrammiDissolvenza, int fotogrammiScomparsa,
+                                      boolean sfumaScie) {
+        if (sfumaScie) {
+            switch (stato.fase) {
+                case TRACCIAMENTO:
+                    return 1.0;
+                case DISSOLVENZA:
+                    return 1.0 - Math.min(1.0, (double) stato.fotogrammaDissolvenza / fotogrammiDissolvenza);
+                default: // PAUSA e SCOMPARSA
+                    return 0.0;
+            }
+        }
+        if (stato.fase == Fase.SCOMPARSA) {
+            return 1.0 - Math.min(1.0, (double) stato.fotogrammaScomparsa / fotogrammiScomparsa);
+        }
+        return 1.0;
     }
 
     // =========================================================================
@@ -1164,7 +1249,8 @@ public final class TracciatoreLogo {
      * punto luminoso di ogni corridore.
      */
     private static void disegnaFotogramma(Graphics2D g2, BufferedImage logo, List<Corridore> corridori, Fase fase,
-                                          double opacita, boolean rivelaConTorcia, int raggioTorcia, Color coloreSfondo) {
+                                          double opacita, double opacitaScie, boolean conTeste, boolean rivelaConTorcia,
+                                          int raggioTorcia, Color coloreSfondo) {
         int w = logo.getWidth(), h = logo.getHeight();
         // riempie lo sfondo per primo (se ce n'e' uno): qualunque cosa venga
         // disegnata dopo (logo, torcia, scia) vi si sovrappone
@@ -1189,14 +1275,23 @@ public final class TracciatoreLogo {
             g2.setComposite(compositoPrecedente);
         }
 
-        // scia e punto luminoso vengono SEMPRE disegnati sopra al logo (rivelato o
-        // meno), per ogni corridore che ha già superato il proprio ritardo iniziale
+        // scia e punto luminoso vengono disegnati sopra al logo (rivelato o meno),
+        // per ogni corridore che ha già superato il proprio ritardo iniziale, con
+        // l'opacita' delle scie (che le fa svanire nella dissolvenza o nella scomparsa)
+        if (opacitaScie <= 0) {
+            return;
+        }
+        Composite compositoPrecedente = g2.getComposite();
+        if (opacitaScie < 1) {
+            g2.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, (float) opacitaScie));
+        }
         for (Corridore r : corridori) {
             if (!r.isPartito()) continue; // ritardo non ancora scaduto: resta invisibile
             int finoA = (int) Math.min(r.avanzamento, r.percorso.size() - 1);
             if (finoA > 0) disegnaScia(g2, r.percorso, finoA);
-            disegnaTestaCometa(g2, r.percorso, finoA);
+            if (conTeste) disegnaTestaCometa(g2, r.percorso, finoA);
         }
+        g2.setComposite(compositoPrecedente);
     }
 
     /**
