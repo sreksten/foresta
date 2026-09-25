@@ -31,7 +31,7 @@ public class TestGenerazionePersonaggi {
             writer.append("INTELLIGENZA,INTELLIGENZA_MEDIA,SAGGEZZA,SAGGEZZA_MEDIA,CARISMA,CARISMA_MEDIA,");
             writer.append("FORTUNA,FORTUNA_MEDIA,CRITICO_MEDIA,CARICO_MASSIMO_MEDIA,PRECISIONE_MEDIA,");
             writer.append("VELOCITA_MEDIA,FURTIVITA_MEDIA,PARATA_MEDIA,RESISTENZA_MAGICA_MEDIA,");
-            writer.append("PERCEZIONE_MEDIA,SOGGEZIONE_MEDIA,FURIA_MEDIA,CORAGGIO_MEDIA,VALORE_MEDIA\n");
+            writer.append("PERCEZIONE_MEDIA,SOGGEZIONE_MEDIA,FURIA_MEDIA,CORAGGIO_MEDIA,VALORE_MEDIA,CONTRATTAZIONE_MEDIA\n");
 
             for (ClassePersonaggio classe : ClassePersonaggio.values()) {
                 Personaggio pPerMax = classe.getIstanza(1);
@@ -42,6 +42,7 @@ public class TestGenerazionePersonaggi {
                 long sommaCritico = 0, sommaCarico = 0, sommaPrecisione = 0, sommaVelocita = 0;
                 long sommaFurtivita = 0, sommaParata = 0, sommaResistenzaMagica = 0, sommaPercezione = 0;
                 long sommaSoggezione = 0, sommaFuria = 0, sommaCoraggio = 0, sommaValore = 0;
+                long sommaContrattazione = 0;
 
                 for (int i = 0; i < NUMERO_ISTANZE; i++) {
                     Personaggio p = classe.getIstanza(1);
@@ -65,6 +66,7 @@ public class TestGenerazionePersonaggi {
                     sommaFuria += p.getFuria();
                     sommaCoraggio += p.getCoraggio();
                     sommaValore += p.getValore();
+                    sommaContrattazione += p.getContrattazione();
                 }
 
                 double mediaForza = sommaForza / (double) NUMERO_ISTANZE;
@@ -86,6 +88,7 @@ public class TestGenerazionePersonaggi {
                 double mediaFuria = sommaFuria / (double) NUMERO_ISTANZE;
                 double mediaCoraggio = sommaCoraggio / (double) NUMERO_ISTANZE;
                 double mediaValore = sommaValore / (double) NUMERO_ISTANZE;
+                double mediaContrattazione = sommaContrattazione / (double) NUMERO_ISTANZE;
 
                 writer.append(classe.toString()).append(",");
                 writer.append(String.valueOf(pbPerMax.getMaxStatistica(TipoAttributo.FORZA))).append(",");
@@ -113,7 +116,8 @@ public class TestGenerazionePersonaggi {
                 writer.append(String.format("%.2f", mediaSoggezione)).append(",");
                 writer.append(String.format("%.2f", mediaFuria)).append(",");
                 writer.append(String.format("%.2f", mediaCoraggio)).append(",");
-                writer.append(String.format("%.2f", mediaValore)).append("\n");
+                writer.append(String.format("%.2f", mediaValore)).append(",");
+                writer.append(String.format("%.2f", mediaContrattazione)).append("\n");
             }
         }
         System.out.println("File CSV generato: " + CSV_FILE);

@@ -1143,6 +1143,13 @@ public abstract class PersonaggioBase implements Personaggio {
 		return get(md, PersonaggioMD::getValore, TipoAttributo.VALORE);
 	}
 
+	// CONTRATTAZIONE
+
+	@Override
+	public int getContrattazione() {
+		return get(md, PersonaggioMD::getContrattazione, TipoAttributo.CONTRATTAZIONE);
+	}
+
 	// STANCHEZZA
 
 	@Override
@@ -1189,7 +1196,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	/**
 	 * Ricalcola gli attributi secondari del personaggio: carico massimo, critico, precisione, velocità, furtività,
-	 * parata, resistenza magica, percezione, soggezione, furia, coraggio, valore, numero bersagli
+	 * parata, resistenza magica, percezione, soggezione, furia, coraggio, valore, contrattazione, numero bersagli
 	 */
 	protected void ricalcolaAttributiSecondari() {
 		ricalcolaAttributiSecondariCore(md, this, this);
@@ -1197,8 +1204,8 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	/**
 	 * Ricalcola gli attributi secondari (carico massimo, critico, precisione, velocità, furtività, parata,
-	 * resistenza magica, percezione, soggezione, furia, coraggio, valore, numero bersagli) direttamente su
-	 * {@code md}, usando i moltiplicatori di classe di {@code moltiplicatori}. Non pubblica eventi: da usare
+	 * resistenza magica, percezione, soggezione, furia, coraggio, valore, contrattazione, numero bersagli)
+	 * direttamente su {@code md}, usando i moltiplicatori di classe di {@code moltiplicatori}. Non pubblica eventi: da usare
 	 * in fase di caricamento, quando non esiste ancora un Personaggio vivo a cui riferirli.
 	 */
 	public static void ricalcolaAttributiSecondari(PersonaggioMD md, Personaggio moltiplicatori) {
@@ -1223,6 +1230,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.FURIA, calcolaFuria(md, moltiplicatori));
 		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.CORAGGIO, calcolaCoraggio(md, moltiplicatori));
 		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.VALORE, calcolaValore(md, moltiplicatori));
+		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.CONTRATTAZIONE, calcolaContrattazione(md, moltiplicatori));
 		ricalcolaAttributoSecondario(md, sorgenteEvento, TipoAttributo.NUMERO_BERSAGLI, calcolaNumeroBersagli(md, moltiplicatori));
 	}
 
@@ -1462,6 +1470,28 @@ public abstract class PersonaggioBase implements Personaggio {
 		double coraggioFinale = coraggioGrezzo * moltiplicatori.getMoltiplicatoreCoraggio();
 
 		return (int)coraggioFinale;
+	}
+
+	public abstract double getMoltiplicatoreContrattazione();
+
+	private static int calcolaContrattazione(PersonaggioMD md, Personaggio moltiplicatori) {
+		// Per rispecchiare il concetto di "strappare un prezzo migliore a chi vende o compra", la Contrattazione
+		// deve attingere a due forze distinte:
+		// CARISMA (Peso Maggiore - 60%): La parlantina, la faccia tosta e la capacità di convincere il mercante che
+		// quell'affare lo sta facendo lui.
+		// FORTUNA (Peso Minore - 40%): Beccare il mercante nella giornata buona, notare il difetto sulla merce al
+		// momento giusto, arrivare quando ha fretta di liberarsi del magazzino.
+		final double COEFFICIENTE_CARISMA = 0.60;
+		final double COEFFICIENTE_FORTUNA = 0.40;
+
+		// Calcolo della contrattazione grezza con Diminishing Returns
+		double contrattazioneGrezza = (COEFFICIENTE_CARISMA * Math.sqrt(get(md, PersonaggioMD::getCarisma, TipoAttributo.CARISMA))) +
+				(COEFFICIENTE_FORTUNA * Math.sqrt(get(md, PersonaggioMD::getFortuna, TipoAttributo.FORTUNA)));
+
+		// Applicazione del moltiplicatore di archetipo
+		double contrattazioneFinale = contrattazioneGrezza * moltiplicatori.getMoltiplicatoreContrattazione();
+
+		return (int)contrattazioneFinale;
 	}
 
 	public abstract double getMoltiplicatoreValore();

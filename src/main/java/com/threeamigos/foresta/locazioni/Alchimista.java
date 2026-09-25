@@ -47,18 +47,18 @@ public class Alchimista extends LocazioneBase implements Locazione {
 
 	private void reimpostaAcquistiPossibili() {
 		int monete = gruppo.getMonete();
-		pozioniAcquistabili = monete >= Costanti.COSTO_POZIONE_SALUTE;
-		ripristinareMagia = monete >= Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO &&
+		pozioniAcquistabili = monete >= gruppo.prezzoAcquisto(Costanti.COSTO_POZIONE_SALUTE);
+		ripristinareMagia = monete >= gruppo.prezzoAcquisto(Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO) &&
 				gruppo.getPersonaggiVivi().stream().anyMatch(p -> p.getMagia() < p.getMagiaMassima());
 		if (gruppo.getPersonaggiVivi().stream().filter(p -> p.getMagia() < p.getMagiaMassima()).count() > 1) {
 			// Dopo il primo personaggio sconta del 25%. Molto generoso.
-			costoTotaleAumentoMagiaGruppo = Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO +
-					(Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO * (gruppo.getNumeroPersonaggiVivi() - 1)) * 75 / 100;
+			costoTotaleAumentoMagiaGruppo = gruppo.prezzoAcquisto(Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO +
+					(Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO * (gruppo.getNumeroPersonaggiVivi() - 1)) * 75 / 100);
 			ripristinareMagiaGruppo = monete >= costoTotaleAumentoMagiaGruppo;
 		} else {
 			ripristinareMagiaGruppo = false;
 		}
-		incantesimiAcquistabili = Arrays.stream(ClasseIncantesimo.values()).anyMatch(c -> c.getCostoAcquisto() <= monete);
+		incantesimiAcquistabili = Arrays.stream(ClasseIncantesimo.values()).anyMatch(c -> gruppo.prezzoAcquisto(c.getCostoAcquisto()) <= monete);
 		nessunAcquistoEseguibile = !pozioniAcquistabili && !ripristinareMagia && !ripristinareMagiaGruppo && !incantesimiAcquistabili;
 	}
 
@@ -122,9 +122,9 @@ public class Alchimista extends LocazioneBase implements Locazione {
 			azione == Comando.PERSONAGGIO_3 ||
 			azione == Comando.PERSONAGGIO_4 ||
 			azione == Comando.PERSONAGGIO_5) {
-				if (gruppo.getMonete() >= Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO) {
+				if (gruppo.getMonete() >= gruppo.prezzoAcquisto(Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO)) {
 					Personaggio p = gruppo.getPersonaggio(azione);
-					gruppo.subMonete(Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO);
+					gruppo.subMonete(gruppo.prezzoAcquisto(Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO));
 					p.addMagia(Costanti.AUMENTO_MAGIA_PERSONAGGIO);
 					reimpostaAcquistiPossibili();
 					return Stato.IN_LOCAZIONE;
@@ -153,22 +153,22 @@ public class Alchimista extends LocazioneBase implements Locazione {
 				return Stato.IN_LOCAZIONE;
 
 			} else if (azione == Comando.POZIONE_SALUTE) {
-				gruppo.subMonete(Costanti.COSTO_POZIONE_SALUTE);
+				gruppo.subMonete(gruppo.prezzoAcquisto(Costanti.COSTO_POZIONE_SALUTE));
 				gruppo.addPozioniSalute(1);
 				return Stato.IN_LOCAZIONE;
 
 			} else if (azione == Comando.POZIONE_SALUTE_GRANDE) {
-				gruppo.subMonete(Costanti.COSTO_POZIONE_SALUTE_GRANDE);
+				gruppo.subMonete(gruppo.prezzoAcquisto(Costanti.COSTO_POZIONE_SALUTE_GRANDE));
 				gruppo.addPozioniSaluteGrande(1);
 				return Stato.IN_LOCAZIONE;
 
 			} else if (azione == Comando.POZIONE_MAGIA) {
-				gruppo.subMonete(Costanti.COSTO_POZIONE_MAGIA);
+				gruppo.subMonete(gruppo.prezzoAcquisto(Costanti.COSTO_POZIONE_MAGIA));
 				gruppo.addPozioniMagia(1);
 				return Stato.IN_LOCAZIONE;
 
 			} else if (azione == Comando.POZIONE_MAGIA_GRANDE) {
-				gruppo.subMonete(Costanti.COSTO_POZIONE_MAGIA_GRANDE);
+				gruppo.subMonete(gruppo.prezzoAcquisto(Costanti.COSTO_POZIONE_MAGIA_GRANDE));
 				gruppo.addPozioniMagiaGrande(1);
 				return Stato.IN_LOCAZIONE;
 
@@ -188,7 +188,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 			} else {
 				if (azione != null) {
 					ClasseIncantesimo classe = ClasseIncantesimo.ofComando(azione);
-					int costo = classe.getCostoAcquisto();
+					int costo = gruppo.prezzoAcquisto(classe.getCostoAcquisto());
 					if (gruppo.getMonete() < costo) {
 						BusEventi.pubblica(new NotificaTestoFrase("“Questo incantesimo costa troppo per le tue tasche.\"" + DICE));
 					} else {
@@ -222,7 +222,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 		}
 		if (ripristinareMagia) {
 			sb.append(" o ripristinare il tuo potere magico per ")
-					.append(Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO)
+					.append(gruppo.prezzoAcquisto(Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO))
 					.append(" monete");
 			if (ripristinareMagiaGruppo) {
 				sb.append(", o ripristinare quello di tutto il gruppo per ")
@@ -252,16 +252,16 @@ public class Alchimista extends LocazioneBase implements Locazione {
 			comandiPossibili.add(Comando.INCANTESIMO);
 		}
 		if (pozioniAcquistabili) {
-			if (gruppo.getMonete() >= Costanti.COSTO_POZIONE_SALUTE) {
+			if (gruppo.getMonete() >= gruppo.prezzoAcquisto(Costanti.COSTO_POZIONE_SALUTE)) {
 				comandiPossibili.add(Comando.POZIONE_SALUTE);
 			}
-			if (gruppo.getMonete() >= Costanti.COSTO_POZIONE_SALUTE_GRANDE) {
+			if (gruppo.getMonete() >= gruppo.prezzoAcquisto(Costanti.COSTO_POZIONE_SALUTE_GRANDE)) {
 				comandiPossibili.add(Comando.POZIONE_SALUTE_GRANDE);
 			}
-			if (gruppo.getMonete() >= Costanti.COSTO_POZIONE_MAGIA) {
+			if (gruppo.getMonete() >= gruppo.prezzoAcquisto(Costanti.COSTO_POZIONE_MAGIA)) {
 				comandiPossibili.add(Comando.POZIONE_MAGIA);
 			}
-			if (gruppo.getMonete() >= Costanti.COSTO_POZIONE_MAGIA_GRANDE) {
+			if (gruppo.getMonete() >= gruppo.prezzoAcquisto(Costanti.COSTO_POZIONE_MAGIA_GRANDE)) {
 				comandiPossibili.add(Comando.POZIONE_MAGIA_GRANDE);
 			}
 		}
@@ -272,7 +272,7 @@ public class Alchimista extends LocazioneBase implements Locazione {
 	private void impostaIncantesimi() {
 		List<Comando> comandiPossibili = new ArrayList<>();
 		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
-			if (classeIncantesimo.getCostoAcquisto() <= gruppo.getMonete()) {
+			if (gruppo.prezzoAcquisto(classeIncantesimo.getCostoAcquisto()) <= gruppo.getMonete()) {
 				comandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
 			}
 		}

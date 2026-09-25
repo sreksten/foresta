@@ -145,6 +145,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         creaNodo(componenteScorrevole, colore, TipoAttributo.FURIA, p.getFuria(), evidenziato);
         creaNodo(componenteScorrevole, colore, TipoAttributo.CORAGGIO, p.getCoraggio(), evidenziato);
         creaNodo(componenteScorrevole, colore, TipoAttributo.VALORE, p.getValore(), evidenziato);
+        creaNodo(componenteScorrevole, colore, TipoAttributo.CONTRATTAZIONE, p.getContrattazione(), evidenziato);
 
         return componenteScorrevole;
     }

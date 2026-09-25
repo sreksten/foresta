@@ -185,6 +185,16 @@ public class OmbraNera extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public double getMoltiplicatoreContrattazione() {
+		return Costanti.OMBRANERA_MOLTIPLICATORE_CONTRATTAZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreContrattazione() {
+		return Costanti.OMBRANERA_MOLTIPLICATORE_CONTRATTAZIONE_NOTA;
+	}
+
+	@Override
 	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.OMBRANERA_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}

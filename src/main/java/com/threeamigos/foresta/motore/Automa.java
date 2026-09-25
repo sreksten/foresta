@@ -18,6 +18,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.Missione;
+import com.threeamigos.foresta.motore.modellodati.RaritaArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.motore.modellodati.TipoDanno;
@@ -1213,9 +1214,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				.setPeso(3000)
 				.setModificatore(TipoAttributo.COSTITUZIONE, TipoModificatore.AUMENTO_PERCENTUALE, 5)
 				.setModificatore(TipoAttributo.RESISTENZA_MAGICA, TipoModificatore.AUMENTO_PERCENTUALE, 2)
-				.setModificatore(TipoAttributo.FORTUNA, TipoModificatore.AUMENTO_PERCENTUALE, 1)
+				.setModificatore(TipoAttributo.CONTRATTAZIONE, TipoModificatore.AUMENTO_FISSO, 16)
 				.setIncantamento("La battuta del cavolo", TipoDanno.GELO, 10, 0.5)
 				.costruisci();
+		// Leggendario, obiettivo di una missione: con +16 in CONTRATTAZIONE porta ai limiti di RegoleContrattazione
+		superscudo.getModelloDati().setRarita(RaritaArtefatto.LEGGENDARIO);
 		personaggio.addArtefatto(superscudo);
 
 		Artefatto scarponi = CostruttoreArtefatto.istanza()

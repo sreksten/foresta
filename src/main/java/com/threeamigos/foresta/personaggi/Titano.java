@@ -188,6 +188,16 @@ public class Titano extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public double getMoltiplicatoreContrattazione() {
+		return Costanti.TITANO_MOLTIPLICATORE_CONTRATTAZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreContrattazione() {
+		return Costanti.TITANO_MOLTIPLICATORE_CONTRATTAZIONE_NOTA;
+	}
+
+	@Override
 	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.TITANO_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}

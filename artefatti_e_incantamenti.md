@@ -35,7 +35,7 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
 
 - [ ] **Pergamene:** bilanciare prezzi e gradi (§6).
 - [ ] **Tutti i prezzi del gioco** (artefatti, pozioni, incantesimi, pergamene, fusione), alla luce del loot che ora si trova in giro: con spade, scudi, anelli e pergamene raccolti per strada l'economia cambia.
-- [ ] **Magazzini dei negozi:** rifornimento periodico (oggi si riempiono una volta sola, alla creazione del mondo), e rivendita a prezzo ridotto invece che pieno (oggi l'armaiolo ricompra a prezzo pieno).
+- [ ] **Magazzini dei negozi:** rifornimento periodico (oggi si riempiono una volta sola, alla creazione del mondo). La rivendita a prezzo ridotto c'è: la regola la `CONTRATTAZIONE` (vedi "Prezzi e contrattazione").
 - [ ] **Scudi rari** più frequenti (oggi il 10% degli artefatti incantabili è raro), e forse scudi con `RESISTENZA_MAGICA` come modificatore.
 
 ### Contenuti nuovi
@@ -178,7 +178,7 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
 ### Fusione (incantatore)
 
 - **Cosa si trasferisce.** Tutti gli effetti della pergamena: gli incantamenti **e** i modificatori di attributo (`ModificatoreAttributo`). Nel seguito "effetto" vuol dire l'uno o l'altro.
-- **Costo.** 10 monete + 5 per ogni effetto trasferito (incantamento o modificatore).
+- **Costo.** 10 monete + 5 per ogni effetto trasferito (incantamento o modificatore). Il costo si sconta con la `CONTRATTAZIONE` del gruppo, come gli acquisti.
 - **Limite.** Un artefatto ha un numero massimo di effetti **in totale** che dipende dalla sua rarità (vedi "Rarità"): per un comune `min(3, livello − 1)`. Si contano incantamenti e modificatori, **compresi** quelli che l'artefatto ha già di suo (es. i modificatori degli artefatti dei templi). A livello 1 non se ne hanno. Una spada di livello 3 con già 1 incantamento ne può ricevere al più un altro.
 - **Conteggio.** Si contano gli **effetti**, non le pergamene: una pergamena con un incantamento e un modificatore vale due, per il costo e per i limiti.
 - **Accessori.** Non si incantano, quindi non ricevono nemmeno i modificatori di una pergamena: la fusione vale solo per gli artefatti incantabili (`isIncantabile()`).
@@ -193,6 +193,7 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
 
 - **Dove.** In città, in quest'ordine nella barra delle icone: locanda, alchimista, armaiolo, venditore di pergamene, incantatore. I negozi sparsi nella foresta vengono dopo.
 - **Cosa trattano.** L'armaiolo compra e vende tutto tranne le pergamene; il venditore di pergamene solo quelle (`TipoNegozio.tratta`). Un rifiuto si avverte con un fumetto.
+- **Prezzi e contrattazione.** Il gruppo tratta con la `CONTRATTAZIONE` più alta tra i personaggi vivi (attributo secondario: 60% Carisma, 40% Fortuna, per il moltiplicatore di archetipo; il Ladro è il migliore). `RegoleContrattazione` ne ricava `bonus = c / (c + 4)`: gli acquisti (artefatti, consumabili, fusione) si scontano di `0,24 × bonus`, al massimo del 20%; le vendite rendono `0,50 + 0,30 × bonus` del costo, al massimo il 75%. Il peggior acquisto (80%) resta sopra la miglior vendita (75%), quindi comprando e rivendendo non si guadagna. Arrotondamenti a favore del mercante. Lo Scudo Fiscale (leggendario, +16 `CONTRATTAZIONE`) porta un Ladro esattamente ai due limiti.
 - **Magazzini.** La chiave è (coordinate, `TipoNegozio`), perché più negozi della stessa città hanno la stessa coordinata.
 - **Generatore.** `GeneratoreArtefatti`: nomi ed effetti dalle tabelle di `GeneratoreArtefattiTabelle` e, per i tipi che la conosce (per ora la spada), in parte da una grammatica (§7).
 - **Riempimento dei negozi** (venditore di pergamene e armaiolo). Per ora il magazzino si genera **una volta sola, alla creazione del mondo**: 6 artefatti e 6 pergamene per città, con livelli a rotazione da 1 a 3 (`Costanti.MAGAZZINO_*`), perché alla creazione il livello di riferimento è sempre 1. Si potrà passare poi a una rigenerazione periodica in base al livello del gruppo.

@@ -186,6 +186,16 @@ public class Idra extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public double getMoltiplicatoreContrattazione() {
+		return Costanti.IDRA_MOLTIPLICATORE_CONTRATTAZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreContrattazione() {
+		return Costanti.IDRA_MOLTIPLICATORE_CONTRATTAZIONE_NOTA;
+	}
+
+	@Override
 	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.IDRA_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}

@@ -188,6 +188,16 @@ public class Gigante extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public double getMoltiplicatoreContrattazione() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_CONTRATTAZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreContrattazione() {
+		return Costanti.GIGANTE_MOLTIPLICATORE_CONTRATTAZIONE_NOTA;
+	}
+
+	@Override
 	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.GIGANTE_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}

@@ -62,7 +62,7 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
         Collection<Artefatto> banco = automa.getParteRemota().getInventario();
         boolean conPergamene = banco.stream().anyMatch(RegoleIncantatura::isPergamena);
         if (conPergamene) {
-            y = disegnaValore(graphics, "Costo fusione", String.valueOf(RegoleIncantatura.costo(banco)), y, coloreTestata);
+            y = disegnaValore(graphics, "Costo fusione", String.valueOf(GruppoGiocatore.getIstanza().costoFusione(banco)), y, coloreTestata);
         }
         Optional<Artefatto> artefatto = RegoleIncantatura.artefattoSulBanco(banco);
         if (artefatto.isPresent()) {

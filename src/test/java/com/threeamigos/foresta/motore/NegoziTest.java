@@ -65,7 +65,8 @@ class NegoziTest {
         assertFalse(gruppo.vende(new ComandoVenditaArtefatto(gruppo, venditore, spada)));
         assertTrue(gruppo.vende(new ComandoVenditaArtefatto(gruppo, venditore, pergamena)));
 
-        assertEquals(30, gruppo.getMonete());
+        // Un gruppo senza nessuno che sappia trattare vende a metà del costo (vedi RegoleContrattazione)
+        assertEquals(15, gruppo.getMonete());
         assertTrue(nelGruppo(spada));
         assertFalse(nelGruppo(pergamena));
         assertEquals(1, venditore.getInventario().size());

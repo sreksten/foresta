@@ -185,6 +185,16 @@ public class ChimeraDrago extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
+	public double getMoltiplicatoreContrattazione() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_CONTRATTAZIONE;
+	}
+
+	@Override
+	public String getNoteMoltiplicatoreContrattazione() {
+		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_CONTRATTAZIONE_NOTA;
+	}
+
+	@Override
 	public double getMoltiplicatoreNumeroBersagli() {
 		return Costanti.CHIMERADRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI;
 	}

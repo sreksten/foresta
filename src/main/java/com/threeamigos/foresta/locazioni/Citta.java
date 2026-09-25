@@ -185,7 +185,7 @@ public abstract class Citta extends LocazioneUnica {
 	 */
 	private void chiediNomeArtefattoDaFondere(GruppoGiocatore g) {
 		Collection<Artefatto> banco = incantatore.getBanco().getInventario();
-		Optional<MotivoRifiutoIncantatura> motivo = RegoleIncantatura.verifica(banco, g.getMonete());
+		Optional<MotivoRifiutoIncantatura> motivo = RegoleIncantatura.verifica(banco, g.getMonete(), g.getContrattazione());
 		if (motivo.isPresent()) {
 			BusEventi.pubblica(new NotificaRifiutoIncantatura(motivo.get()));
 			return;
@@ -197,7 +197,7 @@ public abstract class Citta extends LocazioneUnica {
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili());
 		// Il messaggio si scrive in grande: niente accenti né parentesi
 		BusEventi.pubblica(new RichiestaTesto("Come si chiamera' l'artefatto? La fusione costa "
-				+ RegoleIncantatura.costo(banco) + " monete.", nomeAttuale));
+				+ g.costoFusione(banco) + " monete.", nomeAttuale));
 	}
 
 	/**

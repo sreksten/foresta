@@ -62,6 +62,13 @@ public final class RegoleIncantatura {
 	 * Se si può fare la fusione con quel che c'è sul banco e le monete del gruppo. Vuoto se si può.
 	 */
 	public static Optional<MotivoRifiutoIncantatura> verifica(Collection<Artefatto> banco, int monete) {
+		return verifica(banco, monete, 0);
+	}
+
+	/**
+	 * Come {@link #verifica(Collection, int)}, con il costo scontato secondo la CONTRATTAZIONE di chi tratta.
+	 */
+	public static Optional<MotivoRifiutoIncantatura> verifica(Collection<Artefatto> banco, int monete, int contrattazione) {
 		List<Artefatto> artefatti = banco.stream().filter(a -> !isPergamena(a)).collect(Collectors.toList());
 		List<Artefatto> pergamene = banco.stream().filter(RegoleIncantatura::isPergamena).collect(Collectors.toList());
 		if (artefatti.isEmpty()) {
@@ -80,7 +87,7 @@ public final class RegoleIncantatura {
 		if (!ciStanno(artefatto, pergamene)) {
 			return Optional.of(MotivoRifiutoIncantatura.LIMITE_SUPERATO);
 		}
-		if (monete < costo(banco)) {
+		if (monete < costo(banco, contrattazione)) {
 			return Optional.of(MotivoRifiutoIncantatura.MONETE_INSUFFICIENTI);
 		}
 		return Optional.empty();
@@ -92,6 +99,13 @@ public final class RegoleIncantatura {
 	public static int costo(Collection<Artefatto> banco) {
 		int effettiTrasferiti = banco.stream().filter(RegoleIncantatura::isPergamena).mapToInt(RegoleIncantatura::effetti).sum();
 		return Costanti.FUSIONE_COSTO_BASE + Costanti.FUSIONE_COSTO_PER_EFFETTO * effettiTrasferiti;
+	}
+
+	/**
+	 * Il costo della fusione scontato secondo la CONTRATTAZIONE di chi tratta (vedi RegoleContrattazione).
+	 */
+	public static int costo(Collection<Artefatto> banco, int contrattazione) {
+		return RegoleContrattazione.prezzoAcquisto(costo(banco), contrattazione);
 	}
 
 	/**

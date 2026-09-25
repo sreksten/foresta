@@ -53,6 +53,16 @@ public class Costanti {
     public static final int FUSIONE_COSTO_BASE = 10;
     public static final int FUSIONE_COSTO_PER_EFFETTO = 5;
 
+    // Contrattazione (vedi RegoleContrattazione): lo sconto sugli acquisti e il ricavo delle vendite crescono con
+    // bonus = contrattazione / (contrattazione + saturazione), fino a un limite che nessun modificatore supera.
+    // Con la vendita al massimo al 75% e l'acquisto almeno all'80% non si guadagna comprando e rivendendo.
+    public static final int CONTRATTAZIONE_SATURAZIONE = 4;
+    public static final double CONTRATTAZIONE_COEFFICIENTE_SCONTO = 0.24;
+    public static final double CONTRATTAZIONE_SCONTO_MASSIMO = 0.20;
+    public static final double CONTRATTAZIONE_QUOTA_VENDITA_BASE = 0.50;
+    public static final double CONTRATTAZIONE_COEFFICIENTE_VENDITA = 0.30;
+    public static final double CONTRATTAZIONE_QUOTA_VENDITA_MASSIMA = 0.75;
+
     // Gradi delle pergamene (vedi GradoIncantamento): fino al livello 3 minore, da 4 a 7 medio, da 8 maggiore
     public static final int GRADO_INCANTAMENTO_MEDIO_DAL_LIVELLO = 4;
     public static final int GRADO_INCANTAMENTO_MAGGIORE_DAL_LIVELLO = 8;
@@ -250,6 +260,8 @@ public class Costanti {
     public static final String BARDO_MOLTIPLICATORE_CORAGGIO_NOTA = "Ha una forte personalità; abituato a stare al centro dell'attenzione e a sfidare il pubblico, non si lascia intimidire dalle minacce fisiche.";
     public static final double BARDO_MOLTIPLICATORE_VALORE = 1.1;
     public static final String BARDO_MOLTIPLICATORE_VALORE_NOTA = "Affascinato dalle ballate eroiche e dall'epica; è incline a compiere azioni plateali e coraggiose per proteggere il party.";
+    public static final double BARDO_MOLTIPLICATORE_CONTRATTAZIONE = 1.2;
+    public static final String BARDO_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Parlantina da palcoscenico: tra una rima e un complimento, il mercante si ritrova a fare lo sconto senza sapere perché.";
     public static final double BARDO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
     public static final String BARDO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "La sua musica o le sue parole si propagano nell'aria, permettendogli di influenzare più bersagli contemporaneamente.";
     public static final double BARDO_MOLTIPLICATORE_STANCHEZZA = 1.0;
@@ -325,6 +337,8 @@ public class Costanti {
     public static final String CANTASTORIE_MOLTIPLICATORE_CORAGGIO_NOTA = "Ha una forte personalità; abituato a stare al centro dell'attenzione e a sfidare il pubblico, non si lascia intimidire dalle minacce fisiche.";
     public static final double CANTASTORIE_MOLTIPLICATORE_VALORE = 1.1;
     public static final String CANTASTORIE_MOLTIPLICATORE_VALORE_NOTA = "Affascinato dalle ballate eroiche e dall'epica; è incline a compiere azioni plateali e coraggiose per proteggere il party.";
+    public static final double CANTASTORIE_MOLTIPLICATORE_CONTRATTAZIONE = 1.2;
+    public static final String CANTASTORIE_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Parlantina da palcoscenico: tra una storia e un complimento, il mercante si ritrova a fare lo sconto senza sapere perché.";
     public static final double CANTASTORIE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
     public static final String CANTASTORIE_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "La sua musica o le sue parole si propagano nell'aria, permettendogli di influenzare più bersagli contemporaneamente.";
     public static final double CANTASTORIE_MOLTIPLICATORE_STANCHEZZA = 1.0;
@@ -403,6 +417,8 @@ public class Costanti {
     public static final String ELFA_MOLTIPLICATORE_CORAGGIO_NOTA = "Distaccato e fiero; guarda i pericoli del mondo con la fredda fermezza di chi ha vissuto per secoli e ha visto regni cadere.";
     public static final double ELFA_MOLTIPLICATORE_VALORE = 1.2;
     public static final String ELFA_MOLTIPLICATORE_VALORE_NOTA = "Profondo senso di responsabilità verso la propria stirpe e la natura; combatte con nobiltà e spirito di squadra.";
+    public static final double ELFA_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
+    public static final String ELFA_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "La Linea di Base. Cortese e paziente, tratta con garbo ma considera il mercanteggiare un'usanza un po' volgare.";
     public static final double ELFA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
     public static final String ELFA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Bilanciato: predilige l'accuratezza del colpo singolo, ma la sua grazia gli permette di gestire la linea di fronte.";
     public static final double ELFA_MOLTIPLICATORE_STANCHEZZA = 0.8;
@@ -481,6 +497,8 @@ public class Costanti {
     public static final String ELFO_MOLTIPLICATORE_CORAGGIO_NOTA = "Distaccato e fiero; guarda i pericoli del mondo con la fredda fermezza di chi ha vissuto per secoli e ha visto regni cadere.";
     public static final double ELFO_MOLTIPLICATORE_VALORE = 1.2;
     public static final String ELFO_MOLTIPLICATORE_VALORE_NOTA = "Profondo senso di responsabilità verso la propria stirpe e la natura; combatte con nobiltà e spirito di squadra.";
+    public static final double ELFO_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
+    public static final String ELFO_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "La Linea di Base. Cortese e paziente, tratta con garbo ma considera il mercanteggiare un'usanza un po' volgare.";
     public static final double ELFO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
     public static final String ELFO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Bilanciato: predilige l'accuratezza del colpo singolo, ma la sua grazia gli permette di gestire la linea di fronte.";
     public static final double ELFO_MOLTIPLICATORE_STANCHEZZA = 0.8;
@@ -557,6 +575,8 @@ public class Costanti {
     public static final String GUERRIERA_MOLTIPLICATORE_CORAGGIO_NOTA = "L'essenza del Coraggio Marziale. Addestrato a mantenere salda la linea di sangue, a seguire gli ordini e a guardare la morte in faccia.";
     public static final double GUERRIERA_MOLTIPLICATORE_VALORE = 1.5;
     public static final String GUERRIERA_MOLTIPLICATORE_VALORE_NOTA = "Il Re del Valore. L'archetipo del cavaliere o del protettore addestrato a intercettare i colpi e a fare da baluardo per il gruppo.";
+    public static final double GUERRIERA_MOLTIPLICATORE_CONTRATTAZIONE = 0.9;
+    public static final String GUERRIERA_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Paga quello che le chiedono e si fida della stretta di mano: un bersaglio facile per ogni bottegaio.";
     public static final double GUERRIERA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
     public static final String GUERRIERA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "L'addestramento marziale gli insegna a eseguire fendenti circolari e a gestire più nemici ingaggiati intorno a lui.";
     public static final double GUERRIERA_MOLTIPLICATORE_STANCHEZZA = 1.0;
@@ -633,6 +653,8 @@ public class Costanti {
     public static final String GUERRIERO_MOLTIPLICATORE_CORAGGIO_NOTA = "L'essenza del Coraggio Marziale. Addestrato a mantenere salda la linea di sangue, a seguire gli ordini e a guardare la morte in faccia.";
     public static final double GUERRIERO_MOLTIPLICATORE_VALORE = 1.5;
     public static final String GUERRIERO_MOLTIPLICATORE_VALORE_NOTA = "Il Re del Valore. L'archetipo del cavaliere o del protettore addestrato a intercettare i colpi e a fare da baluardo per il gruppo.";
+    public static final double GUERRIERO_MOLTIPLICATORE_CONTRATTAZIONE = 0.9;
+    public static final String GUERRIERO_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Paga quello che gli chiedono e si fida della stretta di mano: un bersaglio facile per ogni bottegaio.";
     public static final double GUERRIERO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
     public static final String GUERRIERO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "L'addestramento marziale gli insegna a eseguire fendenti circolari e a gestire più nemici ingaggiati intorno a lui.";
     public static final double GUERRIERO_MOLTIPLICATORE_STANCHEZZA = 1.0;
@@ -708,6 +730,8 @@ public class Costanti {
     public static final String LADRA_MOLTIPLICATORE_CORAGGIO_NOTA = "La Linea di Base. Pragmatico: non si fa paralizzare dal terrore, ma preferisce ritirarsi tatticamente se la situazione scotta.";
     public static final double LADRA_MOLTIPLICATORE_VALORE = 1.0;
     public static final String LADRA_MOLTIPLICATORE_VALORE_NOTA = "La Linea di Base. Individualista e pragmatico; aiuta il gruppo solo se questo rientra nei suoi piani di sopravvivenza o profitto.";
+    public static final double LADRA_MOLTIPLICATORE_CONTRATTAZIONE = 1.3;
+    public static final String LADRA_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "La Regina dell'Affare. Sa sempre dove il mercante nasconde il margine e come farglielo mollare senza che se ne accorga.";
     public static final double LADRA_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
     public static final String LADRA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Specialista del Bersaglio Singolo. Punta tutto sull'assassinio mirato di un'unica vittima dall'ombra.";
     public static final double LADRA_MOLTIPLICATORE_STANCHEZZA = 0.9;
@@ -783,6 +807,8 @@ public class Costanti {
     public static final String LADRO_MOLTIPLICATORE_CORAGGIO_NOTA = "La Linea di Base. Pragmatico: non si fa paralizzare dal terrore, ma preferisce ritirarsi tatticamente se la situazione scotta.";
     public static final double LADRO_MOLTIPLICATORE_VALORE = 1.0;
     public static final String LADRO_MOLTIPLICATORE_VALORE_NOTA = "La Linea di Base. Individualista e pragmatico; aiuta il gruppo solo se questo rientra nei suoi piani di sopravvivenza o profitto.";
+    public static final double LADRO_MOLTIPLICATORE_CONTRATTAZIONE = 1.3;
+    public static final String LADRO_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Il Re dell'Affare. Sa sempre dove il mercante nasconde il margine e come farglielo mollare senza che se ne accorga.";
     public static final double LADRO_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
     public static final String LADRO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Specialista del Bersaglio Singolo. Punta tutto sull'assassinio mirato di un'unica vittima dall'ombra.";
     public static final double LADRO_MOLTIPLICATORE_STANCHEZZA = 0.9;
@@ -862,6 +888,8 @@ public class Costanti {
     public static final String MAGA_MOLTIPLICATORE_CORAGGIO_NOTA = "Standard. Si affida alla logica e allo studio per analizzare freddamente il pericolo, controllando le emozioni con l'intelletto.";
     public static final double MAGA_MOLTIPLICATORE_VALORE = 1.0;
     public static final String MAGA_MOLTIPLICATORE_VALORE_NOTA = "Standard. Si affida alla logica e al dovere tattico per supportare la squadra, senza lo slancio marziale del guerriero.";
+    public static final double MAGA_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
+    public static final String MAGA_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "La Linea di Base. Conosce il valore delle cose, ma ha la testa tra le stelle e raramente discute sul prezzo.";
     public static final double MAGA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.3;
     public static final String MAGA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "I maestri dell'AoE. La loro intera dottrina si basa sul canalizzare incantesimi (es. Palle di fuoco o Catene di fulmini) su più nemici.";
     public static final double MAGA_MOLTIPLICATORE_STANCHEZZA = 1.4;
@@ -941,6 +969,8 @@ public class Costanti {
     public static final String MAGO_MOLTIPLICATORE_CORAGGIO_NOTA = "Standard. Si affida alla logica e allo studio per analizzare freddamente il pericolo, controllando le emozioni con l'intelletto.";
     public static final double MAGO_MOLTIPLICATORE_VALORE = 1.0;
     public static final String MAGO_MOLTIPLICATORE_VALORE_NOTA = "Standard. Si affida alla logica e al dovere tattico per supportare la squadra, senza lo slancio marziale del guerriero.";
+    public static final double MAGO_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
+    public static final String MAGO_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "La Linea di Base. Conosce il valore delle cose, ma ha la testa tra le stelle e raramente discute sul prezzo.";
     public static final double MAGO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.3;
     public static final String MAGO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "I maestri dell'AoE. La loro intera dottrina si basa sul canalizzare incantesimi (es. Palle di fuoco o Catene di fulmini) su più nemici.";
     public static final double MAGO_MOLTIPLICATORE_STANCHEZZA = 1.4;
@@ -1022,6 +1052,8 @@ public class Costanti {
     public static final String OMBRAFIAMMA_MOLTIPLICATORE_CORAGGIO_NOTA = "Essere sovrannaturale";
     public static final double OMBRAFIAMMA_MOLTIPLICATORE_VALORE = 1.5;
     public static final String OMBRAFIAMMA_MOLTIPLICATORE_VALORE_NOTA = "Essere sovrannaturale";
+    public static final double OMBRAFIAMMA_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
+    public static final String OMBRAFIAMMA_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Essere sovrannaturale";
     public static final double OMBRAFIAMMA_MOLTIPLICATORE_NUMERO_BERSAGLI = 3;
     public static final String OMBRAFIAMMA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Essere sovrannaturale";
     public static final double OMBRAFIAMMA_MOLTIPLICATORE_STANCHEZZA = 0.1;
@@ -1088,6 +1120,8 @@ public class Costanti {
     public static final String ARPIA_MOLTIPLICATORE_CORAGGIO_NOTA = "Creatura opportunista. Se si rende conto che lo scontro è svantaggioso o troppo pericoloso, cede facilmente al panico e si ritira.";
     public static final double ARPIA_MOLTIPLICATORE_VALORE = 0.5;
     public static final String ARPIA_MOLTIPLICATORE_VALORE_NOTA = "Creatura predatrice ed egoista; preferisce banchettare sulle carogne dei compagni piuttosto che rischiare la vita per salvarli.";
+    public static final double ARPIA_MOLTIPLICATORE_CONTRATTAZIONE = 0.7;
+    public static final String ARPIA_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Ruba ciò che luccica, non lo compra.";
     public static final double ARPIA_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.8;
     public static final String ARPIA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Focalizzata su attacchi rapidi in picchiata contro un singolo bersaglio isolato; non ha raggio d'azione ampio.";
     public static final double ARPIA_MOLTIPLICATORE_STANCHEZZA = 1.1;
@@ -1163,6 +1197,8 @@ public class Costanti {
     public static final String CENTAURO_MOLTIPLICATORE_CORAGGIO_NOTA = "Orgoglioso e fiero guerriero delle praterie. Possiede una solida fermezza marziale contro la paura e difende la sua terra.";
     public static final double CENTAURO_MOLTIPLICATORE_VALORE = 1.3;
     public static final String CENTAURO_MOLTIPLICATORE_VALORE_NOTA = "Fiero e leale difensore della tribù; possiede un profondo senso dell'onore e della salvaguardia del proprio branco.";
+    public static final double CENTAURO_MOLTIPLICATORE_CONTRATTAZIONE = 0.9;
+    public static final String CENTAURO_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Fiero e diretto, disprezza il mercanteggiare delle città degli uomini.";
     public static final double CENTAURO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.2;
     public static final String CENTAURO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "La stazza equina e la travolgente spazzata della lancia in carica gli permettono di colpire più nemici in linea.";
     public static final double CENTAURO_MOLTIPLICATORE_STANCHEZZA = 0.8;
@@ -1238,6 +1274,8 @@ public class Costanti {
     public static final String CHIMERA_MOLTIPLICATORE_CORAGGIO_NOTA = "Bilanciata: la ferocia istintiva delle tre teste le impedisce di fuggire subito, ma non possiede una vera disciplina mentale.";
     public static final double CHIMERA_MOLTIPLICATORE_VALORE = 0.6;
     public static final String CHIMERA_MOLTIPLICATORE_VALORE_NOTA = "Bestia magica selvaggia mossa esclusivamente dalla fame e dall'istinto di sopravvivenza individuale.";
+    public static final double CHIMERA_MOLTIPLICATORE_CONTRATTAZIONE = 0.5;
+    public static final String CHIMERA_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Creatura bestiale senza alcuna nozione di scambio.";
     public static final double CHIMERA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.4;
     public static final String CHIMERA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Avendo tre teste che mordono e attaccano in direzioni diverse, può ingaggiare più nemici nello stesso istante.";
     public static final double CHIMERA_MOLTIPLICATORE_STANCHEZZA = 0.9;
@@ -1313,6 +1351,8 @@ public class Costanti {
     public static final String CHIMERADRAGO_MOLTIPLICATORE_CORAGGIO_NOTA = "La componente draconica infusa nella sua forma raddoppiata le conferisce un netto aumento della forza di volontà.";
     public static final double CHIMERADRAGO_MOLTIPLICATORE_VALORE = 0.7;
     public static final String CHIMERADRAGO_MOLTIPLICATORE_VALORE_NOTA = "Nonostante la mole imponente, resta un abominio privo di codice morale, empatia o legami con altre creature.";
+    public static final double CHIMERADRAGO_MOLTIPLICATORE_CONTRATTAZIONE = 0.6;
+    public static final String CHIMERADRAGO_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Creatura bestiale che ammassa tesori ma non li scambia.";
     public static final double CHIMERADRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.6;
     public static final String CHIMERADRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Raddoppiata nelle dimensioni; i suoi artigli e la coda coprono una porzione di campo di battaglia immensa.";
     public static final double CHIMERADRAGO_MOLTIPLICATORE_STANCHEZZA = 1.1;
@@ -1388,6 +1428,8 @@ public class Costanti {
     public static final String EREMITA_MOLTIPLICATORE_CORAGGIO_NOTA = "Ha affrontato la solitudine e le privazioni della natura selvaggia; la sua mente è stabile, anche se priva dello slancio dell'eroe.";
     public static final double EREMITA_MOLTIPLICATORE_VALORE = 1.0;
     public static final String EREMITA_MOLTIPLICATORE_VALORE_NOTA = "Distaccato dalle dinamiche del mondo, ma conserva una profonda saggezza morale e compassione se costretto a proteggere qualcuno.";
+    public static final double EREMITA_MOLTIPLICATORE_CONTRATTAZIONE = 0.8;
+    public static final String EREMITA_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Vive di poco e ha perso l'abitudine agli scambi; le monete gli sembrano un'invenzione recente.";
     public static final double EREMITA_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
     public static final String EREMITA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Abituato a combattere da solo, fatica a dividere la sua attenzione su folle di nemici.";
     public static final double EREMITA_MOLTIPLICATORE_STANCHEZZA = 1.2;
@@ -1463,6 +1505,8 @@ public class Costanti {
     public static final String FANTASMA_MOLTIPLICATORE_CORAGGIO_NOTA = "Essendo già morto, ha superato la paura della fine biologica, risultando molto saldo contro i debuff mentali e psichici.";
     public static final double FANTASMA_MOLTIPLICATORE_VALORE = 0.4;
     public static final String FANTASMA_MOLTIPLICATORE_VALORE_NOTA = "Una presenza eterea sbiadita, troppo intrappolata nel proprio limbo emotivo per curarsi del destino dei vivi.";
+    public static final double FANTASMA_MOLTIPLICATORE_CONTRATTAZIONE = 0.6;
+    public static final String FANTASMA_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Legato al mondo dei vivi da ben altro che il denaro.";
     public static final double FANTASMA_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
     public static final String FANTASMA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "I suoi attacchi spettrali passano attraverso la materia, ma è limitato nella capacità di colpire più corpi solidi insieme.";
     public static final double FANTASMA_MOLTIPLICATORE_STANCHEZZA = 0.0;
@@ -1538,6 +1582,8 @@ public class Costanti {
     public static final String FOLLETTO_MOLTIPLICATORE_CORAGGIO_NOTA = "Estremamente volubile, capriccioso e pauroso. Se affrontato da nemici imponenti, preferisce scappare, scherzare o nascondersi.";
     public static final double FOLLETTO_MOLTIPLICATORE_VALORE = 0.5;
     public static final String FOLLETTO_MOLTIPLICATORE_VALORE_NOTA = "Dispettoso e capriccioso; la sua natura scherzosa lo spinge a fuggire o a nascondersi anziché sacrificarsi per il gruppo.";
+    public static final double FOLLETTO_MOLTIPLICATORE_CONTRATTAZIONE = 1.1;
+    public static final String FOLLETTO_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Imbroglione nato: confonde i conti, scambia le monete e sparisce prima che il mercante se ne accorga.";
     public static final double FOLLETTO_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.6;
     public static final String FOLLETTO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Troppo piccolo. I suoi attacchi con micro-armi sono chirurgici ma strettamente limitati a un nemico alla volta.";
     public static final double FOLLETTO_MOLTIPLICATORE_STANCHEZZA = 1.3;
@@ -1615,6 +1661,8 @@ public class Costanti {
     public static final String GARGOYLE_MOLTIPLICATORE_CORAGGIO_NOTA = "Sentinella di pietra incrollabile. Esegue il suo compito di guardia eterna senza provare emozioni limitanti come il terrore.";
     public static final double GARGOYLE_MOLTIPLICATORE_VALORE = 1.2;
     public static final String GARGOYLE_MOLTIPLICATORE_VALORE_NOTA = "Sentinella protettiva nata; il suo intero scopo magico e biologico è fare da scudo e difendere il luogo o le persone assegnate.";
+    public static final double GARGOYLE_MOLTIPLICATORE_CONTRATTAZIONE = 0.6;
+    public static final String GARGOYLE_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Statua vivente: immobile e inflessibile, anche sul prezzo.";
     public static final double GARGOYLE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
     public static final String GARGOYLE_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Ottimo nel controllo della folla ravvicinata grazie alle ampie ali di pietra utilizzabili come fruste.";
     public static final double GARGOYLE_MOLTIPLICATORE_STANCHEZZA = 0.5;
@@ -1690,6 +1738,8 @@ public class Costanti {
     public static final String GIGANTE_MOLTIPLICATORE_CORAGGIO_NOTA = "La sua stessa mole imponente e la consapevolezza della sua forza lo fanno sentire al sicuro dalla maggior parte delle minacce.";
     public static final double GIGANTE_MOLTIPLICATORE_VALORE = 1.1;
     public static final String GIGANTE_MOLTIPLICATORE_VALORE_NOTA = "Sebbene rozzo, possiede una dignità tribale molto solida e difende accanitamente i membri del suo clan.";
+    public static final double GIGANTE_MOLTIPLICATORE_CONTRATTAZIONE = 0.7;
+    public static final String GIGANTE_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Troppo grosso per le botteghe e troppo semplice per le trattative.";
     public static final double GIGANTE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.6;
     public static final String GIGANTE_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Una clava lunga 3 metri brandita da lui attraversa il campo orizzontalmente, travolgendo qualunque soldato si trovi sulla traiettoria.";
     public static final double GIGANTE_MOLTIPLICATORE_STANCHEZZA = 1.3;
@@ -1765,6 +1815,8 @@ public class Costanti {
     public static final String GOBLIN_MOLTIPLICATORE_CORAGGIO_NOTA = "Il Re della Codardia. Combatte solo se in netta superiorità numerica o dall'ombra. Se il leader cade, fugge all'istante.";
     public static final double GOBLIN_MOLTIPLICATORE_VALORE = 0.3;
     public static final String GOBLIN_MOLTIPLICATORE_VALORE_NOTA = "L'antitesi del Valore. Vigliacco e traditore; se un compagno è in difficoltà, non esita a usarlo come scudo per salvarsi.";
+    public static final double GOBLIN_MOLTIPLICATORE_CONTRATTAZIONE = 1.2;
+    public static final String GOBLIN_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Avido e insistente fino allo sfinimento: tira sul prezzo di qualunque cosa, anche quando non vuole comprarla.";
     public static final double GOBLIN_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.8;
     public static final String GOBLIN_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Armi corte e fisicità ridotta. Tende a concentrarsi in gruppo contro un solo bersaglio piuttosto che fare il contrario.";
     public static final double GOBLIN_MOLTIPLICATORE_STANCHEZZA = 1.1;
@@ -1841,6 +1893,8 @@ public class Costanti {
     public static final String HOBGOBLIN_MOLTIPLICATORE_CORAGGIO_NOTA = "Militarmente disciplinato come il guerriero umano; il senso del dovere e della falange annulla completamente la viltà goblin.";
     public static final double HOBGOBLIN_MOLTIPLICATORE_VALORE = 1.3;
     public static final String HOBGOBLIN_MOLTIPLICATORE_VALORE_NOTA = "Possiede un rigido codice d'onore militare e un senso del dovere verso la legione che lo spinge a proteggere la falange.";
+    public static final double HOBGOBLIN_MOLTIPLICATORE_CONTRATTAZIONE = 1.1;
+    public static final String HOBGOBLIN_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Pratico dei bottini di guerra e delle loro spartizioni, sa quanto vale ciò che ha in mano.";
     public static final double HOBGOBLIN_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
     public static final String HOBGOBLIN_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Addestrato alla falange; sa coordinare i colpi per coprire lo spazio davanti alla sua postazione.";
     public static final double HOBGOBLIN_MOLTIPLICATORE_STANCHEZZA = 1.0;
@@ -1916,6 +1970,8 @@ public class Costanti {
     public static final String MINOTAURO_MOLTIPLICATORE_CORAGGIO_NOTA = "Più che coraggioso è ostinato e accecato dalla bramosia di sangue, il che lo spinge ad avanzare ignorando i rischi per la vita.";
     public static final double MINOTAURO_MOLTIPLICATORE_VALORE = 0.6;
     public static final String MINOTAURO_MOLTIPLICATORE_VALORE_NOTA = "Accecato dalla bramosia di sangue; in battaglia vede solo bersagli da distruggere, ignorando lo stato dei suoi alleati.";
+    public static final double MINOTAURO_MOLTIPLICATORE_CONTRATTAZIONE = 0.6;
+    public static final String MINOTAURO_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Bestia del labirinto: non conosce il valore del denaro.";
     public static final double MINOTAURO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.3;
     public static final String MINOTAURO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Brandisce enormi asce bipenni con spazzate selvagge e brutali che colpiscono tutto ciò che lo circonda.";
     public static final double MINOTAURO_MOLTIPLICATORE_STANCHEZZA = 1.2;
@@ -1992,6 +2048,8 @@ public class Costanti {
     public static final String OMBRANERA_MOLTIPLICATORE_CORAGGIO_NOTA = "Il suo temperamento irascibile, maligno e vendicativo si traduce in una determinazione feroce a distruggere il bersaglio senza esitazioni.";
     public static final double OMBRANERA_MOLTIPLICATORE_VALORE = 0.3;
     public static final String OMBRANERA_MOLTIPLICATORE_VALORE_NOTA = "Non-morto irascibile guidato da un rancore maligno e da un puro egoismo distruttivo.";
+    public static final double OMBRANERA_MOLTIPLICATORE_CONTRATTAZIONE = 0.7;
+    public static final String OMBRANERA_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Presenza oscura che mette in fuga i mercanti prima ancora di trattare.";
     public static final double OMBRANERA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
     public static final String OMBRANERA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Può allungare i suoi lembi d'ombra per graffiare o ghermire più nemici vicini nella sua foga irascibile.";
     public static final double OMBRANERA_MOLTIPLICATORE_STANCHEZZA = 0.0;
@@ -2067,6 +2125,8 @@ public class Costanti {
     public static final String SCHELETRO_MOLTIPLICATORE_CORAGGIO_NOTA = "Immunità Emotiva. Un automa privo di cervello, ormoni o paura. Avanza verso il pericolo eseguendo gli ordini fino alla distruzione.";
     public static final double SCHELETRO_MOLTIPLICATORE_VALORE = 0.0;
     public static final String SCHELETRO_MOLTIPLICATORE_VALORE_NOTA = "Privo di Scelta. Un automa senza mente o anima. Non può scegliere il valore o il sacrificio; esegue solo ordini meccanici.";
+    public static final double SCHELETRO_MOLTIPLICATORE_CONTRATTAZIONE = 0.5;
+    public static final String SCHELETRO_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Non morto senza mente: il denaro non gli serve più.";
     public static final double SCHELETRO_MOLTIPLICATORE_NUMERO_BERSAGLI = 0.9;
     public static final String SCHELETRO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Esegue attacchi rigidi e lineari; manca dell'elasticità mentale per alternare i colpi su bersagli multipli fluidamente.";
     public static final double SCHELETRO_MOLTIPLICATORE_STANCHEZZA = 0.0;
@@ -2142,6 +2202,8 @@ public class Costanti {
     public static final String SPETTRO_MOLTIPLICATORE_CORAGGIO_NOTA = "Mosso da un rancore eterno, freddo e implacabile che annulla qualsiasi forma di esitazione o timore biologico.";
     public static final double SPETTRO_MOLTIPLICATORE_VALORE = 0.2;
     public static final String SPETTRO_MOLTIPLICATORE_VALORE_NOTA = "Una manifestazione di puro odio ultraterreno focalizzata solo sul tormentare e consumare i vivi.";
+    public static final double SPETTRO_MOLTIPLICATORE_CONTRATTAZIONE = 0.6;
+    public static final String SPETTRO_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Legato al mondo dei vivi da ben altro che il denaro.";
     public static final double SPETTRO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.1;
     public static final String SPETTRO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Il suo passaggio lascia una scia gelida che può infliggere danni a chiunque si trovi sul suo percorso.";
     public static final double SPETTRO_MOLTIPLICATORE_STANCHEZZA = 0.0;
@@ -2217,6 +2279,8 @@ public class Costanti {
     public static final String SPIRITO_MOLTIPLICATORE_CORAGGIO_NOTA = "Entità astratta e refrattaria ai condizionamenti psicologici e biologici standard legati alla sopravvivenza dei vivi.";
     public static final double SPIRITO_MOLTIPLICATORE_VALORE = 0.9;
     public static final String SPIRITO_MOLTIPLICATORE_VALORE_NOTA = "Entità astratta che può agire da custode o protettore a seconda della sua natura originaria o del patto stipulato; si posiziona appena sotto la media umana perché la sua ascesi lo rende leggermente distaccato dalle necessità puramente fisiche del party.";
+    public static final double SPIRITO_MOLTIPLICATORE_CONTRATTAZIONE = 0.6;
+    public static final String SPIRITO_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Essere etereo per cui le monete non hanno alcun peso.";
     public static final double SPIRITO_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.0;
     public static final String SPIRITO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Può manifestare impulsi energetici che si irradiano in cerchio attorno alla sua forma fluttuante.";
     public static final double SPIRITO_MOLTIPLICATORE_STANCHEZZA = 0.0;
@@ -2292,6 +2356,8 @@ public class Costanti {
     public static final String TITANO_MOLTIPLICATORE_CORAGGIO_NOTA = "L'Incrollabile. Una forza mitologica primordiale. Il concetto stesso di paura, panico o esitazione gli è totalmente estraneo.";
     public static final double TITANO_MOLTIPLICATORE_VALORE = 1.4;
     public static final String TITANO_MOLTIPLICATORE_VALORE_NOTA = "Figura mitologica monumentale. Custode dell'ordine primordiale, affronta minacce colossali con dignità epica.";
+    public static final double TITANO_MOLTIPLICATORE_CONTRATTAZIONE = 0.8;
+    public static final String TITANO_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Non si abbassa a discutere di monete: prende o lascia.";
     public static final double TITANO_MOLTIPLICATORE_NUMERO_BERSAGLI = 2.0;
     public static final String TITANO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Il Cataclisma. Un suo pugno o calpestamento modifica la topografia del terreno. Non colpisce individui, colpisce reggimenti.";
     public static final double TITANO_MOLTIPLICATORE_STANCHEZZA = 0.5;
@@ -2367,6 +2433,8 @@ public class Costanti {
     public static final String TROLL_MOLTIPLICATORE_CORAGGIO_NOTA = "Abbastanza ottuso da non comprendere appieno i pericoli complessi (come le maledizioni), ma teme visibilmente il fuoco.";
     public static final double TROLL_MOLTIPLICATORE_VALORE = 0.7;
     public static final String TROLL_MOLTIPLICATORE_VALORE_NOTA = "Intelletto primitivo e selvaggio; protegge i suoi simili solo se spinto da un basilare istinto di branco.";
+    public static final double TROLL_MOLTIPLICATORE_CONTRATTAZIONE = 0.6;
+    public static final String TROLL_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Ottuso e collerico, risolve le trattative a randellate.";
     public static final double TROLL_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.2;
     public static final String TROLL_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Le braccia lunghe e scimmiesche gli permettono ampie zampate capaci di colpire due o tre avversari vicini.";
     public static final double TROLL_MOLTIPLICATORE_STANCHEZZA = 0.8;
@@ -2443,6 +2511,8 @@ public class Costanti {
     public static final String VIVERNA_MOLTIPLICATORE_CORAGGIO_NOTA = "Predatore fiero ma guidato dal puro istinto animale; se ferito gravemente, l'istinto di conservazione vince sul coraggio e vola via.";
     public static final double VIVERNA_MOLTIPLICATORE_VALORE = 0.8;
     public static final String VIVERNA_MOLTIPLICATORE_VALORE_NOTA = "Bestia territoriale; difende ferocemente solo la sua prole o il suo nido, non i membri di un gruppo eterogeneo.";
+    public static final double VIVERNA_MOLTIPLICATORE_CONTRATTAZIONE = 0.5;
+    public static final String VIVERNA_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Predatore bestiale senza alcuna nozione di scambio.";
     public static final double VIVERNA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.2;
     public static final String VIVERNA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Sfrutta il raggio d'azione del lungo pungiglione caudale e le ali per tenere a bada più avversari.";
     public static final double VIVERNA_MOLTIPLICATORE_STANCHEZZA = 1.0;
@@ -2520,6 +2590,8 @@ public class Costanti {
     public static final String IDRA_MOLTIPLICATORE_CORAGGIO_NOTA = "La sua natura primordiale e la mostruosa capacità rigenerativa la rendono estremamente ostinata: continua ad avanzare e a combattere finché ha almeno una testa attiva, ignorando gran parte dei debuff mentali da paura.";
     public static final double IDRA_MOLTIPLICATORE_VALORE = 0.5;
     public static final String IDRA_MOLTIPLICATORE_VALORE_NOTA = "Creatura primordiale mossa esclusivamente da un appetito caotico e selvaggio; non concepisce minimamente il concetto di alleanza, branco o sacrificio per gli altri.";
+    public static final double IDRA_MOLTIPLICATORE_CONTRATTAZIONE = 0.5;
+    public static final String IDRA_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Mostro primordiale senza alcuna nozione di scambio.";
     public static final double IDRA_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.9;
     public static final String IDRA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Il Massimo Potenziale Fisico. Con cinque o più teste indipendenti che scattano, è una macchina da multi-target naturale.";
     public static final double IDRA_MOLTIPLICATORE_STANCHEZZA = 0.9;
@@ -2598,6 +2670,8 @@ public class Costanti {
     public static final String LICH_MOLTIPLICATORE_CORAGGIO_NOTA = "Volontà Immortale. Ha sconfitto la morte stessa tramite la necromanzia; la sua mente fredda è una fortezza inespugnabile.";
     public static final double LICH_MOLTIPLICATORE_VALORE = 0.2;
     public static final String LICH_MOLTIPLICATORE_VALORE_NOTA = "Ha sacrificato ogni briciolo di umanità ed empatia per ottenere l'immortalità; cinico e spietato al massimo grado.";
+    public static final double LICH_MOLTIPLICATORE_CONTRATTAZIONE = 0.8;
+    public static final String LICH_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Ha avuto secoli per imparare il valore delle cose, ma nessun mercante vuole trattare con lui.";
     public static final double LICH_MOLTIPLICATORE_NUMERO_BERSAGLI = 5.0;
     public static final String LICH_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Unisce un'Intelligenza immensa a magie ad area necrotiche capaci di ghermire le anime di interi plotoni.";
     public static final double LICH_MOLTIPLICATORE_STANCHEZZA = 0.0;
@@ -2673,6 +2747,8 @@ public class Costanti {
     public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_CORAGGIO_NOTA = "La furia selvaggia combinata alla mole colossale lo rendono del tutto noncurante e indifferente a ciò che gli si para davanti.";
     public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_VALORE = 0.5;
     public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_VALORE_NOTA = "Una furia devastante del tutto incapace di discernere il concetto di protezione o coordinazione difensiva.";
+    public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_CONTRATTAZIONE = 0.6;
+    public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Bestia del labirinto: non conosce il valore del denaro.";
     public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_NUMERO_BERSAGLI = 1.6;
     public static final String MINOTAUROGIGANTE_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Unisce le spazzate d'ascia del minotauro alla portata geometrica del gigante.";
     public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_STANCHEZZA = 1.4;
@@ -2751,6 +2827,8 @@ public class Costanti {
     public static final String STREGA_MOLTIPLICATORE_CORAGGIO_NOTA = "Abituata a trattare con forze oscure, patti occulti e spiriti, possiede una mente temprata contro i terrori mistici.";
     public static final double STREGA_MOLTIPLICATORE_VALORE = 0.8;
     public static final String STREGA_MOLTIPLICATORE_VALORE_NOTA = "Opportunista e legata a patti oscuri; raramente rischia la propria pelle per proteggere un alleato in fin di vita.";
+    public static final double STREGA_MOLTIPLICATORE_CONTRATTAZIONE = 1.0;
+    public static final String STREGA_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "La Linea di Base. Abituata a vendere intrugli e maledizioni, sa tenere il punto su un prezzo.";
     public static final double STREGA_MOLTIPLICATORE_NUMERO_BERSAGLI = 5.0;
     public static final String STREGA_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "I Maestri dell'AoE. La loro intera dottrina si basa sul canalizzare incantesimi (es. Palle di fuoco o Catene di fulmini) su più nemici.";
     public static final double STREGA_MOLTIPLICATORE_STANCHEZZA = 1.4;
@@ -2831,6 +2909,8 @@ public class Costanti {
     public static final String DRAGO_MOLTIPLICATORE_CORAGGIO_NOTA = "Orgoglio Millenario. Consapevole della propria superiorità assoluta sul mondo. È praticamente immune alla paura dei mortali.";
     public static final double DRAGO_MOLTIPLICATORE_VALORE = 1.1;
     public static final String DRAGO_MOLTIPLICATORE_VALORE_NOTA = "Superbo e solitario, ma possiede un'immensa dignità e un orgoglio antico che gli impediscono di fuggire vigliaccamente.";
+    public static final double DRAGO_MOLTIPLICATORE_CONTRATTAZIONE = 0.8;
+    public static final String DRAGO_MOLTIPLICATORE_CONTRATTAZIONE_NOTA = "Accumula tesori e ne conosce il valore fino all'ultima moneta, ma non cede nulla del suo tesoro.";
     public static final double DRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI = 5.0;
     public static final String DRAGO_MOLTIPLICATORE_NUMERO_BERSAGLI_NOTA = "Il Signore delle Spazzate. Oltre all'intelligenza nel gestire il campo, un singolo colpo di coda o artiglio falcia interi gruppi.";
     public static final double DRAGO_MOLTIPLICATORE_STANCHEZZA = 0.7;

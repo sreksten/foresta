@@ -146,6 +146,34 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		addMonete(-quantita);
 	}
 
+	/**
+	 * Nelle botteghe il gruppo manda avanti chi sa trattare meglio: la CONTRATTAZIONE più alta tra i personaggi vivi.
+	 */
+	public final int getContrattazione() {
+		return getPersonaggiVivi().stream().mapToInt(Personaggio::getContrattazione).max().orElse(0);
+	}
+
+	/**
+	 * Quanto paga il gruppo un oggetto di quel costo (vedi RegoleContrattazione).
+	 */
+	public final int prezzoAcquisto(int costo) {
+		return RegoleContrattazione.prezzoAcquisto(costo, getContrattazione());
+	}
+
+	/**
+	 * Quanto ricava il gruppo vendendo un oggetto di quel costo (vedi RegoleContrattazione).
+	 */
+	public final int prezzoVendita(int costo) {
+		return RegoleContrattazione.prezzoVendita(costo, getContrattazione());
+	}
+
+	/**
+	 * Il costo della fusione di quel che c'è sul banco, scontato secondo la contrattazione del gruppo.
+	 */
+	public final int costoFusione(Collection<Artefatto> banco) {
+		return RegoleIncantatura.costo(banco, getContrattazione());
+	}
+
 	public final int getPreziosi() {
 		return md.getPreziosi();
 	}
@@ -582,10 +610,10 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 
 	private void suEventoRichiestaAcquistoArtefatto(ComandoAcquistoArtefatto comandoAcquistoArtefatto) {
 		Artefatto artefatto = (Artefatto) comandoAcquistoArtefatto.getOggettoDaSpostare();
-		int costoOggetto = comandoAcquistoArtefatto.getOggettoDaSpostare().getCostoAcquisto();
+		int costoOggetto = prezzoAcquisto(artefatto.getCostoAcquisto());
 		if (getMonete() >= costoOggetto) {
 			addArtefatto(artefatto);
-			subMonete(artefatto.getCostoAcquisto());
+			subMonete(costoOggetto);
 			comandoAcquistoArtefatto.getParteRemota().removeArtefatto(artefatto);
 			BusEventi.pubblica(new NotificaApprovazioneAcquistoArtefatto(comandoAcquistoArtefatto));
 		} else {
@@ -610,8 +638,9 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 			BusEventi.pubblica(new NotificaRifiutoVenditaArtefatto(eventoRichiestaVendita));
 			return false;
 		}
+		int ricavo = prezzoVendita(artefatto.getCostoAcquisto());
 		removeArtefatto(artefatto);
-		addMonete(artefatto.getCostoAcquisto());
+		addMonete(ricavo);
 		eventoRichiestaVendita.getParteRemota().addArtefatto(artefatto);
 		BusEventi.pubblica(new NotificaApprovazioneVenditaArtefatto(eventoRichiestaVendita));
 		return true;
@@ -629,12 +658,12 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	 * @return il motivo del rifiuto, oppure vuoto se la fusione è riuscita
 	 */
 	public Optional<MotivoRifiutoIncantatura> incanta(BancoDiLavoro banco, String nomeProprio) {
-		Optional<MotivoRifiutoIncantatura> motivo = RegoleIncantatura.verifica(banco.getInventario(), getMonete());
+		Optional<MotivoRifiutoIncantatura> motivo = RegoleIncantatura.verifica(banco.getInventario(), getMonete(), getContrattazione());
 		if (motivo.isPresent()) {
 			BusEventi.pubblica(new NotificaRifiutoIncantatura(motivo.get()));
 			return motivo;
 		}
-		int costo = RegoleIncantatura.costo(banco.getInventario());
+		int costo = costoFusione(banco.getInventario());
 		Artefatto incantato = RegoleIncantatura.fondi(banco, nomeProprio);
 		subMonete(costo);
 		addArtefatto(incantato);
@@ -643,7 +672,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	}
 
 	private void suEventoRichiestaAcquistoConsumabile(ComandoAcquistoConsumabile comandoAcquistoConsumabile) {
-		int costoOggetto = comandoAcquistoConsumabile.getPrezzo();
+		int costoOggetto = prezzoAcquisto(comandoAcquistoConsumabile.getPrezzo());
 		if (getMonete() >= costoOggetto) {
 			switch (comandoAcquistoConsumabile.getTipoConsumabile()) {
 				case POZIONE_SALUTE:
@@ -683,7 +712,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 				default:
 					throw new IllegalArgumentException("Tipo consumabile non valido");
 			}
-			subMonete(comandoAcquistoConsumabile.getPrezzo());
+			subMonete(costoOggetto);
 			BusEventi.pubblica(new NotificaApprovazioneAcquistoConsumabile(comandoAcquistoConsumabile));
 		} else {
 			BusEventi.pubblica(new NotificaRifiutoAcquistoConsumabile(comandoAcquistoConsumabile));

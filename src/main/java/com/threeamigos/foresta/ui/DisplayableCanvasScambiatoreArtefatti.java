@@ -7,6 +7,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArte
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto;
 import com.threeamigos.foresta.motore.AutomaScambiatoreArtefatti;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
 import com.threeamigos.foresta.oggetti.Artefatto;
@@ -16,6 +17,7 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.function.IntUnaryOperator;
 
 /**
  *
@@ -55,7 +57,8 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         }
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Grazie per il vostro acquisto!", getCoordinateFumetto()));
 
-        int costo = notificaApprovazioneAcquistoArtefatto.getEventoRichiestaSpostamentoArtefatto().getOggettoDaSpostare().getCostoAcquisto();
+        int costo = GruppoGiocatore.getIstanza().prezzoAcquisto(
+                notificaApprovazioneAcquistoArtefatto.getEventoRichiestaSpostamentoArtefatto().getOggettoDaSpostare().getCostoAcquisto());
         aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteMoneta, -costo, font,
                 xMassimaZonaCentrale, yRigaMonete(), "Monete spese"));
     }
@@ -66,7 +69,8 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         }
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Grazie di aver fatto affari con noi!", getCoordinateFumetto()));
 
-        int costo = notificaApprovazioneVenditaArtefatto.getEventoRichiestaSpostamentoArtefatto().getOggettoDaSpostare().getCostoAcquisto();
+        int costo = GruppoGiocatore.getIstanza().prezzoVendita(
+                notificaApprovazioneVenditaArtefatto.getEventoRichiestaSpostamentoArtefatto().getOggettoDaSpostare().getCostoAcquisto());
         aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteMoneta, costo, font,
                 xMassimaZonaCentrale, yRigaMonete(), "Monete acquisite"));
     }
@@ -92,12 +96,13 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
 
         disegnaColonnaPersonaggio(graphics);
 
-        // Inventario personaggio
+        // Inventario personaggio: il prezzo è quanto si ricava vendendo
+        GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
         offsetYZonaSinistra = disegnaElenco(graphics, new ArrayList<>(automa.getParteAttiva().getInventario()), xMinimaZonaSinistra,
-                offsetYZonaSinistra, automa.mostraCostoSuParteAttiva());
-        // Inventario gruppo
+                offsetYZonaSinistra, automa.mostraCostoSuParteAttiva() ? gruppo::prezzoVendita : null);
+        // Inventario gruppo: il prezzo è quanto si paga comprando
         offsetYZonaDestra = disegnaElenco(graphics, automa.getParteRemota().getInventario(), xMinimaZonaDestra, offsetYZonaDestra,
-                automa.mostraCostoSuParteRemota());
+                automa.mostraCostoSuParteRemota() ? gruppo::prezzoAcquisto : null);
 
         disegnaIntestazioniInventario(graphics);
 
@@ -105,10 +110,10 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
     }
 
     private int disegnaElenco(Graphics2D graphics, Collection<Artefatto> artefatti, int x, int offset,
-                              boolean mostraCosto) {
+                              IntUnaryOperator prezzo) {
 
         Artefatto evidenziato = trovaArtefatto(artefatti, x, offset, mouseX, mouseY);
-        ComponenteScorrevole<Artefatto> componenteScorrevole = costruisciComponenteScorrevoleArtefatti(artefatti, evidenziato, mostraCosto);
+        ComponenteScorrevole<Artefatto> componenteScorrevole = costruisciComponenteScorrevoleArtefatti(artefatti, evidenziato, prezzo);
 
         int nuovoOffset = componenteScorrevole.limitaOffset(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, offset);
         Image image = componenteScorrevole.produci(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, nuovoOffset);
@@ -120,9 +125,10 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
     /**
      * L'albero viene ricostruito a ogni disegno e a ogni click. L'artefatto passato in
      * evidenziato (se non null) viene disegnato in bianco invece che in grigio chiaro.
+     * Se prezzo non è null, accanto a ogni artefatto c'è il prezzo che ne ricava dal costo.
      */
     private ComponenteScorrevole<Artefatto> costruisciComponenteScorrevoleArtefatti(Collection<Artefatto> artefatti,
-                                                                                    Artefatto evidenziato, boolean mostraCosto) {
+                                                                                    Artefatto evidenziato, IntUnaryOperator prezzo) {
 
         ComponenteScorrevole<Artefatto> componenteScorrevole = new ComponenteScorrevole<>(
                 LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, 10, 2);
@@ -161,7 +167,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
             nome = nome.substring(0, 1).toUpperCase() + nome.substring(1);
             ComponenteScorrevole<Artefatto>.Nodo nodo = componenteScorrevole.creaNodo(
                     nome, font, colore,
-                    mostraCosto ? String.valueOf(artefatto.getCostoAcquisto()) : null, fontSmall, DoomdarkColorModel.Color.YELLOW,
+                    prezzo != null ? String.valueOf(prezzo.applyAsInt(artefatto.getCostoAcquisto())) : null, fontSmall, DoomdarkColorModel.Color.YELLOW,
                     artefatto.getModelloDati().getDescrizioneBreve(), fontSmall, colore,
                     null, artefatto);
             nodo.setFigliVisibili(artefatto.isFigliVisibili());
@@ -250,7 +256,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
                 || yInterno < 0 || yInterno >= ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO) {
             return null;
         }
-        return costruisciComponenteScorrevoleArtefatti(artefatti, null, false).riferimentoTitoloAllaQuota(yInterno + offset);
+        return costruisciComponenteScorrevoleArtefatti(artefatti, null, null).riferimentoTitoloAllaQuota(yInterno + offset);
     }
 
     protected abstract boolean processaClickPersonaggio(int x, int y, Tasto tasto);

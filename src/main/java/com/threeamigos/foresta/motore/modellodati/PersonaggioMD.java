@@ -466,6 +466,22 @@ public class PersonaggioMD implements Serializzabile {
 		return getMassimo(TipoAttributo.SOGGEZIONE);
 	}
 
+	public void setContrattazione(double contrattazione) {
+		set(TipoAttributo.CONTRATTAZIONE, contrattazione);
+	}
+
+	public int getContrattazione() {
+		return (int)get(TipoAttributo.CONTRATTAZIONE);
+	}
+
+	public void setContrattazioneMassima(double contrattazioneMassima) {
+		setMassimo(TipoAttributo.CONTRATTAZIONE, contrattazioneMassima);
+	}
+
+	public Optional<Double> getContrattazioneMassima() {
+		return getMassimo(TipoAttributo.CONTRATTAZIONE);
+	}
+
 	public void setFuria(double furia) {
 		set(TipoAttributo.FURIA, furia);
 	}

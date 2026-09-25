@@ -194,6 +194,14 @@ public enum TipoAttributo {
     VALORE(SupertipoAttributo.SECONDARIO, "Valore", "Spirito eroico e attitudini al sacrificio per il gruppo"),
 
     /**
+     * Abilità nel mercanteggiare: parlantina, faccia tosta e il fiuto per l'affare giusto al momento giusto.
+     * <p><b>Nelle botteghe:</b> Riduce il prezzo degli acquisti (artefatti, consumabili, fusioni dall'incantatore)
+     * e alza il ricavo delle vendite, entro i limiti di {@link com.threeamigos.foresta.motore.RegoleContrattazione}.
+     * Il gruppo tratta con la Contrattazione più alta tra i suoi personaggi vivi.</p>
+     */
+    CONTRATTAZIONE(SupertipoAttributo.SECONDARIO, "Contrattazione", "Abilità nello strappare prezzi migliori ai mercanti"),
+
+    /**
      * Livello di esperienza raggiunto dal personaggio.
      */
     LIVELLO(SupertipoAttributo.RISORSA_DINAMICA, "Livello", "Livello di esperienza raggiunto"),

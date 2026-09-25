@@ -433,6 +433,12 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
     int getValore();
 
 	/**
+	 * La contrattazione di un personaggio, somma della contrattazione base e dei modificatori di contrattazione
+	 * degli artefatti.
+	 */
+    int getContrattazione();
+
+	/**
 	 * La stanchezza di un personaggio, somma della stanchezza base e dei modificatori di stanchezza degli artefatti.
 	 */
     int getStanchezza();
@@ -545,6 +551,10 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
 	double getMoltiplicatoreValore();
 
 	String getNoteMoltiplicatoreValore();
+
+	double getMoltiplicatoreContrattazione();
+
+	String getNoteMoltiplicatoreContrattazione();
 
 	double getMoltiplicatoreNumeroBersagli();
 

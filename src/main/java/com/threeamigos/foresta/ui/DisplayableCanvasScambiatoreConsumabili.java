@@ -33,7 +33,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
 
         ComandoAcquistoConsumabile comando = notificaApprovazioneAcquistoConsumabile.getEventoRichiestaAcquistoConsumabile();
 
-        aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteMoneta, -comando.getPrezzo(), font,
+        aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteMoneta, -GruppoGiocatore.getIstanza().prezzoAcquisto(comando.getPrezzo()), font,
                 xMassimaZonaCentrale, yRigaMonete(), "Monete spese"));
 
         if (comando.getTipoConsumabile() == TipoConsumabile.INCANTESIMO) {
@@ -198,7 +198,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
             String nome = consumabile.nome;
             ComponenteScorrevole<Consumabile>.Nodo nodo = componenteScorrevole.creaNodo(
                     nome, font, colore,
-                    String.valueOf(mostraCosto ? consumabile.costo : consumabile.quantita), fontSmall,
+                    String.valueOf(mostraCosto ? GruppoGiocatore.getIstanza().prezzoAcquisto(consumabile.costo) : consumabile.quantita), fontSmall,
                     mostraCosto ? DoomdarkColorModel.Color.YELLOW : DoomdarkColorModel.Color.LIGHT_GRAY,
                     consumabile.descrizione, fontSmall, colore,
                     consumabile.icona, consumabile);
