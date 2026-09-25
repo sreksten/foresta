@@ -137,7 +137,7 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
 - **Anelli non magici.** Restano come oggi, senza effetto. Più avanti si potranno trattare come gemme, da vendere.
 - **Elmo e armatura.** Diventano loot a sé, come spada e scudo. Per ora però non si generano, perché mancano le immagini: il codice c'è ma resta commentato.
 - **Morti.** Sempre esclusi, come già oggi.
-- **Scelta.** Si propongono i candidati più **`GRUPPO`** (comando e icona esistono già, usati dall'alchimista).
+- **Scelta.** Si propongono i candidati più **`GRUPPO`** (comando e icona esistevano già).
   - **Un solo candidato:** l'oggetto va direttamente a lui, senza domanda.
   - **Nessun candidato:** l'oggetto va direttamente nell'inventario del gruppo, con un messaggio. È anche il caso di chi avrebbe già occupato lo slot (spada, scudo, elmo, armatura): niente sostituzioni automatiche, per non dargli robaccia.
 - **Troppo carico.** Se il personaggio scelto è troppo carico, l'oggetto va nel gruppo con il messaggio già in uso (fatto).

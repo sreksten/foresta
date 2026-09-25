@@ -27,10 +27,6 @@ public enum ClassiLocazione {
 	CITTA_RUUNA(CittaRuuna::new, TipoLocazione.CITTA),
 	CITTA_FLEENA(CittaFleena::new, TipoLocazione.CITTA),
 	/*
-	 * L'Alchimista si trova unicamente in città
-	 */
-	ALCHIMISTA(Alchimista::new, TipoLocazione.STANDARD),
-	/*
 	 * Castelli
 	 */
 	CASTELLO_IDRA(CastelloIdra::new, TipoLocazione.CASTELLO),

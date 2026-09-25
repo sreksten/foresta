@@ -35,10 +35,8 @@ public abstract class Citta extends LocazioneUnica {
 	}
 
 	private StatoInCitta stato;
-	// La locanda e la bottega dell'alchimista stanno sulla casella della città:
-	// ne condividono il modello dati, così quel che vi segnano resta lì.
+	// La locanda sta sulla casella della città: ne condivide il modello dati, così quel che vi segna resta lì.
 	private Locanda locanda;
-	private Alchimista alchimista;
 	// La bottega dell'incantatore: il banco di lavoro vive solo finché si è dentro
 	private AutomaIncantatore incantatore;
 
@@ -52,21 +50,12 @@ public abstract class Citta extends LocazioneUnica {
 		if (locanda != null) {
 			locanda.setModelloDati(modelloDati);
 		}
-		if (alchimista != null) {
-			alchimista.setModelloDati(modelloDati);
-		}
 	}
 
 	private Locanda nuovaLocanda() {
 		locanda = new Locanda();
 		locanda.setModelloDati(getModelloDati());
 		return locanda;
-	}
-
-	private Alchimista nuovoAlchimista() {
-		alchimista = new Alchimista();
-		alchimista.setModelloDati(getModelloDati());
-		return alchimista;
 	}
 
 	public abstract String getNome();
@@ -83,7 +72,6 @@ public abstract class Citta extends LocazioneUnica {
 	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
 		nuovaLocanda().crea(g, gng);
-		nuovoAlchimista().crea(g, gng);
 		setCompleta(true);
 	}
 

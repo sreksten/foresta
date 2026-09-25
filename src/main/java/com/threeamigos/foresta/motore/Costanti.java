@@ -162,7 +162,6 @@ public class Costanti {
     public static final int COSTO_POZIONE_MAGIA = 10;
     public static final int COSTO_POZIONE_MAGIA_GRANDE = 30;
     public static final int COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO = 10;
-    public static final int AUMENTO_MAGIA_PERSONAGGIO = 20; //  Da pozione o alchimista
 
     // In locanda
     public static final int COSTO_PASTO = 5;
