@@ -15,6 +15,9 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.AtomicMoveNotSupportedException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,15 +66,21 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements Interfacci
 		return false;
 	}
 
+	/**
+	 * Scrive prima su un file temporaneo e lo sostituisce al salvataggio solo se è stato scritto per intero:
+	 * un errore a metà lascia intatto il salvataggio che c'era.
+	 */
 	@Override
-	public void salva(Comando id) {
+	public boolean salva(Comando id) {
 		File directorySalvataggi = recuperaDirectory();
 		File fileSalvataggio = new File(directorySalvataggi.getPath() + File.separatorChar + id.name() + POSTFISSO_FILE);
 		if (fileSalvataggio.exists() && !fileSalvataggio.canWrite()) {
 			BusEventi.pubblica(new InternoMessaggio("Tentativo di scrittura su file non scrivibile: " + id));
+			return false;
 		}
+		File fileTemporaneo = new File(fileSalvataggio.getPath() + ".tmp");
 		try (PrintWriter writer = new PrintWriter(new BufferedWriter(new OutputStreamWriter(
-				new FileOutputStream(fileSalvataggio), StandardCharsets.UTF_8)))) {
+				new FileOutputStream(fileTemporaneo), StandardCharsets.UTF_8)))) {
 			// Intestazione
 			GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
             String sb = id +
@@ -85,8 +94,26 @@ public class GestoreSalvataggiSuFile extends GestoreSuFile implements Interfacci
 
 			ModelloDati.getIstanza().salva(writer);
 
+			// PrintWriter non lancia eccezioni sugli errori di scrittura: vanno chiesti
+			if (writer.checkError()) {
+				throw new IOException("Errore di scrittura del salvataggio " + id);
+			}
+		} catch (Exception e) {
+			BusEventi.pubblica(new InternoException(e));
+			fileTemporaneo.delete();
+			return false;
+		}
+		try {
+			try {
+				Files.move(fileTemporaneo.toPath(), fileSalvataggio.toPath(), StandardCopyOption.REPLACE_EXISTING, StandardCopyOption.ATOMIC_MOVE);
+			} catch (AtomicMoveNotSupportedException e) {
+				Files.move(fileTemporaneo.toPath(), fileSalvataggio.toPath(), StandardCopyOption.REPLACE_EXISTING);
+			}
+			return true;
 		} catch (IOException e) {
 			BusEventi.pubblica(new InternoException(e));
+			fileTemporaneo.delete();
+			return false;
 		}
 	}
 

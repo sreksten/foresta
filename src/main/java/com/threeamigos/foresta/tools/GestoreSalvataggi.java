@@ -33,8 +33,8 @@ public class GestoreSalvataggi {
 		return letturaRiuscita;
 	}
 
-	public static void salva(Comando id) {
-		interfacciaGestoreSalvataggi.salva(id);
+	public static boolean salva(Comando id) {
+		return interfacciaGestoreSalvataggi.salva(id);
 	}
 
 	/**

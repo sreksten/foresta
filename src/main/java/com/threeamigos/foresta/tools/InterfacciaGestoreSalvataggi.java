@@ -12,6 +12,9 @@ public interface InterfacciaGestoreSalvataggi {
 
 	boolean leggi(Comando id);
 
-	void salva(Comando id);
+	/**
+	 * @return true se il salvataggio è stato scritto per intero
+	 */
+	boolean salva(Comando id);
 
 }

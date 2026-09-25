@@ -62,7 +62,7 @@ final class GestoreSalvataggiInMemoria implements InterfacciaGestoreSalvataggi {
 	}
 
 	@Override
-	public void salva(Comando id) {
+	public boolean salva(Comando id) {
 		StringWriter testo = new StringWriter();
 		try (PrintWriter writer = new PrintWriter(testo)) {
 			String capo = GruppoGiocatore.getIstanza().getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
@@ -72,6 +72,7 @@ final class GestoreSalvataggiInMemoria implements InterfacciaGestoreSalvataggi {
 			throw new UncheckedIOException(e);
 		}
 		salvataggi.put(id, testo.toString());
+		return true;
 	}
 
 	boolean contiene(Comando id) {

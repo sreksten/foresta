@@ -54,11 +54,6 @@ import java.util.function.Supplier;
 // FIXME getBersagli() ignora il NUMERO_BERSAGLI calcolato e salvato
 // FIXME PersonaggioBase.attacca(Gruppo) fa get(0) su una lista che potrebbe essere vuota
 //
-// Salvataggi e dati
-// FIXME GestoreSalvataggiSuFile.salva: scrivere su uno slot lo svuota subito (una RuntimeException fa perdere il vecchio
-//  salvataggio) e gli errori di PrintWriter (checkError) vengono ignorati
-// FIXME IntermezziMD.leggi non si accorge di un file troncato (aggiunge null)
-//
 // UI
 // FIXME modalita' VERTICALE: DisplayableCanvasBarraIcone avanza di 32 con icone alte 64, e la finestra e' larga al massimo 400
 // FIXME schermi alti meno di 804 px: la barra delle icone copre il fondo del riquadro delle missioni
@@ -1138,7 +1133,13 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			stato = Stato.ATTESA_DIREZIONE;
 			return Esito.CONTINUA_CON_INGRESSO;
 		} else if (comando != null) {
-			salva(comando);
+			if (comando != Comando.ANNULLA && !GestoreSalvataggi.salva(comando)) {
+				// Senza un salvataggio valido non si propone di uscire: si torna al gioco
+				BusEventi.pubblica(new NotificaTestoParagrafo("Il salvataggio non è riuscito."));
+				BusEventi.pubblica(new InternoMostraSchermataGioco());
+				stato = Stato.ATTESA_DIREZIONE;
+				return Esito.CONTINUA_CON_INGRESSO;
+			}
 			BusEventi.pubblica(new RichiestaUscitaDalGioco());
 			stato = Stato.CONFERMA_USCITA;
 			return Esito.CONTINUA_CON_INGRESSO;
@@ -1519,12 +1520,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		// Permette di tornare alla scelta della direzione (vedi gestisciComandoInStatoSceltaPassi)
 		comandiPossibili.add(Comando.ANNULLA);
 		return comandiPossibili;
-	}
-
-	private void salva(Comando azione) {
-		if (azione != Comando.ANNULLA) {
-			GestoreSalvataggi.salva(azione);
-		}
 	}
 
 	/**

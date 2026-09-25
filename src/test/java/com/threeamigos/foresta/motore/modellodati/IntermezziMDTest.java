@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import java.io.*;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -33,5 +34,14 @@ class IntermezziMDTest {
         assertTrue(riletto.isScattato("PRIMO"));
         assertTrue(riletto.isScattato("SECONDO"));
         assertFalse(riletto.isScattato("DA_DIMENTICARE"));
+    }
+
+    @Test
+    void unFileTroncatoNonSiLegge() {
+        // Given: ne annuncia due ma ne contiene uno
+        String troncato = "2\nPRIMO\n";
+        // When / Then
+        assertThrows(IOException.class,
+                () -> new IntermezziMD().leggi(new BufferedReader(new StringReader(troncato))));
     }
 }
