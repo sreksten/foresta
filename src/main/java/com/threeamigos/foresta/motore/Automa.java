@@ -36,10 +36,14 @@ import java.util.function.Supplier;
 // TODO: (dovrebbe essere stato fatto) se prendono un oggetto che è troppo pesante e questo va nell'inventario del gruppo dovrà apparire un fumetto "è troppo pesante" oltre al messaggio
 // TODO: implementare fumetto che attende chiusura
 // TODO: implementare sistema di aiuto
+// TODO: se carino e non costa troppo, sarebbe bello nel pannello icone fare tipo la barra dele applicazioni di macos che si ingrandisce sull'icona corrente e scala leggermente quelle vicine.
 
 // Bug noti ancora da correggere (dall'indagine sul codice): si spuntano togliendo la riga quando sono corretti.
 //
 // Combattimento e personaggi
+// FIXME nelle varie schermate di armaiolo, incantatore, inventario gruppo, sarebbe bene far vedere il livello dell'oggetto
+// per capire se può essere incantato/preso da un personaggio eccetera. Per esempio, se un personaggio NON potesse prelevare
+// un oggetto il livello dovrebbe essere ROSSO mentre se lo può prelevare dovrebbe essere VERDE.
 // FIXME Personaggi a livello 5 pesantemente armati non riescono neanche lontanamente a scalfire un boss come la Strega o il Lich
 // FIXME Morte (rimandata): LocazioneBase.impostaAzioni, per le portate SINGOLO_* i bersagli sono il gruppo del giocatore,
 //  quindi Morte (SINGOLO_SOLO_VIVI) si lancia solo sui propri compagni
