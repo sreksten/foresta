@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.RaritaArtefatto;
@@ -26,7 +27,7 @@ import java.util.stream.Collectors;
  */
 public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 
-	static final GeneratoreArtefatti ISTANZA = new GeneratoreArtefattiTabelle(new Random(), GrammaticaArtefatti.caricaOppureNull());
+	static final GeneratoreArtefatti ISTANZA = new GeneratoreArtefattiTabelle(Dado.sorgente(), GrammaticaArtefatti.caricaOppureNull());
 
 	private static final Map<TipoArtefatto, String> NOMI = new EnumMap<>(TipoArtefatto.class);
 	private static final Map<TipoArtefatto, Double> PESI = new EnumMap<>(TipoArtefatto.class);

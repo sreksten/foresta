@@ -132,6 +132,6 @@ public class Cofano extends OggettoBase implements Oggetto {
 	}
 
 	private static Artefatto artefattoRaro() {
-		return artefattoRaro(Math.random(), GeneratoreArtefatti.istanza(), Statistiche.getLivello());
+		return artefattoRaro(Dado.probabilita(), GeneratoreArtefatti.istanza(), Statistiche.getLivello());
 	}
 }

@@ -43,19 +43,19 @@ public class Anello extends OggettoBase implements Oggetto {
 		String descrizione;
 		if (tipo == 1) {
 			String[] appartenenzePossibili = new String[]{ "della Valchiria", "del Grifone", "del Paladino", "del Centurione", "della Manticora", "del Minotauro", "della Viverna" };
-			int indiceAppartenenza = (int) (Math.random() * appartenenzePossibili.length);
+			int indiceAppartenenza = Dado.tiraAncheAUnaFaccia(appartenenzePossibili.length) - 1;
 			nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
 			modificatore = new ModificatoreAttributo(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, Costanti.ANELLO_MAGICO_AGGIUNTA_VALORE);
 			descrizione = "che aumenta il Valore";
 		} else if (tipo == 2) {
 			String[] appartenenzePossibili = new String[]{ "del Berserker", "della Fenice", "del Pegaso", "della Salamandra", "del Gladiatore", "dell'Ippogrifo", "dell'Esploratore" };
-			int indiceAppartenenza = (int) (Math.random() * appartenenzePossibili.length);
+			int indiceAppartenenza = Dado.tiraAncheAUnaFaccia(appartenenzePossibili.length) - 1;
 			nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
 			modificatore = new ModificatoreAttributo(TipoAttributo.CORAGGIO, TipoModificatore.AUMENTO_PERCENTUALE, Costanti.ANELLO_MAGICO_AGGIUNTA_CORAGGIO);
 			descrizione = "che aumenta il Coraggio";
 		} else {
 			String[] appartenenzePossibili = new String[]{ "della Sirena", "della Sfinge", "dell'Arcangelo", "della Gorgone", "del Dullahan", "della Lamia", "del Basilisco" };
-			int indiceAppartenenza = (int) (Math.random() * appartenenzePossibili.length);
+			int indiceAppartenenza = Dado.tiraAncheAUnaFaccia(appartenenzePossibili.length) - 1;
 			nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
 			modificatore = new ModificatoreAttributo(TipoAttributo.CARISMA, TipoModificatore.AUMENTO_PERCENTUALE, Costanti.ANELLO_MAGICO_AGGIUNTA_CARISMA);
 			descrizione = "che aumenta il Carisma";
