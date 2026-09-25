@@ -10,6 +10,8 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 
 public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements Missione {
 
+	private static final int AMMONTARE_RICOMPENSA = 20;
+
 	public RecuperaIlMedaglione() {
 		super(ClasseMissione.RECUPERA_IL_MEDAGLIONE);
 	}
@@ -22,15 +24,15 @@ public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements M
 	@Override
 	public String getDescrizione() {
 		if (isBersaglioRecuperato()) {
-			return "Un uomo ti ha chiesto di recuperare il suo prezioso medaglione rubato da una banda di ladri.";
-		} else {
 			return "Torna in città per riconsegnare il medaglione rubato in cambio della ricompensa.";
+		} else {
+			return "Un uomo ti ha chiesto di recuperare il suo prezioso medaglione rubato da una banda di ladri.";
 		}
 	}
 
 	@Override
 	public void controllaPreLocazione() {
-		// Se la citta' della consegna e' stata distrutta, la missione non si puo' piu' concludere
+		// Se la città della consegna e' stata distrutta, la missione non si puo' piu' concludere
 		if (isAttiva() && !isCompleta() && !isFallita() && LineaTemporale.isCittaDistrutta(ClassiLocazione.CITTA_FLEENA)) {
 			BusEventi.pubblica(new NotificaTestoParagrafo("Fleena è stata distrutta: il medaglione non potrà più essere restituito al suo proprietario."));
 			fallisciMissione();
@@ -45,13 +47,13 @@ public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements M
 			if (!isAttiva()) {
 				BusEventi.pubblica(new NotificaTestoParagrafo(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
 						" incontra un uomo che chiede aiuto per recuperare il suo prezioso medaglione rubato da " +
-						"una banda di ladri, che hanno il loro covo in una grotta. Offre 20 monete in cambio."));
+						"una banda di ladri, che hanno il loro covo in una grotta. Offre " + AMMONTARE_RICOMPENSA + " monete in cambio."));
 				attivaMissione();
 				Foresta.costruisciLocazioneUnica(ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE, true);
 			} else if (!isCompleta() && isBersaglioRecuperato()) {
 				completaMissione();
-				BusEventi.pubblica(new NotificaTestoParagrafo("L'uomo è felicissimo di riavere il suo medaglione in cambio delle 20 monete promesse."));
-				gruppo.addMonete(20);
+				BusEventi.pubblica(new NotificaTestoParagrafo("L'uomo è felicissimo di riavere il suo medaglione in cambio delle " + AMMONTARE_RICOMPENSA + " monete promesse."));
+				gruppo.addMonete(AMMONTARE_RICOMPENSA);
 			}
 		}
 	}

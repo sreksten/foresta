@@ -27,9 +27,9 @@ public class MappaZona implements Offerta {
 		StringBuilder sb = new StringBuilder();
 		if (gruppoAvversario.getNumeroPersonaggiVivi() > 1) {
 			if (sesso == Personaggio.Sesso.MASCHIO) {
-				sb.append("Una");
-			} else {
 				sb.append("Uno");
+			} else {
+				sb.append("Una");
 			}
 			sb.append(" di loro");
 		} else {

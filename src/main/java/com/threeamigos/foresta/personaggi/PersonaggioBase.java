@@ -440,7 +440,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		int intelligenza = getIntelligenza();
 		// Un mostro stupido non sa mai cosa fare, quindi sceglie un incantesimo a caso
 		if (intelligenza < 5) {
-			Incantesimo incantesimo = incantesimiDisponibili.get(Dado.tira(incantesimiDisponibili.size()) - 1);
+			Incantesimo incantesimo = incantesimiDisponibili.get(Dado.tiraAncheAUnaFaccia(incantesimiDisponibili.size()) - 1);
 			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
 					RisultatoValutazioneAttaccante.SCEGLIE_A_CASO, incantesimo));
 			return incantesimo;
@@ -1541,27 +1541,73 @@ public abstract class PersonaggioBase implements Personaggio {
 	public abstract double getMoltiplicatoreNumeroBersagli();
 
 	private static int calcolaNumeroBersagli(PersonaggioMD md, Personaggio moltiplicatori) {
-		// Per rispecchiare sia la capacità fisica di spazzare un'area con la massa corporea sia il controllo mentale
-		// per gestire più minacce contemporaneamente, il Numero di Bersagli deve attingere a queste due forze:
-		// FORZA (Peso Maggiore - 70%): La potenza fisica e la stazza. Più si è forti e grandi, più le armi impugnate
-		// sono lunghe (spadoni, clave monumentali, colpi di coda), coprendo un arco di attacco più ampio.
-		// INTELLIGENZA (Peso Minore - 30%): La concentrazione mentale e il calcolo tattico, necessari sia per i maghi
-		// che concatenano incantesimi su più bersagli, sia per i guerrieri che mantengono il controllo su più
-		// nemici ingaggiati.
-		final double COEFFICIENTE_FORZA = 0.70;
-		final double COEFFICIENTE_INTELLIGENZA = 0.30;
+		// Recuperiamo la classe per capire qual è la forza trainante del personaggio
+		ClassePersonaggio classe = moltiplicatori.getClasse();
 
-		// DA RICONTROLLARE: il commento e il nome del coefficiente dicono FORZA, ma qui si legge SAGGEZZA
-		// (voluto o no? con FORZA i bersagli dipenderebbero dalla stazza, con SAGGEZZA dalla lucidità).
-		// Calcolo del valore grezzo con Diminishing Returns
-		double numeroGrezzo = (COEFFICIENTE_FORZA * Math.sqrt(get(md, PersonaggioMD::getSaggezza, TipoAttributo.SAGGEZZA))) +
-				(COEFFICIENTE_INTELLIGENZA * Math.sqrt(get(md, PersonaggioMD::getIntelligenza, TipoAttributo.INTELLIGENZA)));
+		double statPrincipale;
+		double statSecondaria;
 
-		// Applicazione del moltiplicatore di archetipo
+		// BIVIO DI BILANCIAMENTO IN BASE ALL'ARCHETIPO DI CLASSE
+		switch (classe) {
+			case MAGO:
+			case MAGA:
+			case LICH:
+			case STREGA:
+				// I maghi concatenano minacce con la mente: Intelligenza (70%) + Saggezza (30%)
+				statPrincipale = get(md, PersonaggioMD::getIntelligenza, TipoAttributo.INTELLIGENZA);
+				statSecondaria = get(md, PersonaggioMD::getSaggezza, TipoAttributo.SAGGEZZA);
+				break;
+
+			case BARDO:
+			case CANTASTORIE:
+				// I bardi ammaliano o spaventano folle intere: Carisma (70%) + Intelligenza (30%)
+				statPrincipale = get(md, PersonaggioMD::getCarisma, TipoAttributo.CARISMA);
+				statSecondaria = get(md, PersonaggioMD::getIntelligenza, TipoAttributo.INTELLIGENZA);
+				break;
+
+			case LADRO:
+			case LADRA:
+			case ELFO:
+			case ELFA:
+				// Classi agili (e il Ladro che mena a due mani): Destrezza (70%) + Fortuna/Forza (30%)
+				statPrincipale = get(md, PersonaggioMD::getDestrezza, TipoAttributo.DESTREZZA);
+				statSecondaria = get(md, PersonaggioMD::getForza, TipoAttributo.FORZA);
+				break;
+
+			case GUERRIERO:
+			case GUERRIERA:
+			case MINOTAURO:
+			case MINOTAURO_GIGANTE:
+			case GIGANTE:
+			case TITANO:
+			case DRAGO:
+				// I bruti e i tank fisici: Forza (70%) + Costituzione (30%)
+				statPrincipale = get(md, PersonaggioMD::getForza, TipoAttributo.FORZA);
+				statSecondaria = get(md, PersonaggioMD::getCostituzione, TipoAttributo.COSTITUZIONE);
+				break;
+
+			default:
+				// Fail-safe per mostri generici ed eremiti (Forza ed equilibrio mentale)
+				statPrincipale = get(md, PersonaggioMD::getForza, TipoAttributo.FORZA);
+				statSecondaria = get(md, PersonaggioMD::getIntelligenza, TipoAttributo.INTELLIGENZA);
+				break;
+		}
+
+		// PESI DELLA FORMULA ADATTIVA (70% Potere di Classe, 30% Controllo Secondario)
+		final double COEFFICIENTE_PRIMARIO = 0.70;
+		final double COEFFICIENTE_SECONDARIO = 0.30;
+
+		// Calcolo del valore grezzo con Diminishing Returns protetto da radice
+		double numeroGrezzo = (COEFFICIENTE_PRIMARIO * Math.sqrt(statPrincipale)) +
+				(COEFFICIENTE_SECONDARIO * Math.sqrt(statSecondaria));
+
+		// Applicazione del moltiplicatore di archetipo (molto utile per i Boss o le abilità AoE)
 		double valoreFinale = numeroGrezzo * moltiplicatori.getMoltiplicatoreNumeroBersagli();
 
-		return (int)Math.max(1, Math.floor(valoreFinale));
+		// Restituisce il numero di bersagli calcolato, garantendo il minimo di 1
+		return (int) Math.max(1, Math.floor(valoreFinale));
 	}
+
 
 	public abstract double getMoltiplicatoreStanchezza();
 

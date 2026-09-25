@@ -50,21 +50,17 @@ import java.util.function.Supplier;
 //  spaventato si difende meglio; CORAGGIO e PERCEZIONE (valori ~2-10) vi sono divisi per 100, quindi non mitigano quasi nulla
 // FIXME PersonaggioBase.getModificaDanniMagia: i danni degli incantesimi usano i modificatori della riserva di MAGIA
 //  (un anello +20 MAGIA massima da' +20 danni a ogni incantesimo)
-// FIXME DA RICONTROLLARE PersonaggioBase.calcolaNumeroBersagli legge SAGGEZZA dove commento e coefficiente dicono FORZA;
-//  inoltre getBersagli() ignora il NUMERO_BERSAGLI calcolato e salvato
+// FIXME getBersagli() ignora il NUMERO_BERSAGLI calcolato e salvato
 // FIXME LocazioneBase.trascorriTurnoEffettiDiStato: i mostri uccisi da veleno, sanguinamento ecc. non danno esperienza
 //  ne' entrano nelle statistiche (registraUccisione non viene chiamato)
 // FIXME PersonaggioBase: la notifica di variazione del CARICO_MASSIMO non parte mai (si scrive con setMassimo, si legge con getOptional)
-// FIXME latente: PersonaggioBase.scegliIncantesimoContro, con INTELLIGENZA < 5 e un solo incantesimo Dado.tira(1) lancia un'eccezione
-//  (va usato tiraAncheAUnaFaccia); PersonaggioBase.attacca(Gruppo) fa get(0) su una lista che potrebbe essere vuota
+// FIXME PersonaggioBase.attacca(Gruppo) fa get(0) su una lista che potrebbe essere vuota
 // FIXME LanciatoreDeiDadi.getPercentualiPer: le percentuali di alcune classi sommano a 110 (Ombrafiamma, Titano, Drago), 95 (Goblin), 90 (Arpia)
 //
 // Missioni, locazioni, offerte
 // FIXME RegistroMissioni.completaMissione: una sotto-missione completata finisce anche nell'elenco di primo livello delle
 //  completate (e dopo un caricamento non piu'): nella finestra delle missioni compare due volte
 // FIXME testi: "Optional[...]" in LineaTemporale.eventi (sconfitta a tempo) e in AiutoMercenario.getDescrizione (getNomeProprio)
-// FIXME testi: MappaZona.getDescrizione ha il genere invertito ("Una" per MASCHIO); MappaForesta dice "dieci monete" ma
-//  COSTO_MAPPA_DELLA_FORESTA vale 20; RecuperaIlMedaglione.getDescrizione ha le due frasi invertite
 //
 // Automa e avvio
 // FIXME Main: si iscrive a InternoInterfacciaUtentePronta dopo aver creato ForestaUI, che la pubblica sull'EDT: in teoria puo'
