@@ -51,8 +51,21 @@ public class ComponenteScorrevole<T> {
                          String valore, DoomdarkFont fontValore, DoomdarkColorModel.Color coloreValore,
                          String descrizione, DoomdarkFont fontDescrizione, DoomdarkColorModel.Color coloreDescrizione,
                          Image icona, T riferimento) {
+        return creaNodo(chiave, fontChiave, coloreChiave,
+                valore != null ? ImageCache.get(valore, fontValore, coloreValore) : null,
+                descrizione, fontDescrizione, coloreDescrizione,
+                icona, riferimento);
+    }
+
+    /**
+     * Come sopra, con il valore già disegnato: serve quando è fatto di più parti di colori diversi.
+     */
+    public Nodo creaNodo(String chiave, DoomdarkFont fontChiave, DoomdarkColorModel.Color coloreChiave,
+                         Image valore,
+                         String descrizione, DoomdarkFont fontDescrizione, DoomdarkColorModel.Color coloreDescrizione,
+                         Image icona, T riferimento) {
         Nodo nodo = new Nodo(chiave, fontChiave, coloreChiave,
-                valore, fontValore, coloreValore,
+                valore,
                 descrizione, fontDescrizione, coloreDescrizione,
                 icona, 0, riferimento);
         nodi.add(nodo);
@@ -211,7 +224,7 @@ public class ComponenteScorrevole<T> {
         private boolean figliVisibili = true;
 
         Nodo(String chiave, DoomdarkFont fontChiave, DoomdarkColorModel.Color coloreChiave,
-             String valore, DoomdarkFont fontValore, DoomdarkColorModel.Color coloreValore,
+             Image valore,
              String descrizione, DoomdarkFont fontDescrizione, DoomdarkColorModel.Color coloreDescrizione,
              Image icona, int indentazione, T riferimento) {
             this.riferimento = riferimento;
@@ -227,11 +240,9 @@ public class ComponenteScorrevole<T> {
             int larghezzaMassimaDescrizione = larghezzaMassimaChiave - larghezzaIndentazione;
 
             // Se abbiamo anche un valore la larghezza massima per la chiave si riduce, ma per la descrizione rimane la stessa
+            this.valore = valore;
             if (valore != null) {
-                this.valore = ImageCache.get(valore, fontValore, coloreValore);
-                larghezzaMassimaChiave = larghezzaMassimaChiave - this.valore.getWidth(null) - ImageCache.SPACING;
-            } else {
-                this.valore = null;
+                larghezzaMassimaChiave = larghezzaMassimaChiave - valore.getWidth(null) - ImageCache.SPACING;
             }
             if (chiave != null) {
                 this.chiave = creaImmagine(fontChiave, coloreChiave, chiave, larghezzaMassimaChiave);
@@ -277,7 +288,7 @@ public class ComponenteScorrevole<T> {
                              String descrizione, DoomdarkFont fontDescrizione, DoomdarkColorModel.Color coloreDescrizione,
                              Image icona, T riferimento) {
             Nodo nodo = new Nodo(chiave, fontChiave, coloreChiave,
-                    valore, fontValore, coloreValore,
+                    valore != null ? ImageCache.get(valore, fontValore, coloreValore) : null,
                     descrizione, fontDescrizione, coloreDescrizione,
                     icona, this.indentazione + larghezzaIndentazione, riferimento);
             figli.add(nodo);

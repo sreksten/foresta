@@ -4,6 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoPrelievoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
+import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.awt.*;
@@ -199,6 +200,19 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
             return true;
         }
         return false;
+    }
+
+    /**
+     * Negli artefatti del gruppo il livello dice se il personaggio può prenderli adesso (verde) o no (rosso), per
+     * qualunque motivo: livello, classe, peso, forza, posto occupato. Quelli che ha già restano grigi.
+     */
+    @Override
+    protected DoomdarkColorModel.Color coloreLivello(Artefatto artefatto, boolean parteAttiva) {
+        if (parteAttiva) {
+            return super.coloreLivello(artefatto, true);
+        }
+        Personaggio personaggio = (Personaggio) automa.getParteAttiva();
+        return personaggio.puoEquipaggiare(artefatto).isPresent() ? DoomdarkColorModel.Color.RED : DoomdarkColorModel.Color.GREEN;
     }
 
     protected boolean processaDoppioClickPersonaggio(int x, int y, Tasto tasto) {

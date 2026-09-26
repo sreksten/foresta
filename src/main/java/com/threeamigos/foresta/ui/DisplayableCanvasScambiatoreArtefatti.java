@@ -14,6 +14,7 @@ import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Incantamento;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -96,24 +97,62 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
 
         disegnaColonnaPersonaggio(graphics);
 
-        // Inventario personaggio: il prezzo è quanto si ricava vendendo
-        GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
         offsetYZonaSinistra = disegnaElenco(graphics, new ArrayList<>(automa.getParteAttiva().getInventario()), xMinimaZonaSinistra,
-                offsetYZonaSinistra, automa.mostraCostoSuParteAttiva() ? gruppo::prezzoVendita : null);
-        // Inventario gruppo: il prezzo è quanto si paga comprando
+                offsetYZonaSinistra, true);
         offsetYZonaDestra = disegnaElenco(graphics, automa.getParteRemota().getInventario(), xMinimaZonaDestra, offsetYZonaDestra,
-                automa.mostraCostoSuParteRemota() ? gruppo::prezzoAcquisto : null);
+                false);
 
         disegnaIntestazioniInventario(graphics);
 
         disegnaSpriteLocali(graphics);
     }
 
-    private int disegnaElenco(Graphics2D graphics, Collection<Artefatto> artefatti, int x, int offset,
-                              IntUnaryOperator prezzo) {
+    /**
+     * Il prezzo da mostrare accanto agli artefatti di una parte, oppure null se lì non si mostra: sulla parte
+     * attiva è quanto si ricava vendendo, sulla remota quanto si paga comprando.
+     */
+    private IntUnaryOperator prezzo(boolean parteAttiva) {
+        GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
+        if (parteAttiva) {
+            return automa.mostraCostoSuParteAttiva() ? gruppo::prezzoVendita : null;
+        }
+        return automa.mostraCostoSuParteRemota() ? gruppo::prezzoAcquisto : null;
+    }
 
-        Artefatto evidenziato = trovaArtefatto(artefatti, x, offset, mouseX, mouseY);
-        ComponenteScorrevole<Artefatto> componenteScorrevole = costruisciComponenteScorrevoleArtefatti(artefatti, evidenziato, prezzo);
+    /**
+     * Il colore del livello di un artefatto: di suo grigio, le schermate lo ridefiniscono per dire a colpo
+     * d'occhio se l'artefatto si può prendere (inventario) o incantare (incantatore).
+     */
+    protected DoomdarkColorModel.Color coloreLivello(Artefatto artefatto, boolean parteAttiva) {
+        return DoomdarkColorModel.Color.MEDIUM_GRAY;
+    }
+
+    /**
+     * Accanto al nome: il livello, nel suo colore, e il prezzo in giallo se la parte lo mostra.
+     */
+    private Image valore(Artefatto artefatto, boolean parteAttiva) {
+        Image livello = ImageCache.get("Lv " + artefatto.getLivello(), fontSmall, coloreLivello(artefatto, parteAttiva));
+        IntUnaryOperator prezzo = prezzo(parteAttiva);
+        if (prezzo == null) {
+            return livello;
+        }
+        Image costo = ImageCache.get(String.valueOf(prezzo.applyAsInt(artefatto.getCostoAcquisto())), fontSmall,
+                DoomdarkColorModel.Color.YELLOW);
+        int larghezzaLivello = livello.getWidth(null) + ImageCache.SPACING;
+        BufferedImage valore = new BufferedImage(larghezzaLivello + costo.getWidth(null),
+                Math.max(livello.getHeight(null), costo.getHeight(null)), BufferedImage.TYPE_INT_ARGB);
+        Graphics2D g2d = valore.createGraphics();
+        g2d.drawImage(livello, 0, 0, null);
+        g2d.drawImage(costo, larghezzaLivello, 0, null);
+        g2d.dispose();
+        return valore;
+    }
+
+    private int disegnaElenco(Graphics2D graphics, Collection<Artefatto> artefatti, int x, int offset,
+                              boolean parteAttiva) {
+
+        Artefatto evidenziato = trovaArtefatto(artefatti, x, offset, mouseX, mouseY, parteAttiva);
+        ComponenteScorrevole<Artefatto> componenteScorrevole = costruisciComponenteScorrevoleArtefatti(artefatti, evidenziato, parteAttiva);
 
         int nuovoOffset = componenteScorrevole.limitaOffset(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, offset);
         Image image = componenteScorrevole.produci(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, nuovoOffset);
@@ -123,12 +162,12 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
     }
 
     /**
-     * L'albero viene ricostruito a ogni disegno e a ogni click. L'artefatto passato in
+     * L'albero viene ricostruito a ogni disegno e a ogni click, sempre con lo stesso valore accanto ai nomi
+     * (livello ed eventuale prezzo), così le righe cadono alla stessa quota. L'artefatto passato in
      * evidenziato (se non null) viene disegnato in bianco invece che in grigio chiaro.
-     * Se prezzo non è null, accanto a ogni artefatto c'è il prezzo che ne ricava dal costo.
      */
     private ComponenteScorrevole<Artefatto> costruisciComponenteScorrevoleArtefatti(Collection<Artefatto> artefatti,
-                                                                                    Artefatto evidenziato, IntUnaryOperator prezzo) {
+                                                                                    Artefatto evidenziato, boolean parteAttiva) {
 
         ComponenteScorrevole<Artefatto> componenteScorrevole = new ComponenteScorrevole<>(
                 LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, 10, 2);
@@ -167,7 +206,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
             nome = nome.substring(0, 1).toUpperCase() + nome.substring(1);
             ComponenteScorrevole<Artefatto>.Nodo nodo = componenteScorrevole.creaNodo(
                     nome, font, colore,
-                    prezzo != null ? String.valueOf(prezzo.applyAsInt(artefatto.getCostoAcquisto())) : null, fontSmall, DoomdarkColorModel.Color.YELLOW,
+                    valore(artefatto, parteAttiva),
                     artefatto.getModelloDati().getDescrizioneBreve(), fontSmall, colore,
                     null, artefatto);
             nodo.setFigliVisibili(artefatto.isFigliVisibili());
@@ -249,14 +288,14 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
      * finestra, oppure null se il punto non cade sull'elenco o non corrisponde al titolo
      * di un artefatto (es. una riga di modificatore/incantamento, o spazio vuoto).
      */
-    private Artefatto trovaArtefatto(Collection<Artefatto> artefatti, int boxX, int offset, int x, int y) {
+    private Artefatto trovaArtefatto(Collection<Artefatto> artefatti, int boxX, int offset, int x, int y, boolean parteAttiva) {
         int xInterno = x - (boxX + SPACING);
         int yInterno = y - (DIMENSIONE_BORDO_INTERNO + 2 * SPACING);
         if (xInterno < 0 || xInterno >= LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO
                 || yInterno < 0 || yInterno >= ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO) {
             return null;
         }
-        return costruisciComponenteScorrevoleArtefatti(artefatti, null, null).riferimentoTitoloAllaQuota(yInterno + offset);
+        return costruisciComponenteScorrevoleArtefatti(artefatti, null, parteAttiva).riferimentoTitoloAllaQuota(yInterno + offset);
     }
 
     protected abstract boolean processaClickPersonaggio(int x, int y, Tasto tasto);
@@ -270,9 +309,9 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
             return;
         }
         java.util.List<Artefatto> inventarioPersonaggio = new ArrayList<>(automa.getParteAttiva().getInventario());
-        Artefatto artefatto = trovaArtefatto(inventarioPersonaggio, xMinimaZonaSinistra, offsetYZonaSinistra, x, y);
+        Artefatto artefatto = trovaArtefatto(inventarioPersonaggio, xMinimaZonaSinistra, offsetYZonaSinistra, x, y, true);
         if (artefatto == null) {
-            artefatto = trovaArtefatto(automa.getArtefattiDisponibili(), xMinimaZonaDestra, offsetYZonaDestra, x, y);
+            artefatto = trovaArtefatto(automa.getArtefattiDisponibili(), xMinimaZonaDestra, offsetYZonaDestra, x, y, false);
         }
         if (artefatto == null) {
             return;
@@ -295,13 +334,13 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
             return;
         }
         List<Artefatto> inventarioPersonaggio = new ArrayList<>(automa.getParteAttiva().getInventario());
-        Artefatto artefatto = trovaArtefatto(inventarioPersonaggio, xMinimaZonaSinistra, offsetYZonaSinistra, x, y);
+        Artefatto artefatto = trovaArtefatto(inventarioPersonaggio, xMinimaZonaSinistra, offsetYZonaSinistra, x, y, true);
         if (artefatto != null) {
             automa.richiediSpostamentoSuParteRemota(artefatto);
             return;
         }
         Collection<Artefatto> disponibili = automa.getArtefattiDisponibili();
-        artefatto = trovaArtefatto(disponibili, xMinimaZonaDestra, offsetYZonaDestra, x, y);
+        artefatto = trovaArtefatto(disponibili, xMinimaZonaDestra, offsetYZonaDestra, x, y, false);
         if (artefatto != null) {
             automa.richiediSpostamentoSuParteAttiva(artefatto);
         }

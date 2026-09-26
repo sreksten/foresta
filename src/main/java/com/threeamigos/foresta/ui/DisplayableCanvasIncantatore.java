@@ -86,6 +86,19 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
         return y + fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
     }
 
+    /**
+     * Negli artefatti incantabili il livello dice se hanno ancora posti per gli effetti delle pergamene (verde) o
+     * no (rosso); gli altri (accessori, pergamene) restano grigi.
+     */
+    @Override
+    protected DoomdarkColorModel.Color coloreLivello(Artefatto artefatto, boolean parteAttiva) {
+        if (!artefatto.isIncantabile()) {
+            return super.coloreLivello(artefatto, parteAttiva);
+        }
+        return RegoleIncantatura.effetti(artefatto) < artefatto.getEffettiMassimi()
+                ? DoomdarkColorModel.Color.GREEN : DoomdarkColorModel.Color.RED;
+    }
+
     @Override
     protected boolean processaClickPersonaggio(int x, int y, Tasto tasto) {
         return false;
