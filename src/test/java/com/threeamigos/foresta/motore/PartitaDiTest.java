@@ -2,24 +2,9 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.RichiestaConComandi;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaIncantatore;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioCommerciante;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioFornitore;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioGruppo;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoDiGioco;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoInvioTesto;
-import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
-import com.threeamigos.foresta.eventi.interni.InternoErrore;
-import com.threeamigos.foresta.eventi.interni.InternoException;
-import com.threeamigos.foresta.eventi.interni.InternoFineLogoIniziale;
-import com.threeamigos.foresta.eventi.interni.InternoStatoDiGioco;
-import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
-import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
-import com.threeamigos.foresta.eventi.notifiche.NotificaPaginaIntermezzo;
-import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto;
-import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoVenditaArtefatto;
-import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
-import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
+import com.threeamigos.foresta.eventi.comandigiocatore.*;
+import com.threeamigos.foresta.eventi.interni.*;
+import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneDirezione;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneIncantesimoDaLanciare;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
@@ -64,15 +49,11 @@ final class PartitaDiTest implements AutoCloseable {
 	private int erroriVisti;
 	private boolean saltaIntermezzi = true;
 	private final java.util.Deque<String> ultimiTesti = new java.util.ArrayDeque<>();
-	private final String modalitaDiProvaPrecedente = System.getProperty(ModalitaDiProva.PROPRIETA);
+	private final boolean modalitaDiProvaPrecedente = ModalitaDiProva.isAttiva();
 
 	private PartitaDiTest(long seme, GestoreSalvataggiInMemoria salvataggi, boolean modalitaDiProva) {
 		this.salvataggi = salvataggi;
-		if (modalitaDiProva) {
-			System.setProperty(ModalitaDiProva.PROPRIETA, "true");
-		} else {
-			System.clearProperty(ModalitaDiProva.PROPRIETA);
-		}
+        ModalitaDiProva.setAttiva(modalitaDiProva);
 		BusEventi.azzera();
 		BusEventi.impostaConsegna(Runnable::run);
 		Dado.ripristina();
@@ -343,10 +324,8 @@ final class PartitaDiTest implements AutoCloseable {
 		Dado.impostaSeme(System.nanoTime());
 		BusEventi.azzera();
 		BusEventi.impostaConsegna(BusEventi.CONSEGNA_SU_EDT);
-		if (modalitaDiProvaPrecedente == null) {
-			System.clearProperty(ModalitaDiProva.PROPRIETA);
-		} else {
-			System.setProperty(ModalitaDiProva.PROPRIETA, modalitaDiProvaPrecedente);
+		if (modalitaDiProvaPrecedente) {
+			ModalitaDiProva.setAttiva(false);
 		}
 	}
 }

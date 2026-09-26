@@ -32,6 +32,8 @@ public class Main {
                 saltaLogo = true;
             } else if (arg.equalsIgnoreCase("BARRACLASSICA")) {
                 barraDock = false;
+            } else if (arg.equalsIgnoreCase("MODALITA_DI_PROVA")) {
+                ModalitaDiProva.setAttiva(true);
             }
         }
 	}

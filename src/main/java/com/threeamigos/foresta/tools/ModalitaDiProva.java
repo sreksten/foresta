@@ -8,13 +8,16 @@ package com.threeamigos.foresta.tools;
  */
 public final class ModalitaDiProva {
 
-	public static final String PROPRIETA = "testMode";
+	private static boolean attiva;
 
 	private ModalitaDiProva() {
 	}
 
+	public static void setAttiva(boolean attiva) {
+		ModalitaDiProva.attiva = attiva;
+	}
+
 	public static boolean isAttiva() {
-		String valore = System.getProperty(PROPRIETA);
-		return valore != null && (valore.equalsIgnoreCase("true") || valore.equalsIgnoreCase("yes") || valore.equals("1"));
+		return attiva;
 	}
 }
