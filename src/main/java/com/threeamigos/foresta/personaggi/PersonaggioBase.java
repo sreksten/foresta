@@ -179,18 +179,32 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int)danni;
 	}
 
+	/**
+	 * Quanti bersagli colpisce un incantesimo MULTIPLO: il NUMERO_BERSAGLI calcolato dalle caratteristiche (con il
+	 * moltiplicatore di classe, vedi calcolaNumeroBersagli) più i modificatori di bastoni e libri.
+	 */
 	public int getBersagli() {
-		double numeroBersagli = getQuantitaModificata(md, 1 * getMoltiplicatoreNumeroBersagli(), TipoAttributo.NUMERO_BERSAGLI);
+		double numeroBase = md.getOptional(TipoAttributo.NUMERO_BERSAGLI).orElse(1.0d);
+		double numeroBersagli = getQuantitaModificata(md, numeroBase, TipoAttributo.NUMERO_BERSAGLI);
 		// Almeno un bersaglio: con un moltiplicatore sotto 1 il troncamento darebbe 0
 		return (int)(Math.max(1, numeroBersagli));
 	}
 
 	/**
-	 * Prende il valore base dei danni di un incantesimo e lo moltiplica per il moltiplicatore di danni magia
+	 * Il POTERE_MAGICO non ha un valore proprio: si parte da 100 e si applicano i modificatori, quelli fissi come
+	 * punti percentuali (+5 porta a 105) e quelli percentuali in proporzione (+20% porta a 120).
+	 */
+	@Override
+	public double getPotereMagico() {
+		return getQuantitaModificata(md, 100.0d, TipoAttributo.POTERE_MAGICO);
+	}
+
+	/**
+	 * Applica ai danni di un incantesimo il POTERE_MAGICO (non la MAGIA, che è solo la riserva)
  	 */
-	public int getModificaDanniMagia(int danniBase) {
-		double danniModificati = getQuantitaModificata(md, danniBase, TipoAttributo.MAGIA);
-		return (int)danniModificati;
+	@Override
+	public double getModificaDanniMagia(double danni) {
+		return danni * getPotereMagico() / 100.0d;
 	}
 
 	/**
@@ -329,9 +343,6 @@ public abstract class PersonaggioBase implements Personaggio {
 					bersaglio = personaggio;
 				}
 			}
-		}
-		if (bersaglio == null) {
-			bersaglio = personaggiPossibili.get(0);
 		}
 		attacca(bersaglio);
 	}

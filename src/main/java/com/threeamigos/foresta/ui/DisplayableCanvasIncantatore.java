@@ -3,6 +3,7 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
+import com.threeamigos.foresta.eventi.notifiche.NotificaAvvisoIncantatura;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoIncantatura;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegoleIncantatura;
@@ -22,6 +23,8 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
     DisplayableCanvasIncantatore(int width, int height) {
         super(width, height);
         BusEventi.iscriviti(NotificaRifiutoIncantatura.class, this::onEventoRifiutoIncantatura);
+        BusEventi.iscriviti(NotificaAvvisoIncantatura.class,
+                evento -> BusEventi.pubblica(new InternoNotificaViaFumettoATempo(evento.getFrase(), getCoordinateFumetto())));
         BusEventi.iscriviti(NotificaApprovazioneIncantatura.class, this::onEventoApprovazioneIncantatura);
     }
 
@@ -67,7 +70,7 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
         Optional<Artefatto> artefatto = RegoleIncantatura.artefattoSulBanco(banco);
         if (artefatto.isPresent()) {
             int effetti = RegoleIncantatura.effetti(artefatto.get());
-            int daAggiungere = banco.stream().filter(RegoleIncantatura::isPergamena).mapToInt(RegoleIncantatura::effetti).sum();
+            int daAggiungere = RegoleIncantatura.effettiDaTrasferire(banco);
             y = disegnaValore(graphics, "Effetti", (effetti + daAggiungere) + "/" + artefatto.get().getEffettiMassimi(), y, coloreTestata);
         }
 

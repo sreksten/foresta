@@ -170,8 +170,8 @@ public class CombatSimulatorMatrix {
     }
 
     /**
-     * Come nel gioco: un incantesimo di portata GRUPPO colpisce tutti i mostri vivi, gli altri il primo vivo.
-     * Ogni bersaglio si colpisce o si manca per conto suo.
+     * Come nel gioco: un incantesimo di portata GRUPPO colpisce tutti i mostri vivi, uno MULTIPLO fino al numero di
+     * bersagli del PG, gli altri il primo vivo. Ogni bersaglio si colpisce o si manca per conto suo.
      */
     private static void lancia(Personaggio pg, IncantesimoMalefico incantesimo, List<Personaggio> mostri,
                                StatisticheAttacco statistiche) {
@@ -179,7 +179,8 @@ public class CombatSimulatorMatrix {
         for (Personaggio mostro : mostri) {
             if (mostro.isVivo()) {
                 bersagli.add(mostro);
-                if (incantesimo.getClasse().getPortata() != PortataIncantesimo.GRUPPO) {
+                PortataIncantesimo portata = incantesimo.getClasse().getPortata();
+                if (portata == PortataIncantesimo.MULTIPLO ? bersagli.size() >= pg.getBersagli() : portata != PortataIncantesimo.GRUPPO) {
                     break;
                 }
             }

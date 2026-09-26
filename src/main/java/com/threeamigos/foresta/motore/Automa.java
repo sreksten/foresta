@@ -44,15 +44,6 @@ import java.util.function.Supplier;
 // per capire se può essere incantato/preso da un personaggio eccetera. Per esempio, se un personaggio NON potesse prelevare
 // un oggetto il livello dovrebbe essere ROSSO mentre se lo può prelevare dovrebbe essere VERDE.
 // FIXME Personaggi a livello 5 pesantemente armati non riescono neanche lontanamente a scalfire un boss come la Strega o il Lich
-// FIXME Morte (rimandata): LocazioneBase.impostaAzioni, per le portate SINGOLO_* i bersagli sono il gruppo del giocatore,
-//  quindi Morte (SINGOLO_SOLO_VIVI) si lancia solo sui propri compagni
-// FIXME Morte (rimandata): Morte.formulaImpl ignora le immunita' (Lich, Fantasma, Scheletro, Spettro, Spirito, Ombra Nera)
-// FIXME Morte (rimandata): Morte.formula non imposta mai "totale", quindi IncantesimoMaleficoImpl.risultato con il lancio fallito
-//  stampa "ha ferito tutti i suoi avversari"
-// FIXME PersonaggioBase.getModificaDanniMagia: i danni degli incantesimi usano i modificatori della riserva di MAGIA
-//  (un anello +20 MAGIA massima da' +20 danni a ogni incantesimo)
-// FIXME getBersagli() ignora il NUMERO_BERSAGLI calcolato e salvato
-// FIXME PersonaggioBase.attacca(Gruppo) fa get(0) su una lista che potrebbe essere vuota
 //
 // UI
 // FIXME modalita' VERTICALE: DisplayableCanvasBarraIcone avanza di 32 con icone alte 64, e la finestra e' larga al massimo 400

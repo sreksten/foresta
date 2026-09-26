@@ -2,11 +2,17 @@ package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
+import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.modellodati.TipoDanno;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
+/**
+ * Il colpo di grazia: se va a segno su un bersaglio sotto un quarto della salute massima gli toglie tutta la
+ * salute che ha, altrimenti si ritorce contro chi lo lancia. Il danno non passa da CalcolatoreCombattimento,
+ * che lo ridurrebbe con difese e resistenze.
+ */
 public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 
 	public Morte(int livello) {
@@ -30,36 +36,32 @@ public class Morte extends IncantesimoMaleficoImpl implements Incantesimo {
 		return Costanti.INCANTESIMO_MORTE_DANNI;
 	}
 
+	/**
+	 * Solo su un bersaglio: su un gruppo, o con un effetto globale, sarebbe troppo pericoloso.
+	 */
 	@Override
 	public void formula(Personaggio formulante, Personaggio bersaglio, Gruppo gruppoBersaglio) {
-		if (bersaglio != null) {
-			formulaImpl(formulante, bersaglio);
-		} else {
-			int l = gruppoBersaglio.getNumeroPersonaggi();
-			for (int i = 0; i < l; i++) {
-				formulaImpl(formulante, gruppoBersaglio.getPersonaggio(i));
-				if (!formulante.isVivo()) {
-					break;
-				}
-			}
+		if (bersaglio == null) {
+			throw new IllegalArgumentException("Morte si formula solo su un bersaglio");
 		}
-		if (!formulante.isPNG()) {
-			BusEventi.pubblica(new NotificaTestoFrase(risultato(formulante)));
-		}
-		// Come gli altri incantesimi (IncantesimoMaleficoImpl.formula), il lancio costa MAGIA
-		formulante.subMagia(getCostoLancio());
+		super.formula(formulante, bersaglio, null);
 	}
 
-	private void formulaImpl(Personaggio formulante, Personaggio bersaglio) {
-		if (bersaglio == null)
+	@Override
+	protected void colpisci(Personaggio formulante, Personaggio bersaglio) {
+		if (!bersaglio.isVivo()) {
 			return;
-		if (!bersaglio.isVivo())
+		}
+		String nomeBersaglio = bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
+		if (bersaglio.isImmuneAIncantesimo(getClasse())) {
+			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo non ha effetto su " + nomeBersaglio + "."));
 			return;
-		if (bersaglio.getSalute() < bersaglio.getSaluteMassima() / 4) {
-			String s = bersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
-			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo ha ucciso " + s + "."));
-			bersaglio.muore((bersaglio.getSesso() == Personaggio.Sesso.MASCHIO ? "Ucciso " : "Uccisa ") + " da un incantesimo di Morte");
-			uccisi++;
+		}
+		if (bersaglio.getSalute() < bersaglio.getSaluteMassima() / 4
+				&& CalcolatoreCombattimento.colpisce(formulante, bersaglio, getTipoDanno().getSuperTipo())) {
+			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo ha ucciso " + nomeBersaglio + "."));
+			// Tutta la salute rimasta: la morte passa da subSalute come per ogni altro colpo (causa, immortali)
+			bersaglio.subSalute(bersaglio.getSalute(), formulante, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
 		} else {
 			String s = formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 			BusEventi.pubblica(new NotificaTestoFrase("L'incantesimo non ha avuto successo e si è ritorto contro " + s + "."));

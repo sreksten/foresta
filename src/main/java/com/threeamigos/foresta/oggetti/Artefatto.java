@@ -72,6 +72,7 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 			case SCUDO:
 			case ELMO:
 			case ARMATURA:
+			case POTENZIAMENTO_POTERE_MAGICO:
 				return true;
 			default:
 				return false;

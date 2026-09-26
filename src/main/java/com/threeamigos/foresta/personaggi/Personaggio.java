@@ -157,9 +157,14 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
 	 */
     void subMagia(int quantita);
 	/**
-	 *  Eventuali moltiplicatori ai danni derivanti da un incantesimo
+	 * Il POTERE_MAGICO come percentuale: 100 senza modificatori, di più con bastoni e libri magici
+	 * (es. un bastone +20% lo porta a 120). Non dipende dalla riserva di MAGIA.
 	 */
-    int getModificaDanniMagia(int danniBase);
+    double getPotereMagico();
+	/**
+	 * I danni di un incantesimo modificati dal POTERE_MAGICO di chi lo lancia (bastoni, libri)
+	 */
+    double getModificaDanniMagia(double danni);
 	/**
 	 * Aumenta la stanchezza di un personaggio fino a 9
 	 */

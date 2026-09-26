@@ -72,20 +72,31 @@ public enum TipoAttributo {
      */
     FORTUNA(SupertipoAttributo.PRIMARIO, "Fortuna", "Influenza del fato sulle probabilità di successo"),
 
+    // Numero bersagli, rigenerazioni e potere magico si ricavano dalle caratteristiche e dall'equipaggiamento e
+    // non hanno un valore proprio da alzare: sono SECONDARIO, così non si possono spendere punti abilità su di loro.
+
     /**
      * Il numero massimo di bersagli che un personaggio può colpire in un turno.
      */
-    NUMERO_BERSAGLI(SupertipoAttributo.PRIMARIO, "Numero bersagli", "Numero massimo di bersagli che può colpire in un turno"),
+    NUMERO_BERSAGLI(SupertipoAttributo.SECONDARIO, "Numero bersagli", "Numero massimo di bersagli che può colpire in un turno"),
 
     /**
      * Abilità di rigenerazione della salute fisica.
      */
-    RIGENERAZIONE_SALUTE(SupertipoAttributo.PRIMARIO, "Rigenerazione salute", "Abilità di rigenerazione della salute fisica"),
+    RIGENERAZIONE_SALUTE(SupertipoAttributo.SECONDARIO, "Rigenerazione salute", "Abilità di rigenerazione della salute fisica"),
 
     /**
      * Abilità di rigenerazione della magia.
      */
-    RIGENERAZIONE_MAGIA(SupertipoAttributo.PRIMARIO, "Rigenerazione magia", "Abilità di rigenerazione della magia"),
+    RIGENERAZIONE_MAGIA(SupertipoAttributo.SECONDARIO, "Rigenerazione magia", "Abilità di rigenerazione della magia"),
+
+    /**
+     * La potenza degli incantesimi lanciati, data da bastoni e libri magici: una percentuale che parte da 100
+     * (vedi Personaggio.getPotereMagico) e moltiplica i danni degli incantesimi; pesa anche sulla probabilità
+     * che un'arma incantata applichi il suo effetto di stato (vedi CalcolatoreCombattimento). Non ha niente a
+     * che vedere con la riserva di MAGIA.
+     */
+    POTERE_MAGICO(SupertipoAttributo.SECONDARIO, "Potere magico", "Potenza degli incantesimi lanciati"),
 
     /**
      * Capacità di carico, peso massimo trasportabile e stazza dell'equipaggiamento.

@@ -201,6 +201,10 @@ public enum TipoEvento {
      */
     NOTIFICA_RIFIUTO_INCANTATURA,
     /**
+     * Notifica di un avviso dell'incantatore su quel che c'è sul banco, che non impedisce la fusione
+     */
+    NOTIFICA_AVVISO_INCANTATURA,
+    /**
      * Un messaggio viene inviato dal motore al giocatore. Nuovo paragrafo con spaziatura antecedente
      */
     NOTIFICA_TESTO_PARAGRAFO,

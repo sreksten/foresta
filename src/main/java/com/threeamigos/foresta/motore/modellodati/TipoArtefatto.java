@@ -18,7 +18,7 @@ public enum TipoArtefatto {
      * FIXME se si passa ARMA occorre passare il tipo di danno, ma questo dipenderebbe un po' dall'incantesimo...
      * Ad ogni modo potrebbe essere considerato un'arma secondaria.
      */
-    LIBRO_MAGICO(SupertipoArtefatto.ALTRO, SlotArtefatto.MANO_SECONDARIA, "Libro magico", "porta"),
+    LIBRO_MAGICO(SupertipoArtefatto.POTENZIAMENTO_POTERE_MAGICO, SlotArtefatto.MANO_SECONDARIA, "Libro magico", "porta"),
 
     SCUDO(SupertipoArtefatto.SCUDO, SlotArtefatto.MANO_SECONDARIA, "Scudo", "porta"),
 

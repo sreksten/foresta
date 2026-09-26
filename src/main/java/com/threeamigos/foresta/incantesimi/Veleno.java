@@ -17,10 +17,6 @@ public class Veleno extends IncantesimoMaleficoImpl implements Incantesimo {
         return ClasseIncantesimo.VELENO;
     }
 
-    public PortataIncantesimo getPortata() {
-        return PortataIncantesimo.GRUPPO;
-    }
-
     public int getCostoAcquisto() {
         return Costanti.INCANTESIMO_VELENO_COSTO_ACQUISTO;
     }

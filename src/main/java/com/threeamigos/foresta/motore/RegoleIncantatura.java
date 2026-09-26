@@ -2,7 +2,9 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
 import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
+import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Incantamento;
 
@@ -15,7 +17,8 @@ import java.util.stream.Collectors;
  * Le regole della fusione (vedi artefatti_e_incantamenti.md, §2 "Fusione"): sul banco un solo artefatto
  * incantabile e almeno una pergamena; si trasferiscono tutti gli effetti delle pergamene (incantamenti e
  * modificatori), fino ai posti dell'artefatto, che contano anche gli effetti che ha già; costo 10 monete
- * più 5 per effetto trasferito. Le pergamene usate vengono distrutte.
+ * più 5 per effetto trasferito. Le pergamene usate vengono distrutte. Su un libro magico passano solo i
+ * modificatori: gli incantamenti elementali, che agiscono solo sulle armi, vanno persi.
  */
 public final class RegoleIncantatura {
 
@@ -31,6 +34,32 @@ public final class RegoleIncantatura {
 	 */
 	public static int effetti(Artefatto artefatto) {
 		return artefatto.getIncantamenti().size() + artefatto.getModificatori().size();
+	}
+
+	/**
+	 * Quanti effetti di una pergamena passano sull'artefatto: su un libro magico solo i modificatori.
+	 */
+	public static int effettiTrasferibili(Artefatto artefatto, Artefatto pergamena) {
+		return isLibro(artefatto) ? pergamena.getModificatori().size() : effetti(pergamena);
+	}
+
+	/**
+	 * Gli effetti delle pergamene sul banco che passeranno sull'artefatto (tutti, finché l'artefatto manca).
+	 */
+	public static int effettiDaTrasferire(Collection<Artefatto> banco) {
+		Optional<Artefatto> artefatto = artefattoSulBanco(banco);
+		return banco.stream().filter(RegoleIncantatura::isPergamena)
+				.mapToInt(p -> artefatto.map(a -> effettiTrasferibili(a, p)).orElse(effetti(p)))
+				.sum();
+	}
+
+	/**
+	 * Se la fusione farà perdere degli incantamenti elementali: sul banco c'è un libro magico e qualche
+	 * pergamena ne ha. L'incantatore lo dice, ma la fusione si può fare.
+	 */
+	public static boolean incantamentiPersi(Collection<Artefatto> banco) {
+		return artefattoSulBanco(banco).filter(RegoleIncantatura::isLibro).isPresent()
+				&& banco.stream().filter(RegoleIncantatura::isPergamena).anyMatch(p -> !p.getIncantamenti().isEmpty());
 	}
 
 	/**
@@ -51,9 +80,15 @@ public final class RegoleIncantatura {
 			}
 			artefatto = Optional.of(nuovo);
 		}
-		// Finché manca l'artefatto non si sa quanti posti ha: il limite si controlla quando arriva
+		// Finché manca l'artefatto non si sa quanti posti ha né che cosa sia: si controlla quando arriva
 		if (artefatto.isPresent() && !ciStanno(artefatto.get(), pergamene)) {
 			return Optional.of(MotivoRifiutoIncantatura.LIMITE_SUPERATO);
+		}
+		if (artefatto.isPresent() && potereMagicoFuoriPosto(artefatto.get(), pergamene)) {
+			return Optional.of(MotivoRifiutoIncantatura.POTERE_MAGICO_FUORI_POSTO);
+		}
+		if (artefatto.isPresent() && pergamenaSenzaEffetto(artefatto.get(), pergamene)) {
+			return Optional.of(MotivoRifiutoIncantatura.INCANTAMENTO_SU_LIBRO);
 		}
 		return Optional.empty();
 	}
@@ -87,6 +122,12 @@ public final class RegoleIncantatura {
 		if (!ciStanno(artefatto, pergamene)) {
 			return Optional.of(MotivoRifiutoIncantatura.LIMITE_SUPERATO);
 		}
+		if (potereMagicoFuoriPosto(artefatto, pergamene)) {
+			return Optional.of(MotivoRifiutoIncantatura.POTERE_MAGICO_FUORI_POSTO);
+		}
+		if (pergamenaSenzaEffetto(artefatto, pergamene)) {
+			return Optional.of(MotivoRifiutoIncantatura.INCANTAMENTO_SU_LIBRO);
+		}
 		if (monete < costo(banco, contrattazione)) {
 			return Optional.of(MotivoRifiutoIncantatura.MONETE_INSUFFICIENTI);
 		}
@@ -94,11 +135,10 @@ public final class RegoleIncantatura {
 	}
 
 	/**
-	 * Costo della fusione: 10 monete più 5 per ogni effetto delle pergamene sul banco.
+	 * Costo della fusione: 10 monete più 5 per ogni effetto delle pergamene sul banco che passa sull'artefatto.
 	 */
 	public static int costo(Collection<Artefatto> banco) {
-		int effettiTrasferiti = banco.stream().filter(RegoleIncantatura::isPergamena).mapToInt(RegoleIncantatura::effetti).sum();
-		return Costanti.FUSIONE_COSTO_BASE + Costanti.FUSIONE_COSTO_PER_EFFETTO * effettiTrasferiti;
+		return Costanti.FUSIONE_COSTO_BASE + Costanti.FUSIONE_COSTO_PER_EFFETTO * effettiDaTrasferire(banco);
 	}
 
 	/**
@@ -126,8 +166,10 @@ public final class RegoleIncantatura {
 		ArtefattoMD md = artefatto.getModelloDati();
 		for (Artefatto oggetto : sulBanco) {
 			if (isPergamena(oggetto)) {
-				for (Incantamento incantamento : oggetto.getIncantamenti()) {
-					md.addIncantamento(incantamento);
+				if (!isLibro(artefatto)) {
+					for (Incantamento incantamento : oggetto.getIncantamenti()) {
+						md.addIncantamento(incantamento);
+					}
 				}
 				for (ModificatoreAttributo modificatore : oggetto.getModificatori()) {
 					md.addModificatore(modificatore);
@@ -140,8 +182,34 @@ public final class RegoleIncantatura {
 		return artefatto;
 	}
 
+	/**
+	 * Il POTERE_MAGICO rende più forti gli incantesimi di chi porta l'artefatto: va solo su bastoni e libri magici,
+	 * non su una spada che poi impugnerebbe un elfo o un bardo.
+	 */
+	private static boolean potereMagicoFuoriPosto(Artefatto artefatto, Collection<Artefatto> pergamene) {
+		TipoArtefatto tipo = artefatto.getTipo();
+		if (tipo == TipoArtefatto.BASTONE_MAGICO || tipo == TipoArtefatto.LIBRO_MAGICO) {
+			return false;
+		}
+		return pergamene.stream()
+				.flatMap(p -> p.getModificatori().stream())
+				.anyMatch(m -> m.getTipoAttributo() == TipoAttributo.POTERE_MAGICO);
+	}
+
+	private static boolean isLibro(Artefatto artefatto) {
+		return artefatto.getTipo().getSupertipo() == SupertipoArtefatto.POTENZIAMENTO_POTERE_MAGICO;
+	}
+
+	/**
+	 * Una pergamena che sull'artefatto non trasferirebbe niente: su un libro magico, una con soli incantamenti
+	 * elementali, che agiscono solo sulle armi (vedi CalcolatoreCombattimento).
+	 */
+	private static boolean pergamenaSenzaEffetto(Artefatto artefatto, Collection<Artefatto> pergamene) {
+		return pergamene.stream().anyMatch(p -> effettiTrasferibili(artefatto, p) == 0);
+	}
+
 	private static boolean ciStanno(Artefatto artefatto, Collection<Artefatto> pergamene) {
-		int daAggiungere = pergamene.stream().mapToInt(RegoleIncantatura::effetti).sum();
+		int daAggiungere = pergamene.stream().mapToInt(p -> effettiTrasferibili(artefatto, p)).sum();
 		return effetti(artefatto) + daAggiungere <= artefatto.getEffettiMassimi();
 	}
 }

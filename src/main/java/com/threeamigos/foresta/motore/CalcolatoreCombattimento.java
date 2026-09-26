@@ -211,6 +211,11 @@ public class CalcolatoreCombattimento {
         double moltiplicatoreClasse = dannoNonFisico ? attaccante.getMoltiplicatoreDanniMagici() : attaccante.getMoltiplicatoreDanniFisici();
         double dannoOffensivoGrezzo = (dannoBaseArma + Math.floor(contributoEroe * rapportoEfficacia)) * fattore * moltiplicatoreClasse;
         Logger.log("dannoOffensivoGrezzo = " + dannoOffensivoGrezzo + " (fattore " + fattore + ", moltiplicatore di classe " + moltiplicatoreClasse + ")");
+        if (isIncantesimo(arma)) {
+            // Bastoni e libri magici aumentano la potenza degli incantesimi (POTERE_MAGICO)
+            dannoOffensivoGrezzo = attaccante.getModificaDanniMagia(dannoOffensivoGrezzo);
+            Logger.log("dannoOffensivoGrezzo dopo POTERE_MAGICO = " + dannoOffensivoGrezzo);
+        }
 
         // 2.5 APPLICAZIONE DEL BONUS BERSERK (Esclusivo ai Guerrieri con FURIA)
         // Solo sul danno fisico (vedi TipoEffettoDiStato.BERSERK): la condizione era negata al
@@ -406,8 +411,13 @@ public class CalcolatoreCombattimento {
                         double dannoQuestoIncantamentoProc = dannoIncantamento(attaccante, difensore, incantamento,
                                 arma.getLivello(), fattore, 1.0d);
 
-                        // La probabilità del proc magico si basa sul danno reale di QUESTO elemento e sulla statistica MAGIA
-                        double probStatoMagico = ((dannoQuestoIncantamentoProc * 100.0d) / difensore.getForza()) + (attaccante.getMagia() * 2.0d);
+                        // Probabilità (su 100) che l'incantamento applichi il suo effetto di stato: una parte dipende da
+                        // quanto è forte il colpo di QUESTO elemento rispetto alla FORZA del difensore, l'altra da chi
+                        // colpisce, cioè la sua INTELLIGENZA pesata dal POTERE_MAGICO (100 = nessun bastone o libro).
+                        // La riserva di MAGIA non conta: un guerriero senza mana con INTELLIGENZA 10 aggiunge 10 punti,
+                        // un mago con INTELLIGENZA 20 e un bastone +20% ne aggiunge 24.
+                        double contributoMagico = attaccante.getIntelligenza() * attaccante.getPotereMagico() / 100.0d;
+                        double probStatoMagico = ((dannoQuestoIncantamentoProc * 100.0d) / difensore.getForza()) + contributoMagico;
                         if (Dado.tira(100) <= probStatoMagico) {
                             TipoEffettoDiStato effettoMagico = elemento.getTipoEffettoDiStatoCasuale();
                             if (effettoMagico != null) {

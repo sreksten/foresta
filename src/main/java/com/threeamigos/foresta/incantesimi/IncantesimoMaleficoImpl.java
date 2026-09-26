@@ -2,12 +2,11 @@ package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
+import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
+import com.threeamigos.foresta.motore.DannoRisultante;
 import com.threeamigos.foresta.motore.Gruppo;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Logger;
-import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tools.Misc;
 
 import java.util.List;
 
@@ -18,13 +17,13 @@ import java.util.List;
  * Invisibilità
  */
 
+/**
+ * Il lancio di un incantesimo malefico, per chiunque lo formuli (gruppo del giocatore o mostri). Su ogni bersaglio
+ * tiro per colpire e danno si calcolano con CalcolatoreCombattimento, come per le armi.
+ */
 public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 
 	protected final int livello;
-	protected int totale;
-	protected int bersagli;
-	protected int feriti;
-	protected int uccisi;
 
 	protected IncantesimoMaleficoImpl(int livello) {
 		this.livello = livello;
@@ -38,138 +37,57 @@ public abstract class IncantesimoMaleficoImpl implements IncantesimoMalefico {
 		return TipoIncantesimo.MALEFICO;
 	}
 
+	/**
+	 * Un incantesimo GLOBALE agisce su tutta la locazione; altrimenti con un bersaglio colpisce solo lui (è il caso
+	 * dei mostri, che lanciano sempre su un personaggio), e con un gruppo colpisce tutti i vivi (GRUPPO) o fino al
+	 * numero di bersagli di chi lo formula (MULTIPLO).
+	 */
 	public void formula(Personaggio formulante, Personaggio personaggioBersaglio, Gruppo gruppoBersaglio) {
 		if (getClasse().getPortata() == PortataIncantesimo.GLOBALE) {
-			formula(formulante);
+			formulaGlobale(formulante);
 		} else if (personaggioBersaglio != null) {
-			formula(formulante, personaggioBersaglio);
+			annuncia(formulante, personaggioBersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
+			colpisci(formulante, personaggioBersaglio);
 		} else if (gruppoBersaglio != null) {
-			formula(formulante, gruppoBersaglio);
+			List<Personaggio> bersagli = gruppoBersaglio.getPersonaggiVivi();
+			if (getClasse().getPortata() == PortataIncantesimo.MULTIPLO && bersagli.size() > formulante.getBersagli()) {
+				bersagli = bersagli.subList(0, formulante.getBersagli());
+			}
+			annuncia(formulante, bersagli.size() > 1 ? "il gruppo" :
+					bersagli.get(0).getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
+			for (Personaggio bersaglio : bersagli) {
+				colpisci(formulante, bersaglio);
+			}
 		} else {
 			throw new IllegalArgumentException("Non so come formulare questo incantesimo!");
 		}
-		if (!formulante.isPNG()) {
-			BusEventi.pubblica(new NotificaTestoFrase(risultato(formulante)));
-		}
-	}
-
-	private void formula(Personaggio formulante, Gruppo gruppoBersaglio) {
-
-		List<Personaggio> personaggiVivi = gruppoBersaglio.getPersonaggiVivi();
-
-		String nomeBersaglio;
-		if (personaggiVivi.size() > 1) {
-			nomeBersaglio = "il gruppo";
-		} else {
-			nomeBersaglio = gruppoBersaglio.getPersonaggiVivi().get(0)
-					.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-							Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
-		}
-
-		String nomeFormulante = formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
-
-		BusEventi.pubblica(new NotificaTestoFrase(nomeFormulante + " formula un " + getClasse().getNomeSingolare() + " contro " + nomeBersaglio + "."));
-
-		totale = gruppoBersaglio.getNumeroPersonaggi();
-		bersagli = formulante.getBersagli();
-		if (bersagli > personaggiVivi.size()) {
-			bersagli = personaggiVivi.size();
-		}
-		int danni = formulante.getModificaDanniMagia(getDanni());
-		if (getClasse().getPortata() != PortataIncantesimo.GRUPPO && bersagli > 1) {
-			Logger.log("I danni vengono suddivisi tra i personaggi bersaglio");
-			danni /= bersagli;
-		}
-		Logger.log("Bersagli vivi: " + personaggiVivi.size() + " -> bersagli: " + bersagli + ", danni=" + danni);
-
-		for (int i = 0; i < bersagli; i++) {
-			Personaggio personaggioBersaglio = personaggiVivi.get(i);
-			formulaImpl(formulante, personaggioBersaglio, danni, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
-		}
 		formulante.subMagia(getCostoLancio());
 	}
 
-	public void formula(Personaggio formulante, Personaggio personaggioBersaglio) {
-		String nomeBersaglio = personaggioBersaglio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+	/**
+	 * L'effetto di un incantesimo GLOBALE. Per ora nessuno lo è: chi lo sarà ridefinirà questo metodo.
+	 */
+	protected void formulaGlobale(Personaggio formulante) {
+		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " formula un " + getClasse().getNomeSingolare() + "."));
+	}
+
+	private void annuncia(Personaggio formulante, String nomeBersaglio) {
 		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " formula un " + getClasse().getNomeSingolare() + " contro " +
 				nomeBersaglio + "."));
-
-		int danni = formulante.getModificaDanniMagia(getDanni());
-		formulaImpl(formulante, personaggioBersaglio, danni, Personaggio.NotificaFerite.SI, Personaggio.NotificaMorte.SI);
-		formulante.subMagia(getCostoLancio());
 	}
-	
-	private void formulaImpl(Personaggio formulante, Personaggio personaggioBersaglio, int danni, Personaggio.NotificaFerite notificaFerite, Personaggio.NotificaMorte notificaMorte) {
-		if (!personaggioBersaglio.isImmuneAIncantesimo(getClasse())) {
-			personaggioBersaglio.subSalute(danni, formulante, notificaFerite, notificaMorte);
-			if (personaggioBersaglio.isVivo()) {
-				feriti++;
-			} else {
-				uccisi++;
-				if (GruppoGiocatore.getIstanza().contiene(formulante)) {
-					Statistiche.addMostroUcciso(personaggioBersaglio.getClasse());
-					Statistiche.addPunti(personaggioBersaglio.getSaluteMassima());
-					GruppoGiocatore.getIstanza().addPuntiEsperienza(personaggioBersaglio.getPuntiEsperienza());
-				}
-			}
-		} else {
-			Logger.log("Mostro immune a incantesimo");
+
+	protected void colpisci(Personaggio formulante, Personaggio personaggioBersaglio) {
+		if (personaggioBersaglio.isImmuneAIncantesimo(getClasse())) {
+			Logger.log("Bersaglio immune all'incantesimo");
+			return;
 		}
-		Logger.log("Feriti: " + feriti + ", uccisi: " + uccisi);
-	}
-
-	protected String risultato(Personaggio formulante) {
-		Logger.log("Totale: " + totale + ", bersagli: " + bersagli + ", feriti: " + feriti + ", uccisi: " + uccisi);
-
-		String s = formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
-
-		StringBuilder sb = new StringBuilder(s);
-		if (uccisi == totale && totale > 1) {
-			sb.append(" ha formulato l'incantesimo alla perfezione, eliminando tutti i suoi avversari.");
-		} else {
-			if (uccisi > 0) {
-				sb.append(" ha eliminato ");
-				if (uccisi == 1) {
-					if (totale == 1) {
-						sb.append("il suo avversario");
-					} else {
-						sb.append("un suo avversario");
-					}
-				} else {
-					sb.append(Misc.getCardinaleM(uccisi)).append(" dei suoi avversari");
-				}
-				if (feriti > 0) {
-					sb.append(" e ne ha ");
-					if (feriti == 1) {
-						sb.append("ferito uno");
-					} else {
-						sb.append("feriti ").append(Misc.getCardinaleM(feriti));
-					}
-				}
-				sb.append('.');
-			} else {
-				sb.append(" ha ferito ");
-				if (totale == 1) {
-					sb.append("il suo avversario.");
-				} else {
-					if (feriti == totale) {
-						sb.append(" tutti i suoi avversari.");
-					} else {
-						sb.append(Misc.getCardinaleM(feriti)).append(" dei suoi avversari.");
-					}
-				}
-			}
+		if (!CalcolatoreCombattimento.colpisce(formulante, personaggioBersaglio, getTipoDanno().getSuperTipo())) {
+			Logger.log("L'incantesimo non va a segno");
+			return;
 		}
-		return sb.toString();
-	}
-
-	public void formula(Personaggio formulante) {
-		BusEventi.pubblica(new NotificaTestoFrase(formulante.getNome(
-				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-				" formula un " + getClasse().getNomeSingolare() + "."));
+		DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(formulante, personaggioBersaglio, this);
+		personaggioBersaglio.applicaRisultatoCombattimento(risultato);
 	}
 }

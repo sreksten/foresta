@@ -23,14 +23,14 @@ class ArtefattoIncantabileTest {
         assertTrue(artefatto(TipoArtefatto.ELMO, 3).isIncantabile());
         assertTrue(artefatto(TipoArtefatto.ARMATURA, 3).isIncantabile());
         assertTrue(artefatto(TipoArtefatto.VESTE, 3).isIncantabile());
+        assertTrue(artefatto(TipoArtefatto.LIBRO_MAGICO, 3).isIncantabile());
     }
 
     @Test
-    void accessoriLibroEPergameneNonSonoIncantabili() {
+    void accessoriEPergameneNonSonoIncantabili() {
         assertFalse(artefatto(TipoArtefatto.ANELLO, 3).isIncantabile());
         assertFalse(artefatto(TipoArtefatto.TALISMANO, 3).isIncantabile());
         assertFalse(artefatto(TipoArtefatto.NINNOLO, 3).isIncantabile());
-        assertFalse(artefatto(TipoArtefatto.LIBRO_MAGICO, 3).isIncantabile());
         assertFalse(artefatto(TipoArtefatto.INCANTAMENTO, 3).isIncantabile());
         assertEquals(0, artefatto(TipoArtefatto.ANELLO, 6).getEffettiMassimi());
     }

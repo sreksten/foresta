@@ -150,7 +150,7 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
 
 - **Cosa si incanta.** Armi, scudi, elmi, armature.
   - Gli **accessori** (anelli, talismani, ninnoli) non si incantano: tengono solo i loro modificatori di attributo.
-  - Il **libro magico** non si incanta: è già una fonte di magia, e dà di suo un bonus simile a un incantamento, un po' più alto (vedi "Combattimento").
+  - Il **libro magico** si incanta (supertipo `POTENZIAMENTO_POTERE_MAGICO`): una pergamena fusa è come una pagina in più del libro. Oltre al bonus proprio, simile a un incantamento e un po' più alto (vedi "Combattimento"), può ricevere dalle pergamene i modificatori, fra cui `POTERE_MAGICO`, che si fonde solo su libri e bastoni magici. Gli incantamenti elementali no, perché agiscono solo sulle armi: una pergamena che ha anche un modificatore si può fondere lo stesso, l'incantatore avverte e passa solo il modificatore (costo e posti contano solo gli effetti che passano); una con soli incantamenti elementali viene rifiutata.
 - **Sulle armi.** Danno aggiuntivo, come oggi.
 - **Sui pezzi difensivi.** Resistenza contro gli attacchi di quel `TipoDanno`, con una parte fissa e una percentuale, come il danno (vedi "Combattimento").
 
@@ -253,9 +253,9 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
   - Interfaccia `GeneratoreArtefatti` (`oggetti`), con `istanza()`, `generaArtefatto(tipo, livello)`, `generaArtefattoCasuale(livello)` (pergamene escluse) e `generaPergamena(livello)`. Chi chiama passa il livello di riferimento, `Statistiche.getLivello()`.
   - Implementazione `GeneratoreArtefattiTabelle`, con un `Random` iniettabile per i test. Nomi da tabelle ("la spada d'argento"); nome proprio nel 5% dei casi. Valori tarati sui templi:
     - costo `5 + 5 × livello`;
-    - armi: danno `max(4 + 2 × livello, 11 + livello) ± 1` (`GeneratoreArtefatti.danniMediArma`), così ai livelli bassi un'arma fa più delle mani nude di un PG, che fanno 9-10 a ogni livello; dal livello 7 vale `4 + 2 × livello` come prima; lo spadone fa +50% di danno e di prezzo; il bastone fa metà danno e dà +5% di `MAGIA` per livello;
+    - armi: danno `max(4 + 2 × livello, 11 + livello) ± 1` (`GeneratoreArtefatti.danniMediArma`), così ai livelli bassi un'arma fa più delle mani nude di un PG, che fanno 9-10 a ogni livello; dal livello 7 vale `4 + 2 × livello` come prima; lo spadone fa +50% di danno e di prezzo; il bastone fa metà danno e dà +5% di `POTERE_MAGICO` per livello;
     - pezzi difensivi: +5% di `PARATA` per livello (la veste dà `RESISTENZA_MAGICA`);
-    - libro magico: +5% di `MAGIA` per livello;
+    - libro magico: +5% di `POTERE_MAGICO` per livello;
     - accessori: +livello fisso a un attributo (carisma, coraggio, valore, fortuna, percezione).
   - Pergamene: livello da 1 a 3 (quello di riferimento, limitato a 3) e tanti effetti quanto il livello, del grado del livello di riferimento, ciascuno a caso un incantamento (elementale o magico: solo fisso, solo percentuale o entrambi) o un modificatore di attributo (fisso di 1/2/3 secondo il grado, oppure percentuale come il coefficiente del grado).
   - `GradoIncantamento` (bonus, coefficiente, prezzo base, soglie) e `ListinoPergamene.prezzo(...)`, che applica le regole di §6 a incantamenti e modificatori. I valori stanno in `Costanti`.

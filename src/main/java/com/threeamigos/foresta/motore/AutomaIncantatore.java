@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.notifiche.NotificaAvvisoIncantatura;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoIncantatura;
 import com.threeamigos.foresta.oggetti.Artefatto;
 
@@ -46,6 +47,10 @@ public class AutomaIncantatore extends AutomaScambiatoreArtefatti {
 			BusEventi.pubblica(new NotificaRifiutoIncantatura(motivo.get()));
 		} else {
 			spostaSuParteRemota(artefatto);
+			if (RegoleIncantatura.incantamentiPersi(banco.getInventario())) {
+				BusEventi.pubblica(new NotificaAvvisoIncantatura(
+						"Sul libro gli incantamenti elementali non hanno effetto: passeranno solo gli altri effetti."));
+			}
 		}
 	}
 

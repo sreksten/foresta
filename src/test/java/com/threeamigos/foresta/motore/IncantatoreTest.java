@@ -40,8 +40,6 @@ class IncantatoreTest {
     void gliAccessoriNonSiIncantano() {
         assertEquals(Optional.of(MotivoRifiutoIncantatura.NON_INCANTABILE),
                 RegoleIncantatura.puoMettereSulBanco(Collections.emptyList(), artefatto(TipoArtefatto.ANELLO, 5)));
-        assertEquals(Optional.of(MotivoRifiutoIncantatura.NON_INCANTABILE),
-                RegoleIncantatura.puoMettereSulBanco(Collections.emptyList(), artefatto(TipoArtefatto.LIBRO_MAGICO, 5)));
     }
 
     @Test
@@ -175,6 +173,42 @@ class IncantatoreTest {
         incantatore.svuotaBanco();
         assertTrue(incantatore.getBanco().getInventario().isEmpty());
         assertEquals(3, gruppo.getInventario().size());
+    }
+
+    @Test
+    void ilPotereMagicoSiFondeSoloSuBastoniELibriMagici() {
+        Artefatto pergamena = artefatto(TipoArtefatto.INCANTAMENTO, 1);
+        pergamena.getModelloDati().addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_PERCENTUALE, 10, "");
+        List<Artefatto> banco = Collections.singletonList(pergamena);
+        assertEquals(Optional.of(MotivoRifiutoIncantatura.POTERE_MAGICO_FUORI_POSTO),
+                RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.SPADA, 5)));
+        assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.BASTONE_MAGICO, 5)));
+        assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.LIBRO_MAGICO, 5)));
+    }
+
+    @Test
+    void suUnLibroMagicoUnaPergamenaConSoliIncantamentiElementaliNonServe() {
+        assertEquals(Optional.of(MotivoRifiutoIncantatura.INCANTAMENTO_SU_LIBRO),
+                RegoleIncantatura.puoMettereSulBanco(Collections.singletonList(pergamena(1)), artefatto(TipoArtefatto.LIBRO_MAGICO, 5)));
+    }
+
+    @Test
+    void suUnLibroMagicoPassaSoloIlModificatoreEGliIncantamentiSiPerdono() {
+        // Given: una pergamena con un incantamento elementale e un modificatore di POTERE_MAGICO
+        Artefatto libro = artefatto(TipoArtefatto.LIBRO_MAGICO, 5);
+        Artefatto pergamena = pergamena(1);
+        pergamena.getModelloDati().addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_PERCENTUALE, 10, "");
+        BancoDiLavoro banco = new BancoDiLavoro();
+        banco.addArtefatto(libro);
+        banco.addArtefatto(pergamena);
+        assertTrue(RegoleIncantatura.incantamentiPersi(banco.getInventario()));
+        // Si paga solo l'effetto che passa
+        assertEquals(Costanti.FUSIONE_COSTO_BASE + Costanti.FUSIONE_COSTO_PER_EFFETTO, RegoleIncantatura.costo(banco.getInventario()));
+        // When
+        assertEquals(Optional.empty(), gruppo.incanta(banco, ""));
+        // Then
+        assertTrue(libro.getIncantamenti().isEmpty());
+        assertTrue(libro.getModificatori().stream().anyMatch(m -> m.getTipoAttributo() == TipoAttributo.POTERE_MAGICO));
     }
 
     private static Artefatto artefatto(TipoArtefatto tipo, int livello) {

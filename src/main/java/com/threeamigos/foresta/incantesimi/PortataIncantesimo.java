@@ -4,20 +4,27 @@ public enum PortataIncantesimo {
 	
 
 	/**
-	 * Se l'incantesimo è globale non ha bisogno di parametri aggiuntivi
-	 * (al momento non ne esistono ma non si sa mai, un NegaMagia o AccresciForza
-	 * o qualcosa del genere che agisce su tutta la locazione o su chi lo formula)
+	 * Un effetto su tutta la locazione o su chi lo formula, senza bersagli (al momento non ne esistono: un
+	 * NegaMagia, un AccresciForza, "fino alla fine del turno gli attacchi sono ridotti del X%"...). Va scritto
+	 * ridefinendo IncantesimoMaleficoImpl.formulaGlobale. Morte non può mai esserlo.
 	 */
 	GLOBALE,
 
 	/**
-	 * Se l'incantesimo è di gruppo ha bisogno di un gruppo su cui formularlo
+	 * Colpisce tutti i personaggi vivi del gruppo avversario
 	 */
 	GRUPPO,
 
 	/**
-	 * Se l'incantesimo è singolo ha bisogno di un personaggio su cui formularlo
-	 * e il personaggio appartiene al nostro gruppo
+	 * Colpisce fino a N personaggi vivi del gruppo avversario, con N il numero di bersagli di chi lo formula
+	 * (Personaggio.getBersagli)
+	 */
+	MULTIPLO,
+
+	/**
+	 * Su un solo personaggio: se l'incantesimo è benefico (Resurrezione) uno del nostro gruppo, scelto dal
+	 * giocatore; se è malefico (Morte) un avversario, per ora il primo ancora vivo (vedi LocazioneBase).
+	 * SOLO_VIVI esclude i morti, QUALSIASI no.
 	 */
 	SINGOLO_SOLO_VIVI,
 	SINGOLO_QUALSIASI

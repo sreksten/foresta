@@ -165,7 +165,7 @@ public class RegistroArtefatti {
 				.setLivello(1)
 				.setCostoAcquisto(10)
 				.setPeso(1)
-				.setModificatore(TipoAttributo.MAGIA, TipoModificatore.AUMENTO_FISSO, 5)
+				.setModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_FISSO, 5)
 				.costruisci());
 
 		aggiungiArtefatto(CostruttoreArtefatto.istanza()
@@ -175,7 +175,7 @@ public class RegistroArtefatti {
 				.setLivello(2)
 				.setCostoAcquisto(15)
 				.setPeso(2)
-				.setModificatore(TipoAttributo.MAGIA, TipoModificatore.AUMENTO_PERCENTUALE, 10)
+				.setModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_PERCENTUALE, 10)
 				.setModificatore(TipoAttributo.NUMERO_BERSAGLI, TipoModificatore.AUMENTO_FISSO, 2)
 				.costruisci());
 
@@ -186,7 +186,7 @@ public class RegistroArtefatti {
 				.setLivello(3)
 				.setCostoAcquisto(20)
 				.setPeso(1)
-				.setModificatore(TipoAttributo.MAGIA, TipoModificatore.AUMENTO_PERCENTUALE, 15)
+				.setModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_PERCENTUALE, 15)
 				.setModificatore(TipoAttributo.NUMERO_BERSAGLI, TipoModificatore.AUMENTO_FISSO, 3)
 				.costruisci());
 
@@ -197,7 +197,7 @@ public class RegistroArtefatti {
 				.setLivello(4)
 				.setCostoAcquisto(25)
 				.setPeso(1)
-				.setModificatore(TipoAttributo.MAGIA, TipoModificatore.AUMENTO_PERCENTUALE, 20)
+				.setModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_PERCENTUALE, 20)
 				.setModificatore(TipoAttributo.NUMERO_BERSAGLI, TipoModificatore.AUMENTO_FISSO, 4)
 				.costruisci());
 

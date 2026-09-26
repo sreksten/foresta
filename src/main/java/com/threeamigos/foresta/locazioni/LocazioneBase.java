@@ -10,6 +10,7 @@ import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
+import com.threeamigos.foresta.incantesimi.TipoIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
@@ -359,8 +360,10 @@ public abstract class LocazioneBase implements Locazione {
 				}
 
 				PortataIncantesimo tipo = classeIncantesimo.getPortata();
-				// Se l'incantesimo ha bisogno di un bersaglio preciso, occorre chiedere quale sia
-				if (tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI || tipo == PortataIncantesimo.SINGOLO_QUALSIASI) {
+				boolean suUnSoloBersaglio = tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI || tipo == PortataIncantesimo.SINGOLO_QUALSIASI;
+				// Un incantesimo benefico su un solo bersaglio (Resurrezione) si formula su un personaggio del gruppo,
+				// e occorre chiedere quale sia
+				if (suUnSoloBersaglio && classeIncantesimo.getTipo() == TipoIncantesimo.BENEFICO) {
 					Logger.log("Incantesimo di tipo " + (tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI ? "SINGOLO_SOLO_VIVI" : "SINGOLO_QUALSIASI"));
 					int l = gruppo.getNumeroPersonaggi();
 					Personaggio personaggio;
@@ -378,34 +381,26 @@ public abstract class LocazioneBase implements Locazione {
 					return Stato.SCELTA_PERSONAGGIO_QUALSIASI;
 				}
 
-				// Altrimenti, l'incantesimo può colpire tutti i bersagli del gruppo avversario o proprio tutti,
-				// a seconda della portata
-				List<Personaggio> bersagli = new ArrayList<>();
-				if (tipo == PortataIncantesimo.GLOBALE) {
-					bersagli.addAll(gruppo.getPersonaggiVivi());
-					bersagli.remove(formulante);
-					bersagli.addAll(gruppoAvversario.getPersonaggiVivi());
-					Logger.log("tipo == PortataIncantesimo.GLOBALE, applico a tutti i personaggi meno il formulante");
-				} else if (tipo == PortataIncantesimo.GRUPPO) {
-					bersagli.addAll(gruppoAvversario.getPersonaggiVivi());
-					Logger.log("tipo == PortataIncantesimo.GRUPPO, applico a tutti i personaggi del gruppo avversario");
+				// Altrimenti l'incantesimo agisce sul gruppo avversario (tutto o fino al numero di bersagli del
+				// formulante, secondo la portata), su un solo avversario (Morte) o su tutta la locazione: il lancio,
+				// costo in MAGIA compreso, lo fa l'incantesimo. Gli avversari che uccide contano nelle statistiche e
+				// danno esperienza.
+				List<Personaggio> avversariVivi = gruppoAvversario.getPersonaggiVivi();
+				if (suUnSoloBersaglio) {
+					// TODO far scegliere al giocatore su quale avversario formularlo, quando ci saranno le icone dei
+					// mostri: per ora il primo ancora vivo, come per l'inizio del combattimento
+					incantesimo.formula(formulante, gruppoAvversario.getPersonaggioVivo(), null);
+				} else {
+					incantesimo.formula(formulante, null, gruppoAvversario);
 				}
-
-				for (Personaggio bersaglio : bersagli) {
-					IncantesimoMalefico incantesimoMalefico = (IncantesimoMalefico) incantesimo;
-					if (CalcolatoreCombattimento.colpisce(formulante, bersaglio, incantesimoMalefico.getTipoDanno().getSuperTipo())) {
-						DannoRisultante dannoRisultante = CalcolatoreCombattimento.calcolaDannoRisultante(formulante, bersaglio, incantesimoMalefico);
-						bersaglio.applicaRisultatoCombattimento(dannoRisultante);
-						registraUccisione(formulante, bersaglio);
-					}
+				for (Personaggio avversario : avversariVivi) {
+					registraUccisione(formulante, avversario);
 				}
 
 				if (!gruppo.getCapo().isVivo()) {
 					return Stato.GIOCO_PERSO;
 				}
 
-				// Come per gli incantesimi su un solo bersaglio (IncantesimoMaleficoImpl.formula), il lancio costa MAGIA
-				formulante.subMagia(incantesimo.getCostoLancio());
 				gruppo.subIncantesimi(incantesimo.getClasse(), 1);
 
 				if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
@@ -432,6 +427,7 @@ public abstract class LocazioneBase implements Locazione {
 			Personaggio personaggioBersaglio = gruppoBersaglio.getPersonaggio(azione);
 			Personaggio formulanteScelto = gruppo.getFormulante();
 			incantesimo.formula(formulanteScelto, personaggioBersaglio, null);
+			registraUccisione(formulanteScelto, personaggioBersaglio);
 			gruppo.subIncantesimi(incantesimo.getClasse(), 1);
 			rispostaAvversaria(formulanteScelto, gruppo, gruppoAvversario);
 			if (!gruppo.getCapo().isVivo()) {
@@ -810,7 +806,12 @@ public abstract class LocazioneBase implements Locazione {
 				avversarioAttaccante.hasEffettoDiStato(TipoEffettoDiStato.STORDITO)) {
 			return;
 		}
-		if (personaggioBersaglio == null) {
+		if (gruppo.getNumeroPersonaggiVivi() == 0) {
+			return;
+		}
+		// Chi ha appena agito può essere morto (es. un Morte che gli si è ritorto contro): allora il mostro
+		// sceglie fra i vivi del gruppo
+		if (personaggioBersaglio == null || !personaggioBersaglio.isVivo()) {
 			avversarioAttaccante.attacca(gruppo);
 		} else {
 			avversarioAttaccante.attacca(personaggioBersaglio);

@@ -233,7 +233,7 @@ public final class Equipaggiamento {
 						danni = (int) Math.round(danni * Costanti.ARTEFATTO_MOLTIPLICATORE_DUE_MANI);
 					} else if (tipo == TipoArtefatto.BASTONE_MAGICO) {
 						danni = danni / 2;
-						md.addModificatore(TipoAttributo.MAGIA, TipoModificatore.AUMENTO_PERCENTUALE, 5.0 * livello, "");
+						md.addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_PERCENTUALE, 5.0 * livello, "");
 					}
 					md.setDanni(danni);
 					break;
@@ -244,7 +244,7 @@ public final class Equipaggiamento {
 							TipoModificatore.AUMENTO_PERCENTUALE, 5.0 * livello, "");
 					break;
 				default:
-					md.addModificatore(TipoAttributo.MAGIA, TipoModificatore.AUMENTO_PERCENTUALE, 5.0 * livello, "");
+					md.addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_PERCENTUALE, 5.0 * livello, "");
 					break;
 			}
 			if (incantamento != null) {

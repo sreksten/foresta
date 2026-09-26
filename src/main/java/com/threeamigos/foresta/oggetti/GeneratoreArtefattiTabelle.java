@@ -81,7 +81,9 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 			TipoAttributo.FORZA, TipoAttributo.DESTREZZA, TipoAttributo.COSTITUZIONE, TipoAttributo.INTELLIGENZA,
 			TipoAttributo.SAGGEZZA, TipoAttributo.CARISMA, TipoAttributo.FORTUNA, TipoAttributo.PARATA,
 			TipoAttributo.RESISTENZA_MAGICA, TipoAttributo.PRECISIONE, TipoAttributo.VELOCITA,
-			TipoAttributo.CORAGGIO, TipoAttributo.VALORE
+			TipoAttributo.CORAGGIO, TipoAttributo.VALORE,
+			// Fuso su un bastone o un libro magico ne aumenta la potenza
+			TipoAttributo.POTERE_MAGICO
 	};
 
 	/**
@@ -151,15 +153,14 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 				md.addModificatore(tipo == TipoArtefatto.VESTE ? TipoAttributo.RESISTENZA_MAGICA : TipoAttributo.PARATA,
 						TipoModificatore.AUMENTO_PERCENTUALE, 5.0 * livelloEffettivo, "");
 				break;
+			case POTENZIAMENTO_POTERE_MAGICO:
+				md.setDescrizione(MAGIA);
+				md.addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_PERCENTUALE, 5.0 * livelloEffettivo, "");
+				break;
 			default:
-				if (tipo == TipoArtefatto.LIBRO_MAGICO) {
-					md.setDescrizione(MAGIA);
-					md.addModificatore(TipoAttributo.MAGIA, TipoModificatore.AUMENTO_PERCENTUALE, 5.0 * livelloEffettivo, "");
-				} else {
-					Object[] accessorio = ACCESSORI[random.nextInt(ACCESSORI.length)];
-					md.setDescrizione((String) accessorio[1]);
-					md.addModificatore((TipoAttributo) accessorio[0], TipoModificatore.AUMENTO_FISSO, livelloEffettivo, "");
-				}
+				Object[] accessorio = ACCESSORI[random.nextInt(ACCESSORI.length)];
+				md.setDescrizione((String) accessorio[1]);
+				md.addModificatore((TipoAttributo) accessorio[0], TipoModificatore.AUMENTO_FISSO, livelloEffettivo, "");
 				break;
 		}
 		Artefatto artefatto = Artefatto.di(md);
@@ -251,7 +252,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		if (md.getTipo() == TipoArtefatto.BASTONE_MAGICO) {
 			danni = danni / 2;
 			md.setDescrizione(MAGIA);
-			md.addModificatore(TipoAttributo.MAGIA, TipoModificatore.AUMENTO_PERCENTUALE, 5.0 * livello, "");
+			md.addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_PERCENTUALE, 5.0 * livello, "");
 		} else {
 			md.setDescrizione(COMBATTIMENTO);
 		}
