@@ -109,7 +109,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		return new Dimension(640, height);
 	}
 
-	public DisplayableCanvas(int width, int height, int orientamento, int dimensioneBarraIcone) {
+	/**
+	 * @param barraDock vero per la barra delle icone che si ingrandisce sotto il cursore (DisplayableCanvasBarraIconeDock),
+	 *                  solo in orientamento orizzontale; altrimenti la barra classica
+	 */
+	public DisplayableCanvas(int width, int height, int orientamento, int dimensioneBarraIcone, boolean barraDock) {
 		super();
 		altezzaTotaleSchermo = height;
 		Dimension areaDiContenuto = calcolaAreaDiContenuto(width, height, orientamento, dimensioneBarraIcone);
@@ -264,7 +268,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			barraX = width - dimensioneBarraIcone;
 			barraY = 0;
 		}
-		barraIcone = new DisplayableCanvasBarraIcone(orientamento, barraX, barraY, barraLarghezza, barraAltezza);
+		barraIcone = barraDock && orientamento == ORIENTAMENTO_ORIZZONTALE
+				? new DisplayableCanvasBarraIconeDock(barraX, barraY, barraLarghezza, barraAltezza)
+				: new DisplayableCanvasBarraIcone(orientamento, barraX, barraY, barraLarghezza, barraAltezza);
 
 		Rectangle barraIconeRect = new Rectangle(barraX, barraY, barraLarghezza, barraAltezza);
 		mappaCoordinateElementiGrafici.put(barraIcone, barraIconeRect);
@@ -419,7 +425,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 					|| stato == StatoDisplayableCanvas.STATO_ALCHIMISTA
 					|| stato == StatoDisplayableCanvas.STATO_INCANTATORE
 					|| stato == StatoDisplayableCanvas.STATO_INTERMEZZO
-					|| annuncioGlobaleAttivo != null || !codaAnnunciGlobali.isEmpty()) {
+					|| annuncioGlobaleAttivo != null || !codaAnnunciGlobali.isEmpty()
+					|| barraIcone.inTransizione()) {
 				repaint();
 			}
 			prossimoFotogramma += periodoNanos;
@@ -1008,7 +1015,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 				return null;
 			}
 			Rectangle rettangolo = mappaCoordinateElementiGrafici.get(finestra);
-			if (!rettangolo.contains(x, y)) {
+			// La barra decide da sé quali punti sono suoi: le icone ingrandite escono dal suo rettangolo
+			boolean dentro = finestra == barraIcone
+					? barraIcone.contiene(x - rettangolo.x, y - rettangolo.y)
+					: rettangolo.contains(x, y);
+			if (!dentro) {
 				return null;
 			}
 			return new RisultatoRicerca(finestra, x - rettangolo.x, y - rettangolo.y);

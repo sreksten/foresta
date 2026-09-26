@@ -35,7 +35,6 @@ import java.util.function.Supplier;
 // TODO: mostrare in locazione anche i personaggi del gruppo.
 // TODO: implementare fumetto che attende chiusura
 // TODO: implementare sistema di aiuto
-// TODO: se carino e non costa troppo, sarebbe bello nel pannello icone fare tipo la barra dele applicazioni di macos che si ingrandisce sull'icona corrente e scala leggermente quelle vicine.
 
 // Bug noti ancora da correggere (dall'indagine sul codice): si spuntano togliendo la riga quando sono corretti.
 //

@@ -16,6 +16,9 @@ public class Main {
 	private static boolean tuttoSchermo = false;
 	// Per le partite di prova: niente logo iniziale, si va dritti all'INTRO
 	private static boolean saltaLogo = false;
+	// La barra delle icone che si ingrandisce sotto il cursore, come il Dock di macOS (solo in orizzontale);
+	// con l'argomento BARRACLASSICA si torna alla barra fissa
+	private static boolean barraDock = true;
 
 	private static void leggiArgomenti(String[] args) {
         for (String arg : args) {
@@ -27,6 +30,8 @@ public class Main {
                 tuttoSchermo = true;
             } else if (arg.equalsIgnoreCase("SALTALOGO")) {
                 saltaLogo = true;
+            } else if (arg.equalsIgnoreCase("BARRACLASSICA")) {
+                barraDock = false;
             }
         }
 	}
@@ -50,7 +55,7 @@ public class Main {
 		BusEventi.iscriviti(InternoInterfacciaUtentePronta.class, e -> controlloreDiGioco.inizia());
 
 		Temporizzatore temporizzatoreUI = new TemporizzatoreJ2SE();
-		new ForestaUI(orientamento, tuttoSchermo, saltaLogo, temporizzatoreUI);
+		new ForestaUI(orientamento, tuttoSchermo, saltaLogo, barraDock, temporizzatoreUI);
 
 		//FIXME gestire l'elenco finestre togliendolo da InterfacciaUtente
 	}

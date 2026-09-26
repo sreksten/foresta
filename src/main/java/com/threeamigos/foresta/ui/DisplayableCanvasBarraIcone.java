@@ -21,10 +21,10 @@ import java.util.List;
  */
 class DisplayableCanvasBarraIcone implements Finestra {
 
-	private static final int ICONA_WIDTH = 62;
-	private static final int ICONA_HEIGHT = 64;
+	static final int ICONA_WIDTH = 62;
+	static final int ICONA_HEIGHT = 64;
 
-	private static class IconaVisibile {
+	static class IconaVisibile {
 		final Rectangle rettangolo;
 		final Comando comando;
 		final BufferedImage icona;
@@ -37,10 +37,10 @@ class DisplayableCanvasBarraIcone implements Finestra {
 	}
 
 	private final int orientamento;
-	private final int offsetX;
-	private final int offsetY;
-	private final int larghezza;
-	private final int altezza;
+	final int offsetX;
+	final int offsetY;
+	final int larghezza;
+	final int altezza;
 
 	private final Comando comandoPrecedente;
 	private final BufferedImage iconaPrecedente;
@@ -55,11 +55,11 @@ class DisplayableCanvasBarraIcone implements Finestra {
 	private BufferedImage[] icone = new BufferedImage[0];
 	private int saltaPrimi = 0;
 
-	private final List<IconaVisibile> iconeVisibili = new ArrayList<>();
+	final List<IconaVisibile> iconeVisibili = new ArrayList<>();
 
-	private int mouseX = -1;
-	private int mouseY = -1;
-	private boolean mousePremuto = false;
+	int mouseX = -1;
+	int mouseY = -1;
+	boolean mousePremuto = false;
 
 	DisplayableCanvasBarraIcone(int orientamento, int offsetX, int offsetY, int larghezza, int altezza) {
 		this.orientamento = orientamento;
@@ -228,10 +228,26 @@ class DisplayableCanvasBarraIcone implements Finestra {
 		graphics.drawLine(sx, sy, sx, y);
 	}
 
-	private void copyright(Graphics2D graphics) {
+	void copyright(Graphics2D graphics) {
 		for (int i = 0; i < 3; i++) {
 			graphics.drawImage(copyrightImages[i], offsetX + copyrightImagesXOffset[i], offsetY + copyrightImagesYOffset[i], null);
 		}
+	}
+
+	/**
+	 * Se il punto (relativo all'angolo della barra) spetta alla barra: qui il suo rettangolo, ma una barra le cui
+	 * icone escono dal rettangolo (vedi DisplayableCanvasBarraIconeDock) può reclamare anche i punti fuori.
+	 */
+	boolean contiene(int x, int y) {
+		return x >= 0 && y >= 0 && x < larghezza && y < altezza;
+	}
+
+	/**
+	 * Se la barra sta animando qualcosa da sola, anche a mouse fermo: allora DisplayableCanvas la ridisegna a ogni
+	 * fotogramma. La barra classica non anima mai.
+	 */
+	boolean inTransizione() {
+		return false;
 	}
 
 	@Override
@@ -269,26 +285,31 @@ class DisplayableCanvasBarraIcone implements Finestra {
 			return;
 		}
 		for (IconaVisibile iconaVisibile : iconeVisibili) {
-			if (!iconaVisibile.rettangolo.contains(x, y)) {
-				continue;
+			if (iconaVisibile.rettangolo.contains(x, y)) {
+				esegui(iconaVisibile.comando);
+				return;
 			}
-			Comando azione = iconaVisibile.comando;
-			if (azione == Comando.SU || azione == Comando.SINISTRA) {
-				saltaPrimi--;
-				if (saltaPrimi == 1) {
-					saltaPrimi = 0;
-				}
-				ridistribuisciScelte();
-			} else if (azione == Comando.GIU || azione == Comando.DESTRA) {
-				saltaPrimi++;
-				if (saltaPrimi == 1) {
-					saltaPrimi = 2;
-				}
-				ridistribuisciScelte();
-			} else {
-				BusEventi.pubblica(new ComandoDiGioco(azione));
+		}
+	}
+
+	/**
+	 * Il click su un'icona: le frecce scorrono le scelte, le altre mandano il comando al gioco.
+	 */
+	void esegui(Comando azione) {
+		if (azione == Comando.SU || azione == Comando.SINISTRA) {
+			saltaPrimi--;
+			if (saltaPrimi == 1) {
+				saltaPrimi = 0;
 			}
-			return;
+			ridistribuisciScelte();
+		} else if (azione == Comando.GIU || azione == Comando.DESTRA) {
+			saltaPrimi++;
+			if (saltaPrimi == 1) {
+				saltaPrimi = 2;
+			}
+			ridistribuisciScelte();
+		} else {
+			BusEventi.pubblica(new ComandoDiGioco(azione));
 		}
 	}
 }

@@ -43,6 +43,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	private PannelloLogoIniziale pannelloLogoIniziale;
 	private volatile boolean interfacciaCompleta;
 	private boolean logoInizialeConcluso;
+	private final boolean barraDock;
 	private Stato statoDiGioco;
 
 	public ForestaUI(Orientamento orientamento, boolean tuttoSchermo, Temporizzatore temporizzatore) {
@@ -54,6 +55,16 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	 *                          aspetta solo il caricamento delle risorse e si passa subito all'INTRO
 	 */
 	public ForestaUI(Orientamento orientamento, boolean tuttoSchermo, boolean saltaLogoIniziale, Temporizzatore temporizzatore) {
+		this(orientamento, tuttoSchermo, saltaLogoIniziale, true, temporizzatore);
+	}
+
+	/**
+	 * @param barraDock vero per la barra delle icone che si ingrandisce sotto il cursore, come il Dock di macOS
+	 *                  (vedi DisplayableCanvasBarraIconeDock; solo in orientamento orizzontale)
+	 */
+	public ForestaUI(Orientamento orientamento, boolean tuttoSchermo, boolean saltaLogoIniziale, boolean barraDock,
+					 Temporizzatore temporizzatore) {
+		this.barraDock = barraDock;
 		this.orientamento = orientamento;
 		this.tuttoSchermo = tuttoSchermo;
 		this.saltaLogoIniziale = saltaLogoIniziale;
@@ -192,7 +203,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		prompt.setLocation((larghezza - prompt.getSize().width) / 2, (altezza - prompt.getSize().height) / 2);
 
 		Logger.log("Orientamento: " + orientamento);
-		displayableCanvas = new DisplayableCanvas(larghezza, altezza, orientamentoCanvas(orientamento), SPESSORE_BARRA_ICONE);
+		displayableCanvas = new DisplayableCanvas(larghezza, altezza, orientamentoCanvas(orientamento), SPESSORE_BARRA_ICONE, barraDock);
 		interfacciaCompleta = true;
 	}
 
