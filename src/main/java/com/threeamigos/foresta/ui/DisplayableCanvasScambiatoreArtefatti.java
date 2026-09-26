@@ -361,6 +361,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
             case SCUDO:
                 return ImageCache.separatoreScudi;
             case INCANTAMENTO:
+            case POTENZIAMENTO_POTERE_MAGICO:
                 return ImageCache.separatoreIncantamenti;
             case ALTRO:
                 return ImageCache.separatoreNinnoli;
