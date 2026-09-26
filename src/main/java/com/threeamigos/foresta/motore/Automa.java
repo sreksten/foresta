@@ -1258,6 +1258,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private void inizializzaGioco() {
 
 		gruppo.aggiungiPersonaggioSenzaNotificare(personaggio);
+
 		if (!ModalitaDiProva.isAttiva()) {
 			// In modalità di prova ha già i suoi artefatti potenti (vedi sotto)
 			EquipaggiamentoIniziale.equipaggia(personaggio);
@@ -1265,19 +1266,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 		// Solo in modalità di prova: artefatti potenti e punti abilità al primo personaggio
 		if (ModalitaDiProva.isAttiva()) {
-			Artefatto cazzabubbolo = CostruttoreArtefatto.istanza()
-					.setTipo(TipoArtefatto.NINNOLO)
-					.setNome("il cazzabubbolo a molla della morte alata perforante")
-					.setDescrizione("il cui potere è nel fancazzismo")
-					.setLivello(1)
-					.setDanniBase(5)
-					.setCostoAcquisto(10)
-					.setPeso(1)
-					.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 500)
-					.setModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_PERCENTUALE, 400)
-					.setIncantamento("Il Peperoncino di Cayenna", TipoDanno.FUOCO, 10, 0.5)
-					.costruisci();
-			personaggio.addArtefatto(cazzabubbolo);
 
 			Artefatto megaspada = CostruttoreArtefatto.istanza()
 					.setTipo(TipoArtefatto.SPADA)
@@ -1322,6 +1310,44 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					.setModificatore(TipoAttributo.CARISMA, TipoModificatore.QUANTITA_ASSOLUTA, 0)
 					.costruisci();
 			personaggio.addArtefatto(scarponi);
+
+			Artefatto elmoTremendo = CostruttoreArtefatto.istanza()
+					.setTipo(TipoArtefatto.ELMO)
+					.setNome("La dvra cervice di RomyJona")
+					.setDescrizione("che fa tremare il nemico")
+					.setLivello(5)
+					.setDanniBase(0)
+					.setCostoAcquisto(100)
+					.setPeso(3)
+					.setModificatore(TipoAttributo.COSTITUZIONE, TipoModificatore.AUMENTO_PERCENTUALE, 5)
+					.costruisci();
+			personaggio.addArtefatto(elmoTremendo);
+
+			Artefatto cazzabubbolo = CostruttoreArtefatto.istanza()
+					.setTipo(TipoArtefatto.NINNOLO)
+					.setNome("il cazzabubbolo a molla della morte alata perforante")
+					.setDescrizione("il cui potere è nel fancazzismo")
+					.setLivello(1)
+					.setDanniBase(5)
+					.setCostoAcquisto(10)
+					.setPeso(1)
+					.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 500)
+					.setModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_PERCENTUALE, 400)
+					.setIncantamento("Il Peperoncino di Cayenna", TipoDanno.FUOCO, 10, 0.5)
+					.costruisci();
+			personaggio.addArtefatto(cazzabubbolo);
+
+			Artefatto manualeUnix = CostruttoreArtefatto.istanza()
+					.setTipo(TipoArtefatto.LIBRO_MAGICO)
+					.setNome("Manuale di Unix System 5")
+					.setDescrizione("che aiuta a far gli spregi ar CDA")
+					.setLivello(1)
+					.setDanniBase(0)
+					.setCostoAcquisto(20)
+					.setPeso(1)
+					.setModificatore(TipoAttributo.SAGGEZZA, TipoModificatore.AUMENTO_PERCENTUALE, 30)
+					.costruisci();
+			personaggio.addArtefatto(manualeUnix);
 
 			Artefatto occhiali = CostruttoreArtefatto.istanza()
 					.setTipo(TipoArtefatto.NINNOLO)
