@@ -25,7 +25,9 @@ public class Prompt extends JPanel implements ActionListener {
 		}
 	}
 
-	private final TextField tf;
+	// Un JTextField e non un java.awt.TextField: un componente AWT (nativo) ha una visibilità sua e, aggiunto a
+	// finestra già aperta (a fine logo, vedi ForestaUI), comparirebbe anche con il Prompt nascosto e senza cornice
+	private final JTextField tf;
 
 	public String getText() {
 		return Serializzabile.senzaPipe(tf.getText());
@@ -36,7 +38,7 @@ public class Prompt extends JPanel implements ActionListener {
 		BufferedImage cornice = ImageCache.cornicePiccola;
 		setSize(new Dimension(cornice.getWidth(), cornice.getHeight()));
 		setLayout(null);
-		tf = new TextField();
+		tf = new JTextField();
 		tf.addFocusListener(new MyFocusListener());
 		// Il "|" separa i campi dei salvataggi: non si lascia nemmeno scrivere
 		tf.addKeyListener(new KeyAdapter() {
