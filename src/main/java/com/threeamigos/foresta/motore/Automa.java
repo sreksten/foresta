@@ -45,7 +45,6 @@ import java.util.function.Supplier;
 // UI
 // FIXME modalita' VERTICALE: DisplayableCanvasBarraIcone avanza di 32 con icone alte 64, e la finestra e' larga al massimo 400
 // FIXME schermi alti meno di 804 px: la barra delle icone copre il fondo del riquadro delle missioni
-// FIXME DisplayableCanvas: il click singolo differito (Timer da 175 ms) puo' scattare su una schermata gia' chiusa
 // FIXME latente: ClassiOggettoImmagine restituisce null per Elmo e Armatura (oggi non compaiono tra gli oggetti delle locazioni)
 
 public class Automa implements ControlloreDiGioco, Temporizzabile {

@@ -945,6 +945,15 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		// sia un evento con clickCount 1 sia uno con clickCount 2. Il primo va quindi rimandato,
 		// per poterlo scartare se nel frattempo arriva il secondo (altrimenti processaClick e
 		// processaDoppioClick scatterebbero entrambi per un solo doppio click).
+		//
+		// Limiti noti, lasciati così perché oggi innocui:
+		// - il timer ricorda la finestra cliccata e nessuno lo ferma quando la schermata cambia: se entro
+		//   l'intervallo la schermata si chiude, processaClick scatta lo stesso sulla finestra che non si vede
+		//   più (oggi apre o chiude al massimo i dettagli di un oggetto). Per correggerlo basterebbe controllare
+		//   nel timer che la finestra sia ancora quella mostrata, o fermare il timer a ogni cambio di schermata;
+		// - l'intervallo è fisso a 175 ms, mentre Swing riconosce il doppio click con quello del sistema (di
+		//   solito 400-500 ms): un doppio click più lento di 175 ms fa scattare sia il click singolo sia il
+		//   doppio. Con l'intervallo del sistema il click singolo risponderebbe più lentamente.
 		private final int intervalloDoppioClick = intervalloDoppioClick();
 		private Timer timerClickSingolo;
 
