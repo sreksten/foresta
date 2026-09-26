@@ -25,6 +25,7 @@ import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tools.GestorePunteggi;
 import com.threeamigos.foresta.tools.GestoreSalvataggi;
+import com.threeamigos.foresta.tools.ModalitaDiProva;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -44,6 +45,10 @@ import java.util.stream.Collectors;
  * Gli intermezzi possono scattare in qualunque momento (inizio partita, ingresso in una locazione...): dopo ogni
  * comando, testo o impulso la partita li fa scorrere da sola fino alla fine, come un giocatore che clicca sulla
  * pergamena. Un test sugli intermezzi lo disattiva con {@link #nonSaltareIntermezzi()}.
+ * <p>
+ * Le partite di test girano in modalità di prova (ModalitaDiProva: monete, pergamene e pozioni a volontà, la mappa
+ * svelata, le missioni e l'intermezzo di prova), tranne quelle di {@link #nuovaSenzaTrucchi(long)}, che partono
+ * come per un giocatore vero. {@link #close()} rimette la system property com'era.
  */
 final class PartitaDiTest implements AutoCloseable {
 
@@ -54,9 +59,15 @@ final class PartitaDiTest implements AutoCloseable {
 	private Collection<Comando> comandiDisponibili = new ArrayList<>();
 	private int erroriVisti;
 	private boolean saltaIntermezzi = true;
+	private final String modalitaDiProvaPrecedente = System.getProperty(ModalitaDiProva.PROPRIETA);
 
-	private PartitaDiTest(long seme, GestoreSalvataggiInMemoria salvataggi) {
+	private PartitaDiTest(long seme, GestoreSalvataggiInMemoria salvataggi, boolean modalitaDiProva) {
 		this.salvataggi = salvataggi;
+		if (modalitaDiProva) {
+			System.setProperty(ModalitaDiProva.PROPRIETA, "true");
+		} else {
+			System.clearProperty(ModalitaDiProva.PROPRIETA);
+		}
 		BusEventi.azzera();
 		BusEventi.impostaConsegna(Runnable::run);
 		Dado.ripristina();
@@ -99,7 +110,7 @@ final class PartitaDiTest implements AutoCloseable {
 	 * caricare una partita.
 	 */
 	static PartitaDiTest nuovaConSalvataggi(long seme, GestoreSalvataggiInMemoria salvataggi) {
-		PartitaDiTest partita = new PartitaDiTest(seme, salvataggi);
+		PartitaDiTest partita = new PartitaDiTest(seme, salvataggi, true);
 		partita.fineLogoIniziale();
 		return partita;
 	}
@@ -108,7 +119,16 @@ final class PartitaDiTest implements AutoCloseable {
 	 * Una partita nuova ferma al primissimo stato, LOGO_INIZIALE, in attesa che la UI finisca l'animazione.
 	 */
 	static PartitaDiTest nuovaAlLogoIniziale(long seme) {
-		return new PartitaDiTest(seme, new GestoreSalvataggiInMemoria());
+		return new PartitaDiTest(seme, new GestoreSalvataggiInMemoria(), true);
+	}
+
+	/**
+	 * Una partita nuova, ferma all'INTRO, senza la modalità di prova: parte come per un giocatore vero.
+	 */
+	static PartitaDiTest nuovaSenzaTrucchi(long seme) {
+		PartitaDiTest partita = new PartitaDiTest(seme, new GestoreSalvataggiInMemoria(), false);
+		partita.fineLogoIniziale();
+		return partita;
 	}
 
 	/**
@@ -280,5 +300,10 @@ final class PartitaDiTest implements AutoCloseable {
 		Dado.impostaSeme(System.nanoTime());
 		BusEventi.azzera();
 		BusEventi.impostaConsegna(BusEventi.CONSEGNA_SU_EDT);
+		if (modalitaDiProvaPrecedente == null) {
+			System.clearProperty(ModalitaDiProva.PROPRIETA);
+		} else {
+			System.setProperty(ModalitaDiProva.PROPRIETA, modalitaDiProvaPrecedente);
+		}
 	}
 }

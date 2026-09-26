@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tools.ModalitaDiProva;
 import com.threeamigos.foresta.intermezzi.ClasseIntermezzo;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
@@ -26,6 +27,9 @@ public class RegistroIntermezzi {
 	 */
 	public static Intermezzo getProssimoIntermezzo(MomentoIntermezzo momento) {
 		for (ClasseIntermezzo classeIntermezzo : ClasseIntermezzo.values()) {
+			if (classeIntermezzo.isDiProva() && !ModalitaDiProva.isAttiva()) {
+				continue;
+			}
 			Intermezzo intermezzo = classeIntermezzo.getIstanza();
 			if (!getIntermezziMD().isScattato(intermezzo.getId()) && intermezzo.deveScattare(momento)) {
 				return intermezzo;

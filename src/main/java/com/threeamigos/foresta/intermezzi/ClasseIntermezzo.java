@@ -8,13 +8,22 @@ import java.util.function.Supplier;
  */
 public enum ClasseIntermezzo {
 
-	//FIXME va levato dopo le prove
-	INTERMEZZO_DI_PROVA(IntermezzoDiProva::new);
+	// Solo in modalità di prova (vedi ModalitaDiProva)
+	INTERMEZZO_DI_PROVA(IntermezzoDiProva::new, true);
 
 	private final Supplier<Intermezzo> supplier;
+	private final boolean diProva;
 
-	ClasseIntermezzo(Supplier<Intermezzo> supplier) {
+	ClasseIntermezzo(Supplier<Intermezzo> supplier, boolean diProva) {
 		this.supplier = supplier;
+		this.diProva = diProva;
+	}
+
+	/**
+	 * Se l'intermezzo esiste solo in modalità di prova
+	 */
+	public boolean isDiProva() {
+		return diProva;
 	}
 
 	public Intermezzo getIstanza() {

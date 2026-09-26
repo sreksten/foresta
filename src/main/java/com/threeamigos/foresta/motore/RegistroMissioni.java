@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tools.ModalitaDiProva;
 import com.threeamigos.foresta.missioni.ClasseMissione;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.SconfiggiIlDrago;
@@ -24,10 +25,10 @@ public class RegistroMissioni {
 		SCONFIGGI_L_IDRA(ClasseMissione.SCONFIGGI_L_IDRA),
 		SCONFIGGI_IL_LICH(ClasseMissione.SCONFIGGI_IL_LICH),
 		SCONFIGGI_LA_STREGA(ClasseMissione.SCONFIGGI_LA_STREGA),
-		//FIXME va levata dopo le prove
-		MISSIONE_DI_PROVA(ClasseMissione.MISSIONE_DI_PROVA),
-		//FIXME va levata dopo le prove: serve a vedere una missione fallita nella finestra delle missioni
-		MISSIONE_CHE_FALLISCE(ClasseMissione.MISSIONE_CHE_FALLISCE),
+		// Solo in modalità di prova (vedi ModalitaDiProva)
+		MISSIONE_DI_PROVA(ClasseMissione.MISSIONE_DI_PROVA, true),
+		// Solo in modalità di prova: serve a vedere una missione fallita nella finestra delle missioni
+		MISSIONE_CHE_FALLISCE(ClasseMissione.MISSIONE_CHE_FALLISCE, true),
 		RECUPERA_IL_MEDAGLIONE(ClasseMissione.RECUPERA_IL_MEDAGLIONE),
 		RECUPERA_LE_DERRATE_ALIMENTARI(ClasseMissione.RECUPERA_LE_DERRATE_ALIMENTARI),
 		CRONACHE_DI_UN_FEGATO_EROICO(ClasseMissione.CRONACHE_DI_UN_FEGATO_EROICO),
@@ -35,10 +36,16 @@ public class RegistroMissioni {
 		DISTURBATORE_DELLA_QUIETE_PUBBLICA(ClasseMissione.DISTURBATORE_DELLA_QUIETE_PUBBLICA);
 
 		TipoMissionePredefinita(ClasseMissione classeMissione) {
+			this(classeMissione, false);
+		}
+
+		TipoMissionePredefinita(ClasseMissione classeMissione, boolean diProva) {
 			this.classeMissione = classeMissione;
+			this.diProva = diProva;
 		}
 
 		private final ClasseMissione classeMissione;
+		private final boolean diProva;
 
 		public Missione getIstanza() {
 			return classeMissione.getIstanza();
@@ -72,6 +79,9 @@ public class RegistroMissioni {
 		pulisciElenchi();
 
 		for (TipoMissionePredefinita tipoMissionePredefinita : TipoMissionePredefinita.values()) {
+			if (tipoMissionePredefinita.diProva && !ModalitaDiProva.isAttiva()) {
+				continue;
+			}
 			Missione missione = tipoMissionePredefinita.getIstanza();
 			missione.getModelloDati().setId(tipoMissionePredefinita.name());
 			elencoMissioniPredefinite.put(tipoMissionePredefinita, missione);

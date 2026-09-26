@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tools.ModalitaDiProva;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
 import com.threeamigos.foresta.eventi.comandigiocatore.*;
@@ -102,16 +103,17 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		md.setCoordinate(Foresta.getCoordinateLibere());
 		Foresta.aggiornaMappaCircostante(this);
 
-		// FIXME questo è lecito solo finché stiamo debuggando...
-		md.setMonete(9999);
-		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
-			md.setIncantesimi(classeIncantesimo, 99);
+		if (ModalitaDiProva.isAttiva()) {
+			md.setMonete(9999);
+			for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
+				md.setIncantesimi(classeIncantesimo, 99);
+			}
+			md.setPozioniSalute(99);
+			md.setPozioniSaluteGrande(99);
+			md.setPozioniMagia(99);
+			md.setPozioniMagiaGrande(99);
+			Foresta.ottieniMappa();
 		}
-		md.setPozioniSalute(99);
-		md.setPozioniSaluteGrande(99);
-		md.setPozioniMagia(99);
-		md.setPozioniMagiaGrande(99);
-		Foresta.ottieniMappa();
 	}
 
 	@Override

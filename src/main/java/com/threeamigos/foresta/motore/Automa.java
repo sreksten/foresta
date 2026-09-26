@@ -1257,97 +1257,98 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 		gruppo.aggiungiPersonaggioSenzaNotificare(personaggio);
 
-		// PER TEST
-		Artefatto cazzabubbolo = CostruttoreArtefatto.istanza()
-				.setTipo(TipoArtefatto.NINNOLO)
-				.setNome("il cazzabubbolo a molla della morte alata perforante")
-				.setDescrizione("il cui potere è nel fancazzismo")
-				.setLivello(1)
-				.setDanniBase(5)
-				.setCostoAcquisto(10)
-				.setPeso(1)
-				.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 500)
-				.setModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_PERCENTUALE, 400)
-				.setIncantamento("Il Peperoncino di Cayenna", TipoDanno.FUOCO, 10, 0.5)
-				.costruisci();
-		personaggio.addArtefatto(cazzabubbolo);
+		// Solo in modalità di prova: artefatti potenti e punti abilità al primo personaggio
+		if (ModalitaDiProva.isAttiva()) {
+			Artefatto cazzabubbolo = CostruttoreArtefatto.istanza()
+					.setTipo(TipoArtefatto.NINNOLO)
+					.setNome("il cazzabubbolo a molla della morte alata perforante")
+					.setDescrizione("il cui potere è nel fancazzismo")
+					.setLivello(1)
+					.setDanniBase(5)
+					.setCostoAcquisto(10)
+					.setPeso(1)
+					.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 500)
+					.setModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_PERCENTUALE, 400)
+					.setIncantamento("Il Peperoncino di Cayenna", TipoDanno.FUOCO, 10, 0.5)
+					.costruisci();
+			personaggio.addArtefatto(cazzabubbolo);
 
-		Artefatto megaspada = CostruttoreArtefatto.istanza()
-				.setTipo(TipoArtefatto.SPADA)
-				.setNome("la Spada della Morte alata con rinterzo laterale")
-				.setDescrizione("che massacra i porci")
-				.setLivello(5)
-				.setDanniBase(50)
-				.setCostoAcquisto(100)
-				.setPeso(3)
-				.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 5)
-				.setModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, 2)
-				.setModificatore(TipoAttributo.CORAGGIO, TipoModificatore.QUANTITA_ASSOLUTA, 1)
-				.setIncantamento("Incantesimo di RomyJona", TipoDanno.NECROTICO, 10, 0.5)
-				.costruisci();
-		personaggio.addArtefatto(megaspada);
+			Artefatto megaspada = CostruttoreArtefatto.istanza()
+					.setTipo(TipoArtefatto.SPADA)
+					.setNome("la Spada della Morte alata con rinterzo laterale")
+					.setDescrizione("che massacra i porci")
+					.setLivello(5)
+					.setDanniBase(50)
+					.setCostoAcquisto(100)
+					.setPeso(3)
+					.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 5)
+					.setModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, 2)
+					.setModificatore(TipoAttributo.CORAGGIO, TipoModificatore.QUANTITA_ASSOLUTA, 1)
+					.setIncantamento("Incantesimo di RomyJona", TipoDanno.NECROTICO, 10, 0.5)
+					.costruisci();
+			personaggio.addArtefatto(megaspada);
 
-		Artefatto superscudo = CostruttoreArtefatto.istanza()
-				.setTipo(TipoArtefatto.SCUDO)
-				.setNome("lo scudo fiscale")
-				.setDescrizione("che si fa fare sconti sugli acquisti")
-				.setLivello(5)
-				.setDanniBase(50)
-				.setCostoAcquisto(100_000)
-				.setPeso(3000)
-				.setModificatore(TipoAttributo.COSTITUZIONE, TipoModificatore.AUMENTO_PERCENTUALE, 5)
-				.setModificatore(TipoAttributo.RESISTENZA_MAGICA, TipoModificatore.AUMENTO_PERCENTUALE, 2)
-				.setModificatore(TipoAttributo.CONTRATTAZIONE, TipoModificatore.AUMENTO_FISSO, 16)
-				.setIncantamento("La battuta del cavolo", TipoDanno.GELO, 10, 0.5)
-				.costruisci();
-		// Leggendario, obiettivo di una missione: con +16 in CONTRATTAZIONE porta ai limiti di RegoleContrattazione
-		superscudo.getModelloDati().setRarita(RaritaArtefatto.LEGGENDARIO);
-		personaggio.addArtefatto(superscudo);
+			Artefatto superscudo = CostruttoreArtefatto.istanza()
+					.setTipo(TipoArtefatto.SCUDO)
+					.setNome("lo scudo fiscale")
+					.setDescrizione("che si fa fare sconti sugli acquisti")
+					.setLivello(5)
+					.setDanniBase(50)
+					.setCostoAcquisto(100_000)
+					.setPeso(3000)
+					.setModificatore(TipoAttributo.COSTITUZIONE, TipoModificatore.AUMENTO_PERCENTUALE, 5)
+					.setModificatore(TipoAttributo.RESISTENZA_MAGICA, TipoModificatore.AUMENTO_PERCENTUALE, 2)
+					.setModificatore(TipoAttributo.CONTRATTAZIONE, TipoModificatore.AUMENTO_FISSO, 16)
+					.setIncantamento("La battuta del cavolo", TipoDanno.GELO, 10, 0.5)
+					.costruisci();
+			// Leggendario, obiettivo di una missione: con +16 in CONTRATTAZIONE porta ai limiti di RegoleContrattazione
+			superscudo.getModelloDati().setRarita(RaritaArtefatto.LEGGENDARIO);
+			personaggio.addArtefatto(superscudo);
 
-		Artefatto scarponi = CostruttoreArtefatto.istanza()
-				.setTipo(TipoArtefatto.ARMATURA)
-				.setNome("gli scarponi di RomyJona")
-				.setDescrizione("che tritura i tegami")
-				.setLivello(5)
-				.setDanniBase(50)
-				.setCostoAcquisto(100)
-				.setPeso(3)
-				.setModificatore(TipoAttributo.CARISMA, TipoModificatore.QUANTITA_ASSOLUTA, 0)
-				.costruisci();
-		personaggio.addArtefatto(scarponi);
+			Artefatto scarponi = CostruttoreArtefatto.istanza()
+					.setTipo(TipoArtefatto.ARMATURA)
+					.setNome("gli scarponi di RomyJona")
+					.setDescrizione("che tritura i tegami")
+					.setLivello(5)
+					.setDanniBase(50)
+					.setCostoAcquisto(100)
+					.setPeso(3)
+					.setModificatore(TipoAttributo.CARISMA, TipoModificatore.QUANTITA_ASSOLUTA, 0)
+					.costruisci();
+			personaggio.addArtefatto(scarponi);
 
-		Artefatto occhiali = CostruttoreArtefatto.istanza()
-				.setTipo(TipoArtefatto.NINNOLO)
-				.setNome("occhiali da sole del Ruttatore")
-				.setDescrizione("che tritura i tegami")
-				.setLivello(5)
-				.setDanniBase(50)
-				.setCostoAcquisto(100)
-				.setPeso(3)
-				.setModificatore(TipoAttributo.CARISMA, TipoModificatore.QUANTITA_ASSOLUTA, 5)
-				.setIncantamento("La serpe di Yalar", TipoDanno.VELENO, 10, 0.5)
-				.setIncantamento("La mazzata nel capo", TipoDanno.CONTUNDENTE, 10, 0.5)
-				.setIncantamento("Lo scherzo da prete", TipoDanno.SACRO, 10, 0.5)
-				.costruisci();
-		personaggio.addArtefatto(occhiali);
+			Artefatto occhiali = CostruttoreArtefatto.istanza()
+					.setTipo(TipoArtefatto.NINNOLO)
+					.setNome("occhiali da sole del Ruttatore")
+					.setDescrizione("che tritura i tegami")
+					.setLivello(5)
+					.setDanniBase(50)
+					.setCostoAcquisto(100)
+					.setPeso(3)
+					.setModificatore(TipoAttributo.CARISMA, TipoModificatore.QUANTITA_ASSOLUTA, 5)
+					.setIncantamento("La serpe di Yalar", TipoDanno.VELENO, 10, 0.5)
+					.setIncantamento("La mazzata nel capo", TipoDanno.CONTUNDENTE, 10, 0.5)
+					.setIncantamento("Lo scherzo da prete", TipoDanno.SACRO, 10, 0.5)
+					.costruisci();
+			personaggio.addArtefatto(occhiali);
 
-		Artefatto portafogli = CostruttoreArtefatto.istanza()
-				.setTipo(TipoArtefatto.NINNOLO)
-				.setNome("portafogli di Samuele")
-				.setDescrizione("che tritura i tegami")
-				.setLivello(5)
-				.setDanniBase(50)
-				.setCostoAcquisto(100)
-				.setPeso(3)
-				.setModificatore(TipoAttributo.CARISMA, TipoModificatore.QUANTITA_ASSOLUTA, 5)
-				.setIncantamento("Il pelo di topa", TipoDanno.ARCANO, 10, 0.5)
-				.setIncantamento("Giocondo", TipoDanno.SONICO, 10, 0.5)
-				.setIncantamento("Il cervello di Tarlo", TipoDanno.VUOTO, 10, 0.5)
-				.costruisci();
-		personaggio.addArtefatto(portafogli);
+			Artefatto portafogli = CostruttoreArtefatto.istanza()
+					.setTipo(TipoArtefatto.NINNOLO)
+					.setNome("portafogli di Samuele")
+					.setDescrizione("che tritura i tegami")
+					.setLivello(5)
+					.setDanniBase(50)
+					.setCostoAcquisto(100)
+					.setPeso(3)
+					.setModificatore(TipoAttributo.CARISMA, TipoModificatore.QUANTITA_ASSOLUTA, 5)
+					.setIncantamento("Il pelo di topa", TipoDanno.ARCANO, 10, 0.5)
+					.setIncantamento("Giocondo", TipoDanno.SONICO, 10, 0.5)
+					.setIncantamento("Il cervello di Tarlo", TipoDanno.VUOTO, 10, 0.5)
+					.costruisci();
+			personaggio.addArtefatto(portafogli);
 
-		personaggio.getModelloDati().setPuntiAbilitaDisponibili(10);
-		// FINE PER TEST
+			personaggio.getModelloDati().setPuntiAbilitaDisponibili(10);
+		}
 
 		stato = Stato.INIZIO_GIOCO;
 		BusEventi.pubblica(new InternoRichiestaReinizializzazioneUI());
