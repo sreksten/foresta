@@ -50,6 +50,7 @@ public class ImageCache {
 	static BufferedImage separatoreScudi;
 	static BufferedImage separatoreIncantesimi;
 	static BufferedImage separatorePozioni;
+	static BufferedImage separatoreLibriMagici;
 	static BufferedImage separatoreIncantamenti;
 	static BufferedImage separatoreNinnoli;
 	static BufferedImage segnalino;
@@ -123,6 +124,7 @@ public class ImageCache {
 		separatoreScudi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Scudi.gif");
 		separatoreIncantesimi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Incantesimi.gif");
 		separatorePozioni = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Pozioni.gif");
+		separatoreLibriMagici = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-LibriMagici.gif");
 		separatoreIncantamenti = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Incantamenti.gif");
 		separatoreNinnoli = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Ninnoli.gif");
 
