@@ -2,8 +2,10 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.RichiestaConComandi;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaIncantatore;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioCommerciante;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioFornitore;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioGruppo;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoDiGioco;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoInvioTesto;
 import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
@@ -19,6 +21,8 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneDirezione;
+import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneIncantesimoDaLanciare;
+import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
@@ -59,6 +63,7 @@ final class PartitaDiTest implements AutoCloseable {
 	private Collection<Comando> comandiDisponibili = new ArrayList<>();
 	private int erroriVisti;
 	private boolean saltaIntermezzi = true;
+	private final java.util.Deque<String> ultimiTesti = new java.util.ArrayDeque<>();
 	private final String modalitaDiProvaPrecedente = System.getProperty(ModalitaDiProva.PROPRIETA);
 
 	private PartitaDiTest(long seme, GestoreSalvataggiInMemoria salvataggi, boolean modalitaDiProva) {
@@ -90,6 +95,12 @@ final class PartitaDiTest implements AutoCloseable {
 		BusEventi.iscriviti(RichiestaSelezioneDirezione.class, this::aggiornaComandi);
 		BusEventi.iscriviti(ComandoAperturaInventarioCommerciante.class, this::aggiornaComandi);
 		BusEventi.iscriviti(ComandoAperturaInventarioFornitore.class, this::aggiornaComandi);
+		BusEventi.iscriviti(ComandoAperturaIncantatore.class, this::aggiornaComandi);
+		BusEventi.iscriviti(ComandoAperturaInventarioGruppo.class, this::aggiornaComandi);
+		BusEventi.iscriviti(RichiestaSelezioneIncantesimoDaLanciare.class, this::aggiornaComandi);
+		BusEventi.iscriviti(RichiestaSelezioneSiNo.class, this::aggiornaComandi);
+		BusEventi.iscriviti(NotificaTestoFrase.class, e -> ricordaTesto(e.getMessaggio()));
+		BusEventi.iscriviti(NotificaTestoParagrafo.class, e -> ricordaTesto(e.getMessaggio()));
 
 		// Il precaricamento del motore sullo stesso thread, cosi' finisce prima che inizia() ritorni
 		automa = new Automa(temporizzatore, Runnable::run);
@@ -155,6 +166,17 @@ final class PartitaDiTest implements AutoCloseable {
 
 	PartitaDiTest testo(String testo) {
 		BusEventi.pubblica(new ComandoInvioTesto(testo));
+		verificaNessunErrore();
+		dopoOgniPasso();
+		return this;
+	}
+
+	/**
+	 * Pubblica sul bus un evento che manderebbe la UI fuori dai comandi di gioco (per esempio un acquisto
+	 * dall'alchimista, ComandoAcquistoConsumabile), con gli stessi controlli di {@link #comando}.
+	 */
+	PartitaDiTest pubblica(Object evento) {
+		BusEventi.pubblica(evento);
 		verificaNessunErrore();
 		dopoOgniPasso();
 		return this;
@@ -268,6 +290,27 @@ final class PartitaDiTest implements AutoCloseable {
 						? ((NotificaTestoFrase) e).getMessaggio()
 						: ((NotificaTestoParagrafo) e).getMessaggio())
 				.collect(Collectors.toList());
+	}
+
+	private void ricordaTesto(String testo) {
+		ultimiTesti.addLast(testo);
+		if (ultimiTesti.size() > 4) {
+			ultimiTesti.removeFirst();
+		}
+	}
+
+	/**
+	 * L'ultima frase o l'ultimo paragrafo mostrato al giocatore ("" se non ce ne sono ancora).
+	 */
+	String ultimoTesto() {
+		return ultimiTesti.isEmpty() ? "" : ultimiTesti.getLast();
+	}
+
+	/**
+	 * Le ultime quattro frasi o paragrafi mostrati al giocatore, uno per riga.
+	 */
+	String ultimiTesti() {
+		return String.join("\n", ultimiTesti);
 	}
 
 	void assertStato(Stato atteso) {

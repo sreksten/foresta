@@ -1256,6 +1256,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private void inizializzaGioco() {
 
 		gruppo.aggiungiPersonaggioSenzaNotificare(personaggio);
+		if (!ModalitaDiProva.isAttiva()) {
+			// In modalità di prova ha già i suoi artefatti potenti (vedi sotto)
+			EquipaggiamentoIniziale.equipaggia(personaggio);
+		}
 
 		// Solo in modalità di prova: artefatti potenti e punti abilità al primo personaggio
 		if (ModalitaDiProva.isAttiva()) {

@@ -51,6 +51,22 @@ public class RegistroPersonaggi {
 		return costruisciPersonaggio(getRegistroMD().getPersonaggioCasuale());
 	}
 
+	/**
+	 * Il compagno che entra nel gruppo. Quelli del registro nascono al livello 1 insieme al mondo: chi entra arriva
+	 * al livello del mondo meno un numero a caso fra 0 e 2 (mai sotto 1), con caratteristiche tirate come per
+	 * chiunque nasca a quel livello e il suo nome, e con l'equipaggiamento di base della sua classe.
+	 */
+	public static Personaggio preparaCompagno(Personaggio compagno) {
+		int livello = EquipaggiamentoIniziale.livelloCasualeDalMondo();
+		Personaggio pronto = compagno;
+		if (livello > compagno.getLivello()) {
+			pronto = compagno.getClasse().getIstanza(livello);
+			pronto.getModelloDati().setNome(compagno.getNomeProprio().orElse(null));
+		}
+		EquipaggiamentoIniziale.equipaggia(pronto);
+		return pronto;
+	}
+
 	public static void addPersonaggioInLocazione(Personaggio personaggio, CoordinateMD coordinate) {
 		getRegistroMD().addPersonaggioInLocazione(personaggio.getModelloDati(), coordinate);
 	}

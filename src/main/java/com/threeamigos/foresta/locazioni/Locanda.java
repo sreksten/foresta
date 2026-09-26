@@ -296,7 +296,7 @@ public class Locanda extends LocazioneBase {
 		if (accetta) {
 			RegistroPersonaggi.rimuoviPersonaggioInLocazione(g.getCoordinate());
 			GruppoAvversario.getIstanza().rimuoviPersonaggio(personaggioDisponibile);
-			g.aggiungiPersonaggio(personaggioDisponibile);
+			g.aggiungiPersonaggio(RegistroPersonaggi.preparaCompagno(personaggioDisponibile));
 			g.addMonete(Dado.tira(5, 15));
 			g.addIncantesimi(ClasseIncantesimo.ARIA, Dado.tira(0, 3));
 			g.addIncantesimi(ClasseIncantesimo.ACQUA, Dado.tira(0, 3));
