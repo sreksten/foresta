@@ -497,7 +497,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public void setTempo(int tempo) {
-		double quantitaPrecedente = md.get(TipoAttributo.TEMPO);
+		double quantitaPrecedente = md.getOptional(TipoAttributo.TEMPO).orElse(0.0d);
 		md.set(TipoAttributo.TEMPO, tempo);
 		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.TEMPO, quantitaPrecedente, tempo));
 	}
