@@ -29,7 +29,7 @@ public enum TipoEffettoDiStato {
 
     // SPAVENTATO (Fear): Costringe il bersaglio a fuggire lontano dalla fonte della paura.
     // 🔮 ARCANO ➔ Sovraccarico Mentale: (Vedi CONFUSO) Trasforma la paura in uno STORDITO pesante di 1-2 turni.
-    // 🔨 FISICO ➔ Shock di Realtà: Il dolore fisico acuto interrompe immediatamente lo stato di paura.
+    // 🔨 FISICO ➔ Shock di Realtà: Il dolore fisico acuto interrompe immediatamente lo stato di paura e infligge il 20% di danno in più.
     SPAVENTATO("Spaventato"),
 
     // =========================================================================

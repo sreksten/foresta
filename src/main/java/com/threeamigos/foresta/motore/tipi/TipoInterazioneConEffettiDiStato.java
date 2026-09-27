@@ -60,7 +60,24 @@ public enum TipoInterazioneConEffettiDiStato {
     // Interazioni con ATTERRATO (fisica, non elementale)
     // + CONTUNDENTE
     // Raddoppia il danno fisico e ne estende l'atterramento
-    SCHIACCIAMENTO(TipoEffettoDiStato.ATTERRATO, TipoDanno.CONTUNDENTE, "Schiacciamento");
+    SCHIACCIAMENTO(TipoEffettoDiStato.ATTERRATO, TipoDanno.CONTUNDENTE, "Schiacciamento"),
+
+    // Interazioni con RALLENTATO
+    // + TERRA / CONTUNDENTE
+    // Il bersaglio non riesce a scartare l'impatto: +30% danno e viene ATTERRATO
+    INCIAMPO(Collections.singletonList(TipoEffettoDiStato.RALLENTATO),
+            Arrays.asList(TipoDanno.TERRA, TipoDanno.CONTUNDENTE),
+            "Inciampo"),
+
+    // Interazioni con SPAVENTATO
+    // + ARCANO
+    // Trasforma la paura in uno STORDITO pesante (1-2 turni)
+    SOVRACCARICO_MENTALE(TipoEffettoDiStato.SPAVENTATO, TipoDanno.ARCANO, "Sovraccarico Mentale"),
+    // + danno FISICO (qualsiasi tipo)
+    // Il dolore acuto interrompe subito la paura e infligge il 20% di danno in più
+    SHOCK_DI_REALTA(Collections.singletonList(TipoEffettoDiStato.SPAVENTATO),
+            Arrays.asList(TipoDanno.TAGLIENTE, TipoDanno.PERFORANTE, TipoDanno.CONTUNDENTE),
+            "Shock di Realtà");
 
     private final Collection<TipoEffettoDiStato> precondizioni;
     private final Collection<TipoDanno> innescanti;

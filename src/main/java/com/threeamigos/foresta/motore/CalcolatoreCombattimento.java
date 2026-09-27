@@ -346,6 +346,30 @@ public class CalcolatoreCombattimento {
             dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SCHIACCIAMENTO);
         }
 
+        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.RALLENTATO) &&
+                (tipoDanno == TipoDanno.TERRA || tipoDanno == TipoDanno.CONTUNDENTE)) {
+            Logger.log("Con difensore già RALLENTATO, tipo danno TERRA o CONTUNDENTE: Inciampo");
+            moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d;
+            dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.ATTERRATO,
+                    calcolaDurataStato(difensore, TipoEffettoDiStato.ATTERRATO), 0);
+            dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.INCIAMPO);
+        }
+
+        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO)) {
+            Logger.log("Con difensore già SPAVENTATO");
+            if (tipoDanno == TipoDanno.ARCANO) {
+                Logger.log("tipo danno ARCANO: Sovraccarico Mentale, trasforma la paura in STORDITO pesante");
+                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.SPAVENTATO);
+                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.STORDITO, Dado.tira(2), 0);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SOVRACCARICO_MENTALE);
+            } else if (tipoDanno.getSuperTipo() == SupertipoDanno.FISICO) {
+                Logger.log("danno FISICO: Shock di Realtà, interrompe subito la paura");
+                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.2d;
+                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.SPAVENTATO);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SHOCK_DI_REALTA);
+            }
+        }
+
         // 4. MITIGAZIONE DELLA DIFESA DEL DIFENSORE (Formula Diminishing Returns)
         double fattoreMitigazione = 100.0d / (100.0d + statDifensiva);
         Logger.log("fattoreMitigazione: " + fattoreMitigazione + ", moltiplicatoreDannoStato = " + moltiplicatoreDannoStato);
