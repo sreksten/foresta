@@ -330,6 +330,11 @@ public class CalcolatoreCombattimento {
             } else if (tipoDanno == TipoDanno.SACRO) {
                 dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.MALEDETTO);
                 dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.RIGETTO);
+            } else if (tipoDanno == TipoDanno.VUOTO) {
+                Logger.log("tipo danno VUOTO: Collasso Entropico, rimuove MALEDETTO e brucia il 25% dei MP massimi come danno aggiuntivo");
+                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.MALEDETTO);
+                dannoRisultante.setCollassoEntropicoAttivo(true);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.COLLASSO_ENTROPICO);
             }
         }
 

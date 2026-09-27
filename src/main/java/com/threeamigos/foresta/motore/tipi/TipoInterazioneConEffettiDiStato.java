@@ -41,6 +41,9 @@ public enum TipoInterazioneConEffettiDiStato {
     MIETITURA(TipoEffettoDiStato.MALEDETTO, TipoDanno.NECROTICO, "Mietitura"),
     // + SACRO
     RIGETTO(TipoEffettoDiStato.MALEDETTO, TipoDanno.SACRO, "Rigetto"),
+    // + VUOTO
+    // Rimuove MALEDETTO, brucia il 25% dei MP massimi e infligge un danno pari agli MP persi
+    COLLASSO_ENTROPICO(TipoEffettoDiStato.MALEDETTO, TipoDanno.VUOTO, "Collasso Entropico"),
 
     // Interazioni con INFETTATO
     // + SACRO

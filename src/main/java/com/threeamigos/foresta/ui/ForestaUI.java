@@ -493,6 +493,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 			case SUPERCONDUZIONE:
 			case MIETITURA:
 			case RIGETTO:
+			case COLLASSO_ENTROPICO:
 			case PURIFICAZIONE:
 			case SIFONE_VITALE:
 			case TOSSICITA_SETTICA:

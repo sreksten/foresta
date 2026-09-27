@@ -420,6 +420,14 @@ public abstract class PersonaggioBase implements Personaggio {
 					.findFirst()
 					.ifPresent(effetto -> effetto.setDanniNelTempo(effetto.getDanniNelTempo() / 2));
 		}
+
+		if (risultato.isCollassoEntropicoAttivo()) {
+			int mpBruciato = Math.min((int) Math.round(getMagiaMassima() * 0.25d), getMagia());
+			if (mpBruciato > 0) {
+				subMagia(mpBruciato);
+				subSalute(mpBruciato, risultato.getAttaccante(), Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
+			}
+		}
 	}
 
 	/**

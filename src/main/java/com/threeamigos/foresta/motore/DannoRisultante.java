@@ -25,6 +25,7 @@ public class DannoRisultante {
     private int curaAdArea = 0;
     private int sifoneVitale = 0;
     private boolean diluizioneEmaticaAttiva = false;
+    private boolean collassoEntropicoAttivo = false;
 
     public DannoRisultante(Personaggio attaccante, Personaggio bersaglio) {
         this.attaccante = attaccante;
@@ -109,6 +110,14 @@ public class DannoRisultante {
 
     public void setDiluizioneEmaticaAttiva(boolean diluizioneEmaticaAttiva) {
         this.diluizioneEmaticaAttiva = diluizioneEmaticaAttiva;
+    }
+
+    public boolean isCollassoEntropicoAttivo() {
+        return collassoEntropicoAttivo;
+    }
+
+    public void setCollassoEntropicoAttivo(boolean collassoEntropicoAttivo) {
+        this.collassoEntropicoAttivo = collassoEntropicoAttivo;
     }
 
 }
