@@ -192,7 +192,7 @@ public class CalcolatoreCombattimento {
             dannoBaseArma = (int) Math.round(dannoBaseArma * Costanti.INCANTESIMO_FATTORE_DANNI);
         }
 
-        Logger.log(String.format("dannoBaseArma = danniBase %d + livello arma %d = %d", arma.getDanni(), arma.getLivello(), dannoBaseArma));
+        Logger.log(String.format("dannoBaseArma = danniBase %d * livello arma %d = %d", arma.getDanni(), arma.getLivello(), dannoBaseArma));
 
         // Rapporto di Efficacia dell'Arma per evitare exploit di armi liv. 1 su campioni liv. 20
         double rapportoEfficacia = (double) arma.getLivello() / (double) attaccante.getLivello();
@@ -228,7 +228,7 @@ public class CalcolatoreCombattimento {
         boolean criticoAutomatico = false;
 
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
-            Logger.log("difensore ha stato BAGNATO");
+            Logger.log("Con difensore già BAGNATO");
             if (tipoDanno == TipoDanno.FULMINE) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
                 dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.ELETTROCUZIONE);
@@ -246,7 +246,7 @@ public class CalcolatoreCombattimento {
         }
 
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.BRUCIATO)) {
-            Logger.log("difensore ha stato BRUCIATO");
+            Logger.log("Con difensore già BRUCIATO");
             if (tipoDanno == TipoDanno.ARIA) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
                 dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.ALIMENTAZIONE_FIAMMA);
@@ -271,7 +271,7 @@ public class CalcolatoreCombattimento {
         }
 
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.CONGELATO)) {
-            Logger.log("difensore ha stato CONGELATO");
+            Logger.log("Con difensore già CONGELATO");
             if (tipoDanno == TipoDanno.CONTUNDENTE) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 2.0d;
                 dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.CONGELATO);
@@ -291,7 +291,7 @@ public class CalcolatoreCombattimento {
         }
 
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.MALEDETTO)) {
-            Logger.log("difensore ha stato MALEDETTO");
+            Logger.log("Con difensore già MALEDETTO");
             if (tipoDanno == TipoDanno.NECROTICO) {
                 // La SAGGEZZA del difensore riduce l'efficacia dei danni NECROTICO su un bersaglio MALEDETTO
                 double moltiplicatoreMaledetto = Math.max(1.0d, 2.0d - (difensore.getSaggezza() / 100.0));
@@ -304,7 +304,7 @@ public class CalcolatoreCombattimento {
         }
 
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.INFETTATO)) {
-            Logger.log("difensore ha stato INFETTATO");
+            Logger.log("Con difensore già INFETTATO");
             if (tipoDanno == TipoDanno.SACRO) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
                 dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.PURIFICAZIONE);
@@ -313,7 +313,7 @@ public class CalcolatoreCombattimento {
 
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.STORDITO) ||
                 difensore.hasEffettoDiStato(TipoEffettoDiStato.ATTERRATO)) {
-            Logger.log("difensore ha stato STORDITO o ATTERRATO");
+            Logger.log("Con difensore già STORDITO o ATTERRATO");
             if (tipoDanno == TipoDanno.TAGLIENTE || tipoDanno == TipoDanno.PERFORANTE) {
                 Logger.log("tipo danno TAGLIENTE o PERFORANTE, critico automatico");
                 criticoAutomatico = true;
