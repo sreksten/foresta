@@ -425,6 +425,13 @@ public abstract class PersonaggioBase implements Personaggio {
 			return null;
 		}
 
+		// Se il personaggio è stato silenziato, non può lanciare incantesimi
+		if (hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO)) {
+			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
+					TipoRisultatoValutazioneAttaccante.SILENZIATO));
+			return null;
+		}
+
 		// Se il personaggio non ha magia a sua disposizione, non lancio incantesimo
 		int magiaCorrente = getMagia();
 		if (getMagia() == 0) {
