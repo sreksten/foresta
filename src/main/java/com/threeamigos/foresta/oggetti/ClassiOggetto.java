@@ -32,12 +32,14 @@ public enum ClassiOggetto {
 			.setQuantitaMassima(1)
 			.setValore(100)
 			),
-	// Senza immagine (vedi ClassiOggettoImmagine): l'elmo non va tra gli oggetti delle locazioni
+	SPADONE(Spadone::new, builder()
+			.setQuantitaMassima(1)
+			.setValore(100)
+	),
 	ELMO(Elmo::new, builder()
 			.setQuantitaMassima(1)
 			.setValore(100)
 			),
-	// Senza immagine (vedi ClassiOggettoImmagine): l'armatura non va tra gli oggetti delle locazioni
 	ARMATURA(Armatura::new, builder()
 			.setQuantitaMassima(1)
 			.setValore(100)

@@ -17,10 +17,9 @@ public enum ClassiOggettoImmagine {
     MONETA(ClassiOggetto.MONETA, "oggetti/Moneta.gif"),
     SCUDO(ClassiOggetto.SCUDO, "oggetti/Scudo.gif"),
     SPADA(ClassiOggetto.SPADA, "oggetti/Spada.gif"),
-    // TODO manca l'immagine "oggetti/Elmo.gif": finché non c'è, l'elmo non va tra gli oggetti delle locazioni
-    ELMO(ClassiOggetto.ELMO, null),
-    // TODO manca l'immagine "oggetti/Armatura.gif": finché non c'è, l'armatura non va tra gli oggetti delle locazioni
-    ARMATURA(ClassiOggetto.ARMATURA, null),
+    SPADONE(ClassiOggetto.SPADONE, "oggetti/Spadone.gif"),
+    ELMO(ClassiOggetto.ELMO, "oggetti/Elmo.gif"),
+    ARMATURA(ClassiOggetto.ARMATURA, "oggetti/Armatura.gif"),
     // Gli artefatti non si mostrano nelle locazioni
     ARTEFATTO(ClassiOggetto.ARTEFATTO, null);
 
