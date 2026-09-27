@@ -226,6 +226,7 @@ public class CalcolatoreCombattimento {
         // 3. APPLICAZIONE INTERAZIONI ELEMENTALI E STATI DEL DIFENSORE
         double moltiplicatoreDannoStato = 1.0d;
         boolean criticoAutomatico = false;
+        boolean purificazioneAttiva = false;
 
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
             Logger.log("Con difensore già BAGNATO");
@@ -307,7 +308,22 @@ public class CalcolatoreCombattimento {
             Logger.log("Con difensore già INFETTATO");
             if (tipoDanno == TipoDanno.SACRO) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
+                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.INFETTATO);
                 dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.PURIFICAZIONE);
+                // La cura ad area (50% del danno applicato) va calcolata più avanti, quando il danno finale è noto
+                purificazioneAttiva = true;
+            } else if (tipoDanno == TipoDanno.ARCANO) {
+                // Sifone Vitale: il 30% del danno grezzo (pre-mitigazione) va all'attaccante come MP, l'eccedenza oltre
+                // il massimo di MP va in HP
+                int sifoneVitale = (int) Math.round(dannoOffensivoGrezzo * 0.3d);
+                dannoRisultante.setSifoneVitale(sifoneVitale);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SIFONE_VITALE);
+            } else if (tipoDanno == TipoDanno.VELENO) {
+                // Tossicità Settica: l'AVVELENATO applicato su un bersaglio già INFETTATO raddoppia i danni periodici
+                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.AVVELENATO,
+                        calcolaDurataStato(difensore, TipoEffettoDiStato.AVVELENATO),
+                        calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.AVVELENATO) * 2);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.TOSSICITA_SETTICA);
             }
         }
 
@@ -437,6 +453,11 @@ public class CalcolatoreCombattimento {
 
             int dannoFinale = Math.max(1, (int)dannoTotaleCombinato);
             dannoRisultante.setDanno(dannoFinale);
+
+            if (purificazioneAttiva) {
+                // Cura ad area: 50% del danno applicato (dannoFinale, già mitigato ed eventualmente raddoppiato dal critico)
+                dannoRisultante.setCuraAdArea(dannoFinale / 2);
+            }
         }
 
         return dannoRisultante;

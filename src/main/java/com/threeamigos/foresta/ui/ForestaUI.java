@@ -494,6 +494,8 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 			case MIETITURA:
 			case RIGETTO:
 			case PURIFICAZIONE:
+			case SIFONE_VITALE:
+			case TOSSICITA_SETTICA:
 			case COLPO_DI_GRAZIA:
 			case SCHIACCIAMENTO:
 				displayableCanvas.aggiungiInterazione(personaggio, tipoInterazione);

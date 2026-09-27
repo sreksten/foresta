@@ -45,6 +45,10 @@ public enum TipoInterazioneConEffettiDiStato {
     // Interazioni con INFETTATO
     // + SACRO
     PURIFICAZIONE(TipoEffettoDiStato.INFETTATO, TipoDanno.SACRO, "Purificazione"),
+    // + ARCANO
+    SIFONE_VITALE(TipoEffettoDiStato.INFETTATO, TipoDanno.ARCANO, "Sifone Vitale"),
+    // + VELENO
+    TOSSICITA_SETTICA(TipoEffettoDiStato.INFETTATO, TipoDanno.VELENO, "Tossicità Settica"),
 
     // Interazioni con STORDITO / ATTERRATO (fisica, non elementale)
     // + TAGLIENTE / PERFORANTE

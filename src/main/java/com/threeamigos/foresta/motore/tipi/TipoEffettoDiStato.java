@@ -56,7 +56,7 @@ public enum TipoEffettoDiStato {
 
     // INFETTATO (Diseased): Danno necrotico nel tempo o blocco totale di qualsiasi effetto di cura ricevuto.
     // ✨ SACRO ➔ Purificazione Violenta: L'attacco Sacro infligge il 50% di danni in più, rimuove INFETTATO e sprigiona un'onda che cura gli alleati vicini.
-    // 🔮 ARCANO ➔ Sifone Vitale: Il 30% del danno inflitto dall'attacco Arcano viene convertito in HP o MP per l'attaccante.
+    // 🔮 ARCANO ➔ Sifone Vitale: Il 30% del danno grezzo dell'attacco Arcano viene convertito in MP per l'attaccante (l'eccedenza oltre il massimo di MP diventa HP).
     // 🤢 VELENO ➔ Tossicità Settica: Lo stato AVVELENATO applicato sul bersaglio infetto infligge il doppio dei danni periodici.
     INFETTATO("Infettato"),
 

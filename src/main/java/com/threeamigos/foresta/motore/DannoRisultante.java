@@ -22,6 +22,8 @@ public class DannoRisultante {
     private final Collection<EffettoDiStato> effettiDiStatoDaAggiungere = new ArrayList<>();
     private final Collection<TipoEffettoDiStato> effettiDiStatoDaRimuovere = new ArrayList<>();
     private boolean colpoDiGrazia = false;
+    private int curaAdArea = 0;
+    private int sifoneVitale = 0;
 
     public DannoRisultante(Personaggio attaccante, Personaggio bersaglio) {
         this.attaccante = attaccante;
@@ -82,6 +84,22 @@ public class DannoRisultante {
 
     public void setColpoDiGrazia(boolean colpoDiGrazia) {
         this.colpoDiGrazia = colpoDiGrazia;
+    }
+
+    public int getCuraAdArea() {
+        return curaAdArea;
+    }
+
+    public void setCuraAdArea(int curaAdArea) {
+        this.curaAdArea = curaAdArea;
+    }
+
+    public int getSifoneVitale() {
+        return sifoneVitale;
+    }
+
+    public void setSifoneVitale(int sifoneVitale) {
+        this.sifoneVitale = sifoneVitale;
     }
 
 }

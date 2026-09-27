@@ -389,6 +389,30 @@ public abstract class PersonaggioBase implements Personaggio {
 		for (TipoInterazioneConEffettiDiStato interazione : risultato.getInterazioni()) {
 			BusEventi.pubblica(new NotificaInterazionePersonaggio(this, interazione));
 		}
+
+		if (risultato.getCuraAdArea() > 0) {
+			Gruppo gruppoDifensore = GruppoGiocatore.getIstanza().contiene(this) ?
+					GruppoGiocatore.getIstanza() : GruppoAvversario.getIstanza();
+			for (Personaggio alleato : gruppoDifensore.getPersonaggiVivi()) {
+				if (alleato != this) {
+					alleato.addSalute(risultato.getCuraAdArea());
+				}
+			}
+		}
+
+		if (risultato.getSifoneVitale() > 0) {
+			Personaggio attaccante = risultato.getAttaccante();
+			int sifone = risultato.getSifoneVitale();
+			int capienzaMagia = attaccante.getMagiaMassima() - attaccante.getMagia();
+			int perMagia = Math.min(sifone, capienzaMagia);
+			if (perMagia > 0) {
+				attaccante.addMagia(perMagia);
+			}
+			int eccedenza = sifone - perMagia;
+			if (eccedenza > 0) {
+				attaccante.addSalute(eccedenza);
+			}
+		}
 	}
 
 	/**
