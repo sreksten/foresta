@@ -111,6 +111,9 @@ public enum TipoInterazioneConEffettiDiStato {
     VAMPATA_TOSSICA(TipoEffettoDiStato.AVVELENATO, TipoDanno.FUOCO, "Vampata Tossica"),
 
     // Interazioni con IMMOBILIZZATO
+    // + FUOCO
+    // Il fuoco distrugge all'istante l'immobilizzazione: rimuove IMMOBILIZZATO, +50% danno
+    INCENDIO_LIBERATORIO(TipoEffettoDiStato.IMMOBILIZZATO, TipoDanno.FUOCO, "Incendio Liberatorio"),
     // + CONTUNDENTE / TERRA
     // Il bersaglio non può assecondare il colpo muovendo le gambe: +30% danno
     IMPATTO_RIGIDO(Collections.singletonList(TipoEffettoDiStato.IMMOBILIZZATO),

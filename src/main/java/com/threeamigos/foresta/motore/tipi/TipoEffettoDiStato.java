@@ -15,7 +15,7 @@ public enum TipoEffettoDiStato {
     RALLENTATO("Rallentato"),
 
     // IMMOBILIZZATO (Root): Impedisce il movimento fisico, ma permette di attaccare o lanciare incantesimi sul posto.
-    // 🔥 FUOCO ➔ Incendio Liberatorio: Se l'immobilizzazione è vegetale (radici), il fuoco la distrugge all'istante, ma infligge il 50% di danni da fuoco extra al bersaglio.
+    // 🔥 FUOCO ➔ Incendio Liberatorio: Il fuoco distrugge all'istante l'immobilizzazione e infligge il 50% di danni da fuoco extra al bersaglio.
     // 🔨 CONTUNDENTE / 🪨 TERRA ➔ Impatto Rigido: Non potendo assecondare il colpo muovendo le gambe, il bersaglio subisce il 30% di danno in più.
     IMMOBILIZZATO("Immobilizzato"),
 

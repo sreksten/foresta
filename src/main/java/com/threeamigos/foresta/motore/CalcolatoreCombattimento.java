@@ -389,11 +389,18 @@ public class CalcolatoreCombattimento {
             dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.INCIAMPO);
         }
 
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.IMMOBILIZZATO) &&
-                (tipoDanno == TipoDanno.CONTUNDENTE || tipoDanno == TipoDanno.TERRA)) {
-            Logger.log("Con difensore già IMMOBILIZZATO, tipo danno CONTUNDENTE o TERRA: Impatto Rigido");
-            moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d;
-            dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.IMPATTO_RIGIDO);
+        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.IMMOBILIZZATO)) {
+            Logger.log("Con difensore già IMMOBILIZZATO");
+            if (tipoDanno == TipoDanno.FUOCO) {
+                Logger.log("tipo danno FUOCO: Incendio Liberatorio, distrugge l'immobilizzazione all'istante");
+                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
+                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.IMMOBILIZZATO);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.INCENDIO_LIBERATORIO);
+            } else if (tipoDanno == TipoDanno.CONTUNDENTE || tipoDanno == TipoDanno.TERRA) {
+                Logger.log("tipo danno CONTUNDENTE o TERRA: Impatto Rigido");
+                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d;
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.IMPATTO_RIGIDO);
+            }
         }
 
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO) || difensore.hasEffettoDiStato(TipoEffettoDiStato.CONFUSO)) {
