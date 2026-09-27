@@ -2,21 +2,21 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.motore.MotivoRifiutoIncantatura;
+import com.threeamigos.foresta.motore.tipi.TipoMotivoRifiutoIncantatura;
 
 /**
  * L'incantatore rifiuta qualcosa sul banco di lavoro, o la fusione: il motivo dice perché.
  */
 public class NotificaRifiutoIncantatura extends EventoBase {
 
-    private final MotivoRifiutoIncantatura motivo;
+    private final TipoMotivoRifiutoIncantatura motivo;
 
-    public NotificaRifiutoIncantatura(MotivoRifiutoIncantatura motivo) {
+    public NotificaRifiutoIncantatura(TipoMotivoRifiutoIncantatura motivo) {
         super(TipoEvento.NOTIFICA_RIFIUTO_INCANTATURA);
         this.motivo = motivo;
     }
 
-    public MotivoRifiutoIncantatura getMotivo() {
+    public TipoMotivoRifiutoIncantatura getMotivo() {
         return motivo;
     }
 }

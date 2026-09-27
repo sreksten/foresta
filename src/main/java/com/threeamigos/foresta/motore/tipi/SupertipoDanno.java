@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore.modellodati;
+package com.threeamigos.foresta.motore.tipi;
 
 /**
  *

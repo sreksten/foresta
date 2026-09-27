@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.motore.tipi.TipoModalitaProduzioneTesti;
+
 import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
@@ -77,7 +79,7 @@ import java.util.*;
  *     are empty lines.</li>
  *     <li>An alternative may start with a {@code [^N]} token ({@code N} a positive
  *     number, e.g. {@code 10} or {@code 2.5}) to give it a selection <b>weight</b>: under
- *     {@link ProductionModeEnum#RANDOM} it is picked {@code N} times as often as an
+ *     {@link TipoModalitaProduzioneTesti#CASUALE} it is picked {@code N} times as often as an
  *     alternative with the default weight of 1.
  *     The token is resolved and stripped when the grammar is loaded (unlike
  *     {@code [key=value]}, which is resolved lazily during production), so it never appears
@@ -91,7 +93,7 @@ import java.util.*;
  *     weight of every production it references (recursively, since a referenced
  *     production's own weight has by then already been boosted by whatever it in turn
  *     references), so alternatives that expand into structurally richer subtrees get
- *     picked proportionally more often under {@link ProductionModeEnum#RANDOM} without
+ *     picked proportionally more often under {@link TipoModalitaProduzioneTesti#CASUALE} without
  *     requiring a hand-written {@code [^N]} token. A production referenced more than
  *     once in the same alternative contributes to the boost once per occurrence. A
  *     reference carrying a default counts either the referenced production or whatever its
@@ -364,12 +366,12 @@ public class GrammarBean {
 	 */
 	private final Random rnd = Dado.sorgente();
 	/**
-	 * Controls how a production's alternative is picked; see {@link ProductionModeEnum}.
-	 * Defaults to {@link ProductionModeEnum#RANDOM}. Setting it to {@link ProductionModeEnum#FIRST}
-	 * or {@link ProductionModeEnum#LAST} makes {@link #produce()}/{@link #produce(String)} fully
+	 * Controls how a production's alternative is picked; see {@link TipoModalitaProduzioneTesti}.
+	 * Defaults to {@link TipoModalitaProduzioneTesti#CASUALE}. Setting it to {@link TipoModalitaProduzioneTesti#PRIMO}
+	 * or {@link TipoModalitaProduzioneTesti#ULTIMO} makes {@link #produce()}/{@link #produce(String)} fully
 	 * deterministic, which is mostly useful for testing.
 	 */
-	private ProductionModeEnum productionMode = ProductionModeEnum.RANDOM;
+	private TipoModalitaProduzioneTesti productionMode = TipoModalitaProduzioneTesti.CASUALE;
 	/**
 	 * Productions that must be removed once used within a cycle
 	 */
@@ -380,7 +382,7 @@ public class GrammarBean {
 	 */
 	private int inlineProductionCounter = 0;
 
-	private Map<String, Collection<String>> derivedProductions = new HashMap<>();
+	private final Map<String, Collection<String>> derivedProductions = new HashMap<>();
 
 	/**
 	 * One frame per active (not yet returned) recursive call to
@@ -1047,7 +1049,7 @@ public class GrammarBean {
 	 * adjusted) aggregate weight of every production it references (see
 	 * {@link #findReferencedProductions}), so alternatives that expand into structurally
 	 * richer subtrees are picked proportionally more often under
-	 * {@link ProductionModeEnum#RANDOM}, without needing a hand-written {@code [^N]}
+	 * {@link TipoModalitaProduzioneTesti#CASUALE}, without needing a hand-written {@code [^N]}
 	 * token on every alternative. Called once, right after the whole grammar (including
 	 * inline-alternation-group productions) has been parsed and validated, and before
 	 * {@link #reset()} ever copies {@link #productionsMap} into
@@ -1254,17 +1256,17 @@ public class GrammarBean {
 	}
 
 	/**
-	 * @return the current alternative-picking mode (see {@link ProductionModeEnum})
+	 * @return the current alternative-picking mode (see {@link TipoModalitaProduzioneTesti})
 	 */
-	public ProductionModeEnum getProductionMode() {
+	public TipoModalitaProduzioneTesti getProductionMode() {
 		return productionMode;
 	}
 
 	/**
 	 * Sets how a production's alternative is picked.
-	 * @param productionMode the new mode; see {@link ProductionModeEnum}
+	 * @param productionMode the new mode; see {@link TipoModalitaProduzioneTesti}
 	 */
-	public void setProductionMode(ProductionModeEnum productionMode) {
+	public void setProductionMode(TipoModalitaProduzioneTesti productionMode) {
 		this.productionMode = productionMode;
 	}
 
@@ -1759,10 +1761,10 @@ public class GrammarBean {
 		List<WeightedAlternative> productions = localProductionsMap.get(production);
 		WeightedAlternative chosen;
 		switch (productionMode) {
-			case FIRST:
+			case PRIMO:
 				chosen = productions.get(0);
 				break;
-			case LAST:
+			case ULTIMO:
 				chosen = productions.get(productions.size() - 1);
 				break;
 			default:

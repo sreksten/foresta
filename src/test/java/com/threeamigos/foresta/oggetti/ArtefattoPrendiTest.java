@@ -4,15 +4,13 @@ import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
+import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ArtefattoPrendiTest {
 
@@ -80,7 +78,7 @@ class ArtefattoPrendiTest {
         assertTrue(preso);
         assertEquals(1, guerriero.getInventario().size());
         assertEquals(1, gruppo.getInventario().size());
-        assertEquals(null, gruppo.getInventario().iterator().next().getModelloDati().getSlotEquipaggiamento());
+        assertNull(gruppo.getInventario().iterator().next().getModelloDati().getSlotEquipaggiamento());
     }
 
     @Test

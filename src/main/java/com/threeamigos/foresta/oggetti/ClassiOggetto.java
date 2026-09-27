@@ -44,6 +44,10 @@ public enum ClassiOggetto {
 			.setQuantitaMassima(1)
 			.setValore(100)
 			),
+	SCHINIERI(Schinieri::new, builder()
+			.setQuantitaMassima(1)
+			.setValore(100)
+	),
 	// Gli artefatti non vanno mai restituiti tra gli oggetti che una locazione può nascondere!
 	ARTEFATTO(null, builder()
 			.setQuantitaMassima(1)

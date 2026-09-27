@@ -3,6 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAvvisoIncantatura;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoIncantatura;
+import com.threeamigos.foresta.motore.tipi.TipoMotivoRifiutoIncantatura;
 import com.threeamigos.foresta.oggetti.Artefatto;
 
 import java.util.Optional;
@@ -42,7 +43,7 @@ public class AutomaIncantatore extends AutomaScambiatoreArtefatti {
 
 	@Override
 	public void richiediSpostamentoSuParteRemota(Artefatto artefatto) {
-		Optional<MotivoRifiutoIncantatura> motivo = RegoleIncantatura.puoMettereSulBanco(banco.getInventario(), artefatto);
+		Optional<TipoMotivoRifiutoIncantatura> motivo = RegoleIncantatura.puoMettereSulBanco(banco.getInventario(), artefatto);
 		if (motivo.isPresent()) {
 			BusEventi.pubblica(new NotificaRifiutoIncantatura(motivo.get()));
 		} else {

@@ -47,6 +47,7 @@ public class ImageCache {
 	static BufferedImage separatoreArmi;
 	static BufferedImage separatoreElmi;
 	static BufferedImage separatoreArmature;
+	static BufferedImage separatoreSchinieri;
 	static BufferedImage separatoreScudi;
 	static BufferedImage separatoreIncantesimi;
 	static BufferedImage separatorePozioni;
@@ -121,6 +122,7 @@ public class ImageCache {
 		separatoreArmi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Armi.gif");
 		separatoreElmi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Elmi.gif");
 		separatoreArmature = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Armature.gif");
+		separatoreSchinieri = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Schinieri.gif");
 		separatoreScudi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Scudi.gif");
 		separatoreIncantesimi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Incantesimi.gif");
 		separatorePozioni = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Pozioni.gif");

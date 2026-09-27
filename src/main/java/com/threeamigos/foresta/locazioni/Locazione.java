@@ -5,7 +5,7 @@ import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Stato;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
-import com.threeamigos.foresta.motore.modellodati.TipoRiposo;
+import com.threeamigos.foresta.motore.tipi.TipoRiposo;
 import com.threeamigos.foresta.oggetti.Oggetto;
 
 /**

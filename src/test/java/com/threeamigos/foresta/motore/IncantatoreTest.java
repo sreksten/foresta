@@ -3,24 +3,14 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.modellodati.RaritaArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
-import com.threeamigos.foresta.motore.modellodati.TipoDanno;
-import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
+import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class IncantatoreTest {
 
@@ -38,14 +28,14 @@ class IncantatoreTest {
 
     @Test
     void gliAccessoriNonSiIncantano() {
-        assertEquals(Optional.of(MotivoRifiutoIncantatura.NON_INCANTABILE),
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.NON_INCANTABILE),
                 RegoleIncantatura.puoMettereSulBanco(Collections.emptyList(), artefatto(TipoArtefatto.ANELLO, 5)));
     }
 
     @Test
     void unArtefattoAllaVolta() {
         List<Artefatto> banco = Collections.singletonList(artefatto(TipoArtefatto.SPADA, 5));
-        assertEquals(Optional.of(MotivoRifiutoIncantatura.PIU_ARTEFATTI),
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.PIU_ARTEFATTI),
                 RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.ELMO, 5)));
     }
 
@@ -57,9 +47,9 @@ class IncantatoreTest {
         List<Artefatto> banco = new ArrayList<>(Collections.singletonList(spada));
         assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(banco, pergamena(1)));
         banco.add(pergamena(1));
-        assertEquals(Optional.of(MotivoRifiutoIncantatura.LIMITE_SUPERATO), RegoleIncantatura.puoMettereSulBanco(banco, pergamena(1)));
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.LIMITE_SUPERATO), RegoleIncantatura.puoMettereSulBanco(banco, pergamena(1)));
         // Una pergamena con due effetti non ci sta
-        assertEquals(Optional.of(MotivoRifiutoIncantatura.LIMITE_SUPERATO),
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.LIMITE_SUPERATO),
                 RegoleIncantatura.puoMettereSulBanco(Collections.singletonList(spada), pergamena(2)));
     }
 
@@ -67,7 +57,7 @@ class IncantatoreTest {
     void conLePergameneGiaSulBancoSiControllaLArtefattoCheArriva() {
         // Prima le pergamene (3 effetti), poi una spada comune di livello 3 (2 posti)
         List<Artefatto> banco = Arrays.asList(pergamena(2), pergamena(1));
-        assertEquals(Optional.of(MotivoRifiutoIncantatura.LIMITE_SUPERATO),
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.LIMITE_SUPERATO),
                 RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.SPADA, 3)));
         assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.SPADA, 4)));
     }
@@ -75,26 +65,26 @@ class IncantatoreTest {
     @Test
     void ilTettoDeiLeggendariECinque() {
         Artefatto spada = artefatto(TipoArtefatto.SPADA, 20);
-        spada.getModelloDati().setRarita(RaritaArtefatto.LEGGENDARIO);
+        spada.getModelloDati().setRarita(TipoRaritaArtefatto.LEGGENDARIO);
         List<Artefatto> banco = Arrays.asList(spada, pergamena(3), pergamena(2));
         assertEquals(Optional.empty(), RegoleIncantatura.verifica(banco, 1000));
-        assertEquals(Optional.of(MotivoRifiutoIncantatura.LIMITE_SUPERATO), RegoleIncantatura.puoMettereSulBanco(banco, pergamena(1)));
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.LIMITE_SUPERATO), RegoleIncantatura.puoMettereSulBanco(banco, pergamena(1)));
     }
 
     // --- Verifica della fusione
 
     @Test
     void rifiutiDellaFusione() {
-        assertEquals(Optional.of(MotivoRifiutoIncantatura.NESSUN_ARTEFATTO),
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.NESSUN_ARTEFATTO),
                 RegoleIncantatura.verifica(Collections.singletonList(pergamena(1)), 100));
-        assertEquals(Optional.of(MotivoRifiutoIncantatura.NESSUNA_PERGAMENA),
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.NESSUNA_PERGAMENA),
                 RegoleIncantatura.verifica(Collections.singletonList(artefatto(TipoArtefatto.SPADA, 4)), 100));
-        assertEquals(Optional.of(MotivoRifiutoIncantatura.PIU_ARTEFATTI),
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.PIU_ARTEFATTI),
                 RegoleIncantatura.verifica(Arrays.asList(artefatto(TipoArtefatto.SPADA, 4), artefatto(TipoArtefatto.ELMO, 4), pergamena(1)), 100));
         // 10 + 5 × 2 = 20 monete
         List<Artefatto> banco = Arrays.asList(artefatto(TipoArtefatto.SPADA, 4), pergamena(2));
         assertEquals(20, RegoleIncantatura.costo(banco));
-        assertEquals(Optional.of(MotivoRifiutoIncantatura.MONETE_INSUFFICIENTI), RegoleIncantatura.verifica(banco, 19));
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.MONETE_INSUFFICIENTI), RegoleIncantatura.verifica(banco, 19));
         assertEquals(Optional.empty(), RegoleIncantatura.verifica(banco, 20));
     }
 
@@ -114,7 +104,7 @@ class IncantatoreTest {
         incantatore.richiediSpostamentoSuParteRemota(pergamena);
         assertTrue(gruppo.getInventario().isEmpty());
         // When
-        Optional<MotivoRifiutoIncantatura> esito = gruppo.incanta(incantatore.getBanco(), "lama del drago");
+        Optional<TipoMotivoRifiutoIncantatura> esito = gruppo.incanta(incantatore.getBanco(), "lama del drago");
         // Then
         assertEquals(Optional.empty(), esito);
         assertEquals(100 - 20, gruppo.getMonete());
@@ -144,7 +134,7 @@ class IncantatoreTest {
         BancoDiLavoro banco = new BancoDiLavoro();
         banco.addArtefatto(artefatto(TipoArtefatto.SPADA, 4));
         banco.addArtefatto(pergamena(1));
-        assertEquals(Optional.of(MotivoRifiutoIncantatura.MONETE_INSUFFICIENTI), gruppo.incanta(banco, "Diavolina"));
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.MONETE_INSUFFICIENTI), gruppo.incanta(banco, "Diavolina"));
         assertEquals(2, banco.getInventario().size());
         assertTrue(gruppo.getInventario().isEmpty());
     }
@@ -180,7 +170,7 @@ class IncantatoreTest {
         Artefatto pergamena = artefatto(TipoArtefatto.INCANTAMENTO, 1);
         pergamena.getModelloDati().addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_PERCENTUALE, 10, "");
         List<Artefatto> banco = Collections.singletonList(pergamena);
-        assertEquals(Optional.of(MotivoRifiutoIncantatura.POTERE_MAGICO_FUORI_POSTO),
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.POTERE_MAGICO_FUORI_POSTO),
                 RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.SPADA, 5)));
         assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.BASTONE_MAGICO, 5)));
         assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.LIBRO_MAGICO, 5)));
@@ -188,7 +178,7 @@ class IncantatoreTest {
 
     @Test
     void suUnLibroMagicoUnaPergamenaConSoliIncantamentiElementaliNonServe() {
-        assertEquals(Optional.of(MotivoRifiutoIncantatura.INCANTAMENTO_SU_LIBRO),
+        assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.INCANTAMENTO_SU_LIBRO),
                 RegoleIncantatura.puoMettereSulBanco(Collections.singletonList(pergamena(1)), artefatto(TipoArtefatto.LIBRO_MAGICO, 5)));
     }
 

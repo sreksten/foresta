@@ -8,7 +8,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoConsumabi
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.modellodati.TipoConsumabile;
+import com.threeamigos.foresta.motore.tipi.TipoConsumabile;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.awt.*;

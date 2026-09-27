@@ -2,14 +2,12 @@ package com.threeamigos.foresta.motore.modellodati;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
+import com.threeamigos.foresta.motore.tipi.TipoSlotArtefatto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -34,7 +32,7 @@ class ModelloDatiSalvataggioTest {
         senzaNome.setClasse(ClassePersonaggio.LADRO);
         senzaNome.setVivo(true);
         ArtefattoMD spada = ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "la spada di fuoco", "");
-        spada.setSlotEquipaggiamento(SlotArtefatto.MANO_PRINCIPALE);
+        spada.setSlotEquipaggiamento(TipoSlotArtefatto.MANO_PRINCIPALE);
         spada.setNomeProprio("Diavolina");
         senzaNome.getArtefatti().add(spada);
         PersonaggioMD morto = new PersonaggioMD();

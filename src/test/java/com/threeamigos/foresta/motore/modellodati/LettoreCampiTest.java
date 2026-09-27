@@ -1,18 +1,11 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.motore.tipi.TipoSlotArtefatto;
 import org.junit.jupiter.api.Test;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringReader;
-import java.io.StringWriter;
+import java.io.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class LettoreCampiTest {
 
@@ -35,10 +28,10 @@ class LettoreCampiTest {
     void iCampiFacoltativiVuotiSonoNull() throws IOException {
         LettoreCampi campi = new LettoreCampi("|MANO_SECONDARIA|");
         assertNull(campi.testoFacoltativo());
-        assertEquals(SlotArtefatto.MANO_SECONDARIA, campi.enumeratoFacoltativo(SlotArtefatto.class));
-        assertNull(campi.enumeratoFacoltativo(SlotArtefatto.class));
+        assertEquals(TipoSlotArtefatto.MANO_SECONDARIA, campi.enumeratoFacoltativo(TipoSlotArtefatto.class));
+        assertNull(campi.enumeratoFacoltativo(TipoSlotArtefatto.class));
         assertEquals("", Serializzabile.facoltativo(null));
-        assertEquals("TESTA", Serializzabile.facoltativo(SlotArtefatto.TESTA));
+        assertEquals("TESTA", Serializzabile.facoltativo(TipoSlotArtefatto.TESTA));
     }
 
     @Test

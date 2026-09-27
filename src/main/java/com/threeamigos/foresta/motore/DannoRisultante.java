@@ -1,9 +1,8 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.motore.modellodati.EffettoDiStato;
-import com.threeamigos.foresta.motore.modellodati.TipoDanno;
-import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
-import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
+import com.threeamigos.foresta.motore.tipi.TipoDanno;
+import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.motore.tipi.TipoInterazioneElementale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.ArrayList;

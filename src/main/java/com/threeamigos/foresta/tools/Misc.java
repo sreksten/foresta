@@ -22,11 +22,13 @@ public class Misc {
 	public static final String GLI = "gli ";
 	public static final String LE = "le ";
 	public static final String UN = "un ";
+	public static final String UN_PAIO_DI = "un paio di ";
 	public static final String UNO = "uno ";
 	public static final String UNA = "una ";
 	public static final String UN_APOSTROFO = "un'";
 	public static final String ALCUNI = "alcuni ";
 	public static final String ALCUNE = "alcune ";
+	public static final String ALCUNE_PAIA_DI = "alcune paia di ";
 	public static final String DEL = "del ";
 	public static final String DELLO = "dello ";
 	public static final String DELLA = "della ";

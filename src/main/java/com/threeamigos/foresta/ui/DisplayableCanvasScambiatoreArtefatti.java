@@ -9,7 +9,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto
 import com.threeamigos.foresta.motore.AutomaScambiatoreArtefatti;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
+import com.threeamigos.foresta.motore.tipi.SupertipoArtefatto;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Incantamento;
 
@@ -358,6 +358,8 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
                 return ImageCache.separatoreElmi;
             case ARMATURA:
                 return ImageCache.separatoreArmature;
+            case SCHINIERI:
+                return ImageCache.separatoreSchinieri;
             case SCUDO:
                 return ImageCache.separatoreScudi;
             case INCANTAMENTO:

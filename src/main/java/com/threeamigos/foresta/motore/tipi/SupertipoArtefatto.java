@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore.modellodati;
+package com.threeamigos.foresta.motore.tipi;
 
 /**
  *
@@ -22,6 +22,10 @@ public enum SupertipoArtefatto {
      * Supertipo generico per artefatti difensivi
      */
     ELMO,
+    /**
+     * Supertipo generico per artefatti difensivi
+     */
+    SCHINIERI,
 
     /**
      * Artefatti che aumentano il POTERE_MAGICO di chi li porta (il libro magico): si incantano, e una pergamena

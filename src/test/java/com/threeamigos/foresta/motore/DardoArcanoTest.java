@@ -4,22 +4,15 @@ import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
-import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
+import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
+import com.threeamigos.foresta.motore.tipi.TipoAttributo;
+import com.threeamigos.foresta.motore.tipi.TipoModificatore;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
-import com.threeamigos.foresta.personaggi.Elfo;
-import com.threeamigos.foresta.personaggi.Guerriero;
-import com.threeamigos.foresta.personaggi.Ladro;
-import com.threeamigos.foresta.personaggi.Mago;
-import com.threeamigos.foresta.personaggi.PersonaggioBase;
+import com.threeamigos.foresta.personaggi.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Il dardo arcano, l'incantesimo innato di Mago ed Elfo. Il critico è neutralizzato, così i danni sono deterministici.

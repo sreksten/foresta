@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoVenditaArtefatto;
-import com.threeamigos.foresta.motore.OggettoConCosto;
+import com.threeamigos.foresta.interfacce.OggettoConCosto;
 
 /**
  * Il GruppoGiocatore rifiuta la vendita di un Artefatto a un commerciante che non tratta quel genere di

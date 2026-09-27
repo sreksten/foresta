@@ -1,6 +1,6 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.motore.modellodati.TipoDanno;
+import com.threeamigos.foresta.motore.tipi.TipoDanno;
 import com.threeamigos.foresta.oggetti.Incantamento;
 
 import java.util.Collection;

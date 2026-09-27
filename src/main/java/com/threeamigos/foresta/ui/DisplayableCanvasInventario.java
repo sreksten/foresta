@@ -3,7 +3,7 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoPrelievoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
+import com.threeamigos.foresta.motore.tipi.TipoAttributo;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
@@ -54,8 +54,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
     }
 
     void onEventoRifiutoPrelievo(NotificaRifiutoPrelievoArtefatto evento) {
-        Personaggio personaggio = (Personaggio) evento.getEventoRichiestaSpostamento().getParteAttiva();
-        BusEventi.pubblica(new InternoNotificaViaFumettoATempo(evento.getMotivo().getFrase(personaggio), getCoordinateFumetto()));
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo(evento.getEsito().getFumetto(), getCoordinateFumetto()));
     }
 
     @Override

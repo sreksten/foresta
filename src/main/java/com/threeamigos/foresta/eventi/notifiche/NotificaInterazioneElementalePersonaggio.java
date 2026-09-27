@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoSuPersonaggio;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
+import com.threeamigos.foresta.motore.tipi.TipoInterazioneElementale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 /**

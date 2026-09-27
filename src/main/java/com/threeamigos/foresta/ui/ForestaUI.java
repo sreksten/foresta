@@ -1,22 +1,18 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaIncantatore;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioCommerciante;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioFornitore;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioGruppo;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoVisualizzazioneMappa;
+import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
-import com.threeamigos.foresta.ui.sfx.TracciatoreLogo;
-import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
-import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
+import com.threeamigos.foresta.motore.tipi.TipoAttributo;
+import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.motore.tipi.TipoInterazioneElementale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Temporizzatore;
 import com.threeamigos.foresta.tools.TestataSalvataggio;
+import com.threeamigos.foresta.ui.sfx.TracciatoreLogo;
 
 import javax.swing.*;
 import java.awt.*;

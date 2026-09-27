@@ -4,8 +4,8 @@ import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.modellodati.SlotArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
+import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
+import com.threeamigos.foresta.motore.tipi.TipoSlotArtefatto;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Ladro;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
@@ -16,10 +16,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class LootTest {
 
@@ -121,7 +118,7 @@ class LootTest {
         ladro.addArtefatto(artefatto(TipoArtefatto.SPADA, 1));
         Artefatto seconda = artefatto(TipoArtefatto.SPADA, 1);
         assertTrue(seconda.prendi(gruppoDelLadro, null));
-        assertEquals(SlotArtefatto.MANO_SECONDARIA, seconda.getModelloDati().getSlotEquipaggiamento());
+        assertEquals(TipoSlotArtefatto.MANO_SECONDARIA, seconda.getModelloDati().getSlotEquipaggiamento());
     }
 
     @Test
@@ -136,8 +133,8 @@ class LootTest {
         assertEquals(TipoArtefatto.INCANTAMENTO, Cofano.artefattoRaro(0.0, generatore, 3).getTipo());
         assertEquals(TipoArtefatto.INCANTAMENTO, Cofano.artefattoRaro(0.049, generatore, 3).getTipo());
         Artefatto artefatto = Cofano.artefattoRaro(0.05, generatore, 3);
-        assertTrue(artefatto.getTipo() != TipoArtefatto.INCANTAMENTO);
-        assertTrue(Cofano.artefattoRaro(0.099, generatore, 3).getTipo() != TipoArtefatto.INCANTAMENTO);
+        assertNotSame(artefatto.getTipo(), TipoArtefatto.INCANTAMENTO);
+        assertNotSame(Cofano.artefattoRaro(0.099, generatore, 3).getTipo(), TipoArtefatto.INCANTAMENTO);
         assertNull(Cofano.artefattoRaro(0.10, generatore, 3));
         assertNull(Cofano.artefattoRaro(0.99, generatore, 3));
     }

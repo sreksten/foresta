@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.incantesimi;
 
-import com.threeamigos.foresta.motore.Arma;
-import com.threeamigos.foresta.motore.modellodati.TipoDanno;
+import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.motore.tipi.TipoDanno;
 import com.threeamigos.foresta.oggetti.Incantamento;
 
 import java.util.Collection;

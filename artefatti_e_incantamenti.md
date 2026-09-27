@@ -92,11 +92,11 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
 ### Equipaggiamento
 
 - **Inventario personale.** È la lista degli artefatti che il personaggio porta con sé, cioè il suo equipaggiamento; quelli del gruppo ne sono esclusi. Tutto ciò che è nell'inventario personale applica i suoi modificatori, come oggi.
-- **Slot.** Ogni `TipoArtefatto` ha il suo `SlotArtefatto` (`getSlotArtefatto()`).
+- **Slot.** Ogni `TipoArtefatto` ha il suo `TipoSlotArtefatto` (`getSlotArtefatto()`).
   - Al massimo 1 artefatto per `TESTA`, `CORPO`, `MANO_PRINCIPALE` e `MANO_SECONDARIA`.
   - Nessun limite su `ACCESSORIO` (anelli, talismani, ninnoli).
-  - `NUCLEO` (le pergamene): un personaggio non può prenderlo, resta nel gruppo con un messaggio o fumetto.
-  - `ENTRAMBE_LE_MANI` (nuovo valore di `SlotArtefatto`), per le **armi a due mani**: occupa sia la mano principale sia la secondaria.
+  - `NUCLEO` (le pergamene): un personaggio non può prenderlo, resta nel gruppo con un messaggioMD o fumetto.
+  - `ENTRAMBE_LE_MANI` (nuovo valore di `TipoSlotArtefatto`), per le **armi a due mani**: occupa sia la mano principale sia la secondaria.
     - Chi impugna un'arma a due mani non può equipaggiare scudo, libro magico o seconda arma finché non la ripone nell'inventario del gruppo. Viceversa, non può prendere un'arma a due mani se ha qualcosa in una delle due mani.
     - Il rifiuto si avverte con un fumetto.
 - **Equipaggiamento secondo la classe.** Armi, scudo e libro seguono una tabella per classe (`RegoleEquipaggiamento.puoUsare`); le versioni femminili seguono le maschili, le classi fuori tabella (i mostri, l'Ombrafiamma) non hanno limiti. Elmo, veste e accessori li portano tutti.
@@ -116,7 +116,7 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
   - **+50% di danno base** rispetto a un'arma a una mano dello stesso livello.
   - Lo stesso **−25% di `PARATA`** della doppia arma: si rinuncia allo scudo in cambio di potenza.
   - Lancia e bastone magico restano armi a una mano. Il bastone in particolare, perché altrimenti il mago non potrebbe più usare il libro magico.
-- **Slot di equipaggiamento sull'artefatto.** Nuovo campo `ArtefattoMD.slotEquipaggiamento` (di tipo `SlotArtefatto`): lo slot che l'artefatto occupa **davvero** mentre un personaggio lo porta.
+- **Slot di equipaggiamento sull'artefatto.** Nuovo campo `ArtefattoMD.slotEquipaggiamento` (di tipo `TipoSlotArtefatto`): lo slot che l'artefatto occupa **davvero** mentre un personaggio lo porta.
   - Di solito coincide con lo slot del suo `TipoArtefatto`. Serve per i casi in cui non è così: la spada di Ladro o Elfo nella mano secondaria.
   - Vale `null` quando l'artefatto non è equipaggiato (inventario del gruppo, negozi, templi).
   - Si assegna quando un personaggio prende l'artefatto: se la mano principale è occupata e quella secondaria è libera, la seconda arma va nella secondaria. Si azzera quando l'artefatto viene riposto.
@@ -139,8 +139,8 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
 - **Morti.** Sempre esclusi, come già oggi.
 - **Scelta.** Si propongono i candidati più **`GRUPPO`** (comando e icona esistevano già).
   - **Un solo candidato:** l'oggetto va direttamente a lui, senza domanda.
-  - **Nessun candidato:** l'oggetto va direttamente nell'inventario del gruppo, con un messaggio. È anche il caso di chi avrebbe già occupato lo slot (spada, scudo, elmo, armatura): niente sostituzioni automatiche, per non dargli robaccia.
-- **Troppo carico.** Se il personaggio scelto è troppo carico, l'oggetto va nel gruppo con il messaggio già in uso (fatto).
+  - **Nessun candidato:** l'oggetto va direttamente nell'inventario del gruppo, con un messaggioMD. È anche il caso di chi avrebbe già occupato lo slot (spada, scudo, elmo, armatura): niente sostituzioni automatiche, per non dargli robaccia.
+- **Troppo carico.** Se il personaggio scelto è troppo carico, l'oggetto va nel gruppo con il messaggioMD già in uso (fatto).
 - **Pergamene.** Vanno sempre nel gruppo (slot `NUCLEO`).
 - **Cofano.** Per ogni cofano aperto: 5% una pergamena, 5% un artefatto casuale, quindi il 10% delle volte si trova l'uno o l'altro. Gli altri esiti restano quelli di oggi.
 - **Nomi.** Il cofano trova già delle "pergamene" di incantesimi: nessun problema, perché con la grammatica gli incantamenti non si chiameranno più "Pergamena".
@@ -204,7 +204,7 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
 
 ### Rarità
 
-- **`RaritaArtefatto`** (`COMUNE`, `RARO`, `LEGGENDARIO`), campo di `ArtefattoMD`, salvato e riletto. Di default `COMUNE`.
+- **`TipoRaritaArtefatto`** (`COMUNE`, `RARO`, `LEGGENDARIO`), campo di `ArtefattoMD`, salvato e riletto. Di default `COMUNE`.
 - **Posti per gli effetti** (incantamenti più modificatori, `Artefatto.getEffettiMassimi()`):
 
   | Rarità | Posti | Tetto |
@@ -222,7 +222,7 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
 - [x] **`RegistroArtefatti.costruisciArtefatto` usa `Artefatto.di`**: un'arma presa al tempio torna un `ArmaFisica`. Prima `getArmaEquipaggiata()` falliva con `ClassCastException`.
 - [x] **L'artefatto del tempio si toglie dal registro** una volta raccolto (`LocazioneBase.rimuoviOggetto`). Corruzione e fuga lo lasciano al suo posto.
 - [x] **L'anello "del Valore" aumenta il `VALORE`**, non la `FORZA`.
-- [x] **Controllo del peso** in `Artefatto.prendi` e `Anello.prendi` (`Artefatto.consegna`). Se il personaggio è troppo carico, l'oggetto va nell'inventario del gruppo con un messaggio. `Personaggio.puoPrendere` è nell'interfaccia e lo usa anche il prelievo.
+- [x] **Controllo del peso** in `Artefatto.prendi` e `Anello.prendi` (`Artefatto.consegna`). Se il personaggio è troppo carico, l'oggetto va nell'inventario del gruppo con un messaggioMD. `Personaggio.puoPrendere` è nell'interfaccia e lo usa anche il prelievo.
 - [x] **Note vuote dei modificatori:** `-` si rilegge come `""`, quindi il modificatore riletto è `equals` all'originale.
 - [x] **Test** (13, verdi): `ArtefattoMDTest`, `RegistroArtefattiMDTest`, `RegistroArtefattiTest`.
 - [x] **`TipoArtefatto.getSlotArtefatto()`** (aggiunto da Stefano).
@@ -242,12 +242,12 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
   - `ArtefattoMD.slotEquipaggiamento` (null se non equipaggiato, oggi salvato come campo vuoto). Per ora nessuno lo imposta: è la fase 2.
   - Test: 10 nuovi in `ArtefattoMDTest` (salva/rileggi di nome proprio, slot, pergamene; forma completa; normalizzazione) e `ArtefattoIncantabileTest` (5). Tutta la suite è verde.
 - [x] **Fase 2 (equipaggiamento a slot e livello).**
-  - `Personaggio.puoEquipaggiare(Artefatto)` restituisce un `Optional<MotivoRifiutoEquipaggiamento>`: `TROPPO_CARICO`, `SLOT_OCCUPATO`, `PERGAMENA`, `LIVELLO_TROPPO_ALTO`, `SECONDA_ARMA_NON_CONSENTITA`, `MANI_OCCUPATE`, `ARMA_A_DUE_MANI_IMPUGNATA`. Ogni motivo ha la sua spiegazione ("Pippo non sa combattere con due armi.").
+  - `Personaggio.puoEquipaggiare(Artefatto)` restituisce un `Optional<MotivoRifiutoEquipaggiamento>`: `TROPPO_CARICO`, `SLOT_OCCUPATO`, `PERGAMENA`, `LIVELLO_TROPPO_ALTO`, `SECONDA_ARMA_NON_CONSENTITA`, `MANI_OCCUPATE_PER_ARMA_A_DUE_MANI`, `ARMA_A_DUE_MANI_IMPUGNATA`. Ogni motivo ha la sua spiegazione ("Pippo non sa combattere con due armi.").
   - Le regole a slot stanno in `RegoleEquipaggiamento` (package `personaggi`); il peso lo controlla `PersonaggioBase`.
-  - Lo usano il prelievo (`GruppoGiocatore`: la `NotificaRifiutoPrelievoArtefatto` porta il motivo, e il fumetto dell'inventario lo mostra) e `Artefatto.consegna` (messaggio "… resta nell'inventario del gruppo: Pippo …").
+  - Lo usano il prelievo (`GruppoGiocatore`: la `NotificaRifiutoPrelievoArtefatto` porta il motivo, e il fumetto dell'inventario lo mostra) e `Artefatto.consegna` (messaggioMD "… resta nell'inventario del gruppo: Pippo …").
   - `PersonaggioBase.addArtefatto` imposta `slotEquipaggiamento`; `removeArtefatto` e `GruppoGiocatore.addArtefatto` lo azzerano. Se si aggiunge un artefatto senza controlli (es. gli artefatti "PER TEST" dell'`Automa`), prende lo slot del suo tipo.
   - `getArmaEquipaggiata()` legge l'arma in `MANO_PRINCIPALE` o `ENTRAMBE_LE_MANI`; nuovo `getArmaSecondaria()`. Riponendo l'arma principale la secondaria resta dov'è: la prossima arma presa va nella principale.
-  - Il filtro dei candidati per il loot resta alla fase 4, quando il loot genererà l'artefatto prima della scelta: per ora chi non può prenderlo lo lascia nel gruppo, con il messaggio.
+  - Il filtro dei candidati per il loot resta alla fase 4, quando il loot genererà l'artefatto prima della scelta: per ora chi non può prenderlo lo lascia nel gruppo, con il messaggioMD.
   - Test: `PersonaggioEquipaggiamentoTest` (17) e 2 nuovi in `ArtefattoPrendiTest` (livello troppo alto, seconda spada del guerriero). Tutta la suite è verde (255 test).
 - [x] **Fase 3 (scheletro del generatore).**
   - Interfaccia `GeneratoreArtefatti` (`oggetti`), con `istanza()`, `generaArtefatto(tipo, livello)`, `generaArtefattoCasuale(livello)` (pergamene escluse) e `generaPergamena(livello)`. Chi chiama passa il livello di riferimento, `Statistiche.getLivello()`.
@@ -265,7 +265,7 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
 - [x] **Fase 4 (loot).**
   - `Spada` e `Scudo` estendono il nuovo `OggettoArtefatto`, che genera l'artefatto nel costruttore, al livello di riferimento: così è già noto quando si sceglie chi lo prende. `Elmo` e `Armatura` ci sono, con le loro voci in `ClassiOggetto` e in `ClassiOggettoImmagine` (immagine `null`), ma restano commentati nell'elenco degli oggetti del `Bosco` finché mancano le immagini.
   - L'anello magico costruisce il suo artefatto nel costruttore; quelli non magici restano senza effetto.
-  - Una sola logica di raccolta, `Artefatto.raccogli`, per loot, anelli e artefatti dei templi. I candidati sono i personaggi vivi che possono equipaggiare l'artefatto (`Artefatto.candidati`, con `puoEquipaggiare`). Nessun candidato: va nel gruppo con un messaggio (anche le pergamene); uno solo: va a lui; più di uno: sceglie il giocatore. Il messaggio usa il verbo del tipo ("Pippo impugna la spada d'argento, …").
+  - Una sola logica di raccolta, `Artefatto.raccogli`, per loot, anelli e artefatti dei templi. I candidati sono i personaggi vivi che possono equipaggiare l'artefatto (`Artefatto.candidati`, con `puoEquipaggiare`). Nessun candidato: va nel gruppo con un messaggioMD (anche le pergamene); uno solo: va a lui; più di uno: sceglie il giocatore. Il messaggioMD usa il verbo del tipo ("Pippo impugna la spada d'argento, …").
   - `Oggetto.getArtefatto()` dice quale artefatto porta un oggetto; l'`Automa` lo usa per proporre in `SCELTA_DESTINATARIO_OGGETTO` solo i candidati più `GRUPPO`, e rifiuta un personaggio che non è fra i candidati.
   - `Cofano`: per ogni cofano, 5% una pergamena e 5% un artefatto casuale, che vanno nel gruppo (`Costanti.COFANO_PROBABILITA_*`).
   - Test: `LootTest` (10) e `ArtefattoPrendiTest` aggiornato. Tutta la suite è verde (291 test).
@@ -306,7 +306,7 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
 - [x] **Grammatica degli artefatti, prima versione** (2026-09-25). `artefatti2.txt` con `artefatti2_pp.txt`, letti da `GrammaticaArtefatti`; formato e scelte in §7. `GeneratoreArtefattiTabelle` la usa per metà delle spade; il costruttore con il solo `Random` resta a sole tabelle, così i test di prima non cambiano. `artefatti.txt` non è stato toccato. Test: `GrammaticaArtefattiTest` (7); `TestArtefatti2` stampa 40 spade come le genera il gioco. Tutta la suite è verde (352 test).
 - [x] **Tetti degli effetti a 3/4/5** (comune/raro/leggendario) al posto di 5/6/7.
 - [x] **Il `|` sparisce dai testi** alla fonte (§5.5).
-- [x] **Rarità degli artefatti.** `RaritaArtefatto` con posti e tetti (§2, "Rarità"), salvata in `ArtefattoMD`. Il generatore fa rari il 10% degli artefatti incantabili e non genera mai leggendari; gli artefatti che nascono incantati hanno al massimo 3 incantamenti e almeno un posto libero. Test in `ArtefattoMDTest`, `ArtefattoIncantabileTest` e `GeneratoreArtefattiTest`; tutta la suite è verde (271 test).
+- [x] **Rarità degli artefatti.** `TipoRaritaArtefatto` con posti e tetti (§2, "Rarità"), salvata in `ArtefattoMD`. Il generatore fa rari il 10% degli artefatti incantabili e non genera mai leggendari; gli artefatti che nascono incantati hanno al massimo 3 incantamenti e almeno un posto libero. Test in `ArtefattoMDTest`, `ArtefattoIncantabileTest` e `GeneratoreArtefattiTest`; tutta la suite è verde (271 test).
 
 ## 4. Fasi
 
@@ -328,7 +328,7 @@ Ogni fase si può provare e committare da sola.
   - livello troppo alto;
   - arma in mano secondaria per una classe che non può;
   - arma a due mani con una mano già occupata, o un oggetto da mano (scudo, libro, seconda arma) con un'arma a due mani impugnata.
-- Lo usano il prelievo (`GruppoGiocatore.suEventoRichiestaPrelievoArtefatto`), `Artefatto.consegna` e la scelta dei candidati per il loot. Ogni motivo ha il suo fumetto o messaggio.
+- Lo usano il prelievo (`GruppoGiocatore.suEventoRichiestaPrelievoArtefatto`), `Artefatto.consegna` e la scelta dei candidati per il loot. Ogni motivo ha il suo fumetto o messaggioMD.
 - Prendere un artefatto ne imposta `slotEquipaggiamento`; riporlo lo azzera.
 - `getArmaEquipaggiata()` legge l'arma con `slotEquipaggiamento` `MANO_PRINCIPALE` o `ENTRAMBE_LE_MANI`, invece del "primo artefatto di supertipo ARMA". Per la doppia arma si aggiunge `getArmaSecondaria()`.
 - Test per ogni motivo di rifiuto, per l'arma impugnata e per la seconda arma messa nella mano secondaria.
@@ -460,7 +460,7 @@ Perché marcatori nel testo e non JSON, come in `artefatti.txt`: il JSON costrin
 ### Radici e numero di effetti
 
 - Le radici si chiamano `<TIPO>_<n>`: un `TipoArtefatto` e il numero di effetti. Per ora `SPADA_0` … `SPADA_3`. `GrammaticaArtefatti` scopre da sola quali tipi e quanti effetti ci sono: per aggiungere un tipo basta scriverne le radici.
-- **Ogni parte del nome porta un solo effetto**, quindi il numero di parti è il numero di effetti, e il limite di `RaritaArtefatto` si rispetta senza tentativi. Dove in `artefatti.txt` una parola dava due effetti (un bonus e un malus) si è tenuto il bonus.
+- **Ogni parte del nome porta un solo effetto**, quindi il numero di parti è il numero di effetti, e il limite di `TipoRaritaArtefatto` si rispetta senza tentativi. Dove in `artefatti.txt` una parola dava due effetti (un bonus e un malus) si è tenuto il bonus.
 - Il generatore chiede tanti effetti quanti ne ammette l'artefatto **meno uno**, come per gli artefatti che nascono incantati, così resta un posto per la fusione; se la grammatica non ne prevede tanti, prende la radice più grande. Quindi un comune di livello 1-2 esce da `SPADA_0`, che ha solo aggettivi di colore ("la spada di latta").
 
 ### Valori e prezzo

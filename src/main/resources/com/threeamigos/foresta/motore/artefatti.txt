@@ -317,7 +317,7 @@ ATTRIBUTO_SOLO_PRE_LIV_3
 # CRITICO -2 / FORTUNA -1: Prefissi fallimentari legati a difetti strutturali o sfortuna di fabbricazione.
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"CRITICO\", \"quantita\": -2 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"FORTUNA\", \"quantita\": -1 }"]{ Triste | Misera | Sghemba | Fiacca | Infausta | Disastrosa | Fallimentare | Difettosa | Inefficace | Low-Cost }
 
-# PRECISIONE +2: Aggettivi di infallibile certezza geometrica che blindano l'esito del colpo prima del nome.
+# PRECISIONE +2: Aggettivi di infallibile certezza geometrica che blindano l'esitoControlloRichiestaEquipaggiamento del colpo prima del nome.
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": 2 }"]{ Sicura | Retta | Ferma | Salda | Chiara | Infallibile | Chirurgica | Centrata | Mirata | Accurata }
 # PRECISIONE +1 / DESTREZZA +1: Prefissi di assoluto rigore e meticolosità artigianale o burocratica.
     [MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"PRECISIONE\", \"quantita\": 1 }"][MODIFICATORI="[#MODIFICATORI?],{ \"attributo\": \"DESTREZZA\", \"quantita\": 1 }"]{ Accorta | Pronta | Calibrata | Attenta | Chiara | Orologiaia | Cacciatrice | Sarta | Calibratrice | Pignola }

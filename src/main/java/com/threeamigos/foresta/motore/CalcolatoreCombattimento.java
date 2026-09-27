@@ -2,12 +2,8 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
-import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.SupertipoDanno;
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoDanno;
-import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
-import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
+import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GradoIncantamento;
 import com.threeamigos.foresta.oggetti.Incantamento;

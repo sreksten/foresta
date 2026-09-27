@@ -5,19 +5,15 @@ import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
-import com.threeamigos.foresta.motore.AutomaIncantatore;
-import com.threeamigos.foresta.motore.AutomaInventario;
-import com.threeamigos.foresta.motore.Comando;
-import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.motore.modellodati.Messaggio;
+import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.motore.modellodati.MessaggioMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
-import com.threeamigos.foresta.motore.modellodati.TipoInterazioneElementale;
-import com.threeamigos.foresta.motore.modellodati.TipoNegozio;
+import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.motore.tipi.TipoInterazioneElementale;
+import com.threeamigos.foresta.motore.tipi.TipoNegozio;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.tools.GestoreSalvataggi;
+import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.tools.Temporizzatore;
 import com.threeamigos.foresta.tools.TestataSalvataggio;
 
@@ -831,14 +827,14 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 *
 	 * @param messaggiDalPiuRecenteAlPiuVecchio come li restituisce {@code Notizie.getUltimiMessaggi()}
 	 */
-	public void ripristinaMessaggi(List<Messaggio> messaggiDalPiuRecenteAlPiuVecchio) {
+	public void ripristinaMessaggi(List<MessaggioMD> messaggiDalPiuRecenteAlPiuVecchio) {
 		riquadroTesto.clear();
 		for (int i = messaggiDalPiuRecenteAlPiuVecchio.size() - 1; i >= 0; i--) {
-			Messaggio messaggio = messaggiDalPiuRecenteAlPiuVecchio.get(i);
-			if (messaggio.isParagrafo()) {
-				aggiungiParagrafo(messaggio.getTesto());
+			MessaggioMD messaggioMD = messaggiDalPiuRecenteAlPiuVecchio.get(i);
+			if (messaggioMD.isParagrafo()) {
+				aggiungiParagrafo(messaggioMD.getTesto());
 			} else {
-				riquadroTesto.addString(messaggio.getTesto());
+				riquadroTesto.addString(messaggioMD.getTesto());
 			}
 		}
 		repaint();

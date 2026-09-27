@@ -1,16 +1,10 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.modellodati.RaritaArtefatto;
-import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.SupertipoDanno;
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
-import com.threeamigos.foresta.motore.modellodati.TipoDanno;
-import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
 import com.threeamigos.foresta.motore.ArmaNaturale;
+import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import org.junit.jupiter.api.Test;
 
@@ -18,12 +12,7 @@ import java.util.EnumSet;
 import java.util.Random;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class GeneratoreArtefattiTest {
 
@@ -195,19 +184,19 @@ class GeneratoreArtefattiTest {
         int incantabili = 0;
         for (int i = 0; i < 2000; i++) {
             Artefatto artefatto = generatore.generaArtefattoCasuale(5);
-            assertNotEquals(RaritaArtefatto.LEGGENDARIO, artefatto.getRarita());
+            assertNotEquals(TipoRaritaArtefatto.LEGGENDARIO, artefatto.getRarita());
             if (!artefatto.isIncantabile()) {
-                assertEquals(RaritaArtefatto.COMUNE, artefatto.getRarita());
+                assertEquals(TipoRaritaArtefatto.COMUNE, artefatto.getRarita());
                 continue;
             }
             incantabili++;
-            if (artefatto.getRarita() == RaritaArtefatto.RARO) {
+            if (artefatto.getRarita() == TipoRaritaArtefatto.RARO) {
                 rari++;
             }
         }
         double quota = (double) rari / incantabili;
         assertTrue(quota > 0.06 && quota < 0.14, "Quota di rari: " + quota);
-        assertEquals(RaritaArtefatto.COMUNE, generatore.generaPergamena(5).getRarita());
+        assertEquals(TipoRaritaArtefatto.COMUNE, generatore.generaPergamena(5).getRarita());
     }
 
     private static int contaIncantati(GeneratoreArtefatti generatore, int livello) {

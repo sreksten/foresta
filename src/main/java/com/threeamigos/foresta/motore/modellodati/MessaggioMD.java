@@ -12,7 +12,7 @@ import java.io.PrintWriter;
  *
  * @author Stefano Reksten
  */
-public class Messaggio implements Serializzabile {
+public class MessaggioMD implements Serializzabile {
 
 	private static final char PARAGRAFO = 'P';
 	private static final char FRASE = 'F';
@@ -20,10 +20,10 @@ public class Messaggio implements Serializzabile {
 	private String testo;
 	private boolean paragrafo;
 
-	public Messaggio() {
+	public MessaggioMD() {
 	}
 
-	public Messaggio(String testo, boolean paragrafo) {
+	public MessaggioMD(String testo, boolean paragrafo) {
 		this.testo = testo;
 		this.paragrafo = paragrafo;
 	}
@@ -57,7 +57,7 @@ public class Messaggio implements Serializzabile {
 			throw new IOException("Messaggio mancante");
 		}
 		if (line.length() >= 2 && (line.charAt(0) == PARAGRAFO || line.charAt(0) == FRASE)
-				&& line.substring(1, 2).equals(PIPE)) {
+				&& line.startsWith(PIPE, 1)) {
 			paragrafo = line.charAt(0) == PARAGRAFO;
 			testo = line.substring(2);
 		} else {

@@ -1,5 +1,9 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.motore.EffettoDiStato;
+import com.threeamigos.foresta.motore.tipi.TipoAttributo;
+import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.motore.tipi.TipoModificatore;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
 import java.io.BufferedReader;

@@ -1,8 +1,13 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.interfacce.OggettoConArticoli;
 import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.motore.modellodati.*;
+import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
+import com.threeamigos.foresta.motore.tipi.TipoAttributo;
+import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.motore.tipi.TipoRiposo;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 
@@ -340,7 +345,7 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
 	 * del rifiuto (troppo carico, slot occupato, pergamena, livello troppo alto, seconda arma non consentita,
 	 * mani occupate o arma a due mani impugnata).
 	 */
-	Optional<MotivoRifiutoEquipaggiamento> puoEquipaggiare(Artefatto artefatto);
+	Optional<RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento> puoEquipaggiare(Artefatto artefatto);
 
 	/**
 	 * La forza di un personaggio, somma della forza base e dei modificatori di forza degli artefatti.

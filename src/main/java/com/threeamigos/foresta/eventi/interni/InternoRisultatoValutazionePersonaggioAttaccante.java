@@ -3,7 +3,7 @@ package com.threeamigos.foresta.eventi.interni;
 import com.threeamigos.foresta.eventi.EventoSuPersonaggio;
 import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
-import com.threeamigos.foresta.motore.modellodati.RisultatoValutazioneAttaccante;
+import com.threeamigos.foresta.motore.tipi.TipoRisultatoValutazioneAttaccante;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 /**
@@ -15,7 +15,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 public class InternoRisultatoValutazionePersonaggioAttaccante extends EventoSuPersonaggio {
 
     private final Personaggio bersaglio;
-    private final RisultatoValutazioneAttaccante valutazione;
+    private final TipoRisultatoValutazioneAttaccante valutazione;
     private final Incantesimo incantesimo;
     private final double probabilitaColpireFisico;
     private final double probabilitaColpireMagico;
@@ -28,7 +28,7 @@ public class InternoRisultatoValutazionePersonaggioAttaccante extends EventoSuPe
      * @param valutazione il risultato della valutazione
      */
     public InternoRisultatoValutazionePersonaggioAttaccante(Personaggio personaggio, Personaggio bersaglio,
-                                                            RisultatoValutazioneAttaccante valutazione) {
+                                                            TipoRisultatoValutazioneAttaccante valutazione) {
         super(TipoEvento.INTERNO_RISULTATO_VALUTAZIONE_PERSONAGGIO_ATTACCANTE, personaggio);
         this.bersaglio = bersaglio;
         this.valutazione = valutazione;
@@ -46,7 +46,7 @@ public class InternoRisultatoValutazionePersonaggioAttaccante extends EventoSuPe
      * @param incantesimo l'Incantesimo che viene utilizzato per attaccare
      */
     public InternoRisultatoValutazionePersonaggioAttaccante(Personaggio personaggio, Personaggio bersaglio,
-                                                            RisultatoValutazioneAttaccante valutazione, Incantesimo incantesimo) {
+                                                            TipoRisultatoValutazioneAttaccante valutazione, Incantesimo incantesimo) {
         super(TipoEvento.INTERNO_RISULTATO_VALUTAZIONE_PERSONAGGIO_ATTACCANTE, personaggio);
         this.bersaglio = bersaglio;
         this.valutazione = valutazione;
@@ -68,7 +68,7 @@ public class InternoRisultatoValutazionePersonaggioAttaccante extends EventoSuPe
      * @param possibiliDanniMagici i possibili danni magici
      */
     public InternoRisultatoValutazionePersonaggioAttaccante(Personaggio personaggio, Personaggio bersaglio,
-                                                            RisultatoValutazioneAttaccante valutazione, Incantesimo incantesimo,
+                                                            TipoRisultatoValutazioneAttaccante valutazione, Incantesimo incantesimo,
                                                             double probabilitaColpireFisico, double probabilitaColpireMagico,
                                                             double possibiliDanniFisici, double possibiliDanniMagici) {
         super(TipoEvento.INTERNO_RISULTATO_VALUTAZIONE_PERSONAGGIO_ATTACCANTE, personaggio);
@@ -91,7 +91,7 @@ public class InternoRisultatoValutazionePersonaggioAttaccante extends EventoSuPe
     /**
      * @return il risultato della valutazione
      */
-    public RisultatoValutazioneAttaccante getValutazione() {
+    public TipoRisultatoValutazioneAttaccante getValutazione() {
         return valutazione;
     }
 

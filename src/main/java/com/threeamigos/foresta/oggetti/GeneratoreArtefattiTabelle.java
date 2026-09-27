@@ -4,19 +4,9 @@ import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.modellodati.RaritaArtefatto;
-import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.SupertipoDanno;
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
-import com.threeamigos.foresta.motore.modellodati.TipoDanno;
-import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
+import com.threeamigos.foresta.motore.tipi.*;
 
-import java.util.Arrays;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -43,6 +33,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		nomeEPeso(TipoArtefatto.SCUDO, "lo scudo", 2);
 		nomeEPeso(TipoArtefatto.ELMO, "l'elmo", 1);
 		nomeEPeso(TipoArtefatto.ARMATURA, "l'armatura", 3);
+		nomeEPeso(TipoArtefatto.SCHINIERI, "gli schinieri", 2);
 		nomeEPeso(TipoArtefatto.VESTE, "la veste", 1);
 		nomeEPeso(TipoArtefatto.ANELLO, "l'anello", 0.1);
 		nomeEPeso(TipoArtefatto.TALISMANO, "il talismano", 0.5);
@@ -67,11 +58,11 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 	 * Accessori: l'attributo che migliorano e la descrizione che lo dice
 	 */
 	private static final Object[][] ACCESSORI = {
-			{ TipoAttributo.CARISMA, "che aumenta il Carisma" },
-			{ TipoAttributo.CORAGGIO, "che aumenta il Coraggio" },
-			{ TipoAttributo.VALORE, "che aumenta il Valore" },
-			{ TipoAttributo.FORTUNA, "che porta fortuna" },
-			{ TipoAttributo.PERCEZIONE, "che acuisce i sensi" }
+			{ TipoAttributo.CARISMA, "che aumenta il Carisma", "che aumentano il Carisma" },
+			{ TipoAttributo.CORAGGIO, "che aumenta il Coraggio", "che aumentano il Coraggio" },
+			{ TipoAttributo.VALORE, "che aumenta il Valore", "che aumentano il Valore" },
+			{ TipoAttributo.FORTUNA, "che porta Fortuna", "che portano Fortuna" },
+			{ TipoAttributo.PERCEZIONE, "che acuisce i sensi", "che acuiscono i sensi" }
 	};
 
 	/**
@@ -140,7 +131,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		}
 		// La rarità conta solo per il numero di effetti, quindi solo per gli artefatti incantabili
 		if (Artefatto.di(md).isIncantabile() && random.nextDouble() < Costanti.ARTEFATTO_PROBABILITA_RARO) {
-			md.setRarita(RaritaArtefatto.RARO);
+			md.setRarita(TipoRaritaArtefatto.RARO);
 		}
 		switch (tipo.getSupertipo()) {
 			case ARMA:
@@ -159,7 +150,11 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 				break;
 			default:
 				Object[] accessorio = ACCESSORI[random.nextInt(ACCESSORI.length)];
-				md.setDescrizione((String) accessorio[1]);
+				if (tipo.getCardinalita() == TipoCardinalitaArtefatto.SINGOLO) {
+					md.setDescrizione((String) accessorio[1]);
+				} else {
+					md.setDescrizione((String) accessorio[2]);
+				}
 				md.addModificatore((TipoAttributo) accessorio[0], TipoModificatore.AUMENTO_FISSO, livelloEffettivo, "");
 				break;
 		}
@@ -202,7 +197,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 	private Artefatto generaDaGrammatica(ArtefattoMD md, int livello) {
 		TipoArtefatto tipo = md.getTipo();
 		if (Artefatto.di(md).isIncantabile() && random.nextDouble() < Costanti.ARTEFATTO_PROBABILITA_RARO) {
-			md.setRarita(RaritaArtefatto.RARO);
+			md.setRarita(TipoRaritaArtefatto.RARO);
 		}
 		md.setNome(NOMI.get(tipo));
 		if (tipo.getSupertipo() == SupertipoArtefatto.ARMA) {

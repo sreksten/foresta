@@ -1,5 +1,8 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.motore.tipi.TipoAttributo;
+import com.threeamigos.foresta.motore.tipi.TipoModificatore;
+
 import java.util.Objects;
 
 /**

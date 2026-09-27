@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi.comandigiocatore;
 
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.motore.OggettoConPeso;
+import com.threeamigos.foresta.interfacce.OggettoConPeso;
 import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
 
 /**

@@ -1,15 +1,14 @@
 package com.threeamigos.foresta.motore.modellodati;
 
 import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
+import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;
 import java.util.Collection;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class RegistroArtefattiMDTest {
 

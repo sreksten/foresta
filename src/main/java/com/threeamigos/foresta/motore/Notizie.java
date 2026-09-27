@@ -4,7 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaNotizia;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
-import com.threeamigos.foresta.motore.modellodati.Messaggio;
+import com.threeamigos.foresta.motore.modellodati.MessaggioMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.Notizia;
 import com.threeamigos.foresta.motore.modellodati.NotizieMD;
@@ -34,14 +34,14 @@ public class Notizie {
 	 * a pubblicare notifiche (vedi Main).
 	 */
 	public static void registrati() {
-		BusEventi.iscriviti(NotificaTestoFrase.class, evento -> aggiungiMessaggio(new Messaggio(evento.getMessaggio(), false)));
-		BusEventi.iscriviti(NotificaTestoParagrafo.class, evento -> aggiungiMessaggio(new Messaggio(evento.getMessaggio(), true)));
+		BusEventi.iscriviti(NotificaTestoFrase.class, evento -> aggiungiMessaggio(new MessaggioMD(evento.getMessaggio(), false)));
+		BusEventi.iscriviti(NotificaTestoParagrafo.class, evento -> aggiungiMessaggio(new MessaggioMD(evento.getMessaggio(), true)));
 		BusEventi.iscriviti(NotificaNotizia.class, evento -> aggiungiNotizia(evento.getNotizia()));
 	}
 
-	private static void aggiungiMessaggio(Messaggio messaggio) {
-		List<Messaggio> ultimiMessaggi = getNotizieMD().getUltimiMessaggi();
-		ultimiMessaggi.add(0, messaggio);
+	private static void aggiungiMessaggio(MessaggioMD messaggioMD) {
+		List<MessaggioMD> ultimiMessaggi = getNotizieMD().getUltimiMessaggi();
+		ultimiMessaggi.add(0, messaggioMD);
 		while (ultimiMessaggi.size() > Costanti.MASSIMO_MESSAGGI_RICORDATI) {
 			ultimiMessaggi.remove(ultimiMessaggi.size() - 1);
 		}
@@ -59,7 +59,7 @@ public class Notizie {
 	 * Gli ultimi messaggi mostrati al giocatore, dal più recente al più vecchio:
 	 * serve a ripopolare il pannello di testo dopo un ricaricamento.
 	 */
-	public static List<Messaggio> getUltimiMessaggi() {
+	public static List<MessaggioMD> getUltimiMessaggi() {
 		return getNotizieMD().getUltimiMessaggi();
 	}
 

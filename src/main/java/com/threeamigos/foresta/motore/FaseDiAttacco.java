@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.interfacce.Arma;
+
 /**
  * Una fase dell'attacco di un turno: con quale arma si colpisce e con che quota del danno
  * (1 per l'arma principale, Costanti.DOPPIA_ARMA_FATTORE_SECONDA_ARMA per la seconda arma).

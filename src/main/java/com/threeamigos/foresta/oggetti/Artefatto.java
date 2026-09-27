@@ -3,16 +3,17 @@ package com.threeamigos.foresta.oggetti;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
+import com.threeamigos.foresta.interfacce.OggettoConCosto;
+import com.threeamigos.foresta.interfacce.OggettoConPeso;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.OggettoConCosto;
-import com.threeamigos.foresta.motore.OggettoConPeso;
+import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.modellodati.RaritaArtefatto;
-import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
-import com.threeamigos.foresta.personaggi.MotivoRifiutoEquipaggiamento;
+import com.threeamigos.foresta.motore.tipi.SupertipoArtefatto;
+import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
+import com.threeamigos.foresta.motore.tipi.TipoMotivoRifiutoEquipaggiamento;
+import com.threeamigos.foresta.motore.tipi.TipoRaritaArtefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -79,7 +80,7 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 		}
 	}
 
-	public final RaritaArtefatto getRarita() {
+	public final TipoRaritaArtefatto getRarita() {
 		return md.getRarita();
 	}
 
@@ -213,7 +214,7 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 	private static boolean troppoPesante(GruppoGiocatore gruppo, Artefatto artefatto) {
 		for (Personaggio personaggio : gruppo.getPersonaggi()) {
 			if (personaggio.isVivo() && personaggio.puoEquipaggiare(artefatto)
-					.filter(motivo -> motivo == MotivoRifiutoEquipaggiamento.TROPPO_CARICO).isPresent()) {
+					.filter(motivo -> motivo.equals(TipoMotivoRifiutoEquipaggiamento.TROPPO_CARICO.getFumetto())).isPresent()) {
 				return true;
 			}
 		}
@@ -234,7 +235,7 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 	 * nell'inventario del gruppo spiegando il perché. Restituisce true se l'ha preso il personaggio.
 	 */
 	public static boolean consegna(GruppoGiocatore gruppo, Personaggio personaggio, Artefatto artefatto) {
-		Optional<MotivoRifiutoEquipaggiamento> motivoRifiuto = personaggio.puoEquipaggiare(artefatto);
+		Optional<RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento> motivoRifiuto = personaggio.puoEquipaggiare(artefatto);
 		if (!motivoRifiuto.isPresent()) {
 			personaggio.addArtefatto(artefatto);
 			return true;
@@ -245,7 +246,7 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 		BusEventi.pubblica(new NotificaTestoParagrafo(comeSoggetto(artefatto)
 				+ " resta nell'inventario del gruppo: "
 				+ personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)
-				+ ' ' + motivoRifiuto.get().getSpiegazione() + '.'));
+				+ ' ' + motivoRifiuto.get() + '.'));
 		return false;
 	}
 

@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.motore.tipi.TipoModalitaProduzioneTesti;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.nio.charset.StandardCharsets;
 import java.util.HashSet;
@@ -28,7 +28,7 @@ class GrammarBeanTest {
 
     @Test
     void constructorWithNullGrammarAndPostProductionIsNotAccepted() {
-        assertThrows(GrammarBean.InvalidGrammarException.class, () -> new GrammarBean((String)null, ""));
+        assertThrows(GrammarBean.InvalidGrammarException.class, () -> new GrammarBean(null, ""));
     }
 
     @Test
@@ -297,7 +297,7 @@ class GrammarBeanTest {
         // Every production produces a trimmed string, so the space left between "y" and the
         // nested group's now-empty expansion is stripped, yielding exactly "y", not "y ".
         GrammarBean bean = new GrammarBean("ROOT\n\t{ x | y { z | } }\n");
-        bean.setProductionMode(ProductionModeEnum.LAST);
+        bean.setProductionMode(TipoModalitaProduzioneTesti.ULTIMO);
         assertEquals("y", bean.produce().get(0));
     }
 
@@ -717,14 +717,14 @@ class GrammarBeanTest {
     @Test
     void productionModeDefaultsToRandom() throws Exception {
         GrammarBean bean = new GrammarBean("ROOT\n\tA|B|C\n");
-        assertEquals(ProductionModeEnum.RANDOM, bean.getProductionMode());
+        assertEquals(TipoModalitaProduzioneTesti.CASUALE, bean.getProductionMode());
     }
 
     @Test
     void firstProductionModeAlwaysPicksFirstOption() throws Exception {
         GrammarBean bean = new GrammarBean("ROOT\n\tA|B|C\n");
-        bean.setProductionMode(ProductionModeEnum.FIRST);
-        assertEquals(ProductionModeEnum.FIRST, bean.getProductionMode());
+        bean.setProductionMode(TipoModalitaProduzioneTesti.PRIMO);
+        assertEquals(TipoModalitaProduzioneTesti.PRIMO, bean.getProductionMode());
         for (int i = 0; i < 10; i++) {
             assertEquals("A", bean.produce().get(0));
         }
@@ -733,8 +733,8 @@ class GrammarBeanTest {
     @Test
     void lastProductionModeAlwaysPicksLastOption() throws Exception {
         GrammarBean bean = new GrammarBean("ROOT\n\tA|B|C\n");
-        bean.setProductionMode(ProductionModeEnum.LAST);
-        assertEquals(ProductionModeEnum.LAST, bean.getProductionMode());
+        bean.setProductionMode(TipoModalitaProduzioneTesti.ULTIMO);
+        assertEquals(TipoModalitaProduzioneTesti.ULTIMO, bean.getProductionMode());
         for (int i = 0; i < 10; i++) {
             assertEquals("C", bean.produce().get(0));
         }
@@ -771,7 +771,7 @@ class GrammarBeanTest {
         // and one ("Z") doesn't reference X at all. Once X$ is exhausted, the cascade in
         // removeProduction must strip the first three but leave "Z" and ROOT itself standing.
         GrammarBean bean = new GrammarBean("ROOT\n\t[X]|[*X]|[!X]|Z\nX$\n\tonly\n");
-        bean.setProductionMode(ProductionModeEnum.FIRST);
+        bean.setProductionMode(TipoModalitaProduzioneTesti.PRIMO);
         assertEquals("only", bean.produce().get(0));
         assertEquals("Z", bean.produce().get(0));
         assertEquals("Z", bean.produce().get(0));
@@ -1353,14 +1353,14 @@ class GrammarBeanTest {
     @Test
     void weightTokenIsStrippedFromAlternativeText() throws Exception {
         GrammarBean bean = new GrammarBean("ROOT\n\t[^5] A|B\n");
-        bean.setProductionMode(ProductionModeEnum.FIRST);
+        bean.setProductionMode(TipoModalitaProduzioneTesti.PRIMO);
         assertEquals("A", bean.produce().get(0));
     }
 
     @Test
     void weightTokenOnLastAlternativeIsAlsoStripped() throws Exception {
         GrammarBean bean = new GrammarBean("ROOT\n\tA|[^3] B\n");
-        bean.setProductionMode(ProductionModeEnum.LAST);
+        bean.setProductionMode(TipoModalitaProduzioneTesti.ULTIMO);
         assertEquals("B", bean.produce().get(0));
     }
 
@@ -1407,7 +1407,7 @@ class GrammarBeanTest {
     @Test
     void fractionalWeightTokenIsStrippedAndHonored() throws Exception {
         GrammarBean bean = new GrammarBean("ROOT\n\t[^2.5] A|B\n");
-        bean.setProductionMode(ProductionModeEnum.FIRST);
+        bean.setProductionMode(TipoModalitaProduzioneTesti.PRIMO);
         assertEquals("A", bean.produce().get(0));
     }
 
@@ -1464,7 +1464,7 @@ class GrammarBeanTest {
         // X has two weighted alternatives; consuming one via FIRST mode must remove exactly
         // that one (by reference, not by content), leaving the other one reachable afterward.
         GrammarBean bean = new GrammarBean("ROOT\n\t[X]\nX$\n\t[^5] a|[^3] b\n");
-        bean.setProductionMode(ProductionModeEnum.FIRST);
+        bean.setProductionMode(TipoModalitaProduzioneTesti.PRIMO);
         assertEquals("a", bean.produce().get(0));
         assertEquals("b", bean.produce().get(0));
     }
@@ -1614,7 +1614,7 @@ class GrammarBeanTest {
     @Test
     void capitalizeMarkerOnEmptyResolutionIsNoOp() throws Exception {
         GrammarBean bean = new GrammarBean("ROOT\n\ta^[X]b\nX\n\thello|\n");
-        bean.setProductionMode(ProductionModeEnum.LAST);
+        bean.setProductionMode(TipoModalitaProduzioneTesti.ULTIMO);
         assertEquals("ab", bean.produce().get(0));
     }
 

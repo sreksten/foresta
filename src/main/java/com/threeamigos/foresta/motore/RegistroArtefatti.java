@@ -1,6 +1,13 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.motore.modellodati.*;
+import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.motore.modellodati.RegistroArtefattiMD;
+import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
+import com.threeamigos.foresta.motore.tipi.TipoAttributo;
+import com.threeamigos.foresta.motore.tipi.TipoModificatore;
+import com.threeamigos.foresta.motore.tipi.TipoNegozio;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;

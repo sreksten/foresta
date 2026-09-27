@@ -6,6 +6,7 @@ import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
 import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
 import com.threeamigos.foresta.motore.DannoRisultante;
 import com.threeamigos.foresta.motore.FaseDiAttacco;
+import com.threeamigos.foresta.motore.tipi.SupertipoDanno;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Personaggio.NotificaMorte;

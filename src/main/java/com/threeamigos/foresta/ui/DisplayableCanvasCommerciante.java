@@ -4,7 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoVenditaArtefatto;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.modellodati.TipoNegozio;
+import com.threeamigos.foresta.motore.tipi.TipoNegozio;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

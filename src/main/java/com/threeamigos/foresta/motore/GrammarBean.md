@@ -961,7 +961,7 @@ A: [X] [X] -> only [X]
 
 qui `A` aveva già sostituito la prima `[X]` (con `only`) quando la seconda `[X]` ha fallito
 perché `X` era one-shot ed era già stata consumata. L'eccezione rilanciata resta invariata
-(stesso tipoVariazione, stesso messaggio): la traccia è solo un aiuto diagnostico nel log.
+(stesso tipoVariazione, stesso messaggioMD): la traccia è solo un aiuto diagnostico nel log.
 
 ### Altri errori
 

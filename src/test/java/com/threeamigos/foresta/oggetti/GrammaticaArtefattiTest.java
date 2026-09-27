@@ -1,21 +1,16 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.motore.modellodati.SupertipoDanno;
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
-import com.threeamigos.foresta.motore.modellodati.TipoDanno;
+import com.threeamigos.foresta.motore.tipi.SupertipoDanno;
+import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
+import com.threeamigos.foresta.motore.tipi.TipoAttributo;
+import com.threeamigos.foresta.motore.tipi.TipoDanno;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.util.Random;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class GrammaticaArtefattiTest {
 
@@ -48,7 +43,7 @@ class GrammaticaArtefattiTest {
                 assertFalse(nome.matches(".*[@\\[\\]{}|<>\"].*"), nome);
                 assertFalse(nome.contains("  "), nome);
                 for (TipoDanno danno : risultato.getDanni()) {
-                    assertTrue(danno.getSuperTipo() != SupertipoDanno.FISICO, nome);
+                    assertNotSame(danno.getSuperTipo(), SupertipoDanno.FISICO, nome);
                 }
                 for (GrammaticaArtefatti.Modificatore modificatore : risultato.getModificatori()) {
                     assertTrue(modificatore.getIntensita() != 0 && Math.abs(modificatore.getIntensita()) <= 3, nome);

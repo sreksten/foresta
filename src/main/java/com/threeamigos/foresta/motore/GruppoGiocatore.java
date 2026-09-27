@@ -1,19 +1,23 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tools.ModalitaDiProva;
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
 import com.threeamigos.foresta.eventi.comandigiocatore.*;
+import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
-import com.threeamigos.foresta.motore.modellodati.*;
+import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.motore.modellodati.GruppoGiocatoreMD;
+import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
+import com.threeamigos.foresta.motore.tipi.TipoMotivoRifiutoIncantatura;
+import com.threeamigos.foresta.motore.tipi.TipoRiposo;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
-import com.threeamigos.foresta.personaggi.MotivoRifiutoEquipaggiamento;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
+import com.threeamigos.foresta.tools.ModalitaDiProva;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 
 import java.util.ArrayList;
@@ -609,9 +613,10 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	private void suEventoRichiestaPrelievoArtefatto(ComandoPrelievoArtefatto eventoRichiestaPrelievoArtefatto) {
 		Artefatto artefatto = (Artefatto) eventoRichiestaPrelievoArtefatto.getOggettoDaSpostare();
 		Personaggio personaggio = (Personaggio) eventoRichiestaPrelievoArtefatto.getParteAttiva();
-		Optional<MotivoRifiutoEquipaggiamento> motivoRifiuto = personaggio.puoEquipaggiare(artefatto);
+		Optional<RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento> motivoRifiuto = personaggio.puoEquipaggiare(artefatto);
 		if (motivoRifiuto.isPresent()) {
-			BusEventi.pubblica(new NotificaRifiutoPrelievoArtefatto(eventoRichiestaPrelievoArtefatto, motivoRifiuto.get()));
+			RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento esito = motivoRifiuto.get();
+			BusEventi.pubblica(new NotificaRifiutoPrelievoArtefatto(eventoRichiestaPrelievoArtefatto, esito));
 		} else {
 			removeArtefatto(artefatto);
 			personaggio.addArtefatto(artefatto);
@@ -668,8 +673,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	 *
 	 * @return il motivo del rifiuto, oppure vuoto se la fusione è riuscita
 	 */
-	public Optional<MotivoRifiutoIncantatura> incanta(BancoDiLavoro banco, String nomeProprio) {
-		Optional<MotivoRifiutoIncantatura> motivo = RegoleIncantatura.verifica(banco.getInventario(), getMonete(), getContrattazione());
+	public Optional<TipoMotivoRifiutoIncantatura> incanta(BancoDiLavoro banco, String nomeProprio) {
+		Optional<TipoMotivoRifiutoIncantatura> motivo = RegoleIncantatura.verifica(banco.getInventario(), getMonete(), getContrattazione());
 		if (motivo.isPresent()) {
 			BusEventi.pubblica(new NotificaRifiutoIncantatura(motivo.get()));
 			return motivo;

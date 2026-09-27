@@ -3,7 +3,7 @@ package com.threeamigos.foresta.oggetti;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
+import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
 
 import java.util.Optional;
 
@@ -33,4 +33,24 @@ public abstract class OggettoArtefatto extends OggettoBase implements Oggetto {
 		}
 		return super.prendi(gruppo, azione);
 	}
+
+	public String getNome() {
+		if (artefatto.getNome() != null) {
+			return artefatto.getNome();
+		}
+		return getAIS() + ' ' + getNomeSingolare();
+	}
+
+	public abstract String getAIS();
+
+	public abstract String getAIP();
+
+	public abstract String getADS();
+
+	public abstract String getADP();
+
+	public abstract String getNomeSingolare();
+
+	public abstract String getNomePlurale();
+
 }

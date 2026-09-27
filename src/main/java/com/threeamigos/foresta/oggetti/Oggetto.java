@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.oggetti;
 
-import java.util.Optional;
-
+import com.threeamigos.foresta.interfacce.OggettoConArticoli;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.OggettoConArticoli;
+
+import java.util.Optional;
 
 public interface Oggetto extends OggettoConArticoli {
 

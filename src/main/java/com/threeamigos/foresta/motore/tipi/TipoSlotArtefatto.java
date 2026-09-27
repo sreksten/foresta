@@ -1,10 +1,10 @@
-package com.threeamigos.foresta.motore.modellodati;
+package com.threeamigos.foresta.motore.tipi;
 
 /**
  *
  * @author Stefano Reksten
  */
-public enum SlotArtefatto {
+public enum TipoSlotArtefatto {
 
     /**
      * Massimo 1 Elmo
@@ -26,6 +26,10 @@ public enum SlotArtefatto {
      * Armi a due mani (Spadone): occupa sia la mano principale sia la secondaria
      */
     ENTRAMBE_LE_MANI,
+    /**
+     * Massimo un paio di schinieri
+     */
+    GAMBE,
     /**
      * Per ora niente massimo (Anelli, Talismani, Ninnoli - non occupano le mani)
      */

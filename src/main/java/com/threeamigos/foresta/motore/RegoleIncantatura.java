@@ -2,9 +2,10 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
+import com.threeamigos.foresta.motore.tipi.SupertipoArtefatto;
+import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
+import com.threeamigos.foresta.motore.tipi.TipoAttributo;
+import com.threeamigos.foresta.motore.tipi.TipoMotivoRifiutoIncantatura;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Incantamento;
 
@@ -66,29 +67,29 @@ public final class RegoleIncantatura {
 	 * Se si può aggiungere l'oggetto al banco: un solo artefatto, incantabile, e mai più effetti di quanti
 	 * l'artefatto ne possa ricevere. Vuoto se si può.
 	 */
-	public static Optional<MotivoRifiutoIncantatura> puoMettereSulBanco(Collection<Artefatto> banco, Artefatto nuovo) {
+	public static Optional<TipoMotivoRifiutoIncantatura> puoMettereSulBanco(Collection<Artefatto> banco, Artefatto nuovo) {
 		Optional<Artefatto> artefatto = banco.stream().filter(a -> !isPergamena(a)).findFirst();
 		List<Artefatto> pergamene = banco.stream().filter(RegoleIncantatura::isPergamena).collect(Collectors.toList());
 		if (isPergamena(nuovo)) {
 			pergamene.add(nuovo);
 		} else {
 			if (artefatto.isPresent()) {
-				return Optional.of(MotivoRifiutoIncantatura.PIU_ARTEFATTI);
+				return Optional.of(TipoMotivoRifiutoIncantatura.PIU_ARTEFATTI);
 			}
 			if (!nuovo.isIncantabile()) {
-				return Optional.of(MotivoRifiutoIncantatura.NON_INCANTABILE);
+				return Optional.of(TipoMotivoRifiutoIncantatura.NON_INCANTABILE);
 			}
 			artefatto = Optional.of(nuovo);
 		}
 		// Finché manca l'artefatto non si sa quanti posti ha né che cosa sia: si controlla quando arriva
 		if (artefatto.isPresent() && !ciStanno(artefatto.get(), pergamene)) {
-			return Optional.of(MotivoRifiutoIncantatura.LIMITE_SUPERATO);
+			return Optional.of(TipoMotivoRifiutoIncantatura.LIMITE_SUPERATO);
 		}
 		if (artefatto.isPresent() && potereMagicoFuoriPosto(artefatto.get(), pergamene)) {
-			return Optional.of(MotivoRifiutoIncantatura.POTERE_MAGICO_FUORI_POSTO);
+			return Optional.of(TipoMotivoRifiutoIncantatura.POTERE_MAGICO_FUORI_POSTO);
 		}
 		if (artefatto.isPresent() && pergamenaSenzaEffetto(artefatto.get(), pergamene)) {
-			return Optional.of(MotivoRifiutoIncantatura.INCANTAMENTO_SU_LIBRO);
+			return Optional.of(TipoMotivoRifiutoIncantatura.INCANTAMENTO_SU_LIBRO);
 		}
 		return Optional.empty();
 	}
@@ -96,40 +97,40 @@ public final class RegoleIncantatura {
 	/**
 	 * Se si può fare la fusione con quel che c'è sul banco e le monete del gruppo. Vuoto se si può.
 	 */
-	public static Optional<MotivoRifiutoIncantatura> verifica(Collection<Artefatto> banco, int monete) {
+	public static Optional<TipoMotivoRifiutoIncantatura> verifica(Collection<Artefatto> banco, int monete) {
 		return verifica(banco, monete, 0);
 	}
 
 	/**
 	 * Come {@link #verifica(Collection, int)}, con il costo scontato secondo la CONTRATTAZIONE di chi tratta.
 	 */
-	public static Optional<MotivoRifiutoIncantatura> verifica(Collection<Artefatto> banco, int monete, int contrattazione) {
+	public static Optional<TipoMotivoRifiutoIncantatura> verifica(Collection<Artefatto> banco, int monete, int contrattazione) {
 		List<Artefatto> artefatti = banco.stream().filter(a -> !isPergamena(a)).collect(Collectors.toList());
 		List<Artefatto> pergamene = banco.stream().filter(RegoleIncantatura::isPergamena).collect(Collectors.toList());
 		if (artefatti.isEmpty()) {
-			return Optional.of(MotivoRifiutoIncantatura.NESSUN_ARTEFATTO);
+			return Optional.of(TipoMotivoRifiutoIncantatura.NESSUN_ARTEFATTO);
 		}
 		if (artefatti.size() > 1) {
-			return Optional.of(MotivoRifiutoIncantatura.PIU_ARTEFATTI);
+			return Optional.of(TipoMotivoRifiutoIncantatura.PIU_ARTEFATTI);
 		}
 		Artefatto artefatto = artefatti.get(0);
 		if (!artefatto.isIncantabile()) {
-			return Optional.of(MotivoRifiutoIncantatura.NON_INCANTABILE);
+			return Optional.of(TipoMotivoRifiutoIncantatura.NON_INCANTABILE);
 		}
 		if (pergamene.isEmpty()) {
-			return Optional.of(MotivoRifiutoIncantatura.NESSUNA_PERGAMENA);
+			return Optional.of(TipoMotivoRifiutoIncantatura.NESSUNA_PERGAMENA);
 		}
 		if (!ciStanno(artefatto, pergamene)) {
-			return Optional.of(MotivoRifiutoIncantatura.LIMITE_SUPERATO);
+			return Optional.of(TipoMotivoRifiutoIncantatura.LIMITE_SUPERATO);
 		}
 		if (potereMagicoFuoriPosto(artefatto, pergamene)) {
-			return Optional.of(MotivoRifiutoIncantatura.POTERE_MAGICO_FUORI_POSTO);
+			return Optional.of(TipoMotivoRifiutoIncantatura.POTERE_MAGICO_FUORI_POSTO);
 		}
 		if (pergamenaSenzaEffetto(artefatto, pergamene)) {
-			return Optional.of(MotivoRifiutoIncantatura.INCANTAMENTO_SU_LIBRO);
+			return Optional.of(TipoMotivoRifiutoIncantatura.INCANTAMENTO_SU_LIBRO);
 		}
 		if (monete < costo(banco, contrattazione)) {
-			return Optional.of(MotivoRifiutoIncantatura.MONETE_INSUFFICIENTI);
+			return Optional.of(TipoMotivoRifiutoIncantatura.MONETE_INSUFFICIENTI);
 		}
 		return Optional.empty();
 	}

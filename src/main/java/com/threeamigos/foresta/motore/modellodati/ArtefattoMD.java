@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.oggetti.Incantamento;
 
 import java.io.BufferedReader;
@@ -16,7 +17,7 @@ public class ArtefattoMD implements Serializzabile {
 	public static final String NESSUN_NOME = Serializzabile.NESSUN_NOME;
 
 	private TipoArtefatto tipo;
-	private RaritaArtefatto rarita = RaritaArtefatto.COMUNE;
+	private TipoRaritaArtefatto rarita = TipoRaritaArtefatto.COMUNE;
 	// Facoltativo (null se manca), es. "Diavolina"
 	private String nomeProprio;
 	// Con l'articolo, es. "la spada di fuoco"
@@ -24,7 +25,7 @@ public class ArtefattoMD implements Serializzabile {
 	// Es. "che brucia i nemici"
 	private String descrizione;
 	// Lo slot occupato davvero mentre un personaggio porta l'artefatto; null se non è equipaggiato
-	private SlotArtefatto slotEquipaggiamento;
+	private TipoSlotArtefatto slotEquipaggiamento;
 	private int livello;
 	private int danni;
 	protected int costoAcquisto;
@@ -42,11 +43,11 @@ public class ArtefattoMD implements Serializzabile {
 		this.tipo = tipo;
 	}
 
-	public RaritaArtefatto getRarita() {
+	public TipoRaritaArtefatto getRarita() {
 		return rarita;
 	}
 
-	public void setRarita(RaritaArtefatto rarita) {
+	public void setRarita(TipoRaritaArtefatto rarita) {
 		this.rarita = rarita;
 	}
 
@@ -130,11 +131,11 @@ public class ArtefattoMD implements Serializzabile {
 		this.descrizione = Serializzabile.senzaPipe(descrizione);
 	}
 
-	public SlotArtefatto getSlotEquipaggiamento() {
+	public TipoSlotArtefatto getSlotEquipaggiamento() {
 		return slotEquipaggiamento;
 	}
 
-	public void setSlotEquipaggiamento(SlotArtefatto slotEquipaggiamento) {
+	public void setSlotEquipaggiamento(TipoSlotArtefatto slotEquipaggiamento) {
 		this.slotEquipaggiamento = slotEquipaggiamento;
 	}
 
@@ -256,7 +257,7 @@ public class ArtefattoMD implements Serializzabile {
 	public void leggi(BufferedReader stream) throws IOException {
 		LettoreCampi campi = new LettoreCampi(stream.readLine());
 		tipo = campi.enumerato(TipoArtefatto.class);
-		rarita = campi.enumerato(RaritaArtefatto.class);
+		rarita = campi.enumerato(TipoRaritaArtefatto.class);
 		nomeProprio = campi.testoFacoltativo();
 		nome = campi.testo();
 		descrizione = campi.testo();
@@ -265,7 +266,7 @@ public class ArtefattoMD implements Serializzabile {
 		costoAcquisto = campi.intero();
 		peso = campi.decimale();
 		figliVisibili = campi.booleano();
-		slotEquipaggiamento = campi.enumeratoFacoltativo(SlotArtefatto.class);
+		slotEquipaggiamento = campi.enumeratoFacoltativo(TipoSlotArtefatto.class);
 		int numeroModificatori = campi.intero();
 		int numeroIncantamenti = campi.intero();
 		modificatori.clear();

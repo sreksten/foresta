@@ -2,14 +2,11 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
+import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.modellodati.RaritaArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoAttributo;
-import com.threeamigos.foresta.motore.modellodati.TipoDanno;
-import com.threeamigos.foresta.motore.modellodati.TipoModificatore;
+import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.personaggi.Guerriero;
@@ -157,7 +154,7 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
 
         Guerriero raro = conResistenzaMagica(new Guerriero("Pippo", 5), 20);
         Artefatto scudoRaro = artefatto(TipoArtefatto.SCUDO, 4);
-        scudoRaro.getModelloDati().setRarita(RaritaArtefatto.RARO);
+        scudoRaro.getModelloDati().setRarita(TipoRaritaArtefatto.RARO);
         raro.addArtefatto(scudoRaro);
         assertEquals(20 + 4 * Costanti.SCUDO_RARO_RESISTENZA_MAGICA_PER_LIVELLO, raro.getResistenzaMagica());
     }

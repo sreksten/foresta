@@ -1,20 +1,15 @@
 package com.threeamigos.foresta.motore.modellodati;
 
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
+import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.GradoIncantamento;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
-import com.threeamigos.foresta.personaggi.MotivoRifiutoEquipaggiamento;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 
 /**
  * Un equipaggiamento da dare al PG nel simulatore (vedi CombatSimulatorMatrix e piano_montecarlo_matrix.md, §11):
@@ -155,7 +150,7 @@ public final class Equipaggiamento {
 		List<Artefatto> presi = new ArrayList<>();
 		for (Pezzo pezzo : pezzi) {
 			Artefatto artefatto = pezzo.costruisci(pg.getLivello());
-			Optional<MotivoRifiutoEquipaggiamento> motivo = pg.puoEquipaggiare(artefatto);
+			Optional<RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento> motivo = pg.puoEquipaggiare(artefatto);
 			if (motivo.isPresent()) {
 				presi.forEach(pg::removeArtefatto);
 				return Optional.of(pezzo.getTipo() + ": " + motivo.get());
@@ -186,9 +181,9 @@ public final class Equipaggiamento {
 
 		private final TipoArtefatto tipo;
 		private final TipoDanno incantamento;
-		private final RaritaArtefatto rarita;
+		private final TipoRaritaArtefatto rarita;
 
-		private Pezzo(TipoArtefatto tipo, TipoDanno incantamento, RaritaArtefatto rarita) {
+		private Pezzo(TipoArtefatto tipo, TipoDanno incantamento, TipoRaritaArtefatto rarita) {
 			this.tipo = tipo;
 			this.incantamento = incantamento;
 			this.rarita = rarita;
@@ -198,7 +193,7 @@ public final class Equipaggiamento {
 			if (!PESI.containsKey(tipo)) {
 				throw new IllegalArgumentException("Nel simulatore non si equipaggia " + tipo);
 			}
-			return new Pezzo(tipo, null, RaritaArtefatto.COMUNE);
+			return new Pezzo(tipo, null, TipoRaritaArtefatto.COMUNE);
 		}
 
 		public Pezzo incantato(TipoDanno tipoDanno) {
@@ -206,7 +201,7 @@ public final class Equipaggiamento {
 		}
 
 		public Pezzo raro() {
-			return new Pezzo(tipo, incantamento, RaritaArtefatto.RARO);
+			return new Pezzo(tipo, incantamento, TipoRaritaArtefatto.RARO);
 		}
 
 		public TipoArtefatto getTipo() {

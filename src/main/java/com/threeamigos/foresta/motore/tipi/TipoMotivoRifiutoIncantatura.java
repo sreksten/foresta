@@ -1,9 +1,9 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.motore.tipi;
 
 /**
  * Perché l'incantatore non accetta qualcosa sul banco o non fa la fusione (vedi RegoleIncantatura).
  */
-public enum MotivoRifiutoIncantatura {
+public enum TipoMotivoRifiutoIncantatura {
 
 	NESSUN_ARTEFATTO("Sul banco manca l'artefatto da incantare."),
 	PIU_ARTEFATTI("Sul banco ci va un artefatto alla volta."),
@@ -16,7 +16,7 @@ public enum MotivoRifiutoIncantatura {
 
 	private final String frase;
 
-	MotivoRifiutoIncantatura(String frase) {
+	TipoMotivoRifiutoIncantatura(String frase) {
 		this.frase = frase;
 	}
 

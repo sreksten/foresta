@@ -8,8 +8,12 @@ import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.incantesimi.TipoIncantesimo;
+import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.motore.modellodati.*;
+import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
+import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
@@ -391,7 +395,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	 */
 	@Override
 	public Arma getArmaEquipaggiata() {
-		return armaInSlot(SlotArtefatto.MANO_PRINCIPALE, SlotArtefatto.ENTRAMBE_LE_MANI)
+		return armaInSlot(TipoSlotArtefatto.MANO_PRINCIPALE, TipoSlotArtefatto.ENTRAMBE_LE_MANI)
 				.orElseGet(() -> new ArmaNaturale(this));
 	}
 
@@ -400,11 +404,11 @@ public abstract class PersonaggioBase implements Personaggio {
 	 */
 	@Override
 	public Optional<Arma> getArmaSecondaria() {
-		return armaInSlot(SlotArtefatto.MANO_SECONDARIA);
+		return armaInSlot(TipoSlotArtefatto.MANO_SECONDARIA);
 	}
 
-	private Optional<Arma> armaInSlot(SlotArtefatto... slot) {
-		List<SlotArtefatto> slotAmmessi = Arrays.asList(slot);
+	private Optional<Arma> armaInSlot(TipoSlotArtefatto... slot) {
+		List<TipoSlotArtefatto> slotAmmessi = Arrays.asList(slot);
 		return md.getArtefatti().stream()
 				.filter(a -> a.getTipo().getSupertipo() == SupertipoArtefatto.ARMA)
 				.filter(a -> slotAmmessi.contains(RegoleEquipaggiamento.slotOccupato(a)))
@@ -416,7 +420,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		// Se il personaggio non sa usare la magia, non lancio incantesimo
 		if (!isMagico()) {
 			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
-					RisultatoValutazioneAttaccante.NON_USA_MAGIA));
+					TipoRisultatoValutazioneAttaccante.NON_USA_MAGIA));
 			return null;
 		}
 
@@ -424,7 +428,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		int magiaCorrente = getMagia();
 		if (getMagia() == 0) {
 			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
-					RisultatoValutazioneAttaccante.SENZA_MAGIA_A_DISPOSIZIONE));
+					TipoRisultatoValutazioneAttaccante.SENZA_MAGIA_A_DISPOSIZIONE));
 			return null;
 		}
 
@@ -437,14 +441,14 @@ public abstract class PersonaggioBase implements Personaggio {
 		// Se non ci sono incantesimi possibili, non lancio incantesimo
 		if (incantesimiDisponibili.isEmpty()) {
 			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
-					RisultatoValutazioneAttaccante.SENZA_INCANTESIMI_A_DISPOSIZIONE));
+					TipoRisultatoValutazioneAttaccante.SENZA_INCANTESIMI_A_DISPOSIZIONE));
 			return null;
 		}
 
 		// Per qualche motivo suo il mostro potrebbe decidere di non tirare incantesimi
 		if (Dado.tira(3) == 1) {
 			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
-					RisultatoValutazioneAttaccante.CASUALMENTE_NON_LANCIA_INCANTESIMO));
+					TipoRisultatoValutazioneAttaccante.CASUALMENTE_NON_LANCIA_INCANTESIMO));
 			return null;
 		}
 
@@ -453,7 +457,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		if (intelligenza < 5) {
 			Incantesimo incantesimo = incantesimiDisponibili.get(Dado.tiraAncheAUnaFaccia(incantesimiDisponibili.size()) - 1);
 			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
-					RisultatoValutazioneAttaccante.SCEGLIE_A_CASO, incantesimo));
+					TipoRisultatoValutazioneAttaccante.SCEGLIE_A_CASO, incantesimo));
 			return incantesimo;
 		}
 
@@ -462,7 +466,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		if (intelligenza < 7) {
 			// Usa l'incantesimo più potente a disposizione
 			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
-					RisultatoValutazioneAttaccante.SCEGLIE_IL_PIU_POTENTE, piuPotente));
+					TipoRisultatoValutazioneAttaccante.SCEGLIE_IL_PIU_POTENTE, piuPotente));
 			return piuPotente;
 		}
 
@@ -480,12 +484,12 @@ public abstract class PersonaggioBase implements Personaggio {
 
 		if (probabilitaDiColpireMagico * possibiliDanniMagici > probabilitaDiColpireFisico * possibiliDanniFisici) {
 			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
-					RisultatoValutazioneAttaccante.PREFERISCE_ATTACCO_MAGICO, piuPotente,
+					TipoRisultatoValutazioneAttaccante.PREFERISCE_ATTACCO_MAGICO, piuPotente,
 					probabilitaDiColpireFisico, probabilitaDiColpireMagico, possibiliDanniFisici, possibiliDanniMagici));
 			return piuPotente;
 		} else {
 			BusEventi.pubblica(new InternoRisultatoValutazionePersonaggioAttaccante(this, personaggioBersaglio,
-					RisultatoValutazioneAttaccante.PREFERISCE_ATTACCO_FISICO, piuPotente,
+					TipoRisultatoValutazioneAttaccante.PREFERISCE_ATTACCO_FISICO, piuPotente,
 					probabilitaDiColpireFisico, probabilitaDiColpireMagico, possibiliDanniFisici, possibiliDanniMagici));
 			return null;
 		}
@@ -719,17 +723,10 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public Optional<MotivoRifiutoEquipaggiamento> puoEquipaggiare(Artefatto artefatto) {
-		RegoleEquipaggiamento.Esito esito = RegoleEquipaggiamento.valuta(getClasse(), getLivello(),
-				md.getArtefatti(), artefatto.getModelloDati());
-		if (esito.getMotivo() != null) {
-			return Optional.of(esito.getMotivo());
-		}
-		if (artefatto.getTipo() == TipoArtefatto.ARMATURA && getForza() < Costanti.ARMATURA_FORZA_MINIMA) {
-			return Optional.of(MotivoRifiutoEquipaggiamento.FORZA_INSUFFICIENTE);
-		}
-		if (!puoPrendere(artefatto)) {
-			return Optional.of(MotivoRifiutoEquipaggiamento.TROPPO_CARICO);
+	public Optional<RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento> puoEquipaggiare(Artefatto artefatto) {
+		RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento esitoControlloRichiestaEquipaggiamento = RegoleEquipaggiamento.valuta(this, artefatto.getModelloDati());
+		if (esitoControlloRichiestaEquipaggiamento.getMotivo() != null) {
+			return Optional.of(esitoControlloRichiestaEquipaggiamento);
 		}
 		return Optional.empty();
 	}
@@ -1104,7 +1101,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		return md.getArtefatti().stream()
 				.filter(a -> a.getTipo().getSupertipo() == SupertipoArtefatto.ARMA)
 				.map(RegoleEquipaggiamento::slotOccupato)
-				.anyMatch(slot -> slot == SlotArtefatto.ENTRAMBE_LE_MANI || slot == SlotArtefatto.MANO_SECONDARIA);
+				.anyMatch(slot -> slot == TipoSlotArtefatto.ENTRAMBE_LE_MANI || slot == TipoSlotArtefatto.MANO_SECONDARIA);
 	}
 
 	// RESISTENZA MAGICA
@@ -1118,7 +1115,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		int resistenza = get(md, PersonaggioMD::getResistenzaMagica, TipoAttributo.RESISTENZA_MAGICA);
 		for (ArtefattoMD artefatto : md.getArtefatti()) {
 			if (artefatto.getTipo() == TipoArtefatto.SCUDO) {
-				int perLivello = artefatto.getRarita() == RaritaArtefatto.COMUNE
+				int perLivello = artefatto.getRarita() == TipoRaritaArtefatto.COMUNE
 						? Costanti.SCUDO_RESISTENZA_MAGICA_PER_LIVELLO
 						: Costanti.SCUDO_RARO_RESISTENZA_MAGICA_PER_LIVELLO;
 				resistenza += perLivello * artefatto.getLivello();
@@ -1821,7 +1818,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	 */
 	public void addArtefatto(Artefatto a) {
 		ArtefattoMD artefattoMD = a.getModelloDati();
-		SlotArtefatto slot = RegoleEquipaggiamento.valuta(getClasse(), getLivello(), md.getArtefatti(), artefattoMD).getSlot();
+		TipoSlotArtefatto slot = RegoleEquipaggiamento.valuta(this, artefattoMD).getSlot();
 		artefattoMD.setSlotEquipaggiamento(slot != null ? slot : artefattoMD.getTipo().getSlotArtefatto());
 		md.getArtefatti().add(artefattoMD);
 		// I modificatori dell'artefatto sui primari cambiano anche i secondari che ne derivano

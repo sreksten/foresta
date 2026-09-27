@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
+import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Spada extends OggettoArtefatto {

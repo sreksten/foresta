@@ -1,10 +1,10 @@
-package com.threeamigos.foresta.motore.modellodati;
+package com.threeamigos.foresta.motore.tipi;
 
 /**
  *
  * @author Stefano Reksten
  */
-public enum RisultatoValutazioneAttaccante {
+public enum TipoRisultatoValutazioneAttaccante {
 
     NON_USA_MAGIA,
     SENZA_MAGIA_A_DISPOSIZIONE,

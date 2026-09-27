@@ -4,9 +4,11 @@ import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.modellodati.EffettoDiStato;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.modellodati.TipoEffettoDiStato;
+import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
+import com.threeamigos.foresta.motore.tipi.TipoAttributo;
+import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.motore.tipi.TipoModificatore;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -14,9 +16,7 @@ import com.threeamigos.foresta.personaggi.Troll;
 import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Regressioni dei bug corretti dopo l'indagine sul codice.
@@ -192,11 +192,11 @@ class ScenarioCorrezioniTest {
 		com.threeamigos.foresta.personaggi.Ladro ladro = new com.threeamigos.foresta.personaggi.Ladro("L", 1);
 		int prima = ladro.getPrecisione();
 		com.threeamigos.foresta.oggetti.Artefatto anello = com.threeamigos.foresta.tools.CostruttoreArtefatto.istanza()
-				.setTipo(com.threeamigos.foresta.motore.modellodati.TipoArtefatto.ANELLO)
+				.setTipo(TipoArtefatto.ANELLO)
 				.setNome("anello di prova").setDescrizione("che fa mirare meglio").setLivello(1).setDanniBase(0)
 				.setCostoAcquisto(1).setPeso(0)
-				.setModificatore(com.threeamigos.foresta.motore.modellodati.TipoAttributo.DESTREZZA,
-						com.threeamigos.foresta.motore.modellodati.TipoModificatore.AUMENTO_FISSO, 200)
+				.setModificatore(TipoAttributo.DESTREZZA,
+						TipoModificatore.AUMENTO_FISSO, 200)
 				.costruisci();
 		ladro.addArtefatto(anello);
 		assertTrue(ladro.getPrecisione() > prima, "precisione " + prima + " -> " + ladro.getPrecisione());
@@ -211,7 +211,7 @@ class ScenarioCorrezioniTest {
 		int prima = ladro.getPrecisione();
 		ladro.getModelloDati().setPuntiAbilitaDisponibili(200);
 		for (int i = 0; i < 200; i++) {
-			ladro.spendiPuntoAbilita(com.threeamigos.foresta.motore.modellodati.TipoAttributo.DESTREZZA);
+			ladro.spendiPuntoAbilita(TipoAttributo.DESTREZZA);
 		}
 		assertTrue(ladro.getPrecisione() > prima, "precisione " + prima + " -> " + ladro.getPrecisione());
 	}

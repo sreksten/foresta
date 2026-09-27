@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.modellodati.TipoDanno;
+import com.threeamigos.foresta.motore.tipi.TipoDanno;
 
 public class Fuoco extends IncantesimoMaleficoImpl implements Incantesimo {
 

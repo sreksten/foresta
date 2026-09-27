@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 import org.junit.jupiter.api.Test;
@@ -9,9 +10,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  *
@@ -232,11 +231,11 @@ class ArtefattoMDTest {
     void salvaERicaricaRarita() throws IOException {
         // Given
         ArtefattoMD artefatto = creaArtefatto(TipoArtefatto.SPADA, "la Leggendaria Spada del Fulmine con Rinterzo", "che non perdona");
-        artefatto.setRarita(RaritaArtefatto.LEGGENDARIO);
+        artefatto.setRarita(TipoRaritaArtefatto.LEGGENDARIO);
         // When
         ArtefattoMD ricaricato = salvaERileggi(artefatto);
         // Then
-        assertEquals(RaritaArtefatto.LEGGENDARIO, ricaricato.getRarita());
+        assertEquals(TipoRaritaArtefatto.LEGGENDARIO, ricaricato.getRarita());
     }
 
     @Test
@@ -277,7 +276,7 @@ class ArtefattoMDTest {
 
     @Test
     void unArtefattoNuovoEComune() {
-        assertEquals(RaritaArtefatto.COMUNE, new ArtefattoMD().getRarita());
+        assertEquals(TipoRaritaArtefatto.COMUNE, new ArtefattoMD().getRarita());
     }
 
     @Test
@@ -294,11 +293,11 @@ class ArtefattoMDTest {
     void salvaERicaricaSlotEquipaggiamento() throws IOException {
         // Given: la spada di un Ladro nella mano secondaria
         ArtefattoMD artefatto = creaArtefatto(TipoArtefatto.SPADA, "la spada corta", "che punge");
-        artefatto.setSlotEquipaggiamento(SlotArtefatto.MANO_SECONDARIA);
+        artefatto.setSlotEquipaggiamento(TipoSlotArtefatto.MANO_SECONDARIA);
         // When
         ArtefattoMD ricaricato = salvaERileggi(artefatto);
         // Then
-        assertEquals(SlotArtefatto.MANO_SECONDARIA, ricaricato.getSlotEquipaggiamento());
+        assertEquals(TipoSlotArtefatto.MANO_SECONDARIA, ricaricato.getSlotEquipaggiamento());
     }
 
     @Test
@@ -323,7 +322,7 @@ class ArtefattoMDTest {
         ArtefattoMD ricaricato = salvaERileggi(pergamena);
         // Then
         assertEquals(TipoArtefatto.INCANTAMENTO, ricaricato.getTipo());
-        assertEquals(SlotArtefatto.NUCLEO, ricaricato.getTipo().getSlotArtefatto());
+        assertEquals(TipoSlotArtefatto.NUCLEO, ricaricato.getTipo().getSlotArtefatto());
         assertEquals("una pergamena del fuoco", ricaricato.getNome());
         assertTrue(ricaricato.getModificatori().isEmpty());
         List<Incantamento> incantamenti = new ArrayList<>(ricaricato.getIncantamenti());

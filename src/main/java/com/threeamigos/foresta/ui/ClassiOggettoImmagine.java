@@ -20,6 +20,7 @@ public enum ClassiOggettoImmagine {
     SPADONE(ClassiOggetto.SPADONE, "oggetti/Spadone.gif"),
     ELMO(ClassiOggetto.ELMO, "oggetti/Elmo.gif"),
     ARMATURA(ClassiOggetto.ARMATURA, "oggetti/Armatura.gif"),
+    SCHINIERI(ClassiOggetto.SCHINIERI, "oggetti/Schinieri.gif"),
     // Gli artefatti non si mostrano nelle locazioni
     ARTEFATTO(ClassiOggetto.ARTEFATTO, null);
 

@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore.modellodati;
+package com.threeamigos.foresta.motore.tipi;
 
 import com.threeamigos.foresta.motore.Costanti;
 
@@ -8,7 +8,7 @@ import com.threeamigos.foresta.motore.Costanti;
  * I comuni sono il loot più probabile, i rari escono nel 10% dei casi, i leggendari non escono mai
  * nel loot: si trovano nei templi o come premio di una missione.
  */
-public enum RaritaArtefatto {
+public enum TipoRaritaArtefatto {
 
 	COMUNE("comune", -1, Costanti.ARTEFATTO_MASSIMO_EFFETTI_COMUNE),
 	RARO("raro", 0, Costanti.ARTEFATTO_MASSIMO_EFFETTI_RARO),
@@ -18,7 +18,7 @@ public enum RaritaArtefatto {
 	private final int scartoSulLivello;
 	private final int tettoEffetti;
 
-	RaritaArtefatto(String nome, int scartoSulLivello, int tettoEffetti) {
+	TipoRaritaArtefatto(String nome, int scartoSulLivello, int tettoEffetti) {
 		this.nome = nome;
 		this.scartoSulLivello = scartoSulLivello;
 		this.tettoEffetti = tettoEffetti;

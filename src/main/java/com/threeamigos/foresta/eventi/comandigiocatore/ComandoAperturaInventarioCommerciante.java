@@ -4,7 +4,7 @@ import com.threeamigos.foresta.eventi.RichiestaConComandi;
 import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
 import com.threeamigos.foresta.motore.Comando;
-import com.threeamigos.foresta.motore.modellodati.TipoNegozio;
+import com.threeamigos.foresta.motore.tipi.TipoNegozio;
 
 import java.util.Collection;
 

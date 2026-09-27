@@ -1,16 +1,10 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.motore.modellodati.RaritaArtefatto;
-import com.threeamigos.foresta.motore.modellodati.SlotArtefatto;
-import com.threeamigos.foresta.motore.modellodati.SupertipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoArtefatto;
-import com.threeamigos.foresta.motore.modellodati.TipoDanno;
+import com.threeamigos.foresta.motore.tipi.*;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class ArtefattoIncantabileTest {
 
@@ -46,27 +40,27 @@ class ArtefattoIncantabileTest {
 
     @Test
     void iPostiDipendonoDallaRarita() {
-        assertEquals(2, artefatto(TipoArtefatto.SPADA, 3, RaritaArtefatto.COMUNE).getEffettiMassimi());
-        assertEquals(3, artefatto(TipoArtefatto.SPADA, 3, RaritaArtefatto.RARO).getEffettiMassimi());
-        assertEquals(4, artefatto(TipoArtefatto.SPADA, 3, RaritaArtefatto.LEGGENDARIO).getEffettiMassimi());
+        assertEquals(2, artefatto(TipoArtefatto.SPADA, 3, TipoRaritaArtefatto.COMUNE).getEffettiMassimi());
+        assertEquals(3, artefatto(TipoArtefatto.SPADA, 3, TipoRaritaArtefatto.RARO).getEffettiMassimi());
+        assertEquals(4, artefatto(TipoArtefatto.SPADA, 3, TipoRaritaArtefatto.LEGGENDARIO).getEffettiMassimi());
         // A livello 1 un raro ha già un posto, un leggendario due
-        assertEquals(0, artefatto(TipoArtefatto.SPADA, 1, RaritaArtefatto.COMUNE).getEffettiMassimi());
-        assertEquals(1, artefatto(TipoArtefatto.SPADA, 1, RaritaArtefatto.RARO).getEffettiMassimi());
-        assertEquals(2, artefatto(TipoArtefatto.SPADA, 1, RaritaArtefatto.LEGGENDARIO).getEffettiMassimi());
+        assertEquals(0, artefatto(TipoArtefatto.SPADA, 1, TipoRaritaArtefatto.COMUNE).getEffettiMassimi());
+        assertEquals(1, artefatto(TipoArtefatto.SPADA, 1, TipoRaritaArtefatto.RARO).getEffettiMassimi());
+        assertEquals(2, artefatto(TipoArtefatto.SPADA, 1, TipoRaritaArtefatto.LEGGENDARIO).getEffettiMassimi());
         // Tetti: 3, 4, 5
-        assertEquals(3, artefatto(TipoArtefatto.SPADA, 20, RaritaArtefatto.COMUNE).getEffettiMassimi());
-        assertEquals(4, artefatto(TipoArtefatto.SPADA, 20, RaritaArtefatto.RARO).getEffettiMassimi());
-        assertEquals(5, artefatto(TipoArtefatto.SPADA, 20, RaritaArtefatto.LEGGENDARIO).getEffettiMassimi());
+        assertEquals(3, artefatto(TipoArtefatto.SPADA, 20, TipoRaritaArtefatto.COMUNE).getEffettiMassimi());
+        assertEquals(4, artefatto(TipoArtefatto.SPADA, 20, TipoRaritaArtefatto.RARO).getEffettiMassimi());
+        assertEquals(5, artefatto(TipoArtefatto.SPADA, 20, TipoRaritaArtefatto.LEGGENDARIO).getEffettiMassimi());
         // Un accessorio non si incanta, qualunque sia la rarità
-        assertEquals(0, artefatto(TipoArtefatto.ANELLO, 5, RaritaArtefatto.LEGGENDARIO).getEffettiMassimi());
+        assertEquals(0, artefatto(TipoArtefatto.ANELLO, 5, TipoRaritaArtefatto.LEGGENDARIO).getEffettiMassimi());
     }
 
     @Test
     void spadoneEArmaADueMani() {
         assertEquals(SupertipoArtefatto.ARMA, TipoArtefatto.SPADONE.getSupertipo());
-        assertEquals(SlotArtefatto.ENTRAMBE_LE_MANI, TipoArtefatto.SPADONE.getSlotArtefatto());
+        assertEquals(TipoSlotArtefatto.ENTRAMBE_LE_MANI, TipoArtefatto.SPADONE.getSlotArtefatto());
         assertEquals(TipoDanno.TAGLIENTE, TipoArtefatto.SPADONE.getTipoDanno());
-        assertTrue(Artefatto.di(artefatto(TipoArtefatto.SPADONE, 3).getModelloDati()) instanceof ArmaFisica);
+        assertInstanceOf(ArmaFisica.class, Artefatto.di(artefatto(TipoArtefatto.SPADONE, 3).getModelloDati()));
     }
 
     @Test
@@ -78,7 +72,7 @@ class ArtefattoIncantabileTest {
         assertEquals("Diavolina, la spada di fuoco, che brucia i nemici", spada.getNomeCompleto());
     }
 
-    private static Artefatto artefatto(TipoArtefatto tipo, int livello, RaritaArtefatto rarita) {
+    private static Artefatto artefatto(TipoArtefatto tipo, int livello, TipoRaritaArtefatto rarita) {
         Artefatto artefatto = artefatto(tipo, livello);
         artefatto.getModelloDati().setRarita(rarita);
         return artefatto;

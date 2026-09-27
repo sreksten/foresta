@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore.modellodati;
+package com.threeamigos.foresta.motore.tipi;
 
 /**
  * I negozi che comprano e vendono artefatti. Più negozi della stessa città stanno sulla stessa casella:
@@ -30,6 +30,6 @@ public enum TipoNegozio {
 	 */
 	public boolean tratta(TipoArtefatto tipo) {
 		boolean pergamena = tipo == TipoArtefatto.INCANTAMENTO;
-		return this == VENDITORE_DI_PERGAMENE ? pergamena : !pergamena;
+		return (this == VENDITORE_DI_PERGAMENE) == pergamena;
 	}
 }

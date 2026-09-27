@@ -11,6 +11,7 @@ import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
+import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
@@ -18,7 +19,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.motore.modellodati.*;
+import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.Oggetto;
@@ -1296,13 +1297,13 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					.setIncantamento("La battuta del cavolo", TipoDanno.GELO, 10, 0.5)
 					.costruisci();
 			// Leggendario, obiettivo di una missione: con +16 in CONTRATTAZIONE porta ai limiti di RegoleContrattazione
-			superscudo.getModelloDati().setRarita(RaritaArtefatto.LEGGENDARIO);
+			superscudo.getModelloDati().setRarita(TipoRaritaArtefatto.LEGGENDARIO);
 			personaggio.addArtefatto(superscudo);
 
 			Artefatto scarponi = CostruttoreArtefatto.istanza()
-					.setTipo(TipoArtefatto.ARMATURA)
+					.setTipo(TipoArtefatto.SCHINIERI)
 					.setNome("gli scarponi di RomyJona")
-					.setDescrizione("che tritura i tegami")
+					.setDescrizione("che schiacciano i tegami")
 					.setLivello(5)
 					.setDanniBase(50)
 					.setCostoAcquisto(100)
@@ -1313,7 +1314,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 			Artefatto elmoTremendo = CostruttoreArtefatto.istanza()
 					.setTipo(TipoArtefatto.ELMO)
-					.setNome("La dvra cervice di RomyJona")
+					.setNome("la dvra cervice di RomyJona")
 					.setDescrizione("che fa tremare il nemico")
 					.setLivello(5)
 					.setDanniBase(0)
@@ -1339,7 +1340,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 			Artefatto manualeUnix = CostruttoreArtefatto.istanza()
 					.setTipo(TipoArtefatto.LIBRO_MAGICO)
-					.setNome("Manuale di Unix System 5")
+					.setNome("il Manuale di Unix System 5")
 					.setDescrizione("che aiuta a far gli spregi ar CDA")
 					.setLivello(1)
 					.setDanniBase(0)
@@ -1351,8 +1352,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 			Artefatto occhiali = CostruttoreArtefatto.istanza()
 					.setTipo(TipoArtefatto.NINNOLO)
-					.setNome("occhiali da sole del Ruttatore")
-					.setDescrizione("che tritura i tegami")
+					.setNome("gli occhiali da sole del Ruttatore")
+					.setDescrizione("che impressionano le fie")
 					.setLivello(5)
 					.setDanniBase(50)
 					.setCostoAcquisto(100)
@@ -1366,8 +1367,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 			Artefatto portafogli = CostruttoreArtefatto.istanza()
 					.setTipo(TipoArtefatto.NINNOLO)
-					.setNome("portafogli di Samuele")
-					.setDescrizione("che tritura i tegami")
+					.setNome("il portafogli di Samuele")
+					.setDescrizione("che obnubila i tegami")
 					.setLivello(5)
 					.setDanniBase(50)
 					.setCostoAcquisto(100)
