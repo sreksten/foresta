@@ -5,11 +5,13 @@ import com.threeamigos.foresta.eventi.interni.InternoErrore;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.LineaTemporale;
-import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tools.*;
+import com.threeamigos.foresta.tools.GestorePunteggi;
+import com.threeamigos.foresta.tools.Misc;
+import com.threeamigos.foresta.tools.Punteggio;
+import com.threeamigos.foresta.tools.TestataSalvataggio;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -206,7 +208,6 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 
 	void hiscore(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
-		Logger.log("HISCORE");
 		int locXOffset = xOffset;
 		int locYOffset = yOffset + 28;
 		Image doomdark;
