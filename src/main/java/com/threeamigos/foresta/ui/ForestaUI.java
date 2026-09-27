@@ -506,6 +506,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 			case DISORIENTAMENTO:
 			case RISONANZA_SIGILLATA:
 			case ISOLAMENTO_SENSORIALE:
+			case VAMPATA_TOSSICA:
 				displayableCanvas.aggiungiInterazione(personaggio, tipoInterazione);
 				break;
 			default:

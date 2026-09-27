@@ -272,6 +272,16 @@ public class CalcolatoreCombattimento {
             }
         }
 
+        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.AVVELENATO) && tipoDanno == TipoDanno.FUOCO) {
+            Logger.log("Con difensore già AVVELENATO, tipo danno FUOCO: Vampata Tossica");
+            moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d;
+            dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.AVVELENATO);
+            dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.BRUCIATO,
+                    calcolaDurataStato(difensore, TipoEffettoDiStato.BRUCIATO),
+                    calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.BRUCIATO));
+            dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.VAMPATA_TOSSICA);
+        }
+
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.CONGELATO)) {
             Logger.log("Con difensore già CONGELATO");
             if (tipoDanno == TipoDanno.CONTUNDENTE) {
