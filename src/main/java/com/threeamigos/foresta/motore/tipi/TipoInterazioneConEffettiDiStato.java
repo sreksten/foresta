@@ -77,7 +77,15 @@ public enum TipoInterazioneConEffettiDiStato {
     // Il dolore acuto interrompe subito la paura e infligge il 20% di danno in più
     SHOCK_DI_REALTA(Collections.singletonList(TipoEffettoDiStato.SPAVENTATO),
             Arrays.asList(TipoDanno.TAGLIENTE, TipoDanno.PERFORANTE, TipoDanno.CONTUNDENTE),
-            "Shock di Realtà");
+            "Shock di Realtà"),
+
+    // Interazioni con ACCECATO
+    // + ARIA
+    // Rimuove ACCECATO, piccolo bonus di danno
+    DISPERSIONE(TipoEffettoDiStato.ACCECATO, TipoDanno.ARIA, "Dispersione"),
+    // + ACQUA
+    // Applica RALLENTATO severo, piccolo bonus di danno
+    FANGO(TipoEffettoDiStato.ACCECATO, TipoDanno.ACQUA, "Fango");
 
     private final Collection<TipoEffettoDiStato> precondizioni;
     private final Collection<TipoDanno> innescanti;

@@ -370,6 +370,23 @@ public class CalcolatoreCombattimento {
             }
         }
 
+        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.ACCECATO)) {
+            Logger.log("Con difensore già ACCECATO");
+            if (tipoDanno == TipoDanno.ARIA) {
+                Logger.log("tipo danno ARIA: Dispersione, rimuove ACCECATO");
+                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.05d;
+                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.ACCECATO);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.DISPERSIONE);
+            } else if (tipoDanno == TipoDanno.ACQUA) {
+                Logger.log("tipo danno ACQUA: Fango, applica RALLENTATO severo");
+                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.05d;
+                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.RALLENTATO,
+                        calcolaDurataStato(difensore, TipoEffettoDiStato.RALLENTATO) + 2,
+                        calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.RALLENTATO));
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.FANGO);
+            }
+        }
+
         // 4. MITIGAZIONE DELLA DIFESA DEL DIFENSORE (Formula Diminishing Returns)
         double fattoreMitigazione = 100.0d / (100.0d + statDifensiva);
         Logger.log("fattoreMitigazione: " + fattoreMitigazione + ", moltiplicatoreDannoStato = " + moltiplicatoreDannoStato);

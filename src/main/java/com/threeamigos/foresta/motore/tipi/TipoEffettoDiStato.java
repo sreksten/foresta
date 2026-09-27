@@ -71,8 +71,8 @@ public enum TipoEffettoDiStato {
     CONFUSO("Confuso"),
 
     // ACCECATO (Blinded): Riduce drasticamente la precisione degli attacchi fisici o la gittata degli incantesimi.
-    // 💨 ARIA ➔ Dispersione: Un forte attacco d'aria (folata di vento) spazza via la sabbia dagli occhi, rimuovendo istantaneamente lo stato ACCECATO.
-    // 💧 ACQUA ➔ Fango: L'acqua impasta la terra/sabbia sul bersaglio. Lo stato ACCECATO si somma a uno stato di RALLENTATO molto severo.
+    // 💨 ARIA ➔ Dispersione: Un forte attacco d'aria (folata di vento) spazza via la sabbia dagli occhi, rimuovendo istantaneamente lo stato ACCECATO e infliggendo il 5% di danno in più.
+    // 💧 ACQUA ➔ Fango: L'acqua impasta la terra/sabbia sul bersaglio. Lo stato ACCECATO si somma a uno stato di RALLENTATO molto severo, con il 5% di danno in più.
     ACCECATO("Accecato"),
 
     // ASSORDATO (Deafened): Impedisce di sentire, può far fallire incantesimi verbali e riduce la percezione.
