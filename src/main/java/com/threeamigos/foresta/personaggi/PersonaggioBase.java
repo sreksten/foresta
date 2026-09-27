@@ -386,8 +386,8 @@ public abstract class PersonaggioBase implements Personaggio {
 		for (TipoEffettoDiStato tipoEffettoDiStato: risultato.getEffettiDiStatoDaRimuovere()) {
 			rimuoviEffettoDiStato(tipoEffettoDiStato);
 		}
-		for (TipoInterazioneElementale interazione : risultato.getInterazioniElementali()) {
-			BusEventi.pubblica(new NotificaInterazioneElementalePersonaggio(this, interazione));
+		for (TipoInterazioneConEffettiDiStato interazione : risultato.getInterazioni()) {
+			BusEventi.pubblica(new NotificaInterazionePersonaggio(this, interazione));
 		}
 	}
 

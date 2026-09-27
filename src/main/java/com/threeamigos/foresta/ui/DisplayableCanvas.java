@@ -9,7 +9,7 @@ import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.MessaggioMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.motore.tipi.TipoInterazioneElementale;
+import com.threeamigos.foresta.motore.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.motore.tipi.TipoNegozio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.GestoreSalvataggi;
@@ -899,8 +899,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		aggiungiSprite(riquadroLocazione.aggiungiEffettoDiStato(personaggio, effettoDiStato, colore));
 	}
 
-	public void aggiungiInterazioneElementale(Personaggio personaggio, TipoInterazioneElementale interazioneElementale) {
-		aggiungiSprite(riquadroLocazione.aggiungiInterazioneElementale(personaggio, interazioneElementale));
+	public void aggiungiInterazione(Personaggio personaggio, TipoInterazioneConEffettiDiStato interazione) {
+		aggiungiSprite(riquadroLocazione.aggiungiInterazione(personaggio, interazione));
 	}
 
 	private void aggiungiSprite(SpriteInterface sprite) {

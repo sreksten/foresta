@@ -1,0 +1,88 @@
+package com.threeamigos.foresta.motore.tipi;
+
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Collections;
+
+/**
+ *
+ * @author Stefano Reksten
+ */
+public enum TipoInterazioneConEffettiDiStato {
+
+    // Interazioni con BAGNATO
+    // + FULMINE
+    ELETTROCUZIONE(TipoEffettoDiStato.BAGNATO, TipoDanno.FULMINE, "Elettrocuzione"),
+    // + GELO
+    CONGELAMENTO(TipoEffettoDiStato.BAGNATO, TipoDanno.GELO, "Congelamento"),
+    // + FUOCO
+    VAPORIZZAZIONE(TipoEffettoDiStato.BAGNATO, TipoDanno.FUOCO, "Vaporizzazione"),
+
+    // Interazioni con BRUCIATO
+    // + ARIA
+    ALIMENTAZIONE_FIAMMA(TipoEffettoDiStato.BRUCIATO, TipoDanno.ARIA, "Alimentazione fiamma"),
+    // + ACQUA
+    ESTINZIONE(TipoEffettoDiStato.BRUCIATO, TipoDanno.ACQUA, "Estinzione"),
+    // + GELO
+    SCIOGLIMENTO_TERMICO(TipoEffettoDiStato.BRUCIATO, TipoDanno.GELO, "Scioglimento termico"),
+    // + VELENO
+    ESPLOSIONE_DI_GAS(TipoEffettoDiStato.BRUCIATO, TipoDanno.VELENO, "Esplosione di gas"),
+
+    // Interazioni con CONGELATO
+    // + CONTUNDENTE
+    FRANTUMAZIONE_DEL_GHIACCO(TipoEffettoDiStato.CONGELATO, TipoDanno.CONTUNDENTE, "Frantumazione del ghiaccio"),
+    // + FUOCO
+    DISGELO_VIOLENTO(TipoEffettoDiStato.CONGELATO, TipoDanno.FUOCO, "Disgelo violento"),
+    // + FULMINE
+    SUPERCONDUZIONE(TipoEffettoDiStato.CONGELATO, TipoDanno.FULMINE, "Superconduzione"),
+
+    // Interazioni con MALEDETTO
+    // + NECROTICO
+    MIETITURA(TipoEffettoDiStato.MALEDETTO, TipoDanno.NECROTICO, "Mietitura"),
+    // + SACRO
+    RIGETTO(TipoEffettoDiStato.MALEDETTO, TipoDanno.SACRO, "Rigetto"),
+
+    // Interazioni con INFETTATO
+    // + SACRO
+    PURIFICAZIONE(TipoEffettoDiStato.INFETTATO, TipoDanno.SACRO, "Purificazione"),
+
+    // Interazioni con STORDITO / ATTERRATO (fisica, non elementale)
+    // + TAGLIENTE / PERFORANTE
+    // NON uccide il personaggio ma infligge automaticamente un critico a 2x il danno normale
+    COLPO_DI_GRAZIA(Arrays.asList(TipoEffettoDiStato.STORDITO, TipoEffettoDiStato.ATTERRATO),
+            Arrays.asList(TipoDanno.TAGLIENTE, TipoDanno.PERFORANTE),
+            "Colpo di Grazia"),
+
+    // Interazioni con ATTERRATO (fisica, non elementale)
+    // + CONTUNDENTE
+    // Raddoppia il danno fisico e ne estende l'atterramento
+    SCHIACCIAMENTO(TipoEffettoDiStato.ATTERRATO, TipoDanno.CONTUNDENTE, "Schiacciamento");
+
+    private final Collection<TipoEffettoDiStato> precondizioni;
+    private final Collection<TipoDanno> innescanti;
+    private final String descrizione;
+
+    TipoInterazioneConEffettiDiStato(TipoEffettoDiStato precondizione, TipoDanno innescante, String descrizione) {
+        this.precondizioni = Collections.singleton(precondizione);
+        this.innescanti = Collections.singleton(innescante);
+        this.descrizione = descrizione;
+    }
+
+    TipoInterazioneConEffettiDiStato(Collection<TipoEffettoDiStato> precondizioni, Collection<TipoDanno> innescanti, String descrizione) {
+        this.precondizioni = precondizioni;
+        this.innescanti = innescanti;
+        this.descrizione = descrizione;
+    }
+
+    public Collection<TipoEffettoDiStato> getPrecondizioni() {
+        return precondizioni;
+    }
+
+    public Collection<TipoDanno> getInnescanti() {
+        return innescanti;
+    }
+
+    public String getDescrizione() {
+        return descrizione;
+    }
+}

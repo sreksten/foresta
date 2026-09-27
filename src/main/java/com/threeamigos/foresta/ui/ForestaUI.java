@@ -8,7 +8,7 @@ import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.tipi.TipoAttributo;
 import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.motore.tipi.TipoInterazioneElementale;
+import com.threeamigos.foresta.motore.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Temporizzatore;
 import com.threeamigos.foresta.tools.TestataSalvataggio;
@@ -76,7 +76,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(NotificaConsumoPuntoAbilitaPersonaggio.class, this::gestisciEventoConsumoPuntoAbilita);
 		BusEventi.iscriviti(NotificaFineGioco.class, this::gestisciEventoFineGioco);
 		BusEventi.iscriviti(InternoNotificaViaFumettoATempo.class, this::gestisciEventoFumetto);
-		BusEventi.iscriviti(NotificaInterazioneElementalePersonaggio.class, this::gestisciEventoInterazioneElementale);
+		BusEventi.iscriviti(NotificaInterazionePersonaggio.class, this::gestisciEventoInterazione);
 		BusEventi.iscriviti(NotificaTestoFrase.class, this::gestisciEventoMessaggio);
 		BusEventi.iscriviti(InternoPortaInPrimoPiano.class, this::gestisciEventoMostraFinestra);
 		BusEventi.iscriviti(NotificaMostraPunteggiMigliori.class, this::gestisciEventoMostraPunteggi);
@@ -477,10 +477,10 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		}
 	}
 
-	private void gestisciEventoInterazioneElementale(NotificaInterazioneElementalePersonaggio evento) {
+	private void gestisciEventoInterazione(NotificaInterazionePersonaggio evento) {
 		Personaggio personaggio = evento.getPersonaggio();
-		TipoInterazioneElementale tipoInterazioneElementale = evento.getTipoInterazioneElementale();
-		switch (tipoInterazioneElementale) {
+		TipoInterazioneConEffettiDiStato tipoInterazione = evento.getTipoInterazione();
+		switch (tipoInterazione) {
 			case ELETTROCUZIONE:
 			case CONGELAMENTO:
 			case VAPORIZZAZIONE:
@@ -494,10 +494,12 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 			case MIETITURA:
 			case RIGETTO:
 			case PURIFICAZIONE:
-				displayableCanvas.aggiungiInterazioneElementale(personaggio, tipoInterazioneElementale);
+			case COLPO_DI_GRAZIA:
+			case SCHIACCIAMENTO:
+				displayableCanvas.aggiungiInterazione(personaggio, tipoInterazione);
 				break;
 			default:
-				throw new IllegalArgumentException("TipoInterazioneElementale non gestito: " + tipoInterazioneElementale);
+				throw new IllegalArgumentException("TipoInterazioneConEffettiDiStato non gestito: " + tipoInterazione);
 		}
 	}
 

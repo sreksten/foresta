@@ -157,9 +157,9 @@ public enum TipoEvento {
      */
     NOTIFICA_INIZIO_COMBATTIMENTO_PERSONAGGIO,
     /**
-     * Un Personaggio subisce una interazione elementale come effetto collaterale di un combattimento
+     * Un Personaggio subisce una interazione con un effetto di stato come effetto collaterale di un combattimento
      */
-    NOTIFICA_INTERAZIONE_ELEMENTALE_PERSONAGGIO,
+    NOTIFICA_INTERAZIONE_PERSONAGGIO,
     /**
      * Mostra la finestra con i migliori 10 giocatori di tutti i tempi
      */

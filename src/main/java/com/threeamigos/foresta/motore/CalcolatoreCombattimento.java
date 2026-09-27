@@ -231,17 +231,17 @@ public class CalcolatoreCombattimento {
             Logger.log("Con difensore già BAGNATO");
             if (tipoDanno == TipoDanno.FULMINE) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
-                dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.ELETTROCUZIONE);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.ELETTROCUZIONE);
             } else if (tipoDanno == TipoDanno.GELO) {
                 dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BAGNATO);
                 dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.CONGELATO,
                         calcolaDurataStato(difensore, TipoEffettoDiStato.CONGELATO),
                         calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.CONGELATO));
-                dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.CONGELAMENTO);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.CONGELAMENTO);
             } else if (tipoDanno == TipoDanno.FUOCO) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 0.5d;
                 dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BAGNATO);
-                dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.VAPORIZZAZIONE);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.VAPORIZZAZIONE);
             }
         }
 
@@ -249,24 +249,24 @@ public class CalcolatoreCombattimento {
             Logger.log("Con difensore già BRUCIATO");
             if (tipoDanno == TipoDanno.ARIA) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
-                dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.ALIMENTAZIONE_FIAMMA);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.ALIMENTAZIONE_FIAMMA);
             } else if (tipoDanno == TipoDanno.ACQUA) {
                 dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BRUCIATO);
-                dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.ESTINZIONE);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.ESTINZIONE);
             } else if (tipoDanno == TipoDanno.GELO) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
                 dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BRUCIATO);
                 dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.BAGNATO,
                         calcolaDurataStato(difensore, TipoEffettoDiStato.BAGNATO),
                         calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.BAGNATO));
-                dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.SCIOGLIMENTO_TERMICO);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SCIOGLIMENTO_TERMICO);
             } else if (tipoDanno == TipoDanno.VELENO) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d; // Esplosione di gas
                 dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BRUCIATO);
                 dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.AVVELENATO,
                         calcolaDurataStato(difensore, TipoEffettoDiStato.AVVELENATO),
                         calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.AVVELENATO));
-                dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.ESPLOSIONE_DI_GAS);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.ESPLOSIONE_DI_GAS);
             }
         }
 
@@ -275,17 +275,17 @@ public class CalcolatoreCombattimento {
             if (tipoDanno == TipoDanno.CONTUNDENTE) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 2.0d;
                 dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.CONGELATO);
-                dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.FRANTUMAZIONE_DEL_GHIACCO);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.FRANTUMAZIONE_DEL_GHIACCO);
             } else if (tipoDanno == TipoDanno.FUOCO) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
                 dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.CONGELATO);
-                dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.DISGELO_VIOLENTO);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.DISGELO_VIOLENTO);
             } else if (tipoDanno.getSuperTipo() == SupertipoDanno.FISICO) {
                 statDifensiva = statDifensiva * 1.5d; // Il guscio di ghiaccio fa da scudo ai colpi di lama/punta
             } else if (tipoDanno == TipoDanno.FULMINE) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d;
                 statDifensiva = statDifensiva * 0.7d;
-                dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.SUPERCONDUZIONE);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SUPERCONDUZIONE);
             }
 
         }
@@ -296,10 +296,10 @@ public class CalcolatoreCombattimento {
                 // La SAGGEZZA del difensore riduce l'efficacia dei danni NECROTICO su un bersaglio MALEDETTO
                 double moltiplicatoreMaledetto = Math.max(1.0d, 2.0d - (difensore.getSaggezza() / 100.0));
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * moltiplicatoreMaledetto;
-                dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.MIETITURA);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.MIETITURA);
             } else if (tipoDanno == TipoDanno.SACRO) {
                 dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.MALEDETTO);
-                dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.RIGETTO);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.RIGETTO);
             }
         }
 
@@ -307,7 +307,7 @@ public class CalcolatoreCombattimento {
             Logger.log("Con difensore già INFETTATO");
             if (tipoDanno == TipoDanno.SACRO) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
-                dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.PURIFICAZIONE);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.PURIFICAZIONE);
             }
         }
 
@@ -318,7 +318,16 @@ public class CalcolatoreCombattimento {
                 Logger.log("tipo danno TAGLIENTE o PERFORANTE, critico automatico");
                 criticoAutomatico = true;
                 dannoRisultante.setColpoDiGrazia(true);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.COLPO_DI_GRAZIA);
             }
+        }
+
+        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.ATTERRATO) && tipoDanno == TipoDanno.CONTUNDENTE) {
+            Logger.log("Con difensore già ATTERRATO, tipo danno CONTUNDENTE: Schiacciamento");
+            moltiplicatoreDannoStato = moltiplicatoreDannoStato * 2.0d;
+            dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.ATTERRATO,
+                    calcolaDurataStato(difensore, TipoEffettoDiStato.ATTERRATO) + 1, 0);
+            dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SCHIACCIAMENTO);
         }
 
         // 4. MITIGAZIONE DELLA DIFESA DEL DIFENSORE (Formula Diminishing Returns)
@@ -338,7 +347,7 @@ public class CalcolatoreCombattimento {
 
                 // Se il bersaglio era BAGNATO e la spada è di FUOCO, si attiva l'interazione Vaporizzazione
                 if (elementoMagico == TipoDanno.FUOCO && difensore.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
-                    dannoRisultante.addInterazioneElementale(TipoInterazioneElementale.VAPORIZZAZIONE);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.VAPORIZZAZIONE);
                 }
 
                 // SOMMA i danni invece di sovrascriverli

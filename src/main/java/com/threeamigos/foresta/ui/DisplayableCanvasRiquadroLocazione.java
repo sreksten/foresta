@@ -6,7 +6,7 @@ import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.motore.tipi.TipoInterazioneElementale;
+import com.threeamigos.foresta.motore.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -151,7 +151,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		return sprite;
 	}
 
-	SpriteInterface aggiungiInterazioneElementale(Personaggio personaggio, TipoInterazioneElementale interazioneElementale) {
+	SpriteInterface aggiungiInterazione(Personaggio personaggio, TipoInterazioneConEffettiDiStato interazione) {
 		CoordinateMD coordinate = mappaCoordinate.get(personaggio);
 		if (coordinate == null) {
 			return null;
@@ -159,7 +159,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		BufferedImage image = mappaImmagini.get(personaggio);
 		int x = coordinate.getX() + image.getWidth();
 		int yIniziale = coordinate.getY() + image.getHeight() * 2 / 3 - SOLLEVAMENTO_ANCORA;
-		SpriteEffetto sprite = new SpriteEffetto(interazioneElementale.getDescrizione(), DoomdarkFontMedium.getInstance(),
+		SpriteEffetto sprite = new SpriteEffetto(interazione.getDescrizione(), DoomdarkFontMedium.getInstance(),
 				DoomdarkColorModel.Color.GREEN, x, yIniziale + calcolaOffsetVerticale(yIniziale));
 		effettiAttivi.add(new EffettoAttivo(yIniziale, sprite));
 		return sprite;

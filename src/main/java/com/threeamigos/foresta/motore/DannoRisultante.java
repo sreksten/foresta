@@ -2,7 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.motore.tipi.TipoDanno;
 import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.motore.tipi.TipoInterazioneElementale;
+import com.threeamigos.foresta.motore.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.ArrayList;
@@ -18,7 +18,7 @@ public class DannoRisultante {
     private final Personaggio difensore;
     private TipoDanno tipoDanno;
     private int danno;
-    private final Collection<TipoInterazioneElementale> interazioniElementali = new ArrayList<>();
+    private final Collection<TipoInterazioneConEffettiDiStato> interazioni = new ArrayList<>();
     private final Collection<EffettoDiStato> effettiDiStatoDaAggiungere = new ArrayList<>();
     private final Collection<TipoEffettoDiStato> effettiDiStatoDaRimuovere = new ArrayList<>();
     private boolean colpoDiGrazia = false;
@@ -52,12 +52,12 @@ public class DannoRisultante {
         return danno;
     }
 
-    public void addInterazioneElementale(TipoInterazioneElementale tipoInterazioneElementale) {
-        interazioniElementali.add(tipoInterazioneElementale);
+    public void addInterazione(TipoInterazioneConEffettiDiStato tipoInterazione) {
+        interazioni.add(tipoInterazione);
     }
 
-    public Collection<TipoInterazioneElementale> getInterazioniElementali() {
-        return interazioniElementali;
+    public Collection<TipoInterazioneConEffettiDiStato> getInterazioni() {
+        return interazioni;
     }
 
     public void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int durata, int danniNelTempo) {

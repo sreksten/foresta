@@ -44,8 +44,8 @@ public class NotificaInizioCombattimentoPersonaggio extends EventoSuPersonaggio 
         return "TipoDanno: " + risultato.getTipoDanno() +
         ", Danno: " + risultato.getDanno() +
         ", Fatale: " + risultato.isColpoDiGrazia() +
-        ", Interazioni elementali: " +
-        risultato.getInterazioniElementali().stream().map(e -> "+" + e).collect(Collectors.joining(", ")) +
+        ", Interazioni: " +
+        risultato.getInterazioni().stream().map(e -> "+" + e).collect(Collectors.joining(", ")) +
         ", Effetti di stato: " +
         risultato.getEffettiDiStatoDaAggiungere().stream().map(e -> "+" + e.getTipoEffettoDiStato()
                 + ":" + e.getDurata()).collect(Collectors.joining(", ")) +
