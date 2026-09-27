@@ -746,14 +746,14 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Esito entraInStatoSceltaIncantesimoDaLanciare() {
 		List<Comando> comandiPossibili = new ArrayList<>();
 		Personaggio formulante = gruppo.getFormulante();
+		// Mago ed Elfo hanno anche il dardo arcano, che non consuma pergamene
+		if (DardoArcano.puoLanciarlo(formulante)) {
+			comandiPossibili.add(Comando.DARDO_ARCANO);
+		}
 		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
 			if (gruppo.getIncantesimi(classeIncantesimo) > 0 && formulante.getMagia() >= classeIncantesimo.getIstanza(formulante.getLivello()).getCostoLancio()) {
 				comandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
 			}
-		}
-		// Mago ed Elfo hanno anche il dardo arcano, che non consuma pergamene
-		if (DardoArcano.puoLanciarlo(formulante)) {
-			comandiPossibili.add(Comando.DARDO_ARCANO);
 		}
 		comandiPossibili.add(Comando.NO_INCANTESIMO);
 		BusEventi.pubblica(new RichiestaSelezioneIncantesimoDaLanciare(comandiPossibili));
