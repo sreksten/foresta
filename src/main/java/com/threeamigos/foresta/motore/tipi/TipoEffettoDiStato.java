@@ -76,7 +76,7 @@ public enum TipoEffettoDiStato {
     ACCECATO("Accecato"),
 
     // ASSORDATO (Deafened): Impedisce di sentire, può far fallire incantesimi verbali e riduce la percezione.
-    // 🔊 SONICO ➔ Disorientamento da Risonanza: Un attacco sonico contro un bersaglio già assordato distrugge i canali auricolari interni, trasformando l'effetto in uno STORDITO di 1 turno.
+    // 🔊 SONICO ➔ Disorientamento: Un attacco sonico contro un bersaglio già assordato distrugge i canali auricolari interni, trasformando l'effetto in uno STORDITO di 1 turno e infliggendo il 5% di danno in più.
     ASSORDATO("Assordato"),
 
     // SILENZIATO (Silenced): Impedisce totalmente il lancio di incantesimi o l'uso di abilità magiche.

@@ -85,7 +85,20 @@ public enum TipoInterazioneConEffettiDiStato {
     DISPERSIONE(TipoEffettoDiStato.ACCECATO, TipoDanno.ARIA, "Dispersione"),
     // + ACQUA
     // Applica RALLENTATO severo, piccolo bonus di danno
-    FANGO(TipoEffettoDiStato.ACCECATO, TipoDanno.ACQUA, "Fango");
+    FANGO(TipoEffettoDiStato.ACCECATO, TipoDanno.ACQUA, "Fango"),
+
+    // Interazioni con ASSORDATO
+    // + SONICO
+    // Trasforma in STORDITO di 1 turno, piccolo bonus di danno
+    DISORIENTAMENTO(TipoEffettoDiStato.ASSORDATO, TipoDanno.SONICO, "Disorientamento"),
+
+    // Interazioni con SILENZIATO
+    // + ARCANO
+    // +30% danno Puro che ignora le difese
+    RISONANZA_SIGILLATA(TipoEffettoDiStato.SILENZIATO, TipoDanno.ARCANO, "Risonanza Sigillata"),
+    // + PSICHICO
+    // +50% danno, estende anche ACCECATO
+    ISOLAMENTO_SENSORIALE(TipoEffettoDiStato.SILENZIATO, TipoDanno.PSICHICO, "Isolamento Sensoriale");
 
     private final Collection<TipoEffettoDiStato> precondizioni;
     private final Collection<TipoDanno> innescanti;

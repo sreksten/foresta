@@ -225,6 +225,7 @@ public class CalcolatoreCombattimento {
 
         // 3. APPLICAZIONE INTERAZIONI ELEMENTALI E STATI DEL DIFENSORE
         double moltiplicatoreDannoStato = 1.0d;
+        double dannoPuroBonus = 0.0d;
         boolean criticoAutomatico = false;
         boolean purificazioneAttiva = false;
 
@@ -387,6 +388,29 @@ public class CalcolatoreCombattimento {
             }
         }
 
+        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.ASSORDATO) && tipoDanno == TipoDanno.SONICO) {
+            Logger.log("Con difensore già ASSORDATO, tipo danno SONICO: Disorientamento, trasforma in STORDITO");
+            moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.05d;
+            dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.ASSORDATO);
+            dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.STORDITO, 1, 0);
+            dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.DISORIENTAMENTO);
+        }
+
+        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO)) {
+            Logger.log("Con difensore già SILENZIATO");
+            if (tipoDanno == TipoDanno.ARCANO) {
+                Logger.log("tipo danno ARCANO: Risonanza Sigillata, +30% danno Puro che ignora le difese");
+                dannoPuroBonus = dannoPuroBonus + dannoOffensivoGrezzo * 0.3d;
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.RISONANZA_SIGILLATA);
+            } else if (tipoDanno == TipoDanno.PSICHICO) {
+                Logger.log("tipo danno PSICHICO: Isolamento Sensoriale, +50% danno ed estende anche ACCECATO");
+                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
+                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.ACCECATO,
+                        calcolaDurataStato(difensore, TipoEffettoDiStato.ACCECATO), 0);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.ISOLAMENTO_SENSORIALE);
+            }
+        }
+
         // 4. MITIGAZIONE DELLA DIFESA DEL DIFENSORE (Formula Diminishing Returns)
         double fattoreMitigazione = 100.0d / (100.0d + statDifensiva);
         Logger.log("fattoreMitigazione: " + fattoreMitigazione + ", moltiplicatoreDannoStato = " + moltiplicatoreDannoStato);
@@ -425,8 +449,8 @@ public class CalcolatoreCombattimento {
             }
         }
 
-        // Il danno totale combinato dell'attacco
-        double dannoTotaleCombinato = dannoMitigato + dannoElementaleFinale;
+        // Il danno totale combinato dell'attacco (il bonus Puro di Risonanza Sigillata ignora la mitigazione)
+        double dannoTotaleCombinato = dannoMitigato + dannoElementaleFinale + dannoPuroBonus;
 
         // 5. DETERMINAZIONE DEL COLPO CRITICO (Come capire se il colpo raddoppia)
         // Formula di base: 5% fisso + 1% per ogni punto statistica CRITICO dell'attaccante,
