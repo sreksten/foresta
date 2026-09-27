@@ -282,14 +282,21 @@ public class CalcolatoreCombattimento {
             }
         }
 
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.AVVELENATO) && tipoDanno == TipoDanno.FUOCO) {
-            Logger.log("Con difensore già AVVELENATO, tipo danno FUOCO: Vampata Tossica");
-            moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d;
-            dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.AVVELENATO);
-            dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.BRUCIATO,
-                    calcolaDurataStato(difensore, TipoEffettoDiStato.BRUCIATO),
-                    calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.BRUCIATO));
-            dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.VAMPATA_TOSSICA);
+        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.AVVELENATO)) {
+            Logger.log("Con difensore già AVVELENATO");
+            if (tipoDanno == TipoDanno.FUOCO) {
+                Logger.log("tipo danno FUOCO: Vampata Tossica");
+                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d;
+                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.AVVELENATO);
+                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.BRUCIATO,
+                        calcolaDurataStato(difensore, TipoEffettoDiStato.BRUCIATO),
+                        calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.BRUCIATO));
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.VAMPATA_TOSSICA);
+            } else if (tipoDanno == TipoDanno.ACIDO) {
+                Logger.log("tipo danno ACIDO: Reazione Tossica, +15% danno");
+                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.15d;
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.REAZIONE_TOSSICA);
+            }
         }
 
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SANGUINAMENTO)) {

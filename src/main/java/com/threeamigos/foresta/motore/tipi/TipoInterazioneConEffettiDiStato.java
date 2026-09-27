@@ -114,6 +114,9 @@ public enum TipoInterazioneConEffettiDiStato {
     // + FUOCO
     // Il veleno si incendia: rimuove AVVELENATO, applica BRUCIATO, piccolo bonus di danno (effetto simile a Esplosione di gas, ma nel verso opposto)
     VAMPATA_TOSSICA(TipoEffettoDiStato.AVVELENATO, TipoDanno.FUOCO, "Vampata Tossica"),
+    // + ACIDO
+    // +15% danno (non gestiamo corrosione/usura dell'armatura, vedi nota nel roadmap)
+    REAZIONE_TOSSICA(TipoEffettoDiStato.AVVELENATO, TipoDanno.ACIDO, "Reazione Tossica"),
 
     // Interazioni con IMMOBILIZZATO
     // + FUOCO
