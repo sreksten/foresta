@@ -84,6 +84,11 @@ public enum TipoInterazioneConEffettiDiStato {
             Arrays.asList(TipoDanno.TAGLIENTE, TipoDanno.PERFORANTE, TipoDanno.CONTUNDENTE),
             "Shock di Realtà"),
 
+    // Interazioni con CONFUSO (esclusiva, non condivisa con SPAVENTATO)
+    // + VUOTO
+    // Rimuove CONFUSO, +50% danno, applica MENTE_FRATTURATA
+    FOLLIA_COSMICA(TipoEffettoDiStato.CONFUSO, TipoDanno.VUOTO, "Follia Cosmica"),
+
     // Interazioni con ACCECATO
     // + ARIA
     // Rimuove ACCECATO, piccolo bonus di danno

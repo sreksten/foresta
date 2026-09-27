@@ -66,9 +66,14 @@ public enum TipoEffettoDiStato {
 
     // CONFUSO (Confused): Il bersaglio attacca alleati o nemici a caso, oppure vaga senza meta.
     // 🔮 ARCANO ➔ Sovraccarico Mentale: (Vedi SPAVENTATO) L'impatto trasforma istantaneamente la Confusione in uno STORDITO (Stun) pesante che dura 1 o 2 turni.
-    // 🌌 VUOTO ➔ Follia Cosmica: Il bersaglio subisce il 50% di danni in più e subisce un malus permanente alla statistica di Attacco Magico o Resistenza Mentale.
+    // 🌌 VUOTO ➔ Follia Cosmica: Il bersaglio subisce il 50% di danni in più; rimuove CONFUSO e applica MENTE_FRATTURATA.
     // 🔨 FISICO ➔ Shock di Realtà: (Vedi SPAVENTATO) Qualsiasi danno fisico ricevuto interrompe immediatamente lo stato CONFUSO e infligge il 20% di danno in più.
     CONFUSO("Confuso"),
+
+    // MENTE_FRATTURATA (Shattered Mind): applicato da Follia Cosmica (Vedi CONFUSO). Non è permanente: dura a turni
+    // come gli altri stati. Penalizza del 20% la statistica offensiva quando il personaggio attacca con danno
+    // magico/elementale, e del 20% la statistica difensiva quando lo subisce.
+    MENTE_FRATTURATA("Mente Fratturata"),
 
     // ACCECATO (Blinded): Riduce drasticamente la precisione degli attacchi fisici o la gittata degli incantesimi.
     // 💨 ARIA ➔ Dispersione: Un forte attacco d'aria (folata di vento) spazza via la sabbia dagli occhi, rimuovendo istantaneamente lo stato ACCECATO e infliggendo il 5% di danno in più.

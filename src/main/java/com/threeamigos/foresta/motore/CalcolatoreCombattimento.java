@@ -181,9 +181,19 @@ public class CalcolatoreCombattimento {
             Logger.log("statOffensiva (FORZA) = " + statOffensiva);
         }
 
+        if (dannoNonFisico && attaccante.hasEffettoDiStato(TipoEffettoDiStato.MENTE_FRATTURATA)) {
+            statOffensiva = (int) Math.round(statOffensiva * 0.8d);
+            Logger.log("statOffensiva penalizzata dal 20% da MENTE_FRATTURATA = " + statOffensiva);
+        }
+
         // Determina la difesa del bersaglio (COSTITUZIONE + PARATA per Fisico, RESISTENZA_MAGICA per Magico/Elementale),
         // con le resistenze di elmo, scudo e armatura contro questo tipo di danno
         double statDifensiva = difesaContro(difensore, tipoDanno);
+
+        if (dannoNonFisico && difensore.hasEffettoDiStato(TipoEffettoDiStato.MENTE_FRATTURATA)) {
+            statDifensiva = statDifensiva * 0.8d;
+            Logger.log("statDifensiva penalizzata dal 20% da MENTE_FRATTURATA = " + statDifensiva);
+        }
 
         // 2. MATEMATICA DI BASE DEL DANNO (Con fattore di scala livello arma)
         int dannoBaseArma = arma.getDanni() * arma.getLivello();
@@ -417,6 +427,13 @@ public class CalcolatoreCombattimento {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.2d;
                 dannoRisultante.rimuoviEffettoDiStato(statoAttivo);
                 dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SHOCK_DI_REALTA);
+            } else if (tipoDanno == TipoDanno.VUOTO && statoAttivo == TipoEffettoDiStato.CONFUSO) {
+                Logger.log("tipo danno VUOTO: Follia Cosmica, rimuove CONFUSO e applica MENTE_FRATTURATA");
+                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
+                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.CONFUSO);
+                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.MENTE_FRATTURATA,
+                        calcolaDurataStato(difensore, TipoEffettoDiStato.MENTE_FRATTURATA), 0);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.FOLLIA_COSMICA);
             }
         }
 

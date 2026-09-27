@@ -502,6 +502,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 			case INCIAMPO:
 			case SOVRACCARICO_MENTALE:
 			case SHOCK_DI_REALTA:
+			case FOLLIA_COSMICA:
 			case DISPERSIONE:
 			case FANGO:
 			case DISORIENTAMENTO:
