@@ -226,7 +226,7 @@ class PersonaggioEquipaggiamentoTest {
         Personaggio guerriero = new Guerriero("Pippo", 1);
         Artefatto spadone = artefatto(TipoArtefatto.SPADONE, 1);
         assertEquals("Pippo non sa combattere con due armi.",
-                TipoMotivoRifiutoEquipaggiamento.SECONDA_ARMA_NON_CONSENTITA.getSpiegazione(guerriero, spadone));
+                TipoMotivoRifiutoEquipaggiamento.SECONDA_ARMA_NON_CONSENTITA.formattaSpiegazione(guerriero, spadone));
     }
 
     private static void assertRifiuto(TipoMotivoRifiutoEquipaggiamento atteso, Personaggio personaggio, Artefatto artefatto) {

@@ -56,7 +56,7 @@ public enum TipoMotivoRifiutoEquipaggiamento {
 
 	public String getSpiegazione(Personaggio personaggio) {
 		return personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + ' ' + spiegazione;
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + ' ' + spiegazione + '.';
 	}
 
 	public String getFumetto() {
@@ -66,12 +66,21 @@ public enum TipoMotivoRifiutoEquipaggiamento {
 	/**
 	 * Frase completa, es. "Il guerriero porta già troppo peso."
 	 */
-	public String getSpiegazione(Personaggio personaggio, Artefatto artefatto) {
+	public String formattaSpiegazione(Personaggio personaggio) {
+		return personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + ' ' + spiegazione + '.';
+	}
+
+	public String formattaSpiegazione(Personaggio personaggio, Artefatto artefatto) {
 		return personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + ' ' + String.format(spiegazione, artefatto.getNome()) + '.';
 	}
 
-	public String getFumetto(Artefatto artefatto) {
+	public String formattaFumetto() {
+		return fumetto + '.';
+	}
+
+	public String formattaFumetto(Artefatto artefatto) {
 		return String.format(fumetto, artefatto.getNome()) + '.';
 	}
 }

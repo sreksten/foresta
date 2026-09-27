@@ -51,11 +51,11 @@ public final class RegoleEquipaggiamento {
 			if (motivo != null) {
 				if (artefattoMD != null) {
 					Artefatto artefatto = Artefatto.di(artefattoMD);
-					this.descrizione = motivo.getSpiegazione(personaggio, artefatto);
-					this.fumetto = motivo.getFumetto(artefatto);
+					this.descrizione = motivo.formattaSpiegazione(personaggio, artefatto);
+					this.fumetto = motivo.formattaFumetto(artefatto);
 				} else {
-					this.descrizione = motivo.getSpiegazione(personaggio);
-					this.fumetto = motivo.getFumetto();
+					this.descrizione = motivo.formattaSpiegazione(personaggio);
+					this.fumetto = motivo.formattaFumetto();
 				}
 			} else {
 				this.descrizione = null;
