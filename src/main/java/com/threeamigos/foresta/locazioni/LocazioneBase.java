@@ -21,6 +21,7 @@ import com.threeamigos.foresta.ui.InterfacciaUtente;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * La locazione è un automa a stati finiti. Un gruppo mentre si sposta per
@@ -77,6 +78,7 @@ public abstract class LocazioneBase implements Locazione {
 	private enum StatoLocazione {
 		NUOVA_LOCAZIONE,
 		IN_LOCAZIONE,
+		CHI_ESEGUE_SINGOLO_ATTACCO,
 		CHI_COMBATTE,
 		IN_COMBATTIMENTO,
 		CHI_BEVE_POZIONE_SALUTE,
@@ -232,119 +234,175 @@ public abstract class LocazioneBase implements Locazione {
 	public Stato impostaAzioni(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario, Comando azione) {
         Stato possibileStato;
         switch (statoLocazione) {
-		case NUOVA_LOCAZIONE:
-			possibileStato = gestisciNuovaLocazione();
-			if (possibileStato != null) {
-				return possibileStato;
-			}
-			break;
-
-		case IN_COMBATTIMENTO:
-			possibileStato = gestisciCombattimento(azione);
-			if (possibileStato != null) {
-				return possibileStato;
-			}
-			possibileStato = gestisciInLocazione(azione);
-			if (possibileStato != null) {
-				return possibileStato;
-			}
-			break;
-
-		case IN_LOCAZIONE:
-			possibileStato = gestisciInLocazione(azione);
-			if (possibileStato != null) {
-				return possibileStato;
-			}
-			break;
-
-		case CHI_COMBATTE:
-			if (azione == Comando.ANNULLA) {
-				// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
-				return annullaScelta();
-			}
-			gestisciChiCombatte(azione);
-			break;
-
-		case CHI_BEVE_POZIONE_SALUTE:
-			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_SALUTE");
-			statoLocazione = StatoLocazione.IN_LOCAZIONE;
-			if (azione == Comando.ANNULLA) {
-				// Rinunciare alla pozione non è un'azione: nessun turno trascorre,
-				// si ripresentano solo i comandi della locazione.
-				ripresentaComandi();
-				return Stato.IN_LOCAZIONE;
-			}
-			gruppo.consumaPozioneSalute(azione);
-			// Bere la pozione fa trascorrere un turno: il suo esito (per esempio la morte del
-			// capo o dell'ultimo avversario per un effetto di stato) va restituito all'automa.
-			return impostaAzioni(gruppo, gruppoAvversario, null);
-
-		case CHI_BEVE_POZIONE_SALUTE_GRANDE:
-			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_SALUTE_GRANDE");
-			statoLocazione = StatoLocazione.IN_LOCAZIONE;
-			if (azione == Comando.ANNULLA) {
-				ripresentaComandi();
-				return Stato.IN_LOCAZIONE;
-			}
-			gruppo.consumaPozioneSaluteGrande(azione);
-			return impostaAzioni(gruppo, gruppoAvversario, null);
-
-		case CHI_BEVE_POZIONE_MAGIA:
-			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_MAGIA");
-			statoLocazione = StatoLocazione.IN_LOCAZIONE;
-			if (azione == Comando.ANNULLA) {
-				ripresentaComandi();
-				return Stato.IN_LOCAZIONE;
-			}
-			gruppo.consumaPozioneMagia(azione);
-			return impostaAzioni(gruppo, gruppoAvversario, null);
-
-		case CHI_BEVE_POZIONE_MAGIA_GRANDE:
-			Logger.log("LocazioneBase.CHI_BEVE_POZIONE_MAGIA_GRANDE");
-			statoLocazione = StatoLocazione.IN_LOCAZIONE;
-			if (azione == Comando.ANNULLA) {
-				ripresentaComandi();
-				return Stato.IN_LOCAZIONE;
-			}
-			gruppo.consumaPozioneMagiaGrande(azione);
-			return impostaAzioni(gruppo, gruppoAvversario, null);
-
-		case CHI_FORMULA:
-			Logger.log("LocazioneBase.CHI_FORMULA");
-			if (azione == Comando.ANNULLA) {
-				// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
-				return annullaScelta();
-			}
-			gruppo.setFormulante(gruppo.getPersonaggio(azione));
-			statoLocazione = StatoLocazione.QUALE_FORMULA;
-			return Stato.SCELTA_INCANTESIMO_DA_LANCIARE;
-
-		case QUALE_FORMULA:
-			Logger.log("LocazioneBase.QUALE_FORMULA: " + azione);
-			if (azione == Comando.NO_INCANTESIMO) {
-				// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
-				return annullaScelta();
-			} else if (azione == Comando.DARDO_ARCANO) {
-				Stato statoDopoIlDardo = lanciaDardoArcano(gruppo.getFormulante(), gruppo, gruppoAvversario);
-				if (statoDopoIlDardo != null) {
-					return statoDopoIlDardo;
+			case NUOVA_LOCAZIONE:
+				possibileStato = gestisciNuovaLocazione();
+				if (possibileStato != null) {
+					return possibileStato;
 				}
-				statoLocazione = StatoLocazione.IN_LOCAZIONE;
 				break;
-			} else {
-				opzioneCorruzioneDisponibile = false;
-				opzioneAmiciziaDisponibile = false;
-				Personaggio formulante = gruppo.getFormulante();
-				ClasseIncantesimo classeIncantesimo = ClasseIncantesimo.ofComando(azione);
-				incantesimo = classeIncantesimo.getIstanza(formulante.getLivello());
-				if (formulante.getMagia() < incantesimo.getCostoLancio()) {
 
-					// Non si dovrebbe più riuscire a entrare in questo ramo perché la scelta degli incantesimi è già stata filtrata
-                    String sb = "Il livello di magia " + formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
-                            " non permette di formulare questo incantesimo.";
-					BusEventi.pubblica(new NotificaTestoFrase(sb));
+			case IN_COMBATTIMENTO:
+				possibileStato = gestisciCombattimento(azione);
+				if (possibileStato != null) {
+					return possibileStato;
+				}
+				possibileStato = gestisciInLocazione(azione);
+				if (possibileStato != null) {
+					return possibileStato;
+				}
+				break;
 
-					rispostaAvversaria(null, gruppo, gruppoAvversario);
+			case IN_LOCAZIONE:
+				possibileStato = gestisciInLocazione(azione);
+				if (possibileStato != null) {
+					return possibileStato;
+				}
+				break;
+
+			case CHI_ESEGUE_SINGOLO_ATTACCO:
+				if (azione == Comando.ANNULLA) {
+					return annullaScelta();
+				}
+				return gestisciChiEsegueSingoloAttacco(azione);
+
+			case CHI_COMBATTE:
+				if (azione == Comando.ANNULLA) {
+					return annullaScelta();
+				}
+				gestisciChiCombatte(azione);
+				break;
+
+			case CHI_BEVE_POZIONE_SALUTE:
+				Logger.log("LocazioneBase.CHI_BEVE_POZIONE_SALUTE");
+				statoLocazione = StatoLocazione.IN_LOCAZIONE;
+				if (azione == Comando.ANNULLA) {
+					return annullaScelta();
+				}
+				gruppo.consumaPozioneSalute(azione);
+				// Bere la pozione fa trascorrere un turno: il suo esito (per esempio la morte del
+				// capo o dell'ultimo avversario per un effetto di stato) va restituito all'automa.
+				return impostaAzioni(gruppo, gruppoAvversario, null);
+
+			case CHI_BEVE_POZIONE_SALUTE_GRANDE:
+				Logger.log("LocazioneBase.CHI_BEVE_POZIONE_SALUTE_GRANDE");
+				statoLocazione = StatoLocazione.IN_LOCAZIONE;
+				if (azione == Comando.ANNULLA) {
+					return annullaScelta();
+				}
+				gruppo.consumaPozioneSaluteGrande(azione);
+				return impostaAzioni(gruppo, gruppoAvversario, null);
+
+			case CHI_BEVE_POZIONE_MAGIA:
+				Logger.log("LocazioneBase.CHI_BEVE_POZIONE_MAGIA");
+				statoLocazione = StatoLocazione.IN_LOCAZIONE;
+				if (azione == Comando.ANNULLA) {
+					return annullaScelta();
+				}
+				gruppo.consumaPozioneMagia(azione);
+				return impostaAzioni(gruppo, gruppoAvversario, null);
+
+			case CHI_BEVE_POZIONE_MAGIA_GRANDE:
+				Logger.log("LocazioneBase.CHI_BEVE_POZIONE_MAGIA_GRANDE");
+				statoLocazione = StatoLocazione.IN_LOCAZIONE;
+				if (azione == Comando.ANNULLA) {
+					return annullaScelta();
+				}
+				gruppo.consumaPozioneMagiaGrande(azione);
+				return impostaAzioni(gruppo, gruppoAvversario, null);
+
+			case CHI_FORMULA:
+				Logger.log("LocazioneBase.CHI_FORMULA");
+				if (azione == Comando.ANNULLA) {
+					return annullaScelta();
+				}
+				gruppo.setFormulante(gruppo.getPersonaggio(azione));
+				statoLocazione = StatoLocazione.QUALE_FORMULA;
+				return Stato.SCELTA_INCANTESIMO_DA_LANCIARE;
+
+			case QUALE_FORMULA:
+				Logger.log("LocazioneBase.QUALE_FORMULA: " + azione);
+				if (azione == Comando.NO_INCANTESIMO) {
+					return annullaScelta();
+				} else if (azione == Comando.DARDO_ARCANO) {
+					Stato statoDopoIlDardo = lanciaDardoArcano(gruppo.getFormulante(), gruppo, gruppoAvversario);
+					if (statoDopoIlDardo != null) {
+						return statoDopoIlDardo;
+					}
+					statoLocazione = StatoLocazione.IN_LOCAZIONE;
+					break;
+				} else {
+					opzioneCorruzioneDisponibile = false;
+					opzioneAmiciziaDisponibile = false;
+					Personaggio formulante = gruppo.getFormulante();
+					ClasseIncantesimo classeIncantesimo = ClasseIncantesimo.ofComando(azione);
+					incantesimo = classeIncantesimo.getIstanza(formulante.getLivello());
+					if (formulante.getMagia() < incantesimo.getCostoLancio()) {
+
+						// Non si dovrebbe più riuscire a entrare in questo ramo perché la scelta degli incantesimi è già stata filtrata
+						String sb = "Il livello di magia " + formulante.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
+								" non permette di formulare questo incantesimo.";
+						BusEventi.pubblica(new NotificaTestoFrase(sb));
+
+						rispostaAvversaria(null, gruppo, gruppoAvversario);
+
+						if (!gruppo.getCapo().isVivo()) {
+							return Stato.GIOCO_PERSO;
+						}
+
+						statoLocazione = StatoLocazione.IN_LOCAZIONE;
+						break;
+					}
+
+					PortataIncantesimo tipo = classeIncantesimo.getPortata();
+					boolean suUnSoloBersaglio = tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI || tipo == PortataIncantesimo.SINGOLO_QUALSIASI;
+					// Un incantesimo benefico su un solo bersaglio (Resurrezione) si formula su un personaggio del gruppo,
+					// e occorre chiedere quale sia
+					if (suUnSoloBersaglio && classeIncantesimo.getTipo() == TipoIncantesimo.BENEFICO) {
+						Logger.log("Incantesimo di tipo " + (tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI ? "SINGOLO_SOLO_VIVI" : "SINGOLO_QUALSIASI"));
+						int l = gruppo.getNumeroPersonaggi();
+						Personaggio personaggio;
+						List<Comando> comandiPossibiliBersaglio = new ArrayList<>();
+						for (int i = 0; i < l; i++) {
+							personaggio = gruppo.getPersonaggio(i);
+							Logger.log("tipo == Incantesimo.SINGOLO_QUALSIASI || p.isVivo() ? " + ((tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo())));
+							if (tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo()) {
+								comandiPossibiliBersaglio.add(Comando.ofPersonaggio(i));
+							}
+						}
+						BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibiliBersaglio));
+						statoLocazione = StatoLocazione.SU_CHI_FORMULA;
+						gruppoBersaglio = gruppo;
+						return Stato.SCELTA_PERSONAGGIO_QUALSIASI;
+					}
+
+					// Altrimenti l'incantesimo agisce sul gruppo avversario (tutto o fino al numero di bersagli del
+					// formulante, secondo la portata), su un solo avversario (Morte) o su tutta la locazione: il lancio,
+					// costo in MAGIA compreso, lo fa l'incantesimo. Gli avversari che uccide contano nelle statistiche e
+					// danno esperienza.
+					List<Personaggio> avversariVivi = gruppoAvversario.getPersonaggiVivi();
+					if (suUnSoloBersaglio) {
+						// TODO far scegliere al giocatore su quale avversario formularlo, quando ci saranno le icone dei
+						// mostri: per ora il primo ancora vivo, come per l'inizio del combattimento
+						incantesimo.formula(formulante, gruppoAvversario.getPersonaggioVivo(), null);
+					} else {
+						incantesimo.formula(formulante, null, gruppoAvversario);
+					}
+					for (Personaggio avversario : avversariVivi) {
+						registraUccisione(formulante, avversario);
+					}
+
+					if (!gruppo.getCapo().isVivo()) {
+						return Stato.GIOCO_PERSO;
+					}
+
+					gruppo.subIncantesimi(incantesimo.getClasse(), 1);
+
+					if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
+						setCompleta(true);
+						return Stato.FINE_LOCAZIONE;
+					}
+
+					rispostaAvversaria(formulante, gruppo, gruppoAvversario);
 
 					if (!gruppo.getCapo().isVivo()) {
 						return Stato.GIOCO_PERSO;
@@ -354,235 +412,176 @@ public abstract class LocazioneBase implements Locazione {
 					break;
 				}
 
-				PortataIncantesimo tipo = classeIncantesimo.getPortata();
-				boolean suUnSoloBersaglio = tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI || tipo == PortataIncantesimo.SINGOLO_QUALSIASI;
-				// Un incantesimo benefico su un solo bersaglio (Resurrezione) si formula su un personaggio del gruppo,
-				// e occorre chiedere quale sia
-				if (suUnSoloBersaglio && classeIncantesimo.getTipo() == TipoIncantesimo.BENEFICO) {
-					Logger.log("Incantesimo di tipo " + (tipo == PortataIncantesimo.SINGOLO_SOLO_VIVI ? "SINGOLO_SOLO_VIVI" : "SINGOLO_QUALSIASI"));
-					int l = gruppo.getNumeroPersonaggi();
-					Personaggio personaggio;
-					List<Comando> comandiPossibiliBersaglio = new ArrayList<>();
-					for (int i = 0; i < l; i++) {
-						personaggio = gruppo.getPersonaggio(i);
-						Logger.log("tipo == Incantesimo.SINGOLO_QUALSIASI || p.isVivo() ? " + ((tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo())));
-						if (tipo == PortataIncantesimo.SINGOLO_QUALSIASI || personaggio.isVivo()) {
-							comandiPossibiliBersaglio.add(Comando.ofPersonaggio(i));
-						}
-					}
-					BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibiliBersaglio));
-					statoLocazione = StatoLocazione.SU_CHI_FORMULA;
-					gruppoBersaglio = gruppo;
-					return Stato.SCELTA_PERSONAGGIO_QUALSIASI;
+			case SU_CHI_FORMULA:
+				Logger.log("LocazioneBase.SU_CHI_FORMULA");
+				if (azione == Comando.ANNULLA) {
+					// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
+					return annullaScelta();
 				}
-
-				// Altrimenti l'incantesimo agisce sul gruppo avversario (tutto o fino al numero di bersagli del
-				// formulante, secondo la portata), su un solo avversario (Morte) o su tutta la locazione: il lancio,
-				// costo in MAGIA compreso, lo fa l'incantesimo. Gli avversari che uccide contano nelle statistiche e
-				// danno esperienza.
-				List<Personaggio> avversariVivi = gruppoAvversario.getPersonaggiVivi();
-				if (suUnSoloBersaglio) {
-					// TODO far scegliere al giocatore su quale avversario formularlo, quando ci saranno le icone dei
-					// mostri: per ora il primo ancora vivo, come per l'inizio del combattimento
-					incantesimo.formula(formulante, gruppoAvversario.getPersonaggioVivo(), null);
-				} else {
-					incantesimo.formula(formulante, null, gruppoAvversario);
-				}
-				for (Personaggio avversario : avversariVivi) {
-					registraUccisione(formulante, avversario);
-				}
-
+				Personaggio personaggioBersaglio = gruppoBersaglio.getPersonaggio(azione);
+				Personaggio formulanteScelto = gruppo.getFormulante();
+				incantesimo.formula(formulanteScelto, personaggioBersaglio, null);
+				registraUccisione(formulanteScelto, personaggioBersaglio);
+				gruppo.subIncantesimi(incantesimo.getClasse(), 1);
+				rispostaAvversaria(formulanteScelto, gruppo, gruppoAvversario);
 				if (!gruppo.getCapo().isVivo()) {
 					return Stato.GIOCO_PERSO;
 				}
+				statoLocazione = StatoLocazione.IN_LOCAZIONE;
+				break;
 
-				gruppo.subIncantesimi(incantesimo.getClasse(), 1);
+			case CHI_CORROMPE:
+				Logger.log("LocazioneBase.CHI_CORROMPE");
+				if (azione == Comando.ANNULLA) {
+					// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
+					return annullaScelta();
+				}
+				if (gruppo.getMonete() >= gruppo.getNumeroPersonaggi() * 2 && Dado.tira(10) > 3) {
+					gruppo.subMonete(gruppo.getNumeroPersonaggi() * 2);
+					BusEventi.pubblica(new NotificaTestoFrase(gruppo.chiMaiuscolo() + " ha ottenuto un passaggio sicuro."));
+					setOggetto(null);
 
-				if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
+					offerta = gruppoAvversario.getCapo().getOfferta(Comando.CORRUZIONE);
+					if (offerta != null && offerta.isFattibile(gruppo, gruppoAvversario)) {
+						BusEventi.pubblica(new NotificaTestoFrase(offerta.getDescrizione(gruppo, gruppoAvversario)));
+						if (offerta.isGratuita(gruppo, gruppoAvversario)) {
+							offerta.accetta(gruppo, gruppoAvversario);
+						} else {
+							BusEventi.pubblica(new NotificaTestoFrase("Accetta?"));
+							BusEventi.pubblica(new RichiestaSelezioneSiNo());
+							statoLocazione = StatoLocazione.ACCETTA_OFFERTA;
+							return Stato.IN_LOCAZIONE;
+						}
+					} else {
+						Logger.log("Mancano i prerequisiti per l'offerta");
+					}
 					setCompleta(true);
 					return Stato.FINE_LOCAZIONE;
-				}
-
-				rispostaAvversaria(formulante, gruppo, gruppoAvversario);
-
-				if (!gruppo.getCapo().isVivo()) {
-					return Stato.GIOCO_PERSO;
-				}
-
-				statoLocazione = StatoLocazione.IN_LOCAZIONE;
-				break;
-			}
-
-		case SU_CHI_FORMULA:
-			Logger.log("LocazioneBase.SU_CHI_FORMULA");
-			if (azione == Comando.ANNULLA) {
-				// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
-				return annullaScelta();
-			}
-			Personaggio personaggioBersaglio = gruppoBersaglio.getPersonaggio(azione);
-			Personaggio formulanteScelto = gruppo.getFormulante();
-			incantesimo.formula(formulanteScelto, personaggioBersaglio, null);
-			registraUccisione(formulanteScelto, personaggioBersaglio);
-			gruppo.subIncantesimi(incantesimo.getClasse(), 1);
-			rispostaAvversaria(formulanteScelto, gruppo, gruppoAvversario);
-			if (!gruppo.getCapo().isVivo()) {
-				return Stato.GIOCO_PERSO;
-			}
-			statoLocazione = StatoLocazione.IN_LOCAZIONE;
-			break;
-
-		case CHI_CORROMPE:
-			Logger.log("LocazioneBase.CHI_CORROMPE");
-			if (azione == Comando.ANNULLA) {
-				// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
-				return annullaScelta();
-			}
-			if (gruppo.getMonete() >= gruppo.getNumeroPersonaggi() * 2 && Dado.tira(10) > 3) {
-				gruppo.subMonete(gruppo.getNumeroPersonaggi() * 2);
-				BusEventi.pubblica(new NotificaTestoFrase(gruppo.chiMaiuscolo() + " ha ottenuto un passaggio sicuro."));
-				setOggetto(null);
-
-				offerta = gruppoAvversario.getCapo().getOfferta(Comando.CORRUZIONE);
-				if (offerta != null && offerta.isFattibile(gruppo, gruppoAvversario)) {
-					BusEventi.pubblica(new NotificaTestoFrase(offerta.getDescrizione(gruppo, gruppoAvversario)));
-					if (offerta.isGratuita(gruppo, gruppoAvversario)) {
-						offerta.accetta(gruppo, gruppoAvversario);
-					} else {
-						BusEventi.pubblica(new NotificaTestoFrase("Accetta?"));
-						BusEventi.pubblica(new RichiestaSelezioneSiNo());
-						statoLocazione = StatoLocazione.ACCETTA_OFFERTA;
-						return Stato.IN_LOCAZIONE;
-					}
 				} else {
-					Logger.log("Mancano i prerequisiti per l'offerta");
+					Personaggio p = gruppo.getPersonaggio(azione);
+					BusEventi.pubblica(new NotificaTestoFrase("Il tentativo di corruzione " + p.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
+							" non ha avuto successo."));
+					opzioneCorruzioneDisponibile = false;
+					opzioneAmiciziaDisponibile = false;
+					statoLocazione = StatoLocazione.IN_LOCAZIONE;
+					break;
 				}
-				setCompleta(true);
-				return Stato.FINE_LOCAZIONE;
-			} else {
-				Personaggio p = gruppo.getPersonaggio(azione);
-				BusEventi.pubblica(new NotificaTestoFrase("Il tentativo di corruzione " + p.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
-						" non ha avuto successo."));
-				opzioneCorruzioneDisponibile = false;
-				opzioneAmiciziaDisponibile = false;
-				statoLocazione = StatoLocazione.IN_LOCAZIONE;
-				break;
-			}
 
-		case CHI_FA_AMICIZIA:
-			Logger.log("LocazioneBase.CHI_FA_AMICIZIA (azione " + azione + ")");
-			if (azione == Comando.ANNULLA) {
-				// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
-				return annullaScelta();
-			}
-			Personaggio personaggio = gruppo.getPersonaggio(azione);
-			int tiroDelDado = Dado.tira(12);
-			Logger.log("Carisma personaggio: " + personaggio.getCarisma() + "; tiro del dado: " + tiroDelDado);
-			if (personaggio.getCarisma() > tiroDelDado) {
-				personaggio.addCarisma(1);
-				haStrettoAmicizia = true;
-				BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-						Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " riesce a stringere amicizia."));
-
-				offerta = gruppoAvversario.getCapo().getOfferta(Comando.AMICIZIA);
-				if (offerta != null && offerta.isFattibile(gruppo, gruppoAvversario)) {
-					BusEventi.pubblica(new NotificaTestoFrase(offerta.getDescrizione(gruppo, gruppoAvversario)));
-					if (offerta.isGratuita(gruppo, gruppoAvversario)) {
-						offerta.accetta(gruppo, gruppoAvversario);
-					} else {
-						BusEventi.pubblica(new NotificaTestoFrase("Accetta?"));
-						BusEventi.pubblica(new RichiestaSelezioneSiNo());
-						statoLocazione = StatoLocazione.ACCETTA_OFFERTA;
-						return Stato.IN_LOCAZIONE;
-					}
-				} else {
-					Logger.log("Mancano i prerequisiti per l'offerta");
+			case CHI_FA_AMICIZIA:
+				Logger.log("LocazioneBase.CHI_FA_AMICIZIA (azione " + azione + ")");
+				if (azione == Comando.ANNULLA) {
+					// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
+					return annullaScelta();
 				}
-				setCompleta(true);
-				return Stato.FINE_LOCAZIONE;
-			} else {
-				int spregio = Dado.tira(5);
-				String descrizione = null;
-				switch (spregio) {
-					case 1:
-						ClasseIncantesimo quale = ClasseIncantesimo.casuale();
-						if (gruppo.getIncantesimi(quale) > 0) {
-							descrizione = "perde un " + quale.getNomeSingolare() + '.';
-							gruppo.subIncantesimi(quale, 1);
-						}
-						break;
-					case 2:
-						Personaggio avversario = gruppoAvversario.getCapo();
-						int ferite = Dado.tiraAncheAUnaFaccia(avversario.getSalute());
-						if (ferite < 20) {
-							descrizione = "riceve alcune lievi ferite.";
-						} else if (ferite > 40) {
-							descrizione = "riceve gravi ferite.";
+				Personaggio personaggio = gruppo.getPersonaggio(azione);
+				int tiroDelDado = Dado.tira(12);
+				Logger.log("Carisma personaggio: " + personaggio.getCarisma() + "; tiro del dado: " + tiroDelDado);
+				if (personaggio.getCarisma() > tiroDelDado) {
+					personaggio.addCarisma(1);
+					haStrettoAmicizia = true;
+					BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+							Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " riesce a stringere amicizia."));
+
+					offerta = gruppoAvversario.getCapo().getOfferta(Comando.AMICIZIA);
+					if (offerta != null && offerta.isFattibile(gruppo, gruppoAvversario)) {
+						BusEventi.pubblica(new NotificaTestoFrase(offerta.getDescrizione(gruppo, gruppoAvversario)));
+						if (offerta.isGratuita(gruppo, gruppoAvversario)) {
+							offerta.accetta(gruppo, gruppoAvversario);
 						} else {
-							descrizione = "riceve alcune ferite.";
+							BusEventi.pubblica(new NotificaTestoFrase("Accetta?"));
+							BusEventi.pubblica(new RichiestaSelezioneSiNo());
+							statoLocazione = StatoLocazione.ACCETTA_OFFERTA;
+							return Stato.IN_LOCAZIONE;
 						}
-						personaggio.subSalute(ferite, avversario, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
-						break;
-					case 3:
-						if (gruppo.getMonete() > 0) {
-							descrizione = "perde alcune monete.";
-							int quanteMonetePerde = Dado.tira(5);
-							if (quanteMonetePerde > gruppo.getMonete()) {
-								quanteMonetePerde = gruppo.getMonete();
-							}
-							gruppo.subMonete(quanteMonetePerde);
-						}
-						break;
-					case 4:
-						if (gruppo.getPreziosi() > 0) {
-							descrizione = "perde alcuni preziosi.";
-							int quantiPreziosiPerde = Dado.tira(5);
-							if (quantiPreziosiPerde > gruppo.getPreziosi()) {
-								quantiPreziosiPerde = gruppo.getPreziosi();
-							}
-							gruppo.subPreziosi(quantiPreziosiPerde);
-						}
-						break;
-					default:
-						break;
-				}
-
-				String s = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
-				if (descrizione != null) {
-					BusEventi.pubblica(new NotificaTestoFrase("Non solo " + s + " non riesce a stringere amicizia, ma in una breve colluttazione " + descrizione));
-					// Non sapendo cosa andiamo a perdere rinfreschiamo tutto
-					BusEventi.pubblica(new InternoRichiestaRefreshUI());
-				} else {
-					BusEventi.pubblica(new NotificaTestoFrase(s + " non riesce a stringere amicizia."));
-				}
-				opzioneAmiciziaDisponibile = false;
-				statoLocazione = StatoLocazione.IN_LOCAZIONE;
-				break;
-			}
-
-		case ACCETTA_OFFERTA:
-			if (azione == Comando.SI) {
-				offerta.accetta(gruppo, gruppoAvversario);
-			}
-			setCompleta(true);
-			return Stato.FINE_LOCAZIONE;
-
-		case CONFERMA_FUGA:
-			if (azione == Comando.SI) {
-				setCompleta(false);
-				setOggetto(null);
-				gruppo.fugge();
-				if (!gruppo.getCapo().isVivo()) {
-					return Stato.GIOCO_PERSO;
-				} else {
+					} else {
+						Logger.log("Mancano i prerequisiti per l'offerta");
+					}
+					setCompleta(true);
 					return Stato.FINE_LOCAZIONE;
+				} else {
+					int spregio = Dado.tira(5);
+					String descrizione = null;
+					switch (spregio) {
+						case 1:
+							ClasseIncantesimo quale = ClasseIncantesimo.casuale();
+							if (gruppo.getIncantesimi(quale) > 0) {
+								descrizione = "perde un " + quale.getNomeSingolare() + '.';
+								gruppo.subIncantesimi(quale, 1);
+							}
+							break;
+						case 2:
+							Personaggio avversario = gruppoAvversario.getCapo();
+							int ferite = Dado.tiraAncheAUnaFaccia(avversario.getSalute());
+							if (ferite < 20) {
+								descrizione = "riceve alcune lievi ferite.";
+							} else if (ferite > 40) {
+								descrizione = "riceve gravi ferite.";
+							} else {
+								descrizione = "riceve alcune ferite.";
+							}
+							personaggio.subSalute(ferite, avversario, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
+							break;
+						case 3:
+							if (gruppo.getMonete() > 0) {
+								descrizione = "perde alcune monete.";
+								int quanteMonetePerde = Dado.tira(5);
+								if (quanteMonetePerde > gruppo.getMonete()) {
+									quanteMonetePerde = gruppo.getMonete();
+								}
+								gruppo.subMonete(quanteMonetePerde);
+							}
+							break;
+						case 4:
+							if (gruppo.getPreziosi() > 0) {
+								descrizione = "perde alcuni preziosi.";
+								int quantiPreziosiPerde = Dado.tira(5);
+								if (quantiPreziosiPerde > gruppo.getPreziosi()) {
+									quantiPreziosiPerde = gruppo.getPreziosi();
+								}
+								gruppo.subPreziosi(quantiPreziosiPerde);
+							}
+							break;
+						default:
+							break;
+					}
+
+					String s = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
+					if (descrizione != null) {
+						BusEventi.pubblica(new NotificaTestoFrase("Non solo " + s + " non riesce a stringere amicizia, ma in una breve colluttazione " + descrizione));
+						// Non sapendo cosa andiamo a perdere rinfreschiamo tutto
+						BusEventi.pubblica(new InternoRichiestaRefreshUI());
+					} else {
+						BusEventi.pubblica(new NotificaTestoFrase(s + " non riesce a stringere amicizia."));
+					}
+					opzioneAmiciziaDisponibile = false;
+					statoLocazione = StatoLocazione.IN_LOCAZIONE;
+					break;
 				}
-			} else if (azione == Comando.NO) {
-				// Rinunciare alla fuga non fa trascorrere il turno
-				return annullaScelta();
-			} else {
-				// Qualunque altro comando: si attende ancora il si' o il no
-				return Stato.ATTESA_SI_NO;
-			}
+
+			case ACCETTA_OFFERTA:
+				if (azione == Comando.SI) {
+					offerta.accetta(gruppo, gruppoAvversario);
+				}
+				setCompleta(true);
+				return Stato.FINE_LOCAZIONE;
+
+			case CONFERMA_FUGA:
+				if (azione == Comando.SI) {
+					setCompleta(false);
+					setOggetto(null);
+					gruppo.fugge();
+					if (!gruppo.getCapo().isVivo()) {
+						return Stato.GIOCO_PERSO;
+					} else {
+						return Stato.FINE_LOCAZIONE;
+					}
+				} else if (azione == Comando.NO) {
+					// Rinunciare alla fuga non fa trascorrere il turno
+					return annullaScelta();
+				} else {
+					// Qualunque altro comando: si attende ancora il si' o il no
+					return Stato.ATTESA_SI_NO;
+				}
 		}
 
 		Stato dopoGliEffetti = trascorriTurnoEffettiDiStato();
@@ -651,6 +650,7 @@ public abstract class LocazioneBase implements Locazione {
 		List<Comando> comandiPossibili = new ArrayList<>();
 		// Possiamo combattere? Oppure, vogliamo cambiare chi combatte?
 		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO || gruppo.getNumeroPersonaggiVivi() > 1) {
+			comandiPossibili.add(Comando.SINGOLO_ATTACCO);
 			comandiPossibili.add(Comando.COMBATTIMENTO);
 		}
 		// Se stiamo combattendo possiamo interrompere la schermaglia
@@ -952,7 +952,80 @@ public abstract class LocazioneBase implements Locazione {
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
 			return Stato.IN_LOCAZIONE;
 		}
+		if (!gruppo.getCapo().isVivo()) {
+			return Stato.GIOCO_PERSO;
+		}
 		return null;
+	}
+
+	private Optional<Stato> eseguiSingoloAttacco() {
+
+		Personaggio bersaglio = gruppoAvversario.getPersonaggioVivo();
+		if (bersaglio == null) {
+			setCompleta(true);
+			return Optional.of(Stato.FINE_LOCAZIONE);
+		}
+
+		BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(combattente, bersaglio));
+
+		Logger.log(combattente.getNome() + " attacca " + bersaglio.getNome());
+
+		Logger.log("Valutazione combattente -> bersaglio");
+		// Chi combatte con due armi ha una seconda fase, con l'arma secondaria, sullo stesso bersaglio
+		// (o sul prossimo vivo, se la prima l'ha ucciso)
+		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(combattente)) {
+			Arma arma = fase.getArma();
+			boolean colpisce = CalcolatoreCombattimento.colpisce(combattente, bersaglio, arma.getTipoDanno().getSuperTipo());
+			if (colpisce) {
+				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(combattente, bersaglio, arma, fase.getFattore());
+				bersaglio.applicaRisultatoCombattimento(risultato);
+				if (!bersaglio.isVivo()) {
+					registraUccisione(combattente, bersaglio);
+					Personaggio nuovoBersaglio = gruppoAvversario.getPersonaggioVivo();
+					if (nuovoBersaglio != null) {
+						bersaglio = nuovoBersaglio;
+					} else {
+						setCompleta(true);
+						return Optional.of(Stato.FINE_LOCAZIONE);
+					}
+				}
+			}
+		}
+		Logger.log("Valutazione bersaglio -> combattente");
+
+		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(bersaglio)) {
+			Arma arma = fase.getArma();
+			boolean colpisce = CalcolatoreCombattimento.colpisce(bersaglio, combattente, arma.getTipoDanno().getSuperTipo());
+			if (colpisce) {
+				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(bersaglio, combattente, arma, fase.getFattore());
+				combattente.applicaRisultatoCombattimento(risultato);
+				if (!combattente.isVivo()) {
+					if (gruppo.getCapo().isVivo()) {
+						statoLocazione = StatoLocazione.IN_LOCAZIONE;
+						return Optional.of(Stato.IN_LOCAZIONE);
+					} else {
+						return Optional.of(Stato.GIOCO_PERSO);
+					}
+				}
+			}
+		}
+
+		if (gruppoAvversario.getNumeroPersonaggiVivi() > gruppo.getNumeroPersonaggiVivi()) {
+			bersaglio = gruppoAvversario.getPersonaggioVivo();
+			String sb = bersaglio.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
+					" si disimpegna e attacca!";
+			BusEventi.pubblica(new NotificaTestoFrase(sb));
+			bersaglio.attacca(gruppo);
+		}
+		if (!gruppo.getCapo().isVivo()) {
+			return Optional.of(Stato.GIOCO_PERSO);
+		}
+		Stato dopoIlRound = dopoIlRound();
+		if (dopoIlRound != null) {
+			return Optional.of(dopoIlRound);
+		}
+
+		return Optional.empty();
 	}
 
 	private Stato gestisciCombattimento(Comando azione) {
@@ -966,7 +1039,6 @@ public abstract class LocazioneBase implements Locazione {
 		if (azione == Comando.PERSONAGGIO_1 || azione == Comando.PERSONAGGIO_2 || azione == Comando.PERSONAGGIO_3 ||
 			azione == Comando.PERSONAGGIO_4 || azione == Comando.PERSONAGGIO_5) {
 			combattente = gruppo.getPersonaggio(azione);
-			BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(combattente, gruppoAvversario.getPersonaggioVivo()));
 			impostaComandiPossibili();
 			return Stato.IN_COMBATTIMENTO;
 		}
@@ -981,75 +1053,9 @@ public abstract class LocazioneBase implements Locazione {
 			return Stato.IN_COMBATTIMENTO;
 		}
 		if (azione == Comando.COMBATTIMENTO || azione == Comando.TIMER) {
-			Personaggio bersaglio = gruppoAvversario.getPersonaggioVivo();
-			if (bersaglio == null) {
-				setCompleta(true);
-				return Stato.FINE_LOCAZIONE;
-			}
-			int danniBersaglio = bersaglio.getDanniInCombattimento();
-			int danniCombattente = combattente.getDanniInCombattimento();
-			Logger.log("Valutazione danno originale: danniBersaglio (" + bersaglio.getNome() + ") = " + danniBersaglio + ", danniCombattente (" + combattente.getNome() + ") = " + danniCombattente);
-
-
-			// Test per nuovo motore combattimento
-			Logger.log("---------- NUOVO MOTORE ----------");
-			Logger.log(combattente.getNome() + " attacca " + bersaglio.getNome());
-
-			Logger.log("Valutazione combattente -> bersaglio");
-			// Chi combatte con due armi ha una seconda fase, con l'arma secondaria, sullo stesso bersaglio
-			// (o sul prossimo vivo, se la prima l'ha ucciso)
-			for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(combattente)) {
-				Arma arma = fase.getArma();
-				boolean colpisce = CalcolatoreCombattimento.colpisce(combattente, bersaglio, arma.getTipoDanno().getSuperTipo());
-				if (colpisce) {
-					DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(combattente, bersaglio, arma, fase.getFattore());
-					bersaglio.applicaRisultatoCombattimento(risultato);
-					if (!bersaglio.isVivo()) {
-						registraUccisione(combattente, bersaglio);
-						Personaggio nuovoBersaglio = gruppoAvversario.getPersonaggioVivo();
-						if (nuovoBersaglio != null) {
-							bersaglio = nuovoBersaglio;
-						} else {
-							setCompleta(true);
-							return Stato.FINE_LOCAZIONE;
-						}
-					}
-				}
-			}
-			Logger.log("Valutazione bersaglio -> combattente");
-
-			for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(bersaglio)) {
-				Arma arma = fase.getArma();
-				boolean colpisce = CalcolatoreCombattimento.colpisce(bersaglio, combattente, arma.getTipoDanno().getSuperTipo());
-				if (colpisce) {
-					DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(bersaglio, combattente, arma, fase.getFattore());
-					combattente.applicaRisultatoCombattimento(risultato);
-					if (!combattente.isVivo()) {
-						if (gruppo.getCapo().isVivo()) {
-							statoLocazione = StatoLocazione.IN_LOCAZIONE;
-							return Stato.IN_LOCAZIONE;
-						} else {
-							return Stato.GIOCO_PERSO;
-						}
-					}
-				}
-			}
-
-			BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(combattente, bersaglio));
-
-			if (gruppoAvversario.getNumeroPersonaggiVivi() > gruppo.getNumeroPersonaggiVivi()) {
-				bersaglio = gruppoAvversario.getPersonaggioVivo();
-                String sb = bersaglio.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
-                        " si disimpegna e attacca!";
-				BusEventi.pubblica(new NotificaTestoFrase(sb));
-				bersaglio.attacca(gruppo);
-			}
-			if (!gruppo.getCapo().isVivo()) {
-				return Stato.GIOCO_PERSO;
-			}
-			Stato dopoIlRound = dopoIlRound();
-			if (dopoIlRound != null) {
-				return dopoIlRound;
+			Optional<Stato> stato = eseguiSingoloAttacco();
+			if (stato.isPresent()) {
+				return stato.get();
 			}
 		}
 		if (azione == Comando.MAPPA) {
@@ -1121,71 +1127,76 @@ public abstract class LocazioneBase implements Locazione {
 		BusEventi.pubblica(new InternoMessaggio("LocazioneBase.IN_LOCAZIONE, Comando: " + azione));
 		if (azione != null) {
 			switch (azione) {
-			case COMBATTIMENTO:
-				statoLocazione = StatoLocazione.CHI_COMBATTE;
-				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-				
-			case INCANTESIMO:
-				statoLocazione = StatoLocazione.CHI_FORMULA;
-				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-				
-			case CORRUZIONE:
-				statoLocazione = StatoLocazione.CHI_CORROMPE;
-				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-				
-			case AMICIZIA:
-				statoLocazione = StatoLocazione.CHI_FA_AMICIZIA;
-				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 
-			case MAPPA:
-				return Stato.MAPPA;
+				case SINGOLO_ATTACCO:
+					statoLocazione = StatoLocazione.CHI_ESEGUE_SINGOLO_ATTACCO;
+					return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 
-			case INVENTARIO:
-				return Stato.INVENTARIO;
+				case COMBATTIMENTO:
+					statoLocazione = StatoLocazione.CHI_COMBATTE;
+					return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 
-			case POZIONE_SALUTE:
-				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE;
-				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
-				
-			case POZIONE_SALUTE_GRANDE:
-				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE_GRANDE;
-				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+				case INCANTESIMO:
+					statoLocazione = StatoLocazione.CHI_FORMULA;
+					return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 
-			case POZIONE_MAGIA:
-				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA;
-				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+				case CORRUZIONE:
+					statoLocazione = StatoLocazione.CHI_CORROMPE;
+					return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 
-			case POZIONE_MAGIA_GRANDE:
-				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA_GRANDE;
-				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+				case AMICIZIA:
+					statoLocazione = StatoLocazione.CHI_FA_AMICIZIA;
+					return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 
-			case FUGA:
-				chiediConfermaPerLaFuga();
-				statoLocazione = StatoLocazione.CONFERMA_FUGA;
-				BusEventi.pubblica(new RichiestaSelezioneSiNo());
-				return Stato.ATTESA_SI_NO;
-				
-			case AIUTO:
-				for (Personaggio personaggio : gruppo.getPersonaggi()) {
-					BusEventi.pubblica(new NotificaTestoFrase(personaggio.getDescrizione()));
-				}
-				int numeroAvversari = gruppoAvversario.getNumeroPersonaggiVivi();
-				Personaggio p = gruppoAvversario.getCapo();
-				StringBuilder sb = new StringBuilder(gruppo.chiMaiuscolo()).append(" sta affrontando ");
-				if (numeroAvversari == 1) {
-					sb.append(p.getAIS()).append(p.getNomeSingolare());
-				} else {
-					sb.append(Misc.getCardinaleM(numeroAvversari)).append(' ').append(p.getNomePlurale());
-				}
-				sb.append('.');
-				BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
-				BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
-				// Ridescrivere la locazione non è un'azione: si torna subito, senza passare
-				// dalla coda di impostaAzioni che farebbe trascorrere un turno.
-				return Stato.IN_LOCAZIONE;
+				case MAPPA:
+					return Stato.MAPPA;
 
-			default:
-				break;
+				case INVENTARIO:
+					return Stato.INVENTARIO;
+
+				case POZIONE_SALUTE:
+					statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE;
+					return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+
+				case POZIONE_SALUTE_GRANDE:
+					statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE_GRANDE;
+					return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+
+				case POZIONE_MAGIA:
+					statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA;
+					return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+
+				case POZIONE_MAGIA_GRANDE:
+					statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA_GRANDE;
+					return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+
+				case FUGA:
+					chiediConfermaPerLaFuga();
+					statoLocazione = StatoLocazione.CONFERMA_FUGA;
+					BusEventi.pubblica(new RichiestaSelezioneSiNo());
+					return Stato.ATTESA_SI_NO;
+
+				case AIUTO:
+					for (Personaggio personaggio : gruppo.getPersonaggi()) {
+						BusEventi.pubblica(new NotificaTestoFrase(personaggio.getDescrizione()));
+					}
+					int numeroAvversari = gruppoAvversario.getNumeroPersonaggiVivi();
+					Personaggio p = gruppoAvversario.getCapo();
+					StringBuilder sb = new StringBuilder(gruppo.chiMaiuscolo()).append(" sta affrontando ");
+					if (numeroAvversari == 1) {
+						sb.append(p.getAIS()).append(p.getNomeSingolare());
+					} else {
+						sb.append(Misc.getCardinaleM(numeroAvversari)).append(' ').append(p.getNomePlurale());
+					}
+					sb.append('.');
+					BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
+					BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
+					// Ridescrivere la locazione non è un'azione: si torna subito, senza passare
+					// dalla coda di impostaAzioni che farebbe trascorrere un turno.
+					return Stato.IN_LOCAZIONE;
+
+				default:
+					break;
 			}
 		}
 		return null;
@@ -1203,12 +1214,33 @@ public abstract class LocazioneBase implements Locazione {
 		}
 	}
 
+	/**
+	 * A differenza di CHI_COMBATTE/IN_COMBATTIMENTO (che avvia una mischia a round continui
+	 * scandita da Comando.TIMER), qui si esegue subito un solo round con eseguiSingoloAttacco()
+	 * e si torna direttamente IN_LOCAZIONE.
+	 */
+	private Stato gestisciChiEsegueSingoloAttacco(Comando azione) {
+		Logger.log("LocazioneBase.CHI_ESEGUE_SINGOLO_ATTACCO");
+		combattente = gruppo.getPersonaggio(azione);
+		String nome = combattente.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
+		BusEventi.pubblica(new NotificaTestoFrase(nome + " lancia un attacco."));
+		opzioneAmiciziaDisponibile = false;
+		opzioneCorruzioneDisponibile = false;
+		Stato esito = eseguiSingoloAttacco().orElse(Stato.IN_LOCAZIONE);
+		combattente = null;
+		statoLocazione = StatoLocazione.IN_LOCAZIONE;
+		if (esito == Stato.IN_LOCAZIONE) {
+			impostaComandiPossibili();
+		}
+		return esito;
+	}
+
 	private void gestisciChiCombatte(Comando azione) {
 		Logger.log("LocazioneBase.CHI_COMBATTE");
 		combattente = gruppo.getPersonaggio(azione);
 		String nome = combattente.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
-		BusEventi.pubblica(new NotificaTestoFrase(nome + " si appresta al combattimento."));
-		BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(combattente, gruppoAvversario.getPersonaggioVivo()));
+		BusEventi.pubblica(new NotificaTestoFrase(nome + " inizia il combattimento."));
+//		BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(combattente, gruppoAvversario.getPersonaggioVivo()));
 		opzioneAmiciziaDisponibile = false;
 		opzioneCorruzioneDisponibile = false;
 		statoLocazione = StatoLocazione.IN_COMBATTIMENTO;

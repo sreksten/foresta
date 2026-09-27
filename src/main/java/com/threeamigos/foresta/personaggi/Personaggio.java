@@ -146,10 +146,6 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
 	 */
     void addSaluteMassima(int quantita, String note);
 	/**
-	 * Quanti danni fa normalmente il personaggio in combattimento
-	 */
-    int getDanniInCombattimento();
-	/**
 	 * Incrementa il livello di magia del personaggio; non puo' superare il livello massimo
 	 */
     void addMagia(int quantita);

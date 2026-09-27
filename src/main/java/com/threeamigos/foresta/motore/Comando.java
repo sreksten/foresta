@@ -19,6 +19,7 @@ public enum Comando {
 	MAGO,
 
 	// Le scelte tipiche all'interno di una locazione standard
+	SINGOLO_ATTACCO,
 	COMBATTIMENTO,
 	INTERRUZIONE_COMBATTIMENTO,
 	INCANTESIMO,

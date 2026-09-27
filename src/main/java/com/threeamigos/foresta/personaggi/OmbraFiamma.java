@@ -291,9 +291,4 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	public boolean isImmortale() {
 		return true;
 	}
-
-	@Override
-	public int getDanniInCombattimento() {
-		return 100;
-	}
 }

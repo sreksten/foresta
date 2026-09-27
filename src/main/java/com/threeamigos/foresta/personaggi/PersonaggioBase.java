@@ -172,17 +172,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		BusEventi.pubblica(new NotificaVariazioneStatoVitalePersonaggio(this, true));
 	}
 
-	//FIXME metodo da rimuovere quando passiamo al nuovo motore di combattimento
-	public int getDanniInCombattimento() {
-
-		double danni = Math.max(0, (getSalute() + getCoraggio()) / 10 + getValore() - getStanchezza() - Dado.tira(-5, +5));
-		danni = danni * getMoltiplicatoreDanniFisici();
-
-		Logger.log((getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)) + " (" + getSalute() + "/"
-				+ getSaluteMassima() + ") fa " + danni + " danni.");
-		return (int)danni;
-	}
-
 	/**
 	 * Quanti bersagli colpisce un incantesimo MULTIPLO: il NUMERO_BERSAGLI calcolato dalle caratteristiche (con il
 	 * moltiplicatore di classe, vedi calcolaNumeroBersagli) più i modificatori di bastoni e libri.
