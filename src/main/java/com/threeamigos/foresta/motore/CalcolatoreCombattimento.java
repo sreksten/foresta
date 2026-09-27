@@ -384,17 +384,26 @@ public class CalcolatoreCombattimento {
             dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.INCIAMPO);
         }
 
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO)) {
-            Logger.log("Con difensore già SPAVENTATO");
+        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.IMMOBILIZZATO) &&
+                (tipoDanno == TipoDanno.CONTUNDENTE || tipoDanno == TipoDanno.TERRA)) {
+            Logger.log("Con difensore già IMMOBILIZZATO, tipo danno CONTUNDENTE o TERRA: Impatto Rigido");
+            moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d;
+            dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.IMPATTO_RIGIDO);
+        }
+
+        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO) || difensore.hasEffettoDiStato(TipoEffettoDiStato.CONFUSO)) {
+            TipoEffettoDiStato statoAttivo = difensore.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO) ?
+                    TipoEffettoDiStato.SPAVENTATO : TipoEffettoDiStato.CONFUSO;
+            Logger.log("Con difensore già " + statoAttivo.getDescrizione());
             if (tipoDanno == TipoDanno.ARCANO) {
-                Logger.log("tipo danno ARCANO: Sovraccarico Mentale, trasforma la paura in STORDITO pesante");
-                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.SPAVENTATO);
+                Logger.log("tipo danno ARCANO: Sovraccarico Mentale, trasforma lo stato in STORDITO pesante");
+                dannoRisultante.rimuoviEffettoDiStato(statoAttivo);
                 dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.STORDITO, Dado.tira(2), 0);
                 dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SOVRACCARICO_MENTALE);
             } else if (tipoDanno.getSuperTipo() == SupertipoDanno.FISICO) {
-                Logger.log("danno FISICO: Shock di Realtà, interrompe subito la paura");
+                Logger.log("danno FISICO: Shock di Realtà, interrompe subito lo stato");
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.2d;
-                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.SPAVENTATO);
+                dannoRisultante.rimuoviEffettoDiStato(statoAttivo);
                 dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SHOCK_DI_REALTA);
             }
         }

@@ -69,13 +69,15 @@ public enum TipoInterazioneConEffettiDiStato {
             Arrays.asList(TipoDanno.TERRA, TipoDanno.CONTUNDENTE),
             "Inciampo"),
 
-    // Interazioni con SPAVENTATO
+    // Interazioni con SPAVENTATO / CONFUSO
     // + ARCANO
-    // Trasforma la paura in uno STORDITO pesante (1-2 turni)
-    SOVRACCARICO_MENTALE(TipoEffettoDiStato.SPAVENTATO, TipoDanno.ARCANO, "Sovraccarico Mentale"),
+    // Trasforma lo stato in uno STORDITO pesante (1-2 turni)
+    SOVRACCARICO_MENTALE(Arrays.asList(TipoEffettoDiStato.SPAVENTATO, TipoEffettoDiStato.CONFUSO),
+            Collections.singletonList(TipoDanno.ARCANO),
+            "Sovraccarico Mentale"),
     // + danno FISICO (qualsiasi tipo)
-    // Il dolore acuto interrompe subito la paura e infligge il 20% di danno in più
-    SHOCK_DI_REALTA(Collections.singletonList(TipoEffettoDiStato.SPAVENTATO),
+    // Il dolore acuto interrompe subito lo stato e infligge il 20% di danno in più
+    SHOCK_DI_REALTA(Arrays.asList(TipoEffettoDiStato.SPAVENTATO, TipoEffettoDiStato.CONFUSO),
             Arrays.asList(TipoDanno.TAGLIENTE, TipoDanno.PERFORANTE, TipoDanno.CONTUNDENTE),
             "Shock di Realtà"),
 
@@ -104,6 +106,13 @@ public enum TipoInterazioneConEffettiDiStato {
     // + FUOCO
     // Il veleno si incendia: rimuove AVVELENATO, applica BRUCIATO, piccolo bonus di danno (effetto simile a Esplosione di gas, ma nel verso opposto)
     VAMPATA_TOSSICA(TipoEffettoDiStato.AVVELENATO, TipoDanno.FUOCO, "Vampata Tossica"),
+
+    // Interazioni con IMMOBILIZZATO
+    // + CONTUNDENTE / TERRA
+    // Il bersaglio non può assecondare il colpo muovendo le gambe: +30% danno
+    IMPATTO_RIGIDO(Collections.singletonList(TipoEffettoDiStato.IMMOBILIZZATO),
+            Arrays.asList(TipoDanno.CONTUNDENTE, TipoDanno.TERRA),
+            "Impatto Rigido"),
 
     // Interazioni con SANGUINAMENTO
     // + ACQUA

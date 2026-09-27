@@ -29,7 +29,7 @@ public enum TipoEffettoDiStato {
 
     // SPAVENTATO (Fear): Costringe il bersaglio a fuggire lontano dalla fonte della paura.
     // 🔮 ARCANO ➔ Sovraccarico Mentale: (Vedi CONFUSO) Trasforma la paura in uno STORDITO pesante di 1-2 turni.
-    // 🔨 FISICO ➔ Shock di Realtà: Il dolore fisico acuto interrompe immediatamente lo stato di paura e infligge il 20% di danno in più.
+    // 🔨 FISICO ➔ Shock di Realtà: (Vedi CONFUSO) Il dolore fisico acuto interrompe immediatamente lo stato di paura e infligge il 20% di danno in più.
     SPAVENTATO("Spaventato"),
 
     // =========================================================================
@@ -65,9 +65,9 @@ public enum TipoEffettoDiStato {
     // =========================================================================
 
     // CONFUSO (Confused): Il bersaglio attacca alleati o nemici a caso, oppure vaga senza meta.
-    // 🔮 ARCANO ➔ Sovraccarico Mentale: L'impatto trasforma istantaneamente la Confusione in uno STORDITO (Stun) pesante che dura 1 o 2 turni.
+    // 🔮 ARCANO ➔ Sovraccarico Mentale: (Vedi SPAVENTATO) L'impatto trasforma istantaneamente la Confusione in uno STORDITO (Stun) pesante che dura 1 o 2 turni.
     // 🌌 VUOTO ➔ Follia Cosmica: Il bersaglio subisce il 50% di danni in più e subisce un malus permanente alla statistica di Attacco Magico o Resistenza Mentale.
-    // 🔨 FISICO ➔ Shock di Realtà: Qualsiasi danno fisico ricevuto interrompe immediatamente lo stato CONFUSO.
+    // 🔨 FISICO ➔ Shock di Realtà: (Vedi SPAVENTATO) Qualsiasi danno fisico ricevuto interrompe immediatamente lo stato CONFUSO e infligge il 20% di danno in più.
     CONFUSO("Confuso"),
 
     // ACCECATO (Blinded): Riduce drasticamente la precisione degli attacchi fisici o la gittata degli incantesimi.
