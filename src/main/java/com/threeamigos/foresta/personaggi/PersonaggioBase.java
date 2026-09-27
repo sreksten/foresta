@@ -413,6 +413,13 @@ public abstract class PersonaggioBase implements Personaggio {
 				attaccante.addSalute(eccedenza);
 			}
 		}
+
+		if (risultato.isDiluizioneEmaticaAttiva()) {
+			md.getEffettiDiStato().stream()
+					.filter(effetto -> effetto.getTipoEffettoDiStato() == TipoEffettoDiStato.SANGUINAMENTO)
+					.findFirst()
+					.ifPresent(effetto -> effetto.setDanniNelTempo(effetto.getDanniNelTempo() / 2));
+		}
 	}
 
 	/**

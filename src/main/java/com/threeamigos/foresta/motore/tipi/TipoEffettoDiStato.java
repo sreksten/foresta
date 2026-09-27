@@ -37,8 +37,8 @@ public enum TipoEffettoDiStato {
     // =========================================================================
 
     // SANGUINAMENTO (Bleed): Danno fisico periodico causato da ferite aperte. Spesso ignora la difesa dell'armatura.
-    // 💧 ACQUA ➔ Diluizione Ematica: L'acqua lava la ferita, riducendo il danno da sanguinamento sul bersaglio, ma infetta l'area attorno creando una pozza di sangue calpestabile.
-    // ❄️ GHIACCIO ➔ Coagulazione Forzata: Il freddo blocca il dissanguamento (rimuove lo stato), ma congela i vasi sanguigni applicando immediatamente RALLENTATO.
+    // 💧 ACQUA ➔ Diluizione Ematica: L'acqua lava la ferita, dimezzando il danno periodico da sanguinamento e infliggendo il 5% di danno in più.
+    // ❄️ GHIACCIO ➔ Coagulazione Forzata: Il freddo blocca il dissanguamento (rimuove lo stato), congela i vasi sanguigni applicando immediatamente RALLENTATO e infligge il 5% di danno in più.
     SANGUINAMENTO("Sanguinamento"),
 
     // BRUCIATO (Burn): Danno da fuoco periodico. Può propagarsi ad altri elementi o oggetti vicini.

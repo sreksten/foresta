@@ -24,6 +24,7 @@ public class DannoRisultante {
     private boolean colpoDiGrazia = false;
     private int curaAdArea = 0;
     private int sifoneVitale = 0;
+    private boolean diluizioneEmaticaAttiva = false;
 
     public DannoRisultante(Personaggio attaccante, Personaggio bersaglio) {
         this.attaccante = attaccante;
@@ -100,6 +101,14 @@ public class DannoRisultante {
 
     public void setSifoneVitale(int sifoneVitale) {
         this.sifoneVitale = sifoneVitale;
+    }
+
+    public boolean isDiluizioneEmaticaAttiva() {
+        return diluizioneEmaticaAttiva;
+    }
+
+    public void setDiluizioneEmaticaAttiva(boolean diluizioneEmaticaAttiva) {
+        this.diluizioneEmaticaAttiva = diluizioneEmaticaAttiva;
     }
 
 }

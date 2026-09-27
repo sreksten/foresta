@@ -282,6 +282,24 @@ public class CalcolatoreCombattimento {
             dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.VAMPATA_TOSSICA);
         }
 
+        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SANGUINAMENTO)) {
+            Logger.log("Con difensore già SANGUINAMENTO");
+            if (tipoDanno == TipoDanno.ACQUA) {
+                Logger.log("tipo danno ACQUA: Diluizione Ematica, riduce il danno periodico da sanguinamento");
+                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.05d;
+                dannoRisultante.setDiluizioneEmaticaAttiva(true);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.DILUIZIONE_EMATICA);
+            } else if (tipoDanno == TipoDanno.GELO) {
+                Logger.log("tipo danno GELO: Coagulazione Forzata, rimuove SANGUINAMENTO e applica RALLENTATO");
+                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.05d;
+                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.SANGUINAMENTO);
+                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.RALLENTATO,
+                        calcolaDurataStato(difensore, TipoEffettoDiStato.RALLENTATO),
+                        calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.RALLENTATO));
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.COAGULAZIONE_FORZATA);
+            }
+        }
+
         if (difensore.hasEffettoDiStato(TipoEffettoDiStato.CONGELATO)) {
             Logger.log("Con difensore già CONGELATO");
             if (tipoDanno == TipoDanno.CONTUNDENTE) {

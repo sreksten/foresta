@@ -103,7 +103,15 @@ public enum TipoInterazioneConEffettiDiStato {
     // Interazioni con AVVELENATO
     // + FUOCO
     // Il veleno si incendia: rimuove AVVELENATO, applica BRUCIATO, piccolo bonus di danno (effetto simile a Esplosione di gas, ma nel verso opposto)
-    VAMPATA_TOSSICA(TipoEffettoDiStato.AVVELENATO, TipoDanno.FUOCO, "Vampata Tossica");
+    VAMPATA_TOSSICA(TipoEffettoDiStato.AVVELENATO, TipoDanno.FUOCO, "Vampata Tossica"),
+
+    // Interazioni con SANGUINAMENTO
+    // + ACQUA
+    // Riduce il danno periodico da sanguinamento, piccolo bonus di danno
+    DILUIZIONE_EMATICA(TipoEffettoDiStato.SANGUINAMENTO, TipoDanno.ACQUA, "Diluizione Ematica"),
+    // + GELO
+    // Rimuove SANGUINAMENTO, applica RALLENTATO, piccolo bonus di danno
+    COAGULAZIONE_FORZATA(TipoEffettoDiStato.SANGUINAMENTO, TipoDanno.GELO, "Coagulazione Forzata");
 
     private final Collection<TipoEffettoDiStato> precondizioni;
     private final Collection<TipoDanno> innescanti;
