@@ -382,6 +382,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito gestisciComandoInStatoPreGameSelezionaSalvataggioDaLeggere(Comando comando) {
 		if (comando != Comando.ANNULLA && GestoreSalvataggi.leggi(comando)) {
+			gruppo.getLocazioneCorrente().azzeraLocazione(gruppo);
 			stato = Stato.ATTESA_DIREZIONE;
 			BusEventi.pubblica(new InternoMostraSchermataGioco());
 			// Copia: la lista viva continua a ricevere i messaggi pubblicati da qui in poi

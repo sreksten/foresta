@@ -717,6 +717,9 @@ public abstract class LocazioneBase implements Locazione {
 	 * appare quello del drago
 	 */
 	public void azzeraLocazione(GruppoGiocatore g) {
+		// Per evitare che dopo un ricaricamento successivo a una partita persa rimanga in locazione il mostro
+		// che ha sconfitto il giocatore nella partita precedente.
+		gruppoAvversario.rimuoviPersonaggi();
 		if (isCompleta()) {
 			g.setLocazioneCorrenteVisitata();
 		}

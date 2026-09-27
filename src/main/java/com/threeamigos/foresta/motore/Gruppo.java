@@ -99,6 +99,11 @@ public abstract class Gruppo {
 		return personaggi.get(azione.ordinal() - Comando.PERSONAGGIO_1.ordinal());
 	}
 
+	public void rimuoviPersonaggi() {
+		personaggi.clear();
+		capo = null;
+	}
+
 	public void rimuoviPersonaggio(Personaggio p) {
 		if (p.equals(capo)) {
 			capo = null;
