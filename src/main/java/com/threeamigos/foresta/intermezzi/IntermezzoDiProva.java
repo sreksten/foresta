@@ -5,7 +5,7 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -35,12 +35,14 @@ public class IntermezzoDiProva implements Intermezzo {
 		// Il protagonista al centro, a due terzi dell'altezza, sotto il testo. L'alfabeto
 		// grande ha solo lettere, cifre e ' , . ? : niente accenti (si scrive e') né due punti.
 		ClassePersonaggio classeEroe = capo.getClasse();
-		return Arrays.asList(
-				new PaginaIntermezzo("La Foresta e' silenziosa, e " + eroe + " si inoltra fra gli alberi.")
-						.conElemento(ElementoIntermezzo.personaggio("eroe", classeEroe, 0.5, 2.0 / 3)),
-				new PaginaIntermezzo("Lontano, oltre le chiome, si alza un filo di fumo nero. Il Drago non dorme.")
-						.conElemento(ElementoIntermezzo.personaggio("eroe", classeEroe, 0.5, 2.0 / 3)),
-				new PaginaIntermezzo()
+		List<PaginaIntermezzo> pagineIntermezzo = new ArrayList<>();
+		pagineIntermezzo.add(new PaginaIntermezzo("La Foresta e' silenziosa, e " + eroe + " si inoltra fra gli alberi.")
+				.perSecondi(3)
+				.conElemento(ElementoIntermezzo.personaggio("eroe", classeEroe, 0.5, 2.0 / 3)));
+		pagineIntermezzo.add(new PaginaIntermezzo("Lontano, oltre le chiome, si alza un filo di fumo nero. Il Drago non dorme.")
+				.perSecondi(3)
+				.conElemento(ElementoIntermezzo.personaggio("eroe", classeEroe, 0.5, 2.0 / 3)));
+		PaginaIntermezzo finale = new PaginaIntermezzo()
 						.conSfondo(ImmagineIntermezzo.locazione(ClassiLocazione.RADURA))
 						// Il drago attraversa il cielo, piccolo e semitrasparente, avanti e indietro,
 						// guardando sempre dove va (l'immagine originale guarda a sinistra)
@@ -56,7 +58,13 @@ public class IntermezzoDiProva implements Intermezzo {
 								.specchiato()
 								.poi(Tappa.inSecondi(2).verso(0.7, 0.7)))
 						.conBattuta(BattutaIntermezzo.di("eremita", "Chi va là?").daSecondo(2))
-						.conBattuta(BattutaIntermezzo.di("eroe", "Mi chiamo " + eroe + ", e cerco il Drago."))
-						.conBattuta(BattutaIntermezzo.di("eremita", "Allora guarda in alto, e prega di non trovarlo.")));
+						.conBattuta(BattutaIntermezzo.di("eroe", "Mi chiamo " + eroe + ", e cerco il Drago."));
+		if (GruppoGiocatore.getIstanza().getCapo().getClasse() == ClassePersonaggio.OMBRAFIAMMA) {
+			finale.conBattuta(BattutaIntermezzo.di("eremita", "Non vorrei essere nei suoi panni."));
+		} else {
+			finale.conBattuta(BattutaIntermezzo.di("eremita", "Allora guarda in alto, e prega di non trovarlo."));
+		}
+		pagineIntermezzo.add(finale);
+		return pagineIntermezzo;
 	}
 }
