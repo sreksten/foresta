@@ -136,7 +136,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		return null;
 	}
 
-	SpriteInterface aggiungiEffettoDiStato(Personaggio personaggio, TipoEffettoDiStato effettoDiStato) {
+	SpriteInterface aggiungiEffettoDiStato(Personaggio personaggio, TipoEffettoDiStato effettoDiStato, DoomdarkColorModel.Color colore) {
 		CoordinateMD coordinate = mappaCoordinate.get(personaggio);
 		if (coordinate == null) {
 			return null;
@@ -146,7 +146,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		int x = coordinate.getX() + image.getWidth();
 		int yIniziale = coordinate.getY() + image.getHeight() / 3 - SOLLEVAMENTO_ANCORA;
 		SpriteEffetto sprite = new SpriteEffetto(effettoDiStato.getDescrizione(), DoomdarkFontMedium.getInstance(),
-				DoomdarkColorModel.Color.YELLOW, x, yIniziale + calcolaOffsetVerticale(yIniziale));
+				colore, x, yIniziale + calcolaOffsetVerticale(yIniziale));
 		effettiAttivi.add(new EffettoAttivo(yIniziale, sprite));
 		return sprite;
 	}

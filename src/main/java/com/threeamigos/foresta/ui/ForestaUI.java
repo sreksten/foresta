@@ -506,11 +506,16 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		TipoEffettoDiStato tipoEffettoDiStato = evento.getEffetto();
 		switch (evento.getTipo()) {
 			case AGGIUNTA:
-			case VARIAZIONE:
-				displayableCanvas.aggiungiEffettoDiStato(personaggio, tipoEffettoDiStato);
+			case RINFORZO:
+				displayableCanvas.aggiungiEffettoDiStato(personaggio, tipoEffettoDiStato, DoomdarkColorModel.Color.YELLOW);
 				break;
-            case RIMOZIONE:
-				// L'effetto è terminato.
+			case DECADIMENTO:
+				// Solo la durata scende di un turno: nessuno sprite, altrimenti si duplicherebbe
+				// quello già mostrato per l'AGGIUNTA/RINFORZO nello stesso round.
+				break;
+			case RIMOZIONE:
+				// L'effetto è terminato: sprite in grigio per segnalarlo.
+				displayableCanvas.aggiungiEffettoDiStato(personaggio, tipoEffettoDiStato, DoomdarkColorModel.Color.MEDIUM_GRAY);
 				break;
 			default:
 				throw new IllegalArgumentException("TipoVariazioneEffettoDiStato non gestito: " + evento.getTipo());

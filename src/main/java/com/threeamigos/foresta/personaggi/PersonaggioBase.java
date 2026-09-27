@@ -368,7 +368,19 @@ public abstract class PersonaggioBase implements Personaggio {
 	@Override
 	public void applicaRisultatoCombattimento(DannoRisultante risultato) {
 		subSalute(risultato.getDanno(), risultato.getAttaccante(), Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
-		for (EffettoDiStato effetto : risultato.getEffettiDiStatoDaAggiungere()) {
+
+		// Il risultato del combattimento potrebbe cercare di applicare più di una volta lo stesso effetto di stato;
+		// in questo caso, manteniamo solo il maggiore
+		Map<TipoEffettoDiStato, EffettoDiStato> mappaFiltrata = risultato.getEffettiDiStatoDaAggiungere().stream()
+				.collect(Collectors.toMap(
+						EffettoDiStato::getTipoEffettoDiStato, // Chiave della mappa: il tipo di stato (es. CONGELATO)
+						effetto -> effetto,       // Valore della mappa: l'oggetto effetto stesso
+						// Funzione di risoluzione conflitti: se la chiave esiste già, confronta le durate e tiene il maggiore
+						(effettoEsistente, nuovoEffetto) ->
+								nuovoEffetto.getDurata() > effettoEsistente.getDurata() ? nuovoEffetto : effettoEsistente
+				));
+
+		for (EffettoDiStato effetto : mappaFiltrata.values()) {
 			addEffettoDiStato(effetto.getTipoEffettoDiStato(), effetto.getDurata(), effetto.getDanniNelTempo());
 		}
 		for (TipoEffettoDiStato tipoEffettoDiStato: risultato.getEffettiDiStatoDaRimuovere()) {
@@ -1717,7 +1729,7 @@ public abstract class PersonaggioBase implements Personaggio {
 					equivalente.setDanniNelTempo(danniNelTempo);
 				}
 				BusEventi.pubblica(new NotificaVariazioneEffettoDiStatoPersonaggio(this,
-						NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.VARIAZIONE, tipoEffettoDiStato,
+						NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.RINFORZO, tipoEffettoDiStato,
 						equivalente.getDurata(), equivalente.getDanniNelTempo()));
 			}
 		} else {
@@ -1749,7 +1761,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			if (valoreAttuale > 0) {
 				effettoDiStato.setDurata(valoreAttuale);
 				BusEventi.pubblica(new NotificaVariazioneEffettoDiStatoPersonaggio(this,
-						NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.VARIAZIONE,
+						NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.DECADIMENTO,
 						effettoDiStato.getTipoEffettoDiStato(),
 						valorePrecedente, valoreAttuale));
 			} else {

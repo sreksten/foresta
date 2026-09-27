@@ -14,7 +14,8 @@ public class NotificaVariazioneEffettoDiStatoPersonaggio extends EventoSuPersona
 
     public enum TipoVariazione {
         AGGIUNTA,
-        VARIAZIONE,
+        RINFORZO,
+        DECADIMENTO,
         RIMOZIONE
     }
 
@@ -25,7 +26,7 @@ public class NotificaVariazioneEffettoDiStatoPersonaggio extends EventoSuPersona
 
     /**
      * @param personaggio il Personaggio che subisce la variazione dell'Effetto di Stato
-     * @param tipoVariazione il tipo di variazione (aggiunta, variazione, rimozione)
+     * @param tipoVariazione il tipo di variazione (aggiunta, rinforzo, decadimento, rimozione)
      * @param effetto l'Effetto di Stato che il personaggio subisce
      * @param valorePrecedente il valore precedente alla variazione (durata)
      * @param nuovoValore il valore successivo alla variazione (durata)
@@ -40,7 +41,7 @@ public class NotificaVariazioneEffettoDiStatoPersonaggio extends EventoSuPersona
     }
 
     /**
-     * @return il tipo di variazione (aggiunta, variazione, rimozione)
+     * @return il tipo di variazione (aggiunta, rinforzo, decadimento, rimozione)
      */
     public TipoVariazione getTipo() {
         return tipoVariazione;
