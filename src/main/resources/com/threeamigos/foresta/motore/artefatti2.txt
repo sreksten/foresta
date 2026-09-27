@@ -37,7 +37,7 @@ SPADA_0
     @la spada [COSMETICO]
 
 SPADA_1
-    @la [PREFISSO] spada
+    @la spada [PREFISSO]
     @la spada [AGGETTIVO]
     @la spada [COMPLEMENTO]
     @la spada [AGGETTIVO_ELEMENTALE]
@@ -63,7 +63,7 @@ SPADA_3
 
 # Senza effetti: solo colore
 COSMETICO
-    volante | rotante con rinterzo | d'ordinanza | del nonno | di latta | da collezione
+    rugginosa | arrugginita | d'ordinanza | del nonno | di latta | da collezione | da cucina | da esposizione
     in offerta speciale | fatta in casa | comprata al mercato | da souvenir | d'allenamento
     con l'etichetta ancora attaccata | ancora nella confezione | da cerimonia | usata una volta sola
     presa in prestito | senza lode e senza infamia | di ferro dolce | del rigattiere | di scorta
@@ -73,23 +73,23 @@ COSMETICO
 # file, così dal nome si capisce sempre che cosa fa la spada.
 # ---------------------------------------------------------------------------------------------
 
-# Aggettivi che stanno bene prima del nome: "la terribile spada"
+# Aggettivi che stanno bene anche prima del nome: "la terribile spada"
 PREFISSO
-    { immane | smisurata | sovrumana | inenarrabile | generosa | indomabile | mastodontica | formidabile | cruenta | poderosa }<mod:FORZA+2>
-    { valente | fiera | temuta | blasonata | promettente | conclamata | autentica | franca | gagliarda | subitanea | pronta | impetuosa | fulminea | vigorosa | smanettona | scalpitante | calibrata | istantanea | rozza | severa | bruta | massiccia | dura | grezza | tosta | fabbrile | orsina | bestiale | ciclopica | ferina | spaccapietre | picchiatrice | violenta | disordinata | minotaurica | barbarica | bulldozer | scaricatrice }<mod:FORZA+1>
+    { immane | smisurata | sovrumana | inarrestabile | inenarrabile | generosa | indomabile | mastodontica | formidabile | cruenta | poderosa }<mod:FORZA+2>
+    { valente | fiera | temuta | blasonata | promettente | conclamata | autentica | franca | gagliarda | subitanea | pronta | impetuosa | fulminea | vigorosa | scalpitante | calibrata | istantanea | rozza | severa | bruta | massiccia | dura | grezza | tosta | fabbrile | orsina | bestiale | ciclopica | ferina | violenta | disordinata | minotaurica | barbarica | scaricatrice }<mod:FORZA+1>
     { misera | meschina | vile | modesta | sottostimata | ordinaria | comune | infelice | tapina }<mod:FORZA-1>
     { lesta | scaltra | schiva | svelta | snella | fuggitiva | scaltrita | fluida }<mod:DESTREZZA+2>
-    { sottilissima | fugace | svanente | minuta | impalpabile | invisibile | sgattaiolante | libera | accurata | mirata | orologiaia | rigorosa | sacra | regolamentare | chiara | pignola | nitida | lieve | piumosa | minima | sobria | semplice | nuda | schietta | essenziale | volatile | agile | cristallina | saponetta | mosca | saltimbanca | farfallina | colibrì | fresca | riposata | scattante | risvegliata | mattiniera | motivata }<mod:DESTREZZA+1>
+    { sottilissima | fugace | svanente | minuta | impalpabile | invisibile | sgattaiolante | libera | accurata | mirata | orologiaia | rigorosa | sacra | regolamentare | chiara | pignola | nitida | lieve | piumosa | minima | sobria | semplice | nuda | schietta | essenziale | volatile | agile | cristallina | mosca | saltimbanca | farfallina | colibrì | fresca | scattante | risvegliata }<mod:DESTREZZA+1>
     { maldestra | incolta | pigra | tarda | pesante | rallentata | sghemba | rigida | sventata }<mod:DESTREZZA-1>
     { ferma | immobile | fissa | salda | perenne | statica | piombata | monumentale | quadrata | antica | vetusta | secolare | immortale | ferrea | invincibile | integra | eterna | ottusa | mattona | cementizia | trattorina | divanata }<mod:COSTITUZIONE+2>
     { grata | onesta | sicura | solida | capiente | tollerante | ampia | comoda | fornita | grave | lenta | saggia | flemmatica | calma | soporifera | ancorata | golemica | montana }<mod:COSTITUZIONE+1>
     { precaria | instabile | fragile | triste | pallida | malata | breve }<mod:COSTITUZIONE-1>
-    { acuta | lucida | fina | geniale | logica | direttoriale | architettata }<mod:INTELLIGENZA+2>
+    { acuta | lucida | fine | finissima | geniale | logica | direttoriale | architettata }<mod:INTELLIGENZA+2>
     { dotta | sapiente | sottile | arguta | ragionata | contabile | filosofica | archivistica | accademica | calcolata | arcana | veggente | pratica | esperta | tecnica | riflessiva | poetica | teorica | secchiona | esile }<mod:INTELLIGENZA+1>
     { stolta | cruda | grossolana | povera | smemorata | matricola | cieca }<mod:INTELLIGENZA-1>
     { retta | giusta | illuminata | santa | profonda | moderata | misurata | maestra }<mod:SAGGEZZA+2>
     { accorta | attenta | ispettiva | sentinella | portinaia | rilevatrice | meditativa | anziana | stoica | paziente | penitente | rassegnata | ottimista | incassatrice | passiva | serena | equilibrata | zen | buddista | distaccata }<mod:SAGGEZZA+1>
-    { vana | folle | ceca | distratta | confusa | sconsiderata | disorientata }<mod:SAGGEZZA-1>
+    { vana | folle | distratta | confusa | sconsiderata | disorientata }<mod:SAGGEZZA-1>
     { vaga | bella | splendida | nobile | illustre | magnifica | regale | carismatica }<mod:CARISMA+2>
     { propizia | simpatica | ammiccante | paracula | raccomandata | sanremese | leggera | fine | specchiata | narcisista | modaiola | vanitosa | diva }<mod:CARISMA+1>
     { mesta | cupa | ruvida | scontrosa | goffa | solitaria | burbera }<mod:CARISMA-1>
@@ -112,7 +112,7 @@ PREFISSO
     { rapida | celere | volante }<mod:VELOCITA+2>
     { rondinina | leprina | libellula | giocoliera | frecciata | slanciata | soffio | aerea | energetica | iperattiva | insonne | indefessa }<mod:VELOCITA+1>
     { bradipica | abbioccata | tardiva }<mod:VELOCITA-1>
-    { lumaca | intasata | bloccata | buroocratica }<mod:VELOCITA-2>
+    { lumaca | intasata | bloccata | burocratica }<mod:VELOCITA-2>
     { cheta | acquetta | silenziosa | ombra | occulta | segreta }<mod:FURTIVITA+2>
     { felina | sguizzante | seta | scalza | discreta | infiltrata | scout | pipistrello | spia | volpina | ladruncola | scroccona }<mod:FURTIVITA+1>
     { elefantesca | pasticciona | cascamorta | sguaiata | sgargiante | squillante | boato | sirena | sonaglio }<mod:FURTIVITA-1>
@@ -145,12 +145,12 @@ PREFISSO
     { cenerina | burnout | scarica }<mod:MAGIA-2>
     { estenuante | logorante | faticosa | spossante | sonnolenta }<mod:STANCHEZZA+2>
     { sonnecchiante | sbadigliante | rilassata | anfibia | tassina | postale | memory }<mod:STANCHEZZA+1>
-    { attiva | giornaliera | ricaricata }<mod:STANCHEZZA-1>
+    { attiva | giornaliera | ricaricata | riposata | mattiniera | motivata }<mod:STANCHEZZA-1>
 
 # Aggettivi dopo il nome: "la spada mozzarella"
 AGGETTIVO
     { titanica | colossale | pesantissima | monolitica }<mod:FORZA+2>
-    { muscolare | forzuta | sgobbona | impattante | dinamica | lanciata | aggressiva | cinghialesca | palettatrice | culturista | martella }<mod:FORZA+1>
+    { muscolare | forzuta | sgobbona | impattante | dinamica | lanciata | aggressiva | cinghialesca | palettatrice | culturista | martella | spaccapietre | picchiatrice | bulldozer }<mod:FORZA+1>
     { debole | gracile | flessibile | sedentaria | flaccida | impiegatizia | mozzarella }<mod:FORZA-1>
     { evasiva | sfuggente | anguilla | bilanciata }<mod:DESTREZZA+2>
     { leggerissima | sgusciante | geometrica | estiva | scontrina | svestita | disarmata }<mod:DESTREZZA+1>
@@ -171,9 +171,9 @@ AGGETTIVO
     { prescelta | fortunatissima | baciata }<mod:FORTUNA+2>
     { fragilissima | sopravvissuta | sorteggiata | salta-fila }<mod:FORTUNA+1>
     { sfigata | sfortunata }<mod:FORTUNA-1>
-    ingombrante<mod:CARICO_MASSIMO+2>
+    ridotta<mod:CARICO_MASSIMO+2>
     { spezzata | alberghiera }<mod:CARICO_MASSIMO+1>
-    ridotta<mod:CARICO_MASSIMO-1>
+    ingombrante<mod:CARICO_MASSIMO-1>
     zero<mod:CARICO_MASSIMO-2>
     autoaffilante<mod:CRITICO+3>
     affilatissima<mod:CRITICO+2>
@@ -197,7 +197,7 @@ AGGETTIVO
     apertura<mod:RESISTENZA_MAGICA-1>
     vedetta<mod:PERCEZIONE+2>
     guardalinee<mod:PERCEZIONE+1>
-    { zsciagurata | sfigatissima | nera | urlante | suprema }<mod:SOGGEZIONE+1>
+    { sciagurata | sfigatissima | nera | urlante | suprema }<mod:SOGGEZIONE+1>
     { cucciola | divertente }<mod:SOGGEZIONE-1>
     burocratica<mod:SOGGEZIONE-2>
     irritata<mod:FURIA+1>
@@ -371,7 +371,9 @@ COMPLEMENTO_ELEMENTALE
 AGGETTIVO_ARIA
     sibilante | eolica | tempestosa | alata | ventosa | sventolante | spifferante | ciclonica | turbinante | sbuffante | burrascosa | svolazzante
 COMPLEMENTO_ARIA
-    del Tornado | del Tifone | del Maestrale | della Brezza | del Ciclone | dello Sbuffo | del Sospiro | della Tramontana | dello Spiffero
+    del Tornado | del Tifone | della Brezza | del Ciclone | dello Sbuffo | del Sospiro
+    della Tramontana | del Grecale | del Vento di Levante | dello Scirocco | dell'Ostro | del Libeccio | del Vento di Ponente | del Maestrale
+    dello Zefìro | dello Spiffero
 EFFETTO_ARIA
     <danno:ARIA><descrizione:[DESCRIZIONE_ARIA]>{ <soprannome:[SOPRANNOME_ARIA]> | [^2.5] }
 SOPRANNOME_ARIA
@@ -381,7 +383,7 @@ DESCRIZIONE_ARIA
 
 # ACQUA
 AGGETTIVO_ACQUA
-    idrica | marittima | lacustre | torrenziale | ondosa | umida | bagnata | ad idromassaggio | fradicia | brodosa | fluviale | diluviante | inzuppata | gocciolante
+    idrica | marittima | lacustre | torrenziale | ondosa | umida | bagnata | a idromassaggio | fradicia | brodosa | fluviale | diluviante | inzuppata | gocciolante
 COMPLEMENTO_ACQUA
     dell'Oceano | dello Tsunami | della Cascata | del Diluvio | della Pozzanghera | del Gavettone | della Marea | del Nubifragio | della Cannella
 EFFETTO_ACQUA
@@ -543,6 +545,6 @@ COMPLEMENTO_MALEDIZIONE
 EFFETTO_MALEDIZIONE
     <danno:MALEDIZIONE><descrizione:[DESCRIZIONE_MALEDIZIONE]>{ <soprannome:[SOPRANNOME_MALEDIZIONE]> | [^2.5] }
 SOPRANNOME_MALEDIZIONE
-    Portasfiga | Malaugurio | Gatto Nero | Venerdì Diciassette | Iella | Civetta | Specchio Rotto | Scala Aperta | Menagramo | Cornetto
+    Portasfiga | Malaugurio | Gatto Nero | Venerdì Diciassette | Jella | Civetta | Specchio Rotto | Scala Aperta | Menagramo | Cornetto
 DESCRIZIONE_MALEDIZIONE
     che porta sfortuna a chi colpisce | che nessuno vuole prendere in prestito | che fa cadere il pane dalla parte imburrata
