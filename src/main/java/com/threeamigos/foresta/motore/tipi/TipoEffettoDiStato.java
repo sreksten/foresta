@@ -50,7 +50,6 @@ public enum TipoEffettoDiStato {
 
     // AVVELENATO (Poisoned): Danno periodico costante, spesso accompagnato da un malus alle statistiche.
     // 🧪 ACIDO ➔ Reazione Tossica: infligge il 15% di danno in più (non gestiamo corrosione/usura dell'armatura).
-    // ✨ SACRO / ☀️ LUCE ➔ Neutralizzazione: La luce divina purifica le tossine, rimuovendo lo stato AVVELENATO e convertendo il veleno residuo in una piccola cura per il bersaglio.
     // 🔥 FUOCO ➔ Vampata Tossica: Se il bersaglio avvelenato viene colpito da fuoco, il veleno si incendia: rimuove AVVELENATO, applica BRUCIATO e infligge il 30% di danno in più (effetto simile a Esplosione di Gas, vedi BRUCIATO, ma nel verso opposto).
     AVVELENATO("Avvelenato"),
 
