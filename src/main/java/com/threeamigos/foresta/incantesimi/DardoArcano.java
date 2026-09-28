@@ -3,6 +3,7 @@ package com.threeamigos.foresta.incantesimi;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.tipi.TipoDanno;
+import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -55,7 +56,8 @@ public class DardoArcano implements Arma {
 	 */
 	public static boolean puoLanciarlo(Personaggio personaggio) {
 		return personaggio.isVivo() && conosciutoDa(personaggio.getClasse())
-				&& personaggio.getMagia() >= costoLancio(personaggio.getClasse());
+				&& personaggio.getMagia() >= costoLancio(personaggio.getClasse())
+				&& !personaggio.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO);
 	}
 
 	private static int costoLancio(ClassePersonaggio classe) {
