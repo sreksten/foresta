@@ -52,6 +52,8 @@ import java.util.function.Supplier;
 // TODO: implementare gli intermezzi da alchimista, armaiolo, venditore di pergamene, incantatore che spiegano come funzionano
 // TODO: implementare intermezzi durante la notte tipo:
 //  - ma voi <negoziante> siete sempre aperti/non chiudete mai? parla quello che mi piomba in negozio alle tre del mattino/no, perché abbiamo clienti come te
+// TODO: gli oggetti venduti all'armaiolo probabilmente andrebbero anche distrutti alla fine della locazione per non riempirgli l'inventario
+// TODO: come ci sono locande sparse per la foresta, forse anche qualche negozio di armaiolo, alchimista, venditore di pergamene e incantatore male non farebbero
 
 // Bug noti ancora da correggere (dall'indagine sul codice): si spuntano togliendo la riga quando sono corretti.
 //
@@ -59,7 +61,7 @@ import java.util.function.Supplier;
 // FIXME Personaggi a livello 5 pesantemente armati non riescono neanche lontanamente a scalfire un boss come la Strega o il Lich
 //
 // UI
-// FIXME modalita' VERTICALE: DisplayableCanvasBarraIcone avanza di 32 con icone alte 64, e la finestra e' larga al massimo 400
+// FIXME modalità VERTICALE: DisplayableCanvasBarraIcone avanza di 32 con icone alte 64, e la finestra e' larga al massimo 400
 // FIXME schermi alti meno di 804 px: la barra delle icone copre il fondo del riquadro delle missioni
 
 public class Automa implements ControlloreDiGioco, Temporizzabile {

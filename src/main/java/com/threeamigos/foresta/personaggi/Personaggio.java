@@ -344,6 +344,12 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
 	Optional<RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento> puoEquipaggiare(Artefatto artefatto);
 
 	/**
+	 * Un Personaggio può formulare un incantesimo se ha abbastanza magia per farlo e se non è silenziato
+	 * @param classeIncantesimo il tipo di incantesimo che si vorrebbe lanciare
+	 */
+	boolean puoFormulare(ClasseIncantesimo classeIncantesimo);
+
+	/**
 	 * La forza di un personaggio, somma della forza base e dei modificatori di forza degli artefatti.
 	 */
     int getForza();

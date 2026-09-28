@@ -782,6 +782,11 @@ public abstract class PersonaggioBase implements Personaggio {
 		return quantita <= calcolaCaricoMassimo(md, this) - getCarico();
 	}
 
+	@Override
+	public boolean puoFormulare(ClasseIncantesimo classeIncantesimo) {
+		return getMagia() >= classeIncantesimo.getCostoLancio() && !hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO);
+	}
+
 	// CARICO MASSIMO
 
 	@Override

@@ -662,7 +662,7 @@ public abstract class LocazioneBase implements Locazione {
 		boolean incantesimoPossibile = gruppo.getPersonaggiVivi().stream().anyMatch(DardoArcano::puoLanciarlo);
 		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
 			if (gruppo.getIncantesimi(classeIncantesimo) > 0 &&
-					gruppo.getPersonaggiVivi().stream().anyMatch(p -> p.getMagia() >= classeIncantesimo.getCostoLancio())) {
+					gruppo.getPersonaggiVivi().stream().anyMatch(p -> p.puoFormulare(classeIncantesimo))) {
 				incantesimoPossibile = true;
 				break;
 			}
@@ -697,7 +697,7 @@ public abstract class LocazioneBase implements Locazione {
 		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO) {
 			comandiPossibili.add(Comando.INVENTARIO);
 		}
-		// Si puo' sempre ricorrere a una bella...
+		// Si può sempre ricorrere a una bella...
 		comandiPossibili.add(Comando.FUGA);
 		// E possiamo sempre richiedere di descrivere di nuovo la locazione
 		comandiPossibili.add(Comando.AIUTO);
@@ -1192,7 +1192,7 @@ public abstract class LocazioneBase implements Locazione {
 					BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
 					BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
 					// Ridescrivere la locazione non è un'azione: si torna subito, senza passare
-					// dalla coda di impostaAzioni che farebbe trascorrere un turno.
+					// dalla coda di si può sempre che farebbe trascorrere un turno.
 					return Stato.IN_LOCAZIONE;
 
 				default:
