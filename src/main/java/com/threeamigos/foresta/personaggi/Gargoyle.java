@@ -2,7 +2,10 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.motore.tipi.SupertipoDanno;
 import com.threeamigos.foresta.motore.tipi.TipoAttributo;
+import com.threeamigos.foresta.motore.tipi.TipoDanno;
+import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -269,5 +272,18 @@ public class Gargoyle extends PersonaggioBase implements Personaggio {
 	@Override
 	public boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo) {
 		return true;
+	}
+
+	@Override
+	public boolean isImmuneATipoDanno(TipoDanno tipoDanno) {
+		return tipoDanno.getSuperTipo() != SupertipoDanno.FISICO;
+	}
+
+	@Override
+	public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {
+		return effettoStato == TipoEffettoDiStato.SANGUINAMENTO ||
+				effettoStato == TipoEffettoDiStato.INFETTATO ||
+				effettoStato == TipoEffettoDiStato.AVVELENATO ||
+				effettoStato == TipoEffettoDiStato.IMMOBILIZZATO;
 	}
 }

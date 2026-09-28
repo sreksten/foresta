@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
@@ -113,7 +115,7 @@ public class CalcolatoreCombattimento {
         Logger.log(String.format("Difesa totale dopo stanchezza (STANCHEZZA %d): %f", difensore.getStanchezza(), difesaTotale));
 
         // 5. CALCOLO DELLA PROBABILITÀ FINALE DI COLPIRE
-        int probabilitaFinale = 75 + (int)((attaccoTotale - difesaTotale) * 2.0d);
+        int probabilitaFinale = 75 + (int) ((attaccoTotale - difesaTotale) * 2.0d);
         Logger.log("Probabilità finale di colpire: " + probabilitaFinale);
 
         // Limiti minimi e massimi (Cap) per il bilanciamento
@@ -163,6 +165,11 @@ public class CalcolatoreCombattimento {
         TipoDanno tipoDanno = arma.getTipoDanno();
         dannoRisultante.setTipoDanno(tipoDanno);
 
+        boolean immuneATipoDannoBase = difensore.isImmuneATipoDanno(tipoDanno);
+        if (immuneATipoDannoBase) {
+            BusEventi.pubblica(new InternoMessaggio(difensore.getNome() + " è immune al tipo di danno " + tipoDanno));
+        }
+
         // 1. CALCOLO STATISTICHE EFFETTIVE
         // Determina se l'attacco scala su FORZA (Fisico) o INTELLIGENZA (Magico/Elementale)
         int statOffensiva;
@@ -211,7 +218,7 @@ public class CalcolatoreCombattimento {
         }
         Logger.log(String.format("rapportoEfficacia (livello arma %d / livello attaccante %d) = %f", arma.getLivello(), attaccante.getLivello(), rapportoEfficacia));
 
-        double contributoEroe = (double)(statOffensiva * attaccante.getLivello()) / 5.0d;
+        double contributoEroe = (double) (statOffensiva * attaccante.getLivello()) / 5.0d;
         Logger.log(String.format("contributoEroe (statOffensiva %d * livello attaccante %d / 5 = %f", statOffensiva, attaccante.getLivello(), contributoEroe));
         // Il carattere della classe: il guerriero picchia, il mago incanta (Costanti.*_MOLTIPLICATORE_DANNI_*)
         double moltiplicatoreClasse = dannoNonFisico ? attaccante.getMoltiplicatoreDanniMagici() : attaccante.getMoltiplicatoreDanniFisici();
@@ -228,7 +235,7 @@ public class CalcolatoreCombattimento {
         // contrario, e il bonus valeva solo per gli attacchi elementali e magici.
         if (!dannoNonFisico && attaccante.hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
             // Il danno fisico scala con la salute persa: più è ferito, più forte colpisce
-            double percentualeSalutePerduta = 1.0d - ((double)attaccante.getSalute() / (double)attaccante.getSaluteMassima());
+            double percentualeSalutePerduta = 1.0d - ((double) attaccante.getSalute() / (double) attaccante.getSaluteMassima());
             dannoOffensivoGrezzo = dannoOffensivoGrezzo * (1.0d + percentualeSalutePerduta * 0.5d);
             Logger.log("dannoOffensivoGrezzo dopo BERSERK = " + dannoOffensivoGrezzo);
         }
@@ -239,256 +246,267 @@ public class CalcolatoreCombattimento {
         boolean criticoAutomatico = false;
         boolean purificazioneAttiva = false;
 
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
-            Logger.log("Con difensore già BAGNATO");
-            if (tipoDanno == TipoDanno.FULMINE) {
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.ELETTROCUZIONE);
-            } else if (tipoDanno == TipoDanno.GELO) {
-                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BAGNATO);
-                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.CONGELATO,
-                        calcolaDurataStato(difensore, TipoEffettoDiStato.CONGELATO),
-                        calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.CONGELATO));
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.CONGELAMENTO);
-            } else if (tipoDanno == TipoDanno.FUOCO) {
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 0.5d;
-                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BAGNATO);
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.VAPORIZZAZIONE);
-            }
-        }
+        if (!immuneATipoDannoBase) {
 
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.BRUCIATO)) {
-            Logger.log("Con difensore già BRUCIATO");
-            if (tipoDanno == TipoDanno.ARIA) {
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.ALIMENTAZIONE_FIAMMA);
-            } else if (tipoDanno == TipoDanno.ACQUA) {
-                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BRUCIATO);
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.ESTINZIONE);
-            } else if (tipoDanno == TipoDanno.GELO) {
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
-                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BRUCIATO);
-                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.BAGNATO,
-                        calcolaDurataStato(difensore, TipoEffettoDiStato.BAGNATO),
-                        calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.BAGNATO));
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SCIOGLIMENTO_TERMICO);
-            } else if (tipoDanno == TipoDanno.VELENO) {
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d; // Esplosione di gas
-                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BRUCIATO);
-                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.AVVELENATO,
-                        calcolaDurataStato(difensore, TipoEffettoDiStato.AVVELENATO),
-                        calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.AVVELENATO));
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.ESPLOSIONE_DI_GAS);
-            }
-        }
-
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.AVVELENATO)) {
-            Logger.log("Con difensore già AVVELENATO");
-            if (tipoDanno == TipoDanno.FUOCO) {
-                Logger.log("tipo danno FUOCO: Vampata Tossica");
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d;
-                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.AVVELENATO);
-                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.BRUCIATO,
-                        calcolaDurataStato(difensore, TipoEffettoDiStato.BRUCIATO),
-                        calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.BRUCIATO));
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.VAMPATA_TOSSICA);
-            } else if (tipoDanno == TipoDanno.ACIDO) {
-                Logger.log("tipo danno ACIDO: Reazione Tossica, +15% danno");
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.15d;
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.REAZIONE_TOSSICA);
-            }
-        }
-
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SANGUINAMENTO)) {
-            Logger.log("Con difensore già SANGUINAMENTO");
-            if (tipoDanno == TipoDanno.ACQUA) {
-                Logger.log("tipo danno ACQUA: Diluizione Ematica, riduce il danno periodico da sanguinamento");
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.05d;
-                dannoRisultante.setDiluizioneEmaticaAttiva(true);
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.DILUIZIONE_EMATICA);
-            } else if (tipoDanno == TipoDanno.GELO) {
-                Logger.log("tipo danno GELO: Coagulazione Forzata, rimuove SANGUINAMENTO e applica RALLENTATO");
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.05d;
-                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.SANGUINAMENTO);
-                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.RALLENTATO,
-                        calcolaDurataStato(difensore, TipoEffettoDiStato.RALLENTATO),
-                        calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.RALLENTATO));
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.COAGULAZIONE_FORZATA);
-            }
-        }
-
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.CONGELATO)) {
-            Logger.log("Con difensore già CONGELATO");
-            if (tipoDanno == TipoDanno.CONTUNDENTE) {
+            TipoInterazioneConEffettiDiStato interazioneBase = difensore.haInterazioneCon(tipoDanno);
+            if (interazioneBase == TipoInterazioneConEffettiDiStato.DANNO_VERO) {
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 2.0d;
-                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.CONGELATO);
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.FRANTUMAZIONE_DEL_GHIACCO);
-            } else if (tipoDanno == TipoDanno.FUOCO) {
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
-                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.CONGELATO);
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.DISGELO_VIOLENTO);
-            } else if (tipoDanno.getSuperTipo() == SupertipoDanno.FISICO) {
-                statDifensiva = statDifensiva * 1.5d; // Il guscio di ghiaccio fa da scudo ai colpi di lama/punta
-            } else if (tipoDanno == TipoDanno.FULMINE) {
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.DANNO_VERO);
+            }
+
+            if (difensore.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
+                Logger.log("Con difensore già BAGNATO");
+                if (tipoDanno == TipoDanno.FULMINE) {
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.ELETTROCUZIONE);
+                } else if (tipoDanno == TipoDanno.GELO) {
+                    dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BAGNATO);
+                    dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.CONGELATO,
+                            calcolaDurataStato(difensore, TipoEffettoDiStato.CONGELATO),
+                            calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.CONGELATO));
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.CONGELAMENTO);
+                } else if (tipoDanno == TipoDanno.FUOCO) {
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 0.5d;
+                    dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BAGNATO);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.VAPORIZZAZIONE);
+                }
+            }
+
+            if (difensore.hasEffettoDiStato(TipoEffettoDiStato.BRUCIATO)) {
+                Logger.log("Con difensore già BRUCIATO");
+                if (tipoDanno == TipoDanno.ARIA) {
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.ALIMENTAZIONE_FIAMMA);
+                } else if (tipoDanno == TipoDanno.ACQUA) {
+                    dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BRUCIATO);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.ESTINZIONE);
+                } else if (tipoDanno == TipoDanno.GELO) {
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
+                    dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BRUCIATO);
+                    dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.BAGNATO,
+                            calcolaDurataStato(difensore, TipoEffettoDiStato.BAGNATO),
+                            calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.BAGNATO));
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SCIOGLIMENTO_TERMICO);
+                } else if (tipoDanno == TipoDanno.VELENO) {
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d; // Esplosione di gas
+                    dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.BRUCIATO);
+                    dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.AVVELENATO,
+                            calcolaDurataStato(difensore, TipoEffettoDiStato.AVVELENATO),
+                            calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.AVVELENATO));
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.ESPLOSIONE_DI_GAS);
+                }
+            }
+
+            if (difensore.hasEffettoDiStato(TipoEffettoDiStato.AVVELENATO)) {
+                Logger.log("Con difensore già AVVELENATO");
+                if (tipoDanno == TipoDanno.FUOCO) {
+                    Logger.log("tipo danno FUOCO: Vampata Tossica");
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d;
+                    dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.AVVELENATO);
+                    dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.BRUCIATO,
+                            calcolaDurataStato(difensore, TipoEffettoDiStato.BRUCIATO),
+                            calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.BRUCIATO));
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.VAMPATA_TOSSICA);
+                } else if (tipoDanno == TipoDanno.ACIDO) {
+                    Logger.log("tipo danno ACIDO: Reazione Tossica, +15% danno");
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.15d;
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.REAZIONE_TOSSICA);
+                }
+            }
+
+            if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SANGUINAMENTO)) {
+                Logger.log("Con difensore già SANGUINAMENTO");
+                if (tipoDanno == TipoDanno.ACQUA) {
+                    Logger.log("tipo danno ACQUA: Diluizione Ematica, riduce il danno periodico da sanguinamento");
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.05d;
+                    dannoRisultante.setDiluizioneEmaticaAttiva(true);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.DILUIZIONE_EMATICA);
+                } else if (tipoDanno == TipoDanno.GELO) {
+                    Logger.log("tipo danno GELO: Coagulazione Forzata, rimuove SANGUINAMENTO e applica RALLENTATO");
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.05d;
+                    dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.SANGUINAMENTO);
+                    dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.RALLENTATO,
+                            calcolaDurataStato(difensore, TipoEffettoDiStato.RALLENTATO),
+                            calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.RALLENTATO));
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.COAGULAZIONE_FORZATA);
+                }
+            }
+
+            if (difensore.hasEffettoDiStato(TipoEffettoDiStato.CONGELATO)) {
+                Logger.log("Con difensore già CONGELATO");
+                if (tipoDanno == TipoDanno.CONTUNDENTE) {
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 2.0d;
+                    dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.CONGELATO);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.FRANTUMAZIONE_DEL_GHIACCO);
+                } else if (tipoDanno == TipoDanno.FUOCO) {
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
+                    dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.CONGELATO);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.DISGELO_VIOLENTO);
+                } else if (tipoDanno.getSuperTipo() == SupertipoDanno.FISICO) {
+                    statDifensiva = statDifensiva * 1.5d; // Il guscio di ghiaccio fa da scudo ai colpi di lama/punta
+                } else if (tipoDanno == TipoDanno.FULMINE) {
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d;
+                    statDifensiva = statDifensiva * 0.7d;
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SUPERCONDUZIONE);
+                }
+
+            }
+
+            if (difensore.hasEffettoDiStato(TipoEffettoDiStato.MALEDETTO)) {
+                Logger.log("Con difensore già MALEDETTO");
+                if (tipoDanno == TipoDanno.NECROTICO) {
+                    // La SAGGEZZA del difensore riduce l'efficacia dei danni NECROTICO su un bersaglio MALEDETTO
+                    double moltiplicatoreMaledetto = Math.max(1.0d, 2.0d - (difensore.getSaggezza() / 100.0));
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * moltiplicatoreMaledetto;
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.MIETITURA);
+                    dannoRisultante.setMietituraAttiva(true);
+                } else if (tipoDanno == TipoDanno.SACRO) {
+                    dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.MALEDETTO);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.RIGETTO);
+                } else if (tipoDanno == TipoDanno.VUOTO) {
+                    Logger.log("tipo danno VUOTO: Collasso Entropico, rimuove MALEDETTO e brucia il 25% dei MP massimi come danno aggiuntivo");
+                    dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.MALEDETTO);
+                    dannoRisultante.setCollassoEntropicoAttivo(true);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.COLLASSO_ENTROPICO);
+                }
+            }
+
+            if (difensore.hasEffettoDiStato(TipoEffettoDiStato.INFETTATO)) {
+                Logger.log("Con difensore già INFETTATO");
+                if (tipoDanno == TipoDanno.SACRO) {
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
+                    dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.INFETTATO);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.PURIFICAZIONE);
+                    // La cura ad area (50% del danno applicato) va calcolata più avanti, quando il danno finale è noto
+                    purificazioneAttiva = true;
+                } else if (tipoDanno == TipoDanno.ARCANO) {
+                    // Sifone Vitale: il 30% del danno grezzo (pre-mitigazione) va all'attaccante come MP, l'eccedenza oltre
+                    // il massimo di MP va in HP
+                    int sifoneVitale = (int) Math.round(dannoOffensivoGrezzo * 0.3d);
+                    dannoRisultante.setSifoneVitale(sifoneVitale);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SIFONE_VITALE);
+                } else if (tipoDanno == TipoDanno.VELENO) {
+                    // Tossicità Settica: l'AVVELENATO applicato su un bersaglio già INFETTATO raddoppia i danni periodici
+                    dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.AVVELENATO,
+                            calcolaDurataStato(difensore, TipoEffettoDiStato.AVVELENATO),
+                            calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.AVVELENATO) * 2);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.TOSSICITA_SETTICA);
+                }
+            }
+
+            if (difensore.hasEffettoDiStato(TipoEffettoDiStato.STORDITO) ||
+                    difensore.hasEffettoDiStato(TipoEffettoDiStato.ATTERRATO)) {
+                Logger.log("Con difensore già STORDITO o ATTERRATO");
+                if (tipoDanno == TipoDanno.TAGLIENTE || tipoDanno == TipoDanno.PERFORANTE) {
+                    Logger.log("tipo danno TAGLIENTE o PERFORANTE, critico automatico");
+                    criticoAutomatico = true;
+                    dannoRisultante.setColpoDiGrazia(true);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.COLPO_DI_GRAZIA);
+                }
+            }
+
+            if (difensore.hasEffettoDiStato(TipoEffettoDiStato.ATTERRATO) && tipoDanno == TipoDanno.CONTUNDENTE) {
+                Logger.log("Con difensore già ATTERRATO, tipo danno CONTUNDENTE: Schiacciamento");
+                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 2.0d;
+                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.ATTERRATO,
+                        calcolaDurataStato(difensore, TipoEffettoDiStato.ATTERRATO) + 1, 0);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SCHIACCIAMENTO);
+            }
+
+            if (difensore.hasEffettoDiStato(TipoEffettoDiStato.RALLENTATO) &&
+                    (tipoDanno == TipoDanno.TERRA || tipoDanno == TipoDanno.CONTUNDENTE)) {
+                Logger.log("Con difensore già RALLENTATO, tipo danno TERRA o CONTUNDENTE: Inciampo");
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d;
-                statDifensiva = statDifensiva * 0.7d;
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SUPERCONDUZIONE);
+                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.ATTERRATO,
+                        calcolaDurataStato(difensore, TipoEffettoDiStato.ATTERRATO), 0);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.INCIAMPO);
             }
 
-        }
-
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.MALEDETTO)) {
-            Logger.log("Con difensore già MALEDETTO");
-            if (tipoDanno == TipoDanno.NECROTICO) {
-                // La SAGGEZZA del difensore riduce l'efficacia dei danni NECROTICO su un bersaglio MALEDETTO
-                double moltiplicatoreMaledetto = Math.max(1.0d, 2.0d - (difensore.getSaggezza() / 100.0));
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * moltiplicatoreMaledetto;
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.MIETITURA);
-                dannoRisultante.setMietituraAttiva(true);
-            } else if (tipoDanno == TipoDanno.SACRO) {
-                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.MALEDETTO);
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.RIGETTO);
-            } else if (tipoDanno == TipoDanno.VUOTO) {
-                Logger.log("tipo danno VUOTO: Collasso Entropico, rimuove MALEDETTO e brucia il 25% dei MP massimi come danno aggiuntivo");
-                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.MALEDETTO);
-                dannoRisultante.setCollassoEntropicoAttivo(true);
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.COLLASSO_ENTROPICO);
+            if (difensore.hasEffettoDiStato(TipoEffettoDiStato.IMMOBILIZZATO)) {
+                Logger.log("Con difensore già IMMOBILIZZATO");
+                if (tipoDanno == TipoDanno.FUOCO) {
+                    Logger.log("tipo danno FUOCO: Incendio Liberatorio, distrugge l'immobilizzazione all'istante");
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
+                    dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.IMMOBILIZZATO);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.INCENDIO_LIBERATORIO);
+                } else if (tipoDanno == TipoDanno.CONTUNDENTE || tipoDanno == TipoDanno.TERRA) {
+                    Logger.log("tipo danno CONTUNDENTE o TERRA: Impatto Rigido");
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d;
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.IMPATTO_RIGIDO);
+                }
             }
-        }
 
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.INFETTATO)) {
-            Logger.log("Con difensore già INFETTATO");
-            if (tipoDanno == TipoDanno.SACRO) {
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
-                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.INFETTATO);
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.PURIFICAZIONE);
-                // La cura ad area (50% del danno applicato) va calcolata più avanti, quando il danno finale è noto
-                purificazioneAttiva = true;
-            } else if (tipoDanno == TipoDanno.ARCANO) {
-                // Sifone Vitale: il 30% del danno grezzo (pre-mitigazione) va all'attaccante come MP, l'eccedenza oltre
-                // il massimo di MP va in HP
-                int sifoneVitale = (int) Math.round(dannoOffensivoGrezzo * 0.3d);
-                dannoRisultante.setSifoneVitale(sifoneVitale);
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SIFONE_VITALE);
-            } else if (tipoDanno == TipoDanno.VELENO) {
-                // Tossicità Settica: l'AVVELENATO applicato su un bersaglio già INFETTATO raddoppia i danni periodici
-                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.AVVELENATO,
-                        calcolaDurataStato(difensore, TipoEffettoDiStato.AVVELENATO),
-                        calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.AVVELENATO) * 2);
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.TOSSICITA_SETTICA);
+            if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO) || difensore.hasEffettoDiStato(TipoEffettoDiStato.CONFUSO)) {
+                TipoEffettoDiStato statoAttivo = difensore.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO) ?
+                        TipoEffettoDiStato.SPAVENTATO : TipoEffettoDiStato.CONFUSO;
+                Logger.log("Con difensore già " + statoAttivo.getDescrizione());
+                if (tipoDanno == TipoDanno.ARCANO) {
+                    Logger.log("tipo danno ARCANO: Sovraccarico Mentale, trasforma lo stato in STORDITO pesante");
+                    dannoRisultante.rimuoviEffettoDiStato(statoAttivo);
+                    dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.STORDITO, Dado.tira(2), 0);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SOVRACCARICO_MENTALE);
+                } else if (tipoDanno.getSuperTipo() == SupertipoDanno.FISICO) {
+                    Logger.log("danno FISICO: Shock di Realtà, interrompe subito lo stato");
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.2d;
+                    dannoRisultante.rimuoviEffettoDiStato(statoAttivo);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SHOCK_DI_REALTA);
+                } else if (tipoDanno == TipoDanno.VUOTO && statoAttivo == TipoEffettoDiStato.CONFUSO) {
+                    Logger.log("tipo danno VUOTO: Follia Cosmica, rimuove CONFUSO e applica MENTE_FRATTURATA");
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
+                    dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.CONFUSO);
+                    dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.MENTE_FRATTURATA,
+                            calcolaDurataStato(difensore, TipoEffettoDiStato.MENTE_FRATTURATA), 0);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.FOLLIA_COSMICA);
+                }
             }
-        }
 
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.STORDITO) ||
-                difensore.hasEffettoDiStato(TipoEffettoDiStato.ATTERRATO)) {
-            Logger.log("Con difensore già STORDITO o ATTERRATO");
-            if (tipoDanno == TipoDanno.TAGLIENTE || tipoDanno == TipoDanno.PERFORANTE) {
-                Logger.log("tipo danno TAGLIENTE o PERFORANTE, critico automatico");
-                criticoAutomatico = true;
-                dannoRisultante.setColpoDiGrazia(true);
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.COLPO_DI_GRAZIA);
+            if (difensore.hasEffettoDiStato(TipoEffettoDiStato.ACCECATO)) {
+                Logger.log("Con difensore già ACCECATO");
+                if (tipoDanno == TipoDanno.ARIA) {
+                    Logger.log("tipo danno ARIA: Dispersione, rimuove ACCECATO");
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.05d;
+                    dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.ACCECATO);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.DISPERSIONE);
+                } else if (tipoDanno == TipoDanno.ACQUA) {
+                    Logger.log("tipo danno ACQUA: Fango, applica RALLENTATO severo");
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.05d;
+                    dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.RALLENTATO,
+                            calcolaDurataStato(difensore, TipoEffettoDiStato.RALLENTATO) + 2,
+                            calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.RALLENTATO));
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.FANGO);
+                }
             }
-        }
 
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.ATTERRATO) && tipoDanno == TipoDanno.CONTUNDENTE) {
-            Logger.log("Con difensore già ATTERRATO, tipo danno CONTUNDENTE: Schiacciamento");
-            moltiplicatoreDannoStato = moltiplicatoreDannoStato * 2.0d;
-            dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.ATTERRATO,
-                    calcolaDurataStato(difensore, TipoEffettoDiStato.ATTERRATO) + 1, 0);
-            dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SCHIACCIAMENTO);
-        }
-
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.RALLENTATO) &&
-                (tipoDanno == TipoDanno.TERRA || tipoDanno == TipoDanno.CONTUNDENTE)) {
-            Logger.log("Con difensore già RALLENTATO, tipo danno TERRA o CONTUNDENTE: Inciampo");
-            moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d;
-            dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.ATTERRATO,
-                    calcolaDurataStato(difensore, TipoEffettoDiStato.ATTERRATO), 0);
-            dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.INCIAMPO);
-        }
-
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.IMMOBILIZZATO)) {
-            Logger.log("Con difensore già IMMOBILIZZATO");
-            if (tipoDanno == TipoDanno.FUOCO) {
-                Logger.log("tipo danno FUOCO: Incendio Liberatorio, distrugge l'immobilizzazione all'istante");
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
-                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.IMMOBILIZZATO);
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.INCENDIO_LIBERATORIO);
-            } else if (tipoDanno == TipoDanno.CONTUNDENTE || tipoDanno == TipoDanno.TERRA) {
-                Logger.log("tipo danno CONTUNDENTE o TERRA: Impatto Rigido");
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.3d;
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.IMPATTO_RIGIDO);
-            }
-        }
-
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO) || difensore.hasEffettoDiStato(TipoEffettoDiStato.CONFUSO)) {
-            TipoEffettoDiStato statoAttivo = difensore.hasEffettoDiStato(TipoEffettoDiStato.SPAVENTATO) ?
-                    TipoEffettoDiStato.SPAVENTATO : TipoEffettoDiStato.CONFUSO;
-            Logger.log("Con difensore già " + statoAttivo.getDescrizione());
-            if (tipoDanno == TipoDanno.ARCANO) {
-                Logger.log("tipo danno ARCANO: Sovraccarico Mentale, trasforma lo stato in STORDITO pesante");
-                dannoRisultante.rimuoviEffettoDiStato(statoAttivo);
-                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.STORDITO, Dado.tira(2), 0);
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SOVRACCARICO_MENTALE);
-            } else if (tipoDanno.getSuperTipo() == SupertipoDanno.FISICO) {
-                Logger.log("danno FISICO: Shock di Realtà, interrompe subito lo stato");
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.2d;
-                dannoRisultante.rimuoviEffettoDiStato(statoAttivo);
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.SHOCK_DI_REALTA);
-            } else if (tipoDanno == TipoDanno.VUOTO && statoAttivo == TipoEffettoDiStato.CONFUSO) {
-                Logger.log("tipo danno VUOTO: Follia Cosmica, rimuove CONFUSO e applica MENTE_FRATTURATA");
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
-                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.CONFUSO);
-                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.MENTE_FRATTURATA,
-                        calcolaDurataStato(difensore, TipoEffettoDiStato.MENTE_FRATTURATA), 0);
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.FOLLIA_COSMICA);
-            }
-        }
-
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.ACCECATO)) {
-            Logger.log("Con difensore già ACCECATO");
-            if (tipoDanno == TipoDanno.ARIA) {
-                Logger.log("tipo danno ARIA: Dispersione, rimuove ACCECATO");
+            if (difensore.hasEffettoDiStato(TipoEffettoDiStato.ASSORDATO) && tipoDanno == TipoDanno.SONICO) {
+                Logger.log("Con difensore già ASSORDATO, tipo danno SONICO: Disorientamento, trasforma in STORDITO");
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.05d;
-                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.ACCECATO);
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.DISPERSIONE);
-            } else if (tipoDanno == TipoDanno.ACQUA) {
-                Logger.log("tipo danno ACQUA: Fango, applica RALLENTATO severo");
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.05d;
-                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.RALLENTATO,
-                        calcolaDurataStato(difensore, TipoEffettoDiStato.RALLENTATO) + 2,
-                        calcolaDannoPeriodico(attaccante, difensore, TipoEffettoDiStato.RALLENTATO));
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.FANGO);
+                dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.ASSORDATO);
+                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.STORDITO, 1, 0);
+                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.DISORIENTAMENTO);
             }
-        }
 
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.ASSORDATO) && tipoDanno == TipoDanno.SONICO) {
-            Logger.log("Con difensore già ASSORDATO, tipo danno SONICO: Disorientamento, trasforma in STORDITO");
-            moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.05d;
-            dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.ASSORDATO);
-            dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.STORDITO, 1, 0);
-            dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.DISORIENTAMENTO);
-        }
-
-        if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO)) {
-            Logger.log("Con difensore già SILENZIATO");
-            if (tipoDanno == TipoDanno.ARCANO) {
-                Logger.log("tipo danno ARCANO: Risonanza Sigillata, +30% danno Puro che ignora le difese");
-                dannoPuroBonus = dannoPuroBonus + dannoOffensivoGrezzo * 0.3d;
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.RISONANZA_SIGILLATA);
-            } else if (tipoDanno == TipoDanno.PSICHICO) {
-                Logger.log("tipo danno PSICHICO: Isolamento Sensoriale, +50% danno ed estende anche ACCECATO");
-                moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
-                dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.ACCECATO,
-                        calcolaDurataStato(difensore, TipoEffettoDiStato.ACCECATO), 0);
-                dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.ISOLAMENTO_SENSORIALE);
+            if (difensore.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO)) {
+                Logger.log("Con difensore già SILENZIATO");
+                if (tipoDanno == TipoDanno.ARCANO) {
+                    Logger.log("tipo danno ARCANO: Risonanza Sigillata, +30% danno Puro che ignora le difese");
+                    dannoPuroBonus = dannoPuroBonus + dannoOffensivoGrezzo * 0.3d;
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.RISONANZA_SIGILLATA);
+                } else if (tipoDanno == TipoDanno.PSICHICO) {
+                    Logger.log("tipo danno PSICHICO: Isolamento Sensoriale, +50% danno ed estende anche ACCECATO");
+                    moltiplicatoreDannoStato = moltiplicatoreDannoStato * 1.5d;
+                    dannoRisultante.addEffettoDiStato(TipoEffettoDiStato.ACCECATO,
+                            calcolaDurataStato(difensore, TipoEffettoDiStato.ACCECATO), 0);
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.ISOLAMENTO_SENSORIALE);
+                }
             }
+
         }
 
         // 4. MITIGAZIONE DELLA DIFESA DEL DIFENSORE (Formula Diminishing Returns)
         double fattoreMitigazione = 100.0d / (100.0d + statDifensiva);
         Logger.log("fattoreMitigazione: " + fattoreMitigazione + ", moltiplicatoreDannoStato = " + moltiplicatoreDannoStato);
-        double dannoMitigato = Math.floor(dannoOffensivoGrezzo * fattoreMitigazione * moltiplicatoreDannoStato);
+        double dannoMitigato = immuneATipoDannoBase ? 0.0d :
+                Math.floor(dannoOffensivoGrezzo * fattoreMitigazione * moltiplicatoreDannoStato);
         Logger.log("dannoMitigato: " + dannoMitigato);
 
         // 4.2 --- COMPONENTE ELEMENTALE INCANTATA CUMULATIVA ---
@@ -498,7 +516,18 @@ public class CalcolatoreCombattimento {
             for (Incantamento inc : arma.getIncantamenti()) {
                 TipoDanno elementoMagico = inc.getTipoDannoElementale();
 
+                if (difensore.isImmuneATipoDanno(elementoMagico)) {
+                    Logger.log(String.format("[INCANTAMENTO] %s è immune a %s: incantamento senza effetto",
+                            difensore.getNome(), elementoMagico));
+                    continue;
+                }
+
                 double dannoQuestoIncantamento = dannoIncantamento(attaccante, difensore, inc, arma.getLivello(), fattore, 1.0d);
+
+                if (difensore.haInterazioneCon(elementoMagico) == TipoInterazioneConEffettiDiStato.DANNO_VERO) {
+                    dannoQuestoIncantamento = dannoQuestoIncantamento * 2.0d;
+                    dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.DANNO_VERO);
+                }
 
                 // Se il bersaglio era BAGNATO e la spada è di FUOCO, si attiva l'interazione Vaporizzazione
                 if (elementoMagico == TipoDanno.FUOCO && difensore.hasEffettoDiStato(TipoEffettoDiStato.BAGNATO)) {
@@ -512,7 +541,7 @@ public class CalcolatoreCombattimento {
         }
 
         // 4.3 --- LIBRO MAGICO: bonus al danno degli incantesimi di chi lo porta ---
-        if (isIncantesimo(arma)) {
+        if (isIncantesimo(arma) && !immuneATipoDannoBase) {
             Optional<Artefatto> libro = libroMagico(attaccante);
             if (libro.isPresent()) {
                 // Il bonus del libro è danno dell'incantesimo: prende tutto il moltiplicatore magico della classe
@@ -549,7 +578,7 @@ public class CalcolatoreCombattimento {
             Logger.log("Applicazione stati nativi per arma ibrida");
 
             // --- TRAGUARDO 1: Stato dell'arma Principale (es. TAGLIENTE ➔ SANGUINAMENTO) ---
-            if (tipoDanno.hasEffettiDiStato()) {
+            if (!immuneATipoDannoBase && tipoDanno.hasEffettiDiStato()) {
                 double probStatoFisico = ((dannoMitigato * 100.0d) / difensore.getForza()) + (attaccante.getFuria() * 2.0d);
                 if (Dado.tira(100) <= probStatoFisico) {
                     TipoEffettoDiStato effettoFisico = tipoDanno.getTipoEffettoDiStatoCasuale();
@@ -564,6 +593,9 @@ public class CalcolatoreCombattimento {
             // --- TRAGUARDO 2: Stati degli Incantamenti (Multipli e Indipendenti) ---
             if (arma.isIncantata()) {
                 for (Incantamento incantamento : arma.getIncantamenti()) {
+                    if (difensore.isImmuneATipoDanno(incantamento.getTipoDannoElementale())) {
+                        continue;
+                    }
                     if (incantamento.getTipoDannoElementale().hasEffettiDiStato()) {
                         TipoDanno elemento = incantamento.getTipoDannoElementale();
 
@@ -590,7 +622,7 @@ public class CalcolatoreCombattimento {
                 }
             }
 
-            int dannoFinale = Math.max(1, (int)dannoTotaleCombinato);
+            int dannoFinale = Math.max(1, (int) dannoTotaleCombinato);
             dannoRisultante.setDanno(dannoFinale);
 
             if (purificazioneAttiva) {

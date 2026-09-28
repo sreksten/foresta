@@ -3,6 +3,9 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.tipi.TipoAttributo;
+import com.threeamigos.foresta.motore.tipi.TipoDanno;
+import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.motore.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -268,6 +271,28 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 
 	@Override
 	public boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo) {
-		return classeIncantesimo == ClasseIncantesimo.MORTE;
+		return classeIncantesimo == ClasseIncantesimo.MORTE ||
+				classeIncantesimo == ClasseIncantesimo.VELENO;
+	}
+
+	@Override
+	public boolean isImmuneATipoDanno(TipoDanno tipoDanno) {
+		return tipoDanno == TipoDanno.VELENO;
+	}
+
+	@Override
+	public TipoInterazioneConEffettiDiStato haInterazioneCon(TipoDanno tipoDanno) {
+		if (tipoDanno == TipoDanno.SACRO) {
+			return TipoInterazioneConEffettiDiStato.DANNO_VERO;
+		}
+		return null;
+	}
+
+	@Override
+	public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {
+		return effettoStato == TipoEffettoDiStato.SANGUINAMENTO ||
+				effettoStato == TipoEffettoDiStato.INFETTATO ||
+				effettoStato == TipoEffettoDiStato.AVVELENATO ||
+				effettoStato == TipoEffettoDiStato.SPAVENTATO;
 	}
 }

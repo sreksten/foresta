@@ -5,9 +5,7 @@ import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.interfacce.OggettoConArticoli;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.motore.tipi.TipoAttributo;
-import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.motore.tipi.TipoRiposo;
+import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 
@@ -241,7 +239,22 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
 	 * Un personaggio potrebbe essere immune a una certa classe di incantesimi (o più)
 	 */
     boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo);
-
+	/**
+	 * Un personaggio potrebbe essere immune a certi tipi di attacco
+	 */
+	boolean isImmuneATipoDanno(TipoDanno tipoDanno);
+	/**
+	 * Un personaggio potrebbe essere immune a un effetto di stato
+	 */
+	boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato);
+	/**
+	 * Un personaggio è particolarmente debole contro un tipo di danno. Nel caso dei non morti per esempio
+	 * sacro o resurrezione provocano Danno Vero (True Damage)
+	 */
+	TipoInterazioneConEffettiDiStato haInterazioneCon(TipoDanno tipoDanno);
+	/**
+	 * Restituisce il modello dati del personaggio.
+	 */
 	PersonaggioMD getModelloDati();
 
 	void setModelloDati(PersonaggioMD modelloDati);
@@ -491,7 +504,7 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
     boolean hasEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato);
 
 	/**
-	 * Applica danni da effeti di stato tipo sanguinamento
+	 * Applica danni da effetti di stato tipo sanguinamento
 	 */
 	void applicaDanniDaEffettiDiStato();
 

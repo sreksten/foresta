@@ -3,6 +3,8 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.tipi.TipoAttributo;
+import com.threeamigos.foresta.motore.tipi.TipoDanno;
+import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -269,5 +271,15 @@ public class ChimeraDrago extends PersonaggioBase implements Personaggio {
 	@Override
 	public boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo) {
 		return classeIncantesimo == ClasseIncantesimo.FUOCO;
+	}
+
+	@Override
+	public boolean isImmuneATipoDanno(TipoDanno tipoDanno) {
+		return tipoDanno == TipoDanno.FUOCO;
+	}
+
+	@Override
+	public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {
+		return effettoStato == TipoEffettoDiStato.BRUCIATO;
 	}
 }

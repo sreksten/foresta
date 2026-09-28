@@ -2,6 +2,7 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.tipi.TipoAttributo;
+import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -280,5 +281,12 @@ public class Guerriera extends PersonaggioBase implements Personaggio {
 			default:
 				throw new IllegalArgumentException(tipoAttributo + " non è un tipo primario");
 		}
+	}
+
+	@Override
+	public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {
+		return (effettoStato == TipoEffettoDiStato.CONFUSO ||
+				effettoStato == TipoEffettoDiStato.SPAVENTATO) &&
+				hasEffettoDiStato(TipoEffettoDiStato.BERSERK);
 	}
 }

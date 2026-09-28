@@ -134,7 +134,10 @@ public enum TipoInterazioneConEffettiDiStato {
     DILUIZIONE_EMATICA(TipoEffettoDiStato.SANGUINAMENTO, TipoDanno.ACQUA, "Diluizione Ematica"),
     // + GELO
     // Rimuove SANGUINAMENTO, applica RALLENTATO, piccolo bonus di danno
-    COAGULAZIONE_FORZATA(TipoEffettoDiStato.SANGUINAMENTO, TipoDanno.GELO, "Coagulazione Forzata");
+    COAGULAZIONE_FORZATA(TipoEffettoDiStato.SANGUINAMENTO, TipoDanno.GELO, "Coagulazione Forzata"),
+
+    // Interazioni particolari che dipendono dalla classe del Personaggio
+    DANNO_VERO(Collections.emptyList(), Collections.emptyList(), "Danno Vero");
 
     private final Collection<TipoEffettoDiStato> precondizioni;
     private final Collection<TipoDanno> innescanti;

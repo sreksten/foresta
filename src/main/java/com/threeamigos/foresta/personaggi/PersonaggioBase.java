@@ -2,6 +2,7 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoCreazionePersonaggio;
+import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
 import com.threeamigos.foresta.eventi.interni.InternoRisultatoValutazionePersonaggioAttaccante;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
@@ -133,6 +134,18 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 	
 	public boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo) {
+		return false;
+	}
+
+	public boolean isImmuneATipoDanno(TipoDanno tipoDanno) {
+		return false;
+	}
+
+	public TipoInterazioneConEffettiDiStato haInterazioneCon(TipoDanno tipoDanno) {
+		return null;
+	}
+
+	public boolean isImmuneAEffetto(TipoEffettoDiStato effettoStato) {
 		return false;
 	}
 	
@@ -1782,6 +1795,12 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	public void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int durata, int danniNelTempo) {
 		if (!isVivo()) {
+			return;
+		}
+		if (isImmuneAEffetto(tipoEffettoDiStato)) {
+			BusEventi.pubblica(new InternoMessaggio(
+					getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+							" è immune a " + tipoEffettoDiStato.getDescrizione() + "."));
 			return;
 		}
 		if (durata <= 0) {
