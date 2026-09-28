@@ -9,7 +9,9 @@ import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GradoIncantamento;
 import com.threeamigos.foresta.oggetti.Incantamento;
+import com.threeamigos.foresta.personaggi.OmbraFiamma;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tools.ModalitaDiProva;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -23,6 +25,13 @@ public class CalcolatoreCombattimento {
 
 
     public static int calcolaProbabilitaDiColpire(Personaggio attaccante, Personaggio difensore, SupertipoDanno tipoDanno) {
+
+        // DEBUG: in modalità di prova l'OmbraFiamma va sempre a segno, per poter testare
+        // che il gioco sia completabile senza dover contare sulla fortuna dei tiri.
+        if (ModalitaDiProva.isAttiva() && attaccante instanceof OmbraFiamma) {
+            Logger.log("DEBUG: attaccante OmbraFiamma in modalità di prova, colpisce sempre.");
+            return 100;
+        }
 
         // 0. CONTROLLO EFFETTI DI STATO CHE DETERMINANO AUTOMATICAMENTE LA RIUSCITA
         if (attaccante.hasEffettoDiStato(TipoEffettoDiStato.STORDITO)) {
@@ -629,6 +638,13 @@ public class CalcolatoreCombattimento {
                 // Cura ad area: 50% del danno applicato (dannoFinale, già mitigato ed eventualmente raddoppiato dal critico)
                 dannoRisultante.setCuraAdArea(dannoFinale / 2);
             }
+        }
+
+        // DEBUG: in modalità di prova l'OmbraFiamma fa sempre almeno 100 danni, anche contro
+        // bersagli immuni, per poter testare che il gioco sia completabile.
+        if (ModalitaDiProva.isAttiva() && attaccante instanceof OmbraFiamma && dannoRisultante.getDanno() < 100) {
+            Logger.log("DEBUG: attaccante OmbraFiamma in modalità di prova, danno minimo forzato a 100.");
+            dannoRisultante.setDanno(100);
         }
 
         return dannoRisultante;
