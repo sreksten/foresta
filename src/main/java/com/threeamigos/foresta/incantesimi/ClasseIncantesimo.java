@@ -45,7 +45,11 @@ public enum ClasseIncantesimo {
 	RESURREZIONE(Resurrezione::new, TipoIncantesimo.BENEFICO, PortataIncantesimo.SINGOLO_QUALSIASI, null,
 			"Resurr.", "incantesimo della Resurrezione", "incantesimi della Resurrezione",
 			Comando.RESURREZIONE, Costanti.INCANTESIMO_RESURREZIONE_COSTO_ACQUISTO, Costanti.INCANTESIMO_RESURREZIONE_COSTO_LANCIO,
-			"Inverte il flusso del fato infliggendo un devastante rigetto rigenerativo alle creature d'ombra e ai non-morti.");
+			"Inverte il flusso del fato infliggendo un devastante rigetto rigenerativo alle creature d'ombra e ai non-morti."),
+	ALBA_SACRA(AlbaSacra::new, TipoIncantesimo.BENEFICO, PortataIncantesimo.GRUPPO, null,
+			"Alba", "incantesimo dell'Alba Sacra", "incantesimi dell'Alba Sacra",
+			Comando.ALBA_SACRA, Costanti.INCANTESIMO_ALBA_SACRA_COSTO_ACQUISTO, Costanti.INCANTESIMO_ALBA_SACRA_COSTO_LANCIO,
+			"Rimuove tutti gli effetti di stato al gruppo.");
 
 	private final Function<Integer, Incantesimo> supplier;
 	private final TipoIncantesimo tipo;

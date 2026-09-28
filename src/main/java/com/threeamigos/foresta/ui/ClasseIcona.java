@@ -38,6 +38,7 @@ public enum ClasseIcona {
 	AMICIZIA(Comando.AMICIZIA,"icone/Amicizia.gif"),
 	FUGA(Comando.FUGA, "icone/Fuga.gif"),
 
+	DARDO_ARCANO(Comando.DARDO_ARCANO, "icone/DardoArcano.gif"),
 	ARIA(Comando.ARIA,"icone/Aria.gif"),
 	ACQUA(Comando.ACQUA, "icone/Acqua.gif"),
 	TERRA(Comando.TERRA,"icone/Terra.gif"),
@@ -47,7 +48,7 @@ public enum ClasseIcona {
 	VELENO(Comando.VELENO, "icone/Veleno.gif"),
 	MORTE(Comando.MORTE, "icone/Morte.gif"),
 	RESURREZIONE(Comando.RESURREZIONE, "icone/Resurrezione.gif"),
-	DARDO_ARCANO(Comando.DARDO_ARCANO, "icone/DardoArcano.gif"),
+	ALBA_SACRA(Comando.ALBA_SACRA, "icone/AlbaSacra.gif"),
 	NO_INCANTESIMO(Comando.NO_INCANTESIMO, "icone/NoIncantesimo.gif"),
 
 	NORD(Comando.NORD, "icone/Nord.gif"),

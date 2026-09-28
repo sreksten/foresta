@@ -13,9 +13,11 @@ class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI = 16;
 
-	private final ClasseIncantesimo[] colonnaSinistra = { ClasseIncantesimo.ARIA, ClasseIncantesimo.ACQUA, ClasseIncantesimo.TERRA,
-			ClasseIncantesimo.FUOCO, ClasseIncantesimo.FULMINE, ClasseIncantesimo.GELO, ClasseIncantesimo.VELENO };
-	private final ClasseIncantesimo[] colonnaDestra = { ClasseIncantesimo.MORTE, ClasseIncantesimo.RESURREZIONE };
+	private final ClasseIncantesimo[] colonnaSinistra = { ClasseIncantesimo.ARIA, ClasseIncantesimo.ACQUA,
+			ClasseIncantesimo.TERRA, ClasseIncantesimo.FUOCO, ClasseIncantesimo.FULMINE, ClasseIncantesimo.GELO,
+			ClasseIncantesimo.VELENO };
+	private final ClasseIncantesimo[] colonnaDestra = { ClasseIncantesimo.MORTE, ClasseIncantesimo.RESURREZIONE,
+			ClasseIncantesimo.ALBA_SACRA};
 
 	private final int topLeftX;
 	private final int topLeftY;
@@ -74,9 +76,6 @@ class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 			disegnaIncantesimo(graphics, iconaDestraX, nomeDestraX, totaleDestraX, locYOffset, classeIncantesimo, g.getIncantesimi(classeIncantesimo), color);
 			locYOffset += fontMedium.getHeight();
 		}
-
-		// Per lasciare spazio tra incantesimi e pozioni
-		locYOffset += fontMedium.getHeight();
 
 		disegnaOggetto(graphics, iconaDestraX, nomeDestraX, totaleDestraX, locYOffset, ImageCache.spritePozioneSalute, "Salute", g.getPozioniSalute(), color);
 		locYOffset += fontMedium.getHeight();
