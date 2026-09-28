@@ -57,6 +57,7 @@ import java.util.function.Supplier;
 //  - ma voi <negoziante> siete sempre aperti/non chiudete mai? parla quello che mi piomba in negozio alle tre del mattino/no, perché abbiamo clienti come te
 // TODO: gli oggetti venduti all'armaiolo probabilmente andrebbero anche distrutti alla fine della locazione per non riempirgli l'inventario
 // TODO: come ci sono locande sparse per la foresta, forse anche qualche negozio di armaiolo, alchimista, venditore di pergamene e incantatore male non farebbero
+// TODO: trofei come aiuto per il gioco?
 
 // Bug noti ancora da correggere (dall'indagine sul codice): si spuntano togliendo la riga quando sono corretti.
 //
@@ -64,7 +65,6 @@ import java.util.function.Supplier;
 // FIXME Personaggi a livello 5 pesantemente armati non riescono neanche lontanamente a scalfire un boss come la Strega o il Lich
 //
 // UI
-// FIXME il pannello col testo è scrollabile ma non mostra le freccine di scorrimento
 // FIXME modalità VERTICALE: DisplayableCanvasBarraIcone avanza di 32 con icone alte 64, e la finestra e' larga al massimo 400
 // FIXME schermi alti meno di 804 px: la barra delle icone copre il fondo del riquadro delle missioni
 

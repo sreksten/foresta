@@ -10,6 +10,8 @@ class DisplayableCanvasRiquadroTesto implements Finestra {
 
 	private final int topLeftX;
 	private final int topLeftY;
+	private final int width;
+	private final int height;
 	private final DoomdarkTextRectangle2x doomdarkTextRectangle;
 	// L'immagine finita del riquadro (ombra del drago + testo sfumato), rifatta solo
 	// quando cambia la versione del testo
@@ -19,6 +21,8 @@ class DisplayableCanvasRiquadroTesto implements Finestra {
 	DisplayableCanvasRiquadroTesto(int topLeftX, int topLeftY, int width, int height) {
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
+		this.width = width;
+		this.height = height;
 		doomdarkTextRectangle = new DoomdarkTextRectangle2x(width, height);
 	}
 
@@ -48,6 +52,17 @@ class DisplayableCanvasRiquadroTesto implements Finestra {
 			versioneDisegnata = versione;
 		}
 		graphics.drawImage(immagineTesto, topLeftX, topLeftY, null);
+
+		final int SPACING = ImageCache.SPACING;
+		if (doomdarkTextRectangle.isScorribileSu()) {
+			Image frecciaSu = ImageCache.componenteScorrevoleFrecciaSu;
+			graphics.drawImage(frecciaSu, topLeftX + width - frecciaSu.getWidth(null) - SPACING, topLeftY + SPACING, null);
+		}
+		if (doomdarkTextRectangle.isScorribileGiu()) {
+			Image frecciaGiu = ImageCache.componenteScorrevoleFrecciaGiu;
+			graphics.drawImage(frecciaGiu, topLeftX + width - frecciaGiu.getWidth(null) - SPACING,
+					topLeftY + height - frecciaGiu.getHeight(null) - SPACING, null);
+		}
 	}
 
 	/**

@@ -160,6 +160,20 @@ public class DoomdarkTextRectangle2x {
 	}
 
 	/**
+	 * Se si può ancora scorrere all'indietro verso i messaggi più vecchi (freccia su).
+	 */
+	public synchronized boolean isScorribileSu() {
+		return offsetRighe < Math.max(0, righe.size() - righeVisibili);
+	}
+
+	/**
+	 * Se si è già scorsi all'indietro e si può tornare verso i messaggi più recenti (freccia giù).
+	 */
+	public synchronized boolean isScorribileGiu() {
+		return offsetRighe > 0;
+	}
+
+	/**
 	 * Un numero che cambia ogni volta che il contenuto visibile cambia (testo aggiunto,
 	 * svuotato o fatto scorrere): finché resta uguale, getImageSource() darebbe lo
 	 * stesso raster.
