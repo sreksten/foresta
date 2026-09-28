@@ -375,6 +375,27 @@ public abstract class LocazioneBase implements Locazione {
 						return Stato.SCELTA_PERSONAGGIO_QUALSIASI;
 					}
 
+					// Un incantesimo benefico su tutto il gruppo (Alba Sacra) si formula sul proprio gruppo,
+					// non su quello avversario
+					if (!suUnSoloBersaglio && classeIncantesimo.getTipo() == TipoIncantesimo.BENEFICO) {
+						incantesimo.formula(formulante, null, gruppo);
+
+						if (!gruppo.getCapo().isVivo()) {
+							return Stato.GIOCO_PERSO;
+						}
+
+						gruppo.subIncantesimi(incantesimo.getClasse(), 1);
+
+						rispostaAvversaria(formulante, gruppo, gruppoAvversario);
+
+						if (!gruppo.getCapo().isVivo()) {
+							return Stato.GIOCO_PERSO;
+						}
+
+						statoLocazione = StatoLocazione.IN_LOCAZIONE;
+						break;
+					}
+
 					// Altrimenti l'incantesimo agisce sul gruppo avversario (tutto o fino al numero di bersagli del
 					// formulante, secondo la portata), su un solo avversario (Morte) o su tutta la locazione: il lancio,
 					// costo in MAGIA compreso, lo fa l'incantesimo. Gli avversari che uccide contano nelle statistiche e
