@@ -1036,8 +1036,7 @@ public abstract class LocazioneBase implements Locazione {
 			combattente = null;
 			return Stato.IN_LOCAZIONE;
 		}
-		if (azione == Comando.PERSONAGGIO_1 || azione == Comando.PERSONAGGIO_2 || azione == Comando.PERSONAGGIO_3 ||
-			azione == Comando.PERSONAGGIO_4 || azione == Comando.PERSONAGGIO_5) {
+		if (azione.isPersonaggio()) {
 			combattente = gruppo.getPersonaggio(azione);
 			impostaComandiPossibili();
 			return Stato.IN_COMBATTIMENTO;

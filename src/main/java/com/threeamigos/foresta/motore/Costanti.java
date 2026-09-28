@@ -155,6 +155,9 @@ public class Costanti {
 
     // Gruppo
     public static final int MAX_PERSONAGGI_GRUPPO_GIOCATORE = 5;
+    // Oltre ai 5 permanenti, fino a 3 slot aggiuntivi per personaggi temporanei
+    // (AiutoGratuito, AiutoMercenario, ospiti di locazione come lo Scheletro da MIETITURA)
+    public static final int MAX_PERSONAGGI_GRUPPO_TOTALE = 8;
 
     // Dall'alchimista
     public static final int COSTO_POZIONE_SALUTE = 5;

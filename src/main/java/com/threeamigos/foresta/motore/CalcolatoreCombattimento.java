@@ -344,6 +344,7 @@ public class CalcolatoreCombattimento {
                 double moltiplicatoreMaledetto = Math.max(1.0d, 2.0d - (difensore.getSaggezza() / 100.0));
                 moltiplicatoreDannoStato = moltiplicatoreDannoStato * moltiplicatoreMaledetto;
                 dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.MIETITURA);
+                dannoRisultante.setMietituraAttiva(true);
             } else if (tipoDanno == TipoDanno.SACRO) {
                 dannoRisultante.rimuoviEffettoDiStato(TipoEffettoDiStato.MALEDETTO);
                 dannoRisultante.addInterazione(TipoInterazioneConEffettiDiStato.RIGETTO);

@@ -23,7 +23,7 @@ public class AiutoMercenario implements Offerta {
 	@Override
 	public boolean isFattibile(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
 		// A gruppo pieno nessuno si puo' unire (vedi anche PersonaggioBase.getOfferta)
-		if (gruppo.getNumeroPersonaggi() >= Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE) {
+		if (gruppo.getNumeroPersonaggi() >= Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE) {
 			return false;
 		}
 		if (gruppo.getMonete() < costo) {

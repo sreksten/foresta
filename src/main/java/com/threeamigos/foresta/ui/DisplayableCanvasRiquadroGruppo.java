@@ -44,6 +44,9 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 	private final int leftXOffsetLabelCarisma;
 	private final int rightXOffsetCarisma;
 
+	private final int personaggiVisibili;
+	private int saltaPrimi = 0;
+
 	DisplayableCanvasRiquadroGruppo(int topLeftX, int topLeftY) {
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
@@ -88,6 +91,8 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		rightXOffsetStanchezza = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 17;
 		leftXOffsetLabelCarisma = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 18;
 		rightXOffsetCarisma = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 23;
+
+		personaggiVisibili = (ImageCache.corniceGrande.getHeight() - (DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE << 1)) / (fontMedium.getHeight() * 3);
 	}
 
 	void disegnaStatus(Graphics2D graphics) {
@@ -98,8 +103,15 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		int locYOffset = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE;
 
 		int l = g.getNumeroPersonaggi();
+		saltaPrimi = Math.min(saltaPrimi, Math.max(0, l - personaggiVisibili));
 		Personaggio p;
 		for (int i = 0; i < l; i++) {
+			if (i < saltaPrimi) {
+				continue;
+			}
+			if (i - saltaPrimi >= personaggiVisibili) {
+				break;
+			}
 			p = g.getPersonaggio(i);
 			Image doomdark;
 			Optional<String> nomeOpt = p.getNomeProprio();
@@ -180,6 +192,29 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		return -1;
 	}
 
+	/**
+	 * A differenza di {@link #getOrdinalePersonaggio}, riporta la riga a cui il personaggio è
+	 * effettivamente disegnato, tenendo conto dello scorrimento; -1 se il personaggio non è
+	 * visibile nella porzione corrente del riquadro.
+	 */
+	private int getRigaVisibilePersonaggio(Personaggio personaggio) {
+		int ordinale = getOrdinalePersonaggio(personaggio);
+		if (ordinale == -1) {
+			return -1;
+		}
+		int riga = ordinale - saltaPrimi;
+		return (riga < 0 || riga >= personaggiVisibili) ? -1 : riga;
+	}
+
+	@Override
+	public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
+		if (movimentoRotella == MovimentoRotella.SU) {
+			saltaPrimi = Math.max(0, saltaPrimi - numeroRotazioni);
+		} else if (movimentoRotella == MovimentoRotella.GIU) {
+			saltaPrimi += numeroRotazioni;
+		}
+	}
+
 	void gestisciEventoAumentoLivelloPersonaggio(NotificaAumentoLivelloPersonaggio evento) {
 		BusEventi.pubblica(new InternoCreazioneSpriteATempo(costruisciSpritePerVariazioneLivello(evento.getPersonaggio(),
 				evento.getLivelloAttuale() - evento.getLivelloPrecedente())));
@@ -189,12 +224,12 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		int ordinalePersonaggio = getOrdinalePersonaggio(personaggio);
-		if (ordinalePersonaggio == -1) {
+		int rigaPersonaggio = getRigaVisibilePersonaggio(personaggio);
+		if (rigaPersonaggio == -1) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteAumentoLivello;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (rigaPersonaggio * 3 + 1);
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetLivello, y, "Livello variato");
 	}
 
@@ -248,12 +283,12 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		int ordinalePersonaggio = getOrdinalePersonaggio(personaggio);
-		if (ordinalePersonaggio == -1) {
+		int rigaPersonaggio = getRigaVisibilePersonaggio(personaggio);
+		if (rigaPersonaggio == -1) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (rigaPersonaggio * 3 + 1);
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetSalute, y, "Salute variata");
 	}
 
@@ -269,12 +304,12 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		int ordinalePersonaggio = getOrdinalePersonaggio(personaggio);
-		if (ordinalePersonaggio == -1) {
+		int rigaPersonaggio = getRigaVisibilePersonaggio(personaggio);
+		if (rigaPersonaggio == -1) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (rigaPersonaggio * 3 + 1);
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetSaluteMassima, y, "Salute massima variata");
 	}
 
@@ -290,12 +325,12 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		int ordinalePersonaggio = getOrdinalePersonaggio(personaggio);
-		if (ordinalePersonaggio == -1) {
+		int rigaPersonaggio = getRigaVisibilePersonaggio(personaggio);
+		if (rigaPersonaggio == -1) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteMagia;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (rigaPersonaggio * 3 + 1);
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetMagia, y, "Magia variata");
 	}
 
@@ -311,12 +346,12 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		int ordinalePersonaggio = getOrdinalePersonaggio(personaggio);
-		if (ordinalePersonaggio == -1) {
+		int rigaPersonaggio = getRigaVisibilePersonaggio(personaggio);
+		if (rigaPersonaggio == -1) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteMagia;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (rigaPersonaggio * 3 + 1);
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetMagiaMassima, y, "Magia massima variata");
 	}
 
@@ -332,12 +367,12 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		int ordinalePersonaggio = getOrdinalePersonaggio(personaggio);
-		if (ordinalePersonaggio == -1) {
+		int rigaPersonaggio = getRigaVisibilePersonaggio(personaggio);
+		if (rigaPersonaggio == -1) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 2);
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (rigaPersonaggio * 3 + 2);
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetCoraggio, y, "Coraggio variato");
 	}
 
@@ -353,12 +388,12 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		int ordinalePersonaggio = getOrdinalePersonaggio(personaggio);
-		if (ordinalePersonaggio == -1) {
+		int rigaPersonaggio = getRigaVisibilePersonaggio(personaggio);
+		if (rigaPersonaggio == -1) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (rigaPersonaggio * 3 + 1);
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetValore, y, "Valore variato");
 	}
 
@@ -374,12 +409,12 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		int ordinalePersonaggio = getOrdinalePersonaggio(personaggio);
-		if (ordinalePersonaggio == -1) {
+		int rigaPersonaggio = getRigaVisibilePersonaggio(personaggio);
+		if (rigaPersonaggio == -1) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteAmicizia;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 1);
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (rigaPersonaggio * 3 + 1);
 		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetCarisma, y, "Carisma variato");
 	}
 
@@ -395,12 +430,12 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		int ordinalePersonaggio = getOrdinalePersonaggio(personaggio);
-		if (ordinalePersonaggio == -1) {
+		int rigaPersonaggio = getRigaVisibilePersonaggio(personaggio);
+		if (rigaPersonaggio == -1) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (ordinalePersonaggio * 3 + 2);
+		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (rigaPersonaggio * 3 + 2);
 		DoomdarkColorModel.Color color = variazione < 0 ? DoomdarkColorModel.Color.GREEN : DoomdarkColorModel.Color.RED;
 		return new SpriteATempo(icona, variazione, fontMedium, color, rightXOffsetStanchezza, y, "Stanchezza variata");
 	}

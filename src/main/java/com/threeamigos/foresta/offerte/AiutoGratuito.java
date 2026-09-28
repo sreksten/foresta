@@ -23,7 +23,7 @@ public class AiutoGratuito implements Offerta {
 	@Override
 	public boolean isFattibile(GruppoGiocatore gruppo, GruppoAvversario gng) {
 		// A gruppo pieno nessuno si puo' unire (vedi anche PersonaggioBase.getOfferta)
-		if (gruppo.getNumeroPersonaggi() >= Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE) {
+		if (gruppo.getNumeroPersonaggi() >= Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE) {
 			return false;
 		}
 		List<Personaggio> personaggiAvversari = gng.getPersonaggiVivi();

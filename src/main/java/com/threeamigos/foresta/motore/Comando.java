@@ -33,6 +33,9 @@ public enum Comando {
 	PERSONAGGIO_3,
 	PERSONAGGIO_4,
 	PERSONAGGIO_5,
+	PERSONAGGIO_6,
+	PERSONAGGIO_7,
+	PERSONAGGIO_8,
 
 	// Selezione di un tipo di incantesimo
 	ARIA,
@@ -125,10 +128,10 @@ public enum Comando {
 	}
 	
 	/**
-	 * Se il comando indica uno dei personaggi del gruppo (PERSONAGGIO_1 ... PERSONAGGIO_5).
+	 * Se il comando indica uno dei personaggi del gruppo (PERSONAGGIO_1 ... PERSONAGGIO_8).
 	 */
 	public boolean isPersonaggio() {
-		return ordinal() >= PERSONAGGIO_1.ordinal() && ordinal() <= PERSONAGGIO_5.ordinal();
+		return ordinal() >= PERSONAGGIO_1.ordinal() && ordinal() <= PERSONAGGIO_8.ordinal();
 	}
 
 	public static Comando ofPersonaggio(int personaggio) {
@@ -142,6 +145,12 @@ public enum Comando {
 			return PERSONAGGIO_4;
 		} else if (personaggio == 4) {
 			return PERSONAGGIO_5;
+		} else if (personaggio == 5) {
+			return PERSONAGGIO_6;
+		} else if (personaggio == 6) {
+			return PERSONAGGIO_7;
+		} else if (personaggio == 7) {
+			return PERSONAGGIO_8;
 		}
 		throw new IllegalArgumentException();
 	}

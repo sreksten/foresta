@@ -72,6 +72,15 @@ public abstract class Gruppo {
 		return getPersonaggiVivi().size();
 	}
 
+	/**
+	 * Riporta il numero di personaggi permanenti (esclusi quelli a tempo e gli ospiti di locazione).
+	 */
+	public final int getNumeroPersonaggiPermanenti() {
+		return (int) personaggi.stream()
+				.filter(p -> !p.isATempo() && !p.isOspiteDiLocazione())
+				.count();
+	}
+
 	public final List<Personaggio> getPersonaggi() {
 		return personaggi;
 	}

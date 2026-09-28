@@ -109,9 +109,7 @@ class DisplayableCanvasBarraIcone implements Finestra {
 	}
 
 	private BufferedImage getIcona(Comando comando) {
-		if (comando == Comando.PERSONAGGIO_1 || comando == Comando.PERSONAGGIO_2 ||
-				comando == Comando.PERSONAGGIO_3 || comando == Comando.PERSONAGGIO_4 ||
-				comando == Comando.PERSONAGGIO_5) {
+		if (comando.isPersonaggio()) {
 			return getIconaPersonaggio(comando.ordinal() - Comando.PERSONAGGIO_1.ordinal()).getIcona();
 		}
 		return ClasseIcona.ofComando(comando).getIcona();

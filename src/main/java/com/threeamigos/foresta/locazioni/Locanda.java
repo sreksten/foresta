@@ -77,7 +77,7 @@ public class Locanda extends LocazioneBase {
 		stato = StatoInLocanda.SULLA_PORTA;
 		// O incontra un personaggio o riceve informazioni
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		if (gruppo.getNumeroPersonaggi() < Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE) {
+		if (gruppo.getNumeroPersonaggiPermanenti() < Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE) {
 			personaggioDisponibile = RegistroPersonaggi.getPersonaggioInLocazione(gruppo.getCoordinate());
 		}
 		if (personaggioDisponibile != null) {

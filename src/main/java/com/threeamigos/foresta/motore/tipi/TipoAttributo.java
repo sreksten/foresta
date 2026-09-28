@@ -263,7 +263,15 @@ public enum TipoAttributo {
     /**
      * Per i personaggi che rimangono nel gruppo un determinato periodo di tempo e poi lo lasciano.
      */
-    TEMPO(SupertipoAttributo.RISORSA_DINAMICA, "Tempo", "Tempo rimanente nel gruppo");
+    TEMPO(SupertipoAttributo.RISORSA_DINAMICA, "Tempo", "Tempo rimanente nel gruppo"),
+
+    /**
+     * Per i personaggi che entrano nel gruppo del giocatore e vi restano solo per la durata
+     * della locazione corrente, a differenza di {@link #TEMPO} che si consuma a turni. Oggi lo
+     * Scheletro nato dalla MIETITURA di un minion; in futuro un eventuale mostro convertito
+     * temporaneamente da un incantesimo come "Controllo Mentale".
+     */
+    OSPITE_DI_LOCAZIONE(SupertipoAttributo.RISORSA_DINAMICA, "Ospite di locazione", "Resta nel gruppo solo per la locazione corrente");
 
     private final SupertipoAttributo supertipo;
     private final String nome;

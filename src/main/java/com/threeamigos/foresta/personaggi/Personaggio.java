@@ -222,6 +222,17 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
 	 * Quando la funzione restituisce 0 il PNG lascia il gruppo.
 	 */
     int decrementaTempo();
+
+	/**
+	 * Un personaggio ospite del gruppo del giocatore resta solo per la durata
+	 * della locazione corrente, invece che per un numero di turni come {@link #isATempo()}.
+	 */
+    void setOspiteDiLocazione(boolean ospiteDiLocazione);
+
+	/**
+	 * Indica che il personaggio è un ospite di locazione (vedi {@link #setOspiteDiLocazione(boolean)}).
+	 */
+    boolean isOspiteDiLocazione();
 	/**
 	 * Ogni personaggio puo' fare differenti tipi di offerta, a seconda della sua classe.
 	 */

@@ -16,6 +16,7 @@ public enum ClasseIcona {
 	GOBLIN(ClassePersonaggio.GOBLIN, "icone/Goblin.gif"),
 	HOBGOBLIN(ClassePersonaggio.HOBGOBLIN, "icone/Hobgoblin.gif"),
 	MINOTAURO(ClassePersonaggio.MINOTAURO, "icone/Minotauro.gif"),
+	SCHELETRO(ClassePersonaggio.SCHELETRO, "icone/Scheletro.gif"),
 	TITANO(ClassePersonaggio.TITANO, "icone/Titano.gif"),
 	GUERRIERA(Comando.GUERRIERA, ClassePersonaggio.GUERRIERA, "icone/Guerriera.gif"),
 	GUERRIERO(Comando.GUERRIERO, ClassePersonaggio.GUERRIERO, "icone/Guerriero.gif"),

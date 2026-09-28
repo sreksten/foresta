@@ -140,6 +140,10 @@ public abstract class PersonaggioBase implements Personaggio {
 		return false;
 	}
 
+	private boolean isServitoreAvversario() {
+		return !isParteConValoriMassimi() && GruppoAvversario.getIstanza().contiene(this);
+	}
+
 	public boolean isPNG() {
 		return png;
 	}
@@ -428,6 +432,16 @@ public abstract class PersonaggioBase implements Personaggio {
 				subSalute(mpBruciato, risultato.getAttaccante(), Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
 			}
 		}
+
+		if (risultato.isMietituraAttiva() && isServitoreAvversario() && getSalute() * 5 < getSaluteMassima()) {
+			if (isVivo()) {
+				muore("è stato mietuto e si è risvegliato come scheletro");
+			}
+			GruppoAvversario.getIstanza().rimuoviPersonaggio(this);
+			Scheletro scheletro = new Scheletro(getLivello());
+			scheletro.setOspiteDiLocazione(true);
+			GruppoGiocatore.getIstanza().aggiungiPersonaggio(scheletro);
+		}
 	}
 
 	/**
@@ -565,6 +579,16 @@ public abstract class PersonaggioBase implements Personaggio {
 		return (int)tempo;
 	}
 
+	@Override
+	public void setOspiteDiLocazione(boolean ospiteDiLocazione) {
+		md.set(TipoAttributo.OSPITE_DI_LOCAZIONE, ospiteDiLocazione ? 1.0d : 0.0d);
+	}
+
+	@Override
+	public boolean isOspiteDiLocazione() {
+		return md.getOptional(TipoAttributo.OSPITE_DI_LOCAZIONE).orElse(0.0d) != 0.0d;
+	}
+
 	public Offerta getOfferta(Comando azione) {
 		ClassiOfferta[] offerte = null;
 		if (isAmichevole() && azione == Comando.AMICIZIA) {
@@ -573,7 +597,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			offerte = getOfferteCorruzione();
 		}
 		// A gruppo pieno nessuno si puo' unire: le offerte di aiuto non si propongono
-		if (GruppoGiocatore.getIstanza().getNumeroPersonaggi() >= Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE) {
+		if (GruppoGiocatore.getIstanza().getNumeroPersonaggi() >= Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE) {
 			offerte = Arrays.stream(offerte)
 					.filter(o -> o != ClassiOfferta.AIUTO_GRATUITO && o != ClassiOfferta.AIUTO_MERCENARIO)
 					.toArray(ClassiOfferta[]::new);
