@@ -32,6 +32,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+// TODO: missioni principali come il drago e il fegato eroico che hanno missioni secondarie non dovrebbero far scattare
+// le notifiche globali per le secondarie (sono una scocciatura). inoltre la missione principale del drago, a differenza
+// di Fegato Eroico, tiene le missioni figlie come missioni a parte. dovrebbero diventare missioni figlie della principale.
 // TODO: carta, forbice e sasso
 // TODO: mostrare in locazione anche i personaggi del gruppo.
 // TODO: implementare fumetto che attende chiusura
