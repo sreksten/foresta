@@ -9,10 +9,16 @@ import java.util.function.Supplier;
 public enum ClasseIntermezzo {
 
 	// Solo in modalità di prova (vedi ModalitaDiProva)
+	INTERMEZZO_INTRODUTTIVO(IntermezzoIntroduttivo::new),
 	INTERMEZZO_DI_PROVA(IntermezzoDiProva::new, true);
 
 	private final Supplier<Intermezzo> supplier;
 	private final boolean diProva;
+
+	ClasseIntermezzo(Supplier<Intermezzo> supplier) {
+		this.supplier = supplier;
+		this.diProva = false;
+	}
 
 	ClasseIntermezzo(Supplier<Intermezzo> supplier, boolean diProva) {
 		this.supplier = supplier;

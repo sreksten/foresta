@@ -8,6 +8,7 @@ import com.threeamigos.foresta.intermezzi.ElementoIntermezzo;
 import com.threeamigos.foresta.intermezzi.ImmagineIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.StatoElemento;
+import com.threeamigos.foresta.intermezzi.TipoStiramento;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -17,9 +18,10 @@ import java.util.Map;
 
 /**
  * La schermata a tutto schermo degli intermezzi. Disegna una {@link PaginaIntermezzo} a
- * strati: lo sfondo (scalato a coprire tutta l'area, o l'ombra del drago se manca), gli
- * elementi nell'ordine della pagina con il loro stato al secondo corrente, il testo in
- * alto e i fumetti delle battute visibili, con la punta verso la bocca di chi parla.
+ * strati: lo sfondo (stirato sugli assi indicati dal suo {@link TipoStiramento}, o l'ombra
+ * del drago se manca), gli elementi nell'ordine della pagina con il loro stato al secondo
+ * corrente, il testo in alto e i fumetti delle battute visibili, con la punta verso la
+ * bocca di chi parla.
  * <p>
  * Il tempo è quello reale trascorso da quando la pagina è comparsa: è lo stesso metro del
  * timer con cui il motore fa avanzare le pagine, quindi animazioni e dialoghi restano
@@ -99,7 +101,10 @@ class DisplayableCanvasIntermezzo implements Finestra {
 		Graphics2D graphicsImmagini = (Graphics2D) graphics.create();
 		try {
 			graphicsImmagini.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
-			disegnaSfondo(graphicsImmagini, secondi);
+			Rectangle areaSfondo = disegnaSfondo(graphicsImmagini, secondi);
+			if (pagina.isRitaglioSuSfondo() && areaSfondo != null) {
+				graphicsImmagini.setClip(areaSfondo);
+			}
 			posizioni.clear();
 			versi.clear();
 			for (ElementoIntermezzo elemento : pagina.getElementi()) {
@@ -118,18 +123,29 @@ class DisplayableCanvasIntermezzo implements Finestra {
 		}
 	}
 
-	private void disegnaSfondo(Graphics2D graphics, double secondi) {
+	/**
+	 * Disegna lo sfondo e restituisce l'area dello schermo che ha effettivamente occupato
+	 * (per l'eventuale ritaglio degli elementi, vedi {@link PaginaIntermezzo#conRitaglioSuSfondo()});
+	 * null se non c'è sfondo, nel qual caso si vede solo l'ombra del drago.
+	 */
+	private Rectangle disegnaSfondo(Graphics2D graphics, double secondi) {
 		BufferedImage sfondo = pagina.getSfondo() == null ? null : immagine(pagina.getSfondo(), secondi, null);
 		if (sfondo == null) {
 			testo.disegnaOmbraDelDrago(graphics);
-			return;
+			return null;
 		}
-		// Scalato per coprire tutta l'area mantenendo le proporzioni, centrato
-		double scala = Math.max((double) width / sfondo.getWidth(), (double) height / sfondo.getHeight());
-		int larghezzaSfondo = (int) Math.ceil(sfondo.getWidth() * scala);
-		int altezzaSfondo = (int) Math.ceil(sfondo.getHeight() * scala);
-		graphics.drawImage(sfondo, (width - larghezzaSfondo) / 2, (height - altezzaSfondo) / 2,
-				larghezzaSfondo, altezzaSfondo, null);
+		// Stirato solo sugli assi richiesti da TipoStiramento per riempire esattamente l'area
+		// (anche distorcendo le proporzioni); gli assi non stirati restano a dimensione
+		// nativa, centrati.
+		TipoStiramento tipoStiramento = pagina.getTipoStiramentoSfondo();
+		boolean stiraOrizzontale = tipoStiramento == TipoStiramento.ORIZZONTALE || tipoStiramento == TipoStiramento.ORIZZONTALE_E_VERTICALE;
+		boolean stiraVerticale = tipoStiramento == TipoStiramento.VERTICALE || tipoStiramento == TipoStiramento.ORIZZONTALE_E_VERTICALE;
+		int larghezzaSfondo = stiraOrizzontale ? width : sfondo.getWidth();
+		int altezzaSfondo = stiraVerticale ? height : sfondo.getHeight();
+		int x = (width - larghezzaSfondo) / 2;
+		int y = (height - altezzaSfondo) / 2;
+		graphics.drawImage(sfondo, x, y, larghezzaSfondo, altezzaSfondo, null);
+		return new Rectangle(x, y, larghezzaSfondo, altezzaSfondo);
 	}
 
 	private void disegnaElemento(Graphics2D graphics, ElementoIntermezzo elemento, StatoElemento stato, double secondi) {

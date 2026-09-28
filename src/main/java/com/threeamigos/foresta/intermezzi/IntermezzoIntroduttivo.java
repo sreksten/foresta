@@ -14,11 +14,11 @@ import java.util.List;
  * animato sullo sfondo che si gira quando torna indietro, un'animazione fornita da una
  * classe della UI (il fuoco) e un dialogo a fumetti.
  */
-public class IntermezzoDiProva implements Intermezzo {
+public class IntermezzoIntroduttivo implements Intermezzo {
 
 	@Override
 	public String getId() {
-		return ClasseIntermezzo.INTERMEZZO_DI_PROVA.name();
+		return ClasseIntermezzo.INTERMEZZO_INTRODUTTIVO.name();
 	}
 
 	@Override
@@ -38,33 +38,43 @@ public class IntermezzoDiProva implements Intermezzo {
 		List<PaginaIntermezzo> pagineIntermezzo = new ArrayList<>();
 		pagineIntermezzo.add(new PaginaIntermezzo("La Foresta e' silenziosa, e " + eroe + " si inoltra fra gli alberi.")
 				.perSecondi(3)
-				.conElemento(ElementoIntermezzo.personaggio("eroe", classeEroe, 0.5, 2.0 / 3)));
+				.conElemento(personaggioVersoSinistra(classeEroe, 0.5, 2.0 / 3)));
 		pagineIntermezzo.add(new PaginaIntermezzo("Lontano, oltre le chiome, si alza un filo di fumo nero. Il Drago non dorme.")
 				.perSecondi(3)
-				.conElemento(ElementoIntermezzo.personaggio("eroe", classeEroe, 0.5, 2.0 / 3)));
+				.conElemento(personaggioVersoSinistra(classeEroe, 0.5, 2.0 / 3)));
 		PaginaIntermezzo finale = new PaginaIntermezzo()
-						.conSfondo(ImmagineIntermezzo.locazione(ClassiLocazione.RADURA))
-						// Il drago attraversa il cielo, piccolo e semitrasparente, avanti e indietro,
-						// guardando sempre dove va (l'immagine originale guarda a sinistra)
-						.conElemento(ElementoIntermezzo.personaggio("drago", ClassePersonaggio.DRAGO, 1.1, 0.25)
-								.conScala(0.4).conOpacita(0.6)
-								.poi(Tappa.inSecondi(8).verso(-0.1, 0.15))
-								.ripeti(Ripetizione.AVANTI_E_INDIETRO)
-								.orientaNelVersoDelMoto(Verso.SINISTRA))
-						.conElemento(ElementoIntermezzo.di("fuoco", ImmagineIntermezzo.animazione(Animazione.FUOCO_DA_CAMPO), 0.5, 0.76))
-						.conElemento(ElementoIntermezzo.personaggio("eroe", classeEroe, 0.3, 0.7))
+						.conSfondo(ImmagineIntermezzo.locazione(ClassiLocazione.BOSCO))
+						.conRitaglioSuSfondo()
+						.conElemento(ElementoIntermezzo.di("fuoco", ImmagineIntermezzo.animazione(Animazione.FUOCO_DA_CAMPO), 0.5, 0.68))
+						// Guarda a sinistra finché non si accorge dell'eremita, poi si volta verso di lui
+						.conElemento(personaggioVersoSinistra(classeEroe, 0.38, 0.61)
+								.conBocca(0.5, -0.15)
+								.poi(Tappa.inSecondi(2))
+								.poi(Tappa.inSecondi(0.1).specchiata(VersoDiDefault.serveSpecchiare(classeEroe, Verso.DESTRA))))
 						// L'eremita entra da destra e si ferma davanti all'eroe
-						.conElemento(ElementoIntermezzo.personaggio("eremita", ClassePersonaggio.EREMITA, 1.1, 0.7)
+						.conElemento(ElementoIntermezzo.personaggio("eremita", ClassePersonaggio.EREMITA, 1.1, 0.61)
+								.conBocca(0.5, -0.15)
 								.specchiato()
-								.poi(Tappa.inSecondi(2).verso(0.7, 0.7)))
+								.poi(Tappa.inSecondi(2).verso(0.62, 0.61)))
 						.conBattuta(BattutaIntermezzo.di("eremita", "Chi va là?").daSecondo(2))
 						.conBattuta(BattutaIntermezzo.di("eroe", "Mi chiamo " + eroe + ". Sto cercando il Drago."));
+		finale.conBattuta(BattutaIntermezzo.di("eremita", "Il suo castello è protetto da un incantesimo. Non riuscirai a trovarlo, a meno che tu prima non sconfigga i suoi alleati."));
 		if (GruppoGiocatore.getIstanza().getCapo().getClasse() == ClassePersonaggio.OMBRAFIAMMA) {
-			finale.conBattuta(BattutaIntermezzo.di("eremita", "Non vorrei essere nei suoi panni."));
-		} else {
-			finale.conBattuta(BattutaIntermezzo.di("eremita", "Allora guarda in alto, e prega di non trovarlo."));
+			finale.conBattuta(BattutaIntermezzo.di("eremita", "E comunque... Non vorrei essere nei suoi panni."));
 		}
 		pagineIntermezzo.add(finale);
 		return pagineIntermezzo;
+	}
+
+	/**
+	 * L'eroe guarda a sinistra all'inizio, indipendentemente dal verso con cui è
+	 * disegnata l'immagine della sua classe (vedi {@link VersoDiDefault}).
+	 */
+	private static ElementoIntermezzo personaggioVersoSinistra(ClassePersonaggio classe, double x, double y) {
+		ElementoIntermezzo elemento = ElementoIntermezzo.personaggio("eroe", classe, x, y);
+		if (VersoDiDefault.serveSpecchiare(classe, Verso.SINISTRA)) {
+			elemento.specchiato();
+		}
+		return elemento;
 	}
 }

@@ -30,6 +30,8 @@ public class PaginaIntermezzo {
 
 	private final String testo;
 	private ImmagineIntermezzo sfondo;
+	private TipoStiramento tipoStiramentoSfondo = TipoStiramento.NESSUNO;
+	private boolean ritaglioSuSfondo = false;
 	private final Map<String, ElementoIntermezzo> elementi = new LinkedHashMap<>();
 	private final List<BattutaIntermezzo> battute = new ArrayList<>();
 	private double durata = Double.NaN;
@@ -43,9 +45,37 @@ public class PaginaIntermezzo {
 		this.testo = testo;
 	}
 
+	/**
+	 * Sfondo senza stiramento: a dimensione nativa, centrato.
+	 */
 	public PaginaIntermezzo conSfondo(ImmagineIntermezzo sfondo) {
+		return conSfondo(sfondo, TipoStiramento.NESSUNO);
+	}
+
+	/**
+	 * Sfondo stirato sugli assi indicati da {@code tipoStiramento} per riempire esattamente
+	 * l'area, anche distorcendo le proporzioni dell'immagine. Gli assi non stirati restano
+	 * a dimensione nativa, centrati.
+	 */
+	public PaginaIntermezzo conSfondo(ImmagineIntermezzo sfondo, TipoStiramento tipoStiramento) {
 		this.sfondo = sfondo;
+		this.tipoStiramentoSfondo = tipoStiramento;
 		return this;
+	}
+
+	/**
+	 * Ritaglia gli elementi sull'area effettiva dello sfondo (a dimensione nativa o
+	 * stirato, secondo {@link #conSfondo}), così che chi entra o esce di scena non sia
+	 * visibile finché è ancora fuori dall'immagine di sfondo. Non riguarda i fumetti, che
+	 * restano sempre visibili per intero anche se sporgono dall'area di sfondo.
+	 */
+	public PaginaIntermezzo conRitaglioSuSfondo() {
+		ritaglioSuSfondo = true;
+		return this;
+	}
+
+	public boolean isRitaglioSuSfondo() {
+		return ritaglioSuSfondo;
 	}
 
 	public PaginaIntermezzo conElemento(ElementoIntermezzo elemento) {
@@ -83,6 +113,10 @@ public class PaginaIntermezzo {
 
 	public ImmagineIntermezzo getSfondo() {
 		return sfondo;
+	}
+
+	public TipoStiramento getTipoStiramentoSfondo() {
+		return tipoStiramentoSfondo;
 	}
 
 	public List<ElementoIntermezzo> getElementi() {
