@@ -39,14 +39,6 @@ import java.util.function.Supplier;
 // TODO: mostrare in locazione anche i personaggi del gruppo.
 // TODO: implementare fumetto che attende chiusura
 // TODO: implementare sistema di aiuto
-// TODO: SACRO vs non-morti: nessun bonus/malus di danno SACRO contro i non-morti (Scheletro, Spettro, Lich,
-//   Fantasma, OmbraNera) esiste oggi in CalcolatoreCombattimento. L'unico marcatore "non-morto"
-//   attuale è getMoltiplicatoreRecuperoFisico() == 0, usato solo per la guarigione da riposo.
-// TODO: immunità dei non-morti a stati DoT senza senso biologico (INFETTATO, SANGUINAMENTO, AVVELENATO):
-//   oggi qualsiasi personaggio può subirli, ma su un non-morto non hanno senso e dovrebbero essere ignorati.
-// TODO: incantesimo benefico di gruppo che rimuova effetti di stato negativi (es. AVVELENATO) dal proprio
-//   gruppo, sul modello di Resurrezione (che opera fuori da TipoDanno/CalcolatoreCombattimento, direttamente
-//   su Personaggio/Gruppo). Nato dalla Neutralizzazione scartata in interazioni_effetti_di_stato.md.
 // TODO: implementare gli intermezzi nelle Locande che mostrano il dialogo del gestore con il gruppo al completo
 // TODO: implementare gli intermezzi nell'accampamento:
 //  - hai visto che luna stasera? non è una luna quella... è una stazione da battaglia! - perdi troppo tempo ad ascoltare le storie nelle locande.
