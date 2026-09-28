@@ -64,6 +64,7 @@ import java.util.function.Supplier;
 // FIXME Personaggi a livello 5 pesantemente armati non riescono neanche lontanamente a scalfire un boss come la Strega o il Lich
 //
 // UI
+// FIXME il pannello col testo è scrollabile ma non mostra le freccine di scorrimento
 // FIXME modalità VERTICALE: DisplayableCanvasBarraIcone avanza di 32 con icone alte 64, e la finestra e' larga al massimo 400
 // FIXME schermi alti meno di 804 px: la barra delle icone copre il fondo del riquadro delle missioni
 
