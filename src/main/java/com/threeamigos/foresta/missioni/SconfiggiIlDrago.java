@@ -16,6 +16,10 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 
 	public SconfiggiIlDrago() {
 		super(ClasseMissione.SCONFIGGI_IL_DRAGO);
+		aggiungiMissione(new SconfiggiLaStrega());
+		aggiungiMissione(new SconfiggiIlLich());
+		aggiungiMissione(new SconfiggiIlMinotauroGigante());
+		aggiungiMissione(new SconfiggiLIdra());
 	}
 
 	private static final String DRAGO_APPARSO = "DRAGO_APPARSO";

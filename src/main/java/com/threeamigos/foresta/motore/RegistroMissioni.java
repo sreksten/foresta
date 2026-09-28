@@ -21,10 +21,6 @@ public class RegistroMissioni {
 
 	public enum TipoMissionePredefinita {
 		SCONFIGGI_IL_DRAGO(ClasseMissione.SCONFIGGI_IL_DRAGO),
-		SCONFIGGI_IL_MINOTAURO_GIGANTE(ClasseMissione.SCONFIGGI_IL_MINOTAURO_GIGANTE),
-		SCONFIGGI_L_IDRA(ClasseMissione.SCONFIGGI_L_IDRA),
-		SCONFIGGI_IL_LICH(ClasseMissione.SCONFIGGI_IL_LICH),
-		SCONFIGGI_LA_STREGA(ClasseMissione.SCONFIGGI_LA_STREGA),
 		// Solo in modalità di prova (vedi ModalitaDiProva)
 		MISSIONE_DI_PROVA(ClasseMissione.MISSIONE_DI_PROVA, true),
 		// Solo in modalità di prova: serve a vedere una missione fallita nella finestra delle missioni

@@ -81,7 +81,9 @@ public abstract class MissioneBase implements Missione {
 	@Override
 	public void attivaMissione() {
 		md.aggiungiProprieta(ATTIVA, "S");
-		BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "NUOVA MISSIONE", getNome()));
+		if (RegistroMissioni.TipoMissionePredefinita.contieneMissione(getId())) {
+			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "NUOVA MISSIONE", getNome()));
+		}
 	}
 
 	@Override
@@ -114,7 +116,9 @@ public abstract class MissioneBase implements Missione {
 		}
 		md.aggiungiProprieta(FALLITA, AFFERMATIVO);
 		RegistroMissioni.fallisciMissione(this);
-		BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "MISSIONE FALLITA", getNome()));
+		if (RegistroMissioni.TipoMissionePredefinita.contieneMissione(getId())) {
+			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "MISSIONE FALLITA", getNome()));
+		}
 		md.setDescrizioneVisibile(false);
 	}
 
