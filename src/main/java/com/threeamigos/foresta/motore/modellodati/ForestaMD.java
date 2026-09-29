@@ -31,6 +31,14 @@ public class ForestaMD implements Serializzabile {
 	// Si potrebbe fare anche un ciclo su tutta la foresta ma così si fa prima.
 	private Map<ClassiLocazione, CoordinateMD> locazioniUniche;
 
+	// Incrementato ogni volta che cambia visivamente la mappa (conosciuta/visitata),
+	// così chi disegna la mappa generale sa quando la sua cache è da ricostruire.
+	private int versioneMappa;
+
+	public int getVersioneMappa() {
+		return versioneMappa;
+	}
+
 	public int getDimensioneX() {
 		return dimensioneX;
 	}
@@ -116,6 +124,7 @@ public class ForestaMD implements Serializzabile {
 		maxXConosciuta = -1;
 		minYConosciuta = -1;
 		maxYConosciuta = -1;
+		versioneMappa = 0;
 	}
 
 	public final void impostaLocazioneVisitata(CoordinateMD coordinate) {
@@ -129,6 +138,7 @@ public class ForestaMD implements Serializzabile {
 		} else {
 			locazioneMD.rimuoviProprieta(LocazioneMD.VISITATA);
 		}
+		versioneMappa++;
 	}
 
 	public final boolean isLocazioneVisitata(CoordinateMD coordinate) {
@@ -160,6 +170,7 @@ public class ForestaMD implements Serializzabile {
 	private void impostaLocazioneConosciuta(int x, int y) {
 		arrayLocazioni[offset(x, y)].aggiungiProprieta(LocazioneMD.CONOSCIUTA, LocazioneMD.AFFERMATIVO);
 		aggiornaEstremiConosciuti(x, y);
+		versioneMappa++;
 	}
 
 	private void aggiornaEstremiConosciuti(int x, int y) {

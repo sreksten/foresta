@@ -7,9 +7,6 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.ui.sfx.CloudManager;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.List;
 
 class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Finestra {
 
@@ -23,14 +20,8 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 	private final int width;
 	private final int height;
 	private final Notiziario notiziario;
-	// Le caselle della mappa, senza quella del gruppo (vedi preparaMappa)
-	private BufferedImage immagineMappa;
 	private int mappaXOffset;
 	private int mappaYOffset;
-	// Le caselle da segnalare con Indicatore.gif, lampeggiante come il segnalino del
-	// gruppo: va ridisegnato a ogni frame, quindi non può far parte di immagineMappa
-	// (vedi disegnaIndicatori)
-	private final List<CoordinateMD> coordinateDaSegnalare = new ArrayList<>();
 
 	private boolean stoTrascinando;
 	private int ultimaXMouse;
@@ -90,45 +81,6 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 	}
 
 	/**
-	 * Ricostruisce l'immagine delle caselle. Va chiamato a ogni apertura della mappa:
-	 * mentre la mappa è mostrata l'automa attende solo di chiuderla, quindi né le
-	 * caselle conosciute né la posizione del gruppo possono cambiare.
-	 * <p>
-	 * La casella del gruppo resta vuota: il segnalino lampeggia, e viene disegnato
-	 * sopra l'immagine a ogni frame (vedi disegnaSegnalino).
-	 */
-	void preparaMappa() {
-		immagineMappa = new BufferedImage(Foresta.getDimensioneX() * LARGHEZZA_ICONA,
-				Foresta.getDimensioneY() * ALTEZZA_ICONA, BufferedImage.TYPE_INT_ARGB);
-		CoordinateMD coordinateGruppo = GruppoGiocatore.getIstanza().getCoordinate();
-		coordinateDaSegnalare.clear();
-
-		Graphics2D graphics = immagineMappa.createGraphics();
-
-		for (int x = 0; x < Foresta.getDimensioneX(); x++) {
-			for (int y = 0; y < Foresta.getDimensioneY(); y++) {
-				int coordinateX = x * LARGHEZZA_ICONA;
-				int coordinateY = y * ALTEZZA_ICONA;
-				CoordinateMD coordinateCorrenti = new CoordinateMD(x, y);
-				if (coordinateCorrenti.equals(coordinateGruppo)) {
-					continue;
-				}
-				if (Foresta.isLocazioneConosciuta(coordinateCorrenti)) {
-					Image image = recuperaImmaginePerLocazione(coordinateCorrenti);
-					graphics.drawImage(image, coordinateX, coordinateY, null);
-					if (Foresta.isLocazioneVisitata(coordinateCorrenti)) {
-						scurisci(graphics, coordinateX, coordinateY, LARGHEZZA_ICONA, ALTEZZA_ICONA, 50);
-					}
-					if (Foresta.isDaSegnalareConIndicatore(coordinateCorrenti)) {
-						coordinateDaSegnalare.add(coordinateCorrenti);
-					}
-				}
-			}
-		}
-		graphics.dispose();
-	}
-
-	/**
 	 * Il segnalino del gruppo, acceso un secondo sì e uno no, sulla casella lasciata
 	 * vuota nell'immagine della mappa.
 	 */
@@ -142,10 +94,10 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 	/**
 	 * Le caselle segnalate (artefatti di cui si è saputo, bersagli di missione), lampeggianti
 	 * come il segnalino del gruppo: vanno ridisegnate a ogni frame perché non fanno parte
-	 * dell'immagine statica della mappa (vedi preparaMappa).
+	 * dell'immagine statica della mappa (vedi DisegnatoreMappa.ottieniMappaGenerale).
 	 */
 	private void disegnaIndicatori(Graphics2D graphics) {
-		for (CoordinateMD coordinate : coordinateDaSegnalare) {
+		for (CoordinateMD coordinate : Foresta.getCoordinateDaSegnalare()) {
 			graphics.drawImage(ImageCache.indicatore,
 					mappaXOffset + coordinate.getX() * LARGHEZZA_ICONA,
 					mappaYOffset + coordinate.getY() * ALTEZZA_ICONA, null);
@@ -167,10 +119,6 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 			mappaYOffset = Math.max(altezzaMappa - dimensioneMappaY, Math.min(0, mappaYOffset));
 		}
 
-		if (immagineMappa == null) {
-			preparaMappa();
-		}
-
 		// Salva lo stato originale della Clip e del Composite
 		Shape originalClip = graphics.getClip();
 		Composite originalComposite = graphics.getComposite();
@@ -179,7 +127,7 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 		// notiziario, così non può mai debordare nella fascia in basso
 		graphics.clipRect(0, 0, width, altezzaMappa);
 
-		graphics.drawImage(immagineMappa, mappaXOffset, mappaYOffset, null);
+		graphics.drawImage(ottieniMappaGenerale(), mappaXOffset, mappaYOffset, null);
 
 		if (isSegnaliniVisibili()) {
 			disegnaSegnalino(graphics);

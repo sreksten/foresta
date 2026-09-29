@@ -70,6 +70,10 @@ public class RegistroArtefattiMD implements Serializzabile {
 		return localizzazioniConosciute.contains(coordinate);
 	}
 
+	public Set<CoordinateMD> getLocalizzazioniConosciute() {
+		return Collections.unmodifiableSet(localizzazioniConosciute);
+	}
+
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
 		stream.println(artefattiSmarriti.size());

@@ -68,24 +68,23 @@ class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements Finestr
 		}
 		int localXOffset = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_MAPPA;
 		int localYOffset = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_MAPPA;
-		for (int x = daX; x <= aX; x++) {
-			for (int y = daY; y <= aY; y++) {
-				int coordinateX = localXOffset + (x - daX) * LARGHEZZA_ICONA;
-				int coordinateY = localYOffset + (y - daY) * ALTEZZA_ICONA;
-				CoordinateMD coordinateCorrenti = new CoordinateMD(x, y);
-				if (coordinateCorrenti.equals(coordinateGruppo)) {
-					if (isSegnaliniVisibili()) {
-						graphics.drawImage(ImageCache.segnalino, coordinateX, coordinateY, null);
-					}
-				} else {
-					Image image = recuperaImmaginePerLocazione(coordinateCorrenti);
-					graphics.drawImage(image, coordinateX, coordinateY, null);
-					if (Foresta.isLocazioneVisitata(coordinateCorrenti)) {
-						scurisci(graphics, coordinateX, coordinateY, LARGHEZZA_ICONA, ALTEZZA_ICONA, 50);
-					}
-					if (Foresta.isDaSegnalareConIndicatore(coordinateCorrenti) && (isSegnaliniVisibili())) {
-						graphics.drawImage(ImageCache.indicatore, coordinateX, coordinateY, null);
-					}
+
+		graphics.drawImage(ottieniMappaGenerale(),
+				localXOffset, localYOffset, localXOffset + larghezzaRiquadroMappa, localYOffset + larghezzaRiquadroMappa,
+				daX * LARGHEZZA_ICONA, daY * ALTEZZA_ICONA, (aX + 1) * LARGHEZZA_ICONA, (aY + 1) * ALTEZZA_ICONA, null);
+
+		if (isSegnaliniVisibili()) {
+			int coordinateX = localXOffset + (gruppoX - daX) * LARGHEZZA_ICONA;
+			int coordinateY = localYOffset + (gruppoY - daY) * ALTEZZA_ICONA;
+			graphics.drawImage(ImageCache.segnalino, coordinateX, coordinateY, null);
+
+			for (CoordinateMD coordinate : Foresta.getCoordinateDaSegnalare()) {
+				int x = coordinate.getX();
+				int y = coordinate.getY();
+				if (x >= daX && x <= aX && y >= daY && y <= aY) {
+					int indicatoreX = localXOffset + (x - daX) * LARGHEZZA_ICONA;
+					int indicatoreY = localYOffset + (y - daY) * ALTEZZA_ICONA;
+					graphics.drawImage(ImageCache.indicatore, indicatoreX, indicatoreY, null);
 				}
 			}
 		}

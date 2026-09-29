@@ -12,6 +12,8 @@ import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 
+import java.util.Set;
+
 public class RegistroArtefatti {
 
 	private static RegistroArtefattiMD getRegistroArtefatti() {
@@ -236,6 +238,10 @@ public class RegistroArtefatti {
 
 	public static boolean isLocalizzazioneConosciuta(CoordinateMD coordinate) {
 		return getRegistroArtefatti().isLocalizzazioneConosciuta(coordinate);
+	}
+
+	public static Set<CoordinateMD> getLocalizzazioniConosciute() {
+		return getRegistroArtefatti().getLocalizzazioniConosciute();
 	}
 
 	private static void aggiungiArtefatto(Artefatto artefatto) {
