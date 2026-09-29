@@ -58,7 +58,7 @@ public class IntermezzoIntroduttivo implements Intermezzo {
 								.poi(Tappa.inSecondi(2).verso(0.62, 0.61)))
 						.conBattuta(BattutaIntermezzo.di("eremita", "Chi va là?").daSecondo(2))
 						.conBattuta(BattutaIntermezzo.di("eroe", "Mi chiamo " + eroe + ". Sto cercando il Drago."));
-		finale.conBattuta(BattutaIntermezzo.di("eremita", "Il suo castello è protetto da un incantesimo. Non riuscirai a trovarlo, a meno che tu prima non sconfigga i suoi alleati."));
+		finale.conBattuta(BattutaIntermezzo.di("eremita", "Il suo castello è nascosto da un incantesimo. Non riuscirai a trovarlo, a meno che tu prima non sconfigga i suoi alleati."));
 		if (GruppoGiocatore.getIstanza().getCapo().getClasse() == ClassePersonaggio.OMBRAFIAMMA) {
 			finale.conBattuta(BattutaIntermezzo.di("eremita", "E comunque... Non vorrei essere nei suoi panni."));
 		}
