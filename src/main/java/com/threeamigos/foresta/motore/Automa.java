@@ -47,7 +47,6 @@ import java.util.function.Supplier;
 // TODO: gli oggetti venduti all'armaiolo probabilmente andrebbero anche distrutti alla fine della locazione per non riempirgli l'inventario
 // TODO: come ci sono locande sparse per la foresta, forse anche qualche negozio di armaiolo, alchimista, venditore di pergamene e incantatore male non farebbero
 // TODO: trofei come aiuto per il gioco?
-// TODO: puntatori sulla mappa?
 // TODO: se si fa avanti e indietro per la locanda in città (o cmq anche nel bosco) piano piano si possono tirare fuori tutte le locazioni del bosco; la quantità
 //  - di informazioni reperibili per locazione dovrebbe essere limitata. Al più un castello, un artefatto e una città e quando le ha finite continua a ripetere la città.
 
