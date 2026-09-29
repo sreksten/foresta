@@ -18,11 +18,16 @@ public class RegistroArtefattiMD implements Serializzabile {
 	private final Map<CoordinateMD, ArtefattoMD> artefattiSmarriti = new HashMap<>();
 	// I magazzini dei negozi: più negozi della stessa città hanno la stessa coordinata
 	private final Map<TipoNegozio, Map<CoordinateMD, Collection<ArtefattoMD>>> magazzini = new EnumMap<>(TipoNegozio.class);
+	// Locazioni di artefatti smarriti di cui il giocatore ha avuto notizia (Informazioni, in
+	// locanda o per amicizia): vanno segnalate sulla mappa con Indicatore.gif finché
+	// l'artefatto non viene recuperato.
+	private final Set<CoordinateMD> localizzazioniConosciute = new HashSet<>();
 
 	public void reimposta() {
 		elencoIniziale.clear();
 		artefattiSmarriti.clear();
 		magazzini.clear();
+		localizzazioniConosciute.clear();
 	}
 
 	public void aggiungiArtefatto(ArtefattoMD artefattoMD) {
@@ -54,6 +59,15 @@ public class RegistroArtefattiMD implements Serializzabile {
 
 	public final void rimuoviArtefattoInLocazione(CoordinateMD coordinate) {
 		artefattiSmarriti.remove(coordinate);
+		localizzazioniConosciute.remove(coordinate);
+	}
+
+	public final void segnaLocalizzazioneConosciuta(CoordinateMD coordinate) {
+		localizzazioniConosciute.add(coordinate);
+	}
+
+	public final boolean isLocalizzazioneConosciuta(CoordinateMD coordinate) {
+		return localizzazioniConosciute.contains(coordinate);
 	}
 
 	@Override
@@ -80,6 +94,12 @@ public class RegistroArtefattiMD implements Serializzabile {
 					artefatto.salva(stream);
 				}
 			}
+		}
+		stream.println(localizzazioniConosciute.size());
+		for (CoordinateMD coordinate : localizzazioniConosciute) {
+			stream.print(coordinate.getX());
+			stream.print(PIPE);
+			stream.println(coordinate.getY());
 		}
 	}
 
@@ -110,6 +130,14 @@ public class RegistroArtefattiMD implements Serializzabile {
 				artefatto.leggi(stream);
 				magazzino.add(artefatto);
 			}
+		}
+		line = stream.readLine();
+		int numeroLocalizzazioniConosciute = Integer.parseInt(line);
+		for (int i = 0; i < numeroLocalizzazioniConosciute; i++) {
+			line = stream.readLine();
+			LettoreCampi st = new LettoreCampi(line);
+			CoordinateMD coordinate = new CoordinateMD(Integer.parseInt(st.testo()), Integer.parseInt(st.testo()));
+			localizzazioniConosciute.add(coordinate);
 		}
 	}
 

@@ -1,8 +1,5 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.locazioni.Bosco;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Notizie;
@@ -11,11 +8,11 @@ import com.threeamigos.foresta.ui.sfx.CloudManager;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
 
-class DisplayableCanvasMappaATuttoSchermo implements Finestra {
+class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Finestra {
 
-	private static final int LARGHEZZA_ICONA = ImageCache.mappa.get(ClassiLocazione.BOSCO).getWidth();
-	private static final int ALTEZZA_ICONA = ImageCache.mappa.get(ClassiLocazione.BOSCO).getHeight();
 	// Il notiziario si ferma a metà della larghezza della sfera magica: l'altra
 	// metà è coperta dalla sfera stessa (disegnata in primo piano sull'angolo
 	// inferiore sinistro di tutto il canvas, vedi DisplayableCanvas.disegnaSferaMagica),
@@ -30,6 +27,10 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 	private BufferedImage immagineMappa;
 	private int mappaXOffset;
 	private int mappaYOffset;
+	// Le caselle da segnalare con Indicatore.gif, lampeggiante come il segnalino del
+	// gruppo: va ridisegnato a ogni frame, quindi non può far parte di immagineMappa
+	// (vedi disegnaIndicatori)
+	private final List<CoordinateMD> coordinateDaSegnalare = new ArrayList<>();
 
 	private boolean stoTrascinando;
 	private int ultimaXMouse;
@@ -88,9 +89,6 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 		}
 	}
 
-	void muoviMappa(Comando direzione) {
-	}
-
 	/**
 	 * Ricostruisce l'immagine delle caselle. Va chiamato a ogni apertura della mappa:
 	 * mentre la mappa è mostrata l'automa attende solo di chiuderla, quindi né le
@@ -103,6 +101,7 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 		immagineMappa = new BufferedImage(Foresta.getDimensioneX() * LARGHEZZA_ICONA,
 				Foresta.getDimensioneY() * ALTEZZA_ICONA, BufferedImage.TYPE_INT_ARGB);
 		CoordinateMD coordinateGruppo = GruppoGiocatore.getIstanza().getCoordinate();
+		coordinateDaSegnalare.clear();
 
 		Graphics2D graphics = immagineMappa.createGraphics();
 
@@ -115,13 +114,13 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 					continue;
 				}
 				if (Foresta.isLocazioneConosciuta(coordinateCorrenti)) {
-					ClassiLocazione classeLocazione = Foresta.getLocazione(coordinateCorrenti);
-					BufferedImage image = classeLocazione == ClassiLocazione.BOSCO
-							? ImageCache.getImmagineMappaBosco(Bosco.getVarianteMappa(Foresta.getLocazioneMD(coordinateCorrenti)))
-							: ImageCache.mappa.get(classeLocazione);
+					Image image = recuperaImmaginePerLocazione(coordinateCorrenti);
 					graphics.drawImage(image, coordinateX, coordinateY, null);
 					if (Foresta.isLocazioneVisitata(coordinateCorrenti)) {
 						scurisci(graphics, coordinateX, coordinateY, LARGHEZZA_ICONA, ALTEZZA_ICONA, 50);
+					}
+					if (Foresta.isDaSegnalareConIndicatore(coordinateCorrenti)) {
+						coordinateDaSegnalare.add(coordinateCorrenti);
 					}
 				}
 			}
@@ -134,21 +133,23 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 	 * vuota nell'immagine della mappa.
 	 */
 	private void disegnaSegnalino(Graphics2D graphics) {
-		if ((System.currentTimeMillis() / 1000) % 2 == 0) {
-			GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-			graphics.drawImage(ImageCache.segnalino,
-					mappaXOffset + gruppo.getX() * LARGHEZZA_ICONA,
-					mappaYOffset + gruppo.getY() * ALTEZZA_ICONA, null);
-		}
+		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
+		graphics.drawImage(ImageCache.segnalino,
+				mappaXOffset + gruppo.getX() * LARGHEZZA_ICONA,
+				mappaYOffset + gruppo.getY() * ALTEZZA_ICONA, null);
 	}
 
-	private void scurisci(Graphics2D g, int x, int y, int width, int height, int percentualeOscuramento) {
-		// Calcola alpha (0 = trasparente, 255 = nero opaco)
-		int alpha = (int) (percentualeOscuramento * 2.55f);
-		// Imposta il colore nero con la trasparenza calcolata
-		g.setColor(new java.awt.Color(0, 0, 0, alpha));
-		// Disegna il rettangolo sopra l'immagine
-		g.fillRect(x, y, width, height);
+	/**
+	 * Le caselle segnalate (artefatti di cui si è saputo, bersagli di missione), lampeggianti
+	 * come il segnalino del gruppo: vanno ridisegnate a ogni frame perché non fanno parte
+	 * dell'immagine statica della mappa (vedi preparaMappa).
+	 */
+	private void disegnaIndicatori(Graphics2D graphics) {
+		for (CoordinateMD coordinate : coordinateDaSegnalare) {
+			graphics.drawImage(ImageCache.indicatore,
+					mappaXOffset + coordinate.getX() * LARGHEZZA_ICONA,
+					mappaYOffset + coordinate.getY() * ALTEZZA_ICONA, null);
+		}
 	}
 
 	void disegnaMappaATuttoSchermo(Graphics2D graphics) {
@@ -179,7 +180,11 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 		graphics.clipRect(0, 0, width, altezzaMappa);
 
 		graphics.drawImage(immagineMappa, mappaXOffset, mappaYOffset, null);
-		disegnaSegnalino(graphics);
+
+		if (isSegnaliniVisibili()) {
+			disegnaSegnalino(graphics);
+			disegnaIndicatori(graphics);
+		}
 
 		CloudManager.assicuraGenerate(width, height, LARGHEZZA_ICONA, ALTEZZA_ICONA);
 

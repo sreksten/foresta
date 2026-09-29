@@ -56,6 +56,7 @@ public class ImageCache {
 	static BufferedImage separatoreIncantamenti;
 	static BufferedImage separatoreNinnoli;
 	static BufferedImage segnalino;
+	static BufferedImage indicatore;
 	static BufferedImage punto;
 	static BufferedImage virgola;
 	static BufferedImage apostrofo;
@@ -190,6 +191,7 @@ public class ImageCache {
 		mappa.put(ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, d);
 		mappa.put(ClassiLocazione.TEMPIO, BufferedImageBuilder.buildBufferedImage("mappa/Tempio.gif"));
 		segnalino = BufferedImageBuilder.buildBufferedImage("mappa/Segnalino.gif");
+		indicatore = BufferedImageBuilder.buildBufferedImage("mappa/Indicatore.gif");
 
 		lettere = new BufferedImage[26];
 		lettere[0] = BufferedImageBuilder.buildBufferedImage("alfabeto/A.gif");

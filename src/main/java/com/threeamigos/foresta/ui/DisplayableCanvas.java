@@ -5,7 +5,10 @@ import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
+import com.threeamigos.foresta.motore.AutomaIncantatore;
+import com.threeamigos.foresta.motore.AutomaInventario;
+import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.modellodati.MessaggioMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
@@ -728,15 +731,6 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		notificaFumetto(oroscopo, alchimista.getCoordinateFumetto());
 		notificaFumetto("Benvenuti. Cosa posso fare per voi?", alchimista.getCoordinateFumetto());
 		repaint();
-	}
-
-	public void spostaMappa(Comando direzione) {
-		mappaATuttoSchermo.muoviMappa(direzione);
-		repaint();
-	}
-
-	public void centraMappa() {
-		mappaATuttoSchermo.centraSuGiocatore();
 	}
 
 	public void impostaAzioniIcone() {

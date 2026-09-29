@@ -290,6 +290,20 @@ public class Foresta {
 	public static boolean isLocazioneConosciuta(CoordinateMD coordinate) {
 		return getForestaMD().isLocazioneConosciuta(coordinate);
 	}
+
+	/**
+	 * Questa locazione va segnalata sulla mappa con Indicatore.gif: o perché vi si trova un
+	 * artefatto di cui si è saputo tramite Informazioni, o perché è il bersaglio, ancora da
+	 * raggiungere, di una missione "Recupera le derrate alimentari" o "Recupera il medaglione"
+	 * attualmente attiva.
+	 */
+	public static boolean isDaSegnalareConIndicatore(CoordinateMD coordinate) {
+		return RegistroArtefatti.isLocalizzazioneConosciuta(coordinate) ||
+				(RegistroMissioni.isMissioneAttiva(RegistroMissioni.TipoMissionePredefinita.RECUPERA_LE_DERRATE_ALIMENTARI) &&
+						coordinate.equals(getCoordinateLocazioneUnica(ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI))) ||
+				(RegistroMissioni.isMissioneAttiva(RegistroMissioni.TipoMissionePredefinita.RECUPERA_IL_MEDAGLIONE) &&
+						coordinate.equals(getCoordinateLocazioneUnica(ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE)));
+	}
 	/**
 	 * Un personaggio compra la mappa della foresta da un PNG
 	 */

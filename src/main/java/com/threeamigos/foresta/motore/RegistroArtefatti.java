@@ -230,6 +230,14 @@ public class RegistroArtefatti {
 		getRegistroArtefatti().rimuoviArtefattoInLocazione(coordinate);
 	}
 
+	public static void segnaLocalizzazioneConosciuta(CoordinateMD coordinate) {
+		getRegistroArtefatti().segnaLocalizzazioneConosciuta(coordinate);
+	}
+
+	public static boolean isLocalizzazioneConosciuta(CoordinateMD coordinate) {
+		return getRegistroArtefatti().isLocalizzazioneConosciuta(coordinate);
+	}
+
 	private static void aggiungiArtefatto(Artefatto artefatto) {
 		getRegistroArtefatti().aggiungiArtefatto(artefatto.getModelloDati());
 	}

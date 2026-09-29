@@ -156,6 +156,14 @@ public class RegistroMissioni {
 	}
 
 	/**
+	 * La missione predefinita indicata è attualmente attiva (accettata e non ancora completata
+	 * né fallita)?
+	 */
+	public static boolean isMissioneAttiva(TipoMissionePredefinita tipoMissionePredefinita) {
+		return elencoMissioniPredefinite.containsKey(tipoMissionePredefinita);
+	}
+
+	/**
 	 * Le missioni di primo livello completate, seguite dalle sotto-missioni completate di quelle ancora in corso.
 	 * Quando si completa anche la missione che le contiene, le sotto-missioni non compaiono più qui da sole ma
 	 * sotto di lei, perché la missione passa tra le completate con tutto il suo albero.
