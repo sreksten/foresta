@@ -3,6 +3,7 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoPuliziaCacheDinamicaImmagini;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.locazioni.Bosco;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Logger;
 
@@ -61,6 +62,9 @@ public class ImageCache {
 	static BufferedImage puntodd;
 	static Map<ClassiLocazione, BufferedImage> locazioni;
 	static Map<ClassiLocazione, BufferedImage> mappa;
+	// Le immagini alternative del bosco sulla mappa (indice 0 = Foresta.gif), vedi
+	// Bosco.VARIANTE_MAPPA e getImmagineMappaBosco
+	static BufferedImage[] mappaVariantiBosco;
 	static BufferedImage[] lettere;
 	static BufferedImage[] cifre;
 
@@ -157,7 +161,12 @@ public class ImageCache {
 		locazioni.put(ClassiLocazione.TEMPIO, BufferedImageBuilder.buildBufferedImage("locazioni/Tempio.gif"));
 
 		mappa = new EnumMap<>(ClassiLocazione.class);
-		mappa.put(ClassiLocazione.BOSCO, BufferedImageBuilder.buildBufferedImage("mappa/Foresta.gif"));
+		mappaVariantiBosco = new BufferedImage[Bosco.NUMERO_VARIANTI_MAPPA];
+		mappaVariantiBosco[0] = BufferedImageBuilder.buildBufferedImage("mappa/Foresta.gif");
+		mappaVariantiBosco[1] = BufferedImageBuilder.buildBufferedImage("mappa/Foresta2.gif");
+		mappaVariantiBosco[2] = BufferedImageBuilder.buildBufferedImage("mappa/Foresta3.gif");
+		mappaVariantiBosco[3] = BufferedImageBuilder.buildBufferedImage("mappa/Foresta4.gif");
+		mappa.put(ClassiLocazione.BOSCO, mappaVariantiBosco[0]);
 		d = BufferedImageBuilder.buildBufferedImage("mappa/Castello.gif");
 		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
 			if (classeLocazione.getTipoLocazione() == ClassiLocazione.TipoLocazione.CASTELLO) {
@@ -322,6 +331,14 @@ public class ImageCache {
 	
 	public static BufferedImage get(String nomeImmagine) {
 		return imageMap.get(nomeImmagine);
+	}
+
+	/**
+	 * L'immagine della variante di bosco indicata (1-based, vedi {@link Bosco#getVarianteMappa}),
+	 * da usare al posto di {@code mappa.get(ClassiLocazione.BOSCO)}.
+	 */
+	public static BufferedImage getImmagineMappaBosco(int variante) {
+		return mappaVariantiBosco[variante - 1];
 	}
 
 	/**

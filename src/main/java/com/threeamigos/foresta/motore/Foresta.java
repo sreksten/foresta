@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.locazioni.Bosco;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
@@ -140,6 +141,7 @@ public class Foresta {
 				CoordinateMD coordinate = new CoordinateMD(x, y);
 				if (getLocazione(coordinate) == null) {
 					setLocazione(coordinate, ClassiLocazione.BOSCO);
+					Bosco.impostaVarianteMappaACaso(getLocazioneMD(coordinate));
 				}
 			}
 		}

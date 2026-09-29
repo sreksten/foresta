@@ -3,6 +3,7 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoCreazioneSpriteATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneConoscenzaMappa;
+import com.threeamigos.foresta.locazioni.Bosco;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -83,9 +84,14 @@ class DisplayableCanvasRiquadroMappa implements Finestra {
 						graphics.drawImage(image, coordinateX, coordinateY, null);
 					}
 				} else {
-					image = ImageCache.mappa.get(classeLocazione);
+					CoordinateMD coordinateCorrente = new CoordinateMD(x, y);
+					if (classeLocazione == ClassiLocazione.BOSCO) {
+						image = ImageCache.getImmagineMappaBosco(Bosco.getVarianteMappa(Foresta.getLocazioneMD(coordinateCorrente)));
+					} else {
+						image = ImageCache.mappa.get(classeLocazione);
+					}
 					graphics.drawImage(image, coordinateX, coordinateY, null);
-					if (Foresta.isLocazioneVisitata(new CoordinateMD(x, y))) {
+					if (Foresta.isLocazioneVisitata(coordinateCorrente)) {
 						scurisci(graphics, coordinateX, coordinateY, mw, mh, 50);
 					}
 				}

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.locazioni.Bosco;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Foresta;
@@ -115,8 +116,11 @@ class DisplayableCanvasMappaATuttoSchermo implements Finestra {
 				}
 				if (Foresta.isLocazioneConosciuta(coordinateCorrenti)) {
 					ClassiLocazione classeLocazione = Foresta.getLocazione(coordinateCorrenti);
-					graphics.drawImage(ImageCache.mappa.get(classeLocazione), coordinateX, coordinateY, null);
-					if (Foresta.isLocazioneVisitata(new CoordinateMD(x, y))) {
+					BufferedImage image = classeLocazione == ClassiLocazione.BOSCO
+							? ImageCache.getImmagineMappaBosco(Bosco.getVarianteMappa(Foresta.getLocazioneMD(coordinateCorrenti)))
+							: ImageCache.mappa.get(classeLocazione);
+					graphics.drawImage(image, coordinateX, coordinateY, null);
+					if (Foresta.isLocazioneVisitata(coordinateCorrenti)) {
 						scurisci(graphics, coordinateX, coordinateY, LARGHEZZA_ICONA, ALTEZZA_ICONA, 50);
 					}
 				}
