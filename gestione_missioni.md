@@ -1,0 +1,419 @@
+# Missioni a passi + intermezzi agganciati a una missione
+
+## Contesto
+
+Oggi un intermezzo scatta solo a due checkpoint statici e globali dell'automa
+(`MomentoIntermezzo.INIZIO_GIOCO`, `INIZIO_LOCAZIONE`), pescando da un elenco
+statico (`ClasseIntermezzo`) di intermezzi "singleton per partita": una volta
+mostrati, un id finisce in `IntermezziMD` e non scattano più. Le missioni come
+`RecuperaIlMedaglione`/`RecuperaLeDerrateAlimentari` codificano invece la loro
+sequenza di fasi (attiva → bersaglio recuperato → completata) a mano, con
+flag ad hoc su `controllaPreLocazione`/`InLocazione`/`PostLocazione`, e non
+hanno alcun modo di agganciare un intermezzo a un proprio passaggio di stato.
+
+Obiettivo: dare alle missioni un **automa a passi** riusabile, in cui ogni
+passo può opzionalmente far scattare un intermezzo quando si completa —
+usando lo scenario concreto di Recupera il Medaglione (assunzione incarico in
+città → "portiamolo in città" a fine locazione dopo aver recuperato il
+medaglione → ringraziamento all'arrivo in città) come primo caso reale. In
+più, un nuovo checkpoint `MomentoIntermezzo.LOCAZIONE_COMPLETATA` serve sia a
+questo scenario sia in generale a locazioni con eventi da segnalare a fine
+locazione.
+
+Il framework deve restare abbastanza generico da poter essere pilotato in
+futuro da missioni generate con `GrammarBean` (molte istanze della stessa
+classe di missione, ciascuna con proprio stato indipendente) — per questo lo
+stato "intermezzo del passo già mostrato" vive nelle proprietà della singola
+istanza di missione (stesso meccanismo di `ATTIVA`/`COMPLETA`/
+`BERSAGLIO_RECUPERATO` in `MissioneBase`), **non** nel registro globale
+`IntermezziMD`/`ClasseIntermezzo`, che non è pensato per crescere con istanze
+dinamiche.
+
+Per questo primo giro, `RecuperaIlMedaglione` e `RecuperaLeDerrateAlimentari`
+vengono portate ciascuna, separatamente, sulla nuova base a passi — restano
+due classi distinte. L'eventuale unificazione in un'unica classe parametrica
+(propedeutica al generatore a grammatica) è un passo successivo, non parte di
+questo piano.
+
+**Vincolo aggiuntivo**: i due esempi concreti sono sequenze lineari, ma la
+struttura dati NON deve assumere che un passo abbia un unico successore
+fisso. Una missione deve poter, a un certo passo, diramarsi in base allo
+stato di gioco, oppure fermarsi ad attendere una scelta del giocatore (sì/no,
+o una fra più opzioni) e continuare con passi diversi secondo la risposta —
+passi che possono essere già previsti staticamente o costruiti al volo (caso
+tipico di una missione generata da `GrammarBean`, dove l'opzione scelta
+determina quale variante testuale/parametrica del passo successivo esiste).
+Il design del punto 3 tiene conto di questo fin da subito, e il punto 4
+copre anche l'aggancio UI vero e proprio: un nuovo stato in `Automa`,
+simmetrico a `Stato.ATTESA_SI_NO`, che permette a un passo di missione di
+porre al giocatore una domanda sì/no o una scelta fra 2 e 5 opzioni
+testuali, riusando l'infrastruttura di richiesta-comandi già esistente
+(vedi punto 4) invece di introdurne una nuova da zero.
+
+## 1. Nuovo checkpoint `MomentoIntermezzo.LOCAZIONE_COMPLETATA`
+
+File: `src/main/java/com/threeamigos/foresta/intermezzi/MomentoIntermezzo.java`
+
+Aggiungere il valore con un commento sullo stesso stile degli altri due,
+spiegando che scatta dopo `controllaPostLocazione` e prima che il gruppo
+riparta verso una nuova direzione.
+
+File: `src/main/java/com/threeamigos/foresta/motore/Automa.java`
+
+- `eseguiFineLocazione(Comando comando)` (righe ~808-866) va spezzato: la
+  parte fino a `controllaMissioni(Missione::controllaPostLocazione,
+  OrdineVisita.FIGLI_PRIMA)` + `locazioneCorrente.azzeraLocazione(gruppo)`
+  resta nel gestore di ingresso/comando esistente, poi invece di procedere
+  subito con game-over/stanchezza/`Stato.ATTESA_DIREZIONE` si chiama
+  `avviaProssimoIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA,
+  Stato.FINE_LOCAZIONE_2)` (nuovo stato, stesso pattern di
+  `INZIO_LOCAZIONE`→`avviaProssimoIntermezzo`→`PREPARAZIONE_LOCAZIONE`).
+- Nuovo `Stato.FINE_LOCAZIONE_2` con gestore di ingresso che contiene la coda
+  di `eseguiFineLocazione` (game-over check, decremento "a tempo",
+  incremento stanchezza, transizione a `Stato.ATTESA_DIREZIONE`). Va
+  registrato in `gestoriIngresso` come gli altri stati derivati
+  (`INTERMEZZO` già dimostra il pattern di ripartire da uno stato "dopo" una
+  volta esaurita la coda di intermezzi — vedi `statoDopoIntermezzi` in
+  `avviaProssimoIntermezzo`/`gestisciComandoInStatoIntermezzo`, righe
+  ~513-579).
+- Nessun'altra modifica ad `avviaProssimoIntermezzo`: il meccanismo di coda
+  esistente (mostra tutti gli intermezzi pendenti per quel momento, poi salta
+  allo stato indicato) funziona identico per il nuovo momento.
+
+## 2. `RegistroIntermezzi` interroga anche le missioni attive
+
+File: `src/main/java/com/threeamigos/foresta/motore/RegistroIntermezzi.java`
+
+`getProssimoIntermezzo(MomentoIntermezzo momento)` oggi scandisce solo
+`ClasseIntermezzo.values()`. Va estesa: se lo scan statico non trova nulla,
+scandisce l'albero delle missioni attive (stesso tipo di attraversamento che
+`Automa.controllaMissioni`/`controllaMissione` già fa su
+`RegistroMissioni.getMissioniNonCompletate()`, righe ~1400-1453 di
+`Automa.java` — va estratto/duplicato come piccolo helper statico, es. su
+`RegistroMissioni`, per non far dipendere `RegistroIntermezzi` da `Automa`)
+cercando la prima missione con un passo pendente il cui intermezzo è per
+`momento` e non è ancora stato mostrato.
+
+`segnaScattato(Intermezzo)` diventa polimorfica: se l'intermezzo è
+un'istanza del nuovo adattatore `IntermezzoDiPasso` (punto 4), la marcatura
+va delegata alla missione (chiama un metodo che aggiorna la sua proprietà
+MD), **non** scritta in `IntermezziMD`. Altrimenti comportamento invariato
+(scrive in `IntermezziMD` come oggi).
+
+## 3. `Passo` e `MissioneAPassi`: un automa a passi, non una lista lineare
+
+Nuovo package `com.threeamigos.foresta.missioni.passi` (o direttamente in
+`missioni`), due classi nuove. La cosa da evitare è modellare i passi come
+`List<Passo>` con un indice: un indice assume una sequenza fissa e non regge
+diramazioni né passi generati al volo. Il modello adottato è invece lo stesso
+usato da `Automa` per gli stati: **passi identificati da una chiave
+(`String id`)**, nessuna lista, nessun ordine implicito — chi decide "cosa
+viene dopo" è il passo stesso, non la sua posizione.
+
+**`Passo`** — piccolo value object che descrive un singolo passo. Non è una
+`Missione` e non entra nell'albero `aggiungiMissione`/`getMissioniSecondarie`
+(quell'albero resta per la composizione di sotto-missioni indipendenti, vedi
+`CronacheDiUnFegatoEroico`; qui serve invece la logica di avanzamento dentro
+*una* missione). Campi:
+
+- `MomentoControllo momento` — enum con tre valori `PRE_LOCAZIONE`,
+  `IN_LOCAZIONE`, `POST_LOCAZIONE`, che rispecchia i tre metodi esistenti di
+  `Missione` e dice in quale di essi il passo va valutato.
+- `BooleanSupplier condizione` — quando true, il passo è concluso e si può
+  avanzare. Per un passo che aspetta una scelta del giocatore, la condizione
+  è semplicemente "la risposta è già stata registrata" (vedi più sotto).
+- `Runnable azione` — eseguita una sola volta quando la condizione diventa
+  vera (attivare la missione, costruire una locazione, dare la ricompensa,
+  pubblicare `NotificaTestoParagrafo`, salvare come proprietà l'esito di una
+  scelta, eventualmente costruire dinamicamente i parametri di un passo
+  successivo).
+- `Supplier<String> prossimoPasso` — calcolato **dopo** `azione`, restituisce
+  l'id del passo su cui la missione continua. Per una catena lineare è
+  semplicemente una costante (`() -> "PASSO_2"`); per una diramazione legge
+  lo stato di gioco o la proprietà appena scritta da `azione` e restituisce
+  id diversi a seconda del caso. Restituire un sentinel dedicato (es. `null`
+  o una costante `Passo.FINE`) segnala che questo era l'ultimo passo — tipicamente
+  l'`azione` stessa avrà già chiamato `completaMissione()`.
+- opzionale: `MomentoIntermezzo momentoIntermezzo` +
+  `Supplier<List<PaginaIntermezzo>> pagine` — se presenti, al completarsi del
+  passo viene registrato un intermezzo pendente per quel momento (le pagine
+  si costruiscono pigramente, come già oggi per gli `Intermezzo` statici, così
+  possono leggere lo stato di gioco al momento in cui scattano).
+
+Costruzione con un piccolo builder fluente (`Passo.quando(momento,
+condizione).esegui(azione).poi(prossimoPasso).conIntermezzo(momentoIntermezzo,
+pagine)`), sul modello di `PaginaIntermezzo`/`ElementoIntermezzo` già usato in
+`intermezzi/`.
+
+**`MissioneAPassi`** — `abstract class extends MissioneBase`:
+
+- costruttore protetto che riceve solo `ClasseMissione` (come oggi); **non**
+  riceve una lista di passi.
+- unico metodo abstract da implementare nelle sottoclassi:
+  `protected abstract Passo costruisciPasso(String id)` — una fabbrica che,
+  dato un id, ricostruisce il `Passo` corrispondente (tipicamente uno
+  switch/if-chain su costanti `String`). Viene chiamata ogni volta che serve
+  valutare il passo corrente, non tenuta in cache: questo è il punto chiave
+  che permette ai passi dinamici di funzionare senza dover serializzare
+  `BooleanSupplier`/`Runnable` (impossibile con il salvataggio su testo di
+  questo progetto) — si persiste solo l'id (una stringa) più, se il passo
+  dinamico ne ha bisogno, i parametri che lo caratterizzano come proprietà
+  MD ordinarie (stesso meccanismo di `aggiungiProprieta` già usato per tutto
+  il resto). Un passo generato da `GrammarBean` con `[!MANDANTE]`/
+  `[!BERSAGLIO]` fissati, per esempio, salva quei valori come proprietà
+  prima di restituire il proprio id come `prossimoPasso`, e
+  `costruisciPasso` li rilegge per rigenerare lo stesso testo in modo
+  deterministico — anche dopo un salvataggio/caricamento.
+- id del passo corrente persistito come proprietà MD `PASSO_CORRENTE`
+  (stringa, non indice: insensibile a riordini o inserimenti futuri).
+  L'id iniziale è restituito da un secondo metodo abstract,
+  `protected abstract String passoIniziale()`.
+- proprietà `INTERMEZZO_MOSTRATO_<id>` (una per id di passo con intermezzo)
+  per il bookkeeping "già mostrato" richiesto dal punto 2 — un metodo
+  `segnaIntermezzoPassoMostrato(String idPasso)` e
+  `isIntermezzoPassoMostrato(String idPasso)` usati da
+  `RegistroIntermezzi`/`IntermezzoDiPasso`.
+- implementa `controllaPreLocazione()`/`controllaInLocazione()`/
+  `controllaPostLocazione()` delegando a un unico
+  `avanzaSePronto(MomentoControllo)`: se non fallita/completa, recupera
+  `Passo corrente = costruisciPasso(getPassoCorrente())`; se
+  `corrente.getMomento() == quello richiesto` e
+  `corrente.getCondizione().getAsBoolean()`, esegue `azione.run()`, registra
+  l'eventuale intermezzo pendente, calcola `prossimoPasso.get()` e lo
+  persiste come nuovo `PASSO_CORRENTE` (o chiama/verifica `completaMissione()`
+  se è il sentinel di fine).
+- sottoclassi che hanno bisogno di logica extra (es. fallimento per città
+  distrutta, come oggi in `RecuperaIlMedaglione.controllaPreLocazione`)
+  possono sovrascrivere il metodo corrispondente chiamando
+  `super.controllaPreLocazione()` a fine metodo — stesso pattern di override
+  già visto in `MuoviALocazione.completaMissione()`.
+
+**Persistenza dei dati generati.** Una missione (soprattutto se generata a
+caso con `GrammarBean`) ha in genere due tipi di cose da salvare in modo
+permanente, oltre all'id del passo corrente:
+
+1. *Valori singoli fissati alla generazione* (es. il nome del mandante, il
+   nome del bersaglio, l'importo della ricompensa). Non serve costruire
+   nulla di nuovo: `Missione.aggiungiProprieta(String, String)`/
+   `ottieniProprieta(String)` sono già a chiave e valore completamente
+   liberi — `MissioneMD` li mantiene in una `Map<String, String>` qualsiasi
+   (verificato in `src/main/java/com/threeamigos/foresta/motore/modellodati/MissioneMD.java`,
+   serializzata da `MappaProprieta` nello stesso file), senza alcun enum o
+   whitelist di chiavi. Una chiave tipo `"MANDANTE"` o `"BERSAGLIO_NOME"`
+   scritta da un passo generato funziona già oggi, esattamente come le
+   costanti `ATTIVA`/`COMPLETA`/`FALLITA` usate da `MissioneBase`. Il passo
+   che genera questi valori (tipicamente il primo, quando la missione viene
+   attivata) li scrive una sola volta con `aggiungiProprieta`, e
+   `costruisciPasso` li rilegge sempre con `ottieniProprieta` invece di
+   richiamare di nuovo `GrammarBean.produce()` — così il testo resta
+   identico anche dopo un salvataggio/caricamento, senza dipendere da un
+   seed o da alcuna persistenza del generatore stesso.
+2. *La sequenza dei passi da fare*, quando non è fissa a compile time ma
+   decisa alla generazione (es. "visita N locazioni scelte a caso" con N
+   variabile). Per questo caso `MissioneAPassi` offre due metodi protetti,
+   `impostaSequenzaPassi(List<String> idPassi)` e
+   `List<String> leggiSequenzaPassi()`, che non richiedono alcuna modifica a
+   `MissioneMD`/`MappaProprieta`: si appoggiano alla stessa proprietà
+   generica del punto 1, salvando la lista come un unico valore stringa con
+   gli id separati da un carattere che gli id di passo non useranno mai
+   (es. `,`, non `§`/`|` che sono già riservati da `MappaProprieta`). Un
+   passo la cui logica è "vai al prossimo elemento della sequenza generata"
+   usa il supplier di comodo `prossimoNellaSequenza()` (legge
+   `leggiSequenzaPassi()`, trova l'id corrente, restituisce il successivo o
+   il sentinel di fine se era l'ultimo) invece di scrivere a mano la
+   diramazione; i passi con vera diramazione/scelta del giocatore
+   continuano a usare un `Supplier<String>` esplicito come già descritto.
+   In questo modo il "piano" generato casualmente (quali passi, in quale
+   ordine) è deciso una volta sola dall'azione del passo che lo genera e
+   resta stabile per tutta la vita della missione, incluso attraverso
+   salvataggio/caricamento — non viene mai ricalcolato o rigenerato.
+
+**Diramazioni e scelte del giocatore.** Con questo modello una diramazione
+che dipende solo dallo stato di gioco è già supportata: `prossimoPasso` è un
+`Supplier` qualsiasi, può leggere `LineaTemporale`, proprietà della missione,
+ecc. Una diramazione che dipende da **una scelta del giocatore** (conferma
+sì/no, o una fra più opzioni) si modella con un passo che:
+1. resta con `condizione` false finché non esiste ancora una proprietà
+   "risposta data" sulla missione;
+2. una volta che qualcosa scrive quella proprietà, `condizione` diventa vera
+   e `prossimoPasso` la rilegge per decidere il ramo.
+
+Il "qualcosa" che raccoglie la risposta del giocatore e scrive la proprietà è
+descritto nel punto 4: un nuovo stato di `Automa` che presenta la domanda,
+aspetta il comando del giocatore e chiama
+`MissioneAPassi.rispondi(String idOpzioneScelta)` (implementato con
+`aggiungiProprieta`, come già previsto qui sopra). La struttura dati di
+questo paragrafo (passo che aspetta una proprietà, `prossimoPasso` che la
+rilegge, `costruisciPasso` che può generare il ramo scelto anche se non era
+previsto in anticipo) non richiede alcuna modifica per supportarlo: il
+punto 4 aggiunge solo il meccanismo che scrive quella proprietà a partire da
+un input reale del giocatore, invece che a scopo di analisi.
+
+**`IntermezzoDiPasso implements Intermezzo`** (in `intermezzi/` o
+`missioni/`, da vedere in base ai package-private necessari) — adattatore
+`(MissioneAPassi missione, String idPasso)`: `getId()` non serve per
+bookkeeping (delega alla missione), ma utile per log/debug;
+`deveScattare(momento)` verifica solo per coerenza (la selezione è già fatta
+da chi lo crea); `getPagine()` richiama il supplier del passo.
+
+Registrazione in `ClasseMissione.java`: nessuna voce nuova richiesta per
+`Passo`/`MissioneAPassi` di per sé (non sono `Missione` concrete), solo le
+sottoclassi concrete (punto 4) vanno registrate come oggi.
+
+## 4. Il giocatore risponde a una domanda di missione
+
+Un passo che rappresenta una domanda (conferma sì/no, o scelta fra 2 e 5
+opzioni testuali) ha bisogno di un aggancio reale con l'utente. Il progetto
+ha già tutti i pezzi per questo, usati oggi per casi analoghi (conferma di
+fuga, scelta dell'incantesimo, scelta della direzione): non serve inventare
+nulla di nuovo lato `Comando`/UI, solo un nuovo stato in `Automa` che li
+orchestri per conto di una missione.
+
+**Riuso di infrastruttura esistente** (verificato leggendo il codice, non
+per supposizione):
+- `Comando.SI`/`Comando.NO` (`src/main/java/com/threeamigos/foresta/motore/Comando.java`)
+  e le icone corrispondenti in `ClasseIcona` — già usati da
+  `Stato.ATTESA_SI_NO` per la conferma di fuga (`LocazioneBase.chiediConfermaPerLaFuga` +
+  `RichiestaSelezioneSiNo`). Riusati tali e quali per una domanda di
+  missione a due opzioni.
+- `Comando.NUMERO_1`..`NUMERO_5` (stesso file), già con icone dedicate
+  (`icone/1.gif`..`5.gif` in `ClasseIcona`) e già riusati per due scopi
+  diversi secondo il contesto (numero di passi, slot di salvataggio) — lo
+  stesso riuso "per contesto" si applica a una scelta di missione fra 2 e 5
+  opzioni testuali: l'opzione N-esima elencata dal passo corrisponde a
+  `NUMERO_N`.
+- `RichiestaConComandi` (`src/main/java/com/threeamigos/foresta/eventi/RichiestaConComandi.java`),
+  la classe base già usata da `RichiestaSelezioneSiNo` e dalla selezione
+  incantesimo/direzione per dire alla UI "mostra queste icone e aspetta
+  un clic". Nuova sottoclasse `RichiestaSelezioneMissione` nello stesso
+  package `eventi/richieste/`, stesso pattern esatto di
+  `RichiestaSelezioneSiNo`.
+- Il testo della domanda si pubblica separatamente con
+  `NotificaTestoParagrafo`, esattamente come `chiediConfermaPerLaFuga`
+  pubblica `NotificaTestoFrase` prima di richiedere sì/no — nessuna novità.
+
+**Nuovo stato `Stato.ATTESA_RISPOSTA_MISSIONE`** (in
+`src/main/java/com/threeamigos/foresta/motore/Stato.java`), **non** un
+riuso di `Stato.ATTESA_SI_NO`: quest'ultimo, alla risposta, rigioca il
+comando nello stato precedente aspettandosi che sia proprio quello stato
+(es. la gestione fuga di `LocazioneBase`) a intercettare `SI`/`NO` — un
+meccanismo cablato sul chiamante che non si vuole toccare né estendere per
+un caso d'uso completamente diverso (una missione, non uno stato
+dell'automa). Il nuovo stato ha una risoluzione diversa e più semplice:
+chiama direttamente la missione, senza bisogno che nessuno "intercetti" il
+comando altrove.
+
+In `Automa.java`:
+- due nuovi campi privati, es. `MissioneAPassi missioneInAttesaDiRisposta` e
+  l'id del passo in attesa (per costruire la chiave della proprietà),
+  impostati subito prima della transizione a questo stato.
+- `gestoriIngresso.put(Stato.ATTESA_RISPOSTA_MISSIONE, this::entraInStatoAttesaRispostaMissione)`:
+  pubblica il testo della domanda (`Passo.getTestoDomanda()`), poi
+  `RichiestaSelezioneMissione` con la lista di `Comando` corrispondente al
+  numero di opzioni del passo (2 opzioni booleane → `SI`/`NO`; 2-5 opzioni
+  generiche → `NUMERO_1..NUMERO_N`), poi `Esito.FERMATI` — stesso schema di
+  `entraInStatoAttesaSiNo`.
+- `gestoriComando.put(Stato.ATTESA_RISPOSTA_MISSIONE, this::gestisciComandoInStatoAttesaRispostaMissione)`:
+  se il comando non è `Comando.TIMER`, traduce il `Comando` ricevuto
+  nell'id di opzione del passo (mappa inversa rispetto a quella usata per
+  costruire la richiesta), chiama
+  `missioneInAttesaDiRisposta.rispondi(idOpzione)`, azzera i due campi e
+  torna a `statoPrecedente` **senza rigiocare il comando** (a differenza di
+  `ATTESA_SI_NO`: qui nessuno stato a valle deve intercettarlo, la risposta
+  è già stata consegnata alla missione) — semplicemente
+  `stato = statoPrecedente; return Esito.CONTINUA_CON_INGRESSO` fa
+  ripartire da capo la valutazione dei passi (`controllaMissioni`), che
+  ora troverà la proprietà risposta già scritta.
+
+**Sul lato `Passo`/`MissioneAPassi`** (estensione del punto 3, stesse
+classi, nessuna classe ulteriore):
+- il builder fluente si estende con `.chiediConferma(String testoDomanda)`
+  (zucchero sintattico per il caso a due opzioni SI/NO) e
+  `.chiediScelta(String testoDomanda, List<String> opzioni)` (2 a 5 opzioni
+  testuali, mappate in ordine su `NUMERO_1..NUMERO_N`). Entrambi impostano
+  automaticamente `condizione` a "la proprietà risposta di questo passo
+  esiste" — chi scrive la missione non deve scriverla a mano.
+- `MissioneAPassi.rispondi(String idOpzione)`: unico punto di scrittura,
+  `aggiungiProprieta("RISPOSTA_" + getPassoCorrente(), idOpzione)` — la
+  chiave è qualificata dall'id del passo corrente, quindi risposte di passi
+  diversi (anche in istanze diverse della stessa missione generata a caso)
+  non collidono mai.
+- `prossimoPasso` di un passo-domanda tipicamente legge
+  `ottieniProprieta("RISPOSTA_" + idPasso)` per scegliere il ramo — stesso
+  meccanismo già descritto nel punto 3, ora effettivamente popolato da un
+  input reale.
+- una proprietà di bookkeeping `DOMANDA_<id>_PRESENTATA` (stesso schema di
+  `INTERMEZZO_MOSTRATO_<id>` nel punto 3) evita di ripresentare la stessa
+  domanda a ogni frame mentre l'automa è già in
+  `Stato.ATTESA_RISPOSTA_MISSIONE` aspettando la risposta.
+
+**Chi rileva che un passo-domanda è pronto e non ancora presentato**: stesso
+punto di aggancio già descritto nel punto 2 per gli intermezzi di passo
+(dentro `controllaMissioni`, ai checkpoint pre/in/post-locazione) — un
+piccolo helper (stesso spirito di quello per `RegistroIntermezzi`) scandisce
+le missioni attive cercando un passo la cui condizione è "domanda non
+ancora presentata"; se lo trova, `Automa` imposta i due campi e transita a
+`Stato.ATTESA_RISPOSTA_MISSIONE` invece di procedere con il normale
+`Esito.CONTINUA_CON_INGRESSO`. Non c'è ambiguità con gli intermezzi di passo
+del punto 2: un intermezzo scatta al completarsi di un passo, una domanda
+scatta quando il passo successivo (quello con la domanda) diventa corrente
+— non possono mai capitare nello stesso istante per lo stesso passo.
+
+## 5. Migrare `RecuperaIlMedaglione` e `RecuperaLeDerrateAlimentari`
+
+File: `src/main/java/com/threeamigos/foresta/missioni/RecuperaIlMedaglione.java`
+(e l'equivalente `RecuperaLeDerrateAlimentari.java`, stessa struttura).
+
+Ciascuna diventa `extends MissioneAPassi` con 3 `Passo`:
+
+1. `IN_LOCAZIONE`, condizione = gruppo in `CITTA_FLEENA` e non attiva, azione
+   = testo di incontro + `attivaMissione()` + costruzione della locazione
+   grotta — **con** un intermezzo iniziale (`MomentoIntermezzo.
+   INIZIO_LOCAZIONE`, essendo valutato durante `controllaInLocazione` che
+   corre comunque a valle di quel checkpoint per il primo arrivo in città;
+   se si vuole davvero un intermezzo "appena assunto l'incarico" mostrato
+   nello stesso frame, si può lasciare senza intermezzo qui e mettere solo il
+   testo in `NotificaTestoParagrafo` come oggi, dato che l'utente ha parlato
+   esplicitamente di intermezzo iniziale come *esempio* generico, non come
+   requisito stretto per questa missione — da confermare nella review).
+2. `POST_LOCAZIONE`, condizione = gruppo in `GROTTA_RECUPERA_IL_MEDAGLIONE`
+   e locazione completa, azione = `setBersaglioRecuperato()`-equivalente
+   (ora solo avanzamento passo, il flag dedicato sparisce), **con**
+   intermezzo `LOCAZIONE_COMPLETATA` ("il medaglione è stato recuperato, va
+   riportato in città").
+3. `IN_LOCAZIONE`, condizione = gruppo in `CITTA_FLEENA`, azione =
+   `completaMissione()` + ricompensa, **con** intermezzo
+   `INIZIO_LOCAZIONE` (o nessuno, restando sul solo testo — stessa nota del
+   passo 1) di ringraziamento.
+
+La guardia "città distrutta" resta un override di `controllaPreLocazione()`
+che chiama `fallisciMissione()` e poi delega a `super.controllaPreLocazione()`
+(che con la missione già fallita non farà avanzare nulla, dato che
+`avanzaSePronto` controlla `isFallita()`).
+
+`MissioneRecuperaBersaglio` (la classe intermedia con `BERSAGLIO_RECUPERATO`)
+può essere rimossa se non ha più altri usi dopo la migrazione — verificare
+con una ricerca testuale prima di eliminarla.
+
+## Verifica
+
+- `mvn -o compile -q` (workaround offline già in uso in questo progetto) per
+  verificare che tutto compili dopo ogni fase.
+- Avvio manuale del gioco, missione Recupera il Medaglione: assumere
+  l'incarico in città, notare la locazione grotta creata; combattere e
+  vincere nella grotta, verificare che a fine locazione scatti l'intermezzo
+  "portalo in città" (nuovo checkpoint `LOCAZIONE_COMPLETATA`) prima del
+  messaggio "in quale direzione ti incammini"; tornare in città e verificare
+  il completamento con ricompensa e (se previsto) l'intermezzo finale.
+- Ripetere lo stesso percorso per Recupera le Derrate Alimentari.
+- Controllare che uscendo e ricaricando un salvataggio a metà missione (es.
+  dopo il passo 1) lo stato riprenda dal passo corretto (proprietà
+  `PASSO_CORRENTE` persistita correttamente).
+- Nessuna delle due missioni migrate (punto 5) usa un passo-domanda: per
+  verificare concretamente `Stato.ATTESA_RISPOSTA_MISSIONE` (punto 4) va
+  aggiunto temporaneamente un passo di prova con `.chiediConferma(...)` o
+  `.chiediScelta(...)` a una delle due missioni, verificato a mano che la
+  domanda appaia, che la scelta porti al ramo giusto e che sia persistita
+  correttamente dopo un salvataggio/caricamento, poi rimosso. In alternativa
+  si rimanda questa verifica end-to-end al momento in cui una missione reale
+  ne avrà davvero bisogno.
