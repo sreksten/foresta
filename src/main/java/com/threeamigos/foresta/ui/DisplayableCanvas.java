@@ -84,9 +84,15 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	private final ArrayList<SpriteInterface> sprites;
 	private final List<SpriteAnnuncioGlobale> codaAnnunciGlobali = new ArrayList<>();
+	// Un annuncio richiesto mentre è ancora a schermo l'ultima pagina di un intermezzo
+	// (es. una missione attivata da un controllo dell'Automa a cascata, prima che la UI
+	// torni al gioco) va rimandato: disegnarlo subito lo sovrapporrebbe all'intermezzo.
+	private final List<SpriteAnnuncioGlobale> annunciGlobaliRimandati = new ArrayList<>();
 	private SpriteAnnuncioGlobale annuncioGlobaleAttivo;
 	private final List<SpriteFumetto> codaFumetti = new ArrayList<>();
 	private SpriteFumetto fumettoAttivo;
+	// Rileva il fronte "appena tornata inattiva" per notificare l'Automa con InternoUiInattiva
+	private boolean uiOccupata;
 
 	private final int larghezzaSchermo;
 	private final int altezzaSchermo;
@@ -609,6 +615,20 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		disegnaAnnuncioGlobale(graphics);
 		barraIcone.disegna(graphics);
 		disegnaSferaMagica(graphics);
+		segnalaSeUiDiventataInattiva();
+	}
+
+	/**
+	 * Rilevato ad ogni fotogramma, indipendentemente dallo stato del canvas: appena sprite
+	 * transitori e annunci globali sono tutti esauriti, l'Automa può mostrare il prossimo
+	 * intermezzo in attesa (se ce n'è uno).
+	 */
+	private void segnalaSeUiDiventataInattiva() {
+		boolean occupataOra = !sprites.isEmpty() || annuncioGlobaleAttivo != null || !codaAnnunciGlobali.isEmpty();
+		if (uiOccupata && !occupataOra) {
+			BusEventi.pubblica(new InternoUiInattiva());
+		}
+		uiOccupata = occupataOra;
 	}
 
 	/**
@@ -675,6 +695,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		intermezzo.svuota();
 		stato = StatoDisplayableCanvas.STATO_IN_GIOCO;
 		abortisciFumetto();
+		if (!annunciGlobaliRimandati.isEmpty()) {
+			codaAnnunciGlobali.addAll(annunciGlobaliRimandati);
+			annunciGlobaliRimandati.clear();
+			BusEventi.pubblica(new InternoUiOccupata());
+		}
 		repaint();
 	}
 
@@ -885,7 +910,15 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	public void notificaAnnuncioGlobale(String etichetta, String messaggio) {
-		codaAnnunciGlobali.add(new SpriteAnnuncioGlobale(etichetta, messaggio, larghezzaSchermo, altezzaSchermo));
+		SpriteAnnuncioGlobale annuncio = new SpriteAnnuncioGlobale(etichetta, messaggio, larghezzaSchermo, altezzaSchermo);
+		if (stato == StatoDisplayableCanvas.STATO_INTERMEZZO) {
+			// Costruire lo sprite subito non lo fa scadere: il suo tempo trascorso parte
+			// dalla prima anima(), non dalla costruzione, quindi può aspettare in coda.
+			annunciGlobaliRimandati.add(annuncio);
+			return;
+		}
+		codaAnnunciGlobali.add(annuncio);
+		BusEventi.pubblica(new InternoUiOccupata());
 	}
 
 	public void aggiungiEffettoDiStato(Personaggio personaggio, TipoEffettoDiStato effettoDiStato, DoomdarkColorModel.Color colore) {
@@ -899,6 +932,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private void aggiungiSprite(SpriteInterface sprite) {
 		if (sprite != null) {
 			sprites.add(sprite);
+			BusEventi.pubblica(new InternoUiOccupata());
 		}
 	}
 

@@ -328,6 +328,15 @@ public enum TipoEvento {
      */
     INTERNO_PRECARICAMENTO_MOTORE_COMPLETATO,
     /**
+     * La UI ha appena iniziato un'animazione (sprite o annuncio globale) da portare a termine
+     * prima che l'Automa possa mostrare il prossimo intermezzo
+     */
+    INTERNO_UI_OCCUPATA,
+    /**
+     * La UI non ha piu' sprite attivi ne' annunci globali in coda o in corso
+     */
+    INTERNO_UI_INATTIVA,
+    /**
      * Messaggi di notifica interni al motore non destinati al giocatore
      */
     INTERNO_MESSAGGIO,

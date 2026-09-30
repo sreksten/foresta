@@ -9,8 +9,10 @@ import java.util.function.Supplier;
 public enum ClasseIntermezzo {
 
 	// Solo in modalità di prova (vedi ModalitaDiProva)
+	INTERMEZZO_DI_PROVA(IntermezzoDiProva::new, true),
+
 	INTERMEZZO_INTRODUTTIVO(IntermezzoIntroduttivo::new),
-	INTERMEZZO_DI_PROVA(IntermezzoDiProva::new, true);
+	INTERMEZZO_FINE_PRIMA_LOCAZIONE(IntermezzoFinePrimaLocazione::new);
 
 	private final Supplier<Intermezzo> supplier;
 	private final boolean diProva;

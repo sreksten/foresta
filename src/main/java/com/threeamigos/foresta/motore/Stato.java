@@ -27,6 +27,8 @@ public enum Stato {
 	INZIO_LOCAZIONE,
 	// Mostra le pagine di un intermezzo e attende il click o il timer per avanzare
 	INTERMEZZO,
+	// Un intermezzo è pronto a scattare ma si attende che la UI finisca le animazioni in corso
+	ATTESA_UI_PER_INTERMEZZO,
 	// Costruisce la locazione, la descrive e ne imposta le azioni
 	PREPARAZIONE_LOCAZIONE,
 	// Controlla trigger in-locazione, stabilisce quali azioni possono essere intraprese
@@ -48,8 +50,10 @@ public enum Stato {
 
 	ATTESA_SI_NO,
 
-	// Controlla trigger post-locazione
+	// Controlla trigger post-locazione, poi mostra gli intermezzi di fine locazione
 	FINE_LOCAZIONE,
+	// Coda di FINE_LOCAZIONE dopo gli intermezzi: game over, tempo, stanchezza, ATTESA_DIREZIONE
+	FINE_LOCAZIONE_2,
 	// Pubblica la richiesta della direzione e passa subito a SCELTA_DIREZIONE
 	ATTESA_DIREZIONE,
 	// Attende la direzione (o pozioni, mappa, inventario, accampamento...)

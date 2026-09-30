@@ -128,6 +128,17 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private MomentoIntermezzo momentoIntermezzo;
 	private Stato statoDopoIntermezzi;
 
+	// La UI sta ancora animando qualcosa (sprite, annuncio globale): l'intermezzo pronto a
+	// scattare aspetta che segnali InternoUiInattiva prima di essere mostrato
+	private boolean uiOccupata;
+	private MomentoIntermezzo momentoIntermezzoInAttesa;
+	private Stato statoDopoIntermezzoInAttesa;
+	// Si è appena usciti da Stato.INTERMEZZO (ultima pagina mostrata): il ritorno alla
+	// schermata di gioco va notificato solo quando la cascata automatica che segue si sarà
+	// davvero fermata (vedi prosegui()), non a questo singolo passo intermedio — potrebbe
+	// scattare subito un altro intermezzo, o la UI potrebbe non essere ancora pronta.
+	private boolean mostraSchermataGiocoAllaRipresa;
+
 	public Automa(Temporizzatore temporizzatore) {
 		this(temporizzatore, Automa::precaricaInBackground);
 	}
@@ -151,6 +162,13 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			motorePrecaricato = true;
 			passaAllIntroSePronto();
 		});
+		BusEventi.iscriviti(InternoUiOccupata.class, e -> uiOccupata = true);
+		BusEventi.iscriviti(InternoUiInattiva.class, e -> {
+			uiOccupata = false;
+			if (stato == Stato.ATTESA_UI_PER_INTERMEZZO) {
+				prosegui(avviaProssimoIntermezzo(momentoIntermezzoInAttesa, statoDopoIntermezzoInAttesa));
+			}
+		});
 
 		gestoriIngresso = new EnumMap<>(Stato.class);
 		gestoriIngresso.put(Stato.INIZIO_GIOCO, this::entraInStatoInizioGioco);
@@ -165,6 +183,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriIngresso.put(Stato.ATTESA_INCANTESIMO_QUALSIASI, this::entraInStatoAttesaIncantesimoQualsiasi);
 		gestoriIngresso.put(Stato.ATTESA_SI_NO, this::entraInStatoAttesaSiNo);
 		gestoriIngresso.put(Stato.FINE_LOCAZIONE, () -> eseguiFineLocazione(null));
+		gestoriIngresso.put(Stato.FINE_LOCAZIONE_2, this::entraInStatoFineLocazione2);
 		gestoriIngresso.put(Stato.ATTESA_DIREZIONE, this::entraInStatoAttesaDirezione);
 		gestoriIngresso.put(Stato.SCELTA_FORMULANTE_RESURREZIONE, this::entraInStatoSceltaFormulanteResurrezione);
 		gestoriIngresso.put(Stato.SCELTA_BERSAGLIO_RESURREZIONE, this::entraInStatoSceltaBersaglioResurrezione);
@@ -188,6 +207,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriComando.put(Stato.LOGO_INIZIALE, comando -> Esito.FERMATI);
 		// In attesa del nome per la classifica non c'e' nessuna icona: un comando arrivato comunque si ignora
 		gestoriComando.put(Stato.ATTESA_NOME_PUNTEGGI, comando -> Esito.FERMATI);
+		// In attesa che la UI finisca le sue animazioni: i comandi arrivati nel frattempo si ignorano
+		gestoriComando.put(Stato.ATTESA_UI_PER_INTERMEZZO, comando -> Esito.FERMATI);
 		gestoriComando.put(Stato.INTRO, this::gestisciComandoInStatoIntro);
 		gestoriComando.put(Stato.INTERMEZZO, this::gestisciComandoInStatoIntermezzo);
 		gestoriComando.put(Stato.PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE, this::gestisciComandoInStatoPreGameSelezionaSalvataggioDaLeggere);
@@ -353,6 +374,12 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			BusEventi.pubblica(new InternoMessaggio("Automa in stato " + stato.name() + "; processo Comando " + prossimo));
 			esito = eseguiPasso(prossimo);
 		}
+		// La cascata automatica si è davvero fermata (non solo un passo intermedio):
+		// solo ora, se era in sospeso, si può avvisare la UI del ritorno al gioco.
+		if (mostraSchermataGiocoAllaRipresa && stato != Stato.INTERMEZZO && stato != Stato.ATTESA_UI_PER_INTERMEZZO) {
+			mostraSchermataGiocoAllaRipresa = false;
+			BusEventi.pubblica(new InternoMostraSchermataGioco());
+		}
 	}
 
 	private Esito eseguiPasso(Comando comando) {
@@ -511,6 +538,12 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 * intermezzi scattati nello stesso momento vengono mostrati uno dopo l'altro.
 	 */
 	private Esito avviaProssimoIntermezzo(MomentoIntermezzo momento, Stato statoDopo) {
+		if (uiOccupata) {
+			momentoIntermezzoInAttesa = momento;
+			statoDopoIntermezzoInAttesa = statoDopo;
+			stato = Stato.ATTESA_UI_PER_INTERMEZZO;
+			return Esito.FERMATI;
+		}
 		Intermezzo intermezzo;
 		List<PaginaIntermezzo> pagine;
 		do {
@@ -572,8 +605,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		pagineIntermezzo = null;
 		Esito esito = avviaProssimoIntermezzo(momentoIntermezzo, statoDopoIntermezzi);
 		if (stato != Stato.INTERMEZZO) {
-			// Nessun altro intermezzo in coda: la UI torna alla schermata di gioco
-			BusEventi.pubblica(new InternoMostraSchermataGioco());
+			// Il ritorno al gioco va segnalato solo a cascata automatica completamente ferma
+			// (vedi prosegui()): questo passo potrebbe non essere l'ultimo, per esempio se
+			// stato è uno stato intermedio che scatenerà subito un altro intermezzo, o se la
+			// UI non è ancora pronta e si finirà comunque in ATTESA_UI_PER_INTERMEZZO.
+			mostraSchermataGiocoAllaRipresa = true;
 		}
 		return esito;
 	}
@@ -835,6 +871,12 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			locazioneCorrente.azzeraLocazione(gruppo);
 		}
 
+		// Missioni ed eventuale locazione azzerate: è il momento degli intermezzi, prima
+		// del controllo di game over e del resto della coda di fine locazione
+		return avviaProssimoIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA, Stato.FINE_LOCAZIONE_2);
+	}
+
+	private Esito entraInStatoFineLocazione2() {
 		if (LineaTemporale.isGiocoFinito()) {
 			if (RegistroMissioni.getMissionePrincipale().isCompleta()) {
 				stato = Stato.GIOCO_VINTO;
