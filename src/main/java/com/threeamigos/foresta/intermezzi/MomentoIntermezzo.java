@@ -15,5 +15,11 @@ public enum MomentoIntermezzo {
 	 * All'arrivo in una nuova locazione, dopo i controlli pre-locazione delle missioni
 	 * e gli eventi della linea temporale, prima che la locazione venga costruita.
 	 */
-	INIZIO_LOCAZIONE
+	INIZIO_LOCAZIONE,
+
+	/**
+	 * Alla fine di una locazione, dopo i controlli post-locazione delle missioni,
+	 * prima che il gruppo riparta verso una nuova direzione.
+	 */
+	LOCAZIONE_COMPLETATA
 }
