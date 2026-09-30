@@ -66,6 +66,10 @@ public enum TipoMissione {
      * Esempio: allevare animali, bestiame, creature magiche
      */
     ALLEVAMENTO(SupertipoMissione.ACQUISIZIONE),
+    /**
+     * Esempio: speculazione, investimenti, gioco d'azzardo, trading
+     */
+    BORSA(SupertipoMissione.ACQUISIZIONE),
 
     //----------
 
@@ -86,10 +90,6 @@ public enum TipoMissione {
      */
     ASTA(SupertipoMissione.NEGOZIAZIONE),
     /**
-     * Esempio: speculazione, investimenti, gioco d'azzardo, trading
-     */
-    BORSA(SupertipoMissione.NEGOZIAZIONE),
-    /**
      * Esempio: fare da broker, intermediario commerciale, mediatore
      */
     SENSERIA(SupertipoMissione.NEGOZIAZIONE),
@@ -101,10 +101,6 @@ public enum TipoMissione {
      * Esempio: scambiare ostaggi, negoziazione di rilascio, baratto persone
      */
     SCAMBIO_OSTAGGI(SupertipoMissione.NEGOZIAZIONE),
-    /**
-     * Esempio: commercio nel mercato nero, merci illegali, contrabbando organizzato
-     */
-    MERCATO_NERO(SupertipoMissione.NEGOZIAZIONE),
     /**
      * Esempio: negoziare tregua, cessate il fuoco, armistizio
      */
@@ -124,10 +120,6 @@ public enum TipoMissione {
      * Esempio: combattere un duello per ripristinare l'onore, affrontare un campione in arena
      */
     DUELLO(SupertipoMissione.COMBATTIMENTO),
-    /**
-     * Esempio: dominare una bestia selvaggia, controllare un demone, sottomettere un nemico
-     */
-    CONTROLLO_CREATURA(SupertipoMissione.COMBATTIMENTO),
     /**
      * Esempio: partecipare a battaglia large-scale, combattimento di massa, schieramento di truppe
      */
@@ -184,10 +176,6 @@ public enum TipoMissione {
      * Esempio: guerra di trincea, bunker, difesa statica
      */
     TRINCEA(SupertipoMissione.COMBATTIMENTO),
-    /**
-     * Esempio: sabotaggio con esplosivi, demolizione, esplosione tattica
-     */
-    ESPLOSIONE(SupertipoMissione.COMBATTIMENTO),
     /**
      * Esempio: battaglia su ponte strategico, controllo passaggio, ponte conteso
      */
@@ -252,10 +240,6 @@ public enum TipoMissione {
      */
     EPIDEMIA(SupertipoMissione.PROTEZIONE),
     /**
-     * Esempio: purificare una terra corrotta, bonificare un luogo maledetto
-     */
-    PURIFICAZIONE(SupertipoMissione.PROTEZIONE),
-    /**
      * Esempio: esorcizzare una possessione demoniaca, liberare da controllo mentale
      */
     POSSESSIONE(SupertipoMissione.PROTEZIONE),
@@ -263,10 +247,6 @@ public enum TipoMissione {
      * Esempio: isolare malati, contenimento, prevenzione contagio
      */
     QUARANTENA(SupertipoMissione.PROTEZIONE),
-    /**
-     * Esempio: imprigionare qualcuno, tenere in carcere, reclusione
-     */
-    CONFINAMENTO(SupertipoMissione.PROTEZIONE),
     /**
      * Esempio: creare barriera magica, protezione magica, scudo incantato
      */
@@ -331,10 +311,6 @@ public enum TipoMissione {
      */
     RINTRACCIAMENTO(SupertipoMissione.INVESTIGAZIONE),
     /**
-     * Esempio: parlare con spiriti, comunicare con divinità, ottenere messaggi soprannaturali, negoziare con entità
-     */
-    COMUNICAZIONE(SupertipoMissione.INVESTIGAZIONE),
-    /**
      * Esempio: cercare informazioni in archivi, ricercare in biblioteche, studiare testi antichi, raccogliere dati
      */
     RICERCA(SupertipoMissione.INVESTIGAZIONE),
@@ -346,6 +322,10 @@ public enum TipoMissione {
      * Esempio: osservare, monitorare, pedinare qualcuno senza essere scoperti, seguire movimenti
      */
     SORVEGLIANZA(SupertipoMissione.INVESTIGAZIONE),
+    /**
+     * Esempio: scoprire una spia nel nostro accampamento, smascherare un traditore, impedire lo spionaggio
+     */
+    CONTROSPIONAGGIO(SupertipoMissione.INVESTIGAZIONE),
     /**
      * Esempio: interrogare prigionieri, estrarre informazioni, interrogatorio forzato, estorsione confessioni
      */
@@ -359,10 +339,6 @@ public enum TipoMissione {
      */
     FORENSICA(SupertipoMissione.INVESTIGAZIONE),
     /**
-     * Esempio: infiltrarsi in organizzazione, spionaggio interno, penetrazione sociale, reclutamento spie
-     */
-    INFILTRAZIONE(SupertipoMissione.INVESTIGAZIONE),
-    /**
      * Esempio: analizzare profilo criminale, psicologia criminale, prevedere comportamenti, profilazione psicologica
      */
     PROFILING(SupertipoMissione.INVESTIGAZIONE),
@@ -374,18 +350,6 @@ public enum TipoMissione {
      * Esempio: raccogliere testimonianze, interviste, deposizioni, interrogare testimoni
      */
     TESTIMONI(SupertipoMissione.INVESTIGAZIONE),
-    /**
-     * Esempio: visione del passato, retrocognizione, rivivere momenti passati, leggere storia di oggetti, psicometria
-     */
-    VISIONE_PASSATO(SupertipoMissione.INVESTIGAZIONE),
-    /**
-     * Esempio: leggere mente, telepathy, penetrazione psichica, percepire pensieri altrui
-     */
-    LETTURA_MENTE(SupertipoMissione.INVESTIGAZIONE),
-    /**
-     * Esempio: visione del futuro, precognizione, profezia, astrologia, lettura stelle, predizioni, divinazione
-     */
-    VISIONE_FUTURO(SupertipoMissione.INVESTIGAZIONE),
     /**
      * Esempio: scoprire segreto, rivelare mistero, smascheramento, investigare fantasmi, paranormale, entità spettrali
      */
@@ -544,17 +508,21 @@ public enum TipoMissione {
      */
     ASSASSINIO(SupertipoMissione.ILLECITO),
     /**
+     * Esempio: commercio nel mercato nero, merci illegali, contrabbando organizzato
+     */
+    MERCATO_NERO(SupertipoMissione.NEGOZIAZIONE),
+    /**
      * Esempio: sabotare i rifornimenti di un nemico o sabotare le difese di una fortezza
      */
     SABOTAGGIO(SupertipoMissione.ILLECITO),
     /**
+     * Esempio: sabotaggio con esplosivi, demolizione, esplosione tattica
+     */
+    ESPLOSIONE(SupertipoMissione.COMBATTIMENTO),
+    /**
      * Esempio: spiare una riunione importante, raccogliere informazioni senza farsi scoprire
      */
     SPIONAGGIO(SupertipoMissione.ILLECITO),
-    /**
-     * Esempio: scoprire una spia nel nostro accampamento, smascherare un traditore, impedire lo spionaggio
-     */
-    CONTROSPIONAGGIO(SupertipoMissione.ILLECITO),
     /**
      * Esempio: ricattare qualcuno, estorcere denaro, blackmail, estorsione, estorsione sotto minaccia, minaccia per guadagni
      */
@@ -640,13 +608,9 @@ public enum TipoMissione {
      */
     FURTO_IDENTITA(SupertipoMissione.ILLECITO),
     /**
-     * Esempio: offendere divinità, bestemmia, profanazione religiosa
+     * Esempio: rapire, furto a mano armata, rapinare
      */
-    BLASFEMIA(SupertipoMissione.ILLECITO),
-    /**
-     * Esempio: rapire, furto a mano armata, brigantaggio
-     */
-    PARRUCCHIO(SupertipoMissione.ILLECITO),
+    BRIGANTAGGIO(SupertipoMissione.ILLECITO),
     /**
      * Esempio: testimonianza falsa, perjury, giuramento falso
      */
@@ -656,9 +620,9 @@ public enum TipoMissione {
      */
     IMBROGLIONE(SupertipoMissione.ILLECITO),
     /**
-     * Esempio: imprigionamento illegale, reclusione non autorizzata, sequestro, carcere illegale
+     * Esempio: imprigionare qualcuno, tenere in carcere, reclusione
      */
-    CARCERE_ILLEGALE(SupertipoMissione.ILLECITO),
+    CONFINAMENTO(SupertipoMissione.ILLECITO),
     /**
      * Esempio: tortura, estorsione confessione, interrogatorio forzato
      */
@@ -671,17 +635,37 @@ public enum TipoMissione {
     //----------
 
     /**
+     * Esempio: purificare una terra corrotta, bonificare un luogo maledetto
+     */
+    PURIFICAZIONE(SupertipoMissione.PROTEZIONE),
+    /**
      * Esempio: spezzare una maledizione su uno spirito tormentato
      */
     SPEZZATURA(SupertipoMissione.SPIRITUALE),
     /**
-     * Esempio: eseguire un rituale di evocazione per contattare uno spirito o sigillare un portale
-     */
-    RITUALE(SupertipoMissione.SPIRITUALE),
-    /**
      * Esempio: benedire un luogo maledetto, purificare un'anima corrotta, benedire una coppia
      */
     BENEDIZIONE(SupertipoMissione.SPIRITUALE),
+    /**
+     * Esempio: parlare con spiriti, comunicare con divinità, ottenere messaggi soprannaturali, negoziare con entità
+     */
+    COMUNICAZIONE(SupertipoMissione.SPIRITUALE),
+    /**
+     * Esempio: visione del passato, retrocognizione, rivivere momenti passati, leggere storia di oggetti, psicometria
+     */
+    VISIONE_PASSATO(SupertipoMissione.SPIRITUALE),
+    /**
+     * Esempio: leggere mente, telepathy, penetrazione psichica, percepire pensieri altrui
+     */
+    LETTURA_MENTE(SupertipoMissione.SPIRITUALE),
+    /**
+     * Esempio: visione del futuro, precognizione, profezia, astrologia, lettura stelle, predizioni, divinazione
+     */
+    VISIONE_FUTURO(SupertipoMissione.SPIRITUALE),
+    /**
+     * Esempio: eseguire un rituale di evocazione per contattare uno spirito o sigillare un portale
+     */
+    RITUALE(SupertipoMissione.SPIRITUALE),
     /**
      * Esempio: animare i non-morti, controllare scheletri, risvegliare cadaveri
      */
