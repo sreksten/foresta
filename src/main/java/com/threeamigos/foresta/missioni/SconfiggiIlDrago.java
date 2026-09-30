@@ -4,12 +4,10 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaGlobale;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 public class SconfiggiIlDrago extends MissioneBase implements Missione {
@@ -75,22 +73,13 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 	}
 
 	/**
-	 * Un castello è distrutto quando non è più sulla mappa, o quando la sua casella
-	 * si ricorda di essere stata portata a termine. Interrogare il modello dati
-	 * invece delle istanze regge anche dopo un caricamento.
+	 * I quattro alleati del Drago sono sconfitti quando le rispettive missioni sono complete.
+	 * Restano sempre nell'albero (vedi RegistroMissioni.getMissioniCompletate), quindi la
+	 * verifica regge anche dopo un caricamento e non dipende da quando/se una missione
+	 * ha già costruito la propria locazione.
 	 */
 	private boolean castelliDistrutti() {
-		boolean castelliDistrutti = true;
-		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
-			if (classeLocazione.getTipoLocazione() != TipoLocazione.CASTELLO || classeLocazione == ClassiLocazione.CASTELLO_DRAGO) {
-				continue;
-			}
-			CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(classeLocazione);
-			if (coordinate != null && Foresta.getLocazioneMD(coordinate).ottieniProprieta(LocazioneMD.COMPLETA) == null) {
-				castelliDistrutti = false;
-			}
-		}
-		return castelliDistrutti;
+		return getMissioniSecondarie().stream().allMatch(Missione::isCompleta);
 	}
 
 	@Override
