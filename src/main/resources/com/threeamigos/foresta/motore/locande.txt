@@ -284,6 +284,7 @@ NOME
     Gaspare
     Gaudenzio
     Leocadio
+    Lucrezio
     Nepomuceno
     Ninfidio
     Odoacre
@@ -296,6 +297,7 @@ NOME
     Pellegrino
     Sulpicio
     Teodolindo
+    Teofilo
     Torquato
     Tristano
     Ubaldo
