@@ -12,8 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Intermezzo per il checkpoint {@link MomentoIntermezzo#INIZIO_LOCAZIONE}: scatta alla
- * seconda visita del gruppo a una locanda (qualunque locanda), e solo se il gruppo ha più
+ * Intermezzo per i checkpoint {@link MomentoIntermezzo#INIZIO_LOCAZIONE} (locanda nel
+ * bosco) e {@link MomentoIntermezzo#INGRESSO_LOCANDA_IN_CITTA} (locanda in città): scatta
+ * alla seconda visita del gruppo a una locanda (qualunque locanda), e solo se il gruppo ha più
  * di un personaggio. Niente bardo questa volta: l'oste è sulla destra, il gruppo avanza
  * con il capo in testa fino a poco oltre il centro, gli altri lo seguono in fila. Il capo
  * si volta verso il gruppo (guarda a sinistra, mentre tutti gli altri, fermi dove sono
@@ -45,7 +46,7 @@ public class IntermezzoLocandaSecondaVisita implements Intermezzo {
 
 	@Override
 	public boolean deveScattare(MomentoIntermezzo momento) {
-		if (momento != MomentoIntermezzo.INIZIO_LOCAZIONE) {
+		if (!momentoCoerenteConLocazioneCorrente(momento)) {
 			return false;
 		}
 		LocazioneMD locazioneMD = getLocazioneMDLocandaCorrente();
@@ -54,6 +55,20 @@ public class IntermezzoLocandaSecondaVisita implements Intermezzo {
 		}
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		return gruppo.getPersonaggiVivi().size() > 1 && gruppo.getCapo().isVivo();
+	}
+
+	/**
+	 * Vedi il commento sullo stesso metodo in {@link IntermezzoLocandaPrimaVisita}.
+	 */
+	private static boolean momentoCoerenteConLocazioneCorrente(MomentoIntermezzo momento) {
+		ClassiLocazione classe = GruppoGiocatore.getIstanza().getClasseLocazioneCorrente();
+		if (momento == MomentoIntermezzo.INIZIO_LOCAZIONE) {
+			return classe == ClassiLocazione.LOCANDA;
+		}
+		if (momento == MomentoIntermezzo.INGRESSO_LOCANDA_IN_CITTA) {
+			return classe.getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA;
+		}
+		return false;
 	}
 
 	@Override
@@ -102,7 +117,8 @@ public class IntermezzoLocandaSecondaVisita implements Intermezzo {
 
 	private static LocazioneMD getLocazioneMDLocandaCorrente() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		if (gruppo.getClasseLocazioneCorrente() != ClassiLocazione.LOCANDA) {
+		ClassiLocazione classe = gruppo.getClasseLocazioneCorrente();
+		if (classe != ClassiLocazione.LOCANDA && classe.getTipoLocazione() != ClassiLocazione.TipoLocazione.CITTA) {
 			return null;
 		}
 		return Foresta.getLocazioneMD(gruppo.getCoordinate());

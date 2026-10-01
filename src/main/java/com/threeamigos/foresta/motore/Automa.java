@@ -120,6 +120,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Comando direzione; // serve a memorizzare la direzione prima di chiedere il numero di passi
 	private Collection<Comando> comandiPossibiliPerNumeroPassi; // i passi consentiti in quella direzione, più ANNULLA
 	private Personaggio formulanteResurrezione; // chi lancerà la Resurrezione, scelto prima del bersaglio
+	private Comando comandoNegozioInAttesa; // il comando di ingresso in un negozio, in attesa del suo intermezzo
 
 	// L'intermezzo in corso, la pagina mostrata, e dove riprendere quando non ce ne sono altri
 	private Intermezzo intermezzoCorrente;
@@ -194,6 +195,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		// nullo: bisogna ripubblicare i comandi della locazione, altrimenti restano quelli
 		// della mappa e il giocatore deve cliccare due volte perché la UI si aggiorni.
 		gestoriIngresso.put(Stato.IN_LOCAZIONE, this::entraInStatoInLocazione);
+		gestoriIngresso.put(Stato.INGRESSO_NEGOZIO, this::entraInStatoIngressoNegozio);
 		gestoriIngresso.put(Stato.CONFERMA_USCITA, () -> Esito.FERMATI);
 		gestoriIngresso.put(Stato.GIOCO_PERSO, this::entraInStatoGiocoPerso);
 		gestoriIngresso.put(Stato.GIOCO_PERSO_2, this::entraInStatoGiocoPerso2);
@@ -660,6 +662,14 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			richiediAperturaInventarioGruppo();
 			return Esito.CONTINUA_CON_INGRESSO;
 		}
+		MomentoIntermezzo momentoIngressoNegozio = momentoIngressoNegozio(comando);
+		if (momentoIngressoNegozio != null) {
+			// Prima di entrare nel negozio (locanda compresa) si dà modo al suo intermezzo
+			// di scattare; locazioneCorrente.impostaAzioni(...) viene chiamato solo dopo,
+			// da entraInStatoIngressoNegozio()
+			comandoNegozioInAttesa = comando;
+			return avviaProssimoIntermezzo(momentoIngressoNegozio, Stato.INGRESSO_NEGOZIO);
+		}
 		statoPrecedente = stato;
 		/*
 		 * Continuiamo a fornire all'automa a stati finiti della
@@ -667,6 +677,49 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		 * LOCAZIONE_COMPLETA
 		 */
 		stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, comando);
+		return esitoDaStatoLocazione(stato);
+	}
+
+	/**
+	 * Il comando con cui si entra in un negozio di città (locanda compresa), se comando
+	 * è uno di questi, altrimenti null. La locanda in città riusa gli stessi intermezzi
+	 * delle locande nel bosco; gli altri negozi hanno un intermezzo proprio, mostrato una
+	 * sola volta per l'intera partita.
+	 */
+	private static MomentoIntermezzo momentoIngressoNegozio(Comando comando) {
+		switch (comando) {
+			case LOCANDA:
+				return MomentoIntermezzo.INGRESSO_LOCANDA_IN_CITTA;
+			case ALCHIMISTA:
+				return MomentoIntermezzo.INGRESSO_ALCHIMISTA;
+			case ARMAIOLO:
+				return MomentoIntermezzo.INGRESSO_ARMAIOLO;
+			case VENDITORE_DI_PERGAMENE:
+				return MomentoIntermezzo.INGRESSO_VENDITORE_DI_PERGAMENE;
+			case INCANTATORE:
+				return MomentoIntermezzo.INGRESSO_INCANTATORE;
+			default:
+				return null;
+		}
+	}
+
+	/**
+	 * Dopo l'eventuale intermezzo di ingresso nel negozio, esegue finalmente il comando
+	 * con cui ci si era entrati.
+	 */
+	private Esito entraInStatoIngressoNegozio() {
+		Comando comando = comandoNegozioInAttesa;
+		comandoNegozioInAttesa = null;
+		statoPrecedente = Stato.IN_LOCAZIONE;
+		stato = locazioneCorrente.impostaAzioni(gruppo, gruppoAvversario, comando);
+		if (comando != Comando.LOCANDA) {
+			// Armaiolo, alchimista, venditore di pergamene e incantatore hanno già richiesto,
+			// nella chiamata sopra, la loro finestra specifica (ComandoAperturaInventario*/
+			// ComandoAperturaIncantatore): non bisogna poi sovrascriverla con la schermata di
+			// gioco normale (vedi mostraSchermataGiocoAllaRipresa in prosegui()), a differenza
+			// della locanda, il cui dialogo compare nella normale schermata di gioco.
+			mostraSchermataGiocoAllaRipresa = false;
+		}
 		return esitoDaStatoLocazione(stato);
 	}
 

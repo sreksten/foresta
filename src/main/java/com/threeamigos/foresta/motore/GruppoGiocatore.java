@@ -116,7 +116,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 			md.setPozioniSaluteGrande(99);
 			md.setPozioniMagia(99);
 			md.setPozioniMagiaGrande(99);
-			//Foresta.ottieniMappa();
+			Foresta.ottieniMappa();
 		}
 	}
 

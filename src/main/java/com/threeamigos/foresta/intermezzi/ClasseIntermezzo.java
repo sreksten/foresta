@@ -14,7 +14,11 @@ public enum ClasseIntermezzo {
 	INTERMEZZO_INTRODUTTIVO(IntermezzoIntroduttivo::new),
 	INTERMEZZO_FINE_PRIMA_LOCAZIONE(IntermezzoFinePrimaLocazione::new),
 	INTERMEZZO_LOCANDA_PRIMA_VISITA(IntermezzoLocandaPrimaVisita::new),
-	INTERMEZZO_LOCANDA_SECONDA_VISITA(IntermezzoLocandaSecondaVisita::new);
+	INTERMEZZO_LOCANDA_SECONDA_VISITA(IntermezzoLocandaSecondaVisita::new),
+	INTERMEZZO_ARMAIOLO(IntermezzoArmaiolo::new),
+	INTERMEZZO_ALCHIMISTA(IntermezzoAlchimista::new),
+	INTERMEZZO_VENDITORE_DI_PERGAMENE(IntermezzoVenditoreDiPergamene::new),
+	INTERMEZZO_INCANTATORE(IntermezzoIncantatore::new);
 
 	private final Supplier<Intermezzo> supplier;
 	private final boolean diProva;

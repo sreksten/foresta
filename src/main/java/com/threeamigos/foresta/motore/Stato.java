@@ -33,6 +33,9 @@ public enum Stato {
 	PREPARAZIONE_LOCAZIONE,
 	// Controlla trigger in-locazione, stabilisce quali azioni possono essere intraprese
 	IN_LOCAZIONE,
+	// Si entra in un negozio di città (locanda compresa): dà modo al suo intermezzo di
+	// scattare, poi esegue il comando con cui ci si era entrati
+	INGRESSO_NEGOZIO,
 
 	SCELTA_AUTOMATICA_PERSONAGGIO,
 	SCELTA_PERSONAGGIO_QUALSIASI,

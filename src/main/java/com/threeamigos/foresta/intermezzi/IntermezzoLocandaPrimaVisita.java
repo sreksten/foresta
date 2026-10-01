@@ -12,8 +12,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Intermezzo per il checkpoint {@link MomentoIntermezzo#INIZIO_LOCAZIONE}: scatta alla
- * prima visita del gruppo a una locanda non ancora visitata. Il gruppo entra in scena
+ * Intermezzo per i checkpoint {@link MomentoIntermezzo#INIZIO_LOCAZIONE} (locanda nel
+ * bosco) e {@link MomentoIntermezzo#INGRESSO_LOCANDA_IN_CITTA} (locanda in città): scatta
+ * alla prima visita del gruppo a una locanda non ancora visitata. Il gruppo entra in scena
  * camminando verso il centro (capo in testa), un bardo saluta con "C'era una volta...",
  * il locandiere lo zittisce e pronuncia il dialogo di benvenuto specifico di quella
  * locanda.
@@ -48,11 +49,29 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 
 	@Override
 	public boolean deveScattare(MomentoIntermezzo momento) {
-		if (momento != MomentoIntermezzo.INIZIO_LOCAZIONE) {
+		if (!momentoCoerenteConLocazioneCorrente(momento)) {
 			return false;
 		}
 		LocazioneMD locazioneMD = getLocazioneMDLocandaCorrente();
 		return locazioneMD != null && locazioneMD.ottieniProprieta(Locanda.LOCANDA_VISITATA) == null;
+	}
+
+	/**
+	 * Il checkpoint di una locanda nel bosco (INIZIO_LOCAZIONE) scatta all'ingresso nella
+	 * locazione stessa, ma lo stesso checkpoint scatterebbe anche entrando in una città
+	 * (la cui locanda viene costruita subito, a prescindere da cosa si scelga in piazza):
+	 * serve quindi distinguere i due casi, altrimenti l'intermezzo comparirebbe appena
+	 * entrati in città, prima ancora di aver scelto "Locanda".
+	 */
+	private static boolean momentoCoerenteConLocazioneCorrente(MomentoIntermezzo momento) {
+		ClassiLocazione classe = GruppoGiocatore.getIstanza().getClasseLocazioneCorrente();
+		if (momento == MomentoIntermezzo.INIZIO_LOCAZIONE) {
+			return classe == ClassiLocazione.LOCANDA;
+		}
+		if (momento == MomentoIntermezzo.INGRESSO_LOCANDA_IN_CITTA) {
+			return classe.getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA;
+		}
+		return false;
 	}
 
 	@Override
@@ -97,7 +116,8 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 
 	private static LocazioneMD getLocazioneMDLocandaCorrente() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		if (gruppo.getClasseLocazioneCorrente() != ClassiLocazione.LOCANDA) {
+		ClassiLocazione classe = gruppo.getClasseLocazioneCorrente();
+		if (classe != ClassiLocazione.LOCANDA && classe.getTipoLocazione() != ClassiLocazione.TipoLocazione.CITTA) {
 			return null;
 		}
 		return Foresta.getLocazioneMD(gruppo.getCoordinate());
