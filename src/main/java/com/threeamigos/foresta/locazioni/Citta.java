@@ -117,7 +117,7 @@ public abstract class Citta extends LocazioneUnica {
 			} else if (azione == Comando.INCANTATORE) {
 				stato = StatoInCitta.DA_INCANTATORE;
 				incantatore = new AutomaIncantatore(g, new BancoDiLavoro());
-				apriIncantatore("Benvenuti. Mettete sul banco un artefatto e le pergamene da fondere.");
+				apriIncantatore("Mettete sul banco un artefatto e le pergamene da fondere.");
 
 			} else if (azione == Comando.ESCI_DA_CITTA) {
 				return Stato.FINE_LOCAZIONE;
