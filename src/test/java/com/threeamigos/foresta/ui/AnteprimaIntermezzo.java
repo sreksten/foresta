@@ -35,6 +35,8 @@ import java.util.Locale;
  *     INTERMEZZO            un valore di ClasseIntermezzo (default: il primo)
  *     --classe CLASSE       classe del protagonista, un valore di ClassePersonaggio (default GUERRIERO)
  *     --nome NOME           nome del protagonista (default Aldric)
+ *     --compagni C1,C2,...  classi di eventuali compagni (fino a 4, oltre al protagonista),
+ *                           per testare intermezzi come l'accampamento con gruppi più numerosi
  *     --pagina N            pagina da cui partire, da 1 (default 1)
  *     --png FILE            invece della finestra, salva in FILE una griglia: una riga per
  *                           pagina (o solo la pagina indicata con --pagina), una colonna per istante
@@ -47,6 +49,11 @@ import java.util.Locale;
  * un'immagine mancante) vengono stampati sulla console.
  */
 public final class AnteprimaIntermezzo {
+
+	private static final String[] argomentiAlchimista = {
+			"INTERMEZZO_ACCAMPAMENTO", "--classe", "ELFA", "--compagni", "GUERRIERO,BARDO,MAGO,LADRA",
+			"--nome", "Beppina"
+	};
 
 	private static final int FRAME_AL_SECONDO = 30;
 
@@ -75,9 +82,11 @@ public final class AnteprimaIntermezzo {
 	}
 
 	public static void main(String[] args) throws IOException {
+		args = argomentiAlchimista;
 		String nomeIntermezzo = ClasseIntermezzo.values()[0].name();
 		ClassePersonaggio classe = ClassePersonaggio.GUERRIERO;
 		String nome = "Aldric";
+		ClassePersonaggio[] compagni = {};
 		int pagina = 1;
 		String png = null;
 		double[] istanti = {0, 1, 2, 4};
@@ -88,6 +97,9 @@ public final class AnteprimaIntermezzo {
 					break;
 				case "--nome":
 					nome = args[++i];
+					break;
+				case "--compagni":
+					compagni = leggiCompagni(args[++i]);
 					break;
 				case "--pagina":
 					pagina = Integer.parseInt(args[++i]);
@@ -108,7 +120,7 @@ public final class AnteprimaIntermezzo {
 
 		BusEventi.iscriviti(InternoErrore.class, errore -> System.err.println("ERRORE: " + errore.getMessaggio()));
 		ImageCache.init();
-		PartitaDiAnteprima.prepara(classe, nome);
+		PartitaDiAnteprima.prepara(classe, nome, compagni);
 		Intermezzo intermezzo = ClasseIntermezzo.valueOf(nomeIntermezzo).getIstanza();
 		AnteprimaIntermezzo anteprima = new AnteprimaIntermezzo(intermezzo, pagina - 1);
 
@@ -277,6 +289,15 @@ public final class AnteprimaIntermezzo {
 	}
 
 	// ----- Argomenti
+
+	private static ClassePersonaggio[] leggiCompagni(String elenco) {
+		String[] parti = elenco.split(",");
+		ClassePersonaggio[] compagni = new ClassePersonaggio[parti.length];
+		for (int i = 0; i < parti.length; i++) {
+			compagni[i] = ClassePersonaggio.valueOf(parti[i].trim().toUpperCase(Locale.ROOT));
+		}
+		return compagni;
+	}
 
 	private static double[] leggiIstanti(String elenco) {
 		String[] parti = elenco.split(",");

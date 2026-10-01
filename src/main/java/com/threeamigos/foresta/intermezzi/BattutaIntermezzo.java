@@ -7,11 +7,13 @@ package com.threeamigos.foresta.intermezzi;
  * <p>
  * Se non si indica quando comincia, la battuta parte alla fine della precedente; se non
  * si indica quanto dura, la durata dipende dalla lunghezza del testo. Se non si indica
- * dove mettere il fumetto, la UI lo colloca sopra chi parla, verso il centro dello schermo.
+ * dove mettere il fumetto, la UI lo colloca sopra chi parla, verso il centro dello schermo;
+ * se non si indica la larghezza, è un terzo dello schermo.
  * <pre>
  *     BattutaIntermezzo.di("eremita", "Chi va là?")
  *     BattutaIntermezzo.di("eroe", "Un amico.").perSecondi(2)
  *     BattutaIntermezzo.daPunto(0.9, 0.1, "Aiuto!").daSecondo(6)
+ *     BattutaIntermezzo.di("bardo", "Una storia lunghissima...").conLarghezza(0.6).centrataOrizzontalmente()
  * </pre>
  */
 public final class BattutaIntermezzo {
@@ -28,6 +30,8 @@ public final class BattutaIntermezzo {
 	private double perSecondi = Double.NaN;
 	private double nuvolaX = Double.NaN;
 	private double nuvolaY = Double.NaN;
+	private double larghezza = Double.NaN;
+	private boolean centrataOrizzontalmente = false;
 
 	private BattutaIntermezzo(String idElemento, double puntoX, double puntoY, String testo) {
 		if (testo == null || testo.isEmpty()) {
@@ -65,8 +69,29 @@ public final class BattutaIntermezzo {
 
 	/** Il centro del fumetto, in frazioni dello schermo, invece della posizione automatica. */
 	public BattutaIntermezzo nuvolaA(double x, double y) {
+		if (centrataOrizzontalmente) {
+			throw new IllegalStateException("Il fumetto è già centrato in orizzontale");
+		}
 		nuvolaX = x;
 		nuvolaY = y;
+		return this;
+	}
+
+	/** La larghezza massima del fumetto, in frazioni dello schermo, invece di un terzo dello schermo. */
+	public BattutaIntermezzo conLarghezza(double frazioneSchermo) {
+		larghezza = frazioneSchermo;
+		return this;
+	}
+
+	/**
+	 * Centra il fumetto in orizzontale, mantenendo automatica la posizione verticale
+	 * (sopra chi parla, o sopra il punto fisso indicato con {@link #daPunto}).
+	 */
+	public BattutaIntermezzo centrataOrizzontalmente() {
+		if (hasPosizioneNuvola()) {
+			throw new IllegalStateException("Il fumetto ha già una posizione fissa");
+		}
+		centrataOrizzontalmente = true;
 		return this;
 	}
 
@@ -97,6 +122,18 @@ public final class BattutaIntermezzo {
 
 	public double getNuvolaY() {
 		return nuvolaY;
+	}
+
+	public boolean hasLarghezza() {
+		return !Double.isNaN(larghezza);
+	}
+
+	public double getLarghezza() {
+		return larghezza;
+	}
+
+	public boolean isCentrataOrizzontalmente() {
+		return centrataOrizzontalmente;
 	}
 
 	boolean hasInizio() {

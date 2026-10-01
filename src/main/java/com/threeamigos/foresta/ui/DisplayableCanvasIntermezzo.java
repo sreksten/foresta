@@ -190,9 +190,13 @@ class DisplayableCanvasIntermezzo implements Finestra {
 			x = (int) Math.round(battuta.getNuvolaX() * width) - larghezza / 2;
 			y = (int) Math.round(battuta.getNuvolaY() * height) + altezza / 2;
 		} else {
-			// Sopra chi parla, spostato verso il centro dello schermo
 			y = punta.y - DISTANZA_FUMETTO_VERTICALE;
-			x = punta.x < width / 2 ? punta.x + DISTANZA_FUMETTO_ORIZZONTALE : punta.x - larghezza - DISTANZA_FUMETTO_ORIZZONTALE;
+			if (battuta.isCentrataOrizzontalmente()) {
+				x = (width - larghezza) / 2;
+			} else {
+				// Sopra chi parla, spostato verso il centro dello schermo
+				x = punta.x < width / 2 ? punta.x + DISTANZA_FUMETTO_ORIZZONTALE : punta.x - larghezza - DISTANZA_FUMETTO_ORIZZONTALE;
+			}
 		}
 		x = Math.max(MARGINE_SCHERMO, Math.min(x, width - larghezza - MARGINE_SCHERMO));
 		y = Math.max(altezza + MARGINE_SCHERMO, Math.min(y, height - MARGINE_SCHERMO));
@@ -221,8 +225,9 @@ class DisplayableCanvasIntermezzo implements Finestra {
 	private BufferedImage nuvola(BattutaIntermezzo battuta) {
 		if (!nuvole.containsKey(battuta)) {
 			BufferedImage nuvola = null;
+			int larghezzaNuvola = battuta.hasLarghezza() ? (int) Math.round(battuta.getLarghezza() * width) : width / 3;
 			try {
-				nuvola = SpriteFumetto.costruisciNuvola(battuta.getTesto(), width / 3,
+				nuvola = SpriteFumetto.costruisciNuvola(battuta.getTesto(), larghezzaNuvola,
 						DoomdarkFontMedium.getInstance(), DoomdarkColorModel.Color.BLACK);
 			} catch (DoomdarkFont.UnsupportedCharacterException e) {
 				BusEventi.pubblica(new InternoErrore("Battuta non disegnabile: \"" + battuta.getTesto() + "\" - " + e.getMessage()));

@@ -36,6 +36,8 @@ public enum Stato {
 	// Si entra in un negozio di città (locanda compresa): dà modo al suo intermezzo di
 	// scattare, poi esegue il comando con cui ci si era entrati
 	INGRESSO_NEGOZIO,
+	// Il gruppo si accampa: dà modo al suo intermezzo di scattare, poi fa passare la notte
+	ACCAMPAMENTO,
 
 	SCELTA_AUTOMATICA_PERSONAGGIO,
 	SCELTA_PERSONAGGIO_QUALSIASI,

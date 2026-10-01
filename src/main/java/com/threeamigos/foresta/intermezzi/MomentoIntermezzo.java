@@ -51,5 +51,11 @@ public enum MomentoIntermezzo {
 	 * Quando dalla piazza di una città si sceglie di entrare dall'incantatore, prima che
 	 * {@link com.threeamigos.foresta.locazioni.Citta} esegua il comando.
 	 */
-	INGRESSO_INCANTATORE
+	INGRESSO_INCANTATORE,
+
+	/**
+	 * Quando il gruppo si accampa (fuori da città, castelli, locande e palude), prima che
+	 * {@link com.threeamigos.foresta.motore.Automa} faccia passare la notte.
+	 */
+	ACCAMPAMENTO
 }

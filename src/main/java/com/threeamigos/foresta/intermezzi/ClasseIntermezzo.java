@@ -18,7 +18,8 @@ public enum ClasseIntermezzo {
 	INTERMEZZO_ARMAIOLO(IntermezzoArmaiolo::new),
 	INTERMEZZO_ALCHIMISTA(IntermezzoAlchimista::new),
 	INTERMEZZO_VENDITORE_DI_PERGAMENE(IntermezzoVenditoreDiPergamene::new),
-	INTERMEZZO_INCANTATORE(IntermezzoIncantatore::new);
+	INTERMEZZO_INCANTATORE(IntermezzoIncantatore::new),
+	INTERMEZZO_ACCAMPAMENTO(IntermezzoAccampamento::new);
 
 	private final Supplier<Intermezzo> supplier;
 	private final boolean diProva;

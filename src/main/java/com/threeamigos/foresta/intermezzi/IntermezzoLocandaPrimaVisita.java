@@ -29,9 +29,9 @@ import java.util.List;
 public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 
 	private static final double X_PARTENZA_PERSONAGGI = -0.15;
-	private static final double X_TARGET_BASE = 0.45;
-	private static final double DISTANZA_FRA_PERSONAGGI = 0.08;
-	private static final double RITARDO_FRA_PARTENZE = 1.0;
+	private static final double X_TARGET_BASE = 0.5;
+	private static final double DISTANZA_FRA_PERSONAGGI = 0.05;
+	private static final double RITARDO_FRA_PARTENZE = 0.6;
 	private static final double SECONDI_CAMMINATA = 2.0;
 	private static final double MARGINE_DOPO_CAMMINATA = 0.3;
 
@@ -39,6 +39,10 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 	private static final double Y_LOCANDIERE = 0.6;
 	private static final double X_BARDO = 0.60;
 	private static final double Y_BARDO = 0.6;
+
+	// Centrato come lo sfondo, di cui ha le stesse dimensioni
+	private static final double X_FOREGROUND = 0.5;
+	private static final double Y_FOREGROUND = 0.5;
 
 	@Override
 	public String getId() {
@@ -102,7 +106,11 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 		double tempoFineCammino = (personaggiVivi.size() - 1) * RITARDO_FRA_PARTENZE + SECONDI_CAMMINATA;
 		pagina.conBattuta(BattutaIntermezzo.di("bardo", "C'era una volta...").daSecondo(tempoFineCammino + MARGINE_DOPO_CAMMINATA))
 				.conBattuta(BattutaIntermezzo.di("locandiere", "Smettila con queste tue storielle!"))
-				.conBattuta(BattutaIntermezzo.di("locandiere", dialogo));
+				.conBattuta(BattutaIntermezzo.di("locandiere", dialogo).conLarghezza(0.8)
+						.centrataOrizzontalmente());
+
+		// Aggiunto per ultimo così resta sopra a tutto il resto della scena
+		pagina.conElemento(ElementoIntermezzo.di("foreground", ImmagineIntermezzo.risorsa("fondi/ForegroundLocanda.gif"), X_FOREGROUND, Y_FOREGROUND));
 
 		// Evita che Locanda.descrivi(), chiamato subito dopo con la locanda ormai
 		// costruita, ripeta il dialogo o anticipi la recensione appena mostrati qui

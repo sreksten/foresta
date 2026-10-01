@@ -17,6 +17,11 @@ public class IntermezziMD implements Serializzabile {
 
 	private final Set<String> intermezziScattati = new LinkedHashSet<>();
 
+	// Quante volte il gruppo si è accampato nella partita corrente: usato da
+	// IntermezzoAccampamento per scattare una volta per accampamento (non di più in uno
+	// stesso ciclo), fino a un massimo di occorrenze.
+	private int numeroAccampamenti;
+
 	public boolean isScattato(String id) {
 		return intermezziScattati.contains(id);
 	}
@@ -25,8 +30,17 @@ public class IntermezziMD implements Serializzabile {
 		intermezziScattati.add(id);
 	}
 
+	public int getNumeroAccampamenti() {
+		return numeroAccampamenti;
+	}
+
+	public void incrementaNumeroAccampamenti() {
+		numeroAccampamenti++;
+	}
+
 	public void reimposta() {
 		intermezziScattati.clear();
+		numeroAccampamenti = 0;
 	}
 
 	@Override
@@ -35,6 +49,7 @@ public class IntermezziMD implements Serializzabile {
 		for (String id : intermezziScattati) {
 			stream.println(id);
 		}
+		stream.println(numeroAccampamenti);
 	}
 
 	@Override
@@ -45,5 +60,6 @@ public class IntermezziMD implements Serializzabile {
 		for (int i = 0; i < numero; i++) {
 			intermezziScattati.add(new LettoreCampi(stream.readLine()).testo());
 		}
+		numeroAccampamenti = new LettoreCampi(stream.readLine()).intero();
 	}
 }

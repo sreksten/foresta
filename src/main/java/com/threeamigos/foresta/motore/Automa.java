@@ -19,6 +19,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.Missione;
+import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
@@ -36,12 +37,10 @@ import java.util.function.Supplier;
 // TODO: mostrare in locazione anche i personaggi del gruppo.
 // TODO: implementare fumetto che attende chiusura
 // TODO: implementare sistema di aiuto
-// TODO: implementare gli intermezzi nelle Locande che mostrano il dialogo del gestore con il gruppo al completo
 // TODO: implementare gli intermezzi nell'accampamento:
 //  - hai visto che luna stasera? non è una luna quella... è una stazione da battaglia! - perdi troppo tempo ad ascoltare le storie nelle locande.
 //  - hai visto che luna stasera? non farti prendere dal panico.
 //  - una volta ho sentito di uno che è stato trasformato in scarafaggio/asino d'oro - perdi troppo tempo ad ascoltare le storie nelle locande.
-// TODO: implementare gli intermezzi da alchimista, armaiolo, venditore di pergamene, incantatore che spiegano come funzionano
 // TODO: implementare intermezzi durante la notte tipo:
 //  - ma voi <negoziante> siete sempre aperti/non chiudete mai? parla quello che mi piomba in negozio alle tre del mattino/no, perché abbiamo clienti come te
 // TODO: gli oggetti venduti all'armaiolo probabilmente andrebbero anche distrutti alla fine della locazione per non riempirgli l'inventario
@@ -196,6 +195,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		// della mappa e il giocatore deve cliccare due volte perché la UI si aggiorni.
 		gestoriIngresso.put(Stato.IN_LOCAZIONE, this::entraInStatoInLocazione);
 		gestoriIngresso.put(Stato.INGRESSO_NEGOZIO, this::entraInStatoIngressoNegozio);
+		gestoriIngresso.put(Stato.ACCAMPAMENTO, this::entraInStatoAccampamento);
 		gestoriIngresso.put(Stato.CONFERMA_USCITA, () -> Esito.FERMATI);
 		gestoriIngresso.put(Stato.GIOCO_PERSO, this::entraInStatoGiocoPerso);
 		gestoriIngresso.put(Stato.GIOCO_PERSO_2, this::entraInStatoGiocoPerso2);
@@ -724,6 +724,19 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	/**
+	 * Dopo l'eventuale intermezzo di accampamento, il gruppo passa davvero la notte.
+	 */
+	private Esito entraInStatoAccampamento() {
+		// Dalla casella, non da locazioneCorrente: dopo un caricamento questa e' null, e dopo un castello
+		// completato e' ancora il castello mentre sulla casella ci sono le rovine
+		gruppo.pernotta(Foresta.costruisciIstanza(gruppo.getCoordinate()).getTipoRiposo());
+		LineaTemporale.mattinoSeguente();
+		LineaTemporale.eventi(gruppo);
+		stato = Stato.ATTESA_DIREZIONE;
+		return Esito.CONTINUA_CON_INGRESSO;
+	}
+
+	/**
 	 * Traduce lo stato restituito da Locazione.impostaAzioni nel passo successivo
 	 * dell'automa: IN_LOCAZIONE attende il giocatore, IN_COMBATTIMENTO avvia il battito
 	 * dei round e attende, qualunque altro stato viene eseguito subito (fermando il
@@ -980,13 +993,14 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				richiediAperturaInventarioGruppo();
 				return Esito.CONTINUA_CON_INGRESSO;
 			case ACCAMPAMENTO:
-				// Dalla casella, non da locazioneCorrente: dopo un caricamento questa e' null, e dopo un castello
-				// completato e' ancora il castello mentre sulla casella ci sono le rovine
-				gruppo.pernotta(Foresta.costruisciIstanza(gruppo.getCoordinate()).getTipoRiposo());
-				LineaTemporale.mattinoSeguente();
-				LineaTemporale.eventi(gruppo);
-				stato = Stato.ATTESA_DIREZIONE;
-				return Esito.CONTINUA_CON_INGRESSO;
+				// Il contatore incrementa qui, una sola volta per accampamento, e non
+				// dentro IntermezzoAccampamento: lì verrebbe ricontrollato più volte in
+				// cascata (vedi gestisciComandoInStatoIntermezzo) finendo per scattare più
+				// volte nello stesso accampamento invece che una volta per accampamento.
+				ModelloDati.getIstanza().getIntermezziMD().incrementaNumeroAccampamenti();
+				// Poi si dà modo al suo intermezzo di scattare; la notte passa solo dopo,
+				// in entraInStatoAccampamento()
+				return avviaProssimoIntermezzo(MomentoIntermezzo.ACCAMPAMENTO, Stato.ACCAMPAMENTO);
 			case POZIONE_SALUTE:
 				statoPrecedente = Stato.ATTESA_POZIONE_SALUTE;
 				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;

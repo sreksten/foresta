@@ -35,7 +35,11 @@ public class IntermezzoLocandaSecondaVisita implements Intermezzo {
 	private static final double SECONDI_VOLTATA_CAPO = 0.1;
 	private static final double MARGINE_DOPO_CAMMINATA = 0.3;
 
-	private static final double X_OSTE = 0.75;
+	private static final double X_OSTE = 0.68;
+
+	// Centrato come lo sfondo, di cui ha le stesse dimensioni
+	private static final double X_FOREGROUND = 0.5;
+	private static final double Y_FOREGROUND = 0.5;
 
 	@Override
 	public String getId() {
@@ -109,6 +113,9 @@ public class IntermezzoLocandaSecondaVisita implements Intermezzo {
 
 		double tempoFineCammino = (personaggiVivi.size() - 1) * RITARDO_FRA_PARTENZE + SECONDI_CAMMINATA;
 		pagina.conBattuta(BattutaIntermezzo.di(idElementoCapo, recensione).daSecondo(tempoFineCammino + MARGINE_DOPO_CAMMINATA));
+
+		// Aggiunto per ultimo così resta sopra a tutto il resto della scena
+		pagina.conElemento(ElementoIntermezzo.di("foreground", ImmagineIntermezzo.risorsa("fondi/ForegroundLocanda.gif"), X_FOREGROUND, Y_FOREGROUND));
 
 		List<PaginaIntermezzo> pagineIntermezzo = new ArrayList<>();
 		pagineIntermezzo.add(pagina);
