@@ -12,7 +12,9 @@ public enum ClasseIntermezzo {
 	INTERMEZZO_DI_PROVA(IntermezzoDiProva::new, true),
 
 	INTERMEZZO_INTRODUTTIVO(IntermezzoIntroduttivo::new),
-	INTERMEZZO_FINE_PRIMA_LOCAZIONE(IntermezzoFinePrimaLocazione::new);
+	INTERMEZZO_FINE_PRIMA_LOCAZIONE(IntermezzoFinePrimaLocazione::new),
+	INTERMEZZO_LOCANDA_PRIMA_VISITA(IntermezzoLocandaPrimaVisita::new),
+	INTERMEZZO_LOCANDA_SECONDA_VISITA(IntermezzoLocandaSecondaVisita::new);
 
 	private final Supplier<Intermezzo> supplier;
 	private final boolean diProva;

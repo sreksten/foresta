@@ -10,9 +10,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Verifica il checkpoint {@link MomentoIntermezzo#LOCAZIONE_COMPLETATA} (gestione_missioni.md, punto 1):
@@ -36,7 +34,7 @@ class IntermezzoLocazioneCompletataTest {
 			assertEquals(1, contaBattutaEremita(partita),
 					"alla prima fine locazione l'intermezzo deve comparire una volta sola");
 			assertTrue(ModelloDati.getIstanza().getIntermezziMD()
-							.isScattato(ClasseIntermezzo.INTERMEZZO_FINE_LOCAZIONE_DI_PROVA.name()),
+							.isScattato(ClasseIntermezzo.INTERMEZZO_FINE_PRIMA_LOCAZIONE.name()),
 					"il registro deve ricordare che l'intermezzo e' scattato");
 
 			// Da questo momento in poi il checkpoint non troverebbe piu' nulla da mostrare: non si ripete
