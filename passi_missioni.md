@@ -15,51 +15,6 @@ i più redditizi sono quelli usati da decine di `TipoMissione` — vagabondare
 finché non si trova qualcosa, combattere, raccogliere, contare fino a N,
 tornare al punto di partenza, chiedere una conferma/scelta).
 
-## 1. Verifica dei `SupertipoMissione` assegnati
-
-La maggioranza delle ~190 assegnazioni è coerente con l'esempio riportato nel
-Javadoc. Segnalo qui solo i casi in cui l'esempio descrive meccanicamente
-qualcosa che assomiglia più a un altro supertipo già esistente — non
-correzioni "di getto", ma incongruenze verificabili confrontando l'esempio di
-un tipo con quello di un altro tipo già classificato diversamente.
-
-| `TipoMissione` | Supertipo attuale | Problema | Supertipo suggerito |
-|---|---|---|---|
-| `CONFINAMENTO` | PROTEZIONE | Esempio "imprigionare qualcuno, tenere in carcere, reclusione" è un atto coercitivo *verso* un bersaglio, meccanicamente identico a `CARCERE_ILLEGALE` | ILLECITO |
-| `PURIFICAZIONE` | PROTEZIONE | Esempio ("purificare terra corrotta, bonificare luogo maledetto") è un rito magico, vicino a `SPEZZATURA`/`BENEDIZIONE` | SPIRITUALE |
-| `COMUNICAZIONE` | INVESTIGAZIONE | Esempio include esplicitamente "negoziare con entità"/comunicare con divinità: è un atto rituale, non un'indagine | SPIRITUALE |
-| `LETTURA_MENTE` | INVESTIGAZIONE | "Leggere mente, telepathy" è una capacità magica, vicina a `CONTROLLO_MENTE` | SPIRITUALE |
-| `VISIONE_PASSATO` | INVESTIGAZIONE | Esempio esplicitamente magico (retrocognizione, psicometria) | SPIRITUALE |
-| `VISIONE_FUTURO` | INVESTIGAZIONE | Esempio si sovrappone quasi parola per parola a `DIVINAZIONE`/`ASTRI` (già SPIRITUALE) | SPIRITUALE |
-| `INFILTRAZIONE` | INVESTIGAZIONE | Esempio ("spionaggio interno... reclutamento spie") meccanicamente identico a `SPIONAGGIO` (già ILLECITO) | ILLECITO |
-| `CONTROSPIONAGGIO` | ILLECITO | L'azione del giocatore è difensiva/legittima (scoprire una spia nemica), non un atto illecito | INVESTIGAZIONE o PROTEZIONE |
-| `MERCATO_NERO` | NEGOZIAZIONE | "Merci illegali, contrabbando organizzato" è per definizione illecito, si sovrappone a `CONTRABBANDO`/`TRAFFICO` | ILLECITO |
-| `BORSA` | NEGOZIAZIONE | "Speculazione, investimenti, gioco d'azzardo" non ha una controparte con cui negoziare | ACQUISIZIONE |
-| `RICCHEZZA` | PROGRESSIONE | "Accumulare ricchezza" è meccanicamente acquisizione di risorse, non avanzamento di stato | ACQUISIZIONE |
-| `GESTIONE` | PROGRESSIONE | "Accumulare risorse per potenziare una base" è lo stesso schema di `RICCHEZZA`/`COSTRUZIONE` | ACQUISIZIONE |
-| `RICOSTRUZIONE` | PROGRESSIONE | "Ricostruire una fortezza abbandonata" è meccanicamente identico a `COSTRUZIONE` (già ACQUISIZIONE) | ACQUISIZIONE |
-| `BENEDIZIONE_RICEVERE` | PROGRESSIONE | Sovrapposizione quasi totale con `BENEDIZIONE` (SPIRITUALE), differisce solo dal punto di vista (dare/ricevere) | SPIRITUALE |
-| `RISCATTO` | RELAZIONI | Percorso di trasformazione personale, non un rapporto fra due persone come le altre voci di RELAZIONI | PROGRESSIONE |
-| `REDENZIONE_PUBBLICA` | RELAZIONI | Stesso problema di `RISCATTO` | PROGRESSIONE |
-| `CONTROLLO_CREATURA` | COMBATTIMENTO | Il combattimento è solo un mezzo: il fine (dominare/sottomettere) è lo stesso di `CONTROLLO_MENTE` | SPIRITUALE |
-| `ESPLOSIONE` | COMBATTIMENTO | "Sabotaggio con esplosivi, demolizione" è meccanicamente identico a `SABOTAGGIO` (già ILLECITO) | ILLECITO |
-
-Segnalazioni minori, non di supertipo:
-
-- `SACRILEGIO` e `BLASFEMIA` (entrambi ILLECITO) descrivono quasi la stessa
-  azione con parole diverse — da unificare o differenziare meglio, se non è
-  voluto.
-- `PARRUCCHIO` (ILLECITO): non è un problema di classificazione ma di nome —
-  "parrucchio" in italiano significa "parrucca/toupee", chiaramente un refuso
-  per qualcosa come `BRIGANTAGGIO` o `RAPINA` (l'esempio parla di "rapire,
-  furto a mano armata, brigantaggio").
-
-Il resto delle assegnazioni (circa 170 su 190) è coerente con l'esempio
-riportato ed è confermato dalla mappatura dei passi che segue: quando un
-`TipoMissione` condivide lo stesso schema meccanico di un altro già
-classificato nello stesso supertipo, è un buon segno che la classificazione
-sia giusta.
-
 ## 2. Vocabolario dei passi riutilizzabili
 
 Ogni voce è un "tipo di passo" nel senso di `gestione_missioni.md` §3-4:
@@ -297,7 +252,7 @@ con il codice esistente).
 | `TRAFFICO` | Come `CONTRABBANDO` + `CONTA_FINCHE(N carichi)` | |
 | `FURTO_IDENTITA` | `RACCOGLI(documenti)` → `CHIEDI_SCELTA(uso identità)` → `RAMO(riuscito/scoperto)` → `RICOMPENSA` | |
 | `BLASFEMIA` | Come `SACRILEGIO` | Vedi nota su duplicato |
-| `PARRUCCHIO` | `VAGABONDA_FINCHE`/`VAI(bersaglio)` → `COMBATTI(rapina)` → `RACCOGLI(bottino)` → `RICOMPENSA` | Vedi nota sul nome (probabile refuso), §1 |
+| `BRIGANTAGGIO` | `VAGABONDA_FINCHE`/`VAI(bersaglio)` → `COMBATTI(rapina)` → `RACCOGLI(bottino)` → `RICOMPENSA` | |
 | `FALSA_TESTIMONIANZA` | `VAI(tribunale)` → `CHIEDI_SCELTA(versione)` → `RAMO(creduta/scoperta)` → `RICOMPENSA` | |
 | `IMBROGLIONE` | `VAI(tavolo da gioco)` → `CHIEDI_SCELTA(metodo)` → `RAMO(vinto/scoperto)` → `RICOMPENSA` | |
 | `CARCERE_ILLEGALE` | `COMBATTI`/`EVITA_COMBATTIMENTO(cattura)` → `VAI(prigione clandestina)` → `CONSEGNA` → `RICOMPENSA` | Vedi nota di classificazione §1: sovrapposto a `CONFINAMENTO` |

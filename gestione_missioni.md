@@ -395,6 +395,233 @@ che chiama `fallisciMissione()` e poi delega a `super.controllaPreLocazione()`
 può essere rimossa se non ha più altri usi dopo la migrazione — verificare
 con una ricerca testuale prima di eliminarla.
 
+## 6. Locazioni assegnate dinamicamente: claim delle missioni e `cerca(ClassiLocazione)`
+
+### Perché
+
+Oggi (verificato leggendo il codice, non per supposizione) le locazioni
+"uniche" (città, castelli, `GROTTA_RECUPERA_IL_MEDAGLIONE`,
+`ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI`) vivono in
+`ForestaMD.locazioniUniche`, un `EnumMap<ClassiLocazione, CoordinateMD>`: **una
+sola coordinata per valore dell'enum**. Funziona per un numero fisso di
+locazioni scritte a mano (una `GrottaRecuperaIlMedaglione`, quattro castelli
+alleati, un castello del Drago), ma non scala ai quasi 190 `TipoMissione` di
+`passi_missioni.md`: non si può dare a ciascuno una propria costante
+`ClassiLocazione` e relativa sottoclasse.
+
+Due precedenti concreti mostrano già i due estremi:
+- `Foresta.costruisciCastelli()` (righe ~178-184) piazza i quattro castelli
+  alleati **a tempo di generazione del mondo**, sempre, incondizionatamente —
+  le missioni `SconfiggiLaStrega`/`Lich`/`MinotauroGigante`/`LIdra` si
+  limitano a controllare se il gruppo è arrivato in un castello già esistente.
+- `SconfiggiIlDrago.controllaPostLocazione()` (righe ~61-66) **costruisce da
+  sé** `CASTELLO_DRAGO` a runtime, quando serve (`castelliDistrutti()`),
+  chiamando `Foresta.costruisciLocazioneUnica(ClassiLocazione.CASTELLO_DRAGO,
+  false)` — che internamente usa `getCoordinateLibere()` (righe ~256-264 di
+  `Foresta.java`), una ricerca a tentativi casuali finché non trova una
+  casella `BOSCO`/`RADURA`/libera.
+
+L'idea è generalizzare il secondo pattern (una missione si procura da sola la
+propria locazione, quando ne ha bisogno) e usarlo anche per i quattro castelli
+alleati, eliminando il piazzamento incondizionato a tempo di generazione.
+Questo **non** richiede eliminare `ClassiLocazione`/`LocazioneUnica`: i
+castelli restano sottoclassi concrete come oggi. Cambia solo *quando* e *chi*
+decide la coordinata.
+
+### Claim delle missioni in `RegistroMissioni`
+
+Nuovo stato privato in `RegistroMissioni`: `Map<CoordinateMD, String>
+locazioniOccupate` (coordinata → id della missione che la occupa). Non serve
+toccare `ForestaMD`/`MissioneMD`: è un indice in più, ricostruibile dopo un
+caricamento rileggendo le proprietà delle missioni attive (vedi sotto), non
+un dato persistito per conto suo.
+
+- `occupaLocazione(CoordinateMD, Missione)`: registra il claim. Chiamato
+  dall'`azione` del passo che costruisce/rivendica la locazione (stesso
+  momento in cui oggi si chiamerebbe `costruisciLocazioneUnica`).
+- La missione stessa memorizza la coordinata come proprietà ordinaria (stesso
+  schema di `COORDINATA_X`/`COORDINATA_Y` già usato da `MuoviALocazione`) —
+  non serve una mappa inversa nel registro, la missione sa già dove si trova
+  la propria locazione.
+- Nessun metodo esplicito "libera": una missione conclusa **non** deve
+  liberare attivamente la coordinata (romperebbe l'ordine fra
+  `completaMissione()` e il resto del turno). La liberazione è **passiva**,
+  a carico di `cerca()` (sotto): quando la ricerca incontra una coordinata
+  occupata, guarda l'id della missione proprietaria; se quella missione è
+  `isCompleta()`/`isFallita()`, rimuove il claim da `locazioniOccupate` e
+  tratta la coordinata come libera per questa ricerca. La missione conclusa
+  **resta** dov'è già oggi (`elencoMissioniPredefiniteCompletate`/
+  `elencoMissioniSecondarieCompletate` — vedi `RegistroMissioni.java` righe
+  55-61): si toglie solo il suo claim sulla locazione, non la missione dal
+  diario/storico.
+- Dopo un caricamento (`aggiornaDopoRilettura`, righe 88-118), il registro dei
+  claim va ricostruito scandendo le missioni attive che hanno proprietà
+  coordinata (stesso giro che già fa `aggiornaDopoRiletturaImpl`): non serve
+  serializzare `locazioniOccupate` a parte.
+
+### `cerca(ClassiLocazione richiesta)`: ricerca a quadrati concentrici
+
+Nuovo metodo (su `RegistroMissioni`, perché deve conoscere sia la mappa sia i
+claim; internamente chiama `Foresta.getLocazione(coordinate)` per leggere la
+casella). Diverso da `getCoordinateLibere()`: quello cerca una casella
+*libera* qualsiasi per piazzarci qualcosa di nuovo; questo cerca una casella
+che **esiste già** di un certo `ClassiLocazione` (es. un `BOSCO` da
+trasformare in castello, un `TEMPIO` già presente) e non è rivendicata da una
+missione ancora attiva.
+
+Nota sui nomi: l'esempio `cerca(TipoLocazione.TEMPIO)` non corrisponde
+esattamente ai tipi esistenti — `TipoLocazione` è solo il raggruppamento
+(`STANDARD`/`CITTA`/`CASTELLO`/`MISSIONE_SECONDARIA`), mentre `TEMPIO`,
+`BOSCO` ecc. sono valori di `ClassiLocazione` (vedi
+`src/main/java/com/threeamigos/foresta/locazioni/ClassiLocazione.java` righe
+10-16). Il filtro di `cerca()` è quindi su `ClassiLocazione`, non su
+`TipoLocazione`.
+
+Algoritmo, a partire da una coordinata casuale `(x0, y0)` (stesso
+`Dado.tira` già usato da `getCoordinateLibere`):
+1. Controlla `(x0, y0)` stesso (raggio 0).
+2. Per raggio `r = 1, 2, 3, ...` crescente, controlla solo il **bordo** del
+   quadrato di lato `2r+1` centrato su `(x0, y0)` (cioè le celle con distanza
+   di Chebyshev esattamente `r` dal centro — non l'intero quadrato, altrimenti
+   si riconterebbero le celle già viste ai raggi precedenti).
+3. Per ogni cella del bordo (in un ordine qualsiasi ma deterministico, es. dal
+   lato nord in senso orario): se fuori dai limiti della mappa
+   (`0 <= x < Foresta.getDimensioneX()`, idem per y) la si scarta; altrimenti
+   se `Foresta.getLocazione(coordinate) != richiesta` la si scarta; altrimenti
+   controlla il claim come descritto sopra (occupata da missione attiva →
+   scarta; occupata da missione conclusa → libera il claim e accetta; libera →
+   accetta).
+4. La ricerca termina quando trova una cella accettabile (la marca subito con
+   `occupaLocazione` per la missione chiamante e ne restituisce la
+   coordinata), oppure quando il quadrato di raggio `r` è interamente fuori
+   dai limiti della mappa su tutti i lati (raggio massimo utile ≈
+   `max(getDimensioneX(), getDimensioneY())`, oggi 20): in quel caso non
+   esiste alcuna cella `richiesta` libera su tutta la mappa e il metodo
+   restituisce `null`/`Optional.empty()` — la missione che lo ha chiamato
+   deve gestire questo caso (tipicamente: non avanza questo turno e riprova al
+   turno successivo, non è un fallimento della missione).
+
+### Impatto sulle missioni principali (`Sconfiggi*`)
+
+- `Foresta.costruisciCastelli()` (righe 178-184) perde il piazzamento
+  incondizionato dei quattro castelli alleati — resta solo, se serve,
+  eventuale terreno "neutro" preesistente (bosco) su cui le missioni
+  costruiranno.
+- `SconfiggiLaStrega`/`SconfiggiIlLich`/`SconfiggiIlMinotauroGigante`/
+  `SconfiggiLIdra`: `controllaPreLocazione()` oggi si limita ad
+  `attivaMissione()`. Diventa: se non attiva, `RegistroMissioni.cerca(
+  ClassiLocazione.BOSCO)`, trasforma la coordinata trovata nel proprio
+  castello (stessa `setLocazione`/registrazione che oggi fa
+  `costruisciLocazioneUnica`, ma sulla coordinata già scelta da `cerca()`
+  invece che da `getCoordinateLibere()`), poi `attivaMissione()`. Se `cerca()`
+  non trova nulla questo turno, la missione resta non attiva e si riprova al
+  turno successivo (mappa 20×20, praticamente non dovrebbe mai succedere con
+  solo 4 castelli da piazzare).
+- `SconfiggiIlDrago` **non cambia comportamento**: già oggi costruisce
+  `CASTELLO_DRAGO` da sé a runtime. Per coerenza si può far passare anche lui
+  da `RegistroMissioni.cerca(ClassiLocazione.BOSCO)` invece che da
+  `getCoordinateLibere()` diretto (così anche il suo claim entra nel
+  registro), ma non è necessario per la correttezza: è già lo schema che gli
+  altri quattro devono imitare.
+
+### Impatto su `Recupera il Medaglione`/`Le Derrate Alimentari` e passo `CercaLocazione`
+
+Le due missioni del punto 5 hanno già una coordinata fissa
+(`GROTTA_RECUPERA_IL_MEDAGLIONE`/`ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI` sono
+`ClassiLocazione` dedicate, sempre presenti una sola volta): per loro il claim
+è opzionale, non toglie né aggiunge nulla al piano del punto 5 e si può
+saltare in questo primo giro. Diventa utile quando una missione **non** ha
+una `ClassiLocazione` dedicata e deve trovarne una a runtime: un nuovo tipo di
+passo `CercaLocazione(ClassiLocazione richiesta)` (da aggiungere al catalogo
+di `passi_missioni.md`) la cui `azione` chiama `cerca()` e salva la coordinata
+trovata come proprietà (stesso schema `COORDINATA_X`/`COORDINATA_Y` di
+`MuoviALocazione`); `condizione` resta falsa (passo non concluso, si riprova
+al turno successivo) se `cerca()` non trova nulla.
+
+### Cosa non serve toccare
+
+A differenza dell'idea più ampia discussa a voce (eventi interni
+`InternoSconfittaPersonaggio`, hook di riempimento/descrizione a
+`INIZIO_LOCAZIONE` al posto di `LocazioneUnica`), questo pezzo **non tocca
+`Automa`**: `occupaLocazione`/`cerca()` sono chiamate dirette dentro
+l'`azione` di un passo o dentro `controllaPreLocazione`/`PostLocazione` di una
+missione, esattamente come oggi `costruisciLocazioneUnica`. È quindi
+indipendente e più piccolo del resto della discussione su "locazione unica",
+e può essere costruito prima, senza aspettare quella parte.
+
+## 7. `SconfiggiIlDrago`: claim precoce delle quattro missioni figlie, memoria storica del claim
+
+### Il percorso proposto è già quello che il codice fa oggi, a parte il claim
+
+Verificato riga per riga: `SconfiggiIlDrago()` (costruttore, righe 17-23) crea
+già le quattro missioni figlie (`SconfiggiLaStrega`, `SconfiggiIlLich`,
+`SconfiggiIlMinotauroGigante`, `SconfiggiLIdra`) appena viene istanziata, cioè
+a `RegistroMissioni.reimposta()` — quindi alla generazione della Foresta, non
+dopo. `controllaPreLocazione()` (righe 47-52) attiva `SconfiggiIlDrago` al
+primissimo controllo, senza condizioni. E la visita dell'albero delle
+missioni in `Automa.controllaMissione` (righe 1433-1453) usa
+`OrdineVisita.PADRE_PRIMA` per `controllaPreLocazione` — il commento sul posto
+lo dice esplicitamente: *"una missione che si attiva adesso porta con sé le
+proprie figlie nello stesso giro"* (riga ~1410). Risultato: con la modifica
+del punto 6 (`SconfiggiLaStrega` & co. chiamano `RegistroMissioni.cerca(
+ClassiLocazione.BOSCO)` dentro il proprio `controllaPreLocazione` invece di
+limitarsi ad `attivaMissione()`), le quattro rivendicano ciascuna una propria
+locazione **nello stesso giro** in cui parte la partita, senza bisogno di
+nessun collegamento nuovo fra `SconfiggiIlDrago` e le figlie: è già tutto
+cablato dall'albero `aggiungiMissione`/`getMissioniSecondarie` esistente e
+dall'ordine di visita esistente. Sei corretto su questo punto.
+
+### Il claim va tenuto anche dopo il completamento, non evitato — va solo corretta la regola di "disponibilità"
+
+Il punto 6, come scritto, fa evitare da `cerca()` un claim non appena la
+missione proprietaria è completa — pensato per liberare la coordinata al
+prossimo che ne ha bisogno, ma incompatibile con l'idea di conservare "qui
+sorgeva il Castello della Strega" come testo dopo il completamento: se il
+claim si cancella, non resta nulla da interrogare per scriverlo.
+
+Correzione: **non cancellare mai un claim**, solo scriverne sopra uno nuovo
+quando serve. La disponibilità per `cerca()` diventa "la coordinata non ha
+claim, oppure il claim è di una missione non più attiva
+(`!missione.isAttiva()`, cioè completata o fallita)" — la stessa condizione
+di prima, ma senza la cancellazione: chi rivendica la coordinata sovrascrive
+semplicemente la voce con il proprio id. `locazioniOccupate` finisce così a
+fare doppio servizio: per `cerca()` è "chi ha la coordinata **adesso**, se
+ancora attivo"; per un hook di descrizione è "chi l'ha avuta **per ultimo**",
+utile anche dopo che qualcun altro l'ha rivendicata di nuovo (risolve anche
+la domanda lasciata aperta due messaggi fa su come arbitrare un conflitto fra
+due missioni sulla stessa locazione: vince l'ultima che l'ha rivendicata,
+punto e basta, perché è l'unica voce che esiste).
+
+Un hook di descrizione a `INIZIO_LOCAZIONE` (idea del messaggio precedente)
+può quindi interrogare `RegistroMissioni` per "chi ha il claim su questa
+coordinata" indipendentemente dal `ClassiLocazione` che ci si trova sopra in
+quel momento — così "qui sorgeva il Castello della Strega" può comparire
+anche quando la casella è già tornata `ROVINE` o `BOSCO`.
+
+**Nota**: oggi nessuna missione trasforma davvero il proprio castello in
+rovine dopo la vittoria — `SconfiggiLaStrega.controllaPostLocazione()` chiama
+solo `completaMissione()`, la casella resta `CASTELLO_STREGA` con la sua
+proprietà `LocazioneMD.COMPLETA`. Per avere davvero "rovine" bisognerebbe
+aggiungere, sul modello già esistente di
+`GrottaRecuperaIlMedaglione.azzeraLocazione()` (che a fine missione chiama
+`Foresta.distruggiLocazioneUnica(..., ClassiLocazione.GROTTA)`), un
+`azzeraLocazione` analogo che trasformi il castello sconfitto in `ROVINE`. È
+un'aggiunta, non qualcosa che va "preservato" da una funzionalità già
+esistente — ma lo schema è lo stesso, collaudato.
+
+### Intermezzi per passo: già coperto, nessuna novità
+
+Confermato: se `SconfiggiLaStrega` & co. venissero riscritte come
+`MissioneAPassi` (punto 3), ogni passo — rivendica locazione, combatti,
+completa — può già portare un `.conIntermezzo(...)` opzionale esattamente
+come progettato al punto 2/3 per `RecuperaIlMedaglione`. Non serve alcun
+meccanismo nuovo: è lo stesso framework, applicato a missioni che oggi sono
+ancora `MissioneBase` semplici. La migrazione delle cinque missioni
+`Sconfiggi*` a `MissioneAPassi` resta però un passo di implementazione
+separato (più cinque classi da convertire, con `costruisciCastelli()` da
+smontare) — non è incluso nel piano attuale (punto 5), che riguarda solo le
+due missioni di recupero.
+
 ## Verifica
 
 - `mvn -o compile -q` (workaround offline già in uso in questo progetto) per
@@ -417,3 +644,12 @@ con una ricerca testuale prima di eliminarla.
   correttamente dopo un salvataggio/caricamento, poi rimosso. In alternativa
   si rimanda questa verifica end-to-end al momento in cui una missione reale
   ne avrà davvero bisogno.
+- Punto 6: avviare una partita, verificare che i quattro castelli alleati
+  compaiano solo quando la relativa missione `Sconfiggi*` li rivendica (non
+  più tutti fin dall'inizio); sconfiggerne uno, verificare che `cerca()` non
+  lo riproponga più come `BOSCO` disponibile finché la missione non è
+  completa, e che dopo il completamento la sua coordinata possa essere
+  rivendicata di nuovo da un'altra missione (claim liberato passivamente).
+  Verificare anche il caso limite "nessun `BOSCO` libero trovato" forzando
+  temporaneamente una mappa piena, per controllare che la missione resti
+  semplicemente non attiva invece di fallire o lanciare un errore.
