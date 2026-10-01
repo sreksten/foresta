@@ -34,7 +34,7 @@
 # Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean) e < > @ (marcatori).
 
 SPADA_0
-    @la spada [COSMETICO]
+    @la spada [COSMETICO_FEMMINILE_SINGOLARE]
 
 SPADA_1
     @la spada [PREFISSO]
