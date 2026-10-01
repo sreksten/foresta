@@ -62,11 +62,21 @@ SPADA_3
     @la [PREFISSO] spada [AGGETTIVO] [COMPLEMENTO_ELEMENTALE]
 
 # Senza effetti: solo colore
-COSMETICO
+COSMETICO_FEMMINILE_SINGOLARE
     rugginosa | arrugginita | d'ordinanza | del nonno | di latta | da collezione | da cucina | da esposizione
     in offerta speciale | fatta in casa | comprata al mercato | da souvenir | d'allenamento
     con l'etichetta ancora attaccata | ancora nella confezione | da cerimonia | usata una volta sola
     presa in prestito | senza lode e senza infamia | di ferro dolce | del rigattiere | di scorta
+COSMETICO_MASCHILE_SINGOLARE
+    rugginoso | arrugginito | d'ordinanza | del nonno | di latta | da collezione | da cucina | da esposizione
+    in offerta speciale | fatto in casa | comprato al mercato | da souvenir | d'allenamento
+    con l'etichetta ancora attaccata | ancora nella confezione | da cerimonia | usato una volta sola
+    preso in prestito | senza lode e senza infamia | di ferro dolce | del rigattiere | di scorta
+COSMETICO_MASCHILE_PLURALE
+    rugginosi | arrugginiti | d'ordinanza | del nonno | di latta | da collezione | da cucina | da esposizione
+    in offerta speciale | fatti in casa | comprati al mercato | da souvenir | d'allenamento
+    con l'etichetta ancora attaccata | ancora nella confezione | da cerimonia | usati una volta sola
+    presi in prestito | senza lode e senza infamia | di ferro dolce | del rigattiere | di scorta
 
 # ---------------------------------------------------------------------------------------------
 # Parti con un modificatore di attributo. La stessa parola compare una volta sola in tutto il
@@ -75,79 +85,99 @@ COSMETICO
 
 # Aggettivi che stanno bene anche prima del nome: "la terribile spada"
 PREFISSO
-    { immane | smisurata | sovrumana | inarrestabile | inenarrabile | generosa | indomabile | mastodontica | formidabile | cruenta | poderosa }<mod:FORZA+2>
-    { valente | fiera | temuta | blasonata | promettente | conclamata | autentica | franca | gagliarda | subitanea | pronta | impetuosa | fulminea | vigorosa | scalpitante | calibrata | istantanea | rozza | severa | bruta | massiccia | dura | grezza | tosta | fabbrile | orsina | bestiale | ciclopica | ferina | violenta | disordinata | minotaurica | barbarica | scaricatrice }<mod:FORZA+1>
+    { immane | smisurata | sovrumana | inarrestabile | inenarrabile | generosa | indomabile | mastodontica | formidabile | cruenta | poderosa | minotaurica | barbarica | ciclopica }<mod:FORZA+2>
+    { valente | fiera | temuta | blasonata | promettente | conclamata | autentica | franca | gagliarda | subitanea | pronta | impetuosa | fulminea | vigorosa | scalpitante | calibrata | istantanea | rozza | severa | bruta | massiccia | dura | grezza | tosta | fabbrile | orsina | bestiale | ferina | violenta }<mod:FORZA+1>
     { misera | meschina | vile | modesta | sottostimata | ordinaria | comune | infelice | tapina }<mod:FORZA-1>
+
     { lesta | scaltra | schiva | svelta | snella | fuggitiva | scaltrita | fluida }<mod:DESTREZZA+2>
-    { sottilissima | fugace | svanente | minuta | impalpabile | invisibile | sgattaiolante | libera | accurata | mirata | orologiaia | rigorosa | sacra | regolamentare | chiara | pignola | nitida | lieve | piumosa | minima | sobria | semplice | nuda | schietta | essenziale | volatile | agile | cristallina | mosca | saltimbanca | farfallina | colibrì | fresca | scattante | risvegliata }<mod:DESTREZZA+1>
+    { sottilissima | fugace | svanente | minuta | impalpabile | invisibile | sgattaiolante | libera | accurata | mirata | rigorosa | regolamentare | chiara | pignola | nitida | lieve | piumosa | minima | sobria | semplice | nuda | schietta | essenziale | volatile | agile | scattante | risvegliata }<mod:DESTREZZA+1>
     { maldestra | incolta | pigra | tarda | pesante | rallentata | sghemba | rigida | sventata }<mod:DESTREZZA-1>
+
     { ferma | immobile | fissa | salda | perenne | statica | piombata | monumentale | quadrata | antica | vetusta | secolare | immortale | ferrea | invincibile | integra | eterna | ottusa | mattona | cementizia | trattorina | divanata }<mod:COSTITUZIONE+2>
     { grata | onesta | sicura | solida | capiente | tollerante | ampia | comoda | fornita | grave | lenta | saggia | flemmatica | calma | soporifera | ancorata | golemica | montana }<mod:COSTITUZIONE+1>
     { precaria | instabile | fragile | triste | pallida | malata | breve }<mod:COSTITUZIONE-1>
+
     { acuta | lucida | fine | finissima | geniale | logica | direttoriale | architettata }<mod:INTELLIGENZA+2>
     { dotta | sapiente | sottile | arguta | ragionata | contabile | filosofica | archivistica | accademica | calcolata | arcana | veggente | pratica | esperta | tecnica | riflessiva | poetica | teorica | secchiona | esile }<mod:INTELLIGENZA+1>
     { stolta | cruda | grossolana | povera | smemorata | matricola | cieca }<mod:INTELLIGENZA-1>
+
     { retta | giusta | illuminata | santa | profonda | moderata | misurata | maestra }<mod:SAGGEZZA+2>
     { accorta | attenta | ispettiva | sentinella | portinaia | rilevatrice | meditativa | anziana | stoica | paziente | penitente | rassegnata | ottimista | incassatrice | passiva | serena | equilibrata | zen | buddista | distaccata }<mod:SAGGEZZA+1>
     { vana | folle | distratta | confusa | sconsiderata | disorientata }<mod:SAGGEZZA-1>
+
     { vaga | bella | splendida | nobile | illustre | magnifica | regale | carismatica }<mod:CARISMA+2>
-    { propizia | simpatica | ammiccante | paracula | raccomandata | sanremese | leggera | fine | specchiata | narcisista | modaiola | vanitosa | diva }<mod:CARISMA+1>
+    { propizia | simpatica | ammiccante | paracula | raccomandata | leggera | fine | specchiata | narcisista | modaiola | vanitosa | diva }<mod:CARISMA+1>
     { mesta | cupa | ruvida | scontrosa | goffa | solitaria | burbera }<mod:CARISMA-1>
-    { muta | umile | bassa | piccola | anonima | timida | introversa | ragioniera | stagista }<mod:CARISMA-2>
+    { muta | umile | bassa | piccola | anonima | timida | introversa }<mod:CARISMA-2>
+
     { beata | intoccabile | sfacciata | protetta }<mod:FORTUNA+2>
     { effimera | vetrosa | porcellanata | delicata | fortunata | miracolata | temeraria | incosciente | spensierata | sognatrice | kamikaze | buona | fidata | auspicabile | truccata | premiata | opportuna | tempestiva | fatidica | presaga | cruciale | jolly | vincente | spietata | oculata | decisiva | notturna | dormiente | coniglia | codarda | disertrice | invertebrata | panica | traditrice | rinnegata | giuda | scaricabarile | voltafaccia }<mod:FORTUNA+1>
     { sinistra | macumbata | iettatoria }<mod:FORTUNA-1>
-    { zavorrata | caravan | mammut | cargo | stivata }<mod:CARICO_MASSIMO+2>
-    { facchina | mulesca | asinina | camalla | portapacchi | trasloco | scolastica | sollevatrice | tiro | custode | portatrice | trekking }<mod:CARICO_MASSIMO+1>
-    { minimalista | inconsistente | bucata | svasata }<mod:CARICO_MASSIMO-1>
-    { vuota | velina | guscia | esaurita | piena }<mod:CARICO_MASSIMO-2>
+
+    { vuota | velina | guscia | esaurita | piena }<mod:CARICO_MASSIMO+2>
+    { minimalista | inconsistente | bucata | svasata }<mod:CARICO_MASSIMO+1>
+    { facchina | mulesca | asinina | camalla | portapacchi | trasloco | scolastica | sollevatrice | tiro | custode | portatrice }<mod:CARICO_MASSIMO-1>
+    { zavorrata | caravan | mammut | cargo | stivata }<mod:CARICO_MASSIMO-2>
+
     { feroce | devastante | lacerante | macellaia | brutale }<mod:CRITICO+2>
-    { penetrante | incisiva | boia | rasoio | fatalistica | potente | spaccatutto | dirompente | mannaia | fratturante | martellante }<mod:CRITICO+1>
+    { penetrante | incisiva | boia | rasoio | fatalistica | potente | dirompente | mannaia | fratturante | martellante }<mod:CRITICO+1>
     { stanca | fiacca | smussata | arrotondata | logora | consumata | innocua }<mod:CRITICO-1>
     { fallimentare | difettosa | inefficace | low-cost }<mod:CRITICO-2>
+
     { infallibile | chirurgica | centrata }<mod:PRECISIONE+2>
     { cacciatrice | sarta | calibratrice | schermistica | matematica | grafologica }<mod:PRECISIONE+1>
     { storta | frettolosa | sbadata | approssimativa | cialtrona | casuale }<mod:PRECISIONE-1>
     { guercia | orba | miope | talpa | sguercia | ubriaca | pendola }<mod:PRECISIONE-2>
+
     { rapida | celere | volante }<mod:VELOCITA+2>
-    { rondinina | leprina | libellula | giocoliera | frecciata | slanciata | soffio | aerea | energetica | iperattiva | insonne | indefessa }<mod:VELOCITA+1>
-    { bradipica | abbioccata | tardiva }<mod:VELOCITA-1>
-    { lumaca | intasata | bloccata | burocratica }<mod:VELOCITA-2>
+    { giocoliera | slanciata | aerea | energetica | iperattiva | insonne | indefessa }<mod:VELOCITA+1>
+    { abbioccata | tardiva | rallentata }<mod:VELOCITA-1>
+    { bradipica | intasata | bloccata | burocratica }<mod:VELOCITA-2>
+
     { cheta | acquetta | silenziosa | ombra | occulta | segreta }<mod:FURTIVITA+2>
     { felina | sguizzante | seta | scalza | discreta | infiltrata | scout | pipistrello | spia | volpina | ladruncola | scroccona }<mod:FURTIVITA+1>
-    { elefantesca | pasticciona | cascamorta | sguaiata | sgargiante | squillante | boato | sirena | sonaglio }<mod:FURTIVITA-1>
+    { elefantesca | pasticciona | cascamorta | sguaiata | sgargiante | squillante }<mod:FURTIVITA-1>
+
     { chiusa | invalicabile | inespugnabile | baluarda | lucchetto | portiera | cancello }<mod:PARATA+2>
-    { cauta | prudente | guardinga | coperta | difensiva | protettiva | vigilante | arroccata | schermata | guardiana | scuda | palizzata | fortezza | vigile | robusta | paladina | protettrice | testuggine | quercia | corazzata | aziendale | cassaforte | inerte | apatica | letargica | scioperante | statale | airbag | cuscina }<mod:PARATA+1>
+    { cauta | prudente | guardinga | coperta | difensiva | protettiva | vigilante | arroccata | schermata | guardiana | scuda | palizzata | fortezza | vigile | robusta | paladina | testuggine | quercia | corazzata | aziendale | cassaforte | inerte | apatica | letargica | scioperante | statale | airbag | cuscina }<mod:PARATA+1>
     { scoperta | sbilanciata | esposta | vulnerabile | cartone | aperta }<mod:PARATA-1>
-    { refrattaria | sorda | isolata | diffidente | antimagica | incredula | no-vax | firewall }<mod:RESISTENZA_MAGICA+2>
-    { templare | santuaria | temperata | spessa | bastiona | isolante | lastrona }<mod:RESISTENZA_MAGICA+1>
+
+    { refrattaria | sorda | isolata | diffidente | antimagica | incredula }<mod:RESISTENZA_MAGICA+2>
+    { templare | protettrice | santuaria | temperata | spessa | bastiona | isolante | lastrona }<mod:RESISTENZA_MAGICA+1>
     { porosa | sensibile | ricettiva | conduttrice | candina }<mod:RESISTENZA_MAGICA-1>
     { condannata | trance | pezza | credulona | marketing | complottista }<mod:RESISTENZA_MAGICA-2>
+
     { lincina | falchina | civettina }<mod:PERCEZIONE+2>
     { falconica | laser | meticolosa | controllore | cecchina | sciamanica | eremita | consulente | investigativa }<mod:PERCEZIONE+1>
     { nebbiosa | turista | appannata }<mod:PERCEZIONE-1>
+
     { terribile | tremenda | terrificante | mortale | inevitabile | apocalittica | caotica | ruinosa | licenziatrice | sconvolgente }<mod:SOGGEZIONE+2>
     { oscura | fiscale | inquisitoria | spaventosa | tirannica | intimidatoria | disastrosa | calamitosa | catastrofica | plateale | clamorosa | roboante | teatrale | esplosiva | banda | spoileratrice | allarme | bombardiera | favolosa | mitica | fantasmagorica | leggendaria | imperiale | conquistatrice | dittatoriale | padronale | spauracchio | furtiva | predatrice | buttafuori | legale | minacciosa }<mod:SOGGEZIONE+1>
     { mansueta | buffona | giullara | macchietta | pagliaccia }<mod:SOGGEZIONE-1>
     { catastale | comunale | bollata | condominiale | amministrativa | noiosa }<mod:SOGGEZIONE-2>
+
     { rabbiosa | furiosa | esasperata }<mod:FURIA+2>
     { furente | fanatica | zelota | caricante | arrabbiata | impazzita | scatenata | permalosa | berserker | iraconda | nervosa | isterica | impulsiva | vendicativa | rinocerontica | calda | tesa | agitata | ringhiosa | adrenalinica | reattiva }<mod:FURIA+1>
     { mita | pacifica }<mod:FURIA-1>
+
     { leonina | intrepida | audace | impavida | fegatosa | sfrontata | spavalda }<mod:CORAGGIO+2>
     { crociata | gladiatoria | vendicatrice }<mod:CORAGGIO+1>
     { esitante | musona }<mod:CORAGGIO-1>
+
     { virtuosa | eroica | onorevole | meritocratica | medagliata | cavalleresca }<mod:VALORE+2>
     { bodyguard | leader | campione | popolare | comandante | splendente | benefica }<mod:VALORE+1>
     { neutrale | egoista | freelance | esterna | indifferente | spettatrice | autonoma }<mod:VALORE-1>
+
     { stregata | canalizzatrice | focalizzata | manatizia | fattucchiera | illusionista | svuotapozioni }<mod:MAGIA+2>
     { medium | catalizzatrice | sifone | canale | ripetitrice | calamita | recettiva | scriba | astrologica | cartografica | sistemista | aura | wi-fi }<mod:MAGIA+1>
     { arida | profana | terrena | materiale | rustica | babbana | scettica }<mod:MAGIA-1>
     { cenerina | burnout | scarica }<mod:MAGIA-2>
+
     { estenuante | logorante | faticosa | spossante | sonnolenta }<mod:STANCHEZZA+2>
     { sonnecchiante | sbadigliante | rilassata | anfibia | tassina | postale | memory }<mod:STANCHEZZA+1>
     { attiva | giornaliera | ricaricata | riposata | mattiniera | motivata }<mod:STANCHEZZA-1>
 
-# Aggettivi dopo il nome: "la spada mozzarella"
+# Aggettivi dopo il nome: "la spada pesantissima"
 AGGETTIVO
     { titanica | colossale | pesantissima | monolitica }<mod:FORZA+2>
     { muscolare | forzuta | sgobbona | impattante | dinamica | lanciata | aggressiva | cinghialesca | palettatrice | culturista | martella | spaccapietre | picchiatrice | bulldozer }<mod:FORZA+1>
@@ -173,11 +203,10 @@ AGGETTIVO
     { sfigata | sfortunata }<mod:FORTUNA-1>
     ridotta<mod:CARICO_MASSIMO+2>
     { spezzata | alberghiera }<mod:CARICO_MASSIMO+1>
-    ingombrante<mod:CARICO_MASSIMO-1>
-    zero<mod:CARICO_MASSIMO-2>
-    autoaffilante<mod:CRITICO+3>
-    affilatissima<mod:CRITICO+2>
-    { affilata | tagliente | occasionale }<mod:CRITICO+1>
+    { ingombrante | voluminosa }<mod:CARICO_MASSIMO-1>
+    { autoaffilante | più che affilata } <mod:CRITICO+3>
+    { affilatissima | taglientissima }<mod:CRITICO+2>
+    { affilata | tagliente | occasionale | spaccatutto  }<mod:CRITICO+1>
     { gomma | giocattolo | usurata }<mod:CRITICO-1>
     { usata | ricondizionata }<mod:CRITICO-2>
     { millimetrica | perfetta }<mod:PRECISIONE+2>
@@ -189,7 +218,8 @@ AGGETTIVO
     { inceppata | registro | a batteria scarica }<mod:VELOCITA-2>
     { camaleontica | ninja | guardona | sussurrante }<mod:FURTIVITA+2>
     { velata | origliatrice | curiosa | microspia | furba | fantasma }<mod:FURTIVITA+1>
-    palese<mod:FURTIVITA-1>
+    { palese | boato | sirena | sonaglio }<mod:FURTIVITA-1>
+
     { sbarra | trincerata | sospesa | certificata a norma di legge | antiruggine }<mod:PARATA+1>
     ammaccata<mod:PARATA-1>
     sigillata<mod:RESISTENZA_MAGICA+2>
@@ -491,7 +521,7 @@ DESCRIZIONE_NECROTICO
 
 # SACRO
 AGGETTIVO_SACRO
-    benedetta | divina | radiosa | celestiale | consacrata | angelica | santificata | chierica | miracolosa | gloriosa | redentrice | martire | devota | incensata | purificatrice
+    benedetta | divina | radiosa | celestiale | sacra | consacrata | angelica | santificata | chierica | miracolosa | gloriosa | redentrice | martire | devota | incensata | purificatrice
 COMPLEMENTO_SACRO
     dell'Alba | dell'Aurora | del Paradiso | dell'Angelo | del Santo | del Chierichetto | del Miracolo | dei Pii Desideri | della Sagrestia
 EFFETTO_SACRO
