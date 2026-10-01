@@ -721,7 +721,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void commerciante() {
 		stato = StatoDisplayableCanvas.STATO_COMMERCIANTE;
-		notificaFumetto("Benvenuti. Come posso aiutarvi?", commerciante.getCoordinateFumetto());
+		notificaFumetto("Come posso aiutarvi?", commerciante.getCoordinateFumetto());
 		repaint();
 	}
 
@@ -753,7 +753,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		// FIXME: fatto quello, si può dismettere tutto il vecchio flusso.
 		String oroscopo = String.join(" ", ProduttoreDiTestiCasuale.oroscopo());
 		notificaFumetto(oroscopo, alchimista.getCoordinateFumetto());
-		notificaFumetto("Benvenuti. Cosa posso fare per voi?", alchimista.getCoordinateFumetto());
+		notificaFumetto("Cosa posso fare per voi?", alchimista.getCoordinateFumetto());
 		repaint();
 	}
 
