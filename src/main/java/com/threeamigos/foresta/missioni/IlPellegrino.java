@@ -4,10 +4,12 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.tools.Misc;
 
 /**
  * In città una donna chiede di accompagnare suo fratello Anselmo, un pellegrino, fino a un tempio nella foresta: la
@@ -36,9 +38,9 @@ public class IlPellegrino extends IncaricoInCitta {
 	public String getDescrizione() {
 		String passo = getPassoCorrente();
 		if (RITORNO.equals(passo)) {
-			return "Anselmo è arrivato al tempio: torna da sua sorella a " + getNomeCitta() + ".";
+			return "Anselmo è arrivato " + Misc.conPreposizione("a", getNomeDelTempio()) + ": torna da sua sorella a " + getNomeCitta() + ".";
 		}
-		return "Accompagna il pellegrino Anselmo fino al tempio segnato sulla mappa.";
+		return "Accompagna il pellegrino Anselmo fino " + Misc.conPreposizione("a", getNomeDelTempio()) + ", segnato sulla mappa.";
 	}
 
 	@Override
@@ -53,6 +55,13 @@ public class IlPellegrino extends IncaricoInCitta {
 		return RegistroMissioni.getLocazioneOccupata(this);
 	}
 
+	/**
+	 * Il nome del tempio della meta, con l'articolo; "il tempio" finché la missione non l'ha trovato.
+	 */
+	private String getNomeDelTempio() {
+		return getTempio() == null ? "il tempio" : Tempio.getNome(getTempio());
+	}
+
 	@Override
 	protected String primoPassoDelCompito() {
 		return META;
@@ -65,14 +74,15 @@ public class IlPellegrino extends IncaricoInCitta {
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, ClassiLocazione.TEMPIO)
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getTempio());
-							BusEventi.pubblica(new NotificaTestoParagrafo("Il tempio dove vuole andare Anselmo è segnato sulla mappa."));
+							BusEventi.pubblica(new NotificaTestoParagrafo(Misc.inizialeMaiuscola(getNomeDelTempio())
+									+ ", dove vuole andare Anselmo, è segnato sulla mappa."));
 						})
 						.poi(PARTENZA);
 			case PARTENZA:
 				return prendiInScorta(MomentoControllo.IN_LOCAZIONE, this::nellaCitta, ANSELMO).poi(VIAGGIO);
 			case VIAGGIO:
 				return scorta(MomentoControllo.PRE_LOCAZIONE, this::getTempio)
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Arrivato al tempio, Anselmo vi ringrazia e si mette a pregare. Sua sorella aspetta notizie a "
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Arrivato " + Misc.conPreposizione("a", getNomeDelTempio()) + ", Anselmo vi ringrazia e si mette a pregare. Sua sorella aspetta notizie a "
 								+ getNomeCitta() + ".")))
 						.poi(RITORNO);
 			default:
@@ -92,7 +102,7 @@ public class IlPellegrino extends IncaricoInCitta {
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante("Anselmo è arrivato al tempio? Che il cielo vi benedica!")
+				.parlaIlMandante("Anselmo è arrivato " + Misc.conPreposizione("a", getNomeDelTempio()) + "? Che il cielo vi benedica!")
 				.parlaIlMandante("Ecco le " + RICOMPENSA + " monete.")
 				.parlaIlCapo("Ha pregato anche per noi, speriamo.");
 	}

@@ -24,6 +24,7 @@ public class ProduttoreDiTestiCasuale {
 	private static GrammarBean fiabe;
 	private static GrammarBean oroscopi;
 	private static GrammarBean locande;
+	private static GrammarBean templi;
 
 	private ProduttoreDiTestiCasuale() {
 	}
@@ -47,6 +48,9 @@ public class ProduttoreDiTestiCasuale {
 			locande = new GrammarBean(
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/locande.txt"),
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
+			templi = new GrammarBean(
+					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/templi.txt"),
+					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
 		} catch (InvalidGrammarException | IOException e) {
 			// Senza grammatiche il gioco non puo' andare avanti: si segnala l'errore e si esce. L'uscita va in coda
 			// sull'EDT dopo la notifica, cosi' chi ascolta le InternoException la riceve prima.
@@ -60,6 +64,13 @@ public class ProduttoreDiTestiCasuale {
 		List<String> fiaba = fiabe.produce();
 		fiabe.reset();
 		return fiaba;
+	}
+
+	/**
+	 * Un nome a caso per un tempio, con l'articolo: "il Santuario della Luna" (vedi templi.txt e Tempio.getNome).
+	 */
+	public static String nomeTempio() {
+		return templi.produce("NOME_TEMPIO").get(0).trim();
 	}
 
 	public static List<String> oroscopo() {

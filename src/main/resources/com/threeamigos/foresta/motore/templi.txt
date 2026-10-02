@@ -1,0 +1,110 @@
+# I nomi dei templi della Foresta (vedi ProduttoreDiTestiCasuale.nomeTempio e Tempio.getNome): un edificio, con il
+# suo articolo, e a chi o a che cosa è dedicato. "il Santuario della Luna", "l'Eremo del Fine Settimana".
+# Il nome si dà al tempio la prima volta che serve e si salva con la casella.
+#
+# Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
+
+NOME_TEMPIO
+    [EDIFICIO] [DEDICA]
+
+# Il tempio vero e proprio esce più spesso degli altri
+EDIFICIO
+    [^6] il Tempio
+    [^3] il Santuario
+    [^2] la Cappella
+    [^2] l'Abbazia
+    [^2] il Monastero
+    [^2] l'Eremo
+    il Tempietto
+    la Pagoda
+    il Tabernacolo
+    l'Oratorio
+    il Sacrario
+    la Basilica
+    lo Ziggurat
+    il Priorato
+    la Pieve
+    il Convento
+    il Romitorio
+    il Delubro
+
+DEDICA
+    [^4] [ELEMENTI]
+    [^4] [CIELO]
+    [^3] [TEMPO]
+    [^3] [VIRTU]
+    [^2] [ANIMALI]
+    [^2] [SCHERZI]
+
+ELEMENTI
+    del Fuoco
+    dell'Aria
+    dell'Acqua
+    della Terra
+    del Fulmine
+    del Gelo
+    della Fiamma Eterna
+    delle Sette Sorgenti
+    della Pietra Viva
+    del Vento dell'Est
+    della Nebbia
+    della Brace che Non Si Spegne
+
+CIELO
+    del Sole
+    della Luna
+    delle Stelle
+    dell'Aurora
+    del Tramonto
+    della Stella Polare
+    della Luna Nuova
+    dell'Eclissi
+    della Cometa
+    del Solstizio
+    dell'Arcobaleno
+    delle Due Lune
+
+TEMPO
+    del Fine Settimana
+    del Lunedì Mattina
+    dell'Ora di Pranzo
+    della Pennichella
+    del Giorno di Paga
+    delle Ferie d'Agosto
+    dell'Ultimo Giorno dell'Anno
+    del Ponte del Primo Maggio
+    della Siesta
+    del Mezzogiorno
+
+VIRTU
+    della Pazienza
+    della Speranza
+    del Silenzio
+    della Saggezza
+    della Misericordia
+    del Coraggio
+    della Pace Interiore
+    dell'Eterna Vigilanza
+    della Buona Digestione
+    del Perdono Facile
+
+ANIMALI
+    del Grifone
+    della Fenice
+    del Drago Dormiente
+    della Civetta
+    del Lupo Bianco
+    del Cervo d'Argento
+    della Lumaca Sacra
+    del Gatto Che Ti Ignora
+
+SCHERZI
+    delle Chiavi Perdute
+    del Calzino Ritrovato
+    dell'Ombrello Dimenticato
+    del Parcheggio Libero
+    del Wi-Fi Gratuito
+    della Coda alle Poste
+    del Telecomando Scomparso
+    delle Bollette Pagate
+    della Dieta di Lunedì

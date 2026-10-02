@@ -57,6 +57,38 @@ public class Misc {
 			"zero", "uno", "due", "tre", "quattro", "cinque", "sei", "sette", "otto", "nove", "dieci"
 	};
 
+	/**
+	 * La preposizione "a", "di", "da" o "in" fusa con l'articolo con cui comincia il nome: "in" + "il Tempio del Sole"
+	 * fa "nel Tempio del Sole", "a" + "l'Eremo" fa "all'Eremo". Se il nome non comincia con un articolo, la
+	 * preposizione resta staccata.
+	 */
+	public static String conPreposizione(String preposizione, String nomeConArticolo) {
+		String[][] articoli = {{"il ", "l"}, {"lo ", "llo"}, {"la ", "lla"}, {"l'", "ll'"}, {"i ", "i"}, {"gli ", "gli"}, {"le ", "lle"}};
+		String radice;
+		switch (preposizione) {
+			case "a": radice = "a"; break;
+			case "di": radice = "de"; break;
+			case "da": radice = "da"; break;
+			case "in": radice = "ne"; break;
+			default: throw new IllegalArgumentException("Preposizione non articolabile: " + preposizione);
+		}
+		for (String[] articolo : articoli) {
+			if (nomeConArticolo.startsWith(articolo[0])) {
+				String fusa = radice + articolo[1];
+				String separatore = articolo[0].endsWith("'") ? "" : " ";
+				return fusa + separatore + nomeConArticolo.substring(articolo[0].length());
+			}
+		}
+		return preposizione + " " + nomeConArticolo;
+	}
+
+	/**
+	 * Il testo con la prima lettera maiuscola: "il Tempio del Sole" diventa "Il Tempio del Sole".
+	 */
+	public static String inizialeMaiuscola(String testo) {
+		return testo.isEmpty() ? testo : Character.toUpperCase(testo.charAt(0)) + testo.substring(1);
+	}
+
 	public static String getCardinaleM(int numero) {
 		return cardinali[numero];
 	}

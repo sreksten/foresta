@@ -5,6 +5,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.ArtefattoLeggendario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -12,6 +13,7 @@ import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.tools.Misc;
 
 import java.util.List;
 import java.util.Objects;
@@ -65,8 +67,9 @@ public abstract class RecuperaUnArtefattoLeggendario extends MissioneAPassi {
 		if (leggendario == null) {
 			return "";
 		}
+		String tempio = getTempio() == null ? "in un tempio" : Misc.conPreposizione("in", Tempio.getNome(getTempio()));
 		return "Secondo la leggenda raccontata dall'armaiolo, un nido di viverne custodisce " + leggendario.getNomeBreve()
-				+ " in un tempio segnato sulla mappa. Potrebbe servire contro il Drago.";
+				+ " " + tempio + ", segnato sulla mappa. Potrebbe servire contro il Drago.";
 	}
 
 	@Override
@@ -98,8 +101,8 @@ public abstract class RecuperaUnArtefattoLeggendario extends MissioneAPassi {
 								() -> nellaCitta() && RegistroMissioni.cercaOCostruisci(ClassiLocazione.BOSCO, this).isPresent())
 						.esegui(() -> {
 							RegistroArtefatti.custodisciInUnTempioNuovo(getLeggendario().costruisci(), getTempio());
-							BusEventi.pubblica(new NotificaTestoParagrafo("L'armaiolo segna sulla mappa il tempio dove le viverne custodiscono "
-									+ getLeggendario().getNomeBreve() + "."));
+							BusEventi.pubblica(new NotificaTestoParagrafo("L'armaiolo segna sulla mappa " + Tempio.getNome(getTempio())
+									+ ", dove le viverne custodiscono " + getLeggendario().getNomeBreve() + "."));
 							attivaMissione();
 						})
 						.poi(RECUPERO);
