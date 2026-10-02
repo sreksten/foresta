@@ -43,11 +43,7 @@ import java.util.function.Supplier;
 //  - una volta ho sentito di uno che è stato trasformato in scarafaggio/asino d'oro - perdi troppo tempo ad ascoltare le storie nelle locande.
 // TODO: implementare intermezzi durante la notte tipo:
 //  - ma voi <negoziante> siete sempre aperti/non chiudete mai? parla quello che mi piomba in negozio alle tre del mattino/no, perché abbiamo clienti come te
-// TODO: gli oggetti venduti all'armaiolo probabilmente andrebbero anche distrutti alla fine della locazione per non riempirgli l'inventario
 // TODO: come ci sono locande sparse per la foresta, forse anche qualche negozio di armaiolo, alchimista, venditore di pergamene e incantatore male non farebbero
-// TODO: trofei come aiuto per il gioco?
-// TODO: se si fa avanti e indietro per la locanda in città (o cmq anche nel bosco) piano piano si possono tirare fuori tutte le locazioni del bosco; la quantità
-//  - di informazioni reperibili per locazione dovrebbe essere limitata. Al più un castello, un artefatto e una città e quando le ha finite continua a ripetere la città.
 
 // Bug noti ancora da correggere (dall'indagine sul codice): si spuntano togliendo la riga quando sono corretti.
 //
