@@ -1451,38 +1451,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		// Solo in modalità di prova: artefatti potenti e punti abilità al primo personaggio
 		if (ModalitaDiProva.isAttiva()) {
 
-			Artefatto megaspada = CostruttoreArtefatto.istanza()
-					.setTipo(TipoArtefatto.SPADA)
-					.setNome("la Spada della Morte alata con rinterzo laterale")
-					.setDescrizione("che massacra i porci")
-					.setLivello(5)
-					.setDanniBase(50)
-					.setCostoAcquisto(100)
-					.setPeso(3)
-					.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 5)
-					.setModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, 2)
-					.setModificatore(TipoAttributo.CORAGGIO, TipoModificatore.QUANTITA_ASSOLUTA, 1)
-					.setIncantamento("Incantesimo di RomyJona", TipoDanno.NECROTICO, 10, 0.5)
-					.costruisci();
-			personaggio.addArtefatto(megaspada);
-
-			Artefatto superscudo = CostruttoreArtefatto.istanza()
-					.setTipo(TipoArtefatto.SCUDO)
-					.setNome("lo scudo fiscale")
-					.setDescrizione("che si fa fare sconti sugli acquisti")
-					.setLivello(5)
-					.setDanniBase(50)
-					.setCostoAcquisto(100_000)
-					.setPeso(3000)
-					.setModificatore(TipoAttributo.COSTITUZIONE, TipoModificatore.AUMENTO_PERCENTUALE, 5)
-					.setModificatore(TipoAttributo.RESISTENZA_MAGICA, TipoModificatore.AUMENTO_PERCENTUALE, 2)
-					.setModificatore(TipoAttributo.CONTRATTAZIONE, TipoModificatore.AUMENTO_FISSO, 16)
-					.setIncantamento("La battuta del cavolo", TipoDanno.GELO, 10, 0.5)
-					.costruisci();
-			// Leggendario, obiettivo di una missione: con +16 in CONTRATTAZIONE porta ai limiti di RegoleContrattazione
-			superscudo.getModelloDati().setRarita(TipoRaritaArtefatto.LEGGENDARIO);
-			personaggio.addArtefatto(superscudo);
-
+			// La Spada della Morte e lo Scudo Fiscale non ci sono più: ora sono leggendari da conquistare con le
+			// missioni di recupero (vedi ArtefattoLeggendario)
 			Artefatto scarponi = CostruttoreArtefatto.istanza()
 					.setTipo(TipoArtefatto.SCHINIERI)
 					.setNome("gli scarponi di RomyJona")

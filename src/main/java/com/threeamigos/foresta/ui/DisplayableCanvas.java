@@ -561,7 +561,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * Solo nella schermata di gioco: altrove la rivelazione aspetta, perché il suo tempo avanza solo quando si disegna.
 	 */
 	private void disegnaRivelazione(Graphics2D graphics) {
-		if (rivelazioneAttiva == null && !codaRivelazioni.isEmpty()) {
+		// Un effetto alla volta: con un annuncio a tutto schermo in corso, la rivelazione aspetta
+		if (rivelazioneAttiva == null && !codaRivelazioni.isEmpty() && annuncioGlobaleAttivo == null) {
 			rivelazioneAttiva = codaRivelazioni.remove(0);
 		}
 		if (rivelazioneAttiva == null) {
@@ -582,7 +583,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * sopra il contenuto corrente indipendentemente dallo stato del canvas.
 	 */
 	private void disegnaAnnuncioGlobale(Graphics2D graphics) {
-		if (annuncioGlobaleAttivo == null && !codaAnnunciGlobali.isEmpty()) {
+		// Un effetto alla volta: un annuncio (per esempio "MISSIONE COMPLETATA" per l'artefatto appena raccolto)
+		// aspetta che la rivelazione in corso o in coda sia finita
+		if (annuncioGlobaleAttivo == null && !codaAnnunciGlobali.isEmpty() && rivelazioneAttiva == null && codaRivelazioni.isEmpty()) {
 			annuncioGlobaleAttivo = codaAnnunciGlobali.remove(0);
 		}
 		if (annuncioGlobaleAttivo == null) {

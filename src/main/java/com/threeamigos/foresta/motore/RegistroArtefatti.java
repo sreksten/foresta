@@ -6,6 +6,7 @@ import com.threeamigos.foresta.eventi.interni.InternoPreparazioneLocazione;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloMondo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
+import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
@@ -20,8 +21,10 @@ import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EnumSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 public class RegistroArtefatti {
@@ -220,6 +223,31 @@ public class RegistroArtefatti {
 				.setModificatore(TipoAttributo.NUMERO_BERSAGLI, TipoModificatore.AUMENTO_FISSO, 4)
 				.costruisci());
 
+	}
+
+	// --- Artefatti leggendari (vedi ArtefattoLeggendario)
+
+	/**
+	 * Un artefatto leggendario a caso fra quelli non ancora assegnati a una missione; vuoto se li hanno già tutti.
+	 */
+	public static Optional<ArtefattoLeggendario> pescaLeggendario(Collection<ArtefattoLeggendario> giaAssegnati) {
+		List<ArtefattoLeggendario> liberi = new ArrayList<>(EnumSet.allOf(ArtefattoLeggendario.class));
+		liberi.removeAll(giaAssegnati);
+		if (liberi.isEmpty()) {
+			return Optional.empty();
+		}
+		return Optional.of(liberi.get(Dado.tiraAncheAUnaFaccia(liberi.size()) - 1));
+	}
+
+	/**
+	 * Fa sorgere in quelle coordinate un tempio che custodisce l'artefatto, segnato sulla mappa: come gli altri
+	 * templi con un artefatto, è guardato da un nido di viverne (vedi Tempio).
+	 */
+	public static void custodisciInUnTempioNuovo(Artefatto artefatto, CoordinateMD coordinate) {
+		Foresta.costruisciLocazione(coordinate, ClassiLocazione.TEMPIO);
+		addArtefattoInLocazione(artefatto, coordinate);
+		segnaLocalizzazioneConosciuta(coordinate);
+		Foresta.setLocazioneConosciuta(coordinate);
 	}
 
 	static Artefatto getArtefattoDisponibile() {

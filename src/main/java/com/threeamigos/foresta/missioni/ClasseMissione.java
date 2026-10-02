@@ -18,6 +18,8 @@ public enum ClasseMissione {
 	MISSIONE_CHE_FALLISCE(MissioneCheFallisce::new),
 	RECUPERA_IL_MEDAGLIONE(RecuperaIlMedaglione::new),
 	RECUPERA_LE_DERRATE_ALIMENTARI(RecuperaLeDerrateAlimentari::new),
+	LA_LEGGENDA_DI_NYENA(LaLeggendaDiNyena::new),
+	LA_LEGGENDA_DI_MALGAARD(LaLeggendaDiMalgaard::new),
 	CRONACHE_DI_UN_FEGATO_EROICO(CronacheDiUnFegatoEroico::new),
 	NESSUN_BOCCALE_LASCIATO_INDIETRO(NessunBoccaleLasciatoIndietro::new),
 	DISTURBATORE_DELLA_QUIETE_PUBBLICA(DisturbatoreDellaQuietePubblica::new),

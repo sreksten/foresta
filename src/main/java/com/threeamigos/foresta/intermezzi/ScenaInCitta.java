@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * La pagina di un intermezzo in una strada di città: il mandante di una missione aspetta sulla destra, il gruppo
  * arriva in fila come quando entra in un negozio (vedi {@link ScenaNegozio}) e, appena arrivato, cominciano le
- * battute. Per ora il mandante ha l'aspetto del locandiere.
+ * battute. Il mandante ha l'aspetto del locandiere ({@link #conMandante()}) o dell'armaiolo ({@link #conArmaiolo()}).
  * <pre>
  * ScenaInCitta.conMandante()
  *     .parlaIlMandante("Una banda di ladri mi ha rubato il medaglione!")
@@ -16,7 +16,8 @@ import java.util.List;
 public final class ScenaInCitta {
 
 	private static final String SFONDO = "locazioni/Citta.gif";
-	private static final String MANDANTE = "personaggi/Locandiere.gif";
+	private static final String LOCANDIERE = "personaggi/Locandiere.gif";
+	private static final String ARMAIOLO = "personaggi/Armaiolo.gif";
 	private static final String ID_MANDANTE = "mandante";
 	// Le coordinate sono dello schermo e lo sfondo della città (390 × 320) è più piccolo di quelli dei negozi:
 	// mandante e gruppo stanno sul selciato nelle stesse proporzioni dello sfondo, il mandante a destra
@@ -27,14 +28,24 @@ public final class ScenaInCitta {
 
 	private final ScenaNegozio scena;
 
-	private ScenaInCitta() {
+	private ScenaInCitta(String immagineMandante) {
 		scena = new ScenaNegozio(SFONDO, null, ID_MANDANTE,
-				ElementoIntermezzo.di(ID_MANDANTE, ImmagineIntermezzo.risorsa(MANDANTE), X_MANDANTE, Y_PERSONAGGI),
+				ElementoIntermezzo.di(ID_MANDANTE, ImmagineIntermezzo.risorsa(immagineMandante), X_MANDANTE, Y_PERSONAGGI),
 				Y_PERSONAGGI, X_ARRIVO_CAPO, RITARDO_FRA_PARTENZE);
 	}
 
+	/**
+	 * Un mandante qualsiasi: per ora ha l'aspetto del locandiere.
+	 */
 	public static ScenaInCitta conMandante() {
-		return new ScenaInCitta();
+		return new ScenaInCitta(LOCANDIERE);
+	}
+
+	/**
+	 * L'armaiolo della città, fuori dalla sua bottega.
+	 */
+	public static ScenaInCitta conArmaiolo() {
+		return new ScenaInCitta(ARMAIOLO);
 	}
 
 	public ScenaInCitta parlaIlMandante(String testo) {

@@ -91,6 +91,19 @@ public class Foresta {
 	}
 
 	/**
+	 * Fa diventare la casella una locazione ordinaria di quella classe (per esempio un tempio, al posto di un bosco
+	 * rivendicato da una missione), come non ancora visitata.
+	 */
+	public static void costruisciLocazione(CoordinateMD coordinate, ClassiLocazione classeLocazione) {
+		if (classeLocazione.isLocazioneUnica()) {
+			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + classeLocazione.name());
+		}
+		Logger.log("Costruzione di " + classeLocazione + " in " + coordinate);
+		setLocazione(coordinate, classeLocazione);
+		setLocazioneVisitata(coordinate, false);
+	}
+
+	/**
 	 * Costruisce la locazione unica in quelle coordinate, scelte da chi chiama (per esempio da
 	 * RegistroMissioni.cerca, per una missione che si procura la propria locazione).
 	 */

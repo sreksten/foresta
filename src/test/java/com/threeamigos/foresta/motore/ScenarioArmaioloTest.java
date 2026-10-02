@@ -40,6 +40,9 @@ class ScenarioArmaioloTest {
 
 	@Test
 	void compraDallArmaioloAlPrezzoTrattato() {
+		// Il Ladro imbraccia lo Scudo Fiscale, che aggiunge 4 alla sua contrattazione
+		int contrattazioneSenzaScudo = partita.gruppo().getContrattazione();
+		partita.gruppo().getCapo().addArtefatto(ArtefattoLeggendario.SCUDO_FISCALE.costruisci());
 		AutomaAcquistiArtefatti bottega = entraDallArmaiolo();
 		Artefatto scelto = new ArrayList<>(bottega.getParteRemota().getInventario()).get(0);
 		int moneteIniziali = partita.gruppo().getMonete();
@@ -51,9 +54,9 @@ class ScenarioArmaioloTest {
 		assertEquals(moneteIniziali - prezzo, partita.gruppo().getMonete());
 		assertTrue(PartitaDiTest.contiene(partita.gruppo().getInventario(), scelto));
 		assertFalse(PartitaDiTest.contiene(bottega.getParteRemota().getInventario(), scelto));
-		// Il Ladro porta lo Scudo Fiscale (+16): lo sconto e' quello della sua contrattazione, vicino al massimo
+		// Lo sconto è quello della sua contrattazione, scudo compreso
 		int contrattazione = partita.gruppo().getContrattazione();
-		assertTrue(contrattazione >= 16, "contrattazione " + contrattazione);
+		assertTrue(contrattazione > contrattazioneSenzaScudo, "contrattazione " + contrattazione);
 		assertEquals(RegoleContrattazione.prezzoAcquisto(scelto.getCostoAcquisto(), contrattazione), prezzo);
 	}
 

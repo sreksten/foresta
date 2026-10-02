@@ -859,6 +859,38 @@ due missioni di recupero.
   ricorda chi ci stava; e su una partita vera il gruppo che entra fra le rovine
   del castello della Strega legge "Qui sorgeva il castello della Strega.".
 
+## Missioni degli artefatti leggendari (2026-10-02)
+
+Prime missioni nuove scritte sul framework: **La leggenda di Nyena** e **La
+leggenda di Malgaard** (`LaLeggendaDiNyena`, `LaLeggendaDiMalgaard`, sulla
+base comune `RecuperaUnArtefattoLeggendario`), per le due città che non
+avevano una missione.
+
+1. `INCARICO` (`PRE_LOCAZIONE`, nella città): la missione pesca un
+   `ArtefattoLeggendario` che nessun'altra missione ha già
+   (`RegistroArtefatti.pescaLeggendario`) e lo ricorda nella proprietà
+   `LEGGENDARIO`; intermezzo a `INIZIO_LOCAZIONE` con l'armaiolo
+   (`ScenaInCitta.conArmaiolo()`) che racconta la leggenda dell'artefatto, e il
+   gruppo che decide di andarlo a prendere contro il Drago.
+2. `ACCETTAZIONE` (`IN_LOCAZIONE`, nella città): la missione rivendica un
+   `BOSCO` con `cerca` e ci fa sorgere un **tempio nuovo** che custodisce il
+   leggendario (`RegistroArtefatti.custodisciInUnTempioNuovo`, segnato sulla
+   mappa): i templi esistenti tengono i loro artefatti. Poi si attiva, così
+   l'avviso arriva dopo l'intermezzo.
+3. `RECUPERO` (`POST_LOCAZIONE`, nel tempio, quando l'artefatto non è più nel
+   registro): la raccolta, che avviene prima del controllo di fine locazione,
+   fa già partire la rivelazione dell'artefatto; poi la missione si completa.
+
+Il ricordo del tempio è "Qui le viverne custodivano la Spada della Morte.".
+L'avviso "MISSIONE COMPLETATA" non si sovrappone alla rivelazione: in
+`DisplayableCanvas` un annuncio globale aspetta che le rivelazioni in corso o in
+coda siano finite, e una rivelazione aspetta che finisca l'annuncio in corso.
+
+Test: `ScenarioArtefattiLeggendariTest` (2): a Nyena la leggenda arriva prima
+dell'avviso e il tempio nuovo custodisce il leggendario, segnato sulla mappa; a
+Malgaard un leggendario diverso in un altro tempio, e raccoglierlo completa la
+missione e lascia il ricordo.
+
 ## Verifica
 
 - `mvn -o compile -q` (workaround offline già in uso in questo progetto) per
