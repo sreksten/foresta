@@ -236,22 +236,28 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	}
 
 	/**
-	 * L'elenco dei trofei, come quello dei mostri uccisi nelle statistiche: in bianco quelli
-	 * vinti, in grigio scuro quelli mancanti.
+	 * Il titolo nel font grande e sotto l'elenco dei trofei: il nome nel font medio, bianco se
+	 * vinto e grigio scuro se mancante, e sotto la descrizione nel font piccolo, grigio medio
+	 * se vinto e grigio scuro se mancante.
 	 */
 	void trofei(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
-		int locXOffset = xOffset + 9;
-		int locYOffset = yOffset + 20;
+		disegnaStringaCentrataConACapoAutomatico(graphics, "trofei", 20);
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
-		Image doomdark = DoomdarkTextProducer.getImage("Trofei:", fontMedium);
-		graphics.drawImage(doomdark, locXOffset, locYOffset, null);
-		locYOffset += fontMedium.getHeight();
+		DoomdarkFont fontSmall = DoomdarkFontSmall.getInstance();
+		int locXOffset = xOffset + 9;
+		int larghezzaMassima = width - 2 * locXOffset;
+		int locYOffset = 64;
 		for (TipoTrofeo trofeo : TipoTrofeo.values()) {
-			DoomdarkColorModel.Color color = RegistroTrofei.isVinto(trofeo) ? DoomdarkColorModel.Color.WHITE : DoomdarkColorModel.Color.DARK_GRAY;
-			doomdark = DoomdarkTextProducer.getImage(trofeo.getNome(), fontMedium, color);
+			boolean vinto = RegistroTrofei.isVinto(trofeo);
+			Image doomdark = DoomdarkTextProducer.getImage(trofeo.getNome(), fontMedium,
+					vinto ? DoomdarkColorModel.Color.WHITE : DoomdarkColorModel.Color.DARK_GRAY);
 			graphics.drawImage(doomdark, locXOffset, locYOffset, null);
 			locYOffset += fontMedium.getHeight();
+			doomdark = DoomdarkTextProducer.getImage(trofeo.getDescrizione(), fontSmall,
+					vinto ? DoomdarkColorModel.Color.MEDIUM_GRAY : DoomdarkColorModel.Color.DARK_GRAY, larghezzaMassima);
+			graphics.drawImage(doomdark, locXOffset, locYOffset, null);
+			locYOffset += doomdark.getHeight(null) + (fontSmall.getHeight() >> 1);
 		}
 	}
 
