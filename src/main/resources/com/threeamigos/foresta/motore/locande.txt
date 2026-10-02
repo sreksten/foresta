@@ -13,245 +13,245 @@ NOME_LOCANDA
 CINGHIALE_VEGANO$
     [IDENTIFICATIVO=CINGHIALE_VEGANO]\
     [DIALOGO=Benvenuti al Cinghiale Vegano! Sì, l'insegna è giusta. No, non abbiamo pancetta. Sedetevi prima che i nani ricomincino a protestare.]\
-    [RECENSIONE=è famoso per non servire carne, con grande disappunto dei nani]\
+    [RECENSIONE=Il Cinghiale Vegano è famoso per non servire carne, con grande disappunto dei nani.]\
     [NOME_LOCANDA=Il Cinghiale Vegano]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 FURIA_DEL_GIORNO_DOPO$
     [IDENTIFICATIVO=FURIA_DEL_GIORNO_DOPO]\
     [DIALOGO=Benvenuti alla Furia del Giorno Dopo. Parlate piano, camminate in punta di piedi e, per l'amor degli dei, non fate sbattere quei boccali di ferro. Qui dentro la luce del sole è bandita e il rumore è punito con la morte. Se siete qui per fare casino, andatevene. Se vi serve del brodo salato, dell'idromele sgasato o un angolo buio dove rimpiangere le vostre scelte di ieri sera... sedetevi e non respirate troppo forte.]\
-    [RECENSIONE={un chiaro riferimento ai postumi|è un locale gestito da un oste burbero specializzato nel trattare i postumi da sbronza dei clienti}]\
+    [RECENSIONE={"“La Furia del Giorno Dopo\"" è un chiaro riferimento ai postumi.|La Furia del Giorno Dopo è un locale gestito da un oste burbero specializzato nel trattare i postumi da sbronza dei clienti.}]\
     [NOME_LOCANDA=La Furia del Giorno Dopo]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 GUARDIA_ADDORMENTATA$
     [IDENTIFICATIVO=GUARDIA_ADDORMENTATA]\
     [DIALOGO=Chiudete quella porta! L'aria pulita fa scappare i clienti della Guardia Addormentata. Cosa vi serve? Oro sul bancone, domande al muro.]\
-    [RECENSIONE=il posto preferito dai ladri]\
+    [RECENSIONE=La Guardia Addormentata è il posto preferito dai ladri.]\
     [NOME_LOCANDA=La Guardia Addormentata]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 DA_POCHI_SOLDI$
     [IDENTIFICATIVO=DA_POCHI_SOLDI]\
     [DIALOGO=Entrate, entrate! Siete alla locanda Da Pochi Soldi, quindi non aspettatevi il tappeto rosso. Ma la birra costa meno dell'acqua, e fa quasi lo stesso effetto.]\
-    [RECENSIONE=onesta fin dal nome]\
+    [RECENSIONE=La locanda Da Pochi Soldi è onesta fin dal nome.]\
     [NOME_LOCANDA=Da Pochi Soldi]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 MAGO_SENZA_TRUCCO$
     [IDENTIFICATIVO=MAGO_SENZA_TRUCCO]\
     [DIALOGO=Ah, facce nuove! Benvenuti al Mago Senza Trucco. Vi avviso: se cercate pozioni magiche avete sbagliato posto, ma se cercate un vino che fa vedere i draghi, siete nel posto giusto.]\
-    [RECENSIONE=il proprietario è solo un vecchio un po' eccentrico]\
+    [RECENSIONE=Il proprietario del Mago Senza Trucco è solo un vecchio un po' eccentrico.]\
     [NOME_LOCANDA=Il Mago senza Trucco]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 ULTIMO_BICCHIERE$
     [IDENTIFICATIVO=ULTIMO_BICCHIERE]\
     [DIALOGO=Benvenuti all'Ultimo Bicchiere (Promesso)! Ricordatevi la regola della casa: il penultimo bicchiere non esiste, si passa sempre all'ultimo. Di nuovo.]\
-    [RECENSIONE=la bugia più grande della storia del regno]\
+    [RECENSIONE="L'Ultimo Bicchiere (Promesso)\"": la bugia più grande della storia del regno!]\
     [NOME_LOCANDA=L'Ultimo Bicchiere (Promesso)]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 ORSO_BALLERINO$
     [IDENTIFICATIVO=ORSO_BALLERINO]\
     [DIALOGO=Benvenuti all'Orso Ballerino. Scusate la pelliccia, un incantesimo di trasmutazione andato storto. Non badate ai peli nella minestra, fanno polpa.]\
-    [RECENSIONE=il proprietario è un druido rimasto bloccato in forma animale]\
+    [RECENSIONE=Il proprietario dell'Orso Ballerino è un druido rimasto bloccato in forma animale.]\
     [NOME_LOCANDA=L'Orso Ballerino]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 ULTIMA_SPERANZA$
     [IDENTIFICATIVO=ULTIMA_SPERANZA]\
     [DIALOGO=Per tutti i numi, dei clienti vivi! Benvenuti alla Locanda dell'Ultima Speranza. Di solito serviamo solo spettri e cacciatori smarriti. Accomodatevi, prima che il fuoco si spenga o che i lupi fuori finiscano la pazienza.]\
-    [RECENSIONE=l'unica decente nel raggio di chilometri]\
+    [RECENSIONE=La Locanda dell'Ultima Speranza è l'unica decente nel raggio di chilometri.]\
     [NOME_LOCANDA=La Locanda dell'Ultima Speranza]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 FUNGO_ALLUCINOGENO$
     [IDENTIFICATIVO=FUNGO_ALLUCINOGENO]\
     [DIALOGO=Benvenuti al Fungo Allucinogeno! Vi consiglio lo stufato del giorno. Se vedete il tavolo fluttuare dopo il primo cucchiaio, non vi preoccupate: è l'effetto del legno di pino. O del fungo. Più probabilmente del fungo.]\
-    [RECENSIONE=la specialità della casa è un brodo molto... colorato]\
+    [RECENSIONE=la specialità della casa è un brodo molto... colorato.]\
     [NOME_LOCANDA=Al Fungo Allucinogeno]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 GOBLIN_CORTESE$
     [IDENTIFICATIVO=GOBLIN_CORTESE]\
     [DIALOGO=Salute, viandanti! Benvenuti alla Tana del Goblin Cortese. Prego, pulitevi gli stivali, posate le armi e ignorate il fatto che stia usando una scimitarra per affettare il formaggio. Vi porto del sidro?]\
-    [RECENSIONE=l'unico goblin dell'intera foresta che usa il tovagliolo]\
+    [RECENSIONE=Qui lavora l'unico goblin dell'intera foresta che usa il tovagliolo.]\
     [NOME_LOCANDA=La Tana del Goblin Cortese]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 ZANZARE_E_ZUCCHE$
     [IDENTIFICATIVO=ZANZARE_E_ZUCCHE]\
     [DIALOGO=Benvenuti a Zanzare e Zucche! Prendete una sedia e schiacciate gli insetti che trovate sul cuscino. Se sopravvivete alla zuppa d'ortica, la notte è gratis.]\
-    [RECENSIONE=il nome descrive perfettamente i dintorni]\
+    [RECENSIONE="“Zanzare e Zucche" - il nome descrive perfettamente i dintorni.]\
     [NOME_LOCANDA=Zanzare e Zucche]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 BIVIO_SBAGLIATO$
     [IDENTIFICATIVO=BIVIO_SBAGLIATO]\
     [DIALOGO=Benvenuti alla locanda Il Bivio Sbagliato. Lo so, volevate andare a salvare la principessa a nord, e invece eccovi qui. Ormai siete dentro, tanto vale bere.]\
-    [RECENSIONE=ci finisci solo se ti perdi]\
+    [RECENSIONE=La locanda del Bivio Sbagliato. Ci finisci solo se ti perdi.]\
     [NOME_LOCANDA=Il Bivio Sbagliato]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 RIPARO_DAL_DM$
     [IDENTIFICATIVO=RIPARO_DAL_DM]\
     [DIALOGO=Benvenuti al Riparo dal DM! Rilassatevi, qui dentro non ci sono tiri salvezza, trappole nel pavimento o draghi millenari. C'è solo birra e una temporanea immunità alle decisioni sadiche del destino. Cosa vi spillo?]\
-    [RECENSIONE=un porto sicuro dove l'oste non ti costringe a fare un tiro salvezza sulla Costituzione prima di toccare il cibo]\
+    [RECENSIONE=Questo è un porto sicuro dove l'oste non ti costringe a fare un tiro salvezza sulla Costituzione prima di toccare il cibo.]\
     [NOME_LOCANDA=Al Riparo dal DM]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 VEDI_TU$
     [IDENTIFICATIVO=VEDI_TU]\
     [DIALOGO=Siete al Vedi Tu! Non chiedetemi cosa c'è sul menu, perché non lo so nemmeno io. Sedetevi, io vi porto qualcosa, voi mi date dell'oro e speriamo che a nessuno venga il mal di pancia.]\
-    [RECENSIONE=non esiste un menu, decide l'oste]\
+    [RECENSIONE=Qui al Vedi tu non esiste un menu, decide l'oste.]\
     [NOME_LOCANDA=La Locanda del "Vedi Tu"]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 TOPO_SAGGIO$
     [IDENTIFICATIVO=TOPO_SAGGIO]\
     [DIALOGO=Benvenuti al Topo Saggio. No, non state allucinando per il troppo idromele, sono proprio io il proprietario. Vi prego di non fare battute sui gatti, sulle trappole o sul fatto che potrei finire nello stufato. Piuttosto, saltate sul bancone per ordinare o lasciate le monete direttamente a terra, all'altezza dei miei baffi. Cosa vi servo? E vi avviso, il formaggio della casa costa il doppio per i giganti come voi.]\
-    [RECENSIONE=c'è chi giura che il proprietario sia davvero un roditore parlante]\
+    [RECENSIONE=C'è chi giura che il proprietario del Topo Saggio sia davvero un roditore parlante.]\
     [NOME_LOCANDA=Il Topo Saggio]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 TAZZA_BUCATA$
     [IDENTIFICATIVO=TAZZA_BUCATA]\
     [DIALOGO=Benvenuti alla Tazza Bucata. Vi do un consiglio: non guardate troppo da vicino i boccali, non chiedete cosa c'è dentro la zuppa e, se vedete un buco sul fondo della tazza, tappatelo con il pollice come fanno tutti. Il servizio fa schifo, l'oste è di pessimo umore, ma la birra costa una sola moneta di rame al barile. Se vi sta bene è così, altrimenti la porta è quella da cui siete entrati]\
-    [RECENSIONE=il servizio è pessimo, ma la birra è economica]\
+    [RECENSIONE=Il servizio qui alla Tazza Bucata è pessimo, ma la birra è economica.]\
     [NOME_LOCANDA=La Tazza Bucata]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 ELFO_ALTICCIO$
     [IDENTIFICATIVO=ELFO_ALTICCIO]\
     [DIALOGO=Salute, viandanti! Hic! Benvenuti all'... all'... aspettate, come si chiama questo posto? Ah sì, L'Elfo Alticcio! Che sarei io! Venite, entrate nel cerchio magico della sbronza! Gli umani dicono che noi elfi siamo creature aggraziate e mistiche... beh, non hanno mai visto me dopo sei calici di nettare di bosco! Sedetevi, oggi offro io! Cioè, pagate voi, ma verso io!]\
-    [RECENSIONE=è raro da vedere, memorabile da sentire]\
+    [RECENSIONE=L'Elfo Alticcio è raro da vedere, memorabile da sentire!]\
     [NOME_LOCANDA=L'Elfo Alticcio]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 FRASCA_DEL_LUPO_ASTEMIO$
     [IDENTIFICATIVO=FRASCA_DEL_LUPO_ASTEMIO]\
     [DIALOGO=Ahaha, benvenuti alla Frasca del Lupo Astemio! Il nome è una barzelletta, ragazzi! Qui dentro l'unica cosa astemia è l'acqua nel pozzo, perché nessuno la tocca! Perfino le mosche volano storte in questa stanza. Forza, prendete un boccale e dateci dentro. Se riuscite a uscire camminando dritti, significa che non avete onorato il lupo!]\
-    [RECENSIONE=ironico, visto quanto si beve dentro]\
+    [RECENSIONE=Il nome del posto, La Frasca del Lupo Astemio, è ironico, visto quanto si beve dentro.]\
     [NOME_LOCANDA=La Frasca del Lupo Astemio]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 TRONCO_CAVO$
     [IDENTIFICATIVO=TRONCO_CAVO]\
     [DIALOGO=Benvenuti nel Tronco Cavo, viaggiatori. Siete dentro trecento tonnellate di quercia millenaria. Vi prego solo di seguire tre semplici regole: non usate incantesimi di fuoco, non piantate i vostri pugnali nel muro per fare i fighi e non chiedete legno da ardere. Se avete sete, provate la nostra birra alla corteccia. Ha un sapore un po' terroso, ma vi garantisco che vi lascerà con le radici ben piantate a terra.]\
-    [RECENSIONE=è letteralmente costruita dentro un albero millenario scavato]\
+    [RECENSIONE=Il Tronco Cavo è letteralmente costruita dentro un albero millenario scavato.]\
     [NOME_LOCANDA=Il Tronco Cavo]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 DRAGO_VOMITANTE$
     [IDENTIFICATIVO=DRAGO_VOMITANTE]\
     [DIALOGO=Benvenuti al Drago Vomitante. Il nome non è una metafora poetica, è un avvertimento. Se dovete esagerare con l'idromele di fuoco, uscite sul retro o mirate ai vasi di piante. Chi sporca pulisce, e vi assicuro che il mio straccio ha visto cose che farebbero impallidire un necromante. Cosa vi porto, prima che vi passi l'appetito?]\
-    [RECENSIONE=la birra di fuoco è ottima, ma l'odore di acido sul pavimento toglie la voglia di vivere prima ancora di ordinare lo stufato]\
+    [RECENSIONE=Qui al Drago Vomitante la birra di fuoco è ottima, ma l'odore di acido sul pavimento toglie la voglia di vivere prima ancora di ordinare lo stufato.]\
     [NOME_LOCANDA=Il Drago Vomitante]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 BOCCALE_FORATO$
     [IDENTIFICATIVO=BOCCALE_FORATO]\
     [DIALOGO=Benvenuti al Boccale Forato! Sbrigatevi a bere, ragazzi, qui il tempo è letteralmente oro! Se sorseggiate con calma vi ritrovate con le scarpe bagnate e il boccale vuoto. Mandate giù tutto d'un fiato, è l'unico modo per avere il controvalore dei vostri soldi. Allora, vi riempio questo colabrodo?]\
-    [RECENSIONE=i prezzi sono stracciati ma occorre avere i piedi impermeabili]\
+    [RECENSIONE=Qui al Boccale Forato i prezzi sono stracciati ma occorre avere i piedi impermeabili.]\
     [NOME_LOCANDA=Il Boccale Forato]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 CINGHIALE_SOBRIO$
     [IDENTIFICATIVO=CINGHIALE_SOBRIO]\
     [DIALOGO=Benvenuti al Cinghiale Sobrio. Sì, vendiamo alcolici, ma vi tengo d'occhio. Al primo segno di barcollamento, al primo 'hic' molesto o alla prima canzone intonata fuori tempo, sarete scaraventati fuori a calci. Qui si beve con dignità, autocontrollo e moderazione. Ora, volete una birra analcolica o rischiare la mia ira?]\
-    [RECENSIONE=l'atmosfera è da funerale, ma il posto è pulito]\
+    [RECENSIONE=Qui al Cinghiale Sobrio l'atmosfera è da funerale, ma almeno il posto è pulito.]\
     [NOME_LOCANDA=Il Cinghiale Sobrio]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 GOBLIN_ASTEMIO$
     [IDENTIFICATIVO=GOBLIN_ASTEMIO]\
     [DIALOGO=Salute e benvenuti alla Tana del Goblin Astemio! No, non vi ruberò il portafoglio e no, non ho sputato nella botte. Ho chiuso con i vecchi vizi della tribù: niente risse, niente funghi allucinogeni e solo succo di mela fermentato al minimo sindacale. Scommetto che non avete mai visto un locale gestito così bene da uno della mia specie, vero? Accomodatevi!]\
-    [RECENSIONE=il locale è splendente e non cercano neanche di borseggiare il clienti]\
+    [RECENSIONE=La locanda del Goblin Astemio è splendente e non cercano neanche di borseggiare i clienti.]\
     [NOME_LOCANDA=La Tana del Goblin Astemio]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 ULTIMO_AVAMPOSTO$
     [IDENTIFICATIVO=ULTIMO_AVAMPOSTO]\
     [DIALOGO=Entrate pure all'Ultimo Avamposto Prima del Baratro... e vi prego, non fate movimenti bruschi tutti insieme sul lato est. Siamo letteralmente sospesi sul dirupo. Mandate giù qualcosa per farvi coraggio, perché se soffrite di vertigini, l'unico modo per uscire da questa foresta vivi è farlo da ubriachi. Cosa vi serve?]\
-    [RECENSIONE=l'idromele è l'unica cosa che impedisce di svenire guardando fuori dalla finestra]\
+    [RECENSIONE=All'Ultimo Avamposto Prima Del Baratro l'idromele è l'unica cosa che impedisce di svenire guardando fuori dalla finestra.]\
     [NOME_LOCANDA=L'Ultimo Avamposto Prima del Baratro]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 BOCCALE_CAPOVOLTO$
     [IDENTIFICATIVO=BOCCALE_CAPOVOLTO]\
     [DIALOGO=Benvenuti al Boccale Capovolto! Trovatevi un posto a terra o sugli sgabelli nani. Qui non ci giriamo intorno: la nostra birra scura è così forte che entro mezz'ora sarete tutti sdraiati a terra a fissare il soffitto. Abbiamo eliminato le sedie alte per evitare che la gente si facesse male cadendo. Siete pronti a fare un ruzzolone?]\
-    [RECENSIONE=i tavoli sono cortissimi e il pavimento è coperto di morbida paglia spessa trenta centimetri]\
+    [RECENSIONE=Al Boccale Capovolto i tavoli sono cortissimi e il pavimento è coperto di morbida paglia spessa trenta centimetri]\
     [NOME_LOCANDA=Il Boccale Capovolto]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 DRAGO_SPENNATO$
     [IDENTIFICATIVO=DRAGO_SPENNATO]\
     [DIALOGO=Benvenuti al Drago Spennato! Potete ridere dell'insegna, ma vi assicuro che la nostra cucina è letale quanto un soffio di fuoco. Abbiamo spennato i prezzi e rasato al suolo la concorrenza! Accomodatevi, ordinate un cosciotto di montone e non fate domande sulla provenienza della carne se vedete delle lucertole giganti senza pelle nel cortile dietro.]\
-    [RECENSIONE=l'insegna mostra un drago tragicamente privo di squame]\
+    [RECENSIONE=L'insegna del Drago Spennato mostra un drago tragicamente privo di squame.]\
     [NOME_LOCANDA=Il Drago Spennato]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 CACCIATORE_MANCINO$
     [IDENTIFICATIVO=CACCIATORE_MANCINO]\
     [DIALOGO=Benvenuti, viandanti! Siete al Cacciatore Mancino. Se cercate dello stufato di cervo fresco... beh, sperate che sia passato un altro cacciatore a vendermelo. Io ci provo, ma la foresta è densa e i miei occhi non sono più quelli di una volta. In compenso, non manco mai il colpo quando si tratta di versare il vino nel boccale!]\
-    [RECENSIONE=il posto è gestita da un arciere che non ha mai preso una preda]\
+    [RECENSIONE=Il Cacciatore Mancino è gestito da un arciere che non ha mai preso una preda in vita sua.]\
     [NOME_LOCANDA=Il Cacciatore Mancino]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 FUEGO_DEL_FUORILEGGE$
     [IDENTIFICATIVO=FUEGO_DEL_FUORILEGGE]\
     [DIALOGO=Pst! Entrate e abbassate la testa! Benvenuti al Fuego del Fuorilegge. Se le guardie cittadine vi hanno chiesto dove stavate andando, spero abbiate inventato una buona scusa. Qui dentro non chiediamo nomi, non teniamo registri e accettiamo monete d'oro di qualsiasi regno, anche quelle palesemente contraffatte. Sedetevi e cercate di non farvi notare.]\
-    [RECENSIONE=nascosta benissimo tra i cespugli]\
+    [RECENSIONE=Il Fuego Del Fuorilegge è nascosta benissimo tra i cespugli!]\
     [NOME_LOCANDA=Il Fuego del Fuorilegge]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 RADURA_DEL_MAL_DI_PANCIA$
     [IDENTIFICATIVO=RADURA_DEL_MAL_DI_PANCIA]\
     [DIALOGO=Salute! Benvenuti alla Radura del Mal di Pancia! Il segreto della nostra cucina è lo strutto d'orso, lo usiamo anche nei dolci! Vi lascerà un ricordo indelebile nello stomaco per i prossimi tre giorni. Ma non temete: il nostro idromele è così forte e puro che disinfetta tutto prima che possiate pentirvene. Chi ordina il piatto della casa riceve un'erba digestiva in omaggio!]\
-    [RECENSIONE=la cucina è un po' pesante, ma l'idromele è ottimo]\
+    [RECENSIONE=Qui alla Radura del Mal Di Pancia la cucina è un po' pesante, ma l'idromele è ottimo.]\
     [NOME_LOCANDA=La Radura del Mal Di Pancia]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 CAVALLO_CHE_PARLA$
     [IDENTIFICATIVO=CAVALLO_CHE_PARLA]\
     [DIALOGO=Benvenuti Al Cavallo che Parla! Forza, fate la vostra domanda a Fulmine, vi risponderà! Visto? E' un miracolo della natura! Ora smettetela di fare domande all'animale e comprate della birra, che mantenere questo quadrupede ciarlatano mi costa un patrimonio.]\
-    [RECENSIONE=il cavallo non parla, ma l'oste sa imitare il nitrito]\
+    [RECENSIONE=Non vi fate ingannare, il cavallo non parla, ma l'oste sa imitare il nitrito.]\
     [NOME_LOCANDA=Al Cavallo Che Parla]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 ANONIMA_ALCOLISTI$
     [IDENTIFICATIVO=ANONIMA_ALCOLISTI]\
-    [DIALOGO=Entrate, entrate. Benvenuti alla Teverna dell'Anonima Alcolisti. Qui ci supportiamo tutti a vicenda. Io supporto voi vendendovi i migliori alcolici della contea, e voi supportate me pagando l'affitto del locale. Coraggio, unitevi al cerchio, alzatevi a turno, dite il vostro nome e quale liquore preferite dimenticare stasera.]\
-    [RECENSIONE=è la terapia di gruppo migliore di sempre. Racconti i tuoi traumi d'infanzia, l'oste ti riempie il boccale e tutti brindano alle tue sventure. Ci sono andato per smettere di bere, sono uscito strisciando. Consigliatissimo]\
+    [DIALOGO=Entrate, entrate. Benvenuti alla Taverna dell'Anonima Alcolisti. Qui ci supportiamo tutti a vicenda. Io supporto voi vendendovi i migliori alcolici della contea, e voi supportate me pagando l'affitto del locale. Coraggio, unitevi al cerchio, alzatevi a turno, dite il vostro nome e quale liquore preferite dimenticare stasera.]\
+    [RECENSIONE=Questa dell'Anonima Alcolisti è la terapia di gruppo migliore di sempre. Racconti i tuoi traumi d'infanzia, l'oste ti riempie il boccale e tutti brindano alle tue sventure. Ci sono andato per smettere di bere, sono uscito strisciando. Consigliatissimo!]\
     [NOME_LOCANDA=La Taverna dell'Anonima Alcolisti]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 FORZIERE_VUOTO$
     [IDENTIFICATIVO=FORZIERE_VUOTO]\
     [DIALOGO=Benvenuti al Forziere Vuoto! Potete lasciare le vostre borse sul tavolo, qui i borseggiatori non entrano nemmeno: sanno che chi frequenta questo posto ha già speso l'ultimo rame prima di superare la soglia. Siamo la locanda dei disperati e dei fieri squattrinati! Se avete oro, spendetelo subito, così non avrete più l'ansia di farvelo rubare!]\
-    [RECENSIONE=ottima per tenere alla larga i borseggiatori]\
+    [RECENSIONE=La locanda del Forziere Vuoto è ottima per tenere alla larga i borseggiatori.]\
     [NOME_LOCANDA=Il Forziere Vuoto]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 PANE_E_SPADA$
     [IDENTIFICATIVO=PANE_E_SPADA]\
     [DIALOGO=Siete da Pane e Spada. Qui non ci sono fronzoli, cameriere carine o tovaglioli di seta. C'è del pane raffermo per riempire lo stomaco, della birra calda per mandarlo giù e una lama se qualcuno si lamenta del servizio. Mangiate, bevete, pagate e andate a combattere da un'altra parte. Cosa vi serve?]\
-    [RECENSIONE=essenziale, rozza, efficace]\
+    [RECENSIONE=Pane e spada: essenziale, rozza, efficace.]\
     [NOME_LOCANDA=Pane e Spada]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 ORCO_SENSIBILE$
     [IDENTIFICATIVO=ORCO_SENSIBILE]\
-    [DIALOGO=Benvenuti... snif... all'Orco Sensibile. Scusate, ma quella ballata sulla caduta di Forte Grigio mi spezza sempre il cuore. Entrate con animo gentile, vi prego. Niente parole dure, niente insulti e se dovete sfidare qualcuno a duello, fate che sia una gara di poesia. Chi non rispetta i sentimenti altrui viene preso a pugni in faccia con molta, molta tristezza. Cosa vi porto da bere per affogare i dispiaceri?]\
-    [RECENSIONE=all'interno si recitano poesie e si piange davanti alla birra]\
+    [DIALOGO=Benvenuti... snif... all'Orco Sensibile. Scusate, ma quella ballata sulla caduta di Forte Grigio mi spezza sempre il cuore. Entrate con animo gentile, vi prego. Niente parole dure, niente insulti e se dovete sfidare qualcuno a duello, fate che sia una gara di poesia. Chi non rispetta i sentimenti altrui viene preso a pugni in faccia ma con molta, molta tristezza. Cosa vi porto da bere per affogare i dispiaceri?]\
+    [RECENSIONE=All'interno dell'Orcon Sensibile si recitano poesie e si piange davanti alla birra.]\
     [NOME_LOCANDA=L'Orco Sensibile]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
 RE_FINTO$
     [IDENTIFICATIVO=RE_FINTO]\
     [DIALOGO=Nobili viandanti, benvenuti alla Locanda del Re Finto! Qui ogni mendicante viene trattato come un duca e ogni avventuriero come un eroe leggendario! Inchinatevi davanti al bancone, ordinate il nostro 'Nettare Reale' (che in realtà è sidro di terza scelta corretto con miele) e godetevi l'illusione della ricchezza! L'oro che mi darete, purtroppo per me, deve essere vero. Cosa desiderano le vostre maestà?]\
-    [RECENSIONE=arredata con corone di cartapesta e finti velluti]\
+    [RECENSIONE=Il Re Finto... arredata con corone di cartapesta e finti velluti.]\
     [NOME_LOCANDA=La Locanda del Re Finto]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
