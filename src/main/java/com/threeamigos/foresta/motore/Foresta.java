@@ -177,12 +177,15 @@ public class Foresta {
 	}
 	
 	/**
-	 * Costruisce le città e ci piazza un personaggio a caso
+	 * Costruisce le città, una per quadrante (in ordine casuale), e ci piazza un personaggio a caso
 	 */
 	private static void costruisciCittaEPosizionaPersonaggi(List<ProduttoreDiTestiCasuale.DatiLocanda> poolDatiLocanda) {
+		List<Quadrante> quadranti = Quadrante.inOrdineCasuale();
 		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
 			if (classeLocazione.getTipoLocazione() == TipoLocazione.CITTA) {
-				CoordinateMD coordinate = costruisciLocazioneUnica(classeLocazione, false);
+				CoordinateMD coordinate = quadranti.isEmpty()
+						? costruisciLocazioneUnica(classeLocazione, false)
+						: costruisciLocazioneUnica(classeLocazione, getCoordinateLibere(quadranti.remove(0)), false);
 				Locanda.impostaDatiLocanda(getLocazioneMD(coordinate), poolDatiLocanda.remove(0));
 				RegistroArtefatti.riempiMagazzini(coordinate, GeneratoreArtefatti.istanza());
 				Personaggio personaggioDisponibile = RegistroPersonaggi.getPersonaggioDisponibile();
@@ -269,8 +272,23 @@ public class Foresta {
 		do {
 			coordinate = new CoordinateMD(Dado.tira(getDimensioneX()) - 1, Dado.tira(getDimensioneY()) - 1);
 			classeLocazione = getLocazione(coordinate);
-		} while (classeLocazione != null && classeLocazione != ClassiLocazione.BOSCO && classeLocazione != ClassiLocazione.RADURA);
+		} while (!isLibera(classeLocazione));
 		return coordinate;
+	}
+
+	/**
+	 * Come {@link #getCoordinateLibere()}, ma dentro il quadrante.
+	 */
+	static CoordinateMD getCoordinateLibere(Quadrante quadrante) {
+		CoordinateMD coordinate;
+		do {
+			coordinate = quadrante.getCoordinateACaso();
+		} while (!isLibera(getLocazione(coordinate)));
+		return coordinate;
+	}
+
+	private static boolean isLibera(ClassiLocazione classeLocazione) {
+		return classeLocazione == null || classeLocazione == ClassiLocazione.BOSCO || classeLocazione == ClassiLocazione.RADURA;
 	}
 
 	/**

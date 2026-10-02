@@ -223,6 +223,8 @@ Facade statica su `LineaTemporaleMD`. Tiene un'ora del giorno (0-23, con 24 desc
 
 `locazioni/` (24 file) definisce i tipi di luogo visitabile: `Bosco`, `Grotta`, `Palude`, `Radura`, `Rovine`, `Tempio` (locazioni generiche, ripetute sulla mappa), `Citta`/`CittaFleena`/`CittaMalgaard`/`CittaNyena`/`CittaRuuna` (città nominate), `Locanda`, `Alchimista` (i due "negozi" visti anche dal lato UI), e locazioni uniche legate a missioni/boss: `CastelloDrago`, `CastelloIdra`, `CastelloLich`, `CastelloMinotauro`, `CastelloStrega`, `GrottaRecuperaIlMedaglione`, `RovineRecuperaLeDerrateAlimentari`. La gerarchia `LocazioneBase`/`Locazione`/`LocazioneUnica` rispecchia questa distinzione locazione-comune vs locazione-narrativa-unica.
 
+Le città e i castelli degli alleati del Drago non sono sparsi a caso: la mappa è divisa in quattro quadranti (`motore/Quadrante.java`), e alla creazione del mondo ogni città finisce in un quadrante diverso, in ordine casuale (`Foresta.costruisciCittaEPosizionaPersonaggi`). I castelli di Idra, Lich, Minotauro e Strega li rivendicano le loro missioni a inizio partita, ciascuno in un quadrante in cui non c'è ancora un castello (`RegistroMissioni.rivendicaPerLocazioneUnica`, `quadranteSenza`), quindi anche loro uno per quadrante; il castello del Drago, che arriva dopo, va dovunque.
+
 ## 7. Missioni
 
 `missioni/` (24 file) implementa missioni concrete sopra una gerarchia `MissioneBase`/`Missione`/`SupertipoMissione`/`TipoMissione`/`ClasseMissione`. Pattern osservabili dai nomi:
