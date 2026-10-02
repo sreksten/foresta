@@ -8,7 +8,7 @@ import java.util.Arrays;
 
 public class SpriteInDissolvenza extends SpriteBase {
 
-	private static final float DURATA_IN_SECONDI = 3.2f;
+	private static final float DURATA_IN_SECONDI = 1.2f;
 	private static final float ATTACCO_DISSOLVENZA_DOPO_SECONDI = 0;
 	private static final float SCALA_INIZIALE = 1.0f;
 	private static final float SCALA_FINALE = 1.0f;
