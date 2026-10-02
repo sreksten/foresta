@@ -23,6 +23,8 @@ public enum ClasseMissione {
 	CRONACHE_DI_UN_FEGATO_EROICO(CronacheDiUnFegatoEroico::new),
 	NESSUN_BOCCALE_LASCIATO_INDIETRO(NessunBoccaleLasciatoIndietro::new),
 	DISTURBATORE_DELLA_QUIETE_PUBBLICA(DisturbatoreDellaQuietePubblica::new),
+	CACCIA_AI_GOBLIN(CacciaAiGoblin::new),
+	L_ALCHIMISTA_E_LA_MANDRAGOLA(LAlchimistaELaMandragola::new),
 
 	MISSIONE_DI_PROVA_SECONDARIA_UNO(MissioneDiProvaSecondariaUno::new),
 	MISSIONE_DI_PROVA_SECONDARIA_DUE(MissioneDiProvaSecondariaDue::new),

@@ -70,10 +70,40 @@ passo corrente**, così un passo conta solo quel che succede da quando è
 corrente. Test: 4 nuovi in `MissioneAPassiTest`, `ScenarioPassiProntiTest`
 (una caccia ai goblin con gli eventi veri del bus).
 
+### Oggetti di missione (2026-10-02)
+
+`raccogli(momento, OggettiDaRaccogliere)` è il `RACCOGLI` di oggetti che
+esistono solo per la missione, come le radici di mandragola dell'alchimista:
+
+```java
+OggettiDaRaccogliere.di("MANDRAGOLA", NomeOggetto.femminile("radice di mandragola", "radici di mandragola"), 4)
+    .in(ClassiLocazione.RADURA, ClassiLocazione.BOSCO)
+    .conProbabilita(35)
+    .alPiuPerLocazione(2);
+```
+
+- Il passo li semina (`Passo.semina`) finché è il passo corrente: entrando in
+  una locazione, `Automa` chiede a `RegistroMissioni.getOggettoMissione` (prima
+  la missione che ha rivendicato la casella, poi le altre in corso) e mette
+  l'`OggettoMissione` al posto dell'oggetto della locazione, mai al posto
+  dell'artefatto del registro. L'aggancio sta in `Automa` subito dopo `crea`,
+  perché molte locazioni ridefiniscono `crea`.
+- Compaiono solo nelle locazioni mai visitate, con la probabilità data, mai più
+  di quanti ne mancano.
+- `OggettoMissione` (classe `ClassiOggetto.OGGETTO_MISSIONE`) si ricorda la
+  missione, la chiave e il nome (`NomeOggetto`); raccoglierlo incrementa il
+  contatore della missione con quella chiave. Come tutti gli oggetti delle
+  locazioni non si salva.
+- Immagine provvisoria: `img/oggetti/OggettoMissione.gif`.
+
+Due missioni lo usano, per ora solo in modalità di prova: `CacciaAiGoblin` e
+`LAlchimistaELaMandragola`, entrambe sopra `IncaricoInCitta` (l'incarico preso
+nella prima città in cui si entra, con l'intermezzo del mandante, e la
+ricompensa al ritorno; fallisce se la città viene distrutta). Test:
+`ScenarioIncarichiInCittaTest`.
+
 Mancano ancora: `COMBATTI(bersaglio)` con un nemico preciso in una locazione,
-`RACCOGLI` di oggetti di missione (un `OggettoMissione` generico, con un
-aggancio che lo metta nelle locazioni), `CONSEGNA`, `SORVEGLIA`, `SCORTA`,
-`EVITA_COMBATTIMENTO`, `COSTRUISCI`.
+`CONSEGNA`, `SORVEGLIA`, `SCORTA`, `EVITA_COMBATTIMENTO`, `COSTRUISCI`.
 
 ## 3. Mappatura `TipoMissione` → sequenza di passi
 

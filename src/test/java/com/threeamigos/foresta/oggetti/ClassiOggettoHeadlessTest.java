@@ -52,7 +52,7 @@ class ClassiOggettoHeadlessTest {
                 throw new IllegalStateException("la sonda deve girare headless");
             }
             for (ClassiOggetto classe : ClassiOggetto.values()) {
-                if (classe != ClassiOggetto.ARTEFATTO) {
+                if (classe.isGenerabile()) {
                     Oggetto oggetto = classe.getIstanza();
                     if (oggetto == null || oggetto.getClasse() != classe) {
                         throw new IllegalStateException("istanza sbagliata per " + classe);

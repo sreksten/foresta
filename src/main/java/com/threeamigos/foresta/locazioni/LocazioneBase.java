@@ -865,6 +865,13 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	@Override
+	public void collocaOggettoMissione(Oggetto oggetto) {
+		if (!(oggettoCorrente instanceof Artefatto)) {
+			setOggetto(oggetto);
+		}
+	}
+
+	@Override
 	public boolean isCustodita() {
 		return custodita;
 	}

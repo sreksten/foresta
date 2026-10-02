@@ -13,6 +13,7 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.MissioneMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.RegistroMissioniMD;
+import com.threeamigos.foresta.oggetti.Oggetto;
 
 import java.util.*;
 
@@ -37,7 +38,10 @@ public class RegistroMissioni {
 		LA_LEGGENDA_DI_MALGAARD(ClasseMissione.LA_LEGGENDA_DI_MALGAARD),
 		CRONACHE_DI_UN_FEGATO_EROICO(ClasseMissione.CRONACHE_DI_UN_FEGATO_EROICO),
 		NESSUN_BOCCALE_LASCIATO_INDIETRO(ClasseMissione.NESSUN_BOCCALE_LASCIATO_INDIETRO),
-		DISTURBATORE_DELLA_QUIETE_PUBBLICA(ClasseMissione.DISTURBATORE_DELLA_QUIETE_PUBBLICA);
+		DISTURBATORE_DELLA_QUIETE_PUBBLICA(ClasseMissione.DISTURBATORE_DELLA_QUIETE_PUBBLICA),
+		// Solo in modalità di prova, finché non diventano missioni vere: incarichi presi nella prima città
+		CACCIA_AI_GOBLIN(ClasseMissione.CACCIA_AI_GOBLIN, true),
+		L_ALCHIMISTA_E_LA_MANDRAGOLA(ClasseMissione.L_ALCHIMISTA_E_LA_MANDRAGOLA, true);
 
 		TipoMissionePredefinita(ClasseMissione classeMissione) {
 			this(classeMissione, false);
@@ -164,6 +168,37 @@ public class RegistroMissioni {
 	public static Optional<Missione> getMissioneCheHaOccupato(CoordinateMD coordinate) {
 		String id = locazioniOccupate.get(coordinate);
 		return id == null ? Optional.empty() : getTutteLeMissioni().stream().filter(m -> id.equals(m.getId())).findFirst();
+	}
+
+	/**
+	 * La missione con quell'id, in qualunque stato.
+	 */
+	public static Optional<Missione> getMissione(String id) {
+		return getTutteLeMissioni().stream().filter(m -> m.getId().equals(id)).findFirst();
+	}
+
+	/**
+	 * L'oggetto che una missione vuole nella locazione in cui il gruppo sta entrando (vedi
+	 * Missione.getOggettoInLocazione), se ce n'è uno: chiede prima alla missione che ha rivendicato la casella, poi
+	 * alle altre in corso, e vince la prima che risponde.
+	 */
+	public static Optional<Oggetto> getOggettoMissione(CoordinateMD coordinate, ClassiLocazione classe, boolean visitata) {
+		List<Missione> candidate = new ArrayList<>();
+		getMissioneCheHaOccupato(coordinate).ifPresent(candidate::add);
+		for (Missione missione : getTutteLeMissioni()) {
+			if (!candidate.contains(missione)) {
+				candidate.add(missione);
+			}
+		}
+		for (Missione missione : candidate) {
+			if (missione.isAttiva() && !missione.isCompleta() && !missione.isFallita()) {
+				Optional<Oggetto> oggetto = missione.getOggettoInLocazione(coordinate, classe, visitata);
+				if (oggetto.isPresent()) {
+					return oggetto;
+				}
+			}
+		}
+		return Optional.empty();
 	}
 
 	/**

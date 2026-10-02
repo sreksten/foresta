@@ -16,6 +16,13 @@ public abstract class OggettoBase implements Oggetto {
 		int quantitaMassima = getClasse().getQuantitaMassima();
 		quantita = Dado.tiraAncheAUnaFaccia(quantitaMassima);
 	}
+
+	/**
+	 * Un oggetto in una quantità decisa da chi lo crea, non dal dado (vedi OggettoMissione).
+	 */
+	OggettoBase(int quantita) {
+		this.quantita = quantita;
+	}
 	
 	public final int getQuantita() {
 		return quantita;

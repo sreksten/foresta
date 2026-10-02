@@ -70,6 +70,7 @@ public final class Passo {
 	private Supplier<List<PaginaIntermezzo>> pagine;
 	private String domanda;
 	private List<String> opzioni;
+	private OggettiDaRaccogliere oggettiDaSeminare;
 
 	private Passo(MomentoControllo momento, BooleanSupplier condizione) {
 		this.momento = Objects.requireNonNull(momento);
@@ -113,6 +114,22 @@ public final class Passo {
 
 	String getTestoFallimento() {
 		return testoFallimento.get();
+	}
+
+	/**
+	 * Finché questo è il passo corrente, la missione mette questi oggetti nelle locazioni (vedi
+	 * {@link MissioneAPassi#getOggettoInLocazione}).
+	 */
+	public Passo semina(OggettiDaRaccogliere oggetti) {
+		this.oggettiDaSeminare = Objects.requireNonNull(oggetti);
+		return this;
+	}
+
+	/**
+	 * Gli oggetti da mettere nelle locazioni finché questo è il passo corrente, o null.
+	 */
+	public OggettiDaRaccogliere getOggettiDaSeminare() {
+		return oggettiDaSeminare;
 	}
 
 	/**

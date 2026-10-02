@@ -5,11 +5,14 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
+import com.threeamigos.foresta.oggetti.Oggetto;
+import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
 import java.util.ArrayList;
@@ -17,6 +20,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 
 /**
@@ -256,6 +260,45 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 */
 	protected final Passo raccogli(MomentoControllo momento, ClassiOggetto classe, int quanti) {
 		return Passo.quando(momento, () -> getConteggioNelPassoCorrente(eventoRaccolto(classe)) >= quanti);
+	}
+
+	/**
+	 * RACCOGLI di oggetti che esistono solo per la missione (vedi {@link OggettoMissione}): finché è il passo
+	 * corrente la missione li mette nelle locazioni indicate, e si conclude quando il gruppo ne ha raccolti quanti
+	 * ne servono. Si contano sotto la chiave degli oggetti ({@link #getContatore}).
+	 */
+	protected final Passo raccogli(MomentoControllo momento, OggettiDaRaccogliere oggetti) {
+		return contaFinche(momento, oggetti.getChiave(), oggetti.getQuantita()).semina(oggetti);
+	}
+
+	/**
+	 * Il gruppo ha raccolto un oggetto di questa missione (vedi OggettoMissione.prendi).
+	 */
+	public final void oggettoDiMissioneRaccolto(String chiave, int quantita) {
+		if (!isCompleta() && !isFallita()) {
+			incrementaContatore(chiave, quantita);
+		}
+	}
+
+	/**
+	 * Se il passo corrente semina oggetti (vedi {@link Passo#semina}) e la locazione è adatta, mai visitata e
+	 * fortunata, quanti ne mancano fino a quelli che possono stare in una locazione.
+	 */
+	@Override
+	public Optional<Oggetto> getOggettoInLocazione(CoordinateMD coordinate, ClassiLocazione classe, boolean visitata) {
+		if (!isAttiva() || isCompleta() || isFallita() || visitata || Passo.FINE.equals(getPassoCorrente())) {
+			return Optional.empty();
+		}
+		OggettiDaRaccogliere oggetti = costruisciPasso(getPassoCorrente()).getOggettiDaSeminare();
+		if (oggetti == null || !oggetti.getLocazioni().contains(classe)) {
+			return Optional.empty();
+		}
+		int mancanti = oggetti.getQuantita() - getContatore(oggetti.getChiave());
+		if (mancanti <= 0 || Dado.tira(100) > oggetti.getProbabilita()) {
+			return Optional.empty();
+		}
+		int quanti = Math.min(Dado.tiraAncheAUnaFaccia(oggetti.getMassimoPerLocazione()), mancanti);
+		return Optional.of(new OggettoMissione(getId(), oggetti.getChiave(), oggetti.getNome(), quanti));
 	}
 
 	// --- Eventi di gioco contati per il passo corrente (vedi RegistroMissioni.registrati)

@@ -105,5 +105,11 @@ public interface Locazione {
 	 */
     void rimuoviOggetto();
 
+	/**
+	 * Mette nella locazione l'oggetto di una missione (vedi RegistroMissioni.getOggettoMissione) al posto di quello
+	 * che c'era, a meno che non sia l'artefatto del registro: quello resta.
+	 */
+    void collocaOggettoMissione(Oggetto oggetto);
+
 	TipoRiposo getTipoRiposo();
 }

@@ -21,6 +21,8 @@ public enum ClassiOggettoImmagine {
     ELMO(ClassiOggetto.ELMO, "oggetti/Elmo.gif"),
     ARMATURA(ClassiOggetto.ARMATURA, "oggetti/Armatura.gif"),
     SCHINIERI(ClassiOggetto.SCHINIERI, "oggetti/Schinieri.gif"),
+    // Per ora un sacchetto generico per tutti gli oggetti delle missioni
+    OGGETTO_MISSIONE(ClassiOggetto.OGGETTO_MISSIONE, "oggetti/OggettoMissione.gif"),
     // Gli artefatti non si mostrano nelle locazioni
     ARTEFATTO(ClassiOggetto.ARTEFATTO, null);
 

@@ -54,6 +54,10 @@ import java.util.function.Supplier;
 //  - protezioni: Veste;
 //  - accessori: Talismano, Ninnolo;
 //  - ingredienti magici (oggi usano l'icona della pergamena): Pergamena, Gemma, Monile, Gingillo, Sigillo.
+// TODO: img/oggetti/OggettoMissione.gif è un sacchetto provvisorio, da ridisegnare (oggetti delle missioni, per ora la
+//  mandragola dell'alchimista; in futuro magari un'immagine per ogni oggetto).
+// TODO: CacciaAiGoblin e LAlchimistaELaMandragola sono missioni di prova (TipoMissionePredefinita): decidere se e come
+//  farne missioni vere.
 
 // Bug noti ancora da correggere (dall'indagine sul codice): si spuntano togliendo la riga quando sono corretti.
 //
@@ -659,6 +663,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
 		gruppo.setLocazioneCorrente(locazioneCorrente);
 		locazioneCorrente.crea(gruppo, gruppoAvversario);
+		// Qui e non in crea, che molte locazioni ridefiniscono: l'oggetto che una missione vuole in questa locazione
+		RegistroMissioni.getOggettoMissione(gruppo.getCoordinate(), gruppo.getClasseLocazioneCorrente(),
+						Foresta.isLocazioneVisitata(gruppo.getCoordinate()))
+				.ifPresent(locazioneCorrente::collocaOggettoMissione);
 		BusEventi.pubblica(new InternoPreparazioneLocazione());
 		BusEventi.pubblica(new NotificaTestoParagrafo(LineaTemporale.getDescrizioneOraDelGiorno()));
 		locazioneCorrente.descrivi(gruppo, gruppoAvversario);

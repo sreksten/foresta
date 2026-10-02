@@ -52,6 +52,11 @@ public enum ClassiOggetto {
 	ARTEFATTO(null, builder()
 			.setQuantitaMassima(1)
 			.setValore(100)
+			),
+	// Neanche gli oggetti delle missioni: li mettono nelle locazioni le missioni (vedi OggettoMissione)
+	OGGETTO_MISSIONE(null, builder()
+			.setQuantitaMassima(1)
+			.setValore(50)
 			);
 
 	private final Supplier<Oggetto> supplier;
@@ -66,6 +71,14 @@ public enum ClassiOggetto {
 	
 	public Oggetto getIstanza() {
 		return supplier.get();
+	}
+
+	/**
+	 * Se se ne può creare un'istanza qualsiasi con {@link #getIstanza()}: non per gli artefatti e gli oggetti
+	 * delle missioni, che nascono altrove.
+	 */
+	public boolean isGenerabile() {
+		return supplier != null;
 	}
 	
 	public final int getQuantitaMassima() {

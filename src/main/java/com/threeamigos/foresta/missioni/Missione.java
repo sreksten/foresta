@@ -1,8 +1,12 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.MissioneMD;
+import com.threeamigos.foresta.oggetti.Oggetto;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface Missione {
 
@@ -53,6 +57,17 @@ public interface Missione {
 	 */
 	default String getRicordoDellaLocazione() {
 		return null;
+	}
+
+	/**
+	 * L'oggetto che la missione vuole nella locazione in cui il gruppo sta entrando, al posto di quello che la
+	 * locazione avrebbe avuto (vedi RegistroMissioni.getOggettoMissione): per esempio le radici di mandragola che
+	 * chiede l'alchimista. Vuoto se non ne vuole.
+	 *
+	 * @param visitata se il gruppo aveva già completato la locazione in una visita precedente
+	 */
+	default Optional<Oggetto> getOggettoInLocazione(CoordinateMD coordinate, ClassiLocazione classe, boolean visitata) {
+		return Optional.empty();
 	}
 
 	MissioneMD getModelloDati();
