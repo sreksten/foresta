@@ -34,6 +34,8 @@ class DoomdarkFontMedium implements DoomdarkFont {
 			return maiuscole[(c - 'A')][0];
 		} else if (c >= '0' && c <= '9') {
 			return cifre[(c - '0')][0];
+		} else if (c == 'È') {
+			return E_grave[0];
 		} else if (c == 'à') {
 			return a_grave[0];
 		} else if (c == 'è') {
@@ -89,6 +91,8 @@ class DoomdarkFontMedium implements DoomdarkFont {
 			return maiuscole[c - 'A'];
 		} else if (c >= '0' && c <= '9') {
 			return cifre[c - '0'];
+		} else if (c == 'È') {
+			return E_grave;
 		} else if (c == 'à') {
 			return a_grave;
 		} else if (c == 'è') {
@@ -1643,6 +1647,27 @@ class DoomdarkFontMedium implements DoomdarkFont {
 			(byte)0b11110000, (byte)0b00000000,
 			(byte)0b11100000, (byte)0b00000000,
 			(byte)0b00000000, (byte)0b00000000,
+	};
+
+	// Lettere accentate minuscole
+	private static final byte[] E_grave = {
+		14, // E
+				(byte)0b11000111, (byte)0b11111100,
+				(byte)0b01111111, (byte)0b11111100,
+				(byte)0b00111100, (byte)0b00111100,
+				(byte)0b00111100, (byte)0b00111100,
+				(byte)0b00111100, (byte)0b00000000,
+				(byte)0b00111100, (byte)0b00000000,
+				(byte)0b11111111, (byte)0b11000000,
+				(byte)0b11111111, (byte)0b11000000,
+				(byte)0b00111100, (byte)0b00000000,
+				(byte)0b00111100, (byte)0b00000000,
+				(byte)0b00111100, (byte)0b00111100,
+				(byte)0b00111100, (byte)0b00111100,
+				(byte)0b00011111, (byte)0b11111100,
+				(byte)0b00000111, (byte)0b11111100,
+				0, 0,
+				0, 0
 	};
 
 	// Lettere accentate minuscole

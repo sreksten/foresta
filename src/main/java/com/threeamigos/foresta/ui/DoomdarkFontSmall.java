@@ -34,6 +34,8 @@ class DoomdarkFontSmall implements DoomdarkFont {
 			return maiuscole[(c - 'A')][0];
 		} else if (c >= '0' && c <= '9') {
 			return cifre[(c - '0')][0];
+		} else if (c == 'È') {
+			return E_grave[0];
 		} else if (c == 'à') {
 			return a_grave[0];
 		} else if (c == 'è') {
@@ -89,6 +91,8 @@ class DoomdarkFontSmall implements DoomdarkFont {
 			return maiuscole[c - 'A'];
 		} else if (c >= '0' && c <= '9') {
 			return cifre[c - '0'];
+		} else if (c == 'È') {
+			return E_grave;
 		} else if (c == 'à') {
 			return a_grave;
 		} else if (c == 'è') {
@@ -1043,6 +1047,19 @@ class DoomdarkFontSmall implements DoomdarkFont {
 			(byte)0b00011000,
 			(byte)0b00110000,
 			(byte)0b01100000,
+			(byte)0b00000000
+	};
+
+	// Lettere accentate maiuscole
+	private static final byte[] E_grave = {
+			7, // È
+			(byte)0b10111110,
+			(byte)0b01100110,
+			(byte)0b01100000,
+			(byte)0b11111000,
+			(byte)0b01100000,
+			(byte)0b01100110,
+			(byte)0b00111110,
 			(byte)0b00000000
 	};
 
