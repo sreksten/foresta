@@ -53,4 +53,9 @@ public class SconfiggiLIdra extends MissioneBase implements Missione {
     public boolean isPrimaria() {
         return true;
     }
+
+    @Override
+    public String getRicordoDellaLocazione() {
+        return "il castello dell'Idra";
+    }
 }

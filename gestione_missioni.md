@@ -10,7 +10,7 @@
 | 4. Domande al giocatore | fatto, vedi "Come è stato implementato" in fondo al punto 4 |
 | 5. Migrazione di Medaglione e Derrate | fatto, vedi "Come è stato implementato" in fondo al punto 5 |
 | 6. Claim delle locazioni e `cerca` | fatto, con la regola corretta del punto 7; vedi "Come è stato implementato" in fondo al punto 6 |
-| 7. `SconfiggiIlDrago` e claim precoce | claim precoce e memoria dei claim fatti col punto 6; restano l'hook di descrizione ("qui sorgeva…") e i castelli che diventano rovine |
+| 7. `SconfiggiIlDrago` e claim precoce | fatto, vedi "Come è stato implementato" in fondo al punto 7 |
 
 ## Contesto
 
@@ -829,6 +829,27 @@ ancora `MissioneBase` semplici. La migrazione delle cinque missioni
 separato (più cinque classi da convertire, con `costruisciCastelli()` da
 smontare) — non è incluso nel piano attuale (punto 5), che riguarda solo le
 due missioni di recupero.
+
+### Come è stato implementato (2026-10-02)
+
+- **Claim precoce e memoria:** fatti col punto 6 (vedi lì).
+- **Castelli in rovine:** c'erano già. Tutti e cinque, Drago compreso,
+  `azzeraLocazione` della locazione completata chiama
+  `Foresta.distruggiLocazioneUnica(…, ROVINE)`, che cambia la casella e la toglie
+  dalle locazioni uniche. Il claim resta, ed è quel che permette il ricordo.
+- **"Qui sorgeva…":** `Missione.getRicordoDellaLocazione()` (null di default)
+  dice che cosa ricordare della locazione rivendicata; le cinque missioni dei
+  castelli rispondono "il castello della Strega", "del Lich", "del Minotauro
+  Gigante", "dell'Idra", "del Drago". `RegistroMissioni.getRicordo(coordinate)`
+  restituisce il ricordo della missione che ha rivendicato per ultima la
+  casella, solo se quella missione è finita (completa o fallita). L'`Automa`,
+  in `PREPARAZIONE_LOCAZIONE` subito dopo la descrizione della locazione,
+  scrive "Qui sorgeva il castello della Strega." a ogni ingresso. Se un'altra
+  missione rivendica di nuovo la casella, il ricordo diventa il suo.
+- **Test** in `ScenarioLocazioniRivendicateTest` (2 nuovi): ogni castello
+  sconfitto, Drago compreso, diventa rovine, esce dalle locazioni uniche e
+  ricorda chi ci stava; e su una partita vera il gruppo che entra fra le rovine
+  del castello della Strega legge "Qui sorgeva il castello della Strega.".
 
 ## Verifica
 

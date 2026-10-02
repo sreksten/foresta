@@ -142,6 +142,16 @@ public class RegistroMissioni {
 	}
 
 	/**
+	 * Il ricordo della missione finita che ha rivendicato per ultima quella casella ("il castello della Strega"),
+	 * se ce n'è uno: chi entra in quella casella legge "Qui sorgeva il castello della Strega".
+	 */
+	public static Optional<String> getRicordo(CoordinateMD coordinate) {
+		return getMissioneCheHaOccupato(coordinate)
+				.filter(missione -> missione.isCompleta() || missione.isFallita())
+				.map(Missione::getRicordoDellaLocazione);
+	}
+
+	/**
 	 * Cerca, a quadrati concentrici attorno a una casella a caso, una locazione che esiste già di quella classe
 	 * (un BOSCO da trasformare in castello, un TEMPIO...) e che sia disponibile: nessuna missione l'ha rivendicata,
 	 * oppure quella che l'ha fatto è finita, oppure è la missione stessa. Non si sceglie mai la casella in cui si

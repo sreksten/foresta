@@ -54,4 +54,9 @@ public class SconfiggiLaStrega extends MissioneBase implements Missione {
     public boolean isPrimaria() {
         return true;
     }
+
+    @Override
+    public String getRicordoDellaLocazione() {
+        return "il castello della Strega";
+    }
 }

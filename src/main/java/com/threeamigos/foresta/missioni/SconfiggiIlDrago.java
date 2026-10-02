@@ -95,4 +95,9 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 	public void setDragoApparso() {
 		md.aggiungiProprieta(DRAGO_APPARSO, AFFERMATIVO);
 	}
+
+	@Override
+	public String getRicordoDellaLocazione() {
+		return "il castello del Drago";
+	}
 }

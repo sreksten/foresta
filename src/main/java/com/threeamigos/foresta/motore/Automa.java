@@ -662,6 +662,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		BusEventi.pubblica(new InternoPreparazioneLocazione());
 		BusEventi.pubblica(new NotificaTestoParagrafo(LineaTemporale.getDescrizioneOraDelGiorno()));
 		locazioneCorrente.descrivi(gruppo, gruppoAvversario);
+		// Dove una missione finita aveva la sua locazione, per esempio fra le rovine di un castello sconfitto
+		RegistroMissioni.getRicordo(gruppo.getCoordinate())
+				.ifPresent(ricordo -> BusEventi.pubblica(new NotificaTestoFrase("Qui sorgeva " + ricordo + ".")));
 		return controllaMissioniEDomande(MomentoControllo.IN_LOCAZIONE, this::proseguiPreparazioneLocazione);
 	}
 

@@ -6,11 +6,14 @@ import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.missioni.SconfiggiIlDrago;
 import com.threeamigos.foresta.missioni.SconfiggiIlLich;
 import com.threeamigos.foresta.missioni.SconfiggiIlMinotauroGigante;
 import com.threeamigos.foresta.missioni.SconfiggiLIdra;
 import com.threeamigos.foresta.missioni.SconfiggiLaStrega;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import org.junit.jupiter.api.Test;
 
@@ -169,5 +172,70 @@ class ScenarioLocazioniRivendicateTest {
             }
         }
         return trovate;
+    }
+
+    /**
+     * Come se il gruppo avesse appena sconfitto chi stava nel castello: la locazione è completa e si azzera, come a
+     * fine locazione, e la missione si completa.
+     */
+    private static CoordinateMD sconfiggi(PartitaDiTest partita, ClassiLocazione castello, Missione missione) {
+        CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(castello);
+        Foresta.getLocazioneMD(coordinate).aggiungiProprieta(LocazioneMD.COMPLETA, LocazioneMD.AFFERMATIVO);
+        Foresta.costruisciIstanza(coordinate).azzeraLocazione(partita.gruppo());
+        missione.completaMissione();
+        return coordinate;
+    }
+
+    private static Missione missione(Class<? extends Missione> tipo) {
+        return RegistroMissioni.getTutteLeMissioni().stream().filter(tipo::isInstance).findFirst().orElseThrow(AssertionError::new);
+    }
+
+    @Test
+    void ogniCastelloSconfittoDiventaRovineERicordaChiCiStava() {
+        try (PartitaDiTest partita = nuovaPartita(35)) {
+            Object[][] castelli = {
+                    {SconfiggiLaStrega.class, ClassiLocazione.CASTELLO_STREGA, "il castello della Strega"},
+                    {SconfiggiIlLich.class, ClassiLocazione.CASTELLO_LICH, "il castello del Lich"},
+                    {SconfiggiIlMinotauroGigante.class, ClassiLocazione.CASTELLO_MINOTAURO, "il castello del Minotauro Gigante"},
+                    {SconfiggiLIdra.class, ClassiLocazione.CASTELLO_IDRA, "il castello dell'Idra"},
+            };
+            for (Object[] castello : castelli) {
+                Missione missione = missione((Class<? extends Missione>) castello[0]);
+                CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica((ClassiLocazione) castello[1]);
+                assertEquals(Optional.empty(), RegistroMissioni.getRicordo(coordinate), "il castello c'è ancora");
+                sconfiggi(partita, (ClassiLocazione) castello[1], missione);
+                assertEquals(ClassiLocazione.ROVINE, Foresta.getLocazione(coordinate));
+                assertNull(Foresta.getCoordinateLocazioneUnica((ClassiLocazione) castello[1]));
+                assertEquals(Optional.of(castello[2]), RegistroMissioni.getRicordo(coordinate));
+            }
+
+            // Sconfitti gli alleati, compare il castello del Drago, che a sua volta diventa rovine
+            SconfiggiIlDrago drago = RegistroMissioni.getMissionePrincipale();
+            drago.controllaPostLocazione();
+            CoordinateMD castelloDrago = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CASTELLO_DRAGO);
+            assertNotNull(castelloDrago);
+            assertSame(drago, RegistroMissioni.getMissioneCheHaOccupato(castelloDrago).orElse(null));
+            sconfiggi(partita, ClassiLocazione.CASTELLO_DRAGO, drago);
+            assertEquals(ClassiLocazione.ROVINE, Foresta.getLocazione(castelloDrago));
+            assertNull(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CASTELLO_DRAGO));
+            assertEquals(Optional.of("il castello del Drago"), RegistroMissioni.getRicordo(castelloDrago));
+        }
+    }
+
+    @Test
+    void entrandoFraLeRovineDiUnCastelloSiLeggeCheCosaCiSorgeva() {
+        try (PartitaDiTest partita = nuovaPartita(36)) {
+            CoordinateMD rovine = sconfiggi(partita, ClassiLocazione.CASTELLO_STREGA, missione(SconfiggiLaStrega.class));
+            // Il gruppo esce dalla città da una casella accanto alle rovine e ci entra con un passo
+            boolean daSud = rovine.getY() + 1 < Foresta.getDimensioneY();
+            partita.gruppo().setCoordinate(new CoordinateMD(rovine.getX(), rovine.getY() + (daSud ? 1 : -1)));
+            partita.comando(Comando.ESCI_DA_CITTA);
+            partita.assertStato(Stato.SCELTA_DIREZIONE);
+            partita.eventi().ascolta(NotificaTestoFrase.class);
+            partita.comando(daSud ? Comando.NORD : Comando.SUD).comando(Comando.NUMERO_1);
+
+            assertEquals(rovine, partita.gruppo().getCoordinate());
+            assertTrue(partita.testi().contains("Qui sorgeva il castello della Strega."), String.valueOf(partita.testi()));
+        }
     }
 }

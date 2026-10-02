@@ -53,4 +53,9 @@ public class SconfiggiIlMinotauroGigante extends MissioneBase implements Mission
     public boolean isPrimaria() {
         return true;
     }
+
+    @Override
+    public String getRicordoDellaLocazione() {
+        return "il castello del Minotauro Gigante";
+    }
 }

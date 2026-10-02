@@ -45,6 +45,15 @@ public interface Missione {
 	 */
 	void fallisciMissione();
 
+	/**
+	 * Che cosa ricordare della locazione che la missione aveva rivendicato, una volta finita (vedi
+	 * RegistroMissioni.getRicordo): per esempio "il castello della Strega", per dire "Qui sorgeva il castello della
+	 * Strega" a chi passa fra le sue rovine. Null se non c'è niente da ricordare.
+	 */
+	default String getRicordoDellaLocazione() {
+		return null;
+	}
+
 	MissioneMD getModelloDati();
 	
 	void setModelloDati(MissioneMD modelloDati);
