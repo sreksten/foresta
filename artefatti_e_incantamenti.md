@@ -43,7 +43,6 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
 - [ ] **Artefatti leggendari**, scritti a mano, da mettere nei templi e come premi delle missioni (§2, "Rarità").
 - [ ] **Negozi sparsi nella foresta:** un paio per tipo, tra armaiolo, alchimista e incantatore.
 - [ ] **Grammatica per `GeneratoreArtefatti`:** formato definito e prima versione per la spada (§7), metà delle spade generate vengono da lì. Da fare:
-  - [ ] **Rileggere le liste** di `artefatti2.txt`: alcune parole ereditate da `artefatti.txt` non reggono come prefisso o aggettivo ("la rasoio spada", "la postale spada", "la spada tank").
   - [ ] **Stesso attributo due volte** (es. `SOGGEZIONE` +2 e +1): sommarli in `generaDaGrammatica` o evitarli nella grammatica.
   - [ ] **Bilanciamento:** i modificatori sono intensità × gradino, quindi +6 al livello 10 per un'intensità +2; da misurare insieme alla quota di spade da grammatica (`Costanti.ARTEFATTO_PROBABILITA_DA_GRAMMATICA`, 0,5 per provarla) e ai prezzi.
   - [ ] **Altri tipi:** spadone, mazza, ascia, scudo… (basta aggiungere le radici `<TIPO>_<n>`, §7), e poi le pergamene.
@@ -304,6 +303,7 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
   - Ritocchi: dardo dell'Elfo a 4 di `MAGIA`, dardo del Mago a 40 × livello. Non ancora misurati (vedi "Da fare"). Provato e tolto +0,1 di danno fisico a Ladro e Bardo: i loro moltiplicatori restano quelli di prima.
   - Tutta la suite è verde (345 test).
 - [x] **Grammatica degli artefatti, prima versione** (2026-09-25). `artefatti2.txt` con `artefatti2_pp.txt`, letti da `GrammaticaArtefatti`; formato e scelte in §7. `GeneratoreArtefattiTabelle` la usa per metà delle spade; il costruttore con il solo `Random` resta a sole tabelle, così i test di prima non cambiano. `artefatti.txt` non è stato toccato. Test: `GrammaticaArtefattiTest` (7); `TestArtefatti2` stampa 40 spade come le genera il gioco. Tutta la suite è verde (352 test).
+- [x] **Liste di `artefatti2.txt` rilette** (2026-10-02). In `PREFISSO` restano solo gli aggettivi che reggono davanti al nome; gli altri (aggettivi di relazione, participi, sostantivi in apposizione come "la spada laser") sono passati in `AGGETTIVO` con lo stesso modificatore. Tolte le parole che non esistono o non hanno senso per una spada ("la spada mozzarella", "la rasoio spada", "la lincina spada") e i doppioni; `PERCEZIONE+2` ha ora lincea, occhiuta e onniveggente. Tutta la suite è verde (485 test).
 - [x] **Tetti degli effetti a 3/4/5** (comune/raro/leggendario) al posto di 5/6/7.
 - [x] **Il `|` sparisce dai testi** alla fonte (§5.5).
 - [x] **Rarità degli artefatti.** `TipoRaritaArtefatto` con posti e tetti (§2, "Rarità"), salvata in `ArtefattoMD`. Il generatore fa rari il 10% degli artefatti incantabili e non genera mai leggendari; gli artefatti che nascono incantati hanno al massimo 3 incantamenti e almeno un posto libero. Test in `ArtefattoMDTest`, `ArtefattoIncantabileTest` e `GeneratoreArtefattiTest`; tutta la suite è verde (271 test).
