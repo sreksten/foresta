@@ -29,7 +29,7 @@ class IntermezzoIngressoNegozioTest {
 					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 
-			assertEquals(0, contaBattuta(partita, "C'era una volta..."),
+			assertFalse(ModelloDati.getIstanza().getIntermezziMD().isScattato(new IntermezzoLocandaPrimaVisita().getId()),
 					"il solo ingresso in città non deve far scattare l'intermezzo della locanda, prima ancora di aver scelto \"Locanda\"");
 		}
 	}
@@ -43,9 +43,10 @@ class IntermezzoIngressoNegozioTest {
 			partita.eventi().ascolta(InternoMostraSchermataGioco.class);
 			partita.nonSaltareIntermezzi();
 
+			long intermezziPrima = contaIntermezziAvviati(partita);
 			partita.comando(Comando.ARMAIOLO);
 			partita.assertStato(Stato.INTERMEZZO);
-			assertEquals(1, contaBattuta(partita, "armaiolo", "Ciao."),
+			assertEquals(intermezziPrima + 1, contaIntermezziAvviati(partita),
 					"la prima volta dall'armaiolo deve comparire il suo intermezzo");
 			assertEquals(0, partita.eventi().tutti(ComandoAperturaInventarioCommerciante.class).size(),
 					"il negozio non deve apparire ancora, finché l'intermezzo non è terminato");
@@ -62,7 +63,7 @@ class IntermezzoIngressoNegozioTest {
 			partita.comando(Comando.ANNULLA);
 			partita.comando(Comando.ARMAIOLO);
 			partita.assertStato(Stato.IN_LOCAZIONE);
-			assertEquals(1, contaBattuta(partita, "armaiolo", "Ciao."),
+			assertEquals(intermezziPrima + 1, contaIntermezziAvviati(partita),
 					"alla seconda visita l'intermezzo non deve ripetersi");
 			assertEquals(2, partita.eventi().tutti(ComandoAperturaInventarioCommerciante.class).size(),
 					"il negozio deve comunque apparire anche senza intermezzo");
@@ -80,8 +81,8 @@ class IntermezzoIngressoNegozioTest {
 
 			partita.comando(Comando.ALCHIMISTA);
 			partita.assertStato(Stato.INTERMEZZO);
-			assertEquals(1, contaBattuta(partita, "alchimista", "Ciao."));
 			partita.saltaIntermezzi();
+			assertTrue(ModelloDati.getIstanza().getIntermezziMD().isScattato(ClasseIntermezzo.INTERMEZZO_ALCHIMISTA.name()));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			assertEquals(1, partita.eventi().tutti(ComandoAperturaInventarioFornitore.class).size());
 			assertApreNegozioSenzaTornareAllaSchermataDiGioco(partita, ComandoAperturaInventarioFornitore.class);
@@ -89,8 +90,8 @@ class IntermezzoIngressoNegozioTest {
 			partita.comando(Comando.ANNULLA);
 			partita.comando(Comando.VENDITORE_DI_PERGAMENE);
 			partita.assertStato(Stato.INTERMEZZO);
-			assertEquals(1, contaBattuta(partita, "venditore", "Ciao."));
 			partita.saltaIntermezzi();
+			assertTrue(ModelloDati.getIstanza().getIntermezziMD().isScattato(ClasseIntermezzo.INTERMEZZO_VENDITORE_DI_PERGAMENE.name()));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			assertEquals(1, partita.eventi().tutti(ComandoAperturaInventarioCommerciante.class).size());
 			assertApreNegozioSenzaTornareAllaSchermataDiGioco(partita, ComandoAperturaInventarioCommerciante.class);
@@ -106,10 +107,11 @@ class IntermezzoIngressoNegozioTest {
 			partita.eventi().ascolta(ComandoAperturaIncantatore.class, InternoMostraSchermataGioco.class);
 			partita.nonSaltareIntermezzi();
 
+			long intermezziPrima = contaIntermezziAvviati(partita);
 			partita.comando(Comando.INCANTATORE);
 			partita.assertStato(Stato.INTERMEZZO);
-			assertEquals(1, contaBattuta(partita, "incantatore", "Ciao."));
 			partita.saltaIntermezzi();
+			assertTrue(ModelloDati.getIstanza().getIntermezziMD().isScattato(ClasseIntermezzo.INTERMEZZO_INCANTATORE.name()));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			assertEquals(1, partita.eventi().tutti(ComandoAperturaIncantatore.class).size());
 			assertApreNegozioSenzaTornareAllaSchermataDiGioco(partita, ComandoAperturaIncantatore.class);
@@ -117,7 +119,7 @@ class IntermezzoIngressoNegozioTest {
 			partita.comando(Comando.ANNULLA);
 			partita.comando(Comando.INCANTATORE);
 			partita.assertStato(Stato.IN_LOCAZIONE);
-			assertEquals(1, contaBattuta(partita, "incantatore", "Ciao."), "non deve ripetersi alla seconda visita");
+			assertEquals(intermezziPrima + 1, contaIntermezziAvviati(partita), "non deve ripetersi alla seconda visita");
 			assertEquals(2, partita.eventi().tutti(ComandoAperturaIncantatore.class).size());
 		}
 	}
@@ -132,8 +134,6 @@ class IntermezzoIngressoNegozioTest {
 
 			partita.comando(Comando.LOCANDA);
 			partita.assertStato(Stato.INTERMEZZO);
-			assertEquals(1, contaBattuta(partita, "bardo", "C'era una volta..."),
-					"scegliendo \"Locanda\" la prima volta deve scattare l'intermezzo della prima visita");
 
 			partita.saltaIntermezzi();
 			partita.assertStato(Stato.IN_LOCAZIONE);
@@ -160,20 +160,13 @@ class IntermezzoIngressoNegozioTest {
 				"dopo l'apertura del negozio non deve arrivare InternoMostraSchermataGioco, altrimenti la UI tornerebbe alla schermata di gioco normale invece di mostrare l'inventario");
 	}
 
-	private static long contaBattuta(PartitaDiTest partita, String testoContenuto) {
+	/**
+	 * Quanti intermezzi sono stati avviati finora (la prima pagina di ognuno). Non si guardano
+	 * i testi delle battute, che possono cambiare in qualsiasi momento.
+	 */
+	private static long contaIntermezziAvviati(PartitaDiTest partita) {
 		return partita.eventi().tutti(NotificaPaginaIntermezzo.class).stream()
-				.flatMap(n -> n.getPagina().getBattuteProgrammate().stream())
-				.map(b -> b.getBattuta().getTesto())
-				.filter(testo -> testo != null && testo.contains(testoContenuto))
-				.count();
-	}
-
-	private static long contaBattuta(PartitaDiTest partita, String idElemento, String testoContenuto) {
-		return partita.eventi().tutti(NotificaPaginaIntermezzo.class).stream()
-				.flatMap(n -> n.getPagina().getBattuteProgrammate().stream())
-				.filter(b -> idElemento.equals(b.getBattuta().getIdElemento()))
-				.map(b -> b.getBattuta().getTesto())
-				.filter(testo -> testo != null && testo.contains(testoContenuto))
+				.filter(n -> n.getNumeroPagina() == 1)
 				.count();
 	}
 }
