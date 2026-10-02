@@ -38,6 +38,10 @@ public class Locanda extends LocazioneBase {
 	 * dall'oste per mancanza di monete non è entrato, e non ha visitato la locanda.
 	 */
 	public static final String LOCANDA_VISITATA = "LOCANDA_VISITATA";
+	/**
+	 * Quante volte il gruppo ha superato la porta della locanda.
+	 */
+	public static final String LOCANDA_VISITE = "LOCANDA_VISITE";
 
 	/**
 	 * Nome, identificativo, recensione e dialogo pescati dal pool di
@@ -199,6 +203,8 @@ public class Locanda extends LocazioneBase {
 			BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
 			stato = StatoInLocanda.ENTRATO;
 			getModelloDati().aggiungiProprieta(LOCANDA_VISITATA, LocazioneMD.AFFERMATIVO);
+			String visite = getModelloDati().ottieniProprieta(LOCANDA_VISITE);
+			getModelloDati().aggiungiProprieta(LOCANDA_VISITE, String.valueOf(visite == null ? 1 : Integer.parseInt(visite) + 1));
 			return Stato.IN_LOCAZIONE;
 
 		case ENTRATO:

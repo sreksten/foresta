@@ -512,7 +512,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 * controlli delle missioni, le cui notifiche comparirebbero già durante l'intermezzo.
 	 */
 	private Esito entraInStatoInizioGioco() {
-		return avviaProssimoIntermezzo(MomentoIntermezzo.INIZIO_GIOCO, Stato.INZIO_LOCAZIONE);
+		return avviaIntermezzi(MomentoIntermezzo.INIZIO_GIOCO, Stato.INZIO_LOCAZIONE);
 	}
 
 	private Esito entraInStatoInizioLocazione() {
@@ -527,7 +527,16 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 		// Missioni ed eventi del tempo sono aggiornati e la partita non è persa: è il
 		// momento degli intermezzi, prima che la locazione venga costruita
-		return avviaProssimoIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, Stato.PREPARAZIONE_LOCAZIONE);
+		return avviaIntermezzi(MomentoIntermezzo.INIZIO_LOCAZIONE, Stato.PREPARAZIONE_LOCAZIONE);
+	}
+
+	/**
+	 * Comincia un nuovo momento degli intermezzi (vedi RegistroIntermezzi.nuovoMomento) e
+	 * mostra il primo che deve scattare; se non ce ne sono prosegue con statoDopo.
+	 */
+	private Esito avviaIntermezzi(MomentoIntermezzo momento, Stato statoDopo) {
+		RegistroIntermezzi.nuovoMomento();
+		return avviaProssimoIntermezzo(momento, statoDopo);
 	}
 
 	/**
@@ -672,7 +681,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			// di scattare; locazioneCorrente.impostaAzioni(...) viene chiamato solo dopo,
 			// da entraInStatoIngressoNegozio()
 			comandoNegozioInAttesa = comando;
-			return avviaProssimoIntermezzo(momentoIngressoNegozio, Stato.INGRESSO_NEGOZIO);
+			return avviaIntermezzi(momentoIngressoNegozio, Stato.INGRESSO_NEGOZIO);
 		}
 		statoPrecedente = stato;
 		/*
@@ -948,7 +957,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 		// Missioni ed eventuale locazione azzerate: è il momento degli intermezzi, prima
 		// del controllo di game over e del resto della coda di fine locazione
-		return avviaProssimoIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA, Stato.FINE_LOCAZIONE_2);
+		return avviaIntermezzi(MomentoIntermezzo.LOCAZIONE_COMPLETATA, Stato.FINE_LOCAZIONE_2);
 	}
 
 	private Esito entraInStatoFineLocazione2() {
@@ -1015,7 +1024,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				ModelloDati.getIstanza().getIntermezziMD().incrementaNumeroAccampamenti();
 				// Poi si dà modo al suo intermezzo di scattare; la notte passa solo dopo,
 				// in entraInStatoAccampamento()
-				return avviaProssimoIntermezzo(MomentoIntermezzo.ACCAMPAMENTO, Stato.ACCAMPAMENTO);
+				return avviaIntermezzi(MomentoIntermezzo.ACCAMPAMENTO, Stato.ACCAMPAMENTO);
 			case POZIONE_SALUTE:
 				statoPrecedente = Stato.ATTESA_POZIONE_SALUTE;
 				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;

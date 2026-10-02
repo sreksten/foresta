@@ -36,6 +36,14 @@ public interface Intermezzo {
 	List<PaginaIntermezzo> getPagine();
 
 	/**
+	 * Un intermezzo di ripiego scatta solo se in quel momento non scatta, e non è già scattato,
+	 * nessun altro intermezzo: una scenetta che non deve sommarsi a un benvenuto o a una storia.
+	 */
+	default boolean isDiRipiego() {
+		return false;
+	}
+
+	/**
 	 * Dopo quanti secondi, al minimo, una pagina avanza da sola; 0 perché avanzi solo al click.
 	 */
 	default int getSecondiPerPagina() {
