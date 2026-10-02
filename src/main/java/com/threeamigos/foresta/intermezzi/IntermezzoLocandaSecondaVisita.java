@@ -30,7 +30,7 @@ public class IntermezzoLocandaSecondaVisita implements Intermezzo {
 	private static final double X_TARGET_CAPO = 0.55;
 	private static final double Y_PERSONAGGI = 0.6;
 	private static final double DISTANZA_FRA_PERSONAGGI = 0.08;
-	private static final double RITARDO_FRA_PARTENZE = 1.0;
+	private static final double RITARDO_FRA_PARTENZE = 0.4;
 	private static final double SECONDI_CAMMINATA = 2.0;
 	private static final double SECONDI_VOLTATA_CAPO = 0.1;
 	private static final double MARGINE_DOPO_CAMMINATA = 0.3;

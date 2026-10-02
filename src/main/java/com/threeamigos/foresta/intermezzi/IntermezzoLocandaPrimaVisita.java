@@ -4,12 +4,16 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Intermezzo per i checkpoint {@link MomentoIntermezzo#INIZIO_LOCAZIONE} (locanda nel
@@ -27,6 +31,9 @@ import java.util.List;
  * di stringhe senza vincoli di formato.
  */
 public class IntermezzoLocandaPrimaVisita implements Intermezzo {
+
+	private static final String REGEX_PER_SPEZZARE_FRASI = "(?<=[.!?][\"“”])(?=(?:[^\"“”]*[\"“”][^\"“”]*[\"“”])*[^\"“”]*$)"
+			+ "|(?<=[.!?])(?![.!?])(?![\"“”])(?=(?:[^\"“”]*[\"“”][^\"“”]*[\"“”])*[^\"“”]*$)";
 
 	private static final double X_PARTENZA_PERSONAGGI = -0.15;
 	private static final double X_TARGET_BASE = 0.5;
@@ -103,11 +110,25 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 					.poi(Tappa.inSecondi(SECONDI_CAMMINATA).verso(targetX, Y_BARDO)));
 		}
 
-		double tempoFineCammino = (personaggiVivi.size() - 1) * RITARDO_FRA_PARTENZE + SECONDI_CAMMINATA;
-		pagina.conBattuta(BattutaIntermezzo.di("bardo", "C'era una volta...").daSecondo(tempoFineCammino + MARGINE_DOPO_CAMMINATA))
-				.conBattuta(BattutaIntermezzo.di("locandiere", "Smettila con queste tue storielle!"))
-				.conBattuta(BattutaIntermezzo.di("locandiere", dialogo).conLarghezza(0.8)
-						.centrataOrizzontalmente());
+		//double tempoFineCammino = (personaggiVivi.size() - 1) * RITARDO_FRA_PARTENZE + SECONDI_CAMMINATA;
+		//pagina.conBattuta(BattutaIntermezzo.di("bardo", "C'era una volta...").daSecondo(tempoFineCammino + MARGINE_DOPO_CAMMINATA));
+
+		String fiaba = ProduttoreDiTestiCasuale.fiaba().get(0);
+		Collection<String> frasiFiaba = Arrays.stream(fiaba.split(REGEX_PER_SPEZZARE_FRASI))
+				.map(String::trim)
+				.collect(Collectors.toList());
+
+		frasiFiaba.forEach(frase -> pagina.conBattuta(BattutaIntermezzo.di("bardo", frase).centrataOrizzontalmente()));
+
+		pagina.conBattuta(BattutaIntermezzo.di("locandiere", "Smettila con queste tue storielle!"));
+
+		Collection<String> frasiLocandiere = Arrays.stream(dialogo.split(REGEX_PER_SPEZZARE_FRASI))
+				.map(String::trim)
+				.collect(Collectors.toList());
+
+		frasiLocandiere.forEach(frase -> pagina.conBattuta(BattutaIntermezzo.di("locandiere", frase)));
+
+		//pagina.conBattuta(BattutaIntermezzo.di("locandiere", dialogo).conLarghezza(0.8).centrataOrizzontalmente());
 
 		// Aggiunto per ultimo così resta sopra a tutto il resto della scena
 		pagina.conElemento(ElementoIntermezzo.di("foreground", ImmagineIntermezzo.risorsa("fondi/ForegroundLocanda.gif"), X_FOREGROUND, Y_FOREGROUND));

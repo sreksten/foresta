@@ -51,7 +51,7 @@ import java.util.Locale;
 public final class AnteprimaIntermezzo {
 
 	private static final String[] argomentiAlchimista = {
-			"INTERMEZZO_ACCAMPAMENTO", "--classe", "ELFA", "--compagni", "GUERRIERO,BARDO,MAGO,LADRA",
+			"INTERMEZZO_LOCANDA_PRIMA_VISITA", "--classe", "ELFA", "--compagni", "GUERRIERO,BARDO,MAGO,LADRA",
 			"--nome", "Beppina"
 	};
 
