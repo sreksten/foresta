@@ -131,6 +131,8 @@ public interface SpriteInterface {
 
 Sottoclassi concrete: `SpriteATempo` (sprite generico con durata fissa, il più usato — es. variazioni di livello/salute/magia nel riquadro gruppo), `SpriteEffetto` (per effetti di stato sul personaggio), `SpriteFumetto` (fumetti di testo a tempo, con coordinate relative a un personaggio via `CoordinateFumetto`), `SpriteInDissolvenza` (fade puro), `SpriteAnnuncioGlobale` (banner centrato a schermo intero, per notifiche importanti tipo aumento di livello/fine gioco).
 
+`SpriteRivelazioneArtefatto` mostra un artefatto o un ingrediente trovato in un cofano, o l'artefatto di un tempio (`NotificaArtefattoTrovato`, pubblicata da `Cofano` e dall'`Automa` alla raccolta): un cerchio luminoso con l'oggetto, raggi che girano in senso antiorario allungandosi e ritraendosi, scintille e, sotto, un pannello scuro con nome, descrizione ed effetti. È centrata sul riquadro della locazione, sopra il riquadro del testo che resta leggibile (raggi ritagliati sull'area di mappa e locazione, pannello tenuto dentro), e all'uscita vola verso il riquadro del gruppo. Quanto è vistoso dipende dallo *splendore* (0-3: effetti, rarità, livelli sopra quello del mondo); i raggi prendono i colori degli elementi degli incantamenti. Non blocca il gioco; ha una coda propria (`codaRivelazioni`/`rivelazioneAttiva`), si disegna solo in `STATO_IN_GIOCO` e con altre in coda accorcia la sosta.
+
 `SpriteFumetto` e `SpriteAnnuncioGlobale` hanno inoltre una **coda dedicata con un solo elemento attivo alla volta** (`codaFumetti`/`fumettoAttivo`, `codaAnnunciGlobali`/`annuncioGlobaleAttivo` in `DisplayableCanvas`): se arrivano più notifiche ravvicinate, vengono mostrate in sequenza invece che sovrapposte.
 
 ## 6. Font bitmap custom "Doomdark"

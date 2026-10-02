@@ -35,6 +35,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(NotificaApprovazioneStoccaggioArtefatto.class, this::onEventoApprovazioneStoccaggioArtefatto);
         BusEventi.iscriviti(NotificaApprovazioneVenditaArtefatto.class, this::onEventoApprovazioneVenditaArtefatto);
         BusEventi.iscriviti(NotificaAumentoLivelloMondo.class, this::onEventoAumentoLivelloMondo);
+        BusEventi.iscriviti(NotificaArtefattoTrovato.class, this::onEventoArtefattoTrovato);
         BusEventi.iscriviti(NotificaAumentoLivelloPersonaggio.class, this::onEventoAumentoLivelloPersonaggio);
         // EventoBase è classe astratta
         BusEventi.iscriviti(InternoAggiornamentoComandiDisponibili.class, this::onEventoComandiDisponibili);
@@ -150,6 +151,10 @@ public class SnifferBusEventi {
 
     private void onEventoApprovazioneVenditaArtefatto(NotificaApprovazioneVenditaArtefatto evento) {
         Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamentoArtefatto().getUuid());
+    }
+
+    private void onEventoArtefattoTrovato(NotificaArtefattoTrovato evento) {
+        Logger.log(headerEvento(evento) + "Trovato " + evento.getArtefatto().getNomeCompleto());
     }
 
     private void onEventoAumentoLivelloMondo(NotificaAumentoLivelloMondo evento) {

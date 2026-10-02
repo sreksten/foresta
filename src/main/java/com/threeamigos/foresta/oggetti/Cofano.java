@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
@@ -81,6 +82,7 @@ public class Cofano extends OggettoBase implements Oggetto {
 			}
 			if (trovato != null) {
 				gruppo.addArtefatto(trovato);
+				BusEventi.pubblica(new NotificaArtefattoTrovato(trovato, Statistiche.getLivello()));
 				sb.append("trova ").append(trovato.getNomeCompleto()).append(": finisce nell'inventario del gruppo.");
 			} else if (tipo == 0) {
 				sb.append("non trova nulla.");

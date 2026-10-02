@@ -133,6 +133,10 @@ public enum TipoEvento {
      */
     NOTIFICA_AUMENTO_LIVELLO_MONDO,
     /**
+     * Il gruppo ha trovato un artefatto in un cofano o in un tempio
+     */
+    NOTIFICA_ARTEFATTO_TROVATO,
+    /**
      * Un Personaggio aumenta di livello
      */
     NOTIFICA_AUMENTO_LIVELLO_PERSONAGGIO,

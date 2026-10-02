@@ -22,6 +22,7 @@ import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.*;
@@ -42,6 +43,12 @@ import java.util.function.Supplier;
 //  - hai visto che luna stasera? non farti prendere dal panico.
 //  - una volta ho sentito di uno che è stato trasformato in scarafaggio/asino d'oro - perdi troppo tempo ad ascoltare le storie nelle locande.
 // TODO: come ci sono locande sparse per la foresta, forse anche qualche negozio di armaiolo, alchimista, venditore di pergamene e incantatore male non farebbero
+// TODO: immagini degli artefatti che mancano per la rivelazione (SpriteRivelazioneArtefatto), da mettere in img/oggetti:
+//  - armi: Mazza, Ascia, Lancia, BastoneMagico;
+//  - libro magico: LibroMagico;
+//  - protezioni: Veste;
+//  - accessori: Talismano, Ninnolo;
+//  - ingredienti magici (oggi usano l'icona della pergamena): Pergamena, Gemma, Monile, Gingillo, Sigillo.
 
 // Bug noti ancora da correggere (dall'indagine sul codice): si spuntano togliendo la riga quando sono corretti.
 //
@@ -937,6 +944,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 						BusEventi.pubblica(new NotificaRaccoltaOggetti());
 						BusEventi.pubblica(new InternoOggettoRaccolto(oggetto.getClasse(), oggetto.getQuantita(),
 								oggetto.getArtefatto().orElse(null), locazioneCorrente.isCustodita()));
+						// L'artefatto di un tempio (quello del registro) si mostra con la rivelazione, come quelli dei cofani
+						if (oggetto.getClasse() == ClassiOggetto.ARTEFATTO) {
+							oggetto.getArtefatto().ifPresent(a -> BusEventi.pubblica(new NotificaArtefattoTrovato(a, Statistiche.getLivello())));
+						}
 						BusEventi.pubblica(new InternoMessaggio("Oggetto raccolto."));
 						locazioneCorrente.rimuoviOggetto();
 					}

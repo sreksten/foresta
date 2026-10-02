@@ -90,6 +90,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final List<SpriteAnnuncioGlobale> annunciGlobaliRimandati = new ArrayList<>();
 	private SpriteAnnuncioGlobale annuncioGlobaleAttivo;
 	private final List<SpriteFumetto> codaFumetti = new ArrayList<>();
+	// Gli artefatti trovati nei cofani e nei templi, mostrati uno alla volta (vedi SpriteRivelazioneArtefatto)
+	private final List<SpriteRivelazioneArtefatto> codaRivelazioni = new ArrayList<>();
+	private SpriteRivelazioneArtefatto rivelazioneAttiva;
 	private SpriteFumetto fumettoAttivo;
 	// Rileva il fronte "appena tornata inattiva" per notificare l'Automa con InternoUiInattiva
 	private boolean uiOccupata;
@@ -293,6 +296,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private void registratiAEventi() {
 		// Eventi globali
 		BusEventi.iscriviti(NotificaAumentoLivelloMondo.class, this::gestisciEventoAumentoLivelloMondo);
+		BusEventi.iscriviti(NotificaArtefattoTrovato.class, this::gestisciEventoArtefattoTrovato);
 		// Eventi interni del motore grafico - i sottopannelli potrebbero richiedere la creazione di sprite da gestire qui
 		BusEventi.iscriviti(InternoCreazioneSpriteAnnuncioGlobale.class, this::gestisciEventoCreazioneSpriteAnnuncioGlobale);
 		BusEventi.iscriviti(InternoCreazioneSpriteATempo.class, this::gestisciEventoCreazioneSpriteATempo);
@@ -540,6 +544,39 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	/**
+	 * La rivelazione dell'artefatto trovato è centrata sul riquadro della locazione e resta sopra il riquadro del
+	 * testo, che resta leggibile; all'uscita vola verso il riquadro del gruppo.
+	 */
+	private void gestisciEventoArtefattoTrovato(NotificaArtefattoTrovato evento) {
+		Rectangle testo = mappaCoordinateElementiGrafici.get(riquadroTesto);
+		Rectangle gruppo = mappaCoordinateElementiGrafici.get(riquadroGruppo);
+		Rectangle area = new Rectangle(testo.x, ImageCache.SPACING, testo.width, testo.y - 2 * ImageCache.SPACING);
+		Point destinazione = new Point((int) gruppo.getCenterX(), (int) gruppo.getCenterY());
+		codaRivelazioni.add(new SpriteRivelazioneArtefatto(evento.getArtefatto(), evento.getLivelloMondo(), area,
+				mappaCoordinateElementiGrafici.get(riquadroLocazione), destinazione));
+		BusEventi.pubblica(new InternoUiOccupata());
+	}
+
+	/**
+	 * Solo nella schermata di gioco: altrove la rivelazione aspetta, perché il suo tempo avanza solo quando si disegna.
+	 */
+	private void disegnaRivelazione(Graphics2D graphics) {
+		if (rivelazioneAttiva == null && !codaRivelazioni.isEmpty()) {
+			rivelazioneAttiva = codaRivelazioni.remove(0);
+		}
+		if (rivelazioneAttiva == null) {
+			return;
+		}
+		if (!codaRivelazioni.isEmpty()) {
+			rivelazioneAttiva.accelera();
+		}
+		rivelazioneAttiva.anima(graphics);
+		if (!rivelazioneAttiva.isAttivo()) {
+			rivelazioneAttiva = null;
+		}
+	}
+
+	/**
 	 * A differenza degli altri sprite, ancorati a coordinate di riquadri validi solo in
 	 * STATO_IN_GIOCO, l'annuncio globale è centrato sull'intero schermo e va quindi disegnato
 	 * sopra il contenuto corrente indipendentemente dallo stato del canvas.
@@ -580,6 +617,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			riquadroIntroOutro.scrivi(graphics, true);
 		} else if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO) {
 			inGioco(graphics);
+			disegnaRivelazione(graphics);
 			disegnaFumetto(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_MAPPA) {
 			mappaATuttoSchermo.disegnaMappaATuttoSchermo(graphics);
@@ -624,7 +662,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * intermezzo in attesa (se ce n'è uno).
 	 */
 	private void segnalaSeUiDiventataInattiva() {
-		boolean occupataOra = !sprites.isEmpty() || annuncioGlobaleAttivo != null || !codaAnnunciGlobali.isEmpty();
+		boolean occupataOra = !sprites.isEmpty() || annuncioGlobaleAttivo != null || !codaAnnunciGlobali.isEmpty()
+				|| rivelazioneAttiva != null || !codaRivelazioni.isEmpty();
 		if (uiOccupata && !occupataOra) {
 			BusEventi.pubblica(new InternoUiInattiva());
 		}
