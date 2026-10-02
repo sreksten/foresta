@@ -43,6 +43,8 @@ import java.util.function.Supplier;
 //  - hai visto che luna stasera? non farti prendere dal panico.
 //  - una volta ho sentito di uno che è stato trasformato in scarafaggio/asino d'oro - perdi troppo tempo ad ascoltare le storie nelle locande.
 // TODO: come ci sono locande sparse per la foresta, forse anche qualche negozio di armaiolo, alchimista, venditore di pergamene e incantatore male non farebbero
+// TODO: ricontrollare l'economia del gioco partendo da economia.md (entrate, uscite, modello per livello e proposte:
+//  bottino dei nemici, preziosi che valgono col livello, missioni pagate col livello, prezzi degli ingredienti)
 // TODO: immagini degli artefatti che mancano per la rivelazione (SpriteRivelazioneArtefatto), da mettere in img/oggetti:
 //  - armi: Mazza, Ascia, Lancia, BastoneMagico;
 //  - libro magico: LibroMagico;
