@@ -2,6 +2,7 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.ArmaNaturale;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
@@ -122,7 +123,7 @@ class PersonaggioEquipaggiamentoTest {
         // L'Elfo sa usare la lancia e combatte con due armi, ma la lancia resta nella mano principale
         Personaggio elfo = new Elfo("Pippo", 1);
         elfo.addArtefatto(artefatto(TipoArtefatto.SPADA, 1));
-        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.SLOT_OCCUPATO, elfo, artefatto(TipoArtefatto.LANCIA, 1));
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.ARMA_NON_DA_MANO_SECONDARIA, elfo, artefatto(TipoArtefatto.LANCIA, 1));
     }
 
     @Test
@@ -130,7 +131,7 @@ class PersonaggioEquipaggiamentoTest {
         Personaggio ladro = new Ladro("Pippo", 1);
         ladro.addArtefatto(artefatto(TipoArtefatto.SPADA, 1));
         ladro.addArtefatto(artefatto(TipoArtefatto.MAZZA, 1));
-        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.SLOT_OCCUPATO, ladro, artefatto(TipoArtefatto.ASCIA, 1));
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.MANO_SECONDARIA_OCCUPATA, ladro, artefatto(TipoArtefatto.ASCIA, 1));
     }
 
     @Test
@@ -230,7 +231,7 @@ class PersonaggioEquipaggiamentoTest {
     }
 
     private static void assertRifiuto(TipoMotivoRifiutoEquipaggiamento atteso, Personaggio personaggio, Artefatto artefatto) {
-        assertEquals(Optional.of(atteso), personaggio.puoEquipaggiare(artefatto));
+        assertEquals(Optional.of(atteso), personaggio.puoEquipaggiare(artefatto).map(RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento::getMotivo));
     }
 
     private static Artefatto artefatto(TipoArtefatto tipo, int livello) {

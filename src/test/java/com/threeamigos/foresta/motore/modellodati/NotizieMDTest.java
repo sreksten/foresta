@@ -32,6 +32,7 @@ class NotizieMDTest {
         // Then
         List<MessaggioMD> messaggi = riletto.getUltimiMessaggi();
         assertEquals(2, messaggi.size());
+        assertEquals(originale.getUltimiMessaggi().get(0).getUuid(), messaggi.get(0).getUuid());
         assertEquals("Una frase | con un separatore", messaggi.get(0).getTesto());
         assertFalse(messaggi.get(0).isParagrafo());
         assertEquals("Un paragrafo", messaggi.get(1).getTesto());
@@ -41,9 +42,12 @@ class NotizieMDTest {
     }
 
     @Test
-    void rileggeIMessaggiDeiSalvataggiSenzaTipo() throws IOException {
-        // Given: il formato precedente, con il solo testo di ogni messaggio
-        String salvataggio = "2\nPrimo messaggio\nF\n0\n";
+    void rileggeUnSalvataggioScrittoAMano() throws IOException {
+        // Given: ogni messaggio è "uuid|tipo|testo"
+        String salvataggio = "2\n"
+                + "uuid-1|P|Primo messaggio\n"
+                + "uuid-2|F|F|P\n"
+                + "0\n";
 
         // When
         NotizieMD riletto = new NotizieMD();
@@ -51,10 +55,14 @@ class NotizieMDTest {
 
         // Then
         List<MessaggioMD> messaggi = riletto.getUltimiMessaggi();
+        assertEquals(2, messaggi.size());
+        assertEquals("uuid-1", messaggi.get(0).getUuid());
+        assertTrue(messaggi.get(0).isParagrafo());
         assertEquals("Primo messaggio", messaggi.get(0).getTesto());
-        assertFalse(messaggi.get(0).isParagrafo());
-        // Una riga che non ha la forma "tipo|testo" resta testo, anche se inizia per F
-        assertEquals("F", messaggi.get(1).getTesto());
+        assertEquals("uuid-2", messaggi.get(1).getUuid());
         assertFalse(messaggi.get(1).isParagrafo());
+        // Il testo è tutto ciò che segue il secondo separatore, anche se somiglia a un tipo
+        assertEquals("F|P", messaggi.get(1).getTesto());
+        assertTrue(riletto.getUltimeNotizie().isEmpty());
     }
 }

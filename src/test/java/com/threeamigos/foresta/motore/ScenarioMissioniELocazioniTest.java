@@ -52,28 +52,32 @@ class ScenarioMissioniELocazioniTest {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(21)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
 					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
-			Missione principale = RegistroMissioni.getMissioniNonCompletate().stream()
-					.filter(m -> m instanceof SconfiggiIlMinotauroGigante).findFirst().orElseThrow(AssertionError::new);
-			principale.aggiungiMissione(new MissioneDiProvaSecondariaDue());
-
-			principale.getMissioniSecondarie().get(0).completaMissione();
+			// Le missioni dei boss sono sotto-missioni del Drago, non missioni di primo livello
+			assertFalse(RegistroMissioni.getMissioniNonCompletate().stream().anyMatch(m -> m instanceof SconfiggiIlMinotauroGigante),
+					"il Minotauro Gigante non e' una missione di primo livello");
+			trovaMinotauroGigante().completaMissione();
 
 			assertEquals(1, RegistroMissioni.getMissioniCompletate().stream()
-					.filter(m -> m instanceof MissioneDiProvaSecondariaDue).count(), "compare una volta tra le completate");
+					.filter(m -> m instanceof SconfiggiIlMinotauroGigante).count(), "compare una volta tra le completate");
 			GestoreSalvataggi.salva(Comando.NUMERO_3);
 			assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_3));
 			assertEquals(1, RegistroMissioni.getMissioniCompletate().stream()
-					.filter(m -> m instanceof MissioneDiProvaSecondariaDue).count(), "anche dopo un caricamento");
+					.filter(m -> m instanceof SconfiggiIlMinotauroGigante).count(), "anche dopo un caricamento");
 
-			principale = RegistroMissioni.getMissioniNonCompletate().stream()
-					.filter(m -> m instanceof SconfiggiIlMinotauroGigante).findFirst().orElseThrow(AssertionError::new);
-			principale.completaMissione();
+			SconfiggiIlDrago drago = RegistroMissioni.getMissionePrincipale();
+			drago.completaMissione();
 
-			assertTrue(RegistroMissioni.getMissioniCompletate().contains(principale));
-			assertFalse(RegistroMissioni.getMissioniCompletate().stream().anyMatch(m -> m instanceof MissioneDiProvaSecondariaDue),
-					"completata la principale, la sotto-missione compare solo sotto di lei");
-			assertTrue(principale.getMissioniSecondarie().stream().anyMatch(m -> m instanceof MissioneDiProvaSecondariaDue));
+			assertTrue(RegistroMissioni.getMissioniCompletate().contains(drago));
+			assertFalse(RegistroMissioni.getMissioniCompletate().stream().anyMatch(m -> m instanceof SconfiggiIlMinotauroGigante),
+					"completato il Drago, il Minotauro Gigante compare solo sotto di lui");
+			assertTrue(drago.getMissioniSecondarie().stream().anyMatch(m -> m instanceof SconfiggiIlMinotauroGigante));
 		}
+	}
+
+	private static Missione trovaMinotauroGigante() {
+		return RegistroMissioni.getMissionePrincipale().getMissioniSecondarie().stream()
+				.filter(m -> m instanceof SconfiggiIlMinotauroGigante).findFirst()
+				.orElseThrow(() -> new AssertionError("il Minotauro Gigante deve essere una sotto-missione del Drago"));
 	}
 
 	@Test

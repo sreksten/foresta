@@ -1001,6 +1001,12 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				richiediAperturaInventarioGruppo();
 				return Esito.CONTINUA_CON_INGRESSO;
 			case ACCAMPAMENTO:
+				// L'icona viene offerta solo se ci si può accampare: un comando arrivato
+				// comunque si rifiuta, o l'intermezzo dell'accampamento non avrebbe chi mostrare
+				if (!isAccampamentoPossibile()) {
+					comandoNonValido(comando);
+					return Esito.FERMATI;
+				}
 				// Il contatore incrementa qui, una sola volta per accampamento, e non
 				// dentro IntermezzoAccampamento: lì verrebbe ricontrollato più volte in
 				// cascata (vedi gestisciComandoInStatoIntermezzo) finendo per scattare più
@@ -1671,6 +1677,22 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	/**
+	 * Ci si accampa solo di notte, con almeno un altro personaggio vivo da mettere di
+	 * guardia, e non in città, castelli, locande o paludi.
+	 */
+	private boolean isAccampamentoPossibile() {
+		if (gruppo.getNumeroPersonaggiVivi() <= 1 || (LineaTemporale.getOra() <= 20 && LineaTemporale.getOra() >= 6)) {
+			return false;
+		}
+		ClassiLocazione classeLocazione = gruppo.getClasseLocazioneCorrente();
+		// Nei castelli non si riposa (getTipoRiposo lancia un'eccezione): ci si resta dopo una fuga
+		return classeLocazione.getTipoLocazione() != TipoLocazione.CITTA &&
+				classeLocazione.getTipoLocazione() != TipoLocazione.CASTELLO &&
+				classeLocazione != ClassiLocazione.LOCANDA &&
+				classeLocazione != ClassiLocazione.PALUDE;
+	}
+
+	/**
 	 * I possibili comandi che il giocatore può dare quando la locazione è completata e sta andando via.
 	 */
 	private Collection<Comando> getComandiPossibiliInStatoAttesaDirezione() {
@@ -1688,15 +1710,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			comandiPossibili.add(Comando.OVEST);
 		}
 		comandiPossibili.add(Comando.MAPPA);
-		if (gruppo.getNumeroPersonaggiVivi() > 1 && (LineaTemporale.getOra() > 20 || LineaTemporale.getOra() < 6)) {
-			ClassiLocazione classeLocazione = gruppo.getClasseLocazioneCorrente();
-			// Nei castelli non si riposa (getTipoRiposo lancia un'eccezione): ci si resta dopo una fuga
-			if (classeLocazione.getTipoLocazione() != TipoLocazione.CITTA &&
-					classeLocazione.getTipoLocazione() != TipoLocazione.CASTELLO &&
-					classeLocazione != ClassiLocazione.LOCANDA &&
-					classeLocazione != ClassiLocazione.PALUDE) {
-				comandiPossibili.add(Comando.ACCAMPAMENTO);
-			}
+		if (isAccampamentoPossibile()) {
+			comandiPossibili.add(Comando.ACCAMPAMENTO);
 		}
 		if (gruppo.getPozioniSalute() > 0) {
 			comandiPossibili.add(Comando.POZIONE_SALUTE);

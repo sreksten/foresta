@@ -77,14 +77,41 @@ class ScenarioCorrezioniTest {
 			prima.comando(Comando.ESCI_DA_CITTA);
 			// Ci si accampa nel bosco, non in citta': il gruppo va su una casella di bosco prima del salvataggio
 			prima.gruppo().setCoordinate(unaCasellaDiBosco());
+			// Ci si accampa solo di notte e con qualcuno da mettere di guardia
+			prima.gruppo().aggiungiPersonaggio(new Guerriero("Sentinella", 1));
+			while (LineaTemporale.getOra() <= 20) {
+				LineaTemporale.aggiungiOre(1);
+			}
 			prima.comando(Comando.FLOPPY).comando(Comando.NUMERO_1);
 			salvataggi = prima.salvataggi();
 		}
 		try (PartitaDiTest dopo = PartitaDiTest.nuovaConSalvataggi(8, salvataggi)) {
 			dopo.comando(Comando.FLOPPY).comando(Comando.NUMERO_1);
 			dopo.assertStato(Stato.SCELTA_DIREZIONE);
+			dopo.assertComandoDisponibile(Comando.ACCAMPAMENTO);
 			dopo.comando(Comando.ACCAMPAMENTO);
 			dopo.assertStato(Stato.SCELTA_DIREZIONE);
+		}
+	}
+
+	@Test
+	void daSoliNonCiSiAccampa() {
+		try (PartitaDiTest partita = PartitaDiTest.nuova(7)) {
+			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.LADRO,
+					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+			partita.comando(Comando.ESCI_DA_CITTA);
+			partita.gruppo().setCoordinate(unaCasellaDiBosco());
+			while (LineaTemporale.getOra() <= 20) {
+				LineaTemporale.aggiungiOre(1);
+			}
+			partita.assertStato(Stato.SCELTA_DIREZIONE);
+
+			// Nessuno da mettere di guardia: il comando, anche se arrivasse, va rifiutato
+			AssertionError errore = assertThrows(AssertionError.class, () -> partita.comando(Comando.ACCAMPAMENTO));
+			assertTrue(errore.getMessage().contains("Comando non valido: " + Comando.ACCAMPAMENTO), errore.getMessage());
+			partita.assertStato(Stato.SCELTA_DIREZIONE);
+			assertEquals(0, ModelloDati.getIstanza().getIntermezziMD().getNumeroAccampamenti(),
+					"un accampamento rifiutato non va contato");
 		}
 	}
 
@@ -221,7 +248,8 @@ class ScenarioCorrezioniTest {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(16)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
 					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
-			while (partita.gruppo().getNumeroPersonaggi() < Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE) {
+			// Pieno vuol dire anche gli slot dei personaggi temporanei, quelli che un aiuto occuperebbe
+			while (partita.gruppo().getNumeroPersonaggi() < Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE) {
 				partita.gruppo().aggiungiPersonaggio(new Guerriero("Compagno", 1));
 			}
 			com.threeamigos.foresta.personaggi.Centauro centauro = new com.threeamigos.foresta.personaggi.Centauro(1);
