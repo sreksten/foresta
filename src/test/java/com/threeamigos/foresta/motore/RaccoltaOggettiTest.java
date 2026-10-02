@@ -32,6 +32,7 @@ class RaccoltaOggettiTest {
 			assertEquals(moneta.getClasse(), raccolto.getClasse());
 			assertEquals(moneta.getQuantita(), raccolto.getQuantita());
 			assertFalse(raccolto.isCustodito());
+			assertFalse(raccolto.getArtefatto().isPresent(), "una moneta non e' un artefatto");
 		}
 	}
 

@@ -23,6 +23,7 @@ import java.util.List;
 public class DisplayableCanvasIntroOutro implements Finestra {
 
 	private static final int CHAR_SPACING = 1;
+	private static final int TROFEI_PER_PAGINA = 10;
 
 	private final int width;
 	private final int height;
@@ -58,9 +59,13 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		sequenza = Misc.STORIA.length + 1;
 	}
 
-	/** Loghi, una pagina per ogni paragrafo della storia, classifica, trofei. */
+	/** Loghi, una pagina per ogni paragrafo della storia, classifica, le pagine dei trofei. */
 	int lunghezzaIntro() {
-		return Misc.STORIA.length + 3;
+		return Misc.STORIA.length + 2 + numeroPagineTrofei();
+	}
+
+	private static int numeroPagineTrofei() {
+		return (TipoTrofeo.values().length + TROFEI_PER_PAGINA - 1) / TROFEI_PER_PAGINA;
 	}
 
 	void incrementaSequenza(int lunghezzaMassima) {
@@ -130,8 +135,8 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 			// Dopo l'ultima pagina della storia, la classifica
 			hiscore(graphics);
 		} else {
-			// I trofei chiudono la sequenza
-			trofei(graphics);
+			// I trofei chiudono la sequenza, una pagina dopo l'altra
+			trofei(graphics, sequenza - Misc.STORIA.length - 2);
 		}
 	}
 
@@ -236,11 +241,13 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	}
 
 	/**
-	 * Il titolo nel font grande e sotto l'elenco dei trofei: il nome nel font medio, bianco se
-	 * vinto e grigio scuro se mancante, e sotto la descrizione nel font piccolo, grigio medio
-	 * se vinto e grigio scuro se mancante.
+	 * Una pagina dei trofei, raggruppati per tipologia: il titolo nel font grande e sotto
+	 * l'elenco, con il nome nel font medio, bianco se vinto e grigio scuro se mancante, e
+	 * sotto la descrizione nel font piccolo, grigio medio se vinto e grigio scuro se mancante.
+	 *
+	 * @param pagina da 0
 	 */
-	void trofei(Graphics2D graphics) {
+	void trofei(Graphics2D graphics, int pagina) {
 		disegnaOmbraDelDrago(graphics);
 		disegnaStringaCentrataConACapoAutomatico(graphics, "trofei", 20);
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
@@ -248,7 +255,9 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		int locXOffset = xOffset + 9;
 		int larghezzaMassima = width - 2 * locXOffset;
 		int locYOffset = 64;
-		for (TipoTrofeo trofeo : TipoTrofeo.values()) {
+		List<TipoTrofeo> trofei = TipoTrofeo.perTipologia();
+		int primo = pagina * TROFEI_PER_PAGINA;
+		for (TipoTrofeo trofeo : trofei.subList(primo, Math.min(primo + TROFEI_PER_PAGINA, trofei.size()))) {
 			boolean vinto = RegistroTrofei.isVinto(trofeo);
 			Image doomdark = DoomdarkTextProducer.getImage(trofeo.getNome(), fontMedium,
 					vinto ? DoomdarkColorModel.Color.WHITE : DoomdarkColorModel.Color.DARK_GRAY);

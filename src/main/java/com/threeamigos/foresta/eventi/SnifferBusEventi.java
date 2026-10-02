@@ -75,6 +75,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(InternoAmiciziaStretta.class, this::onEventoAmiciziaStretta);
         BusEventi.iscriviti(InternoCorruzioneRiuscita.class, this::onEventoCorruzioneRiuscita);
         BusEventi.iscriviti(InternoOggettoRaccolto.class, this::onEventoOggettoRaccolto);
+        BusEventi.iscriviti(InternoMissioneCompletata.class, this::onEventoMissioneCompletata);
         BusEventi.iscriviti(ComandoAcquistoArtefatto.class, this::onEventoRichiestaAcquistoArtefatto);
         BusEventi.iscriviti(ComandoAcquistoConsumabile.class, this::onEventoRichiestaAcquistoConsumabile);
         BusEventi.iscriviti(InternoRichiestaAperturaFinestraCombattimento.class, this::onEventoRichiestaAperturaFinestraCombattimento);
@@ -314,6 +315,10 @@ public class SnifferBusEventi {
 
     private void onEventoCorruzioneRiuscita(InternoCorruzioneRiuscita evento) {
         Logger.log(headerEvento(evento) + "Corrotti: " + evento.getAvversari());
+    }
+
+    private void onEventoMissioneCompletata(InternoMissioneCompletata evento) {
+        Logger.log(headerEvento(evento) + "Missione completata: " + evento.getMissione().getNome());
     }
 
     private void onEventoOggettoRaccolto(InternoOggettoRaccolto evento) {

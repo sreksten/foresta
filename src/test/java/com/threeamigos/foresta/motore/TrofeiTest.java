@@ -4,6 +4,7 @@ import com.threeamigos.foresta.eventi.interni.InternoAmiciziaStretta;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.interni.InternoCorruzioneRiuscita;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
+import com.threeamigos.foresta.eventi.interni.InternoMissioneCompletata;
 import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
 import com.threeamigos.foresta.eventi.interni.InternoPreparazioneLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoTrofeoAcquisito;
@@ -17,6 +18,7 @@ import org.junit.jupiter.api.Test;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -255,12 +257,12 @@ class TrofeiTest {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			// 99 monete, gemme e corone tolte agli avversari, e altrettante trovate incustodite
 			for (int i = 0; i < 33; i++) {
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.MONETA, 3, true));
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.GEMMA, 3, true));
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.CORONA, 3, true));
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.MONETA, 3, false));
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.GEMMA, 3, false));
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.CORONA, 3, false));
+				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.MONETA, 3, null, true));
+				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.GEMMA, 3, null, true));
+				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.CORONA, 3, null, true));
+				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.MONETA, 3, null, false));
+				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.GEMMA, 3, null, false));
+				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.CORONA, 3, null, false));
 			}
 			partita.pubblica(new InternoFineLocazione());
 
@@ -269,9 +271,9 @@ class TrofeiTest {
 			assertEquals(99, RegistroTrofei.getProgresso(TipoTrofeo.ARSENIO_LUPIN));
 			assertFalse(RegistroTrofei.isVinto(TipoTrofeo.RAPINATORE));
 
-			partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.MONETA, 1, true));
-			partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.GEMMA, 1, true));
-			partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.CORONA, 1, true));
+			partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.MONETA, 1, null, true));
+			partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.GEMMA, 1, null, true));
+			partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.CORONA, 1, null, true));
 			partita.pubblica(new InternoFineLocazione());
 
 			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.RAPINATORE));
@@ -285,8 +287,8 @@ class TrofeiTest {
 	void lEspertoScassinatoreContaAncheICofaniIncustoditi() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			for (int i = 0; i < 50; i++) {
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.COFANO, 1, true));
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.COFANO, 1, false));
+				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.COFANO, 1, null, true));
+				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.COFANO, 1, null, false));
 			}
 			partita.pubblica(new InternoFineLocazione());
 
@@ -307,6 +309,53 @@ class TrofeiTest {
 
 			assertFalse(RegistroTrofei.isVinto(TipoTrofeo.UCCIDI_IL_DRAGO));
 			assertEquals(0, RegistroTrofei.getProgresso(TipoTrofeo.UCCIDI_IL_DRAGO));
+		}
+	}
+
+	@Test
+	void ilCacciatoreDiTaglieContaLeMissioniCompletate() {
+		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
+			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
+					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+			partita.eventi().ascolta(InternoMissioneCompletata.class);
+
+			RegistroMissioni.getMissionePrincipale().completaMissione();
+			assertEquals(1, partita.eventi().tutti(InternoMissioneCompletata.class).size(), "completare una missione pubblica l'evento");
+			for (int i = 0; i < 48; i++) {
+				partita.pubblica(new InternoMissioneCompletata(RegistroMissioni.getMissionePrincipale()));
+			}
+			partita.pubblica(new InternoFineLocazione());
+			assertEquals(49, RegistroTrofei.getProgresso(TipoTrofeo.CACCIATORE_DI_TAGLIE));
+			assertFalse(RegistroTrofei.isVinto(TipoTrofeo.CACCIATORE_DI_TAGLIE));
+
+			partita.pubblica(new InternoMissioneCompletata(RegistroMissioni.getMissionePrincipale()));
+			partita.pubblica(new InternoFineLocazione());
+
+			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.CACCIATORE_DI_TAGLIE));
+		}
+	}
+
+	@Test
+	void ilPerdigiornoSiVinceInsiemeAllUltimoDegliAltriTrofei() {
+		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
+			// Vinti in partite precedenti tutti tranne il Perdigiorno e l'Ammazzagoblin
+			partita.trofei().conVinti(Arrays.stream(TipoTrofeo.values())
+					.filter(t -> t != TipoTrofeo.PERDIGIORNO && t != TipoTrofeo.AMMAZZAGOBLIN)
+					.toArray(TipoTrofeo[]::new));
+			RegistroTrofei.impostaGestoreTrofei(partita.trofei());
+			partita.eventi().ascolta(InternoTrofeoAcquisito.class);
+			partita.pubblica(new InternoFineLocazione());
+			assertFalse(RegistroTrofei.isVinto(TipoTrofeo.PERDIGIORNO), "manca ancora l'Ammazzagoblin");
+
+			for (int i = 0; i < 100; i++) {
+				partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GOBLIN));
+			}
+			partita.pubblica(new InternoFineLocazione());
+
+			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.AMMAZZAGOBLIN));
+			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.PERDIGIORNO), "nella stessa fine locazione dell'ultimo trofeo");
+			assertEquals(Arrays.asList(TipoTrofeo.AMMAZZAGOBLIN, TipoTrofeo.PERDIGIORNO),
+					partita.eventi().tutti(InternoTrofeoAcquisito.class).stream().map(InternoTrofeoAcquisito::getTrofeo).collect(Collectors.toList()));
 		}
 	}
 

@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoMissioneCompletata;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
 import com.threeamigos.foresta.motore.GestoreProgressione;
 import com.threeamigos.foresta.motore.RegistroMissioni;
@@ -96,6 +97,7 @@ public abstract class MissioneBase implements Missione {
 		md.aggiungiProprieta(COMPLETA, "S");
 		RegistroMissioni.completaMissione(this);
 		BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "MISSIONE COMPLETATA", getNome()));
+		BusEventi.pubblica(new InternoMissioneCompletata(this));
 		if (isPrimaria()) {
 			GestoreProgressione.completaMissionePrincipale();
 		} else {

@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.motore.modellodati.TrofeiMD;
+import com.threeamigos.foresta.motore.tipi.TipoTrofeo;
 import com.threeamigos.foresta.tools.InterfacciaGestoreTrofei;
 
 import java.io.BufferedReader;
@@ -39,6 +40,18 @@ final class GestoreTrofeiInMemoria implements InterfacciaGestoreTrofei {
 		contenuto = scrittura.toString();
 		salvataggi++;
 		return true;
+	}
+
+	/**
+	 * Scrive nel "file" i trofei indicati come vinti, come se lo fossero in partite precedenti.
+	 * Va seguito da RegistroTrofei.impostaGestoreTrofei perché il registro li rilegga.
+	 */
+	void conVinti(TipoTrofeo... vinti) {
+		TrofeiMD trofeiMD = new TrofeiMD();
+		for (TipoTrofeo trofeo : vinti) {
+			trofeiMD.aggiungiVinto(trofeo);
+		}
+		salva(trofeiMD);
 	}
 
 	/**

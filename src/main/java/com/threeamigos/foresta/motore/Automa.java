@@ -933,7 +933,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					} else {
 						BusEventi.pubblica(new NotificaRaccoltaOggetti());
 						BusEventi.pubblica(new InternoOggettoRaccolto(oggetto.getClasse(), oggetto.getQuantita(),
-								locazioneCorrente.isCustodita()));
+								oggetto.getArtefatto().orElse(null), locazioneCorrente.isCustodita()));
 						BusEventi.pubblica(new InternoMessaggio("Oggetto raccolto."));
 						locazioneCorrente.rimuoviOggetto();
 					}

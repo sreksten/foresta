@@ -87,14 +87,21 @@ public class RegistroTrofei {
 		boolean modificato = !progressiInSospeso.isEmpty();
 		progressiInSospeso.forEach(trofeiMD::incrementaProgresso);
 		progressiInSospeso.clear();
-		for (ClasseTrofeo classeTrofeo : ClasseTrofeo.values()) {
-			Trofeo trofeo = classeTrofeo.getIstanza();
-			if (!trofeiMD.isVinto(trofeo.getTipo()) && trofeo.isMeritato()) {
-				trofeiMD.aggiungiVinto(trofeo.getTipo());
-				modificato = true;
-				BusEventi.pubblica(new InternoTrofeoAcquisito(trofeo.getTipo()));
+		// Si ripete finché si vince qualcosa: un trofeo come il Perdigiorno dipende dagli altri,
+		// qualunque sia il loro ordine
+		boolean vintoQualcosa;
+		do {
+			vintoQualcosa = false;
+			for (ClasseTrofeo classeTrofeo : ClasseTrofeo.values()) {
+				Trofeo trofeo = classeTrofeo.getIstanza();
+				if (!trofeiMD.isVinto(trofeo.getTipo()) && trofeo.isMeritato()) {
+					trofeiMD.aggiungiVinto(trofeo.getTipo());
+					vintoQualcosa = true;
+					modificato = true;
+					BusEventi.pubblica(new InternoTrofeoAcquisito(trofeo.getTipo()));
+				}
 			}
-		}
+		} while (vintoQualcosa);
 		if (modificato) {
 			gestoreTrofei.salva(trofeiMD);
 		}

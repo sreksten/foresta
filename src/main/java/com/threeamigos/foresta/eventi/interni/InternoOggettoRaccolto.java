@@ -2,22 +2,30 @@ package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
+import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 
+import java.util.Optional;
+
 /**
- * Il gruppo ha raccolto l'oggetto di fine locazione: quale, in che quantità e se era
- * custodito dagli avversari o abbandonato in una locazione senza mostri.
+ * Il gruppo ha raccolto l'oggetto di fine locazione: quale, in che quantità, l'eventuale
+ * artefatto e se era custodito dagli avversari o abbandonato in una locazione senza mostri.
  */
 public class InternoOggettoRaccolto extends EventoBase {
 
     private final ClassiOggetto classe;
     private final int quantita;
+    private final Artefatto artefatto;
     private final boolean custodito;
 
-    public InternoOggettoRaccolto(ClassiOggetto classe, int quantita, boolean custodito) {
+    /**
+     * @param artefatto l'artefatto raccolto (un artefatto vero o, per esempio, una spada), oppure null
+     */
+    public InternoOggettoRaccolto(ClassiOggetto classe, int quantita, Artefatto artefatto, boolean custodito) {
         super(TipoEvento.INTERNO_OGGETTO_RACCOLTO);
         this.classe = classe;
         this.quantita = quantita;
+        this.artefatto = artefatto;
         this.custodito = custodito;
     }
 
@@ -27,6 +35,10 @@ public class InternoOggettoRaccolto extends EventoBase {
 
     public int getQuantita() {
         return quantita;
+    }
+
+    public Optional<Artefatto> getArtefatto() {
+        return Optional.ofNullable(artefatto);
     }
 
     /**

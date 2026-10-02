@@ -369,6 +369,10 @@ public enum TipoEvento {
      */
     INTERNO_NOTIFICA_VIA_FUMETTO_A_TEMPO,
     /**
+     * Una missione è stata completata
+     */
+    INTERNO_MISSIONE_COMPLETATA,
+    /**
      * Il gruppo ha raccolto l'oggetto di fine locazione
      */
     INTERNO_OGGETTO_RACCOLTO,
