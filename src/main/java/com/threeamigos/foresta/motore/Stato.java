@@ -54,6 +54,9 @@ public enum Stato {
 	INCANTESIMO_SCELTO,
 
 	ATTESA_SI_NO,
+	// Una missione a passi ha posto una domanda al giocatore: si aspetta la risposta, poi si rifà il controllo
+	// delle missioni in cui è nata e si prosegue da lì (vedi Automa.controllaMissioniEDomande)
+	ATTESA_RISPOSTA_MISSIONE,
 
 	// Controlla trigger post-locazione, poi mostra gli intermezzi di fine locazione
 	FINE_LOCAZIONE,

@@ -21,6 +21,9 @@ import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.tipi.*;
+import com.threeamigos.foresta.missioni.MissioneAPassi;
+import com.threeamigos.foresta.missioni.Passo;
+import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
@@ -134,6 +137,15 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	// La UI sta ancora animando qualcosa (sprite, annuncio globale): l'intermezzo pronto a
 	// scattare aspetta che segnali InternoUiInattiva prima di essere mostrato
 	private boolean uiOccupata;
+	// La domanda di una missione a passi in attesa di risposta (vedi controllaMissioniEDomande): chi l'ha posta, in
+	// quale controllo, con quali comandi, e come si prosegue una volta consegnata la risposta
+	private MissioneAPassi missioneInAttesaDiRisposta;
+	private MomentoControllo momentoDomanda;
+	private List<Comando> comandiRispostaMissione;
+	private Supplier<Esito> ripresaDopoRisposta;
+	// Le risposte a una scelta di missione: l'opzione N-esima è NUMERO_N
+	private static final List<Comando> COMANDI_OPZIONI = Arrays.asList(Comando.NUMERO_1, Comando.NUMERO_2,
+			Comando.NUMERO_3, Comando.NUMERO_4, Comando.NUMERO_5);
 	private MomentoIntermezzo momentoIntermezzoInAttesa;
 	private Stato statoDopoIntermezzoInAttesa;
 	// Si è appena usciti da Stato.INTERMEZZO (ultima pagina mostrata): il ritorno alla
@@ -185,6 +197,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriIngresso.put(Stato.SCELTA_INCANTESIMO_DA_LANCIARE, this::entraInStatoSceltaIncantesimoDaLanciare);
 		gestoriIngresso.put(Stato.ATTESA_INCANTESIMO_QUALSIASI, this::entraInStatoAttesaIncantesimoQualsiasi);
 		gestoriIngresso.put(Stato.ATTESA_SI_NO, this::entraInStatoAttesaSiNo);
+		gestoriIngresso.put(Stato.ATTESA_RISPOSTA_MISSIONE, this::entraInStatoAttesaRispostaMissione);
 		gestoriIngresso.put(Stato.FINE_LOCAZIONE, () -> eseguiFineLocazione(null));
 		gestoriIngresso.put(Stato.FINE_LOCAZIONE_2, this::entraInStatoFineLocazione2);
 		gestoriIngresso.put(Stato.ATTESA_DIREZIONE, this::entraInStatoAttesaDirezione);
@@ -225,6 +238,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriComando.put(Stato.SCELTA_DESTINATARIO_OGGETTO, this::gestisciComandoInStatoSceltaDestinatarioOggetto);
 		gestoriComando.put(Stato.INCANTESIMO_SCELTO, this::gestisciComandoInStatoIncantesimoScelto);
 		gestoriComando.put(Stato.ATTESA_SI_NO, this::gestisciComandoInStatoAttesaSiNo);
+		gestoriComando.put(Stato.ATTESA_RISPOSTA_MISSIONE, this::gestisciComandoInStatoAttesaRispostaMissione);
 		gestoriComando.put(Stato.FINE_LOCAZIONE, this::eseguiFineLocazione);
 		gestoriComando.put(Stato.SCELTA_DIREZIONE, this::gestisciComandoInStatoSceltaDirezione);
 		gestoriComando.put(Stato.SCELTA_PASSI, this::gestisciComandoInStatoSceltaPassi);
@@ -523,7 +537,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Esito entraInStatoInizioLocazione() {
-		controllaMissioni(Missione::controllaPreLocazione, OrdineVisita.PADRE_PRIMA);
+		return controllaMissioniEDomande(MomentoControllo.PRE_LOCAZIONE, this::proseguiInizioLocazione);
+	}
+
+	private Esito proseguiInizioLocazione() {
 		String evento = LineaTemporale.getEvento();
 		if (evento != null) {
 			BusEventi.pubblica(new NotificaTestoFrase(evento));
@@ -645,7 +662,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		BusEventi.pubblica(new InternoPreparazioneLocazione());
 		BusEventi.pubblica(new NotificaTestoParagrafo(LineaTemporale.getDescrizioneOraDelGiorno()));
 		locazioneCorrente.descrivi(gruppo, gruppoAvversario);
-		controllaMissioni(Missione::controllaInLocazione, OrdineVisita.PADRE_PRIMA);
+		return controllaMissioniEDomande(MomentoControllo.IN_LOCAZIONE, this::proseguiPreparazioneLocazione);
+	}
+
+	private Esito proseguiPreparazioneLocazione() {
 		/*
 		 * Ogni locazione ha un metodo impostaAzioni; nel caso delle
 		 * locazioni di base imposterà le azioni combattimento,
@@ -959,10 +979,15 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			// distruzione di un castello con sostituzione con rovine non fa completare le
 			// missioni. Potremmo anche salvare il tipo di locazione nelle missioni ma così
 			// mi pare più pulito.
-			controllaMissioni(Missione::controllaPostLocazione, OrdineVisita.FIGLI_PRIMA);
-			locazioneCorrente.azzeraLocazione(gruppo);
+			return controllaMissioniEDomande(MomentoControllo.POST_LOCAZIONE, () -> {
+				locazioneCorrente.azzeraLocazione(gruppo);
+				return concludiFineLocazione();
+			});
 		}
+		return concludiFineLocazione();
+	}
 
+	private Esito concludiFineLocazione() {
 		// Anche se la locazione non è completa: chi deve, per esempio i trofei, se ne accorge
 		BusEventi.pubblica(new InternoFineLocazione());
 
@@ -1562,6 +1587,97 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		 * vede nello stato di questo giro, non del precedente.
 		 */
 		FIGLI_PRIMA
+	}
+
+	/**
+	 * Fa il controllo delle missioni di quel momento; se poi una missione a passi ha una domanda da porre al
+	 * giocatore, passa ad ATTESA_RISPOSTA_MISSIONE tenendo da parte come proseguire. Consegnata la risposta, il
+	 * controllo si rifà (così il passo con la domanda si conclude, e può nascerne un'altra) e solo allora si
+	 * prosegue con {@code seguito}, il resto del lavoro che veniva dopo il controllo. Non si torna allo stato di
+	 * prima: rientrarci rifarebbe cose già fatte, come costruire la locazione o raccoglierne l'oggetto.
+	 */
+	private Esito controllaMissioniEDomande(MomentoControllo momento, Supplier<Esito> seguito) {
+		switch (momento) {
+			case PRE_LOCAZIONE:
+				controllaMissioni(Missione::controllaPreLocazione, OrdineVisita.PADRE_PRIMA);
+				break;
+			case IN_LOCAZIONE:
+				controllaMissioni(Missione::controllaInLocazione, OrdineVisita.PADRE_PRIMA);
+				break;
+			default:
+				controllaMissioni(Missione::controllaPostLocazione, OrdineVisita.FIGLI_PRIMA);
+				break;
+		}
+		for (Missione missione : missioniControllate()) {
+			if (missione instanceof MissioneAPassi && ((MissioneAPassi) missione).getDomandaDaPorre(momento) != null) {
+				missioneInAttesaDiRisposta = (MissioneAPassi) missione;
+				momentoDomanda = momento;
+				ripresaDopoRisposta = () -> controllaMissioniEDomande(momento, seguito);
+				stato = Stato.ATTESA_RISPOSTA_MISSIONE;
+				return Esito.CONTINUA_CON_INGRESSO;
+			}
+		}
+		return seguito.get();
+	}
+
+	/**
+	 * Pubblica la domanda, con le opzioni numerate se è una scelta, e le icone per rispondere: SI e NO per una
+	 * conferma, NUMERO_1..NUMERO_N per una scelta.
+	 */
+	private Esito entraInStatoAttesaRispostaMissione() {
+		Passo passo = missioneInAttesaDiRisposta.getDomandaDaPorre(momentoDomanda);
+		BusEventi.pubblica(new NotificaTestoParagrafo(passo.getDomanda()));
+		List<String> opzioni = passo.getOpzioni();
+		for (int i = 0; i < opzioni.size(); i++) {
+			BusEventi.pubblica(new NotificaTestoFrase((i + 1) + ". " + opzioni.get(i)));
+		}
+		comandiRispostaMissione = passo.isConferma()
+				? Arrays.asList(Comando.SI, Comando.NO)
+				: new ArrayList<>(COMANDI_OPZIONI.subList(0, opzioni.size()));
+		BusEventi.pubblica(new RichiestaSelezioneMissione(comandiRispostaMissione));
+		return Esito.FERMATI;
+	}
+
+	private Esito gestisciComandoInStatoAttesaRispostaMissione(Comando comando) {
+		if (comando == Comando.TIMER) {
+			return Esito.FERMATI;
+		}
+		int indice = comandiRispostaMissione.indexOf(comando);
+		if (indice < 0) {
+			comandoNonValido(comando);
+			return Esito.FERMATI;
+		}
+		Passo passo = missioneInAttesaDiRisposta.getDomandaDaPorre(momentoDomanda);
+		missioneInAttesaDiRisposta.rispondi(passo.getRispostePossibili().get(indice));
+		Supplier<Esito> ripresa = ripresaDopoRisposta;
+		missioneInAttesaDiRisposta = null;
+		momentoDomanda = null;
+		comandiRispostaMissione = null;
+		ripresaDopoRisposta = null;
+		return ripresa.get();
+	}
+
+	/**
+	 * Le missioni che controllaMissioni visita: le radici non completate e, sotto le missioni attive e non concluse,
+	 * le figlie non concluse.
+	 */
+	private static List<Missione> missioniControllate() {
+		List<Missione> missioni = new ArrayList<>();
+		for (Missione missione : RegistroMissioni.getMissioniNonCompletate()) {
+			aggiungiMissioneControllata(missione, missioni);
+		}
+		return missioni;
+	}
+
+	private static void aggiungiMissioneControllata(Missione missione, List<Missione> missioni) {
+		missioni.add(missione);
+		if (missione.isAttiva() && !missione.isCompleta() && !missione.isFallita()) {
+			for (Missione missioneSecondaria : missione.getMissioniSecondarie()) {
+				if (!missioneSecondaria.isCompleta() && !missioneSecondaria.isFallita()) {
+					aggiungiMissioneControllata(missioneSecondaria, missioni);
+				}
+			}
+		}
 	}
 
 	/**

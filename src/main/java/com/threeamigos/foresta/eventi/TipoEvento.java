@@ -82,6 +82,10 @@ public enum TipoEvento {
      */
     RICHIESTA_SELEZIONE_SI_O_NO,
     /**
+     * Una missione chiede una conferma o una scelta fra più opzioni
+     */
+    RICHIESTA_SELEZIONE_MISSIONE,
+    /**
      * Richiesta di selezione di uno slot per effettuare una rilettura
      */
     RICHIESTA_SELEZIONE_SLOT_PER_RILETTURA,

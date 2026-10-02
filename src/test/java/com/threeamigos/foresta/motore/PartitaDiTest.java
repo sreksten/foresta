@@ -6,6 +6,7 @@ import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneDirezione;
+import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneMissione;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneIncantesimoDaLanciare;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
@@ -86,6 +87,7 @@ final class PartitaDiTest implements AutoCloseable {
 		BusEventi.iscriviti(ComandoAperturaInventarioGruppo.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaSelezioneIncantesimoDaLanciare.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaSelezioneSiNo.class, this::aggiornaComandi);
+		BusEventi.iscriviti(RichiestaSelezioneMissione.class, this::aggiornaComandi);
 		BusEventi.iscriviti(NotificaTestoFrase.class, e -> ricordaTesto(e.getMessaggio()));
 		BusEventi.iscriviti(NotificaTestoParagrafo.class, e -> ricordaTesto(e.getMessaggio()));
 

@@ -220,4 +220,77 @@ class MissioneAPassiTest {
         };
         assertThrows(IllegalStateException.class, ciclica::controllaInLocazione);
     }
+
+    /**
+     * Chiede una conferma dopo la locazione, quando il test lo permette; SI porta a ACCETTATA, NO a RIFIUTATA.
+     */
+    static class MissioneConConferma extends MissioneAPassi {
+
+        boolean sePuoChiedere;
+        final List<String> eseguiti = new ArrayList<>();
+
+        MissioneConConferma() {
+            super(ClasseMissione.MISSIONE_DI_PROVA);
+        }
+
+        @Override
+        protected String passoIniziale() {
+            return "PROPOSTA";
+        }
+
+        @Override
+        protected Passo costruisciPasso(String id) {
+            if ("PROPOSTA".equals(id)) {
+                return Passo.quando(MomentoControllo.POST_LOCAZIONE, () -> sePuoChiedere)
+                        .chiediConferma("Accetti l'incarico?")
+                        .esegui(() -> eseguiti.add(id))
+                        .poi(() -> Passo.SI.equals(getRisposta(id)) ? "ACCETTATA" : "RIFIUTATA");
+            }
+            return Passo.quando(MomentoControllo.POST_LOCAZIONE, () -> true).esegui(() -> eseguiti.add(id)).poi(Passo.FINE);
+        }
+    }
+
+    @Test
+    void laDomandaSiOffreSoloQuandoSiPuoPorreENelSuoControllo() {
+        MissioneConConferma missione = new MissioneConConferma();
+        assertNull(missione.getDomandaDaPorre(MomentoControllo.POST_LOCAZIONE), "non ancora");
+        missione.sePuoChiedere = true;
+        assertNull(missione.getDomandaDaPorre(MomentoControllo.IN_LOCAZIONE), "è una domanda di fine locazione");
+        Passo domanda = missione.getDomandaDaPorre(MomentoControllo.POST_LOCAZIONE);
+        assertNotNull(domanda);
+        assertTrue(domanda.isConferma());
+        assertEquals("Accetti l'incarico?", domanda.getDomanda());
+        assertEquals(Arrays.asList(Passo.SI, Passo.NO), domanda.getRispostePossibili());
+        // Senza risposta il passo non si conclude, anche se la condizione è vera
+        missione.controllaPostLocazione();
+        assertEquals("PROPOSTA", missione.getPassoCorrente());
+        assertTrue(missione.eseguiti.isEmpty());
+    }
+
+    @Test
+    void laRispostaConcludeIlPassoEScegliIlRamo() {
+        MissioneConConferma missione = new MissioneConConferma();
+        missione.sePuoChiedere = true;
+        assertThrows(IllegalArgumentException.class, () -> missione.rispondi("FORSE"));
+        missione.rispondi(Passo.NO);
+        assertNull(missione.getDomandaDaPorre(MomentoControllo.POST_LOCAZIONE), "ha già una risposta");
+        missione.controllaPostLocazione();
+        assertEquals(Arrays.asList("PROPOSTA", "RIFIUTATA"), missione.eseguiti);
+        assertEquals(Passo.NO, missione.getRisposta("PROPOSTA"));
+        assertTrue(missione.isCompleta());
+        assertThrows(IllegalStateException.class, () -> missione.rispondi(Passo.SI), "la missione è finita: nessuna domanda");
+    }
+
+    @Test
+    void unaSceltaHaDaDueACinqueOpzioniNumerate() {
+        Passo scelta = Passo.quando(MomentoControllo.IN_LOCAZIONE, () -> true)
+                .chiediScelta("Quale?", Arrays.asList("A", "B", "C"));
+        assertFalse(scelta.isConferma());
+        assertEquals(Arrays.asList("A", "B", "C"), scelta.getOpzioni());
+        assertEquals(Arrays.asList("1", "2", "3"), scelta.getRispostePossibili());
+        assertThrows(IllegalArgumentException.class, () -> Passo.quando(MomentoControllo.IN_LOCAZIONE, () -> true)
+                .chiediScelta("Quale?", Collections.singletonList("A")));
+        assertThrows(IllegalArgumentException.class, () -> Passo.quando(MomentoControllo.IN_LOCAZIONE, () -> true)
+                .chiediScelta("Quale?", Arrays.asList("A", "B", "C", "D", "E", "F")));
+    }
 }

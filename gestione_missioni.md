@@ -7,7 +7,7 @@
 | 1. Checkpoint `LOCAZIONE_COMPLETATA` | fatto (`MomentoIntermezzo.LOCAZIONE_COMPLETATA`, `Stato.FINE_LOCAZIONE_2`) |
 | 2. `RegistroIntermezzi` interroga le missioni | fatto, vedi "Come è stato implementato" in fondo al punto 2 |
 | 3. `Passo` e `MissioneAPassi` | fatto, vedi "Come è stato implementato" in fondo al punto 3 |
-| 4. Domande al giocatore | da fare |
+| 4. Domande al giocatore | fatto, vedi "Come è stato implementato" in fondo al punto 4 |
 | 5. Migrazione di Medaglione e Derrate | da fare |
 | 6. Claim delle locazioni e `cerca` | da fare |
 | 7. `SconfiggiIlDrago` e claim precoce | da fare, dopo il 6 |
@@ -432,6 +432,55 @@ del punto 2: un intermezzo scatta al completarsi di un passo, una domanda
 scatta quando il passo successivo (quello con la domanda) diventa corrente
 — non possono mai capitare nello stesso istante per lo stesso passo.
 
+### Come è stato implementato (2026-10-02)
+
+Rispetto al piano, due differenze di sostanza:
+
+- **Niente ritorno allo stato precedente.** I controlli delle missioni stanno
+  in mezzo al lavoro di tre stati: `INZIO_LOCAZIONE` (prima degli eventi del
+  tempo e degli intermezzi), `PREPARAZIONE_LOCAZIONE` (dopo che la locazione è
+  stata costruita e descritta) e `FINE_LOCAZIONE` (dopo la raccolta
+  dell'oggetto). Rientrare in quegli stati dopo la risposta rifarebbe cose già
+  fatte: costruire di nuovo la locazione con i suoi mostri, ritentare la
+  raccolta. Ogni controllo passa quindi da `Automa.controllaMissioniEDomande(
+  momento, seguito)`: fa il controllo e, se una missione ha una domanda da
+  porre, passa a `ATTESA_RISPOSTA_MISSIONE` tenendo da parte una ripresa.
+  Consegnata la risposta, il controllo si rifà (il passo con la domanda si
+  conclude, e può nascerne un'altra) e solo allora si prosegue con `seguito`,
+  il resto del lavoro dello stato (`proseguiInizioLocazione`,
+  `proseguiPreparazioneLocazione`, `concludiFineLocazione`). La ripresa è una
+  lambda e non si salva: va bene, perché in `ATTESA_RISPOSTA_MISSIONE` i soli
+  comandi disponibili sono le risposte, quindi non si può salvare a metà
+  domanda.
+- **Niente `DOMANDA_<id>_PRESENTATA`.** La domanda si pone una volta per
+  controllo, e finché non c'è risposta l'automa resta fermo in
+  `ATTESA_RISPOSTA_MISSIONE`: non c'è nulla da ripresentare. Se la risposta
+  non arriva mai (per esempio la partita si chiude), la domanda si ripone al
+  prossimo controllo del suo momento, che è quel che si vuole.
+
+Il resto come previsto:
+
+- **`Passo`:** `chiediConferma(testo)` (risposte `Passo.SI`/`Passo.NO`) e
+  `chiediScelta(testo, opzioni)` (da 2 a 5 opzioni, risposte "1".."N"). La
+  condizione del passo dice **quando la domanda si può porre**; il passo si
+  conclude quando c'è la risposta, e solo nel controllo del suo momento.
+- **`MissioneAPassi`:** `getDomandaDaPorre(momento)`, `rispondi(risposta)`
+  (scrive `RISPOSTA_<id passo>`, rifiuta risposte non valide e passi senza
+  domanda) e `getRisposta(idPasso)`, da leggere nel `poi` della diramazione.
+- **`Automa`:** stato `Stato.ATTESA_RISPOSTA_MISSIONE`. All'ingresso pubblica
+  la domanda (`NotificaTestoParagrafo`), le opzioni numerate
+  (`NotificaTestoFrase`, "1. …") e `RichiestaSelezioneMissione` con `SI`/`NO` o
+  `NUMERO_1..N`; un comando che non è una risposta è un comando non valido, il
+  `TIMER` si ignora. Cerca le domande nelle stesse missioni che il controllo
+  visita (radici non completate e figlie delle missioni attive).
+- **UI:** `ForestaUI` mostra le icone delle risposte e porta in primo piano il
+  riquadro del testo.
+- **Test:** 3 nuovi in `MissioneAPassiTest` (quando si offre la domanda,
+  risposta e ramo, opzioni di una scelta) e `ScenarioDomandeMissioniTest`, su
+  una partita vera: entrando in una locazione la missione chiede quale strada
+  prendere fra tre, la risposta sceglie il ramo, la missione si completa e la
+  locazione non viene costruita di nuovo.
+
 ## 5. Migrare `RecuperaIlMedaglione` e `RecuperaLeDerrateAlimentari`
 
 File: `src/main/java/com/threeamigos/foresta/missioni/RecuperaIlMedaglione.java`
@@ -709,14 +758,9 @@ due missioni di recupero.
 - Controllare che uscendo e ricaricando un salvataggio a metà missione (es.
   dopo il passo 1) lo stato riprenda dal passo corretto (proprietà
   `PASSO_CORRENTE` persistita correttamente).
-- Nessuna delle due missioni migrate (punto 5) usa un passo-domanda: per
-  verificare concretamente `Stato.ATTESA_RISPOSTA_MISSIONE` (punto 4) va
-  aggiunto temporaneamente un passo di prova con `.chiediConferma(...)` o
-  `.chiediScelta(...)` a una delle due missioni, verificato a mano che la
-  domanda appaia, che la scelta porti al ramo giusto e che sia persistita
-  correttamente dopo un salvataggio/caricamento, poi rimosso. In alternativa
-  si rimanda questa verifica end-to-end al momento in cui una missione reale
-  ne avrà davvero bisogno.
+- `Stato.ATTESA_RISPOSTA_MISSIONE` (punto 4) è verificato da
+  `ScenarioDomandeMissioniTest` su una partita vera. Resta da vedere a mano,
+  nel gioco, come appaiono domanda e icone delle risposte.
 - Punto 6: avviare una partita, verificare che i quattro castelli alleati
   compaiano solo quando la relativa missione `Sconfiggi*` li rivendica (non
   più tutti fin dall'inizio); sconfiggerne uno, verificare che `cerca()` non

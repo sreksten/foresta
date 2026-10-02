@@ -102,6 +102,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(RichiestaSelezioneDirezione.class, this::gestisciEventoSelezioneDirezione);
 		BusEventi.iscriviti(RichiestaSelezioneIncantesimoDaLanciare.class, this::gestisciEventoSelezioneIncantesimoDaLanciare);
 		BusEventi.iscriviti(RichiestaSelezioneSiNo.class, this::gestisciEventoSelezioneSiNo);
+		BusEventi.iscriviti(RichiestaSelezioneMissione.class, this::gestisciEventoSelezioneMissione);
 		BusEventi.iscriviti(InternoStatoDiGioco.class, this::gestisciEventoStatoDiGioco);
 		BusEventi.iscriviti(NotificaVariazioneEffettoDiStatoPersonaggio.class, this::gestisciEventoVariazioneEffettoDiStato);
 		BusEventi.iscriviti(NotificaVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
@@ -393,6 +394,14 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	private void gestisciEventoSelezioneSiNo(RichiestaSelezioneSiNo evento) {
 		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.STATO);
+	}
+
+	/**
+	 * Domanda e opzioni sono nel riquadro del testo: lì va lo sguardo.
+	 */
+	private void gestisciEventoSelezioneMissione(RichiestaSelezioneMissione evento) {
+		impostaAzioni(evento.getPossibilita());
+		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.TESTO);
 	}
 
 	private void gestisciEventoStatoDiGioco(InternoStatoDiGioco evento) {

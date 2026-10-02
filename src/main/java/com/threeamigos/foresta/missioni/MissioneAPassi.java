@@ -24,6 +24,11 @@ import java.util.function.Supplier;
  * anche quello è dello stesso controllo ed è già concluso si prosegue subito, così un passo di solo testo non
  * costa un turno. {@link Passo#FINE} chiude la missione, completandola se l'azione non l'ha già fatto.
  * <p>
+ * Un passo con una domanda ({@link Passo#chiediConferma}, {@link Passo#chiediScelta}) non si conclude da solo:
+ * quando la sua condizione è vera la missione la offre con {@link #getDomandaDaPorre}, l'automa la pone al
+ * giocatore e consegna la risposta con {@link #rispondi}; al controllo successivo il passo si conclude e la
+ * diramazione la legge con {@link #getRisposta(String)}.
+ * <p>
  * Un passo con un intermezzo, una volta concluso, lascia il suo id tra quelli con un intermezzo in attesa
  * ({@link #getPassiConIntermezzoInAttesa()}): chi lo mostra lo segna con {@link #segnaIntermezzoPassoMostrato}.
  * <p>
@@ -36,6 +41,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	private static final String SEQUENZA_PASSI = "SEQUENZA_PASSI";
 	private static final String INTERMEZZI_IN_ATTESA = "INTERMEZZI_IN_ATTESA";
 	private static final String INTERMEZZO_MOSTRATO = "INTERMEZZO_MOSTRATO_";
+	private static final String RISPOSTA = "RISPOSTA_";
 	/**
 	 * Separatore delle liste di id salvate come una proprietà: '§' e '|' sono già riservati dal salvataggio
 	 */
@@ -90,7 +96,11 @@ public abstract class MissioneAPassi extends MissioneBase {
 				return;
 			}
 			Passo passo = costruisciPasso(id);
-			if (passo.getMomento() != momento || !passo.isConcluso()) {
+			if (passo.getMomento() != momento) {
+				return;
+			}
+			// Una domanda si conclude con la risposta, che può arrivare solo dall'automa (vedi getDomandaDaPorre)
+			if (passo.isDomanda() ? getRisposta(id) == null : !passo.isConcluso()) {
 				return;
 			}
 			if (passiDiFila >= PASSI_DI_FILA_MASSIMI) {
@@ -115,6 +125,51 @@ public abstract class MissioneAPassi extends MissioneBase {
 
 	private void impostaPassoCorrente(String id) {
 		aggiungiProprieta(PASSO_CORRENTE, validaId(id));
+	}
+
+	// --- Domande al giocatore
+
+	/**
+	 * Il passo corrente, se è una domanda di quel controllo che si può porre adesso e non ha ancora risposta;
+	 * altrimenti null.
+	 */
+	public final Passo getDomandaDaPorre(MomentoControllo momento) {
+		if (isCompleta() || isFallita()) {
+			return null;
+		}
+		String id = getPassoCorrente();
+		if (Passo.FINE.equals(id)) {
+			return null;
+		}
+		Passo passo = costruisciPasso(id);
+		if (passo.isDomanda() && passo.getMomento() == momento && getRisposta(id) == null && passo.isConcluso()) {
+			return passo;
+		}
+		return null;
+	}
+
+	/**
+	 * La risposta del giocatore alla domanda del passo corrente: {@link Passo#SI}/{@link Passo#NO} per una conferma,
+	 * "1".."N" per una scelta. Il passo si conclude al prossimo controllo del suo momento.
+	 */
+	public final void rispondi(String risposta) {
+		String id = getPassoCorrente();
+		Passo passo = costruisciPasso(id);
+		if (!passo.isDomanda()) {
+			throw new IllegalStateException("Il passo " + id + " della missione " + getId() + " non è una domanda");
+		}
+		if (!passo.getRispostePossibili().contains(risposta)) {
+			throw new IllegalArgumentException("Risposta " + risposta + " non valida per il passo " + id
+					+ ": possibili " + passo.getRispostePossibili());
+		}
+		aggiungiProprieta(RISPOSTA + validaId(id), risposta);
+	}
+
+	/**
+	 * La risposta data alla domanda di quel passo, o null se non c'è ancora.
+	 */
+	public final String getRisposta(String idPasso) {
+		return ottieniProprieta(RISPOSTA + idPasso);
 	}
 
 	// --- Sequenze di passi decise alla generazione
