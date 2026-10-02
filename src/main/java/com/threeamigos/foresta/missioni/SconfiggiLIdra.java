@@ -56,6 +56,6 @@ public class SconfiggiLIdra extends MissioneBase implements Missione {
 
     @Override
     public String getRicordoDellaLocazione() {
-        return "il castello dell'Idra";
+        return "Qui sorgeva il castello dell'Idra.";
     }
 }

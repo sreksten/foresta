@@ -194,10 +194,10 @@ class ScenarioLocazioniRivendicateTest {
     void ogniCastelloSconfittoDiventaRovineERicordaChiCiStava() {
         try (PartitaDiTest partita = nuovaPartita(35)) {
             Object[][] castelli = {
-                    {SconfiggiLaStrega.class, ClassiLocazione.CASTELLO_STREGA, "il castello della Strega"},
-                    {SconfiggiIlLich.class, ClassiLocazione.CASTELLO_LICH, "il castello del Lich"},
-                    {SconfiggiIlMinotauroGigante.class, ClassiLocazione.CASTELLO_MINOTAURO, "il castello del Minotauro Gigante"},
-                    {SconfiggiLIdra.class, ClassiLocazione.CASTELLO_IDRA, "il castello dell'Idra"},
+                    {SconfiggiLaStrega.class, ClassiLocazione.CASTELLO_STREGA, "Qui sorgeva il castello della Strega."},
+                    {SconfiggiIlLich.class, ClassiLocazione.CASTELLO_LICH, "Qui sorgeva il castello del Lich."},
+                    {SconfiggiIlMinotauroGigante.class, ClassiLocazione.CASTELLO_MINOTAURO, "Qui sorgeva il castello del Minotauro Gigante."},
+                    {SconfiggiLIdra.class, ClassiLocazione.CASTELLO_IDRA, "Qui sorgeva il castello dell'Idra."},
             };
             for (Object[] castello : castelli) {
                 Missione missione = missione((Class<? extends Missione>) castello[0]);
@@ -218,7 +218,7 @@ class ScenarioLocazioniRivendicateTest {
             sconfiggi(partita, ClassiLocazione.CASTELLO_DRAGO, drago);
             assertEquals(ClassiLocazione.ROVINE, Foresta.getLocazione(castelloDrago));
             assertNull(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CASTELLO_DRAGO));
-            assertEquals(Optional.of("il castello del Drago"), RegistroMissioni.getRicordo(castelloDrago));
+            assertEquals(Optional.of("Qui sorgeva il castello del Drago."), RegistroMissioni.getRicordo(castelloDrago));
         }
     }
 

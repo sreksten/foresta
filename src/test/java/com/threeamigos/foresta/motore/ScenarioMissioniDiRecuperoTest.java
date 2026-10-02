@@ -10,9 +10,12 @@ import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.RecuperaIlMedaglione;
 import com.threeamigos.foresta.missioni.RecuperaLeDerrateAlimentari;
+import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -97,5 +100,36 @@ class ScenarioMissioniDiRecuperoTest {
     private static Missione trova(Class<? extends Missione> tipo) {
         return RegistroMissioni.getMissioniNonCompletate().stream().filter(tipo::isInstance).findFirst()
                 .orElseThrow(() -> new AssertionError("missione " + tipo.getSimpleName() + " non trovata"));
+    }
+
+    @Test
+    void ilCovoDeiLadriRicordaIlMedaglioneAMissioneFinita() {
+        verificaRicordoDelCovo(ClassiLocazione.CITTA_FLEENA, RecuperaIlMedaglione.class, ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE,
+                ClassiLocazione.GROTTA, "In questa grotta i ladri nascondevano il medaglione rubato.");
+    }
+
+    @Test
+    void ilNascondiglioDeiTrollRicordaLeDerrateAMissioneFinita() {
+        verificaRicordoDelCovo(ClassiLocazione.CITTA_RUUNA, RecuperaLeDerrateAlimentari.class, ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI,
+                ClassiLocazione.ROVINE, "Fra queste rovine i Troll nascondevano le derrate di Ruuna.");
+    }
+
+    private static void verificaRicordoDelCovo(ClassiLocazione citta, Class<? extends Missione> tipo, ClassiLocazione covo,
+                                               ClassiLocazione covoRipulito, String ricordo) {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(22)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(citta));
+            MissioneAPassi missione = (MissioneAPassi) trova(tipo);
+            CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(covo);
+            assertSame(missione, RegistroMissioni.getMissioneCheHaOccupato(coordinate).orElse(null), "il covo è della missione");
+
+            // Il covo ripulito torna una locazione qualsiasi, ma a missione in corso non si ricorda ancora niente
+            Foresta.getLocazioneMD(coordinate).aggiungiProprieta(LocazioneMD.COMPLETA, LocazioneMD.AFFERMATIVO);
+            Foresta.costruisciIstanza(coordinate).azzeraLocazione(partita.gruppo());
+            assertEquals(covoRipulito, Foresta.getLocazione(coordinate));
+            assertEquals(Optional.empty(), RegistroMissioni.getRicordo(coordinate));
+
+            missione.completaMissione();
+            assertEquals(Optional.of(ricordo), RegistroMissioni.getRicordo(coordinate));
+        }
     }
 }

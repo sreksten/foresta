@@ -81,4 +81,9 @@ public class RecuperaLeDerrateAlimentari extends MissioneRecuperaBersaglio imple
 	protected String testoCittaDistrutta() {
 		return "Ruuna è stata distrutta: le derrate alimentari non potranno più essere consegnate al Borgomastro.";
 	}
+
+	@Override
+	public String getRicordoDellaLocazione() {
+		return "Fra queste rovine i Troll nascondevano le derrate di Ruuna.";
+	}
 }

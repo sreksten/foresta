@@ -142,8 +142,8 @@ public class RegistroMissioni {
 	}
 
 	/**
-	 * Il ricordo della missione finita che ha rivendicato per ultima quella casella ("il castello della Strega"),
-	 * se ce n'è uno: chi entra in quella casella legge "Qui sorgeva il castello della Strega".
+	 * Il ricordo della missione finita che ha rivendicato per ultima quella casella, se ce n'è uno: la frase che
+	 * legge chi ci entra, per esempio "Qui sorgeva il castello della Strega.".
 	 */
 	public static Optional<String> getRicordo(CoordinateMD coordinate) {
 		return getMissioneCheHaOccupato(coordinate)

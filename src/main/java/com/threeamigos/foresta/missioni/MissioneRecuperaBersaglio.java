@@ -9,6 +9,7 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
+import com.threeamigos.foresta.motore.RegistroMissioni;
 
 /**
  * Una missione di recupero a passi (vedi gestione_missioni.md, §5): in una città un mandante chiede di recuperare
@@ -21,7 +22,8 @@ import com.threeamigos.foresta.motore.LineaTemporale;
  * <li>RITORNO, a inizio locazione, di nuovo nella città: l'intermezzo del ringraziamento;</li>
  * <li>RICOMPENSA, in locazione, nella città: le monete, e la missione si completa, anche qui dopo l'intermezzo.</li>
  * </ol>
- * Se la città viene distrutta prima della consegna, la missione fallisce.
+ * Se la città viene distrutta prima della consegna, la missione fallisce. Il covo è rivendicato dalla missione,
+ * così a missione finita chi ci passa ne legge il ricordo ({@link #getRicordoDellaLocazione()}).
  */
 public abstract class MissioneRecuperaBersaglio extends MissioneAPassi {
 
@@ -98,7 +100,8 @@ public abstract class MissioneRecuperaBersaglio extends MissioneAPassi {
 						.esegui(() -> {
 							BusEventi.pubblica(new NotificaTestoParagrafo(testoAccettazione(gruppo)));
 							attivaMissione();
-							Foresta.costruisciLocazioneUnica(getCovo(), true);
+							// Il covo è della missione: finita, chi ci passa ne leggerà il ricordo
+							RegistroMissioni.occupaLocazione(Foresta.costruisciLocazioneUnica(getCovo(), true), this);
 						})
 						.poi(RECUPERO);
 			case RECUPERO:

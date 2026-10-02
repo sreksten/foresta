@@ -56,6 +56,6 @@ public class SconfiggiIlLich extends MissioneBase implements Missione {
 
     @Override
     public String getRicordoDellaLocazione() {
-        return "il castello del Lich";
+        return "Qui sorgeva il castello del Lich.";
     }
 }

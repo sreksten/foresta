@@ -56,6 +56,6 @@ public class SconfiggiIlMinotauroGigante extends MissioneBase implements Mission
 
     @Override
     public String getRicordoDellaLocazione() {
-        return "il castello del Minotauro Gigante";
+        return "Qui sorgeva il castello del Minotauro Gigante.";
     }
 }

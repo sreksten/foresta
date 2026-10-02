@@ -77,4 +77,9 @@ public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements M
 	protected String testoCittaDistrutta() {
 		return "Fleena è stata distrutta: il medaglione non potrà più essere restituito al suo proprietario.";
 	}
+
+	@Override
+	public String getRicordoDellaLocazione() {
+		return "In questa grotta i ladri nascondevano il medaglione rubato.";
+	}
 }

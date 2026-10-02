@@ -98,6 +98,6 @@ public class SconfiggiIlDrago extends MissioneBase implements Missione {
 
 	@Override
 	public String getRicordoDellaLocazione() {
-		return "il castello del Drago";
+		return "Qui sorgeva il castello del Drago.";
 	}
 }

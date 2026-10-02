@@ -57,6 +57,6 @@ public class SconfiggiLaStrega extends MissioneBase implements Missione {
 
     @Override
     public String getRicordoDellaLocazione() {
-        return "il castello della Strega";
+        return "Qui sorgeva il castello della Strega.";
     }
 }

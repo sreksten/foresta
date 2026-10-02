@@ -838,15 +838,23 @@ due missioni di recupero.
   `Foresta.distruggiLocazioneUnica(…, ROVINE)`, che cambia la casella e la toglie
   dalle locazioni uniche. Il claim resta, ed è quel che permette il ricordo.
 - **"Qui sorgeva…":** `Missione.getRicordoDellaLocazione()` (null di default)
-  dice che cosa ricordare della locazione rivendicata; le cinque missioni dei
-  castelli rispondono "il castello della Strega", "del Lich", "del Minotauro
-  Gigante", "dell'Idra", "del Drago". `RegistroMissioni.getRicordo(coordinate)`
-  restituisce il ricordo della missione che ha rivendicato per ultima la
-  casella, solo se quella missione è finita (completa o fallita). L'`Automa`,
-  in `PREPARAZIONE_LOCAZIONE` subito dopo la descrizione della locazione,
-  scrive "Qui sorgeva il castello della Strega." a ogni ingresso. Se un'altra
-  missione rivendica di nuovo la casella, il ricordo diventa il suo.
-- **Test** in `ScenarioLocazioniRivendicateTest` (2 nuovi): ogni castello
+  è la **frase intera** da scrivere a chi entra nella locazione rivendicata,
+  perché il verbo dipende dal luogo: le cinque missioni dei castelli rispondono
+  "Qui sorgeva il castello della Strega." (e del Lich, del Minotauro Gigante,
+  dell'Idra, del Drago); Recupera il Medaglione "In questa grotta i ladri
+  nascondevano il medaglione rubato."; Recupera le Derrate "Fra queste rovine i
+  Troll nascondevano le derrate di Ruuna.". Le due missioni di recupero
+  rivendicano il covo con `occupaLocazione` quando lo costruiscono, nel passo
+  di accettazione. `RegistroMissioni.getRicordo(coordinate)` restituisce la
+  frase della missione che ha rivendicato per ultima la casella, solo se quella
+  missione è finita (completa o fallita): un covo ripulito ma con il bersaglio
+  non ancora consegnato non ricorda niente. L'`Automa`, in
+  `PREPARAZIONE_LOCAZIONE` subito dopo la descrizione della locazione, la scrive
+  a ogni ingresso. Se un'altra missione rivendica di nuovo la casella, il
+  ricordo diventa il suo.
+- **Test** in `ScenarioMissioniDiRecuperoTest` (2 nuovi): il covo è della
+  missione, ripulito diventa una grotta o delle rovine qualsiasi, e ricorda la
+  frase solo a missione finita. In `ScenarioLocazioniRivendicateTest` (2 nuovi): ogni castello
   sconfitto, Drago compreso, diventa rovine, esce dalle locazioni uniche e
   ricorda chi ci stava; e su una partita vera il gruppo che entra fra le rovine
   del castello della Strega legge "Qui sorgeva il castello della Strega.".

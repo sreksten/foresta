@@ -46,9 +46,10 @@ public interface Missione {
 	void fallisciMissione();
 
 	/**
-	 * Che cosa ricordare della locazione che la missione aveva rivendicato, una volta finita (vedi
-	 * RegistroMissioni.getRicordo): per esempio "il castello della Strega", per dire "Qui sorgeva il castello della
-	 * Strega" a chi passa fra le sue rovine. Null se non c'è niente da ricordare.
+	 * La frase da scrivere a chi entra nella locazione che la missione aveva rivendicato, una volta finita (vedi
+	 * RegistroMissioni.getRicordo): per esempio "Qui sorgeva il castello della Strega." fra le rovine del castello.
+	 * È la frase intera perché il verbo dipende dal luogo: un castello sorgeva, in una grotta si nascondeva
+	 * qualcosa. Null se non c'è niente da ricordare.
 	 */
 	default String getRicordoDellaLocazione() {
 		return null;
