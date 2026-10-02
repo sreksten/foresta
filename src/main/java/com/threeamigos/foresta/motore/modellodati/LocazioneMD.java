@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.UUID;
 
 /**
  * Il modello dati di una singola casella della Foresta. Ogni casella ha la sua
@@ -41,6 +42,11 @@ public class LocazioneMD implements Serializzabile {
 	 */
 	public static final String AFFERMATIVO = "S";
 
+	/**
+	 * Un identificativo unico per la locazione
+	 */
+	private String uuid = UUID.randomUUID().toString();
+
 	private ClassiLocazione classe;
 	private final Map<String, String> proprieta = new HashMap<>();
 
@@ -49,6 +55,10 @@ public class LocazioneMD implements Serializzabile {
 
 	public LocazioneMD(ClassiLocazione classe) {
 		this.classe = classe;
+	}
+
+	public String getUuid() {
+		return uuid;
 	}
 
 	public ClassiLocazione getClasse() {
@@ -85,6 +95,8 @@ public class LocazioneMD implements Serializzabile {
 
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
+		stream.print(uuid);
+		stream.print(PIPE);
 		stream.print(classe.name());
 		if (!proprieta.isEmpty()) {
 			stream.print(PIPE);
@@ -98,7 +110,8 @@ public class LocazioneMD implements Serializzabile {
 		String line = stream.readLine();
 		// Il limite -1 conserva gli eventuali campi vuoti in coda
 		String[] tokens = line.split("\\|", -1);
-		classe = ClassiLocazione.valueOf(tokens[0]);
-		MappaProprieta.leggi(tokens, 1, proprieta);
+		uuid = tokens[0];
+		classe = ClassiLocazione.valueOf(tokens[1]);
+		MappaProprieta.leggi(tokens, 2, proprieta);
 	}
 }

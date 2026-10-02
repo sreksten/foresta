@@ -96,6 +96,28 @@ public abstract class PersonaggioBase implements Personaggio {
 	protected void setQuantitaMassima(int quantitaMassima) {
 		this.quantitaMassima = quantitaMassima;
 	}
+
+	/**
+	 * Basati sull'uuid del PersonaggioMD, non sull'istanza Java: chi richiede lo stesso
+	 * personaggio più volte (es. RegistroPersonaggi.getPersonaggioInLocazione()) può
+	 * ottenere ogni volta un wrapper Personaggio diverso sullo stesso modello dati, e
+	 * l'uuid resta lo stesso anche dopo un salvataggio/caricamento.
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj) {
+			return true;
+		}
+		if (!(obj instanceof Personaggio)) {
+			return false;
+		}
+		return md.getUuid().equals(((Personaggio) obj).getModelloDati().getUuid());
+	}
+
+	@Override
+	public int hashCode() {
+		return md.getUuid().hashCode();
+	}
 	
 	public int getOrdinale() {
 		return ordinale;

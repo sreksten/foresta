@@ -8,6 +8,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.UUID;
 
 public class ArtefattoMD implements Serializzabile {
 
@@ -15,6 +16,11 @@ public class ArtefattoMD implements Serializzabile {
 	 * Il nome di un artefatto o di un incantamento a cui è stato dato un nome vuoto
 	 */
 	public static final String NESSUN_NOME = Serializzabile.NESSUN_NOME;
+
+	/**
+	 * Un identificativo unico per l'artefatto
+	 */
+	private String uuid = UUID.randomUUID().toString();
 
 	private TipoArtefatto tipo;
 	private TipoRaritaArtefatto rarita = TipoRaritaArtefatto.COMUNE;
@@ -34,6 +40,10 @@ public class ArtefattoMD implements Serializzabile {
 	private boolean figliVisibili = true;
 	private final Collection<ModificatoreAttributo> modificatori = new ArrayList<>();
 	private final Collection<Incantamento> incantamenti = new ArrayList<>();
+
+	public String getUuid() {
+		return uuid;
+	}
 
 	public TipoArtefatto getTipo() {
 		return tipo;
@@ -206,6 +216,8 @@ public class ArtefattoMD implements Serializzabile {
 
 	@Override
 	public void salva(PrintWriter stream) throws IOException {
+		stream.print(uuid);
+		stream.print(PIPE);
 		stream.print(tipo.name());
 		stream.print(PIPE);
 		stream.print(rarita.name());
@@ -256,6 +268,7 @@ public class ArtefattoMD implements Serializzabile {
 	@Override
 	public void leggi(BufferedReader stream) throws IOException {
 		LettoreCampi campi = new LettoreCampi(stream.readLine());
+		uuid = campi.testo();
 		tipo = campi.enumerato(TipoArtefatto.class);
 		rarita = campi.enumerato(TipoRaritaArtefatto.class);
 		nomeProprio = campi.testoFacoltativo();
