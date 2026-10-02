@@ -6,6 +6,7 @@ import com.threeamigos.foresta.eventi.interni.InternoInterfacciaUtentePronta;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
 import com.threeamigos.foresta.motore.Automa;
 import com.threeamigos.foresta.motore.Notizie;
+import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.motore.RegistroTrofei;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.tools.*;
@@ -49,6 +50,7 @@ public class Main {
 		// Si registrano per tenere il conto di quanto succede in gioco
 		Statistiche.registrati();
 		RegistroTrofei.registrati();
+		RegistroArtefatti.registrati();
 
 		leggiArgomenti(args);
 		GestorePunteggi.impostaGestorePunteggi(new GestorePunteggiSuFile());

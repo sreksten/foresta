@@ -9,6 +9,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class RegistroArtefattiMD implements Serializzabile {
@@ -143,6 +144,29 @@ public class RegistroArtefattiMD implements Serializzabile {
 			CoordinateMD coordinate = new CoordinateMD(Integer.parseInt(st.testo()), Integer.parseInt(st.testo()));
 			localizzazioniConosciute.add(coordinate);
 		}
+	}
+
+	/**
+	 * Le città in cui un negozio ha un magazzino.
+	 */
+	public Set<CoordinateMD> getCoordinateMagazzini(TipoNegozio negozio) {
+		return new HashSet<>(magazzini.computeIfAbsent(negozio, k -> new HashMap<>()).keySet());
+	}
+
+	/**
+	 * Toglie l'artefatto dal magazzino, se c'è ancora.
+	 *
+	 * @return true se c'era
+	 */
+	public boolean rimuoviDaMagazzino(CoordinateMD coordinate, TipoNegozio negozio, ArtefattoMD artefatto) {
+		return getMagazzino(coordinate, negozio).remove(artefatto);
+	}
+
+	/**
+	 * Toglie dal magazzino gli artefatti che non soddisfano la condizione.
+	 */
+	public void tieniInMagazzino(CoordinateMD coordinate, TipoNegozio negozio, Predicate<ArtefattoMD> daTenere) {
+		getMagazzino(coordinate, negozio).removeIf(daTenere.negate());
 	}
 
 	private Collection<ArtefattoMD> getMagazzino(CoordinateMD coordinate, TipoNegozio negozio) {

@@ -265,7 +265,10 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         return componenteScorrevole;
     }
 
-    private static Collection<Artefatto> ordinaArtefattiDaDisegnare(Collection<Artefatto> artefatti) {
+    /**
+     * Per supertipo e tipo, e dentro lo stesso tipo dal livello più alto al più basso: i migliori in cima.
+     */
+    static Collection<Artefatto> ordinaArtefattiDaDisegnare(Collection<Artefatto> artefatti) {
         java.util.List<Artefatto> artefattiDaDisegnare = new ArrayList<>(artefatti);
         artefattiDaDisegnare.sort((a1, a2) -> {
             int ordinaleSupertipo1 = a1.getTipo().getSupertipo().ordinal();
@@ -274,6 +277,9 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
                 int ordinaleTipo1 = a1.getTipo().ordinal();
                 int ordinaleTipo2 = a2.getTipo().ordinal();
                 if (ordinaleTipo1 == ordinaleTipo2) {
+                    if (a1.getLivello() != a2.getLivello()) {
+                        return Integer.compare(a2.getLivello(), a1.getLivello());
+                    }
                     return a1.getNome().compareTo(a2.getNome());
                 }
                 return Integer.compare(ordinaleTipo1, ordinaleTipo2);

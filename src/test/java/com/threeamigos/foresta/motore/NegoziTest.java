@@ -12,6 +12,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -80,9 +81,13 @@ class NegoziTest {
         assertEquals(Costanti.MAGAZZINO_PERGAMENE, venditore.size());
         assertTrue(armaiolo.stream().allMatch(a -> TipoNegozio.ARMAIOLO.tratta(a.getTipo())));
         assertTrue(venditore.stream().allMatch(a -> a.getTipo() == TipoArtefatto.INCANTAMENTO));
-        // Livelli a rotazione da 1 al massimo
-        Set<Integer> livelli = venditore.stream().map(a -> a.getModelloDati().getLivello()).collect(Collectors.toSet());
-        assertEquals(Costanti.MAGAZZINO_LIVELLO_MASSIMO, livelli.size());
+        // Livelli a rotazione attorno al livello del mondo, che all'inizio e' 1: mai sotto 1
+        Set<Integer> livelli = armaiolo.stream().map(a -> a.getModelloDati().getLivello()).collect(Collectors.toSet());
+        Set<Integer> attesi = new HashSet<>();
+        for (int livello = 1; livello <= 1 + Costanti.MAGAZZINO_DIVARIO_LIVELLO; livello++) {
+            attesi.add(livello);
+        }
+        assertEquals(attesi, livelli);
         // Un'altra città ha i magazzini vuoti
         assertTrue(RegistroArtefatti.getScambiatorePerNegozio(new CoordinateMD(1, 1), TipoNegozio.ARMAIOLO).getInventario().isEmpty());
     }

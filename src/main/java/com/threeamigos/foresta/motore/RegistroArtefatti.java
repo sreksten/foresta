@@ -1,5 +1,12 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
+import com.threeamigos.foresta.eventi.interni.InternoPreparazioneLocazione;
+import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
+import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloMondo;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
+import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
@@ -12,6 +19,9 @@ import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 
+import java.util.ArrayList;
+import java.util.EnumSet;
+import java.util.List;
 import java.util.Set;
 
 public class RegistroArtefatti {
@@ -263,22 +273,107 @@ public class RegistroArtefatti {
 	}
 
 	/**
-	 * Riempie i magazzini dei negozi di una città: armi ed equipaggiamento per l'armaiolo, pergamene
-	 * per il venditore. Per ora si fa una volta sola, alla creazione del mondo, con livelli a rotazione
-	 * da 1 a Costanti.MAGAZZINO_LIVELLO_MASSIMO, così c'è qualcosa anche per quando il gruppo sarà cresciuto.
+	 * Si iscrive agli eventi che cambiano i magazzini dei negozi: le vendite del gruppo, la fine
+	 * della locazione e l'aumento del livello del mondo.
+	 */
+	public static void registrati() {
+		BusEventi.iscriviti(NotificaApprovazioneVenditaArtefatto.class, RegistroArtefatti::ricordaVendita);
+		BusEventi.iscriviti(InternoPreparazioneLocazione.class, evento -> vendutiNellaVisita.clear());
+		BusEventi.iscriviti(InternoFineLocazione.class, evento -> smaltisciVenduti());
+		BusEventi.iscriviti(NotificaAumentoLivelloMondo.class, evento -> aggiornaMagazzini(evento.getLivello(), GeneratoreArtefatti.istanza()));
+	}
+
+	/**
+	 * Riempie i magazzini dei negozi di una città alla creazione del mondo: armi ed equipaggiamento per
+	 * l'armaiolo, pergamene per il venditore, attorno al livello del mondo.
 	 */
 	static void riempiMagazzini(CoordinateMD coordinate, GeneratoreArtefatti generatore) {
-		ScambiatoreArtefatti armaiolo = getScambiatorePerNegozio(coordinate, TipoNegozio.ARMAIOLO);
-		for (int i = 0; i < Costanti.MAGAZZINO_ARTEFATTI_ARMAIOLO; i++) {
-			armaiolo.addArtefatto(generatore.generaArtefattoCasuale(livelloInMagazzino(i)));
-		}
-		ScambiatoreArtefatti venditoreDiPergamene = getScambiatorePerNegozio(coordinate, TipoNegozio.VENDITORE_DI_PERGAMENE);
-		for (int i = 0; i < Costanti.MAGAZZINO_PERGAMENE; i++) {
-			venditoreDiPergamene.addArtefatto(generatore.generaPergamena(livelloInMagazzino(i)));
+		rifornisci(coordinate, Statistiche.getLivello(), generatore);
+	}
+
+	/**
+	 * Il livello del mondo è aumentato: in ogni città ancora in piedi l'armaiolo scarta gli artefatti
+	 * ormai troppo deboli, il venditore rinnova le pergamene (il loro livello non supera mai
+	 * PERGAMENA_LIVELLO_MASSIMO, quindi non si possono scartare per livello), e arriva merce nuova.
+	 */
+	static void aggiornaMagazzini(int livelloMondo, GeneratoreArtefatti generatore) {
+		int livelloMinimo = livelloMondo - Costanti.MAGAZZINO_SCARTO_SOTTO_LIVELLO;
+		RegistroArtefattiMD registro = getRegistroArtefatti();
+		for (CoordinateMD coordinate : registro.getCoordinateMagazzini(TipoNegozio.ARMAIOLO)) {
+			if (Foresta.getLocazione(coordinate).getTipoLocazione() == TipoLocazione.CITTA) {
+				registro.tieniInMagazzino(coordinate, TipoNegozio.ARMAIOLO, artefatto -> artefatto.getLivello() >= livelloMinimo);
+				registro.tieniInMagazzino(coordinate, TipoNegozio.VENDITORE_DI_PERGAMENE, artefatto -> false);
+				rifornisci(coordinate, livelloMondo, generatore);
+			}
 		}
 	}
 
-	private static int livelloInMagazzino(int indice) {
-		return 1 + indice % Costanti.MAGAZZINO_LIVELLO_MASSIMO;
+	private static void rifornisci(CoordinateMD coordinate, int livelloMondo, GeneratoreArtefatti generatore) {
+		ScambiatoreArtefatti armaiolo = getScambiatorePerNegozio(coordinate, TipoNegozio.ARMAIOLO);
+		for (int i = 0; i < Costanti.MAGAZZINO_ARTEFATTI_ARMAIOLO; i++) {
+			armaiolo.addArtefatto(generatore.generaArtefattoCasuale(livelloInMagazzino(i, livelloMondo)));
+		}
+		ScambiatoreArtefatti venditoreDiPergamene = getScambiatorePerNegozio(coordinate, TipoNegozio.VENDITORE_DI_PERGAMENE);
+		for (int i = 0; i < Costanti.MAGAZZINO_PERGAMENE; i++) {
+			venditoreDiPergamene.addArtefatto(generatore.generaPergamena(livelloInMagazzino(i, livelloMondo)));
+		}
+	}
+
+	/**
+	 * Livelli a rotazione fra livello del mondo - divario e livello del mondo + divario, mai sotto 1.
+	 */
+	private static int livelloInMagazzino(int indice, int livelloMondo) {
+		int minimo = Math.max(1, livelloMondo - Costanti.MAGAZZINO_DIVARIO_LIVELLO);
+		int massimo = livelloMondo + Costanti.MAGAZZINO_DIVARIO_LIVELLO;
+		return minimo + indice % (massimo - minimo + 1);
+	}
+
+	/**
+	 * Quanto il gruppo ha venduto ai negozi durante la visita alla città, e dove.
+	 */
+	private static final List<Vendita> vendutiNellaVisita = new ArrayList<>();
+
+	private static final class Vendita {
+		private final CoordinateMD coordinate;
+		private final TipoNegozio negozio;
+		private final ArtefattoMD artefatto;
+
+		Vendita(CoordinateMD coordinate, TipoNegozio negozio, ArtefattoMD artefatto) {
+			this.coordinate = coordinate;
+			this.negozio = negozio;
+			this.artefatto = artefatto;
+		}
+	}
+
+	/**
+	 * Il negozio si riconosce dalla merce: il venditore tratta solo le pergamene, l'armaiolo tutto il resto.
+	 */
+	private static void ricordaVendita(NotificaApprovazioneVenditaArtefatto evento) {
+		Artefatto artefatto = (Artefatto) evento.getEventoRichiestaSpostamentoArtefatto().getOggettoDaSpostare();
+		TipoNegozio negozio = TipoNegozio.VENDITORE_DI_PERGAMENE.tratta(artefatto.getTipo())
+				? TipoNegozio.VENDITORE_DI_PERGAMENE : TipoNegozio.ARMAIOLO;
+		vendutiNellaVisita.add(new Vendita(GruppoGiocatore.getIstanza().getCoordinate(), negozio, artefatto.getModelloDati()));
+	}
+
+	/**
+	 * All'uscita dalla città i negozi distruggono quanto il gruppo ha venduto loro e non ha ricomprato,
+	 * così i magazzini non crescono all'infinito.
+	 */
+	private static void smaltisciVenduti() {
+		Set<TipoNegozio> negoziCheHannoSmaltito = EnumSet.noneOf(TipoNegozio.class);
+		for (Vendita vendita : vendutiNellaVisita) {
+			if (getRegistroArtefatti().rimuoviDaMagazzino(vendita.coordinate, vendita.negozio, vendita.artefatto)) {
+				negoziCheHannoSmaltito.add(vendita.negozio);
+			}
+		}
+		vendutiNellaVisita.clear();
+		if (negoziCheHannoSmaltito.contains(TipoNegozio.ARMAIOLO)) {
+			BusEventi.pubblica(new NotificaTestoParagrafo(
+					"L'armaiolo ti saluta: “Con il materiale che mi hai fornito, farò altre meravigliose creazioni!\""));
+		}
+		if (negoziCheHannoSmaltito.contains(TipoNegozio.VENDITORE_DI_PERGAMENE)) {
+			BusEventi.pubblica(new NotificaTestoParagrafo(
+					"Il venditore di pergamene ti saluta: “Ottime pergamene: le rivenderò a qualche mago di passaggio!\""));
+		}
 	}
 }
