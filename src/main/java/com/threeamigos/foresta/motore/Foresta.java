@@ -87,11 +87,18 @@ public class Foresta {
 	}
 	
 	public static CoordinateMD costruisciLocazioneUnica(ClassiLocazione classeLocazioneUnica, boolean conosciutaSuMappa) {
+		return costruisciLocazioneUnica(classeLocazioneUnica, getCoordinateLibere(), conosciutaSuMappa);
+	}
+
+	/**
+	 * Costruisce la locazione unica in quelle coordinate, scelte da chi chiama (per esempio da
+	 * RegistroMissioni.cerca, per una missione che si procura la propria locazione).
+	 */
+	public static CoordinateMD costruisciLocazioneUnica(ClassiLocazione classeLocazioneUnica, CoordinateMD coordinate, boolean conosciutaSuMappa) {
 		if (!classeLocazioneUnica.isLocazioneUnica()) {
 			throw new IllegalArgumentException("Utilizzare costruisciLocazione per creare " + classeLocazioneUnica.name());
 		}
-		Logger.log("Costruzione di " + classeLocazioneUnica);
-		CoordinateMD coordinate = getCoordinateLibere();
+		Logger.log("Costruzione di " + classeLocazioneUnica + " in " + coordinate);
 		setLocazione(coordinate, classeLocazioneUnica);
 		getForestaMD().aggiungiLocazioneUnica(classeLocazioneUnica, coordinate);
 		if (conosciutaSuMappa) {
@@ -125,7 +132,8 @@ public class Foresta {
 		List<ProduttoreDiTestiCasuale.DatiLocanda> poolDatiLocanda = ProduttoreDiTestiCasuale.getDatiLocanda(numeroCitta + numeroLocandeMax);
 
 		costruisciCittaEPosizionaPersonaggi(poolDatiLocanda);
-		costruisciCastelli();		
+		// I castelli degli alleati del Drago non si costruiscono qui: li rivendica ciascuno la propria missione
+		// all'inizio della partita (vedi RegistroMissioni.rivendicaPerLocazioneUnica)
 		costruisciLocandeEPosizionaPersonaggi(poolDatiLocanda);
 		costruisciTempliEPosizionaArtefatti();
 		
@@ -168,17 +176,6 @@ public class Foresta {
 				if (personaggioDisponibile != null) {
 					RegistroPersonaggi.addPersonaggioInLocazione(personaggioDisponibile, coordinate);
 				}
-			}
-		}
-	}
-	
-	/**
-	 * Costruisce tutti i castelli tranne quello del Drago che appare solo dopo aver distrutto tutti gli altri
-	 */
-	private static void costruisciCastelli() {
-		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
-			if (classeLocazione.getTipoLocazione() == TipoLocazione.CASTELLO && classeLocazione != ClassiLocazione.CASTELLO_DRAGO) {
-				costruisciLocazioneUnica(classeLocazione, false);
 			}
 		}
 	}

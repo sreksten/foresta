@@ -4,6 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.RegistroMissioni;
 
 /**
  *
@@ -27,7 +28,9 @@ public class SconfiggiLIdra extends MissioneBase implements Missione {
 
     @Override
     public void controllaPreLocazione() {
-        if (!isAttiva()) {
+        // Il castello non c'è dall'inizio: la missione se lo procura su un bosco, e si attiva solo se ci riesce
+        // (altrimenti riprova al prossimo controllo)
+        if (!isAttiva() && RegistroMissioni.rivendicaPerLocazioneUnica(ClassiLocazione.CASTELLO_IDRA, ClassiLocazione.BOSCO, this) != null) {
             attivaMissione();
         }
     }

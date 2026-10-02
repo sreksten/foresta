@@ -10,6 +10,7 @@ import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneMissione;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneIncantesimoDaLanciare;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.Artefatto;
@@ -215,6 +216,11 @@ final class PartitaDiTest implements AutoCloseable {
 	 */
 	void spostaGruppoIn(ClassiLocazione locazioneUnica) {
 		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(locazioneUnica);
+		if (coordinate == null && locazioneUnica.getTipoLocazione() == ClassiLocazione.TipoLocazione.CASTELLO) {
+			// I castelli li rivendicano le loro missioni al primo controllo della partita: qui lo si anticipa
+			RegistroMissioni.getMissionePrincipale().getMissioniSecondarie().forEach(Missione::controllaPreLocazione);
+			coordinate = Foresta.getCoordinateLocazioneUnica(locazioneUnica);
+		}
 		if (coordinate == null) {
 			throw new IllegalArgumentException(locazioneUnica + " non è nella Foresta");
 		}

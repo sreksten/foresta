@@ -9,8 +9,8 @@
 | 3. `Passo` e `MissioneAPassi` | fatto, vedi "Come è stato implementato" in fondo al punto 3 |
 | 4. Domande al giocatore | fatto, vedi "Come è stato implementato" in fondo al punto 4 |
 | 5. Migrazione di Medaglione e Derrate | fatto, vedi "Come è stato implementato" in fondo al punto 5 |
-| 6. Claim delle locazioni e `cerca` | da fare |
-| 7. `SconfiggiIlDrago` e claim precoce | da fare, dopo il 6 |
+| 6. Claim delle locazioni e `cerca` | fatto, con la regola corretta del punto 7; vedi "Come è stato implementato" in fondo al punto 6 |
+| 7. `SconfiggiIlDrago` e claim precoce | claim precoce e memoria dei claim fatti col punto 6; restano l'hook di descrizione ("qui sorgeva…") e i castelli che diventano rovine |
 
 ## Contesto
 
@@ -712,6 +712,50 @@ l'`azione` di un passo o dentro `controllaPreLocazione`/`PostLocazione` di una
 missione, esattamente come oggi `costruisciLocazioneUnica`. È quindi
 indipendente e più piccolo del resto della discussione su "locazione unica",
 e può essere costruito prima, senza aspettare quella parte.
+
+### Come è stato implementato (2026-10-02)
+
+Con la regola corretta del punto 7: un claim **non si cancella mai**, si
+sovrascrive.
+
+- **`RegistroMissioni`:**
+  - `locazioniOccupate` (coordinata → id della missione che l'ha rivendicata per
+    ultima) e `occupaLocazione(coordinate, missione)`. La missione ricorda la
+    sua coordinata nella proprietà `LOCAZIONE_OCCUPATA` (`"x,y,n"`, con `n` il
+    numero d'ordine del claim); ne rivendica una sola alla volta. Non si usa
+    `COORDINATA_X`/`COORDINATA_Y`, che in `MuoviALocazione` vogliono dire
+    "destinazione da raggiungere".
+  - `getLocazioneOccupata(missione)` e `getMissioneCheHaOccupato(coordinate)`
+    (anche a missione finita, per l'hook "qui sorgeva…").
+  - `cerca(classe, missione)`: quadrati concentrici attorno a una casella a
+    caso (`bordo(x0, y0, raggio)`: le celle a distanza di Chebyshev esatta, dal
+    lato nord in senso orario). Una cella è disponibile se non ha claim, se il
+    claim è della missione stessa, o se la missione che l'ha rivendicata è
+    completa o fallita. Non si sceglie mai la casella del gruppo, per non
+    cambiargli la locazione sotto i piedi. Vuoto se non c'è niente: la
+    missione riprova.
+  - `rivendicaPerLocazioneUnica(locazioneUnica, suCasellaDi, missione)`: `cerca`
+    più la costruzione della locazione unica, come non visitata.
+  - Dopo un caricamento i claim si ricostruiscono dalle proprietà di tutte le
+    missioni, nell'ordine del numero `n`, così vince ancora l'ultimo.
+- **Castelli:** `Foresta.costruisciCastelli()` non c'è più. Le quattro missioni
+  `Sconfiggi*` rivendicano il loro castello su un `BOSCO` nel proprio
+  `controllaPreLocazione` e si attivano solo se ci riescono: con l'ordine di
+  visita esistente succede al primo controllo della partita. Anche
+  `SconfiggiIlDrago` costruisce il suo castello con
+  `rivendicaPerLocazioneUnica`, e se non trova un bosco libero riprova alla
+  fine della locazione successiva. `Foresta.costruisciLocazioneUnica` ha una
+  variante con le coordinate.
+- **Passo `CercaLocazione`:** `MissioneAPassi.cercaLocazione(momento, classe)`,
+  un passo che si conclude quando `cerca` trova una locazione (e la
+  rivendica); la coordinata si legge con `getLocazioneOccupata`.
+- **Test:** la partita di test (`PartitaDiTest.spostaGruppoIn`), se le si chiede
+  un castello che ancora non esiste, fa rivendicare i castelli alle missioni
+  prima del tempo. `ScenarioLocazioniRivendicateTest` (5): i quattro castelli
+  rivendicati a inizio partita, il bordo dei quadrati, il passo `cercaLocazione`
+  (mai la casella del gruppo), le locazioni di una missione in corso escluse e
+  quelle di una finita riprese con la memoria del vecchio proprietario, i
+  claim ricostruiti dopo un caricamento con l'ultimo che vince.
 
 ## 7. `SconfiggiIlDrago`: claim precoce delle quattro missioni figlie, memoria storica del claim
 

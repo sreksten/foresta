@@ -1,7 +1,9 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
+import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.motore.RegistroMissioni;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -125,6 +127,19 @@ public abstract class MissioneAPassi extends MissioneBase {
 
 	private void impostaPassoCorrente(String id) {
 		aggiungiProprieta(PASSO_CORRENTE, validaId(id));
+	}
+
+	// --- Locazioni da procurarsi
+
+	/**
+	 * Un passo che si procura una locazione esistente di quella classe che nessuna missione in corso ha
+	 * rivendicato (vedi {@link RegistroMissioni#cerca}): si conclude quando la trova, rivendicandola per la missione;
+	 * finché non c'è, si riprova a ogni controllo del suo momento. La coordinata trovata si legge poi con
+	 * {@link RegistroMissioni#getLocazioneOccupata(Missione)}. Come ogni passo, si completa con {@code poi} e,
+	 * se serve, {@code esegui}.
+	 */
+	protected final Passo cercaLocazione(MomentoControllo momento, ClassiLocazione richiesta) {
+		return Passo.quando(momento, () -> RegistroMissioni.cerca(richiesta, this).isPresent());
 	}
 
 	// --- Domande al giocatore
