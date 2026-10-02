@@ -64,6 +64,29 @@ class ScenarioIncarichiInCittaTest {
     }
 
     @Test
+    void rientrandoInCittaConLAutomaVeroLIncaricoParte() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(65)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
+                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_FLEENA));
+            CacciaAiGoblin caccia = trova(CacciaAiGoblin.class);
+            assertFalse(caccia.isAttiva(), "alla prima visita parte il medaglione");
+            CoordinateMD fleena = partita.gruppo().getCoordinate();
+
+            // Si esce dalla città e ci si rientra da sud, come farebbe il giocatore
+            partita.comando(Comando.ESCI_DA_CITTA);
+            partita.gruppo().setCoordinate(new CoordinateMD(fleena.getX(), fleena.getY() + 1));
+            partita.assertStato(Stato.SCELTA_DIREZIONE);
+            partita.comando(Comando.NORD).comando(Comando.NUMERO_1);
+            assertEquals(fleena, partita.gruppo().getCoordinate());
+
+            assertTrue(caccia.isAttiva(), "alla seconda visita parte l'incarico");
+            assertEquals("CACCIA", caccia.getPassoCorrente());
+            assertFalse(trova(LAlchimistaELaMandragola.class).isAttiva(), "uno per visita");
+            assertTrue(partita.testi().stream().anyMatch(t -> t.contains("Il mercante pagherà")), String.valueOf(partita.testi()));
+        }
+    }
+
+    @Test
     void laCacciaAiGoblinSiPrendeInCittaESiRiscuoteLi() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(61)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
