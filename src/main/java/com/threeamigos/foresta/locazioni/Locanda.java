@@ -58,6 +58,11 @@ public class Locanda extends LocazioneBase {
 	 * alle visite successive.
 	 */
 	public static final String LOCANDA_DIALOGO_LETTO = "LOCANDA_DIALOGO_LETTO";
+	/**
+	 * Quante informazioni la locanda ha già dato: oltre Costanti.LOCANDA_MASSIMO_INFORMAZIONI non
+	 * ne dà più, altrimenti andando avanti e indietro si scoprirebbe tutta la Foresta.
+	 */
+	public static final String LOCANDA_INFORMAZIONI_DATE = "LOCANDA_INFORMAZIONI_DATE";
 	public static final String LOCANDA_RECENSIONE_LETTA = "LOCANDA_RECENSIONE_LETTA";
 
 	private StatoInLocanda stato;
@@ -222,8 +227,13 @@ public class Locanda extends LocazioneBase {
 				BusEventi.pubblica(new InternoPastoConsumatoInLocanda());
 
 				if (evento == RICEVE_INFORMAZIONI) {
-					Informazioni info = new Informazioni();
-					BusEventi.pubblica(new NotificaTestoParagrafo(info.getDescrizione(gruppo, gng)));
+					if (getInformazioniDate() < Costanti.LOCANDA_MASSIMO_INFORMAZIONI) {
+						Informazioni info = new Informazioni();
+						BusEventi.pubblica(new NotificaTestoParagrafo(info.getDescrizione(gruppo, gng)));
+						getModelloDati().aggiungiProprieta(LOCANDA_INFORMAZIONI_DATE, String.valueOf(getInformazioniDate() + 1));
+					} else {
+						BusEventi.pubblica(new NotificaTestoParagrafo("Nessuno ha più nulla di nuovo da raccontare."));
+					}
 				}
 
 				if (incontra(gruppo)) {
@@ -269,6 +279,11 @@ public class Locanda extends LocazioneBase {
 		default:
 			throw new IllegalArgumentException("Locanda::impostaAzioni(): Qui non ci dovrei arrivare MAI");
 		}
+	}
+
+	private int getInformazioniDate() {
+		String informazioniDate = getModelloDati().ottieniProprieta(LOCANDA_INFORMAZIONI_DATE);
+		return informazioniDate == null ? 0 : Integer.parseInt(informazioniDate);
 	}
 
 	private boolean incontra(GruppoGiocatore g) {

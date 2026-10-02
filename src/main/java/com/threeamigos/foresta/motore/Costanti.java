@@ -175,6 +175,8 @@ public class Costanti {
 
     // In locanda
     public static final int COSTO_PASTO = 5;
+    // Quante informazioni si possono ottenere in una stessa locanda, in tutta la partita
+    public static final int LOCANDA_MASSIMO_INFORMAZIONI = 3;
     public static final int COSTO_PERNOTTAMENTO = 5;
     public static final int RECUPERO_SALUTE_DA_PASTO = 100;
 
