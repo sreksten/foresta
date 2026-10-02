@@ -62,6 +62,8 @@ class IntermezzoLocazioneCompletataTest {
 			assertEquals(0, contaBattutaEremita(partita),
 					"l'intermezzo non deve comparire finché la UI è occupata");
 			partita.assertStato(Stato.ATTESA_UI_PER_INTERMEZZO);
+			assertTrue(partita.comandiDisponibili().isEmpty(),
+					"in attesa della UI la barra delle icone deve essere vuota");
 
 			partita.pubblica(new InternoUiInattiva());
 
@@ -71,13 +73,12 @@ class IntermezzoLocazioneCompletataTest {
 	}
 
 	/**
-	 * Riproduce il bug per cui, terminando l'ultima pagina di un intermezzo mentre la UI è ancora
-	 * occupata, l'Automa avvisava subito la UI di tornare alla schermata di gioco
-	 * ({@link InternoMostraSchermataGioco}) pur restando in {@link Stato#ATTESA_UI_PER_INTERMEZZO}:
-	 * la UI si ritrovava così a disegnare la locazione prima che l'Automa l'avesse impostata.
+	 * Terminando l'ultima pagina di un intermezzo mentre la UI è ancora occupata, se non ci sono
+	 * altri intermezzi da mostrare non si aspetta la UI: si torna subito al gioco
+	 * ({@link InternoMostraSchermataGioco}, una volta sola) e alla scelta della direzione.
 	 */
 	@Test
-	void nonTornaAlGiocoFincheLaUiENonEInattivaDopoLultimaPaginaDiUnIntermezzo() {
+	void dopoLultimaPaginaDiUnIntermezzoNonAspettaLaUiSeNonCeNeSonoAltri() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
 					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
@@ -89,17 +90,34 @@ class IntermezzoLocazioneCompletataTest {
 			partita.assertStato(Stato.INTERMEZZO);
 
 			partita.pubblica(new InternoUiOccupata());
-			partita.comando(Comando.PERGAMENA);
-
-			partita.assertStato(Stato.ATTESA_UI_PER_INTERMEZZO);
-			assertEquals(0, partita.eventi().tutti(InternoMostraSchermataGioco.class).size(),
-					"la UI non deve tornare al gioco finché è ancora occupata");
-
-			partita.pubblica(new InternoUiInattiva());
+			while (partita.stato() == Stato.INTERMEZZO) {
+				partita.comando(Comando.PERGAMENA);
+			}
 
 			partita.assertStato(Stato.SCELTA_DIREZIONE);
 			assertEquals(1, partita.eventi().tutti(InternoMostraSchermataGioco.class).size(),
-					"appena la UI è inattiva deve tornare al gioco una volta sola");
+					"la UI deve tornare al gioco una volta sola");
+		}
+	}
+
+	/**
+	 * A fine locazione, se non c'è nessun intermezzo da mostrare, non si aspetta che la UI finisca
+	 * le sue animazioni: si passa subito alla scelta della direzione.
+	 */
+	@Test
+	void senzaIntermezziNonAspettaLaUiAFineLocazione() {
+		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
+			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
+					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+			partita.assertStato(Stato.IN_LOCAZIONE);
+			RegistroIntermezzi.segnaScattato(ClasseIntermezzo.INTERMEZZO_FINE_PRIMA_LOCAZIONE.getIstanza());
+			assertNull(RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA),
+					"precondizione: nessun intermezzo deve scattare a fine locazione");
+
+			partita.pubblica(new InternoUiOccupata());
+			partita.comando(Comando.ESCI_DA_CITTA);
+
+			partita.assertStato(Stato.SCELTA_DIREZIONE);
 		}
 	}
 

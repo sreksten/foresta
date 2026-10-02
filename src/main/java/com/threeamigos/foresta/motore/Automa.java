@@ -540,10 +540,18 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 * intermezzi scattati nello stesso momento vengono mostrati uno dopo l'altro.
 	 */
 	private Esito avviaProssimoIntermezzo(MomentoIntermezzo momento, Stato statoDopo) {
+		// Senza intermezzi da mostrare non c'è motivo di aspettare che la UI finisca le
+		// sue animazioni: si prosegue subito
+		if (RegistroIntermezzi.getProssimoIntermezzo(momento) == null) {
+			stato = statoDopo;
+			return Esito.CONTINUA_CON_INGRESSO;
+		}
 		if (uiOccupata) {
 			momentoIntermezzoInAttesa = momento;
 			statoDopoIntermezzoInAttesa = statoDopo;
 			stato = Stato.ATTESA_UI_PER_INTERMEZZO;
+			// In attesa nessun comando è applicabile: la barra delle icone va svuotata
+			BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili());
 			return Esito.FERMATI;
 		}
 		Intermezzo intermezzo;
