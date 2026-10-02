@@ -102,8 +102,14 @@ public class RegistroMissioni {
 	 * avversari sconfitti e gli oggetti raccolti. Vanno a tutte le missioni non ancora finite.
 	 */
 	public static void registrati() {
-		BusEventi.iscriviti(InternoAvversarioSconfitto.class,
-				evento -> registraEvento(MissioneAPassi.eventoSconfitto(evento.getClasse()), 1));
+		BusEventi.iscriviti(InternoAvversarioSconfitto.class, evento -> {
+			registraEvento(MissioneAPassi.eventoSconfitto(evento.getClasse()), 1);
+			// Anche con la casella in cui è successo: per i combattimenti di una missione in una locazione precisa
+			CoordinateMD coordinate = GruppoGiocatore.getIstanza().getCoordinate();
+			if (coordinate != null) {
+				registraEvento(MissioneAPassi.eventoSconfittoIn(evento.getClasse(), coordinate), 1);
+			}
+		});
 		BusEventi.iscriviti(InternoOggettoRaccolto.class,
 				evento -> registraEvento(MissioneAPassi.eventoRaccolto(evento.getClasse()), evento.getQuantita()));
 	}
@@ -257,12 +263,59 @@ public class RegistroMissioni {
 	}
 
 	/**
+	 * Come {@link #cerca}, ma se su tutta la mappa non c'è una locazione disponibile di quella classe se ne costruisce
+	 * una nuova al posto di un bosco o di una palude disponibile, preferendo quelli già visitati, e la si rivendica
+	 * per la missione come non ancora visitata. Non si tocca la casella del gruppo né una casella con un artefatto del
+	 * registro. Vuoto solo se non c'è neanche un bosco o una palude da sostituire.
+	 */
+	public static Optional<CoordinateMD> cercaOCostruisci(ClassiLocazione richiesta, Missione missione) {
+		Optional<CoordinateMD> trovata = cerca(richiesta, missione);
+		if (trovata.isPresent()) {
+			return trovata;
+		}
+		Optional<CoordinateMD> sostituita = cercaDaSostituire(missione, true);
+		if (!sostituita.isPresent()) {
+			sostituita = cercaDaSostituire(missione, false);
+		}
+		sostituita.ifPresent(coordinate -> {
+			Foresta.costruisciLocazione(coordinate, richiesta);
+			occupaLocazione(coordinate, missione);
+		});
+		return sostituita;
+	}
+
+	private static Optional<CoordinateMD> cercaDaSostituire(Missione missione, boolean soloVisitate) {
+		int dimensioneX = Foresta.getDimensioneX();
+		int dimensioneY = Foresta.getDimensioneY();
+		int x0 = Dado.tira(dimensioneX) - 1;
+		int y0 = Dado.tira(dimensioneY) - 1;
+		CoordinateMD gruppo = GruppoGiocatore.getIstanza().getCoordinate();
+		int raggioMassimo = Math.max(dimensioneX, dimensioneY);
+		for (int raggio = 0; raggio <= raggioMassimo; raggio++) {
+			for (CoordinateMD coordinate : bordo(x0, y0, raggio)) {
+				if (coordinate.getX() < 0 || coordinate.getX() >= dimensioneX || coordinate.getY() < 0 || coordinate.getY() >= dimensioneY
+						|| coordinate.equals(gruppo)) {
+					continue;
+				}
+				ClassiLocazione classe = Foresta.getLocazione(coordinate);
+				if ((classe == ClassiLocazione.BOSCO || classe == ClassiLocazione.PALUDE)
+						&& (!soloVisitate || Foresta.isLocazioneVisitata(coordinate))
+						&& isDisponibile(coordinate, missione)
+						&& RegistroArtefatti.getArtefattoInLocazione(coordinate) == null) {
+					return Optional.of(coordinate);
+				}
+			}
+		}
+		return Optional.empty();
+	}
+
+	/**
 	 * Per una missione che si procura la propria locazione unica: cerca una casella di quella classe
-	 * ({@link #cerca}), ci costruisce la locazione unica come non ancora visitata e ne restituisce la coordinata,
+	 * ({@link #cercaOCostruisci}), ci costruisce la locazione unica come non ancora visitata e ne restituisce la coordinata,
 	 * o null se non ne ha trovata nessuna.
 	 */
 	public static CoordinateMD rivendicaPerLocazioneUnica(ClassiLocazione locazioneUnica, ClassiLocazione suCasellaDi, Missione missione) {
-		Optional<CoordinateMD> coordinate = cerca(suCasellaDi, missione);
+		Optional<CoordinateMD> coordinate = cercaOCostruisci(suCasellaDi, missione);
 		if (!coordinate.isPresent()) {
 			return null;
 		}

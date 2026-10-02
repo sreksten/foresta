@@ -38,7 +38,8 @@ public abstract class OggettoArtefatto extends OggettoBase implements Oggetto {
 		if (artefatto.getNome() != null) {
 			return artefatto.getNome();
 		}
-		return getAIS() + ' ' + getNomeSingolare();
+		// Gli articoli finiscono già con lo spazio (vedi Misc)
+		return getAIS() + getNomeSingolare();
 	}
 
 	public abstract String getAIS();

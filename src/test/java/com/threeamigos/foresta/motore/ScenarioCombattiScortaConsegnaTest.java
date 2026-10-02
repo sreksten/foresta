@@ -50,8 +50,16 @@ class ScenarioCombattiScortaConsegnaTest {
             assertEquals(3, GruppoAvversario.getIstanza().getNumeroPersonaggi());
             assertEquals("Sgranf", GruppoAvversario.getIstanza().getCapo().getNome());
 
-            // Due hobgoblin non bastano, tre sì, ma solo nel covo
+            // Gli hobgoblin sconfitti altrove non contano
+            partita.gruppo().setCoordinate(new CoordinateMD(covo.getX(), covo.getY() + 1));
+            for (int i = 0; i < 3; i++) {
+                partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.HOBGOBLIN));
+            }
             partita.gruppo().setCoordinate(covo);
+            taglia.controllaPostLocazione();
+            assertEquals("CACCIA", taglia.getPassoCorrente(), "quelli sconfitti fuori dal covo non contano");
+
+            // Nel covo, due non bastano, tre sì
             partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.HOBGOBLIN));
             partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.HOBGOBLIN));
             taglia.controllaPostLocazione();

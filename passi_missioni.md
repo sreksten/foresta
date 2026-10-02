@@ -114,8 +114,14 @@ pronti nella stessa visita parte il primo controllato. Test:
   dopo `crea`, come per gli oggetti: `RegistroMissioni.getIncontroMissione`).
   `IncontroDiMissione.di(HOBGOBLIN, 3).conCapo("Sgranf")`: il capo ha un nome
   proprio e un livello in più. Si conclude a fine locazione, lì, quando il
-  gruppo ne ha sconfitti quanti ne erano (contano anche quelli della stessa
-  classe sconfitti altrove nel frattempo).
+  gruppo ne ha sconfitti lì quanti ne erano: `RegistroMissioni` registra ogni
+  avversario sconfitto anche con la casella in cui è caduto
+  (`MissioneAPassi.eventoSconfittoIn`), e quelli sconfitti altrove non contano.
+- **Locazioni procurate**: `cercaLocazione` (e la leggenda dell'armaiolo, e i
+  castelli delle missioni `Sconfiggi*`) usano `RegistroMissioni.cercaOCostruisci`:
+  se non c'è una locazione disponibile della classe richiesta se ne costruisce
+  una al posto di un bosco o di una palude disponibile, preferendo quelli già
+  visitati, come non ancora visitata. Così un incarico non resta mai fermo.
 - **`SCORTA`**: `prendiInScorta(momento, quando, nome)` fa viaggiare con il
   gruppo un `Viandante` (nuova `ClassePersonaggio.VIANDANTE`, con le
   caratteristiche e per ora l'immagine del bardo; non si incontra e non si

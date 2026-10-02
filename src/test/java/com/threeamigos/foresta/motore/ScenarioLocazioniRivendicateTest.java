@@ -113,6 +113,33 @@ class ScenarioLocazioniRivendicateTest {
     }
 
     @Test
+    void seNonCeUnTempioLiberoSeNeCostruisceUnoSuUnBoscoGiaVisitato() {
+        try (PartitaDiTest partita = nuovaPartita(34)) {
+            MissioneDelTempio prima = aggiungi(new MissioneDelTempio());
+            MissioneDelTempio seconda = aggiungi(new MissioneDelTempio());
+            for (CoordinateMD tempio : coordinate(ClassiLocazione.TEMPIO)) {
+                RegistroMissioni.occupaLocazione(tempio, prima);
+            }
+            assertEquals(Optional.empty(), RegistroMissioni.cerca(ClassiLocazione.TEMPIO, seconda));
+
+            // Un solo bosco visitato, e niente paludi visitate: il tempio nuovo sorge lì
+            CoordinateMD visitato = coordinate(ClassiLocazione.BOSCO).stream()
+                    .filter(c -> !c.equals(partita.gruppo().getCoordinate()) && RegistroArtefatti.getArtefattoInLocazione(c) == null)
+                    .findFirst().orElseThrow(AssertionError::new);
+            for (ClassiLocazione classe : new ClassiLocazione[]{ClassiLocazione.BOSCO, ClassiLocazione.PALUDE}) {
+                coordinate(classe).forEach(c -> Foresta.setLocazioneVisitata(c, false));
+            }
+            Foresta.setLocazioneVisitata(visitato, true);
+
+            Optional<CoordinateMD> costruito = RegistroMissioni.cercaOCostruisci(ClassiLocazione.TEMPIO, seconda);
+            assertEquals(Optional.of(visitato), costruito);
+            assertEquals(ClassiLocazione.TEMPIO, Foresta.getLocazione(visitato));
+            assertFalse(Foresta.isLocazioneVisitata(visitato), "il tempio nuovo è da visitare");
+            assertSame(seconda, RegistroMissioni.getMissioneCheHaOccupato(visitato).orElse(null));
+        }
+    }
+
+    @Test
     void unaLocazioneDiUnaMissioneInCorsoNonSiPrendeQuellaDiUnaMissioneFinitaSiERestaLUltimoProprietario() {
         try (PartitaDiTest partita = nuovaPartita(33)) {
             MissioneDelTempio prima = aggiungi(new MissioneDelTempio());

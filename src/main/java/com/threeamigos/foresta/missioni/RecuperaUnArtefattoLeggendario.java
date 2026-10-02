@@ -93,9 +93,9 @@ public abstract class RecuperaUnArtefattoLeggendario extends MissioneAPassi {
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaDellaLeggenda().getPagine())
 						.poi(ACCETTAZIONE);
 			case ACCETTAZIONE:
-				// Il tempio sorge su un bosco che la missione rivendica; se non ce n'è nessuno libero si riprova
+				// Il tempio sorge su un bosco che la missione rivendica; se non ce n'è nessuno libero se ne fa uno
 				return Passo.quando(MomentoControllo.IN_LOCAZIONE,
-								() -> nellaCitta() && RegistroMissioni.cerca(ClassiLocazione.BOSCO, this).isPresent())
+								() -> nellaCitta() && RegistroMissioni.cercaOCostruisci(ClassiLocazione.BOSCO, this).isPresent())
 						.esegui(() -> {
 							RegistroArtefatti.custodisciInUnTempioNuovo(getLeggendario().costruisci(), getTempio());
 							BusEventi.pubblica(new NotificaTestoParagrafo("L'armaiolo segna sulla mappa il tempio dove le viverne custodiscono "

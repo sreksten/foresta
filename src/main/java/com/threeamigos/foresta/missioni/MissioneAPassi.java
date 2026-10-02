@@ -326,13 +326,12 @@ public abstract class MissioneAPassi extends MissioneBase {
 	/**
 	 * COMBATTI(bersaglio): finché è il passo corrente, nella locazione in quelle coordinate ci sono gli avversari
 	 * dell'incontro, al posto di quelli che ci sarebbero stati; si conclude a fine locazione, lì, quando il gruppo
-	 * ne ha sconfitti quanti ne erano. Gli avversari della stessa classe sconfitti altrove nel frattempo contano
-	 * anche loro: per una banda in un covo va bene così.
+	 * ne ha sconfitti lì quanti ne erano: quelli della stessa classe sconfitti altrove non contano.
 	 */
 	protected final Passo combatti(Supplier<CoordinateMD> dove, IncontroDiMissione incontro) {
 		return Passo.quando(MomentoControllo.POST_LOCAZIONE,
 						() -> dove.get() != null && dove.get().equals(GruppoGiocatore.getIstanza().getCoordinate())
-								&& getConteggioNelPassoCorrente(eventoSconfitto(incontro.getClasse())) >= incontro.getNumero())
+								&& getConteggioNelPassoCorrente(eventoSconfittoIn(incontro.getClasse(), dove.get())) >= incontro.getNumero())
 				.affronta(dove, incontro);
 	}
 
@@ -402,6 +401,13 @@ public abstract class MissioneAPassi extends MissioneBase {
 		return "SCONFITTO_" + classe.name();
 	}
 
+	/**
+	 * Un avversario di quella classe sconfitto in quella casella (vedi {@link #combatti}).
+	 */
+	public static String eventoSconfittoIn(ClassePersonaggio classe, CoordinateMD coordinate) {
+		return eventoSconfitto(classe) + "_IN_" + coordinate.getX() + "_" + coordinate.getY();
+	}
+
 	public static String eventoRaccolto(ClassiOggetto classe) {
 		return "RACCOLTO_" + classe.name();
 	}
@@ -444,14 +450,15 @@ public abstract class MissioneAPassi extends MissioneBase {
 	// --- Locazioni da procurarsi
 
 	/**
-	 * Un passo che si procura una locazione esistente di quella classe che nessuna missione in corso ha
-	 * rivendicato (vedi {@link RegistroMissioni#cerca}): si conclude quando la trova, rivendicandola per la missione;
-	 * finché non c'è, si riprova a ogni controllo del suo momento. La coordinata trovata si legge poi con
+	 * Un passo che si procura una locazione di quella classe che nessuna missione in corso ha rivendicato (vedi
+	 * {@link RegistroMissioni#cercaOCostruisci}: se non ce n'è nessuna se ne costruisce una al posto di un bosco o di
+	 * una palude) e la rivendica per la missione; nel caso, rarissimo, in cui non ci sia neanche quello si riprova a
+	 * ogni controllo del suo momento. La coordinata trovata si legge poi con
 	 * {@link RegistroMissioni#getLocazioneOccupata(Missione)}. Come ogni passo, si completa con {@code poi} e,
 	 * se serve, {@code esegui}.
 	 */
 	protected final Passo cercaLocazione(MomentoControllo momento, ClassiLocazione richiesta) {
-		return Passo.quando(momento, () -> RegistroMissioni.cerca(richiesta, this).isPresent());
+		return Passo.quando(momento, () -> RegistroMissioni.cercaOCostruisci(richiesta, this).isPresent());
 	}
 
 	// --- Domande al giocatore
