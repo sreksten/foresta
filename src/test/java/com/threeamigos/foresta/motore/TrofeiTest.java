@@ -4,11 +4,13 @@ import com.threeamigos.foresta.eventi.interni.InternoAmiciziaStretta;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.interni.InternoCorruzioneRiuscita;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
+import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
 import com.threeamigos.foresta.eventi.interni.InternoPreparazioneLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoTrofeoAcquisito;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.tipi.TipoTrofeo;
+import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import org.junit.jupiter.api.Test;
 
@@ -245,6 +247,52 @@ class TrofeiTest {
 			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.UCCIDI_LA_STREGA));
 			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.UCCIDI_IL_LICH));
 			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.UCCIDI_IL_MINOTAURO_GIGANTE));
+		}
+	}
+
+	@Test
+	void iTesoriContanoSoloSeCustoditiDagliAvversari() {
+		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
+			// 99 monete, gemme e corone tolte agli avversari, e altrettante trovate incustodite
+			for (int i = 0; i < 33; i++) {
+				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.MONETA, 3, true));
+				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.GEMMA, 3, true));
+				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.CORONA, 3, true));
+				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.MONETA, 3, false));
+				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.GEMMA, 3, false));
+				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.CORONA, 3, false));
+			}
+			partita.pubblica(new InternoFineLocazione());
+
+			assertEquals(99, RegistroTrofei.getProgresso(TipoTrofeo.RAPINATORE), "le monete incustodite non contano");
+			assertEquals(99, RegistroTrofei.getProgresso(TipoTrofeo.LADRO_DI_PREZIOSI));
+			assertEquals(99, RegistroTrofei.getProgresso(TipoTrofeo.ARSENIO_LUPIN));
+			assertFalse(RegistroTrofei.isVinto(TipoTrofeo.RAPINATORE));
+
+			partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.MONETA, 1, true));
+			partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.GEMMA, 1, true));
+			partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.CORONA, 1, true));
+			partita.pubblica(new InternoFineLocazione());
+
+			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.RAPINATORE));
+			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.LADRO_DI_PREZIOSI));
+			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.ARSENIO_LUPIN));
+			assertFalse(RegistroTrofei.isVinto(TipoTrofeo.ESPERTO_SCASSINATORE), "monete, gemme e corone non sono cofani");
+		}
+	}
+
+	@Test
+	void lEspertoScassinatoreContaAncheICofaniIncustoditi() {
+		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
+			for (int i = 0; i < 50; i++) {
+				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.COFANO, 1, true));
+				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.COFANO, 1, false));
+			}
+			partita.pubblica(new InternoFineLocazione());
+
+			assertEquals(100, RegistroTrofei.getProgresso(TipoTrofeo.ESPERTO_SCASSINATORE));
+			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.ESPERTO_SCASSINATORE));
+			assertEquals(0, RegistroTrofei.getProgresso(TipoTrofeo.RAPINATORE));
 		}
 	}
 

@@ -64,6 +64,8 @@ public abstract class LocazioneBase implements Locazione {
 	private boolean opzioneAmiciziaDisponibile;
 	// Se il gruppo stringe amicizia non può prendere gli oggetti
 	private boolean haStrettoAmicizia;
+	// Se all'arrivo del gruppo c'erano avversari: altrimenti il tesoro è incustodito
+	private boolean custodita;
 	// Se si riesce a fare amicizia potrebbe essere formulata un'offerta
 	private Offerta offerta;
 
@@ -862,6 +864,11 @@ public abstract class LocazioneBase implements Locazione {
 		oggettoCorrente = null;
 	}
 
+	@Override
+	public boolean isCustodita() {
+		return custodita;
+	}
+
 	public boolean isHaStrettoAmicizia() {
 		return haStrettoAmicizia;
 	}
@@ -870,6 +877,7 @@ public abstract class LocazioneBase implements Locazione {
 		Logger.log("LocazioneBase.NUOVA_LOCAZIONE");
 		TipoLocazione tipoLocazione = gruppo.getClasseLocazioneCorrente().getTipoLocazione();
 		int numeroAvversari = gruppoAvversario.getNumeroPersonaggi();
+		custodita = numeroAvversari > 0;
 		if (numeroAvversari == 0) {
 			if (oggettoCorrente != null) {
 				BusEventi.pubblica(new NotificaTestoFrase("Essendo il tesoro incustodito, " +

@@ -14,7 +14,11 @@ public enum TipoTrofeo {
 	UCCIDI_LA_STREGA("Uccidi la Strega", "Sconfiggi la Strega"),
 	UCCIDI_IL_LICH("Uccidi il Lich", "Sconfiggi il Lich"),
 	UCCIDI_L_IDRA("Uccidi l'Idra", "Sconfiggi l'Idra"),
-	UCCIDI_IL_MINOTAURO_GIGANTE("Uccidi il Minotauro Gigante", "Sconfiggi il Minotauro Gigante");
+	UCCIDI_IL_MINOTAURO_GIGANTE("Uccidi il Minotauro Gigante", "Sconfiggi il Minotauro Gigante"),
+	RAPINATORE("Rapinatore", "Impossessati di 100 monete appartenenti agli avversari"),
+	LADRO_DI_PREZIOSI("Ladro di preziosi", "Impossessati di 100 gemme appartenenti agli avversari"),
+	ARSENIO_LUPIN("Arsenio Lupin", "Impossessati di 100 corone appartenenti agli avversari"),
+	ESPERTO_SCASSINATORE("Esperto scassinatore", "Apri 100 cofani");
 
 	private final String nome;
 	private final String descrizione;

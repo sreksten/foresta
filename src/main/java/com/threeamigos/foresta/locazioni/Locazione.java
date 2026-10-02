@@ -83,6 +83,11 @@ public interface Locazione {
     boolean isHaStrettoAmicizia();
 
 	/**
+	 * All'arrivo del gruppo c'erano avversari a custodire l'oggetto della locazione?
+	 */
+    boolean isCustodita();
+
+	/**
 	 * Alla fine di un turno un gruppo rade al suolo una locazione e si può verificare
 	 * qualcosa; per adesso al momento in cui il giocatore rade al suolo quattro castelli
 	 * appare quello del drago

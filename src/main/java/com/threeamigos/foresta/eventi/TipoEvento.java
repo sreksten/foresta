@@ -369,6 +369,10 @@ public enum TipoEvento {
      */
     INTERNO_NOTIFICA_VIA_FUMETTO_A_TEMPO,
     /**
+     * Il gruppo ha raccolto l'oggetto di fine locazione
+     */
+    INTERNO_OGGETTO_RACCOLTO,
+    /**
      * Il gruppo, o almeno uno dei suoi personaggi, ha consumato un pasto in una locanda
      */
     INTERNO_PASTO_CONSUMATO_IN_LOCANDA,
