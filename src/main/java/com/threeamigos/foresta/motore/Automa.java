@@ -56,8 +56,6 @@ import java.util.function.Supplier;
 //  - ingredienti magici (oggi usano l'icona della pergamena): Pergamena, Gemma, Monile, Gingillo, Sigillo.
 // TODO: img/oggetti/OggettoMissione.gif è un sacchetto provvisorio, da ridisegnare (oggetti delle missioni, per ora la
 //  mandragola dell'alchimista; in futuro magari un'immagine per ogni oggetto).
-// TODO: CacciaAiGoblin e LAlchimistaELaMandragola sono missioni di prova (TipoMissionePredefinita): decidere se e come
-//  farne missioni vere.
 
 // Bug noti ancora da correggere (dall'indagine sul codice): si spuntano togliendo la riga quando sono corretti.
 //

@@ -39,9 +39,8 @@ public class RegistroMissioni {
 		CRONACHE_DI_UN_FEGATO_EROICO(ClasseMissione.CRONACHE_DI_UN_FEGATO_EROICO),
 		NESSUN_BOCCALE_LASCIATO_INDIETRO(ClasseMissione.NESSUN_BOCCALE_LASCIATO_INDIETRO),
 		DISTURBATORE_DELLA_QUIETE_PUBBLICA(ClasseMissione.DISTURBATORE_DELLA_QUIETE_PUBBLICA),
-		// Solo in modalità di prova, finché non diventano missioni vere: incarichi presi nella prima città
-		CACCIA_AI_GOBLIN(ClasseMissione.CACCIA_AI_GOBLIN, true),
-		L_ALCHIMISTA_E_LA_MANDRAGOLA(ClasseMissione.L_ALCHIMISTA_E_LA_MANDRAGOLA, true);
+		CACCIA_AI_GOBLIN(ClasseMissione.CACCIA_AI_GOBLIN),
+		L_ALCHIMISTA_E_LA_MANDRAGOLA(ClasseMissione.L_ALCHIMISTA_E_LA_MANDRAGOLA);
 
 		TipoMissionePredefinita(ClasseMissione classeMissione) {
 			this(classeMissione, false);

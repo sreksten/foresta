@@ -96,10 +96,14 @@ OggettiDaRaccogliere.di("MANDRAGOLA", NomeOggetto.femminile("radice di mandragol
   locazioni non si salva.
 - Immagine provvisoria: `img/oggetti/OggettoMissione.gif`.
 
-Due missioni lo usano, per ora solo in modalità di prova: `CacciaAiGoblin` e
-`LAlchimistaELaMandragola`, entrambe sopra `IncaricoInCitta` (l'incarico preso
-nella prima città in cui si entra, con l'intermezzo del mandante, e la
-ricompensa al ritorno; fallisce se la città viene distrutta). Test:
+Due missioni vere lo usano: `CacciaAiGoblin` e `LAlchimistaELaMandragola`,
+entrambe sopra `IncaricoInCitta` (l'incarico preso in una città, con
+l'intermezzo del mandante, e la ricompensa al ritorno; fallisce se la città
+viene distrutta). L'incarico parte solo a una visita tranquilla, in cui
+nessun'altra missione mostra un intermezzo entrando in città
+(`MissioneAPassi.haUnIntermezzoInArrivo`): non alla prima visita, quando parte
+la missione della città, né quando si torna a concluderne una. Fra due incarichi
+pronti nella stessa visita parte il primo controllato. Test:
 `ScenarioIncarichiInCittaTest`.
 
 Mancano ancora: `COMBATTI(bersaglio)` con un nemico preciso in una locazione,

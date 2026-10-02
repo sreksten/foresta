@@ -462,6 +462,25 @@ public abstract class MissioneAPassi extends MissioneBase {
 		return null;
 	}
 
+	/**
+	 * Se la missione mostrerà un intermezzo in quel momento: ne ha uno in attesa, oppure il passo corrente si valuta
+	 * in quel controllo, ha un intermezzo in quel momento ed è già concluso, quindi scatterà appena la missione verrà
+	 * controllata. Serve a chi non vuole sovrapporsi agli intermezzi delle altre missioni (vedi IncaricoInCitta).
+	 * Valuta la condizione del passo corrente solo se ha un intermezzo: le condizioni di quei passi non devono avere
+	 * effetti.
+	 */
+	public final boolean haUnIntermezzoInArrivo(MomentoControllo controllo, MomentoIntermezzo momento) {
+		if (getPassoConIntermezzoInAttesa(momento) != null) {
+			return true;
+		}
+		if (isCompleta() || isFallita() || Passo.FINE.equals(getPassoCorrente())) {
+			return false;
+		}
+		Passo passo = costruisciPasso(getPassoCorrente());
+		return passo.getMomento() == controllo && passo.getMomentoIntermezzo() == momento && !passo.isDomanda()
+				&& !passo.isFallito() && passo.isConcluso();
+	}
+
 	public final boolean isIntermezzoPassoMostrato(String idPasso) {
 		return ottieniProprieta(INTERMEZZO_MOSTRATO + idPasso) != null;
 	}

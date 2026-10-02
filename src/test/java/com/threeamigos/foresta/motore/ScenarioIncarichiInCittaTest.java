@@ -11,6 +11,7 @@ import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
 import com.threeamigos.foresta.missioni.Passo;
+import com.threeamigos.foresta.missioni.RecuperaIlMedaglione;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
@@ -30,12 +31,44 @@ import static org.junit.jupiter.api.Assertions.*;
 class ScenarioIncarichiInCittaTest {
 
     @Test
-    void laCacciaAiGoblinSiPrendeNellaPrimaCittaESiRiscuoteLi() {
-        try (PartitaDiTest partita = PartitaDiTest.nuova(61)) {
+    void gliIncarichiNonSiSovrappongonoAlleAltreMissioniDellaCitta() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(64)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_FLEENA));
             CacciaAiGoblin caccia = trova(CacciaAiGoblin.class);
+            LAlchimistaELaMandragola mandragola = trova(LAlchimistaELaMandragola.class);
+            MissioneAPassi medaglione = trova(RecuperaIlMedaglione.class);
+
+            // Alla prima visita parte il medaglione, e gli incarichi aspettano
+            assertTrue(medaglione.isAttiva());
+            assertEquals("INCARICO", caccia.getPassoCorrente());
+            assertEquals("INCARICO", mandragola.getPassoCorrente());
+
+            // Tornati col medaglione: c'è il ringraziamento, e gli incarichi aspettano ancora
+            medaglione.aggiungiProprieta("PASSO_CORRENTE", "RITORNO");
+            caccia.controllaPreLocazione();
+            mandragola.controllaPreLocazione();
+            assertEquals("INCARICO", caccia.getPassoCorrente());
+            assertEquals("INCARICO", mandragola.getPassoCorrente());
+
+            // A medaglione ancora da trovare la visita è tranquilla: parte il primo incarico controllato, l'altro aspetta
+            medaglione.aggiungiProprieta("PASSO_CORRENTE", "RECUPERO");
+            caccia.controllaPreLocazione();
+            mandragola.controllaPreLocazione();
+            assertEquals("ACCETTAZIONE", caccia.getPassoCorrente());
+            assertEquals("INCARICO", mandragola.getPassoCorrente());
+            caccia.controllaInLocazione();
             assertTrue(caccia.isAttiva());
+            assertFalse(mandragola.isAttiva());
+        }
+    }
+
+    @Test
+    void laCacciaAiGoblinSiPrendeInCittaESiRiscuoteLi() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(61)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
+                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_FLEENA));
+            CacciaAiGoblin caccia = prendiIncaricoAllaSecondaVisita(CacciaAiGoblin.class);
             assertEquals(ClassiLocazione.CITTA_FLEENA, caccia.getCitta());
             assertTrue(caccia.getDescrizione().contains("Fleena"), caccia.getDescrizione());
 
@@ -59,8 +92,7 @@ class ScenarioIncarichiInCittaTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(62)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
-            LAlchimistaELaMandragola mandragola = trova(LAlchimistaELaMandragola.class);
-            assertTrue(mandragola.isAttiva());
+            LAlchimistaELaMandragola mandragola = prendiIncaricoAllaSecondaVisita(LAlchimistaELaMandragola.class);
             assertEquals("RACCOLTA", mandragola.getPassoCorrente());
             CoordinateMD casella = new CoordinateMD(0, 0);
 
@@ -167,6 +199,21 @@ class ScenarioIncarichiInCittaTest {
             }
         }
         throw new AssertionError("nessun bosco adatto");
+    }
+
+    /**
+     * Come se il gruppo tornasse nella città in cui si trova: l'intermezzo della prima visita è già stato mostrato e
+     * l'incarico si può prendere.
+     */
+    private static <T extends IncaricoInCitta> T prendiIncaricoAllaSecondaVisita(Class<T> tipo) {
+        T incarico = trova(tipo);
+        incarico.controllaPreLocazione();
+        assertEquals("ACCETTAZIONE", incarico.getPassoCorrente(), tipo.getSimpleName());
+        // L'intermezzo del mandante lo mostrerebbe l'automa
+        incarico.segnaIntermezzoPassoMostrato("INCARICO");
+        incarico.controllaInLocazione();
+        assertTrue(incarico.isAttiva());
+        return incarico;
     }
 
     @SuppressWarnings("unchecked")

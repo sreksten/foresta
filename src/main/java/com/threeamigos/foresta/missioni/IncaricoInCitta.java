@@ -8,10 +8,13 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
+import com.threeamigos.foresta.motore.RegistroMissioni;
 
 /**
- * Un incarico preso in una città qualsiasi, la prima in cui il gruppo entra: un mandante chiede un servizio, il
- * gruppo lo fa e torna in quella città a riscuotere.
+ * Un incarico preso in una città qualsiasi: un mandante chiede un servizio, il gruppo lo fa e torna in quella città
+ * a riscuotere. L'incarico si offre solo a una visita tranquilla, in cui nessun'altra missione mostra un intermezzo
+ * entrando in città: non alla prima visita, quando parte la missione della città, né quando si torna a concluderne
+ * una; fra due incarichi in città pronti nella stessa visita parte il primo controllato, l'altro aspetta.
  * <ol>
  * <li>INCARICO, a inizio locazione, in una città: la missione se la ricorda e parte l'intermezzo del mandante;</li>
  * <li>ACCETTAZIONE, in locazione, nella città: la missione si attiva, dopo l'intermezzo;</li>
@@ -79,7 +82,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		switch (id) {
 			case INCARICO:
-				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::inUnaCitta)
+				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> inUnaCitta() && isVisitaTranquilla())
 						.esegui(() -> aggiungiProprieta(CITTA, gruppo.getClasseLocazioneCorrente().name()))
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaIncarico().getPagine())
 						.poi(ACCETTAZIONE);
@@ -110,6 +113,26 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 
 	private boolean isCittaDistrutta() {
 		return getCitta() != null && LineaTemporale.isCittaDistrutta(getCitta());
+	}
+
+	/**
+	 * Nessun'altra missione mostrerà un intermezzo entrando in questa locazione. Gli altri incarichi in città contano
+	 * solo se il loro è già in attesa: se si guardassero l'un l'altro prima di partire, non partirebbe nessuno.
+	 */
+	private boolean isVisitaTranquilla() {
+		for (Missione missione : RegistroMissioni.getTutteLeMissioni()) {
+			if (missione == this || !(missione instanceof MissioneAPassi)) {
+				continue;
+			}
+			MissioneAPassi altra = (MissioneAPassi) missione;
+			boolean inArrivo = altra instanceof IncaricoInCitta
+					? altra.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE) != null
+					: altra.haUnIntermezzoInArrivo(MomentoControllo.PRE_LOCAZIONE, MomentoIntermezzo.INIZIO_LOCAZIONE);
+			if (inArrivo) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	private boolean inUnaCitta() {
