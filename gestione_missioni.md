@@ -1,5 +1,17 @@
 # Missioni a passi + intermezzi agganciati a una missione
 
+## Stato (2026-10-02)
+
+| Punto | Stato |
+| --- | --- |
+| 1. Checkpoint `LOCAZIONE_COMPLETATA` | fatto (`MomentoIntermezzo.LOCAZIONE_COMPLETATA`, `Stato.FINE_LOCAZIONE_2`) |
+| 2. `RegistroIntermezzi` interroga le missioni | da fare |
+| 3. `Passo` e `MissioneAPassi` | fatto, vedi "Come è stato implementato" in fondo al punto 3 |
+| 4. Domande al giocatore | da fare |
+| 5. Migrazione di Medaglione e Derrate | da fare |
+| 6. Claim delle locazioni e `cerca` | da fare |
+| 7. `SconfiggiIlDrago` e claim precoce | da fare, dopo il 6 |
+
 ## Contesto
 
 Oggi un intermezzo scatta solo a due checkpoint statici e globali dell'automa
@@ -259,6 +271,39 @@ da chi lo crea); `getPagine()` richiama il supplier del passo.
 Registrazione in `ClasseMissione.java`: nessuna voce nuova richiesta per
 `Passo`/`MissioneAPassi` di per sé (non sono `Missione` concrete), solo le
 sottoclassi concrete (punto 4) vanno registrate come oggi.
+
+### Come è stato implementato (2026-10-02)
+
+Classi in `missioni/` (non in un package a parte, per usare i membri protetti
+di `MissioneBase`): `Passo` e `MissioneAPassi`, test in `MissioneAPassiTest`
+(8). Rispetto al piano:
+
+- **Builder:** `Passo.quando(momento, condizione).esegui(azione).poi(id)`, con
+  `poi(Supplier<String>)` per le diramazioni e `conIntermezzo(momento, pagine)`.
+  `MomentoControllo` è un enum annidato in `Passo`. Senza `esegui` l'azione non
+  fa niente; senza `poi` il passo successivo è `Passo.FINE`.
+- **Passi di fila:** se il passo che diventa corrente è dello stesso controllo
+  ed è già concluso, si esegue subito, nello stesso controllo, così un passo di
+  solo testo non costa un turno. Oltre 50 passi di fila si lancia
+  `IllegalStateException`, perché è quasi certamente un ciclo.
+- **Fine:** `Passo.FINE` completa la missione se l'azione non l'ha già fatto.
+  Una missione completa o fallita non avanza più; se l'azione fa fallire la
+  missione, il passo corrente non cambia.
+- **Attivazione:** la fa l'azione di un passo (`attivaMissione()`), come oggi;
+  i passi si valutano anche per una missione non ancora attiva, perché il primo
+  è spesso proprio quello che la attiva.
+- **Intermezzi dei passi:** un passo concluso con un intermezzo lascia il suo id
+  nella proprietà `INTERMEZZI_IN_ATTESA` (lista separata da virgole).
+  `getPassiConIntermezzoInAttesa()`, `getPassoConIntermezzoInAttesa(momento)`,
+  `segnaIntermezzoPassoMostrato(id)` e `isIntermezzoPassoMostrato(id)` sono le
+  chiamate per il punto 2. `costruisciPasso` deve quindi saper ricostruire
+  anche i passi già superati. L'adattatore `IntermezzoDiPasso` si scriverà con
+  il punto 2, che è il primo a usarlo.
+- **Sequenze:** `impostaSequenzaPassi(lista)` (id tutti diversi, lista non
+  vuota), `leggiSequenzaPassi()` e `prossimoNellaSequenza()`.
+- **Id dei passi:** non possono essere vuoti né contenere `,`, `§` o `|`
+  (separatore delle liste e caratteri riservati del salvataggio):
+  `IllegalArgumentException` altrimenti.
 
 ## 4. Il giocatore risponde a una domanda di missione
 
