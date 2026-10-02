@@ -7,7 +7,6 @@ package com.threeamigos.foresta.motore.tipi;
  */
 public enum TipoConsumabile {
 
-    GEMME,
     MONETE,
     PUNTI_ESPERIENZA, // In realtà questi non vengono mai "consumati"
 

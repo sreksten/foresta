@@ -69,9 +69,12 @@ public class Costanti {
     public static final int GRADO_INCANTAMENTO_MEDIO_DAL_LIVELLO = 4;
     public static final int GRADO_INCANTAMENTO_MAGGIORE_DAL_LIVELLO = 8;
 
-    // Prezzi delle pergamene (vedi ListinoPergamene)
-    public static final int PERGAMENA_PREZZO_PER_PUNTO_FISSO = 2;
-    public static final int PERGAMENA_PREZZO_PER_PUNTO_PERCENTUALE = 1;
+    // Prezzi degli ingredienti magici (vedi ListinoPergamene): un incantamento per punto di danno grezzo che aggiunge,
+    // un modificatore per ogni 1% di cui aumenta il valore tipico dell'attributo
+    public static final double PERGAMENA_PREZZO_PER_PUNTO_DI_DANNO = 0.5;
+    public static final double PERGAMENA_PREZZO_PER_PERCENTO_DI_ATTRIBUTO = 0.5;
+    // Un ingrediente non è mai gratis: una gemma minore con la sola parte percentuale vale meno di una moneta
+    public static final int PERGAMENA_PREZZO_MINIMO = 1;
     public static final int PERGAMENA_PREZZO_PER_PUNTO_ASSOLUTO = 5;
     public static final double PERGAMENA_MAGGIORAZIONE_EFFETTI_DI_STATO = 0.25;
 

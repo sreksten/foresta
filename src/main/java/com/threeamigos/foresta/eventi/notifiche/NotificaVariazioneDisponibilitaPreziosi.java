@@ -4,17 +4,17 @@ import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
 
 /**
- * Notifica un cambiamento nel totale delle gemme presenti nell'inventario del gruppo.
+ * Notifica un cambiamento nel totale delle pietre preziose presenti nell'inventario del gruppo.
  *
  * @author Stefano Reksten
  */
-public class NotificaVariazioneDisponibilitaGemme extends EventoBase {
+public class NotificaVariazioneDisponibilitaPreziosi extends EventoBase {
 
     private final int valorePrecedente;
     private final int nuovoValore;
 
-    public NotificaVariazioneDisponibilitaGemme(int valorePrecedente, int nuovoValore) {
-        super(TipoEvento.NOTIFICA_VARIAZIONE_DISPONIBILITA_GEMME);
+    public NotificaVariazioneDisponibilitaPreziosi(int valorePrecedente, int nuovoValore) {
+        super(TipoEvento.NOTIFICA_VARIAZIONE_DISPONIBILITA_PREZIOSI);
         this.valorePrecedente = valorePrecedente;
         this.nuovoValore = nuovoValore;
     }

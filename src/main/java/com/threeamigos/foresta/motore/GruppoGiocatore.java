@@ -198,7 +198,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		int valorePrecedente = md.getPreziosi();
 		int valoreAttuale = valorePrecedente + quantita;
 		md.setPreziosi(valoreAttuale);
-		BusEventi.pubblica(new NotificaVariazioneDisponibilitaGemme(valorePrecedente, valoreAttuale));
+		BusEventi.pubblica(new NotificaVariazioneDisponibilitaPreziosi(valorePrecedente, valoreAttuale));
 	}
 
 	public final void subPreziosi(int quantita) {

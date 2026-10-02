@@ -107,7 +107,7 @@ public class Cofano extends OggettoBase implements Oggetto {
 				sb.append("trova alcune monete d'oro.");
 				gruppo.addMonete(Dado.tira(5, 10));
 			} else if (tipo == 7) {
-				sb.append("trova alcune gemme.");
+				sb.append("trova alcune pietre preziose.");
 				gruppo.addPreziosi(Dado.tira(5, 10));
 			}
 			if (i < quantita - 1) {

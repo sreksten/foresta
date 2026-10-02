@@ -45,7 +45,7 @@ public enum ClasseTrofeo {
 	UCCIDI_IL_MINOTAURO_GIGANTE(() -> boss(TipoTrofeo.UCCIDI_IL_MINOTAURO_GIGANTE, ClassePersonaggio.MINOTAURO_GIGANTE)),
 	// I tesori degli avversari: quanto si trova in una locazione incustodita non conta
 	RAPINATORE(() -> refurtiva(TipoTrofeo.RAPINATORE, ClassiOggetto.MONETA)),
-	LADRO_DI_PREZIOSI(() -> refurtiva(TipoTrofeo.LADRO_DI_PREZIOSI, ClassiOggetto.GEMMA)),
+	LADRO_DI_PREZIOSI(() -> refurtiva(TipoTrofeo.LADRO_DI_PREZIOSI, ClassiOggetto.PIETRA_PREZIOSA)),
 	ARSENIO_LUPIN(() -> refurtiva(TipoTrofeo.ARSENIO_LUPIN, ClassiOggetto.CORONA)),
 	// I cofani contano anche se incustoditi, come nelle grotte
 	ESPERTO_SCASSINATORE(() -> new TrofeoAContatore<>(TipoTrofeo.ESPERTO_SCASSINATORE,

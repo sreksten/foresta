@@ -65,7 +65,7 @@ public class Bosco extends LocazioneBase {
 			ClassiOggetto.ANELLO,
 			ClassiOggetto.COFANO,
 			ClassiOggetto.CORONA,
-			ClassiOggetto.GEMMA,
+			ClassiOggetto.PIETRA_PREZIOSA,
 			ClassiOggetto.MONETA,
 			ClassiOggetto.SCUDO,
 			ClassiOggetto.SPADA,

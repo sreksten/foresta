@@ -225,19 +225,19 @@ class GeneratoreArtefattiTest {
     }
 
     @Test
-    void prezziDellaTabella() {
-        // Un incantamento con entrambe le parti costa il prezzo base del grado (tipo senza effetti di stato)
-        for (GradoIncantamento grado : GradoIncantamento.values()) {
-            Incantamento incantamento = new Incantamento("prova", TipoDanno.ACIDO, grado.getBonusFisso(), grado.getCoefficiente());
-            assertEquals(grado.getPrezzoBase(), ListinoPergamene.prezzo(incantamento), 0.0001);
-        }
-        // Medio con solo +10 costa 20, con solo +10% costa 10; +25% per il fuoco
-        assertEquals(20, ListinoPergamene.prezzo(new Incantamento("prova", TipoDanno.ACIDO, 10, 0)), 0.0001);
-        assertEquals(10, ListinoPergamene.prezzo(new Incantamento("prova", TipoDanno.ACIDO, 0, 0.1)), 0.0001);
-        assertEquals(37.5, ListinoPergamene.prezzo(new Incantamento("prova", TipoDanno.FUOCO, 10, 0.1)), 0.0001);
-        // Modificatori: fisso 2 × q, percentuale q, assoluto 5 × q
-        assertEquals(6, ListinoPergamene.prezzo(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 3)), 0.0001);
-        assertEquals(10, ListinoPergamene.prezzo(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 10)), 0.0001);
+    void prezziDelListino() {
+        // Incantamento: 0,5 per punto di danno, fisso × livello + coefficiente × Intelligenza tipica (9,7)
+        assertEquals(0.5 * (10 + 0.97), ListinoPergamene.prezzo(new Incantamento("prova", TipoDanno.ACIDO, 10, 0.1), 1), 0.0001);
+        assertEquals(0.5 * (40 + 0.97), ListinoPergamene.prezzo(new Incantamento("prova", TipoDanno.ACIDO, 10, 0.1), 4), 0.0001);
+        assertEquals(0.5 * 40, ListinoPergamene.prezzo(new Incantamento("prova", TipoDanno.ACIDO, 10, 0), 4), 0.0001);
+        // +25% per un tipo di danno con effetti di stato
+        assertEquals(0.5 * 40 * 1.25, ListinoPergamene.prezzo(new Incantamento("prova", TipoDanno.FUOCO, 10, 0), 4), 0.0001);
+        // Modificatore fisso: 0,5 per ogni 1% del valore tipico, quindi +3 di Precisione (3,2) costa più di +3 di Forza (11,5)
+        assertEquals(0.5 * 300 / 11.5, ListinoPergamene.prezzo(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 3)), 0.0001);
+        assertEquals(0.5 * 300 / 3.2, ListinoPergamene.prezzo(new ModificatoreAttributo(TipoAttributo.PRECISIONE, TipoModificatore.AUMENTO_FISSO, 3)), 0.0001);
+        // Percentuale: 0,5 per punto, qualunque sia l'attributo; assoluto 5 × q
+        assertEquals(5, ListinoPergamene.prezzo(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 10)), 0.0001);
+        assertEquals(5, ListinoPergamene.prezzo(new ModificatoreAttributo(TipoAttributo.PRECISIONE, TipoModificatore.AUMENTO_PERCENTUALE, 10)), 0.0001);
         assertEquals(20, ListinoPergamene.prezzo(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.QUANTITA_ASSOLUTA, 4)), 0.0001);
     }
 }

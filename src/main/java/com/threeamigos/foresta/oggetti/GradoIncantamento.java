@@ -4,25 +4,22 @@ import com.threeamigos.foresta.motore.Costanti;
 
 /**
  * I gradini degli effetti di un ingrediente magico e degli incantamenti degli artefatti (vedi
- * artefatti_e_incantamenti.md, §6).
- * Il prezzo base è quello di un incantamento con entrambe le parti, fissa e percentuale.
+ * artefatti_e_incantamenti.md, §6). Il prezzo lo fa ListinoPergamene.
  */
 public enum GradoIncantamento {
 
-	MINORE("minore", 5, 0.05, 15),
-	MEDIO("medio", 10, 0.10, 30),
-	MAGGIORE("maggiore", 15, 0.20, 50);
+	MINORE("minore", 5, 0.05),
+	MEDIO("medio", 10, 0.10),
+	MAGGIORE("maggiore", 15, 0.20);
 
 	private final String nome;
 	private final int bonusFisso;
 	private final double coefficiente;
-	private final int prezzoBase;
 
-	GradoIncantamento(String nome, int bonusFisso, double coefficiente, int prezzoBase) {
+	GradoIncantamento(String nome, int bonusFisso, double coefficiente) {
 		this.nome = nome;
 		this.bonusFisso = bonusFisso;
 		this.coefficiente = coefficiente;
-		this.prezzoBase = prezzoBase;
 	}
 
 	/**
@@ -65,10 +62,6 @@ public enum GradoIncantamento {
 	 */
 	public double getCoefficiente() {
 		return coefficiente;
-	}
-
-	public int getPrezzoBase() {
-		return prezzoBase;
 	}
 
 	/**

@@ -4,9 +4,9 @@ import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.tools.Misc;
 
-public class Gemma extends OggettoBase implements Oggetto {
+public class PietraPreziosa extends OggettoBase implements Oggetto {
 
-	public Gemma() {
+	public PietraPreziosa() {
 		super();
 	}
 
@@ -27,15 +27,15 @@ public class Gemma extends OggettoBase implements Oggetto {
 	}
 
 	public String getNomeSingolare() {
-		return "gemma";
+		return "pietra preziosa";
 	}
 
 	public String getNomePlurale() {
-		return "gemme";
+		return "pietre preziose";
 	}
 
 	public ClassiOggetto getClasse() {
-		return ClassiOggetto.GEMMA;
+		return ClassiOggetto.PIETRA_PREZIOSA;
 	}
 
 	@Override

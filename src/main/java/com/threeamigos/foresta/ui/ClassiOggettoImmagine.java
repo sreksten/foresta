@@ -13,7 +13,7 @@ public enum ClassiOggettoImmagine {
     ANELLO(ClassiOggetto.ANELLO, "oggetti/Anello.gif"),
     COFANO(ClassiOggetto.COFANO, "oggetti/Cofano.gif"),
     CORONA(ClassiOggetto.CORONA, "oggetti/Corona.gif"),
-    GEMMA(ClassiOggetto.GEMMA, "oggetti/Gemma.gif"),
+    PIETRA_PREZIOSA(ClassiOggetto.PIETRA_PREZIOSA, "oggetti/PietraPreziosa.gif"),
     MONETA(ClassiOggetto.MONETA, "oggetti/Moneta.gif"),
     SCUDO(ClassiOggetto.SCUDO, "oggetti/Scudo.gif"),
     SPADA(ClassiOggetto.SPADA, "oggetti/Spada.gif"),

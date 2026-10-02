@@ -107,7 +107,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(InternoStatoDiGioco.class, this::onEventoStatoDiGioco);
         BusEventi.iscriviti(InternoRisultatoValutazionePersonaggioAttaccante.class, this::onEventoValutazioneAttaccante);
         BusEventi.iscriviti(NotificaVariazioneEffettoDiStatoPersonaggio.class, this::onEventoVariazioneEffettoDiStato);
-        BusEventi.iscriviti(NotificaVariazioneDisponibilitaGemme.class, this::onEventoVariazioneGemme);
+        BusEventi.iscriviti(NotificaVariazioneDisponibilitaPreziosi.class, this::onEventoVariazionePreziosi);
         BusEventi.iscriviti(NotificaVariazioneDisponibilitaIncantesimi.class, this::onEventoVariazioneIncantesimi);
         BusEventi.iscriviti(NotificaVariazioneConoscenzaMappa.class, this::onEventoVariazioneMappa);
         BusEventi.iscriviti(NotificaVariazioneDisponibilitaMonete.class, this::onEventoVariazioneMonete);
@@ -459,7 +459,7 @@ public class SnifferBusEventi {
                 evento.getTipo(), evento.getEffetto()) + formattaStatistichePersonaggio(p));
     }
 
-    public void onEventoVariazioneGemme(NotificaVariazioneDisponibilitaGemme evento) {
+    public void onEventoVariazionePreziosi(NotificaVariazioneDisponibilitaPreziosi evento) {
         Logger.log(headerEvento(evento) + String.format("Variazione: %d -> %d",
                 evento.getValorePrecedente(), evento.getNuovoValore()));
     }

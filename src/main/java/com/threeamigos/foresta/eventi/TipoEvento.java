@@ -225,9 +225,9 @@ public enum TipoEvento {
      */
     NOTIFICA_VARIAZIONE_CONOSCENZA_MAPPA,
     /**
-     * Variazione delle gemme disponibili al gruppo
+     * Variazione delle pietre preziose disponibili al gruppo
      */
-    NOTIFICA_VARIAZIONE_DISPONIBILITA_GEMME,
+    NOTIFICA_VARIAZIONE_DISPONIBILITA_PREZIOSI,
     /**
      * Variazione degli incantesimi disponibili al gruppo
      */

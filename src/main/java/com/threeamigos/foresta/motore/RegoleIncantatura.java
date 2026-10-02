@@ -231,7 +231,7 @@ public final class RegoleIncantatura {
 		List<Effetto> effetti = new ArrayList<>();
 		if (!isLibro(artefatto)) {
 			for (Incantamento incantamento : ingrediente.getIncantamenti()) {
-				effetti.add(new Effetto(incantamento, null, ListinoPergamene.prezzo(incantamento)));
+				effetti.add(new Effetto(incantamento, null, ListinoPergamene.prezzo(incantamento, artefatto.getLivello())));
 			}
 		}
 		for (ModificatoreAttributo modificatore : ingrediente.getModificatori()) {

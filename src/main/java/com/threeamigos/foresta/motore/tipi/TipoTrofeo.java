@@ -20,7 +20,7 @@ public enum TipoTrofeo {
 	UCCIDI_L_IDRA("Una testa alla volta", "Sconfiggi l'Idra", SupertipoTrofeo.UCCISIONE),
 	UCCIDI_IL_MINOTAURO_GIGANTE("Più grosso è, più rumore fa", "Sconfiggi il Minotauro Gigante", SupertipoTrofeo.UCCISIONE),
 	RAPINATORE("Rapinatore", "Impossessati di 100 monete appartenenti agli avversari", SupertipoTrofeo.BOTTINO),
-	LADRO_DI_PREZIOSI("Ladro di preziosi", "Impossessati di 100 gemme appartenenti agli avversari", SupertipoTrofeo.BOTTINO),
+	LADRO_DI_PREZIOSI("Ladro di preziosi", "Impossessati di 100 pietre preziose appartenenti agli avversari", SupertipoTrofeo.BOTTINO),
 	ARSENIO_LUPIN("Arsenio Lupin", "Impossessati di 100 corone appartenenti agli avversari", SupertipoTrofeo.BOTTINO),
 	ESPERTO_SCASSINATORE("Esperto scassinatore", "Apri 100 cofani", SupertipoTrofeo.BOTTINO),
 	CACCIATORE_DI_TESORI("Cacciatore di tesori", "Impossessati di 100 artefatti in possesso di avversari", SupertipoTrofeo.BOTTINO),

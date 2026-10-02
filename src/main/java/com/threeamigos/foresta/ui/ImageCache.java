@@ -79,7 +79,7 @@ public class ImageCache {
 	static BufferedImage spritePozioneMagiaGrande;
 	static BufferedImage spriteMappa;
 	static BufferedImage spriteMoneta;
-	static BufferedImage spriteGemma;
+	static BufferedImage spritePietraPreziosa;
 	static BufferedImage spriteTempo;
 	static BufferedImage spriteAumentoLivello;
 	static BufferedImage spriteGruppo;
@@ -259,7 +259,7 @@ public class ImageCache {
 		spritePozioneMagiaGrande = BufferedImageBuilder.buildBufferedImage("icone/PozioneMagiaGrande-nobordo-piccolo.gif");
 		spriteMappa = BufferedImageBuilder.buildBufferedImage("icone/Mappa-nobordo-piccolo.gif");
 		spriteMoneta = BufferedImageBuilder.buildBufferedImage("icone/Moneta-nobordo-piccolo.gif");
-		spriteGemma = BufferedImageBuilder.buildBufferedImage("icone/Gemma-nobordo-piccolo.gif");
+		spritePietraPreziosa = BufferedImageBuilder.buildBufferedImage("icone/PietraPreziosa-nobordo-piccolo.gif");
 		spriteTempo = BufferedImageBuilder.buildBufferedImage("icone/Tempo-nobordo-piccolo.gif");
 		spriteAumentoLivello = BufferedImageBuilder.buildBufferedImage("icone/AumentoLivello-nobordo-piccolo.gif");
 		spriteGruppo = BufferedImageBuilder.buildBufferedImage("icone/Gruppo-nobordo-piccolo.gif");

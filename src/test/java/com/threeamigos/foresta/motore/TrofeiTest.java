@@ -255,13 +255,13 @@ class TrofeiTest {
 	@Test
 	void iTesoriContanoSoloSeCustoditiDagliAvversari() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
-			// 99 monete, gemme e corone tolte agli avversari, e altrettante trovate incustodite
+			// 99 monete, pietre preziose e corone tolte agli avversari, e altrettante trovate incustodite
 			for (int i = 0; i < 33; i++) {
 				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.MONETA, 3, null, true));
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.GEMMA, 3, null, true));
+				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.PIETRA_PREZIOSA, 3, null, true));
 				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.CORONA, 3, null, true));
 				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.MONETA, 3, null, false));
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.GEMMA, 3, null, false));
+				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.PIETRA_PREZIOSA, 3, null, false));
 				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.CORONA, 3, null, false));
 			}
 			partita.pubblica(new InternoFineLocazione());
@@ -272,14 +272,14 @@ class TrofeiTest {
 			assertFalse(RegistroTrofei.isVinto(TipoTrofeo.RAPINATORE));
 
 			partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.MONETA, 1, null, true));
-			partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.GEMMA, 1, null, true));
+			partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.PIETRA_PREZIOSA, 1, null, true));
 			partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.CORONA, 1, null, true));
 			partita.pubblica(new InternoFineLocazione());
 
 			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.RAPINATORE));
 			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.LADRO_DI_PREZIOSI));
 			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.ARSENIO_LUPIN));
-			assertFalse(RegistroTrofei.isVinto(TipoTrofeo.ESPERTO_SCASSINATORE), "monete, gemme e corone non sono cofani");
+			assertFalse(RegistroTrofei.isVinto(TipoTrofeo.ESPERTO_SCASSINATORE), "monete, pietre preziose e corone non sono cofani");
 		}
 	}
 

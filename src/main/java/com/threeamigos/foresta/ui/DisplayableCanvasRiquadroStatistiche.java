@@ -2,7 +2,7 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoCreazioneSpriteATempo;
-import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneDisponibilitaGemme;
+import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneDisponibilitaPreziosi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneDisponibilitaMonete;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazionePuntiEsperienzaPersonaggio;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -21,7 +21,7 @@ class DisplayableCanvasRiquadroStatistiche implements Finestra {
 	private final int topLeftX;
 	private final int topLeftY;
 	private final int moneteY;
-	private final int gemmeY;
+	private final int preziosiY;
 	private final int puntiY;
 	private final int scrittaX;
 	private final int totaleX;
@@ -30,8 +30,8 @@ class DisplayableCanvasRiquadroStatistiche implements Finestra {
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
 		moneteY = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE + 4;
-		gemmeY = moneteY + fontMedium.getHeight() + 1;
-		puntiY = gemmeY + fontMedium.getHeight() + 1;
+		preziosiY = moneteY + fontMedium.getHeight() + 1;
+		puntiY = preziosiY + fontMedium.getHeight() + 1;
 		scrittaX = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE + 4;
 		totaleX = topLeftX + ImageCache.cornicePiccola.getWidth() - DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE - 4;
 
@@ -39,7 +39,7 @@ class DisplayableCanvasRiquadroStatistiche implements Finestra {
 	}
 
 	private void registratiAEventi() {
-        BusEventi.iscriviti(NotificaVariazioneDisponibilitaGemme.class, this::gestisciEventoVariazioneGemme);
+        BusEventi.iscriviti(NotificaVariazioneDisponibilitaPreziosi.class, this::gestisciEventoVariazionePreziosi);
 		BusEventi.iscriviti(NotificaVariazioneDisponibilitaMonete.class, this::gestisciEventoVariazioneMonete);
 		BusEventi.iscriviti(NotificaVariazionePuntiEsperienzaPersonaggio.class, this::gestisciEventoVariazionePuntiEsperienza);
 	}
@@ -53,10 +53,10 @@ class DisplayableCanvasRiquadroStatistiche implements Finestra {
 		image = ImageCache.get(gruppoGiocatore.getMonete(), fontMedium, coloreTestata);
 		graphics.drawImage(image, totaleX - image.getWidth(null), moneteY, null);
 		
-		image = ImageCache.get("Gemme", fontMedium, coloreTestata);
-		graphics.drawImage(image, scrittaX, gemmeY, null);
+		image = ImageCache.get("Preziosi", fontMedium, coloreTestata);
+		graphics.drawImage(image, scrittaX, preziosiY, null);
 		image = ImageCache.get(gruppoGiocatore.getPreziosi(), fontMedium, coloreTestata);
-		graphics.drawImage(image, totaleX - image.getWidth(null), gemmeY, null);
+		graphics.drawImage(image, totaleX - image.getWidth(null), preziosiY, null);
 
 		image = ImageCache.get("Punti", fontMedium, coloreTestata);
 		graphics.drawImage(image, scrittaX, puntiY, null);
@@ -66,20 +66,20 @@ class DisplayableCanvasRiquadroStatistiche implements Finestra {
 		graphics.drawImage(image, totaleX - image.getWidth(null), puntiY, null);
 	}
 
-	private void gestisciEventoVariazioneGemme(NotificaVariazioneDisponibilitaGemme evento) {
-		SpriteATempo sprite = costruisciSpritePerVariazioneGemme(
+	private void gestisciEventoVariazionePreziosi(NotificaVariazioneDisponibilitaPreziosi evento) {
+		SpriteATempo sprite = costruisciSpritePerVariazionePreziosi(
 				evento.getNuovoValore() - evento.getValorePrecedente());
 		if (sprite != null) {
 			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
 		}
 	}
 
-	private SpriteATempo costruisciSpritePerVariazioneGemme(int variazione) {
+	private SpriteATempo costruisciSpritePerVariazionePreziosi(int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
-		BufferedImage icona = ImageCache.spriteGemma;
-		return new SpriteATempo(icona, variazione, fontMedium, totaleX, gemmeY, "Gemme variate");
+		BufferedImage icona = ImageCache.spritePietraPreziosa;
+		return new SpriteATempo(icona, variazione, fontMedium, totaleX, preziosiY, "Preziosi variati");
 	}
 
 	private void gestisciEventoVariazioneMonete(NotificaVariazioneDisponibilitaMonete evento) {

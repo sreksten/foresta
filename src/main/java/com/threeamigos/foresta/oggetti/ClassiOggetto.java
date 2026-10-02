@@ -16,7 +16,7 @@ public enum ClassiOggetto {
 			.setQuantitaMassima(2)
 			.setValore(100)
 			),
-	GEMMA(Gemma::new, builder()
+	PIETRA_PREZIOSA(PietraPreziosa::new, builder()
 			.setQuantitaMassima(2)
 			.setValore(75)
 			),

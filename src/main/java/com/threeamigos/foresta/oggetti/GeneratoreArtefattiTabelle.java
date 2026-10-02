@@ -219,7 +219,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		for (int i = 0; i < numero; i++) {
 			Incantamento incantamento = generaIncantamento(grado);
 			md.addIncantamento(incantamento);
-			md.setCostoAcquisto(md.getCostoAcquisto() + (int) Math.round(ListinoPergamene.prezzo(incantamento)));
+			md.setCostoAcquisto(md.getCostoAcquisto() + (int) Math.round(ListinoPergamene.prezzo(incantamento, livello)));
 		}
 	}
 
@@ -271,7 +271,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 			Incantamento incantamento = new Incantamento(tipoDanno.getNome() + ' ' + grado.getNome(), tipoDanno,
 					grado.getBonusFisso(), grado.getCoefficiente());
 			md.addIncantamento(incantamento);
-			costo += ListinoPergamene.prezzo(incantamento);
+			costo += ListinoPergamene.prezzo(incantamento, livello);
 		}
 		md.setCostoAcquisto((int) Math.round(Math.max(costoBase / 2.0, costo)));
 		return Artefatto.di(md);

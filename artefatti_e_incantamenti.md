@@ -403,26 +403,39 @@ Riferimenti dell'economia attuale:
 - incantesimi 5-15;
 - mappa 10-20.
 
-I bonus vanno a gradini, come proposto:
+I bonus vanno a gradini:
 
-| Grado | Bonus fisso | Coefficiente | Prezzo base |
+| Grado | Bonus fisso | Coefficiente | Gradino dei modificatori |
 | :--- | ---: | ---: | ---: |
-| Minore | +5 | +5% | 15 |
-| Medio | +10 | +10% | 30 |
-| Maggiore | +15 | +20% | 50 |
+| Minore | +5 | +5% | 1 |
+| Medio | +10 | +10% | 2 |
+| Maggiore | +15 | +20% | 3 |
 
-- **Formula del prezzo:** `2 × bonus fisso + coefficiente in punti percentuali`, che dà esattamente i prezzi della tabella (2 × 5 + 5 = 15, 2 × 10 + 10 = 30, 2 × 15 + 20 = 50).
-- **Modificatori di attributo:** si prezzano come gli incantamenti. Un `AUMENTO_FISSO` di q vale `2 × q`, un `AUMENTO_PERCENTUALE` di q% vale `q`, una `QUANTITA_ASSOLUTA` ("porta a q") vale `5 × q` (valore di partenza, da riaggiustare). Il prezzo della pergamena è la somma dei prezzi dei suoi effetti.
+- **Prezzo secondo il valore in gioco** (`ListinoPergamene`, dal 2026-10-02; prima ogni punto costava uguale: 2 il fisso, 1 il percentuale).
+  - **Incantamento:** 0,5 monete (`PERGAMENA_PREZZO_PER_PUNTO_DI_DANNO`) per ogni punto di danno grezzo che aggiunge a un colpo, cioè `bonus fisso × livello + coefficiente × Intelligenza tipica (9,7)`. Il livello è quello dell'ingrediente (che si compra vicino al livello del mondo), o quello dell'artefatto per gli artefatti incantati e per scegliere gli effetti migliori nella fusione.
+  - **Modificatore:** 0,5 monete (`PERGAMENA_PREZZO_PER_PERCENTO_DI_ATTRIBUTO`) per ogni 1% di cui aumenta il **valore tipico** dell'attributo, cioè la media delle classi giocanti in `PERSONAGGI_VALORI_MEDI.csv` (Forza 11,5, Precisione 3,2, Carico massimo 57; il Potere magico parte da 100). Un `AUMENTO_PERCENTUALE` di q% costa 0,5 × q; un `AUMENTO_FISSO` di q costa 0,5 × 100 × q / valore tipico, quindi +3 di Precisione (47) costa molto più di +3 di Forza (13). Una `QUANTITA_ASSOLUTA` ("porta a q") vale ancora `5 × q`.
+  - **Minimo:** un ingrediente costa almeno 1 moneta (`PERGAMENA_PREZZO_MINIMO`).
+- **Il prezzo dell'ingrediente** è la somma dei prezzi dei suoi effetti.
 - **Effetti di stato:** +25% di prezzo per i `TipoDanno` che li hanno (`hasEffettiDiStato()`: FUOCO, GELO, VELENO…).
 - **Rivendita** (anche per l'armaiolo): 50% del prezzo.
-- **Solo fisso o solo percentuale:** una pergamena generata a caso può avere una sola delle due parti, e la formula funziona lo stesso. Per esempio una "media" con solo +10 costa 20, una con solo +10% costa 10.
-- **`GradoIncantamento`:** un enum con bonus, coefficiente e prezzo per grado.
+- **Solo fisso o solo percentuale:** un ingrediente generato a caso può avere una sola delle due parti, e la formula funziona lo stesso.
+- **`GradoIncantamento`:** un enum con bonus, coefficiente e gradino per grado.
   - Il generatore sceglie il grado in base al livello di riferimento, per esempio solo minori ai primi livelli.
   - La grammatica lo usa anche per il **nome**: semplice per i gradi bassi ("una pergamena del fuoco"), altisonante per quelli alti ("il Sigillo della Fiamma Eterna").
 
-Conti di esempio con la fusione:
-- una spada di livello 3 con un incantamento medio: 30 (pergamena) + 15 (fusione) = 45 monete;
-- una spada comune di livello 6 senza modificatori propri, con tre incantamenti maggiori (il tetto dei comuni): 150 + 25 = 175 monete.
+Prezzi medi misurati (2000 ingredienti per tipo e livello, generatore del gioco), con l'artefatto dell'armaiolo per confronto:
+
+| Livello | Artefatto | Pergamena | Gingillo | Sigillo | Gemma | Monile |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| 1 | 10 | 4 | 8 | 7 | 2 | 2 |
+| 2 | 15 | 7 | 16 | 14 | 8 | 8 |
+| 3 | 20 | 23 | 51 | 43 | 38 | 36 |
+| 4 | 25 | 38 | 80 | 67 | 75 | 72 |
+| 6 | 35 | 38 | 79 | 68 | 112 | 109 |
+| 8 | 45 | 38 | 80 | 68 | 148 | 144 |
+| 10 | 55 | 38 | 81 | 68 | 184 | 179 |
+
+Dal livello 4 i modificatori non crescono più (il grado è già maggiore, e un +20% vale lo stesso a ogni livello), gli incantamenti sì, perché la loro parte fissa si moltiplica per il livello.
 
 Il bonus fisso scala con il livello dell'arma (`bonus × livello`), il coefficiente con l'Intelligenza di chi colpisce. Per questo il fisso rende di più sulle armi alte e il percentuale sui maghi.
 
