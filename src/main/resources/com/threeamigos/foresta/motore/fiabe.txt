@@ -196,7 +196,7 @@ ISTANTE_PRECISO
     nell'attesa che il caffè fosse pronto
     mentre parcheggiava la bicicletta
     poco prima di spegnere la luce per dormire
-    mentre aspettava un messaggioMD che non arrivava
+    mentre aspettava un messaggio che non arrivava
     mentre sedeva sul water leggendo una rivista
     durante una qualunque notte di insonnia
     mentre raccoglieva i cocci di una tazza rotta
