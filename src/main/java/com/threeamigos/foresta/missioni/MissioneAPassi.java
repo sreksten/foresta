@@ -12,13 +12,11 @@ import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
-import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Viandante;
-import com.threeamigos.foresta.motore.Costanti;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -348,68 +346,49 @@ public abstract class MissioneAPassi extends MissioneBase {
 	}
 
 	/**
-	 * L'inizio di una SCORTA: quando la condizione è vera e nel gruppo c'è posto, un {@link Viandante} con quel nome
-	 * si unisce al gruppo; la missione se lo ricorda e lo si ritrova con {@link #getScortato()}. Finché il gruppo è
-	 * pieno, il passo aspetta.
+	 * L'inizio di una SCORTA: quando la condizione è vera, un {@link Viandante} con quel nome si unisce al gruppo
+	 * come ospite (vedi GruppoGiocatore.aggiungiOspite: non combatte e non conta nei limiti del gruppo); la missione
+	 * se lo ricorda e lo si ritrova con {@link #getScortato()}.
 	 */
 	protected final Passo prendiInScorta(MomentoControllo momento, BooleanSupplier quando, String nome) {
-		return Passo.quando(momento, () -> quando.getAsBoolean() && haPostoNelGruppo())
+		return Passo.quando(momento, quando)
 				.esegui(() -> {
 					Viandante viandante = new Viandante(nome, EquipaggiamentoIniziale.livelloCasualeDalMondo());
-					GruppoGiocatore.getIstanza().aggiungiPersonaggio(viandante);
+					GruppoGiocatore.getIstanza().aggiungiOspite(viandante);
 					aggiungiProprieta(SCORTATO, viandante.getModelloDati().getUuid());
 				});
 	}
 
 	/**
-	 * SCORTA: si conclude quando il gruppo arriva in quelle coordinate con lo scortato vivo, che allora lascia il
-	 * gruppo. Se lo scortato muore (o non è più nel gruppo) la missione fallisce, con il testo.
+	 * SCORTA: si conclude quando il gruppo arriva in quelle coordinate con lo scortato, che allora si separa dal
+	 * gruppo.
 	 */
-	protected final Passo scorta(MomentoControllo momento, Supplier<CoordinateMD> destinazione, Supplier<String> testoSeMuore) {
+	protected final Passo scorta(MomentoControllo momento, Supplier<CoordinateMD> destinazione) {
 		return Passo.quando(momento, () -> destinazione.get() != null
-						&& destinazione.get().equals(GruppoGiocatore.getIstanza().getCoordinate()) && isScortatoVivo())
-				.esegui(this::congedaScortato)
-				.falliscoSe(() -> !isScortatoVivo(), testoSeMuore);
-	}
-
-	public static boolean haPostoNelGruppo() {
-		return GruppoGiocatore.getIstanza().getNumeroPersonaggi() < Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE;
+						&& destinazione.get().equals(GruppoGiocatore.getIstanza().getCoordinate()) && getScortato().isPresent())
+				.esegui(this::congedaScortato);
 	}
 
 	/**
-	 * Chi la missione sta scortando, se è nel gruppo (anche morto).
+	 * Chi la missione sta scortando, se viaggia con il gruppo.
 	 */
 	public final Optional<Personaggio> getScortato() {
 		String uuid = ottieniProprieta(SCORTATO);
 		if (uuid == null) {
 			return Optional.empty();
 		}
-		return GruppoGiocatore.getIstanza().getPersonaggi().stream()
+		return GruppoGiocatore.getIstanza().getOspiti().stream()
 				.filter(p -> uuid.equals(p.getModelloDati().getUuid()))
 				.findFirst();
 	}
 
-	private boolean isScortatoVivo() {
-		return getScortato().filter(Personaggio::isVivo).isPresent();
-	}
-
-	/**
-	 * Lo scortato lascia il gruppo; quel che il gruppo gli aveva dato da portare torna nell'inventario del gruppo.
-	 */
 	private void congedaScortato() {
-		getScortato().ifPresent(scortato -> {
-			GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-			for (Artefatto artefatto : scortato.getInventario()) {
-				scortato.removeArtefatto(artefatto);
-				gruppo.addArtefatto(artefatto);
-			}
-			gruppo.rimuoviPersonaggio(scortato);
-		});
+		getScortato().ifPresent(GruppoGiocatore.getIstanza()::rimuoviOspite);
 		rimuoviProprieta(SCORTATO);
 	}
 
 	/**
-	 * Come per ogni missione, e chi la missione stava scortando lascia il gruppo, vivo o morto.
+	 * Come per ogni missione, e chi la missione stava scortando si separa dal gruppo.
 	 */
 	@Override
 	public void fallisciMissione() {

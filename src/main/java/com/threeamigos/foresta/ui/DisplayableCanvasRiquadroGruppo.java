@@ -11,6 +11,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 
@@ -103,7 +104,8 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		int locYOffset = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE;
 
 		int l = g.getNumeroPersonaggi();
-		saltaPrimi = Math.min(saltaPrimi, Math.max(0, l - personaggiVisibili));
+		List<Personaggio> ospiti = g.getOspiti();
+		saltaPrimi = Math.min(saltaPrimi, Math.max(0, l + ospiti.size() - personaggiVisibili));
 		Personaggio p;
 		for (int i = 0; i < l; i++) {
 			if (i < saltaPrimi) {
@@ -179,6 +181,22 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 
 				locYOffset += fontMedium.getHeight();
 			}
+		}
+		// Dopo i personaggi, gli ospiti: solo il nome, perché non combattono
+		for (int i = 0; i < ospiti.size(); i++) {
+			int riga = l + i - saltaPrimi;
+			if (riga < 0) {
+				continue;
+			}
+			if (riga >= personaggiVisibili) {
+				break;
+			}
+			Personaggio ospite = ospiti.get(i);
+			String nome = ospite.getNomeProprio().map(n -> n + "-" + ospite.getNomeSingolare()).orElse(ospite.getNomeSingolare());
+			graphics.drawImage(DoomdarkTextProducer.getImage(nome, fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY), locXOffset, locYOffset, null);
+			locYOffset += fontMedium.getHeight();
+			graphics.drawImage(DoomdarkTextProducer.getImage("Ospite del gruppo", fontMedium, DoomdarkColorModel.Color.DARK_GRAY), locXOffset, locYOffset, null);
+			locYOffset += fontMedium.getHeight() * 2;
 		}
 	}
 

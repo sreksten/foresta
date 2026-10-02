@@ -6,14 +6,11 @@ import com.threeamigos.foresta.missioni.IlPellegrino;
 import com.threeamigos.foresta.missioni.IncaricoInCitta;
 import com.threeamigos.foresta.missioni.LAlchimistaELaMandragola;
 import com.threeamigos.foresta.missioni.LaTagliaSuSgranf;
-import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -22,7 +19,7 @@ import java.util.Optional;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * I passi COMBATTI, SCORTA e CONSEGNA (passi_missioni.md, §2) sugli incarichi in città che li usano: la taglia su
+ * I passi COMBATTI, SCORTA (con lo scortato come ospite del gruppo) e CONSEGNA (passi_missioni.md, §2) sugli incarichi in città che li usano: la taglia su
  * Sgranf, il pellegrino Anselmo e le radici di mandragola.
  */
 class ScenarioCombattiScortaConsegnaTest {
@@ -67,7 +64,7 @@ class ScenarioCombattiScortaConsegnaTest {
     }
 
     @Test
-    void anselmoSiUnisceAlGruppoELoLasciaAlTempioRestituendoQuelCheGliSiEraDato() {
+    void anselmoViaggiaColGruppoComeOspiteESeNeSeparaAlTempio() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(72)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
@@ -78,51 +75,46 @@ class ScenarioCombattiScortaConsegnaTest {
             Personaggio anselmo = pellegrino.getScortato().orElseThrow(AssertionError::new);
             assertEquals(IlPellegrino.ANSELMO, anselmo.getNome());
             assertEquals(ClassePersonaggio.VIANDANTE, anselmo.getClasse());
-            assertTrue(partita.gruppo().getPersonaggi().contains(anselmo));
+            assertTrue(partita.gruppo().getOspiti().contains(anselmo));
+            assertFalse(partita.gruppo().getPersonaggi().contains(anselmo), "un ospite non combatte");
 
-            // Il gruppo gli fa portare una spada: arrivati al tempio torna nell'inventario del gruppo
-            Artefatto spada = GeneratoreArtefatti.istanza().generaArtefatto(TipoArtefatto.SPADA, 1);
-            anselmo.addArtefatto(spada);
             partita.gruppo().setCoordinate(tempio);
             pellegrino.controllaPreLocazione();
             assertEquals("RITORNO", pellegrino.getPassoCorrente());
-            assertFalse(partita.gruppo().getPersonaggi().contains(anselmo), "Anselmo resta al tempio");
-            assertTrue(PartitaDiTest.contiene(partita.gruppo().getInventario(), spada));
+            assertTrue(partita.gruppo().getOspiti().isEmpty(), "Anselmo resta al tempio");
         }
     }
 
     @Test
-    void seAnselmoMuoreLaMissioneFallisceELuiLasciaIlGruppo() {
-        try (PartitaDiTest partita = PartitaDiTest.nuova(73)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
-            IlPellegrino pellegrino = prendiIncaricoAllaSecondaVisita(IlPellegrino.class);
-            Personaggio anselmo = pellegrino.getScortato().orElseThrow(AssertionError::new);
-
-            anselmo.muore("un hobgoblin");
-            pellegrino.controllaPostLocazione();
-            assertTrue(pellegrino.isFallita());
-            assertFalse(partita.gruppo().getPersonaggi().contains(anselmo));
-            assertTrue(partita.testi().stream().anyMatch(t -> t.contains("Anselmo è morto")), String.valueOf(partita.testi()));
-        }
-    }
-
-    @Test
-    void colGruppoPienoAnselmoAspetta() {
+    void anselmoViaggiaAncheColGruppoPienoESenzaContare() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(74)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
             while (partita.gruppo().getNumeroPersonaggi() < Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE) {
                 partita.gruppo().aggiungiPersonaggioSenzaNotificare(new com.threeamigos.foresta.personaggi.Guerriero("Compagno", 1));
             }
+            IlPellegrino pellegrino = prendiIncaricoAllaSecondaVisita(IlPellegrino.class);
+            assertTrue(pellegrino.getScortato().isPresent());
+            assertEquals(Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE, partita.gruppo().getNumeroPersonaggi());
+        }
+    }
+
+    @Test
+    void anselmoSopravviveAUnSalvataggioESeLaMissioneFallisceSiSeparaDalGruppo() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(73)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
+                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            prendiIncaricoAllaSecondaVisita(IlPellegrino.class);
+
+            GestoreSalvataggi.salva(Comando.NUMERO_2);
+            assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_2));
             IlPellegrino pellegrino = RegistroMissioni.getTutteLeMissioni().stream().filter(IlPellegrino.class::isInstance)
                     .map(IlPellegrino.class::cast).findFirst().orElseThrow(AssertionError::new);
-            pellegrino.controllaPreLocazione();
-            pellegrino.segnaIntermezzoPassoMostrato("INCARICO");
-            pellegrino.controllaInLocazione();
-            assertEquals("PARTENZA", pellegrino.getPassoCorrente());
-            assertEquals(Optional.empty(), pellegrino.getScortato());
-            assertTrue(pellegrino.getDescrizione().contains("posto"), pellegrino.getDescrizione());
+            Personaggio anselmo = pellegrino.getScortato().orElseThrow(() -> new AssertionError("Anselmo dopo il caricamento"));
+            assertEquals(IlPellegrino.ANSELMO, anselmo.getNome());
+
+            pellegrino.fallisciMissione();
+            assertTrue(partita.gruppo().getOspiti().isEmpty());
         }
     }
 

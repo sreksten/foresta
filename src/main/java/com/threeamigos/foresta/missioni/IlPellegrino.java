@@ -11,9 +11,9 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 
 /**
  * In città una donna chiede di accompagnare suo fratello Anselmo, un pellegrino, fino a un tempio nella foresta: la
- * missione rivendica il tempio e lo segna sulla mappa, Anselmo si unisce al gruppo (vedi
- * {@link MissioneAPassi#prendiInScorta}) e lo lascia arrivati al tempio. Se Anselmo muore la missione fallisce;
- * altrimenti si torna dalla sorella a riscuotere (vedi IncaricoInCitta).
+ * missione rivendica il tempio e lo segna sulla mappa, Anselmo viaggia con il gruppo come ospite (vedi
+ * {@link MissioneAPassi#prendiInScorta}) e se ne separa arrivati al tempio; poi si torna dalla sorella a riscuotere
+ * (vedi IncaricoInCitta).
  */
 public class IlPellegrino extends IncaricoInCitta {
 
@@ -38,10 +38,7 @@ public class IlPellegrino extends IncaricoInCitta {
 		if (RITORNO.equals(passo)) {
 			return "Anselmo è arrivato al tempio: torna da sua sorella a " + getNomeCitta() + ".";
 		}
-		if (PARTENZA.equals(passo)) {
-			return "Anselmo aspetta a " + getNomeCitta() + " che nel gruppo ci sia posto per lui.";
-		}
-		return "Accompagna il pellegrino Anselmo fino al tempio segnato sulla mappa, e riportalo vivo fin là.";
+		return "Accompagna il pellegrino Anselmo fino al tempio segnato sulla mappa.";
 	}
 
 	@Override
@@ -74,8 +71,7 @@ public class IlPellegrino extends IncaricoInCitta {
 			case PARTENZA:
 				return prendiInScorta(MomentoControllo.IN_LOCAZIONE, this::nellaCitta, ANSELMO).poi(VIAGGIO);
 			case VIAGGIO:
-				return scorta(MomentoControllo.PRE_LOCAZIONE, this::getTempio,
-								() -> "Anselmo è morto: al tempio non arriverà mai, e sua sorella non vi pagherà di certo.")
+				return scorta(MomentoControllo.PRE_LOCAZIONE, this::getTempio)
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Arrivato al tempio, Anselmo vi ringrazia e si mette a pregare. Sua sorella aspetta notizie a "
 								+ getNomeCitta() + ".")))
 						.poi(RITORNO);
@@ -103,7 +99,7 @@ public class IlPellegrino extends IncaricoInCitta {
 
 	@Override
 	protected String testoAccettazione() {
-		return "Anselmo si unirà al gruppo fino al tempio. Ricompensa al ritorno: " + RICOMPENSA + " monete.";
+		return "Anselmo viaggerà con il gruppo fino al tempio. Ricompensa al ritorno: " + RICOMPENSA + " monete.";
 	}
 
 	@Override

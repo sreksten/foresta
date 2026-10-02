@@ -22,6 +22,7 @@ import com.threeamigos.foresta.ui.InterfacciaUtente;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Function;
@@ -82,9 +83,38 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 			personaggio.setModelloDati(personaggioMD);
 			aggiungiPersonaggioSenzaNotificare(personaggio);
 		}
+		ospiti.clear();
+		for (PersonaggioMD ospiteMD : gruppoGiocatoreMD.getOspitiMD()) {
+			Personaggio ospite = ospiteMD.getClasse().getIstanza(1);
+			ospite.setModelloDati(ospiteMD);
+			ospiti.add(ospite);
+		}
+	}
+
+	/**
+	 * Chi viaggia con il gruppo senza farne parte, per esempio chi una missione deve scortare: non combatte, non lo
+	 * si attacca, non conta nei limiti del gruppo e non si equipaggia. Gli ospiti possono essere quanti si vuole.
+	 */
+	public final List<Personaggio> getOspiti() {
+		return Collections.unmodifiableList(ospiti);
+	}
+
+	public final void aggiungiOspite(Personaggio ospite) {
+		ospiti.add(ospite);
+		md.getOspitiMD().add(ospite.getModelloDati());
+		BusEventi.pubblica(new NotificaTestoFrase(ospite.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " viaggia con il gruppo."));
+	}
+
+	public final void rimuoviOspite(Personaggio ospite) {
+		ospiti.remove(ospite);
+		md.getOspitiMD().remove(ospite.getModelloDati());
+		BusEventi.pubblica(new NotificaTestoFrase(ospite.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " si separa dal gruppo."));
 	}
 
 	private GruppoGiocatoreMD md = ModelloDati.getIstanza().getGruppoGiocatoreMD();
+	private final List<Personaggio> ospiti = new ArrayList<>();
 	private Locazione locazioneCorrente;
 
 	// Serve per passare chi formula un incantesimo all'automa dalla locazione base.
@@ -95,6 +125,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	public final void reimposta() {
 		super.reimposta();
 		md.reimposta();
+		ospiti.clear();
 		md.setMonete(100);
 		md.setPreziosi(5);
 		md.setIncantesimi(ClasseIncantesimo.ARIA, 3);

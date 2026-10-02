@@ -8,6 +8,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
@@ -23,6 +24,12 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	private CoordinateMD coordinate;
 	// Artefatti disponibili al gruppo ma non in uso da un personaggio specifico
 	private final Collection<ArtefattoMD> artefatti = new ArrayList<>();
+	// Chi viaggia con il gruppo senza farne parte (vedi GruppoGiocatore.aggiungiOspite)
+	private final List<PersonaggioMD> ospiti = new ArrayList<>();
+
+	public List<PersonaggioMD> getOspitiMD() {
+		return ospiti;
+	}
 
 	public int getMonete() {
 		return monete;
@@ -96,6 +103,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		pozioniMagia = 0;
 		pozioniMagiaGrande = 0;
 		artefatti.clear();
+		ospiti.clear();
 	}
 
 	public void setIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
@@ -138,6 +146,10 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		for (ArtefattoMD artefatto : artefatti) {
 			artefatto.salva(stream);
 		}
+		stream.println(ospiti.size());
+		for (PersonaggioMD ospite : ospiti) {
+			ospite.salva(stream);
+		}
 	}
 
 	@Override
@@ -164,6 +176,13 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 			ArtefattoMD artefatto = new ArtefattoMD();
 			artefatto.leggi(stream);
 			artefatti.add(artefatto);
+		}
+		ospiti.clear();
+		int numeroOspiti = Integer.parseInt(stream.readLine());
+		for (int i = 0; i < numeroOspiti; i++) {
+			PersonaggioMD ospite = new PersonaggioMD();
+			ospite.leggi(stream);
+			ospiti.add(ospite);
 		}
 	}
 }

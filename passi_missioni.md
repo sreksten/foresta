@@ -116,26 +116,31 @@ pronti nella stessa visita parte il primo controllato. Test:
   proprio e un livello in più. Si conclude a fine locazione, lì, quando il
   gruppo ne ha sconfitti quanti ne erano (contano anche quelli della stessa
   classe sconfitti altrove nel frattempo).
-- **`SCORTA`**: `prendiInScorta(momento, quando, nome)` fa unire al gruppo un
-  `Viandante` (nuova `ClassePersonaggio.VIANDANTE`, con le caratteristiche e per
-  ora l'immagine del bardo; non si incontra e non si recluta), e aspetta se il
-  gruppo è pieno; `scorta(momento, destinazione, testoSeMuore)` si conclude
-  quando il gruppo arriva a destinazione con lo scortato vivo, che allora lascia
-  il gruppo restituendo all'inventario quel che gli si era dato. Se muore, la
-  missione fallisce; quando una missione fallisce, lo scortato lascia comunque
-  il gruppo.
+- **`SCORTA`**: `prendiInScorta(momento, quando, nome)` fa viaggiare con il
+  gruppo un `Viandante` (nuova `ClassePersonaggio.VIANDANTE`, con le
+  caratteristiche e per ora l'immagine del bardo; non si incontra e non si
+  recluta) come **ospite**; `scorta(momento, destinazione)` si conclude quando il
+  gruppo arriva a destinazione, e lo scortato si separa dal gruppo. Si separa
+  anche se la missione fallisce.
+- **Ospiti del gruppo**: `GruppoGiocatore.getOspiti()`, una collezione a parte
+  rispetto ai personaggi (anche a quelli a tempo), salvata con il gruppo. Gli
+  ospiti non combattono, non si possono attaccare, non contano nei limiti del
+  gruppo (né nei fissi della locanda) e non si equipaggiano: possono essere
+  quanti si vuole. Nel riquadro del gruppo compaiono dopo i personaggi, con il
+  solo nome e "Ospite del gruppo". Non potendo morire, una scorta oggi non
+  fallisce per lo scortato: se un giorno servirà un ostaggio che rischia la
+  pelle, sarà un'opzione dell'ospite.
 - **`CONSEGNA`**: `consegna(momento, dove, oggetti, testo)`. Gli oggetti di
   missione non stanno nell'inventario: il gruppo li ha se la missione li ha
   contati, e consegnandoli escono dal conteggio. `IncaricoInCitta` la fa al
   ritorno, prima della ricompensa, se `getOggettiDaConsegnare()` non è null
   (la mandragola).
 - `Passo.falliscoSe` ora si può chiamare più volte: vale la prima guardia che
-  scatta (la scorta ne ha una sua, `IncaricoInCitta` aggiunge quella della
-  città distrutta).
+  scatta.
 
 Due incarichi in città nuovi li usano: `LaTagliaSuSgranf` (rivendica un bosco,
 lo segna sulla mappa e ci mette la banda di Sgranf; 30 monete) e `IlPellegrino`
-(rivendica un tempio, Anselmo si unisce al gruppo e lo lascia al tempio; 25
+(rivendica un tempio, Anselmo viaggia con il gruppo come ospite fino al tempio; 25
 monete al ritorno dalla sorella). Test: `ScenarioCombattiScortaConsegnaTest`.
 
 Mancano ancora: `SORVEGLIA`, `EVITA_COMBATTIMENTO`, `COSTRUISCI`,

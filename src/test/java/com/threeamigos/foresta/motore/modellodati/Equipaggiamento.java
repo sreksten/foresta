@@ -102,7 +102,6 @@ public final class Equipaggiamento {
 				return Arrays.asList(DUE_SPADE_E_VESTE, LANCIA_E_VESTE);
 			case BARDO:
 			case CANTASTORIE:
-			case VIANDANTE:
 				return Collections.singletonList(SPADA_SCUDO_E_VESTE);
 			case MAGO:
 			case MAGA:
