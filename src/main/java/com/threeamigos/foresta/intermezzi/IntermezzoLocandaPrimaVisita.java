@@ -32,7 +32,7 @@ import java.util.stream.Collectors;
  */
 public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 
-	private static final String REGEX_PER_SPEZZARE_FRASI = "(?<=[.!?][\"“”])(?=(?:[^\"“”]*[\"“”][^\"“”]*[\"“”])*[^\"“”]*$)"
+	private static final String REGEX_PER_SPEZZARE_FRASI = "(?<=[.!?][\"“”])(?!\\s*,)(?=(?:[^\"“”]*[\"“”][^\"“”]*[\"“”])*[^\"“”]*$)"
 			+ "|(?<=[.!?])(?![.!?])(?![\"“”])(?=(?:[^\"“”]*[\"“”][^\"“”]*[\"“”])*[^\"“”]*$)";
 
 	private static final double X_PARTENZA_PERSONAGGI = -0.15;
@@ -118,7 +118,7 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 				.map(String::trim)
 				.collect(Collectors.toList());
 
-		frasiFiaba.forEach(frase -> pagina.conBattuta(BattutaIntermezzo.di("bardo", frase).centrataOrizzontalmente()));
+		frasiFiaba.forEach(frase -> pagina.conBattuta(BattutaIntermezzo.di("bardo", frase)));
 
 		pagina.conBattuta(BattutaIntermezzo.di("locandiere", "Smettila con queste tue storielle!"));
 

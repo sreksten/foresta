@@ -6,9 +6,9 @@ package com.threeamigos.foresta.intermezzi;
  * schermo, per chi parla da fuori scena.
  * <p>
  * Se non si indica quando comincia, la battuta parte alla fine della precedente; se non
- * si indica quanto dura, la durata dipende dalla lunghezza del testo. Se non si indica
- * dove mettere il fumetto, la UI lo colloca sopra chi parla, verso il centro dello schermo;
- * se non si indica la larghezza, è un terzo dello schermo.
+ * si indica quanto dura, la durata dipende dalla lunghezza del testo (fino a un massimo).
+ * Se non si indica dove mettere il fumetto, la UI lo colloca sopra chi parla; se non si
+ * indica la larghezza, è un terzo dello schermo.
  * <pre>
  *     BattutaIntermezzo.di("eremita", "Chi va là?")
  *     BattutaIntermezzo.di("eroe", "Un amico.").perSecondi(2)
@@ -19,6 +19,7 @@ package com.threeamigos.foresta.intermezzi;
 public final class BattutaIntermezzo {
 
 	static final double DURATA_MINIMA = 2.0;
+	static final double DURATA_MASSIMA = 6.0;
 	static final double SECONDI_BASE = 1.0;
 	static final double SECONDI_PER_CARATTERE = 0.06;
 
@@ -148,6 +149,6 @@ public final class BattutaIntermezzo {
 		if (!Double.isNaN(perSecondi)) {
 			return perSecondi;
 		}
-		return Math.max(DURATA_MINIMA, SECONDI_BASE + SECONDI_PER_CARATTERE * testo.length());
+		return Math.min(DURATA_MASSIMA, Math.max(DURATA_MINIMA, SECONDI_BASE + SECONDI_PER_CARATTERE * testo.length()));
 	}
 }

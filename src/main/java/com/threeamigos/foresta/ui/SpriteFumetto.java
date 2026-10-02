@@ -91,7 +91,7 @@ public class SpriteFumetto extends SpriteBase {
         BufferedImage immagineRisultante = new BufferedImage(maxLarghezzaEffettiva, altezzaCostruita, BufferedImage.TYPE_INT_ARGB);
         Graphics2D graphics = immagineRisultante.createGraphics();
         graphics.setColor(Color.WHITE);
-        graphics.fillRoundRect(0, 0, maxLarghezzaEffettiva - 1, altezzaCostruita - 1, DIMENSIONE_SMUSSAMENTO_BORDO, DIMENSIONE_SMUSSAMENTO_BORDO);
+        graphics.fillRoundRect(0, 0, maxLarghezzaEffettiva, altezzaCostruita, DIMENSIONE_SMUSSAMENTO_BORDO, DIMENSIONE_SMUSSAMENTO_BORDO);
         int testoY = DIMENSIONE_SMUSSAMENTO_BORDO;
         for (Image testoDisegnato : testiDisegnati) {
             graphics.drawImage(testoDisegnato, DIMENSIONE_SMUSSAMENTO_BORDO, testoY, null);

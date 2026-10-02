@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoCreazioneFumetto;
 import com.threeamigos.foresta.eventi.interni.InternoErrore;
 import com.threeamigos.foresta.intermezzi.BattutaIntermezzo;
 import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
@@ -37,7 +38,6 @@ class DisplayableCanvasIntermezzo implements Finestra {
 
 	// Distanza fra la bocca di chi parla e il bordo del fumetto collocato automaticamente
 	private static final int DISTANZA_FUMETTO_VERTICALE = 24;
-	private static final int DISTANZA_FUMETTO_ORIZZONTALE = 8;
 	private static final int MARGINE_SCHERMO = 4;
 
 	private final int width;
@@ -194,8 +194,8 @@ class DisplayableCanvasIntermezzo implements Finestra {
 			if (battuta.isCentrataOrizzontalmente()) {
 				x = (width - larghezza) / 2;
 			} else {
-				// Sopra chi parla, spostato verso il centro dello schermo
-				x = punta.x < width / 2 ? punta.x + DISTANZA_FUMETTO_ORIZZONTALE : punta.x - larghezza - DISTANZA_FUMETTO_ORIZZONTALE;
+				// Sopra chi parla
+				x = punta.x - larghezza / 2;
 			}
 		}
 		x = Math.max(MARGINE_SCHERMO, Math.min(x, width - larghezza - MARGINE_SCHERMO));
@@ -224,6 +224,7 @@ class DisplayableCanvasIntermezzo implements Finestra {
 
 	private BufferedImage nuvola(BattutaIntermezzo battuta) {
 		if (!nuvole.containsKey(battuta)) {
+			BusEventi.pubblica(new InternoCreazioneFumetto(battuta.getTesto()));
 			BufferedImage nuvola = null;
 			int larghezzaNuvola = battuta.hasLarghezza() ? (int) Math.round(battuta.getLarghezza() * width) : width / 3;
 			try {

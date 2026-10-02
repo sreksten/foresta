@@ -41,6 +41,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(ComandoDiGioco.class, this::onEventoComandoDiGioco);
         BusEventi.iscriviti(NotificaInizioCombattimentoPersonaggio.class, this::onEventoCombattimento);
         BusEventi.iscriviti(NotificaConsumoPuntoAbilitaPersonaggio.class, this::onEventoConsumoPuntoAbilita);
+        BusEventi.iscriviti(InternoCreazioneFumetto.class, this::onEventoCreazioneFumetto);
         BusEventi.iscriviti(InternoCreazionePersonaggio.class, this::onEventoCreazionePersonaggio);
         BusEventi.iscriviti(InternoCreazioneSpriteAnnuncioGlobale.class, this::onEventoCreazioneSpriteAnnuncioGlobale);
         BusEventi.iscriviti(InternoCreazioneSpriteATempo.class, this::onEventoCreazioneSpriteATempo);
@@ -171,6 +172,10 @@ public class SnifferBusEventi {
     private void onEventoConsumoPuntoAbilita(NotificaConsumoPuntoAbilitaPersonaggio evento) {
         Personaggio p = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getTipoAttributo());
+    }
+
+    private void onEventoCreazioneFumetto(InternoCreazioneFumetto evento) {
+        Logger.log(headerEvento(evento) + "Frase: " + evento.getFrase());
     }
 
     private void onEventoCreazionePersonaggio(InternoCreazionePersonaggio evento) {

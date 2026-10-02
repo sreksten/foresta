@@ -284,6 +284,10 @@ public enum TipoEvento {
      */
     INTERNO_CARICAMENTO_COMPLETATO,
     /**
+     * Un fumetto di un intermezzo viene creato dal gestore grafico, con la frase che mostra
+     */
+    INTERNO_CREAZIONE_FUMETTO,
+    /**
      * Un nuovo Personaggio viene creato dal motore
      */
     INTERNO_CREAZIONE_PERSONAGGIO,
