@@ -1175,8 +1175,9 @@ public abstract class PersonaggioBase implements Personaggio {
 	// PARATA
 
 	/**
-	 * La PARATA con l'equipaggiamento: scudo, elmo e armatura ne aggiungono una parte fissa più una per ogni
-	 * loro livello, mentre chi impugna due armi o un'arma a due mani ha la guardia aperta e ne perde un quarto.
+	 * La PARATA con l'equipaggiamento: scudo, elmo, armatura e schinieri ne aggiungono una parte fissa più una
+	 * per ogni loro livello, mentre chi impugna due armi o un'arma a due mani ha la guardia aperta e ne perde
+	 * un quarto.
 	 */
 	@Override
 	public int getParata() {
@@ -1203,6 +1204,8 @@ public abstract class PersonaggioBase implements Personaggio {
 				return Costanti.ELMO_PARATA_MINIMA + Costanti.ELMO_PARATA_PER_LIVELLO * livello;
 			case ARMATURA:
 				return Costanti.ARMATURA_PARATA_MINIMA + Costanti.ARMATURA_PARATA_PER_LIVELLO * livello;
+			case SCHINIERI:
+				return Costanti.SCHINIERI_PARATA_MINIMA + Costanti.SCHINIERI_PARATA_PER_LIVELLO * livello;
 			default:
 				return 0;
 		}

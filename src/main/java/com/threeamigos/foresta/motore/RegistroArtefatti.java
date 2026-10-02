@@ -285,7 +285,7 @@ public class RegistroArtefatti {
 
 	/**
 	 * Riempie i magazzini dei negozi di una città alla creazione del mondo: armi ed equipaggiamento per
-	 * l'armaiolo, pergamene per il venditore, attorno al livello del mondo.
+	 * l'armaiolo, ingredienti magici per il venditore di pergamene, attorno al livello del mondo.
 	 */
 	static void riempiMagazzini(CoordinateMD coordinate, GeneratoreArtefatti generatore) {
 		rifornisci(coordinate, Statistiche.getLivello(), generatore);
@@ -293,8 +293,7 @@ public class RegistroArtefatti {
 
 	/**
 	 * Il livello del mondo è aumentato: in ogni città ancora in piedi l'armaiolo scarta gli artefatti
-	 * ormai troppo deboli, il venditore rinnova le pergamene (il loro livello non supera mai
-	 * PERGAMENA_LIVELLO_MASSIMO, quindi non si possono scartare per livello), e arriva merce nuova.
+	 * ormai troppo deboli, il venditore rinnova tutti i suoi ingredienti magici, e arriva merce nuova.
 	 */
 	static void aggiornaMagazzini(int livelloMondo, GeneratoreArtefatti generatore) {
 		int livelloMinimo = livelloMondo - Costanti.MAGAZZINO_SCARTO_SOTTO_LIVELLO;
@@ -315,7 +314,7 @@ public class RegistroArtefatti {
 		}
 		ScambiatoreArtefatti venditoreDiPergamene = getScambiatorePerNegozio(coordinate, TipoNegozio.VENDITORE_DI_PERGAMENE);
 		for (int i = 0; i < Costanti.MAGAZZINO_PERGAMENE; i++) {
-			venditoreDiPergamene.addArtefatto(generatore.generaPergamena(livelloInMagazzino(i, livelloMondo)));
+			venditoreDiPergamene.addArtefatto(generatore.generaIngrediente(livelloInMagazzino(i, livelloMondo)));
 		}
 	}
 

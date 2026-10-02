@@ -27,8 +27,8 @@ public class DisplayableCanvasCommerciante extends DisplayableCanvasScambiatoreA
 
     private void gestisciEventoRifiutoVenditaArtefatto(NotificaRifiutoVenditaArtefatto notificaRifiutoVenditaArtefatto) {
         String frase = negozio == TipoNegozio.VENDITORE_DI_PERGAMENE
-                ? "Mi dispiace, io tratto solo pergamene."
-                : "Mi dispiace, le pergamene non le tratto.";
+                ? "Mi dispiace, io tratto solo pergamene, gemme, monili, gingilli e sigilli."
+                : "Mi dispiace, la roba magica la vende il venditore di pergamene.";
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo(frase, getCoordinateFumetto()));
     }
 

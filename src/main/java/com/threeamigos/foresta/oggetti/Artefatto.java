@@ -65,7 +65,7 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 	}
 
 	/**
-	 * Armi, scudi, elmi e armature. Accessori, libro magico e pergamene non si incantano.
+	 * Armi, scudi, elmi, armature e schinieri, e il libro magico. Accessori e pergamene non si incantano.
 	 */
 	public boolean isIncantabile() {
 		switch (getTipo().getSupertipo()) {
@@ -73,6 +73,7 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 			case SCUDO:
 			case ELMO:
 			case ARMATURA:
+			case SCHINIERI:
 			case POTENZIAMENTO_POTERE_MAGICO:
 				return true;
 			default:

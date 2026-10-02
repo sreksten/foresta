@@ -34,7 +34,8 @@ public enum SupertipoArtefatto {
     POTENZIAMENTO_POTERE_MAGICO,
 
     /**
-     * Supertipo generico per artefatti destinati a potenziarne altri
+     * Gli ingredienti magici (pergamena, gemma, monile, gingillo, sigillo), che si fondono sugli artefatti
+     * per potenziarli
      */
     INCANTAMENTO,
 

@@ -42,12 +42,11 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
 
 - [ ] **Artefatti leggendari**, scritti a mano, da mettere nei templi e come premi delle missioni (§2, "Rarità").
 - [ ] **Negozi sparsi nella foresta:** un paio per tipo, tra armaiolo, alchimista e incantatore.
-- [ ] **Grammatica per `GeneratoreArtefatti`:** formato definito e prima versione per la spada (§7), metà delle spade generate vengono da lì. Da fare:
+- [ ] **Grammatica per `GeneratoreArtefatti`:** formato definito (§7); spada, armatura, veste, elmo, scudo e schinieri vengono da lì per metà. Da fare:
   - [ ] **Stesso attributo due volte** (es. `SOGGEZIONE` +2 e +1): sommarli in `generaDaGrammatica` o evitarli nella grammatica.
   - [ ] **Bilanciamento:** i modificatori sono intensità × gradino, quindi +6 al livello 10 per un'intensità +2; da misurare insieme alla quota di spade da grammatica (`Costanti.ARTEFATTO_PROBABILITA_DA_GRAMMATICA`, 0,5 per provarla) e ai prezzi.
-  - [ ] **Altri tipi:** spadone, mazza, ascia, scudo… (basta aggiungere le radici `<TIPO>_<n>`, §7), e poi le pergamene.
+  - [ ] **Altre armi:** spadone, mazza, ascia, lancia… (basta aggiungere le radici `<TIPO>_<n>`, §7; per lo spadone serve `AGGETTIVO_LAMA` al maschile).
   - [ ] **`artefatti.txt`** resta com'è, come banco di prova di `GrammarBean` (`GrammarBean.md`, §5.3): da togliere quando `artefatti2.txt` l'avrà sostituito.
-- [ ] **Nome delle pergamene:** "Pergamena" va generato a caso come i nomi delle locande (runa, sigillo, …).
 - [ ] **Accessori:** nuove idee per incantarli (per ora non si incantano).
 
 ### Grafica e interfaccia
@@ -75,7 +74,7 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
 
 ### Modello
 
-- **Pergamena.** Un incantamento-oggetto è un `Artefatto` di tipo `TipoArtefatto.INCANTAMENTO` (supertipo `INCANTAMENTO`, slot `NUCLEO`), chiamato per ora "Pergamena". Come ogni artefatto porta sia una lista di `ModificatoreAttributo` sia una lista di `Incantamento`: sono gli effetti che trasferisce (verificato con `ArtefattoMDTest.salvaERicaricaPergamenaConModificatoriEIncantamenti`). Finché resta nel gruppo i suoi modificatori non si applicano a nessuno, perché contano solo quelli dell'inventario personale. `Incantamento` resta l'oggetto valore che descrive l'effetto: nome, `TipoDanno`, bonus fisso, coefficiente. Così la pergamena riusa inventari, compravendita e salvataggio degli artefatti.
+- **Ingredienti magici.** Un incantamento-oggetto è un `Artefatto` del supertipo `INCANTAMENTO` (slot `NUCLEO`, `TipoArtefatto.isIngrediente()`): pergamena, gemma, monile, gingillo o sigillo, ognuno con la sua specialità (vedi "Ingredienti magici", sotto). Fino al 2026-10-02 c'era solo la pergamena, `TipoArtefatto.INCANTAMENTO`. Come ogni artefatto porta sia una lista di `ModificatoreAttributo` sia una lista di `Incantamento`: sono gli effetti che trasferisce (verificato con `ArtefattoMDTest.salvaERicaricaPergamenaConModificatoriEIncantamenti`). Finché resta nel gruppo i suoi modificatori non si applicano a nessuno, perché contano solo quelli dell'inventario personale. `Incantamento` resta l'oggetto valore che descrive l'effetto: nome, `TipoDanno`, bonus fisso, coefficiente. Così la pergamena riusa inventari, compravendita e salvataggio degli artefatti.
 - **Nome proprio.** Facoltativo, su `ArtefattoMD`. Se lo sceglie il giocatore si normalizza con le iniziali maiuscole (es. "lama del drago" → "Lama Del Drago"), nel momento in cui il testo è disponibile. Se lo costruisce il codice resta com'è scritto.
   - È **un solo campo in più** (`nomeProprio`). La forma completa si compone con i campi che ogni artefatto ha già, `nome` (es. "la spada di fuoco", con l'articolo) e `descrizione` (es. "che brucia i nemici"): "Diavolina, la spada di fuoco, che brucia i nemici". Senza nome proprio resta com'è oggi: "la spada di fuoco, che brucia i nemici".
   - **Nei testi** si usa sempre la forma completa:
@@ -85,8 +84,10 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
     - i messaggi di azione ("Pippo raccoglie Diavolina, la spada di fuoco, che brucia i nemici.").
   - **Nell'inventario** (`DisplayableCanvasScambiatoreArtefatti`) il nodo dell'artefatto mostra in grande il nome proprio, oppure il `nome` se non c'è. La descrizione compare in piccolo, come nodo secondario. Con il nome proprio conviene che il nodo piccolo sia "la spada di fuoco, che brucia i nemici", così il nome generico non si perde. Da riguardare con la resa grafica.
   - La **grammatica** che genera le armi a caso passa anche il nome proprio, facoltativo.
-- **Pergamene generate a caso.** Hanno un livello da 1 a 3 e **tanti effetti quanto il loro livello**. Ogni incantamento può avere solo la parte fissa, solo la parte percentuale, o entrambe.
-- **Livello di una pergamena.** Non ne limita l'uso: il limite sta sull'oggetto incantato (numero massimo di effetti, cioè incantamenti più modificatori).
+- **Ingredienti generati a caso.** Hanno il livello di riferimento e **tanti effetti quanto il loro livello, fino a tre** (`Costanti.INGREDIENTE_EFFETTI_MASSIMI`), tutti diversi e della loro specialità. Il grado viene dal livello: **minore** fino al 2, normale (`MEDIO`, nel nome non si dice) al 3, **maggiore** dal 4 (`GradoIncantamento.perIngrediente`, `Costanti.INGREDIENTE_GRADO_*`); gli artefatti che nascono incantati restano alle soglie di `GradoIncantamento.perLivello`. Un modificatore è fisso (il gradino) o percentuale; un incantamento può avere solo la parte fissa, solo la parte percentuale, o entrambe.
+- **Livello di un ingrediente.** Non ne limita l'uso: il limite sta sull'oggetto incantato (numero massimo di effetti, cioè incantamenti più modificatori).
+- **Specialità.** La **pergamena** dà le caratteristiche primarie, la **gemma** gli incantamenti elementali, il **monile** quelli magici, il **gingillo** le secondarie d'attacco (`CRITICO`, `PRECISIONE`, `VELOCITA`, `FURTIVITA`, `PERCEZIONE`, `FURIA`, `SOGGEZIONE`), il **sigillo** quelle di difesa e d'animo (`PARATA`, `RESISTENZA_MAGICA`, `CORAGGIO`, `VALORE`, `CARICO_MASSIMO`) e il `POTERE_MAGICO` (`GeneratoreArtefattiTabelle.attributiDi`, `danniDi`). Talismano e ninnolo restano accessori da indossare.
+- **Nomi.** Dalla grammatica `ingredienti.txt` (§7): ogni effetto ha un "del qualcosa" che lo dice, e il generatore mette il grado dopo il nome comune ("la gemma maggiore del Drago e della Vipera", "il monile del Buco Nero Supermassivo", "il sigillo minore del Leone").
 
 ### Equipaggiamento
 
@@ -141,8 +142,7 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
   - **Nessun candidato:** l'oggetto va direttamente nell'inventario del gruppo, con un messaggioMD. È anche il caso di chi avrebbe già occupato lo slot (spada, scudo, elmo, armatura): niente sostituzioni automatiche, per non dargli robaccia.
 - **Troppo carico.** Se il personaggio scelto è troppo carico, l'oggetto va nel gruppo con il messaggioMD già in uso (fatto).
 - **Pergamene.** Vanno sempre nel gruppo (slot `NUCLEO`).
-- **Cofano.** Per ogni cofano aperto: 5% una pergamena, 5% un artefatto casuale, quindi il 10% delle volte si trova l'uno o l'altro. Gli altri esiti restano quelli di oggi.
-- **Nomi.** Il cofano trova già delle "pergamene" di incantesimi: nessun problema, perché con la grammatica gli incantamenti non si chiameranno più "Pergamena".
+- **Cofano.** Per ogni cofano aperto: 5% un ingrediente magico, 5% un artefatto casuale, quindi il 10% delle volte si trova l'uno o l'altro. Gli altri esiti restano quelli di oggi.
 - **Monete e gemme.** Restano risorse del gruppo.
 
 ### Incantamenti ed effetti
@@ -159,7 +159,7 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
 - **Danno delle pergamene.** `Costanti.INCANTESIMO_FATTORE_DANNI` (oggi 1,0) scala il danno base di tutti gli incantesimi, dardo compreso. Abbassarlo punisce soprattutto il Mago, che vive di pergamene: le pergamene sono poche, quindi restano forti, e il loro peso va rivisto con l'economia.
 - **Moltiplicatori di classe.** Il danno base si moltiplica per il `*_MOLTIPLICATORE_DANNI_FISICI` della classe di chi colpisce se l'attacco è fisico, per il `*_MOLTIPLICATORE_DANNI_MAGICI` se è elementale o magico (incantesimi compresi, e gli attacchi naturali di mostri come Spettro o Viverna). Negli incantamenti delle armi il moltiplicatore magico vale solo per la parte percentuale, che scala sull'`INTELLIGENZA`: la parte fissa è dell'arma e vale per tutti. Il bonus del libro magico prende tutto il moltiplicatore magico, perché è danno dell'incantesimo. Valori: Mago 0,5 fisico e 2,0 magico, Guerriero 1,3 e 0,5, Elfo 0,9 e 1,4, Bardo 0,9 e 1,1, Ladro 1,0 e 1,0. Ladro e Bardo reggono poco contro i gruppi, ma i loro moltiplicatori restano questi: si sistemeranno più avanti, in altro modo.
 - **Resistenze.** Entrano nella formula a rendimenti decrescenti che c'è già, `danno × 100 / (100 + difesa)`, senza un tetto separato: la difesa non porta mai all'immunità.
-  - La somma è su tutti gli incantamenti di tipo T di elmo, scudo e armatura del difensore. La difesa base è quella di oggi: `COSTITUZIONE + PARATA` per il danno fisico, `RESISTENZA_MAGICA` per quello elementale o magico.
+  - La somma è su tutti gli incantamenti di tipo T di elmo, scudo, armatura e schinieri del difensore. La difesa base è quella di oggi: `COSTITUZIONE + PARATA` per il danno fisico, `RESISTENZA_MAGICA` per quello elementale o magico.
   - `difesa_T` si usa nella mitigazione del danno base (se l'arma è di tipo T) e in quella di ogni incantamento di tipo T dell'attaccante.
   - Sui pezzi difensivi la parte percentuale vale la **metà** (`Costanti.RESISTENZA_FATTORE_PERCENTUALE`), perché moltiplica una difesa che cresce già con il livello. Quindi `difesa_T = (difesa base + Σ fisso_T × livello del pezzo) × (1 + Σ percentuale_T / 2)`.
 - **Doppia arma** (Ladro/Ladra, Elfo/Elfa con un'arma in `MANO_SECONDARIA`): **due fasi di attacco** per turno.
@@ -167,7 +167,7 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
   - L'arma secondaria occupa lo slot `MANO_SECONDARIA` (`slotEquipaggiamento`), anche se il suo `TipoArtefatto` dice `MANO_PRINCIPALE`.
   - "Guardia aperta": **−25% di `PARATA`** finché si impugnano due armi. Senza scudo, poi, non si ha la parata dello scudo.
 - **Scudo.** Oltre ai modificatori scritti sull'artefatto, ha una **`PARATA` intrinseca** di 6 + 2 per livello (`Costanti.SCUDO_PARATA_*`) e una **`RESISTENZA_MAGICA` intrinseca** di +1 per livello, +2 se è raro o leggendario (`Costanti.SCUDO_*RESISTENZA_MAGICA_PER_LIVELLO`). Così la scelta tra scudo e seconda arma conta sempre, anche con scudi "spogli", e anche contro gli attacchi elementali e magici, che la `PARATA` non ferma. Per una protezione magica forte lo scudo è un ottimo candidato per un incantamento.
-- **Elmo e armatura.** Anche loro hanno una **`PARATA` intrinseca** con una parte fissa, perché servano anche ai livelli bassi e senza incantamenti: elmo 2 + 1 per livello, armatura 3 + 1 per livello (`Costanti.ELMO_PARATA_*`, `Costanti.ARMATURA_PARATA_*`). La veste, l'armatura di chi usa la magia, dà lo stesso minimo dell'armatura in `RESISTENZA_MAGICA` invece che in `PARATA`. Il +5% di `PARATA` per livello che il generatore scrive sui pezzi difensivi resta, ma su una `PARATA` di base di 2-6 pesa poco.
+- **Elmo, armatura e schinieri.** Anche loro hanno una **`PARATA` intrinseca** con una parte fissa, perché servano anche ai livelli bassi e senza incantamenti: elmo 2 + 1 per livello, armatura 3 + 1 per livello, schinieri 2 + 1 per livello come l'elmo (`Costanti.ELMO_PARATA_*`, `Costanti.ARMATURA_PARATA_*`, `Costanti.SCHINIERI_PARATA_*`). Gli schinieri sono un pezzo difensivo come gli altri dal 2026-10-02: prima non si incantavano e il generatore li trattava come un accessorio. La veste, l'armatura di chi usa la magia, dà lo stesso minimo dell'armatura in `RESISTENZA_MAGICA` invece che in `PARATA`. Il +5% di `PARATA` per livello che il generatore scrive sui pezzi difensivi resta, ma su una `PARATA` di base di 2-6 pesa poco.
 - **Libro magico.** Bonus al **danno degli incantesimi** di chi lo porta, con parte fissa e parte percentuale come un incantamento del `GradoIncantamento` del livello del libro, **+25%**, del tipo di danno dell'incantesimo. La parte fissa scala con il livello del libro. Non dà effetti di stato in più e non aiuta le armi. Occupa `MANO_SECONDARIA`, quindi il mago sceglie tra libro e scudo.
 
 ### Prezzi delle pergamene
@@ -176,13 +176,13 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
 
 ### Fusione (incantatore)
 
-- **Cosa si trasferisce.** Tutti gli effetti della pergamena: gli incantamenti **e** i modificatori di attributo (`ModificatoreAttributo`). Nel seguito "effetto" vuol dire l'uno o l'altro.
+- **Cosa si trasferisce.** Gli effetti degli ingredienti: gli incantamenti **e** i modificatori di attributo (`ModificatoreAttributo`). Nel seguito "effetto" vuol dire l'uno o l'altro. Se non ci stanno tutti passano **i più preziosi** (secondo `ListinoPergamene`), finché l'artefatto ha posti liberi, e gli altri vanno persi; l'incantatore lo dice prima con un avviso (`RegoleIncantatura.avvisoEffettiPersi`), e si pagano solo quelli che passano. Su un libro magico non passano gli incantamenti elementali, su ciò che non è un bastone o un libro magico non passa il `POTERE_MAGICO`: anche questi vanno persi, con l'avviso. (Fino al 2026-10-02 la fusione si rifiutava se gli effetti non ci stavano tutti.)
 - **Costo.** 10 monete + 5 per ogni effetto trasferito (incantamento o modificatore). Il costo si sconta con la `CONTRATTAZIONE` del gruppo, come gli acquisti.
 - **Limite.** Un artefatto ha un numero massimo di effetti **in totale** che dipende dalla sua rarità (vedi "Rarità"): per un comune `min(3, livello − 1)`. Si contano incantamenti e modificatori, **compresi** quelli che l'artefatto ha già di suo (es. i modificatori degli artefatti dei templi). A livello 1 non se ne hanno. Una spada di livello 3 con già 1 incantamento ne può ricevere al più un altro.
 - **Conteggio.** Si contano gli **effetti**, non le pergamene: una pergamena con un incantamento e un modificatore vale due, per il costo e per i limiti.
 - **Accessori.** Non si incantano, quindi non ricevono nemmeno i modificatori di una pergamena: la fusione vale solo per gli artefatti incantabili (`isIncantabile()`).
-- **Controlli.** La schermata impedisce di mettere sul banco più effetti di quanti l'artefatto ne possa ricevere (rifiuto con fumetto), e il motore ricontrolla tutto alla conferma.
-- **Rifiuti.** Nessun artefatto sul banco, più di un artefatto, nessuna pergamena, limite superato, monete insufficienti.
+- **Controlli.** La schermata rifiuta con un fumetto un artefatto senza posti liberi e un ingrediente che sull'artefatto non avrebbe nessun effetto, e il motore ricontrolla tutto alla conferma.
+- **Rifiuti.** Nessun artefatto sul banco, più di un artefatto, nessun ingrediente, artefatto senza posti liberi, ingrediente senza effetto sull'artefatto, monete insufficienti.
 - **Incantamenti uguali.** Restano **distinti** anche se hanno lo stesso `TipoDanno`, così non si aggira il limite; i bonus si sommano comunque. Le pergamene usate vengono distrutte.
 - **Nome proprio.** Si chiede a **ogni** fusione con il `Prompt`, proponendo come valore predefinito quello che l'artefatto aveva già, se ce l'aveva.
 - **Da dove si prende l'artefatto.** Solo dall'inventario del gruppo: se ce l'ha un personaggio, prima va riposto.
@@ -191,13 +191,13 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
 ### Negozi e generatore
 
 - **Dove.** In città, in quest'ordine nella barra delle icone: locanda, alchimista, armaiolo, venditore di pergamene, incantatore. I negozi sparsi nella foresta vengono dopo.
-- **Cosa trattano.** L'armaiolo compra e vende tutto tranne le pergamene; il venditore di pergamene solo quelle (`TipoNegozio.tratta`). Un rifiuto si avverte con un fumetto.
+- **Cosa trattano.** L'armaiolo compra e vende tutto tranne gli ingredienti magici; il venditore di pergamene solo quelli (`TipoNegozio.tratta`). Un rifiuto si avverte con un fumetto.
 - **Prezzi e contrattazione.** Il gruppo tratta con la `CONTRATTAZIONE` più alta tra i personaggi vivi (attributo secondario: 60% Carisma, 40% Fortuna, per il moltiplicatore di archetipo; il Ladro è il migliore). `RegoleContrattazione` ne ricava `bonus = c / (c + 4)`: gli acquisti (artefatti, consumabili, fusione) si scontano di `0,24 × bonus`, al massimo del 20%; le vendite rendono `0,50 + 0,30 × bonus` del costo, al massimo il 75%. Il peggior acquisto (80%) resta sopra la miglior vendita (75%), quindi comprando e rivendendo non si guadagna. Arrotondamenti a favore del mercante. Lo Scudo Fiscale (leggendario, +16 `CONTRATTAZIONE`) porta un Ladro esattamente ai due limiti.
 - **Magazzini.** La chiave è (coordinate, `TipoNegozio`), perché più negozi della stessa città hanno la stessa coordinata.
 - **Generatore.** `GeneratoreArtefatti`: nomi ed effetti dalle tabelle di `GeneratoreArtefattiTabelle` e, per i tipi che la conosce (per ora la spada), in parte da una grammatica (§7).
 - **Riempimento dei negozi** (venditore di pergamene e armaiolo). Per ora il magazzino si genera **una volta sola, alla creazione del mondo**: 6 artefatti e 6 pergamene per città, con livelli a rotazione da 1 a 3 (`Costanti.MAGAZZINO_*`), perché alla creazione il livello di riferimento è sempre 1. Si potrà passare poi a una rigenerazione periodica in base al livello del gruppo.
 - **Gradi per livello.** Livelli 1-3 minore, 4-7 medio, dall'8 in su maggiore (`Costanti.GRADO_INCANTAMENTO_*`, da riaggiustare).
-- **Pergamene generate.** Per ora, per le prove, incantamenti e modificatori a caso; poi ci penserà la grammatica. Il livello della pergamena è quello di riferimento limitato a 3, e dà il numero di effetti; il grado dipende dal livello di riferimento.
+- **Ingredienti generati.** Vedi "Modello": livello di riferimento, effetti fino a tre, grado dal livello, nome dalla grammatica.
 - **Artefatti che nascono incantati.** Ogni tanto il generatore produce un artefatto incantabile già incantato, tanto più spesso quanto più è alto il livello: 5% per ogni livello oltre il primo, fino al 60% (`Costanti.ARTEFATTO_PROBABILITA_INCANTATO_*`). Gli incantamenti sono del grado del livello e rispettano il limite di effetti, che conta anche i modificatori dell'artefatto. Il prezzo cresce come quello delle pergamene.
 - **Artefatti che nascono incantati: tetto.** Al massimo 3 incantamenti, e sempre almeno un posto libero nel limite di effetti, così il giocatore ha modo di migliorare l'artefatto con la fusione (gli incantamenti casuali non si tolgono). Quindi un comune nasce incantato solo dal livello 4 (dal 3 se è raro).
 
@@ -303,6 +303,9 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
   - Ritocchi: dardo dell'Elfo a 4 di `MAGIA`, dardo del Mago a 40 × livello. Non ancora misurati (vedi "Da fare"). Provato e tolto +0,1 di danno fisico a Ladro e Bardo: i loro moltiplicatori restano quelli di prima.
   - Tutta la suite è verde (345 test).
 - [x] **Grammatica degli artefatti, prima versione** (2026-09-25). `artefatti2.txt` con `artefatti2_pp.txt`, letti da `GrammaticaArtefatti`; formato e scelte in §7. `GeneratoreArtefattiTabelle` la usa per metà delle spade; il costruttore con il solo `Random` resta a sole tabelle, così i test di prima non cambiano. `artefatti.txt` non è stato toccato. Test: `GrammaticaArtefattiTest` (7); `TestArtefatti2` stampa 40 spade come le genera il gioco. Tutta la suite è verde (352 test).
+- [x] **Grammatica per armatura, veste, elmo, scudo e schinieri** (2026-10-02). Le parole che si accordano col nome sono in tre generi (§7, "Genere e tipo"), declinate dalle stesse righe; quelle che vanno bene solo per una lama, solo per il metallo o solo per la stoffa sono in sezioni a parte, con sostituti per i pezzi difensivi ("borchiata", "irta di punte", "su misura") e la veste ("imbottita", "trapuntata"). Dettagli e descrizioni elementali hanno una versione per le protezioni, dove l'incantamento dà resistenza ("che respinge le fiamme"). `artefatti2_pp.txt` sceglie anche `il`/`lo`/`l'` e `i`/`gli`. Nel generatore le protezioni da grammatica hanno la `PARATA` di base delle tabelle (la `RESISTENZA_MAGICA` per la veste). Test: 4 nuovi in `GrammaticaArtefattiTest`; `TestArtefatti2` stampa tutti i tipi.
+- [x] **Ingredienti magici** (2026-10-02). Il venditore di pergamene vende pergamene, gemme, monili, gingilli e sigilli (`TipoArtefatto.PERGAMENA` … `SIGILLO`, supertipo `INCANTAMENTO`), ognuno con la sua specialità, con nome ed effetti dalla grammatica `ingredienti.txt` e il grado nel nome (§2, "Modello"). Nella fusione passano gli effetti più preziosi finché ci sono posti, gli altri si perdono con un avviso (§2, "Fusione"). `generaPergamena` è diventato `generaIngrediente`; `PERGAMENA_LIVELLO_MASSIMO` non c'è più. Test: `GrammaticaIngredientiTest` (3), 4 nuovi in `IncantatoreTest`. Tutta la suite è verde (496 test).
+- [x] **Schinieri pezzo difensivo** (2026-10-02), come elmo e armatura: si incantano (`Artefatto.isIncantabile`), le loro resistenze contano (`CalcolatoreCombattimento.isPezzoDifensivo`), hanno una `PARATA` intrinseca di 2 + 1 per livello come l'elmo (`Costanti.SCHINIERI_PARATA_*`) e nel generatore il +5% di `PARATA` per livello delle protezioni invece del modificatore da accessorio. Nella grammatica hanno fino a 3 effetti e le parti elementali, con le descrizioni al plurale ("che respingono le fiamme"). Il supertipo `SCHINIERI` c'era già. Test in `CalcolatoreCombattimentoEquipaggiamentoTest` (2), `ArtefattoIncantabileTest` e `GrammaticaArtefattiTest`. Tutta la suite è verde (491 test).
 - [x] **Liste di `artefatti2.txt` rilette** (2026-10-02). In `PREFISSO` restano solo gli aggettivi che reggono davanti al nome; gli altri (aggettivi di relazione, participi, sostantivi in apposizione come "la spada laser") sono passati in `AGGETTIVO` con lo stesso modificatore. Tolte le parole che non esistono o non hanno senso per una spada ("la spada mozzarella", "la rasoio spada", "la lincina spada") e i doppioni; `PERCEZIONE+2` ha ora lincea, occhiuta e onniveggente. Tutta la suite è verde (485 test).
 - [x] **Tetti degli effetti a 3/4/5** (comune/raro/leggendario) al posto di 5/6/7.
 - [x] **Il `|` sparisce dai testi** alla fonte (§5.5).
@@ -432,7 +435,8 @@ La grammatica sceglie **che cosa** ha un artefatto (nome, soprannome, descrizion
 ### File e classi
 
 - `src/main/resources/.../motore/artefatti2.txt`: la grammatica, con il formato spiegato in testa al file.
-- `artefatti2_pp.txt`: post-produzione, solo per l'articolo (sotto).
+- `artefatti2_pp.txt`: post-produzione, solo per gli articoli (sotto).
+- `ingredienti.txt`: la grammatica degli ingredienti magici, con le radici `PERGAMENA_1` … `SIGILLO_3`; gli effetti di un ingrediente sono tutti diversi perché `EFFETTO_<TIPO>$` è one-shot. Usa la stessa post-produzione. `GrammaticaArtefatti.caricaIngredientiOppureNull` la carica; se non si carica, gli ingredienti vengono dalle tabelle con il solo nome comune.
 - `oggetti/GrammaticaArtefatti`: carica la grammatica, sceglie la radice, toglie i marcatori e restituisce un `Risultato`. Se il file non si carica lo scrive nel log e il gioco resta alle tabelle.
 - `GeneratoreArtefattiTabelle.generaDaGrammatica`: trasforma il `Risultato` in un `ArtefattoMD`.
 
@@ -459,7 +463,7 @@ Perché marcatori nel testo e non JSON, come in `artefatti.txt`: il JSON costrin
 
 ### Radici e numero di effetti
 
-- Le radici si chiamano `<TIPO>_<n>`: un `TipoArtefatto` e il numero di effetti. Per ora `SPADA_0` … `SPADA_3`. `GrammaticaArtefatti` scopre da sola quali tipi e quanti effetti ci sono: per aggiungere un tipo basta scriverne le radici.
+- Le radici si chiamano `<TIPO>_<n>`: un `TipoArtefatto` e il numero di effetti. Per ora `SPADA`, `ARMATURA`, `VESTE`, `ELMO`, `SCUDO` e `SCHINIERI`, da 0 a 3. `GrammaticaArtefatti` scopre da sola quali tipi e quanti effetti ci sono: per aggiungere un tipo basta scriverne le radici.
 - **Ogni parte del nome porta un solo effetto**, quindi il numero di parti è il numero di effetti, e il limite di `TipoRaritaArtefatto` si rispetta senza tentativi. Dove in `artefatti.txt` una parola dava due effetti (un bonus e un malus) si è tenuto il bonus.
 - Il generatore chiede tanti effetti quanti ne ammette l'artefatto **meno uno**, come per gli artefatti che nascono incantati, così resta un posto per la fusione; se la grammatica non ne prevede tanti, prende la radice più grande. Quindi un comune di livello 1-2 esce da `SPADA_0`, che ha solo aggettivi di colore ("la spada di latta").
 
@@ -469,25 +473,31 @@ Perché marcatori nel testo e non JSON, come in `artefatti.txt`: il JSON costrin
 - Un incantamento è del grado del livello, con parte fissa e percentuale, e si chiama come quelli generati a caso ("Fuoco medio").
 - Il prezzo parte da quello base e sale del prezzo di pergamena (§6) di incantamenti e modificatori positivi, scende di quello dei modificatori negativi, ma non va sotto la metà del prezzo base.
 - Le spade da grammatica non ricevono incantamenti a caso (`incantaForse`): contraddirebbero il nome.
+- Armi e protezioni hanno prima quello che danno loro le tabelle: danno e descrizione le armi, +5% di `PARATA` per livello (la veste di `RESISTENZA_MAGICA`) e "che protegge dagli attacchi avversari" le protezioni. Il modificatore di base occupa un posto, quindi la grammatica ne riempie uno in meno. Una descrizione elementale prende il posto di quella di base.
+- Per gli schinieri, plurali, le descrizioni hanno il verbo al plurale: "che proteggono dagli attacchi avversari", e le parti elementali usano `DESCRIZIONE_<ELEMENTO>_PROTEZIONE_PLURALE`.
 
 ### Contenuto
 
-- **Parti con un modificatore:** `PREFISSO` ("la terribile spada"), `AGGETTIVO` ("la spada mozzarella"), `COMPLEMENTO` ("del Monaco Distratto"), `DETTAGLIO` ("(con Camomilla in Omaggio)"). Vengono da `artefatti.txt`; ogni parola compare una volta sola in tutto il file, così dal nome si capisce che cosa fa la spada.
+- **Parti con un modificatore:** `PREFISSO` ("la terribile spada"), `AGGETTIVO` ("la spada pesantissima"), `COMPLEMENTO` ("del Monaco Distratto"), `DETTAGLIO` ("(con Camomilla in Omaggio)"). Vengono da `artefatti.txt`; ogni parola compare una volta sola per genere, sempre con lo stesso effetto, così dal nome si capisce che cosa fa l'artefatto. In `PREFISSO` ci sono solo gli aggettivi che reggono davanti al nome.
+- **Genere e tipo.** Prefissi, aggettivi e cosmetici sono in tre sezioni, `_FEMMINILE_SINGOLARE` (spada, armatura, veste), `_MASCHILE_SINGOLARE` (elmo, scudo) e `_MASCHILE_PLURALE` (schinieri), con le stesse righe nello stesso ordine. Al maschile mancano tra i prefissi buono, bello e santo, che davanti al nome si troncano. Le sezioni comuni valgono per tutti; `_LAMA` (affilata, tagliente, l'elsa e la lama nei dettagli) solo per le armi, `_METALLO` (blindata, ammaccata, di latta) per tutto tranne la veste, `_STOFFA` per la veste, `_PROTEZIONE` per i pezzi difensivi. Ogni tipo ha le sue sezioni composte (`AGGETTIVO_SPADA`, `DETTAGLIO_ELMO`…) che mettono insieme quelle giuste; un tipo nuovo dello stesso genere e materiale le copia.
 - **Parti elementali:** per ognuno dei quindici tipi di danno non fisici un aggettivo o un complemento, l'incantamento, una descrizione e, due volte su tre, un soprannome (Diavolina, Fiammifero e Barbecue per il fuoco, Ghiacciolo e Sorbetto per il gelo…). Ogni elemento ha produzioni sue, quindi aggettivo, soprannome e descrizione non si contraddicono. Una spada ha al più una parte elementale.
-- **Articolo.** Il nome segue lo stile delle tabelle ("la spada di ferro"): la grammatica scrive `@la ` a inizio riga e `artefatti2_pp.txt` lo elide davanti a vocale ("l'immane spada").
+- **Parti elementali delle protezioni.** Su un pezzo difensivo l'incantamento dà resistenza, quindi aggettivi e complementi sono gli stessi ma la descrizione no: `EFFETTO_<ELEMENTO>_PROTEZIONE` usa `DESCRIZIONE_<ELEMENTO>_PROTEZIONE` ("che respinge le fiamme", "che fa da cappello di stagnola").
+- **Articolo.** Il nome segue lo stile delle tabelle ("la spada di ferro"): la grammatica scrive `@la `, `@il ` o `@i ` a inizio riga e `artefatti2_pp.txt` sceglie la forma per la parola che segue ("l'immane spada", "lo scudo", "il severo elmo", "gli schinieri", "i beati schinieri").
 - Rispetto a `artefatti.txt`: tolti gli attributi e i danni che nel gioco non esistono (`CARICO` è diventato `CARICO_MASSIMO`; tolti `SONICO` e `NECROTICO` come attributi, `SANGUINAMENTO` e `TENEBRA` come danni), i doppioni e qualche refuso; i nomi comuni usati come aggettivi (Accendino, Frigorifero, Suocera…) sono diventati soprannomi.
 
 ### Frequenze misurate
 
 Su 20.000 generazioni per radice (cambiano quando si aggiungono parole, per il boost dei pesi di `GrammarBean`, `GrammarBean.md` §5.2):
 
-| Radice | Spade elementali | Con soprannome | Modificatori positivi |
+| Radice | Elementali | Con soprannome | Modificatori positivi |
 | :--- | ---: | ---: | ---: |
-| `SPADA_1` | 19% | 12% | 71% |
-| `SPADA_2` | 40% | 26% | 69% |
-| `SPADA_3` | 46% | 29% | 67% |
+| `SPADA_1` | 20% | 13% | 69% |
+| `SPADA_2` | 38% | 24% | 68% |
+| `SPADA_3` | 44% | 28% | 67% |
+
+Armatura, veste, elmo e scudo hanno gli stessi schemi e frequenze quasi uguali (entro l'1%).
 
 ### Come vederle
 
-- Nel gioco, dall'armaiolo e nei cofani: metà delle spade viene dalla grammatica.
-- Senza avviare il gioco: `TestArtefatti2` (nei test) stampa 40 spade dal livello 1 al 10, con prezzo, danno, modificatori e incantamenti.
+- Nel gioco, dall'armaiolo e nei cofani: metà degli artefatti dei tipi che la grammatica conosce viene da lì.
+- Senza avviare il gioco: `TestArtefatti2` (nei test) stampa 40 artefatti per tipo dal livello 1 al 10, con prezzo, danno, modificatori e incantamenti.

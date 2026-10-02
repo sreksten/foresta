@@ -30,7 +30,13 @@ public enum TipoArtefatto {
     TALISMANO(SupertipoArtefatto.ALTRO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.ACCESSORIO, "Talismano", "possiede"),
     NINNOLO(SupertipoArtefatto.ALTRO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.ACCESSORIO, "Ninnolo", "ha con se"),
 
-    INCANTAMENTO(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Pergamena", "porta con se");
+    // Ingredienti magici: si comprano dal venditore di pergamene e si fondono sugli artefatti dall'incantatore.
+    // Ognuno ha la sua specialità (vedi GeneratoreArtefattiTabelle e ingredienti.txt).
+    PERGAMENA(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Pergamena", "porta con se"),
+    GEMMA(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Gemma", "porta con se"),
+    MONILE(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Monile", "porta con se"),
+    GINGILLO(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Gingillo", "porta con se"),
+    SIGILLO(SupertipoArtefatto.INCANTAMENTO, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.NUCLEO, "Sigillo", "porta con se");
 
     private final SupertipoArtefatto supertipo;
     private final TipoCardinalitaArtefatto cardinalita;
@@ -63,6 +69,13 @@ public enum TipoArtefatto {
         this.tipoDanno = null;
         this.descrizione = descrizione;
         this.utilizzo = utilizzo;
+    }
+
+    /**
+     * Pergamena, gemma, monile, gingillo o sigillo: un ingrediente magico da fondere su un artefatto
+     */
+    public boolean isIngrediente() {
+        return supertipo == SupertipoArtefatto.INCANTAMENTO;
     }
 
     public SupertipoArtefatto getSupertipo() {

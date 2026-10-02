@@ -203,7 +203,7 @@ public class CalcolatoreCombattimento {
         }
 
         // Determina la difesa del bersaglio (COSTITUZIONE + PARATA per Fisico, RESISTENZA_MAGICA per Magico/Elementale),
-        // con le resistenze di elmo, scudo e armatura contro questo tipo di danno
+        // con le resistenze di elmo, scudo, armatura e schinieri contro questo tipo di danno
         double statDifensiva = difesaContro(difensore, tipoDanno);
 
         if (dannoNonFisico && difensore.hasEffettoDiStato(TipoEffettoDiStato.MENTE_FRATTURATA)) {
@@ -671,7 +671,7 @@ public class CalcolatoreCombattimento {
     /**
      * La difesa del bersaglio contro un tipo di danno T:
      * (difesa base + Σ fisso_T × livello del pezzo) × (1 + Σ percentuale_T / 2), sugli incantamenti di tipo T
-     * di elmo, scudo e armatura. La difesa base è COSTITUZIONE + PARATA per il danno fisico,
+     * di elmo, scudo, armatura e schinieri. La difesa base è COSTITUZIONE + PARATA per il danno fisico,
      * RESISTENZA_MAGICA per quello elementale o magico.
      */
     public static double difesaContro(Personaggio difensore, TipoDanno tipoDanno) {
@@ -699,7 +699,7 @@ public class CalcolatoreCombattimento {
     private static boolean isPezzoDifensivo(Artefatto artefatto) {
         SupertipoArtefatto supertipo = artefatto.getTipo().getSupertipo();
         return supertipo == SupertipoArtefatto.SCUDO || supertipo == SupertipoArtefatto.ELMO
-                || supertipo == SupertipoArtefatto.ARMATURA;
+                || supertipo == SupertipoArtefatto.ARMATURA || supertipo == SupertipoArtefatto.SCHINIERI;
     }
 
     /**

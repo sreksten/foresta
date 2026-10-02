@@ -29,7 +29,6 @@ public enum TipoNegozio {
 	 * @return true se il negozio compra e vende artefatti di quel tipo
 	 */
 	public boolean tratta(TipoArtefatto tipo) {
-		boolean pergamena = tipo == TipoArtefatto.INCANTAMENTO;
-		return (this == VENDITORE_DI_PERGAMENE) == pergamena;
+		return (this == VENDITORE_DI_PERGAMENE) == tipo.isIngrediente();
 	}
 }

@@ -27,7 +27,7 @@ public enum TipoTrofeo {
 	ESPERTO_CACCIATORE_DI_TESORI("Esperto cacciatore di tesori", "Impossessati di 100 artefatti di livello 5 o superiore in possesso degli avversari", SupertipoTrofeo.BOTTINO),
 	RIGATTIERE("Rigattiere", "Compra 100 artefatti di livello 2 o inferiore dall'armaiolo", SupertipoTrofeo.ACQUISTO),
 	COLLEZIONISTA("Collezionista", "Compra 100 artefatti di livello 5 o superiore dall'armaiolo", SupertipoTrofeo.ACQUISTO),
-	STUDIOSO("Studioso", "Compra 100 pergamene dal venditore di pergamene", SupertipoTrofeo.ACQUISTO),
+	STUDIOSO("Studioso", "Compra 100 ingredienti magici dal venditore di pergamene", SupertipoTrofeo.ACQUISTO),
 	BOMBAROLO("Bombarolo", "Compra 100 incantesimi dall'alchimista", SupertipoTrofeo.ACQUISTO),
 	CARTOGRAFO("Cartografo", "Compra la mappa completa della foresta dall'alchimista", SupertipoTrofeo.ACQUISTO),
 	TRAFFICONE("Trafficone", "Incanta 50 artefatti dall'incantatore", SupertipoTrofeo.ACQUISTO),

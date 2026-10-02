@@ -33,16 +33,16 @@ class NegoziTest {
 
     @Test
     void ilVenditoreTrattaSoloPergameneLArmaioloTuttoIlResto() {
-        assertTrue(TipoNegozio.VENDITORE_DI_PERGAMENE.tratta(TipoArtefatto.INCANTAMENTO));
+        assertTrue(TipoNegozio.VENDITORE_DI_PERGAMENE.tratta(TipoArtefatto.PERGAMENA));
         assertFalse(TipoNegozio.VENDITORE_DI_PERGAMENE.tratta(TipoArtefatto.SPADA));
-        assertFalse(TipoNegozio.ARMAIOLO.tratta(TipoArtefatto.INCANTAMENTO));
+        assertFalse(TipoNegozio.ARMAIOLO.tratta(TipoArtefatto.PERGAMENA));
         assertTrue(TipoNegozio.ARMAIOLO.tratta(TipoArtefatto.SPADA));
         assertTrue(TipoNegozio.ARMAIOLO.tratta(TipoArtefatto.ANELLO));
     }
 
     @Test
     void lArmaioloNonCompraPergamene() {
-        Artefatto pergamena = artefatto(TipoArtefatto.INCANTAMENTO, 30);
+        Artefatto pergamena = artefatto(TipoArtefatto.PERGAMENA, 30);
         gruppo.addArtefatto(pergamena);
         ScambiatoreArtefatti armaiolo = RegistroArtefatti.getScambiatorePerNegozio(CITTA, TipoNegozio.ARMAIOLO);
 
@@ -56,7 +56,7 @@ class NegoziTest {
     @Test
     void ilVenditoreDiPergameneCompraSoloPergamene() {
         Artefatto spada = artefatto(TipoArtefatto.SPADA, 20);
-        Artefatto pergamena = artefatto(TipoArtefatto.INCANTAMENTO, 30);
+        Artefatto pergamena = artefatto(TipoArtefatto.PERGAMENA, 30);
         gruppo.addArtefatto(spada);
         gruppo.addArtefatto(pergamena);
         ScambiatoreArtefatti venditore = RegistroArtefatti.getScambiatorePerNegozio(CITTA, TipoNegozio.VENDITORE_DI_PERGAMENE);
@@ -80,7 +80,7 @@ class NegoziTest {
         assertEquals(Costanti.MAGAZZINO_ARTEFATTI_ARMAIOLO, armaiolo.size());
         assertEquals(Costanti.MAGAZZINO_PERGAMENE, venditore.size());
         assertTrue(armaiolo.stream().allMatch(a -> TipoNegozio.ARMAIOLO.tratta(a.getTipo())));
-        assertTrue(venditore.stream().allMatch(a -> a.getTipo() == TipoArtefatto.INCANTAMENTO));
+        assertTrue(venditore.stream().allMatch(a -> a.getTipo().isIngrediente()));
         // Livelli a rotazione attorno al livello del mondo, che all'inizio e' 1: mai sotto 1
         Set<Integer> livelli = armaiolo.stream().map(a -> a.getModelloDati().getLivello()).collect(Collectors.toSet());
         Set<Integer> attesi = new HashSet<>();

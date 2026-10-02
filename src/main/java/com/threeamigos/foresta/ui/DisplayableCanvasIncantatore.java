@@ -63,8 +63,8 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
         y = disegnaValore(graphics, "Monete", String.valueOf(GruppoGiocatore.getIstanza().getMonete()), y, coloreTestata);
 
         Collection<Artefatto> banco = automa.getParteRemota().getInventario();
-        boolean conPergamene = banco.stream().anyMatch(RegoleIncantatura::isPergamena);
-        if (conPergamene) {
+        boolean conIngredienti = banco.stream().anyMatch(RegoleIncantatura::isIngrediente);
+        if (conIngredienti) {
             y = disegnaValore(graphics, "Costo fusione", String.valueOf(GruppoGiocatore.getIstanza().costoFusione(banco)), y, coloreTestata);
         }
         Optional<Artefatto> artefatto = RegoleIncantatura.artefattoSulBanco(banco);
@@ -87,8 +87,8 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
     }
 
     /**
-     * Negli artefatti incantabili il livello dice se hanno ancora posti per gli effetti delle pergamene (verde) o
-     * no (rosso); gli altri (accessori, pergamene) restano grigi.
+     * Negli artefatti incantabili il livello dice se hanno ancora posti per gli effetti degli ingredienti (verde)
+     * o no (rosso); gli altri (accessori, ingredienti) restano grigi.
      */
     @Override
     protected DoomdarkColorModel.Color coloreLivello(Artefatto artefatto, boolean parteAttiva) {

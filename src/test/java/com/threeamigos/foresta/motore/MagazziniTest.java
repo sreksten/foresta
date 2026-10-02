@@ -50,7 +50,7 @@ class MagazziniTest {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
 					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
 			ScambiatoreArtefatti venditore = magazzino(TipoNegozio.VENDITORE_DI_PERGAMENE);
-			Artefatto pergamena = artefatto(TipoArtefatto.INCANTAMENTO);
+			Artefatto pergamena = artefatto(TipoArtefatto.PERGAMENA);
 			partita.gruppo().addArtefatto(pergamena);
 
 			partita.pubblica(new ComandoVenditaArtefatto(partita.gruppo(), venditore, pergamena));

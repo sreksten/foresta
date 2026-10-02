@@ -8,6 +8,7 @@ import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.Random;
 import java.util.Set;
@@ -24,8 +25,7 @@ class GeneratoreArtefattiTest {
         for (TipoArtefatto tipo : TipoArtefatto.values()) {
             Artefatto artefatto = generatore.generaArtefatto(tipo, 4);
             assertEquals(tipo, artefatto.getTipo());
-            // Le pergamene si fermano al livello 3
-            assertEquals(tipo == TipoArtefatto.INCANTAMENTO ? 3 : 4, artefatto.getLivello());
+            assertEquals(4, artefatto.getLivello());
             assertNotNull(artefatto.getNome());
             assertNotNull(artefatto.getDescrizione());
             assertTrue(artefatto.getPeso() > 0);
@@ -41,7 +41,7 @@ class GeneratoreArtefattiTest {
     void ilLivelloMinimoEUno() {
         GeneratoreArtefatti generatore = new GeneratoreArtefattiTabelle(new Random(2));
         assertEquals(1, generatore.generaArtefatto(TipoArtefatto.SPADA, 0).getLivello());
-        assertEquals(1, generatore.generaPergamena(-3).getLivello());
+        assertEquals(1, generatore.generaIngrediente(-3).getLivello());
     }
 
     @Test
@@ -75,14 +75,14 @@ class GeneratoreArtefattiTest {
     }
 
     @Test
-    void lArtefattoCasualeNonEMaiUnaPergamena() {
+    void lArtefattoCasualeNonEMaiUnIngrediente() {
         GeneratoreArtefatti generatore = new GeneratoreArtefattiTabelle(new Random(4));
         Set<TipoArtefatto> visti = EnumSet.noneOf(TipoArtefatto.class);
         for (int i = 0; i < GIRI; i++) {
             visti.add(generatore.generaArtefattoCasuale(3).getTipo());
         }
-        assertFalse(visti.contains(TipoArtefatto.INCANTAMENTO));
-        assertEquals(TipoArtefatto.values().length - 1, visti.size());
+        assertTrue(visti.stream().noneMatch(TipoArtefatto::isIngrediente));
+        assertEquals(Arrays.stream(TipoArtefatto.values()).filter(t -> !t.isIngrediente()).count(), visti.size());
     }
 
     @Test
@@ -99,35 +99,39 @@ class GeneratoreArtefattiTest {
     }
 
     @Test
-    void lePergameneHannoIncantamentiEModificatoriDelGradoGiusto() {
+    void gliIngredientiHannoEffettiDellaLoroSpecialitaEDelGradoGiusto() {
         GeneratoreArtefatti generatore = new GeneratoreArtefattiTabelle(new Random(6));
-        boolean visteConIncantamenti = false;
-        boolean visteConModificatori = false;
-        boolean visteConEntrambi = false;
+        Set<TipoArtefatto> tipi = EnumSet.noneOf(TipoArtefatto.class);
         for (int i = 0; i < GIRI; i++) {
             int livello = 1 + i % 10;
-            GradoIncantamento grado = GradoIncantamento.perLivello(livello);
-            Artefatto pergamena = generatore.generaPergamena(livello);
+            GradoIncantamento grado = GradoIncantamento.perIngrediente(livello);
+            Artefatto pergamena = generatore.generaIngrediente(livello);
             ArtefattoMD md = pergamena.getModelloDati();
-            assertEquals(TipoArtefatto.INCANTAMENTO, pergamena.getTipo());
-            // Livello da 1 a 3, e tanti effetti quanto il livello
-            assertEquals(Math.min(3, livello), pergamena.getLivello());
+            TipoArtefatto tipo = pergamena.getTipo();
+            assertTrue(tipo.isIngrediente());
+            tipi.add(tipo);
+            // Il livello di riferimento, e tanti effetti quanto il livello fino a tre, tutti diversi
+            assertEquals(livello, pergamena.getLivello());
             int effetti = md.getIncantamenti().size() + md.getModificatori().size();
-            assertEquals(pergamena.getLivello(), effetti);
+            assertEquals(Math.min(3, livello), effetti);
+            assertEquals(md.getIncantamenti().size(), md.getIncantamenti().stream().map(Incantamento::getTipoDannoElementale).distinct().count());
+            assertEquals(md.getModificatori().size(), md.getModificatori().stream().map(m -> m.getTipoAttributo()).distinct().count());
+            for (ModificatoreAttributo modificatore : md.getModificatori()) {
+                assertTrue(GeneratoreArtefattiTabelle.attributiDi(tipo).contains(modificatore.getTipoAttributo()), md.getNome());
+            }
+            // Il grado nel nome: niente per il medio
+            assertEquals(grado != GradoIncantamento.MEDIO, md.getNome().contains(" " + grado.getNome()), md.getNome());
             for (Incantamento incantamento : md.getIncantamenti()) {
+                assertTrue(GeneratoreArtefattiTabelle.danniDi(tipo).contains(incantamento.getTipoDannoElementale()), md.getNome());
                 assertNotEquals(SupertipoDanno.FISICO, incantamento.getTipoDannoElementale().getSuperTipo());
                 assertTrue(incantamento.getDannoBonusFisso() == 0 || incantamento.getDannoBonusFisso() == grado.getBonusFisso());
                 assertTrue(incantamento.getCoefficienteScala() == 0 || incantamento.getCoefficienteScala() == grado.getCoefficiente());
                 assertTrue(incantamento.getDannoBonusFisso() > 0 || incantamento.getCoefficienteScala() > 0);
             }
             assertEquals(ListinoPergamene.prezzo(md), pergamena.getCostoAcquisto());
-            visteConIncantamenti |= !md.getIncantamenti().isEmpty();
-            visteConModificatori |= !md.getModificatori().isEmpty();
-            visteConEntrambi |= !md.getIncantamenti().isEmpty() && !md.getModificatori().isEmpty();
         }
-        assertTrue(visteConIncantamenti);
-        assertTrue(visteConModificatori);
-        assertTrue(visteConEntrambi);
+        assertEquals(EnumSet.of(TipoArtefatto.PERGAMENA, TipoArtefatto.GEMMA, TipoArtefatto.MONILE, TipoArtefatto.GINGILLO,
+                TipoArtefatto.SIGILLO), tipi);
     }
 
     @Test
@@ -196,7 +200,7 @@ class GeneratoreArtefattiTest {
         }
         double quota = (double) rari / incantabili;
         assertTrue(quota > 0.06 && quota < 0.14, "Quota di rari: " + quota);
-        assertEquals(TipoRaritaArtefatto.COMUNE, generatore.generaPergamena(5).getRarita());
+        assertEquals(TipoRaritaArtefatto.COMUNE, generatore.generaIngrediente(5).getRarita());
     }
 
     private static int contaIncantati(GeneratoreArtefatti generatore, int livello) {

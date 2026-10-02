@@ -46,7 +46,7 @@ class TrofeiNegoziTest {
 	void loStudiosoContaLePergameneComprate() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			for (int i = 0; i < 100; i++) {
-				compra(partita, artefatto(TipoArtefatto.INCANTAMENTO, 1));
+				compra(partita, artefatto(TipoArtefatto.PERGAMENA, 1));
 			}
 			partita.pubblica(new InternoFineLocazione());
 

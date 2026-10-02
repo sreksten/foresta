@@ -5,16 +5,20 @@ import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
 
 /**
- * Stampa qualche spada come la genera il gioco, metà dalle tabelle e metà da artefatti2.txt,
- * per vedere a colpo d'occhio che cosa esce.
+ * Stampa qualche artefatto di ogni tipo che artefatti2.txt conosce, come li genera il gioco, metà dalle
+ * tabelle e metà dalla grammatica, per vedere a colpo d'occhio che cosa esce.
  */
 public class TestArtefatti2 {
 
     public static void main(String[] args) {
         GeneratoreArtefatti generatore = GeneratoreArtefatti.istanza();
-        for (int livello = 1; livello <= 10; livello++) {
-            for (int i = 0; i < 4; i++) {
-                stampa(generatore.generaArtefatto(TipoArtefatto.SPADA, livello));
+        TipoArtefatto[] tipi = { TipoArtefatto.SPADA, TipoArtefatto.ARMATURA, TipoArtefatto.VESTE, TipoArtefatto.ELMO,
+                TipoArtefatto.SCUDO, TipoArtefatto.SCHINIERI };
+        for (TipoArtefatto tipo : tipi) {
+            for (int livello = 1; livello <= 10; livello++) {
+                for (int i = 0; i < 4; i++) {
+                    stampa(generatore.generaArtefatto(tipo, livello));
+                }
             }
         }
     }

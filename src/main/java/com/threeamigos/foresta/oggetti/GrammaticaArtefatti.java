@@ -14,7 +14,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * Nomi ed effetti degli artefatti presi da una grammatica (artefatti2.txt, che ne descrive il formato).
+ * Nomi ed effetti degli artefatti presi da una grammatica (artefatti2.txt, che ne descrive il formato, o
+ * ingredienti.txt per gli ingredienti magici).
  * Ogni riga prodotta è il nome dell'artefatto con dentro dei marcatori {@code <chiave:valore>}: qui si
  * tolgono dal testo e diventano un {@link Risultato}, che dice che cosa ha l'artefatto ma non quanto,
  * perché i valori dipendono dal livello e li decide il generatore.
@@ -24,31 +25,54 @@ import java.util.regex.Pattern;
 final class GrammaticaArtefatti {
 
 	private static final String GRAMMATICA = "/com/threeamigos/foresta/motore/artefatti2.txt";
+	private static final String GRAMMATICA_INGREDIENTI = "/com/threeamigos/foresta/motore/ingredienti.txt";
 	private static final String POST_PRODUZIONE = "/com/threeamigos/foresta/motore/artefatti2_pp.txt";
+
+	/**
+	 * Fin dove si cercano le radici <TIPO>_<n>
+	 */
+	private static final int EFFETTI_CERCATI = 10;
 
 	private static final Pattern MARCATORE = Pattern.compile("<([a-z]+):([^<>]*)>");
 	private static final Pattern MODIFICATORE = Pattern.compile("([A-Z_]+)([+-]\\d+)");
 
 	private final GrammarBean grammatica;
 	/**
-	 * Per ogni tipo presente nella grammatica il numero massimo di effetti, cioè la radice <TIPO>_<n> più grande
+	 * Per ogni tipo presente nella grammatica il numero minimo e massimo di effetti, cioè la radice <TIPO>_<n> più
+	 * piccola e più grande (le radici vanno dalla prima all'ultima senza buchi)
 	 */
+	private final Map<TipoArtefatto, Integer> effettiMinimi = new EnumMap<>(TipoArtefatto.class);
 	private final Map<TipoArtefatto, Integer> effettiMassimi = new EnumMap<>(TipoArtefatto.class);
 
 	GrammaticaArtefatti(GrammarBean grammatica) {
 		this.grammatica = grammatica;
 		for (TipoArtefatto tipo : TipoArtefatto.values()) {
-			for (int effetti = 0; esisteRadice(tipo, effetti); effetti++) {
-				effettiMassimi.put(tipo, effetti);
+			for (int effetti = 0; effetti <= EFFETTI_CERCATI; effetti++) {
+				if (esisteRadice(tipo, effetti)) {
+					effettiMinimi.putIfAbsent(tipo, effetti);
+					effettiMassimi.put(tipo, effetti);
+				}
 			}
 		}
 	}
 
 	/**
-	 * La grammatica del gioco, o null se non si carica: in quel caso il generatore resta alle sue tabelle.
+	 * La grammatica degli artefatti del gioco, o null se non si carica: in quel caso il generatore resta alle sue
+	 * tabelle.
 	 */
 	static GrammaticaArtefatti caricaOppureNull() {
-		try (InputStream grammatica = GrammaticaArtefatti.class.getResourceAsStream(GRAMMATICA);
+		return caricaOppureNull(GRAMMATICA);
+	}
+
+	/**
+	 * La grammatica degli ingredienti magici (pergamene, gemme…), o null se non si carica.
+	 */
+	static GrammaticaArtefatti caricaIngredientiOppureNull() {
+		return caricaOppureNull(GRAMMATICA_INGREDIENTI);
+	}
+
+	private static GrammaticaArtefatti caricaOppureNull(String file) {
+		try (InputStream grammatica = GrammaticaArtefatti.class.getResourceAsStream(file);
 			 InputStream postProduzione = GrammaticaArtefatti.class.getResourceAsStream(POST_PRODUZIONE)) {
 			return new GrammaticaArtefatti(new GrammarBean(grammatica, postProduzione));
 		} catch (InvalidGrammarException | IOException | RuntimeException e) {
@@ -75,14 +99,15 @@ final class GrammaticaArtefatti {
 	}
 
 	/**
-	 * Un artefatto con al più quel numero di effetti: se la grammatica non ne prevede tanti, il massimo che ha.
+	 * Un artefatto con quel numero di effetti: se la grammatica non ne prevede tanti, o così pochi, il massimo o il
+	 * minimo che ha.
 	 */
 	synchronized Risultato genera(TipoArtefatto tipo, int effetti) {
 		Integer massimo = effettiMassimi.get(tipo);
 		if (massimo == null) {
 			throw new IllegalArgumentException("La grammatica degli artefatti non genera il tipo " + tipo);
 		}
-		String riga = String.join(" ", grammatica.produce(radice(tipo, Math.max(0, Math.min(massimo, effetti)))));
+		String riga = String.join(" ", grammatica.produce(radice(tipo, Math.max(effettiMinimi.get(tipo), Math.min(massimo, effetti)))));
 		grammatica.reset();
 		return interpreta(riga);
 	}
@@ -123,7 +148,8 @@ final class GrammaticaArtefatti {
 					throw new IllegalArgumentException("Marcatore sconosciuto: " + matcher.group() + " in " + riga);
 			}
 		}
-		risultato.nome = matcher.replaceAll(" ").replaceAll("\\s+", " ").trim();
+		// Un marcatore prima di una virgola lascerebbe uno spazio: "del Tuono<danno:SONICO>, della…"
+		risultato.nome = matcher.replaceAll(" ").replaceAll("\\s+", " ").replaceAll(" ([,.;:!?])", "$1").trim();
 		if (risultato.nome.contains("<") || risultato.nome.contains(">")) {
 			throw new IllegalArgumentException("Marcatore non chiuso in " + riga);
 		}

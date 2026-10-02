@@ -119,11 +119,11 @@ public class Cofano extends OggettoBase implements Oggetto {
 	}
 
 	/**
-	 * Con probabilità 5% una pergamena, con un altro 5% un artefatto casuale, altrimenti null.
+	 * Con probabilità 5% un ingrediente magico, con un altro 5% un artefatto casuale, altrimenti null.
 	 */
 	static Artefatto artefattoRaro(double tiro, GeneratoreArtefatti generatore, int livello) {
 		if (tiro < Costanti.COFANO_PROBABILITA_PERGAMENA) {
-			return generatore.generaPergamena(livello);
+			return generatore.generaIngrediente(livello);
 		}
 		if (tiro < Costanti.COFANO_PROBABILITA_PERGAMENA + Costanti.COFANO_PROBABILITA_ARTEFATTO) {
 			return generatore.generaArtefattoCasuale(livello);

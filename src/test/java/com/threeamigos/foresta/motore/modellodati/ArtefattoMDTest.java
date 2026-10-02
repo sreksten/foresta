@@ -314,14 +314,14 @@ class ArtefattoMDTest {
     @Test
     void salvaERicaricaPergamena() throws IOException {
         // Given: una pergamena che porta due incantamenti
-        ArtefattoMD pergamena = creaArtefatto(TipoArtefatto.INCANTAMENTO, "una pergamena del fuoco", "che arde di magia");
+        ArtefattoMD pergamena = creaArtefatto(TipoArtefatto.PERGAMENA, "una pergamena del fuoco", "che arde di magia");
         pergamena.setDanni(0);
         pergamena.addIncantamento("Fiamma", TipoDanno.FUOCO, 10, 0.1);
         pergamena.addIncantamento("Brina", TipoDanno.GELO, 0, 0.05);
         // When
         ArtefattoMD ricaricato = salvaERileggi(pergamena);
         // Then
-        assertEquals(TipoArtefatto.INCANTAMENTO, ricaricato.getTipo());
+        assertEquals(TipoArtefatto.PERGAMENA, ricaricato.getTipo());
         assertEquals(TipoSlotArtefatto.NUCLEO, ricaricato.getTipo().getSlotArtefatto());
         assertEquals("una pergamena del fuoco", ricaricato.getNome());
         assertTrue(ricaricato.getModificatori().isEmpty());
@@ -335,7 +335,7 @@ class ArtefattoMDTest {
     void salvaERicaricaPergamenaConModificatoriEIncantamenti() throws IOException {
         // Given: una pergamena è un artefatto, quindi porta sia modificatori sia incantamenti
         ArtefattoMD pergamena = CostruttoreArtefatto.istanza()
-                .setTipo(TipoArtefatto.INCANTAMENTO)
+                .setTipo(TipoArtefatto.PERGAMENA)
                 .setNome("il Sigillo della Fiamma Eterna")
                 .setDescrizione("che arde di magia")
                 .setLivello(3)
@@ -350,7 +350,7 @@ class ArtefattoMDTest {
         // When
         ArtefattoMD ricaricato = salvaERileggi(pergamena);
         // Then
-        assertEquals(TipoArtefatto.INCANTAMENTO, ricaricato.getTipo());
+        assertEquals(TipoArtefatto.PERGAMENA, ricaricato.getTipo());
         Collection<ModificatoreAttributo> modificatori = ricaricato.getModificatori();
         assertEquals(2, modificatori.size());
         assertTrue(modificatori.contains(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 2)));

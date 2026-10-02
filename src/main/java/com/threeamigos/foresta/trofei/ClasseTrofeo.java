@@ -9,7 +9,6 @@ import com.threeamigos.foresta.eventi.interni.InternoPastoConsumatoInLocanda;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
 import com.threeamigos.foresta.motore.tipi.TipoConsumabile;
 import com.threeamigos.foresta.motore.tipi.TipoTrofeo;
 import com.threeamigos.foresta.oggetti.Artefatto;
@@ -51,11 +50,11 @@ public enum ClasseTrofeo {
 	// I cofani contano anche se incustoditi, come nelle grotte
 	ESPERTO_SCASSINATORE(() -> new TrofeoAContatore<>(TipoTrofeo.ESPERTO_SCASSINATORE,
 			InternoOggettoRaccolto.class, evento -> evento.getClasse() == ClassiOggetto.COFANO ? evento.getQuantita() : 0, 100)),
-	// Gli artefatti in città si comprano solo da armaiolo (tutto tranne le pergamene) e venditore di pergamene
+	// Gli artefatti in città si comprano solo da armaiolo (tutto tranne gli ingredienti magici) e venditore di pergamene
 	RIGATTIERE(() -> acquistoDallArmaiolo(TipoTrofeo.RIGATTIERE, livello -> livello <= 2)),
 	COLLEZIONISTA(() -> acquistoDallArmaiolo(TipoTrofeo.COLLEZIONISTA, livello -> livello >= 5)),
 	STUDIOSO(() -> new TrofeoAContatore<>(TipoTrofeo.STUDIOSO, NotificaApprovazioneAcquistoArtefatto.class,
-			evento -> isPergamena(artefattoComprato(evento)) ? 1 : 0, 100)),
+			evento -> artefattoComprato(evento).getTipo().isIngrediente() ? 1 : 0, 100)),
 	// Gli artefatti degli avversari: l'oggetto della locazione, se custodito
 	CACCIATORE_DI_TESORI(() -> bottino(TipoTrofeo.CACCIATORE_DI_TESORI, livello -> true)),
 	ESPERTO_CACCIATORE_DI_TESORI(() -> bottino(TipoTrofeo.ESPERTO_CACCIATORE_DI_TESORI, livello -> livello >= 5)),
@@ -84,7 +83,7 @@ public enum ClasseTrofeo {
 	private static Trofeo acquistoDallArmaiolo(TipoTrofeo tipo, IntPredicate livello) {
 		return new TrofeoAContatore<>(tipo, NotificaApprovazioneAcquistoArtefatto.class, evento -> {
 			Artefatto artefatto = artefattoComprato(evento);
-			return !isPergamena(artefatto) && livello.test(artefatto.getLivello()) ? 1 : 0;
+			return !artefatto.getTipo().isIngrediente() && livello.test(artefatto.getLivello()) ? 1 : 0;
 		}, 100);
 	}
 
@@ -95,10 +94,6 @@ public enum ClasseTrofeo {
 
 	private static Artefatto artefattoComprato(NotificaApprovazioneAcquistoArtefatto evento) {
 		return (Artefatto) evento.getEventoRichiestaSpostamentoArtefatto().getOggettoDaSpostare();
-	}
-
-	private static boolean isPergamena(Artefatto artefatto) {
-		return artefatto.getTipo() == TipoArtefatto.INCANTAMENTO;
 	}
 
 	private static TipoConsumabile consumabileComprato(NotificaApprovazioneAcquistoConsumabile evento) {

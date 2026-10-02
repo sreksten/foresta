@@ -3,7 +3,8 @@ package com.threeamigos.foresta.oggetti;
 import com.threeamigos.foresta.motore.Costanti;
 
 /**
- * I gradini degli effetti di una pergamena (vedi artefatti_e_incantamenti.md, §6).
+ * I gradini degli effetti di un ingrediente magico e degli incantamenti degli artefatti (vedi
+ * artefatti_e_incantamenti.md, §6).
  * Il prezzo base è quello di un incantamento con entrambe le parti, fissa e percentuale.
  */
 public enum GradoIncantamento {
@@ -32,6 +33,20 @@ public enum GradoIncantamento {
 			return MAGGIORE;
 		}
 		if (livello >= Costanti.GRADO_INCANTAMENTO_MEDIO_DAL_LIVELLO) {
+			return MEDIO;
+		}
+		return MINORE;
+	}
+
+	/**
+	 * Il grado degli effetti di un ingrediente magico: minore fino al livello 2, medio (nel nome non si dice) al
+	 * 3, maggiore dal 4.
+	 */
+	public static GradoIncantamento perIngrediente(int livello) {
+		if (livello >= Costanti.INGREDIENTE_GRADO_MAGGIORE_DAL_LIVELLO) {
+			return MAGGIORE;
+		}
+		if (livello >= Costanti.INGREDIENTE_GRADO_MEDIO_DAL_LIVELLO) {
 			return MEDIO;
 		}
 		return MINORE;

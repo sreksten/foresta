@@ -42,7 +42,7 @@ class ModelloDatiSalvataggioTest {
         modello.getGruppoGiocatoreMD().addPersonaggioMD(senzaNome);
         modello.getGruppoGiocatoreMD().addPersonaggioMD(morto);
         modello.getGruppoGiocatoreMD().getArtefatti().add(
-                ArtefattoMDTest.creaArtefatto(TipoArtefatto.INCANTAMENTO, "la pergamena minore", "che trasmette un effetto"));
+                ArtefattoMDTest.creaArtefatto(TipoArtefatto.PERGAMENA, "la pergamena minore", "che trasmette un effetto"));
         modello.getGruppoGiocatoreMD().setIncantesimi(ClasseIncantesimo.FUOCO, 4);
         modello.getLineaTemporaleMD().setGiocoFinito(true);
         modello.getLineaTemporaleMD().setEvento("Gwendolyn vede levarsi una colonna di fumo a nord");

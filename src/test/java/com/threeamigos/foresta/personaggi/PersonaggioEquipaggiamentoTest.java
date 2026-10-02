@@ -101,7 +101,7 @@ class PersonaggioEquipaggiamentoTest {
     @Test
     void lePergameneRestanoNelGruppo() {
         Personaggio guerriero = new Guerriero("Pippo", 5);
-        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.PERGAMENA, guerriero, artefatto(TipoArtefatto.INCANTAMENTO, 1));
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.PERGAMENA, guerriero, artefatto(TipoArtefatto.PERGAMENA, 1));
     }
 
     @Test

@@ -61,6 +61,13 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
     }
 
     @Test
+    void ancheGliSchinieriIncantatiProteggono() {
+        difensore.addArtefatto(pezzoIncantato(TipoArtefatto.SCHINIERI, 2, TipoDanno.FUOCO, 5, 0.10));
+        // (30 + 5 × 2) × (1 + 0,05)
+        assertEquals(40 * 1.05, CalcolatoreCombattimento.difesaContro(difensore, TipoDanno.FUOCO), DELTA);
+    }
+
+    @Test
     void gliIncantamentiDelleArmiNonProteggono() {
         difensore.addArtefatto(pezzoIncantato(TipoArtefatto.SPADA, 3, TipoDanno.FUOCO, 10, 0.10));
         assertEquals(30.0, CalcolatoreCombattimento.difesaContro(difensore, TipoDanno.FUOCO), DELTA);
@@ -136,6 +143,13 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
         guerriero.addArtefatto(artefatto(TipoArtefatto.ARMATURA, 3));
         assertEquals(20 + Costanti.ELMO_PARATA_MINIMA + Costanti.ELMO_PARATA_PER_LIVELLO
                 + Costanti.ARMATURA_PARATA_MINIMA + 3 * Costanti.ARMATURA_PARATA_PER_LIVELLO, guerriero.getParata());
+    }
+
+    @Test
+    void ancheGliSchinieriDannoUnaParataMinima() {
+        Guerriero guerriero = conParata(new Guerriero("Pippo", 5), 20);
+        guerriero.addArtefatto(artefatto(TipoArtefatto.SCHINIERI, 4));
+        assertEquals(20 + Costanti.SCHINIERI_PARATA_MINIMA + 4 * Costanti.SCHINIERI_PARATA_PER_LIVELLO, guerriero.getParata());
     }
 
     @Test

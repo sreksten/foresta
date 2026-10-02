@@ -1,8 +1,65 @@
-# "@la " è l'articolo che artefatti2.txt mette a inizio riga: davanti a vocale si elide.
-# Le regole sono in ordine: l'ultima, generica, vale per tutte le consonanti.
+# "@la ", "@il " e "@i " sono gli articoli che artefatti2.txt mette a inizio riga: qui si sceglie
+# la forma giusta per la parola che segue. Le regole sono in ordine: l'ultima di ogni articolo,
+# generica, vale per tutte le altre consonanti.
 @la a:l'a
 @la e:l'e
 @la i:l'i
 @la o:l'o
 @la u:l'u
 @la :la 
+# "l'elmo", "lo scudo", "lo zelante", "lo gnomo", "lo psicotico", "il terribile elmo"
+@il a:l'a
+@il e:l'e
+@il i:l'i
+@il o:l'o
+@il u:l'u
+@il sb:lo sb
+@il sc:lo sc
+@il sd:lo sd
+@il sf:lo sf
+@il sg:lo sg
+@il sh:lo sh
+@il sl:lo sl
+@il sm:lo sm
+@il sn:lo sn
+@il sp:lo sp
+@il sq:lo sq
+@il sr:lo sr
+@il st:lo st
+@il sv:lo sv
+@il sz:lo sz
+@il z:lo z
+@il gn:lo gn
+@il ps:lo ps
+@il pn:lo pn
+@il x:lo x
+@il y:lo y
+@il :il 
+# "gli schinieri", "gli intrepidi schinieri", "i terribili schinieri"
+@i a:gli a
+@i e:gli e
+@i i:gli i
+@i o:gli o
+@i u:gli u
+@i sb:gli sb
+@i sc:gli sc
+@i sd:gli sd
+@i sf:gli sf
+@i sg:gli sg
+@i sh:gli sh
+@i sl:gli sl
+@i sm:gli sm
+@i sn:gli sn
+@i sp:gli sp
+@i sq:gli sq
+@i sr:gli sr
+@i st:gli st
+@i sv:gli sv
+@i sz:gli sz
+@i z:gli z
+@i gn:gli gn
+@i ps:gli ps
+@i pn:gli pn
+@i x:gli x
+@i y:gli y
+@i :i 

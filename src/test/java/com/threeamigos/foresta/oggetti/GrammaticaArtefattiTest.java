@@ -5,6 +5,7 @@ import com.threeamigos.foresta.motore.tipi.SupertipoDanno;
 import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
 import com.threeamigos.foresta.motore.tipi.TipoAttributo;
 import com.threeamigos.foresta.motore.tipi.TipoDanno;
+import com.threeamigos.foresta.motore.tipi.TipoModificatore;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -16,6 +17,17 @@ class GrammaticaArtefattiTest {
 
     private static final int GIRI = 2000;
     private static final int EFFETTI_MASSIMI_SPADA = 3;
+    /**
+     * I tipi che la grammatica conosce, con il numero massimo di effetti e l'inizio del nome senza prefisso
+     */
+    private static final Object[][] TIPI = {
+            { TipoArtefatto.SPADA, 3, "la spada" },
+            { TipoArtefatto.ARMATURA, 3, "l'armatura" },
+            { TipoArtefatto.VESTE, 3, "la veste" },
+            { TipoArtefatto.ELMO, 3, "l'elmo" },
+            { TipoArtefatto.SCUDO, 3, "lo scudo" },
+            { TipoArtefatto.SCHINIERI, 3, "gli schinieri" },
+    };
 
     private static GrammaticaArtefatti grammatica;
 
@@ -26,10 +38,62 @@ class GrammaticaArtefattiTest {
     }
 
     @Test
-    void conosceLaSpadaESoloLei() {
-        assertTrue(grammatica.supporta(TipoArtefatto.SPADA));
-        assertFalse(grammatica.supporta(TipoArtefatto.SCUDO));
-        assertThrows(IllegalArgumentException.class, () -> grammatica.genera(TipoArtefatto.SCUDO, 1));
+    void conosceSoloITipiChePrevede() {
+        for (Object[] tipo : TIPI) {
+            assertTrue(grammatica.supporta((TipoArtefatto) tipo[0]), tipo[0].toString());
+        }
+        assertFalse(grammatica.supporta(TipoArtefatto.ANELLO));
+        assertThrows(IllegalArgumentException.class, () -> grammatica.genera(TipoArtefatto.ANELLO, 1));
+    }
+
+    @Test
+    void ogniTipoHaIlSuoArticoloEIlNumeroDiEffettiChiesto() {
+        for (Object[] riga : TIPI) {
+            TipoArtefatto tipo = (TipoArtefatto) riga[0];
+            int massimo = (Integer) riga[1];
+            String nome = ((String) riga[2]).replaceFirst("^(la |l'|lo |gli )", "");
+            for (int effetti = 0; effetti <= massimo; effetti++) {
+                for (int i = 0; i < GIRI / 4; i++) {
+                    GrammaticaArtefatti.Risultato risultato = grammatica.genera(tipo, effetti);
+                    String testo = risultato.getNome();
+                    assertEquals(effetti, risultato.getEffetti(), testo);
+                    assertTrue(testo.matches("^(la |l'|il |lo |i |gli ).*\\b" + nome + "\\b.*"), testo);
+                    assertFalse(testo.matches(".*[@\\[\\]{}|<>\"].*"), testo);
+                    // Senza effetti non c'è prefisso, quindi il nome comincia con articolo e nome
+                    if (effetti == 0) {
+                        assertTrue(testo.startsWith((String) riga[2]), testo);
+                    }
+                }
+            }
+            assertEquals(massimo, grammatica.genera(tipo, 10).getEffetti());
+        }
+    }
+
+    @Test
+    void gliArticoliMaschiliSiAccordanoConLaParolaCheSegue() {
+        for (int i = 0; i < GIRI; i++) {
+            String elmo = grammatica.genera(TipoArtefatto.ELMO, 1).getNome();
+            assertTrue(elmo.matches("^(l'[aeiou]|lo (s[^aeiou]|z|gn|ps|pn|x|y)|il [^aeiou]).*"), elmo);
+            assertFalse(elmo.matches("^il (s[^aeiou]|z|gn|ps).*"), elmo);
+            String schinieri = grammatica.genera(TipoArtefatto.SCHINIERI, 1).getNome();
+            assertTrue(schinieri.matches("^(gli ([aeiou]|s[^aeiou]|z|gn|ps|pn|x|y)|i [^aeiou]).*"), schinieri);
+            assertFalse(schinieri.matches("^i (s[^aeiou]|z|gn|ps).*"), schinieri);
+        }
+    }
+
+    @Test
+    void gliSchinieriHannoLeDescrizioniAlPlurale() {
+        int elementali = 0;
+        for (int i = 0; i < GIRI; i++) {
+            GrammaticaArtefatti.Risultato risultato = grammatica.genera(TipoArtefatto.SCHINIERI, 2);
+            if (!risultato.getDanni().isEmpty()) {
+                elementali++;
+                // "che respingono", "che non si lasciano": il verbo dopo "che", "non" e "si" finisce in -no
+                String verbo = risultato.getDescrizione().replaceFirst("^che (non )?(si )?", "").split(" ")[0];
+                assertTrue(verbo.endsWith("no"), risultato.getNome() + ", " + risultato.getDescrizione());
+            }
+        }
+        assertTrue(elementali > GIRI / 5, "Elementali: " + elementali);
     }
 
     @Test
@@ -110,7 +174,7 @@ class GrammaticaArtefattiTest {
 
     @Test
     void ilGeneratoreUsaLaGrammaticaPerMetaDelleSpadeRispettandoIlLimite() {
-        GeneratoreArtefatti generatore = new GeneratoreArtefattiTabelle(new Random(12), grammatica);
+        GeneratoreArtefatti generatore = new GeneratoreArtefattiTabelle(new Random(12), grammatica, null);
         int conModificatori = 0;
         for (int i = 0; i < GIRI; i++) {
             int livello = 1 + i % 10;
@@ -132,6 +196,25 @@ class GrammaticaArtefattiTest {
             Artefatto spada = generatore.generaArtefatto(TipoArtefatto.SPADA, 1);
             assertTrue(spada.getModelloDati().getModificatori().isEmpty());
             assertTrue(spada.getIncantamenti().isEmpty());
+        }
+    }
+
+    @Test
+    void leProtezioniDallaGrammaticaHannoLaLoroDifesaDiBase() {
+        GeneratoreArtefatti generatore = new GeneratoreArtefattiTabelle(new Random(7), grammatica, null);
+        for (TipoArtefatto tipo : new TipoArtefatto[] { TipoArtefatto.ARMATURA, TipoArtefatto.VESTE, TipoArtefatto.ELMO,
+                TipoArtefatto.SCUDO, TipoArtefatto.SCHINIERI }) {
+            TipoAttributo difesa = tipo == TipoArtefatto.VESTE ? TipoAttributo.RESISTENZA_MAGICA : TipoAttributo.PARATA;
+            for (int i = 0; i < GIRI / 4; i++) {
+                Artefatto artefatto = generatore.generaArtefatto(tipo, 1 + i % 10);
+                ArtefattoMD md = artefatto.getModelloDati();
+                assertTrue(md.getModificatori().stream().anyMatch(m -> m.getTipoAttributo() == difesa
+                        && m.getTipoModificatoreAttributo() == TipoModificatore.AUMENTO_PERCENTUALE), md.getNome());
+                assertNotNull(md.getDescrizione(), md.getNome());
+                // La difesa di base c'è anche quando l'artefatto non ha posti (comune di livello 1)
+                int effetti = md.getModificatori().size() - 1 + md.getIncantamenti().size();
+                assertTrue(effetti == 0 || effetti < artefatto.getEffettiMassimi(), md.getNome());
+            }
         }
     }
 }

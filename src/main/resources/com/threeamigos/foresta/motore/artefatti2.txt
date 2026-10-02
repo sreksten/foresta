@@ -22,160 +22,596 @@
 #
 # PRODUZIONI RADICE
 #
-# <TIPO>_<n>, dove TIPO è un TipoArtefatto e n il numero di effetti: SPADA_0 ... SPADA_3.
+# <TIPO>_<n>, dove TIPO è un TipoArtefatto e n il numero di effetti, da 0 a 3: SPADA, ARMATURA,
+# VESTE, ELMO, SCUDO e SCHINIERI.
 # Il generatore chiede la radice con tanti effetti quanti ne ammette l'artefatto meno uno, lasciando
 # un posto libero per la fusione, e ripiega sulla più grande disponibile.
 #
+# GENERE E TIPO
+#
+# Le parole che si accordano col nome sono in tre sezioni, _FEMMINILE_SINGOLARE (la spada,
+# l'armatura, la veste), _MASCHILE_SINGOLARE (l'elmo, lo scudo) e _MASCHILE_PLURALE (gli schinieri),
+# con le stesse righe nello stesso ordine: una parola ha lo stesso effetto in ogni genere.
+# Le sezioni comuni valgono per tutti i tipi; quelle _LAMA solo per le armi, _METALLO per ciò che
+# è di metallo (non la veste), _STOFFA per la veste, _PROTEZIONE per i pezzi difensivi. Ogni tipo
+# ha le sue sezioni composte (AGGETTIVO_SPADA, DETTAGLIO_ELMO…) che mettono insieme quelle giuste.
+#
 # ARTICOLO
 #
-# "@la " a inizio riga è l'articolo: artefatti2_pp.txt lo elide davanti a vocale, così un
-# prefisso può cominciare con qualunque lettera ("l'immane spada", "la terribile spada").
+# "@la ", "@il " e "@i " a inizio riga sono l'articolo: artefatti2_pp.txt lo sceglie in base alla
+# parola che segue, così un prefisso può cominciare con qualunque lettera ("l'immane spada",
+# "lo smisurato elmo", "gli intrepidi schinieri").
 #
 # Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean) e < > @ (marcatori).
 
 SPADA_0
-    @la spada [COSMETICO_FEMMINILE_SINGOLARE]
+    @la spada [COSMETICO_SPADA]
 
 SPADA_1
-    @la spada [PREFISSO]
-    @la spada [AGGETTIVO]
-    @la spada [COMPLEMENTO]
-    @la spada [AGGETTIVO_ELEMENTALE]
-    @la spada [COMPLEMENTO_ELEMENTALE]
+    @la [PREFISSO_SPADA] spada
+    @la spada [AGGETTIVO_SPADA]
+    @la spada [COMPLEMENTO_SPADA]
+    @la spada [AGGETTIVO_ELEMENTALE_SPADA]
+    @la spada [COMPLEMENTO_ELEMENTALE_SPADA]
 
 SPADA_2
-    @la [PREFISSO] spada [AGGETTIVO]
-    @la [PREFISSO] spada [COMPLEMENTO]
-    @la spada [AGGETTIVO] [COMPLEMENTO]
-    @la spada [COMPLEMENTO] [DETTAGLIO]
-    @la [PREFISSO] spada [AGGETTIVO_ELEMENTALE]
-    @la spada [AGGETTIVO_ELEMENTALE] [COMPLEMENTO]
-    @la [PREFISSO] spada [COMPLEMENTO_ELEMENTALE]
-    @la spada [AGGETTIVO] [COMPLEMENTO_ELEMENTALE]
+    @la [PREFISSO_SPADA] spada [AGGETTIVO_SPADA]
+    @la [PREFISSO_SPADA] spada [COMPLEMENTO_SPADA]
+    @la spada [AGGETTIVO_SPADA] [COMPLEMENTO_SPADA]
+    @la spada [COMPLEMENTO_SPADA] [DETTAGLIO_SPADA]
+    @la [PREFISSO_SPADA] spada [AGGETTIVO_ELEMENTALE_SPADA]
+    @la spada [AGGETTIVO_ELEMENTALE_SPADA] [COMPLEMENTO_SPADA]
+    @la [PREFISSO_SPADA] spada [COMPLEMENTO_ELEMENTALE_SPADA]
+    @la spada [AGGETTIVO_SPADA] [COMPLEMENTO_ELEMENTALE_SPADA]
 
 SPADA_3
-    @la [PREFISSO] spada [AGGETTIVO] [COMPLEMENTO]
-    @la [PREFISSO] spada [COMPLEMENTO] [DETTAGLIO]
-    @la spada [AGGETTIVO] [COMPLEMENTO] [DETTAGLIO]
-    @la [PREFISSO] spada [AGGETTIVO_ELEMENTALE] [COMPLEMENTO]
-    @la spada [AGGETTIVO_ELEMENTALE] [COMPLEMENTO] [DETTAGLIO]
-    @la [PREFISSO] spada [AGGETTIVO] [COMPLEMENTO_ELEMENTALE]
+    @la [PREFISSO_SPADA] spada [AGGETTIVO_SPADA] [COMPLEMENTO_SPADA]
+    @la [PREFISSO_SPADA] spada [COMPLEMENTO_SPADA] [DETTAGLIO_SPADA]
+    @la spada [AGGETTIVO_SPADA] [COMPLEMENTO_SPADA] [DETTAGLIO_SPADA]
+    @la [PREFISSO_SPADA] spada [AGGETTIVO_ELEMENTALE_SPADA] [COMPLEMENTO_SPADA]
+    @la spada [AGGETTIVO_ELEMENTALE_SPADA] [COMPLEMENTO_SPADA] [DETTAGLIO_SPADA]
+    @la [PREFISSO_SPADA] spada [AGGETTIVO_SPADA] [COMPLEMENTO_ELEMENTALE_SPADA]
+
+ARMATURA_0
+    @la armatura [COSMETICO_ARMATURA]
+
+ARMATURA_1
+    @la [PREFISSO_ARMATURA] armatura
+    @la armatura [AGGETTIVO_ARMATURA]
+    @la armatura [COMPLEMENTO_ARMATURA]
+    @la armatura [AGGETTIVO_ELEMENTALE_ARMATURA]
+    @la armatura [COMPLEMENTO_ELEMENTALE_ARMATURA]
+
+ARMATURA_2
+    @la [PREFISSO_ARMATURA] armatura [AGGETTIVO_ARMATURA]
+    @la [PREFISSO_ARMATURA] armatura [COMPLEMENTO_ARMATURA]
+    @la armatura [AGGETTIVO_ARMATURA] [COMPLEMENTO_ARMATURA]
+    @la armatura [COMPLEMENTO_ARMATURA] [DETTAGLIO_ARMATURA]
+    @la [PREFISSO_ARMATURA] armatura [AGGETTIVO_ELEMENTALE_ARMATURA]
+    @la armatura [AGGETTIVO_ELEMENTALE_ARMATURA] [COMPLEMENTO_ARMATURA]
+    @la [PREFISSO_ARMATURA] armatura [COMPLEMENTO_ELEMENTALE_ARMATURA]
+    @la armatura [AGGETTIVO_ARMATURA] [COMPLEMENTO_ELEMENTALE_ARMATURA]
+
+ARMATURA_3
+    @la [PREFISSO_ARMATURA] armatura [AGGETTIVO_ARMATURA] [COMPLEMENTO_ARMATURA]
+    @la [PREFISSO_ARMATURA] armatura [COMPLEMENTO_ARMATURA] [DETTAGLIO_ARMATURA]
+    @la armatura [AGGETTIVO_ARMATURA] [COMPLEMENTO_ARMATURA] [DETTAGLIO_ARMATURA]
+    @la [PREFISSO_ARMATURA] armatura [AGGETTIVO_ELEMENTALE_ARMATURA] [COMPLEMENTO_ARMATURA]
+    @la armatura [AGGETTIVO_ELEMENTALE_ARMATURA] [COMPLEMENTO_ARMATURA] [DETTAGLIO_ARMATURA]
+    @la [PREFISSO_ARMATURA] armatura [AGGETTIVO_ARMATURA] [COMPLEMENTO_ELEMENTALE_ARMATURA]
+
+VESTE_0
+    @la veste [COSMETICO_VESTE]
+
+VESTE_1
+    @la [PREFISSO_VESTE] veste
+    @la veste [AGGETTIVO_VESTE]
+    @la veste [COMPLEMENTO_VESTE]
+    @la veste [AGGETTIVO_ELEMENTALE_VESTE]
+    @la veste [COMPLEMENTO_ELEMENTALE_VESTE]
+
+VESTE_2
+    @la [PREFISSO_VESTE] veste [AGGETTIVO_VESTE]
+    @la [PREFISSO_VESTE] veste [COMPLEMENTO_VESTE]
+    @la veste [AGGETTIVO_VESTE] [COMPLEMENTO_VESTE]
+    @la veste [COMPLEMENTO_VESTE] [DETTAGLIO_VESTE]
+    @la [PREFISSO_VESTE] veste [AGGETTIVO_ELEMENTALE_VESTE]
+    @la veste [AGGETTIVO_ELEMENTALE_VESTE] [COMPLEMENTO_VESTE]
+    @la [PREFISSO_VESTE] veste [COMPLEMENTO_ELEMENTALE_VESTE]
+    @la veste [AGGETTIVO_VESTE] [COMPLEMENTO_ELEMENTALE_VESTE]
+
+VESTE_3
+    @la [PREFISSO_VESTE] veste [AGGETTIVO_VESTE] [COMPLEMENTO_VESTE]
+    @la [PREFISSO_VESTE] veste [COMPLEMENTO_VESTE] [DETTAGLIO_VESTE]
+    @la veste [AGGETTIVO_VESTE] [COMPLEMENTO_VESTE] [DETTAGLIO_VESTE]
+    @la [PREFISSO_VESTE] veste [AGGETTIVO_ELEMENTALE_VESTE] [COMPLEMENTO_VESTE]
+    @la veste [AGGETTIVO_ELEMENTALE_VESTE] [COMPLEMENTO_VESTE] [DETTAGLIO_VESTE]
+    @la [PREFISSO_VESTE] veste [AGGETTIVO_VESTE] [COMPLEMENTO_ELEMENTALE_VESTE]
+
+ELMO_0
+    @il elmo [COSMETICO_ELMO]
+
+ELMO_1
+    @il [PREFISSO_ELMO] elmo
+    @il elmo [AGGETTIVO_ELMO]
+    @il elmo [COMPLEMENTO_ELMO]
+    @il elmo [AGGETTIVO_ELEMENTALE_ELMO]
+    @il elmo [COMPLEMENTO_ELEMENTALE_ELMO]
+
+ELMO_2
+    @il [PREFISSO_ELMO] elmo [AGGETTIVO_ELMO]
+    @il [PREFISSO_ELMO] elmo [COMPLEMENTO_ELMO]
+    @il elmo [AGGETTIVO_ELMO] [COMPLEMENTO_ELMO]
+    @il elmo [COMPLEMENTO_ELMO] [DETTAGLIO_ELMO]
+    @il [PREFISSO_ELMO] elmo [AGGETTIVO_ELEMENTALE_ELMO]
+    @il elmo [AGGETTIVO_ELEMENTALE_ELMO] [COMPLEMENTO_ELMO]
+    @il [PREFISSO_ELMO] elmo [COMPLEMENTO_ELEMENTALE_ELMO]
+    @il elmo [AGGETTIVO_ELMO] [COMPLEMENTO_ELEMENTALE_ELMO]
+
+ELMO_3
+    @il [PREFISSO_ELMO] elmo [AGGETTIVO_ELMO] [COMPLEMENTO_ELMO]
+    @il [PREFISSO_ELMO] elmo [COMPLEMENTO_ELMO] [DETTAGLIO_ELMO]
+    @il elmo [AGGETTIVO_ELMO] [COMPLEMENTO_ELMO] [DETTAGLIO_ELMO]
+    @il [PREFISSO_ELMO] elmo [AGGETTIVO_ELEMENTALE_ELMO] [COMPLEMENTO_ELMO]
+    @il elmo [AGGETTIVO_ELEMENTALE_ELMO] [COMPLEMENTO_ELMO] [DETTAGLIO_ELMO]
+    @il [PREFISSO_ELMO] elmo [AGGETTIVO_ELMO] [COMPLEMENTO_ELEMENTALE_ELMO]
+
+SCUDO_0
+    @il scudo [COSMETICO_SCUDO]
+
+SCUDO_1
+    @il [PREFISSO_SCUDO] scudo
+    @il scudo [AGGETTIVO_SCUDO]
+    @il scudo [COMPLEMENTO_SCUDO]
+    @il scudo [AGGETTIVO_ELEMENTALE_SCUDO]
+    @il scudo [COMPLEMENTO_ELEMENTALE_SCUDO]
+
+SCUDO_2
+    @il [PREFISSO_SCUDO] scudo [AGGETTIVO_SCUDO]
+    @il [PREFISSO_SCUDO] scudo [COMPLEMENTO_SCUDO]
+    @il scudo [AGGETTIVO_SCUDO] [COMPLEMENTO_SCUDO]
+    @il scudo [COMPLEMENTO_SCUDO] [DETTAGLIO_SCUDO]
+    @il [PREFISSO_SCUDO] scudo [AGGETTIVO_ELEMENTALE_SCUDO]
+    @il scudo [AGGETTIVO_ELEMENTALE_SCUDO] [COMPLEMENTO_SCUDO]
+    @il [PREFISSO_SCUDO] scudo [COMPLEMENTO_ELEMENTALE_SCUDO]
+    @il scudo [AGGETTIVO_SCUDO] [COMPLEMENTO_ELEMENTALE_SCUDO]
+
+SCUDO_3
+    @il [PREFISSO_SCUDO] scudo [AGGETTIVO_SCUDO] [COMPLEMENTO_SCUDO]
+    @il [PREFISSO_SCUDO] scudo [COMPLEMENTO_SCUDO] [DETTAGLIO_SCUDO]
+    @il scudo [AGGETTIVO_SCUDO] [COMPLEMENTO_SCUDO] [DETTAGLIO_SCUDO]
+    @il [PREFISSO_SCUDO] scudo [AGGETTIVO_ELEMENTALE_SCUDO] [COMPLEMENTO_SCUDO]
+    @il scudo [AGGETTIVO_ELEMENTALE_SCUDO] [COMPLEMENTO_SCUDO] [DETTAGLIO_SCUDO]
+    @il [PREFISSO_SCUDO] scudo [AGGETTIVO_SCUDO] [COMPLEMENTO_ELEMENTALE_SCUDO]
+
+SCHINIERI_0
+    @i schinieri [COSMETICO_SCHINIERI]
+
+SCHINIERI_1
+    @i [PREFISSO_SCHINIERI] schinieri
+    @i schinieri [AGGETTIVO_SCHINIERI]
+    @i schinieri [COMPLEMENTO_SCHINIERI]
+    @i schinieri [AGGETTIVO_ELEMENTALE_SCHINIERI]
+    @i schinieri [COMPLEMENTO_ELEMENTALE_SCHINIERI]
+
+SCHINIERI_2
+    @i [PREFISSO_SCHINIERI] schinieri [AGGETTIVO_SCHINIERI]
+    @i [PREFISSO_SCHINIERI] schinieri [COMPLEMENTO_SCHINIERI]
+    @i schinieri [AGGETTIVO_SCHINIERI] [COMPLEMENTO_SCHINIERI]
+    @i schinieri [COMPLEMENTO_SCHINIERI] [DETTAGLIO_SCHINIERI]
+    @i [PREFISSO_SCHINIERI] schinieri [AGGETTIVO_ELEMENTALE_SCHINIERI]
+    @i schinieri [AGGETTIVO_ELEMENTALE_SCHINIERI] [COMPLEMENTO_SCHINIERI]
+    @i [PREFISSO_SCHINIERI] schinieri [COMPLEMENTO_ELEMENTALE_SCHINIERI]
+    @i schinieri [AGGETTIVO_SCHINIERI] [COMPLEMENTO_ELEMENTALE_SCHINIERI]
+
+SCHINIERI_3
+    @i [PREFISSO_SCHINIERI] schinieri [AGGETTIVO_SCHINIERI] [COMPLEMENTO_SCHINIERI]
+    @i [PREFISSO_SCHINIERI] schinieri [COMPLEMENTO_SCHINIERI] [DETTAGLIO_SCHINIERI]
+    @i schinieri [AGGETTIVO_SCHINIERI] [COMPLEMENTO_SCHINIERI] [DETTAGLIO_SCHINIERI]
+    @i [PREFISSO_SCHINIERI] schinieri [AGGETTIVO_ELEMENTALE_SCHINIERI] [COMPLEMENTO_SCHINIERI]
+    @i schinieri [AGGETTIVO_ELEMENTALE_SCHINIERI] [COMPLEMENTO_SCHINIERI] [DETTAGLIO_SCHINIERI]
+    @i [PREFISSO_SCHINIERI] schinieri [AGGETTIVO_SCHINIERI] [COMPLEMENTO_ELEMENTALE_SCHINIERI]
+
+# ---------------------------------------------------------------------------------------------
+# Le parti di ogni tipo: le sezioni comuni, del suo genere, più quelle adatte a che cosa è
+# ---------------------------------------------------------------------------------------------
+
+COSMETICO_SPADA
+    [COSMETICO_FEMMINILE_SINGOLARE]
+    [COSMETICO_METALLO_FEMMINILE_SINGOLARE]
+
+PREFISSO_SPADA
+    [PREFISSO_FEMMINILE_SINGOLARE]
+    [PREFISSO_LAMA_FEMMINILE_SINGOLARE]
+
+AGGETTIVO_SPADA
+    [AGGETTIVO_FEMMINILE_SINGOLARE]
+    [AGGETTIVO_METALLO_FEMMINILE_SINGOLARE]
+    [AGGETTIVO_LAMA_FEMMINILE_SINGOLARE]
+
+COMPLEMENTO_SPADA
+    [COMPLEMENTO]
+    [COMPLEMENTO_LAMA]
+
+DETTAGLIO_SPADA
+    [DETTAGLIO]
+    [DETTAGLIO_LAMA]
+
+AGGETTIVO_ELEMENTALE_SPADA
+    [AGGETTIVO_ELEMENTALE_ARMA_FEMMINILE_SINGOLARE]
+
+COMPLEMENTO_ELEMENTALE_SPADA
+    [COMPLEMENTO_ELEMENTALE_ARMA]
+
+COSMETICO_ARMATURA
+    [COSMETICO_FEMMINILE_SINGOLARE]
+    [COSMETICO_METALLO_FEMMINILE_SINGOLARE]
+
+PREFISSO_ARMATURA
+    [PREFISSO_FEMMINILE_SINGOLARE]
+
+AGGETTIVO_ARMATURA
+    [AGGETTIVO_FEMMINILE_SINGOLARE]
+    [AGGETTIVO_METALLO_FEMMINILE_SINGOLARE]
+    [AGGETTIVO_PROTEZIONE_FEMMINILE_SINGOLARE]
+
+COMPLEMENTO_ARMATURA
+    [COMPLEMENTO]
+
+DETTAGLIO_ARMATURA
+    [DETTAGLIO]
+    [DETTAGLIO_PROTEZIONE]
+
+AGGETTIVO_ELEMENTALE_ARMATURA
+    [AGGETTIVO_ELEMENTALE_PROTEZIONE_FEMMINILE_SINGOLARE]
+
+COMPLEMENTO_ELEMENTALE_ARMATURA
+    [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+COSMETICO_VESTE
+    [COSMETICO_FEMMINILE_SINGOLARE]
+    [COSMETICO_STOFFA_FEMMINILE_SINGOLARE]
+
+PREFISSO_VESTE
+    [PREFISSO_FEMMINILE_SINGOLARE]
+
+AGGETTIVO_VESTE
+    [AGGETTIVO_FEMMINILE_SINGOLARE]
+    [AGGETTIVO_STOFFA_FEMMINILE_SINGOLARE]
+    [AGGETTIVO_PROTEZIONE_FEMMINILE_SINGOLARE]
+
+COMPLEMENTO_VESTE
+    [COMPLEMENTO]
+
+DETTAGLIO_VESTE
+    [DETTAGLIO]
+    [DETTAGLIO_PROTEZIONE]
+
+AGGETTIVO_ELEMENTALE_VESTE
+    [AGGETTIVO_ELEMENTALE_PROTEZIONE_FEMMINILE_SINGOLARE]
+
+COMPLEMENTO_ELEMENTALE_VESTE
+    [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+COSMETICO_ELMO
+    [COSMETICO_MASCHILE_SINGOLARE]
+    [COSMETICO_METALLO_MASCHILE_SINGOLARE]
+
+PREFISSO_ELMO
+    [PREFISSO_MASCHILE_SINGOLARE]
+
+AGGETTIVO_ELMO
+    [AGGETTIVO_MASCHILE_SINGOLARE]
+    [AGGETTIVO_METALLO_MASCHILE_SINGOLARE]
+    [AGGETTIVO_PROTEZIONE_MASCHILE_SINGOLARE]
+
+COMPLEMENTO_ELMO
+    [COMPLEMENTO]
+
+DETTAGLIO_ELMO
+    [DETTAGLIO]
+    [DETTAGLIO_PROTEZIONE]
+
+AGGETTIVO_ELEMENTALE_ELMO
+    [AGGETTIVO_ELEMENTALE_PROTEZIONE_MASCHILE_SINGOLARE]
+
+COMPLEMENTO_ELEMENTALE_ELMO
+    [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+COSMETICO_SCUDO
+    [COSMETICO_MASCHILE_SINGOLARE]
+    [COSMETICO_METALLO_MASCHILE_SINGOLARE]
+
+PREFISSO_SCUDO
+    [PREFISSO_MASCHILE_SINGOLARE]
+
+AGGETTIVO_SCUDO
+    [AGGETTIVO_MASCHILE_SINGOLARE]
+    [AGGETTIVO_METALLO_MASCHILE_SINGOLARE]
+    [AGGETTIVO_PROTEZIONE_MASCHILE_SINGOLARE]
+
+COMPLEMENTO_SCUDO
+    [COMPLEMENTO]
+
+DETTAGLIO_SCUDO
+    [DETTAGLIO]
+    [DETTAGLIO_PROTEZIONE]
+
+AGGETTIVO_ELEMENTALE_SCUDO
+    [AGGETTIVO_ELEMENTALE_PROTEZIONE_MASCHILE_SINGOLARE]
+
+COMPLEMENTO_ELEMENTALE_SCUDO
+    [COMPLEMENTO_ELEMENTALE_PROTEZIONE]
+
+COSMETICO_SCHINIERI
+    [COSMETICO_MASCHILE_PLURALE]
+    [COSMETICO_METALLO_MASCHILE_PLURALE]
+
+PREFISSO_SCHINIERI
+    [PREFISSO_MASCHILE_PLURALE]
+
+AGGETTIVO_SCHINIERI
+    [AGGETTIVO_MASCHILE_PLURALE]
+    [AGGETTIVO_METALLO_MASCHILE_PLURALE]
+    [AGGETTIVO_PROTEZIONE_MASCHILE_PLURALE]
+
+COMPLEMENTO_SCHINIERI
+    [COMPLEMENTO]
+
+DETTAGLIO_SCHINIERI
+    [DETTAGLIO]
+    [DETTAGLIO_PROTEZIONE]
+
+AGGETTIVO_ELEMENTALE_SCHINIERI
+    [AGGETTIVO_ELEMENTALE_PROTEZIONE_MASCHILE_PLURALE]
+
+COMPLEMENTO_ELEMENTALE_SCHINIERI
+    [COMPLEMENTO_ELEMENTALE_PROTEZIONE_PLURALE]
 
 # Senza effetti: solo colore
 COSMETICO_FEMMINILE_SINGOLARE
-    rugginosa | arrugginita | d'ordinanza | del nonno | di latta | da collezione | da cucina | da esposizione
+    d'ordinanza | del nonno | da collezione | da cucina | da esposizione
     in offerta speciale | fatta in casa | comprata al mercato | da souvenir | d'allenamento
     con l'etichetta ancora attaccata | ancora nella confezione | da cerimonia | usata una volta sola
-    presa in prestito | senza lode e senza infamia | di ferro dolce | del rigattiere | di scorta
+    presa in prestito | senza lode e senza infamia | del rigattiere | di scorta
+
 COSMETICO_MASCHILE_SINGOLARE
-    rugginoso | arrugginito | d'ordinanza | del nonno | di latta | da collezione | da cucina | da esposizione
+    d'ordinanza | del nonno | da collezione | da cucina | da esposizione
     in offerta speciale | fatto in casa | comprato al mercato | da souvenir | d'allenamento
     con l'etichetta ancora attaccata | ancora nella confezione | da cerimonia | usato una volta sola
-    preso in prestito | senza lode e senza infamia | di ferro dolce | del rigattiere | di scorta
+    preso in prestito | senza lode e senza infamia | del rigattiere | di scorta
+
 COSMETICO_MASCHILE_PLURALE
-    rugginosi | arrugginiti | d'ordinanza | del nonno | di latta | da collezione | da cucina | da esposizione
+    d'ordinanza | del nonno | da collezione | da cucina | da esposizione
     in offerta speciale | fatti in casa | comprati al mercato | da souvenir | d'allenamento
     con l'etichetta ancora attaccata | ancora nella confezione | da cerimonia | usati una volta sola
-    presi in prestito | senza lode e senza infamia | di ferro dolce | del rigattiere | di scorta
+    presi in prestito | senza lode e senza infamia | del rigattiere | di scorta
+
+COSMETICO_METALLO_FEMMINILE_SINGOLARE
+    rugginosa | arrugginita | di latta
+    di ferro dolce
+
+COSMETICO_METALLO_MASCHILE_SINGOLARE
+    rugginoso | arrugginito | di latta
+    di ferro dolce
+
+COSMETICO_METALLO_MASCHILE_PLURALE
+    rugginosi | arrugginiti | di latta
+    di ferro dolce
+
+COSMETICO_STOFFA_FEMMINILE_SINGOLARE
+    stinta | rammendata | tarmata | di lana grezza | stirata male | con una macchia di sugo | lavata a novanta gradi
 
 # ---------------------------------------------------------------------------------------------
-# Parti con un modificatore di attributo. La stessa parola compare una volta sola in tutto il
-# file, così dal nome si capisce sempre che cosa fa la spada.
+# Parti con un modificatore di attributo. Una parola compare una volta sola per genere, sempre
+# con lo stesso effetto, così dal nome si capisce sempre che cosa fa l'artefatto.
 # ---------------------------------------------------------------------------------------------
 
-# Aggettivi che stanno bene anche prima del nome: "la terribile spada"
-PREFISSO
+# Aggettivi che stanno bene anche prima del nome: "la terribile spada". Al maschile mancano buono,
+# bello e santo, che davanti al nome si troncano ("il bel")
+PREFISSO_FEMMINILE_SINGOLARE
     { immane | smisurata | sovrumana | inarrestabile | inenarrabile | generosa | indomabile | mastodontica | formidabile | cruenta | poderosa | ciclopica }<mod:FORZA+2>
     { valente | fiera | temuta | blasonata | promettente | conclamata | autentica | gagliarda | subitanea | pronta | impetuosa | fulminea | vigorosa | rozza | severa | bruta | massiccia | dura | grezza | bestiale | ferina | violenta }<mod:FORZA+1>
     { misera | meschina | vile | modesta | ordinaria | comune | infelice | tapina }<mod:FORZA-1>
-
     { lesta | scaltra | schiva | svelta | snella | fuggitiva | scaltrita | fluida }<mod:DESTREZZA+2>
-    { sottilissima | fugace | svanente | minuta | impalpabile | invisibile | libera | accurata | rigorosa | chiara | pignola | nitida | lieve | piumosa | minima | sobria | semplice | nuda | schietta | essenziale | volatile | agile | scattante }<mod:DESTREZZA+1>
+    { sottilissima | fugace | svanente | minuta | impalpabile | invisibile | libera | accurata | rigorosa | chiara | pignola | nitida | lieve | piumosa | minima | sobria | semplice | schietta | essenziale | volatile | agile | scattante }<mod:DESTREZZA+1>
     { maldestra | incolta | pigra | tarda | pesante | sghemba | rigida | sventata }<mod:DESTREZZA-1>
-
     { ferma | immobile | salda | perenne | monumentale | antica | vetusta | secolare | immortale | ferrea | invincibile | integra | eterna | ottusa }<mod:COSTITUZIONE+2>
     { onesta | sicura | solida | ampia | comoda | grave | lenta | saggia | flemmatica | calma | soporifera }<mod:COSTITUZIONE+1>
     { precaria | instabile | fragile | triste | pallida | malata | breve }<mod:COSTITUZIONE-1>
-
     { acuta | lucida | fine | finissima | geniale }<mod:INTELLIGENZA+2>
     { dotta | sapiente | sottile | arguta | arcana | esperta | riflessiva | esile }<mod:INTELLIGENZA+1>
     { stolta | cruda | grossolana | povera | cieca }<mod:INTELLIGENZA-1>
-
     { retta | giusta | illuminata | santa | profonda | moderata | misurata }<mod:SAGGEZZA+2>
     { accorta | attenta | anziana | stoica | paziente | penitente | serena }<mod:SAGGEZZA+1>
     { vana | folle | distratta | confusa | sconsiderata }<mod:SAGGEZZA-1>
-
     { vaga | bella | splendida | nobile | illustre | magnifica | regale | carismatica }<mod:CARISMA+2>
     { propizia | simpatica | leggera | specchiata }<mod:CARISMA+1>
     { mesta | cupa | ruvida | scontrosa | goffa | solitaria | burbera }<mod:CARISMA-1>
     { muta | umile | bassa | piccola | anonima | timida }<mod:CARISMA-2>
-
     { beata | intoccabile | sfacciata }<mod:FORTUNA+2>
     { effimera | delicata | fortunata | temeraria | spensierata | buona | fidata | opportuna | tempestiva | fatidica | presaga | cruciale | spietata | oculata | decisiva | notturna | codarda | traditrice }<mod:FORTUNA+1>
     sinistra<mod:FORTUNA-1>
-
     vuota<mod:CARICO_MASSIMO+2>
     inconsistente<mod:CARICO_MASSIMO+1>
-
-    { feroce | devastante | lacerante | brutale }<mod:CRITICO+2>
-    { penetrante | incisiva | potente | dirompente | martellante }<mod:CRITICO+1>
+    { feroce | devastante | brutale }<mod:CRITICO+2>
+    { potente | dirompente | martellante }<mod:CRITICO+1>
     { stanca | fiacca | logora | consumata | innocua }<mod:CRITICO-1>
     inefficace<mod:CRITICO-2>
-
     infallibile<mod:PRECISIONE+2>
     { frettolosa | sbadata | approssimativa }<mod:PRECISIONE-1>
     { guercia | orba }<mod:PRECISIONE-2>
-
     { rapida | celere }<mod:VELOCITA+2>
     { slanciata | indefessa }<mod:VELOCITA+1>
     tardiva<mod:VELOCITA-1>
-
     { cheta | silenziosa | occulta | segreta }<mod:FURTIVITA+2>
     { felina | discreta }<mod:FURTIVITA+1>
     { sguaiata | sgargiante | squillante }<mod:FURTIVITA-1>
-
     { invalicabile | inespugnabile }<mod:PARATA+2>
     { cauta | prudente | guardinga | vigile | robusta | inerte }<mod:PARATA+1>
     vulnerabile<mod:PARATA-1>
-
     sorda<mod:RESISTENZA_MAGICA+2>
     spessa<mod:RESISTENZA_MAGICA+1>
     sensibile<mod:RESISTENZA_MAGICA-1>
-
     { lincea | occhiuta }<mod:PERCEZIONE+2>
     meticolosa<mod:PERCEZIONE+1>
     nebbiosa<mod:PERCEZIONE-1>
-
     { terribile | tremenda | terrificante | mortale | inevitabile | ruinosa | sconvolgente }<mod:SOGGEZIONE+2>
     { oscura | spaventosa | disastrosa | calamitosa | catastrofica | clamorosa | roboante | favolosa | mitica | fantasmagorica | leggendaria | imperiale | furtiva | minacciosa }<mod:SOGGEZIONE+1>
     mansueta<mod:SOGGEZIONE-1>
     noiosa<mod:SOGGEZIONE-2>
-
     { rabbiosa | furiosa }<mod:FURIA+2>
     { furente | iraconda | impulsiva | vendicativa | calda }<mod:FURIA+1>
     pacifica<mod:FURIA-1>
-
     { leonina | intrepida | audace | impavida | sfrontata | spavalda }<mod:CORAGGIO+2>
     vendicatrice<mod:CORAGGIO+1>
     esitante<mod:CORAGGIO-1>
-
     { virtuosa | eroica | onorevole }<mod:VALORE+2>
     { splendente | benefica }<mod:VALORE+1>
     indifferente<mod:VALORE-1>
-
     { arida | profana | terrena | rustica }<mod:MAGIA-1>
-
     { estenuante | logorante | faticosa | spossante | sonnolenta }<mod:STANCHEZZA+2>
 
+PREFISSO_MASCHILE_SINGOLARE
+    { immane | smisurato | sovrumano | inarrestabile | inenarrabile | generoso | indomabile | mastodontico | formidabile | cruento | poderoso | ciclopico }<mod:FORZA+2>
+    { valente | fiero | temuto | blasonato | promettente | conclamato | autentico | gagliardo | subitaneo | pronto | impetuoso | fulmineo | vigoroso | rozzo | severo | bruto | massiccio | duro | grezzo | bestiale | ferino | violento }<mod:FORZA+1>
+    { misero | meschino | vile | modesto | ordinario | comune | infelice | tapino }<mod:FORZA-1>
+    { lesto | scaltro | schivo | svelto | snello | fuggitivo | scaltrito | fluido }<mod:DESTREZZA+2>
+    { sottilissimo | fugace | svanente | minuto | impalpabile | invisibile | libero | accurato | rigoroso | chiaro | pignolo | nitido | lieve | piumoso | minimo | sobrio | semplice | schietto | essenziale | volatile | agile | scattante }<mod:DESTREZZA+1>
+    { maldestro | incolto | pigro | tardo | pesante | sghembo | rigido | sventato }<mod:DESTREZZA-1>
+    { fermo | immobile | saldo | perenne | monumentale | antico | vetusto | secolare | immortale | ferreo | invincibile | integro | eterno | ottuso }<mod:COSTITUZIONE+2>
+    { onesto | sicuro | solido | ampio | comodo | grave | lento | saggio | flemmatico | calmo | soporifero }<mod:COSTITUZIONE+1>
+    { precario | instabile | fragile | triste | pallido | malato | breve }<mod:COSTITUZIONE-1>
+    { acuto | lucido | fine | finissimo | geniale }<mod:INTELLIGENZA+2>
+    { dotto | sapiente | sottile | arguto | arcano | esperto | riflessivo | esile }<mod:INTELLIGENZA+1>
+    { stolto | crudo | grossolano | povero | cieco }<mod:INTELLIGENZA-1>
+    { retto | giusto | illuminato | profondo | moderato | misurato }<mod:SAGGEZZA+2>
+    { accorto | attento | anziano | stoico | paziente | penitente | sereno }<mod:SAGGEZZA+1>
+    { vano | folle | distratto | confuso | sconsiderato }<mod:SAGGEZZA-1>
+    { vago | splendido | nobile | illustre | magnifico | regale | carismatico }<mod:CARISMA+2>
+    { propizio | simpatico | leggero | specchiato }<mod:CARISMA+1>
+    { mesto | cupo | ruvido | scontroso | goffo | solitario | burbero }<mod:CARISMA-1>
+    { muto | umile | basso | piccolo | anonimo | timido }<mod:CARISMA-2>
+    { beato | intoccabile | sfacciato }<mod:FORTUNA+2>
+    { effimero | delicato | fortunato | temerario | spensierato | fidato | opportuno | tempestivo | fatidico | presago | cruciale | spietato | oculato | decisivo | notturno | codardo | traditore }<mod:FORTUNA+1>
+    sinistro<mod:FORTUNA-1>
+    vuoto<mod:CARICO_MASSIMO+2>
+    inconsistente<mod:CARICO_MASSIMO+1>
+    { feroce | devastante | brutale }<mod:CRITICO+2>
+    { potente | dirompente | martellante }<mod:CRITICO+1>
+    { stanco | fiacco | logoro | consumato | innocuo }<mod:CRITICO-1>
+    inefficace<mod:CRITICO-2>
+    infallibile<mod:PRECISIONE+2>
+    { frettoloso | sbadato | approssimativo }<mod:PRECISIONE-1>
+    { guercio | orbo }<mod:PRECISIONE-2>
+    { rapido | celere }<mod:VELOCITA+2>
+    { slanciato | indefesso }<mod:VELOCITA+1>
+    tardivo<mod:VELOCITA-1>
+    { cheto | silenzioso | occulto | segreto }<mod:FURTIVITA+2>
+    { felino | discreto }<mod:FURTIVITA+1>
+    { sguaiato | sgargiante | squillante }<mod:FURTIVITA-1>
+    { invalicabile | inespugnabile }<mod:PARATA+2>
+    { cauto | prudente | guardingo | vigile | robusto | inerte }<mod:PARATA+1>
+    vulnerabile<mod:PARATA-1>
+    sordo<mod:RESISTENZA_MAGICA+2>
+    spesso<mod:RESISTENZA_MAGICA+1>
+    sensibile<mod:RESISTENZA_MAGICA-1>
+    { linceo | occhiuto }<mod:PERCEZIONE+2>
+    meticoloso<mod:PERCEZIONE+1>
+    nebbioso<mod:PERCEZIONE-1>
+    { terribile | tremendo | terrificante | mortale | inevitabile | ruinoso | sconvolgente }<mod:SOGGEZIONE+2>
+    { oscuro | spaventoso | disastroso | calamitoso | catastrofico | clamoroso | roboante | favoloso | mitico | fantasmagorico | leggendario | imperiale | furtivo | minaccioso }<mod:SOGGEZIONE+1>
+    mansueto<mod:SOGGEZIONE-1>
+    noioso<mod:SOGGEZIONE-2>
+    { rabbioso | furioso }<mod:FURIA+2>
+    { furente | iracondo | impulsivo | vendicativo | caldo }<mod:FURIA+1>
+    pacifico<mod:FURIA-1>
+    { leonino | intrepido | audace | impavido | sfrontato | spavaldo }<mod:CORAGGIO+2>
+    vendicatore<mod:CORAGGIO+1>
+    esitante<mod:CORAGGIO-1>
+    { virtuoso | eroico | onorevole }<mod:VALORE+2>
+    { splendente | benefico }<mod:VALORE+1>
+    indifferente<mod:VALORE-1>
+    { arido | profano | terreno | rustico }<mod:MAGIA-1>
+    { estenuante | logorante | faticoso | spossante | sonnolento }<mod:STANCHEZZA+2>
+
+PREFISSO_MASCHILE_PLURALE
+    { immani | smisurati | sovrumani | inarrestabili | inenarrabili | generosi | indomabili | mastodontici | formidabili | cruenti | poderosi | ciclopici }<mod:FORZA+2>
+    { valenti | fieri | temuti | blasonati | promettenti | conclamati | autentici | gagliardi | subitanei | pronti | impetuosi | fulminei | vigorosi | rozzi | severi | bruti | massicci | duri | grezzi | bestiali | ferini | violenti }<mod:FORZA+1>
+    { miseri | meschini | vili | modesti | ordinari | comuni | infelici | tapini }<mod:FORZA-1>
+    { lesti | scaltri | schivi | svelti | snelli | fuggitivi | scaltriti | fluidi }<mod:DESTREZZA+2>
+    { sottilissimi | fugaci | svanenti | minuti | impalpabili | invisibili | liberi | accurati | rigorosi | chiari | pignoli | nitidi | lievi | piumosi | minimi | sobri | semplici | schietti | essenziali | volatili | agili | scattanti }<mod:DESTREZZA+1>
+    { maldestri | incolti | pigri | tardi | pesanti | sghembi | rigidi | sventati }<mod:DESTREZZA-1>
+    { fermi | immobili | saldi | perenni | monumentali | antichi | vetusti | secolari | immortali | ferrei | invincibili | integri | eterni | ottusi }<mod:COSTITUZIONE+2>
+    { onesti | sicuri | solidi | ampi | comodi | gravi | lenti | saggi | flemmatici | calmi | soporiferi }<mod:COSTITUZIONE+1>
+    { precari | instabili | fragili | tristi | pallidi | malati | brevi }<mod:COSTITUZIONE-1>
+    { acuti | lucidi | fini | finissimi | geniali }<mod:INTELLIGENZA+2>
+    { dotti | sapienti | sottili | arguti | arcani | esperti | riflessivi | esili }<mod:INTELLIGENZA+1>
+    { stolti | crudi | grossolani | poveri | ciechi }<mod:INTELLIGENZA-1>
+    { retti | giusti | illuminati | santi | profondi | moderati | misurati }<mod:SAGGEZZA+2>
+    { accorti | attenti | anziani | stoici | pazienti | penitenti | sereni }<mod:SAGGEZZA+1>
+    { vani | folli | distratti | confusi | sconsiderati }<mod:SAGGEZZA-1>
+    { vaghi | splendidi | nobili | illustri | magnifici | regali | carismatici }<mod:CARISMA+2>
+    { propizi | simpatici | leggeri | specchiati }<mod:CARISMA+1>
+    { mesti | cupi | ruvidi | scontrosi | goffi | solitari | burberi }<mod:CARISMA-1>
+    { muti | umili | bassi | piccoli | anonimi | timidi }<mod:CARISMA-2>
+    { beati | intoccabili | sfacciati }<mod:FORTUNA+2>
+    { effimeri | delicati | fortunati | temerari | spensierati | buoni | fidati | opportuni | tempestivi | fatidici | presaghi | cruciali | spietati | oculati | decisivi | notturni | codardi | traditori }<mod:FORTUNA+1>
+    sinistri<mod:FORTUNA-1>
+    vuoti<mod:CARICO_MASSIMO+2>
+    inconsistenti<mod:CARICO_MASSIMO+1>
+    { feroci | devastanti | brutali }<mod:CRITICO+2>
+    { potenti | dirompenti | martellanti }<mod:CRITICO+1>
+    { stanchi | fiacchi | logori | consumati | innocui }<mod:CRITICO-1>
+    inefficaci<mod:CRITICO-2>
+    infallibili<mod:PRECISIONE+2>
+    { frettolosi | sbadati | approssimativi }<mod:PRECISIONE-1>
+    { guerci | orbi }<mod:PRECISIONE-2>
+    { rapidi | celeri }<mod:VELOCITA+2>
+    { slanciati | indefessi }<mod:VELOCITA+1>
+    tardivi<mod:VELOCITA-1>
+    { cheti | silenziosi | occulti | segreti }<mod:FURTIVITA+2>
+    { felini | discreti }<mod:FURTIVITA+1>
+    { sguaiati | sgargianti | squillanti }<mod:FURTIVITA-1>
+    { invalicabili | inespugnabili }<mod:PARATA+2>
+    { cauti | prudenti | guardinghi | vigili | robusti | inerti }<mod:PARATA+1>
+    vulnerabili<mod:PARATA-1>
+    sordi<mod:RESISTENZA_MAGICA+2>
+    spessi<mod:RESISTENZA_MAGICA+1>
+    sensibili<mod:RESISTENZA_MAGICA-1>
+    { lincei | occhiuti }<mod:PERCEZIONE+2>
+    meticolosi<mod:PERCEZIONE+1>
+    nebbiosi<mod:PERCEZIONE-1>
+    { terribili | tremendi | terrificanti | mortali | inevitabili | ruinosi | sconvolgenti }<mod:SOGGEZIONE+2>
+    { oscuri | spaventosi | disastrosi | calamitosi | catastrofici | clamorosi | roboanti | favolosi | mitici | fantasmagorici | leggendari | imperiali | furtivi | minacciosi }<mod:SOGGEZIONE+1>
+    mansueti<mod:SOGGEZIONE-1>
+    noiosi<mod:SOGGEZIONE-2>
+    { rabbiosi | furiosi }<mod:FURIA+2>
+    { furenti | iracondi | impulsivi | vendicativi | caldi }<mod:FURIA+1>
+    pacifici<mod:FURIA-1>
+    { leonini | intrepidi | audaci | impavidi | sfrontati | spavaldi }<mod:CORAGGIO+2>
+    vendicatori<mod:CORAGGIO+1>
+    esitanti<mod:CORAGGIO-1>
+    { virtuosi | eroici | onorevoli }<mod:VALORE+2>
+    { splendenti | benefici }<mod:VALORE+1>
+    indifferenti<mod:VALORE-1>
+    { aridi | profani | terreni | rustici }<mod:MAGIA-1>
+    { estenuanti | logoranti | faticosi | spossanti | sonnolenti }<mod:STANCHEZZA+2>
+
+PREFISSO_LAMA_FEMMINILE_SINGOLARE
+    nuda<mod:DESTREZZA+1>
+    lacerante<mod:CRITICO+2>
+    { penetrante | incisiva }<mod:CRITICO+1>
+
 # Aggettivi dopo il nome: "la spada pesantissima"
-AGGETTIVO
-    { titanica | colossale | pesantissima | monolitica | barbarica }<mod:FORZA+2>
-    { muscolare | forzuta | sgobbona | impattante | dinamica | lanciata | aggressiva | spaccapietre | picchiatrice | franca | scalpitante | calibrata | tosta | orsina }<mod:FORZA+1>
+AGGETTIVO_FEMMINILE_SINGOLARE
+    { titanica | colossale | pesantissima | barbarica }<mod:FORZA+2>
+    { muscolare | forzuta | sgobbona | impattante | dinamica | aggressiva | spaccapietre | picchiatrice | franca | scalpitante | calibrata | tosta | orsina }<mod:FORZA+1>
     { debole | gracile | flessibile | sedentaria | flaccida | impiegatizia | sottostimata }<mod:FORZA-1>
     { evasiva | sfuggente | bilanciata }<mod:DESTREZZA+2>
-    { leggerissima | sgusciante | geometrica | estiva | svestita | disarmata | sgattaiolante | mirata | regolamentare | risvegliata }<mod:DESTREZZA+1>
+    { leggerissima | sgusciante | geometrica | estiva | sgattaiolante | mirata | regolamentare | risvegliata }<mod:DESTREZZA+1>
     { impacciata | antinfortunistica }<mod:DESTREZZA-1>
-    { incrollabile | indistruttibile | blindata | stagnante | fissa | statica | piombata | quadrata | cementizia }<mod:COSTITUZIONE+2>
+    { incrollabile | indistruttibile | stagnante | fissa | statica | quadrata }<mod:COSTITUZIONE+2>
     { portante | carica | attrezzata | frenata | tollerante | ancorata | montana }<mod:COSTITUZIONE+1>
     { malaticcia | cedevole | tenera | febbricitante }<mod:COSTITUZIONE-1>
     { cervellona | ingegneristica | computerizzata | logica | direttoriale | architettata }<mod:INTELLIGENZA+2>
@@ -195,10 +631,8 @@ AGGETTIVO
     { spezzata | minimalista | bucata | svasata }<mod:CARICO_MASSIMO+1>
     { ingombrante | voluminosa | mulesca | asinina | scolastica | sollevatrice | custode | portatrice }<mod:CARICO_MASSIMO-1>
     { zavorrata | mammut | stivata }<mod:CARICO_MASSIMO-2>
-    { autoaffilante | più che affilata }<mod:CRITICO+3>
-    { affilatissima | taglientissima }<mod:CRITICO+2>
-    { affilata | tagliente | occasionale | spaccatutto }<mod:CRITICO+1>
-    { giocattolo | usurata | smussata | arrotondata }<mod:CRITICO-1>
+    { occasionale | spaccatutto }<mod:CRITICO+1>
+    { giocattolo | usurata }<mod:CRITICO-1>
     { usata | ricondizionata | fallimentare | difettosa | low-cost }<mod:CRITICO-2>
     { millimetrica | perfetta | chirurgica | centrata }<mod:PRECISIONE+2>
     { ordinata | cacciatrice | schermistica | matematica }<mod:PRECISIONE+1>
@@ -207,13 +641,13 @@ AGGETTIVO
     volante<mod:VELOCITA+2>
     { fuggiasca | turbocompressa | aerea | energetica | iperattiva | insonne }<mod:VELOCITA+1>
     rallentata<mod:VELOCITA-1>
-    { inceppata | a batteria scarica | intasata | bloccata }<mod:VELOCITA-2>
+    { a batteria scarica | intasata | bloccata }<mod:VELOCITA-2>
     { camaleontica | ninja | guardona | sussurrante | ombra }<mod:FURTIVITA+2>
     { velata | curiosa | furba | fantasma | scalza | infiltrata | spia | volpina }<mod:FURTIVITA+1>
     { palese | elefantesca | pasticciona }<mod:FURTIVITA-1>
     chiusa<mod:PARATA+2>
-    { trincerata | sospesa | certificata a norma di legge | antiruggine | coperta | difensiva | protettiva | vigilante | arroccata | schermata | guardiana | paladina | corazzata | apatica | letargica | scioperante }<mod:PARATA+1>
-    { ammaccata | scoperta | sbilanciata | esposta | aperta }<mod:PARATA-1>
+    { trincerata | sospesa | certificata a norma di legge | coperta | difensiva | protettiva | vigilante | arroccata | schermata | guardiana | paladina | apatica | letargica | scioperante }<mod:PARATA+1>
+    { scoperta | sbilanciata | esposta | aperta }<mod:PARATA-1>
     { sigillata | refrattaria | isolata | diffidente | antimagica | incredula }<mod:RESISTENZA_MAGICA+2>
     { templare | protettrice | temperata | isolante }<mod:RESISTENZA_MAGICA+1>
     { porosa | ricettiva | conduttrice }<mod:RESISTENZA_MAGICA-1>
@@ -240,13 +674,204 @@ AGGETTIVO
     { sonnecchiante | sbadigliante | rilassata | calante }<mod:STANCHEZZA+1>
     { attiva | ricaricata | riposata | mattiniera | motivata }<mod:STANCHEZZA-1>
 
+AGGETTIVO_MASCHILE_SINGOLARE
+    { titanico | colossale | pesantissimo | barbarico }<mod:FORZA+2>
+    { muscolare | forzuto | sgobbone | impattante | dinamico | aggressivo | spaccapietre | picchiatore | franco | scalpitante | calibrato | tosto | orsino }<mod:FORZA+1>
+    { debole | gracile | flessibile | sedentario | flaccido | impiegatizio | sottostimato }<mod:FORZA-1>
+    { evasivo | sfuggente | bilanciato }<mod:DESTREZZA+2>
+    { leggerissimo | sgusciante | geometrico | estivo | sgattaiolante | mirato | regolamentare | risvegliato }<mod:DESTREZZA+1>
+    { impacciato | antinfortunistico }<mod:DESTREZZA-1>
+    { incrollabile | indistruttibile | stagnante | fisso | statico | quadrato }<mod:COSTITUZIONE+2>
+    { portante | carico | attrezzato | frenato | tollerante | ancorato | montano }<mod:COSTITUZIONE+1>
+    { malaticcio | cedevole | tenero | febbricitante }<mod:COSTITUZIONE-1>
+    { cervellone | ingegneristico | computerizzato | logico | direttoriale | architettato }<mod:INTELLIGENZA+2>
+    { erudito | progettuale | nerd | intellettuale | teologico | ragionato | contabile | filosofico | archivistico | accademico | calcolato | veggente | pratico | tecnico | poetico | teorico | secchione }<mod:INTELLIGENZA+1>
+    { ignorante | novizio | neofita | inesperto | somaro | negato | smemorato }<mod:INTELLIGENZA-1>
+    { patriarcale | ragionevole | spirituale | maestro }<mod:SAGGEZZA+2>
+    { ascetico | pensatore | resiliente | ispettivo | sentinella | rilevatore | meditativo | rassegnato | ottimista | passivo | equilibrato | zen | buddista | distaccato }<mod:SAGGEZZA+1>
+    { fake | smarrito | disorientato }<mod:SAGGEZZA-1>
+    { autorevole | politico | dominante }<mod:CARISMA+2>
+    { affascinante | seduttivo | persuasivo | estetico | figlio di papà | belloccio | ammiccante | paraculo | raccomandato | narcisista | modaiolo | vanitoso | divo }<mod:CARISMA+1>
+    { villano | mutanghero | asociale }<mod:CARISMA-1>
+    { antipatico | guastafeste | introverso }<mod:CARISMA-2>
+    { prescelto | fortunatissimo | baciato | protetto }<mod:FORTUNA+2>
+    { fragilissimo | sopravvissuto | sorteggiato | vetroso | miracolato | incosciente | sognatore | kamikaze | truccato | premiato | jolly | vincente | dormiente | disertore | invertebrato | rinnegato }<mod:FORTUNA+1>
+    { sfigato | sfortunato | iettatorio }<mod:FORTUNA-1>
+    { ridotto | esaurito | pieno }<mod:CARICO_MASSIMO+2>
+    { spezzato | minimalista | bucato | svasato }<mod:CARICO_MASSIMO+1>
+    { ingombrante | voluminoso | mulesco | asinino | scolastico | sollevatore | custode | portatore }<mod:CARICO_MASSIMO-1>
+    { zavorrato | mammut | stivato }<mod:CARICO_MASSIMO-2>
+    { occasionale | spaccatutto }<mod:CRITICO+1>
+    { giocattolo | usurato }<mod:CRITICO-1>
+    { usato | ricondizionato | fallimentare | difettoso | low-cost }<mod:CRITICO-2>
+    { millimetrico | perfetto | chirurgico | centrato }<mod:PRECISIONE+2>
+    { ordinato | cacciatore | schermistico | matematico }<mod:PRECISIONE+1>
+    { disattento | storto | cialtrone | casuale }<mod:PRECISIONE-1>
+    { sbandato | disallineato | miope | ubriaco }<mod:PRECISIONE-2>
+    volante<mod:VELOCITA+2>
+    { fuggiasco | turbocompresso | aereo | energetico | iperattivo | insonne }<mod:VELOCITA+1>
+    rallentato<mod:VELOCITA-1>
+    { a batteria scarica | intasato | bloccato }<mod:VELOCITA-2>
+    { camaleontico | ninja | guardone | sussurrante | ombra }<mod:FURTIVITA+2>
+    { velato | curioso | furbo | fantasma | scalzo | infiltrato | spia | volpino }<mod:FURTIVITA+1>
+    { palese | elefantesco | pasticcione }<mod:FURTIVITA-1>
+    chiuso<mod:PARATA+2>
+    { trincerato | sospeso | certificato a norma di legge | coperto | difensivo | protettivo | vigilante | arroccato | schermato | guardiano | paladino | apatico | letargico | scioperante }<mod:PARATA+1>
+    { scoperto | sbilanciato | esposto | aperto }<mod:PARATA-1>
+    { sigillato | refrattario | isolato | diffidente | antimagico | incredulo }<mod:RESISTENZA_MAGICA+2>
+    { templare | protettore | temperato | isolante }<mod:RESISTENZA_MAGICA+1>
+    { poroso | ricettivo | conduttore }<mod:RESISTENZA_MAGICA-1>
+    { condannato | credulone | complottista }<mod:RESISTENZA_MAGICA-2>
+    onniveggente<mod:PERCEZIONE+2>
+    { laser | sciamanico | investigativo }<mod:PERCEZIONE+1>
+    appannato<mod:PERCEZIONE-1>
+    { apocalittico | caotico }<mod:SOGGEZIONE+2>
+    { sfigatissimo | nero | urlante | supremo | fiscale | inquisitorio | tirannico | intimidatorio | plateale | teatrale | esplosivo | conquistatore | dittatoriale | padronale | predatore | legale }<mod:SOGGEZIONE+1>
+    { divertente | buffone }<mod:SOGGEZIONE-1>
+    { burocratico | catastale | comunale | bollato | condominiale | amministrativo }<mod:SOGGEZIONE-2>
+    esasperato<mod:FURIA+2>
+    { irritato | fanatico | arrabbiato | impazzito | scatenato | permaloso | nervoso | isterico | teso | agitato | ringhioso | adrenalinico | reattivo }<mod:FURIA+1>
+    fegatoso<mod:CORAGGIO+2>
+    { crociato | gladiatorio }<mod:CORAGGIO+1>
+    musone<mod:CORAGGIO-1>
+    { meritocratico | medagliato | cavalleresco }<mod:VALORE+2>
+    { sindacale | trascinatore | popolare }<mod:VALORE+1>
+    { individualista | neutrale | egoista | freelance | esterno | autonomo }<mod:VALORE-1>
+    { stregato | focalizzato }<mod:MAGIA+2>
+    { catalizzatore | ripetitore | astrologico | cartografico }<mod:MAGIA+1>
+    { sempliciotto | materiale | babbano | scettico }<mod:MAGIA-1>
+    { perso | cenerino | scarico }<mod:MAGIA-2>
+    { sonnecchiante | sbadigliante | rilassato | calante }<mod:STANCHEZZA+1>
+    { attivo | ricaricato | riposato | mattiniero | motivato }<mod:STANCHEZZA-1>
+
+AGGETTIVO_MASCHILE_PLURALE
+    { titanici | colossali | pesantissimi | barbarici }<mod:FORZA+2>
+    { muscolari | forzuti | sgobboni | impattanti | dinamici | aggressivi | spaccapietre | picchiatori | franchi | scalpitanti | calibrati | tosti | orsini }<mod:FORZA+1>
+    { deboli | gracili | flessibili | sedentari | flaccidi | impiegatizi | sottostimati }<mod:FORZA-1>
+    { evasivi | sfuggenti | bilanciati }<mod:DESTREZZA+2>
+    { leggerissimi | sguscianti | geometrici | estivi | sgattaiolanti | mirati | regolamentari | risvegliati }<mod:DESTREZZA+1>
+    { impacciati | antinfortunistici }<mod:DESTREZZA-1>
+    { incrollabili | indistruttibili | stagnanti | fissi | statici | quadrati }<mod:COSTITUZIONE+2>
+    { portanti | carichi | attrezzati | frenati | tolleranti | ancorati | montani }<mod:COSTITUZIONE+1>
+    { malaticci | cedevoli | teneri | febbricitanti }<mod:COSTITUZIONE-1>
+    { cervelloni | ingegneristici | computerizzati | logici | direttoriali | architettati }<mod:INTELLIGENZA+2>
+    { eruditi | progettuali | nerd | intellettuali | teologici | ragionati | contabili | filosofici | archivistici | accademici | calcolati | veggenti | pratici | tecnici | poetici | teorici | secchioni }<mod:INTELLIGENZA+1>
+    { ignoranti | novizi | neofiti | inesperti | somari | negati | smemorati }<mod:INTELLIGENZA-1>
+    { patriarcali | ragionevoli | spirituali | maestri }<mod:SAGGEZZA+2>
+    { ascetici | pensatori | resilienti | ispettivi | sentinella | rilevatori | meditativi | rassegnati | ottimisti | passivi | equilibrati | zen | buddisti | distaccati }<mod:SAGGEZZA+1>
+    { fake | smarriti | disorientati }<mod:SAGGEZZA-1>
+    { autorevoli | politici | dominanti }<mod:CARISMA+2>
+    { affascinanti | seduttivi | persuasivi | estetici | figli di papà | bellocci | ammiccanti | paraculi | raccomandati | narcisisti | modaioli | vanitosi | divi }<mod:CARISMA+1>
+    { villani | mutangheri | asociali }<mod:CARISMA-1>
+    { antipatici | guastafeste | introversi }<mod:CARISMA-2>
+    { prescelti | fortunatissimi | baciati | protetti }<mod:FORTUNA+2>
+    { fragilissimi | sopravvissuti | sorteggiati | vetrosi | miracolati | incoscienti | sognatori | kamikaze | truccati | premiati | jolly | vincenti | dormienti | disertori | invertebrati | rinnegati }<mod:FORTUNA+1>
+    { sfigati | sfortunati | iettatori }<mod:FORTUNA-1>
+    { ridotti | esauriti | pieni }<mod:CARICO_MASSIMO+2>
+    { spezzati | minimalisti | bucati | svasati }<mod:CARICO_MASSIMO+1>
+    { ingombranti | voluminosi | muleschi | asinini | scolastici | sollevatori | custodi | portatori }<mod:CARICO_MASSIMO-1>
+    { zavorrati | mammut | stivati }<mod:CARICO_MASSIMO-2>
+    { occasionali | spaccatutto }<mod:CRITICO+1>
+    { giocattolo | usurati }<mod:CRITICO-1>
+    { usati | ricondizionati | fallimentari | difettosi | low-cost }<mod:CRITICO-2>
+    { millimetrici | perfetti | chirurgici | centrati }<mod:PRECISIONE+2>
+    { ordinati | cacciatori | schermistici | matematici }<mod:PRECISIONE+1>
+    { disattenti | storti | cialtroni | casuali }<mod:PRECISIONE-1>
+    { sbandati | disallineati | miopi | ubriachi }<mod:PRECISIONE-2>
+    volanti<mod:VELOCITA+2>
+    { fuggiaschi | turbocompressi | aerei | energetici | iperattivi | insonni }<mod:VELOCITA+1>
+    rallentati<mod:VELOCITA-1>
+    { a batteria scarica | intasati | bloccati }<mod:VELOCITA-2>
+    { camaleontici | ninja | guardoni | sussurranti | ombra }<mod:FURTIVITA+2>
+    { velati | curiosi | furbi | fantasma | scalzi | infiltrati | spia | volpini }<mod:FURTIVITA+1>
+    { palesi | elefanteschi | pasticcioni }<mod:FURTIVITA-1>
+    chiusi<mod:PARATA+2>
+    { trincerati | sospesi | certificati a norma di legge | coperti | difensivi | protettivi | vigilanti | arroccati | schermati | guardiani | paladini | apatici | letargici | scioperanti }<mod:PARATA+1>
+    { scoperti | sbilanciati | esposti | aperti }<mod:PARATA-1>
+    { sigillati | refrattari | isolati | diffidenti | antimagici | increduli }<mod:RESISTENZA_MAGICA+2>
+    { templari | protettori | temperati | isolanti }<mod:RESISTENZA_MAGICA+1>
+    { porosi | ricettivi | conduttori }<mod:RESISTENZA_MAGICA-1>
+    { condannati | creduloni | complottisti }<mod:RESISTENZA_MAGICA-2>
+    onniveggenti<mod:PERCEZIONE+2>
+    { laser | sciamanici | investigativi }<mod:PERCEZIONE+1>
+    appannati<mod:PERCEZIONE-1>
+    { apocalittici | caotici }<mod:SOGGEZIONE+2>
+    { sfigatissimi | neri | urlanti | supremi | fiscali | inquisitori | tirannici | intimidatori | plateali | teatrali | esplosivi | conquistatori | dittatoriali | padronali | predatori | legali }<mod:SOGGEZIONE+1>
+    { divertenti | buffoni }<mod:SOGGEZIONE-1>
+    { burocratici | catastali | comunali | bollati | condominiali | amministrativi }<mod:SOGGEZIONE-2>
+    esasperati<mod:FURIA+2>
+    { irritati | fanatici | arrabbiati | impazziti | scatenati | permalosi | nervosi | isterici | tesi | agitati | ringhiosi | adrenalinici | reattivi }<mod:FURIA+1>
+    fegatosi<mod:CORAGGIO+2>
+    { crociati | gladiatori }<mod:CORAGGIO+1>
+    musoni<mod:CORAGGIO-1>
+    { meritocratici | medagliati | cavallereschi }<mod:VALORE+2>
+    { sindacali | trascinatori | popolari }<mod:VALORE+1>
+    { individualisti | neutrali | egoisti | freelance | esterni | autonomi }<mod:VALORE-1>
+    { stregati | focalizzati }<mod:MAGIA+2>
+    { catalizzatori | ripetitori | astrologici | cartografici }<mod:MAGIA+1>
+    { sempliciotti | materiali | babbani | scettici }<mod:MAGIA-1>
+    { persi | cenerini | scarichi }<mod:MAGIA-2>
+    { sonnecchianti | sbadiglianti | rilassati | calanti }<mod:STANCHEZZA+1>
+    { attivi | ricaricati | riposati | mattinieri | motivati }<mod:STANCHEZZA-1>
+
+AGGETTIVO_LAMA_FEMMINILE_SINGOLARE
+    lanciata<mod:FORZA+1>
+    { svestita | disarmata }<mod:DESTREZZA+1>
+    { autoaffilante | più che affilata }<mod:CRITICO+3>
+    { affilatissima | taglientissima }<mod:CRITICO+2>
+    { affilata | tagliente }<mod:CRITICO+1>
+    { smussata | arrotondata }<mod:CRITICO-1>
+
+AGGETTIVO_METALLO_FEMMINILE_SINGOLARE
+    monolitica<mod:FORZA+2>
+    { blindata | piombata | cementizia }<mod:COSTITUZIONE+2>
+    inceppata<mod:VELOCITA-2>
+    { antiruggine | corazzata }<mod:PARATA+1>
+    ammaccata<mod:PARATA-1>
+
+AGGETTIVO_METALLO_MASCHILE_SINGOLARE
+    monolitico<mod:FORZA+2>
+    { blindato | piombato | cementizio }<mod:COSTITUZIONE+2>
+    inceppato<mod:VELOCITA-2>
+    { antiruggine | corazzato }<mod:PARATA+1>
+    ammaccato<mod:PARATA-1>
+
+AGGETTIVO_METALLO_MASCHILE_PLURALE
+    monolitici<mod:FORZA+2>
+    { blindati | piombati | cementizi }<mod:COSTITUZIONE+2>
+    inceppati<mod:VELOCITA-2>
+    { antiruggine | corazzati }<mod:PARATA+1>
+    ammaccati<mod:PARATA-1>
+
+AGGETTIVO_STOFFA_FEMMINILE_SINGOLARE
+    imbottita<mod:PARATA+1>
+    sdrucita<mod:PARATA-1>
+    trapuntata<mod:COSTITUZIONE+1>
+    lisa<mod:COSTITUZIONE-1>
+
+# Al posto di "affilata" e "tagliente" per i pezzi difensivi
+AGGETTIVO_PROTEZIONE_FEMMINILE_SINGOLARE
+    borchiata<mod:CRITICO+1>
+    irta di punte<mod:CRITICO+2>
+    su misura<mod:PRECISIONE+1>
+
+AGGETTIVO_PROTEZIONE_MASCHILE_SINGOLARE
+    borchiato<mod:CRITICO+1>
+    irto di punte<mod:CRITICO+2>
+    su misura<mod:PRECISIONE+1>
+
+AGGETTIVO_PROTEZIONE_MASCHILE_PLURALE
+    borchiati<mod:CRITICO+1>
+    irti di punte<mod:CRITICO+2>
+    su misura<mod:PRECISIONE+1>
+
 # Complementi: "la spada del Monaco Distratto"
 COMPLEMENTO
     { del Cinghiale Furioso | del Golem d'Argilla | del Rinoceronte Caricante | del Berserker Cieco | del Fabbro Pesante | del Trattore | del Blocco di Cemento | del Sollevatore di Pesi | del Bulldozer | del Ghiottone Rampante }<mod:FORZA+2>
     { della Vittoria | del Campione | del Titano | del Toro | del Minotauro | del Braccio di Ferro | dello Smanettone | dello Scaricatore di Porto | del Traslocatore | del Culturista | del Ghepardo Corazzato | della Pantera | del Centauro | del Cavaliere d'Assalto | della Valanga | dello Smanettone del Lunedì | dell'Atleta dell'Ultimo Minuto | del Corridore con la Spesa | della Furia del Casello | dello Scatto Felino | dell'Orso | del Tasso del Miele | del Cinghiale | del Fabbro | del Palettatore | del Sollevatore | del Buttafuori | dello Scaricatore | del Fusto di Birra | del Bestione | del Ciclope | del Barbaro | dello Spaccapietre | del Picchiatore | del Martello | del Macigno | dello Smanettone Cieco | dello Scaricatore Distratto | della Spaccata | del Sasso nel Buio | della Foga Bruta }<mod:FORZA+1>
     { del Debole | del Novizio | del Fuscello | della Foglia | del Vetro | del Fisico da Scrivania | del Segretario | del Flautista | della Mozzarella | della Piuma }<mod:FORZA-1>
     { della Lucertola | del Ghepardo | del Giocoliere | della Libellula | del Ladro d'Anime | del Gatto di Marmo | dell'Anguilla | dell'Evasore Fiscale }<mod:DESTREZZA+2>
-    { del Grillo | della Zanzara | dello Spirito Volante | della Seta | del Ladruncolo | dell'Impiegato Agile | dell'Apprendista Fuggiasco | della Saponetta | della Mosca | del Saltimbanco | del Falco | del Cecchino | dell'Arciere | della Lince | del Chirurgo | del Geometra | dell'Orologiaio | del Sarto | del Contabile Pignolo | del Vento leggero | dello Spettro | del Guardaroba Estivo | del Bagaglio a Mano | dello Scontrino | della Bolla di Sapone | dello Stagista senza fissa dimora | della Farfalla | del Colibrì | dello Spirito | della Sgattaiolata | del Fuggiasco | della Lama Fragile | del Fioretto Leggero | dello Schermidore Folle | dello Stagista Disarmato | del Riposato | dello Scattante | del Fresco | del Risveglio | dello Smanettone del Mattino | del Caffè Espresso | dello Stagista Motivato | del Gatto Felino | del Mattiniero }<mod:DESTREZZA+1>
+    { del Grillo | della Zanzara | dello Spirito Volante | della Seta | del Ladruncolo | dell'Impiegato Agile | dell'Apprendista Fuggiasco | della Saponetta | della Mosca | del Saltimbanco | del Falco | del Cecchino | dell'Arciere | della Lince | del Chirurgo | del Geometra | dell'Orologiaio | del Sarto | del Contabile Pignolo | del Vento leggero | dello Spettro | del Guardaroba Estivo | del Bagaglio a Mano | dello Scontrino | della Bolla di Sapone | dello Stagista senza fissa dimora | della Farfalla | del Colibrì | dello Spirito | della Sgattaiolata | del Fuggiasco | dello Schermidore Folle | dello Stagista Disarmato | del Riposato | dello Scattante | del Fresco | del Risveglio | dello Smanettone del Mattino | del Caffè Espresso | dello Stagista Motivato | del Gatto Felino | del Mattiniero }<mod:DESTREZZA+1>
     { dell'Inciampo | del Golem | dell'Ancora | del Masso | del Piombo | del Cantiere | del Pavimento Cerato | del Branzino Surgelato | delle Scarpe Antinfortunistiche | del Sabato Sera }<mod:DESTREZZA-1>
     { della Montagna | del Bastione | della Fortezza | della Quercia | del Muro Portante | del Divano | della Riunione di Condominio | del Carro Armato | della Montagna Impervia | della Quercia Secolare | dello Stomaco di Ferro | della Corazza | del Golem di Granito | del Troll | della Roccia | della Capra | del Mattone }<mod:COSTITUZIONE+2>
     { del Facchino | del Mulo | dell'Asino | del Cavallo da Tiro | del Guardiano | del Portapacchi | della Spesa del Sabato | del Camallo | dello Zaino da Trekking | del Facchino d'Albergo | della Lumaca Corazzata | della Tartaruga | del Tricheco | del Cuor di Pietra | dell'Incudine | della Coda alle Poste | del Freno a Mano | del Cantiere Stradale | del Lunedì Mattina | della Corazza Pesante }<mod:COSTITUZIONE+1>
@@ -270,8 +895,8 @@ COMPLEMENTO
     { della Piuma Fragile | dell'Inconsistente | dell'Involucro Vuoto | del Portafoglio a Fine Mese | dello Spazio Esaurito | del Cloud Pieno | dell'Armadio Esploso | del Saldo Zero }<mod:CARICO_MASSIMO-2>
     { del Colpo Devastante | del Macellaio | della Spaccatura | dell'Anatomista | del Mietitore | del Tutto o Niente | della Sventola | della Pallonata | del Sasso in un Occhio | del Braccio di Ferro Impazzito }<mod:CRITICO+2>
     { del Rasoio | del Colpo Letale | del Carnefice | della Ghigliottina | dell'Occasione | del Colpo secco | del Punto Debole | della Fatalità | della Sfortuna Altrui | del Maglio Spaccatutto | della Frattura | della Mannaia Pesante | del Tritacarne | dello Spacca-Scrivanie | della Martellata | del Pugno di Ghisa | del Fusto di Birra Cadente }<mod:CRITICO+1>
-    { dello Smussato | dell'Arrotondato | del Logoro | del Filo Perso | dell'Innocuo | del Coltello da Burro | della Spada di Gomma | del Giocattolo | della Lama di Cartone | del Cucchiaio }<mod:CRITICO-1>
-    { del Disastro | della Sfortuna Nera | del Colpo a Vuoto | del Fiacco | della Lama Sghemba | di Seconda Mano | del Controllo Qualità Fallito | del Model Difettoso | del Fabbro Distratto | del Fornitore Al Risparmio }<mod:CRITICO-2>
+    { dello Smussato | dell'Arrotondato | del Logoro | dell'Innocuo | del Giocattolo | del Cucchiaio }<mod:CRITICO-1>
+    { del Disastro | della Sfortuna Nera | del Colpo a Vuoto | del Fiacco | di Seconda Mano | del Controllo Qualità Fallito | del Model Difettoso | del Fabbro Distratto | del Fornitore Al Risparmio }<mod:CRITICO-2>
     { dell'Aquila | della Mosca sul Muro | del Geometra Pignolo | del Laser | del Mirino | del Centromirato }<mod:PRECISIONE+2>
     { del Cacciatore | del Perito | del Revisore dei Conti | dell'Amministratore Meticoloso | del Perito Calibratore | dello Schermidore | del Matematico | dello Scacchista | del Maestro d'Armi | del Grafologo | del Disegnatore Tecnico | del Truccatore | dell'Impiegato Esile }<mod:PRECISIONE+1>
     { dell'Approssimativo | del Frettoloso | del Cialtrone | del Tira-a-Campare | dell'Occhio Storto | del Vetro Appannato | dello Sguardo Vago | della Fretta }<mod:PRECISIONE-1>
@@ -314,32 +939,21 @@ COMPLEMENTO
     { del Sonnecchiante | del Rallentato | del Pigro | dell'Occhio Chiuso | della Pausa Sigaretta | del Calo idrosalino | del Letargico | dell'Anfibio | del Tasso | dell'Orso in Inverno | del Materasso Memory | dello Smart Working passivo | della Copertina | del Riposino Corazzato }<mod:STANCHEZZA+1>
     { della Sveglia | dell'Attento | del Pronto | dell'Attivo | del Turno di Giorno | della Ricarica | del Lunedì Pomeriggio | dell'Occhio Aperto | dello Slancio }<mod:STANCHEZZA-1>
 
+COMPLEMENTO_LAMA
+    { della Lama Fragile | del Fioretto Leggero }<mod:DESTREZZA+1>
+    { del Filo Perso | del Coltello da Burro | della Spada di Gomma | della Lama di Cartone }<mod:CRITICO-1>
+    della Lama Sghemba<mod:CRITICO-2>
+
 # Il dettaglio da catalogo in fondo al nome: "(con Camomilla in Omaggio)"
 DETTAGLIO
-    { (con { Bulloni Allentati | Struttura Cedevole | Manico di Plastica | Impugnatura Usurata | Lama Piegata | Sconto del 50% | Difetto di Fabbrica | Gioco sul Pomolo | Struttura Fragile }) | (senza { Rinforzo Strutturale | Struttura Portante | Telaio Rinforzato | Contrappeso in Acciaio | Supporto Rigido | Metallo Denso | Perni di Tenuta | Anima d'Acciaio | Spessore Interno | Bilanciamento di Massa | Pistone Idraulico | Lega Pesante | Impugnatura Solida | Nucleo Denso | Molla Potenziata | Innesto Muscolare | Struttura Monoblocco }) }<mod:FORZA-1>
-    (con { Rinforzo Strutturale | Struttura Portante | Telaio Rinforzato | Contrappeso in Acciaio | Supporto Rigido | Metallo Denso | Perni di Tenuta | Anima d'Acciaio | Spessore Interno | Bilanciamento di Massa | Pistone Idraulico | Lega Pesante | Impugnatura Solida | Nucleo Denso | Molla Potenziata | Innesto Muscolare | Struttura Monoblocco })<mod:FORZA+1>
-    { (con { Peso Sbilanciato | Impugnatura Incollata | Manico Unto | Assetto Goffo | Ergonomia Bocciata | Finitura Grezza | Peso Eccessivo | Bilanciamento Sghembo | Vernice Fresca | Grip Scadente }) | (senza { Grip Ergonomico | Impugnatura Antiscivolo | Bilanciamento Dinamico | Assetto Aerodinamico | Rivestimento in Gomma | Profilo Snello | Finitura Calibrata | Ergonomia | Distribuzione del Peso | Impugnatura Curva | Impugnatura Sagomata | Peso Fluido | Finitura Ultra-Leggera | Bilanciere di Precisione }) }<mod:DESTREZZA-1>
-    (con { Grip Ergonomico | Impugnatura Antiscivolo | Bilanciamento Dinamico | Assetto Aerodinamico | Rivestimento in Gomma | Profilo Snello | Finitura Calibrata | Ergonomia | Distribuzione del Peso | Impugnatura Curva | Impugnatura Sagomata | Peso Fluido | Finitura Ultra-Leggera | Bilanciere di Precisione })<mod:DESTREZZA+1>
-    { (con { Segni di Cedimento | Crepa sulla Lama | Microfratture | Metallo Poroso | Ruggine Interna | Scadenza a Breve | Saldatura Debole | Difetto Strutturale | Materiale Riciclato | Sottile Spessore }) | (senza { Giunto di Sicurezza | Certificato di Resilienza | Rivestimento Antishock | Sigillo di Durata | Spessore Maggiorato | Piastra di Rinforzo | Collaudo Strutturale | Trattamento Termico | Garanzia sui Materiali | Lega Antirottura | Lega Temperata | Protezione Termica | Anima di Ghisa }) }<mod:COSTITUZIONE-1>
-    (con { Giunto di Sicurezza | Certificato di Resilienza | Rivestimento Antishock | Sigillo di Durata | Spessore Maggiorato | Piastra di Rinforzo | Collaudo Strutturale | Trattamento Termico | Garanzia sui Materiali | Lega Antirottura | Lega Temperata | Protezione Termica | Anima di Ghisa })<mod:COSTITUZIONE+1>
     { (con { Cervello in Sciopero | Nebbia Mentale | Errori di Battitura | Logica Mancante | Bug di Sistema | Memoria Piena | Cortocircuito Logico | Dati Corrotti | Traduzione Imbarazzante | Schermo Nero }) | (senza { Manuale di Istruzioni | Guida Rapida | Scheda Tecnica | Tutorial Cartaceo | Istruzioni di Montaggio | Schema Logico | Assistenza dello Sviluppatore | Note del Produttore | Etichetta | Traduzione dei Testi | Bino di Note | Mappa dei Flussi | Note a Margine | Glossario Tecnico | FAQ Incluse }) }<mod:INTELLIGENZA-1>
     (con { Manuale di Istruzioni | Guida Rapida | Scheda Tecnica | Tutorial Cartaceo | Istruzioni di Montaggio | Schema Logico | Assistenza dello Sviluppatore | Note del Produttore | Etichetta | Traduzione dei Testi | Bino di Note | Mappa dei Flussi | Note a Margine | Glossario Tecnico | FAQ Incluse })<mod:INTELLIGENZA+1>
     { (con { Crisi d'Ansia | Impulsività | Attacco di Panico | Distrazione Totale | Crisi Esistenziale | Cattive Intenzioni | Sconsideratezza | Arroganza | Testa tra le Nuvole | Follia Transitoria }) | (senza { Santino Incluso | Benedizione Standard | Clausola di Coscienza | Nota Spirituale | Vademecum Etico | Principi Morali | Consapevolezza | Moderazione | Autocontrollo | Senso della Misura | Consigli del Mentore | Consigli del Consulente | Buone Intenzioni | Pensiero del Giorno | Scuse Formali | Autocertificazione Spirituale }) }<mod:SAGGEZZA-1>
     (con { Santino Incluso | Benedizione Standard | Clausola di Coscienza | Nota Spirituale | Vademecum Etico | Principi Morali | Consapevolezza | Moderazione | Autocontrollo | Senso della Misura | Consigli del Mentore | Consigli del Consulente | Buone Intenzioni | Pensiero del Giorno | Scuse Formali | Autocertificazione Spirituale })<mod:SAGGEZZA+1>
-    { (con { Cattivo Odore | Colore Sbiadito | Design Imbarazzante | Finitura Grezza | Ruggine Visibile | Bave di Colla | Aspetto Anonimo | Linee Goffe | Rivestimento Spellato | Dettagli Trascurati }) | (senza { Logo Aziendale | Design di Tendenza | Finitura Lucida | Look Accattivante | Bollino di Qualità | Confezione Estetica | Sponsor in Evidenza | Cura del Dettaglio | Verniciatura | Elementi Grafici | Effetto Instagram | Confezione Regalo | Fiocchetto Rosso | Stile Unico }) }<mod:CARISMA-1>
+    { (con { Cattivo Odore | Colore Sbiadito | Design Imbarazzante | Finitura Grezza | Bave di Colla | Aspetto Anonimo | Linee Goffe | Rivestimento Spellato | Dettagli Trascurati }) | (senza { Logo Aziendale | Design di Tendenza | Finitura Lucida | Look Accattivante | Bollino di Qualità | Confezione Estetica | Sponsor in Evidenza | Cura del Dettaglio | Verniciatura | Elementi Grafici | Effetto Instagram | Confezione Regalo | Fiocchetto Rosso | Stile Unico }) }<mod:CARISMA-1>
     (con { Logo Aziendale | Design di Tendenza | Finitura Lucida | Look Accattivante | Bollino di Qualità | Confezione Estetica | Sponsor in Evidenza | Cura del Dettaglio | Verniciatura | Elementi Grafici | Effetto Instagram | Confezione Regalo | Fiocchetto Rosso | Stile Unico })<mod:CARISMA+1>
     { (in { Comodato d'Uso | Leasing | Subappalto | Sfratto | Regime di Proroga | Amministrazione Controllata | Liquidazione | Pegno | Franchigia | Contratto a Termine }) | (senza { Garanzia Biennale | Garanzia Triennale | Garanzia Estesa | Assicurazione Kasko | Assicurazione Infortuni | Clausola di Recesso | Rimborso Garantito | Polizza Vetri | Tutela Legale | Copertura Imprevisti | Fondo di Riserva | Paracadute Finanziario | Scudo Fiscale | Biglietto della Lotteria | Opzione Soddisfatti o Rimborsati }) }<mod:FORTUNA-1>
     (con { Garanzia Biennale | Garanzia Triennale | Garanzia Estesa | Assicurazione Kasko | Assicurazione Infortuni | Clausola di Recesso | Rimborso Garantito | Polizza Vetri | Tutela Legale | Copertura Imprevisti | Fondo di Riserva | Paracadute Finanziario | Scudo Fiscale | Biglietto della Lotteria | Opzione Soddisfatti o Rimborsati })<mod:FORTUNA+1>
-    { (con { Usata | di Seconda Mano | Ricondizionata | da Esposizione | Km Zero | di Fine Serie | da Stock | Fallimentare | Fuori Catalogo | da Cesto delle Offerte }) | (senza { Lama Autoaffilante | Filo al Diamante | Profilo a Rasoio | Angolo di Taglio Ottimale | Intaglio di Precisione | Tempra Laser | Punta Spillo | Profilo Dentellato | Smussatura al Micrometro | Geometria Letale | Affilatura | Controllo del Filo | Rifinitura della Lama }) }<mod:CRITICO-1>
-    (con { Lama Autoaffilante | Filo al Diamante | Profilo a Rasoio | Angolo di Taglio Ottimale | Intaglio di Precisione | Tempra Laser | Punta Spillo | Profilo Dentellato | Smussatura al Micrometro | Geometria Letale | Affilatura | Controllo del Filo | Rifinitura della Lama })<mod:CRITICO+1>
-    { (con { Lama Sghemba | Mirino Storto | Angolazione Fallata | Lente Incrinata | Vibrazione Strutturale | Gioco sul Perno | Assemblaggio Approssimativo | Bilanciamento Difettoso | Ottica Graffiata | Calibrazione Mancata }) | (senza { Allineamento Ottico | Taratura Laser | Centratura di Fabbrica | Collaudo Finale | Certificato di Calibrazione | Controllo Qualità | Mirino Regolabile | Squadratura Millimetrica | Assistenza Tecnica | Revisione | Regolazione Basale | Livella a Bolla | Calibratore Automatico | Ottica di Puntamento | Sistema di Allineamento }) }<mod:PRECISIONE-1>
-    (con { Allineamento Ottico | Taratura Laser | Centratura di Fabbrica | Collaudo Finale | Certificato di Calibrazione | Controllo Qualità | Mirino Regolabile | Squadratura Millimetrica | Assistenza Tecnica | Revisione | Regolazione Basale | Livella a Bolla | Calibratore Automatico | Ottica di Puntamento | Sistema di Allineamento })<mod:PRECISIONE+1>
-    { (con { Freno di Stazionamento | Limitatore di Giri | Batteria Scarica | Alimentatore Lento | Connessione 3G | Sistema Inceppato | Peso Morto | Trasmissione Grippata | Attrito Elevato | Blocco di Sicurezza | Zavorra | Attrito | Viscosità | Resistenza Meccanica | Rallentatore Innato }) | (senza { Alleggerimento di Massa | Cuscinetto a Sfera | Struttura Traforata | Lega Aeronautica | Svuotamento Interno | Cinetica Fluida | Risposta Rapida | Scatto Meccanico | Profilo Svasato | Riduzione d'Attrito }) }<mod:VELOCITA-1>
-    (con { Alleggerimento di Massa | Cuscinetto a Sfera | Struttura Traforata | Lega Aeronautica | Svuotamento Interno | Cinetica Fluida | Risposta Rapida | Scatto Meccanico | Profilo Svasato | Riduzione d'Attrito })<mod:VELOCITA+1>
-    { (con { Sonaglio di Serie | Allarme Acustico | Led Lampeggiante | Sirena Incorporata | Vernice Catarifrangente | Cassa Bluetooth | Campanellino | Finitura Neon | Tracciamento GPS | Avviso Sonoro }) | (senza { Silenziatore in Feltro | Rivestimento Opaco | Vernice Antiriflesso | Fodero Felpato | Impugnatura Sorda | Finitura Ombra | Isolamento Acustico | Camuffamento Mimetico | Profilo Antirisonante | Assorbitore di Vibrazioni | Opacizzazione }) }<mod:FURTIVITA-1>
-    (con { Silenziatore in Feltro | Rivestimento Opaco | Vernice Antiriflesso | Fodero Felpato | Impugnatura Sorda | Finitura Ombra | Isolamento Acustico | Camuffamento Mimetico | Profilo Antirisonante | Assorbitore di Vibrazioni | Opacizzazione })<mod:FURTIVITA+1>
-    { (con { Elsa Fragile | Paramano Mancante | Guardia Allentata | Impugnatura Corta | Protezione Assente | Manico Scheggiato | Struttura Aperta | Profilo Sottile | Nessuno Schermo | Gioco sul Blocco }) | (senza { Paramano Rinforzato | Elsa a Cesto | Guardia Maggiorata | Scudo da Pugno | Blocco di Sicurezza | Protezione Dita | Guardia d'Acciaio | Arresto di Battuta | Staffa di Protezione | Contrappeso Difensivo | Barriera Fisica | Croce d'Arresto | Copertura Laterale }) }<mod:PARATA-1>
-    (con { Paramano Rinforzato | Elsa a Cesto | Guardia Maggiorata | Scudo da Pugno | Blocco di Sicurezza | Protezione Dita | Guardia d'Acciaio | Arresto di Battuta | Staffa di Protezione | Contrappeso Difensivo | Barriera Fisica | Croce d'Arresto | Copertura Laterale })<mod:PARATA+1>
     { (con { Antenna Arcana | Canale Aperto | Firewall Bucato | Vulnerabilità Zero-Day | Connessione Non Protetta | Sensibilità Mistica | Sigillo Infranto | Bug di Sistema | Ripetitore Runico | Calamita per Anatemi }) | (senza { Schermatura Mistica | Isolamento Arcano | Protezione Antivirus | Firewall Attivo | Filtro Malefici | Barriera Elementale | Sigillo di Sicurezza | Blindatura Runica | Messa a Terra | Protezione della Privacy }) }<mod:RESISTENZA_MAGICA-1>
     (con { Schermatura Mistica | Isolamento Arcano | Protezione Antivirus | Firewall Attivo | Filtro Malefici | Barriera Elementale | Sigillo di Sicurezza | Blindatura Runica | Messa a Terra | Protezione della Privacy })<mod:RESISTENZA_MAGICA+1>
     { (con { Visiera Opaca | Vetro Graffiato | Lente Appannata | Sensore Sporco | Angolo Cieco | Display Rotto | Indicatori Spenti | Copertura Mancante | Filtro Notturno Fallato | Visuale Ridotta }) | (senza { Visiera Chiara | Lente di Ingrandimento | Sensore Rilevatore | Visore Notturno | Indicatore Luminoso | Display di Stato | Filtro di Contrasto | Rilevatore d'Impronte | Scanner Ambientale | Tracciatore Ottico | Segnale Sonoro }) }<mod:PERCEZIONE-1>
@@ -359,30 +973,119 @@ DETTAGLIO
     { (con { Calo Idrosalino | Flemma Innata | Peso Soporifero | Effetto Lunedì | Abbiocco Pomeridiano | Stanchezza Cronica | Palpebra Calante | Ritmo Rallentato | Mancanza di Caffeina | Flusso Pigro }) | (senza { Cuscino Incorporato | Modalità Riposino | Sensazione di Sonno | Effetto Amaca | Materassino Gonfiabile | Sconto Caffè | Rilevatore di Sbadigli | Modalità Divano | Copertina da Viaggio | Tappo per Orecchie | Imbottitura Relax | Appoggio Cervicale }) }<mod:STANCHEZZA+1>
     (con { Cuscino Incorporato | Modalità Riposino | Sensazione di Sonno | Effetto Amaca | Materassino Gonfiabile | Sconto Caffè | Rilevatore di Sbadigli | Modalità Divano | Copertina da Viaggio | Tappo per Orecchie | Imbottitura Relax | Appoggio Cervicale })<mod:STANCHEZZA-1>
 
+DETTAGLIO_LAMA
+    { (con { Bulloni Allentati | Struttura Cedevole | Manico di Plastica | Impugnatura Usurata | Lama Piegata | Sconto del 50% | Difetto di Fabbrica | Gioco sul Pomolo | Struttura Fragile }) | (senza { Rinforzo Strutturale | Struttura Portante | Telaio Rinforzato | Contrappeso in Acciaio | Supporto Rigido | Metallo Denso | Perni di Tenuta | Anima d'Acciaio | Spessore Interno | Bilanciamento di Massa | Pistone Idraulico | Lega Pesante | Impugnatura Solida | Nucleo Denso | Molla Potenziata | Innesto Muscolare | Struttura Monoblocco }) }<mod:FORZA-1>
+    (con { Rinforzo Strutturale | Struttura Portante | Telaio Rinforzato | Contrappeso in Acciaio | Supporto Rigido | Metallo Denso | Perni di Tenuta | Anima d'Acciaio | Spessore Interno | Bilanciamento di Massa | Pistone Idraulico | Lega Pesante | Impugnatura Solida | Nucleo Denso | Molla Potenziata | Innesto Muscolare | Struttura Monoblocco })<mod:FORZA+1>
+    { (con { Peso Sbilanciato | Impugnatura Incollata | Manico Unto | Assetto Goffo | Ergonomia Bocciata | Finitura Grezza | Peso Eccessivo | Bilanciamento Sghembo | Vernice Fresca | Grip Scadente }) | (senza { Grip Ergonomico | Impugnatura Antiscivolo | Bilanciamento Dinamico | Assetto Aerodinamico | Rivestimento in Gomma | Profilo Snello | Finitura Calibrata | Ergonomia | Distribuzione del Peso | Impugnatura Curva | Impugnatura Sagomata | Peso Fluido | Finitura Ultra-Leggera | Bilanciere di Precisione }) }<mod:DESTREZZA-1>
+    (con { Grip Ergonomico | Impugnatura Antiscivolo | Bilanciamento Dinamico | Assetto Aerodinamico | Rivestimento in Gomma | Profilo Snello | Finitura Calibrata | Ergonomia | Distribuzione del Peso | Impugnatura Curva | Impugnatura Sagomata | Peso Fluido | Finitura Ultra-Leggera | Bilanciere di Precisione })<mod:DESTREZZA+1>
+    { (con { Segni di Cedimento | Crepa sulla Lama | Microfratture | Metallo Poroso | Ruggine Interna | Scadenza a Breve | Saldatura Debole | Difetto Strutturale | Materiale Riciclato | Sottile Spessore }) | (senza { Giunto di Sicurezza | Certificato di Resilienza | Rivestimento Antishock | Sigillo di Durata | Spessore Maggiorato | Piastra di Rinforzo | Collaudo Strutturale | Trattamento Termico | Garanzia sui Materiali | Lega Antirottura | Lega Temperata | Protezione Termica | Anima di Ghisa }) }<mod:COSTITUZIONE-1>
+    (con { Giunto di Sicurezza | Certificato di Resilienza | Rivestimento Antishock | Sigillo di Durata | Spessore Maggiorato | Piastra di Rinforzo | Collaudo Strutturale | Trattamento Termico | Garanzia sui Materiali | Lega Antirottura | Lega Temperata | Protezione Termica | Anima di Ghisa })<mod:COSTITUZIONE+1>
+    { (con { Usata | di Seconda Mano | Ricondizionata | da Esposizione | Km Zero | di Fine Serie | da Stock | Fallimentare | Fuori Catalogo | da Cesto delle Offerte }) | (senza { Lama Autoaffilante | Filo al Diamante | Profilo a Rasoio | Angolo di Taglio Ottimale | Intaglio di Precisione | Tempra Laser | Punta Spillo | Profilo Dentellato | Smussatura al Micrometro | Geometria Letale | Affilatura | Controllo del Filo | Rifinitura della Lama }) }<mod:CRITICO-1>
+    (con { Lama Autoaffilante | Filo al Diamante | Profilo a Rasoio | Angolo di Taglio Ottimale | Intaglio di Precisione | Tempra Laser | Punta Spillo | Profilo Dentellato | Smussatura al Micrometro | Geometria Letale | Affilatura | Controllo del Filo | Rifinitura della Lama })<mod:CRITICO+1>
+    { (con { Lama Sghemba | Mirino Storto | Angolazione Fallata | Lente Incrinata | Vibrazione Strutturale | Gioco sul Perno | Assemblaggio Approssimativo | Bilanciamento Difettoso | Ottica Graffiata | Calibrazione Mancata }) | (senza { Allineamento Ottico | Taratura Laser | Centratura di Fabbrica | Collaudo Finale | Certificato di Calibrazione | Controllo Qualità | Mirino Regolabile | Squadratura Millimetrica | Assistenza Tecnica | Revisione | Regolazione Basale | Livella a Bolla | Calibratore Automatico | Ottica di Puntamento | Sistema di Allineamento }) }<mod:PRECISIONE-1>
+    (con { Allineamento Ottico | Taratura Laser | Centratura di Fabbrica | Collaudo Finale | Certificato di Calibrazione | Controllo Qualità | Mirino Regolabile | Squadratura Millimetrica | Assistenza Tecnica | Revisione | Regolazione Basale | Livella a Bolla | Calibratore Automatico | Ottica di Puntamento | Sistema di Allineamento })<mod:PRECISIONE+1>
+    { (con { Freno di Stazionamento | Limitatore di Giri | Batteria Scarica | Alimentatore Lento | Connessione 3G | Sistema Inceppato | Peso Morto | Trasmissione Grippata | Attrito Elevato | Blocco di Sicurezza | Zavorra | Attrito | Viscosità | Resistenza Meccanica | Rallentatore Innato }) | (senza { Alleggerimento di Massa | Cuscinetto a Sfera | Struttura Traforata | Lega Aeronautica | Svuotamento Interno | Cinetica Fluida | Risposta Rapida | Scatto Meccanico | Profilo Svasato | Riduzione d'Attrito }) }<mod:VELOCITA-1>
+    (con { Alleggerimento di Massa | Cuscinetto a Sfera | Struttura Traforata | Lega Aeronautica | Svuotamento Interno | Cinetica Fluida | Risposta Rapida | Scatto Meccanico | Profilo Svasato | Riduzione d'Attrito })<mod:VELOCITA+1>
+    { (con { Sonaglio di Serie | Allarme Acustico | Led Lampeggiante | Sirena Incorporata | Vernice Catarifrangente | Cassa Bluetooth | Campanellino | Finitura Neon | Tracciamento GPS | Avviso Sonoro }) | (senza { Silenziatore in Feltro | Rivestimento Opaco | Vernice Antiriflesso | Fodero Felpato | Impugnatura Sorda | Finitura Ombra | Isolamento Acustico | Camuffamento Mimetico | Profilo Antirisonante | Assorbitore di Vibrazioni | Opacizzazione }) }<mod:FURTIVITA-1>
+    (con { Silenziatore in Feltro | Rivestimento Opaco | Vernice Antiriflesso | Fodero Felpato | Impugnatura Sorda | Finitura Ombra | Isolamento Acustico | Camuffamento Mimetico | Profilo Antirisonante | Assorbitore di Vibrazioni | Opacizzazione })<mod:FURTIVITA+1>
+    { (con { Elsa Fragile | Paramano Mancante | Guardia Allentata | Impugnatura Corta | Protezione Assente | Manico Scheggiato | Struttura Aperta | Profilo Sottile | Nessuno Schermo | Gioco sul Blocco }) | (senza { Paramano Rinforzato | Elsa a Cesto | Guardia Maggiorata | Scudo da Pugno | Blocco di Sicurezza | Protezione Dita | Guardia d'Acciaio | Arresto di Battuta | Staffa di Protezione | Contrappeso Difensivo | Barriera Fisica | Croce d'Arresto | Copertura Laterale }) }<mod:PARATA-1>
+    (con { Paramano Rinforzato | Elsa a Cesto | Guardia Maggiorata | Scudo da Pugno | Blocco di Sicurezza | Protezione Dita | Guardia d'Acciaio | Arresto di Battuta | Staffa di Protezione | Contrappeso Difensivo | Barriera Fisica | Croce d'Arresto | Copertura Laterale })<mod:PARATA+1>
+
+# Per i pezzi difensivi, anche di stoffa: niente lame, elsa o impugnatura
+DETTAGLIO_PROTEZIONE
+    { (con { Cinghie Allentate | Fibbie Difettose | Cuciture Cedevoli | Sconto del 50% | Difetto di Fabbrica | Lacci Sfilacciati }) | (senza { Rinforzi Strutturali | Imbottitura Rinforzata | Fodera Doppia | Lacci di Cuoio | Innesto Muscolare | Fibbie Robuste }) }<mod:FORZA-1>
+    (con { Rinforzi Strutturali | Imbottitura Rinforzata | Fodera Doppia | Lacci di Cuoio | Innesto Muscolare | Fibbie Robuste })<mod:FORZA+1>
+    { (con { Taglia Sbagliata | Cinghie Troppo Strette | Fibbie Incastrate | Peso Eccessivo | Vernice Fresca | Bordi che Graffiano }) | (senza { Taglio Ergonomico | Cinghie Regolabili | Fodera Scorrevole | Profilo Snello | Distribuzione del Peso | Giunture Morbide }) }<mod:DESTREZZA-1>
+    (con { Taglio Ergonomico | Cinghie Regolabili | Fodera Scorrevole | Profilo Snello | Distribuzione del Peso | Giunture Morbide })<mod:DESTREZZA+1>
+    { (con { Tarme | Strappi | Materiale Riciclato | Scadenza a Breve | Cuciture Marce | Difetto Strutturale }) | (senza { Doppia Cucitura | Garanzia sui Materiali | Collaudo Strutturale | Fodera Antistrappo | Rinforzi ai Bordi | Sigillo di Durata }) }<mod:COSTITUZIONE-1>
+    (con { Doppia Cucitura | Garanzia sui Materiali | Collaudo Strutturale | Fodera Antistrappo | Rinforzi ai Bordi | Sigillo di Durata })<mod:COSTITUZIONE+1>
+    { (con { Borchie Spuntate | Punte Smussate | Spuntoni di Gomma }) | (senza { Borchie | Punte | Spuntoni Affilati | Lame sui Bordi }) }<mod:CRITICO-1>
+    (con { Borchie | Punte | Spuntoni Affilati | Lame sui Bordi })<mod:CRITICO+1>
+    { (con { Taglia Approssimativa | Cuciture Storte | Assemblaggio Approssimativo | Cinghie Sbilenche }) | (senza { Taglio su Misura | Prova dal Sarto | Controllo Qualità | Collaudo Finale | Revisione }) }<mod:PRECISIONE-1>
+    (con { Taglio su Misura | Prova dal Sarto | Controllo Qualità | Collaudo Finale | Revisione })<mod:PRECISIONE+1>
+    { (con { Peso Morto | Zavorra | Cinghie che si Impigliano | Attrito Elevato | Strascico | Rallentatore Innato }) | (senza { Alleggerimento di Massa | Tessuto Tecnico | Risposta Rapida | Riduzione d'Attrito | Profilo Aerodinamico }) }<mod:VELOCITA-1>
+    (con { Alleggerimento di Massa | Tessuto Tecnico | Risposta Rapida | Riduzione d'Attrito | Profilo Aerodinamico })<mod:VELOCITA+1>
+    { (con { Protezione Assente | Punti Scoperti | Struttura Aperta | Profilo Sottile | Toppe Mancanti | Gioco sulle Cinghie }) | (senza { Rinforzi ai Punti Vitali | Imbottitura Spessa | Bordo Rialzato | Doppio Strato | Copertura Laterale | Barriera Fisica }) }<mod:PARATA-1>
+    (con { Rinforzi ai Punti Vitali | Imbottitura Spessa | Bordo Rialzato | Doppio Strato | Copertura Laterale | Barriera Fisica })<mod:PARATA+1>
+    { (con { Sonaglio di Serie | Allarme Acustico | Led Lampeggiante | Campanellino | Vernice Catarifrangente | Finitura Neon | Fibbie che Tintinnano }) | (senza { Imbottitura Silenziosa | Rivestimento Opaco | Fodera Felpata | Camuffamento Mimetico | Isolamento Acustico | Opacizzazione }) }<mod:FURTIVITA-1>
+    (con { Imbottitura Silenziosa | Rivestimento Opaco | Fodera Felpata | Camuffamento Mimetico | Isolamento Acustico | Opacizzazione })<mod:FURTIVITA+1>
+
 # ---------------------------------------------------------------------------------------------
 # Parti elementali: un incantamento del tipo di danno, la descrizione che lo dice e, spesso, un
 # soprannome. Ogni elemento ha le sue produzioni, così aggettivo, soprannome e descrizione non
-# possono contraddirsi.
+# possono contraddirsi. Su un'arma l'incantamento fa danno, su un pezzo difensivo dà resistenza:
+# per questo le descrizioni sono diverse (EFFETTO_<ELEMENTO> e EFFETTO_<ELEMENTO>_PROTEZIONE).
 # ---------------------------------------------------------------------------------------------
 
-AGGETTIVO_ELEMENTALE
-    [AGGETTIVO_ARIA][EFFETTO_ARIA]
-    [AGGETTIVO_ACQUA][EFFETTO_ACQUA]
-    [AGGETTIVO_TERRA][EFFETTO_TERRA]
-    [AGGETTIVO_FUOCO][EFFETTO_FUOCO]
-    [AGGETTIVO_FULMINE][EFFETTO_FULMINE]
-    [AGGETTIVO_GELO][EFFETTO_GELO]
-    [AGGETTIVO_ACIDO][EFFETTO_ACIDO]
-    [AGGETTIVO_SONICO][EFFETTO_SONICO]
-    [AGGETTIVO_VELENO][EFFETTO_VELENO]
-    [AGGETTIVO_NECROTICO][EFFETTO_NECROTICO]
-    [AGGETTIVO_SACRO][EFFETTO_SACRO]
-    [AGGETTIVO_PSICHICO][EFFETTO_PSICHICO]
-    [AGGETTIVO_ARCANO][EFFETTO_ARCANO]
-    [AGGETTIVO_VUOTO][EFFETTO_VUOTO]
-    [AGGETTIVO_MALEDIZIONE][EFFETTO_MALEDIZIONE]
+AGGETTIVO_ELEMENTALE_ARMA_FEMMINILE_SINGOLARE
+    [AGGETTIVO_ARIA_FEMMINILE_SINGOLARE][EFFETTO_ARIA]
+    [AGGETTIVO_ACQUA_FEMMINILE_SINGOLARE][EFFETTO_ACQUA]
+    [AGGETTIVO_TERRA_FEMMINILE_SINGOLARE][EFFETTO_TERRA]
+    [AGGETTIVO_FUOCO_FEMMINILE_SINGOLARE][EFFETTO_FUOCO]
+    [AGGETTIVO_FULMINE_FEMMINILE_SINGOLARE][EFFETTO_FULMINE]
+    [AGGETTIVO_GELO_FEMMINILE_SINGOLARE][EFFETTO_GELO]
+    [AGGETTIVO_ACIDO_FEMMINILE_SINGOLARE][EFFETTO_ACIDO]
+    [AGGETTIVO_SONICO_FEMMINILE_SINGOLARE][EFFETTO_SONICO]
+    [AGGETTIVO_VELENO_FEMMINILE_SINGOLARE][EFFETTO_VELENO]
+    [AGGETTIVO_NECROTICO_FEMMINILE_SINGOLARE][EFFETTO_NECROTICO]
+    [AGGETTIVO_SACRO_FEMMINILE_SINGOLARE][EFFETTO_SACRO]
+    [AGGETTIVO_PSICHICO_FEMMINILE_SINGOLARE][EFFETTO_PSICHICO]
+    [AGGETTIVO_ARCANO_FEMMINILE_SINGOLARE][EFFETTO_ARCANO]
+    [AGGETTIVO_VUOTO_FEMMINILE_SINGOLARE][EFFETTO_VUOTO]
+    [AGGETTIVO_MALEDIZIONE_FEMMINILE_SINGOLARE][EFFETTO_MALEDIZIONE]
 
-COMPLEMENTO_ELEMENTALE
+AGGETTIVO_ELEMENTALE_PROTEZIONE_FEMMINILE_SINGOLARE
+    [AGGETTIVO_ARIA_FEMMINILE_SINGOLARE][EFFETTO_ARIA_PROTEZIONE]
+    [AGGETTIVO_ACQUA_FEMMINILE_SINGOLARE][EFFETTO_ACQUA_PROTEZIONE]
+    [AGGETTIVO_TERRA_FEMMINILE_SINGOLARE][EFFETTO_TERRA_PROTEZIONE]
+    [AGGETTIVO_FUOCO_FEMMINILE_SINGOLARE][EFFETTO_FUOCO_PROTEZIONE]
+    [AGGETTIVO_FULMINE_FEMMINILE_SINGOLARE][EFFETTO_FULMINE_PROTEZIONE]
+    [AGGETTIVO_GELO_FEMMINILE_SINGOLARE][EFFETTO_GELO_PROTEZIONE]
+    [AGGETTIVO_ACIDO_FEMMINILE_SINGOLARE][EFFETTO_ACIDO_PROTEZIONE]
+    [AGGETTIVO_SONICO_FEMMINILE_SINGOLARE][EFFETTO_SONICO_PROTEZIONE]
+    [AGGETTIVO_VELENO_FEMMINILE_SINGOLARE][EFFETTO_VELENO_PROTEZIONE]
+    [AGGETTIVO_NECROTICO_FEMMINILE_SINGOLARE][EFFETTO_NECROTICO_PROTEZIONE]
+    [AGGETTIVO_SACRO_FEMMINILE_SINGOLARE][EFFETTO_SACRO_PROTEZIONE]
+    [AGGETTIVO_PSICHICO_FEMMINILE_SINGOLARE][EFFETTO_PSICHICO_PROTEZIONE]
+    [AGGETTIVO_ARCANO_FEMMINILE_SINGOLARE][EFFETTO_ARCANO_PROTEZIONE]
+    [AGGETTIVO_VUOTO_FEMMINILE_SINGOLARE][EFFETTO_VUOTO_PROTEZIONE]
+    [AGGETTIVO_MALEDIZIONE_FEMMINILE_SINGOLARE][EFFETTO_MALEDIZIONE_PROTEZIONE]
+
+AGGETTIVO_ELEMENTALE_PROTEZIONE_MASCHILE_SINGOLARE
+    [AGGETTIVO_ARIA_MASCHILE_SINGOLARE][EFFETTO_ARIA_PROTEZIONE]
+    [AGGETTIVO_ACQUA_MASCHILE_SINGOLARE][EFFETTO_ACQUA_PROTEZIONE]
+    [AGGETTIVO_TERRA_MASCHILE_SINGOLARE][EFFETTO_TERRA_PROTEZIONE]
+    [AGGETTIVO_FUOCO_MASCHILE_SINGOLARE][EFFETTO_FUOCO_PROTEZIONE]
+    [AGGETTIVO_FULMINE_MASCHILE_SINGOLARE][EFFETTO_FULMINE_PROTEZIONE]
+    [AGGETTIVO_GELO_MASCHILE_SINGOLARE][EFFETTO_GELO_PROTEZIONE]
+    [AGGETTIVO_ACIDO_MASCHILE_SINGOLARE][EFFETTO_ACIDO_PROTEZIONE]
+    [AGGETTIVO_SONICO_MASCHILE_SINGOLARE][EFFETTO_SONICO_PROTEZIONE]
+    [AGGETTIVO_VELENO_MASCHILE_SINGOLARE][EFFETTO_VELENO_PROTEZIONE]
+    [AGGETTIVO_NECROTICO_MASCHILE_SINGOLARE][EFFETTO_NECROTICO_PROTEZIONE]
+    [AGGETTIVO_SACRO_MASCHILE_SINGOLARE][EFFETTO_SACRO_PROTEZIONE]
+    [AGGETTIVO_PSICHICO_MASCHILE_SINGOLARE][EFFETTO_PSICHICO_PROTEZIONE]
+    [AGGETTIVO_ARCANO_MASCHILE_SINGOLARE][EFFETTO_ARCANO_PROTEZIONE]
+    [AGGETTIVO_VUOTO_MASCHILE_SINGOLARE][EFFETTO_VUOTO_PROTEZIONE]
+    [AGGETTIVO_MALEDIZIONE_MASCHILE_SINGOLARE][EFFETTO_MALEDIZIONE_PROTEZIONE]
+
+AGGETTIVO_ELEMENTALE_PROTEZIONE_MASCHILE_PLURALE
+    [AGGETTIVO_ARIA_MASCHILE_PLURALE][EFFETTO_ARIA_PROTEZIONE_PLURALE]
+    [AGGETTIVO_ACQUA_MASCHILE_PLURALE][EFFETTO_ACQUA_PROTEZIONE_PLURALE]
+    [AGGETTIVO_TERRA_MASCHILE_PLURALE][EFFETTO_TERRA_PROTEZIONE_PLURALE]
+    [AGGETTIVO_FUOCO_MASCHILE_PLURALE][EFFETTO_FUOCO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_FULMINE_MASCHILE_PLURALE][EFFETTO_FULMINE_PROTEZIONE_PLURALE]
+    [AGGETTIVO_GELO_MASCHILE_PLURALE][EFFETTO_GELO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_ACIDO_MASCHILE_PLURALE][EFFETTO_ACIDO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_SONICO_MASCHILE_PLURALE][EFFETTO_SONICO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_VELENO_MASCHILE_PLURALE][EFFETTO_VELENO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_NECROTICO_MASCHILE_PLURALE][EFFETTO_NECROTICO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_SACRO_MASCHILE_PLURALE][EFFETTO_SACRO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_PSICHICO_MASCHILE_PLURALE][EFFETTO_PSICHICO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_ARCANO_MASCHILE_PLURALE][EFFETTO_ARCANO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_VUOTO_MASCHILE_PLURALE][EFFETTO_VUOTO_PROTEZIONE_PLURALE]
+    [AGGETTIVO_MALEDIZIONE_MASCHILE_PLURALE][EFFETTO_MALEDIZIONE_PROTEZIONE_PLURALE]
+
+COMPLEMENTO_ELEMENTALE_ARMA
     [COMPLEMENTO_ARIA][EFFETTO_ARIA]
     [COMPLEMENTO_ACQUA][EFFETTO_ACQUA]
     [COMPLEMENTO_TERRA][EFFETTO_TERRA]
@@ -399,184 +1102,548 @@ COMPLEMENTO_ELEMENTALE
     [COMPLEMENTO_VUOTO][EFFETTO_VUOTO]
     [COMPLEMENTO_MALEDIZIONE][EFFETTO_MALEDIZIONE]
 
+COMPLEMENTO_ELEMENTALE_PROTEZIONE
+    [COMPLEMENTO_ARIA][EFFETTO_ARIA_PROTEZIONE]
+    [COMPLEMENTO_ACQUA][EFFETTO_ACQUA_PROTEZIONE]
+    [COMPLEMENTO_TERRA][EFFETTO_TERRA_PROTEZIONE]
+    [COMPLEMENTO_FUOCO][EFFETTO_FUOCO_PROTEZIONE]
+    [COMPLEMENTO_FULMINE][EFFETTO_FULMINE_PROTEZIONE]
+    [COMPLEMENTO_GELO][EFFETTO_GELO_PROTEZIONE]
+    [COMPLEMENTO_ACIDO][EFFETTO_ACIDO_PROTEZIONE]
+    [COMPLEMENTO_SONICO][EFFETTO_SONICO_PROTEZIONE]
+    [COMPLEMENTO_VELENO][EFFETTO_VELENO_PROTEZIONE]
+    [COMPLEMENTO_NECROTICO][EFFETTO_NECROTICO_PROTEZIONE]
+    [COMPLEMENTO_SACRO][EFFETTO_SACRO_PROTEZIONE]
+    [COMPLEMENTO_PSICHICO][EFFETTO_PSICHICO_PROTEZIONE]
+    [COMPLEMENTO_ARCANO][EFFETTO_ARCANO_PROTEZIONE]
+    [COMPLEMENTO_VUOTO][EFFETTO_VUOTO_PROTEZIONE]
+    [COMPLEMENTO_MALEDIZIONE][EFFETTO_MALEDIZIONE_PROTEZIONE]
+
+COMPLEMENTO_ELEMENTALE_PROTEZIONE_PLURALE
+    [COMPLEMENTO_ARIA][EFFETTO_ARIA_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_ACQUA][EFFETTO_ACQUA_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_TERRA][EFFETTO_TERRA_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_FUOCO][EFFETTO_FUOCO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_FULMINE][EFFETTO_FULMINE_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_GELO][EFFETTO_GELO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_ACIDO][EFFETTO_ACIDO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_SONICO][EFFETTO_SONICO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_VELENO][EFFETTO_VELENO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_NECROTICO][EFFETTO_NECROTICO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_SACRO][EFFETTO_SACRO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_PSICHICO][EFFETTO_PSICHICO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_ARCANO][EFFETTO_ARCANO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_VUOTO][EFFETTO_VUOTO_PROTEZIONE_PLURALE]
+    [COMPLEMENTO_MALEDIZIONE][EFFETTO_MALEDIZIONE_PROTEZIONE_PLURALE]
+
 # ARIA
-AGGETTIVO_ARIA
+AGGETTIVO_ARIA_FEMMINILE_SINGOLARE
     sibilante | eolica | tempestosa | alata | ventosa | sventolante | ciclonica | turbinante | sbuffante | burrascosa | svolazzante
+
+AGGETTIVO_ARIA_MASCHILE_SINGOLARE
+    sibilante | eolico | tempestoso | alato | ventoso | sventolante | ciclonico | turbinante | sbuffante | burrascoso | svolazzante
+
+AGGETTIVO_ARIA_MASCHILE_PLURALE
+    sibilanti | eolici | tempestosi | alati | ventosi | sventolanti | ciclonici | turbinanti | sbuffanti | burrascosi | svolazzanti
+
 COMPLEMENTO_ARIA
     del Tornado | del Tifone | della Brezza | del Ciclone | dello Sbuffo | del Sospiro
     della Tramontana | del Grecale | del Vento di Levante | dello Scirocco | dell'Ostro | del Libeccio | del Vento di Ponente | del Maestrale
     dello Zefìro | dello Spiffero
+
 EFFETTO_ARIA
     <danno:ARIA><descrizione:[DESCRIZIONE_ARIA]>{ <soprannome:[SOPRANNOME_ARIA]> | [^2.5] }
+
+EFFETTO_ARIA_PROTEZIONE
+    <danno:ARIA><descrizione:[DESCRIZIONE_ARIA_PROTEZIONE]>{ <soprannome:[SOPRANNOME_ARIA]> | [^2.5] }
+
+EFFETTO_ARIA_PROTEZIONE_PLURALE
+    <danno:ARIA><descrizione:[DESCRIZIONE_ARIA_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_ARIA]> | [^2.5] }
+
 SOPRANNOME_ARIA
     Ventilatore | Asciugacapelli | Tramontana | Brezzolina | Sventola | Spiffero | Girandola | Mulinello | Aquilone | Soffione
+
 DESCRIZIONE_ARIA
     che solleva i nemici come foglie secche | che scompiglia i capelli a chiunque | che fischia a ogni fendente
 
+DESCRIZIONE_ARIA_PROTEZIONE
+    che ferma le raffiche di vento | che non si lascia scompigliare da nessuna bufera | che fischia quando tira vento
+
+DESCRIZIONE_ARIA_PROTEZIONE_PLURALE
+    che fermano le raffiche di vento | che non si lasciano scompigliare da nessuna bufera | che fischiano quando tira vento
+
 # ACQUA
-AGGETTIVO_ACQUA
+AGGETTIVO_ACQUA_FEMMINILE_SINGOLARE
     idrica | marittima | lacustre | torrenziale | ondosa | umida | bagnata | a idromassaggio | fradicia | brodosa | fluviale | diluviante | inzuppata | gocciolante
+
+AGGETTIVO_ACQUA_MASCHILE_SINGOLARE
+    idrico | marittimo | lacustre | torrenziale | ondoso | umido | bagnato | a idromassaggio | fradicio | brodoso | fluviale | diluviante | inzuppato | gocciolante
+
+AGGETTIVO_ACQUA_MASCHILE_PLURALE
+    idrici | marittimi | lacustri | torrenziali | ondosi | umidi | bagnati | a idromassaggio | fradici | brodosi | fluviali | diluvianti | inzuppati | gocciolanti
+
 COMPLEMENTO_ACQUA
     dell'Oceano | dello Tsunami | della Cascata | del Diluvio | della Pozzanghera | del Gavettone | della Marea | del Nubifragio | della Cannella
+
 EFFETTO_ACQUA
     <danno:ACQUA><descrizione:[DESCRIZIONE_ACQUA]>{ <soprannome:[SOPRANNOME_ACQUA]> | [^2.5] }
+
+EFFETTO_ACQUA_PROTEZIONE
+    <danno:ACQUA><descrizione:[DESCRIZIONE_ACQUA_PROTEZIONE]>{ <soprannome:[SOPRANNOME_ACQUA]> | [^2.5] }
+
+EFFETTO_ACQUA_PROTEZIONE_PLURALE
+    <danno:ACQUA><descrizione:[DESCRIZIONE_ACQUA_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_ACQUA]> | [^2.5] }
+
 SOPRANNOME_ACQUA
     Sciacquone | Pozzanghera | Acquazzone | Gavettone | Spugna | Annaffiatoio | Rubinetta | Idrante | Scroscio | Bagnomaria
+
 DESCRIZIONE_ACQUA
     che lascia i nemici fradici | che gocciola sempre sul tappeto | che non si asciuga mai
 
+DESCRIZIONE_ACQUA_PROTEZIONE
+    che tiene all'asciutto anche sotto il diluvio | che non lascia passare una goccia | che fa scivolare via le onde
+
+DESCRIZIONE_ACQUA_PROTEZIONE_PLURALE
+    che tengono all'asciutto anche sotto il diluvio | che non lasciano passare una goccia | che fanno scivolare via le onde
+
 # TERRA
-AGGETTIVO_TERRA
+AGGETTIVO_TERRA_FEMMINILE_SINGOLARE
     tellurica | sismica | rocciosa | granitica | terrosa | infangata | polverosa | ancestrale | sotterranea | minerale | lastricata | franosa
+
+AGGETTIVO_TERRA_MASCHILE_SINGOLARE
+    tellurico | sismico | roccioso | granitico | terroso | infangato | polveroso | ancestrale | sotterraneo | minerale | lastricato | franoso
+
+AGGETTIVO_TERRA_MASCHILE_PLURALE
+    tellurici | sismici | rocciosi | granitici | terrosi | infangati | polverosi | ancestrali | sotterranei | minerali | lastricati | franosi
+
 COMPLEMENTO_TERRA
     del Terremoto | della Frana | del Cataclisma | del Granito | della Faglia | della Zappa | della Mattonella | della Talpa | della Cava
+
 EFFETTO_TERRA
     <danno:TERRA><descrizione:[DESCRIZIONE_TERRA]>{ <soprannome:[SOPRANNOME_TERRA]> | [^2.5] }
+
+EFFETTO_TERRA_PROTEZIONE
+    <danno:TERRA><descrizione:[DESCRIZIONE_TERRA_PROTEZIONE]>{ <soprannome:[SOPRANNOME_TERRA]> | [^2.5] }
+
+EFFETTO_TERRA_PROTEZIONE_PLURALE
+    <danno:TERRA><descrizione:[DESCRIZIONE_TERRA_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_TERRA]> | [^2.5] }
+
 SOPRANNOME_TERRA
     Mattone | Zolla | Zappaterra | Cazzuola | Betoniera | Frana | Sassolina | Ghiaia | Macigno | Geometra
+
 DESCRIZIONE_TERRA
     che fa tremare il terreno | che lascia ovunque terra e sassolini | che entra nel nemico come in un campo arato
 
+DESCRIZIONE_TERRA_PROTEZIONE
+    che non teme frane né sassate | che si scrolla di dosso il fango | che regge il peso di una montagna
+
+DESCRIZIONE_TERRA_PROTEZIONE_PLURALE
+    che non temono frane né sassate | che si scrollano di dosso il fango | che reggono il peso di una montagna
+
 # FUOCO
-AGGETTIVO_FUOCO
+AGGETTIVO_FUOCO_FEMMINILE_SINGOLARE
     fiammeggiante | ardente | vulcanica | incendiaria | piromane | bruciante | grigliata | piccante | magmatica | infernale | ustionante | a carbonella | carbonizzante | rovente
+
+AGGETTIVO_FUOCO_MASCHILE_SINGOLARE
+    fiammeggiante | ardente | vulcanico | incendiario | piromane | bruciante | grigliato | piccante | magmatico | infernale | ustionante | a carbonella | carbonizzante | rovente
+
+AGGETTIVO_FUOCO_MASCHILE_PLURALE
+    fiammeggianti | ardenti | vulcanici | incendiari | piromani | brucianti | grigliati | piccanti | magmatici | infernali | ustionanti | a carbonella | carbonizzanti | roventi
+
 COMPLEMENTO_FUOCO
     del Vulcano | del Drago | dell'Inferno | del Falò | della Fenice | del Barbecue | del Drago Sdentato | della Brace
+
 EFFETTO_FUOCO
     <danno:FUOCO><descrizione:[DESCRIZIONE_FUOCO]>{ <soprannome:[SOPRANNOME_FUOCO]> | [^2.5] }
+
+EFFETTO_FUOCO_PROTEZIONE
+    <danno:FUOCO><descrizione:[DESCRIZIONE_FUOCO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_FUOCO]> | [^2.5] }
+
+EFFETTO_FUOCO_PROTEZIONE_PLURALE
+    <danno:FUOCO><descrizione:[DESCRIZIONE_FUOCO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_FUOCO]> | [^2.5] }
+
 SOPRANNOME_FUOCO
     Diavolina | Fiammifero | Barbecue | Accendino | Caldarrosta | Fornello | Lanterna | Brace | Salamandra | Braciola | Grigliata Mista | Zolfanello | Tizzone
+
 DESCRIZIONE_FUOCO
     che brucia i nemici | che profuma di grigliata | che scotta anche il fodero | che accende il camino con un fendente
 
+DESCRIZIONE_FUOCO_PROTEZIONE
+    che respinge le fiamme | che non teme il fiato del drago | che tiene lontane le scottature
+
+DESCRIZIONE_FUOCO_PROTEZIONE_PLURALE
+    che respingono le fiamme | che non temono il fiato del drago | che tengono lontane le scottature
+
 # FULMINE
-AGGETTIVO_FULMINE
+AGGETTIVO_FULMINE_FEMMINILE_SINGOLARE
     ronzante | fulminante | voltaica | scintillante | galvanica | elettrica | temporalesca | ionica | magnetica | elettrizzante
+
+AGGETTIVO_FULMINE_MASCHILE_SINGOLARE
+    ronzante | fulminante | voltaico | scintillante | galvanico | elettrico | temporalesco | ionico | magnetico | elettrizzante
+
+AGGETTIVO_FULMINE_MASCHILE_PLURALE
+    ronzanti | fulminanti | voltaici | scintillanti | galvanici | elettrici | temporaleschi | ionici | magnetici | elettrizzanti
+
 COMPLEMENTO_FULMINE
     della Tempesta | del Fulmine | della Saetta | del Tuono | dell'Atomo | del Cortocircuito | della Scossa | della Presa Multipla
+
 EFFETTO_FULMINE
     <danno:FULMINE><descrizione:[DESCRIZIONE_FULMINE]>{ <soprannome:[SOPRANNOME_FULMINE]> | [^2.5] }
+
+EFFETTO_FULMINE_PROTEZIONE
+    <danno:FULMINE><descrizione:[DESCRIZIONE_FULMINE_PROTEZIONE]>{ <soprannome:[SOPRANNOME_FULMINE]> | [^2.5] }
+
+EFFETTO_FULMINE_PROTEZIONE_PLURALE
+    <danno:FULMINE><descrizione:[DESCRIZIONE_FULMINE_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_FULMINE]> | [^2.5] }
+
 SOPRANNOME_FULMINE
     Friggitrice | Dinamo | Cercafase | Lampadina | Batteria | Saetta | Scossa | Cortocircuito | Elettroshock | Prolunga | Ciabatta Elettrica
+
 DESCRIZIONE_FULMINE
     che fulmina i nemici | che fa rizzare i capelli | che dà la scossa anche a chi la impugna
 
+DESCRIZIONE_FULMINE_PROTEZIONE
+    che scarica a terra i fulmini | che fa da parafulmine | che non prende la scossa
+
+DESCRIZIONE_FULMINE_PROTEZIONE_PLURALE
+    che scaricano a terra i fulmini | che fanno da parafulmine | che non prendono la scossa
+
 # GELO
-AGGETTIVO_GELO
+AGGETTIVO_GELO_FEMMINILE_SINGOLARE
     gelida | artica | glaciale | invernale | criogenica | surgelata | freddolosa | polare | iperborea | brinata | sottozero | ghiacciata
+
+AGGETTIVO_GELO_MASCHILE_SINGOLARE
+    gelido | artico | glaciale | invernale | criogenico | surgelato | freddoloso | polare | iperboreo | brinato | sottozero | ghiacciato
+
+AGGETTIVO_GELO_MASCHILE_PLURALE
+    gelidi | artici | glaciali | invernali | criogenici | surgelati | freddolosi | polari | iperborei | brinati | sottozero | ghiacciati
+
 COMPLEMENTO_GELO
     delle Nevi Eterne | del Ghiacciaio | dell'Artide | della Tormenta | del Criostato | del Pinguino | della Bufera | del Congelatore
+
 EFFETTO_GELO
     <danno:GELO><descrizione:[DESCRIZIONE_GELO]>{ <soprannome:[SOPRANNOME_GELO]> | [^2.5] }
+
+EFFETTO_GELO_PROTEZIONE
+    <danno:GELO><descrizione:[DESCRIZIONE_GELO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_GELO]> | [^2.5] }
+
+EFFETTO_GELO_PROTEZIONE_PLURALE
+    <danno:GELO><descrizione:[DESCRIZIONE_GELO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_GELO]> | [^2.5] }
+
 SOPRANNOME_GELO
     Ghiacciolo | Frigorifero | Sorbetto | Granita | Calippo | Pinguina | Ghiacciaia | Cubetto | Brivido | Morsofreddo | Surgelato | Pupazzo di Neve
+
 DESCRIZIONE_GELO
     che congela i nemici | che tiene fresca la birra | che fa venire i geloni
 
+DESCRIZIONE_GELO_PROTEZIONE
+    che tiene caldo anche tra i ghiacci | che non teme il gelo | che scongiura i geloni
+
+DESCRIZIONE_GELO_PROTEZIONE_PLURALE
+    che tengono caldo anche tra i ghiacci | che non temono il gelo | che scongiurano i geloni
+
 # ACIDO
-AGGETTIVO_ACIDO
+AGGETTIVO_ACIDO_FEMMINILE_SINGOLARE
     corrosiva | caustica | dissolvente | erosiva | aspra | sgorgante | brucia-stomaci | alchemica | putrescente | marinata | acida | basica | solvente
+
+AGGETTIVO_ACIDO_MASCHILE_SINGOLARE
+    corrosivo | caustico | dissolvente | erosivo | aspro | sgorgante | brucia-stomaci | alchemico | putrescente | marinato | acido | basico | solvente
+
+AGGETTIVO_ACIDO_MASCHILE_PLURALE
+    corrosivi | caustici | dissolventi | erosivi | aspri | sgorganti | brucia-stomaci | alchemici | putrescenti | marinati | acidi | basici | solventi
+
 COMPLEMENTO_ACIDO
     della Palude | della Corrosione | del Solfato | dell'Alchimista | del Limone | della Batteria d'Auto | del Vomito
+
 EFFETTO_ACIDO
     <danno:ACIDO><descrizione:[DESCRIZIONE_ACIDO]>{ <soprannome:[SOPRANNOME_ACIDO]> | [^2.5] }
+
+EFFETTO_ACIDO_PROTEZIONE
+    <danno:ACIDO><descrizione:[DESCRIZIONE_ACIDO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_ACIDO]> | [^2.5] }
+
+EFFETTO_ACIDO_PROTEZIONE_PLURALE
+    <danno:ACIDO><descrizione:[DESCRIZIONE_ACIDO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_ACIDO]> | [^2.5] }
+
 SOPRANNOME_ACIDO
     Sottaceto | Limoncella | Candeggina | Sgorgatubi | Aceto | Anticalcare | Varechina | Citrosodina | Giardiniera
+
 DESCRIZIONE_ACIDO
     che corrode le armature | che scioglie la ruggine e i nemici | che puzza di aceto
 
+DESCRIZIONE_ACIDO_PROTEZIONE
+    che non si lascia corrodere | che resiste all'acido e all'aceto | che respinge gli schizzi corrosivi
+
+DESCRIZIONE_ACIDO_PROTEZIONE_PLURALE
+    che non si lasciano corrodere | che resistono all'acido e all'aceto | che respingono gli schizzi corrosivi
+
 # SONICO
-AGGETTIVO_SONICO
+AGGETTIVO_SONICO_FEMMINILE_SINGOLARE
     tuonante | risonante | acustica | vibrante | supersonica | rumorosa | sbraitante | amplificata | ecoica | rimbombante | strillante | assordante
+
+AGGETTIVO_SONICO_MASCHILE_SINGOLARE
+    tuonante | risonante | acustico | vibrante | supersonico | rumoroso | sbraitante | amplificato | ecoico | rimbombante | strillante | assordante
+
+AGGETTIVO_SONICO_MASCHILE_PLURALE
+    tuonanti | risonanti | acustici | vibranti | supersonici | rumorosi | sbraitanti | amplificati | ecoici | rimbombanti | strillanti | assordanti
+
 COMPLEMENTO_SONICO
     del Gong | della Grancassa | del Tamburo | dell'Eco | del Ruggito | della Fanfara | del Karaoke | della Banda del Paese
+
 EFFETTO_SONICO
     <danno:SONICO><descrizione:[DESCRIZIONE_SONICO]>{ <soprannome:[SOPRANNOME_SONICO]> | [^2.5] }
+
+EFFETTO_SONICO_PROTEZIONE
+    <danno:SONICO><descrizione:[DESCRIZIONE_SONICO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_SONICO]> | [^2.5] }
+
+EFFETTO_SONICO_PROTEZIONE_PLURALE
+    <danno:SONICO><descrizione:[DESCRIZIONE_SONICO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_SONICO]> | [^2.5] }
+
 SOPRANNOME_SONICO
     Caciara | Megafono | Clacson | Trapano | Altoparlante | Fischietto | Trombetta | Grancassa | Vuvuzela | Sveglia | Ultrasuono
+
 DESCRIZIONE_SONICO
     che assorda i nemici | che rimbomba come una campana | che fa abbaiare tutti i cani del vicinato
 
+DESCRIZIONE_SONICO_PROTEZIONE
+    che attutisce urla e boati | che fa da tappo per le orecchie | che smorza ogni rimbombo
+
+DESCRIZIONE_SONICO_PROTEZIONE_PLURALE
+    che attutiscono urla e boati | che fanno da tappo per le orecchie | che smorzano ogni rimbombo
+
 # VELENO
-AGGETTIVO_VELENO
+AGGETTIVO_VELENO_FEMMINILE_SINGOLARE
     letale | tossica | nociva | venefica | contaminata | malmostosa | arsenica | infetta | velenosa | al plutonio | all'uranio impoverito
+
+AGGETTIVO_VELENO_MASCHILE_SINGOLARE
+    letale | tossico | nocivo | venefico | contaminato | malmostoso | arsenico | infetto | velenoso | al plutonio | all'uranio impoverito
+
+AGGETTIVO_VELENO_MASCHILE_PLURALE
+    letali | tossici | nocivi | venefici | contaminati | malmostosi | arsenici | infetti | velenosi | al plutonio | all'uranio impoverito
+
 COMPLEMENTO_VELENO
     della Vipera | del Serpente | del Cobra | del Pesce Pietra | dello Scorpione | del Basilisco | della Viverna | del Ragno | del Wyrm | del Fungo | del Rosicone
+
 EFFETTO_VELENO
     <danno:VELENO><descrizione:[DESCRIZIONE_VELENO]>{ <soprannome:[SOPRANNOME_VELENO]> | [^2.5] }
+
+EFFETTO_VELENO_PROTEZIONE
+    <danno:VELENO><descrizione:[DESCRIZIONE_VELENO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_VELENO]> | [^2.5] }
+
+EFFETTO_VELENO_PROTEZIONE_PLURALE
+    <danno:VELENO><descrizione:[DESCRIZIONE_VELENO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_VELENO]> | [^2.5] }
+
 SOPRANNOME_VELENO
     Suocera | Gorgonzola | Pungiglione | Vipera | Vedova Nera | Cicuta | Tarantola | Ortica | Amanita | Mamba
+
 DESCRIZIONE_VELENO
     che avvelena i nemici | che lascia un retrogusto amaro | che va maneggiata coi guanti
 
+DESCRIZIONE_VELENO_PROTEZIONE
+    che respinge i veleni | che fa da antidoto | che tiene lontani i morsi delle serpi
+
+DESCRIZIONE_VELENO_PROTEZIONE_PLURALE
+    che respingono i veleni | che fanno da antidoto | che tengono lontani i morsi delle serpi
+
 # NECROTICO
-AGGETTIVO_NECROTICO
+AGGETTIVO_NECROTICO_FEMMINILE_SINGOLARE
     spettrale | sepolcrale | cadaverica | tombale | macabra | ossuta | rianimata | scheletrica | putrefatta | cimiteriale | divoratrice
+
+AGGETTIVO_NECROTICO_MASCHILE_SINGOLARE
+    spettrale | sepolcrale | cadaverico | tombale | macabro | ossuto | rianimato | scheletrico | putrefatto | cimiteriale | divoratore
+
+AGGETTIVO_NECROTICO_MASCHILE_PLURALE
+    spettrali | sepolcrali | cadaverici | tombali | macabri | ossuti | rianimati | scheletrici | putrefatti | cimiteriali | divoratori
+
 COMPLEMENTO_NECROTICO
     del Crepuscolo | della Cripta | del Necromante | della Piaga | della Tomba | dello Zombie | della Puzza di Piedi | del Cadavere | del Fantasma
+
 EFFETTO_NECROTICO
     <danno:NECROTICO><descrizione:[DESCRIZIONE_NECROTICO]>{ <soprannome:[SOPRANNOME_NECROTICO]> | [^2.5] }
+
+EFFETTO_NECROTICO_PROTEZIONE
+    <danno:NECROTICO><descrizione:[DESCRIZIONE_NECROTICO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_NECROTICO]> | [^2.5] }
+
+EFFETTO_NECROTICO_PROTEZIONE_PLURALE
+    <danno:NECROTICO><descrizione:[DESCRIZIONE_NECROTICO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_NECROTICO]> | [^2.5] }
+
 SOPRANNOME_NECROTICO
     Spettrina | Lumino | Riempicimiteri | Becchina | Ossobuco | Zombie | Lapide | Crisantemo | Mortella | Teschietto
+
 DESCRIZIONE_NECROTICO
     che fa appassire la carne | che odora di cantina chiusa | che risveglia i vicini del cimitero
 
+DESCRIZIONE_NECROTICO_PROTEZIONE
+    che tiene lontani i non morti | che ripara dal tocco della morte | che scaccia i vermi del sepolcro
+
+DESCRIZIONE_NECROTICO_PROTEZIONE_PLURALE
+    che tengono lontani i non morti | che riparano dal tocco della morte | che scacciano i vermi del sepolcro
+
 # SACRO
-AGGETTIVO_SACRO
+AGGETTIVO_SACRO_FEMMINILE_SINGOLARE
     benedetta | divina | radiosa | celestiale | sacra | consacrata | angelica | santificata | miracolosa | gloriosa | redentrice | martire | devota | incensata | purificatrice
+
+AGGETTIVO_SACRO_MASCHILE_SINGOLARE
+    benedetto | divino | radioso | celestiale | sacro | consacrato | angelico | santificato | miracoloso | glorioso | redentore | martire | devoto | incensato | purificatore
+
+AGGETTIVO_SACRO_MASCHILE_PLURALE
+    benedetti | divini | radiosi | celestiali | sacri | consacrati | angelici | santificati | miracolosi | gloriosi | redentori | martiri | devoti | incensati | purificatori
+
 COMPLEMENTO_SACRO
     dell'Alba | dell'Aurora | del Paradiso | dell'Angelo | del Santo | del Chierichetto | del Miracolo | dei Pii Desideri | della Sagrestia
+
 EFFETTO_SACRO
     <danno:SACRO><descrizione:[DESCRIZIONE_SACRO]>{ <soprannome:[SOPRANNOME_SACRO]> | [^2.5] }
+
+EFFETTO_SACRO_PROTEZIONE
+    <danno:SACRO><descrizione:[DESCRIZIONE_SACRO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_SACRO]> | [^2.5] }
+
+EFFETTO_SACRO_PROTEZIONE_PLURALE
+    <danno:SACRO><descrizione:[DESCRIZIONE_SACRO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_SACRO]> | [^2.5] }
+
 SOPRANNOME_SACRO
     Campanile | Chierichetta | Sagrestana | Aureola | Acquasanta | Incensiera | Beghina | Candelotta | Santina | Perpetua
+
 DESCRIZIONE_SACRO
     che scaccia i non morti | che canta in latino nelle notti di luna | che brilla di luce divina
 
+DESCRIZIONE_SACRO_PROTEZIONE
+    che non si lascia accecare dalla luce sacra | che ripara dai castighi celesti | che resiste alle prediche
+
+DESCRIZIONE_SACRO_PROTEZIONE_PLURALE
+    che non si lasciano accecare dalla luce sacra | che riparano dai castighi celesti | che resistono alle prediche
+
 # PSICHICO
-AGGETTIVO_PSICHICO
+AGGETTIVO_PSICHICO_FEMMINILE_SINGOLARE
     allucinante | mentale | telepatica | illusoria | cerebrale | schizzata | paranoica | cervellotica | onirica | ipnotica | psicotica | allucinogena | emicranica | svitata | ululante
+
+AGGETTIVO_PSICHICO_MASCHILE_SINGOLARE
+    allucinante | mentale | telepatico | illusorio | cerebrale | schizzato | paranoico | cervellotico | onirico | ipnotico | psicotico | allucinogeno | emicranico | svitato | ululante
+
+AGGETTIVO_PSICHICO_MASCHILE_PLURALE
+    allucinanti | mentali | telepatici | illusori | cerebrali | schizzati | paranoici | cervellotici | onirici | ipnotici | psicotici | allucinogeni | emicranici | svitati | ululanti
+
 COMPLEMENTO_PSICHICO
     dell'Illusione | dell'Incubo | della Mente | della Follia | dell'Ipnosi | del Matto | dell'Emicrania | dello Schizzato | dello Svitato
+
 EFFETTO_PSICHICO
     <danno:PSICHICO><descrizione:[DESCRIZIONE_PSICHICO]>{ <soprannome:[SOPRANNOME_PSICHICO]> | [^2.5] }
+
+EFFETTO_PSICHICO_PROTEZIONE
+    <danno:PSICHICO><descrizione:[DESCRIZIONE_PSICHICO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_PSICHICO]> | [^2.5] }
+
+EFFETTO_PSICHICO_PROTEZIONE_PLURALE
+    <danno:PSICHICO><descrizione:[DESCRIZIONE_PSICHICO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_PSICHICO]> | [^2.5] }
+
 SOPRANNOME_PSICHICO
     Emicrania | Esaurimento | Paturnia | Tarlo | Chiodo Fisso | Pensierina | Lunatica | Incubo | Cefalea | Ossessione
+
 DESCRIZIONE_PSICHICO
     che confonde i nemici | che sussurra cose strane di notte | che fa venire il mal di testa a chi la guarda
 
+DESCRIZIONE_PSICHICO_PROTEZIONE
+    che protegge la mente | che tiene fuori i pensieri altrui | che fa da cappello di stagnola
+
+DESCRIZIONE_PSICHICO_PROTEZIONE_PLURALE
+    che proteggono la mente | che tengono fuori i pensieri altrui | che fanno da cappello di stagnola
+
 # ARCANO
-AGGETTIVO_ARCANO
+AGGETTIVO_ARCANO_FEMMINILE_SINGOLARE
     mistica | runica | prodigiosa | esoterica | eterea | magica | fatata | astratta | stellata | evocatrice | prestigiatrice | incantata
+
+AGGETTIVO_ARCANO_MASCHILE_SINGOLARE
+    mistico | runico | prodigioso | esoterico | etereo | magico | fatato | astratto | stellato | evocatore | prestigiatore | incantato
+
+AGGETTIVO_ARCANO_MASCHILE_PLURALE
+    mistici | runici | prodigiosi | esoterici | eterei | magici | fatati | astratti | stellati | evocatori | prestigiatori | incantati
+
 COMPLEMENTO_ARCANO
     dell'Arcano | della Magia | delle Rune | del Portale | del Cosmo | del Mago Zurlì | del Trucchetto Magico | dell'Abracadabra | della Scintillina | del Circo
+
 EFFETTO_ARCANO
     <danno:ARCANO><descrizione:[DESCRIZIONE_ARCANO]>{ <soprannome:[SOPRANNOME_ARCANO]> | [^2.5] }
+
+EFFETTO_ARCANO_PROTEZIONE
+    <danno:ARCANO><descrizione:[DESCRIZIONE_ARCANO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_ARCANO]> | [^2.5] }
+
+EFFETTO_ARCANO_PROTEZIONE_PLURALE
+    <danno:ARCANO><descrizione:[DESCRIZIONE_ARCANO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_ARCANO]> | [^2.5] }
+
 SOPRANNOME_ARCANO
     Abracadabra | Scintillina | Bacchetta | Cilindro | Coniglietta | Zurlina | Sim Sala Bim | Prestigio | Mandragola | Cartomante
+
 DESCRIZIONE_ARCANO
     che crepita di energia arcana | che tira fuori conigli dal fodero | che sa di zolfo e di polvere di stelle
 
+DESCRIZIONE_ARCANO_PROTEZIONE
+    che assorbe gli incantesimi | che fa rimbalzare la magia | che spegne le scintille arcane
+
+DESCRIZIONE_ARCANO_PROTEZIONE_PLURALE
+    che assorbono gli incantesimi | che fanno rimbalzare la magia | che spengono le scintille arcane
+
 # VUOTO
-AGGETTIVO_VUOTO
+AGGETTIVO_VUOTO_FEMMINILE_SINGOLARE
     astrale | cosmica | siderale | gravitazionale | infinita | vacua | spaziale | dispersa | nullafacente | eclissata | nebulosa | interstellare | abissale | desolata
+
+AGGETTIVO_VUOTO_MASCHILE_SINGOLARE
+    astrale | cosmico | siderale | gravitazionale | infinito | vacuo | spaziale | disperso | nullafacente | eclissato | nebuloso | interstellare | abissale | desolato
+
+AGGETTIVO_VUOTO_MASCHILE_PLURALE
+    astrali | cosmici | siderali | gravitazionali | infiniti | vacui | spaziali | dispersi | nullafacenti | eclissati | nebulosi | interstellari | abissali | desolati
+
 COMPLEMENTO_VUOTO
     del Vuoto | dell'Eclissi | della Singolarità | dell'Abisso | del Buco Nero | dell'Aria Fritta | del Nulla | dell'Astronauta | del Deserto
+
 EFFETTO_VUOTO
     <danno:VUOTO><descrizione:[DESCRIZIONE_VUOTO]>{ <soprannome:[SOPRANNOME_VUOTO]> | [^2.5] }
+
+EFFETTO_VUOTO_PROTEZIONE
+    <danno:VUOTO><descrizione:[DESCRIZIONE_VUOTO_PROTEZIONE]>{ <soprannome:[SOPRANNOME_VUOTO]> | [^2.5] }
+
+EFFETTO_VUOTO_PROTEZIONE_PLURALE
+    <danno:VUOTO><descrizione:[DESCRIZIONE_VUOTO_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_VUOTO]> | [^2.5] }
+
 SOPRANNOME_VUOTO
     Aria Fritta | Buco Nero | Astronauta | Nullità | Cometa | Galassia | Lunedì Mattina | Vuoto a Rendere | Meteorite | Calzino Spaiato
+
 DESCRIZIONE_VUOTO
     che risucchia la luce | che pesa meno di niente | che fa sparire i nemici e i calzini
 
+DESCRIZIONE_VUOTO_PROTEZIONE
+    che resiste al richiamo del vuoto | che non si lascia risucchiare | che tiene insieme ciò che il nulla disfa
+
+DESCRIZIONE_VUOTO_PROTEZIONE_PLURALE
+    che resistono al richiamo del vuoto | che non si lasciano risucchiare | che tengono insieme ciò che il nulla disfa
+
 # MALEDIZIONE
-AGGETTIVO_MALEDIZIONE
-    maledetta | sciagurata | funesta | infausta | dannata | iettatrice | malocchia | malefica | disgraziata | sventurata | scalognata
+AGGETTIVO_MALEDIZIONE_FEMMINILE_SINGOLARE
+    maledetta | sciagurata | funesta | infausta | dannata | iettatrice | malefica | disgraziata | sventurata | scalognata
+
+AGGETTIVO_MALEDIZIONE_MASCHILE_SINGOLARE
+    maledetto | sciagurato | funesto | infausto | dannato | iettatore | malefico | disgraziato | sventurato | scalognato
+
+AGGETTIVO_MALEDIZIONE_MASCHILE_PLURALE
+    maledetti | sciagurati | funesti | infausti | dannati | iettatori | malefici | disgraziati | sventurati | scalognati
+
 COMPLEMENTO_MALEDIZIONE
     del Malocchio | della Sventura | della Jella | dell'Infausto | della Condanna | del Gatto Nero | del Venerdì 17 | della Scalogna | del Portasfiga
+
 EFFETTO_MALEDIZIONE
     <danno:MALEDIZIONE><descrizione:[DESCRIZIONE_MALEDIZIONE]>{ <soprannome:[SOPRANNOME_MALEDIZIONE]> | [^2.5] }
+
+EFFETTO_MALEDIZIONE_PROTEZIONE
+    <danno:MALEDIZIONE><descrizione:[DESCRIZIONE_MALEDIZIONE_PROTEZIONE]>{ <soprannome:[SOPRANNOME_MALEDIZIONE]> | [^2.5] }
+
+EFFETTO_MALEDIZIONE_PROTEZIONE_PLURALE
+    <danno:MALEDIZIONE><descrizione:[DESCRIZIONE_MALEDIZIONE_PROTEZIONE_PLURALE]>{ <soprannome:[SOPRANNOME_MALEDIZIONE]> | [^2.5] }
+
 SOPRANNOME_MALEDIZIONE
     Portasfiga | Malaugurio | Gatto Nero | Venerdì Diciassette | Jella | Civetta | Specchio Rotto | Scala Aperta | Menagramo | Cornetto
+
 DESCRIZIONE_MALEDIZIONE
     che porta sfortuna a chi colpisce | che nessuno vuole prendere in prestito | che fa cadere il pane dalla parte imburrata
+
+DESCRIZIONE_MALEDIZIONE_PROTEZIONE
+    che allontana il malocchio | che scongiura le maledizioni | che fa le corna alla sfortuna
+
+DESCRIZIONE_MALEDIZIONE_PROTEZIONE_PLURALE
+    che allontanano il malocchio | che scongiurano le maledizioni | che fanno le corna alla sfortuna

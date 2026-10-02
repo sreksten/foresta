@@ -1,0 +1,161 @@
+# Nomi ed effetti degli ingredienti magici, quelli che il venditore di pergamene vende e l'incantatore fonde
+# sugli artefatti (vedi GrammaticaArtefatti, GrammarBean.md e artefatti2.txt, che spiega i marcatori).
+#
+# Ogni ingrediente ha la sua specialità:
+#   pergamena   le caratteristiche primarie (Forza, Destrezza, … Fortuna)
+#   gemma       gli incantamenti elementali (Aria, Acqua, … Veleno)
+#   monile      gli incantamenti magici (Necrotico, Sacro, … Maledizione)
+#   gingillo    le secondarie che servono ad attaccare (Critico, Precisione, Velocità, …)
+#   sigillo     le secondarie che servono a difendersi e a tenere duro (Parata, Coraggio, …, Potere magico)
+#
+# Ogni effetto ha un "del qualcosa" che lo dice: "la gemma del Drago e della Vipera" dà Fuoco e Veleno.
+# Il generatore aggiunge il grado dopo il nome comune ("la gemma maggiore del Drago") e decide i valori:
+# qui le intensità sono sempre +1 e non contano.
+#
+# PRODUZIONI RADICE
+#
+# <TIPO>_<n>, con n da 1 a 3 il numero di effetti. Gli effetti di un ingrediente sono tutti diversi:
+# EFFETTO_<TIPO>$ è one-shot (GrammarBean.md, §4.7), quindi un attributo o un danno esce una volta sola.
+#
+# Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean) e < > @ (marcatori).
+
+PERGAMENA_1
+    @la pergamena [EFFETTO_PERGAMENA]
+PERGAMENA_2
+    @la pergamena [EFFETTO_PERGAMENA] e [EFFETTO_PERGAMENA]
+PERGAMENA_3
+    @la pergamena [EFFETTO_PERGAMENA], [EFFETTO_PERGAMENA] e [EFFETTO_PERGAMENA]
+
+GEMMA_1
+    @la gemma [EFFETTO_GEMMA]
+GEMMA_2
+    @la gemma [EFFETTO_GEMMA] e [EFFETTO_GEMMA]
+GEMMA_3
+    @la gemma [EFFETTO_GEMMA], [EFFETTO_GEMMA] e [EFFETTO_GEMMA]
+
+MONILE_1
+    @il monile [EFFETTO_MONILE]
+MONILE_2
+    @il monile [EFFETTO_MONILE] e [EFFETTO_MONILE]
+MONILE_3
+    @il monile [EFFETTO_MONILE], [EFFETTO_MONILE] e [EFFETTO_MONILE]
+
+GINGILLO_1
+    @il gingillo [EFFETTO_GINGILLO]
+GINGILLO_2
+    @il gingillo [EFFETTO_GINGILLO] e [EFFETTO_GINGILLO]
+GINGILLO_3
+    @il gingillo [EFFETTO_GINGILLO], [EFFETTO_GINGILLO] e [EFFETTO_GINGILLO]
+
+SIGILLO_1
+    @il sigillo [EFFETTO_SIGILLO]
+SIGILLO_2
+    @il sigillo [EFFETTO_SIGILLO] e [EFFETTO_SIGILLO]
+SIGILLO_3
+    @il sigillo [EFFETTO_SIGILLO], [EFFETTO_SIGILLO] e [EFFETTO_SIGILLO]
+
+EFFETTO_PERGAMENA$
+    [FORZA] | [DESTREZZA] | [COSTITUZIONE] | [INTELLIGENZA] | [SAGGEZZA] | [CARISMA] | [FORTUNA]
+EFFETTO_GEMMA$
+    [ARIA] | [ACQUA] | [TERRA] | [FUOCO] | [FULMINE] | [GELO] | [ACIDO] | [SONICO] | [VELENO]
+EFFETTO_MONILE$
+    [NECROTICO] | [SACRO] | [PSICHICO] | [ARCANO] | [VUOTO] | [MALEDIZIONE]
+EFFETTO_GINGILLO$
+    [CRITICO] | [PRECISIONE] | [VELOCITA] | [FURTIVITA] | [PERCEZIONE] | [FURIA] | [SOGGEZIONE]
+EFFETTO_SIGILLO$
+    [PARATA] | [RESISTENZA_MAGICA] | [CORAGGIO] | [VALORE] | [CARICO_MASSIMO] | [POTERE_MAGICO]
+
+# ---------------------------------------------------------------------------------------------
+# Caratteristiche primarie (pergamena)
+# ---------------------------------------------------------------------------------------------
+
+FORZA
+    { dell'Orso | del Toro | dello Scaricatore di Porto | del Sollevatore di Frigoriferi | del Bue Muschiato | del Fabbro Mancino }<mod:FORZA+1>
+DESTREZZA
+    { della Volpe | dello Scoiattolo | del Borseggiatore | del Giocoliere Distratto | del Gatto sul Cornicione | del Prestigiatore }<mod:DESTREZZA+1>
+COSTITUZIONE
+    { della Quercia | della Tartaruga | del Tricheco | della Nonna Centenaria | del Cinghiale | dello Stomaco di Ferro }<mod:COSTITUZIONE+1>
+INTELLIGENZA
+    { del Gufo | del Professore | del Topo di Biblioteca | del Cruciverba Finito | dell'Ingegnere | del Secchione }<mod:INTELLIGENZA+1>
+SAGGEZZA
+    { della Civetta | dell'Eremita | del Nonno Saggio | della Tisana | del Vecchio Monaco | del Proverbio }<mod:SAGGEZZA+1>
+CARISMA
+    { del Pavone | del Bardo | del Venditore di Tappeti | del Cantante di Piano Bar | del Sorriso Smagliante | del Ciuffo Ribelle }<mod:CARISMA+1>
+FORTUNA
+    { del Quadrifoglio | del Ferro di Cavallo | della Coccinella | del Biglietto Vincente | del Cornetto Rosso | del Gatto Bianco }<mod:FORTUNA+1>
+
+# ---------------------------------------------------------------------------------------------
+# Incantamenti elementali (gemma)
+# ---------------------------------------------------------------------------------------------
+
+ARIA
+    { della Tramontana | del Mulinello | dell'Aquilone | dello Spiffero | del Ventilatore | del Soffione }<danno:ARIA>
+ACQUA
+    { della Sorgente | del Gavettone | dell'Acquazzone | del Delfino | della Pozzanghera Profonda | dello Sciacquone }<danno:ACQUA>
+TERRA
+    { della Montagna | della Frana | del Lombrico | della Talpa | del Sasso nella Scarpa | della Betoniera }<danno:TERRA>
+FUOCO
+    { del Drago | della Fenice | della Salamandra | del Peperoncino | della Brace | del Barbecue della Domenica }<danno:FUOCO>
+FULMINE
+    { del Temporale | della Saetta | dell'Anguilla Elettrica | della Presa Multipla | del Maglione di Lana | della Ciabatta Elettrica }<danno:FULMINE>
+GELO
+    { del Ghiacciaio | del Pinguino | del Ghiacciolo | del Congelatore | dell'Inverno Russo | del Pupazzo di Neve }<danno:GELO>
+ACIDO
+    { del Limone | dell'Aceto Balsamico | della Palude | dell'Anticalcare | della Lumaca Acida | dello Yogurt Scaduto }<danno:ACIDO>
+SONICO
+    { del Tuono | del Gong | della Suocera che Urla | della Banda del Paese | del Clacson | della Vuvuzela }<danno:SONICO>
+VELENO
+    { del Serpente | della Vipera | dello Scorpione | del Fungo Sospetto | della Medusa | della Cena dal Cugino }<danno:VELENO>
+
+# ---------------------------------------------------------------------------------------------
+# Incantamenti magici (monile)
+# ---------------------------------------------------------------------------------------------
+
+NECROTICO
+    { del Necromante | della Cripta | dello Scheletro Ballerino | della Mummia | del Becchino | dello Zombie Vegetariano }<danno:NECROTICO>
+SACRO
+    { dell'Angelo | del Santo Patrono | della Candela Votiva | del Coro Angelico | dell'Aureola | del Chierichetto }<danno:SACRO>
+PSICHICO
+    { dell'Incubo | dell'Ipnotista | del Mal di Testa | della Chiromante | del Pensiero Fisso | del Lunedì Mattina }<danno:PSICHICO>
+ARCANO
+    { dell'Arcimago Distratto | delle Rune | del Cappello a Punta | della Bacchetta | del Coniglio nel Cilindro | dell'Abracadabra }<danno:ARCANO>
+VUOTO
+    { del Buco Nero Supermassivo | del Vuoto Cosmico | della Stella Morente | del Calzino Spaiato | dell'Astronauta Smarrito | del Frigo Vuoto }<danno:VUOTO>
+MALEDIZIONE
+    { del Gatto Nero | dello Specchio Rotto | del Malocchio | del Venerdì 17 | della Scala Aperta | del Portasfiga }<danno:MALEDIZIONE>
+
+# ---------------------------------------------------------------------------------------------
+# Secondarie d'attacco (gingillo)
+# ---------------------------------------------------------------------------------------------
+
+CRITICO
+    { del Macellaio | della Ghigliottina | del Colpo Basso | dello Spillo | del Mignolo contro lo Spigolo | del Punto Debole }<mod:CRITICO+1>
+PRECISIONE
+    { dell'Aquila | del Cecchino | dell'Arciere | dell'Orologiaio | della Freccetta al Bar | del Geometra }<mod:PRECISIONE+1>
+VELOCITA
+    { della Lepre | del Ghepardo | del Fattorino | del Lampo | del Caffè Doppio | del Saldo di Fine Stagione }<mod:VELOCITA+1>
+FURTIVITA
+    { dell'Ombra | del Ninja | del Ladro di Galline | del Topo d'Appartamento | delle Pantofole di Feltro | del Gatto in Agguato }<mod:FURTIVITA+1>
+PERCEZIONE
+    { della Lince | del Pipistrello | della Portinaia | del Segugio | dell'Occhio di Falco | della Vicina di Casa }<mod:PERCEZIONE+1>
+FURIA
+    { del Berserker | del Toro Infuriato | dell'Automobilista nel Traffico | del Vespaio | del Cliente Arrabbiato | della Stampante Inceppata }<mod:FURIA+1>
+SOGGEZIONE
+    { del Tiranno | del Lupo | dell'Uomo Nero | dell'Esattore delle Tasse | dell'Ispettore del Fisco | della Maestra Severa }<mod:SOGGEZIONE+1>
+
+# ---------------------------------------------------------------------------------------------
+# Secondarie di difesa e d'animo (sigillo)
+# ---------------------------------------------------------------------------------------------
+
+PARATA
+    { della Testuggine | del Bastione | del Portiere | del Riccio | della Porta Blindata | dell'Ombrello Rinforzato }<mod:PARATA+1>
+RESISTENZA_MAGICA
+    { del Templare | dello Scettico | della Nonna Incredula | del Cappello di Stagnola | del Parafulmine | dell'Antivirus }<mod:RESISTENZA_MAGICA+1>
+CORAGGIO
+    { del Leone | dell'Eroe | del Gladiatore | del Topo che Sfida il Gatto | del Domatore di Leoni | del Primo della Fila }<mod:CORAGGIO+1>
+VALORE
+    { del Cavaliere | del Paladino | del Capitano | del Pompiere | del Fratello Maggiore | del Bagnino }<mod:VALORE+1>
+CARICO_MASSIMO
+    { del Cammello | del Facchino d'Albergo | della Formica | dello Sherpa | del Carrello della Spesa | della Borsa della Nonna }<mod:CARICO_MASSIMO+1>
+POTERE_MAGICO
+    { del Mago | della Strega | del Druido | dello Stregone | della Fata Madrina | del Grimorio Polveroso }<mod:POTERE_MAGICO+1>

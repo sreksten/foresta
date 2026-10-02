@@ -28,7 +28,7 @@ public final class ListinoPergamene {
 		return (int) Math.round(prezzo);
 	}
 
-	static double prezzo(Incantamento incantamento) {
+	public static double prezzo(Incantamento incantamento) {
 		double prezzo = Costanti.PERGAMENA_PREZZO_PER_PUNTO_FISSO * Math.abs(incantamento.getDannoBonusFisso())
 				+ Costanti.PERGAMENA_PREZZO_PER_PUNTO_PERCENTUALE * Math.abs(incantamento.getCoefficienteScala()) * 100;
 		if (incantamento.getTipoDannoElementale().hasEffettiDiStato()) {
@@ -37,7 +37,7 @@ public final class ListinoPergamene {
 		return prezzo;
 	}
 
-	static double prezzo(ModificatoreAttributo modificatore) {
+	public static double prezzo(ModificatoreAttributo modificatore) {
 		double quantita = Math.abs(modificatore.getQuantita());
 		switch (modificatore.getTipoModificatoreAttributo()) {
 			case AUMENTO_FISSO:

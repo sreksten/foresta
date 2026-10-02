@@ -35,19 +35,20 @@ public interface GeneratoreArtefatti {
 	}
 
 	/**
-	 * Un artefatto del tipo dato; per TipoArtefatto.INCANTAMENTO una pergamena. Ogni tanto un artefatto
+	 * Un artefatto del tipo dato; per un ingrediente magico vedi {@link #generaIngrediente}. Ogni tanto un artefatto
 	 * incantabile nasce già incantato, tanto più spesso quanto più alto è il livello.
 	 */
 	Artefatto generaArtefatto(TipoArtefatto tipo, int livello);
 
 	/**
-	 * Un artefatto di tipo scelto a caso, pergamene escluse.
+	 * Un artefatto di tipo scelto a caso, ingredienti magici esclusi.
 	 */
 	Artefatto generaArtefattoCasuale(int livello);
 
 	/**
-	 * Una pergamena di livello da 1 a 3, con tanti effetti quanto il suo livello (incantamenti e modificatori
-	 * di attributo scelti a caso), del grado adatto al livello di riferimento.
+	 * Un ingrediente magico di tipo scelto a caso (pergamena, gemma, monile, gingillo o sigillo), del livello di
+	 * riferimento, con tanti effetti quanto il livello, fino a tre, tutti della specialità del tipo e del grado
+	 * adatto al livello: minore fino al 2, normale al 3, maggiore dal 4.
 	 */
-	Artefatto generaPergamena(int livello);
+	Artefatto generaIngrediente(int livello);
 }

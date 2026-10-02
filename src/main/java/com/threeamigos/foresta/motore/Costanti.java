@@ -14,7 +14,7 @@ public class Costanti {
     public static final int ARTEFATTO_MASSIMO_EFFETTI_LEGGENDARIO = 5;
 
     // Combattimento (vedi artefatti_e_incantamenti.md, §2 "Combattimento")
-    // PARATA intrinseca di scudo, elmo e armatura: una parte fissa, perché servano anche ai livelli bassi,
+    // PARATA intrinseca di scudo, elmo, armatura e schinieri: una parte fissa, perché servano anche ai livelli bassi,
     // più una per ogni livello del pezzo. La veste dà lo stesso minimo in RESISTENZA_MAGICA.
     public static final int SCUDO_PARATA_MINIMA = 6;
     public static final int SCUDO_PARATA_PER_LIVELLO = 2;
@@ -22,6 +22,8 @@ public class Costanti {
     public static final int ELMO_PARATA_PER_LIVELLO = 1;
     public static final int ARMATURA_PARATA_MINIMA = 3;
     public static final int ARMATURA_PARATA_PER_LIVELLO = 1;
+    public static final int SCHINIERI_PARATA_MINIMA = 2;
+    public static final int SCHINIERI_PARATA_PER_LIVELLO = 1;
     // FORZA minima per indossare un'armatura: il Guerriero ce l'ha sempre (17 a livello 1), Ladro, Elfo e
     // Bardo solo se forzuti ai livelli alti (11-14 a livello 1, fino a 19 a livello 10), il Mago mai (5-11)
     public static final int ARMATURA_FORZA_MINIMA = 16;
@@ -32,7 +34,7 @@ public class Costanti {
     public static final double GUARDIA_APERTA_FATTORE_PARATA = 0.75;
     // La seconda fase di attacco, con l'arma nella mano secondaria, fa il 40% (danno base e incantamenti)
     public static final double DOPPIA_ARMA_FATTORE_SECONDA_ARMA = 0.4;
-    // Su elmo, scudo e armatura la parte percentuale di un incantamento vale la metà, perché moltiplica
+    // Su elmo, scudo, armatura e schinieri la parte percentuale di un incantamento vale la metà, perché moltiplica
     // una difesa che cresce già con il livello
     public static final double RESISTENZA_FATTORE_PERCENTUALE = 0.5;
     // Il libro magico dà al danno degli incantesimi un bonus come un incantamento del suo grado, più il 25%
@@ -95,8 +97,11 @@ public class Costanti {
     // Esiti rari di ogni cofano aperto: 5% una pergamena, 5% un artefatto casuale (10% in tutto)
     public static final double COFANO_PROBABILITA_PERGAMENA = 0.05;
     public static final double COFANO_PROBABILITA_ARTEFATTO = 0.05;
-    // Livello (e quindi numero di effetti) di una pergamena
-    public static final int PERGAMENA_LIVELLO_MASSIMO = 3;
+    // Un ingrediente magico ha tanti effetti quanto il suo livello, fino a questo
+    public static final int INGREDIENTE_EFFETTI_MASSIMI = 3;
+    // Grado degli effetti di un ingrediente magico: minore fino al livello 2, normale (MEDIO) al 3, maggiore dal 4
+    public static final int INGREDIENTE_GRADO_MEDIO_DAL_LIVELLO = 3;
+    public static final int INGREDIENTE_GRADO_MAGGIORE_DAL_LIVELLO = 4;
     // Magazzini dei negozi di città, riforniti alla creazione del mondo e a ogni aumento del suo livello:
     // quanti artefatti per negozio, con livelli a rotazione fra livello del mondo - MAGAZZINO_DIVARIO_LIVELLO
     // e livello del mondo + MAGAZZINO_DIVARIO_LIVELLO (mai sotto 1)
