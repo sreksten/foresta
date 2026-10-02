@@ -460,6 +460,7 @@ public abstract class LocazioneBase implements Locazione {
 				if (gruppo.getMonete() >= gruppo.getNumeroPersonaggi() * 2 && Dado.tira(10) > 3) {
 					gruppo.subMonete(gruppo.getNumeroPersonaggi() * 2);
 					BusEventi.pubblica(new NotificaTestoFrase(gruppo.chiMaiuscolo() + " ha ottenuto un passaggio sicuro."));
+					BusEventi.pubblica(new InternoCorruzioneRiuscita(classiAvversariVivi()));
 					setOggetto(null);
 
 					offerta = gruppoAvversario.getCapo().getOfferta(Comando.CORRUZIONE);
@@ -500,6 +501,7 @@ public abstract class LocazioneBase implements Locazione {
 				if (personaggio.getCarisma() > tiroDelDado) {
 					personaggio.addCarisma(1);
 					haStrettoAmicizia = true;
+					BusEventi.pubblica(new InternoAmiciziaStretta(classiAvversariVivi()));
 					BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 							Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " riesce a stringere amicizia."));
 
@@ -922,13 +924,21 @@ public abstract class LocazioneBase implements Locazione {
 		}
 	}
 
+	private List<ClassePersonaggio> classiAvversariVivi() {
+		List<ClassePersonaggio> classi = new ArrayList<>();
+		for (Personaggio avversario : gruppoAvversario.getPersonaggiVivi()) {
+			classi.add(avversario.getClasse());
+		}
+		return classi;
+	}
+
 	/**
 	 * Un avversario morto conta nelle statistiche e da' i punti esperienza al gruppo: per mano di un personaggio
 	 * del gruppo (vedi registraUccisione) o per veleno, sanguinamento e gli altri effetti di stato.
 	 */
 	private void registraMorteAvversario(Personaggio vittima) {
 		if (!vittima.isVivo() && !gruppo.contiene(vittima)) {
-			Statistiche.addMostroUcciso(vittima.getClasse());
+			BusEventi.pubblica(new InternoAvversarioSconfitto(vittima.getClasse()));
 			Statistiche.addPunti(vittima.getSaluteMassima());
 			gruppo.addPuntiEsperienza(vittima.getPuntiEsperienza());
 		}

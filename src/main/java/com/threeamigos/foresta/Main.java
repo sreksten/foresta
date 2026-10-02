@@ -6,6 +6,8 @@ import com.threeamigos.foresta.eventi.interni.InternoInterfacciaUtentePronta;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
 import com.threeamigos.foresta.motore.Automa;
 import com.threeamigos.foresta.motore.Notizie;
+import com.threeamigos.foresta.motore.RegistroTrofei;
+import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.tools.*;
 import com.threeamigos.foresta.ui.ForestaUI;
 import com.threeamigos.foresta.ui.Orientamento;
@@ -44,10 +46,15 @@ public class Main {
 		new SnifferBusEventi();
 		// Si registra per ricordare gli ultimi messaggi e le ultime notizie
 		Notizie.registrati();
+		// Si registrano per tenere il conto di quanto succede in gioco
+		Statistiche.registrati();
+		RegistroTrofei.registrati();
 
 		leggiArgomenti(args);
 		GestorePunteggi.impostaGestorePunteggi(new GestorePunteggiSuFile());
 		GestoreSalvataggi.impostaGestoreSalvataggi(new GestoreSalvataggiSuFile());
+		// I trofei vinti valgono da una partita all'altra: si rileggono una volta sola, all'avvio
+		RegistroTrofei.impostaGestoreTrofei(new GestoreTrofeiSuFile());
 
 		Temporizzatore temporizzatoreAutoma = new TemporizzatoreJ2SE();
 		ControlloreDiGioco controlloreDiGioco = new Automa(temporizzatoreAutoma);

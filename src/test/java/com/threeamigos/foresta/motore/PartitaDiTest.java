@@ -44,6 +44,7 @@ final class PartitaDiTest implements AutoCloseable {
 	private final Automa automa;
 	private final TemporizzatoreManuale temporizzatore = new TemporizzatoreManuale();
 	private final GestoreSalvataggiInMemoria salvataggi;
+	private final GestoreTrofeiInMemoria trofei = new GestoreTrofeiInMemoria();
 	private final RegistratoreEventi registratore = new RegistratoreEventi();
 	private Collection<Comando> comandiDisponibili = new ArrayList<>();
 	private int erroriVisti;
@@ -63,7 +64,11 @@ final class PartitaDiTest implements AutoCloseable {
 		GruppoAvversario.azzeraIstanza();
 		GestoreSalvataggi.impostaGestoreSalvataggi(salvataggi);
 		GestorePunteggi.impostaGestorePunteggi(new GestorePunteggiInMemoria());
+		// I trofei passano da una partita all'altra: ogni test riparte senza nessun trofeo vinto
+		RegistroTrofei.impostaGestoreTrofei(trofei);
 		Notizie.registrati();
+		Statistiche.registrati();
+		RegistroTrofei.registrati();
 
 		registratore.ascolta(InternoErrore.class, InternoException.class, InternoStatoDiGioco.class,
 				InternoAggiornamentoComandiDisponibili.class, RichiestaSelezioneDirezione.class,
@@ -248,6 +253,10 @@ final class PartitaDiTest implements AutoCloseable {
 	 */
 	Collection<Comando> comandiDisponibili() {
 		return comandiDisponibili;
+	}
+
+	GestoreTrofeiInMemoria trofei() {
+		return trofei;
 	}
 
 	RegistratoreEventi eventi() {

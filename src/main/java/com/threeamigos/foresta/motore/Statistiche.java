@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloMondo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazionePunteggio;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazionePuntiEsperienzaPersonaggio;
@@ -15,6 +16,13 @@ public class Statistiche {
 	}
 
 	private Statistiche() {
+	}
+
+	/**
+	 * Si iscrive agli eventi che le statistiche tengono in conto, come gli avversari sconfitti.
+	 */
+	public static void registrati() {
+		BusEventi.iscriviti(InternoAvversarioSconfitto.class, evento -> addMostroUcciso(evento.getClasse()));
 	}
 
 	public static void addPunti(int quantita) {
@@ -59,7 +67,7 @@ public class Statistiche {
 		return GestoreProgressione.getXpPerProssimoLivello(getLivello());
 	}
 
-	public static void addMostroUcciso(ClassePersonaggio classe) {
+	private static void addMostroUcciso(ClassePersonaggio classe) {
 		getStatisticheMD().addMostroUcciso(classe);
 	}
 

@@ -72,6 +72,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(InternoCaricamentoCompletato.class, this::gestisciEventoCaricamentoCompletato);
 		BusEventi.iscriviti(NotificaErroreCaricamento.class, this::gestisciEventoErroreCaricamento);
 		BusEventi.iscriviti(NotificaGlobale.class, this::gestisciEventoNotificaGlobale);
+		BusEventi.iscriviti(InternoTrofeoAcquisito.class, this::gestisciEventoTrofeoAcquisito);
 		BusEventi.iscriviti(InternoAggiornamentoComandiDisponibili.class, this::gestisciEventoComandiDisponibili);
 		BusEventi.iscriviti(NotificaConsumoPuntoAbilitaPersonaggio.class, this::gestisciEventoConsumoPuntoAbilita);
 		BusEventi.iscriviti(NotificaFineGioco.class, this::gestisciEventoFineGioco);
@@ -290,6 +291,10 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	private void gestisciEventoNotificaGlobale(NotificaGlobale evento) {
 		displayableCanvas.notificaAnnuncioGlobale(evento.getEtichetta(), evento.getMessaggio());
+	}
+
+	private void gestisciEventoTrofeoAcquisito(InternoTrofeoAcquisito evento) {
+		displayableCanvas.notificaAnnuncioGlobale("Trofeo vinto", evento.getTrofeo().getNome());
 	}
 
 	private void gestisciEventoPaginaIntermezzo(NotificaPaginaIntermezzo evento) {

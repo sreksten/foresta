@@ -945,6 +945,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			locazioneCorrente.azzeraLocazione(gruppo);
 		}
 
+		// Anche se la locazione non è completa: chi deve, per esempio i trofei, se ne accorge
+		BusEventi.pubblica(new InternoFineLocazione());
+
 		// Missioni ed eventuale locazione azzerate: è il momento degli intermezzi, prima
 		// del controllo di game over e del resto della coda di fine locazione
 		return avviaProssimoIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA, Stato.FINE_LOCAZIONE_2);

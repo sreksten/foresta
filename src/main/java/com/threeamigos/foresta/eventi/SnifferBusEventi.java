@@ -68,6 +68,12 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(InternoPreparazioneLocazione.class, this::onEventoPreparazioneLocazione);
         BusEventi.iscriviti(InternoPuliziaCacheDinamicaImmagini.class, this::onEventoPuliziaCacheDinamicaImmagini);
         BusEventi.iscriviti(NotificaRaccoltaOggetti.class, this::onEventoRaccoltaOggetti);
+        BusEventi.iscriviti(InternoTrofeoAcquisito.class, this::onEventoTrofeoAcquisito);
+        BusEventi.iscriviti(InternoAvversarioSconfitto.class, this::onEventoAvversarioSconfitto);
+        BusEventi.iscriviti(InternoFineLocazione.class, this::onEventoFineLocazione);
+        BusEventi.iscriviti(InternoPastoConsumatoInLocanda.class, this::onEventoPastoConsumatoInLocanda);
+        BusEventi.iscriviti(InternoAmiciziaStretta.class, this::onEventoAmiciziaStretta);
+        BusEventi.iscriviti(InternoCorruzioneRiuscita.class, this::onEventoCorruzioneRiuscita);
         BusEventi.iscriviti(ComandoAcquistoArtefatto.class, this::onEventoRichiestaAcquistoArtefatto);
         BusEventi.iscriviti(ComandoAcquistoConsumabile.class, this::onEventoRichiestaAcquistoConsumabile);
         BusEventi.iscriviti(InternoRichiestaAperturaFinestraCombattimento.class, this::onEventoRichiestaAperturaFinestraCombattimento);
@@ -283,6 +289,30 @@ public class SnifferBusEventi {
 
     private void onEventoRaccoltaOggetti(NotificaRaccoltaOggetti evento) {
         Logger.log(headerEvento(evento));
+    }
+
+    private void onEventoTrofeoAcquisito(InternoTrofeoAcquisito evento) {
+        Logger.log(headerEvento(evento) + "Trofeo vinto: " + evento.getTrofeo().getNome());
+    }
+
+    private void onEventoAvversarioSconfitto(InternoAvversarioSconfitto evento) {
+        Logger.log(headerEvento(evento) + "Sconfitto: " + evento.getClasse());
+    }
+
+    private void onEventoFineLocazione(InternoFineLocazione evento) {
+        Logger.log(headerEvento(evento));
+    }
+
+    private void onEventoPastoConsumatoInLocanda(InternoPastoConsumatoInLocanda evento) {
+        Logger.log(headerEvento(evento));
+    }
+
+    private void onEventoAmiciziaStretta(InternoAmiciziaStretta evento) {
+        Logger.log(headerEvento(evento) + "Amicizia con: " + evento.getAvversari());
+    }
+
+    private void onEventoCorruzioneRiuscita(InternoCorruzioneRiuscita evento) {
+        Logger.log(headerEvento(evento) + "Corrotti: " + evento.getAvversari());
     }
 
     private void onEventoRichiestaAcquistoArtefatto(ComandoAcquistoArtefatto evento) {

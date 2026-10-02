@@ -280,9 +280,21 @@ public enum TipoEvento {
      */
     INTERNO_AGGIORNAMENTO_COMANDI_DISPONIBILI,
     /**
+     * Un personaggio del gruppo ha stretto amicizia con il gruppo avversario
+     */
+    INTERNO_AMICIZIA_STRETTA,
+    /**
+     * Un avversario del gruppo è stato sconfitto
+     */
+    INTERNO_AVVERSARIO_SCONFITTO,
+    /**
      * Un salvataggio è stato riletto con successo: porta gli ultimi messaggi da ripristinare nel pannello di testo
      */
     INTERNO_CARICAMENTO_COMPLETATO,
+    /**
+     * Il gruppo ha corrotto il gruppo avversario, ottenendo un passaggio sicuro
+     */
+    INTERNO_CORRUZIONE_RIUSCITA,
     /**
      * Un fumetto di un intermezzo viene creato dal gestore grafico, con la frase che mostra
      */
@@ -324,6 +336,10 @@ public enum TipoEvento {
      */
     INTERNO_INTERFACCIA_UTENTE_PRONTA,
     /**
+     * Il gruppo lascia la locazione corrente
+     */
+    INTERNO_FINE_LOCAZIONE,
+    /**
      * L'animazione del logo iniziale e' finita e la UI ha caricato le sue risorse
      */
     INTERNO_FINE_LOGO_INIZIALE,
@@ -352,6 +368,10 @@ public enum TipoEvento {
      * Chiede di effettuare una notifica al giocatore via fumetto a tempo a video invece che come messaggio
      */
     INTERNO_NOTIFICA_VIA_FUMETTO_A_TEMPO,
+    /**
+     * Il gruppo, o almeno uno dei suoi personaggi, ha consumato un pasto in una locanda
+     */
+    INTERNO_PASTO_CONSUMATO_IN_LOCANDA,
     /**
      * Il motore chiede alla UI di portare in primo piano una certa Finestra
      */
@@ -383,6 +403,10 @@ public enum TipoEvento {
     /**
      * Cambio di stato dell'automa principale che informa la UI
      */
-    INTERNO_STATO_DI_GIOCO
+    INTERNO_STATO_DI_GIOCO,
+    /**
+     * Il giocatore ha vinto un trofeo
+     */
+    INTERNO_TROFEO_ACQUISITO
 
 }

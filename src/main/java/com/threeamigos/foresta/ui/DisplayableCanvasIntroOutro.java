@@ -5,7 +5,9 @@ import com.threeamigos.foresta.eventi.interni.InternoErrore;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.LineaTemporale;
+import com.threeamigos.foresta.motore.RegistroTrofei;
 import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.motore.tipi.TipoTrofeo;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.GestorePunteggi;
@@ -50,16 +52,15 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	}
 
 	/**
-	 * Porta l'intro all'ultimo passo, la classifica: da lì il passo successivo
-	 * riparte dai loghi.
+	 * Porta l'intro alla classifica: da lì si passa ai trofei, poi si riparte dai loghi.
 	 */
 	void posizionaSuPunteggi() {
-		sequenza = lunghezzaIntro() - 1;
+		sequenza = Misc.STORIA.length + 1;
 	}
 
-	/** Loghi, una pagina per ogni paragrafo della storia, classifica. */
+	/** Loghi, una pagina per ogni paragrafo della storia, classifica, trofei. */
 	int lunghezzaIntro() {
-		return Misc.STORIA.length + 2;
+		return Misc.STORIA.length + 3;
 	}
 
 	void incrementaSequenza(int lunghezzaMassima) {
@@ -125,9 +126,12 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		} else if (sequenza <= Misc.STORIA.length) {
 			messaggio = Misc.STORIA[sequenza - 1];
 			scrivi(graphics, true);
-		} else {
-			// I punteggi chiudono la sequenza, dopo l'ultima pagina della storia
+		} else if (sequenza == Misc.STORIA.length + 1) {
+			// Dopo l'ultima pagina della storia, la classifica
 			hiscore(graphics);
+		} else {
+			// I trofei chiudono la sequenza
+			trofei(graphics);
 		}
 	}
 
@@ -228,6 +232,26 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 			drawString(graphics, punteggio.getNome().toLowerCase(), 50, coordinataY);
 			String valorePunteggio = String.valueOf(punteggio.getPunteggio());
 			drawString(graphics, valorePunteggio, width - 50 - getLarghezzaParola(valorePunteggio), coordinataY);
+		}
+	}
+
+	/**
+	 * L'elenco dei trofei, come quello dei mostri uccisi nelle statistiche: in bianco quelli
+	 * vinti, in grigio scuro quelli mancanti.
+	 */
+	void trofei(Graphics2D graphics) {
+		disegnaOmbraDelDrago(graphics);
+		int locXOffset = xOffset + 9;
+		int locYOffset = yOffset + 20;
+		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
+		Image doomdark = DoomdarkTextProducer.getImage("Trofei:", fontMedium);
+		graphics.drawImage(doomdark, locXOffset, locYOffset, null);
+		locYOffset += fontMedium.getHeight();
+		for (TipoTrofeo trofeo : TipoTrofeo.values()) {
+			DoomdarkColorModel.Color color = RegistroTrofei.isVinto(trofeo) ? DoomdarkColorModel.Color.WHITE : DoomdarkColorModel.Color.DARK_GRAY;
+			doomdark = DoomdarkTextProducer.getImage(trofeo.getNome(), fontMedium, color);
+			graphics.drawImage(doomdark, locXOffset, locYOffset, null);
+			locYOffset += fontMedium.getHeight();
 		}
 	}
 

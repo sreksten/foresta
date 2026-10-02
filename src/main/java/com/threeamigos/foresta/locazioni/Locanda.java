@@ -2,6 +2,7 @@ package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
+import com.threeamigos.foresta.eventi.interni.InternoPastoConsumatoInLocanda;
 import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
 import com.threeamigos.foresta.eventi.notifiche.NotificaNotizia;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
@@ -218,6 +219,7 @@ public class Locanda extends LocazioneBase {
 					personaggiCheHannoMangiato++;
 				}
 				gruppo.subMonete(Costanti.COSTO_PASTO * personaggiCheHannoMangiato);
+				BusEventi.pubblica(new InternoPastoConsumatoInLocanda());
 
 				if (evento == RICEVE_INFORMAZIONI) {
 					Informazioni info = new Informazioni();
@@ -237,6 +239,7 @@ public class Locanda extends LocazioneBase {
 			Personaggio p = gruppo.getPersonaggio(azione);
 			p.addSalute(Costanti.RECUPERO_SALUTE_DA_PASTO);
 			gruppo.subMonete(Costanti.COSTO_PASTO);
+			BusEventi.pubblica(new InternoPastoConsumatoInLocanda());
 			String nome = p.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
             String sb = nome + " si è rifocillat" + p.getLetteraFinaleAttributo() +
                     " in gran fretta, ed il gruppo lascia la locanda dietro pressione dell'oste.";
