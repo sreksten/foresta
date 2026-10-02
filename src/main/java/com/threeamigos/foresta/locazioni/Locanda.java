@@ -50,8 +50,12 @@ public class Locanda extends LocazioneBase {
 	 * CINGHIALE_VEGANO) e resta lo stesso indipendentemente dal nome pubblicato: serve
 	 * a collegare questa istanza di locanda alle sue notizie proprie (NOTIZIE_<IDENTIFICATIVO>
 	 * in locande.txt), non a essere mostrato al giocatore.
+	 * <p>
+	 * Il nome di una locanda nel bosco è il nome della casella (LocazioneMD.NOME), come per le altre locazioni con
+	 * un nome; quello di una locanda in città sta in LOCANDA_NOME_IN_CITTA, perché il nome della casella è quello
+	 * della città.
 	 */
-	public static final String LOCANDA_NOME = "LOCANDA_NOME";
+	private static final String LOCANDA_NOME_IN_CITTA = "LOCANDA_NOME_IN_CITTA";
 	public static final String LOCANDA_IDENTIFICATIVO = "LOCANDA_IDENTIFICATIVO";
 	public static final String LOCANDA_NOME_LOCANDIERE = "LOCANDA_NOME_LOCANDIERE";
 	public static final String LOCANDA_RECENSIONE = "LOCANDA_RECENSIONE";
@@ -112,7 +116,11 @@ public class Locanda extends LocazioneBase {
 	}
 
 	public static void impostaDatiLocanda(LocazioneMD modelloDati, ProduttoreDiTestiCasuale.DatiLocanda datiLocanda) {
-		modelloDati.aggiungiProprieta(LOCANDA_NOME, datiLocanda.getNome());
+		if (modelloDati.getClasse() == ClassiLocazione.LOCANDA) {
+			modelloDati.setNome(datiLocanda.getNome());
+		} else {
+			modelloDati.aggiungiProprieta(LOCANDA_NOME_IN_CITTA, datiLocanda.getNome());
+		}
 		modelloDati.aggiungiProprieta(LOCANDA_IDENTIFICATIVO, datiLocanda.getIdentificativo());
 		modelloDati.aggiungiProprieta(LOCANDA_NOME_LOCANDIERE, datiLocanda.getNomeLocandiere());
 		modelloDati.aggiungiProprieta(LOCANDA_RECENSIONE, datiLocanda.getRecensione());
@@ -128,8 +136,16 @@ public class Locanda extends LocazioneBase {
 		return getModelloDati().ottieniProprieta(LOCANDA_IDENTIFICATIVO);
 	}
 
+	@Override
 	public String getNome() {
-		return getModelloDati().ottieniProprieta(LOCANDA_NOME);
+		return getNome(getModelloDati());
+	}
+
+	/**
+	 * Il nome della locanda della casella, nel bosco o in una città.
+	 */
+	public static String getNome(LocazioneMD modelloDati) {
+		return modelloDati.getClasse() == ClassiLocazione.LOCANDA ? modelloDati.getNome() : modelloDati.ottieniProprieta(LOCANDA_NOME_IN_CITTA);
 	}
 
 	private String getNomeLocandiere() {
@@ -147,7 +163,7 @@ public class Locanda extends LocazioneBase {
 	 */
 	private String descrizioneLocanda(GruppoGiocatore g) {
 		LocazioneMD md = getModelloDati();
-		String nome = md.ottieniProprieta(LOCANDA_NOME);
+		String nome = getNome(md);
 		if (md.ottieniProprieta(LOCANDA_DIALOGO_LETTO) == null) {
 			md.aggiungiProprieta(LOCANDA_DIALOGO_LETTO, LocazioneMD.AFFERMATIVO);
 			String dialogo = md.ottieniProprieta(LOCANDA_DIALOGO);

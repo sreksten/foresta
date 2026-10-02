@@ -20,10 +20,6 @@ public class CastelloLich extends LocazioneUnica {
 		setOggetto(new Cofano(Costanti.COFANI_IN_CASTELLO_LICH));
 	}
 
-	@Override
-	public String getNome() {
-		return "il Castello dell'Ombra";
-	}
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {

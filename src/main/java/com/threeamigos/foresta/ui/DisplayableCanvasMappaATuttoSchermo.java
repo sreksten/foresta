@@ -4,6 +4,7 @@ import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Notizie;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.sfx.CloudManager;
 
 import java.awt.*;
@@ -26,6 +27,13 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 	private boolean stoTrascinando;
 	private int ultimaXMouse;
 	private int ultimaYMouse;
+	// Dove sta il mouse sopra la mappa, per il nome della casella (vedi disegnaNomeSottoIlMouse)
+	private boolean mouseSopra;
+	private int xMouse;
+	private int yMouse;
+
+	private static final int MARGINE_NOME = 4;
+	private static final int DISTANZA_NOME_DAL_MOUSE = 16;
 
 	DisplayableCanvasMappaATuttoSchermo(int width, int height) {
 		this.width = width;
@@ -156,6 +164,51 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 		if (altezzaMappa < height) {
 			notiziario.disegna(graphics, LARGHEZZA_SFERA_MAGICA_COPERTA, altezzaMappa);
 		}
+		disegnaNomeSottoIlMouse(graphics, altezzaMappa);
+	}
+
+	/**
+	 * Il nome della casella sotto il mouse, se il gruppo la conosce e ne ha uno (città, castelli, locande, templi;
+	 * vedi Foresta.getNomeDaMostrare), o null. Mai mentre si trascina la mappa o sopra il notiziario.
+	 */
+	String getNomeSottoIlMouse() {
+		if (!mouseSopra || stoTrascinando || yMouse >= altezzaMappa()) {
+			return null;
+		}
+		CoordinateMD casella = new CoordinateMD(Math.floorDiv(xMouse - mappaXOffset, LARGHEZZA_ICONA),
+				Math.floorDiv(yMouse - mappaYOffset, ALTEZZA_ICONA));
+		return Foresta.getNomeDaMostrare(casella);
+	}
+
+	/**
+	 * Il nome della casella sotto il mouse, su un riquadro scuro accanto al puntatore, tenuto dentro la mappa.
+	 */
+	private void disegnaNomeSottoIlMouse(Graphics2D graphics, int altezzaMappa) {
+		String nome = getNomeSottoIlMouse();
+		if (nome == null) {
+			return;
+		}
+		Image testo = DoomdarkTextProducer.getImage(Misc.inizialeMaiuscola(nome), DoomdarkFontMedium.getInstance(),
+				DoomdarkColorModel.Color.LIGHT_GRAY);
+		int larghezza = testo.getWidth(null) + MARGINE_NOME * 2;
+		int altezza = testo.getHeight(null) + MARGINE_NOME * 2;
+		int x = Math.max(0, Math.min(xMouse + DISTANZA_NOME_DAL_MOUSE, width - larghezza));
+		int y = yMouse + DISTANZA_NOME_DAL_MOUSE;
+		if (y + altezza > altezzaMappa) {
+			y = Math.max(0, yMouse - DISTANZA_NOME_DAL_MOUSE - altezza);
+		}
+		Color coloreOriginale = graphics.getColor();
+		graphics.setColor(new Color(0, 0, 0, 200));
+		graphics.fillRect(x, y, larghezza, altezza);
+		graphics.setColor(coloreOriginale);
+		graphics.drawImage(testo, x + MARGINE_NOME, y + MARGINE_NOME, null);
+	}
+
+	@Override
+	public void processaMovimento(int x, int y) {
+		mouseSopra = true;
+		xMouse = x;
+		yMouse = y;
 	}
 
 	@Override
@@ -179,6 +232,7 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 		// Uscendo dal riquadro (sulla barra icone o fuori dal canvas) il rilascio del tasto potrebbe
 		// arrivare a un'altra finestra o andare perso: si chiude il trascinamento come se fosse avvenuto qui
 		stoTrascinando = false;
+		mouseSopra = false;
 	}
 
 	@Override
@@ -187,6 +241,8 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 			// Sceso sul notiziario: si esce dalla zona della mappa, come per processaUscita
 			stoTrascinando = false;
 		}
+		xMouse = x;
+		yMouse = y;
 		if (stoTrascinando) {
 			// 1. Calcoliamo il delta (differenza rispetto alla posizione precedente)
 			int deltaX = x - ultimaXMouse;

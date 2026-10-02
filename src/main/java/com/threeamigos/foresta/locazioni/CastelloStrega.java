@@ -20,10 +20,6 @@ public class CastelloStrega extends LocazioneUnica {
 		setOggetto(new Cofano(Costanti.COFANI_IN_CASTELLO_STREGA));
 	}
 
-	@Override
-	public String getNome() {
-		return "il Maniero del Malefizio";
-	}
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {

@@ -18,10 +18,6 @@ public class CastelloDrago extends LocazioneUnica {
 		gng.aggiungiPersonaggio(new Drago(Statistiche.getLivello()));
 	}
 
-	@Override
-	public String getNome() {
-		return "il Castello della Morte Alata";
-	}
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {

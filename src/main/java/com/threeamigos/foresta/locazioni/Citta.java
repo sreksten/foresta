@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaIncantatore;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioCommerciante;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioFornitore;
@@ -59,11 +60,9 @@ public abstract class Citta extends LocazioneUnica {
 		return locanda;
 	}
 
-	public abstract String getNome();
-	
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {
-        BusEventi.pubblica(new NotificaTestoParagrafo(g.chiMaiuscolo() + " arriva al" + getNome() +
+        BusEventi.pubblica(new NotificaTestoParagrafo(g.chiMaiuscolo() + " arriva " + Misc.conPreposizione("a", getNome()) +
                 ". Qui è possibile cercare una locanda, il negozio di un alchimista, fare un salto dall'armaiolo o dal venditore di pergamene, o far incantare un artefatto prima di andare via."));
 		if (g.getPreziosi() > 0) {
 			g.vendePreziosi();

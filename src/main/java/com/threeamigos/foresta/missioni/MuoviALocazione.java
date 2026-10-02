@@ -21,7 +21,7 @@ public class MuoviALocazione extends MissioneBase {
 		aggiungiProprieta(COORDINATA_X, String.valueOf(coordinate.getX()));
 		aggiungiProprieta(COORDINATA_Y, String.valueOf(coordinate.getY()));
 		StringBuilder sb = new StringBuilder();
-		sb.append("Raggiungi ").append(classeLocazione.getIstanza().getNome());
+		sb.append("Raggiungi ").append(classeLocazione.getNomeProprio());
 		aggiungiProprieta(NOME, sb.toString());
 		sb = new StringBuilder();
 		sb.append("Raggiungi la locazione designata");

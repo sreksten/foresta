@@ -20,10 +20,6 @@ public class CastelloIdra extends LocazioneUnica {
 		setOggetto(new Cofano(Costanti.COFANI_IN_CASTELLO_IDRA));
 	}
 
-	@Override
-	public String getNome() {
-		return "la Rocca del Sangue";
-	}
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {

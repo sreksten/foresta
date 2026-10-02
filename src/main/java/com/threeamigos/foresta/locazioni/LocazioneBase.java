@@ -120,7 +120,8 @@ public abstract class LocazioneBase implements Locazione {
 
 	@Override
 	public String getNome() {
-		return md.getNome();
+		// Per una locazione unica il nome c'è sempre, anche su un'istanza senza la sua casella
+		return md.getNome() != null ? md.getNome() : getClasseLocazione().getNomeProprio();
 	}
 
 	/**

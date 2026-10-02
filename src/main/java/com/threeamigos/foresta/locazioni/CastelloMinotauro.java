@@ -20,10 +20,6 @@ public class CastelloMinotauro extends LocazioneUnica {
 		setOggetto(new Cofano(Costanti.COFANI_IN_CASTELLO_MINOTAURO));
 	}
 
-	@Override
-	public String getNome() {
-		return "la Torre della Paura";
-	}
 
 	@Override
 	public void descrivi(GruppoGiocatore g, GruppoAvversario gng) {

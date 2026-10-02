@@ -66,7 +66,7 @@ public class Informazioni implements Offerta {
 			ClassiLocazione classeLocazione = citta.get(indice);
 			CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(classeLocazione);
 			Foresta.setLocazioneConosciuta(coordinate);
-			sb.append(classeLocazione.getIstanza().getNome());
+			sb.append(classeLocazione.getNomeProprio());
 			sb.append(" si trova ").append(Misc.getDirezione(gruppo, coordinate));
 		}
 	}
@@ -87,7 +87,7 @@ public class Informazioni implements Offerta {
 			coordinate = Foresta.getCoordinateLocazioneUnica(classeLocazione);
 		}
 		Foresta.setLocazioneConosciuta(coordinate);
-		sb.append(classeLocazione.getIstanza().getNome());
+		sb.append(classeLocazione.getNomeProprio());
 		sb.append(" sorge ").append(Misc.getDirezione(gruppo, coordinate));
 	}
 

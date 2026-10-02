@@ -58,7 +58,7 @@ public class VisitaLocanda extends MissioneBase {
 		if (coordinate == null) {
 			return "locanda perduta";
 		}
-		nome = Foresta.getLocazioneMD(coordinate).ottieniProprieta(Locanda.LOCANDA_NOME);
+		nome = Locanda.getNome(Foresta.getLocazioneMD(coordinate));
 		if (nome != null) {
 			aggiungiProprieta(NOME_LOCANDA, nome);
 		}

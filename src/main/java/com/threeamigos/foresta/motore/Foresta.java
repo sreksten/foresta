@@ -5,6 +5,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Locazione;
+import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ForestaMD;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
@@ -113,6 +114,7 @@ public class Foresta {
 		}
 		Logger.log("Costruzione di " + classeLocazioneUnica + " in " + coordinate);
 		setLocazione(coordinate, classeLocazioneUnica);
+		getLocazioneMD(coordinate).setNome(classeLocazioneUnica.getNomeProprio());
 		getForestaMD().aggiungiLocazioneUnica(classeLocazioneUnica, coordinate);
 		if (conosciutaSuMappa) {
 			setLocazioneConosciuta(coordinate);
@@ -174,6 +176,22 @@ public class Foresta {
 
 	private static void setLocazione(CoordinateMD coordinate, ClassiLocazione classeLocazione) {
 		getForestaMD().impostaLocazione(coordinate, classeLocazione);
+		if (classeLocazione == ClassiLocazione.TEMPIO) {
+			// Un tempio ha il suo nome da quando nasce
+			Tempio.getNome(getLocazioneMD(coordinate));
+		}
+	}
+
+	/**
+	 * Il nome della casella da mostrare sulla mappa, se il gruppo la conosce e ha un nome (città, castelli, locande,
+	 * templi...); altrimenti null.
+	 */
+	public static String getNomeDaMostrare(CoordinateMD coordinate) {
+		if (coordinate.getX() < 0 || coordinate.getX() >= getDimensioneX() || coordinate.getY() < 0 || coordinate.getY() >= getDimensioneY()
+				|| !isLocazioneConosciuta(coordinate)) {
+			return null;
+		}
+		return getLocazioneMD(coordinate).getNome();
 	}
 	
 	/**

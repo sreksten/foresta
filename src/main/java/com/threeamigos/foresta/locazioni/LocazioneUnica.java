@@ -6,7 +6,7 @@ public abstract class LocazioneUnica extends LocazioneBase {
 	 * Le locazioni uniche sono le città e i castelli. Essendo uniche hanno
 	 * una loro ubicazione all'interno della foresta e a volte chiacchierando
 	 * un gruppo viene a sapere la direzione della locazione rispetto alla loro.
-	 * Il nome se lo cablano nella getNome() che l'interfaccia dichiara.
+	 * Il nome sta in ClassiLocazione.getNomeProprio e, costruita la locazione, nel nome della casella.
 	 */
 
 }

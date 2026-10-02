@@ -7,9 +7,5 @@ public class CittaRuuna extends Citta {
 		return ClassiLocazione.CITTA_RUUNA;
 	}
 
-	@Override
-	public String getNome() {
-		return "la città di Ruuna";
-	}
 
 }

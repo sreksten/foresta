@@ -7,9 +7,5 @@ public class CittaMalgaard extends Citta {
 		return ClassiLocazione.CITTA_MALGAARD;
 	}
 
-	@Override
-	public String getNome() {
-		return "la città di Malgaard";
-	}
 
 }

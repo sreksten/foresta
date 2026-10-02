@@ -22,11 +22,6 @@ public class RovineRecuperaLeDerrateAlimentari extends LocazioneUnica {
 	}
 
 	@Override
-	public String getNome() {
-		return "il covo dei Troll che hanno rubato il carico di derrate alimentari";
-	}	
-
-	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
 		if (!isCompleta()) {
 			for (int i = 0; i < 7; i++) {

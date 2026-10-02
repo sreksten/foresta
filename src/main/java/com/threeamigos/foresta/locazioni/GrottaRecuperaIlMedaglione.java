@@ -17,10 +17,6 @@ public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 		return ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE;
 	}
 
-	@Override
-	public String getNome() {
-		return "la grotta dei ladri del Medaglione";
-	}
 
 	@Override
 	public void crea(GruppoGiocatore g, GruppoAvversario gng) {
