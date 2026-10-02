@@ -1,16 +1,14 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
+import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
+/**
+ * A Fleena un uomo chiede di recuperare il medaglione che una banda di ladri gli ha rubato e nascosto in una grotta.
+ */
 public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements Missione {
-
-	private static final int AMMONTARE_RICOMPENSA = 20;
 
 	public RecuperaIlMedaglione() {
 		super(ClasseMissione.RECUPERA_IL_MEDAGLIONE);
@@ -31,40 +29,52 @@ public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements M
 	}
 
 	@Override
-	public void controllaPreLocazione() {
-		// Se la città della consegna e' stata distrutta, la missione non si puo' piu' concludere
-		if (isAttiva() && !isCompleta() && !isFallita() && LineaTemporale.isCittaDistrutta(ClassiLocazione.CITTA_FLEENA)) {
-			BusEventi.pubblica(new NotificaTestoParagrafo("Fleena è stata distrutta: il medaglione non potrà più essere restituito al suo proprietario."));
-			fallisciMissione();
-		}
-	}
-	
-	@Override
-	public void controllaInLocazione() {
-		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		if (gruppo.isInLocazioneUnica(ClassiLocazione.CITTA_FLEENA) &&
-				!LineaTemporale.isCittaDistrutta(ClassiLocazione.CITTA_FLEENA)) {
-			if (!isAttiva()) {
-				BusEventi.pubblica(new NotificaTestoParagrafo(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
-						" incontra un uomo che chiede aiuto per recuperare il suo prezioso medaglione rubato da " +
-						"una banda di ladri, che hanno il loro covo in una grotta. Offre " + AMMONTARE_RICOMPENSA + " monete in cambio."));
-				attivaMissione();
-				Foresta.costruisciLocazioneUnica(ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE, true);
-			} else if (!isCompleta() && isBersaglioRecuperato()) {
-				completaMissione();
-				BusEventi.pubblica(new NotificaTestoParagrafo("L'uomo è felicissimo di riavere il suo medaglione in cambio delle " + AMMONTARE_RICOMPENSA + " monete promesse."));
-				gruppo.addMonete(AMMONTARE_RICOMPENSA);
-			}
-		}
+	protected ClassiLocazione getCitta() {
+		return ClassiLocazione.CITTA_FLEENA;
 	}
 
 	@Override
-	public void controllaPostLocazione() {
-		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		if (gruppo.isInLocazioneUnica(ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE) &&
-				gruppo.getLocazioneCorrente().isCompleta() && !isBersaglioRecuperato()) {
-			BusEventi.pubblica(new NotificaTestoParagrafo("Il medaglione è stato recuperato. Puoi tornare in città per reclamare la ricompensa."));
-			setBersaglioRecuperato();
-		}
+	protected ClassiLocazione getCovo() {
+		return ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE;
+	}
+
+	@Override
+	protected ScenaInCitta scenaIncarico() {
+		return ScenaInCitta.conMandante()
+				.parlaIlMandante("Viandanti, vi prego, aiutatemi!")
+				.parlaIlMandante("Una banda di ladri mi ha rubato il medaglione di famiglia, l'unico ricordo di mia madre.")
+				.parlaIlCapo("Sai dove si nascondono?")
+				.parlaIlMandante("Hanno il covo in una grotta poco lontano da qui. Riportatemelo e vi darò " + AMMONTARE_RICOMPENSA + " monete.")
+				.parlaIlCapo("Consideralo già al tuo collo.");
+	}
+
+	@Override
+	protected ScenaInCitta scenaRingraziamento() {
+		return ScenaInCitta.conMandante()
+				.parlaIlMandante("Il mio medaglione! Siete tornati davvero!")
+				.parlaIlMandante("Ecco le " + AMMONTARE_RICOMPENSA + " monete promesse, e tutta la mia gratitudine.")
+				.parlaIlCapo("È stato un piacere. Più o meno.");
+	}
+
+	@Override
+	protected String testoAccettazione(GruppoGiocatore gruppo) {
+		return gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)
+				+ " promette di recuperare il medaglione rubato dai ladri, che hanno il loro covo in una grotta. Ricompensa: "
+				+ AMMONTARE_RICOMPENSA + " monete.";
+	}
+
+	@Override
+	protected String testoRecupero(GruppoGiocatore gruppo) {
+		return "Il medaglione è stato recuperato. Puoi tornare in città per reclamare la ricompensa.";
+	}
+
+	@Override
+	protected String testoRicompensa(GruppoGiocatore gruppo) {
+		return "L'uomo è felicissimo di riavere il suo medaglione in cambio delle " + AMMONTARE_RICOMPENSA + " monete promesse.";
+	}
+
+	@Override
+	protected String testoCittaDistrutta() {
+		return "Fleena è stata distrutta: il medaglione non potrà più essere restituito al suo proprietario.";
 	}
 }

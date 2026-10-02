@@ -10,7 +10,8 @@ import java.util.List;
 /**
  * La pagina di un intermezzo in un negozio o in una locanda: il negoziante è al suo posto,
  * il gruppo entra camminando verso il centro (capo in testa, gli altri in fila) e, appena
- * arrivato, cominciano le battute di negoziante e capo.
+ * arrivato, cominciano le battute di negoziante e capo. La usa anche {@link ScenaInCitta}, all'aperto e senza
+ * primo piano.
  */
 final class ScenaNegozio {
 
@@ -29,6 +30,9 @@ final class ScenaNegozio {
 	private final double secondoFineIngresso;
 	private boolean primaBattuta = true;
 
+	/**
+	 * @param primoPiano l'immagine sopra a tutta la scena (il bancone), o null se non ce n'è
+	 */
 	ScenaNegozio(String sfondo, String primoPiano, String idNegoziante, ElementoIntermezzo negoziante,
 				 double yPersonaggi, double xArrivoCapo, double ritardoFraPartenze) {
 		this.idNegoziante = idNegoziante;
@@ -61,7 +65,9 @@ final class ScenaNegozio {
 		secondoFineIngresso = (personaggiVivi.size() - 1) * ritardoFraPartenze + SECONDI_CAMMINATA + MARGINE_DOPO_CAMMINATA;
 
 		// Aggiunto per ultimo così resta sopra a tutto il resto della scena
-		pagina.conElemento(ElementoIntermezzo.di("foreground", ImmagineIntermezzo.risorsa(primoPiano), X_PRIMO_PIANO, Y_PRIMO_PIANO));
+		if (primoPiano != null) {
+			pagina.conElemento(ElementoIntermezzo.di("foreground", ImmagineIntermezzo.risorsa(primoPiano), X_PRIMO_PIANO, Y_PRIMO_PIANO));
+		}
 	}
 
 	ScenaNegozio parlaIlNegoziante(String testo) {

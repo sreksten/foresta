@@ -8,7 +8,7 @@
 | 2. `RegistroIntermezzi` interroga le missioni | fatto, vedi "Come è stato implementato" in fondo al punto 2 |
 | 3. `Passo` e `MissioneAPassi` | fatto, vedi "Come è stato implementato" in fondo al punto 3 |
 | 4. Domande al giocatore | fatto, vedi "Come è stato implementato" in fondo al punto 4 |
-| 5. Migrazione di Medaglione e Derrate | da fare |
+| 5. Migrazione di Medaglione e Derrate | fatto, vedi "Come è stato implementato" in fondo al punto 5 |
 | 6. Claim delle locazioni e `cerca` | da fare |
 | 7. `SconfiggiIlDrago` e claim precoce | da fare, dopo il 6 |
 
@@ -517,6 +517,48 @@ che chiama `fallisciMissione()` e poi delega a `super.controllaPreLocazione()`
 può essere rimossa se non ha più altri usi dopo la migrazione — verificare
 con una ricerca testuale prima di eliminarla.
 
+### Come è stato implementato (2026-10-02)
+
+Le due missioni hanno lo stesso scheletro, quindi `MissioneRecuperaBersaglio`
+non è stata tolta ma è diventata la base a passi comune (`extends
+MissioneAPassi`): le due classi concrete danno solo città, covo, scene e testi.
+Il flag `BERSAGLIO_RECUPERATO` non c'è più: `isBersaglioRecuperato()` guarda il
+passo corrente. Cinque passi invece di tre:
+
+1. `INCARICO` (`PRE_LOCAZIONE`, nella città non distrutta): intermezzo a
+   `INIZIO_LOCAZIONE`, il mandante che chiede aiuto.
+2. `ACCETTAZIONE` (`IN_LOCAZIONE`, nella città): riassunto nel riquadro del
+   testo, `attivaMissione()` e costruzione del covo.
+3. `RECUPERO` (`POST_LOCAZIONE`, nel covo completato): testo.
+4. `RITORNO` (`PRE_LOCAZIONE`, nella città): intermezzo a `INIZIO_LOCAZIONE`,
+   il ringraziamento.
+5. `RICOMPENSA` (`IN_LOCAZIONE`, nella città): 20 monete e testo, poi `FINE`,
+   che completa la missione.
+
+Perché due passi per ogni momento: `attivaMissione()` e `completaMissione()`
+pubblicano subito l'avviso globale ("NUOVA MISSIONE", "MISSIONE COMPLETATA"), e
+l'automa aspetta che gli avvisi finiscano prima di mostrare un intermezzo.
+Se l'avviso partisse insieme all'intermezzo comparirebbe prima della scena.
+Il passo con l'intermezzo è quindi a inizio locazione, che corre prima del
+checkpoint `INIZIO_LOCAZIONE`; quello con l'avviso è in locazione, che corre
+dopo gli intermezzi. La città si riconosce dalle coordinate del gruppo, quindi
+il passo a inizio locazione funziona anche se la locazione non è ancora
+costruita. La guardia "città distrutta" resta un override di
+`controllaPreLocazione()`.
+
+**Scene:** `intermezzi/ScenaInCitta` (pubblica) riusa `ScenaNegozio`, che ora
+accetta un primo piano assente: sfondo `locazioni/Citta.gif`, il mandante a
+destra (per ora l'immagine del locandiere), il gruppo che arriva in fila come
+nei negozi e poi le battute. Le coordinate degli intermezzi sono dello schermo
+e lo sfondo della città (390 × 320) è più piccolo di quelli dei negozi
+(500 × 348): mandante a x 0,62 e personaggi a y 0,6, nelle stesse proporzioni
+dello sfondo.
+
+**Test:** `ScenarioMissioniDiRecuperoTest` (3), su una partita vera: a Fleena e
+a Ruuna la pagina con le battute del mandante arriva prima dell'avviso di nuova
+missione, e il covo compare; al ritorno il ringraziamento resta in attesa a
+inizio locazione e monete e completamento arrivano solo dopo.
+
 ## 6. Locazioni assegnate dinamicamente: claim delle missioni e `cerca(ClassiLocazione)`
 
 ### Perché
@@ -748,6 +790,9 @@ due missioni di recupero.
 
 - `mvn -o compile -q` (workaround offline già in uso in questo progetto) per
   verificare che tutto compili dopo ogni fase.
+- Le scene sono state controllate disegnandone i fotogrammi con
+  `DisplayableCanvasIntermezzo`. Resta da vedere a mano, nel gioco, l'intero
+  percorso qui sotto.
 - Avvio manuale del gioco, missione Recupera il Medaglione: assumere
   l'incarico in città, notare la locazione grotta creata; combattere e
   vincere nella grotta, verificare che a fine locazione scatti l'intermezzo
