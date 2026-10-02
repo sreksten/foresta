@@ -62,8 +62,9 @@ public final class Passo {
 
 	private final MomentoControllo momento;
 	private final BooleanSupplier condizione;
-	private Runnable azione = () -> {
-	};
+	private final List<Runnable> azioni = new ArrayList<>();
+	private BooleanSupplier guardia;
+	private Supplier<String> testoFallimento;
 	private Supplier<String> prossimoPasso = () -> FINE;
 	private MomentoIntermezzo momentoIntermezzo;
 	private Supplier<List<PaginaIntermezzo>> pagine;
@@ -83,11 +84,35 @@ public final class Passo {
 	}
 
 	/**
-	 * Che cosa fare, una volta sola, quando il passo si conclude.
+	 * Che cosa fare, una volta sola, quando il passo si conclude. Si può chiamare più volte: le azioni si eseguono
+	 * nell'ordine in cui sono state aggiunte, così si può comporre un passo già pronto (un dialogo, una ricompensa)
+	 * con altro.
 	 */
 	public Passo esegui(Runnable azione) {
-		this.azione = Objects.requireNonNull(azione);
+		azioni.add(Objects.requireNonNull(azione));
 		return this;
+	}
+
+	/**
+	 * Finché questo è il passo corrente, se la condizione diventa vera la missione fallisce, scrivendo il testo
+	 * (vedi {@link MissioneAPassi}): per esempio "il villaggio da difendere è stato distrutto". Si controlla in
+	 * tutti e tre i controlli, prima di vedere se il passo è concluso.
+	 */
+	public Passo falliscoSe(BooleanSupplier condizione, Supplier<String> testo) {
+		this.guardia = Objects.requireNonNull(condizione);
+		this.testoFallimento = Objects.requireNonNull(testo);
+		return this;
+	}
+
+	/**
+	 * Se la guardia di {@link #falliscoSe} è scattata.
+	 */
+	boolean isFallito() {
+		return guardia != null && guardia.getAsBoolean();
+	}
+
+	String getTestoFallimento() {
+		return testoFallimento.get();
 	}
 
 	/**
@@ -189,7 +214,7 @@ public final class Passo {
 	}
 
 	void eseguiAzione() {
-		azione.run();
+		azioni.forEach(Runnable::run);
 	}
 
 	String getProssimoPasso() {

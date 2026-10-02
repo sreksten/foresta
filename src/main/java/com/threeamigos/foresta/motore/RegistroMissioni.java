@@ -4,6 +4,10 @@ import com.threeamigos.foresta.tools.ModalitaDiProva;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.ClasseMissione;
 import com.threeamigos.foresta.missioni.Missione;
+import com.threeamigos.foresta.missioni.MissioneAPassi;
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
+import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
 import com.threeamigos.foresta.missioni.SconfiggiIlDrago;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.MissioneMD;
@@ -85,6 +89,25 @@ public class RegistroMissioni {
 		elencoMissioniSecondarieCompletate.clear();
 		elencoMissioniPredefiniteFallite.clear();
 		elencoMissioniSecondarieFallite.clear();
+	}
+
+	/**
+	 * Si iscrive agli eventi di gioco che le missioni a passi contano (vedi MissioneAPassi.registraEvento): gli
+	 * avversari sconfitti e gli oggetti raccolti. Vanno a tutte le missioni non ancora finite.
+	 */
+	public static void registrati() {
+		BusEventi.iscriviti(InternoAvversarioSconfitto.class,
+				evento -> registraEvento(MissioneAPassi.eventoSconfitto(evento.getClasse()), 1));
+		BusEventi.iscriviti(InternoOggettoRaccolto.class,
+				evento -> registraEvento(MissioneAPassi.eventoRaccolto(evento.getClasse()), evento.getQuantita()));
+	}
+
+	private static void registraEvento(String evento, int quantita) {
+		for (Missione missione : getTutteLeMissioni()) {
+			if (missione instanceof MissioneAPassi && !missione.isCompleta() && !missione.isFallita()) {
+				((MissioneAPassi) missione).registraEvento(evento, quantita);
+			}
+		}
 	}
 
 	public static void reimposta() {

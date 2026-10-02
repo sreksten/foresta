@@ -44,6 +44,37 @@ nelle tabelle della sezione 3.
 | `FALLISCI_SE(condizione)` | Guardia che chiama `fallisciMissione()` quando una condizione avversa si avvera | Come oggi la guardia "città distrutta" di `RecuperaIlMedaglione` |
 | `GENERA_PARAMETRI()` | Passo "zero" tipico delle missioni generate da `GrammarBean`: fissa i valori variabili (mandante, bersaglio, quantità...) come proprietà | Vedi `gestione_missioni.md` §3, "Persistenza dei dati generati" |
 
+### Già implementati (2026-10-02)
+
+Metodi di `MissioneAPassi` che restituiscono un `Passo` da completare con
+`poi` (e, se serve, altre azioni con `esegui`, che ora si accumulano):
+
+| Sigla | Metodo | Note |
+|---|---|---|
+| `VAI(luogo)` | `vai(momento, coordinate)`, `vai(momento, locazioneUnica)` | |
+| `VAI_INIZIALE` | `tornaAlPuntoDiPartenza(momento)` | il punto di partenza è la casella in cui la missione si è attivata (`getPuntoDiPartenza()`) |
+| `DIALOGO(testo)` | `dialogo(momento, testo)` | |
+| `RICOMPENSA()` | `ricompensa(momento, monete, testo)` | per ora solo monete |
+| `ATTENDI(durata)` | `attendiOre(momento, ore)` | ore di gioco da quando il passo è diventato corrente |
+| `CONTA_FINCHE(contatore, N)` | `contaFinche(momento, contatore, N)` | con `incrementaContatore`/`getContatore` |
+| `VAGABONDA_FINCHE` + `COMBATTI` + `CONTA_FINCHE` | `sconfiggi(momento, classePersonaggio, N)` | avversari di quella classe sconfitti ovunque |
+| `VAGABONDA_FINCHE` + `RACCOGLI` + `CONTA_FINCHE` | `raccogli(momento, classiOggetto, N)` | oggetti di quella classe raccolti |
+| `FALLISCI_SE(condizione)` | `Passo.falliscoSe(condizione, testo)` | controllata in tutti e tre i controlli, prima del resto |
+| `CHIEDI_CONFERMA`, `CHIEDI_SCELTA`, `RAMO` | `Passo.chiediConferma`, `Passo.chiediScelta`, `poi(Supplier)` | dal punto 4 di gestione_missioni.md |
+| (cerca una locazione) | `cercaLocazione(momento, classe)` | dal punto 6 di gestione_missioni.md |
+
+Gli eventi di gioco (`InternoAvversarioSconfitto`, `InternoOggettoRaccolto`)
+li ascolta `RegistroMissioni.registrati()` (chiamato da `Main`) e li gira a
+tutte le missioni a passi non finite con `registraEvento`; si contano **per il
+passo corrente**, così un passo conta solo quel che succede da quando è
+corrente. Test: 4 nuovi in `MissioneAPassiTest`, `ScenarioPassiProntiTest`
+(una caccia ai goblin con gli eventi veri del bus).
+
+Mancano ancora: `COMBATTI(bersaglio)` con un nemico preciso in una locazione,
+`RACCOGLI` di oggetti di missione (un `OggettoMissione` generico, con un
+aggancio che lo metta nelle locazioni), `CONSEGNA`, `SORVEGLIA`, `SCORTA`,
+`EVITA_COMBATTIMENTO`, `COSTRUISCI`.
+
 ## 3. Mappatura `TipoMissione` → sequenza di passi
 
 I due esempi di partenza dell'utente, per riferimento:

@@ -2,6 +2,7 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.modellodati.MissioneMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import org.junit.jupiter.api.BeforeEach;
@@ -50,10 +51,7 @@ class MissioneAPassiTest {
         protected Passo costruisciPasso(String id) {
             switch (id) {
                 case "INCARICO":
-                    return passo(MomentoControllo.IN_LOCAZIONE, id).esegui(() -> {
-                        eseguiti.add(id);
-                        attivaMissione();
-                    }).poi("RECUPERO");
+                    return passo(MomentoControllo.IN_LOCAZIONE, id).esegui(this::attivaMissione).poi("RECUPERO");
                 case "RECUPERO":
                     return passo(MomentoControllo.POST_LOCAZIONE, id)
                             .conIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA, Collections::emptyList)
@@ -292,5 +290,96 @@ class MissioneAPassiTest {
                 .chiediScelta("Quale?", Collections.singletonList("A")));
         assertThrows(IllegalArgumentException.class, () -> Passo.quando(MomentoControllo.IN_LOCAZIONE, () -> true)
                 .chiediScelta("Quale?", Arrays.asList("A", "B", "C", "D", "E", "F")));
+    }
+
+    /**
+     * Una missione con i passi pronti: CONTA (contatore a 3) → CACCIA (2 eventi di prova) → ATTESA (48 ore) → fine,
+     * con una guardia che la fa fallire se il test la accende.
+     */
+    static class MissioneConPassiPronti extends MissioneAPassi {
+
+        boolean disastro;
+        final List<String> eseguiti = new ArrayList<>();
+
+        MissioneConPassiPronti() {
+            super(ClasseMissione.MISSIONE_DI_PROVA);
+        }
+
+        @Override
+        protected String passoIniziale() {
+            return "CONTA";
+        }
+
+        @Override
+        protected Passo costruisciPasso(String id) {
+            switch (id) {
+                case "CONTA":
+                    return contaFinche(MomentoControllo.IN_LOCAZIONE, "PROVE", 3)
+                            .esegui(() -> eseguiti.add("prima"))
+                            .esegui(() -> eseguiti.add("seconda"))
+                            .poi("CACCIA");
+                case "CACCIA":
+                    return Passo.quando(MomentoControllo.POST_LOCAZIONE, () -> getConteggioNelPassoCorrente("PROVA") >= 2)
+                            .falliscoSe(() -> disastro, () -> "È successo un disastro.")
+                            .poi("ATTESA");
+                default:
+                    return attendiOre(MomentoControllo.PRE_LOCAZIONE, 48).poi(Passo.FINE);
+            }
+        }
+    }
+
+    @Test
+    void ilContatoreConcludeIlPassoELeAzioniSiEseguonoInOrdine() {
+        MissioneConPassiPronti missione = new MissioneConPassiPronti();
+        missione.incrementaContatore("PROVE", 2);
+        missione.controllaInLocazione();
+        assertEquals("CONTA", missione.getPassoCorrente());
+        missione.incrementaContatore("PROVE", 1);
+        missione.controllaInLocazione();
+        assertEquals("CACCIA", missione.getPassoCorrente());
+        assertEquals(Arrays.asList("prima", "seconda"), missione.eseguiti);
+    }
+
+    @Test
+    void gliEventiSiContanoSoloPerIlPassoCorrente() {
+        MissioneConPassiPronti missione = new MissioneConPassiPronti();
+        // Durante CONTA l'evento non vale per CACCIA
+        missione.registraEvento("PROVA", 5);
+        missione.incrementaContatore("PROVE", 3);
+        missione.controllaInLocazione();
+        assertEquals(0, missione.getConteggioNelPassoCorrente("PROVA"));
+        missione.registraEvento("PROVA", 1);
+        missione.controllaPostLocazione();
+        assertEquals("CACCIA", missione.getPassoCorrente());
+        missione.registraEvento("PROVA", 1);
+        missione.controllaPostLocazione();
+        assertEquals("ATTESA", missione.getPassoCorrente());
+    }
+
+    @Test
+    void laGuardiaFaFallireLaMissioneInQualunqueControllo() {
+        MissioneConPassiPronti missione = new MissioneConPassiPronti();
+        missione.incrementaContatore("PROVE", 3);
+        missione.controllaInLocazione();
+        missione.disastro = true;
+        missione.controllaPreLocazione();
+        assertTrue(missione.isFallita());
+        assertEquals("CACCIA", missione.getPassoCorrente());
+    }
+
+    @Test
+    void lAttesaContaLeOreDaQuandoIlPassoECorrente() {
+        MissioneConPassiPronti missione = new MissioneConPassiPronti();
+        missione.incrementaContatore("PROVE", 3);
+        missione.controllaInLocazione();
+        missione.registraEvento("PROVA", 2);
+        missione.controllaPostLocazione();
+        assertEquals("ATTESA", missione.getPassoCorrente());
+        LineaTemporale.aggiungiOre(47);
+        missione.controllaPreLocazione();
+        assertFalse(missione.isCompleta(), "47 ore non bastano");
+        LineaTemporale.aggiungiOre(1);
+        missione.controllaPreLocazione();
+        assertTrue(missione.isCompleta());
     }
 }

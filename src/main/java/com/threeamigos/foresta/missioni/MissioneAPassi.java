@@ -1,9 +1,16 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
+import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.oggetti.ClassiOggetto;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,6 +51,10 @@ public abstract class MissioneAPassi extends MissioneBase {
 	private static final String INTERMEZZI_IN_ATTESA = "INTERMEZZI_IN_ATTESA";
 	private static final String INTERMEZZO_MOSTRATO = "INTERMEZZO_MOSTRATO_";
 	private static final String RISPOSTA = "RISPOSTA_";
+	private static final String PUNTO_DI_PARTENZA = "PUNTO_DI_PARTENZA";
+	private static final String INIZIO_PASSO = "INIZIO_";
+	private static final String EVENTO = "EVENTO_";
+	private static final String CONTATORE = "CONTATORE_";
 	/**
 	 * Separatore delle liste di id salvate come una proprietà: '§' e '|' sono già riservati dal salvataggio
 	 */
@@ -98,6 +109,12 @@ public abstract class MissioneAPassi extends MissioneBase {
 				return;
 			}
 			Passo passo = costruisciPasso(id);
+			// La guardia di falliscoSe vale in tutti i controlli, prima di tutto il resto
+			if (passo.isFallito()) {
+				BusEventi.pubblica(new NotificaTestoParagrafo(passo.getTestoFallimento()));
+				fallisciMissione();
+				return;
+			}
 			if (passo.getMomento() != momento) {
 				return;
 			}
@@ -119,6 +136,9 @@ public abstract class MissioneAPassi extends MissioneBase {
 			}
 			String prossimo = passo.getProssimoPasso();
 			impostaPassoCorrente(prossimo);
+			if (!Passo.FINE.equals(prossimo)) {
+				aggiungiProprieta(INIZIO_PASSO + prossimo, String.valueOf(oreDiGioco()));
+			}
 			if (Passo.FINE.equals(prossimo) && !isCompleta()) {
 				completaMissione();
 			}
@@ -127,6 +147,160 @@ public abstract class MissioneAPassi extends MissioneBase {
 
 	private void impostaPassoCorrente(String id) {
 		aggiungiProprieta(PASSO_CORRENTE, validaId(id));
+	}
+
+	/**
+	 * Come per ogni missione, e in più si ricorda dove si trova il gruppo: è il punto di partenza a cui tornare con
+	 * {@link #tornaAlPuntoDiPartenza}.
+	 */
+	@Override
+	public void attivaMissione() {
+		CoordinateMD coordinate = GruppoGiocatore.getIstanza().getCoordinate();
+		// Senza una casella (fuori da una partita) non c'è un punto di partenza da ricordare
+		if (ottieniProprieta(PUNTO_DI_PARTENZA) == null && coordinate != null) {
+			aggiungiProprieta(PUNTO_DI_PARTENZA, coordinate.getX() + SEPARATORE + coordinate.getY());
+		}
+		super.attivaMissione();
+	}
+
+	// --- Passi pronti (vedi passi_missioni.md, §2): ognuno restituisce un Passo da completare con poi
+
+	/**
+	 * VAI: si conclude quando il gruppo è in quella casella.
+	 */
+	protected final Passo vai(MomentoControllo momento, CoordinateMD destinazione) {
+		return Passo.quando(momento, () -> destinazione.equals(GruppoGiocatore.getIstanza().getCoordinate()));
+	}
+
+	/**
+	 * VAI: si conclude quando il gruppo è in quella locazione unica (una città, un castello…).
+	 */
+	protected final Passo vai(MomentoControllo momento, ClassiLocazione locazioneUnica) {
+		return Passo.quando(momento, () -> GruppoGiocatore.getIstanza().isInLocazioneUnica(locazioneUnica));
+	}
+
+	/**
+	 * VAI_INIZIALE: si conclude quando il gruppo torna nella casella in cui la missione si è attivata.
+	 */
+	protected final Passo tornaAlPuntoDiPartenza(MomentoControllo momento) {
+		return Passo.quando(momento, () -> {
+			CoordinateMD partenza = getPuntoDiPartenza();
+			return partenza != null && partenza.equals(GruppoGiocatore.getIstanza().getCoordinate());
+		});
+	}
+
+	/**
+	 * La casella in cui la missione si è attivata, o null se non si è ancora attivata.
+	 */
+	public final CoordinateMD getPuntoDiPartenza() {
+		String valore = ottieniProprieta(PUNTO_DI_PARTENZA);
+		if (valore == null) {
+			return null;
+		}
+		String[] parti = valore.split(SEPARATORE);
+		return new CoordinateMD(Integer.parseInt(parti[0]), Integer.parseInt(parti[1]));
+	}
+
+	/**
+	 * DIALOGO: scrive il testo nel riquadro del testo e passa oltre, al primo controllo del suo momento.
+	 */
+	protected final Passo dialogo(MomentoControllo momento, Supplier<String> testo) {
+		return Passo.quando(momento, () -> true).esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(testo.get())));
+	}
+
+	/**
+	 * RICOMPENSA: dà le monete al gruppo e scrive il testo. Spesso è l'ultimo passo, con {@code poi(Passo.FINE)}.
+	 */
+	protected final Passo ricompensa(MomentoControllo momento, int monete, Supplier<String> testo) {
+		return Passo.quando(momento, () -> true).esegui(() -> {
+			GruppoGiocatore.getIstanza().addMonete(monete);
+			BusEventi.pubblica(new NotificaTestoParagrafo(testo.get()));
+		});
+	}
+
+	/**
+	 * ATTENDI: si conclude quando sono passate almeno quelle ore di gioco da quando è diventato il passo corrente.
+	 */
+	protected final Passo attendiOre(MomentoControllo momento, int ore) {
+		return Passo.quando(momento, () -> oreDiGioco() - inizioDelPassoCorrente() >= ore);
+	}
+
+	/**
+	 * CONTA_FINCHE: si conclude quando il contatore della missione arriva a {@code obiettivo} (vedi
+	 * {@link #incrementaContatore}).
+	 */
+	protected final Passo contaFinche(MomentoControllo momento, String contatore, int obiettivo) {
+		return Passo.quando(momento, () -> getContatore(contatore) >= obiettivo);
+	}
+
+	protected final void incrementaContatore(String contatore, int quanto) {
+		aggiungiProprieta(CONTATORE + validaId(contatore), String.valueOf(getContatore(contatore) + quanto));
+	}
+
+	public final int getContatore(String contatore) {
+		String valore = ottieniProprieta(CONTATORE + contatore);
+		return valore == null ? 0 : Integer.parseInt(valore);
+	}
+
+	/**
+	 * VAGABONDA_FINCHE + COMBATTI + CONTA_FINCHE: si conclude quando il gruppo ha sconfitto {@code quanti} avversari
+	 * di quella classe, dovunque, da quando questo è il passo corrente.
+	 */
+	protected final Passo sconfiggi(MomentoControllo momento, ClassePersonaggio classe, int quanti) {
+		return Passo.quando(momento, () -> getConteggioNelPassoCorrente(eventoSconfitto(classe)) >= quanti);
+	}
+
+	/**
+	 * VAGABONDA_FINCHE + RACCOGLI + CONTA_FINCHE: si conclude quando il gruppo ha raccolto {@code quanti} oggetti di
+	 * quella classe, da quando questo è il passo corrente.
+	 */
+	protected final Passo raccogli(MomentoControllo momento, ClassiOggetto classe, int quanti) {
+		return Passo.quando(momento, () -> getConteggioNelPassoCorrente(eventoRaccolto(classe)) >= quanti);
+	}
+
+	// --- Eventi di gioco contati per il passo corrente (vedi RegistroMissioni.registrati)
+
+	public static String eventoSconfitto(ClassePersonaggio classe) {
+		return "SCONFITTO_" + classe.name();
+	}
+
+	public static String eventoRaccolto(ClassiOggetto classe) {
+		return "RACCOLTO_" + classe.name();
+	}
+
+	/**
+	 * Il gioco segnala alla missione un evento (un avversario sconfitto, un oggetto raccolto): si conta per il passo
+	 * corrente, così un passo conta solo quel che succede da quando è corrente.
+	 */
+	public final void registraEvento(String evento, int quantita) {
+		if (isCompleta() || isFallita() || Passo.FINE.equals(getPassoCorrente())) {
+			return;
+		}
+		String chiave = EVENTO + validaId(getPassoCorrente()) + "_" + validaId(evento);
+		aggiungiProprieta(chiave, String.valueOf(getConteggioNelPassoCorrente(evento) + quantita));
+	}
+
+	public final int getConteggioNelPassoCorrente(String evento) {
+		String valore = ottieniProprieta(EVENTO + getPassoCorrente() + "_" + evento);
+		return valore == null ? 0 : Integer.parseInt(valore);
+	}
+
+	/**
+	 * Quando il passo corrente è diventato tale, in ore di gioco. Il passo iniziale non ci è arrivato da un altro
+	 * passo: la prima volta che serve si prende l'ora di adesso.
+	 */
+	private long inizioDelPassoCorrente() {
+		String chiave = INIZIO_PASSO + getPassoCorrente();
+		String valore = ottieniProprieta(chiave);
+		if (valore == null) {
+			valore = String.valueOf(oreDiGioco());
+			aggiungiProprieta(chiave, valore);
+		}
+		return Long.parseLong(valore);
+	}
+
+	private static long oreDiGioco() {
+		return LineaTemporale.getGiorno() * 24L + LineaTemporale.getOra();
 	}
 
 	// --- Locazioni da procurarsi

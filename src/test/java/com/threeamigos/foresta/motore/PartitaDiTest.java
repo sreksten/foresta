@@ -72,6 +72,7 @@ final class PartitaDiTest implements AutoCloseable {
 		Statistiche.registrati();
 		RegistroTrofei.registrati();
 		RegistroArtefatti.registrati();
+		RegistroMissioni.registrati();
 
 		registratore.ascolta(InternoErrore.class, InternoException.class, InternoStatoDiGioco.class,
 				InternoAggiornamentoComandiDisponibili.class, RichiestaSelezioneDirezione.class,
