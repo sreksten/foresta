@@ -4,13 +4,17 @@ import com.threeamigos.foresta.tools.ModalitaDiProva;
 import com.threeamigos.foresta.intermezzi.ClasseIntermezzo;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
+import com.threeamigos.foresta.missioni.IntermezzoDiPasso;
+import com.threeamigos.foresta.missioni.Missione;
+import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.motore.modellodati.IntermezziMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 
 /**
  * Facciata su {@link IntermezziMD}: sceglie il prossimo intermezzo da mostrare e
- * ricorda quelli già scattati. Gli intermezzi esistenti sono quelli elencati in
- * {@link ClasseIntermezzo}.
+ * ricorda quelli già scattati. Gli intermezzi fissi sono quelli elencati in
+ * {@link ClasseIntermezzo}; in più ci sono quelli dei passi conclusi delle missioni a
+ * passi ({@link IntermezzoDiPasso}), che si ricordano nella missione stessa.
  */
 public class RegistroIntermezzi {
 
@@ -34,12 +38,16 @@ public class RegistroIntermezzi {
 	}
 
 	/**
-	 * Il primo intermezzo, nell'ordine di ClasseIntermezzo, non ancora scattato che deve
-	 * scattare nel momento indicato; null se nessuno. Quelli di ripiego solo se nel momento
-	 * non scatta, e non è già scattato, nessun altro.
+	 * Il primo intermezzo non ancora scattato che deve scattare nel momento indicato; null se
+	 * nessuno. Prima quelli fissi, nell'ordine di ClasseIntermezzo, poi quelli dei passi delle
+	 * missioni, nell'ordine in cui i passi si sono conclusi; quelli di ripiego solo se nel
+	 * momento non scatta, e non è già scattato, nessun altro.
 	 */
 	public static Intermezzo getProssimoIntermezzo(MomentoIntermezzo momento) {
 		Intermezzo intermezzo = getProssimoIntermezzo(momento, false);
+		if (intermezzo == null) {
+			intermezzo = getProssimoIntermezzoDiPasso(momento);
+		}
 		if (intermezzo == null && !scattatoNelMomento) {
 			intermezzo = getProssimoIntermezzo(momento, true);
 		}
@@ -60,8 +68,32 @@ public class RegistroIntermezzi {
 		return null;
 	}
 
+	/**
+	 * L'intermezzo del primo passo concluso, in qualunque missione (anche già completata: il suo
+	 * ultimo passo può avere un intermezzo), che aspetta di essere mostrato in quel momento.
+	 */
+	private static Intermezzo getProssimoIntermezzoDiPasso(MomentoIntermezzo momento) {
+		for (Missione missione : RegistroMissioni.getTutteLeMissioni()) {
+			if (missione instanceof MissioneAPassi) {
+				MissioneAPassi missioneAPassi = (MissioneAPassi) missione;
+				String idPasso = missioneAPassi.getPassoConIntermezzoInAttesa(momento);
+				if (idPasso != null) {
+					return new IntermezzoDiPasso(missioneAPassi, idPasso);
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Ricorda che l'intermezzo è scattato: quelli dei passi nella loro missione, gli altri in IntermezziMD.
+	 */
 	public static void segnaScattato(Intermezzo intermezzo) {
-		getIntermezziMD().aggiungiScattato(intermezzo.getId());
+		if (intermezzo instanceof IntermezzoDiPasso) {
+			((IntermezzoDiPasso) intermezzo).segnaMostrato();
+		} else {
+			getIntermezziMD().aggiungiScattato(intermezzo.getId());
+		}
 		scattatoNelMomento = true;
 	}
 }

@@ -146,6 +146,33 @@ public class RegistroMissioni {
 	}
 
 	/**
+	 * Ogni missione dell'albero, una volta sola e in qualunque stato (da attivare, attiva, completata, fallita),
+	 * sotto-missioni comprese: per chi cerca qualcosa che una missione ha lasciato in sospeso anche dopo essersi
+	 * conclusa, come l'intermezzo del suo ultimo passo (vedi RegistroIntermezzi).
+	 */
+	public static List<Missione> getTutteLeMissioni() {
+		List<Missione> radici = new ArrayList<>(getMissioniNonCompletate());
+		radici.addAll(elencoMissioniPredefiniteCompletate.values());
+		radici.addAll(elencoMissioniSecondarieCompletate);
+		radici.addAll(getMissioniFallite());
+		Set<Missione> viste = Collections.newSetFromMap(new IdentityHashMap<>());
+		List<Missione> missioni = new ArrayList<>();
+		for (Missione radice : radici) {
+			aggiungiConSottoMissioni(radice, viste, missioni);
+		}
+		return missioni;
+	}
+
+	private static void aggiungiConSottoMissioni(Missione missione, Set<Missione> viste, List<Missione> missioni) {
+		if (viste.add(missione)) {
+			missioni.add(missione);
+			for (Missione missioneSecondaria : missione.getMissioniSecondarie()) {
+				aggiungiConSottoMissioni(missioneSecondaria, viste, missioni);
+			}
+		}
+	}
+
+	/**
 	 * Riporta solo le missioni attive.
 	 */
 	public static List<Missione> getMissioniAttive() {

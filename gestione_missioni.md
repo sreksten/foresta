@@ -5,7 +5,7 @@
 | Punto | Stato |
 | --- | --- |
 | 1. Checkpoint `LOCAZIONE_COMPLETATA` | fatto (`MomentoIntermezzo.LOCAZIONE_COMPLETATA`, `Stato.FINE_LOCAZIONE_2`) |
-| 2. `RegistroIntermezzi` interroga le missioni | da fare |
+| 2. `RegistroIntermezzi` interroga le missioni | fatto, vedi "Come è stato implementato" in fondo al punto 2 |
 | 3. `Passo` e `MissioneAPassi` | fatto, vedi "Come è stato implementato" in fondo al punto 3 |
 | 4. Domande al giocatore | da fare |
 | 5. Migrazione di Medaglione e Derrate | da fare |
@@ -111,6 +111,34 @@ un'istanza del nuovo adattatore `IntermezzoDiPasso` (punto 4), la marcatura
 va delegata alla missione (chiama un metodo che aggiorna la sua proprietà
 MD), **non** scritta in `IntermezziMD`. Altrimenti comportamento invariato
 (scrive in `IntermezziMD` come oggi).
+
+### Come è stato implementato (2026-10-02)
+
+- **Ordine:** `getProssimoIntermezzo(momento)` cerca prima gli intermezzi
+  fissi non di ripiego, poi quelli dei passi, poi quelli fissi di ripiego. Un
+  intermezzo di passo conta come scattato nel momento, quindi esclude i
+  ripieghi come gli altri.
+- **Dove cerca:** in `RegistroMissioni.getTutteLeMissioni()`, un helper nuovo
+  che restituisce ogni missione dell'albero una volta sola e **in qualunque
+  stato**, completate e fallite comprese. Il motivo: l'ultimo passo di una
+  missione può avere un intermezzo (un ringraziamento) e insieme completarla,
+  e `getMissioniNonCompletate()` lo perderebbe. Fra le missioni vale l'ordine
+  dell'albero; dentro una missione, l'ordine in cui i passi si sono conclusi.
+- **`IntermezzoDiPasso`** sta in `missioni/` (chiama `costruisciPasso`, che è
+  protetto). L'id serve solo ai log (`<id missione>/<id passo>`). Il registro
+  lo crea al volo; `segnaScattato` lo riconosce e chiama
+  `segnaIntermezzoPassoMostrato` sulla missione invece di scrivere in
+  `IntermezziMD`.
+- **Quando si vede:** un passo `POST_LOCAZIONE` con intermezzo
+  `LOCAZIONE_COMPLETATA` si vede nello stesso turno, perché
+  `controllaPostLocazione` corre prima del checkpoint. Un passo `IN_LOCAZIONE`
+  con intermezzo `INIZIO_LOCAZIONE` si vede invece all'ingresso nella
+  locazione successiva, perché quel checkpoint viene prima dei controlli in
+  locazione.
+- **Test:** `RegistroIntermezziPassiTest` (2), su una partita vera: un
+  intermezzo di passo scatta solo nel suo momento e una volta sola, il già
+  mostrato sta nella missione e non in `IntermezziMD`, e l'ultimo passo di una
+  missione completata mostra comunque il suo intermezzo.
 
 ## 3. `Passo` e `MissioneAPassi`: un automa a passi, non una lista lineare
 
