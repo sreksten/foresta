@@ -54,6 +54,8 @@ import java.util.function.Supplier;
 //  - protezioni: Veste;
 //  - accessori: Talismano, Ninnolo;
 //  - ingredienti magici (oggi usano l'icona della pergamena): Pergamena, Gemma, Monile, Gingillo, Sigillo.
+// TODO: il Viandante (ClassePersonaggio.VIANDANTE, chi si fa scortare dalle missioni) usa le immagini del bardo:
+//  servono personaggi/Viandante.gif e icone/Viandante-nobordo-piccolo.gif (ClassePersonaggioImmagine).
 // TODO: img/oggetti/OggettoMissione.gif è un sacchetto provvisorio, da ridisegnare (oggetti delle missioni, per ora la
 //  mandragola dell'alchimista; in futuro magari un'immagine per ogni oggetto).
 
@@ -665,6 +667,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		RegistroMissioni.getOggettoMissione(gruppo.getCoordinate(), gruppo.getClasseLocazioneCorrente(),
 						Foresta.isLocazioneVisitata(gruppo.getCoordinate()))
 				.ifPresent(locazioneCorrente::collocaOggettoMissione);
+		// E gli avversari che una missione vuole qui, al posto di quelli della locazione
+		RegistroMissioni.getIncontroMissione(gruppo.getCoordinate()).ifPresent(avversari -> {
+			gruppoAvversario.rimuoviPersonaggi();
+			avversari.forEach(gruppoAvversario::aggiungiPersonaggio);
+		});
 		BusEventi.pubblica(new InternoPreparazioneLocazione());
 		BusEventi.pubblica(new NotificaTestoParagrafo(LineaTemporale.getDescrizioneOraDelGiorno()));
 		locazioneCorrente.descrivi(gruppo, gruppoAvversario);

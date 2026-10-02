@@ -6,6 +6,7 @@ import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
+import com.threeamigos.foresta.tools.Misc;
 
 /**
  * In città l'alchimista chiede {@link #RADICI} radici di mandragola: crescono nelle radure e nei boschi, dove la
@@ -56,6 +57,16 @@ public class LAlchimistaELaMandragola extends IncaricoInCitta {
 				.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Le radici di mandragola ci sono tutte: l'alchimista di "
 						+ getNomeCitta() + " le aspetta.")))
 				.poi(RITORNO);
+	}
+
+	@Override
+	protected OggettiDaRaccogliere getOggettiDaConsegnare() {
+		return RADICI_DI_MANDRAGOLA;
+	}
+
+	@Override
+	protected String testoConsegna() {
+		return "Le " + Misc.getCardinaleF(RADICI) + " radici di mandragola passano all'alchimista, che le annusa soddisfatto.";
 	}
 
 	@Override

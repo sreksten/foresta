@@ -76,7 +76,8 @@ public class LanciatoreDeiDadi {
         switch (classePersonaggio) {
             case ARPIA: return ARPIA;
             case BARDO:
-            case CANTASTORIE: return BARDO;
+            case CANTASTORIE:
+            case VIANDANTE: return BARDO;
             case CENTAURO: return CENTAURO;
             case CHIMERA: return CHIMERA;
             case CHIMERA_DRAGO: return CHIMERADRAGO;
@@ -130,6 +131,7 @@ public class LanciatoreDeiDadi {
                 return 135 + (livelloModificato * 4);
             case BARDO:
             case CANTASTORIE:
+            case VIANDANTE:
             case ELFA:
             case ELFO:
             case GUERRIERA:

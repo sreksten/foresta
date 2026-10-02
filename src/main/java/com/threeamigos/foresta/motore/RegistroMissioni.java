@@ -14,6 +14,7 @@ import com.threeamigos.foresta.motore.modellodati.MissioneMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.RegistroMissioniMD;
 import com.threeamigos.foresta.oggetti.Oggetto;
+import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.*;
 
@@ -40,7 +41,9 @@ public class RegistroMissioni {
 		NESSUN_BOCCALE_LASCIATO_INDIETRO(ClasseMissione.NESSUN_BOCCALE_LASCIATO_INDIETRO),
 		DISTURBATORE_DELLA_QUIETE_PUBBLICA(ClasseMissione.DISTURBATORE_DELLA_QUIETE_PUBBLICA),
 		CACCIA_AI_GOBLIN(ClasseMissione.CACCIA_AI_GOBLIN),
-		L_ALCHIMISTA_E_LA_MANDRAGOLA(ClasseMissione.L_ALCHIMISTA_E_LA_MANDRAGOLA);
+		L_ALCHIMISTA_E_LA_MANDRAGOLA(ClasseMissione.L_ALCHIMISTA_E_LA_MANDRAGOLA),
+		LA_TAGLIA_SU_SGRANF(ClasseMissione.LA_TAGLIA_SU_SGRANF),
+		IL_PELLEGRINO(ClasseMissione.IL_PELLEGRINO);
 
 		TipoMissionePredefinita(ClasseMissione classeMissione) {
 			this(classeMissione, false);
@@ -194,6 +197,22 @@ public class RegistroMissioni {
 				Optional<Oggetto> oggetto = missione.getOggettoInLocazione(coordinate, classe, visitata);
 				if (oggetto.isPresent()) {
 					return oggetto;
+				}
+			}
+		}
+		return Optional.empty();
+	}
+
+	/**
+	 * Gli avversari che una missione in corso vuole nella locazione in cui il gruppo sta entrando (vedi
+	 * Missione.getIncontroInLocazione), se ce ne sono: vince la prima missione che risponde.
+	 */
+	public static Optional<List<Personaggio>> getIncontroMissione(CoordinateMD coordinate) {
+		for (Missione missione : getTutteLeMissioni()) {
+			if (missione.isAttiva() && !missione.isCompleta() && !missione.isFallita()) {
+				Optional<List<Personaggio>> avversari = missione.getIncontroInLocazione(coordinate);
+				if (avversari.isPresent()) {
+					return avversari;
 				}
 			}
 		}

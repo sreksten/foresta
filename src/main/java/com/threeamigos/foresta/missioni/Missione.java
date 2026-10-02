@@ -4,6 +4,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.MissioneMD;
 import com.threeamigos.foresta.oggetti.Oggetto;
+import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.List;
 import java.util.Optional;
@@ -67,6 +68,15 @@ public interface Missione {
 	 * @param visitata se il gruppo aveva già completato la locazione in una visita precedente
 	 */
 	default Optional<Oggetto> getOggettoInLocazione(CoordinateMD coordinate, ClassiLocazione classe, boolean visitata) {
+		return Optional.empty();
+	}
+
+	/**
+	 * Gli avversari che la missione vuole nella locazione in cui il gruppo sta entrando, al posto di quelli che la
+	 * locazione avrebbe avuto (vedi RegistroMissioni.getIncontroMissione): per esempio la banda di un brigante su
+	 * cui c'è una taglia. Vuoto se non ne vuole.
+	 */
+	default Optional<List<Personaggio>> getIncontroInLocazione(CoordinateMD coordinate) {
 		return Optional.empty();
 	}
 

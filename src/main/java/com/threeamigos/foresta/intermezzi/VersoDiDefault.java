@@ -24,6 +24,8 @@ public final class VersoDiDefault {
 		VERSI.put(ClassePersonaggio.GUERRIERO, Verso.SINISTRA);
 		VERSI.put(ClassePersonaggio.LADRO, Verso.SINISTRA);
 		VERSI.put(ClassePersonaggio.BARDO, Verso.SINISTRA);
+		// Ha l'immagine del bardo
+		VERSI.put(ClassePersonaggio.VIANDANTE, Verso.SINISTRA);
 		VERSI.put(ClassePersonaggio.ELFA, Verso.DESTRA);
 		VERSI.put(ClassePersonaggio.GUERRIERA, Verso.DESTRA);
 		VERSI.put(ClassePersonaggio.CANTASTORIE, Verso.DESTRA);

@@ -44,7 +44,9 @@ public enum ClassePersonaggioImmagine {
     STREGA(ClassePersonaggio.STREGA, "personaggi/Strega.gif"),
     TITANO(ClassePersonaggio.TITANO, "personaggi/Titano.gif", "icone/Titano-nobordo-piccolo.gif"),
     TROLL(ClassePersonaggio.TROLL, "personaggi/Troll.gif"),
-    VIVERNA(ClassePersonaggio.VIVERNA, "personaggi/Viverna.gif");
+    VIVERNA(ClassePersonaggio.VIVERNA, "personaggi/Viverna.gif"),
+    // Per ora ha l'immagine del bardo (vedi il TODO in Automa)
+    VIANDANTE(ClassePersonaggio.VIANDANTE, "personaggi/Bardo.gif", "icone/Bardo-nobordo-piccolo.gif");
 
     private final ClassePersonaggio classePersonaggio;
     private final BufferedImage immagine;

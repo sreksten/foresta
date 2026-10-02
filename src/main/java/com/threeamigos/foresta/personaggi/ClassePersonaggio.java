@@ -39,7 +39,10 @@ public enum ClassePersonaggio {
 	LADRO(Ladro::new),
 	MAGA(Maga::new),
 	MAGO(Mago::new),
-	OMBRAFIAMMA(OmbraFiamma::new);
+	OMBRAFIAMMA(OmbraFiamma::new),
+
+	// Solo per le missioni di scorta: non si incontra e non si recluta
+	VIANDANTE(Viandante::new);
 
 	private final Function<Integer, Personaggio> supplier;
 	private int quantitaMassima = 1;

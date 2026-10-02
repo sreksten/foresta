@@ -106,8 +106,40 @@ la missione della città, né quando si torna a concluderne una. Fra due incaric
 pronti nella stessa visita parte il primo controllato. Test:
 `ScenarioIncarichiInCittaTest`.
 
-Mancano ancora: `COMBATTI(bersaglio)` con un nemico preciso in una locazione,
-`CONSEGNA`, `SORVEGLIA`, `SCORTA`, `EVITA_COMBATTIMENTO`, `COSTRUISCI`.
+### Combattimenti, scorte e consegne (2026-10-02)
+
+- **`COMBATTI(bersaglio)`**: `combatti(dove, IncontroDiMissione)`. Finché è il
+  passo corrente, nella locazione in quelle coordinate ci sono gli avversari
+  dell'incontro al posto di quelli che ci sarebbero stati (aggancio in `Automa`
+  dopo `crea`, come per gli oggetti: `RegistroMissioni.getIncontroMissione`).
+  `IncontroDiMissione.di(HOBGOBLIN, 3).conCapo("Sgranf")`: il capo ha un nome
+  proprio e un livello in più. Si conclude a fine locazione, lì, quando il
+  gruppo ne ha sconfitti quanti ne erano (contano anche quelli della stessa
+  classe sconfitti altrove nel frattempo).
+- **`SCORTA`**: `prendiInScorta(momento, quando, nome)` fa unire al gruppo un
+  `Viandante` (nuova `ClassePersonaggio.VIANDANTE`, con le caratteristiche e per
+  ora l'immagine del bardo; non si incontra e non si recluta), e aspetta se il
+  gruppo è pieno; `scorta(momento, destinazione, testoSeMuore)` si conclude
+  quando il gruppo arriva a destinazione con lo scortato vivo, che allora lascia
+  il gruppo restituendo all'inventario quel che gli si era dato. Se muore, la
+  missione fallisce; quando una missione fallisce, lo scortato lascia comunque
+  il gruppo.
+- **`CONSEGNA`**: `consegna(momento, dove, oggetti, testo)`. Gli oggetti di
+  missione non stanno nell'inventario: il gruppo li ha se la missione li ha
+  contati, e consegnandoli escono dal conteggio. `IncaricoInCitta` la fa al
+  ritorno, prima della ricompensa, se `getOggettiDaConsegnare()` non è null
+  (la mandragola).
+- `Passo.falliscoSe` ora si può chiamare più volte: vale la prima guardia che
+  scatta (la scorta ne ha una sua, `IncaricoInCitta` aggiunge quella della
+  città distrutta).
+
+Due incarichi in città nuovi li usano: `LaTagliaSuSgranf` (rivendica un bosco,
+lo segna sulla mappa e ci mette la banda di Sgranf; 30 monete) e `IlPellegrino`
+(rivendica un tempio, Anselmo si unisce al gruppo e lo lascia al tempio; 25
+monete al ritorno dalla sorella). Test: `ScenarioCombattiScortaConsegnaTest`.
+
+Mancano ancora: `SORVEGLIA`, `EVITA_COMBATTIMENTO`, `COSTRUISCI`,
+`GENERA_PARAMETRI`.
 
 ## 3. Mappatura `TipoMissione` → sequenza di passi
 

@@ -12,8 +12,13 @@ import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
+import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
+import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.personaggi.Viandante;
+import com.threeamigos.foresta.motore.Costanti;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -21,6 +26,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
 
 /**
@@ -59,6 +65,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	private static final String INIZIO_PASSO = "INIZIO_";
 	private static final String EVENTO = "EVENTO_";
 	private static final String CONTATORE = "CONTATORE_";
+	private static final String SCORTATO = "SCORTATO";
 	/**
 	 * Separatore delle liste di id salvate come una proprietà: '§' e '|' sono già riservati dal salvataggio
 	 */
@@ -299,6 +306,115 @@ public abstract class MissioneAPassi extends MissioneBase {
 		}
 		int quanti = Math.min(Dado.tiraAncheAUnaFaccia(oggetti.getMassimoPerLocazione()), mancanti);
 		return Optional.of(new OggettoMissione(getId(), oggetti.getChiave(), oggetti.getNome(), quanti));
+	}
+
+	/**
+	 * CONSEGNA: quando la condizione è vera (per esempio il gruppo è dal mandante) e il gruppo ha gli oggetti, li
+	 * consegna: escono dal conteggio della missione e si scrive il testo. Gli oggetti di missione non stanno
+	 * nell'inventario: il gruppo li ha se la missione li ha contati (vedi {@link #raccogli(MomentoControllo,
+	 * OggettiDaRaccogliere)}).
+	 */
+	protected final Passo consegna(MomentoControllo momento, BooleanSupplier dove, OggettiDaRaccogliere oggetti,
+								   Supplier<String> testo) {
+		return Passo.quando(momento, () -> dove.getAsBoolean() && getContatore(oggetti.getChiave()) >= oggetti.getQuantita())
+				.esegui(() -> {
+					incrementaContatore(oggetti.getChiave(), -oggetti.getQuantita());
+					BusEventi.pubblica(new NotificaTestoParagrafo(testo.get()));
+				});
+	}
+
+	// --- Combattimenti e scorte
+
+	/**
+	 * COMBATTI(bersaglio): finché è il passo corrente, nella locazione in quelle coordinate ci sono gli avversari
+	 * dell'incontro, al posto di quelli che ci sarebbero stati; si conclude a fine locazione, lì, quando il gruppo
+	 * ne ha sconfitti quanti ne erano. Gli avversari della stessa classe sconfitti altrove nel frattempo contano
+	 * anche loro: per una banda in un covo va bene così.
+	 */
+	protected final Passo combatti(Supplier<CoordinateMD> dove, IncontroDiMissione incontro) {
+		return Passo.quando(MomentoControllo.POST_LOCAZIONE,
+						() -> dove.get() != null && dove.get().equals(GruppoGiocatore.getIstanza().getCoordinate())
+								&& getConteggioNelPassoCorrente(eventoSconfitto(incontro.getClasse())) >= incontro.getNumero())
+				.affronta(dove, incontro);
+	}
+
+	@Override
+	public Optional<List<Personaggio>> getIncontroInLocazione(CoordinateMD coordinate) {
+		if (!isAttiva() || isCompleta() || isFallita() || Passo.FINE.equals(getPassoCorrente())) {
+			return Optional.empty();
+		}
+		IncontroDiMissione incontro = costruisciPasso(getPassoCorrente()).getIncontroIn(coordinate);
+		return incontro == null ? Optional.empty() : Optional.of(incontro.crea());
+	}
+
+	/**
+	 * L'inizio di una SCORTA: quando la condizione è vera e nel gruppo c'è posto, un {@link Viandante} con quel nome
+	 * si unisce al gruppo; la missione se lo ricorda e lo si ritrova con {@link #getScortato()}. Finché il gruppo è
+	 * pieno, il passo aspetta.
+	 */
+	protected final Passo prendiInScorta(MomentoControllo momento, BooleanSupplier quando, String nome) {
+		return Passo.quando(momento, () -> quando.getAsBoolean() && haPostoNelGruppo())
+				.esegui(() -> {
+					Viandante viandante = new Viandante(nome, EquipaggiamentoIniziale.livelloCasualeDalMondo());
+					GruppoGiocatore.getIstanza().aggiungiPersonaggio(viandante);
+					aggiungiProprieta(SCORTATO, viandante.getModelloDati().getUuid());
+				});
+	}
+
+	/**
+	 * SCORTA: si conclude quando il gruppo arriva in quelle coordinate con lo scortato vivo, che allora lascia il
+	 * gruppo. Se lo scortato muore (o non è più nel gruppo) la missione fallisce, con il testo.
+	 */
+	protected final Passo scorta(MomentoControllo momento, Supplier<CoordinateMD> destinazione, Supplier<String> testoSeMuore) {
+		return Passo.quando(momento, () -> destinazione.get() != null
+						&& destinazione.get().equals(GruppoGiocatore.getIstanza().getCoordinate()) && isScortatoVivo())
+				.esegui(this::congedaScortato)
+				.falliscoSe(() -> !isScortatoVivo(), testoSeMuore);
+	}
+
+	public static boolean haPostoNelGruppo() {
+		return GruppoGiocatore.getIstanza().getNumeroPersonaggi() < Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE;
+	}
+
+	/**
+	 * Chi la missione sta scortando, se è nel gruppo (anche morto).
+	 */
+	public final Optional<Personaggio> getScortato() {
+		String uuid = ottieniProprieta(SCORTATO);
+		if (uuid == null) {
+			return Optional.empty();
+		}
+		return GruppoGiocatore.getIstanza().getPersonaggi().stream()
+				.filter(p -> uuid.equals(p.getModelloDati().getUuid()))
+				.findFirst();
+	}
+
+	private boolean isScortatoVivo() {
+		return getScortato().filter(Personaggio::isVivo).isPresent();
+	}
+
+	/**
+	 * Lo scortato lascia il gruppo; quel che il gruppo gli aveva dato da portare torna nell'inventario del gruppo.
+	 */
+	private void congedaScortato() {
+		getScortato().ifPresent(scortato -> {
+			GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
+			for (Artefatto artefatto : scortato.getInventario()) {
+				scortato.removeArtefatto(artefatto);
+				gruppo.addArtefatto(artefatto);
+			}
+			gruppo.rimuoviPersonaggio(scortato);
+		});
+		rimuoviProprieta(SCORTATO);
+	}
+
+	/**
+	 * Come per ogni missione, e chi la missione stava scortando lascia il gruppo, vivo o morto.
+	 */
+	@Override
+	public void fallisciMissione() {
+		congedaScortato();
+		super.fallisciMissione();
 	}
 
 	// --- Eventi di gioco contati per il passo corrente (vedi RegistroMissioni.registrati)

@@ -1,0 +1,109 @@
+package com.threeamigos.foresta.missioni;
+
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
+import com.threeamigos.foresta.intermezzi.ScenaInCitta;
+import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.motore.RegistroMissioni;
+import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+
+/**
+ * In città c'è una taglia su Sgranf, il capo di una banda di hobgoblin che si nasconde in un bosco: la missione
+ * rivendica il bosco, lo segna sulla mappa e ci mette la banda (vedi {@link MissioneAPassi#combatti}). Sconfitta
+ * la banda, si torna a riscuotere (vedi IncaricoInCitta).
+ */
+public class LaTagliaSuSgranf extends IncaricoInCitta {
+
+	public static final IncontroDiMissione BANDA = IncontroDiMissione.di(ClassePersonaggio.HOBGOBLIN, 3).conCapo("Sgranf");
+	private static final int RICOMPENSA = 30;
+	private static final String COVO = "COVO";
+	private static final String CACCIA = "CACCIA";
+
+	public LaTagliaSuSgranf() {
+		super(ClasseMissione.LA_TAGLIA_SU_SGRANF);
+	}
+
+	@Override
+	public String getNome() {
+		return "La taglia su Sgranf";
+	}
+
+	@Override
+	public String getDescrizione() {
+		if (RITORNO.equals(getPassoCorrente())) {
+			return "Sgranf non darà più fastidio: torna a " + getNomeCitta() + " a riscuotere la taglia.";
+		}
+		return "A " + getNomeCitta() + " c'è una taglia su Sgranf, il capo di una banda di hobgoblin che si nasconde in un bosco segnato sulla mappa.";
+	}
+
+	@Override
+	public String getRicordoDellaLocazione() {
+		return "In questo bosco si nascondeva la banda di Sgranf.";
+	}
+
+	/**
+	 * Il bosco della banda, o null finché la missione non l'ha trovato.
+	 */
+	public CoordinateMD getCovo() {
+		return RegistroMissioni.getLocazioneOccupata(this);
+	}
+
+	@Override
+	protected String primoPassoDelCompito() {
+		return COVO;
+	}
+
+	@Override
+	protected Passo costruisciPassoDelCompito(String id) {
+		switch (id) {
+			case COVO:
+				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, ClassiLocazione.BOSCO)
+						.esegui(() -> {
+							Foresta.setLocazioneConosciuta(getCovo());
+							BusEventi.pubblica(new NotificaTestoParagrafo("Il bosco dove si nasconde la banda di Sgranf è segnato sulla mappa."));
+						})
+						.poi(CACCIA);
+			case CACCIA:
+				return combatti(this::getCovo, BANDA)
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Sgranf e la sua banda non daranno più fastidio a nessuno: la taglia aspetta a "
+								+ getNomeCitta() + ".")))
+						.poi(RITORNO);
+			default:
+				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
+		}
+	}
+
+	@Override
+	protected ScenaInCitta scenaIncarico() {
+		return ScenaInCitta.conMandante()
+				.parlaIlMandante("Avete visto l'avviso? C'è una taglia su Sgranf, il capo degli hobgoblin.")
+				.parlaIlMandante("Lui e la sua banda si nascondono in un bosco qui vicino. " + RICOMPENSA + " monete a chi li sistema.")
+				.parlaIlCapo("Dicci dov'è il bosco.");
+	}
+
+	@Override
+	protected ScenaInCitta scenaRingraziamento() {
+		return ScenaInCitta.conMandante()
+				.parlaIlMandante("Sgranf è andato? Finalmente si torna a dormire tranquilli.")
+				.parlaIlMandante("Ecco la taglia, ve la siete guadagnata.")
+				.parlaIlCapo("Era un tipo simpatico, in fondo. No, non è vero.");
+	}
+
+	@Override
+	protected String testoAccettazione() {
+		return "La taglia su Sgranf vale " + RICOMPENSA + " monete.";
+	}
+
+	@Override
+	protected String testoRicompensa() {
+		return "La taglia di " + RICOMPENSA + " monete è vostra.";
+	}
+
+	@Override
+	protected int getRicompensa() {
+		return RICOMPENSA;
+	}
+}

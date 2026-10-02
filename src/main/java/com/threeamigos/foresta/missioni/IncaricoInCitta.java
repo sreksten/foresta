@@ -20,16 +20,18 @@ import com.threeamigos.foresta.motore.RegistroMissioni;
  * <li>ACCETTAZIONE, in locazione, nella città: la missione si attiva, dopo l'intermezzo;</li>
  * <li>i passi del compito, dal {@link #primoPassoDelCompito()}: l'ultimo va a {@link #RITORNO};</li>
  * <li>RITORNO, a inizio locazione, di nuovo nella città: l'intermezzo del ringraziamento;</li>
+ * <li>CONSEGNA, in locazione, nella città, se il compito era procurarsi degli oggetti
+ * ({@link #getOggettiDaConsegnare()}): il gruppo li consegna;</li>
  * <li>RICOMPENSA, in locazione, nella città: le monete, e la missione si completa.</li>
  * </ol>
- * Se la città viene distrutta dopo l'accettazione, la missione fallisce (la guardia è di questa classe: i passi
- * del compito non usano {@link Passo#falliscoSe}).
+ * Se la città viene distrutta dopo l'accettazione, la missione fallisce.
  */
 public abstract class IncaricoInCitta extends MissioneAPassi {
 
 	private static final String INCARICO = "INCARICO";
 	private static final String ACCETTAZIONE = "ACCETTAZIONE";
 	protected static final String RITORNO = "RITORNO";
+	private static final String CONSEGNA = "CONSEGNA";
 	private static final String RICOMPENSA = "RICOMPENSA";
 	private static final String CITTA = "CITTA";
 	private static final String PREFISSO_CITTA = "CITTA_";
@@ -51,6 +53,17 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	protected abstract String primoPassoDelCompito();
 
 	protected abstract Passo costruisciPassoDelCompito(String id);
+
+	/**
+	 * Gli oggetti che il gruppo consegna al ritorno, prima della ricompensa; null se non ce ne sono.
+	 */
+	protected OggettiDaRaccogliere getOggettiDaConsegnare() {
+		return null;
+	}
+
+	protected String testoConsegna() {
+		return "";
+	}
 
 	/**
 	 * La città dell'incarico, o null finché il gruppo non ne ha trovata una.
@@ -97,6 +110,10 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::nellaCitta)
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaRingraziamento().getPagine())
 						.falliscoSe(this::isCittaDistrutta, this::testoCittaDistrutta)
+						.poi(getOggettiDaConsegnare() != null ? CONSEGNA : RICOMPENSA);
+			case CONSEGNA:
+				return consegna(MomentoControllo.IN_LOCAZIONE, this::nellaCitta, getOggettiDaConsegnare(), this::testoConsegna)
+						.falliscoSe(this::isCittaDistrutta, this::testoCittaDistrutta)
 						.poi(RICOMPENSA);
 			case RICOMPENSA:
 				return ricompensa(MomentoControllo.IN_LOCAZIONE, getRicompensa(), this::testoRicompensa)
@@ -141,7 +158,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 				&& !LineaTemporale.isCittaDistrutta(classe);
 	}
 
-	private boolean nellaCitta() {
+	protected final boolean nellaCitta() {
 		return getCitta() != null && GruppoGiocatore.getIstanza().isInLocazioneUnica(getCitta()) && !isCittaDistrutta();
 	}
 }

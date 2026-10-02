@@ -2,6 +2,7 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
+import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,14 +64,16 @@ public final class Passo {
 	private final MomentoControllo momento;
 	private final BooleanSupplier condizione;
 	private final List<Runnable> azioni = new ArrayList<>();
-	private BooleanSupplier guardia;
-	private Supplier<String> testoFallimento;
+	private final List<BooleanSupplier> guardie = new ArrayList<>();
+	private final List<Supplier<String>> testiFallimento = new ArrayList<>();
 	private Supplier<String> prossimoPasso = () -> FINE;
 	private MomentoIntermezzo momentoIntermezzo;
 	private Supplier<List<PaginaIntermezzo>> pagine;
 	private String domanda;
 	private List<String> opzioni;
 	private OggettiDaRaccogliere oggettiDaSeminare;
+	private Supplier<CoordinateMD> luogoDellIncontro;
+	private IncontroDiMissione incontro;
 
 	private Passo(MomentoControllo momento, BooleanSupplier condizione) {
 		this.momento = Objects.requireNonNull(momento);
@@ -97,23 +100,32 @@ public final class Passo {
 	/**
 	 * Finché questo è il passo corrente, se la condizione diventa vera la missione fallisce, scrivendo il testo
 	 * (vedi {@link MissioneAPassi}): per esempio "il villaggio da difendere è stato distrutto". Si controlla in
-	 * tutti e tre i controlli, prima di vedere se il passo è concluso.
+	 * tutti e tre i controlli, prima di vedere se il passo è concluso. Si può chiamare più volte: vale la prima
+	 * guardia che scatta, nell'ordine in cui sono state aggiunte.
 	 */
 	public Passo falliscoSe(BooleanSupplier condizione, Supplier<String> testo) {
-		this.guardia = Objects.requireNonNull(condizione);
-		this.testoFallimento = Objects.requireNonNull(testo);
+		guardie.add(Objects.requireNonNull(condizione));
+		testiFallimento.add(Objects.requireNonNull(testo));
 		return this;
 	}
 
 	/**
-	 * Se la guardia di {@link #falliscoSe} è scattata.
+	 * Se una guardia di {@link #falliscoSe} è scattata.
 	 */
 	boolean isFallito() {
-		return guardia != null && guardia.getAsBoolean();
+		return guardie.stream().anyMatch(BooleanSupplier::getAsBoolean);
 	}
 
+	/**
+	 * Il testo della prima guardia scattata.
+	 */
 	String getTestoFallimento() {
-		return testoFallimento.get();
+		for (int i = 0; i < guardie.size(); i++) {
+			if (guardie.get(i).getAsBoolean()) {
+				return testiFallimento.get(i).get();
+			}
+		}
+		throw new IllegalStateException("Nessuna guardia è scattata");
 	}
 
 	/**
@@ -123,6 +135,23 @@ public final class Passo {
 	public Passo semina(OggettiDaRaccogliere oggetti) {
 		this.oggettiDaSeminare = Objects.requireNonNull(oggetti);
 		return this;
+	}
+
+	/**
+	 * Finché questo è il passo corrente, nella locazione in quelle coordinate la missione mette questi avversari al
+	 * posto di quelli che ci sarebbero stati (vedi {@link MissioneAPassi#getIncontroInLocazione}).
+	 */
+	public Passo affronta(Supplier<CoordinateMD> dove, IncontroDiMissione incontro) {
+		this.luogoDellIncontro = Objects.requireNonNull(dove);
+		this.incontro = Objects.requireNonNull(incontro);
+		return this;
+	}
+
+	/**
+	 * Gli avversari da mettere in quelle coordinate finché questo è il passo corrente, o null.
+	 */
+	public IncontroDiMissione getIncontroIn(CoordinateMD coordinate) {
+		return incontro != null && coordinate != null && coordinate.equals(luogoDellIncontro.get()) ? incontro : null;
 	}
 
 	/**

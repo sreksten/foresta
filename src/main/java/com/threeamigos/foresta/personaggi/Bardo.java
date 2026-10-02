@@ -28,6 +28,13 @@ public class Bardo extends PersonaggioBase implements Personaggio {
 	public Bardo(String nome, int livello) {
 		super(nome, ClassePersonaggio.BARDO, livello);
 	}
+
+	/**
+	 * Per chi ha le caratteristiche del bardo sotto un'altra classe (vedi Viandante).
+	 */
+	protected Bardo(String nome, ClassePersonaggio classe, int livello) {
+		super(nome, classe, livello);
+	}
 	
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {

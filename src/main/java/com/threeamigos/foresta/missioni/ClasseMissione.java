@@ -25,6 +25,8 @@ public enum ClasseMissione {
 	DISTURBATORE_DELLA_QUIETE_PUBBLICA(DisturbatoreDellaQuietePubblica::new),
 	CACCIA_AI_GOBLIN(CacciaAiGoblin::new),
 	L_ALCHIMISTA_E_LA_MANDRAGOLA(LAlchimistaELaMandragola::new),
+	LA_TAGLIA_SU_SGRANF(LaTagliaSuSgranf::new),
+	IL_PELLEGRINO(IlPellegrino::new),
 
 	MISSIONE_DI_PROVA_SECONDARIA_UNO(MissioneDiProvaSecondariaUno::new),
 	MISSIONE_DI_PROVA_SECONDARIA_DUE(MissioneDiProvaSecondariaDue::new),

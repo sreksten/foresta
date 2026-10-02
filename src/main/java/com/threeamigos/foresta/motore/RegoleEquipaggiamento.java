@@ -234,6 +234,7 @@ public final class RegoleEquipaggiamento {
 				return ELFO;
 			case BARDO:
 			case CANTASTORIE:
+			case VIANDANTE:
 				return BARDO;
 			case MAGO:
 			case MAGA:
