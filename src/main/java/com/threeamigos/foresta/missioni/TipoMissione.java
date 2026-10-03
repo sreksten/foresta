@@ -4,28 +4,36 @@ package com.threeamigos.foresta.missioni;
  *
  * @author Stefano Reksten
  */
+// Ogni tipo coperto da almeno una missione vera ha sopra un commento "Coperto da:" con le classi che lo coprono
+// (vedi passi_missioni.md, "Regole per chi aggiunge missioni"); i tipi impossibili nella Foresta sono commentati.
 public enum TipoMissione {
 
+    // Coperto da: RichiestaDiMateriali (alchimista: le erbe)
     /**
      * Esempio: raccogliere funchi luminescenti o fiori di loto nero per un alchimista locale
      */
     RACCOLTA_INGREDIENTI(SupertipoMissione.ACQUISIZIONE),
+    // Coperto da: RichiestaDiMateriali (capitano delle guardie)
     /**
      * Esempio: raccogliere trofei da nemici sconfitti, scalpi, reliquie
      */
     RACCOLTA_TROFEI(SupertipoMissione.ACQUISIZIONE),
+    // Coperto da: RichiestaDiMateriali (armaiolo: i cristalli delle grotte)
     /**
      * Esempio: raccogliere cristalli magici, cristalli energetici, cristalli rari
      */
     RACCOLTA_CRISTALLI(SupertipoMissione.ACQUISIZIONE),
+    // Coperto da: RichiestaDiMateriali (alchimista: le parti dei mostri)
     /**
      * Esempio: raccogliere essenza magica, estratto vitale, energia pura
      */
     RACCOLTA_ESSENZA(SupertipoMissione.ACQUISIZIONE),
+    // Coperto da: RichiestaDiMateriali (armaiolo: i minerali delle grotte e delle rovine)
     /**
      * Esempio: estrarre minerali, gemme, cristalli da una miniera
      */
     MINIERA(SupertipoMissione.ACQUISIZIONE),
+    // Coperto da: RecuperaIlMedaglione, RecuperaLeDerrateAlimentari
     /**
      * Esempio: ritrovare un amuleto o un cimelio di famiglia e riportarlo al legittimo proprietario
      */
@@ -46,6 +54,7 @@ public enum TipoMissione {
      * Esempio: costruire una torre, erigere una statua, realizzare un ponte
      */
     COSTRUZIONE(SupertipoMissione.ACQUISIZIONE),
+    // Coperto da: RichiestaDiMateriali (armaiolo: pelli e corni)
     /**
      * Esempio: cacciare cervi per le pelli, raccogliere ingredienti da animali, procacciare cibo
      */
@@ -58,6 +67,7 @@ public enum TipoMissione {
      * Esempio: piantare raccolti, coltivare orto, raccogliere grano
      */
     AGRICOLTURA(SupertipoMissione.ACQUISIZIONE),
+    // Coperto da: RichiestaDiMateriali (alchimista: le erbe)
     /**
      * Esempio: raccogliere erbe, piante medicinali, funghi, bacche
      */
@@ -108,6 +118,7 @@ public enum TipoMissione {
 
     //----------
 
+    // Coperto da: CacciatoreDiTaglie, LaTagliaSullaBanda
     /**
      * Esempio: eliminare una specifica bestia o un bandito
      */
@@ -124,6 +135,7 @@ public enum TipoMissione {
      * Esempio: partecipare a battaglia large-scale, combattimento di massa, schieramento di truppe
      */
     BATTAGLIA(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: SconfiggiLaStrega, SconfiggiIlLich, SconfiggiIlMinotauroGigante, SconfiggiLIdra, SconfiggiIlDrago
     /**
      * Esempio: assaltare una fortezza, conquistare una posizione, assedio di un castello
      */
@@ -132,6 +144,7 @@ public enum TipoMissione {
      * Esempio: tendere imboscata, intrappolamento tattico, attacchi a sorpresa
      */
     IMBOSCATA(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: CacciaAiGoblin
     /**
      * Esempio: attacchi rapidi, guerre di logoramento, tattiche di guerriglia
      */
@@ -214,10 +227,12 @@ public enum TipoMissione {
 
     //----------
 
+    // Coperto da: IlRapimento
     /**
      * Esempio: liberare un fabbro elfo o un mago imprigionato
      */
     SALVATAGGIO(SupertipoMissione.PROTEZIONE),
+    // Coperto da: IlPellegrino, NonSparateSulPianista, IlRapimento
     /**
      * Esempio: proteggere un mercante che attraversa un passo di montagna
      */
@@ -305,6 +320,7 @@ public enum TipoMissione {
      * Esempio: indagare su sparizioni di persone scoprendo dietro congiure di streghe o vampiri
      */
     INVESTIGAZIONE(SupertipoMissione.INVESTIGAZIONE),
+    // Coperto da: IlCartografo
     /**
      * Esempio: esplorare le terre selvagge per scoprire nuovi insediamenti o rovine sconosciute
      */
@@ -357,6 +373,7 @@ public enum TipoMissione {
      * Esempio: scoprire segreto, rivelare mistero, smascheramento, investigare fantasmi, paranormale, entità spettrali
      */
     SCOPERTA_SEGRETO(SupertipoMissione.INVESTIGAZIONE),
+    // Coperto da: LaLeggendaDiNyena, LaLeggendaDiMalgaard
     /**
      * Esempio: cercare oggetto specifico, localizzazione oggetto, ricerca mirata, leggere storia di oggetti, psicometria
      */

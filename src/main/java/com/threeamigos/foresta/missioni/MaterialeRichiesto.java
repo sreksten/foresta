@@ -12,8 +12,9 @@ import java.util.List;
 import java.util.Objects;
 
 /**
- * Un materiale che un mandante chiede (vedi RichiestaDiMateriali), letto da una riga di missioni.txt: genere,
- * singolare, plurale, provenienza, quantità, prezzo per pezzo, la battuta del capo e la risposta del mandante,
+ * Un materiale che un mandante chiede (vedi RichiestaDiMateriali), letto da una riga di missioni.txt: genere
+ * ("F", "M", oppure "M/F" quando il singolare e il plurale ne hanno uno diverso, come orecchio e orecchie), singolare,
+ * plurale, provenienza, quantità, prezzo per pezzo, la battuta del capo e la risposta del mandante,
  * separati da ";".
  * <pre>
  * F;radice di mandragola;radici di mandragola;LUOGHI RADURA BOSCO;3-5;5;E quando le tiriamo su non strillano?;Solo un po'.
@@ -29,6 +30,8 @@ public final class MaterialeRichiesto {
 	private static final String NEMICI = "NEMICI";
 
 	private final String riga;
+	private final boolean singolareFemminile;
+	// Il genere del plurale, che regge articoli, pronomi e accordi dei testi
 	private final boolean femminile;
 	private final String singolare;
 	private final String plurale;
@@ -46,10 +49,17 @@ public final class MaterialeRichiesto {
 		if (campi.length != CAMPI) {
 			throw new IllegalArgumentException("Un materiale richiesto ha " + CAMPI + " campi: " + riga);
 		}
-		if (!"F".equals(campi[0]) && !"M".equals(campi[0])) {
-			throw new IllegalArgumentException("Il genere è F o M: " + riga);
+		String[] generi = campi[0].trim().split("/");
+		for (String genere : generi) {
+			if (!"F".equals(genere) && !"M".equals(genere)) {
+				throw new IllegalArgumentException("Il genere è F, M o, singolare e plurale, M/F: " + riga);
+			}
 		}
-		femminile = "F".equals(campi[0]);
+		if (generi.length > 2) {
+			throw new IllegalArgumentException("Al più due generi, singolare e plurale: " + riga);
+		}
+		singolareFemminile = "F".equals(generi[0]);
+		femminile = "F".equals(generi[generi.length - 1]);
 		singolare = campi[1].trim();
 		plurale = campi[2].trim();
 		String[] provenienza = campi[3].trim().split("\\s+");
@@ -112,12 +122,21 @@ public final class MaterialeRichiesto {
 		return !nemici.isEmpty();
 	}
 
+	/**
+	 * Se il plurale è femminile: è quello che usano i testi delle missioni, che parlano sempre di più pezzi.
+	 */
 	public boolean isFemminile() {
 		return femminile;
 	}
 
+	/**
+	 * Il nome, con gli articoli del genere del singolare e del plurale: "un orecchio di goblin", "le orecchie di
+	 * goblin".
+	 */
 	public NomeOggetto getNome() {
-		return femminile ? NomeOggetto.femminile(singolare, plurale) : NomeOggetto.maschile(singolare, plurale);
+		return new NomeOggetto(singolare, plurale,
+				singolareFemminile ? Misc.UNA : Misc.UN, femminile ? Misc.ALCUNE : Misc.ALCUNI,
+				singolareFemminile ? Misc.LA : Misc.IL, femminile ? Misc.LE : Misc.I);
 	}
 
 	public String getPlurale() {

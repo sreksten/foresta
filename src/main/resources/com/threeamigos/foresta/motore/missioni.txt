@@ -108,7 +108,7 @@ SOPRANNOME_GOBLIN
 # ---------------------------------------------------------------------------------------------
 #
 # Una produzione per mandante, una riga per materiale, otto campi separati da ";":
-#   1. genere (F o M);
+#   1. genere: F o M, oppure M/F se il singolare e il plurale ne hanno uno diverso (orecchio, orecchie);
 #   2. singolare;
 #   3. plurale;
 #   4. provenienza: "LUOGHI" e i luoghi dove si raccoglie (RADURA, BOSCO, GROTTA, ROVINE), oppure "NEMICI" e i
@@ -146,7 +146,7 @@ RICHIESTA_ARMAIOLO
     F;pelle di troll;pelli di troll;NEMICI TROLL;2-3;9;Non puzzano un po'?;Un po' tanto. Ma un'armatura di pelle di troll si ricuce da sola.
 
 RICHIESTA_CAPITANO
-    F;orecchia di goblin;orecchie di goblin;NEMICI GOBLIN;3-4;6;Prove? Non vi fidate di noi?;Mi fido delle prove.
+    M/F;orecchio di goblin;orecchie di goblin;NEMICI GOBLIN;3-4;6;Prove? Non vi fidate di noi?;Mi fido delle prove.
     M;dente di hobgoblin;denti di hobgoblin;NEMICI HOBGOBLIN;3-4;6;Anche quelli d'oro?;Quelli d'oro tenete pure.
     M;teschio di scheletro;teschi di scheletro;NEMICI SCHELETRO;3-4;6;Ma non erano già morti?;Fateli morire meglio.
     M;corno di minotauro;corni di minotauro;NEMICI MINOTAURO;3-4;7;Tutti e due i corni?;Uno basta. Il minotauro non protesterà.

@@ -24,7 +24,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ScenarioTrofeiEdEsplorazioneTest {
 
     static final OggettiDaRaccogliere ORECCHIE = OggettiDaRaccogliere
-            .di("ORECCHIE", NomeOggetto.femminile("orecchia di goblin", "orecchie di goblin"), 3)
+            .di("ORECCHIE", new NomeOggetto("orecchio di goblin", "orecchie di goblin", "un ", "alcune ", "il ", "le "), 3)
             .daiNemici(ClassePersonaggio.GOBLIN)
             .alPiuPerLocazione(5);
 
@@ -85,7 +85,7 @@ class ScenarioTrofeiEdEsplorazioneTest {
             avversari(ClassePersonaggio.GOBLIN, 2);
             Oggetto orecchie = caccia.getOggettoInLocazione(casella, ClassiLocazione.ROVINE, true).orElseThrow(AssertionError::new);
             assertTrue(orecchie.getQuantita() >= 1 && orecchie.getQuantita() <= 2, String.valueOf(orecchie.getQuantita()));
-            assertEquals("orecchia di goblin", orecchie.getNomeSingolare());
+            assertEquals("orecchio di goblin", orecchie.getNomeSingolare());
 
             // Mai più di quante ne mancano
             orecchie.prendi(partita.gruppo(), null);

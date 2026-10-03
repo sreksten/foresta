@@ -54,8 +54,18 @@ class ScenarioRichiesteDiMaterialiTest {
         assertEquals("si prendono sconfiggendo le Viverne", viverna.getDaDoveViene());
         assertTrue(viverna.daRaccogliere("X", 2).getNemici().contains(ClassePersonaggio.VIVERNA));
 
+        // Singolare maschile, plurale femminile
+        MaterialeRichiesto orecchio = MaterialeRichiesto.da("M/F;orecchio di goblin;orecchie di goblin;NEMICI GOBLIN;3-4;6;a;b");
+        assertEquals("un ", orecchio.getNome().getAIS());
+        assertEquals("il ", orecchio.getNome().getADS());
+        assertEquals("le orecchie di goblin", orecchio.getPluraleConArticolo());
+        assertEquals("tre orecchie di goblin", orecchio.quanti(3));
+        assertEquals("le", orecchio.getPronome());
+        assertEquals("una per una", orecchio.getUnoPerUno());
+
         assertThrows(IllegalArgumentException.class, () -> MaterialeRichiesto.da("F;uno;due;ALTROVE BOSCO;1-2;3;a;b"));
         assertThrows(IllegalArgumentException.class, () -> MaterialeRichiesto.da("F;uno;due;LUOGHI BOSCO;3-1;3;a;b"));
+        assertThrows(IllegalArgumentException.class, () -> MaterialeRichiesto.da("X;uno;due;LUOGHI BOSCO;1-2;3;a;b"));
     }
 
     @Test

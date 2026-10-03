@@ -16,8 +16,7 @@ public enum Mandante {
 	ARMAIOLO("RICHIESTA_ARMAIOLO", "l'armaiolo", ScenaInCitta::conArmaiolo,
 			"Ehi, voi! Mi serve del materiale per la forgia, e voi avete l'aria di chi non ha paura di sporcarsi.",
 			"che %s soppesa con l'occhio del mestiere"),
-	// Per ora il capitano ha l'aspetto del mandante qualsiasi
-	CAPITANO("RICHIESTA_CAPITANO", "il capitano delle guardie", ScenaInCitta::conMandante,
+	CAPITANO("RICHIESTA_CAPITANO", "il capitano delle guardie", ScenaInCitta::conCapitano,
 			"Voi avete l'aria di chi sa usare una spada. Sono il capitano delle guardie, e ho bisogno di prove.",
 			"che %s conta per bene");
 

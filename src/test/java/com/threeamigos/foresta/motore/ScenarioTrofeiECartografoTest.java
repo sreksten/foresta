@@ -49,7 +49,7 @@ class ScenarioTrofeiECartografoTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(191)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
             RichiestaDiMateriali capitano = Alchimie.fissa(Alchimie.richiestaDi(Mandante.CAPITANO),
-                    "F;orecchia di goblin;orecchie di goblin;NEMICI GOBLIN;3-4;6;Prove? Non vi fidate di noi?;Mi fido delle prove.", 3);
+                    "M/F;orecchio di goblin;orecchie di goblin;NEMICI GOBLIN;3-4;6;Prove? Non vi fidate di noi?;Mi fido delle prove.", 3);
             prendiLIncarico(capitano);
             assertEquals("Il capitano delle guardie e le orecchie di goblin", capitano.getNome());
             assertTrue(capitano.getDescrizione().contains("ti ha chiesto tre orecchie di goblin, che si prendono sconfiggendo i Goblin"),

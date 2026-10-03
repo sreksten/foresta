@@ -15,6 +15,18 @@ i più redditizi sono quelli usati da decine di `TipoMissione` — vagabondare
 finché non si trova qualcosa, combattere, raccogliere, contare fino a N,
 tornare al punto di partenza, chiedere una conferma/scelta).
 
+## Regole per chi aggiunge missioni
+
+- **Annotare i `TipoMissione` coperti.** Ogni volta che si aggiunge (o si
+  toglie) una missione vera, in `missioni/TipoMissione.java` si mette sopra ogni
+  tipo che la missione copre un commento `// Coperto da: NomeClasse` (più classi
+  separate da virgole, con fra parentesi il mandante o il caso se serve). Così
+  si possono "spuntare" i tipi già coperti. I tipi impossibili nella Foresta
+  sono commentati, con il motivo. Le missioni particolari che non corrispondono
+  a nessun tipo del catalogo (`CronacheDiUnFegatoEroico`,
+  `NessunBoccaleLasciatoIndietro`, `DisturbatoreDellaQuietePubblica`) non si
+  annotano.
+
 ## 2. Vocabolario dei passi riutilizzabili
 
 Ogni voce è un "tipo di passo" nel senso di `gestione_missioni.md` §3-4:

@@ -108,7 +108,7 @@ public class CacciatoreDiTaglie extends IncaricoInCitta {
 
 	@Override
 	protected ScenaInCitta scenaIncarico() {
-		return ScenaInCitta.conMandante()
+		return ScenaInCitta.conCapitano()
 				.parlaIlMandante("Cercate lavoro? Leggete qui: ricercato, vivo o morto, " + getRicercato() + ".")
 				.parlaIlMandante("È un hobgoblin, il capo di una banda di goblin che assalta chiunque passi. Si nasconde fra certe rovine.")
 				.parlaIlCapo("Dove, esattamente?")
@@ -117,7 +117,7 @@ public class CacciatoreDiTaglie extends IncaricoInCitta {
 
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
-		return ScenaInCitta.conMandante()
+		return ScenaInCitta.conCapitano()
 				.parlaIlMandante(getRicercato() + " non darà più fastidio a nessuno? Ottimo lavoro.")
 				.parlaIlMandante("Ecco la taglia.")
 				.parlaIlCapo("Se ne avete altre, sapete dove trovarci.");
