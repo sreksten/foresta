@@ -1,7 +1,8 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.missioni.CacciaAiTrofei;
+import com.threeamigos.foresta.missioni.Mandante;
+import com.threeamigos.foresta.missioni.RichiestaDiMateriali;
 import com.threeamigos.foresta.missioni.IlCartografo;
 import com.threeamigos.foresta.missioni.IncaricoInCitta;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
@@ -14,7 +15,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Gli incarichi della caccia ai trofei (il capitano delle guardie) e del cartografo.
+ * Le richieste del capitano delle guardie (i trofei di una caccia) e l'incarico del cartografo.
  */
 class ScenarioTrofeiECartografoTest {
 
@@ -24,6 +25,10 @@ class ScenarioTrofeiECartografoTest {
         for (int i = 0; i < parametri.length; i += 2) {
             incarico.aggiungiProprieta("PARAMETRO_" + parametri[i], parametri[i + 1]);
         }
+        return prendiLIncarico(incarico);
+    }
+
+    private static <T extends IncaricoInCitta> T prendiLIncarico(T incarico) {
         // Come a una visita tranquilla della città
         incarico.controllaPreLocazione();
         incarico.segnaIntermezzoPassoMostrato("INCARICO");
@@ -43,10 +48,12 @@ class ScenarioTrofeiECartografoTest {
     void ilCapitanoVuoleLeOrecchieDiGoblinEContaQuelleCheGliSiPortano() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(191)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
-            CacciaAiTrofei caccia = prendiLIncarico(CacciaAiTrofei.class, "TROFEO", "ORECCHIE_DI_GOBLIN", "QUANTITA", "3");
-            assertEquals("Prove di caccia: orecchie di goblin", caccia.getNome());
-            assertTrue(caccia.getDescrizione().contains("vuole tre orecchie di goblin come prova che hai sfoltito i goblin"),
-                    caccia.getDescrizione());
+            RichiestaDiMateriali capitano = Alchimie.fissa(Alchimie.richiestaDi(Mandante.CAPITANO),
+                    "F;orecchia di goblin;orecchie di goblin;NEMICI GOBLIN;3-4;6;Prove? Non vi fidate di noi?;Mi fido delle prove.", 3);
+            prendiLIncarico(capitano);
+            assertEquals("Il capitano delle guardie e le orecchie di goblin", capitano.getNome());
+            assertTrue(capitano.getDescrizione().contains("ti ha chiesto tre orecchie di goblin, che si prendono sconfiggendo i Goblin"),
+                    capitano.getDescrizione());
 
             // Le orecchie le portano i goblin
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
@@ -54,20 +61,20 @@ class ScenarioTrofeiECartografoTest {
             for (int i = 0; i < 3; i++) {
                 avversari.aggiungiPersonaggio(ClassePersonaggio.GOBLIN.getIstanza(1));
             }
-            Oggetto orecchie = caccia.getOggettoInLocazione(new CoordinateMD(0, 0), ClassiLocazione.ROVINE, true)
+            Oggetto orecchie = capitano.getOggettoInLocazione(new CoordinateMD(0, 0), ClassiLocazione.ROVINE, true)
                     .orElseThrow(AssertionError::new);
             assertEquals("orecchie di goblin", orecchie.getNomePlurale());
-            new com.threeamigos.foresta.oggetti.OggettoMissione(caccia.getId(), CacciaAiTrofei.TROFEI, caccia.getTrofeo().getNome(), 3)
-                    .prendi(partita.gruppo(), null);
-            caccia.controllaPostLocazione();
-            assertEquals("RITORNO", caccia.getPassoCorrente());
+            new com.threeamigos.foresta.oggetti.OggettoMissione(capitano.getId(), RichiestaDiMateriali.MATERIALE,
+                    capitano.getMateriali().getNome(), 3).prendi(partita.gruppo(), null);
+            capitano.controllaPostLocazione();
+            assertEquals("RITORNO", capitano.getPassoCorrente());
 
             int monete = partita.gruppo().getMonete();
-            tornaARiscuotere(partita, caccia);
+            tornaARiscuotere(partita, capitano);
             assertEquals(monete + 6 * 3 + 5, partita.gruppo().getMonete());
-            assertTrue(caccia.isCompleta());
+            assertTrue(capitano.isCompleta());
             List<String> testi = partita.testi();
-            assertTrue(testi.contains("Il capitano delle guardie conta le tre orecchie di goblin, una per una."), String.valueOf(testi));
+            assertTrue(testi.contains("Le tre orecchie di goblin passano al capitano delle guardie, che le conta per bene."), String.valueOf(testi));
         }
     }
 

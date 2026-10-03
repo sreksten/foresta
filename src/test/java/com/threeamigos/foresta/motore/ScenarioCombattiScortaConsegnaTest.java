@@ -4,7 +4,7 @@ import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.IlPellegrino;
 import com.threeamigos.foresta.missioni.IncaricoInCitta;
-import com.threeamigos.foresta.missioni.LAlchimista;
+import com.threeamigos.foresta.missioni.RichiestaDiMateriali;
 import com.threeamigos.foresta.missioni.LaTagliaSullaBanda;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
@@ -131,10 +131,9 @@ class ScenarioCombattiScortaConsegnaTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(75)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
-            Alchimie.conLaMandragola();
-            LAlchimista mandragola = prendiIncaricoAllaSecondaVisita(LAlchimista.class);
-            new OggettoMissione(mandragola.getId(), LAlchimista.INGREDIENTE,
-                    mandragola.getIngredienti().getNome(), Alchimie.RADICI)
+            RichiestaDiMateriali mandragola = prendiIncaricoAllaSecondaVisita(Alchimie.conLaMandragola());
+            new OggettoMissione(mandragola.getId(), RichiestaDiMateriali.MATERIALE,
+                    mandragola.getMateriali().getNome(), Alchimie.RADICI)
                     .prendi(partita.gruppo(), null);
             mandragola.controllaPostLocazione();
             assertEquals("RITORNO", mandragola.getPassoCorrente());
@@ -142,7 +141,7 @@ class ScenarioCombattiScortaConsegnaTest {
             int monete = partita.gruppo().getMonete();
             mandragola.controllaPreLocazione();
             mandragola.controllaInLocazione();
-            assertEquals(0, mandragola.getContatore(LAlchimista.INGREDIENTE), "le radici sono passate all'alchimista");
+            assertEquals(0, mandragola.getContatore(RichiestaDiMateriali.MATERIALE), "le radici sono passate all'alchimista");
             assertEquals(monete + 25, partita.gruppo().getMonete());
             assertTrue(mandragola.isCompleta());
             List<String> testi = partita.testi();
@@ -177,10 +176,13 @@ class ScenarioCombattiScortaConsegnaTest {
      * l'incarico si può prendere.
      */
     private static <T extends IncaricoInCitta> T prendiIncaricoAllaSecondaVisita(Class<T> tipo) {
-        T incarico = RegistroMissioni.getTutteLeMissioni().stream().filter(tipo::isInstance).map(tipo::cast)
-                .findFirst().orElseThrow(() -> new AssertionError("missione " + tipo.getSimpleName() + " non trovata"));
+        return prendiIncaricoAllaSecondaVisita(RegistroMissioni.getTutteLeMissioni().stream().filter(tipo::isInstance).map(tipo::cast)
+                .findFirst().orElseThrow(() -> new AssertionError("missione " + tipo.getSimpleName() + " non trovata")));
+    }
+
+    private static <T extends IncaricoInCitta> T prendiIncaricoAllaSecondaVisita(T incarico) {
         incarico.controllaPreLocazione();
-        assertEquals("ACCETTAZIONE", incarico.getPassoCorrente(), tipo.getSimpleName());
+        assertEquals("ACCETTAZIONE", incarico.getPassoCorrente(), incarico.getClass().getSimpleName());
         incarico.segnaIntermezzoPassoMostrato("INCARICO");
         incarico.controllaInLocazione();
         assertTrue(incarico.isAttiva());

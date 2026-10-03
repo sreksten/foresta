@@ -116,10 +116,11 @@ public class ProduttoreDiTestiCasuale {
 	}
 
 	/**
-	 * Un ingrediente alchemico, come riga di sei campi separati da ";" (vedi missioni.txt e IngredienteAlchemico).
+	 * Un materiale che un mandante chiede, da una produzione di missioni.txt (RICHIESTA_ALCHIMISTA...), come riga di
+	 * otto campi separati da ";" (vedi MaterialeRichiesto).
 	 */
-	public static String ingredienteAlchemico() {
-		return missioni.produce("INGREDIENTE_ALCHEMICO").get(0).trim();
+	public static String materialeRichiesto(String produzione) {
+		return missioni.produce(produzione).get(0).trim();
 	}
 
 	/**

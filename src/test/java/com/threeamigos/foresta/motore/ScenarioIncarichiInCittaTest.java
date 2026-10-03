@@ -6,7 +6,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.CacciaAiGoblin;
 import com.threeamigos.foresta.missioni.ClasseMissione;
 import com.threeamigos.foresta.missioni.IncaricoInCitta;
-import com.threeamigos.foresta.missioni.LAlchimista;
+import com.threeamigos.foresta.missioni.RichiestaDiMateriali;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
@@ -36,7 +36,7 @@ class ScenarioIncarichiInCittaTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_FLEENA));
             CacciaAiGoblin caccia = trova(CacciaAiGoblin.class);
-            LAlchimista mandragola = trova(LAlchimista.class);
+            RichiestaDiMateriali mandragola = Alchimie.alchimista();
             MissioneAPassi medaglione = trova(RecuperaIlMedaglione.class);
 
             // Alla prima visita parte il medaglione, e gli incarichi aspettano
@@ -81,7 +81,7 @@ class ScenarioIncarichiInCittaTest {
 
             assertTrue(caccia.isAttiva(), "alla seconda visita parte l'incarico");
             assertEquals("CACCIA", caccia.getPassoCorrente());
-            assertFalse(trova(LAlchimista.class).isAttiva(), "uno per visita");
+            assertFalse(Alchimie.alchimista().isAttiva(), "uno per visita");
             assertTrue(partita.testi().stream().anyMatch(t -> t.contains("Il mercante pagherà")), String.valueOf(partita.testi()));
         }
     }
@@ -115,8 +115,7 @@ class ScenarioIncarichiInCittaTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(62)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
-            Alchimie.conLaMandragola();
-            LAlchimista mandragola = prendiIncaricoAllaSecondaVisita(LAlchimista.class);
+            RichiestaDiMateriali mandragola = prendiIncaricoAllaSecondaVisita(Alchimie.conLaMandragola());
             assertEquals("RACCOLTA", mandragola.getPassoCorrente());
             CoordinateMD casella = new CoordinateMD(0, 0);
 
@@ -130,15 +129,15 @@ class ScenarioIncarichiInCittaTest {
                 radici = (OggettoMissione) mandragola.getOggettoInLocazione(casella, ClassiLocazione.RADURA, false).orElse(null);
             }
             assertNotNull(radici, "prima o poi una radura le ha");
-            assertEquals(ClasseMissione.L_ALCHIMISTA.name(), radici.getIdMissione());
+            assertEquals(ClasseMissione.RICHIESTA_ALCHIMISTA.name(), radici.getIdMissione());
             assertEquals("radice di mandragola", radici.getNomeSingolare());
             assertEquals("una ", radici.getAIS());
             assertTrue(radici.getQuantita() >= 1 && radici.getQuantita() <= 2);
 
             // Raccolte tutte (anche in due volte), non ne crescono più e si torna dall'alchimista
-            new OggettoMissione(radici.getIdMissione(), LAlchimista.INGREDIENTE, mandragola.getIngredienti().getNome(), 3)
+            new OggettoMissione(radici.getIdMissione(), RichiestaDiMateriali.MATERIALE, mandragola.getMateriali().getNome(), 3)
                     .prendi(partita.gruppo(), null);
-            assertEquals(3, mandragola.getContatore(LAlchimista.INGREDIENTE));
+            assertEquals(3, mandragola.getContatore(RichiestaDiMateriali.MATERIALE));
             for (int i = 0; i < 200; i++) {
                 mandragola.getOggettoInLocazione(casella, ClassiLocazione.BOSCO, false)
                         .ifPresent(o -> assertEquals(1, o.getQuantita(), "mai più di quante ne mancano"));
@@ -165,10 +164,9 @@ class ScenarioIncarichiInCittaTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(66)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
-            Alchimie.conLaMandragola();
-            LAlchimista mandragola = prendiIncaricoAllaSecondaVisita(LAlchimista.class);
-            OggettiDaRaccogliere radici = mandragola.getIngredienti();
-            new OggettoMissione(mandragola.getId(), LAlchimista.INGREDIENTE, radici.getNome(), 1)
+            RichiestaDiMateriali mandragola = prendiIncaricoAllaSecondaVisita(Alchimie.conLaMandragola());
+            OggettiDaRaccogliere radici = mandragola.getMateriali();
+            new OggettoMissione(mandragola.getId(), RichiestaDiMateriali.MATERIALE, radici.getNome(), 1)
                     .prendi(partita.gruppo(), null);
 
             // Prima dei tre giorni non si ripiega
@@ -195,7 +193,7 @@ class ScenarioIncarichiInCittaTest {
             // Il ripiego si salva con la missione
             com.threeamigos.foresta.tools.GestoreSalvataggi.salva(Comando.NUMERO_2);
             assertTrue(com.threeamigos.foresta.tools.GestoreSalvataggi.leggi(Comando.NUMERO_2));
-            LAlchimista riletta = trova(LAlchimista.class);
+            RichiestaDiMateriali riletta = Alchimie.alchimista();
             assertEquals(ripiego, riletta.getRipiego(radici));
 
             // Raccolte, la missione va avanti come sempre
@@ -276,9 +274,12 @@ class ScenarioIncarichiInCittaTest {
      * l'incarico si può prendere.
      */
     private static <T extends IncaricoInCitta> T prendiIncaricoAllaSecondaVisita(Class<T> tipo) {
-        T incarico = trova(tipo);
+        return prendiIncaricoAllaSecondaVisita(trova(tipo));
+    }
+
+    private static <T extends IncaricoInCitta> T prendiIncaricoAllaSecondaVisita(T incarico) {
         incarico.controllaPreLocazione();
-        assertEquals("ACCETTAZIONE", incarico.getPassoCorrente(), tipo.getSimpleName());
+        assertEquals("ACCETTAZIONE", incarico.getPassoCorrente(), incarico.getClass().getSimpleName());
         // L'intermezzo del mandante lo mostrerebbe l'automa
         incarico.segnaIntermezzoPassoMostrato("INCARICO");
         incarico.controllaInLocazione();

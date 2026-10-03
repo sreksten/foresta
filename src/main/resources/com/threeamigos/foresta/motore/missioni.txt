@@ -1,6 +1,6 @@
 # I nomi dei personaggi delle missioni (vedi ProduttoreDiTestiCasuale): gli ostaggi da liberare, i bardi da
-# riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia; e gli ingredienti che chiede
-# l'alchimista. Per ora sono tutti maschili, perché i testi delle missioni
+# riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia; e i materiali che chiedono
+# l'alchimista, l'armaiolo e il capitano delle guardie. Per ora sono tutti maschili, perché i testi delle missioni
 # parlano di "suo marito" e "sua moglie".
 #
 # Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
@@ -104,23 +104,51 @@ SOPRANNOME_GOBLIN
     Pancia Molle
 
 # ---------------------------------------------------------------------------------------------
-# Ingredienti alchemici (vedi LAlchimista e IngredienteAlchemico)
+# Richieste di materiali (vedi RichiestaDiMateriali e MaterialeRichiesto)
 # ---------------------------------------------------------------------------------------------
 #
-# Una riga per ingrediente, sei campi separati da ";":
-#   genere (F o M); singolare; plurale; dove si trova (RADURA, BOSCO, GROTTA, ROVINE, separati da spazi);
-#   la battuta del capo all'alchimista; la risposta dell'alchimista.
+# Una produzione per mandante, una riga per materiale, otto campi separati da ";":
+#   1. genere (F o M);
+#   2. singolare;
+#   3. plurale;
+#   4. provenienza: "LUOGHI" e i luoghi dove si raccoglie (RADURA, BOSCO, GROTTA, ROVINE), oppure "NEMICI" e i
+#      mostri a cui si prende sconfiggendoli (le ClassePersonaggio: GOBLIN, VIVERNA, CHIMERA_DRAGO...);
+#   5. quante ne chiede il mandante, minimo-massimo (per esempio 3-5);
+#   6. quante monete paga per pezzo: di più per i materiali dei mostri pericolosi;
+#   7. la battuta del capo nell'intermezzo;
+#   8. la risposta del mandante.
 # Nomi che cominciano per consonante (non s impura né z): gli articoli sono una/la/le o un/il/i.
-# Nei testi non si usa il ";".
+# Nei testi non si usa il ";". Meglio mostri che si incontrano spesso: quelli rari allungano la richiesta (c'è
+# comunque il ripiego dopo tre giorni).
 
-INGREDIENTE_ALCHEMICO
-    F;radice di mandragola;radici di mandragola;RADURA BOSCO;E quando le tiriamo su non strillano?;Solo un po'.
-    F;bacca di belladonna;bacche di belladonna;BOSCO;Ma non sono velenose?;Solo se le mangiate. Quindi non mangiatele.
-    M;fiore di aconito;fiori di aconito;RADURA;Li raccogliamo con i guanti?;Se ci tenete alle dita, sì.
-    M;fungo lunare;funghi lunari;BOSCO GROTTA;Come li riconosciamo?;Brillano al buio. E un po' anche di giorno.
-    F;radice di valeriana;radici di valeriana;RADURA BOSCO;Fanno dormire?;Me sì. Voi, mentre le raccogliete, meglio di no.
-    M;bulbo di giglio nero;bulbi di giglio nero;BOSCO;E a cosa servono?;Meno sapete, meglio dormite.
-    F;lacrima di resina;lacrime di resina;BOSCO;Di quale albero?;Di uno che piange. Lo riconoscerete.
-    M;cristallo di sale nero;cristalli di sale nero;GROTTA ROVINE;Si possono usare anche in cucina?;Una volta sola.
-    F;piuma di civetta;piume di civetta;BOSCO ROVINE;E la civetta è d'accordo?;Le civette non vengono mai consultate.
-    M;petalo di rosa selvatica;petali di rosa selvatica;RADURA;Tutto qui? Dei petali?;Per una pozione d'amore. Non chiedete per chi.
+RICHIESTA_ALCHIMISTA
+    F;radice di mandragola;radici di mandragola;LUOGHI RADURA BOSCO;3-5;5;E quando le tiriamo su non strillano?;Solo un po'.
+    F;bacca di belladonna;bacche di belladonna;LUOGHI BOSCO;3-5;5;Ma non sono velenose?;Solo se le mangiate. Quindi non mangiatele.
+    M;fiore di aconito;fiori di aconito;LUOGHI RADURA;3-4;6;Li raccogliamo con i guanti?;Se ci tenete alle dita, sì.
+    M;fungo lunare;funghi lunari;LUOGHI BOSCO GROTTA;3-5;5;Come li riconosciamo?;Brillano al buio. E un po' anche di giorno.
+    F;radice di valeriana;radici di valeriana;LUOGHI RADURA BOSCO;3-5;5;Fanno dormire?;Me sì. Voi, mentre le raccogliete, meglio di no.
+    M;bulbo di giglio nero;bulbi di giglio nero;LUOGHI BOSCO;3-4;6;E a cosa servono?;Meno sapete, meglio dormite.
+    F;lacrima di resina;lacrime di resina;LUOGHI BOSCO;3-5;5;Di quale albero?;Di uno che piange. Lo riconoscerete.
+    F;piuma di civetta;piume di civetta;LUOGHI BOSCO ROVINE;3-4;6;E la civetta è d'accordo?;Le civette non vengono mai consultate.
+    M;petalo di rosa selvatica;petali di rosa selvatica;LUOGHI RADURA;3-5;5;Tutto qui? Dei petali?;Per una pozione d'amore. Non chiedete per chi.
+    F;ghiandola di chimera-drago;ghiandole di chimera-drago;NEMICI CHIMERA_DRAGO;2-3;14;E come gliele togliamo?;Con molta cautela. E da lontano, se potete.
+    F;scaglia di viverna;scaglie di viverna;NEMICI VIVERNA;2-3;12;A cosa vi servono?;Polverizzate, curano le ustioni. Ironico, vero?
+    F;polvere di folletto;polveri di folletto;NEMICI FOLLETTO;3-4;7;Si raccoglie con il cucchiaino?;Si raccoglie in fretta, prima che il folletto se ne accorga.
+    M;lamento di fantasma;lamenti di fantasma;NEMICI FANTASMA;2-3;9;E come si mette un lamento in una boccetta?;Tappandola subito.
+
+RICHIESTA_ARMAIOLO
+    F;pepita di ferro nero;pepite di ferro nero;LUOGHI GROTTA;3-4;7;Picconi ce li date voi?;Le mani le avete.
+    M;cristallo di quarzo fumé;cristalli di quarzo fumé;LUOGHI GROTTA;3-4;7;Per farci cosa, gioielli?;Pomoli di spada. Il gioielliere è due porte più in là.
+    M;frammento di mithril;frammenti di mithril;LUOGHI GROTTA ROVINE;2-3;10;Mithril? Esiste davvero?;Se tornate a mani vuote, no.
+    M;lingotto di bronzo antico;lingotti di bronzo antico;LUOGHI ROVINE;3-4;7;E i fantasmi dei proprietari?;Non hanno mai protestato. Finora.
+    F;scaglia di viverna;scaglie di viverna;NEMICI VIVERNA;2-3;12;Per farci cosa?;Uno scudo che non brucia.
+    M;corno di minotauro;corni di minotauro;NEMICI MINOTAURO;2-3;9;Corni? Per le armi?;Per i manici. Non si scheggiano mai.
+    F;pelle di troll;pelli di troll;NEMICI TROLL;2-3;9;Non puzzano un po'?;Un po' tanto. Ma un'armatura di pelle di troll si ricuce da sola.
+
+RICHIESTA_CAPITANO
+    F;orecchia di goblin;orecchie di goblin;NEMICI GOBLIN;3-4;6;Prove? Non vi fidate di noi?;Mi fido delle prove.
+    M;dente di hobgoblin;denti di hobgoblin;NEMICI HOBGOBLIN;3-4;6;Anche quelli d'oro?;Quelli d'oro tenete pure.
+    M;teschio di scheletro;teschi di scheletro;NEMICI SCHELETRO;3-4;6;Ma non erano già morti?;Fateli morire meglio.
+    M;corno di minotauro;corni di minotauro;NEMICI MINOTAURO;3-4;7;Tutti e due i corni?;Uno basta. Il minotauro non protesterà.
+    F;piuma di arpia;piume di arpia;NEMICI ARPIA;3-4;6;Non volano via?;Le arpie sì. Le piume, se le tenete strette, no.
+    M;dente di troll;denti di troll;NEMICI TROLL;3-4;7;Ne hanno parecchi, i troll.;Uno a testa. Non fate i pignoli.

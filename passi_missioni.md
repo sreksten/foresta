@@ -604,3 +604,25 @@ Test: `ScenarioTrofeiECartografoTest`. Inoltre `MissioneAPassi.attivaMissione()`
 ora segna da quando conta il passo corrente: il primo passo di una missione non
 ci arriva da un altro, e senza questo un ATTENDI o un ripiego sul primo passo
 partivano dal primo controllo invece che dall'attivazione.
+
+### Richieste di materiali: alchimista, armaiolo, capitano (2026-10-03)
+
+`LAlchimista` e `CacciaAiTrofei` sono confluite in un'unica missione,
+`RichiestaDiMateriali`, con un `Mandante` (alchimista, armaiolo, capitano delle
+guardie): tre missioni predefinite, `RICHIESTA_ALCHIMISTA`, `RICHIESTA_ARMAIOLO`,
+`RICHIESTA_CAPITANO`, tutte ripetibili. Il mandante dice da quale produzione di
+`missioni.txt` pescare, come compare nell'intermezzo e che cosa fa dei materiali
+alla consegna. `TrofeoDiCaccia` e `IngredienteAlchemico` non ci sono più: i dati
+stanno nella grammatica, letti da `MaterialeRichiesto`.
+
+Ogni riga ha otto campi separati da ";": genere, singolare, plurale,
+provenienza (`LUOGHI` e i luoghi dove si raccoglie, oppure `NEMICI` e i mostri a
+cui si prende), quantità minima-massima, monete per pezzo, la battuta del capo e
+la risposta del mandante. La ricompensa è quantità × prezzo per pezzo, più 5: i
+materiali dei mostri pericolosi (ghiandole di chimera-drago, scaglie di viverna)
+valgono di più. Contenuti: l'alchimista ha le erbe di prima e parti di mostri;
+l'armaiolo minerali delle grotte e delle rovine e materiali dei mostri; il
+capitano i trofei di prima. Le sezioni precedenti su `LAlchimista` e
+`CacciaAiTrofei` descrivono com'erano prima di questa unificazione. Test:
+`ScenarioRichiesteDiMaterialiTest`, e quelli della semina e del ripiego, che
+fissano la mandragola (`Alchimie`).
