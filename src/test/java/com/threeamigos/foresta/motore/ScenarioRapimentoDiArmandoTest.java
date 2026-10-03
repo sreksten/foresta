@@ -73,16 +73,31 @@ class ScenarioRapimentoDiArmandoTest {
     }
 
     @Test
-    void seArmandoMuorePerStradaLaMissioneFallisce() {
+    void seArmandoMuorePerStradaBisognaDirloASuaMoglieEPoiLaMissioneFallisce() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(132)) {
             IlRapimentoDiArmando rapimento = prendiLIncarico(partita);
             Personaggio armando = liberaArmando(partita, rapimento);
 
+            // Muore lontano dalla città: la missione resta aperta, e c'è da portare la notizia
             armando.muore("un goblin rimasto indietro");
             rapimento.controllaPreLocazione();
-            assertTrue(rapimento.isFallita());
-            assertTrue(partita.gruppo().getOspiti().isEmpty());
+            assertFalse(rapimento.isFallita());
+            assertEquals("LUTTO", rapimento.getPassoCorrente());
+            assertTrue(partita.gruppo().getOspiti().isEmpty(), "Armando non viaggia più con il gruppo");
             assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith("Armando non ce l'ha fatta")), String.valueOf(partita.testi()));
+            assertTrue(rapimento.getDescrizione().contains("dare la notizia"), rapimento.getDescrizione());
+
+            // In città la scena triste, poi la missione fallisce, senza monete
+            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA));
+            int monete = partita.gruppo().getMonete();
+            rapimento.controllaPreLocazione();
+            assertEquals("LUTTO", rapimento.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
+            assertFalse(rapimento.isFallita(), "prima la scena");
+            rapimento.segnaIntermezzoPassoMostrato("LUTTO");
+            rapimento.controllaInLocazione();
+            assertTrue(rapimento.isFallita());
+            assertEquals(monete, partita.gruppo().getMonete());
+            assertTrue(partita.testi().contains("La moglie di Armando chiude la porta senza dire una parola."));
         }
     }
 }

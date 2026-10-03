@@ -2,6 +2,7 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
+import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
@@ -16,7 +17,8 @@ import com.threeamigos.foresta.personaggi.ClassePersonaggio;
  * la missione rivendica la grotta, la segna sulla mappa e ci mette la banda (vedi {@link MissioneAPassi#combatti}).
  * Sconfitta la banda, Armando si unisce al gruppo come ospite vulnerabile (vedi
  * {@link MissioneAPassi#prendiInScorta(MomentoControllo, java.util.function.BooleanSupplier, String, boolean)}): gli
- * avversari lo possono attaccare, e va riportato vivo in città. Se muore per strada, la missione fallisce.
+ * avversari lo possono attaccare, e va riportato vivo in città. Se muore per strada, la missione resta aperta finché
+ * il gruppo non torna in città a dare la notizia a sua moglie: allora c'è la scena triste, e la missione fallisce.
  */
 public class IlRapimentoDiArmando extends IncaricoInCitta {
 
@@ -27,6 +29,8 @@ public class IlRapimentoDiArmando extends IncaricoInCitta {
 	private static final String LIBERAZIONE = "LIBERAZIONE";
 	private static final String LIBERATO = "LIBERATO";
 	private static final String VIAGGIO = "VIAGGIO";
+	private static final String LUTTO = "LUTTO";
+	private static final String FALLIMENTO = "FALLIMENTO";
 
 	public IlRapimentoDiArmando() {
 		super(ClasseMissione.IL_RAPIMENTO_DI_ARMANDO);
@@ -45,6 +49,9 @@ public class IlRapimentoDiArmando extends IncaricoInCitta {
 		}
 		if (RITORNO.equals(passo)) {
 			return "Armando è a casa: sua moglie ti aspetta a " + getNomeCitta() + ".";
+		}
+		if (LUTTO.equals(passo) || FALLIMENTO.equals(passo)) {
+			return "Armando è morto: devi dare la notizia a sua moglie, a " + getNomeCitta() + ".";
 		}
 		return "Una banda di goblin tiene prigioniero Armando in una grotta segnata sulla mappa. Liberalo e riportalo a "
 				+ getNomeCitta() + ".";
@@ -86,9 +93,26 @@ public class IlRapimentoDiArmando extends IncaricoInCitta {
 								+ "riportatelo vivo a " + getNomeCitta() + ".")))
 						.poi(VIAGGIO);
 			case VIAGGIO:
-				return scorta(MomentoControllo.PRE_LOCAZIONE, () -> Foresta.getCoordinateLocazioneUnica(getCitta()),
-								() -> "Armando non ce l'ha fatta: i suoi rapitori avevano degli amici. La sua famiglia non vi pagherà.")
-						.poi(RITORNO);
+				return scortaFinoAllaMeta(MomentoControllo.PRE_LOCAZIONE, () -> Foresta.getCoordinateLocazioneUnica(getCitta()))
+						.esegui(() -> {
+							if (isScortatoMorto()) {
+								BusEventi.pubblica(new NotificaTestoParagrafo("Armando non ce l'ha fatta: i suoi rapitori avevano degli amici. "
+										+ "Bisogna dirlo a sua moglie, a " + getNomeCitta() + "."));
+							}
+						})
+						.poi(() -> isScortatoMorto() ? LUTTO : RITORNO);
+			case LUTTO:
+				// A inizio locazione la scena, in locazione il fallimento: così l'avviso arriva dopo la scena
+				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::nellaCitta)
+						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaDelLutto().getPagine())
+						.poi(FALLIMENTO);
+			case FALLIMENTO:
+				return Passo.quando(MomentoControllo.IN_LOCAZIONE, this::nellaCitta)
+						.esegui(() -> {
+							BusEventi.pubblica(new NotificaTestoParagrafo("La moglie di Armando chiude la porta senza dire una parola."));
+							fallisciMissione();
+						})
+						.poi(Passo.FINE);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
 		}
@@ -109,6 +133,13 @@ public class IlRapimentoDiArmando extends IncaricoInCitta {
 				.parlaIlMandante("Armando! Sei tornato!")
 				.parlaIlMandante("Non so come ringraziarvi. Ecco le " + RICOMPENSA + " monete.")
 				.parlaIlCapo("Tenetelo d'occhio, la prossima volta.");
+	}
+
+	private ScenaInCitta scenaDelLutto() {
+		return ScenaInCitta.conMandante()
+				.parlaIlMandante("Siete tornati! Ma... dov'è Armando?")
+				.parlaIlCapo("Mi dispiace. Lo avevamo liberato, ma per strada ci hanno attaccati.")
+				.parlaIlMandante("No... Non voglio sentire altro. Andate via.");
 	}
 
 	@Override

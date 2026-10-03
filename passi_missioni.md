@@ -200,8 +200,12 @@ Test: `ScenarioPassiAvanzatiTest` e, per gli ospiti vulnerabili,
 L'incarico in città `IlRapimentoDiArmando` li usa: la missione rivendica una
 grotta, la segna sulla mappa e ci mette la banda di goblin di Ghignazzo
 (`combatti`); sconfitta la banda, Armando si unisce al gruppo come ospite
-vulnerabile (`prendiInScorta(..., true)`) e va riportato vivo in città
-(`scorta(..., testoSeMuore)`); 35 monete. Test: `ScenarioRapimentoDiArmandoTest`.
+vulnerabile (`prendiInScorta(..., true)`) e va riportato vivo in città; 35
+monete. Il viaggio usa `scortaFinoAllaMeta`, che si conclude sia arrivando con
+lo scortato vivo sia, dovunque, quando muore (`isScortatoMorto()` sceglie il
+ramo): se Armando muore la missione resta aperta finché il gruppo non torna in
+città, dove c'è la scena triste con la moglie, e solo dopo fallisce. Test:
+`ScenarioRapimentoDiArmandoTest`.
 Il nome dell'ostaggio per ora è fisso; si potrà prendere da una grammatica. Con questi il catalogo del §2 è coperto tutto.
 
 ## 3. Mappatura `TipoMissione` → sequenza di passi

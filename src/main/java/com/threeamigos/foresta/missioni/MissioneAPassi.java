@@ -70,6 +70,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	private static final String EVENTO = "EVENTO_";
 	private static final String CONTATORE = "CONTATORE_";
 	private static final String SCORTATO = "SCORTATO";
+	private static final String SCORTATO_MORTO = "SCORTATO_MORTO";
 	private static final String RIPIEGO = "RIPIEGO_";
 	private static final String VISITE = "VISITE_";
 	private static final String ULTIMA_VISITA = "ULTIMA_VISITA_";
@@ -566,6 +567,31 @@ public abstract class MissioneAPassi extends MissioneBase {
 	protected final Passo scorta(MomentoControllo momento, Supplier<CoordinateMD> destinazione, Supplier<String> testoSeMuore) {
 		return scorta(momento, destinazione)
 				.falliscoSe(() -> getScortato().map(scortato -> !scortato.isVivo()).orElse(false), testoSeMuore);
+	}
+
+	/**
+	 * SCORTA che non fa fallire la missione se lo scortato (vulnerabile) muore: si conclude quando il gruppo arriva
+	 * in quelle coordinate con lo scortato vivo, oppure, dovunque, quando lo scortato muore. In tutti e due i casi lo
+	 * scortato si separa dal gruppo; il {@code poi} sceglie come continuare con {@link #isScortatoMorto()}, per
+	 * esempio con un passo che porta la brutta notizia a chi aspettava.
+	 */
+	protected final Passo scortaFinoAllaMeta(MomentoControllo momento, Supplier<CoordinateMD> destinazione) {
+		return Passo.quando(momento, () -> getScortato().map(scortato -> !scortato.isVivo()).orElse(false)
+						|| destinazione.get() != null && destinazione.get().equals(GruppoGiocatore.getIstanza().getCoordinate())
+						&& getScortato().filter(Personaggio::isVivo).isPresent())
+				.esegui(() -> {
+					if (getScortato().map(scortato -> !scortato.isVivo()).orElse(false)) {
+						aggiungiProprieta(SCORTATO_MORTO, AFFERMATIVO);
+					}
+					congedaScortato();
+				});
+	}
+
+	/**
+	 * Se lo scortato è morto per strada (vedi {@link #scortaFinoAllaMeta}).
+	 */
+	public final boolean isScortatoMorto() {
+		return ottieniProprieta(SCORTATO_MORTO) != null;
 	}
 
 	/**
