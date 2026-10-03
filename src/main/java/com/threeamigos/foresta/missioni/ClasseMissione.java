@@ -24,7 +24,7 @@ public enum ClasseMissione {
 	NESSUN_BOCCALE_LASCIATO_INDIETRO(NessunBoccaleLasciatoIndietro::new),
 	DISTURBATORE_DELLA_QUIETE_PUBBLICA(DisturbatoreDellaQuietePubblica::new),
 	CACCIA_AI_GOBLIN(CacciaAiGoblin::new),
-	L_ALCHIMISTA_E_LA_MANDRAGOLA(LAlchimistaELaMandragola::new),
+	L_ALCHIMISTA(LAlchimista::new),
 	LA_TAGLIA_SULLA_BANDA(LaTagliaSullaBanda::new),
 	IL_PELLEGRINO(IlPellegrino::new),
 	IL_RAPIMENTO(IlRapimento::new),

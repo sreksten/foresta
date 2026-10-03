@@ -1,5 +1,6 @@
 # I nomi dei personaggi delle missioni (vedi ProduttoreDiTestiCasuale): gli ostaggi da liberare, i bardi da
-# riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia. Per ora sono tutti maschili, perché i testi delle missioni
+# riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia; e gli ingredienti che chiede
+# l'alchimista. Per ora sono tutti maschili, perché i testi delle missioni
 # parlano di "suo marito" e "sua moglie".
 #
 # Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
@@ -101,3 +102,25 @@ SOPRANNOME_GOBLIN
     il Ladro di Galline
     il Terribile, o quasi
     Pancia Molle
+
+# ---------------------------------------------------------------------------------------------
+# Ingredienti alchemici (vedi LAlchimista e IngredienteAlchemico)
+# ---------------------------------------------------------------------------------------------
+#
+# Una riga per ingrediente, sei campi separati da ";":
+#   genere (F o M); singolare; plurale; dove si trova (RADURA, BOSCO, GROTTA, ROVINE, separati da spazi);
+#   la battuta del capo all'alchimista; la risposta dell'alchimista.
+# Nomi che cominciano per consonante (non s impura né z): gli articoli sono una/la/le o un/il/i.
+# Nei testi non si usa il ";".
+
+INGREDIENTE_ALCHEMICO
+    F;radice di mandragola;radici di mandragola;RADURA BOSCO;E quando le tiriamo su non strillano?;Solo un po'.
+    F;bacca di belladonna;bacche di belladonna;BOSCO;Ma non sono velenose?;Solo se le mangiate. Quindi non mangiatele.
+    M;fiore di aconito;fiori di aconito;RADURA;Li raccogliamo con i guanti?;Se ci tenete alle dita, sì.
+    M;fungo lunare;funghi lunari;BOSCO GROTTA;Come li riconosciamo?;Brillano al buio. E un po' anche di giorno.
+    F;radice di valeriana;radici di valeriana;RADURA BOSCO;Fanno dormire?;Me sì. Voi, mentre le raccogliete, meglio di no.
+    M;bulbo di giglio nero;bulbi di giglio nero;BOSCO;E a cosa servono?;Meno sapete, meglio dormite.
+    F;lacrima di resina;lacrime di resina;BOSCO;Di quale albero?;Di uno che piange. Lo riconoscerete.
+    M;cristallo di sale nero;cristalli di sale nero;GROTTA ROVINE;Si possono usare anche in cucina?;Una volta sola.
+    F;piuma di civetta;piume di civetta;BOSCO ROVINE;E la civetta è d'accordo?;Le civette non vengono mai consultate.
+    M;petalo di rosa selvatica;petali di rosa selvatica;RADURA;Tutto qui? Dei petali?;Per una pozione d'amore. Non chiedete per chi.

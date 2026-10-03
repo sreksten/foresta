@@ -107,7 +107,7 @@ OggettiDaRaccogliere.di("MANDRAGOLA", NomeOggetto.femminile("radice di mandragol
   locazioni non si salva.
 - Immagine provvisoria: `img/oggetti/OggettoMissione.gif`.
 
-Due missioni vere lo usano: `CacciaAiGoblin` e `LAlchimistaELaMandragola`,
+Due missioni vere lo usano: `CacciaAiGoblin` e `LAlchimista`,
 entrambe sopra `IncaricoInCitta` (l'incarico preso in una città, con
 l'intermezzo del mandante, e la ricompensa al ritorno; fallisce se la città
 viene distrutta). L'incarico parte solo a una visita tranquilla, in cui
@@ -547,3 +547,17 @@ classe)`, un capo di un'altra classe, in più); basta abbattere il capo
 (`MissioneAPassi.combattiIlCapo`), poi si torna a riscuotere 30 monete. A
 differenza della taglia sulla banda, che segna il bosco sulla mappa e vuole
 tutta la banda sconfitta. Test: `ScenarioCacciatoreDiTaglieTest`.
+
+### Gli ingredienti dell'alchimista (2026-10-03)
+
+`LAlchimistaELaMandragola` è diventata `LAlchimista`: l'ingrediente e la
+quantità (da 3 a 5) si pescano quando l'incarico si offre, da
+`INGREDIENTE_ALCHEMICO` in `missioni.txt` (mandragola, belladonna, aconito,
+funghi lunari, valeriana, giglio nero, resina, sale nero, piume di civetta, rose
+selvatiche). Ogni riga ha sei campi separati da ";": genere, singolare,
+plurale, dove si trova (RADURA, BOSCO, GROTTA, ROVINE), la battuta del capo e la
+risposta dell'alchimista nell'intermezzo; `IngredienteAlchemico` la legge e dà
+articoli, pronomi e accordi per i testi. La ricompensa è 5 monete per
+ingrediente più 5. Si ripete ogni volta con un ingrediente nuovo. Test:
+`ScenarioIngredientiAlchemiciTest`; i test della semina e del ripiego fissano la
+mandragola (`Alchimie`).

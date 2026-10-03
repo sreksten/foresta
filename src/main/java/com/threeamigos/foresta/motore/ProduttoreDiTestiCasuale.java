@@ -116,6 +116,13 @@ public class ProduttoreDiTestiCasuale {
 	}
 
 	/**
+	 * Un ingrediente alchemico, come riga di sei campi separati da ";" (vedi missioni.txt e IngredienteAlchemico).
+	 */
+	public static String ingredienteAlchemico() {
+		return missioni.produce("INGREDIENTE_ALCHEMICO").get(0).trim();
+	}
+
+	/**
 	 * Il nome di un capobanda di goblin o hobgoblin, a volte con un soprannome: "Grumolo il Guercio" (vedi
 	 * missioni.txt).
 	 */
