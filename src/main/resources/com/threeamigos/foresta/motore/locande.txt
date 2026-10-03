@@ -769,7 +769,9 @@ VOLANO_PUGNI
     pugni e morsi
 
 REAZIONE_LOCANDIERE
-    [SMETTILA] [CLIENTI_SI_DOMANDANO]
+    [^4] [SMETTILA] [CLIENTI_SI_DOMANDANO]
+    [^3] [SMETTILA] [MINACCIA_DEL_LOCANDIERE]
+    [^1] [BATTUTA_SECCA]
 
 SMETTILA
     Smettila con queste tue storielle!
@@ -779,6 +781,16 @@ SMETTILA
     Ancora con queste fole?
     Ti ho già detto di non raccontare più queste storie!
     Non hai storie più credibili nel tuo repertorio?
+    Ma chi ti ha insegnato a raccontare storie, un troll con il singhiozzo?
+    Ogni sera la stessa storia, e ogni sera peggiore!
+    Ecco, ci risiamo!
+    Qui si viene per bere, non per sentire frottole!
+    Questa l'avevi già raccontata, e finiva in un altro modo!
+    Per tutti i boccali di Sglord, basta!
+    Ma quando mai un drago ha chiesto scusa a qualcuno?
+    Ancora quella dei tre cavalieri e della capra? Ma chi ci crede?
+    Fermati prima che arrivi la parte con l'unicorno!
+    Le tue storie sono più annacquate della mia birra!
 
 CLIENTI_SI_DOMANDANO
     I clienti si domandano quanti boccali di Sglord tu ti sia scolato!
@@ -789,6 +801,33 @@ CLIENTI_SI_DOMANDANO
     Gli avventori si sono spostati in un'altra dimensione!
     I clienti si stanno domandando cosa tu ti sia scolato!
     Devi finire di mettere a dura prova le riserve alcooliche del locale!
+    Il nano al tavolo in fondo si è addormentato nella zuppa!
+    Due clienti sono usciti dalla finestra pur di non sentire il finale!
+    Perfino il cane si è coperto le orecchie con le zampe!
+    Il goblin di guardia alla porta chiede di essere pagato il doppio!
+    Metà dei clienti dorme e l'altra metà vorrebbe farlo!
+    Il mago al bancone sta cercando un incantesimo per diventare sordo!
+    Il menestrello della concorrenza ti ringrazia sentitamente!
+    I clienti hanno cominciato a lanciare le noccioline, e non sono nemmeno le loro!
+    Gli avventori stanno organizzando una colletta per pagarti il silenzio!
+
+MINACCIA_DEL_LOCANDIERE
+    Se continui ti faccio lavare i boccali fino all'alba!
+    Un'altra parola e la prossima storia la racconti alle galline nel cortile!
+    Continua così e ti servo la zuppa di ieri!
+    Ancora una e ti sbatto fuori insieme al tuo liuto!
+    La prossima volta che apri bocca ci verso dentro l'aceto!
+    Alla prossima frottola ti metto il conto di tutta la sala!
+    Se non la smetti chiamo mia suocera, e lei le storie le racconta peggio di te!
+    Ancora una parola e ti faccio dormire nella stalla, col mulo che russa!
+    Smetti subito o ti faccio pagare anche lo Sglord che non hai bevuto!
+
+BATTUTA_SECCA
+    Questa la conosco, finisce con te che paghi il conto e te ne vai!
+    Bella storia. Peccato che il drago, nella versione vera, si mangiasse il narratore!
+    Bravo, bravo. Ora però canta qualcosa, che almeno si balla!
+    Ogni volta che racconti questa storia, il drago diventa più grosso e il conto più piccolo!
+    Ah sì? Allora io sono il Re di Malgaard, e voi mi dovete tre monete!
 
 NOTIZIE_CITTA
     CG1-Rissa da Spettacolo - Pugni e morsi tra i mercanti quando EROE ha pagato un folletto per fare boccacce alle guardie cittadine nel bel mezzo della lettura del bando reale.
