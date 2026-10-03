@@ -45,7 +45,8 @@ public class RegistroMissioni {
 		L_ALCHIMISTA_E_LA_MANDRAGOLA(ClasseMissione.L_ALCHIMISTA_E_LA_MANDRAGOLA),
 		LA_TAGLIA_SU_SGRANF(ClasseMissione.LA_TAGLIA_SU_SGRANF),
 		IL_PELLEGRINO(ClasseMissione.IL_PELLEGRINO),
-		IL_RAPIMENTO_DI_ARMANDO(ClasseMissione.IL_RAPIMENTO_DI_ARMANDO);
+		IL_RAPIMENTO_DI_ARMANDO(ClasseMissione.IL_RAPIMENTO_DI_ARMANDO),
+		NON_SPARATE_SUL_PIANISTA(ClasseMissione.NON_SPARATE_SUL_PIANISTA);
 
 		TipoMissionePredefinita(ClasseMissione classeMissione) {
 			this(classeMissione, false);

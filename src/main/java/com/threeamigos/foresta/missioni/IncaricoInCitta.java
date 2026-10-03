@@ -180,26 +180,9 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 		return inUnaCitta() && isVisitaTranquilla();
 	}
 
-	/**
-	 * Nessun'altra missione mostrerà un intermezzo entrando in questa locazione. Gli altri incarichi che aspettano
-	 * una visita tranquilla contano solo se il loro è già in attesa: se si guardassero l'un l'altro prima di
-	 * partire, non partirebbe nessuno.
-	 */
-	private boolean isVisitaTranquilla() {
-		for (Missione missione : RegistroMissioni.getTutteLeMissioni()) {
-			if (missione == this || !(missione instanceof MissioneAPassi)) {
-				continue;
-			}
-			MissioneAPassi altra = (MissioneAPassi) missione;
-			boolean aspettaAncheLei = altra instanceof IncaricoInCitta && ((IncaricoInCitta) altra).getCittaFissa() == null;
-			boolean inArrivo = aspettaAncheLei
-					? altra.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE) != null
-					: altra.haUnIntermezzoInArrivo(MomentoControllo.PRE_LOCAZIONE, MomentoIntermezzo.INIZIO_LOCAZIONE);
-			if (inArrivo) {
-				return false;
-			}
-		}
-		return true;
+	@Override
+	protected boolean aspettaUnaVisitaTranquilla() {
+		return getCittaFissa() == null;
 	}
 
 	@Override

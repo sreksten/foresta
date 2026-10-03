@@ -28,6 +28,7 @@ public enum ClasseMissione {
 	LA_TAGLIA_SU_SGRANF(LaTagliaSuSgranf::new),
 	IL_PELLEGRINO(IlPellegrino::new),
 	IL_RAPIMENTO_DI_ARMANDO(IlRapimentoDiArmando::new),
+	NON_SPARATE_SUL_PIANISTA(NonSparateSulPianista::new),
 
 	MISSIONE_DI_PROVA_SECONDARIA_UNO(MissioneDiProvaSecondariaUno::new),
 	MISSIONE_DI_PROVA_SECONDARIA_DUE(MissioneDiProvaSecondariaDue::new),

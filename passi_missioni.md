@@ -226,7 +226,22 @@ della missione principale, che altrimenti aspetterebbe anche lui per far
 comparire il Drago), che si offre dopo
 `IncaricoInCitta.ORE_FRA_UN_INCARICO_E_L_ALTRO` ore di gioco (48). Si ripetono
 la caccia ai goblin e la mandragola; Sgranf, Anselmo e Armando no, finché i loro
-nomi non verranno da una grammatica. Test: `ScenarioIncarichiRipetutiTest`. Con questi il catalogo del §2 è coperto tutto.
+nomi non verranno da una grammatica. Test: `ScenarioIncarichiRipetutiTest`.
+
+### Missioni che nascono fuori dalle città (2026-10-03)
+
+La visita tranquilla ora è di `MissioneAPassi` (`isVisitaTranquilla()`), e ogni
+missione dice se la aspetta (`aspettaUnaVisitaTranquilla()`): così anche una
+missione che nasce in una locanda non si sovrappone alle altre. `ScenaInLocanda`
+è come `ScenaInCitta`, con il locandiere dietro il bancone. `prendiInScorta`
+accetta anche un personaggio fatto dalla missione (un bardo, invece di un
+viandante).
+
+`NonSparateSulPianista`: alla terza visita a una locanda nel bosco, a una visita
+tranquilla, il locandiere affida al gruppo il bardo Ugolino, ubriaco, da
+riportare a casa nella città più vicina; viaggia come ospite vulnerabile. In
+città la scena con la moglie e 20 monete; se muore per strada o la città viene
+distrutta, la missione fallisce. Test: `ScenarioNonSparateSulPianistaTest`. Con questi il catalogo del §2 è coperto tutto.
 
 ## 3. Mappatura `TipoMissione` → sequenza di passi
 

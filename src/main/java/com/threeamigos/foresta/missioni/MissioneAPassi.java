@@ -541,11 +541,20 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * {@link #scorta(MomentoControllo, Supplier, Supplier)}).
 	 */
 	protected final Passo prendiInScorta(MomentoControllo momento, BooleanSupplier quando, String nome, boolean vulnerabile) {
+		return prendiInScorta(momento, quando, () -> new Viandante(nome, EquipaggiamentoIniziale.livelloCasualeDalMondo()), vulnerabile);
+	}
+
+	/**
+	 * Come gli altri prendiInScorta, con un personaggio fatto dalla missione (per esempio un bardo, invece di un
+	 * viandante qualsiasi), che si crea quando si unisce al gruppo.
+	 */
+	protected final Passo prendiInScorta(MomentoControllo momento, BooleanSupplier quando, Supplier<Personaggio> scortato,
+										  boolean vulnerabile) {
 		return Passo.quando(momento, quando)
 				.esegui(() -> {
-					Viandante viandante = new Viandante(nome, EquipaggiamentoIniziale.livelloCasualeDalMondo());
-					GruppoGiocatore.getIstanza().aggiungiOspite(viandante, vulnerabile);
-					aggiungiProprieta(SCORTATO, viandante.getModelloDati().getUuid());
+					Personaggio personaggio = scortato.get();
+					GruppoGiocatore.getIstanza().aggiungiOspite(personaggio, vulnerabile);
+					aggiungiProprieta(SCORTATO, personaggio.getModelloDati().getUuid());
 				});
 	}
 
@@ -807,6 +816,35 @@ public abstract class MissioneAPassi extends MissioneBase {
 		Passo passo = costruisciPasso(getPassoCorrente());
 		return passo.getMomento() == controllo && passo.getMomentoIntermezzo() == momento && !passo.isDomanda()
 				&& !passo.isFallito() && passo.isConcluso();
+	}
+
+	/**
+	 * Se la missione, per cominciare, aspetta una visita tranquilla (vedi {@link #isVisitaTranquilla()}): sì per gli
+	 * incarichi che si offrono in un posto qualsiasi, perché non si sovrappongano alle altre missioni.
+	 */
+	protected boolean aspettaUnaVisitaTranquilla() {
+		return false;
+	}
+
+	/**
+	 * Nessun'altra missione mostrerà un intermezzo entrando in questa locazione. Le altre missioni che aspettano una
+	 * visita tranquilla contano solo se il loro è già in attesa: se si guardassero l'un l'altra prima di partire, non
+	 * partirebbe nessuna.
+	 */
+	protected final boolean isVisitaTranquilla() {
+		for (Missione missione : RegistroMissioni.getTutteLeMissioni()) {
+			if (missione == this || !(missione instanceof MissioneAPassi)) {
+				continue;
+			}
+			MissioneAPassi altra = (MissioneAPassi) missione;
+			boolean inArrivo = altra.aspettaUnaVisitaTranquilla()
+					? altra.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE) != null
+					: altra.haUnIntermezzoInArrivo(MomentoControllo.PRE_LOCAZIONE, MomentoIntermezzo.INIZIO_LOCAZIONE);
+			if (inArrivo) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	public final boolean isIntermezzoPassoMostrato(String idPasso) {
