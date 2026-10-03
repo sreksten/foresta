@@ -68,7 +68,17 @@ public class LIndagine extends IncaricoInCitta {
 		if (indagine.isFinoAllaResa()) {
 			nemici.finoAllaResa();
 		}
-		return indagine.isConCapo() ? nemici.conCapo(getCapo()) : nemici;
+		if (indagine.isConCapo()) {
+			nemici.conCapo(getCapo());
+		}
+		return indagine.getOndate().aggiungiA(nemici, this::getCapoDellOndata, this::testo);
+	}
+
+	/**
+	 * Il nome del capo di quell'ondata (2, 3), pescato una volta sola.
+	 */
+	private String getCapoDellOndata(int ondata) {
+		return parametro(CAPO + "_" + ondata, () -> getIndagine().getOndate().pescaNomeDelCapo(ondata));
 	}
 
 	/**
@@ -100,7 +110,11 @@ public class LIndagine extends IncaricoInCitta {
 	 * Il testo della grammatica, con il nome del capo al posto di %CAPO%.
 	 */
 	private String testo(String testo) {
-		return testo.replace(IndagineRichiesta.CAPO, getCapo());
+		String conICapi = testo.replace(IndagineRichiesta.CAPO, getCapo());
+		for (int ondata : getIndagine().getOndate().getOndateConCapo()) {
+			conICapi = conICapi.replace(OndateDellaRiga.capo(ondata), getCapoDellOndata(ondata));
+		}
+		return conICapi;
 	}
 
 	private String getMandanteDiCitta() {
@@ -119,6 +133,7 @@ public class LIndagine extends IncaricoInCitta {
 	protected void allIncarico() {
 		getIndagine();
 		getCapo();
+		getIndagine().getOndate().getOndateConCapo().forEach(this::getCapoDellOndata);
 	}
 
 	@Override

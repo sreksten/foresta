@@ -59,9 +59,6 @@ import java.util.function.Supplier;
 //  un'immagine per ogni oggetto.
 // TODO: il sacerdote e la sacerdotessa che offrono una benedizione in locanda (ScenaInLocanda.conSacerdote) hanno le
 //  immagini del mago e della maga: servono personaggi/Sacerdote.gif e personaggi/Sacerdotessa.gif.
-// TODO: quando ci saranno più attacchi nella stessa locazione, riprendere l'indagine LUCI_NELLE_ROVINE (missioni.txt,
-//  produzione INDAGINE): oggi il negromante scappa e si combattono solo i suoi scheletri, perché un incontro di
-//  missione ha una classe sola; meglio prima gli scheletri e poi lui, come MAGO o MAGA con un nome.
 
 // Bug noti ancora da correggere (dall'indagine sul codice): si spuntano togliendo la riga quando sono corretti.
 //
@@ -717,6 +714,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		RegistroMissioni.getIncontroMissione(gruppo.getCoordinate()).ifPresent(avversari -> {
 			gruppoAvversario.rimuoviPersonaggi();
 			avversari.forEach(gruppoAvversario::aggiungiPersonaggio);
+			// ...con le ondate che arrivano dopo, se la missione ne vuole (vedi LocazioneBase.impostaAzioni)
+			gruppoAvversario.setOndateSuccessive(RegistroMissioni.getOndateSuccessiveMissione(gruppo.getCoordinate()));
 		});
 		// ...e l'oggetto che una missione vuole qui, che può dipendere dagli avversari (i trofei di una caccia)
 		RegistroMissioni.getOggettoMissione(gruppo.getCoordinate(), gruppo.getClasseLocazioneCorrente(),

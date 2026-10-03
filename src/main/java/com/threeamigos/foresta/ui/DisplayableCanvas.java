@@ -605,6 +605,14 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		riquadroLocazione.assegnaCoordinateAgliAvversari();
 	}
 
+	/**
+	 * Gli avversari in locazione sono cambiati (è arrivata un'altra ondata): immagini e posizioni nuove.
+	 */
+	void assegnaCoordinateAPersonaggi() {
+		riquadroLocazione.assegnaCoordinateAgliAvversari();
+		repaint();
+	}
+
 	// Sprite decorativo statico, visibile solo mentre è mostrata la mappa a
 	// tutto schermo, ancorato all'angolo inferiore sinistro.
 	private void disegnaSferaMagica(Graphics2D graphics) {

@@ -58,7 +58,17 @@ public class LaSorveglianza extends IncaricoInCitta {
 			return null;
 		}
 		IncontroDiMissione nemici = IncontroDiMissione.di(sorveglianza.getNemico(), sorveglianza.getNumero());
-		return sorveglianza.isConCapo() ? nemici.conCapo(getCapo()) : nemici;
+		if (sorveglianza.isConCapo()) {
+			nemici.conCapo(getCapo());
+		}
+		return sorveglianza.getOndate().aggiungiA(nemici, this::getCapoDellOndata, this::testo);
+	}
+
+	/**
+	 * Il nome del capo di quell'ondata (2, 3), pescato una volta sola.
+	 */
+	private String getCapoDellOndata(int ondata) {
+		return parametro(CAPO + "_" + ondata, () -> getSorveglianza().getOndate().pescaNomeDelCapo(ondata));
 	}
 
 	/**
@@ -69,10 +79,15 @@ public class LaSorveglianza extends IncaricoInCitta {
 	}
 
 	/**
-	 * Il testo della grammatica, con il nome del capo al posto di %CAPO%.
+	 * Il testo della grammatica, con il nome del capo al posto di %CAPO%, e quelli dei capi delle ondate al posto di
+	 * %CAPO_2% e %CAPO_3%.
 	 */
 	private String testo(String testo) {
-		return testo.replace(SorveglianzaRichiesta.CAPO, getCapo());
+		String conICapi = testo.replace(SorveglianzaRichiesta.CAPO, getCapo());
+		for (int ondata : getSorveglianza().getOndate().getOndateConCapo()) {
+			conICapi = conICapi.replace(OndateDellaRiga.capo(ondata), getCapoDellOndata(ondata));
+		}
+		return conICapi;
 	}
 
 	private String getMandanteDiCitta() {
@@ -113,6 +128,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 	protected void allIncarico() {
 		getSorveglianza();
 		getCapo();
+		getSorveglianza().getOndate().getOndateConCapo().forEach(this::getCapoDellOndata);
 	}
 
 	@Override

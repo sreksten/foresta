@@ -74,6 +74,7 @@ public final class IndagineRichiesta {
 	}
 
 	private final String riga;
+	private final OndateDellaRiga ondate;
 	private final String chiave;
 	private final TipoMissione tipo;
 	private final AspettoDelMandante aspetto;
@@ -100,9 +101,11 @@ public final class IndagineRichiesta {
 
 	private IndagineRichiesta(String riga) {
 		this.riga = riga;
-		CampiDiGrammatica campi = CampiDiGrammatica.da(riga, "CHIAVE", "TIPO", "ASPETTO", "MANDANTE", "INDIZIO_1", "INDIZIO_2",
-				"INDIZIO_3", "DOMANDA", "SOSPETTI", "COLPEVOLE", "NEMICO", "NUMERO", "CAPO", "RESA", "LUOGO", "MONETE", "TITOLO",
-				"RICHIESTA", "BATTUTA", "RISPOSTA", "SMASCHERAMENTO", "ERRORE", "VITTORIA", "RINGRAZIAMENTO", "RICORDO");
+		CampiDiGrammatica campi = CampiDiGrammatica.da(riga, OndateDellaRiga.conICampiDelleOndate("CHIAVE", "TIPO", "ASPETTO",
+				"MANDANTE", "INDIZIO_1", "INDIZIO_2", "INDIZIO_3", "DOMANDA", "SOSPETTI", "COLPEVOLE", "NEMICO", "NUMERO", "CAPO",
+				"RESA", "LUOGO", "MONETE", "TITOLO", "RICHIESTA", "BATTUTA", "RISPOSTA", "SMASCHERAMENTO", "ERRORE", "VITTORIA",
+				"RINGRAZIAMENTO", "RICORDO"));
+		ondate = OndateDellaRiga.da(campi, riga);
 		chiave = campi.obbligatorio("CHIAVE");
 		tipo = campi.enumerato("TIPO", TipoMissione.class);
 		aspetto = campi.enumerato("ASPETTO", AspettoDelMandante.class);
@@ -149,6 +152,13 @@ public final class IndagineRichiesta {
 
 	private Indizio indizio(String campo) {
 		return Indizio.da(campo, riga);
+	}
+
+	/**
+	 * Le ondate che arrivano nel nascondiglio dopo i primi nemici, se ce ne sono (ONDATA_2=, ONDATA_3=).
+	 */
+	OndateDellaRiga getOndate() {
+		return ondate;
 	}
 
 	public static IndagineRichiesta da(String riga) {

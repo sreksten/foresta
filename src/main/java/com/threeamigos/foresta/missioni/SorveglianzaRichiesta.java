@@ -35,12 +35,13 @@ public final class SorveglianzaRichiesta {
 	private final String vittoria;
 	private final String ringraziamento;
 	private final String ricordo;
+	private final OndateDellaRiga ondate;
 
 	private SorveglianzaRichiesta(String riga) {
 		this.riga = riga;
-		CampiDiGrammatica campi = CampiDiGrammatica.da(riga, "CHIAVE", "TIPO", "ASPETTO", "MANDANTE", "LUOGO", "VISITE", "ORE",
-				"NEMICO", "NUMERO", "CAPO", "MONETE", "TITOLO", "RICHIESTA", "BATTUTA", "RISPOSTA", "VEGLIA", "SCOPERTA",
-				"VITTORIA", "RINGRAZIAMENTO", "RICORDO");
+		CampiDiGrammatica campi = CampiDiGrammatica.da(riga, OndateDellaRiga.conICampiDelleOndate("CHIAVE", "TIPO", "ASPETTO",
+				"MANDANTE", "LUOGO", "VISITE", "ORE", "NEMICO", "NUMERO", "CAPO", "MONETE", "TITOLO", "RICHIESTA", "BATTUTA",
+				"RISPOSTA", "VEGLIA", "SCOPERTA", "VITTORIA", "RINGRAZIAMENTO", "RICORDO"));
 		chiave = campi.obbligatorio("CHIAVE");
 		tipo = campi.enumerato("TIPO", TipoMissione.class);
 		aspetto = campi.enumerato("ASPETTO", AspettoDelMandante.class);
@@ -64,6 +65,10 @@ public final class SorveglianzaRichiesta {
 				: numero < 1 || vittoria == null) {
 			throw new IllegalArgumentException("NEMICO, NUMERO e VITTORIA vanno insieme, e CAPO solo con loro: " + riga);
 		}
+		ondate = OndateDellaRiga.da(campi, riga);
+		if (nemico == null && !ondate.isVuota()) {
+			throw new IllegalArgumentException("Le ondate arrivano dopo i nemici dell'ultima visita (NEMICO=): " + riga);
+		}
 		titolo = campi.obbligatorio("TITOLO");
 		richiesta = campi.obbligatorio("RICHIESTA");
 		battutaDelCapo = campi.obbligatorio("BATTUTA");
@@ -72,6 +77,13 @@ public final class SorveglianzaRichiesta {
 		scoperta = campi.obbligatorio("SCOPERTA");
 		ringraziamento = campi.obbligatorio("RINGRAZIAMENTO");
 		ricordo = campi.obbligatorio("RICORDO");
+	}
+
+	/**
+	 * Le ondate che arrivano all'ultima visita dopo i primi nemici, se ce ne sono (ONDATA_2=, ONDATA_3=).
+	 */
+	OndateDellaRiga getOndate() {
+		return ondate;
 	}
 
 	public static SorveglianzaRichiesta da(String riga) {

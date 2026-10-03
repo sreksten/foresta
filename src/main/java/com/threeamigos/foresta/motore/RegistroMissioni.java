@@ -286,12 +286,26 @@ public class RegistroMissioni {
 	 * Missione.getIncontroInLocazione), se ce ne sono: vince la prima missione che risponde.
 	 */
 	public static Optional<List<Personaggio>> getIncontroMissione(CoordinateMD coordinate) {
+		return getMissioneConIncontro(coordinate).flatMap(missione -> missione.getIncontroInLocazione(coordinate));
+	}
+
+	/**
+	 * Le ondate che arrivano dopo gli avversari di {@link #getIncontroMissione}, dalla stessa missione (vedi
+	 * Missione.getOndateSuccessiveInLocazione): vuota se non ce ne sono.
+	 */
+	public static List<Ondata> getOndateSuccessiveMissione(CoordinateMD coordinate) {
+		return getMissioneConIncontro(coordinate).map(missione -> missione.getOndateSuccessiveInLocazione(coordinate))
+				.orElse(Collections.emptyList());
+	}
+
+	/**
+	 * La prima missione in corso che vuole degli avversari in quella locazione, se ce n'è una.
+	 */
+	private static Optional<Missione> getMissioneConIncontro(CoordinateMD coordinate) {
 		for (Missione missione : getTutteLeMissioni()) {
-			if (missione.isAttiva() && !missione.isCompleta() && !missione.isFallita()) {
-				Optional<List<Personaggio>> avversari = missione.getIncontroInLocazione(coordinate);
-				if (avversari.isPresent()) {
-					return avversari;
-				}
+			if (missione.isAttiva() && !missione.isCompleta() && !missione.isFallita()
+					&& missione.getIncontroInLocazione(coordinate).isPresent()) {
+				return Optional.of(missione);
 			}
 		}
 		return Optional.empty();

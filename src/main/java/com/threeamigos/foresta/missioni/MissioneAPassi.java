@@ -11,6 +11,7 @@ import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.Ondata;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.Statistiche;
@@ -678,12 +679,14 @@ public abstract class MissioneAPassi extends MissioneBase {
 	/**
 	 * COMBATTI(bersaglio): finché è il passo corrente, nella locazione in quelle coordinate ci sono gli avversari
 	 * dell'incontro, al posto di quelli che ci sarebbero stati; si conclude a fine locazione, lì, quando il gruppo
-	 * ne ha sconfitti lì quanti ne erano: quelli della stessa classe sconfitti altrove non contano.
+	 * ne ha sconfitti lì quanti ne erano, di ogni classe e in tutte le ondate (vedi IncontroDiMissione.poi): quelli
+	 * della stessa classe sconfitti altrove non contano.
 	 */
 	protected final Passo combatti(Supplier<CoordinateMD> dove, IncontroDiMissione incontro) {
 		return Passo.quando(MomentoControllo.POST_LOCAZIONE,
 						() -> dove.get() != null && dove.get().equals(GruppoGiocatore.getIstanza().getCoordinate())
-								&& getConteggioNelPassoCorrente(eventoSconfittoIn(incontro.getClasse(), dove.get())) >= incontro.getNumero())
+								&& incontro.getSconfittiRichiesti().entrySet().stream().allMatch(richiesti ->
+										getConteggioNelPassoCorrente(eventoSconfittoIn(richiesti.getKey(), dove.get())) >= richiesti.getValue()))
 				.affronta(dove, incontro);
 	}
 
@@ -705,7 +708,24 @@ public abstract class MissioneAPassi extends MissioneBase {
 			return Optional.empty();
 		}
 		IncontroDiMissione incontro = costruisciPasso(getPassoCorrente()).getIncontroIn(coordinate);
-		return incontro == null ? Optional.empty() : Optional.of(incontro.crea());
+		if (incontro == null) {
+			return Optional.empty();
+		}
+		// A ondate si ricomincia dalla prima a ogni visita: e si ricomincia anche a contare gli sconfitti, perché
+		// non basti mettere insieme quelli di più visite senza mai battere l'ultima ondata
+		if (incontro.getNumeroDiOndate() > 1) {
+			incontro.getSconfittiRichiesti().keySet().forEach(classe -> azzeraConteggio(eventoSconfittoIn(classe, coordinate)));
+		}
+		return Optional.of(incontro.crea());
+	}
+
+	@Override
+	public List<Ondata> getOndateSuccessiveInLocazione(CoordinateMD coordinate) {
+		if (!isAttiva() || isCompleta() || isFallita() || Passo.FINE.equals(getPassoCorrente())) {
+			return Collections.emptyList();
+		}
+		IncontroDiMissione incontro = costruisciPasso(getPassoCorrente()).getIncontroIn(coordinate);
+		return incontro == null ? Collections.emptyList() : incontro.creaOndateSuccessive();
 	}
 
 	/**
@@ -907,6 +927,10 @@ public abstract class MissioneAPassi extends MissioneBase {
 		}
 		String chiave = EVENTO + validaId(getPassoCorrente()) + "_" + validaId(evento);
 		aggiungiProprieta(chiave, String.valueOf(getConteggioNelPassoCorrente(evento) + quantita));
+	}
+
+	private void azzeraConteggio(String evento) {
+		aggiungiProprieta(EVENTO + validaId(getPassoCorrente()) + "_" + validaId(evento), "0");
 	}
 
 	public final int getConteggioNelPassoCorrente(String evento) {

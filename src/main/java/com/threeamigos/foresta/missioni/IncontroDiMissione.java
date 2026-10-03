@@ -1,11 +1,14 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.motore.Ondata;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 /**
@@ -16,6 +19,13 @@ import java.util.Objects;
  * <pre>
  * IncontroDiMissione.di(ClassePersonaggio.HOBGOBLIN, 3).conCapo("Sgranf");
  * IncontroDiMissione.di(ClassePersonaggio.GOBLIN, 3).conCapo("Grumolo", ClassePersonaggio.HOBGOBLIN);
+ * </pre>
+ * Può arrivare a ondate (vedi {@link #poi}): sconfitti tutti quelli in campo, la locazione si riempie di nuovo, fino a
+ * {@value #ONDATE_MASSIME} ondate in tutto. Con delle ondate in arrivo non si corrompe, non si fa amicizia e non si
+ * passa inosservati; chi fugge, alla visita dopo ricomincia dalla prima.
+ * <pre>
+ * IncontroDiMissione.di(ClassePersonaggio.SCHELETRO, 3)
+ *         .poi(IncontroDiMissione.di(ClassePersonaggio.MAGO, 1).conCapo("Mortimer"), "Il negromante esce dall'ombra!");
  * </pre>
  */
 public final class IncontroDiMissione {
@@ -28,6 +38,13 @@ public final class IncontroDiMissione {
 	private boolean finoAllaResa;
 	private boolean aDuello;
 	private boolean aggirabile;
+	private final List<IncontroDiMissione> ondateSuccessive = new ArrayList<>();
+	private final List<String> arrivi = new ArrayList<>();
+
+	/**
+	 * Quante ondate al massimo, contando la prima.
+	 */
+	public static final int ONDATE_MASSIME = 3;
 
 	private IncontroDiMissione(ClassePersonaggio classe, int numero) {
 		if (numero < 1) {
@@ -76,6 +93,54 @@ public final class IncontroDiMissione {
 
 	public boolean isADuello() {
 		return aDuello;
+	}
+
+	/**
+	 * Un'ondata in più, che arriva quando quelli di prima sono sconfitti tutti, con che cosa si scrive quando arriva.
+	 * Non con un duello; al massimo {@value #ONDATE_MASSIME} ondate in tutto.
+	 */
+	public IncontroDiMissione poi(IncontroDiMissione ondata, String arrivo) {
+		if (aDuello || ondata.aDuello) {
+			throw new IllegalStateException("Un duello non arriva a ondate");
+		}
+		if (ondateSuccessive.size() + 1 >= ONDATE_MASSIME) {
+			throw new IllegalStateException("Al massimo " + ONDATE_MASSIME + " ondate");
+		}
+		ondateSuccessive.add(Objects.requireNonNull(ondata));
+		arrivi.add(Objects.requireNonNull(arrivo));
+		return this;
+	}
+
+	/**
+	 * Quante ondate in tutto, contando la prima.
+	 */
+	public int getNumeroDiOndate() {
+		return 1 + ondateSuccessive.size();
+	}
+
+	/**
+	 * Quanti avversari di ogni classe vanno sconfitti, in tutte le ondate: quelli della banda di ognuna (vedi
+	 * {@link MissioneAPassi#combatti}).
+	 */
+	public Map<ClassePersonaggio, Integer> getSconfittiRichiesti() {
+		Map<ClassePersonaggio, Integer> richiesti = new EnumMap<>(ClassePersonaggio.class);
+		richiesti.merge(classe, numero, Integer::sum);
+		ondateSuccessive.forEach(ondata -> richiesti.merge(ondata.classe, ondata.numero, Integer::sum));
+		return richiesti;
+	}
+
+	/**
+	 * Le ondate dopo la prima, al livello del mondo (vedi {@link #crea}).
+	 */
+	public List<Ondata> creaOndateSuccessive() {
+		List<Ondata> ondate = new ArrayList<>();
+		for (int i = 0; i < ondateSuccessive.size(); i++) {
+			IncontroDiMissione ondata = ondateSuccessive.get(i);
+			ondata.aggirabile = aggirabile;
+			ondata.finoAllaResa = ondata.finoAllaResa || finoAllaResa;
+			ondate.add(new Ondata(ondata.crea(), arrivi.get(i)));
+		}
+		return ondate;
 	}
 
 	/**

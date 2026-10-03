@@ -30,6 +30,7 @@ public final class CombattimentoRichiesto {
 	private final CapoDellaRiga capo;
 	private final boolean finoAllaResa;
 	private final boolean aDuello;
+	private final OndateDellaRiga ondate;
 	private final ClassiLocazione luogo;
 	private final int monete;
 	private final String titolo;
@@ -42,8 +43,9 @@ public final class CombattimentoRichiesto {
 
 	private CombattimentoRichiesto(String riga) {
 		this.riga = riga;
-		CampiDiGrammatica campi = CampiDiGrammatica.da(riga, "CHIAVE", "TIPO", "ASPETTO", "MANDANTE", "NEMICO", "NUMERO",
-				"CAPO", "RESA", "DUELLO", "LUOGO", "MONETE", "TITOLO", "RICHIESTA", "BATTUTA", "RISPOSTA", "VITTORIA", "RINGRAZIAMENTO", "RICORDO");
+		CampiDiGrammatica campi = CampiDiGrammatica.da(riga, OndateDellaRiga.conICampiDelleOndate("CHIAVE", "TIPO", "ASPETTO",
+				"MANDANTE", "NEMICO", "NUMERO", "CAPO", "RESA", "DUELLO", "LUOGO", "MONETE", "TITOLO", "RICHIESTA", "BATTUTA",
+				"RISPOSTA", "VITTORIA", "RINGRAZIAMENTO", "RICORDO"));
 		chiave = campi.obbligatorio("CHIAVE");
 		tipo = campi.enumerato("TIPO", TipoMissione.class);
 		aspetto = campi.enumerato("ASPETTO", AspettoDelMandante.class);
@@ -64,6 +66,10 @@ public final class CombattimentoRichiesto {
 		if (aDuello && numero != 1) {
 			throw new IllegalArgumentException("A duello si sfida da soli: NUMERO=1 con DUELLO=SI: " + riga);
 		}
+		ondate = OndateDellaRiga.da(campi, riga);
+		if (aDuello && !ondate.isVuota()) {
+			throw new IllegalArgumentException("Un duello non arriva a ondate: " + riga);
+		}
 		titolo = campi.obbligatorio("TITOLO");
 		richiesta = campi.obbligatorio("RICHIESTA");
 		battutaDelCapo = campi.obbligatorio("BATTUTA");
@@ -71,6 +77,13 @@ public final class CombattimentoRichiesto {
 		vittoria = campi.obbligatorio("VITTORIA");
 		ringraziamento = campi.obbligatorio("RINGRAZIAMENTO");
 		ricordo = campi.obbligatorio("RICORDO");
+	}
+
+	/**
+	 * Le ondate che arrivano dopo i primi nemici, se ce ne sono (ONDATA_2=, ONDATA_3=).
+	 */
+	OndateDellaRiga getOndate() {
+		return ondate;
 	}
 
 	public static CombattimentoRichiesto da(String riga) {

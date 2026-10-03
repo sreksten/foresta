@@ -146,6 +146,7 @@ public enum TipoMissione {
      * Esempio: combattere un duello per ripristinare l'onore, affrontare un campione in arena
      */
     DUELLO(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: IncaricoDiCombattimento (l'esercito della radura, la notte dei morti: a ondate)
     /**
      * Esempio: partecipare a battaglia large-scale, combattimento di massa, schieramento di truppe
      */

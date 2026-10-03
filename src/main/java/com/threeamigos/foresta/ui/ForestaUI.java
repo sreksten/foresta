@@ -87,6 +87,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(NotificaPaginaIntermezzo.class, this::gestisciEventoPaginaIntermezzo);
 		BusEventi.iscriviti(InternoFumettoSuccessivo.class, evento -> displayableCanvas.saltaNellaPaginaIntermezzo(evento.getSecondi()));
 		BusEventi.iscriviti(InternoPreparazioneLocazione.class, this::gestisciEventoPreparazioneLocazione);
+		BusEventi.iscriviti(InternoAssegnaCoordinateAPersonaggi.class, evento -> displayableCanvas.assegnaCoordinateAPersonaggi());
 		BusEventi.iscriviti(InternoRichiestaAperturaFinestraCombattimento.class, this::gestisciEventoRichiestaAperturaFinestraCombattimento);
 		BusEventi.iscriviti(ComandoAperturaInventarioCommerciante.class, this::gestisciEventoRichiestaAperturaInventarioCommerciante);
 		BusEventi.iscriviti(ComandoAperturaIncantatore.class, this::gestisciEventoRichiestaAperturaIncantatore);

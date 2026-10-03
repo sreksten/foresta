@@ -264,7 +264,30 @@ public abstract class LocazioneBase implements Locazione {
 		if (stato != Stato.GIOCO_PERSO && stato != Stato.FINE_LOCAZIONE && isDuelloPerso()) {
 			return perdiIlDuello();
 		}
+		// Non si guarda se la locazione è completa: quando l'ultimo avversario muore per un veleno non lo è ancora
+		if (stato == Stato.FINE_LOCAZIONE && gruppoAvversario.getPersonaggiVivi().isEmpty() && gruppoAvversario.hasOndateSuccessive()) {
+			return arrivaLaProssimaOndata();
+		}
 		return stato;
+	}
+
+	/**
+	 * Sconfitti tutti gli avversari in campo, ne arriva un'altra ondata (vedi GruppoAvversario.prossimaOndata): la
+	 * locazione non è più completa, la finestra di combattimento si chiude e si torna a scegliere che cosa fare. Tutti
+	 * i punti in cui un combattimento si vince (la mischia, gli incantesimi, il dardo, i veleni) passano di qui.
+	 */
+	private Stato arrivaLaProssimaOndata() {
+		BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
+		Ondata ondata = gruppoAvversario.prossimaOndata();
+		combattente = null;
+		statoLocazione = StatoLocazione.IN_LOCAZIONE;
+		opzioneCorruzioneDisponibile = false;
+		opzioneAmiciziaDisponibile = false;
+		setCompleta(false);
+		BusEventi.pubblica(new InternoAssegnaCoordinateAPersonaggi());
+		BusEventi.pubblica(new NotificaTestoParagrafo(ondata.getArrivo()));
+		impostaComandiPossibili();
+		return Stato.IN_LOCAZIONE;
 	}
 
 	/**
@@ -998,9 +1021,10 @@ public abstract class LocazioneBase implements Locazione {
 			return Stato.FINE_LOCAZIONE;
 		} else {
 			setCompleta(false);
-			// Non possiamo fare amicizia o corrompere per completare le missioni secondarie!
+			// Non possiamo fare amicizia o corrompere per completare le missioni secondarie! E nemmeno con delle
+			// ondate in arrivo: corrotta la prima, non arriverebbero le altre
 			//TODO il meccanismo delle missioni andrebbe gestito meglio
-			if (tipoLocazione != TipoLocazione.MISSIONE_SECONDARIA) {
+			if (tipoLocazione != TipoLocazione.MISSIONE_SECONDARIA && !gruppoAvversario.hasOndateSuccessive()) {
 				Personaggio p;
 				for (int i = 0; i < numeroAvversari; i++) {
 					p = gruppoAvversario.getPersonaggio(i);
@@ -1398,12 +1422,13 @@ public abstract class LocazioneBase implements Locazione {
 	 * Se il gruppo può provare a passare inosservato: una volta sola, prima di fare qualunque altra cosa (vedi
 	 * isAzione), fuori dal combattimento, in una locazione della
 	 * foresta (non in una città, in un castello o nella locazione di una missione secondaria), con avversari che non
-	 * vanno affrontati per forza (vedi Personaggio.isDaAffrontare) e che non sfidano a duello.
+	 * vanno affrontati per forza (vedi Personaggio.isDaAffrontare), che non sfidano a duello e senza ondate in arrivo.
 	 */
 	private boolean isPassaggioPossibile() {
 		return !passaggioEscluso && statoLocazione == StatoLocazione.IN_LOCAZIONE
 				&& gruppo.getClasseLocazioneCorrente().getTipoLocazione() == TipoLocazione.STANDARD
-				&& !gruppoAvversario.getPersonaggiVivi().isEmpty() && !gruppoAvversario.isDaAffrontare() && !gruppoAvversario.isDuello();
+				&& !gruppoAvversario.getPersonaggiVivi().isEmpty() && !gruppoAvversario.isDaAffrontare() && !gruppoAvversario.isDuello()
+				&& !gruppoAvversario.hasOndateSuccessive();
 	}
 
 	/**

@@ -389,6 +389,10 @@ public enum TipoEvento {
      */
     INTERNO_FUMETTO_SUCCESSIVO,
     /**
+     * Il motore chiede alla UI di assegnare di nuovo immagini e posizioni ai personaggi in locazione
+     */
+    INTERNO_ASSEGNA_COORDINATE_A_PERSONAGGI,
+    /**
      * Chiede di effettuare una notifica al giocatore via fumetto a tempo a video invece che come messaggio
      */
     INTERNO_NOTIFICA_VIA_FUMETTO_A_TEMPO,

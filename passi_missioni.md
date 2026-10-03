@@ -1106,3 +1106,33 @@ incontrati"): potranno tornare.
 Copre TORNEO. Test: `ScenarioTorneoTest`. COMMERCIO, SENSERIA e RICATTO sono
 commentati come non adatti al tono del gioco.
 
+### Le ondate, e la battaglia (2026-10-04)
+
+**Le ondate.** Un incontro di missione può arrivare a ondate
+(`IncontroDiMissione.poi(ondata, arrivo)`, al massimo tre in tutto, mai in un
+duello): sconfitti tutti gli avversari in campo, la locazione si riempie di nuovo.
+
+- Entrando, l'automa mette in campo la prima ondata e consegna le altre al
+  `GruppoAvversario` (`setOndateSuccessive`, dalla stessa missione:
+  `RegistroMissioni.getOndateSuccessiveMissione`). Non si salvano: si salva solo
+  fra una locazione e l'altra, mai a metà combattimento.
+- `LocazioneBase.impostaAzioni`, da cui passano tutti i modi di vincere (mischia,
+  incantesimi, dardo, veleni), quando non resta un avversario vivo e c'è
+  un'ondata in arrivo la mette in campo: la locazione non è più completa, la
+  finestra di combattimento si chiude, si scrive l'arrivo e si torna a scegliere.
+  La UI riassegna immagini e posizioni con `InternoAssegnaCoordinateAPersonaggi`.
+- Con delle ondate in arrivo non si corrompe, non si fa amicizia e non si passa
+  inosservati. Chi fugge, alla visita dopo ricomincia dalla prima ondata, e
+  ricomincia anche il conto degli sconfitti.
+- `combatti` vuole sconfitti, per ogni classe, quelli di tutte le ondate
+  (`IncontroDiMissione.getSconfittiRichiesti`).
+- Nella grammatica `OndateDellaRiga` legge `ONDATA_2=CLASSE NUMERO [CAPO]`,
+  `ARRIVO_2=`, `ONDATA_3=`, `ARRIVO_3=`, nei testi `%CAPO_2%` e `%CAPO_3%`; la
+  leggono gli incarichi di combattimento, le sorveglianze e le indagini.
+
+**BATTAGLIA**: l'esercito della radura (goblin, hobgoblin, il troll che comanda la
+baracca) e la notte dei morti (scheletri, spettri, il negromante). DIFESA,
+ASSEDIO_DIFESA e TRINCEA hanno ora due o tre ondate all'ultima visita, e
+nell'indagine delle luci nelle rovine, dopo gli scheletri, arriva il negromante
+con un nome. Test: `ScenarioOndateTest`.
+

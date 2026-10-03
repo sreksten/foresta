@@ -358,13 +358,35 @@ OGGETTO_SMARRITO
 #   MONETE=     quanto si paga;
 #   TITOLO=, RICHIESTA=, BATTUTA=, RISPOSTA=  il nome della missione e le battute dell'incarico (mandante, capo,
 #               mandante); dove stanno e quanto pagano lo aggiunge la missione;
-#   VITTORIA=, RINGRAZIAMENTO=, RICORDO=  quando sono sconfitti, al ritorno in città, e il ricordo del luogo.
-# Nei testi %CAPO% è il nome del capo. Nei testi non si usa il ";".
+#   VITTORIA=, RINGRAZIAMENTO=, RICORDO=  quando sono sconfitti, al ritorno in città, e il ricordo del luogo;
+#   ONDATA_2=, ARRIVO_2=, ONDATA_3=, ARRIVO_3=  facoltativi: le ondate che arrivano, sconfitti tutti quelli in campo
+#               (al massimo tre in tutto, non in un duello): classe e numero, e se c'è un capo con un nome il terzo
+#               pezzo è come CAPO= (TROLL 1 SI); ARRIVO_ è che cosa si scrive quando l'ondata arriva. Con le ondate non
+#               si corrompe, non si fa amicizia e non si passa inosservati; chi fugge, alla visita dopo ricomincia.
+# Nei testi %CAPO% è il nome del capo, %CAPO_2% e %CAPO_3% quelli dei capi delle ondate. Nei testi non si usa il ";".
 # Una riga può pescare dei pezzi a caso dalla grammatica: i titoli nobiliari, per esempio, scelgono il titolo una
 # volta sola con [TITOLO_NOBILE=[TITOLO_DELLA_PALUDE]] e lo ripetono nei testi con [#TITOLO_NOBILE], e i nemici con
 # [NEMICI_DELLA_PALUDE].
 
 INCARICO_DI_COMBATTIMENTO
+    CHIAVE=ESERCITO_DELLA_RADURA;TIPO=BATTAGLIA;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=GOBLIN;NUMERO=5;\
+    LUOGO=RADURA;MONETE=60;TITOLO=La battaglia della radura;\
+    RICHIESTA=Un esercito di goblin si raduna in una radura per marciare sulla città. Esercito è una parola grossa: è una gran confusione con le lance. Ma sono tanti. Fermateli lì.;\
+    BATTUTA=Quanti, tanti?;RISPOSTA=Tanti. E dietro ai goblin, dicono, c'è qualcosa di più grosso. Ma dicono tante cose.;\
+    ONDATA_2=HOBGOBLIN 3;ARRIVO_2=I goblin sono a terra, ma dal bosco arrivano tre hobgoblin, con l'aria di chi viene a vedere perché ci mettono tanto.;\
+    ONDATA_3=TROLL 1 SI;ARRIVO_3=Il terreno trema: arriva %CAPO_3%, il troll che comanda tutta la baracca, e non è contento.;\
+    VITTORIA=Anche %CAPO_3% è a terra: l'esercito è sbaragliato, e la radura è di nuovo libera.;\
+    RINGRAZIAMENTO=Goblin, hobgoblin e pure un troll! In città faranno una canzone. Brutta, ma una canzone.;\
+    RICORDO=In questa radura fu sbaragliato l'esercito di %CAPO_3%.
+    CHIAVE=NOTTE_DEI_MORTI;TIPO=BATTAGLIA;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;NEMICO=SCHELETRO;NUMERO=4;LUOGO=ROVINE;\
+    MONETE=55;TITOLO=La notte dei morti;\
+    RICHIESTA=Fra delle rovine i morti si sono messi a camminare. Tutti insieme, in fila, come a una processione. Qualcuno li comanda, e non è il parroco.;\
+    BATTUTA=E chi li comanda?;RISPOSTA=Lo scoprirete quando avrete sistemato quelli in prima fila.;\
+    ONDATA_2=SPETTRO 2;ARRIVO_2=Gli scheletri crollano in un mucchio d'ossa, ma dai muri escono due spettri, gelidi come la cantina del parroco.;\
+    ONDATA_3=MAGO 1 NOME_MAGO;ARRIVO_3=Dall'ombra esce un negromante, %CAPO_3%, che batte piano le mani: “Complimenti. Ma adesso tocca a me.”;\
+    VITTORIA=%CAPO_3% è sconfitto, e i morti tornano a dormire. Questa volta per sempre, si spera.;\
+    RINGRAZIAMENTO=I morti riposano, e il parroco è tornato a dormire anche lui. Era ora.;\
+    RICORDO=Fra queste rovine il negromante %CAPO_3% fece camminare i morti, per una notte.
     CHIAVE=TROLL_DEL_MULINO;TIPO=VENDETTA;ASPETTO=QUALUNQUE;MANDANTE=il mugnaio;NEMICO=TROLL;NUMERO=1;CAPO=SI;LUOGO=GROTTA;\
     MONETE=35;TITOLO=La vendetta del mugnaio;\
     RICHIESTA=Un troll di nome %CAPO% ha sfasciato il mulino di mio padre. Con mio padre dentro. Voglio che paghi.;\
@@ -627,8 +649,10 @@ NEMICI_DELLE_ROVINE
 #   VEGLIA=     che cosa si scrive a una visita che conta, se non è l'ultima (la missione aggiunge quante ne mancano);
 #   SCOPERTA=   che cosa si scrive all'ultima visita;
 #   NEMICO=, NUMERO=, CAPO=, VITTORIA=  facoltativi: chi salta fuori all'ultima visita, da sconfiggere lì, e che
-#               cosa si scrive quando è sconfitto.
-# Nei testi %CAPO% è il nome del capo. Nei testi non si usa il ";".
+#               cosa si scrive quando è sconfitto;
+#   ONDATA_2=, ARRIVO_2=, ONDATA_3=, ARRIVO_3=  facoltativi, solo con NEMICO=: le ondate che arrivano all'ultima
+#               visita dopo i primi nemici, come per gli incarichi di combattimento.
+# Nei testi %CAPO% è il nome del capo, %CAPO_2% e %CAPO_3% quelli dei capi delle ondate. Nei testi non si usa il ";".
 
 SORVEGLIANZA
     CHIAVE=CERCHIO_DI_PIETRE;TIPO=VIGILIA;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;LUOGO=RADURA;VISITE=3;ORE=20;\
@@ -684,30 +708,34 @@ SORVEGLIANZA
     RINGRAZIAMENTO=Un tonico per i capelli? Tutto qui? Beh, me lo segno. Per un amico.;\
     RICORDO=Fra queste rovine c'era il laboratorio segreto di %CAPO%.
     CHIAVE=GALLINE_DEL_FATTORE;TIPO=DIFESA;ASPETTO=QUALUNQUE;MANDANTE=il fattore;LUOGO=RADURA;VISITE=3;ORE=12;\
-    NEMICO=GOBLIN;NUMERO=4;CAPO=SI;MONETE=40;TITOLO=Le galline del fattore;\
+    NEMICO=GOBLIN;NUMERO=4;CAPO=SI;MONETE=45;TITOLO=Le galline del fattore;\
+    ONDATA_2=GOBLIN 3;ARRIVO_2=Altri tre goblin sbucano dal pollaio, con le piume in bocca: erano già dentro!;\
     RICHIESTA=La mia fattoria è in una radura, e i goblin di %CAPO% vengono a rubarmi le galline. Passate a fare la guardia, finché non si fanno vedere.;\
     BATTUTA=E se non vengono?;RISPOSTA=Vengono, vengono. Le mie galline sono famose.;\
     VEGLIA=Intorno alla fattoria tutto tace. Le galline vi guardano con sospetto.;\
     SCOPERTA=Alla terza guardia arrivano i goblin di %CAPO%, con i sacchi per le galline.;\
-    VITTORIA=I goblin di %CAPO% sono sconfitti: le galline sono salve.;\
+    VITTORIA=I goblin di %CAPO% sono sconfitti tutti, anche quelli del pollaio: le galline sono salve.;\
     RINGRAZIAMENTO=Le galline hanno ricominciato a fare le uova. Per lo spavento, credo.;\
     RICORDO=In questa radura c'è una fattoria che fu difesa dai goblin di %CAPO%.
     CHIAVE=TORRE_ASSEDIATA;TIPO=ASSEDIO_DIFESA;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;LUOGO=ROVINE;VISITE=3;\
-    ORE=16;NEMICO=HOBGOBLIN;NUMERO=4;CAPO=SI;MONETE=50;TITOLO=La torre assediata;\
+    ORE=16;NEMICO=HOBGOBLIN;NUMERO=4;CAPO=SI;MONETE=60;TITOLO=La torre assediata;\
+    ONDATA_2=GOBLIN 5;ARRIVO_2=Respinto il primo assalto, dalla boscaglia arrivano cinque goblin con una scala. Troppo corta, ma ci provano.;\
+    ONDATA_3=TROLL 1 SI;ARRIVO_3=Per ultimo arriva %CAPO_3%, un troll che usa un albero intero come ariete.;\
     RICHIESTA=Una nostra pattuglia si è rifugiata in una torre fra delle rovine, e gli hobgoblin di %CAPO% la assediano. Portate rinforzi, e tornateci finché l'assedio non cede.;\
     BATTUTA=Quanto possono resistere?;RISPOSTA=Hanno pane per una settimana e pazienza per un giorno. Sbrigatevi.;\
     VEGLIA=Gli assediati vi salutano dalla torre. Gli hobgoblin, dalla boscaglia, vi tengono d'occhio.;\
     SCOPERTA=Stanchi di aspettare, gli hobgoblin di %CAPO% tentano l'assalto alla torre.;\
-    VITTORIA=L'assalto è respinto: %CAPO% e i suoi hobgoblin non assedieranno più nessuno.;\
+    VITTORIA=L'assedio è rotto: gli hobgoblin di %CAPO%, i goblin con la scala e perfino %CAPO_3% non assedieranno più nessuno.;\
     RINGRAZIAMENTO=La pattuglia è tornata. Affamata, ma intera. Il pane è finito il secondo giorno, la pazienza il primo.;\
     RICORDO=Fra queste rovine c'è una torre che resistette all'assedio degli hobgoblin di %CAPO%.
     CHIAVE=GUADO_DA_TENERE;TIPO=TRINCEA;ASPETTO=QUALUNQUE;MANDANTE=il traghettatore;LUOGO=PALUDE;VISITE=2;ORE=20;\
-    NEMICO=TROLL;NUMERO=2;MONETE=45;TITOLO=Il guado da tenere;\
+    NEMICO=TROLL;NUMERO=2;MONETE=50;TITOLO=Il guado da tenere;\
+    ONDATA_2=HOBGOBLIN 3;ARRIVO_2=I troll sono a terra, ma dall'altra sponda arrivano tre hobgoblin, a guado, con l'acqua fino al naso.;\
     RICHIESTA=C'è un guado nella palude, l'unico per chilometri. Due troll vogliono prenderselo per farci pagare il pedaggio. Scavate un fosso e tenete la posizione.;\
     BATTUTA=Un fosso? In una palude?;RISPOSTA=In una palude i fossi si scavano da soli. Basta aspettare.;\
     VEGLIA=Il fosso si riempie d'acqua, ma tiene. Dei troll, per ora, nessuna traccia.;\
     SCOPERTA=I due troll arrivano al guado, e trovano il fosso. E voi dietro.;\
-    VITTORIA=I troll sono sconfitti: il guado resta di tutti.;\
+    VITTORIA=Troll e hobgoblin sono sconfitti: il guado resta di tutti.;\
     RINGRAZIAMENTO=Il guado è libero, e il pedaggio lo chiedo io. Scherzo! Per voi è gratis.;\
     RICORDO=In questa palude c'è un guado che fu tenuto contro due troll.
     CHIAVE=GROTTA_MURATA;TIPO=CONTENIMENTO;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;LUOGO=GROTTA;VISITE=3;ORE=12;\
@@ -839,6 +867,8 @@ SOCCORSO
 #   SOSPETTI=   da 2 a 5, separati da "/": le risposte possibili, nell'ordine;
 #   COLPEVOLE=  il numero del sospetto giusto, da 1. Gli indizi devono bastare a capirlo;
 #   NEMICO=, NUMERO=, CAPO=, RESA=, LUOGO=  chi va sconfitto nel nascondiglio del colpevole, e dov'è;
+#   ONDATA_2=, ARRIVO_2=, ONDATA_3=, ARRIVO_3=  facoltativi: le ondate che arrivano nel nascondiglio dopo i primi
+#               nemici, come per gli incarichi di combattimento (%CAPO_2% e %CAPO_3% nei testi);
 #   SMASCHERAMENTO=  quando si sceglie il colpevole giusto (la missione aggiunge che il nascondiglio è sulla mappa);
 #   ERRORE=     quando si accusa un innocente: la missione fallisce;
 #   VITTORIA=   quando chi è nel nascondiglio è sconfitto;
@@ -905,12 +935,13 @@ INDAGINE
     INDIZIO_1=ROVINE:Fra le rovine ci sono candele nere consumate e un grande cerchio disegnato col gesso. Dentro il cerchio, ossa sparse.;\
     INDIZIO_2=TEMPIO:Il custode del tempio dice che mancano tre libri proibiti, sui morti che camminano. Li aveva chiesti un uomo vestito di nero, con le dita sporche di gesso.;\
     DOMANDA=Che cosa succede nelle rovine?;SOSPETTI=Ci sono i fantasmi/Un negromante risveglia i morti/Gli spiriti della palude fanno scherzi;\
-    COLPEVOLE=2;NEMICO=SCHELETRO;NUMERO=5;LUOGO=GROTTA;\
+    COLPEVOLE=2;NEMICO=SCHELETRO;NUMERO=4;LUOGO=GROTTA;\
+    ONDATA_2=MAGO 1 NOME_MAGO;ARRIVO_2=Crollato l'ultimo scheletro, dal fondo della grotta avanza il negromante, %CAPO_2%, con un libro aperto in mano.;\
     SMASCHERAMENTO=Gesso, candele nere, libri sui morti che camminano: è un negromante. E ha portato i suoi morti in una grotta.;\
     ERRORE=Vi siete sbagliati, e mentre cercate dove non dovreste, il cimitero si svuota del tutto. Il sacerdote chiude la porta.;\
-    VITTORIA=Gli scheletri sono tornati polvere. Del negromante resta solo il mantello nero, e i tre libri, che riportate al tempio.;\
+    VITTORIA=Gli scheletri sono tornati polvere, e %CAPO_2% non risveglierà più nessuno. I tre libri tornano al tempio.;\
     RINGRAZIAMENTO=I morti possono tornare a riposare. Domani li rimettiamo al loro posto, uno per uno.;\
-    RICORDO=In questa grotta un negromante nascondeva i suoi scheletri.
+    RICORDO=In questa grotta il negromante %CAPO_2% nascondeva i suoi scheletri.
     CHIAVE=MORTE_DEL_PESCATORE;TIPO=FORENSICA;ASPETTO=QUALUNQUE;MANDANTE=la vedova del pescatore;MONETE=35;\
     TITOLO=La morte del pescatore;\
     RICHIESTA=Mio marito è morto in una palude, dove andava a pescare. Dicono che è stato un incidente. Io non ci credo.;\

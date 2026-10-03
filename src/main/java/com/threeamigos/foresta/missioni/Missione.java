@@ -1,11 +1,13 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.motore.Ondata;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.MissioneMD;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -76,6 +78,14 @@ public interface Missione {
 	 */
 	default Optional<Oggetto> getOggettoInLocazione(CoordinateMD coordinate, ClassiLocazione classe, boolean visitata) {
 		return Optional.empty();
+	}
+
+	/**
+	 * Le ondate di avversari che arrivano, nella locazione in cui il gruppo sta entrando, dopo quelli di
+	 * {@link #getIncontroInLocazione} (vedi IncontroDiMissione.poi). Vuota se non ce ne sono.
+	 */
+	default List<Ondata> getOndateSuccessiveInLocazione(CoordinateMD coordinate) {
+		return Collections.emptyList();
 	}
 
 	/**
