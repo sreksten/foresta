@@ -1,6 +1,6 @@
 # I nomi dei personaggi delle missioni (vedi ProduttoreDiTestiCasuale): gli ostaggi da liberare, i bardi da
 # riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia; e i materiali che chiedono
-# l'alchimista, l'armaiolo e il capitano delle guardie. Per ora sono tutti maschili, perché i testi delle missioni
+# l'alchimista, l'armaiolo e il capitano delle guardie; e le cose da portare da una città all'altra. Per ora sono tutti maschili, perché i testi delle missioni
 # parlano di "suo marito" e "sua moglie".
 #
 # Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
@@ -152,3 +152,36 @@ RICHIESTA_CAPITANO
     M;corno di minotauro;corni di minotauro;NEMICI MINOTAURO;3-4;7;Tutti e due i corni?;Uno basta. Il minotauro non protesterà.
     F;piuma di arpia;piume di arpia;NEMICI ARPIA;3-4;6;Non volano via?;Le arpie sì. Le piume, se le tenete strette, no.
     M;dente di troll;denti di troll;NEMICI TROLL;3-4;7;Ne hanno parecchi, i troll.;Uno a testa. Non fate i pignoli.
+
+# ---------------------------------------------------------------------------------------------
+# Spedizioni da una città all'altra (vedi IlCorriere e Spedizione)
+# ---------------------------------------------------------------------------------------------
+#
+# Una riga per spedizione, dieci campi separati da ";":
+#   1. genere dell'oggetto: F o M;
+#   2. l'oggetto, senza articolo (per esempio "fiala di antidoto");
+#   3. chi lo manda, con l'articolo;
+#   4. chi lo riceve, con l'articolo: abita in un'altra città, che sceglie la missione (non nominarla);
+#   5. URGENTE (un antidoto, una medicina: c'è una scadenza, che dipende dalla strada) o CON_CALMA;
+#   6. quante monete paga il destinatario, prima di aggiungere quelle per la strada;
+#   7. perché il mittente lo manda: la sua prima battuta nell'intermezzo;
+#   8. la battuta del capo;
+#   9. la risposta del mittente;
+#  10. il ringraziamento del destinatario, quando lo riceve.
+# Oggetti che cominciano per consonante (non s impura né z): gli articoli sono la/questa o il/questo.
+# Le prime sono semplici trasporti, poi antidoti, medicine, cure magiche ed epidemie.
+
+TRASPORTO
+    F;lettera sigillata;il notaio;il borgomastro;CON_CALMA;14;Ho una lettera che non posso affidare ai corrieri. L'ultimo l'ha aperta per leggerla.;E cosa c'è scritto?;Se ve lo dicessi, dovrei cercarmi un altro corriere.;Il sigillo è intatto! Allora esiste ancora gente onesta.
+    M;pegno d'amore;il giovane apprendista;la sua promessa sposa;CON_CALMA;14;Lei abita lontano, e io non posso lasciare la bottega. Il maestro mi ha già sgridato due volte, oggi.;E se lei dice di no?;Allora tenetevelo. No, aspettate, riportatemelo.;Ha detto che sarebbe venuto a portarmelo di persona! Sì, sì, mille volte sì.
+    M;sacchetto di semi rari;la giardiniera del palazzo;l'erborista;CON_CALMA;12;Questi semi vengono da molto lontano, e nella foresta gli uccelli li mangerebbero in un boccone.;Che cosa ci cresce?;Se lo sapessi, non li manderei a un'erborista.;Proprio quelli che cercavo! E nemmeno uno beccato.
+    M;forziere di monete;il cambiavalute;il banchiere;CON_CALMA;18;Devo mandare un forziere di monete al banchiere. Lo so, lo so, è una prova di fiducia.;E se ci venisse la tentazione?;Il banchiere sa quanto c'è dentro. E adesso sa anche le vostre facce.;Conto, riconto... c'è tutto. Che strano.
+    F;cassa di libri;il bibliotecario;il maestro di scuola;CON_CALMA;12;Il maestro di scuola ha finito i libri da far leggere ai bambini. Cioè, i bambini li hanno finiti. A morsi.;A morsi?;Sono bambini di città. Non chiedete.;Libri nuovi! Questa volta li metto sullo scaffale più alto.
+    F;fiala di antidoto;l'erborista;il fabbro;URGENTE;20;Il fabbro è stato morso da una vipera dei boschi, e senza questo antidoto non arriva a fine settimana.;E se arriviamo tardi?;Allora portategli dei fiori, invece.;Il veleno se ne va... Mi sento di nuovo le dita dei piedi!
+    M;barattolo di unguento;l'alchimista;il cacciatore;URGENTE;18;Il cacciatore si è graffiato con una freccia avvelenata. Una delle sue.;Si è avvelenato da solo?;Era la sua prima settimana con l'arco.;Brucia, ma funziona! La prossima volta vado a caccia con la fionda.
+    M;sacchetto di erbe medicinali;la guaritrice;la vedova del mugnaio;URGENTE;18;La vedova del mugnaio ha la febbre alta da tre giorni, e lì nessuno sa preparare un decotto come si deve.;Basta un sacchetto di erbe?;Con un brodo caldo e qualcuno che le stia vicino, sì.;Mi sento già meglio, solo a sentirne l'odore.
+    F;boccetta di tintura;lo speziale;il maestro d'armi;CON_CALMA;12;Il maestro d'armi ha la tosse da un mese, e tossisce proprio quando deve parare.;È grave?;Per lui no. Per i suoi allievi, sì.;Finalmente! Adesso posso tornare a parare senza tossire.
+    M;talismano benedetto;il sacerdote;il figlio del sindaco;URGENTE;22;Una strega ha lanciato una maledizione sul figlio del sindaco, che adesso abbaia alla luna. Questo talismano la scioglie, se arriva prima della luna piena.;Abbaia? Davvero?;E scodinzola, quando arriva la cena.;Bau! Cioè, grazie! Grazie davvero.
+    F;boccetta d'acqua sacra;la badessa;il cavaliere ferito;URGENTE;22;Il cavaliere è stato ferito da una lama stregata, e la ferita non si chiude. Solo l'acqua della nostra fonte la può guarire.;Non basterebbe una benda?;Le bende le ha già provate tutte. Anche quelle stregate.;La ferita si chiude! Sento il calore dell'acqua sacra fin nelle ossa.
+    F;cassa di rimedi;il medico di corte;il guaritore del lazzaretto;URGENTE;25;Nel lazzaretto c'è un'epidemia di febbre grigia, e i rimedi sono finiti.;Si attacca anche a noi?;Non se ve ne andate subito, dopo la consegna.;Basteranno per tutti i malati! E adesso andate, prima che la febbre prenda anche voi.
+    M;sacco di sale purificato;la badessa;il sindaco;URGENTE;22;Una pestilenza si sta mangiando il grano, e chi lo mangia. Questo sale, sparso sulle soglie delle case, ferma il contagio.;Funziona davvero?;Funziona sempre. Quasi sempre. Spesso.;Lo spargeremo su ogni soglia. Che il cielo vi benedica!

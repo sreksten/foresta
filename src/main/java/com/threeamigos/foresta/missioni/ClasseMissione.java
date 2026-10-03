@@ -33,6 +33,7 @@ public enum ClasseMissione {
 	NON_SPARATE_SUL_PIANISTA(NonSparateSulPianista::new),
 	CACCIATORE_DI_TAGLIE(CacciatoreDiTaglie::new),
 	IL_CARTOGRAFO(IlCartografo::new),
+	IL_CORRIERE(IlCorriere::new),
 
 	MISSIONE_DI_PROVA_SECONDARIA_UNO(MissioneDiProvaSecondariaUno::new),
 	MISSIONE_DI_PROVA_SECONDARIA_DUE(MissioneDiProvaSecondariaDue::new),

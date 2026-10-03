@@ -22,7 +22,9 @@ import com.threeamigos.foresta.motore.RegistroMissioni;
  * ({@link #getOggettiDaConsegnare()}): il gruppo li consegna;</li>
  * <li>RICOMPENSA, in locazione, nella città: le monete, e la missione si completa.</li>
  * </ol>
- * Se la città viene distrutta dopo l'accettazione, la missione fallisce.
+ * Si riscuote in un'altra città se l'incarico è portare qualcosa a qualcuno ({@link #getCittaDelRitorno()}): allora
+ * RITORNO, CONSEGNA e RICOMPENSA sono là.
+ * Se la città in cui si riscuote viene distrutta dopo l'accettazione, la missione fallisce.
  * <p>
  * Un incarico può avere una città fissa ({@link #getCittaFissa()}): è la storia di quella città (il medaglione di
  * Fleena, le derrate di Ruuna, vedi MissioneRecuperaBersaglio), e parte alla prima visita. Gli altri si prendono in
@@ -81,6 +83,21 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	}
 
 	/**
+	 * La città in cui si torna a riscuotere: quella dell'incarico, se non è un'altra (vedi IlCorriere).
+	 */
+	protected ClassiLocazione getCittaDelRitorno() {
+		return getCitta();
+	}
+
+	/**
+	 * Se l'incarico si può offrire nella città in cui è il gruppo (per esempio se c'è un'altra città a cui portare
+	 * qualcosa). Vale solo per gli incarichi senza città fissa.
+	 */
+	protected boolean isPossibileQui() {
+		return true;
+	}
+
+	/**
 	 * Gli incarichi che si prendono in una città qualsiasi si ripetono; le storie delle città no.
 	 */
 	@Override
@@ -96,7 +113,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	}
 
 	protected String testoCittaDistrutta() {
-		return getNomeCitta() + " è stata distrutta: nessuno potrà più pagare per l'incarico.";
+		return nomeDellaCitta(getCittaDelRitorno()) + " è stata distrutta: nessuno potrà più pagare per l'incarico.";
 	}
 
 	/**
@@ -114,7 +131,13 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	 * Il nome della città dell'incarico, "Ruuna"; vuoto finché non c'è.
 	 */
 	protected final String getNomeCitta() {
-		ClassiLocazione citta = getCitta();
+		return nomeDellaCitta(getCitta());
+	}
+
+	/**
+	 * Il nome di una città, "Ruuna"; vuoto se non c'è.
+	 */
+	protected static String nomeDellaCitta(ClassiLocazione citta) {
 		if (citta == null) {
 			return "";
 		}
@@ -147,12 +170,12 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 						})
 						.poi(primoPassoDelCompito());
 			case RITORNO:
-				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::nellaCitta)
+				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::nellaCittaDelRitorno)
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaRingraziamento().getPagine())
 						.falliscoSe(this::isCittaDistrutta, this::testoCittaDistrutta)
 						.poi(getOggettiDaConsegnare() != null ? CONSEGNA : RICOMPENSA);
 			case CONSEGNA:
-				return consegna(MomentoControllo.IN_LOCAZIONE, this::nellaCitta, getOggettiDaConsegnare(), this::testoConsegna)
+				return consegna(MomentoControllo.IN_LOCAZIONE, this::nellaCittaDelRitorno, getOggettiDaConsegnare(), this::testoConsegna)
 						.falliscoSe(this::isCittaDistrutta, this::testoCittaDistrutta)
 						.poi(RICOMPENSA);
 			case RICOMPENSA:
@@ -164,8 +187,12 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 		}
 	}
 
+	/**
+	 * Se la città in cui si riscuote è stata distrutta.
+	 */
 	private boolean isCittaDistrutta() {
-		return getCitta() != null && LineaTemporale.isCittaDistrutta(getCitta());
+		ClassiLocazione citta = getCittaDelRitorno();
+		return citta != null && LineaTemporale.isCittaDistrutta(citta);
 	}
 
 	/**
@@ -176,7 +203,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 		if (getCittaFissa() != null) {
 			return nellaCitta();
 		}
-		return isDisponibile() && inUnaCitta() && isVisitaTranquilla();
+		return isDisponibile() && inUnaCitta() && isPossibileQui() && isVisitaTranquilla();
 	}
 
 	@Override
@@ -191,6 +218,17 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	}
 
 	protected final boolean nellaCitta() {
-		return getCitta() != null && GruppoGiocatore.getIstanza().isInLocazioneUnica(getCitta()) && !isCittaDistrutta();
+		return inCitta(getCitta());
+	}
+
+	/**
+	 * Se il gruppo è nella città in cui si riscuote.
+	 */
+	protected final boolean nellaCittaDelRitorno() {
+		return inCitta(getCittaDelRitorno());
+	}
+
+	private static boolean inCitta(ClassiLocazione citta) {
+		return citta != null && GruppoGiocatore.getIstanza().isInLocazioneUnica(citta) && !LineaTemporale.isCittaDistrutta(citta);
 	}
 }

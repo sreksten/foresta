@@ -646,3 +646,29 @@ capitano i trofei di prima. Le sezioni precedenti su `LAlchimista` e
 `CacciaAiTrofei` descrivono com'erano prima di questa unificazione. Test:
 `ScenarioRichiesteDiMaterialiTest`, e quelli della semina e del ripiego, che
 fissano la mandragola (`Alchimie`).
+
+### Il corriere (2026-10-03)
+
+`IlCorriere` è un incarico in città, ripetibile: qualcuno affida al gruppo una
+cosa da portare a qualcuno in un'altra città, e paga il destinatario alla
+consegna. Le spedizioni vengono da `TRASPORTO` in `missioni.txt`, lette da
+`Spedizione`. Ogni riga ha dieci campi separati da ";": genere, oggetto senza
+articolo, mittente, destinatario, `URGENTE` o `CON_CALMA`, monete, la richiesta
+del mittente, la battuta del capo, la risposta del mittente e il ringraziamento
+del destinatario.
+
+- La città di destinazione si sceglie quando l'incarico si offre: un'altra
+  città, non distrutta. Si segna sulla mappa alla partenza. Se non ce n'è
+  un'altra l'incarico non si offre (`IncaricoInCitta.isPossibileQui`).
+- `IncaricoInCitta.getCittaDelRitorno()` dice dove si riscuote: per gli altri
+  incarichi è la città dell'incarico, per il corriere la destinazione. Lì ci
+  sono il ringraziamento, la consegna dell'oggetto (un oggetto di missione,
+  contato alla partenza) e le monete. Se la città in cui si riscuote viene
+  distrutta, la missione fallisce.
+- Ricompensa: le monete della riga, più una ogni due caselle di distanza.
+- Le spedizioni urgenti hanno una scadenza: due ore per casella di distanza più
+  dodici. Arrivare tardi fa fallire la missione.
+
+Le righe coprono TRASPORTO (lettere, pegni, forzieri), ANTI_VELENO (antidoti),
+GUARIGIONE (erbe e tinture), CURA_MAGICA (talismani, acqua sacra) ed EPIDEMIA
+(rimedi per un lazzaretto). Test: `ScenarioCorriereTest`.

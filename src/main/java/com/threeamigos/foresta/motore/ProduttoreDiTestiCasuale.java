@@ -124,6 +124,14 @@ public class ProduttoreDiTestiCasuale {
 	}
 
 	/**
+	 * Una cosa da portare da una città all'altra, come riga di dieci campi separati da ";" (vedi missioni.txt e
+	 * Spedizione).
+	 */
+	public static String spedizione() {
+		return missioni.produce("TRASPORTO").get(0).trim();
+	}
+
+	/**
 	 * Il nome di un capobanda di goblin o hobgoblin, a volte con un soprannome: "Grumolo il Guercio" (vedi
 	 * missioni.txt).
 	 */

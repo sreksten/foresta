@@ -38,6 +38,7 @@ public enum TipoMissione {
      * Esempio: ritrovare un amuleto o un cimelio di famiglia e riportarlo al legittimo proprietario
      */
     RECUPERO(SupertipoMissione.ACQUISIZIONE),
+    // Coperto da: IlCorriere (lettere, pegni, forzieri)
     /**
      * Esempio: portare un amuleto sacro o una lettera sigillata da un punto A ad un punto B
      */
@@ -241,6 +242,7 @@ public enum TipoMissione {
      * Esempio: difendere un villaggio dagli attacchi di goblin o da un drago
      */
     DIFESA(SupertipoMissione.PROTEZIONE),
+    // Coperto da: IlCorriere (erbe e tinture per un malato)
     /**
      * Esempio: curare una malattia rara, guarire da un avvelenamento, resuscitare un alleato
      */
@@ -253,6 +255,7 @@ public enum TipoMissione {
      * Esempio: evacuare civili da una zona di guerra, portare in sicurezza rifugiati
      */
     EVACUAZIONE(SupertipoMissione.PROTEZIONE),
+    // Coperto da: IlCorriere (rimedi per un lazzaretto, sale contro il contagio)
     /**
      * Esempio: contenere un'epidemia, aiutare i malati, disinfestare un'area
      */
@@ -277,10 +280,12 @@ public enum TipoMissione {
      * Esempio: creare rifugio, accogliere profughi, fornire riparo
      */
     RIFUGIO(SupertipoMissione.PROTEZIONE),
+    // Coperto da: IlCorriere (talismani e acqua sacra, urgenti)
     /**
      * Esempio: guarigione tramite magia, incantesimi curativi
      */
     CURA_MAGICA(SupertipoMissione.PROTEZIONE),
+    // Coperto da: IlCorriere (antidoti e unguenti, urgenti)
     /**
      * Esempio: contrastare avvelenamento, antidoto, cura veleno
      */
