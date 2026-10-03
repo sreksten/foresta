@@ -3,6 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
+import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.BenedizioneRichiesta;
 import com.threeamigos.foresta.missioni.IlFavore;
 import com.threeamigos.foresta.missioni.LaBenedizione;
@@ -40,6 +41,10 @@ class ScenarioBenedizioneTest {
             + "NOME=la benedizione della notte;BENEDIZIONE=PERCEZIONE AUMENTO_FISSO 2;RICHIESTA=La tomba.;BATTUTA=Quale?;"
             + "RISPOSTA=Del santo.;FAVORE=La veglia;LUOGO=BOSCO;VISITE=2;ORE=16;VEGLIA=Tutto tace.;VITTORIA=La veglia è finita.;"
             + "BENEDETTO=Il buio è meno buio per %PERSONAGGIO%.";
+    private static final String GUADO = "CHIAVE=GUADO_DI_PROVA;ASPETTO=SACERDOTE;MANDANTE=il sacerdote del fiume;"
+            + "NOME=la benedizione del fiume;BENEDIZIONE=SALUTE AUMENTO_PERCENTUALE 10;RICHIESTA=Il guado.;BATTUTA=Quale?;"
+            + "RISPOSTA=Quello del troll.;FAVORE=Il troll del guado;LUOGO=PALUDE;NEMICO=TROLL;NUMERO=1;"
+            + "VITTORIA=Il guado è libero.;BENEDETTO=L'acqua scorre per %PERSONAGGIO%.";
 
     @Test
     void ogniBenedizioneSiLegge() {
@@ -111,6 +116,30 @@ class ScenarioBenedizioneTest {
                     String.valueOf(partita.testi()));
             assertTrue(RegistroMissioni.getTutteLeMissioni().stream().anyMatch(m -> m instanceof LaBenedizione && m != benedizione),
                     "si potrà ricevere un'altra benedizione");
+        }
+    }
+
+    @Test
+    void nellaPaludeDelFavoreCiSonoINemici() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(245)) {
+            LaBenedizione benedizione = incontra(partita, GUADO);
+            IlFavore favore = (IlFavore) benedizione.getMissioniAffidate(LaBenedizione.FAVORE).get(0);
+            favore.controllaInLocazione();
+            CoordinateMD palude = favore.getPosto();
+            assertEquals(ClassiLocazione.PALUDE, Foresta.getLocazione(palude));
+
+            // Come in Automa.entraInStatoPreparazioneLocazione
+            partita.gruppo().setCoordinate(palude);
+            Locazione locazione = Foresta.costruisciIstanza(palude);
+            partita.gruppo().setLocazioneCorrente(locazione);
+            GruppoAvversario avversari = GruppoAvversario.getIstanza();
+            avversari.reimposta();
+            locazione.crea(partita.gruppo(), avversari);
+            RegistroMissioni.getIncontroMissione(palude).orElseThrow(AssertionError::new).forEach(avversari::aggiungiPersonaggio);
+            locazione.descrivi(partita.gruppo(), avversari);
+            assertFalse(partita.testi().stream().anyMatch(t -> t.contains("non trova nulla")), String.valueOf(partita.testi()));
+            assertNotEquals(Stato.FINE_LOCAZIONE, locazione.impostaAzioni(partita.gruppo(), avversari, null));
+            assertFalse(locazione.isCompleta());
         }
     }
 
