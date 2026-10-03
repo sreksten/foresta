@@ -81,7 +81,7 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
     private int disegnaValore(Graphics2D graphics, String etichetta, String valore, int y, DoomdarkColorModel.Color colore) {
         Image i = ImageCache.get(etichetta, colore);
         graphics.drawImage(i, xMinimaZonaCentrale, y, null);
-        i = DoomdarkTextProducer.getImage(valore, font, colore);
+        i = ImageCache.get(valore, font, colore);
         graphics.drawImage(i, xMassimaZonaCentrale - i.getWidth(null), y, null);
         return y + fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
     }

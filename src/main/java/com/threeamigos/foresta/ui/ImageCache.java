@@ -17,6 +17,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.function.Supplier;
 
 public class ImageCache {
 
@@ -105,6 +106,8 @@ public class ImageCache {
 		return thread;
 	});
 	private static final DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
+	// Separa, nella chiave della cache, la larghezza massima dal testo: un carattere che nei testi non c'è
+	private static final String SEPARATORE_LARGHEZZA = "\u0000";
 
 	private static boolean inited = false;
 	
@@ -373,15 +376,29 @@ public class ImageCache {
 	 * Metodo di utilità che costruisce e memorizza immagini utilizzate spessissimo (Ad esempio, nomi e statistiche)
 	 */
 	public static Image get(String testo, DoomdarkFont font, DoomdarkColorModel.Color colore) {
+		return get(font, colore, testo, () -> DoomdarkTextProducer.getImage(testo, font, colore));
+	}
+
+	/**
+	 * Come {@link #get(String, DoomdarkFont, DoomdarkColorModel.Color)}, ma il testo va a capo per non superare la
+	 * larghezza massima.
+	 */
+	public static Image get(String testo, DoomdarkFont font, DoomdarkColorModel.Color colore, int larghezzaMassima) {
+		// Lo stesso testo a capo a larghezze diverse è un'altra immagine: la larghezza entra nella chiave
+		return get(font, colore, larghezzaMassima + SEPARATORE_LARGHEZZA + testo,
+				() -> DoomdarkTextProducer.getImage(testo, font, colore, larghezzaMassima));
+	}
+
+	private static Image get(DoomdarkFont font, DoomdarkColorModel.Color colore, String chiave, Supplier<Image> costruttore) {
 		Map<String, WeakReference<Image>> stringToImageMap = cacheDinamica
 				// Mappe concorrenti anche all'interno: il reaper le ripulisce dal suo thread mentre l'EDT le usa
 				.computeIfAbsent(font, k -> new ConcurrentHashMap<>())
 				.computeIfAbsent(colore, k -> new ConcurrentHashMap<>());
-		WeakReference<Image> ref = stringToImageMap.get(testo);
+		WeakReference<Image> ref = stringToImageMap.get(chiave);
 		Image img = (ref != null) ? ref.get() : null;
 		if (img == null) {
-			img = DoomdarkTextProducer.getImage(testo, font, colore);
-			stringToImageMap.put(testo, new WeakReference<>(img));
+			img = costruttore.get();
+			stringToImageMap.put(chiave, new WeakReference<>(img));
 		}
 		return img;
 	}

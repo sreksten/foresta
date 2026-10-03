@@ -266,7 +266,7 @@ public class ComponenteScorrevole<T> {
             Graphics2D g2d = canvas.createGraphics();
             int y = 0;
             for (String s : testi) {
-                Image image = DoomdarkTextProducer.getImage(s, font, color);
+                Image image = ImageCache.get(s, font, color);
                 g2d.drawImage(image, 0, y, null);
                 y += font.getHeight() + interlinea;
             }

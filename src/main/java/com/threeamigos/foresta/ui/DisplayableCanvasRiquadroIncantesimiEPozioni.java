@@ -99,9 +99,9 @@ class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
         DoomdarkColorModel.Color color = colorA.getColor();
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 		graphics.drawImage(icona, iconaX, y - (icona.getHeight() - fontMedium.getHeight()) / 2, null);
-		Image doomdark = DoomdarkTextProducer.getImage(descrizione, fontMedium, color);
+		Image doomdark = ImageCache.get(descrizione, fontMedium, color);
 		graphics.drawImage(doomdark, nomeX, y, null);
-		doomdark = DoomdarkTextProducer.getImage(quantita, fontMedium, color);
+		doomdark = ImageCache.get(quantita, fontMedium, color);
 		graphics.drawImage(doomdark, totaleX - doomdark.getWidth(null), y, null);
 	}
 

@@ -10,9 +10,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 
 class DisplayableCanvasRiquadroGruppo implements Finestra {
@@ -22,8 +20,6 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 	private final int topLeftX;
 	private final int topLeftY;
 	private final int innerWidth;
-	private final Map<Object, Image> lightGrayMap = new HashMap<>();
-	private final Map<Object, Image> mediumGrayMap = new HashMap<>();
 	private final DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 	private final int leftXOffsetLabelSalute;
 	private final int rightXOffsetSalute;
@@ -52,22 +48,6 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
 		innerWidth = ImageCache.corniceGrande.getWidth() - (DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE << 1);
-		lightGrayMap.put(TipoAttributo.SALUTE, DoomdarkTextProducer.getImage("Sl:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
-		lightGrayMap.put(TipoAttributo.MAGIA, DoomdarkTextProducer.getImage("Mg:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
-		lightGrayMap.put(TipoAttributo.LIVELLO, DoomdarkTextProducer.getImage("Lv:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
-		lightGrayMap.put(TipoAttributo.CORAGGIO, DoomdarkTextProducer.getImage("Cr:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
-		lightGrayMap.put(TipoAttributo.VALORE, DoomdarkTextProducer.getImage("Vl:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
-		lightGrayMap.put(TipoAttributo.STANCHEZZA, DoomdarkTextProducer.getImage("St:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
-		lightGrayMap.put(TipoAttributo.CARISMA, DoomdarkTextProducer.getImage("Ca:", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
-		lightGrayMap.put("/", DoomdarkTextProducer.getImage("/", fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY));
-		mediumGrayMap.put(TipoAttributo.SALUTE, DoomdarkTextProducer.getImage("Sl:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
-		mediumGrayMap.put(TipoAttributo.MAGIA, DoomdarkTextProducer.getImage("Mg:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
-		mediumGrayMap.put(TipoAttributo.LIVELLO, DoomdarkTextProducer.getImage("Lv:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
-		mediumGrayMap.put(TipoAttributo.CORAGGIO, DoomdarkTextProducer.getImage("Cr:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
-		mediumGrayMap.put(TipoAttributo.VALORE, DoomdarkTextProducer.getImage("Vl:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
-		mediumGrayMap.put(TipoAttributo.STANCHEZZA, DoomdarkTextProducer.getImage("St:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
-		mediumGrayMap.put(TipoAttributo.CARISMA, DoomdarkTextProducer.getImage("Ca:", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
-		mediumGrayMap.put("/", DoomdarkTextProducer.getImage("/", fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY));
 		
 		int glyph9Width = fontMedium.getGlyphWidth('9');
 		
@@ -124,59 +104,51 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 				nome = p.getNomeSingolare();
 			}
 			if (!p.isVivo()) {
-				doomdark = DoomdarkTextProducer.getImage(nome, fontMedium, DoomdarkColorModel.Color.DARK_GRAY);
+				doomdark = ImageCache.get(nome, fontMedium, DoomdarkColorModel.Color.DARK_GRAY);
 				graphics.drawImage(doomdark, locXOffset, locYOffset, null);
 				locYOffset += fontMedium.getHeight();
-				doomdark = DoomdarkTextProducer.getImage(p.getCausaTrapasso(), fontMedium, DoomdarkColorModel.Color.DARK_GRAY, innerWidth);
+				doomdark = ImageCache.get(p.getCausaTrapasso(), fontMedium, DoomdarkColorModel.Color.DARK_GRAY, innerWidth);
 				graphics.drawImage(doomdark, locXOffset, locYOffset, null);
 				locYOffset += fontMedium.getHeight() * 2;
 			} else {
 				DoomdarkColorModel.Color color = i % 2 == 0 ? DoomdarkColorModel.Color.MEDIUM_GRAY : DoomdarkColorModel.Color.LIGHT_GRAY;
-				Map<Object, Image> imageMap = i % 2 == 0 ? mediumGrayMap : lightGrayMap;
-				doomdark = DoomdarkTextProducer.getImage(nome, fontMedium, color);
+				doomdark = ImageCache.get(nome, fontMedium, color);
 				graphics.drawImage(doomdark, locXOffset, locYOffset, null);
 
 				locYOffset += fontMedium.getHeight();
-				graphics.drawImage(imageMap.get(TipoAttributo.SALUTE), leftXOffsetLabelSalute, locYOffset, null);
-				doomdark = DoomdarkTextProducer.getImage(p.getSalute(), fontMedium, color);
+				graphics.drawImage(ImageCache.get("Sl:", fontMedium, color), leftXOffsetLabelSalute, locYOffset, null);
+				doomdark = ImageCache.get(p.getSalute(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetSalute - doomdark.getWidth(null), locYOffset, null);
-				graphics.drawImage(imageMap.get("/"), leftXOffsetSeparatoreSalute, locYOffset, null);
-				doomdark = DoomdarkTextProducer.getImage(p.getSaluteMassima(), fontMedium, color);
+				graphics.drawImage(ImageCache.get("/", fontMedium, color), leftXOffsetSeparatoreSalute, locYOffset, null);
+				doomdark = ImageCache.get(p.getSaluteMassima(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetSaluteMassima - doomdark.getWidth(null), locYOffset, null);
 
-				graphics.drawImage(imageMap.get(TipoAttributo.MAGIA), leftXOffsetLabelMagia, locYOffset, null);
-				doomdark = DoomdarkTextProducer.getImage(p.getMagia(), fontMedium, color);
+				graphics.drawImage(ImageCache.get("Mg:", fontMedium, color), leftXOffsetLabelMagia, locYOffset, null);
+				doomdark = ImageCache.get(p.getMagia(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetMagia - doomdark.getWidth(null), locYOffset, null);
-				graphics.drawImage(imageMap.get("/"), leftXOffsetSeparatoreMagia, locYOffset, null);
-				doomdark = DoomdarkTextProducer.getImage(p.getMagiaMassima(), fontMedium, color);
+				graphics.drawImage(ImageCache.get("/", fontMedium, color), leftXOffsetSeparatoreMagia, locYOffset, null);
+				doomdark = ImageCache.get(p.getMagiaMassima(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetMagiaMassima - doomdark.getWidth(null), locYOffset, null);
 
-				graphics.drawImage(imageMap.get(TipoAttributo.MAGIA), leftXOffsetLabelMagia, locYOffset, null);
-				doomdark = DoomdarkTextProducer.getImage(p.getMagia(), fontMedium, color);
-				graphics.drawImage(doomdark, rightXOffsetMagia - doomdark.getWidth(null), locYOffset, null);
-				graphics.drawImage(imageMap.get("/"), leftXOffsetSeparatoreMagia, locYOffset, null);
-				doomdark = DoomdarkTextProducer.getImage(p.getMagiaMassima(), fontMedium, color);
-				graphics.drawImage(doomdark, rightXOffsetMagiaMassima - doomdark.getWidth(null), locYOffset, null);
-
-				graphics.drawImage(imageMap.get(TipoAttributo.LIVELLO), leftXOffsetLabelLivello, locYOffset, null);
-				doomdark = DoomdarkTextProducer.getImage(p.getLivello(), fontMedium, color);
+				graphics.drawImage(ImageCache.get("Lv:", fontMedium, color), leftXOffsetLabelLivello, locYOffset, null);
+				doomdark = ImageCache.get(p.getLivello(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetLivello - doomdark.getWidth(null), locYOffset, null);
 
 				locYOffset += fontMedium.getHeight();
-				graphics.drawImage(imageMap.get(TipoAttributo.CORAGGIO), leftXOffsetLabelCoraggio, locYOffset, null);
-				doomdark = DoomdarkTextProducer.getImage(p.getCoraggio(), fontMedium, color);
+				graphics.drawImage(ImageCache.get("Cr:", fontMedium, color), leftXOffsetLabelCoraggio, locYOffset, null);
+				doomdark = ImageCache.get(p.getCoraggio(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetCoraggio - doomdark.getWidth(null), locYOffset, null);
 
-				graphics.drawImage(imageMap.get(TipoAttributo.VALORE), leftXOffsetLabelValore, locYOffset, null);
-				doomdark = DoomdarkTextProducer.getImage(p.getValore(), fontMedium, color);
+				graphics.drawImage(ImageCache.get("Vl:", fontMedium, color), leftXOffsetLabelValore, locYOffset, null);
+				doomdark = ImageCache.get(p.getValore(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetValore - doomdark.getWidth(null), locYOffset, null);
 
-				graphics.drawImage(imageMap.get(TipoAttributo.STANCHEZZA), leftXOffsetLabelStanchezza, locYOffset, null);
-				doomdark = DoomdarkTextProducer.getImage(p.getStanchezza(), fontMedium, color);
+				graphics.drawImage(ImageCache.get("St:", fontMedium, color), leftXOffsetLabelStanchezza, locYOffset, null);
+				doomdark = ImageCache.get(p.getStanchezza(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetStanchezza - doomdark.getWidth(null), locYOffset, null);
 
-				graphics.drawImage(imageMap.get(TipoAttributo.CARISMA), leftXOffsetLabelCarisma, locYOffset, null);
-				doomdark = DoomdarkTextProducer.getImage(p.getCarisma(), fontMedium, color);
+				graphics.drawImage(ImageCache.get("Ca:", fontMedium, color), leftXOffsetLabelCarisma, locYOffset, null);
+				doomdark = ImageCache.get(p.getCarisma(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetCarisma - doomdark.getWidth(null), locYOffset, null);
 
 				locYOffset += fontMedium.getHeight();
@@ -194,7 +166,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 			Personaggio ospite = ospiti.get(i);
 			String nome = ospite.getNomeProprio().map(n -> n + "-" + ospite.getNomeSingolare()).orElse(ospite.getNomeSingolare());
 			DoomdarkColorModel.Color colore = ospite.isVivo() ? DoomdarkColorModel.Color.MEDIUM_GRAY : DoomdarkColorModel.Color.DARK_GRAY;
-			graphics.drawImage(DoomdarkTextProducer.getImage(nome, fontMedium, colore), locXOffset, locYOffset, null);
+			graphics.drawImage(ImageCache.get(nome, fontMedium, colore), locXOffset, locYOffset, null);
 			locYOffset += fontMedium.getHeight();
 			// Di un ospite che si può ferire si vede la salute
 			String stato;
@@ -205,7 +177,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 			} else {
 				stato = "Ospite del gruppo";
 			}
-			graphics.drawImage(DoomdarkTextProducer.getImage(stato, fontMedium, DoomdarkColorModel.Color.DARK_GRAY, innerWidth), locXOffset, locYOffset, null);
+			graphics.drawImage(ImageCache.get(stato, fontMedium, DoomdarkColorModel.Color.DARK_GRAY, innerWidth), locXOffset, locYOffset, null);
 			locYOffset += fontMedium.getHeight() * 2;
 		}
 	}

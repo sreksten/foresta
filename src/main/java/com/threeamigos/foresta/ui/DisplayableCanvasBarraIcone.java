@@ -82,9 +82,9 @@ class DisplayableCanvasBarraIcone implements Finestra {
 
 		DoomdarkFont fontSmall = DoomdarkFontSmall.getInstance();
 		DoomdarkColorModel.Color color = DoomdarkColorModel.Color.VERY_DARK_GRAY;
-		copyrightImages[0] = DoomdarkTextProducer.getImage("La Foresta", fontSmall, color);
-		copyrightImages[1] = DoomdarkTextProducer.getImage("copyright 1984-2026", fontSmall, color);
-		copyrightImages[2] = DoomdarkTextProducer.getImage("Stefano Reksten", fontSmall, color);
+		copyrightImages[0] = ImageCache.get("La Foresta", fontSmall, color);
+		copyrightImages[1] = ImageCache.get("copyright 1984-2026", fontSmall, color);
+		copyrightImages[2] = ImageCache.get("Stefano Reksten", fontSmall, color);
 		for (int i = 0; i < 3; i++) {
 			copyrightImagesXOffset[i] = larghezza - copyrightImages[i].getWidth(null) - 1;
 			copyrightImagesYOffset[i] = altezza - fontSmall.getHeight() * (3 - i) - 1;

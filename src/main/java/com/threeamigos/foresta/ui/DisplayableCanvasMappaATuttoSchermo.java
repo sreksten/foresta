@@ -192,7 +192,7 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 		if (nome == null) {
 			return;
 		}
-		Image testo = DoomdarkTextProducer.getImage(Misc.inizialeMaiuscola(nome), DoomdarkFontMedium.getInstance(),
+		Image testo = ImageCache.get(Misc.inizialeMaiuscola(nome), DoomdarkFontMedium.getInstance(),
 				DoomdarkColorModel.Color.BLACK);
 		int larghezza = testo.getWidth(null) + MARGINE_NOME * 2;
 		int altezza = testo.getHeight(null) + MARGINE_NOME * 2;

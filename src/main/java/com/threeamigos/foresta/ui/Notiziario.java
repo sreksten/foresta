@@ -150,7 +150,7 @@ class Notiziario {
 	}
 
 	private BufferedImage costruisciSeparatore() {
-		Image imgTrattino = DoomdarkTextProducer.getImage("-", FONT, DoomdarkColorModel.Color.WHITE);
+		Image imgTrattino = ImageCache.get("-", FONT, DoomdarkColorModel.Color.WHITE);
 		int larghezzaTrattino = imgTrattino.getWidth(null);
 		int larghezzaTotale = LARGHEZZA_MARGINE_SEPARATORE_NOTIZIE * 2 + larghezzaTrattino;
 
@@ -172,11 +172,11 @@ class Notiziario {
 		if (posizioneSeparatore > 0) {
 			String titolo = corpo.substring(0, posizioneSeparatore);
 			resto = corpo.substring(posizioneSeparatore);
-			imgTitolo = DoomdarkTextProducer.getImage(titolo, FONT, DoomdarkColorModel.Color.YELLOW);
+			imgTitolo = ImageCache.get(titolo, FONT, DoomdarkColorModel.Color.YELLOW);
 		} else {
 			resto = corpo;
 		}
-		Image imgResto = DoomdarkTextProducer.getImage(resto, FONT, DoomdarkColorModel.Color.WHITE);
+		Image imgResto = ImageCache.get(resto, FONT, DoomdarkColorModel.Color.WHITE);
 
 		int larghezzaTitolo = imgTitolo == null ? 0 : imgTitolo.getWidth(null);
 		int larghezzaTotale = larghezzaTitolo + imgResto.getWidth(null);

@@ -80,7 +80,7 @@ public class SpriteFumetto extends SpriteBase {
         List<Image> testiDisegnati = new ArrayList<>();
         int maxLarghezzaEffettiva = 0;
         for (String s : parti) {
-            Image testoDisegnato = DoomdarkTextProducer.getImage(s, font, colore);
+            Image testoDisegnato = ImageCache.get(s, font, colore);
             maxLarghezzaEffettiva = Math.max(maxLarghezzaEffettiva, testoDisegnato.getWidth(null));
             testiDisegnati.add(testoDisegnato);
         }

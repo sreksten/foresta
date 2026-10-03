@@ -106,14 +106,14 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		Image doomdark;
 		int giorni = LineaTemporale.getGiorno();
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
-		doomdark = DoomdarkTextProducer.getImage("Avversari uccisi in " + (giorni > 1 ? (Misc.getCardinaleM(giorni) + " giorni:") : "un giorno:"), fontMedium);
+		doomdark = ImageCache.get("Avversari uccisi in " + (giorni > 1 ? (Misc.getCardinaleM(giorni) + " giorni:") : "un giorno:"), fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY);
 		graphics.drawImage(doomdark, locXOffset + 9, locYOffset, null);
 		locYOffset += fontMedium.getHeight();
 		for (ClassePersonaggio classePersonaggio : ClassePersonaggio.values()) {
 			int m = Statistiche.getMostriUccisi(classePersonaggio);
 			if (m > 0) {
 				color = (color == DoomdarkColorModel.Color.MEDIUM_GRAY ? DoomdarkColorModel.Color.LIGHT_GRAY : DoomdarkColorModel.Color.MEDIUM_GRAY); 
-				doomdark = DoomdarkTextProducer.getImage(m + " " + (m == 1 ? classePersonaggio.getNomeSingolare() : classePersonaggio.getNomePlurale()), fontMedium, color);
+				doomdark = ImageCache.get(m + " " + (m == 1 ? classePersonaggio.getNomeSingolare() : classePersonaggio.getNomePlurale()), fontMedium, color);
 				graphics.drawImage(doomdark, locXOffset + 9, locYOffset, null);
 				locYOffset += fontMedium.getHeight();
 			}
@@ -225,9 +225,9 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		for (int posizione = 0; posizione < GestorePunteggi.getCardinalita(); posizione++) {
 			Punteggio punteggio = GestorePunteggi.getPunteggio(posizione);
 			color = (color == DoomdarkColorModel.Color.MEDIUM_GRAY ? DoomdarkColorModel.Color.LIGHT_GRAY : DoomdarkColorModel.Color.MEDIUM_GRAY);
-			doomdark = DoomdarkTextProducer.getImage(punteggio.getNome(), fontMedium, color);
+			doomdark = ImageCache.get(punteggio.getNome(), fontMedium, color);
 			graphics.drawImage(doomdark, locXOffset + 9, locYOffset, null);
-			doomdark = DoomdarkTextProducer.getImage(punteggio.getPunteggio(), fontMedium, color);
+			doomdark = ImageCache.get(punteggio.getPunteggio(), fontMedium, color);
 			graphics.drawImage(doomdark, width - locXOffset - doomdark.getWidth(null), locYOffset, null);
 			locYOffset += fontMedium.getHeight();
 		}
@@ -259,11 +259,11 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		int primo = pagina * TROFEI_PER_PAGINA;
 		for (TipoTrofeo trofeo : trofei.subList(primo, Math.min(primo + TROFEI_PER_PAGINA, trofei.size()))) {
 			boolean vinto = RegistroTrofei.isVinto(trofeo);
-			Image doomdark = DoomdarkTextProducer.getImage(trofeo.getNome(), fontMedium,
+			Image doomdark = ImageCache.get(trofeo.getNome(), fontMedium,
 					vinto ? DoomdarkColorModel.Color.WHITE : DoomdarkColorModel.Color.DARK_GRAY);
 			graphics.drawImage(doomdark, locXOffset, locYOffset, null);
 			locYOffset += fontMedium.getHeight();
-			doomdark = DoomdarkTextProducer.getImage(trofeo.getDescrizione(), fontSmall,
+			doomdark = ImageCache.get(trofeo.getDescrizione(), fontSmall,
 					vinto ? DoomdarkColorModel.Color.MEDIUM_GRAY : DoomdarkColorModel.Color.DARK_GRAY, larghezzaMassima);
 			graphics.drawImage(doomdark, locXOffset, locYOffset, null);
 			locYOffset += doomdark.getHeight(null) + (fontSmall.getHeight() >> 1);

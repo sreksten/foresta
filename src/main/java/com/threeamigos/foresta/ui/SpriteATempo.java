@@ -103,8 +103,8 @@ public class SpriteATempo extends SpriteBase {
 			return immagineFornita;
 		}
 
-		Image doomdark = DoomdarkTextProducer.getImage(testoVariazione, font, color);
-		Image blackDoomdark = DoomdarkTextProducer.getImage(testoVariazione, font, DoomdarkColorModel.Color.BLACK);
+		Image doomdark = ImageCache.get(testoVariazione, font, color);
+		Image blackDoomdark = ImageCache.get(testoVariazione, font, DoomdarkColorModel.Color.BLACK);
 		int doomdarkHeight = doomdark.getHeight(null) + 2; // per il bordo nero
 		int width;
 		int height;

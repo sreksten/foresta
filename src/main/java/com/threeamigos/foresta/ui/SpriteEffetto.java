@@ -52,7 +52,7 @@ public class SpriteEffetto extends SpriteBase {
 	}
 
 	private static BufferedImage costruisciTestoColorato(String testo, DoomdarkFont font, DoomdarkColorModel.Color color) {
-		Image doomdark = DoomdarkTextProducer.getImage(testo, font, color);
+		Image doomdark = ImageCache.get(testo, font, color);
 		BufferedImage immagine = new BufferedImage(doomdark.getWidth(null), doomdark.getHeight(null), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = immagine.createGraphics();
 		g.drawImage(doomdark, 0, 0, null);
@@ -61,7 +61,7 @@ public class SpriteEffetto extends SpriteBase {
 	}
 
 	private static BufferedImage costruisciTestoConPattern(String testo, DoomdarkFont font, BufferedImage pattern) {
-		Image sagoma = DoomdarkTextProducer.getImage(testo, font, DoomdarkColorModel.Color.WHITE);
+		Image sagoma = ImageCache.get(testo, font, DoomdarkColorModel.Color.WHITE);
 		int larghezza = sagoma.getWidth(null);
 		int altezza = sagoma.getHeight(null);
 

@@ -356,13 +356,13 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 		List<Image> righe = new ArrayList<>();
 		String nomeProprio = md.getNomeProprio();
 		if (nomeProprio != null) {
-			righe.add(DoomdarkTextProducer.getImage(nomeProprio, font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima));
-			righe.add(DoomdarkTextProducer.getImage(maiuscola(md.getNome()), font, DoomdarkColorModel.Color.WHITE, larghezzaMassima));
+			righe.add(ImageCache.get(nomeProprio, font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima));
+			righe.add(ImageCache.get(maiuscola(md.getNome()), font, DoomdarkColorModel.Color.WHITE, larghezzaMassima));
 		} else {
-			righe.add(DoomdarkTextProducer.getImage(maiuscola(md.getNome()), font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima));
+			righe.add(ImageCache.get(maiuscola(md.getNome()), font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima));
 		}
 		if (md.getDescrizione() != null) {
-			righe.add(DoomdarkTextProducer.getImage(maiuscola(md.getDescrizione()), font, DoomdarkColorModel.Color.LIGHT_GRAY, larghezzaMassima));
+			righe.add(ImageCache.get(maiuscola(md.getDescrizione()), font, DoomdarkColorModel.Color.LIGHT_GRAY, larghezzaMassima));
 		}
 		StringBuilder dati = new StringBuilder("Livello ").append(md.getLivello());
 		if (md.getRarita() != TipoRaritaArtefatto.COMUNE) {
@@ -371,11 +371,11 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 		if (md.getDanni() > 0) {
 			dati.append(", danni ").append(md.getDanni());
 		}
-		righe.add(DoomdarkTextProducer.getImage(dati.toString(), font, DoomdarkColorModel.Color.WHITE, larghezzaMassima));
+		righe.add(ImageCache.get(dati.toString(), font, DoomdarkColorModel.Color.WHITE, larghezzaMassima));
 		RegoleSetLeggendari.descrizioneSet(md).ifPresent(set ->
-				righe.add(DoomdarkTextProducer.getImage(set, font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima)));
+				righe.add(ImageCache.get(set, font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima)));
 		RegoleSetLeggendari.tipiDelSet(md).ifPresent(tipi ->
-				righe.add(DoomdarkTextProducer.getImage(tipi, font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima)));
+				righe.add(ImageCache.get(tipi, font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima)));
 		List<String> incantamenti = new ArrayList<>();
 		for (Incantamento incantamento : md.getIncantamenti()) {
 			incantamenti.add(incantamento(incantamento));
@@ -418,7 +418,7 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 
 	private static void aggiungi(List<Image> righe, List<String> voci, DoomdarkFont font, DoomdarkColorModel.Color colore, int larghezzaMassima) {
 		if (!voci.isEmpty()) {
-			righe.add(DoomdarkTextProducer.getImage(String.join(", ", voci), font, colore, larghezzaMassima));
+			righe.add(ImageCache.get(String.join(", ", voci), font, colore, larghezzaMassima));
 		}
 	}
 
