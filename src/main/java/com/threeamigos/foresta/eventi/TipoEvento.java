@@ -304,6 +304,10 @@ public enum TipoEvento {
      */
     INTERNO_PERSONAGGIO_ARRESO,
     /**
+     * Il gruppo è passato inosservato in una locazione, senza combattere
+     */
+    INTERNO_PASSAGGIO_INOSSERVATO,
+    /**
      * Un salvataggio è stato riletto con successo: porta gli ultimi messaggi da ripristinare nel pannello di testo
      */
     INTERNO_CARICAMENTO_COMPLETATO,

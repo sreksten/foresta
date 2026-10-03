@@ -101,6 +101,13 @@ public abstract class Gruppo {
 	}
 
 	/**
+	 * Se qualcuno del gruppo va affrontato per forza (vedi Personaggio.isDaAffrontare).
+	 */
+	public final boolean isDaAffrontare() {
+		return personaggi.stream().anyMatch(Personaggio::isDaAffrontare);
+	}
+
+	/**
 	 * Se qualcuno del gruppo sfida a duello (vedi Personaggio.isSfidante).
 	 */
 	public final boolean isDuello() {

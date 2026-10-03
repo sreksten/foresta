@@ -142,6 +142,12 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
     boolean isSfidante();
     void setSfidante(boolean sfidante);
 	/**
+	 * Se il personaggio va affrontato per forza: lo vuole una missione (vedi IncontroDiMissione). Allora non si può
+	 * passare inosservati (vedi LocazioneBase).
+	 */
+    boolean isDaAffrontare();
+    void setDaAffrontare(boolean daAffrontare);
+	/**
 	 * Un modificatore permanente di un attributo (una benedizione, per esempio): resta finché non lo si toglie.
 	 */
     void addModificatore(ModificatoreAttributo modificatore);

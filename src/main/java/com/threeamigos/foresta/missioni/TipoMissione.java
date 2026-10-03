@@ -569,6 +569,7 @@ public enum TipoMissione {
 
     //----------
 
+    // Coperto da: IlColpo (il libro dei conti dell'usuraio)
     /**
      * Esempio: rubare un artefatto da una camera del tesoro o un documento da una biblioteca
      */
@@ -582,6 +583,7 @@ public enum TipoMissione {
      * Esempio: commercio nel mercato nero, merci illegali, contrabbando organizzato
      */
     MERCATO_NERO(SupertipoMissione.NEGOZIAZIONE),
+    // Coperto da: IlColpo (le scale dei goblin)
     /**
      * Esempio: sabotare i rifornimenti di un nemico o sabotare le difese di una fortezza
      */
@@ -629,10 +631,12 @@ public enum TipoMissione {
     //  * Esempio: attaccare commercianti, razziare una costa, saccheggiare una carovana
     //  */
     // PIRATERIA(SupertipoMissione.ILLECITO),
+    // Coperto da: IlColpo (il sonno dei troll)
     /**
      * Esempio: avvelenare cibo/acqua, envenenonment, contaminazione
      */
     AVVELENAMENTO(SupertipoMissione.ILLECITO),
+    // Coperto da: IlColpo (i baffi alla statua)
     /**
      * Esempio: distruggere proprietà, vandalizzare edifici, rovinare strutture
      */
@@ -653,6 +657,7 @@ public enum TipoMissione {
      * Esempio: incitare ribellione, sedizione, sommossa, insurrezione, incitare disordini, sommossa pubblica
      */
     SEDIZIONE(SupertipoMissione.ILLECITO),
+    // Coperto da: IlColpo (il deposito di frecce)
     /**
      * Esempio: incendiare, fuoco appiccato, piromane, incendio intenzionale, fuoco premeditato, fuoco criminale
      */
@@ -666,6 +671,7 @@ public enum TipoMissione {
      * Esempio: riciclare denaro sporco, lavaggio denaro
      */
     RICICLAGGIO(SupertipoMissione.ILLECITO),
+    // Coperto da: IlColpo (la capanna della guaritrice)
     /**
      * Esempio: irruzione, invasione casa, violazione proprietà privata, imprigionamento illegale, sequestro
      */

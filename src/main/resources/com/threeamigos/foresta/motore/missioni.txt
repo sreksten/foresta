@@ -2,7 +2,7 @@
 # riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia; e i materiali che chiedono
 # l'alchimista, l'armaiolo, il capitano delle guardie e il locandiere; le cose da portare da una città all'altra,
 # anche di contrabbando; gli oggetti smarriti nella foresta; gli incarichi di combattimento, le sorveglianze, i
-# soccorsi, le indagini, i riti, le benedizioni e le documentazioni.
+# soccorsi, le indagini, i riti, le benedizioni, le documentazioni e i colpi.
 # I nomi sono tutti maschili, perché i testi delle missioni parlano di "suo marito" e "sua moglie".
 #
 # Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
@@ -1182,3 +1182,67 @@ DOCUMENTAZIONE
     REPERTO_1=LOCANDA:In questa locanda la zuppa è buona, il vino annacquato e il locandiere racconta sempre la stessa storia.;\
     REPERTO_2=LOCANDA:Qui la birra è eccellente, i letti duri come sassi e il gatto della locanda ruba il formaggio dai piatti.;\
     RINGRAZIAMENTO=Zuppa buona, birra eccellente, un gatto ladro. La mia guida sarà un successo. La mia locanda, naturalmente, avrà tre stelle.
+
+# ---------------------------------------------------------------------------------------------
+# Colpi (vedi IlColpo e ColpoRichiesto)
+# ---------------------------------------------------------------------------------------------
+#
+# Una riga per colpo, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
+#   CHIAVE=, TIPO= (FURTO, SABOTAGGIO, VANDALISMO, INCENDIO, VIOLAZIONE_DOMICILIO, AVVELENAMENTO), ASPETTO=,
+#               MANDANTE=, LUOGO=, MONETE=, TITOLO=, RICHIESTA=, BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=, RICORDO=  come per
+#               gli incarichi di combattimento; dov'è, chi fa la guardia e quanto pagano lo aggiunge la missione;
+#   NEMICO=, NUMERO=, CAPO=  le guardie: il colpo riesce passando inosservati fra loro. Più alta la loro percezione,
+#               più è difficile;
+#   COLPO=      che cosa si scrive quando il colpo riesce: che cosa si è fatto;
+#   SCOPERTI=   che cosa si scrive se il gruppo combatte con le guardie: il colpo fallisce.
+# Nei testi %CAPO% è il nome del capo delle guardie. Nei testi non si usa il ";".
+
+COLPO
+    CHIAVE=LIBRO_DELL_USURAIO;TIPO=FURTO;ASPETTO=QUALUNQUE;MANDANTE=il fornaio;LUOGO=ROVINE;NEMICO=TROLL;NUMERO=2;\
+    MONETE=40;TITOLO=Il libro dei conti;\
+    RICHIESTA=L'usuraio tiene il libro dei debiti di mezza città in una torre fra delle rovine. Senza quel libro, nessuno gli deve più niente.;\
+    BATTUTA=E chi lo sorveglia?;RISPOSTA=Due troll. Sono forti, ma per fortuna ci vedono poco e ci sentono anche meno.;\
+    COLPO=Fra i due troll che russano trovate il libro dei conti, e ve lo infilate sotto il mantello.;\
+    SCOPERTI=I troll vi hanno visti, e il libro dei conti è finito chissà dove nella confusione. Il colpo è fallito.;\
+    RINGRAZIAMENTO=Il libro dei conti! Stasera lo bruciamo nel forno, con il pane. Il pane più buono della storia.;\
+    RICORDO=Fra queste rovine l'usuraio nascondeva il libro dei debiti della città.
+    CHIAVE=SCALE_DEI_GOBLIN;TIPO=SABOTAGGIO;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;LUOGO=BOSCO;NEMICO=GOBLIN;\
+    NUMERO=4;CAPO=SI;MONETE=45;TITOLO=Le scale dei goblin;\
+    RICHIESTA=In un bosco i goblin di %CAPO% costruiscono scale per assaltare le nostre mura. Segatene i pioli, di nascosto, e alla prima salita crolleranno.;\
+    BATTUTA=E se ci vedono?;RISPOSTA=Allora diventa una battaglia, e le scale le finiscono comunque. Non fatevi vedere.;\
+    COLPO=Mentre i goblin di %CAPO% dormono, segate a metà tutti i pioli delle scale. Da lontano sembrano nuove.;\
+    SCOPERTI=I goblin di %CAPO% vi hanno scoperti: le scale saranno sorvegliate giorno e notte. Il sabotaggio è fallito.;\
+    RINGRAZIAMENTO=Stamattina i goblin hanno provato a salire. Sono ancora lì sotto, a contare i bernoccoli.;\
+    RICORDO=In questo bosco i goblin di %CAPO% costruivano le loro scale, prima che qualcuno ne segasse i pioli.
+    CHIAVE=STATUA_DELLO_SCULTORE;TIPO=VANDALISMO;ASPETTO=QUALUNQUE;MANDANTE=lo scultore;LUOGO=RADURA;NEMICO=ARPIA;NUMERO=2;\
+    MONETE=30;TITOLO=I baffi alla statua;\
+    RICHIESTA=Il mio rivale ha scolpito una statua di sé stesso in una radura, e tutti vanno ad ammirarla. Disegnategli due bei baffi.;\
+    BATTUTA=Tutto qui? Dei baffi?;RISPOSTA=Dei baffi enormi. E attenti alle arpie che ci hanno fatto il nido sopra: hanno un occhio acutissimo.;\
+    COLPO=Con un carboncino disegnate alla statua due baffi a manubrio, e un monocolo, già che ci siete.;\
+    SCOPERTI=Le arpie vi hanno visti, e mentre scappate il carboncino vi cade. La statua resta senza baffi. Il colpo è fallito.;\
+    RINGRAZIAMENTO=Baffi a manubrio! E un monocolo! Il mio rivale non uscirà di casa per un mese.;\
+    RICORDO=In questa radura c'è la statua di uno scultore, con due baffi a manubrio disegnati a carboncino.
+    CHIAVE=DEPOSITO_DI_FRECCE;TIPO=INCENDIO;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;LUOGO=BOSCO;NEMICO=HOBGOBLIN;\
+    NUMERO=3;MONETE=45;TITOLO=Il deposito di frecce;\
+    RICHIESTA=Gli hobgoblin tengono le loro frecce in un deposito, in un bosco. Senza frecce, il loro prossimo attacco sarà molto meno pericoloso.;\
+    BATTUTA=E come lo distruggiamo?;RISPOSTA=Con il fuoco. Di notte, mentre le sentinelle guardano dall'altra parte.;\
+    COLPO=Appiccate il fuoco al deposito e vi allontanate nel buio. Alle vostre spalle, le frecce degli hobgoblin bruciano scoppiettando.;\
+    SCOPERTI=Le sentinelle vi hanno visti, e il deposito adesso è sorvegliato da tutti gli hobgoblin del bosco. Il colpo è fallito.;\
+    RINGRAZIAMENTO=Il fumo si vedeva fin dalle mura. Senza frecce gli hobgoblin dovranno avvicinarsi, e da vicino li aspettiamo noi.;\
+    RICORDO=In questo bosco bruciò il deposito di frecce degli hobgoblin.
+    CHIAVE=CAPANNA_DELLA_GUARITRICE;TIPO=VIOLAZIONE_DOMICILIO;ASPETTO=ALCHIMISTA;MANDANTE=l'alchimista;LUOGO=PALUDE;\
+    NEMICO=GARGOYLE;NUMERO=2;MONETE=35;TITOLO=La capanna della guaritrice;\
+    RICHIESTA=La guaritrice della palude non risponde da tre giorni. Ha messo due gargoyle a guardia della capanna, e non lasciano entrare nessuno.;\
+    BATTUTA=E noi dovremmo entrare lo stesso?;RISPOSTA=Di nascosto, sì. Se svegliate i gargoyle, la difenderanno da voi, e poi chi la aiuta?;\
+    COLPO=Entrate nella capanna: la guaritrice dorme sotto un incantesimo. Le lasciate accanto l'antidoto dell'alchimista, e uscite in punta di piedi.;\
+    SCOPERTI=I gargoyle vi hanno scoperti, e da adesso non lasceranno avvicinare nessuno. Il colpo è fallito.;\
+    RINGRAZIAMENTO=La guaritrice si è svegliata, e mi ha mandato un biglietto: Grazie, e la prossima volta bussate.;\
+    RICORDO=In questa palude c'è la capanna della guaritrice, sorvegliata da due gargoyle.
+    CHIAVE=ACQUA_DEI_TROLL;TIPO=AVVELENAMENTO;ASPETTO=QUALUNQUE;MANDANTE=il cacciatore;LUOGO=GROTTA;NEMICO=TROLL;NUMERO=2;\
+    CAPO=SI;MONETE=40;TITOLO=Il sonno dei troll;\
+    RICHIESTA=Il troll %CAPO% e suo fratello spaventano la selvaggina di mezza foresta. Nella loro grotta c'è una botte d'acqua: versateci questa pozione.;\
+    BATTUTA=È veleno?;RISPOSTA=È un sonnifero. Dormiranno una settimana, e intanto la selvaggina torna. Io non avveleno nessuno, nemmeno i troll.;\
+    COLPO=Versate il sonnifero nella botte d'acqua dei troll. Quando %CAPO% beve, sbadiglia così forte che trema la grotta.;\
+    SCOPERTI=%CAPO% vi ha visti, e la botte si è rovesciata nella zuffa. Il colpo è fallito.;\
+    RINGRAZIAMENTO=I troll russano da tre giorni, e la selvaggina è già tornata. Stasera cervo arrosto, ve lo assicuro.;\
+    RICORDO=In questa grotta i troll di %CAPO% dormirono una settimana intera.

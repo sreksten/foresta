@@ -8,6 +8,7 @@ import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
+import com.threeamigos.foresta.eventi.interni.InternoPassaggioInosservato;
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaAperturaFinestraCombattimento;
 import com.threeamigos.foresta.missioni.SconfiggiIlDrago;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
@@ -61,7 +62,8 @@ public class RegistroMissioni {
 		L_INDAGINE(ClasseMissione.L_INDAGINE),
 		IL_RITUALE(ClasseMissione.IL_RITUALE),
 		LA_BENEDIZIONE(ClasseMissione.LA_BENEDIZIONE),
-		LA_DOCUMENTAZIONE(ClasseMissione.LA_DOCUMENTAZIONE);
+		LA_DOCUMENTAZIONE(ClasseMissione.LA_DOCUMENTAZIONE),
+		IL_COLPO(ClasseMissione.IL_COLPO);
 
 		TipoMissionePredefinita(ClasseMissione classeMissione) {
 			this(classeMissione, false);
@@ -120,20 +122,39 @@ public class RegistroMissioni {
 	 * avversari sconfitti e gli oggetti raccolti. Vanno a tutte le missioni non ancora finite.
 	 */
 	public static void registrati() {
-		BusEventi.iscriviti(InternoRichiestaAperturaFinestraCombattimento.class,
-				evento -> registraEvento(MissioneAPassi.EVENTO_COMBATTIMENTO, 1));
+		BusEventi.iscriviti(InternoRichiestaAperturaFinestraCombattimento.class, evento -> {
+			registraEvento(MissioneAPassi.EVENTO_COMBATTIMENTO, 1);
+			registraCombattimentoQui();
+		});
 		BusEventi.iscriviti(InternoAvversarioSconfitto.class, evento -> {
 			registraEvento(MissioneAPassi.eventoSconfitto(evento.getClasse()), 1);
 			// Anche un avversario abbattuto da un incantesimo è un combattimento
 			registraEvento(MissioneAPassi.EVENTO_COMBATTIMENTO, 1);
+			registraCombattimentoQui();
 			// Anche con la casella in cui è successo: per i combattimenti di una missione in una locazione precisa
 			CoordinateMD coordinate = GruppoGiocatore.getIstanza().getCoordinate();
 			if (coordinate != null) {
 				registraEvento(MissioneAPassi.eventoSconfittoIn(evento.getClasse(), coordinate), 1);
 			}
 		});
+		BusEventi.iscriviti(InternoPassaggioInosservato.class, evento -> {
+			CoordinateMD coordinate = GruppoGiocatore.getIstanza().getCoordinate();
+			if (coordinate != null) {
+				registraEvento(MissioneAPassi.eventoInosservatoIn(coordinate), 1);
+			}
+		});
 		BusEventi.iscriviti(InternoOggettoRaccolto.class,
 				evento -> registraEvento(MissioneAPassi.eventoRaccolto(evento.getClasse()), evento.getQuantita()));
+	}
+
+	/**
+	 * Un combattimento, con la casella in cui c'è stato: per le missioni che vietano di combattere in un posto preciso.
+	 */
+	private static void registraCombattimentoQui() {
+		CoordinateMD coordinate = GruppoGiocatore.getIstanza().getCoordinate();
+		if (coordinate != null) {
+			registraEvento(MissioneAPassi.eventoCombattimentoIn(coordinate), 1);
+		}
 	}
 
 	private static void registraEvento(String evento, int quantita) {

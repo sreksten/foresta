@@ -25,6 +25,7 @@ import java.util.Collections;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.OptionalInt;
 import java.util.Set;
 
 /**
@@ -78,6 +79,21 @@ public abstract class LocazioneBase implements Locazione {
 	 * Gli avversari di cui si è già contata la sconfitta: chi si arrende resta vivo, e non va contato due volte.
 	 */
 	private final Set<Personaggio> avversariSconfitti = Collections.newSetFromMap(new IdentityHashMap<>());
+	/**
+	 * Se il gruppo non può più passare inosservato in questa locazione: ci ha già provato (si prova una volta sola),
+	 * o ha già fatto qualcos'altro (vedi isAzione).
+	 */
+	private boolean passaggioEscluso;
+
+	// Passare inosservati (vedi passaInosservati): la probabilità, in percentuale
+	private static final int PASSAGGIO_BASE = 40;
+	private static final int PASSAGGIO_PER_PUNTO = 10;
+	private static final int PASSAGGIO_DI_NOTTE = 15;
+	private static final int PASSAGGIO_PER_COMPAGNO = 10;
+	private static final int PASSAGGIO_MINIMO = 5;
+	private static final int PASSAGGIO_MASSIMO = 75;
+	private static final int ORA_DELL_ALBA = 6;
+	private static final int ORA_DEL_TRAMONTO = 20;
 
 	// Chi sta combattendo
 	private Personaggio combattente;
@@ -252,6 +268,34 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
+	 * Se quel comando, nello stato corrente della locazione, è un'azione vera: un attacco, una mischia, un incantesimo
+	 * lanciato, una corruzione, un tentativo d'amicizia, una pozione bevuta. Dopo, passare inosservati non si può
+	 * più. Guardare la mappa o l'inventario non conta, e nemmeno scegliere un'azione e poi annullarla: l'azione conta
+	 * quando si sceglie chi la compie (o, per un incantesimo, quale e su chi).
+	 */
+	private boolean isAzione(Comando azione) {
+		if (azione == null || azione == Comando.ANNULLA) {
+			return false;
+		}
+		switch (statoLocazione) {
+			case IN_COMBATTIMENTO:
+			case CHI_ESEGUE_SINGOLO_ATTACCO:
+			case CHI_COMBATTE:
+			case CHI_BEVE_POZIONE_SALUTE:
+			case CHI_BEVE_POZIONE_SALUTE_GRANDE:
+			case CHI_BEVE_POZIONE_MAGIA:
+			case CHI_BEVE_POZIONE_MAGIA_GRANDE:
+			case QUALE_FORMULA:
+			case SU_CHI_FORMULA:
+			case CHI_CORROMPE:
+			case CHI_FA_AMICIZIA:
+				return true;
+			default:
+				return false;
+		}
+	}
+
+	/**
 	 * In un combattimento fino alla resa, i personaggi del gruppo si sono arresi tutti: sono vivi, ma in panchina; o,
 	 * in un duello, chi lo combatteva si è arreso o è morto, e gli altri sono in panchina.
 	 */
@@ -277,6 +321,9 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	private Stato impostaAzioniImpl(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario, Comando azione) {
+		if (isAzione(azione)) {
+			passaggioEscluso = true;
+		}
         Stato possibileStato;
         switch (statoLocazione) {
 			case NUOVA_LOCAZIONE:
@@ -774,6 +821,10 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		// Si può sempre ricorrere a una bella...
 		comandiPossibili.add(Comando.FUGA);
+		// ...o provare, una volta, a passare inosservati
+		if (isPassaggioPossibile()) {
+			comandiPossibili.add(Comando.PASSA_INOSSERVATO);
+		}
 		// E possiamo sempre richiedere di descrivere di nuovo la locazione
 		comandiPossibili.add(Comando.AIUTO);
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibili));
@@ -1241,6 +1292,9 @@ public abstract class LocazioneBase implements Locazione {
 					statoLocazione = StatoLocazione.CHI_COMBATTE;
 					return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 
+				case PASSA_INOSSERVATO:
+					return isPassaggioPossibile() ? passaInosservati() : null;
+
 				case INCANTESIMO:
 					statoLocazione = StatoLocazione.CHI_FORMULA;
 					return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
@@ -1338,6 +1392,63 @@ public abstract class LocazioneBase implements Locazione {
 			impostaComandiPossibili();
 		}
 		return esito;
+	}
+
+	/**
+	 * Se il gruppo può provare a passare inosservato: una volta sola, prima di fare qualunque altra cosa (vedi
+	 * isAzione), fuori dal combattimento, in una locazione della
+	 * foresta (non in una città, in un castello o nella locazione di una missione secondaria), con avversari che non
+	 * vanno affrontati per forza (vedi Personaggio.isDaAffrontare) e che non sfidano a duello.
+	 */
+	private boolean isPassaggioPossibile() {
+		return !passaggioEscluso && statoLocazione == StatoLocazione.IN_LOCAZIONE
+				&& gruppo.getClasseLocazioneCorrente().getTipoLocazione() == TipoLocazione.STANDARD
+				&& !gruppoAvversario.getPersonaggiVivi().isEmpty() && !gruppoAvversario.isDaAffrontare() && !gruppoAvversario.isDuello();
+	}
+
+	/**
+	 * La probabilità, in percentuale, che il gruppo passi inosservato: la furtività del gruppo contro la percezione
+	 * migliore fra gli avversari, dieci punti ogni punto di differenza a partire da quaranta. Il gruppo è furtivo
+	 * quanto il suo membro più maldestro, a meno che un ladro non lo guidi: allora conta il ladro. Di notte è più
+	 * facile, e ogni compagno oltre il primo fa rumore. Mai meno di cinque, mai più di settantacinque.
+	 */
+	public static int probabilitaDiPassareInosservati(Gruppo gruppo, Gruppo avversari, int ora) {
+		List<Personaggio> vivi = gruppo.getPersonaggiVivi();
+		OptionalInt ladro = vivi.stream()
+				.filter(p -> p.getClasse() == ClassePersonaggio.LADRO || p.getClasse() == ClassePersonaggio.LADRA)
+				.mapToInt(Personaggio::getFurtivita).max();
+		int furtivita = ladro.isPresent() ? ladro.getAsInt() : vivi.stream().mapToInt(Personaggio::getFurtivita).min().orElse(0);
+		int percezione = avversari.getPersonaggiVivi().stream().mapToInt(Personaggio::getPercezione).max().orElse(0);
+		int probabilita = PASSAGGIO_BASE + PASSAGGIO_PER_PUNTO * (furtivita - percezione)
+				- PASSAGGIO_PER_COMPAGNO * Math.max(0, vivi.size() - 1);
+		if (ora < ORA_DELL_ALBA || ora > ORA_DEL_TRAMONTO) {
+			probabilita += PASSAGGIO_DI_NOTTE;
+		}
+		return Math.max(PASSAGGIO_MINIMO, Math.min(PASSAGGIO_MASSIMO, probabilita));
+	}
+
+	/**
+	 * Il gruppo prova a passare inosservato, e ci mette un'ora. Se ci riesce se ne va senza combattere, senza
+	 * esperienza né bottino, e la locazione non è completa; se no, gli avversari se ne accorgono e attaccano per primi.
+	 */
+	private Stato passaInosservati() {
+		passaggioEscluso = true;
+		int probabilita = probabilitaDiPassareInosservati(gruppo, gruppoAvversario, LineaTemporale.getOra());
+		LineaTemporale.aggiungiOre(1);
+		if (Dado.tira(100) <= probabilita) {
+			BusEventi.pubblica(new NotificaTestoParagrafo(gruppo.chiMaiuscolo() + " passa in silenzio, senza farsi notare, e si allontana."));
+			BusEventi.pubblica(new InternoPassaggioInosservato());
+			setCompleta(false);
+			setOggetto(null);
+			return Stato.FINE_LOCAZIONE;
+		}
+		BusEventi.pubblica(new NotificaTestoParagrafo("Un rametto si spezza: gli avversari vi hanno visti, e attaccano per primi!"));
+		rispostaAvversaria(null, gruppo, gruppoAvversario);
+		if (!gruppo.getCapo().isVivo()) {
+			return Stato.GIOCO_PERSO;
+		}
+		impostaComandiPossibili();
+		return Stato.IN_LOCAZIONE;
 	}
 
 	private String nomeDelloSfidante() {

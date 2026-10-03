@@ -874,6 +874,20 @@ public abstract class MissioneAPassi extends MissioneBase {
 		return eventoSconfitto(classe) + "_IN_" + coordinate.getX() + "_" + coordinate.getY();
 	}
 
+	/**
+	 * Il gruppo ha combattuto in quella casella (ha attaccato un avversario o ne ha abbattuto uno).
+	 */
+	public static String eventoCombattimentoIn(CoordinateMD coordinate) {
+		return EVENTO_COMBATTIMENTO + "_IN_" + coordinate.getX() + "_" + coordinate.getY();
+	}
+
+	/**
+	 * Il gruppo è passato inosservato in quella casella (vedi LocazioneBase e InternoPassaggioInosservato).
+	 */
+	public static String eventoInosservatoIn(CoordinateMD coordinate) {
+		return "INOSSERVATO_IN_" + coordinate.getX() + "_" + coordinate.getY();
+	}
+
 	public static String eventoRaccolto(ClassiOggetto classe) {
 		return "RACCOLTO_" + classe.name();
 	}

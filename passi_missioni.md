@@ -953,3 +953,37 @@ DIPLOMAZIA, NEGOZIAZIONE_TREGUA e MEDIAZIONE (corriere), RICICLAGGIO
 Correzione: davanti a un luogo i testi usano `TestiDeiLuoghi.dentro` ("fra delle
 rovine", "in una grotta") e non "in" più `indefinito`, che dava "in delle rovine"
 (indagini, sorveglianze, riti).
+
+### Passare inosservati, e il colpo (2026-10-03)
+
+**Passare inosservati** (`Comando.PASSA_INOSSERVATO`, per ora con l'icona della
+fuga: vedi i TODO in `Automa`). In una locazione con avversari il gruppo può
+provare, una volta sola e prima di fare qualunque altra cosa (un attacco, una
+mischia, un incantesimo, una corruzione, un tentativo d'amicizia, una pozione:
+`LocazioneBase.isAzione`; la mappa, l'inventario e le scelte annullate non
+contano), ad andarsene senza combattere (`LocazioneBase`):
+
+- la probabilità (`LocazioneBase.probabilitaDiPassareInosservati`) è 40% più 10%
+  per ogni punto di furtività del gruppo sopra la percezione migliore fra gli
+  avversari; il gruppo è furtivo quanto il suo membro più maldestro, a meno che un
+  ladro non lo guidi (allora conta il ladro); di notte +15%, ogni compagno oltre il
+  primo -10%; sempre fra il 5% e il 75%. Ci vuole un'ora;
+- se riesce, il gruppo se ne va: niente esperienza, niente bottino, la locazione
+  non è completa (`InternoPassaggioInosservato`); se fallisce, gli avversari
+  attaccano per primi e si torna alle solite scelte;
+- non si può nelle città, nei castelli, nelle locazioni delle missioni secondarie,
+  contro chi sfida a duello e contro gli avversari che una missione vuole
+  sconfitti (`Personaggio.isDaAffrontare`: tutti quelli di un `IncontroDiMissione`,
+  tranne quelli `aggirabile()`).
+
+Il controllo di fine locazione delle missioni ora si fa anche quando la locazione
+non è completa (una fuga, un duello perso, un passaggio inosservato): solo
+l'azzeramento della locazione resta per quelle completate.
+
+**Il colpo** (`IlColpo`, righe `COLPO` in `missioni.txt`, lette da
+`ColpoRichiesto`): un incarico in città; il posto si segna sulla mappa e lì ci sono
+guardie aggirabili. Il colpo riesce passando inosservati fra le guardie; se il
+gruppo combatte lì (`eventoCombattimentoIn`, i combattimenti contati per casella)
+il colpo fallisce; se fugge può riprovare. Copre FURTO, SABOTAGGIO, VANDALISMO,
+INCENDIO, VIOLAZIONE_DOMICILIO e AVVELENAMENTO (un sonnifero). Test:
+`ScenarioPassaInosservatoTest`, `ScenarioColpoTest`.

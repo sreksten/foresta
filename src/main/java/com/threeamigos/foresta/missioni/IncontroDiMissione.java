@@ -27,6 +27,7 @@ public final class IncontroDiMissione {
 	private ClassePersonaggio classeDelCapo;
 	private boolean finoAllaResa;
 	private boolean aDuello;
+	private boolean aggirabile;
 
 	private IncontroDiMissione(ClassePersonaggio classe, int numero) {
 		if (numero < 1) {
@@ -78,6 +79,15 @@ public final class IncontroDiMissione {
 	}
 
 	/**
+	 * Gli avversari si possono evitare passando inosservati (vedi LocazioneBase): le guardie di un colpo. Gli altri
+	 * avversari di una missione, che la missione vuole sconfitti, vanno affrontati.
+	 */
+	public IncontroDiMissione aggirabile() {
+		this.aggirabile = true;
+		return this;
+	}
+
+	/**
 	 * Un capo in più, di un'altra classe (un hobgoblin a capo di una banda di goblin): ha un nome proprio e un
 	 * livello in più della banda.
 	 */
@@ -122,6 +132,7 @@ public final class IncontroDiMissione {
 			avversario.setOrdinale(i + 1);
 			avversario.setFinoAllaResa(finoAllaResa);
 			avversario.setSfidante(aDuello);
+			avversario.setDaAffrontare(!aggirabile);
 			avversari.add(avversario);
 		}
 		if (classeDelCapo != null) {
@@ -129,6 +140,7 @@ public final class IncontroDiMissione {
 			capo.getModelloDati().setNome(nomeDelCapo);
 			capo.setOrdinale(1);
 			capo.setFinoAllaResa(finoAllaResa);
+			capo.setDaAffrontare(!aggirabile);
 			avversari.add(capo);
 		}
 		return avversari;

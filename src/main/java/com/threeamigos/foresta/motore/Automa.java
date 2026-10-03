@@ -59,6 +59,8 @@ import java.util.function.Supplier;
 //  un'immagine per ogni oggetto.
 // TODO: il sacerdote e la sacerdotessa che offrono una benedizione in locanda (ScenaInLocanda.conSacerdote) hanno le
 //  immagini del mago e della maga: servono personaggi/Sacerdote.gif e personaggi/Sacerdotessa.gif.
+// TODO: il comando PASSA_INOSSERVATO usa l'icona della fuga: serve icone/PassaInosservato.gif, per esempio due impronte
+//  di piedi nudi in punta di piedi (ClasseIcona).
 // TODO: quando ci saranno più attacchi nella stessa locazione, riprendere l'indagine LUCI_NELLE_ROVINE (missioni.txt,
 //  produzione INDAGINE): oggi il negromante scappa e si combattono solo i suoi scheletri, perché un incontro di
 //  missione ha una classe sola; meglio prima gli scheletri e poi lui, come MAGO o MAGA con un nome.
@@ -1010,7 +1012,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				return concludiFineLocazione();
 			});
 		}
-		return concludiFineLocazione();
+		// Anche da una locazione lasciata a metà (una fuga, un duello perso, un passaggio inosservato) le missioni
+		// vanno controllate: possono essere successe cose che contano, come un capo abbattuto prima di fuggire
+		return controllaMissioniEDomande(MomentoControllo.POST_LOCAZIONE, this::concludiFineLocazione);
 	}
 
 	private Esito concludiFineLocazione() {

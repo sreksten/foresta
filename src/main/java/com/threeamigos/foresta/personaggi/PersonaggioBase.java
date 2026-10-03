@@ -68,6 +68,10 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * Sfida a duello (vedi Personaggio.isSfidante): non si salva.
 	 */
 	private boolean sfidante;
+	/**
+	 * Va affrontato per forza (vedi Personaggio.isDaAffrontare): non si salva.
+	 */
+	private boolean daAffrontare;
 
 	public PersonaggioBase(ClassePersonaggio classe, int livello) {
 		md.setClasse(classe);
@@ -222,6 +226,16 @@ public abstract class PersonaggioBase implements Personaggio {
 	@Override
 	public void setFinoAllaResa(boolean finoAllaResa) {
 		this.finoAllaResa = finoAllaResa;
+	}
+
+	@Override
+	public boolean isDaAffrontare() {
+		return daAffrontare;
+	}
+
+	@Override
+	public void setDaAffrontare(boolean daAffrontare) {
+		this.daAffrontare = daAffrontare;
 	}
 
 	@Override

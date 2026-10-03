@@ -26,6 +26,7 @@ public enum Comando {
 	CORRUZIONE,
 	AMICIZIA,
 	FUGA,
+	PASSA_INOSSERVATO,
 
 	// Quando occorre scegliere un particolare componente del gruppo
 	PERSONAGGIO_1,
