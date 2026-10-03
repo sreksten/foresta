@@ -11,7 +11,7 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Le città e i castelli degli alleati del Drago non sono sparsi a caso: uno per quadrante.
+ * Le città e i castelli degli alleati del Drago non sono sparsi a caso: uno per quadrante. E le radure sono poche.
  */
 class ScenarioQuadrantiTest {
 
@@ -30,6 +30,22 @@ class ScenarioQuadrantiTest {
                 assertEquals(EnumSet.allOf(Quadrante.class), quadranti(CITTA), "città, seme " + seme);
                 assertEquals(EnumSet.allOf(Quadrante.class), quadranti(CASTELLI), "castelli, seme " + seme);
             }
+        }
+    }
+
+    @Test
+    void ciSonoPocheRadure() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(95)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
+            int radure = 0;
+            for (int x = 0; x < Foresta.getDimensioneX(); x++) {
+                for (int y = 0; y < Foresta.getDimensioneY(); y++) {
+                    if (Foresta.getLocazione(x, y) == ClassiLocazione.RADURA) {
+                        radure++;
+                    }
+                }
+            }
+            assertEquals((Foresta.getDimensioneX() + Foresta.getDimensioneY()) / 4, radure, "quante le grotte");
         }
     }
 

@@ -167,6 +167,8 @@ public class Foresta {
 		costruisci(ClassiLocazione.GROTTA, media >> 1);
 		costruisci(ClassiLocazione.PALUDE, media);
 		costruisci(ClassiLocazione.ROVINE, media);
+		// Poche radure, quante le grotte: ci crescono alcuni ingredienti dell'alchimista
+		costruisci(ClassiLocazione.RADURA, media >> 1);
 
 		// Il resto della Foresta è bosco. Va posato prima di sistemare il gruppo,
 		// che appena arriva si guarda intorno e ha bisogno di caselle su cui farlo.
