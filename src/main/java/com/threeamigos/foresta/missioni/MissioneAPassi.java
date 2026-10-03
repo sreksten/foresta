@@ -899,6 +899,14 @@ public abstract class MissioneAPassi extends MissioneBase {
 		return ottieniProprieta(RISPOSTA + idPasso);
 	}
 
+	/**
+	 * Dimentica la risposta data alla domanda di quel passo: tornandoci, la domanda si pone di nuovo (per un "non
+	 * ancora": il rito si farà un'altra volta).
+	 */
+	protected final void dimenticaRisposta(String idPasso) {
+		rimuoviProprieta(RISPOSTA + idPasso);
+	}
+
 	// --- Sequenze di passi decise alla generazione
 
 	/**

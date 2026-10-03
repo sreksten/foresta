@@ -98,6 +98,15 @@ public final class MaterialeRichiesto {
 	}
 
 	/**
+	 * Un ingrediente che non si paga a pezzo e non ha battute (quelli di un rito, vedi RitualeRichiesto): genere
+	 * (F, M o M/F), singolare, plurale, provenienza ("LUOGHI BOSCO", "NEMICI SPETTRO") e quantità.
+	 */
+	static MaterialeRichiesto ingrediente(String genere, String singolare, String plurale, String provenienza, int quantita) {
+		return new MaterialeRichiesto(String.join(SEPARATORE, genere, singolare, plurale, provenienza, quantita + "-" + quantita,
+				"0", "", ""));
+	}
+
+	/**
 	 * La riga da cui è stato letto, da salvare con la missione.
 	 */
 	public String getRiga() {

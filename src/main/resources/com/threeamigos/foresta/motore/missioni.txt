@@ -1,8 +1,8 @@
 # I nomi dei personaggi delle missioni (vedi ProduttoreDiTestiCasuale): gli ostaggi da liberare, i bardi da
 # riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia; e i materiali che chiedono
 # l'alchimista, l'armaiolo, il capitano delle guardie e il locandiere; le cose da portare da una città all'altra,
-# anche di contrabbando; gli oggetti smarriti nella foresta; gli incarichi di combattimento, le sorveglianze e i
-# soccorsi.
+# anche di contrabbando; gli oggetti smarriti nella foresta; gli incarichi di combattimento, le sorveglianze, i
+# soccorsi, le indagini e i riti.
 # I nomi sono tutti maschili, perché i testi delle missioni parlano di "suo marito" e "sua moglie".
 #
 # Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
@@ -68,6 +68,88 @@ NOME_PELLEGRINO
     Bernardino
     Saturnino
     Ireneo
+
+# ---------------------------------------------------------------------------------------------
+# Sfidanti dei duelli (vedi IncaricoDiCombattimento, CAPO=NOME_CAMPIONE o CAPO=NOME_CAMPIONESSA): nome ed epiteto
+# ---------------------------------------------------------------------------------------------
+
+NOME_CAMPIONE
+    [NOME_DI_CAMPIONE] [EPITETO_DI_CAMPIONE]
+
+NOME_DI_CAMPIONE
+    Baldovino
+    Ser Galeazzo
+    Ferraguto
+    Uberto
+    Rinaldo
+    Corrado
+    Brunoro
+    Alardo
+
+EPITETO_DI_CAMPIONE
+    il Fiero
+    l'Invitto
+    il Tremendo
+    Braccio di Ferro
+    lo Spaccascudi
+    il Bello
+    il Lungo
+
+NOME_CAMPIONESSA
+    [NOME_DI_CAMPIONESSA] [EPITETO_DI_CAMPIONESSA]
+
+NOME_DI_CAMPIONESSA
+    Bradamante
+    Marfisa
+    Ermengarda
+    Matilde
+    Clorinda
+    Gualdrada
+    Isotta
+    Brunilde
+
+EPITETO_DI_CAMPIONESSA
+    la Fiera
+    l'Invitta
+    la Tremenda
+    Braccio di Ferro
+    la Spaccascudi
+    la Bella
+    la Lunga
+
+# ---------------------------------------------------------------------------------------------
+# Briganti e maghi (vedi CAPO=NOME_BRIGANTE e CAPO=NOME_MAGO): capi di bande di ladri, maghi rivali
+# ---------------------------------------------------------------------------------------------
+
+NOME_BRIGANTE
+    [NOME_DI_BRIGANTE] [SOPRANNOME_DI_BRIGANTE]
+
+NOME_DI_BRIGANTE
+    Bastiano
+    Cecco
+    Tonio
+    Rocco
+    Gaspare
+    Nando
+    Biagio
+    Menico
+
+SOPRANNOME_DI_BRIGANTE
+    lo Sfregiato
+    Mezzaluna
+    Coltello
+    il Rosso
+    il Monco
+    Tagliaborse
+    Gambalesta
+
+NOME_MAGO
+    Mastro Ezechiele
+    Mastro Pandolfo
+    Mastro Gaudenzio
+    Mastro Arcibaldo
+    Mastro Tiburzio
+    Mastro Ermete
 
 # ---------------------------------------------------------------------------------------------
 # Capibanda di goblin e hobgoblin (vedi LaTagliaSullaBanda e IlRapimento): a volte con un soprannome
@@ -249,11 +331,14 @@ OGGETTO_SMARRITO
 #
 # Una riga per incarico, campi CHIAVE=valore separati da ";" (una riga lunga si spezza con una "\" in fondo):
 #   CHIAVE=     l'identificativo, diverso per ogni riga;
-#   TIPO=       il TipoMissione che copre (VENDETTA, COMBATTIMENTO_BESTIA, PULIZIA_DEI_DUNGEON...);
+#   TIPO=       il TipoMissione che copre (VENDETTA, COMBATTIMENTO_BESTIA, DUELLO, BLOCCO...);
 #   ASPETTO=    chi compare nella scena in città: QUALUNQUE, CAPITANO, ARMAIOLO, ALCHIMISTA o LOCANDIERE;
 #   MANDANTE=   chi chiede, con l'articolo (il mugnaio);
 #   NEMICO=, NUMERO=  chi va sconfitto (una ClassePersonaggio) e quanti;
-#   CAPO=       facoltativo, SI se uno di loro ha un nome (da NOME_CAPOBANDA) e un livello in più;
+#   CAPO=       facoltativo: uno di loro ha un nome e un livello in più. SI pesca il nome da NOME_CAPOBANDA,
+#               NOME_CAMPIONE, NOME_CAMPIONESSA, NOME_BRIGANTE o NOME_MAGO da lì, qualunque altra cosa è il nome stesso
+#               (CAPO=Teodolinda), quando i testi lo dicono. Fra i nemici vanno bene anche le classi del gruppo:
+#               GUERRIERO, MAGA, LADRO, ELFO...;
 #   LUOGO=      dove si nascondono: GROTTA, ROVINE, BOSCO, PALUDE o RADURA (si segna sulla mappa);
 #   MONETE=     quanto si paga;
 #   TITOLO=, RICHIESTA=, BATTUTA=, RISPOSTA=  il nome della missione e le battute dell'incarico (mandante, capo,
@@ -311,8 +396,8 @@ INCARICO_DI_COMBATTIMENTO
     VITTORIA=La pattuglia di hobgoblin non tasterà più le difese di nessuno.;\
     RINGRAZIAMENTO=Bel lavoro. Per un po' gli hobgoblin staranno alla larga.;\
     RICORDO=In questo bosco girava la pattuglia degli hobgoblin.
-    CHIAVE=PREDONI_DELLA_RADURA;TIPO=IMBOSCATA;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=HOBGOBLIN;NUMERO=4;\
-    CAPO=SI;LUOGO=RADURA;MONETE=40;TITOLO=L'agguato ai predoni;\
+    CHIAVE=PREDONI_DELLA_RADURA;TIPO=IMBOSCATA;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=LADRO;NUMERO=4;\
+    CAPO=NOME_BRIGANTE;LUOGO=RADURA;MONETE=40;TITOLO=L'agguato ai predoni;\
     RICHIESTA=I predoni di %CAPO% passano sempre da una radura, quando tornano dalle loro razzie. Aspettateli lì.;\
     BATTUTA=Un agguato? Non è un po' sleale?;RISPOSTA=Sleale è razziare le fattorie. Questo si chiama restituire il favore.;\
     VITTORIA=I predoni di %CAPO% non razzieranno più nessuna fattoria.;\
@@ -325,6 +410,90 @@ INCARICO_DI_COMBATTIMENTO
     VITTORIA=I fantasmi del pozzo sono svaniti.;\
     RINGRAZIAMENTO=Stanotte avrò la mia acqua, e senza nessuno che mi soffia sul collo.;\
     RICORDO=In questa radura, attorno al vecchio pozzo, si radunavano i fantasmi.
+    CHIAVE=SFIDA_DEL_CAMPIONE;TIPO=DUELLO;ASPETTO=QUALUNQUE;MANDANTE=il maestro d'armi;NEMICO=GUERRIERO;NUMERO=1;\
+    CAPO=NOME_CAMPIONE;LUOGO=RADURA;MONETE=35;TITOLO=La sfida di %CAPO%;\
+    RICHIESTA=Un campione, %CAPO%, ha piantato la sua tenda in una radura e sfida chiunque passi. Ha già battuto tutti i miei allievi. E me.;\
+    BATTUTA=E perché dovremmo batterlo noi?;RISPOSTA=Perché adesso nessuno vuole più prendere lezioni da me.;\
+    VITTORIA=%CAPO% ripiega la tenda e se ne va, un po' meno fiero di prima.;\
+    RINGRAZIAMENTO=Gli allievi sono già tornati. Dico a tutti che il trucco gliel'ho insegnato io.;\
+    RICORDO=In questa radura %CAPO% sfidava chiunque passasse.
+    CHIAVE=SFIDA_DELLA_CAMPIONESSA;TIPO=DUELLO;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=GUERRIERA;\
+    NUMERO=1;CAPO=NOME_CAMPIONESSA;LUOGO=RADURA;MONETE=35;TITOLO=La sfida di %CAPO%;\
+    RICHIESTA=%CAPO% ha sfidato a duello le mie guardie, una per volta, in una radura fuori città. Ne ho ancora tre in piedi.;\
+    BATTUTA=E cosa vuole?;RISPOSTA=Dice che cerca qualcuno degno di lei. Le mie guardie, evidentemente, no.;\
+    VITTORIA=%CAPO% abbassa la spada e vi stringe la mano: finalmente qualcuno degno.;\
+    RINGRAZIAMENTO=Le mie guardie possono uscire dall'infermeria a testa alta. Più o meno.;\
+    RICORDO=In questa radura %CAPO% sfidava a duello le guardie.
+    CHIAVE=DUELLO_DELL_ELFO;TIPO=DUELLO_ANTICO;ASPETTO=QUALUNQUE;MANDANTE=il borgomastro;NEMICO=ELFO;NUMERO=1;\
+    CAPO=NOME_CAMPIONE;LUOGO=BOSCO;MONETE=40;TITOLO=Il duello dell'antica usanza;\
+    RICHIESTA=Un elfo, %CAPO%, dice che il bosco qui vicino è suo per un'antica usanza, e che si può contestare solo con un duello alla vecchia maniera.;\
+    BATTUTA=Alla vecchia maniera?;RISPOSTA=Niente trucchi, niente fughe, e prima ci si inchina. Inchinatevi, mi raccomando.;\
+    VITTORIA=%CAPO% si inchina a sua volta: secondo l'antica usanza, il bosco torna di tutti.;\
+    RINGRAZIAMENTO=Il bosco è di nuovo di tutti. Spero vi siate inchinati bene.;\
+    RICORDO=In questo bosco un elfo combatté un duello secondo l'antica usanza.
+    CHIAVE=DUELLO_DELLA_MAGA;TIPO=DUELLO_MAGICO;ASPETTO=ALCHIMISTA;MANDANTE=l'alchimista;NEMICO=MAGA;NUMERO=1;\
+    CAPO=NOME_CAMPIONESSA;LUOGO=ROVINE;MONETE=40;TITOLO=Il duello di magia;\
+    RICHIESTA=Una maga, %CAPO%, si è stabilita fra delle rovine e sostiene che la mia magia è robaccia da fiera. Mi ha sfidato a duello.;\
+    BATTUTA=E perché non ci andate voi?;RISPOSTA=Perché ha ragione. Ma non deve saperlo nessuno.;\
+    VITTORIA=%CAPO% ammette la sconfitta, e chiede chi vi ha insegnato quegli incantesimi.;\
+    RINGRAZIAMENTO=Se qualcuno chiede, ditegli che eravate miei allievi.;\
+    RICORDO=Fra queste rovine si combatté un duello di magia.
+    CHIAVE=MINOTAURO_DEL_RITO;TIPO=COMBATTIMENTO_RITUALE;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;NEMICO=MINOTAURO;NUMERO=1;\
+    CAPO=SI;LUOGO=BOSCO;MONETE=40;TITOLO=Il rito del minotauro;\
+    RICHIESTA=Nel bosco vive un minotauro, %CAPO%. Ogni anno, per la festa del raccolto, qualcuno deve affrontarlo nel combattimento sacro.;\
+    BATTUTA=E se vince lui?;RISPOSTA=Allora il raccolto è scarso, e i funerali costosi.;\
+    VITTORIA=Il combattimento sacro è concluso: %CAPO% è stato sconfitto secondo il rito.;\
+    RINGRAZIAMENTO=Il raccolto sarà abbondante, e nessun funerale. Che bella festa.;\
+    RICORDO=In questo bosco si combatté il rito del minotauro.
+    CHIAVE=SBARRAMENTO_DEGLI_HOBGOBLIN;TIPO=BLOCCO;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=HOBGOBLIN;\
+    NUMERO=4;CAPO=SI;LUOGO=BOSCO;MONETE=35;TITOLO=La strada sbarrata;\
+    RICHIESTA=Gli hobgoblin di %CAPO% hanno sbarrato la strada che passa per un bosco, e chiedono un pedaggio ai mercanti.;\
+    BATTUTA=Quanto chiedono?;RISPOSTA=Tutto. Il carro compreso.;\
+    VITTORIA=Lo sbarramento di %CAPO% non c'è più: la strada è libera.;\
+    RINGRAZIAMENTO=I mercanti passano di nuovo. Uno ha detto che vi farà uno sconto. Non ha detto quanto.;\
+    RICORDO=In questo bosco gli hobgoblin di %CAPO% sbarravano la strada.
+    CHIAVE=PONTE_DEI_TROLL;TIPO=PONTE_TATTICO;ASPETTO=QUALUNQUE;MANDANTE=il mercante;NEMICO=TROLL;NUMERO=2;LUOGO=PALUDE;\
+    MONETE=40;TITOLO=Il ponte della palude;\
+    RICHIESTA=L'unico ponte per attraversare una palude qui vicino è in mano a due troll. Chi vuole passare deve rispondere a un indovinello.;\
+    BATTUTA=E se si risponde giusto?;RISPOSTA=Non lo so. Finora nessuno ha risposto giusto.;\
+    VITTORIA=Il ponte della palude è libero, e senza indovinelli.;\
+    RINGRAZIAMENTO=Finalmente le mie merci passano il ponte. Ma qual era l'indovinello?;\
+    RICORDO=In questa palude due troll tenevano il ponte.
+    CHIAVE=FATTORIA_ASSEDIATA;TIPO=SORTITA;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=GOBLIN;NUMERO=6;\
+    CAPO=SI;LUOGO=RADURA;MONETE=40;TITOLO=La fattoria assediata;\
+    RICHIESTA=I goblin di %CAPO% assediano una fattoria in una radura. Dentro i contadini resistono, ma hanno finito le provviste.;\
+    BATTUTA=E noi cosa facciamo?;RISPOSTA=Arrivate da fuori, loro escono da dentro, e i goblin si trovano in mezzo.;\
+    VITTORIA=I contadini escono dalla fattoria: l'assedio di %CAPO% è rotto.;\
+    RINGRAZIAMENTO=I contadini mandano un cesto di uova. Le galline, durante l'assedio, non hanno mai smesso.;\
+    RICORDO=In questa radura i goblin di %CAPO% assediarono una fattoria.
+    CHIAVE=CARICA_ALLE_CHIMERE;TIPO=CARICA;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=CHIMERA;NUMERO=3;\
+    LUOGO=RADURA;MONETE=40;TITOLO=La carica alle chimere;\
+    RICHIESTA=Tre chimere si sono stabilite in una radura sulla via del mercato. Niente agguati, niente trappole: ci vuole una bella carica.;\
+    BATTUTA=Una carica? A piedi?;RISPOSTA=I cavalli si sono rifiutati. Hanno visto le chimere.;\
+    VITTORIA=La carica ha funzionato: le chimere della radura non ci sono più.;\
+    RINGRAZIAMENTO=La via del mercato è libera. Lo racconterò ai cavalli.;\
+    RICORDO=In questa radura qualcuno caricò tre chimere.
+    CHIAVE=CAVALIERE_SPERGIURO;TIPO=VENDETTA;ASPETTO=QUALUNQUE;MANDANTE=il fabbro;NEMICO=GUERRIERO;NUMERO=1;\
+    CAPO=NOME_CAMPIONE;LUOGO=RADURA;MONETE=40;TITOLO=Il cavaliere spergiuro;\
+    RICHIESTA=Un cavaliere, %CAPO%, ha promesso di sposare mia figlia, si è fatto forgiare un'armatura nuova e se n'è andato senza pagare. Né sposare.;\
+    BATTUTA=E dov'è adesso?;RISPOSTA=Si è accampato in una radura, con la mia armatura addosso. Voglio che qualcuno gliela ammacchi per bene.;\
+    VITTORIA=%CAPO% è sconfitto, e l'armatura del fabbro è tutta ammaccata.;\
+    RINGRAZIAMENTO=Ammaccata? Benissimo. Me la riporta lui, a piedi, e la ripara a sue spese.;\
+    RICORDO=In questa radura il cavaliere spergiuro %CAPO% ebbe quello che si meritava.
+    CHIAVE=MAGO_DEL_ROSPO;TIPO=VENDETTA;ASPETTO=QUALUNQUE;MANDANTE=la sorella del mercante;NEMICO=MAGO;NUMERO=1;\
+    CAPO=NOME_MAGO;LUOGO=ROVINE;MONETE=40;TITOLO=Il mago e il rospo;\
+    RICHIESTA=Un mago, %CAPO%, ha trasformato mio fratello in un rospo perché gli aveva venduto un mantello tarlato. Adesso vive fra delle rovine.;\
+    BATTUTA=Il mago o vostro fratello?;RISPOSTA=Il mago. Mio fratello vive in un secchio, in cucina.;\
+    VITTORIA=%CAPO%, sconfitto, scioglie l'incantesimo borbottando. In cucina, a quest'ora, il secchio è vuoto.;\
+    RINGRAZIAMENTO=Mio fratello è tornato. Mangia ancora le mosche, ogni tanto, ma passerà.;\
+    RICORDO=Fra queste rovine viveva %CAPO%, il mago che trasformava la gente in rospi.
+    CHIAVE=CAVALIERE_NERO;TIPO=BLOCCO;ASPETTO=QUALUNQUE;MANDANTE=il mercante;NEMICO=GUERRIERO;NUMERO=1;\
+    CAPO=NOME_CAMPIONE;LUOGO=BOSCO;MONETE=40;TITOLO=Il cavaliere nero;\
+    RICHIESTA=Un cavaliere vestito di nero, %CAPO%, si è piazzato sull'unico sentiero che attraversa un bosco, e non lascia passare nessuno.;\
+    BATTUTA=Perché?;RISPOSTA=Non lo dice. Dice solo che nessuno passa. Lo ripete molto spesso.;\
+    VITTORIA=%CAPO% è sconfitto. Giura che è solo un graffio, ma si sposta dal sentiero.;\
+    RINGRAZIAMENTO=Il sentiero è libero! Le mie merci passano, e il cavaliere nero, dicono, adesso chiede l'elemosina.;\
+    RICORDO=In questo bosco il cavaliere nero %CAPO% non lasciava passare nessuno.
 
 # ---------------------------------------------------------------------------------------------
 # Sorveglianze (vedi LaSorveglianza e SorveglianzaRichiesta)
@@ -361,11 +530,11 @@ SORVEGLIANZA
     RINGRAZIAMENTO=Grazie. Mio fratello sarebbe contento. Cioè, sarebbe infastidito, come sempre, ma in fondo contento.;\
     RICORDO=In questo bosco riposa un eremita, che qualcuno vegliò per due notti.
     CHIAVE=CONTRABBANDIERI_DEL_BOSCO;TIPO=SORVEGLIANZA;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;LUOGO=BOSCO;\
-    VISITE=3;ORE=12;NEMICO=GOBLIN;NUMERO=4;CAPO=SI;MONETE=40;TITOLO=Chi passa dal bosco?;\
+    VISITE=3;ORE=12;NEMICO=LADRO;NUMERO=3;CAPO=NOME_BRIGANTE;MONETE=40;TITOLO=Chi passa dal bosco?;\
     RICHIESTA=Qualcuno porta merce di contrabbando in città passando da un bosco. Tenetelo d'occhio e scoprite chi è.;\
     BATTUTA=E quando lo scopriamo?;RISPOSTA=Gli chiedete gentilmente di smettere. Con la spada, se serve.;\
     VEGLIA=Nel bosco ci sono impronte fresche di carri, ma nessuno in vista.;\
-    SCOPERTA=Eccoli: quattro goblin con un carro pieno di casse, e a guidarli c'è %CAPO%.;\
+    SCOPERTA=Eccoli: tre ladri con un carro pieno di casse, e a guidarli c'è %CAPO%.;\
     VITTORIA=I contrabbandieri di %CAPO% non passeranno più dal bosco.;\
     RINGRAZIAMENTO=Le casse le teniamo noi. Per le indagini, s'intende.;\
     RICORDO=Da questo bosco passavano i contrabbandieri di %CAPO%.
@@ -387,14 +556,14 @@ SORVEGLIANZA
     RINGRAZIAMENTO=Una trentina, e con le scale. Raddoppierò le guardie sulle mura. Bel lavoro.;\
     RICORDO=In questa palude gli hobgoblin avevano il loro accampamento.
     CHIAVE=ROVINE_DEL_RIVALE;TIPO=SPIONAGGIO;ASPETTO=ALCHIMISTA;MANDANTE=l'alchimista;LUOGO=ROVINE;VISITE=2;ORE=12;\
-    NEMICO=GARGOYLE;NUMERO=2;MONETE=35;TITOLO=Il laboratorio segreto;\
-    RICHIESTA=Un mio rivale ha un laboratorio segreto fra delle rovine. Voglio sapere cosa sta preparando.;\
+    NEMICO=MAGO;NUMERO=1;CAPO=NOME_MAGO;MONETE=35;TITOLO=Il laboratorio segreto;\
+    RICHIESTA=Un mio rivale, %CAPO%, ha un laboratorio segreto fra delle rovine. Voglio sapere cosa sta preparando.;\
     BATTUTA=Non sarebbe più semplice chiederglielo?;RISPOSTA=Certo. E lui mi direbbe la verità, come no.;\
-    VEGLIA=Dalle rovine esce un fumo verde, e un odore di uova marce.;\
-    SCOPERTA=Il rivale non c'è, ma ha lasciato a guardia del laboratorio due gargoyle. E i gargoyle vi hanno visto.;\
-    VITTORIA=Sul tavolo del laboratorio c'è una ricetta: un tonico per far ricrescere i capelli.;\
+    VEGLIA=Dalle rovine esce un fumo verde, e un odore di uova marce. Il laboratorio è vuoto, per ora.;\
+    SCOPERTA=Mentre frugate fra le ampolle torna %CAPO%, e non la prende bene.;\
+    VITTORIA=%CAPO% scappa lasciando tutto. Sul tavolo c'è la ricetta che preparava: un tonico per far ricrescere i capelli.;\
     RINGRAZIAMENTO=Un tonico per i capelli? Tutto qui? Beh, me lo segno. Per un amico.;\
-    RICORDO=Fra queste rovine c'era il laboratorio segreto di un alchimista.
+    RICORDO=Fra queste rovine c'era il laboratorio segreto di %CAPO%.
 
 # ---------------------------------------------------------------------------------------------
 # Soccorsi (vedi IlSoccorso e SoccorsoRichiesto)
@@ -452,3 +621,216 @@ SOCCORSO
     RINGRAZIAMENTO=%NOME% è salvo. E guardate un po': sono tornate anche le pecore.;\
     LUTTO=Lo dirò io alla sua famiglia. È il mio lavoro.;\
     RICORDO=In questa radura gli hobgoblin di %CAPO% attaccarono un pastore.
+
+# ---------------------------------------------------------------------------------------------
+# Indagini (vedi LIndagine e IndagineRichiesta)
+# ---------------------------------------------------------------------------------------------
+#
+# Una riga per indagine, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
+#   CHIAVE=, TIPO= (INVESTIGAZIONE, TESTIMONI, CONTROSPIONAGGIO...), ASPETTO=, MANDANTE=, MONETE=, TITOLO=,
+#               RICHIESTA=, BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=  come per gli incarichi di combattimento;
+#   INDIZIO_1=, INDIZIO_2=, INDIZIO_3=  il terzo è facoltativo: LUOGO:testo, con il luogo fra GROTTA, ROVINE, BOSCO,
+#               PALUDE, RADURA, TEMPIO e LOCANDA. La missione segna i posti sulla mappa uno alla volta;
+#   DOMANDA=    la domanda dopo l'ultimo indizio;
+#   SOSPETTI=   da 2 a 5, separati da "/": le risposte possibili, nell'ordine;
+#   COLPEVOLE=  il numero del sospetto giusto, da 1. Gli indizi devono bastare a capirlo;
+#   NEMICO=, NUMERO=, CAPO=, LUOGO=  chi va sconfitto nel nascondiglio del colpevole, e dov'è;
+#   SMASCHERAMENTO=  quando si sceglie il colpevole giusto (la missione aggiunge che il nascondiglio è sulla mappa);
+#   ERRORE=     quando si accusa un innocente: la missione fallisce;
+#   VITTORIA=   quando chi è nel nascondiglio è sconfitto;
+#   RICORDO=    il ricordo del nascondiglio.
+# Nei testi %CAPO% è il nome del capo. Nei testi non si usa il ";".
+
+INDAGINE
+    CHIAVE=VIANDANTI_SCOMPARSI;TIPO=INVESTIGAZIONE;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;MONETE=40;\
+    TITOLO=I viandanti scomparsi;\
+    RICHIESTA=Da un mese spariscono viandanti sulla strada del bosco. Nessun corpo, nessun bagaglio rubato. Spariscono e basta.;\
+    BATTUTA=E le vostre guardie?;RISPOSTA=Due sono andate a indagare. Sono sparite anche loro.;\
+    INDIZIO_1=LOCANDA:Il locandiere ricorda che gli scomparsi erano tutti passati di notte, e che giuravano di sentire una musica dolcissima venire dal bosco.;\
+    INDIZIO_2=RADURA:Nell'erba della radura c'è il cappello di un viandante, e tutto intorno impronte di piedi nudi e piccolissimi, che girano in tondo come in una danza.;\
+    DOMANDA=Chi fa sparire i viandanti?;SOSPETTI=Una banda di briganti/Un troll affamato/I folletti del bosco/Gli spettri della palude;\
+    COLPEVOLE=3;NEMICO=FOLLETTO;NUMERO=4;LUOGO=BOSCO;\
+    SMASCHERAMENTO=Musica, piedi piccoli, danze in tondo: sono i folletti, che fanno ballare i viandanti fino allo sfinimento.;\
+    ERRORE=Vi siete sbagliati: mentre seguite la pista sbagliata, sparisce un altro viandante. Il capitano non vuole più sentir parlare di voi.;\
+    VITTORIA=I folletti sono sconfitti, e dal bosco escono barcollando i viandanti scomparsi, stanchi morti di ballare.;\
+    RINGRAZIAMENTO=Sono tornati tutti, anche le mie guardie. Dicono che non vogliono ballare mai più.;\
+    RICORDO=In questo bosco i folletti facevano ballare i viandanti fino allo sfinimento.
+    CHIAVE=CAMPANE_RUBATE;TIPO=TESTIMONI;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;MONETE=35;TITOLO=Le campane rubate;\
+    RICHIESTA=Stanotte qualcuno ha rubato le campane del campanile. Tutte e tre. Sapete quanto pesa una campana?;\
+    BATTUTA=Tanto?;RISPOSTA=Tantissimo. Chiedete in giro, qualcuno avrà visto qualcosa.;\
+    INDIZIO_1=LOCANDA:Un ubriaco giura di aver visto le campane volare via, di notte, verso delle rovine. Il locandiere dice che l'ubriaco giura tante cose.;\
+    INDIZIO_2=TEMPIO:Il custode del tempio dice che una campana è troppo pesante per qualunque uomo, e anche per qualunque uccello. Per qualcosa con le ali e i muscoli di pietra, invece, no.;\
+    DOMANDA=Chi ha rubato le campane?;SOSPETTI=Il campanaro/I gargoyle delle rovine/Le arpie/Il fonditore di campane;\
+    COLPEVOLE=2;NEMICO=GARGOYLE;NUMERO=3;LUOGO=ROVINE;\
+    SMASCHERAMENTO=Le ali, la pietra, le rovine: sono i gargoyle, che vogliono le campane per il loro campanile diroccato.;\
+    ERRORE=Vi siete sbagliati, e l'innocente che avete accusato lo racconta a tutta la città. Il sacerdote preferisce che non vi facciate più vedere.;\
+    VITTORIA=I gargoyle sono sconfitti, e fra le rovine ci sono le tre campane, un po' ammaccate.;\
+    RINGRAZIAMENTO=Le campane sono di nuovo al loro posto. Domattina le suoniamo forte, così lo sanno anche i gargoyle.;\
+    RICORDO=Fra queste rovine i gargoyle nascondevano le campane rubate.
+    CHIAVE=SPIA_DEI_GOBLIN;TIPO=CONTROSPIONAGGIO;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;MONETE=45;\
+    TITOLO=La spia dei goblin;\
+    RICHIESTA=I goblin sanno sempre dove sono le mie guardie e quando cambiano i turni. Qualcuno glielo dice. Uno dei miei.;\
+    BATTUTA=Avete dei sospetti?;RISPOSTA=Tre. Il sergente Bruno, la guardia Teodolinda e la recluta Osvaldo. Ma non posso accusarli senza prove.;\
+    INDIZIO_1=LOCANDA:Il locandiere ha visto una guardia offrire da bere a tutti con delle monete strane, piccole e storte: monete dei goblin. Era mancina, e si puliva le mani piene di farina.;\
+    INDIZIO_2=GROTTA:In una grotta dei goblin trovate un foglio con i turni delle guardie, scritto con la mano sinistra, e con una macchia di farina.;\
+    INDIZIO_3=TEMPIO:Il custode del tempio conosce bene le guardie: Bruno scrive con la destra e non entra mai in una locanda, Osvaldo è mancino ma è astemio, Teodolinda è mancina e la sera aiuta il fratello fornaio.;\
+    DOMANDA=Chi è la spia?;SOSPETTI=Il sergente Bruno/La guardia Teodolinda/La recluta Osvaldo;\
+    COLPEVOLE=2;NEMICO=GUERRIERA;NUMERO=1;CAPO=Teodolinda;LUOGO=GROTTA;\
+    SMASCHERAMENTO=Mancina, farina, locanda: è Teodolinda. Scoperta, è fuggita in una grotta, e non ha intenzione di arrendersi.;\
+    ERRORE=Vi siete sbagliati, e la vera spia, avvertita, sparisce. Il capitano non si fida più di voi.;\
+    VITTORIA=Teodolinda, sconfitta, getta la spada e si arrende.;\
+    RINGRAZIAMENTO=Teodolinda è in cella, e i goblin non sapranno più niente dei miei turni. Il pane, però, ci mancherà.;\
+    RICORDO=In questa grotta si nascondeva la spia dei goblin.
+    CHIAVE=DRAGO_DI_CARTAPESTA;TIPO=SCOPERTA_INGANNO;ASPETTO=QUALUNQUE;MANDANTE=il mugnaio;MONETE=40;\
+    TITOLO=Il drago della palude;\
+    RICHIESTA=Un drago vive in una palude qui vicino, e ogni settimana vuole un sacco di monete, o brucia i mulini. Ma io un drago non l'ho mai visto. Nessuno l'ha visto.;\
+    BATTUTA=E allora come sapete che c'è?;RISPOSTA=Ci sono le impronte, e le lettere. Firmate Il Drago.;\
+    INDIZIO_1=PALUDE:Nella palude ci sono impronte di drago enormi. Guardandole bene, sono disegnate nel fango con un bastone. E accanto ci sono impronte di stivali.;\
+    INDIZIO_2=LOCANDA:Il locandiere dice che da quando c'è il drago, tre forestieri vestiti bene vengono a bere tutte le sere e pagano sempre con sacchi di monete. E sanno scrivere molto bene.;\
+    DOMANDA=Chi c'è dietro il drago della palude?;SOSPETTI=Un drago vero/Una viverna/Una banda di ladri/Una strega;\
+    COLPEVOLE=3;NEMICO=LADRO;NUMERO=3;CAPO=NOME_CAMPIONE;LUOGO=PALUDE;\
+    SMASCHERAMENTO=Bastoni, stivali, lettere ben scritte: il drago è una banda di ladri, guidata da %CAPO%.;\
+    ERRORE=Vi siete sbagliati, e i ladri, che vi tenevano d'occhio, se ne vanno con le monete. Il mugnaio non vuole più vedervi.;\
+    VITTORIA=La banda di %CAPO% è sconfitta. Nel loro nascondiglio ci sono un costume da drago e tante lettere già firmate.;\
+    RINGRAZIAMENTO=Un costume da drago! E io che pagavo. Non ditelo a nessuno, per favore.;\
+    RICORDO=In questa palude la banda di %CAPO% si fingeva un drago.
+    CHIAVE=LUCI_NELLE_ROVINE;TIPO=SCOPERTA_SEGRETO;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;MONETE=40;\
+    TITOLO=Le luci nelle rovine;\
+    RICHIESTA=Ogni notte, fra delle rovine, si accendono luci verdi. E da quando ci sono le luci, il cimitero è sempre più vuoto.;\
+    BATTUTA=Più vuoto?;RISPOSTA=I morti. Spariscono i morti.;\
+    INDIZIO_1=ROVINE:Fra le rovine ci sono candele nere consumate e un grande cerchio disegnato col gesso. Dentro il cerchio, ossa sparse.;\
+    INDIZIO_2=TEMPIO:Il custode del tempio dice che mancano tre libri proibiti, sui morti che camminano. Li aveva chiesti un uomo vestito di nero, con le dita sporche di gesso.;\
+    DOMANDA=Che cosa succede nelle rovine?;SOSPETTI=Ci sono i fantasmi/Un negromante risveglia i morti/Gli spiriti della palude fanno scherzi;\
+    COLPEVOLE=2;NEMICO=SCHELETRO;NUMERO=5;LUOGO=GROTTA;\
+    SMASCHERAMENTO=Gesso, candele nere, libri sui morti che camminano: è un negromante. E ha portato i suoi morti in una grotta.;\
+    ERRORE=Vi siete sbagliati, e mentre cercate dove non dovreste, il cimitero si svuota del tutto. Il sacerdote chiude la porta.;\
+    VITTORIA=Gli scheletri sono tornati polvere. Del negromante resta solo il mantello nero, e i tre libri, che riportate al tempio.;\
+    RINGRAZIAMENTO=I morti possono tornare a riposare. Domani li rimettiamo al loro posto, uno per uno.;\
+    RICORDO=In questa grotta un negromante nascondeva i suoi scheletri.
+    CHIAVE=MORTE_DEL_PESCATORE;TIPO=FORENSICA;ASPETTO=QUALUNQUE;MANDANTE=la vedova del pescatore;MONETE=35;\
+    TITOLO=La morte del pescatore;\
+    RICHIESTA=Mio marito è morto in una palude, dove andava a pescare. Dicono che è stato un incidente. Io non ci credo.;\
+    BATTUTA=E cosa credete?;RISPOSTA=Che qualcosa l'ha ucciso. Scopritelo voi, io non ho il coraggio di guardare.;\
+    INDIZIO_1=PALUDE:Sulla riva dove pescava ci sono tre graffi paralleli e profondi sulla barca, come di artigli. Le canne intorno sono bruciacchiate.;\
+    INDIZIO_2=LOCANDA:Il locandiere dice che nessun orso vive vicino alle paludi, e che le arpie non bruciano niente. Ma una volta ha visto una bestia con tre teste che sputava fuoco.;\
+    DOMANDA=Che cosa ha ucciso il pescatore?;SOSPETTI=Un orso/Una chimera/Un troll/Le arpie;\
+    COLPEVOLE=2;NEMICO=CHIMERA;NUMERO=1;LUOGO=PALUDE;\
+    SMASCHERAMENTO=Artigli, fuoco, la bestia con tre teste: è stata una chimera.;\
+    ERRORE=Vi siete sbagliati. La vedova vi guarda, scuote la testa e chiude la porta.;\
+    VITTORIA=La chimera della palude è sconfitta.;\
+    RINGRAZIAMENTO=Adesso so com'è andata. Non mi ridà mio marito, ma almeno non ci sarà un'altra vedova.;\
+    RICORDO=In questa palude viveva la chimera che uccise un pescatore.
+    CHIAVE=GRANO_MALEDETTO;TIPO=INCHIESTA;ASPETTO=QUALUNQUE;MANDANTE=il borgomastro;MONETE=45;TITOLO=Il grano maledetto;\
+    RICHIESTA=Nei magazzini il grano si copre di una muffa che, giuro, canticchia. Se va avanti così, quest'inverno moriremo di fame.;\
+    BATTUTA=Canticchia?;RISPOSTA=Sottovoce. Ma canticchia.;\
+    INDIZIO_1=RADURA:Nella radura qualcuno ha tagliato degli alberi giovani. Ai ceppi sono legati dei nastri sottili, colorati, di fattura elfica.;\
+    INDIZIO_2=LOCANDA:Un contadino si vanta di aver venduto al magazzino la legna di certi alberi bellissimi, che quando li tagliavi cantavano.;\
+    INDIZIO_3=TEMPIO:Il custode del tempio ha letto di una maledizione degli elfi: chi taglia un albero che canta, avrà il grano che canta. E marcisce.;\
+    DOMANDA=Chi ha maledetto il grano?;SOSPETTI=Il mugnaio invidioso/I goblin/Un'elfa del bosco/Il contadino;\
+    COLPEVOLE=3;NEMICO=ELFA;NUMERO=1;CAPO=NOME_CAMPIONESSA;LUOGO=BOSCO;\
+    SMASCHERAMENTO=Nastri elfici, alberi che cantano, la maledizione degli elfi: è stata un'elfa, %CAPO%, per vendicare i suoi alberi.;\
+    ERRORE=Vi siete sbagliati, e intanto il grano canta sempre più forte. Il borgomastro non vi paga per le chiacchiere.;\
+    VITTORIA=%CAPO%, sconfitta, toglie la maledizione. Ma vuole la promessa che nessuno taglierà più un albero che canta.;\
+    RINGRAZIAMENTO=Il grano non canta più. E il contadino pianterà dieci alberi, così impara.;\
+    RICORDO=In questo bosco viveva %CAPO%, l'elfa che maledisse il grano.
+
+# ---------------------------------------------------------------------------------------------
+# Riti (vedi IlRituale e RitualeRichiesto)
+# ---------------------------------------------------------------------------------------------
+#
+# Una riga per rito, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
+#   CHIAVE=, TIPO= (RITUALE, SIGILLO, BENEDIZIONE, POSSESSIONE...), ASPETTO=, MANDANTE=, MONETE=, TITOLO=,
+#               RICHIESTA=, BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=, RICORDO=  come per gli incarichi di combattimento;
+#               dove si celebra, che ingredienti servono e quanto pagano lo aggiunge la missione;
+#   LUOGO=      dove si celebra: GROTTA, ROVINE, BOSCO, PALUDE, RADURA o TEMPIO;
+#   GENERE=, INGREDIENTE=, INGREDIENTI=, DOVE=, QUANTITA=  l'ingrediente, come i materiali dell'alchimista: genere,
+#               singolare, plurale, da dove viene (LUOGHI BOSCO RADURA, oppure NEMICI SPETTRO) e quanti ne servono;
+#   DOMANDA=    la domanda nel posto del rito, con gli ingredienti: una conferma, se non ci sono METODI;
+#   METODI=, METODO=, ERRORE=  facoltativi, insieme: da 2 a 4 modi di celebrare il rito, separati da "/" (la
+#               missione aggiunge "Non ancora"), il numero di quello giusto, da 1, e che cosa si scrive con quello
+#               sbagliato: la missione fallisce. Il racconto deve bastare a capire qual è il metodo giusto;
+#   RITO=       che cosa si scrive quando il rito si celebra: tutto, se nessuno salta fuori, altrimenti chi arriva;
+#   NEMICO=, NUMERO=, CAPO=, VITTORIA=  facoltativi: chi salta fuori durante il rito, da sconfiggere lì, e che
+#               cosa si scrive quando è sconfitto.
+# Nei testi %CAPO% è il nome del capo. Nei testi non si usa il ";".
+
+RITUALE
+    CHIAVE=FUOCO_DEL_SOLSTIZIO;TIPO=RITUALE;ASPETTO=QUALUNQUE;MANDANTE=la sacerdotessa;LUOGO=RADURA;\
+    GENERE=F;INGREDIENTE=lacrima di resina;INGREDIENTI=lacrime di resina;DOVE=LUOGHI BOSCO;QUANTITA=4;\
+    DOMANDA=La radura è pronta e la resina anche. Accendete il fuoco del solstizio?;\
+    MONETE=30;TITOLO=Il fuoco del solstizio;\
+    RICHIESTA=Per il solstizio bisogna accendere il fuoco sacro in una radura, come si è sempre fatto. Quest'anno io ho la gotta.;\
+    BATTUTA=E se non si accende?;RISPOSTA=Allora l'inverno durerà il doppio. Così dice la tradizione. Io dico che la resina brucia benissimo.;\
+    RITO=La resina prende fuoco con una fiammata alta, che profuma di bosco. Il fuoco del solstizio è acceso.;\
+    RINGRAZIAMENTO=L'ho visto anche da qui, il vostro fuoco! L'inverno sarà breve, o almeno così dice la tradizione.;\
+    RICORDO=In questa radura qualcuno accese il fuoco del solstizio.
+    CHIAVE=VARCO_DEGLI_SPETTRI;TIPO=SIGILLO;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;LUOGO=ROVINE;\
+    GENERE=M;INGREDIENTE=frammento d'argento;INGREDIENTI=frammenti d'argento;DOVE=LUOGHI GROTTA;QUANTITA=3;\
+    DOMANDA=Il varco fra le rovine pulsa di una luce fredda. Lo sigillate con l'argento?;\
+    NEMICO=SPETTRO;NUMERO=2;MONETE=40;TITOLO=Il varco degli spettri;\
+    RICHIESTA=Fra delle rovine si è aperto un varco, e di notte ne escono spettri. Va sigillato con l'argento, prima che si allarghi.;\
+    BATTUTA=E gli spettri cosa ne pensano?;RISPOSTA=Che non vogliono essere chiusi fuori. Ma non è affar loro.;\
+    RITO=L'argento comincia a chiudere il varco, ma prima che si chiuda del tutto ne escono due spettri, furiosi.;\
+    VITTORIA=Gli spettri svaniscono, e il varco si chiude con un rumore di porta sbattuta.;\
+    RINGRAZIAMENTO=Il varco è chiuso, e le notti sono di nuovo tranquille. Avete avanzato dell'argento, per caso?;\
+    RICORDO=Fra queste rovine c'era un varco da cui uscivano gli spettri.
+    CHIAVE=FONTE_DELLA_RADURA;TIPO=BENEDIZIONE;ASPETTO=QUALUNQUE;MANDANTE=la levatrice;LUOGO=RADURA;\
+    GENERE=M;INGREDIENTE=giglio bianco;INGREDIENTI=gigli bianchi;DOVE=LUOGHI RADURA BOSCO;QUANTITA=3;\
+    DOMANDA=La fonte gorgoglia piano. Gettate i gigli nell'acqua e la benedite?;\
+    MONETE=25;TITOLO=La fonte dei neonati;\
+    RICHIESTA=In una radura c'è una fonte: con la sua acqua si lavano i neonati, ed è tradizione benedirla una volta l'anno con dei gigli bianchi.;\
+    BATTUTA=Non dovrebbe farlo un sacerdote?;RISPOSTA=Il sacerdote è allergico ai gigli. Starnutisce tutta la benedizione.;\
+    RITO=I gigli galleggiano sull'acqua e la fonte si fa limpida come il cristallo. È benedetta.;\
+    RINGRAZIAMENTO=I bambini di quest'anno nasceranno sani e forti. E puliti.;\
+    RICORDO=In questa radura c'è una fonte, benedetta con i gigli bianchi.
+    CHIAVE=SPIRITO_DELLA_PALUDE;TIPO=SPEZZATURA;ASPETTO=QUALUNQUE;MANDANTE=il pescatore;LUOGO=PALUDE;\
+    GENERE=F;INGREDIENTE=piuma di civetta;INGREDIENTI=piume di civetta;DOVE=LUOGHI BOSCO ROVINE;QUANTITA=3;\
+    DOMANDA=Lo spirito vi guarda dalla nebbia. Spezzate la maledizione con le piume di civetta?;\
+    NEMICO=SPIRITO;NUMERO=1;MONETE=40;TITOLO=Lo spirito tormentato;\
+    RICHIESTA=In una palude vaga lo spirito di un vecchio pescatore, maledetto da una strega. Piange tutte le notti, e i pesci non abboccano più.;\
+    BATTUTA=E noi come lo aiutiamo?;RISPOSTA=Le piume di civetta spezzano le maledizioni. Ma lo spirito non lo sa, e si spaventerà.;\
+    RITO=Le piume bruciano con una fiamma azzurra, e lo spirito, terrorizzato, vi si scaglia contro.;\
+    VITTORIA=Lo spirito si calma, la maledizione è spezzata. Prima di svanire, vi saluta con la mano.;\
+    RINGRAZIAMENTO=Stanotte nessuno ha pianto, e stamattina i pesci abboccavano. Riposi in pace, il vecchio.;\
+    RICORDO=In questa palude vagava uno spirito tormentato, finché qualcuno non ne spezzò la maledizione.
+    CHIAVE=BOSCO_CORROTTO;TIPO=PURIFICAZIONE;ASPETTO=ALCHIMISTA;MANDANTE=l'alchimista;LUOGO=BOSCO;\
+    GENERE=M;INGREDIENTE=ramo di vischio;INGREDIENTI=rami di vischio;DOVE=LUOGHI BOSCO;QUANTITA=4;\
+    DOMANDA=Gli alberi qui sono neri e contorti. Bruciate il vischio per purificare il bosco?;\
+    NEMICO=OMBRA_NERA;NUMERO=2;MONETE=40;TITOLO=Il bosco corrotto;\
+    RICHIESTA=Un bosco qui vicino si sta corrompendo: gli alberi anneriscono e le erbe che raccolgo sono velenose. Il vischio bruciato lo purifica.;\
+    BATTUTA=Così, semplicemente?;RISPOSTA=Semplicemente. A meno che la corruzione non abbia preso forma. Allora un po' meno semplicemente.;\
+    RITO=Il fumo del vischio si allarga fra gli alberi, e la corruzione prende forma: due ombre nere si staccano dai tronchi.;\
+    VITTORIA=Le ombre nere si dissolvono nel fumo, e gli alberi tornano verdi.;\
+    RINGRAZIAMENTO=Le erbe del bosco sono di nuovo buone. Le ho assaggiate. Cioè, le ha assaggiate il mio assistente.;\
+    RICORDO=Questo bosco era corrotto, finché qualcuno non lo purificò con il vischio.
+    CHIAVE=PASTORE_POSSEDUTO;TIPO=POSSESSIONE;ASPETTO=QUALUNQUE;MANDANTE=la moglie del pastore;LUOGO=TEMPIO;\
+    GENERE=F;INGREDIENTE=radice di valeriana;INGREDIENTI=radici di valeriana;DOVE=LUOGHI RADURA BOSCO;QUANTITA=3;\
+    DOMANDA=Il pastore si contorce e ringhia. Come lo liberate?;\
+    METODI=Gli recitate la formula al contrario/Gli fate respirare il fumo della valeriana bruciata/Lo cospargete di sale;\
+    METODO=2;ERRORE=Lo spirito ride di voi, e il pastore, ancora posseduto, scappa nella foresta. Sua moglie non vi perdonerà.;\
+    NEMICO=FANTASMA;NUMERO=1;MONETE=40;TITOLO=Il pastore posseduto;\
+    RICHIESTA=Mio marito ha respirato il fumo di un fuoco fatuo, e da allora parla con una voce che non è la sua. L'ho portato al tempio, ma il custode ha paura.;\
+    BATTUTA=E cosa possiamo fare noi?;RISPOSTA=Il libro del custode dice che lo spirito entrato con il fumo, con il fumo deve uscire. Il resto lo lascio a voi.;\
+    RITO=Il fumo della valeriana riempie il tempio, e lo spirito esce dal pastore tossendo. Ma, uscito, non ha nessuna intenzione di andarsene.;\
+    VITTORIA=Il fantasma svanisce, e il pastore si sveglia chiedendo che cosa ci fa in un tempio.;\
+    RINGRAZIAMENTO=Mio marito è tornato. Russa come prima, ma con la sua voce.;\
+    RICORDO=In questo tempio uno spirito fu cacciato con il fumo della valeriana.
+    CHIAVE=VOCE_DELL_ANTENATO;TIPO=COMUNICAZIONE;ASPETTO=QUALUNQUE;MANDANTE=il notaio;LUOGO=ROVINE;\
+    GENERE=M;INGREDIENTE=fungo lunare;INGREDIENTI=funghi lunari;DOVE=LUOGHI BOSCO GROTTA;QUANTITA=3;\
+    DOMANDA=Le rovine sono silenziose. Accendete i funghi lunari e chiamate lo spirito del vecchio conte?;\
+    MONETE=35;TITOLO=La voce del conte;\
+    RICHIESTA=Il vecchio conte è morto senza dire a nessuno dove ha nascosto il testamento. I suoi nipoti litigano da tre anni. Bisogna chiederlo a lui.;\
+    BATTUTA=Ai morti?;RISPOSTA=Fra delle rovine si può parlare con loro, con la luce dei funghi lunari. Sono notaio, mica stregone, ma ho letto.;\
+    RITO=Alla luce dei funghi compare il vecchio conte, sbadiglia e dice che il testamento è nel camino, e che i nipoti non meritano niente. Poi torna a dormire.;\
+    RINGRAZIAMENTO=Nel camino, eh? E c'è scritto davvero che lascia tutto al suo gatto. Questo lo leggo io ai nipoti.;\
+    RICORDO=Fra queste rovine qualcuno parlò con lo spirito del vecchio conte.
+    CHIAVE=GUARDIANO_DI_PIETRA;TIPO=EVOCAZIONE;ASPETTO=ARMAIOLO;MANDANTE=l'armaiolo;LUOGO=ROVINE;\
+    GENERE=F;INGREDIENTE=pietra di fulmine;INGREDIENTI=pietre di fulmine;DOVE=LUOGHI RADURA ROVINE;QUANTITA=3;\
+    DOMANDA=Le pietre di fulmine crepitano. Cominciate l'evocazione del guardiano?;\
+    NEMICO=GARGOYLE;NUMERO=1;MONETE=40;TITOLO=Il guardiano di pietra;\
+    RICHIESTA=Di notte mi rubano le spade. Ho letto che fra delle rovine si può evocare un guardiano di pietra, che poi ubbidisce a chi l'ha evocato.;\
+    BATTUTA=Ubbidisce e basta?;RISPOSTA=Prima vuole vedere se chi l'ha evocato è degno. Poi ubbidisce. Credo.;\
+    RITO=Le pietre di fulmine si spaccano con un tuono, e dalle rovine si alza un gargoyle, che vuole vedere se siete degni.;\
+    VITTORIA=Il gargoyle si inchina: siete degni. Vi segue fino alla bottega dell'armaiolo, e si piazza sul tetto.;\
+    RINGRAZIAMENTO=Da quando c'è il gargoyle sul tetto, nessuno mi ruba più niente. E nessun cliente entra più. Dovrò pensarci.;\
+    RICORDO=Fra queste rovine fu evocato un guardiano di pietra.

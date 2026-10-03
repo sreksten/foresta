@@ -126,11 +126,12 @@ public enum TipoMissione {
      * Esempio: eliminare una specifica bestia o un bandito
      */
     CACCIATORE_DI_TAGLIE(SupertipoMissione.COMBATTIMENTO),
-    // Coperto da: IncaricoDiCombattimento (il troll del mulino, le arpie del fornaio)
+    // Coperto da: IncaricoDiCombattimento (il troll del mulino, le arpie del fornaio, il cavaliere spergiuro, il mago del rospo)
     /**
      * Esempio: affrontare e sconfiggere un nemico specifico per motivi personali, riscatto, onore perso
      */
     VENDETTA(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: IncaricoDiCombattimento (il campione del maestro d'armi, la campionessa delle guardie)
     /**
      * Esempio: combattere un duello per ripristinare l'onore, affrontare un campione in arena
      */
@@ -158,6 +159,7 @@ public enum TipoMissione {
      * Esempio: ritirata ordinata, battere in ritirata, riposizionamento tattico
      */
     RITIRATA_TATTICA(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: IncaricoDiCombattimento (le chimere della radura)
     /**
      * Esempio: attacco diretto, cavalry charge, assalto frontale
      */
@@ -166,6 +168,7 @@ public enum TipoMissione {
      * Esempio: circondare nemici, accerchiamento tattico, movimento a pinza
      */
     CIRCONDAMENTO(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: IncaricoDiCombattimento (la strada sbarrata dagli hobgoblin, il cavaliere nero)
     /**
      * Esempio: bloccare passaggio, creare barricata, sbarramento
      */
@@ -184,6 +187,7 @@ public enum TipoMissione {
     //  * Esempio: battaglia navale, combattimento via mare, flotta
     //  */
     // FLOTTA(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: IncaricoDiCombattimento (la fattoria assediata)
     /**
      * Esempio: uscita tattica da fortezza, attacco sorpresa, sortita
      */
@@ -197,6 +201,7 @@ public enum TipoMissione {
      * Esempio: guerra di trincea, bunker, difesa statica
      */
     TRINCEA(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: IncaricoDiCombattimento (il ponte dei troll)
     /**
      * Esempio: battaglia su ponte strategico, controllo passaggio, ponte conteso
      */
@@ -205,6 +210,7 @@ public enum TipoMissione {
      * Esempio: assedio offensivo, assalto a fortezza, conquista della rocca
      */
     ASSEDIO_OFFENSIVO(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: IncaricoDiCombattimento (il rito del minotauro)
     /**
      * Esempio: combattimento rituale, duello cerimoniale, combattimento sacro
      */
@@ -214,6 +220,7 @@ public enum TipoMissione {
     //  * Esempio: battaglia aerea, combattimento in volo, scontro fra le nuvole
     //  */
     // BATTAGLIA_AEREA(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: IncaricoDiCombattimento (la maga delle rovine)
     /**
      * Esempio: duello magico specializzato, scontro magico puro, battaglia di maghi
      */
@@ -223,6 +230,7 @@ public enum TipoMissione {
      * Esempio: combattimento contro bestia rara, dominio selvatico, caccia bestia
      */
     COMBATTIMENTO_BESTIA(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: IncaricoDiCombattimento (l'elfo dell'antica usanza)
     /**
      * Esempio: duello in stile antico, combattimento tradizionale, scontro eroico
      */
@@ -268,6 +276,7 @@ public enum TipoMissione {
      * Esempio: contenere un'epidemia, aiutare i malati, disinfestare un'area
      */
     EPIDEMIA(SupertipoMissione.PROTEZIONE),
+    // Coperto da: IlRituale (il pastore posseduto)
     /**
      * Esempio: esorcizzare una possessione demoniaca, liberare da controllo mentale
      */
@@ -331,6 +340,7 @@ public enum TipoMissione {
 
     //----------
 
+    // Coperto da: LIndagine (i viandanti scomparsi)
     /**
      * Esempio: indagare su sparizioni di persone scoprendo dietro congiure di streghe o vampiri
      */
@@ -357,6 +367,7 @@ public enum TipoMissione {
      * Esempio: osservare, monitorare, pedinare qualcuno senza essere scoperti, seguire movimenti
      */
     SORVEGLIANZA(SupertipoMissione.INVESTIGAZIONE),
+    // Coperto da: LIndagine (la spia dei goblin)
     /**
      * Esempio: scoprire una spia nel nostro accampamento, smascherare un traditore, impedire lo spionaggio
      */
@@ -365,10 +376,12 @@ public enum TipoMissione {
      * Esempio: interrogare prigionieri, estrarre informazioni, interrogatorio forzato, estorsione confessioni
      */
     INTERROGATORIO(SupertipoMissione.INVESTIGAZIONE),
+    // Coperto da: LIndagine (il grano maledetto)
     /**
      * Esempio: indagine profonda, inchiesta giudiziaria, investigazione complessa, analisi approfondita
      */
     INCHIESTA(SupertipoMissione.INVESTIGAZIONE),
+    // Coperto da: LIndagine (la morte del pescatore)
     /**
      * Esempio: analisi scene crimine, raccolta prove, indizi forensici, esaminare corpi, cause di morte, autopsia
      */
@@ -381,10 +394,12 @@ public enum TipoMissione {
      * Esempio: seguire tracce magiche, tracciamento soprannaturale, aura tracking, leggere presenze invisibili
      */
     TRACCIA_MAGICA(SupertipoMissione.INVESTIGAZIONE),
+    // Coperto da: LIndagine (le campane rubate)
     /**
      * Esempio: raccogliere testimonianze, interviste, deposizioni, interrogare testimoni
      */
     TESTIMONI(SupertipoMissione.INVESTIGAZIONE),
+    // Coperto da: LIndagine (le luci nelle rovine)
     /**
      * Esempio: scoprire segreto, rivelare mistero, smascheramento, investigare fantasmi, paranormale, entità spettrali
      */
@@ -394,6 +409,7 @@ public enum TipoMissione {
      * Esempio: cercare oggetto specifico, localizzazione oggetto, ricerca mirata, leggere storia di oggetti, psicometria
      */
     RICERCA_OGGETTO(SupertipoMissione.INVESTIGAZIONE),
+    // Coperto da: LIndagine (il drago di cartapesta)
     /**
      * Esempio: scoprire inganno, smascherare falsità, rivelare bugia, denudare inganni
      */
@@ -674,18 +690,22 @@ public enum TipoMissione {
 
     //----------
 
+    // Coperto da: IlRituale (il bosco corrotto)
     /**
      * Esempio: purificare una terra corrotta, bonificare un luogo maledetto
      */
     PURIFICAZIONE(SupertipoMissione.PROTEZIONE),
+    // Coperto da: IlRituale (lo spirito della palude)
     /**
      * Esempio: spezzare una maledizione su uno spirito tormentato
      */
     SPEZZATURA(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (la fonte dei neonati)
     /**
      * Esempio: benedire un luogo maledetto, purificare un'anima corrotta, benedire una coppia
      */
     BENEDIZIONE(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (la voce del conte)
     /**
      * Esempio: parlare con spiriti, comunicare con divinità, ottenere messaggi soprannaturali, negoziare con entità
      */
@@ -702,6 +722,7 @@ public enum TipoMissione {
      * Esempio: visione del futuro, precognizione, profezia, astrologia, lettura stelle, predizioni, divinazione
      */
     VISIONE_FUTURO(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (il fuoco del solstizio)
     /**
      * Esempio: eseguire un rituale di evocazione per contattare uno spirito o sigillare un portale
      */
@@ -710,6 +731,7 @@ public enum TipoMissione {
      * Esempio: animare i non-morti, controllare scheletri, risvegliare cadaveri
      */
     NECROMANZIA(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (il guardiano di pietra)
     /**
      * Esempio: evocare creature, convocare entità soprannaturali, richiamare spiriti
      */
@@ -722,6 +744,7 @@ public enum TipoMissione {
      * Esempio: lanciare incantesimi complessi, magia avanzata, effetti magici potenti
      */
     INCANTESIMO(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (il varco degli spettri)
     /**
      * Esempio: sigillare portali, incantesimi sigillo, chiudere varchi magici
      */

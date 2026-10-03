@@ -8,7 +8,7 @@ import java.util.Optional;
 /**
  * Una sorveglianza (vedi LaSorveglianza), letta da una riga di SORVEGLIANZA in missioni.txt, che ne descrive i campi:
  * chi la chiede, che posto tenere d'occhio, quante volte e a quante ore di distanza, chi salta fuori alla fine (se
- * qualcuno salta fuori), quanto si paga e i testi. Nei testi %CAPO% è il nome del capo, se c'è.
+ * qualcuno salta fuori), quanto si paga e i testi. Nei testi %CAPO% è il nome del capo, se c'è (vedi CapoDellaRiga).
  */
 public final class SorveglianzaRichiesta {
 
@@ -24,7 +24,7 @@ public final class SorveglianzaRichiesta {
 	private final int ore;
 	private final ClassePersonaggio nemico;
 	private final int numero;
-	private final boolean conCapo;
+	private final CapoDellaRiga capo;
 	private final int monete;
 	private final String titolo;
 	private final String richiesta;
@@ -58,9 +58,9 @@ public final class SorveglianzaRichiesta {
 		Optional<String> classe = campi.facoltativo("NEMICO");
 		nemico = classe.map(ClassePersonaggio::valueOf).orElse(null);
 		numero = nemico == null ? 0 : campi.intero("NUMERO");
-		conCapo = campi.facoltativo("CAPO").map("SI"::equals).orElse(false);
+		capo = CapoDellaRiga.da(campi.facoltativo("CAPO"));
 		vittoria = campi.facoltativo("VITTORIA").orElse(null);
-		if (nemico == null ? campi.facoltativo("NUMERO").isPresent() || conCapo || vittoria != null
+		if (nemico == null ? campi.facoltativo("NUMERO").isPresent() || capo != null || vittoria != null
 				: numero < 1 || vittoria == null) {
 			throw new IllegalArgumentException("NEMICO, NUMERO e VITTORIA vanno insieme, e CAPO solo con loro: " + riga);
 		}
@@ -141,10 +141,17 @@ public final class SorveglianzaRichiesta {
 	}
 
 	/**
-	 * Se fra chi salta fuori c'è un capo con un nome (da NOME_CAPOBANDA), un livello sopra gli altri.
+	 * Se fra chi salta fuori c'è un capo con un nome, un livello sopra gli altri.
 	 */
 	public boolean isConCapo() {
-		return conCapo;
+		return capo != null;
+	}
+
+	/**
+	 * Il nome del capo: scritto nella riga, o pescato dalla sua produzione (vedi CapoDellaRiga). Solo se c'è un capo.
+	 */
+	public String pescaNomeDelCapo() {
+		return capo.pescaNome();
 	}
 
 	public int getMonete() {

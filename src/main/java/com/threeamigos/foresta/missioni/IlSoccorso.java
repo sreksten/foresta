@@ -38,7 +38,8 @@ public class IlSoccorso extends LaLiberazione {
 	 * Il nome del capo dei nemici, se il soccorso ne ha uno (da missioni.txt), altrimenti vuoto.
 	 */
 	public String getCapo() {
-		return getSoccorso().isConCapo() ? parametro(CAPO, ProduttoreDiTestiCasuale::nomeCapobanda) : "";
+		SoccorsoRichiesto soccorso = getSoccorso();
+		return soccorso.isConCapo() ? parametro(CAPO, soccorso::pescaNomeDelCapo) : "";
 	}
 
 	/**

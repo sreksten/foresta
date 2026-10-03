@@ -6,7 +6,7 @@ import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 /**
  * Un soccorso (vedi IlSoccorso), letto da una riga di SOCCORSO in missioni.txt, che ne descrive i campi: chi lo
  * chiede, chi va riportato a casa, dove sta e chi lo minaccia, quanto si paga e i testi. Nei testi %NOME% è il nome
- * di chi va riportato a casa, %CAPO% quello del capo dei nemici, se c'è.
+ * di chi va riportato a casa, %CAPO% quello del capo dei nemici, se c'è (vedi CapoDellaRiga).
  */
 public final class SoccorsoRichiesto {
 
@@ -21,7 +21,7 @@ public final class SoccorsoRichiesto {
 	private final String persona;
 	private final ClassePersonaggio nemico;
 	private final int numero;
-	private final boolean conCapo;
+	private final CapoDellaRiga capo;
 	private final ClassiLocazione luogo;
 	private final int monete;
 	private final String titolo;
@@ -45,7 +45,7 @@ public final class SoccorsoRichiesto {
 		persona = campi.obbligatorio("PERSONA");
 		nemico = campi.enumerato("NEMICO", ClassePersonaggio.class);
 		numero = campi.intero("NUMERO");
-		conCapo = campi.facoltativo("CAPO").map("SI"::equals).orElse(false);
+		capo = CapoDellaRiga.da(campi.facoltativo("CAPO"));
 		luogo = campi.enumerato("LUOGO", ClassiLocazione.class);
 		if (!CombattimentoRichiesto.LUOGHI.contains(luogo)) {
 			throw new IllegalArgumentException("Il luogo è fra " + CombattimentoRichiesto.LUOGHI + ": " + riga);
@@ -110,10 +110,17 @@ public final class SoccorsoRichiesto {
 	}
 
 	/**
-	 * Se fra i nemici c'è un capo con un nome (da NOME_CAPOBANDA), un livello sopra gli altri.
+	 * Se fra i nemici c'è un capo con un nome, un livello sopra gli altri.
 	 */
 	public boolean isConCapo() {
-		return conCapo;
+		return capo != null;
+	}
+
+	/**
+	 * Il nome del capo: scritto nella riga, o pescato dalla sua produzione (vedi CapoDellaRiga). Solo se c'è un capo.
+	 */
+	public String pescaNomeDelCapo() {
+		return capo.pescaNome();
 	}
 
 	public ClassiLocazione getLuogo() {

@@ -40,6 +40,8 @@ public enum ClasseMissione {
 	LA_SORVEGLIANZA(LaSorveglianza::new),
 	IL_CONTRABBANDIERE(IlContrabbandiere::new),
 	IL_SOCCORSO(IlSoccorso::new),
+	L_INDAGINE(LIndagine::new),
+	IL_RITUALE(IlRituale::new),
 
 	MISSIONE_DI_PROVA_SECONDARIA_UNO(MissioneDiProvaSecondariaUno::new),
 	MISSIONE_DI_PROVA_SECONDARIA_DUE(MissioneDiProvaSecondariaDue::new),

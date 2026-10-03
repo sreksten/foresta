@@ -768,9 +768,15 @@ di loro è un capo con un nome (`CAPO=SI`, nei testi `%CAPO%`), dove si nascondo
 - `TestiDeiLuoghi` dà i nomi dei luoghi per i testi ("una grotta", "fra delle
   rovine", il nome del tempio); lo usa anche `LOggettoSmarrito`.
 - Per un nuovo incarico di questo tipo basta una riga nella grammatica.
+- Il capo può pescare il nome da un'altra lista: `CAPO=NOME_CAMPIONE` o
+  `CAPO=NOME_CAMPIONESSA` per lo sfidante di un duello, che può essere anche di
+  una classe del gruppo (guerriero, maga, elfo...): da avversari funzionano come
+  gli altri.
 
 Copre VENDETTA, COMBATTIMENTO_BESTIA, PULIZIA_DEI_DUNGEON, SCHERMAGLIA,
-IMBOSCATA e PROTEZIONE_TEMPORALE. Test: `ScenarioIncaricoDiCombattimentoTest`.
+IMBOSCATA, PROTEZIONE_TEMPORALE e, con le sole righe della grammatica, DUELLO,
+DUELLO_ANTICO, DUELLO_MAGICO, COMBATTIMENTO_RITUALE, BLOCCO, PONTE_TATTICO,
+SORTITA e CARICA. Test: `ScenarioIncaricoDiCombattimentoTest`.
 
 ### Le sorveglianze (2026-10-03)
 
@@ -809,3 +815,38 @@ nome pescato da `NOME_OSTAGGIO`, nei testi `%NOME%`), i nemici e dove stanno.
 Copre SOCCORSO e, con l'apprendista prigioniero dei gargoyle, anche SALVATAGGIO.
 ASILO resta fuori: il rifugiato va accompagnato altrove, non riportato in città.
 Test: `ScenarioSoccorsoTest`.
+
+### L'indagine (2026-10-03)
+
+`LIndagine` è un incarico in città, ripetibile: le righe stanno in `missioni.txt`
+alla produzione `INDAGINE`, lette da `IndagineRichiesta`. Gli indizi, due o tre
+(`INDIZIO_n=LUOGO:testo`, in una grotta, delle rovine, un bosco, una palude, una
+radura, un tempio o una locanda), si cercano in posti che la missione segna sulla
+mappa uno alla volta: la missione rivendica un posto alla volta, e trovato un
+indizio rivendica il successivo. Gli indizi trovati restano scritti nella
+descrizione della missione. Dopo l'ultimo, nello stesso posto, il gioco chiede
+chi è il colpevole fra i `SOSPETTI` (`chiediScelta`): è la prima missione vera che
+usa le domande. Con il colpevole giusto si segna il suo nascondiglio e lì si
+combatte; con un innocente la missione fallisce.
+
+Copre INVESTIGAZIONE, TESTIMONI, CONTROSPIONAGGIO, SCOPERTA_INGANNO,
+SCOPERTA_SEGRETO, FORENSICA e INCHIESTA. Test: `ScenarioIndagineTest`.
+
+### Il rito (2026-10-03)
+
+`IlRituale` è un incarico in città, ripetibile: le righe stanno in `missioni.txt`
+alla produzione `RITUALE`, lette da `RitualeRichiesto`. Il posto del rito si
+segna subito sulla mappa; prima bisogna raccogliere l'ingrediente, descritto come
+i materiali dell'alchimista (`MaterialeRichiesto.ingrediente`). Nel posto, con
+tutti gli ingredienti, il gioco chiede se cominciare (`chiediConferma`) o, se la
+riga ha dei `METODI`, come celebrarlo (`chiediScelta`, con in fondo "Non
+ancora"): il metodo sbagliato fa fallire la missione. Un no o un "non ancora"
+rimandano il rito alla prossima volta che si torna lì
+(`MissioneAPassi.dimenticaRisposta`).
+
+- La domanda si pone a inizio locazione: dopo la risposta l'automa rifà il
+  controllo prima di costruire la locazione, così chi salta fuori durante il rito
+  (`NEMICO`, `NUMERO`, `CAPO`, `VITTORIA`) c'è già in quella visita.
+
+Copre RITUALE, SIGILLO, BENEDIZIONE, SPEZZATURA, PURIFICAZIONE, POSSESSIONE,
+COMUNICAZIONE ed EVOCAZIONE. Test: `ScenarioRitualeTest`.

@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * Un incarico di combattimento (vedi IncaricoDiCombattimento), letto da una riga di INCARICO_DI_COMBATTIMENTO in
  * missioni.txt, che ne descrive i campi: chi lo chiede, chi va sconfitto, dove, quanto si paga e i testi.
- * Nei testi %CAPO% è il nome del capo, se c'è.
+ * Nei testi %CAPO% è il nome del capo, se c'è (vedi CapoDellaRiga).
  */
 public final class CombattimentoRichiesto {
 
@@ -27,7 +27,7 @@ public final class CombattimentoRichiesto {
 	private final String mandante;
 	private final ClassePersonaggio nemico;
 	private final int numero;
-	private final boolean conCapo;
+	private final CapoDellaRiga capo;
 	private final ClassiLocazione luogo;
 	private final int monete;
 	private final String titolo;
@@ -48,7 +48,7 @@ public final class CombattimentoRichiesto {
 		mandante = campi.obbligatorio("MANDANTE");
 		nemico = campi.enumerato("NEMICO", ClassePersonaggio.class);
 		numero = campi.intero("NUMERO");
-		conCapo = campi.facoltativo("CAPO").map("SI"::equals).orElse(false);
+		capo = CapoDellaRiga.da(campi.facoltativo("CAPO"));
 		luogo = campi.enumerato("LUOGO", ClassiLocazione.class);
 		if (!LUOGHI.contains(luogo)) {
 			throw new IllegalArgumentException("Il luogo è fra " + LUOGHI + ": " + riga);
@@ -105,10 +105,17 @@ public final class CombattimentoRichiesto {
 	}
 
 	/**
-	 * Se c'è un capo con un nome (da NOME_CAPOBANDA), un livello sopra gli altri.
+	 * Se c'è un capo con un nome, un livello sopra gli altri.
 	 */
 	public boolean isConCapo() {
-		return conCapo;
+		return capo != null;
+	}
+
+	/**
+	 * Il nome del capo: scritto nella riga, o pescato dalla sua produzione (vedi CapoDellaRiga). Solo se c'è un capo.
+	 */
+	public String pescaNomeDelCapo() {
+		return capo.pescaNome();
 	}
 
 	public ClassiLocazione getLuogo() {

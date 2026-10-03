@@ -45,7 +45,8 @@ public class LaSorveglianza extends IncaricoInCitta {
 	 * Il nome del capo di chi salta fuori, se ce n'è uno (da missioni.txt), altrimenti vuoto.
 	 */
 	public String getCapo() {
-		return getSorveglianza().isConCapo() ? parametro(CAPO, ProduttoreDiTestiCasuale::nomeCapobanda) : "";
+		SorveglianzaRichiesta sorveglianza = getSorveglianza();
+		return sorveglianza.isConCapo() ? parametro(CAPO, sorveglianza::pescaNomeDelCapo) : "";
 	}
 
 	/**

@@ -39,10 +39,12 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 	}
 
 	/**
-	 * Il nome del capo, se l'incarico ne ha uno (da missioni.txt), altrimenti vuoto.
+	 * Il nome del capo, se l'incarico ne ha uno (da missioni.txt, dalla produzione che dice l'incarico), altrimenti
+	 * vuoto.
 	 */
 	public String getCapo() {
-		return getIncarico().isConCapo() ? parametro(CAPO, ProduttoreDiTestiCasuale::nomeCapobanda) : "";
+		CombattimentoRichiesto incarico = getIncarico();
+		return incarico.isConCapo() ? parametro(CAPO, incarico::pescaNomeDelCapo) : "";
 	}
 
 	/**

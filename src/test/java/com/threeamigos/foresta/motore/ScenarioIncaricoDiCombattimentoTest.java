@@ -32,7 +32,7 @@ class ScenarioIncaricoDiCombattimentoTest {
     void ogniIncaricoSiLeggeEOgniTipoCompare() {
         Set<String> chiavi = new HashSet<>();
         Set<TipoMissione> tipi = EnumSet.noneOf(TipoMissione.class);
-        for (int i = 0; i < 300; i++) {
+        for (int i = 0; i < 600; i++) {
             CombattimentoRichiesto incarico = CombattimentoRichiesto.da(ProduttoreDiTestiCasuale.rigaDiMissioni("INCARICO_DI_COMBATTIMENTO"));
             assertTrue(incarico.getNumero() > 0 && incarico.getMonete() > 0, incarico.getRiga());
             assertFalse(incarico.getVittoria().isEmpty() || incarico.getRingraziamento().isEmpty(), incarico.getRiga());
@@ -42,11 +42,16 @@ class ScenarioIncaricoDiCombattimentoTest {
             chiavi.add(incarico.getChiave());
             tipi.add(incarico.getTipo());
         }
-        assertTrue(chiavi.size() >= 9, String.valueOf(chiavi));
+        assertTrue(chiavi.size() >= 18, String.valueOf(chiavi));
         assertEquals(EnumSet.of(TipoMissione.VENDETTA, TipoMissione.COMBATTIMENTO_BESTIA, TipoMissione.PULIZIA_DEI_DUNGEON,
-                TipoMissione.SCHERMAGLIA, TipoMissione.IMBOSCATA, TipoMissione.PROTEZIONE_TEMPORALE), tipi);
+                TipoMissione.SCHERMAGLIA, TipoMissione.IMBOSCATA, TipoMissione.PROTEZIONE_TEMPORALE, TipoMissione.DUELLO,
+                TipoMissione.DUELLO_ANTICO, TipoMissione.DUELLO_MAGICO, TipoMissione.COMBATTIMENTO_RITUALE, TipoMissione.BLOCCO,
+                TipoMissione.PONTE_TATTICO, TipoMissione.SORTITA, TipoMissione.CARICA), tipi);
 
         assertThrows(IllegalArgumentException.class, () -> CombattimentoRichiesto.da(TROLL + ";COLORE=VERDE"));
+        assertEquals("Teodolinda", CombattimentoRichiesto.da(TROLL.replace("CAPO=SI", "CAPO=Teodolinda")).pescaNomeDelCapo());
+        assertTrue(CombattimentoRichiesto.da(TROLL.replace("CAPO=SI", "CAPO=NOME_CAMPIONESSA")).pescaNomeDelCapo()
+                .matches("(Bradamante|Marfisa|Ermengarda|Matilde|Clorinda|Gualdrada|Isotta|Brunilde) .+"));
         assertThrows(IllegalArgumentException.class, () -> CombattimentoRichiesto.da(TROLL.replace("LUOGO=GROTTA", "LUOGO=CITTA_NYENA")));
         assertThrows(IllegalArgumentException.class, () -> CombattimentoRichiesto.da(TROLL.replace("MONETE=35;", "")));
     }
@@ -100,6 +105,30 @@ class ScenarioIncaricoDiCombattimentoTest {
             assertTrue(incarico.isCompleta());
             assertTrue(RegistroMissioni.getTutteLeMissioni().stream().anyMatch(m -> m instanceof IncaricoDiCombattimento && m != incarico),
                     "c'è già un altro incarico");
+        }
+    }
+
+    @Test
+    void laCampionessaDelDuelloEUnaGuerrieraConUnNomeDaCampionessa() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(172)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            IncaricoDiCombattimento incarico = RegistroMissioni.getTutteLeMissioni().stream()
+                    .filter(IncaricoDiCombattimento.class::isInstance).map(IncaricoDiCombattimento.class::cast)
+                    .findFirst().orElseThrow(AssertionError::new);
+            incarico.aggiungiProprieta("PARAMETRO_" + IncaricoDiCombattimento.INCARICO, TROLL.replace("TIPO=VENDETTA", "TIPO=DUELLO")
+                    .replace("NEMICO=TROLL", "NEMICO=GUERRIERA").replace("NUMERO=2", "NUMERO=1").replace("CAPO=SI", "CAPO=NOME_CAMPIONESSA"));
+            incarico.controllaPreLocazione();
+            incarico.segnaIntermezzoPassoMostrato("INCARICO");
+            incarico.controllaInLocazione();
+
+            String campionessa = incarico.getCapo();
+            assertTrue(campionessa.matches("(Bradamante|Marfisa|Ermengarda|Matilde|Clorinda|Gualdrada|Isotta|Brunilde) .+"), campionessa);
+            assertEquals("Il mugnaio di Nyena ti ha chiesto di sconfiggere " + campionessa + ", la Guerriera, che si trova nel posto "
+                    + "segnato sulla mappa.", incarico.getDescrizione());
+            List<Personaggio> sfidante = RegistroMissioni.getIncontroMissione(incarico.getCovo()).orElseThrow(AssertionError::new);
+            assertEquals(1, sfidante.size());
+            assertEquals(ClassePersonaggio.GUERRIERA, sfidante.get(0).getClasse());
+            assertEquals(campionessa, sfidante.get(0).getNome());
         }
     }
 }
