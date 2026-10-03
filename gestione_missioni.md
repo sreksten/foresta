@@ -1,6 +1,6 @@
 # Missioni a passi + intermezzi agganciati a una missione
 
-## Stato (2026-10-02)
+## Stato (2026-10-03)
 
 | Punto | Stato |
 | --- | --- |
@@ -8,7 +8,7 @@
 | 2. `RegistroIntermezzi` interroga le missioni | fatto, vedi "Come è stato implementato" in fondo al punto 2 |
 | 3. `Passo` e `MissioneAPassi` | fatto, vedi "Come è stato implementato" in fondo al punto 3 |
 | 4. Domande al giocatore | fatto, vedi "Come è stato implementato" in fondo al punto 4 |
-| 5. Migrazione di Medaglione e Derrate | fatto, vedi "Come è stato implementato" in fondo al punto 5 |
+| 5. Migrazione di Medaglione e Derrate | fatto, vedi "Come è stato implementato" in fondo al punto 5; dal 2026-10-03 sono incarichi in città a città fissa (vedi l'aggiornamento in fondo al punto 5) |
 | 6. Claim delle locazioni e `cerca` | fatto, con la regola corretta del punto 7; vedi "Come è stato implementato" in fondo al punto 6 |
 | 7. `SconfiggiIlDrago` e claim precoce | fatto, vedi "Come è stato implementato" in fondo al punto 7 |
 
@@ -558,6 +558,28 @@ dello sfondo.
 a Ruuna la pagina con le battute del mandante arriva prima dell'avviso di nuova
 missione, e il covo compare; al ritorno il ringraziamento resta in attesa a
 inizio locazione e monete e completamento arrivano solo dopo.
+
+### Aggiornamento (2026-10-03): incarichi in città a città fissa
+
+La struttura descritta qui sopra non c'è più così. `MissioneRecuperaBersaglio`
+ora estende `IncaricoInCitta`, la base comune di tutti gli incarichi presi in
+una città (la caccia ai goblin, la mandragola, Sgranf, Anselmo, Armando…):
+
+- città fissa (`getCittaFissa()`): il medaglione è la storia di Fleena, le
+  derrate quella di Ruuna, e partono alla prima visita, come prima; gli altri
+  incarichi aspettano una visita tranquilla;
+- INCARICO, ACCETTAZIONE, RITORNO, CONSEGNA (se c'è) e RICOMPENSA sono quelli
+  di `IncaricoInCitta`; il compito del recupero sono due passi, COVO (compare il
+  covo, rivendicato dalla missione, subito dopo l'accettazione) e RECUPERO (il
+  covo completato);
+- la guardia "città distrutta" non è più un override di
+  `controllaPreLocazione()`: è un `falliscoSe` che `IncaricoInCitta` mette sui
+  passi dopo l'accettazione, con il testo di `testoCittaDistrutta()`.
+
+Medaglione e derrate non si ripetono; gli altri incarichi in città sì. I
+dettagli (passi, ripetizione, visita tranquilla, missioni che nascono fuori
+dalle città) sono in `passi_missioni.md`, alla sezione "Incarichi in città
+unificati e ripetibili" e seguenti.
 
 ## 6. Locazioni assegnate dinamicamente: claim delle missioni e `cerca(ClassiLocazione)`
 
