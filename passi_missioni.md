@@ -727,3 +727,25 @@ costruisce l'artefatto.
   è il momento, l'armaiolo racconta la sua leggenda prima di offrire un incarico.
 
 Coprono CACCIA_AL_TESORO. Test: `ScenarioLeggendeTest`.
+
+### La pesca favorisce i set cominciati (2026-10-03)
+
+Completare un set pescando a caso era quasi solo fortuna (il Corredo di RomyJona,
+4 pezzi su 28, dopo 14 leggende era completo nel 5% dei casi). Ora la pesca
+(`PescaLeggendaria`) favorisce i set cominciati, quelli con almeno un pezzo già
+uscito in una leggenda della partita e almeno uno che manca:
+
+- con un set cominciato, una leggenda su due racconta un suo pezzo mancante, del
+  set più vicino a essere completo (la quota di pezzi usciti più alta); l'altra
+  pesca a caso fra tutti i leggendari rimasti, come prima;
+- se tre leggende di fila, con un set cominciato, non hanno raccontato un pezzo
+  mancante, la successiva lo racconta per forza. Ogni leggenda si ricorda se è
+  stata una di queste (`SENZA_PEZZI`), così il conto sopravvive ai salvataggi.
+
+Il dado si tira solo quando la leggenda si racconta: prima si controlla soltanto
+che resti un leggendario. Test: `ScenarioPescaLeggendariaTest`.
+
+Quando la leggenda racconta un altro pezzo di un set già cominciato, il narratore
+lo dice prima della leggenda (`PescaLeggendaria.battutaDelSet`): "Vi interessa il
+Corredo di RomyJona? Allora ascoltate: questo è un altro dei suoi pezzi, e ne
+mancano ancora due." (oppure "ed è l'ultimo che manca.").

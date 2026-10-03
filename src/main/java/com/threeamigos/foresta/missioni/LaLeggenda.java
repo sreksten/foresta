@@ -7,6 +7,8 @@ import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.motore.CatalogoLeggendari;
+import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
@@ -17,6 +19,7 @@ import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 
+import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -33,8 +36,9 @@ import java.util.stream.Collectors;
  * <li>ACCETTAZIONE, in locazione, nello stesso posto: sorge il tempio e la missione si attiva;</li>
  * <li>RECUPERO, a fine locazione, nel tempio, quando il leggendario non c'è più: la missione si completa.</li>
  * </ol>
- * Si ripete con altri leggendari finché ce ne sono; fra il racconto di una leggenda e quello della successiva, di
- * chiunque, passano almeno {@link #ORE_FRA_DUE_LEGGENDE} ore di gioco.
+ * Si ripete con altri leggendari finché ce ne sono, favorendo i pezzi mancanti dei set già cominciati (vedi
+ * PescaLeggendaria); fra il racconto di una leggenda e quello della successiva, di chiunque, passano almeno
+ * {@link #ORE_FRA_DUE_LEGGENDE} ore di gioco.
  */
 public abstract class LaLeggenda extends MissioneAPassi {
 
@@ -46,6 +50,8 @@ public abstract class LaLeggenda extends MissioneAPassi {
 	private static final String GUARDIANI = "GUARDIANI";
 	private static final String POSTO = "POSTO";
 	private static final String RACCONTATA_ALLE = "RACCONTATA_ALLE";
+	// La leggenda è stata raccontata con un set cominciato, ma senza un suo pezzo mancante (vedi PescaLeggendaria)
+	private static final String SENZA_PEZZI = "SENZA_PEZZI";
 	private static final String INCARICO = "INCARICO";
 	private static final String ACCETTAZIONE = "ACCETTAZIONE";
 	private static final String RECUPERO = "RECUPERO";
@@ -175,7 +181,7 @@ public abstract class LaLeggenda extends MissioneAPassi {
 		switch (id) {
 			case INCARICO:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> isDisponibile() && isPostoDelRacconto()
-								&& nessunaLeggendaRecente() && isVisitaTranquilla() && (getLeggendario() != null || pesca().isPresent()))
+								&& nessunaLeggendaRecente() && isVisitaTranquilla() && (getLeggendario() != null || restaUnLeggendario()))
 						.esegui(this::raccontaLaLeggenda)
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, this::getPagineDelRacconto)
 						.poi(ACCETTAZIONE);
@@ -205,11 +211,17 @@ public abstract class LaLeggenda extends MissioneAPassi {
 	}
 
 	/**
-	 * Quando la leggenda si racconta: il leggendario (se non è già fissato), i guardiani, il posto e l'ora.
+	 * Quando la leggenda si racconta: il leggendario (se non è già fissato), se ha lasciato in attesa un set
+	 * cominciato, i guardiani, il posto e l'ora.
 	 */
 	private void raccontaLaLeggenda() {
+		Set<String> giaPescati = giaPescati();
 		if (getLeggendario() == null) {
-			aggiungiProprieta(LEGGENDARIO, pesca().orElseThrow(IllegalStateException::new));
+			aggiungiProprieta(LEGGENDARIO, pesca(giaPescati));
+		}
+		if (!PescaLeggendaria.setCominciati(giaPescati).isEmpty()
+				&& !PescaLeggendaria.isPezzoMancante(getLeggendario().getChiave(), giaPescati)) {
+			aggiungiProprieta(SENZA_PEZZI, AFFERMATIVO);
 		}
 		IncontroDiMissione guardiani = getGuardiani();
 		aggiungiProprieta(GUARDIANI, guardiani.getClasse().name() + SEPARATORE + guardiani.getNumero());
@@ -221,6 +233,8 @@ public abstract class LaLeggenda extends MissioneAPassi {
 	private List<PaginaIntermezzo> getPagineDelRacconto() {
 		OggettoLeggendario leggendario = getLeggendario();
 		Racconto racconto = nuovoRacconto();
+		// Se è un altro pezzo di un set già cominciato, il narratore lo dice subito
+		PescaLeggendaria.battutaDelSet(leggendario, giaPescati()).ifPresent(racconto::narra);
 		leggendario.getLeggenda().forEach(racconto::narra);
 		String breve = leggendario.getNomeBreve();
 		boolean plurale = breve.startsWith("gli ") || breve.startsWith("i ") || breve.startsWith("le ");
@@ -258,14 +272,48 @@ public abstract class LaLeggenda extends MissioneAPassi {
 	}
 
 	/**
-	 * Un leggendario che nessun'altra leggenda della partita ha già pescato, o vuoto se non ne restano.
+	 * Le chiavi dei leggendari che le altre leggende della partita hanno già pescato.
 	 */
-	private Optional<String> pesca() {
-		Set<String> giaPescati = altreLeggende().stream()
+	private Set<String> giaPescati() {
+		return altreLeggende().stream()
 				.map(LaLeggenda::getLeggendario)
 				.filter(leggendario -> leggendario != null)
 				.map(OggettoLeggendario::getChiave)
 				.collect(Collectors.toSet());
-		return ProduttoreDiTestiCasuale.oggettoLeggendario(riga -> giaPescati.contains(OggettoLeggendario.da(riga).getChiave()));
+	}
+
+	private boolean restaUnLeggendario() {
+		return !giaPescati().containsAll(CatalogoLeggendari.getTuttiILeggendari().keySet());
+	}
+
+	/**
+	 * La riga del leggendario da raccontare, fra quelli che nessun'altra leggenda ha già pescato: un pezzo mancante
+	 * di un set cominciato, se tocca a lui (vedi PescaLeggendaria), altrimenti uno a caso.
+	 */
+	private String pesca(Set<String> giaPescati) {
+		Optional<String> pezzoMancante = PescaLeggendaria.pezzoDaRaccontare(giaPescati, leggendeSenzaPezzi(), Dado::tiraAncheAUnaFaccia);
+		if (pezzoMancante.isPresent()) {
+			return CatalogoLeggendari.getLeggendario(pezzoMancante.get()).orElseThrow(IllegalStateException::new).getRiga();
+		}
+		return ProduttoreDiTestiCasuale.oggettoLeggendario(riga -> giaPescati.contains(OggettoLeggendario.da(riga).getChiave()))
+				.orElseThrow(IllegalStateException::new);
+	}
+
+	/**
+	 * Quante delle ultime leggende raccontate, di fila, hanno lasciato in attesa un set cominciato.
+	 */
+	private int leggendeSenzaPezzi() {
+		List<LaLeggenda> raccontate = altreLeggende().stream()
+				.filter(leggenda -> leggenda.ottieniProprieta(RACCONTATA_ALLE) != null)
+				.sorted(Comparator.comparingLong((LaLeggenda leggenda) -> Long.parseLong(leggenda.ottieniProprieta(RACCONTATA_ALLE))).reversed())
+				.collect(Collectors.toList());
+		int senzaPezzi = 0;
+		for (LaLeggenda leggenda : raccontate) {
+			if (leggenda.ottieniProprieta(SENZA_PEZZI) == null) {
+				break;
+			}
+			senzaPezzi++;
+		}
+		return senzaPezzi;
 	}
 }
