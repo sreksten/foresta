@@ -531,10 +531,19 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * se lo ricorda e lo si ritrova con {@link #getScortato()}.
 	 */
 	protected final Passo prendiInScorta(MomentoControllo momento, BooleanSupplier quando, String nome) {
+		return prendiInScorta(momento, quando, nome, false);
+	}
+
+	/**
+	 * Come {@link #prendiInScorta(MomentoControllo, BooleanSupplier, String)}; se lo scortato è vulnerabile (un
+	 * ostaggio, un ferito) gli avversari lo possono attaccare, e per strada può morire (vedi
+	 * {@link #scorta(MomentoControllo, Supplier, Supplier)}).
+	 */
+	protected final Passo prendiInScorta(MomentoControllo momento, BooleanSupplier quando, String nome, boolean vulnerabile) {
 		return Passo.quando(momento, quando)
 				.esegui(() -> {
 					Viandante viandante = new Viandante(nome, EquipaggiamentoIniziale.livelloCasualeDalMondo());
-					GruppoGiocatore.getIstanza().aggiungiOspite(viandante);
+					GruppoGiocatore.getIstanza().aggiungiOspite(viandante, vulnerabile);
 					aggiungiProprieta(SCORTATO, viandante.getModelloDati().getUuid());
 				});
 	}
@@ -545,8 +554,18 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 */
 	protected final Passo scorta(MomentoControllo momento, Supplier<CoordinateMD> destinazione) {
 		return Passo.quando(momento, () -> destinazione.get() != null
-						&& destinazione.get().equals(GruppoGiocatore.getIstanza().getCoordinate()) && getScortato().isPresent())
+						&& destinazione.get().equals(GruppoGiocatore.getIstanza().getCoordinate())
+						&& getScortato().filter(Personaggio::isVivo).isPresent())
 				.esegui(this::congedaScortato);
+	}
+
+	/**
+	 * SCORTA di uno scortato vulnerabile: come {@link #scorta(MomentoControllo, Supplier)}, ma se lo scortato muore
+	 * la missione fallisce con il testo (e lui si separa dal gruppo, vedi {@link #fallisciMissione()}).
+	 */
+	protected final Passo scorta(MomentoControllo momento, Supplier<CoordinateMD> destinazione, Supplier<String> testoSeMuore) {
+		return scorta(momento, destinazione)
+				.falliscoSe(() -> getScortato().map(scortato -> !scortato.isVivo()).orElse(false), testoSeMuore);
 	}
 
 	/**

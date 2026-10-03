@@ -193,9 +193,19 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 			}
 			Personaggio ospite = ospiti.get(i);
 			String nome = ospite.getNomeProprio().map(n -> n + "-" + ospite.getNomeSingolare()).orElse(ospite.getNomeSingolare());
-			graphics.drawImage(DoomdarkTextProducer.getImage(nome, fontMedium, DoomdarkColorModel.Color.MEDIUM_GRAY), locXOffset, locYOffset, null);
+			DoomdarkColorModel.Color colore = ospite.isVivo() ? DoomdarkColorModel.Color.MEDIUM_GRAY : DoomdarkColorModel.Color.DARK_GRAY;
+			graphics.drawImage(DoomdarkTextProducer.getImage(nome, fontMedium, colore), locXOffset, locYOffset, null);
 			locYOffset += fontMedium.getHeight();
-			graphics.drawImage(DoomdarkTextProducer.getImage("Ospite del gruppo", fontMedium, DoomdarkColorModel.Color.DARK_GRAY), locXOffset, locYOffset, null);
+			// Di un ospite che si può ferire si vede la salute
+			String stato;
+			if (!ospite.isVivo()) {
+				stato = ospite.getCausaTrapasso();
+			} else if (g.isOspiteVulnerabile(ospite)) {
+				stato = "Ospite, salute " + ospite.getSalute() + "/" + ospite.getSaluteMassima();
+			} else {
+				stato = "Ospite del gruppo";
+			}
+			graphics.drawImage(DoomdarkTextProducer.getImage(stato, fontMedium, DoomdarkColorModel.Color.DARK_GRAY, innerWidth), locXOffset, locYOffset, null);
 			locYOffset += fontMedium.getHeight() * 2;
 		}
 	}

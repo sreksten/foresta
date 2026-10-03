@@ -353,6 +353,12 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public void attacca(Gruppo gruppoBersaglio) {
+		// Un ospite vulnerabile del gruppo può prendersi il colpo al posto di un personaggio
+		Optional<Personaggio> ospite = gruppoBersaglio.scegliOspiteBersaglio();
+		if (ospite.isPresent()) {
+			attacca(ospite.get());
+			return;
+		}
 		List<Personaggio> personaggiPossibili = gruppoBersaglio.getPersonaggiVivi();
 		Personaggio bersaglio = null;
 		for (Personaggio personaggio : personaggiPossibili) {

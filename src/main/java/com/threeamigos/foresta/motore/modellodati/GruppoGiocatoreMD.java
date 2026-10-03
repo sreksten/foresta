@@ -8,7 +8,9 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.EnumMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.Map;
 
 public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
@@ -26,9 +28,15 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	private final Collection<ArtefattoMD> artefatti = new ArrayList<>();
 	// Chi viaggia con il gruppo senza farne parte (vedi GruppoGiocatore.aggiungiOspite)
 	private final List<PersonaggioMD> ospiti = new ArrayList<>();
+	// Gli ospiti che gli avversari possono attaccare, per uuid
+	private final Set<String> ospitiVulnerabili = new HashSet<>();
 
 	public List<PersonaggioMD> getOspitiMD() {
 		return ospiti;
+	}
+
+	public Set<String> getOspitiVulnerabili() {
+		return ospitiVulnerabili;
 	}
 
 	public int getMonete() {
@@ -104,6 +112,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		pozioniMagiaGrande = 0;
 		artefatti.clear();
 		ospiti.clear();
+		ospitiVulnerabili.clear();
 	}
 
 	public void setIncantesimi(ClasseIncantesimo classeIncantesimo, int quantita) {
@@ -150,6 +159,10 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		for (PersonaggioMD ospite : ospiti) {
 			ospite.salva(stream);
 		}
+		stream.println(ospitiVulnerabili.size());
+		for (String uuid : ospitiVulnerabili) {
+			stream.println(uuid);
+		}
 	}
 
 	@Override
@@ -183,6 +196,11 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 			PersonaggioMD ospite = new PersonaggioMD();
 			ospite.leggi(stream);
 			ospiti.add(ospite);
+		}
+		ospitiVulnerabili.clear();
+		int numeroVulnerabili = Integer.parseInt(stream.readLine());
+		for (int i = 0; i < numeroVulnerabili; i++) {
+			ospitiVulnerabili.add(stream.readLine());
 		}
 	}
 }

@@ -92,23 +92,55 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	}
 
 	/**
-	 * Chi viaggia con il gruppo senza farne parte, per esempio chi una missione deve scortare: non combatte, non lo
-	 * si attacca, non conta nei limiti del gruppo e non si equipaggia. Gli ospiti possono essere quanti si vuole.
+	 * Chi viaggia con il gruppo senza farne parte, per esempio chi una missione deve scortare: non combatte, non
+	 * conta nei limiti del gruppo e non si equipaggia. Gli ospiti possono essere quanti si vuole. Un ospite
+	 * vulnerabile (un ostaggio, un ferito da soccorrere) può essere attaccato dagli avversari, e quindi morire (vedi
+	 * {@link #scegliOspiteBersaglio()}); gli altri no.
 	 */
 	public final List<Personaggio> getOspiti() {
 		return Collections.unmodifiableList(ospiti);
 	}
 
 	public final void aggiungiOspite(Personaggio ospite) {
+		aggiungiOspite(ospite, false);
+	}
+
+	public final void aggiungiOspite(Personaggio ospite, boolean vulnerabile) {
 		ospiti.add(ospite);
 		md.getOspitiMD().add(ospite.getModelloDati());
+		if (vulnerabile) {
+			md.getOspitiVulnerabili().add(ospite.getModelloDati().getUuid());
+		}
 		BusEventi.pubblica(new NotificaTestoFrase(ospite.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " viaggia con il gruppo."));
+	}
+
+	public final boolean isOspiteVulnerabile(Personaggio ospite) {
+		return md.getOspitiVulnerabili().contains(ospite.getModelloDati().getUuid());
+	}
+
+	private List<Personaggio> getOspitiVulnerabiliVivi() {
+		return ospiti.stream().filter(this::isOspiteVulnerabile).filter(Personaggio::isVivo).collect(Collectors.toList());
+	}
+
+	/**
+	 * Un avversario attacca un ospite vulnerabile vivo con probabilità proporzionale: con tre personaggi vivi e un
+	 * ospite vulnerabile, un attacco su quattro va all'ospite.
+	 */
+	@Override
+	public Optional<Personaggio> scegliOspiteBersaglio() {
+		List<Personaggio> vulnerabili = getOspitiVulnerabiliVivi();
+		int vivi = getPersonaggiVivi().size();
+		if (vulnerabili.isEmpty() || Dado.tiraAncheAUnaFaccia(vivi + vulnerabili.size()) <= vivi) {
+			return Optional.empty();
+		}
+		return Optional.of(vulnerabili.get(Dado.tiraAncheAUnaFaccia(vulnerabili.size()) - 1));
 	}
 
 	public final void rimuoviOspite(Personaggio ospite) {
 		ospiti.remove(ospite);
 		md.getOspitiMD().remove(ospite.getModelloDati());
+		md.getOspitiVulnerabili().remove(ospite.getModelloDati().getUuid());
 		BusEventi.pubblica(new NotificaTestoFrase(ospite.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " si separa dal gruppo."));
 	}
@@ -506,6 +538,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 
 	public final void riposa(TipoRiposo tipoRiposo) {
 		getPersonaggiVivi().forEach(p -> p.riposa(1, tipoRiposo));
+		// Anche gli ospiti che si possono ferire recuperano
+		getOspitiVulnerabiliVivi().forEach(p -> p.riposa(1, tipoRiposo));
 		BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
 	}
 
@@ -550,6 +584,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 			BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
 		}
 		getPersonaggiVivi().forEach(p -> p.riposa(ore, tipoRiposo));
+		getOspitiVulnerabiliVivi().forEach(p -> p.riposa(ore, tipoRiposo));
 		BusEventi.pubblica(new NotificaTestoFrase("Il sole sorge e l'avventura ricomincia."));
 	}
 

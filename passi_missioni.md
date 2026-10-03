@@ -144,9 +144,17 @@ pronti nella stessa visita parte il primo controllato. Test:
   ospiti non combattono, non si possono attaccare, non contano nei limiti del
   gruppo (né nei fissi della locanda) e non si equipaggiano: possono essere
   quanti si vuole. Nel riquadro del gruppo compaiono dopo i personaggi, con il
-  solo nome e "Ospite del gruppo". Non potendo morire, una scorta oggi non
-  fallisce per lo scortato: se un giorno servirà un ostaggio che rischia la
-  pelle, sarà un'opzione dell'ospite.
+  solo nome e "Ospite del gruppo".
+- **Ospiti vulnerabili** (ostaggi, feriti da soccorrere):
+  `GruppoGiocatore.aggiungiOspite(ospite, true)`, o
+  `prendiInScorta(momento, quando, nome, true)`. Non combattono, ma gli
+  avversari li possono attaccare: `PersonaggioBase.attacca(Gruppo)` chiede prima
+  al gruppo `scegliOspiteBersaglio()`, che sceglie un ospite vulnerabile vivo con
+  probabilità proporzionale (con tre personaggi vivi e un ospite vulnerabile, un
+  attacco su quattro va all'ospite). Riposando recuperano come i personaggi, e
+  nel riquadro del gruppo se ne vede la salute. La vulnerabilità si salva con il
+  gruppo. `scorta(momento, destinazione, testoSeMuore)` fa fallire la missione
+  se lo scortato muore.
 - **`CONSEGNA`**: `consegna(momento, dove, oggetti, testo)`. Gli oggetti di
   missione non stanno nell'inventario: il gruppo li ha se la missione li ha
   contati, e consegnandoli escono dal conteggio. `IncaricoInCitta` la fa al
@@ -186,9 +194,8 @@ monete al ritorno dalla sorella). Test: `ScenarioCombattiScortaConsegnaTest`.
   L'artefatto si crea quando la missione lo consegna, finisce nell'inventario
   del gruppo e si mostra con la rivelazione dei cofani.
 
-Test: `ScenarioPassiAvanzatiTest`. Con questi il catalogo del §2 è coperto
-tutto. Resta fuori solo un ospite che può morire (per ostaggi e salvataggi),
-da aggiungere quando servirà.
+Test: `ScenarioPassiAvanzatiTest` e, per gli ospiti vulnerabili,
+`ScenarioOspitiVulnerabiliTest`. Con questi il catalogo del §2 è coperto tutto.
 
 ## 3. Mappatura `TipoMissione` → sequenza di passi
 

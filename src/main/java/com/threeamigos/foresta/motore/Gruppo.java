@@ -4,6 +4,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -106,6 +107,14 @@ public abstract class Gruppo {
 
 	public final Personaggio getPersonaggio(Comando azione) {
 		return personaggi.get(azione.ordinal() - Comando.PERSONAGGIO_1.ordinal());
+	}
+
+	/**
+	 * Un ospite che un avversario attacca al posto di un personaggio del gruppo, se ce n'è uno (vedi
+	 * GruppoGiocatore): per gli altri gruppi mai.
+	 */
+	public Optional<Personaggio> scegliOspiteBersaglio() {
+		return Optional.empty();
 	}
 
 	public void rimuoviPersonaggi() {
