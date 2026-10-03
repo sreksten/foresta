@@ -311,15 +311,15 @@ con il codice esistente).
 | `BLOCCO` | `VAI(passaggio)` → `DIALOGO(sbarramento)` → `COMBATTI` [`CONTA_FINCHE`] → `RICOMPENSA` | |
 | `SCHERMAGLIA` | `VAGABONDA_FINCHE(pattuglia)` → `COMBATTI(breve)` → `RICOMPENSA` | |
 | `ASSEDIO_DIFESA` | `VAI(fortezza)` → `CONTA_FINCHE(ondate, COMBATTI)` → `RICOMPENSA` | Quasi identico a `DIFESA` (PROTEZIONE) e `TRINCEA` |
-| `FLOTTA` | `VAI(porto)` → `COMBATTI(navale)` → `RICOMPENSA` | |
+| `FLOTTA` | `VAI(porto)` → `COMBATTI(navale)` → `RICOMPENSA` | **Non fattibile nella Foresta** (commentato in `TipoMissione`) |
 | `SORTITA` | `VAI(assediati)` → `CHIEDI_CONFERMA(tentare)` → `COMBATTI(uscita)` → `VAI(rientro)` → `RICOMPENSA` | |
-| `CAVALLERIA` | `VAI(linea nemica)` → `COMBATTI(carica montata)` → `RICOMPENSA` | Praticamente identico a `CARICA` |
+| `CAVALLERIA` | `VAI(linea nemica)` → `COMBATTI(carica montata)` → `RICOMPENSA` | **Non fattibile nella Foresta** (commentato in `TipoMissione`); Praticamente identico a `CARICA` |
 | `TRINCEA` | `VAI(trincea)` → `CONTA_FINCHE(assalti respinti)` → `RICOMPENSA` | Simile ad `ASSEDIO_DIFESA` |
 | `ESPLOSIONE` | `VAI(obiettivo)` → `RACCOGLI`/`COSTRUISCI(ordigno)` → `CHIEDI_CONFERMA(detonare)` → `RAMO(scoperti?)` → `COMBATTI` (se scoperti) → `RICOMPENSA` | Vedi nota di classificazione §1 |
 | `PONTE_TATTICO` | `VAI(ponte)` → `COMBATTI(controllo passaggio)` [`CONTA_FINCHE`] → `RICOMPENSA` | |
 | `ASSEDIO_OFFENSIVO` | `VAI(fortezza nemica)` → `CONTA_FINCHE(fasi d'assedio)` → `COMBATTI(breccia finale)` → `RICOMPENSA` | |
 | `COMBATTIMENTO_RITUALE` | `VAI(luogo sacro)` → `CHIEDI_CONFERMA(accettare il rito)` → `COMBATTI(regole speciali)` → `DIALOGO(esito)` → `RICOMPENSA` | |
-| `BATTAGLIA_AEREA` | `VAI(cielo/torre)` → `COMBATTI(aereo)` → `RICOMPENSA` | |
+| `BATTAGLIA_AEREA` | `VAI(cielo/torre)` → `COMBATTI(aereo)` → `RICOMPENSA` | **Non fattibile nella Foresta** (commentato in `TipoMissione`) |
 | `DUELLO_MAGICO` | Come `DUELLO` | `COMBATTI` vincolato a un set di incantesimi, nessun passo nuovo |
 | `COMBATTIMENTO_BESTIA` | `VAGABONDA_FINCHE(bestia rara)` → `COMBATTI` → `RICOMPENSA` | |
 | `DUELLO_ANTICO` | Come `DUELLO` | + `DIALOGO` cerimoniale prima/dopo |
@@ -436,7 +436,7 @@ con il codice esistente).
 | `CORRUZIONE` | `VAI(ufficiale)` → `CHIEDI_SCELTA(importo)` → `RAMO(accettata/rifiutata)` → `RICOMPENSA` | |
 | `FALSIFICAZIONE` | `RACCOGLI(originale da copiare)` → `COSTRUISCI(falso)` → `CONSEGNA` → `RICOMPENSA` | |
 | `RAPIMENTO` | `VAGABONDA_FINCHE`/`VAI(bersaglio)` → `COMBATTI`/`EVITA_COMBATTIMENTO(cattura)` → `SCORTA(nascondiglio)` → `RICOMPENSA` | |
-| `PIRATERIA` | `VAI(rotta commerciale)` → `VAGABONDA_FINCHE(nave)` → `COMBATTI(abbordaggio)` → `RACCOGLI(bottino)` → `RICOMPENSA` | |
+| `PIRATERIA` | `VAI(rotta commerciale)` → `VAGABONDA_FINCHE(nave)` → `COMBATTI(abbordaggio)` → `RACCOGLI(bottino)` → `RICOMPENSA` | **Non fattibile nella Foresta** (commentato in `TipoMissione`) |
 | `AVVELENAMENTO` | `RACCOGLI(veleno)` → `VAI(bersaglio)` → `CHIEDI_CONFERMA(somministrare)` → `RICOMPENSA` | |
 | `VANDALISMO` | `VAI(struttura)` → `EVITA_COMBATTIMENTO` → `DIALOGO(danneggiamento)` → `RICOMPENSA` | |
 | `FRODE` | `CHIEDI_SCELTA(schema)` → `RAMO(riuscito/scoperto)` → `RICOMPENSA` | |
@@ -481,12 +481,12 @@ con il codice esistente).
 | `SHAPE_SHIFT` | `CHIEDI_SCELTA(forma)` → `RAMO(uso della forma per un ostacolo)` → `RICOMPENSA` | |
 | `CONTROLLO_ELEMENTALE` | `VAI(fonte elementale)` → `CHIEDI_CONFERMA(controllo)` → `COMBATTI` (opz., ribelle) → `RICOMPENSA` | |
 | `LEGAME_SPIRITUALE` | `VAI(spirito)` → `CHIEDI_CONFERMA(stringere legame)` → `RICOMPENSA` | |
-| `VIAGGIO_ASTRALE` | `CHIEDI_CONFERMA(proiettarsi)` → `VAI(piano astrale)` → `DIALOGO(scoperta)` → `RICOMPENSA` | |
+| `VIAGGIO_ASTRALE` | `CHIEDI_CONFERMA(proiettarsi)` → `VAI(piano astrale)` → `DIALOGO(scoperta)` → `RICOMPENSA` | **Non fattibile nella Foresta** (commentato in `TipoMissione`) |
 | `COMUNIONE` | `VAI(luogo sacro)` → `CHIEDI_CONFERMA(comunione)` → `DIALOGO(rivelazione)` → `RICOMPENSA` | |
 | `TRANCE` | `CHIEDI_CONFERMA(entrare in trance)` → `ATTENDI(durata)` → `DIALOGO(visione)` → `RICOMPENSA` | |
 | `FUSIONE` | `CHIEDI_CONFERMA(fondersi)` → `RAMO(esito)` → `RICOMPENSA` | |
-| `VIAGGIO_TEMPO` | `RACCOGLI(componenti)` → `CHIEDI_CONFERMA(viaggiare)` → `VAI(epoca diversa)` → `RICOMPENSA` | |
-| `REALTA_PARALLELA` | `CHIEDI_CONFERMA(varcare la soglia)` → `VAI(dimensione alternativa)` → `RICOMPENSA` | |
+| `VIAGGIO_TEMPO` | `RACCOGLI(componenti)` → `CHIEDI_CONFERMA(viaggiare)` → `VAI(epoca diversa)` → `RICOMPENSA` | **Non fattibile nella Foresta** (commentato in `TipoMissione`) |
+| `REALTA_PARALLELA` | `CHIEDI_CONFERMA(varcare la soglia)` → `VAI(dimensione alternativa)` → `RICOMPENSA` | **Non fattibile nella Foresta** (commentato in `TipoMissione`) |
 | `POSSESSO_CORPO` | `VAI(bersaglio)` → `CHIEDI_CONFERMA(possedere)` → `RAMO(riuscita/respinta)` → `RICOMPENSA` | |
 | `ASSORBIMENTO` | `COMBATTI(fonte di potere)` → `CHIEDI_CONFERMA(assorbire)` → `RICOMPENSA` | |
 | `CONTROLLO_MENTE` | `VAI(bersaglio)` → `CHIEDI_CONFERMA(controllo)` → `RAMO(riuscito/resistito)` → `RICOMPENSA` | |
@@ -561,3 +561,28 @@ articoli, pronomi e accordi per i testi. La ricompensa è 5 monete per
 ingrediente più 5. Si ripete ogni volta con un ingrediente nuovo. Test:
 `ScenarioIngredientiAlchemiciTest`; i test della semina e del ripiego fissano la
 mandragola (`Alchimie`).
+
+### Trofei, esplorazione e copertura del catalogo (2026-10-03)
+
+- **Trofei**: `OggettiDaRaccogliere.daiNemici(classi...)`. Invece che in certe
+  locazioni, i trofei (orecchie di goblin, pelli, essenze) compaiono dovunque ci
+  siano avversari di quelle classi, anche nelle caselle già visitate, perché i
+  mostri ricompaiono; li custodiscono loro, al più uno per avversario, e per
+  prenderli bisogna sconfiggerli. Per i trofei non c'è ripiego. Per questo in
+  `Automa` gli avversari di una missione si mettono prima dell'oggetto.
+  Coprono RACCOLTA_TROFEI, RACCOLTA_ESSENZA e CACCIA_ANIMALI.
+- **Esplorazione**: `MissioneAPassi.esplora(caselleNuove)` (VAGABONDA_FINCHE di
+  un luogo scoperto): si conclude quando il gruppo è entrato in tante caselle
+  mai visitate da quando il passo è corrente; ogni casella conta una volta
+  (`getCaselleEsplorate()`). Copre ESPLORAZIONE e, con un conteggio, DOCUMENTAZIONE.
+
+Test: `ScenarioTrofeiEdEsplorazioneTest`.
+
+**Copertura** (stima, voce per voce): dei 190 `TipoMissione`, circa il 75% si
+fa bene con i passi e i luoghi che ci sono, circa il 20% con delle
+semplificazioni (ondate fra una visita e l'altra, luoghi resi come scene in
+città, magie solo narrative), e 7 non si fanno nella Foresta: FLOTTA,
+PIRATERIA, BATTAGLIA_AEREA, CAVALLERIA, VIAGGIO_ASTRALE, VIAGGIO_TEMPO,
+REALTA_PARALLELA, commentati in `TipoMissione`. Resterebbero da aggiungere le
+ondate dentro uno stesso combattimento e i combattimenti con regole (duello 1
+contro 1, avversario che si arrende), che richiedono agganci nel combattimento.

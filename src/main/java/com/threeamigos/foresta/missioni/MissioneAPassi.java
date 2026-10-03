@@ -9,6 +9,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
@@ -75,6 +76,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	private static final String RIPIEGO = "RIPIEGO_";
 	private static final String VISITE = "VISITE_";
 	private static final String ULTIMA_VISITA = "ULTIMA_VISITA_";
+	private static final String ESPLORATE = "ESPLORATE_";
 	private static final String PARAMETRO = "PARAMETRO_";
 	private static final String DISPONIBILE_DALLE = "DISPONIBILE_DALLE";
 	private static final String GIA_RIPETUTA = "GIA_RIPETUTA";
@@ -343,11 +345,17 @@ public abstract class MissioneAPassi extends MissioneBase {
 			return Optional.empty();
 		}
 		OggettiDaRaccogliere oggetti = costruisciPasso(getPassoCorrente()).getOggettiDaSeminare();
-		if (oggetti == null || !oggetti.getLocazioni().contains(classe)) {
+		if (oggetti == null) {
 			return Optional.empty();
 		}
 		int mancanti = oggetti.getQuantita() - getContatore(oggetti.getChiave());
 		if (mancanti <= 0) {
+			return Optional.empty();
+		}
+		if (oggetti.isTrofeo()) {
+			return getTrofeo(oggetti, mancanti);
+		}
+		if (!oggetti.getLocazioni().contains(classe)) {
 			return Optional.empty();
 		}
 		// Nella locazione del ripiego ci sono tutti quelli che mancano, anche se è già stata visitata
@@ -358,6 +366,21 @@ public abstract class MissioneAPassi extends MissioneBase {
 			return Optional.empty();
 		}
 		int quanti = Math.min(Dado.tiraAncheAUnaFaccia(oggetti.getMassimoPerLocazione()), mancanti);
+		return Optional.of(new OggettoMissione(getId(), oggetti.getChiave(), oggetti.getNome(), quanti));
+	}
+
+	/**
+	 * I trofei custoditi dagli avversari della locazione, se fra loro ce n'è di quelli giusti: con la probabilità
+	 * data, al più uno per avversario e quanti ne possono stare in una locazione, mai più di quanti ne mancano.
+	 */
+	private Optional<Oggetto> getTrofeo(OggettiDaRaccogliere oggetti, int mancanti) {
+		long portatori = GruppoAvversario.getIstanza().getPersonaggiVivi().stream()
+				.filter(avversario -> oggetti.getNemici().contains(avversario.getClasse()))
+				.count();
+		if (portatori == 0 || Dado.tira(100) > oggetti.getProbabilita()) {
+			return Optional.empty();
+		}
+		int quanti = (int) Math.min(Math.min(Dado.tiraAncheAUnaFaccia(oggetti.getMassimoPerLocazione()), portatori), mancanti);
 		return Optional.of(new OggettoMissione(getId(), oggetti.getChiave(), oggetti.getNome(), quanti));
 	}
 
@@ -384,7 +407,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 			return;
 		}
 		OggettiDaRaccogliere oggetti = costruisciPasso(getPassoCorrente()).getOggettiDaSeminare();
-		if (oggetti == null || getRipiego(oggetti) != null || getContatore(oggetti.getChiave()) >= oggetti.getQuantita()
+		if (oggetti == null || oggetti.isTrofeo() || getRipiego(oggetti) != null || getContatore(oggetti.getChiave()) >= oggetti.getQuantita()
 				|| oreDiGioco() - inizioDelPassoCorrente() < oggetti.getOreAlRipiego()) {
 			return;
 		}
@@ -433,6 +456,35 @@ public abstract class MissioneAPassi extends MissioneBase {
 						aggiungiProprieta(ULTIMA_VISITA + passo, String.valueOf(oreDiGioco()));
 					}
 				});
+	}
+
+	/**
+	 * ESPLORAZIONE (VAGABONDA_FINCHE di un luogo scoperto): si conclude quando il gruppo è entrato in
+	 * {@code caselleNuove} caselle mai visitate prima, da quando questo è il passo corrente. Una casella conta una
+	 * volta sola, anche se il gruppo ne fugge e ci rientra. Si leggono con {@link #getCaselleEsplorate()}.
+	 */
+	protected final Passo esplora(int caselleNuove) {
+		return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> getCaselleEsplorate() >= caselleNuove)
+				.aOgniControllo(() -> {
+					CoordinateMD qui = GruppoGiocatore.getIstanza().getCoordinate();
+					if (qui == null || Foresta.isLocazioneVisitata(qui)) {
+						return;
+					}
+					String chiave = ESPLORATE + validaId(getPassoCorrente());
+					List<String> esplorate = leggiLista(chiave);
+					String casella = qui.getX() + "_" + qui.getY();
+					if (!esplorate.contains(casella)) {
+						esplorate.add(casella);
+						scriviLista(chiave, esplorate);
+					}
+				});
+	}
+
+	/**
+	 * Quante caselle nuove il gruppo ha esplorato per il passo di esplorazione corrente.
+	 */
+	public final int getCaselleEsplorate() {
+		return leggiLista(ESPLORATE + getPassoCorrente()).size();
 	}
 
 	/**

@@ -2,6 +2,7 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -22,6 +23,10 @@ import java.util.Set;
  * Compaiono solo alla prima visita di una locazione, mai più di quanti ne mancano, e prendono il posto
  * dell'oggetto che la locazione avrebbe avuto (non di un artefatto del registro).
  * <p>
+ * Con {@link #daiNemici} sono invece trofei (orecchie di goblin, pelli di lupo...): compaiono dovunque ci siano
+ * avversari di quelle classi, anche nelle locazioni già visitate, e li custodiscono loro; per prenderli bisogna
+ * sconfiggerli. Per i trofei non c'è ripiego, perché i mostri si trovano comunque.
+ * <p>
  * Se dopo {@link #getOreAlRipiego()} ore di gioco il gruppo non li ha ancora trovati tutti (magari ha già visitato
  * quasi tutte le locazioni adatte), la missione ripiega: si procura una locazione adatta, la segna sulla mappa e lì
  * mette tutti quelli che mancano (vedi MissioneAPassi.getRipiego).
@@ -35,6 +40,7 @@ public final class OggettiDaRaccogliere {
 	private int probabilita = 100;
 	private int massimoPerLocazione = 1;
 	private int oreAlRipiego = ORE_AL_RIPIEGO;
+	private Set<ClassePersonaggio> nemici = Collections.emptySet();
 
 	/**
 	 * Dopo quante ore di gioco senza averli trovati tutti la missione ripiega, se non si dice altrimenti: tre giorni.
@@ -57,6 +63,25 @@ public final class OggettiDaRaccogliere {
 	public OggettiDaRaccogliere in(ClassiLocazione prima, ClassiLocazione... altre) {
 		locazioni = EnumSet.of(prima, altre);
 		return this;
+	}
+
+	/**
+	 * Sono trofei che si prendono a quei nemici: compaiono dove ci sono, in qualunque locazione.
+	 */
+	public OggettiDaRaccogliere daiNemici(ClassePersonaggio primo, ClassePersonaggio... altri) {
+		nemici = EnumSet.of(primo, altri);
+		return this;
+	}
+
+	/**
+	 * I nemici a cui si prendono questi oggetti, vuoto se non sono trofei.
+	 */
+	public Set<ClassePersonaggio> getNemici() {
+		return Collections.unmodifiableSet(nemici);
+	}
+
+	public boolean isTrofeo() {
+		return !nemici.isEmpty();
 	}
 
 	/**

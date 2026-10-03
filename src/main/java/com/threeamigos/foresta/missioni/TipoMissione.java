@@ -160,18 +160,20 @@ public enum TipoMissione {
      * Esempio: difendere durante assedio, resistenza assediata
      */
     ASSEDIO_DIFESA(SupertipoMissione.COMBATTIMENTO),
-    /**
-     * Esempio: battaglia navale, combattimento via mare, flotta
-     */
-    FLOTTA(SupertipoMissione.COMBATTIMENTO),
+    // Non fattibile nella Foresta: servono il mare e le navi.
+    // /**
+    //  * Esempio: battaglia navale, combattimento via mare, flotta
+    //  */
+    // FLOTTA(SupertipoMissione.COMBATTIMENTO),
     /**
      * Esempio: uscita tattica da fortezza, attacco sorpresa, sortita
      */
     SORTITA(SupertipoMissione.COMBATTIMENTO),
-    /**
-     * Esempio: attacco di cavalleria, carica montata, charges
-     */
-    CAVALLERIA(SupertipoMissione.COMBATTIMENTO),
+    // Non fattibile nella Foresta: nella Foresta non ci sono cavalli.
+    // /**
+    //  * Esempio: attacco di cavalleria, carica montata, charges
+    //  */
+    // CAVALLERIA(SupertipoMissione.COMBATTIMENTO),
     /**
      * Esempio: guerra di trincea, bunker, difesa statica
      */
@@ -188,10 +190,11 @@ public enum TipoMissione {
      * Esempio: combattimento rituale, duello cerimoniale, combattimento sacro
      */
     COMBATTIMENTO_RITUALE(SupertipoMissione.COMBATTIMENTO),
-    /**
-     * Esempio: battaglia aerea, combattimento in volo, scontro fra le nuvole
-     */
-    BATTAGLIA_AEREA(SupertipoMissione.COMBATTIMENTO),
+    // Non fattibile nella Foresta: nessuno vola, nella Foresta.
+    // /**
+    //  * Esempio: battaglia aerea, combattimento in volo, scontro fra le nuvole
+    //  */
+    // BATTAGLIA_AEREA(SupertipoMissione.COMBATTIMENTO),
     /**
      * Esempio: duello magico specializzato, scontro magico puro, battaglia di maghi
      */
@@ -551,10 +554,11 @@ public enum TipoMissione {
      * Esempio: rapire qualcuno per riscatto, prendere in ostaggio
      */
     RAPIMENTO(SupertipoMissione.ILLECITO),
-    /**
-     * Esempio: attaccare commercianti, razziare una costa, saccheggiare una carovana
-     */
-    PIRATERIA(SupertipoMissione.ILLECITO),
+    // Non fattibile nella Foresta: servono il mare e le navi; le carovane da saccheggiare le copre BRIGANTAGGIO.
+    // /**
+    //  * Esempio: attaccare commercianti, razziare una costa, saccheggiare una carovana
+    //  */
+    // PIRATERIA(SupertipoMissione.ILLECITO),
     /**
      * Esempio: avvelenare cibo/acqua, envenenonment, contaminazione
      */
@@ -730,10 +734,11 @@ public enum TipoMissione {
      * Esempio: legare spiriti, connessione soprannaturale, legame spirituale
      */
     LEGAME_SPIRITUALE(SupertipoMissione.SPIRITUALE),
-    /**
-     * Esempio: viaggio astrale, proiezione eterica, corpo astrale, proiezione astrale conscia, controllo corpo astrale, viaggio etereo controllato
-     */
-    VIAGGIO_ASTRALE(SupertipoMissione.SPIRITUALE),
+    // Non fattibile nella Foresta: non c'è un piano astrale in cui andare.
+    // /**
+    //  * Esempio: viaggio astrale, proiezione eterica, corpo astrale, proiezione astrale conscia, controllo corpo astrale, viaggio etereo controllato
+    //  */
+    // VIAGGIO_ASTRALE(SupertipoMissione.SPIRITUALE),
     /**
      * Esempio: comunione con entità divina, connessione divina, unione sacra
      */
@@ -746,14 +751,16 @@ public enum TipoMissione {
      * Esempio: fusione di esseri/anime, unione spirituale, sincretismo
      */
     FUSIONE(SupertipoMissione.SPIRITUALE),
-    /**
-     * Esempio: viaggio nel tempo, manipolazione temporale, viaggio temporale
-     */
-    VIAGGIO_TEMPO(SupertipoMissione.SPIRITUALE),
-    /**
-     * Esempio: accesso a realtà parallela, dimensioni alternative, mondi alternativi
-     */
-    REALTA_PARALLELA(SupertipoMissione.SPIRITUALE),
+    // Non fattibile nella Foresta: non ci sono altre epoche in cui andare.
+    // /**
+    //  * Esempio: viaggio nel tempo, manipolazione temporale, viaggio temporale
+    //  */
+    // VIAGGIO_TEMPO(SupertipoMissione.SPIRITUALE),
+    // Non fattibile nella Foresta: non ci sono altre dimensioni in cui andare.
+    // /**
+    //  * Esempio: accesso a realtà parallela, dimensioni alternative, mondi alternativi
+    //  */
+    // REALTA_PARALLELA(SupertipoMissione.SPIRITUALE),
     /**
      * Esempio: possedere corpo, occupazione fisica, usurpazione corporea, possessione dell'anima, usurpazione spirituale, controllo anima
      */

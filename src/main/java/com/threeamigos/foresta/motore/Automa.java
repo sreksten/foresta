@@ -667,15 +667,16 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
 		gruppo.setLocazioneCorrente(locazioneCorrente);
 		locazioneCorrente.crea(gruppo, gruppoAvversario);
-		// Qui e non in crea, che molte locazioni ridefiniscono: l'oggetto che una missione vuole in questa locazione
-		RegistroMissioni.getOggettoMissione(gruppo.getCoordinate(), gruppo.getClasseLocazioneCorrente(),
-						Foresta.isLocazioneVisitata(gruppo.getCoordinate()))
-				.ifPresent(locazioneCorrente::collocaOggettoMissione);
-		// E gli avversari che una missione vuole qui, al posto di quelli della locazione
+		// Qui e non in crea, che molte locazioni ridefiniscono: gli avversari che una missione vuole qui, al posto di
+		// quelli della locazione...
 		RegistroMissioni.getIncontroMissione(gruppo.getCoordinate()).ifPresent(avversari -> {
 			gruppoAvversario.rimuoviPersonaggi();
 			avversari.forEach(gruppoAvversario::aggiungiPersonaggio);
 		});
+		// ...e l'oggetto che una missione vuole qui, che può dipendere dagli avversari (i trofei di una caccia)
+		RegistroMissioni.getOggettoMissione(gruppo.getCoordinate(), gruppo.getClasseLocazioneCorrente(),
+						Foresta.isLocazioneVisitata(gruppo.getCoordinate()))
+				.ifPresent(locazioneCorrente::collocaOggettoMissione);
 		BusEventi.pubblica(new InternoPreparazioneLocazione());
 		BusEventi.pubblica(new NotificaTestoParagrafo(LineaTemporale.getDescrizioneOraDelGiorno()));
 		locazioneCorrente.descrivi(gruppo, gruppoAvversario);
