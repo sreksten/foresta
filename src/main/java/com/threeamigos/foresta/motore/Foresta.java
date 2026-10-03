@@ -5,6 +5,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Locazione;
+import com.threeamigos.foresta.locazioni.Rovine;
 import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ForestaMD;
@@ -13,9 +14,13 @@ import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tools.Misc;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Supplier;
 
 /**
  * Contiene la mappa di una istanza della Foresta,
@@ -60,6 +65,10 @@ public class Foresta {
 			ForestaMD md = getForestaMD();
 			md.impostaLocazione(coordinate, nuovaClasseLocazione);
 			md.rimuoviLocazioneUnica(classeLocazione);
+			if (nuovaClasseLocazione == ClassiLocazione.ROVINE) {
+				// Le rovine di un castello o di una città prendono il nome da quello che c'era
+				getLocazioneMD(coordinate).setNome("le Rovine " + Misc.conPreposizione("di", classeLocazione.getNomeProprio()));
+			}
 		}
 	}
 
@@ -176,10 +185,36 @@ public class Foresta {
 
 	private static void setLocazione(CoordinateMD coordinate, ClassiLocazione classeLocazione) {
 		getForestaMD().impostaLocazione(coordinate, classeLocazione);
+		// Templi e rovine hanno il loro nome da quando nascono
 		if (classeLocazione == ClassiLocazione.TEMPIO) {
-			// Un tempio ha il suo nome da quando nasce
 			Tempio.getNome(getLocazioneMD(coordinate));
+		} else if (classeLocazione == ClassiLocazione.ROVINE) {
+			Rovine.getNome(getLocazioneMD(coordinate));
 		}
+	}
+
+	// Quante volte provare a pescare un nome che nessun'altra casella dello stesso tipo ha già
+	private static final int TENTATIVI_NOME_NUOVO = 20;
+
+	/**
+	 * Un nome dal generatore, possibilmente diverso da quello di tutte le caselle di quella classe (per esempio di
+	 * tutti gli altri templi): se dopo qualche tentativo non ci si riesce, va bene anche un doppione.
+	 */
+	public static String nomeNuovo(ClassiLocazione classe, Supplier<String> generatore) {
+		Set<String> giaDati = new HashSet<>();
+		for (int x = 0; x < getDimensioneX(); x++) {
+			for (int y = 0; y < getDimensioneY(); y++) {
+				LocazioneMD md = getLocazioneMD(new CoordinateMD(x, y));
+				if (md != null && md.getClasse() == classe && md.getNome() != null) {
+					giaDati.add(md.getNome());
+				}
+			}
+		}
+		String nome = generatore.get();
+		for (int i = 1; i < TENTATIVI_NOME_NUOVO && giaDati.contains(nome); i++) {
+			nome = generatore.get();
+		}
+		return nome;
 	}
 
 	/**

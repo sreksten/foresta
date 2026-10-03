@@ -1,0 +1,82 @@
+# I nomi delle rovine della Foresta (vedi ProduttoreDiTestiCasuale.nomeRovine e Rovine.getNome): che cosa resta, con
+# il suo articolo, e di chi o di che cosa era. "le Vestigia dell'Antico Impero", "il Mulino Abbandonato del Geometra
+# Distratto". Le rovine che nascono in partita, da un castello sconfitto o da una città distrutta, non pescano da qui:
+# prendono il nome da quello che c'era prima ("le Rovine del Maniero del Malefizio", vedi Foresta.distruggiLocazioneUnica).
+#
+# Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
+
+NOME_ROVINE
+    [RESTI] [ORIGINE]
+
+# Le rovine vere e proprie escono più spesso degli edifici crollati
+RESTI
+    [^5] [GENERICI]
+    [^4] [CROLLATI]
+    [^2] [RURALI]
+
+GENERICI
+    le Rovine
+    i Ruderi
+    il Rudere
+    le Vestigia
+    i Resti
+    le Macerie
+
+CROLLATI
+    la Torre Crollata
+    il Forte Diroccato
+    le Mura Sbrecciate
+    l'Arco Spezzato
+    il Ponte Interrotto
+    il Pozzo Secco
+    le Colonne Mozze
+    la Villa Sventrata
+    il Bastione Franato
+    la Scala che Non Porta da Nessuna Parte
+
+RURALI
+    il Mulino Abbandonato
+    la Vecchia Fattoria
+    il Fienile Sfondato
+    la Locanda Bruciata
+    la Stalla Senza Tetto
+    il Granaio Vuoto
+
+ORIGINE
+    [^4] [ANTICHI]
+    [^4] [STORIE]
+    [^3] [COMICHE]
+
+ANTICHI
+    del Re Senza Nome
+    dei Giganti
+    dell'Antico Impero
+    del Primo Mago
+    dell'Ordine Dimenticato
+    della Regina Pallida
+    del Popolo delle Nebbie
+    dei Sette Principi
+    della Dinastia Perduta
+    del Signore delle Torri
+
+STORIE
+    del Barone Sfrattato
+    del Cavaliere che Perse la Scommessa
+    del Mago che Sbagliò Incantesimo
+    dell'Assedio dei Cento Giorni
+    della Contessa Sonnambula
+    del Drago che Passava di Qui
+    del Gigante col Raffreddore
+    dell'Ultima Festa del Conte
+    del Mercante che Non Voleva Pagare i Muratori
+
+COMICHE
+    del Condono Edilizio
+    dell'Ultima Ristrutturazione
+    del Geometra Distratto
+    del Mutuo Non Pagato
+    della Lite di Condominio
+    dei Lavori Mai Finiti
+    del Preventivo Sbagliato
+    dell'Abuso Edilizio
+    della Riunione di Condominio Finita Male

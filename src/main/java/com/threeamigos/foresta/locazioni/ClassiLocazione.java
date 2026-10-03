@@ -18,7 +18,7 @@ public enum ClassiLocazione {
 	 * Locazioni per le missioni secondarie
 	 */
 	GROTTA_RECUPERA_IL_MEDAGLIONE(GrottaRecuperaIlMedaglione::new, TipoLocazione.MISSIONE_SECONDARIA, "la grotta dei ladri del Medaglione"),
-	ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI(RovineRecuperaLeDerrateAlimentari::new, TipoLocazione.MISSIONE_SECONDARIA, "il covo dei Troll che hanno rubato il carico di derrate alimentari"),
+	ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI(RovineRecuperaLeDerrateAlimentari::new, TipoLocazione.MISSIONE_SECONDARIA, "il covo dei Troll ladri di derrate"),
 	/*
 	 * Città
 	 */

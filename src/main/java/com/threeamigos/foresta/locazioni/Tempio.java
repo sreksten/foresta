@@ -17,13 +17,7 @@ import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 
-import java.util.HashSet;
-import java.util.Set;
-
 public class Tempio extends LocazioneBase {
-
-	// Quante volte provare a pescare un nome che nessun altro tempio ha già
-	private static final int TENTATIVI_NOME_NUOVO = 20;
 
 	@Override
 	public ClassiLocazione getClasseLocazione() {
@@ -51,29 +45,10 @@ public class Tempio extends LocazioneBase {
 	 * caricamento.
 	 */
 	public static String getNome(LocazioneMD modelloDati) {
-		String nome = modelloDati.getNome();
-		if (nome == null) {
-			Set<String> giaDati = nomiDegliAltriTempli();
-			nome = ProduttoreDiTestiCasuale.nomeTempio();
-			for (int i = 1; i < TENTATIVI_NOME_NUOVO && giaDati.contains(nome); i++) {
-				nome = ProduttoreDiTestiCasuale.nomeTempio();
-			}
-			modelloDati.setNome(nome);
+		if (modelloDati.getNome() == null) {
+			modelloDati.setNome(Foresta.nomeNuovo(ClassiLocazione.TEMPIO, ProduttoreDiTestiCasuale::nomeTempio));
 		}
-		return nome;
-	}
-
-	private static Set<String> nomiDegliAltriTempli() {
-		Set<String> nomi = new HashSet<>();
-		for (int x = 0; x < Foresta.getDimensioneX(); x++) {
-			for (int y = 0; y < Foresta.getDimensioneY(); y++) {
-				LocazioneMD md = Foresta.getLocazioneMD(new CoordinateMD(x, y));
-				if (md != null && md.getClasse() == ClassiLocazione.TEMPIO && md.getNome() != null) {
-					nomi.add(md.getNome());
-				}
-			}
-		}
-		return nomi;
+		return modelloDati.getNome();
 	}
 
 	@Override

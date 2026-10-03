@@ -24,6 +24,7 @@ public class ProduttoreDiTestiCasuale {
 	private static GrammarBean oroscopi;
 	private static GrammarBean locande;
 	private static GrammarBean templi;
+	private static GrammarBean rovine;
 
 	private ProduttoreDiTestiCasuale() {
 	}
@@ -49,6 +50,9 @@ public class ProduttoreDiTestiCasuale {
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
 			templi = new GrammarBean(
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/templi.txt"),
+					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
+			rovine = new GrammarBean(
+					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/rovine.txt"),
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
 		} catch (InvalidGrammarException | IOException e) {
 			// Senza grammatiche il gioco non puo' andare avanti: si segnala l'errore e si esce. L'uscita va in coda
@@ -76,6 +80,14 @@ public class ProduttoreDiTestiCasuale {
 	 */
 	public static String nomeTempio() {
 		return templi.produce("NOME_TEMPIO").get(0).trim();
+	}
+
+	/**
+	 * Un nome a caso per delle rovine, con l'articolo: "le Vestigia dell'Antico Impero" (vedi rovine.txt e
+	 * Rovine.getNome).
+	 */
+	public static String nomeRovine() {
+		return rovine.produce("NOME_ROVINE").get(0).trim();
 	}
 
 	public static List<String> oroscopo() {

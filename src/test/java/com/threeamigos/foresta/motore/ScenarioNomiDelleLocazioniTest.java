@@ -58,9 +58,9 @@ class ScenarioNomiDelleLocazioniTest {
             assertEquals("la città di Ruuna", Foresta.getNomeDaMostrare(ruuna));
             assertEquals(locandaDiRuuna, Locanda.getNome(Foresta.getLocazioneMD(ruuna)));
 
-            // Un castello sconfitto diventa rovine, senza nome
+            // Un castello sconfitto diventa rovine, che prendono il nome dal castello
             Foresta.distruggiLocazioneUnica(ClassiLocazione.CASTELLO_STREGA, ClassiLocazione.ROVINE);
-            assertNull(Foresta.getNomeDaMostrare(strega));
+            assertEquals("le Rovine del Maniero del Malefizio", Foresta.getNomeDaMostrare(strega));
         }
     }
 
