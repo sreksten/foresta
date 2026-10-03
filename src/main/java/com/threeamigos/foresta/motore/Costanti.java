@@ -41,6 +41,8 @@ public class Costanti {
     public static final double RESISTENZA_FATTORE_PERCENTUALE = 0.5;
     // Il libro magico dà al danno degli incantesimi un bonus come un incantamento del suo grado, più il 25%
     public static final double LIBRO_MAGICO_MAGGIORAZIONE = 0.25;
+    // L'elfo sa usare il libro magico, ma non bene come il mago: del bonus agli incantesimi gliene resta questa quota
+    public static final double LIBRO_MAGICO_FATTORE_ELFO = 0.5;
 
     // Quota del danno base di un incantesimo (INCANTESIMO_*_DANNI × livello) che vale in combattimento: una pergamena
     // deve aiutare chiunque la lanci, ma essere devastante solo in mano al Mago (moltiplicatore magico 2,0)

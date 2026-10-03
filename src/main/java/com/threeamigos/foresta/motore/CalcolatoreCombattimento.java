@@ -10,6 +10,7 @@ import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GradoIncantamento;
 import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.personaggi.OmbraFiamma;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.ModalitaDiProva;
 
@@ -555,9 +556,10 @@ public class CalcolatoreCombattimento {
         if (isIncantesimo(arma) && !immuneATipoDannoBase) {
             Optional<Artefatto> libro = libroMagico(attaccante);
             if (libro.isPresent()) {
-                // Il bonus del libro è danno dell'incantesimo: prende tutto il moltiplicatore magico della classe
+                // Il bonus del libro è danno dell'incantesimo: prende tutto il moltiplicatore magico della classe.
+                // Un elfo ne ha solo una parte
                 double dannoLibro = dannoIncantamento(attaccante, difensore, bonusLibroMagico(libro.get(), tipoDanno),
-                        libro.get().getLivello(), 1.0d, attaccante.getMoltiplicatoreDanniMagici());
+                        libro.get().getLivello(), fattoreLibroMagico(attaccante), attaccante.getMoltiplicatoreDanniMagici());
                 dannoElementaleFinale += dannoLibro;
                 Logger.log(String.format("[LIBRO MAGICO] Danno bonus: %.2f", dannoLibro));
             }
@@ -723,6 +725,14 @@ public class CalcolatoreCombattimento {
      */
     private static boolean isIncantesimo(Arma arma) {
         return arma instanceof IncantesimoMalefico || arma instanceof DardoArcano;
+    }
+
+    /**
+     * Quanto del bonus del libro magico ha chi lo porta: tutto, tranne l'elfo, che non lo usa bene come il mago.
+     */
+    static double fattoreLibroMagico(Personaggio personaggio) {
+        ClassePersonaggio classe = personaggio.getClasse();
+        return classe == ClassePersonaggio.ELFO || classe == ClassePersonaggio.ELFA ? Costanti.LIBRO_MAGICO_FATTORE_ELFO : 1.0d;
     }
 
     private static Optional<Artefatto> libroMagico(Personaggio personaggio) {

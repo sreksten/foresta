@@ -64,6 +64,14 @@ class PersonaggioEquipaggiamentoTest {
     }
 
     @Test
+    void lElfoSaUsareIlLibroMagicoGliAltriNo() {
+        assertEquals(Optional.empty(), new Elfa("Pippa", 1).puoEquipaggiare(artefatto(TipoArtefatto.LIBRO_MAGICO, 1)));
+        assertEquals(Optional.empty(), new Elfo("Pippo", 1).puoEquipaggiare(artefatto(TipoArtefatto.LIBRO_MAGICO, 1)));
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Ladro("Pippo", 1), artefatto(TipoArtefatto.LIBRO_MAGICO, 1));
+        assertRifiuto(TipoMotivoRifiutoEquipaggiamento.NON_ADATTO_ALLA_CLASSE, new Bardo("Pippo", 1), artefatto(TipoArtefatto.LIBRO_MAGICO, 1));
+    }
+
+    @Test
     void ilMagoUsaBastoneELibro() {
         Personaggio maga = new Maga("Morgana", 1);
         maga.addArtefatto(artefatto(TipoArtefatto.BASTONE_MAGICO, 1));

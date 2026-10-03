@@ -11,6 +11,8 @@ import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Ladro;
+import com.threeamigos.foresta.personaggi.Elfo;
+import com.threeamigos.foresta.personaggi.Elfa;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
 import org.junit.jupiter.api.BeforeEach;
@@ -208,6 +210,21 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
         int senzaLibro = CalcolatoreCombattimento.calcolaDannoRisultante(mago, difensore, aria).getDanno();
         mago.addArtefatto(artefatto(TipoArtefatto.LIBRO_MAGICO, 4));
         int conLibro = CalcolatoreCombattimento.calcolaDannoRisultante(mago, difensore, aria).getDanno();
+        assertTrue(conLibro > senzaLibro, "con libro " + conLibro + ", senza " + senzaLibro);
+    }
+
+    @Test
+    void allElfoIlLibroMagicoDaMetaBonusMaAiutaComunque() {
+        assertEquals(Costanti.LIBRO_MAGICO_FATTORE_ELFO, CalcolatoreCombattimento.fattoreLibroMagico(new Elfo("Legolas", 4)), DELTA);
+        assertEquals(Costanti.LIBRO_MAGICO_FATTORE_ELFO, CalcolatoreCombattimento.fattoreLibroMagico(new Elfa("Arwen", 4)), DELTA);
+        assertEquals(1.0d, CalcolatoreCombattimento.fattoreLibroMagico(new Mago("Merlino", 4)), DELTA);
+
+        Elfo elfo = new Elfo("Legolas", 4);
+        elfo.addModificatore(new ModificatoreAttributo(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
+        IncantesimoMalefico aria = (IncantesimoMalefico) ClasseIncantesimo.ARIA.getIstanza(4);
+        int senzaLibro = CalcolatoreCombattimento.calcolaDannoRisultante(elfo, difensore, aria).getDanno();
+        elfo.addArtefatto(artefatto(TipoArtefatto.LIBRO_MAGICO, 4));
+        int conLibro = CalcolatoreCombattimento.calcolaDannoRisultante(elfo, difensore, aria).getDanno();
         assertTrue(conLibro > senzaLibro, "con libro " + conLibro + ", senza " + senzaLibro);
     }
 
