@@ -18,6 +18,7 @@ import com.threeamigos.foresta.tools.Misc;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
@@ -379,20 +380,9 @@ public class Foresta {
 	 * "Recupera le derrate alimentari" o "Recupera il medaglione" attualmente attiva.
 	 */
 	public static List<CoordinateMD> getCoordinateDaSegnalare() {
-		List<CoordinateMD> coordinateDaSegnalare = new ArrayList<>(RegistroArtefatti.getLocalizzazioniConosciute());
-		if (RegistroMissioni.isMissioneAttiva(RegistroMissioni.TipoMissionePredefinita.RECUPERA_LE_DERRATE_ALIMENTARI)) {
-			CoordinateMD coordinate = getCoordinateLocazioneUnica(ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI);
-			if (coordinate != null) {
-				coordinateDaSegnalare.add(coordinate);
-			}
-		}
-		if (RegistroMissioni.isMissioneAttiva(RegistroMissioni.TipoMissionePredefinita.RECUPERA_IL_MEDAGLIONE)) {
-			CoordinateMD coordinate = getCoordinateLocazioneUnica(ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE);
-			if (coordinate != null) {
-				coordinateDaSegnalare.add(coordinate);
-			}
-		}
-		return coordinateDaSegnalare;
+		Set<CoordinateMD> coordinateDaSegnalare = new LinkedHashSet<>(RegistroArtefatti.getLocalizzazioniConosciute());
+		coordinateDaSegnalare.addAll(RegistroMissioni.getLocazioniDaSegnalare());
+		return new ArrayList<>(coordinateDaSegnalare);
 	}
 
 	public static int getVersioneMappa() {

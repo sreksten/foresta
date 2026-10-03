@@ -179,6 +179,24 @@ public class RegistroMissioni {
 	}
 
 	/**
+	 * Le caselle da far lampeggiare sulla mappa per le missioni: quelle rivendicate dalle missioni a passi attive e non
+	 * ancora finite (il covo dei ladri, il tempio di una leggenda o di un pellegrino, il bosco di una banda, il posto
+	 * del ripiego di una raccolta...), se il gruppo le conosce. I castelli delle missioni Sconfiggi* no.
+	 */
+	public static List<CoordinateMD> getLocazioniDaSegnalare() {
+		List<CoordinateMD> caselle = new ArrayList<>();
+		for (Missione missione : getTutteLeMissioni()) {
+			if (missione instanceof MissioneAPassi && missione.isAttiva() && !missione.isCompleta() && !missione.isFallita()) {
+				CoordinateMD coordinate = getLocazioneOccupata(missione);
+				if (coordinate != null && Foresta.isLocazioneConosciuta(coordinate)) {
+					caselle.add(coordinate);
+				}
+			}
+		}
+		return caselle;
+	}
+
+	/**
 	 * La missione con quell'id, in qualunque stato.
 	 */
 	public static Optional<Missione> getMissione(String id) {
