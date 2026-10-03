@@ -30,6 +30,8 @@ public enum ClasseMissione {
 	IL_RAPIMENTO(IlRapimento::new),
 	NON_SPARATE_SUL_PIANISTA(NonSparateSulPianista::new),
 	CACCIATORE_DI_TAGLIE(CacciatoreDiTaglie::new),
+	CACCIA_AI_TROFEI(CacciaAiTrofei::new),
+	IL_CARTOGRAFO(IlCartografo::new),
 
 	MISSIONE_DI_PROVA_SECONDARIA_UNO(MissioneDiProvaSecondariaUno::new),
 	MISSIONE_DI_PROVA_SECONDARIA_DUE(MissioneDiProvaSecondariaDue::new),

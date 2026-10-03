@@ -568,8 +568,9 @@ mandragola (`Alchimie`).
   locazioni, i trofei (orecchie di goblin, pelli, essenze) compaiono dovunque ci
   siano avversari di quelle classi, anche nelle caselle già visitate, perché i
   mostri ricompaiono; li custodiscono loro, al più uno per avversario, e per
-  prenderli bisogna sconfiggerli. Per i trofei non c'è ripiego. Per questo in
-  `Automa` gli avversari di una missione si mettono prima dell'oggetto.
+  prenderli bisogna sconfiggerli. Il loro ripiego (dopo tre giorni) è un bosco
+  segnato sulla mappa con i mostri che portano i trofei mancanti. In `Automa`
+  gli avversari di una missione si mettono prima dell'oggetto.
   Coprono RACCOLTA_TROFEI, RACCOLTA_ESSENZA e CACCIA_ANIMALI.
 - **Esplorazione**: `MissioneAPassi.esplora(caselleNuove)` (VAGABONDA_FINCHE di
   un luogo scoperto): si conclude quando il gruppo è entrato in tante caselle
@@ -586,3 +587,20 @@ PIRATERIA, BATTAGLIA_AEREA, CAVALLERIA, VIAGGIO_ASTRALE, VIAGGIO_TEMPO,
 REALTA_PARALLELA, commentati in `TipoMissione`. Resterebbero da aggiungere le
 ondate dentro uno stesso combattimento e i combattimenti con regole (duello 1
 contro 1, avversario che si arrende), che richiedono agganci nel combattimento.
+
+### Caccia ai trofei e cartografo (2026-10-03)
+
+Due incarichi in città, ripetibili:
+
+- `CacciaAiTrofei` ("Prove di caccia: …"): il capitano delle guardie vuole da 3 a
+  4 trofei di un mostro (`TrofeoDiCaccia`: orecchie di goblin, denti di
+  hobgoblin, teschi di scheletro, corni di minotauro, piume di arpia, denti di
+  troll), che si prendono sconfiggendo quei mostri; al ritorno si consegnano. 6
+  monete per trofeo più 5.
+- `IlCartografo`: il cartografo vuole che il gruppo esplori da 6 a 10 zone mai
+  visitate (`esplora`) e torni a raccontargliele. 3 monete per zona più 5.
+
+Test: `ScenarioTrofeiECartografoTest`. Inoltre `MissioneAPassi.attivaMissione()`
+ora segna da quando conta il passo corrente: il primo passo di una missione non
+ci arriva da un altro, e senza questo un ATTENDI o un ripiego sul primo passo
+partivano dal primo controllo invece che dall'attivazione.

@@ -186,8 +186,8 @@ public abstract class MissioneAPassi extends MissioneBase {
 	}
 
 	/**
-	 * Come per ogni missione, e in più si ricorda dove si trova il gruppo: è il punto di partenza a cui tornare con
-	 * {@link #tornaAlPuntoDiPartenza}.
+	 * Come per ogni missione, e in più si ricorda dove si trova il gruppo, il punto di partenza a cui tornare con
+	 * {@link #tornaAlPuntoDiPartenza}, e da quando conta il passo corrente (per ATTENDI e per i ripieghi).
 	 */
 	@Override
 	public void attivaMissione() {
@@ -195,6 +195,10 @@ public abstract class MissioneAPassi extends MissioneBase {
 		// Senza una casella (fuori da una partita) non c'è un punto di partenza da ricordare
 		if (ottieniProprieta(PUNTO_DI_PARTENZA) == null && coordinate != null) {
 			aggiungiProprieta(PUNTO_DI_PARTENZA, coordinate.getX() + SEPARATORE + coordinate.getY());
+		}
+		// Il passo in cui la missione si attiva comincia adesso, anche se è il primo (che non ci arriva da un altro)
+		if (!Passo.FINE.equals(getPassoCorrente())) {
+			inizioDelPassoCorrente();
 		}
 		super.attivaMissione();
 	}
@@ -323,7 +327,13 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * ne servono. Si contano sotto la chiave degli oggetti ({@link #getContatore}).
 	 */
 	protected final Passo raccogli(MomentoControllo momento, OggettiDaRaccogliere oggetti) {
-		return contaFinche(momento, oggetti.getChiave(), oggetti.getQuantita()).semina(oggetti);
+		Passo passo = contaFinche(momento, oggetti.getChiave(), oggetti.getQuantita()).semina(oggetti);
+		if (oggetti.isTrofeo()) {
+			// Nel posto del ripiego ci sono anche i mostri che portano i trofei mancanti
+			int mancanti = Math.max(1, oggetti.getQuantita() - getContatore(oggetti.getChiave()));
+			passo.affronta(() -> getRipiego(oggetti), IncontroDiMissione.di(oggetti.getNemici().iterator().next(), mancanti));
+		}
+		return passo;
 	}
 
 	/**
@@ -352,15 +362,15 @@ public abstract class MissioneAPassi extends MissioneBase {
 		if (mancanti <= 0) {
 			return Optional.empty();
 		}
+		// Nella locazione del ripiego ci sono tutti quelli che mancano, anche se è già stata visitata
+		if (coordinate.equals(getRipiego(oggetti)) && (oggetti.isTrofeo() || oggetti.getLocazioni().contains(classe))) {
+			return Optional.of(new OggettoMissione(getId(), oggetti.getChiave(), oggetti.getNome(), mancanti));
+		}
 		if (oggetti.isTrofeo()) {
 			return getTrofeo(oggetti, mancanti);
 		}
 		if (!oggetti.getLocazioni().contains(classe)) {
 			return Optional.empty();
-		}
-		// Nella locazione del ripiego ci sono tutti quelli che mancano, anche se è già stata visitata
-		if (coordinate.equals(getRipiego(oggetti))) {
-			return Optional.of(new OggettoMissione(getId(), oggetti.getChiave(), oggetti.getNome(), mancanti));
 		}
 		if (visitata || Dado.tira(100) > oggetti.getProbabilita()) {
 			return Optional.empty();
@@ -407,11 +417,12 @@ public abstract class MissioneAPassi extends MissioneBase {
 			return;
 		}
 		OggettiDaRaccogliere oggetti = costruisciPasso(getPassoCorrente()).getOggettiDaSeminare();
-		if (oggetti == null || oggetti.isTrofeo() || getRipiego(oggetti) != null || getContatore(oggetti.getChiave()) >= oggetti.getQuantita()
+		if (oggetti == null || getRipiego(oggetti) != null || getContatore(oggetti.getChiave()) >= oggetti.getQuantita()
 				|| oreDiGioco() - inizioDelPassoCorrente() < oggetti.getOreAlRipiego()) {
 			return;
 		}
-		ClassiLocazione classe = oggetti.getLocazioni().iterator().next();
+		// Per i trofei un bosco, dove la missione mette i mostri che li portano (vedi raccogli)
+		ClassiLocazione classe = oggetti.isTrofeo() ? ClassiLocazione.BOSCO : oggetti.getLocazioni().iterator().next();
 		RegistroMissioni.cercaOCostruisci(classe, this).ifPresent(coordinate -> {
 			aggiungiProprieta(RIPIEGO + oggetti.getChiave(), coordinate.getX() + SEPARATORE + coordinate.getY());
 			Foresta.setLocazioneConosciuta(coordinate);

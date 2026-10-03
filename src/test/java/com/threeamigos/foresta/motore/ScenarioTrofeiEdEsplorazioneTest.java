@@ -18,7 +18,7 @@ import java.util.function.Function;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * I trofei che si prendono ai mostri (OggettiDaRaccogliere.daiNemici) e l'esplorazione di caselle nuove
+ * I trofei che si prendono ai mostri (OggettiDaRaccogliere.daiNemici, con il ripiego) e l'esplorazione di caselle nuove
  * (MissioneAPassi.esplora).
  */
 class ScenarioTrofeiEdEsplorazioneTest {
@@ -87,7 +87,7 @@ class ScenarioTrofeiEdEsplorazioneTest {
             assertTrue(orecchie.getQuantita() >= 1 && orecchie.getQuantita() <= 2, String.valueOf(orecchie.getQuantita()));
             assertEquals("orecchia di goblin", orecchie.getNomeSingolare());
 
-            // Mai più di quante ne mancano, e per i trofei niente ripiego
+            // Mai più di quante ne mancano
             orecchie.prendi(partita.gruppo(), null);
             avversari(ClassePersonaggio.GOBLIN, 4);
             int mancanti = 3 - caccia.getContatore("ORECCHIE");
@@ -95,9 +95,20 @@ class ScenarioTrofeiEdEsplorazioneTest {
                 caccia.getOggettoInLocazione(casella, ClassiLocazione.BOSCO, false)
                         .ifPresent(o -> assertTrue(o.getQuantita() <= mancanti));
             }
+
+            // Dopo tre giorni il ripiego: un bosco segnato sulla mappa, con i goblin che portano le orecchie mancanti
             LineaTemporale.aggiungiOre(OggettiDaRaccogliere.ORE_AL_RIPIEGO);
             caccia.controllaPreLocazione();
-            assertNull(caccia.getRipiego(ORECCHIE));
+            CoordinateMD ripiego = caccia.getRipiego(ORECCHIE);
+            assertNotNull(ripiego);
+            assertEquals(ClassiLocazione.BOSCO, Foresta.getLocazione(ripiego));
+            assertTrue(Foresta.isLocazioneConosciuta(ripiego));
+            java.util.List<com.threeamigos.foresta.personaggi.Personaggio> goblin = RegistroMissioni.getIncontroMissione(ripiego)
+                    .orElseThrow(AssertionError::new);
+            assertEquals(mancanti, goblin.size());
+            goblin.forEach(g -> assertEquals(ClassePersonaggio.GOBLIN, g.getClasse()));
+            assertEquals(mancanti, caccia.getOggettoInLocazione(ripiego, ClassiLocazione.BOSCO, true)
+                    .orElseThrow(AssertionError::new).getQuantita());
         }
     }
 

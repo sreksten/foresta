@@ -25,7 +25,7 @@ import java.util.Set;
  * <p>
  * Con {@link #daiNemici} sono invece trofei (orecchie di goblin, pelli di lupo...): compaiono dovunque ci siano
  * avversari di quelle classi, anche nelle locazioni già visitate, e li custodiscono loro; per prenderli bisogna
- * sconfiggerli. Per i trofei non c'è ripiego, perché i mostri si trovano comunque.
+ * sconfiggerli. Il loro ripiego è un bosco con i mostri che portano i trofei mancanti.
  * <p>
  * Se dopo {@link #getOreAlRipiego()} ore di gioco il gruppo non li ha ancora trovati tutti (magari ha già visitato
  * quasi tutte le locazioni adatte), la missione ripiega: si procura una locazione adatta, la segna sulla mappa e lì

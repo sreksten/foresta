@@ -47,7 +47,9 @@ public class RegistroMissioni {
 		IL_PELLEGRINO(ClasseMissione.IL_PELLEGRINO),
 		IL_RAPIMENTO(ClasseMissione.IL_RAPIMENTO),
 		NON_SPARATE_SUL_PIANISTA(ClasseMissione.NON_SPARATE_SUL_PIANISTA),
-		CACCIATORE_DI_TAGLIE(ClasseMissione.CACCIATORE_DI_TAGLIE);
+		CACCIATORE_DI_TAGLIE(ClasseMissione.CACCIATORE_DI_TAGLIE),
+		CACCIA_AI_TROFEI(ClasseMissione.CACCIA_AI_TROFEI),
+		IL_CARTOGRAFO(ClasseMissione.IL_CARTOGRAFO);
 
 		TipoMissionePredefinita(ClasseMissione classeMissione) {
 			this(classeMissione, false);
