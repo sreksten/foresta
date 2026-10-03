@@ -44,7 +44,8 @@ public class RegistroMissioni {
 		CACCIA_AI_GOBLIN(ClasseMissione.CACCIA_AI_GOBLIN),
 		L_ALCHIMISTA_E_LA_MANDRAGOLA(ClasseMissione.L_ALCHIMISTA_E_LA_MANDRAGOLA),
 		LA_TAGLIA_SU_SGRANF(ClasseMissione.LA_TAGLIA_SU_SGRANF),
-		IL_PELLEGRINO(ClasseMissione.IL_PELLEGRINO);
+		IL_PELLEGRINO(ClasseMissione.IL_PELLEGRINO),
+		IL_RAPIMENTO_DI_ARMANDO(ClasseMissione.IL_RAPIMENTO_DI_ARMANDO);
 
 		TipoMissionePredefinita(ClasseMissione classeMissione) {
 			this(classeMissione, false);

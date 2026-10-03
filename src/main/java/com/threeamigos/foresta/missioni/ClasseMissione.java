@@ -27,6 +27,7 @@ public enum ClasseMissione {
 	L_ALCHIMISTA_E_LA_MANDRAGOLA(LAlchimistaELaMandragola::new),
 	LA_TAGLIA_SU_SGRANF(LaTagliaSuSgranf::new),
 	IL_PELLEGRINO(IlPellegrino::new),
+	IL_RAPIMENTO_DI_ARMANDO(IlRapimentoDiArmando::new),
 
 	MISSIONE_DI_PROVA_SECONDARIA_UNO(MissioneDiProvaSecondariaUno::new),
 	MISSIONE_DI_PROVA_SECONDARIA_DUE(MissioneDiProvaSecondariaDue::new),
