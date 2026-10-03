@@ -41,6 +41,8 @@ public enum ClasseMissione {
 	IL_CONTRABBANDIERE(IlContrabbandiere::new),
 	IL_SOCCORSO(IlSoccorso::new),
 	L_INDAGINE(LIndagine::new),
+	LA_BENEDIZIONE(LaBenedizione::new),
+	IL_FAVORE(IlFavore::new),
 	IL_RITUALE(IlRituale::new),
 
 	MISSIONE_DI_PROVA_SECONDARIA_UNO(MissioneDiProvaSecondariaUno::new),

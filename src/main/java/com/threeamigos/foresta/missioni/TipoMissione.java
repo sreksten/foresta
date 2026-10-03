@@ -512,6 +512,7 @@ public enum TipoMissione {
      * Esempio: diventare erede ufficiale, diritto successorio, linea successoria
      */
     EREDE(SupertipoMissione.PROGRESSIONE),
+    // Coperto da: LaBenedizione (con il favore, IlFavore, come missione secondaria)
     /**
      * Esempio: ricevere benedizione, favore divino, grazia divina
      */

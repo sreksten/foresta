@@ -917,6 +917,36 @@ dell'avviso e il tempio nuovo custodisce il leggendario, segnato sulla mappa; a
 Malgaard un leggendario diverso in un altro tempio, e raccoglierlo completa la
 missione e lascia il ricordo.
 
+## Missioni secondarie affidate durante una missione (2026-10-03)
+
+Una missione può avere missioni secondarie fin dal costruttore (`SconfiggiIlDrago`
+con i quattro castelli). Una missione a passi può anche **affidarne** a metà
+strada, decise in quel momento: una, più d'una, o una invece di un'altra secondo
+la scelta del giocatore.
+
+- `MissioneAPassi.affida(chiave, momento, quando, missioni)`: quando la
+  condizione è vera, il fornitore crea le missioni; diventano figlie della
+  missione (`aggiungiMissione`, quindi entrano nel suo modello dati e si salvano
+  con lei), attive, e i loro id si ricordano sotto la chiave. Si affidano una
+  volta sola, anche se il passo si valuta più volte. Il fornitore può leggere
+  una risposta data prima (`getRisposta`) per scegliere quali.
+- `attendiLeAffidate(chiave, momento)`: il passo si conclude quando sono finite
+  tutte, bene o male; `sonoRiusciteLeAffidate(chiave)` e
+  `getMissioniAffidate(chiave)` dicono com'è andata, per diramare con `poi`.
+- Le affidate si controllano come le altre figlie: l'automa scende nelle figlie
+  delle missioni attive (`Automa.controllaMissione`), il registro le vede tutte
+  (`RegistroMissioni.getTutteLeMissioni`) e quindi ricevono gli eventi di gioco;
+  il riquadro delle missioni le mostra sotto la madre. Alla rilettura di un
+  salvataggio si ricostruiscono dalla loro `ClasseMissione`: ogni missione che
+  si può affidare ci deve stare (non in `TipoMissionePredefinita`, che elenca solo
+  le radici).
+- Le affidate non devono essere ripetibili (una ripetibile, finita, lascerebbe
+  una copia di sé fra le missioni di primo livello). La madre può passare loro dei
+  parametri prima di affidarle (`PARAMETRO_` è protetta).
+
+Primo uso: `LaBenedizione` affida `IlFavore` (vedi passi_missioni.md). Test:
+`ScenarioMissioniAffidateTest`, `ScenarioBenedizioneTest`.
+
 ## Registro dei personaggi incontrati (idea, da riprendere)
 
 Oggi un avversario esiste solo per la locazione in cui combatte; dei personaggi

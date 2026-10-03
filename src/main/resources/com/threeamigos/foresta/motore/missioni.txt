@@ -2,7 +2,7 @@
 # riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia; e i materiali che chiedono
 # l'alchimista, l'armaiolo, il capitano delle guardie e il locandiere; le cose da portare da una città all'altra,
 # anche di contrabbando; gli oggetti smarriti nella foresta; gli incarichi di combattimento, le sorveglianze, i
-# soccorsi, le indagini e i riti.
+# soccorsi, le indagini, i riti e le benedizioni.
 # I nomi sono tutti maschili, perché i testi delle missioni parlano di "suo marito" e "sua moglie".
 #
 # Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
@@ -1030,3 +1030,86 @@ RITUALE
     RITO=Il fumo della ruta cancella il cerchio di carbone, e in lontananza, sopra la città, l'ultima rana cade con un plof. L'incantesimo è sciolto.;\
     RINGRAZIAMENTO=Niente più rane! Il pane di oggi è senza zampe. Ve ne do una pagnotta, controllata.;\
     RICORDO=Fra queste rovine fu sciolto l'incantesimo della pioggia di rane.
+
+# ---------------------------------------------------------------------------------------------
+# Benedizioni (vedi LaBenedizione, IlFavore e BenedizioneRichiesta)
+# ---------------------------------------------------------------------------------------------
+#
+# Una riga per benedizione, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
+#   CHIAVE=     l'identificativo, diverso per ogni riga;
+#   ASPETTO=    SACERDOTE o SACERDOTESSA: chi offre la benedizione, seduto in una locanda;
+#   MANDANTE=   chi è, con l'articolo (la sacerdotessa della luna);
+#   NOME=       il nome della benedizione, con l'articolo (la benedizione della luna): resta scritto nel modificatore;
+#   BENEDIZIONE=  ATTRIBUTO TIPO QUANTITA: il modificatore permanente, per esempio FORZA AUMENTO_FISSO 2 o
+#               SALUTE AUMENTO_PERCENTUALE 10 (TipoAttributo e TipoModificatore, solo aumenti);
+#   RICHIESTA=, BATTUTA=, RISPOSTA=  le battute in locanda (sacerdote, capo, sacerdote): la missione aggiunge
+#               la promessa della benedizione;
+#   FAVORE=     il nome del favore, che è la missione secondaria (Le ombre della radura). Il favore è di un tipo solo:
+#     - combattimento: LUOGO=, NEMICO=, NUMERO=, CAPO=  chi sconfiggere, e dove (come per gli incarichi di
+#               combattimento);
+#     - raccolta: GENERE=, INGREDIENTE=, INGREDIENTI=, DOVE=, QUANTITA=  che cosa raccogliere (come per i riti);
+#     - veglia: LUOGO=, VISITE=, ORE=, VEGLIA=  che posto vegliare, quante volte, a quante ore di distanza, e che cosa
+#               si scrive a una visita che conta, se non è l'ultima (come per le sorveglianze);
+#   VITTORIA=   quando il favore è fatto;
+#   BENEDETTO=  nel tempio, quando un personaggio riceve la benedizione: %PERSONAGGIO% è il suo nome.
+# Nei testi %CAPO% è il nome del capo dei nemici del favore. Nei testi non si usa il ";".
+
+BENEDIZIONE
+    CHIAVE=BENEDIZIONE_DELLA_LUNA;ASPETTO=SACERDOTESSA;MANDANTE=la sacerdotessa della luna;NOME=la benedizione della luna;\
+    BENEDIZIONE=SALUTE AUMENTO_PERCENTUALE 10;\
+    RICHIESTA=Vi ho visti entrare. Avete l'aria di chi ha bisogno di protezione, e io ho bisogno di qualcuno che non abbia paura del buio.;\
+    BATTUTA=Del buio no. Di quello che c'è dentro, dipende.;\
+    RISPOSTA=Dentro ci sono due ombre nere, in una radura dove una volta si pregava la luna. Scacciatele.;\
+    FAVORE=Le ombre della radura;LUOGO=RADURA;NEMICO=OMBRA_NERA;NUMERO=2;\
+    VITTORIA=Le ombre nere si dissolvono, e sulla radura torna a splendere la luna.;\
+    BENEDETTO=La sacerdotessa posa le mani sulla fronte di %PERSONAGGIO%, e una luce d'argento scende dalle sue dita fino al cuore.
+    CHIAVE=BENEDIZIONE_DEL_SOLE;ASPETTO=SACERDOTE;MANDANTE=il sacerdote del sole;NOME=la benedizione del sole;\
+    BENEDIZIONE=FORZA AUMENTO_FISSO 2;\
+    RICHIESTA=Il sole dà forza a chi lo serve. Io lo servo da quarant'anni, e di forza me n'è rimasta poca. Voi ne avete, e io ho un problema.;\
+    BATTUTA=Che problema?;\
+    RISPOSTA=Dei ladri rubano le offerte del mio altare nel bosco. Le offerte del sole! Riprendetele, e il sole saprà ringraziarvi.;\
+    FAVORE=I ladri delle offerte;LUOGO=BOSCO;NEMICO=LADRO;NUMERO=3;CAPO=NOME_BRIGANTE;\
+    VITTORIA=I ladri di %CAPO% sono sconfitti, e le offerte del sole tornano sull'altare.;\
+    BENEDETTO=Il sacerdote alza le mani verso il cielo, e un raggio di sole cade dritto su %PERSONAGGIO%, caldo come una forgia.
+    CHIAVE=BENEDIZIONE_DELLE_STELLE;ASPETTO=SACERDOTESSA;MANDANTE=la sacerdotessa delle stelle;NOME=la benedizione delle stelle;\
+    BENEDIZIONE=SAGGEZZA AUMENTO_FISSO 2;\
+    RICHIESTA=Le stelle mi hanno detto che sareste venuti. Mi hanno detto anche che avreste ordinato la zuppa, e infatti.;\
+    BATTUTA=E cos'altro dicono le stelle?;\
+    RISPOSTA=Che in una cappella fra delle rovine due spettri disturbano chi prega. E che li scaccerete voi.;\
+    FAVORE=La cappella degli spettri;LUOGO=ROVINE;NEMICO=SPETTRO;NUMERO=2;\
+    VITTORIA=Gli spettri lasciano la cappella, e fra le rovine torna il silenzio.;\
+    BENEDETTO=La sacerdotessa traccia una costellazione nell'aria, e le stelle si specchiano per un momento negli occhi di %PERSONAGGIO%.
+    CHIAVE=BENEDIZIONE_DEL_VIANDANTE;ASPETTO=SACERDOTE;MANDANTE=il frate errante;NOME=la benedizione del viandante;\
+    BENEDIZIONE=FORTUNA AUMENTO_FISSO 2;\
+    RICHIESTA=Vado di locanda in locanda a benedire i viandanti. Ma da qualche giorno c'è un troll, sul guado della palude, che i viandanti se li mangia.;\
+    BATTUTA=E voi cosa fate, li benedite prima?;\
+    RISPOSTA=Li benedico prima, sì. Ma preferirei benedirli dopo, quando sono arrivati sani e salvi dall'altra parte.;\
+    FAVORE=Il troll del guado;LUOGO=PALUDE;NEMICO=TROLL;NUMERO=1;CAPO=SI;\
+    VITTORIA=Il troll %CAPO% non mangerà più nessun viandante, e il guado è di nuovo libero.;\
+    BENEDETTO=Il frate benedice %PERSONAGGIO% con un ramoscello d'ulivo, e borbotta che da oggi i dadi saranno dalla sua parte.
+    CHIAVE=BENEDIZIONE_DEL_VENTO;ASPETTO=SACERDOTESSA;MANDANTE=la sacerdotessa del vento;NOME=la benedizione del vento;\
+    BENEDIZIONE=DESTREZZA AUMENTO_FISSO 2;\
+    RICHIESTA=Il vento è libero, e chi ne riceve la benedizione è leggero come una piuma. Ma il vento ha un problema: le arpie.;\
+    BATTUTA=Il vento ha paura delle arpie?;\
+    RISPOSTA=Non paura. Fastidio. Hanno fatto il nido fra delle rovine, e ogni volta che soffia gli tirano le piume.;\
+    FAVORE=Le arpie del vento;LUOGO=ROVINE;NEMICO=ARPIA;NUMERO=3;\
+    VITTORIA=Le arpie sono sconfitte, e fra le rovine il vento torna a soffiare indisturbato.;\
+    BENEDETTO=La sacerdotessa soffia sul palmo della mano verso %PERSONAGGIO%, e un refolo fresco avvolge chi l'ha ricevuta, leggero.
+    CHIAVE=BENEDIZIONE_DELLA_TERRA;ASPETTO=SACERDOTE;MANDANTE=il sacerdote della terra;NOME=la benedizione della terra;\
+    BENEDIZIONE=COSTITUZIONE AUMENTO_FISSO 2;\
+    RICHIESTA=La terra rende forti quelli che la rispettano. Io la rispetto, ma le mie ginocchia no: non riesco più a chinarmi.;\
+    BATTUTA=E cosa dovremmo raccogliere, al posto vostro?;\
+    RISPOSTA=Fiori di loto bianco, nelle paludi. Per la festa della semina. Ci si china parecchio, ve lo dico subito.;\
+    FAVORE=I fiori della semina;GENERE=M;INGREDIENTE=fiore di loto bianco;INGREDIENTI=fiori di loto bianco;DOVE=LUOGHI PALUDE;\
+    QUANTITA=4;\
+    VITTORIA=I fiori di loto bianco ci sono tutti: la festa della semina si può fare.;\
+    BENEDETTO=Il sacerdote sparge un pugno di terra ai piedi di %PERSONAGGIO%, e la terra trema appena, come un cuore che batte.
+    CHIAVE=BENEDIZIONE_DELLA_NOTTE;ASPETTO=SACERDOTESSA;MANDANTE=la sacerdotessa della notte;NOME=la benedizione della notte;\
+    BENEDIZIONE=PERCEZIONE AUMENTO_FISSO 2;\
+    RICHIESTA=Nel bosco c'è la tomba di un santo eremita, e qualcuno deve vegliarla di notte, per tre notti, prima della sua festa.;\
+    BATTUTA=E se non la veglia nessuno?;\
+    RISPOSTA=Allora il santo si offende. E un santo offeso, credetemi, è peggio di un troll.;\
+    FAVORE=La veglia del santo;LUOGO=BOSCO;VISITE=3;ORE=16;\
+    VEGLIA=La tomba del santo è quieta. Una civetta vi guarda da un ramo, e annuisce.;\
+    VITTORIA=La terza veglia è finita: il santo può festeggiare in pace.;\
+    BENEDETTO=La sacerdotessa copre gli occhi di %PERSONAGGIO% con la mano, e quando la toglie il buio sembra un po' meno buio.

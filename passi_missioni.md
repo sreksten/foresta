@@ -912,3 +912,26 @@ Righe nuove in `missioni.txt`, senza codice:
 Restano da valutare, perché verrebbero forzati: SICARIO, TENTATIVO_OMICIDIO,
 BENEDIZIONE_RICEVERE, PROFILING, CURIOSITA_ACCADEMICA, DIPLOMAZIA,
 NEGOZIAZIONE_TREGUA.
+
+### La benedizione (2026-10-03)
+
+`LaBenedizione` nasce in una locanda già visitata due volte, a una visita
+tranquilla, come la leggenda del locandiere: un sacerdote o una sacerdotessa
+(per ora con le immagini del mago e della maga, vedi i TODO in `Automa`) offre una
+benedizione in cambio di un favore. Le righe stanno in `missioni.txt` alla
+produzione `BENEDIZIONE`, lette da `BenedizioneRichiesta`.
+
+- Il favore è una missione secondaria affidata (`affida`, vedi
+  gestione_missioni.md): `IlFavore`, che si completa lì, senza ritorno. È di un
+  tipo solo, secondo i campi della riga: un combattimento in un posto segnato
+  sulla mappa (`NEMICO=`), una raccolta (`INGREDIENTE=`, come per i riti) o una
+  veglia, più visite a un posto segnato (`VISITE=`, come per le sorveglianze).
+- Fatto il favore, la benedizione rivendica un tempio e lo segna sulla mappa. Nel
+  tempio, se in campo c'è più di un personaggio, il giocatore sceglie chi riceve
+  la benedizione (`chiediScelta` fra i nomi); quel personaggio riceve un
+  modificatore permanente (`Personaggio.addModificatore`), con il nome della
+  benedizione come nota (`BENEDIZIONE=FORZA AUMENTO_FISSO 2`,
+  `SALUTE AUMENTO_PERCENTUALE 10`...).
+- È ripetibile, ogni 48 ore, anche per lo stesso personaggio.
+
+Copre BENEDIZIONE_RICEVERE. Test: `ScenarioBenedizioneTest`.

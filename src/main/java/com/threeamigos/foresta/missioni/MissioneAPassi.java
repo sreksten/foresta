@@ -77,7 +77,8 @@ public abstract class MissioneAPassi extends MissioneBase {
 	private static final String VISITE = "VISITE_";
 	private static final String ULTIMA_VISITA = "ULTIMA_VISITA_";
 	private static final String ESPLORATE = "ESPLORATE_";
-	private static final String PARAMETRO = "PARAMETRO_";
+	// Protetta: una missione può fissare i parametri di una missione secondaria che affida (vedi affida)
+	protected static final String PARAMETRO = "PARAMETRO_";
 	private static final String DISPONIBILE_DALLE = "DISPONIBILE_DALLE";
 	private static final String GIA_RIPETUTA = "GIA_RIPETUTA";
 
@@ -93,6 +94,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * Separatore delle liste di id salvate come una proprietà: '§' e '|' sono già riservati dal salvataggio
 	 */
 	private static final String SEPARATORE = ",";
+	private static final String AFFIDATE = "AFFIDATE_";
 	/**
 	 * Quanti passi si possono concludere di fila nello stesso controllo: di più è quasi certamente un ciclo
 	 */
@@ -593,6 +595,77 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 */
 	public final String getParametro(String nome) {
 		return ottieniProprieta(PARAMETRO + nome);
+	}
+
+	// --- Missioni secondarie affidate durante la missione
+
+	/**
+	 * AFFIDA: quando la condizione è vera, la missione affida al giocatore le missioni secondarie che il fornitore
+	 * crea in quel momento: una, più d'una, o una invece di un'altra secondo una risposta data prima (vedi
+	 * {@link #getRisposta}). Diventano figlie di questa missione, attive, si controllano e si salvano con lei; la
+	 * chiave serve a ritrovarle (vedi {@link #getMissioniAffidate}) e ad affidarle una volta sola. Le missioni
+	 * affidate non devono essere ripetibili. Per aspettare che finiscano c'è {@link #attendiLeAffidate}.
+	 * <pre>
+	 * case FAVORE:
+	 *     return affida(FAVORE, MomentoControllo.IN_LOCAZIONE, () -> true,
+	 *             () -> "1".equals(getRisposta(SCELTA)) ? Arrays.asList(new IlFavore()) : Arrays.asList(new AltroFavore()))
+	 *         .poi(ATTESA);
+	 * case ATTESA:
+	 *     return attendiLeAffidate(FAVORE, MomentoControllo.POST_LOCAZIONE)
+	 *         .poi(() -> sonoRiusciteLeAffidate(FAVORE) ? RICOMPENSA : FALLIMENTO);
+	 * </pre>
+	 */
+	protected final Passo affida(String chiave, MomentoControllo momento, BooleanSupplier quando, Supplier<List<Missione>> missioni) {
+		String proprieta = AFFIDATE + validaId(chiave);
+		return Passo.quando(momento, () -> ottieniProprieta(proprieta) != null || quando.getAsBoolean())
+				.esegui(() -> {
+					if (ottieniProprieta(proprieta) != null) {
+						return;
+					}
+					List<String> id = new ArrayList<>();
+					for (Missione missione : missioni.get()) {
+						aggiungiMissione(missione);
+						missione.attivaMissione();
+						id.add(missione.getId());
+					}
+					aggiungiProprieta(proprieta, String.join(SEPARATORE, id));
+				});
+	}
+
+	/**
+	 * ATTENDI le missioni affidate con quella chiave (vedi {@link #affida}): il passo si conclude quando sono finite
+	 * tutte, bene o male. Chi viene dopo sa com'è andata con {@link #sonoRiusciteLeAffidate} o
+	 * {@link #getMissioniAffidate}.
+	 */
+	protected final Passo attendiLeAffidate(String chiave, MomentoControllo momento) {
+		return Passo.quando(momento, () -> {
+			List<Missione> affidate = getMissioniAffidate(chiave);
+			return !affidate.isEmpty() && affidate.stream().allMatch(m -> m.isCompleta() || m.isFallita());
+		});
+	}
+
+	/**
+	 * Le missioni affidate con quella chiave, nell'ordine in cui sono state affidate; vuota se non sono state ancora
+	 * affidate.
+	 */
+	public final List<Missione> getMissioniAffidate(String chiave) {
+		String valore = ottieniProprieta(AFFIDATE + validaId(chiave));
+		if (valore == null) {
+			return Collections.emptyList();
+		}
+		List<Missione> affidate = new ArrayList<>();
+		for (String id : valore.split(SEPARATORE)) {
+			getMissioniSecondarie().stream().filter(m -> m.getId().equals(id)).findFirst().ifPresent(affidate::add);
+		}
+		return affidate;
+	}
+
+	/**
+	 * Se le missioni affidate con quella chiave sono state completate tutte.
+	 */
+	public final boolean sonoRiusciteLeAffidate(String chiave) {
+		List<Missione> affidate = getMissioniAffidate(chiave);
+		return !affidate.isEmpty() && affidate.stream().allMatch(Missione::isCompleta);
 	}
 
 	// --- Combattimenti e scorte

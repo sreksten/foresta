@@ -59,7 +59,8 @@ public class RegistroMissioni {
 		IL_CONTRABBANDIERE(ClasseMissione.IL_CONTRABBANDIERE),
 		IL_SOCCORSO(ClasseMissione.IL_SOCCORSO),
 		L_INDAGINE(ClasseMissione.L_INDAGINE),
-		IL_RITUALE(ClasseMissione.IL_RITUALE);
+		IL_RITUALE(ClasseMissione.IL_RITUALE),
+		LA_BENEDIZIONE(ClasseMissione.LA_BENEDIZIONE);
 
 		TipoMissionePredefinita(ClasseMissione classeMissione) {
 			this(classeMissione, false);

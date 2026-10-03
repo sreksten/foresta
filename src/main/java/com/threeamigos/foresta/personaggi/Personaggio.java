@@ -4,6 +4,7 @@ import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.interfacce.OggettoConArticoli;
 import com.threeamigos.foresta.motore.*;
+import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.offerte.Offerta;
@@ -140,6 +141,10 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
 	 */
     boolean isSfidante();
     void setSfidante(boolean sfidante);
+	/**
+	 * Un modificatore permanente di un attributo (una benedizione, per esempio): resta finché non lo si toglie.
+	 */
+    void addModificatore(ModificatoreAttributo modificatore);
 	/**
 	 * Il personaggio muore a causa di qualcosa
 	 */

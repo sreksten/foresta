@@ -57,6 +57,8 @@ import java.util.function.Supplier;
 // TODO: img/oggetti/OggettoMissione.gif è un sacchetto provvisorio, da ridisegnare: lo usano tutti gli oggetti delle
 //  missioni (i materiali delle richieste: erbe, minerali, pesci, trofei; l'oggetto smarrito). In futuro magari
 //  un'immagine per ogni oggetto.
+// TODO: il sacerdote e la sacerdotessa che offrono una benedizione in locanda (ScenaInLocanda.conSacerdote) hanno le
+//  immagini del mago e della maga: servono personaggi/Sacerdote.gif e personaggi/Sacerdotessa.gif.
 // TODO: quando ci saranno più attacchi nella stessa locazione, riprendere l'indagine LUCI_NELLE_ROVINE (missioni.txt,
 //  produzione INDAGINE): oggi il negromante scappa e si combattono solo i suoi scheletri, perché un incontro di
 //  missione ha una classe sola; meglio prima gli scheletri e poi lui, come MAGO o MAGA con un nome.
