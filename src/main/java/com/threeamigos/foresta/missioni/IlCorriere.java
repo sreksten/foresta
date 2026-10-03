@@ -27,6 +27,9 @@ import java.util.List;
  * <li>VIAGGIO, a inizio locazione, nella città di destinazione: poi il ringraziamento, la consegna e le monete.</li>
  * </ol>
  * La spedizione e la destinazione si pescano quando l'incarico si offre: la missione si ripete con altre.
+ * <p>
+ * Il contrabbandiere (vedi IlContrabbandiere) porta la sua merce di nascosto: se per strada il gruppo combatte, la
+ * voce si sparge e la missione fallisce.
  */
 public class IlCorriere extends IncaricoInCitta {
 
@@ -49,12 +52,29 @@ public class IlCorriere extends IncaricoInCitta {
 	 */
 	private static final int ORE_DI_MARGINE = 12;
 
+	private final String produzione;
+
 	public IlCorriere() {
-		super(ClasseMissione.IL_CORRIERE);
+		this(ClasseMissione.IL_CORRIERE, "TRASPORTO");
+	}
+
+	/**
+	 * Un corriere che pesca le spedizioni da quella produzione di missioni.txt.
+	 */
+	protected IlCorriere(ClasseMissione classe, String produzione) {
+		super(classe);
+		this.produzione = produzione;
 	}
 
 	public Spedizione getSpedizione() {
-		return Spedizione.da(parametro(SPEDIZIONE, ProduttoreDiTestiCasuale::spedizione));
+		return Spedizione.da(parametro(SPEDIZIONE, () -> ProduttoreDiTestiCasuale.rigaDiMissioni(produzione)));
+	}
+
+	/**
+	 * Se la spedizione va fatta di nascosto: allora, se per strada il gruppo combatte, la missione fallisce.
+	 */
+	protected boolean isDiNascosto() {
+		return false;
 	}
 
 	/**
@@ -191,6 +211,9 @@ public class IlCorriere extends IncaricoInCitta {
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::nellaCittaDelRitorno)
 						.falliscoSe(this::isInRitardo, () -> "Troppo tardi: " + spedizione.getOggettoConArticolo() + " non arriverà più in tempo "
 								+ Misc.conPreposizione("a", getDestinatarioDiCitta()) + ".")
+						.falliscoSe(() -> isDiNascosto() && haCombattutoNelPassoCorrente(), () -> "La voce del combattimento si è sparsa: "
+								+ spedizione.getDestinatario() + " non vorrà più saperne " + Misc.conPreposizione("di", spedizione.getOggettoConArticolo())
+								+ ", e " + spedizione.getMittente() + " nemmeno di voi.")
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -214,6 +237,9 @@ public class IlCorriere extends IncaricoInCitta {
 		String quando = spedizione.isUrgente()
 				? " E in fretta: avete " + getOreConcesse() + " ore, non di più."
 				: " Non c'è fretta, ma non " + spedizione.getPronome() + " perdete per strada.";
+		if (isDiNascosto()) {
+			quando += " E che nessuno vi noti: niente combattimenti per strada, o la voce arriva alle guardie.";
+		}
 		return ScenaInCitta.conMandante()
 				.parlaIlMandante(spedizione.getRichiesta())
 				.parlaIlMandante("Portate " + spedizione.getQuestoOggetto() + " " + Misc.conPreposizione("a", getDestinatarioDiCitta()) + "."

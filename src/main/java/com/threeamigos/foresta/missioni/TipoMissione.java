@@ -126,6 +126,7 @@ public enum TipoMissione {
      * Esempio: eliminare una specifica bestia o un bandito
      */
     CACCIATORE_DI_TAGLIE(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: IncaricoDiCombattimento (il troll del mulino, le arpie del fornaio)
     /**
      * Esempio: affrontare e sconfiggere un nemico specifico per motivi personali, riscatto, onore perso
      */
@@ -143,6 +144,7 @@ public enum TipoMissione {
      * Esempio: assaltare una fortezza, conquistare una posizione, assedio di un castello
      */
     ASSALTO(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: IncaricoDiCombattimento (i predoni nella radura)
     /**
      * Esempio: tendere imboscata, intrappolamento tattico, attacchi a sorpresa
      */
@@ -168,6 +170,7 @@ public enum TipoMissione {
      * Esempio: bloccare passaggio, creare barricata, sbarramento
      */
     BLOCCO(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: IncaricoDiCombattimento (la pattuglia di hobgoblin)
     /**
      * Esempio: combattimento minore, scaramucce, scontri limitati
      */
@@ -215,6 +218,7 @@ public enum TipoMissione {
      * Esempio: duello magico specializzato, scontro magico puro, battaglia di maghi
      */
     DUELLO_MAGICO(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: IncaricoDiCombattimento (la chimera-drago, le viverne)
     /**
      * Esempio: combattimento contro bestia rara, dominio selvatico, caccia bestia
      */
@@ -223,6 +227,7 @@ public enum TipoMissione {
      * Esempio: duello in stile antico, combattimento tradizionale, scontro eroico
      */
     DUELLO_ANTICO(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: IncaricoDiCombattimento (la cripta degli scheletri, la miniera dei goblin)
     /**
      * Esempio: ripulire una cripta o una miniera invasa a non morti o ragni
      */
@@ -230,7 +235,7 @@ public enum TipoMissione {
 
     //----------
 
-    // Coperto da: IlRapimento
+    // Coperto da: IlRapimento, IlSoccorso (l'apprendista dei gargoyle)
     /**
      * Esempio: liberare un fabbro elfo o un mago imprigionato
      */
@@ -249,6 +254,7 @@ public enum TipoMissione {
      * Esempio: curare una malattia rara, guarire da un avvelenamento, resuscitare un alleato
      */
     GUARIGIONE(SupertipoMissione.PROTEZIONE),
+    // Coperto da: IlSoccorso (il taglialegna, il minatore, il cacciatore, il pastore)
     /**
      * Esempio: salvare qualcuno intrappolato in una caverna, estrarre feriti da un'area pericolosa
      */
@@ -300,6 +306,7 @@ public enum TipoMissione {
      * Esempio: contenere minaccia, limitazione, isolamento pericolo
      */
     CONTENIMENTO(SupertipoMissione.PROTEZIONE),
+    // Coperto da: LaSorveglianza (il cerchio di pietre, la tomba dell'eremita)
     /**
      * Esempio: stare di guardia, sorveglianza notturna, vigilanza
      */
@@ -308,6 +315,7 @@ public enum TipoMissione {
      * Esempio: nascondere, mascheramento, cela, nascondiglio
      */
     OCCULTAMENTO(SupertipoMissione.PROTEZIONE),
+    // Coperto da: IncaricoDiCombattimento (i fantasmi del pozzo, per una notte)
     /**
      * Esempio: protezione temporanea, scudo temporale, difesa limitata
      */
@@ -344,6 +352,7 @@ public enum TipoMissione {
      * Esempio: approfondire uno studio accademico, scoprire il funzionamento di una magia, risolvere un mistero scientifico per pura conoscenza
      */
     CURIOSITA_ACCADEMICA(SupertipoMissione.INVESTIGAZIONE),
+    // Coperto da: LaSorveglianza (i contrabbandieri del bosco, i rumori della grotta)
     /**
      * Esempio: osservare, monitorare, pedinare qualcuno senza essere scoperti, seguire movimenti
      */
@@ -546,6 +555,7 @@ public enum TipoMissione {
      * Esempio: sabotaggio con esplosivi, demolizione, esplosione tattica
      */
     ESPLOSIONE(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: LaSorveglianza (l'accampamento degli hobgoblin, il laboratorio del rivale)
     /**
      * Esempio: spiare una riunione importante, raccogliere informazioni senza farsi scoprire
      */
@@ -558,6 +568,7 @@ public enum TipoMissione {
      * Esempio: truffare un mercante, ingannare un nobile, corrompere un ufficiale
      */
     INGANNO(SupertipoMissione.ILLECITO),
+    // Coperto da: IlContrabbandiere (il vino senza dazio, le sete, il libro proibito)
     /**
      * Esempio: contrabbandare merci proibite attraverso un checkpoint
      */
@@ -627,6 +638,7 @@ public enum TipoMissione {
      * Esempio: profanare luogo sacro, offesa religiosa, sacrilegio, bestemmia, profanazione religiosa
      */
     SACRILEGIO(SupertipoMissione.ILLECITO),
+    // Coperto da: IlContrabbandiere (le erbe proibite, le pozioni rubate, i folletti)
     /**
      * Esempio: traffico di merci proibite, smuggling su larga scala
      */

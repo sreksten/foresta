@@ -36,6 +36,10 @@ public enum ClasseMissione {
 	IL_CARTOGRAFO(IlCartografo::new),
 	IL_CORRIERE(IlCorriere::new),
 	L_OGGETTO_SMARRITO(LOggettoSmarrito::new),
+	INCARICO_DI_COMBATTIMENTO(IncaricoDiCombattimento::new),
+	LA_SORVEGLIANZA(LaSorveglianza::new),
+	IL_CONTRABBANDIERE(IlContrabbandiere::new),
+	IL_SOCCORSO(IlSoccorso::new),
 
 	MISSIONE_DI_PROVA_SECONDARIA_UNO(MissioneDiProvaSecondariaUno::new),
 	MISSIONE_DI_PROVA_SECONDARIA_DUE(MissioneDiProvaSecondariaDue::new),

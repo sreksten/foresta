@@ -122,6 +122,13 @@ public class ProduttoreDiTestiCasuale {
 	}
 
 	/**
+	 * Una riga di una produzione di missioni.txt (gli incarichi di combattimento, le sorveglianze...).
+	 */
+	public static String rigaDiMissioni(String produzione) {
+		return missioni.produce(produzione).get(0).trim();
+	}
+
+	/**
 	 * Un materiale che un mandante chiede, da una produzione di missioni.txt (RICHIESTA_ALCHIMISTA...), come riga di
 	 * otto campi separati da ";" (vedi MaterialeRichiesto).
 	 */

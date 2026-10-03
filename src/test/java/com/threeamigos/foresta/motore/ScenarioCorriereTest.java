@@ -1,10 +1,13 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.missioni.IlContrabbandiere;
 import com.threeamigos.foresta.missioni.IlCorriere;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Spedizione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -15,11 +18,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Il corriere: una cosa da portare da una città all'altra, che il destinatario paga alla consegna; le spedizioni
- * urgenti hanno una scadenza.
+ * urgenti hanno una scadenza. Il contrabbandiere, in più, non deve combattere per strada.
  */
 class ScenarioCorriereTest {
 
     private static final String LETTERA = "F;lettera sigillata;il notaio;il borgomastro;CON_CALMA;14;Ho una lettera.;E cosa c'è scritto?;Non si dice.;Il sigillo è intatto!";
+    private static final String VINO = "F;botte di vino;l'oste;il taverniere;CON_CALMA;20;Niente dazio.;E le guardie?;Aceto.;Che profumo!";
     private static final String ANTIDOTO = "F;fiala di antidoto;l'erborista;il fabbro;URGENTE;20;Il fabbro è stato morso.;E se arriviamo tardi?;Non arrivate tardi.;Mi sento le dita dei piedi!";
 
     @Test
@@ -71,7 +75,7 @@ class ScenarioCorriereTest {
             assertTrue(corriere.isCompleta());
 
             // Il prossimo corriere porterà altro, altrove
-            assertTrue(RegistroMissioni.getTutteLeMissioni().stream().anyMatch(m -> m instanceof IlCorriere && m != corriere));
+            assertTrue(RegistroMissioni.getTutteLeMissioni().stream().anyMatch(m -> m.getClass() == IlCorriere.class && m != corriere));
         }
     }
 
@@ -120,6 +124,47 @@ class ScenarioCorriereTest {
     }
 
     @Test
+    void ogniMerceDiContrabbandoSiLegge() {
+        Set<String> oggetti = new HashSet<>();
+        for (int i = 0; i < 200; i++) {
+            Spedizione spedizione = Spedizione.da(ProduttoreDiTestiCasuale.rigaDiMissioni("CONTRABBANDO"));
+            assertFalse("aeiou".contains(spedizione.getOggetto().substring(0, 1)), spedizione.getOggetto());
+            oggetti.add(spedizione.getOggetto());
+        }
+        assertTrue(oggetti.size() >= 6, String.valueOf(oggetti));
+    }
+
+    @Test
+    void ilVinoDiContrabbandoArrivaSeNessunoCombatte() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(187)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            IlCorriere contrabbando = prendiLIncarico(IlContrabbandiere.class, VINO, ClassiLocazione.CITTA_RUUNA);
+            int monete = partita.gruppo().getMonete();
+            consegnaA(partita, contrabbando, Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_RUUNA));
+            assertTrue(contrabbando.isCompleta());
+            assertTrue(partita.gruppo().getMonete() > monete);
+            assertTrue(RegistroMissioni.getTutteLeMissioni().stream().anyMatch(m -> m instanceof IlContrabbandiere && m != contrabbando));
+        }
+    }
+
+    @Test
+    void seIlContrabbandiereCombattePerStradaLaMissioneFallisce() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(188)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            IlCorriere contrabbando = prendiLIncarico(IlContrabbandiere.class, VINO, ClassiLocazione.CITTA_RUUNA);
+            // Il corriere normale invece può combattere quanto vuole
+            IlCorriere corriere = prendiLIncarico(LETTERA, ClassiLocazione.CITTA_RUUNA);
+            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GOBLIN));
+            contrabbando.controllaPostLocazione();
+            corriere.controllaPostLocazione();
+            assertTrue(contrabbando.isFallita());
+            assertFalse(corriere.isFallita());
+            assertTrue(partita.testi().contains("La voce del combattimento si è sparsa: il taverniere non vorrà più saperne della botte "
+                    + "di vino, e l'oste nemmeno di voi."), String.valueOf(partita.testi()));
+        }
+    }
+
+    @Test
     void laDestinazioneEUnAltraCittaESenzaAltreCittaLIncaricoNonSiOffre() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(185)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
@@ -143,7 +188,14 @@ class ScenarioCorriereTest {
     }
 
     private static IlCorriere corriere() {
-        return RegistroMissioni.getTutteLeMissioni().stream().filter(IlCorriere.class::isInstance)
+        return corriere(IlCorriere.class);
+    }
+
+    /**
+     * Il corriere di quella classe esatta: il contrabbandiere è anche un corriere.
+     */
+    private static IlCorriere corriere(Class<? extends IlCorriere> classe) {
+        return RegistroMissioni.getTutteLeMissioni().stream().filter(m -> m.getClass() == classe)
                 .map(IlCorriere.class::cast).findFirst().orElseThrow(AssertionError::new);
     }
 
@@ -151,7 +203,11 @@ class ScenarioCorriereTest {
      * Come a una visita tranquilla della città, con la spedizione e la destinazione fissate.
      */
     private static IlCorriere prendiLIncarico(String spedizione, ClassiLocazione destinazione) {
-        IlCorriere corriere = corriere();
+        return prendiLIncarico(IlCorriere.class, spedizione, destinazione);
+    }
+
+    private static IlCorriere prendiLIncarico(Class<? extends IlCorriere> classe, String spedizione, ClassiLocazione destinazione) {
+        IlCorriere corriere = corriere(classe);
         corriere.aggiungiProprieta("PARAMETRO_" + IlCorriere.SPEDIZIONE, spedizione);
         corriere.aggiungiProprieta(IlCorriere.DESTINAZIONE, destinazione.name());
         corriere.controllaPreLocazione();

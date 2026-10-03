@@ -4,8 +4,6 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.locazioni.Rovine;
-import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.Foresta;
@@ -13,7 +11,6 @@ import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.ArrayList;
@@ -125,21 +122,7 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 	 * Il nome del posto, con l'articolo: "il Tempio del Sole", "la grotta"; "il posto" finché non c'è.
 	 */
 	private String getNomeDelPosto() {
-		CoordinateMD posto = getPosto();
-		if (posto == null) {
-			return "il posto";
-		}
-		LocazioneMD md = Foresta.getLocazioneMD(posto);
-		switch (md.getClasse()) {
-			case TEMPIO:
-				return Tempio.getNome(md);
-			case ROVINE:
-				return Rovine.getNome(md);
-			case GROTTA:
-				return "la grotta";
-			default:
-				return md.getNome() != null ? md.getNome() : "la locanda";
-		}
+		return TestiDeiLuoghi.nome(getPosto());
 	}
 
 	private String getProprietarioDiCitta() {

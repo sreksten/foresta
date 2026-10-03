@@ -1,41 +1,24 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
-import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.motore.RegistroMissioni;
-import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
 /**
- * In città una donna chiede di liberare suo marito, rapito da una banda di goblin che lo tiene in una grotta: la
- * missione rivendica la grotta, la segna sulla mappa e ci mette la banda (vedi {@link MissioneAPassi#combatti}).
- * Sconfitta la banda, l'ostaggio si unisce al gruppo come ospite vulnerabile (vedi
- * {@link MissioneAPassi#prendiInScorta(MomentoControllo, java.util.function.BooleanSupplier, String, boolean)}): gli
- * avversari lo possono attaccare, e va riportato vivo in città. Se muore per strada, la missione resta aperta finché
- * il gruppo non torna in città a dare la notizia a sua moglie: allora c'è la scena triste, e la missione fallisce.
+ * In città una donna chiede di liberare suo marito, rapito da una banda di goblin che lo tiene in una grotta (vedi
+ * {@link LaLiberazione}): sconfitta la banda, l'ostaggio va riportato vivo in città. Se muore per strada, bisogna
+ * tornare a dare la notizia a sua moglie, e la missione fallisce.
  * <p>
  * I nomi dell'ostaggio e del capobanda vengono da missioni.txt, pescati quando l'incarico si offre: la missione si
  * ripete con altri nomi.
  */
-public class IlRapimento extends IncaricoInCitta {
+public class IlRapimento extends LaLiberazione {
 
 	private static final String OSTAGGIO = "OSTAGGIO";
 	private static final String CAPOBANDA = "CAPOBANDA";
 	public static final int RAPITORI = 4;
 	private static final int RICOMPENSA = 35;
-	private static final String COVO = "COVO";
-	private static final String LIBERAZIONE = "LIBERAZIONE";
-	private static final String LIBERATO = "LIBERATO";
-	private static final String VIAGGIO = "VIAGGIO";
-	private static final String LUTTO = "LUTTO";
-	private static final String FALLIMENTO = "FALLIMENTO";
 
 	public IlRapimento() {
 		super(ClasseMissione.IL_RAPIMENTO);
@@ -94,61 +77,40 @@ public class IlRapimento extends IncaricoInCitta {
 		return "In questa grotta i goblin di " + getCapobanda() + " tenevano prigioniero " + getOstaggio() + ".";
 	}
 
-	/**
-	 * La grotta dei rapitori, o null finché la missione non l'ha trovata.
-	 */
-	public CoordinateMD getCovo() {
-		return RegistroMissioni.getLocazioneOccupata(this);
+	@Override
+	protected String getPersona() {
+		return getOstaggio();
 	}
 
 	@Override
-	protected String primoPassoDelCompito() {
-		return COVO;
+	protected ClassiLocazione getLuogoDelCovo() {
+		return ClassiLocazione.GROTTA;
 	}
 
 	@Override
-	protected Passo costruisciPassoDelCompito(String id) {
-		switch (id) {
-			case COVO:
-				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, ClassiLocazione.GROTTA)
-						.esegui(() -> {
-							Foresta.setLocazioneConosciuta(getCovo());
-							BusEventi.pubblica(new NotificaTestoParagrafo("La grotta dove i goblin tengono prigioniero " + getOstaggio()
-									+ " è segnata sulla mappa."));
-						})
-						.poi(LIBERAZIONE);
-			case LIBERAZIONE:
-				return combatti(this::getCovo, getRapitori()).poi(LIBERATO);
-			case LIBERATO:
-				return prendiInScorta(MomentoControllo.POST_LOCAZIONE,
-								() -> getCovo().equals(GruppoGiocatore.getIstanza().getCoordinate()), getOstaggio(), true)
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(getOstaggio() + " è libero, ma è debole e non sa difendersi: "
-								+ "riportatelo vivo a " + getNomeCitta() + ".")))
-						.poi(VIAGGIO);
-			case VIAGGIO:
-				return scortaFinoAllaMeta(MomentoControllo.PRE_LOCAZIONE, () -> Foresta.getCoordinateLocazioneUnica(getCitta()))
-						.esegui(() -> {
-							if (isScortatoMorto()) {
-								BusEventi.pubblica(new NotificaTestoParagrafo(getOstaggio() + " non ce l'ha fatta: i suoi rapitori avevano degli amici. "
-										+ "Bisogna dirlo a sua moglie, a " + getNomeCitta() + "."));
-							}
-						})
-						.poi(() -> isScortatoMorto() ? LUTTO : RITORNO);
-			case LUTTO:
-				// A inizio locazione la scena, in locazione il fallimento: così l'avviso arriva dopo la scena
-				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::nellaCitta)
-						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaDelLutto().getPagine())
-						.poi(FALLIMENTO);
-			case FALLIMENTO:
-				return Passo.quando(MomentoControllo.IN_LOCAZIONE, this::nellaCitta)
-						.esegui(() -> {
-							BusEventi.pubblica(new NotificaTestoParagrafo("La moglie di " + getOstaggio() + " chiude la porta senza dire una parola."));
-							fallisciMissione();
-						})
-						.poi(Passo.FINE);
-			default:
-				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
-		}
+	protected IncontroDiMissione getNemiciDelCovo() {
+		return getRapitori();
+	}
+
+	@Override
+	protected String testoCovoSegnato() {
+		return "La grotta dove i goblin tengono prigioniero " + getOstaggio() + " è segnata sulla mappa.";
+	}
+
+	@Override
+	protected String testoLiberato() {
+		return getOstaggio() + " è libero, ma è debole e non sa difendersi: riportatelo vivo a " + getNomeCitta() + ".";
+	}
+
+	@Override
+	protected String testoMorto() {
+		return getOstaggio() + " non ce l'ha fatta: i suoi rapitori avevano degli amici. Bisogna dirlo a sua moglie, a "
+				+ getNomeCitta() + ".";
+	}
+
+	@Override
+	protected String testoPortaChiusa() {
+		return "La moglie di " + getOstaggio() + " chiude la porta senza dire una parola.";
 	}
 
 	@Override
@@ -169,7 +131,8 @@ public class IlRapimento extends IncaricoInCitta {
 				.parlaIlCapo("Tenetelo d'occhio, la prossima volta.");
 	}
 
-	private ScenaInCitta scenaDelLutto() {
+	@Override
+	protected ScenaInCitta scenaDelLutto() {
 		return ScenaInCitta.conMandante()
 				.parlaIlMandante("Siete tornati! Ma... dov'è " + getOstaggio() + "?")
 				.parlaIlCapo("Mi dispiace. Lo avevamo liberato, ma per strada ci hanno attaccati.")

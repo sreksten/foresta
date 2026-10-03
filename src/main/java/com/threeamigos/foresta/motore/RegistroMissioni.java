@@ -53,7 +53,11 @@ public class RegistroMissioni {
 		CACCIATORE_DI_TAGLIE(ClasseMissione.CACCIATORE_DI_TAGLIE),
 		IL_CARTOGRAFO(ClasseMissione.IL_CARTOGRAFO),
 		IL_CORRIERE(ClasseMissione.IL_CORRIERE),
-		L_OGGETTO_SMARRITO(ClasseMissione.L_OGGETTO_SMARRITO);
+		L_OGGETTO_SMARRITO(ClasseMissione.L_OGGETTO_SMARRITO),
+		INCARICO_DI_COMBATTIMENTO(ClasseMissione.INCARICO_DI_COMBATTIMENTO),
+		LA_SORVEGLIANZA(ClasseMissione.LA_SORVEGLIANZA),
+		IL_CONTRABBANDIERE(ClasseMissione.IL_CONTRABBANDIERE),
+		IL_SOCCORSO(ClasseMissione.IL_SOCCORSO);
 
 		TipoMissionePredefinita(ClasseMissione classeMissione) {
 			this(classeMissione, false);

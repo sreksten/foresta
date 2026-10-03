@@ -1,8 +1,9 @@
 # I nomi dei personaggi delle missioni (vedi ProduttoreDiTestiCasuale): gli ostaggi da liberare, i bardi da
 # riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia; e i materiali che chiedono
-# l'alchimista, l'armaiolo, il capitano delle guardie e il locandiere; le cose da portare da una città all'altra;
-# gli oggetti smarriti nella foresta. Per ora sono tutti maschili, perché i testi delle missioni
-# parlano di "suo marito" e "sua moglie".
+# l'alchimista, l'armaiolo, il capitano delle guardie e il locandiere; le cose da portare da una città all'altra,
+# anche di contrabbando; gli oggetti smarriti nella foresta; gli incarichi di combattimento, le sorveglianze e i
+# soccorsi.
+# I nomi sono tutti maschili, perché i testi delle missioni parlano di "suo marito" e "sua moglie".
 #
 # Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
 
@@ -198,6 +199,20 @@ TRASPORTO
     F;boccetta d'acqua sacra;la badessa;il cavaliere ferito;URGENTE;22;Il cavaliere è stato ferito da una lama stregata, e la ferita non si chiude. Solo l'acqua della nostra fonte la può guarire.;Non basterebbe una benda?;Le bende le ha già provate tutte. Anche quelle stregate.;La ferita si chiude! Sento il calore dell'acqua sacra fin nelle ossa.
     F;cassa di rimedi;il medico di corte;il guaritore del lazzaretto;URGENTE;25;Nel lazzaretto c'è un'epidemia di febbre grigia, e i rimedi sono finiti.;Si attacca anche a noi?;Non se ve ne andate subito, dopo la consegna.;Basteranno per tutti i malati! E adesso andate, prima che la febbre prenda anche voi.
     M;sacco di sale purificato;la badessa;il sindaco;URGENTE;22;Una pestilenza si sta mangiando il grano, e chi lo mangia. Questo sale, sparso sulle soglie delle case, ferma il contagio.;Funziona davvero?;Funziona sempre. Quasi sempre. Spesso.;Lo spargeremo su ogni soglia. Che il cielo vi benedica!
+# ---------------------------------------------------------------------------------------------
+# Contrabbando da una città all'altra (vedi IlContrabbandiere)
+# ---------------------------------------------------------------------------------------------
+#
+# Gli stessi dieci campi delle spedizioni. La merce non dovrebbe girare, e va portata di nascosto: se per strada
+# il gruppo combatte, la missione fallisce (lo dice la missione, non serve scriverlo).
+
+CONTRABBANDO
+    F;botte di vino senza dazio;l'oste;il taverniere;CON_CALMA;20;Il dazio sul vino è più caro del vino. Allora il vino viaggia senza dazio.;E se ci fermano le guardie?;Dite che è aceto. Ha anche il sapore, quasi.;Che profumo! E nemmeno una moneta alle gabelle.
+    M;pacco di erbe proibite;l'erborista;il medico condotto;CON_CALMA;22;Queste erbe sono proibite, ma solo perché curano meglio delle medicine del gran maestro dei guaritori.;E perché il gran maestro le ha proibite?;Indovinate chi vende le medicine.;Finalmente! Adesso i miei malati guariscono, e il gran maestro si arrabbia.
+    F;cassetta di pozioni rubate;il ricettatore;la fattucchiera;URGENTE;24;Queste pozioni sono cadute da un carro. Il proprietario del carro le sta cercando, e anche le guardie.;Cadute da un carro? Da sole?;Con un piccolo aiuto. Partite subito, prima che le cerchino qui.;Ah, le pozioni del carro. Non chiedo, non dico.
+    M;baule di sete orientali;il mercante;la sarta di corte;CON_CALMA;20;Le sete orientali pagano una gabella che farebbe piangere un esattore. Per fortuna gli esattori non piangono, e non guardano nei bauli.;E se lo aprono?;Dentro ci sono anche delle mutande, sopra. Nessuno guarda sotto le mutande.;Che meraviglia! Le dame di corte non sapranno mai da dove vengono.
+    F;gabbia di folletti;il cacciatore di frodo;il collezionista;URGENTE;26;Catturare i folletti è proibito, venderli ancora di più. Ma il collezionista paga bene, e i folletti nella gabbia non durano molto.;Non è un po' crudele?;Sì. Infatti pago bene anche voi.;Ah, splendidi! Lo so, lo so, non dovrei. Ma guardate che colori.
+    M;libro di incantesimi proibiti;il bibliotecario;il mago di corte;CON_CALMA;24;Questo libro era nella sezione chiusa della biblioteca, e adesso non c'è più. Il mago di corte lo vuole leggere prima che qualcuno se ne accorga.;Che incantesimi ci sono dentro?;Non lo so. E non apritelo per scoprirlo, l'ultimo che l'ha aperto adesso è un rospo.;Eccolo! Grazie. E il rospo come sta?
 
 # ---------------------------------------------------------------------------------------------
 # Oggetti smarriti nella foresta (vedi LOggettoSmarrito e OggettoSmarrito)
@@ -227,3 +242,213 @@ OGGETTO_SMARRITO
     M;sigillo di famiglia;il cavaliere decaduto;ROVINE;16;Prima è caduto in rovina il castello, poi è caduto il nome, e alla fine è caduto anche il sigillo. Da una tasca bucata.;Vale qualcosa?;Per me sì. Per un ricettatore, molto di più.;Il sigillo della mia casata! Un giorno lo rimetteremo sul portone. Quando avremo di nuovo un portone.
     M;pettine di tartaruga;la moglie del borgomastro;LOCANDA TEMPIO;12;Sono passata a prendere una tisana e ho perso il pettine. Mio marito dice che sono distratta. Io dico che è distratto il pettine.;E se è pieno di nodi?;Lo pulisco io. Voi trovatelo.;Il mio pettine! Adesso mio marito dovrà trovare un'altra cosa di cui lamentarsi.
     F;borraccia di rame;il carrettiere;GROTTA LOCANDA;10;Ho fatto sosta per far riposare il mulo e ho dimenticato la borraccia. Era di mio padre, e prima ancora di suo padre.;E dentro c'era ancora qualcosa?;Vino di mio nonno. Non bevetelo.;La borraccia di famiglia! Il vino di mio nonno è ancora lì? Meglio così.
+
+# ---------------------------------------------------------------------------------------------
+# Incarichi di combattimento (vedi IncaricoDiCombattimento e CombattimentoRichiesto)
+# ---------------------------------------------------------------------------------------------
+#
+# Una riga per incarico, campi CHIAVE=valore separati da ";" (una riga lunga si spezza con una "\" in fondo):
+#   CHIAVE=     l'identificativo, diverso per ogni riga;
+#   TIPO=       il TipoMissione che copre (VENDETTA, COMBATTIMENTO_BESTIA, PULIZIA_DEI_DUNGEON...);
+#   ASPETTO=    chi compare nella scena in città: QUALUNQUE, CAPITANO, ARMAIOLO, ALCHIMISTA o LOCANDIERE;
+#   MANDANTE=   chi chiede, con l'articolo (il mugnaio);
+#   NEMICO=, NUMERO=  chi va sconfitto (una ClassePersonaggio) e quanti;
+#   CAPO=       facoltativo, SI se uno di loro ha un nome (da NOME_CAPOBANDA) e un livello in più;
+#   LUOGO=      dove si nascondono: GROTTA, ROVINE, BOSCO, PALUDE o RADURA (si segna sulla mappa);
+#   MONETE=     quanto si paga;
+#   TITOLO=, RICHIESTA=, BATTUTA=, RISPOSTA=  il nome della missione e le battute dell'incarico (mandante, capo,
+#               mandante); dove stanno e quanto pagano lo aggiunge la missione;
+#   VITTORIA=, RINGRAZIAMENTO=, RICORDO=  quando sono sconfitti, al ritorno in città, e il ricordo del luogo.
+# Nei testi %CAPO% è il nome del capo. Nei testi non si usa il ";".
+
+INCARICO_DI_COMBATTIMENTO
+    CHIAVE=TROLL_DEL_MULINO;TIPO=VENDETTA;ASPETTO=QUALUNQUE;MANDANTE=il mugnaio;NEMICO=TROLL;NUMERO=1;CAPO=SI;LUOGO=GROTTA;\
+    MONETE=35;TITOLO=La vendetta del mugnaio;\
+    RICHIESTA=Un troll di nome %CAPO% ha sfasciato il mulino di mio padre. Con mio padre dentro. Voglio che paghi.;\
+    BATTUTA=E se chiede scusa?;RISPOSTA=I troll non chiedono scusa. Si sfasciano anche loro.;\
+    VITTORIA=%CAPO% non sfascerà più nessun mulino.;\
+    RINGRAZIAMENTO=Adesso mio padre può riposare in pace. E io posso ricostruire il mulino.;\
+    RICORDO=Qui viveva %CAPO%, il troll che sfasciò il mulino.
+    CHIAVE=ARPIE_DEL_FORNAIO;TIPO=VENDETTA;ASPETTO=LOCANDIERE;MANDANTE=il fornaio;NEMICO=ARPIA;NUMERO=4;LUOGO=ROVINE;\
+    MONETE=30;TITOLO=Le arpie golose;\
+    RICHIESTA=Tutte le mattine le arpie mi rubano le crostate dalla finestra. Tutte. Le mattine.;\
+    BATTUTA=E se chiudeste la finestra?;RISPOSTA=E le crostate come si raffreddano? Siete eroi o pasticceri?;\
+    VITTORIA=Le arpie non ruberanno più una crostata.;\
+    RINGRAZIAMENTO=Le mie crostate sono salve! Ve ne darei una, ma le ho già vendute tutte.;\
+    RICORDO=Fra queste rovine le arpie mangiavano le crostate rubate.
+    CHIAVE=CHIMERA_DELLA_PALUDE;TIPO=COMBATTIMENTO_BESTIA;ASPETTO=ALCHIMISTA;MANDANTE=l'alchimista;NEMICO=CHIMERA_DRAGO;\
+    NUMERO=1;LUOGO=PALUDE;MONETE=45;TITOLO=La chimera della palude;\
+    RICHIESTA=In una palude vive una chimera-drago, una bestia rarissima. Gli studiosi la vorrebbero viva. Io no.;\
+    BATTUTA=Perché no?;RISPOSTA=Perché la palude è dove raccolgo le mie erbe, e lei mi ha già mangiato due assistenti.;\
+    VITTORIA=La chimera-drago non mangerà più nessun assistente.;\
+    RINGRAZIAMENTO=Finalmente posso tornare a raccogliere le erbe. Cerco un assistente, se vi interessa.;\
+    RICORDO=In questa palude viveva la chimera-drago che mangiava gli assistenti dell'alchimista.
+    CHIAVE=VIVERNE_DEL_NIDO;TIPO=COMBATTIMENTO_BESTIA;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=VIVERNA;\
+    NUMERO=2;LUOGO=ROVINE;MONETE=40;TITOLO=Il nido delle viverne;\
+    RICHIESTA=Due viverne hanno fatto il nido fra delle rovine, e da lì si portano via le pecore dei pastori.;\
+    BATTUTA=Due viverne? Solo due?;RISPOSTA=Due adulte. Delle uova preferisco non sapere.;\
+    VITTORIA=Le viverne non porteranno più via nessuna pecora.;\
+    RINGRAZIAMENTO=I pastori vi ringraziano. Le pecore anche, a modo loro.;\
+    RICORDO=Fra queste rovine nidificavano le viverne.
+    CHIAVE=SCHELETRI_DELLA_CRIPTA;TIPO=PULIZIA_DEI_DUNGEON;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;NEMICO=SCHELETRO;\
+    NUMERO=5;LUOGO=ROVINE;MONETE=35;TITOLO=La cripta inquieta;\
+    RICHIESTA=La vecchia cripta fra le rovine è piena di scheletri che non vogliono saperne di riposare.;\
+    BATTUTA=E noi cosa dovremmo fare, cantargli una ninna nanna?;RISPOSTA=Più o meno. Ma con la spada.;\
+    VITTORIA=Nella cripta adesso regna il silenzio.;\
+    RINGRAZIAMENTO=Che riposino in pace. Stavolta per davvero.;\
+    RICORDO=Queste rovine erano una cripta inquieta, finché qualcuno non la fece tacere.
+    CHIAVE=GOBLIN_DELLA_MINIERA;TIPO=PULIZIA_DEI_DUNGEON;ASPETTO=ARMAIOLO;MANDANTE=l'armaiolo;NEMICO=GOBLIN;NUMERO=5;CAPO=SI;\
+    LUOGO=GROTTA;MONETE=35;TITOLO=La miniera occupata;\
+    RICHIESTA=La grotta dove scavo il ferro è stata occupata dai goblin di %CAPO%. Senza ferro, niente spade.;\
+    BATTUTA=E senza spade, come li cacciamo?;RISPOSTA=Con quelle che avete. Le ultime che ho fatto.;\
+    VITTORIA=I goblin di %CAPO% hanno lasciato libera la miniera.;\
+    RINGRAZIAMENTO=Si torna a scavare! La prossima spada la faccio con il ferro che avete liberato voi.;\
+    RICORDO=In questa grotta i goblin di %CAPO% avevano occupato la miniera dell'armaiolo.
+    CHIAVE=PATTUGLIA_DI_HOBGOBLIN;TIPO=SCHERMAGLIA;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=HOBGOBLIN;\
+    NUMERO=3;LUOGO=BOSCO;MONETE=30;TITOLO=La pattuglia nel bosco;\
+    RICHIESTA=Una pattuglia di hobgoblin gira per un bosco qui vicino e tasta le nostre difese. Una scaramuccia, e se ne vanno.;\
+    BATTUTA=E se non se ne vanno?;RISPOSTA=Allora la scaramuccia diventa una battaglia, e la paga raddoppia. Scherzo.;\
+    VITTORIA=La pattuglia di hobgoblin non tasterà più le difese di nessuno.;\
+    RINGRAZIAMENTO=Bel lavoro. Per un po' gli hobgoblin staranno alla larga.;\
+    RICORDO=In questo bosco girava la pattuglia degli hobgoblin.
+    CHIAVE=PREDONI_DELLA_RADURA;TIPO=IMBOSCATA;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=HOBGOBLIN;NUMERO=4;\
+    CAPO=SI;LUOGO=RADURA;MONETE=40;TITOLO=L'agguato ai predoni;\
+    RICHIESTA=I predoni di %CAPO% passano sempre da una radura, quando tornano dalle loro razzie. Aspettateli lì.;\
+    BATTUTA=Un agguato? Non è un po' sleale?;RISPOSTA=Sleale è razziare le fattorie. Questo si chiama restituire il favore.;\
+    VITTORIA=I predoni di %CAPO% non razzieranno più nessuna fattoria.;\
+    RINGRAZIAMENTO=Le fattorie dormiranno tranquille. E anche le mie guardie.;\
+    RICORDO=In questa radura i predoni di %CAPO% caddero in un agguato.
+    CHIAVE=FANTASMI_DEL_POZZO;TIPO=PROTEZIONE_TEMPORALE;ASPETTO=QUALUNQUE;MANDANTE=la vedova del fabbro;NEMICO=FANTASMA;\
+    NUMERO=3;LUOGO=RADURA;MONETE=30;TITOLO=I fantasmi del pozzo;\
+    RICHIESTA=Nella radura del vecchio pozzo si radunano tre fantasmi, e stanotte tocca a me andare a prendere l'acqua.;\
+    BATTUTA=Non potete andarci di giorno?;RISPOSTA=Di giorno il pozzo è asciutto. Lo so, non ha senso. Ma è così.;\
+    VITTORIA=I fantasmi del pozzo sono svaniti.;\
+    RINGRAZIAMENTO=Stanotte avrò la mia acqua, e senza nessuno che mi soffia sul collo.;\
+    RICORDO=In questa radura, attorno al vecchio pozzo, si radunavano i fantasmi.
+
+# ---------------------------------------------------------------------------------------------
+# Sorveglianze (vedi LaSorveglianza e SorveglianzaRichiesta)
+# ---------------------------------------------------------------------------------------------
+#
+# Una riga per sorveglianza, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
+#   CHIAVE=, TIPO= (VIGILIA, SORVEGLIANZA, SPIONAGGIO), ASPETTO=, MANDANTE=, LUOGO=, MONETE=, TITOLO=, RICHIESTA=,
+#               BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=, RICORDO=  come per gli incarichi di combattimento; che posto
+#               è, quante volte passarci e quanto pagano lo aggiunge la missione;
+#   VISITE=     quante volte passare dal posto (almeno 2);
+#   ORE=        quante ore di gioco lasciar passare almeno fra una visita e l'altra;
+#   VEGLIA=     che cosa si scrive a una visita che conta, se non è l'ultima (la missione aggiunge quante ne mancano);
+#   SCOPERTA=   che cosa si scrive all'ultima visita;
+#   NEMICO=, NUMERO=, CAPO=, VITTORIA=  facoltativi: chi salta fuori all'ultima visita, da sconfiggere lì, e che
+#               cosa si scrive quando è sconfitto.
+# Nei testi %CAPO% è il nome del capo. Nei testi non si usa il ";".
+
+SORVEGLIANZA
+    CHIAVE=CERCHIO_DI_PIETRE;TIPO=VIGILIA;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;LUOGO=RADURA;VISITE=3;ORE=20;\
+    NEMICO=FANTASMA;NUMERO=2;MONETE=35;TITOLO=La veglia delle pietre;\
+    RICHIESTA=In una radura c'è un cerchio di pietre antiche. Ogni cento anni qualcuno deve vegliarlo per tre notti. Quest'anno tocca a voi.;\
+    BATTUTA=E se non lo veglia nessuno?;RISPOSTA=Non lo so. L'ultima volta che è successo non è sopravvissuto nessuno a raccontarlo.;\
+    VEGLIA=Le pietre del cerchio sono fredde e silenziose.;\
+    SCOPERTA=Alla terza notte, dalle pietre del cerchio si alzano due fantasmi.;\
+    VITTORIA=I fantasmi tornano dentro le pietre, per altri cento anni.;\
+    RINGRAZIAMENTO=Il cerchio dormirà per altri cento anni. A quel tempo toccherà a qualcun altro, per fortuna.;\
+    RICORDO=In questa radura c'è il cerchio di pietre che qualcuno vegliò per tre notti.
+    CHIAVE=TOMBA_DELL_EREMITA;TIPO=VIGILIA;ASPETTO=QUALUNQUE;MANDANTE=la sorella dell'eremita;LUOGO=BOSCO;VISITE=2;ORE=24;\
+    MONETE=25;TITOLO=La tomba dell'eremita;\
+    RICHIESTA=Mio fratello era un eremita, e l'abbiamo sepolto nel bosco dove viveva. La tradizione vuole che qualcuno vegli la sua tomba per due notti.;\
+    BATTUTA=Perché non la vegliate voi?;RISPOSTA=Nel bosco ci sono i lupi. E poi mio fratello mi stava antipatico.;\
+    VEGLIA=Sulla tomba dell'eremita tutto è tranquillo. Un gufo, ogni tanto.;\
+    SCOPERTA=La seconda notte passa tranquilla. L'eremita può riposare in pace, come ha sempre voluto.;\
+    RINGRAZIAMENTO=Grazie. Mio fratello sarebbe contento. Cioè, sarebbe infastidito, come sempre, ma in fondo contento.;\
+    RICORDO=In questo bosco riposa un eremita, che qualcuno vegliò per due notti.
+    CHIAVE=CONTRABBANDIERI_DEL_BOSCO;TIPO=SORVEGLIANZA;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;LUOGO=BOSCO;\
+    VISITE=3;ORE=12;NEMICO=GOBLIN;NUMERO=4;CAPO=SI;MONETE=40;TITOLO=Chi passa dal bosco?;\
+    RICHIESTA=Qualcuno porta merce di contrabbando in città passando da un bosco. Tenetelo d'occhio e scoprite chi è.;\
+    BATTUTA=E quando lo scopriamo?;RISPOSTA=Gli chiedete gentilmente di smettere. Con la spada, se serve.;\
+    VEGLIA=Nel bosco ci sono impronte fresche di carri, ma nessuno in vista.;\
+    SCOPERTA=Eccoli: quattro goblin con un carro pieno di casse, e a guidarli c'è %CAPO%.;\
+    VITTORIA=I contrabbandieri di %CAPO% non passeranno più dal bosco.;\
+    RINGRAZIAMENTO=Le casse le teniamo noi. Per le indagini, s'intende.;\
+    RICORDO=Da questo bosco passavano i contrabbandieri di %CAPO%.
+    CHIAVE=RUMORI_DELLA_GROTTA;TIPO=SORVEGLIANZA;ASPETTO=LOCANDIERE;MANDANTE=il locandiere;LUOGO=GROTTA;VISITE=2;ORE=12;\
+    NEMICO=TROLL;NUMERO=1;MONETE=35;TITOLO=I rumori della grotta;\
+    RICHIESTA=Da una grotta qui vicino escono rumori strani, e i miei clienti hanno paura a tornare a casa la sera.;\
+    BATTUTA=Che tipo di rumori?;RISPOSTA=Come qualcuno che russa. Qualcuno molto grosso.;\
+    VEGLIA=Dalla grotta esce un russare profondo, che fa tremare le pareti.;\
+    SCOPERTA=Il russare si interrompe: dalla grotta esce un troll appena sveglio, e di pessimo umore.;\
+    VITTORIA=Il troll della grotta non russerà più.;\
+    RINGRAZIAMENTO=I miei clienti torneranno a casa tranquilli. Cioè, ubriachi, ma tranquilli.;\
+    RICORDO=In questa grotta russava un troll.
+    CHIAVE=ACCAMPAMENTO_DEGLI_HOBGOBLIN;TIPO=SPIONAGGIO;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;LUOGO=PALUDE;\
+    VISITE=3;ORE=16;MONETE=40;TITOLO=L'accampamento nella palude;\
+    RICHIESTA=Gli hobgoblin hanno messo un accampamento in una palude. Voglio sapere quanti sono e cosa stanno preparando.;\
+    BATTUTA=Spiare? Non potremmo semplicemente attaccarli?;RISPOSTA=Se ne contate più di dieci, no.;\
+    VEGLIA=Fra le canne si vedono le tende degli hobgoblin. Ne contate un po', prima di dovervi nascondere.;\
+    SCOPERTA=Ormai è chiaro: sono una trentina, e costruiscono scale. Per le mura di una città, di sicuro.;\
+    RINGRAZIAMENTO=Una trentina, e con le scale. Raddoppierò le guardie sulle mura. Bel lavoro.;\
+    RICORDO=In questa palude gli hobgoblin avevano il loro accampamento.
+    CHIAVE=ROVINE_DEL_RIVALE;TIPO=SPIONAGGIO;ASPETTO=ALCHIMISTA;MANDANTE=l'alchimista;LUOGO=ROVINE;VISITE=2;ORE=12;\
+    NEMICO=GARGOYLE;NUMERO=2;MONETE=35;TITOLO=Il laboratorio segreto;\
+    RICHIESTA=Un mio rivale ha un laboratorio segreto fra delle rovine. Voglio sapere cosa sta preparando.;\
+    BATTUTA=Non sarebbe più semplice chiederglielo?;RISPOSTA=Certo. E lui mi direbbe la verità, come no.;\
+    VEGLIA=Dalle rovine esce un fumo verde, e un odore di uova marce.;\
+    SCOPERTA=Il rivale non c'è, ma ha lasciato a guardia del laboratorio due gargoyle. E i gargoyle vi hanno visto.;\
+    VITTORIA=Sul tavolo del laboratorio c'è una ricetta: un tonico per far ricrescere i capelli.;\
+    RINGRAZIAMENTO=Un tonico per i capelli? Tutto qui? Beh, me lo segno. Per un amico.;\
+    RICORDO=Fra queste rovine c'era il laboratorio segreto di un alchimista.
+
+# ---------------------------------------------------------------------------------------------
+# Soccorsi (vedi IlSoccorso e SoccorsoRichiesto)
+# ---------------------------------------------------------------------------------------------
+#
+# Una riga per soccorso, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
+#   CHIAVE=, TIPO= (SOCCORSO, SALVATAGGIO), ASPETTO=, MANDANTE=, NEMICO=, NUMERO=, CAPO=, LUOGO=, MONETE=, TITOLO=,
+#               RICHIESTA=, BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=, RICORDO=  come per gli incarichi di combattimento;
+#               dov'è e quanto pagano lo aggiunge la missione;
+#   PERSONA=    chi va riportato a casa, con l'articolo, maschile (il taglialegna): il nome lo pesca la missione da
+#               NOME_OSTAGGIO;
+#   SOCCORSO=   che cosa si scrive quando, sconfitti i nemici, si unisce al gruppo (la missione aggiunge di
+#               riportarlo vivo in città);
+#   LUTTO=      l'ultima battuta del mandante, se è morto per strada.
+# Nei testi %NOME% è il nome di chi va riportato a casa, %CAPO% quello del capo. Nei testi non si usa il ";".
+
+SOCCORSO
+    CHIAVE=TAGLIALEGNA_E_ARPIE;TIPO=SOCCORSO;ASPETTO=QUALUNQUE;MANDANTE=la moglie del taglialegna;PERSONA=il taglialegna;\
+    NEMICO=ARPIA;NUMERO=3;LUOGO=BOSCO;MONETE=35;TITOLO=Il taglialegna nel bosco;\
+    RICHIESTA=Mio marito %NOME% è andato a far legna in un bosco e non è tornato. Un cacciatore l'ha visto su un albero, con una gamba rotta e tre arpie che gli girano intorno.;\
+    BATTUTA=Su un albero? Con una gamba rotta?;RISPOSTA=Le arpie fanno salire sugli alberi chiunque. Anche con due gambe rotte.;\
+    SOCCORSO=%NOME% scende dall'albero, e si appoggia all'ascia per camminare.;\
+    RINGRAZIAMENTO=%NOME%! La prossima volta la legna la compriamo al mercato.;\
+    LUTTO=Gli avevo detto di comprarla al mercato, la legna.;\
+    RICORDO=In questo bosco le arpie tenevano un taglialegna su un albero.
+    CHIAVE=MINATORE_E_TROLL;TIPO=SOCCORSO;ASPETTO=ARMAIOLO;MANDANTE=l'armaiolo;PERSONA=il minatore;NEMICO=TROLL;NUMERO=1;\
+    CAPO=SI;LUOGO=GROTTA;MONETE=40;TITOLO=Il minatore intrappolato;\
+    RICHIESTA=Il mio minatore, %NOME%, è rimasto bloccato in fondo a una grotta. All'ingresso si è sistemato un troll, un certo %CAPO%, e non lo lascia uscire.;\
+    BATTUTA=E cosa mangia, là in fondo?;RISPOSTA=Funghi, spero. E spero che il troll non abbia ancora pensato a mangiare lui.;\
+    SOCCORSO=%NOME% esce dal fondo della grotta, pallido e affamato, ma intero.;\
+    RINGRAZIAMENTO=%NOME% è salvo, e la miniera è libera! Domani si torna a scavare.;\
+    LUTTO=Era il mio miglior minatore. E anche l'unico.;\
+    RICORDO=In questa grotta il troll %CAPO% teneva prigioniero un minatore.
+    CHIAVE=CACCIATORE_NELLA_PALUDE;TIPO=SOCCORSO;ASPETTO=LOCANDIERE;MANDANTE=il locandiere;PERSONA=il cacciatore;\
+    NEMICO=VIVERNA;NUMERO=1;LUOGO=PALUDE;MONETE=40;TITOLO=Il cacciatore cacciato;\
+    RICHIESTA=%NOME%, il cacciatore che mi porta la selvaggina, è andato in una palude a cacciare una viverna. Adesso è la viverna che caccia lui.;\
+    BATTUTA=E dove si è nascosto?;RISPOSTA=Sotto il fango, credo. Ha sempre detto che il fango è il miglior travestimento.;\
+    SOCCORSO=%NOME% esce dal fango, che gli è entrato dappertutto. Ha una brutta ferita a un braccio.;\
+    RINGRAZIAMENTO=%NOME%, fatti un bagno, prima di sederti ai miei tavoli. Anzi, fatti due bagni.;\
+    LUTTO=E adesso chi mi porta la selvaggina?;\
+    RICORDO=In questa palude una viverna dava la caccia a un cacciatore.
+    CHIAVE=APPRENDISTA_E_GARGOYLE;TIPO=SALVATAGGIO;ASPETTO=ALCHIMISTA;MANDANTE=l'alchimista;PERSONA=il suo apprendista;\
+    NEMICO=GARGOYLE;NUMERO=2;LUOGO=ROVINE;MONETE=40;TITOLO=L'apprendista imprigionato;\
+    RICHIESTA=Il mio apprendista, %NOME%, è andato a cercare erbe fra delle rovine. Due gargoyle l'hanno chiuso in una vecchia cella e fanno la guardia.;\
+    BATTUTA=Perché i gargoyle imprigionano la gente?;RISPOSTA=Si annoiano. Stare fermi sui tetti per secoli non è divertente.;\
+    SOCCORSO=%NOME% esce dalla cella, con le gambe che tremano per i giorni passati al buio.;\
+    RINGRAZIAMENTO=%NOME%! Spero che tu abbia almeno trovato le erbe.;\
+    LUTTO=Era un buon apprendista. Un po' distratto, ma buono.;\
+    RICORDO=Fra queste rovine due gargoyle tenevano prigioniero un apprendista.
+    CHIAVE=PASTORE_E_HOBGOBLIN;TIPO=SOCCORSO;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;PERSONA=il pastore;\
+    NEMICO=HOBGOBLIN;NUMERO=3;CAPO=SI;LUOGO=RADURA;MONETE=35;TITOLO=Il pastore della radura;\
+    RICHIESTA=Gli hobgoblin di %CAPO% hanno attaccato il gregge di %NOME% in una radura. Le pecore sono scappate, lui è ferito e non riesce a muoversi.;\
+    BATTUTA=E le pecore?;RISPOSTA=Le pecore tornano da sole. I pastori, di solito, no.;\
+    SOCCORSO=%NOME% si rialza a fatica, appoggiandosi al bastone.;\
+    RINGRAZIAMENTO=%NOME% è salvo. E guardate un po': sono tornate anche le pecore.;\
+    LUTTO=Lo dirò io alla sua famiglia. È il mio lavoro.;\
+    RICORDO=In questa radura gli hobgoblin di %CAPO% attaccarono un pastore.

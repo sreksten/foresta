@@ -749,3 +749,63 @@ Quando la leggenda racconta un altro pezzo di un set già cominciato, il narrato
 lo dice prima della leggenda (`PescaLeggendaria.battutaDelSet`): "Vi interessa il
 Corredo di RomyJona? Allora ascoltate: questo è un altro dei suoi pezzi, e ne
 mancano ancora due." (oppure "ed è l'ultimo che manca.").
+
+### Gli incarichi di combattimento (2026-10-03)
+
+`IncaricoDiCombattimento` è un incarico in città, ripetibile, scritto quasi tutto
+nella grammatica: in `missioni.txt`, alla produzione `INCARICO_DI_COMBATTIMENTO`,
+c'è una riga per incarico con campi `CHIAVE=valore` separati da ";" (il formato è
+in testa alla sezione), letta da `CombattimentoRichiesto` con
+`CampiDiGrammatica`, che rifiuta i campi sconosciuti, ripetuti o mancanti.
+Ogni riga dice chi chiede e chi compare nella scena (`ASPETTO`: capitano,
+armaiolo, alchimista, locandiere o qualunque), chi va sconfitto e quanti, se uno
+di loro è un capo con un nome (`CAPO=SI`, nei testi `%CAPO%`), dove si nascondono
+(grotta, rovine, bosco, palude o radura), quanto si paga e i testi.
+
+- COVO: all'accettazione la missione rivendica un posto della classe giusta, lo
+  segna sulla mappa e ci mette i nemici (`combatti`). CACCIA: sconfitti tutti, si
+  torna a riscuotere.
+- `TestiDeiLuoghi` dà i nomi dei luoghi per i testi ("una grotta", "fra delle
+  rovine", il nome del tempio); lo usa anche `LOggettoSmarrito`.
+- Per un nuovo incarico di questo tipo basta una riga nella grammatica.
+
+Copre VENDETTA, COMBATTIMENTO_BESTIA, PULIZIA_DEI_DUNGEON, SCHERMAGLIA,
+IMBOSCATA e PROTEZIONE_TEMPORALE. Test: `ScenarioIncaricoDiCombattimentoTest`.
+
+### Le sorveglianze (2026-10-03)
+
+`LaSorveglianza` è un incarico in città, ripetibile, come gli incarichi di
+combattimento: le righe stanno in `missioni.txt` alla produzione `SORVEGLIANZA`,
+lette da `SorveglianzaRichiesta`. Il posto (grotta, rovine, bosco, palude o
+radura) si segna sulla mappa; il gruppo ci deve passare `VISITE` volte, con
+almeno `ORE` ore fra una visita e l'altra (`sorveglia`). A ogni visita che conta,
+tranne l'ultima, si scrive la veglia e quante ne mancano; le visite troppo
+ravvicinate non contano. All'ultima si scrive la scoperta; se la riga ha dei
+nemici (`NEMICO`, `NUMERO`, `CAPO`, `VITTORIA`) saltano fuori lì, già in quella
+visita (AGGUATO), e vanno sconfitti prima di tornare a riscuotere.
+
+Copre VIGILIA, SORVEGLIANZA e SPIONAGGIO. Test: `ScenarioSorveglianzaTest`.
+
+### Il contrabbandiere (2026-10-03)
+
+`IlContrabbandiere` è un `IlCorriere` che pesca le spedizioni da `CONTRABBANDO`
+(gli stessi dieci campi di `TRASPORTO`) e le porta di nascosto: se durante il
+viaggio il gruppo combatte (`haCombattutoNelPassoCorrente`), la voce si sparge e
+la missione fallisce. Nella scena dell'incarico il mittente lo dice. Attenzione:
+un contrabbandiere è anche un corriere, quindi per distinguerli si guarda la
+classe esatta.
+
+Copre CONTRABBANDO e TRAFFICO. Test: `ScenarioCorriereTest`.
+
+### Il soccorso (2026-10-03)
+
+Lo scheletro del rapimento (il posto con i nemici, la persona che si unisce al
+gruppo come ospite vulnerabile, il viaggio di ritorno, la scena triste se muore)
+sta in `LaLiberazione`; `IlRapimento` ne dà i testi, che non sono cambiati.
+`IlSoccorso` prende tutto dalla grammatica: `SOCCORSO` in `missioni.txt`, letta da
+`SoccorsoRichiesto`, con chi chiede, chi va riportato a casa (`PERSONA`, con il
+nome pescato da `NOME_OSTAGGIO`, nei testi `%NOME%`), i nemici e dove stanno.
+
+Copre SOCCORSO e, con l'apprendista prigioniero dei gargoyle, anche SALVATAGGIO.
+ASILO resta fuori: il rifugiato va accompagnato altrove, non riportato in città.
+Test: `ScenarioSoccorsoTest`.
