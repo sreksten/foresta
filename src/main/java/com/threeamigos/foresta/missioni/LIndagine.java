@@ -65,6 +65,9 @@ public class LIndagine extends IncaricoInCitta {
 	public IncontroDiMissione getNemici() {
 		IndagineRichiesta indagine = getIndagine();
 		IncontroDiMissione nemici = IncontroDiMissione.di(indagine.getNemico(), indagine.getNumero());
+		if (indagine.isFinoAllaResa()) {
+			nemici.finoAllaResa();
+		}
 		return indagine.isConCapo() ? nemici.conCapo(getCapo()) : nemici;
 	}
 

@@ -3,6 +3,7 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoCreazionePersonaggio;
 import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
+import com.threeamigos.foresta.eventi.interni.InternoPersonaggioArreso;
 import com.threeamigos.foresta.eventi.interni.InternoRisultatoValutazionePersonaggioAttaccante;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
@@ -55,6 +56,18 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * Quantità massima per locazione
 	 */
 	private int quantitaMassima = 1;
+	/**
+	 * Fuori dal combattimento di questa locazione (vedi Personaggio.isInPanchina): non si salva.
+	 */
+	private boolean inPanchina;
+	/**
+	 * Combatte fino alla resa (vedi Personaggio.isFinoAllaResa): non si salva.
+	 */
+	private boolean finoAllaResa;
+	/**
+	 * Sfida a duello (vedi Personaggio.isSfidante): non si salva.
+	 */
+	private boolean sfidante;
 
 	public PersonaggioBase(ClassePersonaggio classe, int livello) {
 		md.setClasse(classe);
@@ -189,6 +202,56 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	public boolean isVivo() {
 		return md.isVivo();
+	}
+
+	@Override
+	public boolean isInPanchina() {
+		return inPanchina;
+	}
+
+	@Override
+	public void setInPanchina(boolean inPanchina) {
+		this.inPanchina = inPanchina;
+	}
+
+	@Override
+	public boolean isFinoAllaResa() {
+		return finoAllaResa;
+	}
+
+	@Override
+	public void setFinoAllaResa(boolean finoAllaResa) {
+		this.finoAllaResa = finoAllaResa;
+	}
+
+	@Override
+	public boolean isSfidante() {
+		return sfidante;
+	}
+
+	@Override
+	public void setSfidante(boolean sfidante) {
+		this.sfidante = sfidante;
+	}
+
+	/**
+	 * Se questo personaggio, invece di morire, si arrende: combatte lui fino alla resa, o è del gruppo e combatte
+	 * contro chi combatte fino alla resa.
+	 */
+	private boolean siArrende() {
+		return finoAllaResa || GruppoGiocatore.getIstanza().contiene(this) && GruppoAvversario.getIstanza().isFinoAllaResa();
+	}
+
+	/**
+	 * Si arrende: resta con un punto ferita, va in panchina e lo dice.
+	 */
+	private void arrenditi() {
+		md.set(TipoAttributo.SALUTE, 1);
+		inPanchina = true;
+		String nome = getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, OpzioniGetNome.INIZIALE_MAIUSCOLA);
+		BusEventi.pubblica(new NotificaTestoFrase(nome + (GruppoGiocatore.getIstanza().contiene(this)
+				? " ammette la sconfitta e si fa da parte." : " abbassa le armi e si arrende.")));
+		BusEventi.pubblica(new InternoPersonaggioArreso(this));
 	}
 
 	public void muore(String causaTrapasso) {
@@ -360,6 +423,10 @@ public abstract class PersonaggioBase implements Personaggio {
 			return;
 		}
 		List<Personaggio> personaggiPossibili = gruppoBersaglio.getPersonaggiVivi();
+		if (personaggiPossibili.isEmpty()) {
+			// Sono tutti in panchina (si sono arresi): non c'è più nessuno da attaccare
+			return;
+		}
 		Personaggio bersaglio = null;
 		for (Personaggio personaggio : personaggiPossibili) {
 			if (personaggio.getClasse() == ClassePersonaggio.MAGA || personaggio.getClasse() == ClassePersonaggio.MAGO) {
@@ -919,6 +986,11 @@ public abstract class PersonaggioBase implements Personaggio {
 
 		double saluteOriginale = md.get(TipoAttributo.SALUTE);
 		double salute = saluteOriginale - quantita;
+		if (salute <= 0 && !isImmortale() && siArrende()) {
+			arrenditi();
+			BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE, saluteOriginale, 1));
+			return;
+		}
 		if (salute <= 0) {
 			salute = 0;
 			if (!isImmortale()) {

@@ -3,6 +3,7 @@ package com.threeamigos.foresta.locazioni;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
 import com.threeamigos.foresta.incantesimi.*;
 import com.threeamigos.foresta.interfacce.Arma;
@@ -20,8 +21,11 @@ import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 /**
  * La locazione è un automa a stati finiti. Un gruppo mentre si sposta per
@@ -70,6 +74,10 @@ public abstract class LocazioneBase implements Locazione {
 	private Offerta offerta;
 
 	private StatoLocazione statoLocazione;
+	/**
+	 * Gli avversari di cui si è già contata la sconfitta: chi si arrende resta vivo, e non va contato due volte.
+	 */
+	private final Set<Personaggio> avversariSconfitti = Collections.newSetFromMap(new IdentityHashMap<>());
 
 	// Chi sta combattendo
 	private Personaggio combattente;
@@ -93,7 +101,8 @@ public abstract class LocazioneBase implements Locazione {
 		CHI_CORROMPE,
 		CHI_FA_AMICIZIA,
 		ACCETTA_OFFERTA,
-		CONFERMA_FUGA
+		CONFERMA_FUGA,
+		CHI_DUELLA
 	}
 
 	/**
@@ -235,6 +244,39 @@ public abstract class LocazioneBase implements Locazione {
 	 */
 	@Override
 	public Stato impostaAzioni(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario, Comando azione) {
+		Stato stato = impostaAzioniImpl(gruppo, gruppoAvversario, azione);
+		if (stato != Stato.GIOCO_PERSO && stato != Stato.FINE_LOCAZIONE && isDuelloPerso()) {
+			return perdiIlDuello();
+		}
+		return stato;
+	}
+
+	/**
+	 * In un combattimento fino alla resa, i personaggi del gruppo si sono arresi tutti: sono vivi, ma in panchina; o,
+	 * in un duello, chi lo combatteva si è arreso o è morto, e gli altri sono in panchina.
+	 */
+	private boolean isDuelloPerso() {
+		return (gruppoAvversario.isFinoAllaResa() || gruppoAvversario.isDuello()) && gruppo.getCapo().isVivo()
+				&& gruppo.getPersonaggiVivi().isEmpty() && !gruppoAvversario.getPersonaggiVivi().isEmpty();
+	}
+
+	/**
+	 * Il duello perso: il gruppo se ne va, come da una fuga ma senza danni, e la locazione non è completa; chi l'ha
+	 * vinto resta lì ad aspettare la rivincita (la missione che l'ha messo lì è ancora a quel passo).
+	 */
+	private Stato perdiIlDuello() {
+		BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
+		Personaggio vincitore = gruppoAvversario.getPersonaggioVivo();
+		BusEventi.pubblica(new NotificaTestoParagrafo(vincitore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " ha vinto, e vi lascia andare. Vi aspetta qui per la rivincita, quando sarete in forze."));
+		combattente = null;
+		statoLocazione = StatoLocazione.IN_LOCAZIONE;
+		setCompleta(false);
+		setOggetto(null);
+		return Stato.FINE_LOCAZIONE;
+	}
+
+	private Stato impostaAzioniImpl(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario, Comando azione) {
         Stato possibileStato;
         switch (statoLocazione) {
 			case NUOVA_LOCAZIONE:
@@ -273,6 +315,13 @@ public abstract class LocazioneBase implements Locazione {
 					return annullaScelta();
 				}
 				gestisciChiCombatte(azione);
+				break;
+
+			case CHI_DUELLA:
+				if (azione == Comando.ANNULLA) {
+					return rifiutaIlDuello();
+				}
+				gestisciChiDuella(azione);
 				break;
 
 			case CHI_BEVE_POZIONE_SALUTE:
@@ -835,7 +884,7 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		// Chi ha appena agito può essere morto (es. un Morte che gli si è ritorto contro): allora il mostro
 		// sceglie fra i vivi del gruppo
-		if (personaggioBersaglio == null || !personaggioBersaglio.isVivo()) {
+		if (personaggioBersaglio == null || personaggioBersaglio.isFuoriCombattimento()) {
 			avversarioAttaccante.attacca(gruppo);
 		} else {
 			avversarioAttaccante.attacca(personaggioBersaglio);
@@ -918,6 +967,15 @@ public abstract class LocazioneBase implements Locazione {
 					}
 				}
 			}
+			if (gruppoAvversario.isDuello()) {
+				// Una sfida a duello: prima si sceglie chi la accetta, o la si rifiuta
+				opzioneAmiciziaDisponibile = false;
+				opzioneCorruzioneDisponibile = false;
+				BusEventi.pubblica(new NotificaTestoFrase(nomeDelloSfidante() + (gruppo.getNumeroPersonaggiVivi() > 1
+						? " sfida a duello uno di voi: chi accetta la sfida?" : " vi sfida a duello.")));
+				statoLocazione = StatoLocazione.CHI_DUELLA;
+				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
+			}
 		}
 		statoLocazione = StatoLocazione.IN_LOCAZIONE;
 		return null;
@@ -949,11 +1007,12 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
-	 * Un avversario morto conta nelle statistiche e da' i punti esperienza al gruppo: per mano di un personaggio
-	 * del gruppo (vedi registraUccisione) o per veleno, sanguinamento e gli altri effetti di stato.
+	 * Un avversario morto o arreso conta nelle statistiche e da' i punti esperienza al gruppo, una volta sola: per
+	 * mano di un personaggio del gruppo (vedi registraUccisione) o per veleno, sanguinamento e gli altri effetti di
+	 * stato.
 	 */
 	private void registraMorteAvversario(Personaggio vittima) {
-		if (!vittima.isVivo() && !gruppo.contiene(vittima)) {
+		if (vittima.isFuoriCombattimento() && !gruppo.contiene(vittima) && avversariSconfitti.add(vittima)) {
 			BusEventi.pubblica(new InternoAvversarioSconfitto(vittima.getClasse()));
 			Statistiche.addPunti(vittima.getSaluteMassima());
 			gruppo.addPuntiEsperienza(vittima.getPuntiEsperienza());
@@ -995,7 +1054,7 @@ public abstract class LocazioneBase implements Locazione {
 		if (dopoGliEffetti != null) {
 			return dopoGliEffetti;
 		}
-		if (!combattente.isVivo()) {
+		if (combattente.isFuoriCombattimento()) {
 			statoLocazione = StatoLocazione.IN_LOCAZIONE;
 			return Stato.IN_LOCAZIONE;
 		}
@@ -1026,7 +1085,7 @@ public abstract class LocazioneBase implements Locazione {
 			if (colpisce) {
 				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(combattente, bersaglio, arma, fase.getFattore());
 				bersaglio.applicaRisultatoCombattimento(risultato);
-				if (!bersaglio.isVivo()) {
+				if (bersaglio.isFuoriCombattimento()) {
 					registraUccisione(combattente, bersaglio);
 					Personaggio nuovoBersaglio = gruppoAvversario.getPersonaggioVivo();
 					if (nuovoBersaglio != null) {
@@ -1046,7 +1105,7 @@ public abstract class LocazioneBase implements Locazione {
 			if (colpisce) {
 				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(bersaglio, combattente, arma, fase.getFattore());
 				combattente.applicaRisultatoCombattimento(risultato);
-				if (!combattente.isVivo()) {
+				if (combattente.isFuoriCombattimento()) {
 					if (gruppo.getCapo().isVivo()) {
 						statoLocazione = StatoLocazione.IN_LOCAZIONE;
 						return Optional.of(Stato.IN_LOCAZIONE);
@@ -1117,7 +1176,7 @@ public abstract class LocazioneBase implements Locazione {
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
-				gruppo.consumaPozioneSalute(gruppo.getCapo());
+				gruppo.consumaPozioneSalute(gruppo.getPersonaggiVivi().get(0));
 				return Stato.IN_COMBATTIMENTO;
 			}
 		}
@@ -1128,7 +1187,7 @@ public abstract class LocazioneBase implements Locazione {
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_SALUTE_GRANDE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
-				gruppo.consumaPozioneSaluteGrande(gruppo.getCapo());
+				gruppo.consumaPozioneSaluteGrande(gruppo.getPersonaggiVivi().get(0));
 				return Stato.IN_COMBATTIMENTO;
 			}
 		}
@@ -1139,7 +1198,7 @@ public abstract class LocazioneBase implements Locazione {
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
-				gruppo.consumaPozioneMagia(gruppo.getCapo());
+				gruppo.consumaPozioneMagia(gruppo.getPersonaggiVivi().get(0));
 				return Stato.IN_COMBATTIMENTO;
 			}
 		}
@@ -1150,7 +1209,7 @@ public abstract class LocazioneBase implements Locazione {
 				statoLocazione = StatoLocazione.CHI_BEVE_POZIONE_MAGIA_GRANDE;
 				return Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
 			} else {
-				gruppo.consumaPozioneMagiaGrande(gruppo.getCapo());
+				gruppo.consumaPozioneMagiaGrande(gruppo.getPersonaggiVivi().get(0));
 				return Stato.IN_COMBATTIMENTO;
 			}
 		}
@@ -1279,6 +1338,39 @@ public abstract class LocazioneBase implements Locazione {
 			impostaComandiPossibili();
 		}
 		return esito;
+	}
+
+	private String nomeDelloSfidante() {
+		return gruppoAvversario.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+	}
+
+	/**
+	 * Chi accetta la sfida a duello resta in campo, gli altri vanno in panchina.
+	 */
+	private void gestisciChiDuella(Comando azione) {
+		Personaggio duellante = gruppo.getPersonaggio(azione);
+		boolean altri = false;
+		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
+			if (personaggio != duellante) {
+				personaggio.setInPanchina(true);
+				altri = true;
+			}
+		}
+		BusEventi.pubblica(new NotificaTestoFrase(duellante.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " accetta la sfida" + (altri ? ": gli altri si fanno da parte." : ".")));
+		statoLocazione = StatoLocazione.IN_LOCAZIONE;
+	}
+
+	/**
+	 * La sfida rifiutata: il gruppo se ne va senza combattere, e lo sfidante resta lì ad aspettarlo.
+	 */
+	private Stato rifiutaIlDuello() {
+		BusEventi.pubblica(new NotificaTestoFrase("Rifiutate la sfida. " + nomeDelloSfidante() + " vi aspetta qui, se cambiate idea."));
+		statoLocazione = StatoLocazione.IN_LOCAZIONE;
+		setCompleta(false);
+		setOggetto(null);
+		return Stato.FINE_LOCAZIONE;
 	}
 
 	private void gestisciChiCombatte(Comando azione) {

@@ -917,6 +917,41 @@ dell'avviso e il tempio nuovo custodisce il leggendario, segnato sulla mappa; a
 Malgaard un leggendario diverso in un altro tempio, e raccoglierlo completa la
 missione e lascia il ricordo.
 
+## Registro dei personaggi incontrati (idea, da riprendere)
+
+Oggi un avversario esiste solo per la locazione in cui combatte; dei personaggi
+con un nome resta traccia solo nei parametri della missione che li ha creati.
+Con la resa (vedi passi_missioni.md, "Combattimenti fino alla resa e panchina")
+uno sfidante sconfitto può restare vivo: vale la pena ricordarselo e riusarlo.
+
+**Il registro.** Un `RegistroPersonaggi`, salvato con la partita, con i
+personaggi con un nome che il gruppo ha incontrato: nome, classe, livello, dove
+e in che missione li ha incontrati, come è finita (arreso, ha vinto lui,
+morto), e che rapporto hanno con il gruppo (nemico, rivale, debitore).
+
+- **Missioni che li riprendono.** Una missione nuova può chiedere al registro un
+  personaggio adatto invece di pescarne uno nuovo dalla grammatica. Esempio: un
+  LADRO che in città ha cercato di borseggiare il gruppo e ha perso il duello
+  si ritrova più avanti come bersaglio di una VENDETTA, o come quello da tenere
+  d'occhio in una SORVEGLIANZA.
+- **Aiuti.** Un campione (GUERRIERO, GUERRIERA) sconfitto lealmente in un duello
+  può tornare utile: in un'altra missione, o quando il gruppo è in estrema
+  difficoltà in un combattimento, si aggiunge temporaneamente a chi combatte
+  (come i personaggi a tempo), e alla fine saluta e se ne va, con un intermezzo.
+- **Incontri casuali.** Anche solo per salutarsi, o per una battuta, entrando in
+  una locanda o per strada.
+- **Morti.** Chi muore (il LADRO della VENDETTA che soccombe) va tolto dal
+  registro, o segnato come morto: non è più riusabile.
+- **Nomi unici.** Non devono esistere due "Matilde l'Intrepida". Le produzioni
+  dei nomi dei campioni (`NOME_CAMPIONE`, `NOME_CAMPIONESSA`, e forse anche
+  `NOME_BRIGANTE`, `NOME_MAGO`) vanno rese one-shot almeno per il nome, come i
+  leggendari (vedi `GrammarBean.canProduce`): pescato un nome, non si ripesca.
+  Quando i nomi finiscono, le missioni che li usano (i duelli) non si offrono
+  più, oppure riprendono un personaggio già nel registro. Il controllo va fatto
+  contro il registro, come le leggende fanno con i leggendari già raccontati,
+  perché la grammatica non si salva.
+
+
 ## Verifica
 
 - `mvn -o compile -q` (workaround offline già in uso in questo progetto) per

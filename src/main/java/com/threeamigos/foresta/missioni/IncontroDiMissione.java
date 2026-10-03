@@ -25,6 +25,8 @@ public final class IncontroDiMissione {
 	private String nomeDelCapo;
 	// La classe del capo se non è uno della banda, altrimenti null
 	private ClassePersonaggio classeDelCapo;
+	private boolean finoAllaResa;
+	private boolean aDuello;
 
 	private IncontroDiMissione(ClassePersonaggio classe, int numero) {
 		if (numero < 1) {
@@ -44,6 +46,35 @@ public final class IncontroDiMissione {
 	public IncontroDiMissione conCapo(String nome) {
 		this.nomeDelCapo = Objects.requireNonNull(nome);
 		return this;
+	}
+
+	/**
+	 * Gli avversari combattono fino alla resa e non all'ultimo sangue (vedi Personaggio.isFinoAllaResa): sconfitti,
+	 * si arrendono; e se si arrende tutto il gruppo, il gruppo se ne va e torna per la rivincita.
+	 */
+	public IncontroDiMissione finoAllaResa() {
+		this.finoAllaResa = true;
+		return this;
+	}
+
+	public boolean isFinoAllaResa() {
+		return finoAllaResa;
+	}
+
+	/**
+	 * L'avversario sfida a duello: uno contro uno, gli altri del gruppo in panchina (vedi Personaggio.isSfidante).
+	 * Solo per un avversario solo.
+	 */
+	public IncontroDiMissione aDuello() {
+		if (numero != 1 || classeDelCapo != null) {
+			throw new IllegalStateException("A duello si sfida da soli");
+		}
+		this.aDuello = true;
+		return this;
+	}
+
+	public boolean isADuello() {
+		return aDuello;
 	}
 
 	/**
@@ -89,12 +120,15 @@ public final class IncontroDiMissione {
 				avversario.getModelloDati().setNome(nomeDelCapo);
 			}
 			avversario.setOrdinale(i + 1);
+			avversario.setFinoAllaResa(finoAllaResa);
+			avversario.setSfidante(aDuello);
 			avversari.add(avversario);
 		}
 		if (classeDelCapo != null) {
 			Personaggio capo = classeDelCapo.getIstanza(livello + 1);
 			capo.getModelloDati().setNome(nomeDelCapo);
 			capo.setOrdinale(1);
+			capo.setFinoAllaResa(finoAllaResa);
 			avversari.add(capo);
 		}
 		return avversari;

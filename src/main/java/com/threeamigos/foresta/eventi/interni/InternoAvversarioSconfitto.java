@@ -5,8 +5,8 @@ import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
 /**
- * Un avversario del gruppo è morto: per mano di un personaggio del gruppo o per gli
- * effetti di stato. Chi tiene il conto delle uccisioni (statistiche, trofei) si iscrive qui.
+ * Un avversario del gruppo è morto, per mano di un personaggio del gruppo o per gli effetti di stato, o si è arreso
+ * (vedi InternoPersonaggioArreso). Chi tiene il conto delle uccisioni (statistiche, trofei) si iscrive qui.
  */
 public class InternoAvversarioSconfitto extends EventoBase {
 

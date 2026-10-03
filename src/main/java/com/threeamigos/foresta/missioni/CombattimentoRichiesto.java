@@ -28,6 +28,8 @@ public final class CombattimentoRichiesto {
 	private final ClassePersonaggio nemico;
 	private final int numero;
 	private final CapoDellaRiga capo;
+	private final boolean finoAllaResa;
+	private final boolean aDuello;
 	private final ClassiLocazione luogo;
 	private final int monete;
 	private final String titolo;
@@ -41,7 +43,7 @@ public final class CombattimentoRichiesto {
 	private CombattimentoRichiesto(String riga) {
 		this.riga = riga;
 		CampiDiGrammatica campi = CampiDiGrammatica.da(riga, "CHIAVE", "TIPO", "ASPETTO", "MANDANTE", "NEMICO", "NUMERO",
-				"CAPO", "LUOGO", "MONETE", "TITOLO", "RICHIESTA", "BATTUTA", "RISPOSTA", "VITTORIA", "RINGRAZIAMENTO", "RICORDO");
+				"CAPO", "RESA", "DUELLO", "LUOGO", "MONETE", "TITOLO", "RICHIESTA", "BATTUTA", "RISPOSTA", "VITTORIA", "RINGRAZIAMENTO", "RICORDO");
 		chiave = campi.obbligatorio("CHIAVE");
 		tipo = campi.enumerato("TIPO", TipoMissione.class);
 		aspetto = campi.enumerato("ASPETTO", AspettoDelMandante.class);
@@ -49,6 +51,8 @@ public final class CombattimentoRichiesto {
 		nemico = campi.enumerato("NEMICO", ClassePersonaggio.class);
 		numero = campi.intero("NUMERO");
 		capo = CapoDellaRiga.da(campi.facoltativo("CAPO"));
+		finoAllaResa = campi.facoltativo("RESA").map("SI"::equals).orElse(false);
+		aDuello = campi.facoltativo("DUELLO").map("SI"::equals).orElse(false);
 		luogo = campi.enumerato("LUOGO", ClassiLocazione.class);
 		if (!LUOGHI.contains(luogo)) {
 			throw new IllegalArgumentException("Il luogo è fra " + LUOGHI + ": " + riga);
@@ -56,6 +60,9 @@ public final class CombattimentoRichiesto {
 		monete = campi.intero("MONETE");
 		if (numero < 1 || monete < 1) {
 			throw new IllegalArgumentException("Numero e monete sono almeno 1: " + riga);
+		}
+		if (aDuello && numero != 1) {
+			throw new IllegalArgumentException("A duello si sfida da soli: NUMERO=1 con DUELLO=SI: " + riga);
 		}
 		titolo = campi.obbligatorio("TITOLO");
 		richiesta = campi.obbligatorio("RICHIESTA");
@@ -158,5 +165,20 @@ public final class CombattimentoRichiesto {
 	 */
 	public String getRicordo() {
 		return ricordo;
+	}
+
+	/**
+	 * Se si combatte fino alla resa e non all'ultimo sangue (RESA=SI): vedi IncontroDiMissione.finoAllaResa.
+	 */
+	public boolean isFinoAllaResa() {
+		return finoAllaResa;
+	}
+
+
+	/**
+	 * Se il nemico sfida a duello, uno contro uno (DUELLO=SI): vedi IncontroDiMissione.aDuello.
+	 */
+	public boolean isADuello() {
+		return aDuello;
 	}
 }

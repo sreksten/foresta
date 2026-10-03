@@ -31,7 +31,7 @@ public class GruppoAvversario extends Gruppo {
 
 	public Personaggio getPersonaggioVivo() {
 		for (Personaggio personaggio : personaggi) {
-			if (personaggio.isVivo()) {
+			if (!personaggio.isFuoriCombattimento()) {
 				return personaggio;
 			}
 		}

@@ -115,6 +115,32 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
 	 */
     boolean isVivo();
 	/**
+	 * Se il personaggio è in panchina: vivo, ma fuori dal combattimento di questa locazione (perché si è arreso, o
+	 * perché in un duello combatte un altro). Chi è in panchina non conta fra i vivi del suo gruppo (vedi
+	 * Gruppo.getPersonaggiVivi). La panchina si svuota a ogni nuova locazione.
+	 */
+    boolean isInPanchina();
+    void setInPanchina(boolean inPanchina);
+	/**
+	 * Se il personaggio non può combattere: è morto o in panchina.
+	 */
+    default boolean isFuoriCombattimento() {
+        return !isVivo() || isInPanchina();
+    }
+	/**
+	 * Se il personaggio combatte fino alla resa e non all'ultimo sangue (uno sfidante in un duello): quando i suoi
+	 * punti ferita finirebbero si arrende e va in panchina, invece di morire. Contro di lui si arrendono anche i
+	 * personaggi del gruppo.
+	 */
+    boolean isFinoAllaResa();
+    void setFinoAllaResa(boolean finoAllaResa);
+	/**
+	 * Se il personaggio sfida a duello: si combatte uno contro uno, e chi del gruppo non lo affronta va in
+	 * panchina (vedi LocazioneBase).
+	 */
+    boolean isSfidante();
+    void setSfidante(boolean sfidante);
+	/**
 	 * Il personaggio muore a causa di qualcosa
 	 */
     void muore(String causaTrapasso);

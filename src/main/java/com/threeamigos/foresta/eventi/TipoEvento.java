@@ -300,6 +300,10 @@ public enum TipoEvento {
      */
     INTERNO_AVVERSARIO_SCONFITTO,
     /**
+     * Un personaggio si è arreso invece di morire, in un combattimento fino alla resa
+     */
+    INTERNO_PERSONAGGIO_ARRESO,
+    /**
      * Un salvataggio è stato riletto con successo: porta gli ultimi messaggi da ripristinare nel pannello di testo
      */
     INTERNO_CARICAMENTO_COMPLETATO,

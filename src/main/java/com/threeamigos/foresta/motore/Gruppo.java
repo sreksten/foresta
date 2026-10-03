@@ -44,8 +44,8 @@ public abstract class Gruppo {
 			ultimoIndiceSelezionato = (ultimoIndiceSelezionato + 1) % dimensioneLista;
 			Personaggio candidato = personaggi.get(ultimoIndiceSelezionato);
 
-			// Se il personaggio è morto (sconfitto), viene saltato istantaneamente e si passa al prossimo
-			if (!candidato.isVivo()) {
+			// Se il personaggio è morto o in panchina, viene saltato istantaneamente e si passa al prossimo
+			if (candidato.isFuoriCombattimento()) {
 				continue;
 			}
 
@@ -86,8 +86,32 @@ public abstract class Gruppo {
 		return personaggi;
 	}
 	
+	/**
+	 * I personaggi vivi e in campo: chi è in panchina non conta (vedi Personaggio.isInPanchina).
+	 */
 	public final List<Personaggio> getPersonaggiVivi() {
-		return personaggi.stream().filter(Personaggio::isVivo).collect(Collectors.toList());
+		return personaggi.stream().filter(p -> !p.isFuoriCombattimento()).collect(Collectors.toList());
+	}
+
+	/**
+	 * Rimette in campo chi era in panchina: a ogni nuova locazione.
+	 */
+	public final void svuotaPanchina() {
+		personaggi.forEach(p -> p.setInPanchina(false));
+	}
+
+	/**
+	 * Se qualcuno del gruppo sfida a duello (vedi Personaggio.isSfidante).
+	 */
+	public final boolean isDuello() {
+		return personaggi.stream().anyMatch(Personaggio::isSfidante);
+	}
+
+	/**
+	 * Se qualcuno del gruppo combatte fino alla resa (vedi Personaggio.isFinoAllaResa).
+	 */
+	public final boolean isFinoAllaResa() {
+		return personaggi.stream().anyMatch(Personaggio::isFinoAllaResa);
 	}
 
 	public void aggiungiPersonaggio(Personaggio p) {

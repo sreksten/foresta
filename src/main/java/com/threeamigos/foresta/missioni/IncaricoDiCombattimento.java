@@ -53,6 +53,12 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 	public IncontroDiMissione getNemici() {
 		CombattimentoRichiesto incarico = getIncarico();
 		IncontroDiMissione nemici = IncontroDiMissione.di(incarico.getNemico(), incarico.getNumero());
+		if (incarico.isFinoAllaResa()) {
+			nemici.finoAllaResa();
+		}
+		if (incarico.isADuello()) {
+			nemici.aDuello();
+		}
 		return incarico.isConCapo() ? nemici.conCapo(getCapo()) : nemici;
 	}
 

@@ -69,6 +69,7 @@ public final class IndagineRichiesta {
 	private final ClassePersonaggio nemico;
 	private final int numero;
 	private final CapoDellaRiga capo;
+	private final boolean finoAllaResa;
 	private final ClassiLocazione luogo;
 	private final int monete;
 	private final String titolo;
@@ -84,7 +85,7 @@ public final class IndagineRichiesta {
 	private IndagineRichiesta(String riga) {
 		this.riga = riga;
 		CampiDiGrammatica campi = CampiDiGrammatica.da(riga, "CHIAVE", "TIPO", "ASPETTO", "MANDANTE", "INDIZIO_1", "INDIZIO_2",
-				"INDIZIO_3", "DOMANDA", "SOSPETTI", "COLPEVOLE", "NEMICO", "NUMERO", "CAPO", "LUOGO", "MONETE", "TITOLO",
+				"INDIZIO_3", "DOMANDA", "SOSPETTI", "COLPEVOLE", "NEMICO", "NUMERO", "CAPO", "RESA", "LUOGO", "MONETE", "TITOLO",
 				"RICHIESTA", "BATTUTA", "RISPOSTA", "SMASCHERAMENTO", "ERRORE", "VITTORIA", "RINGRAZIAMENTO", "RICORDO");
 		chiave = campi.obbligatorio("CHIAVE");
 		tipo = campi.enumerato("TIPO", TipoMissione.class);
@@ -110,6 +111,7 @@ public final class IndagineRichiesta {
 		nemico = campi.enumerato("NEMICO", ClassePersonaggio.class);
 		numero = campi.intero("NUMERO");
 		capo = CapoDellaRiga.da(campi.facoltativo("CAPO"));
+		finoAllaResa = campi.facoltativo("RESA").map("SI"::equals).orElse(false);
 		luogo = campi.enumerato("LUOGO", ClassiLocazione.class);
 		if (!CombattimentoRichiesto.LUOGHI.contains(luogo)) {
 			throw new IllegalArgumentException("Il luogo è fra " + CombattimentoRichiesto.LUOGHI + ": " + riga);
@@ -276,4 +278,12 @@ public final class IndagineRichiesta {
 	public String getRicordo() {
 		return ricordo;
 	}
+
+	/**
+	 * Se si combatte fino alla resa e non all'ultimo sangue (RESA=SI): vedi IncontroDiMissione.finoAllaResa.
+	 */
+	public boolean isFinoAllaResa() {
+		return finoAllaResa;
+	}
+
 }

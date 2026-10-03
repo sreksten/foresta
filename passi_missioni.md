@@ -850,3 +850,47 @@ rimandano il rito alla prossima volta che si torna lì
 
 Copre RITUALE, SIGILLO, BENEDIZIONE, SPEZZATURA, PURIFICAZIONE, POSSESSIONE,
 COMUNICAZIONE ed EVOCAZIONE. Test: `ScenarioRitualeTest`.
+
+### Combattimenti fino alla resa e panchina (2026-10-03)
+
+Non tutti i combattimenti sono all'ultimo sangue. Un incontro di missione può
+essere `finoAllaResa()` (nella grammatica `RESA=SI`, per ora negli incarichi di
+combattimento e nelle indagini): chi lo compone combatte fino alla resa
+(`Personaggio.isFinoAllaResa`).
+
+- **Panchina.** Un personaggio in panchina è vivo ma fuori dal combattimento di
+  questa locazione (`Personaggio.isInPanchina`, non si salva):
+  `Gruppo.getPersonaggiVivi()` non lo conta, e il combattimento usa
+  `isFuoriCombattimento()` (morto o in panchina) dove guardava il singolo
+  combattente o bersaglio. I controlli sul capo morto (partita persa) restano su
+  `isVivo()`. La panchina si svuota a fine locazione e all'inizio della
+  successiva (`Gruppo.svuotaPanchina`).
+- **Resa.** In `PersonaggioBase.subSalute`, chi scenderebbe a 0 e combatte fino
+  alla resa, o è del gruppo e combatte contro chi combatte fino alla resa, resta
+  a 1 punto ferita, va in panchina, lo dice ("abbassa le armi e si arrende",
+  "ammette la sconfitta e si fa da parte") e pubblica `InternoPersonaggioArreso`.
+  Gli immortali (l'Ombrafiamma) non si arrendono.
+- Un avversario arreso conta come sconfitto: `InternoAvversarioSconfitto` e punti
+  esperienza, una volta sola (`LocazioneBase.avversariSconfitti`), così le
+  missioni avanzano come prima.
+- **Duello perso.** Se in un combattimento fino alla resa si arrendono tutti i
+  personaggi del gruppo in campo, `LocazioneBase.impostaAzioni` chiude la
+  locazione come una fuga senza danni, non completa: nessuno muore, la missione
+  resta al passo del combattimento e lo sfidante aspetta lì la rivincita.
+
+- **Duello uno contro uno.** Un avversario può sfidare a duello
+  (`Personaggio.isSfidante`, `IncontroDiMissione.aDuello()`, nella grammatica
+  `DUELLO=SI`, solo con `NUMERO=1`). Entrando nella sua locazione si sceglie chi
+  del gruppo accetta la sfida (con un solo personaggio in campo la scelta è
+  automatica): gli altri vanno in panchina. Annullando la scelta si rifiuta la
+  sfida: il gruppo se ne va, senza combattere, e lo sfidante resta lì. Se chi
+  duella si arrende (o muore), il duello è perso anche se gli altri sono vivi in
+  panchina. Per un duello non serve per forza la resa: senza `RESA=SI` è
+  all'ultimo sangue.
+- Con un solo personaggio in campo, la scelta automatica del personaggio prende
+  quello e non il primo del gruppo, e le pozioni bevute da soli vanno a lui e non
+  al capo, che può essere in panchina.
+
+Test: `ScenarioDuelliTest`. Da fare, se serve: `RESA=SI` e `DUELLO=SI` anche per
+sorveglianze, soccorsi, indagini (il duello) e riti; il registro dei personaggi
+incontrati (vedi gestione_missioni.md).

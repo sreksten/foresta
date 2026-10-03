@@ -57,6 +57,9 @@ import java.util.function.Supplier;
 // TODO: img/oggetti/OggettoMissione.gif è un sacchetto provvisorio, da ridisegnare: lo usano tutti gli oggetti delle
 //  missioni (i materiali delle richieste: erbe, minerali, pesci, trofei; l'oggetto smarrito). In futuro magari
 //  un'immagine per ogni oggetto.
+// TODO: quando ci saranno più attacchi nella stessa locazione, riprendere l'indagine LUCI_NELLE_ROVINE (missioni.txt,
+//  produzione INDAGINE): oggi il negromante scappa e si combattono solo i suoi scheletri, perché un incontro di
+//  missione ha una classe sola; meglio prima gli scheletri e poi lui, come MAGO o MAGA con un nome.
 
 // Bug noti ancora da correggere (dall'indagine sul codice): si spuntano togliendo la riga quando sono corretti.
 //
@@ -660,6 +663,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito entraInStatoPreparazioneLocazione() {
 		gruppoAvversario.reimposta();
+		gruppo.svuotaPanchina();
 		gruppo.getPersonaggiVivi().forEach(Personaggio::rimuoviTuttiGliEffettiDiStato);
 		locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
 		gruppo.setLocazioneCorrente(locazioneCorrente);
@@ -968,6 +972,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Esito eseguiFineLocazione(Comando comando) {
 		temporizzatore.termina();
 		BusEventi.pubblica(new InternoRichiestaChiusuraFinestraCombattimento());
+		// Chi si era arreso torna in campo: il combattimento è finito
+		gruppo.svuotaPanchina();
 
 		// Recuperiamo l'oggetto se fattibile
 		if (locazioneCorrente.isCompleta()) {
@@ -1721,13 +1727,15 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Comando scegliPersonaggio(boolean ancheSeMorto) {
 		if (gruppo.getNumeroPersonaggiVivi() == 1 && !ancheSeMorto) {
-			BusEventi.pubblica(new InternoMessaggio("Automa::scegliPersonaggio(ancheMorto=false): automaticamente PERSONAGGIO_1"));
-			return Comando.PERSONAGGIO_1;
+			// L'unico in campo: non per forza il primo del gruppo, se gli altri sono morti o in panchina
+			Comando unico = Comando.ofPersonaggio(gruppo.getPersonaggi().indexOf(gruppo.getPersonaggiVivi().get(0)));
+			BusEventi.pubblica(new InternoMessaggio("Automa::scegliPersonaggio(ancheMorto=false): automaticamente " + unico));
+			return unico;
 		} else {
 			List<Comando> comandiPossibili = new ArrayList<>();
 			int i = 0;
 			for (Personaggio personaggioCorrente : gruppo.getPersonaggi()) {
-				if (ancheSeMorto || personaggioCorrente.isVivo()) {
+				if (ancheSeMorto || !personaggioCorrente.isFuoriCombattimento()) {
 					comandiPossibili.add(Comando.ofPersonaggio(i));
 				}
 				i++;

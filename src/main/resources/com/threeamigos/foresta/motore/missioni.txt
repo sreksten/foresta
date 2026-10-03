@@ -339,6 +339,10 @@ OGGETTO_SMARRITO
 #               NOME_CAMPIONE, NOME_CAMPIONESSA, NOME_BRIGANTE o NOME_MAGO da lì, qualunque altra cosa è il nome stesso
 #               (CAPO=Teodolinda), quando i testi lo dicono. Fra i nemici vanno bene anche le classi del gruppo:
 #               GUERRIERO, MAGA, LADRO, ELFO...;
+#   RESA=       facoltativo, SI se si combatte fino alla resa e non all'ultimo sangue (un duello): sconfitti, i nemici
+#               si arrendono e restano vivi; se si arrende tutto il gruppo, torna per la rivincita;
+#   DUELLO=     facoltativo, SI se il nemico (uno solo) sfida a duello: entrando si sceglie chi del gruppo lo affronta,
+#               gli altri si fanno da parte; rifiutando la sfida, il gruppo se ne va e lo sfidante resta lì;
 #   LUOGO=      dove si nascondono: GROTTA, ROVINE, BOSCO, PALUDE o RADURA (si segna sulla mappa);
 #   MONETE=     quanto si paga;
 #   TITOLO=, RICHIESTA=, BATTUTA=, RISPOSTA=  il nome della missione e le battute dell'incarico (mandante, capo,
@@ -411,35 +415,35 @@ INCARICO_DI_COMBATTIMENTO
     RINGRAZIAMENTO=Stanotte avrò la mia acqua, e senza nessuno che mi soffia sul collo.;\
     RICORDO=In questa radura, attorno al vecchio pozzo, si radunavano i fantasmi.
     CHIAVE=SFIDA_DEL_CAMPIONE;TIPO=DUELLO;ASPETTO=QUALUNQUE;MANDANTE=il maestro d'armi;NEMICO=GUERRIERO;NUMERO=1;\
-    CAPO=NOME_CAMPIONE;LUOGO=RADURA;MONETE=35;TITOLO=La sfida di %CAPO%;\
+    CAPO=NOME_CAMPIONE;RESA=SI;DUELLO=SI;LUOGO=RADURA;MONETE=35;TITOLO=La sfida di %CAPO%;\
     RICHIESTA=Un campione, %CAPO%, ha piantato la sua tenda in una radura e sfida chiunque passi. Ha già battuto tutti i miei allievi. E me.;\
     BATTUTA=E perché dovremmo batterlo noi?;RISPOSTA=Perché adesso nessuno vuole più prendere lezioni da me.;\
     VITTORIA=%CAPO% ripiega la tenda e se ne va, un po' meno fiero di prima.;\
     RINGRAZIAMENTO=Gli allievi sono già tornati. Dico a tutti che il trucco gliel'ho insegnato io.;\
     RICORDO=In questa radura %CAPO% sfidava chiunque passasse.
     CHIAVE=SFIDA_DELLA_CAMPIONESSA;TIPO=DUELLO;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=GUERRIERA;\
-    NUMERO=1;CAPO=NOME_CAMPIONESSA;LUOGO=RADURA;MONETE=35;TITOLO=La sfida di %CAPO%;\
+    NUMERO=1;CAPO=NOME_CAMPIONESSA;RESA=SI;DUELLO=SI;LUOGO=RADURA;MONETE=35;TITOLO=La sfida di %CAPO%;\
     RICHIESTA=%CAPO% ha sfidato a duello le mie guardie, una per volta, in una radura fuori città. Ne ho ancora tre in piedi.;\
     BATTUTA=E cosa vuole?;RISPOSTA=Dice che cerca qualcuno degno di lei. Le mie guardie, evidentemente, no.;\
     VITTORIA=%CAPO% abbassa la spada e vi stringe la mano: finalmente qualcuno degno.;\
     RINGRAZIAMENTO=Le mie guardie possono uscire dall'infermeria a testa alta. Più o meno.;\
     RICORDO=In questa radura %CAPO% sfidava a duello le guardie.
     CHIAVE=DUELLO_DELL_ELFO;TIPO=DUELLO_ANTICO;ASPETTO=QUALUNQUE;MANDANTE=il borgomastro;NEMICO=ELFO;NUMERO=1;\
-    CAPO=NOME_CAMPIONE;LUOGO=BOSCO;MONETE=40;TITOLO=Il duello dell'antica usanza;\
+    CAPO=NOME_CAMPIONE;RESA=SI;DUELLO=SI;LUOGO=BOSCO;MONETE=40;TITOLO=Il duello dell'antica usanza;\
     RICHIESTA=Un elfo, %CAPO%, dice che il bosco qui vicino è suo per un'antica usanza, e che si può contestare solo con un duello alla vecchia maniera.;\
     BATTUTA=Alla vecchia maniera?;RISPOSTA=Niente trucchi, niente fughe, e prima ci si inchina. Inchinatevi, mi raccomando.;\
     VITTORIA=%CAPO% si inchina a sua volta: secondo l'antica usanza, il bosco torna di tutti.;\
     RINGRAZIAMENTO=Il bosco è di nuovo di tutti. Spero vi siate inchinati bene.;\
     RICORDO=In questo bosco un elfo combatté un duello secondo l'antica usanza.
     CHIAVE=DUELLO_DELLA_MAGA;TIPO=DUELLO_MAGICO;ASPETTO=ALCHIMISTA;MANDANTE=l'alchimista;NEMICO=MAGA;NUMERO=1;\
-    CAPO=NOME_CAMPIONESSA;LUOGO=ROVINE;MONETE=40;TITOLO=Il duello di magia;\
+    CAPO=NOME_CAMPIONESSA;RESA=SI;DUELLO=SI;LUOGO=ROVINE;MONETE=40;TITOLO=Il duello di magia;\
     RICHIESTA=Una maga, %CAPO%, si è stabilita fra delle rovine e sostiene che la mia magia è robaccia da fiera. Mi ha sfidato a duello.;\
     BATTUTA=E perché non ci andate voi?;RISPOSTA=Perché ha ragione. Ma non deve saperlo nessuno.;\
     VITTORIA=%CAPO% ammette la sconfitta, e chiede chi vi ha insegnato quegli incantesimi.;\
     RINGRAZIAMENTO=Se qualcuno chiede, ditegli che eravate miei allievi.;\
     RICORDO=Fra queste rovine si combatté un duello di magia.
     CHIAVE=MINOTAURO_DEL_RITO;TIPO=COMBATTIMENTO_RITUALE;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;NEMICO=MINOTAURO;NUMERO=1;\
-    CAPO=SI;LUOGO=BOSCO;MONETE=40;TITOLO=Il rito del minotauro;\
+    CAPO=SI;RESA=SI;DUELLO=SI;LUOGO=BOSCO;MONETE=40;TITOLO=Il rito del minotauro;\
     RICHIESTA=Nel bosco vive un minotauro, %CAPO%. Ogni anno, per la festa del raccolto, qualcuno deve affrontarlo nel combattimento sacro.;\
     BATTUTA=E se vince lui?;RISPOSTA=Allora il raccolto è scarso, e i funerali costosi.;\
     VITTORIA=Il combattimento sacro è concluso: %CAPO% è stato sconfitto secondo il rito.;\
@@ -474,21 +478,21 @@ INCARICO_DI_COMBATTIMENTO
     RINGRAZIAMENTO=La via del mercato è libera. Lo racconterò ai cavalli.;\
     RICORDO=In questa radura qualcuno caricò tre chimere.
     CHIAVE=CAVALIERE_SPERGIURO;TIPO=VENDETTA;ASPETTO=QUALUNQUE;MANDANTE=il fabbro;NEMICO=GUERRIERO;NUMERO=1;\
-    CAPO=NOME_CAMPIONE;LUOGO=RADURA;MONETE=40;TITOLO=Il cavaliere spergiuro;\
+    CAPO=NOME_CAMPIONE;RESA=SI;LUOGO=RADURA;MONETE=40;TITOLO=Il cavaliere spergiuro;\
     RICHIESTA=Un cavaliere, %CAPO%, ha promesso di sposare mia figlia, si è fatto forgiare un'armatura nuova e se n'è andato senza pagare. Né sposare.;\
     BATTUTA=E dov'è adesso?;RISPOSTA=Si è accampato in una radura, con la mia armatura addosso. Voglio che qualcuno gliela ammacchi per bene.;\
     VITTORIA=%CAPO% è sconfitto, e l'armatura del fabbro è tutta ammaccata.;\
     RINGRAZIAMENTO=Ammaccata? Benissimo. Me la riporta lui, a piedi, e la ripara a sue spese.;\
     RICORDO=In questa radura il cavaliere spergiuro %CAPO% ebbe quello che si meritava.
     CHIAVE=MAGO_DEL_ROSPO;TIPO=VENDETTA;ASPETTO=QUALUNQUE;MANDANTE=la sorella del mercante;NEMICO=MAGO;NUMERO=1;\
-    CAPO=NOME_MAGO;LUOGO=ROVINE;MONETE=40;TITOLO=Il mago e il rospo;\
+    CAPO=NOME_MAGO;RESA=SI;LUOGO=ROVINE;MONETE=40;TITOLO=Il mago e il rospo;\
     RICHIESTA=Un mago, %CAPO%, ha trasformato mio fratello in un rospo perché gli aveva venduto un mantello tarlato. Adesso vive fra delle rovine.;\
     BATTUTA=Il mago o vostro fratello?;RISPOSTA=Il mago. Mio fratello vive in un secchio, in cucina.;\
     VITTORIA=%CAPO%, sconfitto, scioglie l'incantesimo borbottando. In cucina, a quest'ora, il secchio è vuoto.;\
     RINGRAZIAMENTO=Mio fratello è tornato. Mangia ancora le mosche, ogni tanto, ma passerà.;\
     RICORDO=Fra queste rovine viveva %CAPO%, il mago che trasformava la gente in rospi.
     CHIAVE=CAVALIERE_NERO;TIPO=BLOCCO;ASPETTO=QUALUNQUE;MANDANTE=il mercante;NEMICO=GUERRIERO;NUMERO=1;\
-    CAPO=NOME_CAMPIONE;LUOGO=BOSCO;MONETE=40;TITOLO=Il cavaliere nero;\
+    CAPO=NOME_CAMPIONE;RESA=SI;LUOGO=BOSCO;MONETE=40;TITOLO=Il cavaliere nero;\
     RICHIESTA=Un cavaliere vestito di nero, %CAPO%, si è piazzato sull'unico sentiero che attraversa un bosco, e non lascia passare nessuno.;\
     BATTUTA=Perché?;RISPOSTA=Non lo dice. Dice solo che nessuno passa. Lo ripete molto spesso.;\
     VITTORIA=%CAPO% è sconfitto. Giura che è solo un graffio, ma si sposta dal sentiero.;\
@@ -634,7 +638,7 @@ SOCCORSO
 #   DOMANDA=    la domanda dopo l'ultimo indizio;
 #   SOSPETTI=   da 2 a 5, separati da "/": le risposte possibili, nell'ordine;
 #   COLPEVOLE=  il numero del sospetto giusto, da 1. Gli indizi devono bastare a capirlo;
-#   NEMICO=, NUMERO=, CAPO=, LUOGO=  chi va sconfitto nel nascondiglio del colpevole, e dov'è;
+#   NEMICO=, NUMERO=, CAPO=, RESA=, LUOGO=  chi va sconfitto nel nascondiglio del colpevole, e dov'è;
 #   SMASCHERAMENTO=  quando si sceglie il colpevole giusto (la missione aggiunge che il nascondiglio è sulla mappa);
 #   ERRORE=     quando si accusa un innocente: la missione fallisce;
 #   VITTORIA=   quando chi è nel nascondiglio è sconfitto;
@@ -675,7 +679,7 @@ INDAGINE
     INDIZIO_2=GROTTA:In una grotta dei goblin trovate un foglio con i turni delle guardie, scritto con la mano sinistra, e con una macchia di farina.;\
     INDIZIO_3=TEMPIO:Il custode del tempio conosce bene le guardie: Bruno scrive con la destra e non entra mai in una locanda, Osvaldo è mancino ma è astemio, Teodolinda è mancina e la sera aiuta il fratello fornaio.;\
     DOMANDA=Chi è la spia?;SOSPETTI=Il sergente Bruno/La guardia Teodolinda/La recluta Osvaldo;\
-    COLPEVOLE=2;NEMICO=GUERRIERA;NUMERO=1;CAPO=Teodolinda;LUOGO=GROTTA;\
+    COLPEVOLE=2;NEMICO=GUERRIERA;NUMERO=1;CAPO=Teodolinda;RESA=SI;LUOGO=GROTTA;\
     SMASCHERAMENTO=Mancina, farina, locanda: è Teodolinda. Scoperta, è fuggita in una grotta, e non ha intenzione di arrendersi.;\
     ERRORE=Vi siete sbagliati, e la vera spia, avvertita, sparisce. Il capitano non si fida più di voi.;\
     VITTORIA=Teodolinda, sconfitta, getta la spada e si arrende.;\
@@ -727,7 +731,7 @@ INDAGINE
     INDIZIO_2=LOCANDA:Un contadino si vanta di aver venduto al magazzino la legna di certi alberi bellissimi, che quando li tagliavi cantavano.;\
     INDIZIO_3=TEMPIO:Il custode del tempio ha letto di una maledizione degli elfi: chi taglia un albero che canta, avrà il grano che canta. E marcisce.;\
     DOMANDA=Chi ha maledetto il grano?;SOSPETTI=Il mugnaio invidioso/I goblin/Un'elfa del bosco/Il contadino;\
-    COLPEVOLE=3;NEMICO=ELFA;NUMERO=1;CAPO=NOME_CAMPIONESSA;LUOGO=BOSCO;\
+    COLPEVOLE=3;NEMICO=ELFA;NUMERO=1;CAPO=NOME_CAMPIONESSA;RESA=SI;LUOGO=BOSCO;\
     SMASCHERAMENTO=Nastri elfici, alberi che cantano, la maledizione degli elfi: è stata un'elfa, %CAPO%, per vendicare i suoi alberi.;\
     ERRORE=Vi siete sbagliati, e intanto il grano canta sempre più forte. Il borgomastro non vi paga per le chiacchiere.;\
     VITTORIA=%CAPO%, sconfitta, toglie la maledizione. Ma vuole la promessa che nessuno taglierà più un albero che canta.;\
