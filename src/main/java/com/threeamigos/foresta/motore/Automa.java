@@ -48,10 +48,6 @@ import java.util.function.Supplier;
 // TODO: mostrare in locazione anche i personaggi del gruppo.
 // TODO: implementare fumetto che attende chiusura
 // TODO: implementare sistema di aiuto
-// TODO: implementare gli intermezzi nell'accampamento:
-//  - hai visto che luna stasera? non è una luna quella... è una stazione da battaglia! - perdi troppo tempo ad ascoltare le storie nelle locande.
-//  - hai visto che luna stasera? non farti prendere dal panico.
-//  - una volta ho sentito di uno che è stato trasformato in scarafaggio/asino d'oro - perdi troppo tempo ad ascoltare le storie nelle locande.
 // TODO: come ci sono locande sparse per la foresta, forse anche qualche negozio di armaiolo, alchimista, venditore di pergamene e incantatore male non farebbero
 // TODO: ricontrollare l'economia del gioco partendo da economia.md (entrate, uscite, modello per livello e proposte:
 //  bottino dei nemici, preziosi che valgono col livello, missioni pagate col livello, prezzi degli ingredienti)
@@ -67,6 +63,8 @@ import java.util.function.Supplier;
 //  servono personaggi/Viandante.gif e icone/Viandante-nobordo-piccolo.gif (ClassePersonaggioImmagine).
 // TODO: img/oggetti/Maschera.gif e img/fondi/Separatore-Maschere.gif sono copie di Elmo.gif e di Separatore-Elmi.gif,
 //  da ridisegnare con una maschera.
+// TODO: img/fondi/Luna.gif (la luna normale) e img/fondi/LunaSW.gif (la stazione da battaglia), negli intermezzi
+//  dell'accampamento, sono copie di LunaHHGTTG.gif, da ridisegnare.
 // TODO: img/oggetti/OggettoMissione.gif è un sacchetto provvisorio, da ridisegnare: lo usano tutti gli oggetti delle
 //  missioni (i materiali delle richieste: erbe, minerali, pesci, trofei; l'oggetto smarrito). In futuro magari
 //  un'immagine per ogni oggetto.

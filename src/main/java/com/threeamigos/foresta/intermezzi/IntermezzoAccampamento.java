@@ -22,6 +22,9 @@ import java.util.List;
  * il numero dell'accampamento corrente ({@link IntermezziMD#getNumeroAccampamenti()}), cosa
  * possibile perché {@link ClasseIntermezzo#getIstanza()} crea una nuova istanza a ogni
  * controllo e {@link IntermezziMD} è un semplice insieme di stringhe senza vincoli di formato.
+ * <p>
+ * Ogni accampamento ha la sua scena, con la sua luna e le sue battute: la storia di quello trasformato in scarafaggio
+ * sotto una luna normale, la luna che è una stazione da battaglia, e la luna strana di cui non farsi prendere dal panico.
  */
 public class IntermezzoAccampamento implements Intermezzo {
 
@@ -48,6 +51,23 @@ public class IntermezzoAccampamento implements Intermezzo {
 	private static final double Y_LUNA_FINE = 0.18;
 	private static final double SECONDI_SALITA_LUNA = 6;
 
+	/**
+	 * Le scene, una per accampamento: l'immagine della luna e le battute, alternate fra il primo e il secondo
+	 * personaggio.
+	 */
+	private static final String[][] SCENE = {
+			{"fondi/Luna.gif",
+					"Una volta ho sentito di uno che si è svegliato trasformato in uno scarafaggio. O forse era un asino d'oro.",
+					"Passi troppo tempo ad ascoltare le storie nelle locande."},
+			{"fondi/LunaSW.gif",
+					"Hai visto che luna stasera?",
+					"Quella non è una luna... è una stazione da battaglia!",
+					"Passi troppo tempo ad ascoltare le storie nelle locande."},
+			{"fondi/LunaHHGTTG.gif",
+					"Che luna strana stasera.",
+					"Non fatevi prendere dal panico."}
+	};
+
 	@Override
 	public String getId() {
 		return ClasseIntermezzo.INTERMEZZO_ACCAMPAMENTO.name() + "_" + numeroAccampamentoCorrente();
@@ -65,6 +85,7 @@ public class IntermezzoAccampamento implements Intermezzo {
 	@Override
 	public List<PaginaIntermezzo> getPagine() {
 		List<Personaggio> personaggiVivi = GruppoGiocatore.getIstanza().getPersonaggiVivi();
+		String[] scena = SCENE[(numeroAccampamentoCorrente() - 1) % SCENE.length];
 
 		// Niente conRitaglioSuSfondo(): la luna deve salire liberamente nel cielo, ben oltre
 		// il piccolo riquadro occupato dall'immagine di sfondo (a differenza degli altri
@@ -73,7 +94,7 @@ public class IntermezzoAccampamento implements Intermezzo {
 				.conSfondo(ImmagineIntermezzo.locazione(ClassiLocazione.BOSCO));
 
 		// La luna è nel cielo, più lontana di tutto il resto della scena
-		pagina.conElemento(ElementoIntermezzo.di("luna", ImmagineIntermezzo.risorsa("fondi/LunaHHGTTG.gif"),
+		pagina.conElemento(ElementoIntermezzo.di("luna", ImmagineIntermezzo.risorsa(scena[0]),
 						X_LUNA_INIZIO, Y_LUNA_INIZIO)
 				.poi(Tappa.inSecondi(SECONDI_SALITA_LUNA).verso(X_LUNA_FINE, Y_LUNA_FINE)));
 
@@ -93,8 +114,9 @@ public class IntermezzoAccampamento implements Intermezzo {
 		pagina.conElemento(personaggioVersoDestra("personaggio0", personaggiVivi.get(0).getClasse(), X_PRIMO, Y_PRIMO)
 				.conBocca(0.5, -0.15));
 		pagina.conElemento(ElementoIntermezzo.di("fuoco", ImmagineIntermezzo.animazione(Animazione.FUOCO_DA_CAMPO), X_FUOCO, Y_FUOCO));
-		pagina.conBattuta(BattutaIntermezzo.di("personaggio0", "Che luna strana stasera."));
-		pagina.conBattuta(BattutaIntermezzo.di("personaggio1", "Non fatevi prendere dal panico."));
+		for (int i = 1; i < scena.length; i++) {
+			pagina.conBattuta(BattutaIntermezzo.di(i % 2 == 1 ? "personaggio0" : "personaggio1", scena[i]));
+		}
 
 		List<PaginaIntermezzo> pagineIntermezzo = new ArrayList<>();
 		pagineIntermezzo.add(pagina);
