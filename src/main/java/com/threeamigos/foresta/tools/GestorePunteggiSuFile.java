@@ -32,9 +32,10 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 		try (BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get(nomeFile())), StandardCharsets.UTF_8))) {
 			for (int posizione = 0; posizione < getConteggio(); posizione++) {
 				LettoreCampi campi = new LettoreCampi(reader.readLine());
+				String idPartita = campi.testoFacoltativo();
 				String nome = campi.testo();
 				int punteggio = campi.intero();
-				setPunteggio(posizione, nome, punteggio);
+				setPunteggio(posizione, nome, punteggio, idPartita);
 			}
 		} catch (Exception e) {
 			BusEventi.pubblica(new InternoException(e));
@@ -47,6 +48,8 @@ public final class GestorePunteggiSuFile extends GestorePunteggiBase {
 		try (PrintWriter writer = new PrintWriter(new OutputStreamWriter(Files.newOutputStream(Paths.get(nomeFile())), StandardCharsets.UTF_8))) {
 			for (int posizione = 0; posizione < getConteggio(); posizione++) {
 				Punteggio punteggio = getPunteggio(posizione);
+				writer.print(Serializzabile.facoltativo(punteggio.getIdPartita()));
+				writer.print(Serializzabile.PIPE);
 				writer.print(punteggio.getNome());
 				writer.print(Serializzabile.PIPE);
 				writer.println(punteggio.getPunteggio());

@@ -19,12 +19,12 @@ public class GestorePunteggi {
 		return interfacciaGestorePunteggi.getPunteggio(posizione);
 	}
 
-	public static boolean isPunteggioInClassifica(int punteggio) {
-		return interfacciaGestorePunteggi.isPunteggioInClassifica(punteggio);
+	public static boolean isPunteggioInClassifica(int punteggio, String idPartita) {
+		return interfacciaGestorePunteggi.isPunteggioInClassifica(punteggio, idPartita);
 	}
 
-	public static void addPunteggio(String nome, int punteggio) {
-		interfacciaGestorePunteggi.addPunteggio(nome, punteggio);
+	public static void addPunteggio(String nome, int punteggio, String idPartita) {
+		interfacciaGestorePunteggi.addPunteggio(nome, punteggio, idPartita);
 	}
 
 	public static boolean salva() {

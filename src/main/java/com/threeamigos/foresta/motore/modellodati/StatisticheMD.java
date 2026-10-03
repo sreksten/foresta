@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.UUID;
 
 public class StatisticheMD implements Serializzabile {
 
@@ -14,6 +15,9 @@ public class StatisticheMD implements Serializzabile {
 	private int puntiEsperienza = 0;
 	private int punti = 0;
 	private int turniGiocati = 0;
+	// Identifica la partita, anche attraverso salvataggi e caricamenti: la classifica lo usa per non registrare
+	// più volte la stessa partita (vedi GestorePunteggiBase)
+	private String idPartita = UUID.randomUUID().toString();
 	private final Map<ClassePersonaggio, Integer> mostriUccisi = new EnumMap<>(ClassePersonaggio.class);
 
 	/**
@@ -48,6 +52,10 @@ public class StatisticheMD implements Serializzabile {
 		this.turniGiocati = turniGiocati;
 	}
 
+	public String getIdPartita() {
+		return idPartita;
+	}
+
 	////////////////////
 
 	public final void reimposta() {
@@ -56,6 +64,7 @@ public class StatisticheMD implements Serializzabile {
 		puntiEsperienza = 0;
 		punti = 0;
 		turniGiocati = 0;
+		idPartita = UUID.randomUUID().toString();
 	}
 
 	public final void setLivello(int livello) {
@@ -90,7 +99,9 @@ public class StatisticheMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(punti);
 		stream.print(PIPE);
-		stream.println(turniGiocati);
+		stream.print(turniGiocati);
+		stream.print(PIPE);
+		stream.println(idPartita);
 		for (ClassePersonaggio classePersonaggio : ClassePersonaggio.values()) {
 			stream.print(classePersonaggio.name());
 			stream.print(PIPE);
@@ -108,6 +119,7 @@ public class StatisticheMD implements Serializzabile {
 		puntiEsperienza = Integer.parseInt(st.testo());
 		punti = Integer.parseInt(st.testo());
 		turniGiocati = Integer.parseInt(st.testo());
+		idPartita = st.testo();
 		mostriUccisi.clear();
 		ClassePersonaggio[] classi = ClassePersonaggio.values();
 		line = stream.readLine();

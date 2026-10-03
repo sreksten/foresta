@@ -32,12 +32,18 @@ final class GestorePunteggiInMemoria implements InterfacciaGestorePunteggi {
 	}
 
 	@Override
-	public boolean isPunteggioInClassifica(int punteggio) {
+	public boolean isPunteggioInClassifica(int punteggio, String idPartita) {
+		for (Punteggio esistente : punteggi) {
+			if (idPartita != null && idPartita.equals(esistente.getIdPartita())) {
+				return punteggio > esistente.getPunteggio();
+			}
+		}
 		return punteggi.size() < POSTI || punteggio > punteggi.get(punteggi.size() - 1).getPunteggio();
 	}
 
 	@Override
-	public void addPunteggio(String nome, int punteggio) {
+	public void addPunteggio(String nome, int punteggio, String idPartita) {
+		punteggi.removeIf(esistente -> idPartita != null && idPartita.equals(esistente.getIdPartita()));
 		punteggi.add(new Punteggio() {
 			@Override
 			public String getNome() {
@@ -47,6 +53,11 @@ final class GestorePunteggiInMemoria implements InterfacciaGestorePunteggi {
 			@Override
 			public int getPunteggio() {
 				return punteggio;
+			}
+
+			@Override
+			public String getIdPartita() {
+				return idPartita;
 			}
 		});
 		punteggi.sort(Comparator.comparingInt(Punteggio::getPunteggio).reversed());

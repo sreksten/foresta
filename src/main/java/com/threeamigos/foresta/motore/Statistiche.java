@@ -84,6 +84,13 @@ public class Statistiche {
 		return getStatisticheMD().getTurniGiocati();
 	}
 
+	/**
+	 * L'identificativo della partita, che resta lo stesso dopo un salvataggio e un caricamento.
+	 */
+	public static String getIdPartita() {
+		return getStatisticheMD().getIdPartita();
+	}
+
 	public static void reimposta() {
 		getStatisticheMD().reimposta();
 	}

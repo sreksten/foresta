@@ -21,18 +21,22 @@ public interface InterfacciaGestorePunteggi {
 	Punteggio getPunteggio(int posizione);
 
 	/**
-	 * Verifica se un punteggio possa entrare in classifica
+	 * Verifica se un punteggio possa entrare in classifica. Se la partita c'è già, solo migliorando il suo
+	 * punteggio: chi ricarica un salvataggio e rifinisce la partita non deve riempire la classifica di sé.
 	 * @param punteggio il punteggio da controllare
+	 * @param idPartita la partita che l'ha fatto
 	 * @return true se il punteggio può entrare in classifica
 	 */
-	boolean isPunteggioInClassifica(int punteggio);
+	boolean isPunteggioInClassifica(int punteggio, String idPartita);
 
 	/**
-	 * Aggiunge un punteggio alla classifica eliminando il più basso
+	 * Aggiunge un punteggio alla classifica: se la partita c'era già, il suo punteggio precedente se ne va (se il
+	 * nuovo è migliore), altrimenti se ne va il più basso.
 	 * @param nome il nome del giocatore
 	 * @param punteggio il punteggio da aggiungere
+	 * @param idPartita la partita che l'ha fatto
 	 */
-	void addPunteggio(String nome, int punteggio);
+	void addPunteggio(String nome, int punteggio, String idPartita);
 
 	/**
 	 * Salva i punteggi in qualche modo

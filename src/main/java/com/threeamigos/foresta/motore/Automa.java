@@ -1414,7 +1414,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Esito gestisciComandoInStatoStatistiche(Comando comando) {
-		if (comando == Comando.PERGAMENA && !GestorePunteggi.isPunteggioInClassifica(Statistiche.getPunti())) {
+		if (comando == Comando.PERGAMENA && !GestorePunteggi.isPunteggioInClassifica(Statistiche.getPunti(), Statistiche.getIdPartita())) {
 			// Nessun punteggio da registrare: si torna all'intro, che riparte dai loghi.
 			// mostraIntro() pubblica anche lo stato INTRO, senza il quale la UI resterebbe
 			// sulle statistiche. Al logo iniziale non si torna.
@@ -1439,7 +1439,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			testoDisponibile = primo.getNomeProprio()
 					.orElseGet(() -> primo.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
 		}
-		GestorePunteggi.addPunteggio(testoDisponibile, Statistiche.getPunti());
+		GestorePunteggi.addPunteggio(testoDisponibile, Statistiche.getPunti(), Statistiche.getIdPartita());
 		stato = Stato.PUNTEGGI;
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
 		BusEventi.pubblica(new NotificaMostraPunteggiMigliori());
