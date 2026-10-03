@@ -89,12 +89,9 @@ public class LineaTemporale {
 	public static void aggiungiOre(int quantita) {
 		LineaTemporaleMD md = getLineaTemporaleMD();
 		int ora = getOra() + quantita;
-		if (ora >= 24) {
-			md.setOra(ora % 24);
-			md.setGiorno(getLineaTemporaleMD().getGiorno() + 1);
-		} else {
-			md.setOra(ora);
-		}
+		// Anche più di un giorno in una volta sola
+		md.setOra(ora % 24);
+		md.setGiorno(md.getGiorno() + ora / 24);
 	}
 
 	private static final String COLONNA = " vede levarsi una colonna di fumo ";

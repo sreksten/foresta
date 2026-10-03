@@ -159,6 +159,51 @@ class ScenarioIncarichiInCittaTest {
         }
     }
 
+    @Test
+    void dopoTreGiorniSenzaTutteLeRadiciLaMissioneRipiegaSuUnPostoSegnatoSullaMappa() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(66)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
+                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            LAlchimistaELaMandragola mandragola = prendiIncaricoAllaSecondaVisita(LAlchimistaELaMandragola.class);
+            OggettiDaRaccogliere radici = LAlchimistaELaMandragola.RADICI_DI_MANDRAGOLA;
+            new OggettoMissione(mandragola.getId(), LAlchimistaELaMandragola.MANDRAGOLA, radici.getNome(), 1)
+                    .prendi(partita.gruppo(), null);
+
+            // Prima dei tre giorni non si ripiega
+            LineaTemporale.aggiungiOre(OggettiDaRaccogliere.ORE_AL_RIPIEGO - 1);
+            mandragola.controllaPreLocazione();
+            assertNull(mandragola.getRipiego(radici));
+
+            LineaTemporale.aggiungiOre(1);
+            mandragola.controllaPreLocazione();
+            CoordinateMD ripiego = mandragola.getRipiego(radici);
+            assertNotNull(ripiego);
+            assertTrue(radici.getLocazioni().contains(Foresta.getLocazione(ripiego)));
+            assertTrue(Foresta.isLocazioneConosciuta(ripiego));
+            assertTrue(partita.testi().stream().anyMatch(t -> t.contains("le radici di mandragola che vi mancano")),
+                    String.valueOf(partita.testi()));
+
+            // Lì ci sono tutte quelle che mancano, anche se la casella era già stata visitata; altrove, nelle
+            // locazioni visitate, niente
+            Oggetto lì = mandragola.getOggettoInLocazione(ripiego, Foresta.getLocazione(ripiego), true).orElseThrow(AssertionError::new);
+            assertEquals(LAlchimistaELaMandragola.RADICI - 1, lì.getQuantita());
+            assertEquals(Optional.empty(), mandragola.getOggettoInLocazione(
+                    new CoordinateMD(ripiego.getX() == 0 ? 1 : 0, ripiego.getY()), ClassiLocazione.BOSCO, true));
+
+            // Il ripiego si salva con la missione
+            com.threeamigos.foresta.tools.GestoreSalvataggi.salva(Comando.NUMERO_2);
+            assertTrue(com.threeamigos.foresta.tools.GestoreSalvataggi.leggi(Comando.NUMERO_2));
+            LAlchimistaELaMandragola riletta = trova(LAlchimistaELaMandragola.class);
+            assertEquals(ripiego, riletta.getRipiego(radici));
+
+            // Raccolte, la missione va avanti come sempre
+            riletta.getOggettoInLocazione(ripiego, Foresta.getLocazione(ripiego), true).orElseThrow(AssertionError::new)
+                    .prendi(partita.gruppo(), null);
+            riletta.controllaPostLocazione();
+            assertEquals("RITORNO", riletta.getPassoCorrente());
+        }
+    }
+
     /**
      * Funghi in ogni bosco, sempre: per vedere l'aggancio dell'automa senza dipendere dal dado.
      */

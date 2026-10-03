@@ -6,11 +6,13 @@ import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
+import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
@@ -64,6 +66,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	private static final String EVENTO = "EVENTO_";
 	private static final String CONTATORE = "CONTATORE_";
 	private static final String SCORTATO = "SCORTATO";
+	private static final String RIPIEGO = "RIPIEGO_";
 	/**
 	 * Separatore delle liste di id salvate come una proprietà: '§' e '|' sono già riservati dal salvataggio
 	 */
@@ -89,6 +92,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 
 	@Override
 	public void controllaPreLocazione() {
+		cercaRipiegoSeServe();
 		avanzaSePronto(MomentoControllo.PRE_LOCAZIONE);
 	}
 
@@ -291,7 +295,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 */
 	@Override
 	public Optional<Oggetto> getOggettoInLocazione(CoordinateMD coordinate, ClassiLocazione classe, boolean visitata) {
-		if (!isAttiva() || isCompleta() || isFallita() || visitata || Passo.FINE.equals(getPassoCorrente())) {
+		if (!isAttiva() || isCompleta() || isFallita() || Passo.FINE.equals(getPassoCorrente())) {
 			return Optional.empty();
 		}
 		OggettiDaRaccogliere oggetti = costruisciPasso(getPassoCorrente()).getOggettiDaSeminare();
@@ -299,11 +303,55 @@ public abstract class MissioneAPassi extends MissioneBase {
 			return Optional.empty();
 		}
 		int mancanti = oggetti.getQuantita() - getContatore(oggetti.getChiave());
-		if (mancanti <= 0 || Dado.tira(100) > oggetti.getProbabilita()) {
+		if (mancanti <= 0) {
+			return Optional.empty();
+		}
+		// Nella locazione del ripiego ci sono tutti quelli che mancano, anche se è già stata visitata
+		if (coordinate.equals(getRipiego(oggetti))) {
+			return Optional.of(new OggettoMissione(getId(), oggetti.getChiave(), oggetti.getNome(), mancanti));
+		}
+		if (visitata || Dado.tira(100) > oggetti.getProbabilita()) {
 			return Optional.empty();
 		}
 		int quanti = Math.min(Dado.tiraAncheAUnaFaccia(oggetti.getMassimoPerLocazione()), mancanti);
 		return Optional.of(new OggettoMissione(getId(), oggetti.getChiave(), oggetti.getNome(), quanti));
+	}
+
+	/**
+	 * La locazione su cui la missione ha ripiegato per quegli oggetti (vedi {@link OggettiDaRaccogliere}), o null se
+	 * non ci ha ancora ripiegato.
+	 */
+	public final CoordinateMD getRipiego(OggettiDaRaccogliere oggetti) {
+		String valore = ottieniProprieta(RIPIEGO + oggetti.getChiave());
+		if (valore == null) {
+			return null;
+		}
+		String[] parti = valore.split(SEPARATORE);
+		return new CoordinateMD(Integer.parseInt(parti[0]), Integer.parseInt(parti[1]));
+	}
+
+	/**
+	 * Se il passo corrente semina oggetti da troppe ore e il gruppo non li ha ancora trovati tutti, la missione si
+	 * procura una locazione adatta (vedi RegistroMissioni.cercaOCostruisci), la segna sulla mappa e lo dice: lì ci
+	 * saranno tutti quelli che mancano. La locazione è rivendicata dalla missione.
+	 */
+	private void cercaRipiegoSeServe() {
+		if (!isAttiva() || isCompleta() || isFallita() || Passo.FINE.equals(getPassoCorrente())) {
+			return;
+		}
+		OggettiDaRaccogliere oggetti = costruisciPasso(getPassoCorrente()).getOggettiDaSeminare();
+		if (oggetti == null || getRipiego(oggetti) != null || getContatore(oggetti.getChiave()) >= oggetti.getQuantita()
+				|| oreDiGioco() - inizioDelPassoCorrente() < oggetti.getOreAlRipiego()) {
+			return;
+		}
+		ClassiLocazione classe = oggetti.getLocazioni().iterator().next();
+		RegistroMissioni.cercaOCostruisci(classe, this).ifPresent(coordinate -> {
+			aggiungiProprieta(RIPIEGO + oggetti.getChiave(), coordinate.getX() + SEPARATORE + coordinate.getY());
+			Foresta.setLocazioneConosciuta(coordinate);
+			NomeOggetto nome = oggetti.getNome();
+			BusEventi.pubblica(new NotificaTestoParagrafo("Un viandante vi segna sulla mappa un posto dove trovare "
+					+ nome.getADP() + nome.getPlurale() + " che vi mancano."));
+		});
 	}
 
 	/**

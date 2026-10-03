@@ -90,6 +90,17 @@ OggettiDaRaccogliere.di("MANDRAGOLA", NomeOggetto.femminile("radice di mandragol
   perché molte locazioni ridefiniscono `crea`.
 - Compaiono solo nelle locazioni mai visitate, con la probabilità data, mai più
   di quanti ne mancano.
+- **Ripiego**: se dopo `OggettiDaRaccogliere.getOreAlRipiego()` ore di gioco
+  (72 se non si dice altrimenti, `conRipiegoDopoOre`) da quando il passo è
+  corrente il gruppo non li ha ancora trovati tutti, al controllo di inizio
+  locazione la missione si procura una locazione della prima classe adatta
+  (`RegistroMissioni.cercaOCostruisci`, quindi rivendicata), la segna sulla
+  mappa e lo dice ("Un viandante vi segna sulla mappa un posto dove trovare le
+  radici di mandragola che vi mancano."). Lì ci sono tutti quelli che mancano,
+  anche se la casella è già stata visitata (`MissioneAPassi.getRipiego`). Così
+  una raccolta non resta bloccata quando il gruppo ha già esplorato quasi tutto.
+  Il ripiego usa il claim della missione: una missione che ne ha già un altro
+  in corso lo sovrascriverebbe.
 - `OggettoMissione` (classe `ClassiOggetto.OGGETTO_MISSIONE`) si ricorda la
   missione, la chiave e il nome (`NomeOggetto`); raccoglierlo incrementa il
   contatore della missione con quella chiave. Come tutti gli oggetti delle
