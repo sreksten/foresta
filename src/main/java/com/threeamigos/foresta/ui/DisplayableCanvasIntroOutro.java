@@ -26,6 +26,10 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	private static final int FASCIA = 40;
 	// I loghi compaiono quando la storia è salita almeno tanto sopra di loro
 	private static final int MARGINE_LOGHI = 20;
+	// Fra la cima del logo 3AM e quella del logo della Foresta
+	private static final int DISTANZA_LOGHI = 60;
+	// L'alone nero attorno alle lettere della storia e ai loghi, perché si vedano sullo sfondo
+	private static final int RAGGIO_ALONE = 4;
 	private static final double SECONDI_DISSOLVENZA = 1;
 	private static final double SECONDI_LOGHI = 3;
 	private static final double SECONDI_CLASSIFICA = 5;
@@ -53,10 +57,14 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	private Fase fase = Fase.STORIA;
 	private ScorrimentoVerticale scorrimento;
 	private BufferedImage immagineStoria;
+	// I loghi con l'alone scuro, perché si vedano sullo sfondo della storia: si fanno una volta sola
+	private BufferedImage logo3AMConAlone;
+	private BufferedImage logoForestaConAlone;
 	// Il tempo della fase: dall'ultimo fotogramma, da quando i loghi compaiono, da quando si sta fermi
 	private long ultimoFotogramma;
 	private double secondiLoghi = -1;
 	private double secondiFermo;
+	private double secondiFase;
 
 	private Collection<TestataSalvataggio> salvataggiDisponibili;
 
@@ -94,6 +102,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		scorrimento = null;
 		secondiLoghi = -1;
 		secondiFermo = 0;
+		secondiFase = 0;
 		ultimoFotogramma = 0;
 	}
 
@@ -258,9 +267,12 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		if (!scorrimento.isUscito()) {
 			scorrimento.avanza(secondi, VELOCITA);
 		}
-		// I loghi arrivano quando la storia non ci finirebbe sopra, e restano un poco dopo che è uscita
+		secondiFase += secondi;
+		// I loghi arrivano quando la storia non ci finirebbe sopra, e restano un poco dopo che è uscita; il loro
+		// centro sta a un terzo dello schermo
 		BufferedImage logo3AM = ImageCache.logo3AM;
-		int cimaLoghi = yOffset + 20;
+		BufferedImage logoForesta = ImageCache.logoForesta;
+		int cimaLoghi = height / 3 - (DISTANZA_LOGHI + logoForesta.getHeight()) / 2;
 		if (secondiLoghi < 0 && scorrimento.getFondo() <= cimaLoghi - MARGINE_LOGHI) {
 			secondiLoghi = 0;
 		}
@@ -272,15 +284,22 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 			}
 			uscita = (float) Math.max(0, Math.min(1, (secondiFermo - SECONDI_LOGHI) / SECONDI_DISSOLVENZA));
 		}
-		// Lo sfondo della storia sparisce insieme ai loghi
+		// Lo sfondo della storia compare in dissolvenza, e sparisce insieme ai loghi
+		float comparsa = (float) Math.min(1, secondiFase / SECONDI_DISSOLVENZA);
 		disegnaConOpacita(graphics, ImageCache.sfondoStoria, (width - ImageCache.sfondoStoria.getWidth()) >> 1,
-				(height - ImageCache.sfondoStoria.getHeight()) >> 1, 1 - uscita);
+				(height - ImageCache.sfondoStoria.getHeight()) >> 1, comparsa * (1 - uscita));
 		scorrimento.disegna(graphics, 1);
 		if (secondiLoghi >= 0) {
 			float opacita = (float) Math.min(1, secondiLoghi / SECONDI_DISSOLVENZA) * (1 - uscita);
-			disegnaConOpacita(graphics, logo3AM, (width - logo3AM.getWidth()) >> 1, cimaLoghi, opacita);
-			BufferedImage logoForesta = ImageCache.logoForesta;
-			disegnaConOpacita(graphics, logoForesta, (width - logoForesta.getWidth()) >> 1, yOffset + 80, opacita);
+			// Con l'alone l'immagine è più grande di RAGGIO_ALONE per lato: la si sposta, e il logo resta al suo posto
+			if (logo3AMConAlone == null) {
+				logo3AMConAlone = TestoGrande.conAlone(logo3AM, RAGGIO_ALONE);
+				logoForestaConAlone = TestoGrande.conAlone(logoForesta, RAGGIO_ALONE);
+			}
+			disegnaConOpacita(graphics, logo3AMConAlone, ((width - logo3AM.getWidth()) >> 1) - RAGGIO_ALONE,
+					cimaLoghi - RAGGIO_ALONE, opacita);
+			disegnaConOpacita(graphics, logoForestaConAlone, ((width - logoForesta.getWidth()) >> 1) - RAGGIO_ALONE,
+					cimaLoghi + DISTANZA_LOGHI - RAGGIO_ALONE, opacita);
 		}
 		if (uscita >= 1) {
 			passaA(Fase.CLASSIFICA);
@@ -329,29 +348,13 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	}
 
 	/**
-	 * Tutta la storia in un'immagine, un paragrafo dopo l'altro con una riga vuota in mezzo. Non cambia mai: si fa una
-	 * volta sola.
+	 * Tutta la storia in un'immagine, come un unico testo che va a capo dove serve (i paragrafi di Misc.STORIA erano le
+	 * pagine dell'intro di una volta), con un alone nero attorno alle lettere. Non cambia mai: si fa una volta sola.
 	 */
 	private BufferedImage immagineStoria() {
 		if (immagineStoria == null) {
-			List<BufferedImage> paragrafi = new ArrayList<>();
-			int altezza = 0;
-			for (String paragrafo : Misc.STORIA) {
-				BufferedImage immagine = TestoGrande.immagine(paragrafo, width, true);
-				paragrafi.add(immagine);
-				altezza += immagine.getHeight() + TestoGrande.ALTEZZA_RIGA;
-			}
-			immagineStoria = new BufferedImage(width, Math.max(1, altezza - TestoGrande.ALTEZZA_RIGA), BufferedImage.TYPE_INT_ARGB);
-			Graphics2D g = immagineStoria.createGraphics();
-			try {
-				int y = 0;
-				for (BufferedImage paragrafo : paragrafi) {
-					g.drawImage(paragrafo, 0, y, null);
-					y += paragrafo.getHeight() + TestoGrande.ALTEZZA_RIGA;
-				}
-			} finally {
-				g.dispose();
-			}
+			immagineStoria = TestoGrande.conAlone(
+					TestoGrande.immagine(String.join(" ", Misc.STORIA), width - 2 * RAGGIO_ALONE, true), RAGGIO_ALONE);
 		}
 		return immagineStoria;
 	}

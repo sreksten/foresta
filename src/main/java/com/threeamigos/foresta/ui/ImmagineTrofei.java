@@ -27,6 +27,13 @@ final class ImmagineTrofei {
 	}
 
 	/**
+	 * Di quanto la descrizione sale sul nome: un quarto di lettera del suo font.
+	 */
+	private static int sovrapposizione(DoomdarkFont font) {
+		return font.getHeight() / 4;
+	}
+
+	/**
 	 * L'immagine dei trofei così come sono adesso, larga quanto chiesto; con il titolo "trofei" in cima, se serve.
 	 */
 	static BufferedImage costruisci(int larghezza, boolean conTitolo) {
@@ -45,11 +52,11 @@ final class ImmagineTrofei {
 			int progresso = vinto ? trofeo.getObiettivo() : trofeo.getProgresso();
 			DoomdarkColorModel.Color colore = vinto ? VINTO : MANCANTE;
 			Image quantita = ImageCache.get(progresso + "/" + trofeo.getObiettivo(), font, colore);
-			int larghezzaNome = larghezza - quantita.getWidth(null) - SPAZIO_QUANTITA;
-			BufferedImage nome = TestoGrande.immagine(tipo.getNome(), larghezzaNome, false);
-			Image descrizione = ImageCache.get(tipo.getDescrizione(), font, colore, larghezza);
+			int larghezzaTesti = larghezza - quantita.getWidth(null) - SPAZIO_QUANTITA;
+			BufferedImage nome = TestoGrande.immagine(tipo.getNome(), larghezzaTesti, false);
+			Image descrizione = ImageCache.get(tipo.getDescrizione(), font, colore, larghezzaTesti);
 			trofei.add(new Image[] {vinto ? nome : TestoGrande.scura(nome), quantita, descrizione});
-			altezza += nome.getHeight() + descrizione.getHeight(null) + spazioFraTrofei;
+			altezza += nome.getHeight() - sovrapposizione(font) + descrizione.getHeight(null) + spazioFraTrofei;
 		}
 		BufferedImage immagine = new BufferedImage(Math.max(1, larghezza), Math.max(1, altezza), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graphics = immagine.createGraphics();
@@ -64,10 +71,10 @@ final class ImmagineTrofei {
 				Image quantita = trofeo[1];
 				Image descrizione = trofeo[2];
 				graphics.drawImage(nome, 0, y, null);
-				// La quantità a destra, all'altezza della prima riga del nome
-				graphics.drawImage(quantita, larghezza - quantita.getWidth(null), y, null);
-				y += nome.getHeight(null);
+				// La descrizione sale a coprire un quarto di lettera del nome, e la quantità le sta accanto, a destra
+				y += nome.getHeight(null) - sovrapposizione(font);
 				graphics.drawImage(descrizione, 0, y, null);
+				graphics.drawImage(quantita, larghezza - quantita.getWidth(null), y, null);
 				y += descrizione.getHeight(null) + spazioFraTrofei;
 			}
 		} finally {

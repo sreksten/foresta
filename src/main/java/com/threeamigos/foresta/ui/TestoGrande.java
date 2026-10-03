@@ -2,8 +2,11 @@ package com.threeamigos.foresta.ui;
 
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
 import java.awt.image.RescaleOp;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -28,6 +31,10 @@ final class TestoGrande {
 	 * Quanto della luminosità resta al testo grigio scuro.
 	 */
 	private static final float LUMINOSITA_SCURO = 0.3f;
+	/**
+	 * Quanto è scuro l'alone attorno alle lettere: più di 1 lo rende pieno vicino alle lettere.
+	 */
+	private static final float FORZA_ALONE = 2.5f;
 
 	private TestoGrande() {
 	}
@@ -161,6 +168,35 @@ final class TestoGrande {
 			graphics.dispose();
 		}
 		return immagine;
+	}
+
+	/**
+	 * La stessa immagine con un alone nero sfumato attorno alle lettere (o a qualunque disegno, come i loghi), perché
+	 * si leggano anche su uno sfondo chiaro o movimentato: l'immagine si allarga di {@code raggio} pixel per lato.
+	 */
+	static BufferedImage conAlone(BufferedImage immagine, int raggio) {
+		int larghezza = immagine.getWidth() + 2 * raggio;
+		int altezza = immagine.getHeight() + 2 * raggio;
+		// La sagoma nera delle lettere
+		BufferedImage sagoma = new BufferedImage(larghezza, altezza, BufferedImage.TYPE_INT_ARGB);
+		for (int y = 0; y < immagine.getHeight(); y++) {
+			for (int x = 0; x < immagine.getWidth(); x++) {
+				int alfa = immagine.getRGB(x, y) >>> 24;
+				sagoma.setRGB(x + raggio, y + raggio, alfa << 24);
+			}
+		}
+		// Sfumata, e rinforzata perché non svanisca troppo presto
+		float[] nucleo = new float[(2 * raggio + 1) * (2 * raggio + 1)];
+		Arrays.fill(nucleo, FORZA_ALONE / nucleo.length);
+		BufferedImage alone = new ConvolveOp(new Kernel(2 * raggio + 1, 2 * raggio + 1, nucleo), ConvolveOp.EDGE_NO_OP, null)
+				.filter(sagoma, null);
+		Graphics2D graphics = alone.createGraphics();
+		try {
+			graphics.drawImage(immagine, raggio, raggio, null);
+		} finally {
+			graphics.dispose();
+		}
+		return alone;
 	}
 
 	/**
