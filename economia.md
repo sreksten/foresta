@@ -16,6 +16,7 @@ Gli oggetti per terra compaiono solo alla prima visita di una cella e non ricomp
 | Pietre preziose e corone per terra | 1-2 preziosi | 2 celle di bosco su 11 | ~85 |
 | Cofano fuori dai castelli | 5-10 monete o 5-10 preziosi, 1/8 ciascuno | bosco 1/11, rovine sempre, grotte 1-2 | ~0,84 monete + 0,84 preziosi a cofano |
 | Cofano nei castelli | 5-10 monete, 1/6 | 5 per castello, 4 castelli | ~22 |
+| Artefatto o pergamena da un cofano | un artefatto casuale (10%) o un ingrediente magico (10%) a cofano, al livello del mondo | ogni cofano aperto | da rivendere o usare: 1 cofano su 5 |
 | Compagno reclutato in locanda | 5-15 monete + 0-10 preziosi | fino a 4 volte | ~40 + ~20 preziosi |
 | Missioni (Medaglione, Derrate alimentari) | 20 monete | 2 | 40 |
 | Aiuto del mercenario (offerta dopo corruzione o amicizia) | 1-6 monete | di rado | trascurabile |

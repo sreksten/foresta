@@ -97,9 +97,9 @@ public class Costanti {
     public static final int ARTEFATTO_MASSIMO_INCANTAMENTI_IN_NASCITA = 3;
     // Probabilità che un artefatto incantabile generato sia raro (i leggendari non si generano)
     public static final double ARTEFATTO_PROBABILITA_RARO = 0.1;
-    // Esiti rari di ogni cofano aperto: 5% una pergamena, 5% un artefatto casuale (10% in tutto)
-    public static final double COFANO_PROBABILITA_PERGAMENA = 0.05;
-    public static final double COFANO_PROBABILITA_ARTEFATTO = 0.05;
+    // Esiti rari di ogni cofano aperto: 10% una pergamena, 10% un artefatto casuale (20% in tutto)
+    public static final double COFANO_PROBABILITA_PERGAMENA = 0.10;
+    public static final double COFANO_PROBABILITA_ARTEFATTO = 0.10;
     // Un ingrediente magico ha tanti effetti quanto il suo livello, fino a questo
     public static final int INGREDIENTE_EFFETTI_MASSIMI = 3;
     // Grado degli effetti di un ingrediente magico: minore fino al livello 2, normale (MEDIO) al 3, maggiore dal 4

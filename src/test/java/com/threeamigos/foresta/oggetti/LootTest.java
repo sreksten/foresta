@@ -128,13 +128,13 @@ class LootTest {
     }
 
     @Test
-    void cofanoCinquePerCentoPergamenaCinquePerCentoArtefatto() {
+    void cofanoDieciPerCentoPergamenaDieciPerCentoArtefatto() {
         GeneratoreArtefatti generatore = new GeneratoreArtefattiTabelle(new Random(2));
         assertTrue(Cofano.artefattoRaro(0.0, generatore, 3).getTipo().isIngrediente());
-        assertTrue(Cofano.artefattoRaro(0.049, generatore, 3).getTipo().isIngrediente());
-        assertFalse(Cofano.artefattoRaro(0.05, generatore, 3).getTipo().isIngrediente());
-        assertFalse(Cofano.artefattoRaro(0.099, generatore, 3).getTipo().isIngrediente());
-        assertNull(Cofano.artefattoRaro(0.10, generatore, 3));
+        assertTrue(Cofano.artefattoRaro(0.099, generatore, 3).getTipo().isIngrediente());
+        assertFalse(Cofano.artefattoRaro(0.10, generatore, 3).getTipo().isIngrediente());
+        assertFalse(Cofano.artefattoRaro(0.199, generatore, 3).getTipo().isIngrediente());
+        assertNull(Cofano.artefattoRaro(0.20, generatore, 3));
         assertNull(Cofano.artefattoRaro(0.99, generatore, 3));
     }
 
