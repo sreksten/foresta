@@ -250,7 +250,7 @@ public enum TipoMissione {
      * Esempio: duello in stile antico, combattimento tradizionale, scontro eroico
      */
     DUELLO_ANTICO(SupertipoMissione.COMBATTIMENTO),
-    // Coperto da: IncaricoDiCombattimento (la cripta degli scheletri, la miniera dei goblin)
+    // Coperto da: IncaricoDiCombattimento (la cripta degli scheletri, la miniera dei goblin; a ondate: il nido sotto la montagna, le segrete del castello, il pozzo degli esperimenti)
     /**
      * Esempio: ripulire una cripta o una miniera invasa a non morti o ragni
      */

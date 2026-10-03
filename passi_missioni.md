@@ -1136,3 +1136,8 @@ ASSEDIO_DIFESA e TRINCEA hanno ora due o tre ondate all'ultima visita, e
 nell'indagine delle luci nelle rovine, dopo gli scheletri, arriva il negromante
 con un nome. Test: `ScenarioOndateTest`.
 
+PULIZIA_DEI_DUNGEON ha tre varianti a ondate, accanto alla cripta e alla miniera: il
+nido sotto la montagna (goblin, hobgoblin, il troll del nido), le segrete del vecchio
+castello (scheletri, fantasmi, gargoyle) e il pozzo degli esperimenti dell'alchimista
+(folletti, arpie, una chimera).
+

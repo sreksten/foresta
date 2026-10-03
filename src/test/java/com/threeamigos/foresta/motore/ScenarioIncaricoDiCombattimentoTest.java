@@ -42,7 +42,7 @@ class ScenarioIncaricoDiCombattimentoTest {
             chiavi.add(incarico.getChiave());
             tipi.add(incarico.getTipo());
         }
-        assertTrue(chiavi.size() >= 26, String.valueOf(chiavi));
+        assertTrue(chiavi.size() >= 29, String.valueOf(chiavi));
         assertEquals(EnumSet.of(TipoMissione.VENDETTA, TipoMissione.COMBATTIMENTO_BESTIA, TipoMissione.PULIZIA_DEI_DUNGEON,
                 TipoMissione.SCHERMAGLIA, TipoMissione.IMBOSCATA, TipoMissione.PROTEZIONE_TEMPORALE, TipoMissione.DUELLO,
                 TipoMissione.DUELLO_ANTICO, TipoMissione.DUELLO_MAGICO, TipoMissione.COMBATTIMENTO_RITUALE, TipoMissione.BLOCCO,

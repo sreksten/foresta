@@ -429,6 +429,33 @@ INCARICO_DI_COMBATTIMENTO
     VITTORIA=I goblin di %CAPO% hanno lasciato libera la miniera.;\
     RINGRAZIAMENTO=Si torna a scavare! La prossima spada la faccio con il ferro che avete liberato voi.;\
     RICORDO=In questa grotta i goblin di %CAPO% avevano occupato la miniera dell'armaiolo.
+    CHIAVE=NIDO_SOTTO_LA_MONTAGNA;TIPO=PULIZIA_DEI_DUNGEON;ASPETTO=ARMAIOLO;MANDANTE=l'armaiolo;NEMICO=GOBLIN;NUMERO=4;\
+    LUOGO=GROTTA;MONETE=50;TITOLO=Il nido sotto la montagna;\
+    RICHIESTA=In fondo a una grotta i goblin hanno scavato un nido, e ogni settimana ne escono di più. Bisogna ripulirla tutta, fino all'ultimo cunicolo.;\
+    BATTUTA=Quanti cunicoli?;RISPOSTA=Non lo so. Nessuno è mai tornato a contarli. Cioè, nessuno ci è mai andato. Siete i primi.;\
+    ONDATA_2=HOBGOBLIN 3;ARRIVO_2=Dai cunicoli più profondi salgono tre hobgoblin, svegliati dal baccano.;\
+    ONDATA_3=TROLL 1 SI;ARRIVO_3=In fondo alla grotta qualcosa si stiracchia: è %CAPO_3%, il troll che tiene il nido come un pollaio, e ha appena finito il pisolino.;\
+    VITTORIA=Anche %CAPO_3% è a terra: il nido è ripulito, fino all'ultimo cunicolo.;\
+    RINGRAZIAMENTO=Ripulita tutta? Anche il cunicolo in fondo a sinistra? Bene. Domani ci mando il mio apprendista, a controllare.;\
+    RICORDO=In questa grotta c'era il nido dei goblin di %CAPO_3%, ripulito fino all'ultimo cunicolo.
+    CHIAVE=SEGRETE_DEL_CASTELLO;TIPO=PULIZIA_DEI_DUNGEON;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=SCHELETRO;\
+    NUMERO=3;LUOGO=ROVINE;MONETE=50;TITOLO=Le segrete del vecchio castello;\
+    RICHIESTA=Sotto le rovine del vecchio castello ci sono le segrete, e nelle segrete i prigionieri di cento anni fa. Nessuno li ha mai liberati. Ora escono da soli, ma senza la pelle.;\
+    BATTUTA=Non si potrebbe chiudere la porta?;RISPOSTA=La porta è marcita trent'anni fa. Il preventivo del falegname, invece, è ancora sul mio tavolo.;\
+    ONDATA_2=FANTASMA 2;ARRIVO_2=Dalle celle più in fondo filtrano due fantasmi, che lamentano di non aver mai avuto un processo.;\
+    ONDATA_3=GARGOYLE 2;ARRIVO_3=Sulle colonne della sala delle guardie si muovono due gargoyle: erano lì a fare la guardia, e prendono il lavoro sul serio.;\
+    VITTORIA=Le segrete sono vuote, finalmente. Restano solo le catene, e un preventivo da firmare.;\
+    RINGRAZIAMENTO=Segrete pulite! Ho firmato il preventivo del falegname. Fra trent'anni avremo una porta nuova.;\
+    RICORDO=Sotto queste rovine c'erano le segrete del vecchio castello, ripulite da scheletri, fantasmi e gargoyle.
+    CHIAVE=POZZO_DELL_ALCHIMISTA;TIPO=PULIZIA_DEI_DUNGEON;ASPETTO=ALCHIMISTA;MANDANTE=l'alchimista;NEMICO=FOLLETTO;NUMERO=4;\
+    LUOGO=GROTTA;MONETE=45;TITOLO=Il pozzo degli esperimenti;\
+    RICHIESTA=In una grotta butto gli esperimenti venuti male. Ecco, adesso gli esperimenti venuti male si sono organizzati, e non mi fanno più entrare.;\
+    BATTUTA=Che esperimenti?;RISPOSTA=Folletti, soprattutto. E altre cose. Le altre cose ve le presento quando arrivano.;\
+    ONDATA_2=ARPIA 2;ARRIVO_2=Dal fondo del pozzo salgono due arpie, che di sicuro non erano arpie quando l'alchimista le ha buttate via.;\
+    ONDATA_3=CHIMERA 1;ARRIVO_3=Per ultima esce una chimera, con l'aria di chi ha molte cose da rimproverare a chi l'ha messa al mondo.;\
+    VITTORIA=Il pozzo è ripulito: degli esperimenti venuti male restano solo le boccette.;\
+    RINGRAZIAMENTO=Grazie! D'ora in poi gli esperimenti venuti male li butto nel fiume. No, scherzo. Forse.;\
+    RICORDO=In questa grotta l'alchimista buttava gli esperimenti venuti male, finché non si organizzarono.
     CHIAVE=PATTUGLIA_DI_HOBGOBLIN;TIPO=SCHERMAGLIA;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=HOBGOBLIN;\
     NUMERO=3;LUOGO=BOSCO;MONETE=30;TITOLO=La pattuglia nel bosco;\
     RICHIESTA=Una pattuglia di hobgoblin gira per un bosco qui vicino e tasta le nostre difese. Una scaramuccia, e se ne vanno.;\
