@@ -100,7 +100,12 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 
 		frasiFiaba.forEach(frase -> pagina.conBattuta(BattutaIntermezzo.di("bardo", frase)));
 
-		pagina.conBattuta(BattutaIntermezzo.di("locandiere", "Smettila con queste tue storielle!"));
+		String reazioneLocandiere = ProduttoreDiTestiCasuale.reazioneLocandiere();
+		Collection<String> frasiReazioneLocandiere = Arrays.stream(reazioneLocandiere.split(REGEX_PER_SPEZZARE_FRASI))
+				.map(String::trim)
+				.collect(Collectors.toList());
+
+		frasiReazioneLocandiere.forEach(frase -> pagina.conBattuta(BattutaIntermezzo.di("locandiere", frase)));
 
 		Collection<String> frasiLocandiere = Arrays.stream(dialogo.split(REGEX_PER_SPEZZARE_FRASI))
 				.map(String::trim)

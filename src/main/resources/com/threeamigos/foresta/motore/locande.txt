@@ -768,6 +768,27 @@ VOLANO_PUGNI
     morsi
     pugni e morsi
 
+REAZIONE_LOCANDIERE
+    [SMETTILA] [CLIENTI_SI_DOMANDANO]
+
+SMETTILA
+    Smettila con queste tue storielle!
+    Basta con queste storie assurde!
+    Insomma, ti ho già detto di non raccontare più queste storie incredibili!
+    Basta con queste sciocchezze!
+    Ancora con queste fole?
+    Ti ho già detto di non raccontare più queste storie!
+    Non hai storie più credibili nel tuo repertorio?
+
+CLIENTI_SI_DOMANDANO
+    I clienti si domandano quanti boccali di Sglord tu ti sia scolato!
+    Gli avventori cominciano a preoccuparsi!
+    I clienti ti stanno guardando malissimo!
+    Ai clienti stanno sanguinando le orecchie!
+    Te l'ho detto un sacco di volte di non esagerare con lo Sglord!
+    Gli avventori si sono spostati in un'altra dimensione!
+    I clienti si stanno domandando cosa tu ti sia scolato!
+    Devi finire di mettere a dura prova le riserve alcooliche del locale!
 
 NOTIZIE_CITTA
     CG1-Rissa da Spettacolo - Pugni e morsi tra i mercanti quando EROE ha pagato un folletto per fare boccacce alle guardie cittadine nel bel mezzo della lettura del bando reale.

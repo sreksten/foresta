@@ -8,14 +8,13 @@ import com.threeamigos.foresta.motore.modellodati.Notizia;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-
-import javax.swing.SwingUtilities;
 
 public class ProduttoreDiTestiCasuale {
 
@@ -64,6 +63,12 @@ public class ProduttoreDiTestiCasuale {
 		List<String> fiaba = fiabe.produce();
 		fiabe.reset();
 		return fiaba;
+	}
+
+	public static String reazioneLocandiere() {
+		List<String> reazioneLocandiere = locande.produce("REAZIONE_LOCANDIERE");
+		locande.reset();
+		return reazioneLocandiere.get(0);
 	}
 
 	/**
