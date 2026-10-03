@@ -68,7 +68,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         if (!riguardaQuestaSchermata(notificaApprovazioneVenditaArtefatto.getEventoRichiestaSpostamentoArtefatto())) {
             return;
         }
-        BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Grazie di aver fatto affari con noi!", getCoordinateFumetto()));
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo(fraseDopoLaVendita(), getCoordinateFumetto()));
 
         int costo = GruppoGiocatore.getIstanza().prezzoVendita(
                 notificaApprovazioneVenditaArtefatto.getEventoRichiestaSpostamentoArtefatto().getOggettoDaSpostare().getCostoAcquisto());
@@ -81,6 +81,13 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
             return;
         }
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Non hai abbastanza denaro per comprare questo oggetto.", getCoordinateFumetto()));
+    }
+
+    /**
+     * Che cosa dice chi ha appena comprato qualcosa dal gruppo.
+     */
+    String fraseDopoLaVendita() {
+        return "Grazie di aver fatto affari con noi!";
     }
 
     void impostaAutoma(AutomaScambiatoreArtefatti automa) {

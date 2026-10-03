@@ -3,7 +3,6 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloMondo;
-import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
@@ -21,9 +20,6 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class MagazziniTest {
 
-	private static final String SALUTO_ARMAIOLO = "Con il materiale che mi hai fornito, farò altre meravigliose creazioni!";
-	private static final String SALUTO_VENDITORE = "le rivenderò a qualche mago di passaggio!";
-
 	@Test
 	void quantoSiVendeAllArmaioloSparisceAllUscitaDallaCitta() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
@@ -39,8 +35,6 @@ class MagazziniTest {
 			partita.comando(Comando.ESCI_DA_CITTA);
 
 			assertFalse(contiene(armaiolo.getInventario(), spada));
-			assertTrue(haDetto(partita, SALUTO_ARMAIOLO));
-			assertFalse(haDetto(partita, SALUTO_VENDITORE), "al venditore di pergamene non si e' venduto nulla");
 		}
 	}
 
@@ -57,8 +51,6 @@ class MagazziniTest {
 			partita.comando(Comando.ESCI_DA_CITTA);
 
 			assertFalse(contiene(venditore.getInventario(), pergamena));
-			assertTrue(haDetto(partita, SALUTO_VENDITORE));
-			assertFalse(haDetto(partita, SALUTO_ARMAIOLO));
 		}
 	}
 
@@ -76,7 +68,7 @@ class MagazziniTest {
 			partita.comando(Comando.ESCI_DA_CITTA);
 
 			assertTrue(contiene(partita.gruppo().getInventario(), spada), "la spada ricomprata resta al gruppo");
-			assertFalse(haDetto(partita, SALUTO_ARMAIOLO), "l'armaiolo non ha piu' nulla da smaltire");
+			assertFalse(contiene(armaiolo.getInventario(), spada), "ricomprata, non è più dell'armaiolo");
 		}
 	}
 
@@ -109,10 +101,6 @@ class MagazziniTest {
 
 	private static boolean contiene(Collection<Artefatto> artefatti, Artefatto artefatto) {
 		return artefatti.stream().anyMatch(a -> a.getModelloDati() == artefatto.getModelloDati());
-	}
-
-	private static boolean haDetto(PartitaDiTest partita, String testo) {
-		return partita.eventi().tutti(NotificaTestoParagrafo.class).stream().anyMatch(n -> n.getMessaggio().contains(testo));
 	}
 
 	private static Artefatto artefatto(TipoArtefatto tipo) {

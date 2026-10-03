@@ -5,7 +5,6 @@ import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoPreparazioneLocazione;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloMondo;
-import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
@@ -384,23 +383,13 @@ public class RegistroArtefatti {
 
 	/**
 	 * All'uscita dalla città i negozi distruggono quanto il gruppo ha venduto loro e non ha ricomprato,
-	 * così i magazzini non crescono all'infinito.
+	 * così i magazzini non crescono all'infinito. Che cosa ne faranno lo dicono al momento della vendita, a bottega
+	 * aperta (vedi DisplayableCanvasCommerciante.fraseDopoLaVendita).
 	 */
 	private static void smaltisciVenduti() {
-		Set<TipoNegozio> negoziCheHannoSmaltito = EnumSet.noneOf(TipoNegozio.class);
 		for (Vendita vendita : vendutiNellaVisita) {
-			if (getRegistroArtefatti().rimuoviDaMagazzino(vendita.coordinate, vendita.negozio, vendita.artefatto)) {
-				negoziCheHannoSmaltito.add(vendita.negozio);
-			}
+			getRegistroArtefatti().rimuoviDaMagazzino(vendita.coordinate, vendita.negozio, vendita.artefatto);
 		}
 		vendutiNellaVisita.clear();
-		if (negoziCheHannoSmaltito.contains(TipoNegozio.ARMAIOLO)) {
-			BusEventi.pubblica(new NotificaTestoParagrafo(
-					"L'armaiolo ti saluta: “Con il materiale che mi hai fornito, farò altre meravigliose creazioni!\""));
-		}
-		if (negoziCheHannoSmaltito.contains(TipoNegozio.VENDITORE_DI_PERGAMENE)) {
-			BusEventi.pubblica(new NotificaTestoParagrafo(
-					"Il venditore di pergamene ti saluta: “Ottime pergamene: le rivenderò a qualche mago di passaggio!\""));
-		}
 	}
 }

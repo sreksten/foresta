@@ -32,6 +32,17 @@ public class DisplayableCanvasCommerciante extends DisplayableCanvasScambiatoreA
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo(frase, getCoordinateFumetto()));
     }
 
+    /**
+     * Il negoziante dice subito, a bottega aperta, che cosa farà della merce: la smaltisce poi all'uscita dalla città
+     * (vedi RegistroArtefatti.smaltisciVenduti), quando la bottega non si vede più.
+     */
+    @Override
+    String fraseDopoLaVendita() {
+        return negozio == TipoNegozio.VENDITORE_DI_PERGAMENE
+                ? "Ottime pergamene: le rivenderò a qualche mago di passaggio!"
+                : "Con il materiale che mi hai fornito, farò altre meravigliose creazioni!";
+    }
+
     void impostaNegozio(TipoNegozio negozio) {
         this.negozio = negozio;
     }
