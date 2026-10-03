@@ -281,6 +281,8 @@ TRASPORTO
     F;boccetta d'acqua sacra;la badessa;il cavaliere ferito;URGENTE;22;Il cavaliere è stato ferito da una lama stregata, e la ferita non si chiude. Solo l'acqua della nostra fonte la può guarire.;Non basterebbe una benda?;Le bende le ha già provate tutte. Anche quelle stregate.;La ferita si chiude! Sento il calore dell'acqua sacra fin nelle ossa.
     F;cassa di rimedi;il medico di corte;il guaritore del lazzaretto;URGENTE;25;Nel lazzaretto c'è un'epidemia di febbre grigia, e i rimedi sono finiti.;Si attacca anche a noi?;Non se ve ne andate subito, dopo la consegna.;Basteranno per tutti i malati! E adesso andate, prima che la febbre prenda anche voi.
     M;sacco di sale purificato;la badessa;il sindaco;URGENTE;22;Una pestilenza si sta mangiando il grano, e chi lo mangia. Questo sale, sparso sulle soglie delle case, ferma il contagio.;Funziona davvero?;Funziona sempre. Quasi sempre. Spesso.;Lo spargeremo su ogni soglia. Che il cielo vi benedica!
+    M;contratto di compravendita;il notaio;il mercante di stoffe;URGENTE;18;Il mercante deve firmare questo contratto entro pochi giorni, o l'affare salta. E con l'affare salta anche la mia parcella.;E se non lo vuole firmare?;Lo firmerà. È lui che l'ha chiesto, e lo vuole ancora più di me.;Firmato! E con il sigillo, guardate. Adesso le stoffe sono mie.
+
 # ---------------------------------------------------------------------------------------------
 # Contrabbando da una città all'altra (vedi IlContrabbandiere)
 # ---------------------------------------------------------------------------------------------
@@ -295,6 +297,7 @@ CONTRABBANDO
     M;baule di sete orientali;il mercante;la sarta di corte;CON_CALMA;20;Le sete orientali pagano una gabella che farebbe piangere un esattore. Per fortuna gli esattori non piangono, e non guardano nei bauli.;E se lo aprono?;Dentro ci sono anche delle mutande, sopra. Nessuno guarda sotto le mutande.;Che meraviglia! Le dame di corte non sapranno mai da dove vengono.
     F;gabbia di folletti;il cacciatore di frodo;il collezionista;URGENTE;26;Catturare i folletti è proibito, venderli ancora di più. Ma il collezionista paga bene, e i folletti nella gabbia non durano molto.;Non è un po' crudele?;Sì. Infatti pago bene anche voi.;Ah, splendidi! Lo so, lo so, non dovrei. Ma guardate che colori.
     M;libro di incantesimi proibiti;il bibliotecario;il mago di corte;CON_CALMA;24;Questo libro era nella sezione chiusa della biblioteca, e adesso non c'è più. Il mago di corte lo vuole leggere prima che qualcuno se ne accorga.;Che incantesimi ci sono dentro?;Non lo so. E non apritelo per scoprirlo, l'ultimo che l'ha aperto adesso è un rospo.;Eccolo! Grazie. E il rospo come sta?
+    F;cassa di uova di viverna;il ricettatore;l'allevatore di bestie;URGENTE;26;Uova di viverna, vendute al mercato nero. Chi le compra le fa schiudere e vende i cuccioli ai signori. Sono calde, ancora per poco.;E se si schiudono per strada?;Allora correte. Molto. Le viverne appena nate hanno fame.;Ancora calde! I signori pagheranno il triplo. Non chiedete per cosa.
 
 # ---------------------------------------------------------------------------------------------
 # Oggetti smarriti nella foresta (vedi LOggettoSmarrito e OggettoSmarrito)
@@ -498,6 +501,27 @@ INCARICO_DI_COMBATTIMENTO
     VITTORIA=%CAPO% è sconfitto. Giura che è solo un graffio, ma si sposta dal sentiero.;\
     RINGRAZIAMENTO=Il sentiero è libero! Le mie merci passano, e il cavaliere nero, dicono, adesso chiede l'elemosina.;\
     RICORDO=In questo bosco il cavaliere nero %CAPO% non lasciava passare nessuno.
+    CHIAVE=GARA_DI_MAGIA;TIPO=COMPETIZIONE;ASPETTO=QUALUNQUE;MANDANTE=il borgomastro;NEMICO=MAGO;NUMERO=1;CAPO=NOME_MAGO;\
+    RESA=SI;DUELLO=SI;LUOGO=RADURA;MONETE=40;TITOLO=La gara di magia;\
+    RICHIESTA=Per la fiera, la città sfida %CAPO%, il mago della valle, a una gara di magia. Il nostro mago si è ammalato. Di paura.;\
+    BATTUTA=E vince chi?;RISPOSTA=Chi resta in piedi per ultimo. È una gara di magia, ma in valle la fanno così.;\
+    VITTORIA=%CAPO% si inchina: la gara è vostra, e la coppa della fiera resta in città.;\
+    RINGRAZIAMENTO=La coppa resta qui per un altro anno! Il nostro mago dice che si è già sentito meglio.;\
+    RICORDO=In questa radura si tenne la gara di magia contro %CAPO%.
+    CHIAVE=BRIGANTE_DA_CATTURARE;TIPO=CONFINAMENTO;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=LADRO;\
+    NUMERO=1;CAPO=NOME_BRIGANTE;RESA=SI;LUOGO=GROTTA;MONETE=40;TITOLO=Vivo, non morto;\
+    RICHIESTA=Il brigante %CAPO% si nasconde in una grotta qui vicino. Lo voglio in cella, e vivo: il giudice ha molte domande da fargli.;\
+    BATTUTA=E se non vuole venire?;RISPOSTA=Convincetelo. Ma vivo, mi raccomando. Dei morti il giudice non sa che farsene.;\
+    VITTORIA=%CAPO% si arrende, e vi segue fino in città con le mani legate.;\
+    RINGRAZIAMENTO=%CAPO% è in cella, e il giudice è già al lavoro. Bel colpo, e senza un graffio.;\
+    RICORDO=In questa grotta si nascondeva il brigante %CAPO%, finché qualcuno non lo portò in cella.
+    CHIAVE=CAROVANA_DELL_USURAIO;TIPO=BRIGANTAGGIO;ASPETTO=QUALUNQUE;MANDANTE=il fabbro;NEMICO=GUERRIERO;NUMERO=3;LUOGO=BOSCO;\
+    MONETE=40;TITOLO=La carovana dell'usuraio;\
+    RICHIESTA=Domani la carovana dell'usuraio passa per un bosco, carica dei pegni che ci ha portato via. Tre guardie la scortano.;\
+    BATTUTA=Ci state chiedendo di assaltare una carovana?;RISPOSTA=Vi sto chiedendo di riportare a casa la roba di mezza città. Che poi passi da una carovana, è un dettaglio.;\
+    VITTORIA=Le guardie dell'usuraio scappano, e la carovana è vostra: martelli, pentole, fedi nuziali.;\
+    RINGRAZIAMENTO=Il mio martello! E la fede di mia moglie. Il resto lo restituisco io a chi di dovere.;\
+    RICORDO=In questo bosco qualcuno assaltò la carovana dell'usuraio.
 
 # ---------------------------------------------------------------------------------------------
 # Sorveglianze (vedi LaSorveglianza e SorveglianzaRichiesta)
@@ -625,6 +649,14 @@ SOCCORSO
     RINGRAZIAMENTO=%NOME% è salvo. E guardate un po': sono tornate anche le pecore.;\
     LUTTO=Lo dirò io alla sua famiglia. È il mio lavoro.;\
     RICORDO=In questa radura gli hobgoblin di %CAPO% attaccarono un pastore.
+    CHIAVE=MESSAGGERO_FERITO;TIPO=PRIMO_SOCCORSO;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;PERSONA=il messaggero;\
+    NEMICO=GOBLIN;NUMERO=4;LUOGO=PALUDE;MONETE=35;TITOLO=Il messaggero ferito;\
+    RICHIESTA=Il nostro messaggero, %NOME%, è stato ferito da una freccia dei goblin in una palude. Ha fatto in tempo a mandare il suo piccione, poi più niente.;\
+    BATTUTA=E i goblin?;RISPOSTA=Sono ancora lì, e lo cercano. Fate presto: ha una freccia nella gamba, e i goblin non sono famosi per la loro pazienza.;\
+    SOCCORSO=Gli togliete la freccia e gli fasciate la gamba come potete. %NOME% stringe i denti e si rimette in piedi.;\
+    RINGRAZIAMENTO=%NOME% è vivo, e il messaggio è arrivato. Due buone notizie in una volta sola.;\
+    LUTTO=Era il messaggero più veloce che avessi. Il messaggio, almeno, è arrivato.;\
+    RICORDO=In questa palude un messaggero ferito fu salvato dai goblin.
 
 # ---------------------------------------------------------------------------------------------
 # Indagini (vedi LIndagine e IndagineRichiesta)
@@ -737,6 +769,80 @@ INDAGINE
     VITTORIA=%CAPO%, sconfitta, toglie la maledizione. Ma vuole la promessa che nessuno taglierà più un albero che canta.;\
     RINGRAZIAMENTO=Il grano non canta più. E il contadino pianterà dieci alberi, così impara.;\
     RICORDO=In questo bosco viveva %CAPO%, l'elfa che maledisse il grano.
+    CHIAVE=EVASO_ZOPPO;TIPO=RINTRACCIAMENTO;ASPETTO=CAPITANO;MANDANTE=il carceriere;MONETE=40;TITOLO=L'evaso;\
+    RICHIESTA=Stanotte è evaso un prigioniero, il brigante %CAPO%. Se n'è andato con una gamba ferita e la catena ancora al polso.;\
+    BATTUTA=E dove sarà andato?;RISPOSTA=Se lo sapessi non vi pagherei. Seguite le sue tracce, e riportatelo vivo.;\
+    INDIZIO_1=LOCANDA:Il locandiere ha visto all'alba un uomo zoppo, con una catena al polso. Ha chiesto da che parte stanno i canneti, perché l'acqua cancella le tracce.;\
+    INDIZIO_2=BOSCO:Nel bosco ci sono le impronte di uno che zoppica, e un anello di catena spezzato. Le impronte vanno verso la nebbia e l'odore di fango.;\
+    DOMANDA=Dove si nasconde l'evaso?;SOSPETTI=In una grotta/In una palude/Fra delle rovine;\
+    COLPEVOLE=2;NEMICO=LADRO;NUMERO=1;CAPO=NOME_BRIGANTE;RESA=SI;LUOGO=PALUDE;\
+    SMASCHERAMENTO=Canneti, nebbia, fango: %CAPO% si è nascosto in una palude.;\
+    ERRORE=Vi siete sbagliati, e mentre cercate dalla parte sbagliata %CAPO% fa perdere le sue tracce per sempre.;\
+    VITTORIA=%CAPO% si arrende, stanco e infangato, e vi segue senza storie.;\
+    RINGRAZIAMENTO=Di nuovo in cella, e con una catena nuova. Questa volta la controllo io, la serratura.;\
+    RICORDO=In questa palude fu ripreso l'evaso %CAPO%.
+    CHIAVE=PRIGIONIERI_GOBLIN;TIPO=INTERROGATORIO;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;MONETE=40;\
+    TITOLO=Gli interrogatori;\
+    RICHIESTA=Abbiamo catturato due goblin. Sanno dov'è l'accampamento della loro banda, ma uno dei due mente sempre. Interrogateli.;\
+    BATTUTA=E quale dei due mente?;RISPOSTA=Se lo sapessi, li interrogherei io. Uno è chiuso nella cantina di una locanda, l'altro l'hanno lasciato legato in una grotta.;\
+    INDIZIO_1=LOCANDA:Il goblin della cantina giura che l'accampamento è fra delle rovine. Poi giura che il locandiere è suo cugino, che lui non ha mai visto un goblin, e che il vino è buono.;\
+    INDIZIO_2=GROTTA:Il goblin della grotta, dopo molte storie, dice che l'accampamento è in un bosco. Poi aggiunge che quello della cantina è un gran bugiardo, e che il vino della locanda è annacquato. Questo, almeno, è vero.;\
+    DOMANDA=Dov'è l'accampamento dei goblin?;SOSPETTI=Fra delle rovine/In un bosco/In una palude;\
+    COLPEVOLE=2;NEMICO=GOBLIN;NUMERO=6;CAPO=SI;LUOGO=BOSCO;\
+    SMASCHERAMENTO=Il goblin della cantina mente su tutto, quello della grotta ha detto la verità sul vino. L'accampamento è in un bosco.;\
+    ERRORE=Vi siete sbagliati: avete creduto al bugiardo, e intanto i goblin hanno spostato l'accampamento.;\
+    VITTORIA=L'accampamento dei goblin di %CAPO% è distrutto.;\
+    RINGRAZIAMENTO=Accampamento distrutto! E i due prigionieri li mandiamo a lavorare nella locanda, a lavare i boccali.;\
+    RICORDO=In questo bosco c'era l'accampamento dei goblin di %CAPO%.
+    CHIAVE=SCIA_VIOLA;TIPO=TRACCIA_MAGICA;ASPETTO=ALCHIMISTA;MANDANTE=l'alchimista;MONETE=40;TITOLO=La scia viola;\
+    RICHIESTA=Qualcuno è entrato nel mio laboratorio di notte, senza aprire porte né finestre, e ha rubato la mia pietra lunare. Ha lasciato solo una scia di luce.;\
+    BATTUTA=Una scia di luce?;RISPOSTA=Le creature magiche ne lasciano una, quando passano. Si vede solo di notte, e va seguita.;\
+    INDIZIO_1=RADURA:Nella radura la scia di luce è ancora visibile: è viola, e passa dritta attraverso un albero senza toccarlo.;\
+    INDIZIO_2=TEMPIO:Il custode del tempio conosce le scie: verdi quelle dei folletti, azzurre quelle degli spiriti, viola quelle degli spettri. E solo gli spettri passano attraverso le cose.;\
+    DOMANDA=Chi ha rubato la pietra lunare?;SOSPETTI=Un folletto/Uno spirito/Uno spettro;\
+    COLPEVOLE=3;NEMICO=SPETTRO;NUMERO=2;LUOGO=ROVINE;\
+    SMASCHERAMENTO=Scia viola, che attraversa le cose: sono gli spettri, che si sono rintanati fra delle rovine.;\
+    ERRORE=Vi siete sbagliati, e intanto la scia si spegne. La pietra lunare è perduta.;\
+    VITTORIA=Gli spettri svaniscono, e fra le rovine brilla la pietra lunare.;\
+    RINGRAZIAMENTO=La mia pietra lunare! Stanotte la chiudo in un cassetto di piombo. Gli spettri il piombo non lo attraversano.;\
+    RICORDO=Fra queste rovine si erano rintanati gli spettri che rubarono la pietra lunare.
+    CHIAVE=RUNE_SULLA_PORTA;TIPO=LETTURA_RUNE;ASPETTO=QUALUNQUE;MANDANTE=il borgomastro;MONETE=40;TITOLO=Le rune sulla porta;\
+    RICHIESTA=Stamattina sulla porta della città c'erano delle rune incise, enormi. Nessuno sa leggerle, e nessuno sa chi le ha incise.;\
+    BATTUTA=Enormi quanto?;RISPOSTA=Bisogna salire su una scala per vederle tutte. Già questo mi preoccupa.;\
+    INDIZIO_1=ROVINE:Su una colonna fra le rovine ci sono le stesse rune, incise all'altezza di tre uomini, con accanto il disegno di una mano grande come un carro.;\
+    INDIZIO_2=TEMPIO:Il custode del tempio legge le rune: Verremo a prendere le vostre pecore. Dice che è la lingua antica, quella che nessun goblin ed elfo usa più, ma che i più grandi di tutti non hanno mai dimenticato.;\
+    DOMANDA=Chi ha inciso le rune?;SOSPETTI=I goblin/Gli elfi/I giganti;\
+    COLPEVOLE=3;NEMICO=GIGANTE;NUMERO=1;LUOGO=GROTTA;\
+    SMASCHERAMENTO=Rune incise in alto, una mano grande come un carro, la lingua antica: è un gigante, e si è sistemato in una grotta.;\
+    ERRORE=Vi siete sbagliati, e una notte il gigante viene davvero a prendersi le pecore. Il borgomastro non vi vuole più vedere.;\
+    VITTORIA=Il gigante è sconfitto, e le pecore della città sono salve.;\
+    RINGRAZIAMENTO=Le rune le abbiamo cancellate. Al loro posto ho fatto scrivere: qui le pecore sono protette. In tutte le lingue.;\
+    RICORDO=In questa grotta viveva il gigante che incise le rune sulla porta della città.
+    CHIAVE=TOMBA_DEL_RE;TIPO=DECIFRAZIONE;ASPETTO=QUALUNQUE;MANDANTE=lo storico;MONETE=40;TITOLO=La tomba del re antico;\
+    RICHIESTA=Le iscrizioni di un'antica civiltà raccontano dove fu sepolto il suo ultimo re, con la sua corona di ferro. Sono sparse, e vanno messe insieme.;\
+    BATTUTA=E la corona?;RISPOSTA=La voglio per il museo della città. Che non esiste ancora, ma con una corona antica comincerebbe bene.;\
+    INDIZIO_1=ROVINE:Un'iscrizione fra le rovine dice: Il re dorme dove non arriva il sole.;\
+    INDIZIO_2=RADURA:Su un masso nella radura un'altra iscrizione dice: Il re dorme dove l'acqua non scorre ma goccia.;\
+    INDIZIO_3=TEMPIO:Il custode del tempio traduce l'ultima iscrizione, copiata da un viandante: Il re dorme con le sue guardie, che non hanno più carne ma non hanno smesso di vegliare.;\
+    DOMANDA=Dove fu sepolto il re antico?;SOSPETTI=In una palude/In una grotta/In un bosco/In una radura;\
+    COLPEVOLE=2;NEMICO=SCHELETRO;NUMERO=4;LUOGO=GROTTA;\
+    SMASCHERAMENTO=Dove non arriva il sole e l'acqua goccia: in una grotta. E le guardie senza carne sono scheletri.;\
+    ERRORE=Vi siete sbagliati, e quando lo storico scopre la verità, dei tombaroli hanno già svuotato la tomba.;\
+    VITTORIA=Le guardie del re tornano polvere. Sul trono di pietra c'è la corona di ferro.;\
+    RINGRAZIAMENTO=La corona del re antico! Il museo avrà la sua prima sala. E forse anche la seconda, per voi.;\
+    RICORDO=In questa grotta fu sepolto l'ultimo re di un'antica civiltà.
+    CHIAVE=CURA_DELLA_FEBBRE;TIPO=RICERCA;ASPETTO=QUALUNQUE;MANDANTE=il medico condotto;MONETE=40;TITOLO=La cura dimenticata;\
+    RICHIESTA=In città c'è una febbre che non conosco. Una volta qualcuno sapeva curarla, ma la cura è sepolta in qualche vecchio libro.;\
+    BATTUTA=E dove sono i vecchi libri?;RISPOSTA=Nella biblioteca di un tempio. E qualcosa ne sa anche chi ha vissuto abbastanza da ricordare.;\
+    INDIZIO_1=TEMPIO:In un vecchio libro del tempio c'è scritto che la febbre dei boschi si cura con un fiore bianco, che cresce solo dove l'acqua è ferma.;\
+    INDIZIO_2=LOCANDA:Un vecchio cliente della locanda si ricorda della febbre dei boschi: da ragazzo l'aveva curata con un fiore che sua nonna raccoglieva vicino al nido delle viverne.;\
+    DOMANDA=Quale fiore cura la febbre?;SOSPETTI=Il giglio di palude/La rosa di bosco/Il fiore di aconito della radura;\
+    COLPEVOLE=1;NEMICO=VIVERNA;NUMERO=1;LUOGO=PALUDE;\
+    SMASCHERAMENTO=Bianco, dove l'acqua è ferma, vicino al nido delle viverne: è il giglio di palude. E una viverna ci ha fatto il nido proprio sopra.;\
+    ERRORE=Vi siete sbagliati: il fiore che avete indicato non serve a niente, e la febbre si allarga.;\
+    VITTORIA=La viverna è sconfitta, e i gigli di palude sono vostri.;\
+    RINGRAZIAMENTO=Il giglio di palude! Con questo la febbre se ne va in tre giorni. Lo scrivo in un libro nuovo, che non si perda più.;\
+    RICORDO=In questa palude crescono i gigli che curano la febbre dei boschi.
 
 # ---------------------------------------------------------------------------------------------
 # Riti (vedi IlRituale e RitualeRichiesto)
@@ -838,3 +944,89 @@ RITUALE
     VITTORIA=Il gargoyle si inchina: siete degni. Vi segue fino alla bottega dell'armaiolo, e si piazza sul tetto.;\
     RINGRAZIAMENTO=Da quando c'è il gargoyle sul tetto, nessuno mi ruba più niente. E nessun cliente entra più. Dovrò pensarci.;\
     RICORDO=Fra queste rovine fu evocato un guardiano di pietra.
+    CHIAVE=BARRIERA_CONTRO_LE_ARPIE;TIPO=BARRIERA_MAGICA;ASPETTO=QUALUNQUE;MANDANTE=il borgomastro;LUOGO=RADURA;\
+    GENERE=M;INGREDIENTE=cristallo di quarzo;INGREDIENTI=cristalli di quarzo;DOVE=LUOGHI GROTTA;QUANTITA=4;\
+    DOMANDA=La radura domina la strada per la città. Piantate i cristalli e alzate la barriera?;\
+    NEMICO=ARPIA;NUMERO=3;MONETE=40;TITOLO=La barriera di cristallo;\
+    RICHIESTA=Le arpie attaccano chi va e viene dalla città. Un mago di passaggio dice che una barriera di cristalli, in una radura che domina la strada, le terrebbe lontane.;\
+    BATTUTA=E il mago non poteva alzarla lui?;RISPOSTA=Era di passaggio. È passato.;\
+    RITO=I cristalli cominciano a brillare e la barriera si alza, ma tre arpie piombano sulla radura per impedirlo.;\
+    VITTORIA=Le arpie fuggono, e la barriera di cristallo si chiude sopra la strada con un suono di campanelle.;\
+    RINGRAZIAMENTO=Da quando c'è la barriera, le arpie girano al largo. E la strada, di notte, brilla un po'.;\
+    RICORDO=In questa radura c'è la barriera di cristallo che tiene lontane le arpie.
+    CHIAVE=SANTUARIO_DEI_VIANDANTI;TIPO=SANTUARIO;ASPETTO=QUALUNQUE;MANDANTE=la badessa;LUOGO=BOSCO;\
+    GENERE=M;INGREDIENTE=sasso bianco;INGREDIENTI=sassi bianchi;DOVE=LUOGHI RADURA PALUDE;QUANTITA=5;\
+    DOMANDA=Nel bosco c'è il posto giusto, all'ombra di una quercia. Disponete i sassi e consacrate il santuario?;\
+    MONETE=30;TITOLO=Il santuario dei viandanti;\
+    RICHIESTA=Vorrei un piccolo santuario nel bosco, dove i viandanti possano fermarsi e sentirsi al sicuro. Basta un cerchio di sassi bianchi, consacrato.;\
+    BATTUTA=Al sicuro da cosa?;RISPOSTA=Da quasi tutto. Il quasi è la parte che vi riguarda.;\
+    RITO=I sassi bianchi formano un cerchio perfetto, e sotto la quercia scende una pace che si sente sulla pelle. Il santuario è consacrato.;\
+    RINGRAZIAMENTO=Un viandante è già venuto a ringraziare: ha dormito nel santuario, e nessuno l'ha mangiato. È un buon inizio.;\
+    RICORDO=In questo bosco, sotto una quercia, c'è il santuario dei viandanti.
+    CHIAVE=OCCHIO_DELLA_PALUDE;TIPO=DIVINAZIONE;ASPETTO=QUALUNQUE;MANDANTE=la veggente;LUOGO=PALUDE;\
+    GENERE=F;INGREDIENTE=foglia di salice;INGREDIENTI=foglie di salice;DOVE=LUOGHI PALUDE BOSCO;QUANTITA=4;\
+    DOMANDA=L'acqua della palude è ferma come uno specchio. Bruciate le foglie di salice e interrogate il futuro?;\
+    MONETE=30;TITOLO=L'occhio della palude;\
+    RICHIESTA=Le mie visioni si sono annebbiate. Nell'acqua ferma di una palude, con il fumo delle foglie di salice, il futuro si vede ancora chiaro.;\
+    BATTUTA=E perché non ci andate voi?;RISPOSTA=Perché nell'ultima visione che ho avuto c'era una palude, e io che ci cadevo dentro.;\
+    RITO=Nel fumo dei salici l'acqua si increspa e mostra un castello avvolto dalle fiamme, un drago, e un gruppo di eroi che gli va incontro. Vi assomigliano parecchio.;\
+    RINGRAZIAMENTO=Un drago e degli eroi? Allora il futuro non è poi così annebbiato. Buona fortuna, comunque.;\
+    RICORDO=In questa palude qualcuno vide il futuro nell'acqua ferma.
+    CHIAVE=CONGIUNZIONE_DEGLI_ASTRI;TIPO=ASTRI;ASPETTO=QUALUNQUE;MANDANTE=l'astrologo di corte;LUOGO=RADURA;\
+    GENERE=M;INGREDIENTE=petalo di gelsomino notturno;INGREDIENTI=petali di gelsomino notturno;DOVE=LUOGHI RADURA;QUANTITA=3;\
+    DOMANDA=Il cielo sopra la radura è limpido, le stelle sono tutte al loro posto. Bruciate i petali e leggete le stelle?;\
+    MONETE=30;TITOLO=La congiunzione degli astri;\
+    RICHIESTA=Stanotte c'è una congiunzione che capita una volta ogni cento anni. Va osservata da una radura, lontano dalle luci della città, con il profumo del gelsomino notturno.;\
+    BATTUTA=E dalla vostra torre?;RISPOSTA=Dalla mia torre si vede la torre del vicino. Lui osserva le stelle, io osservo lui.;\
+    RITO=Nel profumo del gelsomino le stelle si allineano, e per un momento disegnano in cielo una spada. Segno di guerra, o di un ottimo raccolto: le stelle non sono mai precise.;\
+    RINGRAZIAMENTO=Una spada? Guerra o raccolto, allora. Scriverò entrambe le cose, così ci azzecco di sicuro.;\
+    RICORDO=Da questa radura qualcuno osservò la congiunzione degli astri.
+    CHIAVE=MEMORIA_DELLE_PIETRE;TIPO=VISIONE_PASSATO;ASPETTO=QUALUNQUE;MANDANTE=il cronista;LUOGO=ROVINE;\
+    GENERE=F;INGREDIENTE=scaglia di ossidiana;INGREDIENTI=scaglie di ossidiana;DOVE=LUOGHI GROTTA ROVINE;QUANTITA=3;\
+    DOMANDA=Le rovine sono silenziose. Posate l'ossidiana sulle pietre e guardate nel loro passato?;\
+    MONETE=30;TITOLO=La memoria delle pietre;\
+    RICHIESTA=Sto scrivendo la storia della città, ma nessuno sa perché la vecchia rocca fu abbandonata. Le pietre lo ricordano: con l'ossidiana si può guardare nella loro memoria.;\
+    BATTUTA=E se il passato non vi piace?;RISPOSTA=Lo scrivo lo stesso. Un cronista non sceglie il passato, lo copia.;\
+    RITO=Nell'ossidiana compaiono gli abitanti della rocca, che se ne vanno tutti in fila, con i loro carri. Il motivo è un pozzo, che si è prosciugato. Niente draghi, niente maledizioni: solo sete.;\
+    RINGRAZIAMENTO=Un pozzo prosciugato. Che delusione. Scriverò che c'era anche un drago, così la gente legge fino alla fine.;\
+    RICORDO=Fra queste rovine, qualcuno guardò nella memoria delle pietre.
+    CHIAVE=PIOMBO_IN_ORO;TIPO=TRASMUTAZIONE;ASPETTO=ALCHIMISTA;MANDANTE=l'alchimista;LUOGO=GROTTA;\
+    GENERE=F;INGREDIENTE=goccia di mercurio;INGREDIENTI=gocce di mercurio;DOVE=LUOGHI GROTTA;QUANTITA=3;\
+    DOMANDA=Il piombo e il mercurio sono pronti, nel cuore della grotta. Come procedete?;\
+    METODI=Mescolate a freddo il piombo e il mercurio/Scaldate il piombo sul fuoco e poi aggiungete il mercurio/Recitate la formula del sole sul piombo;\
+    METODO=2;ERRORE=Il piombo resta piombo, il mercurio si sparge sul pavimento e la grotta si riempie di fumi velenosi. L'alchimista non vi pagherà per questo.;\
+    MONETE=40;TITOLO=Il piombo e l'oro;\
+    RICHIESTA=Ho trovato la ricetta per trasformare il piombo in oro, ma va provata nel cuore di una grotta, dove la terra è calda. Il mercurio non deve mai toccare il piombo freddo.;\
+    BATTUTA=E se funziona?;RISPOSTA=Allora diventiamo ricchi. Io molto, voi un po'. Diciamo quaranta monete.;\
+    RITO=Il piombo caldo beve il mercurio, sfrigola, e diventa un pezzetto d'oro grande come un'unghia.;\
+    RINGRAZIAMENTO=Oro! Poco, ma oro. Con tre gocce di mercurio. A questo ritmo, divento ricco fra trecento anni.;\
+    RICORDO=In questa grotta, una volta, il piombo diventò oro.
+    CHIAVE=GOLEM_D_ARGILLA;TIPO=CREAZIONE_GOLEM;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;LUOGO=PALUDE;\
+    GENERE=F;INGREDIENTE=zolla d'argilla rossa;INGREDIENTI=zolle d'argilla rossa;DOVE=LUOGHI PALUDE;QUANTITA=5;\
+    DOMANDA=L'argilla è impastata, e la figura è pronta. Scrivete il nome segreto sulla fronte del golem?;\
+    NEMICO=GIGANTE;NUMERO=1;MONETE=40;TITOLO=Il golem d'argilla;\
+    RICHIESTA=Mi servono guardie che non dormono, non mangiano e non chiedono la paga. Un vecchio libro spiega come fare un golem d'argilla, in una palude.;\
+    BATTUTA=E se il golem non ubbidisce?;RISPOSTA=Il libro dice che appena nato ubbidisce solo a chi lo batte. Il libro è molto sincero.;\
+    RITO=Il nome segreto si accende sulla fronte, e il golem si alza: grande come un gigante, e con la voglia di vedere chi comanda.;\
+    VITTORIA=Il golem si inginocchia: adesso ubbidisce. Vi segue fino alle mura della città, e si mette di guardia.;\
+    RINGRAZIAMENTO=Non dorme, non mangia e non chiede la paga. Ma ogni tanto piove, e si scioglie un po'. Ci lavoreremo.;\
+    RICORDO=In questa palude fu impastato un golem d'argilla.
+    CHIAVE=PATTO_COL_FIUME;TIPO=PATTO_ANIMA;ASPETTO=QUALUNQUE;MANDANTE=il mugnaio;LUOGO=PALUDE;\
+    GENERE=M;INGREDIENTE=bulbo di giglio nero;INGREDIENTI=bulbi di giglio nero;DOVE=LUOGHI BOSCO;QUANTITA=3;\
+    DOMANDA=Lo spirito delle acque vi osserva dalla nebbia. Gli offrite i gigli neri e stringete il patto?;\
+    NEMICO=SPIRITO;NUMERO=1;MONETE=40;TITOLO=Il patto con il fiume;\
+    RICHIESTA=Ogni primavera il fiume esce dagli argini e mi porta via il mulino. Lo spirito delle acque vive in una palude: con lui si può fare un patto.;\
+    BATTUTA=Che tipo di patto?;RISPOSTA=Lui non allaga il mulino, io non pesco più nel suo fiume. Mi sembra giusto. E poi i pesci erano piccoli.;\
+    RITO=Lo spirito accetta i gigli neri, ma prima di stringere il patto vuole misurarsi con chi glielo propone.;\
+    VITTORIA=Lo spirito si inchina e stringe il patto: il fiume resterà negli argini, finché il mugnaio non pescherà.;\
+    RINGRAZIAMENTO=Il patto è stretto! Ho già venduto le canne da pesca. Il mulino, quest'anno, resta dov'è.;\
+    RICORDO=In questa palude fu stretto il patto tra il mugnaio e lo spirito delle acque.
+    CHIAVE=PIOGGIA_DI_RANE;TIPO=ANTI_MAGIA;ASPETTO=QUALUNQUE;MANDANTE=la fornaia;LUOGO=ROVINE;\
+    GENERE=M;INGREDIENTE=rametto di ruta;INGREDIENTI=rametti di ruta;DOVE=LUOGHI RADURA BOSCO;QUANTITA=4;\
+    DOMANDA=Fra le rovine c'è ancora il cerchio dell'incantesimo, tracciato col carbone. Bruciate la ruta e scioglietelo?;\
+    MONETE=35;TITOLO=La pioggia di rane;\
+    RICHIESTA=Da una settimana in città piovono rane. Sul pane, nel latte, nei letti. Una strega se n'è andata ridendo, e ha lasciato un cerchio fra delle rovine.;\
+    BATTUTA=E come si scioglie?;RISPOSTA=Con il fumo della ruta, dice il sacerdote. Lui intanto si è chiuso in casa con l'ombrello.;\
+    RITO=Il fumo della ruta cancella il cerchio di carbone, e in lontananza, sopra la città, l'ultima rana cade con un plof. L'incantesimo è sciolto.;\
+    RINGRAZIAMENTO=Niente più rane! Il pane di oggi è senza zampe. Ve ne do una pagnotta, controllata.;\
+    RICORDO=Fra queste rovine fu sciolto l'incantesimo della pioggia di rane.

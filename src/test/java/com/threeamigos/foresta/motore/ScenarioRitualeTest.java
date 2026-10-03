@@ -39,14 +39,17 @@ class ScenarioRitualeTest {
     void ogniRitoSiLegge() {
         Set<String> chiavi = new HashSet<>();
         Set<TipoMissione> tipi = EnumSet.noneOf(TipoMissione.class);
-        for (int i = 0; i < 300; i++) {
+        for (int i = 0; i < 600; i++) {
             RitualeRichiesto rituale = RitualeRichiesto.da(ProduttoreDiTestiCasuale.rigaDiMissioni("RITUALE"));
             chiavi.add(rituale.getChiave());
             tipi.add(rituale.getTipo());
         }
-        assertTrue(chiavi.size() >= 8, String.valueOf(chiavi));
+        assertTrue(chiavi.size() >= 17, String.valueOf(chiavi));
         assertEquals(EnumSet.of(TipoMissione.RITUALE, TipoMissione.SIGILLO, TipoMissione.BENEDIZIONE, TipoMissione.SPEZZATURA,
-                TipoMissione.PURIFICAZIONE, TipoMissione.POSSESSIONE, TipoMissione.COMUNICAZIONE, TipoMissione.EVOCAZIONE), tipi);
+                TipoMissione.PURIFICAZIONE, TipoMissione.POSSESSIONE, TipoMissione.COMUNICAZIONE, TipoMissione.EVOCAZIONE,
+                TipoMissione.BARRIERA_MAGICA, TipoMissione.SANTUARIO, TipoMissione.DIVINAZIONE, TipoMissione.ASTRI,
+                TipoMissione.VISIONE_PASSATO, TipoMissione.TRASMUTAZIONE, TipoMissione.CREAZIONE_GOLEM, TipoMissione.PATTO_ANIMA,
+                TipoMissione.ANTI_MAGIA), tipi);
 
         RitualeRichiesto pastore = RitualeRichiesto.da(PASTORE);
         assertEquals(Arrays.asList("La formula", "Il fumo", "Il sale"), pastore.getMetodi());

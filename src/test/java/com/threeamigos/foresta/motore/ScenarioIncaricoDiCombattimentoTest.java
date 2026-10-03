@@ -32,7 +32,7 @@ class ScenarioIncaricoDiCombattimentoTest {
     void ogniIncaricoSiLeggeEOgniTipoCompare() {
         Set<String> chiavi = new HashSet<>();
         Set<TipoMissione> tipi = EnumSet.noneOf(TipoMissione.class);
-        for (int i = 0; i < 600; i++) {
+        for (int i = 0; i < 1000; i++) {
             CombattimentoRichiesto incarico = CombattimentoRichiesto.da(ProduttoreDiTestiCasuale.rigaDiMissioni("INCARICO_DI_COMBATTIMENTO"));
             assertTrue(incarico.getNumero() > 0 && incarico.getMonete() > 0, incarico.getRiga());
             assertFalse(incarico.getVittoria().isEmpty() || incarico.getRingraziamento().isEmpty(), incarico.getRiga());
@@ -46,7 +46,8 @@ class ScenarioIncaricoDiCombattimentoTest {
         assertEquals(EnumSet.of(TipoMissione.VENDETTA, TipoMissione.COMBATTIMENTO_BESTIA, TipoMissione.PULIZIA_DEI_DUNGEON,
                 TipoMissione.SCHERMAGLIA, TipoMissione.IMBOSCATA, TipoMissione.PROTEZIONE_TEMPORALE, TipoMissione.DUELLO,
                 TipoMissione.DUELLO_ANTICO, TipoMissione.DUELLO_MAGICO, TipoMissione.COMBATTIMENTO_RITUALE, TipoMissione.BLOCCO,
-                TipoMissione.PONTE_TATTICO, TipoMissione.SORTITA, TipoMissione.CARICA), tipi);
+                TipoMissione.PONTE_TATTICO, TipoMissione.SORTITA, TipoMissione.CARICA, TipoMissione.COMPETIZIONE,
+                TipoMissione.CONFINAMENTO, TipoMissione.BRIGANTAGGIO), tipi);
 
         assertThrows(IllegalArgumentException.class, () -> CombattimentoRichiesto.da(TROLL + ";COLORE=VERDE"));
         assertEquals("Teodolinda", CombattimentoRichiesto.da(TROLL.replace("CAPO=SI", "CAPO=Teodolinda")).pescaNomeDelCapo());

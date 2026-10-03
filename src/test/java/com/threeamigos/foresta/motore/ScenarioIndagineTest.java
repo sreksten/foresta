@@ -31,14 +31,14 @@ class ScenarioIndagineTest {
     @Test
     void ogniIndagineSiLegge() {
         Set<String> chiavi = new HashSet<>();
-        for (int i = 0; i < 300; i++) {
+        for (int i = 0; i < 600; i++) {
             IndagineRichiesta indagine = IndagineRichiesta.da(ProduttoreDiTestiCasuale.rigaDiMissioni("INDAGINE"));
             if (!indagine.isConCapo()) {
                 assertFalse(indagine.getRiga().contains("%CAPO%"), indagine.getRiga());
             }
             chiavi.add(indagine.getChiave());
         }
-        assertTrue(chiavi.size() >= 7, String.valueOf(chiavi));
+        assertTrue(chiavi.size() >= 13, String.valueOf(chiavi));
 
         IndagineRichiesta campane = IndagineRichiesta.da(CAMPANE);
         assertEquals(Arrays.asList("Il campanaro", "I gargoyle", "Le arpie"), campane.getSospetti());

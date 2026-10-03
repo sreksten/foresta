@@ -894,3 +894,21 @@ combattimento e nelle indagini): chi lo compone combatte fino alla resa
 Test: `ScenarioDuelliTest`. Da fare, se serve: `RESA=SI` e `DUELLO=SI` anche per
 sorveglianze, soccorsi, indagini (il duello) e riti; il registro dei personaggi
 incontrati (vedi gestione_missioni.md).
+
+### Altri tipi coperti con la sola grammatica (2026-10-03)
+
+Righe nuove in `missioni.txt`, senza codice:
+
+- riti (`RITUALE`): BARRIERA_MAGICA, SANTUARIO, DIVINAZIONE, ASTRI,
+  VISIONE_PASSATO, TRASMUTAZIONE (con il metodo da scegliere), CREAZIONE_GOLEM
+  (il golem è un GIGANTE), PATTO_ANIMA, ANTI_MAGIA;
+- indagini (`INDAGINE`): RINTRACCIAMENTO, INTERROGATORIO, TRACCIA_MAGICA,
+  LETTURA_RUNE, DECIFRAZIONE, RICERCA. I sospetti possono essere anche posti
+  ("In una palude") o cose ("Il giglio di palude"): sono solo risposte;
+- incarichi di combattimento: COMPETIZIONE (una gara di magia, duello con resa),
+  CONFINAMENTO (un brigante da catturare vivo, con resa), BRIGANTAGGIO;
+- corriere: CONTRATTO; contrabbando: MERCATO_NERO; soccorso: PRIMO_SOCCORSO.
+
+Restano da valutare, perché verrebbero forzati: SICARIO, TENTATIVO_OMICIDIO,
+BENEDIZIONE_RICEVERE, PROFILING, CURIOSITA_ACCADEMICA, DIPLOMAZIA,
+NEGOZIAZIONE_TREGUA.

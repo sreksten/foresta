@@ -106,6 +106,7 @@ public enum TipoMissione {
      * Esempio: fare da broker, intermediario commerciale, mediatore
      */
     SENSERIA(SupertipoMissione.NEGOZIAZIONE),
+    // Coperto da: IlCorriere (il contratto di compravendita)
     /**
      * Esempio: negoziare contratto, accordo legale, documento vincolante
      */
@@ -285,10 +286,12 @@ public enum TipoMissione {
      * Esempio: isolare malati, contenimento, prevenzione contagio
      */
     QUARANTENA(SupertipoMissione.PROTEZIONE),
+    // Coperto da: IlRituale (la barriera di cristallo contro le arpie)
     /**
      * Esempio: creare barriera magica, protezione magica, scudo incantato
      */
     BARRIERA_MAGICA(SupertipoMissione.PROTEZIONE),
+    // Coperto da: IlSoccorso (il messaggero ferito)
     /**
      * Esempio: aiuto immediato a feriti, intervento d'emergenza, primo intervento
      */
@@ -307,6 +310,7 @@ public enum TipoMissione {
      * Esempio: contrastare avvelenamento, antidoto, cura veleno
      */
     ANTI_VELENO(SupertipoMissione.PROTEZIONE),
+    // Coperto da: IlRituale (il santuario dei viandanti)
     /**
      * Esempio: creare santuario, luogo sacro, area protetta consacrata
      */
@@ -350,10 +354,12 @@ public enum TipoMissione {
      * Esempio: esplorare le terre selvagge per scoprire nuovi insediamenti o rovine sconosciute
      */
     ESPLORAZIONE(SupertipoMissione.INVESTIGAZIONE),
+    // Coperto da: LIndagine (l'evaso)
     /**
      * Esempio: trovare persona scomparsa, rintracciare creatura selvatica, localizzare fuggitivo, cercare persona specifica, ricerca mirata, localizzazione target
      */
     RINTRACCIAMENTO(SupertipoMissione.INVESTIGAZIONE),
+    // Coperto da: LIndagine (la cura dimenticata)
     /**
      * Esempio: cercare informazioni in archivi, ricercare in biblioteche, studiare testi antichi, raccogliere dati
      */
@@ -372,6 +378,7 @@ public enum TipoMissione {
      * Esempio: scoprire una spia nel nostro accampamento, smascherare un traditore, impedire lo spionaggio
      */
     CONTROSPIONAGGIO(SupertipoMissione.INVESTIGAZIONE),
+    // Coperto da: LIndagine (i due goblin prigionieri)
     /**
      * Esempio: interrogare prigionieri, estrarre informazioni, interrogatorio forzato, estorsione confessioni
      */
@@ -390,6 +397,7 @@ public enum TipoMissione {
      * Esempio: analizzare profilo criminale, psicologia criminale, prevedere comportamenti, profilazione psicologica
      */
     PROFILING(SupertipoMissione.INVESTIGAZIONE),
+    // Coperto da: LIndagine (la scia viola)
     /**
      * Esempio: seguire tracce magiche, tracciamento soprannaturale, aura tracking, leggere presenze invisibili
      */
@@ -414,6 +422,7 @@ public enum TipoMissione {
      * Esempio: scoprire inganno, smascherare falsità, rivelare bugia, denudare inganni
      */
     SCOPERTA_INGANNO(SupertipoMissione.INVESTIGAZIONE),
+    // Coperto da: LIndagine (le rune sulla porta)
     /**
      * Esempio: leggere rune, decifrare simboli magici, interpretazione runica, leggere aura
      */
@@ -422,6 +431,7 @@ public enum TipoMissione {
      * Esempio: mappare un territorio sconosciuto, catalogare reperti archeologici, documenting scoperte
      */
     DOCUMENTAZIONE(SupertipoMissione.INVESTIGAZIONE),
+    // Coperto da: LIndagine (la tomba del re antico)
     /**
      * Esempio: esplorare rovine perdute per ricomporre la storia di una civiltà attraverso iscrizioni magiche
      */
@@ -437,6 +447,7 @@ public enum TipoMissione {
      * Esempio: insegnare a un apprendista la magia, allenare una guardia, diventare maestro di una disciplina
      */
     ADDESTRAMENTO(SupertipoMissione.PROGRESSIONE),
+    // Coperto da: IncaricoDiCombattimento (la gara di magia)
     /**
      * Esempio: vincere una gara di magia, battere un campione in un duello, guadagnare un'elezione
      */
@@ -559,6 +570,7 @@ public enum TipoMissione {
      * Esempio: assassinare silenziosamente un nemico senza farsi scoprire
      */
     ASSASSINIO(SupertipoMissione.ILLECITO),
+    // Coperto da: IlContrabbandiere (le uova di viverna)
     /**
      * Esempio: commercio nel mercato nero, merci illegali, contrabbando organizzato
      */
@@ -663,6 +675,7 @@ public enum TipoMissione {
      * Esempio: rubare identità, usurpazione, furto identità
      */
     FURTO_IDENTITA(SupertipoMissione.ILLECITO),
+    // Coperto da: IncaricoDiCombattimento (la carovana dell'usuraio)
     /**
      * Esempio: rapire, furto a mano armata, rapinare
      */
@@ -675,6 +688,7 @@ public enum TipoMissione {
      * Esempio: imbrogliare al gioco, baro, truffa al gioco d'azzardo
      */
     IMBROGLIONE(SupertipoMissione.ILLECITO),
+    // Coperto da: IncaricoDiCombattimento (il brigante da catturare vivo)
     /**
      * Esempio: imprigionare qualcuno, tenere in carcere, reclusione
      */
@@ -710,6 +724,7 @@ public enum TipoMissione {
      * Esempio: parlare con spiriti, comunicare con divinità, ottenere messaggi soprannaturali, negoziare con entità
      */
     COMUNICAZIONE(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (la memoria delle pietre)
     /**
      * Esempio: visione del passato, retrocognizione, rivivere momenti passati, leggere storia di oggetti, psicometria
      */
@@ -749,14 +764,17 @@ public enum TipoMissione {
      * Esempio: sigillare portali, incantesimi sigillo, chiudere varchi magici
      */
     SIGILLO(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (il piombo e l'oro)
     /**
      * Esempio: trasformare metalli, alchemy, alchimia, trasmutazione
      */
     TRASMUTAZIONE(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (la congiunzione degli astri)
     /**
      * Esempio: astrologia, lettura stelle, predizioni, divinazione
      */
     ASTRI(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (l'occhio della palude)
     /**
      * Esempio: leggere il futuro, predizioni magiche, visioni
      */
@@ -765,6 +783,7 @@ public enum TipoMissione {
      * Esempio: creare illusioni magiche, inganno illusorio, miraggio
      */
     ILLUSIONE(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (la pioggia di rane)
     /**
      * Esempio: contrastare magia, dispellare incantesimi, anti-magia
      */
@@ -836,6 +855,7 @@ public enum TipoMissione {
      * Esempio: scambio di corpi, trasferimento corporeo, swap souls
      */
     SCAMBIO_CORPI(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (il golem d'argilla)
     /**
      * Esempio: creazione di golem, animazione artificiale, creatura magica
      */
@@ -852,6 +872,7 @@ public enum TipoMissione {
      * Esempio: animazione di oggetti inanimati, enchantment animato, vita artificiale
      */
     ANIMAZIONE_OGGETTI(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (il patto con lo spirito del fiume)
     /**
      * Esempio: patto con demoni/entità, contratto spirituale, alleanza soprannaturale
      */

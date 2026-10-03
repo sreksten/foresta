@@ -42,7 +42,7 @@ class ScenarioSoccorsoTest {
             tipi.add(soccorso.getTipo());
         }
         assertTrue(chiavi.size() >= 5, String.valueOf(chiavi));
-        assertEquals(EnumSet.of(TipoMissione.SOCCORSO, TipoMissione.SALVATAGGIO), tipi);
+        assertEquals(EnumSet.of(TipoMissione.SOCCORSO, TipoMissione.SALVATAGGIO, TipoMissione.PRIMO_SOCCORSO), tipi);
         assertThrows(IllegalArgumentException.class, () -> SoccorsoRichiesto.da(TAGLIALEGNA.replace("LUTTO=Andate via.;", "")));
     }
 
