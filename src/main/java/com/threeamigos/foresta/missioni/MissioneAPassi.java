@@ -669,7 +669,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 		return Long.parseLong(valore);
 	}
 
-	private static long oreDiGioco() {
+	protected static long oreDiGioco() {
 		return LineaTemporale.getGiorno() * 24L + LineaTemporale.getOra();
 	}
 

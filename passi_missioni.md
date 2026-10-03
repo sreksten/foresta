@@ -206,7 +206,27 @@ lo scortato vivo sia, dovunque, quando muore (`isScortatoMorto()` sceglie il
 ramo): se Armando muore la missione resta aperta finché il gruppo non torna in
 città, dove c'è la scena triste con la moglie, e solo dopo fallisce. Test:
 `ScenarioRapimentoDiArmandoTest`.
-Il nome dell'ostaggio per ora è fisso; si potrà prendere da una grammatica. Con questi il catalogo del §2 è coperto tutto.
+Il nome dell'ostaggio per ora è fisso; si potrà prendere da una grammatica.
+
+### Incarichi in città unificati e ripetibili (2026-10-03)
+
+`MissioneRecuperaBersaglio` (il medaglione di Fleena, le derrate di Ruuna) è
+ora una specializzazione di `IncaricoInCitta`: ha una città fissa
+(`getCittaFissa()`), e il suo compito sono due passi, COVO (compare il covo,
+rivendicato dalla missione) e RECUPERO (il covo completato); incarico, ritorno,
+ricompensa e città distrutta sono quelli di tutti gli incarichi. Un incarico con
+la città fissa è la storia di quella città e parte alla prima visita; gli altri
+aspettano una visita tranquilla, e nel decidere se lo è contano gli incarichi a
+città fissa come qualunque altra missione.
+
+Un incarico ripetibile (`isRipetibile()`: sì per quelli senza città fissa),
+finito bene o male, ne lascia uno nuovo della stessa classe come missione
+secondaria (`RegistroMissioni.aggiungiMissioneSecondaria`, fuori dall'albero
+della missione principale, che altrimenti aspetterebbe anche lui per far
+comparire il Drago), che si offre dopo
+`IncaricoInCitta.ORE_FRA_UN_INCARICO_E_L_ALTRO` ore di gioco (48). Si ripetono
+la caccia ai goblin e la mandragola; Sgranf, Anselmo e Armando no, finché i loro
+nomi non verranno da una grammatica. Test: `ScenarioIncarichiRipetutiTest`. Con questi il catalogo del §2 è coperto tutto.
 
 ## 3. Mappatura `TipoMissione` → sequenza di passi
 

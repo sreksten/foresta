@@ -29,7 +29,7 @@ public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements M
 	}
 
 	@Override
-	protected ClassiLocazione getCitta() {
+	protected ClassiLocazione getCittaFissa() {
 		return ClassiLocazione.CITTA_FLEENA;
 	}
 
@@ -57,19 +57,19 @@ public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements M
 	}
 
 	@Override
-	protected String testoAccettazione(GruppoGiocatore gruppo) {
-		return gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)
+	protected String testoAccettazione() {
+		return GruppoGiocatore.getIstanza().getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)
 				+ " promette di recuperare il medaglione rubato dai ladri, che hanno il loro covo in una grotta. Ricompensa: "
 				+ AMMONTARE_RICOMPENSA + " monete.";
 	}
 
 	@Override
-	protected String testoRecupero(GruppoGiocatore gruppo) {
+	protected String testoRecupero() {
 		return "Il medaglione è stato recuperato. Puoi tornare in città per reclamare la ricompensa.";
 	}
 
 	@Override
-	protected String testoRicompensa(GruppoGiocatore gruppo) {
+	protected String testoRicompensa() {
 		return "L'uomo è felicissimo di riavere il suo medaglione in cambio delle " + AMMONTARE_RICOMPENSA + " monete promesse.";
 	}
 

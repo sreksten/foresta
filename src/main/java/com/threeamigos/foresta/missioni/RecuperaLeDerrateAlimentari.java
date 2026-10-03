@@ -32,7 +32,7 @@ public class RecuperaLeDerrateAlimentari extends MissioneRecuperaBersaglio imple
 	}
 
 	@Override
-	protected ClassiLocazione getCitta() {
+	protected ClassiLocazione getCittaFissa() {
 		return ClassiLocazione.CITTA_RUUNA;
 	}
 
@@ -60,19 +60,21 @@ public class RecuperaLeDerrateAlimentari extends MissioneRecuperaBersaglio imple
 	}
 
 	@Override
-	protected String testoAccettazione(GruppoGiocatore gruppo) {
-		return gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)
+	protected String testoAccettazione() {
+		return GruppoGiocatore.getIstanza().getCapo().getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE)
 				+ " promette al Borgomastro di recuperare le derrate rubate dai Troll, nascosti in alcune rovine. Ricompensa: "
 				+ AMMONTARE_RICOMPENSA + " monete.";
 	}
 
 	@Override
-	protected String testoRecupero(GruppoGiocatore gruppo) {
+	protected String testoRecupero() {
+		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		return "Le derrate alimentari sono state recuperate. " + gruppo.chiMaiuscolo() + " può tornare in città per reclamare la ricompensa.";
 	}
 
 	@Override
-	protected String testoRicompensa(GruppoGiocatore gruppo) {
+	protected String testoRicompensa() {
+		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		return "Il Borgomastro accoglie " + gruppo.chi() + ", che ha recuperato le derrate alimentari. La ricompensa promessa viene saldata: "
 				+ AMMONTARE_RICOMPENSA + " monete.";
 	}

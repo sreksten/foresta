@@ -26,6 +26,15 @@ public class LaTagliaSuSgranf extends IncaricoInCitta {
 		super(ClasseMissione.LA_TAGLIA_SU_SGRANF);
 	}
 
+	/**
+	 * Ha un personaggio con un nome proprio: finché il nome non viene da una grammatica, la stessa storia non si
+	 * ripete.
+	 */
+	@Override
+	protected boolean isRipetibile() {
+		return false;
+	}
+
 	@Override
 	public String getNome() {
 		return "La taglia su Sgranf";

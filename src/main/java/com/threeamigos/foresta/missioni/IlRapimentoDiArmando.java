@@ -36,6 +36,15 @@ public class IlRapimentoDiArmando extends IncaricoInCitta {
 		super(ClasseMissione.IL_RAPIMENTO_DI_ARMANDO);
 	}
 
+	/**
+	 * Ha un personaggio con un nome proprio: finché il nome non viene da una grammatica, la stessa storia non si
+	 * ripete.
+	 */
+	@Override
+	protected boolean isRipetibile() {
+		return false;
+	}
+
 	@Override
 	public String getNome() {
 		return "Il rapimento di Armando";

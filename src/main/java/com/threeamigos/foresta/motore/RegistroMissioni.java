@@ -203,6 +203,15 @@ public class RegistroMissioni {
 	}
 
 	/**
+	 * Una missione secondaria nuova, fuori dall'albero della missione principale (per esempio l'incarico in città
+	 * che ne ripete uno finito): si controlla come le altre e si salva con il registro.
+	 */
+	public static void aggiungiMissioneSecondaria(Missione missione) {
+		getRegistroMissioni().aggiungiMissione(missione.getId(), missione.getModelloDati());
+		elencoMissioniSecondarie.add(missione);
+	}
+
+	/**
 	 * La missione con quell'id, in qualunque stato.
 	 */
 	public static Optional<Missione> getMissione(String id) {
