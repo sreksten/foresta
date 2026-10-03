@@ -43,9 +43,10 @@ class ScenarioSorveglianzaTest {
             chiavi.add(sorveglianza.getChiave());
             tipi.add(sorveglianza.getTipo());
         }
-        assertTrue(chiavi.size() >= 10, String.valueOf(chiavi));
+        assertTrue(chiavi.size() >= 13, String.valueOf(chiavi));
         assertEquals(EnumSet.of(TipoMissione.VIGILIA, TipoMissione.SORVEGLIANZA, TipoMissione.SPIONAGGIO, TipoMissione.DIFESA,
-                TipoMissione.ASSEDIO_DIFESA, TipoMissione.TRINCEA, TipoMissione.CONTENIMENTO), tipi);
+                TipoMissione.ASSEDIO_DIFESA, TipoMissione.TRINCEA, TipoMissione.CONTENIMENTO, TipoMissione.QUARANTENA,
+                TipoMissione.AGRICOLTURA, TipoMissione.ALLEVAMENTO), tipi);
 
         assertFalse(SorveglianzaRichiesta.da(TOMBA).isConNemici());
         assertThrows(IllegalArgumentException.class, () -> SorveglianzaRichiesta.da(TROLL.replace("VITTORIA=Il troll non russerà più.;", "")));

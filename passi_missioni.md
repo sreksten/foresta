@@ -22,7 +22,10 @@ tornare al punto di partenza, chiedere una conferma/scelta).
   tipo che la missione copre un commento `// Coperto da: NomeClasse` (più classi
   separate da virgole, con fra parentesi il mandante o il caso se serve). Così
   si possono "spuntare" i tipi già coperti. I tipi impossibili nella Foresta
-  sono commentati, con il motivo. Le missioni particolari, che non sono missioni
+  sono commentati, con il motivo (`// Non fattibile nella Foresta: ...`), e così
+  quelli che non si addicono al tono del gioco (`// Non adatto al tono del gioco:
+  ...`): non vanno riproposti. I tipi che per ora non vale la pena sviluppare
+  restano nell'enum con sopra `// Da non sviluppare per ora: ...` e il motivo. Le missioni particolari, che non sono missioni
   standard di un gioco fantasy (andare a bere in tutte le locande:
   `CronacheDiUnFegatoEroico`, `NessunBoccaleLasciatoIndietro`; disturbare dieci
   eremiti: `DisturbatoreDellaQuietePubblica`), non si annotano.
@@ -1039,4 +1042,43 @@ Solo righe nuove in `missioni.txt`, senza codice:
   satirici), OCCULTAMENTO (i gioielli di famiglia).
 
 I test che controllano i tipi di ogni produzione (`ogni...SiLegge`) li elencano.
+
+### Altri dodici tipi dalla grammatica, e i tipi da lasciare (2026-10-04)
+
+Solo righe nuove in `missioni.txt`: FRODE (contrabbando: le reliquie false);
+QUARANTENA, AGRICOLTURA e ALLEVAMENTO (sorveglianze: la capanna dei raffreddati, le
+rape giganti, le oche da guardia); CHANNELING, COMUNIONE, TRANCE, INCANTESIMO,
+VISIONE_FUTURO, PERDONO, RISCATTO e REDENZIONE_PUBBLICA (riti: i lampioni della
+città, la dea del raccolto, la trance di fratello Anselmo, la torre pendente, lo
+stagno del domani, il perdono del fratello, la vita nuova del brigante, il falò
+del cavaliere).
+
+ASSASSINIO e TENTATIVO_OMICIDIO sono commentati come non adatti al tono del gioco;
+MATRIMONIO e CELEBRAZIONE sono da non sviluppare per ora: sarebbero solo raccolte
+di materiali, già coperte.
+
+Commentati anche, per non tornarci sopra: SCHIAVITU, TORTURA, FALSA_TESTIMONIANZA e
+FURTO_IDENTITA, non adatti al tono del gioco; LETTURA_MENTE, INVISIBILITA,
+TELEPORTAZIONE, SHAPE_SHIFT, FUSIONE, POSSESSO_CORPO, ASSORBIMENTO, CONTROLLO_MENTE,
+SCAMBIO_CORPI, FISSIONE e MORTE_TEMPORALE, non fattibili: chiedono poteri che il
+gruppo non ha.
+
+### I titoli nobiliari, e altri tipi lasciati (2026-10-04)
+
+TITOLO_NOBILIARE, con la sola grammatica: tre incarichi di combattimento in cui il
+ciambellano o l'araldo di Sua Maestà promettono un titolo buffo (Conte dei Ranocchi,
+Margravio degli Spifferi...) a chi libera una palude o delle rovine. Titolo e nemici
+si pescano a caso dalla grammatica (`TITOLO_DELLA_PALUDE`, `TITOLO_DELLE_ROVINE`,
+`NEMICI_DELLA_PALUDE`, `NEMICI_DELLE_ROVINE`); il titolo si sceglie una volta sola
+con un'assegnazione (`[TITOLO_NOBILE=[...]]`, ripreso con `[#TITOLO_NOBILE]`), così è
+lo stesso in tutti i testi. Le alternative pescate pesano poco (`[^0.1]`) e le righe
+`[^0.6]`: GrammarBean pesa di più le alternative che contengono riferimenti, e senza
+questi pesi i titoli uscirebbero molto più spesso degli altri incarichi.
+
+Correzione: due riti usavano le virgolette doppie, che per GrammarBean delimitano un
+testo letterale e spariscono; ora sono virgolette tipografiche.
+
+Da non sviluppare per ora: RICCHEZZA, FAMA, REPUTAZIONE e ASTA. Non fattibili: BORSA,
+CORONAZIONE, LIGNAGGIO, LEGATARIO, EREDE, SUCCESSIONE, EREDITA, ALLEANZA_MATRIMONIALE,
+TRADIMENTO e SEDIZIONE.
 

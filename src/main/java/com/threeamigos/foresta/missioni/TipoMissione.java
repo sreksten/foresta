@@ -66,6 +66,7 @@ public enum TipoMissione {
      * Esempio: pescare nel fiume, raccogliere dal mare, catturare creature acquatiche
      */
     PESCA(SupertipoMissione.ACQUISIZIONE),
+    // Coperto da: LaSorveglianza (le rape giganti)
     /**
      * Esempio: piantare raccolti, coltivare orto, raccogliere grano
      */
@@ -75,14 +76,16 @@ public enum TipoMissione {
      * Esempio: raccogliere erbe, piante medicinali, funghi, bacche
      */
     FORAGGIAMENTO(SupertipoMissione.ACQUISIZIONE),
+    // Coperto da: LaSorveglianza (le oche da guardia)
     /**
      * Esempio: allevare animali, bestiame, creature magiche
      */
     ALLEVAMENTO(SupertipoMissione.ACQUISIZIONE),
-    /**
-     * Esempio: speculazione, investimenti, gioco d'azzardo, trading
-     */
-    BORSA(SupertipoMissione.ACQUISIZIONE),
+    // Non fattibile nella Foresta: nella Foresta non ci sono né borse né banchieri che speculano.
+    // /**
+    //  * Esempio: speculazione, investimenti, gioco d'azzardo, trading
+    //  */
+    // BORSA(SupertipoMissione.ACQUISIZIONE),
 
     //----------
 
@@ -100,6 +103,7 @@ public enum TipoMissione {
      * Esempio: vendere merci, speculare su prezzi, guadagnare da commercio
      */
     COMMERCIO(SupertipoMissione.NEGOZIAZIONE),
+    // Da non sviluppare per ora: servirebbero rilanci e avversari all'asta, una meccanica nuova.
     /**
      * Esempio: partecipare ad asta, acquistare oggetti rari, offerta al ribasso
      */
@@ -291,6 +295,7 @@ public enum TipoMissione {
      * Esempio: esorcizzare una possessione demoniaca, liberare da controllo mentale
      */
     POSSESSIONE(SupertipoMissione.PROTEZIONE),
+    // Coperto da: LaSorveglianza (la capanna dei raffreddati)
     /**
      * Esempio: isolare malati, contenimento, prevenzione contagio
      */
@@ -471,10 +476,11 @@ public enum TipoMissione {
      * Esempio: partecipare a torneo multi-round, competizione a eliminazione diretta
      */
     TORNEO(SupertipoMissione.PROGRESSIONE),
-    /**
-     * Esempio: ricevere eredità, ereditare titoli, ricevere lasciti
-     */
-    EREDITA(SupertipoMissione.PROGRESSIONE),
+    // Non fattibile nella Foresta: eredità e testamenti sono affari da notai, non da avventurieri.
+    // /**
+    //  * Esempio: ricevere eredità, ereditare titoli, ricevere lasciti
+    //  */
+    // EREDITA(SupertipoMissione.PROGRESSIONE),
     /**
      * Esempio: essere nominato a carica ufficiale, ricevere incarico importante
      */
@@ -483,14 +489,16 @@ public enum TipoMissione {
      * Esempio: aderire a gilda, fratellanza, unirsi a ordine
      */
     FRATELLANZA(SupertipoMissione.PROGRESSIONE),
-    /**
-     * Esempio: diventare re/regina, ascendere al trono, incoronazione
-     */
-    CORONAZIONE(SupertipoMissione.PROGRESSIONE),
+    // Non fattibile nella Foresta: nessuno del gruppo diventerà re: nella Foresta c'è già Sua Maestà.
+    // /**
+    //  * Esempio: diventare re/regina, ascendere al trono, incoronazione
+    //  */
+    // CORONAZIONE(SupertipoMissione.PROGRESSIONE),
     /**
      * Esempio: migliorare status, avanzamento sociale, migliorare condizione
      */
     ASCESA_SOCIALE(SupertipoMissione.PROGRESSIONE),
+    // Coperto da: IncaricoDiCombattimento (i titoli buffi di Sua Maestà, nella palude e fra le rovine)
     /**
      * Esempio: ottenere titolo nobile, blasone, titolo nobiliare
      */
@@ -503,39 +511,46 @@ public enum TipoMissione {
      * Esempio: specializzarsi in disciplina specifica, focus expertise
      */
     SPECIALIZZAZIONE(SupertipoMissione.PROGRESSIONE),
+    // Da non sviluppare per ora: servirebbe un conto della fama del gruppo, che il gioco non tiene.
     /**
      * Esempio: guadagnare fama, notorietà, celebrità, rinomanza
      */
     FAMA(SupertipoMissione.PROGRESSIONE),
+    // Da non sviluppare per ora: servirebbe un conto della reputazione del gruppo, che il gioco non tiene.
     /**
      * Esempio: migliorare reputazione, onore, prestigio, credibilità
      */
     REPUTAZIONE(SupertipoMissione.PROGRESSIONE),
+    // Da non sviluppare per ora: accumulare monete non è una missione, è il gioco.
     /**
      * Esempio: accumulare ricchezza, prosperità economica, tesoro
      */
     RICCHEZZA(SupertipoMissione.PROGRESSIONE),
-    /**
-     * Esempio: stabilire discendenza nobile, genealogia, stirpe
-     */
-    LIGNAGGIO(SupertipoMissione.PROGRESSIONE),
-    /**
-     * Esempio: diventare legatario, eredità nominata, designazione eredità
-     */
-    LEGATARIO(SupertipoMissione.PROGRESSIONE),
-    /**
-     * Esempio: diventare erede ufficiale, diritto successorio, linea successoria
-     */
-    EREDE(SupertipoMissione.PROGRESSIONE),
+    // Non fattibile nella Foresta: le genealogie nobili non si giocano a colpi di spada.
+    // /**
+    //  * Esempio: stabilire discendenza nobile, genealogia, stirpe
+    //  */
+    // LIGNAGGIO(SupertipoMissione.PROGRESSIONE),
+    // Non fattibile nella Foresta: eredità e testamenti sono affari da notai, non da avventurieri.
+    // /**
+    //  * Esempio: diventare legatario, eredità nominata, designazione eredità
+    //  */
+    // LEGATARIO(SupertipoMissione.PROGRESSIONE),
+    // Non fattibile nella Foresta: eredità e testamenti sono affari da notai, non da avventurieri.
+    // /**
+    //  * Esempio: diventare erede ufficiale, diritto successorio, linea successoria
+    //  */
+    // EREDE(SupertipoMissione.PROGRESSIONE),
     // Coperto da: LaBenedizione (con il favore, IlFavore, come missione secondaria)
     /**
      * Esempio: ricevere benedizione, favore divino, grazia divina
      */
     BENEDIZIONE_RICEVERE(SupertipoMissione.PROGRESSIONE),
-    /**
-     * Esempio: assicurare successione, diritto successorio organizzato
-     */
-    SUCCESSIONE(SupertipoMissione.PROGRESSIONE),
+    // Non fattibile nella Foresta: le successioni al trono non sono affari del gruppo.
+    // /**
+    //  * Esempio: assicurare successione, diritto successorio organizzato
+    //  */
+    // SUCCESSIONE(SupertipoMissione.PROGRESSIONE),
     /**
      * Esempio: accumulare risorse per potenziare una base o una fortezza
      */
@@ -552,26 +567,32 @@ public enum TipoMissione {
      * Esempio: aiutare uno dei membri del gruppo a risolvere un problema personale
      */
     LEALTA(SupertipoMissione.RELAZIONI),
+    // Da non sviluppare per ora: sarebbe solo una raccolta di materiali (un regalo per gli sposi), già coperta.
     /**
      * Esempio: organizzare un matrimonio, celebrare nozze, preparare una cerimonia
      */
     MATRIMONIO(SupertipoMissione.RELAZIONI),
+    // Da non sviluppare per ora: sarebbe solo una raccolta di materiali (le provviste per la festa), già coperta.
     /**
      * Esempio: celebrare una vittoria, organizzare festa, carnevale, banchetto
      */
     CELEBRAZIONE(SupertipoMissione.RELAZIONI),
-    /**
-     * Esempio: matrimonio diplomatico, unione politica, alleanza famigliare
-     */
-    ALLEANZA_MATRIMONIALE(SupertipoMissione.RELAZIONI),
+    // Non fattibile nella Foresta: nessuno del gruppo si sposa per politica.
+    // /**
+    //  * Esempio: matrimonio diplomatico, unione politica, alleanza famigliare
+    //  */
+    // ALLEANZA_MATRIMONIALE(SupertipoMissione.RELAZIONI),
+    // Coperto da: IlRituale (la vita nuova del brigante)
     /**
      * Esempio: riscattarsi, redenzione, cambio di vita
      */
     RISCATTO(SupertipoMissione.RELAZIONI),
+    // Coperto da: IlRituale (il perdono del fratello)
     /**
      * Esempio: ottenere perdono, riconciliazione, pace interiore
      */
     PERDONO(SupertipoMissione.RELAZIONI),
+    // Coperto da: IlRituale (il falò del cavaliere)
     /**
      * Esempio: redenzione pubblica, riabilitazione sociale, ristabilire reputazione
      */
@@ -584,10 +605,11 @@ public enum TipoMissione {
      * Esempio: rubare un artefatto da una camera del tesoro o un documento da una biblioteca
      */
     FURTO(SupertipoMissione.ILLECITO),
-    /**
-     * Esempio: assassinare silenziosamente un nemico senza farsi scoprire
-     */
-    ASSASSINIO(SupertipoMissione.ILLECITO),
+    // Non adatto al tono del gioco: niente omicidi a sangue freddo, nemmeno tentati.
+    // /**
+    //  * Esempio: assassinare silenziosamente un nemico senza farsi scoprire
+    //  */
+    // ASSASSINIO(SupertipoMissione.ILLECITO),
     // Coperto da: IlContrabbandiere (le uova di viverna)
     /**
      * Esempio: commercio nel mercato nero, merci illegali, contrabbando organizzato
@@ -621,10 +643,11 @@ public enum TipoMissione {
      * Esempio: contrabbandare merci proibite attraverso un checkpoint
      */
     CONTRABBANDO(SupertipoMissione.ILLECITO),
-    /**
-     * Esempio: tradire una fazione, passare ai nemici, rivegliarsi come spia
-     */
-    TRADIMENTO(SupertipoMissione.ILLECITO),
+    // Non fattibile nella Foresta: nella Foresta non ci sono fazioni da tradire.
+    // /**
+    //  * Esempio: tradire una fazione, passare ai nemici, rivegliarsi come spia
+    //  */
+    // TRADIMENTO(SupertipoMissione.ILLECITO),
     // Coperto da: IlContrabbandiere (il sacchetto per il gabelliere)
     /**
      * Esempio: corrompere un ufficiale, offrire tangenti, bribery
@@ -654,6 +677,7 @@ public enum TipoMissione {
      * Esempio: distruggere proprietà, vandalizzare edifici, rovinare strutture
      */
     VANDALISMO(SupertipoMissione.ILLECITO),
+    // Coperto da: IlContrabbandiere (le reliquie false)
     /**
      * Esempio: frode finanziaria, schema fraudolento, imbroglio, matrimonio fraudolento
      */
@@ -663,14 +687,16 @@ public enum TipoMissione {
      * Esempio: diffamare qualcuno, spargere voci calunniose, danneggiare reputazione
      */
     DIFFAMAZIONE(SupertipoMissione.ILLECITO),
-    /**
-     * Esempio: ridurre in schiavitù, sfruttamento, servitù forzata
-     */
-    SCHIAVITU(SupertipoMissione.ILLECITO),
-    /**
-     * Esempio: incitare ribellione, sedizione, sommossa, insurrezione, incitare disordini, sommossa pubblica
-     */
-    SEDIZIONE(SupertipoMissione.ILLECITO),
+    // Non adatto al tono del gioco: la schiavitù non fa ridere nemmeno nella Foresta.
+    // /**
+    //  * Esempio: ridurre in schiavitù, sfruttamento, servitù forzata
+    //  */
+    // SCHIAVITU(SupertipoMissione.ILLECITO),
+    // Non fattibile nella Foresta: nella Foresta non ci sono rivolte da sobillare: Sua Maestà ha già abbastanza debiti.
+    // /**
+    //  * Esempio: incitare ribellione, sedizione, sommossa, insurrezione, incitare disordini, sommossa pubblica
+    //  */
+    // SEDIZIONE(SupertipoMissione.ILLECITO),
     // Coperto da: IlColpo (il deposito di frecce)
     /**
      * Esempio: incendiare, fuoco appiccato, piromane, incendio intenzionale, fuoco premeditato, fuoco criminale
@@ -701,19 +727,21 @@ public enum TipoMissione {
      * Esempio: traffico di merci proibite, smuggling su larga scala
      */
     TRAFFICO(SupertipoMissione.ILLECITO),
-    /**
-     * Esempio: rubare identità, usurpazione, furto identità
-     */
-    FURTO_IDENTITA(SupertipoMissione.ILLECITO),
+    // Non adatto al tono del gioco: rubare la vita a qualcuno non è una burla.
+    // /**
+    //  * Esempio: rubare identità, usurpazione, furto identità
+    //  */
+    // FURTO_IDENTITA(SupertipoMissione.ILLECITO),
     // Coperto da: IncaricoDiCombattimento (la carovana dell'usuraio)
     /**
      * Esempio: rapire, furto a mano armata, rapinare
      */
     BRIGANTAGGIO(SupertipoMissione.ILLECITO),
-    /**
-     * Esempio: testimonianza falsa, perjury, giuramento falso
-     */
-    FALSA_TESTIMONIANZA(SupertipoMissione.ILLECITO),
+    // Non adatto al tono del gioco: mandare in rovina un innocente con un falso giuramento non è sgangherato, è cattivo.
+    // /**
+    //  * Esempio: testimonianza falsa, perjury, giuramento falso
+    //  */
+    // FALSA_TESTIMONIANZA(SupertipoMissione.ILLECITO),
     /**
      * Esempio: imbrogliare al gioco, baro, truffa al gioco d'azzardo
      */
@@ -723,14 +751,16 @@ public enum TipoMissione {
      * Esempio: imprigionare qualcuno, tenere in carcere, reclusione
      */
     CONFINAMENTO(SupertipoMissione.ILLECITO),
-    /**
-     * Esempio: tortura, estorsione confessione, interrogatorio forzato
-     */
-    TORTURA(SupertipoMissione.ILLECITO),
-    /**
-     * Esempio: tentativo di omicidio, assassinio fallito, aggressione mortale
-     */
-    TENTATIVO_OMICIDIO(SupertipoMissione.ILLECITO),
+    // Non adatto al tono del gioco: niente torture, nemmeno ai goblin.
+    // /**
+    //  * Esempio: tortura, estorsione confessione, interrogatorio forzato
+    //  */
+    // TORTURA(SupertipoMissione.ILLECITO),
+    // Non adatto al tono del gioco: niente omicidi a sangue freddo, nemmeno tentati.
+    // /**
+    //  * Esempio: tentativo di omicidio, assassinio fallito, aggressione mortale
+    //  */
+    // TENTATIVO_OMICIDIO(SupertipoMissione.ILLECITO),
 
     //----------
 
@@ -759,10 +789,12 @@ public enum TipoMissione {
      * Esempio: visione del passato, retrocognizione, rivivere momenti passati, leggere storia di oggetti, psicometria
      */
     VISIONE_PASSATO(SupertipoMissione.SPIRITUALE),
-    /**
-     * Esempio: leggere mente, telepathy, penetrazione psichica, percepire pensieri altrui
-     */
-    LETTURA_MENTE(SupertipoMissione.SPIRITUALE),
+    // Non fattibile nella Foresta: nessuno nel gruppo legge nel pensiero.
+    // /**
+    //  * Esempio: leggere mente, telepathy, penetrazione psichica, percepire pensieri altrui
+    //  */
+    // LETTURA_MENTE(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (lo stagno del domani)
     /**
      * Esempio: visione del futuro, precognizione, profezia, astrologia, lettura stelle, predizioni, divinazione
      */
@@ -787,6 +819,7 @@ public enum TipoMissione {
      * Esempio: lanciare maledizioni, infliggere curse, danneggiare tramite magia nera
      */
     MALEDIZIONE(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (la torre pendente)
     /**
      * Esempio: lanciare incantesimi complessi, magia avanzata, effetti magici potenti
      */
@@ -821,22 +854,26 @@ public enum TipoMissione {
      * Esempio: contrastare magia, dispellare incantesimi, anti-magia
      */
     ANTI_MAGIA(SupertipoMissione.SPIRITUALE),
-    /**
-     * Esempio: diventare invisibile, magia occultamento, mimetizzazione
-     */
-    INVISIBILITA(SupertipoMissione.SPIRITUALE),
+    // Non fattibile nella Foresta: nessuno nel gruppo sa diventare invisibile (per non farsi vedere c'è il passare inosservati).
+    // /**
+    //  * Esempio: diventare invisibile, magia occultamento, mimetizzazione
+    //  */
+    // INVISIBILITA(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (i lampioni della città)
     /**
      * Esempio: canale energie magiche, conduit, canalizzazione
      */
     CHANNELING(SupertipoMissione.SPIRITUALE),
-    /**
-     * Esempio: teletrasporto magico, portale, viaggio istantaneo
-     */
-    TELEPORTAZIONE(SupertipoMissione.SPIRITUALE),
-    /**
-     * Esempio: trasformarsi in bestia, mutazione, cambio forma
-     */
-    SHAPE_SHIFT(SupertipoMissione.SPIRITUALE),
+    // Non fattibile nella Foresta: nella Foresta si va a piedi, non ci sono portali.
+    // /**
+    //  * Esempio: teletrasporto magico, portale, viaggio istantaneo
+    //  */
+    // TELEPORTAZIONE(SupertipoMissione.SPIRITUALE),
+    // Non fattibile nella Foresta: nessuno nel gruppo cambia forma.
+    // /**
+    //  * Esempio: trasformarsi in bestia, mutazione, cambio forma
+    //  */
+    // SHAPE_SHIFT(SupertipoMissione.SPIRITUALE),
     // Coperto da: IlRituale (la pioggia per il mulino)
     /**
      * Esempio: controllare elementi, dominio elementale, magia elementare
@@ -852,18 +889,21 @@ public enum TipoMissione {
     //  * Esempio: viaggio astrale, proiezione eterica, corpo astrale, proiezione astrale conscia, controllo corpo astrale, viaggio etereo controllato
     //  */
     // VIAGGIO_ASTRALE(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (la dea del raccolto)
     /**
      * Esempio: comunione con entità divina, connessione divina, unione sacra
      */
     COMUNIONE(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (la trance di fratello Anselmo)
     /**
      * Esempio: entrare in trance, meditazione profonda, stato alterato
      */
     TRANCE(SupertipoMissione.SPIRITUALE),
-    /**
-     * Esempio: fusione di esseri/anime, unione spirituale, sincretismo
-     */
-    FUSIONE(SupertipoMissione.SPIRITUALE),
+    // Non fattibile nella Foresta: nessuno nel gruppo fonde anime o esseri.
+    // /**
+    //  * Esempio: fusione di esseri/anime, unione spirituale, sincretismo
+    //  */
+    // FUSIONE(SupertipoMissione.SPIRITUALE),
     // Non fattibile nella Foresta: non ci sono altre epoche in cui andare.
     // /**
     //  * Esempio: viaggio nel tempo, manipolazione temporale, viaggio temporale
@@ -874,35 +914,41 @@ public enum TipoMissione {
     //  * Esempio: accesso a realtà parallela, dimensioni alternative, mondi alternativi
     //  */
     // REALTA_PARALLELA(SupertipoMissione.SPIRITUALE),
-    /**
-     * Esempio: possedere corpo, occupazione fisica, usurpazione corporea, possessione dell'anima, usurpazione spirituale, controllo anima
-     */
-    POSSESSO_CORPO(SupertipoMissione.SPIRITUALE),
-    /**
-     * Esempio: assorbire potenza, estrazione di energia, vampirismo magico
-     */
-    ASSORBIMENTO(SupertipoMissione.SPIRITUALE),
-    /**
-     * Esempio: controllo mentale, dominio psichico, schiavitù mentale
-     */
-    CONTROLLO_MENTE(SupertipoMissione.SPIRITUALE),
-    /**
-     * Esempio: scambio di corpi, trasferimento corporeo, swap souls
-     */
-    SCAMBIO_CORPI(SupertipoMissione.SPIRITUALE),
+    // Non fattibile nella Foresta: nessuno nel gruppo sa possedere un corpo (le possessioni da scacciare le copre POSSESSIONE).
+    // /**
+    //  * Esempio: possedere corpo, occupazione fisica, usurpazione corporea, possessione dell'anima, usurpazione spirituale, controllo anima
+    //  */
+    // POSSESSO_CORPO(SupertipoMissione.SPIRITUALE),
+    // Non fattibile nella Foresta: nessuno nel gruppo sa assorbire la potenza altrui.
+    // /**
+    //  * Esempio: assorbire potenza, estrazione di energia, vampirismo magico
+    //  */
+    // ASSORBIMENTO(SupertipoMissione.SPIRITUALE),
+    // Non fattibile nella Foresta: nessuno nel gruppo controlla le menti.
+    // /**
+    //  * Esempio: controllo mentale, dominio psichico, schiavitù mentale
+    //  */
+    // CONTROLLO_MENTE(SupertipoMissione.SPIRITUALE),
+    // Non fattibile nella Foresta: nessuno nel gruppo scambia i corpi.
+    // /**
+    //  * Esempio: scambio di corpi, trasferimento corporeo, swap souls
+    //  */
+    // SCAMBIO_CORPI(SupertipoMissione.SPIRITUALE),
     // Coperto da: IlRituale (il golem d'argilla)
     /**
      * Esempio: creazione di golem, animazione artificiale, creatura magica
      */
     CREAZIONE_GOLEM(SupertipoMissione.SPIRITUALE),
-    /**
-     * Esempio: divisione di esseri, scissione di anima, separazione magica
-     */
-    FISSIONE(SupertipoMissione.SPIRITUALE),
-    /**
-     * Esempio: morte temporale, ibernazione magica, sonno eterno
-     */
-    MORTE_TEMPORALE(SupertipoMissione.SPIRITUALE),
+    // Non fattibile nella Foresta: nessuno nel gruppo divide esseri o anime.
+    // /**
+    //  * Esempio: divisione di esseri, scissione di anima, separazione magica
+    //  */
+    // FISSIONE(SupertipoMissione.SPIRITUALE),
+    // Non fattibile nella Foresta: nessuno nel gruppo sa far dormire per sempre (né svegliare chi dorme così).
+    // /**
+    //  * Esempio: morte temporale, ibernazione magica, sonno eterno
+    //  */
+    // MORTE_TEMPORALE(SupertipoMissione.SPIRITUALE),
     // Coperto da: IlRituale (lo spaventapasseri vivo)
     /**
      * Esempio: animazione di oggetti inanimati, enchantment animato, vita artificiale

@@ -305,6 +305,7 @@ CONTRABBANDO
     M;sacchetto di monete;il mercante di grano;il gabelliere;CON_CALMA;22;Il gabelliere tassa il mio grano il doppio di quello degli altri. Questo sacchetto lo convincerà a tassarlo la metà. Ma nessuno deve vedere che glielo porto.;E se qualcuno lo vede?;Allora è un regalo di compleanno. Il gabelliere compie gli anni spesso.;Un regalo? Per me? Che gentile. Il grano del mercante, d'ora in poi, peserà la metà.
     F;risma di fogli satirici;lo stampatore;il banditore;CON_CALMA;18;Ho stampato dei fogli sul borgomastro. Non sono veri, ma fanno ridere. Il banditore li leggerà in piazza, se arrivano senza che le guardie li vedano.;E se il borgomastro si arrabbia?;Si arrabbierà. È questo che fa ridere.;Questi sì che li leggo volentieri! Domani in piazza ci sarà la folla.
     M;cofanetto di gioielli di famiglia;la nobildonna decaduta;la sua vecchia balia;URGENTE;20;Domani arrivano gli esattori a pignorare tutto. I gioielli di mia nonna, però, non li avranno: nascondeteli dalla mia vecchia balia.;E se gli esattori ci fermano?;Non vi fermeranno, se non vi vedono. Non fatevi vedere.;I gioielli della signorina! Li terrò sotto il pavimento della stalla, nessuno ci guarda mai.
+    M;baule di reliquie false;il mercante di reliquie;il priore di campagna;CON_CALMA;20;Queste sono le ossa di un santo. Di tre santi, a dire il vero, a giudicare dal numero di gambe. Il priore le vuole per la sua cappella, e le guardie farebbero troppe domande.;Sono vere?;Sono ossa. Su questo non vi mento.;Le sacre reliquie! Tre gambe... doveva essere un santo molto veloce.
 
 # ---------------------------------------------------------------------------------------------
 # Oggetti smarriti nella foresta (vedi LOggettoSmarrito e OggettoSmarrito)
@@ -359,6 +360,9 @@ OGGETTO_SMARRITO
 #               mandante); dove stanno e quanto pagano lo aggiunge la missione;
 #   VITTORIA=, RINGRAZIAMENTO=, RICORDO=  quando sono sconfitti, al ritorno in città, e il ricordo del luogo.
 # Nei testi %CAPO% è il nome del capo. Nei testi non si usa il ";".
+# Una riga può pescare dei pezzi a caso dalla grammatica: i titoli nobiliari, per esempio, scelgono il titolo una
+# volta sola con [TITOLO_NOBILE=[TITOLO_DELLA_PALUDE]] e lo ripetono nei testi con [#TITOLO_NOBILE], e i nemici con
+# [NEMICI_DELLA_PALUDE].
 
 INCARICO_DI_COMBATTIMENTO
     CHIAVE=TROLL_DEL_MULINO;TIPO=VENDETTA;ASPETTO=QUALUNQUE;MANDANTE=il mugnaio;NEMICO=TROLL;NUMERO=1;CAPO=SI;LUOGO=GROTTA;\
@@ -550,6 +554,65 @@ INCARICO_DI_COMBATTIMENTO
     VITTORIA=%CAPO% non venderà più pozioni false. Né vere.;\
     RINGRAZIAMENTO=Il mio buon nome è salvo. E noi non ci siamo mai visti, d'accordo?;\
     RICORDO=In questa grotta %CAPO% vendeva pozioni false, finché qualcuno non fu pagato per fermarlo.
+    [^0.6] [TITOLO_NOBILE=[TITOLO_DELLA_PALUDE]]CHIAVE=TITOLO_DELLA_PALUDE;TIPO=TITOLO_NOBILIARE;ASPETTO=QUALUNQUE;\
+    MANDANTE=il ciambellano del re;[NEMICI_DELLA_PALUDE];LUOGO=PALUDE;MONETE=15;TITOLO=Un titolo per la palude;\
+    RICHIESTA=Sua Maestà ha una palude che nessuno vuole, perché ci vivono certe bestiacce. A chi la libera, Sua Maestà concede un titolo nobiliare: quello di [#TITOLO_NOBILE].;\
+    BATTUTA=Un titolo? Niente oro?;RISPOSTA=Il titolo comprende la palude. E le paludi, come sapete, sono preziosissime. Per le rane.;\
+    VITTORIA=Le bestiacce sono sconfitte: la palude ha di nuovo un padrone, anzi un [#TITOLO_NOBILE].;\
+    RINGRAZIAMENTO=Per volere di Sua Maestà, da oggi siete [#TITOLO_NOBILE]. Ecco la pergamena, il sigillo e uno zoccolo. Uno solo: le finanze del regno sono quelle che sono.;\
+    RICORDO=Questa palude appartiene a un [#TITOLO_NOBILE]. Le rane non lo sanno.
+    [^0.6] [TITOLO_NOBILE=[TITOLO_DELLE_ROVINE]]CHIAVE=TITOLO_DELLE_ROVINE;TIPO=TITOLO_NOBILIARE;ASPETTO=QUALUNQUE;\
+    MANDANTE=il ciambellano del re;[NEMICI_DELLE_ROVINE];LUOGO=ROVINE;MONETE=15;TITOLO=Un titolo fra le rovine;\
+    RICHIESTA=Fra delle rovine c'era un castello di Sua Maestà. Ora c'è solo mezzo tetto, e ci vivono certe creature. Scacciatele, e Sua Maestà vi nominerà [#TITOLO_NOBILE].;\
+    BATTUTA=E il castello?;RISPOSTA=Il castello fa parte del titolo. Quel che ne resta, almeno. Quel che ne resterà dopo che lo avrete liberato, intendo.;\
+    VITTORIA=Le rovine sono libere. Non sono un granché, ma presto saranno vostre.;\
+    RINGRAZIAMENTO=Inginocchiatevi. Ecco: per volere di Sua Maestà, da oggi siete [#TITOLO_NOBILE]. Il mantello d'ermellino arriverà quando avremo trovato l'ermellino.;\
+    RICORDO=Fra queste rovine regna un [#TITOLO_NOBILE]. Regna su dei calcinacci, ma regna.
+    [^0.6] [TITOLO_NOBILE=[TITOLO_DELLA_PALUDE]]CHIAVE=FEUDO_DELLA_PALUDE;TIPO=TITOLO_NOBILIARE;ASPETTO=QUALUNQUE;\
+    MANDANTE=l'araldo di corte;[NEMICI_DELLA_PALUDE];LUOGO=PALUDE;MONETE=15;TITOLO=Un feudo nella palude;\
+    RICHIESTA=Sua Maestà deve soldi a mezzo regno, ma di titoli ne ha quanti ne vuole. Ce n'è uno libero, [#TITOLO_NOBILE], e viene con un feudo in una palude. E con le bestie che ci vivono, che andrebbero tolte.;\
+    BATTUTA=Perché non ci manda i suoi soldati?;RISPOSTA=I soldati vanno pagati. Gli eroi, a quanto pare, si accontentano di un titolo.;\
+    VITTORIA=Il feudo è libero dalle bestie. Restano le zanzare, ma quelle fanno parte del titolo.;\
+    RINGRAZIAMENTO=Squillino le trombe! Anzi, la tromba: l'altra è dal ricettatore. Da oggi siete [#TITOLO_NOBILE], con tutti gli onori e nessuna rendita.;\
+    RICORDO=Questa palude è il feudo di un [#TITOLO_NOBILE], con tutti gli onori e nessuna rendita.
+
+# I titoli nobiliari buffi che Sua Maestà concede (vedi le righe di TITOLO_NOBILIARE qui sopra) e i nemici da
+# sconfiggere per averli, pescati a caso. Le alternative pesano poco perché le righe che le usano non escano più
+# spesso delle altre (vedi GrammarBean, il peso delle alternative che contengono riferimenti).
+
+TITOLO_DELLA_PALUDE
+    [^0.1] Baronetto della Palude Puzzolente
+    [^0.1] Conte dei Ranocchi
+    [^0.1] Marchese delle Zanzare
+    [^0.1] Visconte del Fango Profondo
+    [^0.1] Duca dello Stagno Torbido
+    [^0.1] Gran Feudatario delle Sanguisughe
+    [^0.1] Principe delle Canne Marce
+    [^0.1] Barone della Melma Eterna
+    [^0.1] Arciduca dei Gamberi di Fiume
+
+TITOLO_DELLE_ROVINE
+    [^0.1] Duca delle Rovine Pericolanti
+    [^0.1] Conte dei Calcinacci
+    [^0.1] Marchese delle Pietre Smosse
+    [^0.1] Visconte dei Muri Senza Tetto
+    [^0.1] Baronetto delle Macerie
+    [^0.1] Gran Signore delle Colonne Mozze
+    [^0.1] Principe delle Crepe
+    [^0.1] Arciduca della Polvere
+    [^0.1] Margravio degli Spifferi
+
+NEMICI_DELLA_PALUDE
+    [^0.1] NEMICO=TROLL;NUMERO=2
+    [^0.1] NEMICO=GOBLIN;NUMERO=5
+    [^0.1] NEMICO=HOBGOBLIN;NUMERO=3
+    [^0.1] NEMICO=SPIRITO;NUMERO=2
+
+NEMICI_DELLE_ROVINE
+    [^0.1] NEMICO=SCHELETRO;NUMERO=4
+    [^0.1] NEMICO=GARGOYLE;NUMERO=2
+    [^0.1] NEMICO=SPETTRO;NUMERO=2
+    [^0.1] NEMICO=FANTASMA;NUMERO=3
 
 # ---------------------------------------------------------------------------------------------
 # Sorveglianze (vedi LaSorveglianza e SorveglianzaRichiesta)
@@ -656,6 +719,31 @@ SORVEGLIANZA
     VITTORIA=Gli scheletri tornano a essere ossa, e le ossa tornano dietro il muro.;\
     RINGRAZIAMENTO=Il muro è stato rifatto. Da un muratore vivo, questa volta.;\
     RICORDO=In questa grotta, dietro un muro, riposano degli scheletri che non vogliono riposare.
+    CHIAVE=CAPANNA_DEI_RAFFREDDATI;TIPO=QUARANTENA;ASPETTO=ALCHIMISTA;MANDANTE=l'alchimista;LUOGO=BOSCO;VISITE=3;ORE=24;\
+    MONETE=30;TITOLO=La capanna della quarantena;\
+    RICHIESTA=Tre taglialegna hanno preso la febbre del rospo, e li ho chiusi in una capanna nel bosco finché non passa. Passate a controllare che nessuno esca: chi esce gracida, e poi gracidano tutti.;\
+    BATTUTA=E noi non la prendiamo?;RISPOSTA=Non se restate fuori dalla porta. E non baciate nessuno.;\
+    VEGLIA=Dalla capanna arriva un coro di colpi di tosse e di gracidii. La porta resta chiusa.;\
+    SCOPERTA=I gracidii sono finiti: i taglialegna escono dalla capanna pallidi ma guariti, con una gran voglia di mosche. Passerà.;\
+    RINGRAZIAMENTO=Nessun contagio in città! E i taglialegna hanno quasi smesso di saltellare.;\
+    RICORDO=In questo bosco c'è una capanna dove tre taglialegna passarono la febbre del rospo.
+    CHIAVE=RAPE_GIGANTI;TIPO=AGRICOLTURA;ASPETTO=QUALUNQUE;MANDANTE=l'ortolano;LUOGO=RADURA;VISITE=3;ORE=24;\
+    NEMICO=FOLLETTO;NUMERO=3;MONETE=35;TITOLO=Le rape giganti;\
+    RICHIESTA=Ho seminato rape giganti in una radura, ma vanno controllate. Passateci tre volte, a un giorno di distanza. Al raccolto, attenti ai folletti: le rape giganti gli piacciono da matti.;\
+    BATTUTA=Rape giganti? Quanto giganti?;RISPOSTA=Abbastanza da non stare in un carro. Per questo servite voi.;\
+    VEGLIA=Le rape crescono a vista d'occhio. Una sembra quasi che vi guardi.;\
+    SCOPERTA=Le rape sono pronte, grosse come botti. E dal bosco arrivano tre folletti con le vanghe.;\
+    VITTORIA=I folletti scappano senza rape. Le rape restano, e non si lamentano.;\
+    RINGRAZIAMENTO=Che rape! Ne ho venduta una al locandiere, e ci ha fatto la minestra per un mese.;\
+    RICORDO=In questa radura crescevano rape grosse come botti.
+    CHIAVE=OCHE_DA_GUARDIA;TIPO=ALLEVAMENTO;ASPETTO=QUALUNQUE;MANDANTE=la guardiana di oche;LUOGO=PALUDE;VISITE=2;ORE=20;\
+    MONETE=30;TITOLO=Le oche da guardia;\
+    RICHIESTA=Le mie oche ingrassano in una palude, ma adesso devono imparare a fare la guardia. Passate a sgridarle un paio di volte: devono imparare a starnazzare contro gli sconosciuti.;\
+    BATTUTA=Sgridare delle oche?;RISPOSTA=Con autorità. Le oche capiscono l'autorità. Più di certi soldati.;\
+    VEGLIA=Le oche vi guardano con aria di sfida. Qualcuna, forse, ha capito.;\
+    SCOPERTA=Alla seconda visita le oche vi accolgono starnazzando come un esercito: siete degli sconosciuti, e l'hanno capito. Il lavoro è fatto.;\
+    RINGRAZIAMENTO=Le mie oche da guardia! Ieri hanno messo in fuga un esattore. Il più bel giorno della mia vita.;\
+    RICORDO=In questa palude vivevano le oche da guardia più feroci della regione.
 
 # ---------------------------------------------------------------------------------------------
 # Soccorsi (vedi IlSoccorso e SoccorsoRichiesto)
@@ -1150,7 +1238,7 @@ RITUALE
     NEMICO=SCHELETRO;NUMERO=2;MONETE=35;TITOLO=Il testamento del nonno;\
     RICHIESTA=Mio nonno è morto senza dire dove ha nascosto il testamento. Dicono che con il fumo dei funghi lunari si possa svegliare un morto, per il tempo di una domanda.;\
     BATTUTA=E se si sveglia di cattivo umore?;RISPOSTA=Era di cattivo umore anche da vivo. Non noteremo la differenza.;\
-    RITO=Il fumo dei funghi lunari sale fra le rovine. Il nonno si sveglia, borbotta "sotto il materasso", e con lui si svegliano anche due scheletri delle tombe vicine.;\
+    RITO=Il fumo dei funghi lunari sale fra le rovine. Il nonno si sveglia, borbotta “sotto il materasso”, e con lui si svegliano anche due scheletri delle tombe vicine.;\
     VITTORIA=Gli scheletri tornano a dormire. Il nonno, invece, si era già riaddormentato da solo.;\
     RINGRAZIAMENTO=Sotto il materasso! Ci dormivo sopra da un anno.;\
     RICORDO=Fra queste rovine un vecchio mercante fu svegliato per il tempo di una domanda.
@@ -1193,6 +1281,83 @@ RITUALE
     RITO=I lamenti escono dalle boccette e si intrecciano attorno all'altare. Lontano, nella bottega della vedova, una porta sbatte da sola.;\
     RINGRAZIAMENTO=Stanotte un ladro è entrato in bottega ed è uscito dalla finestra, urlando. Mio marito non è mai stato così utile.;\
     RICORDO=In questo tempio uno spirito fu legato per sempre alla sua bottega.
+    CHIAVE=LAMPIONI_DELLA_CITTA;TIPO=CHANNELING;ASPETTO=QUALUNQUE;MANDANTE=il lampionaio;LUOGO=GROTTA;\
+    GENERE=M;INGREDIENTE=cristallo di quarzo fumé;INGREDIENTI=cristalli di quarzo fumé;DOVE=LUOGHI GROTTA;QUANTITA=3;\
+    DOMANDA=In fondo alla grotta la vena di energia ronza come un alveare. Disponete i cristalli e la incanalate verso la città?;\
+    MONETE=35;TITOLO=I lampioni della città;\
+    RICHIESTA=I lampioni magici della città si spengono uno a uno. In una grotta c'è una vena di energia: con dei cristalli di quarzo fumé la si può incanalare fino a qui. Più o meno.;\
+    BATTUTA=Più o meno?;RISPOSTA=L'ultima volta si sono accese anche le pentole del fabbro. Ma i lampioni funzionavano.;\
+    RITO=I cristalli si illuminano uno dopo l'altro, e un filo di luce corre via dalla grotta verso la città. Da qualche parte, una pentola comincia a brillare.;\
+    RINGRAZIAMENTO=I lampioni sono accesi! E anche le pentole del fabbro, ma lui dice che così cucina meglio.;\
+    RICORDO=In questa grotta c'è una vena di energia che accende i lampioni della città.
+    CHIAVE=DEA_DEL_RACCOLTO;TIPO=COMUNIONE;ASPETTO=QUALUNQUE;MANDANTE=la sacerdotessa;LUOGO=TEMPIO;\
+    GENERE=M;INGREDIENTE=giglio bianco;INGREDIENTI=gigli bianchi;DOVE=LUOGHI RADURA BOSCO;QUANTITA=4;\
+    DOMANDA=L'altare è pronto, e i gigli profumano. Li deponete e chiamate la dea del raccolto?;\
+    MONETE=35;TITOLO=Udienza con la dea;\
+    RICHIESTA=Una volta l'anno qualcuno deve parlare con la dea del raccolto, per chiederle un buon anno. Di solito lo faccio io, ma l'anno scorso abbiamo litigato.;\
+    BATTUTA=Litigato con una dea?;RISPOSTA=Sulle zucchine. Lei dice che sono un ortaggio nobile. Io no.;\
+    RITO=Una luce dorata riempie il tempio, e una voce gentile promette un buon raccolto. Poi, più piano, aggiunge: “E dite a quella là che le zucchine sono nobili.”;\
+    RINGRAZIAMENTO=Un buon raccolto! E va bene, va bene: le zucchine sono nobili. Ma non ditelo in giro.;\
+    RICORDO=In questo tempio una dea promise un buon raccolto, e difese l'onore delle zucchine.
+    CHIAVE=TRANCE_DI_FRATELLO_ANSELMO;TIPO=TRANCE;ASPETTO=QUALUNQUE;MANDANTE=il priore;LUOGO=RADURA;\
+    GENERE=F;INGREDIENTE=radice di valeriana;INGREDIENTI=radici di valeriana;DOVE=LUOGHI RADURA BOSCO;QUANTITA=3;\
+    DOMANDA=Fratello Anselmo medita a gambe incrociate in mezzo alla radura. Come lo riportate indietro?;\
+    METODI=Lo scuotete forte/Bruciate la valeriana sotto il suo naso/Gli suonate una campana nelle orecchie;METODO=2;\
+    ERRORE=Fratello Anselmo sobbalza, strilla, e torna in una trance ancora più profonda, per dispetto. Il rito è fallito.;\
+    MONETE=30;TITOLO=La trance di fratello Anselmo;\
+    RICHIESTA=Fratello Anselmo è andato in trance in una radura tre settimane fa, e non torna. Chi lo sveglia di colpo lo manda ancora più giù: serve il fumo della valeriana, piano piano.;\
+    BATTUTA=Perché non lo lasciate meditare?;RISPOSTA=Perché è lui che fa il formaggio. E il formaggio non medita.;\
+    RITO=Il fumo della valeriana sale piano. Fratello Anselmo apre un occhio, poi l'altro, e chiede che giorno è. E se c'è del formaggio.;\
+    RINGRAZIAMENTO=Fratello Anselmo è tornato, e il formaggio pure. Dice di aver visto l'infinito. Era più piccolo del previsto.;\
+    RICORDO=In questa radura un monaco meditò per tre settimane, pensando al formaggio.
+    CHIAVE=TORRE_PENDENTE;TIPO=INCANTESIMO;ASPETTO=QUALUNQUE;MANDANTE=il mago di corte;LUOGO=ROVINE;\
+    GENERE=F;INGREDIENTE=piuma di civetta;INGREDIENTI=piume di civetta;DOVE=LUOGHI BOSCO ROVINE;QUANTITA=4;\
+    DOMANDA=La torre fra le rovine pende paurosamente. Disponete le piume in cerchio e pronunciate l'incantesimo?;\
+    NEMICO=GARGOYLE;NUMERO=2;MONETE=40;TITOLO=La torre pendente;\
+    RICHIESTA=Fra delle rovine c'è la torre dove studiavo da giovane, e pende ogni anno di più. Un incantesimo di raddrizzamento è complicato, ma con le piume di civetta si può fare. Credo.;\
+    BATTUTA=Credete?;RISPOSTA=L'ho letto in un libro. Il libro era a testa in giù, ma il senso si capiva.;\
+    RITO=La torre scricchiola e si raddrizza con un gemito di pietra. Si raddrizzano anche i due gargoyle sul tetto, che si svegliano di pessimo umore.;\
+    VITTORIA=I gargoyle tornano di pietra. La torre, finalmente, sta dritta.;\
+    RINGRAZIAMENTO=Dritta come un fuso! Quasi. Se la guardate inclinando un po' la testa, è perfetta.;\
+    RICORDO=Fra queste rovine c'è una torre che pendeva, finché un incantesimo non la raddrizzò.
+    CHIAVE=STAGNO_DEL_DOMANI;TIPO=VISIONE_FUTURO;ASPETTO=QUALUNQUE;MANDANTE=il mercante di grano;LUOGO=PALUDE;\
+    GENERE=M;INGREDIENTE=bulbo di giglio nero;INGREDIENTI=bulbi di giglio nero;DOVE=LUOGHI BOSCO;QUANTITA=3;\
+    DOMANDA=L'acqua dello stagno è ferma come uno specchio. Gettate i bulbi e guardate nel domani?;\
+    MONETE=35;TITOLO=Lo stagno del domani;\
+    RICHIESTA=In una palude c'è uno stagno che, con i bulbi di giglio nero, mostra il domani. Voglio sapere se il prezzo del grano salirà. Solo questo: non chiedetegli altro, che si offende.;\
+    BATTUTA=Che cosa succede se si offende?;RISPOSTA=Vi mostra il vostro, di domani. E di solito non è bello.;\
+    RITO=Lo stagno si increspa e mostra un mercato, con un prezzo altissimo sul banco del grano. Poi, per un attimo, mostra anche un vostro piede in una pozzanghera. Meglio non farci caso.;\
+    RINGRAZIAMENTO=Il grano salirà! Compro tutto oggi. E voi, domani, guardate dove mettete i piedi.;\
+    RICORDO=In questa palude c'è uno stagno che mostra il domani a chi glielo chiede con garbo.
+    CHIAVE=PERDONO_DEL_FRATELLO;TIPO=PERDONO;ASPETTO=LOCANDIERE;MANDANTE=il locandiere;LUOGO=TEMPIO;\
+    GENERE=M;INGREDIENTE=petalo di rosa selvatica;INGREDIENTI=petali di rosa selvatica;DOVE=LUOGHI RADURA;QUANTITA=5;\
+    DOMANDA=Davanti all'altare del tempio, spargete i petali e chiedete il perdono a nome del locandiere?;\
+    MONETE=30;TITOLO=Il perdono del fratello;\
+    RICHIESTA=Vent'anni fa ho rubato la ricetta della birra a mio fratello, e da allora non mi parla. Si dice che chi sparge petali di rosa nel tempio ottenga il perdono. Fatelo voi: io mi vergogno.;\
+    BATTUTA=E se vi perdona, gli ridate la ricetta?;RISPOSTA=Questo non l'ho detto. Il perdono è una cosa, la birra un'altra.;\
+    RITO=I petali si posano sull'altare, e dal tempio sembra uscire un sospiro di sollievo. Lontano, in un'altra città, un vecchio birraio si sveglia con la voglia di scrivere una lettera.;\
+    RINGRAZIAMENTO=Mio fratello mi ha scritto! Mi perdona. E rivuole la ricetta. Vedremo.;\
+    RICORDO=In questo tempio due fratelli si perdonarono una ricetta della birra.
+    CHIAVE=VITA_NUOVA_DEL_BRIGANTE;TIPO=RISCATTO;ASPETTO=QUALUNQUE;MANDANTE=l'ex brigante;LUOGO=ROVINE;\
+    GENERE=M;INGREDIENTE=frammento d'argento;INGREDIENTI=frammenti d'argento;DOVE=LUOGHI GROTTA;QUANTITA=3;\
+    DOMANDA=Fra le rovine c'è il vecchio covo. Seppellite l'argento sotto la soglia, come voto di una vita nuova?;\
+    NEMICO=GUERRIERO;NUMERO=2;MONETE=35;TITOLO=La vita nuova;\
+    RICHIESTA=Ero un brigante, ma ho smesso. Per chiudere davvero devo seppellire dell'argento sotto la soglia del mio vecchio covo, fra delle rovine. Come voto. Non chiedetemi da dove viene l'usanza.;\
+    BATTUTA=E perché non ci andate voi?;RISPOSTA=Perché i miei vecchi compari ci passano ancora, e non sanno che ho smesso.;\
+    RITO=L'argento sparisce sotto la soglia. Proprio allora arrivano due vecchi compari dell'ex brigante, e non sembrano contenti di vedervi lì.;\
+    VITTORIA=I vecchi compari se ne vanno con le pive nel sacco. La vita nuova può cominciare.;\
+    RINGRAZIAMENTO=Fatto, allora. Da oggi sono un uomo onesto. Mi sento leggero. Forse perché non ho più l'argento.;\
+    RICORDO=Fra queste rovine un brigante seppellì il suo passato, e un po' d'argento.
+    CHIAVE=FALO_DEL_CAVALIERE;TIPO=REDENZIONE_PUBBLICA;ASPETTO=QUALUNQUE;MANDANTE=il cavaliere caduto in disgrazia;LUOGO=RADURA;\
+    GENERE=F;INGREDIENTE=lacrima di resina;INGREDIENTI=lacrime di resina;DOVE=LUOGHI BOSCO;QUANTITA=4;\
+    DOMANDA=Dalla radura il falò si vedrà fino in città. Accendete la resina e date il segnale?;\
+    NEMICO=HOBGOBLIN;NUMERO=3;MONETE=35;TITOLO=Il falò del cavaliere;\
+    RICHIESTA=Durante l'ultimo assedio sono scappato. Tutti lo sanno, tutti me lo ricordano. Se da una radura si vedesse un falò di resina, il segnale degli eroi, la città capirebbe che sono cambiato.;\
+    BATTUTA=Ma il falò lo accendiamo noi.;RISPOSTA=Sì, ma a mio nome. La gloria funziona così, da sempre.;\
+    RITO=Il falò di resina si alza alto sulla radura, e dalla città lo vedono tutti. Lo vedono anche tre hobgoblin, che arrivano a curiosare.;\
+    VITTORIA=Gli hobgoblin, attirati dal falò, sono sconfitti, e dalla città li hanno visti cadere uno a uno.;\
+    RINGRAZIAMENTO=In città non si parla d'altro: il cavaliere e il falò! Nessuno ricorda più l'assedio. Quasi nessuno.;\
+    RICORDO=In questa radura si accese il falò che riabilitò un cavaliere.
 
 # ---------------------------------------------------------------------------------------------
 # Benedizioni (vedi LaBenedizione, IlFavore e BenedizioneRichiesta)

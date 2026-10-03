@@ -44,13 +44,15 @@ class ScenarioRitualeTest {
             chiavi.add(rituale.getChiave());
             tipi.add(rituale.getTipo());
         }
-        assertTrue(chiavi.size() >= 23, String.valueOf(chiavi));
+        assertTrue(chiavi.size() >= 31, String.valueOf(chiavi));
         assertEquals(EnumSet.of(TipoMissione.RITUALE, TipoMissione.SIGILLO, TipoMissione.BENEDIZIONE, TipoMissione.SPEZZATURA,
                 TipoMissione.PURIFICAZIONE, TipoMissione.POSSESSIONE, TipoMissione.COMUNICAZIONE, TipoMissione.EVOCAZIONE,
                 TipoMissione.BARRIERA_MAGICA, TipoMissione.SANTUARIO, TipoMissione.DIVINAZIONE, TipoMissione.ASTRI,
                 TipoMissione.VISIONE_PASSATO, TipoMissione.TRASMUTAZIONE, TipoMissione.CREAZIONE_GOLEM, TipoMissione.PATTO_ANIMA,
                 TipoMissione.ANTI_MAGIA, TipoMissione.MALEDIZIONE, TipoMissione.NECROMANZIA, TipoMissione.CONTROLLO_ELEMENTALE,
-                TipoMissione.ANIMAZIONE_OGGETTI, TipoMissione.ILLUSIONE, TipoMissione.LEGAME_SPIRITUALE), tipi);
+                TipoMissione.ANIMAZIONE_OGGETTI, TipoMissione.ILLUSIONE, TipoMissione.LEGAME_SPIRITUALE, TipoMissione.CHANNELING,
+                TipoMissione.COMUNIONE, TipoMissione.TRANCE, TipoMissione.INCANTESIMO, TipoMissione.VISIONE_FUTURO,
+                TipoMissione.PERDONO, TipoMissione.RISCATTO, TipoMissione.REDENZIONE_PUBBLICA), tipi);
 
         RitualeRichiesto pastore = RitualeRichiesto.da(PASTORE);
         assertEquals(Arrays.asList("La formula", "Il fumo", "Il sale"), pastore.getMetodi());
