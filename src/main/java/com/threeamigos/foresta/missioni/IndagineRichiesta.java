@@ -36,7 +36,8 @@ public final class IndagineRichiesta {
 	}
 
 	/**
-	 * Un indizio: dove si trova e che cosa dice.
+	 * Un indizio: dove si trova e che cosa dice. Scritto LUOGO:testo, con il luogo fra i POSTI_DEGLI_INDIZI; lo usano
+	 * anche i reperti della documentazione (vedi DocumentazioneRichiesta).
 	 */
 	public static final class Indizio {
 
@@ -46,6 +47,21 @@ public final class IndagineRichiesta {
 		private Indizio(ClassiLocazione luogo, String testo) {
 			this.luogo = luogo;
 			this.testo = testo;
+		}
+
+		/**
+		 * L'indizio di un campo LUOGO:testo della riga.
+		 */
+		static Indizio da(String campo, String riga) {
+			int separatore = campo.indexOf(SEPARATORE_DEL_LUOGO);
+			if (separatore < 0) {
+				throw new IllegalArgumentException("Un indizio è LUOGO:testo: " + campo + " in " + riga);
+			}
+			ClassiLocazione posto = ClassiLocazione.valueOf(campo.substring(0, separatore).trim());
+			if (!POSTI_DEGLI_INDIZI.contains(posto)) {
+				throw new IllegalArgumentException("Gli indizi stanno fra " + POSTI_DEGLI_INDIZI + ": " + riga);
+			}
+			return new Indizio(posto, campo.substring(separatore + 1).trim());
 		}
 
 		public ClassiLocazione getLuogo() {
@@ -132,15 +148,7 @@ public final class IndagineRichiesta {
 	}
 
 	private Indizio indizio(String campo) {
-		int separatore = campo.indexOf(SEPARATORE_DEL_LUOGO);
-		if (separatore < 0) {
-			throw new IllegalArgumentException("Un indizio è LUOGO:testo: " + campo + " in " + riga);
-		}
-		ClassiLocazione posto = ClassiLocazione.valueOf(campo.substring(0, separatore).trim());
-		if (!POSTI_DEGLI_INDIZI.contains(posto)) {
-			throw new IllegalArgumentException("Gli indizi stanno fra " + POSTI_DEGLI_INDIZI + ": " + riga);
-		}
-		return new Indizio(posto, campo.substring(separatore + 1).trim());
+		return Indizio.da(campo, riga);
 	}
 
 	public static IndagineRichiesta da(String riga) {

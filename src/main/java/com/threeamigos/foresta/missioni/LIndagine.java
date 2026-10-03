@@ -173,8 +173,8 @@ public class LIndagine extends IncaricoInCitta {
 			return cercaLocazione(MomentoControllo.IN_LOCAZIONE, indizio.getLuogo())
 					.esegui(() -> {
 						Foresta.setLocazioneConosciuta(getPosto());
-						BusEventi.pubblica(new NotificaTestoParagrafo((numero == 1 ? "Il primo indizio va cercato in " : "Il prossimo indizio va cercato in ")
-								+ TestiDeiLuoghi.indefinito(indizio.getLuogo()) + ": il posto è segnato sulla mappa."));
+						BusEventi.pubblica(new NotificaTestoParagrafo((numero == 1 ? "Il primo indizio va cercato " : "Il prossimo indizio va cercato ")
+								+ TestiDeiLuoghi.dentro(indizio.getLuogo()) + ": il posto è segnato sulla mappa."));
 					})
 					.poi(INDIZIO + numero);
 		}

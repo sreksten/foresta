@@ -193,7 +193,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 		SorveglianzaRichiesta sorveglianza = getSorveglianza();
 		return sorveglianza.getAspetto().nuovaScena()
 				.parlaIlMandante(testo(sorveglianza.getRichiesta()))
-				.parlaIlMandante("Il posto è " + TestiDeiLuoghi.indefinito(sorveglianza.getLuogo()) + " qui vicino: ve lo segno sulla mappa. "
+				.parlaIlMandante("Il posto è " + TestiDeiLuoghi.dentro(sorveglianza.getLuogo()) + " qui vicino: ve lo segno sulla mappa. "
 						+ "Passateci " + Misc.getCardinaleF(sorveglianza.getVisite()) + " volte, " + getIntervallo() + ". "
 						+ getRicompensa() + " monete a lavoro fatto.")
 				.parlaIlCapo(testo(sorveglianza.getBattutaDelCapo()))

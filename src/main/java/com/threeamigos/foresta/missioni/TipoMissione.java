@@ -86,10 +86,12 @@ public enum TipoMissione {
 
     //----------
 
+    // Coperto da: IlCorriere (il trattato d'alleanza)
     /**
      * Esempio: convincere un nobile a schierarsi dalla vostra parte o negoziare una tregua
      */
     DIPLOMAZIA(SupertipoMissione.NEGOZIAZIONE),
+    // Coperto da: IlCorriere (l'accordo fra il mugnaio e il pescatore)
     /**
      * Esempio: fare da intermediario tra due fazioni in guerra, mediare una disputa commerciale
      */
@@ -115,6 +117,7 @@ public enum TipoMissione {
      * Esempio: scambiare ostaggi, negoziazione di rilascio, baratto persone
      */
     SCAMBIO_OSTAGGI(SupertipoMissione.NEGOZIAZIONE),
+    // Coperto da: IlCorriere (la tregua per il ponte)
     /**
      * Esempio: negoziare tregua, cessate il fuoco, armistizio
      */
@@ -364,6 +367,7 @@ public enum TipoMissione {
      * Esempio: cercare informazioni in archivi, ricercare in biblioteche, studiare testi antichi, raccogliere dati
      */
     RICERCA(SupertipoMissione.INVESTIGAZIONE),
+    // Coperto da: LIndagine (le lucciole della palude)
     /**
      * Esempio: approfondire uno studio accademico, scoprire il funzionamento di una magia, risolvere un mistero scientifico per pura conoscenza
      */
@@ -393,6 +397,7 @@ public enum TipoMissione {
      * Esempio: analisi scene crimine, raccolta prove, indizi forensici, esaminare corpi, cause di morte, autopsia
      */
     FORENSICA(SupertipoMissione.INVESTIGAZIONE),
+    // Coperto da: LIndagine (il ladro dei tetti)
     /**
      * Esempio: analizzare profilo criminale, psicologia criminale, prevedere comportamenti, profilazione psicologica
      */
@@ -427,6 +432,7 @@ public enum TipoMissione {
      * Esempio: leggere rune, decifrare simboli magici, interpretazione runica, leggere aura
      */
     LETTURA_RUNE(SupertipoMissione.INVESTIGAZIONE),
+    // Coperto da: LaDocumentazione (le iscrizioni, gli affreschi, l'erbario, la guida delle locande)
     /**
      * Esempio: mappare un territorio sconosciuto, catalogare reperti archeologici, documenting scoperte
      */
@@ -655,6 +661,7 @@ public enum TipoMissione {
      * Esempio: assassinare per denaro, omicidio su commissione, killer
      */
     SICARIO(SupertipoMissione.ILLECITO),
+    // Coperto da: IlContrabbandiere (le monete col marchio)
     /**
      * Esempio: riciclare denaro sporco, lavaggio denaro
      */

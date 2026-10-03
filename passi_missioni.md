@@ -935,3 +935,21 @@ produzione `BENEDIZIONE`, lette da `BenedizioneRichiesta`.
 - È ripetibile, ogni 48 ore, anche per lo stesso personaggio.
 
 Copre BENEDIZIONE_RICEVERE. Test: `ScenarioBenedizioneTest`.
+
+### La documentazione, e altri tipi dalla grammatica (2026-10-03)
+
+`LaDocumentazione` è un incarico in città, ripetibile: uno studioso manda il gruppo
+in due o tre posti (`REPERTO_n=LUOGO:testo`, come gli indizi delle indagini, letti
+con `IndagineRichiesta.Indizio`), segnati sulla mappa uno alla volta. In ognuno si
+annota che cosa si è trovato, che resta nella descrizione; poi si torna dallo
+studioso a consegnare le note. Righe in `missioni.txt` alla produzione
+`DOCUMENTAZIONE`, lette da `DocumentazioneRichiesta`. Copre DOCUMENTAZIONE (il
+cartografo copre ESPLORAZIONE). Test: `ScenarioDocumentazioneTest`.
+
+Con la sola grammatica, in più: PROFILING e CURIOSITA_ACCADEMICA (indagini),
+DIPLOMAZIA, NEGOZIAZIONE_TREGUA e MEDIAZIONE (corriere), RICICLAGGIO
+(contrabbando).
+
+Correzione: davanti a un luogo i testi usano `TestiDeiLuoghi.dentro` ("fra delle
+rovine", "in una grotta") e non "in" più `indefinito`, che dava "in delle rovine"
+(indagini, sorveglianze, riti).

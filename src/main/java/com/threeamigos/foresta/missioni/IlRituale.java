@@ -229,7 +229,7 @@ public class IlRituale extends IncaricoInCitta {
 		MaterialeRichiesto ingrediente = rituale.getIngrediente();
 		return rituale.getAspetto().nuovaScena()
 				.parlaIlMandante(testo(rituale.getRichiesta()))
-				.parlaIlMandante("Il rito si celebra in " + TestiDeiLuoghi.indefinito(rituale.getLuogo()) + " qui vicino: ve lo segno sulla mappa. "
+				.parlaIlMandante("Il rito si celebra " + TestiDeiLuoghi.dentro(rituale.getLuogo()) + " qui vicino: ve lo segno sulla mappa. "
 						+ "Servono " + ingrediente.quanti(rituale.getQuantita()) + ", che " + ingrediente.getDaDoveViene() + ". "
 						+ getRicompensa() + " monete a rito compiuto.")
 				.parlaIlCapo(testo(rituale.getBattutaDelCapo()))
@@ -245,8 +245,8 @@ public class IlRituale extends IncaricoInCitta {
 
 	@Override
 	protected String testoAccettazione() {
-		return Misc.inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per un rito in "
-				+ TestiDeiLuoghi.indefinito(getRituale().getLuogo()) + ".";
+		return Misc.inizialeMaiuscola(getMandanteDiCitta()) + " pagherà " + getRicompensa() + " monete per un rito "
+				+ TestiDeiLuoghi.dentro(getRituale().getLuogo()) + ".";
 	}
 
 	@Override

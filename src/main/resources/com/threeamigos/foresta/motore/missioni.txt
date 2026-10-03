@@ -2,7 +2,7 @@
 # riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia; e i materiali che chiedono
 # l'alchimista, l'armaiolo, il capitano delle guardie e il locandiere; le cose da portare da una città all'altra,
 # anche di contrabbando; gli oggetti smarriti nella foresta; gli incarichi di combattimento, le sorveglianze, i
-# soccorsi, le indagini, i riti e le benedizioni.
+# soccorsi, le indagini, i riti, le benedizioni e le documentazioni.
 # I nomi sono tutti maschili, perché i testi delle missioni parlano di "suo marito" e "sua moglie".
 #
 # Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
@@ -282,6 +282,9 @@ TRASPORTO
     F;cassa di rimedi;il medico di corte;il guaritore del lazzaretto;URGENTE;25;Nel lazzaretto c'è un'epidemia di febbre grigia, e i rimedi sono finiti.;Si attacca anche a noi?;Non se ve ne andate subito, dopo la consegna.;Basteranno per tutti i malati! E adesso andate, prima che la febbre prenda anche voi.
     M;sacco di sale purificato;la badessa;il sindaco;URGENTE;22;Una pestilenza si sta mangiando il grano, e chi lo mangia. Questo sale, sparso sulle soglie delle case, ferma il contagio.;Funziona davvero?;Funziona sempre. Quasi sempre. Spesso.;Lo spargeremo su ogni soglia. Che il cielo vi benedica!
     M;contratto di compravendita;il notaio;il mercante di stoffe;URGENTE;18;Il mercante deve firmare questo contratto entro pochi giorni, o l'affare salta. E con l'affare salta anche la mia parcella.;E se non lo vuole firmare?;Lo firmerà. È lui che l'ha chiesto, e lo vuole ancora più di me.;Firmato! E con il sigillo, guardate. Adesso le stoffe sono mie.
+    M;trattato d'alleanza;il borgomastro;il consiglio dei mercanti;CON_CALMA;20;Da soli i goblin ci schiacciano, ma insieme alle altre città forse no. Questo trattato lo propone. Va consegnato a mano, con un bell'inchino.;E se non lo firmano?;Allora inchinatevi di più.;Un'alleanza! Lo firmiamo subito, e brindiamo stasera. Anzi, adesso.
+    F;proposta di tregua;il capitano delle guardie;il capitano della milizia;URGENTE;22;Le nostre guardie e la loro milizia si prendono a sassate per un ponte che nessuno usa più. Questa tregua mette fine alla faccenda, se arriva prima della prossima sassaiola.;E il ponte?;Lo dividiamo a metà. Una metà a testa, e la campata in mezzo alle capre.;Una tregua, finalmente! I miei uomini avevano finito i sassi.
+    F;proposta d'accordo;il mugnaio;il pescatore;CON_CALMA;14;Il pescatore dice che il mio mulino gli spaventa i pesci, io dico che i suoi pesci mi intasano la ruota. Ho scritto un accordo, ma lui da me non lo accetterebbe mai.;E da noi sì?;Da voi forse. Siete neutrali. E grossi.;Un accordo? Il mulino si ferma la domenica, e io pesco solo dopo il tramonto. Si può fare.
 
 # ---------------------------------------------------------------------------------------------
 # Contrabbando da una città all'altra (vedi IlContrabbandiere)
@@ -298,6 +301,7 @@ CONTRABBANDO
     F;gabbia di folletti;il cacciatore di frodo;il collezionista;URGENTE;26;Catturare i folletti è proibito, venderli ancora di più. Ma il collezionista paga bene, e i folletti nella gabbia non durano molto.;Non è un po' crudele?;Sì. Infatti pago bene anche voi.;Ah, splendidi! Lo so, lo so, non dovrei. Ma guardate che colori.
     M;libro di incantesimi proibiti;il bibliotecario;il mago di corte;CON_CALMA;24;Questo libro era nella sezione chiusa della biblioteca, e adesso non c'è più. Il mago di corte lo vuole leggere prima che qualcuno se ne accorga.;Che incantesimi ci sono dentro?;Non lo so. E non apritelo per scoprirlo, l'ultimo che l'ha aperto adesso è un rospo.;Eccolo! Grazie. E il rospo come sta?
     F;cassa di uova di viverna;il ricettatore;l'allevatore di bestie;URGENTE;26;Uova di viverna, vendute al mercato nero. Chi le compra le fa schiudere e vende i cuccioli ai signori. Sono calde, ancora per poco.;E se si schiudono per strada?;Allora correte. Molto. Le viverne appena nate hanno fame.;Ancora calde! I signori pagheranno il triplo. Non chiedete per cosa.
+    M;sacco di monete sporche;il ricettatore;il cambiavalute;URGENTE;24;Queste monete vengono da un furto, e hanno ancora il marchio del proprietario. Il cambiavalute le fonde e me le ridà pulite. Più o meno pulite.;E se qualcuno riconosce il marchio?;Allora siete dei corrieri molto sfortunati. E io non vi ho mai visti.;Monete col marchio, eh? Tra un'ora saranno lingotti. E tra due, monete nuove di zecca.
 
 # ---------------------------------------------------------------------------------------------
 # Oggetti smarriti nella foresta (vedi LOggettoSmarrito e OggettoSmarrito)
@@ -843,6 +847,31 @@ INDAGINE
     VITTORIA=La viverna è sconfitta, e i gigli di palude sono vostri.;\
     RINGRAZIAMENTO=Il giglio di palude! Con questo la febbre se ne va in tre giorni. Lo scrivo in un libro nuovo, che non si perda più.;\
     RICORDO=In questa palude crescono i gigli che curano la febbre dei boschi.
+    CHIAVE=LADRO_DEI_TETTI;TIPO=PROFILING;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;MONETE=40;TITOLO=Il ladro dei tetti;\
+    RICHIESTA=Un ladro entra nelle case dai tetti, di notte. Non lo vede mai nessuno. Ma ha delle abitudini, e dalle abitudini si capisce chi è.;\
+    BATTUTA=Che abitudini?;RISPOSTA=Chiedete in giro. Io so solo che lascia sempre una mela morsicata sul davanzale.;\
+    INDIZIO_1=LOCANDA:Il locandiere dice che il ladro colpisce solo nelle notti di luna piena, e che salta da un tetto all'altro come se volasse. Una volta l'hanno visto fare una capriola.;\
+    INDIZIO_2=TEMPIO:Il custode del tempio ricorda un acrobata del circo, cacciato anni fa perché rubava le mele al domatore. Non riusciva a dormire nelle notti di luna piena, diceva.;\
+    DOMANDA=Chi è il ladro dei tetti?;SOSPETTI=Il fornaio, che si alza di notte/L'ex acrobata del circo/Il guardiano notturno;\
+    COLPEVOLE=2;NEMICO=LADRO;NUMERO=1;CAPO=NOME_BRIGANTE;RESA=SI;LUOGO=ROVINE;\
+    SMASCHERAMENTO=Capriole, luna piena, mele: è l'ex acrobata del circo, %CAPO%, che si nasconde fra delle rovine.;\
+    ERRORE=Vi siete sbagliati, e la notte dopo, con la luna piena, il ladro colpisce ancora. Il capitano non vi ascolta più.;\
+    VITTORIA=%CAPO% si arrende, e ammette tutto. Anche le mele.;\
+    RINGRAZIAMENTO=Il ladro dei tetti è in cella. Gli ho dato una mela, per la notte. Morsicata, naturalmente.;\
+    RICORDO=Fra queste rovine si nascondeva %CAPO%, il ladro dei tetti.
+    CHIAVE=LUCCIOLE_DELLA_PALUDE;TIPO=CURIOSITA_ACCADEMICA;ASPETTO=QUALUNQUE;MANDANTE=il sapiente;MONETE=35;\
+    TITOLO=Le lucciole della palude;\
+    RICHIESTA=Nelle paludi le lucciole si accendono tutte insieme, nello stesso istante. Nessun libro spiega perché. Io voglio saperlo, per pura curiosità.;\
+    BATTUTA=Solo per curiosità?;RISPOSTA=E per scriverci un libro. Che sarà il primo a spiegarlo. E mi renderà famoso.;\
+    INDIZIO_1=PALUDE:Nella palude, prima che le lucciole si accendano, si sente un fischio acuto, fra le canne. Poi, tutte insieme, si illuminano.;\
+    INDIZIO_2=LOCANDA:Un vecchio cacciatore dice che i folletti fischiano per chiamarsi fra loro, e che amano le cose che brillano. La luna, la luna no: quella non fischia.;\
+    DOMANDA=Chi fa accendere le lucciole?;SOSPETTI=La luna/I folletti/Il vento fra le canne;\
+    COLPEVOLE=2;NEMICO=FOLLETTO;NUMERO=3;RESA=SI;LUOGO=BOSCO;\
+    SMASCHERAMENTO=Il fischio, le cose che brillano: sono i folletti, che accendono le lucciole per giocare. E non vogliono che si sappia.;\
+    ERRORE=Vi siete sbagliati, e il sapiente scrive nel suo libro una sciocchezza. Quando lo scopre, non vi vuole più vedere.;\
+    VITTORIA=I folletti si arrendono, e in cambio del silenzio vi spiegano il trucco: un fischio, e le lucciole rispondono.;\
+    RINGRAZIAMENTO=I folletti! Lo sapevo. Cioè, non lo sapevo, ma adesso lo scrivo come se lo sapessi da sempre.;\
+    RICORDO=In questo bosco vivono i folletti che accendono le lucciole della palude.
 
 # ---------------------------------------------------------------------------------------------
 # Riti (vedi IlRituale e RitualeRichiesto)
@@ -1113,3 +1142,43 @@ BENEDIZIONE
     VEGLIA=La tomba del santo è quieta. Una civetta vi guarda da un ramo, e annuisce.;\
     VITTORIA=La terza veglia è finita: il santo può festeggiare in pace.;\
     BENEDETTO=La sacerdotessa copre gli occhi di %PERSONAGGIO% con la mano, e quando la toglie il buio sembra un po' meno buio.
+
+# ---------------------------------------------------------------------------------------------
+# Documentazioni (vedi LaDocumentazione e DocumentazioneRichiesta)
+# ---------------------------------------------------------------------------------------------
+#
+# Una riga per documentazione, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
+#   CHIAVE=, ASPETTO=, MANDANTE=, MONETE=, TITOLO=, RICHIESTA=, BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=  come per gli
+#               incarichi di combattimento;
+#   REPERTO_1=, REPERTO_2=, REPERTO_3=  il terzo è facoltativo: LUOGO:testo, come gli indizi delle indagini (GROTTA,
+#               ROVINE, BOSCO, PALUDE, RADURA, TEMPIO, LOCANDA). La missione segna i posti sulla mappa uno alla volta;
+#               il testo è quello che il gruppo trova e annota.
+# Nei testi non si usa il ";".
+
+DOCUMENTAZIONE
+    CHIAVE=ISCRIZIONI_DELLE_ROVINE;ASPETTO=QUALUNQUE;MANDANTE=lo storico;MONETE=35;TITOLO=Le iscrizioni perdute;\
+    RICHIESTA=Sto scrivendo la storia dell'antico regno, ma le sue iscrizioni sono sparse per la foresta. Vanno copiate, prima che il muschio se le mangi.;\
+    BATTUTA=Copiate come?;RISPOSTA=Con il carboncino, su queste pergamene. E bene, mi raccomando: l'ultimo che ci ha provato ha scambiato una corona per un cavolo.;\
+    REPERTO_1=ROVINE:Su un architrave c'è scritto: Qui regnò Ottone il Saggio, che costruì cento ponti. Copiate con cura, cavolo compreso.;\
+    REPERTO_2=GROTTA:Sulle pareti della grotta c'è la stessa corona, e una data: l'anno del grande inverno.;\
+    REPERTO_3=TEMPIO:Sull'altare del tempio è inciso il nome di Ottone, accanto a quello di una regina di cui nessuno ricorda niente.;\
+    RINGRAZIAMENTO=Una regina dimenticata! Questo cambia tutto. Cioè, cambia il terzo capitolo. Ma è già qualcosa.
+    CHIAVE=AFFRESCHI_DEI_TEMPLI;ASPETTO=QUALUNQUE;MANDANTE=il pittore di corte;MONETE=30;TITOLO=Gli affreschi dei templi;\
+    RICHIESTA=Devo dipingere la cappella del borgomastro come gli antichi templi della foresta, ma io nella foresta non ci vado. Descrivetemeli voi.;\
+    BATTUTA=Non siamo pittori.;RISPOSTA=Non serve. Ditemi i colori e le figure, al resto penso io. E se sbagliate, dirò che è arte moderna.;\
+    REPERTO_1=TEMPIO:Sulle pareti del tempio c'è un cielo azzurro pieno di stelle d'oro, e un drago rosso che le insegue.;\
+    REPERTO_2=TEMPIO:In quest'altro tempio gli affreschi sono quasi cancellati: si vede solo un cavaliere verde che dorme sotto un albero.;\
+    RINGRAZIAMENTO=Stelle d'oro, un drago rosso, un cavaliere che dorme. Il borgomastro sarà contento. Il cavaliere lo dipingo sveglio, però.
+    CHIAVE=ERBARIO_DEL_MEDICO;ASPETTO=ALCHIMISTA;MANDANTE=l'alchimista;MONETE=30;TITOLO=L'erbario;\
+    RICHIESTA=Sto compilando un erbario di tutte le piante della foresta. Mi mancano quelle che crescono dove io non ho il coraggio di andare.;\
+    BATTUTA=Cioè dove?;RISPOSTA=In una palude, in una grotta e in una radura dove, dicono, ci sono le streghe. Descrivetemi le piante, non serve coglierle.;\
+    REPERTO_1=PALUDE:Fra le canne cresce un fiore nero con i petali a forma di mano, che si chiude quando qualcuno si avvicina.;\
+    REPERTO_2=GROTTA:Sulle pareti della grotta c'è un muschio azzurro che brilla al buio, e che sa di menta.;\
+    REPERTO_3=RADURA:Nella radura cresce un'erba argentata, disposta in un cerchio perfetto. Di streghe, nessuna traccia. Per fortuna.;\
+    RINGRAZIAMENTO=Un fiore che si chiude, un muschio che brilla, un cerchio d'erba d'argento. Il mio erbario sarà il più bello del regno.
+    CHIAVE=LOCANDE_DELLA_FORESTA;ASPETTO=LOCANDIERE;MANDANTE=il locandiere;MONETE=25;TITOLO=La guida delle locande;\
+    RICHIESTA=Voglio scrivere una guida delle locande della foresta, per i viandanti. Ma se ci vado io, chi tiene aperta la mia?;\
+    BATTUTA=E noi cosa dovremmo fare?;RISPOSTA=Visitarle, assaggiare, e dirmi com'è. Lo so, è un lavoro durissimo.;\
+    REPERTO_1=LOCANDA:In questa locanda la zuppa è buona, il vino annacquato e il locandiere racconta sempre la stessa storia.;\
+    REPERTO_2=LOCANDA:Qui la birra è eccellente, i letti duri come sassi e il gatto della locanda ruba il formaggio dai piatti.;\
+    RINGRAZIAMENTO=Zuppa buona, birra eccellente, un gatto ladro. La mia guida sarà un successo. La mia locanda, naturalmente, avrà tre stelle.

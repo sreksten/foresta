@@ -43,6 +43,7 @@ public enum ClasseMissione {
 	L_INDAGINE(LIndagine::new),
 	LA_BENEDIZIONE(LaBenedizione::new),
 	IL_FAVORE(IlFavore::new),
+	LA_DOCUMENTAZIONE(LaDocumentazione::new),
 	IL_RITUALE(IlRituale::new),
 
 	MISSIONE_DI_PROVA_SECONDARIA_UNO(MissioneDiProvaSecondariaUno::new),
