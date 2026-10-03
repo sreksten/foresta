@@ -40,6 +40,9 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+// TODO: intro con scritte in scorrimento verticale
+// TODO: intro con sfondo generato invece dell'ombra del drago
+// TODO: trofei - usare scritte grandi, con scritte doomdarkFontMedium e n. mancanti per completare
 // TODO: elfo non sa usare libro magico. potrebbe saperlo usare con un malus magari
 // TODO: carta, forbice e sasso
 // TODO: mostrare in locazione anche i personaggi del gruppo.
