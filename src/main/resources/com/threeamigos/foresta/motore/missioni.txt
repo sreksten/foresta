@@ -1,0 +1,83 @@
+# I nomi dei personaggi delle missioni (vedi ProduttoreDiTestiCasuale): gli ostaggi da liberare, i bardi da
+# riportare a casa, i capibanda su cui c'è una taglia. Per ora sono tutti maschili, perché i testi delle missioni
+# parlano di "suo marito" e "sua moglie".
+#
+# Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
+
+# ---------------------------------------------------------------------------------------------
+# Ostaggi (vedi IlRapimentoDiArmando)
+# ---------------------------------------------------------------------------------------------
+
+NOME_OSTAGGIO
+    Armando
+    Gervasio
+    Ottone
+    Bonifacio
+    Teodoro
+    Ermanno
+    Pancrazio
+    Aldobrando
+    Ruggero
+    Tancredi
+    Ubaldo
+    Gualberto
+    Ildebrando
+    Settimio
+    Fulgenzio
+    Nazzareno
+
+# ---------------------------------------------------------------------------------------------
+# Bardi (vedi NonSparateSulPianista)
+# ---------------------------------------------------------------------------------------------
+
+NOME_BARDO
+    Ugolino
+    Fiorello
+    Gualtiero
+    Lapo
+    Cecco
+    Folchetto
+    Rambaldo
+    Bertoldo
+    Arnaldo
+    Rinaldino
+    Cantarello
+    Melchiorre
+    Zeffirino
+    Liutprando
+
+# ---------------------------------------------------------------------------------------------
+# Capibanda di goblin e hobgoblin (vedi LaTagliaSuSgranf e IlRapimentoDiArmando): a volte con un soprannome
+# ---------------------------------------------------------------------------------------------
+
+NOME_CAPOBANDA
+    [^3] [NOME_GOBLIN]
+    [^1] [NOME_GOBLIN] [SOPRANNOME_GOBLIN]
+
+NOME_GOBLIN
+    Sgranf
+    Ghignazzo
+    Grumolo
+    Sbrodolo
+    Mordicchio
+    Raspone
+    Bavoso
+    Grattachiodi
+    Muffo
+    Rognaccio
+    Tarlo
+    Sgnaffo
+    Zannagrossa
+    Ruttolo
+    Spigolo
+    Fetecchio
+
+SOPRANNOME_GOBLIN
+    il Guercio
+    lo Sdentato
+    Tre Dita
+    il Puzzolente
+    Mezzorecchio
+    il Ladro di Galline
+    il Terribile, o quasi
+    Pancia Molle

@@ -25,6 +25,7 @@ public class ProduttoreDiTestiCasuale {
 	private static GrammarBean locande;
 	private static GrammarBean templi;
 	private static GrammarBean rovine;
+	private static GrammarBean missioni;
 
 	private ProduttoreDiTestiCasuale() {
 	}
@@ -53,6 +54,9 @@ public class ProduttoreDiTestiCasuale {
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
 			rovine = new GrammarBean(
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/rovine.txt"),
+					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
+			missioni = new GrammarBean(
+					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/missioni.txt"),
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
 		} catch (InvalidGrammarException | IOException e) {
 			// Senza grammatiche il gioco non puo' andare avanti: si segnala l'errore e si esce. L'uscita va in coda
@@ -88,6 +92,28 @@ public class ProduttoreDiTestiCasuale {
 	 */
 	public static String nomeRovine() {
 		return rovine.produce("NOME_ROVINE").get(0).trim();
+	}
+
+	/**
+	 * Il nome di un ostaggio da liberare (vedi missioni.txt).
+	 */
+	public static String nomeOstaggio() {
+		return missioni.produce("NOME_OSTAGGIO").get(0).trim();
+	}
+
+	/**
+	 * Il nome di un bardo (vedi missioni.txt).
+	 */
+	public static String nomeBardo() {
+		return missioni.produce("NOME_BARDO").get(0).trim();
+	}
+
+	/**
+	 * Il nome di un capobanda di goblin o hobgoblin, a volte con un soprannome: "Grumolo il Guercio" (vedi
+	 * missioni.txt).
+	 */
+	public static String nomeCapobanda() {
+		return missioni.produce("NOME_CAPOBANDA").get(0).trim();
 	}
 
 	public static List<String> oroscopo() {
