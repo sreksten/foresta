@@ -47,6 +47,7 @@ public final class OggettoLeggendario {
 	private final List<String> incantamenti;
 	private final List<String> leggenda;
 	private final String guardiani;
+	private final String set;
 
 	private OggettoLeggendario(String riga) {
 		this.riga = Objects.requireNonNull(riga);
@@ -77,6 +78,7 @@ public final class OggettoLeggendario {
 				case "COSTO":
 				case "PESO":
 				case "GUARDIANI":
+				case "SET":
 					if (campi.put(chiave, valore) != null) {
 						throw new IllegalArgumentException("Campo ripetuto: " + chiave + " in " + riga);
 					}
@@ -104,6 +106,7 @@ public final class OggettoLeggendario {
 			throw new IllegalArgumentException("La leggenda ha almeno " + LEGGENDE_MINIME + " battute: " + riga);
 		}
 		guardiani = campi.get("GUARDIANI");
+		set = campi.get("SET");
 		// Si costruisce una volta qui, così un modificatore, un incantamento o i guardiani sbagliati si scoprono subito
 		costruisci();
 		getGuardiani();
@@ -154,6 +157,13 @@ public final class OggettoLeggendario {
 	 */
 	public List<String> getLeggenda() {
 		return leggenda;
+	}
+
+	/**
+	 * La chiave del set di cui è un pezzo (vedi SetLeggendario), o null.
+	 */
+	public String getSet() {
+		return set;
 	}
 
 	/**
@@ -210,6 +220,9 @@ public final class OggettoLeggendario {
 			artefatto = incantato.costruisci();
 		}
 		artefatto.getModelloDati().setRarita(TipoRaritaArtefatto.LEGGENDARIO);
+		if (set != null) {
+			artefatto.getModelloDati().setPezzoDiSetLeggendario(set, nomeBreve);
+		}
 		return artefatto;
 	}
 }

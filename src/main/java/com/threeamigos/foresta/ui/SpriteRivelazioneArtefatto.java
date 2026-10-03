@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.motore.RegoleSetLeggendari;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
@@ -372,6 +373,8 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 			dati.append(", danni ").append(md.getDanni());
 		}
 		righe.add(DoomdarkTextProducer.getImage(dati.toString(), piccolo, DoomdarkColorModel.Color.WHITE, larghezzaMassima));
+		RegoleSetLeggendari.descrizioneSet(md).ifPresent(set ->
+				righe.add(DoomdarkTextProducer.getImage(set, piccolo, DoomdarkColorModel.Color.YELLOW, larghezzaMassima)));
 		List<String> incantamenti = new ArrayList<>();
 		for (Incantamento incantamento : md.getIncantamenti()) {
 			incantamenti.add(incantamento(incantamento));

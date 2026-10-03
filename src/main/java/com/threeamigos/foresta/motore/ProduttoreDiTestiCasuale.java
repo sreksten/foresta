@@ -29,6 +29,7 @@ public class ProduttoreDiTestiCasuale {
 	private static GrammarBean missioni;
 	private static GrammarBean leggendari;
 	private static final String OGGETTO_LEGGENDARIO = "OGGETTO_LEGGENDARIO";
+	private static final String SET_LEGGENDARIO = "SET_LEGGENDARIO";
 
 	private ProduttoreDiTestiCasuale() {
 	}
@@ -164,12 +165,25 @@ public class ProduttoreDiTestiCasuale {
 	 * Tutti gli oggetti leggendari di leggendari.txt, in ordine casuale.
 	 */
 	public static List<String> tuttiGliOggettiLeggendari() {
+		return tutteLeRigheLeggendarie(OGGETTO_LEGGENDARIO);
+	}
+
+	/**
+	 * Tutti i set leggendari di leggendari.txt (vedi SetLeggendario), in ordine casuale.
+	 */
+	public static List<String> tuttiISetLeggendari() {
+		return tutteLeRigheLeggendarie(SET_LEGGENDARIO);
+	}
+
+	/**
+	 * Tutte le righe di una produzione one-shot di leggendari.txt: si pescano finché ce ne sono.
+	 */
+	private static synchronized List<String> tutteLeRigheLeggendarie(String produzione) {
 		List<String> righe = new ArrayList<>();
-		// Ogni riga conta come già pescata, così la pesca le scorre tutte
-		oggettoLeggendario(riga -> {
-			righe.add(riga);
-			return true;
-		});
+		leggendari.reset();
+		while (leggendari.canProduce(produzione)) {
+			righe.add(String.join(" ", leggendari.produce(produzione)).trim());
+		}
 		return righe;
 	}
 

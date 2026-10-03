@@ -1794,11 +1794,14 @@ public abstract class PersonaggioBase implements Personaggio {
 				.filter(m -> m.getTipoAttributo() == tipoAttributo)
 				.forEach(modificatoriLocali::add);
 
-		md.getArtefatti()
-				.stream()
-				.flatMap(a -> a.getModificatori().stream())
-				.filter(m -> m.getTipoAttributo() == tipoAttributo)
-				.forEach(modificatoriLocali::add);
+		// I bonus dei pezzi di un set leggendario completo sono moltiplicati (vedi RegoleSetLeggendari)
+		for (ArtefattoMD artefatto : md.getArtefatti()) {
+			double moltiplicatore = RegoleSetLeggendari.moltiplicatore(md.getArtefatti(), artefatto);
+			artefatto.getModificatori().stream()
+					.filter(m -> m.getTipoAttributo() == tipoAttributo)
+					.map(m -> RegoleSetLeggendari.applica(m, moltiplicatore))
+					.forEach(modificatoriLocali::add);
+		}
 
 		OptionalDouble modificatoreAssoluto = modificatoriLocali
 				.stream()

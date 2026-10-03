@@ -24,6 +24,9 @@ public class ArtefattoMD implements Serializzabile {
 
 	private TipoArtefatto tipo;
 	private TipoRaritaArtefatto rarita = TipoRaritaArtefatto.COMUNE;
+	// Per un leggendario di un set (vedi leggendari.txt): la chiave del set e quella del pezzo, il suo nome breve
+	private String setLeggendario;
+	private String pezzoLeggendario;
 	// Facoltativo (null se manca), es. "Diavolina"
 	private String nomeProprio;
 	// Con l'articolo, es. "la spada di fuoco"
@@ -59,6 +62,28 @@ public class ArtefattoMD implements Serializzabile {
 
 	public void setRarita(TipoRaritaArtefatto rarita) {
 		this.rarita = rarita;
+	}
+
+	/**
+	 * La chiave del set leggendario di cui l'artefatto è un pezzo, o null.
+	 */
+	public String getSetLeggendario() {
+		return setLeggendario;
+	}
+
+	/**
+	 * Il pezzo del set leggendario che è l'artefatto (il nome breve del leggendario), o null.
+	 */
+	public String getPezzoLeggendario() {
+		return pezzoLeggendario;
+	}
+
+	/**
+	 * Fa dell'artefatto quel pezzo di quel set leggendario.
+	 */
+	public void setPezzoDiSetLeggendario(String setLeggendario, String pezzoLeggendario) {
+		this.setLeggendario = setLeggendario;
+		this.pezzoLeggendario = pezzoLeggendario;
 	}
 
 	public String getNomeProprio() {
@@ -222,6 +247,10 @@ public class ArtefattoMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(rarita.name());
 		stream.print(PIPE);
+		stream.print(Serializzabile.facoltativo(setLeggendario));
+		stream.print(PIPE);
+		stream.print(Serializzabile.facoltativo(pezzoLeggendario));
+		stream.print(PIPE);
 		stream.print(Serializzabile.facoltativo(nomeProprio));
 		stream.print(PIPE);
 		stream.print(nome);
@@ -271,6 +300,8 @@ public class ArtefattoMD implements Serializzabile {
 		uuid = campi.testo();
 		tipo = campi.enumerato(TipoArtefatto.class);
 		rarita = campi.enumerato(TipoRaritaArtefatto.class);
+		setLeggendario = campi.testoFacoltativo();
+		pezzoLeggendario = campi.testoFacoltativo();
 		nomeProprio = campi.testoFacoltativo();
 		nome = campi.testo();
 		descrizione = campi.testo();

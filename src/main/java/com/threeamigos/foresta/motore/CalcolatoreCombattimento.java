@@ -522,6 +522,7 @@ public class CalcolatoreCombattimento {
         double dannoElementaleFinale = 0.0d;
 
         if (arma.isIncantata()) {
+            double moltiplicatoreSet = moltiplicatoreSet(attaccante, arma);
             for (Incantamento inc : arma.getIncantamenti()) {
                 TipoDanno elementoMagico = inc.getTipoDannoElementale();
 
@@ -531,7 +532,8 @@ public class CalcolatoreCombattimento {
                     continue;
                 }
 
-                double dannoQuestoIncantamento = dannoIncantamento(attaccante, difensore, inc, arma.getLivello(), fattore, 1.0d);
+                double dannoQuestoIncantamento = dannoIncantamento(attaccante, difensore, inc, arma.getLivello(),
+                        fattore * moltiplicatoreSet, 1.0d);
 
                 if (difensore.haInterazioneCon(elementoMagico) == TipoInterazioneConEffettiDiStato.DANNO_VERO) {
                     dannoQuestoIncantamento = dannoQuestoIncantamento * 2.0d;
@@ -601,6 +603,7 @@ public class CalcolatoreCombattimento {
 
             // --- TRAGUARDO 2: Stati degli Incantamenti (Multipli e Indipendenti) ---
             if (arma.isIncantata()) {
+                double moltiplicatoreSet = moltiplicatoreSet(attaccante, arma);
                 for (Incantamento incantamento : arma.getIncantamenti()) {
                     if (difensore.isImmuneATipoDanno(incantamento.getTipoDannoElementale())) {
                         continue;
@@ -610,7 +613,7 @@ public class CalcolatoreCombattimento {
 
                         // Ricalcola il danno specifico di QUESTO incantamento per un Proc Rate preciso
                         double dannoQuestoIncantamentoProc = dannoIncantamento(attaccante, difensore, incantamento,
-                                arma.getLivello(), fattore, 1.0d);
+                                arma.getLivello(), fattore * moltiplicatoreSet, 1.0d);
 
                         // Probabilità (su 100) che l'incantamento applichi il suo effetto di stato: una parte dipende da
                         // quanto è forte il colpo di QUESTO elemento rispetto alla FORZA del difensore, l'altra da chi
@@ -683,10 +686,11 @@ public class CalcolatoreCombattimento {
             if (!isPezzoDifensivo(pezzo)) {
                 continue;
             }
+            double moltiplicatoreSet = RegoleSetLeggendari.moltiplicatore(difensore.getModelloDati().getArtefatti(), pezzo.getModelloDati());
             for (Incantamento incantamento : pezzo.getIncantamenti()) {
                 if (incantamento.getTipoDannoElementale() == tipoDanno) {
-                    fisso += incantamento.getDannoBonusFisso() * pezzo.getLivello();
-                    percentuale += incantamento.getCoefficienteScala() * Costanti.RESISTENZA_FATTORE_PERCENTUALE;
+                    fisso += incantamento.getDannoBonusFisso() * pezzo.getLivello() * moltiplicatoreSet;
+                    percentuale += incantamento.getCoefficienteScala() * Costanti.RESISTENZA_FATTORE_PERCENTUALE * moltiplicatoreSet;
                 }
             }
         }
@@ -694,6 +698,17 @@ public class CalcolatoreCombattimento {
         Logger.log(String.format("difesa contro %s = (base %.0f + fisso %.0f) x (1 + %.3f) = %.2f",
                 tipoDanno, difesaBase, fisso, percentuale, difesa));
         return difesa;
+    }
+
+    /**
+     * Il moltiplicatore del set leggendario dell'arma, se è un artefatto e chi la impugna ha il set completo (vedi
+     * RegoleSetLeggendari); 1 per le armi naturali e gli incantesimi.
+     */
+    private static double moltiplicatoreSet(Personaggio attaccante, Arma arma) {
+        if (!(arma instanceof Artefatto)) {
+            return 1.0d;
+        }
+        return RegoleSetLeggendari.moltiplicatore(attaccante.getModelloDati().getArtefatti(), ((Artefatto) arma).getModelloDati());
     }
 
     private static boolean isPezzoDifensivo(Artefatto artefatto) {

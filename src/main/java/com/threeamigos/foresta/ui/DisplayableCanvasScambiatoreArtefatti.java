@@ -6,6 +6,7 @@ import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto;
+import com.threeamigos.foresta.motore.RegoleSetLeggendari;
 import com.threeamigos.foresta.motore.AutomaScambiatoreArtefatti;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
@@ -218,6 +219,11 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
                     artefatto.getModelloDati().getDescrizioneBreve(), fontSmall, colore,
                     null, artefatto);
             nodo.setFigliVisibili(artefatto.isFigliVisibili());
+            RegoleSetLeggendari.descrizioneSet(artefatto.getModelloDati()).ifPresent(set -> nodo.creaNodo(
+                    set, font, coloreSeparatori,
+                    null, null, null,
+                    null, null, null,
+                    null, artefatto));
             if (!artefatto.getModificatori().isEmpty()) {
                 nodo.creaNodo(
                         "Modificatori:", font, coloreSeparatori,
