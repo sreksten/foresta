@@ -1,6 +1,9 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.motore.CatalogoLeggendari;
+import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.ArrayList;
@@ -12,8 +15,8 @@ import java.util.function.IntUnaryOperator;
 import java.util.stream.Collectors;
 
 /**
- * Quale leggendario racconta la prossima leggenda (vedi LaLeggenda), perché i set si possano completare: a caso, ma
- * favorendo i pezzi mancanti dei set già cominciati.
+ * Quale leggendario racconta la prossima leggenda (vedi LaLeggenda), o mette in palio il prossimo torneo (vedi
+ * IlTorneo), perché i set si possano completare: a caso, ma favorendo i pezzi mancanti dei set già cominciati.
  * <ul>
  * <li>Un set è cominciato se almeno un suo pezzo è già uscito in una leggenda della partita, e almeno uno manca.</li>
  * <li>Se c'è un set cominciato, una leggenda su due (vedi {@link #PROBABILITA_PEZZO_MANCANTE}) racconta un suo pezzo
@@ -34,6 +37,39 @@ public final class PescaLeggendaria {
 	public static final int LEGGENDE_SENZA_PEZZI_MASSIME = 3;
 
 	private PescaLeggendaria() {
+	}
+
+	/**
+	 * Le chiavi dei leggendari che le missioni della partita con un leggendario (vedi {@link ConLeggendario}), tranne
+	 * quella, hanno già pescato: finite o no, bene o male.
+	 */
+	public static Set<String> giaPescati(Missione esclusa) {
+		return RegistroMissioni.getTutteLeMissioni().stream()
+				.filter(missione -> missione != esclusa && missione instanceof ConLeggendario)
+				.map(missione -> ((ConLeggendario) missione).getLeggendario())
+				.filter(leggendario -> leggendario != null)
+				.map(OggettoLeggendario::getChiave)
+				.collect(Collectors.toSet());
+	}
+
+	/**
+	 * Se resta qualche leggendario che nessuno ha pescato.
+	 */
+	static boolean restaUnLeggendario(Set<String> giaPescati) {
+		return !giaPescati.containsAll(CatalogoLeggendari.getTuttiILeggendari().keySet());
+	}
+
+	/**
+	 * La riga del prossimo leggendario, fra quelli che nessuno ha già pescato: un pezzo mancante di un set cominciato,
+	 * se tocca a lui (vedi {@link #pezzoDaRaccontare}), altrimenti uno a caso.
+	 */
+	static String pesca(Set<String> giaPescati, int leggendeSenzaPezzi) {
+		Optional<String> pezzoMancante = pezzoDaRaccontare(giaPescati, leggendeSenzaPezzi, Dado::tiraAncheAUnaFaccia);
+		if (pezzoMancante.isPresent()) {
+			return CatalogoLeggendari.getLeggendario(pezzoMancante.get()).orElseThrow(IllegalStateException::new).getRiga();
+		}
+		return ProduttoreDiTestiCasuale.oggettoLeggendario(riga -> giaPescati.contains(OggettoLeggendario.da(riga).getChiave()))
+				.orElseThrow(IllegalStateException::new);
 	}
 
 	/**

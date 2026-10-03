@@ -99,19 +99,21 @@ public enum TipoMissione {
      * Esempio: fare da intermediario tra due fazioni in guerra, mediare una disputa commerciale
      */
     MEDIAZIONE(SupertipoMissione.NEGOZIAZIONE),
-    /**
-     * Esempio: vendere merci, speculare su prezzi, guadagnare da commercio
-     */
-    COMMERCIO(SupertipoMissione.NEGOZIAZIONE),
+    // Non adatto al tono del gioco: comprare e rivendere merci è un lavoro da mercanti, non un'avventura.
+    // /**
+    //  * Esempio: vendere merci, speculare su prezzi, guadagnare da commercio
+    //  */
+    // COMMERCIO(SupertipoMissione.NEGOZIAZIONE),
     // Da non sviluppare per ora: servirebbero rilanci e avversari all'asta, una meccanica nuova.
     /**
      * Esempio: partecipare ad asta, acquistare oggetti rari, offerta al ribasso
      */
     ASTA(SupertipoMissione.NEGOZIAZIONE),
-    /**
-     * Esempio: fare da broker, intermediario commerciale, mediatore
-     */
-    SENSERIA(SupertipoMissione.NEGOZIAZIONE),
+    // Non adatto al tono del gioco: fare da sensale fra due mercanti non è un'avventura.
+    // /**
+    //  * Esempio: fare da broker, intermediario commerciale, mediatore
+    //  */
+    // SENSERIA(SupertipoMissione.NEGOZIAZIONE),
     // Coperto da: IlCorriere (il contratto di compravendita)
     /**
      * Esempio: negoziare contratto, accordo legale, documento vincolante
@@ -472,6 +474,7 @@ public enum TipoMissione {
      * Esempio: vincere una gara di magia, battere un campione in un duello, guadagnare un'elezione
      */
     COMPETIZIONE(SupertipoMissione.PROGRESSIONE),
+    // Coperto da: IlTorneo (la Rosa Appassita, la giostra degli incantatori, il Boccale Rovesciato)
     /**
      * Esempio: partecipare a torneo multi-round, competizione a eliminazione diretta
      */
@@ -630,10 +633,11 @@ public enum TipoMissione {
      * Esempio: spiare una riunione importante, raccogliere informazioni senza farsi scoprire
      */
     SPIONAGGIO(SupertipoMissione.ILLECITO),
-    /**
-     * Esempio: ricattare qualcuno, estorcere denaro, blackmail, estorsione, estorsione sotto minaccia, minaccia per guadagni
-     */
-    RICATTO(SupertipoMissione.ILLECITO),
+    // Non adatto al tono del gioco: ricattare qualcuno è meschino, non sgangherato.
+    // /**
+    //  * Esempio: ricattare qualcuno, estorcere denaro, blackmail, estorsione, estorsione sotto minaccia, minaccia per guadagni
+    //  */
+    // RICATTO(SupertipoMissione.ILLECITO),
     /**
      * Esempio: truffare un mercante, ingannare un nobile, corrompere un ufficiale
      */

@@ -1082,3 +1082,27 @@ Da non sviluppare per ora: RICCHEZZA, FAMA, REPUTAZIONE e ASTA. Non fattibili: B
 CORONAZIONE, LIGNAGGIO, LEGATARIO, EREDE, SUCCESSIONE, EREDITA, ALLEANZA_MATRIMONIALE,
 TRADIMENTO e SEDIZIONE.
 
+### Il torneo (2026-10-04)
+
+`IlTorneo`, un incarico in città (righe `TORNEO` in `missioni.txt`, lette da
+`TorneoRichiesto`): chi lo bandisce mette in palio un oggetto leggendario e una
+borsa di monete. Nella lizza, un posto segnato sulla mappa, si combattono due turni
+e la finale, uno per visita, uno contro uno e fino alla resa (`aDuello`,
+`finoAllaResa`); chi perde un turno torna per la rivincita, come in ogni duello. In
+finale il campione ha un nome e un livello in più (`conCapo`); vinta la finale, il
+leggendario va nell'inventario del gruppo (con l'animazione dell'artefatto
+trovato), e la borsa si riscuote in città. Si ripete ogni 72 ore, finché restano
+leggendari.
+
+**I leggendari si pescano una volta sola fra leggende e tornei.** Le missioni con un
+leggendario in palio implementano `ConLeggendario`; `PescaLeggendaria.giaPescati`
+guarda tutte, e `PescaLeggendaria.pesca` (il pezzo mancante di un set cominciato, o
+uno a caso) serve a entrambe.
+
+I campioni dei tornei, che si arrendono e restano vivi, sono candidati al registro
+dei personaggi incontrati (vedi gestione_missioni.md, "Registro dei personaggi
+incontrati"): potranno tornare.
+
+Copre TORNEO. Test: `ScenarioTorneoTest`. COMMERCIO, SENSERIA e RICATTO sono
+commentati come non adatti al tono del gioco.
+

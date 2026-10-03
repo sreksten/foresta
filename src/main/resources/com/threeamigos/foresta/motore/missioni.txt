@@ -2,7 +2,7 @@
 # riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia; e i materiali che chiedono
 # l'alchimista, l'armaiolo, il capitano delle guardie e il locandiere; le cose da portare da una città all'altra,
 # anche di contrabbando; gli oggetti smarriti nella foresta; gli incarichi di combattimento, le sorveglianze, i
-# soccorsi, le indagini, i riti, le benedizioni, le documentazioni e i colpi.
+# soccorsi, le indagini, i riti, le benedizioni, le lealtà, i tornei, le documentazioni e i colpi.
 # I nomi sono tutti maschili, perché i testi delle missioni parlano di "suo marito" e "sua moglie".
 #
 # Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
@@ -1519,6 +1519,53 @@ LEALTA
     RINGRAZIAMENTO=Stanotte dormirò. Davvero, questa volta.;\
     LEALTA=PERCEZIONE AUMENTO_FISSO 2;\
     LEALE=Gli occhi di %PERSONAGGIO% non temono più il buio, e ci vedono meglio.
+
+# ---------------------------------------------------------------------------------------------
+# Tornei (vedi IlTorneo e TorneoRichiesto)
+# ---------------------------------------------------------------------------------------------
+#
+# Una riga per torneo, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento. Il torneo si
+# combatte nella lizza, uno contro uno e fino alla resa: due turni e la finale, uno a ogni visita; chi perde può
+# tornare per la rivincita. In palio c'è un oggetto leggendario, che sceglie la missione, e la borsa del vincitore.
+#   CHIAVE=, ASPETTO=, MANDANTE=, MONETE=, TITOLO=, RICHIESTA=, BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=, RICORDO=  come
+#               per gli incarichi di combattimento; MONETE= è la borsa del vincitore. Dove si combatte, chi c'è in
+#               finale e che cosa c'è in palio lo aggiunge la missione;
+#   LUOGO=      la lizza: GROTTA, ROVINE, BOSCO, PALUDE o RADURA;
+#   SFIDANTI=   le classi degli sfidanti dei due turni prima della finale, separate da uno spazio (GUERRIERO ELFA);
+#   CAMPIONE=, NOME=  la classe del campione della finale e il suo nome, come CAPO= degli incarichi (SI, NOME_CAMPIONE,
+#               NOME_CAMPIONESSA, NOME_MAGO... o il nome stesso): ha un livello in più;
+#   PRIMO_TURNO=, SECONDO_TURNO=  quando lo sfidante di quel turno si arrende;
+#   FINALE=     quando il campione si arrende (la missione aggiunge la consegna del leggendario).
+# Nei testi %CAMPIONE% è il nome del campione. Nei testi non si usa il ";".
+
+TORNEO
+    CHIAVE=ROSA_APPASSITA;ASPETTO=QUALUNQUE;MANDANTE=il borgomastro;TITOLO=Il torneo della Rosa Appassita;LUOGO=RADURA;\
+    SFIDANTI=GUERRIERO ELFA;CAMPIONE=GUERRIERA;NOME=NOME_CAMPIONESSA;MONETE=40;\
+    RICHIESTA=Ogni anno bandiamo il torneo della Rosa Appassita. Si chiama così perché la rosa del primo premio, quella vera, è appassita trent'anni fa, e nessuno ha avuto il coraggio di buttarla. Quest'anno il premio è un altro, per fortuna.;\
+    BATTUTA=E il regolamento?;RISPOSTA=L'ho scritto io. Chi si arrende perde, chi perde può riprovare, chi vince vince. È un regolamento molto moderno.;\
+    PRIMO_TURNO=Il primo sfidante si arrende, e dalla folla qualcuno lancia un cavolo. Non si capisce a chi.;\
+    SECONDO_TURNO=Anche la seconda sfidante alza le mani. Adesso la folla lancia fiori. Di cavolo, ma fiori.;\
+    FINALE=%CAMPIONE% getta la spada a terra e vi stringe la mano: erano anni che nessuno la batteva.;\
+    RINGRAZIAMENTO=Che torneo! Il più bello da quando la rosa era ancora fresca.;\
+    RICORDO=In questa radura si combatte ogni anno il torneo della Rosa Appassita.
+    CHIAVE=GIOSTRA_DEGLI_INCANTATORI;ASPETTO=QUALUNQUE;MANDANTE=il rettore dell'accademia;TITOLO=La giostra degli incantatori;\
+    LUOGO=ROVINE;SFIDANTI=MAGA MAGO;CAMPIONE=MAGO;NOME=NOME_MAGO;MONETE=45;\
+    RICHIESTA=Ogni cinque anni l'accademia bandisce la giostra degli incantatori, fra delle rovine, che tanto più rovinate di così non possono diventare. Si duella con la magia, ma anche le spade sono ammesse: il regolamento è vecchio, e nessuno lo legge.;\
+    BATTUTA=Non siamo maghi, però.;RISPOSTA=Non lo era nemmeno il vincitore dell'ultima volta. Ha tirato un sasso. Era un bel tiro.;\
+    PRIMO_TURNO=La maga si arrende con un inchino e una nuvoletta di fumo viola.;\
+    SECONDO_TURNO=Il mago si arrende, e per l'emozione si trasforma per un attimo in un gufo. Poi torna normale. Quasi.;\
+    FINALE=%CAMPIONE% si arrende, si toglie il cappello a punta e ve lo porge: è il più alto segno di rispetto fra gli incantatori. Poi se lo riprende.;\
+    RINGRAZIAMENTO=Che giostra! L'accademia ne parlerà per anni. Anche perché le rovine adesso sono un po' più rovinate.;\
+    RICORDO=Fra queste rovine si tiene la giostra degli incantatori.
+    CHIAVE=BOCCALE_ROVESCIATO;ASPETTO=LOCANDIERE;MANDANTE=il locandiere;TITOLO=Il torneo del Boccale Rovesciato;LUOGO=BOSCO;\
+    SFIDANTI=LADRO GUERRIERO;CAMPIONE=GUERRIERO;NOME=NOME_CAMPIONE;MONETE=35;\
+    RICHIESTA=I locandieri della regione bandiscono il torneo del Boccale Rovesciato. È nato da una lite su chi dovesse pagare il conto, e da allora si fa ogni anno. Il conto, invece, non l'ha mai pagato nessuno.;\
+    BATTUTA=Si combatte da ubriachi?;RISPOSTA=Solo il pubblico è ubriaco. I combattenti bevono dopo. Di solito tanto.;\
+    PRIMO_TURNO=Il ladro si arrende, vi restituisce con un sorriso la borsa che vi aveva sfilato durante il saluto, e se ne va.;\
+    SECONDO_TURNO=Il guerriero si arrende, e la folla rovescia i boccali per festeggiare. Il nome del torneo, finalmente, si capisce.;\
+    FINALE=%CAMPIONE% si arrende e ordina da bere per tutti. Il conto, naturalmente, lo lascia a voi. Scherza. Forse.;\
+    RINGRAZIAMENTO=Un vincitore nuovo, dopo sei anni! I boccali della locanda non sono mai stati così rovesciati.;\
+    RICORDO=In questo bosco si combatte ogni anno il torneo del Boccale Rovesciato.
 
 # ---------------------------------------------------------------------------------------------
 # Documentazioni (vedi LaDocumentazione e DocumentazioneRichiesta)

@@ -970,6 +970,12 @@ morto), e che rapporto hanno con il gruppo (nemico, rivale, debitore).
   può tornare utile: in un'altra missione, o quando il gruppo è in estrema
   difficoltà in un combattimento, si aggiunge temporaneamente a chi combatte
   (come i personaggi a tempo), e alla fine saluta e se ne va, con un intermezzo.
+- **I campioni dei tornei.** Il campione della finale di un torneo (`IlTorneo`)
+  ha un nome, si arrende e resta vivo: va nel registro. Può tornare al torneo
+  successivo per la rivincita personale, o come campione da battere, oppure in
+  un'altra missione come rivale o come aiuto. Gli sfidanti dei primi due turni
+  oggi non hanno nome: con il registro potrebbero averne uno e ritornare anche
+  loro.
 - **Incontri casuali.** Anche solo per salutarsi, o per una battuta, entrando in
   una locanda o per strada.
 - **Morti.** Chi muore (il LADRO della VENDETTA che soccombe) va tolto dal

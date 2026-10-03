@@ -7,10 +7,7 @@ import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.motore.CatalogoLeggendari;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.Statistiche;
@@ -21,7 +18,6 @@ import com.threeamigos.foresta.tools.Misc;
 
 import java.util.Comparator;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -40,7 +36,7 @@ import java.util.stream.Collectors;
  * PescaLeggendaria); fra il racconto di una leggenda e quello della successiva, di chiunque, passano almeno
  * {@link #ORE_FRA_DUE_LEGGENDE} ore di gioco.
  */
-public abstract class LaLeggenda extends MissioneAPassi {
+public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendario {
 
 	/**
 	 * Quante ore di gioco passano almeno fra due leggende, chiunque le racconti.
@@ -102,6 +98,7 @@ public abstract class LaLeggenda extends MissioneAPassi {
 	/**
 	 * Il leggendario di questa leggenda, o null finché non l'ha pescato.
 	 */
+	@Override
 	public final OggettoLeggendario getLeggendario() {
 		String riga = ottieniProprieta(LEGGENDARIO);
 		return riga == null ? null : OggettoLeggendario.da(riga);
@@ -217,7 +214,7 @@ public abstract class LaLeggenda extends MissioneAPassi {
 	private void raccontaLaLeggenda() {
 		Set<String> giaPescati = giaPescati();
 		if (getLeggendario() == null) {
-			aggiungiProprieta(LEGGENDARIO, pesca(giaPescati));
+			aggiungiProprieta(LEGGENDARIO, PescaLeggendaria.pesca(giaPescati, leggendeSenzaPezzi()));
 		}
 		if (!PescaLeggendaria.setCominciati(giaPescati).isEmpty()
 				&& !PescaLeggendaria.isPezzoMancante(getLeggendario().getChiave(), giaPescati)) {
@@ -272,31 +269,14 @@ public abstract class LaLeggenda extends MissioneAPassi {
 	}
 
 	/**
-	 * Le chiavi dei leggendari che le altre leggende della partita hanno già pescato.
+	 * Le chiavi dei leggendari che le altre missioni della partita, leggende o tornei, hanno già pescato.
 	 */
 	private Set<String> giaPescati() {
-		return altreLeggende().stream()
-				.map(LaLeggenda::getLeggendario)
-				.filter(leggendario -> leggendario != null)
-				.map(OggettoLeggendario::getChiave)
-				.collect(Collectors.toSet());
+		return PescaLeggendaria.giaPescati(this);
 	}
 
 	private boolean restaUnLeggendario() {
-		return !giaPescati().containsAll(CatalogoLeggendari.getTuttiILeggendari().keySet());
-	}
-
-	/**
-	 * La riga del leggendario da raccontare, fra quelli che nessun'altra leggenda ha già pescato: un pezzo mancante
-	 * di un set cominciato, se tocca a lui (vedi PescaLeggendaria), altrimenti uno a caso.
-	 */
-	private String pesca(Set<String> giaPescati) {
-		Optional<String> pezzoMancante = PescaLeggendaria.pezzoDaRaccontare(giaPescati, leggendeSenzaPezzi(), Dado::tiraAncheAUnaFaccia);
-		if (pezzoMancante.isPresent()) {
-			return CatalogoLeggendari.getLeggendario(pezzoMancante.get()).orElseThrow(IllegalStateException::new).getRiga();
-		}
-		return ProduttoreDiTestiCasuale.oggettoLeggendario(riga -> giaPescati.contains(OggettoLeggendario.da(riga).getChiave()))
-				.orElseThrow(IllegalStateException::new);
+		return PescaLeggendaria.restaUnLeggendario(giaPescati());
 	}
 
 	/**
