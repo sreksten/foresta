@@ -25,10 +25,11 @@ public enum ClasseMissione {
 	DISTURBATORE_DELLA_QUIETE_PUBBLICA(DisturbatoreDellaQuietePubblica::new),
 	CACCIA_AI_GOBLIN(CacciaAiGoblin::new),
 	L_ALCHIMISTA_E_LA_MANDRAGOLA(LAlchimistaELaMandragola::new),
-	LA_TAGLIA_SU_SGRANF(LaTagliaSuSgranf::new),
+	LA_TAGLIA_SULLA_BANDA(LaTagliaSullaBanda::new),
 	IL_PELLEGRINO(IlPellegrino::new),
-	IL_RAPIMENTO_DI_ARMANDO(IlRapimentoDiArmando::new),
+	IL_RAPIMENTO(IlRapimento::new),
 	NON_SPARATE_SUL_PIANISTA(NonSparateSulPianista::new),
+	CACCIATORE_DI_TAGLIE(CacciatoreDiTaglie::new),
 
 	MISSIONE_DI_PROVA_SECONDARIA_UNO(MissioneDiProvaSecondariaUno::new),
 	MISSIONE_DI_PROVA_SECONDARIA_DUE(MissioneDiProvaSecondariaDue::new),

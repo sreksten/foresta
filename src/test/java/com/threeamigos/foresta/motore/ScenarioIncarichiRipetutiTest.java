@@ -3,8 +3,9 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.CacciaAiGoblin;
 import com.threeamigos.foresta.missioni.IncaricoInCitta;
-import com.threeamigos.foresta.missioni.LaTagliaSuSgranf;
+import com.threeamigos.foresta.missioni.LaTagliaSullaBanda;
 import com.threeamigos.foresta.missioni.Missione;
+import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.RecuperaIlMedaglione;
 import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import org.junit.jupiter.api.Test;
@@ -16,7 +17,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * Gli incarichi in città ripetibili, finiti, ne lasciano uno nuovo uguale, che si prende dopo una pausa; le storie
- * delle città e gli incarichi con un personaggio dal nome proprio no.
+ * delle città no.
  */
 class ScenarioIncarichiRipetutiTest {
 
@@ -60,7 +61,7 @@ class ScenarioIncarichiRipetutiTest {
             CacciaAiGoblin riletta = tutte(CacciaAiGoblin.class).stream().filter(c -> c.getId().equals(seconda.getId()))
                     .findFirst().orElseThrow(() -> new AssertionError("il nuovo incarico dopo il caricamento"));
 
-            LineaTemporale.aggiungiOre(IncaricoInCitta.ORE_FRA_UN_INCARICO_E_L_ALTRO);
+            LineaTemporale.aggiungiOre(MissioneAPassi.ORE_FRA_UNA_MISSIONE_E_L_ALTRA);
             offri(riletta);
             assertTrue(riletta.isAttiva(), "dopo la pausa si offre");
             assertEquals(ClassiLocazione.CITTA_NYENA, riletta.getCitta());
@@ -80,7 +81,7 @@ class ScenarioIncarichiRipetutiTest {
     }
 
     @Test
-    void leStorieDelleCittaEGliIncarichiConUnNomeProprioNonSiRipetono() {
+    void leStorieDelleCittaNonSiRipetonoGliIncarichiConINomiDallaGrammaticaSi() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(143)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_FLEENA));
             RecuperaIlMedaglione medaglione = tutte(RecuperaIlMedaglione.class).get(0);
@@ -88,9 +89,9 @@ class ScenarioIncarichiRipetutiTest {
             medaglione.completaMissione();
             assertEquals(1, tutte(RecuperaIlMedaglione.class).size());
 
-            LaTagliaSuSgranf taglia = tutte(LaTagliaSuSgranf.class).get(0);
+            LaTagliaSullaBanda taglia = tutte(LaTagliaSullaBanda.class).get(0);
             taglia.completaMissione();
-            assertEquals(1, tutte(LaTagliaSuSgranf.class).size());
+            assertEquals(2, tutte(LaTagliaSullaBanda.class).size(), "con un altro capobanda, pescato quando si offre");
         }
     }
 }

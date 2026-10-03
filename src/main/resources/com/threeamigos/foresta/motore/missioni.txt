@@ -1,11 +1,11 @@
 # I nomi dei personaggi delle missioni (vedi ProduttoreDiTestiCasuale): gli ostaggi da liberare, i bardi da
-# riportare a casa, i capibanda su cui c'è una taglia. Per ora sono tutti maschili, perché i testi delle missioni
+# riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia. Per ora sono tutti maschili, perché i testi delle missioni
 # parlano di "suo marito" e "sua moglie".
 #
 # Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
 
 # ---------------------------------------------------------------------------------------------
-# Ostaggi (vedi IlRapimentoDiArmando)
+# Ostaggi (vedi IlRapimento)
 # ---------------------------------------------------------------------------------------------
 
 NOME_OSTAGGIO
@@ -47,7 +47,27 @@ NOME_BARDO
     Liutprando
 
 # ---------------------------------------------------------------------------------------------
-# Capibanda di goblin e hobgoblin (vedi LaTagliaSuSgranf e IlRapimentoDiArmando): a volte con un soprannome
+# Pellegrini (vedi IlPellegrino)
+# ---------------------------------------------------------------------------------------------
+
+NOME_PELLEGRINO
+    Anselmo
+    Benedetto
+    Romualdo
+    Pasquale
+    Serafino
+    Celestino
+    Gaudenzio
+    Eusebio
+    Prospero
+    Taddeo
+    Clemente
+    Bernardino
+    Saturnino
+    Ireneo
+
+# ---------------------------------------------------------------------------------------------
+# Capibanda di goblin e hobgoblin (vedi LaTagliaSullaBanda e IlRapimento): a volte con un soprannome
 # ---------------------------------------------------------------------------------------------
 
 NOME_CAPOBANDA

@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
 import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
@@ -75,6 +76,13 @@ public abstract class MissioneAPassi extends MissioneBase {
 	private static final String VISITE = "VISITE_";
 	private static final String ULTIMA_VISITA = "ULTIMA_VISITA_";
 	private static final String PARAMETRO = "PARAMETRO_";
+	private static final String DISPONIBILE_DALLE = "DISPONIBILE_DALLE";
+	private static final String GIA_RIPETUTA = "GIA_RIPETUTA";
+
+	/**
+	 * Quante ore di gioco passano fra la fine di una missione ripetibile e quella nuova che lascia.
+	 */
+	public static final int ORE_FRA_UNA_MISSIONE_E_L_ALTRA = 48;
 	/**
 	 * L'evento che conta i combattimenti, di qualunque classe di avversario (vedi RegistroMissioni.registrati).
 	 */
@@ -497,7 +505,21 @@ public abstract class MissioneAPassi extends MissioneBase {
 	}
 
 	/**
-	 * Un parametro fissato da {@link #generaParametri}, o null se non è ancora stato generato.
+	 * Un parametro della missione (il nome di un ostaggio, di un capobanda...): la prima volta che serve lo pesca il
+	 * generatore, poi resta quello, anche dopo un caricamento. Le missioni lo chiedono in un'azione, non in una
+	 * condizione, perché pescarlo cambia lo stato della missione.
+	 */
+	protected final String parametro(String nome, Supplier<String> generatore) {
+		String valore = getParametro(nome);
+		if (valore == null) {
+			valore = generatore.get();
+			aggiungiProprieta(PARAMETRO + validaId(nome), valore);
+		}
+		return valore;
+	}
+
+	/**
+	 * Un parametro fissato da {@link #generaParametri} o da {@link #parametro}, o null se non è ancora stato generato.
 	 */
 	public final String getParametro(String nome) {
 		return ottieniProprieta(PARAMETRO + nome);
@@ -514,6 +536,18 @@ public abstract class MissioneAPassi extends MissioneBase {
 		return Passo.quando(MomentoControllo.POST_LOCAZIONE,
 						() -> dove.get() != null && dove.get().equals(GruppoGiocatore.getIstanza().getCoordinate())
 								&& getConteggioNelPassoCorrente(eventoSconfittoIn(incontro.getClasse(), dove.get())) >= incontro.getNumero())
+				.affronta(dove, incontro);
+	}
+
+	/**
+	 * COMBATTI(bersaglio) per un cacciatore di taglie: come {@link #combatti}, ma basta abbattere il capo
+	 * dell'incontro, che deve essere di un'altra classe dalla banda (vedi IncontroDiMissione.conCapo(String,
+	 * ClassePersonaggio)).
+	 */
+	protected final Passo combattiIlCapo(Supplier<CoordinateMD> dove, IncontroDiMissione incontro) {
+		return Passo.quando(MomentoControllo.POST_LOCAZIONE,
+						() -> dove.get() != null && dove.get().equals(GruppoGiocatore.getIstanza().getCoordinate())
+								&& getConteggioNelPassoCorrente(eventoSconfittoIn(incontro.getClasseDelCapo(), dove.get())) >= 1)
 				.affronta(dove, incontro);
 	}
 
@@ -622,12 +656,58 @@ public abstract class MissioneAPassi extends MissioneBase {
 	}
 
 	/**
-	 * Come per ogni missione, e chi la missione stava scortando si separa dal gruppo.
+	 * Come per ogni missione, e chi la missione stava scortando si separa dal gruppo; una missione ripetibile ne
+	 * lascia una nuova (vedi {@link #isRipetibile()}).
 	 */
 	@Override
 	public void fallisciMissione() {
+		boolean eraInCorso = !isCompleta() && !isFallita();
 		congedaScortato();
 		super.fallisciMissione();
+		if (eraInCorso && !RegistroMissioni.TipoMissionePredefinita.contieneMissione(getId())) {
+			// Per le missioni predefinite l'avviso lo dà già MissioneBase
+			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "MISSIONE FALLITA", getNome()));
+		}
+		lasciaUnaMissioneNuova();
+	}
+
+	@Override
+	public void completaMissione() {
+		super.completaMissione();
+		lasciaUnaMissioneNuova();
+	}
+
+	// --- Missioni che si ripetono
+
+	/**
+	 * Se la missione, finita (bene o male), ne lascia una nuova uguale come missione secondaria, che si potrà
+	 * cominciare dopo {@link #ORE_FRA_UNA_MISSIONE_E_L_ALTRA} ore di gioco (vedi {@link #isDisponibile()}).
+	 */
+	protected boolean isRipetibile() {
+		return false;
+	}
+
+	/**
+	 * Se la pausa dopo la missione precedente è passata: le missioni ripetibili lo mettono nella condizione del loro
+	 * primo passo.
+	 */
+	protected final boolean isDisponibile() {
+		String disponibileDalle = ottieniProprieta(DISPONIBILE_DALLE);
+		return disponibileDalle == null || oreDiGioco() >= Long.parseLong(disponibileDalle);
+	}
+
+	/**
+	 * Una missione ripetibile, finita, ne lascia una nuova della stessa classe, con i suoi nomi e i suoi luoghi.
+	 * Una volta sola, anche se la fine si controllasse due volte.
+	 */
+	private void lasciaUnaMissioneNuova() {
+		if (!isRipetibile() || ottieniProprieta(GIA_RIPETUTA) != null) {
+			return;
+		}
+		aggiungiProprieta(GIA_RIPETUTA, AFFERMATIVO);
+		Missione nuova = getModelloDati().getClasse().getIstanza();
+		nuova.aggiungiProprieta(DISPONIBILE_DALLE, String.valueOf(oreDiGioco() + ORE_FRA_UNA_MISSIONE_E_L_ALTRA));
+		RegistroMissioni.aggiungiMissioneSecondaria(nuova);
 	}
 
 	// --- Eventi di gioco contati per il passo corrente (vedi RegistroMissioni.registrati)

@@ -5,7 +5,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.IlPellegrino;
 import com.threeamigos.foresta.missioni.IncaricoInCitta;
 import com.threeamigos.foresta.missioni.LAlchimistaELaMandragola;
-import com.threeamigos.foresta.missioni.LaTagliaSuSgranf;
+import com.threeamigos.foresta.missioni.LaTagliaSullaBanda;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
@@ -20,7 +20,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * I passi COMBATTI, SCORTA (con lo scortato come ospite del gruppo) e CONSEGNA (passi_missioni.md, §2) sugli incarichi in città che li usano: la taglia su
- * Sgranf, il pellegrino Anselmo e le radici di mandragola.
+ * una banda di hobgoblin, il pellegrino e le radici di mandragola.
  */
 class ScenarioCombattiScortaConsegnaTest {
 
@@ -29,7 +29,7 @@ class ScenarioCombattiScortaConsegnaTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(71)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
-            LaTagliaSuSgranf taglia = prendiIncaricoAllaSecondaVisita(LaTagliaSuSgranf.class);
+            LaTagliaSullaBanda taglia = prendiIncaricoAllaSecondaVisita(LaTagliaSullaBanda.class);
             CoordinateMD covo = taglia.getCovo();
             assertNotNull(covo, "la missione ha trovato il bosco della banda");
             assertEquals(ClassiLocazione.BOSCO, Foresta.getLocazione(covo));
@@ -41,14 +41,14 @@ class ScenarioCombattiScortaConsegnaTest {
             List<Personaggio> banda = RegistroMissioni.getIncontroMissione(covo).orElseThrow(AssertionError::new);
             assertEquals(3, banda.size());
             banda.forEach(p -> assertEquals(ClassePersonaggio.HOBGOBLIN, p.getClasse()));
-            assertEquals("Sgranf", banda.get(0).getNome());
+            assertEquals(taglia.getCapobanda(), banda.get(0).getNome());
             assertEquals(banda.get(1).getLivello() + 1, banda.get(0).getLivello());
 
             // Entrando nel covo si trova la banda, al posto degli avversari del bosco
             partita.comando(Comando.ESCI_DA_CITTA);
             entraDaSud(partita, covo);
             assertEquals(3, GruppoAvversario.getIstanza().getNumeroPersonaggi());
-            assertEquals("Sgranf", GruppoAvversario.getIstanza().getCapo().getNome());
+            assertEquals(taglia.getCapobanda(), GruppoAvversario.getIstanza().getCapo().getNome());
 
             // Gli hobgoblin sconfitti altrove non contano
             partita.gruppo().setCoordinate(new CoordinateMD(covo.getX(), covo.getY() + 1));
@@ -81,7 +81,7 @@ class ScenarioCombattiScortaConsegnaTest {
             assertEquals(ClassiLocazione.TEMPIO, Foresta.getLocazione(tempio));
             assertEquals("VIAGGIO", pellegrino.getPassoCorrente());
             Personaggio anselmo = pellegrino.getScortato().orElseThrow(AssertionError::new);
-            assertEquals(IlPellegrino.ANSELMO, anselmo.getNome());
+            assertEquals(pellegrino.getPellegrino(), anselmo.getNome());
             assertEquals(ClassePersonaggio.VIANDANTE, anselmo.getClasse());
             assertTrue(partita.gruppo().getOspiti().contains(anselmo));
             assertFalse(partita.gruppo().getPersonaggi().contains(anselmo), "un ospite non combatte");
@@ -119,7 +119,7 @@ class ScenarioCombattiScortaConsegnaTest {
             IlPellegrino pellegrino = RegistroMissioni.getTutteLeMissioni().stream().filter(IlPellegrino.class::isInstance)
                     .map(IlPellegrino.class::cast).findFirst().orElseThrow(AssertionError::new);
             Personaggio anselmo = pellegrino.getScortato().orElseThrow(() -> new AssertionError("Anselmo dopo il caricamento"));
-            assertEquals(IlPellegrino.ANSELMO, anselmo.getNome());
+            assertEquals(pellegrino.getPellegrino(), anselmo.getNome());
 
             pellegrino.fallisciMissione();
             assertTrue(partita.gruppo().getOspiti().isEmpty());

@@ -8,22 +8,27 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
 /**
- * In città una donna chiede di liberare suo marito Armando, rapito da una banda di goblin che lo tiene in una grotta:
- * la missione rivendica la grotta, la segna sulla mappa e ci mette la banda (vedi {@link MissioneAPassi#combatti}).
- * Sconfitta la banda, Armando si unisce al gruppo come ospite vulnerabile (vedi
+ * In città una donna chiede di liberare suo marito, rapito da una banda di goblin che lo tiene in una grotta: la
+ * missione rivendica la grotta, la segna sulla mappa e ci mette la banda (vedi {@link MissioneAPassi#combatti}).
+ * Sconfitta la banda, l'ostaggio si unisce al gruppo come ospite vulnerabile (vedi
  * {@link MissioneAPassi#prendiInScorta(MomentoControllo, java.util.function.BooleanSupplier, String, boolean)}): gli
  * avversari lo possono attaccare, e va riportato vivo in città. Se muore per strada, la missione resta aperta finché
  * il gruppo non torna in città a dare la notizia a sua moglie: allora c'è la scena triste, e la missione fallisce.
+ * <p>
+ * I nomi dell'ostaggio e del capobanda vengono da missioni.txt, pescati quando l'incarico si offre: la missione si
+ * ripete con altri nomi.
  */
-public class IlRapimentoDiArmando extends IncaricoInCitta {
+public class IlRapimento extends IncaricoInCitta {
 
-	public static final String ARMANDO = "Armando";
-	public static final IncontroDiMissione RAPITORI = IncontroDiMissione.di(ClassePersonaggio.GOBLIN, 4).conCapo("Ghignazzo");
+	private static final String OSTAGGIO = "OSTAGGIO";
+	private static final String CAPOBANDA = "CAPOBANDA";
+	public static final int RAPITORI = 4;
 	private static final int RICOMPENSA = 35;
 	private static final String COVO = "COVO";
 	private static final String LIBERAZIONE = "LIBERAZIONE";
@@ -32,43 +37,61 @@ public class IlRapimentoDiArmando extends IncaricoInCitta {
 	private static final String LUTTO = "LUTTO";
 	private static final String FALLIMENTO = "FALLIMENTO";
 
-	public IlRapimentoDiArmando() {
-		super(ClasseMissione.IL_RAPIMENTO_DI_ARMANDO);
+	public IlRapimento() {
+		super(ClasseMissione.IL_RAPIMENTO);
 	}
 
 	/**
-	 * Ha un personaggio con un nome proprio: finché il nome non viene da una grammatica, la stessa storia non si
-	 * ripete.
+	 * Il nome dell'ostaggio, da missioni.txt.
 	 */
+	public String getOstaggio() {
+		return parametro(OSTAGGIO, ProduttoreDiTestiCasuale::nomeOstaggio);
+	}
+
+	/**
+	 * Il nome del capo dei rapitori, da missioni.txt.
+	 */
+	public String getCapobanda() {
+		return parametro(CAPOBANDA, ProduttoreDiTestiCasuale::nomeCapobanda);
+	}
+
+	/**
+	 * La banda di goblin dei rapitori, con il loro capo.
+	 */
+	public IncontroDiMissione getRapitori() {
+		return IncontroDiMissione.di(ClassePersonaggio.GOBLIN, RAPITORI).conCapo(getCapobanda());
+	}
+
 	@Override
-	protected boolean isRipetibile() {
-		return false;
+	protected void allIncarico() {
+		getOstaggio();
+		getCapobanda();
 	}
 
 	@Override
 	public String getNome() {
-		return "Il rapimento di Armando";
+		return "Il rapimento di " + getOstaggio();
 	}
 
 	@Override
 	public String getDescrizione() {
 		String passo = getPassoCorrente();
 		if (VIAGGIO.equals(passo)) {
-			return "Armando è libero ma debole: riportalo vivo a " + getNomeCitta() + ", e proteggilo per strada.";
+			return getOstaggio() + " è libero ma debole: riportalo vivo a " + getNomeCitta() + ", e proteggilo per strada.";
 		}
 		if (RITORNO.equals(passo)) {
-			return "Armando è a casa: sua moglie ti aspetta a " + getNomeCitta() + ".";
+			return getOstaggio() + " è a casa: sua moglie ti aspetta a " + getNomeCitta() + ".";
 		}
 		if (LUTTO.equals(passo) || FALLIMENTO.equals(passo)) {
-			return "Armando è morto: devi dare la notizia a sua moglie, a " + getNomeCitta() + ".";
+			return getOstaggio() + " è morto: devi dare la notizia a sua moglie, a " + getNomeCitta() + ".";
 		}
-		return "Una banda di goblin tiene prigioniero Armando in una grotta segnata sulla mappa. Liberalo e riportalo a "
-				+ getNomeCitta() + ".";
+		return "La banda di goblin di " + getCapobanda() + " tiene prigioniero " + getOstaggio()
+				+ " in una grotta segnata sulla mappa. Liberalo e riportalo a " + getNomeCitta() + ".";
 	}
 
 	@Override
 	public String getRicordoDellaLocazione() {
-		return "In questa grotta i goblin di Ghignazzo tenevano prigioniero Armando.";
+		return "In questa grotta i goblin di " + getCapobanda() + " tenevano prigioniero " + getOstaggio() + ".";
 	}
 
 	/**
@@ -90,22 +113,23 @@ public class IlRapimentoDiArmando extends IncaricoInCitta {
 				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, ClassiLocazione.GROTTA)
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getCovo());
-							BusEventi.pubblica(new NotificaTestoParagrafo("La grotta dove i goblin tengono prigioniero Armando è segnata sulla mappa."));
+							BusEventi.pubblica(new NotificaTestoParagrafo("La grotta dove i goblin tengono prigioniero " + getOstaggio()
+									+ " è segnata sulla mappa."));
 						})
 						.poi(LIBERAZIONE);
 			case LIBERAZIONE:
-				return combatti(this::getCovo, RAPITORI).poi(LIBERATO);
+				return combatti(this::getCovo, getRapitori()).poi(LIBERATO);
 			case LIBERATO:
 				return prendiInScorta(MomentoControllo.POST_LOCAZIONE,
-								() -> getCovo().equals(GruppoGiocatore.getIstanza().getCoordinate()), ARMANDO, true)
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Armando è libero, ma è debole e non sa difendersi: "
+								() -> getCovo().equals(GruppoGiocatore.getIstanza().getCoordinate()), getOstaggio(), true)
+						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(getOstaggio() + " è libero, ma è debole e non sa difendersi: "
 								+ "riportatelo vivo a " + getNomeCitta() + ".")))
 						.poi(VIAGGIO);
 			case VIAGGIO:
 				return scortaFinoAllaMeta(MomentoControllo.PRE_LOCAZIONE, () -> Foresta.getCoordinateLocazioneUnica(getCitta()))
 						.esegui(() -> {
 							if (isScortatoMorto()) {
-								BusEventi.pubblica(new NotificaTestoParagrafo("Armando non ce l'ha fatta: i suoi rapitori avevano degli amici. "
+								BusEventi.pubblica(new NotificaTestoParagrafo(getOstaggio() + " non ce l'ha fatta: i suoi rapitori avevano degli amici. "
 										+ "Bisogna dirlo a sua moglie, a " + getNomeCitta() + "."));
 							}
 						})
@@ -118,7 +142,7 @@ public class IlRapimentoDiArmando extends IncaricoInCitta {
 			case FALLIMENTO:
 				return Passo.quando(MomentoControllo.IN_LOCAZIONE, this::nellaCitta)
 						.esegui(() -> {
-							BusEventi.pubblica(new NotificaTestoParagrafo("La moglie di Armando chiude la porta senza dire una parola."));
+							BusEventi.pubblica(new NotificaTestoParagrafo("La moglie di " + getOstaggio() + " chiude la porta senza dire una parola."));
 							fallisciMissione();
 						})
 						.poi(Passo.FINE);
@@ -130,8 +154,9 @@ public class IlRapimentoDiArmando extends IncaricoInCitta {
 	@Override
 	protected ScenaInCitta scenaIncarico() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante("Vi prego, aiutatemi! Una banda di goblin ha rapito mio marito Armando.")
-				.parlaIlMandante("Lo tengono in una grotta qui vicino, e il loro capo, Ghignazzo, chiede un riscatto che non posso pagare.")
+				.parlaIlMandante("Vi prego, aiutatemi! Una banda di goblin ha rapito mio marito " + getOstaggio() + ".")
+				.parlaIlMandante("Lo tengono in una grotta qui vicino, e il loro capo, " + getCapobanda()
+						+ ", chiede un riscatto che non posso pagare.")
 				.parlaIlCapo("Il riscatto glielo portiamo noi, a modo nostro.")
 				.parlaIlMandante("Riportatemelo vivo e avrete " + RICOMPENSA + " monete.");
 	}
@@ -139,26 +164,26 @@ public class IlRapimentoDiArmando extends IncaricoInCitta {
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante("Armando! Sei tornato!")
+				.parlaIlMandante(getOstaggio() + "! Sei tornato!")
 				.parlaIlMandante("Non so come ringraziarvi. Ecco le " + RICOMPENSA + " monete.")
 				.parlaIlCapo("Tenetelo d'occhio, la prossima volta.");
 	}
 
 	private ScenaInCitta scenaDelLutto() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante("Siete tornati! Ma... dov'è Armando?")
+				.parlaIlMandante("Siete tornati! Ma... dov'è " + getOstaggio() + "?")
 				.parlaIlCapo("Mi dispiace. Lo avevamo liberato, ma per strada ci hanno attaccati.")
 				.parlaIlMandante("No... Non voglio sentire altro. Andate via.");
 	}
 
 	@Override
 	protected String testoAccettazione() {
-		return "La moglie di Armando pagherà " + RICOMPENSA + " monete per riaverlo a casa vivo.";
+		return "La moglie di " + getOstaggio() + " pagherà " + RICOMPENSA + " monete per riaverlo a casa vivo.";
 	}
 
 	@Override
 	protected String testoRicompensa() {
-		return "La moglie di Armando paga le " + RICOMPENSA + " monete promesse.";
+		return "La moglie di " + getOstaggio() + " paga le " + RICOMPENSA + " monete promesse.";
 	}
 
 	@Override

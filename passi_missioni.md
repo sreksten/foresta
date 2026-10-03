@@ -163,7 +163,7 @@ pronti nella stessa visita parte il primo controllato. Test:
 - `Passo.falliscoSe` ora si può chiamare più volte: vale la prima guardia che
   scatta.
 
-Due incarichi in città nuovi li usano: `LaTagliaSuSgranf` (rivendica un bosco,
+Due incarichi in città nuovi li usano: `LaTagliaSullaBanda` (rivendica un bosco,
 lo segna sulla mappa e ci mette la banda di Sgranf; 30 monete) e `IlPellegrino`
 (rivendica un tempio, Anselmo viaggia con il gruppo come ospite fino al tempio; 25
 monete al ritorno dalla sorella). Test: `ScenarioCombattiScortaConsegnaTest`.
@@ -197,7 +197,7 @@ monete al ritorno dalla sorella). Test: `ScenarioCombattiScortaConsegnaTest`.
 Test: `ScenarioPassiAvanzatiTest` e, per gli ospiti vulnerabili,
 `ScenarioOspitiVulnerabiliTest`.
 
-L'incarico in città `IlRapimentoDiArmando` li usa: la missione rivendica una
+L'incarico in città `IlRapimento` li usa: la missione rivendica una
 grotta, la segna sulla mappa e ci mette la banda di goblin di Ghignazzo
 (`combatti`); sconfitta la banda, Armando si unisce al gruppo come ospite
 vulnerabile (`prendiInScorta(..., true)`) e va riportato vivo in città; 35
@@ -205,7 +205,7 @@ monete. Il viaggio usa `scortaFinoAllaMeta`, che si conclude sia arrivando con
 lo scortato vivo sia, dovunque, quando muore (`isScortatoMorto()` sceglie il
 ramo): se Armando muore la missione resta aperta finché il gruppo non torna in
 città, dove c'è la scena triste con la moglie, e solo dopo fallisce. Test:
-`ScenarioRapimentoDiArmandoTest`.
+`ScenarioRapimentoTest`.
 Il nome dell'ostaggio per ora è fisso; si potrà prendere da una grammatica.
 
 ### Incarichi in città unificati e ripetibili (2026-10-03)
@@ -225,8 +225,8 @@ secondaria (`RegistroMissioni.aggiungiMissioneSecondaria`, fuori dall'albero
 della missione principale, che altrimenti aspetterebbe anche lui per far
 comparire il Drago), che si offre dopo
 `IncaricoInCitta.ORE_FRA_UN_INCARICO_E_L_ALTRO` ore di gioco (48). Si ripetono
-la caccia ai goblin e la mandragola; Sgranf, Anselmo e Armando no, finché i loro
-nomi non verranno da una grammatica. Test: `ScenarioIncarichiRipetutiTest`.
+la caccia ai goblin e la mandragola, e (vedi sotto) anche le missioni con i nomi
+dalla grammatica. Test: `ScenarioIncarichiRipetutiTest`.
 
 ### Missioni che nascono fuori dalle città (2026-10-03)
 
@@ -522,3 +522,28 @@ con il codice esistente).
   evitare, quando si scriverà il generatore a grammatica, di pescare per
   errore un `TipoMissione` "spirituale" quando si cercava qualcosa di
   "investigativo" (e viceversa).
+
+### Nomi dalla grammatica e cacciatore di taglie (2026-10-03)
+
+`missioni.txt` dà i nomi di ostaggi, bardi, pellegrini e capibanda
+(`ProduttoreDiTestiCasuale.nomeOstaggio`, `nomeBardo`, `nomePellegrino`,
+`nomeCapobanda`, quest'ultimo a volte con un soprannome). Le missioni li pescano
+con `MissioneAPassi.parametro(nome, generatore)`, che la prima volta chiede al
+generatore e poi tiene il valore fra le proprietà: così restano gli stessi dopo
+un caricamento. Gli incarichi in città li pescano quando si offrono
+(`IncaricoInCitta.allIncarico()`), prima dell'intermezzo del mandante.
+
+La ripetizione ora è di `MissioneAPassi` (`isRipetibile()`, `isDisponibile()`,
+`ORE_FRA_UNA_MISSIONE_E_L_ALTRA`), così si ripete anche una missione che non è un
+incarico in città. Con i nomi dalla grammatica si ripetono `IlRapimento` (prima
+`IlRapimentoDiArmando`), `LaTagliaSullaBanda` (prima `LaTagliaSuSgranf`),
+`IlPellegrino` e `NonSparateSulPianista`, ogni volta con altri nomi.
+
+`CacciatoreDiTaglie` ("Ricercato: …"): una taglia sul capo di una banda di
+goblin, un hobgoblin. La missione rivendica delle rovine ma non le segna sulla
+mappa: il mandante dice solo in che direzione si trovano (`Misc.getDirezione`),
+e il gruppo le deve cercare. Lì c'è la banda (`IncontroDiMissione.conCapo(nome,
+classe)`, un capo di un'altra classe, in più); basta abbattere il capo
+(`MissioneAPassi.combattiIlCapo`), poi si torna a riscuotere 30 monete. A
+differenza della taglia sulla banda, che segna il bosco sulla mappa e vuole
+tutta la banda sconfitta. Test: `ScenarioCacciatoreDiTaglieTest`.

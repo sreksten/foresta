@@ -2,7 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.missioni.LaTagliaSuSgranf;
+import com.threeamigos.foresta.missioni.LaTagliaSullaBanda;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
@@ -33,12 +33,12 @@ class ScenarioCaselleSegnalateTest {
     }
 
     @Test
-    void ilBoscoDiSgranfLampeggiaDuranteLaCacciaENonDopo() {
+    void ilBoscoDellaBandaLampeggiaDuranteLaCacciaENonDopo() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(71)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
-            LaTagliaSuSgranf taglia = RegistroMissioni.getTutteLeMissioni().stream().filter(LaTagliaSuSgranf.class::isInstance)
-                    .map(LaTagliaSuSgranf.class::cast).findFirst().orElseThrow(AssertionError::new);
+            LaTagliaSullaBanda taglia = RegistroMissioni.getTutteLeMissioni().stream().filter(LaTagliaSullaBanda.class::isInstance)
+                    .map(LaTagliaSullaBanda.class::cast).findFirst().orElseThrow(AssertionError::new);
             assertFalse(taglia.isAttiva());
             taglia.controllaPreLocazione();
             taglia.segnaIntermezzoPassoMostrato("INCARICO");
@@ -47,7 +47,7 @@ class ScenarioCaselleSegnalateTest {
             assertTrue(Foresta.getCoordinateDaSegnalare().contains(covo));
 
             partita.gruppo().setCoordinate(covo);
-            for (int i = 0; i < LaTagliaSuSgranf.BANDA.getNumero(); i++) {
+            for (int i = 0; i < LaTagliaSullaBanda.HOBGOBLIN; i++) {
                 partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.HOBGOBLIN));
             }
             taglia.controllaPostLocazione();

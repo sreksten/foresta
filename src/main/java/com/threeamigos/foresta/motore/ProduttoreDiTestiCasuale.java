@@ -109,6 +109,13 @@ public class ProduttoreDiTestiCasuale {
 	}
 
 	/**
+	 * Il nome di un pellegrino (vedi missioni.txt).
+	 */
+	public static String nomePellegrino() {
+		return missioni.produce("NOME_PELLEGRINO").get(0).trim();
+	}
+
+	/**
 	 * Il nome di un capobanda di goblin o hobgoblin, a volte con un soprannome: "Grumolo il Guercio" (vedi
 	 * missioni.txt).
 	 */

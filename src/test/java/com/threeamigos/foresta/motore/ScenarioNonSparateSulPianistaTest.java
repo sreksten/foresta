@@ -12,7 +12,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Non sparate sul pianista: alla terza visita a una locanda il locandiere affida al gruppo il bardo Ugolino, ubriaco,
+ * Non sparate sul pianista: alla terza visita a una locanda il locandiere affida al gruppo un bardo ubriaco,
  * da riportare a casa nella città più vicina.
  */
 class ScenarioNonSparateSulPianistaTest {
@@ -47,7 +47,7 @@ class ScenarioNonSparateSulPianistaTest {
     }
 
     @Test
-    void allaTerzaVisitaUgolinoSiAffidaAlGruppoEArrivaACasa() {
+    void allaTerzaVisitaIlBardoSiAffidaAlGruppoEArrivaACasa() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(151)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             NonSparateSulPianista pianista = pianista();
@@ -60,7 +60,7 @@ class ScenarioNonSparateSulPianistaTest {
             assertTrue(pianista.isAttiva());
             assertEquals("VIAGGIO", pianista.getPassoCorrente());
             Personaggio ugolino = pianista.getScortato().orElseThrow(AssertionError::new);
-            assertEquals(NonSparateSulPianista.UGOLINO, ugolino.getNome());
+            assertEquals(pianista.getBardo(), ugolino.getNome());
             assertEquals(ClassePersonaggio.BARDO, ugolino.getClasse());
             assertTrue(partita.gruppo().isOspiteVulnerabile(ugolino));
 
@@ -80,7 +80,7 @@ class ScenarioNonSparateSulPianistaTest {
             int monete = partita.gruppo().getMonete();
             pianista.controllaPreLocazione();
             assertEquals("VIAGGIO", pianista.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
-            assertTrue(partita.gruppo().getOspiti().isEmpty(), "Ugolino è a casa");
+            assertTrue(partita.gruppo().getOspiti().isEmpty(), "il bardo è a casa");
             pianista.segnaIntermezzoPassoMostrato("VIAGGIO");
             pianista.controllaInLocazione();
             assertEquals(monete + 20, partita.gruppo().getMonete());
@@ -89,7 +89,7 @@ class ScenarioNonSparateSulPianistaTest {
     }
 
     @Test
-    void seUgolinoMuorePerStradaLaMissioneFallisce() {
+    void seIlBardoMuorePerStradaLaMissioneFallisce() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(152)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             NonSparateSulPianista pianista = pianista();
@@ -100,7 +100,7 @@ class ScenarioNonSparateSulPianistaTest {
             pianista.controllaPreLocazione();
             assertTrue(pianista.isFallita());
             assertTrue(partita.gruppo().getOspiti().isEmpty());
-            assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith("Ugolino il bardo non ce l'ha fatta")), String.valueOf(partita.testi()));
+            assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith(pianista.getBardo() + " il bardo non ce l'ha fatta")), String.valueOf(partita.testi()));
         }
     }
 

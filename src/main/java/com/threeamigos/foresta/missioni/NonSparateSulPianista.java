@@ -11,6 +11,7 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
+import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Bardo;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
@@ -18,12 +19,13 @@ import com.threeamigos.foresta.tools.Misc;
 
 /**
  * Non sparate sul pianista: alla terza visita a una locanda nel bosco, a una visita tranquilla, il locandiere chiede
- * di riportare a casa il bardo Ugolino, che ha preso una sbronza solenne e non si regge in piedi, nella città più
- * vicina. Ugolino viaggia con il gruppo come ospite vulnerabile: arrivati, sua moglie paga e se lo porta in casa. Se
- * per strada muore, o la città viene distrutta, la missione fallisce.
+ * di riportare a casa un bardo che ha preso una sbronza solenne e non si regge in piedi, nella città più vicina. Il
+ * bardo viaggia con il gruppo come ospite vulnerabile: arrivati, sua moglie paga e se lo porta in casa. Se per strada
+ * muore, o la città viene distrutta, la missione fallisce. Il nome del bardo viene da missioni.txt: la missione si
+ * ripete, con altri bardi e in altre locande.
  * <ol>
  * <li>INCARICO, a inizio locazione, in una locanda nel bosco alla terza visita: l'intermezzo con il locandiere;</li>
- * <li>ACCETTAZIONE, in locazione, nella stessa locanda: Ugolino si unisce al gruppo e la missione si ricorda la
+ * <li>ACCETTAZIONE, in locazione, nella stessa locanda: il bardo si unisce al gruppo e la missione si ricorda la
  * città più vicina;</li>
  * <li>VIAGGIO, a inizio locazione, fino alla città;</li>
  * <li>ARRIVO, in locazione, nella città: la moglie paga, e la missione si completa.</li>
@@ -31,7 +33,7 @@ import com.threeamigos.foresta.tools.Misc;
  */
 public class NonSparateSulPianista extends MissioneAPassi {
 
-	public static final String UGOLINO = "Ugolino";
+	private static final String BARDO = "BARDO";
 	// La terza visita: le visite precedenti alla locanda sono già contate quando si entra
 	private static final int VISITE_PRECEDENTI = 2;
 	private static final int RICOMPENSA = 20;
@@ -51,9 +53,21 @@ public class NonSparateSulPianista extends MissioneAPassi {
 		return "Non sparate sul pianista";
 	}
 
+	/**
+	 * Il nome del bardo, da missioni.txt.
+	 */
+	public String getBardo() {
+		return parametro(BARDO, ProduttoreDiTestiCasuale::nomeBardo);
+	}
+
+	@Override
+	protected boolean isRipetibile() {
+		return true;
+	}
+
 	@Override
 	public String getDescrizione() {
-		return "Ugolino il bardo ha bevuto troppo: riportalo sano e salvo a casa, " + Misc.conPreposizione("in", getNomeCitta())
+		return getBardo() + " il bardo ha bevuto troppo: riportalo sano e salvo a casa, " + Misc.conPreposizione("in", getNomeCitta())
 				+ ", e proteggilo per strada.";
 	}
 
@@ -63,7 +77,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	}
 
 	/**
-	 * La città dove abita Ugolino, la più vicina alla locanda; null finché la missione non è accettata.
+	 * La città dove abita il bardo, la più vicina alla locanda; null finché la missione non è accettata.
 	 */
 	public ClassiLocazione getCitta() {
 		String citta = ottieniProprieta(CITTA);
@@ -84,8 +98,9 @@ public class NonSparateSulPianista extends MissioneAPassi {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		switch (id) {
 			case INCARICO:
-				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> isTerzaVisitaAUnaLocanda() && cittaPiuVicina() != null && isVisitaTranquilla())
+				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> isDisponibile() && isTerzaVisitaAUnaLocanda() && cittaPiuVicina() != null && isVisitaTranquilla())
 						.esegui(() -> {
+							getBardo();
 							CoordinateMD locanda = gruppo.getCoordinate();
 							aggiungiProprieta(LOCANDA, locanda.getX() + "," + locanda.getY());
 						})
@@ -93,23 +108,23 @@ public class NonSparateSulPianista extends MissioneAPassi {
 						.poi(ACCETTAZIONE);
 			case ACCETTAZIONE:
 				return prendiInScorta(MomentoControllo.IN_LOCAZIONE, this::nellaLocanda,
-								() -> new Bardo(UGOLINO, EquipaggiamentoIniziale.livelloCasualeDalMondo()), true)
+								() -> new Bardo(getBardo(), EquipaggiamentoIniziale.livelloCasualeDalMondo()), true)
 						.esegui(() -> {
 							aggiungiProprieta(CITTA, cittaPiuVicina().name());
-							BusEventi.pubblica(new NotificaTestoParagrafo("Ugolino il bardo, che non si regge in piedi, si unisce al gruppo: va riportato a casa, "
+							BusEventi.pubblica(new NotificaTestoParagrafo(getBardo() + " il bardo, che non si regge in piedi, si unisce al gruppo: va riportato a casa, "
 									+ Misc.conPreposizione("in", getNomeCitta()) + "."));
 							attivaMissione();
 						})
 						.poi(VIAGGIO);
 			case VIAGGIO:
 				return scorta(MomentoControllo.PRE_LOCAZIONE, () -> Foresta.getCoordinateLocazioneUnica(getCitta()),
-								() -> "Ugolino il bardo non ce l'ha fatta: a casa non arriverà mai. Il locandiere non ve lo perdonerà.")
-						.falliscoSe(this::isCittaDistrutta, () -> getNomeCitta() + " è stata distrutta: Ugolino non ha più una casa a cui tornare.")
+								() -> getBardo() + " il bardo non ce l'ha fatta: a casa non arriverà mai. Il locandiere non ve lo perdonerà.")
+						.falliscoSe(this::isCittaDistrutta, () -> getNomeCitta() + " è stata distrutta: " + getBardo() + " non ha più una casa a cui tornare.")
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaDellaMoglie().getPagine())
 						.poi(ARRIVO);
 			case ARRIVO:
 				return ricompensa(MomentoControllo.IN_LOCAZIONE, RICOMPENSA,
-								() -> "La moglie di Ugolino paga " + RICOMPENSA + " monete e trascina il marito in casa per un orecchio.")
+								() -> "La moglie di " + getBardo() + " paga " + RICOMPENSA + " monete e trascina il marito in casa per un orecchio.")
 						.poi(Passo.FINE);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
@@ -119,7 +134,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	private ScenaInLocanda scenaDelLocandiere() {
 		return ScenaInLocanda.conLocandiere()
 				.parlaIlLocandiere("Ah, siete voi! Proprio voi cercavo. Vedete quello là, abbracciato al liuto sotto il tavolo?")
-				.parlaIlLocandiere("È Ugolino, il bardo. Stasera ha preso una sbronza solenne e non si regge in piedi.")
+				.parlaIlLocandiere("È " + getBardo() + ", il bardo. Stasera ha preso una sbronza solenne e non si regge in piedi.")
 				.parlaIlLocandiere("Abita " + Misc.conPreposizione("in", cittaPiuVicina().getNomeProprio())
 						+ ", non è lontano, ma da solo non ci arriva vivo. Me lo riportereste a casa?")
 				.parlaIlCapo("Purché non canti per tutto il viaggio.")
@@ -128,7 +143,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 
 	private ScenaInCitta scenaDellaMoglie() {
 		return ScenaInCitta.conMandante()
-				.parlaIlMandante("Ugolino! Di nuovo in queste condizioni!")
+				.parlaIlMandante(getBardo() + "! Di nuovo in queste condizioni!")
 				.parlaIlCapo("Lo abbiamo trovato in una locanda, abbracciato al suo liuto.")
 				.parlaIlMandante("Grazie, viandanti. A lui ci penso io.");
 	}

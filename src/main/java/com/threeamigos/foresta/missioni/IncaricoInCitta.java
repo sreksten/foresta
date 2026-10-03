@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
@@ -31,8 +30,8 @@ import com.threeamigos.foresta.motore.RegistroMissioni;
  * città: non alla prima visita, quando parte la missione della città, né quando si torna a concluderne una; fra due
  * incarichi pronti nella stessa visita parte il primo controllato, l'altro aspetta.
  * <p>
- * Un incarico ripetibile ({@link #isRipetibile()}), finito (bene o male), ne lascia uno nuovo uguale, che si può
- * prendere dopo {@link #ORE_FRA_UN_INCARICO_E_L_ALTRO} ore di gioco.
+ * Gli incarichi senza città fissa sono ripetibili (vedi MissioneAPassi.isRipetibile): finiti, bene o male, ne
+ * lasciano uno nuovo uguale, che si può prendere dopo una pausa.
  */
 public abstract class IncaricoInCitta extends MissioneAPassi {
 
@@ -43,13 +42,6 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	private static final String RICOMPENSA = "RICOMPENSA";
 	private static final String CITTA = "CITTA";
 	private static final String PREFISSO_CITTA = "CITTA_";
-	private static final String DISPONIBILE_DALLE = "DISPONIBILE_DALLE";
-	private static final String GIA_RIPETUTO = "GIA_RIPETUTO";
-
-	/**
-	 * Quante ore di gioco passano fra la fine di un incarico ripetibile e quello nuovo che lascia.
-	 */
-	public static final int ORE_FRA_UN_INCARICO_E_L_ALTRO = 48;
 
 	protected IncaricoInCitta(ClasseMissione classe) {
 		super(classe);
@@ -89,10 +81,18 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	}
 
 	/**
-	 * Se l'incarico, finito, ne lascia uno nuovo uguale: sì per quelli che si prendono in una città qualsiasi.
+	 * Gli incarichi che si prendono in una città qualsiasi si ripetono; le storie delle città no.
 	 */
+	@Override
 	protected boolean isRipetibile() {
 		return getCittaFissa() == null;
+	}
+
+	/**
+	 * Quando l'incarico si offre, prima dell'intermezzo del mandante: il momento di pescare i nomi dei personaggi
+	 * (vedi MissioneAPassi.parametro), che l'intermezzo userà.
+	 */
+	protected void allIncarico() {
 	}
 
 	protected String testoCittaDistrutta() {
@@ -133,7 +133,10 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 		switch (id) {
 			case INCARICO:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::isIncaricoDaOffrire)
-						.esegui(() -> aggiungiProprieta(CITTA, gruppo.getClasseLocazioneCorrente().name()))
+						.esegui(() -> {
+							aggiungiProprieta(CITTA, gruppo.getClasseLocazioneCorrente().name());
+							allIncarico();
+						})
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaIncarico().getPagine())
 						.poi(ACCETTAZIONE);
 			case ACCETTAZIONE:
@@ -173,47 +176,12 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 		if (getCittaFissa() != null) {
 			return nellaCitta();
 		}
-		String disponibileDalle = ottieniProprieta(DISPONIBILE_DALLE);
-		if (disponibileDalle != null && oreDiGioco() < Long.parseLong(disponibileDalle)) {
-			return false;
-		}
-		return inUnaCitta() && isVisitaTranquilla();
+		return isDisponibile() && inUnaCitta() && isVisitaTranquilla();
 	}
 
 	@Override
 	protected boolean aspettaUnaVisitaTranquilla() {
 		return getCittaFissa() == null;
-	}
-
-	@Override
-	public void completaMissione() {
-		super.completaMissione();
-		lasciaUnIncaricoNuovo();
-	}
-
-	@Override
-	public void fallisciMissione() {
-		boolean eraInCorso = !isCompleta() && !isFallita();
-		super.fallisciMissione();
-		if (eraInCorso && !RegistroMissioni.TipoMissionePredefinita.contieneMissione(getId())) {
-			// Per le missioni predefinite l'avviso lo dà già MissioneBase
-			BusEventi.pubblica(new NotificaAggiornamentoStatoMissione(this, "MISSIONE FALLITA", getNome()));
-		}
-		lasciaUnIncaricoNuovo();
-	}
-
-	/**
-	 * Un incarico ripetibile, finito, ne lascia uno nuovo della stessa classe, che si potrà prendere dopo la pausa.
-	 * Una volta sola, anche se la fine si controllasse due volte.
-	 */
-	private void lasciaUnIncaricoNuovo() {
-		if (!isRipetibile() || ottieniProprieta(GIA_RIPETUTO) != null) {
-			return;
-		}
-		aggiungiProprieta(GIA_RIPETUTO, AFFERMATIVO);
-		Missione nuovo = getModelloDati().getClasse().getIstanza();
-		nuovo.aggiungiProprieta(DISPONIBILE_DALLE, String.valueOf(oreDiGioco() + ORE_FRA_UN_INCARICO_E_L_ALTRO));
-		RegistroMissioni.aggiungiMissioneSecondaria(nuovo);
 	}
 
 	private boolean inUnaCitta() {
