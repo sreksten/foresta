@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
 public class ProduttoreDiTestiCasuale {
@@ -26,6 +27,8 @@ public class ProduttoreDiTestiCasuale {
 	private static GrammarBean templi;
 	private static GrammarBean rovine;
 	private static GrammarBean missioni;
+	private static GrammarBean leggendari;
+	private static final String OGGETTO_LEGGENDARIO = "OGGETTO_LEGGENDARIO";
 
 	private ProduttoreDiTestiCasuale() {
 	}
@@ -58,6 +61,8 @@ public class ProduttoreDiTestiCasuale {
 			missioni = new GrammarBean(
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/missioni.txt"),
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
+			leggendari = new GrammarBean(
+					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/leggendari.txt"), null);
 		} catch (InvalidGrammarException | IOException e) {
 			// Senza grammatiche il gioco non puo' andare avanti: si segnala l'errore e si esce. L'uscita va in coda
 			// sull'EDT dopo la notifica, cosi' chi ascolta le InternoException la riceve prima.
@@ -137,6 +142,35 @@ public class ProduttoreDiTestiCasuale {
 	 */
 	public static String oggettoSmarrito() {
 		return missioni.produce("OGGETTO_SMARRITO").get(0).trim();
+	}
+
+	/**
+	 * Un oggetto leggendario di leggendari.txt (vedi OggettoLeggendario) che non è già stato pescato, o vuoto se sono
+	 * stati pescati tutti. Le righe sono one-shot: si riparte ogni volta da tutte e si scartano quelle già pescate
+	 * nella partita, che lo sa dalle sue missioni (la grammatica non si salva con la partita).
+	 */
+	public static synchronized Optional<String> oggettoLeggendario(Predicate<String> giaPescato) {
+		leggendari.reset();
+		while (leggendari.canProduce(OGGETTO_LEGGENDARIO)) {
+			String riga = String.join(" ", leggendari.produce(OGGETTO_LEGGENDARIO)).trim();
+			if (!giaPescato.test(riga)) {
+				return Optional.of(riga);
+			}
+		}
+		return Optional.empty();
+	}
+
+	/**
+	 * Tutti gli oggetti leggendari di leggendari.txt, in ordine casuale.
+	 */
+	public static List<String> tuttiGliOggettiLeggendari() {
+		List<String> righe = new ArrayList<>();
+		// Ogni riga conta come già pescata, così la pesca le scorre tutte
+		oggettoLeggendario(riga -> {
+			righe.add(riga);
+			return true;
+		});
+		return righe;
 	}
 
 	/**

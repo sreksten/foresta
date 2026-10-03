@@ -40,7 +40,7 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
 
 ### Contenuti nuovi
 
-- [ ] **Artefatti leggendari**, scritti a mano, da mettere nei templi e come premi delle missioni (§2, "Rarità"). Cominciati: `ArtefattoLeggendario` ha la Spada della Morte e lo Scudo Fiscale, premi delle missioni "La leggenda di Nyena" e "La leggenda di Malgaard" (vedi gestione_missioni.md). Da aggiungerne altri, ognuno con la sua leggenda.
+- [x] **Artefatti leggendari**, scritti a mano, da mettere nei templi e come premi delle missioni (§2, "Rarità"). Stanno in `leggendari.txt`, una riga per leggendario con le sue proprietà e la sua leggenda (la Spada della Morte, lo Scudo Fiscale e una ventina d'altri, di ogni tipo), e sono i premi delle leggende dell'armaiolo e del locandiere (vedi passi_missioni.md, "Le leggende"). Per aggiungerne basta una riga.
 - [ ] **Negozi sparsi nella foresta:** un paio per tipo, tra armaiolo, alchimista e incantatore.
 - [ ] **Grammatica per `GeneratoreArtefatti`:** formato definito (§7); spada, armatura, veste, elmo, scudo e schinieri vengono da lì per metà. Da fare:
   - [ ] **Stesso attributo due volte** (es. `SOGGEZIONE` +2 e +1): sommarli in `generaDaGrammatica` o evitarli nella grammatica.

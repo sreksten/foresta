@@ -43,7 +43,7 @@ public enum TipoMissione {
      * Esempio: portare un amuleto sacro o una lettera sigillata da un punto A ad un punto B
      */
     TRASPORTO(SupertipoMissione.ACQUISIZIONE),
-    // Coperto da: LaLeggendaDiNyena, LaLeggendaDiMalgaard (la leggenda è l'indizio, le viverne il guardiano, il leggendario il tesoro)
+    // Coperto da: LaLeggendaDellArmaiolo, LaLeggendaDelLocandiere (la leggenda è l'indizio, i guardiani del tempio, il leggendario il tesoro)
     /**
      * Esempio: esplorare un dungeon alla ricerca di un tesoro
      */

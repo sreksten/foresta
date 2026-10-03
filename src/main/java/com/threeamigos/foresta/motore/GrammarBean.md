@@ -86,6 +86,7 @@ GrammarBean bean = new GrammarBean(
 | `List<String> produce()` | Genera partendo da `rootNode`. Al termine **svuota** la cache delle produzioni fissate globali. |
 | `List<String> produce(String rootNode)` | Genera partendo dalla produzione indicata, senza cambiare `rootNode`. Come `produce()`, svuota la cache globale al termine. |
 | `void reset()` | Ripristina le produzioni one-shot consumate e svuota la cache globale. Segna il confine fra una serie di generazioni e la successiva: **quando** chiamarlo è una scelta, vedi §4.7. |
+| `boolean canProduce(String)` | Se la produzione può ancora produrre in questo ciclo: esiste e ha alternative. Diventa falso quando una produzione one-shot si esaurisce, e con lei quelle che la usavano soltanto (la cascata, §4.7), fino al prossimo `reset()`. Serve a sapere che una serie senza ripetizioni è finita prima che `produce()` lanci l'eccezione. |
 | `void setRootNode(String)` | Cambia la radice. Lancia `IllegalArgumentException` se il nome non è una produzione definita. |
 | `String getRootNode()` | La radice corrente. Di default è **la prima produzione dichiarata nel file**. |
 | `void setProductionMode(ProductionModeEnum)` | `RANDOM` (default), `FIRST`, `LAST`. |
@@ -363,7 +364,16 @@ giusta in assoluto, perché i due scopi possibili sono opposti:
 
 Nel secondo caso la **lunghezza della serie è limitata dal serbatoio one-shot più piccolo** che
 attraversa: superarla non dà un risultato scadente, dà l'eccezione di cui sopra. Se serve una
-serie più lunga, il serbatoio va allargato.
+serie più lunga, il serbatoio va allargato. Per sapere prima che la serie è finita c'è
+`canProduce(nome)`: diventa falso quando la produzione, o tutto ciò che usava, si è esaurito.
+
+```java
+bean.reset();
+while (bean.canProduce("OGGETTO_LEGGENDARIO")) {
+    String riga = String.join(" ", bean.produce("OGGETTO_LEGGENDARIO"));
+    // … ogni riga è diversa dalle precedenti
+}
+```
 
 ### 4.8 Capitalizzazione: `^[...]`
 

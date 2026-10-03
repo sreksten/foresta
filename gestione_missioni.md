@@ -883,6 +883,10 @@ due missioni di recupero.
 
 ## Missioni degli artefatti leggendari (2026-10-02)
 
+> Superata il 2026-10-03: le due leggende delle città e `ArtefattoLeggendario`
+> sono state sostituite dalle leggende ripetibili con i leggendari di
+> `leggendari.txt` (vedi passi_missioni.md, "Le leggende"). Resta qui la storia.
+
 Prime missioni nuove scritte sul framework: **La leggenda di Nyena** e **La
 leggenda di Malgaard** (`LaLeggendaDiNyena`, `LaLeggendaDiMalgaard`, sulla
 base comune `RecuperaUnArtefattoLeggendario`), per le due città che non

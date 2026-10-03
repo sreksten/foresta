@@ -786,6 +786,22 @@ class GrammarBeanTest {
     }
 
     @Test
+    void canProduceTellsWhenAOneShotRunIsOver() throws Exception {
+        // ROOT picks from two one-shot pools: after three productions both are exhausted, the
+        // cascade strips ROOT too, and canProduce says so before produce() would throw.
+        GrammarBean bean = new GrammarBean("ROOT\n\t[A]|[B]\nA$\n\ta1|a2\nB$\n\tb1\n");
+        Set<String> seen = new HashSet<>();
+        while (bean.canProduce("ROOT")) {
+            seen.add(bean.produce().get(0));
+        }
+        assertEquals(new HashSet<>(java.util.Arrays.asList("a1", "a2", "b1")), seen);
+        assertFalse(bean.canProduce("A"));
+        assertFalse(bean.canProduce("MAI_DEFINITA"));
+        bean.reset();
+        assertTrue(bean.canProduce("ROOT"));
+    }
+
+    @Test
     void referencingExhaustedOneShotProductionAgainViaPlainReferenceThrows() throws Exception {
         GrammarBean bean = new GrammarBean("ROOT\n\t[X] [X]\nX$\n\tonly\n");
         assertThrows(IllegalArgumentException.class, bean::produce);

@@ -1251,6 +1251,24 @@ public class GrammarBean {
 		return rootNode;
 	}
 
+	/**
+	 * Whether the production can still produce something in the current cycle: it exists and has
+	 * alternatives left. A one-shot production ({@code NAME$}) stops being able to once its last
+	 * alternative is consumed, and so does every production that only referenced it (the removal
+	 * cascade, see {@link #removeProduction}), until the next {@link #reset()}. It is how a caller
+	 * that draws a run of unique results finds out the run is over, instead of waiting for
+	 * {@link #produce(String)} to throw.
+	 * <p>
+	 * It does not look inside the alternatives: one that references the same exhausted one-shot
+	 * production twice ({@code [X] [X]}) still counts, and fails only when produced.
+	 * @param production the plain name (no brackets) of a production
+	 * @return false for a production that was never defined, too
+	 */
+	public boolean canProduce(String production) {
+		List<WeightedAlternative> alternatives = currentProductionsMap.get(production);
+		return alternatives != null && !alternatives.isEmpty();
+	}
+
 	List<WeightedAlternative> getProductions(String rootProduction) {
 		return productionsMap.get(rootProduction);
 	}

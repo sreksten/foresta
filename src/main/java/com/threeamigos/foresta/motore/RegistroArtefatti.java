@@ -20,10 +20,7 @@ import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 
 import java.util.ArrayList;
-import java.util.Collection;
-import java.util.EnumSet;
 import java.util.List;
-import java.util.Optional;
 import java.util.Set;
 
 public class RegistroArtefatti {
@@ -224,23 +221,12 @@ public class RegistroArtefatti {
 
 	}
 
-	// --- Artefatti leggendari (vedi ArtefattoLeggendario)
-
-	/**
-	 * Un artefatto leggendario a caso fra quelli non ancora assegnati a una missione; vuoto se li hanno già tutti.
-	 */
-	public static Optional<ArtefattoLeggendario> pescaLeggendario(Collection<ArtefattoLeggendario> giaAssegnati) {
-		List<ArtefattoLeggendario> liberi = new ArrayList<>(EnumSet.allOf(ArtefattoLeggendario.class));
-		liberi.removeAll(giaAssegnati);
-		if (liberi.isEmpty()) {
-			return Optional.empty();
-		}
-		return Optional.of(liberi.get(Dado.tiraAncheAUnaFaccia(liberi.size()) - 1));
-	}
+	// --- Artefatti leggendari (vedi LaLeggenda)
 
 	/**
 	 * Fa sorgere in quelle coordinate un tempio che custodisce l'artefatto, segnato sulla mappa: come gli altri
-	 * templi con un artefatto, è guardato da un nido di viverne (vedi Tempio).
+	 * templi con un artefatto, è guardato da un nido di viverne (vedi Tempio), a meno che la missione non ci metta
+	 * i suoi guardiani.
 	 */
 	public static void custodisciInUnTempioNuovo(Artefatto artefatto, CoordinateMD coordinate) {
 		Foresta.costruisciLocazione(coordinate, ClassiLocazione.TEMPIO);

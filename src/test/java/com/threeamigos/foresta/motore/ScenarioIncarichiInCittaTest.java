@@ -6,6 +6,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.CacciaAiGoblin;
 import com.threeamigos.foresta.missioni.ClasseMissione;
 import com.threeamigos.foresta.missioni.IncaricoInCitta;
+import com.threeamigos.foresta.missioni.LaLeggendaDellArmaiolo;
 import com.threeamigos.foresta.missioni.RichiestaDiMateriali;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
@@ -71,6 +72,8 @@ class ScenarioIncarichiInCittaTest {
             CacciaAiGoblin caccia = trova(CacciaAiGoblin.class);
             assertFalse(caccia.isAttiva(), "alla prima visita parte il medaglione");
             CoordinateMD fleena = partita.gruppo().getCoordinate();
+            // L'armaiolo racconterebbe la sua leggenda prima di ogni incarico: qui non è ancora il momento
+            trova(LaLeggendaDellArmaiolo.class).aggiungiProprieta("DISPONIBILE_DALLE", String.valueOf(Long.MAX_VALUE));
 
             // Si esce dalla città e ci si rientra da sud, come farebbe il giocatore
             partita.comando(Comando.ESCI_DA_CITTA);

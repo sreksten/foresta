@@ -758,6 +758,14 @@ public abstract class MissioneAPassi extends MissioneBase {
 	}
 
 	/**
+	 * Quante ore di gioco passano fra la fine di questa missione, se è ripetibile, e quella nuova che lascia:
+	 * {@link #ORE_FRA_UNA_MISSIONE_E_L_ALTRA}, se la missione non dice altrimenti.
+	 */
+	protected int getOreFraUnaMissioneELAltra() {
+		return ORE_FRA_UNA_MISSIONE_E_L_ALTRA;
+	}
+
+	/**
 	 * Se la pausa dopo la missione precedente è passata: le missioni ripetibili lo mettono nella condizione del loro
 	 * primo passo.
 	 */
@@ -776,7 +784,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 		}
 		aggiungiProprieta(GIA_RIPETUTA, AFFERMATIVO);
 		Missione nuova = getModelloDati().getClasse().getIstanza();
-		nuova.aggiungiProprieta(DISPONIBILE_DALLE, String.valueOf(oreDiGioco() + ORE_FRA_UNA_MISSIONE_E_L_ALTRA));
+		nuova.aggiungiProprieta(DISPONIBILE_DALLE, String.valueOf(oreDiGioco() + getOreFraUnaMissioneELAltra()));
 		RegistroMissioni.aggiungiMissioneSecondaria(nuova);
 	}
 

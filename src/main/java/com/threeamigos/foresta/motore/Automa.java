@@ -63,9 +63,6 @@ import java.util.function.Supplier;
 //  - ingredienti magici (oggi usano l'icona della pergamena): Pergamena, Gemma, Monile, Gingillo, Sigillo.
 // TODO: il nome delle caselle sulla mappa a tutto schermo (DisplayableCanvasMappaATuttoSchermo.disegnaNomeSottoIlMouse)
 //  per ora è un riquadro giallo bordato di nero: sarebbe più bello un cartiglio, di dimensione variabile secondo il nome.
-// TODO: i leggendari delle leggende dell'armaiolo (RecuperaUnArtefattoLeggendario) sono scritti a mano: una grammatica
-//  (artefatti2.txt estesa, o una simile) che generi leggendari come "la Spada della Morte Volante con Rinterzo Laterale"
-//  renderebbe la loro ricerca ripetibile (vedi passi_missioni.md).
 // TODO: il Viandante (ClassePersonaggio.VIANDANTE, chi si fa scortare dalle missioni) usa le immagini del bardo:
 //  servono personaggi/Viandante.gif e icone/Viandante-nobordo-piccolo.gif (ClassePersonaggioImmagine).
 // TODO: img/oggetti/OggettoMissione.gif è un sacchetto provvisorio, da ridisegnare (oggetti delle missioni, per ora la
@@ -1478,7 +1475,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (ModalitaDiProva.isAttiva()) {
 
 			// La Spada della Morte e lo Scudo Fiscale non ci sono più: ora sono leggendari da conquistare con le
-			// missioni di recupero (vedi ArtefattoLeggendario)
+			// leggende (vedi LaLeggenda e leggendari.txt)
 			Artefatto scarponi = CostruttoreArtefatto.istanza()
 					.setTipo(TipoArtefatto.SCHINIERI)
 					.setNome("gli scarponi di RomyJona")

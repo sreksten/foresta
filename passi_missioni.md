@@ -27,13 +27,10 @@ tornare al punto di partenza, chiedere una conferma/scelta).
   `CronacheDiUnFegatoEroico`, `NessunBoccaleLasciatoIndietro`; disturbare dieci
   eremiti: `DisturbatoreDellaQuietePubblica`), non si annotano.
 - **`RICERCA_OGGETTO` è coperto da `LOggettoSmarrito`**, per oggetti comuni e
-  ripetibili. La ricerca dei leggendari resta a sé: le leggende dell'armaiolo
-  (`LaLeggendaDiNyena`, `LaLeggendaDiMalgaard`) hanno leggendari scritti a mano, e
-  per renderle ripetibili servirebbe una grammatica (quella degli artefatti,
-  `artefatti2.txt`, estesa, o una simile) che sappia produrre nomi come "la Spada
-  della Morte Volante con Rinterzo Laterale". `RECUPERO` invece è coperto dal
-  medaglione e dalle derrate, che si possono riusare per un oggetto generico
-  qualsiasi.
+  ripetibili. La ricerca dei leggendari resta a sé: è CACCIA_AL_TESORO, con le
+  leggende (`LaLeggendaDellArmaiolo`, `LaLeggendaDelLocandiere`) e i leggendari di
+  `leggendari.txt`. `RECUPERO` invece è coperto dal medaglione e dalle derrate,
+  che si possono riusare per un oggetto generico qualsiasi.
 
 ## 2. Vocabolario dei passi riutilizzabili
 
@@ -700,3 +697,33 @@ battuta del capo, la risposta e il ringraziamento.
 - Trovato l'oggetto, si torna in città a riconsegnarlo e a riscuotere.
 
 Copre RICERCA_OGGETTO. Test: `ScenarioOggettoSmarritoTest`.
+
+### Le leggende (2026-10-03)
+
+I leggendari non sono più scritti nel codice (`ArtefattoLeggendario` non c'è
+più): stanno in `leggendari.txt`, già pronti, una riga per oggetto con le sue
+proprietà esagerate e la sua leggenda (vedi il formato in testa al file). La
+supersezione `OGGETTO_LEGGENDARIO` pesca fra le sottosezioni, una per tipo
+(`SPADA_LEGGENDARIA`, `SCUDO_LEGGENDARIO`, `NINNOLO_LEGGENDARIO`,
+`PERGAMENA_LEGGENDARIA`…), che sono one-shot. La Spada della Morte e lo Scudo
+Fiscale sono due righe come le altre. `OggettoLeggendario` legge una riga e
+costruisce l'artefatto.
+
+- **Una volta sola per partita.** `GrammarBean.canProduce(nome)` dice se una
+  produzione può ancora produrre. `ProduttoreDiTestiCasuale.oggettoLeggendario`
+  riparte ogni volta da tutte le righe (`reset()`) e le pesca senza ripetizioni,
+  scartando quelle già pescate da una leggenda della partita: la grammatica non
+  si salva, le missioni sì. Quando non ne restano, le leggende non si offrono più.
+- **`LaLeggenda`**, ripetibile, con due narratori: `LaLeggendaDellArmaiolo` in
+  una città qualsiasi e `LaLeggendaDelLocandiere` in una locanda, dalla terza
+  visita in poi (alle prime due c'è l'intermezzo della locanda). Entrambe
+  aspettano una visita tranquilla, quindi non si sovrappongono al bardo ubriaco.
+  Fra il racconto di una leggenda e quello della successiva, di chiunque, passano
+  almeno 36 ore; la stessa pausa c'è dopo la fine di una leggenda.
+- Il tempio sorge su un bosco, come prima. I **guardiani** sono quelli della riga
+  (`GUARDIANI=VIVERNA 5`), oppure dipendono dal livello del gruppo quando la
+  leggenda viene raccontata: hobgoblin, troll, viverne, chimere-drago.
+- Le leggende stanno prima degli incarichi in città: a una visita tranquilla, se
+  è il momento, l'armaiolo racconta la sua leggenda prima di offrire un incarico.
+
+Coprono CACCIA_AL_TESORO. Test: `ScenarioLeggendeTest`.
