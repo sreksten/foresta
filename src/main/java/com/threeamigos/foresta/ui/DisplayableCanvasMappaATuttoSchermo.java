@@ -34,6 +34,9 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 
 	private static final int MARGINE_NOME = 4;
 	private static final int DISTANZA_NOME_DAL_MOUSE = 16;
+	// Per ora un riquadro giallo bordato di nero; in futuro un cartiglio (vedi i TODO di Automa)
+	private static final Color SFONDO_NOME = new Color(240, 214, 112);
+	private static final Color BORDO_NOME = Color.BLACK;
 
 	DisplayableCanvasMappaATuttoSchermo(int width, int height) {
 		this.width = width;
@@ -181,7 +184,8 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 	}
 
 	/**
-	 * Il nome della casella sotto il mouse, su un riquadro scuro accanto al puntatore, tenuto dentro la mappa.
+	 * Il nome della casella sotto il mouse, scritto in nero su un riquadro giallo bordato di nero accanto al puntatore,
+	 * tenuto dentro la mappa.
 	 */
 	private void disegnaNomeSottoIlMouse(Graphics2D graphics, int altezzaMappa) {
 		String nome = getNomeSottoIlMouse();
@@ -189,7 +193,7 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 			return;
 		}
 		Image testo = DoomdarkTextProducer.getImage(Misc.inizialeMaiuscola(nome), DoomdarkFontMedium.getInstance(),
-				DoomdarkColorModel.Color.LIGHT_GRAY);
+				DoomdarkColorModel.Color.BLACK);
 		int larghezza = testo.getWidth(null) + MARGINE_NOME * 2;
 		int altezza = testo.getHeight(null) + MARGINE_NOME * 2;
 		int x = Math.max(0, Math.min(xMouse + DISTANZA_NOME_DAL_MOUSE, width - larghezza));
@@ -198,8 +202,10 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 			y = Math.max(0, yMouse - DISTANZA_NOME_DAL_MOUSE - altezza);
 		}
 		Color coloreOriginale = graphics.getColor();
-		graphics.setColor(new Color(0, 0, 0, 200));
+		graphics.setColor(SFONDO_NOME);
 		graphics.fillRect(x, y, larghezza, altezza);
+		graphics.setColor(BORDO_NOME);
+		graphics.drawRect(x, y, larghezza - 1, altezza - 1);
 		graphics.setColor(coloreOriginale);
 		graphics.drawImage(testo, x + MARGINE_NOME, y + MARGINE_NOME, null);
 	}

@@ -58,6 +58,8 @@ import java.util.function.Supplier;
 //  - protezioni: Veste;
 //  - accessori: Talismano, Ninnolo;
 //  - ingredienti magici (oggi usano l'icona della pergamena): Pergamena, Gemma, Monile, Gingillo, Sigillo.
+// TODO: il nome delle caselle sulla mappa a tutto schermo (DisplayableCanvasMappaATuttoSchermo.disegnaNomeSottoIlMouse)
+//  per ora è un riquadro giallo bordato di nero: sarebbe più bello un cartiglio, di dimensione variabile secondo il nome.
 // TODO: RICERCA_OGGETTO (TipoMissione) non è coperto finché una grammatica (artefatti2.txt estesa, o una simile) non
 //  genera oggetti rari o leggendari come "la Spada della Morte Volante con Rinterzo Laterale" (vedi passi_missioni.md).
 // TODO: il Viandante (ClassePersonaggio.VIANDANTE, chi si fa scortare dalle missioni) usa le immagini del bardo:
