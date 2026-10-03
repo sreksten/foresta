@@ -33,7 +33,7 @@ public enum TipoMissione {
      * Esempio: estrarre minerali, gemme, cristalli da una miniera
      */
     MINIERA(SupertipoMissione.ACQUISIZIONE),
-    // Coperto da: RecuperaIlMedaglione, RecuperaLeDerrateAlimentari
+    // Coperto da: RecuperaIlMedaglione, RecuperaLeDerrateAlimentari (riusabili per recuperare un oggetto generico qualsiasi)
     /**
      * Esempio: ritrovare un amuleto o un cimelio di famiglia e riportarlo al legittimo proprietario
      */
@@ -373,7 +373,9 @@ public enum TipoMissione {
      * Esempio: scoprire segreto, rivelare mistero, smascheramento, investigare fantasmi, paranormale, entità spettrali
      */
     SCOPERTA_SEGRETO(SupertipoMissione.INVESTIGAZIONE),
-    // Coperto da: LaLeggendaDiNyena, LaLeggendaDiMalgaard
+    // Non ancora coperto: va usato per oggetti rari o leggendari generati da una grammatica (artefatti2.txt estesa,
+    // o una simile), come "la Spada della Morte Volante con Rinterzo Laterale". Oggi LaLeggendaDiNyena e
+    // LaLeggendaDiMalgaard ci si avvicinano, ma con leggendari scritti a mano (vedi passi_missioni.md).
     /**
      * Esempio: cercare oggetto specifico, localizzazione oggetto, ricerca mirata, leggere storia di oggetti, psicometria
      */

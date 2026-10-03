@@ -22,10 +22,18 @@ tornare al punto di partenza, chiedere una conferma/scelta).
   tipo che la missione copre un commento `// Coperto da: NomeClasse` (più classi
   separate da virgole, con fra parentesi il mandante o il caso se serve). Così
   si possono "spuntare" i tipi già coperti. I tipi impossibili nella Foresta
-  sono commentati, con il motivo. Le missioni particolari che non corrispondono
-  a nessun tipo del catalogo (`CronacheDiUnFegatoEroico`,
-  `NessunBoccaleLasciatoIndietro`, `DisturbatoreDellaQuietePubblica`) non si
-  annotano.
+  sono commentati, con il motivo. Le missioni particolari, che non sono missioni
+  standard di un gioco fantasy (andare a bere in tutte le locande:
+  `CronacheDiUnFegatoEroico`, `NessunBoccaleLasciatoIndietro`; disturbare dieci
+  eremiti: `DisturbatoreDellaQuietePubblica`), non si annotano.
+- **`RICERCA_OGGETTO` non è ancora coperto.** Va usato per oggetti rari o
+  leggendari generati da una grammatica: quella degli artefatti (`artefatti2.txt`)
+  estesa, o una simile, che sappia produrre nomi come "la Spada della Morte
+  Volante con Rinterzo Laterale". Le leggende dell'armaiolo (`LaLeggendaDiNyena`,
+  `LaLeggendaDiMalgaard`) ci si avvicinano, ma con leggendari scritti a mano: non
+  contano finché non c'è la grammatica. `RECUPERO` invece è coperto dal
+  medaglione e dalle derrate, che si possono riusare per un oggetto generico
+  qualsiasi.
 
 ## 2. Vocabolario dei passi riutilizzabili
 
