@@ -44,13 +44,16 @@ public class ImageCache {
 	static BufferedImage venditoreDiPergamene;
 	static BufferedImage incantatore;
 	static BufferedImage ombraDelDrago;
-	// Lo sfondo della storia nell'intro: per ora una copia dell'ombra del drago, sarà una foresta con templi e locande
+	// Lo sfondo della storia nell'intro: una foresta con templi e locande
 	static BufferedImage sfondoStoria;
 	static BufferedImage trionfo;
 	static BufferedImage separatore;
 	static BufferedImage separatoreArmi;
 	static BufferedImage separatoreElmi;
 	static BufferedImage separatoreMaschere;
+	// I due capi del cartiglio con il nome delle caselle sulla mappa a tutto schermo
+	static BufferedImage cartiglioSinistro;
+	static BufferedImage cartiglioDestro;
 	static BufferedImage separatoreArmature;
 	static BufferedImage separatoreSchinieri;
 	static BufferedImage separatoreScudi;
@@ -135,6 +138,8 @@ public class ImageCache {
 		separatoreElmi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Elmi.gif");
 		// Per ora una copia di quello degli elmi, da ridisegnare
 		separatoreMaschere = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Maschere.gif");
+		cartiglioSinistro = BufferedImageBuilder.buildBufferedImage("fondi/Cartiglio-sinistro.gif");
+		cartiglioDestro = BufferedImageBuilder.buildBufferedImage("fondi/Cartiglio-destro.gif");
 		separatoreArmature = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Armature.gif");
 		separatoreSchinieri = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Schinieri.gif");
 		separatoreScudi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Scudi.gif");

@@ -14,6 +14,8 @@ public class DoomdarkColorModel {
 		RED,
 		YELLOW,
 		GREEN,
+		// Il marrone del bordo dei cartigli (#8c4210)
+		BROWN,
 	}
 	
 	private static final byte[] whiteColorMap = new byte[] { 0, (byte)0xFF };
@@ -32,6 +34,8 @@ public class DoomdarkColorModel {
 	private static final IndexColorModel redIndexColorModel = new IndexColorModel(8, 2, whiteColorMap, blackColorMap, blackColorMap, 0);
 	private static final IndexColorModel yellowIndexColorModel = new IndexColorModel(8, 2, whiteColorMap, whiteColorMap, blackColorMap, 0);
 	private static final IndexColorModel greenIndexColorModel = new IndexColorModel(8, 2, blackColorMap, whiteColorMap, blackColorMap, 0);
+	private static final IndexColorModel brownIndexColorModel = new IndexColorModel(8, 2,
+			new byte[] { 0, (byte)0x8C }, new byte[] { 0, (byte)0x42 }, new byte[] { 0, (byte)0x10 }, 0);
 
 	static final IndexColorModel getColorModel(Color color) {
 		switch (color) {
@@ -53,6 +57,8 @@ public class DoomdarkColorModel {
 			return yellowIndexColorModel;
 		case GREEN:
 			return greenIndexColorModel;
+		case BROWN:
+			return brownIndexColorModel;
 		}
 		return null;
 	}

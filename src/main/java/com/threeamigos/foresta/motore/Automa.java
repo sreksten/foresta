@@ -37,8 +37,6 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-// TODO: nella mappa usare il cartiglio (sfondi/cartiglio_dx.gif, cartigliosx.gif) - il cartiglio delimita una zona
-//  - di 22 pixel di altezza con colore di sfondo #ffad00 e colore di bordo #8c4210 da usare anche per il colore del testo
 // TODO: elfo non sa usare libro magico. potrebbe saperlo usare con un malus magari
 // TODO: carta, forbice e sasso
 // TODO: mostrare in locazione anche i personaggi del gruppo.
@@ -53,14 +51,10 @@ import java.util.function.Supplier;
 //  - protezioni: Veste;
 //  - accessori: Talismano, Ninnolo;
 //  - ingredienti magici (oggi usano l'icona della pergamena): Pergamena, Gemma, Monile, Gingillo, Sigillo.
-// TODO: il nome delle caselle sulla mappa a tutto schermo (DisplayableCanvasMappaATuttoSchermo.disegnaNomeSottoIlMouse)
-//  per ora è un riquadro giallo bordato di nero: sarebbe più bello un cartiglio, di dimensione variabile secondo il nome.
 // TODO: il Viandante (ClassePersonaggio.VIANDANTE, chi si fa scortare dalle missioni) usa le immagini del bardo:
 //  servono personaggi/Viandante.gif e icone/Viandante-nobordo-piccolo.gif (ClassePersonaggioImmagine).
 // TODO: img/oggetti/Maschera.gif e img/fondi/Separatore-Maschere.gif sono copie di Elmo.gif e di Separatore-Elmi.gif,
 //  da ridisegnare con una maschera.
-// TODO: img/fondi/SfondoStoria.gif, lo sfondo della storia che scorre nell'intro, è una copia di OmbraDelDrago.gif: va
-//  sostituito con uno sfondo generato, una foresta con templi e locande.
 // TODO: img/oggetti/OggettoMissione.gif è un sacchetto provvisorio, da ridisegnare: lo usano tutti gli oggetti delle
 //  missioni (i materiali delle richieste: erbe, minerali, pesci, trofei; l'oggetto smarrito). In futuro magari
 //  un'immagine per ogni oggetto.

@@ -8,6 +8,7 @@ import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.sfx.CloudManager;
 
 import java.awt.*;
+import java.awt.image.BufferedImage;
 
 class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Finestra {
 
@@ -32,11 +33,16 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 	private int xMouse;
 	private int yMouse;
 
+	// Il nome sta su un cartiglio: un nastro alto 24 pixel (un bordo marrone sopra e uno sotto, 22 pixel arancioni in
+	// mezzo) con ai lati i due capi arrotolati, che coprono di un pixel le estremità del nastro e stanno un pixel più
+	// in basso, come se la pergamena si abbassasse ai lati
 	private static final int MARGINE_NOME = 4;
 	private static final int DISTANZA_NOME_DAL_MOUSE = 16;
-	// Per ora un riquadro giallo bordato di nero; in futuro un cartiglio (vedi i TODO di Automa)
-	private static final Color SFONDO_NOME = new Color(240, 214, 112);
-	private static final Color BORDO_NOME = Color.BLACK;
+	private static final int ALTEZZA_NASTRO = 24;
+	private static final int SOVRAPPOSIZIONE_CAPI = 1;
+	private static final int ABBASSAMENTO_CAPI = 1;
+	private static final Color SFONDO_NOME = new Color(0xFF, 0xAD, 0x00);
+	private static final Color BORDO_NOME = new Color(0x8C, 0x42, 0x10);
 
 	DisplayableCanvasMappaATuttoSchermo(int width, int height) {
 		this.width = width;
@@ -184,8 +190,7 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 	}
 
 	/**
-	 * Il nome della casella sotto il mouse, scritto in nero su un riquadro giallo bordato di nero accanto al puntatore,
-	 * tenuto dentro la mappa.
+	 * Il nome della casella sotto il mouse, in marrone su un cartiglio accanto al puntatore, tenuto dentro la mappa.
 	 */
 	private void disegnaNomeSottoIlMouse(Graphics2D graphics, int altezzaMappa) {
 		String nome = getNomeSottoIlMouse();
@@ -193,21 +198,31 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 			return;
 		}
 		Image testo = ImageCache.get(Misc.inizialeMaiuscola(nome), DoomdarkFontMedium.getInstance(),
-				DoomdarkColorModel.Color.BLACK);
-		int larghezza = testo.getWidth(null) + MARGINE_NOME * 2;
-		int altezza = testo.getHeight(null) + MARGINE_NOME * 2;
+				DoomdarkColorModel.Color.BROWN);
+		BufferedImage capoSinistro = ImageCache.cartiglioSinistro;
+		BufferedImage capoDestro = ImageCache.cartiglioDestro;
+		int larghezzaNastro = testo.getWidth(null) + MARGINE_NOME * 2;
+		int sporgenzaSinistra = capoSinistro.getWidth() - SOVRAPPOSIZIONE_CAPI;
+		int larghezza = sporgenzaSinistra + larghezzaNastro + capoDestro.getWidth() - SOVRAPPOSIZIONE_CAPI;
+		int altezza = ABBASSAMENTO_CAPI + Math.max(capoSinistro.getHeight(), capoDestro.getHeight());
 		int x = Math.max(0, Math.min(xMouse + DISTANZA_NOME_DAL_MOUSE, width - larghezza));
 		int y = yMouse + DISTANZA_NOME_DAL_MOUSE;
 		if (y + altezza > altezzaMappa) {
 			y = Math.max(0, yMouse - DISTANZA_NOME_DAL_MOUSE - altezza);
 		}
+		// Il nastro: arancione, con il bordo marrone solo sopra e sotto
+		int xNastro = x + sporgenzaSinistra;
 		Color coloreOriginale = graphics.getColor();
 		graphics.setColor(SFONDO_NOME);
-		graphics.fillRect(x, y, larghezza, altezza);
+		graphics.fillRect(xNastro, y, larghezzaNastro, ALTEZZA_NASTRO);
 		graphics.setColor(BORDO_NOME);
-		graphics.drawRect(x, y, larghezza - 1, altezza - 1);
+		graphics.fillRect(xNastro, y, larghezzaNastro, 1);
+		graphics.fillRect(xNastro, y + ALTEZZA_NASTRO - 1, larghezzaNastro, 1);
 		graphics.setColor(coloreOriginale);
-		graphics.drawImage(testo, x + MARGINE_NOME, y + MARGINE_NOME, null);
+		graphics.drawImage(testo, xNastro + MARGINE_NOME, y + (ALTEZZA_NASTRO - testo.getHeight(null)) / 2, null);
+		// I capi arrotolati, sopra le estremità del nastro e un pixel più in basso
+		graphics.drawImage(capoSinistro, x, y + ABBASSAMENTO_CAPI, null);
+		graphics.drawImage(capoDestro, xNastro + larghezzaNastro - SOVRAPPOSIZIONE_CAPI, y + ABBASSAMENTO_CAPI, null);
 	}
 
 	@Override
