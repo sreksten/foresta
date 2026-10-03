@@ -232,7 +232,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
                 for (RegoleSetLeggendari.Pezzo pezzo : RegoleSetLeggendari.pezzi(artefatto.getModelloDati(),
                         equipaggiamentiDelGruppo(), inventarioDelGruppo())) {
                     boolean noto = pezzo.getStato() != RegoleSetLeggendari.StatoPezzo.DA_TROVARE
-                            || pezzo.getNome().equals(artefatto.getModelloDati().getPezzoLeggendario());
+                            || pezzo.getChiave().equals(artefatto.getModelloDati().getPezzoLeggendario());
                     DoomdarkColorModel.Color colorePezzo = colorePezzo(pezzo.getStato());
                     nodo.creaNodo(
                             pezzo.getTipo().getDescrizione(), font, colorePezzo,

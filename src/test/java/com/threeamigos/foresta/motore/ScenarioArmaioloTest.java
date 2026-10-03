@@ -42,7 +42,7 @@ class ScenarioArmaioloTest {
 	void compraDallArmaioloAlPrezzoTrattato() {
 		// Il Ladro imbraccia lo Scudo Fiscale, che aggiunge 4 alla sua contrattazione
 		int contrattazioneSenzaScudo = partita.gruppo().getContrattazione();
-		partita.gruppo().getCapo().addArtefatto(Leggendari.con("lo Scudo Fiscale").costruisci());
+		partita.gruppo().getCapo().addArtefatto(Leggendari.con(Leggendari.SCUDO_DELL_ESATTORE).costruisci());
 		AutomaAcquistiArtefatti bottega = entraDallArmaiolo();
 		Artefatto scelto = new ArrayList<>(bottega.getParteRemota().getInventario()).get(0);
 		int moneteIniziali = partita.gruppo().getMonete();

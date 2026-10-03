@@ -24,7 +24,7 @@ public class ArtefattoMD implements Serializzabile {
 
 	private TipoArtefatto tipo;
 	private TipoRaritaArtefatto rarita = TipoRaritaArtefatto.COMUNE;
-	// Per un leggendario di un set (vedi leggendari.txt): la chiave del set e quella del pezzo, il suo nome breve
+	// Per un leggendario di un set (vedi leggendari.txt): la chiave del set e quella del pezzo
 	private String setLeggendario;
 	private String pezzoLeggendario;
 	// Facoltativo (null se manca), es. "Diavolina"
@@ -72,7 +72,7 @@ public class ArtefattoMD implements Serializzabile {
 	}
 
 	/**
-	 * Il pezzo del set leggendario che è l'artefatto (il nome breve del leggendario), o null.
+	 * Il pezzo del set leggendario che è l'artefatto (la chiave del leggendario), o null.
 	 */
 	public String getPezzoLeggendario() {
 		return pezzoLeggendario;

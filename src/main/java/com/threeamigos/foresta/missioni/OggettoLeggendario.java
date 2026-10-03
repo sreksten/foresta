@@ -25,7 +25,8 @@ import java.util.Optional;
  * TIPO=SCUDO;NOME=lo Scudo Fiscale;BREVE=lo Scudo Fiscale;DESCRIZIONE=che si fa fare sconti;LIVELLO=5;COSTO=60;PESO=3;
  * MOD=CONTRATTAZIONE +4;INCANTAMENTO=GELO 12 0.15 La battuta del cavolo;LEGGENDA=Conoscete lo Scudo Fiscale?;...
  * </pre>
- * Il nome breve lo identifica: due righe non hanno mai lo stesso.
+ * La chiave lo identifica (nei set, nelle partite salvate, nei test): due righe non hanno mai la stessa, e non
+ * cambia. Nomi e descrizioni invece sono solo testo, e si possono ritoccare.
  */
 public final class OggettoLeggendario {
 
@@ -35,6 +36,7 @@ public final class OggettoLeggendario {
 	private static final int LEGGENDE_MINIME = 2;
 
 	private final String riga;
+	private final String chiave;
 	private final TipoArtefatto tipo;
 	private final String nome;
 	private final String nomeBreve;
@@ -69,6 +71,7 @@ public final class OggettoLeggendario {
 				case "LEGGENDA":
 					ripetuti.computeIfAbsent(chiave, k -> new ArrayList<>()).add(valore);
 					break;
+				case "CHIAVE":
 				case "TIPO":
 				case "NOME":
 				case "BREVE":
@@ -87,6 +90,7 @@ public final class OggettoLeggendario {
 					throw new IllegalArgumentException("Campo sconosciuto: " + chiave + " in " + riga);
 			}
 		}
+		chiave = obbligatorio(campi, "CHIAVE");
 		tipo = TipoArtefatto.valueOf(obbligatorio(campi, "TIPO"));
 		nome = obbligatorio(campi, "NOME");
 		nomeBreve = obbligatorio(campi, "BREVE");
@@ -134,6 +138,13 @@ public final class OggettoLeggendario {
 		return riga;
 	}
 
+	/**
+	 * L'identificativo del leggendario: "SPADA_DI_ROMY_JONA".
+	 */
+	public String getChiave() {
+		return chiave;
+	}
+
 	public TipoArtefatto getTipo() {
 		return tipo;
 	}
@@ -146,7 +157,7 @@ public final class OggettoLeggendario {
 	}
 
 	/**
-	 * Il nome con cui se ne parla, con l'articolo: "la Spada della Morte". Lo identifica.
+	 * Il nome con cui se ne parla, con l'articolo: "la Spada della Morte".
 	 */
 	public String getNomeBreve() {
 		return nomeBreve;
@@ -221,7 +232,7 @@ public final class OggettoLeggendario {
 		}
 		artefatto.getModelloDati().setRarita(TipoRaritaArtefatto.LEGGENDARIO);
 		if (set != null) {
-			artefatto.getModelloDati().setPezzoDiSetLeggendario(set, nomeBreve);
+			artefatto.getModelloDati().setPezzoDiSetLeggendario(set, chiave);
 		}
 		return artefatto;
 	}

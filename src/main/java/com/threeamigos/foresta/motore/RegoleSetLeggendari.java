@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.missioni.OggettoLeggendario;
 import com.threeamigos.foresta.missioni.SetLeggendario;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
@@ -92,19 +93,28 @@ public final class RegoleSetLeggendari {
 	}
 
 	/**
-	 * Un pezzo di un set, per i testi: il nome breve, il tipo e dove sta.
+	 * Un pezzo di un set, per i testi: la chiave, il nome breve, il tipo e dove sta.
 	 */
 	public static final class Pezzo {
+		private final String chiave;
 		private final String nome;
 		private final TipoArtefatto tipo;
 		private final StatoPezzo stato;
 
-		Pezzo(String nome, TipoArtefatto tipo, StatoPezzo stato) {
-			this.nome = nome;
-			this.tipo = tipo;
+		Pezzo(OggettoLeggendario leggendario, StatoPezzo stato) {
+			this.chiave = leggendario.getChiave();
+			this.nome = leggendario.getNomeBreve();
+			this.tipo = leggendario.getTipo();
 			this.stato = stato;
 		}
 
+		public String getChiave() {
+			return chiave;
+		}
+
+		/**
+		 * Il nome breve, con l'articolo.
+		 */
 		public String getNome() {
 			return nome;
 		}
@@ -132,7 +142,7 @@ public final class RegoleSetLeggendari {
 	 */
 	public static Optional<String> tipiDelSet(ArtefattoMD artefatto) {
 		return set(artefatto).map(set -> CatalogoLeggendari.getPezzi(set.getChiave()).stream()
-				.map(pezzo -> CatalogoLeggendari.getTipo(pezzo).getDescrizione())
+				.map(pezzo -> leggendario(pezzo).getTipo().getDescrizione())
 				.collect(Collectors.joining(", ")));
 	}
 
@@ -160,7 +170,7 @@ public final class RegoleSetLeggendari {
 		for (String pezzo : CatalogoLeggendari.getPezzi(chiave)) {
 			StatoPezzo stato = indossati.contains(pezzo) ? StatoPezzo.INDOSSATO
 					: delGruppo.contains(pezzo) ? StatoPezzo.DEL_GRUPPO : StatoPezzo.DA_TROVARE;
-			pezzi.add(new Pezzo(pezzo, CatalogoLeggendari.getTipo(pezzo), stato));
+			pezzi.add(new Pezzo(leggendario(pezzo), stato));
 		}
 		return pezzi;
 	}
@@ -195,6 +205,10 @@ public final class RegoleSetLeggendari {
 			}
 		}
 		return nome;
+	}
+
+	private static OggettoLeggendario leggendario(String chiave) {
+		return CatalogoLeggendari.getLeggendario(chiave).orElseThrow(() -> new IllegalStateException("Leggendario che non c'è: " + chiave));
 	}
 
 	private static Optional<SetLeggendario> set(ArtefattoMD artefatto) {

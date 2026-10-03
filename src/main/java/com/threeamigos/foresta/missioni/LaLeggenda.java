@@ -264,8 +264,8 @@ public abstract class LaLeggenda extends MissioneAPassi {
 		Set<String> giaPescati = altreLeggende().stream()
 				.map(LaLeggenda::getLeggendario)
 				.filter(leggendario -> leggendario != null)
-				.map(OggettoLeggendario::getNomeBreve)
+				.map(OggettoLeggendario::getChiave)
 				.collect(Collectors.toSet());
-		return ProduttoreDiTestiCasuale.oggettoLeggendario(riga -> giaPescati.contains(OggettoLeggendario.da(riga).getNomeBreve()));
+		return ProduttoreDiTestiCasuale.oggettoLeggendario(riga -> giaPescati.contains(OggettoLeggendario.da(riga).getChiave()));
 	}
 }

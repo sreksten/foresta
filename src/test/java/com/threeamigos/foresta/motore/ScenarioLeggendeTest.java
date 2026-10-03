@@ -34,16 +34,16 @@ import static org.junit.jupiter.api.Assertions.*;
  */
 class ScenarioLeggendeTest {
 
-    private static final String SPADA = "la Spada della Morte";
-    private static final String SCUDO = "lo Scudo Fiscale";
 
     @Test
     void ogniLeggendarioSiLeggeESiCostruisce() {
         List<OggettoLeggendario> leggendari = ProduttoreDiTestiCasuale.tuttiGliOggettiLeggendari().stream()
                 .map(OggettoLeggendario::da).collect(Collectors.toList());
-        Set<String> nomiBrevi = leggendari.stream().map(OggettoLeggendario::getNomeBreve).collect(Collectors.toSet());
-        assertEquals(leggendari.size(), nomiBrevi.size(), "il nome breve identifica il leggendario");
-        assertTrue(nomiBrevi.contains(SPADA) && nomiBrevi.contains(SCUDO), String.valueOf(nomiBrevi));
+        Set<String> chiavi = leggendari.stream().map(OggettoLeggendario::getChiave).collect(Collectors.toSet());
+        assertEquals(leggendari.size(), chiavi.size(), "la chiave identifica il leggendario");
+        assertEquals(chiavi, CatalogoLeggendari.getTuttiILeggendari().keySet());
+        // La Spada della Morte e lo Scudo Fiscale ci devono essere sempre
+        assertTrue(chiavi.contains(Leggendari.SPADA_DI_ROMY_JONA) && chiavi.contains(Leggendari.SCUDO_DELL_ESATTORE), String.valueOf(chiavi));
         Set<TipoArtefatto> tipi = leggendari.stream().map(OggettoLeggendario::getTipo).collect(Collectors.toSet());
         assertTrue(tipi.containsAll(EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.SCUDO, TipoArtefatto.ELMO,
                 TipoArtefatto.NINNOLO, TipoArtefatto.PERGAMENA)), String.valueOf(tipi));
@@ -54,17 +54,15 @@ class ScenarioLeggendeTest {
             assertTrue(leggendario.getLeggenda().size() >= 2);
         }
 
-        // Le proprietà di una volta
-        Artefatto scudo = Leggendari.con(SCUDO).costruisci();
-        assertEquals("lo Scudo Fiscale", scudo.getNome());
-        assertEquals(ClassePersonaggio.VIVERNA, Leggendari.con(SCUDO).getGuardiani().get().getClasse());
-
-        assertThrows(IllegalArgumentException.class, () -> OggettoLeggendario.da("TIPO=SPADA;NOME=x;BREVE=x;DESCRIZIONE=x;"
-                + "LIVELLO=5;COSTO=6;PESO=1;LEGGENDA=a;LEGGENDA=b"), "una spada senza danni");
-        assertThrows(IllegalArgumentException.class, () -> OggettoLeggendario.da("TIPO=ELMO;NOME=x;BREVE=x;DESCRIZIONE=x;"
-                + "LIVELLO=5;COSTO=6;PESO=1;MOD=ALTEZZA +3;LEGGENDA=a;LEGGENDA=b"), "un attributo che non c'è");
-        assertThrows(IllegalArgumentException.class, () -> OggettoLeggendario.da("TIPO=ELMO;NOME=x;BREVE=x;DESCRIZIONE=x;"
-                + "LIVELLO=5;COSTO=6;PESO=1;LEGGENDA=a"), "una leggenda di una battuta");
+        // Una riga giusta si legge; ognuna di quelle sotto ha un solo difetto
+        String elmo = "CHIAVE=X;TIPO=ELMO;NOME=x;BREVE=x;DESCRIZIONE=x;LIVELLO=5;COSTO=6;PESO=1;LEGGENDA=a;LEGGENDA=b";
+        assertEquals("X", OggettoLeggendario.da(elmo).getChiave());
+        assertThrows(IllegalArgumentException.class, () -> OggettoLeggendario.da(elmo.replace("CHIAVE=X;", "")), "senza chiave");
+        assertThrows(IllegalArgumentException.class, () -> OggettoLeggendario.da(elmo.replace("TIPO=ELMO", "TIPO=SPADA")),
+                "una spada senza danni");
+        assertThrows(IllegalArgumentException.class, () -> OggettoLeggendario.da(elmo + ";MOD=ALTEZZA +3"), "un attributo che non c'è");
+        assertThrows(IllegalArgumentException.class, () -> OggettoLeggendario.da(elmo.replace(";LEGGENDA=b", "")),
+                "una leggenda di una battuta");
     }
 
     @Test
@@ -161,7 +159,7 @@ class ScenarioLeggendeTest {
             locandiere.segnaIntermezzoPassoMostrato("INCARICO");
             locandiere.controllaInLocazione();
             assertTrue(locandiere.isAttiva());
-            assertNotEquals(armaiolo.getLeggendario().getNomeBreve(), locandiere.getLeggendario().getNomeBreve());
+            assertNotEquals(armaiolo.getLeggendario().getChiave(), locandiere.getLeggendario().getChiave());
             assertTrue(locandiere.getDescrizione().contains("raccontata dal locandiere"), locandiere.getDescrizione());
         }
     }

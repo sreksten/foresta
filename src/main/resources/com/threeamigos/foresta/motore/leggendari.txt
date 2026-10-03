@@ -6,7 +6,9 @@
 # una "\" in fondo):
 #   TIPO=          il TipoArtefatto (SPADA, SCUDO, NINNOLO, PERGAMENA...);
 #   NOME=          il nome completo, con l'articolo;
-#   BREVE=         il nome con cui se ne parla, con l'articolo (diverso per ogni riga: lo identifica);
+#   CHIAVE=        l'identificativo dell'oggetto, diverso per ogni riga: lo usano i set, le partite salvate e i
+#                  test. Non va più cambiato; i nomi e le descrizioni invece si possono ritoccare liberamente;
+#   BREVE=         il nome con cui se ne parla, con l'articolo;
 #   DESCRIZIONE=   la descrizione, "che ...";
 #   LIVELLO=, COSTO=, PESO=  livello, prezzo d'acquisto e peso;
 #   DANNI=         i danni base: solo per le armi, e per le armi obbligatorio;
@@ -45,14 +47,14 @@ OGGETTO_LEGGENDARIO
     [SIGILLO_LEGGENDARIO]
 
 SPADA_LEGGENDARIA$
-    TIPO=SPADA;NOME=la Spada della Morte alata con rinterzo laterale;BREVE=la Spada della Morte;SET=ROMYJONA;\
+    TIPO=SPADA;NOME=la Spada della Morte alata con rinterzo laterale;CHIAVE=SPADA_DI_ROMY_JONA;BREVE=la Spada della Morte;SET=ROMY_JONA;\
     DESCRIZIONE=che massacra i porci;LIVELLO=5;DANNI=16;COSTO=60;PESO=2;\
     MOD=FORZA +100%;MOD=CORAGGIO +20%;MOD=VALORE +2;INCANTAMENTO=NECROTICO 12 0.15 Incantesimo di RomyJona;\
     LEGGENDA=Avete mai sentito parlare della Spada della Morte alata con rinterzo laterale?;\
     LEGGENDA=La forgiò un fabbro che voleva farla finita con i porci giganti di Malgaard, e ci riuscì fin troppo bene.;\
     LEGGENDA=Dicono che ogni fendente sussurri il nome di chi sta per cadere, e che RomyJona in persona l'abbia incantata.;\
     GUARDIANI=VIVERNA 5
-    TIPO=SPADA;NOME=la Spada del Lunedì Mattina;BREVE=la Spada del Lunedì Mattina;SET=CAVALIERI_SVOGLIATI;\
+    TIPO=SPADA;NOME=la Spada del Lunedì Mattina;CHIAVE=SPADA_DEL_CAVALIERE_SVOGLIATO;BREVE=la Spada del Lunedì Mattina;SET=CAVALIERI_SVOGLIATI;\
     DESCRIZIONE=che toglie ai nemici ogni voglia di combattere;LIVELLO=5;DANNI=18;COSTO=60;PESO=2;\
     MOD=SOGGEZIONE +4;MOD=FURIA +3;INCANTAMENTO=PSICHICO 12 0.15 Sbadiglio Contagioso;\
     LEGGENDA=Conoscete la Spada del Lunedì Mattina? Chi la guarda sbadiglia.;\
@@ -60,7 +62,7 @@ SPADA_LEGGENDARIA$
     LEGGENDA=Chi ne viene colpito perde ogni voglia di combattere, e spesso anche di alzarsi. Il gallo, si dice, fu il primo.
 
 SPADONE_LEGGENDARIO$
-    TIPO=SPADONE;NOME=lo Spadone del Gigante Distratto;BREVE=lo Spadone del Gigante Distratto;\
+    TIPO=SPADONE;NOME=lo Spadone del Gigante Distratto;CHIAVE=SPADONE_DEL_GIGANTE;BREVE=lo Spadone del Gigante Distratto;\
     DESCRIZIONE=che per un gigante era uno stuzzicadenti;LIVELLO=5;DANNI=26;COSTO=60;PESO=6;\
     MOD=FORZA +50%;MOD=CRITICO +3;INCANTAMENTO=TERRA 14 0.15 Passo del Gigante;\
     LEGGENDA=Il gigante Brontolone usava questo spadone come stuzzicadenti.;\
@@ -68,7 +70,7 @@ SPADONE_LEGGENDARIO$
     LEGGENDA=Per un uomo è uno spadone che spacca le montagne. Per un gigante, una scheggia.
 
 MAZZA_LEGGENDARIA$
-    TIPO=MAZZA;NOME=la Mazza dell'Oste Furioso;BREVE=la Mazza dell'Oste Furioso;SET=RECUPERO_CREDITI;\
+    TIPO=MAZZA;NOME=la Mazza dell'Oste Furioso;CHIAVE=MAZZA_DELL_OSTE;BREVE=la Mazza dell'Oste Furioso;SET=RECUPERO_CREDITI;\
     DESCRIZIONE=che ricorda a tutti di pagare il conto;LIVELLO=5;DANNI=17;COSTO=60;PESO=3;\
     MOD=SOGGEZIONE +3;MOD=CONTRATTAZIONE +2;INCANTAMENTO=SONICO 12 0.15 Ultimo Giro;\
     LEGGENDA=Avete mai sentito della Mazza dell'Oste Furioso?;\
@@ -76,7 +78,7 @@ MAZZA_LEGGENDARIA$
     LEGGENDA=Quando colpisce si sente un rintocco di campana. È l'ora di chiusura.
 
 ASCIA_LEGGENDARIA$
-    TIPO=ASCIA;NOME=l'Ascia del Taglialegna Insonne;BREVE=l'Ascia del Taglialegna Insonne;\
+    TIPO=ASCIA;NOME=l'Ascia del Taglialegna Insonne;CHIAVE=ASCIA_DEL_TAGLIALEGNA;BREVE=l'Ascia del Taglialegna Insonne;\
     DESCRIZIONE=che non si stanca mai;LIVELLO=5;DANNI=17;COSTO=60;PESO=3;\
     MOD=VELOCITA +20%;MOD=RIGENERAZIONE_SALUTE +2;INCANTAMENTO=ARIA 12 0.15 Vento fra i Rami;\
     LEGGENDA=Un taglialegna giurò di abbattere tutta la foresta in una notte sola.;\
@@ -84,7 +86,7 @@ ASCIA_LEGGENDARIA$
     LEGGENDA=La sua ascia non si stanca mai, e chi la impugna nemmeno.
 
 LANCIA_LEGGENDARIA$
-    TIPO=LANCIA;NOME=la Lancia del Torneo Truccato;BREVE=la Lancia del Torneo Truccato;\
+    TIPO=LANCIA;NOME=la Lancia del Torneo Truccato;CHIAVE=LANCIA_DEL_MANICHINO;BREVE=la Lancia del Torneo Truccato;\
     DESCRIZIONE=che colpisce sempre dove deve;LIVELLO=5;DANNI=17;COSTO=60;PESO=3;\
     MOD=PRECISIONE +4;MOD=FORTUNA +3;INCANTAMENTO=FULMINE 12 0.15 Colpo Fortunato;\
     LEGGENDA=Questa lancia vinse dodici tornei di fila, sempre con lo stesso cavaliere.;\
@@ -92,7 +94,7 @@ LANCIA_LEGGENDARIA$
     LEGGENDA=I giudici la squalificarono, ma nessuno ebbe il coraggio di andarla a riprendere.
 
 BASTONE_MAGICO_LEGGENDARIO$
-    TIPO=BASTONE_MAGICO;NOME=il Bastone dell'Arcimago Smemorato;BREVE=il Bastone dell'Arcimago Smemorato;\
+    TIPO=BASTONE_MAGICO;NOME=il Bastone dell'Arcimago Smemorato;CHIAVE=BASTONE_DELL_ARCIMAGO;BREVE=il Bastone dell'Arcimago Smemorato;\
     DESCRIZIONE=che ricorda gli incantesimi al posto tuo;LIVELLO=5;DANNI=8;COSTO=60;PESO=2;\
     MOD=POTERE_MAGICO +60%;MOD=RIGENERAZIONE_MAGIA +3;MOD=INTELLIGENZA +3;INCANTAMENTO=ARCANO 12 0.15 Formula Dimenticata;\
     LEGGENDA=L'arcimago Fumagallo sapeva tutti gli incantesimi del mondo. Il problema era ricordarseli.;\
@@ -100,7 +102,7 @@ BASTONE_MAGICO_LEGGENDARIO$
     LEGGENDA=Chi lo trova, dicono, si ricorda di cose che non ha mai imparato.
 
 LIBRO_MAGICO_LEGGENDARIO$
-    TIPO=LIBRO_MAGICO;NOME=il Libro delle Ricette Proibite;BREVE=il Libro delle Ricette Proibite;\
+    TIPO=LIBRO_MAGICO;NOME=il Libro delle Ricette Proibite;CHIAVE=LIBRO_DEL_CUOCO;BREVE=il Libro delle Ricette Proibite;\
     DESCRIZIONE=che cucina incantesimi;LIVELLO=5;COSTO=60;PESO=2;\
     MOD=POTERE_MAGICO +40%;MOD=SAGGEZZA +3;MOD=RIGENERAZIONE_MAGIA +2;\
     LEGGENDA=Un cuoco di corte scrisse le sue ricette in un libro, e poi scoprì che funzionavano anche come incantesimi.;\
@@ -108,7 +110,7 @@ LIBRO_MAGICO_LEGGENDARIO$
     LEGGENDA=Il cuoco fuggì nella foresta con il libro. Il re, ancora un po' verde, lo cerca ancora.
 
 SCUDO_LEGGENDARIO$
-    TIPO=SCUDO;NOME=lo Scudo Fiscale;BREVE=lo Scudo Fiscale;SET=RECUPERO_CREDITI;\
+    TIPO=SCUDO;NOME=lo Scudo Fiscale;CHIAVE=SCUDO_DELL_ESATTORE;BREVE=lo Scudo Fiscale;SET=RECUPERO_CREDITI;\
     DESCRIZIONE=che si fa fare sconti sugli acquisti;LIVELLO=5;COSTO=60;PESO=3;\
     MOD=COSTITUZIONE +10%;MOD=RESISTENZA_MAGICA +3;MOD=CONTRATTAZIONE +4;INCANTAMENTO=GELO 12 0.15 La battuta del cavolo;\
     LEGGENDA=Conoscete la storia dello Scudo Fiscale? Non ridete, è una cosa seria.;\
@@ -116,7 +118,7 @@ SCUDO_LEGGENDARIO$
     LEGGENDA=Ripara dal gelo e dalle magie, ma soprattutto dai conti salati.;\
     LEGGENDA=Quando l'esattore morì, i mercanti lo nascosero nella foresta, e speravano che nessuno lo ritrovasse più.;\
     GUARDIANI=VIVERNA 5
-    TIPO=SCUDO;NOME=lo Scudo del Coperchio Infinito;BREVE=lo Scudo del Coperchio Infinito;\
+    TIPO=SCUDO;NOME=lo Scudo del Coperchio Infinito;CHIAVE=SCUDO_DELLA_CUOCA;BREVE=lo Scudo del Coperchio Infinito;\
     DESCRIZIONE=che non lascia passare niente;LIVELLO=5;COSTO=60;PESO=4;\
     MOD=PARATA +40%;MOD=COSTITUZIONE +3;INCANTAMENTO=FUOCO 12 0.15 Bollore Eterno;\
     LEGGENDA=Una cuoca lo usava come coperchio per la pentola più grande del regno.;\
@@ -124,13 +126,13 @@ SCUDO_LEGGENDARIO$
     LEGGENDA=Da allora niente lo attraversa: né frecce, né fiamme, né l'odore del cavolo.
 
 ELMO_LEGGENDARIO$
-    TIPO=ELMO;NOME=la Cervice Imperturbabile di RomyJona;BREVE=la Cervice Imperturbabile di RomyJona;SET=ROMYJONA;\
+    TIPO=ELMO;NOME=la Cervice Imperturbabile di RomyJona;CHIAVE=ELMO_DI_ROMY_JONA;BREVE=la Cervice Imperturbabile di RomyJona;SET=ROMY_JONA;\
     DESCRIZIONE=a cui nessun colpo fa cambiare idea;LIVELLO=5;COSTO=60;PESO=2;\
     MOD=COSTITUZIONE +4;MOD=CORAGGIO +20%;MOD=PARATA +20%;\
     LEGGENDA=RomyJona aveva la testa dura. Così dura che un elmo, a un certo punto, gli sembrò quasi superfluo.;\
     LEGGENDA=Se lo fece forgiare lo stesso, per gentilezza verso le spade dei nemici, che contro la sua testa si spezzavano.;\
     LEGGENDA=Chi lo indossa non cambia mai idea. Né sotto i colpi, né davanti alle prove.
-    TIPO=ELMO;NOME=l'Elmo del Pensiero Laterale;BREVE=l'Elmo del Pensiero Laterale;\
+    TIPO=ELMO;NOME=l'Elmo del Pensiero Laterale;CHIAVE=ELMO_DELL_INVENTORE;BREVE=l'Elmo del Pensiero Laterale;\
     DESCRIZIONE=che dà sempre un'idea, non sempre buona;LIVELLO=5;COSTO=60;PESO=2;\
     MOD=INTELLIGENZA +4;MOD=PERCEZIONE +4;MOD=PARATA +20%;\
     LEGGENDA=Chi indossa l'Elmo del Pensiero Laterale ha sempre un'idea. Non sempre buona, ma sempre un'idea.;\
@@ -138,19 +140,19 @@ ELMO_LEGGENDARIO$
     LEGGENDA=Poi lo nascose, perché le idee cominciavano a fargli male alla testa.
 
 MASCHERA_LEGGENDARIA$
-    TIPO=MASCHERA;NOME=la Maschera da Guerra di RomyJona;BREVE=la Maschera da Guerra di RomyJona;SET=ROMYJONA;\
+    TIPO=MASCHERA;NOME=la Maschera da Guerra di RomyJona;CHIAVE=MASCHERA_DI_ROMY_JONA;BREVE=la Maschera da Guerra di RomyJona;SET=ROMY_JONA;\
     DESCRIZIONE=che fa scappare i nemici prima ancora di combattere;LIVELLO=5;COSTO=60;PESO=1;\
     MOD=SOGGEZIONE +5;MOD=FURIA +3;INCANTAMENTO=NECROTICO 10 0.15 Sguardo di RomyJona;\
     LEGGENDA=Quando RomyJona andava in guerra si metteva questa maschera, e i nemici si arrendevano prima di vederlo arrivare.;\
     LEGGENDA=Una volta si arrese anche il suo scudiero. Ci vollero tre giorni per convincerlo che era dalla sua parte.;\
     LEGGENDA=Dicono che sotto la maschera RomyJona sorridesse. Nessuno è mai rimasto abbastanza per controllare.
-    TIPO=MASCHERA;NOME=gli Occhiali da Sole del Ribelle;BREVE=gli Occhiali da Sole del Ribelle;SET=GIOVENTU_RIBELLE;\
+    TIPO=MASCHERA;NOME=gli Occhiali da Sole del Ribelle;CHIAVE=MASCHERA_DEL_RIBELLE;BREVE=gli Occhiali da Sole del Ribelle;SET=GIOVENTU_RIBELLE;\
     DESCRIZIONE=che si portano anche di notte;LIVELLO=5;COSTO=60;PESO=0.1;\
     MOD=CARISMA +4;MOD=SOGGEZIONE +3;MOD=PERCEZIONE -1;\
     LEGGENDA=Un giovane cavaliere rifiutò l'elmo di famiglia e si presentò al torneo con un paio di occhiali scuri.;\
     LEGGENDA=Non vinse nemmeno un duello, perché non vedeva niente. Ma tutte le dame del regno si innamorarono di lui.;\
     LEGGENDA=Li portava anche di notte, e infatti inciampava parecchio.
-    TIPO=MASCHERA;NOME=la Maschera del Carnevale Perpetuo;BREVE=la Maschera del Carnevale Perpetuo;\
+    TIPO=MASCHERA;NOME=la Maschera del Carnevale Perpetuo;CHIAVE=MASCHERA_DEL_MERCANTE;BREVE=la Maschera del Carnevale Perpetuo;\
     DESCRIZIONE=dietro cui nessuno ti riconosce;LIVELLO=5;COSTO=60;PESO=0.5;\
     MOD=FURTIVITA +5;MOD=CARISMA +3;MOD=PARATA +15%;\
     LEGGENDA=Un mercante la indossò a una festa di carnevale, e non riuscì più a togliersela.;\
@@ -158,7 +160,7 @@ MASCHERA_LEGGENDARIA$
     LEGGENDA=Visse felice per quarant'anni. Il giorno che se la tolse, gli arrivarono tutti i conti insieme.
 
 ARMATURA_LEGGENDARIA$
-    TIPO=ARMATURA;NOME=l'Armatura del Cavaliere Pigro;BREVE=l'Armatura del Cavaliere Pigro;SET=CAVALIERI_SVOGLIATI;\
+    TIPO=ARMATURA;NOME=l'Armatura del Cavaliere Pigro;CHIAVE=ARMATURA_DEL_CAVALIERE_SVOGLIATO;BREVE=l'Armatura del Cavaliere Pigro;SET=CAVALIERI_SVOGLIATI;\
     DESCRIZIONE=che para i colpi da sola;LIVELLO=5;COSTO=60;PESO=8;\
     MOD=PARATA +45%;MOD=RIGENERAZIONE_SALUTE +3;MOD=COSTITUZIONE +20%;\
     LEGGENDA=Sir Poltrone non combatté mai una battaglia, eppure non fu mai ferito.;\
@@ -166,13 +168,13 @@ ARMATURA_LEGGENDARIA$
     LEGGENDA=Quando finalmente si svegliò era vecchio, ricco, e ancora tutto intero.
 
 VESTE_LEGGENDARIA$
-    TIPO=VESTE;NOME=la Giacca di Pelle del Ribelle;BREVE=la Giacca di Pelle del Ribelle;SET=GIOVENTU_RIBELLE;\
+    TIPO=VESTE;NOME=la Giacca di Pelle del Ribelle;CHIAVE=VESTE_DEL_RIBELLE;BREVE=la Giacca di Pelle del Ribelle;SET=GIOVENTU_RIBELLE;\
     DESCRIZIONE=con le borchie e il colletto alzato;LIVELLO=5;COSTO=60;PESO=2;\
     MOD=CARISMA +3;MOD=RESISTENZA_MAGICA +4;MOD=VELOCITA +15%;\
     LEGGENDA=Il cavaliere ribelle si fece cucire una giacca con la pelle del suo primo drago. Cioè, di una lucertola molto grande.;\
     LEGGENDA=La portava con il colletto alzato e le maniche arrotolate, e i vecchi del villaggio scuotevano la testa.;\
     LEGGENDA=Le magie ci scivolano sopra, come i rimproveri.
-    TIPO=VESTE;NOME=la Veste della Strega Stirata;BREVE=la Veste della Strega Stirata;\
+    TIPO=VESTE;NOME=la Veste della Strega Stirata;CHIAVE=VESTE_DELLA_STREGA;BREVE=la Veste della Strega Stirata;\
     DESCRIZIONE=di cui le magie hanno paura;LIVELLO=5;COSTO=60;PESO=1;\
     MOD=RESISTENZA_MAGICA +6;MOD=POTERE_MAGICO +30%;MOD=FURTIVITA +3;INCANTAMENTO=MALEDIZIONE 12 0.15 Piega Perfetta;\
     LEGGENDA=Una strega passò cento anni a stirare questa veste, senza mai riuscire a togliere una piega.;\
@@ -180,13 +182,13 @@ VESTE_LEGGENDARIA$
     LEGGENDA=Chi la indossa non ha più paura delle magie: sono le magie ad avere paura di lui.
 
 SCHINIERI_LEGGENDARI$
-    TIPO=SCHINIERI;NOME=gli Scarponi Chiodati di RomyJona;BREVE=gli Scarponi Chiodati di RomyJona;SET=ROMYJONA;\
+    TIPO=SCHINIERI;NOME=gli Scarponi Chiodati di RomyJona;CHIAVE=SCHINIERI_DI_ROMY_JONA;BREVE=gli Scarponi Chiodati di RomyJona;SET=ROMY_JONA;\
     DESCRIZIONE=che lasciano il segno dovunque passino;LIVELLO=5;COSTO=60;PESO=3;\
     MOD=FORZA +20%;MOD=PARATA +25%;MOD=VALORE +2;\
     LEGGENDA=RomyJona non bussava mai alle porte: le apriva con un calcio, con questi scarponi.;\
     LEGGENDA=I fabbri del regno chiedevano di essere pagati in anticipo, quando lo vedevano arrivare.;\
     LEGGENDA=Dove sono passati, dicono, l'erba non è più ricresciuta. Ma solo per paura.
-    TIPO=SCHINIERI;NOME=gli Schinieri del Corridore Codardo;BREVE=gli Schinieri del Corridore Codardo;SET=CAVALIERI_SVOGLIATI;\
+    TIPO=SCHINIERI;NOME=gli Schinieri del Corridore Codardo;CHIAVE=SCHINIERI_DEL_CAVALIERE_SVOGLIATO;BREVE=gli Schinieri del Corridore Codardo;SET=CAVALIERI_SVOGLIATI;\
     DESCRIZIONE=che partono da soli;LIVELLO=5;COSTO=60;PESO=3;\
     MOD=VELOCITA +30%;MOD=PARATA +25%;MOD=FURTIVITA +3;\
     LEGGENDA=Il cavaliere Fuggiasco non vinse mai un duello, ma non ne perse nemmeno uno.;\
@@ -194,7 +196,7 @@ SCHINIERI_LEGGENDARI$
     LEGGENDA=Dicono che corra ancora, da qualche parte, e che i suoi schinieri a un certo punto lo abbiano lasciato indietro.
 
 ANELLO_LEGGENDARIO$
-    TIPO=ANELLO;NOME=l'Anello del Fidanzamento Eterno;BREVE=l'Anello del Fidanzamento Eterno;\
+    TIPO=ANELLO;NOME=l'Anello del Fidanzamento Eterno;CHIAVE=ANELLO_DELLA_PRINCIPESSA;BREVE=l'Anello del Fidanzamento Eterno;\
     DESCRIZIONE=che fa dire sì a chiunque, una volta;LIVELLO=5;COSTO=60;PESO=0.1;\
     MOD=CARISMA +5;MOD=FORTUNA +3;MOD=COSTITUZIONE +2;\
     LEGGENDA=Un principe lo regalò a una principessa, che disse sì. Poi disse sì anche al secondo, al terzo e al quarto.;\
@@ -202,7 +204,7 @@ ANELLO_LEGGENDARIO$
     LEGGENDA=Dopo dodici matrimoni la principessa lo buttò in un pozzo. Il pozzo, dicono, si è sposato anche lui.
 
 TALISMANO_LEGGENDARIO$
-    TIPO=TALISMANO;NOME=il Talismano della Nonna Preoccupata;BREVE=il Talismano della Nonna Preoccupata;\
+    TIPO=TALISMANO;NOME=il Talismano della Nonna Preoccupata;CHIAVE=TALISMANO_DELLA_NONNA;BREVE=il Talismano della Nonna Preoccupata;\
     DESCRIZIONE=che ti dice di coprirti;LIVELLO=5;COSTO=60;PESO=0.2;\
     MOD=COSTITUZIONE +4;MOD=RIGENERAZIONE_SALUTE +3;MOD=FORTUNA +3;\
     LEGGENDA=Una nonna cucì questo talismano nella giacca del nipote, prima che partisse per la guerra.;\
@@ -210,7 +212,7 @@ TALISMANO_LEGGENDARIO$
     LEGGENDA=Chi lo porta sente una voce che dice: copriti, che fa freddo.
 
 NINNOLO_LEGGENDARIO$
-    TIPO=NINNOLO;NOME=il Ninnolo che Nessuno Sa Cosa Sia;BREVE=il Ninnolo che Nessuno Sa Cosa Sia;\
+    TIPO=NINNOLO;NOME=il Ninnolo che Nessuno Sa Cosa Sia;CHIAVE=NINNOLO_DEI_SAGGI;BREVE=il Ninnolo che Nessuno Sa Cosa Sia;\
     DESCRIZIONE=che serve sicuramente a qualcosa;LIVELLO=5;COSTO=60;PESO=0.2;\
     MOD=FORTUNA +5;MOD=PERCEZIONE +3;MOD=SOGGEZIONE +3;\
     LEGGENDA=Nessuno sa a cosa serva questo ninnolo. I saggi ne discutono da secoli.;\
@@ -218,7 +220,7 @@ NINNOLO_LEGGENDARIO$
     LEGGENDA=Di sicuro porta fortuna. A chi lo trova, non a chi lo perde.
 
 PERGAMENA_LEGGENDARIA$
-    TIPO=PERGAMENA;NOME=la Pergamena del Contratto Infernale;BREVE=la Pergamena del Contratto Infernale;\
+    TIPO=PERGAMENA;NOME=la Pergamena del Contratto Infernale;CHIAVE=PERGAMENA_DEL_DEMONE;BREVE=la Pergamena del Contratto Infernale;\
     DESCRIZIONE=con le clausole scritte in piccolo;LIVELLO=5;COSTO=60;PESO=0.1;\
     MOD=POTERE_MAGICO +5;INCANTAMENTO=FUOCO 14 0.2 Clausola in Piccolo;\
     LEGGENDA=Un demone scrisse questa pergamena per comprarsi l'anima di un notaio. Il notaio lesse le clausole in piccolo.;\
@@ -226,7 +228,7 @@ PERGAMENA_LEGGENDARIA$
     LEGGENDA=Chi la fonde con un'arma ci ritrova tutto quello che il demone ha perso.
 
 GEMMA_LEGGENDARIA$
-    TIPO=GEMMA;NOME=la Gemma del Tramonto Eterno;BREVE=la Gemma del Tramonto Eterno;\
+    TIPO=GEMMA;NOME=la Gemma del Tramonto Eterno;CHIAVE=GEMMA_DEL_PITTORE;BREVE=la Gemma del Tramonto Eterno;\
     DESCRIZIONE=che non lascia tramontare il sole;LIVELLO=5;COSTO=60;PESO=0.1;\
     MOD=PRECISIONE +3;INCANTAMENTO=SACRO 14 0.2 Ultima Luce;\
     LEGGENDA=Un pittore passò la vita a cercare il colore perfetto del tramonto.;\
@@ -234,7 +236,7 @@ GEMMA_LEGGENDARIA$
     LEGGENDA=La valle ne è stufa. Chiedono che qualcuno se la porti via.
 
 MONILE_LEGGENDARIO$
-    TIPO=MONILE;NOME=il Monile della Regina Vanitosa;BREVE=il Monile della Regina Vanitosa;\
+    TIPO=MONILE;NOME=il Monile della Regina Vanitosa;CHIAVE=MONILE_DELLA_REGINA;BREVE=il Monile della Regina Vanitosa;\
     DESCRIZIONE=che rende irresistibili;LIVELLO=5;COSTO=60;PESO=0.1;\
     MOD=CARISMA +4;INCANTAMENTO=PSICHICO 12 0.15 Specchio delle Mie Brame;\
     LEGGENDA=La regina Narcisa si guardava allo specchio duecento volte al giorno.;\
@@ -242,7 +244,7 @@ MONILE_LEGGENDARIO$
     LEGGENDA=Chi lo porta diventa irresistibile. Soprattutto per se stesso.
 
 GINGILLO_LEGGENDARIO$
-    TIPO=GINGILLO;NOME=il Gingillo del Giullare Malinconico;BREVE=il Gingillo del Giullare Malinconico;\
+    TIPO=GINGILLO;NOME=il Gingillo del Giullare Malinconico;CHIAVE=GINGILLO_DEL_GIULLARE;BREVE=il Gingillo del Giullare Malinconico;\
     DESCRIZIONE=che ride al posto tuo;LIVELLO=5;COSTO=60;PESO=0.1;\
     MOD=FORTUNA +3;INCANTAMENTO=SONICO 12 0.15 Battuta Finale;\
     LEGGENDA=Un giullare non riusciva più a far ridere il re.;\
@@ -250,7 +252,7 @@ GINGILLO_LEGGENDARIO$
     LEGGENDA=Il re rise così tanto che dovettero chiamare il medico. Il giullare, per sicurezza, scappò.
 
 SIGILLO_LEGGENDARIO$
-    TIPO=SIGILLO;NOME=il Sigillo del Notaio Implacabile;BREVE=il Sigillo del Notaio Implacabile;\
+    TIPO=SIGILLO;NOME=il Sigillo del Notaio Implacabile;CHIAVE=SIGILLO_DEL_NOTAIO;BREVE=il Sigillo del Notaio Implacabile;\
     DESCRIZIONE=che rende vero ogni documento;LIVELLO=5;COSTO=60;PESO=0.1;\
     MOD=CONTRATTAZIONE +5;INCANTAMENTO=ARCANO 12 0.15 Timbro e Firma;\
     LEGGENDA=Ogni documento che porta questo sigillo diventa vero. Anche quelli sbagliati.;\
@@ -268,7 +270,7 @@ SIGILLO_LEGGENDARIO$
 # ---------------------------------------------------------------------------------------------
 
 SET_LEGGENDARIO$
-    CHIAVE=ROMYJONA;NOME=il Corredo di RomyJona;MOLTIPLICATORE=1.5
+    CHIAVE=ROMY_JONA;NOME=il Corredo di RomyJona;MOLTIPLICATORE=1.5
     CHIAVE=GIOVENTU_RIBELLE;NOME=la Gioventù Ribelle;MOLTIPLICATORE=1.3
     CHIAVE=CAVALIERI_SVOGLIATI;NOME=l'Ordine dei Cavalieri Svogliati;MOLTIPLICATORE=1.4
     CHIAVE=RECUPERO_CREDITI;NOME=il Recupero Crediti;MOLTIPLICATORE=1.3
