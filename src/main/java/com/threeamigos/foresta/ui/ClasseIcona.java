@@ -37,8 +37,7 @@ public enum ClasseIcona {
 	CORRUZIONE(Comando.CORRUZIONE, "icone/Corruzione.gif"),
 	AMICIZIA(Comando.AMICIZIA,"icone/Amicizia.gif"),
 	FUGA(Comando.FUGA, "icone/Fuga.gif"),
-	// Per ora la stessa icona della fuga (vedi i TODO in Automa)
-	PASSA_INOSSERVATO(Comando.PASSA_INOSSERVATO, "icone/Fuga.gif"),
+	PASSA_INOSSERVATO(Comando.PASSA_INOSSERVATO, "icone/PassaInosservato.gif"),
 
 	DARDO_ARCANO(Comando.DARDO_ARCANO, "icone/DardoArcano.gif"),
 	ARIA(Comando.ARIA,"icone/Aria.gif"),

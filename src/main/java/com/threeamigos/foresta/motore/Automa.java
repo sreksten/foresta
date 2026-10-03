@@ -52,15 +52,11 @@ import java.util.function.Supplier;
 //  - ingredienti magici (oggi usano l'icona della pergamena): Pergamena, Gemma, Monile, Gingillo, Sigillo.
 // TODO: il Viandante (ClassePersonaggio.VIANDANTE, chi si fa scortare dalle missioni) usa le immagini del bardo:
 //  servono personaggi/Viandante.gif e icone/Viandante-nobordo-piccolo.gif (ClassePersonaggioImmagine).
-// TODO: img/oggetti/Maschera.gif e img/fondi/Separatore-Maschere.gif sono copie di Elmo.gif e di Separatore-Elmi.gif,
-//  da ridisegnare con una maschera.
 // TODO: img/oggetti/OggettoMissione.gif è un sacchetto provvisorio, da ridisegnare: lo usano tutti gli oggetti delle
 //  missioni (i materiali delle richieste: erbe, minerali, pesci, trofei; l'oggetto smarrito). In futuro magari
 //  un'immagine per ogni oggetto.
 // TODO: il sacerdote e la sacerdotessa che offrono una benedizione in locanda (ScenaInLocanda.conSacerdote) hanno le
 //  immagini del mago e della maga: servono personaggi/Sacerdote.gif e personaggi/Sacerdotessa.gif.
-// TODO: il comando PASSA_INOSSERVATO usa l'icona della fuga: serve icone/PassaInosservato.gif, per esempio due impronte
-//  di piedi nudi in punta di piedi (ClasseIcona).
 // TODO: quando ci saranno più attacchi nella stessa locazione, riprendere l'indagine LUCI_NELLE_ROVINE (missioni.txt,
 //  produzione INDAGINE): oggi il negromante scappa e si combattono solo i suoi scheletri, perché un incontro di
 //  missione ha una classe sola; meglio prima gli scheletri e poi lui, come MAGO o MAGA con un nome.

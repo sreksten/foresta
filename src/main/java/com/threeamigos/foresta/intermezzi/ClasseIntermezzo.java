@@ -9,9 +9,6 @@ import java.util.function.Supplier;
  */
 public enum ClasseIntermezzo {
 
-	// Solo in modalità di prova (vedi ModalitaDiProva)
-	INTERMEZZO_DI_PROVA(IntermezzoDiProva::new, true),
-
 	INTERMEZZO_INTRODUTTIVO(IntermezzoIntroduttivo::new),
 	INTERMEZZO_FINE_PRIMA_LOCAZIONE(IntermezzoFinePrimaLocazione::new),
 	INTERMEZZO_LOCANDA_PRIMA_VISITA(IntermezzoLocandaPrimaVisita::new),
@@ -50,7 +47,7 @@ public enum ClasseIntermezzo {
 		this(fabbrica, false);
 	}
 
-	private ClasseIntermezzo(Function<ClasseIntermezzo, Intermezzo> fabbrica, boolean diProva) {
+	ClasseIntermezzo(Function<ClasseIntermezzo, Intermezzo> fabbrica, boolean diProva) {
 		this.fabbrica = fabbrica;
 		this.diProva = diProva;
 	}

@@ -3,16 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.missioni.CacciaAiGoblin;
-import com.threeamigos.foresta.missioni.ClasseMissione;
-import com.threeamigos.foresta.missioni.IncaricoInCitta;
-import com.threeamigos.foresta.missioni.LaLeggendaDellArmaiolo;
-import com.threeamigos.foresta.missioni.RichiestaDiMateriali;
-import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
-import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.missioni.RecuperaIlMedaglione;
+import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
@@ -265,7 +256,7 @@ class ScenarioIncarichiInCittaTest {
                 if (Foresta.getLocazione(x, y) == ClassiLocazione.BOSCO && !Foresta.isLocazioneVisitata(coordinate)
                         && Foresta.getLocazione(x, y + 1).getTipoLocazione() == ClassiLocazione.TipoLocazione.STANDARD
                         && RegistroArtefatti.getArtefattoInLocazione(coordinate) == null
-                        && RegistroMissioni.getMissioneCheHaOccupato(sud).isEmpty()) {
+                        && !RegistroMissioni.getMissioneCheHaOccupato(sud).isPresent()) {
                     return coordinate;
                 }
             }
