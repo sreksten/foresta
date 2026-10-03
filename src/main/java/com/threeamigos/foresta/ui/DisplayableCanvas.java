@@ -871,6 +871,14 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
+	/**
+	 * La pagina dell'intermezzo riparte da quei secondi dalla sua comparsa: dal fumetto successivo.
+	 */
+	public void saltaNellaPaginaIntermezzo(double secondi) {
+		intermezzo.saltaA(secondi);
+		repaint();
+	}
+
 	public void scriviGrande(String messaggio) {
 		stato = StatoDisplayableCanvas.STATO_MESSAGGIO;
 		riquadroIntroOutro.impostaMessaggio(messaggio);

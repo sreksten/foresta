@@ -385,6 +385,10 @@ public enum TipoEvento {
      */
     INTERNO_MOSTRA_SCHERMATA_GIOCO,
     /**
+     * Il motore chiede alla UI di saltare al fumetto successivo nella pagina dell'intermezzo
+     */
+    INTERNO_FUMETTO_SUCCESSIVO,
+    /**
      * Chiede di effettuare una notifica al giocatore via fumetto a tempo a video invece che come messaggio
      */
     INTERNO_NOTIFICA_VIA_FUMETTO_A_TEMPO,

@@ -51,6 +51,9 @@ final class PartitaDiTest implements AutoCloseable {
 	private Collection<Comando> comandiDisponibili = new ArrayList<>();
 	private int erroriVisti;
 	private boolean saltaIntermezzi = true;
+	// L'orologio dell'automa per le pagine degli intermezzi (vedi orologioFermo)
+	private long orologioNanosecondi;
+	private boolean orologioFermo;
 	private final java.util.Deque<String> ultimiTesti = new java.util.ArrayDeque<>();
 	private final boolean modalitaDiProvaPrecedente = ModalitaDiProva.isAttiva();
 
@@ -95,7 +98,7 @@ final class PartitaDiTest implements AutoCloseable {
 		BusEventi.iscriviti(NotificaTestoParagrafo.class, e -> ricordaTesto(e.getMessaggio()));
 
 		// Il precaricamento del motore sullo stesso thread, cosi' finisce prima che inizia() ritorni
-		automa = new Automa(temporizzatore, Runnable::run);
+		automa = new Automa(temporizzatore, Runnable::run, this::leggiOrologio);
 		automa.inizia();
 		verificaNessunErrore();
 	}
@@ -189,6 +192,31 @@ final class PartitaDiTest implements AutoCloseable {
 	 */
 	PartitaDiTest nonSaltareIntermezzi() {
 		saltaIntermezzi = false;
+		return this;
+	}
+
+	/**
+	 * Finché non lo si ferma, l'orologio va avanti di un'ora a ogni lettura: per l'automa ogni fumetto di una pagina
+	 * di un intermezzo è già cominciato, e la pergamena gira la pagina.
+	 */
+	private long leggiOrologio() {
+		if (!orologioFermo) {
+			orologioNanosecondi += 3_600_000_000_000L;
+		}
+		return orologioNanosecondi;
+	}
+
+	/**
+	 * Ferma l'orologio delle pagine degli intermezzi: va avanti solo con {@link #avanzaOrologio}, e la pergamena salta
+	 * al fumetto successivo della pagina finché ce n'è uno.
+	 */
+	PartitaDiTest orologioFermo() {
+		orologioFermo = true;
+		return this;
+	}
+
+	PartitaDiTest avanzaOrologio(double secondi) {
+		orologioNanosecondi += (long) (secondi * 1_000_000_000L);
 		return this;
 	}
 

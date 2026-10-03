@@ -9,6 +9,7 @@ import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
+import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
@@ -35,6 +36,7 @@ import java.util.*;
 import java.util.concurrent.Executor;
 import java.util.function.Consumer;
 import java.util.function.Function;
+import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
 // TODO: carta, forbice e sasso
@@ -137,6 +139,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Intermezzo intermezzoCorrente;
 	private List<PaginaIntermezzo> pagineIntermezzo;
 	private int paginaIntermezzo;
+	// Quando è comparsa la pagina corrente dell'intermezzo, secondo l'orologio: spostato all'indietro quando il
+	// giocatore salta al fumetto successivo, come fa la UI
+	private long inizioPaginaIntermezzo;
+	private final LongSupplier orologioNanosecondi;
 	private MomentoIntermezzo momentoIntermezzo;
 	private Stato statoDopoIntermezzi;
 
@@ -169,8 +175,18 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 *                                nel gioco un thread a parte, nei test lo stesso thread ({@code Runnable::run})
 	 */
 	Automa(Temporizzatore temporizzatore, Executor esecutorePrecaricamento) {
+		this(temporizzatore, esecutorePrecaricamento, System::nanoTime);
+	}
+
+	/**
+	 * @param orologioNanosecondi l'orologio con cui si misura da quanto è comparsa una pagina di un intermezzo, per
+	 *                            sapere quale fumetto viene dopo (vedi gestisciComandoInStatoIntermezzo): nel gioco
+	 *                            System.nanoTime, come la UI
+	 */
+	Automa(Temporizzatore temporizzatore, Executor esecutorePrecaricamento, LongSupplier orologioNanosecondi) {
 		this.temporizzatore = temporizzatore;
 		this.esecutorePrecaricamento = esecutorePrecaricamento;
+		this.orologioNanosecondi = orologioNanosecondi;
 		temporizzatore.setTemporizzabile(this);
 
 		BusEventi.iscriviti(ComandoDiGioco.class, this::onEventoComandoDiGioco);
@@ -619,28 +635,56 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private void mostraPaginaIntermezzo() {
+		inizioPaginaIntermezzo = orologioNanosecondi.getAsLong();
 		BusEventi.pubblica(new NotificaPaginaIntermezzo(pagineIntermezzo.get(paginaIntermezzo),
 				paginaIntermezzo + 1, pagineIntermezzo.size()));
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
+		avviaTimerIntermezzo(0);
+	}
+
+	/**
+	 * Il conto alla rovescia della pagina, se avanza da sola, da quei secondi dalla sua comparsa.
+	 */
+	private void avviaTimerIntermezzo(double secondiTrascorsi) {
 		double secondi = pagineIntermezzo.get(paginaIntermezzo).getSecondiPrimaDiAvanzare(intermezzoCorrente.getSecondiPerPagina());
 		if (secondi > 0) {
-			// Riavviato a ogni pagina: un click riporta a zero il conto alla rovescia
-			temporizzatore.iniziaDopo((int) Math.ceil(secondi * 1_000));
+			// Riavviato a ogni pagina e a ogni fumetto saltato: un click riporta a zero il conto alla rovescia
+			temporizzatore.iniziaDopo((int) Math.max(1, Math.ceil((secondi - secondiTrascorsi) * 1_000)));
 		} else {
 			// Pagina che avanza solo al click: non deve scattare il timer della precedente
 			temporizzatore.termina();
 		}
 	}
 
+	/**
+	 * Il primo fumetto della pagina corrente che non è ancora cominciato, se c'è.
+	 */
+	private Optional<BattutaProgrammata> getFumettoSuccessivo() {
+		double trascorsi = (orologioNanosecondi.getAsLong() - inizioPaginaIntermezzo) / 1_000_000_000.0;
+		return pagineIntermezzo.get(paginaIntermezzo).getBattuteProgrammate().stream()
+				.filter(battuta -> battuta.getInizio() > trascorsi)
+				.min(Comparator.comparingDouble(BattutaProgrammata::getInizio));
+	}
+
 
 	/**
-	 * La pagina avanza con la pergamena o con il timer; dopo l'ultima si passa al
-	 * prossimo intermezzo o si riprende il gioco.
+	 * La pergamena salta al fumetto successivo della pagina, se ce n'è ancora uno da cominciare; altrimenti, come il
+	 * timer, fa avanzare la pagina. Dopo l'ultima si passa al prossimo intermezzo o si riprende il gioco.
 	 */
 	private Esito gestisciComandoInStatoIntermezzo(Comando comando) {
 		if (comando != Comando.PERGAMENA && comando != Comando.TIMER) {
 			comandoNonValido(comando);
 			return Esito.FERMATI;
+		}
+		if (comando == Comando.PERGAMENA) {
+			Optional<BattutaProgrammata> fumetto = getFumettoSuccessivo();
+			if (fumetto.isPresent()) {
+				double secondi = fumetto.get().getInizio();
+				inizioPaginaIntermezzo = orologioNanosecondi.getAsLong() - (long) (secondi * 1_000_000_000L);
+				BusEventi.pubblica(new InternoFumettoSuccessivo(secondi));
+				avviaTimerIntermezzo(secondi);
+				return Esito.FERMATI;
+			}
 		}
 		paginaIntermezzo++;
 		if (paginaIntermezzo < pagineIntermezzo.size()) {

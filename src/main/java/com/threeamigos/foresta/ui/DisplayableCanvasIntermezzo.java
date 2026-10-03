@@ -72,6 +72,13 @@ class DisplayableCanvasIntermezzo implements Finestra {
 	}
 
 	/**
+	 * La pagina continua come se fosse comparsa quei secondi fa: per saltare al fumetto successivo.
+	 */
+	void saltaA(double secondi) {
+		inizioPaginaNanosecondi = System.nanoTime() - (long) (secondi * 1_000_000_000L);
+	}
+
+	/**
 	 * Dimentica la pagina e le immagini caricate per l'intermezzo, alla sua fine.
 	 */
 	void svuota() {

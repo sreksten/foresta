@@ -234,7 +234,7 @@ pagina.conBattuta(BattutaIntermezzo.di("eremita", saluto));
 
 ## 7. Quando avanzano le pagine
 
-Una pagina avanza **sempre** al click sulla pergamena. Può anche avanzare da sola:
+Il click sulla pergamena salta al **fumetto successivo** della pagina, se ce n'è ancora uno che non è cominciato: la pagina riparte da quando comincia quel fumetto (`InternoFumettoSuccessivo`), con le animazioni allo stesso istante, e il conto alla rovescia della pagina riparte da lì. Quando tutti i fumetti sono cominciati, o se la pagina non ne ha, il click fa avanzare la pagina. Per sapere quale fumetto viene dopo, l'automa misura da quanto è comparsa la pagina con un suo orologio (`System.nanoTime`, come la UI; nei test `PartitaDiTest` lo fa correre di un'ora a ogni lettura, così la pergamena gira la pagina, finché non lo si ferma con `orologioFermo()`). Una pagina può anche avanzare da sola:
 
 | Situazione | Quando avanza da sola |
 | :--- | :--- |
@@ -244,7 +244,7 @@ Una pagina avanza **sempre** al click sulla pergamena. Può anche avanzare da so
 
 Le animazioni ripetute (`CICLICA`, `AVANTI_E_INDIETRO`) non allungano la pagina. L'anteprima mostra nel titolo della finestra quando avanzerà la pagina corrente.
 
-Il click fa avanzare anche a dialogo non finito, quindi il giocatore può saltare. Dopo l'ultima pagina si passa al prossimo intermezzo in coda, se c'è, altrimenti si torna al gioco.
+Il giocatore può quindi saltare un fumetto alla volta, e poi la pagina. Dopo l'ultima pagina si passa al prossimo intermezzo in coda, se c'è, altrimenti si torna al gioco.
 
 ---
 
