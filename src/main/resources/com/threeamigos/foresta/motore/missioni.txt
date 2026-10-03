@@ -1,6 +1,7 @@
 # I nomi dei personaggi delle missioni (vedi ProduttoreDiTestiCasuale): gli ostaggi da liberare, i bardi da
 # riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia; e i materiali che chiedono
-# l'alchimista, l'armaiolo, il capitano delle guardie e il locandiere; e le cose da portare da una città all'altra. Per ora sono tutti maschili, perché i testi delle missioni
+# l'alchimista, l'armaiolo, il capitano delle guardie e il locandiere; le cose da portare da una città all'altra;
+# gli oggetti smarriti nella foresta. Per ora sono tutti maschili, perché i testi delle missioni
 # parlano di "suo marito" e "sua moglie".
 #
 # Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
@@ -197,3 +198,32 @@ TRASPORTO
     F;boccetta d'acqua sacra;la badessa;il cavaliere ferito;URGENTE;22;Il cavaliere è stato ferito da una lama stregata, e la ferita non si chiude. Solo l'acqua della nostra fonte la può guarire.;Non basterebbe una benda?;Le bende le ha già provate tutte. Anche quelle stregate.;La ferita si chiude! Sento il calore dell'acqua sacra fin nelle ossa.
     F;cassa di rimedi;il medico di corte;il guaritore del lazzaretto;URGENTE;25;Nel lazzaretto c'è un'epidemia di febbre grigia, e i rimedi sono finiti.;Si attacca anche a noi?;Non se ve ne andate subito, dopo la consegna.;Basteranno per tutti i malati! E adesso andate, prima che la febbre prenda anche voi.
     M;sacco di sale purificato;la badessa;il sindaco;URGENTE;22;Una pestilenza si sta mangiando il grano, e chi lo mangia. Questo sale, sparso sulle soglie delle case, ferma il contagio.;Funziona davvero?;Funziona sempre. Quasi sempre. Spesso.;Lo spargeremo su ogni soglia. Che il cielo vi benedica!
+
+# ---------------------------------------------------------------------------------------------
+# Oggetti smarriti nella foresta (vedi LOggettoSmarrito e OggettoSmarrito)
+# ---------------------------------------------------------------------------------------------
+#
+# Una riga per oggetto, nove campi separati da ";":
+#   1. genere dell'oggetto: F o M;
+#   2. l'oggetto, senza articolo (per esempio "fede nuziale");
+#   3. chi l'ha perso, con l'articolo: è il mandante, in città;
+#   4. vicino a quali posti può averlo perso, uno o più fra TEMPIO, ROVINE, LOCANDA e GROTTA: la missione ne
+#      sceglie uno, lo segna sulla mappa e mette l'oggetto a non più di due passi da lì (non nominarlo);
+#   5. quante monete paga chi l'ha perso;
+#   6. come l'ha perso: la sua prima battuta nell'intermezzo;
+#   7. la battuta del capo;
+#   8. la risposta di chi l'ha perso;
+#   9. il ringraziamento, quando lo riavrà.
+# Oggetti che cominciano per consonante (non s impura né z): gli articoli sono la o il.
+
+OGGETTO_SMARRITO
+    F;fede nuziale;il mugnaio;TEMPIO ROVINE;15;Sono andato a pregare per un buon raccolto, e al ritorno la fede non c'era più. Mia moglie non se n'è ancora accorta.;E se se ne accorge?;Allora la missione diventa un'altra. Molto più pericolosa.;Eccola! Al dito, subito, prima che mia moglie torni dal mercato.
+    M;borsello di cuoio;il mercante di stoffe;LOCANDA;12;Ho fatto tappa in una locanda per festeggiare un affare. Un po' troppo. Il borsello è rimasto da qualche parte, lì intorno.;Era pieno?;Era. Adesso, chissà.;C'è ancora tutto! Allora non ero così ubriaco.
+    F;pipa d'osso;il vecchio cacciatore;GROTTA ROVINE;10;Mi sono riparato dalla pioggia, e quando ho ripreso il cammino la pipa era rimasta là. Quarant'anni di pipa.;Non potete comprarne un'altra?;Un'altra non sa di quarant'anni.;Ah, il suo profumo! Sedetevi, ve la faccio provare. No? Peccato.
+    M;libro di preghiere;la novizia;TEMPIO;10;Ero in pellegrinaggio e mi è scivolato dalla bisaccia. La badessa mi farà ricopiare a mano tutto il libro.;Tutto?;Tutto. Due volte. Una per imparare, una per penitenza.;Che il cielo vi benedica! E la badessa non lo saprà mai.
+    F;chiave di bronzo;il custode del granaio;ROVINE GROTTA;12;Ho inseguito un ladro fin là, e nella corsa ho perso la chiave del granaio. Il ladro, invece, l'ho perso di vista.;E adesso il granaio è aperto?;È chiuso. Ed è questo il problema.;Finalmente posso aprire il granaio! Il grano cominciava a lamentarsi.
+    M;flauto d'argento;il menestrello;LOCANDA TEMPIO;14;Ho suonato tutta la notte, e al mattino il flauto non c'era più. Qualcuno dice che l'ho lanciato dalla finestra. Non me lo ricordo.;Suonavate così male?;Suonavo benissimo. Erano gli altri a cantare male.;Il mio flauto! Ve ne suono una in vostro onore. No? Va bene, va bene.
+    F;bambola di pezza;la figlia del fornaio;LOCANDA ROVINE;8;La mia bambola si è persa quando siamo andati a trovare la nonna. Papà dice che sono grande, ma lei di notte piange.;Chi piange, la bambola?;Lei. La bambola. Io no. Io sono grande.;Eccola! Vedi che non era scappata? Era solo andata in gita.
+    M;sigillo di famiglia;il cavaliere decaduto;ROVINE;16;Prima è caduto in rovina il castello, poi è caduto il nome, e alla fine è caduto anche il sigillo. Da una tasca bucata.;Vale qualcosa?;Per me sì. Per un ricettatore, molto di più.;Il sigillo della mia casata! Un giorno lo rimetteremo sul portone. Quando avremo di nuovo un portone.
+    M;pettine di tartaruga;la moglie del borgomastro;LOCANDA TEMPIO;12;Sono passata a prendere una tisana e ho perso il pettine. Mio marito dice che sono distratta. Io dico che è distratto il pettine.;E se è pieno di nodi?;Lo pulisco io. Voi trovatelo.;Il mio pettine! Adesso mio marito dovrà trovare un'altra cosa di cui lamentarsi.
+    F;borraccia di rame;il carrettiere;GROTTA LOCANDA;10;Ho fatto sosta per far riposare il mulo e ho dimenticato la borraccia. Era di mio padre, e prima ancora di suo padre.;E dentro c'era ancora qualcosa?;Vino di mio nonno. Non bevetelo.;La borraccia di famiglia! Il vino di mio nonno è ancora lì? Meglio così.

@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
@@ -27,6 +28,9 @@ import java.util.Set;
  * avversari di quelle classi, anche nelle locazioni già visitate, e li custodiscono loro; per prenderli bisogna
  * sconfiggerli. Il loro ripiego è un bosco con i mostri che portano i trofei mancanti.
  * <p>
+ * Con {@link #nellaCasella} stanno invece in una casella sola, scelta dalla missione (un oggetto smarrito): lì
+ * compaiono tutti quelli che mancano, anche se la casella è già stata visitata, e altrove mai. Non hanno ripiego.
+ * <p>
  * Se dopo {@link #getOreAlRipiego()} ore di gioco il gruppo non li ha ancora trovati tutti (magari ha già visitato
  * quasi tutte le locazioni adatte), la missione ripiega: si procura una locazione adatta, la segna sulla mappa e lì
  * mette tutti quelli che mancano (vedi MissioneAPassi.getRipiego).
@@ -41,6 +45,7 @@ public final class OggettiDaRaccogliere {
 	private int massimoPerLocazione = 1;
 	private int oreAlRipiego = ORE_AL_RIPIEGO;
 	private Set<ClassePersonaggio> nemici = Collections.emptySet();
+	private CoordinateMD casella;
 
 	/**
 	 * Dopo quante ore di gioco senza averli trovati tutti la missione ripiega, se non si dice altrimenti: tre giorni.
@@ -71,6 +76,21 @@ public final class OggettiDaRaccogliere {
 	public OggettiDaRaccogliere daiNemici(ClassePersonaggio primo, ClassePersonaggio... altri) {
 		nemici = EnumSet.of(primo, altri);
 		return this;
+	}
+
+	/**
+	 * Stanno tutti in quella casella, e in nessun'altra.
+	 */
+	public OggettiDaRaccogliere nellaCasella(CoordinateMD casella) {
+		this.casella = Objects.requireNonNull(casella);
+		return this;
+	}
+
+	/**
+	 * La casella in cui stanno, o null se compaiono nelle locazioni di certe classi o ai nemici.
+	 */
+	public CoordinateMD getCasella() {
+		return casella;
 	}
 
 	/**

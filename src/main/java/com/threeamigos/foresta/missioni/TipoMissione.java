@@ -43,6 +43,7 @@ public enum TipoMissione {
      * Esempio: portare un amuleto sacro o una lettera sigillata da un punto A ad un punto B
      */
     TRASPORTO(SupertipoMissione.ACQUISIZIONE),
+    // Coperto da: LaLeggendaDiNyena, LaLeggendaDiMalgaard (la leggenda è l'indizio, le viverne il guardiano, il leggendario il tesoro)
     /**
      * Esempio: esplorare un dungeon alla ricerca di un tesoro
      */
@@ -379,9 +380,7 @@ public enum TipoMissione {
      * Esempio: scoprire segreto, rivelare mistero, smascheramento, investigare fantasmi, paranormale, entità spettrali
      */
     SCOPERTA_SEGRETO(SupertipoMissione.INVESTIGAZIONE),
-    // Non ancora coperto: va usato per oggetti rari o leggendari generati da una grammatica (artefatti2.txt estesa,
-    // o una simile), come "la Spada della Morte Volante con Rinterzo Laterale". Oggi LaLeggendaDiNyena e
-    // LaLeggendaDiMalgaard ci si avvicinano, ma con leggendari scritti a mano (vedi passi_missioni.md).
+    // Coperto da: LOggettoSmarrito (oggetti smarriti vicino a un posto; i leggendari hanno missioni a parte)
     /**
      * Esempio: cercare oggetto specifico, localizzazione oggetto, ricerca mirata, leggere storia di oggetti, psicometria
      */

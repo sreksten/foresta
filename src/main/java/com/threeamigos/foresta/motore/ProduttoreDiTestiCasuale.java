@@ -132,6 +132,14 @@ public class ProduttoreDiTestiCasuale {
 	}
 
 	/**
+	 * Un oggetto smarrito nella foresta, come riga di nove campi separati da ";" (vedi missioni.txt e
+	 * OggettoSmarrito).
+	 */
+	public static String oggettoSmarrito() {
+		return missioni.produce("OGGETTO_SMARRITO").get(0).trim();
+	}
+
+	/**
 	 * Il nome di un capobanda di goblin o hobgoblin, a volte con un soprannome: "Grumolo il Guercio" (vedi
 	 * missioni.txt).
 	 */

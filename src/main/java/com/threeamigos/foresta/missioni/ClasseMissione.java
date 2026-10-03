@@ -35,6 +35,7 @@ public enum ClasseMissione {
 	CACCIATORE_DI_TAGLIE(CacciatoreDiTaglie::new),
 	IL_CARTOGRAFO(IlCartografo::new),
 	IL_CORRIERE(IlCorriere::new),
+	L_OGGETTO_SMARRITO(LOggettoSmarrito::new),
 
 	MISSIONE_DI_PROVA_SECONDARIA_UNO(MissioneDiProvaSecondariaUno::new),
 	MISSIONE_DI_PROVA_SECONDARIA_DUE(MissioneDiProvaSecondariaDue::new),

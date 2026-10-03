@@ -26,12 +26,12 @@ tornare al punto di partenza, chiedere una conferma/scelta).
   standard di un gioco fantasy (andare a bere in tutte le locande:
   `CronacheDiUnFegatoEroico`, `NessunBoccaleLasciatoIndietro`; disturbare dieci
   eremiti: `DisturbatoreDellaQuietePubblica`), non si annotano.
-- **`RICERCA_OGGETTO` non è ancora coperto.** Va usato per oggetti rari o
-  leggendari generati da una grammatica: quella degli artefatti (`artefatti2.txt`)
-  estesa, o una simile, che sappia produrre nomi come "la Spada della Morte
-  Volante con Rinterzo Laterale". Le leggende dell'armaiolo (`LaLeggendaDiNyena`,
-  `LaLeggendaDiMalgaard`) ci si avvicinano, ma con leggendari scritti a mano: non
-  contano finché non c'è la grammatica. `RECUPERO` invece è coperto dal
+- **`RICERCA_OGGETTO` è coperto da `LOggettoSmarrito`**, per oggetti comuni e
+  ripetibili. La ricerca dei leggendari resta a sé: le leggende dell'armaiolo
+  (`LaLeggendaDiNyena`, `LaLeggendaDiMalgaard`) hanno leggendari scritti a mano, e
+  per renderle ripetibili servirebbe una grammatica (quella degli artefatti,
+  `artefatti2.txt`, estesa, o una simile) che sappia produrre nomi come "la Spada
+  della Morte Volante con Rinterzo Laterale". `RECUPERO` invece è coperto dal
   medaglione e dalle derrate, che si possono riusare per un oggetto generico
   qualsiasi.
 
@@ -679,3 +679,24 @@ GUARIGIONE (erbe e tinture), CURA_MAGICA (talismani, acqua sacra) ed EPIDEMIA
 (`RICHIESTA_LOCANDIERE`, `ScenaInCitta.conLocandiere()`): per le sue zuppe vuole
 pesci, rane, lumache e germani reali delle paludi (`LUOGHI PALUDE`, "si trovano
 nelle paludi"). Copre PESCA. Test: `ScenarioRichiesteDiMaterialiTest`.
+
+### L'oggetto smarrito (2026-10-03)
+
+`LOggettoSmarrito` è un incarico in città, ripetibile: qualcuno ha perso
+qualcosa nella foresta, vicino a un posto che si ricorda. Gli oggetti vengono da
+`OGGETTO_SMARRITO` in `missioni.txt`, letti da `OggettoSmarrito`. Ogni riga ha
+nove campi separati da ";": genere, oggetto senza articolo, chi l'ha perso, i
+posti possibili (fra TEMPIO, ROVINE, LOCANDA e GROTTA), monete, il racconto, la
+battuta del capo, la risposta e il ringraziamento.
+
+- Quando l'incarico si offre, la missione rivendica un posto di una di quelle
+  classi (`cercaOCostruisci`) e sceglie lì intorno, a non più di due passi (nord,
+  sud, est e ovest), la casella dell'oggetto. Va bene una radura, un bosco, una
+  palude, delle rovine, un tempio o una grotta; non una città, un castello o una
+  locanda, né una casella con un artefatto del registro o rivendicata da
+  un'altra missione. Alla partenza il posto compare sulla mappa, la casella no.
+- `OggettiDaRaccogliere.nellaCasella(coordinate)`: gli oggetti stanno tutti in
+  quella casella, anche se già visitata, e altrove mai; non hanno ripiego.
+- Trovato l'oggetto, si torna in città a riconsegnarlo e a riscuotere.
+
+Copre RICERCA_OGGETTO. Test: `ScenarioOggettoSmarritoTest`.

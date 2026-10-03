@@ -52,7 +52,8 @@ public class RegistroMissioni {
 		NON_SPARATE_SUL_PIANISTA(ClasseMissione.NON_SPARATE_SUL_PIANISTA),
 		CACCIATORE_DI_TAGLIE(ClasseMissione.CACCIATORE_DI_TAGLIE),
 		IL_CARTOGRAFO(ClasseMissione.IL_CARTOGRAFO),
-		IL_CORRIERE(ClasseMissione.IL_CORRIERE);
+		IL_CORRIERE(ClasseMissione.IL_CORRIERE),
+		L_OGGETTO_SMARRITO(ClasseMissione.L_OGGETTO_SMARRITO);
 
 		TipoMissionePredefinita(ClasseMissione classeMissione) {
 			this(classeMissione, false);
@@ -402,7 +403,10 @@ public class RegistroMissioni {
 		return liberi.isEmpty() ? null : liberi.get(0);
 	}
 
-	private static boolean isDisponibile(CoordinateMD coordinate, Missione richiedente) {
+	/**
+	 * Se la casella è libera per la missione: nessun'altra missione in corso l'ha rivendicata.
+	 */
+	public static boolean isDisponibile(CoordinateMD coordinate, Missione richiedente) {
 		String id = locazioniOccupate.get(coordinate);
 		if (id == null || id.equals(richiedente.getId())) {
 			return true;

@@ -362,6 +362,12 @@ public abstract class MissioneAPassi extends MissioneBase {
 		if (mancanti <= 0) {
 			return Optional.empty();
 		}
+		// Quelli in una casella sola ci sono tutti, anche se è già stata visitata
+		if (oggetti.getCasella() != null) {
+			return coordinate.equals(oggetti.getCasella())
+					? Optional.of(new OggettoMissione(getId(), oggetti.getChiave(), oggetti.getNome(), mancanti))
+					: Optional.empty();
+		}
 		// Nella locazione del ripiego ci sono tutti quelli che mancano, anche se è già stata visitata
 		if (coordinate.equals(getRipiego(oggetti)) && (oggetti.isTrofeo() || oggetti.getLocazioni().contains(classe))) {
 			return Optional.of(new OggettoMissione(getId(), oggetti.getChiave(), oggetti.getNome(), mancanti));
@@ -417,7 +423,8 @@ public abstract class MissioneAPassi extends MissioneBase {
 			return;
 		}
 		OggettiDaRaccogliere oggetti = costruisciPasso(getPassoCorrente()).getOggettiDaSeminare();
-		if (oggetti == null || getRipiego(oggetti) != null || getContatore(oggetti.getChiave()) >= oggetti.getQuantita()
+		if (oggetti == null || oggetti.getCasella() != null || getRipiego(oggetti) != null
+				|| getContatore(oggetti.getChiave()) >= oggetti.getQuantita()
 				|| oreDiGioco() - inizioDelPassoCorrente() < oggetti.getOreAlRipiego()) {
 			return;
 		}
