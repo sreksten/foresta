@@ -1018,3 +1018,25 @@ Copre LEALTA. Test: `ScenarioLealtaTest`.
 Correzione: la palude ignorava gli avversari e gli oggetti messi da una missione
 (il troll di un favore, gli ingredienti di una raccolta): ora, se ce ne sono, si va
 avanti come in ogni altra locazione.
+
+### Altri ventun tipi con la sola grammatica (2026-10-04)
+
+Solo righe nuove in `missioni.txt`, senza codice:
+
+- incarichi di combattimento: ASSEDIO_OFFENSIVO (la rocca dei briganti), CIRCONDAMENTO
+  (gli hobgoblin accerchiati), SICARIO (il rivale dell'alchimista);
+- sorveglianze, con i nemici all'ultima visita: DIFESA (le galline del fattore),
+  ASSEDIO_DIFESA (la torre assediata), TRINCEA (il guado da tenere), CONTENIMENTO (la
+  grotta murata);
+- soccorsi: EVACUAZIONE (il pastore della radura), ASILO (il copista in fuga);
+- riti: MALEDIZIONE (le zucche del vicino), NECROMANZIA (il testamento del nonno),
+  CONTROLLO_ELEMENTALE (la pioggia per il mulino, con i metodi), ANIMAZIONE_OGGETTI (lo
+  spaventapasseri vivo), ILLUSIONE (il drago che non c'è), LEGAME_SPIRITUALE (lo
+  spirito della bottega);
+- colpi: ESPLOSIONE (la diga dei goblin), FALSIFICAZIONE (il registro dei confini),
+  SACRILEGIO (l'idolo dei goblin);
+- contrabbando: CORRUZIONE (il sacchetto per il gabelliere), DIFFAMAZIONE (i fogli
+  satirici), OCCULTAMENTO (i gioielli di famiglia).
+
+I test che controllano i tipi di ogni produzione (`ogni...SiLegge`) li elencano.
+

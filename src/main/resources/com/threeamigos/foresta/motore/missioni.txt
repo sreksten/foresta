@@ -302,6 +302,9 @@ CONTRABBANDO
     M;libro di incantesimi proibiti;il bibliotecario;il mago di corte;CON_CALMA;24;Questo libro era nella sezione chiusa della biblioteca, e adesso non c'è più. Il mago di corte lo vuole leggere prima che qualcuno se ne accorga.;Che incantesimi ci sono dentro?;Non lo so. E non apritelo per scoprirlo, l'ultimo che l'ha aperto adesso è un rospo.;Eccolo! Grazie. E il rospo come sta?
     F;cassa di uova di viverna;il ricettatore;l'allevatore di bestie;URGENTE;26;Uova di viverna, vendute al mercato nero. Chi le compra le fa schiudere e vende i cuccioli ai signori. Sono calde, ancora per poco.;E se si schiudono per strada?;Allora correte. Molto. Le viverne appena nate hanno fame.;Ancora calde! I signori pagheranno il triplo. Non chiedete per cosa.
     M;sacco di monete sporche;il ricettatore;il cambiavalute;URGENTE;24;Queste monete vengono da un furto, e hanno ancora il marchio del proprietario. Il cambiavalute le fonde e me le ridà pulite. Più o meno pulite.;E se qualcuno riconosce il marchio?;Allora siete dei corrieri molto sfortunati. E io non vi ho mai visti.;Monete col marchio, eh? Tra un'ora saranno lingotti. E tra due, monete nuove di zecca.
+    M;sacchetto di monete;il mercante di grano;il gabelliere;CON_CALMA;22;Il gabelliere tassa il mio grano il doppio di quello degli altri. Questo sacchetto lo convincerà a tassarlo la metà. Ma nessuno deve vedere che glielo porto.;E se qualcuno lo vede?;Allora è un regalo di compleanno. Il gabelliere compie gli anni spesso.;Un regalo? Per me? Che gentile. Il grano del mercante, d'ora in poi, peserà la metà.
+    F;risma di fogli satirici;lo stampatore;il banditore;CON_CALMA;18;Ho stampato dei fogli sul borgomastro. Non sono veri, ma fanno ridere. Il banditore li leggerà in piazza, se arrivano senza che le guardie li vedano.;E se il borgomastro si arrabbia?;Si arrabbierà. È questo che fa ridere.;Questi sì che li leggo volentieri! Domani in piazza ci sarà la folla.
+    M;cofanetto di gioielli di famiglia;la nobildonna decaduta;la sua vecchia balia;URGENTE;20;Domani arrivano gli esattori a pignorare tutto. I gioielli di mia nonna, però, non li avranno: nascondeteli dalla mia vecchia balia.;E se gli esattori ci fermano?;Non vi fermeranno, se non vi vedono. Non fatevi vedere.;I gioielli della signorina! Li terrò sotto il pavimento della stalla, nessuno ci guarda mai.
 
 # ---------------------------------------------------------------------------------------------
 # Oggetti smarriti nella foresta (vedi LOggettoSmarrito e OggettoSmarrito)
@@ -526,6 +529,27 @@ INCARICO_DI_COMBATTIMENTO
     VITTORIA=Le guardie dell'usuraio scappano, e la carovana è vostra: martelli, pentole, fedi nuziali.;\
     RINGRAZIAMENTO=Il mio martello! E la fede di mia moglie. Il resto lo restituisco io a chi di dovere.;\
     RICORDO=In questo bosco qualcuno assaltò la carovana dell'usuraio.
+    CHIAVE=ROCCA_DEI_BRIGANTI;TIPO=ASSEDIO_OFFENSIVO;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=GUERRIERO;\
+    NUMERO=4;CAPO=SI;LUOGO=ROVINE;MONETE=50;TITOLO=L'assalto alla rocca;\
+    RICHIESTA=I briganti di %CAPO% si sono asserragliati in una vecchia rocca fra delle rovine. Da lì taglieggiano chiunque passi sulla strada. Prendetela d'assalto.;\
+    BATTUTA=Non vi servirebbe un esercito?;RISPOSTA=Mi servirebbe, sì. Ho voi.;\
+    VITTORIA=La rocca è presa: %CAPO% e i suoi briganti non taglieggeranno più nessuno.;\
+    RINGRAZIAMENTO=La strada è di nuovo libera. Sulla rocca ora sventola la nostra bandiera. Cioè, uno straccio, ma è nostro.;\
+    RICORDO=Fra queste rovine c'era la rocca dei briganti di %CAPO%, presa d'assalto.
+    CHIAVE=HOBGOBLIN_ACCERCHIATI;TIPO=CIRCONDAMENTO;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=HOBGOBLIN;\
+    NUMERO=3;LUOGO=RADURA;MONETE=40;TITOLO=La radura accerchiata;\
+    RICHIESTA=Tre hobgoblin si sono accampati in una radura, e da una radura si scappa da tutte le parti. Accerchiateli prima che si sparpaglino per la foresta.;\
+    BATTUTA=Accerchiarli? Siamo in pochi.;RISPOSTA=Allora fate in modo di sembrare in tanti. Gridate molto.;\
+    VITTORIA=Accerchiati, gli hobgoblin non hanno avuto via di scampo.;\
+    RINGRAZIAMENTO=Nessuno è scappato? Bene. Il trucco di gridare funziona sempre.;\
+    RICORDO=In questa radura furono accerchiati tre hobgoblin.
+    CHIAVE=IL_RIVALE_DELL_ALCHIMISTA;TIPO=SICARIO;ASPETTO=ALCHIMISTA;MANDANTE=l'alchimista;NEMICO=MAGO;NUMERO=1;CAPO=SI;\
+    LUOGO=GROTTA;MONETE=45;TITOLO=Il rivale dell'alchimista;\
+    RICHIESTA=Un mago di nome %CAPO% vende pozioni false dalla sua grotta, e con la mia faccia sull'etichetta. Pago bene perché smetta. Per sempre.;\
+    BATTUTA=Per sempre per sempre?;RISPOSTA=Non fate domande, e io non vi farò ricevute.;\
+    VITTORIA=%CAPO% non venderà più pozioni false. Né vere.;\
+    RINGRAZIAMENTO=Il mio buon nome è salvo. E noi non ci siamo mai visti, d'accordo?;\
+    RICORDO=In questa grotta %CAPO% vendeva pozioni false, finché qualcuno non fu pagato per fermarlo.
 
 # ---------------------------------------------------------------------------------------------
 # Sorveglianze (vedi LaSorveglianza e SorveglianzaRichiesta)
@@ -596,6 +620,42 @@ SORVEGLIANZA
     VITTORIA=%CAPO% scappa lasciando tutto. Sul tavolo c'è la ricetta che preparava: un tonico per far ricrescere i capelli.;\
     RINGRAZIAMENTO=Un tonico per i capelli? Tutto qui? Beh, me lo segno. Per un amico.;\
     RICORDO=Fra queste rovine c'era il laboratorio segreto di %CAPO%.
+    CHIAVE=GALLINE_DEL_FATTORE;TIPO=DIFESA;ASPETTO=QUALUNQUE;MANDANTE=il fattore;LUOGO=RADURA;VISITE=3;ORE=12;\
+    NEMICO=GOBLIN;NUMERO=4;CAPO=SI;MONETE=40;TITOLO=Le galline del fattore;\
+    RICHIESTA=La mia fattoria è in una radura, e i goblin di %CAPO% vengono a rubarmi le galline. Passate a fare la guardia, finché non si fanno vedere.;\
+    BATTUTA=E se non vengono?;RISPOSTA=Vengono, vengono. Le mie galline sono famose.;\
+    VEGLIA=Intorno alla fattoria tutto tace. Le galline vi guardano con sospetto.;\
+    SCOPERTA=Alla terza guardia arrivano i goblin di %CAPO%, con i sacchi per le galline.;\
+    VITTORIA=I goblin di %CAPO% sono sconfitti: le galline sono salve.;\
+    RINGRAZIAMENTO=Le galline hanno ricominciato a fare le uova. Per lo spavento, credo.;\
+    RICORDO=In questa radura c'è una fattoria che fu difesa dai goblin di %CAPO%.
+    CHIAVE=TORRE_ASSEDIATA;TIPO=ASSEDIO_DIFESA;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;LUOGO=ROVINE;VISITE=3;\
+    ORE=16;NEMICO=HOBGOBLIN;NUMERO=4;CAPO=SI;MONETE=50;TITOLO=La torre assediata;\
+    RICHIESTA=Una nostra pattuglia si è rifugiata in una torre fra delle rovine, e gli hobgoblin di %CAPO% la assediano. Portate rinforzi, e tornateci finché l'assedio non cede.;\
+    BATTUTA=Quanto possono resistere?;RISPOSTA=Hanno pane per una settimana e pazienza per un giorno. Sbrigatevi.;\
+    VEGLIA=Gli assediati vi salutano dalla torre. Gli hobgoblin, dalla boscaglia, vi tengono d'occhio.;\
+    SCOPERTA=Stanchi di aspettare, gli hobgoblin di %CAPO% tentano l'assalto alla torre.;\
+    VITTORIA=L'assalto è respinto: %CAPO% e i suoi hobgoblin non assedieranno più nessuno.;\
+    RINGRAZIAMENTO=La pattuglia è tornata. Affamata, ma intera. Il pane è finito il secondo giorno, la pazienza il primo.;\
+    RICORDO=Fra queste rovine c'è una torre che resistette all'assedio degli hobgoblin di %CAPO%.
+    CHIAVE=GUADO_DA_TENERE;TIPO=TRINCEA;ASPETTO=QUALUNQUE;MANDANTE=il traghettatore;LUOGO=PALUDE;VISITE=2;ORE=20;\
+    NEMICO=TROLL;NUMERO=2;MONETE=45;TITOLO=Il guado da tenere;\
+    RICHIESTA=C'è un guado nella palude, l'unico per chilometri. Due troll vogliono prenderselo per farci pagare il pedaggio. Scavate un fosso e tenete la posizione.;\
+    BATTUTA=Un fosso? In una palude?;RISPOSTA=In una palude i fossi si scavano da soli. Basta aspettare.;\
+    VEGLIA=Il fosso si riempie d'acqua, ma tiene. Dei troll, per ora, nessuna traccia.;\
+    SCOPERTA=I due troll arrivano al guado, e trovano il fosso. E voi dietro.;\
+    VITTORIA=I troll sono sconfitti: il guado resta di tutti.;\
+    RINGRAZIAMENTO=Il guado è libero, e il pedaggio lo chiedo io. Scherzo! Per voi è gratis.;\
+    RICORDO=In questa palude c'è un guado che fu tenuto contro due troll.
+    CHIAVE=GROTTA_MURATA;TIPO=CONTENIMENTO;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;LUOGO=GROTTA;VISITE=3;ORE=12;\
+    NEMICO=SCHELETRO;NUMERO=3;MONETE=40;TITOLO=La grotta murata;\
+    RICHIESTA=Tanto tempo fa abbiamo murato una grotta piena di scheletri. Ora il muro scricchiola. Andate a controllarlo, più volte, e se cede fermate chi esce.;\
+    BATTUTA=Non si potrebbe rifare il muro?;RISPOSTA=Il muratore è dentro. È uno degli scheletri.;\
+    VEGLIA=Il muro scricchiola, ma regge. Da dietro arriva un rumore di ossa annoiate.;\
+    SCOPERTA=Il muro cede, e tre scheletri escono dalla grotta.;\
+    VITTORIA=Gli scheletri tornano a essere ossa, e le ossa tornano dietro il muro.;\
+    RINGRAZIAMENTO=Il muro è stato rifatto. Da un muratore vivo, questa volta.;\
+    RICORDO=In questa grotta, dietro un muro, riposano degli scheletri che non vogliono riposare.
 
 # ---------------------------------------------------------------------------------------------
 # Soccorsi (vedi IlSoccorso e SoccorsoRichiesto)
@@ -661,6 +721,22 @@ SOCCORSO
     RINGRAZIAMENTO=%NOME% è vivo, e il messaggio è arrivato. Due buone notizie in una volta sola.;\
     LUTTO=Era il messaggero più veloce che avessi. Il messaggio, almeno, è arrivato.;\
     RICORDO=In questa palude un messaggero ferito fu salvato dai goblin.
+    CHIAVE=PASTORE_E_GOBLIN;TIPO=EVACUAZIONE;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;PERSONA=il pastore;\
+    NEMICO=GOBLIN;NUMERO=4;CAPO=SI;LUOGO=RADURA;MONETE=35;TITOLO=Il pastore della radura;\
+    RICHIESTA=I goblin di %CAPO% hanno invaso la radura dove %NOME% pascola il gregge, e lui non vuole andarsene senza le sue pecore. Portatelo via di lì, con le buone o con le cattive.;\
+    BATTUTA=E le pecore?;RISPOSTA=Le pecore se la cavano. Sono i goblin che hanno paura delle pecore.;\
+    SOCCORSO=%NOME% vi segue brontolando, e contando le pecore che lo seguono a loro volta.;\
+    RINGRAZIAMENTO=%NOME% è in salvo, e anche le pecore. Tutte e trentadue. Le ha contate tre volte.;\
+    LUTTO=Non voleva lasciare le sue pecore. Adesso le pecore sono rimaste sole.;\
+    RICORDO=In questa radura i goblin di %CAPO% invasero il pascolo di un pastore.
+    CHIAVE=COPISTA_IN_FUGA;TIPO=ASILO;ASPETTO=LOCANDIERE;MANDANTE=il locandiere;PERSONA=il copista;NEMICO=GUERRIERO;\
+    NUMERO=3;CAPO=SI;LUOGO=ROVINE;MONETE=40;TITOLO=Il copista in fuga;\
+    RICHIESTA=Il copista %NOME% ha messo per iscritto le malefatte di un signorotto, e ora i suoi sgherri, guidati da %CAPO%, gli danno la caccia. Si nasconde fra delle rovine. Portatelo qui: in città avrà asilo.;\
+    BATTUTA=Perché proprio qui?;RISPOSTA=Perché in città il signorotto non comanda. E perché il copista mi deve tre birre.;\
+    SOCCORSO=%NOME% esce da dietro una colonna, con le pergamene strette al petto.;\
+    RINGRAZIAMENTO=%NOME% è al sicuro, e il borgomastro gli ha concesso asilo. Le tre birre me le paga domani.;\
+    LUTTO=Povero %NOME%. Le sue pergamene, almeno, le faremo leggere a tutti.;\
+    RICORDO=Fra queste rovine si nascose un copista inseguito dagli sgherri di %CAPO%.
 
 # ---------------------------------------------------------------------------------------------
 # Indagini (vedi LIndagine e IndagineRichiesta)
@@ -1059,6 +1135,64 @@ RITUALE
     RITO=Il fumo della ruta cancella il cerchio di carbone, e in lontananza, sopra la città, l'ultima rana cade con un plof. L'incantesimo è sciolto.;\
     RINGRAZIAMENTO=Niente più rane! Il pane di oggi è senza zampe. Ve ne do una pagnotta, controllata.;\
     RICORDO=Fra queste rovine fu sciolto l'incantesimo della pioggia di rane.
+    CHIAVE=ZUCCHE_DEL_VICINO;TIPO=MALEDIZIONE;ASPETTO=QUALUNQUE;MANDANTE=la contadina;LUOGO=RADURA;\
+    GENERE=F;INGREDIENTE=bacca di belladonna;INGREDIENTI=bacche di belladonna;DOVE=LUOGHI BOSCO;QUANTITA=3;\
+    DOMANDA=Le zucche del vicino crescono tranquille nella radura. Spargete le bacche e lanciate la maledizione?;\
+    MONETE=25;TITOLO=Le zucche del vicino;\
+    RICHIESTA=Il mio vicino ha spostato di notte il confine del campo, di tre passi. Voglio maledire le zucche che coltiva in una radura. Solo le zucche, non sono mica cattiva.;\
+    BATTUTA=Non sarebbe meglio parlargli?;RISPOSTA=Gli ho parlato. Ha spostato il confine di altri due passi.;\
+    RITO=Le bacche anneriscono nell'erba. Da domani le zucche del vicino cresceranno a forma di pera.;\
+    RINGRAZIAMENTO=Zucche a forma di pera! Al mercato nessuno le vuole. E stamattina il confine era tornato al suo posto.;\
+    RICORDO=In questa radura le zucche crescono a forma di pera, per una vecchia maledizione.
+    CHIAVE=TESTAMENTO_DEL_NONNO;TIPO=NECROMANZIA;ASPETTO=QUALUNQUE;MANDANTE=il nipote del mercante;LUOGO=ROVINE;\
+    GENERE=M;INGREDIENTE=fungo lunare;INGREDIENTI=funghi lunari;DOVE=LUOGHI BOSCO GROTTA;QUANTITA=3;\
+    DOMANDA=Fra le rovine c'è la tomba del nonno. Bruciate i funghi lunari e lo risvegliate?;\
+    NEMICO=SCHELETRO;NUMERO=2;MONETE=35;TITOLO=Il testamento del nonno;\
+    RICHIESTA=Mio nonno è morto senza dire dove ha nascosto il testamento. Dicono che con il fumo dei funghi lunari si possa svegliare un morto, per il tempo di una domanda.;\
+    BATTUTA=E se si sveglia di cattivo umore?;RISPOSTA=Era di cattivo umore anche da vivo. Non noteremo la differenza.;\
+    RITO=Il fumo dei funghi lunari sale fra le rovine. Il nonno si sveglia, borbotta "sotto il materasso", e con lui si svegliano anche due scheletri delle tombe vicine.;\
+    VITTORIA=Gli scheletri tornano a dormire. Il nonno, invece, si era già riaddormentato da solo.;\
+    RINGRAZIAMENTO=Sotto il materasso! Ci dormivo sopra da un anno.;\
+    RICORDO=Fra queste rovine un vecchio mercante fu svegliato per il tempo di una domanda.
+    CHIAVE=PIOGGIA_PER_IL_MULINO;TIPO=CONTROLLO_ELEMENTALE;ASPETTO=QUALUNQUE;MANDANTE=il mugnaio;LUOGO=RADURA;\
+    GENERE=F;INGREDIENTE=piuma di arpia;INGREDIENTI=piume di arpia;DOVE=NEMICI ARPIA;QUANTITA=3;\
+    DOMANDA=Il cielo sopra la radura è limpido e secco. Come agitate le piume di arpia?;\
+    METODI=Verso il sole/Verso le nuvole lontane/Piantate nella terra;METODO=2;\
+    ERRORE=Le piume si agitano invano, e il cielo resta secco come prima. Il rito è fallito.;\
+    MONETE=35;TITOLO=La pioggia per il mulino;\
+    RICHIESTA=Non piove da due mesi, e il fiume del mulino è un rigagnolo. Le arpie si portano dietro il temporale: con le loro piume, agitate verso le nuvole lontane, la pioggia si può chiamare.;\
+    BATTUTA=Verso le nuvole, non verso il sole?;RISPOSTA=Verso il sole viene solo il mal di testa. Le nuvole, ricordatevelo.;\
+    RITO=Le nuvole lontane si avvicinano, si gonfiano, e sulla radura comincia a piovere. Poi piove dappertutto.;\
+    RINGRAZIAMENTO=La ruota del mulino gira di nuovo! Ho le scarpe bagnate, ma non mi lamento.;\
+    RICORDO=In questa radura qualcuno chiamò la pioggia con le piume di arpia.
+    CHIAVE=SPAVENTAPASSERI_VIVO;TIPO=ANIMAZIONE_OGGETTI;ASPETTO=ALCHIMISTA;MANDANTE=l'alchimista;LUOGO=RADURA;\
+    GENERE=F;INGREDIENTE=polvere di folletto;INGREDIENTI=polveri di folletto;DOVE=NEMICI FOLLETTO;QUANTITA=3;\
+    DOMANDA=Lo spaventapasseri vi guarda dal suo palo, in mezzo alla radura. Gli soffiate addosso la polvere di folletto?;\
+    MONETE=35;TITOLO=Lo spaventapasseri vivo;\
+    RICHIESTA=Ho uno spaventapasseri in una radura, ma i corvi ormai ci si siedono sopra. Con la polvere di folletto prenderà vita, e allora vedremo chi ride.;\
+    BATTUTA=E se poi se ne va?;RISPOSTA=Dove volete che vada? Ha un palo al posto delle gambe.;\
+    RITO=Lo spaventapasseri sbatte gli occhi di bottone, agita le braccia di paglia, e i corvi scappano gracchiando. Poi vi saluta.;\
+    RINGRAZIAMENTO=Non c'è più un corvo in tutta la valle. Lo spaventapasseri, però, adesso vuole essere pagato.;\
+    RICORDO=In questa radura c'è uno spaventapasseri che saluta chi passa.
+    CHIAVE=DRAGO_CHE_NON_C_E;TIPO=ILLUSIONE;ASPETTO=QUALUNQUE;MANDANTE=il borgomastro;LUOGO=BOSCO;\
+    GENERE=M;INGREDIENTE=fiore di aconito;INGREDIENTI=fiori di aconito;DOVE=LUOGHI RADURA;QUANTITA=4;\
+    DOMANDA=È il bosco dove si nascondono i briganti. Bruciate l'aconito ed evocate l'illusione?;\
+    NEMICO=GUERRIERO;NUMERO=2;MONETE=40;TITOLO=Il drago che non c'è;\
+    RICHIESTA=I briganti hanno paura di una cosa sola: il Drago. Con il fumo dell'aconito si può far apparire un drago finto, nel bosco dove si nascondono. Uno grosso.;\
+    BATTUTA=E se si accorgono che è finto?;RISPOSTA=Chi si ferma a controllare se un drago è finto?;\
+    RITO=Dal fumo dell'aconito si alza un drago enorme, che ruggisce senza fare rumore. I briganti scappano tutti, tranne due che si fermano a controllare.;\
+    VITTORIA=I due briganti che non ci sono cascati non ci cascheranno più.;\
+    RINGRAZIAMENTO=I briganti hanno cambiato bosco: dicono che in questo c'è un drago. Noi non smentiamo.;\
+    RICORDO=In questo bosco, si dice, c'è un drago. Non c'è.
+    CHIAVE=SPIRITO_DELLA_BOTTEGA;TIPO=LEGAME_SPIRITUALE;ASPETTO=QUALUNQUE;MANDANTE=la vedova del mercante;LUOGO=TEMPIO;\
+    GENERE=M;INGREDIENTE=lamento di fantasma;INGREDIENTI=lamenti di fantasma;DOVE=NEMICI FANTASMA;QUANTITA=2;\
+    DOMANDA=Davanti all'altare del tempio, aprite le boccette. Legate i lamenti allo spirito del mercante?;\
+    MONETE=40;TITOLO=Lo spirito di guardia;\
+    RICHIESTA=Mio marito è morto, ma il suo spirito vaga ancora per casa. Già che c'è, vorrei legarlo alla bottega come guardiano: di notte i ladri non entrerebbero più.;\
+    BATTUTA=E lui è d'accordo?;RISPOSTA=Da vivo non è mai stato d'accordo su niente. Non cominciamo adesso a chiederglielo.;\
+    RITO=I lamenti escono dalle boccette e si intrecciano attorno all'altare. Lontano, nella bottega della vedova, una porta sbatte da sola.;\
+    RINGRAZIAMENTO=Stanotte un ladro è entrato in bottega ed è uscito dalla finestra, urlando. Mio marito non è mai stato così utile.;\
+    RICORDO=In questo tempio uno spirito fu legato per sempre alla sua bottega.
 
 # ---------------------------------------------------------------------------------------------
 # Benedizioni (vedi LaBenedizione, IlFavore e BenedizioneRichiesta)
@@ -1324,3 +1458,27 @@ COLPO
     SCOPERTI=%CAPO% vi ha visti, e la botte si è rovesciata nella zuffa. Il colpo è fallito.;\
     RINGRAZIAMENTO=I troll russano da tre giorni, e la selvaggina è già tornata. Stasera cervo arrosto, ve lo assicuro.;\
     RICORDO=In questa grotta i troll di %CAPO% dormirono una settimana intera.
+    CHIAVE=DIGA_DEI_GOBLIN;TIPO=ESPLOSIONE;ASPETTO=ARMAIOLO;MANDANTE=l'armaiolo;LUOGO=PALUDE;NEMICO=GOBLIN;NUMERO=4;\
+    CAPO=SI;MONETE=45;TITOLO=La diga dei goblin;\
+    RICHIESTA=I goblin di %CAPO% hanno costruito una diga nella palude, e il ruscello non arriva più alla mia forgia. Ecco un barilotto di polvere nera: accendetelo sotto la diga, e allontanatevi in fretta.;\
+    BATTUTA=Quanto in fretta?;RISPOSTA=Più in fretta di così.;\
+    COLPO=Il barilotto scivola sotto la diga, la miccia sfrigola, e un attimo dopo la diga vola in pezzi. I goblin di %CAPO% si svegliano bagnati.;\
+    SCOPERTI=I goblin di %CAPO% vi hanno visti con il barilotto: adesso la diga è sorvegliata, e la polvere è bagnata. Il colpo è fallito.;\
+    RINGRAZIAMENTO=L'acqua è tornata! La forgia fuma di nuovo. E anche le mie sopracciglia, per l'entusiasmo.;\
+    RICORDO=In questa palude c'era la diga dei goblin di %CAPO%, finché non saltò in aria.
+    CHIAVE=REGISTRO_DEI_CONFINI;TIPO=FALSIFICAZIONE;ASPETTO=QUALUNQUE;MANDANTE=il contadino;LUOGO=ROVINE;NEMICO=HOBGOBLIN;\
+    NUMERO=3;MONETE=40;TITOLO=Il registro dei confini;\
+    RICHIESTA=Il barone tiene il registro dei confini in una torre fra delle rovine, con degli hobgoblin di guardia. Ha falsificato la pagina del mio campo. Ecco la mia copia, falsificata meglio: sostituitela.;\
+    BATTUTA=Falsificata meglio?;RISPOSTA=Falsificata giusta. È diverso.;\
+    COLPO=La pagina del barone esce dal registro, quella del contadino ci entra. Nessuno noterà la differenza, tranne il barone, che non potrà dire niente.;\
+    SCOPERTI=Gli hobgoblin vi hanno scoperti: il barone ora sa che qualcuno vuole il suo registro. Il colpo è fallito.;\
+    RINGRAZIAMENTO=Il campo è di nuovo mio, nero su bianco. Il barone è furioso, ma non può dire perché.;\
+    RICORDO=Fra queste rovine il barone teneva il registro dei confini, finché una pagina non cambiò.
+    CHIAVE=IDOLO_DEI_GOBLIN;TIPO=SACRILEGIO;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;LUOGO=GROTTA;NEMICO=GOBLIN;NUMERO=5;\
+    CAPO=SI;MONETE=40;TITOLO=L'idolo dei goblin;\
+    RICHIESTA=In una grotta i goblin di %CAPO% adorano un idolo, e prima di ogni razzia gli sacrificano qualcosa. Galline, per ora. Profanatelo, di nascosto: senza il suo favore non oseranno uscire.;\
+    BATTUTA=Profanare un idolo? Non porta sfortuna?;RISPOSTA=Ai goblin sì. È proprio questo il punto.;\
+    COLPO=Mentre i goblin di %CAPO% dormono, dipingete dei baffi all'idolo e gli mettete in testa un secchio. Al risveglio, nessun goblin oserà guardarlo.;\
+    SCOPERTI=I goblin di %CAPO% vi hanno sorpresi davanti all'idolo: adesso lo sorvegliano giorno e notte. Il colpo è fallito.;\
+    RINGRAZIAMENTO=I goblin non escono più dalla grotta: credono che il loro dio sia offeso. Lo sarei anch'io, con quei baffi.;\
+    RICORDO=In questa grotta c'era un idolo dei goblin, con i baffi e un secchio in testa.

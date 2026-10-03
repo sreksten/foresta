@@ -30,7 +30,8 @@ class ScenarioColpoTest {
             tipi.add(ColpoRichiesto.da(ProduttoreDiTestiCasuale.rigaDiMissioni("COLPO")).getTipo());
         }
         assertEquals(EnumSet.of(TipoMissione.FURTO, TipoMissione.SABOTAGGIO, TipoMissione.VANDALISMO, TipoMissione.INCENDIO,
-                TipoMissione.VIOLAZIONE_DOMICILIO, TipoMissione.AVVELENAMENTO), tipi);
+                TipoMissione.VIOLAZIONE_DOMICILIO, TipoMissione.AVVELENAMENTO, TipoMissione.ESPLOSIONE, TipoMissione.FALSIFICAZIONE,
+                TipoMissione.SACRILEGIO), tipi);
         assertThrows(IllegalArgumentException.class, () -> ColpoRichiesto.da(LIBRO.replace("SCOPERTI=Vi hanno visti.;", "")));
     }
 

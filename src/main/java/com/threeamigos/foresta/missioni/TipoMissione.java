@@ -168,6 +168,7 @@ public enum TipoMissione {
      * Esempio: attacco diretto, cavalry charge, assalto frontale
      */
     CARICA(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: IncaricoDiCombattimento (gli hobgoblin accerchiati)
     /**
      * Esempio: circondare nemici, accerchiamento tattico, movimento a pinza
      */
@@ -182,6 +183,7 @@ public enum TipoMissione {
      * Esempio: combattimento minore, scaramucce, scontri limitati
      */
     SCHERMAGLIA(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: LaSorveglianza (la torre assediata)
     /**
      * Esempio: difendere durante assedio, resistenza assediata
      */
@@ -201,6 +203,7 @@ public enum TipoMissione {
     //  * Esempio: attacco di cavalleria, carica montata, charges
     //  */
     // CAVALLERIA(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: LaSorveglianza (il guado da tenere)
     /**
      * Esempio: guerra di trincea, bunker, difesa statica
      */
@@ -210,6 +213,7 @@ public enum TipoMissione {
      * Esempio: battaglia su ponte strategico, controllo passaggio, ponte conteso
      */
     PONTE_TATTICO(SupertipoMissione.COMBATTIMENTO),
+    // Coperto da: IncaricoDiCombattimento (la rocca dei briganti)
     /**
      * Esempio: assedio offensivo, assalto a fortezza, conquista della rocca
      */
@@ -257,6 +261,7 @@ public enum TipoMissione {
      * Esempio: proteggere un mercante che attraversa un passo di montagna
      */
     SCORTA(SupertipoMissione.PROTEZIONE),
+    // Coperto da: LaSorveglianza (le galline del fattore)
     /**
      * Esempio: difendere un villaggio dagli attacchi di goblin o da un drago
      */
@@ -271,6 +276,7 @@ public enum TipoMissione {
      * Esempio: salvare qualcuno intrappolato in una caverna, estrarre feriti da un'area pericolosa
      */
     SOCCORSO(SupertipoMissione.PROTEZIONE),
+    // Coperto da: IlSoccorso (il pastore della radura)
     /**
      * Esempio: evacuare civili da una zona di guerra, portare in sicurezza rifugiati
      */
@@ -318,6 +324,7 @@ public enum TipoMissione {
      * Esempio: creare santuario, luogo sacro, area protetta consacrata
      */
     SANTUARIO(SupertipoMissione.PROTEZIONE),
+    // Coperto da: LaSorveglianza (la grotta murata)
     /**
      * Esempio: contenere minaccia, limitazione, isolamento pericolo
      */
@@ -327,6 +334,7 @@ public enum TipoMissione {
      * Esempio: stare di guardia, sorveglianza notturna, vigilanza
      */
     VIGILIA(SupertipoMissione.PROTEZIONE),
+    // Coperto da: IlContrabbandiere (i gioielli di famiglia)
     /**
      * Esempio: nascondere, mascheramento, cela, nascondiglio
      */
@@ -336,6 +344,7 @@ public enum TipoMissione {
      * Esempio: protezione temporanea, scudo temporale, difesa limitata
      */
     PROTEZIONE_TEMPORALE(SupertipoMissione.PROTEZIONE),
+    // Coperto da: IlSoccorso (il copista in fuga)
     /**
      * Esempio: fornire asilo politico, rifugio da persecuzione, protezione rifugiati
      */
@@ -589,6 +598,7 @@ public enum TipoMissione {
      * Esempio: sabotare i rifornimenti di un nemico o sabotare le difese di una fortezza
      */
     SABOTAGGIO(SupertipoMissione.ILLECITO),
+    // Coperto da: IlColpo (la diga dei goblin)
     /**
      * Esempio: sabotaggio con esplosivi, demolizione, esplosione tattica
      */
@@ -615,10 +625,12 @@ public enum TipoMissione {
      * Esempio: tradire una fazione, passare ai nemici, rivegliarsi come spia
      */
     TRADIMENTO(SupertipoMissione.ILLECITO),
+    // Coperto da: IlContrabbandiere (il sacchetto per il gabelliere)
     /**
      * Esempio: corrompere un ufficiale, offrire tangenti, bribery
      */
     CORRUZIONE(SupertipoMissione.ILLECITO),
+    // Coperto da: IlColpo (il registro dei confini)
     /**
      * Esempio: falsificare documenti, coniare monete false, creare oggetti contraffatti, falsificare firma, dipinto falso, sigillo ufficiale
      */
@@ -646,6 +658,7 @@ public enum TipoMissione {
      * Esempio: frode finanziaria, schema fraudolento, imbroglio, matrimonio fraudolento
      */
     FRODE(SupertipoMissione.ILLECITO),
+    // Coperto da: IlContrabbandiere (i fogli satirici sul borgomastro)
     /**
      * Esempio: diffamare qualcuno, spargere voci calunniose, danneggiare reputazione
      */
@@ -663,6 +676,7 @@ public enum TipoMissione {
      * Esempio: incendiare, fuoco appiccato, piromane, incendio intenzionale, fuoco premeditato, fuoco criminale
      */
     INCENDIO(SupertipoMissione.ILLECITO),
+    // Coperto da: IncaricoDiCombattimento (il rivale dell'alchimista)
     /**
      * Esempio: assassinare per denaro, omicidio su commissione, killer
      */
@@ -677,6 +691,7 @@ public enum TipoMissione {
      * Esempio: irruzione, invasione casa, violazione proprietà privata, imprigionamento illegale, sequestro
      */
     VIOLAZIONE_DOMICILIO(SupertipoMissione.ILLECITO),
+    // Coperto da: IlColpo (l'idolo dei goblin)
     /**
      * Esempio: profanare luogo sacro, offesa religiosa, sacrilegio, bestemmia, profanazione religiosa
      */
@@ -757,6 +772,7 @@ public enum TipoMissione {
      * Esempio: eseguire un rituale di evocazione per contattare uno spirito o sigillare un portale
      */
     RITUALE(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (il testamento del nonno)
     /**
      * Esempio: animare i non-morti, controllare scheletri, risvegliare cadaveri
      */
@@ -766,6 +782,7 @@ public enum TipoMissione {
      * Esempio: evocare creature, convocare entità soprannaturali, richiamare spiriti
      */
     EVOCAZIONE(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (le zucche del vicino)
     /**
      * Esempio: lanciare maledizioni, infliggere curse, danneggiare tramite magia nera
      */
@@ -794,6 +811,7 @@ public enum TipoMissione {
      * Esempio: leggere il futuro, predizioni magiche, visioni
      */
     DIVINAZIONE(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (il drago che non c'è)
     /**
      * Esempio: creare illusioni magiche, inganno illusorio, miraggio
      */
@@ -819,10 +837,12 @@ public enum TipoMissione {
      * Esempio: trasformarsi in bestia, mutazione, cambio forma
      */
     SHAPE_SHIFT(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (la pioggia per il mulino)
     /**
      * Esempio: controllare elementi, dominio elementale, magia elementare
      */
     CONTROLLO_ELEMENTALE(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (lo spirito della bottega)
     /**
      * Esempio: legare spiriti, connessione soprannaturale, legame spirituale
      */
@@ -883,6 +903,7 @@ public enum TipoMissione {
      * Esempio: morte temporale, ibernazione magica, sonno eterno
      */
     MORTE_TEMPORALE(SupertipoMissione.SPIRITUALE),
+    // Coperto da: IlRituale (lo spaventapasseri vivo)
     /**
      * Esempio: animazione di oggetti inanimati, enchantment animato, vita artificiale
      */
