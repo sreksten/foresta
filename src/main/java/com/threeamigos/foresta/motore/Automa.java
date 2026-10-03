@@ -1,11 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioGruppo;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaTrofei;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoDiGioco;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoInvioTesto;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoVisualizzazioneMappa;
+import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
@@ -61,11 +57,8 @@ import java.util.function.Supplier;
 //  servono personaggi/Viandante.gif e icone/Viandante-nobordo-piccolo.gif (ClassePersonaggioImmagine).
 // TODO: img/oggetti/Maschera.gif e img/fondi/Separatore-Maschere.gif sono copie di Elmo.gif e di Separatore-Elmi.gif,
 //  da ridisegnare con una maschera.
-// TODO: img/fondi/Luna.gif (la luna normale) e img/fondi/LunaSW.gif (la stazione da battaglia), negli intermezzi
-//  dell'accampamento, sono copie di LunaHHGTTG.gif, da ridisegnare.
 // TODO: img/fondi/SfondoStoria.gif, lo sfondo della storia che scorre nell'intro, è una copia di OmbraDelDrago.gif: va
 //  sostituito con uno sfondo generato, una foresta con templi e locande.
-// TODO: img/icone/Trofei.gif, l'icona del comando MOSTRA_TROFEI nell'inventario, è una copia di Aiuto.gif, da ridisegnare.
 // TODO: img/oggetti/OggettoMissione.gif è un sacchetto provvisorio, da ridisegnare: lo usano tutti gli oggetti delle
 //  missioni (i materiali delle richieste: erbe, minerali, pesci, trofei; l'oggetto smarrito). In futuro magari
 //  un'immagine per ogni oggetto.

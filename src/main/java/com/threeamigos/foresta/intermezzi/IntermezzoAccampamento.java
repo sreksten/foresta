@@ -58,13 +58,13 @@ public class IntermezzoAccampamento implements Intermezzo {
 	private static final String[][] SCENE = {
 			{"fondi/Luna.gif",
 					"Una volta ho sentito di uno che si è svegliato trasformato in uno scarafaggio. O forse era un asino d'oro.",
-					"Passi troppo tempo ad ascoltare le storie nelle locande."},
-			{"fondi/LunaSW.gif",
+					"Tu presti troppa attenzione a quelle assurde storie nelle locande."},
+			{"fondi/Mimas.gif", // Una luna di Saturno
 					"Hai visto che luna stasera?",
 					"Quella non è una luna... è una stazione da battaglia!",
-					"Passi troppo tempo ad ascoltare le storie nelle locande."},
+					"Tu passi troppo tempo ad ascoltare le storie nelle locande."},
 			{"fondi/LunaHHGTTG.gif",
-					"Che luna strana stasera.",
+					"Che luna strana stasera...",
 					"Non fatevi prendere dal panico."}
 	};
 
