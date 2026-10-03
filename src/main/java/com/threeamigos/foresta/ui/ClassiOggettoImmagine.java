@@ -19,6 +19,8 @@ public enum ClassiOggettoImmagine {
     SPADA(ClassiOggetto.SPADA, "oggetti/Spada.gif"),
     SPADONE(ClassiOggetto.SPADONE, "oggetti/Spadone.gif"),
     ELMO(ClassiOggetto.ELMO, "oggetti/Elmo.gif"),
+    // Per ora una copia dell'elmo, da ridisegnare
+    MASCHERA(ClassiOggetto.MASCHERA, "oggetti/Maschera.gif"),
     ARMATURA(ClassiOggetto.ARMATURA, "oggetti/Armatura.gif"),
     SCHINIERI(ClassiOggetto.SCHINIERI, "oggetti/Schinieri.gif"),
     // Per ora un sacchetto generico per tutti gli oggetti delle missioni

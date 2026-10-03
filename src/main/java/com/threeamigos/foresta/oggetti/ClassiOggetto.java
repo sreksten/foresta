@@ -40,6 +40,10 @@ public enum ClassiOggetto {
 			.setQuantitaMassima(1)
 			.setValore(100)
 			),
+	MASCHERA(Maschera::new, builder()
+			.setQuantitaMassima(1)
+			.setValore(100)
+			),
 	ARMATURA(Armatura::new, builder()
 			.setQuantitaMassima(1)
 			.setValore(100)

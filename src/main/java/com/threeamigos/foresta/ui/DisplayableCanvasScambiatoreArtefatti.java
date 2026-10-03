@@ -10,6 +10,7 @@ import com.threeamigos.foresta.motore.AutomaScambiatoreArtefatti;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.tipi.SupertipoArtefatto;
+import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Incantamento;
 
@@ -181,19 +182,19 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
 
         Collection<Artefatto> artefattiDaDisegnare = ordinaArtefattiDaDisegnare(artefatti);
 
-        SupertipoArtefatto supertipoPrecedente = null;
+        Image separatorePrecedente = null;
 
         for (Artefatto artefatto : artefattiDaDisegnare) {
 
-            if (supertipoPrecedente != artefatto.getTipo().getSupertipo()) {
-                supertipoPrecedente = artefatto.getTipo().getSupertipo();
-                Image immagineSupertipo = getImmagineSupertipo(supertipoPrecedente);
-                if (immagineSupertipo != null) {
+            Image immagineSeparatore = getImmagineSeparatore(artefatto.getTipo());
+            if (immagineSeparatore != separatorePrecedente) {
+                separatorePrecedente = immagineSeparatore;
+                if (immagineSeparatore != null) {
                     componenteScorrevole.creaNodo(
                             null, null, null,
                             null, null, null,
                             null, null, null,
-                            immagineSupertipo, null);
+                            immagineSeparatore, null);
                 }
             }
 
@@ -360,10 +361,18 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
     }
 
     /**
-     * L'immagine che separa nell'elenco un supertipo dal precedente, oppure null se il
-     * supertipo non ne ha una (es. ELMO, INCANTAMENTO): in quel caso il separatore si omette.
+     * L'immagine che separa nell'elenco un gruppo di artefatti dal precedente: quella del supertipo, tranne per le
+     * maschere, che sono armature ma hanno il loro separatore (e stanno in fondo alle armature, vedi
+     * ordinaArtefattiDaDisegnare).
      */
-    protected Image getImmagineSupertipo(SupertipoArtefatto supertipo) {
+    private static Image getImmagineSeparatore(TipoArtefatto tipo) {
+        return tipo == TipoArtefatto.MASCHERA ? ImageCache.separatoreMaschere : getImmagineSupertipo(tipo.getSupertipo());
+    }
+
+    /**
+     * L'immagine che separa nell'elenco un supertipo dal precedente.
+     */
+    private static Image getImmagineSupertipo(SupertipoArtefatto supertipo) {
         switch (supertipo) {
             case ARMA:
                 return ImageCache.separatoreArmi;

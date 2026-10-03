@@ -333,6 +333,8 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 				return ClassiOggettoImmagine.getImmagine(ClassiOggetto.SCUDO);
 			case ELMO:
 				return ClassiOggettoImmagine.getImmagine(ClassiOggetto.ELMO);
+			case MASCHERA:
+				return ClassiOggettoImmagine.getImmagine(ClassiOggetto.MASCHERA);
 			case ARMATURA:
 				return ClassiOggettoImmagine.getImmagine(ClassiOggetto.ARMATURA);
 			case SCHINIERI:

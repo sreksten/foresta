@@ -30,6 +30,7 @@ OGGETTO_LEGGENDARIO
     [LIBRO_MAGICO_LEGGENDARIO]
     [SCUDO_LEGGENDARIO]
     [ELMO_LEGGENDARIO]
+    [MASCHERA_LEGGENDARIA]
     [ARMATURA_LEGGENDARIA]
     [VESTE_LEGGENDARIA]
     [SCHINIERI_LEGGENDARI]
@@ -128,6 +129,14 @@ ELMO_LEGGENDARIO$
     LEGGENDA=Chi indossa l'Elmo del Pensiero Laterale ha sempre un'idea. Non sempre buona, ma sempre un'idea.;\
     LEGGENDA=L'ultimo che lo portò inventò la ruota quadrata, la scala orizzontale e il cappello per i piedi.;\
     LEGGENDA=Poi lo nascose, perché le idee cominciavano a fargli male alla testa.
+
+MASCHERA_LEGGENDARIA$
+    TIPO=MASCHERA;NOME=la Maschera del Carnevale Perpetuo;BREVE=la Maschera del Carnevale Perpetuo;\
+    DESCRIZIONE=dietro cui nessuno ti riconosce;LIVELLO=5;COSTO=60;PESO=0.5;\
+    MOD=FURTIVITA +5;MOD=CARISMA +3;MOD=PARATA +15%;\
+    LEGGENDA=Un mercante la indossò a una festa di carnevale, e non riuscì più a togliersela.;\
+    LEGGENDA=Nessuno lo riconobbe più: né i creditori, né la suocera, né le guardie che lo cercavano da anni.;\
+    LEGGENDA=Visse felice per quarant'anni. Il giorno che se la tolse, gli arrivarono tutti i conti insieme.
 
 ARMATURA_LEGGENDARIA$
     TIPO=ARMATURA;NOME=l'Armatura del Cavaliere Pigro;BREVE=l'Armatura del Cavaliere Pigro;\

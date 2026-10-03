@@ -23,6 +23,7 @@ public enum TipoArtefatto {
 
     ARMATURA(SupertipoArtefatto.ARMATURA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.CORPO, "Armatura", "indossa"),
     VESTE(SupertipoArtefatto.ARMATURA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.CORPO, "Veste", "indossa"),
+    MASCHERA(SupertipoArtefatto.ARMATURA, TipoCardinalitaArtefatto.SINGOLO, TipoSlotArtefatto.VOLTO, "Maschera", "indossa"),
 
     SCHINIERI(SupertipoArtefatto.SCHINIERI, TipoCardinalitaArtefatto.PAIO, TipoSlotArtefatto.GAMBE, "Schinieri", "indossa"),
 

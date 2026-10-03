@@ -343,8 +343,12 @@ public class Foresta {
 		return coordinate;
 	}
 
+	/**
+	 * Una casella su cui si può costruire: vuota, o un bosco. Non una radura: sono poche apposta, e una locanda o il
+	 * covo di una missione costruiti sopra le cancellerebbero.
+	 */
 	private static boolean isLibera(ClassiLocazione classeLocazione) {
-		return classeLocazione == null || classeLocazione == ClassiLocazione.BOSCO || classeLocazione == ClassiLocazione.RADURA;
+		return classeLocazione == null || classeLocazione == ClassiLocazione.BOSCO;
 	}
 
 	/**

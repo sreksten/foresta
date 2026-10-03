@@ -11,6 +11,10 @@ public enum TipoSlotArtefatto {
      */
     TESTA,
     /**
+     * Massimo 1 Maschera
+     */
+    VOLTO,
+    /**
      * Massimo 1 Armatura o Veste
      */
     CORPO,

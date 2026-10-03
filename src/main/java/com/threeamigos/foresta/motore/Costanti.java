@@ -14,12 +14,14 @@ public class Costanti {
     public static final int ARTEFATTO_MASSIMO_EFFETTI_LEGGENDARIO = 5;
 
     // Combattimento (vedi artefatti_e_incantamenti.md, §2 "Combattimento")
-    // PARATA intrinseca di scudo, elmo, armatura e schinieri: una parte fissa, perché servano anche ai livelli bassi,
-    // più una per ogni livello del pezzo. La veste dà lo stesso minimo in RESISTENZA_MAGICA.
+    // PARATA intrinseca di scudo, elmo, maschera, armatura e schinieri: una parte fissa, perché servano anche ai
+    // livelli bassi, più una per ogni livello del pezzo. La veste dà lo stesso minimo in RESISTENZA_MAGICA.
     public static final int SCUDO_PARATA_MINIMA = 6;
     public static final int SCUDO_PARATA_PER_LIVELLO = 2;
     public static final int ELMO_PARATA_MINIMA = 2;
     public static final int ELMO_PARATA_PER_LIVELLO = 1;
+    public static final int MASCHERA_PARATA_MINIMA = 1;
+    public static final int MASCHERA_PARATA_PER_LIVELLO = 1;
     public static final int ARMATURA_PARATA_MINIMA = 3;
     public static final int ARMATURA_PARATA_PER_LIVELLO = 1;
     public static final int SCHINIERI_PARATA_MINIMA = 2;

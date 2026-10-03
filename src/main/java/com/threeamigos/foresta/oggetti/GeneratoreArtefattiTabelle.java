@@ -37,6 +37,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		nomeEPeso(TipoArtefatto.ARMATURA, "l'armatura", 3);
 		nomeEPeso(TipoArtefatto.SCHINIERI, "gli schinieri", 2);
 		nomeEPeso(TipoArtefatto.VESTE, "la veste", 1);
+		nomeEPeso(TipoArtefatto.MASCHERA, "la maschera", 0.5);
 		nomeEPeso(TipoArtefatto.ANELLO, "l'anello", 0.1);
 		nomeEPeso(TipoArtefatto.TALISMANO, "il talismano", 0.5);
 		nomeEPeso(TipoArtefatto.NINNOLO, "il ninnolo", 0.2);
@@ -283,7 +284,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 	}
 
 	/**
-	 * Scudo, elmo, armatura e schinieri: +5% di PARATA per livello, la veste invece di RESISTENZA_MAGICA.
+	 * Scudo, elmo, maschera, armatura e schinieri: +5% di PARATA per livello, la veste invece di RESISTENZA_MAGICA.
 	 */
 	private void completaProtezione(ArtefattoMD md, int livello) {
 		md.setDescrizione(md.getTipo().getCardinalita() == TipoCardinalitaArtefatto.PAIO ? PROTEZIONE_PAIO : PROTEZIONE);

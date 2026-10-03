@@ -65,6 +65,8 @@ import java.util.function.Supplier;
 //  per ora è un riquadro giallo bordato di nero: sarebbe più bello un cartiglio, di dimensione variabile secondo il nome.
 // TODO: il Viandante (ClassePersonaggio.VIANDANTE, chi si fa scortare dalle missioni) usa le immagini del bardo:
 //  servono personaggi/Viandante.gif e icone/Viandante-nobordo-piccolo.gif (ClassePersonaggioImmagine).
+// TODO: img/oggetti/Maschera.gif e img/fondi/Separatore-Maschere.gif sono copie di Elmo.gif e di Separatore-Elmi.gif,
+//  da ridisegnare con una maschera.
 // TODO: img/oggetti/OggettoMissione.gif è un sacchetto provvisorio, da ridisegnare (oggetti delle missioni, per ora la
 //  mandragola dell'alchimista; in futuro magari un'immagine per ogni oggetto).
 

@@ -124,8 +124,8 @@ public final class RegoleEquipaggiamento {
 		if (slotDelTipo == TipoSlotArtefatto.ACCESSORIO) {
 			return EsitoControlloRichiestaEquipaggiamento.slot(personaggio, TipoSlotArtefatto.ACCESSORIO);
 
-		} else if (slotDelTipo == TipoSlotArtefatto.TESTA || slotDelTipo == TipoSlotArtefatto.CORPO ||
-				slotDelTipo == TipoSlotArtefatto.GAMBE) {
+		} else if (slotDelTipo == TipoSlotArtefatto.TESTA || slotDelTipo == TipoSlotArtefatto.VOLTO
+				|| slotDelTipo == TipoSlotArtefatto.CORPO || slotDelTipo == TipoSlotArtefatto.GAMBE) {
 			Optional<ArtefattoMD> occupante = occupato(equipaggiati, slotDelTipo);
 			if (occupante.isPresent()) {
 				return EsitoControlloRichiestaEquipaggiamento.rifiuto(personaggio, TipoMotivoRifiutoEquipaggiamento.SLOT_OCCUPATO, occupante.get());

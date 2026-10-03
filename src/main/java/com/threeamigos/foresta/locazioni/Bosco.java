@@ -72,6 +72,7 @@ public class Bosco extends LocazioneBase {
 			ClassiOggetto.SPADONE,
 			ClassiOggetto.ARMATURA,
 			ClassiOggetto.ELMO,
+			ClassiOggetto.MASCHERA,
 			ClassiOggetto.SCHINIERI
 	};
 
