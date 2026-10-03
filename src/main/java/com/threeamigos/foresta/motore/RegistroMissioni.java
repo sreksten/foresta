@@ -63,7 +63,8 @@ public class RegistroMissioni {
 		IL_RITUALE(ClasseMissione.IL_RITUALE),
 		LA_BENEDIZIONE(ClasseMissione.LA_BENEDIZIONE),
 		LA_DOCUMENTAZIONE(ClasseMissione.LA_DOCUMENTAZIONE),
-		IL_COLPO(ClasseMissione.IL_COLPO);
+		IL_COLPO(ClasseMissione.IL_COLPO),
+		LA_LEALTA(ClasseMissione.LA_LEALTA);
 
 		TipoMissionePredefinita(ClasseMissione classeMissione) {
 			this(classeMissione, false);

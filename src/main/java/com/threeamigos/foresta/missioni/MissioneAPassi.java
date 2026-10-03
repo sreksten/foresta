@@ -130,6 +130,11 @@ public abstract class MissioneAPassi extends MissioneBase {
 		avanzaSePronto(MomentoControllo.POST_LOCAZIONE);
 	}
 
+	@Override
+	public void controllaAccampamento() {
+		avanzaSePronto(MomentoControllo.ACCAMPAMENTO);
+	}
+
 	/**
 	 * L'id del passo corrente: il passo iniziale finché la missione non è avanzata, {@link Passo#FINE} quando è
 	 * finita per l'ultimo passo.

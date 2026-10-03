@@ -29,6 +29,13 @@ public interface Missione {
 
 	void controllaPostLocazione();
 
+	/**
+	 * Quando il gruppo si accampa, prima che scattino gli intermezzi dell'accampamento: le missioni che nascono
+	 * intorno al fuoco (vedi LaLealta). Fuori da una locazione: solo le missioni a passi lo usano.
+	 */
+	default void controllaAccampamento() {
+	}
+
 	boolean isPrimaria();
 	
 	boolean isAttiva();

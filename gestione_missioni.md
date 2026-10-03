@@ -156,9 +156,11 @@ viene dopo" è il passo stesso, non la sua posizione.
 `CronacheDiUnFegatoEroico`; qui serve invece la logica di avanzamento dentro
 *una* missione). Campi:
 
-- `MomentoControllo momento` — enum con tre valori `PRE_LOCAZIONE`,
-  `IN_LOCAZIONE`, `POST_LOCAZIONE`, che rispecchia i tre metodi esistenti di
-  `Missione` e dice in quale di essi il passo va valutato.
+- `MomentoControllo momento` — enum con i valori `PRE_LOCAZIONE`,
+  `IN_LOCAZIONE`, `POST_LOCAZIONE` e `ACCAMPAMENTO`, che rispecchia i metodi di
+  `Missione` (`controllaPreLocazione`... `controllaAccampamento`) e dice in quale
+  di essi il passo va valutato. `ACCAMPAMENTO` si controlla quando il gruppo si
+  accampa, prima degli intermezzi dell'accampamento.
 - `BooleanSupplier condizione` — quando true, il passo è concluso e si può
   avanzare. Per un passo che aspetta una scelta del giocatore, la condizione
   è semplicemente "la risposta è già stata registrata" (vedi più sotto).

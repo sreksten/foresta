@@ -987,3 +987,34 @@ gruppo combatte lì (`eventoCombattimentoIn`, i combattimenti contati per casell
 il colpo fallisce; se fugge può riprovare. Copre FURTO, SABOTAGGIO, VANDALISMO,
 INCENDIO, VIOLAZIONE_DOMICILIO e AVVELENAMENTO (un sonnifero). Test:
 `ScenarioPassaInosservatoTest`, `ScenarioColpoTest`.
+
+### La lealtà (2026-10-04)
+
+**Il controllo dell'accampamento.** `MomentoControllo.ACCAMPAMENTO`, con
+`Missione.controllaAccampamento()`: quando il gruppo si accampa l'automa controlla
+le missioni (e le loro domande) prima degli intermezzi di `MomentoIntermezzo.ACCAMPAMENTO`;
+così un passo può concludersi intorno al fuoco e mostrare lì il suo intermezzo.
+`ScenaFraCompagni` è la pagina del gruppo che parla fra sé, intorno al fuoco o in
+una locazione (la usa anche `IntermezzoAccampamento`).
+
+**Il favore riusabile.** I campi del favore (combattimento, raccolta o veglia) sono
+ora in `FavoreRichiesto`, che le righe di `BENEDIZIONE` e di `LEALTA` leggono con i
+loro campi; il modificatore ATTRIBUTO TIPO QUANTITA in `ModificatoreDellaRiga`.
+`IlFavore` si ricorda la riga, la sua origine e chi chiede il favore; nei suoi testi
+`%PERSONAGGIO%` è chi lo chiede.
+
+`LaLealta`: a un accampamento un compagno vivo del gruppo, che non è il capo e non è
+già leale, confida un problema (intermezzo intorno al fuoco: parla il compagno,
+risponde il capo) e chiede un favore, affidato come `IlFavore`. Fatto il favore, a
+fine locazione il compagno ringrazia (intermezzo a `LOCAZIONE_COMPLETATA`, nella
+locazione) e riceve un modificatore permanente con la nota "la lealtà": chi ce
+l'ha non chiede più niente. Se il compagno muore o lascia il gruppo, la lealtà
+fallisce e con lei il favore. Ripetibile ogni 72 ore, con un altro compagno. Righe
+in `missioni.txt` alla produzione `LEALTA`, lette da `LealtaRichiesta`; i testi non
+hanno aggettivi riferiti al compagno, che può essere maschio o femmina.
+
+Copre LEALTA. Test: `ScenarioLealtaTest`.
+
+Correzione: la palude ignorava gli avversari e gli oggetti messi da una missione
+(il troll di un favore, gli ingredienti di una raccolta): ora, se ce ne sono, si va
+avanti come in ogni altra locazione.

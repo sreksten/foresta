@@ -538,6 +538,7 @@ public enum TipoMissione {
 
     //----------
 
+    // Coperto da: LaLealta
     /**
      * Esempio: aiutare uno dei membri del gruppo a risolvere un problema personale
      */

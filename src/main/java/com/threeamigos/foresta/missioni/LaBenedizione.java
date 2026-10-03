@@ -153,7 +153,7 @@ public class LaBenedizione extends MissioneAPassi {
 		}
 		return Misc.inizialeMaiuscola(benedizione.getMandante()) + " ti darà " + benedizione.getNomeDellaBenedizione()
 				+ " in cambio di un favore: " + getMissioniAffidate(FAVORE).stream().findFirst().map(Missione::getNome)
-				.orElse(benedizione.getFavore()) + ".";
+				.orElse(benedizione.getFavore().getNome()) + ".";
 	}
 
 	@Override

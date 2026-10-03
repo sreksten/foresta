@@ -52,13 +52,14 @@ public final class Passo {
 	public static final int OPZIONI_MASSIME = 5;
 
 	/**
-	 * In quale dei tre controlli delle missioni (vedi {@link Missione#controllaPreLocazione()} e seguenti) si
-	 * valuta il passo.
+	 * In quale dei controlli delle missioni (vedi {@link Missione#controllaPreLocazione()} e seguenti) si valuta il
+	 * passo: i tre di una locazione, e quello dell'accampamento ({@link Missione#controllaAccampamento()}).
 	 */
 	public enum MomentoControllo {
 		PRE_LOCAZIONE,
 		IN_LOCAZIONE,
-		POST_LOCAZIONE
+		POST_LOCAZIONE,
+		ACCAMPAMENTO
 	}
 
 	private final MomentoControllo momento;

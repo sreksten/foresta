@@ -1144,6 +1144,84 @@ BENEDIZIONE
     BENEDETTO=La sacerdotessa copre gli occhi di %PERSONAGGIO% con la mano, e quando la toglie il buio sembra un po' meno buio.
 
 # ---------------------------------------------------------------------------------------------
+# Lealtà (vedi LaLealta, IlFavore e LealtaRichiesta)
+# ---------------------------------------------------------------------------------------------
+#
+# Una sera, intorno al fuoco dell'accampamento, un compagno del gruppo (non il capo) confida un problema personale e
+# chiede un favore; fatto il favore, ringrazia e riceve un modificatore permanente. Una riga per problema, campi
+# CHIAVE=valore separati da ";":
+#   CHIAVE=     identifica il problema;
+#   CONFIDENZA=, BATTUTA=, RISPOSTA=  le battute intorno al fuoco (compagno, capo, compagno);
+#   FAVORE=     il nome del favore, che è la missione secondaria, e i suoi campi, come per le benedizioni:
+#     - combattimento: LUOGO=, NEMICO=, NUMERO=, CAPO=;
+#     - raccolta: GENERE=, INGREDIENTE=, INGREDIENTI=, DOVE=, QUANTITA=;
+#     - veglia: LUOGO=, VISITE=, ORE=, VEGLIA=;
+#   VITTORIA=   quando il favore è fatto;
+#   RINGRAZIAMENTO=  che cosa dice il compagno a fine locazione, quando il favore è fatto;
+#   LEALTA=     ATTRIBUTO TIPO QUANTITA: il modificatore permanente del compagno, come per le benedizioni;
+#   LEALE=      quando il compagno riceve il modificatore.
+# Nei testi %PERSONAGGIO% è il nome del compagno, e %CAPO% il nome del capo dei nemici del favore. I testi devono
+# andare bene per qualunque compagno, di qualunque classe, maschio o femmina: niente aggettivi o participi riferiti a lui. Nei testi non si usa il ";".
+
+LEALTA
+    CHIAVE=IL_DEBITO;\
+    CONFIDENZA=Prima di unirmi a voi ho perso a dadi contro un capo goblin. Lui e i suoi mi cercano ancora.;\
+    BATTUTA=E quanto gli devi?;\
+    RISPOSTA=Tutto quello che ho, più gli interessi. Preferirei pagarli con l'acciaio.;\
+    FAVORE=Il debito di gioco;LUOGO=GROTTA;NEMICO=GOBLIN;NUMERO=4;CAPO=SI;\
+    VITTORIA=%CAPO% e i suoi goblin non riscuoteranno più niente da nessuno.;\
+    RINGRAZIAMENTO=Debito saldato. Per la prima volta da mesi dormirò senza un occhio aperto.;\
+    LEALTA=COSTITUZIONE AUMENTO_FISSO 2;\
+    LEALE=Senza più il debito sulle spalle, %PERSONAGGIO% cammina con un passo più saldo.
+    CHIAVE=LA_TOMBA_DEL_MAESTRO;\
+    CONFIDENZA=Il mio vecchio maestro è sepolto fra delle rovine qui vicino. Dicono che non riposi in pace.;\
+    BATTUTA=Spettri?;\
+    RISPOSTA=Due, e non sono lui. Lo tengono sveglio, e lui non era mai di buonumore la mattina.;\
+    FAVORE=La tomba del maestro;LUOGO=ROVINE;NEMICO=SPETTRO;NUMERO=2;\
+    VITTORIA=Gli spettri svaniscono, e fra le rovine scende un silenzio da biblioteca.;\
+    RINGRAZIAMENTO=Ora il maestro riposa. Mi pare quasi di sentirlo dire che ci ho messo troppo.;\
+    LEALTA=SAGGEZZA AUMENTO_FISSO 2;\
+    LEALE=%PERSONAGGIO% ripete sottovoce una lezione del maestro, e per la prima volta la capisce davvero.
+    CHIAVE=I_FIORI_PER_LA_MADRE;\
+    CONFIDENZA=Domani mia madre compie gli anni. Non la vedo da tanto, e non le ho mai mandato niente.;\
+    BATTUTA=Non è mai troppo tardi.;\
+    RISPOSTA=Le piacevano le campanule azzurre. Ne servirebbe un mazzo come si deve: tre almeno.;\
+    FAVORE=I fiori per la madre;GENERE=F;INGREDIENTE=campanula azzurra;INGREDIENTI=campanule azzurre;DOVE=LUOGHI RADURA BOSCO;QUANTITA=3;\
+    VITTORIA=Le campanule sono legate con un filo d'erba: un mazzo come si deve.;\
+    RINGRAZIAMENTO=Le mando con il primo corriere. Magari stavolta mi risponde.;\
+    LEALTA=FORTUNA AUMENTO_FISSO 2;\
+    LEALE=%PERSONAGGIO% sorride senza motivo per tutto il giorno, e la fortuna sembra ricambiare.
+    CHIAVE=LA_LAMA_SPEZZATA;\
+    CONFIDENZA=La mia prima arma si è spezzata in una grotta. Voglio farla rifondere, ma serve del metallo buono.;\
+    BATTUTA=Quanto metallo?;\
+    RISPOSTA=Quattro frammenti d'argento delle grotte. Il fabbro dice che con meno viene un cucchiaio.;\
+    FAVORE=La lama spezzata;GENERE=M;INGREDIENTE=frammento d'argento;INGREDIENTI=frammenti d'argento;DOVE=LUOGHI GROTTA;QUANTITA=4;\
+    VITTORIA=Quattro frammenti d'argento: abbastanza per una lama, e non per un cucchiaio.;\
+    RINGRAZIAMENTO=Tornerà come nuova. Anzi, meglio: questa volta so come si tiene.;\
+    LEALTA=FORZA AUMENTO_FISSO 2;\
+    LEALE=%PERSONAGGIO% soppesa l'aria come se avesse già in pugno la lama nuova. Il braccio è più forte.
+    CHIAVE=IL_GIURAMENTO;\
+    CONFIDENZA=Ho giurato di vegliare la radura dove è caduto il mio compagno d'armi. Non l'ho mai fatto.;\
+    BATTUTA=Possiamo farlo insieme.;\
+    RISPOSTA=Tre notti, una ogni tanto. Non serve altro: solo esserci.;\
+    FAVORE=Il giuramento;LUOGO=RADURA;VISITE=3;ORE=12;\
+    VEGLIA=La radura è quieta. %PERSONAGGIO% resta in piedi in silenzio, a lungo.;\
+    VITTORIA=La terza veglia è finita: il giuramento è mantenuto.;\
+    RINGRAZIAMENTO=Ora posso guardare avanti. Grazie per essere rimasti con me.;\
+    LEALTA=SALUTE AUMENTO_PERCENTUALE 10;\
+    LEALE=Un peso è sparito dalle spalle di %PERSONAGGIO%, che sembra più forte di prima.
+    CHIAVE=LE_LUCI_NELLA_PALUDE;\
+    CONFIDENZA=Da bambini, io e mio fratello abbiamo seguito delle luci in una palude. Lui è tornato a casa prima di me, e io quelle luci le sogno ancora.;\
+    BATTUTA=E vuoi tornarci?;\
+    RISPOSTA=Voglio guardarle finché non mi fanno più paura. Due volte, con voi, e con calma.;\
+    FAVORE=Le luci nella palude;LUOGO=PALUDE;VISITE=2;ORE=20;\
+    VEGLIA=Le luci danzano sull'acqua. %PERSONAGGIO% le guarda, e non distoglie lo sguardo.;\
+    VITTORIA=Le luci sono solo luci. Fanno anche un po' ridere, a guardarle bene.;\
+    RINGRAZIAMENTO=Stanotte dormirò. Davvero, questa volta.;\
+    LEALTA=PERCEZIONE AUMENTO_FISSO 2;\
+    LEALE=Gli occhi di %PERSONAGGIO% non temono più il buio, e ci vedono meglio.
+
+# ---------------------------------------------------------------------------------------------
 # Documentazioni (vedi LaDocumentazione e DocumentazioneRichiesta)
 # ---------------------------------------------------------------------------------------------
 #

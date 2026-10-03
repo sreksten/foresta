@@ -43,6 +43,7 @@ public enum ClasseMissione {
 	L_INDAGINE(LIndagine::new),
 	LA_BENEDIZIONE(LaBenedizione::new),
 	IL_FAVORE(IlFavore::new),
+	LA_LEALTA(LaLealta::new),
 	LA_DOCUMENTAZIONE(LaDocumentazione::new),
 	IL_COLPO(IlColpo::new),
 	IL_RITUALE(IlRituale::new),

@@ -5,6 +5,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.BenedizioneRichiesta;
+import com.threeamigos.foresta.missioni.FavoreRichiesto;
 import com.threeamigos.foresta.missioni.IlFavore;
 import com.threeamigos.foresta.missioni.LaBenedizione;
 import com.threeamigos.foresta.missioni.Missione;
@@ -55,9 +56,9 @@ class ScenarioBenedizioneTest {
             chiavi.add(benedizione.getChiave());
         }
         assertTrue(chiavi.size() >= 7, String.valueOf(chiavi));
-        assertEquals(BenedizioneRichiesta.TipoFavore.COMBATTIMENTO, BenedizioneRichiesta.da(LUNA).getTipoFavore());
-        assertEquals(BenedizioneRichiesta.TipoFavore.RACCOLTA, BenedizioneRichiesta.da(TERRA).getTipoFavore());
-        assertEquals(BenedizioneRichiesta.TipoFavore.VEGLIA, BenedizioneRichiesta.da(NOTTE).getTipoFavore());
+        assertEquals(FavoreRichiesto.Tipo.COMBATTIMENTO, BenedizioneRichiesta.da(LUNA).getFavore().getTipo());
+        assertEquals(FavoreRichiesto.Tipo.RACCOLTA, BenedizioneRichiesta.da(TERRA).getFavore().getTipo());
+        assertEquals(FavoreRichiesto.Tipo.VEGLIA, BenedizioneRichiesta.da(NOTTE).getFavore().getTipo());
         assertThrows(IllegalArgumentException.class, () -> BenedizioneRichiesta.da(LUNA + ";VISITE=2;ORE=3;VEGLIA=x"));
         assertThrows(IllegalArgumentException.class, () -> BenedizioneRichiesta.da(TERRA + ";LUOGO=PALUDE"));
         assertThrows(IllegalArgumentException.class, () -> BenedizioneRichiesta.da(LUNA.replace("SALUTE AUMENTO_PERCENTUALE 10", "SALUTE 10")));

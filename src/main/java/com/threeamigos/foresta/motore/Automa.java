@@ -1084,9 +1084,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				// cascata (vedi gestisciComandoInStatoIntermezzo) finendo per scattare più
 				// volte nello stesso accampamento invece che una volta per accampamento.
 				ModelloDati.getIstanza().getIntermezziMD().incrementaNumeroAccampamenti();
-				// Poi si dà modo al suo intermezzo di scattare; la notte passa solo dopo,
-				// in entraInStatoAccampamento()
-				return avviaIntermezzi(MomentoIntermezzo.ACCAMPAMENTO, Stato.ACCAMPAMENTO);
+				// Poi le missioni che nascono intorno al fuoco (vedi LaLealta), e si dà modo agli intermezzi
+				// dell'accampamento di scattare; la notte passa solo dopo, in entraInStatoAccampamento()
+				return controllaMissioniEDomande(MomentoControllo.ACCAMPAMENTO,
+						() -> avviaIntermezzi(MomentoIntermezzo.ACCAMPAMENTO, Stato.ACCAMPAMENTO));
 			case POZIONE_SALUTE:
 				statoPrecedente = Stato.ATTESA_POZIONE_SALUTE;
 				stato = Stato.SCELTA_AUTOMATICA_PERSONAGGIO;
@@ -1618,6 +1619,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				break;
 			case IN_LOCAZIONE:
 				controllaMissioni(Missione::controllaInLocazione, OrdineVisita.PADRE_PRIMA);
+				break;
+			case ACCAMPAMENTO:
+				controllaMissioni(Missione::controllaAccampamento, OrdineVisita.PADRE_PRIMA);
 				break;
 			default:
 				controllaMissioni(Missione::controllaPostLocazione, OrdineVisita.FIGLI_PRIMA);
