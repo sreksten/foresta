@@ -160,8 +160,35 @@ lo segna sulla mappa e ci mette la banda di Sgranf; 30 monete) e `IlPellegrino`
 (rivendica un tempio, Anselmo viaggia con il gruppo come ospite fino al tempio; 25
 monete al ritorno dalla sorella). Test: `ScenarioCombattiScortaConsegnaTest`.
 
-Mancano ancora: `SORVEGLIA`, `EVITA_COMBATTIMENTO`, `COSTRUISCI`,
-`GENERA_PARAMETRI`.
+### Gli ultimi passi (2026-10-03)
+
+- **`SORVEGLIA(luogo, durata)`**: `sorveglia(dove, volte, oreFraLeVisite)`. Il
+  gruppo deve passare da quella casella `volte` volte, a inizio locazione, con
+  almeno `oreFraLeVisite` ore di gioco fra una visita che conta e la successiva;
+  le visite troppo ravvicinate non contano (`getVisiteNelPassoCorrente`). Usa
+  `Passo.aOgniControllo`, un'azione eseguita ogni volta che il passo corrente
+  viene valutato nel suo controllo.
+- **`EVITA_COMBATTIMENTO(luogo)`**: `evitaCombattimento(momento, dove,
+  testoSeScoperti)`. Si conclude arrivando in quella casella; se nel frattempo il
+  gruppo ha combattuto (ha attaccato un avversario o ne ha abbattuto uno, anche
+  con un incantesimo: `RegistroMissioni` conta l'evento `COMBATTIMENTO`) la
+  missione fallisce. Per un ramo alternativo c'è
+  `haCombattutoNelPassoCorrente()`.
+- **`COSTRUISCI(struttura)`**: `costruisci(momento, dove, Costruzione, testo)`.
+  `Costruzione.con(materiali...).conMonete(n).inOre(n)`: consuma gli oggetti di
+  missione raccolti prima, paga le monete e fa passare le ore; che cosa si
+  costruisce lo fa la missione con un altro `esegui`.
+- **`GENERA_PARAMETRI()`**: `generaParametri(momento, parametri)`. Fissa come
+  proprietà i valori generati, ciascuno solo se non c'è già, così restano gli
+  stessi dopo un caricamento (`getParametro`).
+- **`RICOMPENSA` non solo in monete**: `ricompensa(momento, Ricompensa, testo)`,
+  con `Ricompensa.inMonete(n).conPreziosi(n).conEsperienza(n).conArtefatto(...)`.
+  L'artefatto si crea quando la missione lo consegna, finisce nell'inventario
+  del gruppo e si mostra con la rivelazione dei cofani.
+
+Test: `ScenarioPassiAvanzatiTest`. Con questi il catalogo del §2 è coperto
+tutto. Resta fuori solo un ospite che può morire (per ostaggi e salvataggi),
+da aggiungere quando servirà.
 
 ## 3. Mappatura `TipoMissione` → sequenza di passi
 

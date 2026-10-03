@@ -64,6 +64,7 @@ public final class Passo {
 	private final MomentoControllo momento;
 	private final BooleanSupplier condizione;
 	private final List<Runnable> azioni = new ArrayList<>();
+	private final List<Runnable> azioniAOgniControllo = new ArrayList<>();
 	private final List<BooleanSupplier> guardie = new ArrayList<>();
 	private final List<Supplier<String>> testiFallimento = new ArrayList<>();
 	private Supplier<String> prossimoPasso = () -> FINE;
@@ -95,6 +96,19 @@ public final class Passo {
 	public Passo esegui(Runnable azione) {
 		azioni.add(Objects.requireNonNull(azione));
 		return this;
+	}
+
+	/**
+	 * Che cosa fare ogni volta che il passo corrente viene valutato nel suo controllo, prima di vedere se è concluso:
+	 * per tenere un conto che dipende da dove si trova il gruppo (vedi MissioneAPassi.sorveglia).
+	 */
+	public Passo aOgniControllo(Runnable azione) {
+		azioniAOgniControllo.add(Objects.requireNonNull(azione));
+		return this;
+	}
+
+	void eseguiAzioniAOgniControllo() {
+		azioniAOgniControllo.forEach(Runnable::run);
 	}
 
 	/**

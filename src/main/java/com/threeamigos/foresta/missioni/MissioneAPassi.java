@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
@@ -10,7 +11,9 @@ import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
+import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
@@ -25,6 +28,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.function.BooleanSupplier;
 import java.util.function.Supplier;
@@ -67,6 +71,13 @@ public abstract class MissioneAPassi extends MissioneBase {
 	private static final String CONTATORE = "CONTATORE_";
 	private static final String SCORTATO = "SCORTATO";
 	private static final String RIPIEGO = "RIPIEGO_";
+	private static final String VISITE = "VISITE_";
+	private static final String ULTIMA_VISITA = "ULTIMA_VISITA_";
+	private static final String PARAMETRO = "PARAMETRO_";
+	/**
+	 * L'evento che conta i combattimenti, di qualunque classe di avversario (vedi RegistroMissioni.registrati).
+	 */
+	public static final String EVENTO_COMBATTIMENTO = "COMBATTIMENTO";
 	/**
 	 * Separatore delle liste di id salvate come una proprietà: '§' e '|' sono già riservati dal salvataggio
 	 */
@@ -131,6 +142,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 			if (passo.getMomento() != momento) {
 				return;
 			}
+			passo.eseguiAzioniAOgniControllo();
 			// Una domanda si conclude con la risposta, che può arrivare solo dall'automa (vedi getDomandaDaPorre)
 			if (passo.isDomanda() ? getRisposta(id) == null : !passo.isConcluso()) {
 				return;
@@ -225,9 +237,32 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * RICOMPENSA: dà le monete al gruppo e scrive il testo. Spesso è l'ultimo passo, con {@code poi(Passo.FINE)}.
 	 */
 	protected final Passo ricompensa(MomentoControllo momento, int monete, Supplier<String> testo) {
+		return ricompensa(momento, Ricompensa.inMonete(monete), testo);
+	}
+
+	/**
+	 * RICOMPENSA con monete, preziosi, esperienza e un artefatto, in qualunque combinazione: il testo, poi le
+	 * ricompense. L'artefatto finisce nell'inventario del gruppo e si mostra con la rivelazione, come quelli dei
+	 * cofani.
+	 */
+	protected final Passo ricompensa(MomentoControllo momento, Ricompensa ricompensa, Supplier<String> testo) {
 		return Passo.quando(momento, () -> true).esegui(() -> {
-			GruppoGiocatore.getIstanza().addMonete(monete);
+			GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 			BusEventi.pubblica(new NotificaTestoParagrafo(testo.get()));
+			if (ricompensa.getMonete() > 0) {
+				gruppo.addMonete(ricompensa.getMonete());
+			}
+			if (ricompensa.getPreziosi() > 0) {
+				gruppo.addPreziosi(ricompensa.getPreziosi());
+			}
+			if (ricompensa.getEsperienza() > 0) {
+				gruppo.addPuntiEsperienza(ricompensa.getEsperienza());
+			}
+			if (ricompensa.getArtefatto() != null) {
+				Artefatto artefatto = ricompensa.getArtefatto().get();
+				gruppo.addArtefatto(artefatto);
+				BusEventi.pubblica(new NotificaArtefattoTrovato(artefatto, Statistiche.getLivello()));
+			}
 		});
 	}
 
@@ -367,6 +402,104 @@ public abstract class MissioneAPassi extends MissioneBase {
 					incrementaContatore(oggetti.getChiave(), -oggetti.getQuantita());
 					BusEventi.pubblica(new NotificaTestoParagrafo(testo.get()));
 				});
+	}
+
+	// --- Sorveglianze, combattimenti da evitare, costruzioni e parametri
+
+	/**
+	 * SORVEGLIA: il gruppo deve passare da quella casella {@code volte} volte, a inizio locazione, con almeno
+	 * {@code oreFraLeVisite} ore di gioco fra una visita che conta e la successiva ("tornate al faro tre notti di
+	 * fila"). Le visite troppo ravvicinate non contano. Si leggono con {@link #getVisiteNelPassoCorrente()}.
+	 */
+	protected final Passo sorveglia(Supplier<CoordinateMD> dove, int volte, int oreFraLeVisite) {
+		return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> getVisiteNelPassoCorrente() >= volte)
+				.aOgniControllo(() -> {
+					if (dove.get() == null || !dove.get().equals(GruppoGiocatore.getIstanza().getCoordinate())) {
+						return;
+					}
+					String passo = validaId(getPassoCorrente());
+					String ultima = ottieniProprieta(ULTIMA_VISITA + passo);
+					if (ultima == null || oreDiGioco() - Long.parseLong(ultima) >= oreFraLeVisite) {
+						aggiungiProprieta(VISITE + passo, String.valueOf(getVisiteNelPassoCorrente() + 1));
+						aggiungiProprieta(ULTIMA_VISITA + passo, String.valueOf(oreDiGioco()));
+					}
+				});
+	}
+
+	/**
+	 * Quante visite sono valse per il passo di sorveglianza corrente.
+	 */
+	public final int getVisiteNelPassoCorrente() {
+		String valore = ottieniProprieta(VISITE + getPassoCorrente());
+		return valore == null ? 0 : Integer.parseInt(valore);
+	}
+
+	/**
+	 * EVITA_COMBATTIMENTO: si conclude quando il gruppo arriva in quella casella; se nel frattempo ha combattuto
+	 * (ha attaccato un avversario o ne ha abbattuto uno, anche con un incantesimo) la missione fallisce con il
+	 * testo. Chi preferisce un ramo alternativo al fallimento usa {@link #haCombattutoNelPassoCorrente()} in un
+	 * {@code poi} o in un'altra guardia.
+	 */
+	protected final Passo evitaCombattimento(MomentoControllo momento, Supplier<CoordinateMD> dove, Supplier<String> testoSeScoperti) {
+		return Passo.quando(momento, () -> dove.get() != null && dove.get().equals(GruppoGiocatore.getIstanza().getCoordinate()))
+				.falliscoSe(this::haCombattutoNelPassoCorrente, testoSeScoperti);
+	}
+
+	public final boolean haCombattutoNelPassoCorrente() {
+		return getConteggioNelPassoCorrente(EVENTO_COMBATTIMENTO) > 0;
+	}
+
+	/**
+	 * COSTRUISCI: quando la condizione è vera (il gruppo è sul posto) e ha quanto serve, consuma i materiali (gli
+	 * oggetti di missione raccolti prima), paga le monete, passa le ore di gioco e scrive il testo. Che cosa si
+	 * costruisce lo fa la missione, con un altro {@code esegui}: una locazione nuova, una riparazione...
+	 */
+	protected final Passo costruisci(MomentoControllo momento, BooleanSupplier dove, Costruzione costruzione, Supplier<String> testo) {
+		return Passo.quando(momento, () -> dove.getAsBoolean() && isCostruibile(costruzione))
+				.esegui(() -> {
+					for (OggettiDaRaccogliere materiale : costruzione.getMateriali()) {
+						incrementaContatore(materiale.getChiave(), -materiale.getQuantita());
+					}
+					if (costruzione.getMonete() > 0) {
+						GruppoGiocatore.getIstanza().addMonete(-costruzione.getMonete());
+					}
+					if (costruzione.getOre() > 0) {
+						LineaTemporale.aggiungiOre(costruzione.getOre());
+					}
+					BusEventi.pubblica(new NotificaTestoParagrafo(testo.get()));
+				});
+	}
+
+	/**
+	 * Se il gruppo ha i materiali e le monete per la costruzione.
+	 */
+	public final boolean isCostruibile(Costruzione costruzione) {
+		for (OggettiDaRaccogliere materiale : costruzione.getMateriali()) {
+			if (getContatore(materiale.getChiave()) < materiale.getQuantita()) {
+				return false;
+			}
+		}
+		return GruppoGiocatore.getIstanza().getMonete() >= costruzione.getMonete();
+	}
+
+	/**
+	 * GENERA_PARAMETRI: il passo "zero" di una missione generata. Fissa come proprietà della missione i valori
+	 * variabili (il mandante, il bersaglio, la quantità...), ciascuno solo se non c'è già: così restano gli stessi
+	 * anche dopo un caricamento. Si leggono con {@link #getParametro(String)}.
+	 */
+	protected final Passo generaParametri(MomentoControllo momento, Map<String, Supplier<String>> parametri) {
+		return Passo.quando(momento, () -> true).esegui(() -> parametri.forEach((nome, valore) -> {
+			if (getParametro(nome) == null) {
+				aggiungiProprieta(PARAMETRO + validaId(nome), valore.get());
+			}
+		}));
+	}
+
+	/**
+	 * Un parametro fissato da {@link #generaParametri}, o null se non è ancora stato generato.
+	 */
+	public final String getParametro(String nome) {
+		return ottieniProprieta(PARAMETRO + nome);
 	}
 
 	// --- Combattimenti e scorte
