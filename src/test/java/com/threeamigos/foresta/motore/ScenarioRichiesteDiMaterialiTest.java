@@ -16,12 +16,13 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Le richieste di materiali dell'alchimista, dell'armaiolo e del capitano delle guardie: ogni riga di missioni.txt si
+ * Le richieste di materiali dell'alchimista, dell'armaiolo, del capitano delle guardie e del locandiere: ogni riga di missioni.txt si
  * legge, e i testi si accordano con il materiale e con il mandante.
  */
 class ScenarioRichiesteDiMaterialiTest {
 
     private static final String ACONITO = "M;fiore di aconito;fiori di aconito;LUOGHI RADURA;3-4;6;Li raccogliamo con i guanti?;Se ci tenete alle dita, sì.";
+    private static final String CARPA = "F;carpa;carpe;LUOGHI PALUDE;3-5;5;Si pescano con la lenza?;Con la lenza, con le mani, con la pazienza.";
     private static final String VIVERNA = "F;scaglia di viverna;scaglie di viverna;NEMICI VIVERNA;2-3;12;Per farci cosa?;Uno scudo che non brucia.";
 
     @Test
@@ -135,6 +136,40 @@ class ScenarioRichiesteDiMaterialiTest {
             List<String> testi = partita.testi();
             assertTrue(testi.contains("I tre fiori di aconito passano all'alchimista, che li annusa soddisfatto."), String.valueOf(testi));
             assertTrue(testi.stream().anyMatch(t -> t.startsWith("I fiori di aconito ci sono tutti")), String.valueOf(testi));
+        }
+    }
+
+    @Test
+    void ilLocandiereVuoleLeCarpeDellePaludi() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(173)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            RichiestaDiMateriali locandiere = Alchimie.fissa(Alchimie.richiestaDi(Mandante.LOCANDIERE), CARPA, 3);
+            locandiere.controllaPreLocazione();
+            locandiere.segnaIntermezzoPassoMostrato("INCARICO");
+            locandiere.controllaInLocazione();
+            assertEquals("Il locandiere e le carpe", locandiere.getNome());
+            assertTrue(locandiere.getDescrizione().contains("Il locandiere di Nyena ti ha chiesto tre carpe, che si trovano nelle paludi"),
+                    locandiere.getDescrizione());
+
+            // Le carpe stanno solo nelle paludi
+            boolean nelBosco = false;
+            boolean inPalude = false;
+            for (int i = 0; i < 100; i++) {
+                nelBosco |= locandiere.getOggettoInLocazione(new CoordinateMD(0, 0), ClassiLocazione.BOSCO, false).isPresent();
+                inPalude |= locandiere.getOggettoInLocazione(new CoordinateMD(0, 0), ClassiLocazione.PALUDE, false).isPresent();
+            }
+            assertFalse(nelBosco);
+            assertTrue(inPalude);
+
+            new OggettoMissione(locandiere.getId(), RichiestaDiMateriali.MATERIALE, locandiere.getMateriali().getNome(), 3)
+                    .prendi(partita.gruppo(), null);
+            locandiere.controllaPostLocazione();
+            int monete = partita.gruppo().getMonete();
+            locandiere.controllaPreLocazione();
+            locandiere.controllaInLocazione();
+            assertEquals(monete + 5 * 3 + 5, partita.gruppo().getMonete());
+            assertTrue(partita.testi().contains("Le tre carpe passano al locandiere, che le porta subito in cucina."),
+                    String.valueOf(partita.testi()));
         }
     }
 }

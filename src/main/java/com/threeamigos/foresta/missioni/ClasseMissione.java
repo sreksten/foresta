@@ -27,6 +27,7 @@ public enum ClasseMissione {
 	RICHIESTA_ALCHIMISTA(RichiestaDiMateriali::dellAlchimista),
 	RICHIESTA_ARMAIOLO(RichiestaDiMateriali::dellArmaiolo),
 	RICHIESTA_CAPITANO(RichiestaDiMateriali::delCapitano),
+	RICHIESTA_LOCANDIERE(RichiestaDiMateriali::delLocandiere),
 	LA_TAGLIA_SULLA_BANDA(LaTagliaSullaBanda::new),
 	IL_PELLEGRINO(IlPellegrino::new),
 	IL_RAPIMENTO(IlRapimento::new),

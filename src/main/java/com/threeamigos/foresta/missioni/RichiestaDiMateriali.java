@@ -9,8 +9,8 @@ import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tools.Misc;
 
 /**
- * Un mandante in città (l'alchimista, l'armaiolo, il capitano delle guardie: vedi {@link Mandante}) chiede dei
- * materiali: erbe e minerali da raccogliere in certi luoghi, o parti di mostri da prendere sconfiggendoli (vedi
+ * Un mandante in città (l'alchimista, l'armaiolo, il capitano delle guardie, il locandiere: vedi {@link Mandante})
+ * chiede dei materiali: erbe, minerali e pesci da raccogliere in certi luoghi, o parti di mostri da prendere sconfiggendoli (vedi
  * {@link OggettiDaRaccogliere}). Raccolti tutti, si torna da lui a consegnarli e a riscuotere: tanto per pezzo,
  * più cinque. Il materiale e la quantità si pescano da missioni.txt quando l'incarico si offre (vedi
  * {@link MaterialeRichiesto}): la missione si ripete con altri materiali.
@@ -41,6 +41,10 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 
 	public static RichiestaDiMateriali delCapitano() {
 		return new RichiestaDiMateriali(ClasseMissione.RICHIESTA_CAPITANO, Mandante.CAPITANO);
+	}
+
+	public static RichiestaDiMateriali delLocandiere() {
+		return new RichiestaDiMateriali(ClasseMissione.RICHIESTA_LOCANDIERE, Mandante.LOCANDIERE);
 	}
 
 	public Mandante getMandante() {

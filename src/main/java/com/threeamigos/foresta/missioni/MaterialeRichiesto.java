@@ -231,6 +231,9 @@ public final class MaterialeRichiesto {
 				case ROVINE:
 					parti.add("fra le rovine");
 					break;
+				case PALUDE:
+					parti.add("nelle paludi");
+					break;
 				default:
 					parti.add(Misc.conPreposizione("in", luogo.name().toLowerCase()));
 					break;

@@ -5,7 +5,8 @@ import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import java.util.function.Supplier;
 
 /**
- * Chi chiede dei materiali in città (vedi RichiestaDiMateriali): da quale produzione di missioni.txt li pesca, come
+ * Chi chiede dei materiali in città (vedi RichiestaDiMateriali): l'alchimista, l'armaiolo, il capitano delle guardie, il
+ * locandiere (i pesci e le rane delle paludi): da quale produzione di missioni.txt li pesca, come
  * compare nell'intermezzo e che cosa dice.
  */
 public enum Mandante {
@@ -18,7 +19,10 @@ public enum Mandante {
 			"che %s soppesa con l'occhio del mestiere"),
 	CAPITANO("RICHIESTA_CAPITANO", "il capitano delle guardie", ScenaInCitta::conCapitano,
 			"Voi avete l'aria di chi sa usare una spada. Sono il capitano delle guardie, e ho bisogno di prove.",
-			"che %s conta per bene");
+			"che %s conta per bene"),
+	LOCANDIERE("RICHIESTA_LOCANDIERE", "il locandiere", ScenaInCitta::conLocandiere,
+			"Viaggiatori! Le mie zuppe di palude sono famose in tutta la foresta, ma la palude non me la porta più nessuno.",
+			"che %s porta subito in cucina");
 
 	private final String produzione;
 	private final String nome;

@@ -672,3 +672,10 @@ del destinatario.
 Le righe coprono TRASPORTO (lettere, pegni, forzieri), ANTI_VELENO (antidoti),
 GUARIGIONE (erbe e tinture), CURA_MAGICA (talismani, acqua sacra) ed EPIDEMIA
 (rimedi per un lazzaretto). Test: `ScenarioCorriereTest`.
+
+### Il locandiere e la pesca (2026-10-03)
+
+`RichiestaDiMateriali` ha un quarto mandante, il locandiere
+(`RICHIESTA_LOCANDIERE`, `ScenaInCitta.conLocandiere()`): per le sue zuppe vuole
+pesci, rane, lumache e germani reali delle paludi (`LUOGHI PALUDE`, "si trovano
+nelle paludi"). Copre PESCA. Test: `ScenarioRichiesteDiMaterialiTest`.

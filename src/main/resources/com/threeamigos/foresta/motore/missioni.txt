@@ -1,6 +1,6 @@
 # I nomi dei personaggi delle missioni (vedi ProduttoreDiTestiCasuale): gli ostaggi da liberare, i bardi da
 # riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia; e i materiali che chiedono
-# l'alchimista, l'armaiolo e il capitano delle guardie; e le cose da portare da una città all'altra. Per ora sono tutti maschili, perché i testi delle missioni
+# l'alchimista, l'armaiolo, il capitano delle guardie e il locandiere; e le cose da portare da una città all'altra. Per ora sono tutti maschili, perché i testi delle missioni
 # parlano di "suo marito" e "sua moglie".
 #
 # Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
@@ -111,7 +111,7 @@ SOPRANNOME_GOBLIN
 #   1. genere: F o M, oppure M/F se il singolare e il plurale ne hanno uno diverso (orecchio, orecchie);
 #   2. singolare;
 #   3. plurale;
-#   4. provenienza: "LUOGHI" e i luoghi dove si raccoglie (RADURA, BOSCO, GROTTA, ROVINE), oppure "NEMICI" e i
+#   4. provenienza: "LUOGHI" e i luoghi dove si raccoglie (RADURA, BOSCO, GROTTA, ROVINE, PALUDE), oppure "NEMICI" e i
 #      mostri a cui si prende sconfiggendoli (le ClassePersonaggio: GOBLIN, VIVERNA, CHIMERA_DRAGO...);
 #   5. quante ne chiede il mandante, minimo-massimo (per esempio 3-5);
 #   6. quante monete paga per pezzo: di più per i materiali dei mostri pericolosi;
@@ -152,6 +152,18 @@ RICHIESTA_CAPITANO
     M;corno di minotauro;corni di minotauro;NEMICI MINOTAURO;3-4;7;Tutti e due i corni?;Uno basta. Il minotauro non protesterà.
     F;piuma di arpia;piume di arpia;NEMICI ARPIA;3-4;6;Non volano via?;Le arpie sì. Le piume, se le tenete strette, no.
     M;dente di troll;denti di troll;NEMICI TROLL;3-4;7;Ne hanno parecchi, i troll.;Uno a testa. Non fate i pignoli.
+
+RICHIESTA_LOCANDIERE
+    F;carpa;carpe;LUOGHI PALUDE;3-5;5;Si pescano con la lenza?;Con la lenza, con le mani, con la pazienza. Basta che arrivino.
+    F;tinca;tinche;LUOGHI PALUDE;3-5;5;Non sanno un po' di fango?;Sanno di palude. È per questo che i clienti tornano.
+    M;capitone;capitoni;LUOGHI PALUDE;2-4;7;Non sono serpenti, vero?;Quasi. Ma in padella nessuno se ne accorge.
+    M;gambero di fiume;gamberi di fiume;LUOGHI PALUDE;3-5;5;Di fiume? Ma non stanno in palude?;Stanno dove gli pare. Il nome è un'abitudine.
+    M;pesce gatto;pesci gatto;LUOGHI PALUDE;3-4;6;E se miagolano?;Allora lasciateli stare e portatemi il gatto.
+    M;luccio;lucci;LUOGHI PALUDE;2-4;7;Hanno i denti, i lucci?;Più di voi. Tenete le dita fuori dall'acqua.
+    M;pesce persico;pesci persico;LUOGHI PALUDE;3-5;5;Persico come le pesche?;Come le pesche no. Come il fritto misto sì.
+    F;rana verde;rane verdi;LUOGHI PALUDE;4-5;4;Rane? Davvero?;Le cosce di rana fritte sono il piatto più richiesto della locanda. Dopo la birra.
+    F;lumaca di palude;lumache di palude;LUOGHI PALUDE;4-5;4;Lumache? Almeno non scappano.;Appunto. Sono le uniche che non vi faranno correre.
+    M;germano reale;germani reali;LUOGHI PALUDE;2-3;8;Dobbiamo spennarli noi?;Se li spennate voi vi do una moneta in più. Scherzo. Portateli e basta.
 
 # ---------------------------------------------------------------------------------------------
 # Spedizioni da una città all'altra (vedi IlCorriere e Spedizione)

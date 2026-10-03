@@ -5,8 +5,8 @@ import java.util.List;
 /**
  * La pagina di un intermezzo in una strada di città: il mandante di una missione aspetta sulla destra, il gruppo
  * arriva in fila come quando entra in un negozio (vedi {@link ScenaNegozio}) e, appena arrivato, cominciano le
- * battute. Il mandante ha l'aspetto del locandiere ({@link #conMandante()}) dell'armaiolo ({@link #conArmaiolo()})
- * o dell'alchimista ({@link #conAlchimista()}), o è il capitano delle guardie, con l'aspetto del guerriero
+ * battute. Il mandante ha l'aspetto del locandiere ({@link #conMandante()}), oppure è il locandiere
+ * ({@link #conLocandiere()}), l'armaiolo ({@link #conArmaiolo()}) o l'alchimista ({@link #conAlchimista()}), o è il capitano delle guardie, con l'aspetto del guerriero
  * ({@link #conCapitano()}).
  * <pre>
  * ScenaInCitta.conMandante()
@@ -42,6 +42,13 @@ public final class ScenaInCitta {
 	 * Un mandante qualsiasi: per ora ha l'aspetto del locandiere.
 	 */
 	public static ScenaInCitta conMandante() {
+		return new ScenaInCitta(LOCANDIERE);
+	}
+
+	/**
+	 * Il locandiere della città, fuori dalla sua locanda.
+	 */
+	public static ScenaInCitta conLocandiere() {
 		return new ScenaInCitta(LOCANDIERE);
 	}
 

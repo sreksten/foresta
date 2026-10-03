@@ -60,6 +60,7 @@ public enum TipoMissione {
      * Esempio: cacciare cervi per le pelli, raccogliere ingredienti da animali, procacciare cibo
      */
     CACCIA_ANIMALI(SupertipoMissione.ACQUISIZIONE),
+    // Coperto da: RichiestaDiMateriali (locandiere: i pesci e le rane delle paludi)
     /**
      * Esempio: pescare nel fiume, raccogliere dal mare, catturare creature acquatiche
      */
