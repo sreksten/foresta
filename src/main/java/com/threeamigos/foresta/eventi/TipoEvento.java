@@ -35,6 +35,10 @@ public enum TipoEvento {
      */
     COMANDO_APERTURA_INVENTARIO_GRUPPO,
     /**
+     * Richiesta di vedere la pagina dei trofei, dall'inventario
+     */
+    COMANDO_APERTURA_TROFEI,
+    /**
      * Richiesta di interazione con l'incantatore: inventario del gruppo e banco di lavoro per la fusione
      */
     COMANDO_APERTURA_INCANTATORE,

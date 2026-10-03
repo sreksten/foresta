@@ -26,4 +26,23 @@ public class TrofeoPerdigiorno implements Trofeo {
 				.filter(trofeo -> trofeo != TipoTrofeo.PERDIGIORNO)
 				.allMatch(RegistroTrofei::isVinto);
 	}
+
+	/**
+	 * Tutti gli altri trofei.
+	 */
+	@Override
+	public int getObiettivo() {
+		return TipoTrofeo.values().length - 1;
+	}
+
+	/**
+	 * Quanti degli altri trofei sono stati vinti.
+	 */
+	@Override
+	public int getProgresso() {
+		return (int) Arrays.stream(TipoTrofeo.values())
+				.filter(trofeo -> trofeo != TipoTrofeo.PERDIGIORNO)
+				.filter(RegistroTrofei::isVinto)
+				.count();
+	}
 }

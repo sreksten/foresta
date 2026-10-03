@@ -96,6 +96,9 @@ public enum Comando {
 
 	AIUTO,
 
+	// Dall'inventario, la pagina dei trofei
+	MOSTRA_TROFEI,
+
 	// Usata per chiedere conferma all'utente prima di andare avanti
 	PERGAMENA,
 

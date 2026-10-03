@@ -53,6 +53,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		STATO_STATISTICHE,
 		STATO_PUNTEGGI,
 		STATO_INVENTARIO,
+		STATO_TROFEI,
 		STATO_COMMERCIANTE,
 		STATO_ALCHIMISTA,
 		STATO_INCANTATORE,
@@ -75,6 +76,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final transient DisplayableCanvasRiquadroMissioni riquadroMissioni;
 	private final transient DisplayableCanvasMappaATuttoSchermo mappaATuttoSchermo;
 	private final transient DisplayableCanvasInventario inventario;
+	private final transient DisplayableCanvasTrofei paginaTrofei;
 	// Armaiolo e venditore di pergamene: una sola schermata, che cambia secondo il negozio
 	private final transient DisplayableCanvasCommerciante commerciante;
 	private final transient DisplayableCanvasScambiatoreConsumabili alchimista;
@@ -245,6 +247,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 		Rectangle inventarioRect = new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto);
 		mappaCoordinateElementiGrafici.put(inventario, inventarioRect);
+
+		paginaTrofei = new DisplayableCanvasTrofei(larghezzaContenuto, altezzaContenuto);
+		mappaCoordinateElementiGrafici.put(paginaTrofei, new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto));
 
 		commerciante = new DisplayableCanvasCommerciante(larghezzaContenuto, altezzaContenuto);
 
@@ -430,6 +435,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		long prossimoFotogramma = System.nanoTime();
 		while (animatoreInAzione) {
 			if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO || stato == StatoDisplayableCanvas.STATO_MAPPA
+					|| stato == StatoDisplayableCanvas.STATO_INTRO
 					|| stato == StatoDisplayableCanvas.STATO_INVENTARIO || stato == StatoDisplayableCanvas.STATO_COMMERCIANTE
 					|| stato == StatoDisplayableCanvas.STATO_ALCHIMISTA
 					|| stato == StatoDisplayableCanvas.STATO_INCANTATORE
@@ -637,6 +643,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		} else if (stato == StatoDisplayableCanvas.STATO_INVENTARIO) {
 			inventario.disegnaInventario(graphics);
 			disegnaFumetto(graphics);
+		} else if (stato == StatoDisplayableCanvas.STATO_TROFEI) {
+			paginaTrofei.disegna(graphics);
 		} else if (stato == StatoDisplayableCanvas.STATO_COMMERCIANTE) {
 			commerciante.disegnaInventario(graphics);
 			disegnaFumetto(graphics);
@@ -685,6 +693,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		if (stato == StatoDisplayableCanvas.STATO_INVENTARIO) {
 			return inventario;
 		}
+		if (stato == StatoDisplayableCanvas.STATO_TROFEI) {
+			return paginaTrofei;
+		}
 		if (stato == StatoDisplayableCanvas.STATO_COMMERCIANTE) {
 			return commerciante;
 		}
@@ -718,15 +729,13 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	/**
-	 * Passa alla schermata successiva dell'intro, a ogni battito del temporizzatore della UI.
+	 * A ogni battito del temporizzatore della UI: se non si è nell'intro, la si fa partire. L'intro poi va avanti da
+	 * sola, a ogni fotogramma (vedi DisplayableCanvasIntroOutro.intro).
 	 */
 	public void avanzaIntro() {
 		if (stato != StatoDisplayableCanvas.STATO_INTRO) {
 			avviaIntro();
-			return;
 		}
-		riquadroIntroOutro.incrementaSequenza(riquadroIntroOutro.lunghezzaIntro());
-		repaint();
 	}
 
 	public void iniziaGioco() {
@@ -750,6 +759,15 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 	public void inventario() {
 		stato = StatoDisplayableCanvas.STATO_INVENTARIO;
+		repaint();
+	}
+
+	/**
+	 * La pagina dei trofei, aperta dall'inventario.
+	 */
+	public void trofei() {
+		paginaTrofei.apri();
+		stato = StatoDisplayableCanvas.STATO_TROFEI;
 		repaint();
 	}
 

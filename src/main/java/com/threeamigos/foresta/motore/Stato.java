@@ -48,6 +48,8 @@ public enum Stato {
 	IN_COMBATTIMENTO,
 
 	INVENTARIO,
+	// La pagina dei trofei, aperta dall'inventario: con ANNULLA si torna all'inventario
+	TROFEI,
 
 	SCELTA_INCANTESIMO_DA_LANCIARE,
 	ATTESA_INCANTESIMO_QUALSIASI,

@@ -5,9 +5,7 @@ import com.threeamigos.foresta.eventi.interni.InternoErrore;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.LineaTemporale;
-import com.threeamigos.foresta.motore.RegistroTrofei;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.motore.tipi.TipoTrofeo;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.GestorePunteggi;
@@ -22,8 +20,29 @@ import java.util.List;
 
 public class DisplayableCanvasIntroOutro implements Finestra {
 
-	private static final int CHAR_SPACING = 1;
-	private static final int TROFEI_PER_PAGINA = 10;
+	// Lo scorrimento dell'intro (vedi ScorrimentoVerticale): pixel al secondo, e quanto è alta la fascia di
+	// dissolvenza ai bordi
+	private static final double VELOCITA = 30;
+	private static final int FASCIA = 40;
+	// I loghi compaiono quando la storia è salita almeno tanto sopra di loro
+	private static final int MARGINE_LOGHI = 20;
+	private static final double SECONDI_DISSOLVENZA = 1;
+	private static final double SECONDI_LOGHI = 3;
+	private static final double SECONDI_CLASSIFICA = 5;
+	// Il secondo fotogramma più lento che si accetta: dopo una pausa lunga lo scorrimento non salta
+	private static final double SECONDI_FOTOGRAMMA_MASSIMI = 0.1;
+	// La classifica: dove si ferma la prima riga e quanto distano le righe
+	private static final int QUOTA_CLASSIFICA = 100;
+	private static final int RIGA_CLASSIFICA = 50;
+	// A sinistra e a destra della classifica e dei trofei
+	private static final int MARGINE = 50;
+
+	/**
+	 * Le parti dell'intro: la storia che scorre (poi i loghi), la classifica che sale e si ferma, i trofei che scorrono.
+	 */
+	private enum Fase {
+		STORIA, CLASSIFICA, TROFEI
+	}
 
 	private final int width;
 	private final int height;
@@ -31,6 +50,13 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	private final int xOffset;
 	private final int yOffset;
 	private String messaggio;
+	private Fase fase = Fase.STORIA;
+	private ScorrimentoVerticale scorrimento;
+	private BufferedImage immagineStoria;
+	// Il tempo della fase: dall'ultimo fotogramma, da quando i loghi compaiono, da quando si sta fermi
+	private long ultimoFotogramma;
+	private double secondiLoghi = -1;
+	private double secondiFermo;
 
 	private Collection<TestataSalvataggio> salvataggiDisponibili;
 
@@ -48,24 +74,27 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 			yOffset = 0;
 	}
 	
+	/**
+	 * Fa ripartire l'intro dalla storia (e le schermate di fine partita dal primo messaggio).
+	 */
 	void resettaSequenza() {
 		sequenza = 0;
+		passaA(Fase.STORIA);
 	}
 
 	/**
-	 * Porta l'intro alla classifica: da lì si passa ai trofei, poi si riparte dai loghi.
+	 * Porta l'intro alla classifica: da lì si passa ai trofei, poi si riparte dalla storia.
 	 */
 	void posizionaSuPunteggi() {
-		sequenza = Misc.STORIA.length + 1;
+		passaA(Fase.CLASSIFICA);
 	}
 
-	/** Loghi, una pagina per ogni paragrafo della storia, classifica, le pagine dei trofei. */
-	int lunghezzaIntro() {
-		return Misc.STORIA.length + 2 + numeroPagineTrofei();
-	}
-
-	private static int numeroPagineTrofei() {
-		return (TipoTrofeo.values().length + TROFEI_PER_PAGINA - 1) / TROFEI_PER_PAGINA;
+	private void passaA(Fase nuovaFase) {
+		fase = nuovaFase;
+		scorrimento = null;
+		secondiLoghi = -1;
+		secondiFermo = 0;
+		ultimoFotogramma = 0;
 	}
 
 	void incrementaSequenza(int lunghezzaMassima) {
@@ -117,26 +146,6 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 				graphics.drawImage(doomdark, locXOffset + 9, locYOffset, null);
 				locYOffset += fontMedium.getHeight();
 			}
-		}
-	}
-
-	void intro(Graphics2D graphics) {
-		disegnaOmbraDelDrago(graphics);
-		if (sequenza == 0) {
-			BufferedImage d;
-			d = ImageCache.logo3AM;
-			graphics.drawImage(d, (width - d.getWidth()) >> 1, yOffset + 20, null);
-			d = ImageCache.logoForesta;
-			graphics.drawImage(d, (width - d.getWidth()) >> 1, yOffset + 80, null);
-		} else if (sequenza <= Misc.STORIA.length) {
-			messaggio = Misc.STORIA[sequenza - 1];
-			scrivi(graphics, true);
-		} else if (sequenza == Misc.STORIA.length + 1) {
-			// Dopo l'ultima pagina della storia, la classifica
-			hiscore(graphics);
-		} else {
-			// I trofei chiudono la sequenza, una pagina dopo l'altra
-			trofei(graphics, sequenza - Misc.STORIA.length - 2);
 		}
 	}
 
@@ -215,59 +224,167 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		scrivi(graphics,false);
 	}
 
-	void hiscore(Graphics2D graphics) {
-		disegnaOmbraDelDrago(graphics);
-		int locXOffset = xOffset;
-		int locYOffset = yOffset + 28;
-		Image doomdark;
-		DoomdarkColorModel.Color color = DoomdarkColorModel.Color.MEDIUM_GRAY;
-		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
-		for (int posizione = 0; posizione < GestorePunteggi.getCardinalita(); posizione++) {
-			Punteggio punteggio = GestorePunteggi.getPunteggio(posizione);
-			color = (color == DoomdarkColorModel.Color.MEDIUM_GRAY ? DoomdarkColorModel.Color.LIGHT_GRAY : DoomdarkColorModel.Color.MEDIUM_GRAY);
-			doomdark = ImageCache.get(punteggio.getNome(), fontMedium, color);
-			graphics.drawImage(doomdark, locXOffset + 9, locYOffset, null);
-			doomdark = ImageCache.get(punteggio.getPunteggio(), fontMedium, color);
-			graphics.drawImage(doomdark, width - locXOffset - doomdark.getWidth(null), locYOffset, null);
-			locYOffset += fontMedium.getHeight();
+	/**
+	 * L'intro, un fotogramma: la storia sale sullo sfondo della storia, i loghi compaiono appena la storia è salita
+	 * sopra di loro, poi loghi e sfondo spariscono insieme; la classifica sale e si ferma, poi sparisce; i trofei
+	 * scorrono tutti. Poi si ricomincia.
+	 */
+	void intro(Graphics2D graphics) {
+		double secondi = secondiDalFotogrammaPrecedente();
+		switch (fase) {
+			case STORIA:
+				storia(graphics, secondi);
+				break;
+			case CLASSIFICA:
+				classifica(graphics, secondi);
+				break;
+			default:
+				trofei(graphics, secondi);
+				break;
 		}
-		for (int posizione = 0; posizione < GestorePunteggi.getCardinalita(); posizione++) {
-			Punteggio punteggio = GestorePunteggi.getPunteggio(posizione);
-			int coordinataY = 100 + 50 * posizione;
-			drawString(graphics, punteggio.getNome().toLowerCase(), 50, coordinataY);
-			String valorePunteggio = String.valueOf(punteggio.getPunteggio());
-			drawString(graphics, valorePunteggio, width - 50 - getLarghezzaParola(valorePunteggio), coordinataY);
+	}
+
+	private double secondiDalFotogrammaPrecedente() {
+		long adesso = System.nanoTime();
+		double secondi = ultimoFotogramma == 0 ? 0 : (adesso - ultimoFotogramma) / 1_000_000_000d;
+		ultimoFotogramma = adesso;
+		return Math.min(secondi, SECONDI_FOTOGRAMMA_MASSIMI);
+	}
+
+	private void storia(Graphics2D graphics, double secondi) {
+		if (scorrimento == null) {
+			scorrimento = ScorrimentoVerticale.dalBasso(immagineStoria(), schermo(), FASCIA);
+		}
+		if (!scorrimento.isUscito()) {
+			scorrimento.avanza(secondi, VELOCITA);
+		}
+		// I loghi arrivano quando la storia non ci finirebbe sopra, e restano un poco dopo che è uscita
+		BufferedImage logo3AM = ImageCache.logo3AM;
+		int cimaLoghi = yOffset + 20;
+		if (secondiLoghi < 0 && scorrimento.getFondo() <= cimaLoghi - MARGINE_LOGHI) {
+			secondiLoghi = 0;
+		}
+		float uscita = 0;
+		if (secondiLoghi >= 0) {
+			secondiLoghi += secondi;
+			if (scorrimento.isUscito() && secondiLoghi >= SECONDI_DISSOLVENZA) {
+				secondiFermo += secondi;
+			}
+			uscita = (float) Math.max(0, Math.min(1, (secondiFermo - SECONDI_LOGHI) / SECONDI_DISSOLVENZA));
+		}
+		// Lo sfondo della storia sparisce insieme ai loghi
+		disegnaConOpacita(graphics, ImageCache.sfondoStoria, (width - ImageCache.sfondoStoria.getWidth()) >> 1,
+				(height - ImageCache.sfondoStoria.getHeight()) >> 1, 1 - uscita);
+		scorrimento.disegna(graphics, 1);
+		if (secondiLoghi >= 0) {
+			float opacita = (float) Math.min(1, secondiLoghi / SECONDI_DISSOLVENZA) * (1 - uscita);
+			disegnaConOpacita(graphics, logo3AM, (width - logo3AM.getWidth()) >> 1, cimaLoghi, opacita);
+			BufferedImage logoForesta = ImageCache.logoForesta;
+			disegnaConOpacita(graphics, logoForesta, (width - logoForesta.getWidth()) >> 1, yOffset + 80, opacita);
+		}
+		if (uscita >= 1) {
+			passaA(Fase.CLASSIFICA);
+		}
+	}
+
+	private void classifica(Graphics2D graphics, double secondi) {
+		disegnaOmbraDelDrago(graphics);
+		if (scorrimento == null) {
+			scorrimento = ScorrimentoVerticale.dalBasso(immagineClassifica(), schermo(), FASCIA).fermaA(QUOTA_CLASSIFICA);
+		}
+		scorrimento.avanza(secondi, VELOCITA);
+		if (scorrimento.isArrivato()) {
+			secondiFermo += secondi;
+		}
+		float uscita = (float) Math.max(0, Math.min(1, (secondiFermo - SECONDI_CLASSIFICA) / SECONDI_DISSOLVENZA));
+		scorrimento.disegna(graphics, 1 - uscita);
+		if (uscita >= 1) {
+			passaA(Fase.TROFEI);
+		}
+	}
+
+	private void trofei(Graphics2D graphics, double secondi) {
+		disegnaOmbraDelDrago(graphics);
+		if (scorrimento == null) {
+			scorrimento = ScorrimentoVerticale.dalBasso(ImmagineTrofei.costruisci(width - 2 * MARGINE, true),
+					schermo(), FASCIA);
+		}
+		scorrimento.avanza(secondi, VELOCITA);
+		scorrimento.disegna(graphics, 1);
+		if (scorrimento.isUscito()) {
+			passaA(Fase.STORIA);
 		}
 	}
 
 	/**
-	 * Una pagina dei trofei, raggruppati per tipologia: il titolo nel font grande e sotto
-	 * l'elenco, con il nome nel font medio, bianco se vinto e grigio scuro se mancante, e
-	 * sotto la descrizione nel font piccolo, grigio medio se vinto e grigio scuro se mancante.
-	 *
-	 * @param pagina da 0
+	 * La classifica ferma, a fine partita.
 	 */
-	void trofei(Graphics2D graphics, int pagina) {
+	void hiscore(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
-		disegnaStringaCentrataConACapoAutomatico(graphics, "trofei", 20);
-		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
-		DoomdarkFont fontSmall = DoomdarkFontSmall.getInstance();
-		int locXOffset = xOffset + 9;
-		int larghezzaMassima = width - 2 * locXOffset;
-		int locYOffset = 64;
-		List<TipoTrofeo> trofei = TipoTrofeo.perTipologia();
-		int primo = pagina * TROFEI_PER_PAGINA;
-		for (TipoTrofeo trofeo : trofei.subList(primo, Math.min(primo + TROFEI_PER_PAGINA, trofei.size()))) {
-			boolean vinto = RegistroTrofei.isVinto(trofeo);
-			Image doomdark = ImageCache.get(trofeo.getNome(), fontMedium,
-					vinto ? DoomdarkColorModel.Color.WHITE : DoomdarkColorModel.Color.DARK_GRAY);
-			graphics.drawImage(doomdark, locXOffset, locYOffset, null);
-			locYOffset += fontMedium.getHeight();
-			doomdark = ImageCache.get(trofeo.getDescrizione(), fontSmall,
-					vinto ? DoomdarkColorModel.Color.MEDIUM_GRAY : DoomdarkColorModel.Color.DARK_GRAY, larghezzaMassima);
-			graphics.drawImage(doomdark, locXOffset, locYOffset, null);
-			locYOffset += doomdark.getHeight(null) + (fontSmall.getHeight() >> 1);
+		graphics.drawImage(immagineClassifica(), 0, QUOTA_CLASSIFICA, null);
+	}
+
+	private Rectangle schermo() {
+		return new Rectangle(0, 0, width, height);
+	}
+
+	/**
+	 * Tutta la storia in un'immagine, un paragrafo dopo l'altro con una riga vuota in mezzo. Non cambia mai: si fa una
+	 * volta sola.
+	 */
+	private BufferedImage immagineStoria() {
+		if (immagineStoria == null) {
+			List<BufferedImage> paragrafi = new ArrayList<>();
+			int altezza = 0;
+			for (String paragrafo : Misc.STORIA) {
+				BufferedImage immagine = TestoGrande.immagine(paragrafo, width, true);
+				paragrafi.add(immagine);
+				altezza += immagine.getHeight() + TestoGrande.ALTEZZA_RIGA;
+			}
+			immagineStoria = new BufferedImage(width, Math.max(1, altezza - TestoGrande.ALTEZZA_RIGA), BufferedImage.TYPE_INT_ARGB);
+			Graphics2D g = immagineStoria.createGraphics();
+			try {
+				int y = 0;
+				for (BufferedImage paragrafo : paragrafi) {
+					g.drawImage(paragrafo, 0, y, null);
+					y += paragrafo.getHeight() + TestoGrande.ALTEZZA_RIGA;
+				}
+			} finally {
+				g.dispose();
+			}
 		}
+		return immagineStoria;
+	}
+
+	/**
+	 * La classifica in un'immagine, nell'alfabeto grande: il nome a sinistra, il punteggio a destra.
+	 */
+	private BufferedImage immagineClassifica() {
+		int righe = GestorePunteggi.getCardinalita();
+		BufferedImage immagine = new BufferedImage(width, Math.max(1, righe * RIGA_CLASSIFICA), BufferedImage.TYPE_INT_ARGB);
+		Graphics2D g = immagine.createGraphics();
+		try {
+			for (int posizione = 0; posizione < righe; posizione++) {
+				Punteggio punteggio = GestorePunteggi.getPunteggio(posizione);
+				int y = posizione * RIGA_CLASSIFICA;
+				TestoGrande.disegnaRiga(g, TestoGrande.normalizza(punteggio.getNome()), MARGINE, y);
+				String valore = String.valueOf(punteggio.getPunteggio());
+				TestoGrande.disegnaRiga(g, valore, width - MARGINE - TestoGrande.larghezza(valore), y);
+			}
+		} finally {
+			g.dispose();
+		}
+		return immagine;
+	}
+
+	private static void disegnaConOpacita(Graphics2D graphics, Image immagine, int x, int y, float opacita) {
+		if (opacita <= 0) {
+			return;
+		}
+		Composite composito = graphics.getComposite();
+		graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, Math.min(1f, opacita)));
+		graphics.drawImage(immagine, x, y, null);
+		graphics.setComposite(composito);
 	}
 
 	void disegnaOmbraDelDrago(Graphics2D graphics) {
@@ -275,102 +392,16 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		graphics.drawImage(d, (width - d.getWidth(null)) >> 1, (height - d.getHeight(null)) >> 1, null);
 	}
 	
-	private void drawString(Graphics2D graphics, String s, int xOffset, int yOffset) {
-		char[] caratteri = s.toCharArray();
-        for (char c : caratteri) {
-            BufferedImage image = recuperaGlifo(c);
-            graphics.drawImage(image, xOffset, yOffset, null);
-            xOffset += CHAR_SPACING + getLarghezzaCarattere(c);
-            if (xOffset >= width) {
-                break;
-            }
-        }
-	}
-
+	/**
+	 * Il testo nell'alfabeto grande, a capo dove serve, con le righe centrate a partire da quella quota.
+	 */
 	private void disegnaStringaCentrataConACapoAutomatico(Graphics2D graphics, String s, int yOffset) {
-		StringTokenizer st = new StringTokenizer(s, " ");
-		int phraseWidth = 0;
-		int wordWidth;
-		StringBuilder phrase = new StringBuilder();
-		String word;
-		while (st.hasMoreTokens()) {
-			word = st.nextToken();
-			wordWidth = getLarghezzaParola(word);
-			if (phraseWidth > 0 && (phraseWidth + 2 * CHAR_SPACING + getLarghezzaCarattere(' ') + wordWidth >= width)) {
-				disegna(graphics, phrase.toString(), phraseWidth, yOffset);
-				yOffset += 36;
-				phrase = new StringBuilder();
-				phraseWidth = 0;
-			}
-			if (phrase.length() > 0) {
-				phrase.append(" ");
-				phraseWidth += getLarghezzaCarattere(' ');
-			}
-			phrase.append(word);
-			phraseWidth += wordWidth + CHAR_SPACING;
-		}
-		disegna(graphics, phrase.toString(), phraseWidth, yOffset);
-	}
-
-	private int getLarghezzaParola(String s) {
-		int wordWidth = 0;
-		int l = s.length();
-		for (int i = 0; i < l; i++)
-			wordWidth += getLarghezzaCarattere(s.charAt(i)) + CHAR_SPACING;
-		return wordWidth;
-	}
-
-	private void disegna(Graphics graphics, String frase, int larghezzaFrase, int scostamentoVerticale) {
-		int l = frase.length();
-		int locXOffset = width - larghezzaFrase >> 1;
-		char[] c = frase.toCharArray();
-		Image img;
-		for (int i = 0; i < l; i++) {
-			img = recuperaGlifo(c[i]);
-			if (img != null)
-				graphics.drawImage(img, locXOffset, scostamentoVerticale, null);
-			locXOffset += getLarghezzaCarattere(c[i]) + CHAR_SPACING;
+		for (String riga : TestoGrande.righe(s, width)) {
+			TestoGrande.disegnaRiga(graphics, riga, (width - TestoGrande.larghezza(riga)) >> 1, yOffset);
+			yOffset += TestoGrande.ALTEZZA_RIGA;
 		}
 	}
 
-	private BufferedImage recuperaGlifo(char c) {
-		int index;
-		if (c >= 'a' && c <= 'z') {
-			index = c - 'a';
-			return ImageCache.lettere[index];
-		} else if (c >= '0' && c <= '9') {
-			index = c - '0';
-			return ImageCache.cifre[index];
-		} else if (c == '\'') {
-			return ImageCache.apostrofo;
-		} else if (c == ',') {
-			return ImageCache.virgola;
-		} else if (c == '.') {
-			return ImageCache.punto;
-		} else if (c == '?') {
-			return ImageCache.puntodd;
-		}
-		return null;
-	}
-
-	private int getLarghezzaCarattere(char c) {
-		if (c >= 'a' && c <= 'z')
-			return ImageCache.lettere[c - 'a'].getWidth();
-		if (c >= '0' && c <= '9')
-			return ImageCache.lettere[c - '0'].getWidth();
-		if (c == '\'')
-			return ImageCache.apostrofo.getWidth();
-		if (c == ',')
-			return ImageCache.virgola.getWidth();
-		if (c == '.')
-			return ImageCache.punto.getWidth();
-		if (c == '?')
-			return ImageCache.puntodd.getWidth();
-		if (c == ' ')
-			return 10;
-		return 1;
-	}
-	
 	private int getCoordinataY(int id) {
 		return 50 + 100 * id;
 	}

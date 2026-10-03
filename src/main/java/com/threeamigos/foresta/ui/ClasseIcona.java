@@ -88,6 +88,8 @@ public enum ClasseIcona {
 	ANNULLA(Comando.ANNULLA, "icone/Annulla.gif"),
 
 	AIUTO(Comando.AIUTO, "icone/Aiuto.gif"),
+	// Per ora una copia dell'icona di AIUTO, da ridisegnare
+	MOSTRA_TROFEI(Comando.MOSTRA_TROFEI, "icone/Trofei.gif"),
 	PERGAMENA(Comando.PERGAMENA, "icone/Pergamena.gif"),
 
 	SU(Comando.SU, "icone/Su.gif"),

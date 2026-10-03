@@ -2,6 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioGruppo;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaTrofei;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoDiGioco;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoInvioTesto;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoVisualizzazioneMappa;
@@ -65,6 +66,9 @@ import java.util.function.Supplier;
 //  da ridisegnare con una maschera.
 // TODO: img/fondi/Luna.gif (la luna normale) e img/fondi/LunaSW.gif (la stazione da battaglia), negli intermezzi
 //  dell'accampamento, sono copie di LunaHHGTTG.gif, da ridisegnare.
+// TODO: img/fondi/SfondoStoria.gif, lo sfondo della storia che scorre nell'intro, è una copia di OmbraDelDrago.gif: va
+//  sostituito con una foresta con templi e locande.
+// TODO: img/icone/Trofei.gif, l'icona del comando MOSTRA_TROFEI nell'inventario, è una copia di Aiuto.gif, da ridisegnare.
 // TODO: img/oggetti/OggettoMissione.gif è un sacchetto provvisorio, da ridisegnare: lo usano tutti gli oggetti delle
 //  missioni (i materiali delle richieste: erbe, minerali, pesci, trofei; l'oggetto smarrito). In futuro magari
 //  un'immagine per ogni oggetto.
@@ -219,6 +223,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriIngresso.put(Stato.SCELTA_BERSAGLIO_RESURREZIONE, this::entraInStatoSceltaBersaglioResurrezione);
 		gestoriIngresso.put(Stato.MAPPA, this::entraInStatoMappa);
 		gestoriIngresso.put(Stato.INVENTARIO, this::entraInStatoInventario);
+		gestoriIngresso.put(Stato.TROFEI, this::entraInStatoTrofei);
 		// Uscendo da MAPPA o INVENTARIO aperti mentre si era IN_LOCAZIONE si torna qui
 		// tramite CONTINUA_CON_INGRESSO (statoPrecedente vale IN_LOCAZIONE), con comando
 		// nullo: bisogna ripubblicare i comandi della locazione, altrimenti restano quelli
@@ -265,6 +270,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriComando.put(Stato.ESEECUZIONE_RESURREZIONE, this::gestisciComandoInStatoEsecuzioneResurrezione);
 		gestoriComando.put(Stato.MAPPA, this::gestisciComandoInStatoMappa);
 		gestoriComando.put(Stato.INVENTARIO, this::gestisciComandoInStatoInventario);
+		gestoriComando.put(Stato.TROFEI, this::gestisciComandoInStatoTrofei);
 		gestoriComando.put(Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE, this::gestisciComandoInStatoSelezioneSalvataggioDaScrivere);
 		gestoriComando.put(Stato.CONFERMA_USCITA, this::gestisciComandoInStatoConfermaUscita);
 		gestoriComando.put(Stato.GIOCO_PERSO, this::gestisciComandoInStatoGiocoPerso);
@@ -1312,9 +1318,28 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				indicePersonaggioInventario = comando.ordinal() - Comando.PERSONAGGIO_1.ordinal();
 				richiediAperturaInventarioGruppo();
 				return Esito.FERMATI;
+			case MOSTRA_TROFEI:
+				stato = Stato.TROFEI;
+				return Esito.CONTINUA_CON_INGRESSO;
 			default:
 				throw new IllegalArgumentException();
 		}
+	}
+
+	/**
+	 * La pagina dei trofei: l'unico comando è ANNULLA, che torna all'inventario.
+	 */
+	private Esito entraInStatoTrofei() {
+		BusEventi.pubblica(new ComandoAperturaTrofei(Collections.singletonList(Comando.ANNULLA)));
+		return Esito.FERMATI;
+	}
+
+	private Esito gestisciComandoInStatoTrofei(Comando comando) {
+		if (comando != Comando.ANNULLA) {
+			throw new IllegalArgumentException();
+		}
+		stato = Stato.INVENTARIO;
+		return Esito.CONTINUA_CON_INGRESSO;
 	}
 
 	/**
@@ -1878,6 +1903,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		for (int i = 0; i < l; i++) {
 			comandiPossibili.add(Comando.ofPersonaggio(i));
 		}
+		comandiPossibili.add(Comando.MOSTRA_TROFEI);
 		comandiPossibili.add(Comando.ANNULLA);
 
 		// Ultimo personaggio selezionato

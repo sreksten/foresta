@@ -91,6 +91,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(ComandoAperturaIncantatore.class, this::gestisciEventoRichiestaAperturaIncantatore);
 		BusEventi.iscriviti(ComandoAperturaInventarioFornitore.class, this::gestisciEventoRichiestaAperturaInventarioFornitore);
 		BusEventi.iscriviti(ComandoAperturaInventarioGruppo.class, this::gestisciEventoRichiestaAperturaInventarioGruppo);
+		BusEventi.iscriviti(ComandoAperturaTrofei.class, this::gestisciEventoRichiestaAperturaTrofei);
 		BusEventi.iscriviti(InternoRichiestaChiusuraFinestraCombattimento.class, this::gestisciEventoRichiestaChiusuraFinestraCombattimento);
 		BusEventi.iscriviti(NotificaRaccoltaOggetti.class, this::gestisciEventoRaccoltaOggetti);
 		BusEventi.iscriviti(RichiestaUscitaDalGioco.class, this::gestisciEventoRichiestaConfermaUscita);
@@ -342,6 +343,11 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.impostaAutomaInventario(evento.getAutomaInventario());
 		displayableCanvas.inventario();
+	}
+
+	private void gestisciEventoRichiestaAperturaTrofei(ComandoAperturaTrofei evento) {
+		impostaAzioni(evento.getPossibilita());
+		displayableCanvas.trofei();
 	}
 
 	private void gestisciEventoRichiestaChiusuraFinestraCombattimento(InternoRichiestaChiusuraFinestraCombattimento evento) {

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.trofei;
 
+import com.threeamigos.foresta.motore.RegistroTrofei;
 import com.threeamigos.foresta.motore.tipi.TipoTrofeo;
 
 /**
@@ -20,4 +21,16 @@ public interface Trofeo {
 	 * @return true se il trofeo è stato meritato
 	 */
 	boolean isMeritato();
+
+	/**
+	 * Quanto serve per vincerlo: 100 goblin, 50 missioni, 1 per un boss.
+	 */
+	int getObiettivo();
+
+	/**
+	 * A che punto è, da 0 a {@link #getObiettivo()}: quello che il registro ha accumulato, partita dopo partita.
+	 */
+	default int getProgresso() {
+		return Math.min(getObiettivo(), RegistroTrofei.getProgresso(getTipo()));
+	}
 }

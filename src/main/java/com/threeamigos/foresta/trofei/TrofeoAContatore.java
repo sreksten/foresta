@@ -46,4 +46,9 @@ public class TrofeoAContatore<E> implements Trofeo {
 	public boolean isMeritato() {
 		return RegistroTrofei.getProgresso(tipo) >= soglia;
 	}
+
+	@Override
+	public int getObiettivo() {
+		return soglia;
+	}
 }

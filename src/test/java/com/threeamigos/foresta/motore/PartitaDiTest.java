@@ -87,6 +87,7 @@ final class PartitaDiTest implements AutoCloseable {
 		BusEventi.iscriviti(ComandoAperturaInventarioFornitore.class, this::aggiornaComandi);
 		BusEventi.iscriviti(ComandoAperturaIncantatore.class, this::aggiornaComandi);
 		BusEventi.iscriviti(ComandoAperturaInventarioGruppo.class, this::aggiornaComandi);
+		BusEventi.iscriviti(ComandoAperturaTrofei.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaSelezioneIncantesimoDaLanciare.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaSelezioneSiNo.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaSelezioneMissione.class, this::aggiornaComandi);

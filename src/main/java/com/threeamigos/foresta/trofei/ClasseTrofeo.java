@@ -75,6 +75,13 @@ public enum ClasseTrofeo {
 		return supplier.get();
 	}
 
+	/**
+	 * Il trofeo di quel tipo (non iscritto agli eventi: per leggerne obiettivo e progresso).
+	 */
+	public static Trofeo di(TipoTrofeo tipo) {
+		return valueOf(tipo.name()).getIstanza();
+	}
+
 	private static Trofeo refurtiva(TipoTrofeo tipo, ClassiOggetto classe) {
 		return new TrofeoAContatore<>(tipo, InternoOggettoRaccolto.class,
 				evento -> evento.isCustodito() && evento.getClasse() == classe ? evento.getQuantita() : 0, 100);

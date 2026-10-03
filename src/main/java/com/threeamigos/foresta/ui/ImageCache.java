@@ -44,6 +44,8 @@ public class ImageCache {
 	static BufferedImage venditoreDiPergamene;
 	static BufferedImage incantatore;
 	static BufferedImage ombraDelDrago;
+	// Lo sfondo della storia nell'intro: per ora una copia dell'ombra del drago, sarà una foresta con templi e locande
+	static BufferedImage sfondoStoria;
 	static BufferedImage trionfo;
 	static BufferedImage separatore;
 	static BufferedImage separatoreArmi;
@@ -126,6 +128,7 @@ public class ImageCache {
 		venditoreDiPergamene = BufferedImageBuilder.buildBufferedImage("personaggi/VenditoreDiPergamene.gif");
 		incantatore = BufferedImageBuilder.buildBufferedImage("personaggi/Incantatore.gif");
 		ombraDelDrago = BufferedImageBuilder.buildBufferedImage("fondi/OmbraDelDrago.gif");
+		sfondoStoria = BufferedImageBuilder.buildBufferedImage("fondi/SfondoStoria.gif");
 		trionfo = BufferedImageBuilder.buildBufferedImage("fondi/Trionfo.gif");
 		separatore = BufferedImageBuilder.buildBufferedImage("fondi/Separatore.gif");
 		separatoreArmi = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Armi.gif");
