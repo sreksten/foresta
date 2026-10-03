@@ -3,6 +3,8 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoPrelievoArtefatto;
+import com.threeamigos.foresta.missioni.SetLeggendario;
+import com.threeamigos.foresta.motore.RegoleSetLeggendari;
 import com.threeamigos.foresta.motore.tipi.TipoAttributo;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -82,6 +84,13 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         y += ALTEZZA_LADRO;
         graphics.drawImage(immaginePersonaggio, (width - immaginePersonaggio.getWidth()) / 2, y - immaginePersonaggio.getHeight(), null);
         y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
+
+        // I set leggendari completi, sotto l'immagine: quello che segue scende di quanto serve
+        for (SetLeggendario set : RegoleSetLeggendari.setCompleti(p.getModelloDati().getArtefatti())) {
+            doomdark = ImageCache.get(RegoleSetLeggendari.descrizioneSetCompleto(set), DoomdarkColorModel.Color.YELLOW);
+            graphics.drawImage(doomdark, (width - doomdark.getWidth(null)) / 2, y, null);
+            y += fontHeight + SPACING;
+        }
 
         // Livello, XP, punti disponibili
         disegnaAttributoEValore(TipoAttributo.LIVELLO, p.getLivello(), graphics, y, coloreTestata);

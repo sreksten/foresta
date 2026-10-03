@@ -544,16 +544,13 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	/**
-	 * La rivelazione dell'artefatto trovato è centrata sul riquadro della locazione e resta sopra il riquadro del
-	 * testo, che resta leggibile; all'uscita vola verso il riquadro del gruppo.
+	 * La rivelazione dell'artefatto trovato è al centro dello schermo; all'uscita vola verso il riquadro del gruppo.
 	 */
 	private void gestisciEventoArtefattoTrovato(NotificaArtefattoTrovato evento) {
-		Rectangle testo = mappaCoordinateElementiGrafici.get(riquadroTesto);
 		Rectangle gruppo = mappaCoordinateElementiGrafici.get(riquadroGruppo);
-		Rectangle area = new Rectangle(testo.x, ImageCache.SPACING, testo.width, testo.y - 2 * ImageCache.SPACING);
+		Rectangle area = new Rectangle(0, 0, getWidth(), getHeight());
 		Point destinazione = new Point((int) gruppo.getCenterX(), (int) gruppo.getCenterY());
-		codaRivelazioni.add(new SpriteRivelazioneArtefatto(evento.getArtefatto(), evento.getLivelloMondo(), area,
-				mappaCoordinateElementiGrafici.get(riquadroLocazione), destinazione));
+		codaRivelazioni.add(new SpriteRivelazioneArtefatto(evento.getArtefatto(), evento.getLivelloMondo(), area, destinazione));
 		BusEventi.pubblica(new InternoUiOccupata());
 	}
 

@@ -9,11 +9,13 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto
 import com.threeamigos.foresta.motore.RegoleSetLeggendari;
 import com.threeamigos.foresta.motore.AutomaScambiatoreArtefatti;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.tipi.SupertipoArtefatto;
 import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Incantamento;
+import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -219,11 +221,27 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
                     artefatto.getModelloDati().getDescrizioneBreve(), fontSmall, colore,
                     null, artefatto);
             nodo.setFigliVisibili(artefatto.isFigliVisibili());
-            RegoleSetLeggendari.descrizioneSet(artefatto.getModelloDati()).ifPresent(set -> nodo.creaNodo(
-                    set, font, coloreSeparatori,
-                    null, null, null,
-                    null, null, null,
-                    null, artefatto));
+            RegoleSetLeggendari.descrizioneSet(artefatto.getModelloDati()).ifPresent(set -> {
+                nodo.creaNodo(
+                        set, font, coloreSeparatori,
+                        null, null, null,
+                        null, null, null,
+                        null, artefatto);
+                // I pezzi: verdi quelli indossati da chi indossa questo, gialli quelli del gruppo, grigi da trovare
+                // (di questi solo il tipo)
+                for (RegoleSetLeggendari.Pezzo pezzo : RegoleSetLeggendari.pezzi(artefatto.getModelloDati(),
+                        equipaggiamentiDelGruppo(), inventarioDelGruppo())) {
+                    boolean noto = pezzo.getStato() != RegoleSetLeggendari.StatoPezzo.DA_TROVARE
+                            || pezzo.getNome().equals(artefatto.getModelloDati().getPezzoLeggendario());
+                    DoomdarkColorModel.Color colorePezzo = colorePezzo(pezzo.getStato());
+                    nodo.creaNodo(
+                            pezzo.getTipo().getDescrizione(), font, colorePezzo,
+                            noto ? pezzo.getNome().substring(0, 1).toUpperCase() + pezzo.getNome().substring(1) : "???",
+                            fontSmall, colorePezzo,
+                            null, null, null,
+                            null, artefatto);
+                }
+            });
             if (!artefatto.getModificatori().isEmpty()) {
                 nodo.creaNodo(
                         "Modificatori:", font, coloreSeparatori,
@@ -364,6 +382,39 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         if (artefatto != null) {
             automa.richiediSpostamentoSuParteAttiva(artefatto);
         }
+    }
+
+    private static DoomdarkColorModel.Color colorePezzo(RegoleSetLeggendari.StatoPezzo stato) {
+        switch (stato) {
+            case INDOSSATO:
+                return DoomdarkColorModel.Color.GREEN;
+            case DEL_GRUPPO:
+                return DoomdarkColorModel.Color.YELLOW;
+            default:
+                return DoomdarkColorModel.Color.MEDIUM_GRAY;
+        }
+    }
+
+    /**
+     * Gli artefatti indossati da ogni personaggio del gruppo.
+     */
+    private static List<Collection<ArtefattoMD>> equipaggiamentiDelGruppo() {
+        List<Collection<ArtefattoMD>> equipaggiamenti = new ArrayList<>();
+        for (Personaggio personaggio : GruppoGiocatore.getIstanza().getPersonaggi()) {
+            equipaggiamenti.add(personaggio.getModelloDati().getArtefatti());
+        }
+        return equipaggiamenti;
+    }
+
+    /**
+     * Gli artefatti del gruppo che nessuno indossa.
+     */
+    private static Collection<ArtefattoMD> inventarioDelGruppo() {
+        List<ArtefattoMD> inventario = new ArrayList<>();
+        for (Artefatto artefatto : GruppoGiocatore.getIstanza().getInventario()) {
+            inventario.add(artefatto.getModelloDati());
+        }
+        return inventario;
     }
 
     /**

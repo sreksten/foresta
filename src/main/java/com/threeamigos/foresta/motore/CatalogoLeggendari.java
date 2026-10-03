@@ -2,15 +2,18 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.missioni.OggettoLeggendario;
 import com.threeamigos.foresta.missioni.SetLeggendario;
+import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
 import com.threeamigos.foresta.motore.tipi.TipoSlotArtefatto;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * Tutti i set leggendari di leggendari.txt e i loro pezzi: i pezzi di un set sono le righe degli oggetti che lo
@@ -28,6 +31,7 @@ public final class CatalogoLeggendari {
 
 	private static Map<String, SetLeggendario> set;
 	private static Map<String, Set<String>> pezzi;
+	private static Map<String, TipoArtefatto> tipiDeiPezzi;
 
 	private CatalogoLeggendari() {
 	}
@@ -41,11 +45,24 @@ public final class CatalogoLeggendari {
 	}
 
 	/**
-	 * I pezzi del set, con il loro nome breve; vuoto per un set che non c'è.
+	 * I pezzi del set, con il loro nome breve, in ordine di tipo (le armi, poi lo scudo, l'elmo...); vuoto per un set
+	 * che non c'è.
 	 */
 	public static Set<String> getPezzi(String chiave) {
 		carica();
 		return pezzi.getOrDefault(chiave, Collections.emptySet());
+	}
+
+	/**
+	 * Il tipo di un pezzo di un set, dal suo nome breve.
+	 */
+	public static TipoArtefatto getTipo(String pezzo) {
+		carica();
+		TipoArtefatto tipo = tipiDeiPezzi.get(pezzo);
+		if (tipo == null) {
+			throw new IllegalArgumentException("Non è un pezzo di un set: " + pezzo);
+		}
+		return tipo;
 	}
 
 	/**
@@ -68,6 +85,7 @@ public final class CatalogoLeggendari {
 			}
 		}
 		Map<String, Set<String>> pezziDeiSet = new HashMap<>();
+		Map<String, TipoArtefatto> tipi = new HashMap<>();
 		Map<String, Set<TipoSlotArtefatto>> slotDeiSet = new HashMap<>();
 		for (String riga : ProduttoreDiTestiCasuale.tuttiGliOggettiLeggendari()) {
 			OggettoLeggendario leggendario = OggettoLeggendario.da(riga);
@@ -79,14 +97,20 @@ public final class CatalogoLeggendari {
 				throw new IllegalStateException(leggendario.getNomeBreve() + " è di un set che non c'è: " + chiave);
 			}
 			pezziDeiSet.computeIfAbsent(chiave, k -> new LinkedHashSet<>()).add(leggendario.getNomeBreve());
+			tipi.put(leggendario.getNomeBreve(), leggendario.getTipo());
 			aggiungiSlot(slotDeiSet.computeIfAbsent(chiave, k -> EnumSet.noneOf(TipoSlotArtefatto.class)), leggendario);
 		}
 		for (String chiave : tuttiISet.keySet()) {
 			if (pezziDeiSet.getOrDefault(chiave, Collections.emptySet()).size() < 2) {
 				throw new IllegalStateException("Il set " + chiave + " ha meno di due pezzi");
 			}
-			pezziDeiSet.put(chiave, Collections.unmodifiableSet(pezziDeiSet.get(chiave)));
+			// In ordine di tipo, così i testi elencano i pezzi sempre allo stesso modo
+			Set<String> inOrdine = pezziDeiSet.get(chiave).stream()
+					.sorted(Comparator.comparing((String pezzo) -> tipi.get(pezzo).ordinal()).thenComparing(pezzo -> pezzo))
+					.collect(Collectors.toCollection(LinkedHashSet::new));
+			pezziDeiSet.put(chiave, Collections.unmodifiableSet(inOrdine));
 		}
+		tipiDeiPezzi = Collections.unmodifiableMap(tipi);
 		set = Collections.unmodifiableMap(tuttiISet);
 		pezzi = Collections.unmodifiableMap(pezziDeiSet);
 	}

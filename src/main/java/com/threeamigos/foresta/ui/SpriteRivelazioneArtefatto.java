@@ -42,7 +42,7 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 	private static final float FOTOGRAMMA = 1f / Temporizzatore.FRAME_PER_SECONDO;
 
 	// Per gradino di splendore (0-3): raggio del cerchio, numero di raggi, lunghezza massima in raggi, scintille
-	private static final int[] RAGGIO = {40, 48, 56, 64};
+	private static final int[] RAGGIO = {64, 76, 88, 100};
 	private static final int[] RAGGI = {8, 12, 16, 24};
 	private static final float[] LUNGHEZZA = {1.8f, 2.1f, 2.5f, 3.0f};
 	private static final int[] SCINTILLE = {0, 6, 12, 22};
@@ -88,11 +88,10 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 	private boolean attivo = true;
 
 	/**
-	 * @param area         dove sta la rivelazione: sopra il riquadro del testo, che resta leggibile
-	 * @param locazione    il riquadro della locazione, su cui si centra il cerchio
+	 * @param area         dove sta la rivelazione, centrata: tutto lo schermo
 	 * @param destinazione dove vola all'uscita (il riquadro del gruppo)
 	 */
-	SpriteRivelazioneArtefatto(Artefatto artefatto, int livelloMondo, Rectangle area, Rectangle locazione, Point destinazione) {
+	SpriteRivelazioneArtefatto(Artefatto artefatto, int livelloMondo, Rectangle area, Point destinazione) {
 		ArtefattoMD md = artefatto.getModelloDati();
 		this.gradino = splendore(md, livelloMondo);
 		this.raggio = RAGGIO[gradino];
@@ -109,12 +108,12 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 			}
 		}
 		this.immagine = immagine(md.getTipo());
-		this.pannello = pannello(md, Math.min(area.width - 24, 560));
+		this.pannello = pannello(md, Math.min(area.width - 48, 900));
 		int altezzaTotale = 2 * raggio + 12 + pannello.getHeight();
-		int alto = locazione.y + Math.max(6, (locazione.height - altezzaTotale) / 2);
-		this.centroX = (int) locazione.getCenterX();
+		int alto = area.y + Math.max(6, (area.height - altezzaTotale) / 2);
+		this.centroX = (int) area.getCenterX();
 		this.centroY = alto + raggio;
-		// Il pannello si centra sotto il cerchio, ma senza uscire dall'area (a destra c'è il riquadro del gruppo)
+		// Il pannello si centra sotto il cerchio, senza uscire dall'area
 		this.pannelloX = Math.max(area.x + 4, Math.min(area.x + area.width - 4 - pannello.getWidth(), centroX - pannello.getWidth() / 2));
 		Random random = new Random(md.getNome().hashCode());
 		scintille = new float[SCINTILLE[gradino]][];
@@ -250,10 +249,10 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 			}
 		}
 
-		// L'oggetto sul cerchio
+		// L'oggetto sul cerchio, al più alle sue dimensioni vere: ingrandito, il disegno si sgranerebbe
 		if (immagine != null) {
-			float lato = r * 1.25f;
-			float s = Math.min(lato / immagine.getWidth(), lato / immagine.getHeight());
+			float lato = raggio * 1.6f;
+			float s = Math.min(1f, Math.min(lato / immagine.getWidth(), lato / immagine.getHeight())) * scala;
 			int w = Math.round(immagine.getWidth() * s);
 			int h = Math.round(immagine.getHeight() * s);
 			Composite composito = g.getComposite();
@@ -349,21 +348,21 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 
 	/**
 	 * Il pannello scuro sotto il cerchio: il nome proprio (o il nome), il nome comune se c'è un nome proprio, la
-	 * descrizione, livello e rarità, poi gli incantamenti e i modificatori, verdi i bonus e rossi i malus.
+	 * descrizione, livello e rarità, il set leggendario e i tipi dei suoi pezzi, poi gli incantamenti e i
+	 * modificatori, verdi i bonus e rossi i malus. Tutto con il font medio, che si legge meglio del piccolo.
 	 */
 	private BufferedImage pannello(ArtefattoMD md, int larghezzaMassima) {
-		DoomdarkFont grande = DoomdarkFontMedium.getInstance();
-		DoomdarkFont piccolo = DoomdarkFontSmall.getInstance();
+		DoomdarkFont font = DoomdarkFontMedium.getInstance();
 		List<Image> righe = new ArrayList<>();
 		String nomeProprio = md.getNomeProprio();
 		if (nomeProprio != null) {
-			righe.add(DoomdarkTextProducer.getImage(nomeProprio, grande, DoomdarkColorModel.Color.YELLOW, larghezzaMassima));
-			righe.add(DoomdarkTextProducer.getImage(maiuscola(md.getNome()), piccolo, DoomdarkColorModel.Color.WHITE, larghezzaMassima));
+			righe.add(DoomdarkTextProducer.getImage(nomeProprio, font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima));
+			righe.add(DoomdarkTextProducer.getImage(maiuscola(md.getNome()), font, DoomdarkColorModel.Color.WHITE, larghezzaMassima));
 		} else {
-			righe.add(DoomdarkTextProducer.getImage(maiuscola(md.getNome()), grande, DoomdarkColorModel.Color.YELLOW, larghezzaMassima));
+			righe.add(DoomdarkTextProducer.getImage(maiuscola(md.getNome()), font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima));
 		}
 		if (md.getDescrizione() != null) {
-			righe.add(DoomdarkTextProducer.getImage(maiuscola(md.getDescrizione()), piccolo, DoomdarkColorModel.Color.LIGHT_GRAY, larghezzaMassima));
+			righe.add(DoomdarkTextProducer.getImage(maiuscola(md.getDescrizione()), font, DoomdarkColorModel.Color.LIGHT_GRAY, larghezzaMassima));
 		}
 		StringBuilder dati = new StringBuilder("Livello ").append(md.getLivello());
 		if (md.getRarita() != TipoRaritaArtefatto.COMUNE) {
@@ -372,9 +371,11 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 		if (md.getDanni() > 0) {
 			dati.append(", danni ").append(md.getDanni());
 		}
-		righe.add(DoomdarkTextProducer.getImage(dati.toString(), piccolo, DoomdarkColorModel.Color.WHITE, larghezzaMassima));
+		righe.add(DoomdarkTextProducer.getImage(dati.toString(), font, DoomdarkColorModel.Color.WHITE, larghezzaMassima));
 		RegoleSetLeggendari.descrizioneSet(md).ifPresent(set ->
-				righe.add(DoomdarkTextProducer.getImage(set, piccolo, DoomdarkColorModel.Color.YELLOW, larghezzaMassima)));
+				righe.add(DoomdarkTextProducer.getImage(set, font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima)));
+		RegoleSetLeggendari.tipiDelSet(md).ifPresent(tipi ->
+				righe.add(DoomdarkTextProducer.getImage(tipi, font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima)));
 		List<String> incantamenti = new ArrayList<>();
 		for (Incantamento incantamento : md.getIncantamenti()) {
 			incantamenti.add(incantamento(incantamento));
@@ -384,9 +385,9 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 		for (ModificatoreAttributo modificatore : md.getModificatori()) {
 			(modificatore.getQuantita() >= 0 ? bonus : malus).add(modificatore(modificatore));
 		}
-		aggiungi(righe, incantamenti, piccolo, DoomdarkColorModel.Color.YELLOW, larghezzaMassima);
-		aggiungi(righe, bonus, piccolo, DoomdarkColorModel.Color.GREEN, larghezzaMassima);
-		aggiungi(righe, malus, piccolo, DoomdarkColorModel.Color.RED, larghezzaMassima);
+		aggiungi(righe, incantamenti, font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima);
+		aggiungi(righe, bonus, font, DoomdarkColorModel.Color.GREEN, larghezzaMassima);
+		aggiungi(righe, malus, font, DoomdarkColorModel.Color.RED, larghezzaMassima);
 
 		int margine = 8;
 		int divario = 3;

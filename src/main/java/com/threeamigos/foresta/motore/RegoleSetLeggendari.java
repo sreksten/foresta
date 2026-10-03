@@ -3,12 +3,18 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.missioni.SetLeggendario;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
 import com.threeamigos.foresta.motore.tipi.TipoModificatore;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.Set;
@@ -68,17 +74,136 @@ public final class RegoleSetLeggendari {
 	}
 
 	/**
-	 * Per i testi, il set di cui l'artefatto è un pezzo: "Pezzo del Corredo di RomyJona (4 pezzi, bonus x1,5)";
-	 * vuoto se non è un pezzo di un set.
+	 * Dove sta un pezzo di un set, rispetto a un altro pezzo dello stesso set.
+	 */
+	public enum StatoPezzo {
+		/**
+		 * Lo indossa chi indossa l'altro pezzo.
+		 */
+		INDOSSATO,
+		/**
+		 * Ce l'ha il gruppo: nell'inventario, o addosso a un altro personaggio.
+		 */
+		DEL_GRUPPO,
+		/**
+		 * Il gruppo non ce l'ha.
+		 */
+		DA_TROVARE
+	}
+
+	/**
+	 * Un pezzo di un set, per i testi: il nome breve, il tipo e dove sta.
+	 */
+	public static final class Pezzo {
+		private final String nome;
+		private final TipoArtefatto tipo;
+		private final StatoPezzo stato;
+
+		Pezzo(String nome, TipoArtefatto tipo, StatoPezzo stato) {
+			this.nome = nome;
+			this.tipo = tipo;
+			this.stato = stato;
+		}
+
+		public String getNome() {
+			return nome;
+		}
+
+		public TipoArtefatto getTipo() {
+			return tipo;
+		}
+
+		public StatoPezzo getStato() {
+			return stato;
+		}
+	}
+
+	/**
+	 * Per i testi, il set di cui l'artefatto è un pezzo: "Pezzo del Corredo di RomyJona (bonus x1,5)"; vuoto se non è
+	 * un pezzo di un set.
 	 */
 	public static Optional<String> descrizioneSet(ArtefattoMD artefatto) {
+		return set(artefatto).map(set -> "Pezzo " + Misc.conPreposizione("di", set.getNome()) + " (bonus x" + moltiplicatore(set) + ")");
+	}
+
+	/**
+	 * Per i testi, i tipi dei pezzi del set dell'artefatto: "Spada, Elmo, Maschera, Schinieri"; vuoto se non è un pezzo
+	 * di un set.
+	 */
+	public static Optional<String> tipiDelSet(ArtefattoMD artefatto) {
+		return set(artefatto).map(set -> CatalogoLeggendari.getPezzi(set.getChiave()).stream()
+				.map(pezzo -> CatalogoLeggendari.getTipo(pezzo).getDescrizione())
+				.collect(Collectors.joining(", ")));
+	}
+
+	/**
+	 * I pezzi del set dell'artefatto e dove stanno: indossati da chi indossa l'artefatto, del gruppo o da trovare.
+	 * L'artefatto stesso è indossato se qualcuno lo indossa, altrimenti del gruppo se è nell'inventario, altrimenti
+	 * (per esempio in un negozio) da trovare. Vuoto se non è un pezzo di un set.
+	 *
+	 * @param equipaggiamenti  gli artefatti indossati da ogni personaggio del gruppo
+	 * @param inventarioGruppo gli artefatti del gruppo che nessuno indossa
+	 */
+	public static List<Pezzo> pezzi(ArtefattoMD artefatto, Collection<Collection<ArtefattoMD>> equipaggiamenti,
+									Collection<ArtefattoMD> inventarioGruppo) {
 		String chiave = artefatto.getSetLeggendario();
 		if (chiave == null) {
-			return Optional.empty();
+			return Collections.emptyList();
 		}
-		return CatalogoLeggendari.getSet(chiave).map(set -> "Pezzo " + Misc.conPreposizione("di", set.getNome()) + " ("
-				+ CatalogoLeggendari.getPezzi(chiave).size() + " pezzi, bonus x"
-				+ new DecimalFormat("0.##", DecimalFormatSymbols.getInstance(Locale.ITALIAN)).format(set.getMoltiplicatore()) + ")");
+		Collection<ArtefattoMD> portatore = equipaggiamenti.stream()
+				.filter(equipaggiamento -> equipaggiamento.contains(artefatto))
+				.findFirst().orElse(Collections.emptyList());
+		Set<String> indossati = pezziDelSet(portatore, chiave);
+		Set<String> delGruppo = new HashSet<>(pezziDelSet(inventarioGruppo, chiave));
+		equipaggiamenti.forEach(equipaggiamento -> delGruppo.addAll(pezziDelSet(equipaggiamento, chiave)));
+		List<Pezzo> pezzi = new ArrayList<>();
+		for (String pezzo : CatalogoLeggendari.getPezzi(chiave)) {
+			StatoPezzo stato = indossati.contains(pezzo) ? StatoPezzo.INDOSSATO
+					: delGruppo.contains(pezzo) ? StatoPezzo.DEL_GRUPPO : StatoPezzo.DA_TROVARE;
+			pezzi.add(new Pezzo(pezzo, CatalogoLeggendari.getTipo(pezzo), stato));
+		}
+		return pezzi;
+	}
+
+	/**
+	 * I set che chi indossa quegli artefatti ha completato.
+	 */
+	public static List<SetLeggendario> setCompleti(Collection<ArtefattoMD> indossati) {
+		return indossati.stream()
+				.map(ArtefattoMD::getSetLeggendario)
+				.filter(Objects::nonNull)
+				.distinct()
+				.filter(set -> isCompleto(indossati, set))
+				.map(CatalogoLeggendari::getSet)
+				.filter(Optional::isPresent)
+				.map(Optional::get)
+				.collect(Collectors.toList());
+	}
+
+	/**
+	 * Per i testi, un set completo: "Set completo: Corredo di RomyJona (bonus x1,5)". Senza aggettivi da accordare,
+	 * perché i set sono maschili e femminili.
+	 */
+	public static String descrizioneSetCompleto(SetLeggendario set) {
+		return "Set completo: " + Misc.inizialeMaiuscola(senzaArticolo(set.getNome())) + " (bonus x" + moltiplicatore(set) + ")";
+	}
+
+	private static String senzaArticolo(String nome) {
+		for (String articolo : new String[] {"il ", "lo ", "la ", "i ", "gli ", "le ", "l'"}) {
+			if (nome.startsWith(articolo)) {
+				return nome.substring(articolo.length());
+			}
+		}
+		return nome;
+	}
+
+	private static Optional<SetLeggendario> set(ArtefattoMD artefatto) {
+		String chiave = artefatto.getSetLeggendario();
+		return chiave == null ? Optional.empty() : CatalogoLeggendari.getSet(chiave);
+	}
+
+	private static String moltiplicatore(SetLeggendario set) {
+		return new DecimalFormat("0.##", DecimalFormatSymbols.getInstance(Locale.ITALIAN)).format(set.getMoltiplicatore());
 	}
 
 	private static Set<String> pezziDelSet(Collection<ArtefattoMD> indossati, String set) {

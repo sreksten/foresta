@@ -38,7 +38,11 @@ class ScenarioSetLeggendariTest {
         ArtefattoMD giacca = Leggendari.con(GIACCA).costruisci().getModelloDati();
         assertEquals("GIOVENTU_RIBELLE", giacca.getSetLeggendario());
         assertEquals(GIACCA, giacca.getPezzoLeggendario());
-        assertEquals(Optional.of("Pezzo della Gioventù Ribelle (2 pezzi, bonus x1,3)"), RegoleSetLeggendari.descrizioneSet(giacca));
+        assertEquals(Optional.of("Pezzo della Gioventù Ribelle (bonus x1,3)"), RegoleSetLeggendari.descrizioneSet(giacca));
+        // I tipi dei pezzi, in ordine di tipo
+        assertEquals(Optional.of("Veste, Maschera"), RegoleSetLeggendari.tipiDelSet(giacca));
+        assertEquals(Optional.of("Spada, Elmo, Maschera, Schinieri"),
+                RegoleSetLeggendari.tipiDelSet(Leggendari.con("la Spada della Morte").costruisci().getModelloDati()));
         assertEquals(Optional.empty(), RegoleSetLeggendari.descrizioneSet(Leggendari.con("la Gemma del Tramonto Eterno").costruisci().getModelloDati()));
     }
 
@@ -116,5 +120,38 @@ class ScenarioSetLeggendariTest {
         personaggio.getInventario().forEach(personaggio::removeArtefatto);
         assertTrue(personaggio.getModelloDati().getArtefatti().isEmpty());
         return personaggio;
+    }
+
+    @Test
+    void diOgniPezzoSiSaSeELoIndossaChiIndossaQuestoSeCeLHaIlGruppoOSeVaTrovato() {
+        ArtefattoMD spada = Leggendari.con("la Spada della Morte").costruisci().getModelloDati();
+        ArtefattoMD cervice = Leggendari.con("la Cervice Imperturbabile di RomyJona").costruisci().getModelloDati();
+        ArtefattoMD maschera = Leggendari.con("la Maschera da Guerra di RomyJona").costruisci().getModelloDati();
+        // Uno indossa la spada e la cervice, un altro la maschera; gli scarponi non li ha nessuno
+        java.util.List<java.util.Collection<ArtefattoMD>> equipaggiamenti = Arrays.asList(
+                new java.util.ArrayList<>(Arrays.asList(spada, cervice)), new java.util.ArrayList<>(Arrays.asList(maschera)));
+        java.util.List<RegoleSetLeggendari.Pezzo> pezzi = RegoleSetLeggendari.pezzi(spada, equipaggiamenti, java.util.Collections.emptyList());
+        assertEquals(4, pezzi.size());
+        assertEquals(RegoleSetLeggendari.StatoPezzo.INDOSSATO, stato(pezzi, "la Spada della Morte"));
+        assertEquals(RegoleSetLeggendari.StatoPezzo.INDOSSATO, stato(pezzi, "la Cervice Imperturbabile di RomyJona"));
+        assertEquals(RegoleSetLeggendari.StatoPezzo.DEL_GRUPPO, stato(pezzi, "la Maschera da Guerra di RomyJona"));
+        assertEquals(RegoleSetLeggendari.StatoPezzo.DA_TROVARE, stato(pezzi, "gli Scarponi Chiodati di RomyJona"));
+        // Dal punto di vista della maschera, spada e cervice sono del gruppo
+        assertEquals(RegoleSetLeggendari.StatoPezzo.DEL_GRUPPO,
+                stato(RegoleSetLeggendari.pezzi(maschera, equipaggiamenti, java.util.Collections.emptyList()), "la Spada della Morte"));
+    }
+
+    @Test
+    void unSetCompletoSiDiceConIlSuoBonus() {
+        ArtefattoMD giacca = Leggendari.con(GIACCA).costruisci().getModelloDati();
+        ArtefattoMD occhiali = Leggendari.con(OCCHIALI).costruisci().getModelloDati();
+        assertTrue(RegoleSetLeggendari.setCompleti(Arrays.asList(giacca)).isEmpty());
+        java.util.List<com.threeamigos.foresta.missioni.SetLeggendario> completi = RegoleSetLeggendari.setCompleti(Arrays.asList(giacca, occhiali));
+        assertEquals(1, completi.size());
+        assertEquals("Set completo: Gioventù Ribelle (bonus x1,3)", RegoleSetLeggendari.descrizioneSetCompleto(completi.get(0)));
+    }
+
+    private static RegoleSetLeggendari.StatoPezzo stato(java.util.List<RegoleSetLeggendari.Pezzo> pezzi, String nome) {
+        return pezzi.stream().filter(p -> p.getNome().equals(nome)).findFirst().orElseThrow(AssertionError::new).getStato();
     }
 }
