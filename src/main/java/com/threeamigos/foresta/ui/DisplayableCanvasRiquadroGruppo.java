@@ -216,8 +216,11 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 	}
 
 	void gestisciEventoAumentoLivelloPersonaggio(NotificaAumentoLivelloPersonaggio evento) {
-		BusEventi.pubblica(new InternoCreazioneSpriteATempo(costruisciSpritePerVariazioneLivello(evento.getPersonaggio(),
-				evento.getLivelloAttuale() - evento.getLivelloPrecedente())));
+		SpriteATempo sprite = costruisciSpritePerVariazioneLivello(evento.getPersonaggio(),
+				evento.getLivelloAttuale() - evento.getLivelloPrecedente());
+		if (sprite != null) {
+			BusEventi.pubblica(new InternoCreazioneSpriteATempo(sprite));
+		}
 	}
 
 	private SpriteATempo costruisciSpritePerVariazioneLivello(Personaggio personaggio, int variazione) {
