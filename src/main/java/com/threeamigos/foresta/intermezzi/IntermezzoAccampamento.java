@@ -51,14 +51,22 @@ public class IntermezzoAccampamento implements Intermezzo {
 					"Non fatevi prendere dal panico."}
 	};
 
+	/**
+	 * Calcolata una sola volta alla creazione dell'istanza, perché {@link #getPagine()} viene
+	 * chiamato dopo che {@link com.threeamigos.foresta.motore.RegistroIntermezzi#segnaScattato}
+	 * ha già segnato questa stessa occorrenza come scattata: ricalcolarla lì vedrebbe quella
+	 * marcatura e salterebbe erroneamente alla successiva.
+	 */
+	private final int occorrenza = prossimaOccorrenza();
+
 	@Override
 	public String getId() {
-		return idPer(prossimaOccorrenza());
+		return idPer(occorrenza);
 	}
 
 	@Override
 	public boolean deveScattare(MomentoIntermezzo momento) {
-		return momento == MomentoIntermezzo.ACCAMPAMENTO && prossimaOccorrenza() <= MASSIMO_OCCORRENZE
+		return momento == MomentoIntermezzo.ACCAMPAMENTO && occorrenza <= MASSIMO_OCCORRENZE
 				&& !RegistroIntermezzi.isScattatoNelMomento() && !unaMissioneHaUnIntermezzoInArrivo();
 	}
 
@@ -93,7 +101,7 @@ public class IntermezzoAccampamento implements Intermezzo {
 
 	@Override
 	public List<PaginaIntermezzo> getPagine() {
-		String[] scena = SCENE[(prossimaOccorrenza() - 1) % SCENE.length];
+		String[] scena = SCENE[(occorrenza - 1) % SCENE.length];
 		ScenaFraCompagni pagina = ScenaFraCompagni.allAccampamento("Il gruppo si accampa per la notte.",
 				GruppoGiocatore.getIstanza().getPersonaggiVivi()).conLuna(scena[0]);
 		for (int i = 1; i < scena.length; i++) {

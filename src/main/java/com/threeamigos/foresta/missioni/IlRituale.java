@@ -191,9 +191,11 @@ public class IlRituale extends IncaricoInCitta {
 								+ " ci sono " + ingrediente.getTutti() + ": adesso il rito si può celebrare, nel posto segnato sulla mappa.")))
 						.poi(RITO);
 			case RITO:
+				// Non la soppressione se ci sono nemici: altrimenti, risolvendosi il rito e incatenandosi al passo
+				// GUARDIANO nello stesso controllo in cui arriva la risposta, soppresse anche i nemici appena arrivati
 				Passo rito = Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::nelPosto)
 						.aOgniControllo(() -> {
-							if (nelPosto()) {
+							if (nelPosto() && !rituale.isConNemici()) {
 								RegistroMissioni.sopprimiContenutoLocazione(getPosto());
 							}
 						});

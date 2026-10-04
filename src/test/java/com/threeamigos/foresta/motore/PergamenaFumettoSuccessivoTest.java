@@ -4,7 +4,11 @@ import com.threeamigos.foresta.eventi.interni.InternoFumettoSuccessivo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaPaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.missioni.LealtaRichiesta;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.motore.tipi.TipoAttributo;
+import com.threeamigos.foresta.motore.tipi.TipoModificatore;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import org.junit.jupiter.api.Test;
 
@@ -24,7 +28,11 @@ class PergamenaFumettoSuccessivoTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.LADRO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
             partita.comando(Comando.ESCI_DA_CITTA);
             partita.gruppo().setCoordinate(unaCasellaDiBosco());
-            partita.gruppo().aggiungiPersonaggio(new Guerriero("Sentinella", 1));
+            Guerriero sentinella = new Guerriero("Sentinella", 1);
+            // Già "leale" (vedi LaLealta): altrimenti la sua confidenza ruberebbe la scena al primo
+            // accampamento invece dell'intermezzo normale (vedi IntermezzoAccampamento)
+            sentinella.addModificatore(new ModificatoreAttributo(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 0, LealtaRichiesta.NOTA));
+            partita.gruppo().aggiungiPersonaggio(sentinella);
             while (LineaTemporale.getOra() <= 20) {
                 LineaTemporale.aggiungiOre(1);
             }

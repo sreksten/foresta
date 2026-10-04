@@ -281,19 +281,18 @@ public class Foresta {
 	}
 
 	/**
-	 * Costruisce le locande e piazza i rimanenti personaggi disponibili
+	 * Costruisce i templi e ci piazza gli artefatti: solo la metà dei templi ne ha uno, gli altri restano liberi.
 	 */
 	private static void costruisciTempliEPosizionaArtefatti() {
-		int templiCostruiti = 0;
+		int templiConArtefatto = 0;
 		Artefatto artefattoDisponibile;
 		while ((artefattoDisponibile = RegistroArtefatti.getArtefattoDisponibile()) != null) {
 			costruisci(ClassiLocazione.TEMPIO, artefattoDisponibile);
-			templiCostruiti++;
+			templiConArtefatto++;
 		}
 		int media = (getDimensioneX() + getDimensioneY()) >> 2;
-		if (media > templiCostruiti) {
-			costruisci(ClassiLocazione.TEMPIO, media - templiCostruiti);
-		}
+		int templiSenzaArtefatto = Math.max(templiConArtefatto, media - templiConArtefatto);
+		costruisci(ClassiLocazione.TEMPIO, templiSenzaArtefatto);
 	}
 
 	private static void costruisci(ClassiLocazione classeLocazione, Personaggio personaggio, ProduttoreDiTestiCasuale.DatiLocanda datiLocanda) {
