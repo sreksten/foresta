@@ -175,23 +175,30 @@ final class TestoGrande {
 	 * si leggano anche su uno sfondo chiaro o movimentato: l'immagine si allarga di {@code raggio} pixel per lato.
 	 */
 	static BufferedImage conAlone(BufferedImage immagine, int raggio) {
-		int larghezza = immagine.getWidth() + 2 * raggio;
-		int altezza = immagine.getHeight() + 2 * raggio;
+		// Un margine doppio: ConvolveOp con EDGE_NO_OP non sfuma i pixel entro raggio dal bordo dell'immagine di
+		// lavoro, li copia soltanto. Calcolando la sfumatura su un margine doppio, quel bordo non sfumato cade fuori
+		// dal ritaglio finale, e l'alone non resta tagliato sopra e sotto (e ai lati).
+		int margine = 2 * raggio;
+		int larghezzaConMargine = immagine.getWidth() + 2 * margine;
+		int altezzaConMargine = immagine.getHeight() + 2 * margine;
 		// La sagoma nera delle lettere
-		BufferedImage sagoma = new BufferedImage(larghezza, altezza, BufferedImage.TYPE_INT_ARGB);
+		BufferedImage sagoma = new BufferedImage(larghezzaConMargine, altezzaConMargine, BufferedImage.TYPE_INT_ARGB);
 		for (int y = 0; y < immagine.getHeight(); y++) {
 			for (int x = 0; x < immagine.getWidth(); x++) {
 				int alfa = immagine.getRGB(x, y) >>> 24;
-				sagoma.setRGB(x + raggio, y + raggio, alfa << 24);
+				sagoma.setRGB(x + margine, y + margine, alfa << 24);
 			}
 		}
 		// Sfumata, e rinforzata perché non svanisca troppo presto
 		float[] nucleo = new float[(2 * raggio + 1) * (2 * raggio + 1)];
 		Arrays.fill(nucleo, FORZA_ALONE / nucleo.length);
-		BufferedImage alone = new ConvolveOp(new Kernel(2 * raggio + 1, 2 * raggio + 1, nucleo), ConvolveOp.EDGE_NO_OP, null)
+		BufferedImage aloneConMargine = new ConvolveOp(new Kernel(2 * raggio + 1, 2 * raggio + 1, nucleo), ConvolveOp.EDGE_NO_OP, null)
 				.filter(sagoma, null);
+		BufferedImage alone = new BufferedImage(immagine.getWidth() + 2 * raggio, immagine.getHeight() + 2 * raggio,
+				BufferedImage.TYPE_INT_ARGB);
 		Graphics2D graphics = alone.createGraphics();
 		try {
+			graphics.drawImage(aloneConMargine, -raggio, -raggio, null);
 			graphics.drawImage(immagine, raggio, raggio, null);
 		} finally {
 			graphics.dispose();
