@@ -34,7 +34,7 @@ final class TestoGrande {
 	/**
 	 * Quanto è scuro l'alone attorno alle lettere: più di 1 lo rende pieno vicino alle lettere.
 	 */
-	private static final float FORZA_ALONE = 2.5f;
+	private static final float FORZA_ALONE = 4f;
 
 	private TestoGrande() {
 	}

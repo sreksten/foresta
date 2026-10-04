@@ -29,7 +29,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	// Fra la cima del logo 3AM e quella del logo della Foresta
 	private static final int DISTANZA_LOGHI = 60;
 	// L'alone nero attorno alle lettere della storia e ai loghi, perché si vedano sullo sfondo
-	private static final int RAGGIO_ALONE = 4;
+	private static final int RAGGIO_ALONE = 6;
 	private static final double SECONDI_DISSOLVENZA = 1;
 	private static final double SECONDI_LOGHI = 3;
 	private static final double SECONDI_CLASSIFICA = 5;
