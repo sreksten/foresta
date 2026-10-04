@@ -510,7 +510,7 @@ ANTAGONISTA
 ANIMALE
 	lupo | coboldo | somaro | caprone | licaone | maiale | rospo | verre | cinghiale | bue | camaleonte
 	gufo | tapiro | piccione | leone | minotauro | serpente | passero solitario | drago | cerbero | basilisco
-	grifone | troll | ciclope | orso
+	grifone | troll | ciclope
 
 PERSONAGGIO
 	soldato | mago | commerciante | marinaio | musicante | rappresentante di profumi
@@ -518,7 +518,6 @@ PERSONAGGIO
 	tessitore | cavaliere | condottiero | capitano di vascello | giudice
 	bambinaio | picchiatore | ladro | pirata | bucaniere | contrabbandiere
 	fattucchiere | venditore ambulante di paperelle di gomma | banditore | ciarlatano | locandiere
-	armigero | assassino | esattore delle tasse
 
 ATTRIBUTO_ANTAGONISTA
 	mannaro | grasso e pelato | antipatico come il mal di pancia | sorridente | puzzolente | losco
