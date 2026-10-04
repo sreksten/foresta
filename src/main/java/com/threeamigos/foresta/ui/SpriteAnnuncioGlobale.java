@@ -58,8 +58,9 @@ public class SpriteAnnuncioGlobale extends SpriteBase {
 
 	private List<String> righe(String testo) {
 		int larghezzaMassima = larghezzaSchermo / 2;
-		// Il font non supporta i caratteri minuscoli
-		return spezzaInRighe(testo.toUpperCase(), larghezzaMassima);
+		// Il font non supporta i caratteri minuscoli né le accentate: prima si normalizzano le accentate
+		// nella forma vocale+apostrofo (vedi TestoGrande.normalizza), poi si va in maiuscolo
+		return spezzaInRighe(TestoGrande.normalizza(testo).toUpperCase(), larghezzaMassima);
 	}
 
 	private static List<String> spezzaInRighe(String testo, int larghezzaMassima) {
