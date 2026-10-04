@@ -1,1071 +1,202 @@
-# Missioni a passi + intermezzi agganciati a una missione
-
-## `FornitoreMissione`: una missione sostituibile ad arte per i test
-
-File: `src/main/java/com/threeamigos/foresta/interfacce/FornitoreMissione.java`
-
-```java
-public interface FornitoreMissione {
-    Missione fornisciProssimaMissione();
-}
-```
-
-Interfaccia funzionale (equivalente a un `Supplier<Missione>`, ma con un nome
-esplicito) da usare in ogni punto del motore che oggi costruisce "la
-prossima missione" chiamando direttamente `ClasseMissione.getIstanza()` /
-`TipoMissionePredefinita.getIstanza()` (vedi elenco dei punti sotto). L'idea:
-un'implementazione "standard" (quella che oggi è cablata in ciascun punto)
-resta il comportamento di default del gioco; nei test si può sostituirla con
-un `FornitoreMissione` scritto ad arte che restituisce una missione scelta a
-mano (una classe specifica, con parametri noti) invece che una generata a
-caso — per testare una missione precisa senza dover rigiocare finché non
-capita per caso.
-
-Non ancora usata da nessun chiamante: l'interfaccia esiste
-(`interfacce/FornitoreMissione.java`), il collegamento ai punti sotto è da
-fare.
-
-### Punti dove il gioco ha bisogno di una missione
-
-Verificato leggendo il codice: oggi ogni punto chiama direttamente
-`getIstanza()` sull'enum (`ClasseMissione` o `TipoMissionePredefinita`, che
-internamente delega a `ClasseMissione`). Questi sono i punti da far passare
-per un `FornitoreMissione`, verosimilmente fornito da `RegistroMissioni`
-(tre dei quattro punti sono già lì):
-
-1. `RegistroMissioni.reimposta()` (riga 188) — `tipoMissionePredefinita.getIstanza()`:
-   a inizio partita, crea l'istanza di ciascuna missione predefinita (una per
-   valore di `TipoMissionePredefinita`).
-2. `RegistroMissioni.aggiornaDopoRiletturaImpl(...)` (riga 559) —
-   `tipoMissionePredefinita.getIstanza()`: dopo un caricamento, ricostruisce
-   l'istanza di una missione predefinita da rileggere con `ricostruisci(...)`.
-3. `RegistroMissioni.ricostruisci(MissioneMD)` (riga 585) —
-   `missioneMD.getClasse().getIstanza()`: dopo un caricamento, ricostruisce
-   l'istanza di una missione secondaria (qualsiasi `ClasseMissione`, non solo
-   predefinite).
-4. `MissioneAPassi.lasciaUnaMissioneNuova()` (riga 884) —
-   `getModelloDati().getClasse().getIstanza()`: quando una missione ripetibile
-   finisce (bene o male), crea la missione nuova della stessa classe che la
-   sostituisce.
-
-I numeri di riga sono dello stato attuale del file e possono spostarsi.
-
-## Stato (2026-10-03)
-
-| Punto | Stato |
-| --- | --- |
-| 1. Checkpoint `LOCAZIONE_COMPLETATA` | fatto (`MomentoIntermezzo.LOCAZIONE_COMPLETATA`, `Stato.FINE_LOCAZIONE_2`) |
-| 2. `RegistroIntermezzi` interroga le missioni | fatto, vedi "Come è stato implementato" in fondo al punto 2 |
-| 3. `Passo` e `MissioneAPassi` | fatto, vedi "Come è stato implementato" in fondo al punto 3 |
-| 4. Domande al giocatore | fatto, vedi "Come è stato implementato" in fondo al punto 4 |
-| 5. Migrazione di Medaglione e Derrate | fatto, vedi "Come è stato implementato" in fondo al punto 5; dal 2026-10-03 sono incarichi in città a città fissa (vedi l'aggiornamento in fondo al punto 5) |
-| 6. Claim delle locazioni e `cerca` | fatto, con la regola corretta del punto 7; vedi "Come è stato implementato" in fondo al punto 6 |
-| 7. `SconfiggiIlDrago` e claim precoce | fatto, vedi "Come è stato implementato" in fondo al punto 7 |
-
-## Contesto
-
-Oggi un intermezzo scatta solo a due checkpoint statici e globali dell'automa
-(`MomentoIntermezzo.INIZIO_GIOCO`, `INIZIO_LOCAZIONE`), pescando da un elenco
-statico (`ClasseIntermezzo`) di intermezzi "singleton per partita": una volta
-mostrati, un id finisce in `IntermezziMD` e non scattano più. Le missioni come
-`RecuperaIlMedaglione`/`RecuperaLeDerrateAlimentari` codificano invece la loro
-sequenza di fasi (attiva → bersaglio recuperato → completata) a mano, con
-flag ad hoc su `controllaPreLocazione`/`InLocazione`/`PostLocazione`, e non
-hanno alcun modo di agganciare un intermezzo a un proprio passaggio di stato.
-
-Obiettivo: dare alle missioni un **automa a passi** riusabile, in cui ogni
-passo può opzionalmente far scattare un intermezzo quando si completa —
-usando lo scenario concreto di Recupera il Medaglione (assunzione incarico in
-città → "portiamolo in città" a fine locazione dopo aver recuperato il
-medaglione → ringraziamento all'arrivo in città) come primo caso reale. In
-più, un nuovo checkpoint `MomentoIntermezzo.LOCAZIONE_COMPLETATA` serve sia a
-questo scenario sia in generale a locazioni con eventi da segnalare a fine
-locazione.
-
-Il framework deve restare abbastanza generico da poter essere pilotato in
-futuro da missioni generate con `GrammarBean` (molte istanze della stessa
-classe di missione, ciascuna con proprio stato indipendente) — per questo lo
-stato "intermezzo del passo già mostrato" vive nelle proprietà della singola
-istanza di missione (stesso meccanismo di `ATTIVA`/`COMPLETA`/
-`BERSAGLIO_RECUPERATO` in `MissioneBase`), **non** nel registro globale
-`IntermezziMD`/`ClasseIntermezzo`, che non è pensato per crescere con istanze
-dinamiche.
-
-Per questo primo giro, `RecuperaIlMedaglione` e `RecuperaLeDerrateAlimentari`
-vengono portate ciascuna, separatamente, sulla nuova base a passi — restano
-due classi distinte. L'eventuale unificazione in un'unica classe parametrica
-(propedeutica al generatore a grammatica) è un passo successivo, non parte di
-questo piano.
-
-**Vincolo aggiuntivo**: i due esempi concreti sono sequenze lineari, ma la
-struttura dati NON deve assumere che un passo abbia un unico successore
-fisso. Una missione deve poter, a un certo passo, diramarsi in base allo
-stato di gioco, oppure fermarsi ad attendere una scelta del giocatore (sì/no,
-o una fra più opzioni) e continuare con passi diversi secondo la risposta —
-passi che possono essere già previsti staticamente o costruiti al volo (caso
-tipico di una missione generata da `GrammarBean`, dove l'opzione scelta
-determina quale variante testuale/parametrica del passo successivo esiste).
-Il design del punto 3 tiene conto di questo fin da subito, e il punto 4
-copre anche l'aggancio UI vero e proprio: un nuovo stato in `Automa`,
-simmetrico a `Stato.ATTESA_SI_NO`, che permette a un passo di missione di
-porre al giocatore una domanda sì/no o una scelta fra 2 e 5 opzioni
-testuali, riusando l'infrastruttura di richiesta-comandi già esistente
-(vedi punto 4) invece di introdurne una nuova da zero.
-
-## 1. Nuovo checkpoint `MomentoIntermezzo.LOCAZIONE_COMPLETATA`
-
-File: `src/main/java/com/threeamigos/foresta/intermezzi/MomentoIntermezzo.java`
-
-Aggiungere il valore con un commento sullo stesso stile degli altri due,
-spiegando che scatta dopo `controllaPostLocazione` e prima che il gruppo
-riparta verso una nuova direzione.
-
-File: `src/main/java/com/threeamigos/foresta/motore/Automa.java`
-
-- `eseguiFineLocazione(Comando comando)` (righe ~808-866) va spezzato: la
-  parte fino a `controllaMissioni(Missione::controllaPostLocazione,
-  OrdineVisita.FIGLI_PRIMA)` + `locazioneCorrente.azzeraLocazione(gruppo)`
-  resta nel gestore di ingresso/comando esistente, poi invece di procedere
-  subito con game-over/stanchezza/`Stato.ATTESA_DIREZIONE` si chiama
-  `avviaProssimoIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA,
-  Stato.FINE_LOCAZIONE_2)` (nuovo stato, stesso pattern di
-  `INZIO_LOCAZIONE`→`avviaProssimoIntermezzo`→`PREPARAZIONE_LOCAZIONE`).
-- Nuovo `Stato.FINE_LOCAZIONE_2` con gestore di ingresso che contiene la coda
-  di `eseguiFineLocazione` (game-over check, decremento "a tempo",
-  incremento stanchezza, transizione a `Stato.ATTESA_DIREZIONE`). Va
-  registrato in `gestoriIngresso` come gli altri stati derivati
-  (`INTERMEZZO` già dimostra il pattern di ripartire da uno stato "dopo" una
-  volta esaurita la coda di intermezzi — vedi `statoDopoIntermezzi` in
-  `avviaProssimoIntermezzo`/`gestisciComandoInStatoIntermezzo`, righe
-  ~513-579).
-- Nessun'altra modifica ad `avviaProssimoIntermezzo`: il meccanismo di coda
-  esistente (mostra tutti gli intermezzi pendenti per quel momento, poi salta
-  allo stato indicato) funziona identico per il nuovo momento.
-
-## 2. `RegistroIntermezzi` interroga anche le missioni attive
-
-File: `src/main/java/com/threeamigos/foresta/motore/RegistroIntermezzi.java`
-
-`getProssimoIntermezzo(MomentoIntermezzo momento)` oggi scandisce solo
-`ClasseIntermezzo.values()`. Va estesa: se lo scan statico non trova nulla,
-scandisce l'albero delle missioni attive (stesso tipo di attraversamento che
-`Automa.controllaMissioni`/`controllaMissione` già fa su
-`RegistroMissioni.getMissioniNonCompletate()`, righe ~1400-1453 di
-`Automa.java` — va estratto/duplicato come piccolo helper statico, es. su
-`RegistroMissioni`, per non far dipendere `RegistroIntermezzi` da `Automa`)
-cercando la prima missione con un passo pendente il cui intermezzo è per
-`momento` e non è ancora stato mostrato.
-
-`segnaScattato(Intermezzo)` diventa polimorfica: se l'intermezzo è
-un'istanza del nuovo adattatore `IntermezzoDiPasso` (punto 4), la marcatura
-va delegata alla missione (chiama un metodo che aggiorna la sua proprietà
-MD), **non** scritta in `IntermezziMD`. Altrimenti comportamento invariato
-(scrive in `IntermezziMD` come oggi).
-
-### Come è stato implementato (2026-10-02)
-
-- **Ordine:** `getProssimoIntermezzo(momento)` cerca prima gli intermezzi
-  fissi non di ripiego, poi quelli dei passi, poi quelli fissi di ripiego. Un
-  intermezzo di passo conta come scattato nel momento, quindi esclude i
-  ripieghi come gli altri.
-- **Dove cerca:** in `RegistroMissioni.getTutteLeMissioni()`, un helper nuovo
-  che restituisce ogni missione dell'albero una volta sola e **in qualunque
-  stato**, completate e fallite comprese. Il motivo: l'ultimo passo di una
-  missione può avere un intermezzo (un ringraziamento) e insieme completarla,
-  e `getMissioniNonCompletate()` lo perderebbe. Fra le missioni vale l'ordine
-  dell'albero; dentro una missione, l'ordine in cui i passi si sono conclusi.
-- **`IntermezzoDiPasso`** sta in `missioni/` (chiama `costruisciPasso`, che è
-  protetto). L'id serve solo ai log (`<id missione>/<id passo>`). Il registro
-  lo crea al volo; `segnaScattato` lo riconosce e chiama
-  `segnaIntermezzoPassoMostrato` sulla missione invece di scrivere in
-  `IntermezziMD`.
-- **Quando si vede:** un passo `POST_LOCAZIONE` con intermezzo
-  `LOCAZIONE_COMPLETATA` si vede nello stesso turno, perché
-  `controllaPostLocazione` corre prima del checkpoint. Un passo `IN_LOCAZIONE`
-  con intermezzo `INIZIO_LOCAZIONE` si vede invece all'ingresso nella
-  locazione successiva, perché quel checkpoint viene prima dei controlli in
-  locazione.
-- **Test:** `RegistroIntermezziPassiTest` (2), su una partita vera: un
-  intermezzo di passo scatta solo nel suo momento e una volta sola, il già
-  mostrato sta nella missione e non in `IntermezziMD`, e l'ultimo passo di una
-  missione completata mostra comunque il suo intermezzo.
-
-## 3. `Passo` e `MissioneAPassi`: un automa a passi, non una lista lineare
-
-Nuovo package `com.threeamigos.foresta.missioni.passi` (o direttamente in
-`missioni`), due classi nuove. La cosa da evitare è modellare i passi come
-`List<Passo>` con un indice: un indice assume una sequenza fissa e non regge
-diramazioni né passi generati al volo. Il modello adottato è invece lo stesso
-usato da `Automa` per gli stati: **passi identificati da una chiave
-(`String id`)**, nessuna lista, nessun ordine implicito — chi decide "cosa
-viene dopo" è il passo stesso, non la sua posizione.
-
-**`Passo`** — piccolo value object che descrive un singolo passo. Non è una
-`Missione` e non entra nell'albero `aggiungiMissione`/`getMissioniSecondarie`
-(quell'albero resta per la composizione di sotto-missioni indipendenti, vedi
-`CronacheDiUnFegatoEroico`; qui serve invece la logica di avanzamento dentro
-*una* missione). Campi:
-
-- `MomentoControllo momento` — enum con i valori `PRE_LOCAZIONE`,
-  `IN_LOCAZIONE`, `POST_LOCAZIONE` e `ACCAMPAMENTO`, che rispecchia i metodi di
-  `Missione` (`controllaPreLocazione`... `controllaAccampamento`) e dice in quale
-  di essi il passo va valutato. `ACCAMPAMENTO` si controlla quando il gruppo si
-  accampa, prima degli intermezzi dell'accampamento.
-- `BooleanSupplier condizione` — quando true, il passo è concluso e si può
-  avanzare. Per un passo che aspetta una scelta del giocatore, la condizione
-  è semplicemente "la risposta è già stata registrata" (vedi più sotto).
-- `Runnable azione` — eseguita una sola volta quando la condizione diventa
-  vera (attivare la missione, costruire una locazione, dare la ricompensa,
-  pubblicare `NotificaTestoParagrafo`, salvare come proprietà l'esito di una
-  scelta, eventualmente costruire dinamicamente i parametri di un passo
-  successivo).
-- `Supplier<String> prossimoPasso` — calcolato **dopo** `azione`, restituisce
-  l'id del passo su cui la missione continua. Per una catena lineare è
-  semplicemente una costante (`() -> "PASSO_2"`); per una diramazione legge
-  lo stato di gioco o la proprietà appena scritta da `azione` e restituisce
-  id diversi a seconda del caso. Restituire un sentinel dedicato (es. `null`
-  o una costante `Passo.FINE`) segnala che questo era l'ultimo passo — tipicamente
-  l'`azione` stessa avrà già chiamato `completaMissione()`.
-- opzionale: `MomentoIntermezzo momentoIntermezzo` +
-  `Supplier<List<PaginaIntermezzo>> pagine` — se presenti, al completarsi del
-  passo viene registrato un intermezzo pendente per quel momento (le pagine
-  si costruiscono pigramente, come già oggi per gli `Intermezzo` statici, così
-  possono leggere lo stato di gioco al momento in cui scattano).
-
-Costruzione con un piccolo builder fluente (`Passo.quando(momento,
-condizione).esegui(azione).poi(prossimoPasso).conIntermezzo(momentoIntermezzo,
-pagine)`), sul modello di `PaginaIntermezzo`/`ElementoIntermezzo` già usato in
-`intermezzi/`.
-
-**`MissioneAPassi`** — `abstract class extends MissioneBase`:
-
-- costruttore protetto che riceve solo `ClasseMissione` (come oggi); **non**
-  riceve una lista di passi.
-- unico metodo abstract da implementare nelle sottoclassi:
-  `protected abstract Passo costruisciPasso(String id)` — una fabbrica che,
-  dato un id, ricostruisce il `Passo` corrispondente (tipicamente uno
-  switch/if-chain su costanti `String`). Viene chiamata ogni volta che serve
-  valutare il passo corrente, non tenuta in cache: questo è il punto chiave
-  che permette ai passi dinamici di funzionare senza dover serializzare
-  `BooleanSupplier`/`Runnable` (impossibile con il salvataggio su testo di
-  questo progetto) — si persiste solo l'id (una stringa) più, se il passo
-  dinamico ne ha bisogno, i parametri che lo caratterizzano come proprietà
-  MD ordinarie (stesso meccanismo di `aggiungiProprieta` già usato per tutto
-  il resto). Un passo generato da `GrammarBean` con `[!MANDANTE]`/
-  `[!BERSAGLIO]` fissati, per esempio, salva quei valori come proprietà
-  prima di restituire il proprio id come `prossimoPasso`, e
-  `costruisciPasso` li rilegge per rigenerare lo stesso testo in modo
-  deterministico — anche dopo un salvataggio/caricamento.
-- id del passo corrente persistito come proprietà MD `PASSO_CORRENTE`
-  (stringa, non indice: insensibile a riordini o inserimenti futuri).
-  L'id iniziale è restituito da un secondo metodo abstract,
-  `protected abstract String passoIniziale()`.
-- proprietà `INTERMEZZO_MOSTRATO_<id>` (una per id di passo con intermezzo)
-  per il bookkeeping "già mostrato" richiesto dal punto 2 — un metodo
-  `segnaIntermezzoPassoMostrato(String idPasso)` e
-  `isIntermezzoPassoMostrato(String idPasso)` usati da
-  `RegistroIntermezzi`/`IntermezzoDiPasso`.
-- implementa `controllaPreLocazione()`/`controllaInLocazione()`/
-  `controllaPostLocazione()` delegando a un unico
-  `avanzaSePronto(MomentoControllo)`: se non fallita/completa, recupera
-  `Passo corrente = costruisciPasso(getPassoCorrente())`; se
-  `corrente.getMomento() == quello richiesto` e
-  `corrente.getCondizione().getAsBoolean()`, esegue `azione.run()`, registra
-  l'eventuale intermezzo pendente, calcola `prossimoPasso.get()` e lo
-  persiste come nuovo `PASSO_CORRENTE` (o chiama/verifica `completaMissione()`
-  se è il sentinel di fine).
-- sottoclassi che hanno bisogno di logica extra (es. fallimento per città
-  distrutta, come oggi in `RecuperaIlMedaglione.controllaPreLocazione`)
-  possono sovrascrivere il metodo corrispondente chiamando
-  `super.controllaPreLocazione()` a fine metodo — stesso pattern di override
-  già visto in `MuoviALocazione.completaMissione()`.
-
-**Persistenza dei dati generati.** Una missione (soprattutto se generata a
-caso con `GrammarBean`) ha in genere due tipi di cose da salvare in modo
-permanente, oltre all'id del passo corrente:
-
-1. *Valori singoli fissati alla generazione* (es. il nome del mandante, il
-   nome del bersaglio, l'importo della ricompensa). Non serve costruire
-   nulla di nuovo: `Missione.aggiungiProprieta(String, String)`/
-   `ottieniProprieta(String)` sono già a chiave e valore completamente
-   liberi — `MissioneMD` li mantiene in una `Map<String, String>` qualsiasi
-   (verificato in `src/main/java/com/threeamigos/foresta/motore/modellodati/MissioneMD.java`,
-   serializzata da `MappaProprieta` nello stesso file), senza alcun enum o
-   whitelist di chiavi. Una chiave tipo `"MANDANTE"` o `"BERSAGLIO_NOME"`
-   scritta da un passo generato funziona già oggi, esattamente come le
-   costanti `ATTIVA`/`COMPLETA`/`FALLITA` usate da `MissioneBase`. Il passo
-   che genera questi valori (tipicamente il primo, quando la missione viene
-   attivata) li scrive una sola volta con `aggiungiProprieta`, e
-   `costruisciPasso` li rilegge sempre con `ottieniProprieta` invece di
-   richiamare di nuovo `GrammarBean.produce()` — così il testo resta
-   identico anche dopo un salvataggio/caricamento, senza dipendere da un
-   seed o da alcuna persistenza del generatore stesso.
-2. *La sequenza dei passi da fare*, quando non è fissa a compile time ma
-   decisa alla generazione (es. "visita N locazioni scelte a caso" con N
-   variabile). Per questo caso `MissioneAPassi` offre due metodi protetti,
-   `impostaSequenzaPassi(List<String> idPassi)` e
-   `List<String> leggiSequenzaPassi()`, che non richiedono alcuna modifica a
-   `MissioneMD`/`MappaProprieta`: si appoggiano alla stessa proprietà
-   generica del punto 1, salvando la lista come un unico valore stringa con
-   gli id separati da un carattere che gli id di passo non useranno mai
-   (es. `,`, non `§`/`|` che sono già riservati da `MappaProprieta`). Un
-   passo la cui logica è "vai al prossimo elemento della sequenza generata"
-   usa il supplier di comodo `prossimoNellaSequenza()` (legge
-   `leggiSequenzaPassi()`, trova l'id corrente, restituisce il successivo o
-   il sentinel di fine se era l'ultimo) invece di scrivere a mano la
-   diramazione; i passi con vera diramazione/scelta del giocatore
-   continuano a usare un `Supplier<String>` esplicito come già descritto.
-   In questo modo il "piano" generato casualmente (quali passi, in quale
-   ordine) è deciso una volta sola dall'azione del passo che lo genera e
-   resta stabile per tutta la vita della missione, incluso attraverso
-   salvataggio/caricamento — non viene mai ricalcolato o rigenerato.
-
-**Diramazioni e scelte del giocatore.** Con questo modello una diramazione
-che dipende solo dallo stato di gioco è già supportata: `prossimoPasso` è un
-`Supplier` qualsiasi, può leggere `LineaTemporale`, proprietà della missione,
-ecc. Una diramazione che dipende da **una scelta del giocatore** (conferma
-sì/no, o una fra più opzioni) si modella con un passo che:
-1. resta con `condizione` false finché non esiste ancora una proprietà
-   "risposta data" sulla missione;
-2. una volta che qualcosa scrive quella proprietà, `condizione` diventa vera
-   e `prossimoPasso` la rilegge per decidere il ramo.
-
-Il "qualcosa" che raccoglie la risposta del giocatore e scrive la proprietà è
-descritto nel punto 4: un nuovo stato di `Automa` che presenta la domanda,
-aspetta il comando del giocatore e chiama
-`MissioneAPassi.rispondi(String idOpzioneScelta)` (implementato con
-`aggiungiProprieta`, come già previsto qui sopra). La struttura dati di
-questo paragrafo (passo che aspetta una proprietà, `prossimoPasso` che la
-rilegge, `costruisciPasso` che può generare il ramo scelto anche se non era
-previsto in anticipo) non richiede alcuna modifica per supportarlo: il
-punto 4 aggiunge solo il meccanismo che scrive quella proprietà a partire da
-un input reale del giocatore, invece che a scopo di analisi.
-
-**`IntermezzoDiPasso implements Intermezzo`** (in `intermezzi/` o
-`missioni/`, da vedere in base ai package-private necessari) — adattatore
-`(MissioneAPassi missione, String idPasso)`: `getId()` non serve per
-bookkeeping (delega alla missione), ma utile per log/debug;
-`deveScattare(momento)` verifica solo per coerenza (la selezione è già fatta
-da chi lo crea); `getPagine()` richiama il supplier del passo.
-
-Registrazione in `ClasseMissione.java`: nessuna voce nuova richiesta per
-`Passo`/`MissioneAPassi` di per sé (non sono `Missione` concrete), solo le
-sottoclassi concrete (punto 4) vanno registrate come oggi.
-
-### Come è stato implementato (2026-10-02)
-
-Classi in `missioni/` (non in un package a parte, per usare i membri protetti
-di `MissioneBase`): `Passo` e `MissioneAPassi`, test in `MissioneAPassiTest`
-(8). Rispetto al piano:
-
-- **Builder:** `Passo.quando(momento, condizione).esegui(azione).poi(id)`, con
-  `poi(Supplier<String>)` per le diramazioni e `conIntermezzo(momento, pagine)`.
-  `MomentoControllo` è un enum annidato in `Passo`. Senza `esegui` l'azione non
-  fa niente; senza `poi` il passo successivo è `Passo.FINE`.
-- **Passi di fila:** se il passo che diventa corrente è dello stesso controllo
-  ed è già concluso, si esegue subito, nello stesso controllo, così un passo di
-  solo testo non costa un turno. Oltre 50 passi di fila si lancia
-  `IllegalStateException`, perché è quasi certamente un ciclo.
-- **Fine:** `Passo.FINE` completa la missione se l'azione non l'ha già fatto.
-  Una missione completa o fallita non avanza più; se l'azione fa fallire la
-  missione, il passo corrente non cambia.
-- **Attivazione:** la fa l'azione di un passo (`attivaMissione()`), come oggi;
-  i passi si valutano anche per una missione non ancora attiva, perché il primo
-  è spesso proprio quello che la attiva.
-- **Intermezzi dei passi:** un passo concluso con un intermezzo lascia il suo id
-  nella proprietà `INTERMEZZI_IN_ATTESA` (lista separata da virgole).
-  `getPassiConIntermezzoInAttesa()`, `getPassoConIntermezzoInAttesa(momento)`,
-  `segnaIntermezzoPassoMostrato(id)` e `isIntermezzoPassoMostrato(id)` sono le
-  chiamate per il punto 2. `costruisciPasso` deve quindi saper ricostruire
-  anche i passi già superati. L'adattatore `IntermezzoDiPasso` si scriverà con
-  il punto 2, che è il primo a usarlo.
-- **Sequenze:** `impostaSequenzaPassi(lista)` (id tutti diversi, lista non
-  vuota), `leggiSequenzaPassi()` e `prossimoNellaSequenza()`.
-- **Id dei passi:** non possono essere vuoti né contenere `,`, `§` o `|`
-  (separatore delle liste e caratteri riservati del salvataggio):
-  `IllegalArgumentException` altrimenti.
-
-## 4. Il giocatore risponde a una domanda di missione
-
-Un passo che rappresenta una domanda (conferma sì/no, o scelta fra 2 e 5
-opzioni testuali) ha bisogno di un aggancio reale con l'utente. Il progetto
-ha già tutti i pezzi per questo, usati oggi per casi analoghi (conferma di
-fuga, scelta dell'incantesimo, scelta della direzione): non serve inventare
-nulla di nuovo lato `Comando`/UI, solo un nuovo stato in `Automa` che li
-orchestri per conto di una missione.
-
-**Riuso di infrastruttura esistente** (verificato leggendo il codice, non
-per supposizione):
-- `Comando.SI`/`Comando.NO` (`src/main/java/com/threeamigos/foresta/motore/Comando.java`)
-  e le icone corrispondenti in `ClasseIcona` — già usati da
-  `Stato.ATTESA_SI_NO` per la conferma di fuga (`LocazioneBase.chiediConfermaPerLaFuga` +
-  `RichiestaSelezioneSiNo`). Riusati tali e quali per una domanda di
-  missione a due opzioni.
-- `Comando.NUMERO_1`..`NUMERO_5` (stesso file), già con icone dedicate
-  (`icone/1.gif`..`5.gif` in `ClasseIcona`) e già riusati per due scopi
-  diversi secondo il contesto (numero di passi, slot di salvataggio) — lo
-  stesso riuso "per contesto" si applica a una scelta di missione fra 2 e 5
-  opzioni testuali: l'opzione N-esima elencata dal passo corrisponde a
-  `NUMERO_N`.
-- `RichiestaConComandi` (`src/main/java/com/threeamigos/foresta/eventi/RichiestaConComandi.java`),
-  la classe base già usata da `RichiestaSelezioneSiNo` e dalla selezione
-  incantesimo/direzione per dire alla UI "mostra queste icone e aspetta
-  un clic". Nuova sottoclasse `RichiestaSelezioneMissione` nello stesso
-  package `eventi/richieste/`, stesso pattern esatto di
-  `RichiestaSelezioneSiNo`.
-- Il testo della domanda si pubblica separatamente con
-  `NotificaTestoParagrafo`, esattamente come `chiediConfermaPerLaFuga`
-  pubblica `NotificaTestoFrase` prima di richiedere sì/no — nessuna novità.
-
-**Nuovo stato `Stato.ATTESA_RISPOSTA_MISSIONE`** (in
-`src/main/java/com/threeamigos/foresta/motore/Stato.java`), **non** un
-riuso di `Stato.ATTESA_SI_NO`: quest'ultimo, alla risposta, rigioca il
-comando nello stato precedente aspettandosi che sia proprio quello stato
-(es. la gestione fuga di `LocazioneBase`) a intercettare `SI`/`NO` — un
-meccanismo cablato sul chiamante che non si vuole toccare né estendere per
-un caso d'uso completamente diverso (una missione, non uno stato
-dell'automa). Il nuovo stato ha una risoluzione diversa e più semplice:
-chiama direttamente la missione, senza bisogno che nessuno "intercetti" il
-comando altrove.
-
-In `Automa.java`:
-- due nuovi campi privati, es. `MissioneAPassi missioneInAttesaDiRisposta` e
-  l'id del passo in attesa (per costruire la chiave della proprietà),
-  impostati subito prima della transizione a questo stato.
-- `gestoriIngresso.put(Stato.ATTESA_RISPOSTA_MISSIONE, this::entraInStatoAttesaRispostaMissione)`:
-  pubblica il testo della domanda (`Passo.getTestoDomanda()`), poi
-  `RichiestaSelezioneMissione` con la lista di `Comando` corrispondente al
-  numero di opzioni del passo (2 opzioni booleane → `SI`/`NO`; 2-5 opzioni
-  generiche → `NUMERO_1..NUMERO_N`), poi `Esito.FERMATI` — stesso schema di
-  `entraInStatoAttesaSiNo`.
-- `gestoriComando.put(Stato.ATTESA_RISPOSTA_MISSIONE, this::gestisciComandoInStatoAttesaRispostaMissione)`:
-  se il comando non è `Comando.TIMER`, traduce il `Comando` ricevuto
-  nell'id di opzione del passo (mappa inversa rispetto a quella usata per
-  costruire la richiesta), chiama
-  `missioneInAttesaDiRisposta.rispondi(idOpzione)`, azzera i due campi e
-  torna a `statoPrecedente` **senza rigiocare il comando** (a differenza di
-  `ATTESA_SI_NO`: qui nessuno stato a valle deve intercettarlo, la risposta
-  è già stata consegnata alla missione) — semplicemente
-  `stato = statoPrecedente; return Esito.CONTINUA_CON_INGRESSO` fa
-  ripartire da capo la valutazione dei passi (`controllaMissioni`), che
-  ora troverà la proprietà risposta già scritta.
-
-**Sul lato `Passo`/`MissioneAPassi`** (estensione del punto 3, stesse
-classi, nessuna classe ulteriore):
-- il builder fluente si estende con `.chiediConferma(String testoDomanda)`
-  (zucchero sintattico per il caso a due opzioni SI/NO) e
-  `.chiediScelta(String testoDomanda, List<String> opzioni)` (2 a 5 opzioni
-  testuali, mappate in ordine su `NUMERO_1..NUMERO_N`). Entrambi impostano
-  automaticamente `condizione` a "la proprietà risposta di questo passo
-  esiste" — chi scrive la missione non deve scriverla a mano.
-- `MissioneAPassi.rispondi(String idOpzione)`: unico punto di scrittura,
-  `aggiungiProprieta("RISPOSTA_" + getPassoCorrente(), idOpzione)` — la
-  chiave è qualificata dall'id del passo corrente, quindi risposte di passi
-  diversi (anche in istanze diverse della stessa missione generata a caso)
-  non collidono mai.
-- `prossimoPasso` di un passo-domanda tipicamente legge
-  `ottieniProprieta("RISPOSTA_" + idPasso)` per scegliere il ramo — stesso
-  meccanismo già descritto nel punto 3, ora effettivamente popolato da un
-  input reale.
-- una proprietà di bookkeeping `DOMANDA_<id>_PRESENTATA` (stesso schema di
-  `INTERMEZZO_MOSTRATO_<id>` nel punto 3) evita di ripresentare la stessa
-  domanda a ogni frame mentre l'automa è già in
-  `Stato.ATTESA_RISPOSTA_MISSIONE` aspettando la risposta.
-
-**Chi rileva che un passo-domanda è pronto e non ancora presentato**: stesso
-punto di aggancio già descritto nel punto 2 per gli intermezzi di passo
-(dentro `controllaMissioni`, ai checkpoint pre/in/post-locazione) — un
-piccolo helper (stesso spirito di quello per `RegistroIntermezzi`) scandisce
-le missioni attive cercando un passo la cui condizione è "domanda non
-ancora presentata"; se lo trova, `Automa` imposta i due campi e transita a
-`Stato.ATTESA_RISPOSTA_MISSIONE` invece di procedere con il normale
-`Esito.CONTINUA_CON_INGRESSO`. Non c'è ambiguità con gli intermezzi di passo
-del punto 2: un intermezzo scatta al completarsi di un passo, una domanda
-scatta quando il passo successivo (quello con la domanda) diventa corrente
-— non possono mai capitare nello stesso istante per lo stesso passo.
-
-### Come è stato implementato (2026-10-02)
-
-Rispetto al piano, due differenze di sostanza:
-
-- **Niente ritorno allo stato precedente.** I controlli delle missioni stanno
-  in mezzo al lavoro di tre stati: `INZIO_LOCAZIONE` (prima degli eventi del
-  tempo e degli intermezzi), `PREPARAZIONE_LOCAZIONE` (dopo che la locazione è
-  stata costruita e descritta) e `FINE_LOCAZIONE` (dopo la raccolta
-  dell'oggetto). Rientrare in quegli stati dopo la risposta rifarebbe cose già
-  fatte: costruire di nuovo la locazione con i suoi mostri, ritentare la
-  raccolta. Ogni controllo passa quindi da `Automa.controllaMissioniEDomande(
-  momento, seguito)`: fa il controllo e, se una missione ha una domanda da
-  porre, passa a `ATTESA_RISPOSTA_MISSIONE` tenendo da parte una ripresa.
-  Consegnata la risposta, il controllo si rifà (il passo con la domanda si
-  conclude, e può nascerne un'altra) e solo allora si prosegue con `seguito`,
-  il resto del lavoro dello stato (`proseguiInizioLocazione`,
-  `proseguiPreparazioneLocazione`, `concludiFineLocazione`). La ripresa è una
-  lambda e non si salva: va bene, perché in `ATTESA_RISPOSTA_MISSIONE` i soli
-  comandi disponibili sono le risposte, quindi non si può salvare a metà
-  domanda.
-- **Niente `DOMANDA_<id>_PRESENTATA`.** La domanda si pone una volta per
-  controllo, e finché non c'è risposta l'automa resta fermo in
-  `ATTESA_RISPOSTA_MISSIONE`: non c'è nulla da ripresentare. Se la risposta
-  non arriva mai (per esempio la partita si chiude), la domanda si ripone al
-  prossimo controllo del suo momento, che è quel che si vuole.
-
-Il resto come previsto:
-
-- **`Passo`:** `chiediConferma(testo)` (risposte `Passo.SI`/`Passo.NO`) e
-  `chiediScelta(testo, opzioni)` (da 2 a 5 opzioni, risposte "1".."N"). La
-  condizione del passo dice **quando la domanda si può porre**; il passo si
-  conclude quando c'è la risposta, e solo nel controllo del suo momento.
-- **`MissioneAPassi`:** `getDomandaDaPorre(momento)`, `rispondi(risposta)`
-  (scrive `RISPOSTA_<id passo>`, rifiuta risposte non valide e passi senza
-  domanda) e `getRisposta(idPasso)`, da leggere nel `poi` della diramazione.
-- **`Automa`:** stato `Stato.ATTESA_RISPOSTA_MISSIONE`. All'ingresso pubblica
-  la domanda (`NotificaTestoParagrafo`), le opzioni numerate
-  (`NotificaTestoFrase`, "1. …") e `RichiestaSelezioneMissione` con `SI`/`NO` o
-  `NUMERO_1..N`; un comando che non è una risposta è un comando non valido, il
-  `TIMER` si ignora. Cerca le domande nelle stesse missioni che il controllo
-  visita (radici non completate e figlie delle missioni attive).
-- **UI:** `ForestaUI` mostra le icone delle risposte e porta in primo piano il
-  riquadro del testo.
-- **Test:** 3 nuovi in `MissioneAPassiTest` (quando si offre la domanda,
-  risposta e ramo, opzioni di una scelta) e `ScenarioDomandeMissioniTest`, su
-  una partita vera: entrando in una locazione la missione chiede quale strada
-  prendere fra tre, la risposta sceglie il ramo, la missione si completa e la
-  locazione non viene costruita di nuovo.
-
-## 5. Migrare `RecuperaIlMedaglione` e `RecuperaLeDerrateAlimentari`
-
-File: `src/main/java/com/threeamigos/foresta/missioni/RecuperaIlMedaglione.java`
-(e l'equivalente `RecuperaLeDerrateAlimentari.java`, stessa struttura).
-
-Ciascuna diventa `extends MissioneAPassi` con 3 `Passo`:
-
-1. `IN_LOCAZIONE`, condizione = gruppo in `CITTA_FLEENA` e non attiva, azione
-   = testo di incontro + `attivaMissione()` + costruzione della locazione
-   grotta — **con** un intermezzo iniziale (`MomentoIntermezzo.
-   INIZIO_LOCAZIONE`, essendo valutato durante `controllaInLocazione` che
-   corre comunque a valle di quel checkpoint per il primo arrivo in città;
-   se si vuole davvero un intermezzo "appena assunto l'incarico" mostrato
-   nello stesso frame, si può lasciare senza intermezzo qui e mettere solo il
-   testo in `NotificaTestoParagrafo` come oggi, dato che l'utente ha parlato
-   esplicitamente di intermezzo iniziale come *esempio* generico, non come
-   requisito stretto per questa missione — da confermare nella review).
-2. `POST_LOCAZIONE`, condizione = gruppo in `GROTTA_RECUPERA_IL_MEDAGLIONE`
-   e locazione completa, azione = `setBersaglioRecuperato()`-equivalente
-   (ora solo avanzamento passo, il flag dedicato sparisce), **con**
-   intermezzo `LOCAZIONE_COMPLETATA` ("il medaglione è stato recuperato, va
-   riportato in città").
-3. `IN_LOCAZIONE`, condizione = gruppo in `CITTA_FLEENA`, azione =
-   `completaMissione()` + ricompensa, **con** intermezzo
-   `INIZIO_LOCAZIONE` (o nessuno, restando sul solo testo — stessa nota del
-   passo 1) di ringraziamento.
-
-La guardia "città distrutta" resta un override di `controllaPreLocazione()`
-che chiama `fallisciMissione()` e poi delega a `super.controllaPreLocazione()`
-(che con la missione già fallita non farà avanzare nulla, dato che
-`avanzaSePronto` controlla `isFallita()`).
-
-`MissioneRecuperaBersaglio` (la classe intermedia con `BERSAGLIO_RECUPERATO`)
-può essere rimossa se non ha più altri usi dopo la migrazione — verificare
-con una ricerca testuale prima di eliminarla.
-
-### Come è stato implementato (2026-10-02)
-
-Le due missioni hanno lo stesso scheletro, quindi `MissioneRecuperaBersaglio`
-non è stata tolta ma è diventata la base a passi comune (`extends
-MissioneAPassi`): le due classi concrete danno solo città, covo, scene e testi.
-Il flag `BERSAGLIO_RECUPERATO` non c'è più: `isBersaglioRecuperato()` guarda il
-passo corrente. Cinque passi invece di tre:
-
-1. `INCARICO` (`PRE_LOCAZIONE`, nella città non distrutta): intermezzo a
-   `INIZIO_LOCAZIONE`, il mandante che chiede aiuto.
-2. `ACCETTAZIONE` (`IN_LOCAZIONE`, nella città): riassunto nel riquadro del
-   testo, `attivaMissione()` e costruzione del covo.
-3. `RECUPERO` (`POST_LOCAZIONE`, nel covo completato): testo.
-4. `RITORNO` (`PRE_LOCAZIONE`, nella città): intermezzo a `INIZIO_LOCAZIONE`,
-   il ringraziamento.
-5. `RICOMPENSA` (`IN_LOCAZIONE`, nella città): 20 monete e testo, poi `FINE`,
-   che completa la missione.
-
-Perché due passi per ogni momento: `attivaMissione()` e `completaMissione()`
-pubblicano subito l'avviso globale ("NUOVA MISSIONE", "MISSIONE COMPLETATA"), e
-l'automa aspetta che gli avvisi finiscano prima di mostrare un intermezzo.
-Se l'avviso partisse insieme all'intermezzo comparirebbe prima della scena.
-Il passo con l'intermezzo è quindi a inizio locazione, che corre prima del
-checkpoint `INIZIO_LOCAZIONE`; quello con l'avviso è in locazione, che corre
-dopo gli intermezzi. La città si riconosce dalle coordinate del gruppo, quindi
-il passo a inizio locazione funziona anche se la locazione non è ancora
-costruita. La guardia "città distrutta" resta un override di
-`controllaPreLocazione()`.
-
-**Scene:** `intermezzi/ScenaInCitta` (pubblica) riusa `ScenaNegozio`, che ora
-accetta un primo piano assente: sfondo `locazioni/Citta.gif`, il mandante a
-destra (per ora l'immagine del locandiere), il gruppo che arriva in fila come
-nei negozi e poi le battute. Le coordinate degli intermezzi sono dello schermo
-e lo sfondo della città (390 × 320) è più piccolo di quelli dei negozi
-(500 × 348): mandante a x 0,62 e personaggi a y 0,6, nelle stesse proporzioni
-dello sfondo.
-
-**Test:** `ScenarioMissioniDiRecuperoTest` (3), su una partita vera: a Fleena e
-a Ruuna la pagina con le battute del mandante arriva prima dell'avviso di nuova
-missione, e il covo compare; al ritorno il ringraziamento resta in attesa a
-inizio locazione e monete e completamento arrivano solo dopo.
-
-### Aggiornamento (2026-10-03): incarichi in città a città fissa
-
-La struttura descritta qui sopra non c'è più così. `MissioneRecuperaBersaglio`
-ora estende `IncaricoInCitta`, la base comune di tutti gli incarichi presi in
-una città (la caccia ai goblin, la mandragola, Sgranf, Anselmo, Armando…):
-
-- città fissa (`getCittaFissa()`): il medaglione è la storia di Fleena, le
-  derrate quella di Ruuna, e partono alla prima visita, come prima; gli altri
-  incarichi aspettano una visita tranquilla;
-- INCARICO, ACCETTAZIONE, RITORNO, CONSEGNA (se c'è) e RICOMPENSA sono quelli
-  di `IncaricoInCitta`; il compito del recupero sono due passi, COVO (compare il
-  covo, rivendicato dalla missione, subito dopo l'accettazione) e RECUPERO (il
-  covo completato);
-- la guardia "città distrutta" non è più un override di
-  `controllaPreLocazione()`: è un `falliscoSe` che `IncaricoInCitta` mette sui
-  passi dopo l'accettazione, con il testo di `testoCittaDistrutta()`.
-
-Medaglione e derrate non si ripetono; gli altri incarichi in città sì. I
-dettagli (passi, ripetizione, visita tranquilla, missioni che nascono fuori
-dalle città) sono in `passi_missioni.md`, alla sezione "Incarichi in città
-unificati e ripetibili" e seguenti.
-
-## 6. Locazioni assegnate dinamicamente: claim delle missioni e `cerca(ClassiLocazione)`
-
-### Perché
-
-Oggi (verificato leggendo il codice, non per supposizione) le locazioni
-"uniche" (città, castelli, `GROTTA_RECUPERA_IL_MEDAGLIONE`,
-`ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI`) vivono in
-`ForestaMD.locazioniUniche`, un `EnumMap<ClassiLocazione, CoordinateMD>`: **una
-sola coordinata per valore dell'enum**. Funziona per un numero fisso di
-locazioni scritte a mano (una `GrottaRecuperaIlMedaglione`, quattro castelli
-alleati, un castello del Drago), ma non scala ai quasi 190 `TipoMissione` di
-`passi_missioni.md`: non si può dare a ciascuno una propria costante
-`ClassiLocazione` e relativa sottoclasse.
-
-Due precedenti concreti mostrano già i due estremi:
-- `Foresta.costruisciCastelli()` (righe ~178-184) piazza i quattro castelli
-  alleati **a tempo di generazione del mondo**, sempre, incondizionatamente —
-  le missioni `SconfiggiLaStrega`/`Lich`/`MinotauroGigante`/`LIdra` si
-  limitano a controllare se il gruppo è arrivato in un castello già esistente.
-- `SconfiggiIlDrago.controllaPostLocazione()` (righe ~61-66) **costruisce da
-  sé** `CASTELLO_DRAGO` a runtime, quando serve (`castelliDistrutti()`),
-  chiamando `Foresta.costruisciLocazioneUnica(ClassiLocazione.CASTELLO_DRAGO,
-  false)` — che internamente usa `getCoordinateLibere()` (righe ~256-264 di
-  `Foresta.java`), una ricerca a tentativi casuali finché non trova una
-  casella `BOSCO`/`RADURA`/libera.
-
-L'idea è generalizzare il secondo pattern (una missione si procura da sola la
-propria locazione, quando ne ha bisogno) e usarlo anche per i quattro castelli
-alleati, eliminando il piazzamento incondizionato a tempo di generazione.
-Questo **non** richiede eliminare `ClassiLocazione`/`LocazioneUnica`: i
-castelli restano sottoclassi concrete come oggi. Cambia solo *quando* e *chi*
-decide la coordinata.
-
-### Claim delle missioni in `RegistroMissioni`
-
-Nuovo stato privato in `RegistroMissioni`: `Map<CoordinateMD, String>
-locazioniOccupate` (coordinata → id della missione che la occupa). Non serve
-toccare `ForestaMD`/`MissioneMD`: è un indice in più, ricostruibile dopo un
-caricamento rileggendo le proprietà delle missioni attive (vedi sotto), non
-un dato persistito per conto suo.
-
-- `occupaLocazione(CoordinateMD, Missione)`: registra il claim. Chiamato
-  dall'`azione` del passo che costruisce/rivendica la locazione (stesso
-  momento in cui oggi si chiamerebbe `costruisciLocazioneUnica`).
-- La missione stessa memorizza la coordinata come proprietà ordinaria (stesso
-  schema di `COORDINATA_X`/`COORDINATA_Y` già usato da `MuoviALocazione`) —
-  non serve una mappa inversa nel registro, la missione sa già dove si trova
-  la propria locazione.
-- Nessun metodo esplicito "libera": una missione conclusa **non** deve
-  liberare attivamente la coordinata (romperebbe l'ordine fra
-  `completaMissione()` e il resto del turno). La liberazione è **passiva**,
-  a carico di `cerca()` (sotto): quando la ricerca incontra una coordinata
-  occupata, guarda l'id della missione proprietaria; se quella missione è
-  `isCompleta()`/`isFallita()`, rimuove il claim da `locazioniOccupate` e
-  tratta la coordinata come libera per questa ricerca. La missione conclusa
-  **resta** dov'è già oggi (`elencoMissioniPredefiniteCompletate`/
-  `elencoMissioniSecondarieCompletate` — vedi `RegistroMissioni.java` righe
-  55-61): si toglie solo il suo claim sulla locazione, non la missione dal
-  diario/storico.
-- Dopo un caricamento (`aggiornaDopoRilettura`, righe 88-118), il registro dei
-  claim va ricostruito scandendo le missioni attive che hanno proprietà
-  coordinata (stesso giro che già fa `aggiornaDopoRiletturaImpl`): non serve
-  serializzare `locazioniOccupate` a parte.
-
-### `cerca(ClassiLocazione richiesta)`: ricerca a quadrati concentrici
-
-Nuovo metodo (su `RegistroMissioni`, perché deve conoscere sia la mappa sia i
-claim; internamente chiama `Foresta.getLocazione(coordinate)` per leggere la
-casella). Diverso da `getCoordinateLibere()`: quello cerca una casella
-*libera* qualsiasi per piazzarci qualcosa di nuovo; questo cerca una casella
-che **esiste già** di un certo `ClassiLocazione` (es. un `BOSCO` da
-trasformare in castello, un `TEMPIO` già presente) e non è rivendicata da una
-missione ancora attiva.
-
-Nota sui nomi: l'esempio `cerca(TipoLocazione.TEMPIO)` non corrisponde
-esattamente ai tipi esistenti — `TipoLocazione` è solo il raggruppamento
-(`STANDARD`/`CITTA`/`CASTELLO`/`MISSIONE_SECONDARIA`), mentre `TEMPIO`,
-`BOSCO` ecc. sono valori di `ClassiLocazione` (vedi
-`src/main/java/com/threeamigos/foresta/locazioni/ClassiLocazione.java` righe
-10-16). Il filtro di `cerca()` è quindi su `ClassiLocazione`, non su
-`TipoLocazione`.
-
-Algoritmo, a partire da una coordinata casuale `(x0, y0)` (stesso
-`Dado.tira` già usato da `getCoordinateLibere`):
-1. Controlla `(x0, y0)` stesso (raggio 0).
-2. Per raggio `r = 1, 2, 3, ...` crescente, controlla solo il **bordo** del
-   quadrato di lato `2r+1` centrato su `(x0, y0)` (cioè le celle con distanza
-   di Chebyshev esattamente `r` dal centro — non l'intero quadrato, altrimenti
-   si riconterebbero le celle già viste ai raggi precedenti).
-3. Per ogni cella del bordo (in un ordine qualsiasi ma deterministico, es. dal
-   lato nord in senso orario): se fuori dai limiti della mappa
-   (`0 <= x < Foresta.getDimensioneX()`, idem per y) la si scarta; altrimenti
-   se `Foresta.getLocazione(coordinate) != richiesta` la si scarta; altrimenti
-   controlla il claim come descritto sopra (occupata da missione attiva →
-   scarta; occupata da missione conclusa → libera il claim e accetta; libera →
-   accetta).
-4. La ricerca termina quando trova una cella accettabile (la marca subito con
-   `occupaLocazione` per la missione chiamante e ne restituisce la
-   coordinata), oppure quando il quadrato di raggio `r` è interamente fuori
-   dai limiti della mappa su tutti i lati (raggio massimo utile ≈
-   `max(getDimensioneX(), getDimensioneY())`, oggi 20): in quel caso non
-   esiste alcuna cella `richiesta` libera su tutta la mappa e il metodo
-   restituisce `null`/`Optional.empty()` — la missione che lo ha chiamato
-   deve gestire questo caso (tipicamente: non avanza questo turno e riprova al
-   turno successivo, non è un fallimento della missione).
-
-### Impatto sulle missioni principali (`Sconfiggi*`)
-
-- `Foresta.costruisciCastelli()` (righe 178-184) perde il piazzamento
-  incondizionato dei quattro castelli alleati — resta solo, se serve,
-  eventuale terreno "neutro" preesistente (bosco) su cui le missioni
-  costruiranno.
-- `SconfiggiLaStrega`/`SconfiggiIlLich`/`SconfiggiIlMinotauroGigante`/
-  `SconfiggiLIdra`: `controllaPreLocazione()` oggi si limita ad
-  `attivaMissione()`. Diventa: se non attiva, `RegistroMissioni.cerca(
-  ClassiLocazione.BOSCO)`, trasforma la coordinata trovata nel proprio
-  castello (stessa `setLocazione`/registrazione che oggi fa
-  `costruisciLocazioneUnica`, ma sulla coordinata già scelta da `cerca()`
-  invece che da `getCoordinateLibere()`), poi `attivaMissione()`. Se `cerca()`
-  non trova nulla questo turno, la missione resta non attiva e si riprova al
-  turno successivo (mappa 20×20, praticamente non dovrebbe mai succedere con
-  solo 4 castelli da piazzare).
-- `SconfiggiIlDrago` **non cambia comportamento**: già oggi costruisce
-  `CASTELLO_DRAGO` da sé a runtime. Per coerenza si può far passare anche lui
-  da `RegistroMissioni.cerca(ClassiLocazione.BOSCO)` invece che da
-  `getCoordinateLibere()` diretto (così anche il suo claim entra nel
-  registro), ma non è necessario per la correttezza: è già lo schema che gli
-  altri quattro devono imitare.
-
-### Impatto su `Recupera il Medaglione`/`Le Derrate Alimentari` e passo `CercaLocazione`
-
-Le due missioni del punto 5 hanno già una coordinata fissa
-(`GROTTA_RECUPERA_IL_MEDAGLIONE`/`ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI` sono
-`ClassiLocazione` dedicate, sempre presenti una sola volta): per loro il claim
-è opzionale, non toglie né aggiunge nulla al piano del punto 5 e si può
-saltare in questo primo giro. Diventa utile quando una missione **non** ha
-una `ClassiLocazione` dedicata e deve trovarne una a runtime: un nuovo tipo di
-passo `CercaLocazione(ClassiLocazione richiesta)` (da aggiungere al catalogo
-di `passi_missioni.md`) la cui `azione` chiama `cerca()` e salva la coordinata
-trovata come proprietà (stesso schema `COORDINATA_X`/`COORDINATA_Y` di
-`MuoviALocazione`); `condizione` resta falsa (passo non concluso, si riprova
-al turno successivo) se `cerca()` non trova nulla.
-
-### Cosa non serve toccare
-
-A differenza dell'idea più ampia discussa a voce (eventi interni
-`InternoSconfittaPersonaggio`, hook di riempimento/descrizione a
-`INIZIO_LOCAZIONE` al posto di `LocazioneUnica`), questo pezzo **non tocca
-`Automa`**: `occupaLocazione`/`cerca()` sono chiamate dirette dentro
-l'`azione` di un passo o dentro `controllaPreLocazione`/`PostLocazione` di una
-missione, esattamente come oggi `costruisciLocazioneUnica`. È quindi
-indipendente e più piccolo del resto della discussione su "locazione unica",
-e può essere costruito prima, senza aspettare quella parte.
-
-### Come è stato implementato (2026-10-02)
-
-Con la regola corretta del punto 7: un claim **non si cancella mai**, si
-sovrascrive.
-
-- **`RegistroMissioni`:**
-  - `locazioniOccupate` (coordinata → id della missione che l'ha rivendicata per
-    ultima) e `occupaLocazione(coordinate, missione)`. La missione ricorda la
-    sua coordinata nella proprietà `LOCAZIONE_OCCUPATA` (`"x,y,n"`, con `n` il
-    numero d'ordine del claim); ne rivendica una sola alla volta. Non si usa
-    `COORDINATA_X`/`COORDINATA_Y`, che in `MuoviALocazione` vogliono dire
-    "destinazione da raggiungere".
-  - `getLocazioneOccupata(missione)` e `getMissioneCheHaOccupato(coordinate)`
-    (anche a missione finita, per l'hook "qui sorgeva…").
-  - `cerca(classe, missione)`: quadrati concentrici attorno a una casella a
-    caso (`bordo(x0, y0, raggio)`: le celle a distanza di Chebyshev esatta, dal
-    lato nord in senso orario). Una cella è disponibile se non ha claim, se il
-    claim è della missione stessa, o se la missione che l'ha rivendicata è
-    completa o fallita. Non si sceglie mai la casella del gruppo, per non
-    cambiargli la locazione sotto i piedi. Vuoto se non c'è niente: la
-    missione riprova.
-  - `rivendicaPerLocazioneUnica(locazioneUnica, suCasellaDi, missione)`: `cerca`
-    più la costruzione della locazione unica, come non visitata.
-  - Dopo un caricamento i claim si ricostruiscono dalle proprietà di tutte le
-    missioni, nell'ordine del numero `n`, così vince ancora l'ultimo.
-- **Castelli:** `Foresta.costruisciCastelli()` non c'è più. Le quattro missioni
-  `Sconfiggi*` rivendicano il loro castello su un `BOSCO` nel proprio
-  `controllaPreLocazione` e si attivano solo se ci riescono: con l'ordine di
-  visita esistente succede al primo controllo della partita. Anche
-  `SconfiggiIlDrago` costruisce il suo castello con
-  `rivendicaPerLocazioneUnica`, e se non trova un bosco libero riprova alla
-  fine della locazione successiva. `Foresta.costruisciLocazioneUnica` ha una
-  variante con le coordinate.
-- **Passo `CercaLocazione`:** `MissioneAPassi.cercaLocazione(momento, classe)`,
-  un passo che si conclude quando `cerca` trova una locazione (e la
-  rivendica); la coordinata si legge con `getLocazioneOccupata`.
-- **Test:** la partita di test (`PartitaDiTest.spostaGruppoIn`), se le si chiede
-  un castello che ancora non esiste, fa rivendicare i castelli alle missioni
-  prima del tempo. `ScenarioLocazioniRivendicateTest` (5): i quattro castelli
-  rivendicati a inizio partita, il bordo dei quadrati, il passo `cercaLocazione`
-  (mai la casella del gruppo), le locazioni di una missione in corso escluse e
-  quelle di una finita riprese con la memoria del vecchio proprietario, i
-  claim ricostruiti dopo un caricamento con l'ultimo che vince.
-
-## 7. `SconfiggiIlDrago`: claim precoce delle quattro missioni figlie, memoria storica del claim
-
-### Il percorso proposto è già quello che il codice fa oggi, a parte il claim
-
-Verificato riga per riga: `SconfiggiIlDrago()` (costruttore, righe 17-23) crea
-già le quattro missioni figlie (`SconfiggiLaStrega`, `SconfiggiIlLich`,
-`SconfiggiIlMinotauroGigante`, `SconfiggiLIdra`) appena viene istanziata, cioè
-a `RegistroMissioni.reimposta()` — quindi alla generazione della Foresta, non
-dopo. `controllaPreLocazione()` (righe 47-52) attiva `SconfiggiIlDrago` al
-primissimo controllo, senza condizioni. E la visita dell'albero delle
-missioni in `Automa.controllaMissione` (righe 1433-1453) usa
-`OrdineVisita.PADRE_PRIMA` per `controllaPreLocazione` — il commento sul posto
-lo dice esplicitamente: *"una missione che si attiva adesso porta con sé le
-proprie figlie nello stesso giro"* (riga ~1410). Risultato: con la modifica
-del punto 6 (`SconfiggiLaStrega` & co. chiamano `RegistroMissioni.cerca(
-ClassiLocazione.BOSCO)` dentro il proprio `controllaPreLocazione` invece di
-limitarsi ad `attivaMissione()`), le quattro rivendicano ciascuna una propria
-locazione **nello stesso giro** in cui parte la partita, senza bisogno di
-nessun collegamento nuovo fra `SconfiggiIlDrago` e le figlie: è già tutto
-cablato dall'albero `aggiungiMissione`/`getMissioniSecondarie` esistente e
-dall'ordine di visita esistente. Sei corretto su questo punto.
-
-### Il claim va tenuto anche dopo il completamento, non evitato — va solo corretta la regola di "disponibilità"
-
-Il punto 6, come scritto, fa evitare da `cerca()` un claim non appena la
-missione proprietaria è completa — pensato per liberare la coordinata al
-prossimo che ne ha bisogno, ma incompatibile con l'idea di conservare "qui
-sorgeva il Castello della Strega" come testo dopo il completamento: se il
-claim si cancella, non resta nulla da interrogare per scriverlo.
-
-Correzione: **non cancellare mai un claim**, solo scriverne sopra uno nuovo
-quando serve. La disponibilità per `cerca()` diventa "la coordinata non ha
-claim, oppure il claim è di una missione non più attiva
-(`!missione.isAttiva()`, cioè completata o fallita)" — la stessa condizione
-di prima, ma senza la cancellazione: chi rivendica la coordinata sovrascrive
-semplicemente la voce con il proprio id. `locazioniOccupate` finisce così a
-fare doppio servizio: per `cerca()` è "chi ha la coordinata **adesso**, se
-ancora attivo"; per un hook di descrizione è "chi l'ha avuta **per ultimo**",
-utile anche dopo che qualcun altro l'ha rivendicata di nuovo (risolve anche
-la domanda lasciata aperta due messaggi fa su come arbitrare un conflitto fra
-due missioni sulla stessa locazione: vince l'ultima che l'ha rivendicata,
-punto e basta, perché è l'unica voce che esiste).
-
-Un hook di descrizione a `INIZIO_LOCAZIONE` (idea del messaggio precedente)
-può quindi interrogare `RegistroMissioni` per "chi ha il claim su questa
-coordinata" indipendentemente dal `ClassiLocazione` che ci si trova sopra in
-quel momento — così "qui sorgeva il Castello della Strega" può comparire
-anche quando la casella è già tornata `ROVINE` o `BOSCO`.
-
-**Nota**: oggi nessuna missione trasforma davvero il proprio castello in
-rovine dopo la vittoria — `SconfiggiLaStrega.controllaPostLocazione()` chiama
-solo `completaMissione()`, la casella resta `CASTELLO_STREGA` con la sua
-proprietà `LocazioneMD.COMPLETA`. Per avere davvero "rovine" bisognerebbe
-aggiungere, sul modello già esistente di
-`GrottaRecuperaIlMedaglione.azzeraLocazione()` (che a fine missione chiama
-`Foresta.distruggiLocazioneUnica(..., ClassiLocazione.GROTTA)`), un
-`azzeraLocazione` analogo che trasformi il castello sconfitto in `ROVINE`. È
-un'aggiunta, non qualcosa che va "preservato" da una funzionalità già
-esistente — ma lo schema è lo stesso, collaudato.
-
-### Intermezzi per passo: già coperto, nessuna novità
-
-Confermato: se `SconfiggiLaStrega` & co. venissero riscritte come
-`MissioneAPassi` (punto 3), ogni passo — rivendica locazione, combatti,
-completa — può già portare un `.conIntermezzo(...)` opzionale esattamente
-come progettato al punto 2/3 per `RecuperaIlMedaglione`. Non serve alcun
-meccanismo nuovo: è lo stesso framework, applicato a missioni che oggi sono
-ancora `MissioneBase` semplici. La migrazione delle cinque missioni
-`Sconfiggi*` a `MissioneAPassi` resta però un passo di implementazione
-separato (più cinque classi da convertire, con `costruisciCastelli()` da
-smontare) — non è incluso nel piano attuale (punto 5), che riguarda solo le
-due missioni di recupero.
-
-### Come è stato implementato (2026-10-02)
-
-- **Claim precoce e memoria:** fatti col punto 6 (vedi lì).
-- **Castelli in rovine:** c'erano già. Tutti e cinque, Drago compreso,
-  `azzeraLocazione` della locazione completata chiama
-  `Foresta.distruggiLocazioneUnica(…, ROVINE)`, che cambia la casella e la toglie
-  dalle locazioni uniche. Il claim resta, ed è quel che permette il ricordo.
-- **"Qui sorgeva…":** `Missione.getRicordoDellaLocazione()` (null di default)
-  è la **frase intera** da scrivere a chi entra nella locazione rivendicata,
-  perché il verbo dipende dal luogo: le cinque missioni dei castelli rispondono
-  "Qui sorgeva il castello della Strega." (e del Lich, del Minotauro Gigante,
-  dell'Idra, del Drago); Recupera il Medaglione "In questa grotta i ladri
-  nascondevano il medaglione rubato."; Recupera le Derrate "Fra queste rovine i
-  Troll nascondevano le derrate di Ruuna.". Le due missioni di recupero
-  rivendicano il covo con `occupaLocazione` quando lo costruiscono, nel passo
-  di accettazione. `RegistroMissioni.getRicordo(coordinate)` restituisce la
-  frase della missione che ha rivendicato per ultima la casella, solo se quella
-  missione è finita (completa o fallita): un covo ripulito ma con il bersaglio
-  non ancora consegnato non ricorda niente. L'`Automa`, in
-  `PREPARAZIONE_LOCAZIONE` subito dopo la descrizione della locazione, la scrive
-  a ogni ingresso. Se un'altra missione rivendica di nuovo la casella, il
-  ricordo diventa il suo.
-- **Test** in `ScenarioMissioniDiRecuperoTest` (2 nuovi): il covo è della
-  missione, ripulito diventa una grotta o delle rovine qualsiasi, e ricorda la
-  frase solo a missione finita. In `ScenarioLocazioniRivendicateTest` (2 nuovi): ogni castello
-  sconfitto, Drago compreso, diventa rovine, esce dalle locazioni uniche e
-  ricorda chi ci stava; e su una partita vera il gruppo che entra fra le rovine
-  del castello della Strega legge "Qui sorgeva il castello della Strega.".
-
-## Missioni degli artefatti leggendari (2026-10-02)
-
-> Superata il 2026-10-03: le due leggende delle città e `ArtefattoLeggendario`
-> sono state sostituite dalle leggende ripetibili con i leggendari di
-> `leggendari.txt` (vedi passi_missioni.md, "Le leggende"). Resta qui la storia.
-
-Prime missioni nuove scritte sul framework: **La leggenda di Nyena** e **La
-leggenda di Malgaard** (`LaLeggendaDiNyena`, `LaLeggendaDiMalgaard`, sulla
-base comune `RecuperaUnArtefattoLeggendario`), per le due città che non
-avevano una missione.
-
-1. `INCARICO` (`PRE_LOCAZIONE`, nella città): la missione pesca un
-   `ArtefattoLeggendario` che nessun'altra missione ha già
-   (`RegistroArtefatti.pescaLeggendario`) e lo ricorda nella proprietà
-   `LEGGENDARIO`; intermezzo a `INIZIO_LOCAZIONE` con l'armaiolo
-   (`ScenaInCitta.conArmaiolo()`) che racconta la leggenda dell'artefatto, e il
-   gruppo che decide di andarlo a prendere contro il Drago.
-2. `ACCETTAZIONE` (`IN_LOCAZIONE`, nella città): la missione rivendica un
-   `BOSCO` con `cerca` e ci fa sorgere un **tempio nuovo** che custodisce il
-   leggendario (`RegistroArtefatti.custodisciInUnTempioNuovo`, segnato sulla
-   mappa): i templi esistenti tengono i loro artefatti. Poi si attiva, così
-   l'avviso arriva dopo l'intermezzo.
-3. `RECUPERO` (`POST_LOCAZIONE`, nel tempio, quando l'artefatto non è più nel
-   registro): la raccolta, che avviene prima del controllo di fine locazione,
-   fa già partire la rivelazione dell'artefatto; poi la missione si completa.
-
-Il ricordo del tempio è "Qui le viverne custodivano la Spada della Morte.".
-L'avviso "MISSIONE COMPLETATA" non si sovrappone alla rivelazione: in
-`DisplayableCanvas` un annuncio globale aspetta che le rivelazioni in corso o in
-coda siano finite, e una rivelazione aspetta che finisca l'annuncio in corso.
-
-Test: `ScenarioArtefattiLeggendariTest` (2): a Nyena la leggenda arriva prima
-dell'avviso e il tempio nuovo custodisce il leggendario, segnato sulla mappa; a
-Malgaard un leggendario diverso in un altro tempio, e raccoglierlo completa la
-missione e lascia il ricordo.
-
-## Missioni secondarie affidate durante una missione (2026-10-03)
-
-Una missione può avere missioni secondarie fin dal costruttore (`SconfiggiIlDrago`
-con i quattro castelli). Una missione a passi può anche **affidarne** a metà
-strada, decise in quel momento: una, più d'una, o una invece di un'altra secondo
-la scelta del giocatore.
-
-- `MissioneAPassi.affida(chiave, momento, quando, missioni)`: quando la
-  condizione è vera, il fornitore crea le missioni; diventano figlie della
-  missione (`aggiungiMissione`, quindi entrano nel suo modello dati e si salvano
-  con lei), attive, e i loro id si ricordano sotto la chiave. Si affidano una
-  volta sola, anche se il passo si valuta più volte. Il fornitore può leggere
-  una risposta data prima (`getRisposta`) per scegliere quali.
-- `attendiLeAffidate(chiave, momento)`: il passo si conclude quando sono finite
-  tutte, bene o male; `sonoRiusciteLeAffidate(chiave)` e
-  `getMissioniAffidate(chiave)` dicono com'è andata, per diramare con `poi`.
-- Le affidate si controllano come le altre figlie: l'automa scende nelle figlie
-  delle missioni attive (`Automa.controllaMissione`), il registro le vede tutte
-  (`RegistroMissioni.getTutteLeMissioni`) e quindi ricevono gli eventi di gioco;
-  il riquadro delle missioni le mostra sotto la madre. Alla rilettura di un
-  salvataggio si ricostruiscono dalla loro `ClasseMissione`: ogni missione che
-  si può affidare ci deve stare (non in `TipoMissionePredefinita`, che elenca solo
-  le radici).
-- Le affidate non devono essere ripetibili (una ripetibile, finita, lascerebbe
-  una copia di sé fra le missioni di primo livello). La madre può passare loro dei
-  parametri prima di affidarle (`PARAMETRO_` è protetta).
-
-Primo uso: `LaBenedizione` affida `IlFavore` (vedi passi_missioni.md). Test:
-`ScenarioMissioniAffidateTest`, `ScenarioBenedizioneTest`.
-
-## Registro dei personaggi incontrati (idea, da riprendere)
-
-Oggi un avversario esiste solo per la locazione in cui combatte; dei personaggi
-con un nome resta traccia solo nei parametri della missione che li ha creati.
-Con la resa (vedi passi_missioni.md, "Combattimenti fino alla resa e panchina")
-uno sfidante sconfitto può restare vivo: vale la pena ricordarselo e riusarlo.
-
-**Il registro.** Un `RegistroPersonaggi`, salvato con la partita, con i
-personaggi con un nome che il gruppo ha incontrato: nome, classe, livello, dove
-e in che missione li ha incontrati, come è finita (arreso, ha vinto lui,
-morto), e che rapporto hanno con il gruppo (nemico, rivale, debitore).
-
-- **Missioni che li riprendono.** Una missione nuova può chiedere al registro un
-  personaggio adatto invece di pescarne uno nuovo dalla grammatica. Esempio: un
-  LADRO che in città ha cercato di borseggiare il gruppo e ha perso il duello
-  si ritrova più avanti come bersaglio di una VENDETTA, o come quello da tenere
-  d'occhio in una SORVEGLIANZA.
-- **Aiuti.** Un campione (GUERRIERO, GUERRIERA) sconfitto lealmente in un duello
-  può tornare utile: in un'altra missione, o quando il gruppo è in estrema
-  difficoltà in un combattimento, si aggiunge temporaneamente a chi combatte
-  (come i personaggi a tempo), e alla fine saluta e se ne va, con un intermezzo.
-- **I campioni dei tornei.** Il campione della finale di un torneo (`IlTorneo`)
-  ha un nome, si arrende e resta vivo: va nel registro. Può tornare al torneo
-  successivo per la rivincita personale, o come campione da battere, oppure in
-  un'altra missione come rivale o come aiuto. Gli sfidanti dei primi due turni
-  oggi non hanno nome: con il registro potrebbero averne uno e ritornare anche
-  loro.
-- **Incontri casuali.** Anche solo per salutarsi, o per una battuta, entrando in
-  una locanda o per strada.
-- **Morti.** Chi muore (il LADRO della VENDETTA che soccombe) va tolto dal
-  registro, o segnato come morto: non è più riusabile.
-- **Nomi unici.** Non devono esistere due "Matilde l'Intrepida". Le produzioni
-  dei nomi dei campioni (`NOME_CAMPIONE`, `NOME_CAMPIONESSA`, e forse anche
-  `NOME_BRIGANTE`, `NOME_MAGO`) vanno rese one-shot almeno per il nome, come i
-  leggendari (vedi `GrammarBean.canProduce`): pescato un nome, non si ripesca.
-  Quando i nomi finiscono, le missioni che li usano (i duelli) non si offrono
-  più, oppure riprendono un personaggio già nel registro. Il controllo va fatto
-  contro il registro, come le leggende fanno con i leggendari già raccontati,
-  perché la grammatica non si salva.
-
-
-## Verifica
-
-- `mvn -o compile -q` (workaround offline già in uso in questo progetto) per
-  verificare che tutto compili dopo ogni fase.
-- Le scene sono state controllate disegnandone i fotogrammi con
-  `DisplayableCanvasIntermezzo`. Resta da vedere a mano, nel gioco, l'intero
-  percorso qui sotto.
-- Avvio manuale del gioco, missione Recupera il Medaglione: assumere
-  l'incarico in città, notare la locazione grotta creata; combattere e
-  vincere nella grotta, verificare che a fine locazione scatti l'intermezzo
-  "portalo in città" (nuovo checkpoint `LOCAZIONE_COMPLETATA`) prima del
-  messaggio "in quale direzione ti incammini"; tornare in città e verificare
-  il completamento con ricompensa e (se previsto) l'intermezzo finale.
-- Ripetere lo stesso percorso per Recupera le Derrate Alimentari.
-- Controllare che uscendo e ricaricando un salvataggio a metà missione (es.
-  dopo il passo 1) lo stato riprenda dal passo corretto (proprietà
-  `PASSO_CORRENTE` persistita correttamente).
-- `Stato.ATTESA_RISPOSTA_MISSIONE` (punto 4) è verificato da
-  `ScenarioDomandeMissioniTest` su una partita vera. Resta da vedere a mano,
-  nel gioco, come appaiono domanda e icone delle risposte.
-- Punto 6: avviare una partita, verificare che i quattro castelli alleati
-  compaiano solo quando la relativa missione `Sconfiggi*` li rivendica (non
-  più tutti fin dall'inizio); sconfiggerne uno, verificare che `cerca()` non
-  lo riproponga più come `BOSCO` disponibile finché la missione non è
-  completa, e che dopo il completamento la sua coordinata possa essere
-  rivendicata di nuovo da un'altra missione (claim liberato passivamente).
-  Verificare anche il caso limite "nessun `BOSCO` libero trovato" forzando
-  temporaneamente una mappa piena, per controllare che la missione resti
-  semplicemente non attiva invece di fallire o lanciare un errore.
+# Gestione delle missioni
+
+Come il motore rappresenta, controlla, salva e collega al resto del gioco le missioni: l'infrastruttura. Il vocabolario dei passi e la mappatura dei tipi di missione sono in [`passi_missioni.md`](passi_missioni.md); per l'automa che le controlla vedi [`motore_di_gioco.md`](motore_di_gioco.md) §3; per gli intermezzi [`intermezzi.md`](intermezzi.md).
+
+Tutto il codice è in `missioni/` (modello e missioni concrete), in `motore/RegistroMissioni`, `motore/RegistroIntermezzi` e `motore/modellodati/MissioneMD`, `RegistroMissioniMD`.
+
+## 1. Il modello
+
+### `Missione` e `MissioneBase`
+
+`Missione` è l'interfaccia di una missione: identificatore, nome, descrizione (con il flag "visibile" per il riquadro delle missioni), i **tre controlli** dell'automa (`controllaPreLocazione`, `controllaInLocazione`, `controllaPostLocazione`) più `controllaAccampamento` (di default non fa niente), lo stato (`isAttiva`, `isCompleta`, `isFallita`, `isPrimaria`), le **proprietà** (`ottieniProprieta`, `aggiungiProprieta`, `rimuoviProprieta`) e le **missioni secondarie** (figlie). In più cinque metodi di default, con cui una missione influisce sul mondo quando il gruppo entra in una locazione:
+
+| Metodo | A che cosa serve |
+| :--- | :--- |
+| `getIncontroInLocazione(coordinate)` | gli avversari che la missione vuole in quella locazione, al posto di quelli normali |
+| `getOndateSuccessiveInLocazione(coordinate)` | le ondate che arrivano dopo, a combattimento vinto |
+| `getOggettoInLocazione(coordinate, classe, visitata)` | l'oggetto che la missione vuole al posto di quello della locazione |
+| `getRicordoDellaLocazione()` | la frase per chi entra, a missione finita, nel posto che aveva rivendicato ("Qui sorgeva il castello della Strega.") |
+| `controllaAccampamento()` | il controllo all'accampamento (vedi [`motore_di_gioco.md`](motore_di_gioco.md) §3) |
+
+`MissioneBase` realizza il comune. Lo **stato è nelle proprietà** (`ATTIVA`, `COMPLETA`, `FALLITA`: presenza della chiave), non in campi Java, perché le proprietà si salvano. `completaMissione()` segna la missione completata, la sposta nel registro, pubblica `NotificaAggiornamentoStatoMissione` ("MISSIONE COMPLETATA") e `InternoMissioneCompletata`, e dà esperienza: il 50% dei punti per il livello successivo per una missione principale, il 20% per le altre (`GestoreProgressione`). `fallisciMissione()` non fa nulla se la missione è già finita; altrimenti la segna fallita, la sposta fra le fallite e non dà esperienza. L'avviso "NUOVA MISSIONE" e quello "MISSIONE FALLITA" arrivano dalla base solo per le missioni predefinite; per quelle a passi se ne occupa `MissioneAPassi`.
+
+### Le missioni formano un albero
+
+Ogni missione può avere **figlie** (`aggiungiMissione`, `getMissioniSecondarie`). L'albero è quello del modello dati: `MissioneMD` tiene l'identificatore (un UUID, o il nome del `TipoMissionePredefinita` per le radici predefinite), la `ClasseMissione`, nome, descrizione, flag di visibilità, la mappa delle proprietà e la lista delle figlie. Una missione non può essere figlia di sé stessa (un ciclo renderebbe infinite le ricorsioni di salvataggio e di ricostruzione). Un esempio è `SconfiggiIlDrago`, che nel costruttore ha come figlie le quattro missioni degli alleati.
+
+### Classi di missione
+
+`ClasseMissione` elenca **ogni classe concreta** di missione, con il suo costruttore: è ciò che permette di ricostruire un albero dopo un caricamento, perché ogni nodo salvato dichiara la propria classe. Ne consegue una regola: **ogni missione che il gioco può creare, anche solo come figlia affidata a metà partita, deve stare in `ClasseMissione`**. Quelle che nascono con la partita stanno anche in `RegistroMissioni.TipoMissionePredefinita` (§2), che elenca solo le radici.
+
+Le missioni si dividono per come sono scritte:
+- **a mano**, direttamente su `MissioneBase`: le principali (`SconfiggiIlDrago` e le quattro `Sconfiggi*` figlie), le missioni di prova, e alcune secondarie semplici (`Combatti` e le sue derivate, `VisitaLocanda`, `MuoviALocazione`, `CronacheDiUnFegatoEroico`, `NessunBoccaleLasciatoIndietro`, `DisturbatoreDellaQuietePubblica`, `MissioneSecondaria`);
+- **a passi**, su `MissioneAPassi` (§4): tutto il resto, cioè le due missioni di recupero, gli incarichi in città, le leggende, i rituali e le altre. È il modo in cui si scrivono le missioni nuove.
+
+## 2. Il registro (`RegistroMissioni`)
+
+`RegistroMissioni` è la facciata statica sul modello dati (`RegistroMissioniMD`: due mappe, attive e completate) e tiene in memoria gli elenchi di primo livello:
+
+- le **predefinite** (`TipoMissionePredefinita`: la missione principale, le due di recupero, le leggende, gli incarichi e le altre che esistono dall'inizio) in tre elenchi: in corso, completate, fallite. All'inizio della partita (`reimposta`) se ne crea una per ogni valore (le due missioni di prova solo in modalità di prova); nessuna è attiva finché non si attiva da sola (§3). L'identificatore di una predefinita è il nome del suo valore;
+- le **secondarie di primo livello** (`aggiungiMissioneSecondaria`): missioni nate durante la partita fuori dall'albero della principale, per esempio l'incarico in città che ne ripete uno finito. Anche queste in corso, completate, fallite.
+
+Le figlie non stanno in nessun elenco: una figlia completata o fallita resta dentro la sua madre con il proprio flag. Le interrogazioni principali:
+
+| Metodo | Restituisce |
+| :--- | :--- |
+| `getMissioniNonCompletate()` | le radici ancora in corso (attive e da attivare); la discesa nell'albero spetta al chiamante |
+| `getMissioniAttive()` | le radici attive |
+| `getMissioniCompletate()` | le radici completate, e le figlie completate di quelle ancora in corso |
+| `getMissioniFallite()` | le radici fallite |
+| `getTutteLeMissioni()` | ogni missione dell'albero, una volta sola e in qualunque stato (serve a chi cerca ciò che una missione ha lasciato in sospeso anche dopo la fine: l'intermezzo dell'ultimo passo, i claim) |
+| `getMissione(id)` | la missione con quell'identificatore |
+| `getMissionePrincipale()` | `SconfiggiIlDrago`, in corso o completata |
+
+**Eventi di gioco.** `registrati()` (chiamato da `Main`) iscrive il registro al bus per contare ciò che le missioni a passi vogliono sapere: l'apertura di un combattimento, gli avversari sconfitti (con la casella), gli oggetti raccolti, i passaggi inosservati. Ognuno è girato a tutte le missioni a passi non finite (`registraEvento`).
+
+**Salvataggio e rilettura.** Si salvano i due elenchi di `RegistroMissioniMD` (attive e completate, ciascuno con tutto il proprio albero). `aggiornaDopoRilettura()` ricostruisce gli oggetti: per una predefinita crea l'istanza dal suo tipo, per le altre dalla `ClasseMissione` dichiarata nel nodo, poi riattacca ricorsivamente le figlie (`setModelloDati` svuota la lista delle figlie costruite dal costruttore, perché la struttura appartiene al modello dati: figlie con identificatori diversi da quelli salvati farebbero sparire i progressi). Poi smista in corso/completate/fallite e ricostruisce i claim delle locazioni (§6).
+
+**Chi sa se la partita è vinta.** `Automa` chiede a `getMissionePrincipale()` se è completa per decidere fra `GIOCO_VINTO` e `GIOCO_PERSO` (vedi [`motore_di_gioco.md`](motore_di_gioco.md) §3).
+
+## 3. Quando una missione viene controllata
+
+L'automa chiama i controlli in quattro momenti (`MomentoControllo`: `PRE_LOCAZIONE`, `IN_LOCAZIONE`, `POST_LOCAZIONE`, `ACCAMPAMENTO`), sempre sull'**albero** delle missioni non completate: dopo una radice si scende nelle figlie, ma solo se la missione è attiva e non conclusa, e saltando le figlie finite. Il `POST_LOCAZIONE` visita **prima le figlie e poi il padre** (così il padre vede lo stato già aggiornato, per esempio le quattro figlie complete); gli altri tre prima il padre. Si lavora su una copia della lista delle figlie, perché un controllo può aggiungerne (le missioni affidate).
+
+Non c'è una "assegnazione" delle missioni: **ognuna decide da sé quando partire**, nel suo controllo. Alcuni esempi:
+- `SconfiggiIlDrago` si attiva al primo `PRE_LOCAZIONE` e scrive la sua descrizione;
+- ogni missione `Sconfiggi*` degli alleati, a `PRE_LOCAZIONE`, cerca di rivendicare un bosco su cui costruire il suo castello (§6) e si attiva solo se ci riesce, altrimenti riprova al controllo successivo;
+- un incarico in città si offre da sé quando il gruppo è nella città giusta (§8).
+
+Dopo ogni controllo, l'automa guarda se una missione a passi ha una **domanda** da porre al giocatore e, in quel caso, va in `ATTESA_RISPOSTA_MISSIONE`; vedi [`motore_di_gioco.md`](motore_di_gioco.md) §3 per il flusso e §4 per i comandi.
+
+## 4. Le missioni a passi
+
+### `Passo`
+
+Un `Passo` è un pezzo di logica di avanzamento dentro **una sola missione**: non è una `Missione` e non entra nell'albero. Si costruisce con un builder fluente, come `Passo.quando(momento, condizione).esegui(azione).poi("PROSSIMO")`:
+
+| Elemento | Significato |
+| :--- | :--- |
+| `quando(momento, condizione)` | in quale controllo si valuta e quando è concluso |
+| `esegui(azione)` | che cosa fare, una volta sola, alla conclusione (si può chiamare più volte, in ordine) |
+| `aOgniControllo(azione)` | che cosa fare a ogni valutazione, prima di vedere se è concluso (per tenere conti che dipendono da dove si trova il gruppo) |
+| `poi(id)` o `poi(supplier)` | il prossimo passo, fisso o calcolato dopo l'azione (una **diramazione**); `Passo.FINE` chiude la missione |
+| `falliscoSe(condizione, testo)` | finché è il passo corrente, se la condizione è vera la missione fallisce con quel testo; vale in tutti i controlli, prima di tutto il resto |
+| `conIntermezzo(momento, pagine)` | un intermezzo da mostrare, in quel momento, dopo la conclusione; le pagine si costruiscono quando scatta |
+| `chiediConferma(domanda)`, `chiediScelta(domanda, opzioni)` | una domanda al giocatore, sì/no o da 2 a 5 opzioni; la condizione dice quando si può porre |
+| `semina(oggetti)`, `affronta(dove, incontro)` | finché è il passo corrente, la missione mette oggetti nelle locazioni, o avversari in una locazione precisa |
+
+I passi **non si salvano**: la missione li ricostruisce dal loro id ogni volta che servono, quindi condizioni e azioni sono lambda qualsiasi. Gli id sono stringhe senza `,`, `§`, `|` (finiscono nelle proprietà e in liste separate da virgole).
+
+### `MissioneAPassi`
+
+È la base delle missioni a passi: un **piccolo automa** i cui stati sono i passi, identificati da una chiave e non da una posizione in una lista, così una missione può diramarsi secondo lo stato di gioco o la risposta del giocatore e può costruire i passi al volo. Una sottoclasse definisce `passoIniziale()` e `costruisciPasso(id)`; quest'ultimo **deve saper ricostruire ogni id che la missione ha mai usato**, anche dopo un salvataggio.
+
+**Avanzamento.** A ogni controllo (`avanzaSePronto`), se la missione non è finita:
+1. si costruisce il passo corrente; se una guardia `falliscoSe` è scattata la missione fallisce (con il testo nel pannello);
+2. se il passo non è di quel controllo, ci si ferma; altrimenti si eseguono le azioni `aOgniControllo`;
+3. se il passo non è concluso (per una domanda: se non c'è la risposta) ci si ferma;
+4. si esegue l'azione, si ricorda l'eventuale intermezzo in attesa, si calcola il prossimo passo, lo si salva (`PASSO_CORRENTE`) e se ne segna l'inizio in ore di gioco;
+5. se il prossimo è `FINE` la missione si completa (se l'azione non l'ha già fatto), altrimenti si **prosegue subito** con il passo successivo se è dello stesso controllo e già concluso, così un passo di solo testo non costa un turno. Oltre 50 passi di fila nello stesso controllo lancia `IllegalStateException` (un ciclo fra passi).
+
+Si salva solo l'id del passo corrente (`PASSO_CORRENTE`) più le proprietà che le sottoclassi scrivono: dopo un caricamento la missione riprende dal passo giusto (lo verifica `MissioneAPassiTest`).
+
+**Attivazione.** `attivaMissione()` ricorda la casella in cui il gruppo si trovava (`PUNTO_DI_PARTENZA`, a cui si può poi tornare) e l'ora d'inizio del passo corrente.
+
+**Domande.** `getDomandaDaPorre(momento)` restituisce il passo corrente se è una domanda di quel momento, la sua condizione è vera e non c'è ancora risposta; l'automa la pone e consegna la risposta con `rispondi(risposta)` (che la valida e la salva come `RISPOSTA_<id>`). Il passo si conclude al controllo successivo; la diramazione legge la risposta con `getRisposta(idPasso)`. `dimenticaRisposta` fa porre la domanda di nuovo.
+
+**Eventi contati per passo.** `registraEvento(evento, quantità)` somma l'evento al contatore del **passo corrente** (`EVENTO_<passo>_<evento>`): un passo conta solo ciò che succede da quando è corrente. Gli eventi sono nomi costruiti da metodi statici: avversario sconfitto (di una classe, anche in una casella precisa), combattimento, passaggio inosservato, oggetto raccolto. Esistono anche **contatori** per chiave scelta dalla missione (`incrementaContatore`, `getContatore`), usati per gli oggetti di missione.
+
+**Tempo.** `oreDiGioco()` converte la linea temporale in ore; ogni passo ricorda quando è diventato corrente (`INIZIO_<id>`), e così funzionano le attese e i ripieghi.
+
+**Parametri.** Una missione generata fissa i suoi valori variabili (il mandante, il bersaglio, la quantità) come proprietà con `generaParametri` o `parametro(nome, generatore)`: la prima volta si pesca, poi resta quello, anche dopo un salvataggio.
+
+**Sequenze fissate alla generazione.** `impostaSequenzaPassi(ids)` decide una volta sola un ordine di passi (ad esempio "visita N locazioni scelte a caso") e `prossimoNellaSequenza()` lo percorre.
+
+**Missioni ripetibili.** Se `isRipetibile()` è vero, una missione finita (bene o male) ne lascia **una nuova della stessa classe**, aggiunta alle secondarie di primo livello, che si potrà cominciare dopo `ORE_FRA_UNA_MISSIONE_E_L_ALTRA` (48) ore di gioco (`isDisponibile()` va messo nella condizione del suo primo passo). Si ripete una volta sola per missione (`GIA_RIPETUTA`). Le missioni affidate non devono essere ripetibili.
+
+**Missioni affidate.** Un passo può **affidare** missioni secondarie decise in quel momento (`affida(chiave, momento, quando, fornitore)`): il fornitore le crea, diventano figlie della madre (entrano nel suo modello dati e si salvano con lei), vengono attivate e i loro id si ricordano sotto la chiave; si affidano una sola volta. `attendiLeAffidate(chiave, momento)` si conclude quando sono finite tutte; `sonoRiusciteLeAffidate` e `getMissioniAffidate` dicono com'è andata, per diramare.
+
+**Scorta.** Una missione può prendere con sé un `Viandante` (o un personaggio fatto da lei) come **ospite** del gruppo (`prendiInScorta`, anche vulnerabile), che a destinazione si separa; se è vulnerabile e muore la missione può fallire o ramificarsi (`scorta`, `scortaFinoAllaMeta`, `isScortatoMorto`). Quando la missione fallisce o finisce lo scortato si separa.
+
+**Hook sul mondo.** Le sottoclassi realizzano i cinque metodi di default di `Missione` (§1) leggendo il passo corrente: gli avversari dell'incontro (`getIncontroInLocazione`), le ondate, gli oggetti seminati (`getOggettoInLocazione`).
+
+I **passi già pronti** che le missioni compongono (VAI, DIALOGO, RICOMPENSA, ATTENDI, CONTA_FINCHE, SCONFIGGI, RACCOGLI, CONSEGNA, SORVEGLIA, ESPLORA, EVITA_COMBATTIMENTO, COSTRUISCI, COMBATTI, SCORTA, AFFIDA, CERCA_LOCAZIONE...) sono descritti in [`passi_missioni.md`](passi_missioni.md).
+
+## 5. Intermezzi di passo
+
+Un passo con `conIntermezzo` non mostra la scena da sé: quando si conclude, il suo id finisce fra gli **intermezzi in attesa** della missione (`INTERMEZZI_IN_ATTESA`, in ordine di conclusione); chi lo mostra lo segna con `segnaIntermezzoPassoMostrato` (`INTERMEZZO_MOSTRATO_<id>`). Il "già mostrato" **vive nella missione**, non in `IntermezziMD`, perché ogni istanza di una missione generata ha il suo.
+
+- **`RegistroIntermezzi.getProssimoIntermezzo(momento)`** cerca in quest'ordine: gli intermezzi fissi di `ClasseIntermezzo` non di ripiego, poi quelli dei passi delle missioni (`getTutteLeMissioni`, in qualunque stato: l'ultimo passo di una missione può avere un intermezzo e insieme completarla), poi quelli fissi di ripiego solo se nel momento non è già scattato nient'altro (`scattatoNelMomento`, azzerato da `nuovoMomento()` a ogni nuovo momento dell'automa).
+- **`IntermezzoDiPasso`** (in `missioni/`) adatta un passo all'interfaccia `Intermezzo`: l'id serve solo ai log (`<missione>/<passo>`) e il "mostrato" è delegato alla missione.
+- **Quando si vede.** Un passo `POST_LOCAZIONE` con intermezzo `LOCAZIONE_COMPLETATA` si vede nello stesso turno, perché il controllo corre prima del momento. Un passo `IN_LOCAZIONE` con intermezzo `INIZIO_LOCAZIONE` si vede invece all'ingresso nella locazione successiva, perché quel momento viene prima dei controlli in locazione.
+- **Visita tranquilla.** `haUnIntermezzoInArrivo(controllo, momento)` dice se una missione mostrerà un intermezzo, e `isVisitaTranquilla()` se nessun'altra missione ne mostrerà uno entrando nella locazione: serve agli incarichi che si offrono in una città qualsiasi (§8), perché non si sovrappongano alle altre scene. Le missioni che aspettano una visita tranquilla si guardano fra loro solo quando l'intermezzo è già in attesa; se si guardassero l'un l'altra prima di partire non partirebbe nessuna.
+
+## 6. Le locazioni rivendicate (claim)
+
+Alcune missioni hanno bisogno di un **luogo**: un covo, un tempio, un castello. Non lo creano a caso: lo **rivendicano** (claim) in `RegistroMissioni`, che tiene per ogni coordinata l'id della missione che l'ha rivendicata per ultima (`locazioniOccupate`). La missione ricorda la propria coordinata nella proprietà `LOCAZIONE_OCCUPATA` (con un numero d'ordine progressivo) e ne rivendica **una alla volta** (`occupaLocazione`); il registro non salva i claim a parte, li ricostruisce dopo la rilettura dalle proprietà, nell'ordine in cui furono fatti.
+
+**Regola di disponibilità** (`isDisponibile(coordinate, richiedente)`): una casella è libera per una missione se nessuna missione l'ha rivendicata, oppure se chi l'ha fatto è **la stessa missione**, oppure se è **finita** (completa o fallita). Un claim non si cancella mai: si sovrascrive, così la casella ricorda chi l'ha avuta anche dopo la fine e se ne può leggere il **ricordo** (`getRicordo`, dalla frase di `getRicordoDellaLocazione`: "Qui sorgeva il castello della Strega" fra le rovine).
+
+**Ricerca.** `cerca(classe, missione[, quadrante])` esplora la mappa **a quadrati concentrici** attorno a una casella a caso (o a caso nel quadrante) e rivendica la prima locazione già esistente di quella classe che sia disponibile, che non sia la casella del gruppo (non gli si cambia la locazione sotto i piedi) e che non custodisca un artefatto del registro; per un tempio la segna come non ancora visitata. `cercaOCostruisci` aggiunge il caso in cui non ci sia niente: **costruisce** la locazione al posto di un bosco o di una palude disponibili, preferendo quelli già visitati, e la rivendica. Vuoto solo se non c'è nemmeno un bosco da sostituire: la missione riproverà al controllo successivo.
+
+**Locazioni uniche.** `rivendicaPerLocazioneUnica(unica, suCasellaDi, missione)` cerca una casella e ci costruisce una **locazione unica** (un castello) come non ancora visitata. Il castello di un alleato del Drago lo cerca in un quadrante dove non c'è ancora un altro castello (`quadranteSenza`), così i quattro finiscono uno per quadrante; quello del Drago, che arriva dopo, va dovunque. Chi lo cerca resta non attivo finché non lo trova.
+
+**Contenuto soppresso.** Una missione che conclude all'arrivo in un posto che considera sicuro (un tempio per una benedizione) lo segnala con `sopprimiContenutoLocazione`, da un `aOgniControllo` del passo d'arrivo (non dall'azione: il passo potrebbe concludersi e incatenarsi prima che l'automa consumi il segnale); `isDaSopprimere(coordinate)` lo consuma una volta sola e, in `PREPARAZIONE_LOCAZIONE`, toglie avversari e oggetto a caso.
+
+**Segnalazione sulla mappa.** Le caselle rivendicate dalle missioni a passi attive e conosciute dal gruppo lampeggiano sulla mappa (`getLocazioniDaSegnalare`, con il nome della missione da `getNomeMissioneDaSegnalare`); i castelli delle missioni `Sconfiggi*` no.
+
+## 7. La missione principale e i castelli
+
+`SconfiggiIlDrago` è la missione principale (`isPrimaria()`). Le sue quattro figlie sono `SconfiggiLaStrega`, `SconfiggiIlLich`, `SconfiggiIlMinotauroGigante` e `SconfiggiLIdra`, scritte a mano:
+- ciascuna, a `PRE_LOCAZIONE`, rivendica un bosco per il suo castello (`CASTELLO_*`) e solo allora si attiva;
+- a `POST_LOCAZIONE`, se il gruppo è in quel castello e la locazione è completa, si completa;
+- tengono il claim anche dopo il completamento (con il ricordo dei castelli diventati rovine);
+- sono "sconfitte" quando sono complete, e `castelliDistrutti()` del Drago lo verifica sulle figlie, che restano sempre nell'albero (regge dopo un caricamento).
+
+`SconfiggiIlDrago` si attiva al primo `PRE_LOCAZIONE` e scrive la descrizione; a `POST_LOCAZIONE`, finché il Drago non è apparso e le quattro figlie sono complete, rivendica per lui un bosco e fa apparire il castello (`DRAGO_APPARSO`) con l'avviso che l'incantesimo che lo nascondeva è svanito; una volta apparso, se il gruppo completa il castello del Drago la missione si completa, annuncia la vittoria (`NotificaGlobale`) e segna il gioco come finito (`LineaTemporale.setGiocoFinito(true)`); poi `FINE_LOCAZIONE_2` vede il gioco finito e la missione principale completa e passa a `GIOCO_VINTO` (vedi [`motore_di_gioco.md`](motore_di_gioco.md) §3).
+
+## 8. Gli incarichi in città (`IncaricoInCitta`)
+
+`IncaricoInCitta` è la base degli incarichi in città: un mandante chiede un servizio, il gruppo lo fa e torna a riscuotere. La struttura è fissa, i passi del compito si inseriscono in mezzo:
+
+1. `INCARICO` (`PRE_LOCAZIONE`, in una città): la missione si ricorda la città (`CITTA`), pesca i nomi dei personaggi (`allIncarico`) e parte l'intermezzo del mandante;
+2. `ACCETTAZIONE` (`IN_LOCAZIONE`, nella città): la missione si **attiva**, dopo l'intermezzo, così l'avviso non lo precede;
+3. i passi del compito, da `primoPassoDelCompito()`; l'ultimo va a `RITORNO`;
+4. `RITORNO` (`PRE_LOCAZIONE`, nella città di ritorno): l'intermezzo del ringraziamento;
+5. `CONSEGNA` (se il compito era procurarsi oggetti): il gruppo li consegna;
+6. `RICOMPENSA` (`IN_LOCAZIONE`): le monete, e la missione si completa.
+
+Se la città in cui si riscuote viene distrutta, **ogni passo** (anche quelli del compito) ha una guardia `falliscoSe` che fa fallire la missione. Si riscuote in un'altra città se l'incarico è portare qualcosa a qualcuno (`getCittaDelRitorno`).
+
+Due famiglie:
+- **città fissa** (`getCittaFissa()`): la storia di una città (il medaglione di Fleena, le derrate di Ruuna, sulla base `MissioneRecuperaBersaglio`); parte alla prima visita e non si ripete;
+- **città qualsiasi**: si offre in una città qualsiasi, ma solo a una **visita tranquilla** (§5) e passata la pausa dopo l'incarico precedente; è ripetibile.
+
+`MissioneRecuperaBersaglio` aggiunge due passi al compito: `COVO` (compare il covo, rivendicato dalla missione, subito dopo l'accettazione) e `RECUPERO` (a fine locazione, nel covo completato, il claim passa sulla città di ritorno e si torna a riscuotere).
+
+## 9. Come si scrive una missione nuova
+
+1. Estendere `MissioneAPassi` (o `IncaricoInCitta` per un incarico) e implementare `passoIniziale()` e `costruisciPasso(id)`, componendo i passi già pronti di [`passi_missioni.md`](passi_missioni.md) e collegandoli con `poi`.
+2. Aggiungerla a `ClasseMissione` (**obbligatorio**, altrimenti non si ricostruisce dopo un caricamento) e, se deve esistere dall'inizio, a `RegistroMissioni.TipoMissionePredefinita`.
+3. Salvare in proprietà (`aggiungiProprieta` o `parametro`) tutto ciò che deve sopravvivere: i passi non si salvano e i campi Java si perdono.
+4. Se la condizione di un passo ha effetti (pesca un nome, cambia lo stato), spostarli nell'azione: la condizione può essere valutata più volte e per i passi con intermezzo anche in anticipo (`haUnIntermezzoInArrivo`).
+5. Se la missione vuole un luogo, rivendicarlo con `cercaLocazione` (o `RegistroMissioni.cerca`/`cercaOCostruisci`) e dare un `getRicordoDellaLocazione()`.
+6. Scriverne il test di scenario con `PartitaDiTest` (vedi [`motore_di_gioco.md`](motore_di_gioco.md) §12): `ScenarioIncarichiInCittaTest` e `ScenarioMissioniDiRecuperoTest` sono i modelli per gli incarichi.
+
+## 10. Test
+
+`MissioneAPassiTest` copre il motore dei passi: avanzamento nel controllo giusto, diramazioni, fine, intermezzi in attesa, ripresa dopo un salvataggio, missione fallita, sequenze, cicli, domande, contatori, eventi per passo, guardie, attese. Sopra stanno una cinquantina di test di scenario (`Scenario*Test` in `src/test/.../missioni`), uno per famiglia di missioni, che giocano una partita vera con `PartitaDiTest`: fra i trasversali, `ScenarioDomandeMissioniTest` (la domanda al giocatore), `ScenarioLocazioniRivendicateTest`, `ScenarioMissioniELocazioniTest` e `ScenarioQuadrantiTest` (claim e castelli), `ScenarioMissioniAffidateTest`, `ScenarioIncarichiRipetutiTest`, `ScenarioOspitiVulnerabiliTest`, `ScenarioOndateTest`, `ScenarioCaselleSegnalateTest`. `RegistroIntermezziPassiTest` verifica gli intermezzi di passo.
+
+## 11. Da fare e idee aperte
+
+- **`FornitoreMissione`.** L'interfaccia esiste (`interfacce/FornitoreMissione.java`, un solo metodo `fornisciProssimaMissione()`), ma **nessun codice la usa**. L'idea era farla usare dai quattro punti in cui il gioco crea "la prossima missione" (`RegistroMissioni.reimposta`, `aggiornaDopoRilettura`, `ricostruisci`, `MissioneAPassi.lasciaUnaMissioneNuova`), così che nei test, o da uno strumento di debug, si possa fornire una missione scelta a mano invece di una generata a caso.
+- **Registro dei personaggi incontrati.** Oggi un avversario esiste solo per la locazione in cui combatte; dei personaggi con un nome resta traccia solo nei parametri della missione che li ha creati. Con la resa (vedi [`passi_missioni.md`](passi_missioni.md)) uno sfidante sconfitto può restare vivo, e vale la pena ricordarselo. L'idea: un registro salvato con la partita (nome, classe, livello, dove e in che missione, com'è finita, che rapporto ha col gruppo) da cui le missioni nuove possano **riprendere** un personaggio invece di pescarne uno dalla grammatica (un ladro che ha perso un duello, il campione di un torneo che torna per la rivincita), da usare anche come **aiuto** temporaneo, con i **morti** tolti, e con **nomi unici** (le produzioni dei nomi vanno rese one-shot, e il controllo va fatto contro il registro perché la grammatica non si salva). Non è realizzata: il pacchetto `personaggi` non ha un registro di questo tipo.
+- **Verifica a mano nel gioco.** Le note precedenti segnalavano come non ancora provati a mano, nel gioco vero: l'aspetto della domanda di missione con le icone di risposta, e l'intero percorso di un incarico dal primo intermezzo alla ricompensa, con salvataggio e ricarica a metà.
+
+## 12. Osservazioni
+
+- **Due stili di missione.** Le principali, le missioni di prova e le più vecchie secondarie sono scritte direttamente su `MissioneBase` con flag e controlli a mano; tutto il resto è a passi. Non c'è un'unica via, e le prime non hanno gli intermezzi per passo, le domande, i contatori, i ripieghi.
+- **Predefinite e `ClasseMissione` da tenere allineate a mano.** Una missione dimenticata in `ClasseMissione` non dà errori in partita: fallisce solo alla rilettura di un salvataggio.
+- **Un solo claim per missione.** `occupaLocazione` sovrascrive la coordinata precedente di quella missione (`LOCAZIONE_OCCUPATA` ha un solo valore): una missione che dovesse tenere insieme più luoghi non può.
+- **Condizioni con effetti.** `haUnIntermezzoInArrivo` valuta la condizione del passo corrente solo se ha un intermezzo, e dice nel Javadoc che quelle condizioni non devono avere effetti: è una convenzione non controllata.
+- **`getTutteLeMissioni()` costruisce una lista a ogni chiamata.** Viene chiamata una volta per evento di gioco (`registraEvento`), a ogni controllo dell'intermezzo e, tramite `isVisitaTranquilla`, una volta per ogni missione che la valuta (quindi O(N²) sul numero di missioni). Con qualche decina di missioni il costo è di microsecondi e scatta una volta per mossa del giocatore: è una scelta consapevole, non un difetto. Una cache dell'elenco richiederebbe di invalidarla in ogni punto che modifica l'albero (anche le sotto-missioni create dalle missioni stesse), col rischio di un elenco vecchio. Se le missioni crescessero molto, la via meno rischiosa è passare uno snapshot dal chiamante a `isVisitaTranquilla`, il che richiede di portare la lista fino alle condizioni dei passi.

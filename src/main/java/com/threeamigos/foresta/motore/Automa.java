@@ -39,40 +39,6 @@ import java.util.function.Function;
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
-// FIXME: il DisplayableCanvasRiquadroGruppo usa una modalità di scrolling differente da quella delle missioni per
-//  - esempio. I personaggi vengono fatti scrollare di tre righe per volta. Da capire se si possa andare sulla falsariga
-//  - del DisplayableCanvasRiquadroMissioni.
-// TODO: carta, forbice e sasso
-// TODO: mostrare in locazione anche i personaggi del gruppo.
-// TODO: implementare fumetto che attende chiusura
-// TODO: implementare sistema di aiuto
-// TODO: come ci sono locande sparse per la foresta, forse anche qualche negozio di armaiolo, alchimista,
-//  - venditore di pergamene e incantatore male non farebbero
-// TODO: ricontrollare l'economia del gioco partendo da economia.md (entrate, uscite, modello per livello e proposte:
-//  bottino dei nemici, preziosi che valgono col livello, missioni pagate col livello, prezzi degli ingredienti)
-// TODO: immagini degli artefatti che mancano per la rivelazione (SpriteRivelazioneArtefatto), da mettere in img/oggetti:
-//  - armi: Mazza, Ascia, Lancia, BastoneMagico;
-//  - libro magico: LibroMagico;
-//  - protezioni: Veste;
-//  - accessori: Talismano, Ninnolo;
-//  - ingredienti magici (oggi usano l'icona della pergamena): Pergamena, Gemma, Monile, Gingillo, Sigillo.
-// TODO: il Viandante (ClassePersonaggio.VIANDANTE, chi si fa scortare dalle missioni) usa le immagini del bardo:
-//  servono personaggi/Viandante.gif e icone/Viandante-nobordo-piccolo.gif (ClassePersonaggioImmagine).
-// TODO: img/oggetti/OggettoMissione.gif è un sacchetto provvisorio, da ridisegnare: lo usano tutti gli oggetti delle
-//  missioni (i materiali delle richieste: erbe, minerali, pesci, trofei; l'oggetto smarrito). In futuro magari
-//  un'immagine per ogni oggetto.
-// TODO: il sacerdote e la sacerdotessa che offrono una benedizione in locanda (ScenaInLocanda.conSacerdote) hanno le
-//  immagini del mago e della maga: servono personaggi/Sacerdote.gif e personaggi/Sacerdotessa.gif.
-
-// Bug noti ancora da correggere (dall'indagine sul codice): si spuntano togliendo la riga quando sono corretti.
-//
-// Combattimento e personaggi
-// FIXME Personaggi a livello 5 pesantemente armati non riescono neanche lontanamente a scalfire un boss come la Strega o il Lich
-//
-// UI
-// FIXME modalità VERTICALE: DisplayableCanvasBarraIcone avanza di 32 con icone alte 64, e la finestra e' larga al massimo 400
-// FIXME schermi alti meno di 804 px: la barra delle icone copre il fondo del riquadro delle missioni
-
 public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	/**

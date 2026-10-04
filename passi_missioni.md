@@ -1,1143 +1,244 @@
-# Catalogo dei passi possibili per `TipoMissione`
-
-Questo documento nasce per preparare il terreno al generatore di missioni
-casuali (`GrammarBean` + [[gestione_missioni.md]]): prima verifica se il
-`SupertipoMissione` assegnato a ciascun `TipoMissione` è coerente con
-l'esempio dato nel Javadoc, poi propone, per ciascun `TipoMissione`, una
-sequenza di passi costruita con un piccolo vocabolario comune — in modo da
-capire quanti "archetipi meccanici" servono davvero per coprire ~190 tipi di
-missione con la struttura a `Passo`/`MissioneAPassi` descritta in
-`gestione_missioni.md`.
-
-Non è un piano di implementazione: è un'analisi di contenuto, propedeutica a
-decidere quali `Passo` riutilizzabili scrivere per primi (con ogni evidenza,
-i più redditizi sono quelli usati da decine di `TipoMissione` — vagabondare
-finché non si trova qualcosa, combattere, raccogliere, contare fino a N,
-tornare al punto di partenza, chiedere una conferma/scelta).
-
-## Regole per chi aggiunge missioni
-
-- **Annotare i `TipoMissione` coperti.** Ogni volta che si aggiunge (o si
-  toglie) una missione vera, in `missioni/TipoMissione.java` si mette sopra ogni
-  tipo che la missione copre un commento `// Coperto da: NomeClasse` (più classi
-  separate da virgole, con fra parentesi il mandante o il caso se serve). Così
-  si possono "spuntare" i tipi già coperti. I tipi impossibili nella Foresta
-  sono commentati, con il motivo (`// Non fattibile nella Foresta: ...`), e così
-  quelli che non si addicono al tono del gioco (`// Non adatto al tono del gioco:
-  ...`): non vanno riproposti. I tipi che per ora non vale la pena sviluppare
-  restano nell'enum con sopra `// Da non sviluppare per ora: ...` e il motivo. Le missioni particolari, che non sono missioni
-  standard di un gioco fantasy (andare a bere in tutte le locande:
-  `CronacheDiUnFegatoEroico`, `NessunBoccaleLasciatoIndietro`; disturbare dieci
-  eremiti: `DisturbatoreDellaQuietePubblica`), non si annotano.
-- **`RICERCA_OGGETTO` è coperto da `LOggettoSmarrito`**, per oggetti comuni e
-  ripetibili. La ricerca dei leggendari resta a sé: è CACCIA_AL_TESORO, con le
-  leggende (`LaLeggendaDellArmaiolo`, `LaLeggendaDelLocandiere`) e i leggendari di
-  `leggendari.txt`. `RECUPERO` invece è coperto dal medaglione e dalle derrate,
-  che si possono riusare per un oggetto generico qualsiasi.
-
-## 2. Vocabolario dei passi riutilizzabili
-
-Ogni voce è un "tipo di passo" nel senso di `gestione_missioni.md` §3-4:
-concretamente uno o più `Passo` costruiti con lo stesso builder fluente, non
-una nuova astrazione. Le sigle qui sotto sono usate come notazione compatta
-nelle tabelle della sezione 3.
-
-| Sigla | Significato | Note implementative |
-|---|---|---|
-| `VAI(luogo)` | Muovi il gruppo verso una locazione nota e fissa (città, dungeon, covo...). Condizione: gruppo in quel luogo. Azione: eventualmente crea/popola la locazione se non esiste ancora. | Come oggi `RecuperaIlMedaglione` |
-| `VAGABONDA_FINCHE(evento)` | Nessuna destinazione fissa: il passo resta in attesa finché, esplorando liberamente, si verifica un evento casuale (trovato l'ingrediente, incontrato il mostro giusto, rilevata una traccia...) | Condizione = proprietà scritta da un gancio nella logica di incontro/foraggiamento casuale della locazione corrente |
-| `COMBATTI(bersaglio)` | Aggancia un combattimento contro un tipo di nemico specifico | Usa il sistema di combattimento esistente, condizione = combattimento vinto |
-| `RACCOGLI(oggetto, quantità)` | Raccolta di un oggetto (drop, foraggiamento, pesca, scavo...) | Spesso seguito da `CONTA_FINCHE` |
-| `CONTA_FINCHE(contatore, N)` | Ripete un sotto-passo (tipicamente `VAGABONDA_FINCHE`+`COMBATTI`/`RACCOGLI`) finché una proprietà numerica non raggiunge N | Proprietà intera incrementata via `aggiungiProprieta`, stesso spirito di `impostaSequenzaPassi`/`prossimoNellaSequenza` |
-| `VAI_INIZIALE` | Torna al punto/PNG che ha assegnato la missione | Caso particolare di `VAI` |
-| `CONSEGNA(oggetto)` | Consegna quanto raccolto/recuperato a un PNG o locazione | |
-| `RICOMPENSA()` | Assegna oro/oggetto/reputazione e tipicamente chiama `completaMissione()` | |
-| `DIALOGO(testo)` | Pura notifica testuale, nessuna interazione (`NotificaTestoParagrafo`) | |
-| `CHIEDI_CONFERMA(testo)` | Domanda sì/no al giocatore | Vedi `gestione_missioni.md` §4 |
-| `CHIEDI_SCELTA(testo, opzioni)` | Scelta fra 2 e 5 opzioni testuali | Vedi `gestione_missioni.md` §4 |
-| `ATTENDI(durata)` | Il passo resta in attesa finché passa un certo tempo di gioco | Letto da `LineaTemporale`, utile per missioni "a tempo" o "torna fra N giorni" |
-| `SORVEGLIA(bersaglio, durata)` | Variante di `ATTENDI` con osservazione attiva: il giocatore deve restare/ripassare in un luogo per un periodo | |
-| `SCORTA(personaggio, luogo)` | Il gruppo si muove verso un luogo accompagnando/proteggendo un PNG | Spesso abbinato a `FALLISCI_SE(PNG ucciso)` |
-| `EVITA_COMBATTIMENTO(luogo)` | Variante furtiva di `VAI`/`VAGABONDA`: farsi scoprire fa fallire la missione o dirotta su un ramo alternativo | |
-| `COSTRUISCI(struttura)` | Rappresenta la costruzione/riparazione/creazione di qualcosa | Spesso condizionato da materiali raccolti in passi precedenti |
-| `RAMO(stato_di_gioco)` | Il `prossimoPasso` sceglie fra più id in base allo stato di gioco (non a un input del giocatore) | |
-| `FALLISCI_SE(condizione)` | Guardia che chiama `fallisciMissione()` quando una condizione avversa si avvera | Come oggi la guardia "città distrutta" di `RecuperaIlMedaglione` |
-| `GENERA_PARAMETRI()` | Passo "zero" tipico delle missioni generate da `GrammarBean`: fissa i valori variabili (mandante, bersaglio, quantità...) come proprietà | Vedi `gestione_missioni.md` §3, "Persistenza dei dati generati" |
-
-### Già implementati (2026-10-02)
-
-Metodi di `MissioneAPassi` che restituiscono un `Passo` da completare con
-`poi` (e, se serve, altre azioni con `esegui`, che ora si accumulano):
-
-| Sigla | Metodo | Note |
-|---|---|---|
-| `VAI(luogo)` | `vai(momento, coordinate)`, `vai(momento, locazioneUnica)` | |
-| `VAI_INIZIALE` | `tornaAlPuntoDiPartenza(momento)` | il punto di partenza è la casella in cui la missione si è attivata (`getPuntoDiPartenza()`) |
-| `DIALOGO(testo)` | `dialogo(momento, testo)` | |
-| `RICOMPENSA()` | `ricompensa(momento, monete, testo)` | per ora solo monete |
-| `ATTENDI(durata)` | `attendiOre(momento, ore)` | ore di gioco da quando il passo è diventato corrente |
-| `CONTA_FINCHE(contatore, N)` | `contaFinche(momento, contatore, N)` | con `incrementaContatore`/`getContatore` |
-| `VAGABONDA_FINCHE` + `COMBATTI` + `CONTA_FINCHE` | `sconfiggi(momento, classePersonaggio, N)` | avversari di quella classe sconfitti ovunque |
-| `VAGABONDA_FINCHE` + `RACCOGLI` + `CONTA_FINCHE` | `raccogli(momento, classiOggetto, N)` | oggetti di quella classe raccolti |
-| `FALLISCI_SE(condizione)` | `Passo.falliscoSe(condizione, testo)` | controllata in tutti e tre i controlli, prima del resto |
-| `CHIEDI_CONFERMA`, `CHIEDI_SCELTA`, `RAMO` | `Passo.chiediConferma`, `Passo.chiediScelta`, `poi(Supplier)` | dal punto 4 di gestione_missioni.md |
-| (cerca una locazione) | `cercaLocazione(momento, classe)` | dal punto 6 di gestione_missioni.md |
-
-Gli eventi di gioco (`InternoAvversarioSconfitto`, `InternoOggettoRaccolto`)
-li ascolta `RegistroMissioni.registrati()` (chiamato da `Main`) e li gira a
-tutte le missioni a passi non finite con `registraEvento`; si contano **per il
-passo corrente**, così un passo conta solo quel che succede da quando è
-corrente. Test: 4 nuovi in `MissioneAPassiTest`, `ScenarioPassiProntiTest`
-(una caccia ai goblin con gli eventi veri del bus).
-
-### Oggetti di missione (2026-10-02)
-
-`raccogli(momento, OggettiDaRaccogliere)` è il `RACCOGLI` di oggetti che
-esistono solo per la missione, come le radici di mandragola dell'alchimista:
-
-```java
-OggettiDaRaccogliere.di("MANDRAGOLA", NomeOggetto.femminile("radice di mandragola", "radici di mandragola"), 4)
-    .in(ClassiLocazione.RADURA, ClassiLocazione.BOSCO)
-    .conProbabilita(35)
-    .alPiuPerLocazione(2);
-```
-
-- Il passo li semina (`Passo.semina`) finché è il passo corrente: entrando in
-  una locazione, `Automa` chiede a `RegistroMissioni.getOggettoMissione` (prima
-  la missione che ha rivendicato la casella, poi le altre in corso) e mette
-  l'`OggettoMissione` al posto dell'oggetto della locazione, mai al posto
-  dell'artefatto del registro. L'aggancio sta in `Automa` subito dopo `crea`,
-  perché molte locazioni ridefiniscono `crea`.
-- Compaiono solo nelle locazioni mai visitate, con la probabilità data, mai più
-  di quanti ne mancano.
-- **Ripiego**: se dopo `OggettiDaRaccogliere.getOreAlRipiego()` ore di gioco
-  (72 se non si dice altrimenti, `conRipiegoDopoOre`) da quando il passo è
-  corrente il gruppo non li ha ancora trovati tutti, al controllo di inizio
-  locazione la missione si procura una locazione della prima classe adatta
-  (`RegistroMissioni.cercaOCostruisci`, quindi rivendicata), la segna sulla
-  mappa e lo dice ("Un viandante vi segna sulla mappa un posto dove trovare le
-  radici di mandragola che vi mancano."). Lì ci sono tutti quelli che mancano,
-  anche se la casella è già stata visitata (`MissioneAPassi.getRipiego`). Così
-  una raccolta non resta bloccata quando il gruppo ha già esplorato quasi tutto.
-  Il ripiego usa il claim della missione: una missione che ne ha già un altro
-  in corso lo sovrascriverebbe.
-- `OggettoMissione` (classe `ClassiOggetto.OGGETTO_MISSIONE`) si ricorda la
-  missione, la chiave e il nome (`NomeOggetto`); raccoglierlo incrementa il
-  contatore della missione con quella chiave. Come tutti gli oggetti delle
-  locazioni non si salva.
-- Immagine provvisoria: `img/oggetti/OggettoMissione.gif`.
-
-Due missioni vere lo usano: `CacciaAiGoblin` e `LAlchimista`,
-entrambe sopra `IncaricoInCitta` (l'incarico preso in una città, con
-l'intermezzo del mandante, e la ricompensa al ritorno; fallisce se la città
-viene distrutta). L'incarico parte solo a una visita tranquilla, in cui
-nessun'altra missione mostra un intermezzo entrando in città
-(`MissioneAPassi.haUnIntermezzoInArrivo`): non alla prima visita, quando parte
-la missione della città, né quando si torna a concluderne una. Fra due incarichi
-pronti nella stessa visita parte il primo controllato. Test:
-`ScenarioIncarichiInCittaTest`.
-
-### Combattimenti, scorte e consegne (2026-10-02)
-
-- **`COMBATTI(bersaglio)`**: `combatti(dove, IncontroDiMissione)`. Finché è il
-  passo corrente, nella locazione in quelle coordinate ci sono gli avversari
-  dell'incontro al posto di quelli che ci sarebbero stati (aggancio in `Automa`
-  dopo `crea`, come per gli oggetti: `RegistroMissioni.getIncontroMissione`).
-  `IncontroDiMissione.di(HOBGOBLIN, 3).conCapo("Sgranf")`: il capo ha un nome
-  proprio e un livello in più. Si conclude a fine locazione, lì, quando il
-  gruppo ne ha sconfitti lì quanti ne erano: `RegistroMissioni` registra ogni
-  avversario sconfitto anche con la casella in cui è caduto
-  (`MissioneAPassi.eventoSconfittoIn`), e quelli sconfitti altrove non contano.
-- **Locazioni procurate**: `cercaLocazione` (e la leggenda dell'armaiolo, e i
-  castelli delle missioni `Sconfiggi*`) usano `RegistroMissioni.cercaOCostruisci`:
-  se non c'è una locazione disponibile della classe richiesta se ne costruisce
-  una al posto di un bosco o di una palude disponibile, preferendo quelli già
-  visitati, come non ancora visitata. Così un incarico non resta mai fermo.
-- **`SCORTA`**: `prendiInScorta(momento, quando, nome)` fa viaggiare con il
-  gruppo un `Viandante` (nuova `ClassePersonaggio.VIANDANTE`, con le
-  caratteristiche e per ora l'immagine del bardo; non si incontra e non si
-  recluta) come **ospite**; `scorta(momento, destinazione)` si conclude quando il
-  gruppo arriva a destinazione, e lo scortato si separa dal gruppo. Si separa
-  anche se la missione fallisce.
-- **Ospiti del gruppo**: `GruppoGiocatore.getOspiti()`, una collezione a parte
-  rispetto ai personaggi (anche a quelli a tempo), salvata con il gruppo. Gli
-  ospiti non combattono, non si possono attaccare, non contano nei limiti del
-  gruppo (né nei fissi della locanda) e non si equipaggiano: possono essere
-  quanti si vuole. Nel riquadro del gruppo compaiono dopo i personaggi, con il
-  solo nome e "Ospite del gruppo".
-- **Ospiti vulnerabili** (ostaggi, feriti da soccorrere):
-  `GruppoGiocatore.aggiungiOspite(ospite, true)`, o
-  `prendiInScorta(momento, quando, nome, true)`. Non combattono, ma gli
-  avversari li possono attaccare: `PersonaggioBase.attacca(Gruppo)` chiede prima
-  al gruppo `scegliOspiteBersaglio()`, che sceglie un ospite vulnerabile vivo con
-  probabilità proporzionale (con tre personaggi vivi e un ospite vulnerabile, un
-  attacco su quattro va all'ospite). Riposando recuperano come i personaggi, e
-  nel riquadro del gruppo se ne vede la salute. La vulnerabilità si salva con il
-  gruppo. `scorta(momento, destinazione, testoSeMuore)` fa fallire la missione
-  se lo scortato muore.
-- **`CONSEGNA`**: `consegna(momento, dove, oggetti, testo)`. Gli oggetti di
-  missione non stanno nell'inventario: il gruppo li ha se la missione li ha
-  contati, e consegnandoli escono dal conteggio. `IncaricoInCitta` la fa al
-  ritorno, prima della ricompensa, se `getOggettiDaConsegnare()` non è null
-  (la mandragola).
-- `Passo.falliscoSe` ora si può chiamare più volte: vale la prima guardia che
-  scatta.
-
-Due incarichi in città nuovi li usano: `LaTagliaSullaBanda` (rivendica un bosco,
-lo segna sulla mappa e ci mette la banda di Sgranf; 30 monete) e `IlPellegrino`
-(rivendica un tempio, Anselmo viaggia con il gruppo come ospite fino al tempio; 25
-monete al ritorno dalla sorella). Test: `ScenarioCombattiScortaConsegnaTest`.
-
-### Gli ultimi passi (2026-10-03)
-
-- **`SORVEGLIA(luogo, durata)`**: `sorveglia(dove, volte, oreFraLeVisite)`. Il
-  gruppo deve passare da quella casella `volte` volte, a inizio locazione, con
-  almeno `oreFraLeVisite` ore di gioco fra una visita che conta e la successiva;
-  le visite troppo ravvicinate non contano (`getVisiteNelPassoCorrente`). Usa
-  `Passo.aOgniControllo`, un'azione eseguita ogni volta che il passo corrente
-  viene valutato nel suo controllo.
-- **`EVITA_COMBATTIMENTO(luogo)`**: `evitaCombattimento(momento, dove,
-  testoSeScoperti)`. Si conclude arrivando in quella casella; se nel frattempo il
-  gruppo ha combattuto (ha attaccato un avversario o ne ha abbattuto uno, anche
-  con un incantesimo: `RegistroMissioni` conta l'evento `COMBATTIMENTO`) la
-  missione fallisce. Per un ramo alternativo c'è
-  `haCombattutoNelPassoCorrente()`.
-- **`COSTRUISCI(struttura)`**: `costruisci(momento, dove, Costruzione, testo)`.
-  `Costruzione.con(materiali...).conMonete(n).inOre(n)`: consuma gli oggetti di
-  missione raccolti prima, paga le monete e fa passare le ore; che cosa si
-  costruisce lo fa la missione con un altro `esegui`.
-- **`GENERA_PARAMETRI()`**: `generaParametri(momento, parametri)`. Fissa come
-  proprietà i valori generati, ciascuno solo se non c'è già, così restano gli
-  stessi dopo un caricamento (`getParametro`).
-- **`RICOMPENSA` non solo in monete**: `ricompensa(momento, Ricompensa, testo)`,
-  con `Ricompensa.inMonete(n).conPreziosi(n).conEsperienza(n).conArtefatto(...)`.
-  L'artefatto si crea quando la missione lo consegna, finisce nell'inventario
-  del gruppo e si mostra con la rivelazione dei cofani.
-
-Test: `ScenarioPassiAvanzatiTest` e, per gli ospiti vulnerabili,
-`ScenarioOspitiVulnerabiliTest`.
-
-L'incarico in città `IlRapimento` li usa: la missione rivendica una
-grotta, la segna sulla mappa e ci mette la banda di goblin di Ghignazzo
-(`combatti`); sconfitta la banda, Armando si unisce al gruppo come ospite
-vulnerabile (`prendiInScorta(..., true)`) e va riportato vivo in città; 35
-monete. Il viaggio usa `scortaFinoAllaMeta`, che si conclude sia arrivando con
-lo scortato vivo sia, dovunque, quando muore (`isScortatoMorto()` sceglie il
-ramo): se Armando muore la missione resta aperta finché il gruppo non torna in
-città, dove c'è la scena triste con la moglie, e solo dopo fallisce. Test:
-`ScenarioRapimentoTest`.
-Il nome dell'ostaggio per ora è fisso; si potrà prendere da una grammatica.
-
-### Incarichi in città unificati e ripetibili (2026-10-03)
-
-`MissioneRecuperaBersaglio` (il medaglione di Fleena, le derrate di Ruuna) è
-ora una specializzazione di `IncaricoInCitta`: ha una città fissa
-(`getCittaFissa()`), e il suo compito sono due passi, COVO (compare il covo,
-rivendicato dalla missione) e RECUPERO (il covo completato); incarico, ritorno,
-ricompensa e città distrutta sono quelli di tutti gli incarichi. Un incarico con
-la città fissa è la storia di quella città e parte alla prima visita; gli altri
-aspettano una visita tranquilla, e nel decidere se lo è contano gli incarichi a
-città fissa come qualunque altra missione.
-
-Un incarico ripetibile (`isRipetibile()`: sì per quelli senza città fissa),
-finito bene o male, ne lascia uno nuovo della stessa classe come missione
-secondaria (`RegistroMissioni.aggiungiMissioneSecondaria`, fuori dall'albero
-della missione principale, che altrimenti aspetterebbe anche lui per far
-comparire il Drago), che si offre dopo
-`IncaricoInCitta.ORE_FRA_UN_INCARICO_E_L_ALTRO` ore di gioco (48). Si ripetono
-la caccia ai goblin e la mandragola, e (vedi sotto) anche le missioni con i nomi
-dalla grammatica. Test: `ScenarioIncarichiRipetutiTest`.
-
-### Missioni che nascono fuori dalle città (2026-10-03)
-
-La visita tranquilla ora è di `MissioneAPassi` (`isVisitaTranquilla()`), e ogni
-missione dice se la aspetta (`aspettaUnaVisitaTranquilla()`): così anche una
-missione che nasce in una locanda non si sovrappone alle altre. `ScenaInLocanda`
-è come `ScenaInCitta`, con il locandiere dietro il bancone. `prendiInScorta`
-accetta anche un personaggio fatto dalla missione (un bardo, invece di un
-viandante).
-
-`NonSparateSulPianista`: alla terza visita a una locanda nel bosco, a una visita
-tranquilla, il locandiere affida al gruppo il bardo Ugolino, ubriaco, da
-riportare a casa nella città più vicina; viaggia come ospite vulnerabile. In
-città la scena con la moglie e 20 monete; se muore per strada o la città viene
-distrutta, la missione fallisce. Test: `ScenarioNonSparateSulPianistaTest`. Con questi il catalogo del §2 è coperto tutto.
-
-## 3. Mappatura `TipoMissione` → sequenza di passi
-
-I due esempi di partenza dell'utente, per riferimento:
-
-- **RECUPERO** (Recupera il Medaglione): `VAI(bersaglio)` → `COMBATTI` →
-  `RACCOGLI(oggetto)` → `VAI_INIZIALE` → `CONSEGNA` → `RICOMPENSA`
-- **RACCOLTA_TROFEI**: `VAGABONDA_FINCHE(mostro giusto)` → `COMBATTI` →
-  `RACCOGLI(trofeo)` → `CONTA_FINCHE(trofei, N)` [ripete i tre passi
-  precedenti] → `VAI_INIZIALE` → `CONSEGNA` → `RICOMPENSA`
-
-Le tabelle seguenti applicano lo stesso principio a tutti gli altri tipi,
-raggruppati per supertipo (uso il supertipo **attuale** dell'enum, non
-quello corretto proposto al punto 1, per rendere le tabelle confrontabili
-con il codice esistente).
-
-### ACQUISIZIONE
-
-| `TipoMissione` | Sequenza di passi | Note |
-|---|---|---|
-| `RACCOLTA_INGREDIENTI` | `VAGABONDA_FINCHE(ingrediente)` → `CONTA_FINCHE(N)` → `VAI_INIZIALE` → `CONSEGNA` → `RICOMPENSA` | |
-| `RACCOLTA_TROFEI` | `VAGABONDA_FINCHE(mostro)` → `COMBATTI` → `RACCOGLI(trofeo)` → `CONTA_FINCHE(N)` → `VAI_INIZIALE` → `CONSEGNA` → `RICOMPENSA` | Esempio di riferimento dell'utente |
-| `RACCOLTA_CRISTALLI` | `VAI(miniera/grotta)` → `VAGABONDA_FINCHE(cristallo)` → `CONTA_FINCHE(N)` → `VAI_INIZIALE` → `CONSEGNA` → `RICOMPENSA` | Come `RACCOLTA_INGREDIENTI` ma con luogo di partenza fisso |
-| `RACCOLTA_ESSENZA` | `VAGABONDA_FINCHE(mostro)` → `COMBATTI` → `RACCOGLI(essenza)` → `CONTA_FINCHE(N)` → `VAI_INIZIALE` → `CONSEGNA` → `RICOMPENSA` | Come `RACCOLTA_TROFEI` se l'essenza si ottiene da un nemico |
-| `MINIERA` | `VAI(miniera)` → `RACCOGLI(minerale)` + `CONTA_FINCHE(N)` [sul posto] → `VAI_INIZIALE` → `CONSEGNA` → `RICOMPENSA` | Nessun vagabondaggio: l'estrazione avviene tutta nello stesso luogo |
-| `RECUPERO` | `VAI(bersaglio)` → `COMBATTI` (opz.) → `RACCOGLI(oggetto)` → `VAI_INIZIALE` → `CONSEGNA` → `RICOMPENSA` | Esempio di riferimento dell'utente (Recupera il Medaglione) |
-| `TRASPORTO` | `GENERA_PARAMETRI` → `VAI(mittente)` → `RACCOGLI(oggetto sigillato)` → `VAI(destinatario)` → `CONSEGNA` → `RICOMPENSA` | `FALLISCI_SE(oggetto perso/rubato)` come ramo opzionale |
-| `CACCIA_AL_TESORO` | `VAI(dungeon)` → `VAGABONDA_FINCHE(indizio)` [eventuali `RAMO` su più indizi] → `COMBATTI` (opz., guardiano) → `RACCOGLI(tesoro)` → `VAI_INIZIALE` → `RICOMPENSA` | |
-| `ARTIGIANATO` | `RACCOGLI(materiali)` → `VAI(fucina/laboratorio)` → `COSTRUISCI(oggetto)` → `CONSEGNA`/`RICOMPENSA` | `CHIEDI_SCELTA` se l'oggetto ha varianti |
-| `COSTRUZIONE` | `RACCOGLI(materiali)` → `CONTA_FINCHE(N)` → `VAI(cantiere)` → `COSTRUISCI(struttura)` → `DIALOGO(inaugurazione)` → `RICOMPENSA` | |
-| `CACCIA_ANIMALI` | `VAGABONDA_FINCHE(animale)` → `COMBATTI` → `RACCOGLI(pelle)` → `CONTA_FINCHE(N)` → `VAI_INIZIALE` → `CONSEGNA` → `RICOMPENSA` | Identico a `RACCOLTA_TROFEI`, cambia solo il flavor |
-| `PESCA` | `VAI(riva/porto)` → `VAGABONDA_FINCHE`/`ATTENDI(pesce)` → `RACCOGLI(pesce)` → `CONTA_FINCHE(N)` → `VAI_INIZIALE` → `CONSEGNA` → `RICOMPENSA` | |
-| `AGRICOLTURA` | `VAI(campo)` → `DIALOGO(semina)` → `ATTENDI(tempo di crescita)` → `RACCOGLI(raccolto)` → `CONSEGNA` → `RICOMPENSA` | Unico archetipo con un vero passo `ATTENDI` multi-giorno |
-| `FORAGGIAMENTO` | `VAGABONDA_FINCHE(pianta/fungo)` → `CONTA_FINCHE(N)` → `VAI_INIZIALE` → `CONSEGNA` → `RICOMPENSA` | Identico a `RACCOLTA_INGREDIENTI` |
-| `ALLEVAMENTO` | `VAI(recinto)` → `CHIEDI_CONFERMA`/`RACCOGLI(cattura)` → `ATTENDI(crescita)` → `RICOMPENSA` | Simile ad `AGRICOLTURA` con cattura iniziale al posto della semina |
-
-### NEGOZIAZIONE
-
-| `TipoMissione` | Sequenza di passi | Note |
-|---|---|---|
-| `DIPLOMAZIA` | `VAI(corte)` → `DIALOGO(richiesta)` → `CHIEDI_SCELTA(argomentazioni)` → `RAMO(esito)` → `RICOMPENSA`/`FALLISCI_SE(rifiuto)` | |
-| `MEDIAZIONE` | `VAI(luogo neutro)` → `DIALOGO(ascolto)` → `CHIEDI_SCELTA(proposta)` → `RAMO(fazione A/B/compromesso)` → `RICOMPENSA` | |
-| `COMMERCIO` | `VAI(mercato)` → `CHIEDI_SCELTA(vendere/comprare)` → `RAMO(prezzo negoziato)` → `RICOMPENSA` | |
-| `ASTA` | `VAI(sala d'asta)` → `CHIEDI_SCELTA(offerta)` [più turni, `CONTA_FINCHE`] → `RAMO(vinta/persa)` → `RICOMPENSA`/`DIALOGO(sconfitta)` | |
-| `BORSA` | `GENERA_PARAMETRI(andamento mercato)` → `CHIEDI_SCELTA(investimento)` → `ATTENDI` → `RAMO(guadagno/perdita)` → `RICOMPENSA` | Vedi nota di classificazione §1 |
-| `SENSERIA` | `VAI(controparte 1)` → `DIALOGO` → `VAI(controparte 2)` → `CHIEDI_SCELTA(termini)` → `RICOMPENSA` | |
-| `CONTRATTO` | `VAI(controparte)` → `CHIEDI_SCELTA(clausole)` → `RAMO(accettato/rifiutato)` → `RICOMPENSA` | |
-| `SCAMBIO_OSTAGGI` | `VAI(luogo scambio)` → `CHIEDI_CONFERMA(procedere)` → `RAMO(pulito/imboscata)` → `COMBATTI` (se imboscata) → `RICOMPENSA`/`FALLISCI_SE(ostaggio perso)` | |
-| `MERCATO_NERO` | `VAI(mercato nero)` → `CHIEDI_SCELTA(merce)` → `RAMO(scoperti?)` → `COMBATTI`/`EVITA_COMBATTIMENTO` (se scoperti) → `RICOMPENSA` | Vedi nota di classificazione §1 |
-| `NEGOZIAZIONE_TREGUA` | `VAI(campo nemico)` → `CHIEDI_SCELTA(condizioni)` → `RAMO(accettata/respinta)` → `RICOMPENSA`/`COMBATTI` (se respinta) | |
-
-### COMBATTIMENTO
-
-| `TipoMissione` | Sequenza di passi | Note |
-|---|---|---|
-| `CACCIATORE_DI_TAGLIE` | `GENERA_PARAMETRI(bersaglio)` → `VAGABONDA_FINCHE`/`VAI(bersaglio)` → `COMBATTI` → `RACCOGLI(prova)` → `VAI_INIZIALE` → `CONSEGNA` → `RICOMPENSA` | |
-| `VENDETTA` | `DIALOGO(motivazione)` → `VAGABONDA_FINCHE(nemico)` → `COMBATTI` → `DIALOGO(epilogo)` → `RICOMPENSA` | Ricompensa spesso solo narrativa |
-| `DUELLO` | `VAI(arena)` → `CHIEDI_CONFERMA(accetti)` → `COMBATTI(1v1)` → `RICOMPENSA` | |
-| `CONTROLLO_CREATURA` | `VAI(tana)` → `COMBATTI(non fatale)` → `CHIEDI_SCELTA(dominare/liberare)` → `RAMO` → `RICOMPENSA` | Vedi nota di classificazione §1 |
-| `BATTAGLIA` | `VAI(campo)` → `CONTA_FINCHE(ondate, COMBATTI)` → `RICOMPENSA` | |
-| `ASSALTO` | `VAI(fortezza)` → `COMBATTI(esterno)` → `COMBATTI(interno)` → `RICOMPENSA` | |
-| `IMBOSCATA` | `VAGABONDA_FINCHE(bersaglio in transito)` → `COMBATTI(sorpresa)` → `RICOMPENSA` | |
-| `GUERRIGLIA` | `CONTA_FINCHE(N, [VAGABONDA_FINCHE+COMBATTI])` → `RICOMPENSA` | |
-| `RITIRATA_TATTICA` | `COMBATTI(sfavorevole)` → `CHIEDI_CONFERMA(ritirarsi)` → `VAI(raccolta)` → `RICOMPENSA` | |
-| `CARICA` | `VAI(linea nemica)` → `COMBATTI(frontale)` → `RICOMPENSA` | |
-| `CIRCONDAMENTO` | `VAI(posizione 1)` → `VAI(posizione 2)` → `COMBATTI(accerchiamento)` → `RICOMPENSA` | |
-| `BLOCCO` | `VAI(passaggio)` → `DIALOGO(sbarramento)` → `COMBATTI` [`CONTA_FINCHE`] → `RICOMPENSA` | |
-| `SCHERMAGLIA` | `VAGABONDA_FINCHE(pattuglia)` → `COMBATTI(breve)` → `RICOMPENSA` | |
-| `ASSEDIO_DIFESA` | `VAI(fortezza)` → `CONTA_FINCHE(ondate, COMBATTI)` → `RICOMPENSA` | Quasi identico a `DIFESA` (PROTEZIONE) e `TRINCEA` |
-| `FLOTTA` | `VAI(porto)` → `COMBATTI(navale)` → `RICOMPENSA` | **Non fattibile nella Foresta** (commentato in `TipoMissione`) |
-| `SORTITA` | `VAI(assediati)` → `CHIEDI_CONFERMA(tentare)` → `COMBATTI(uscita)` → `VAI(rientro)` → `RICOMPENSA` | |
-| `CAVALLERIA` | `VAI(linea nemica)` → `COMBATTI(carica montata)` → `RICOMPENSA` | **Non fattibile nella Foresta** (commentato in `TipoMissione`); Praticamente identico a `CARICA` |
-| `TRINCEA` | `VAI(trincea)` → `CONTA_FINCHE(assalti respinti)` → `RICOMPENSA` | Simile ad `ASSEDIO_DIFESA` |
-| `ESPLOSIONE` | `VAI(obiettivo)` → `RACCOGLI`/`COSTRUISCI(ordigno)` → `CHIEDI_CONFERMA(detonare)` → `RAMO(scoperti?)` → `COMBATTI` (se scoperti) → `RICOMPENSA` | Vedi nota di classificazione §1 |
-| `PONTE_TATTICO` | `VAI(ponte)` → `COMBATTI(controllo passaggio)` [`CONTA_FINCHE`] → `RICOMPENSA` | |
-| `ASSEDIO_OFFENSIVO` | `VAI(fortezza nemica)` → `CONTA_FINCHE(fasi d'assedio)` → `COMBATTI(breccia finale)` → `RICOMPENSA` | |
-| `COMBATTIMENTO_RITUALE` | `VAI(luogo sacro)` → `CHIEDI_CONFERMA(accettare il rito)` → `COMBATTI(regole speciali)` → `DIALOGO(esito)` → `RICOMPENSA` | |
-| `BATTAGLIA_AEREA` | `VAI(cielo/torre)` → `COMBATTI(aereo)` → `RICOMPENSA` | **Non fattibile nella Foresta** (commentato in `TipoMissione`) |
-| `DUELLO_MAGICO` | Come `DUELLO` | `COMBATTI` vincolato a un set di incantesimi, nessun passo nuovo |
-| `COMBATTIMENTO_BESTIA` | `VAGABONDA_FINCHE(bestia rara)` → `COMBATTI` → `RICOMPENSA` | |
-| `DUELLO_ANTICO` | Come `DUELLO` | + `DIALOGO` cerimoniale prima/dopo |
-| `PULIZIA_DEI_DUNGEON` | `VAI(dungeon)` → `CONTA_FINCHE(stanze, [VAGABONDA_FINCHE+COMBATTI])` → `RICOMPENSA` | |
-
-### PROTEZIONE
-
-| `TipoMissione` | Sequenza di passi | Note |
-|---|---|---|
-| `SALVATAGGIO` | `VAI(prigione)` → `COMBATTI` (opz.) → `DIALOGO(liberazione)` → `SCORTA(prigioniero, iniziale)` → `RICOMPENSA` | |
-| `SCORTA` | `VAI(partenza PNG)` → `SCORTA(PNG, destinazione)` [`COMBATTI` lungo il tragitto, `FALLISCI_SE(PNG ucciso)`] → `RICOMPENSA` | |
-| `DIFESA` | `VAI(villaggio)` → `CONTA_FINCHE(ondate, COMBATTI)` → `RICOMPENSA` | Stesso scheletro di `ASSEDIO_DIFESA`/`TRINCEA`, cambia solo il framing |
-| `GUARIGIONE` | `GENERA_PARAMETRI(malattia)` → `VAI(ingrediente)` → `RACCOGLI` → `VAI(paziente)` → `CHIEDI_CONFERMA(somministrare)` → `RICOMPENSA` | |
-| `SOCCORSO` | `VAI(zona pericolosa)` → `COMBATTI`/`EVITA_COMBATTIMENTO` → `SCORTA(ferito)` → `VAI_INIZIALE` → `RICOMPENSA` | |
-| `EVACUAZIONE` | `VAI(zona di guerra)` → `CONTA_FINCHE(N civili, SCORTA ciascuno)` → `RICOMPENSA` | |
-| `EPIDEMIA` | Come `GUARIGIONE` + `CONTA_FINCHE(N pazienti)` | |
-| `PURIFICAZIONE` | `VAI(terra corrotta)` → `CHIEDI_CONFERMA(rito)` → `COMBATTI` (opz., guardiano corrotto) → `RICOMPENSA` | Vedi nota di classificazione §1 |
-| `POSSESSIONE` | `VAI(posseduto)` → `COMBATTI`/`CHIEDI_SCELTA(metodo esorcismo)` → `RAMO(riuscito/fallito)` → `RICOMPENSA` | |
-| `QUARANTENA` | `VAI(area infetta)` → `CHIEDI_CONFERMA(istituire)` → `ATTENDI(N giorni)` → `RICOMPENSA` | |
-| `CONFINAMENTO` | `VAI(bersaglio)` → `COMBATTI`/`CHIEDI_CONFERMA(catturare)` → `VAI(reclusione)` → `CONSEGNA` → `RICOMPENSA` | Vedi nota di classificazione §1: sovrapposto a `CARCERE_ILLEGALE` |
-| `BARRIERA_MAGICA` | `VAI(luogo da proteggere)` → `RACCOGLI(componenti)` → `COSTRUISCI(barriera)` → `RICOMPENSA` | |
-| `PRIMO_SOCCORSO` | `VAI(ferito)` → `CHIEDI_SCELTA(intervento)` → `RAMO(stabilizzato/critico)` → `RICOMPENSA` | |
-| `RIFUGIO` | `RACCOGLI(materiali)` → `VAI(sito)` → `COSTRUISCI(rifugio)` → `SCORTA(profughi)` → `RICOMPENSA` | |
-| `CURA_MAGICA` | Come `GUARIGIONE` | Ingrediente sostituito da un incantesimo/rituale |
-| `ANTI_VELENO` | `VAI(fonte veleno)` → `RACCOGLI(antidoto)` → `VAI(avvelenato)` → `DIALOGO(somministrazione)` → `RICOMPENSA` | |
-| `SANTUARIO` | `RACCOGLI(offerte)` → `VAI(sito sacro)` → `COSTRUISCI(santuario)` → `DIALOGO(consacrazione)` → `RICOMPENSA` | |
-| `CONTENIMENTO` | `VAI(minaccia)` → `COMBATTI`/`COSTRUISCI(barriera)` → `ATTENDI(tenuta)` → `RICOMPENSA` | |
-| `VIGILIA` | `VAI(postazione)` → `SORVEGLIA(durata)` [eventuale `COMBATTI` se qualcosa tenta di passare] → `RICOMPENSA` | |
-| `OCCULTAMENTO` | `VAI(bersaglio)` → `SCORTA`/`CHIEDI_CONFERMA(nascondiglio)` → `EVITA_COMBATTIMENTO(pattuglie)` → `RICOMPENSA` | |
-| `PROTEZIONE_TEMPORALE` | `CHIEDI_CONFERMA(attivare scudo)` → `COMBATTI(singolo attacco)` → `RICOMPENSA` | Versione ridotta di `DIFESA`/`BARRIERA_MAGICA` a un solo evento |
-| `ASILO` | `VAI(rifugiato)` → `SCORTA(luogo d'asilo)` → `CHIEDI_CONFERMA(concedere asilo)` → `RICOMPENSA` | |
-| `BLINDATURA` | `RACCOGLI(materiali)` → `VAI(struttura)` → `COSTRUISCI(rinforzo)` → `RICOMPENSA` | |
-
-### INVESTIGAZIONE
-
-| `TipoMissione` | Sequenza di passi | Note |
-|---|---|---|
-| `INVESTIGAZIONE` | `VAI(scena)` → `RACCOGLI(indizi)` [`CONTA_FINCHE`] → `RAMO(colpevole dedotto)` → `DIALOGO(rivelazione)` → `RICOMPENSA` | |
-| `ESPLORAZIONE` | `VAGABONDA_FINCHE(luogo scoperto)` → `DIALOGO(scoperta)` → `VAI_INIZIALE` → `RICOMPENSA` | |
-| `RINTRACCIAMENTO` | `GENERA_PARAMETRI(bersaglio)` → `VAGABONDA_FINCHE(traccia)` [`CONTA_FINCHE` su più tracce] → `VAI(destinazione)` → `CHIEDI_SCELTA(confronto/cattura)` → `RICOMPENSA` | |
-| `COMUNICAZIONE` | `VAI(luogo del rito)` → `CHIEDI_CONFERMA(tentare il contatto)` → `DIALOGO(messaggio)` → `RICOMPENSA` | Vedi nota di classificazione §1 |
-| `RICERCA` | `VAI(biblioteca)` → `CONTA_FINCHE(testi)` → `DIALOGO(informazione trovata)` → `RICOMPENSA` | |
-| `CURIOSITA_ACCADEMICA` | Come `RICERCA` | Ricompensa spesso solo narrativa/reputazione |
-| `SORVEGLIANZA` | `VAI(osservazione)` → `SORVEGLIA(bersaglio, durata)` → `RACCOGLI(informazione)` → `RICOMPENSA` | |
-| `INTERROGATORIO` | `VAI(prigioniero)` → `CHIEDI_SCELTA(approccio)` → `RAMO(ottenuta/rifiutata)` → `RICOMPENSA` | |
-| `INCHIESTA` | `CONTA_FINCHE(N testimoni/prove, [VAI+DIALOGO])` → `RAMO(conclusione)` → `RICOMPENSA` | Scala più ampia di `INVESTIGAZIONE` |
-| `FORENSICA` | `VAI(scena del crimine)` → `RACCOGLI(prove)` [`CONTA_FINCHE`] → `DIALOGO(analisi)` → `RICOMPENSA` | |
-| `INFILTRAZIONE` | `VAI(organizzazione)` → `EVITA_COMBATTIMENTO(copertura)` → `RACCOGLI(informazione)` → `VAI(uscita)` → `RICOMPENSA` | Vedi nota di classificazione §1 |
-| `PROFILING` | `VAI(archivio)` → `RACCOGLI(dati)` [`CONTA_FINCHE`] → `DIALOGO(profilo)` → `RICOMPENSA` | |
-| `TRACCIA_MAGICA` | `VAGABONDA_FINCHE(traccia)` [`CONTA_FINCHE`] → `VAI(sorgente)` → `RICOMPENSA` | |
-| `TESTIMONI` | `CONTA_FINCHE(N testimoni, [VAI+DIALOGO])` → `DIALOGO(sintesi)` → `RICOMPENSA` | |
-| `VISIONE_PASSATO` | `VAI(oggetto/luogo)` → `CHIEDI_CONFERMA(attivare visione)` → `DIALOGO(scena rivelata)` → `RICOMPENSA` | Vedi nota di classificazione §1 |
-| `LETTURA_MENTE` | `VAI(bersaglio)` → `CHIEDI_CONFERMA(tentare)` → `RAMO(riuscita/resistita)` → `RICOMPENSA` | Vedi nota di classificazione §1 |
-| `VISIONE_FUTURO` | `CHIEDI_CONFERMA(consultare)` → `DIALOGO(profezia)` → `RICOMPENSA` | Vedi nota di classificazione §1 |
-| `SCOPERTA_SEGRETO` | Come `INVESTIGAZIONE` | Indizi → rivelazione |
-| `RICERCA_OGGETTO` | `VAGABONDA_FINCHE`/`VAI(oggetto)` → `RACCOGLI` → `VAI_INIZIALE` → `CONSEGNA` → `RICOMPENSA` | Praticamente identico a `RECUPERO` |
-| `SCOPERTA_INGANNO` | `VAI(sospettato)` → `CHIEDI_SCELTA(prove)` → `RAMO(confermato/smentito)` → `RICOMPENSA` | |
-| `LETTURA_RUNE` | `VAI(iscrizione)` → `CHIEDI_CONFERMA(decifrare)` → `RAMO(riuscita/indizio mancante)` → `RICOMPENSA` | |
-| `DOCUMENTAZIONE` | `VAGABONDA_FINCHE(reperto)` [`CONTA_FINCHE`] → `RACCOGLI(catalogazione)` → `VAI_INIZIALE` → `RICOMPENSA` | |
-| `DECIFRAZIONE` | Come `LETTURA_RUNE` + `CONTA_FINCHE` | Più iscrizioni |
-
-### PROGRESSIONE
-
-| `TipoMissione` | Sequenza di passi | Note |
-|---|---|---|
-| `FAZIONE` | `CONTA_FINCHE(N incarichi)` → `RAMO(grado raggiunto)` → `RICOMPENSA` | |
-| `ADDESTRAMENTO` | `VAI(luogo addestramento)` → `CONTA_FINCHE(sessioni)` → `CHIEDI_SCELTA(specializzazione)` (opz.) → `RICOMPENSA` | |
-| `COMPETIZIONE` | `VAI(gara)` → `COMBATTI`/`CHIEDI_SCELTA(round)` → `RAMO(vittoria/sconfitta)` → `RICOMPENSA` | |
-| `TORNEO` | Come `COMPETIZIONE` + `CONTA_FINCHE(round eliminatori)` | |
-| `EREDITA` | `DIALOGO(annuncio)` → `CHIEDI_CONFERMA(accettare)` → `VAI(lascito)` → `RICOMPENSA` | |
-| `NOMINA` | `DIALOGO(proposta)` → `CHIEDI_CONFERMA(accettare)` → `RICOMPENSA` | |
-| `FRATELLANZA` | `VAI(sede ordine)` → `CHIEDI_CONFERMA(adesione)` → `CONTA_FINCHE(prove)` → `RICOMPENSA` | |
-| `CORONAZIONE` | `CONTA_FINCHE(requisiti)` → `VAI(luogo incoronazione)` → `DIALOGO(cerimonia)` → `RICOMPENSA` | |
-| `ASCESA_SOCIALE` | `CONTA_FINCHE(imprese pubbliche)` → `RAMO(status raggiunto)` → `RICOMPENSA` | |
-| `TITOLO_NOBILIARE` | Come `NOMINA` | + `CONTA_FINCHE(meriti pregressi)` come precondizione |
-| `MAESTRIA` | `CONTA_FINCHE(prove di maestria)` → `RICOMPENSA` | Come `ADDESTRAMENTO`, focalizzato su una disciplina |
-| `SPECIALIZZAZIONE` | `CHIEDI_SCELTA(ramo)` → `CONTA_FINCHE(prove)` → `RICOMPENSA` | |
-| `FAMA` | `CONTA_FINCHE(imprese pubbliche)` → `RICOMPENSA` | Ricompensa = reputazione, non materiale |
-| `REPUTAZIONE` | Come `FAMA` | Incremento più graduale/locale |
-| `RICCHEZZA` | `CONTA_FINCHE(oro accumulato)` → `RICOMPENSA` | Vedi nota di classificazione §1 |
-| `LIGNAGGIO` | `VAI(archivi genealogici)` → `DIALOGO(rivelazione)` → `RICOMPENSA` | |
-| `LEGATARIO` | `DIALOGO(designazione)` → `CHIEDI_CONFERMA(accettare)` → `RICOMPENSA` | |
-| `EREDE` | Come `EREDITA`/`LEGATARIO` | + `RAMO` su più pretendenti concorrenti |
-| `BENEDIZIONE_RICEVERE` | `VAI(luogo sacro)` → `CHIEDI_CONFERMA(chiedere benedizione)` → `DIALOGO(rito)` → `RICOMPENSA` | Vedi nota di classificazione §1 |
-| `SUCCESSIONE` | `CONTA_FINCHE(prove idoneità)` → `RAMO(successore designato)` → `RICOMPENSA` | |
-| `GESTIONE` | `CONTA_FINCHE(risorse, con ATTENDI fra i cicli)` → `COSTRUISCI(potenziamento)` → `RICOMPENSA` | Vedi nota di classificazione §1 |
-| `RICOSTRUZIONE` | `RACCOGLI(materiali)` [`CONTA_FINCHE`] → `VAI(sito)` → `COSTRUISCI(ricostruzione)` → `RICOMPENSA` | Vedi nota di classificazione §1: identico a `COSTRUZIONE` |
-
-### RELAZIONI
-
-| `TipoMissione` | Sequenza di passi | Note |
-|---|---|---|
-| `LEALTA` | `DIALOGO(problema del compagno)` → `CHIEDI_SCELTA(come aiutarlo)` → sotto-sequenza variabile (spesso composita di altri archetipi) → `RICOMPENSA` | Rapporto rafforzato più che ricompensa materiale |
-| `MATRIMONIO` | `RACCOGLI(preparativi)` [`CONTA_FINCHE`] → `VAI(cerimonia)` → `DIALOGO(celebrazione)` → `RICOMPENSA` | |
-| `CELEBRAZIONE` | `RACCOGLI(preparativi)` → `VAI(luogo festa)` → `DIALOGO` → `RICOMPENSA` | Come `MATRIMONIO` senza tema nuziale |
-| `ALLEANZA_MATRIMONIALE` | `CHIEDI_SCELTA(termini politici)` → `RAMO(accordo)` → sequenza di `MATRIMONIO` → `RICOMPENSA` | Composizione di `DIPLOMAZIA` + `MATRIMONIO` |
-| `RISCATTO` | `DIALOGO(colpa)` → `CONTA_FINCHE(atti di redenzione, sotto-passi variabili)` → `DIALOGO(epilogo)` → `RICOMPENSA` | Vedi nota di classificazione §1 |
-| `PERDONO` | `VAI(persona offesa)` → `CHIEDI_CONFERMA(chiedere perdono)` → `RAMO(concesso/rifiutato)` → `RICOMPENSA` | |
-| `REDENZIONE_PUBBLICA` | Come `RISCATTO` + `DIALOGO` pubblico finale | Vedi nota di classificazione §1 |
-
-### ILLECITO
-
-| `TipoMissione` | Sequenza di passi | Note |
-|---|---|---|
-| `FURTO` | `VAI(camera del tesoro)` → `EVITA_COMBATTIMENTO` → `RACCOGLI(oggetto)` → `VAI(uscita)` → `RICOMPENSA` | |
-| `ASSASSINIO` | `VAGABONDA_FINCHE`/`VAI(bersaglio)` → `EVITA_COMBATTIMENTO(avvicinamento)` → `COMBATTI(colpo furtivo)` → `RICOMPENSA` | |
-| `SABOTAGGIO` | `VAI(obiettivo)` → `EVITA_COMBATTIMENTO` → `COSTRUISCI(manomissione)` → `RAMO(scoperti/riusciti)` → `RICOMPENSA` | |
-| `SPIONAGGIO` | `VAI(riunione)` → `SORVEGLIA(durata)` → `RACCOGLI(informazione)` → `RICOMPENSA` | |
-| `CONTROSPIONAGGIO` | `SORVEGLIA(sospetti)` → `RAMO(spia identificata)` → `CHIEDI_SCELTA(smascherare/seguire)` → `RICOMPENSA` | Vedi nota di classificazione §1 |
-| `RICATTO` | `RACCOGLI(prova compromettente)` → `VAI(bersaglio)` → `CHIEDI_SCELTA(richiesta)` → `RAMO(pagato/rifiutato)` → `RICOMPENSA` | |
-| `INGANNO` | `VAI(bersaglio)` → `CHIEDI_SCELTA(menzogna)` → `RAMO(creduto/scoperto)` → `RICOMPENSA` | |
-| `CONTRABBANDO` | `RACCOGLI(merce)` → `VAI(checkpoint)` → `EVITA_COMBATTIMENTO(controlli)` → `VAI(destinazione)` → `RICOMPENSA` | |
-| `TRADIMENTO` | `CHIEDI_CONFERMA(accettare tradimento)` → `RAMO(conseguenze narrative)` → `RICOMPENSA` | |
-| `CORRUZIONE` | `VAI(ufficiale)` → `CHIEDI_SCELTA(importo)` → `RAMO(accettata/rifiutata)` → `RICOMPENSA` | |
-| `FALSIFICAZIONE` | `RACCOGLI(originale da copiare)` → `COSTRUISCI(falso)` → `CONSEGNA` → `RICOMPENSA` | |
-| `RAPIMENTO` | `VAGABONDA_FINCHE`/`VAI(bersaglio)` → `COMBATTI`/`EVITA_COMBATTIMENTO(cattura)` → `SCORTA(nascondiglio)` → `RICOMPENSA` | |
-| `PIRATERIA` | `VAI(rotta commerciale)` → `VAGABONDA_FINCHE(nave)` → `COMBATTI(abbordaggio)` → `RACCOGLI(bottino)` → `RICOMPENSA` | **Non fattibile nella Foresta** (commentato in `TipoMissione`) |
-| `AVVELENAMENTO` | `RACCOGLI(veleno)` → `VAI(bersaglio)` → `CHIEDI_CONFERMA(somministrare)` → `RICOMPENSA` | |
-| `VANDALISMO` | `VAI(struttura)` → `EVITA_COMBATTIMENTO` → `DIALOGO(danneggiamento)` → `RICOMPENSA` | |
-| `FRODE` | `CHIEDI_SCELTA(schema)` → `RAMO(riuscito/scoperto)` → `RICOMPENSA` | |
-| `DIFFAMAZIONE` | `VAI(luogo pubblico)` → `CHIEDI_SCELTA(voce da spargere)` → `RAMO(creduta/smentita)` → `RICOMPENSA` | |
-| `SCHIAVITU` | `COMBATTI`/`EVITA_COMBATTIMENTO(cattura)` → `SCORTA(mercato)` → `CONSEGNA` → `RICOMPENSA` | |
-| `SEDIZIONE` | `VAI(piazza)` → `CHIEDI_SCELTA(discorso/azione)` → `RAMO(sommossa)` → `RICOMPENSA` | |
-| `INCENDIO` | `VAI(obiettivo)` → `EVITA_COMBATTIMENTO` → `DIALOGO(appiccare)` → `RAMO(riuscito/scoperto)` → `RICOMPENSA` | |
-| `SICARIO` | `GENERA_PARAMETRI(mandante/compenso)` + sequenza di `ASSASSINIO` | |
-| `RICICLAGGIO` | `RACCOGLI(denaro sporco)` → `CHIEDI_SCELTA(canale)` → `RAMO(riuscito/tracciato)` → `RICOMPENSA` | |
-| `VIOLAZIONE_DOMICILIO` | `VAI(abitazione)` → `EVITA_COMBATTIMENTO` → `RACCOGLI`/`DIALOGO(perquisizione)` → `RICOMPENSA` | |
-| `SACRILEGIO` | `VAI(luogo sacro)` → `CHIEDI_CONFERMA(profanare)` → `RAMO(riuscito/punizione)` → `RICOMPENSA` | Vedi nota su duplicato con `BLASFEMIA` |
-| `TRAFFICO` | Come `CONTRABBANDO` + `CONTA_FINCHE(N carichi)` | |
-| `FURTO_IDENTITA` | `RACCOGLI(documenti)` → `CHIEDI_SCELTA(uso identità)` → `RAMO(riuscito/scoperto)` → `RICOMPENSA` | |
-| `BLASFEMIA` | Come `SACRILEGIO` | Vedi nota su duplicato |
-| `BRIGANTAGGIO` | `VAGABONDA_FINCHE`/`VAI(bersaglio)` → `COMBATTI(rapina)` → `RACCOGLI(bottino)` → `RICOMPENSA` | |
-| `FALSA_TESTIMONIANZA` | `VAI(tribunale)` → `CHIEDI_SCELTA(versione)` → `RAMO(creduta/scoperta)` → `RICOMPENSA` | |
-| `IMBROGLIONE` | `VAI(tavolo da gioco)` → `CHIEDI_SCELTA(metodo)` → `RAMO(vinto/scoperto)` → `RICOMPENSA` | |
-| `CARCERE_ILLEGALE` | `COMBATTI`/`EVITA_COMBATTIMENTO(cattura)` → `VAI(prigione clandestina)` → `CONSEGNA` → `RICOMPENSA` | Vedi nota di classificazione §1: sovrapposto a `CONFINAMENTO` |
-| `TORTURA` | `VAI(prigioniero)` → `CHIEDI_SCELTA(metodo)` → `RAMO(informazione ottenuta)` → `RICOMPENSA` | |
-| `TENTATIVO_OMICIDIO` | Come `ASSASSINIO` + `RAMO(fallito → il bersaglio reagisce)` | |
-
-### SPIRITUALE
-
-| `TipoMissione` | Sequenza di passi | Note |
-|---|---|---|
-| `SPEZZATURA` | `VAI(posseduto/maledetto)` → `CHIEDI_CONFERMA(tentare il rito)` → `RAMO(riuscito/fallito)` → `RICOMPENSA` | |
-| `RITUALE` | `RACCOGLI(componenti)` → `VAI(luogo del rito)` → `CHIEDI_CONFERMA(eseguire)` → `RICOMPENSA`/`RAMO(effetto collaterale)` | |
-| `BENEDIZIONE` | `VAI(bersaglio)` → `CHIEDI_CONFERMA(eseguire)` → `RICOMPENSA` | |
-| `NECROMANZIA` | `VAI(cimitero)` → `RACCOGLI(componenti)` → `CHIEDI_CONFERMA(rito)` → `COMBATTI` (opz., controllo instabile) → `RICOMPENSA` | |
-| `EVOCAZIONE` | `RACCOGLI(componenti)` → `CHIEDI_CONFERMA(evocare)` → `RAMO(amica/ostile)` → `COMBATTI` (se ostile) → `RICOMPENSA` | |
-| `MALEDIZIONE` | `VAI(bersaglio)` → `CHIEDI_CONFERMA(lanciare)` → `RICOMPENSA` | |
-| `INCANTESIMO` | `RACCOGLI(componenti/pergamena)` → `CHIEDI_CONFERMA(lanciare)` → `RICOMPENSA` | |
-| `SIGILLO` | `VAI(portale)` → `RACCOGLI(componenti)` → `CHIEDI_CONFERMA(sigillare)` → `COMBATTI` (opz., guardiano) → `RICOMPENSA` | |
-| `TRASMUTAZIONE` | `RACCOGLI(materiale grezzo)` → `CHIEDI_CONFERMA(trasmutare)` → `RICOMPENSA` | |
-| `ASTRI` | `VAI(osservatorio)` → `ATTENDI(momento propizio)` → `DIALOGO(lettura)` → `RICOMPENSA` | |
-| `DIVINAZIONE` | `CHIEDI_CONFERMA(consultare)` → `DIALOGO(visione)` → `RICOMPENSA` | |
-| `ILLUSIONE` | `CHIEDI_CONFERMA(creare)` → `RAMO(inganno riuscito/svelato)` → `RICOMPENSA` | |
-| `ANTI_MAGIA` | `VAI(area incantata)` → `CHIEDI_CONFERMA(dispellare)` → `COMBATTI` (opz., resistenza) → `RICOMPENSA` | |
-| `INVISIBILITA` | `CHIEDI_CONFERMA(attivare)` → `EVITA_COMBATTIMENTO(attraversamento)` → `RICOMPENSA` | |
-| `CHANNELING` | `VAI(fonte energia)` → `CHIEDI_CONFERMA(canalizzare)` → `RICOMPENSA` | |
-| `TELEPORTAZIONE` | `RACCOGLI(componenti)` → `CHIEDI_CONFERMA(teletrasportarsi)` → `VAI(destinazione, istantaneo)` → `RICOMPENSA` | |
-| `SHAPE_SHIFT` | `CHIEDI_SCELTA(forma)` → `RAMO(uso della forma per un ostacolo)` → `RICOMPENSA` | |
-| `CONTROLLO_ELEMENTALE` | `VAI(fonte elementale)` → `CHIEDI_CONFERMA(controllo)` → `COMBATTI` (opz., ribelle) → `RICOMPENSA` | |
-| `LEGAME_SPIRITUALE` | `VAI(spirito)` → `CHIEDI_CONFERMA(stringere legame)` → `RICOMPENSA` | |
-| `VIAGGIO_ASTRALE` | `CHIEDI_CONFERMA(proiettarsi)` → `VAI(piano astrale)` → `DIALOGO(scoperta)` → `RICOMPENSA` | **Non fattibile nella Foresta** (commentato in `TipoMissione`) |
-| `COMUNIONE` | `VAI(luogo sacro)` → `CHIEDI_CONFERMA(comunione)` → `DIALOGO(rivelazione)` → `RICOMPENSA` | |
-| `TRANCE` | `CHIEDI_CONFERMA(entrare in trance)` → `ATTENDI(durata)` → `DIALOGO(visione)` → `RICOMPENSA` | |
-| `FUSIONE` | `CHIEDI_CONFERMA(fondersi)` → `RAMO(esito)` → `RICOMPENSA` | |
-| `VIAGGIO_TEMPO` | `RACCOGLI(componenti)` → `CHIEDI_CONFERMA(viaggiare)` → `VAI(epoca diversa)` → `RICOMPENSA` | **Non fattibile nella Foresta** (commentato in `TipoMissione`) |
-| `REALTA_PARALLELA` | `CHIEDI_CONFERMA(varcare la soglia)` → `VAI(dimensione alternativa)` → `RICOMPENSA` | **Non fattibile nella Foresta** (commentato in `TipoMissione`) |
-| `POSSESSO_CORPO` | `VAI(bersaglio)` → `CHIEDI_CONFERMA(possedere)` → `RAMO(riuscita/respinta)` → `RICOMPENSA` | |
-| `ASSORBIMENTO` | `COMBATTI(fonte di potere)` → `CHIEDI_CONFERMA(assorbire)` → `RICOMPENSA` | |
-| `CONTROLLO_MENTE` | `VAI(bersaglio)` → `CHIEDI_CONFERMA(controllo)` → `RAMO(riuscito/resistito)` → `RICOMPENSA` | |
-| `SCAMBIO_CORPI` | `CHIEDI_CONFERMA(eseguire lo scambio)` → `RAMO(complicazioni)` → `RICOMPENSA` | |
-| `CREAZIONE_GOLEM` | `RACCOGLI(componenti)` → `COSTRUISCI(golem)` → `CHIEDI_CONFERMA(animare)` → `RICOMPENSA` | |
-| `FISSIONE` | `CHIEDI_CONFERMA(scissione)` → `RAMO(esito)` → `RICOMPENSA` | |
-| `MORTE_TEMPORALE` | `CHIEDI_CONFERMA(ibernazione)` → `ATTENDI(durata)` → `RICOMPENSA` | |
-| `ANIMAZIONE_OGGETTI` | `RACCOGLI(componenti)` → `CHIEDI_CONFERMA(animare)` → `RICOMPENSA` | |
-| `PATTO_ANIMA` | `VAI(entità)` → `CHIEDI_SCELTA(termini del patto)` → `RAMO(accettato/rifiutato)` → `RICOMPENSA` | |
-
-## 4. Osservazioni conclusive
-
-- **Concentrazione degli archetipi**: la stragrande maggioranza delle ~190
-  voci si riduce a variazioni su un numero piccolo di scheletri: (a)
-  vagabonda/vai → combatti/raccogli → eventualmente ripeti N volte → torna e
-  consegna (ACQUISIZIONE, molto di COMBATTIMENTO, parte di INVESTIGAZIONE);
-  (b) vai → chiedi conferma/scelta → ramo sull'esito (NEGOZIAZIONE, buona
-  parte di SPIRITUALE, parte di ILLECITO); (c) vai → resisti a N ondate
-  (COMBATTIMENTO difensivo, PROTEZIONE); (d) accumula/costruisci nel tempo
-  con `ATTENDI` (AGRICOLTURA, ALLEVAMENTO, GESTIONE, QUARANTENA). Conviene
-  quindi scrivere per primi i passi `VAI`, `VAGABONDA_FINCHE`, `COMBATTI`,
-  `RACCOGLI`, `CONTA_FINCHE`, `CHIEDI_CONFERMA`/`CHIEDI_SCELTA` e `RAMO`: da
-  soli coprono la quasi totalità delle sequenze di questo catalogo.
-- **`CHIEDI_SCELTA`/`CHIEDI_CONFERMA` sono usati moltissimo**: la richiesta
-  dell'utente di trattare l'interazione col giocatore come parte integrante
-  del piano ([[gestione_missioni.md]] §4) è confermata dai numeri — decine
-  di `TipoMissione`, specie in NEGOZIAZIONE, SPIRITUALE e ILLECITO, non sono
-  esprimibili senza un vero punto di scelta del giocatore che determini il
-  ramo successivo.
-- Le correzioni di supertipo proposte al punto 1 non sono necessarie per
-  scrivere i `Passo`: un `TipoMissione` mal classificato ha comunque una
-  sequenza di passi coerente con il proprio esempio. Servono piuttosto a
-  evitare, quando si scriverà il generatore a grammatica, di pescare per
-  errore un `TipoMissione` "spirituale" quando si cercava qualcosa di
-  "investigativo" (e viceversa).
-
-### Nomi dalla grammatica e cacciatore di taglie (2026-10-03)
-
-`missioni.txt` dà i nomi di ostaggi, bardi, pellegrini e capibanda
-(`ProduttoreDiTestiCasuale.nomeOstaggio`, `nomeBardo`, `nomePellegrino`,
-`nomeCapobanda`, quest'ultimo a volte con un soprannome). Le missioni li pescano
-con `MissioneAPassi.parametro(nome, generatore)`, che la prima volta chiede al
-generatore e poi tiene il valore fra le proprietà: così restano gli stessi dopo
-un caricamento. Gli incarichi in città li pescano quando si offrono
-(`IncaricoInCitta.allIncarico()`), prima dell'intermezzo del mandante.
-
-La ripetizione ora è di `MissioneAPassi` (`isRipetibile()`, `isDisponibile()`,
-`ORE_FRA_UNA_MISSIONE_E_L_ALTRA`), così si ripete anche una missione che non è un
-incarico in città. Con i nomi dalla grammatica si ripetono `IlRapimento` (prima
-`IlRapimentoDiArmando`), `LaTagliaSullaBanda` (prima `LaTagliaSuSgranf`),
-`IlPellegrino` e `NonSparateSulPianista`, ogni volta con altri nomi.
-
-`CacciatoreDiTaglie` ("Ricercato: …"): una taglia sul capo di una banda di
-goblin, un hobgoblin. La missione rivendica delle rovine ma non le segna sulla
-mappa: il mandante dice solo in che direzione si trovano (`Misc.getDirezione`),
-e il gruppo le deve cercare. Lì c'è la banda (`IncontroDiMissione.conCapo(nome,
-classe)`, un capo di un'altra classe, in più); basta abbattere il capo
-(`MissioneAPassi.combattiIlCapo`), poi si torna a riscuotere 30 monete. A
-differenza della taglia sulla banda, che segna il bosco sulla mappa e vuole
-tutta la banda sconfitta. Test: `ScenarioCacciatoreDiTaglieTest`.
-
-### Gli ingredienti dell'alchimista (2026-10-03)
-
-`LAlchimistaELaMandragola` è diventata `LAlchimista`: l'ingrediente e la
-quantità (da 3 a 5) si pescano quando l'incarico si offre, da
-`INGREDIENTE_ALCHEMICO` in `missioni.txt` (mandragola, belladonna, aconito,
-funghi lunari, valeriana, giglio nero, resina, sale nero, piume di civetta, rose
-selvatiche). Ogni riga ha sei campi separati da ";": genere, singolare,
-plurale, dove si trova (RADURA, BOSCO, GROTTA, ROVINE), la battuta del capo e la
-risposta dell'alchimista nell'intermezzo; `IngredienteAlchemico` la legge e dà
-articoli, pronomi e accordi per i testi. La ricompensa è 5 monete per
-ingrediente più 5. Si ripete ogni volta con un ingrediente nuovo. Test:
-`ScenarioIngredientiAlchemiciTest`; i test della semina e del ripiego fissano la
-mandragola (`Alchimie`).
-
-### Trofei, esplorazione e copertura del catalogo (2026-10-03)
-
-- **Trofei**: `OggettiDaRaccogliere.daiNemici(classi...)`. Invece che in certe
-  locazioni, i trofei (orecchie di goblin, pelli, essenze) compaiono dovunque ci
-  siano avversari di quelle classi, anche nelle caselle già visitate, perché i
-  mostri ricompaiono; li custodiscono loro, al più uno per avversario, e per
-  prenderli bisogna sconfiggerli. Il loro ripiego (dopo tre giorni) è un bosco
-  segnato sulla mappa con i mostri che portano i trofei mancanti. In `Automa`
-  gli avversari di una missione si mettono prima dell'oggetto.
-  Coprono RACCOLTA_TROFEI, RACCOLTA_ESSENZA e CACCIA_ANIMALI.
-- **Esplorazione**: `MissioneAPassi.esplora(caselleNuove)` (VAGABONDA_FINCHE di
-  un luogo scoperto): si conclude quando il gruppo è entrato in tante caselle
-  mai visitate da quando il passo è corrente; ogni casella conta una volta
-  (`getCaselleEsplorate()`). Copre ESPLORAZIONE e, con un conteggio, DOCUMENTAZIONE.
-
-Test: `ScenarioTrofeiEdEsplorazioneTest`.
-
-**Copertura** (stima, voce per voce): dei 190 `TipoMissione`, circa il 75% si
-fa bene con i passi e i luoghi che ci sono, circa il 20% con delle
-semplificazioni (ondate fra una visita e l'altra, luoghi resi come scene in
-città, magie solo narrative), e 7 non si fanno nella Foresta: FLOTTA,
-PIRATERIA, BATTAGLIA_AEREA, CAVALLERIA, VIAGGIO_ASTRALE, VIAGGIO_TEMPO,
-REALTA_PARALLELA, commentati in `TipoMissione`. Resterebbero da aggiungere le
-ondate dentro uno stesso combattimento e i combattimenti con regole (duello 1
-contro 1, avversario che si arrende), che richiedono agganci nel combattimento.
-
-### Caccia ai trofei e cartografo (2026-10-03)
-
-Due incarichi in città, ripetibili:
-
-- `CacciaAiTrofei` ("Prove di caccia: …"): il capitano delle guardie vuole da 3 a
-  4 trofei di un mostro (`TrofeoDiCaccia`: orecchie di goblin, denti di
-  hobgoblin, teschi di scheletro, corni di minotauro, piume di arpia, denti di
-  troll), che si prendono sconfiggendo quei mostri; al ritorno si consegnano. 6
-  monete per trofeo più 5.
-- `IlCartografo`: il cartografo vuole che il gruppo esplori da 6 a 10 zone mai
-  visitate (`esplora`) e torni a raccontargliele. 3 monete per zona più 5.
-
-Test: `ScenarioTrofeiECartografoTest`. Inoltre `MissioneAPassi.attivaMissione()`
-ora segna da quando conta il passo corrente: il primo passo di una missione non
-ci arriva da un altro, e senza questo un ATTENDI o un ripiego sul primo passo
-partivano dal primo controllo invece che dall'attivazione.
-
-### Richieste di materiali: alchimista, armaiolo, capitano (2026-10-03)
-
-`LAlchimista` e `CacciaAiTrofei` sono confluite in un'unica missione,
-`RichiestaDiMateriali`, con un `Mandante` (alchimista, armaiolo, capitano delle
-guardie): tre missioni predefinite, `RICHIESTA_ALCHIMISTA`, `RICHIESTA_ARMAIOLO`,
-`RICHIESTA_CAPITANO`, tutte ripetibili. Il mandante dice da quale produzione di
-`missioni.txt` pescare, come compare nell'intermezzo e che cosa fa dei materiali
-alla consegna. `TrofeoDiCaccia` e `IngredienteAlchemico` non ci sono più: i dati
-stanno nella grammatica, letti da `MaterialeRichiesto`.
-
-Ogni riga ha otto campi separati da ";": genere, singolare, plurale,
-provenienza (`LUOGHI` e i luoghi dove si raccoglie, oppure `NEMICI` e i mostri a
-cui si prende), quantità minima-massima, monete per pezzo, la battuta del capo e
-la risposta del mandante. La ricompensa è quantità × prezzo per pezzo, più 5: i
-materiali dei mostri pericolosi (ghiandole di chimera-drago, scaglie di viverna)
-valgono di più. Contenuti: l'alchimista ha le erbe di prima e parti di mostri;
-l'armaiolo minerali delle grotte e delle rovine e materiali dei mostri; il
-capitano i trofei di prima. Le sezioni precedenti su `LAlchimista` e
-`CacciaAiTrofei` descrivono com'erano prima di questa unificazione. Test:
-`ScenarioRichiesteDiMaterialiTest`, e quelli della semina e del ripiego, che
-fissano la mandragola (`Alchimie`).
-
-### Il corriere (2026-10-03)
-
-`IlCorriere` è un incarico in città, ripetibile: qualcuno affida al gruppo una
-cosa da portare a qualcuno in un'altra città, e paga il destinatario alla
-consegna. Le spedizioni vengono da `TRASPORTO` in `missioni.txt`, lette da
-`Spedizione`. Ogni riga ha dieci campi separati da ";": genere, oggetto senza
-articolo, mittente, destinatario, `URGENTE` o `CON_CALMA`, monete, la richiesta
-del mittente, la battuta del capo, la risposta del mittente e il ringraziamento
-del destinatario.
-
-- La città di destinazione si sceglie quando l'incarico si offre: un'altra
-  città, non distrutta. Si segna sulla mappa alla partenza. Se non ce n'è
-  un'altra l'incarico non si offre (`IncaricoInCitta.isPossibileQui`).
-- `IncaricoInCitta.getCittaDelRitorno()` dice dove si riscuote: per gli altri
-  incarichi è la città dell'incarico, per il corriere la destinazione. Lì ci
-  sono il ringraziamento, la consegna dell'oggetto (un oggetto di missione,
-  contato alla partenza) e le monete. Se la città in cui si riscuote viene
-  distrutta, la missione fallisce.
-- Ricompensa: le monete della riga, più una ogni due caselle di distanza.
-- Le spedizioni urgenti hanno una scadenza: due ore per casella di distanza più
-  dodici. Arrivare tardi fa fallire la missione.
-
-Le righe coprono TRASPORTO (lettere, pegni, forzieri), ANTI_VELENO (antidoti),
-GUARIGIONE (erbe e tinture), CURA_MAGICA (talismani, acqua sacra) ed EPIDEMIA
-(rimedi per un lazzaretto). Test: `ScenarioCorriereTest`.
-
-### Il locandiere e la pesca (2026-10-03)
-
-`RichiestaDiMateriali` ha un quarto mandante, il locandiere
-(`RICHIESTA_LOCANDIERE`, `ScenaInCitta.conLocandiere()`): per le sue zuppe vuole
-pesci, rane, lumache e germani reali delle paludi (`LUOGHI PALUDE`, "si trovano
-nelle paludi"). Copre PESCA. Test: `ScenarioRichiesteDiMaterialiTest`.
-
-### L'oggetto smarrito (2026-10-03)
-
-`LOggettoSmarrito` è un incarico in città, ripetibile: qualcuno ha perso
-qualcosa nella foresta, vicino a un posto che si ricorda. Gli oggetti vengono da
-`OGGETTO_SMARRITO` in `missioni.txt`, letti da `OggettoSmarrito`. Ogni riga ha
-nove campi separati da ";": genere, oggetto senza articolo, chi l'ha perso, i
-posti possibili (fra TEMPIO, ROVINE, LOCANDA e GROTTA), monete, il racconto, la
-battuta del capo, la risposta e il ringraziamento.
-
-- Quando l'incarico si offre, la missione rivendica un posto di una di quelle
-  classi (`cercaOCostruisci`) e sceglie lì intorno, a non più di due passi (nord,
-  sud, est e ovest), la casella dell'oggetto. Va bene una radura, un bosco, una
-  palude, delle rovine, un tempio o una grotta; non una città, un castello o una
-  locanda, né una casella con un artefatto del registro o rivendicata da
-  un'altra missione. Alla partenza il posto compare sulla mappa, la casella no.
-- `OggettiDaRaccogliere.nellaCasella(coordinate)`: gli oggetti stanno tutti in
-  quella casella, anche se già visitata, e altrove mai; non hanno ripiego.
-- Trovato l'oggetto, si torna in città a riconsegnarlo e a riscuotere.
-
-Copre RICERCA_OGGETTO. Test: `ScenarioOggettoSmarritoTest`.
-
-### Le leggende (2026-10-03)
-
-I leggendari non sono più scritti nel codice (`ArtefattoLeggendario` non c'è
-più): stanno in `leggendari.txt`, già pronti, una riga per oggetto con le sue
-proprietà esagerate e la sua leggenda (vedi il formato in testa al file). La
-supersezione `OGGETTO_LEGGENDARIO` pesca fra le sottosezioni, una per tipo
-(`SPADA_LEGGENDARIA`, `SCUDO_LEGGENDARIO`, `NINNOLO_LEGGENDARIO`,
-`PERGAMENA_LEGGENDARIA`…), che sono one-shot. La Spada della Morte e lo Scudo
-Fiscale sono due righe come le altre. `OggettoLeggendario` legge una riga e
-costruisce l'artefatto.
-
-- **Una volta sola per partita.** `GrammarBean.canProduce(nome)` dice se una
-  produzione può ancora produrre. `ProduttoreDiTestiCasuale.oggettoLeggendario`
-  riparte ogni volta da tutte le righe (`reset()`) e le pesca senza ripetizioni,
-  scartando quelle già pescate da una leggenda della partita: la grammatica non
-  si salva, le missioni sì. Quando non ne restano, le leggende non si offrono più.
-- **`LaLeggenda`**, ripetibile, con due narratori: `LaLeggendaDellArmaiolo` in
-  una città qualsiasi e `LaLeggendaDelLocandiere` in una locanda, dalla terza
-  visita in poi (alle prime due c'è l'intermezzo della locanda). Entrambe
-  aspettano una visita tranquilla, quindi non si sovrappongono al bardo ubriaco.
-  Fra il racconto di una leggenda e quello della successiva, di chiunque, passano
-  almeno 36 ore; la stessa pausa c'è dopo la fine di una leggenda.
-- Il tempio sorge su un bosco, come prima. I **guardiani** sono quelli della riga
-  (`GUARDIANI=VIVERNA 5`), oppure dipendono dal livello del gruppo quando la
-  leggenda viene raccontata: hobgoblin, troll, viverne, chimere-drago.
-- Le leggende stanno prima degli incarichi in città: a una visita tranquilla, se
-  è il momento, l'armaiolo racconta la sua leggenda prima di offrire un incarico.
-
-Coprono CACCIA_AL_TESORO. Test: `ScenarioLeggendeTest`.
-
-### La pesca favorisce i set cominciati (2026-10-03)
-
-Completare un set pescando a caso era quasi solo fortuna (il Corredo di RomyJona,
-4 pezzi su 28, dopo 14 leggende era completo nel 5% dei casi). Ora la pesca
-(`PescaLeggendaria`) favorisce i set cominciati, quelli con almeno un pezzo già
-uscito in una leggenda della partita e almeno uno che manca:
-
-- con un set cominciato, una leggenda su due racconta un suo pezzo mancante, del
-  set più vicino a essere completo (la quota di pezzi usciti più alta); l'altra
-  pesca a caso fra tutti i leggendari rimasti, come prima;
-- se tre leggende di fila, con un set cominciato, non hanno raccontato un pezzo
-  mancante, la successiva lo racconta per forza. Ogni leggenda si ricorda se è
-  stata una di queste (`SENZA_PEZZI`), così il conto sopravvive ai salvataggi.
-
-Il dado si tira solo quando la leggenda si racconta: prima si controlla soltanto
-che resti un leggendario. Test: `ScenarioPescaLeggendariaTest`.
-
-Quando la leggenda racconta un altro pezzo di un set già cominciato, il narratore
-lo dice prima della leggenda (`PescaLeggendaria.battutaDelSet`): "Vi interessa il
-Corredo di RomyJona? Allora ascoltate: questo è un altro dei suoi pezzi, e ne
-mancano ancora due." (oppure "ed è l'ultimo che manca.").
-
-### Gli incarichi di combattimento (2026-10-03)
-
-`IncaricoDiCombattimento` è un incarico in città, ripetibile, scritto quasi tutto
-nella grammatica: in `missioni.txt`, alla produzione `INCARICO_DI_COMBATTIMENTO`,
-c'è una riga per incarico con campi `CHIAVE=valore` separati da ";" (il formato è
-in testa alla sezione), letta da `CombattimentoRichiesto` con
-`CampiDiGrammatica`, che rifiuta i campi sconosciuti, ripetuti o mancanti.
-Ogni riga dice chi chiede e chi compare nella scena (`ASPETTO`: capitano,
-armaiolo, alchimista, locandiere o qualunque), chi va sconfitto e quanti, se uno
-di loro è un capo con un nome (`CAPO=SI`, nei testi `%CAPO%`), dove si nascondono
-(grotta, rovine, bosco, palude o radura), quanto si paga e i testi.
-
-- COVO: all'accettazione la missione rivendica un posto della classe giusta, lo
-  segna sulla mappa e ci mette i nemici (`combatti`). CACCIA: sconfitti tutti, si
-  torna a riscuotere.
-- `TestiDeiLuoghi` dà i nomi dei luoghi per i testi ("una grotta", "fra delle
-  rovine", il nome del tempio); lo usa anche `LOggettoSmarrito`.
-- Per un nuovo incarico di questo tipo basta una riga nella grammatica.
-- Il capo può pescare il nome da un'altra lista: `CAPO=NOME_CAMPIONE` o
-  `CAPO=NOME_CAMPIONESSA` per lo sfidante di un duello, che può essere anche di
-  una classe del gruppo (guerriero, maga, elfo...): da avversari funzionano come
-  gli altri.
-
-Copre VENDETTA, COMBATTIMENTO_BESTIA, PULIZIA_DEI_DUNGEON, SCHERMAGLIA,
-IMBOSCATA, PROTEZIONE_TEMPORALE e, con le sole righe della grammatica, DUELLO,
-DUELLO_ANTICO, DUELLO_MAGICO, COMBATTIMENTO_RITUALE, BLOCCO, PONTE_TATTICO,
-SORTITA e CARICA. Test: `ScenarioIncaricoDiCombattimentoTest`.
-
-### Le sorveglianze (2026-10-03)
-
-`LaSorveglianza` è un incarico in città, ripetibile, come gli incarichi di
-combattimento: le righe stanno in `missioni.txt` alla produzione `SORVEGLIANZA`,
-lette da `SorveglianzaRichiesta`. Il posto (grotta, rovine, bosco, palude o
-radura) si segna sulla mappa; il gruppo ci deve passare `VISITE` volte, con
-almeno `ORE` ore fra una visita e l'altra (`sorveglia`). A ogni visita che conta,
-tranne l'ultima, si scrive la veglia e quante ne mancano; le visite troppo
-ravvicinate non contano. All'ultima si scrive la scoperta; se la riga ha dei
-nemici (`NEMICO`, `NUMERO`, `CAPO`, `VITTORIA`) saltano fuori lì, già in quella
-visita (AGGUATO), e vanno sconfitti prima di tornare a riscuotere.
-
-Copre VIGILIA, SORVEGLIANZA e SPIONAGGIO. Test: `ScenarioSorveglianzaTest`.
-
-### Il contrabbandiere (2026-10-03)
-
-`IlContrabbandiere` è un `IlCorriere` che pesca le spedizioni da `CONTRABBANDO`
-(gli stessi dieci campi di `TRASPORTO`) e le porta di nascosto: se durante il
-viaggio il gruppo combatte (`haCombattutoNelPassoCorrente`), la voce si sparge e
-la missione fallisce. Nella scena dell'incarico il mittente lo dice. Attenzione:
-un contrabbandiere è anche un corriere, quindi per distinguerli si guarda la
-classe esatta.
-
-Copre CONTRABBANDO e TRAFFICO. Test: `ScenarioCorriereTest`.
-
-### Il soccorso (2026-10-03)
-
-Lo scheletro del rapimento (il posto con i nemici, la persona che si unisce al
-gruppo come ospite vulnerabile, il viaggio di ritorno, la scena triste se muore)
-sta in `LaLiberazione`; `IlRapimento` ne dà i testi, che non sono cambiati.
-`IlSoccorso` prende tutto dalla grammatica: `SOCCORSO` in `missioni.txt`, letta da
-`SoccorsoRichiesto`, con chi chiede, chi va riportato a casa (`PERSONA`, con il
-nome pescato da `NOME_OSTAGGIO`, nei testi `%NOME%`), i nemici e dove stanno.
-
-Copre SOCCORSO e, con l'apprendista prigioniero dei gargoyle, anche SALVATAGGIO.
-ASILO resta fuori: il rifugiato va accompagnato altrove, non riportato in città.
-Test: `ScenarioSoccorsoTest`.
-
-### L'indagine (2026-10-03)
-
-`LIndagine` è un incarico in città, ripetibile: le righe stanno in `missioni.txt`
-alla produzione `INDAGINE`, lette da `IndagineRichiesta`. Gli indizi, due o tre
-(`INDIZIO_n=LUOGO:testo`, in una grotta, delle rovine, un bosco, una palude, una
-radura, un tempio o una locanda), si cercano in posti che la missione segna sulla
-mappa uno alla volta: la missione rivendica un posto alla volta, e trovato un
-indizio rivendica il successivo. Gli indizi trovati restano scritti nella
-descrizione della missione. Dopo l'ultimo, nello stesso posto, il gioco chiede
-chi è il colpevole fra i `SOSPETTI` (`chiediScelta`): è la prima missione vera che
-usa le domande. Con il colpevole giusto si segna il suo nascondiglio e lì si
-combatte; con un innocente la missione fallisce.
-
-Copre INVESTIGAZIONE, TESTIMONI, CONTROSPIONAGGIO, SCOPERTA_INGANNO,
-SCOPERTA_SEGRETO, FORENSICA e INCHIESTA. Test: `ScenarioIndagineTest`.
-
-### Il rito (2026-10-03)
-
-`IlRituale` è un incarico in città, ripetibile: le righe stanno in `missioni.txt`
-alla produzione `RITUALE`, lette da `RitualeRichiesto`. Il posto del rito si
-segna subito sulla mappa; prima bisogna raccogliere l'ingrediente, descritto come
-i materiali dell'alchimista (`MaterialeRichiesto.ingrediente`). Nel posto, con
-tutti gli ingredienti, il gioco chiede se cominciare (`chiediConferma`) o, se la
-riga ha dei `METODI`, come celebrarlo (`chiediScelta`, con in fondo "Non
-ancora"): il metodo sbagliato fa fallire la missione. Un no o un "non ancora"
-rimandano il rito alla prossima volta che si torna lì
-(`MissioneAPassi.dimenticaRisposta`).
-
-- La domanda si pone a inizio locazione: dopo la risposta l'automa rifà il
-  controllo prima di costruire la locazione, così chi salta fuori durante il rito
-  (`NEMICO`, `NUMERO`, `CAPO`, `VITTORIA`) c'è già in quella visita.
-
-Copre RITUALE, SIGILLO, BENEDIZIONE, SPEZZATURA, PURIFICAZIONE, POSSESSIONE,
-COMUNICAZIONE ed EVOCAZIONE. Test: `ScenarioRitualeTest`.
-
-### Combattimenti fino alla resa e panchina (2026-10-03)
-
-Non tutti i combattimenti sono all'ultimo sangue. Un incontro di missione può
-essere `finoAllaResa()` (nella grammatica `RESA=SI`, per ora negli incarichi di
-combattimento e nelle indagini): chi lo compone combatte fino alla resa
-(`Personaggio.isFinoAllaResa`).
-
-- **Panchina.** Un personaggio in panchina è vivo ma fuori dal combattimento di
-  questa locazione (`Personaggio.isInPanchina`, non si salva):
-  `Gruppo.getPersonaggiVivi()` non lo conta, e il combattimento usa
-  `isFuoriCombattimento()` (morto o in panchina) dove guardava il singolo
-  combattente o bersaglio. I controlli sul capo morto (partita persa) restano su
-  `isVivo()`. La panchina si svuota a fine locazione e all'inizio della
-  successiva (`Gruppo.svuotaPanchina`).
-- **Resa.** In `PersonaggioBase.subSalute`, chi scenderebbe a 0 e combatte fino
-  alla resa, o è del gruppo e combatte contro chi combatte fino alla resa, resta
-  a 1 punto ferita, va in panchina, lo dice ("abbassa le armi e si arrende",
-  "ammette la sconfitta e si fa da parte") e pubblica `InternoPersonaggioArreso`.
-  Gli immortali (l'Ombrafiamma) non si arrendono.
-- Un avversario arreso conta come sconfitto: `InternoAvversarioSconfitto` e punti
-  esperienza, una volta sola (`LocazioneBase.avversariSconfitti`), così le
-  missioni avanzano come prima.
-- **Duello perso.** Se in un combattimento fino alla resa si arrendono tutti i
-  personaggi del gruppo in campo, `LocazioneBase.impostaAzioni` chiude la
-  locazione come una fuga senza danni, non completa: nessuno muore, la missione
-  resta al passo del combattimento e lo sfidante aspetta lì la rivincita.
-
-- **Duello uno contro uno.** Un avversario può sfidare a duello
-  (`Personaggio.isSfidante`, `IncontroDiMissione.aDuello()`, nella grammatica
-  `DUELLO=SI`, solo con `NUMERO=1`). Entrando nella sua locazione si sceglie chi
-  del gruppo accetta la sfida (con un solo personaggio in campo la scelta è
-  automatica): gli altri vanno in panchina. Annullando la scelta si rifiuta la
-  sfida: il gruppo se ne va, senza combattere, e lo sfidante resta lì. Se chi
-  duella si arrende (o muore), il duello è perso anche se gli altri sono vivi in
-  panchina. Per un duello non serve per forza la resa: senza `RESA=SI` è
-  all'ultimo sangue.
-- Con un solo personaggio in campo, la scelta automatica del personaggio prende
-  quello e non il primo del gruppo, e le pozioni bevute da soli vanno a lui e non
-  al capo, che può essere in panchina.
-
-Test: `ScenarioDuelliTest`. Da fare, se serve: `RESA=SI` e `DUELLO=SI` anche per
-sorveglianze, soccorsi, indagini (il duello) e riti; il registro dei personaggi
-incontrati (vedi gestione_missioni.md).
-
-### Altri tipi coperti con la sola grammatica (2026-10-03)
-
-Righe nuove in `missioni.txt`, senza codice:
-
-- riti (`RITUALE`): BARRIERA_MAGICA, SANTUARIO, DIVINAZIONE, ASTRI,
-  VISIONE_PASSATO, TRASMUTAZIONE (con il metodo da scegliere), CREAZIONE_GOLEM
-  (il golem è un GIGANTE), PATTO_ANIMA, ANTI_MAGIA;
-- indagini (`INDAGINE`): RINTRACCIAMENTO, INTERROGATORIO, TRACCIA_MAGICA,
-  LETTURA_RUNE, DECIFRAZIONE, RICERCA. I sospetti possono essere anche posti
-  ("In una palude") o cose ("Il giglio di palude"): sono solo risposte;
-- incarichi di combattimento: COMPETIZIONE (una gara di magia, duello con resa),
-  CONFINAMENTO (un brigante da catturare vivo, con resa), BRIGANTAGGIO;
-- corriere: CONTRATTO; contrabbando: MERCATO_NERO; soccorso: PRIMO_SOCCORSO.
-
-Restano da valutare, perché verrebbero forzati: SICARIO, TENTATIVO_OMICIDIO,
-BENEDIZIONE_RICEVERE, PROFILING, CURIOSITA_ACCADEMICA, DIPLOMAZIA,
-NEGOZIAZIONE_TREGUA.
-
-### La benedizione (2026-10-03)
-
-`LaBenedizione` nasce in una locanda già visitata due volte, a una visita
-tranquilla, come la leggenda del locandiere: un sacerdote o una sacerdotessa
-(per ora con le immagini del mago e della maga, vedi i TODO in `Automa`) offre una
-benedizione in cambio di un favore. Le righe stanno in `missioni.txt` alla
-produzione `BENEDIZIONE`, lette da `BenedizioneRichiesta`.
-
-- Il favore è una missione secondaria affidata (`affida`, vedi
-  gestione_missioni.md): `IlFavore`, che si completa lì, senza ritorno. È di un
-  tipo solo, secondo i campi della riga: un combattimento in un posto segnato
-  sulla mappa (`NEMICO=`), una raccolta (`INGREDIENTE=`, come per i riti) o una
-  veglia, più visite a un posto segnato (`VISITE=`, come per le sorveglianze).
-- Fatto il favore, la benedizione rivendica un tempio e lo segna sulla mappa. Nel
-  tempio, se in campo c'è più di un personaggio, il giocatore sceglie chi riceve
-  la benedizione (`chiediScelta` fra i nomi); quel personaggio riceve un
-  modificatore permanente (`Personaggio.addModificatore`), con il nome della
-  benedizione come nota (`BENEDIZIONE=FORZA AUMENTO_FISSO 2`,
-  `SALUTE AUMENTO_PERCENTUALE 10`...).
-- È ripetibile, ogni 48 ore, anche per lo stesso personaggio.
-
-Copre BENEDIZIONE_RICEVERE. Test: `ScenarioBenedizioneTest`.
-
-### La documentazione, e altri tipi dalla grammatica (2026-10-03)
-
-`LaDocumentazione` è un incarico in città, ripetibile: uno studioso manda il gruppo
-in due o tre posti (`REPERTO_n=LUOGO:testo`, come gli indizi delle indagini, letti
-con `IndagineRichiesta.Indizio`), segnati sulla mappa uno alla volta. In ognuno si
-annota che cosa si è trovato, che resta nella descrizione; poi si torna dallo
-studioso a consegnare le note. Righe in `missioni.txt` alla produzione
-`DOCUMENTAZIONE`, lette da `DocumentazioneRichiesta`. Copre DOCUMENTAZIONE (il
-cartografo copre ESPLORAZIONE). Test: `ScenarioDocumentazioneTest`.
-
-Con la sola grammatica, in più: PROFILING e CURIOSITA_ACCADEMICA (indagini),
-DIPLOMAZIA, NEGOZIAZIONE_TREGUA e MEDIAZIONE (corriere), RICICLAGGIO
-(contrabbando).
-
-Correzione: davanti a un luogo i testi usano `TestiDeiLuoghi.dentro` ("fra delle
-rovine", "in una grotta") e non "in" più `indefinito`, che dava "in delle rovine"
-(indagini, sorveglianze, riti).
-
-### Passare inosservati, e il colpo (2026-10-03)
-
-**Passare inosservati** (`Comando.PASSA_INOSSERVATO`, per ora con l'icona della
-fuga: vedi i TODO in `Automa`). In una locazione con avversari il gruppo può
-provare, una volta sola e prima di fare qualunque altra cosa (un attacco, una
-mischia, un incantesimo, una corruzione, un tentativo d'amicizia, una pozione:
-`LocazioneBase.isAzione`; la mappa, l'inventario e le scelte annullate non
-contano), ad andarsene senza combattere (`LocazioneBase`):
-
-- la probabilità (`LocazioneBase.probabilitaDiPassareInosservati`) è 40% più 10%
-  per ogni punto di furtività del gruppo sopra la percezione migliore fra gli
-  avversari; il gruppo è furtivo quanto il suo membro più maldestro, a meno che un
-  ladro non lo guidi (allora conta il ladro); di notte +15%, ogni compagno oltre il
-  primo -10%; sempre fra il 5% e il 75%. Ci vuole un'ora;
-- se riesce, il gruppo se ne va: niente esperienza, niente bottino, la locazione
-  non è completa (`InternoPassaggioInosservato`); se fallisce, gli avversari
-  attaccano per primi e si torna alle solite scelte;
-- non si può nelle città, nei castelli, nelle locazioni delle missioni secondarie,
-  contro chi sfida a duello e contro gli avversari che una missione vuole
-  sconfitti (`Personaggio.isDaAffrontare`: tutti quelli di un `IncontroDiMissione`,
-  tranne quelli `aggirabile()`).
-
-Il controllo di fine locazione delle missioni ora si fa anche quando la locazione
-non è completa (una fuga, un duello perso, un passaggio inosservato): solo
-l'azzeramento della locazione resta per quelle completate.
-
-**Il colpo** (`IlColpo`, righe `COLPO` in `missioni.txt`, lette da
-`ColpoRichiesto`): un incarico in città; il posto si segna sulla mappa e lì ci sono
-guardie aggirabili. Il colpo riesce passando inosservati fra le guardie; se il
-gruppo combatte lì (`eventoCombattimentoIn`, i combattimenti contati per casella)
-il colpo fallisce; se fugge può riprovare. Copre FURTO, SABOTAGGIO, VANDALISMO,
-INCENDIO, VIOLAZIONE_DOMICILIO e AVVELENAMENTO (un sonnifero). Test:
-`ScenarioPassaInosservatoTest`, `ScenarioColpoTest`.
-
-### La lealtà (2026-10-04)
-
-**Il controllo dell'accampamento.** `MomentoControllo.ACCAMPAMENTO`, con
-`Missione.controllaAccampamento()`: quando il gruppo si accampa l'automa controlla
-le missioni (e le loro domande) prima degli intermezzi di `MomentoIntermezzo.ACCAMPAMENTO`;
-così un passo può concludersi intorno al fuoco e mostrare lì il suo intermezzo.
-`ScenaFraCompagni` è la pagina del gruppo che parla fra sé, intorno al fuoco o in
-una locazione (la usa anche `IntermezzoAccampamento`).
-
-**Il favore riusabile.** I campi del favore (combattimento, raccolta o veglia) sono
-ora in `FavoreRichiesto`, che le righe di `BENEDIZIONE` e di `LEALTA` leggono con i
-loro campi; il modificatore ATTRIBUTO TIPO QUANTITA in `ModificatoreDellaRiga`.
-`IlFavore` si ricorda la riga, la sua origine e chi chiede il favore; nei suoi testi
-`%PERSONAGGIO%` è chi lo chiede.
-
-`LaLealta`: a un accampamento un compagno vivo del gruppo, che non è il capo e non è
-già leale, confida un problema (intermezzo intorno al fuoco: parla il compagno,
-risponde il capo) e chiede un favore, affidato come `IlFavore`. Fatto il favore, a
-fine locazione il compagno ringrazia (intermezzo a `LOCAZIONE_COMPLETATA`, nella
-locazione) e riceve un modificatore permanente con la nota "la lealtà": chi ce
-l'ha non chiede più niente. Se il compagno muore o lascia il gruppo, la lealtà
-fallisce e con lei il favore. Ripetibile ogni 72 ore, con un altro compagno. Righe
-in `missioni.txt` alla produzione `LEALTA`, lette da `LealtaRichiesta`; i testi non
-hanno aggettivi riferiti al compagno, che può essere maschio o femmina.
-
-Copre LEALTA. Test: `ScenarioLealtaTest`.
-
-Correzione: la palude ignorava gli avversari e gli oggetti messi da una missione
-(il troll di un favore, gli ingredienti di una raccolta): ora, se ce ne sono, si va
-avanti come in ogni altra locazione.
-
-### Altri ventun tipi con la sola grammatica (2026-10-04)
-
-Solo righe nuove in `missioni.txt`, senza codice:
-
-- incarichi di combattimento: ASSEDIO_OFFENSIVO (la rocca dei briganti), CIRCONDAMENTO
-  (gli hobgoblin accerchiati), SICARIO (il rivale dell'alchimista);
-- sorveglianze, con i nemici all'ultima visita: DIFESA (le galline del fattore),
-  ASSEDIO_DIFESA (la torre assediata), TRINCEA (il guado da tenere), CONTENIMENTO (la
-  grotta murata);
-- soccorsi: EVACUAZIONE (il pastore della radura), ASILO (il copista in fuga);
-- riti: MALEDIZIONE (le zucche del vicino), NECROMANZIA (il testamento del nonno),
-  CONTROLLO_ELEMENTALE (la pioggia per il mulino, con i metodi), ANIMAZIONE_OGGETTI (lo
-  spaventapasseri vivo), ILLUSIONE (il drago che non c'è), LEGAME_SPIRITUALE (lo
-  spirito della bottega);
-- colpi: ESPLOSIONE (la diga dei goblin), FALSIFICAZIONE (il registro dei confini),
-  SACRILEGIO (l'idolo dei goblin);
-- contrabbando: CORRUZIONE (il sacchetto per il gabelliere), DIFFAMAZIONE (i fogli
-  satirici), OCCULTAMENTO (i gioielli di famiglia).
-
-I test che controllano i tipi di ogni produzione (`ogni...SiLegge`) li elencano.
-
-### Altri dodici tipi dalla grammatica, e i tipi da lasciare (2026-10-04)
-
-Solo righe nuove in `missioni.txt`: FRODE (contrabbando: le reliquie false);
-QUARANTENA, AGRICOLTURA e ALLEVAMENTO (sorveglianze: la capanna dei raffreddati, le
-rape giganti, le oche da guardia); CHANNELING, COMUNIONE, TRANCE, INCANTESIMO,
-VISIONE_FUTURO, PERDONO, RISCATTO e REDENZIONE_PUBBLICA (riti: i lampioni della
-città, la dea del raccolto, la trance di fratello Anselmo, la torre pendente, lo
-stagno del domani, il perdono del fratello, la vita nuova del brigante, il falò
-del cavaliere).
-
-ASSASSINIO e TENTATIVO_OMICIDIO sono commentati come non adatti al tono del gioco;
-MATRIMONIO e CELEBRAZIONE sono da non sviluppare per ora: sarebbero solo raccolte
-di materiali, già coperte.
-
-Commentati anche, per non tornarci sopra: SCHIAVITU, TORTURA, FALSA_TESTIMONIANZA e
-FURTO_IDENTITA, non adatti al tono del gioco; LETTURA_MENTE, INVISIBILITA,
-TELEPORTAZIONE, SHAPE_SHIFT, FUSIONE, POSSESSO_CORPO, ASSORBIMENTO, CONTROLLO_MENTE,
-SCAMBIO_CORPI, FISSIONE e MORTE_TEMPORALE, non fattibili: chiedono poteri che il
-gruppo non ha.
-
-### I titoli nobiliari, e altri tipi lasciati (2026-10-04)
-
-TITOLO_NOBILIARE, con la sola grammatica: tre incarichi di combattimento in cui il
-ciambellano o l'araldo di Sua Maestà promettono un titolo buffo (Conte dei Ranocchi,
-Margravio degli Spifferi...) a chi libera una palude o delle rovine. Titolo e nemici
-si pescano a caso dalla grammatica (`TITOLO_DELLA_PALUDE`, `TITOLO_DELLE_ROVINE`,
-`NEMICI_DELLA_PALUDE`, `NEMICI_DELLE_ROVINE`); il titolo si sceglie una volta sola
-con un'assegnazione (`[TITOLO_NOBILE=[...]]`, ripreso con `[#TITOLO_NOBILE]`), così è
-lo stesso in tutti i testi. Le alternative pescate pesano poco (`[^0.1]`) e le righe
-`[^0.6]`: GrammarBean pesa di più le alternative che contengono riferimenti, e senza
-questi pesi i titoli uscirebbero molto più spesso degli altri incarichi.
-
-Correzione: due riti usavano le virgolette doppie, che per GrammarBean delimitano un
-testo letterale e spariscono; ora sono virgolette tipografiche.
-
-Da non sviluppare per ora: RICCHEZZA, FAMA, REPUTAZIONE e ASTA. Non fattibili: BORSA,
-CORONAZIONE, LIGNAGGIO, LEGATARIO, EREDE, SUCCESSIONE, EREDITA, ALLEANZA_MATRIMONIALE,
-TRADIMENTO e SEDIZIONE.
-
-### Il torneo (2026-10-04)
-
-`IlTorneo`, un incarico in città (righe `TORNEO` in `missioni.txt`, lette da
-`TorneoRichiesto`): chi lo bandisce mette in palio un oggetto leggendario e una
-borsa di monete. Nella lizza, un posto segnato sulla mappa, si combattono due turni
-e la finale, uno per visita, uno contro uno e fino alla resa (`aDuello`,
-`finoAllaResa`); chi perde un turno torna per la rivincita, come in ogni duello. In
-finale il campione ha un nome e un livello in più (`conCapo`); vinta la finale, il
-leggendario va nell'inventario del gruppo (con l'animazione dell'artefatto
-trovato), e la borsa si riscuote in città. Si ripete ogni 72 ore, finché restano
-leggendari.
-
-**I leggendari si pescano una volta sola fra leggende e tornei.** Le missioni con un
-leggendario in palio implementano `ConLeggendario`; `PescaLeggendaria.giaPescati`
-guarda tutte, e `PescaLeggendaria.pesca` (il pezzo mancante di un set cominciato, o
-uno a caso) serve a entrambe.
-
-I campioni dei tornei, che si arrendono e restano vivi, sono candidati al registro
-dei personaggi incontrati (vedi gestione_missioni.md, "Registro dei personaggi
-incontrati"): potranno tornare.
-
-Copre TORNEO. Test: `ScenarioTorneoTest`. COMMERCIO, SENSERIA e RICATTO sono
-commentati come non adatti al tono del gioco.
-
-### Le ondate, e la battaglia (2026-10-04)
-
-**Le ondate.** Un incontro di missione può arrivare a ondate
-(`IncontroDiMissione.poi(ondata, arrivo)`, al massimo tre in tutto, mai in un
-duello): sconfitti tutti gli avversari in campo, la locazione si riempie di nuovo.
-
-- Entrando, l'automa mette in campo la prima ondata e consegna le altre al
-  `GruppoAvversario` (`setOndateSuccessive`, dalla stessa missione:
-  `RegistroMissioni.getOndateSuccessiveMissione`). Non si salvano: si salva solo
-  fra una locazione e l'altra, mai a metà combattimento.
-- `LocazioneBase.impostaAzioni`, da cui passano tutti i modi di vincere (mischia,
-  incantesimi, dardo, veleni), quando non resta un avversario vivo e c'è
-  un'ondata in arrivo la mette in campo: la locazione non è più completa, la
-  finestra di combattimento si chiude, si scrive l'arrivo e si torna a scegliere.
-  La UI riassegna immagini e posizioni con `InternoAssegnaCoordinateAPersonaggi`.
-- Con delle ondate in arrivo non si corrompe, non si fa amicizia e non si passa
-  inosservati. Chi fugge, alla visita dopo ricomincia dalla prima ondata, e
-  ricomincia anche il conto degli sconfitti.
-- `combatti` vuole sconfitti, per ogni classe, quelli di tutte le ondate
-  (`IncontroDiMissione.getSconfittiRichiesti`).
-- Nella grammatica `OndateDellaRiga` legge `ONDATA_2=CLASSE NUMERO [CAPO]`,
-  `ARRIVO_2=`, `ONDATA_3=`, `ARRIVO_3=`, nei testi `%CAPO_2%` e `%CAPO_3%`; la
-  leggono gli incarichi di combattimento, le sorveglianze e le indagini.
-
-**BATTAGLIA**: l'esercito della radura (goblin, hobgoblin, il troll che comanda la
-baracca) e la notte dei morti (scheletri, spettri, il negromante). DIFESA,
-ASSEDIO_DIFESA e TRINCEA hanno ora due o tre ondate all'ultima visita, e
-nell'indagine delle luci nelle rovine, dopo gli scheletri, arriva il negromante
-con un nome. Test: `ScenarioOndateTest`.
-
-PULIZIA_DEI_DUNGEON ha tre varianti a ondate, accanto alla cripta e alla miniera: il
-nido sotto la montagna (goblin, hobgoblin, il troll del nido), le segrete del vecchio
-castello (scheletri, fantasmi, gargoyle) e il pozzo degli esperimenti dell'alchimista
-(folletti, arpie, una chimera).
+# Catalogo dei passi e delle missioni
+
+Il vocabolario dei passi con cui si scrivono le missioni a passi, le missioni concrete che li usano e la mappatura dei tipi di missione (`TipoMissione`) sulle missioni che li coprono. L'infrastruttura (`Passo`, `MissioneAPassi`, registro, claim, intermezzi) è in [`gestione_missioni.md`](gestione_missioni.md); qui si descrive **che cosa c'è**, non come funziona il motore.
+
+Il codice è in `missioni/`; le grammatiche in `src/main/resources/com/threeamigos/foresta/motore/missioni.txt` e `leggendari.txt`.
+
+## 1. Regole per chi aggiunge missioni
+
+- **Annotare i `TipoMissione` coperti.** Sopra ogni valore di `missioni/TipoMissione.java` coperto da una missione vera c'è un commento `// Coperto da: NomeClasse` (più classi separate da virgole, con fra parentesi il mandante o il caso). Aggiungendo o togliendo una missione si aggiornano questi commenti.
+- **Tipi non sviluppabili.** I tipi impossibili nella Foresta stanno **commentati nell'enum**, con `// Non fattibile nella Foresta: ...` e il motivo; quelli che non si addicono al tono del gioco `// Non adatto al tono del gioco: ...`; non vanno riproposti. I tipi che per ora non vale la pena sviluppare restano nell'enum con `// Da non sviluppare per ora: ...` e il motivo.
+- **Le missioni particolari** (andare a bere in tutte le locande, disturbare dieci eremiti) non sono missioni standard di un gioco fantasy e non si annotano.
+- **`RICERCA_OGGETTO`** è coperto da `LOggettoSmarrito` (oggetti comuni e ripetibili); la ricerca dei leggendari è un'altra cosa (`CACCIA_AL_TESORO`, §4). **`RECUPERO`** è coperto dal medaglione e dalle derrate, riusabili per un oggetto qualsiasi.
+- Una riga di grammatica di molti incarichi dichiara il suo tipo nel campo `TIPO=` (un valore di `TipoMissione`, letto con controllo): è il modo in cui il contenuto si collega alla mappatura del §5.
+
+## 2. Il vocabolario dei passi
+
+Sono metodi di `MissioneAPassi` (protetti, `final`) che restituiscono un `Passo` da completare con `poi` e, se serve, altre azioni con `esegui`. `momento` è il `MomentoControllo` in cui si valuta il passo.
+
+| Sigla | Metodo | Si conclude quando… |
+| :--- | :--- | :--- |
+| `VAI` | `vai(momento, coordinate)`, `vai(momento, locazioneUnica)` | il gruppo è in quella casella o in quella locazione unica (città, castello) |
+| `VAI_INIZIALE` | `tornaAlPuntoDiPartenza(momento)` | il gruppo torna nella casella in cui la missione si è attivata (`getPuntoDiPartenza()`) |
+| `DIALOGO` | `dialogo(momento, testo)` | subito: scrive il testo nel pannello e passa oltre |
+| `RICOMPENSA` | `ricompensa(momento, monete, testo)`, `ricompensa(momento, Ricompensa, testo)` | subito: scrive il testo e dà monete, preziosi, esperienza, un artefatto (creato al livello di quel momento, nell'inventario del gruppo, con la rivelazione dei cofani) |
+| `ATTENDI` | `attendiOre(momento, ore)` | sono passate quelle ore di gioco da quando il passo è corrente |
+| `CONTA_FINCHE` | `contaFinche(momento, contatore, N)` | il contatore della missione (`incrementaContatore`, `getContatore`) arriva a N |
+| `COMBATTI` (a caso) | `sconfiggi(momento, classe, N)` | il gruppo ha sconfitto N avversari di quella classe, **dovunque**, da quando il passo è corrente |
+| `RACCOGLI` (a caso) | `raccogli(momento, classeOggetto, N)` | il gruppo ha raccolto N oggetti di quella classe da quando il passo è corrente |
+| `RACCOGLI` (oggetti di missione) | `raccogli(momento, OggettiDaRaccogliere)` | il gruppo ha raccolto quanti ne servono (§3) |
+| `CONSEGNA` | `consegna(momento, dove, oggetti, testo)` | la condizione `dove` è vera e il gruppo ha gli oggetti: li consegna (escono dal conteggio) e si scrive il testo |
+| `SORVEGLIA` | `sorveglia(dove, volte, oreFraLeVisite)` | il gruppo è passato dalla casella `volte` volte, a inizio locazione, con almeno quelle ore fra una visita che conta e la successiva (le troppo ravvicinate non contano) |
+| `ESPLORA` | `esplora(caselleNuove)` | il gruppo è entrato in quel numero di caselle mai visitate da quando il passo è corrente (una casella conta una volta sola) |
+| `EVITA_COMBATTIMENTO` | `evitaCombattimento(momento, dove, testoSeScoperti)` | il gruppo arriva alla casella; se nel frattempo ha combattuto, la missione fallisce (per un ramo alternativo: `haCombattutoNelPassoCorrente()`) |
+| `COSTRUISCI` | `costruisci(momento, dove, Costruzione, testo)` | il gruppo è sul posto e ha materiali e monete: li consuma, passa le ore, scrive il testo (che cosa si costruisce lo fa la missione con un altro `esegui`) |
+| `COMBATTI(bersaglio)` | `combatti(dove, IncontroDiMissione)` | a fine locazione, in quella casella, sono stati sconfitti lì tutti gli avversari dell'incontro, in tutte le ondate |
+| `COMBATTI(capo)` | `combattiIlCapo(dove, IncontroDiMissione)` | a fine locazione è stato abbattuto il capo dell'incontro (di un'altra classe dalla banda) |
+| `SCORTA` | `prendiInScorta(momento, quando, nome[, vulnerabile])` o con un personaggio fatto dalla missione, poi `scorta(momento, destinazione[, testoSeMuore])` o `scortaFinoAllaMeta(...)` | `prendiInScorta`: quando la condizione è vera uno scortato si unisce al gruppo come **ospite**; `scorta`: il gruppo arriva a destinazione con lo scortato vivo, che si separa; con `testoSeMuore` se muore la missione fallisce; `scortaFinoAllaMeta` si conclude anche, dovunque, se muore (`isScortatoMorto()` sceglie il ramo) |
+| `AFFIDA` | `affida(chiave, momento, quando, fornitore)`, `attendiLeAffidate(chiave, momento)` | `affida`: crea e attiva missioni secondarie figlie; `attendiLeAffidate`: sono finite tutte (`sonoRiusciteLeAffidate` dice com'è andata) |
+| `CERCA_LOCAZIONE` | `cercaLocazione(momento, classe)` | la missione ha rivendicato una locazione di quella classe (o ne ha costruita una); riprova a ogni controllo se non c'è nemmeno un bosco da sostituire (vedi [`gestione_missioni.md`](gestione_missioni.md) §6) |
+| `GENERA_PARAMETRI` | `generaParametri(momento, parametri)`, `parametro(nome, generatore)` | subito: fissa come proprietà i valori variabili (nomi, quantità), ciascuno solo se non c'è già, così restano gli stessi dopo un caricamento (`getParametro`) |
+
+Operazioni sul `Passo` stesso, non sulla missione:
+
+| Metodo | Effetto |
+| :--- | :--- |
+| `chiediConferma(domanda)`, `chiediScelta(domanda, opzioni)` | domanda al giocatore, sì/no o da 2 a 5 opzioni (`CHIEDI_CONFERMA`, `CHIEDI_SCELTA`); la risposta si legge con `getRisposta(id)` |
+| `poi(id)` o `poi(supplier)` | passo successivo fisso, o calcolato dopo l'azione: **`RAMO`**, una diramazione sullo stato di gioco o sulla risposta |
+| `falliscoSe(condizione, testo)` | **`FALLISCI_SE`**: guardia che fa fallire la missione (la prima che scatta) |
+| `aOgniControllo(azione)` | azione a ogni valutazione del passo (la usano `sorveglia` ed `esplora` per i conteggi) |
+| `semina(oggetti)`, `affronta(dove, incontro)` | oggetti o avversari di missione nelle locazioni, finché è il passo corrente |
+| `conIntermezzo(momento, pagine)` | intermezzo dopo la conclusione |
+
+## 3. Oggetti di supporto dei passi
+
+**`OggettiDaRaccogliere`** descrive gli oggetti che esistono solo per la missione (`OggettoMissione`, `ClassiOggetto.OGGETTO_MISSIONE`: si ricorda missione, chiave e nome, raccoglierlo incrementa il contatore della missione; come gli altri oggetti delle locazioni non si salva). Si costruisce con `OggettiDaRaccogliere.di(chiave, NomeOggetto, quantità)` e:
+
+| Modificatore | Effetto |
+| :--- | :--- |
+| `in(classiDiLocazione)` | dove possono comparire (radura, bosco, grotta, rovine, palude…) |
+| `conProbabilita(%)`, `alPiuPerLocazione(n)` | quanto spesso e quanti per locazione |
+| `daiNemici(classi)` | sono **trofei** custoditi dagli avversari di quelle classi: compaiono dovunque ci siano, anche nelle locazioni già visitate, e per prenderli bisogna sconfiggerli |
+| `nellaCasella(coordinate)` | stanno tutti in una sola casella scelta dalla missione (un oggetto smarrito), anche se già visitata; senza ripiego |
+| `conRipiegoDopoOre(ore)` | dopo quante ore far ripiegare la missione (default 72) |
+
+Compaiono solo nelle locazioni mai visitate (salvo trofei e casella fissa), mai più di quanti ne mancano, e prendono il posto dell'oggetto che la locazione avrebbe avuto (mai di un artefatto del registro). Il **ripiego**: se dopo le ore previste il gruppo non li ha trovati tutti, a inizio locazione la missione si procura una locazione adatta (`cercaOCostruisci`: per i trofei un bosco con i mostri che li portano), la segna sulla mappa con un avviso ("Un viandante vi segna sulla mappa un posto…") e lì mette tutti quelli che mancano. Il ripiego usa il claim della missione: una missione che ne ha già un altro lo sovrascriverebbe.
+
+**`IncontroDiMissione`** descrive gli avversari che una missione mette in una locazione al posto di quelli normali: `IncontroDiMissione.di(classe, numero)` e
+
+| Modificatore | Effetto |
+| :--- | :--- |
+| `conCapo(nome[, classe])` | il primo avversario (o uno in più, di un'altra classe) ha un nome proprio e un livello sopra gli altri |
+| `finoAllaResa()` | gli avversari, sconfitti, si arrendono; se si arrende tutto il gruppo, il gruppo se ne va e torna per la rivincita |
+| `aDuello()` | un solo avversario sfida a duello: uno contro uno, gli altri del gruppo in panchina (un rifiuto lascia lo sfidante dov'è) |
+| `poi(ondata, arrivo)` | un'ondata che arriva a quelli di prima sconfitti, con il testo d'arrivo; **al massimo 3 ondate** in tutto, mai con un duello; con ondate non si corrompe, non si fa amicizia e non si passa inosservati, e chi fugge ricomincia dalla prima |
+| `aggirabile()` | si può evitare passando inosservati (le guardie di un colpo); gli altri avversari vanno affrontati |
+
+Gli avversari nascono al livello del mondo. Come panchina, resa, duello e passaggio inosservato agiscono in combattimento è descritto in [`motore_di_gioco.md`](motore_di_gioco.md) §7.
+
+**`Ricompensa`**: `Ricompensa.inMonete(n).conPreziosi(n).conEsperienza(n).conArtefatto(supplier)`. **`Costruzione`**: `Costruzione.con(materiali…).conMonete(n).inOre(n)`. **`Mandante`** e **`AspettoDelMandante`**: chi chiede e come compare nella scena in città (un mandante qualsiasi con l'aspetto del locandiere, il capitano delle guardie, l'armaiolo, l'alchimista, il locandiere); `ScenaInCitta` e `ScenaInLocanda` sono le scene degli intermezzi. **`TestiDeiLuoghi`**: come i testi nominano i luoghi.
 
+## 4. Le missioni concrete
+
+Quasi tutte nascono sopra `IncaricoInCitta` (vedi [`gestione_missioni.md`](gestione_missioni.md) §8: incarico in città, accettazione, compito, ritorno, consegna, ricompensa, con la guardia "città distrutta" in ogni passo) o direttamente su `MissioneAPassi`. Quelle senza città fissa sono **ripetibili**: finite, bene o male, ne lasciano una uguale che si offre dopo 48 ore di gioco (salvo diverso).
+
+### Le storie delle città (città fissa)
+
+| Missione | Dove | Compito | Ricompensa |
+| :--- | :--- | :--- | :--- |
+| `RecuperaIlMedaglione` | Fleena | un uomo chiede il medaglione di famiglia rubato da una banda di ladri: compare la grotta dei ladri (`COVO`), si recupera (`RECUPERO`) e si torna in città | 20 monete |
+| `RecuperaLeDerrateAlimentari` | Ruuna | stessa struttura (`MissioneRecuperaBersaglio`), con il covo dei Troll ladri di derrate | 20 monete |
+
+### Combattimenti
+
+| Missione | Compito |
+| :--- | :--- |
+| `CacciaAiGoblin` | un mercante chiede di liberare le strade: 3 goblin sconfitti dovunque (`sconfiggi`); 15 monete |
+| `LaTagliaSullaBanda` | una taglia sul capo di una banda di 3 hobgoblin in un bosco rivendicato e segnato sulla mappa (`combatti`); 30 monete; il capo ha un nome dalla grammatica |
+| `CacciatoreDiTaglie` | come sopra, ma la banda (3 goblin con un capo hobgoblin) si nasconde fra delle rovine **non segnate**: il mandante dice solo in che direzione; basta abbattere il capo (`combattiIlCapo`); 30 monete |
+| `IncaricoDiCombattimento` | la famiglia più ampia: qualcuno vuole sconfitto qualcosa che si nasconde in un posto della classe giusta (`COVO`, poi `CACCIA`), descritto da una riga di `INCARICO_DI_COMBATTIMENTO` (`CombattimentoRichiesto`): vendette, duelli, battaglie a ondate, imboscate, cariche, blocchi, assedi, bestie, pulizie di dungeon, riti di combattimento, titoli nobiliari buffi, la carovana dell'usuraio... Una riga può avere capo con nome, resa, duello e ondate |
+| `SconfiggiLaStrega` `SconfiggiIlLich` `SconfiggiIlMinotauroGigante` `SconfiggiLIdra` `SconfiggiIlDrago` | le cinque missioni principali (vedi [`gestione_missioni.md`](gestione_missioni.md) §7) |
+
+### Soccorso e scorta
+
+| Missione | Compito |
+| :--- | :--- |
+| `LaLiberazione` (base astratta) | qualcuno chiede di riportare a casa una persona in mano a dei nemici: `COVO`, `LIBERAZIONE`, `LIBERATO` (la persona si unisce come **ospite vulnerabile**), `VIAGGIO`; se muore, la missione resta aperta finché il gruppo non torna a dare la notizia (`LUTTO`), poi fallisce (`FALLIMENTO`) |
+| `IlRapimento` | una donna chiede di liberare il marito, rapito da 4 goblin e tenuto in una grotta; 35 monete; nomi di ostaggio e capobanda dalla grammatica |
+| `IlSoccorso` | riportare a casa un ferito o un prigioniero fra i nemici (il taglialegna fra le arpie, il minatore e il troll…), da righe di `SOCCORSO` (`SoccorsoRichiesto`); è ripetibile |
+| `IlPellegrino` | accompagnare un pellegrino a un tempio (rivendicato, segnato, **sicuro**: niente avversari né oggetti a caso all'arrivo) e tornare dalla sorella; `PARTENZA`, `VIAGGIO`, `META`; 25 monete |
+| `NonSparateSulPianista` | alla **terza visita** a una locanda nel bosco, a una visita tranquilla, il locandiere affida il bardo ubriaco da riportare a casa nella città più vicina, come ospite vulnerabile; `INCARICO`, `ACCETTAZIONE`, `VIAGGIO`, `ARRIVO`; 20 monete; se muore per strada o la città è distrutta, fallisce; è su `MissioneAPassi` e non su `IncaricoInCitta` perché nasce in una locanda |
+
+### Raccolta e consegna
+
+| Missione | Compito |
+| :--- | :--- |
+| `RichiestaDiMateriali` (quattro mandanti: `dellAlchimista`, `dellArmaiolo`, `delCapitano`, `delLocandiere`) | materiali da raccogliere (erbe, minerali, pesci) o da prendere a certi mostri (trofei), da `RICHIESTA_*` di `missioni.txt` (`MaterialeRichiesto`: genere, nome, provenienza `LUOGHI`/`NEMICI`, quantità, prezzo per pezzo, battute); `RACCOLTA`, poi consegna; paga tanto per pezzo più cinque |
+| `IlCorriere` | portare una cosa da una città a un'altra (`Spedizione`, da `TRASPORTO`): `PARTENZA` (la destinazione compare sulla mappa), `VIAGGIO`; paga di più quanto è lontana; le **spedizioni urgenti** hanno una scadenza (il doppio della distanza, più 12 ore di margine) e se il gruppo arriva tardi la missione fallisce |
+| `IlContrabbandiere` | come il corriere, ma di nascosto (righe di `CONTRABBANDO`): se per strada il gruppo combatte, la voce si sparge e la missione fallisce |
+| `LOggettoSmarrito` | qualcuno ha perso qualcosa vicino a un posto (tempio, rovine, locanda, grotta; da `OGGETTO_SMARRITO`): il posto compare sulla mappa e l'oggetto sta in una casella a non più di 2 passi (`RAGGIO`), anche già visitata (`nellaCasella`) |
+| `IlCartografo` | esplorare da 6 a 10 caselle mai visitate (`esplora`) e tornare a raccontarle |
+
+### Investigazione
+
+| Missione | Compito |
+| :--- | :--- |
+| `LaSorveglianza` | tenere d'occhio un posto passandoci più volte a ore di distanza (`sorveglia`), poi a volte qualcuno salta fuori da sconfiggere lì (`AGGUATO`); righe di `SORVEGLIANZA` (`SorveglianzaRichiesta`): tombe, accampamenti, torri assediate, galline, rape giganti… |
+| `LIndagine` | da due a tre indizi in altrettanti posti segnati uno alla volta (`TRACCIA_n`, `INDIZIO_n`, che resta nella descrizione), poi **la scelta del colpevole** fra 2-5 sospetti (`ACCUSA`): se indovina compare il nascondiglio (`NASCONDIGLIO`, `CATTURA`), se accusa un innocente la missione fallisce (`ERRORE`); righe di `INDAGINE` (`IndagineRichiesta`) |
+| `LaDocumentazione` | uno studioso chiede di documentare due o tre posti segnati uno alla volta (`TRACCIA_n`, `REPERTO_n`), poi si consegnano le note |
+
+### Furto e colpi di mano
+
+| Missione | Compito |
+| :--- | :--- |
+| `IlColpo` | rubare, guastare, appiccare un fuoco, entrare dove non si dovrebbe; il posto è segnato e c'è la guardia: il colpo riesce se il gruppo **passa inosservato** (le guardie sono `aggirabile`); se combatte è scoperto e il colpo fallisce, se fugge può riprovare; righe di `COLPO` (`ColpoRichiesto`) |
+
+### Riti e benedizioni
+
+| Missione | Compito |
+| :--- | :--- |
+| `IlRituale` | celebrare un rito in un posto segnato: `LUOGO`, `RACCOLTA` degli ingredienti, `RITO` (la domanda a inizio locazione, nel posto **sicuro**): una conferma o una scelta fra 2-4 metodi di cui uno solo giusto (`ERRORE` se sbagliato, `RINVIO` se "non ancora", che fa tornare a chiedere), a volte il rito richiama un `GUARDIANO` da sconfiggere; righe di `RITUALE` (`RitualeRichiesto`) |
+| `LaBenedizione` | in una locanda, **dalla terza visita**, un sacerdote offre una benedizione in cambio di un favore: `INCONTRO`, `FAVORE` (affida `IlFavore`), `ATTESA`, `TEMPIO` (compare sulla mappa), `ARRIVO` (sicuro), `SCELTA` di chi la riceve (o `DIRETTA` se c'è un solo personaggio in campo): un modificatore permanente di un attributo; si ripete (48 ore); righe di `BENEDIZIONE` |
+| `IlFavore` | missione **secondaria affidata** (da `LaBenedizione` e da `LaLealta`): sconfiggere qualcuno in un posto, raccogliere qualcosa o vegliare un posto (`FavoreRichiesto`); si completa sul posto, e a proseguire è la madre |
+| `LaLealta` | una sera, **all'accampamento**, un compagno che non è il capo confida un problema e chiede un favore (`IlFavore`): `INCONTRO`, `FAVORE`, `ATTESA`, `RINGRAZIAMENTO` (un modificatore permanente con la nota `LealtaRichiesta.NOTA`, dopo cui quel compagno non chiede più niente); se il compagno muore o se ne va, fallisce; si ripete con un altro compagno (72 ore); righe di `LEALTA` |
+
+### Leggende e tornei
+
+| Missione | Compito |
+| :--- | :--- |
+| `LaLeggenda` (`LaLeggendaDellArmaiolo`, `LaLeggendaDelLocandiere`) | un narratore racconta la leggenda di un **oggetto leggendario** (da `leggendari.txt`): `INCARICO` (si pesca un leggendario che nessun'altra leggenda ha già pescato), `ACCETTAZIONE` (sorge su un bosco un **tempio** che lo custodisce, con dei guardiani, segnato sulla mappa), `RECUPERO` (il leggendario non c'è più). Il leggendario lo tiene il gruppo. L'armaiolo racconta in una città qualsiasi; il locandiere dalla terza visita alla locanda. Fra due leggende, di chiunque, passano almeno 36 ore |
+| `PescaLeggendaria` | decide quale leggendario esce: a caso, ma una leggenda su due (`PROBABILITA_PEZZO_MANCANTE`, 50%) racconta un pezzo mancante del set più vicino a essere completo; dopo 3 leggende di fila senza pezzi mancanti, con un set cominciato, la successiva lo racconta per forza |
+| `OggettoLeggendario`, `SetLeggendario`, `ConLeggendario` | un leggendario (riga di `leggendari.txt`: chiave stabile, proprietà, leggende) e i set (con un moltiplicatore dei bonus se indossati tutti); **ogni leggendario esce una volta sola per partita**, in una sola missione fra leggende e tornei |
+| `IlTorneo` | un torneo bandito in città, con un leggendario e una borsa in palio: nella lizza (segnata sulla mappa) due turni e la finale, uno per visita, uno contro uno e **fino alla resa** (`LIZZA`, `PRIMO_TURNO`, `SECONDO_TURNO`, `FINALE`); in finale il campione ha un nome e un livello in più; chi perde un turno può tornare per la rivincita; vinta la finale il leggendario va al gruppo e la borsa si riscuote in città; fra due tornei 72 ore; righe di `TORNEO` (`TorneoRichiesto`) |
+
+### Missioni scritte a mano
+
+`CronacheDiUnFegatoEroico` (un boccale in ogni locanda cittadina, una tappa `VisitaLocanda` per città), `NessunBoccaleLasciatoIndietro` (dieci locande nel mezzo della Foresta: tornare dallo stesso oste non conta, la bevuta è annotata sulla casella), `DisturbatoreDellaQuietePubblica` (dieci eremiti disturbati, contati all'incontro) e le missioni di prova (`MissioneDIProva`, `MissioneCheFallisce`, `MissioneDiProvaSecondariaUno/Due`, `MissioneDiProvaTerziariaUno`), oltre alle classi generiche `Combatti`, `MuoviALocazione`, `VisitaLocanda`, `MissioneSecondaria`.
+
+## 5. Le grammatiche delle missioni
+
+I contenuti variabili sono in `missioni.txt` (e `leggendari.txt`), caricate da `ProduttoreDiTestiCasuale` (vedi [`motore_di_gioco.md`](motore_di_gioco.md) §11). Una riga di grammatica è una lista di campi `CHIAVE=valore` separati da `;`, letta da `CampiDiGrammatica`, che **controlla** i campi: uno sconosciuto, ripetuto o mancante si scopre subito. Una riga lunga si spezza con `\`. Classi di lettura: `CombattimentoRichiesto`, `SorveglianzaRichiesta`, `SoccorsoRichiesto`, `IndagineRichiesta`, `RitualeRichiesto`, `BenedizioneRichiesta`, `FavoreRichiesto`, `LealtaRichiesta`, `ColpoRichiesto`, `DocumentazioneRichiesta`, `TorneoRichiesto`, `MaterialeRichiesto`, `Spedizione`, `OggettoSmarrito`.
+
+- **Nomi di personaggi** (produzioni di nomi): ostaggi, bardi, pellegrini, campioni e campionesse (con nome e epiteto), briganti, maghi, capibanda, goblin.
+- **Campi comuni**: `CAPO=` (`CapoDellaRiga`: `SI` per un nome da `NOME_CAPOBANDA`, il nome di un'altra produzione di nomi, o il nome stesso quando i testi lo dicono), `NEMICO=`/`NUMERO=` (una `ClassePersonaggio`, anche le classi del gruppo), `LUOGO=` (grotta, rovine, bosco, palude, radura), `MONETE=`, `TIPO=` (il `TipoMissione`), `RESA=`, `DUELLO=`, `ONDATA_2=`/`ARRIVO_2=` e `ONDATA_3=`/`ARRIVO_3=` (`OndateDellaRiga`), un modificatore permanente `ATTRIBUTO TIPO QUANTITA` (`ModificatoreDellaRiga`, solo aumenti). Nei testi `%CAPO%` è il nome del capo; nei testi non si usa il `;` e non vanno usati `[ ] { } | "` (sintassi di `GrammarBean`).
+- **Produzioni**: `RICHIESTA_ALCHIMISTA`/`ARMAIOLO`/`CAPITANO`/`LOCANDIERE`, `TRASPORTO`, `CONTRABBANDO`, `OGGETTO_SMARRITO`, `INCARICO_DI_COMBATTIMENTO` (la più grande, con pezzi comuni per i titoli buffi di Sua Maestà e i nemici delle paludi e delle rovine), `SORVEGLIANZA`, `SOCCORSO`, `INDAGINE`, `RITUALE`, `BENEDIZIONE`, `LEALTA`, `TORNEO`, `DOCUMENTAZIONE`, `COLPO`.
+- Le missioni **pescano riga e nomi quando si offrono** e li fissano come parametri: una missione ripetuta pesca altro.
+
+## 6. Mappatura `TipoMissione` → missione
+
+`TipoMissione` conta **190 tipi** in nove `SupertipoMissione`: acquisizione, combattimento, protezione, investigazione, progressione, negoziazione, illecito, relazioni, spirituale. L'elenco e i motivi stanno nei commenti dell'enum (§1). Stato:
+
+- **coperti**: 129, da almeno una missione;
+- **non fattibili nella Foresta**: 28 (commentati);
+- **non adatti al tono**: 9 (commentati);
+- **da non sviluppare per ora**: 6;
+- **non coperti, non annotati**: 18, candidati per missioni future.
+
+### Acquisizione
+
+- `RichiestaDiMateriali`: `RACCOLTA_INGREDIENTI`, `RACCOLTA_TROFEI`, `RACCOLTA_CRISTALLI`, `RACCOLTA_ESSENZA`, `MINIERA`, `CACCIA_ANIMALI`, `PESCA`, `FORAGGIAMENTO`
+- `RecuperaIlMedaglione`, `RecuperaLeDerrateAlimentari`: `RECUPERO`
+- `IlCorriere`: `TRASPORTO`
+- `LaLeggendaDellArmaiolo`, `LaLeggendaDelLocandiere`: `CACCIA_AL_TESORO` (la leggenda è l'indizio, i guardiani del tempio, il leggendario il tesoro)
+- `LaSorveglianza`: `AGRICOLTURA` (le rape giganti), `ALLEVAMENTO` (le oche da guardia)
+- non fattibile: `BORSA`. Non coperti: `ARTIGIANATO`, `COSTRUZIONE` (il passo `COSTRUISCI` esiste ma nessuna missione lo usa)
+
+### Combattimento
+
+- `IncaricoDiCombattimento`: `VENDETTA`, `DUELLO`, `BATTAGLIA`, `IMBOSCATA`, `CARICA`, `CIRCONDAMENTO`, `BLOCCO`, `SCHERMAGLIA`, `SORTITA`, `PONTE_TATTICO`, `ASSEDIO_OFFENSIVO`, `COMBATTIMENTO_RITUALE`, `DUELLO_MAGICO`, `COMBATTIMENTO_BESTIA`, `DUELLO_ANTICO`, `PULIZIA_DEI_DUNGEON`
+- `CacciatoreDiTaglie`, `LaTagliaSullaBanda`: `CACCIATORE_DI_TAGLIE`
+- le cinque `Sconfiggi*`: `ASSALTO`
+- `CacciaAiGoblin`: `GUERRIGLIA`
+- `LaSorveglianza`: `ASSEDIO_DIFESA` (la torre assediata), `TRINCEA` (il guado da tenere)
+- `IlColpo`: `ESPLOSIONE` (la diga dei goblin)
+- non fattibili: `FLOTTA`, `CAVALLERIA`, `BATTAGLIA_AEREA`. Non coperto: `RITIRATA_TATTICA`
+
+### Protezione
+
+- `IlRapimento`: `SALVATAGGIO`, `SCORTA`; `IlSoccorso`: `SALVATAGGIO`, `SOCCORSO`, `EVACUAZIONE`, `PRIMO_SOCCORSO`, `ASILO`; `IlPellegrino`, `NonSparateSulPianista`: `SCORTA`
+- `LaSorveglianza`: `DIFESA`, `QUARANTENA`, `CONTENIMENTO`, `VIGILIA`
+- `IlCorriere`: `GUARIGIONE`, `EPIDEMIA`, `CURA_MAGICA`, `ANTI_VELENO` (rimedi e antidoti, spesso urgenti)
+- `IlRituale`: `POSSESSIONE`, `BARRIERA_MAGICA`, `SANTUARIO`, `PURIFICAZIONE`
+- `IlContrabbandiere`: `OCCULTAMENTO`; `IncaricoDiCombattimento`: `PROTEZIONE_TEMPORALE` (i fantasmi del pozzo, per una notte)
+- non coperti: `RIFUGIO`, `BLINDATURA`
+
+### Investigazione
+
+- `LIndagine`: `INVESTIGAZIONE`, `RINTRACCIAMENTO`, `RICERCA`, `CURIOSITA_ACCADEMICA`, `CONTROSPIONAGGIO`, `INTERROGATORIO`, `INCHIESTA`, `FORENSICA`, `PROFILING`, `TRACCIA_MAGICA`, `TESTIMONI`, `SCOPERTA_SEGRETO`, `SCOPERTA_INGANNO`, `LETTURA_RUNE`, `DECIFRAZIONE`
+- `IlCartografo`: `ESPLORAZIONE`; `LaSorveglianza`: `SORVEGLIANZA`; `LOggettoSmarrito`: `RICERCA_OGGETTO`; `LaDocumentazione`: `DOCUMENTAZIONE`
+- tutti coperti
+
+### Progressione
+
+- `IncaricoDiCombattimento`: `COMPETIZIONE` (la gara di magia), `TITOLO_NOBILIARE` (i titoli buffi di Sua Maestà); `IlTorneo`: `TORNEO`; `LaBenedizione`: `BENEDIZIONE_RICEVERE`
+- non fattibili: `EREDITA`, `CORONAZIONE`, `LIGNAGGIO`, `LEGATARIO`, `EREDE`, `SUCCESSIONE`. Da non sviluppare: `FAMA`, `REPUTAZIONE` (il gioco non tiene un conto), `RICCHEZZA`. Non coperti: `FAZIONE`, `ADDESTRAMENTO`, `NOMINA`, `FRATELLANZA`, `ASCESA_SOCIALE`, `MAESTRIA`, `SPECIALIZZAZIONE`, `GESTIONE`, `RICOSTRUZIONE`
+
+### Negoziazione
+
+- `IlCorriere`: `DIPLOMAZIA` (il trattato d'alleanza), `MEDIAZIONE`, `CONTRATTO`, `NEGOZIAZIONE_TREGUA`; `IlContrabbandiere`: `MERCATO_NERO`
+- non adatti al tono: `COMMERCIO`, `SENSERIA`. Da non sviluppare: `ASTA` (servirebbero rilanci e avversari all'asta). Non coperto: `SCAMBIO_OSTAGGI`
+
+### Illecito
+
+- `IlColpo`: `FURTO`, `SABOTAGGIO`, `FALSIFICAZIONE`, `AVVELENAMENTO`, `VANDALISMO`, `INCENDIO`, `VIOLAZIONE_DOMICILIO`, `SACRILEGIO`
+- `IlContrabbandiere`: `CONTRABBANDO`, `CORRUZIONE`, `FRODE`, `DIFFAMAZIONE`, `RICICLAGGIO`, `TRAFFICO`
+- `IncaricoDiCombattimento`: `SICARIO`, `BRIGANTAGGIO`, `CONFINAMENTO`; `LaSorveglianza`: `SPIONAGGIO`
+- non fattibili: `TRADIMENTO`, `PIRATERIA`, `SEDIZIONE`. Non adatti al tono: `ASSASSINIO`, `RICATTO`, `SCHIAVITU`, `FURTO_IDENTITA`, `FALSA_TESTIMONIANZA`, `TORTURA`, `TENTATIVO_OMICIDIO`. Non coperti: `INGANNO`, `RAPIMENTO`, `IMBROGLIONE`
+
+### Relazioni
+
+- `LaLealta`: `LEALTA`; `IlRituale`: `RISCATTO`, `PERDONO`, `REDENZIONE_PUBBLICA`
+- non fattibile: `ALLEANZA_MATRIMONIALE`. Da non sviluppare: `MATRIMONIO`, `CELEBRAZIONE` (sarebbero solo una raccolta di materiali, già coperta)
+
+### Spirituale
+
+- `IlRituale` copre ventiquattro tipi: `SPEZZATURA`, `BENEDIZIONE`, `COMUNICAZIONE`, `VISIONE_PASSATO`, `VISIONE_FUTURO`, `RITUALE`, `NECROMANZIA`, `EVOCAZIONE`, `MALEDIZIONE`, `INCANTESIMO`, `SIGILLO`, `TRASMUTAZIONE`, `ASTRI`, `DIVINAZIONE`, `ILLUSIONE`, `ANTI_MAGIA`, `CHANNELING`, `CONTROLLO_ELEMENTALE`, `LEGAME_SPIRITUALE`, `COMUNIONE`, `TRANCE`, `CREAZIONE_GOLEM`, `ANIMAZIONE_OGGETTI`, `PATTO_ANIMA`
+- non fattibili (14): `LETTURA_MENTE`, `INVISIBILITA`, `TELEPORTAZIONE`, `SHAPE_SHIFT`, `VIAGGIO_ASTRALE`, `FUSIONE`, `VIAGGIO_TEMPO`, `REALTA_PARALLELA`, `POSSESSO_CORPO`, `ASSORBIMENTO`, `CONTROLLO_MENTE`, `SCAMBIO_CORPI`, `FISSIONE`, `MORTE_TEMPORALE`
+
+## 7. Osservazioni
+
+- **Pochi scheletri, molta varietà.** Quasi tutto il catalogo si riduce a un piccolo numero di forme: (a) arrivare in un posto, combattere o raccogliere, tornare a riscuotere (`IncaricoInCitta` e le sue figlie); (b) arrivare e rispondere a una domanda con un ramo sull'esito (rituali, indagini); (c) resistere a ondate (battaglie, pulizie di dungeon); (d) tenere d'occhio un posto nel tempo (sorveglianze). Il contenuto vero sta nelle **grammatiche**: una missione nuova di una famiglia esistente è quasi sempre una riga nuova di `missioni.txt`, con il suo `TIPO=`.
+- **L'annotazione dei tipi è manuale.** Nessun test controlla che i commenti `// Coperto da:` dicano il vero (le classi citate esistono tutte, ma niente verifica che una classe copra davvero quel tipo, né che un tipo con `// Coperto da:` sia raggiungibile da una riga di grammatica).
+- **Il passo `COSTRUISCI` e il tipo `ARTIGIANATO`/`COSTRUZIONE`.** Il passo c'è, ma nessuna missione lo usa: il solo uso nel catalogo è nei test (`ScenarioPassiAvanzatiTest`).
+- **Diciotto tipi non coperti e non annotati** (§6) sono i candidati naturali per le prossime famiglie: `RITIRATA_TATTICA`, `SCAMBIO_OSTAGGI`, `INGANNO`, `IMBROGLIONE`, `RAPIMENTO`, `RIFUGIO`, `BLINDATURA`, `ARTIGIANATO`, `COSTRUZIONE`, più i nove di progressione.
+- **Le missioni ripetibili si accumulano.** Ogni incarico senza città fissa, finito, ne lascia un altro fra le secondarie di primo livello; per non sovrapporsi, gli incarichi che aspettano una visita tranquilla partono a una per volta (vedi [`gestione_missioni.md`](gestione_missioni.md) §5).

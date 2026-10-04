@@ -45,7 +45,7 @@ public enum ClassePersonaggioImmagine {
     TITANO(ClassePersonaggio.TITANO, "personaggi/Titano.gif", "icone/Titano-nobordo-piccolo.gif"),
     TROLL(ClassePersonaggio.TROLL, "personaggi/Troll.gif"),
     VIVERNA(ClassePersonaggio.VIVERNA, "personaggi/Viverna.gif"),
-    // Per ora ha l'immagine del bardo (vedi il TODO in Automa)
+    // Per ora ha l'immagine del bardo (vedi todo.md)
     VIANDANTE(ClassePersonaggio.VIANDANTE, "personaggi/Bardo.gif", "icone/Bardo-nobordo-piccolo.gif");
 
     private final ClassePersonaggio classePersonaggio;

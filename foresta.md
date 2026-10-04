@@ -1,73 +1,87 @@
 # La Foresta
 
-> Assessment tecnico — panoramica del progetto
+Panoramica del progetto: cos'è il gioco, come è fatto, dove trovare il resto della documentazione. Per un giudizio sullo stato del progetto vedi [`assessment.md`](assessment.md).
 
 ## Cos'è
 
-**La Foresta** (`com.threeamigos.foresta`, gruppo Maven `com.threeamigos`, `artifactId foresta`) è un **gioco di ruolo single-player in italiano**, sviluppato in Java puro (Swing/AWT/Java2D, nessun motore di gioco esterno). È un'applicazione desktop distribuita come JAR eseguibile (`foresta-0.0.1-SNAPSHOT-jar-with-dependencies.jar`, classe main `com.threeamigos.foresta.Main`).
+**La Foresta** è un **gioco di ruolo single-player in italiano** per desktop, scritto in Java puro (Swing/AWT/Java2D, senza motori di gioco esterni). Si distribuisce come JAR eseguibile (`foresta-0.0.1-SNAPSHOT-jar-with-dependencies.jar`, classe main `com.threeamigos.foresta.Main`). È un progetto personale dell'autore ("La Foresta by Gundam of 3AM" nel `pom.xml`; il `README.md` dice *"My favourite game! (Italian language only)"*).
 
-Esteticamente richiama i fantasy retro a schermate fisse degli anni '80 (font bitmap pixel-based fatti in casa, nome della classe `DoomdarkFont` — un chiaro omaggio a *Doomdark's Revenge*/*Lords of Midnight*): un party di avventurieri esplora una foresta a caselle, entra in locazioni (radure, grotte, città, castelli), combatte mostri, accumula oggetti e incantesimi, e affronta una missione principale (sconfiggere un Drago) più una serie di missioni secondarie e boss opzionali (Idra, Lich, Minotauro Gigante, Strega).
+L'estetica richiama i fantasy a schermate fisse degli anni '80: un font bitmap fatto in casa (`DoomdarkFont`, omaggio a *Doomdark's Revenge* e *Lords of Midnight*), sprite, cornici pixel-perfect. Un gruppo di avventurieri esplora una foresta a caselle, entra nelle locazioni, combatte, raccoglie artefatti e incantesimi e affronta la missione principale, **sconfiggere il Drago**, prima che il tempo finisca. Il Drago ha quattro alleati nei loro castelli (Idra, Lich, Minotauro Gigante, Strega), e intorno alla storia principale ruotano molte missioni secondarie.
 
-Il file `README.md` del repository lo riassume così: *"My favourite game! (Italian language only)"* — è un progetto personale dell'autore (Stefano Reksten / "Gundam of 3AM", vedi `pom.xml`).
+## Le meccaniche in breve
 
-## Genere e meccaniche in breve
+- **Il gruppo.** Il giocatore crea il capo scegliendo nome, sesso e classe: Guerriero/Guerriera, Ladro/Ladra, Bardo/Cantastorie, Elfo/Elfa, Mago/Maga. Il gruppo arriva a 5 personaggi permanenti, reclutati in città e locande, più fino a 3 temporanei (aiuti, mercenari, ospiti scortati da una missione). Se muore il capo, la partita è persa.
+- **La mappa.** La foresta è una griglia di **dimensione variabile**, in fase di taratura (oggi 20×20, `Foresta.DIMENSIONE_X`/`DIMENSIONE_Y`), generata a ogni partita: quattro città, locande, templi, grotte, paludi, rovine, radure, boschi e i castelli dei boss. Le caselle si scoprono vedendole, sentendone parlare o grazie alle missioni.
+- **Il tempo.** Muoversi e riposare fanno passare le ore. A 20, 25, 30 e 35 giorni il Drago distrugge una città; oltre il giorno 40 la partita è persa. Ci si può accampare per la notte.
+- **Il combattimento.** A turni, un round al secondo: il personaggio scelto attacca e l'avversario risponde. Le probabilità di colpire e il danno derivano dagli attributi (tiro su 100, non "d20 contro classe armatura"), con 18 effetti di stato che interagiscono con i tipi di danno. Esistono anche duelli, combattimenti fino alla resa e ondate di avversari. In alternativa al combattimento si può corrompere, stringere amicizia, fuggire o passare inosservati.
+- **La progressione.** Esperienza con curva quadratica, punti abilità da spendere sugli attributi, livello del mondo che fa crescere mostri, bottino e negozi.
+- **Gli oggetti.** Artefatti generati proceduralmente con rarità, slot, incantamenti e set leggendari; ingredienti magici che l'incantatore fonde negli artefatti; dieci incantesimi da comprare come pergamene; pozioni.
+- **I negozi.** Nelle città ci sono locanda, alchimista, armaiolo, venditore di pergamene e incantatore; nelle locande e negli incontri amichevoli si trovano offerte (pasti, informazioni, mappe, aiuti).
+- **Le missioni.** Oltre alle cinque principali, una grande famiglia di incarichi "a passi" (mandanti, corrieri, scorte, indagini, rituali, leggende...) con domande al giocatore e ricompense.
+- **Gli intermezzi.** Scene a pagine con sfondi, animazioni e battute a fumetto, che scattano in momenti precisi del gioco o alla fine di un passo di missione.
+- **Notizie e trofei.** Uscendo da una locanda esce una notizia satirica sulle malefatte del gruppo, che compare nel notiziario della mappa. I trofei valgono da una partita all'altra.
+- **Persistenza.** Cinque slot di salvataggio, classifica dei punteggi, trofei; tutto in file di testo in `~/.foresta/`.
+- **Testi generati.** Nomi di locande, templi, rovine e artefatti, fiabe, oroscopi, notizie e testi delle missioni vengono da grammatiche generative (`GrammarBean`).
 
-- **Party-based**: il giocatore controlla un `GruppoGiocatore` di personaggi (classe scelta all'inizio: Guerriero/a, Ladro/a, Bardo/Cantastorie, Elfo/a, Mago/a), contro un `GruppoAvversario` generato di volta in volta.
-- **Combattimento a turni**, con selezione round-robin del personaggio attivo e calcolo di colpito/danno basato su statistiche (non dadi GDR classici: percentuali derivate da attributi + effetti di stato).
-- **Esplorazione su mappa**: una Foresta a griglia 50×50 (`Foresta.java`), con locazioni di vario tipo (Bosco, Grotta, Palude, Radura, Rovine, Tempio, Città, Locanda, Castelli dei boss) generate/gestite dinamicamente.
-- **Economia**: armaiolo, alchimista/fornitore, scambio di artefatti, offerte nelle locande (aiuto mercenario/gratuito, incantesimi, informazioni, mappe, pasti).
-- **Progressione**: esperienza, livelli, incantesimi elementali (Aria/Acqua/Terra/Fuoco...), effetti di stato (stordito, confuso, congelato...).
-- **Persistenza**: salvataggi su file locali (5 slot), classifica punteggi.
-- **Generazione procedurale di testo**: fiabe, oroscopi, descrizioni di locande e persino JSON di artefatti sono generati da un motore di grammatiche testuali proprietario (`GrammarBean`).
+## Architettura
 
-## Architettura in due parti
+Il codice si divide in due parti, che si parlano attraverso un bus eventi publish/subscribe (`BusEventi`):
 
-Il codice si divide nettamente in due sottosistemi, indipendenti a livello di thread e accoppiati **solo** tramite un bus eventi pubblica/sottoscrivi (`BusEventi`):
-
-| Parte | Package principali | Documento |
+| Parte | Pacchetti | Documento |
 | :--- | :--- | :--- |
-| **Motore di gioco** | `motore`, `motore.modellodati`, `eventi`, `personaggi`, `locazioni`, `missioni`, `oggetti`, `offerte`, `tools` | [`motore_di_gioco.md`](motore_di_gioco.md) |
+| **Motore di gioco** | `motore` (con `modellodati` e `tipi`), `eventi`, `personaggi`, `locazioni`, `missioni`, `intermezzi`, `oggetti`, `offerte`, `incantesimi`, `trofei`, `interfacce`, `tools` | [`motore_di_gioco.md`](motore_di_gioco.md) |
 | **Motore grafico** | `ui`, `ui.sfx` | [`motore_grafico.md`](motore_grafico.md) |
 
 ```
-                         BusEventi (pub/sub sincrono, sull'EDT Swing)
-                    ┌───────────────────────────────────────────────┐
-                    │                                                │
-   Comando*/Notifica*/Richiesta*/Interno*                Notifica*/Richiesta*/Interno*
-                    │                                                │
-                    ▼                                                ▼
-   ┌────────────────────────────┐               ┌──────────────────────────────────┐
-   │   MOTORE DI GIOCO           │               │   MOTORE GRAFICO                 │
-   │   Automa (state machine)    │               │   ForestaUI + DisplayableCanvas  │
-   │   thread proprio            │               │   JFrame Swing, thread daemon    │
-   │   (Temporizzatore + EDT)    │               │   a 30 FPS (repaint)             │
-   └────────────────────────────┘               └──────────────────────────────────┘
+        UI (ui)                                              Motore (Automa e il resto)
+  ┌────────────────────────┐   Comando*  ──────────────▶  ┌─────────────────────────────┐
+  │ ForestaUI              │                              │ Automa: macchina a stati     │
+  │ DisplayableCanvas      │   ◀──────  Notifica*,        │ reattiva, senza game loop    │
+  │ thread di ridisegno    │            Richiesta*,       │                              │
+  │ a 60 FPS (solo repaint)│            Interno*          │ TemporizzatoreJ2SE: impulsi  │
+  └───────────┬────────────┘                              │ TIMER pianificati fuori, ma  │
+              │  legge direttamente lo stato di dominio    │ eseguiti sull'EDT            │
+              └──────────▶ GruppoGiocatore, Foresta, ...   └─────────────────────────────┘
+
+                 Tutta la logica di gioco e tutto il disegno girano sull'EDT di Swing.
 ```
 
-Nessuno dei due sottosistemi ha un riferimento diretto all'altro: il motore non conosce `DisplayableCanvas`, e la UI non conosce `Automa`. Tutta la comunicazione passa per classi di eventi immutabili organizzate in quattro famiglie (`eventi.comandigiocatore`, `eventi.notifiche`, `eventi.richieste`, `eventi.interni`) — dettagliate in `motore_di_gioco.md`.
+- **Un solo thread per la logica.** `BusEventi` consegna gli eventi sull'Event Dispatch Thread, e anche gli impulsi del timer del motore vi arrivano. Il thread della UI si limita a chiedere un `repaint()` 60 volte al secondo quando c'è qualcosa da animare.
+- **Il motore non conosce la UI**, salvo l'enum `InterfacciaUtente.Finestra` usato per portare in primo piano un riquadro.
+- **La UI invece conosce il dominio.** Il bus separa i comandi, ma la UI legge direttamente `GruppoGiocatore`, `Foresta`, `Notizie` e altri oggetti del motore, e chiama gli `Automa*` dei negozi che le arrivano con gli eventi. Separare il modello dati dal motore è fra le cose da valutare ([`todo.md`](todo.md)).
 
-## Bootstrap (avvio dell'applicazione)
+## Avvio
 
-`Main.main()` (`src/main/java/com/threeamigos/foresta/Main.java:29-47`):
+`Main.main()`:
 
-1. Registra `SnifferBusEventi`, un logger che si iscrive a *tutti* gli eventi pubblicati (utile per debug).
-2. Legge gli argomenti da riga di comando (`ORIZZONTALE`/`VERTICALE`/`TUTTOSCHERMO`, e `SALTALOGO` per non mostrare il logo iniziale nelle partite di prova).
-3. Crea `Automa` (il motore, `ControlloreDiGioco`) con il proprio `Temporizzatore`.
-4. Crea `ForestaUI` (la UI) con un secondo `Temporizzatore` indipendente.
-5. Si iscrive all'evento `InternoInterfacciaUtentePronta`, pubblicato da `ForestaUI` a fine setup della finestra Swing: solo a quel punto il motore riceve `inizia()` e la state machine entra nello stato `INTRO`.
+1. registra sul bus i componenti che ascoltano tutta la partita: `SnifferBusEventi` (log di ogni evento), `Notizie`, `Statistiche`, `RegistroTrofei`, `RegistroArtefatti`, `RegistroMissioni`;
+2. legge gli argomenti: `ORIZZONTALE`/`VERTICALE`, `TUTTOSCHERMO`, `SALTALOGO`, `BARRACLASSICA` (barra icone fissa invece del Dock), `MODALITA_DI_PROVA`;
+3. installa i gestori su file di classifica, salvataggi e trofei (i trofei si leggono qui, una volta sola);
+4. crea l'`Automa` con il suo `Temporizzatore` e si iscrive a `InternoInterfacciaUtentePronta`;
+5. crea `ForestaUI`. Quando la finestra è pronta, l'evento arriva e l'automa parte con `inizia()`: mentre la UI traccia il logo, il motore precarica grammatiche e generatore di artefatti.
 
-Questo disaccoppiamento all'avvio è lo stesso pattern che regge tutto il resto del gioco: la UI non aspetta il motore, il motore non aspetta la UI, si sincronizzano solo via eventi.
+## Stack e build
 
-## Stack tecnico
+- **Java 8** (`maven.compiler.source/target = 1.8`), build **Maven**, sorgenti in UTF-8.
+- **Swing/AWT/Java2D** per tutta la grafica, nessuna libreria esterna. Nessuna dipendenza di runtime.
+- **JUnit 5** per i test e **JaCoCo** per la copertura. `mvn test` esegue la suite: al 2026-10-05 sono 681 test, tutti verdi (8 saltati). I test di scenario guidano partite intere senza UI (`PartitaDiTest`).
+- I salvataggi usano un formato testo proprietario a campi separati da `|` (`Serializzabile`), senza versione: la compatibilità con i salvataggi vecchi non è un obiettivo.
+- Circa 520 file e 75.000 righe di codice, più circa 20.000 righe di test.
 
-- **Java 8** (`maven.compiler.source/target = 1.8`), build **Maven** (`pom.xml`).
-- **Swing/AWT/Java2D** per tutta la UI e il rendering — nessuna libreria grafica esterna (no LWJGL, no JavaFX).
-- Unica dipendenza runtime dichiarata: **Gson 2.9.0** — dichiarata nel `pom.xml` ma **non risulta importata in nessun punto del codice sorgente attuale** (grep su `com.google.gson` non produce risultati). La documentazione interna di `GrammarBean.md` §5.3 descrive in dettaglio una pipeline `artefatti.txt` → JSON → Gson → `CostruttoreArtefatto` come caso di studio, ma né `artefatti.txt` né Gson sono mai referenziati da codice `.java`: è un esempio rimasto sulla carta, non una feature attiva (dettagli in [`motore_di_gioco.md`](motore_di_gioco.md) §9) — un punto da chiarire con l'autore in un eventuale refactoring.
-- **JUnit 5** per i test (`src/test`).
-- **JaCoCo** per la code coverage, integrato nella build Maven.
-- Persistenza dei salvataggi in un **formato testo proprietario, pipe-delimited** (non JSON), tramite l'interfaccia `Serializzabile`.
+## Mappa dei documenti
 
-## Per approfondire
-
-- [`motore_di_gioco.md`](motore_di_gioco.md) — state machine, bus eventi, modello dati, combattimento, personaggi, mondo, missioni, economia, persistenza, generazione procedurale di testo.
-- [`motore_grafico.md`](motore_grafico.md) — finestra Swing, sistema di canvas componibili, sprite, font bitmap custom, effetti speciali, cache immagini.
+| Documento | Contenuto |
+| :--- | :--- |
+| [`motore_di_gioco.md`](motore_di_gioco.md) | Macchina a stati, bus eventi, modello dati e salvataggi, mondo, combattimento, personaggi, oggetti, incantesimi, testi generati, strumenti di test |
+| [`motore_grafico.md`](motore_grafico.md) | Finestra, canvas e riquadri, barra icone, ciclo di rendering, sprite, font bitmap, schermate, effetti |
+| [`gestione_missioni.md`](gestione_missioni.md) | Infrastruttura delle missioni: registro, momenti di controllo, `Passo` e `MissioneAPassi`, claim delle locazioni |
+| [`passi_missioni.md`](passi_missioni.md) | Catalogo dei passi e delle missioni concrete, mappatura dei tipi di missione |
+| [`intermezzi.md`](intermezzi.md) | Come scrivere, animare e provare un intermezzo |
+| [`artefatti_e_incantamenti.md`](artefatti_e_incantamenti.md) | Artefatti, pergamene, incantatore, bilanciamento del combattimento (con il piano di lavoro) |
+| [`economia.md`](economia.md) | Bilancio dell'economia del gioco: entrate, uscite, prezzi per livello, cosa non torna. **Il riequilibrio è ancora da affrontare** |
+| [`interazioni_effetti_di_stato.md`](interazioni_effetti_di_stato.md) | Interazioni fra effetti di stato e tipi di danno |
+| [`GrammarBean.md`](GrammarBean.md) | Manuale e assessment del motore di grammatiche |
+| [`assessment.md`](assessment.md) | Valutazione dello stato del progetto e prossimi passi |
+| [`todo.md`](todo.md) | Cose da fare generali e bug noti |
+| [`revisione_documentazione.md`](revisione_documentazione.md) | Piano e avanzamento della revisione della documentazione |
+| `tipiDanno.md`, `tipiPersonaggio.md` | Appunti generici sul genere fantasy (tipi di danno, ruoli dei personaggi), non descrivono il codice |

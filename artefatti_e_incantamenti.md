@@ -46,7 +46,7 @@ Si misura con il simulatore (`TestMonteCarloMatrix.testConfrontoEquipaggiamenti`
   - [ ] **Stesso attributo due volte** (es. `SOGGEZIONE` +2 e +1): sommarli in `generaDaGrammatica` o evitarli nella grammatica.
   - [ ] **Bilanciamento:** i modificatori sono intensità × gradino, quindi +6 al livello 10 per un'intensità +2; da misurare insieme alla quota di spade da grammatica (`Costanti.ARTEFATTO_PROBABILITA_DA_GRAMMATICA`, 0,5 per provarla) e ai prezzi.
   - [ ] **Altre armi:** spadone, mazza, ascia, lancia… (basta aggiungere le radici `<TIPO>_<n>`, §7; per lo spadone serve `AGGETTIVO_LAMA` al maschile).
-  - [ ] **`artefatti.txt`** resta com'è, come banco di prova di `GrammarBean` (`GrammarBean.md`, §5.3): da togliere quando `artefatti2.txt` l'avrà sostituito.
+  - [x] **`artefatti.txt`** tolto dal gioco (2026-10-05): con `artefatti_pp.txt` è in `risorse_e_documenti_vari/` come raccolta di spunti; via anche Gson dal `pom.xml` e il runner `TestArtefatti`.
 - [ ] **Accessori:** nuove idee per incantarli (per ora non si incantano).
 
 ### Grafica e interfaccia

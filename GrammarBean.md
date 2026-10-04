@@ -2,7 +2,14 @@
 
 `GrammarBean` legge un file di grammatica testuale e lo usa per **generare testo casuale**
 espandendo ricorsivamente dei riferimenti fra produzioni. È il motore dietro `fiabe.txt`,
-`oroscopo.txt` e `artefatti.txt`.
+`oroscopo.txt`, `artefatti2.txt` e le altre grammatiche del gioco.
+
+> **Nota (2026-10-05).** Gli esempi di questo manuale usano spesso `artefatti.txt` e
+> `artefatti_pp.txt`, la prima grammatica degli artefatti che emetteva JSON da rileggere con
+> Gson. Il gioco non la usa più (è stata sostituita da `artefatti2.txt`, vedi
+> [`artefatti_e_incantamenti.md`](artefatti_e_incantamenti.md) §7): i due file sono stati
+> spostati in `risorse_e_documenti_vari/` come raccolta di spunti, e Gson è stato tolto dal
+> `pom.xml`. Gli esempi restano validi come illustrazione della sintassi.
 
 Questo documento è sia un **manuale di riferimento** della sintassi e del sistema di pesi,
 sia un **assessment** della classe (§10) con le limitazioni e i difetti verificati
