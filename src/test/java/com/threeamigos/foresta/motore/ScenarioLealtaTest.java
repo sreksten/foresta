@@ -35,6 +35,10 @@ class ScenarioLealtaTest {
             + "FAVORE=Il debito;LUOGO=RADURA;NEMICO=GOBLIN;NUMERO=2;VITTORIA=Debito saldato per %PERSONAGGIO%.;"
             + "RINGRAZIAMENTO=Grazie davvero.;LEALTA=FORZA AUMENTO_FISSO 2;LEALE=%PERSONAGGIO% è più forte.";
 
+    private static final String GIURAMENTO = "CHIAVE=GIURAMENTO_DI_PROVA;CONFIDENZA=Ho un giuramento.;BATTUTA=Quale?;RISPOSTA=Vegliare.;"
+            + "FAVORE=Il giuramento;LUOGO=RADURA;VISITE=3;ORE=12;VEGLIA=Si veglia.;VITTORIA=Veglia finita.;"
+            + "RINGRAZIAMENTO=Grazie.;LEALTA=FORZA AUMENTO_FISSO 2;LEALE=%PERSONAGGIO% è più forte.";
+
     @Test
     void ogniLealtaSiLegge() {
         Set<String> chiavi = new HashSet<>();
@@ -102,6 +106,26 @@ class ScenarioLealtaTest {
             nuova.controllaAccampamento();
             assertFalse(nuova.isAttiva());
             assertNull(nuova.getNomeDelCompagno());
+        }
+    }
+
+    @Test
+    void ilPostoDelFavoreSiSegnaSubitoAllAccampamentoAncheSenzaMuoversi() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(255)) {
+            Guerriera bruna = new Guerriera("Bruna", 1);
+            LaLealta lealta = preparaLAccampamento(partita, bruna);
+            lealta.aggiungiProprieta("PARAMETRO_" + LaLealta.LEALTA, GIURAMENTO);
+            partita.comando(Comando.ACCAMPAMENTO);
+            partita.assertStato(Stato.SCELTA_DIREZIONE);
+
+            // La lealtà ha affidato il favore (una veglia) durante lo stesso accampamento, senza muoversi di casella:
+            // il posto deve già essere stato cercato e segnato sulla mappa, non solo dopo il prossimo ingresso in una locazione
+            IlFavore favore = (IlFavore) lealta.getMissioniAffidate(LaLealta.FAVORE).get(0);
+            assertTrue(favore.isAttiva());
+            assertEquals(FavoreRichiesto.Tipo.VEGLIA, favore.getFavore().getTipo());
+            CoordinateMD posto = favore.getPosto();
+            assertNotNull(posto, "il posto del favore dovrebbe essere già segnato, senza bisogno di spostarsi");
+            assertTrue(Foresta.isLocazioneConosciuta(posto));
         }
     }
 

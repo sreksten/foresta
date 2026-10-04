@@ -75,6 +75,15 @@ public class IlFavore extends MissioneAPassi {
 	}
 
 	/**
+	 * Il momento in cui la madre affida questo favore (vedi LaLealta.FAVORE e LaBenedizione.FAVORE): il posto va
+	 * cercato e segnato in quello stesso momento, non subito dopo (la lealtà lo affida all'accampamento, non in
+	 * locazione, e lì potrebbe non arrivarci mai se il gruppo non si sposta più).
+	 */
+	private MomentoControllo getMomentoRichiesta() {
+		return LEALTA.equals(getParametro(ORIGINE)) ? MomentoControllo.ACCAMPAMENTO : MomentoControllo.IN_LOCAZIONE;
+	}
+
+	/**
 	 * Chi chiede il favore: "la sacerdotessa della luna", o il nome del compagno.
 	 */
 	public String getMandante() {
@@ -182,7 +191,7 @@ public class IlFavore extends MissioneAPassi {
 		FavoreRichiesto favore = getFavore();
 		switch (id) {
 			case POSTO:
-				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, favore.getLuogo())
+				return cercaLocazione(getMomentoRichiesta(), favore.getLuogo())
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getPosto());
 							BusEventi.pubblica(new NotificaTestoParagrafo("Il posto del favore è segnato sulla mappa."));
