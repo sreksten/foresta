@@ -272,6 +272,17 @@ public class RegistroMissioni {
 	}
 
 	/**
+	 * Il nome della missione a passi attiva per cui quella coordinata lampeggia (vedi {@link #getLocazioniDaSegnalare}),
+	 * o null se non ce n'è una: per esempio se la casella lampeggia solo per un artefatto di cui si è saputo.
+	 */
+	public static String getNomeMissioneDaSegnalare(CoordinateMD coordinate) {
+		return getMissioneCheHaOccupato(coordinate)
+				.filter(missione -> missione instanceof MissioneAPassi && missione.isAttiva() && !missione.isCompleta() && !missione.isFallita())
+				.map(Missione::getNome)
+				.orElse(null);
+	}
+
+	/**
 	 * Una missione secondaria nuova, fuori dall'albero della missione principale (per esempio l'incarico in città
 	 * che ne ripete uno finito): si controlla come le altre e si salva con il registro.
 	 */

@@ -176,40 +176,49 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 		disegnaNomeSottoIlMouse(graphics, altezzaMappa);
 	}
 
+	private boolean mouseSuCasellaValida() {
+		return mouseSopra && !stoTrascinando && yMouse < altezzaMappa();
+	}
+
+	private CoordinateMD getCasellaSottoIlMouse() {
+		return new CoordinateMD(Math.floorDiv(xMouse - mappaXOffset, LARGHEZZA_ICONA),
+				Math.floorDiv(yMouse - mappaYOffset, ALTEZZA_ICONA));
+	}
+
 	/**
 	 * Il nome della casella sotto il mouse, se il gruppo la conosce e ne ha uno (città, castelli, locande, templi;
 	 * vedi Foresta.getNomeDaMostrare), o null. Mai mentre si trascina la mappa o sopra il notiziario.
 	 */
 	String getNomeSottoIlMouse() {
-		if (!mouseSopra || stoTrascinando || yMouse >= altezzaMappa()) {
-			return null;
-		}
-		CoordinateMD casella = new CoordinateMD(Math.floorDiv(xMouse - mappaXOffset, LARGHEZZA_ICONA),
-				Math.floorDiv(yMouse - mappaYOffset, ALTEZZA_ICONA));
-		return Foresta.getNomeDaMostrare(casella);
+		return mouseSuCasellaValida() ? Foresta.getNomeDaMostrare(getCasellaSottoIlMouse()) : null;
 	}
 
 	/**
-	 * Il nome della casella sotto il mouse, in marrone su un cartiglio accanto al puntatore, tenuto dentro la mappa.
+	 * Il nome della missione per cui la casella sotto il mouse lampeggia (vedi Foresta.getNomeMissioneDaMostrare),
+	 * o null. Mai mentre si trascina la mappa o sopra il notiziario.
 	 */
-	private void disegnaNomeSottoIlMouse(Graphics2D graphics, int altezzaMappa) {
-		String nome = getNomeSottoIlMouse();
-		if (nome == null) {
-			return;
-		}
-		Image testo = ImageCache.get(Misc.inizialeMaiuscola(nome), DoomdarkFontMedium.getInstance(),
-				DoomdarkColorModel.Color.BROWN);
+	String getNomeMissioneSottoIlMouse() {
+		return mouseSuCasellaValida() ? Foresta.getNomeMissioneDaMostrare(getCasellaSottoIlMouse()) : null;
+	}
+
+	private int larghezzaCartiglio(Image testo) {
+		int larghezzaNastro = testo.getWidth(null) + MARGINE_NOME * 2;
+		return (ImageCache.cartiglioSinistro.getWidth() - SOVRAPPOSIZIONE_CAPI) + larghezzaNastro
+				+ (ImageCache.cartiglioDestro.getWidth() - SOVRAPPOSIZIONE_CAPI);
+	}
+
+	private int altezzaCartiglio() {
+		return ABBASSAMENTO_CAPI + Math.max(ImageCache.cartiglioSinistro.getHeight(), ImageCache.cartiglioDestro.getHeight());
+	}
+
+	/**
+	 * Disegna un cartiglio con quel testo, con l'angolo in alto a sinistra in (x, y).
+	 */
+	private void disegnaCartiglio(Graphics2D graphics, Image testo, int x, int y) {
 		BufferedImage capoSinistro = ImageCache.cartiglioSinistro;
 		BufferedImage capoDestro = ImageCache.cartiglioDestro;
 		int larghezzaNastro = testo.getWidth(null) + MARGINE_NOME * 2;
 		int sporgenzaSinistra = capoSinistro.getWidth() - SOVRAPPOSIZIONE_CAPI;
-		int larghezza = sporgenzaSinistra + larghezzaNastro + capoDestro.getWidth() - SOVRAPPOSIZIONE_CAPI;
-		int altezza = ABBASSAMENTO_CAPI + Math.max(capoSinistro.getHeight(), capoDestro.getHeight());
-		int x = Math.max(0, Math.min(xMouse + DISTANZA_NOME_DAL_MOUSE, width - larghezza));
-		int y = yMouse + DISTANZA_NOME_DAL_MOUSE;
-		if (y + altezza > altezzaMappa) {
-			y = Math.max(0, yMouse - DISTANZA_NOME_DAL_MOUSE - altezza);
-		}
 		// Il nastro: arancione, con il bordo marrone solo sopra e sotto
 		int xNastro = x + sporgenzaSinistra;
 		Color coloreOriginale = graphics.getColor();
@@ -223,6 +232,39 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 		// I capi arrotolati, sopra le estremità del nastro e un pixel più in basso
 		graphics.drawImage(capoSinistro, x, y + ABBASSAMENTO_CAPI, null);
 		graphics.drawImage(capoDestro, xNastro + larghezzaNastro - SOVRAPPOSIZIONE_CAPI, y + ABBASSAMENTO_CAPI, null);
+	}
+
+	/**
+	 * Il nome della casella sotto il mouse su un cartiglio accanto al puntatore, tenuto dentro la mappa; se la casella
+	 * lampeggia anche per una missione (vedi getNomeMissioneSottoIlMouse), un secondo cartiglio con il nome della
+	 * missione sotto il primo.
+	 */
+	private void disegnaNomeSottoIlMouse(Graphics2D graphics, int altezzaMappa) {
+		String nome = getNomeSottoIlMouse();
+		String nomeMissione = getNomeMissioneSottoIlMouse();
+		if (nome == null && nomeMissione == null) {
+			return;
+		}
+		Image testoNome = nome == null ? null
+				: ImageCache.get(Misc.inizialeMaiuscola(nome), DoomdarkFontMedium.getInstance(), DoomdarkColorModel.Color.BROWN);
+		Image testoMissione = nomeMissione == null ? null
+				: ImageCache.get(Misc.inizialeMaiuscola(nomeMissione), DoomdarkFontMedium.getInstance(), DoomdarkColorModel.Color.BROWN);
+		int larghezza = Math.max(testoNome == null ? 0 : larghezzaCartiglio(testoNome),
+				testoMissione == null ? 0 : larghezzaCartiglio(testoMissione));
+		int altezzaSingola = altezzaCartiglio();
+		int altezza = altezzaSingola * ((testoNome == null ? 0 : 1) + (testoMissione == null ? 0 : 1));
+		int x = Math.max(0, Math.min(xMouse + DISTANZA_NOME_DAL_MOUSE, width - larghezza));
+		int y = yMouse + DISTANZA_NOME_DAL_MOUSE;
+		if (y + altezza > altezzaMappa) {
+			y = Math.max(0, yMouse - DISTANZA_NOME_DAL_MOUSE - altezza);
+		}
+		if (testoNome != null) {
+			disegnaCartiglio(graphics, testoNome, x, y);
+			y += altezzaSingola;
+		}
+		if (testoMissione != null) {
+			disegnaCartiglio(graphics, testoMissione, x, y);
+		}
 	}
 
 	@Override

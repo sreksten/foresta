@@ -231,7 +231,19 @@ public class Foresta {
 		}
 		return getLocazioneMD(coordinate).getNome();
 	}
-	
+
+	/**
+	 * Il nome della missione da mostrare sulla mappa per quella casella (vedi RegistroMissioni.getNomeMissioneDaSegnalare),
+	 * se il gruppo la conosce; altrimenti null.
+	 */
+	public static String getNomeMissioneDaMostrare(CoordinateMD coordinate) {
+		if (coordinate.getX() < 0 || coordinate.getX() >= getDimensioneX() || coordinate.getY() < 0 || coordinate.getY() >= getDimensioneY()
+				|| !isLocazioneConosciuta(coordinate)) {
+			return null;
+		}
+		return RegistroMissioni.getNomeMissioneDaSegnalare(coordinate);
+	}
+
 	/**
 	 * Costruisce le città, una per quadrante (in ordine casuale), e ci piazza un personaggio a caso
 	 */
