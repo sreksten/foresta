@@ -42,9 +42,6 @@ import java.util.function.Supplier;
 // FIXME: il DisplayableCanvasRiquadroGruppo usa una modalità di scrolling differente da quella delle missioni per
 //  - esempio. I personaggi vengono fatti scrollare di tre righe per volta. Da capire se si possa andare sulla falsariga
 //  - del DisplayableCanvasRiquadroMissioni.
-// FIXME: durante un combattimento il canvas con le info sui punti vita e la barra salute è sparito e non è più
-//   - riapparso. Quando u personaggio inizia a combattere questo dovrebbe sempre riapparire. Capire perché è scomparso
-//   - e sistemare.
 // TODO: carta, forbice e sasso
 // TODO: mostrare in locazione anche i personaggi del gruppo.
 // TODO: implementare fumetto che attende chiusura

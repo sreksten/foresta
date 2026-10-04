@@ -1514,7 +1514,7 @@ public abstract class LocazioneBase implements Locazione {
 		combattente = gruppo.getPersonaggio(azione);
 		String nome = combattente.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA, Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 		BusEventi.pubblica(new NotificaTestoFrase(nome + " inizia il combattimento."));
-//		BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(combattente, gruppoAvversario.getPersonaggioVivo()));
+		BusEventi.pubblica(new InternoRichiestaAperturaFinestraCombattimento(combattente, gruppoAvversario.getPersonaggioVivo()));
 		opzioneAmiciziaDisponibile = false;
 		opzioneCorruzioneDisponibile = false;
 		statoLocazione = StatoLocazione.IN_COMBATTIMENTO;
