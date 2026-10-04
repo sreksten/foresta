@@ -60,6 +60,8 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	// I loghi con l'alone scuro, perché si vedano sullo sfondo della storia: si fanno una volta sola
 	private BufferedImage logo3AMConAlone;
 	private BufferedImage logoForestaConAlone;
+	// La scritta "seleziona lo slot da caricare" con l'alone scuro, perché si legga sullo sfondo del drago
+	private BufferedImage immagineSelezionaSlotDaCaricare;
 	// Il tempo della fase: dall'ultimo fotogramma, da quando i loghi compaiono, da quando si sta fermi
 	private long ultimoFotogramma;
 	private double secondiLoghi = -1;
@@ -164,7 +166,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 
 	void selezioneSlotDaCaricare(Graphics2D graphics) {
 		disegnaOmbraDelDrago(graphics);
-		disegnaStringaCentrataConACapoAutomatico(graphics, "seleziona lo slot da caricare", 50);
+		graphics.drawImage(immagineSelezionaSlotDaCaricare(), 0, 50 - RAGGIO_ALONE, null);
 		for (TestataSalvataggio testata : salvataggiDisponibili) {
 			try {
 				disegnaElencoPersonaggiDaElencoClassi(graphics, testata);
@@ -197,7 +199,9 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		String descrizione = testata.getDescrizione();
         Collection<Personaggio> personaggi = testata.getGruppoGiocatore().getPersonaggi();
 		disegnaPersonaggi(graphics, id, personaggi, coordinataY);
-		disegnaStringaCentrataConACapoAutomatico(graphics, id + " - " + descrizione.toLowerCase(), coordinataY);
+		BufferedImage immagineConAlone = TestoGrande.conAlone(
+				TestoGrande.immagine(id + " - " + descrizione.toLowerCase(), width - 2 * RAGGIO_ALONE, true), RAGGIO_ALONE);
+		graphics.drawImage(immagineConAlone, 0, coordinataY - RAGGIO_ALONE, null);
 	}
 
 	void selezioneSlotDaSalvare(Graphics2D graphics) {
@@ -357,6 +361,18 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 					TestoGrande.immagine(String.join(" ", Misc.STORIA), width - 2 * RAGGIO_ALONE, true), RAGGIO_ALONE);
 		}
 		return immagineStoria;
+	}
+
+	/**
+	 * La scritta "seleziona lo slot da caricare", con un alone nero attorno alle lettere perché si legga sullo
+	 * sfondo del drago. Non cambia mai: si fa una volta sola.
+	 */
+	private BufferedImage immagineSelezionaSlotDaCaricare() {
+		if (immagineSelezionaSlotDaCaricare == null) {
+			immagineSelezionaSlotDaCaricare = TestoGrande.conAlone(
+					TestoGrande.immagine("seleziona lo slot da caricare", width - 2 * RAGGIO_ALONE, true), RAGGIO_ALONE);
+		}
+		return immagineSelezionaSlotDaCaricare;
 	}
 
 	/**
