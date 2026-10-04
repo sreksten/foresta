@@ -15,7 +15,8 @@ import com.threeamigos.foresta.motore.RegistroMissioni;
  * <ol>
  * <li>COVO, in locazione, nella città, subito dopo l'accettazione: compare il covo, rivendicato dalla missione, così
  * a missione finita chi ci passa ne legge il ricordo ({@link #getRicordoDellaLocazione()});</li>
- * <li>RECUPERO, a fine locazione, nel covo completato: poi si torna in città.</li>
+ * <li>RECUPERO, a fine locazione, nel covo completato: il segnalino lascia il covo e passa sulla città, dove va
+ * riportato il bersaglio (il covo resta comunque rivendicato ai fini del ricordo); poi si torna in città.</li>
  * </ol>
  */
 public abstract class MissioneRecuperaBersaglio extends IncaricoInCitta {
@@ -65,7 +66,10 @@ public abstract class MissioneRecuperaBersaglio extends IncaricoInCitta {
 			case RECUPERO:
 				return Passo.quando(MomentoControllo.POST_LOCAZIONE,
 								() -> gruppo.isInLocazioneUnica(getCovo()) && gruppo.getLocazioneCorrente().isCompleta())
-						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(testoRecupero())))
+						.esegui(() -> {
+							BusEventi.pubblica(new NotificaTestoParagrafo(testoRecupero()));
+							RegistroMissioni.occupaLocazione(Foresta.getCoordinateLocazioneUnica(getCittaDelRitorno()), this);
+						})
 						.poi(RITORNO);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
