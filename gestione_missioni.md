@@ -1,5 +1,55 @@
 # Missioni a passi + intermezzi agganciati a una missione
 
+## `FornitoreMissione`: una missione sostituibile ad arte per i test
+
+File: `src/main/java/com/threeamigos/foresta/interfacce/FornitoreMissione.java`
+
+```java
+public interface FornitoreMissione {
+    Missione fornisciProssimaMissione();
+}
+```
+
+Interfaccia funzionale (equivalente a un `Supplier<Missione>`, ma con un nome
+esplicito) da usare in ogni punto del motore che oggi costruisce "la
+prossima missione" chiamando direttamente `ClasseMissione.getIstanza()` /
+`TipoMissionePredefinita.getIstanza()` (vedi elenco dei punti sotto). L'idea:
+un'implementazione "standard" (quella che oggi è cablata in ciascun punto)
+resta il comportamento di default del gioco; nei test si può sostituirla con
+un `FornitoreMissione` scritto ad arte che restituisce una missione scelta a
+mano (una classe specifica, con parametri noti) invece che una generata a
+caso — per testare una missione precisa senza dover rigiocare finché non
+capita per caso.
+
+Non ancora usata da nessun chiamante: l'interfaccia esiste
+(`interfacce/FornitoreMissione.java`), il collegamento ai punti sotto è da
+fare.
+
+### Punti dove il gioco ha bisogno di una missione
+
+Verificato leggendo il codice: oggi ogni punto chiama direttamente
+`getIstanza()` sull'enum (`ClasseMissione` o `TipoMissionePredefinita`, che
+internamente delega a `ClasseMissione`). Questi sono i punti da far passare
+per un `FornitoreMissione`, verosimilmente fornito da `RegistroMissioni`
+(tre dei quattro punti sono già lì):
+
+1. `RegistroMissioni.reimposta()` (riga 188) — `tipoMissionePredefinita.getIstanza()`:
+   a inizio partita, crea l'istanza di ciascuna missione predefinita (una per
+   valore di `TipoMissionePredefinita`).
+2. `RegistroMissioni.aggiornaDopoRiletturaImpl(...)` (riga 559) —
+   `tipoMissionePredefinita.getIstanza()`: dopo un caricamento, ricostruisce
+   l'istanza di una missione predefinita da rileggere con `ricostruisci(...)`.
+3. `RegistroMissioni.ricostruisci(MissioneMD)` (riga 585) —
+   `missioneMD.getClasse().getIstanza()`: dopo un caricamento, ricostruisce
+   l'istanza di una missione secondaria (qualsiasi `ClasseMissione`, non solo
+   predefinite).
+4. `MissioneAPassi.lasciaUnaMissioneNuova()` (riga 884) —
+   `getModelloDati().getClasse().getIstanza()`: quando una missione ripetibile
+   finisce (bene o male), crea la missione nuova della stessa classe che la
+   sostituisce.
+
+I numeri di riga sono dello stato attuale del file e possono spostarsi.
+
 ## Stato (2026-10-03)
 
 | Punto | Stato |
