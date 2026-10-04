@@ -35,7 +35,6 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 
 ## Grafica e immagini
 
-- Segnalare in verde quando uno o più punti abilità sono disponibili, così da farli notare.
 - Immagini degli artefatti che mancano per la rivelazione (`SpriteRivelazioneArtefatto`), da mettere in `img/oggetti`:
   - armi: Mazza, Ascia, Lancia, BastoneMagico;
   - libro magico: LibroMagico;

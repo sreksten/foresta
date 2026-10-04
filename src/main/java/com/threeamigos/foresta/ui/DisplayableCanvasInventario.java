@@ -97,7 +97,9 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         y += fontHeight + SPACING;
         disegnaAttributoEValore(TipoAttributo.PUNTI_ESPERIENZA, p.getPuntiEsperienza(), graphics, y, coloreTestata);
         y += fontHeight + SPACING;
-        disegnaAttributoEValore(TipoAttributo.PUNTI_ABILITA, p.getPuntiAbilitaDisponibili(), graphics, y, coloreTestata);
+        // In verde se ci sono punti da spendere, perché si notino
+        disegnaAttributoEValore(TipoAttributo.PUNTI_ABILITA, p.getPuntiAbilitaDisponibili(), graphics, y,
+                p.getPuntiAbilitaDisponibili() > 0 ? DoomdarkColorModel.Color.GREEN : coloreTestata);
         y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
         BufferedImage separatore = ImageCache.separatore;

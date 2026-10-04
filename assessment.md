@@ -20,7 +20,7 @@ Valutazione dello stato del progetto al **2026-10-05**, scritta dopo la revision
 | Tempo, distruzione delle città, fine per tempo | Fatta | Giorni 20/25/30/35 e 40 (`motore_di_gioco.md` §6) |
 | Combattimento, effetti di stato, duelli, ondate | Fatta | **Da bilanciare** contro i boss (FIXME in [`todo.md`](todo.md)) |
 | Corruzione, amicizia, fuga, passare inosservati | Fatta | La fuga è giudicata troppo penalizzante (`motore/GruppoGiocatore.java:610`) |
-| Progressione e punti abilità | Fatta | Manca un segnale visivo dei punti abilità disponibili ([`todo.md`](todo.md)) |
+| Progressione e punti abilità | Fatta | Nell'inventario i punti abilità disponibili sono in verde |
 | Artefatti generati, set leggendari, incantatore | Fatta | Mancano diverse immagini per la rivelazione degli artefatti ([`todo.md`](todo.md)); il piano aperto è in [`artefatti_e_incantamenti.md`](artefatti_e_incantamenti.md) |
 | Incantesimi e pozioni | Fatta | Dieci formule più il dardo arcano |
 | Negozi di città e offerte | Fatta | I negozi esistono solo in città; negozi sparsi nella foresta sono un'idea aperta |
