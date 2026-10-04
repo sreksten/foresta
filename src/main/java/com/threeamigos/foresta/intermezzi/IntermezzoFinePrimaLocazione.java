@@ -48,7 +48,9 @@ public class IntermezzoFinePrimaLocazione implements Intermezzo {
 								.conBocca(0.5, -0.15)
 								.specchiato()
 								.poi(Tappa.inSecondi(2).verso(0.62, 0.61)))
-						.conBattuta(BattutaIntermezzo.di("eremita", "Vedo che sei preparato. Buona fortuna nella tua missione!").daSecondo(2));
+						.conBattuta(BattutaIntermezzo.di("eremita", "Vedo che sei preparat" +
+								GruppoGiocatore.getIstanza().getCapo().getLetteraFinaleAttributo() +
+								". Buona fortuna nella tua missione!").daSecondo(2));
 		pagineIntermezzo.add(finale);
 		return pagineIntermezzo;
 	}
