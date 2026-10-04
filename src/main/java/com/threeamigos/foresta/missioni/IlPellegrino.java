@@ -7,6 +7,7 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
@@ -16,7 +17,8 @@ import com.threeamigos.foresta.tools.Misc;
  * In città una donna chiede di accompagnare suo fratello, un pellegrino, fino a un tempio nella foresta: la
  * missione rivendica il tempio e lo segna sulla mappa, il pellegrino viaggia con il gruppo come ospite (vedi
  * {@link MissioneAPassi#prendiInScorta}) e se ne separa arrivati al tempio; poi si torna dalla sorella a riscuotere
- * (vedi IncaricoInCitta).
+ * (vedi IncaricoInCitta). Il tempio è sicuro: all'arrivo niente avversari né oggetti a caso (vedi
+ * RegistroMissioni.sopprimiContenutoLocazione).
  */
 public class IlPellegrino extends IncaricoInCitta {
 
@@ -75,6 +77,10 @@ public class IlPellegrino extends IncaricoInCitta {
 		return getTempio() == null ? "il tempio" : Tempio.getNome(getTempio());
 	}
 
+	private boolean nelTempio() {
+		return getTempio() != null && getTempio().equals(GruppoGiocatore.getIstanza().getCoordinate());
+	}
+
 	@Override
 	protected String primoPassoDelCompito() {
 		return META;
@@ -95,6 +101,11 @@ public class IlPellegrino extends IncaricoInCitta {
 				return prendiInScorta(MomentoControllo.IN_LOCAZIONE, this::nellaCitta, getPellegrino()).poi(VIAGGIO);
 			case VIAGGIO:
 				return scorta(MomentoControllo.PRE_LOCAZIONE, this::getTempio)
+						.aOgniControllo(() -> {
+							if (nelTempio()) {
+								RegistroMissioni.sopprimiContenutoLocazione(getTempio());
+							}
+						})
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Arrivato " + Misc.conPreposizione("a", getNomeDelTempio()) + ", " + getPellegrino() + " vi ringrazia e si mette a pregare. Sua sorella aspetta notizie a "
 								+ getNomeCitta() + ".")))
 						.poi(RITORNO);

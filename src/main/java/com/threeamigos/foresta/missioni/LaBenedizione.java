@@ -31,7 +31,8 @@ import java.util.stream.Collectors;
  * <li>FAVORE, in locanda: la missione si attiva e affida il favore;</li>
  * <li>ATTESA, a fine locazione: il favore è finito;</li>
  * <li>TEMPIO, a fine locazione: se il favore è riuscito, il tempio compare sulla mappa (altrimenti FALLIMENTO);</li>
- * <li>ARRIVO, a inizio locazione, nel tempio;</li>
+ * <li>ARRIVO, a inizio locazione, nel tempio: il tempio è sicuro, niente avversari né oggetti a caso (vedi
+ * RegistroMissioni.sopprimiContenutoLocazione);</li>
  * <li>SCELTA, se nel gruppo c'è più di un personaggio in campo, o DIRETTA: la benedizione.</li>
  * </ol>
  */
@@ -192,6 +193,11 @@ public class LaBenedizione extends MissioneAPassi {
 						.poi(ARRIVO);
 			case ARRIVO:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::nelTempio)
+						.aOgniControllo(() -> {
+							if (nelTempio()) {
+								RegistroMissioni.sopprimiContenutoLocazione(getTempio());
+							}
+						})
 						.poi(() -> candidati().size() > 1 ? SCELTA : DIRETTA);
 			case SCELTA:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> true)

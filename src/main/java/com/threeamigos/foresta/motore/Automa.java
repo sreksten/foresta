@@ -39,11 +39,18 @@ import java.util.function.Function;
 import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
+// FIXME: il DisplayableCanvasRiquadroGruppo usa una modalità di scrolling differente da quella delle missioni per
+//  - esempio. I personaggi vengono fatti scrollare di tre righe per volta. Da capire se si possa andare sulla falsariga
+//  - del DisplayableCanvasRiquadroMissioni.
+// FIXME: durante un combattimento il canvas con le info sui punti vita e la barra salute è sparito e non è più
+//   - riapparso. Quando u personaggio inizia a combattere questo dovrebbe sempre riapparire. Capire perché è scomparso
+//   - e sistemare.
 // TODO: carta, forbice e sasso
 // TODO: mostrare in locazione anche i personaggi del gruppo.
 // TODO: implementare fumetto che attende chiusura
 // TODO: implementare sistema di aiuto
-// TODO: come ci sono locande sparse per la foresta, forse anche qualche negozio di armaiolo, alchimista, venditore di pergamene e incantatore male non farebbero
+// TODO: come ci sono locande sparse per la foresta, forse anche qualche negozio di armaiolo, alchimista,
+//  - venditore di pergamene e incantatore male non farebbero
 // TODO: ricontrollare l'economia del gioco partendo da economia.md (entrate, uscite, modello per livello e proposte:
 //  bottino dei nemici, preziosi che valgono col livello, missioni pagate col livello, prezzi degli ingredienti)
 // TODO: immagini degli artefatti che mancano per la rivelazione (SpriteRivelazioneArtefatto), da mettere in img/oggetti:
@@ -709,18 +716,25 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
 		gruppo.setLocazioneCorrente(locazioneCorrente);
 		locazioneCorrente.crea(gruppo, gruppoAvversario);
-		// Qui e non in crea, che molte locazioni ridefiniscono: gli avversari che una missione vuole qui, al posto di
-		// quelli della locazione...
-		RegistroMissioni.getIncontroMissione(gruppo.getCoordinate()).ifPresent(avversari -> {
+		if (RegistroMissioni.isDaSopprimere(gruppo.getCoordinate())) {
+			// Una missione è appena arrivata qui e considera il posto sicuro (un tempio, un posto di un rito...):
+			// niente avversari né oggetti a caso
 			gruppoAvversario.rimuoviPersonaggi();
-			avversari.forEach(gruppoAvversario::aggiungiPersonaggio);
-			// ...con le ondate che arrivano dopo, se la missione ne vuole (vedi LocazioneBase.impostaAzioni)
-			gruppoAvversario.setOndateSuccessive(RegistroMissioni.getOndateSuccessiveMissione(gruppo.getCoordinate()));
-		});
-		// ...e l'oggetto che una missione vuole qui, che può dipendere dagli avversari (i trofei di una caccia)
-		RegistroMissioni.getOggettoMissione(gruppo.getCoordinate(), gruppo.getClasseLocazioneCorrente(),
-						Foresta.isLocazioneVisitata(gruppo.getCoordinate()))
-				.ifPresent(locazioneCorrente::collocaOggettoMissione);
+			locazioneCorrente.rimuoviOggetto();
+		} else {
+			// Qui e non in crea, che molte locazioni ridefiniscono: gli avversari che una missione vuole qui, al posto di
+			// quelli della locazione...
+			RegistroMissioni.getIncontroMissione(gruppo.getCoordinate()).ifPresent(avversari -> {
+				gruppoAvversario.rimuoviPersonaggi();
+				avversari.forEach(gruppoAvversario::aggiungiPersonaggio);
+				// ...con le ondate che arrivano dopo, se la missione ne vuole (vedi LocazioneBase.impostaAzioni)
+				gruppoAvversario.setOndateSuccessive(RegistroMissioni.getOndateSuccessiveMissione(gruppo.getCoordinate()));
+			});
+			// ...e l'oggetto che una missione vuole qui, che può dipendere dagli avversari (i trofei di una caccia)
+			RegistroMissioni.getOggettoMissione(gruppo.getCoordinate(), gruppo.getClasseLocazioneCorrente(),
+							Foresta.isLocazioneVisitata(gruppo.getCoordinate()))
+					.ifPresent(locazioneCorrente::collocaOggettoMissione);
+		}
 		BusEventi.pubblica(new InternoPreparazioneLocazione());
 		BusEventi.pubblica(new NotificaTestoParagrafo(LineaTemporale.getDescrizioneOraDelGiorno()));
 		locazioneCorrente.descrivi(gruppo, gruppoAvversario);

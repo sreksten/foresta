@@ -25,7 +25,8 @@ import java.util.List;
  * <ol>
  * <li>LUOGO, in locazione, nella città: il posto del rito compare sulla mappa;</li>
  * <li>RACCOLTA, a fine locazione: ci sono tutti gli ingredienti;</li>
- * <li>RITO, a inizio locazione, nel posto: la domanda;</li>
+ * <li>RITO, a inizio locazione, nel posto: la domanda; il posto è sicuro, niente avversari né oggetti a caso
+ * all'arrivo (vedi RegistroMissioni.sopprimiContenutoLocazione) finché non arriva il guardiano, se c'è;</li>
  * <li>RINVIO, a inizio locazione, altrove: dopo un "non ancora", per tornare a chiedere;</li>
  * <li>GUARDIANO, a fine locazione, nel posto: chi è saltato fuori è stato sconfitto;</li>
  * <li>ERRORE, a inizio locazione: con il metodo sbagliato, la missione fallisce.</li>
@@ -190,7 +191,12 @@ public class IlRituale extends IncaricoInCitta {
 								+ " ci sono " + ingrediente.getTutti() + ": adesso il rito si può celebrare, nel posto segnato sulla mappa.")))
 						.poi(RITO);
 			case RITO:
-				Passo rito = Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::nelPosto);
+				Passo rito = Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::nelPosto)
+						.aOgniControllo(() -> {
+							if (nelPosto()) {
+								RegistroMissioni.sopprimiContenutoLocazione(getPosto());
+							}
+						});
 				rito = rituale.isConMetodi() ? rito.chiediScelta(testo(rituale.getDomanda()), getOpzioni())
 						: rito.chiediConferma(testo(rituale.getDomanda()));
 				return rito

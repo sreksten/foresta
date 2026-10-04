@@ -108,6 +108,14 @@ public class RegistroMissioni {
 	private static int prossimoClaim;
 	private static final String LOCAZIONE_OCCUPATA = "LOCAZIONE_OCCUPATA";
 
+	/**
+	 * La coordinata, se non null, dove la prossima {@code crea()} non deve generare né avversari né oggetti: una
+	 * missione (LaBenedizione, IlPellegrino, IlRituale) vi conclude al suo arrivo, in un tempio o un posto che
+	 * considera sicuro (un pellegrino non andrebbe in un tempio infestato). Si consuma una volta sola, vedi
+	 * {@link #isDaSopprimere}.
+	 */
+	private static CoordinateMD coordinataSenzaContenuto;
+
 	private static void pulisciElenchi() {
 		locazioniOccupate.clear();
 		prossimoClaim = 0;
@@ -117,6 +125,7 @@ public class RegistroMissioni {
 		elencoMissioniSecondarieCompletate.clear();
 		elencoMissioniPredefiniteFallite.clear();
 		elencoMissioniSecondarieFallite.clear();
+		coordinataSenzaContenuto = null;
 	}
 
 	/**
@@ -212,6 +221,27 @@ public class RegistroMissioni {
 		}
 		String[] parti = valore.split(",");
 		return new CoordinateMD(Integer.parseInt(parti[0]), Integer.parseInt(parti[1]));
+	}
+
+	/**
+	 * Una missione (LaBenedizione, IlPellegrino, IlRituale) segnala che è appena arrivata, nello stesso controllo
+	 * PRE_LOCAZIONE in cui lo scopre, al suo tempio o posto: lì non deve comparire niente a caso, né avversari né
+	 * oggetti, perché per la missione quel posto è sicuro. Chiamare da un {@code aOgniControllo} del passo
+	 * d'arrivo, non dalla sua azione: il passo potrebbe concludersi, ed eventualmente incatenarsi ad altri passi,
+	 * nello stesso controllo in cui arriva, prima che {@code Automa} arrivi a consumare il segnale.
+	 */
+	public static void sopprimiContenutoLocazione(CoordinateMD coordinate) {
+		coordinataSenzaContenuto = coordinate;
+	}
+
+	/**
+	 * Se quella coordinata è quella appena segnalata da {@link #sopprimiContenutoLocazione}: consuma il segnale,
+	 * che non vale più per i prossimi controlli né per altre coordinate.
+	 */
+	public static boolean isDaSopprimere(CoordinateMD coordinate) {
+		boolean soppressa = coordinataSenzaContenuto != null && coordinataSenzaContenuto.equals(coordinate);
+		coordinataSenzaContenuto = null;
+		return soppressa;
 	}
 
 	/**
@@ -324,9 +354,12 @@ public class RegistroMissioni {
 	/**
 	 * Cerca, a quadrati concentrici attorno a una casella a caso, una locazione che esiste già di quella classe
 	 * (un BOSCO da trasformare in castello, un TEMPIO...) e che sia disponibile: nessuna missione l'ha rivendicata,
-	 * oppure quella che l'ha fatto è finita, oppure è la missione stessa. Non si sceglie mai la casella in cui si
-	 * trova il gruppo, per non cambiargli la locazione sotto i piedi. La coordinata trovata viene subito
-	 * rivendicata per la missione. Vuoto se su tutta la mappa non ce n'è nessuna: la missione riproverà.
+	 * oppure quella che l'ha fatto è finita, oppure è la missione stessa. Mai una casella con un artefatto del
+	 * registro (un tempio così non è quasi certamente quello giusto: tenuto da un nido di viverne, non da chi ci
+	 * manda la missione). Non si sceglie mai la casella in cui si trova il gruppo, per non cambiargli la locazione
+	 * sotto i piedi. La coordinata trovata viene subito rivendicata per la missione; se è un TEMPIO, anche segnata
+	 * come non ancora visitata, per farla trovare come la prima volta. Vuoto se su tutta la mappa non ce n'è
+	 * nessuna: la missione riproverà.
 	 */
 	public static Optional<CoordinateMD> cerca(ClassiLocazione richiesta, Missione missione) {
 		return cerca(richiesta, missione, null);
@@ -338,8 +371,12 @@ public class RegistroMissioni {
 	public static Optional<CoordinateMD> cerca(ClassiLocazione richiesta, Missione missione, Quadrante quadrante) {
 		CoordinateMD gruppo = GruppoGiocatore.getIstanza().getCoordinate();
 		for (CoordinateMD coordinate : aQuadratiConcentrici(quadrante)) {
-			if (!coordinate.equals(gruppo) && Foresta.getLocazione(coordinate) == richiesta && isDisponibile(coordinate, missione)) {
+			if (!coordinate.equals(gruppo) && Foresta.getLocazione(coordinate) == richiesta && isDisponibile(coordinate, missione)
+					&& RegistroArtefatti.getArtefattoInLocazione(coordinate) == null) {
 				occupaLocazione(coordinate, missione);
+				if (richiesta == ClassiLocazione.TEMPIO) {
+					Foresta.setLocazioneVisitata(coordinate, false);
+				}
 				return Optional.of(coordinate);
 			}
 		}
