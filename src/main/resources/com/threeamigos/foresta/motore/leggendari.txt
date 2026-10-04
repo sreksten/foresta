@@ -54,6 +54,7 @@ SPADA_LEGGENDARIA$
     LEGGENDA=La forgiò un fabbro che voleva farla finita con i porci giganti di Malgaard, e ci riuscì fin troppo bene.;\
     LEGGENDA=Dicono che ogni fendente sussurri il nome di chi sta per cadere, e che RomyJona in persona l'abbia incantata.;\
     GUARDIANI=VIVERNA 5
+
     TIPO=SPADA;NOME=la Spada del Lunedì Mattina;CHIAVE=SPADA_DEL_CAVALIERE_SVOGLIATO;BREVE=la Spada del Lunedì Mattina;SET=CAVALIERI_SVOGLIATI;\
     DESCRIZIONE=che toglie ai nemici ogni voglia di combattere;LIVELLO=5;DANNI=18;COSTO=60;PESO=2;\
     MOD=SOGGEZIONE +4;MOD=FURIA +3;INCANTAMENTO=PSICHICO 12 0.15 Sbadiglio Contagioso;\
@@ -118,6 +119,7 @@ SCUDO_LEGGENDARIO$
     LEGGENDA=Ripara dal gelo e dalle magie, ma soprattutto dai conti salati.;\
     LEGGENDA=Quando l'esattore morì, i mercanti lo nascosero nella foresta, e speravano che nessuno lo ritrovasse più.;\
     GUARDIANI=VIVERNA 5
+
     TIPO=SCUDO;NOME=lo Scudo del Coperchio Infinito;CHIAVE=SCUDO_DELLA_CUOCA;BREVE=lo Scudo del Coperchio Infinito;\
     DESCRIZIONE=che non lascia passare niente;LIVELLO=5;COSTO=60;PESO=4;\
     MOD=PARATA +40%;MOD=COSTITUZIONE +3;INCANTAMENTO=FUOCO 12 0.15 Bollore Eterno;\
@@ -132,6 +134,7 @@ ELMO_LEGGENDARIO$
     LEGGENDA=RomyJona aveva la testa dura. Così dura che un elmo, a un certo punto, gli sembrò quasi superfluo.;\
     LEGGENDA=Se lo fece forgiare lo stesso, per gentilezza verso le spade dei nemici, che contro la sua testa si spezzavano.;\
     LEGGENDA=Chi lo indossa non cambia mai idea. Né sotto i colpi, né davanti alle prove.
+
     TIPO=ELMO;NOME=l'Elmo del Pensiero Laterale;CHIAVE=ELMO_DELL_INVENTORE;BREVE=l'Elmo del Pensiero Laterale;\
     DESCRIZIONE=che dà sempre un'idea, non sempre buona;LIVELLO=5;COSTO=60;PESO=2;\
     MOD=INTELLIGENZA +4;MOD=PERCEZIONE +4;MOD=PARATA +20%;\
@@ -146,12 +149,14 @@ MASCHERA_LEGGENDARIA$
     LEGGENDA=Quando RomyJona andava in guerra si metteva questa maschera, e i nemici si arrendevano prima di vederlo arrivare.;\
     LEGGENDA=Una volta si arrese anche il suo scudiero. Ci vollero tre giorni per convincerlo che era dalla sua parte.;\
     LEGGENDA=Dicono che sotto la maschera RomyJona sorridesse. Nessuno è mai rimasto abbastanza per controllare.
+
     TIPO=MASCHERA;NOME=gli Occhiali da Sole del Ribelle;CHIAVE=MASCHERA_DEL_RIBELLE;BREVE=gli Occhiali da Sole del Ribelle;SET=GIOVENTU_RIBELLE;\
     DESCRIZIONE=che si portano anche di notte;LIVELLO=5;COSTO=60;PESO=0.1;\
     MOD=CARISMA +4;MOD=SOGGEZIONE +3;MOD=PERCEZIONE -1;\
     LEGGENDA=Un giovane cavaliere rifiutò l'elmo di famiglia e si presentò al torneo con un paio di occhiali scuri.;\
     LEGGENDA=Non vinse nemmeno un duello, perché non vedeva niente. Ma tutte le dame del regno si innamorarono di lui.;\
     LEGGENDA=Li portava anche di notte, e infatti inciampava parecchio.
+
     TIPO=MASCHERA;NOME=la Maschera del Carnevale Perpetuo;CHIAVE=MASCHERA_DEL_MERCANTE;BREVE=la Maschera del Carnevale Perpetuo;\
     DESCRIZIONE=dietro cui nessuno ti riconosce;LIVELLO=5;COSTO=60;PESO=0.5;\
     MOD=FURTIVITA +5;MOD=CARISMA +3;MOD=PARATA +15%;\
@@ -174,6 +179,7 @@ VESTE_LEGGENDARIA$
     LEGGENDA=Il cavaliere ribelle si fece cucire una giacca con la pelle del suo primo drago. Cioè, di una lucertola molto grande.;\
     LEGGENDA=La portava con il colletto alzato e le maniche arrotolate, e i vecchi del villaggio scuotevano la testa.;\
     LEGGENDA=Le magie ci scivolano sopra, come i rimproveri.
+
     TIPO=VESTE;NOME=la Veste della Strega Stirata;CHIAVE=VESTE_DELLA_STREGA;BREVE=la Veste della Strega Stirata;\
     DESCRIZIONE=di cui le magie hanno paura;LIVELLO=5;COSTO=60;PESO=1;\
     MOD=RESISTENZA_MAGICA +6;MOD=POTERE_MAGICO +30%;MOD=FURTIVITA +3;INCANTAMENTO=MALEDIZIONE 12 0.15 Piega Perfetta;\
@@ -188,6 +194,7 @@ SCHINIERI_LEGGENDARI$
     LEGGENDA=RomyJona non bussava mai alle porte: le apriva con un calcio, con questi scarponi.;\
     LEGGENDA=I fabbri del regno chiedevano di essere pagati in anticipo, quando lo vedevano arrivare.;\
     LEGGENDA=Dove sono passati, dicono, l'erba non è più ricresciuta. Ma solo per paura.
+
     TIPO=SCHINIERI;NOME=gli Schinieri del Corridore Codardo;CHIAVE=SCHINIERI_DEL_CAVALIERE_SVOGLIATO;BREVE=gli Schinieri del Corridore Codardo;SET=CAVALIERI_SVOGLIATI;\
     DESCRIZIONE=che partono da soli;LIVELLO=5;COSTO=60;PESO=3;\
     MOD=VELOCITA +30%;MOD=PARATA +25%;MOD=FURTIVITA +3;\
