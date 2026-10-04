@@ -16,11 +16,8 @@ import java.awt.*;
 import java.awt.geom.Ellipse2D;
 import java.awt.geom.Path2D;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
-import java.util.EnumMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
-import java.util.Random;
 
 /**
  * La rivelazione di un artefatto trovato in un cofano o in un tempio: un cerchio luminoso con l'oggetto sopra,
@@ -33,7 +30,7 @@ import java.util.Random;
  */
 class SpriteRivelazioneArtefatto implements SpriteInterface {
 
-	private static final float DURATA = 3.4f;
+	private static final float DURATA = 5.0f; // 3.4f;
 	// Con altre rivelazioni in coda (un cofano nei castelli ne vale cinque) si accorcia la sosta
 	private static final float DURATA_CON_CODA = 2.2f;
 	private static final float ANTICIPAZIONE = 0.25f;
