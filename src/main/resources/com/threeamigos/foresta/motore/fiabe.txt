@@ -620,7 +620,7 @@ VINTO_COME
 	giocando a carte | giocando a freccette | scappando dai soldati del fortino vicino
 	giocando a dadi | giocando a morra | giocando a rava | scommettendo ai cavalli
 	alle corse di cani | alla lotteria nazionale | giocando in una taverna malfamata
-	a testa o croce | a sasso-carta-forbici | scommettendo sull'esito di una gara di lumache
+	a testa o croce | a sasso-carta-forbici | scommettendo sull'esito di una gara di { lumache | tartarughe }
 
 OGGETTO_SPREGEVOLE
 	un papero magico che poteva prevedere quando sarebbe finito in padella
