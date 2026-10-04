@@ -36,9 +36,9 @@ class CascataIntermezziAvvioPartitaTest {
 					e -> locazioneImpostataAlRitorno.add(partita.gruppo().getLocazioneCorrente() != null));
 
 			// La UI diventa occupata esattamente quando l'Automa sta per entrare in
-			// Stato.INZIO_LOCAZIONE, cioe' subito dopo l'ultimo intermezzo di INIZIO_GIOCO
+			// Stato.INIZIO_LOCAZIONE, cioe' subito dopo l'ultimo intermezzo di INIZIO_GIOCO
 			BusEventi.iscriviti(InternoMessaggio.class, e -> {
-				if (e.getMessaggioInterno().contains("Automa in stato " + Stato.INZIO_LOCAZIONE.name())) {
+				if (e.getMessaggioInterno().contains("Automa in stato " + Stato.INIZIO_LOCAZIONE.name())) {
 					partita.pubblica(new InternoUiOccupata());
 				}
 			});

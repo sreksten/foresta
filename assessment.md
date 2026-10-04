@@ -70,14 +70,13 @@ Valutazione dello stato del progetto al **2026-10-05**, scritta dopo la revision
 - **Codice senza utilizzatori:** il passo `COSTRUISCI` è usato solo dai test; l'interfaccia `FornitoreMissione` non è usata da nessuna classe (`gestione_missioni.md` §11).
 - **Grammatiche:** la produzione `NOTIZIE_CITTA` esiste (`src/main/resources/com/threeamigos/foresta/motore/locande.txt:831`) ma nessuna classe la usa. Le vecchie `artefatti.txt` e `artefatti_pp.txt` sono state tolte dal gioco il 2026-10-05.
 - **Immagini provvisorie:** Viandante, sacerdote e sacerdotessa usano immagini di altre classi; gli oggetti di missione condividono un sacchetto provvisorio ([`todo.md`](todo.md)).
-- **Refusi nei nomi:** `INZIO_LOCAZIONE` e `ESEECUZIONE_RESURREZIONE` compaiono in 12 punti di 3 file: rinominarli costa poco.
 - **Log di debug rimasto:** `"NOTIZIONA!!! -> "` (`locazioni/Locanda.java:366`).
 
 ## 6. Prossimi passi consigliati
 
 1. **Bilanciare il combattimento contro i boss**: è il problema che più incide sull'esperienza di gioco. Il piano è in [`artefatti_e_incantamenti.md`](artefatti_e_incantamenti.md).
 2. **Riequilibrare l'economia** partendo da [`economia.md`](economia.md), insieme al punto 1, perché bottino e prezzi crescono col livello del mondo.
-3. **Pulizie rapide**, a basso rischio e in un solo commit: rinominare `INZIO_LOCAZIONE` ed `ESEECUZIONE_RESURREZIONE`, correggere il Javadoc del 60%, togliere il log `NOTIZIONA`, usare un codice d'uscita diverso da 0 in `BufferedImageBuilder`.
+3. **Pulizie rapide**, a basso rischio e in un solo commit: correggere il Javadoc del 60%, togliere il log `NOTIZIONA`, usare un codice d'uscita diverso da 0 in `BufferedImageBuilder`.
 4. **Rendere robuste le notizie**: controllo del formato al caricamento della grammatica (o un test che produca tutte le alternative) e `null` invece dell'eccezione dopo 20 tentativi.
 5. **Decidere sulla modalità verticale**: sistemarla o toglierla. Oggi è rotta.
 6. **Separare il modello dati dalla UI**, un pezzo alla volta, iniziando dalle schermate che si toccano per altri motivi.

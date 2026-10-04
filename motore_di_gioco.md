@@ -68,11 +68,11 @@ Non esiste una funzione di transizione centralizzata: le regole su "da quale sta
 ### Gli stati (`Stato`)
 
 - **Avvio**: `LOGO_INIZIALE` (la UI traccia il logo mentre il motore precarica `ProduttoreDiTestiCasuale` e `GeneratoreArtefatti` su un thread a parte; passa a `INTRO` quando ha ricevuto sia `InternoFineLogoIniziale` sia `InternoPrecaricamentoMotoreCompletato`; i comandi si ignorano e non ci si torna più).
-- **Pre-partita**: `INTRO`, `PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE`, `FILE_DI_SALVATAGGIO_NON_VALIDO`, `PRE_GAME_ATTESA_NOME_PERSONAGGIO`, `PRE_GAME_ATTESA_SESSO_PERSONAGGIO`, `PRE_GAME_ATTESA_CLASSE_PERSONAGGIO`, `INIZIO_GIOCO`. L'ultimo mostra gli intermezzi di apertura e sta prima del ciclo perché da `INZIO_LOCAZIONE` partono i controlli delle missioni, le cui notifiche altrimenti comparirebbero durante l'intermezzo.
-- **Ciclo di locazione**: `INZIO_LOCAZIONE` (sic), `INTERMEZZO`, `ATTESA_UI_PER_INTERMEZZO`, `PREPARAZIONE_LOCAZIONE`, `IN_LOCAZIONE`, `INGRESSO_NEGOZIO`, `IN_COMBATTIMENTO`, `FINE_LOCAZIONE`, `FINE_LOCAZIONE_2`, `ATTESA_RISPOSTA_MISSIONE`. Il flusso è nel §3.
+- **Pre-partita**: `INTRO`, `PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE`, `FILE_DI_SALVATAGGIO_NON_VALIDO`, `PRE_GAME_ATTESA_NOME_PERSONAGGIO`, `PRE_GAME_ATTESA_SESSO_PERSONAGGIO`, `PRE_GAME_ATTESA_CLASSE_PERSONAGGIO`, `INIZIO_GIOCO`. L'ultimo mostra gli intermezzi di apertura e sta prima del ciclo perché da `INIZIO_LOCAZIONE` partono i controlli delle missioni, le cui notifiche altrimenti comparirebbero durante l'intermezzo.
+- **Ciclo di locazione**: `INIZIO_LOCAZIONE`, `INTERMEZZO`, `ATTESA_UI_PER_INTERMEZZO`, `PREPARAZIONE_LOCAZIONE`, `IN_LOCAZIONE`, `INGRESSO_NEGOZIO`, `IN_COMBATTIMENTO`, `FINE_LOCAZIONE`, `FINE_LOCAZIONE_2`, `ATTESA_RISPOSTA_MISSIONE`. Il flusso è nel §3.
 - **Movimento**: `ATTESA_DIREZIONE`, `SCELTA_DIREZIONE`, `SCELTA_PASSI`, `ACCAMPAMENTO`.
 - **Scelte di personaggio e oggetto**: `SCELTA_AUTOMATICA_PERSONAGGIO`, `SCELTA_PERSONAGGIO_QUALSIASI`, `SCELTA_MANUALE_PERSONAGGIO`, `SCELTA_DESTINATARIO_OGGETTO`.
-- **Incantesimi, pozioni, resurrezione**: `SCELTA_INCANTESIMO_DA_LANCIARE`, `ATTESA_INCANTESIMO_QUALSIASI`, `INCANTESIMO_SCELTO`, `ATTESA_POZIONE_SALUTE`, `ATTESA_POZIONE_SALUTE_GRANDE`, `ATTESA_POZIONE_MAGIA`, `ATTESA_POZIONE_MAGIA_GRANDE`, `SCELTA_FORMULANTE_RESURREZIONE`, `SCELTA_BERSAGLIO_RESURREZIONE`, `ESEECUZIONE_RESURREZIONE` (sic). Ogni scelta con un solo candidato viene saltata; `ANNULLA` riporta ad `ATTESA_DIREZIONE` (o alla locazione).
+- **Incantesimi, pozioni, resurrezione**: `SCELTA_INCANTESIMO_DA_LANCIARE`, `ATTESA_INCANTESIMO_QUALSIASI`, `INCANTESIMO_SCELTO`, `ATTESA_POZIONE_SALUTE`, `ATTESA_POZIONE_SALUTE_GRANDE`, `ATTESA_POZIONE_MAGIA`, `ATTESA_POZIONE_MAGIA_GRANDE`, `SCELTA_FORMULANTE_RESURREZIONE`, `SCELTA_BERSAGLIO_RESURREZIONE`, `ESECUZIONE_RESURREZIONE`. Ogni scelta con un solo candidato viene saltata; `ANNULLA` riporta ad `ATTESA_DIREZIONE` (o alla locazione).
 - **Conferme**: `ATTESA_SI_NO`, `CONFERMA_USCITA`.
 - **Schermate**: `INVENTARIO`, `MAPPA`, `TROFEI`, `SELEZIONE_SALVATAGGIO_DA_SCRIVERE`.
 - **Fine partita**: `GIOCO_PERSO`/`GIOCO_PERSO_2`, `GIOCO_VINTO`/`GIOCO_VINTO_2`, `STATISTICHE`, `ATTESA_NOME_PUNTEGGI`, `PUNTEGGI`. Dalle statistiche, se il punteggio entra in classifica si chiede il nome, lo si registra e si passa per `PUNTEGGI`, che torna all'intro; altrimenti `STATISTICHE` chiama direttamente `inizia()`. La sequenza dell'intro (loghi, pagine della storia, classifica) vive nella UI.
@@ -82,15 +82,15 @@ I comandi che il giocatore può dare (`Comando`, un enum) comprendono scelte di 
 ## 3. Il ciclo di una locazione
 
 ```
-INZIO_LOCAZIONE ─ controllo missioni PRE_LOCAZIONE ─ evento della linea temporale ─ intermezzi INIZIO_LOCAZIONE
+INIZIO_LOCAZIONE ─ controllo missioni PRE_LOCAZIONE ─ evento della linea temporale ─ intermezzi INIZIO_LOCAZIONE
    └─> PREPARAZIONE_LOCAZIONE ─ costruzione, incontri e oggetti, descrizione ─ controllo missioni IN_LOCAZIONE
          └─> IN_LOCAZIONE ⇄ IN_COMBATTIMENTO / schermate / negozi
                └─> FINE_LOCAZIONE ─ raccolta oggetto ─ controllo POST_LOCAZIONE ─ azzeramento ─ intermezzi LOCAZIONE_COMPLETATA
                      └─> FINE_LOCAZIONE_2 ─ fine tempo? personaggi a tempo, stanchezza, turni
-                           └─> ATTESA_DIREZIONE → SCELTA_DIREZIONE → SCELTA_PASSI → (movimento, ore, eventi) → INZIO_LOCAZIONE
+                           └─> ATTESA_DIREZIONE → SCELTA_DIREZIONE → SCELTA_PASSI → (movimento, ore, eventi) → INIZIO_LOCAZIONE
 ```
 
-- **Inizio.** `INZIO_LOCAZIONE` esegue il controllo delle missioni `PRE_LOCAZIONE`, poi `LineaTemporale.getEvento()` (che consuma l'ultimo evento non ancora mostrato; se il gioco è finito si va a `GIOCO_PERSO`), poi gli intermezzi del momento `INIZIO_LOCAZIONE`.
+- **Inizio.** `INIZIO_LOCAZIONE` esegue il controllo delle missioni `PRE_LOCAZIONE`, poi `LineaTemporale.getEvento()` (che consuma l'ultimo evento non ancora mostrato; se il gioco è finito si va a `GIOCO_PERSO`), poi gli intermezzi del momento `INIZIO_LOCAZIONE`.
 - **Preparazione.** `PREPARAZIONE_LOCAZIONE` azzera il gruppo avversario e la panchina, toglie gli effetti di stato, costruisce la `Locazione` della casella e la fa popolare (`crea`). Se una missione la considera sicura (`RegistroMissioni.isDaSopprimere`) non c'è nessun avversario né oggetto; altrimenti la missione può sostituire gli avversari (anche con **ondate** successive) e collocare un oggetto di missione. Poi descrive il luogo, aggiunge l'eventuale "ricordo" di una missione conclusa lì, esegue il controllo `IN_LOCAZIONE` e chiama la prima volta `impostaAzioni(..., null)`.
 - **Dentro la locazione.** `impostaAzioni(gruppo, avversari, comando)` è l'automa interno di ogni locazione: restituisce `IN_LOCAZIONE` (si aspetta il giocatore), `IN_COMBATTIMENTO` (parte il timer) o un altro stato (`FINE_LOCAZIONE`, `GIOCO_PERSO`...), che l'automa interpreta in `esitoDaStatoLocazione`. Il `null` come comando significa "fai avanzare di un passo" e in `LocazioneBase` fa trascorrere un turno di effetti di stato: per ripresentare solo i comandi (tornando da mappa o inventario) si usa `ripresentaComandi()`, che non fa avanzare nulla.
 - **Negozi di città.** Entrando in locanda, alchimista, armaiolo, venditore di pergamene o incantatore (`INGRESSO_NEGOZIO`) l'automa lascia prima scattare l'intermezzo di ingresso (momento `INGRESSO_*`), poi esegue il comando. Armaiolo e simili chiedono alla UI la loro finestra specifica; la locanda mostra il dialogo nella schermata di gioco normale.
@@ -288,6 +288,5 @@ Punti di attenzione verificati sul codice, utili per l'assessment e un eventuale
 - **Commento incoerente.** Il Javadoc di `CalcolatoreCombattimento.fasiDiAttacco` dice che la seconda arma agisce "al 60%", mentre `DOPPIA_ARMA_FATTORE_SECONDA_ARMA` vale 0,4 (il 40%, come dice il commento della costante).
 - **Dimensione della mappa variabile.** `DIMENSIONE_X`/`DIMENSIONE_Y` (in `Foresta`) oggi valgono 20 e si stanno tarando con le prove; il limite tecnico per la codifica delle coordinate è 80.
 - **Elenchi di cose da fare.** I `TODO`/`FIXME` generali che stavano in testa ad `Automa` sono ora in [`todo.md`](todo.md); quelli legati a un punto preciso del codice restano lì, e `todo.md` spiega come ritrovarli.
-- **Nomi con refusi.** `INZIO_LOCAZIONE` e `ESEECUZIONE_RESURREZIONE` sono sbagliati e usati ovunque; rinominarli è meccanico ma tocca molti file.
 - **Combattimento da bilanciare.** Resta aperto un `FIXME` sul fatto che personaggi di livello 5 pesantemente armati non scalfiscano boss come la Strega o il Lich; il piano di bilanciamento è in [`artefatti_e_incantamenti.md`](artefatti_e_incantamenti.md) ed [`economia.md`](economia.md).
 - **Punto di forza: `GrammarBean.md`.** È già un manuale e un assessment con difetti verificati sperimentalmente, ed è un buon modello per gli altri documenti.

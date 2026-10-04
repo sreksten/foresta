@@ -18,13 +18,13 @@ public enum Stato {
 	PRE_GAME_ATTESA_NOME_PERSONAGGIO,
 	PRE_GAME_ATTESA_SESSO_PERSONAGGIO,
 	PRE_GAME_ATTESA_CLASSE_PERSONAGGIO,
-	// Personaggio creato: mostra gli intermezzi di inizio partita e passa a INZIO_LOCAZIONE
+	// Personaggio creato: mostra gli intermezzi di inizio partita e passa a INIZIO_LOCAZIONE
 	INIZIO_GIOCO,
 
 	// Eventi in gioco
 
 	// Crea una nuova locazione, crea i mostri, descrive, controlla trigger pre-locazione e passa al successivo
-	INZIO_LOCAZIONE,
+	INIZIO_LOCAZIONE,
 	// Mostra le pagine di un intermezzo e attende il click o il timer per avanzare
 	INTERMEZZO,
 	// Un intermezzo è pronto a scattare ma si attende che la UI finisca le animazioni in corso
@@ -78,7 +78,7 @@ public enum Stato {
 	// Resurrezione fuori dalle locazioni: chi la lancia, su chi, esecuzione
 	SCELTA_FORMULANTE_RESURREZIONE,
 	SCELTA_BERSAGLIO_RESURREZIONE,
-	ESEECUZIONE_RESURREZIONE,
+	ESECUZIONE_RESURREZIONE,
 	MAPPA,
 
 	// Gestione salvataggi

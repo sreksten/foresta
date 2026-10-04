@@ -176,7 +176,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 		gestoriIngresso = new EnumMap<>(Stato.class);
 		gestoriIngresso.put(Stato.INIZIO_GIOCO, this::entraInStatoInizioGioco);
-		gestoriIngresso.put(Stato.INZIO_LOCAZIONE, this::entraInStatoInizioLocazione);
+		gestoriIngresso.put(Stato.INIZIO_LOCAZIONE, this::entraInStatoInizioLocazione);
 		gestoriIngresso.put(Stato.INTERMEZZO, this::entraInStatoIntermezzo);
 		gestoriIngresso.put(Stato.PREPARAZIONE_LOCAZIONE, this::entraInStatoPreparazioneLocazione);
 		gestoriIngresso.put(Stato.SCELTA_AUTOMATICA_PERSONAGGIO, this::entraInStatoSceltaAutomaticaPersonaggio);
@@ -238,7 +238,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		gestoriComando.put(Stato.ATTESA_POZIONE_MAGIA_GRANDE, this::gestisciComandoInStatoAttesaPozioneMagiaGrande);
 		gestoriComando.put(Stato.SCELTA_FORMULANTE_RESURREZIONE, this::gestisciComandoInStatoSceltaFormulanteResurrezione);
 		gestoriComando.put(Stato.SCELTA_BERSAGLIO_RESURREZIONE, this::gestisciComandoInStatoSceltaBersaglioResurrezione);
-		gestoriComando.put(Stato.ESEECUZIONE_RESURREZIONE, this::gestisciComandoInStatoEsecuzioneResurrezione);
+		gestoriComando.put(Stato.ESECUZIONE_RESURREZIONE, this::gestisciComandoInStatoEsecuzioneResurrezione);
 		gestoriComando.put(Stato.MAPPA, this::gestisciComandoInStatoMappa);
 		gestoriComando.put(Stato.INVENTARIO, this::gestisciComandoInStatoInventario);
 		gestoriComando.put(Stato.TROFEI, this::gestisciComandoInStatoTrofei);
@@ -520,11 +520,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	/**
-	 * Gli intermezzi di apertura vanno mostrati prima di INZIO_LOCAZIONE: lì partono i
+	 * Gli intermezzi di apertura vanno mostrati prima di INIZIO_LOCAZIONE: lì partono i
 	 * controlli delle missioni, le cui notifiche comparirebbero già durante l'intermezzo.
 	 */
 	private Esito entraInStatoInizioGioco() {
-		return avviaIntermezzi(MomentoIntermezzo.INIZIO_GIOCO, Stato.INZIO_LOCAZIONE);
+		return avviaIntermezzi(MomentoIntermezzo.INIZIO_GIOCO, Stato.INIZIO_LOCAZIONE);
 	}
 
 	private Esito entraInStatoInizioLocazione() {
@@ -1196,7 +1196,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 		LineaTemporale.aggiungiOre(passi);
 		LineaTemporale.eventi(gruppo);
-		stato = Stato.INZIO_LOCAZIONE;
+		stato = Stato.INIZIO_LOCAZIONE;
 		return Esito.CONTINUA_CON_INGRESSO;
 	}
 
@@ -1269,7 +1269,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		// personaggio morto lo si risuscita direttamente, altrimenti si chiede quale.
 		Comando comandoRisolto = scegliPersonaggioMorto();
 		if (comandoRisolto != null) {
-			stato = Stato.ESEECUZIONE_RESURREZIONE;
+			stato = Stato.ESECUZIONE_RESURREZIONE;
 			return Esito.continuaCon(comandoRisolto);
 		}
 		return Esito.FERMATI;
@@ -1277,7 +1277,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	private Esito gestisciComandoInStatoSceltaBersaglioResurrezione(Comando comando) {
 		// Il bersaglio scelto (o ANNULLA) passa all'esecuzione
-		stato = Stato.ESEECUZIONE_RESURREZIONE;
+		stato = Stato.ESECUZIONE_RESURREZIONE;
 		return Esito.continuaCon(comando);
 	}
 
