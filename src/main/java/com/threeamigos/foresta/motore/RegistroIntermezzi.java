@@ -33,6 +33,15 @@ public class RegistroIntermezzi {
 		scattatoNelMomento = false;
 	}
 
+	/**
+	 * Se nel momento in corso è già scattato un intermezzo: usato da {@link
+	 * com.threeamigos.foresta.intermezzi.IntermezzoAccampamento} per non sovrapporsi
+	 * all'intermezzo di una missione (vedi LaLealta) già mostrato in questo stesso momento.
+	 */
+	public static boolean isScattatoNelMomento() {
+		return scattatoNelMomento;
+	}
+
 	private static IntermezziMD getIntermezziMD() {
 		return ModelloDati.getIstanza().getIntermezziMD();
 	}

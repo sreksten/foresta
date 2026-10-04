@@ -60,7 +60,7 @@ class ScenarioLealtaTest {
             Guerriera bruna = new Guerriera("Bruna", 1);
             LaLealta lealta = preparaLAccampamento(partita, bruna);
             partita.nonSaltareIntermezzi();
-            partita.eventi().ascolta(NotificaPaginaIntermezzo.class);
+            partita.eventi().svuota();
             partita.comando(Comando.ACCAMPAMENTO);
 
             // La confidenza intorno al fuoco, dopo la scena del primo accampamento: parla Bruna, risponde il capo
@@ -70,6 +70,8 @@ class ScenarioLealtaTest {
             partita.saltaIntermezzi();
             List<String> scene = partita.eventi().tutti(NotificaPaginaIntermezzo.class).stream().map(ScenarioLealtaTest::battute)
                     .collect(Collectors.toList());
+            // Solo la confidenza di Bruna: l'intermezzo normale dell'accampamento non deve sovrapporsi (vedi IntermezzoAccampamento)
+            assertEquals(1, scene.size(), String.valueOf(scene));
             assertEquals("Ho un debito. Con chi? Con dei goblin.", scene.get(scene.size() - 1), String.valueOf(scene));
             partita.assertStato(Stato.SCELTA_DIREZIONE);
             assertTrue(lealta.isIntermezzoPassoMostrato("INCONTRO"));
