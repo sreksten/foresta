@@ -155,7 +155,7 @@ public class CalcolatoreCombattimento {
 
     /**
      * Le fasi di attacco di un turno: l'arma principale e, per chi combatte con due armi, quella nella
-     * mano secondaria, al 60% (Costanti.DOPPIA_ARMA_FATTORE_SECONDA_ARMA).
+     * mano secondaria, al 40% (Costanti.DOPPIA_ARMA_FATTORE_SECONDA_ARMA).
      */
     public static List<FaseDiAttacco> fasiDiAttacco(Personaggio attaccante) {
         List<FaseDiAttacco> fasi = new ArrayList<>();

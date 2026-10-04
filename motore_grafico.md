@@ -177,5 +177,5 @@ Il **notiziario** (`Notiziario`) è un ticker a scorrimento orizzontale in una f
 - **Due rappresentazioni dell'orientamento**: l'enum `Orientamento` e le costanti intere `DisplayableCanvas.ORIENTAMENTO_*`, tradotte in `ForestaUI`. Passare direttamente l'enum eliminerebbe la conversione.
 - **Doppio click.** Il rinvio di 175 ms ha i due limiti descritti in §2 (timer non fermato al cambio di schermata, intervallo non quello del sistema).
 - **Stato di dominio letto dalla UI.** Il notiziario e la mappa a tutto schermo leggono la lista viva delle notizie a ogni fotogramma.
-- **Errore fatale per le risorse di base.** `buildBufferedImage` chiude il gioco con `System.exit(0)` (codice di uscita 0, come se fosse una chiusura normale) se una risorsa manca: è coerente con "fail fast", ma il codice 0 nasconde l'errore a chi lancia il gioco da uno script.
+- **Errore fatale per le risorse di base.** `buildBufferedImage` chiude il gioco con `System.exit(1)` se una risorsa manca, dopo averlo scritto nel log: è una scelta "fail fast", senza un messaggio a video per il giocatore.
 - **`TracciatoreLogo`** è generico, ben documentato e isolato dal resto: un buon candidato per essere estratto in un modulo a sé.

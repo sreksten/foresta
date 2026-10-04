@@ -50,19 +50,17 @@ Valutazione dello stato del progetto al **2026-10-05**, scritta dopo la revision
 1. **La UI legge e chiama il dominio direttamente.** 29 file di `ui` importano classi di `motore` (`GruppoGiocatore` in 12) e `DisplayableCanvas` chiama gli `Automa*` dei negozi ricevuti con gli eventi (`ui/DisplayableCanvas.java:782`, `:810`). Il bus separa i comandi, non lo stato. **Giudizio:** è il limite architetturale più importante, perché rende impossibile cambiare il modello senza toccare la UI. La direzione proposta è separare un modello dati in sola lettura per la UI ([`todo.md`](todo.md)). Non è urgente: conviene farlo un pezzo alla volta, partendo dalle schermate che si toccano comunque.
 2. **Classi molto grandi.** `PersonaggioBase` 2072 righe, `Costanti` 2054 (circa 1870 costanti), `Automa` 1976 (circa 70 gestori, una trentina di campi di stato), `LocazioneBase` 1522, `DisplayableCanvas` 1296. Ogni funzione nuova aggiunge a `Automa` uno stato e un gestore, e a `DisplayableCanvas` modifiche in più punti. **Giudizio:** meglio estrarre sotto-automi (come già fatto per negozi e incantatore con `AutomaScambiatoreArtefatti`) quando si interviene su una zona, invece di un grande refactoring.
 3. **Stato globale statico.** `Foresta` (28 metodi `public static`), `RegistroMissioni` (32), i singleton dei gruppi. `PartitaDiTest` lo azzera prima di ogni scenario, quindi i test funzionano, ma un solo processo può tenere una sola partita. **Giudizio:** accettabile per un gioco single-player; da non estendere.
-4. **Due stili di missione.** Le principali e le secondarie più vecchie (18 classi su `MissioneBase`) non hanno intermezzi per passo, domande, contatori e ripieghi; le altre (23 classi a passi più le figlie) sì (`gestione_missioni.md` §12). **Giudizio:** portare le principali sui passi le renderebbe più ricche, ma solo se si vuole cambiarne il contenuto.
-5. **Contratto implicito di `impostaAzioni(..., null)`**, che vuol dire sia "prima entrata" sia "avanza di un passo" (`motore_di_gioco.md` §13).
+3. **Due stili di missione.** Le principali e le secondarie più vecchie (18 classi su `MissioneBase`) non hanno intermezzi per passo, domande, contatori e ripieghi; le altre (23 classi a passi più le figlie) sì (`gestione_missioni.md` §12). **Giudizio:** portare le principali sui passi le renderebbe più ricche, ma solo se si vuole cambiarne il contenuto.
+4. **Contratto implicito di `impostaAzioni(..., null)`**, che vuol dire sia "prima entrata" sia "avanza di un passo" (`motore_di_gioco.md` §13).
 
 ## 4. Rischi tecnici
 
 | Rischio | Fatto | Gravità |
 | :--- | :--- | :--- |
 | Notizie malformate | `getNotiziaLocanda` fa `substring` sul primo `-` senza controllarlo (`motore/ProduttoreDiTestiCasuale.java:221-222`) e dopo 20 tentativi lancia `IllegalStateException` (`:217`), possibile con un gruppo piccolo | Media: un'eccezione sull'EDT all'uscita da una locanda |
-| Risorsa grafica mancante | `System.exit(0)` (`ui/BufferedImageBuilder.java:24`): codice 0, come una chiusura normale | Bassa, ma nasconde l'errore a chi lancia da script |
 | Copertura della UI | 22% delle righe di `ui` (5570 righe), 54% di `personaggi`, 23% di `offerte` (report JaCoCo in `target/site/jacoco`) | Media: i bug di layout si scoprono solo giocando |
 | Salvataggi senza versione | Formato a `|` senza numero di versione (`motore_di_gioco.md` §5) | Bassa: la compatibilità con i salvataggi vecchi non è un obiettivo |
 | Layout manuale | `setLayout(null)` e coordinate sommate a mano (`motore_grafico.md` §12) | Bassa per l'estetica pixel-perfect voluta; cara da cambiare |
-| Commento incoerente | Il Javadoc dice che la seconda arma agisce "al 60%" (`motore/CalcolatoreCombattimento.java:158`), la costante vale 0,4 (`motore/Costanti.java:38`) | Bassa, ma fuorviante per chi bilancia |
 
 ## 5. Coerenza del contenuto
 
@@ -70,18 +68,16 @@ Valutazione dello stato del progetto al **2026-10-05**, scritta dopo la revision
 - **Codice senza utilizzatori:** il passo `COSTRUISCI` è usato solo dai test; l'interfaccia `FornitoreMissione` non è usata da nessuna classe (`gestione_missioni.md` §11).
 - **Grammatiche:** la produzione `NOTIZIE_CITTA` esiste (`src/main/resources/com/threeamigos/foresta/motore/locande.txt:831`) ma nessuna classe la usa. Le vecchie `artefatti.txt` e `artefatti_pp.txt` sono state tolte dal gioco il 2026-10-05.
 - **Immagini provvisorie:** Viandante, sacerdote e sacerdotessa usano immagini di altre classi; gli oggetti di missione condividono un sacchetto provvisorio ([`todo.md`](todo.md)).
-- **Log di debug rimasto:** `"NOTIZIONA!!! -> "` (`locazioni/Locanda.java:366`).
 
 ## 6. Prossimi passi consigliati
 
 1. **Bilanciare il combattimento contro i boss**: è il problema che più incide sull'esperienza di gioco. Il piano è in [`artefatti_e_incantamenti.md`](artefatti_e_incantamenti.md).
 2. **Riequilibrare l'economia** partendo da [`economia.md`](economia.md), insieme al punto 1, perché bottino e prezzi crescono col livello del mondo.
-3. **Pulizie rapide**, a basso rischio e in un solo commit: correggere il Javadoc del 60%, togliere il log `NOTIZIONA`, usare un codice d'uscita diverso da 0 in `BufferedImageBuilder`.
-4. **Rendere robuste le notizie**: controllo del formato al caricamento della grammatica (o un test che produca tutte le alternative) e `null` invece dell'eccezione dopo 20 tentativi.
-5. **Decidere sulla modalità verticale**: sistemarla o toglierla. Oggi è rotta.
-6. **Separare il modello dati dalla UI**, un pezzo alla volta, iniziando dalle schermate che si toccano per altri motivi.
-7. **Un test sui commenti `// Coperto da:`** dei `TipoMissione`, prima di aggiungere nuove famiglie di missioni.
-8. **Immagini mancanti** (artefatti, Viandante, sacerdoti, oggetti di missione), quando c'è tempo per la grafica.
+3. **Rendere robuste le notizie**: controllo del formato al caricamento della grammatica (o un test che produca tutte le alternative) e `null` invece dell'eccezione dopo 20 tentativi.
+4. **Decidere sulla modalità verticale**: sistemarla o toglierla. Oggi è rotta.
+5. **Separare il modello dati dalla UI**, un pezzo alla volta, iniziando dalle schermate che si toccano per altri motivi.
+6. **Un test sui commenti `// Coperto da:`** dei `TipoMissione`, prima di aggiungere nuove famiglie di missioni.
+7. **Immagini mancanti** (artefatti, Viandante, sacerdoti, oggetti di missione), quando c'è tempo per la grafica.
 
 ## 7. Come è stato fatto
 

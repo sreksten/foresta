@@ -21,7 +21,9 @@ public class BufferedImageBuilder {
 		if (resource != null && !resource.isEmpty()) {
 			BufferedImage immagine = provaACaricare(resource);
 			if (immagine == null) {
-				System.exit(0);
+				// Codice d'uscita diverso da 0, perché chi lancia il gioco da uno script veda l'errore
+				Logger.log("Risorsa grafica di base mancante o illeggibile: " + resource);
+				System.exit(1);
 			}
 			return immagine;
 		}

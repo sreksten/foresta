@@ -363,7 +363,6 @@ public class Locanda extends LocazioneBase {
 	 */
 	private void generaNotizia() {
 		Notizia notizia = ProduttoreDiTestiCasuale.getNotiziaLocanda(getIdentificativo(), getNome(), getNomeLocandiere());
-		Logger.log("NOTIZIONA!!! -> " + notizia.getId() + notizia.getCorpo());
 		BusEventi.pubblica(new NotificaTestoParagrafo(notizia.getCorpo()));
 		BusEventi.pubblica(new NotificaNotizia(notizia));
 	}
