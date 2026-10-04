@@ -47,4 +47,9 @@ public class CoordinateMD {
 	public int hashCode() {
 		return Costanti.MAX_DIMENSIONE_LATO_FORESTA * x + y;
 	}
+
+	@Override
+	public String toString() {
+		return "(" + x + ", " + y + ")";
+	}
 }
