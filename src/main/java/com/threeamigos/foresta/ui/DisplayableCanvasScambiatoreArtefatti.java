@@ -6,9 +6,9 @@ import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto;
-import com.threeamigos.foresta.motore.RegoleSetLeggendari;
 import com.threeamigos.foresta.motore.AutomaScambiatoreArtefatti;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.RegoleSetLeggendari;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.tipi.SupertipoArtefatto;
@@ -250,15 +250,16 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
                         null, artefatto);
                 for (ModificatoreAttributo modificatore : artefatto.getModificatori()) {
                     String valore;
+                    int valoreIntero = (int) modificatore.getQuantita();
                     switch (modificatore.getTipoModificatoreAttributo()) {
                         case AUMENTO_FISSO:
-                            valore = (modificatore.getQuantita() < 0 ? "-" : "+") + (int) modificatore.getQuantita();
+                            valore = segno(valoreIntero) + valoreIntero;
                             break;
                         case AUMENTO_PERCENTUALE:
-                            valore = (modificatore.getQuantita() < 0 ? "-" : "+") + (int) modificatore.getQuantita() + "%";
+                            valore = segno(valoreIntero) + valoreIntero + "%";
                             break;
                         case QUANTITA_ASSOLUTA:
-                            valore = "Porta a " + (int) modificatore.getQuantita();
+                            valore = "Porta a " + valoreIntero;
                             break;
                         default:
                             valore = "";
@@ -286,7 +287,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
                     int bonusFisso = incantamento.getDannoBonusFisso();
                     nodo.creaNodo(
                             incantamento.getTipoDannoElementale().getNome(), font, coloreAttributi,
-                            (bonusFisso < 0 ? "-" : "+") + bonusFisso +
+                            segno(bonusFisso) + bonusFisso +
                                     " + " + (int) (incantamento.getCoefficienteScala() * 100) + "%", font, coloreAttributi,
                             null, null, null,
                             null, artefatto);
@@ -295,6 +296,10 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         }
 
         return componenteScorrevole;
+    }
+
+    private static String segno(int valore) {
+        return valore < 0 ? "" : "+";
     }
 
     /**
