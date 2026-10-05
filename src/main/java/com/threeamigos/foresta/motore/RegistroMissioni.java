@@ -5,7 +5,7 @@ import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
 import com.threeamigos.foresta.eventi.interni.InternoPassaggioInosservato;
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaAperturaFinestraCombattimento;
-import com.threeamigos.foresta.missioni.ClasseMissione;
+import com.threeamigos.foresta.missioni.FabbricaMissioni;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.SconfiggiIlDrago;
@@ -16,6 +16,7 @@ import com.threeamigos.foresta.motore.modellodati.RegistroMissioniMD;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.ModalitaDiProva;
 
@@ -81,7 +82,7 @@ public class RegistroMissioni {
 		private final boolean diProva;
 
 		public Missione getIstanza() {
-			return classeMissione.getIstanza();
+			return FabbricaMissioni.crea(classeMissione);
 		}
 
 		public static boolean contieneMissione(String id) {
@@ -583,7 +584,7 @@ public class RegistroMissioni {
 	 * e ricorre sui figli.
 	 */
 	private static Missione ricostruisci(MissioneMD missioneMD) {
-		return ricostruisci(missioneMD.getClasse().getIstanza(), missioneMD);
+		return ricostruisci(FabbricaMissioni.crea(missioneMD.getClasse()), missioneMD);
 	}
 
 	private static Missione ricostruisci(Missione missione, MissioneMD missioneMD) {

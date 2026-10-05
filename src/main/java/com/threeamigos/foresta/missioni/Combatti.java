@@ -3,6 +3,7 @@ package com.threeamigos.foresta.missioni;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.tipi.ClasseMissione;
 
 public abstract class Combatti extends MissioneBase {
 

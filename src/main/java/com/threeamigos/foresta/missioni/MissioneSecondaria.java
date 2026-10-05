@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.tipi.ClasseMissione;
+
 /**
  *
  * @author Stefano Reksten

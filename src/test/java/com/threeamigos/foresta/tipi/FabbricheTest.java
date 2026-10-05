@@ -1,0 +1,46 @@
+package com.threeamigos.foresta.tipi;
+
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.locazioni.FabbricaLocazioni;
+import com.threeamigos.foresta.missioni.FabbricaMissioni;
+import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+/**
+ * Ogni identificativo dei tipi ha la sua riga nella fabbrica che lo costruisce: dimenticarla non darebbe errori
+ * finché il gioco non prova a costruire proprio quell'oggetto (per una missione, alla rilettura di un salvataggio).
+ */
+class FabbricheTest {
+
+    @BeforeEach
+    void prepara() {
+        BusEventi.azzera();
+        BusEventi.impostaConsegna(Runnable::run);
+        ModelloDati.setIstanza(new ModelloDati());
+    }
+
+    @Test
+    void ogniTipoLocazioneSiCostruisce() {
+        for (TipoLocazione tipo : TipoLocazione.values()) {
+            assertNotNull(FabbricaLocazioni.crea(tipo), tipo.name());
+        }
+    }
+
+    @Test
+    void ogniTipoPersonaggioSiCostruisce() {
+        for (TipoPersonaggio tipo : TipoPersonaggio.values()) {
+            assertNotNull(FabbricaPersonaggi.crea(tipo, 1), tipo.name());
+        }
+    }
+
+    @Test
+    void ogniClasseMissioneSiCostruisce() {
+        for (ClasseMissione classe : ClasseMissione.values()) {
+            assertNotNull(FabbricaMissioni.crea(classe), classe.name());
+        }
+    }
+}

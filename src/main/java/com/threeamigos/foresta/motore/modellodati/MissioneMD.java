@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.missioni.ClasseMissione;
+import com.threeamigos.foresta.tipi.ClasseMissione;
 
 import java.io.BufferedReader;
 import java.io.IOException;

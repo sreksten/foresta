@@ -4,6 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.motore.Dado;
+import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tools.Misc;
 
 /**

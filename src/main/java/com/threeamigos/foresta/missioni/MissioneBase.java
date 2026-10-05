@@ -6,6 +6,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissio
 import com.threeamigos.foresta.motore.GestoreProgressione;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.MissioneMD;
+import com.threeamigos.foresta.tipi.ClasseMissione;
 
 import java.util.ArrayList;
 import java.util.List;

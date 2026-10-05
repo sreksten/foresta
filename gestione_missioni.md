@@ -26,7 +26,7 @@ Ogni missione può avere **figlie** (`aggiungiMissione`, `getMissioniSecondarie`
 
 ### Classi di missione
 
-`ClasseMissione` elenca **ogni classe concreta** di missione, con il suo costruttore: è ciò che permette di ricostruire un albero dopo un caricamento, perché ogni nodo salvato dichiara la propria classe. Ne consegue una regola: **ogni missione che il gioco può creare, anche solo come figlia affidata a metà partita, deve stare in `ClasseMissione`**. Quelle che nascono con la partita stanno anche in `RegistroMissioni.TipoMissionePredefinita` (§2), che elenca solo le radici.
+`tipi.ClasseMissione` elenca **ogni classe concreta** di missione, e `missioni.FabbricaMissioni` ne tiene il costruttore: è ciò che permette di ricostruire un albero dopo un caricamento, perché ogni nodo salvato dichiara la propria classe. Ne consegue una regola: **ogni missione che il gioco può creare, anche solo come figlia affidata a metà partita, deve stare in `ClasseMissione` e in `FabbricaMissioni`** (`FabbricheTest` controlla che ogni `ClasseMissione` si costruisca). Quelle che nascono con la partita stanno anche in `RegistroMissioni.TipoMissionePredefinita` (§2), che elenca solo le radici.
 
 Le missioni si dividono per come sono scritte:
 - **a mano**, direttamente su `MissioneBase`: le principali (`SconfiggiIlDrago` e le quattro `Sconfiggi*` figlie), le missioni di prova, e alcune secondarie semplici (`Combatti` e le sue derivate, `VisitaLocanda`, `MuoviALocazione`, `CronacheDiUnFegatoEroico`, `NessunBoccaleLasciatoIndietro`, `DisturbatoreDellaQuietePubblica`, `MissioneSecondaria`);
@@ -177,7 +177,7 @@ Due famiglie:
 ## 9. Come si scrive una missione nuova
 
 1. Estendere `MissioneAPassi` (o `IncaricoInCitta` per un incarico) e implementare `passoIniziale()` e `costruisciPasso(id)`, componendo i passi già pronti di [`passi_missioni.md`](passi_missioni.md) e collegandoli con `poi`.
-2. Aggiungerla a `ClasseMissione` (**obbligatorio**, altrimenti non si ricostruisce dopo un caricamento) e, se deve esistere dall'inizio, a `RegistroMissioni.TipoMissionePredefinita`.
+2. Aggiungerla a `ClasseMissione` e a `FabbricaMissioni` (**obbligatorio**, altrimenti non si ricostruisce dopo un caricamento) e, se deve esistere dall'inizio, a `RegistroMissioni.TipoMissionePredefinita`.
 3. Salvare in proprietà (`aggiungiProprieta` o `parametro`) tutto ciò che deve sopravvivere: i passi non si salvano e i campi Java si perdono.
 4. Se la condizione di un passo ha effetti (pesca un nome, cambia lo stato), spostarli nell'azione: la condizione può essere valutata più volte e per i passi con intermezzo anche in anticipo (`haUnIntermezzoInArrivo`).
 5. Se la missione vuole un luogo, rivendicarlo con `cercaLocazione` (o `RegistroMissioni.cerca`/`cercaOCostruisci`) e dare un `getRicordoDellaLocazione()`.

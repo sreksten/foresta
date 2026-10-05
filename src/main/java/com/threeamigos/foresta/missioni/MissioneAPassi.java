@@ -23,6 +23,7 @@ import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Viandante;
+import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -881,7 +882,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 			return;
 		}
 		aggiungiProprieta(GIA_RIPETUTA, AFFERMATIVO);
-		Missione nuova = getModelloDati().getClasse().getIstanza();
+		Missione nuova = FabbricaMissioni.crea(getModelloDati().getClasse());
 		nuova.aggiungiProprieta(DISPONIBILE_DALLE, String.valueOf(oreDiGioco() + getOreFraUnaMissioneELAltra()));
 		RegistroMissioni.aggiungiMissioneSecondaria(nuova);
 	}
