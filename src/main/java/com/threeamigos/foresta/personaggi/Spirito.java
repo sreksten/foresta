@@ -55,11 +55,6 @@ public class Spirito extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getLivellamentoSalute() {
-		return Costanti.SPIRITO_LIVELLAMENTO_SALUTE;
-	}
-
-	@Override
 	public double getMagiaBase() {
 		return Costanti.SPIRITO_MAGIA_BASE;
 	}

@@ -53,11 +53,6 @@ public class Folletto extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getLivellamentoSalute() {
-		return Costanti.FOLLETTO_LIVELLAMENTO_SALUTE;
-	}
-
-	@Override
 	public double getMagiaBase() {
 		return Costanti.FOLLETTO_MAGIA_BASE;
 	}

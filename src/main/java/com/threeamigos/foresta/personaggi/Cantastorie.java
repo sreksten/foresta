@@ -56,11 +56,6 @@ public class Cantastorie extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getLivellamentoSalute() {
-		return Costanti.CANTASTORIE_LIVELLAMENTO_SALUTE;
-	}
-
-	@Override
 	public double getMagiaBase() {
 		return Costanti.CANTASTORIE_MAGIA_BASE;
 	}

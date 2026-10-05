@@ -53,11 +53,6 @@ public class Gargoyle extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getLivellamentoSalute() {
-		return Costanti.GARGOYLE_LIVELLAMENTO_SALUTE;
-	}
-
-	@Override
 	public double getMagiaBase() {
 		return Costanti.GARGOYLE_MAGIA_BASE;
 	}

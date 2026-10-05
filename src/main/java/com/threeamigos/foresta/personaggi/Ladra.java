@@ -56,11 +56,6 @@ public class Ladra extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getLivellamentoSalute() {
-		return Costanti.LADRA_LIVELLAMENTO_SALUTE;
-	}
-
-	@Override
 	public double getMagiaBase() {
 		return Costanti.LADRA_MAGIA_BASE;
 	}

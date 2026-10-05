@@ -53,11 +53,6 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getLivellamentoSalute() {
-		return Costanti.SCHELETRO_LIVELLAMENTO_SALUTE;
-	}
-
-	@Override
 	public double getMagiaBase() {
 		return Costanti.SCHELETRO_MAGIA_BASE;
 	}

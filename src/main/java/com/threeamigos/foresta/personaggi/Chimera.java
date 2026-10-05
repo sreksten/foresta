@@ -49,11 +49,6 @@ public class Chimera extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getLivellamentoSalute() {
-		return Costanti.CHIMERA_LIVELLAMENTO_SALUTE;
-	}
-
-	@Override
 	public double getMagiaBase() {
 		return Costanti.CHIMERA_MAGIA_BASE;
 	}

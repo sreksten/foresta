@@ -244,7 +244,6 @@ public class Costanti {
     public static final int BARDO_PUNTI_ESPERIENZA = 25;
 
     public static final int BARDO_SALUTE_BASE = 105;
-    public static final int BARDO_LIVELLAMENTO_SALUTE = 125;
     public static final int BARDO_MAGIA_BASE = 40;
     public static final int BARDO_LIVELLAMENTO_MAGIA = 18;
     public static final double BARDO_MOLTIPLICATORE_CARICO = 0.9;
@@ -297,7 +296,6 @@ public class Costanti {
     public static final int CANTASTORIE_PUNTI_ESPERIENZA = 25;
 
     public static final int CANTASTORIE_SALUTE_BASE = 105;
-    public static final int CANTASTORIE_LIVELLAMENTO_SALUTE = 125;
     public static final int CANTASTORIE_MAGIA_BASE = 40;
     public static final int CANTASTORIE_LIVELLAMENTO_MAGIA = 18;
     public static final double CANTASTORIE_MOLTIPLICATORE_CARICO = 0.85;
@@ -350,7 +348,6 @@ public class Costanti {
     public static final int ELFA_PUNTI_ESPERIENZA = 25;
 
     public static final int ELFA_SALUTE_BASE = 105;
-    public static final int ELFA_LIVELLAMENTO_SALUTE = 130;
     public static final int ELFA_MAGIA_BASE = 45;
     public static final int ELFA_LIVELLAMENTO_MAGIA = 22;
     public static final double ELFA_MOLTIPLICATORE_CARICO = 0.85;
@@ -403,7 +400,6 @@ public class Costanti {
     public static final int ELFO_PUNTI_ESPERIENZA = 25;
 
     public static final int ELFO_SALUTE_BASE = 105;
-    public static final int ELFO_LIVELLAMENTO_SALUTE = 130;
     public static final int ELFO_MAGIA_BASE = 45;
     public static final int ELFO_LIVELLAMENTO_MAGIA = 22;
     public static final double ELFO_MOLTIPLICATORE_CARICO = 0.9;
@@ -456,7 +452,6 @@ public class Costanti {
     public static final int GUERRIERA_PUNTI_ESPERIENZA = 25;
 
     public static final int GUERRIERA_SALUTE_BASE = 150;
-    public static final int GUERRIERA_LIVELLAMENTO_SALUTE = 185;
     public static final int GUERRIERA_MAGIA_BASE = 20;
     public static final int GUERRIERA_LIVELLAMENTO_MAGIA = 6;
     public static final double GUERRIERA_MOLTIPLICATORE_CARICO = 1.2;
@@ -509,7 +504,6 @@ public class Costanti {
     public static final int GUERRIERO_PUNTI_ESPERIENZA = 25;
 
     public static final int GUERRIERO_SALUTE_BASE = 150;
-    public static final int GUERRIERO_LIVELLAMENTO_SALUTE = 185;
     public static final int GUERRIERO_MAGIA_BASE = 20;
     public static final int GUERRIERO_LIVELLAMENTO_MAGIA = 6;
     public static final double GUERRIERO_MOLTIPLICATORE_CARICO = 1.25;
@@ -562,7 +556,6 @@ public class Costanti {
     public static final int LADRA_PUNTI_ESPERIENZA = 25;
 
     public static final int LADRA_SALUTE_BASE = 100;
-    public static final int LADRA_LIVELLAMENTO_SALUTE = 130;
     public static final int LADRA_MAGIA_BASE = 25;
     public static final int LADRA_LIVELLAMENTO_MAGIA = 8;
     public static final double LADRA_MOLTIPLICATORE_CARICO = 0.95;
@@ -615,7 +608,6 @@ public class Costanti {
     public static final int LADRO_PUNTI_ESPERIENZA = 25;
 
     public static final int LADRO_SALUTE_BASE = 100;
-    public static final int LADRO_LIVELLAMENTO_SALUTE = 130;
     public static final int LADRO_MAGIA_BASE = 25;
     public static final int LADRO_LIVELLAMENTO_MAGIA = 8;
     public static final double LADRO_MOLTIPLICATORE_CARICO = 1.0;
@@ -668,7 +660,6 @@ public class Costanti {
     public static final int MAGA_PUNTI_ESPERIENZA = 25;
 
     public static final int MAGA_SALUTE_BASE = 80;
-    public static final int MAGA_LIVELLAMENTO_SALUTE = 95;
     public static final int MAGA_MAGIA_BASE = 60;
     public static final int MAGA_LIVELLAMENTO_MAGIA = 34;
     public static final double MAGA_MOLTIPLICATORE_CARICO = 0.75;
@@ -721,7 +712,6 @@ public class Costanti {
     public static final int MAGO_PUNTI_ESPERIENZA = 25;
 
     public static final int MAGO_SALUTE_BASE = 80;
-    public static final int MAGO_LIVELLAMENTO_SALUTE = 95;
     public static final int MAGO_MAGIA_BASE = 60;
     public static final int MAGO_LIVELLAMENTO_MAGIA = 34;
     public static final double MAGO_MOLTIPLICATORE_CARICO = 0.8;
@@ -776,7 +766,6 @@ public class Costanti {
     public static final int OMBRAFIAMMA_PUNTI_ESPERIENZA = 100;
 
     public static final int OMBRAFIAMMA_SALUTE_BASE = 140;
-    public static final int OMBRAFIAMMA_LIVELLAMENTO_SALUTE = 175;
     public static final int OMBRAFIAMMA_MAGIA_BASE = 50;
     public static final int OMBRAFIAMMA_LIVELLAMENTO_MAGIA = 20;
     public static final double OMBRAFIAMMA_MOLTIPLICATORE_CARICO = 90;
@@ -831,7 +820,6 @@ public class Costanti {
     public static final int ARPIA_PUNTI_ESPERIENZA = 15;
 
     public static final int ARPIA_SALUTE_BASE = 95;
-    public static final int ARPIA_LIVELLAMENTO_SALUTE = 120;
     public static final int ARPIA_MAGIA_BASE = 35;
     public static final int ARPIA_LIVELLAMENTO_MAGIA = 12;
     public static final double ARPIA_MOLTIPLICATORE_CARICO = 0.7;
@@ -882,7 +870,6 @@ public class Costanti {
     public static final int CENTAURO_PUNTI_ESPERIENZA = 40;
 
     public static final int CENTAURO_SALUTE_BASE = 125;
-    public static final int CENTAURO_LIVELLAMENTO_SALUTE = 150;
     public static final int CENTAURO_MAGIA_BASE = 15;
     public static final int CENTAURO_LIVELLAMENTO_MAGIA = 4;
     public static final double CENTAURO_MOLTIPLICATORE_CARICO = 2.0;
@@ -935,7 +922,6 @@ public class Costanti {
     public static final int CHIMERA_PUNTI_ESPERIENZA = 40;
 
     public static final int CHIMERA_SALUTE_BASE = 120;
-    public static final int CHIMERA_LIVELLAMENTO_SALUTE = 140;
     public static final int CHIMERA_MAGIA_BASE = 30;
     public static final int CHIMERA_LIVELLAMENTO_MAGIA = 8;
     public static final double CHIMERA_MOLTIPLICATORE_CARICO = 2.5;
@@ -986,7 +972,6 @@ public class Costanti {
     public static final int CHIMERADRAGO_PUNTI_ESPERIENZA = 70;
 
     public static final int CHIMERADRAGO_SALUTE_BASE = 240;
-    public static final int CHIMERADRAGO_LIVELLAMENTO_SALUTE = 280;
     public static final int CHIMERADRAGO_MAGIA_BASE = 60;
     public static final int CHIMERADRAGO_LIVELLAMENTO_MAGIA = 16;
     public static final double CHIMERADRAGO_MOLTIPLICATORE_CARICO = 6.0;
@@ -1037,7 +1022,6 @@ public class Costanti {
     public static final int EREMITA_PUNTI_ESPERIENZA = 15;
 
     public static final int EREMITA_SALUTE_BASE = 90;
-    public static final int EREMITA_LIVELLAMENTO_SALUTE = 110;
     public static final int EREMITA_MAGIA_BASE = 50;
     public static final int EREMITA_LIVELLAMENTO_MAGIA = 25;
     public static final double EREMITA_MOLTIPLICATORE_CARICO = 0.8;
@@ -1090,7 +1074,6 @@ public class Costanti {
     public static final int FANTASMA_PUNTI_ESPERIENZA = 15;
 
     public static final int FANTASMA_SALUTE_BASE = 65;
-    public static final int FANTASMA_LIVELLAMENTO_SALUTE = 75;
     public static final int FANTASMA_MAGIA_BASE = 30;
     public static final int FANTASMA_LIVELLAMENTO_MAGIA = 15;
     public static final double FANTASMA_MOLTIPLICATORE_CARICO = 0.0;
@@ -1141,7 +1124,6 @@ public class Costanti {
     public static final int FOLLETTO_PUNTI_ESPERIENZA = 15;
 
     public static final int FOLLETTO_SALUTE_BASE = 45;
-    public static final int FOLLETTO_LIVELLAMENTO_SALUTE = 55;
     public static final int FOLLETTO_MAGIA_BASE = 65;
     public static final int FOLLETTO_LIVELLAMENTO_MAGIA = 28;
     public static final double FOLLETTO_MOLTIPLICATORE_CARICO = 0.2;
@@ -1192,7 +1174,6 @@ public class Costanti {
     public static final int GARGOYLE_PUNTI_ESPERIENZA = 40;
 
     public static final int GARGOYLE_SALUTE_BASE = 135;
-    public static final int GARGOYLE_LIVELLAMENTO_SALUTE = 145;
     public static final int GARGOYLE_MAGIA_BASE = 25;
     public static final int GARGOYLE_LIVELLAMENTO_MAGIA = 6;
     public static final double GARGOYLE_MOLTIPLICATORE_CARICO = 1.4;
@@ -1243,7 +1224,6 @@ public class Costanti {
     public static final int GIGANTE_PUNTI_ESPERIENZA = 70;
 
     public static final int GIGANTE_SALUTE_BASE = 250;
-    public static final int GIGANTE_LIVELLAMENTO_SALUTE = 300;
     public static final int GIGANTE_MAGIA_BASE = 0;
     public static final int GIGANTE_LIVELLAMENTO_MAGIA = 0;
     public static final double GIGANTE_MOLTIPLICATORE_CARICO = 4.5;
@@ -1296,7 +1276,6 @@ public class Costanti {
     public static final int GOBLIN_PUNTI_ESPERIENZA = 15;
 
     public static final int GOBLIN_SALUTE_BASE = 60;
-    public static final int GOBLIN_LIVELLAMENTO_SALUTE = 75;
     public static final int GOBLIN_MAGIA_BASE = 5;
     public static final int GOBLIN_LIVELLAMENTO_MAGIA = 2;
     public static final double GOBLIN_MOLTIPLICATORE_CARICO = 0.6;
@@ -1349,7 +1328,6 @@ public class Costanti {
     public static final int HOBGOBLIN_PUNTI_ESPERIENZA = 15;
 
     public static final int HOBGOBLIN_SALUTE_BASE = 85;
-    public static final int HOBGOBLIN_LIVELLAMENTO_SALUTE = 100;
     public static final int HOBGOBLIN_MAGIA_BASE = 10;
     public static final int HOBGOBLIN_LIVELLAMENTO_MAGIA = 4;
     public static final double HOBGOBLIN_MOLTIPLICATORE_CARICO = 1.1;
@@ -1402,7 +1380,6 @@ public class Costanti {
     public static final int MINOTAURO_PUNTI_ESPERIENZA = 40;
 
     public static final int MINOTAURO_SALUTE_BASE = 160;
-    public static final int MINOTAURO_LIVELLAMENTO_SALUTE = 200;
     public static final int MINOTAURO_MAGIA_BASE = 0;
     public static final int MINOTAURO_LIVELLAMENTO_MAGIA = 0;
     public static final double MINOTAURO_MOLTIPLICATORE_CARICO = 2.2;
@@ -1455,7 +1432,6 @@ public class Costanti {
     public static final int OMBRANERA_PUNTI_ESPERIENZA = 40;
 
     public static final int OMBRANERA_SALUTE_BASE = 90;
-    public static final int OMBRANERA_LIVELLAMENTO_SALUTE = 115;
     public static final int OMBRANERA_MAGIA_BASE = 40;
     public static final int OMBRANERA_LIVELLAMENTO_MAGIA = 20;
     public static final double OMBRANERA_MOLTIPLICATORE_CARICO = 0.0;
@@ -1506,7 +1482,6 @@ public class Costanti {
     public static final int SCHELETRO_PUNTI_ESPERIENZA = 15;
 
     public static final int SCHELETRO_SALUTE_BASE = 70;
-    public static final int SCHELETRO_LIVELLAMENTO_SALUTE = 85;
     public static final int SCHELETRO_MAGIA_BASE = 0;
     public static final int SCHELETRO_LIVELLAMENTO_MAGIA = 0;
     public static final double SCHELETRO_MOLTIPLICATORE_CARICO = 1.1;
@@ -1557,7 +1532,6 @@ public class Costanti {
     public static final int SPETTRO_PUNTI_ESPERIENZA = 15;
 
     public static final int SPETTRO_SALUTE_BASE = 70;
-    public static final int SPETTRO_LIVELLAMENTO_SALUTE = 80;
     public static final int SPETTRO_MAGIA_BASE = 50;
     public static final int SPETTRO_LIVELLAMENTO_MAGIA = 25;
     public static final double SPETTRO_MOLTIPLICATORE_CARICO = 0.0;
@@ -1608,7 +1582,6 @@ public class Costanti {
     public static final int SPIRITO_PUNTI_ESPERIENZA = 15;
 
     public static final int SPIRITO_SALUTE_BASE = 50;
-    public static final int SPIRITO_LIVELLAMENTO_SALUTE = 60;
     public static final int SPIRITO_MAGIA_BASE = 45;
     public static final int SPIRITO_LIVELLAMENTO_MAGIA = 20;
     public static final double SPIRITO_MOLTIPLICATORE_CARICO = 0.0;
@@ -1659,7 +1632,6 @@ public class Costanti {
     public static final int TITANO_PUNTI_ESPERIENZA = 100;
 
     public static final int TITANO_SALUTE_BASE = 300;
-    public static final int TITANO_LIVELLAMENTO_SALUTE = 375;
     public static final int TITANO_MAGIA_BASE = 0;
     public static final int TITANO_LIVELLAMENTO_MAGIA = 0;
     public static final double TITANO_MOLTIPLICATORE_CARICO = 10.0;
@@ -1712,7 +1684,6 @@ public class Costanti {
     public static final int TROLL_PUNTI_ESPERIENZA = 40;
 
     public static final int TROLL_SALUTE_BASE = 170;
-    public static final int TROLL_LIVELLAMENTO_SALUTE = 210;
     public static final int TROLL_MAGIA_BASE = 0;
     public static final int TROLL_LIVELLAMENTO_MAGIA = 0;
     public static final double TROLL_MOLTIPLICATORE_CARICO = 2.8;
@@ -1763,7 +1734,6 @@ public class Costanti {
     public static final int VIVERNA_PUNTI_ESPERIENZA = 40;
 
     public static final int VIVERNA_SALUTE_BASE = 130;
-    public static final int VIVERNA_LIVELLAMENTO_SALUTE = 165;
     public static final int VIVERNA_MAGIA_BASE = 30;
     public static final int VIVERNA_LIVELLAMENTO_MAGIA = 10;
     public static final double VIVERNA_MOLTIPLICATORE_CARICO = 3.5;
@@ -1816,7 +1786,6 @@ public class Costanti {
     public static final int IDRA_PUNTI_ESPERIENZA = 70;
 
     public static final int IDRA_SALUTE_BASE = 180;
-    public static final int IDRA_LIVELLAMENTO_SALUTE = 220;
     public static final int IDRA_MAGIA_BASE = 10;
     public static final int IDRA_LIVELLAMENTO_MAGIA = 4;
     public static final double IDRA_MOLTIPLICATORE_CARICO = 5.0;
@@ -1867,7 +1836,6 @@ public class Costanti {
     public static final int LICH_PUNTI_ESPERIENZA = 100;
 
     public static final int LICH_SALUTE_BASE = 75;
-    public static final int LICH_LIVELLAMENTO_SALUTE = 85;
     public static final int LICH_MAGIA_BASE = 80;
     public static final int LICH_LIVELLAMENTO_MAGIA = 45;
     public static final double LICH_MOLTIPLICATORE_CARICO = 1.0;
@@ -1918,7 +1886,6 @@ public class Costanti {
     public static final int MINOTAUROGIGANTE_PUNTI_ESPERIENZA = 70;
 
     public static final int MINOTAUROGIGANTE_SALUTE_BASE = 230;
-    public static final int MINOTAUROGIGANTE_LIVELLAMENTO_SALUTE = 275;
     public static final int MINOTAUROGIGANTE_MAGIA_BASE = 0;
     public static final int MINOTAUROGIGANTE_LIVELLAMENTO_MAGIA = 0;
     public static final double MINOTAUROGIGANTE_MOLTIPLICATORE_CARICO = 4.0;
@@ -1969,7 +1936,6 @@ public class Costanti {
     public static final int STREGA_PUNTI_ESPERIENZA = 100;
 
     public static final int STREGA_SALUTE_BASE = 85;
-    public static final int STREGA_LIVELLAMENTO_SALUTE = 95;
     public static final int STREGA_MAGIA_BASE = 55;
     public static final int STREGA_LIVELLAMENTO_MAGIA = 32;
     public static final double STREGA_MOLTIPLICATORE_CARICO = 0.95;
@@ -2022,7 +1988,6 @@ public class Costanti {
     public static final int DRAGO_PUNTI_ESPERIENZA = 250;
 
     public static final int DRAGO_SALUTE_BASE = 200;
-    public static final int DRAGO_LIVELLAMENTO_SALUTE = 250;
     public static final int DRAGO_MAGIA_BASE = 30;
     public static final int DRAGO_LIVELLAMENTO_MAGIA = 8;
     public static final double DRAGO_MOLTIPLICATORE_CARICO = 8.0;

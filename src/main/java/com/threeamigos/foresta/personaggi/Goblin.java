@@ -52,11 +52,6 @@ public class Goblin extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getLivellamentoSalute() {
-		return Costanti.GOBLIN_LIVELLAMENTO_SALUTE;
-	}
-
-	@Override
 	public double getMagiaBase() {
 		return Costanti.GOBLIN_MAGIA_BASE;
 	}

@@ -571,7 +571,6 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
 
 	double getSaluteBase();
 
-	double getLivellamentoSalute();
 
 	double getMagiaBase();
 

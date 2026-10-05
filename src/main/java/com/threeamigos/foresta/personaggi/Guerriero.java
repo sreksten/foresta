@@ -57,11 +57,6 @@ public class Guerriero extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getLivellamentoSalute() {
-		return Costanti.GUERRIERO_LIVELLAMENTO_SALUTE;
-	}
-
-	@Override
 	public double getMagiaBase() {
 		return Costanti.GUERRIERO_MAGIA_BASE;
 	}

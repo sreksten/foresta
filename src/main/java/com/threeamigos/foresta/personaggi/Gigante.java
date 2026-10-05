@@ -53,11 +53,6 @@ public class Gigante extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getLivellamentoSalute() {
-		return Costanti.GIGANTE_LIVELLAMENTO_SALUTE;
-	}
-
-	@Override
 	public double getMagiaBase() {
 		return Costanti.GIGANTE_MAGIA_BASE;
 	}

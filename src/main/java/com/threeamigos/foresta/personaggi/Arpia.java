@@ -50,11 +50,6 @@ public class Arpia extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getLivellamentoSalute() {
-		return Costanti.ARPIA_LIVELLAMENTO_SALUTE;
-	}
-
-	@Override
 	public double getMagiaBase() {
 		return Costanti.ARPIA_MAGIA_BASE;
 	}

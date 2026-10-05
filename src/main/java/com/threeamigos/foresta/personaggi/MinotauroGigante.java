@@ -55,11 +55,6 @@ public class MinotauroGigante extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getLivellamentoSalute() {
-		return Costanti.MINOTAUROGIGANTE_LIVELLAMENTO_SALUTE;
-	}
-
-	@Override
 	public double getMagiaBase() {
 		return Costanti.MINOTAUROGIGANTE_MAGIA_BASE;
 	}

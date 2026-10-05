@@ -53,11 +53,6 @@ public class Centauro extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getLivellamentoSalute() {
-		return Costanti.CENTAURO_LIVELLAMENTO_SALUTE;
-	}
-
-	@Override
 	public double getMagiaBase() {
 		return Costanti.CENTAURO_MAGIA_BASE;
 	}

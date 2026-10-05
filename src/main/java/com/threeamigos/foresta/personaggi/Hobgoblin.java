@@ -52,11 +52,6 @@ public class Hobgoblin extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getLivellamentoSalute() {
-		return Costanti.HOBGOBLIN_LIVELLAMENTO_SALUTE;
-	}
-
-	@Override
 	public double getMagiaBase() {
 		return Costanti.HOBGOBLIN_MAGIA_BASE;
 	}

@@ -56,11 +56,6 @@ public class Elfa extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public double getLivellamentoSalute() {
-		return Costanti.ELFA_LIVELLAMENTO_SALUTE;
-	}
-
-	@Override
 	public double getMagiaBase() {
 		return Costanti.ELFA_MAGIA_BASE;
 	}
