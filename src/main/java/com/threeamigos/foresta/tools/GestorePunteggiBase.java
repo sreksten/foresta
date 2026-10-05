@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.tools;
 
+import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.motore.modellodati.Serializzabile;
 
-abstract class GestorePunteggiBase extends GestoreSuFile implements InterfacciaGestorePunteggi {
+abstract class GestorePunteggiBase extends GestoreSuFile implements GestorePunteggi {
 
 	private static final int NUMERO_MASSIMO = 10;
 

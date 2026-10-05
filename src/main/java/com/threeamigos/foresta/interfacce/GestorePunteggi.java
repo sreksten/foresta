@@ -1,6 +1,12 @@
-package com.threeamigos.foresta.tools;
+package com.threeamigos.foresta.interfacce;
 
-public interface InterfacciaGestorePunteggi {
+import com.threeamigos.foresta.tools.Punteggio;
+
+/**
+ * La classifica dei punteggi: Main crea l'implementazione (GestorePunteggiSuFile) e la passa all'Automa, che vi
+ * aggiunge i punteggi a fine partita, e alla UI, che la mostra nell'intro.
+ */
+public interface GestorePunteggi {
 
 	/**
 	 * Recupera i punteggi salvati da qualche parte

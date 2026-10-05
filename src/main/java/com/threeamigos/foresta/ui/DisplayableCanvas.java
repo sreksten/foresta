@@ -15,6 +15,7 @@ import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.motore.tipi.TipoNegozio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.tools.Temporizzatore;
 import com.threeamigos.foresta.tools.TestataSalvataggio;
@@ -122,7 +123,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	 * @param barraDock vero per la barra delle icone che si ingrandisce sotto il cursore (DisplayableCanvasBarraIconeDock),
 	 *                  solo in orientamento orizzontale; altrimenti la barra classica
 	 */
-	public DisplayableCanvas(int width, int height, int orientamento, int dimensioneBarraIcone, boolean barraDock) {
+	public DisplayableCanvas(int width, int height, int orientamento, int dimensioneBarraIcone, boolean barraDock,
+							 GestorePunteggi gestorePunteggi) {
 		super();
 		altezzaTotaleSchermo = height;
 		Dimension areaDiContenuto = calcolaAreaDiContenuto(width, height, orientamento, dimensioneBarraIcone);
@@ -146,7 +148,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		setBackground(Color.black);
 		BufferedImage immagineLocazione = ImageCache.locazioni.get(ClassiLocazione.BOSCO);
 
-		riquadroIntroOutro = new DisplayableCanvasIntroOutro(larghezzaContenuto, altezzaContenuto);
+		riquadroIntroOutro = new DisplayableCanvasIntroOutro(larghezzaContenuto, altezzaContenuto, gestorePunteggi);
 
 		Rectangle riquadroIntroOutroRect = new Rectangle(0, 0, larghezzaContenuto, altezzaContenuto);
 		mappaCoordinateElementiGrafici.put(riquadroIntroOutro, riquadroIntroOutroRect);

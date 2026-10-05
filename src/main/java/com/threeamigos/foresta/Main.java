@@ -4,6 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.SnifferBusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoInterfacciaUtentePronta;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
+import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.motore.Automa;
 import com.threeamigos.foresta.motore.Notizie;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
@@ -55,19 +56,19 @@ public class Main {
 		RegistroMissioni.registrati();
 
 		leggiArgomenti(args);
-		GestorePunteggi.impostaGestorePunteggi(new GestorePunteggiSuFile());
+		GestorePunteggi gestorePunteggi = new GestorePunteggiSuFile();
 		// I trofei vinti valgono da una partita all'altra: si rileggono una volta sola, all'avvio
 		RegistroTrofei.impostaGestoreTrofei(new GestoreTrofeiSuFile());
 
 		Temporizzatore temporizzatoreAutoma = new TemporizzatoreJ2SE();
-		ControlloreDiGioco controlloreDiGioco = new Automa(temporizzatoreAutoma, new GestoreSalvataggiSuFile());
+		ControlloreDiGioco controlloreDiGioco = new Automa(temporizzatoreAutoma, new GestoreSalvataggiSuFile(), gestorePunteggi);
 
 		// Ci si iscrive prima di creare la UI: ForestaUI pubblica InternoInterfacciaUtentePronta sull'EDT,
 		// e un evento senza iscritti andrebbe perso lasciando il gioco sulla finestra nera
 		BusEventi.iscriviti(InternoInterfacciaUtentePronta.class, e -> controlloreDiGioco.inizia());
 
 		Temporizzatore temporizzatoreUI = new TemporizzatoreJ2SE();
-		new ForestaUI(orientamento, tuttoSchermo, saltaLogo, barraDock, temporizzatoreUI);
+		new ForestaUI(orientamento, tuttoSchermo, saltaLogo, barraDock, gestorePunteggi, temporizzatoreUI);
 
 		//FIXME gestire l'elenco finestre togliendolo da InterfacciaUtente
 	}

@@ -14,7 +14,6 @@ import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.tools.GestorePunteggi;
 import com.threeamigos.foresta.tools.ModalitaDiProva;
 
 import java.util.ArrayList;
@@ -66,7 +65,6 @@ final class PartitaDiTest implements AutoCloseable {
 		ModelloDati.setIstanza(new ModelloDati());
 		GruppoGiocatore.azzeraIstanza();
 		GruppoAvversario.azzeraIstanza();
-		GestorePunteggi.impostaGestorePunteggi(new GestorePunteggiInMemoria());
 		// I trofei passano da una partita all'altra: ogni test riparte senza nessun trofeo vinto
 		RegistroTrofei.impostaGestoreTrofei(trofei);
 		Notizie.registrati();
@@ -96,7 +94,7 @@ final class PartitaDiTest implements AutoCloseable {
 		BusEventi.iscriviti(NotificaTestoParagrafo.class, e -> ricordaTesto(e.getMessaggio()));
 
 		// Il precaricamento del motore sullo stesso thread, cosi' finisce prima che inizia() ritorni
-		automa = new Automa(temporizzatore, salvataggi, Runnable::run, this::leggiOrologio);
+		automa = new Automa(temporizzatore, salvataggi, new GestorePunteggiInMemoria(), Runnable::run, this::leggiOrologio);
 		automa.inizia();
 		verificaNessunErrore();
 	}

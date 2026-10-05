@@ -8,7 +8,7 @@ import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tools.GestorePunteggi;
+import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.tools.Punteggio;
 import com.threeamigos.foresta.tools.TestataSalvataggio;
@@ -70,7 +70,13 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 
 	private Collection<TestataSalvataggio> salvataggiDisponibili;
 
-	DisplayableCanvasIntroOutro(int width, int height) {
+	private final GestorePunteggi gestorePunteggi;
+
+	/**
+	 * @param gestorePunteggi la classifica, che l'intro mostra fra le sue pagine
+	 */
+	DisplayableCanvasIntroOutro(int width, int height, GestorePunteggi gestorePunteggi) {
+		this.gestorePunteggi = gestorePunteggi;
 		this.width = width;
 		this.height = height;
 
@@ -379,12 +385,12 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	 * La classifica in un'immagine, nell'alfabeto grande: il nome a sinistra, il punteggio a destra.
 	 */
 	private BufferedImage immagineClassifica() {
-		int righe = GestorePunteggi.getCardinalita();
+		int righe = gestorePunteggi.getConteggio();
 		BufferedImage immagine = new BufferedImage(width, Math.max(1, righe * RIGA_CLASSIFICA), BufferedImage.TYPE_INT_ARGB);
 		Graphics2D g = immagine.createGraphics();
 		try {
 			for (int posizione = 0; posizione < righe; posizione++) {
-				Punteggio punteggio = GestorePunteggi.getPunteggio(posizione);
+				Punteggio punteggio = gestorePunteggi.getPunteggio(posizione);
 				int y = posizione * RIGA_CLASSIFICA;
 				TestoGrande.disegnaRiga(g, TestoGrande.normalizza(punteggio.getNome()), MARGINE, y);
 				String valore = String.valueOf(punteggio.getPunteggio());

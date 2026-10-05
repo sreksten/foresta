@@ -3,6 +3,7 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoUiOccupata;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
+import com.threeamigos.foresta.motore.GestorePunteggiInMemoria;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -26,7 +27,8 @@ class DisplayableCanvasAnnuncioGlobaleTest {
 	void creaCanvas() {
 		BusEventi.azzera();
 		BusEventi.impostaConsegna(Runnable::run);
-		canvas = new DisplayableCanvas(1024, 768, DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, 72, false);
+		canvas = new DisplayableCanvas(1024, 768, DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, 72, false,
+				new GestorePunteggiInMemoria());
 		uiOccupataPubblicati = new AtomicInteger();
 		BusEventi.iscriviti(InternoUiOccupata.class, e -> uiOccupataPubblicati.incrementAndGet());
 	}

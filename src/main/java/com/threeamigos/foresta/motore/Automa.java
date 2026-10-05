@@ -9,6 +9,7 @@ import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
+import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.GestoreSalvataggi;
 import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
@@ -84,6 +85,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private final Map<Stato, Function<Comando, Esito>> gestoriComando;
 	private final Temporizzatore temporizzatore;
 	private final GestoreSalvataggi gestoreSalvataggi;
+	private final GestorePunteggi gestorePunteggi;
 
 	private String nomePersonaggio;
 	private Stato stato;
@@ -137,17 +139,19 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 	/**
 	 * @param gestoreSalvataggi dove stanno le partite salvate (nel gioco GestoreSalvataggiSuFile)
+	 * @param gestorePunteggi   la classifica (nel gioco GestorePunteggiSuFile)
 	 */
-	public Automa(Temporizzatore temporizzatore, GestoreSalvataggi gestoreSalvataggi) {
-		this(temporizzatore, gestoreSalvataggi, Automa::precaricaInBackground);
+	public Automa(Temporizzatore temporizzatore, GestoreSalvataggi gestoreSalvataggi, GestorePunteggi gestorePunteggi) {
+		this(temporizzatore, gestoreSalvataggi, gestorePunteggi, Automa::precaricaInBackground);
 	}
 
 	/**
 	 * @param esecutorePrecaricamento dove eseguire, durante il logo iniziale, il caricamento delle risorse del motore:
 	 *                                nel gioco un thread a parte, nei test lo stesso thread ({@code Runnable::run})
 	 */
-	Automa(Temporizzatore temporizzatore, GestoreSalvataggi gestoreSalvataggi, Executor esecutorePrecaricamento) {
-		this(temporizzatore, gestoreSalvataggi, esecutorePrecaricamento, System::nanoTime);
+	Automa(Temporizzatore temporizzatore, GestoreSalvataggi gestoreSalvataggi, GestorePunteggi gestorePunteggi,
+		   Executor esecutorePrecaricamento) {
+		this(temporizzatore, gestoreSalvataggi, gestorePunteggi, esecutorePrecaricamento, System::nanoTime);
 	}
 
 	/**
@@ -155,10 +159,11 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 *                            sapere quale fumetto viene dopo (vedi gestisciComandoInStatoIntermezzo): nel gioco
 	 *                            System.nanoTime, come la UI
 	 */
-	Automa(Temporizzatore temporizzatore, GestoreSalvataggi gestoreSalvataggi, Executor esecutorePrecaricamento,
-		   LongSupplier orologioNanosecondi) {
+	Automa(Temporizzatore temporizzatore, GestoreSalvataggi gestoreSalvataggi, GestorePunteggi gestorePunteggi,
+		   Executor esecutorePrecaricamento, LongSupplier orologioNanosecondi) {
 		this.temporizzatore = temporizzatore;
 		this.gestoreSalvataggi = gestoreSalvataggi;
+		this.gestorePunteggi = gestorePunteggi;
 		this.esecutorePrecaricamento = esecutorePrecaricamento;
 		this.orologioNanosecondi = orologioNanosecondi;
 		temporizzatore.setTemporizzabile(this);
@@ -1466,7 +1471,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Esito gestisciComandoInStatoStatistiche(Comando comando) {
-		if (comando == Comando.PERGAMENA && !GestorePunteggi.isPunteggioInClassifica(Statistiche.getPunti(), Statistiche.getIdPartita())) {
+		if (comando == Comando.PERGAMENA && !gestorePunteggi.isPunteggioInClassifica(Statistiche.getPunti(), Statistiche.getIdPartita())) {
 			// Nessun punteggio da registrare: si torna all'intro, che riparte dai loghi.
 			// mostraIntro() pubblica anche lo stato INTRO, senza il quale la UI resterebbe
 			// sulle statistiche. Al logo iniziale non si torna.
@@ -1491,7 +1496,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			testoDisponibile = primo.getNomeProprio()
 					.orElseGet(() -> primo.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA));
 		}
-		GestorePunteggi.addPunteggio(testoDisponibile, Statistiche.getPunti(), Statistiche.getIdPartita());
+		gestorePunteggi.addPunteggio(testoDisponibile, Statistiche.getPunti(), Statistiche.getIdPartita());
 		stato = Stato.PUNTEGGI;
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.PERGAMENA));
 		BusEventi.pubblica(new NotificaMostraPunteggiMigliori());

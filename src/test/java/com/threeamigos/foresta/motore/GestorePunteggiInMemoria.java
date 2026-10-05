@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.tools.InterfacciaGestorePunteggi;
+import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.tools.Punteggio;
 
 import java.util.ArrayList;
@@ -8,9 +8,9 @@ import java.util.Comparator;
 import java.util.List;
 
 /**
- * La classifica dei test, in memoria.
+ * La classifica dei test, in memoria. Pubblica perché la usano anche i test della UI.
  */
-final class GestorePunteggiInMemoria implements InterfacciaGestorePunteggi {
+public final class GestorePunteggiInMemoria implements GestorePunteggi {
 
 	private static final int POSTI = 10;
 

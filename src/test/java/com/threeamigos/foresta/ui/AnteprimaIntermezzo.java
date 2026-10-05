@@ -5,6 +5,7 @@ import com.threeamigos.foresta.eventi.interni.InternoErrore;
 import com.threeamigos.foresta.intermezzi.ClasseIntermezzo;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
+import com.threeamigos.foresta.motore.GestorePunteggiInMemoria;
 import com.threeamigos.foresta.motore.PartitaDiAnteprima;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
@@ -76,7 +77,8 @@ public final class AnteprimaIntermezzo {
 				ForestaUI.orientamentoCanvas(Orientamento.ORIZZONTALE), ForestaUI.SPESSORE_BARRA_ICONE);
 		larghezza = contenuto.width;
 		altezza = contenuto.height;
-		schermata = new DisplayableCanvasIntermezzo(larghezza, altezza, new DisplayableCanvasIntroOutro(larghezza, altezza));
+		schermata = new DisplayableCanvasIntermezzo(larghezza, altezza, new DisplayableCanvasIntroOutro(larghezza, altezza,
+				new GestorePunteggiInMemoria()));
 		pagine = generaPagine();
 		this.indicePagina = Math.max(0, Math.min(indicePagina, pagine.size() - 1));
 	}
