@@ -101,6 +101,8 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(InternoRichiestaReinizializzazioneUI.class, this::gestisciEventoRichiestaReinizializzazioneUI);
 		BusEventi.iscriviti(RichiestaTesto.class, this::gestisciEventoRichiestaTesto);
 		BusEventi.iscriviti(RichiestaSelezioneSlotPerRilettura.class, this::gestisciEventoSelezioneSalvataggio);
+		BusEventi.iscriviti(RichiestaSelezioneSlotPerSalvataggio.class,
+				e -> displayableCanvas.selezioneSlotSalvataggioDaSalvare(e.getSalvataggiDisponibili()));
 		BusEventi.iscriviti(ComandoVisualizzazioneMappa.class, this::gestisciEventoRichiestaVisualizzazioneMappa);
 		BusEventi.iscriviti(RichiestaSelezioneDirezione.class, this::gestisciEventoSelezioneDirezione);
 		BusEventi.iscriviti(RichiestaSelezioneIncantesimoDaLanciare.class, this::gestisciEventoSelezioneIncantesimoDaLanciare);
@@ -455,7 +457,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 				break;
 
 			case SELEZIONE_SALVATAGGIO_DA_SCRIVERE:
-				displayableCanvas.selezioneSlotSalvataggioDaSalvare();
+				// La schermata è già aperta, con le testate, da RichiestaSelezioneSlotPerSalvataggio
 				impostaAzioni(evento.getComandiPossibili());
 				break;
 

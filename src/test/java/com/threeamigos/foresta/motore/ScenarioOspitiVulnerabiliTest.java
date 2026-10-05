@@ -10,7 +10,6 @@ import com.threeamigos.foresta.motore.tipi.TipoRiposo;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Viandante;
-import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -100,8 +99,8 @@ class ScenarioOspitiVulnerabiliTest {
             partita.gruppo().aggiungiOspite(new Viandante("Ottone", 1), true);
             partita.gruppo().aggiungiOspite(new Viandante("Anselmo", 1));
 
-            GestoreSalvataggi.salva(Comando.NUMERO_2);
-            assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_2));
+            partita.salva(Comando.NUMERO_2);
+            assertTrue(partita.leggi(Comando.NUMERO_2));
             Personaggio ottone = ospite(partita, "Ottone");
             assertTrue(partita.gruppo().isOspiteVulnerabile(ottone), "vulnerabile anche dopo il caricamento");
             assertFalse(partita.gruppo().isOspiteVulnerabile(ospite(partita, "Anselmo")));

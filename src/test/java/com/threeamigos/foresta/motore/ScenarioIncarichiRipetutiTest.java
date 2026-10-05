@@ -7,7 +7,6 @@ import com.threeamigos.foresta.missioni.LaTagliaSullaBanda;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.RecuperaIlMedaglione;
-import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -56,8 +55,8 @@ class ScenarioIncarichiRipetutiTest {
             assertEquals("INCARICO", seconda.getPassoCorrente());
 
             // Il nuovo incarico si salva con la partita
-            GestoreSalvataggi.salva(Comando.NUMERO_2);
-            assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_2));
+            partita.salva(Comando.NUMERO_2);
+            assertTrue(partita.leggi(Comando.NUMERO_2));
             CacciaAiGoblin riletta = tutte(CacciaAiGoblin.class).stream().filter(c -> c.getId().equals(seconda.getId()))
                     .findFirst().orElseThrow(() -> new AssertionError("il nuovo incarico dopo il caricamento"));
 

@@ -14,7 +14,6 @@ import com.threeamigos.foresta.missioni.SconfiggiLaStrega;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
-import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -174,8 +173,8 @@ class ScenarioLocazioniRivendicateTest {
             RegistroMissioni.occupaLocazione(tempio, seconda);
             CoordinateMD strega = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CASTELLO_STREGA);
 
-            GestoreSalvataggi.salva(Comando.NUMERO_3);
-            assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_3));
+            partita.salva(Comando.NUMERO_3);
+            assertTrue(partita.leggi(Comando.NUMERO_3));
 
             assertEquals(seconda.getId(), RegistroMissioni.getMissioneCheHaOccupato(tempio).map(Missione::getId).orElse(null));
             assertTrue(RegistroMissioni.getMissioneCheHaOccupato(strega).orElse(null) instanceof SconfiggiLaStrega);
@@ -183,8 +182,8 @@ class ScenarioLocazioniRivendicateTest {
             Missione primaRiletta = RegistroMissioni.getTutteLeMissioni().stream()
                     .filter(m -> m.getId().equals(prima.getId())).findFirst().orElseThrow(AssertionError::new);
             RegistroMissioni.occupaLocazione(tempio, primaRiletta);
-            GestoreSalvataggi.salva(Comando.NUMERO_3);
-            assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_3));
+            partita.salva(Comando.NUMERO_3);
+            assertTrue(partita.leggi(Comando.NUMERO_3));
             assertEquals(prima.getId(), RegistroMissioni.getMissioneCheHaOccupato(tempio).map(Missione::getId).orElse(null));
         }
     }

@@ -56,12 +56,11 @@ public class Main {
 
 		leggiArgomenti(args);
 		GestorePunteggi.impostaGestorePunteggi(new GestorePunteggiSuFile());
-		GestoreSalvataggi.impostaGestoreSalvataggi(new GestoreSalvataggiSuFile());
 		// I trofei vinti valgono da una partita all'altra: si rileggono una volta sola, all'avvio
 		RegistroTrofei.impostaGestoreTrofei(new GestoreTrofeiSuFile());
 
 		Temporizzatore temporizzatoreAutoma = new TemporizzatoreJ2SE();
-		ControlloreDiGioco controlloreDiGioco = new Automa(temporizzatoreAutoma);
+		ControlloreDiGioco controlloreDiGioco = new Automa(temporizzatoreAutoma, new GestoreSalvataggiSuFile());
 
 		// Ci si iscrive prima di creare la UI: ForestaUI pubblica InternoInterfacciaUtentePronta sull'EDT,
 		// e un evento senza iscritti andrebbe perso lasciando il gioco sulla finestra nera

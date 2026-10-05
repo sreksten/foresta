@@ -10,7 +10,6 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -114,8 +113,8 @@ class ScenarioCombattiScortaConsegnaTest {
                     () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
             prendiIncaricoAllaSecondaVisita(IlPellegrino.class);
 
-            GestoreSalvataggi.salva(Comando.NUMERO_2);
-            assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_2));
+            partita.salva(Comando.NUMERO_2);
+            assertTrue(partita.leggi(Comando.NUMERO_2));
             IlPellegrino pellegrino = RegistroMissioni.getTutteLeMissioni().stream().filter(IlPellegrino.class::isInstance)
                     .map(IlPellegrino.class::cast).findFirst().orElseThrow(AssertionError::new);
             Personaggio anselmo = pellegrino.getScortato().orElseThrow(() -> new AssertionError("Anselmo dopo il caricamento"));

@@ -3,7 +3,6 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import com.threeamigos.foresta.tools.Misc;
 import org.junit.jupiter.api.Test;
 
@@ -54,8 +53,8 @@ class ScenarioNomiDeiTempliTest {
             }
             assertEquals(nomi.size(), new HashSet<>(nomi).size(), "nomi tutti diversi: " + nomi);
 
-            GestoreSalvataggi.salva(Comando.NUMERO_2);
-            assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_2));
+            partita.salva(Comando.NUMERO_2);
+            assertTrue(partita.leggi(Comando.NUMERO_2));
             for (int i = 0; i < templi.size(); i++) {
                 assertEquals(nomi.get(i), Foresta.getLocazioneMD(templi.get(i)).getNome(), "dopo il caricamento");
             }

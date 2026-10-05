@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.interfacce.GestoreSalvataggi;
 import com.threeamigos.foresta.motore.modellodati.GruppoGiocatoreMD;
 import com.threeamigos.foresta.motore.modellodati.LettoreCampi;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tools.InterfacciaGestoreSalvataggi;
 import com.threeamigos.foresta.tools.TestataSalvataggio;
 
 import java.io.BufferedReader;
@@ -22,7 +22,7 @@ import java.util.Map;
  * I salvataggi dei test: nello stesso formato di GestoreSalvataggiSuFile (intestazione più ModelloDati), ma in
  * memoria, così un test può salvare e rileggere senza toccare il disco.
  */
-final class GestoreSalvataggiInMemoria implements InterfacciaGestoreSalvataggi {
+final class GestoreSalvataggiInMemoria implements GestoreSalvataggi {
 
 	private final Map<Comando, String> salvataggi = new EnumMap<>(Comando.class);
 

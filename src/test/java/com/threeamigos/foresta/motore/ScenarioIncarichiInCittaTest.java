@@ -185,8 +185,8 @@ class ScenarioIncarichiInCittaTest {
                     new CoordinateMD(ripiego.getX() == 0 ? 1 : 0, ripiego.getY()), ClassiLocazione.BOSCO, true));
 
             // Il ripiego si salva con la missione
-            com.threeamigos.foresta.tools.GestoreSalvataggi.salva(Comando.NUMERO_2);
-            assertTrue(com.threeamigos.foresta.tools.GestoreSalvataggi.leggi(Comando.NUMERO_2));
+            partita.salva(Comando.NUMERO_2);
+            assertTrue(partita.leggi(Comando.NUMERO_2));
             RichiestaDiMateriali riletta = Alchimie.alchimista();
             assertEquals(ripiego, riletta.getRipiego(radici));
 

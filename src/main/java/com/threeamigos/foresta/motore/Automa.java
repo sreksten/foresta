@@ -9,6 +9,7 @@ import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
+import com.threeamigos.foresta.interfacce.GestoreSalvataggi;
 import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
@@ -82,6 +83,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	// Eseguiti quando arriva un comando reale del giocatore (o inoltrato come tale).
 	private final Map<Stato, Function<Comando, Esito>> gestoriComando;
 	private final Temporizzatore temporizzatore;
+	private final GestoreSalvataggi gestoreSalvataggi;
 
 	private String nomePersonaggio;
 	private Stato stato;
@@ -133,16 +135,19 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	// scattare subito un altro intermezzo, o la UI potrebbe non essere ancora pronta.
 	private boolean mostraSchermataGiocoAllaRipresa;
 
-	public Automa(Temporizzatore temporizzatore) {
-		this(temporizzatore, Automa::precaricaInBackground);
+	/**
+	 * @param gestoreSalvataggi dove stanno le partite salvate (nel gioco GestoreSalvataggiSuFile)
+	 */
+	public Automa(Temporizzatore temporizzatore, GestoreSalvataggi gestoreSalvataggi) {
+		this(temporizzatore, gestoreSalvataggi, Automa::precaricaInBackground);
 	}
 
 	/**
 	 * @param esecutorePrecaricamento dove eseguire, durante il logo iniziale, il caricamento delle risorse del motore:
 	 *                                nel gioco un thread a parte, nei test lo stesso thread ({@code Runnable::run})
 	 */
-	Automa(Temporizzatore temporizzatore, Executor esecutorePrecaricamento) {
-		this(temporizzatore, esecutorePrecaricamento, System::nanoTime);
+	Automa(Temporizzatore temporizzatore, GestoreSalvataggi gestoreSalvataggi, Executor esecutorePrecaricamento) {
+		this(temporizzatore, gestoreSalvataggi, esecutorePrecaricamento, System::nanoTime);
 	}
 
 	/**
@@ -150,8 +155,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 *                            sapere quale fumetto viene dopo (vedi gestisciComandoInStatoIntermezzo): nel gioco
 	 *                            System.nanoTime, come la UI
 	 */
-	Automa(Temporizzatore temporizzatore, Executor esecutorePrecaricamento, LongSupplier orologioNanosecondi) {
+	Automa(Temporizzatore temporizzatore, GestoreSalvataggi gestoreSalvataggi, Executor esecutorePrecaricamento,
+		   LongSupplier orologioNanosecondi) {
 		this.temporizzatore = temporizzatore;
+		this.gestoreSalvataggi = gestoreSalvataggi;
 		this.esecutorePrecaricamento = esecutorePrecaricamento;
 		this.orologioNanosecondi = orologioNanosecondi;
 		temporizzatore.setTemporizzabile(this);
@@ -304,7 +311,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Collection<Comando> getComandiPossibiliInStatoIntro() {
 		Collection<Comando> comandiPossibili = new ArrayList<>();
 		comandiPossibili.add(Comando.PERGAMENA);
-		if (!GestoreSalvataggi.getSalvataggiDisponibili().isEmpty()) {
+		if (!gestoreSalvataggi.getSalvataggiDisponibili().isEmpty()) {
 			comandiPossibili.add(Comando.FLOPPY_CARICA);
 		}
 		return comandiPossibili;
@@ -418,7 +425,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				return Esito.FERMATI;
 			case FLOPPY_CARICA:
 				stato = Stato.PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE;
-				Collection<TestataSalvataggio> salvataggiDisponibili = GestoreSalvataggi.getSalvataggiDisponibili();
+				Collection<TestataSalvataggio> salvataggiDisponibili = gestoreSalvataggi.getSalvataggiDisponibili();
 				BusEventi.pubblica(new RichiestaSelezioneSlotPerRilettura(salvataggiDisponibili));
 				return Esito.FERMATI;
 			default:
@@ -428,7 +435,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private Esito gestisciComandoInStatoPreGameSelezionaSalvataggioDaLeggere(Comando comando) {
-		if (comando != Comando.ANNULLA && GestoreSalvataggi.leggi(comando)) {
+		if (comando != Comando.ANNULLA && gestoreSalvataggi.leggi(comando)) {
+			RiletturaPartita.ricostruisci();
 			gruppo.getLocazioneCorrente().azzeraLocazione(gruppo);
 			stato = Stato.ATTESA_DIREZIONE;
 			BusEventi.pubblica(new InternoMostraSchermataGioco());
@@ -1147,6 +1155,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				break;
 			case FLOPPY_SALVA:
 				stato = Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE;
+				// Le testate dei salvataggi per la schermata di scelta: la UI non legge i salvataggi da sé
+				BusEventi.pubblica(new RichiestaSelezioneSlotPerSalvataggio(gestoreSalvataggi.getSalvataggiDisponibili()));
 				BusEventi.pubblica(new InternoStatoDiGioco(Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE,
 						Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3, Comando.NUMERO_4, Comando.NUMERO_5,
 						Comando.NO));
@@ -1364,7 +1374,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			stato = Stato.ATTESA_DIREZIONE;
 			return Esito.CONTINUA_CON_INGRESSO;
 		} else if (comando != null) {
-			if (comando != Comando.ANNULLA && !GestoreSalvataggi.salva(comando)) {
+			if (comando != Comando.ANNULLA && !gestoreSalvataggi.salva(comando)) {
 				// Senza un salvataggio valido non si propone di uscire: si torna al gioco
 				BusEventi.pubblica(new NotificaTestoParagrafo("Il salvataggio non è riuscito."));
 				BusEventi.pubblica(new InternoMostraSchermataGioco());

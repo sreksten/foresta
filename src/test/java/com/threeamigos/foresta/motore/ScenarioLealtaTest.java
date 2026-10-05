@@ -15,7 +15,6 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Guerriera;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -164,8 +163,8 @@ class ScenarioLealtaTest {
             partita.comando(Comando.ACCAMPAMENTO);
             String id = lealta.getMissioniAffidate(LaLealta.FAVORE).get(0).getId();
 
-            GestoreSalvataggi.salva(Comando.NUMERO_2);
-            assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_2));
+            partita.salva(Comando.NUMERO_2);
+            assertTrue(partita.leggi(Comando.NUMERO_2));
             LaLealta riletta = RegistroMissioni.getTutteLeMissioni().stream().filter(LaLealta.class::isInstance)
                     .map(LaLealta.class::cast).filter(Missione::isAttiva).findFirst().orElseThrow(AssertionError::new);
             assertEquals("Bruna", riletta.getCompagno().map(Personaggio::getNome).orElse(null));

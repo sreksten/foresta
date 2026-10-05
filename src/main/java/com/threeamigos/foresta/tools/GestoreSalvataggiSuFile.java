@@ -4,6 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
 import com.threeamigos.foresta.eventi.notifiche.NotificaErroreCaricamento;
+import com.threeamigos.foresta.interfacce.GestoreSalvataggi;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
@@ -21,7 +22,7 @@ import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.List;
 
-public class GestoreSalvataggiSuFile extends GestoreSuFile implements InterfacciaGestoreSalvataggi {
+public class GestoreSalvataggiSuFile extends GestoreSuFile implements GestoreSalvataggi {
 
 	private static final String POSTFISSO_FILE = ".TXT";
 

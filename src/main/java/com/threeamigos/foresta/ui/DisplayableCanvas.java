@@ -15,7 +15,6 @@ import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.motore.tipi.TipoNegozio;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.tools.Temporizzatore;
 import com.threeamigos.foresta.tools.TestataSalvataggio;
@@ -833,11 +832,13 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
-	public void selezioneSlotSalvataggioDaSalvare() {
-		// Le testate si leggono una volta sola all'apertura della schermata: ognuna ricostruisce
-		// dal file il gruppo del salvataggio con i suoi personaggi, troppo per farlo a ogni frame.
-		// Mentre la schermata è aperta i file non cambiano (si salva solo dopo averla chiusa).
-		riquadroIntroOutro.setSalvataggiDisponibili(GestoreSalvataggi.getSalvataggiDisponibili());
+	/**
+	 * Le testate arrivano dall'Automa (RichiestaSelezioneSlotPerSalvataggio), lette una volta sola all'apertura della
+	 * schermata: ognuna ricostruisce dal file il gruppo del salvataggio con i suoi personaggi, troppo per farlo a ogni
+	 * frame. Mentre la schermata è aperta i file non cambiano (si salva solo dopo averla chiusa).
+	 */
+	public void selezioneSlotSalvataggioDaSalvare(Collection<TestataSalvataggio> salvataggiDisponibili) {
+		riquadroIntroOutro.setSalvataggiDisponibili(salvataggiDisponibili);
 		stato = StatoDisplayableCanvas.STATO_SELEZIONE_SLOT_DA_SALVARE;
 		repaint();
 	}

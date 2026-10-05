@@ -3,7 +3,6 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.tipi.TipoNegozio;
-import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import org.junit.jupiter.api.Test;
 
 import java.io.PrintWriter;
@@ -47,7 +46,7 @@ class ScenarioPartitaTest {
 			// Si spende e ci si sposta, poi si ricarica: tutto torna com'era al salvataggio
 			partita.gruppo().subMonete(50);
 			partita.gruppo().setCoordinate(new CoordinateMD(0, 0));
-			assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_1));
+			assertTrue(partita.leggi(Comando.NUMERO_1));
 
 			assertEquals(monete, partita.gruppo().getMonete());
 			assertEquals(dove.getX(), partita.gruppo().getX());

@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -19,10 +18,10 @@ class IdPartitaTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
             id = Statistiche.getIdPartita();
             assertNotNull(id);
-            GestoreSalvataggi.salva(Comando.NUMERO_2);
+            partita.salva(Comando.NUMERO_2);
             Statistiche.reimposta();
             assertNotEquals(id, Statistiche.getIdPartita(), "una partita nuova ha un altro identificativo");
-            assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_2));
+            assertTrue(partita.leggi(Comando.NUMERO_2));
             assertEquals(id, Statistiche.getIdPartita(), "ricaricata, è la stessa partita");
         }
     }

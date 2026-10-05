@@ -13,7 +13,6 @@ import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Troll;
-import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -125,8 +124,8 @@ class ScenarioCorrezioniTest {
 			assertEquals(2, partita.gruppo().getNumeroPersonaggi());
 			partita.gruppo().rimuoviPersonaggio(mercenario);
 
-			GestoreSalvataggi.salva(Comando.NUMERO_2);
-			assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_2));
+			partita.salva(Comando.NUMERO_2);
+			assertTrue(partita.leggi(Comando.NUMERO_2));
 			assertEquals(1, partita.gruppo().getNumeroPersonaggi(), "il mercenario e' tornato nel gruppo");
 		}
 	}

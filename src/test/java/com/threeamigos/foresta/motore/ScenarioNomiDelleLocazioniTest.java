@@ -5,7 +5,6 @@ import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -51,8 +50,8 @@ class ScenarioNomiDelleLocazioniTest {
 
             String nomeDelTempio = Foresta.getNomeDaMostrare(tempio);
             String nomeDellaLocanda = Foresta.getNomeDaMostrare(locanda);
-            GestoreSalvataggi.salva(Comando.NUMERO_2);
-            assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_2));
+            partita.salva(Comando.NUMERO_2);
+            assertTrue(partita.leggi(Comando.NUMERO_2));
             assertEquals(nomeDelTempio, Foresta.getNomeDaMostrare(tempio));
             assertEquals(nomeDellaLocanda, Foresta.getNomeDaMostrare(locanda));
             assertEquals("la città di Ruuna", Foresta.getNomeDaMostrare(ruuna));

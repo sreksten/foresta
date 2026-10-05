@@ -15,7 +15,6 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tools.GestorePunteggi;
-import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import com.threeamigos.foresta.tools.ModalitaDiProva;
 
 import java.util.ArrayList;
@@ -67,7 +66,6 @@ final class PartitaDiTest implements AutoCloseable {
 		ModelloDati.setIstanza(new ModelloDati());
 		GruppoGiocatore.azzeraIstanza();
 		GruppoAvversario.azzeraIstanza();
-		GestoreSalvataggi.impostaGestoreSalvataggi(salvataggi);
 		GestorePunteggi.impostaGestorePunteggi(new GestorePunteggiInMemoria());
 		// I trofei passano da una partita all'altra: ogni test riparte senza nessun trofeo vinto
 		RegistroTrofei.impostaGestoreTrofei(trofei);
@@ -98,7 +96,7 @@ final class PartitaDiTest implements AutoCloseable {
 		BusEventi.iscriviti(NotificaTestoParagrafo.class, e -> ricordaTesto(e.getMessaggio()));
 
 		// Il precaricamento del motore sullo stesso thread, cosi' finisce prima che inizia() ritorni
-		automa = new Automa(temporizzatore, Runnable::run, this::leggiOrologio);
+		automa = new Automa(temporizzatore, salvataggi, Runnable::run, this::leggiOrologio);
 		automa.inizia();
 		verificaNessunErrore();
 	}
@@ -308,6 +306,29 @@ final class PartitaDiTest implements AutoCloseable {
 
 	GestoreSalvataggiInMemoria salvataggi() {
 		return salvataggi;
+	}
+
+	/**
+	 * Salva la partita in quello slot, senza passare dai comandi del gioco
+	 *
+	 * @return true se il salvataggio è stato scritto per intero
+	 */
+	boolean salva(Comando slot) {
+		return salvataggi.salva(slot);
+	}
+
+	/**
+	 * Rilegge la partita da quello slot e ricostruisce lo stato derivato, come fa l'Automa quando si carica una
+	 * partita, senza passare dai comandi del gioco
+	 *
+	 * @return true se la lettura è riuscita
+	 */
+	boolean leggi(Comando slot) {
+		boolean letturaRiuscita = salvataggi.leggi(slot);
+		if (letturaRiuscita) {
+			RiletturaPartita.ricostruisci();
+		}
+		return letturaRiuscita;
 	}
 
 	/**

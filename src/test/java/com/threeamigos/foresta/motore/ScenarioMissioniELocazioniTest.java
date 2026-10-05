@@ -14,7 +14,6 @@ import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;
-import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -40,8 +39,8 @@ class ScenarioMissioniELocazioniTest {
 			assertFalse(RegistroMissioni.getMissioniAttive().stream().anyMatch(m -> m instanceof MissioneCheFallisce));
 			assertFalse(RegistroMissioni.getMissioniCompletate().stream().anyMatch(m -> m instanceof MissioneCheFallisce));
 
-			GestoreSalvataggi.salva(Comando.NUMERO_3);
-			assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_3));
+			partita.salva(Comando.NUMERO_3);
+			assertTrue(partita.leggi(Comando.NUMERO_3));
 			assertTrue(RegistroMissioni.getMissioniFallite().stream().anyMatch(m -> m instanceof MissioneCheFallisce),
 					"dopo il caricamento non e' piu' tra le fallite");
 		}
@@ -59,8 +58,8 @@ class ScenarioMissioniELocazioniTest {
 
 			assertEquals(1, RegistroMissioni.getMissioniCompletate().stream()
 					.filter(m -> m instanceof SconfiggiIlMinotauroGigante).count(), "compare una volta tra le completate");
-			GestoreSalvataggi.salva(Comando.NUMERO_3);
-			assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_3));
+			partita.salva(Comando.NUMERO_3);
+			assertTrue(partita.leggi(Comando.NUMERO_3));
 			assertEquals(1, RegistroMissioni.getMissioniCompletate().stream()
 					.filter(m -> m instanceof SconfiggiIlMinotauroGigante).count(), "anche dopo un caricamento");
 

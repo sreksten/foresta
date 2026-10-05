@@ -10,7 +10,7 @@ Sorgenti in `src/main/java/com/threeamigos/foresta` (abbreviato `…/` sotto), r
 | :--- | :--- | :--- |
 | Avvio, macchina a stati, ciclo di una locazione | `Main`, `…/motore/Automa` (implementa `…/interfacce/ControlloreDiGioco`), `…/motore/Stato` | `motore_di_gioco.md` §2–3 |
 | Bus eventi | `…/eventi` (`notifiche`, `richieste`, `interni`, `comandigiocatore`) | `motore_di_gioco.md` §4 |
-| Salvataggi e modello dati | `…/motore/modellodati`, `…/tools/GestoreSalvataggi*` | `motore_di_gioco.md` §5 |
+| Salvataggi e modello dati | `…/motore/modellodati`, `…/interfacce/GestoreSalvataggi`, `…/tools/GestoreSalvataggiSuFile`, `…/motore/RiletturaPartita` | `motore_di_gioco.md` §5 |
 | Mappa, tempo, locazioni | `…/motore/Foresta`, `LineaTemporale`, `…/locazioni` | `motore_di_gioco.md` §6 |
 | Combattimento | `…/motore/CalcolatoreCombattimento`, `Ondata`, `EffettoDiStato` | `motore_di_gioco.md` §7, `interazioni_effetti_di_stato.md` |
 | Personaggi e gruppi | `…/personaggi`, `…/motore/Gruppo*`, `GestoreProgressione` | `motore_di_gioco.md` §8 |

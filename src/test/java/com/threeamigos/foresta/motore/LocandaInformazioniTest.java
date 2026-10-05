@@ -5,7 +5,6 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Guerriero;
-import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -41,8 +40,8 @@ class LocandaInformazioniTest {
 					"nelle due visite in piu' la locanda non ha piu' nulla da raccontare");
 
 			// Il conto e' della locanda e resta anche dopo un caricamento
-			GestoreSalvataggi.salva(Comando.NUMERO_3);
-			assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_3));
+			partita.salva(Comando.NUMERO_3);
+			assertTrue(partita.leggi(Comando.NUMERO_3));
 			CoordinateMD nyena = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA);
 			assertEquals(String.valueOf(Costanti.LOCANDA_MASSIMO_INFORMAZIONI),
 					Foresta.getLocazioneMD(nyena).ottieniProprieta(Locanda.LOCANDA_INFORMAZIONI_DATE));

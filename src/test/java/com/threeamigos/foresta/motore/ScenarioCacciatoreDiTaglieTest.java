@@ -8,7 +8,6 @@ import com.threeamigos.foresta.missioni.IncaricoInCitta;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.tools.GestoreSalvataggi;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -91,8 +90,8 @@ class ScenarioCacciatoreDiTaglieTest {
             String ostaggio = rapimento.getOstaggio();
             String capobanda = rapimento.getCapobanda();
 
-            GestoreSalvataggi.salva(Comando.NUMERO_2);
-            assertTrue(GestoreSalvataggi.leggi(Comando.NUMERO_2));
+            partita.salva(Comando.NUMERO_2);
+            assertTrue(partita.leggi(Comando.NUMERO_2));
             IlRapimento riletto = RegistroMissioni.getTutteLeMissioni().stream().filter(IlRapimento.class::isInstance)
                     .map(IlRapimento.class::cast).findFirst().orElseThrow(AssertionError::new);
             assertEquals(ostaggio, riletto.getOstaggio());
