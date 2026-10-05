@@ -21,7 +21,9 @@ import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Optional;
@@ -174,8 +176,48 @@ public abstract class LocazioneBase implements Locazione {
 	 * possono essere trovati in ogni locazione. La locazione base non ha mostri
 	 * e oggetti associati.
 	 */
+	/**
+	 * I mostri che non si incontrano durante l'inizio morbido (Costanti.INIZIO_MORBIDO_FINO_AL_LIVELLO): a livello 1
+	 * sono più forti di un protagonista solo con la dotazione di base
+	 */
+	public static final Set<ClassePersonaggio> MOSTRI_ESCLUSI_A_INIZIO_PARTITA = Collections.unmodifiableSet(EnumSet.of(
+			ClassePersonaggio.CENTAURO, ClassePersonaggio.CHIMERA_DRAGO, ClassePersonaggio.GIGANTE,
+			ClassePersonaggio.MINOTAURO, ClassePersonaggio.TITANO, ClassePersonaggio.TROLL));
+
+	/**
+	 * I mostri che si possono incontrare in una locazione, dato il livello del capo del gruppo: durante l'inizio
+	 * morbido senza quelli di MOSTRI_ESCLUSI_A_INIZIO_PARTITA (se ne resta almeno uno)
+	 */
+	public static ClassePersonaggio[] incontriPossibili(ClassePersonaggio[] mostri, int livelloCapo) {
+		if (livelloCapo > Costanti.INIZIO_MORBIDO_FINO_AL_LIVELLO) {
+			return mostri;
+		}
+		ClassePersonaggio[] ammessi = Arrays.stream(mostri).filter(m -> !MOSTRI_ESCLUSI_A_INIZIO_PARTITA.contains(m))
+				.toArray(ClassePersonaggio[]::new);
+		return ammessi.length > 0 ? ammessi : mostri;
+	}
+
+	/**
+	 * Quanti mostri al massimo in un incontro (e comunque non più del massimo per locazione della classe): tanti
+	 * quanti i personaggi in campo del gruppo (gli ospiti non contano), più uno fino al livello 5 del capo, due fino
+	 * al 15, quattro oltre; durante l'inizio morbido nessuno in più. Per un protagonista solo: 1, 2, 3 e 5.
+	 */
+	public static int numeroMassimoDiMostri(int livelloCapo, int personaggiDelGruppo) {
+		int inPiu;
+		if (livelloCapo <= Costanti.INIZIO_MORBIDO_FINO_AL_LIVELLO) {
+			inPiu = 0;
+		} else if (livelloCapo <= 5) {
+			inPiu = 1;
+		} else if (livelloCapo <= 15) {
+			inPiu = 2;
+		} else {
+			inPiu = 4;
+		}
+		return Math.max(1, personaggiDelGruppo) + inPiu;
+	}
+
 	public void crea(GruppoGiocatore g, GruppoAvversario avversario) {
-		ClassePersonaggio[] m = getPossibiliIncontri();
+		ClassePersonaggio[] m = incontriPossibili(getPossibiliIncontri(), g.getCapo().getLivello());
 		if (m.length > 0) {
 			// Non sempre si trovano mostri. Al primo turno però vogliamo sempre trovarne uno,
 			// un po' per non dare l'impressione che la foresta sia vuota, un po' per non far
@@ -194,16 +236,7 @@ public abstract class LocazioneBase implements Locazione {
 					classePersonaggio = m[ordinale];
 				}
 
-				// FASE 1: Calcolo del CAP base in base al LIVELLO DEL GIOCATORE (Regola Principale)
-				int livelloGiocatore = g.getCapo().getLivello();
-				int capLivello;
-				if (livelloGiocatore <= 5) {
-					capLivello = 2;  // Massimo 2 mostri a inizio gioco per evitare il collasso immediato
-				} else if (livelloGiocatore <= 15) {
-					capLivello = 3;  // Massimo 3 mostri a metà gioco
-				} else {
-					capLivello = 5;  // Massimo 5 mostri per livelli alti / party completi
-				}
+				int capLivello = numeroMassimoDiMostri(g.getCapo().getLivello(), g.getPersonaggiVivi().size());
 
 				int limiteMassimoIncontro = Math.min(capLivello, classePersonaggio.getQuantitaMassima());
 

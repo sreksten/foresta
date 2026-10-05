@@ -50,10 +50,22 @@ public class Costanti {
     // Il dardo arcano, l'incantesimo innato di Mago ed Elfo: su un solo bersaglio, per poca MAGIA e senza consumare
     // pergamene. Al Mago rende di più (una pergamena di fuoco fa 60) e costa meno che all'Elfo, che è
     // un po' meno bravo con la magia e in cambio sa combattere
-    public static final int DARDO_ARCANO_DANNI_MAGO = 40;
-    public static final int DARDO_ARCANO_DANNI_ELFO = 30;
+    public static final int DARDO_ARCANO_DANNI_MAGO = 20;
+    public static final int DARDO_ARCANO_DANNI_ELFO = 15;
     public static final int DARDO_ARCANO_COSTO_LANCIO_MAGO = 2;
     public static final int DARDO_ARCANO_COSTO_LANCIO_ELFO = 4;
+
+    // Un'arma fino a tanti livelli sotto quello di chi la impugna rende ancora tutta la parte dell'eroe; oltre, la parte
+    // dell'eroe cala in proporzione (vedi CalcolatoreCombattimento.calcolaDannoRisultante)
+    public static final int TOLLERANZA_LIVELLO_ARMA = 2;
+
+    // Inizio morbido (vedi LocazioneBase.crea): finché il capo del gruppo è a questo livello o sotto, si incontrano al
+    // massimo tanti mostri quanti i personaggi del gruppo, e mai uno dei mostri di MOSTRI_ESCLUSI_A_INIZIO_PARTITA
+    public static final int INIZIO_MORBIDO_FINO_AL_LIVELLO = 3;
+
+    // A fine locazione ogni personaggio vivo recupera getRigenerazioneSalute(): 5 punti più questa quota della salute
+    // massima, aumentati dalla COSTITUZIONE (circa il 25% della salute massima a inizio partita)
+    public static final double RIGENERAZIONE_SALUTE_QUOTA_SALUTE_MASSIMA = 0.15;
 
     // Fusione dall'incantatore: 10 monete più 5 per ogni effetto trasferito
     public static final int FUSIONE_COSTO_BASE = 10;
@@ -88,11 +100,11 @@ public class Costanti {
     // Metà per provarla accanto alle tabelle: da rivedere quando sarà bilanciata
     public static final double ARTEFATTO_PROBABILITA_DA_GRAMMATICA = 0.5;
     public static final double ARTEFATTO_MOLTIPLICATORE_DUE_MANI = 1.5;
-    // Danno medio di un'arma generata: 4 + 2 × livello, ma almeno 11 + livello, così ai livelli bassi un'arma
-    // fa più delle mani nude di un PG (4 + 1,5 × √FORZA, cioè 9-10). Le due curve si incontrano al livello 7.
+    // Danno medio di un'arma generata: 4 + 2 × livello, ma almeno 16 + livello, così ai livelli bassi un'arma
+    // fa ben più delle mani nude di un PG (4 + 1,5 × √FORZA, cioè 9-10). Le due curve si incontrano al livello 12.
     public static final int ARMA_DANNI_BASE = 4;
     public static final int ARMA_DANNI_PER_LIVELLO = 2;
-    public static final int ARMA_DANNI_MINIMI_BASE = 11;
+    public static final int ARMA_DANNI_MINIMI_BASE = 16;
     public static final int ARMA_DANNI_MINIMI_PER_LIVELLO = 1;
     // Probabilità che un artefatto incantabile generato nasca già incantato: 5% per ogni livello oltre il primo, fino al 60%
     public static final double ARTEFATTO_PROBABILITA_INCANTATO_PER_LIVELLO = 0.05;

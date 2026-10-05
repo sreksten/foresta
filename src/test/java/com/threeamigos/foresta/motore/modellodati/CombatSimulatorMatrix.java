@@ -196,7 +196,7 @@ public class CombatSimulatorMatrix {
      * Se al PG conviene il dardo arcano invece delle armi: deve poterlo lanciare, e la probabilità di colpire per
      * il danno deve essere maggiore di quella delle sue fasi di attacco con le armi.
      */
-    private static boolean conviene(Personaggio pg, Personaggio bersaglio) {
+    static boolean conviene(Personaggio pg, Personaggio bersaglio) {
         if (!DardoArcano.puoLanciarlo(pg)) {
             return false;
         }
@@ -224,7 +224,7 @@ public class CombatSimulatorMatrix {
         return null;
     }
 
-    private static void attacca(Personaggio attaccante, Personaggio difensore, FaseDiAttacco fase, StatisticheAttacco statistiche) {
+    static void attacca(Personaggio attaccante, Personaggio difensore, FaseDiAttacco fase, StatisticheAttacco statistiche) {
         statistiche.tentativi++;
         SupertipoDanno superTipoDanno = fase.getArma().getTipoDanno().getSuperTipo();
 
@@ -240,7 +240,7 @@ public class CombatSimulatorMatrix {
         }
     }
 
-    private static class StatisticheAttacco {
+    static class StatisticheAttacco {
         long tentativi;
         long colpiti;
         long dannoTotale;

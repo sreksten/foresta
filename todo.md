@@ -20,6 +20,7 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 - **Separare il modello dati dal motore.** Oggi la UI importa direttamente classi del motore (`GruppoGiocatore`, `Foresta`, `Notizie`, `RegistroMissioni`...) e riceve dagli eventi gli `Automa*` dei negozi, che poi chiama. L'idea: la UI consulta il modello dati in sola lettura e verso il motore emette solo eventi (`Richiesta*`/`Comando*`). Vedi [`assessment.md`](assessment.md).
 - **`ClassiLocazione`.** `GROTTA_RECUPERA_IL_MEDAGLIONE` e `ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI` servono ancora? Dovrebbero essere state superate. Inoltre `ClassiLocazione` dovrebbe chiamarsi `TipoLocazione` e stare in `motore.tipi`.
 - **`Notizie`** si mette in ascolto di una notizia (delle locande) invece di riceverne la pubblicazione: approccio inusuale.
+- **Livellamento della salute inutilizzato.** Da quando la salute massima è salute base × √livello (2026-10-05), `Personaggio.getLivellamentoSalute`, le sue implementazioni e le costanti `*_LIVELLAMENTO_SALUTE` non servono più: da togliere.
 - **Nomi dei modelli dati.** Alcuni non finiscono per `MD` (`ModificatoreArtefatto`).
 
 ## Gioco e contenuti

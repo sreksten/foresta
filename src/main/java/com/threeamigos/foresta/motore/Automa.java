@@ -1062,9 +1062,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			}
 		}
 
-		// Aumentiamo la stanchezza
+		// Aumentiamo la stanchezza, e fra una locazione e l'altra si riprende un po' di salute
 		for (Personaggio personaggioCorrente : gruppo.getPersonaggiVivi()) {
 			personaggioCorrente.addStanchezza(1);
+			personaggioCorrente.addSalute(personaggioCorrente.getRigenerazioneSalute());
 		}
 
 		Statistiche.incrementaTurniGiocati();

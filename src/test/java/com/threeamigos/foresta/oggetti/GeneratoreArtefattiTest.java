@@ -54,13 +54,13 @@ class GeneratoreArtefattiTest {
     }
 
     @Test
-    void aiLivelliBassiLeArmiFannoAlmenoUndicePiuIlLivello() {
-        assertEquals(12, GeneratoreArtefatti.danniMediArma(1));
-        assertEquals(13, GeneratoreArtefatti.danniMediArma(2));
-        assertEquals(16, GeneratoreArtefatti.danniMediArma(5));
-        // Dal livello 7 vale di nuovo 4 + 2 × livello
-        assertEquals(18, GeneratoreArtefatti.danniMediArma(7));
-        assertEquals(24, GeneratoreArtefatti.danniMediArma(10));
+    void aiLivelliBassiLeArmiFannoAlmenoSediciPiuIlLivello() {
+        assertEquals(17, GeneratoreArtefatti.danniMediArma(1));
+        assertEquals(18, GeneratoreArtefatti.danniMediArma(2));
+        assertEquals(21, GeneratoreArtefatti.danniMediArma(5));
+        // Dal livello 12 vale di nuovo 4 + 2 × livello
+        assertEquals(28, GeneratoreArtefatti.danniMediArma(12));
+        assertEquals(34, GeneratoreArtefatti.danniMediArma(15));
     }
 
     @Test

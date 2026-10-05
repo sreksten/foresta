@@ -105,6 +105,8 @@ class ScenarioDuelliTest {
             // Arsenio è già allo stremo: al primo colpo si arrende
             arsenio.getModelloDati().set(TipoAttributo.SALUTE, 1);
             entraNelCovo(partita, covo);
+            // Uberto invece regge quanto serve: Arsenio colpisce per primo, e non deve farlo arrendere prima del suo colpo
+            GruppoAvversario.getIstanza().getCapo().getModelloDati().set(TipoAttributo.SALUTE, 10_000);
 
             combatti(partita);
             assertNotEquals(Stato.GIOCO_PERSO, partita.stato());

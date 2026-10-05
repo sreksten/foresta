@@ -154,6 +154,14 @@ public class CalcolatoreCombattimento {
     }
 
     /**
+     * Quanto pesa un livello nel danno, per tutti: la sua radice quadrata, come per la salute massima (vedi
+     * PersonaggioBase.calcolaSaluteMassima), così uno scontro alla pari dura uguale a ogni livello
+     */
+    static double livelloDiCombattimento(int livello) {
+        return Math.sqrt(livello);
+    }
+
+    /**
      * Le fasi di attacco di un turno: l'arma principale e, per chi combatte con due armi, quella nella
      * mano secondaria, al 40% (Costanti.DOPPIA_ARMA_FATTORE_SECONDA_ARMA).
      */
@@ -212,8 +220,8 @@ public class CalcolatoreCombattimento {
             Logger.log("statDifensiva penalizzata dal 20% da MENTE_FRATTURATA = " + statDifensiva);
         }
 
-        // 2. MATEMATICA DI BASE DEL DANNO (Con fattore di scala livello arma)
-        int dannoBaseArma = arma.getDanni() * arma.getLivello();
+        // 2. MATEMATICA DI BASE DEL DANNO (Con fattore di scala livello arma, che pesa con la sua radice quadrata)
+        int dannoBaseArma = (int) Math.round(arma.getDanni() * livelloDiCombattimento(arma.getLivello()));
         if (isIncantesimo(arma)) {
             // Il danno proprio dell'incantesimo: il resto lo fanno l'INTELLIGENZA e il moltiplicatore magico di chi la lancia
             dannoBaseArma = (int) Math.round(dannoBaseArma * Costanti.INCANTESIMO_FATTORE_DANNI);
@@ -221,14 +229,16 @@ public class CalcolatoreCombattimento {
 
         Logger.log(String.format("dannoBaseArma = danniBase %d * livello arma %d = %d", arma.getDanni(), arma.getLivello(), dannoBaseArma));
 
-        // Rapporto di Efficacia dell'Arma per evitare exploit di armi liv. 1 su campioni liv. 20
-        double rapportoEfficacia = (double) arma.getLivello() / (double) attaccante.getLivello();
+        // Rapporto di Efficacia dell'Arma per evitare exploit di armi liv. 1 su campioni liv. 20: fino a
+        // TOLLERANZA_LIVELLO_ARMA livelli sotto quello di chi la impugna l'arma rende ancora tutta la parte dell'eroe
+        double rapportoEfficacia = (double) (arma.getLivello() + Costanti.TOLLERANZA_LIVELLO_ARMA) / (double) attaccante.getLivello();
         if (rapportoEfficacia > 1.0d) {
             rapportoEfficacia = 1.0d;
         }
-        Logger.log(String.format("rapportoEfficacia (livello arma %d / livello attaccante %d) = %f", arma.getLivello(), attaccante.getLivello(), rapportoEfficacia));
+        Logger.log(String.format("rapportoEfficacia ((livello arma %d + %d) / livello attaccante %d) = %f", arma.getLivello(),
+                Costanti.TOLLERANZA_LIVELLO_ARMA, attaccante.getLivello(), rapportoEfficacia));
 
-        double contributoEroe = (double) (statOffensiva * attaccante.getLivello()) / 5.0d;
+        double contributoEroe = statOffensiva * livelloDiCombattimento(attaccante.getLivello()) / 5.0d;
         Logger.log(String.format("contributoEroe (statOffensiva %d * livello attaccante %d / 5 = %f", statOffensiva, attaccante.getLivello(), contributoEroe));
         // Il carattere della classe: il guerriero picchia, il mago incanta (Costanti.*_MOLTIPLICATORE_DANNI_*)
         double moltiplicatoreClasse = dannoNonFisico ? attaccante.getMoltiplicatoreDanniMagici() : attaccante.getMoltiplicatoreDanniFisici();

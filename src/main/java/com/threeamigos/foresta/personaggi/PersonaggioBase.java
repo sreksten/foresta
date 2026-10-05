@@ -317,7 +317,8 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	/**
-	 * Calcola i Punti Vita (HP) rigenerati durante un turno di riposo.
+	 * La salute che il personaggio recupera a fine locazione (vedi Automa, stato FINE_LOCAZIONE_2). I modificatori di
+	 * RIGENERAZIONE_SALUTE (del personaggio, degli artefatti e dei set leggendari) valgono su tutta la base.
 	 */
 	public int getRigenerazioneSalute() {
 		// Se la creatura è un non-morto o uno spettro, il moltiplicatore è 0.0, quindi guarisce 0
@@ -325,7 +326,8 @@ public abstract class PersonaggioBase implements Personaggio {
 			return 0;
 		}
 		// 1. Base di partenza mista
-		double baseGrezza = getQuantitaModificata(md, 5.0d, TipoAttributo.RIGENERAZIONE_SALUTE) + (getSaluteMassima() * 0.05);
+		double baseGrezza = getQuantitaModificata(md,
+				5.0d + getSaluteMassima() * Costanti.RIGENERAZIONE_SALUTE_QUOTA_SALUTE_MASSIMA, TipoAttributo.RIGENERAZIONE_SALUTE);
 		// 2. Impatto dell'attributo Costituzione con Diminishing Returns
 		double bonusCostituzione = 1.0 + (Math.sqrt(getCostituzione()) / 10.0);
 		// 3. Calcolo finale combinato con il moltiplicatore di archetipo
@@ -1083,7 +1085,9 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	protected double calcolaSaluteMassima() {
-		double saluteMassima = getSaluteBase() + getLivellamentoSalute() * Math.sqrt(getLivello() - 1);
+		// Cresce con la radice quadrata del livello (100, 141, 173, 200...), per tutti: come il danno
+		// (vedi CalcolatoreCombattimento.livelloDiCombattimento), così uno scontro alla pari dura uguale a ogni livello
+		double saluteMassima = getSaluteBase() * Math.sqrt(getLivello());
 		saluteMassima = getQuantitaModificata(md, saluteMassima, TipoAttributo.SALUTE);
 		return saluteMassima;
 	}
