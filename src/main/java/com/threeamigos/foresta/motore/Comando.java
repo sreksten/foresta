@@ -3,72 +3,72 @@ package com.threeamigos.foresta.motore;
 public enum Comando {
 
 	// All'inizio del gioco, per scegliere il sesso del proprio personaggio
-	MASCHIO,
-	FEMMINA,
+	MASCHIO("Crea un personaggio di sesso maschile"),
+	FEMMINA("Crea un personaggio di sesso femminile"),
 
 	// All'inizio del gioco, per scegliere la classe del proprio personaggio
-	GUERRIERA,
-	GUERRIERO,
-	LADRA,
-	LADRO,
-	BARDO,
-	CANTASTORIE,
-	ELFA,
-	ELFO,
-	MAGA,
-	MAGO,
+	GUERRIERA("Crea una Guerriera"),
+	GUERRIERO("Crea un Guerriero"),
+	LADRA("Crea una Ladra"),
+	LADRO("Crea un Ladro"),
+	BARDO("Crea un Bardo"),
+	CANTASTORIE("Crea una Cantastorie"),
+	ELFA("Crea un'Elfa"),
+	ELFO("Crea un Elfo"),
+	MAGA("Crea una Maga"),
+	MAGO("Crea un Mago"),
 
 	// Le scelte tipiche all'interno di una locazione standard
-	SINGOLO_ATTACCO,
-	COMBATTIMENTO,
-	INTERRUZIONE_COMBATTIMENTO,
-	INCANTESIMO,
-	CORRUZIONE,
-	AMICIZIA,
-	FUGA,
-	PASSA_INOSSERVATO,
+	SINGOLO_ATTACCO("Esegue un singolo attacco"),
+	COMBATTIMENTO("Combatte fino alla fine di uno dei due contendenti"),
+	INTERRUZIONE_COMBATTIMENTO("Interrompe il combattimento in corso"),
+	INCANTESIMO("Formula un incantesimo"),
+	CORRUZIONE("Esegue un tentativo di corruzione"),
+	AMICIZIA("Prova a stringere amicizia"),
+	FUGA("Fugge a gambe levate"),
+	PASSA_INOSSERVATO("Cerca di passare inosservato"),
 
 	// Quando occorre scegliere un particolare componente del gruppo
-	PERSONAGGIO_1,
-	PERSONAGGIO_2,
-	PERSONAGGIO_3,
-	PERSONAGGIO_4,
-	PERSONAGGIO_5,
-	PERSONAGGIO_6,
-	PERSONAGGIO_7,
-	PERSONAGGIO_8,
+	PERSONAGGIO_1("Il primo personaggio del gruppo"),
+	PERSONAGGIO_2("Il secondo personaggio del gruppo"),
+	PERSONAGGIO_3("Il terzo personaggio del gruppo"),
+	PERSONAGGIO_4("Il quarto personaggio del gruppo"),
+	PERSONAGGIO_5("Il quinti personaggio del gruppo"),
+	PERSONAGGIO_6("Il sesto personaggoi del gruppo"),
+	PERSONAGGIO_7("Il settimo personaggio del gruppo"),
+	PERSONAGGIO_8("L'ottavo personaggio del gruppo"),
 
 	// Selezione di un tipo di incantesimo
-	ARIA,
-	ACQUA,
-	TERRA,
-	FUOCO,
-	FULMINE,
-	GELO,
-	VELENO,
-	MORTE,
-	RESURREZIONE,
-	ALBA_SACRA,
+	ARIA("Lancia un incantesimo di Aria"),
+	ACQUA("Lancia un incantesimo di Acqua"),
+	TERRA("Lancia un incantesimo di Terra"),
+	FUOCO("Lancia un incantesimo del Fuoco"),
+	FULMINE("Lancia un incantesimo del Fulmine"),
+	GELO("Lancia un incantesimo del Gelo"),
+	VELENO("Lancia un incantesimo di Veleno"),
+	MORTE("Lancia un incantesimo di Morte"),
+	RESURREZIONE("Lancia un incantesimo di Resurrezione"),
+	ALBA_SACRA("Lancia un incantesimo di Alba Sacra"),
 	// L'incantesimo innato di Mago ed Elfo, che non consuma pergamene
-	DARDO_ARCANO,
+	DARDO_ARCANO("Lancia un Dardo Arcano"),
 	// Annulla la scelta di un incantesimo
-	NO_INCANTESIMO,
+	NO_INCANTESIMO("Annulla il lancio di un incantesimo"),
 
 	// Direzione verso la quale muoversi
-	NORD,
-	EST,
-	SUD,
-	OVEST,
+	NORD("Muove verso Nord"),
+	EST("Muove verso Est"),
+	SUD("Muove verso Sud"),
+	OVEST("Muove verso Ovest"),
 
 	// Scelte possibili al completamento di una locazione
-	ACCAMPAMENTO,
-	POZIONE_SALUTE,
-	POZIONE_SALUTE_GRANDE,
-	POZIONE_MAGIA,
-	POZIONE_MAGIA_GRANDE,
-	MAPPA,
-	INVENTARIO,
-	FLOPPY,
+	ACCAMPAMENTO("Il gruppo si accampa per la notte"),
+	POZIONE_SALUTE("Consuma una pozione della Salute"),
+	POZIONE_SALUTE_GRANDE("Consuma una pozione della Salute, grande"),
+	POZIONE_MAGIA("Consuma una pozione della Magia"),
+	POZIONE_MAGIA_GRANDE("Consuma una pozione della Magia, grande"),
+	MAPPA("Consulta la mappa della Foresta"),
+	INVENTARIO("Consulta l'inventario del gruppo"),
+	FLOPPY("Salva il gioco"),
 
 	// Numero di passi di cui muoversi, o scelta di uno slot di salvataggio
 	NUMERO_1,
@@ -78,30 +78,31 @@ public enum Comando {
 	NUMERO_5,
 
 	// Scelte possibili all'interno di una città
-	LOCANDA,
-	ALCHIMISTA,
-	ARMAIOLO,
-	VENDITORE_DI_PERGAMENE,
-	INCANTATORE,
+	LOCANDA("Visita la Locanda cittadina"),
+	ALCHIMISTA("Visita l'alchimista"),
+	ARMAIOLO("Visita l'armaiolo"),
+	VENDITORE_DI_PERGAMENE("Visita il venditore di pergamene"),
+	INCANTATORE("Visita l'incantatore"),
 	// Nella bottega dell'incantatore, conferma la fusione
-	FUSIONE,
-	ESCI_DA_CITTA,
+	FUSIONE("Esegue la fusione"),
+	ESCI_DA_CITTA("Esce dalla città"),
 
 	// Dall'alchimista, sceglie se agire su un personaggio o su tutto il gruppo
-	GRUPPO,
-	SINGOLO,
+	GRUPPO("Tutto il gruppo"),
+	SINGOLO("Singolo personaggio"),
 
-	SI,
-	NO,
-	ANNULLA,
+	SI("Si"),
+	NO("No"),
+	ANNULLA("Annulla"),
 
-	AIUTO,
+	AIUTO("Mostra l'aiuto"),
+	SPENGI_AIUTO("Disabilita l'aiuto"),
 
 	// Dall'inventario, la pagina dei trofei
-	MOSTRA_TROFEI,
+	MOSTRA_TROFEI("Mostra i trofei vinti"),
 
 	// Usata per chiedere conferma all'utente prima di andare avanti
-	PERGAMENA,
+	PERGAMENA("Vai avanti"),
 
 	// In caso di mancanza di posto per l'elenco delle possibili azioni, appaiono due frecce
 	// agli estremi (a seconda del layout di visualizzazione)
@@ -110,9 +111,9 @@ public enum Comando {
 	DESTRA,
 	SINISTRA,
 
-	CARTA,
-	FORBICE,
-	SASSO,
+	CARTA("Carta"),
+	FORBICE("Forbice"),
+	SASSO("Sasso"),
 
 	// Azione automaticamente generata dal sistema quando si è in una locazione, per le animazioni
 	TIMER,
@@ -131,7 +132,21 @@ public enum Comando {
 		}
 		throw new IllegalArgumentException();
 	}
+
+	private final String descrizione;
+
+	Comando() {
+		this.descrizione = null;
+	}
+
+	Comando(String descrizione) {
+		this.descrizione = descrizione;
+	}
 	
+	public String getDescrizione() {
+		return descrizione;
+	}
+
 	/**
 	 * Se il comando indica uno dei personaggi del gruppo (PERSONAGGIO_1 ... PERSONAGGIO_8).
 	 */
