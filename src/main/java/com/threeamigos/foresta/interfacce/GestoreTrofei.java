@@ -1,8 +1,12 @@
-package com.threeamigos.foresta.tools;
+package com.threeamigos.foresta.interfacce;
 
 import com.threeamigos.foresta.motore.modellodati.TrofeiMD;
 
-public interface InterfacciaGestoreTrofei {
+/**
+ * Dove stanno i trofei vinti, che valgono da una partita all'altra: Main passa a RegistroTrofei l'implementazione
+ * (GestoreTrofeiSuFile), i test un gestore in memoria.
+ */
+public interface GestoreTrofei {
 
 	/**
 	 * Recupera i trofei vinti salvati da qualche parte

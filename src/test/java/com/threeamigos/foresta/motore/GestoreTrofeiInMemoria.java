@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.interfacce.GestoreTrofei;
 import com.threeamigos.foresta.motore.modellodati.TrofeiMD;
 import com.threeamigos.foresta.motore.tipi.TipoTrofeo;
-import com.threeamigos.foresta.tools.InterfacciaGestoreTrofei;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.util.Arrays;
 /**
  * I trofei dei test, in memoria: il "file" è il testo che verrebbe scritto su disco.
  */
-final class GestoreTrofeiInMemoria implements InterfacciaGestoreTrofei {
+final class GestoreTrofeiInMemoria implements GestoreTrofei {
 
 	private String contenuto = "";
 	private int salvataggi;

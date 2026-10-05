@@ -2,6 +2,7 @@ package com.threeamigos.foresta.tools;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoException;
+import com.threeamigos.foresta.interfacce.GestoreTrofei;
 import com.threeamigos.foresta.motore.modellodati.TrofeiMD;
 
 import java.io.BufferedReader;
@@ -17,7 +18,7 @@ import java.nio.file.Paths;
 /**
  * I trofei vinti, nel file "trofei" della cartella .foresta.
  */
-public final class GestoreTrofeiSuFile extends GestoreSuFile implements InterfacciaGestoreTrofei {
+public final class GestoreTrofeiSuFile extends GestoreSuFile implements GestoreTrofei {
 
 	private String nomeFile;
 

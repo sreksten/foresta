@@ -4,9 +4,9 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoPreparazioneLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoTrofeoAcquisito;
+import com.threeamigos.foresta.interfacce.GestoreTrofei;
 import com.threeamigos.foresta.motore.modellodati.TrofeiMD;
 import com.threeamigos.foresta.motore.tipi.TipoTrofeo;
-import com.threeamigos.foresta.tools.InterfacciaGestoreTrofei;
 import com.threeamigos.foresta.trofei.ClasseTrofeo;
 import com.threeamigos.foresta.trofei.Trofeo;
 
@@ -27,7 +27,7 @@ import java.util.Map;
 public class RegistroTrofei {
 
 	private static TrofeiMD trofeiMD = new TrofeiMD();
-	private static InterfacciaGestoreTrofei gestoreTrofei;
+	private static GestoreTrofei gestoreTrofei;
 	private static final Map<TipoTrofeo, Integer> progressiInSospeso = new EnumMap<>(TipoTrofeo.class);
 
 	private RegistroTrofei() {
@@ -36,7 +36,7 @@ public class RegistroTrofei {
 	/**
 	 * Imposta dove leggere e salvare i trofei, e li rilegge da lì.
 	 */
-	public static void impostaGestoreTrofei(InterfacciaGestoreTrofei gestore) {
+	public static void impostaGestoreTrofei(GestoreTrofei gestore) {
 		gestoreTrofei = gestore;
 		trofeiMD = new TrofeiMD();
 		progressiInSospeso.clear();
