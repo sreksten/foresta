@@ -122,6 +122,40 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         disegnaIntestazioniInventario(graphics);
 
         disegnaSpriteLocali(graphics);
+
+        disegnaAiuto(graphics, righeAiuto());
+    }
+
+    /**
+     * L'aiuto per l'elenco sotto il mouse: su un consumabile il click apre e chiude la sua descrizione, e quelli
+     * dell'alchimista, a destra, si comprano con il doppio click (i consumabili del gruppo non si vendono); ovunque
+     * nell'elenco, se si scorre, la rotella
+     */
+    private List<String> righeAiuto() {
+        List<String> righe = new ArrayList<>();
+        if (dentroElenco(xMinimaZonaSinistra, mouseX, mouseY)) {
+            List<Consumabile> gruppo = getElencoGruppo();
+            Consumabile consumabile = trovaConsumabile(gruppo, xMinimaZonaSinistra, offsetYZonaSinistra, mouseX, mouseY, false);
+            if (consumabile != null) {
+                righe.add(Cartiglio.aiutoClick(statoDi(consumabile).isFigliVisibili(), "descrizione"));
+            }
+            aggiungiAiutoRotella(righe, gruppo, false);
+        } else if (dentroElenco(xMinimaZonaDestra, mouseX, mouseY)) {
+            List<Consumabile> venditore = getElencoVenditore();
+            Consumabile consumabile = trovaConsumabile(venditore, xMinimaZonaDestra, offsetYZonaDestra, mouseX, mouseY, true);
+            if (consumabile != null) {
+                righe.add(Cartiglio.aiutoClick(statoDi(consumabile).isFigliVisibili(), "descrizione"));
+                righe.add("Doppio click: acquista");
+            }
+            aggiungiAiutoRotella(righe, venditore, true);
+        }
+        return righe;
+    }
+
+    private void aggiungiAiutoRotella(List<String> righe, List<Consumabile> elenco, boolean mostraCosto) {
+        if (costruisciComponenteScorrevoleConsumabili(elenco, null, mostraCosto).isScorrevole(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO)) {
+            righe.add(Cartiglio.AIUTO_ROTELLA);
+        }
     }
 
     private int disegnaElencoSinistro(Graphics2D graphics, int x, int offset) {

@@ -39,6 +39,16 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
     }
 
     @Override
+    protected String aiutoDoppioClickSinistra() {
+        return "Doppio click: metti sul banco di lavoro";
+    }
+
+    @Override
+    protected String aiutoDoppioClickDestra() {
+        return "Doppio click: rimuovi dal banco di lavoro";
+    }
+
+    @Override
     void disegnaIntestazioniInventario(Graphics2D graphics) {
         disegnaIntestazioniInventarioImpl(graphics, "Inventario gruppo", "Banco di lavoro");
     }

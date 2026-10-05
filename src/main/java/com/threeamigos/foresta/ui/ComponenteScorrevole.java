@@ -84,6 +84,14 @@ public class ComponenteScorrevole<T> {
     }
 
     /**
+     * Se la lista è più alta dello spazio in cui la si disegna, e quindi si scorre (con le frecce su e giù che lo
+     * segnalano, vedi produci)
+     */
+    public boolean isScorrevole(int altezzaMassima) {
+        return calcolaAltezzaMassimaNodi() > altezzaMassima;
+    }
+
+    /**
      * Riporta l'offset di scorrimento entro i limiti della lista: non si scorre
      * sopra la prima riga né oltre l'ultima.
      */

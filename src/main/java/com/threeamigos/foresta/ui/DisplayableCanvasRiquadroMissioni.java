@@ -5,8 +5,10 @@ import com.threeamigos.foresta.missioni.DisturbatoreDellaQuietePubblica;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.NessunBoccaleLasciatoIndietro;
 import com.threeamigos.foresta.motore.RegistroMissioni;
+import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.List;
 
 class DisplayableCanvasRiquadroMissioni implements Finestra {
@@ -25,6 +27,10 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 	private final int innerHeight;
 
 	int offsetY = 0;
+
+	// Dove sta il mouse, relativo al riquadro, per l'aiuto (-1 fuori)
+	private int mouseX = -1;
+	private int mouseY = -1;
 
 	DisplayableCanvasRiquadroMissioni(int topLeftX, int topLeftY) {
 		this.topLeftX = topLeftX;
@@ -129,6 +135,45 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 		} else {
 			missione.mostraDescrizione();
 		}
+	}
+
+	@Override
+	public void processaMovimento(int x, int y) {
+		mouseX = x;
+		mouseY = y;
+	}
+
+	@Override
+	public void processaUscita(int x, int y) {
+		mouseX = -1;
+		mouseY = -1;
+	}
+
+	/**
+	 * Ad aiuto acceso, i cartigli accanto al mouse dentro l'elenco: sul nome di una missione cosa fa il click (aprire
+	 * o chiudere la descrizione), e se l'elenco è più alto del riquadro la rotella. Va chiamato dopo aver disegnato
+	 * tutto lo schermo, grande larghezzaSchermo x altezzaSchermo.
+	 */
+	void disegnaAiuto(Graphics2D graphics, int larghezzaSchermo, int altezzaSchermo) {
+		if (!ModelloDati.getIstanza().isAiutoAbilitato() || mouseX < 0) {
+			return;
+		}
+		int bordo = DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + SPACING;
+		int xInterno = mouseX - bordo;
+		int yInterno = mouseY - bordo;
+		if (xInterno < 0 || xInterno >= innerWidth || yInterno < 0 || yInterno >= innerHeight) {
+			return;
+		}
+		ComponenteScorrevole<Missione> componenteScorrevole = costruisciComponenteScorrevole();
+		List<String> righe = new ArrayList<>();
+		Missione missione = componenteScorrevole.riferimentoTitoloAllaQuota(yInterno + offsetY);
+		if (missione != null) {
+			righe.add(Cartiglio.aiutoClick(missione.isDescrizioneVisibile(), "descrizione"));
+		}
+		if (componenteScorrevole.isScorrevole(innerHeight)) {
+			righe.add(Cartiglio.AIUTO_ROTELLA);
+		}
+		Cartiglio.disegnaAccantoAlMouse(graphics, righe, topLeftX + mouseX, topLeftY + mouseY, larghezzaSchermo, altezzaSchermo);
 	}
 
 	@Override

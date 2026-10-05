@@ -33,8 +33,8 @@ public enum Comando {
 	PERSONAGGIO_2("Il secondo personaggio del gruppo"),
 	PERSONAGGIO_3("Il terzo personaggio del gruppo"),
 	PERSONAGGIO_4("Il quarto personaggio del gruppo"),
-	PERSONAGGIO_5("Il quinti personaggio del gruppo"),
-	PERSONAGGIO_6("Il sesto personaggoi del gruppo"),
+	PERSONAGGIO_5("Il quinto personaggio del gruppo"),
+	PERSONAGGIO_6("Il sesto personaggio del gruppo"),
 	PERSONAGGIO_7("Il settimo personaggio del gruppo"),
 	PERSONAGGIO_8("L'ottavo personaggio del gruppo"),
 
@@ -68,7 +68,9 @@ public enum Comando {
 	POZIONE_MAGIA_GRANDE("Consuma una pozione della Magia, grande"),
 	MAPPA("Consulta la mappa della Foresta"),
 	INVENTARIO("Consulta l'inventario del gruppo"),
-	FLOPPY("Salva il gioco"),
+	// Nell'intro, per riprendere una partita salvata; in gioco, per salvare
+	FLOPPY_CARICA("Continua una partita"),
+	FLOPPY_SALVA("Salva la partita"),
 
 	// Numero di passi di cui muoversi, o scelta di uno slot di salvataggio
 	NUMERO_1,
@@ -96,13 +98,13 @@ public enum Comando {
 	ANNULLA("Annulla"),
 
 	AIUTO("Mostra l'aiuto"),
-	SPENGI_AIUTO("Disabilita l'aiuto"),
+	NO_AIUTO("Disabilita l'aiuto"),
 
 	// Dall'inventario, la pagina dei trofei
 	MOSTRA_TROFEI("Mostra i trofei vinti"),
 
 	// Usata per chiedere conferma all'utente prima di andare avanti
-	PERGAMENA("Vai avanti"),
+	PERGAMENA("Avanti"),
 
 	// In caso di mancanza di posto per l'elenco delle possibili azioni, appaiono due frecce
 	// agli estremi (a seconda del layout di visualizzazione)

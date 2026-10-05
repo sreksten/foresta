@@ -82,11 +82,11 @@ class ScenarioCorrezioniTest {
 			while (LineaTemporale.getOra() <= 20) {
 				LineaTemporale.aggiungiOre(1);
 			}
-			prima.comando(Comando.FLOPPY).comando(Comando.NUMERO_1);
+			prima.comando(Comando.FLOPPY_SALVA).comando(Comando.NUMERO_1);
 			salvataggi = prima.salvataggi();
 		}
 		try (PartitaDiTest dopo = PartitaDiTest.nuovaConSalvataggi(8, salvataggi)) {
-			dopo.comando(Comando.FLOPPY).comando(Comando.NUMERO_1);
+			dopo.comando(Comando.FLOPPY_CARICA).comando(Comando.NUMERO_1);
 			dopo.assertStato(Stato.SCELTA_DIREZIONE);
 			dopo.assertComandoDisponibile(Comando.ACCAMPAMENTO);
 			dopo.comando(Comando.ACCAMPAMENTO);

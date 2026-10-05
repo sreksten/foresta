@@ -60,6 +60,16 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
     }
 
     @Override
+    protected String aiutoDoppioClickSinistra() {
+        return "Doppio click: sposta nell'inventario del gruppo";
+    }
+
+    @Override
+    protected String aiutoDoppioClickDestra() {
+        return "Doppio click: equipaggia";
+    }
+
+    @Override
     void disegnaIntestazioniInventario(Graphics2D graphics) {
         disegnaIntestazioniInventarioImpl(graphics, "Inventario personaggio", "Inventario gruppo");
     }

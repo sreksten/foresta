@@ -28,7 +28,6 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 - Carta, forbice e sasso.
 - Mostrare in locazione anche i personaggi del gruppo.
 - Fumetto che attende la chiusura.
-- Sistema di aiuto.
 - Come ci sono locande sparse per la foresta, anche qualche negozio (armaiolo, alchimista, venditore di pergamene, incantatore).
 - Ricontrollare l'economia partendo da [`economia.md`](economia.md): entrate, uscite, modello per livello e proposte (bottino dei nemici, preziosi che valgono col livello, missioni pagate col livello, prezzi degli ingredienti).
 - Dimensione ottimale della mappa: `Foresta.DIMENSIONE_X`/`DIMENSIONE_Y`, da tarare con le prove.

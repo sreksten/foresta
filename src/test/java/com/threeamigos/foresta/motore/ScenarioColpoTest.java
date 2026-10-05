@@ -129,10 +129,8 @@ class ScenarioColpoTest {
             IlColpo colpo = prendiIlColpo(partita);
             partita.gruppo().addPozioniSalute(1);
             entra(partita, colpo.getPosto());
-            // Farsi ridescrivere la locazione non è un'azione
-            partita.comando(Comando.AIUTO);
             assertTrue(partita.comandiDisponibili().contains(Comando.PASSA_INOSSERVATO), String.valueOf(partita.comandiDisponibili()));
-            // Bere una pozione sì
+            // Bere una pozione è un'azione
             partita.comando(Comando.POZIONE_SALUTE);
             partita.assertStato(Stato.IN_LOCAZIONE);
             assertFalse(partita.comandiDisponibili().contains(Comando.PASSA_INOSSERVATO), String.valueOf(partita.comandiDisponibili()));

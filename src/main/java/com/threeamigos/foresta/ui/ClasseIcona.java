@@ -64,7 +64,8 @@ public enum ClasseIcona {
 	POZIONE_MAGIA_GRANDE(Comando.POZIONE_MAGIA_GRANDE, "icone/PozioneMagiaGrande.gif"),
 	MAPPA(Comando.MAPPA, "icone/Mappa.gif"),
 	INVENTARIO(Comando.INVENTARIO, "icone/Inventario.gif"),
-	FLOPPY(Comando.FLOPPY, "icone/Floppy.gif"),
+	FLOPPY_CARICA(Comando.FLOPPY_CARICA, "icone/Floppy.gif"),
+	FLOPPY_SALVA(Comando.FLOPPY_SALVA, "icone/Floppy.gif"),
 
 	NUMERO_1(Comando.NUMERO_1, "icone/1.gif"),
 	NUMERO_2(Comando.NUMERO_2, "icone/2.gif"),
@@ -89,6 +90,7 @@ public enum ClasseIcona {
 	ANNULLA(Comando.ANNULLA, "icone/Annulla.gif"),
 
 	AIUTO(Comando.AIUTO, "icone/Aiuto.gif"),
+	NO_AIUTO(Comando.NO_AIUTO, "icone/NoAiuto.gif"),
 	MOSTRA_TROFEI(Comando.MOSTRA_TROFEI, "icone/Trofei.gif"),
 	PERGAMENA(Comando.PERGAMENA, "icone/Pergamena.gif"),
 

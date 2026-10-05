@@ -152,6 +152,11 @@ class DisplayableCanvasBarraIconeDock extends DisplayableCanvasBarraIcone {
 	}
 
 	@Override
+	Rectangle rettangoloDisegnato(int indice) {
+		return indice < rettangoli.size() ? rettangoli.get(indice) : super.rettangoloDisegnato(indice);
+	}
+
+	@Override
 	boolean contiene(int x, int y) {
 		if (super.contiene(x, y)) {
 			return true;

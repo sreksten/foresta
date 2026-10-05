@@ -17,6 +17,7 @@ import java.io.PrintWriter;
  * <li>NotizieMD - ultimi messaggi mostrati al giocatore e ultime notizie per la mappa</li>
  * <li>IntermezziMD - gli intermezzi già mostrati</li>
  * </ul>
+ * e se l'aiuto della barra delle icone è acceso (vedi DisplayableCanvasBarraIcone).
  */
 public class ModelloDati implements Serializzabile {
 
@@ -34,6 +35,8 @@ public class ModelloDati implements Serializzabile {
 	private final RegistroMissioniMD registroMissioniMD;
 	private final NotizieMD notizieMD;
 	private final IntermezziMD intermezziMD;
+	// I cartigli con la descrizione dei comandi sopra la barra delle icone: accesi in una partita nuova
+	private boolean aiutoAbilitato = true;
 
 	public ModelloDati() {
 		gruppoGiocatoreMD = new GruppoGiocatoreMD();
@@ -87,6 +90,14 @@ public class ModelloDati implements Serializzabile {
 		return notizieMD;
 	}
 
+	public boolean isAiutoAbilitato() {
+		return aiutoAbilitato;
+	}
+
+	public void setAiutoAbilitato(boolean aiutoAbilitato) {
+		this.aiutoAbilitato = aiutoAbilitato;
+	}
+
 	public IntermezziMD getIntermezziMD() {
 		return intermezziMD;
 	}
@@ -103,6 +114,7 @@ public class ModelloDati implements Serializzabile {
 		registroMissioniMD.reimposta();
 		notizieMD.reimposta();
 		intermezziMD.reimposta();
+		aiutoAbilitato = true;
 	}
 
 	@Override
@@ -116,6 +128,7 @@ public class ModelloDati implements Serializzabile {
 		registroMissioniMD.salva(stream);
 		notizieMD.salva(stream);
 		intermezziMD.salva(stream);
+		stream.println(aiutoAbilitato);
 	}
 
 	@Override
@@ -138,5 +151,6 @@ public class ModelloDati implements Serializzabile {
 		registroMissioniMD.leggi(stream);
 		notizieMD.leggi(stream);
 		intermezziMD.leggi(stream);
+		aiutoAbilitato = Boolean.parseBoolean(stream.readLine());
 	}
 }

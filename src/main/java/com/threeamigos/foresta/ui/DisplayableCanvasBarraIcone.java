@@ -5,6 +5,7 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoDiGioco;
 import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.ComandiPossibili;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.awt.*;
@@ -18,11 +19,20 @@ import java.util.List;
  * DisplayableCanvas (vedi DisplayableCanvas.run). Se la fascia non è sufficiente a
  * contenere tutte le icone, vengono aggiunte icone "Precedente" e "Successivo" in
  * testa e in coda, che servono a scorrere tra le varie scelte.
+ * <p>
+ * In fondo ai comandi la barra aggiunge da sola l'interruttore dell'aiuto, che il gioco non vede: AIUTO quando
+ * l'aiuto è spento, NO_AIUTO quando è acceso (l'icona mostra cosa fa il click). Lo stato sta in ModelloDati e si
+ * salva con la partita. Ad aiuto acceso, passando sopra un'icona compare un cartiglio con la descrizione del comando
+ * (Comando.getDescrizione), sempre dentro lo schermo (vedi disegnaAiuto).
  */
 class DisplayableCanvasBarraIcone implements Finestra {
 
 	static final int ICONA_WIDTH = 62;
 	static final int ICONA_HEIGHT = 64;
+	/**
+	 * La distanza fra il cartiglio dell'aiuto e l'icona a cui si riferisce
+	 */
+	private static final int DISTANZA_CARTIGLIO = 4;
 
 	static class IconaVisibile {
 		final Rectangle rettangolo;
@@ -92,7 +102,11 @@ class DisplayableCanvasBarraIcone implements Finestra {
 	}
 
 	void impostaAzioni() {
-		List<Comando> possibiliAzioni = ComandiPossibili.getComandi();
+		List<Comando> possibiliAzioni = new ArrayList<>(ComandiPossibili.getComandi());
+		// L'interruttore dell'aiuto, in ogni schermata che ha dei comandi
+		if (!possibiliAzioni.isEmpty()) {
+			possibiliAzioni.add(comandoAiuto());
+		}
 		int quanteScelte = possibiliAzioni.size();
 		comandi = new Comando[quanteScelte];
 		icone = new BufferedImage[quanteScelte];
@@ -105,6 +119,31 @@ class DisplayableCanvasBarraIcone implements Finestra {
 			icone[i] = getIcona(comando);
 		}
 		saltaPrimi = 0;
+		ridistribuisciScelte();
+	}
+
+	/**
+	 * L'icona dell'interruttore mostra cosa fa il click: accendere l'aiuto se è spento, spegnerlo se è acceso
+	 */
+	private static Comando comandoAiuto() {
+		return ModelloDati.getIstanza().isAiutoAbilitato() ? Comando.NO_AIUTO : Comando.AIUTO;
+	}
+
+	private static boolean isInterruttoreAiuto(Comando comando) {
+		return comando == Comando.AIUTO || comando == Comando.NO_AIUTO;
+	}
+
+	/**
+	 * Accende o spegne l'aiuto e cambia l'icona dell'interruttore, senza cambiare pagina di scelte
+	 */
+	private void commutaAiuto(Comando azione) {
+		ModelloDati.getIstanza().setAiutoAbilitato(azione == Comando.AIUTO);
+		for (int i = 0; i < comandi.length; i++) {
+			if (isInterruttoreAiuto(comandi[i])) {
+				comandi[i] = comandoAiuto();
+				icone[i] = getIcona(comandi[i]);
+			}
+		}
 		ridistribuisciScelte();
 	}
 
@@ -226,6 +265,57 @@ class DisplayableCanvasBarraIcone implements Finestra {
 		graphics.drawLine(sx, sy, sx, y);
 	}
 
+	/**
+	 * Il rettangolo, relativo alla barra, in cui è disegnata adesso l'icona di iconeVisibili con quell'indice
+	 */
+	Rectangle rettangoloDisegnato(int indice) {
+		return iconeVisibili.get(indice).rettangolo;
+	}
+
+	/**
+	 * Ad aiuto acceso, il cartiglio con la descrizione del comando sotto il mouse, sopra tutto il resto: va chiamato
+	 * dopo aver disegnato lo schermo intero, grande larghezzaSchermo x altezzaSchermo.
+	 */
+	void disegnaAiuto(Graphics2D graphics, int larghezzaSchermo, int altezzaSchermo) {
+		if (!ModelloDati.getIstanza().isAiutoAbilitato() || mouseX < 0) {
+			return;
+		}
+		for (int i = 0; i < iconeVisibili.size(); i++) {
+			Rectangle r = rettangoloDisegnato(i);
+			if (r.contains(mouseX, mouseY)) {
+				String descrizione = iconeVisibili.get(i).comando.getDescrizione();
+				if (descrizione != null) {
+					Image testo = Cartiglio.testo(descrizione);
+					Point posizione = posizioneCartiglio(orientamento, new Rectangle(offsetX + r.x, offsetY + r.y, r.width, r.height),
+							Cartiglio.larghezza(testo), Cartiglio.altezza(), larghezzaSchermo, altezzaSchermo);
+					Cartiglio.disegna(graphics, testo, posizione.x, posizione.y);
+				}
+				return;
+			}
+		}
+	}
+
+	/**
+	 * Dove mettere un cartiglio largo e alto così per l'icona in quel rettangolo (coordinate dello schermo): con la
+	 * barra in basso sopra l'icona e centrato su di lei, con la barra a destra alla sua sinistra e centrato in
+	 * altezza; in ogni caso spostato quanto serve per restare dentro lo schermo, al peggio allineato a un suo bordo.
+	 */
+	static Point posizioneCartiglio(int orientamento, Rectangle icona, int larghezza, int altezza,
+									int larghezzaSchermo, int altezzaSchermo) {
+		int x;
+		int y;
+		if (orientamento == DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE) {
+			x = icona.x + (icona.width - larghezza) / 2;
+			y = icona.y - altezza - DISTANZA_CARTIGLIO;
+		} else {
+			x = icona.x - larghezza - DISTANZA_CARTIGLIO;
+			y = icona.y + (icona.height - altezza) / 2;
+		}
+		x = Math.max(0, Math.min(x, larghezzaSchermo - larghezza));
+		y = Math.max(0, Math.min(y, altezzaSchermo - altezza));
+		return new Point(x, y);
+	}
+
 	void copyright(Graphics2D graphics) {
 		for (int i = 0; i < 3; i++) {
 			graphics.drawImage(copyrightImages[i], offsetX + copyrightImagesXOffset[i], offsetY + copyrightImagesYOffset[i], null);
@@ -291,10 +381,13 @@ class DisplayableCanvasBarraIcone implements Finestra {
 	}
 
 	/**
-	 * Il click su un'icona: le frecce scorrono le scelte, le altre mandano il comando al gioco.
+	 * Il click su un'icona: le frecce scorrono le scelte, l'interruttore accende e spegne l'aiuto, le altre mandano
+	 * il comando al gioco.
 	 */
 	void esegui(Comando azione) {
-		if (azione == Comando.SU || azione == Comando.SINISTRA) {
+		if (isInterruttoreAiuto(azione)) {
+			commutaAiuto(azione);
+		} else if (azione == Comando.SU || azione == Comando.SINISTRA) {
 			saltaPrimi--;
 			if (saltaPrimi == 1) {
 				saltaPrimi = 0;

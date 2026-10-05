@@ -116,6 +116,53 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         disegnaIntestazioniInventario(graphics);
 
         disegnaSpriteLocali(graphics);
+
+        disegnaAiuto(graphics, righeAiuto());
+    }
+
+    /**
+     * Cosa fa il doppio click su un artefatto della parte sinistra (parte attiva) e della destra: le sottoclassi
+     * lo dicono con le parole della loro schermata, per l'aiuto (vedi righeAiuto)
+     */
+    protected abstract String aiutoDoppioClickSinistra();
+
+    protected abstract String aiutoDoppioClickDestra();
+
+    /**
+     * L'aiuto per l'elenco sotto il mouse: sul nome di un artefatto cosa fa il click (aprire o chiudere l'elenco dei
+     * modificatori) e cosa fa il doppio click da quella parte; ovunque nell'elenco, se si scorre, la rotella
+     */
+    private List<String> righeAiuto() {
+        List<String> righe = new ArrayList<>();
+        Collection<Artefatto> elenco;
+        boolean parteAttiva;
+        int boxX;
+        int offset;
+        String doppioClick;
+        if (dentroElenco(xMinimaZonaSinistra, mouseX, mouseY)) {
+            elenco = new ArrayList<>(automa.getParteAttiva().getInventario());
+            parteAttiva = true;
+            boxX = xMinimaZonaSinistra;
+            offset = offsetYZonaSinistra;
+            doppioClick = aiutoDoppioClickSinistra();
+        } else if (dentroElenco(xMinimaZonaDestra, mouseX, mouseY)) {
+            elenco = automa.getArtefattiDisponibili();
+            parteAttiva = false;
+            boxX = xMinimaZonaDestra;
+            offset = offsetYZonaDestra;
+            doppioClick = aiutoDoppioClickDestra();
+        } else {
+            return righe;
+        }
+        Artefatto artefatto = trovaArtefatto(elenco, boxX, offset, mouseX, mouseY, parteAttiva);
+        if (artefatto != null) {
+            righe.add(Cartiglio.aiutoClick(artefatto.isFigliVisibili(), "elenco modificatori"));
+            righe.add(doppioClick);
+        }
+        if (costruisciComponenteScorrevoleArtefatti(elenco, null, parteAttiva).isScorrevole(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO)) {
+            righe.add(Cartiglio.AIUTO_ROTELLA);
+        }
+        return righe;
     }
 
     /**

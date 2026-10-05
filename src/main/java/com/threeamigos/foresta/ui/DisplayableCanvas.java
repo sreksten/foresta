@@ -669,6 +669,12 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		disegnaAnnuncioGlobale(graphics);
 		barraIcone.disegna(graphics);
 		disegnaSferaMagica(graphics);
+		// I cartigli dell'aiuto stanno sopra tutto, anche sopra la sfera magica
+		if (stato == StatoDisplayableCanvas.STATO_IN_GIOCO) {
+			riquadroGruppo.disegnaAiuto(graphics, getWidth(), getHeight());
+			riquadroMissioni.disegnaAiuto(graphics, getWidth(), getHeight());
+		}
+		barraIcone.disegnaAiuto(graphics, getWidth(), getHeight());
 		segnalaSeUiDiventataInattiva();
 	}
 

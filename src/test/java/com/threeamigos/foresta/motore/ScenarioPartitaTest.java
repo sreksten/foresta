@@ -41,7 +41,7 @@ class ScenarioPartitaTest {
 			int monete = partita.gruppo().getMonete();
 			CoordinateMD dove = partita.gruppo().getCoordinate();
 
-			partita.comando(Comando.FLOPPY).comando(Comando.NUMERO_1);
+			partita.comando(Comando.FLOPPY_SALVA).comando(Comando.NUMERO_1);
 			assertTrue(partita.salvataggi().contiene(Comando.NUMERO_1));
 
 			// Si spende e ci si sposta, poi si ricarica: tutto torna com'era al salvataggio

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 
 import java.awt.*;
@@ -215,6 +216,26 @@ abstract class DisplayableCanvasScambiatore implements Finestra {
         graphics.drawImage(image, x + 2, y + 2, null);
         image = ImageCache.get(intestazioneDestra, DoomdarkColorModel.Color.LIGHT_GRAY);
         graphics.drawImage(image, x, y, null);
+    }
+
+    /**
+     * Se il punto (x, y) della finestra cade dentro l'elenco che comincia in boxX (la parte sinistra o la destra)
+     */
+    protected boolean dentroElenco(int boxX, int x, int y) {
+        int xInterno = x - (boxX + SPACING);
+        int yInterno = y - (DIMENSIONE_BORDO_INTERNO + 2 * SPACING);
+        return xInterno >= 0 && xInterno < LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO
+                && yInterno >= 0 && yInterno < ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO;
+    }
+
+    /**
+     * Ad aiuto acceso (vedi ModelloDati.isAiutoAbilitato), i cartigli con quelle righe accanto al mouse, dentro la
+     * finestra: va chiamato per ultimo, sopra il resto della schermata
+     */
+    protected void disegnaAiuto(Graphics2D graphics, List<String> righe) {
+        if (ModelloDati.getIstanza().isAiutoAbilitato() && mouseX >= 0) {
+            Cartiglio.disegnaAccantoAlMouse(graphics, righe, mouseX, mouseY, width, height);
+        }
     }
 
     /**

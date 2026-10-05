@@ -5,11 +5,13 @@ import com.threeamigos.foresta.eventi.interni.InternoCreazioneSpriteATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloPersonaggio;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneStatistichePersonaggio;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.tipi.TipoAttributo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -43,6 +45,10 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 
 	private final int personaggiVisibili;
 	private int saltaPrimi = 0;
+
+	// Dove sta il mouse, relativo al riquadro, per l'aiuto (-1 fuori)
+	private int mouseX = -1;
+	private int mouseY = -1;
 
 	DisplayableCanvasRiquadroGruppo(int topLeftX, int topLeftY) {
 		this.topLeftX = topLeftX;
@@ -204,6 +210,34 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 		int riga = ordinale - saltaPrimi;
 		return (riga < 0 || riga >= personaggiVisibili) ? -1 : riga;
+	}
+
+	@Override
+	public void processaMovimento(int x, int y) {
+		mouseX = x;
+		mouseY = y;
+	}
+
+	@Override
+	public void processaUscita(int x, int y) {
+		mouseX = -1;
+		mouseY = -1;
+	}
+
+	/**
+	 * Ad aiuto acceso, sopra il riquadro il cartiglio della rotella, se i personaggi (ospiti compresi) non ci stanno
+	 * tutti (più di personaggiVisibili, cioè 5). Va chiamato dopo aver disegnato tutto lo schermo, grande
+	 * larghezzaSchermo x altezzaSchermo.
+	 */
+	void disegnaAiuto(Graphics2D graphics, int larghezzaSchermo, int altezzaSchermo) {
+		if (!ModelloDati.getIstanza().isAiutoAbilitato() || mouseX < 0) {
+			return;
+		}
+		GruppoGiocatore g = GruppoGiocatore.getIstanza();
+		if (g.getNumeroPersonaggi() + g.getOspiti().size() > personaggiVisibili) {
+			Cartiglio.disegnaAccantoAlMouse(graphics, Collections.singletonList(Cartiglio.AIUTO_ROTELLA),
+					topLeftX + mouseX, topLeftY + mouseY, larghezzaSchermo, altezzaSchermo);
+		}
 	}
 
 	@Override

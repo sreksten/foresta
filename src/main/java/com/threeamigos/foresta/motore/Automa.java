@@ -305,7 +305,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		Collection<Comando> comandiPossibili = new ArrayList<>();
 		comandiPossibili.add(Comando.PERGAMENA);
 		if (!GestoreSalvataggi.getSalvataggiDisponibili().isEmpty()) {
-			comandiPossibili.add(Comando.FLOPPY);
+			comandiPossibili.add(Comando.FLOPPY_CARICA);
 		}
 		return comandiPossibili;
 	}
@@ -416,7 +416,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				stato = Stato.PRE_GAME_ATTESA_NOME_PERSONAGGIO;
 				BusEventi.pubblica(new InternoStatoDiGioco(stato));
 				return Esito.FERMATI;
-			case FLOPPY:
+			case FLOPPY_CARICA:
 				stato = Stato.PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE;
 				Collection<TestataSalvataggio> salvataggiDisponibili = GestoreSalvataggi.getSalvataggiDisponibili();
 				BusEventi.pubblica(new RichiestaSelezioneSlotPerRilettura(salvataggiDisponibili));
@@ -1145,13 +1145,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				direzione = Comando.OVEST;
 				comandiPossibiliPerNumeroPassi = getComandiPossibiliPerNumeroPassi(gruppo.getMaxPassiOvest());
 				break;
-			case AIUTO:
-				for (Personaggio personaggio : gruppo.getPersonaggi()) {
-					BusEventi.pubblica(new NotificaTestoParagrafo(personaggio.getDescrizione()));
-				}
-				stato = Stato.ATTESA_DIREZIONE;
-				return Esito.CONTINUA_CON_INGRESSO;
-			case FLOPPY:
+			case FLOPPY_SALVA:
 				stato = Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE;
 				BusEventi.pubblica(new InternoStatoDiGioco(Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE,
 						Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3, Comando.NUMERO_4, Comando.NUMERO_5,
@@ -1909,8 +1903,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			comandiPossibili.add(Comando.RESURREZIONE);
 		}
 		comandiPossibili.add(Comando.INVENTARIO);
-		comandiPossibili.add(Comando.AIUTO);
-		comandiPossibili.add(Comando.FLOPPY);
+		comandiPossibili.add(Comando.FLOPPY_SALVA);
 		return comandiPossibili;
 	}
 

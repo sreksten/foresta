@@ -881,8 +881,6 @@ public abstract class LocazioneBase implements Locazione {
 		if (isPassaggioPossibile()) {
 			comandiPossibili.add(Comando.PASSA_INOSSERVATO);
 		}
-		// E possiamo sempre richiedere di descrivere di nuovo la locazione
-		comandiPossibili.add(Comando.AIUTO);
 		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibili));
 	}
 
@@ -1385,25 +1383,6 @@ public abstract class LocazioneBase implements Locazione {
 					statoLocazione = StatoLocazione.CONFERMA_FUGA;
 					BusEventi.pubblica(new RichiestaSelezioneSiNo());
 					return Stato.ATTESA_SI_NO;
-
-				case AIUTO:
-					for (Personaggio personaggio : gruppo.getPersonaggi()) {
-						BusEventi.pubblica(new NotificaTestoFrase(personaggio.getDescrizione()));
-					}
-					int numeroAvversari = gruppoAvversario.getNumeroPersonaggiVivi();
-					Personaggio p = gruppoAvversario.getCapo();
-					StringBuilder sb = new StringBuilder(gruppo.chiMaiuscolo()).append(" sta affrontando ");
-					if (numeroAvversari == 1) {
-						sb.append(p.getAIS()).append(p.getNomeSingolare());
-					} else {
-						sb.append(Misc.getCardinaleM(numeroAvversari)).append(' ').append(p.getNomePlurale());
-					}
-					sb.append('.');
-					BusEventi.pubblica(new NotificaTestoFrase(sb.toString()));
-					BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
-					// Ridescrivere la locazione non è un'azione: si torna subito, senza passare
-					// dalla coda di si può sempre che farebbe trascorrere un turno.
-					return Stato.IN_LOCAZIONE;
 
 				default:
 					break;

@@ -48,6 +48,16 @@ public class DisplayableCanvasCommerciante extends DisplayableCanvasScambiatoreA
     }
 
     @Override
+    protected String aiutoDoppioClickSinistra() {
+        return "Doppio click: vendi";
+    }
+
+    @Override
+    protected String aiutoDoppioClickDestra() {
+        return "Doppio click: compra";
+    }
+
+    @Override
     void disegnaIntestazioniInventario(Graphics2D graphics) {
         disegnaIntestazioniInventarioImpl(graphics, "Inventario gruppo",
                 negozio == TipoNegozio.VENDITORE_DI_PERGAMENE ? "Inventario venditore" : "Inventario armaiolo");
