@@ -4,6 +4,7 @@ import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
@@ -42,7 +43,7 @@ public class IntermezzoLocandaSecondaVisita implements Intermezzo {
 	@Override
 	public String getId() {
 		String identificativo = Locande.getIdentificativoLocandaCorrente();
-		return ClasseIntermezzo.INTERMEZZO_LOCANDA_SECONDA_VISITA.name()
+		return TipoIntermezzo.INTERMEZZO_LOCANDA_SECONDA_VISITA.name()
 				+ (identificativo == null ? "" : "_" + identificativo);
 	}
 

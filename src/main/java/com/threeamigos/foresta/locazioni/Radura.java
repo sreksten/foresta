@@ -4,8 +4,8 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
@@ -33,7 +33,7 @@ public class Radura extends LocazioneBase {
 			TipoPersonaggio.VIVERNA
 	};
 
-	private static final ClassiOggetto[] oggetti = {};
+	private static final TipoOggetto[] oggetti = {};
 
 	@Override
 	public TipoPersonaggio[] getPossibiliIncontri() {
@@ -41,7 +41,7 @@ public class Radura extends LocazioneBase {
 	}
 
 	@Override
-	public ClassiOggetto[] getPossibiliOggetti() {
+	public TipoOggetto[] getPossibiliOggetti() {
 		return oggetti;
 	}
 

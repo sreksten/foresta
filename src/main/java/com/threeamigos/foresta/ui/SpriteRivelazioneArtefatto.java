@@ -4,11 +4,11 @@ import com.threeamigos.foresta.motore.RegoleSetLeggendari;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
 import com.threeamigos.foresta.tools.Temporizzatore;
 
@@ -323,21 +323,21 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 		}
 		switch (tipo) {
 			case SPADA:
-				return ClassiOggettoImmagine.getImmagine(ClassiOggetto.SPADA);
+				return ClassiOggettoImmagine.getImmagine(TipoOggetto.SPADA);
 			case SPADONE:
-				return ClassiOggettoImmagine.getImmagine(ClassiOggetto.SPADONE);
+				return ClassiOggettoImmagine.getImmagine(TipoOggetto.SPADONE);
 			case SCUDO:
-				return ClassiOggettoImmagine.getImmagine(ClassiOggetto.SCUDO);
+				return ClassiOggettoImmagine.getImmagine(TipoOggetto.SCUDO);
 			case ELMO:
-				return ClassiOggettoImmagine.getImmagine(ClassiOggetto.ELMO);
+				return ClassiOggettoImmagine.getImmagine(TipoOggetto.ELMO);
 			case MASCHERA:
-				return ClassiOggettoImmagine.getImmagine(ClassiOggetto.MASCHERA);
+				return ClassiOggettoImmagine.getImmagine(TipoOggetto.MASCHERA);
 			case ARMATURA:
-				return ClassiOggettoImmagine.getImmagine(ClassiOggetto.ARMATURA);
+				return ClassiOggettoImmagine.getImmagine(TipoOggetto.ARMATURA);
 			case SCHINIERI:
-				return ClassiOggettoImmagine.getImmagine(ClassiOggetto.SCHINIERI);
+				return ClassiOggettoImmagine.getImmagine(TipoOggetto.SCHINIERI);
 			case ANELLO:
-				return ClassiOggettoImmagine.getImmagine(ClassiOggetto.ANELLO);
+				return ClassiOggettoImmagine.getImmagine(TipoOggetto.ANELLO);
 			default:
 				return null;
 		}

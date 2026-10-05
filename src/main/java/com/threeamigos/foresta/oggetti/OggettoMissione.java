@@ -5,6 +5,7 @@ import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 
 import java.util.Objects;
 
@@ -37,8 +38,8 @@ public class OggettoMissione extends OggettoBase implements Oggetto {
 	}
 
 	@Override
-	public ClassiOggetto getClasse() {
-		return ClassiOggetto.OGGETTO_MISSIONE;
+	public TipoOggetto getClasse() {
+		return TipoOggetto.OGGETTO_MISSIONE;
 	}
 
 	@Override

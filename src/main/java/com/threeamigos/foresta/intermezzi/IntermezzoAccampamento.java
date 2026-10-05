@@ -8,6 +8,7 @@ import com.threeamigos.foresta.motore.RegistroIntermezzi;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.IntermezziMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.tipi.TipoIntermezzo;
 
 import java.util.List;
 
@@ -18,7 +19,7 @@ import java.util.List;
  * {@link com.threeamigos.foresta.motore.Automa}), fino a un massimo di
  * {@value #MASSIMO_OCCORRENZE} volte nella partita: {@link #getId()} include quindi la sua
  * occorrenza (vedi {@link #prossimaOccorrenza()}), cosa possibile perché
- * {@link ClasseIntermezzo#getIstanza()} crea una nuova istanza a ogni controllo e
+ * {@link TipoIntermezzo#getIstanza()} crea una nuova istanza a ogni controllo e
  * {@link IntermezziMD} è un semplice insieme di stringhe senza vincoli di formato.
  * <p>
  * Ogni occorrenza ha la sua scena, con la sua luna e le sue battute: la storia di quello trasformato in scarafaggio
@@ -71,7 +72,7 @@ public class IntermezzoAccampamento implements Intermezzo {
 	}
 
 	private static String idPer(int occorrenza) {
-		return ClasseIntermezzo.INTERMEZZO_ACCAMPAMENTO.name() + "_" + occorrenza;
+		return TipoIntermezzo.INTERMEZZO_ACCAMPAMENTO.name() + "_" + occorrenza;
 	}
 
 	/**

@@ -2,11 +2,12 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoErrore;
-import com.threeamigos.foresta.intermezzi.ClasseIntermezzo;
+import com.threeamigos.foresta.intermezzi.FabbricaIntermezzi;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.motore.GestorePunteggiInMemoria;
 import com.threeamigos.foresta.motore.PartitaDiAnteprima;
+import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import javax.imageio.ImageIO;
@@ -33,7 +34,7 @@ import java.util.Locale;
  * <pre>
  *     java -cp target/test-classes:target/classes com.threeamigos.foresta.ui.AnteprimaIntermezzo [INTERMEZZO] [opzioni]
  *
- *     INTERMEZZO            un valore di ClasseIntermezzo (default: il primo)
+ *     INTERMEZZO            un valore di TipoIntermezzo (default: il primo)
  *     --classe CLASSE       classe del protagonista, un valore di TipoPersonaggio (default GUERRIERO)
  *     --nome NOME           nome del protagonista (default Aldric)
  *     --compagni C1,C2,...  classi di eventuali compagni (fino a 4, oltre al protagonista),
@@ -85,7 +86,7 @@ public final class AnteprimaIntermezzo {
 
 	public static void main(String[] args) throws IOException {
 		args = argomentiAlchimista;
-		String nomeIntermezzo = ClasseIntermezzo.values()[0].name();
+		String nomeIntermezzo = TipoIntermezzo.values()[0].name();
 		TipoPersonaggio classe = TipoPersonaggio.GUERRIERO;
 		String nome = "Aldric";
 		TipoPersonaggio[] compagni = {};
@@ -123,7 +124,7 @@ public final class AnteprimaIntermezzo {
 		BusEventi.iscriviti(InternoErrore.class, errore -> System.err.println("ERRORE: " + errore.getMessaggio()));
 		ImageCache.init();
 		PartitaDiAnteprima.prepara(classe, nome, compagni);
-		Intermezzo intermezzo = ClasseIntermezzo.valueOf(nomeIntermezzo).getIstanza();
+		Intermezzo intermezzo = FabbricaIntermezzi.crea(TipoIntermezzo.valueOf(nomeIntermezzo));
 		AnteprimaIntermezzo anteprima = new AnteprimaIntermezzo(intermezzo, pagina - 1);
 
 		if (png != null) {

@@ -4,10 +4,11 @@ import com.threeamigos.foresta.eventi.interni.InternoMostraSchermataGioco;
 import com.threeamigos.foresta.eventi.interni.InternoUiInattiva;
 import com.threeamigos.foresta.eventi.interni.InternoUiOccupata;
 import com.threeamigos.foresta.eventi.notifiche.NotificaPaginaIntermezzo;
-import com.threeamigos.foresta.intermezzi.ClasseIntermezzo;
+import com.threeamigos.foresta.intermezzi.FabbricaIntermezzi;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +36,7 @@ class IntermezzoLocazioneCompletataTest {
 			assertEquals(1, contaBattutaEremita(partita),
 					"alla prima fine locazione l'intermezzo deve comparire una volta sola");
 			assertTrue(ModelloDati.getIstanza().getIntermezziMD()
-							.isScattato(ClasseIntermezzo.INTERMEZZO_FINE_PRIMA_LOCAZIONE.name()),
+							.isScattato(TipoIntermezzo.INTERMEZZO_FINE_PRIMA_LOCAZIONE.name()),
 					"il registro deve ricordare che l'intermezzo e' scattato");
 
 			// Da questo momento in poi il checkpoint non troverebbe piu' nulla da mostrare: non si ripete
@@ -111,7 +112,7 @@ class IntermezzoLocazioneCompletataTest {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
 					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
-			RegistroIntermezzi.segnaScattato(ClasseIntermezzo.INTERMEZZO_FINE_PRIMA_LOCAZIONE.getIstanza());
+			RegistroIntermezzi.segnaScattato(FabbricaIntermezzi.crea(TipoIntermezzo.INTERMEZZO_FINE_PRIMA_LOCAZIONE));
 			assertNull(RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA),
 					"precondizione: nessun intermezzo deve scattare a fine locazione");
 

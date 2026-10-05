@@ -2,6 +2,7 @@ package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Corona extends OggettoBase implements Oggetto {
@@ -34,8 +35,8 @@ public class Corona extends OggettoBase implements Oggetto {
 		return "corone";
 	}
 
-	public ClassiOggetto getClasse() {
-		return ClassiOggetto.CORONA;
+	public TipoOggetto getClasse() {
+		return TipoOggetto.CORONA;
 	}
 
 	public boolean prendi(GruppoGiocatore gruppo, Comando azione) {

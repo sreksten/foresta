@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tools.Misc;
 
 /**
@@ -37,7 +38,7 @@ public class Spadone extends OggettoArtefatto {
         return "spadoni";
     }
 
-    public ClassiOggetto getClasse() {
-        return ClassiOggetto.SPADONE;
+    public TipoOggetto getClasse() {
+        return TipoOggetto.SPADONE;
     }
 }

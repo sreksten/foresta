@@ -8,6 +8,7 @@ import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -102,8 +103,8 @@ public class Anello extends OggettoBase implements Oggetto {
 		return "anelli";
 	}
 
-	public ClassiOggetto getClasse() {
-		return ClassiOggetto.ANELLO;
+	public TipoOggetto getClasse() {
+		return TipoOggetto.ANELLO;
 	}
 
 	@Override

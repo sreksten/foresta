@@ -12,6 +12,7 @@ import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Cofano extends OggettoBase implements Oggetto {
@@ -48,8 +49,8 @@ public class Cofano extends OggettoBase implements Oggetto {
 		return "cofani";
 	}
 
-	public ClassiOggetto getClasse() {
-		return ClassiOggetto.COFANO;
+	public TipoOggetto getClasse() {
+		return TipoOggetto.COFANO;
 	}
 
 	@Override

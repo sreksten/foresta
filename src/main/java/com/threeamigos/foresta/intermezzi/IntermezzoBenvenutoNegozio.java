@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.intermezzi;
 
+import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import java.util.List;
 
 /**
@@ -9,19 +10,19 @@ import java.util.List;
  */
 public class IntermezzoBenvenutoNegozio implements Intermezzo {
 
-	private final ClasseIntermezzo classe;
+	private final TipoIntermezzo tipo;
 	private final NegozioInScena negozio;
 	private final String saluto;
 
-	IntermezzoBenvenutoNegozio(ClasseIntermezzo classe, NegozioInScena negozio, String saluto) {
-		this.classe = classe;
+	IntermezzoBenvenutoNegozio(TipoIntermezzo tipo, NegozioInScena negozio, String saluto) {
+		this.tipo = tipo;
 		this.negozio = negozio;
 		this.saluto = saluto;
 	}
 
 	@Override
 	public String getId() {
-		return classe.name();
+		return tipo.name();
 	}
 
 	@Override

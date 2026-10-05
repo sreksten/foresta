@@ -8,10 +8,10 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
 import org.junit.jupiter.api.Test;
 
@@ -110,11 +110,11 @@ class TrofeiNegoziTest {
 	void iCacciatoriDiTesoriContanoGliArtefattiCustoditiSecondoIlLivello() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			for (int i = 0; i < 50; i++) {
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.ARTEFATTO, 1, artefatto(TipoArtefatto.SPADA, 5), true));
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.SPADA, 1, artefatto(TipoArtefatto.SPADA, 4), true));
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.ARTEFATTO, 1, artefatto(TipoArtefatto.SPADA, 5), false));
+				partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.ARTEFATTO, 1, artefatto(TipoArtefatto.SPADA, 5), true));
+				partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.SPADA, 1, artefatto(TipoArtefatto.SPADA, 4), true));
+				partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.ARTEFATTO, 1, artefatto(TipoArtefatto.SPADA, 5), false));
 			}
-			partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.MONETA, 2, null, true));
+			partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.MONETA, 2, null, true));
 			partita.pubblica(new InternoFineLocazione());
 
 			assertEquals(100, RegistroTrofei.getProgresso(TipoTrofeo.CACCIATORE_DI_TESORI), "gli artefatti incustoditi e le monete non contano");

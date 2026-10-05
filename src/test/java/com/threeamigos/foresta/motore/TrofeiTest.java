@@ -9,9 +9,9 @@ import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
 import com.threeamigos.foresta.eventi.interni.InternoPreparazioneLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoTrofeoAcquisito;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
 import org.junit.jupiter.api.Test;
@@ -258,12 +258,12 @@ class TrofeiTest {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			// 99 monete, pietre preziose e corone tolte agli avversari, e altrettante trovate incustodite
 			for (int i = 0; i < 33; i++) {
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.MONETA, 3, null, true));
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.PIETRA_PREZIOSA, 3, null, true));
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.CORONA, 3, null, true));
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.MONETA, 3, null, false));
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.PIETRA_PREZIOSA, 3, null, false));
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.CORONA, 3, null, false));
+				partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.MONETA, 3, null, true));
+				partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.PIETRA_PREZIOSA, 3, null, true));
+				partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.CORONA, 3, null, true));
+				partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.MONETA, 3, null, false));
+				partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.PIETRA_PREZIOSA, 3, null, false));
+				partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.CORONA, 3, null, false));
 			}
 			partita.pubblica(new InternoFineLocazione());
 
@@ -272,9 +272,9 @@ class TrofeiTest {
 			assertEquals(99, RegistroTrofei.getProgresso(TipoTrofeo.ARSENIO_LUPIN));
 			assertFalse(RegistroTrofei.isVinto(TipoTrofeo.RAPINATORE));
 
-			partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.MONETA, 1, null, true));
-			partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.PIETRA_PREZIOSA, 1, null, true));
-			partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.CORONA, 1, null, true));
+			partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.MONETA, 1, null, true));
+			partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.PIETRA_PREZIOSA, 1, null, true));
+			partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.CORONA, 1, null, true));
 			partita.pubblica(new InternoFineLocazione());
 
 			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.RAPINATORE));
@@ -288,8 +288,8 @@ class TrofeiTest {
 	void lEspertoScassinatoreContaAncheICofaniIncustoditi() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			for (int i = 0; i < 50; i++) {
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.COFANO, 1, null, true));
-				partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.COFANO, 1, null, false));
+				partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.COFANO, 1, null, true));
+				partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.COFANO, 1, null, false));
 			}
 			partita.pubblica(new InternoFineLocazione());
 

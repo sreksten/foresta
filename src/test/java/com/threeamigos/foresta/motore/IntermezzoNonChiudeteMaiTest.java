@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.notifiche.NotificaPaginaIntermezzo;
-import com.threeamigos.foresta.intermezzi.ClasseIntermezzo;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.locazioni.Locanda;
@@ -10,6 +9,7 @@ import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
@@ -32,7 +32,7 @@ class IntermezzoNonChiudeteMaiTest {
 			portaAllOra(21);
 
 			partita.comando(Comando.ARMAIOLO);
-			assertTrue(isScattato(ClasseIntermezzo.INTERMEZZO_ARMAIOLO.name()), "la prima volta il benvenuto");
+			assertTrue(isScattato(TipoIntermezzo.INTERMEZZO_ARMAIOLO.name()), "la prima volta il benvenuto");
 			assertEquals(0, conta(partita, DOMANDA_ALL_ARMAIOLO), "il benvenuto non si somma alla scenetta");
 			partita.comando(Comando.ANNULLA);
 
@@ -102,10 +102,10 @@ class IntermezzoNonChiudeteMaiTest {
 
 			partita.comando(Comando.LOCANDA);
 
-			assertTrue(isScattato(ClasseIntermezzo.INTERMEZZO_LOCANDA_SECONDA_VISITA.name() + "_"
+			assertTrue(isScattato(TipoIntermezzo.INTERMEZZO_LOCANDA_SECONDA_VISITA.name() + "_"
 					+ nyena.ottieniProprieta(Locanda.LOCANDA_IDENTIFICATIVO)));
 			assertEquals(0, conta(partita, DOMANDA_AL_LOCANDIERE), "la seconda visita non si somma alla scenetta");
-			assertFalse(isScattato(ClasseIntermezzo.INTERMEZZO_NOTTE_LOCANDA.name()), "resta per la prossima volta");
+			assertFalse(isScattato(TipoIntermezzo.INTERMEZZO_NOTTE_LOCANDA.name()), "resta per la prossima volta");
 		}
 	}
 
@@ -129,7 +129,7 @@ class IntermezzoNonChiudeteMaiTest {
 	private static boolean scatterebbeLaScenettaInLocanda() {
 		RegistroIntermezzi.nuovoMomento();
 		Intermezzo intermezzo = RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.INGRESSO_LOCANDA_IN_CITTA);
-		return intermezzo != null && intermezzo.getId().equals(ClasseIntermezzo.INTERMEZZO_NOTTE_LOCANDA.name());
+		return intermezzo != null && intermezzo.getId().equals(TipoIntermezzo.INTERMEZZO_NOTTE_LOCANDA.name());
 	}
 
 	private static LocazioneMD locandaDiNyena() {

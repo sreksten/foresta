@@ -14,6 +14,7 @@ import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.SupertipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoMotivoRifiutoEquipaggiamento;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -289,8 +290,8 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 		return Misc.GLI;
 	}
 
-	public ClassiOggetto getClasse() {
-		return ClassiOggetto.ARTEFATTO;
+	public TipoOggetto getClasse() {
+		return TipoOggetto.ARTEFATTO;
 	}
 
 	public ArtefattoMD getModelloDati() {

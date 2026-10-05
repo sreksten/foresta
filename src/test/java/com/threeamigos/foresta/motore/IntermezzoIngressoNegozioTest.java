@@ -5,11 +5,11 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventario
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioFornitore;
 import com.threeamigos.foresta.eventi.interni.InternoMostraSchermataGioco;
 import com.threeamigos.foresta.eventi.notifiche.NotificaPaginaIntermezzo;
-import com.threeamigos.foresta.intermezzi.ClasseIntermezzo;
 import com.threeamigos.foresta.intermezzi.IntermezzoLocandaPrimaVisita;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
@@ -54,7 +54,7 @@ class IntermezzoIngressoNegozioTest {
 
 			partita.saltaIntermezzi();
 			partita.assertStato(Stato.IN_LOCAZIONE);
-			assertTrue(ModelloDati.getIstanza().getIntermezziMD().isScattato(ClasseIntermezzo.INTERMEZZO_ARMAIOLO.name()),
+			assertTrue(ModelloDati.getIstanza().getIntermezziMD().isScattato(TipoIntermezzo.INTERMEZZO_ARMAIOLO.name()),
 					"il registro deve ricordare che l'intermezzo e' scattato");
 			assertEquals(1, partita.eventi().tutti(ComandoAperturaInventarioCommerciante.class).size(),
 					"terminato l'intermezzo il negozio dell'armaiolo deve apparire comunque");
@@ -83,7 +83,7 @@ class IntermezzoIngressoNegozioTest {
 			partita.comando(Comando.ALCHIMISTA);
 			partita.assertStato(Stato.INTERMEZZO);
 			partita.saltaIntermezzi();
-			assertTrue(ModelloDati.getIstanza().getIntermezziMD().isScattato(ClasseIntermezzo.INTERMEZZO_ALCHIMISTA.name()));
+			assertTrue(ModelloDati.getIstanza().getIntermezziMD().isScattato(TipoIntermezzo.INTERMEZZO_ALCHIMISTA.name()));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			assertEquals(1, partita.eventi().tutti(ComandoAperturaInventarioFornitore.class).size());
 			assertApreNegozioSenzaTornareAllaSchermataDiGioco(partita, ComandoAperturaInventarioFornitore.class);
@@ -92,7 +92,7 @@ class IntermezzoIngressoNegozioTest {
 			partita.comando(Comando.VENDITORE_DI_PERGAMENE);
 			partita.assertStato(Stato.INTERMEZZO);
 			partita.saltaIntermezzi();
-			assertTrue(ModelloDati.getIstanza().getIntermezziMD().isScattato(ClasseIntermezzo.INTERMEZZO_VENDITORE_DI_PERGAMENE.name()));
+			assertTrue(ModelloDati.getIstanza().getIntermezziMD().isScattato(TipoIntermezzo.INTERMEZZO_VENDITORE_DI_PERGAMENE.name()));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			assertEquals(1, partita.eventi().tutti(ComandoAperturaInventarioCommerciante.class).size());
 			assertApreNegozioSenzaTornareAllaSchermataDiGioco(partita, ComandoAperturaInventarioCommerciante.class);
@@ -112,7 +112,7 @@ class IntermezzoIngressoNegozioTest {
 			partita.comando(Comando.INCANTATORE);
 			partita.assertStato(Stato.INTERMEZZO);
 			partita.saltaIntermezzi();
-			assertTrue(ModelloDati.getIstanza().getIntermezziMD().isScattato(ClasseIntermezzo.INTERMEZZO_INCANTATORE.name()));
+			assertTrue(ModelloDati.getIstanza().getIntermezziMD().isScattato(TipoIntermezzo.INTERMEZZO_INCANTATORE.name()));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			assertEquals(1, partita.eventi().tutti(ComandoAperturaIncantatore.class).size());
 			assertApreNegozioSenzaTornareAllaSchermataDiGioco(partita, ComandoAperturaIncantatore.class);

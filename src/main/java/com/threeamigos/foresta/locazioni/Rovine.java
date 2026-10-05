@@ -7,8 +7,8 @@ import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
-import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.tools.Misc;
@@ -54,8 +54,8 @@ public class Rovine extends LocazioneBase {
 			TipoPersonaggio.SPIRITO
 	};
 
-	private static final ClassiOggetto[] oggetti = {
-			ClassiOggetto.COFANO
+	private static final TipoOggetto[] oggetti = {
+			TipoOggetto.COFANO
 	};
 
 	@Override
@@ -64,7 +64,7 @@ public class Rovine extends LocazioneBase {
 	}
 
 	@Override
-	public ClassiOggetto[] getPossibiliOggetti() {
+	public TipoOggetto[] getPossibiliOggetti() {
 		return oggetti;
 	}
 

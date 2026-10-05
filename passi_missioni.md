@@ -52,7 +52,7 @@ Operazioni sul `Passo` stesso, non sulla missione:
 
 ## 3. Oggetti di supporto dei passi
 
-**`OggettiDaRaccogliere`** descrive gli oggetti che esistono solo per la missione (`OggettoMissione`, `ClassiOggetto.OGGETTO_MISSIONE`: si ricorda missione, chiave e nome, raccoglierlo incrementa il contatore della missione; come gli altri oggetti delle locazioni non si salva). Si costruisce con `OggettiDaRaccogliere.di(chiave, NomeOggetto, quantità)` e:
+**`OggettiDaRaccogliere`** descrive gli oggetti che esistono solo per la missione (`OggettoMissione`, `TipoOggetto.OGGETTO_MISSIONE`: si ricorda missione, chiave e nome, raccoglierlo incrementa il contatore della missione; come gli altri oggetti delle locazioni non si salva). Si costruisce con `OggettiDaRaccogliere.di(chiave, NomeOggetto, quantità)` e:
 
 | Modificatore | Effetto |
 | :--- | :--- |

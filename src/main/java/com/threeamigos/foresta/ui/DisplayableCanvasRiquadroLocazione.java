@@ -4,12 +4,12 @@ import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -78,7 +78,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		}
 
 		Oggetto oggetto = g.getLocazioneCorrente().getOggetto();
-		if (oggetto != null && oggetto.getClasse() != ClassiOggetto.ARTEFATTO) {
+		if (oggetto != null && oggetto.getClasse() != TipoOggetto.ARTEFATTO) {
 			BufferedImage d = ClassiOggettoImmagine.getImmagine(oggetto.getClasse());
 			graphics.drawImage(d, locXOffset + locazione.getWidth() - d.getWidth() - 5, ImageCache.SPACING + locazione.getHeight() - d.getHeight() - 5, null);
 		}
@@ -127,7 +127,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		GruppoGiocatore g = GruppoGiocatore.getIstanza();
 		BufferedImage locazione = ImageCache.locazioni.get(g.getTipoLocazioneCorrente());
 		Oggetto oggetto = g.getLocazioneCorrente().getOggetto();
-		if (oggetto != null && oggetto.getClasse() != ClassiOggetto.ARTEFATTO) {
+		if (oggetto != null && oggetto.getClasse() != TipoOggetto.ARTEFATTO) {
 			BufferedImage d = ClassiOggettoImmagine.getImmagine(oggetto.getClasse());
 			return new SpriteATempo(d, topLeftX + locazione.getWidth() - d.getWidth() - 5,
 					ImageCache.SPACING + locazione.getHeight() - d.getHeight() - 5,

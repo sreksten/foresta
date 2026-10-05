@@ -21,7 +21,7 @@ Ci sono due momenti di innesco (enum `MomentoIntermezzo`):
 
        @Override
        public String getId() {
-           return ClasseIntermezzo.INCONTRO_CON_L_EREMITA.name();
+           return TipoIntermezzo.INCONTRO_CON_L_EREMITA.name();
        }
 
        @Override
@@ -39,10 +39,13 @@ Ci sono due momenti di innesco (enum `MomentoIntermezzo`):
    }
    ```
 
-2. **Registrala** in `intermezzi/ClasseIntermezzo.java`, con una riga nell'enum:
+2. **Registrala** con una costante in `tipi/TipoIntermezzo.java` e una riga in `intermezzi/FabbricaIntermezzi.java`:
 
    ```java
-   INCONTRO_CON_L_EREMITA(IncontroConLEremita::new);
+   // TipoIntermezzo
+   INCONTRO_CON_L_EREMITA,
+   // FabbricaIntermezzi
+   COSTRUTTORI.put(TipoIntermezzo.INCONTRO_CON_L_EREMITA, tipo -> new IncontroConLEremita());
    ```
 
    L'ordine dell'enum conta: se due intermezzi scattano nello stesso momento, vengono mostrati uno dopo l'altro in quell'ordine. `getId()` deve restituire il nome della costante: è ciò che viene salvato per ricordare che l'intermezzo è già scattato.
@@ -54,7 +57,7 @@ Ci sono due momenti di innesco (enum `MomentoIntermezzo`):
    java -cp target/test-classes:target/classes com.threeamigos.foresta.ui.AnteprimaIntermezzo INCONTRO_CON_L_EREMITA
    ```
 
-Quando non serve più, togli `INTERMEZZO_DI_PROVA` da `ClasseIntermezzo` (è segnato con un `FIXME`): scatta a ogni nuova partita.
+Un intermezzo ancora in lavorazione si può dichiarare di prova, `INCONTRO_CON_L_EREMITA(true)`: scatta solo in modalità di prova (`ModalitaDiProva`).
 
 ### Scrivere l'innesco
 
@@ -296,7 +299,7 @@ java -cp target/test-classes:target/classes com.threeamigos.foresta.ui.Anteprima
 
 | Opzione | Significato | Default |
 | :--- | :--- | :--- |
-| `INTERMEZZO` | Nome della costante in `ClasseIntermezzo` | il primo dell'enum |
+| `INTERMEZZO` | Nome della costante in `TipoIntermezzo` | il primo dell'enum |
 | `--classe CLASSE` | Classe del protagonista (`MAGA`, `LADRO`, ...) | `GUERRIERO` |
 | `--nome NOME` | Nome del protagonista | `Aldric` |
 | `--pagina N` | Pagina da cui partire, da 1 | 1 |
@@ -317,7 +320,7 @@ java -cp target/test-classes:target/classes com.threeamigos.foresta.ui.Anteprima
 **Con `--png`** ottieni un'immagine da guardare con calma, per esempio per controllare dove cadono i fumetti in istanti precisi:
 
 ```
-java -cp target/test-classes:target/classes com.threeamigos.foresta.ui.AnteprimaIntermezzo INTERMEZZO_DI_PROVA \
+java -cp target/test-classes:target/classes com.threeamigos.foresta.ui.AnteprimaIntermezzo INTERMEZZO_INTRODUTTIVO \
      --classe maga --nome Lyra --pagina 3 --png anteprima.png --istanti 1,3,6,9
 ```
 

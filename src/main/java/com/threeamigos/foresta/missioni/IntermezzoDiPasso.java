@@ -8,7 +8,7 @@ import java.util.List;
 
 /**
  * L'intermezzo di un passo concluso di una {@link MissioneAPassi} (vedi gestione_missioni.md, §2-3), come lo
- * vede il registro degli intermezzi. Non è in ClasseIntermezzo e non si ricorda in IntermezziMD: il "già mostrato"
+ * vede il registro degli intermezzi. Non è in TipoIntermezzo e non si ricorda in IntermezziMD: il "già mostrato"
  * è una proprietà della missione, così ogni istanza di una missione generata ha il suo.
  */
 public final class IntermezzoDiPasso implements Intermezzo {

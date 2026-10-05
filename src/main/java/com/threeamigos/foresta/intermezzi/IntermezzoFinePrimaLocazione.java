@@ -2,6 +2,7 @@ package com.threeamigos.foresta.intermezzi;
 
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -18,7 +19,7 @@ public class IntermezzoFinePrimaLocazione implements Intermezzo {
 
 	@Override
 	public String getId() {
-		return ClasseIntermezzo.INTERMEZZO_FINE_PRIMA_LOCAZIONE.name();
+		return TipoIntermezzo.INTERMEZZO_FINE_PRIMA_LOCAZIONE.name();
 	}
 
 	@Override

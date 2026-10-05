@@ -22,7 +22,6 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.*;
@@ -34,6 +33,7 @@ import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tools.*;
 
 import java.util.*;
@@ -1026,7 +1026,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 						BusEventi.pubblica(new InternoOggettoRaccolto(oggetto.getClasse(), oggetto.getQuantita(),
 								oggetto.getArtefatto().orElse(null), locazioneCorrente.isCustodita()));
 						// L'artefatto di un tempio (quello del registro) si mostra con la rivelazione, come quelli dei cofani
-						if (oggetto.getClasse() == ClassiOggetto.ARTEFATTO) {
+						if (oggetto.getClasse() == TipoOggetto.ARTEFATTO) {
 							oggetto.getArtefatto().ifPresent(a -> BusEventi.pubblica(new NotificaArtefattoTrovato(a, Statistiche.getLivello())));
 						}
 						BusEventi.pubblica(new InternoMessaggio("Oggetto raccolto."));

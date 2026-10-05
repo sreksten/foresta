@@ -2,6 +2,7 @@ package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Moneta extends OggettoBase implements Oggetto {
@@ -34,8 +35,8 @@ public class Moneta extends OggettoBase implements Oggetto {
 		return "monete";
 	}
 
-	public ClassiOggetto getClasse() {
-		return ClassiOggetto.MONETA;
+	public TipoOggetto getClasse() {
+		return TipoOggetto.MONETA;
 	}
 
 	public boolean prendi(GruppoGiocatore gruppo, Comando azione) {

@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoOfferta;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -276,27 +276,27 @@ public class Titano extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public ClassiOfferta[] getOfferteAmicizia() {
-		return new ClassiOfferta[] {
-				ClassiOfferta.AIUTO_GRATUITO,
-				ClassiOfferta.INCANTESIMI,
-				ClassiOfferta.INFORMAZIONI,
-				ClassiOfferta.MAPPA_FORESTA,
-				ClassiOfferta.MAPPA_ZONA,
-				ClassiOfferta.PASTO
+	public TipoOfferta[] getOfferteAmicizia() {
+		return new TipoOfferta[] {
+				TipoOfferta.AIUTO_GRATUITO,
+				TipoOfferta.INCANTESIMI,
+				TipoOfferta.INFORMAZIONI,
+				TipoOfferta.MAPPA_FORESTA,
+				TipoOfferta.MAPPA_ZONA,
+				TipoOfferta.PASTO
 		};
 	}
 
 	@Override
-	public ClassiOfferta[] getOfferteCorruzione() {
-		return new ClassiOfferta[] {
-				ClassiOfferta.AIUTO_GRATUITO,
-				ClassiOfferta.AIUTO_MERCENARIO,
-				ClassiOfferta.INCANTESIMI,
-				ClassiOfferta.INFORMAZIONI,
-				ClassiOfferta.MAPPA_FORESTA,
-				ClassiOfferta.MAPPA_ZONA,
-				ClassiOfferta.PASTO
+	public TipoOfferta[] getOfferteCorruzione() {
+		return new TipoOfferta[] {
+				TipoOfferta.AIUTO_GRATUITO,
+				TipoOfferta.AIUTO_MERCENARIO,
+				TipoOfferta.INCANTESIMI,
+				TipoOfferta.INFORMAZIONI,
+				TipoOfferta.MAPPA_FORESTA,
+				TipoOfferta.MAPPA_ZONA,
+				TipoOfferta.PASTO
 		};
 	}
 }

@@ -2,9 +2,12 @@ package com.threeamigos.foresta.tipi;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
+import com.threeamigos.foresta.intermezzi.FabbricaIntermezzi;
 import com.threeamigos.foresta.locazioni.FabbricaLocazioni;
 import com.threeamigos.foresta.missioni.FabbricaMissioni;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.offerte.FabbricaOfferte;
+import com.threeamigos.foresta.oggetti.FabbricaOggetti;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -51,6 +54,29 @@ class FabbricheTest {
             assertNotNull(FabbricaIncantesimi.crea(classe, 1), classe.name());
             FabbricaIncantesimi.costoAcquisto(classe);
             FabbricaIncantesimi.costoLancio(classe);
+        }
+    }
+
+    @Test
+    void ogniTipoOggettoGenerabileSiCostruisce() {
+        for (TipoOggetto tipo : TipoOggetto.values()) {
+            if (tipo.isGenerabile()) {
+                assertNotNull(FabbricaOggetti.crea(tipo), tipo.name());
+            }
+        }
+    }
+
+    @Test
+    void ogniTipoIntermezzoSiCostruisce() {
+        for (TipoIntermezzo tipo : TipoIntermezzo.values()) {
+            assertNotNull(FabbricaIntermezzi.crea(tipo), tipo.name());
+        }
+    }
+
+    @Test
+    void ogniTipoOffertaSiCostruisce() {
+        for (TipoOfferta tipo : TipoOfferta.values()) {
+            assertNotNull(FabbricaOfferte.crea(tipo), tipo.name());
         }
     }
 }

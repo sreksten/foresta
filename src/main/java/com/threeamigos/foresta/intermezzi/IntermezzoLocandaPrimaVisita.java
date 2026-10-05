@@ -5,6 +5,7 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
@@ -24,7 +25,7 @@ import java.util.stream.Collectors;
  * A differenza degli altri {@link Intermezzo}, che scattano una volta sola per l'intera
  * partita, questo deve scattare una volta per ogni locanda: {@link #getId()} include
  * quindi l'identificativo della locanda corrente, cosa possibile perché
- * {@link ClasseIntermezzo#getIstanza()} crea una nuova istanza a ogni controllo e
+ * {@link TipoIntermezzo#getIstanza()} crea una nuova istanza a ogni controllo e
  * {@link com.threeamigos.foresta.motore.modellodati.IntermezziMD} è un semplice insieme
  * di stringhe senza vincoli di formato.
  */
@@ -52,7 +53,7 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 	@Override
 	public String getId() {
 		String identificativo = Locande.getIdentificativoLocandaCorrente();
-		return ClasseIntermezzo.INTERMEZZO_LOCANDA_PRIMA_VISITA.name()
+		return TipoIntermezzo.INTERMEZZO_LOCANDA_PRIMA_VISITA.name()
 				+ (identificativo == null ? "" : "_" + identificativo);
 	}
 

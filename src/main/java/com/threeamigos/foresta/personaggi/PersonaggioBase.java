@@ -14,12 +14,13 @@ import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.offerte.ClassiOfferta;
+import com.threeamigos.foresta.offerte.FabbricaOfferte;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
+import com.threeamigos.foresta.tipi.TipoOfferta;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.*;
@@ -183,12 +184,12 @@ public abstract class PersonaggioBase implements Personaggio {
 		return getLivellamentoMagia() > 0.0d;
 	}
 
-	protected ClassiOfferta[] getOfferteAmicizia() {
-		return new ClassiOfferta[0];
+	protected TipoOfferta[] getOfferteAmicizia() {
+		return new TipoOfferta[0];
 	}
 
-	protected ClassiOfferta[] getOfferteCorruzione() {
-		return new ClassiOfferta[0];
+	protected TipoOfferta[] getOfferteCorruzione() {
+		return new TipoOfferta[0];
 	}
 	
 	public boolean isImmuneAIncantesimo(ClasseIncantesimo classeIncantesimo) {
@@ -761,7 +762,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public Offerta getOfferta(Comando azione) {
-		ClassiOfferta[] offerte = null;
+		TipoOfferta[] offerte = null;
 		if (isAmichevole() && azione == Comando.AMICIZIA) {
 			offerte = getOfferteAmicizia();
 		} else {
@@ -770,12 +771,12 @@ public abstract class PersonaggioBase implements Personaggio {
 		// A gruppo pieno nessuno si puo' unire: le offerte di aiuto non si propongono
 		if (GruppoGiocatore.getIstanza().getNumeroPersonaggi() >= Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE) {
 			offerte = Arrays.stream(offerte)
-					.filter(o -> o != ClassiOfferta.AIUTO_GRATUITO && o != ClassiOfferta.AIUTO_MERCENARIO)
-					.toArray(ClassiOfferta[]::new);
+					.filter(o -> o != TipoOfferta.AIUTO_GRATUITO && o != TipoOfferta.AIUTO_MERCENARIO)
+					.toArray(TipoOfferta[]::new);
 		}
 		if (offerte.length > 0) {
 			int indice = Dado.tiraAncheAUnaFaccia(offerte.length) - 1;
-			return offerte[indice].getIstanza();
+			return FabbricaOfferte.crea(offerte[indice]);
 		}
 		return null;
 	}

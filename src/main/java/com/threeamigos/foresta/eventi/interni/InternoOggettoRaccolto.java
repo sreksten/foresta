@@ -3,7 +3,7 @@ package com.threeamigos.foresta.eventi.interni;
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.ClassiOggetto;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 
 import java.util.Optional;
 
@@ -13,7 +13,7 @@ import java.util.Optional;
  */
 public class InternoOggettoRaccolto extends EventoBase {
 
-    private final ClassiOggetto classe;
+    private final TipoOggetto classe;
     private final int quantita;
     private final Artefatto artefatto;
     private final boolean custodito;
@@ -21,7 +21,7 @@ public class InternoOggettoRaccolto extends EventoBase {
     /**
      * @param artefatto l'artefatto raccolto (un artefatto vero o, per esempio, una spada), oppure null
      */
-    public InternoOggettoRaccolto(ClassiOggetto classe, int quantita, Artefatto artefatto, boolean custodito) {
+    public InternoOggettoRaccolto(TipoOggetto classe, int quantita, Artefatto artefatto, boolean custodito) {
         super(TipoEvento.INTERNO_OGGETTO_RACCOLTO);
         this.classe = classe;
         this.quantita = quantita;
@@ -29,7 +29,7 @@ public class InternoOggettoRaccolto extends EventoBase {
         this.custodito = custodito;
     }
 
-    public ClassiOggetto getClasse() {
+    public TipoOggetto getClasse() {
         return classe;
     }
 

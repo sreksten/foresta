@@ -2,6 +2,7 @@ package com.threeamigos.foresta.intermezzi;
 
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.modellodati.LineaTemporaleMD;
+import com.threeamigos.foresta.tipi.TipoIntermezzo;
 
 import java.util.List;
 
@@ -17,17 +18,17 @@ public class IntermezzoNonChiudeteMai implements Intermezzo {
 
 	private static final int VISITE_ALLA_LOCANDA_PRIMA_DELLA_SCENETTA = 2;
 
-	private final ClasseIntermezzo classe;
+	private final TipoIntermezzo tipo;
 	private final NegozioInScena negozio;
 
-	IntermezzoNonChiudeteMai(ClasseIntermezzo classe, NegozioInScena negozio) {
-		this.classe = classe;
+	IntermezzoNonChiudeteMai(TipoIntermezzo tipo, NegozioInScena negozio) {
+		this.tipo = tipo;
 		this.negozio = negozio;
 	}
 
 	@Override
 	public String getId() {
-		return classe.name();
+		return tipo.name();
 	}
 
 	@Override

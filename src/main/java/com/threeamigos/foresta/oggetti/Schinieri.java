@@ -1,11 +1,12 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tools.Misc;
 
 /**
  * Loot a sé, come spada e scudo.
- * (vedi ClassiOggetto.ELMO e l'elenco degli oggetti del Bosco).
+ * (vedi TipoOggetto.ELMO e l'elenco degli oggetti del Bosco).
  *
  */
 public class Schinieri extends OggettoArtefatto {
@@ -38,7 +39,7 @@ public class Schinieri extends OggettoArtefatto {
         return "schinieri";
     }
 
-    public ClassiOggetto getClasse() {
-        return ClassiOggetto.SCHINIERI;
+    public TipoOggetto getClasse() {
+        return TipoOggetto.SCHINIERI;
     }
 }

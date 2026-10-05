@@ -1,11 +1,12 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tools.Misc;
 
 /**
  * Loot a sé, come spada e scudo.
- * (vedi ClassiOggetto.MASCHERA e l'elenco degli oggetti del Bosco).
+ * (vedi TipoOggetto.MASCHERA e l'elenco degli oggetti del Bosco).
  */
 public class Maschera extends OggettoArtefatto {
 
@@ -37,7 +38,7 @@ public class Maschera extends OggettoArtefatto {
 		return "maschere";
 	}
 
-	public ClassiOggetto getClasse() {
-		return ClassiOggetto.MASCHERA;
+	public TipoOggetto getClasse() {
+		return TipoOggetto.MASCHERA;
 	}
 }

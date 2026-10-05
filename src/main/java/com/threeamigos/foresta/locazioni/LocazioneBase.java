@@ -12,7 +12,7 @@ import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.ClassiOggetto;
+import com.threeamigos.foresta.oggetti.FabbricaOggetti;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -22,6 +22,7 @@ import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.PortataIncantesimo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
@@ -59,7 +60,7 @@ import java.util.Set;
 public abstract class LocazioneBase implements Locazione {
 
 	private static final TipoPersonaggio[] NESSUN_INCONTRO = {};
-	private static final ClassiOggetto[] NESSUN_OGGETTO = {};
+	private static final TipoOggetto[] NESSUN_OGGETTO = {};
 
 	private final GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 	private final GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
@@ -137,7 +138,7 @@ public abstract class LocazioneBase implements Locazione {
 		return NESSUN_INCONTRO;
 	}
 
-	protected ClassiOggetto[] getPossibiliOggetti() {
+	protected TipoOggetto[] getPossibiliOggetti() {
 		return NESSUN_OGGETTO;
 	}
 
@@ -264,13 +265,13 @@ public abstract class LocazioneBase implements Locazione {
 			setOggetto(a);
 		} else if (!isLocazioneVisitata()) {
 			// Non ci sono artefatti, creiamo un oggetto.
-			ClassiOggetto[] o = getPossibiliOggetti();
+			TipoOggetto[] o = getPossibiliOggetti();
 			Logger.log("Scelta da " + o.length + " oggetti");
 			if (o.length > 0) {
 				int indice = Dado.tiraAncheAUnaFaccia(o.length) - 1;
-				ClassiOggetto classeOggetto = o[indice];
-				Logger.log("Classe oggetto " + classeOggetto);
-				Oggetto probabileOggetto = classeOggetto.getIstanza();
+				TipoOggetto tipoOggetto = o[indice];
+				Logger.log("Classe oggetto " + tipoOggetto);
+				Oggetto probabileOggetto = FabbricaOggetti.crea(tipoOggetto);
 				if (probabileOggetto.getQuantita() > 0) {
 					setOggetto(probabileOggetto);
 				}
@@ -964,7 +965,7 @@ public abstract class LocazioneBase implements Locazione {
 			}
 			if (numeroOggetti > 0) {
 				if (numeroOggetti == 1) {
-					if (o.getClasse() == ClassiOggetto.ARTEFATTO) {
+					if (o.getClasse() == TipoOggetto.ARTEFATTO) {
 						Artefatto artefatto = (Artefatto)o;
 						sb.append(artefatto.getNomeCompleto());
 					} else {

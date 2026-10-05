@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  * ui.ClassiOggettoImmagine). Nella JVM dei test AWT può essere già stato inizializzato con il display da altri
  * test, quindi la prova gira in una JVM a parte avviata con java.awt.headless=true.
  */
-class ClassiOggettoHeadlessTest {
+class OggettiHeadlessTest {
 
     @Test
     void gliOggettiSiUsanoSenzaSchermo() throws IOException, InterruptedException {
@@ -41,7 +42,7 @@ class ClassiOggettoHeadlessTest {
     }
 
     /**
-     * Gira nella JVM headless: tocca ogni ClassiOggetto e ne crea un'istanza.
+     * Gira nella JVM headless: tocca ogni TipoOggetto e ne crea un'istanza.
      */
     static final class Sonda {
 
@@ -51,11 +52,11 @@ class ClassiOggettoHeadlessTest {
             if (!java.awt.GraphicsEnvironment.isHeadless()) {
                 throw new IllegalStateException("la sonda deve girare headless");
             }
-            for (ClassiOggetto classe : ClassiOggetto.values()) {
-                if (classe.isGenerabile()) {
-                    Oggetto oggetto = classe.getIstanza();
-                    if (oggetto == null || oggetto.getClasse() != classe) {
-                        throw new IllegalStateException("istanza sbagliata per " + classe);
+            for (TipoOggetto tipo : TipoOggetto.values()) {
+                if (tipo.isGenerabile()) {
+                    Oggetto oggetto = FabbricaOggetti.crea(tipo);
+                    if (oggetto == null || oggetto.getClasse() != tipo) {
+                        throw new IllegalStateException("istanza sbagliata per " + tipo);
                     }
                 }
             }

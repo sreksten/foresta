@@ -6,8 +6,8 @@ import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
-import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
@@ -62,19 +62,19 @@ public class Bosco extends LocazioneBase {
 			TipoPersonaggio.VIVERNA
 	};
 
-	private static final ClassiOggetto[] oggetti = {
-			ClassiOggetto.ANELLO,
-			ClassiOggetto.COFANO,
-			ClassiOggetto.CORONA,
-			ClassiOggetto.PIETRA_PREZIOSA,
-			ClassiOggetto.MONETA,
-			ClassiOggetto.SCUDO,
-			ClassiOggetto.SPADA,
-			ClassiOggetto.SPADONE,
-			ClassiOggetto.ARMATURA,
-			ClassiOggetto.ELMO,
-			ClassiOggetto.MASCHERA,
-			ClassiOggetto.SCHINIERI
+	private static final TipoOggetto[] oggetti = {
+			TipoOggetto.ANELLO,
+			TipoOggetto.COFANO,
+			TipoOggetto.CORONA,
+			TipoOggetto.PIETRA_PREZIOSA,
+			TipoOggetto.MONETA,
+			TipoOggetto.SCUDO,
+			TipoOggetto.SPADA,
+			TipoOggetto.SPADONE,
+			TipoOggetto.ARMATURA,
+			TipoOggetto.ELMO,
+			TipoOggetto.MASCHERA,
+			TipoOggetto.SCHINIERI
 	};
 
 	@Override
@@ -83,7 +83,7 @@ public class Bosco extends LocazioneBase {
 	}
 
 	@Override
-	public ClassiOggetto[] getPossibiliOggetti() {
+	public TipoOggetto[] getPossibiliOggetti() {
 		return oggetti;
 	}
 

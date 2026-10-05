@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Scudo extends OggettoArtefatto {
@@ -33,7 +34,7 @@ public class Scudo extends OggettoArtefatto {
 		return "scudi";
 	}
 
-	public ClassiOggetto getClasse() {
-		return ClassiOggetto.SCUDO;
+	public TipoOggetto getClasse() {
+		return TipoOggetto.SCUDO;
 	}
 }

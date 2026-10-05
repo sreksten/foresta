@@ -6,10 +6,10 @@ import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
@@ -45,7 +45,7 @@ class ScenarioPassiProntiTest {
                 case "CACCIA":
                     return sconfiggi(MomentoControllo.POST_LOCAZIONE, TipoPersonaggio.GOBLIN, 2).poi("RACCOLTA");
                 case "RACCOLTA":
-                    return raccogli(MomentoControllo.POST_LOCAZIONE, ClassiOggetto.PIETRA_PREZIOSA, 3).poi("RITORNO");
+                    return raccogli(MomentoControllo.POST_LOCAZIONE, TipoOggetto.PIETRA_PREZIOSA, 3).poi("RITORNO");
                 case "RITORNO":
                     return tornaAlPuntoDiPartenza(MomentoControllo.PRE_LOCAZIONE).poi("PREMIO");
                 default:
@@ -78,10 +78,10 @@ class ScenarioPassiProntiTest {
             missione.controllaPostLocazione();
             assertEquals("RACCOLTA", missione.getPassoCorrente());
 
-            partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.PIETRA_PREZIOSA, 2, null, false));
+            partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.PIETRA_PREZIOSA, 2, null, false));
             missione.controllaPostLocazione();
             assertEquals("RACCOLTA", missione.getPassoCorrente());
-            partita.pubblica(new InternoOggettoRaccolto(ClassiOggetto.PIETRA_PREZIOSA, 1, null, true));
+            partita.pubblica(new InternoOggettoRaccolto(TipoOggetto.PIETRA_PREZIOSA, 1, null, true));
             missione.controllaPostLocazione();
             assertEquals("RITORNO", missione.getPassoCorrente());
 

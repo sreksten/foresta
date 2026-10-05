@@ -2,6 +2,7 @@ package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tools.Misc;
 
 public class PietraPreziosa extends OggettoBase implements Oggetto {
@@ -34,8 +35,8 @@ public class PietraPreziosa extends OggettoBase implements Oggetto {
 		return "pietre preziose";
 	}
 
-	public ClassiOggetto getClasse() {
-		return ClassiOggetto.PIETRA_PREZIOSA;
+	public TipoOggetto getClasse() {
+		return TipoOggetto.PIETRA_PREZIOSA;
 	}
 
 	@Override

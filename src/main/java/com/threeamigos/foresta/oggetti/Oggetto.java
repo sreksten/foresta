@@ -3,15 +3,16 @@ package com.threeamigos.foresta.oggetti;
 import com.threeamigos.foresta.interfacce.OggettoConArticoli;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 
 import java.util.Optional;
 
 public interface Oggetto extends OggettoConArticoli {
 
 	/**
-	 * La classe dell'oggetto da ClassiOggetto
+	 * La classe dell'oggetto da TipoOggetto
 	 */
-    ClassiOggetto getClasse();
+    TipoOggetto getClasse();
 
 	/**
 	 * Il nome singolare dell'oggetto

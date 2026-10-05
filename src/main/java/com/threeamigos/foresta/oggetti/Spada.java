@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Spada extends OggettoArtefatto {
@@ -33,7 +34,7 @@ public class Spada extends OggettoArtefatto {
 		return "spade";
 	}
 
-	public ClassiOggetto getClasse() {
-		return ClassiOggetto.SPADA;
+	public TipoOggetto getClasse() {
+		return TipoOggetto.SPADA;
 	}
 }

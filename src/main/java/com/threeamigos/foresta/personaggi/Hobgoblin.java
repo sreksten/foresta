@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoOfferta;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -275,11 +275,11 @@ public class Hobgoblin extends PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public ClassiOfferta[] getOfferteCorruzione() {
-		return new ClassiOfferta[] {
-				ClassiOfferta.AIUTO_MERCENARIO,
-				ClassiOfferta.INCANTESIMI,
-				ClassiOfferta.MAPPA_FORESTA,
+	public TipoOfferta[] getOfferteCorruzione() {
+		return new TipoOfferta[] {
+				TipoOfferta.AIUTO_MERCENARIO,
+				TipoOfferta.INCANTESIMI,
+				TipoOfferta.MAPPA_FORESTA,
 		};
 	}
 }
