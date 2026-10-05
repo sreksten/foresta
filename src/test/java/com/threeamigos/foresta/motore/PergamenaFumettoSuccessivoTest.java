@@ -7,9 +7,10 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.LealtaRichiesta;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.tipi.TipoAttributo;
-import com.threeamigos.foresta.motore.tipi.TipoModificatore;
 import com.threeamigos.foresta.personaggi.Guerriero;
+import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoModificatore;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

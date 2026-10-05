@@ -4,8 +4,9 @@ import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.ClasseMissione;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
-import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.missioni.Passo;
+import com.threeamigos.foresta.tipi.Comando;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

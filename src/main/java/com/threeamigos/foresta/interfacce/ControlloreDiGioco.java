@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.motore.Comando;
+import com.threeamigos.foresta.tipi.Comando;
 
 /**
  * L'automa a stati finiti che tiene traccia dello svolgimento del gioco.

@@ -4,17 +4,17 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.motore.tipi.TipoRiposo;
+import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Tempio extends LocazioneBase {

@@ -7,15 +7,16 @@ import com.threeamigos.foresta.missioni.ClasseMissione;
 import com.threeamigos.foresta.missioni.Costruzione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
-import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Ricompensa;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedHashMap;

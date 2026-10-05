@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.oggetti.Incantamento;
+import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 import org.junit.jupiter.api.Test;
 

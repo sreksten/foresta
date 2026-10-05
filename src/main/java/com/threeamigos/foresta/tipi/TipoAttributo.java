@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore.tipi;
+package com.threeamigos.foresta.tipi;
 
 /**
  * Rappresenta le statistiche e le caratteristiche modificabili di personaggi ed equipaggiamento.

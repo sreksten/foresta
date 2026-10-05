@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.motore.tipi.TipoRiposo;
+import com.threeamigos.foresta.tipi.TipoRiposo;
 
 /**
  *

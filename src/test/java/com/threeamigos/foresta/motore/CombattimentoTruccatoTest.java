@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.tipi.SupertipoDanno;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Ladro;
+import com.threeamigos.foresta.tipi.SupertipoDanno;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

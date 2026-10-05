@@ -4,6 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
 import com.threeamigos.foresta.eventi.interni.InternoMostraSchermataGioco;
 import com.threeamigos.foresta.eventi.interni.InternoUiOccupata;
+import com.threeamigos.foresta.tipi.Comando;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

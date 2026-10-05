@@ -3,10 +3,10 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
-import com.threeamigos.foresta.motore.tipi.TipoRaritaArtefatto;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
 
 import java.util.Arrays;
 import java.util.Collections;

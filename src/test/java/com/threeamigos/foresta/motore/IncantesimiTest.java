@@ -5,13 +5,13 @@ import com.threeamigos.foresta.incantesimi.Fuoco;
 import com.threeamigos.foresta.incantesimi.Morte;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.tipi.TipoAttributo;
-import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.motore.tipi.TipoModificatore;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Scheletro;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoModificatore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

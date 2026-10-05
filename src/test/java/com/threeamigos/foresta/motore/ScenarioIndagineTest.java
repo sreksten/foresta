@@ -7,6 +7,7 @@ import com.threeamigos.foresta.missioni.LIndagine;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.Comando;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

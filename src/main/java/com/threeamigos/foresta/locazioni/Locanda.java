@@ -12,9 +12,10 @@ import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.modellodati.Notizia;
-import com.threeamigos.foresta.motore.tipi.TipoRiposo;
 import com.threeamigos.foresta.offerte.Informazioni;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 
 import java.util.ArrayList;

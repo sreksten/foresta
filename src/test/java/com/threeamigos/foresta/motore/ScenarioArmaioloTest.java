@@ -5,6 +5,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArte
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.tipi.Comando;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

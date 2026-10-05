@@ -6,10 +6,10 @@ import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.motore.tipi.TipoRiposo;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.Eremita;
 import com.threeamigos.foresta.personaggi.Viverna;
+import com.threeamigos.foresta.tipi.TipoRiposo;
 
 public class Grotta extends LocazioneBase {
 

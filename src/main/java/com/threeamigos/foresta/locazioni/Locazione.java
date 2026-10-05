@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.locazioni;
 
-import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Stato;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
-import com.threeamigos.foresta.motore.tipi.TipoRiposo;
 import com.threeamigos.foresta.oggetti.Oggetto;
+import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoRiposo;
 
 /**
  * Una locazione è un posto all'interno della Foresta dove il gruppo si trova.

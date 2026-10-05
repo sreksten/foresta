@@ -4,12 +4,13 @@ import com.threeamigos.foresta.missioni.OggettoLeggendario;
 import com.threeamigos.foresta.missioni.SetLeggendario;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.tipi.SupertipoArtefatto;
-import com.threeamigos.foresta.motore.tipi.TipoAttributo;
-import com.threeamigos.foresta.motore.tipi.TipoDanno;
-import com.threeamigos.foresta.motore.tipi.TipoModificatore;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.SupertipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoModificatore;
 import org.junit.jupiter.api.Test;
 
 import java.io.BufferedReader;

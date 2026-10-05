@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore.tipi;
+package com.threeamigos.foresta.tipi;
 
 /**
  * I negozi che comprano e vendono artefatti. Più negozi della stessa città stanno sulla stessa casella:

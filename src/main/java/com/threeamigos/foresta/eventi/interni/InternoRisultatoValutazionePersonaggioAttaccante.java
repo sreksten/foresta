@@ -3,8 +3,8 @@ package com.threeamigos.foresta.eventi.interni;
 import com.threeamigos.foresta.eventi.EventoSuPersonaggio;
 import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
-import com.threeamigos.foresta.motore.tipi.TipoRisultatoValutazioneAttaccante;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoRisultatoValutazioneAttaccante;
 
 /**
  * Un Personaggio attaccante fa una valutazione del comportamento da assumere per attaccare

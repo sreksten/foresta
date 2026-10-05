@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore.tipi;
+package com.threeamigos.foresta.tipi;
 
 import java.util.Arrays;
 import java.util.Collection;

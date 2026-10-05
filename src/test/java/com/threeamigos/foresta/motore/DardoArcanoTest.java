@@ -4,11 +4,11 @@ import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
-import com.threeamigos.foresta.motore.tipi.TipoAttributo;
-import com.threeamigos.foresta.motore.tipi.TipoModificatore;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.*;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoModificatore;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.motore.tipi.TipoAttributo;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 

@@ -15,10 +15,10 @@ import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.*;

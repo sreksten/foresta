@@ -2,12 +2,12 @@ package com.threeamigos.foresta.motore.modellodati;
 
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
-import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.GradoIncantamento;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;
 

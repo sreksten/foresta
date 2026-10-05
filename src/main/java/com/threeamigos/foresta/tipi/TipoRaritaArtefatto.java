@@ -1,6 +1,5 @@
-package com.threeamigos.foresta.motore.tipi;
+package com.threeamigos.foresta.tipi;
 
-import com.threeamigos.foresta.motore.Costanti;
 
 /**
  * Quanto è raro un artefatto. Decide quanti effetti (incantamenti più modificatori) può avere:
@@ -10,9 +9,11 @@ import com.threeamigos.foresta.motore.Costanti;
  */
 public enum TipoRaritaArtefatto {
 
-	COMUNE("comune", -1, Costanti.ARTEFATTO_MASSIMO_EFFETTI_COMUNE),
-	RARO("raro", 0, Costanti.ARTEFATTO_MASSIMO_EFFETTI_RARO),
-	LEGGENDARIO("leggendario", 1, Costanti.ARTEFATTO_MASSIMO_EFFETTI_LEGGENDARIO);
+	// L'ultimo numero è il tetto al numero di effetti (incantamenti più modificatori) di un artefatto, qualunque sia il
+	// suo livello
+	COMUNE("comune", -1, 3),
+	RARO("raro", 0, 4),
+	LEGGENDARIO("leggendario", 1, 5);
 
 	private final String nome;
 	private final int scartoSulLivello;

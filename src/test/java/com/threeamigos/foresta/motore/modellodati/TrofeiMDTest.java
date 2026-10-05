@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.motore.tipi.TipoTrofeo;
+import com.threeamigos.foresta.tipi.TipoTrofeo;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;

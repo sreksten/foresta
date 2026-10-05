@@ -5,8 +5,8 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Gruppo;
-import com.threeamigos.foresta.motore.tipi.TipoDanno;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoDanno;
 
 /**
  * Il colpo di grazia: se va a segno su un bersaglio sotto un quarto della salute massima gli toglie tutta la

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.oggetti.Incantamento;
+import com.threeamigos.foresta.tipi.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;

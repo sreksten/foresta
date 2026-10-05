@@ -1,6 +1,4 @@
-package com.threeamigos.foresta.motore.tipi;
-
-import com.threeamigos.foresta.motore.GrammarBean;
+package com.threeamigos.foresta.motore;
 
 /**
  * Controls how {@link GrammarBean} picks an alternative among a production's children.

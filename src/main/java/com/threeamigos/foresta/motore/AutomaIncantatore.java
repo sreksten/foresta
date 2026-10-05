@@ -3,8 +3,8 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAvvisoIncantatura;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoIncantatura;
-import com.threeamigos.foresta.motore.tipi.TipoMotivoRifiutoIncantatura;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
 
 import java.util.Optional;
 

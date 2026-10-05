@@ -10,9 +10,10 @@ import com.threeamigos.foresta.eventi.interni.InternoPreparazioneLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoTrofeoAcquisito;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.tipi.TipoTrofeo;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoTrofeo;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

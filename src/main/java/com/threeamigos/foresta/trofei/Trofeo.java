@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.trofei;
 
 import com.threeamigos.foresta.motore.RegistroTrofei;
-import com.threeamigos.foresta.motore.tipi.TipoTrofeo;
+import com.threeamigos.foresta.tipi.TipoTrofeo;
 
 /**
  * Il trigger di un trofeo: come una missione ha un innesco, ma non scade mai e una

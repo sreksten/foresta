@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.motore.tipi.TipoNegozio;
+import com.threeamigos.foresta.tipi.TipoNegozio;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;

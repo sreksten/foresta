@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.motore.RegistroTrofei;
-import com.threeamigos.foresta.motore.tipi.TipoTrofeo;
+import com.threeamigos.foresta.tipi.TipoTrofeo;
 import com.threeamigos.foresta.trofei.ClasseTrofeo;
 import com.threeamigos.foresta.trofei.Trofeo;
 

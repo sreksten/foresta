@@ -2,7 +2,7 @@ package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 
 /**
  * Stampa qualche artefatto di ogni tipo che artefatti2.txt conosce, come li genera il gioco, metà dalle

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.Comando;
 
 import java.awt.image.BufferedImage;
 

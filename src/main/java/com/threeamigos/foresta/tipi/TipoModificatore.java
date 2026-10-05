@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore.tipi;
+package com.threeamigos.foresta.tipi;
 
 /**
  * Il tipo di modifica da portare a un certo attributo

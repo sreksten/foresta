@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.motore.tipi.TipoModalitaProduzioneTesti;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;

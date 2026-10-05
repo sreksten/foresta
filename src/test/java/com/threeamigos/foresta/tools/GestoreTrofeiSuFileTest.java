@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.tools;
 
 import com.threeamigos.foresta.motore.modellodati.TrofeiMD;
-import com.threeamigos.foresta.motore.tipi.TipoTrofeo;
+import com.threeamigos.foresta.tipi.TipoTrofeo;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

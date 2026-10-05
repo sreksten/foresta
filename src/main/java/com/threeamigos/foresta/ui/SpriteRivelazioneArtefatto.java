@@ -3,13 +3,13 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.motore.RegoleSetLeggendari;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
-import com.threeamigos.foresta.motore.tipi.TipoDanno;
-import com.threeamigos.foresta.motore.tipi.TipoModificatore;
-import com.threeamigos.foresta.motore.tipi.TipoRaritaArtefatto;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.Incantamento;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
 import com.threeamigos.foresta.tools.Temporizzatore;
 
 import java.awt.*;

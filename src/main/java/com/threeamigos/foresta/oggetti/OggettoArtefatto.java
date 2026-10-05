@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 
 import java.util.Optional;
 

@@ -4,10 +4,10 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoVenditaArtefatto;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
-import com.threeamigos.foresta.motore.tipi.TipoNegozio;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoNegozio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

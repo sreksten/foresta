@@ -1,7 +1,8 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.motore.tipi.TipoTrofeo;
+import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoTrofeo;
 import com.threeamigos.foresta.trofei.ClasseTrofeo;
 import com.threeamigos.foresta.trofei.Trofeo;
 import org.junit.jupiter.api.Test;

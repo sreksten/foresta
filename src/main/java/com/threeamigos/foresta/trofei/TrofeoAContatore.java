@@ -2,7 +2,7 @@ package com.threeamigos.foresta.trofei;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.motore.RegistroTrofei;
-import com.threeamigos.foresta.motore.tipi.TipoTrofeo;
+import com.threeamigos.foresta.tipi.TipoTrofeo;
 
 import java.util.function.ToIntFunction;
 

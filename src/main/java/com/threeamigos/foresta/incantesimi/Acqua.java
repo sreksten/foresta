@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoDanno;
 
 public class Acqua extends IncantesimoMaleficoImpl implements Incantesimo {
 

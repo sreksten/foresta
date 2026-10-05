@@ -4,8 +4,8 @@ import com.threeamigos.foresta.missioni.OggettoLeggendario;
 import com.threeamigos.foresta.missioni.SetLeggendario;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
-import com.threeamigos.foresta.motore.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.text.DecimalFormat;

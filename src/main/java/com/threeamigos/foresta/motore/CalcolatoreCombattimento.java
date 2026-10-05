@@ -5,13 +5,13 @@ import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
-import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GradoIncantamento;
 import com.threeamigos.foresta.oggetti.Incantamento;
-import com.threeamigos.foresta.personaggi.OmbraFiamma;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.OmbraFiamma;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.tools.ModalitaDiProva;
 
 import java.util.ArrayList;
@@ -151,6 +151,20 @@ public class CalcolatoreCombattimento {
 
     public static DannoRisultante calcolaDannoRisultante(Personaggio attaccante, Personaggio difensore, Arma arma) {
         return calcolaDannoRisultante(attaccante, difensore, arma, 1.0d);
+    }
+
+    /**
+     * Uno degli effetti di stato che quel tipo di danno può provocare, a caso; null se non ne provoca
+     */
+    private static TipoEffettoDiStato effettoDiStatoCasuale(TipoDanno tipoDanno) {
+        TipoEffettoDiStato[] effetti = tipoDanno.getEffetti();
+        if (effetti.length == 0) {
+            Logger.log("effettoDiStatoCasuale(" + tipoDanno + "): nessun effetto collaterale");
+            return null;
+        }
+        TipoEffettoDiStato tipoEffetto = effetti[Dado.tiraAncheAUnaFaccia(effetti.length) - 1];
+        Logger.log("effettoDiStatoCasuale(" + tipoDanno + "): effetto casuale: " + tipoEffetto);
+        return tipoEffetto;
     }
 
     /**
@@ -604,7 +618,7 @@ public class CalcolatoreCombattimento {
             if (!immuneATipoDannoBase && tipoDanno.hasEffettiDiStato()) {
                 double probStatoFisico = ((dannoMitigato * 100.0d) / difensore.getForza()) + (attaccante.getFuria() * 2.0d);
                 if (Dado.tira(100) <= probStatoFisico) {
-                    TipoEffettoDiStato effettoFisico = tipoDanno.getTipoEffettoDiStatoCasuale();
+                    TipoEffettoDiStato effettoFisico = effettoDiStatoCasuale(tipoDanno);
                     if (effettoFisico != null) {
                         dannoRisultante.addEffettoDiStato(effettoFisico, calcolaDurataStato(difensore, effettoFisico),
                                 calcolaDannoPeriodico(attaccante, difensore, effettoFisico));
@@ -635,7 +649,7 @@ public class CalcolatoreCombattimento {
                         double contributoMagico = attaccante.getIntelligenza() * attaccante.getPotereMagico() / 100.0d;
                         double probStatoMagico = ((dannoQuestoIncantamentoProc * 100.0d) / difensore.getForza()) + contributoMagico;
                         if (Dado.tira(100) <= probStatoMagico) {
-                            TipoEffettoDiStato effettoMagico = elemento.getTipoEffettoDiStatoCasuale();
+                            TipoEffettoDiStato effettoMagico = effettoDiStatoCasuale(elemento);
                             if (effettoMagico != null) {
                                 dannoRisultante.addEffettoDiStato(effettoMagico, calcolaDurataStato(difensore, effettoMagico),
                                         calcolaDannoPeriodico(attaccante, difensore, effettoMagico));

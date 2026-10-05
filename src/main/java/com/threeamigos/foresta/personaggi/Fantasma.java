@@ -2,10 +2,10 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.tipi.TipoAttributo;
-import com.threeamigos.foresta.motore.tipi.TipoDanno;
-import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.motore.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.EnumSet;

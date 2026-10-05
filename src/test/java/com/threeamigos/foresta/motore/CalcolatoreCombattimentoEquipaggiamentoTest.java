@@ -6,15 +6,15 @@ import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Incantamento;
+import com.threeamigos.foresta.personaggi.Elfa;
+import com.threeamigos.foresta.personaggi.Elfo;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Ladro;
-import com.threeamigos.foresta.personaggi.Elfo;
-import com.threeamigos.foresta.personaggi.Elfa;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

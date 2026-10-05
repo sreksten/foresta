@@ -2,13 +2,13 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.tipi.SupertipoArtefatto;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
-import com.threeamigos.foresta.motore.tipi.TipoAttributo;
-import com.threeamigos.foresta.motore.tipi.TipoMotivoRifiutoIncantatura;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.oggetti.ListinoPergamene;
+import com.threeamigos.foresta.tipi.SupertipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -11,11 +11,11 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegoleSetLeggendari;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.tipi.SupertipoArtefatto;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.SupertipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

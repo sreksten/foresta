@@ -5,6 +5,7 @@ import com.threeamigos.foresta.motore.modellodati.GruppoGiocatoreMD;
 import com.threeamigos.foresta.motore.modellodati.LettoreCampi;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tools.TestataSalvataggio;
 
 import java.io.BufferedReader;

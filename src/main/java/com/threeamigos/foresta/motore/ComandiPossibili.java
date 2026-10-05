@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.tipi.Comando;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;

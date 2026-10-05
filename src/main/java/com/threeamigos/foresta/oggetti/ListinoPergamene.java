@@ -3,7 +3,7 @@ package com.threeamigos.foresta.oggetti;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 
 import java.util.EnumMap;
 import java.util.Map;

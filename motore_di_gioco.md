@@ -18,9 +18,9 @@ Documenti di dettaglio su singoli sottosistemi:
 
 | Pacchetto | Contenuto |
 | :--- | :--- |
-| `motore` | `Automa` (la macchina a stati), `Stato`, `Comando`, i gruppi, `Foresta`, `LineaTemporale`, i calcolatori (combattimento, riposo, progressione), i registri, le regole di equipaggiamento e di negoziazione, `Dado`, `GrammarBean` e `ProduttoreDiTestiCasuale` |
+| `motore` | `Automa` (la macchina a stati), `Stato`, i gruppi, `Foresta`, `LineaTemporale`, i calcolatori (combattimento, riposo, progressione), i registri, le regole di equipaggiamento e di negoziazione, `Dado`, `GrammarBean` e `ProduttoreDiTestiCasuale` |
 | `motore.modellodati` | I bean serializzabili (suffisso `MD`) e `ModelloDati`, il contenitore radice |
-| `motore.tipi` | Enum di dominio: attributi, tipi di danno, effetti di stato, slot e rarità degli artefatti, tipi di riposo, di negozio, di trofeo |
+| `tipi` | Il vocabolario condiviso da motore, modello dati e UI, che non dipende da nessun altro pacchetto: `Comando` e gli enum di dominio (attributi, tipi di danno, effetti di stato, slot e rarità degli artefatti, tipi di riposo, di negozio, di trofeo) |
 | `eventi` | Il bus (`BusEventi`) e le quattro famiglie di eventi: `comandigiocatore`, `notifiche`, `richieste`, `interni` |
 | `personaggi` | `Personaggio` (contratto), `PersonaggioBase`, le classi giocabili e i mostri, `ClassePersonaggio`, `EquipaggiamentoIniziale` |
 | `locazioni` | `Locazione`, `LocazioneBase`, le locazioni comuni, le città, i castelli, `Locanda`, `ClassiLocazione` |

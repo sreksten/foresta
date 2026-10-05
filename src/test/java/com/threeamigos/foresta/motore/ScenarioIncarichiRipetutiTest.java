@@ -7,6 +7,7 @@ import com.threeamigos.foresta.missioni.LaTagliaSullaBanda;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.RecuperaIlMedaglione;
+import com.threeamigos.foresta.tipi.Comando;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

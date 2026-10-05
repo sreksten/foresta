@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.incantesimi;
 
-import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Dado;
-import com.threeamigos.foresta.motore.tipi.TipoDanno;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoDanno;
 
 import java.util.function.Function;
 

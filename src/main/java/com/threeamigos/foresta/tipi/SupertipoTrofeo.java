@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore.tipi;
+package com.threeamigos.foresta.tipi;
 
 /**
  * La tipologia di un trofeo, per mostrarli raggruppati: l'ordine qui è quello in cui

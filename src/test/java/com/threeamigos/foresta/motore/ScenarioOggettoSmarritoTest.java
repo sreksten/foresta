@@ -5,6 +5,7 @@ import com.threeamigos.foresta.missioni.LOggettoSmarrito;
 import com.threeamigos.foresta.missioni.OggettoSmarrito;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
+import com.threeamigos.foresta.tipi.Comando;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;

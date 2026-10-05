@@ -3,7 +3,7 @@ package com.threeamigos.foresta.eventi.comandigiocatore;
 import com.threeamigos.foresta.eventi.RichiestaConComandi;
 import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.motore.AutomaInventario;
-import com.threeamigos.foresta.motore.Comando;
+import com.threeamigos.foresta.tipi.Comando;
 
 import java.util.Collection;
 

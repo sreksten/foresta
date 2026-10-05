@@ -7,11 +7,11 @@ import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
-import com.threeamigos.foresta.motore.tipi.TipoConsumabile;
-import com.threeamigos.foresta.motore.tipi.TipoTrofeo;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoConsumabile;
+import com.threeamigos.foresta.tipi.TipoTrofeo;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

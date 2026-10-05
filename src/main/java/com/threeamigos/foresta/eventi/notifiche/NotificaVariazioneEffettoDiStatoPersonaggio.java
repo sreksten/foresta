@@ -2,8 +2,8 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoSuPersonaggio;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 
 /**
  * Un Personaggio subisce una variazione di un Effetto di Stato.

@@ -4,8 +4,8 @@ import com.threeamigos.foresta.motore.ArmaNaturale;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.personaggi.Guerriero;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

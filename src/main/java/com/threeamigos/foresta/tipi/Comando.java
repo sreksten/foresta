@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.tipi;
 
 public enum Comando {
 

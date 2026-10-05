@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.tools;
 
-import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.tipi.Comando;
 
 /**
  * TestataSalvataggio contiene informazioni sul gruppo del giocatore. Serve per identificare

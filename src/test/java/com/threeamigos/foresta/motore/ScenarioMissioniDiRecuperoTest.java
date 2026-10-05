@@ -12,6 +12,7 @@ import com.threeamigos.foresta.missioni.RecuperaIlMedaglione;
 import com.threeamigos.foresta.missioni.RecuperaLeDerrateAlimentari;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
+import com.threeamigos.foresta.tipi.Comando;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;

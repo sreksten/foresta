@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.motore.tipi.*;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;

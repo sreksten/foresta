@@ -5,9 +5,9 @@ import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoPrelievoArtefatto;
 import com.threeamigos.foresta.missioni.SetLeggendario;
 import com.threeamigos.foresta.motore.RegoleSetLeggendari;
-import com.threeamigos.foresta.motore.tipi.TipoAttributo;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

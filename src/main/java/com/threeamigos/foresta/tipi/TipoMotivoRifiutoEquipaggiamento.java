@@ -1,10 +1,8 @@
-package com.threeamigos.foresta.motore.tipi;
+package com.threeamigos.foresta.tipi;
 
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.personaggi.Personaggio;
 
 /**
- * Perché un personaggio non può prendere un artefatto (vedi {@link Personaggio#puoEquipaggiare}).
+ * Perché un personaggio non può prendere un artefatto (vedi Personaggio.puoEquipaggiare e RegoleEquipaggiamento).
  * La spiegazione è una frase in terza persona da far seguire al nome del personaggio,
  * es. "Il guerriero" + " porta già troppo peso".
  */
@@ -54,33 +52,29 @@ public enum TipoMotivoRifiutoEquipaggiamento {
 		this.fumetto = fumetto;
 	}
 
-	public String getSpiegazione(Personaggio personaggio) {
-		return personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + ' ' + spiegazione + '.';
-	}
-
 	public String getFumetto() {
 		return fumetto;
 	}
 
 	/**
-	 * Frase completa, es. "Il guerriero porta già troppo peso."
+	 * Frase completa dopo il nome del personaggio, es. "Il guerriero" + " porta già troppo peso."
 	 */
-	public String formattaSpiegazione(Personaggio personaggio) {
-		return personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + ' ' + spiegazione + '.';
+	public String formattaSpiegazione(String nomePersonaggio) {
+		return nomePersonaggio + ' ' + spiegazione + '.';
 	}
 
-	public String formattaSpiegazione(Personaggio personaggio, Artefatto artefatto) {
-		return personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + ' ' + String.format(spiegazione, artefatto.getNome()) + '.';
+	/**
+	 * Come sopra, con il nome dell'artefatto al posto del %s della spiegazione
+	 */
+	public String formattaSpiegazione(String nomePersonaggio, String nomeArtefatto) {
+		return nomePersonaggio + ' ' + String.format(spiegazione, nomeArtefatto) + '.';
 	}
 
 	public String formattaFumetto() {
 		return fumetto + '.';
 	}
 
-	public String formattaFumetto(Artefatto artefatto) {
-		return String.format(fumetto, artefatto.getNome()) + '.';
+	public String formattaFumetto(String nomeArtefatto) {
+		return String.format(fumetto, nomeArtefatto) + '.';
 	}
 }

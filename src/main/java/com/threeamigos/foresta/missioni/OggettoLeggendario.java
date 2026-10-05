@@ -1,13 +1,13 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.motore.tipi.SupertipoArtefatto;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
-import com.threeamigos.foresta.motore.tipi.TipoAttributo;
-import com.threeamigos.foresta.motore.tipi.TipoDanno;
-import com.threeamigos.foresta.motore.tipi.TipoModificatore;
-import com.threeamigos.foresta.motore.tipi.TipoRaritaArtefatto;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.SupertipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 
 import java.util.ArrayList;

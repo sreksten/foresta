@@ -3,8 +3,8 @@ package com.threeamigos.foresta.eventi.comandigiocatore;
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
-import com.threeamigos.foresta.motore.tipi.TipoConsumabile;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoConsumabile;
 
 /**
  * Il giocatore chiede di acquistare un Consumabile da un alchimista.

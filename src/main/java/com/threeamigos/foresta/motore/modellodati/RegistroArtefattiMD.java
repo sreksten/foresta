@@ -2,8 +2,8 @@ package com.threeamigos.foresta.motore.modellodati;
 
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
-import com.threeamigos.foresta.motore.tipi.TipoNegozio;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.tipi.TipoNegozio;
 
 import java.io.BufferedReader;
 import java.io.IOException;

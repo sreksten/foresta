@@ -6,9 +6,9 @@ import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.motore.tipi.TipoRiposo;
 import com.threeamigos.foresta.personaggi.Ladra;
 import com.threeamigos.foresta.personaggi.Ladro;
+import com.threeamigos.foresta.tipi.TipoRiposo;
 
 public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 

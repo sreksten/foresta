@@ -3,7 +3,8 @@ package com.threeamigos.foresta.locazioni;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.motore.tipi.TipoRiposo;
+import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoRiposo;
 
 public class Palude extends LocazioneBase {
 

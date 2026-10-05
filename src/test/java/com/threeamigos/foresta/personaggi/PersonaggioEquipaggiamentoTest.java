@@ -6,8 +6,8 @@ import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -235,7 +235,9 @@ class PersonaggioEquipaggiamentoTest {
         Personaggio guerriero = new Guerriero("Pippo", 1);
         Artefatto spadone = artefatto(TipoArtefatto.SPADONE, 1);
         assertEquals("Pippo non sa combattere con due armi.",
-                TipoMotivoRifiutoEquipaggiamento.SECONDA_ARMA_NON_CONSENTITA.formattaSpiegazione(guerriero, spadone));
+                TipoMotivoRifiutoEquipaggiamento.SECONDA_ARMA_NON_CONSENTITA.formattaSpiegazione(
+                        guerriero.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+                                Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA), spadone.getNome()));
     }
 
     private static void assertRifiuto(TipoMotivoRifiutoEquipaggiamento atteso, Personaggio personaggio, Artefatto artefatto) {

@@ -2,11 +2,11 @@ package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.tipi.TipoDanno;
-import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 
 import java.util.Collection;
 import java.util.Collections;

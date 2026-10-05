@@ -2,7 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.missioni.OggettoLeggendario;
 import com.threeamigos.foresta.missioni.SetLeggendario;
-import com.threeamigos.foresta.motore.tipi.TipoSlotArtefatto;
+import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
 
 import java.util.Collections;
 import java.util.Comparator;

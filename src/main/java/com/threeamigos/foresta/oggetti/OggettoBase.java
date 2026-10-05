@@ -2,10 +2,10 @@ package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
-import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 
 public abstract class OggettoBase implements Oggetto {

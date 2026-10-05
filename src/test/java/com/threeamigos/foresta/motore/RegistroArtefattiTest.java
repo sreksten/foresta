@@ -3,9 +3,9 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
 import com.threeamigos.foresta.oggetti.ArmaFisica;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 

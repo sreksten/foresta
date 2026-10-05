@@ -2,9 +2,9 @@ package com.threeamigos.foresta.motore.modellodati;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
-import com.threeamigos.foresta.motore.tipi.TipoSlotArtefatto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;

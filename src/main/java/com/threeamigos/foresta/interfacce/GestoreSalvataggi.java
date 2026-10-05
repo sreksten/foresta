@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.motore.Comando;
+import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tools.TestataSalvataggio;
 
 import java.util.List;

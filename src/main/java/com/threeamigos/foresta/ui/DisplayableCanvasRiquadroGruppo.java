@@ -6,8 +6,8 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloPersonaggi
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneStatistichePersonaggio;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.tipi.TipoAttributo;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

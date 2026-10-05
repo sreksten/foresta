@@ -9,11 +9,11 @@ import com.threeamigos.foresta.eventi.interni.InternoPastoConsumatoInLocanda;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
-import com.threeamigos.foresta.motore.tipi.TipoConsumabile;
-import com.threeamigos.foresta.motore.tipi.TipoTrofeo;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoConsumabile;
+import com.threeamigos.foresta.tipi.TipoTrofeo;
 
 import java.util.function.IntPredicate;
 import java.util.function.Supplier;

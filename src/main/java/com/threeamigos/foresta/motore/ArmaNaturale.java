@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.interfacce.Arma;
-import com.threeamigos.foresta.motore.tipi.TipoDanno;
 import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio; // Presumo sia la tua Enum delle 30 classi
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoDanno;
 
 import java.util.Collection;
 import java.util.Collections;

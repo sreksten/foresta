@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaIncantatore;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioCommerciante;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioFornitore;
@@ -13,10 +12,12 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.eventi.richieste.RichiestaTesto;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
-import com.threeamigos.foresta.motore.tipi.TipoMotivoRifiutoIncantatura;
-import com.threeamigos.foresta.motore.tipi.TipoNegozio;
-import com.threeamigos.foresta.motore.tipi.TipoRiposo;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
+import com.threeamigos.foresta.tipi.TipoNegozio;
+import com.threeamigos.foresta.tipi.TipoRiposo;
+import com.threeamigos.foresta.tools.Misc;
 
 import java.util.ArrayList;
 import java.util.Collection;

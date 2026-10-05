@@ -1,14 +1,14 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.motore.tipi.SupertipoArtefatto;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
-import com.threeamigos.foresta.motore.tipi.TipoMotivoRifiutoEquipaggiamento;
-import com.threeamigos.foresta.motore.tipi.TipoSlotArtefatto;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
+import com.threeamigos.foresta.tipi.SupertipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoMotivoRifiutoEquipaggiamento;
+import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
 
 import java.util.Collection;
 import java.util.EnumSet;
@@ -50,12 +50,14 @@ public final class RegoleEquipaggiamento {
 			this.slot = slot;
 			this.motivo = motivo;
 			if (motivo != null) {
+				String nomePersonaggio = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+						Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 				if (artefattoMD != null) {
-					Artefatto artefatto = Artefatto.di(artefattoMD);
-					this.descrizione = motivo.formattaSpiegazione(personaggio, artefatto);
-					this.fumetto = motivo.formattaFumetto(artefatto);
+					String nomeArtefatto = Artefatto.di(artefattoMD).getNome();
+					this.descrizione = motivo.formattaSpiegazione(nomePersonaggio, nomeArtefatto);
+					this.fumetto = motivo.formattaFumetto(nomeArtefatto);
 				} else {
-					this.descrizione = motivo.formattaSpiegazione(personaggio);
+					this.descrizione = motivo.formattaSpiegazione(nomePersonaggio);
 					this.fumetto = motivo.formattaFumetto();
 				}
 			} else {

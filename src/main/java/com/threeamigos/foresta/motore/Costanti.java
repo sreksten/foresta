@@ -7,11 +7,7 @@ package com.threeamigos.foresta.motore;
 public class Costanti {
 
     // Artefatti
-    // Tetto al numero di effetti (incantamenti più modificatori) di un artefatto, qualunque sia il suo livello,
-    // secondo la rarità (vedi RaritaArtefatto)
-    public static final int ARTEFATTO_MASSIMO_EFFETTI_COMUNE = 3;
-    public static final int ARTEFATTO_MASSIMO_EFFETTI_RARO = 4;
-    public static final int ARTEFATTO_MASSIMO_EFFETTI_LEGGENDARIO = 5;
+    // Il tetto al numero di effetti di un artefatto secondo la rarità sta in TipoRaritaArtefatto
 
     // Combattimento (vedi artefatti_e_incantamenti.md, §2 "Combattimento")
     // PARATA intrinseca di scudo, elmo, maschera, armatura e schinieri: una parte fissa, perché servano anche ai

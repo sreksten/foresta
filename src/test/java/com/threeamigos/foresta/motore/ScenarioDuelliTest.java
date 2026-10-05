@@ -7,10 +7,11 @@ import com.threeamigos.foresta.missioni.CombattimentoRichiesto;
 import com.threeamigos.foresta.missioni.IncaricoDiCombattimento;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.tipi.TipoAttributo;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;

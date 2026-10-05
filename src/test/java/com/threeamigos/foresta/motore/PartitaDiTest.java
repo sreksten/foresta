@@ -6,14 +6,15 @@ import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneDirezione;
-import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneMissione;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneIncantesimoDaLanciare;
+import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneMissione;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tools.ModalitaDiProva;
 
 import java.util.ArrayList;

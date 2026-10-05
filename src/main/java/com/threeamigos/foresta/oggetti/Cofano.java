@@ -5,11 +5,11 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Cofano extends OggettoBase implements Oggetto {

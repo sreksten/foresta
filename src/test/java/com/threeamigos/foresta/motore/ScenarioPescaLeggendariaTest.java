@@ -6,6 +6,7 @@ import com.threeamigos.foresta.missioni.LaLeggendaDellArmaiolo;
 import com.threeamigos.foresta.missioni.OggettoLeggendario;
 import com.threeamigos.foresta.missioni.PescaLeggendaria;
 import com.threeamigos.foresta.missioni.SetLeggendario;
+import com.threeamigos.foresta.tipi.Comando;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

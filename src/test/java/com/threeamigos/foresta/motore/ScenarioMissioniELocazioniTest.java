@@ -6,13 +6,14 @@ import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
-import com.threeamigos.foresta.motore.tipi.TipoAttributo;
-import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.motore.tipi.TipoModificatore;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 import org.junit.jupiter.api.Test;
 

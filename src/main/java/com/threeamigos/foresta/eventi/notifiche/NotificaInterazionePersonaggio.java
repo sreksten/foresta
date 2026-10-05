@@ -2,8 +2,8 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoSuPersonaggio;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.motore.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
 
 /**
  * Un evento di interazione con un effetto di stato che accade su un Personaggio durante un combattimento.

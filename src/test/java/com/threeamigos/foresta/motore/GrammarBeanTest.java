@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.motore.tipi.TipoModalitaProduzioneTesti;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayInputStream;

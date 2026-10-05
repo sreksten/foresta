@@ -2,8 +2,8 @@ package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.motore.Comando;
 import com.threeamigos.foresta.motore.Stato;
+import com.threeamigos.foresta.tipi.Comando;
 
 import java.util.Arrays;
 import java.util.Collection;

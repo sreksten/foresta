@@ -2,7 +2,7 @@ package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.Serializzabile;
-import com.threeamigos.foresta.motore.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoDanno;
 
 /**
  *

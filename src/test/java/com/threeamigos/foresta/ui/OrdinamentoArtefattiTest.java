@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.motore.tipi.TipoArtefatto;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

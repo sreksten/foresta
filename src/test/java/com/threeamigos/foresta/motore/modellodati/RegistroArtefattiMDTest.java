@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.motore.modellodati;
 
 import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
-import com.threeamigos.foresta.motore.tipi.*;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;

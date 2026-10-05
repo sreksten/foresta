@@ -4,7 +4,7 @@ import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.tipi.*;
+import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;
 import java.util.stream.Collectors;

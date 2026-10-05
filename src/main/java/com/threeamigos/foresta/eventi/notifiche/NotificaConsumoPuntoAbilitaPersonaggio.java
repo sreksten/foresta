@@ -2,8 +2,8 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoSuPersonaggio;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.motore.tipi.TipoAttributo;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 
 /**
  * Un giocatore consuma un Punto Abilità di un Personaggio per aumentargli un certo Attributo.

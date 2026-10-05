@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.comandigiocatore;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.motore.Comando;
+import com.threeamigos.foresta.tipi.Comando;
 
 /**
  * Il giocatore invia un generico comando al motore per proseguire il gioco.

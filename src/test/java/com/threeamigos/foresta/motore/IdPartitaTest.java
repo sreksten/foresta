@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.tipi.Comando;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
