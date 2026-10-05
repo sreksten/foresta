@@ -2,6 +2,7 @@ package com.threeamigos.foresta.motore.modellodati;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.locazioni.LocazioneBase;
 import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
@@ -372,12 +373,12 @@ public class TestLogoramentoInizioPartita {
                     continue;
                 }
                 StringBuilder sb = new StringBuilder(String.format("%-13s magia %3d int %2d:", classe, m.getMagia(), m.getIntelligenza()));
-                for (com.threeamigos.foresta.incantesimi.ClasseIncantesimo ci : com.threeamigos.foresta.incantesimi.ClasseIncantesimo.values()) {
-                    if (ci.getTipo() != com.threeamigos.foresta.incantesimi.TipoIncantesimo.MALEFICO || ci.getCostoLancio() > m.getMagia()) {
+                for (com.threeamigos.foresta.tipi.ClasseIncantesimo ci : com.threeamigos.foresta.tipi.ClasseIncantesimo.values()) {
+                    if (ci.getTipo() != com.threeamigos.foresta.tipi.TipoIncantesimo.MALEFICO || FabbricaIncantesimi.costoLancio(ci) > m.getMagia()) {
                         continue;
                     }
                     com.threeamigos.foresta.incantesimi.IncantesimoMalefico inc =
-                            (com.threeamigos.foresta.incantesimi.IncantesimoMalefico) ci.getIstanza(1);
+                            (com.threeamigos.foresta.incantesimi.IncantesimoMalefico) FabbricaIncantesimi.crea(ci, 1);
                     sb.append(String.format(" %s %d%%x%d", ci, CalcolatoreCombattimento.calcolaProbabilitaDiColpire(m, g,
                             inc.getTipoDanno().getSuperTipo()), CalcolatoreCombattimento.calcolaDannoRisultante(m, g, inc).getDanno()));
                 }

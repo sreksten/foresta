@@ -2,11 +2,12 @@ package com.threeamigos.foresta.offerte;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 
@@ -17,9 +18,9 @@ public class Incantesimi implements Offerta {
 	private final int costo;
 
 	public Incantesimi() {
-		classeIncantesimo = ClasseIncantesimo.casuale();
+		classeIncantesimo = FabbricaIncantesimi.casuale();
 		quantita = Dado.tira(3);
-		costo = quantita * classeIncantesimo.getCostoAcquisto() / 2;
+		costo = quantita * FabbricaIncantesimi.costoAcquisto(classeIncantesimo) / 2;
 	}
 
 	@Override

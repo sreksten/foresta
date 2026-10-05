@@ -6,10 +6,9 @@ import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
 import com.threeamigos.foresta.eventi.interni.InternoPersonaggioArreso;
 import com.threeamigos.foresta.eventi.interni.InternoRisultatoValutazionePersonaggioAttaccante;
 import com.threeamigos.foresta.eventi.notifiche.*;
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
-import com.threeamigos.foresta.incantesimi.TipoIncantesimo;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
@@ -19,6 +18,8 @@ import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.*;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.*;
@@ -662,9 +663,9 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 
 		List<IncantesimoMalefico> incantesimiDisponibili = Arrays.stream(ClasseIncantesimo.values())
-				.filter(i -> i.getCostoLancio() <= magiaCorrente && i.getTipo() == TipoIncantesimo.MALEFICO)
+				.filter(i -> FabbricaIncantesimi.costoLancio(i) <= magiaCorrente && i.getTipo() == TipoIncantesimo.MALEFICO)
 				.filter(getRepertorioIncantesimi()::contains)
-				.map(i -> i.getIstanza(getLivello()))
+				.map(i -> FabbricaIncantesimi.crea(i, getLivello()))
 				.map(IncantesimoMalefico.class::cast)
 				.collect(Collectors.toList());
 
@@ -978,7 +979,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public boolean puoFormulare(ClasseIncantesimo classeIncantesimo) {
-		return getMagia() >= classeIncantesimo.getCostoLancio() && !hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO);
+		return getMagia() >= FabbricaIncantesimi.costoLancio(classeIncantesimo) && !hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO);
 	}
 
 	// CARICO MASSIMO

@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 
 /**
  * Notifica un cambiamento nel totale degli incantesimi di un certo tipo disponibili nell'inventario del gruppo.

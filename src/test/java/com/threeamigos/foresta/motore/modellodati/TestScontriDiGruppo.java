@@ -1,10 +1,9 @@
 package com.threeamigos.foresta.motore.modellodati;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
-import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.locazioni.LocazioneBase;
 import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
@@ -13,6 +12,8 @@ import com.threeamigos.foresta.motore.DannoRisultante;
 import com.threeamigos.foresta.motore.FaseDiAttacco;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.PortataIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
@@ -305,7 +306,7 @@ public class TestScontriDiGruppo {
     }
 
     private static IncantesimoMalefico pergamena(Personaggio formulante) {
-        return (IncantesimoMalefico) ClasseIncantesimo.FUOCO.getIstanza(formulante.getLivello());
+        return (IncantesimoMalefico) FabbricaIncantesimi.crea(ClasseIncantesimo.FUOCO, formulante.getLivello());
     }
 
     private static List<Personaggio> bersagliDellaPergamena(Personaggio formulante, IncantesimoMalefico incantesimo,

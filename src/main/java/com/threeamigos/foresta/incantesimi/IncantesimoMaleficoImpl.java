@@ -7,6 +7,8 @@ import com.threeamigos.foresta.motore.DannoRisultante;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.PortataIncantesimo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 import java.util.List;
 

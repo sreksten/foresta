@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
@@ -10,6 +10,7 @@ import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Ladro;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoModificatore;
@@ -56,7 +57,7 @@ class CalcolatoreCombattimentoClassiTest {
 
     @Test
     void ilMagoFaPiuDannoConGliIncantesimi() {
-        IncantesimoMalefico aria = (IncantesimoMalefico) ClasseIncantesimo.ARIA.getIstanza(5);
+        IncantesimoMalefico aria = (IncantesimoMalefico) FabbricaIncantesimi.crea(ClasseIncantesimo.ARIA, 5);
         double ladro = danno(new Ladro("Riferimento", 5), aria);
         double mago = danno(new Mago("Merlino", 5), aria);
         double guerriero = danno(new Guerriero("Pippo", 5), aria);

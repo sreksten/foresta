@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 
 public class Fulmine extends IncantesimoMaleficoImpl implements Incantesimo {

@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
@@ -9,6 +9,7 @@ import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Troll;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
@@ -140,12 +141,12 @@ class ScenarioCorrezioniTest {
 		mago.addMagia(mago.getMagiaMassima());
 		Guerriero compagno = new Guerriero("Compagno", 1);
 
-		Incantesimo resurrezione = ClasseIncantesimo.RESURREZIONE.getIstanza(5);
+		Incantesimo resurrezione = FabbricaIncantesimi.crea(ClasseIncantesimo.RESURREZIONE, 5);
 		int prima = mago.getMagia();
 		resurrezione.formula(mago, compagno, null);
 		assertEquals(prima - resurrezione.getCostoLancio(), mago.getMagia());
 
-		Incantesimo morte = ClasseIncantesimo.MORTE.getIstanza(5);
+		Incantesimo morte = FabbricaIncantesimi.crea(ClasseIncantesimo.MORTE, 5);
 		prima = mago.getMagia();
 		morte.formula(mago, new Troll(1), null);
 		assertEquals(prima - morte.getCostoLancio(), mago.getMagia());

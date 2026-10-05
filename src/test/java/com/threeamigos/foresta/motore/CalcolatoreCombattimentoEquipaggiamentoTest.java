@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
@@ -15,6 +15,7 @@ import com.threeamigos.foresta.personaggi.Ladro;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
 import com.threeamigos.foresta.tipi.*;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -206,7 +207,7 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
     void ilLibroMagicoAumentaIlDannoDegliIncantesimi() {
         Mago mago = new Mago("Merlino", 4);
         mago.addModificatore(new ModificatoreAttributo(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
-        IncantesimoMalefico aria = (IncantesimoMalefico) ClasseIncantesimo.ARIA.getIstanza(4);
+        IncantesimoMalefico aria = (IncantesimoMalefico) FabbricaIncantesimi.crea(ClasseIncantesimo.ARIA, 4);
         int senzaLibro = CalcolatoreCombattimento.calcolaDannoRisultante(mago, difensore, aria).getDanno();
         mago.addArtefatto(artefatto(TipoArtefatto.LIBRO_MAGICO, 4));
         int conLibro = CalcolatoreCombattimento.calcolaDannoRisultante(mago, difensore, aria).getDanno();
@@ -221,7 +222,7 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
 
         Elfo elfo = new Elfo("Legolas", 4);
         elfo.addModificatore(new ModificatoreAttributo(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
-        IncantesimoMalefico aria = (IncantesimoMalefico) ClasseIncantesimo.ARIA.getIstanza(4);
+        IncantesimoMalefico aria = (IncantesimoMalefico) FabbricaIncantesimi.crea(ClasseIncantesimo.ARIA, 4);
         int senzaLibro = CalcolatoreCombattimento.calcolaDannoRisultante(elfo, difensore, aria).getDanno();
         elfo.addArtefatto(artefatto(TipoArtefatto.LIBRO_MAGICO, 4));
         int conLibro = CalcolatoreCombattimento.calcolaDannoRisultante(elfo, difensore, aria).getDanno();

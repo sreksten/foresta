@@ -3,10 +3,9 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioCommerciante;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoVenditaArtefatto;
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
-import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Locazione;
@@ -14,7 +13,9 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.PortataIncantesimo;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -702,12 +703,12 @@ final class GiocatoreAutomatico {
 			pozioniComprate++;
 		}
 		boolean qualcunoPuoRisuscitare = gruppo.getPersonaggiVivi().stream()
-				.anyMatch(p -> p.getMagiaMassima() >= ClasseIncantesimo.RESURREZIONE.getCostoLancio());
+				.anyMatch(p -> p.getMagiaMassima() >= FabbricaIncantesimi.costoLancio(ClasseIncantesimo.RESURREZIONE));
 		if (gruppo.getNumeroPersonaggi() > 1 && qualcunoPuoRisuscitare
 				&& gruppo.getIncantesimi(ClasseIncantesimo.RESURREZIONE) == 0
-				&& puoSpendere(gruppo, ClasseIncantesimo.RESURREZIONE.getCostoAcquisto(), riserva)) {
+				&& puoSpendere(gruppo, FabbricaIncantesimi.costoAcquisto(ClasseIncantesimo.RESURREZIONE), riserva)) {
 			if (compra(gruppo, TipoConsumabile.INCANTESIMO, ClasseIncantesimo.RESURREZIONE, null,
-					ClasseIncantesimo.RESURREZIONE.getCostoAcquisto())) {
+					FabbricaIncantesimi.costoAcquisto(ClasseIncantesimo.RESURREZIONE))) {
 				pergameneComprate++;
 			}
 		}
@@ -719,8 +720,8 @@ final class GiocatoreAutomatico {
 			int giro = 0;
 			while (pergameneDiDanno(gruppo) < 8 && giro < 8) {
 				ClasseIncantesimo classe = daComprare[giro++ % daComprare.length];
-				if (!puoSpendere(gruppo, classe.getCostoAcquisto(), riserva + 10)
-						|| !compra(gruppo, TipoConsumabile.INCANTESIMO, classe, null, classe.getCostoAcquisto())) {
+				if (!puoSpendere(gruppo, FabbricaIncantesimi.costoAcquisto(classe), riserva + 10)
+						|| !compra(gruppo, TipoConsumabile.INCANTESIMO, classe, null, FabbricaIncantesimi.costoAcquisto(classe))) {
 					break;
 				}
 				pergameneComprate++;
@@ -1027,7 +1028,7 @@ final class GiocatoreAutomatico {
 				Comando scelta = null;
 				ClasseIncantesimo classeScelta = null;
 				for (ClasseIncantesimo classe : INCANTESIMI_DI_DANNO) {
-					Incantesimo incantesimo = classe.getIstanza(attore.getLivello());
+					Incantesimo incantesimo = FabbricaIncantesimi.crea(classe, attore.getLivello());
 					if (pergamene.get(classe) <= 0 || magia < incantesimo.getCostoLancio()
 							|| !(incantesimo instanceof Arma)) {
 						continue;
@@ -1081,7 +1082,7 @@ final class GiocatoreAutomatico {
 				} else {
 					if (classeScelta != null) {
 						pergamene.put(classeScelta, pergamene.get(classeScelta) - 1);
-						magia -= classeScelta.getIstanza(attore.getLivello()).getCostoLancio();
+						magia -= FabbricaIncantesimi.crea(classeScelta, attore.getLivello()).getCostoLancio();
 						dannoIncantesimo(attore, avversari, salute, classeScelta, true);
 					} else {
 						magia -= costoDardo;
@@ -1108,7 +1109,7 @@ final class GiocatoreAutomatico {
 		 */
 		private double dannoIncantesimo(Personaggio attore, List<Personaggio> avversari, double[] salute,
 										ClasseIncantesimo classe, boolean applica) {
-			Arma incantesimo = (Arma) classe.getIstanza(attore.getLivello());
+			Arma incantesimo = (Arma) FabbricaIncantesimi.crea(classe, attore.getLivello());
 			double danno = 0;
 			int bersagli = 0;
 			for (int i = 0; i < salute.length; i++) {
@@ -1153,8 +1154,8 @@ final class GiocatoreAutomatico {
 			}
 			List<ClasseIncantesimo> possibili = new ArrayList<>();
 			for (ClasseIncantesimo classe : ClasseIncantesimo.values()) {
-				if (classe.getTipo() == com.threeamigos.foresta.incantesimi.TipoIncantesimo.MALEFICO
-						&& classe.getCostoLancio() <= magia && classe != ClasseIncantesimo.MORTE) {
+				if (classe.getTipo() == com.threeamigos.foresta.tipi.TipoIncantesimo.MALEFICO
+						&& FabbricaIncantesimi.costoLancio(classe) <= magia && classe != ClasseIncantesimo.MORTE) {
 					possibili.add(classe);
 				}
 			}
@@ -1163,8 +1164,8 @@ final class GiocatoreAutomatico {
 			}
 			ClasseIncantesimo scelto = possibili.get(0);
 			for (ClasseIncantesimo classe : possibili) {
-				if (((Arma) classe.getIstanza(attaccante.getLivello())).getDanni()
-						> ((Arma) scelto.getIstanza(attaccante.getLivello())).getDanni()) {
+				if (((Arma) FabbricaIncantesimi.crea(classe, attaccante.getLivello())).getDanni()
+						> ((Arma) FabbricaIncantesimi.crea(scelto, attaccante.getLivello())).getDanni()) {
 					scelto = classe;
 				}
 			}
@@ -1172,16 +1173,16 @@ final class GiocatoreAutomatico {
 			if (attaccante.getIntelligenza() < 5) {
 				double somma = 0;
 				for (ClasseIncantesimo classe : possibili) {
-					somma += atteso(attaccante, difensore, (Arma) classe.getIstanza(attaccante.getLivello()), 1.0d, classe.name());
+					somma += atteso(attaccante, difensore, (Arma) FabbricaIncantesimi.crea(classe, attaccante.getLivello()), 1.0d, classe.name());
 				}
 				magico = somma / possibili.size();
 			} else {
-				magico = atteso(attaccante, difensore, (Arma) scelto.getIstanza(attaccante.getLivello()), 1.0d, scelto.name());
+				magico = atteso(attaccante, difensore, (Arma) FabbricaIncantesimi.crea(scelto, attaccante.getLivello()), 1.0d, scelto.name());
 				if (attaccante.getIntelligenza() >= 7) {
 					magico = Math.max(magico, fisico);
 				}
 			}
-			return new double[]{(2 * magico + fisico) / 3, 2.0d * scelto.getCostoLancio() / 3};
+			return new double[]{(2 * magico + fisico) / 3, 2.0d * FabbricaIncantesimi.costoLancio(scelto) / 3};
 		}
 
 		private static int primoVivo(double[] salute) {

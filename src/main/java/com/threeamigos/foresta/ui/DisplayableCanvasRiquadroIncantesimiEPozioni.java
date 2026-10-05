@@ -3,8 +3,8 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoCreazioneSpriteATempo;
 import com.threeamigos.foresta.eventi.notifiche.*;
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

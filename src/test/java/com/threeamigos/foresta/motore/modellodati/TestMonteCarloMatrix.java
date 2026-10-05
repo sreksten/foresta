@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;

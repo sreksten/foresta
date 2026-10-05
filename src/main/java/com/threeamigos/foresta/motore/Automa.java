@@ -5,8 +5,8 @@ import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.interfacce.ControlloreDiGioco;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
@@ -27,6 +27,7 @@ import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
@@ -959,7 +960,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			comandiPossibili.add(Comando.DARDO_ARCANO);
 		}
 		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
-			if (gruppo.getIncantesimi(classeIncantesimo) > 0 && formulante.getMagia() >= classeIncantesimo.getIstanza(formulante.getLivello()).getCostoLancio()) {
+			if (gruppo.getIncantesimi(classeIncantesimo) > 0 && formulante.getMagia() >= FabbricaIncantesimi.crea(classeIncantesimo, formulante.getLivello()).getCostoLancio()) {
 				comandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
 			}
 		}
@@ -1824,7 +1825,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	}
 
 	private void eseguiResurrezione(Personaggio formulante, Personaggio personaggioBersaglio) {
-		Incantesimo incantesimo = ClasseIncantesimo.RESURREZIONE.getIstanza(formulante.getLivello());
+		Incantesimo incantesimo = FabbricaIncantesimi.crea(ClasseIncantesimo.RESURREZIONE, formulante.getLivello());
 		incantesimo.formula(formulante, personaggioBersaglio, null);
 		gruppo.subIncantesimi(ClasseIncantesimo.RESURREZIONE, 1);
 	}
@@ -1834,7 +1835,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 * nell'ordine del gruppo; vuota se nessuno può farlo.
 	 */
 	private List<Personaggio> trovaFormulantiResurrezione() {
-		int costoLancio = ClasseIncantesimo.RESURREZIONE.getIstanza(1).getCostoLancio();
+		int costoLancio = FabbricaIncantesimi.crea(ClasseIncantesimo.RESURREZIONE, 1).getCostoLancio();
 		List<Personaggio> formulanti = new ArrayList<>();
 		for (Personaggio personaggioCorrente : gruppo.getPersonaggiVivi()) {
 			if (personaggioCorrente.getMagia() >= costoLancio) {

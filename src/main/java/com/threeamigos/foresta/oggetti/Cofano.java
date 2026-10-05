@@ -3,12 +3,13 @@ package com.threeamigos.foresta.oggetti;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.Misc;
@@ -89,12 +90,12 @@ public class Cofano extends OggettoBase implements Oggetto {
 				sb.append("non trova nulla.");
 			} else if (tipo == 1) {
 				sb.append("trova una pergamena con un ");
-				ClasseIncantesimo classeIncantesimo = ClasseIncantesimo.casuale();
+				ClasseIncantesimo classeIncantesimo = FabbricaIncantesimi.casuale();
 				sb.append(classeIncantesimo.getNomeSingolare()).append('.');
 				gruppo.addIncantesimi(classeIncantesimo, 1);
 			} else if (tipo == 2) {
 				sb.append("trova una pergamena con tre ");
-				ClasseIncantesimo classeIncantesimo = ClasseIncantesimo.casuale();
+				ClasseIncantesimo classeIncantesimo = FabbricaIncantesimi.casuale();
 				sb.append(classeIncantesimo.getNomePlurale()).append('.');
 				gruppo.addIncantesimi(classeIncantesimo, 3);
 			} else if (tipo == 3) {

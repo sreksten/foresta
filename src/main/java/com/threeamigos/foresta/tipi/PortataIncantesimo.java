@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.incantesimi;
+package com.threeamigos.foresta.tipi;
 
 public enum PortataIncantesimo {
 	

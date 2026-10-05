@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.tipi;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.locazioni.FabbricaLocazioni;
 import com.threeamigos.foresta.missioni.FabbricaMissioni;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
@@ -41,6 +42,15 @@ class FabbricheTest {
     void ogniClasseMissioneSiCostruisce() {
         for (ClasseMissione classe : ClasseMissione.values()) {
             assertNotNull(FabbricaMissioni.crea(classe), classe.name());
+        }
+    }
+
+    @Test
+    void ogniClasseIncantesimoSiCostruisceEHaICosti() {
+        for (ClasseIncantesimo classe : ClasseIncantesimo.values()) {
+            assertNotNull(FabbricaIncantesimi.crea(classe, 1), classe.name());
+            FabbricaIncantesimi.costoAcquisto(classe);
+            FabbricaIncantesimi.costoLancio(classe);
         }
     }
 }

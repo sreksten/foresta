@@ -5,10 +5,11 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabil
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoConsumabile;
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
 
 import java.awt.*;
@@ -370,7 +371,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
                 quantita,
                 classeIncantesimo,
                 null,
-                classeIncantesimo.getCostoAcquisto(),
+                FabbricaIncantesimi.costoAcquisto(classeIncantesimo),
                 ImageCache.spriteIncantesimi[classeIncantesimo.ordinal()]);
     }
 

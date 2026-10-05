@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 
 import java.io.BufferedReader;
 import java.io.IOException;

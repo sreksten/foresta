@@ -6,6 +6,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
 import com.threeamigos.foresta.incantesimi.*;
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
@@ -16,8 +17,11 @@ import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.PortataIncantesimo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
@@ -492,7 +496,7 @@ public abstract class LocazioneBase implements Locazione {
 					opzioneAmiciziaDisponibile = false;
 					Personaggio formulante = gruppo.getFormulante();
 					ClasseIncantesimo classeIncantesimo = ClasseIncantesimo.ofComando(azione);
-					incantesimo = classeIncantesimo.getIstanza(formulante.getLivello());
+					incantesimo = FabbricaIncantesimi.crea(classeIncantesimo, formulante.getLivello());
 					if (formulante.getMagia() < incantesimo.getCostoLancio()) {
 
 						// Non si dovrebbe più riuscire a entrare in questo ramo perché la scelta degli incantesimi è già stata filtrata
@@ -683,7 +687,7 @@ public abstract class LocazioneBase implements Locazione {
 					String descrizione = null;
 					switch (spregio) {
 						case 1:
-							ClasseIncantesimo quale = ClasseIncantesimo.casuale();
+							ClasseIncantesimo quale = FabbricaIncantesimi.casuale();
 							if (gruppo.getIncantesimi(quale) > 0) {
 								descrizione = "perde un " + quale.getNomeSingolare() + '.';
 								gruppo.subIncantesimi(quale, 1);

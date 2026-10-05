@@ -1,14 +1,15 @@
 package com.threeamigos.foresta.motore.modellodati;
 
 import com.threeamigos.foresta.incantesimi.DardoArcano;
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
-import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
 import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
 import com.threeamigos.foresta.motore.DannoRisultante;
 import com.threeamigos.foresta.motore.FaseDiAttacco;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio.NotificaMorte;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.PortataIncantesimo;
 import com.threeamigos.foresta.tipi.SupertipoDanno;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -100,7 +101,7 @@ public class CombatSimulatorMatrix {
                 // il turno del giocatore venga saltato a causa di statistiche non caricate.
                 int bersagli = Math.min(Math.max(1, pg.getBersagli()), mostri.size());
                 IncantesimoMalefico incantesimo = pergameneRimaste > 0
-                        ? (IncantesimoMalefico) pergamene.getIncantesimo().getIstanza(pg.getLivello())
+                        ? (IncantesimoMalefico) FabbricaIncantesimi.crea(pergamene.getIncantesimo(), pg.getLivello())
                         : null;
                 Personaggio primoVivo = bersaglioVivo(mostri, 0);
                 if (incantesimo != null && pg.getMagia() >= incantesimo.getCostoLancio()) {

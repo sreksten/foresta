@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
-import com.threeamigos.foresta.incantesimi.TipoIncantesimo;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.TipoIncantesimo;
 
 /**
  * Le pergamene di incantesimi che il PG porta in uno scontro del simulatore (vedi piano_montecarlo_matrix.md, §13).

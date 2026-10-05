@@ -239,7 +239,7 @@ I compagni da reclutare nascono con il mondo (`RegistroPersonaggi`: 5 guerrieri,
 
 ### Incantesimi
 
-`ClasseIncantesimo` elenca dieci formule: acqua, aria, terra, fuoco, fulmine, gelo, veleno (malefici, su più bersagli), morte (maleficio su un solo bersaglio vivo), resurrezione (benefica, su un solo bersaglio qualunque) e alba sacra (benefica, sul gruppo). Costi di acquisto, di lancio e danni sono in `Costanti`. Gli incantesimi si acquistano come pergamene e si consumano al lancio (il dardo arcano no); il danno passa dal normale calcolo del combattimento.
+`tipi.ClasseIncantesimo` elenca dieci formule, con tipo (`TipoIncantesimo`), portata (`PortataIncantesimo`), tipo di danno, nomi, comando e testo dell'effetto; `incantesimi.FabbricaIncantesimi` le costruisce, dà i costi (acquisto da `Costanti`, lancio dall'incantesimo stesso) e ne sceglie una a caso: acqua, aria, terra, fuoco, fulmine, gelo, veleno (malefici, su più bersagli), morte (maleficio su un solo bersaglio vivo), resurrezione (benefica, su un solo bersaglio qualunque) e alba sacra (benefica, sul gruppo). Costi di acquisto, di lancio e danni sono in `Costanti`. Gli incantesimi si acquistano come pergamene e si consumano al lancio (il dardo arcano no); il danno passa dal normale calcolo del combattimento.
 
 ### Missioni
 

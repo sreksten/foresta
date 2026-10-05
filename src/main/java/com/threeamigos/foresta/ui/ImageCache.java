@@ -2,10 +2,10 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoPuliziaCacheDinamicaImmagini;
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.Bosco;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.awt.*;

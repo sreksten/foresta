@@ -2,6 +2,7 @@ package com.threeamigos.foresta.incantesimi;
 
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 
 /**
  * Un evento soprannaturale che il giocatore può scatenare contro un gruppo

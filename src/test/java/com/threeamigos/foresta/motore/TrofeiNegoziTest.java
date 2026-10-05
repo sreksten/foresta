@@ -5,10 +5,11 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabil
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
-import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
+import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
+import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
@@ -73,7 +74,7 @@ class TrofeiNegoziTest {
 	void bombaroloECartografoContanoGliAcquistiDallAlchimista() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			for (int i = 0; i < 100; i++) {
-				partita.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.INCANTESIMO, ClasseIncantesimo.casuale(), null, 0));
+				partita.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.INCANTESIMO, FabbricaIncantesimi.casuale(), null, 0));
 			}
 			partita.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.POZIONE_SALUTE, null, null, 0));
 			partita.pubblica(new InternoFineLocazione());
