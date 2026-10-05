@@ -4,13 +4,13 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaPaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.ClasseIntermezzo;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.motore.modellodati.LineaTemporaleMD;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -112,7 +112,7 @@ class IntermezzoNonChiudeteMaiTest {
 	private static PartitaDiTest inCitta() {
 		PartitaDiTest partita = PartitaDiTest.nuova(11);
 		partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-				() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+				() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 		partita.assertStato(Stato.IN_LOCAZIONE);
 		return partita;
 	}
@@ -133,7 +133,7 @@ class IntermezzoNonChiudeteMaiTest {
 	}
 
 	private static LocazioneMD locandaDiNyena() {
-		return Foresta.getLocazioneMD(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA));
+		return Foresta.getLocazioneMD(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
 	}
 
 	private static boolean isScattato(String id) {

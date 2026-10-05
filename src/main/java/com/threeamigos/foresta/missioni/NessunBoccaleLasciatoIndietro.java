@@ -2,10 +2,10 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * Dieci locande sparse nella Foresta, quelle cittadine non contano. Tornare due volte
@@ -97,7 +97,7 @@ public class NessunBoccaleLasciatoIndietro extends MissioneBase {
 		for (int y = 0; y < Foresta.getDimensioneY(); y++) {
 			for (int x = 0; x < Foresta.getDimensioneX(); x++) {
 				CoordinateMD coordinate = new CoordinateMD(x, y);
-				if (Foresta.getLocazione(coordinate) == ClassiLocazione.LOCANDA &&
+				if (Foresta.getLocazione(coordinate) == TipoLocazione.LOCANDA &&
 						Foresta.getLocazioneMD(coordinate).ottieniProprieta(Locanda.LOCANDA_VISITATA) != null) {
 					visitate++;
 				}

@@ -8,11 +8,11 @@ import com.threeamigos.foresta.eventi.interni.InternoMissioneCompletata;
 import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
 import com.threeamigos.foresta.eventi.interni.InternoPreparazioneLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoTrofeoAcquisito;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
 import org.junit.jupiter.api.Test;
 
@@ -34,7 +34,7 @@ class TrofeiTest {
 	void mangiareInUnaLocandaInCittaFaAvanzareLoSbevazzoneAFineLocazione() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			assertEquals(0, RegistroTrofei.getProgresso(TipoTrofeo.SBEVAZZONE));
 
@@ -54,7 +54,7 @@ class TrofeiTest {
 	void chiVieneRespintoDallOsteNonHaVisitatoLaLocanda() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			partita.gruppo().subMonete(partita.gruppo().getMonete());
 
@@ -69,7 +69,7 @@ class TrofeiTest {
 	void leLocandeVisitateSiSommanoDaUnaPartitaAllAltra() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.comando(Comando.LOCANDA);
 			partita.comando(Comando.PERGAMENA);
 			partita.pubblica(new InternoFineLocazione());
@@ -89,7 +89,7 @@ class TrofeiTest {
 	void loSbevazzoneSiVinceAFineLocazioneEUnaVoltaSola() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			partita.eventi().ascolta(InternoTrofeoAcquisito.class);
 			for (int i = 0; i < 100; i++) {
@@ -119,7 +119,7 @@ class TrofeiTest {
 	void unTrofeoVintoValeAncheNellePartiteSuccessive() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			for (int i = 0; i < 100; i++) {
 				RegistroTrofei.incrementaProgresso(TipoTrofeo.SBEVAZZONE, 1);
 			}
@@ -196,7 +196,7 @@ class TrofeiTest {
 	void unaCorruzioneRiuscitaInGiocoFaAvanzareIlCorruttore() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(25)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CASTELLO_IDRA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CASTELLO_IDRA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			partita.eventi().ascolta(InternoCorruzioneRiuscita.class);
 
@@ -215,7 +215,7 @@ class TrofeiTest {
 		// Senza la modalita' di prova: i suoi scarponi di RomyJona azzerano il carisma
 		try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(25)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CASTELLO_IDRA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CASTELLO_IDRA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			partita.eventi().ascolta(InternoAmiciziaStretta.class);
 			assertTrue(partita.gruppo().getCapo().getCarisma() > 1, "precondizione: il capo ha carisma");
@@ -317,7 +317,7 @@ class TrofeiTest {
 	void ilCacciatoreDiTaglieContaLeMissioniCompletate() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.eventi().ascolta(InternoMissioneCompletata.class);
 
 			RegistroMissioni.getMissionePrincipale().completaMissione();

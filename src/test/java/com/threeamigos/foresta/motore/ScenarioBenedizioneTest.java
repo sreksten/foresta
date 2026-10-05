@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.BenedizioneRichiesta;
@@ -15,6 +14,7 @@ import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -80,7 +80,7 @@ class ScenarioBenedizioneTest {
             // Il favore: le ombre nella radura segnata sulla mappa
             favore.controllaInLocazione();
             CoordinateMD radura = favore.getPosto();
-            assertEquals(ClassiLocazione.RADURA, Foresta.getLocazione(radura));
+            assertEquals(TipoLocazione.RADURA, Foresta.getLocazione(radura));
             assertTrue(Foresta.isLocazioneConosciuta(radura));
             partita.gruppo().setCoordinate(radura);
             partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.OMBRA_NERA));
@@ -92,7 +92,7 @@ class ScenarioBenedizioneTest {
 
             // Il tempio
             CoordinateMD tempio = benedizione.getTempio();
-            assertEquals(ClassiLocazione.TEMPIO, Foresta.getLocazione(tempio));
+            assertEquals(TipoLocazione.TEMPIO, Foresta.getLocazione(tempio));
             assertTrue(Foresta.isLocazioneConosciuta(tempio));
             assertTrue(benedizione.getDescrizione().startsWith("Il favore è fatto"), benedizione.getDescrizione());
 
@@ -127,7 +127,7 @@ class ScenarioBenedizioneTest {
             IlFavore favore = (IlFavore) benedizione.getMissioniAffidate(LaBenedizione.FAVORE).get(0);
             favore.controllaInLocazione();
             CoordinateMD palude = favore.getPosto();
-            assertEquals(ClassiLocazione.PALUDE, Foresta.getLocazione(palude));
+            assertEquals(TipoLocazione.PALUDE, Foresta.getLocazione(palude));
 
             // Come in Automa.entraInStatoPreparazioneLocazione
             partita.gruppo().setCoordinate(palude);
@@ -169,7 +169,7 @@ class ScenarioBenedizioneTest {
             IlFavore favore = (IlFavore) benedizione.getMissioniAffidate(LaBenedizione.FAVORE).get(0);
             favore.controllaInLocazione();
             CoordinateMD bosco = favore.getPosto();
-            assertEquals(ClassiLocazione.BOSCO, Foresta.getLocazione(bosco));
+            assertEquals(TipoLocazione.BOSCO, Foresta.getLocazione(bosco));
             partita.gruppo().setCoordinate(bosco);
             favore.controllaPreLocazione();
             assertTrue(partita.testi().contains("Tutto tace. Bisogna tornare qui ancora una volta, lasciando passare almeno 16 ore "
@@ -209,7 +209,7 @@ class ScenarioBenedizioneTest {
     }
 
     private static LaBenedizione incontra(PartitaDiTest partita, String riga) {
-        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         CoordinateMD locanda = unaLocanda();
         Foresta.getLocazioneMD(locanda).aggiungiProprieta(Locanda.LOCANDA_VISITE, "2");
         partita.gruppo().setCoordinate(locanda);
@@ -228,7 +228,7 @@ class ScenarioBenedizioneTest {
     private static CoordinateMD unaLocanda() {
         for (int x = 0; x < Foresta.getDimensioneX(); x++) {
             for (int y = 0; y < Foresta.getDimensioneY(); y++) {
-                if (Foresta.getLocazione(x, y) == ClassiLocazione.LOCANDA) {
+                if (Foresta.getLocazione(x, y) == TipoLocazione.LOCANDA) {
                     return new CoordinateMD(x, y);
                 }
             }

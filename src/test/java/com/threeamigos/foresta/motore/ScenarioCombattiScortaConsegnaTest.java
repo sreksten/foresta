@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.IlPellegrino;
 import com.threeamigos.foresta.missioni.IncaricoInCitta;
 import com.threeamigos.foresta.missioni.LaTagliaSullaBanda;
@@ -11,6 +10,7 @@ import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -28,11 +28,11 @@ class ScenarioCombattiScortaConsegnaTest {
     void nelCovoDiSgranfCiSonoLuiELaSuaBandaESconfittiSiTornaARiscuotere() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(71)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+                    () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             LaTagliaSullaBanda taglia = prendiIncaricoAllaSecondaVisita(LaTagliaSullaBanda.class);
             CoordinateMD covo = taglia.getCovo();
             assertNotNull(covo, "la missione ha trovato il bosco della banda");
-            assertEquals(ClassiLocazione.BOSCO, Foresta.getLocazione(covo));
+            assertEquals(TipoLocazione.BOSCO, Foresta.getLocazione(covo));
             assertTrue(Foresta.isLocazioneConosciuta(covo));
             assertEquals("CACCIA", taglia.getPassoCorrente());
 
@@ -75,10 +75,10 @@ class ScenarioCombattiScortaConsegnaTest {
     void anselmoViaggiaColGruppoComeOspiteESeNeSeparaAlTempio() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(72)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+                    () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             IlPellegrino pellegrino = prendiIncaricoAllaSecondaVisita(IlPellegrino.class);
             CoordinateMD tempio = pellegrino.getTempio();
-            assertEquals(ClassiLocazione.TEMPIO, Foresta.getLocazione(tempio));
+            assertEquals(TipoLocazione.TEMPIO, Foresta.getLocazione(tempio));
             assertEquals("VIAGGIO", pellegrino.getPassoCorrente());
             Personaggio anselmo = pellegrino.getScortato().orElseThrow(AssertionError::new);
             assertEquals(pellegrino.getPellegrino(), anselmo.getNome());
@@ -97,7 +97,7 @@ class ScenarioCombattiScortaConsegnaTest {
     void anselmoViaggiaAncheColGruppoPienoESenzaContare() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(74)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+                    () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             while (partita.gruppo().getNumeroPersonaggi() < Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE) {
                 partita.gruppo().aggiungiPersonaggioSenzaNotificare(new com.threeamigos.foresta.personaggi.Guerriero("Compagno", 1));
             }
@@ -111,7 +111,7 @@ class ScenarioCombattiScortaConsegnaTest {
     void anselmoSopravviveAUnSalvataggioESeLaMissioneFallisceSiSeparaDalGruppo() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(73)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+                    () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             prendiIncaricoAllaSecondaVisita(IlPellegrino.class);
 
             partita.salva(Comando.NUMERO_2);
@@ -130,7 +130,7 @@ class ScenarioCombattiScortaConsegnaTest {
     void alRitornoLeRadiciSiConsegnanoPrimaDellaRicompensa() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(75)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+                    () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             RichiestaDiMateriali mandragola = prendiIncaricoAllaSecondaVisita(Alchimie.conLaMandragola());
             new OggettoMissione(mandragola.getId(), RichiestaDiMateriali.MATERIALE,
                     mandragola.getMateriali().getNome(), Alchimie.RADICI)

@@ -5,7 +5,6 @@ import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
 import com.threeamigos.foresta.motore.AutomaIncantatore;
 import com.threeamigos.foresta.motore.AutomaInventario;
@@ -15,6 +14,7 @@ import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.tools.Temporizzatore;
@@ -146,7 +146,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		stato = StatoDisplayableCanvas.STATO_INTRO;
 		setSize(width, height);
 		setBackground(Color.black);
-		BufferedImage immagineLocazione = ImageCache.locazioni.get(ClassiLocazione.BOSCO);
+		BufferedImage immagineLocazione = ImageCache.locazioni.get(TipoLocazione.BOSCO);
 
 		riquadroIntroOutro = new DisplayableCanvasIntroOutro(larghezzaContenuto, altezzaContenuto, gestorePunteggi);
 

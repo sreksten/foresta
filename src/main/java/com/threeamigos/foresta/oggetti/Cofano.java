@@ -4,12 +4,13 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Cofano extends OggettoBase implements Oggetto {
@@ -52,11 +53,11 @@ public class Cofano extends OggettoBase implements Oggetto {
 
 	@Override
 	public boolean prendi(GruppoGiocatore gruppo, Comando azione) {
-		ClassiLocazione classeLocazione = gruppo.getClasseLocazioneCorrente();
+		TipoLocazione classeLocazione = gruppo.getClasseLocazioneCorrente();
 		int min;
 		int max;
 		int tipo;
-		if (classeLocazione.getTipoLocazione() == ClassiLocazione.TipoLocazione.CASTELLO) {
+		if (classeLocazione.getCategoria() == CategoriaLocazione.CASTELLO) {
 			min = 1;
 			max = 6;
 		} else {

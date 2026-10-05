@@ -3,7 +3,6 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
 import com.threeamigos.foresta.eventi.notifiche.NotificaPaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.missioni.LaLeggenda;
@@ -16,6 +15,7 @@ import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
 import org.junit.jupiter.api.Test;
 
@@ -78,7 +78,7 @@ class ScenarioLeggendeTest {
     void entrandoInCittaLArmaioloRaccontaLaLeggendaESorgeIlTempioConIGuardiani() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(41)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> {
-                partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA);
+                partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA);
                 partita.eventi().ascolta(NotificaPaginaIntermezzo.class, NotificaAggiornamentoStatoMissione.class);
             });
             LaLeggenda leggenda = trova(LaLeggendaDellArmaiolo.class);
@@ -107,7 +107,7 @@ class ScenarioLeggendeTest {
 
             // Il tempio nuovo custodisce il leggendario, è della missione ed è segnato sulla mappa
             CoordinateMD tempio = RegistroMissioni.getLocazioneOccupata(leggenda);
-            assertEquals(ClassiLocazione.TEMPIO, Foresta.getLocazione(tempio));
+            assertEquals(TipoLocazione.TEMPIO, Foresta.getLocazione(tempio));
             Artefatto custodito = RegistroArtefatti.getArtefattoInLocazione(tempio);
             assertEquals(leggendario.getNome(), custodito.getNome());
             assertEquals(TipoRaritaArtefatto.LEGGENDARIO, custodito.getRarita());
@@ -135,7 +135,7 @@ class ScenarioLeggendeTest {
     @Test
     void ilLocandiereRaccontaDallaTerzaVisitaEDopoTrentaseiOreUnAltroLeggendario() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(42)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             LaLeggenda armaiolo = trova(LaLeggendaDellArmaiolo.class);
             armaiolo.controllaPreLocazione();
             armaiolo.segnaIntermezzoPassoMostrato("INCARICO");
@@ -173,7 +173,7 @@ class ScenarioLeggendeTest {
     private static CoordinateMD unaLocanda() {
         for (int x = 0; x < Foresta.getDimensioneX(); x++) {
             for (int y = 0; y < Foresta.getDimensioneY(); y++) {
-                if (Foresta.getLocazione(x, y) == ClassiLocazione.LOCANDA) {
+                if (Foresta.getLocazione(x, y) == TipoLocazione.LOCANDA) {
                     return new CoordinateMD(x, y);
                 }
             }

@@ -3,12 +3,12 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloMondo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 import org.junit.jupiter.api.Test;
 
@@ -25,7 +25,7 @@ class MagazziniTest {
 	void quantoSiVendeAllArmaioloSparisceAllUscitaDallaCitta() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			ScambiatoreArtefatti armaiolo = magazzino(TipoNegozio.ARMAIOLO);
 			Artefatto spada = artefatto(TipoArtefatto.SPADA);
 			partita.gruppo().addArtefatto(spada);
@@ -43,7 +43,7 @@ class MagazziniTest {
 	void quantoSiVendeAlVenditoreDiPergameneSparisceAllUscitaDallaCitta() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			ScambiatoreArtefatti venditore = magazzino(TipoNegozio.VENDITORE_DI_PERGAMENE);
 			Artefatto pergamena = artefatto(TipoArtefatto.PERGAMENA);
 			partita.gruppo().addArtefatto(pergamena);
@@ -59,7 +59,7 @@ class MagazziniTest {
 	void quantoSiRicompraPrimaDiUscireNonVieneDistrutto() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			ScambiatoreArtefatti armaiolo = magazzino(TipoNegozio.ARMAIOLO);
 			Artefatto spada = artefatto(TipoArtefatto.SPADA);
 			partita.gruppo().addArtefatto(spada);
@@ -77,7 +77,7 @@ class MagazziniTest {
 	void allAumentoDelLivelloDelMondoIMagazziniSiAggiornano() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			int livelloMondo = 6;
 			int scartatiSotto = livelloMondo - Costanti.MAGAZZINO_SCARTO_SOTTO_LIVELLO;
 
@@ -96,7 +96,7 @@ class MagazziniTest {
 	}
 
 	private static ScambiatoreArtefatti magazzino(TipoNegozio negozio) {
-		CoordinateMD nyena = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA);
+		CoordinateMD nyena = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA);
 		return RegistroArtefatti.getScambiatorePerNegozio(nyena, negozio);
 	}
 

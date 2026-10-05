@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.ClasseMissione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -53,7 +53,7 @@ class ScenarioDomandeMissioniTest {
     void laDomandaFermaIlGiocoLaRispostaScegliIlRamoELaLocazioneNonSiRifa() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(21)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+                    () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             MissioneDelBivio missione = new MissioneDelBivio();
             RegistroMissioni.getMissionePrincipale().aggiungiMissione(missione);
 

@@ -2,7 +2,6 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.ClasseMissione;
 import com.threeamigos.foresta.missioni.Costruzione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
@@ -17,6 +16,7 @@ import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedHashMap;
@@ -84,7 +84,7 @@ class ScenarioPassiAvanzatiTest {
 
     private static PartitaDiTest partita(long seme) {
         PartitaDiTest partita = PartitaDiTest.nuova(seme);
-        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         return partita;
     }
 
@@ -155,7 +155,7 @@ class ScenarioPassiAvanzatiTest {
     void laCostruzioneConsumaMaterialiMoneteEOre() {
         try (PartitaDiTest partita = partita(104)) {
             OggettiDaRaccogliere assi = OggettiDaRaccogliere.di("ASSI", NomeOggetto.femminile("asse", "assi"), 3)
-                    .in(ClassiLocazione.BOSCO);
+                    .in(TipoLocazione.BOSCO);
             MissioneDiUnPasso missione = attiva(m -> m.costruisci(Costruzione.con(assi).conMonete(10).inOre(5)));
 
             missione.controllaInLocazione();

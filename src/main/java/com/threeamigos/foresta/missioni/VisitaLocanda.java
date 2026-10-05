@@ -2,11 +2,12 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * Sotto-missione di {@link CronacheDiUnFegatoEroico}: si conclude quando il gruppo
@@ -27,8 +28,8 @@ public class VisitaLocanda extends MissioneBase {
 		super(ClasseMissione.VISITA_LOCANDA);
 	}
 
-	public void setCitta(ClassiLocazione classeCitta) {
-		if (classeCitta.getTipoLocazione() != ClassiLocazione.TipoLocazione.CITTA) {
+	public void setCitta(TipoLocazione classeCitta) {
+		if (classeCitta.getCategoria() != CategoriaLocazione.CITTA) {
 			throw new IllegalArgumentException(classeCitta.name() + " non è una città");
 		}
 		aggiungiProprieta(CITTA, classeCitta.name());
@@ -86,7 +87,7 @@ public class VisitaLocanda extends MissioneBase {
 
 	@Override
 	public void controllaPostLocazione() {
-		ClassiLocazione classeCitta = getClasseCitta();
+		TipoLocazione classeCitta = getClasseCitta();
 		if (isCompleta() || classeCitta == null) {
 			return;
 		}
@@ -99,8 +100,8 @@ public class VisitaLocanda extends MissioneBase {
 		}
 	}
 
-	private ClassiLocazione getClasseCitta() {
+	private TipoLocazione getClasseCitta() {
 		String nomeClasseCitta = ottieniProprieta(CITTA);
-		return nomeClasseCitta == null ? null : ClassiLocazione.valueOf(nomeClasseCitta);
+		return nomeClasseCitta == null ? null : TipoLocazione.valueOf(nomeClasseCitta);
 	}
 }

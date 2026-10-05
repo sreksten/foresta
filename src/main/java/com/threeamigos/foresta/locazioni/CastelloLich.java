@@ -5,13 +5,14 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.Lich;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
 public class CastelloLich extends LocazioneUnica {
 
 	@Override
-	public ClassiLocazione getClasseLocazione() {
-		return ClassiLocazione.CASTELLO_LICH;
+	public TipoLocazione getClasseLocazione() {
+		return TipoLocazione.CASTELLO_LICH;
 	}
 
 	@Override
@@ -30,7 +31,7 @@ public class CastelloLich extends LocazioneUnica {
 	public void azzeraLocazione(GruppoGiocatore g) {
 		if (isCompleta()) {
 			g.setLocazioneCorrenteVisitata();
-			Foresta.distruggiLocazioneUnica(getClasseLocazione(), ClassiLocazione.ROVINE);
+			Foresta.distruggiLocazioneUnica(getClasseLocazione(), TipoLocazione.ROVINE);
 		}
 	}
 

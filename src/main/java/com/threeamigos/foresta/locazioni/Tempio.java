@@ -14,14 +14,15 @@ import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Tempio extends LocazioneBase {
 
 	@Override
-	public ClassiLocazione getClasseLocazione() {
-		return ClassiLocazione.TEMPIO;
+	public TipoLocazione getClasseLocazione() {
+		return TipoLocazione.TEMPIO;
 	}
 
 	/**
@@ -46,7 +47,7 @@ public class Tempio extends LocazioneBase {
 	 */
 	public static String getNome(LocazioneMD modelloDati) {
 		if (modelloDati.getNome() == null) {
-			modelloDati.setNome(Foresta.nomeNuovo(ClassiLocazione.TEMPIO, ProduttoreDiTestiCasuale::nomeTempio));
+			modelloDati.setNome(Foresta.nomeNuovo(TipoLocazione.TEMPIO, ProduttoreDiTestiCasuale::nomeTempio));
 		}
 		return modelloDati.getNome();
 	}

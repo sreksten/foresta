@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Rovine;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.Misc;
 import org.junit.jupiter.api.Test;
 
@@ -37,11 +37,11 @@ class ScenarioNomiDelleRovineTest {
     void leRovineDellInizioHannoUnNomeDiversoChiSiSalvaEChiEntraLoLegge() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(93)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+                    () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             List<CoordinateMD> rovine = new ArrayList<>();
             for (int x = 0; x < Foresta.getDimensioneX(); x++) {
                 for (int y = 0; y < Foresta.getDimensioneY(); y++) {
-                    if (Foresta.getLocazione(x, y) == ClassiLocazione.ROVINE) {
+                    if (Foresta.getLocazione(x, y) == TipoLocazione.ROVINE) {
                         rovine.add(new CoordinateMD(x, y));
                     }
                 }
@@ -70,17 +70,17 @@ class ScenarioNomiDelleRovineTest {
     void leRovineDiUnCastelloDiUnaCittaEDelCovoPrendonoIlNomeDaQuelloCheCera() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(94)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
-            CoordinateMD ruuna = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_RUUNA);
-            Foresta.distruggiLocazioneUnica(ClassiLocazione.CITTA_RUUNA, ClassiLocazione.ROVINE);
+            CoordinateMD ruuna = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_RUUNA);
+            Foresta.distruggiLocazioneUnica(TipoLocazione.CITTA_RUUNA, TipoLocazione.ROVINE);
             assertEquals("le Rovine della città di Ruuna", Foresta.getLocazioneMD(ruuna).getNome());
 
-            CoordinateMD covo = Foresta.costruisciLocazioneUnica(ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, true);
-            Foresta.distruggiLocazioneUnica(ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, ClassiLocazione.ROVINE);
+            CoordinateMD covo = Foresta.costruisciLocazioneUnica(TipoLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, true);
+            Foresta.distruggiLocazioneUnica(TipoLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, TipoLocazione.ROVINE);
             assertEquals("le Rovine del covo dei Troll ladri di derrate", Foresta.getLocazioneMD(covo).getNome());
 
             RegistroMissioni.getMissionePrincipale().getMissioniSecondarie().forEach(m -> m.controllaPreLocazione());
-            CoordinateMD lich = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CASTELLO_LICH);
-            Foresta.distruggiLocazioneUnica(ClassiLocazione.CASTELLO_LICH, ClassiLocazione.ROVINE);
+            CoordinateMD lich = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CASTELLO_LICH);
+            Foresta.distruggiLocazioneUnica(TipoLocazione.CASTELLO_LICH, TipoLocazione.ROVINE);
             assertEquals("le Rovine del Castello dell'Ombra", Foresta.getLocazioneMD(lich).getNome());
         }
     }

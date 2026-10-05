@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 import org.junit.jupiter.api.Test;
 
@@ -35,7 +36,7 @@ class ScenarioPartitaTest {
 	void unaPartitaSalvataSiRilegge() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(7)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.LADRO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.comando(Comando.ESCI_DA_CITTA);
 			partita.assertStato(Stato.SCELTA_DIREZIONE);
 			int monete = partita.gruppo().getMonete();
@@ -79,7 +80,7 @@ class ScenarioPartitaTest {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(3)) {
 			partita.nonSaltareIntermezzi();
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_RUUNA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_RUUNA));
 			partita.assertStato(Stato.INTERMEZZO);
 			partita.assertComandoDisponibile(Comando.PERGAMENA);
 
@@ -97,8 +98,8 @@ class ScenarioPartitaTest {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(seme)) {
 			partita.comando(Comando.PERGAMENA).testo("Arsenio");
 			StringBuilder magazzini = new StringBuilder();
-			for (ClassiLocazione citta : ClassiLocazione.values()) {
-				if (citta.getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA) {
+			for (TipoLocazione citta : TipoLocazione.values()) {
+				if (citta.getCategoria() == CategoriaLocazione.CITTA) {
 					for (TipoNegozio negozio : TipoNegozio.values()) {
 						RegistroArtefatti.getScambiatorePerNegozio(Foresta.getCoordinateLocazioneUnica(citta), negozio)
 								.getInventario()

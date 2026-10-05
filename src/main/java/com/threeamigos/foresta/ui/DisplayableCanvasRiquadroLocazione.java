@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -10,6 +9,7 @@ import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -54,7 +54,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 			BufferedImage d = ClassePersonaggioImmagine.getImmagine(personaggioCorrente.getClasse());
 			mappaImmagini.put(personaggioCorrente, d);
 			CoordinateMD coordinate = new CoordinateMD(topLeftX + i++ * 20 + Dado.tira(10),
-					ImageCache.SPACING + ImageCache.locazioni.get(ClassiLocazione.BOSCO).getHeight() - i * 6 - d.getHeight());
+					ImageCache.SPACING + ImageCache.locazioni.get(TipoLocazione.BOSCO).getHeight() - i * 6 - d.getHeight());
 			mappaCoordinate.put(personaggioCorrente, coordinate);
 		}
 	}
@@ -62,7 +62,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 	void disegnaLocazione(Graphics2D graphics) {
 		GruppoGiocatore g = GruppoGiocatore.getIstanza();
 		GruppoAvversario gng = GruppoAvversario.getIstanza();
-		ClassiLocazione classeLocazione = g.getClasseLocazioneCorrente();
+		TipoLocazione classeLocazione = g.getClasseLocazioneCorrente();
 		BufferedImage locazione = ImageCache.locazioni.get(classeLocazione);
 		int locXOffset = topLeftX;
 		graphics.drawImage(locazione, locXOffset, topLeftY, null);

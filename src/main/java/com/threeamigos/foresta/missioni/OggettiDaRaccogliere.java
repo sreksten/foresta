@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -17,7 +17,7 @@ import java.util.Set;
  * possono comparire e quanto spesso.
  * <pre>
  * OggettiDaRaccogliere.di("MANDRAGOLA", NomeOggetto.femminile("radice di mandragola", "radici di mandragola"), 4)
- *     .in(ClassiLocazione.RADURA, ClassiLocazione.BOSCO)
+ *     .in(TipoLocazione.RADURA, TipoLocazione.BOSCO)
  *     .conProbabilita(30)
  *     .alPiuPerLocazione(2);
  * </pre>
@@ -40,7 +40,7 @@ public final class OggettiDaRaccogliere {
 	private final String chiave;
 	private final NomeOggetto nome;
 	private final int quantita;
-	private Set<ClassiLocazione> locazioni = Collections.emptySet();
+	private Set<TipoLocazione> locazioni = Collections.emptySet();
 	private int probabilita = 100;
 	private int massimoPerLocazione = 1;
 	private int oreAlRipiego = ORE_AL_RIPIEGO;
@@ -65,7 +65,7 @@ public final class OggettiDaRaccogliere {
 		return new OggettiDaRaccogliere(chiave, nome, quantita);
 	}
 
-	public OggettiDaRaccogliere in(ClassiLocazione prima, ClassiLocazione... altre) {
+	public OggettiDaRaccogliere in(TipoLocazione prima, TipoLocazione... altre) {
 		locazioni = EnumSet.of(prima, altre);
 		return this;
 	}
@@ -151,7 +151,7 @@ public final class OggettiDaRaccogliere {
 		return quantita;
 	}
 
-	public Set<ClassiLocazione> getLocazioni() {
+	public Set<TipoLocazione> getLocazioni() {
 		return Collections.unmodifiableSet(locazioni);
 	}
 

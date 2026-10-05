@@ -2,8 +2,9 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * Un boccale in ogni locanda cittadina. Una tappa per città, e la missione si chiude
@@ -14,8 +15,8 @@ public class CronacheDiUnFegatoEroico extends MissioneBase {
 	public CronacheDiUnFegatoEroico() {
 		super(ClasseMissione.CRONACHE_DI_UN_FEGATO_EROICO);
 		// Una tappa per città: se il mondo ne guadagnasse una, la missione la seguirebbe
-		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
-			if (classeLocazione.getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA) {
+		for (TipoLocazione classeLocazione : TipoLocazione.values()) {
+			if (classeLocazione.getCategoria() == CategoriaLocazione.CITTA) {
 				VisitaLocanda visitaLocanda = new VisitaLocanda();
 				visitaLocanda.setCitta(classeLocazione);
 				aggiungiMissione(visitaLocanda);
@@ -35,7 +36,7 @@ public class CronacheDiUnFegatoEroico extends MissioneBase {
 
 	@Override
 	public void controllaPreLocazione() {
-		if (!isAttiva() && GruppoGiocatore.getIstanza().getClasseLocazioneCorrente().getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA) {
+		if (!isAttiva() && GruppoGiocatore.getIstanza().getClasseLocazioneCorrente().getCategoria() == CategoriaLocazione.CITTA) {
 			BusEventi.pubblica(new NotificaTestoParagrafo(getDescrizione() + ": " + getNome() + " si scrive un boccale per volta."));
 			attivaMissione();
 		}

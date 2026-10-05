@@ -3,7 +3,6 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
 import com.threeamigos.foresta.eventi.interni.InternoAssegnaCoordinateAPersonaggi;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.IncaricoDiCombattimento;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
@@ -11,6 +10,7 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -45,8 +45,8 @@ class ScenarioOndateTest {
     @Test
     void sconfittaUnOndataArrivaLaSuccessivaFinoAllUltima() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(291)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
-            CoordinateMD bosco = unaCasellaDi(ClassiLocazione.BOSCO);
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            CoordinateMD bosco = unaCasellaDi(TipoLocazione.BOSCO);
             partita.gruppo().setCoordinate(bosco);
             Locazione locazione = Foresta.costruisciIstanza(bosco);
             partita.gruppo().setLocazioneCorrente(locazione);
@@ -88,7 +88,7 @@ class ScenarioOndateTest {
     @Test
     void laBattagliaSiVinceBattendoTutteLeOndateInUnaVisita() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(292)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             IncaricoDiCombattimento battaglia = RegistroMissioni.getTutteLeMissioni().stream()
                     .filter(IncaricoDiCombattimento.class::isInstance).map(IncaricoDiCombattimento.class::cast)
                     .findFirst().orElseThrow(AssertionError::new);
@@ -152,7 +152,7 @@ class ScenarioOndateTest {
         return personaggi.stream().map(Personaggio::getClasse).collect(java.util.stream.Collectors.toList());
     }
 
-    private static CoordinateMD unaCasellaDi(ClassiLocazione classe) {
+    private static CoordinateMD unaCasellaDi(TipoLocazione classe) {
         for (int x = 0; x < Foresta.getDimensioneX(); x++) {
             for (int y = 0; y < Foresta.getDimensioneY(); y++) {
                 if (Foresta.getLocazione(x, y) == classe) {

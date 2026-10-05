@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -33,7 +33,7 @@ class MappaNomeSottoIlMouseTest {
         // Come alla creazione del mondo, dove non c'è altro c'è bosco
         for (int x = 0; x < 20; x++) {
             for (int y = 0; y < 20; y++) {
-                ModelloDati.getIstanza().getForestaMD().impostaLocazione(new CoordinateMD(x, y), ClassiLocazione.BOSCO);
+                ModelloDati.getIstanza().getForestaMD().impostaLocazione(new CoordinateMD(x, y), TipoLocazione.BOSCO);
             }
         }
         GruppoGiocatore.getIstanza().setModelloDati(ModelloDati.getIstanza().getGruppoGiocatoreMD());
@@ -52,8 +52,8 @@ class MappaNomeSottoIlMouseTest {
 
     @Test
     void ilNomeCompareSoloSopraUnaCasellaConosciutaConUnNome() {
-        Foresta.costruisciLocazioneUnica(ClassiLocazione.CITTA_NYENA, new CoordinateMD(3, 4), true);
-        Foresta.costruisciLocazioneUnica(ClassiLocazione.CASTELLO_LICH, new CoordinateMD(10, 10), false);
+        Foresta.costruisciLocazioneUnica(TipoLocazione.CITTA_NYENA, new CoordinateMD(3, 4), true);
+        Foresta.costruisciLocazioneUnica(TipoLocazione.CASTELLO_LICH, new CoordinateMD(10, 10), false);
 
         sopra(3, 4);
         assertEquals("la città di Nyena", mappa.getNomeSottoIlMouse());
@@ -73,7 +73,7 @@ class MappaNomeSottoIlMouseTest {
 
     @Test
     void mentreSiTrascinaNonCompareNiente() {
-        Foresta.costruisciLocazioneUnica(ClassiLocazione.CITTA_RUUNA, new CoordinateMD(2, 2), true);
+        Foresta.costruisciLocazioneUnica(TipoLocazione.CITTA_RUUNA, new CoordinateMD(2, 2), true);
         sopra(2, 2);
         mappa.processaPressione(centroX(2), centroY(2), Finestra.Tasto.SINISTRO);
         assertNull(mappa.getNomeSottoIlMouse());

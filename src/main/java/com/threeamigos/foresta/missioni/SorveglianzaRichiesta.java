@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.Optional;
 
@@ -19,7 +19,7 @@ public final class SorveglianzaRichiesta {
 	private final TipoMissione tipo;
 	private final AspettoDelMandante aspetto;
 	private final String mandante;
-	private final ClassiLocazione luogo;
+	private final TipoLocazione luogo;
 	private final int visite;
 	private final int ore;
 	private final ClassePersonaggio nemico;
@@ -46,7 +46,7 @@ public final class SorveglianzaRichiesta {
 		tipo = campi.enumerato("TIPO", TipoMissione.class);
 		aspetto = campi.enumerato("ASPETTO", AspettoDelMandante.class);
 		mandante = campi.obbligatorio("MANDANTE");
-		luogo = campi.enumerato("LUOGO", ClassiLocazione.class);
+		luogo = campi.enumerato("LUOGO", TipoLocazione.class);
 		if (!CombattimentoRichiesto.LUOGHI.contains(luogo)) {
 			throw new IllegalArgumentException("Il luogo è fra " + CombattimentoRichiesto.LUOGHI + ": " + riga);
 		}
@@ -116,7 +116,7 @@ public final class SorveglianzaRichiesta {
 		return mandante;
 	}
 
-	public ClassiLocazione getLuogo() {
+	public TipoLocazione getLuogo() {
 		return luogo;
 	}
 

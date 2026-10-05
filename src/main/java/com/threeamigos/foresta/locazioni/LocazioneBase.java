@@ -7,7 +7,6 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
 import com.threeamigos.foresta.incantesimi.*;
 import com.threeamigos.foresta.interfacce.Arma;
-import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.offerte.Offerta;
@@ -16,6 +15,7 @@ import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tools.Misc;
@@ -1038,7 +1038,7 @@ public abstract class LocazioneBase implements Locazione {
 	
 	private Stato gestisciNuovaLocazione() {
 		Logger.log("LocazioneBase.NUOVA_LOCAZIONE");
-		TipoLocazione tipoLocazione = gruppo.getClasseLocazioneCorrente().getTipoLocazione();
+		CategoriaLocazione tipoLocazione = gruppo.getClasseLocazioneCorrente().getCategoria();
 		int numeroAvversari = gruppoAvversario.getNumeroPersonaggi();
 		custodita = numeroAvversari > 0;
 		if (numeroAvversari == 0) {
@@ -1046,7 +1046,7 @@ public abstract class LocazioneBase implements Locazione {
 				BusEventi.pubblica(new NotificaTestoFrase("Essendo il tesoro incustodito, " +
 						gruppo.chi() + " se ne impossessa."));
 			}
-			if (tipoLocazione != TipoLocazione.MISSIONE_SECONDARIA) {
+			if (tipoLocazione != CategoriaLocazione.MISSIONE_SECONDARIA) {
 				gruppo.riposa(getTipoRiposo());
 			}
 			setCompleta(true);
@@ -1056,7 +1056,7 @@ public abstract class LocazioneBase implements Locazione {
 			// Non possiamo fare amicizia o corrompere per completare le missioni secondarie! E nemmeno con delle
 			// ondate in arrivo: corrotta la prima, non arriverebbero le altre
 			//TODO il meccanismo delle missioni andrebbe gestito meglio
-			if (tipoLocazione != TipoLocazione.MISSIONE_SECONDARIA && !gruppoAvversario.hasOndateSuccessive()) {
+			if (tipoLocazione != CategoriaLocazione.MISSIONE_SECONDARIA && !gruppoAvversario.hasOndateSuccessive()) {
 				Personaggio p;
 				for (int i = 0; i < numeroAvversari; i++) {
 					p = gruppoAvversario.getPersonaggio(i);
@@ -1433,7 +1433,7 @@ public abstract class LocazioneBase implements Locazione {
 	 */
 	private boolean isPassaggioPossibile() {
 		return !passaggioEscluso && statoLocazione == StatoLocazione.IN_LOCAZIONE
-				&& gruppo.getClasseLocazioneCorrente().getTipoLocazione() == TipoLocazione.STANDARD
+				&& gruppo.getClasseLocazioneCorrente().getCategoria() == CategoriaLocazione.STANDARD
 				&& !gruppoAvversario.getPersonaggiVivi().isEmpty() && !gruppoAvversario.isDaAffrontare() && !gruppoAvversario.isDuello()
 				&& !gruppoAvversario.hasOndateSuccessive();
 	}

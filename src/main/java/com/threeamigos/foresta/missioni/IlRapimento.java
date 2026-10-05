@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * In città una donna chiede di liberare suo marito, rapito da una banda di goblin che lo tiene in una grotta (vedi
@@ -83,8 +83,8 @@ public class IlRapimento extends LaLiberazione {
 	}
 
 	@Override
-	protected ClassiLocazione getLuogoDelCovo() {
-		return ClassiLocazione.GROTTA;
+	protected TipoLocazione getLuogoDelCovo() {
+		return TipoLocazione.GROTTA;
 	}
 
 	@Override

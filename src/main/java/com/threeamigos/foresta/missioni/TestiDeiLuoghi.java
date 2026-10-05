@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Rovine;
 import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * Come le missioni nominano i luoghi nei loro testi.
@@ -18,7 +18,7 @@ final class TestiDeiLuoghi {
 	/**
 	 * Un luogo di quella classe, con l'articolo indeterminativo: "una grotta", "delle rovine".
 	 */
-	static String indefinito(ClassiLocazione classe) {
+	static String indefinito(TipoLocazione classe) {
 		switch (classe) {
 			case GROTTA:
 				return "una grotta";
@@ -42,8 +42,8 @@ final class TestiDeiLuoghi {
 	/**
 	 * Dentro un luogo di quella classe: "in una grotta", "fra delle rovine".
 	 */
-	static String dentro(ClassiLocazione classe) {
-		return (classe == ClassiLocazione.ROVINE ? "fra " : "in ") + indefinito(classe);
+	static String dentro(TipoLocazione classe) {
+		return (classe == TipoLocazione.ROVINE ? "fra " : "in ") + indefinito(classe);
 	}
 
 	/**

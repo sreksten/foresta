@@ -6,9 +6,9 @@ import com.threeamigos.foresta.eventi.interni.InternoUiOccupata;
 import com.threeamigos.foresta.eventi.notifiche.NotificaPaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.ClasseIntermezzo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -23,7 +23,7 @@ class IntermezzoLocazioneCompletataTest {
 	void scattaUnaVoltaSolaAllaFineDellaPrimaLocazione() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 
 			assertEquals(0, contaBattutaEremita(partita),
@@ -53,7 +53,7 @@ class IntermezzoLocazioneCompletataTest {
 	void aspettaCheLaUiSiaInattivaPrimaDiMostrareLintermezzo() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 
 			partita.pubblica(new InternoUiOccupata());
@@ -82,7 +82,7 @@ class IntermezzoLocazioneCompletataTest {
 	void dopoLultimaPaginaDiUnIntermezzoNonAspettaLaUiSeNonCeNeSonoAltri() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			partita.eventi().ascolta(InternoMostraSchermataGioco.class);
 			partita.nonSaltareIntermezzi();
@@ -109,7 +109,7 @@ class IntermezzoLocazioneCompletataTest {
 	void senzaIntermezziNonAspettaLaUiAFineLocazione() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			RegistroIntermezzi.segnaScattato(ClasseIntermezzo.INTERMEZZO_FINE_PRIMA_LOCAZIONE.getIstanza());
 			assertNull(RegistroIntermezzi.getProssimoIntermezzo(MomentoIntermezzo.LOCAZIONE_COMPLETATA),

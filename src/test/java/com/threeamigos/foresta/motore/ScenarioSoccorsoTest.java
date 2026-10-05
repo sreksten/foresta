@@ -2,7 +2,6 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.IlSoccorso;
 import com.threeamigos.foresta.missioni.SoccorsoRichiesto;
 import com.threeamigos.foresta.missioni.TipoMissione;
@@ -10,6 +9,7 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
@@ -57,7 +57,7 @@ class ScenarioSoccorsoTest {
             assertEquals("La moglie del taglialegna di Nyena ti ha chiesto di salvare " + nome + ", il taglialegna, dal posto "
                     + "segnato sulla mappa, dove lo minacciano tre Arpie.", soccorso.getDescrizione());
             CoordinateMD bosco = soccorso.getCovo();
-            assertEquals(ClassiLocazione.BOSCO, Foresta.getLocazione(bosco));
+            assertEquals(TipoLocazione.BOSCO, Foresta.getLocazione(bosco));
             assertTrue(Foresta.isLocazioneConosciuta(bosco));
             List<Personaggio> arpie = RegistroMissioni.getIncontroMissione(bosco).orElseThrow(AssertionError::new);
             assertEquals(3, arpie.size());
@@ -67,7 +67,7 @@ class ScenarioSoccorsoTest {
             assertTrue(partita.gruppo().isOspiteVulnerabile(taglialegna));
             assertTrue(partita.testi().contains(nome + " scende dall'albero. Riportatelo vivo a Nyena."), String.valueOf(partita.testi()));
 
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA));
+            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             int monete = partita.gruppo().getMonete();
             soccorso.controllaPreLocazione();
             assertTrue(partita.gruppo().getOspiti().isEmpty());
@@ -89,7 +89,7 @@ class ScenarioSoccorsoTest {
             assertEquals(soccorso.getNomeDellaPersona() + " è morto: devi dare la notizia alla moglie del taglialegna, a Nyena.",
                     soccorso.getDescrizione());
 
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA));
+            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             soccorso.controllaPreLocazione();
             assertEquals("LUTTO", soccorso.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
             soccorso.segnaIntermezzoPassoMostrato("LUTTO");
@@ -100,7 +100,7 @@ class ScenarioSoccorsoTest {
     }
 
     private static IlSoccorso prendiLIncarico(PartitaDiTest partita) {
-        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         IlSoccorso soccorso = RegistroMissioni.getTutteLeMissioni().stream().filter(IlSoccorso.class::isInstance)
                 .map(IlSoccorso.class::cast).findFirst().orElseThrow(AssertionError::new);
         soccorso.aggiungiProprieta("PARAMETRO_" + IlSoccorso.SOCCORSO, TAGLIALEGNA);

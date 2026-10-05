@@ -4,13 +4,14 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
 public class Palude extends LocazioneBase {
 
 	@Override
-	public ClassiLocazione getClasseLocazione() {
-		return ClassiLocazione.PALUDE;
+	public TipoLocazione getClasseLocazione() {
+		return TipoLocazione.PALUDE;
 	}
 
 	@Override

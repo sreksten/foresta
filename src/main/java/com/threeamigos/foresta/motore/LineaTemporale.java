@@ -1,10 +1,11 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.LineaTemporaleMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.Misc;
 
 public class LineaTemporale {
@@ -104,14 +105,14 @@ public class LineaTemporale {
 			setEvento("Sventura! " + nome + " ha invano tentato di fermare il Drago, che col tempo ha abbattuto l'ultimo baluardo della resistenza... tutto e' perduto!");
 			setGiocoFinito(true);
 		} else {
-			if (giorno >= 35 && !isCittaDistrutta(ClassiLocazione.CITTA_MALGAARD)) {
-				distruggiCitta(ClassiLocazione.CITTA_MALGAARD, gruppo, nome);
-			} else if (giorno >= 30 && !isCittaDistrutta(ClassiLocazione.CITTA_FLEENA)) {
-				distruggiCitta(ClassiLocazione.CITTA_FLEENA, gruppo, nome);
-			} else if (giorno >= 25 && !isCittaDistrutta(ClassiLocazione.CITTA_NYENA)) {
-				distruggiCitta(ClassiLocazione.CITTA_NYENA, gruppo, nome);
-			} else if (giorno >= 20 && !isCittaDistrutta(ClassiLocazione.CITTA_RUUNA)) {
-				distruggiCitta(ClassiLocazione.CITTA_RUUNA, gruppo, nome);
+			if (giorno >= 35 && !isCittaDistrutta(TipoLocazione.CITTA_MALGAARD)) {
+				distruggiCitta(TipoLocazione.CITTA_MALGAARD, gruppo, nome);
+			} else if (giorno >= 30 && !isCittaDistrutta(TipoLocazione.CITTA_FLEENA)) {
+				distruggiCitta(TipoLocazione.CITTA_FLEENA, gruppo, nome);
+			} else if (giorno >= 25 && !isCittaDistrutta(TipoLocazione.CITTA_NYENA)) {
+				distruggiCitta(TipoLocazione.CITTA_NYENA, gruppo, nome);
+			} else if (giorno >= 20 && !isCittaDistrutta(TipoLocazione.CITTA_RUUNA)) {
+				distruggiCitta(TipoLocazione.CITTA_RUUNA, gruppo, nome);
 			}
 		}
 	}
@@ -121,13 +122,13 @@ public class LineaTemporale {
 	 * la citta' e' ancora sulla mappa. Le missioni che andavano concluse li' falliscono al turno successivo (vedi
 	 * isCittaDistrutta).
 	 */
-	private static void distruggiCitta(ClassiLocazione citta, GruppoGiocatore gruppo, String nome) {
+	private static void distruggiCitta(TipoLocazione citta, GruppoGiocatore gruppo, String nome) {
 		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(citta);
 		if (coordinate != null) {
 			setEvento(nome + COLONNA + Misc.getDirezione(gruppo, coordinate));
 		}
 		setCittaDistrutta(citta);
-		Foresta.distruggiLocazioneUnica(citta, ClassiLocazione.ROVINE);
+		Foresta.distruggiLocazioneUnica(citta, TipoLocazione.ROVINE);
 	}
 
 	/**
@@ -152,15 +153,15 @@ public class LineaTemporale {
 		getLineaTemporaleMD().setGiocoFinito(finito);
 	}
 
-	public static boolean isCittaDistrutta(ClassiLocazione citta) {
-		if (citta.getTipoLocazione() != ClassiLocazione.TipoLocazione.CITTA) {
+	public static boolean isCittaDistrutta(TipoLocazione citta) {
+		if (citta.getCategoria() != CategoriaLocazione.CITTA) {
 			throw new IllegalArgumentException();
 		}
 		return getLineaTemporaleMD().isCittaDistrutta(citta);
 	}
 
-	public static void setCittaDistrutta(ClassiLocazione citta) {
-		if (citta.getTipoLocazione() != ClassiLocazione.TipoLocazione.CITTA) {
+	public static void setCittaDistrutta(TipoLocazione citta) {
+		if (citta.getCategoria() != CategoriaLocazione.CITTA) {
 			throw new IllegalArgumentException();
 		}
 		getLineaTemporaleMD().addCittaDistrutta(citta);

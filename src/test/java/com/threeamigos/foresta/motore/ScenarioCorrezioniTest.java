@@ -2,7 +2,6 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Guerriero;
@@ -13,6 +12,7 @@ import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import org.junit.jupiter.api.Test;
 
@@ -52,7 +52,7 @@ class ScenarioCorrezioniTest {
 	void inCombattimentoGliEffettiDiStatoScendonoAOgniRound() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(5)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CASTELLO_IDRA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CASTELLO_IDRA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			Personaggio capo = partita.gruppo().getCapo();
 			capo.addEffettoDiStato(TipoEffettoDiStato.RALLENTATO, 5, 0);
@@ -73,7 +73,7 @@ class ScenarioCorrezioniTest {
 		GestoreSalvataggiInMemoria salvataggi;
 		try (PartitaDiTest prima = PartitaDiTest.nuova(7)) {
 			prima.iniziaCon("Arsenio", Comando.MASCHIO, Comando.LADRO,
-					() -> prima.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> prima.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			prima.comando(Comando.ESCI_DA_CITTA);
 			// Ci si accampa nel bosco, non in citta': il gruppo va su una casella di bosco prima del salvataggio
 			prima.gruppo().setCoordinate(unaCasellaDiBosco());
@@ -98,7 +98,7 @@ class ScenarioCorrezioniTest {
 	void daSoliNonCiSiAccampa() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(7)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.LADRO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.comando(Comando.ESCI_DA_CITTA);
 			partita.gruppo().setCoordinate(unaCasellaDiBosco());
 			while (LineaTemporale.getOra() <= 20) {
@@ -119,7 +119,7 @@ class ScenarioCorrezioniTest {
 	void chiLasciaIlGruppoNonTornaDopoIlSalvataggio() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(9)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.LADRO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			Guerriero mercenario = new Guerriero("Mercenario", 1);
 			partita.gruppo().aggiungiPersonaggio(mercenario);
 			assertEquals(2, partita.gruppo().getNumeroPersonaggi());
@@ -153,7 +153,7 @@ class ScenarioCorrezioniTest {
 	void dopoMezzanotteSiRiposaFinoAlleOtto() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(12)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			while (LineaTemporale.getOra() != 2) {
 				LineaTemporale.aggiungiOre(1);
 			}
@@ -169,7 +169,7 @@ class ScenarioCorrezioniTest {
 	void unaMissioneSecondariaDaIlVentiPerCentoDegliXpDelLivello() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(13)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			Personaggio capo = partita.gruppo().getCapo();
 			int prima = capo.getEsperienza();
 			int attesi = GestoreProgressione.getXpRichiestiPerProssimoLivello(Statistiche.getLivello()) * 20 / 100;
@@ -183,7 +183,7 @@ class ScenarioCorrezioniTest {
 	void nellaFugaSiPerdonoAlPiuMetaDellePergamene() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(14)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			int prima = partita.gruppo().getIncantesimi(ClasseIncantesimo.FUOCO);
 			assertTrue(prima >= 2);
 			partita.gruppo().fugge();
@@ -247,7 +247,7 @@ class ScenarioCorrezioniTest {
 	void aGruppoPienoNonSiOffreAiuto() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(16)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			// Pieno vuol dire anche gli slot dei personaggi temporanei, quelli che un aiuto occuperebbe
 			while (partita.gruppo().getNumeroPersonaggi() < Costanti.MAX_PERSONAGGI_GRUPPO_TOTALE) {
 				partita.gruppo().aggiungiPersonaggio(new Guerriero("Compagno", 1));
@@ -269,7 +269,7 @@ class ScenarioCorrezioniTest {
 	private static CoordinateMD unaCasellaDiBosco() {
 		for (int x = 0; x < Foresta.getDimensioneX(); x++) {
 			for (int y = 0; y < Foresta.getDimensioneY(); y++) {
-				if (Foresta.getLocazione(x, y) == ClassiLocazione.BOSCO) {
+				if (Foresta.getLocazione(x, y) == TipoLocazione.BOSCO) {
 					return new CoordinateMD(x, y);
 				}
 			}

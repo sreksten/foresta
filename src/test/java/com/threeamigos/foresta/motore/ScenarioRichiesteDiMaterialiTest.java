@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Mandante;
 import com.threeamigos.foresta.missioni.MaterialeRichiesto;
 import com.threeamigos.foresta.missioni.RichiestaDiMateriali;
@@ -8,6 +7,7 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -73,7 +73,7 @@ class ScenarioRichiesteDiMaterialiTest {
     @Test
     void lArmaioloVuoleLeScaglieDiVivernaEPagaPerPezzo() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(171)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             RichiestaDiMateriali armaiolo = Alchimie.fissa(Alchimie.richiestaDi(Mandante.ARMAIOLO), VIVERNA, 2);
             armaiolo.controllaPreLocazione();
             armaiolo.segnaIntermezzoPassoMostrato("INCARICO");
@@ -87,13 +87,13 @@ class ScenarioRichiesteDiMaterialiTest {
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             avversari.rimuoviPersonaggi();
             avversari.aggiungiPersonaggio(ClassePersonaggio.VIVERNA.getIstanza(1));
-            assertTrue(armaiolo.getOggettoInLocazione(new CoordinateMD(0, 0), ClassiLocazione.TEMPIO, true).isPresent());
+            assertTrue(armaiolo.getOggettoInLocazione(new CoordinateMD(0, 0), TipoLocazione.TEMPIO, true).isPresent());
 
             new OggettoMissione(armaiolo.getId(), RichiestaDiMateriali.MATERIALE, armaiolo.getMateriali().getNome(), 2)
                     .prendi(partita.gruppo(), null);
             armaiolo.controllaPostLocazione();
             int monete = partita.gruppo().getMonete();
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA));
+            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             armaiolo.controllaPreLocazione();
             armaiolo.segnaIntermezzoPassoMostrato("RITORNO");
             armaiolo.controllaInLocazione();
@@ -114,7 +114,7 @@ class ScenarioRichiesteDiMaterialiTest {
     @Test
     void lAlchimistaChiedeIFioriDiAconitoSoloNelleRadure() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(172)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             RichiestaDiMateriali alchimista = Alchimie.fissa(Alchimie.alchimista(), ACONITO, 3);
             alchimista.controllaPreLocazione();
             alchimista.segnaIntermezzoPassoMostrato("INCARICO");
@@ -123,7 +123,7 @@ class ScenarioRichiesteDiMaterialiTest {
 
             boolean nelBosco = false;
             for (int i = 0; i < 100; i++) {
-                nelBosco |= alchimista.getOggettoInLocazione(new CoordinateMD(0, 0), ClassiLocazione.BOSCO, false).isPresent();
+                nelBosco |= alchimista.getOggettoInLocazione(new CoordinateMD(0, 0), TipoLocazione.BOSCO, false).isPresent();
             }
             assertFalse(nelBosco);
 
@@ -143,7 +143,7 @@ class ScenarioRichiesteDiMaterialiTest {
     @Test
     void ilLocandiereVuoleLeCarpeDellePaludi() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(173)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             RichiestaDiMateriali locandiere = Alchimie.fissa(Alchimie.richiestaDi(Mandante.LOCANDIERE), CARPA, 3);
             locandiere.controllaPreLocazione();
             locandiere.segnaIntermezzoPassoMostrato("INCARICO");
@@ -156,8 +156,8 @@ class ScenarioRichiesteDiMaterialiTest {
             boolean nelBosco = false;
             boolean inPalude = false;
             for (int i = 0; i < 100; i++) {
-                nelBosco |= locandiere.getOggettoInLocazione(new CoordinateMD(0, 0), ClassiLocazione.BOSCO, false).isPresent();
-                inPalude |= locandiere.getOggettoInLocazione(new CoordinateMD(0, 0), ClassiLocazione.PALUDE, false).isPresent();
+                nelBosco |= locandiere.getOggettoInLocazione(new CoordinateMD(0, 0), TipoLocazione.BOSCO, false).isPresent();
+                inPalude |= locandiere.getOggettoInLocazione(new CoordinateMD(0, 0), TipoLocazione.PALUDE, false).isPresent();
             }
             assertFalse(nelBosco);
             assertTrue(inPalude);

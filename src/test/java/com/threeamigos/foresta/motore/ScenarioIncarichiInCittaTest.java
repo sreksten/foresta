@@ -2,7 +2,6 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
@@ -10,7 +9,9 @@ import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -27,7 +28,7 @@ class ScenarioIncarichiInCittaTest {
     void gliIncarichiNonSiSovrappongonoAlleAltreMissioniDellaCitta() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(64)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_FLEENA));
+                    () -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
             CacciaAiGoblin caccia = trova(CacciaAiGoblin.class);
             RichiestaDiMateriali mandragola = Alchimie.alchimista();
             MissioneAPassi medaglione = trova(RecuperaIlMedaglione.class);
@@ -60,7 +61,7 @@ class ScenarioIncarichiInCittaTest {
     void rientrandoInCittaConLAutomaVeroLIncaricoParte() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(65)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_FLEENA));
+                    () -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
             CacciaAiGoblin caccia = trova(CacciaAiGoblin.class);
             assertFalse(caccia.isAttiva(), "alla prima visita parte il medaglione");
             CoordinateMD fleena = partita.gruppo().getCoordinate();
@@ -85,9 +86,9 @@ class ScenarioIncarichiInCittaTest {
     void laCacciaAiGoblinSiPrendeInCittaESiRiscuoteLi() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(61)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_FLEENA));
+                    () -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
             CacciaAiGoblin caccia = prendiIncaricoAllaSecondaVisita(CacciaAiGoblin.class);
-            assertEquals(ClassiLocazione.CITTA_FLEENA, caccia.getCitta());
+            assertEquals(TipoLocazione.CITTA_FLEENA, caccia.getCitta());
             assertTrue(caccia.getDescrizione().contains("Fleena"), caccia.getDescrizione());
 
             for (int i = 0; i < CacciaAiGoblin.GOBLIN_DA_SCONFIGGERE; i++) {
@@ -109,19 +110,19 @@ class ScenarioIncarichiInCittaTest {
     void leRadiciDiMandragolaCresconoSoloNelleRaduraENeiBoschiMaiVisitati() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(62)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+                    () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             RichiestaDiMateriali mandragola = prendiIncaricoAllaSecondaVisita(Alchimie.conLaMandragola());
             assertEquals("RACCOLTA", mandragola.getPassoCorrente());
             CoordinateMD casella = new CoordinateMD(0, 0);
 
-            assertEquals(Optional.empty(), mandragola.getOggettoInLocazione(casella, ClassiLocazione.PALUDE, false));
+            assertEquals(Optional.empty(), mandragola.getOggettoInLocazione(casella, TipoLocazione.PALUDE, false));
             for (int i = 0; i < 50; i++) {
-                assertEquals(Optional.empty(), mandragola.getOggettoInLocazione(casella, ClassiLocazione.BOSCO, true),
+                assertEquals(Optional.empty(), mandragola.getOggettoInLocazione(casella, TipoLocazione.BOSCO, true),
                         "non in una locazione già visitata");
             }
             OggettoMissione radici = null;
             for (int i = 0; i < 200 && radici == null; i++) {
-                radici = (OggettoMissione) mandragola.getOggettoInLocazione(casella, ClassiLocazione.RADURA, false).orElse(null);
+                radici = (OggettoMissione) mandragola.getOggettoInLocazione(casella, TipoLocazione.RADURA, false).orElse(null);
             }
             assertNotNull(radici, "prima o poi una radura le ha");
             assertEquals(ClasseMissione.RICHIESTA_ALCHIMISTA.name(), radici.getIdMissione());
@@ -134,7 +135,7 @@ class ScenarioIncarichiInCittaTest {
                     .prendi(partita.gruppo(), null);
             assertEquals(3, mandragola.getContatore(RichiestaDiMateriali.MATERIALE));
             for (int i = 0; i < 200; i++) {
-                mandragola.getOggettoInLocazione(casella, ClassiLocazione.BOSCO, false)
+                mandragola.getOggettoInLocazione(casella, TipoLocazione.BOSCO, false)
                         .ifPresent(o -> assertEquals(1, o.getQuantita(), "mai più di quante ne mancano"));
             }
             mandragola.controllaPostLocazione();
@@ -143,7 +144,7 @@ class ScenarioIncarichiInCittaTest {
             mandragola.controllaPostLocazione();
             assertEquals("RITORNO", mandragola.getPassoCorrente());
             for (int i = 0; i < 50; i++) {
-                assertEquals(Optional.empty(), mandragola.getOggettoInLocazione(casella, ClassiLocazione.RADURA, false));
+                assertEquals(Optional.empty(), mandragola.getOggettoInLocazione(casella, TipoLocazione.RADURA, false));
             }
 
             int monete = partita.gruppo().getMonete();
@@ -158,7 +159,7 @@ class ScenarioIncarichiInCittaTest {
     void dopoTreGiorniSenzaTutteLeRadiciLaMissioneRipiegaSuUnPostoSegnatoSullaMappa() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(66)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+                    () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             RichiestaDiMateriali mandragola = prendiIncaricoAllaSecondaVisita(Alchimie.conLaMandragola());
             OggettiDaRaccogliere radici = mandragola.getMateriali();
             new OggettoMissione(mandragola.getId(), RichiestaDiMateriali.MATERIALE, radici.getNome(), 1)
@@ -183,7 +184,7 @@ class ScenarioIncarichiInCittaTest {
             Oggetto lì = mandragola.getOggettoInLocazione(ripiego, Foresta.getLocazione(ripiego), true).orElseThrow(AssertionError::new);
             assertEquals(Alchimie.RADICI - 1, lì.getQuantita());
             assertEquals(Optional.empty(), mandragola.getOggettoInLocazione(
-                    new CoordinateMD(ripiego.getX() == 0 ? 1 : 0, ripiego.getY()), ClassiLocazione.BOSCO, true));
+                    new CoordinateMD(ripiego.getX() == 0 ? 1 : 0, ripiego.getY()), TipoLocazione.BOSCO, true));
 
             // Il ripiego si salva con la missione
             partita.salva(Comando.NUMERO_2);
@@ -206,7 +207,7 @@ class ScenarioIncarichiInCittaTest {
 
         static final OggettiDaRaccogliere FUNGHI = OggettiDaRaccogliere
                 .di("FUNGHI", NomeOggetto.maschile("fungo porcino", "funghi porcini"), 2)
-                .in(ClassiLocazione.BOSCO)
+                .in(TipoLocazione.BOSCO)
                 .alPiuPerLocazione(2);
 
         FunghiInOgniBosco() {
@@ -228,7 +229,7 @@ class ScenarioIncarichiInCittaTest {
     void entrandoInUnBoscoLOggettoDellaMissionePrendeIlPostoDiQuelloDellaLocazione() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(63)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+                    () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             FunghiInOgniBosco funghi = new FunghiInOgniBosco();
             RegistroMissioni.getMissionePrincipale().aggiungiMissione(funghi);
             funghi.attivaMissione();
@@ -254,8 +255,8 @@ class ScenarioIncarichiInCittaTest {
             for (int y = 0; y < Foresta.getDimensioneY() - 1; y++) {
                 CoordinateMD coordinate = new CoordinateMD(x, y);
                 CoordinateMD sud = new CoordinateMD(x, y + 1);
-                if (Foresta.getLocazione(x, y) == ClassiLocazione.BOSCO && !Foresta.isLocazioneVisitata(coordinate)
-                        && Foresta.getLocazione(x, y + 1).getTipoLocazione() == ClassiLocazione.TipoLocazione.STANDARD
+                if (Foresta.getLocazione(x, y) == TipoLocazione.BOSCO && !Foresta.isLocazioneVisitata(coordinate)
+                        && Foresta.getLocazione(x, y + 1).getCategoria() == CategoriaLocazione.STANDARD
                         && RegistroArtefatti.getArtefattoInLocazione(coordinate) == null
                         && !RegistroMissioni.getMissioneCheHaOccupato(sud).isPresent()) {
                     return coordinate;

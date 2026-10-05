@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.IlRituale;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.RitualeRichiesto;
@@ -10,6 +9,7 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -70,7 +70,7 @@ class ScenarioRitualeTest {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(211)) {
             IlRituale rituale = prendiLIncarico(partita, VARCO);
             CoordinateMD rovine = rituale.getPosto();
-            assertEquals(ClassiLocazione.ROVINE, Foresta.getLocazione(rovine));
+            assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(rovine));
             assertTrue(Foresta.isLocazioneConosciuta(rovine));
             assertTrue(rituale.getDescrizione().endsWith("Finora: 0."), rituale.getDescrizione());
 
@@ -110,7 +110,7 @@ class ScenarioRitualeTest {
             assertEquals("RITORNO", rituale.getPassoCorrente());
             assertTrue(partita.testi().contains("Il varco è chiuso. Il sacerdote aspetta a Nyena."), String.valueOf(partita.testi()));
 
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA));
+            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             int monete = partita.gruppo().getMonete();
             rituale.controllaPreLocazione();
             rituale.segnaIntermezzoPassoMostrato("RITORNO");
@@ -125,7 +125,7 @@ class ScenarioRitualeTest {
     void conIlMetodoGiustoIlPastoreELiberoSenzaCombattere() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(212)) {
             IlRituale rituale = prendiLIncarico(partita, PASTORE);
-            assertEquals(ClassiLocazione.TEMPIO, Foresta.getLocazione(rituale.getPosto()));
+            assertEquals(TipoLocazione.TEMPIO, Foresta.getLocazione(rituale.getPosto()));
             raccogliGliIngredienti(partita, rituale);
             partita.gruppo().setCoordinate(rituale.getPosto());
             rituale.controllaPreLocazione();
@@ -166,7 +166,7 @@ class ScenarioRitualeTest {
     }
 
     private static IlRituale prendiLIncarico(PartitaDiTest partita, String riga) {
-        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         IlRituale rituale = RegistroMissioni.getTutteLeMissioni().stream().filter(IlRituale.class::isInstance)
                 .map(IlRituale.class::cast).findFirst().orElseThrow(AssertionError::new);
         rituale.aggiungiProprieta("PARAMETRO_" + IlRituale.RITUALE, riga);

@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaAperturaFinestraCombattimento;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.ColpoRichiesto;
 import com.threeamigos.foresta.missioni.IlColpo;
 import com.threeamigos.foresta.missioni.TipoMissione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
@@ -103,7 +103,7 @@ class ScenarioColpoTest {
     }
 
     private static IlColpo prendiIlColpo(PartitaDiTest partita) {
-        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         IlColpo colpo = RegistroMissioni.getTutteLeMissioni().stream().filter(IlColpo.class::isInstance)
                 .map(IlColpo.class::cast).findFirst().orElseThrow(AssertionError::new);
         colpo.aggiungiProprieta("PARAMETRO_" + IlColpo.COLPO, LIBRO);
@@ -111,7 +111,7 @@ class ScenarioColpoTest {
         colpo.segnaIntermezzoPassoMostrato("INCARICO");
         colpo.controllaInLocazione();
         assertTrue(colpo.isAttiva());
-        assertEquals(ClassiLocazione.ROVINE, Foresta.getLocazione(colpo.getPosto()));
+        assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(colpo.getPosto()));
         return colpo;
     }
 

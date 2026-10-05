@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.ClasseMissione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.OggettiDaRaccogliere;
@@ -11,6 +10,7 @@ import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -75,16 +75,16 @@ class ScenarioTrofeiEdEsplorazioneTest {
     @Test
     void iTrofeiCompaionoSoloDoveCiSonoIMostriGiusti() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(181)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             MissioneDiUnPasso caccia = attiva(MissioneDiUnPasso::trofei);
             CoordinateMD casella = new CoordinateMD(0, 0);
 
             avversari(ClassePersonaggio.TROLL, 2);
-            assertEquals(Optional.empty(), caccia.getOggettoInLocazione(casella, ClassiLocazione.BOSCO, false), "niente goblin, niente orecchie");
+            assertEquals(Optional.empty(), caccia.getOggettoInLocazione(casella, TipoLocazione.BOSCO, false), "niente goblin, niente orecchie");
 
             // Due goblin: al più due orecchie, anche in una casella già visitata e in qualunque locazione
             avversari(ClassePersonaggio.GOBLIN, 2);
-            Oggetto orecchie = caccia.getOggettoInLocazione(casella, ClassiLocazione.ROVINE, true).orElseThrow(AssertionError::new);
+            Oggetto orecchie = caccia.getOggettoInLocazione(casella, TipoLocazione.ROVINE, true).orElseThrow(AssertionError::new);
             assertTrue(orecchie.getQuantita() >= 1 && orecchie.getQuantita() <= 2, String.valueOf(orecchie.getQuantita()));
             assertEquals("orecchio di goblin", orecchie.getNomeSingolare());
 
@@ -93,7 +93,7 @@ class ScenarioTrofeiEdEsplorazioneTest {
             avversari(ClassePersonaggio.GOBLIN, 4);
             int mancanti = 3 - caccia.getContatore("ORECCHIE");
             for (int i = 0; i < 20; i++) {
-                caccia.getOggettoInLocazione(casella, ClassiLocazione.BOSCO, false)
+                caccia.getOggettoInLocazione(casella, TipoLocazione.BOSCO, false)
                         .ifPresent(o -> assertTrue(o.getQuantita() <= mancanti));
             }
 
@@ -102,13 +102,13 @@ class ScenarioTrofeiEdEsplorazioneTest {
             caccia.controllaPreLocazione();
             CoordinateMD ripiego = caccia.getRipiego(ORECCHIE);
             assertNotNull(ripiego);
-            assertEquals(ClassiLocazione.BOSCO, Foresta.getLocazione(ripiego));
+            assertEquals(TipoLocazione.BOSCO, Foresta.getLocazione(ripiego));
             assertTrue(Foresta.isLocazioneConosciuta(ripiego));
             java.util.List<com.threeamigos.foresta.personaggi.Personaggio> goblin = RegistroMissioni.getIncontroMissione(ripiego)
                     .orElseThrow(AssertionError::new);
             assertEquals(mancanti, goblin.size());
             goblin.forEach(g -> assertEquals(ClassePersonaggio.GOBLIN, g.getClasse()));
-            assertEquals(mancanti, caccia.getOggettoInLocazione(ripiego, ClassiLocazione.BOSCO, true)
+            assertEquals(mancanti, caccia.getOggettoInLocazione(ripiego, TipoLocazione.BOSCO, true)
                     .orElseThrow(AssertionError::new).getQuantita());
         }
     }
@@ -116,7 +116,7 @@ class ScenarioTrofeiEdEsplorazioneTest {
     @Test
     void lEsplorazioneContaSoloLeCaselleNuoveEOgnunaUnaVolta() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(182)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             MissioneDiUnPasso esplorazione = attiva(m -> m.esplorazione(2));
             CoordinateMD prima = new CoordinateMD(0, 0);
             CoordinateMD visitata = new CoordinateMD(1, 0);

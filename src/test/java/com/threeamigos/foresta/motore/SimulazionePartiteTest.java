@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -351,16 +351,16 @@ class SimulazionePartiteTest {
 				chiudiScontro();
 				locazione = corrente;
 				if (corrente != null) {
-					ClassiLocazione classe = corrente.getClasseLocazione();
-					if (classe == ClassiLocazione.LOCANDA) {
+					TipoLocazione classe = corrente.getClasseLocazione();
+					if (classe == TipoLocazione.LOCANDA) {
 						risultato.visiteLocande++;
-					} else if (classe.getTipoLocazione() == TipoLocazione.CITTA) {
+					} else if (classe.getCategoria() == CategoriaLocazione.CITTA) {
 						risultato.visiteCitta++;
 					} else {
 						List<Personaggio> avversari = GruppoAvversario.getIstanza().getPersonaggiVivi();
 						if (!avversari.isEmpty()) {
 							scontro = new Scontro(avversari.get(0).getClasse(),
-									classe.getTipoLocazione() == TipoLocazione.CASTELLO);
+									classe.getCategoria() == CategoriaLocazione.CASTELLO);
 							risultato.scontri.add(scontro);
 						}
 					}
@@ -423,8 +423,8 @@ class SimulazionePartiteTest {
 				risultato.moneteSpese += monetePrima - monete;
 			}
 			if (gruppo.getNumeroPersonaggi() > personaggiPrima && locazione != null) {
-				ClassiLocazione classe = locazione.getClasseLocazione();
-				if (classe == ClassiLocazione.LOCANDA || classe.getTipoLocazione() == TipoLocazione.CITTA) {
+				TipoLocazione classe = locazione.getClasseLocazione();
+				if (classe == TipoLocazione.LOCANDA || classe.getCategoria() == CategoriaLocazione.CITTA) {
 					risultato.reclutati += gruppo.getNumeroPersonaggi() - personaggiPrima;
 				} else {
 					risultato.mercenari += gruppo.getNumeroPersonaggi() - personaggiPrima;

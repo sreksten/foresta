@@ -15,6 +15,7 @@ import com.threeamigos.foresta.motore.modellodati.Notizia;
 import com.threeamigos.foresta.offerte.Informazioni;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 
@@ -84,8 +85,8 @@ public class Locanda extends LocazioneBase {
 
 
 	@Override
-	public ClassiLocazione getClasseLocazione() {
-		return ClassiLocazione.LOCANDA;
+	public TipoLocazione getClasseLocazione() {
+		return TipoLocazione.LOCANDA;
 	}
 
 	public Locanda() {
@@ -117,7 +118,7 @@ public class Locanda extends LocazioneBase {
 	}
 
 	public static void impostaDatiLocanda(LocazioneMD modelloDati, ProduttoreDiTestiCasuale.DatiLocanda datiLocanda) {
-		if (modelloDati.getClasse() == ClassiLocazione.LOCANDA) {
+		if (modelloDati.getClasse() == TipoLocazione.LOCANDA) {
 			modelloDati.setNome(datiLocanda.getNome());
 		} else {
 			modelloDati.aggiungiProprieta(LOCANDA_NOME_IN_CITTA, datiLocanda.getNome());
@@ -146,7 +147,7 @@ public class Locanda extends LocazioneBase {
 	 * Il nome della locanda della casella, nel bosco o in una città.
 	 */
 	public static String getNome(LocazioneMD modelloDati) {
-		return modelloDati.getClasse() == ClassiLocazione.LOCANDA ? modelloDati.getNome() : modelloDati.ottieniProprieta(LOCANDA_NOME_IN_CITTA);
+		return modelloDati.getClasse() == TipoLocazione.LOCANDA ? modelloDati.getNome() : modelloDati.ottieniProprieta(LOCANDA_NOME_IN_CITTA);
 	}
 
 	private String getNomeLocandiere() {

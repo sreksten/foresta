@@ -9,6 +9,7 @@ import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Troll;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
 public class RovineRecuperaLeDerrateAlimentari extends LocazioneUnica {
@@ -17,8 +18,8 @@ public class RovineRecuperaLeDerrateAlimentari extends LocazioneUnica {
 	private final Rovine rovine = new Rovine();
 
 	@Override
-	public ClassiLocazione getClasseLocazione() {
-		return ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI;
+	public TipoLocazione getClasseLocazione() {
+		return TipoLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI;
 	}
 
 	@Override
@@ -53,7 +54,7 @@ public class RovineRecuperaLeDerrateAlimentari extends LocazioneUnica {
 	public void azzeraLocazione(GruppoGiocatore g) {
 		if (isCompleta()) {
 			g.setLocazioneCorrenteVisitata();
-			Foresta.distruggiLocazioneUnica(getClasseLocazione(), ClassiLocazione.ROVINE);
+			Foresta.distruggiLocazioneUnica(getClasseLocazione(), TipoLocazione.ROVINE);
 		}
 	}
 

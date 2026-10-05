@@ -9,12 +9,13 @@ import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneDirezione;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneIncantesimoDaLanciare;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneMissione;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.ModalitaDiProva;
 
 import java.util.ArrayList;
@@ -241,9 +242,9 @@ final class PartitaDiTest implements AutoCloseable {
 	/**
 	 * Mette il gruppo sulla casella di una locazione unica (una città, un castello...), prima che la partita inizi.
 	 */
-	void spostaGruppoIn(ClassiLocazione locazioneUnica) {
+	void spostaGruppoIn(TipoLocazione locazioneUnica) {
 		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(locazioneUnica);
-		if (coordinate == null && locazioneUnica.getTipoLocazione() == ClassiLocazione.TipoLocazione.CASTELLO) {
+		if (coordinate == null && locazioneUnica.getCategoria() == CategoriaLocazione.CASTELLO) {
 			// I castelli li rivendicano le loro missioni al primo controllo della partita: qui lo si anticipa
 			RegistroMissioni.getMissionePrincipale().getMissioniSecondarie().forEach(Missione::controllaPreLocazione);
 			coordinate = Foresta.getCoordinateLocazioneUnica(locazioneUnica);

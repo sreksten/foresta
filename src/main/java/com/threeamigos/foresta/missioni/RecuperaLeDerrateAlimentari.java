@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * A Ruuna il Borgomastro chiede di recuperare un carico di derrate alimentari che una banda di Troll ha nascosto in
@@ -32,13 +32,13 @@ public class RecuperaLeDerrateAlimentari extends MissioneRecuperaBersaglio imple
 	}
 
 	@Override
-	protected ClassiLocazione getCittaFissa() {
-		return ClassiLocazione.CITTA_RUUNA;
+	protected TipoLocazione getCittaFissa() {
+		return TipoLocazione.CITTA_RUUNA;
 	}
 
 	@Override
-	protected ClassiLocazione getCovo() {
-		return ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI;
+	protected TipoLocazione getCovo() {
+		return TipoLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI;
 	}
 
 	@Override

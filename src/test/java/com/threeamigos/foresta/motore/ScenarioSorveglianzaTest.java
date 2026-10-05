@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.LaSorveglianza;
 import com.threeamigos.foresta.missioni.SorveglianzaRichiesta;
 import com.threeamigos.foresta.missioni.TipoMissione;
@@ -9,6 +8,7 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
@@ -58,12 +58,12 @@ class ScenarioSorveglianzaTest {
     @Test
     void dopoDueVisiteDistanzialeEsceIlTrollEPoiSiRiscuote() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(181)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             LaSorveglianza sorveglianza = prendiLIncarico(TROLL);
             assertEquals("Il locandiere di Nyena ti ha chiesto di sorvegliare il posto segnato sulla mappa, passandoci due volte "
                     + "e lasciando passare almeno 12 ore fra una visita e l'altra.", sorveglianza.getDescrizione());
             CoordinateMD posto = sorveglianza.getPosto();
-            assertEquals(ClassiLocazione.GROTTA, Foresta.getLocazione(posto));
+            assertEquals(TipoLocazione.GROTTA, Foresta.getLocazione(posto));
             assertTrue(Foresta.isLocazioneConosciuta(posto));
 
             // Prima visita: conta, e nella grotta non c'è ancora il troll
@@ -102,10 +102,10 @@ class ScenarioSorveglianzaTest {
     @Test
     void laVegliaSenzaNemiciFinisceAllUltimaVisita() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(182)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             LaSorveglianza sorveglianza = prendiLIncarico(TOMBA);
             CoordinateMD posto = sorveglianza.getPosto();
-            assertEquals(ClassiLocazione.BOSCO, Foresta.getLocazione(posto));
+            assertEquals(TipoLocazione.BOSCO, Foresta.getLocazione(posto));
 
             partita.gruppo().setCoordinate(posto);
             sorveglianza.controllaPreLocazione();
@@ -131,7 +131,7 @@ class ScenarioSorveglianzaTest {
     }
 
     private static void riscuoti(PartitaDiTest partita, LaSorveglianza sorveglianza, int ricompensa) {
-        partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA));
+        partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
         int monete = partita.gruppo().getMonete();
         sorveglianza.controllaPreLocazione();
         sorveglianza.segnaIntermezzoPassoMostrato("RITORNO");

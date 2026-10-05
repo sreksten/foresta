@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.motore.modellodati;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
 import org.junit.jupiter.api.Test;
 
@@ -47,7 +47,7 @@ class ModelloDatiSalvataggioTest {
         modello.getGruppoGiocatoreMD().setIncantesimi(ClasseIncantesimo.FUOCO, 4);
         modello.getLineaTemporaleMD().setGiocoFinito(true);
         modello.getLineaTemporaleMD().setEvento("Gwendolyn vede levarsi una colonna di fumo a nord");
-        modello.getLineaTemporaleMD().addCittaDistrutta(ClassiLocazione.CITTA_RUUNA);
+        modello.getLineaTemporaleMD().addCittaDistrutta(TipoLocazione.CITTA_RUUNA);
         String primo = salva(modello);
         // When
         ModelloDati riletto = new ModelloDati();
@@ -60,7 +60,7 @@ class ModelloDatiSalvataggioTest {
         assertEquals(4, riletto.getGruppoGiocatoreMD().getIncantesimi(ClasseIncantesimo.FUOCO));
         assertTrue(riletto.getLineaTemporaleMD().isGiocoFinito());
         assertEquals("Gwendolyn vede levarsi una colonna di fumo a nord", riletto.getLineaTemporaleMD().getEvento());
-        assertEquals(Collections.singletonList(ClassiLocazione.CITTA_RUUNA), riletto.getLineaTemporaleMD().getCittaDistrutte());
+        assertEquals(Collections.singletonList(TipoLocazione.CITTA_RUUNA), riletto.getLineaTemporaleMD().getCittaDistrutte());
     }
 
     @Test
@@ -71,7 +71,7 @@ class ModelloDatiSalvataggioTest {
         modello.getGruppoGiocatoreMD().setCoordinate(new CoordinateMD(1, 2));
         for (int x = 0; x < 4; x++) {
             for (int y = 0; y < 3; y++) {
-                modello.getForestaMD().impostaLocazione(new CoordinateMD(x, y), ClassiLocazione.BOSCO);
+                modello.getForestaMD().impostaLocazione(new CoordinateMD(x, y), TipoLocazione.BOSCO);
             }
         }
         assertTrue(modello.isAiutoAbilitato(), "in una partita nuova l'aiuto è acceso");

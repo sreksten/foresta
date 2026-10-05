@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.IlTorneo;
 import com.threeamigos.foresta.missioni.LaLeggenda;
 import com.threeamigos.foresta.missioni.OggettoLeggendario;
@@ -11,6 +10,7 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -59,7 +59,7 @@ class ScenarioTorneoTest {
                     + "segnata sulla mappa, uno contro uno e fino alla resa. In palio "), torneo.getDescrizione());
 
             CoordinateMD lizza = torneo.getLizza();
-            assertEquals(ClassiLocazione.RADURA, Foresta.getLocazione(lizza));
+            assertEquals(TipoLocazione.RADURA, Foresta.getLocazione(lizza));
             assertTrue(Foresta.isLocazioneConosciuta(lizza));
             partita.gruppo().setCoordinate(lizza);
 
@@ -98,7 +98,7 @@ class ScenarioTorneoTest {
             assertEquals("Qui Bradamante perse il torneo.", torneo.getRicordoDellaLocazione());
 
             // In città, la borsa del vincitore
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA));
+            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             int monete = partita.gruppo().getMonete();
             torneo.controllaPreLocazione();
             torneo.segnaIntermezzoPassoMostrato("RITORNO");
@@ -124,7 +124,7 @@ class ScenarioTorneoTest {
      * Il gruppo è a Nyena, dove il borgomastro bandisce il torneo della Rosa: il gruppo si iscrive.
      */
     private static IlTorneo iscriviti(PartitaDiTest partita) {
-        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         IlTorneo torneo = RegistroMissioni.getTutteLeMissioni().stream().filter(IlTorneo.class::isInstance)
                 .map(IlTorneo.class::cast).findFirst().orElseThrow(AssertionError::new);
         torneo.aggiungiProprieta("PARAMETRO_" + IlTorneo.TORNEO, ROSA);

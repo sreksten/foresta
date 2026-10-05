@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.Misc;
 
 /**
@@ -81,7 +81,7 @@ public class IlSoccorso extends LaLiberazione {
 	}
 
 	@Override
-	protected ClassiLocazione getLuogoDelCovo() {
+	protected TipoLocazione getLuogoDelCovo() {
 		return getSoccorso().getLuogo();
 	}
 

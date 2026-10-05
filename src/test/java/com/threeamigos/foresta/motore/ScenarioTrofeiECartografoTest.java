@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.IlCartografo;
 import com.threeamigos.foresta.missioni.IncaricoInCitta;
 import com.threeamigos.foresta.missioni.Mandante;
@@ -9,6 +8,7 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -39,7 +39,7 @@ class ScenarioTrofeiECartografoTest {
     }
 
     private static void tornaARiscuotere(PartitaDiTest partita, IncaricoInCitta incarico) {
-        partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA));
+        partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
         incarico.controllaPreLocazione();
         incarico.segnaIntermezzoPassoMostrato("RITORNO");
         incarico.controllaInLocazione();
@@ -48,7 +48,7 @@ class ScenarioTrofeiECartografoTest {
     @Test
     void ilCapitanoVuoleLeOrecchieDiGoblinEContaQuelleCheGliSiPortano() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(191)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             RichiestaDiMateriali capitano = Alchimie.fissa(Alchimie.richiestaDi(Mandante.CAPITANO),
                     "M/F;orecchio di goblin;orecchie di goblin;NEMICI GOBLIN;3-4;6;Prove? Non vi fidate di noi?;Mi fido delle prove.", 3);
             prendiLIncarico(capitano);
@@ -62,7 +62,7 @@ class ScenarioTrofeiECartografoTest {
             for (int i = 0; i < 3; i++) {
                 avversari.aggiungiPersonaggio(ClassePersonaggio.GOBLIN.getIstanza(1));
             }
-            Oggetto orecchie = capitano.getOggettoInLocazione(new CoordinateMD(0, 0), ClassiLocazione.ROVINE, true)
+            Oggetto orecchie = capitano.getOggettoInLocazione(new CoordinateMD(0, 0), TipoLocazione.ROVINE, true)
                     .orElseThrow(AssertionError::new);
             assertEquals("orecchie di goblin", orecchie.getNomePlurale());
             new com.threeamigos.foresta.oggetti.OggettoMissione(capitano.getId(), RichiestaDiMateriali.MATERIALE,
@@ -82,7 +82,7 @@ class ScenarioTrofeiECartografoTest {
     @Test
     void ilCartografoVuoleZoneMaiVisitate() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(192)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             IlCartografo cartografo = prendiLIncarico(IlCartografo.class, "CASELLE", "6");
             assertTrue(cartografo.getDescrizione().contains("che cosa c'è in sei zone della foresta"), cartografo.getDescrizione());
 

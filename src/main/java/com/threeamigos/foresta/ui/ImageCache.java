@@ -4,8 +4,9 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoPuliziaCacheDinamicaImmagini;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.Bosco;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Logger;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -68,8 +69,8 @@ public class ImageCache {
 	static BufferedImage virgola;
 	static BufferedImage apostrofo;
 	static BufferedImage puntodd;
-	static Map<ClassiLocazione, BufferedImage> locazioni;
-	static Map<ClassiLocazione, BufferedImage> mappa;
+	static Map<TipoLocazione, BufferedImage> locazioni;
+	static Map<TipoLocazione, BufferedImage> mappa;
 	// Le immagini alternative del bosco sulla mappa (indice 0 = Foresta.gif), vedi
 	// Bosco.VARIANTE_MAPPA e getImmagineMappaBosco
 	static BufferedImage[] mappaVariantiBosco;
@@ -149,61 +150,61 @@ public class ImageCache {
 		separatoreIncantamenti = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Incantamenti.gif");
 		separatoreNinnoli = BufferedImageBuilder.buildBufferedImage("fondi/Separatore-Ninnoli.gif");
 
-		locazioni = new EnumMap<>(ClassiLocazione.class);
+		locazioni = new EnumMap<>(TipoLocazione.class);
 		BufferedImage d;
-		locazioni.put(ClassiLocazione.BOSCO, BufferedImageBuilder.buildBufferedImage(RISORSA_BOSCO));
+		locazioni.put(TipoLocazione.BOSCO, BufferedImageBuilder.buildBufferedImage(RISORSA_BOSCO));
 		d = BufferedImageBuilder.buildBufferedImage("locazioni/Castello.gif");
-		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
-			if (classeLocazione.getTipoLocazione() == ClassiLocazione.TipoLocazione.CASTELLO) {
+		for (TipoLocazione classeLocazione : TipoLocazione.values()) {
+			if (classeLocazione.getCategoria() == CategoriaLocazione.CASTELLO) {
 				locazioni.put(classeLocazione, d);
 			}
 		}
 		d = BufferedImageBuilder.buildBufferedImage("locazioni/Citta.gif");
-		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
-			if (classeLocazione.getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA) {
+		for (TipoLocazione classeLocazione : TipoLocazione.values()) {
+			if (classeLocazione.getCategoria() == CategoriaLocazione.CITTA) {
 				locazioni.put(classeLocazione, d);
 			}
 		}
 		d = BufferedImageBuilder.buildBufferedImage("locazioni/Grotta.gif");
-		locazioni.put(ClassiLocazione.GROTTA, d);
-		locazioni.put(ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE, d);
-		locazioni.put(ClassiLocazione.LOCANDA, BufferedImageBuilder.buildBufferedImage("locazioni/Locanda.gif"));
-		locazioni.put(ClassiLocazione.PALUDE, BufferedImageBuilder.buildBufferedImage("locazioni/Palude.gif"));
-		locazioni.put(ClassiLocazione.RADURA, BufferedImageBuilder.buildBufferedImage("locazioni/Radura.gif"));
+		locazioni.put(TipoLocazione.GROTTA, d);
+		locazioni.put(TipoLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE, d);
+		locazioni.put(TipoLocazione.LOCANDA, BufferedImageBuilder.buildBufferedImage("locazioni/Locanda.gif"));
+		locazioni.put(TipoLocazione.PALUDE, BufferedImageBuilder.buildBufferedImage("locazioni/Palude.gif"));
+		locazioni.put(TipoLocazione.RADURA, BufferedImageBuilder.buildBufferedImage("locazioni/Radura.gif"));
 		d = BufferedImageBuilder.buildBufferedImage("locazioni/Rovine.gif");
-		locazioni.put(ClassiLocazione.ROVINE, d);
-		locazioni.put(ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, d);
-		locazioni.put(ClassiLocazione.TEMPIO, BufferedImageBuilder.buildBufferedImage("locazioni/Tempio.gif"));
+		locazioni.put(TipoLocazione.ROVINE, d);
+		locazioni.put(TipoLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, d);
+		locazioni.put(TipoLocazione.TEMPIO, BufferedImageBuilder.buildBufferedImage("locazioni/Tempio.gif"));
 
-		mappa = new EnumMap<>(ClassiLocazione.class);
+		mappa = new EnumMap<>(TipoLocazione.class);
 		mappaVariantiBosco = new BufferedImage[Bosco.NUMERO_VARIANTI_MAPPA];
 		mappaVariantiBosco[0] = BufferedImageBuilder.buildBufferedImage("mappa/Foresta.gif");
 		mappaVariantiBosco[1] = BufferedImageBuilder.buildBufferedImage("mappa/Foresta2.gif");
 		mappaVariantiBosco[2] = BufferedImageBuilder.buildBufferedImage("mappa/Foresta3.gif");
 		mappaVariantiBosco[3] = BufferedImageBuilder.buildBufferedImage("mappa/Foresta4.gif");
-		mappa.put(ClassiLocazione.BOSCO, mappaVariantiBosco[0]);
+		mappa.put(TipoLocazione.BOSCO, mappaVariantiBosco[0]);
 		d = BufferedImageBuilder.buildBufferedImage("mappa/Castello.gif");
-		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
-			if (classeLocazione.getTipoLocazione() == ClassiLocazione.TipoLocazione.CASTELLO) {
+		for (TipoLocazione classeLocazione : TipoLocazione.values()) {
+			if (classeLocazione.getCategoria() == CategoriaLocazione.CASTELLO) {
 				mappa.put(classeLocazione, d);
 			}
 		}
 		d = BufferedImageBuilder.buildBufferedImage("mappa/Citta.gif");
-		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
-			if (classeLocazione.getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA) {
+		for (TipoLocazione classeLocazione : TipoLocazione.values()) {
+			if (classeLocazione.getCategoria() == CategoriaLocazione.CITTA) {
 				mappa.put(classeLocazione, d);
 			}
 		}
 		d = BufferedImageBuilder.buildBufferedImage("mappa/Grotta.gif");
-		mappa.put(ClassiLocazione.GROTTA, d);
-		mappa.put(ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE, d);
-		mappa.put(ClassiLocazione.LOCANDA, BufferedImageBuilder.buildBufferedImage("mappa/Locanda.gif"));
-		mappa.put(ClassiLocazione.PALUDE, BufferedImageBuilder.buildBufferedImage("mappa/Palude.gif"));
-		mappa.put(ClassiLocazione.RADURA, BufferedImageBuilder.buildBufferedImage("mappa/Radura.gif"));
+		mappa.put(TipoLocazione.GROTTA, d);
+		mappa.put(TipoLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE, d);
+		mappa.put(TipoLocazione.LOCANDA, BufferedImageBuilder.buildBufferedImage("mappa/Locanda.gif"));
+		mappa.put(TipoLocazione.PALUDE, BufferedImageBuilder.buildBufferedImage("mappa/Palude.gif"));
+		mappa.put(TipoLocazione.RADURA, BufferedImageBuilder.buildBufferedImage("mappa/Radura.gif"));
 		d = BufferedImageBuilder.buildBufferedImage("mappa/Rovine.gif");
-		mappa.put(ClassiLocazione.ROVINE, d);
-		mappa.put(ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, d);
-		mappa.put(ClassiLocazione.TEMPIO, BufferedImageBuilder.buildBufferedImage("mappa/Tempio.gif"));
+		mappa.put(TipoLocazione.ROVINE, d);
+		mappa.put(TipoLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, d);
+		mappa.put(TipoLocazione.TEMPIO, BufferedImageBuilder.buildBufferedImage("mappa/Tempio.gif"));
 		segnalino = BufferedImageBuilder.buildBufferedImage("mappa/Segnalino.gif");
 		indicatore = BufferedImageBuilder.buildBufferedImage("mappa/Indicatore.gif");
 
@@ -351,7 +352,7 @@ public class ImageCache {
 
 	/**
 	 * L'immagine della variante di bosco indicata (1-based, vedi {@link Bosco#getVarianteMappa}),
-	 * da usare al posto di {@code mappa.get(ClassiLocazione.BOSCO)}.
+	 * da usare al posto di {@code mappa.get(TipoLocazione.BOSCO)}.
 	 */
 	public static BufferedImage getImmagineMappaBosco(int variante) {
 		return mappaVariantiBosco[variante - 1];

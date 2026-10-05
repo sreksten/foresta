@@ -5,7 +5,6 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.intermezzi.ScenaInLocanda;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Foresta;
@@ -15,6 +14,8 @@ import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Bardo;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.Misc;
 
 /**
@@ -79,9 +80,9 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	/**
 	 * La città dove abita il bardo, la più vicina alla locanda; null finché la missione non è accettata.
 	 */
-	public ClassiLocazione getCitta() {
+	public TipoLocazione getCitta() {
 		String citta = ottieniProprieta(CITTA);
-		return citta == null ? null : ClassiLocazione.valueOf(citta);
+		return citta == null ? null : TipoLocazione.valueOf(citta);
 	}
 
 	private String getNomeCitta() {
@@ -150,7 +151,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 
 	private boolean isTerzaVisitaAUnaLocanda() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		if (gruppo.getClasseLocazioneCorrente() != ClassiLocazione.LOCANDA) {
+		if (gruppo.getClasseLocazioneCorrente() != TipoLocazione.LOCANDA) {
 			return false;
 		}
 		String visite = Foresta.getLocazioneMD(gruppo.getCoordinate()).ottieniProprieta(Locanda.LOCANDA_VISITE);
@@ -169,12 +170,12 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	/**
 	 * La città ancora in piedi più vicina al gruppo, o null se non ce n'è più nessuna.
 	 */
-	private ClassiLocazione cittaPiuVicina() {
+	private TipoLocazione cittaPiuVicina() {
 		CoordinateMD qui = GruppoGiocatore.getIstanza().getCoordinate();
-		ClassiLocazione piuVicina = null;
+		TipoLocazione piuVicina = null;
 		int distanzaMinima = Integer.MAX_VALUE;
-		for (ClassiLocazione classe : ClassiLocazione.values()) {
-			if (classe.getTipoLocazione() != ClassiLocazione.TipoLocazione.CITTA || LineaTemporale.isCittaDistrutta(classe)) {
+		for (TipoLocazione classe : TipoLocazione.values()) {
+			if (classe.getCategoria() != CategoriaLocazione.CITTA || LineaTemporale.isCittaDistrutta(classe)) {
 				continue;
 			}
 			CoordinateMD citta = Foresta.getCoordinateLocazioneUnica(classe);

@@ -4,7 +4,6 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
@@ -14,6 +13,7 @@ import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.Comparator;
@@ -185,7 +185,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 			case ACCETTAZIONE:
 				// Il tempio sorge su un bosco che la missione rivendica; se non ce n'è nessuno libero se ne fa uno
 				return Passo.quando(MomentoControllo.IN_LOCAZIONE,
-								() -> nelPosto() && RegistroMissioni.cercaOCostruisci(ClassiLocazione.BOSCO, this).isPresent())
+								() -> nelPosto() && RegistroMissioni.cercaOCostruisci(TipoLocazione.BOSCO, this).isPresent())
 						.esegui(() -> {
 							RegistroArtefatti.custodisciInUnTempioNuovo(getLeggendario().costruisci(), getTempio());
 							BusEventi.pubblica(new NotificaTestoParagrafo(Misc.inizialeMaiuscola(getNarratore()) + " segna sulla mappa "

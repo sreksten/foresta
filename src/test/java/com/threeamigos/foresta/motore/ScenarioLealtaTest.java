@@ -5,7 +5,6 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaPaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.FavoreRichiesto;
 import com.threeamigos.foresta.missioni.IlFavore;
 import com.threeamigos.foresta.missioni.LaLealta;
@@ -16,6 +15,7 @@ import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Guerriera;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -85,7 +85,7 @@ class ScenarioLealtaTest {
             // Il favore: i goblin nella radura segnata sulla mappa
             favore.controllaInLocazione();
             CoordinateMD radura = favore.getPosto();
-            assertEquals(ClassiLocazione.RADURA, Foresta.getLocazione(radura));
+            assertEquals(TipoLocazione.RADURA, Foresta.getLocazione(radura));
             partita.gruppo().setCoordinate(radura);
             partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GOBLIN));
             partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GOBLIN));
@@ -180,7 +180,7 @@ class ScenarioLealtaTest {
      * Il gruppo, con il compagno se c'è, di notte in un bosco: ci si può accampare. La lealtà ha la riga dei goblin.
      */
     private static LaLealta preparaLAccampamento(PartitaDiTest partita, Personaggio compagno) {
-        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         partita.comando(Comando.ESCI_DA_CITTA);
         partita.gruppo().setCoordinate(unaCasellaDiBosco());
         // Ci si accampa solo con qualcuno da mettere di guardia: senza compagni la lealtà si controlla a mano
@@ -205,7 +205,7 @@ class ScenarioLealtaTest {
     private static CoordinateMD unaCasellaDiBosco() {
         for (int x = 0; x < Foresta.getDimensioneX(); x++) {
             for (int y = 0; y < Foresta.getDimensioneY(); y++) {
-                if (Foresta.getLocazione(x, y) == ClassiLocazione.BOSCO) {
+                if (Foresta.getLocazione(x, y) == TipoLocazione.BOSCO) {
                     return new CoordinateMD(x, y);
                 }
             }

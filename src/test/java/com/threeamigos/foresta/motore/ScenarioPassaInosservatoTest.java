@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.LocazioneBase;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
@@ -8,6 +7,7 @@ import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Ladro;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -24,7 +24,7 @@ class ScenarioPassaInosservatoTest {
     @Test
     void laProbabilitaDipendeDaFurtivitaPercezioneOraEGruppo() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(261)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             GruppoGiocatore gruppo = partita.gruppo();
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             avversari.rimuoviPersonaggi();

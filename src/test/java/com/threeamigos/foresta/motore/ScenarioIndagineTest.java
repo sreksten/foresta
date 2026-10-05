@@ -1,13 +1,13 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.IndagineRichiesta;
 import com.threeamigos.foresta.missioni.LIndagine;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -44,7 +44,7 @@ class ScenarioIndagineTest {
         IndagineRichiesta campane = IndagineRichiesta.da(CAMPANE);
         assertEquals(Arrays.asList("Il campanaro", "I gargoyle", "Le arpie"), campane.getSospetti());
         assertEquals(2, campane.getIndizi().size());
-        assertEquals(ClassiLocazione.TEMPIO, campane.getIndizi().get(1).getLuogo());
+        assertEquals(TipoLocazione.TEMPIO, campane.getIndizi().get(1).getLuogo());
         assertEquals("Ali di pietra.", campane.getIndizi().get(1).getTesto());
         assertThrows(IllegalArgumentException.class, () -> IndagineRichiesta.da(CAMPANE.replace("COLPEVOLE=2", "COLPEVOLE=4")));
         assertThrows(IllegalArgumentException.class, () -> IndagineRichiesta.da(CAMPANE.replace("SOSPETTI=Il campanaro/I gargoyle/Le arpie", "SOSPETTI=Il campanaro")));
@@ -68,7 +68,7 @@ class ScenarioIndagineTest {
             assertEquals("CATTURA", indagine.getPassoCorrente());
             assertTrue(partita.testi().contains("Sono i gargoyle. Il nascondiglio è segnato sulla mappa."), String.valueOf(partita.testi()));
             CoordinateMD nascondiglio = indagine.getPosto();
-            assertEquals(ClassiLocazione.ROVINE, Foresta.getLocazione(nascondiglio));
+            assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(nascondiglio));
             assertTrue(Foresta.isLocazioneConosciuta(nascondiglio));
             assertEquals(3, RegistroMissioni.getIncontroMissione(nascondiglio).orElseThrow(AssertionError::new).size());
 
@@ -80,7 +80,7 @@ class ScenarioIndagineTest {
             assertEquals("RITORNO", indagine.getPassoCorrente());
             assertTrue(partita.testi().contains("Le campane sono salve. Il sacerdote aspetta a Nyena."), String.valueOf(partita.testi()));
 
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA));
+            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             int monete = partita.gruppo().getMonete();
             indagine.controllaPreLocazione();
             indagine.segnaIntermezzoPassoMostrato("RITORNO");
@@ -106,7 +106,7 @@ class ScenarioIndagineTest {
     }
 
     private static LIndagine prendiLIncarico(PartitaDiTest partita) {
-        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         LIndagine indagine = RegistroMissioni.getTutteLeMissioni().stream().filter(LIndagine.class::isInstance)
                 .map(LIndagine.class::cast).findFirst().orElseThrow(AssertionError::new);
         indagine.aggiungiProprieta("PARAMETRO_" + LIndagine.INDAGINE, CAMPANE);
@@ -127,7 +127,7 @@ class ScenarioIndagineTest {
         assertTrue(partita.testi().contains("Il primo indizio va cercato in una locanda: il posto è segnato sulla mappa."),
                 String.valueOf(partita.testi()));
         CoordinateMD locanda = indagine.getPosto();
-        assertEquals(ClassiLocazione.LOCANDA, Foresta.getLocazione(locanda));
+        assertEquals(TipoLocazione.LOCANDA, Foresta.getLocazione(locanda));
         assertTrue(Foresta.isLocazioneConosciuta(locanda));
 
         // Altrove l'indizio non c'è
@@ -140,7 +140,7 @@ class ScenarioIndagineTest {
         assertTrue(partita.testi().contains("Volavano verso le rovine."), String.valueOf(partita.testi()));
         assertTrue(indagine.getDescrizione().endsWith("Indizio 1: Volavano verso le rovine."), indagine.getDescrizione());
         CoordinateMD tempio = indagine.getPosto();
-        assertEquals(ClassiLocazione.TEMPIO, Foresta.getLocazione(tempio));
+        assertEquals(TipoLocazione.TEMPIO, Foresta.getLocazione(tempio));
 
         partita.gruppo().setCoordinate(tempio);
         indagine.controllaInLocazione();

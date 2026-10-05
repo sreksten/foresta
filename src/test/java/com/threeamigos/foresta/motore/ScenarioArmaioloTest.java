@@ -3,9 +3,9 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioCommerciante;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +29,7 @@ class ScenarioArmaioloTest {
 	void iniziaInCitta() {
 		partita = PartitaDiTest.nuova(1234);
 		partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.LADRO,
-				() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+				() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 		partita.assertStato(Stato.IN_LOCAZIONE);
 		partita.assertComandoDisponibile(Comando.ARMAIOLO);
 	}

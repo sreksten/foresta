@@ -9,13 +9,14 @@ import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.oggetti.Cofano;
 import com.threeamigos.foresta.personaggi.Eremita;
 import com.threeamigos.foresta.personaggi.Viverna;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
 public class Grotta extends LocazioneBase {
 
 	@Override
-	public ClassiLocazione getClasseLocazione() {
-		return ClassiLocazione.GROTTA;
+	public TipoLocazione getClasseLocazione() {
+		return TipoLocazione.GROTTA;
 	}
 
 	@Override

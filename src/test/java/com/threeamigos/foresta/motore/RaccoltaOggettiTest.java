@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.OggettiDiProva;
 import com.threeamigos.foresta.oggetti.Moneta;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -21,7 +21,7 @@ class RaccoltaOggettiTest {
 	void unOggettoInCittaEIncustodito() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			partita.eventi().ascolta(InternoOggettoRaccolto.class);
 			Moneta moneta = new Moneta();
@@ -41,7 +41,7 @@ class RaccoltaOggettiTest {
 	void unOggettoTenutoDagliAvversariSconfittiECustodito() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(25)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CASTELLO_IDRA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CASTELLO_IDRA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			partita.eventi().ascolta(InternoOggettoRaccolto.class);
 			OggettiDiProva.impostaOggetto(partita.gruppo().getLocazioneCorrente(), new Moneta());

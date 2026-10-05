@@ -2,10 +2,10 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 public class MuoviALocazione extends MissioneBase {
 
@@ -16,7 +16,7 @@ public class MuoviALocazione extends MissioneBase {
 	private static final String COORDINATA_X = "COORDINATA_X";
 	private static final String COORDINATA_Y = "COORDINATA_Y";
 
-	public void setLocazioneUnica(ClassiLocazione classeLocazione) {
+	public void setLocazioneUnica(TipoLocazione classeLocazione) {
 		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(classeLocazione);
 		aggiungiProprieta(COORDINATA_X, String.valueOf(coordinate.getX()));
 		aggiungiProprieta(COORDINATA_Y, String.valueOf(coordinate.getY()));

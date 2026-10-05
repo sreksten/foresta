@@ -2,7 +2,6 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.interni.InternoPersonaggioArreso;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.CombattimentoRichiesto;
 import com.threeamigos.foresta.missioni.IncaricoDiCombattimento;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
@@ -12,6 +11,7 @@ import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -33,7 +33,7 @@ class ScenarioDuelliTest {
     @Test
     void chiCombatteFinoAllaResaSiArrendeInveceDiMorire() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(221)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             partita.eventi().ascolta(InternoPersonaggioArreso.class);
             Personaggio uberto = IncontroDiMissione.di(ClassePersonaggio.GUERRIERO, 1).conCapo("Uberto").finoAllaResa().crea().get(0);
             assertTrue(uberto.isFinoAllaResa());
@@ -63,7 +63,7 @@ class ScenarioDuelliTest {
     @Test
     void inUnCombattimentoNormaleSiMuoreComePrima() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(222)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             Personaggio goblin = IncontroDiMissione.di(ClassePersonaggio.GOBLIN, 1).crea().get(0);
             GruppoAvversario.getIstanza().aggiungiPersonaggio(goblin);
             Guerriero compagno = new Guerriero("Compagno", 1);
@@ -198,7 +198,7 @@ class ScenarioDuelliTest {
     }
 
     private static IncaricoDiCombattimento prendiLaSfida(PartitaDiTest partita, String riga) {
-        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         assertTrue(CombattimentoRichiesto.da(riga).isFinoAllaResa());
         IncaricoDiCombattimento sfida = RegistroMissioni.getTutteLeMissioni().stream().filter(IncaricoDiCombattimento.class::isInstance)
                 .map(IncaricoDiCombattimento.class::cast).findFirst().orElseThrow(AssertionError::new);

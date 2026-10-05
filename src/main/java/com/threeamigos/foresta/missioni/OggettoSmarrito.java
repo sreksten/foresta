@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.ArrayList;
@@ -25,8 +25,8 @@ public final class OggettoSmarrito {
 	/**
 	 * I posti vicino a cui si può perdere qualcosa: hanno un nome o almeno un aspetto che si riconosce sulla mappa.
 	 */
-	public static final Set<ClassiLocazione> POSTI = Collections.unmodifiableSet(EnumSet.of(
-			ClassiLocazione.TEMPIO, ClassiLocazione.ROVINE, ClassiLocazione.LOCANDA, ClassiLocazione.GROTTA));
+	public static final Set<TipoLocazione> POSTI = Collections.unmodifiableSet(EnumSet.of(
+			TipoLocazione.TEMPIO, TipoLocazione.ROVINE, TipoLocazione.LOCANDA, TipoLocazione.GROTTA));
 
 	private static final String SEPARATORE = ";";
 	private static final int CAMPI = 9;
@@ -35,7 +35,7 @@ public final class OggettoSmarrito {
 	private final boolean femminile;
 	private final String oggetto;
 	private final String proprietario;
-	private final List<ClassiLocazione> posti;
+	private final List<TipoLocazione> posti;
 	private final int monete;
 	private final String racconto;
 	private final String battutaDelCapo;
@@ -55,9 +55,9 @@ public final class OggettoSmarrito {
 		femminile = "F".equals(genere);
 		oggetto = campi[1].trim();
 		proprietario = campi[2].trim();
-		List<ClassiLocazione> dove = new ArrayList<>();
+		List<TipoLocazione> dove = new ArrayList<>();
 		for (String posto : campi[3].trim().split("\\s+")) {
-			ClassiLocazione classe = ClassiLocazione.valueOf(posto);
+			TipoLocazione classe = TipoLocazione.valueOf(posto);
 			if (!POSTI.contains(classe)) {
 				throw new IllegalArgumentException("I posti sono fra " + POSTI + ": " + riga);
 			}
@@ -137,7 +137,7 @@ public final class OggettoSmarrito {
 	/**
 	 * I posti vicino a cui può averlo perso: la missione ne sceglie uno.
 	 */
-	public List<ClassiLocazione> getPosti() {
+	public List<TipoLocazione> getPosti() {
 		return posti;
 	}
 

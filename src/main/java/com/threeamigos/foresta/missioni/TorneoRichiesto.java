@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -25,7 +25,7 @@ public final class TorneoRichiesto {
 	private final AspettoDelMandante aspetto;
 	private final String mandante;
 	private final String titolo;
-	private final ClassiLocazione luogo;
+	private final TipoLocazione luogo;
 	private final List<ClassePersonaggio> sfidanti = new ArrayList<>();
 	private final ClassePersonaggio campione;
 	private final CapoDellaRiga nomeDelCampione;
@@ -47,7 +47,7 @@ public final class TorneoRichiesto {
 		aspetto = campi.enumerato("ASPETTO", AspettoDelMandante.class);
 		mandante = campi.obbligatorio("MANDANTE");
 		titolo = campi.obbligatorio("TITOLO");
-		luogo = campi.enumerato("LUOGO", ClassiLocazione.class);
+		luogo = campi.enumerato("LUOGO", TipoLocazione.class);
 		if (!CombattimentoRichiesto.LUOGHI.contains(luogo)) {
 			throw new IllegalArgumentException("Il luogo è fra " + CombattimentoRichiesto.LUOGHI + ": " + riga);
 		}
@@ -110,7 +110,7 @@ public final class TorneoRichiesto {
 	/**
 	 * Dove si combatte: la lizza.
 	 */
-	public ClassiLocazione getLuogo() {
+	public TipoLocazione getLuogo() {
 		return luogo;
 	}
 

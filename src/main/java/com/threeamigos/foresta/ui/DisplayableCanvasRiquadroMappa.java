@@ -3,10 +3,10 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoCreazioneSpriteATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneConoscenzaMappa;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.ui.sfx.CloudManager;
 
 import java.awt.*;
@@ -30,7 +30,7 @@ class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements Finestr
 		this.larghezzaSchermo = larghezzaSchermo;
 		this.altezzaSchermo = altezzaSchermo;
 
-        int larghezzaSingolaIcona = ImageCache.mappa.get(ClassiLocazione.BOSCO).getWidth();
+        int larghezzaSingolaIcona = ImageCache.mappa.get(TipoLocazione.BOSCO).getWidth();
 		minOffsetPerNuvole = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_MAPPA;
 		larghezzaRiquadroMappa = 7 * larghezzaSingolaIcona;
 

@@ -1,13 +1,14 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.missioni.NonSparateSulPianista;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -26,7 +27,7 @@ class ScenarioNonSparateSulPianistaTest {
     private static CoordinateMD unaLocandaNelBosco() {
         for (int x = 0; x < Foresta.getDimensioneX(); x++) {
             for (int y = 0; y < Foresta.getDimensioneY(); y++) {
-                if (Foresta.getLocazione(x, y) == ClassiLocazione.LOCANDA) {
+                if (Foresta.getLocazione(x, y) == TipoLocazione.LOCANDA) {
                     return new CoordinateMD(x, y);
                 }
             }
@@ -66,11 +67,11 @@ class ScenarioNonSparateSulPianistaTest {
             assertTrue(partita.gruppo().isOspiteVulnerabile(ugolino));
 
             // La città è la più vicina alla locanda
-            ClassiLocazione citta = pianista.getCitta();
+            TipoLocazione citta = pianista.getCitta();
             assertNotNull(citta);
             CoordinateMD casa = Foresta.getCoordinateLocazioneUnica(citta);
-            for (ClassiLocazione altra : ClassiLocazione.values()) {
-                CoordinateMD coordinate = altra.getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA
+            for (TipoLocazione altra : TipoLocazione.values()) {
+                CoordinateMD coordinate = altra.getCategoria() == CategoriaLocazione.CITTA
                         ? Foresta.getCoordinateLocazioneUnica(altra) : null;
                 if (coordinate != null) {
                     assertTrue(distanza(locanda, casa) <= distanza(locanda, coordinate), altra + " è più vicina di " + citta);

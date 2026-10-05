@@ -5,7 +5,6 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaPaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.RecuperaIlMedaglione;
@@ -13,6 +12,7 @@ import com.threeamigos.foresta.missioni.RecuperaLeDerrateAlimentari;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -29,21 +29,21 @@ class ScenarioMissioniDiRecuperoTest {
 
     @Test
     void aFleenaPrimaLIntermezzoDelMedaglionePoiLaNuovaMissione() {
-        verificaIncarico(ClassiLocazione.CITTA_FLEENA, RecuperaIlMedaglione.class, "medaglione di famiglia",
-                "Recupera il medaglione", ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE);
+        verificaIncarico(TipoLocazione.CITTA_FLEENA, RecuperaIlMedaglione.class, "medaglione di famiglia",
+                "Recupera il medaglione", TipoLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE);
     }
 
     @Test
     void aRuunaPrimaLIntermezzoDelBorgomastroPoiLaNuovaMissione() {
-        verificaIncarico(ClassiLocazione.CITTA_RUUNA, RecuperaLeDerrateAlimentari.class, "derrate per l'inverno",
-                "Recupera le derrate alimentari", ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI);
+        verificaIncarico(TipoLocazione.CITTA_RUUNA, RecuperaLeDerrateAlimentari.class, "derrate per l'inverno",
+                "Recupera le derrate alimentari", TipoLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI);
     }
 
     @Test
     void alRitornoIlRingraziamentoPoiLaRicompensa() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(22)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_FLEENA));
+                    () -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
             MissioneAPassi medaglione = (MissioneAPassi) trova(RecuperaIlMedaglione.class);
             assertEquals("RECUPERO", medaglione.getPassoCorrente());
 
@@ -62,8 +62,8 @@ class ScenarioMissioniDiRecuperoTest {
         }
     }
 
-    private static void verificaIncarico(ClassiLocazione citta, Class<? extends Missione> tipo, String battutaDelMandante,
-                                         String nomeMissione, ClassiLocazione covo) {
+    private static void verificaIncarico(TipoLocazione citta, Class<? extends Missione> tipo, String battutaDelMandante,
+                                         String nomeMissione, TipoLocazione covo) {
         try (PartitaDiTest partita = PartitaDiTest.nuova(22)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> {
                 partita.spostaGruppoIn(citta);
@@ -105,18 +105,18 @@ class ScenarioMissioniDiRecuperoTest {
 
     @Test
     void ilCovoDeiLadriRicordaIlMedaglioneAMissioneFinita() {
-        verificaRicordoDelCovo(ClassiLocazione.CITTA_FLEENA, RecuperaIlMedaglione.class, ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE,
-                ClassiLocazione.GROTTA, "In questa grotta i ladri nascondevano il medaglione rubato.");
+        verificaRicordoDelCovo(TipoLocazione.CITTA_FLEENA, RecuperaIlMedaglione.class, TipoLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE,
+                TipoLocazione.GROTTA, "In questa grotta i ladri nascondevano il medaglione rubato.");
     }
 
     @Test
     void ilNascondiglioDeiTrollRicordaLeDerrateAMissioneFinita() {
-        verificaRicordoDelCovo(ClassiLocazione.CITTA_RUUNA, RecuperaLeDerrateAlimentari.class, ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI,
-                ClassiLocazione.ROVINE, "Fra queste rovine i Troll nascondevano le derrate di Ruuna.");
+        verificaRicordoDelCovo(TipoLocazione.CITTA_RUUNA, RecuperaLeDerrateAlimentari.class, TipoLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI,
+                TipoLocazione.ROVINE, "Fra queste rovine i Troll nascondevano le derrate di Ruuna.");
     }
 
-    private static void verificaRicordoDelCovo(ClassiLocazione citta, Class<? extends Missione> tipo, ClassiLocazione covo,
-                                               ClassiLocazione covoRipulito, String ricordo) {
+    private static void verificaRicordoDelCovo(TipoLocazione citta, Class<? extends Missione> tipo, TipoLocazione covo,
+                                               TipoLocazione covoRipulito, String ricordo) {
         try (PartitaDiTest partita = PartitaDiTest.nuova(22)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(citta));
             MissioneAPassi missione = (MissioneAPassi) trova(tipo);

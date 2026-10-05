@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.Misc;
 import org.junit.jupiter.api.Test;
 
@@ -36,11 +36,11 @@ class ScenarioNomiDeiTempliTest {
     void ogniTempioHaIlSuoNomeCheSiSalvaESiRilegge() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(91)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+                    () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             List<CoordinateMD> templi = new ArrayList<>();
             for (int x = 0; x < Foresta.getDimensioneX(); x++) {
                 for (int y = 0; y < Foresta.getDimensioneY(); y++) {
-                    if (Foresta.getLocazione(x, y) == ClassiLocazione.TEMPIO) {
+                    if (Foresta.getLocazione(x, y) == TipoLocazione.TEMPIO) {
                         templi.add(new CoordinateMD(x, y));
                     }
                 }

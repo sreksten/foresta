@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -29,7 +29,7 @@ public class ForestaMD implements Serializzabile {
 
 	// Serve tenerne traccia per le informazioni che i PNG danno al gruppo.
 	// Si potrebbe fare anche un ciclo su tutta la foresta ma così si fa prima.
-	private Map<ClassiLocazione, CoordinateMD> locazioniUniche;
+	private Map<TipoLocazione, CoordinateMD> locazioniUniche;
 
 	// Incrementato ogni volta che cambia visivamente la mappa (conosciuta/visitata),
 	// così chi disegna la mappa generale sa quando la sua cache è da ricostruire.
@@ -71,7 +71,7 @@ public class ForestaMD implements Serializzabile {
 	 * essere stata portata a termine. Restano invece "visitata" e "conosciuta",
 	 * che sono della casella e non di quel che ci si trova sopra.
 	 */
-	public final void impostaLocazione(CoordinateMD coordinate, ClassiLocazione classeLocazione) {
+	public final void impostaLocazione(CoordinateMD coordinate, TipoLocazione classeLocazione) {
 		int offset = offset(coordinate.getX(), coordinate.getY());
 		LocazioneMD precedente = arrayLocazioni[offset];
 		LocazioneMD locazioneMD = new LocazioneMD(classeLocazione);
@@ -89,15 +89,15 @@ public class ForestaMD implements Serializzabile {
 		}
 	}
 
-	public final CoordinateMD ottieniCoordinateLocazioneUnica(ClassiLocazione classeLocazione) {
+	public final CoordinateMD ottieniCoordinateLocazioneUnica(TipoLocazione classeLocazione) {
 		return locazioniUniche.get(classeLocazione);
 	}
 
-	public final void aggiungiLocazioneUnica(ClassiLocazione classeLocazione, CoordinateMD coordinate) {
+	public final void aggiungiLocazioneUnica(TipoLocazione classeLocazione, CoordinateMD coordinate) {
 		locazioniUniche.put(classeLocazione, coordinate);
 	}
 	
-	public final void rimuoviLocazioneUnica(ClassiLocazione classeLocazione) {
+	public final void rimuoviLocazioneUnica(TipoLocazione classeLocazione) {
 		locazioniUniche.remove(classeLocazione);
 	}
 
@@ -105,11 +105,11 @@ public class ForestaMD implements Serializzabile {
 		return arrayLocazioni[offset(coordinate.getX(), coordinate.getY())];
 	}
 
-	public ClassiLocazione ottieniClasseLocazione(CoordinateMD coordinate) {
+	public TipoLocazione ottieniClasseLocazione(CoordinateMD coordinate) {
 		return ottieniClasseLocazione(coordinate.getX(), coordinate.getY());
 	}
 
-	public ClassiLocazione ottieniClasseLocazione(int x, int y) {
+	public TipoLocazione ottieniClasseLocazione(int x, int y) {
 		LocazioneMD locazioneMD = arrayLocazioni[offset(x, y)];
 		// Durante la costruzione della Foresta le caselle non ancora assegnate sono vuote
 		return locazioneMD == null ? null : locazioneMD.getClasse();
@@ -119,7 +119,7 @@ public class ForestaMD implements Serializzabile {
 		this.dimensioneX = dimensioneX;
 		this.dimensioneY = dimensioneY;
 		arrayLocazioni = new LocazioneMD[dimensioneX * dimensioneY];
-		locazioniUniche = new EnumMap<>(ClassiLocazione.class);
+		locazioniUniche = new EnumMap<>(TipoLocazione.class);
 		minXConosciuta = -1;
 		maxXConosciuta = -1;
 		minYConosciuta = -1;

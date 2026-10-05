@@ -16,7 +16,7 @@ import java.util.Map;
  * dialoghi possono essere scelti in base alla partita:
  * <pre>
  *     new PaginaIntermezzo()
- *             .conSfondo(ImmagineIntermezzo.locazione(ClassiLocazione.RADURA))
+ *             .conSfondo(ImmagineIntermezzo.locazione(TipoLocazione.RADURA))
  *             .conElemento(ElementoIntermezzo.personaggio("eroe", capo.getClasse(), 0.3, 0.7))
  *             .conElemento(ElementoIntermezzo.personaggio("eremita", ClassePersonaggio.EREMITA, 0.7, 0.7).specchiato())
  *             .conBattuta(BattutaIntermezzo.di("eremita", "Chi va là?"))

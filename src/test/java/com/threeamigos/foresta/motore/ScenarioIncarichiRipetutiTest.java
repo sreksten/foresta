@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.CacciaAiGoblin;
 import com.threeamigos.foresta.missioni.IncaricoInCitta;
 import com.threeamigos.foresta.missioni.LaTagliaSullaBanda;
@@ -8,6 +7,7 @@ import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.RecuperaIlMedaglione;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -39,7 +39,7 @@ class ScenarioIncarichiRipetutiTest {
     @Test
     void unaCacciaFinitaNeLasciaUnaNuovaCheSiPrendeDopoLaPausa() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(141)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             CacciaAiGoblin prima = tutte(CacciaAiGoblin.class).get(0);
             offri(prima);
             assertTrue(prima.isAttiva());
@@ -64,14 +64,14 @@ class ScenarioIncarichiRipetutiTest {
             LineaTemporale.aggiungiOre(MissioneAPassi.ORE_FRA_UNA_MISSIONE_E_L_ALTRA);
             offri(riletta);
             assertTrue(riletta.isAttiva(), "dopo la pausa si offre");
-            assertEquals(ClassiLocazione.CITTA_NYENA, riletta.getCitta());
+            assertEquals(TipoLocazione.CITTA_NYENA, riletta.getCitta());
         }
     }
 
     @Test
     void ancheUnIncaricoFallitoSiRipeteMaUnaVoltaSola() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(142)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             CacciaAiGoblin caccia = tutte(CacciaAiGoblin.class).get(0);
             offri(caccia);
             caccia.fallisciMissione();
@@ -83,7 +83,7 @@ class ScenarioIncarichiRipetutiTest {
     @Test
     void leStorieDelleCittaNonSiRipetonoGliIncarichiConINomiDallaGrammaticaSi() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(143)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_FLEENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
             RecuperaIlMedaglione medaglione = tutte(RecuperaIlMedaglione.class).get(0);
             assertTrue(medaglione.isAttiva(), "la storia di Fleena parte alla prima visita");
             medaglione.completaMissione();

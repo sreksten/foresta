@@ -5,16 +5,16 @@ import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoPreparazioneLocazione;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloMondo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.RegistroArtefattiMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;
@@ -229,7 +229,7 @@ public class RegistroArtefatti {
 	 * i suoi guardiani.
 	 */
 	public static void custodisciInUnTempioNuovo(Artefatto artefatto, CoordinateMD coordinate) {
-		Foresta.costruisciLocazione(coordinate, ClassiLocazione.TEMPIO);
+		Foresta.costruisciLocazione(coordinate, TipoLocazione.TEMPIO);
 		addArtefattoInLocazione(artefatto, coordinate);
 		segnaLocalizzazioneConosciuta(coordinate);
 		Foresta.setLocazioneConosciuta(coordinate);
@@ -312,7 +312,7 @@ public class RegistroArtefatti {
 		int livelloMinimo = livelloMondo - Costanti.MAGAZZINO_SCARTO_SOTTO_LIVELLO;
 		RegistroArtefattiMD registro = getRegistroArtefatti();
 		for (CoordinateMD coordinate : registro.getCoordinateMagazzini(TipoNegozio.ARMAIOLO)) {
-			if (Foresta.getLocazione(coordinate).getTipoLocazione() == TipoLocazione.CITTA) {
+			if (Foresta.getLocazione(coordinate).getCategoria() == CategoriaLocazione.CITTA) {
 				registro.tieniInMagazzino(coordinate, TipoNegozio.ARMAIOLO, artefatto -> artefatto.getLivello() >= livelloMinimo);
 				registro.tieniInMagazzino(coordinate, TipoNegozio.VENDITORE_DI_PERGAMENE, artefatto -> false);
 				rifornisci(coordinate, livelloMondo, generatore);

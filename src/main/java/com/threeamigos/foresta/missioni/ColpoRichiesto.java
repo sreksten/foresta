@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * Un colpo (vedi IlColpo), letto da una riga di COLPO in missioni.txt, che ne descrive i campi: chi lo chiede, dove,
@@ -17,7 +17,7 @@ public final class ColpoRichiesto {
 	private final TipoMissione tipo;
 	private final AspettoDelMandante aspetto;
 	private final String mandante;
-	private final ClassiLocazione luogo;
+	private final TipoLocazione luogo;
 	private final ClassePersonaggio guardia;
 	private final int numero;
 	private final CapoDellaRiga capo;
@@ -39,7 +39,7 @@ public final class ColpoRichiesto {
 		tipo = campi.enumerato("TIPO", TipoMissione.class);
 		aspetto = campi.enumerato("ASPETTO", AspettoDelMandante.class);
 		mandante = campi.obbligatorio("MANDANTE");
-		luogo = campi.enumerato("LUOGO", ClassiLocazione.class);
+		luogo = campi.enumerato("LUOGO", TipoLocazione.class);
 		if (!CombattimentoRichiesto.LUOGHI.contains(luogo)) {
 			throw new IllegalArgumentException("Il luogo è fra " + CombattimentoRichiesto.LUOGHI + ": " + riga);
 		}
@@ -93,7 +93,7 @@ public final class ColpoRichiesto {
 	/**
 	 * Dove si fa il colpo.
 	 */
-	public ClassiLocazione getLuogo() {
+	public TipoLocazione getLuogo() {
 		return luogo;
 	}
 

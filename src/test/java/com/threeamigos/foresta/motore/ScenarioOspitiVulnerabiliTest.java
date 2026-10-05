@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.ClasseMissione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
@@ -10,6 +9,7 @@ import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Viandante;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import org.junit.jupiter.api.Test;
 
@@ -49,7 +49,7 @@ class ScenarioOspitiVulnerabiliTest {
 
     private static PartitaDiTest partita(long seme) {
         PartitaDiTest partita = PartitaDiTest.nuova(seme);
-        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         return partita;
     }
 

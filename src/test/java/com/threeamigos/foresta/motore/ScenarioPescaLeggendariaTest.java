@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.LaLeggenda;
 import com.threeamigos.foresta.missioni.LaLeggendaDellArmaiolo;
 import com.threeamigos.foresta.missioni.OggettoLeggendario;
 import com.threeamigos.foresta.missioni.PescaLeggendaria;
 import com.threeamigos.foresta.missioni.SetLeggendario;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -109,7 +109,7 @@ class ScenarioPescaLeggendariaTest {
             }
 
             // A una visita tranquilla in città l'armaiolo racconta per forza un pezzo mancante di quel set
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA));
+            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             leggenda.controllaPreLocazione();
             OggettoLeggendario raccontato = leggenda.getLeggendario();
             assertNotNull(raccontato, "l'armaiolo racconta la leggenda");

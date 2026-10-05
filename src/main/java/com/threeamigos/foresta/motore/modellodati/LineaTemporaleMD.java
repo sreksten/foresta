@@ -6,7 +6,7 @@ import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 public class LineaTemporaleMD implements Serializzabile {
 
@@ -14,7 +14,7 @@ public class LineaTemporaleMD implements Serializzabile {
 
 	private int ora;
 	private int giorno;
-	private List<ClassiLocazione> cittaDistrutte = new ArrayList<>();
+	private List<TipoLocazione> cittaDistrutte = new ArrayList<>();
 	private boolean giocoFinito;
 	// Il messaggio dell'ultimo evento (es. la colonna di fumo), non ancora mostrato al giocatore
 	private String evento;
@@ -35,11 +35,11 @@ public class LineaTemporaleMD implements Serializzabile {
 		this.giorno = giorno;
 	}
 
-	public List<ClassiLocazione> getCittaDistrutte() {
+	public List<TipoLocazione> getCittaDistrutte() {
 		return cittaDistrutte;
 	}
 
-	public void setCittaDistrutte(List<ClassiLocazione> cittaDistrutte) {
+	public void setCittaDistrutte(List<TipoLocazione> cittaDistrutte) {
 		this.cittaDistrutte = cittaDistrutte;
 	}
 
@@ -69,11 +69,11 @@ public class LineaTemporaleMD implements Serializzabile {
 		cittaDistrutte.clear();
 	}
 
-	public void addCittaDistrutta(ClassiLocazione citta) {
+	public void addCittaDistrutta(TipoLocazione citta) {
 		cittaDistrutte.add(citta);
 	}
 
-	public boolean isCittaDistrutta(ClassiLocazione citta) {
+	public boolean isCittaDistrutta(TipoLocazione citta) {
 		return cittaDistrutte.contains(citta);
 	}
 
@@ -86,7 +86,7 @@ public class LineaTemporaleMD implements Serializzabile {
 		stream.print(giocoFinito);
 		stream.print(PIPE);
 		stream.print(Serializzabile.facoltativo(Serializzabile.senzaPipe(evento)));
-		for (ClassiLocazione cittaDistrutta : cittaDistrutte) {
+		for (TipoLocazione cittaDistrutta : cittaDistrutte) {
 			stream.print(PIPE);
 			stream.print(cittaDistrutta.name());
 		}
@@ -103,7 +103,7 @@ public class LineaTemporaleMD implements Serializzabile {
 		evento = st.testoFacoltativo();
 		cittaDistrutte.clear();
 		while (st.haAltriCampi()) {
-			cittaDistrutte.add(st.enumerato(ClassiLocazione.class));
+			cittaDistrutte.add(st.enumerato(TipoLocazione.class));
 		}
 	}
 }

@@ -1,8 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.locazioni.Bosco;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
-import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
+import com.threeamigos.foresta.locazioni.FabbricaLocazioni;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.locazioni.Rovine;
@@ -14,6 +13,8 @@ import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.ArrayList;
@@ -49,35 +50,35 @@ public class Foresta {
 		return getForestaMD().getDimensioneY();
 	}
 	
-	public static void impostaLocazioneCorrente(ClassiLocazione classeLocazione) {
+	public static void impostaLocazioneCorrente(TipoLocazione classeLocazione) {
 		getForestaMD().impostaLocazione(GruppoGiocatore.getIstanza().getCoordinate(), classeLocazione);
 	}
 
-	public static CoordinateMD getCoordinateLocazioneUnica(ClassiLocazione classeLocazione) {
+	public static CoordinateMD getCoordinateLocazioneUnica(TipoLocazione classeLocazione) {
 		if (!classeLocazione.isLocazioneUnica()) {
 			throw new IllegalArgumentException();
 		}
 		return getForestaMD().ottieniCoordinateLocazioneUnica(classeLocazione);
 	}
 	
-	public static void distruggiLocazioneUnica(ClassiLocazione classeLocazione, ClassiLocazione nuovaClasseLocazione) {
+	public static void distruggiLocazioneUnica(TipoLocazione classeLocazione, TipoLocazione nuovaClasseLocazione) {
 		CoordinateMD coordinate = getCoordinateLocazioneUnica(classeLocazione);
 		if (coordinate != null) {
 			ForestaMD md = getForestaMD();
 			md.impostaLocazione(coordinate, nuovaClasseLocazione);
 			md.rimuoviLocazioneUnica(classeLocazione);
-			if (nuovaClasseLocazione == ClassiLocazione.ROVINE) {
+			if (nuovaClasseLocazione == TipoLocazione.ROVINE) {
 				// Le rovine di un castello o di una città prendono il nome da quello che c'era
 				getLocazioneMD(coordinate).setNome("le Rovine " + Misc.conPreposizione("di", classeLocazione.getNomeProprio()));
 			}
 		}
 	}
 
-	public static ClassiLocazione getLocazione(CoordinateMD coordinate) {
+	public static TipoLocazione getLocazione(CoordinateMD coordinate) {
 		return getForestaMD().ottieniClasseLocazione(coordinate);
 	}
 	
-	public static ClassiLocazione getLocazione(int x, int y) {
+	public static TipoLocazione getLocazione(int x, int y) {
 		return getForestaMD().ottieniClasseLocazione(x, y);
 	}
 
@@ -92,12 +93,12 @@ public class Foresta {
 	 */
 	public static Locazione costruisciIstanza(CoordinateMD coordinate) {
 		LocazioneMD locazioneMD = getForestaMD().ottieniLocazioneMD(coordinate);
-		Locazione locazione = locazioneMD.getClasse().getIstanza();
+		Locazione locazione = FabbricaLocazioni.crea(locazioneMD.getClasse());
 		locazione.setModelloDati(locazioneMD);
 		return locazione;
 	}
 	
-	public static CoordinateMD costruisciLocazioneUnica(ClassiLocazione classeLocazioneUnica, boolean conosciutaSuMappa) {
+	public static CoordinateMD costruisciLocazioneUnica(TipoLocazione classeLocazioneUnica, boolean conosciutaSuMappa) {
 		return costruisciLocazioneUnica(classeLocazioneUnica, getCoordinateLibere(), conosciutaSuMappa);
 	}
 
@@ -105,7 +106,7 @@ public class Foresta {
 	 * Fa diventare la casella una locazione ordinaria di quella classe (per esempio un tempio, al posto di un bosco
 	 * rivendicato da una missione), come non ancora visitata.
 	 */
-	public static void costruisciLocazione(CoordinateMD coordinate, ClassiLocazione classeLocazione) {
+	public static void costruisciLocazione(CoordinateMD coordinate, TipoLocazione classeLocazione) {
 		if (classeLocazione.isLocazioneUnica()) {
 			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + classeLocazione.name());
 		}
@@ -118,7 +119,7 @@ public class Foresta {
 	 * Costruisce la locazione unica in quelle coordinate, scelte da chi chiama (per esempio da
 	 * RegistroMissioni.cerca, per una missione che si procura la propria locazione).
 	 */
-	public static CoordinateMD costruisciLocazioneUnica(ClassiLocazione classeLocazioneUnica, CoordinateMD coordinate, boolean conosciutaSuMappa) {
+	public static CoordinateMD costruisciLocazioneUnica(TipoLocazione classeLocazioneUnica, CoordinateMD coordinate, boolean conosciutaSuMappa) {
 		if (!classeLocazioneUnica.isLocazioneUnica()) {
 			throw new IllegalArgumentException("Utilizzare costruisciLocazione per creare " + classeLocazioneUnica.name());
 		}
@@ -148,8 +149,8 @@ public class Foresta {
 		getForestaMD().reimposta(DIMENSIONE_X, DIMENSIONE_Y);
 
 		int numeroCitta = 0;
-		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
-			if (classeLocazione.getTipoLocazione() == TipoLocazione.CITTA) {
+		for (TipoLocazione classeLocazione : TipoLocazione.values()) {
+			if (classeLocazione.getCategoria() == CategoriaLocazione.CITTA) {
 				numeroCitta++;
 			}
 		}
@@ -164,11 +165,11 @@ public class Foresta {
 		
 		int media = (getDimensioneX() + getDimensioneY()) / 2;
 
-		costruisci(ClassiLocazione.GROTTA, media >> 1);
-		costruisci(ClassiLocazione.PALUDE, media);
-		costruisci(ClassiLocazione.ROVINE, media);
+		costruisci(TipoLocazione.GROTTA, media >> 1);
+		costruisci(TipoLocazione.PALUDE, media);
+		costruisci(TipoLocazione.ROVINE, media);
 		// Poche radure, quante le grotte: ci crescono alcuni ingredienti dell'alchimista
-		costruisci(ClassiLocazione.RADURA, media >> 1);
+		costruisci(TipoLocazione.RADURA, media >> 1);
 
 		// Il resto della Foresta è bosco. Va posato prima di sistemare il gruppo,
 		// che appena arriva si guarda intorno e ha bisogno di caselle su cui farlo.
@@ -176,7 +177,7 @@ public class Foresta {
 			for (int y = 0; y < getDimensioneY(); y++) {
 				CoordinateMD coordinate = new CoordinateMD(x, y);
 				if (getLocazione(coordinate) == null) {
-					setLocazione(coordinate, ClassiLocazione.BOSCO);
+					setLocazione(coordinate, TipoLocazione.BOSCO);
 					Bosco.impostaVarianteMappaACaso(getLocazioneMD(coordinate));
 				}
 			}
@@ -186,12 +187,12 @@ public class Foresta {
 		GruppoAvversario.getIstanza().reimposta();
 	}
 
-	private static void setLocazione(CoordinateMD coordinate, ClassiLocazione classeLocazione) {
+	private static void setLocazione(CoordinateMD coordinate, TipoLocazione classeLocazione) {
 		getForestaMD().impostaLocazione(coordinate, classeLocazione);
 		// Templi e rovine hanno il loro nome da quando nascono
-		if (classeLocazione == ClassiLocazione.TEMPIO) {
+		if (classeLocazione == TipoLocazione.TEMPIO) {
 			Tempio.getNome(getLocazioneMD(coordinate));
-		} else if (classeLocazione == ClassiLocazione.ROVINE) {
+		} else if (classeLocazione == TipoLocazione.ROVINE) {
 			Rovine.getNome(getLocazioneMD(coordinate));
 		}
 	}
@@ -203,7 +204,7 @@ public class Foresta {
 	 * Un nome dal generatore, possibilmente diverso da quello di tutte le caselle di quella classe (per esempio di
 	 * tutti gli altri templi): se dopo qualche tentativo non ci si riesce, va bene anche un doppione.
 	 */
-	public static String nomeNuovo(ClassiLocazione classe, Supplier<String> generatore) {
+	public static String nomeNuovo(TipoLocazione classe, Supplier<String> generatore) {
 		Set<String> giaDati = new HashSet<>();
 		for (int x = 0; x < getDimensioneX(); x++) {
 			for (int y = 0; y < getDimensioneY(); y++) {
@@ -249,8 +250,8 @@ public class Foresta {
 	 */
 	private static void costruisciCittaEPosizionaPersonaggi(List<ProduttoreDiTestiCasuale.DatiLocanda> poolDatiLocanda) {
 		List<Quadrante> quadranti = Quadrante.inOrdineCasuale();
-		for (ClassiLocazione classeLocazione : ClassiLocazione.values()) {
-			if (classeLocazione.getTipoLocazione() == TipoLocazione.CITTA) {
+		for (TipoLocazione classeLocazione : TipoLocazione.values()) {
+			if (classeLocazione.getCategoria() == CategoriaLocazione.CITTA) {
 				CoordinateMD coordinate = quadranti.isEmpty()
 						? costruisciLocazioneUnica(classeLocazione, false)
 						: costruisciLocazioneUnica(classeLocazione, getCoordinateLibere(quadranti.remove(0)), false);
@@ -271,12 +272,12 @@ public class Foresta {
 		int locandeCostruite = 0;
 		Personaggio personaggioDisponibile;
 		while ((personaggioDisponibile = RegistroPersonaggi.getPersonaggioDisponibile()) != null) {
-			costruisci(ClassiLocazione.LOCANDA, personaggioDisponibile, poolDatiLocanda.remove(0));
+			costruisci(TipoLocazione.LOCANDA, personaggioDisponibile, poolDatiLocanda.remove(0));
 			locandeCostruite++;
 		}
 		int media = (getDimensioneX() + getDimensioneY()) >> 2;
 		for (int i = locandeCostruite; i < media; i++) {
-			costruisci(ClassiLocazione.LOCANDA, poolDatiLocanda.remove(0));
+			costruisci(TipoLocazione.LOCANDA, poolDatiLocanda.remove(0));
 		}
 	}
 
@@ -287,15 +288,15 @@ public class Foresta {
 		int templiConArtefatto = 0;
 		Artefatto artefattoDisponibile;
 		while ((artefattoDisponibile = RegistroArtefatti.getArtefattoDisponibile()) != null) {
-			costruisci(ClassiLocazione.TEMPIO, artefattoDisponibile);
+			costruisci(TipoLocazione.TEMPIO, artefattoDisponibile);
 			templiConArtefatto++;
 		}
 		int media = (getDimensioneX() + getDimensioneY()) >> 2;
 		int templiSenzaArtefatto = Math.max(templiConArtefatto, media - templiConArtefatto);
-		costruisci(ClassiLocazione.TEMPIO, templiSenzaArtefatto);
+		costruisci(TipoLocazione.TEMPIO, templiSenzaArtefatto);
 	}
 
-	private static void costruisci(ClassiLocazione classeLocazione, Personaggio personaggio, ProduttoreDiTestiCasuale.DatiLocanda datiLocanda) {
+	private static void costruisci(TipoLocazione classeLocazione, Personaggio personaggio, ProduttoreDiTestiCasuale.DatiLocanda datiLocanda) {
 		if (classeLocazione.isLocazioneUnica()) {
 			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + classeLocazione.name());
 		}
@@ -305,7 +306,7 @@ public class Foresta {
 		RegistroPersonaggi.addPersonaggioInLocazione(personaggio, coordinate);
 	}
 
-	private static void costruisci(ClassiLocazione classeLocazione, ProduttoreDiTestiCasuale.DatiLocanda datiLocanda) {
+	private static void costruisci(TipoLocazione classeLocazione, ProduttoreDiTestiCasuale.DatiLocanda datiLocanda) {
 		if (classeLocazione.isLocazioneUnica()) {
 			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + classeLocazione.name());
 		}
@@ -314,7 +315,7 @@ public class Foresta {
 		Locanda.impostaDatiLocanda(getLocazioneMD(coordinate), datiLocanda);
 	}
 	
-	private static void costruisci(ClassiLocazione classeLocazione, Artefatto artefatto) {
+	private static void costruisci(TipoLocazione classeLocazione, Artefatto artefatto) {
 		if (classeLocazione.isLocazioneUnica()) {
 			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + classeLocazione.name());
 		}
@@ -323,7 +324,7 @@ public class Foresta {
 		RegistroArtefatti.addArtefattoInLocazione(artefatto, coordinate);
 	}
 
-	private static void costruisci(ClassiLocazione classeLocazione, int quantita) {
+	private static void costruisci(TipoLocazione classeLocazione, int quantita) {
 		if (classeLocazione.isLocazioneUnica()) {
 			throw new IllegalArgumentException("Utilizzare costruisciLocazioneUnica per creare " + classeLocazione.name());
 		}
@@ -334,7 +335,7 @@ public class Foresta {
 	}
 	
 	static CoordinateMD getCoordinateLibere() {
-		ClassiLocazione classeLocazione;
+		TipoLocazione classeLocazione;
 		CoordinateMD coordinate;
 		do {
 			coordinate = new CoordinateMD(Dado.tira(getDimensioneX()) - 1, Dado.tira(getDimensioneY()) - 1);
@@ -358,8 +359,8 @@ public class Foresta {
 	 * Una casella su cui si può costruire: vuota, o un bosco. Non una radura: sono poche apposta, e una locanda o il
 	 * covo di una missione costruiti sopra le cancellerebbero.
 	 */
-	private static boolean isLibera(ClassiLocazione classeLocazione) {
-		return classeLocazione == null || classeLocazione == ClassiLocazione.BOSCO;
+	private static boolean isLibera(TipoLocazione classeLocazione) {
+		return classeLocazione == null || classeLocazione == TipoLocazione.BOSCO;
 	}
 
 	/**

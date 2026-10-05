@@ -23,7 +23,7 @@ Documenti di dettaglio su singoli sottosistemi:
 | `tipi` | Il vocabolario condiviso da motore, modello dati e UI, che non dipende da nessun altro pacchetto: `Comando` e gli enum di dominio (attributi, tipi di danno, effetti di stato, slot e rarità degli artefatti, tipi di riposo, di negozio, di trofeo) |
 | `eventi` | Il bus (`BusEventi`) e le quattro famiglie di eventi: `comandigiocatore`, `notifiche`, `richieste`, `interni` |
 | `personaggi` | `Personaggio` (contratto), `PersonaggioBase`, le classi giocabili e i mostri, `ClassePersonaggio`, `EquipaggiamentoIniziale` |
-| `locazioni` | `Locazione`, `LocazioneBase`, le locazioni comuni, le città, i castelli, `Locanda`, `ClassiLocazione` |
+| `locazioni` | `Locazione`, `LocazioneBase`, le locazioni comuni, le città, i castelli, `Locanda`, `FabbricaLocazioni` |
 | `missioni` | `Missione`, `MissioneAPassi`, `Passo`, le missioni concrete (vedi i due documenti sulle missioni) |
 | `intermezzi` | Le scene a pagine (vedi §10) |
 | `oggetti` | Artefatti, oggetti raccoglibili, generatore di artefatti, listino delle pergamene |
@@ -145,12 +145,12 @@ I salvataggi scritti con una versione precedente del formato non sono leggibili 
 
 ### La Foresta
 
-`Foresta` (statica) è una griglia **20×20** (`DIMENSIONE_X`/`DIMENSIONE_Y`), indicizzata da `CoordinateMD`; la costante `MAX_DIMENSIONE_LATO_FORESTA` (80) serve solo a codificare le coordinate. Ogni casella ha una `ClassiLocazione` e un `LocazioneMD` con le sue proprietà (nome, visitata, conosciuta...). Le classi sono di tre tipi (`TipoLocazione`): `STANDARD` (radura, bosco, palude, locanda, rovine, tempio, grotta), `CITTA` (Nyena, Malgaard, Ruuna, Fleena), `CASTELLO` (Idra, Minotauro, Lich, Strega, Drago) e `MISSIONE_SECONDARIA` (la grotta del Medaglione, il covo dei Troll).
+`Foresta` (statica) è una griglia **20×20** (`DIMENSIONE_X`/`DIMENSIONE_Y`), indicizzata da `CoordinateMD`; la costante `MAX_DIMENSIONE_LATO_FORESTA` (80) serve solo a codificare le coordinate. Ogni casella ha un `TipoLocazione` (in `tipi`) e un `LocazioneMD` con le sue proprietà (nome, visitata, conosciuta...); la locazione vera la costruisce `FabbricaLocazioni.crea` quando il gruppo ci entra. I tipi sono di quattro categorie (`CategoriaLocazione`): `STANDARD` (radura, bosco, palude, locanda, rovine, tempio, grotta), `CITTA` (Nyena, Malgaard, Ruuna, Fleena), `CASTELLO` (Idra, Minotauro, Lich, Strega, Drago) e `MISSIONE_SECONDARIA` (la grotta del Medaglione, il covo dei Troll).
 
 `Foresta.reimposta()` costruisce un mondo nuovo: azzera i registri e le produzioni one-shot delle grammatiche, posiziona le città (una per quadrante, in ordine casuale) con i personaggi reclutabili, poi le locande (con i personaggi e i dati della grammatica), i templi (che custodiscono gli artefatti del registro), grotte, paludi, rovine e radure; il resto è bosco. I castelli degli alleati del Drago non si costruiscono qui: li rivendica ciascuna missione a inizio partita (`RegistroMissioni.rivendicaPerLocazioneUnica`), uno per quadrante senza castello (`Quadrante`); quello del Drago, che arriva dopo, va dovunque. Le missioni possono anche segnare caselle come conosciute, e `Foresta.aggiornaMappaCircostante` rivela quelle intorno al gruppo.
 
 **Nomi.** Le locazioni con un nome lo tengono nella proprietà `NOME` della casella (e perdono il nome se la casella cambia tipo):
-- città e castelli: nome fisso in `ClassiLocazione.getNomeProprio()`;
+- città e castelli: nome fisso in `TipoLocazione.getNomeProprio()`;
 - locande: da `locande.txt` (quella di una città tiene il suo in una proprietà a parte, perché il nome della casella è quello della città);
 - rovine: dalla grammatica `rovine.txt`, oppure derivato da quello che c'era ("le Rovine del Maniero del Malefizio");
 - templi: dalla grammatica `templi.txt`, diverso da quelli già esistenti se possibile.

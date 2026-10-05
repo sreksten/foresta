@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.DocumentazioneRichiesta;
 import com.threeamigos.foresta.missioni.LaDocumentazione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -36,7 +36,7 @@ class ScenarioDocumentazioneTest {
     @Test
     void iPostiSiDocumentanoUnoAllaVoltaEPoiSiRiscuote() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(251)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             LaDocumentazione documentazione = RegistroMissioni.getTutteLeMissioni().stream().filter(LaDocumentazione.class::isInstance)
                     .map(LaDocumentazione.class::cast).findFirst().orElseThrow(AssertionError::new);
             documentazione.aggiungiProprieta("PARAMETRO_" + LaDocumentazione.DOCUMENTAZIONE, ISCRIZIONI);
@@ -49,7 +49,7 @@ class ScenarioDocumentazioneTest {
             assertTrue(partita.testi().contains("Si comincia fra delle rovine: il posto è segnato sulla mappa."), String.valueOf(partita.testi()));
 
             CoordinateMD rovine = documentazione.getPosto();
-            assertEquals(ClassiLocazione.ROVINE, Foresta.getLocazione(rovine));
+            assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(rovine));
             assertTrue(Foresta.isLocazioneConosciuta(rovine));
             partita.gruppo().setCoordinate(rovine);
             documentazione.controllaInLocazione();
@@ -57,7 +57,7 @@ class ScenarioDocumentazioneTest {
             assertTrue(documentazione.getDescrizione().endsWith(" 1: Una corona."), documentazione.getDescrizione());
 
             CoordinateMD tempio = documentazione.getPosto();
-            assertEquals(ClassiLocazione.TEMPIO, Foresta.getLocazione(tempio));
+            assertEquals(TipoLocazione.TEMPIO, Foresta.getLocazione(tempio));
             partita.gruppo().setCoordinate(tempio);
             documentazione.controllaInLocazione();
             assertEquals("RITORNO", documentazione.getPassoCorrente());
@@ -65,7 +65,7 @@ class ScenarioDocumentazioneTest {
             assertEquals("Hai documentato tutto: torna dallo storico a Nyena a consegnare le note. 1: Una corona. 2: Una regina.",
                     documentazione.getDescrizione());
 
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA));
+            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             int monete = partita.gruppo().getMonete();
             documentazione.controllaPreLocazione();
             documentazione.segnaIntermezzoPassoMostrato("RITORNO");

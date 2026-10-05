@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.locazioni.Bosco;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -15,8 +15,8 @@ import java.awt.image.BufferedImage;
  */
 public class DisegnatoreMappa {
 
-    protected static final int LARGHEZZA_ICONA = ImageCache.mappa.get(ClassiLocazione.BOSCO).getWidth();
-    protected static final int ALTEZZA_ICONA = ImageCache.mappa.get(ClassiLocazione.BOSCO).getHeight();
+    protected static final int LARGHEZZA_ICONA = ImageCache.mappa.get(TipoLocazione.BOSCO).getWidth();
+    protected static final int ALTEZZA_ICONA = ImageCache.mappa.get(TipoLocazione.BOSCO).getHeight();
 
     // Le caselle conosciute di tutta la foresta, condivise fra minimappa e mappa a tutto
     // schermo: si ricostruisce pigramente solo quando versioneMappaGenerata non è più
@@ -71,9 +71,9 @@ public class DisegnatoreMappa {
     }
 
     protected static Image recuperaImmaginePerLocazione(CoordinateMD coordinateMD) {
-        ClassiLocazione classeLocazione = Foresta.getLocazione(coordinateMD);
+        TipoLocazione classeLocazione = Foresta.getLocazione(coordinateMD);
         BufferedImage image;
-        if (classeLocazione == ClassiLocazione.BOSCO) {
+        if (classeLocazione == TipoLocazione.BOSCO) {
             image = ImageCache.getImmagineMappaBosco(Bosco.getVarianteMappa(Foresta.getLocazioneMD(coordinateMD)));
         } else {
             image = ImageCache.mappa.get(classeLocazione);

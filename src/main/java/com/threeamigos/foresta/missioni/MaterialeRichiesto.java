@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.ArrayList;
@@ -35,7 +35,7 @@ public final class MaterialeRichiesto {
 	private final boolean femminile;
 	private final String singolare;
 	private final String plurale;
-	private final List<ClassiLocazione> luoghi;
+	private final List<TipoLocazione> luoghi;
 	private final List<ClassePersonaggio> nemici;
 	private final int quantitaMinima;
 	private final int quantitaMassima;
@@ -63,11 +63,11 @@ public final class MaterialeRichiesto {
 		singolare = campi[1].trim();
 		plurale = campi[2].trim();
 		String[] provenienza = campi[3].trim().split("\\s+");
-		List<ClassiLocazione> dove = new ArrayList<>();
+		List<TipoLocazione> dove = new ArrayList<>();
 		List<ClassePersonaggio> chi = new ArrayList<>();
 		for (int i = 1; i < provenienza.length; i++) {
 			if (LUOGHI.equals(provenienza[0])) {
-				dove.add(ClassiLocazione.valueOf(provenienza[i]));
+				dove.add(TipoLocazione.valueOf(provenienza[i]));
 			} else if (NEMICI.equals(provenienza[0])) {
 				chi.add(ClassePersonaggio.valueOf(provenienza[i]));
 			} else {
@@ -122,7 +122,7 @@ public final class MaterialeRichiesto {
 			return oggetti.daiNemici(nemici.get(0), nemici.subList(1, nemici.size()).toArray(new ClassePersonaggio[0]))
 					.alPiuPerLocazione(quantitaMassima);
 		}
-		return oggetti.in(luoghi.get(0), luoghi.subList(1, luoghi.size()).toArray(new ClassiLocazione[0]))
+		return oggetti.in(luoghi.get(0), luoghi.subList(1, luoghi.size()).toArray(new TipoLocazione[0]))
 				.conProbabilita(35)
 				.alPiuPerLocazione(2);
 	}
@@ -206,7 +206,7 @@ public final class MaterialeRichiesto {
 		return prezzo;
 	}
 
-	public List<ClassiLocazione> getLuoghi() {
+	public List<TipoLocazione> getLuoghi() {
 		return luoghi;
 	}
 
@@ -226,7 +226,7 @@ public final class MaterialeRichiesto {
 			}
 			return "si prendono sconfiggendo " + elenco(parti);
 		}
-		for (ClassiLocazione luogo : luoghi) {
+		for (TipoLocazione luogo : luoghi) {
 			switch (luogo) {
 				case RADURA:
 					parti.add("nelle radure");

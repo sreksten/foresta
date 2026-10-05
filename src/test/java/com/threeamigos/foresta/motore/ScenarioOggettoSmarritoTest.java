@@ -1,11 +1,12 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.LOggettoSmarrito;
 import com.threeamigos.foresta.missioni.OggettoSmarrito;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -42,16 +43,16 @@ class ScenarioOggettoSmarritoTest {
     @Test
     void laFedeDelMugnaioStaADuePassiDalleRovineEVaRiportata() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(191)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             LOggettoSmarrito smarrito = prendiLIncarico();
 
             CoordinateMD posto = smarrito.getPosto();
             CoordinateMD casella = smarrito.getCasella();
-            assertEquals(ClassiLocazione.ROVINE, Foresta.getLocazione(posto));
+            assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(posto));
             assertTrue(Foresta.isLocazioneConosciuta(posto));
             assertTrue(Math.abs(casella.getX() - posto.getX()) + Math.abs(casella.getY() - posto.getY()) <= LOggettoSmarrito.RAGGIO);
-            ClassiLocazione classe = Foresta.getLocazione(casella);
-            assertTrue(classe.getTipoLocazione() == ClassiLocazione.TipoLocazione.STANDARD && classe != ClassiLocazione.LOCANDA, String.valueOf(classe));
+            TipoLocazione classe = Foresta.getLocazione(casella);
+            assertTrue(classe.getCategoria() == CategoriaLocazione.STANDARD && classe != TipoLocazione.LOCANDA, String.valueOf(classe));
             assertEquals("La fede nuziale del mugnaio", smarrito.getNome());
             assertTrue(smarrito.getDescrizione().startsWith("Cerca la fede nuziale che il mugnaio di Nyena ha perso vicino"), smarrito.getDescrizione());
 
@@ -72,7 +73,7 @@ class ScenarioOggettoSmarritoTest {
             assertEquals("Hai trovato la fede nuziale: riportala al mugnaio di Nyena.", smarrito.getDescrizione());
 
             int monete = partita.gruppo().getMonete();
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA));
+            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             smarrito.controllaPreLocazione();
             smarrito.segnaIntermezzoPassoMostrato("RITORNO");
             smarrito.controllaInLocazione();

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * Un soccorso (vedi IlSoccorso), letto da una riga di SOCCORSO in missioni.txt, che ne descrive i campi: chi lo
@@ -22,7 +22,7 @@ public final class SoccorsoRichiesto {
 	private final ClassePersonaggio nemico;
 	private final int numero;
 	private final CapoDellaRiga capo;
-	private final ClassiLocazione luogo;
+	private final TipoLocazione luogo;
 	private final int monete;
 	private final String titolo;
 	private final String richiesta;
@@ -46,7 +46,7 @@ public final class SoccorsoRichiesto {
 		nemico = campi.enumerato("NEMICO", ClassePersonaggio.class);
 		numero = campi.intero("NUMERO");
 		capo = CapoDellaRiga.da(campi.facoltativo("CAPO"));
-		luogo = campi.enumerato("LUOGO", ClassiLocazione.class);
+		luogo = campi.enumerato("LUOGO", TipoLocazione.class);
 		if (!CombattimentoRichiesto.LUOGHI.contains(luogo)) {
 			throw new IllegalArgumentException("Il luogo è fra " + CombattimentoRichiesto.LUOGHI + ": " + riga);
 		}
@@ -123,7 +123,7 @@ public final class SoccorsoRichiesto {
 		return capo.pescaNome();
 	}
 
-	public ClassiLocazione getLuogo() {
+	public TipoLocazione getLuogo() {
 		return luogo;
 	}
 

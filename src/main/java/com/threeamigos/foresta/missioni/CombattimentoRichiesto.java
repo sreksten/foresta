@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -16,8 +16,8 @@ public final class CombattimentoRichiesto {
 	/**
 	 * Dove si può nascondere chi va sconfitto.
 	 */
-	static final Set<ClassiLocazione> LUOGHI = EnumSet.of(ClassiLocazione.GROTTA, ClassiLocazione.ROVINE, ClassiLocazione.BOSCO,
-			ClassiLocazione.PALUDE, ClassiLocazione.RADURA);
+	static final Set<TipoLocazione> LUOGHI = EnumSet.of(TipoLocazione.GROTTA, TipoLocazione.ROVINE, TipoLocazione.BOSCO,
+			TipoLocazione.PALUDE, TipoLocazione.RADURA);
 	static final String CAPO = "%CAPO%";
 
 	private final String riga;
@@ -31,7 +31,7 @@ public final class CombattimentoRichiesto {
 	private final boolean finoAllaResa;
 	private final boolean aDuello;
 	private final OndateDellaRiga ondate;
-	private final ClassiLocazione luogo;
+	private final TipoLocazione luogo;
 	private final int monete;
 	private final String titolo;
 	private final String richiesta;
@@ -55,7 +55,7 @@ public final class CombattimentoRichiesto {
 		capo = CapoDellaRiga.da(campi.facoltativo("CAPO"));
 		finoAllaResa = campi.facoltativo("RESA").map("SI"::equals).orElse(false);
 		aDuello = campi.facoltativo("DUELLO").map("SI"::equals).orElse(false);
-		luogo = campi.enumerato("LUOGO", ClassiLocazione.class);
+		luogo = campi.enumerato("LUOGO", TipoLocazione.class);
 		if (!LUOGHI.contains(luogo)) {
 			throw new IllegalArgumentException("Il luogo è fra " + LUOGHI + ": " + riga);
 		}
@@ -138,7 +138,7 @@ public final class CombattimentoRichiesto {
 		return capo.pescaNome();
 	}
 
-	public ClassiLocazione getLuogo() {
+	public TipoLocazione getLuogo() {
 		return luogo;
 	}
 

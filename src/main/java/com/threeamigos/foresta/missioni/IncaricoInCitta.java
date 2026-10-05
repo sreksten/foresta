@@ -4,11 +4,12 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * Un incarico preso in una città: un mandante chiede un servizio, il gruppo lo fa e torna in quella città a
@@ -78,14 +79,14 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	 * La città dell'incarico, se è sempre quella (la storia di una città): allora l'incarico parte alla prima visita,
 	 * senza aspettare una visita tranquilla. Null per un incarico che si prende in una città qualsiasi.
 	 */
-	protected ClassiLocazione getCittaFissa() {
+	protected TipoLocazione getCittaFissa() {
 		return null;
 	}
 
 	/**
 	 * La città in cui si torna a riscuotere: quella dell'incarico, se non è un'altra (vedi IlCorriere).
 	 */
-	protected ClassiLocazione getCittaDelRitorno() {
+	protected TipoLocazione getCittaDelRitorno() {
 		return getCitta();
 	}
 
@@ -119,10 +120,10 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	/**
 	 * La città dell'incarico, o null finché il gruppo non ne ha trovata una.
 	 */
-	public final ClassiLocazione getCitta() {
+	public final TipoLocazione getCitta() {
 		String citta = ottieniProprieta(CITTA);
 		if (citta != null) {
-			return ClassiLocazione.valueOf(citta);
+			return TipoLocazione.valueOf(citta);
 		}
 		return getCittaFissa();
 	}
@@ -137,7 +138,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	/**
 	 * Il nome di una città, "Ruuna"; vuoto se non c'è.
 	 */
-	protected static String nomeDellaCitta(ClassiLocazione citta) {
+	protected static String nomeDellaCitta(TipoLocazione citta) {
 		if (citta == null) {
 			return "";
 		}
@@ -191,7 +192,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	 * Se la città in cui si riscuote è stata distrutta.
 	 */
 	private boolean isCittaDistrutta() {
-		ClassiLocazione citta = getCittaDelRitorno();
+		TipoLocazione citta = getCittaDelRitorno();
 		return citta != null && LineaTemporale.isCittaDistrutta(citta);
 	}
 
@@ -212,8 +213,8 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	}
 
 	private boolean inUnaCitta() {
-		ClassiLocazione classe = GruppoGiocatore.getIstanza().getClasseLocazioneCorrente();
-		return classe != null && classe.getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA
+		TipoLocazione classe = GruppoGiocatore.getIstanza().getClasseLocazioneCorrente();
+		return classe != null && classe.getCategoria() == CategoriaLocazione.CITTA
 				&& !LineaTemporale.isCittaDistrutta(classe);
 	}
 
@@ -228,7 +229,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 		return inCitta(getCittaDelRitorno());
 	}
 
-	private static boolean inCitta(ClassiLocazione citta) {
+	private static boolean inCitta(TipoLocazione citta) {
 		return citta != null && GruppoGiocatore.getIstanza().isInLocazioneUnica(citta) && !LineaTemporale.isCittaDistrutta(citta);
 	}
 }

@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.Ondata;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.MissioneMD;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.Collections;
 import java.util.List;
@@ -76,7 +76,7 @@ public interface Missione {
 	 *
 	 * @param visitata se il gruppo aveva già completato la locazione in una visita precedente
 	 */
-	default Optional<Oggetto> getOggettoInLocazione(CoordinateMD coordinate, ClassiLocazione classe, boolean visitata) {
+	default Optional<Oggetto> getOggettoInLocazione(CoordinateMD coordinate, TipoLocazione classe, boolean visitata) {
 		return Optional.empty();
 	}
 

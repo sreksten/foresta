@@ -9,14 +9,15 @@ import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.tools.Misc;
 
 public class Rovine extends LocazioneBase {
 
 	@Override
-	public ClassiLocazione getClasseLocazione() {
-		return ClassiLocazione.ROVINE;
+	public TipoLocazione getClasseLocazione() {
+		return TipoLocazione.ROVINE;
 	}
 
 	/**
@@ -34,7 +35,7 @@ public class Rovine extends LocazioneBase {
 	 */
 	public static String getNome(LocazioneMD modelloDati) {
 		if (modelloDati.getNome() == null) {
-			modelloDati.setNome(Foresta.nomeNuovo(ClassiLocazione.ROVINE, ProduttoreDiTestiCasuale::nomeRovine));
+			modelloDati.setNome(Foresta.nomeNuovo(TipoLocazione.ROVINE, ProduttoreDiTestiCasuale::nomeRovine));
 		}
 		return modelloDati.getNome();
 	}

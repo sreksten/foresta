@@ -2,10 +2,10 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInLocanda;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.List;
 
@@ -25,7 +25,7 @@ public class LaLeggendaDelLocandiere extends LaLeggenda {
 	@Override
 	protected boolean isPostoDelRacconto() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		if (gruppo.getClasseLocazioneCorrente() != ClassiLocazione.LOCANDA) {
+		if (gruppo.getClasseLocazioneCorrente() != TipoLocazione.LOCANDA) {
 			return false;
 		}
 		String visite = Foresta.getLocazioneMD(gruppo.getCoordinate()).ottieniProprieta(Locanda.LOCANDA_VISITE);

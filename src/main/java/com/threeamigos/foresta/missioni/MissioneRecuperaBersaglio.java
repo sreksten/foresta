@@ -2,11 +2,11 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegistroMissioni;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * Un incarico di recupero, la storia di una città (vedi IncaricoInCitta, con la città fissa): il mandante chiede di
@@ -33,7 +33,7 @@ public abstract class MissioneRecuperaBersaglio extends IncaricoInCitta {
 	/**
 	 * La locazione unica in cui si trova ciò che va recuperato.
 	 */
-	protected abstract ClassiLocazione getCovo();
+	protected abstract TipoLocazione getCovo();
 
 	protected abstract String testoRecupero();
 

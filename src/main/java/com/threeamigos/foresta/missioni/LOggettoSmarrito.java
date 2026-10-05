@@ -3,7 +3,6 @@ package com.threeamigos.foresta.missioni;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.Foresta;
@@ -11,6 +10,7 @@ import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.ArrayList;
@@ -47,8 +47,8 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 	/**
 	 * Dove l'oggetto può stare: non nelle città e nei castelli, né nelle locande, che si completano appena si entra.
 	 */
-	private static final Set<ClassiLocazione> NASCONDIGLI = EnumSet.of(ClassiLocazione.RADURA, ClassiLocazione.BOSCO,
-			ClassiLocazione.PALUDE, ClassiLocazione.ROVINE, ClassiLocazione.TEMPIO, ClassiLocazione.GROTTA);
+	private static final Set<TipoLocazione> NASCONDIGLI = EnumSet.of(TipoLocazione.RADURA, TipoLocazione.BOSCO,
+			TipoLocazione.PALUDE, TipoLocazione.ROVINE, TipoLocazione.TEMPIO, TipoLocazione.GROTTA);
 
 	public LOggettoSmarrito() {
 		super(ClasseMissione.L_OGGETTO_SMARRITO);
@@ -85,8 +85,8 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 		if (getCasella() != null) {
 			return;
 		}
-		List<ClassiLocazione> posti = getSmarrito().getPosti();
-		ClassiLocazione classe = posti.get(Dado.tiraAncheAUnaFaccia(posti.size()) - 1);
+		List<TipoLocazione> posti = getSmarrito().getPosti();
+		TipoLocazione classe = posti.get(Dado.tiraAncheAUnaFaccia(posti.size()) - 1);
 		CoordinateMD posto = RegistroMissioni.cercaOCostruisci(classe, this)
 				// Solo se nella foresta non c'è più neanche un bosco o una palude: allora l'ha perso appena fuori città
 				.orElseGet(() -> Foresta.getCoordinateLocazioneUnica(getCitta()));

@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.intermezzi;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,7 +43,7 @@ public class IntermezzoIntroduttivo implements Intermezzo {
 				.perSecondi(3)
 				.conElemento(personaggioVersoSinistra(classeEroe, 0.5, 2.0 / 3)));
 		PaginaIntermezzo finale = new PaginaIntermezzo()
-						.conSfondo(ImmagineIntermezzo.locazione(ClassiLocazione.BOSCO))
+						.conSfondo(ImmagineIntermezzo.locazione(TipoLocazione.BOSCO))
 						.conRitaglioSuSfondo()
 						.conElemento(ElementoIntermezzo.di("fuoco", ImmagineIntermezzo.animazione(Animazione.FUOCO_DA_CAMPO), 0.5, 0.68))
 						// Guarda a sinistra finché non si accorge dell'eremita, poi si volta verso di lui

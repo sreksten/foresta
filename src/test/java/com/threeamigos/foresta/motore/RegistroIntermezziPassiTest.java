@@ -3,7 +3,6 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.ClasseMissione;
 import com.threeamigos.foresta.missioni.IntermezzoDiPasso;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
@@ -11,6 +10,7 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -61,7 +61,7 @@ class RegistroIntermezziPassiTest {
         // Gli intermezzi fissi guardano la locazione corrente: serve un mondo vero
         partita = PartitaDiTest.nuova(21);
         partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+                () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         RegistroIntermezzi.nuovoMomento();
         missione = new MissioneConIntermezzi();
         // Sotto la missione principale, così il registro deve scendere nell'albero per trovarla

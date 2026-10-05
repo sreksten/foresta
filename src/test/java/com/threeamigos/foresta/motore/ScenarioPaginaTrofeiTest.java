@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
 import com.threeamigos.foresta.trofei.ClasseTrofeo;
 import com.threeamigos.foresta.trofei.Trofeo;
@@ -20,7 +20,7 @@ class ScenarioPaginaTrofeiTest {
     @Test
     void dallInventarioAllaPaginaDeiTrofeiEIndietro() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(231)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             partita.comando(Comando.ESCI_DA_CITTA);
             partita.assertComandoDisponibile(Comando.INVENTARIO);
             partita.comando(Comando.INVENTARIO);

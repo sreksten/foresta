@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -22,11 +22,11 @@ class ScenarioNomiDelleLocazioniTest {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             RegistroMissioni.getMissionePrincipale().getMissioniSecondarie().forEach(Missione::controllaPreLocazione);
 
-            CoordinateMD ruuna = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_RUUNA);
-            CoordinateMD strega = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CASTELLO_STREGA);
-            CoordinateMD tempio = prima(ClassiLocazione.TEMPIO);
-            CoordinateMD locanda = prima(ClassiLocazione.LOCANDA);
-            CoordinateMD bosco = prima(ClassiLocazione.BOSCO);
+            CoordinateMD ruuna = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_RUUNA);
+            CoordinateMD strega = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CASTELLO_STREGA);
+            CoordinateMD tempio = prima(TipoLocazione.TEMPIO);
+            CoordinateMD locanda = prima(TipoLocazione.LOCANDA);
+            CoordinateMD bosco = prima(TipoLocazione.BOSCO);
 
             assertEquals("la città di Ruuna", Foresta.getLocazioneMD(ruuna).getNome());
             assertEquals("il Maniero del Malefizio", Foresta.getLocazioneMD(strega).getNome());
@@ -59,12 +59,12 @@ class ScenarioNomiDelleLocazioniTest {
             assertEquals(locandaDiRuuna, Locanda.getNome(Foresta.getLocazioneMD(ruuna)));
 
             // Un castello sconfitto diventa rovine, che prendono il nome dal castello
-            Foresta.distruggiLocazioneUnica(ClassiLocazione.CASTELLO_STREGA, ClassiLocazione.ROVINE);
+            Foresta.distruggiLocazioneUnica(TipoLocazione.CASTELLO_STREGA, TipoLocazione.ROVINE);
             assertEquals("le Rovine del Maniero del Malefizio", Foresta.getNomeDaMostrare(strega));
         }
     }
 
-    private static CoordinateMD prima(ClassiLocazione classe) {
+    private static CoordinateMD prima(TipoLocazione classe) {
         for (int x = 0; x < Foresta.getDimensioneX(); x++) {
             for (int y = 0; y < Foresta.getDimensioneY(); y++) {
                 if (Foresta.getLocazione(x, y) == classe) {

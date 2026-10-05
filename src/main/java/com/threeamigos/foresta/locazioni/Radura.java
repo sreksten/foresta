@@ -6,13 +6,14 @@ import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
 public class Radura extends LocazioneBase {
 
 	@Override
-	public ClassiLocazione getClasseLocazione() {
-		return ClassiLocazione.RADURA;
+	public TipoLocazione getClasseLocazione() {
+		return TipoLocazione.RADURA;
 	}
 
 	private static final ClassePersonaggio[] mostri = {

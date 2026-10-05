@@ -2,9 +2,10 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.List;
 
@@ -19,8 +20,8 @@ public class LaLeggendaDellArmaiolo extends LaLeggenda {
 
 	@Override
 	protected boolean isPostoDelRacconto() {
-		ClassiLocazione classe = GruppoGiocatore.getIstanza().getClasseLocazioneCorrente();
-		return classe != null && classe.getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA
+		TipoLocazione classe = GruppoGiocatore.getIstanza().getClasseLocazioneCorrente();
+		return classe != null && classe.getCategoria() == CategoriaLocazione.CITTA
 				&& !LineaTemporale.isCittaDistrutta(classe);
 	}
 

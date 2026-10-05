@@ -3,7 +3,6 @@ package com.threeamigos.foresta.missioni;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.Foresta;
@@ -11,6 +10,8 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.ArrayList;
@@ -80,9 +81,9 @@ public class IlCorriere extends IncaricoInCitta {
 	/**
 	 * La città a cui portare l'oggetto, o null finché l'incarico non si offre.
 	 */
-	public ClassiLocazione getDestinazione() {
+	public TipoLocazione getDestinazione() {
 		String destinazione = ottieniProprieta(DESTINAZIONE);
-		return destinazione == null ? null : ClassiLocazione.valueOf(destinazione);
+		return destinazione == null ? null : TipoLocazione.valueOf(destinazione);
 	}
 
 	/**
@@ -99,7 +100,7 @@ public class IlCorriere extends IncaricoInCitta {
 	 * c'è già, se va bene), e la distanza da qui.
 	 */
 	private void scegliLaDestinazione() {
-		List<ClassiLocazione> altre = altreCitta();
+		List<TipoLocazione> altre = altreCitta();
 		if (!altre.contains(getDestinazione())) {
 			aggiungiProprieta(DESTINAZIONE, altre.get(Dado.tiraAncheAUnaFaccia(altre.size()) - 1).name());
 		}
@@ -133,11 +134,11 @@ public class IlCorriere extends IncaricoInCitta {
 	/**
 	 * Le città, diverse da quella in cui si trova il gruppo, che ci sono ancora.
 	 */
-	private static List<ClassiLocazione> altreCitta() {
-		ClassiLocazione qui = GruppoGiocatore.getIstanza().getClasseLocazioneCorrente();
-		List<ClassiLocazione> altre = new ArrayList<>();
-		for (ClassiLocazione citta : ClassiLocazione.values()) {
-			if (citta.getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA && citta != qui
+	private static List<TipoLocazione> altreCitta() {
+		TipoLocazione qui = GruppoGiocatore.getIstanza().getClasseLocazioneCorrente();
+		List<TipoLocazione> altre = new ArrayList<>();
+		for (TipoLocazione citta : TipoLocazione.values()) {
+			if (citta.getCategoria() == CategoriaLocazione.CITTA && citta != qui
 					&& !LineaTemporale.isCittaDistrutta(citta) && Foresta.getCoordinateLocazioneUnica(citta) != null) {
 				altre.add(citta);
 			}
@@ -151,7 +152,7 @@ public class IlCorriere extends IncaricoInCitta {
 	}
 
 	@Override
-	protected ClassiLocazione getCittaDelRitorno() {
+	protected TipoLocazione getCittaDelRitorno() {
 		return getDestinazione();
 	}
 

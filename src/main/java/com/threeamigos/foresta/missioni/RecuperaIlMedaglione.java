@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * A Fleena un uomo chiede di recuperare il medaglione che una banda di ladri gli ha rubato e nascosto in una grotta.
@@ -29,13 +29,13 @@ public class RecuperaIlMedaglione extends MissioneRecuperaBersaglio implements M
 	}
 
 	@Override
-	protected ClassiLocazione getCittaFissa() {
-		return ClassiLocazione.CITTA_FLEENA;
+	protected TipoLocazione getCittaFissa() {
+		return TipoLocazione.CITTA_FLEENA;
 	}
 
 	@Override
-	protected ClassiLocazione getCovo() {
-		return ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE;
+	protected TipoLocazione getCovo() {
+		return TipoLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE;
 	}
 
 	@Override

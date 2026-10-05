@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaChiusuraFinestraCombattimento;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.*;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
@@ -13,6 +12,7 @@ import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 import org.junit.jupiter.api.Test;
@@ -28,7 +28,7 @@ class ScenarioMissioniELocazioniTest {
 	void laMissioneCheFallisceFinisceTraLeFalliteAncheDopoUnSalvataggio() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(21)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			assertTrue(RegistroMissioni.getMissioniAttive().stream().anyMatch(m -> m instanceof MissioneCheFallisce),
 					"al primo turno la missione e' attiva");
 
@@ -51,7 +51,7 @@ class ScenarioMissioniELocazioniTest {
 	void unaSottoMissioneCompletataStaSoloTraLeCompletateEPoiSottoLaSuaMissione() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(21)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			// Le missioni dei boss sono sotto-missioni del Drago, non missioni di primo livello
 			assertFalse(RegistroMissioni.getMissioniNonCompletate().stream().anyMatch(m -> m instanceof SconfiggiIlMinotauroGigante),
 					"il Minotauro Gigante non e' una missione di primo livello");
@@ -84,20 +84,20 @@ class ScenarioMissioniELocazioniTest {
 	void unaCittaDistruttaDiventaRovineEFaFallireLeMissioniDiConsegna() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(22)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_FLEENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
 			Missione medaglione = trova(RecuperaIlMedaglione.class);
 			assertTrue(medaglione.isAttiva(), "a Fleena la missione del medaglione si attiva");
 			Missione cronache = trova(CronacheDiUnFegatoEroico.class);
-			CoordinateMD fleena = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_FLEENA);
+			CoordinateMD fleena = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_FLEENA);
 
 			while (LineaTemporale.getGiorno() < 30) {
 				LineaTemporale.aggiungiOre(24);
 			}
 			LineaTemporale.eventi(partita.gruppo());
 
-			assertTrue(LineaTemporale.isCittaDistrutta(ClassiLocazione.CITTA_FLEENA));
-			assertEquals(ClassiLocazione.ROVINE, Foresta.getLocazione(fleena));
-			assertNull(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_FLEENA));
+			assertTrue(LineaTemporale.isCittaDistrutta(TipoLocazione.CITTA_FLEENA));
+			assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(fleena));
+			assertNull(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_FLEENA));
 
 			partita.comando(Comando.ESCI_DA_CITTA);
 			muoviDiUnPasso(partita);
@@ -114,7 +114,7 @@ class ScenarioMissioniELocazioniTest {
 	void ilTerzoLadroDellaGrottaEAlmenoDiPrimoLivelloELaGrottaCompletaDiventaUnaGrotta() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(23)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
-			CoordinateMD coordinate = Foresta.costruisciLocazioneUnica(ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE, true);
+			CoordinateMD coordinate = Foresta.costruisciLocazioneUnica(TipoLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE, true);
 			partita.gruppo().setCoordinate(coordinate);
 			Locazione grotta = Foresta.costruisciIstanza(coordinate);
 			GruppoAvversario avversari = GruppoAvversario.getIstanza();
@@ -125,8 +125,8 @@ class ScenarioMissioniELocazioniTest {
 
 			Foresta.getLocazioneMD(coordinate).aggiungiProprieta(LocazioneMD.COMPLETA, LocazioneMD.AFFERMATIVO);
 			grotta.azzeraLocazione(partita.gruppo());
-			assertEquals(ClassiLocazione.GROTTA, Foresta.getLocazione(coordinate));
-			assertNull(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE));
+			assertEquals(TipoLocazione.GROTTA, Foresta.getLocazione(coordinate));
+			assertNull(Foresta.getCoordinateLocazioneUnica(TipoLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE));
 		}
 	}
 
@@ -134,13 +134,13 @@ class ScenarioMissioniELocazioniTest {
 	void leRovineDelleDerrateCompleteDiventanoRovine() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(24)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
-			CoordinateMD coordinate = Foresta.costruisciLocazioneUnica(ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, true);
+			CoordinateMD coordinate = Foresta.costruisciLocazioneUnica(TipoLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, true);
 			partita.gruppo().setCoordinate(coordinate);
 			Foresta.getLocazioneMD(coordinate).aggiungiProprieta(LocazioneMD.COMPLETA, LocazioneMD.AFFERMATIVO);
 			Locazione rovine = Foresta.costruisciIstanza(coordinate);
 			rovine.azzeraLocazione(partita.gruppo());
-			assertEquals(ClassiLocazione.ROVINE, Foresta.getLocazione(coordinate));
-			assertNull(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI));
+			assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(coordinate));
+			assertNull(Foresta.getCoordinateLocazioneUnica(TipoLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI));
 		}
 	}
 
@@ -148,7 +148,7 @@ class ScenarioMissioniELocazioniTest {
 	void annullareUnaSceltaEIlNoAllaFugaNonFannoPassareIlTurno() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(25)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CASTELLO_IDRA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CASTELLO_IDRA));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			// Con due personaggi vivi le scelte non sono automatiche e si possono annullare
 			partita.gruppo().aggiungiPersonaggio(new Guerriero("Compagno", 1));
@@ -169,7 +169,7 @@ class ScenarioMissioniELocazioniTest {
 	void bereUnaPozioneInCombattimentoConPiuViviChiudeLaFinestraDelCombattimento() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(26)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CASTELLO_IDRA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CASTELLO_IDRA));
 			partita.gruppo().aggiungiPersonaggio(new Guerriero("Compagno", 1));
 			partita.eventi().ascolta(InternoRichiestaChiusuraFinestraCombattimento.class);
 			partita.comando(Comando.COMBATTIMENTO).comando(Comando.PERSONAGGIO_1);

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,7 +20,7 @@ public final class IndagineRichiesta {
 	/**
 	 * Dove si possono cercare gli indizi: i posti dei combattimenti, più templi e locande.
 	 */
-	static final Set<ClassiLocazione> POSTI_DEGLI_INDIZI;
+	static final Set<TipoLocazione> POSTI_DEGLI_INDIZI;
 	static final String CAPO = CombattimentoRichiesto.CAPO;
 	private static final String SEPARATORE_DEL_LUOGO = ":";
 	private static final String SEPARATORE_DEI_SOSPETTI = "/";
@@ -29,9 +29,9 @@ public final class IndagineRichiesta {
 	private static final int SOSPETTI_MASSIMI = 5;
 
 	static {
-		Set<ClassiLocazione> posti = EnumSet.copyOf(CombattimentoRichiesto.LUOGHI);
-		posti.add(ClassiLocazione.TEMPIO);
-		posti.add(ClassiLocazione.LOCANDA);
+		Set<TipoLocazione> posti = EnumSet.copyOf(CombattimentoRichiesto.LUOGHI);
+		posti.add(TipoLocazione.TEMPIO);
+		posti.add(TipoLocazione.LOCANDA);
 		POSTI_DEGLI_INDIZI = Collections.unmodifiableSet(posti);
 	}
 
@@ -41,10 +41,10 @@ public final class IndagineRichiesta {
 	 */
 	public static final class Indizio {
 
-		private final ClassiLocazione luogo;
+		private final TipoLocazione luogo;
 		private final String testo;
 
-		private Indizio(ClassiLocazione luogo, String testo) {
+		private Indizio(TipoLocazione luogo, String testo) {
 			this.luogo = luogo;
 			this.testo = testo;
 		}
@@ -57,14 +57,14 @@ public final class IndagineRichiesta {
 			if (separatore < 0) {
 				throw new IllegalArgumentException("Un indizio è LUOGO:testo: " + campo + " in " + riga);
 			}
-			ClassiLocazione posto = ClassiLocazione.valueOf(campo.substring(0, separatore).trim());
+			TipoLocazione posto = TipoLocazione.valueOf(campo.substring(0, separatore).trim());
 			if (!POSTI_DEGLI_INDIZI.contains(posto)) {
 				throw new IllegalArgumentException("Gli indizi stanno fra " + POSTI_DEGLI_INDIZI + ": " + riga);
 			}
 			return new Indizio(posto, campo.substring(separatore + 1).trim());
 		}
 
-		public ClassiLocazione getLuogo() {
+		public TipoLocazione getLuogo() {
 			return luogo;
 		}
 
@@ -87,7 +87,7 @@ public final class IndagineRichiesta {
 	private final int numero;
 	private final CapoDellaRiga capo;
 	private final boolean finoAllaResa;
-	private final ClassiLocazione luogo;
+	private final TipoLocazione luogo;
 	private final int monete;
 	private final String titolo;
 	private final String richiesta;
@@ -131,7 +131,7 @@ public final class IndagineRichiesta {
 		numero = campi.intero("NUMERO");
 		capo = CapoDellaRiga.da(campi.facoltativo("CAPO"));
 		finoAllaResa = campi.facoltativo("RESA").map("SI"::equals).orElse(false);
-		luogo = campi.enumerato("LUOGO", ClassiLocazione.class);
+		luogo = campi.enumerato("LUOGO", TipoLocazione.class);
 		if (!CombattimentoRichiesto.LUOGHI.contains(luogo)) {
 			throw new IllegalArgumentException("Il luogo è fra " + CombattimentoRichiesto.LUOGHI + ": " + riga);
 		}
@@ -241,7 +241,7 @@ public final class IndagineRichiesta {
 	/**
 	 * Dove si nasconde il colpevole.
 	 */
-	public ClassiLocazione getLuogo() {
+	public TipoLocazione getLuogo() {
 		return luogo;
 	}
 

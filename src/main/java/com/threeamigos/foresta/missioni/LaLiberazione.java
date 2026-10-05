@@ -4,12 +4,12 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * In città qualcuno chiede di riportare a casa una persona che sta in un posto pericoloso, in mano a dei nemici: un
@@ -49,7 +49,7 @@ public abstract class LaLiberazione extends IncaricoInCitta {
 	/**
 	 * Dove sta la persona.
 	 */
-	protected abstract ClassiLocazione getLuogoDelCovo();
+	protected abstract TipoLocazione getLuogoDelCovo();
 
 	/**
 	 * I nemici da sconfiggere nel posto.

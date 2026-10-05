@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -21,7 +21,7 @@ public final class RitualeRichiesto {
 	/**
 	 * Dove si può celebrare un rito: i posti dei combattimenti, più i templi.
 	 */
-	static final Set<ClassiLocazione> LUOGHI;
+	static final Set<TipoLocazione> LUOGHI;
 	static final String CAPO = CombattimentoRichiesto.CAPO;
 	private static final String SEPARATORE_DEI_METODI = "/";
 	private static final int METODI_MINIMI = 2;
@@ -31,8 +31,8 @@ public final class RitualeRichiesto {
 	private static final int METODI_MASSIMI = 4;
 
 	static {
-		Set<ClassiLocazione> luoghi = EnumSet.copyOf(CombattimentoRichiesto.LUOGHI);
-		luoghi.add(ClassiLocazione.TEMPIO);
+		Set<TipoLocazione> luoghi = EnumSet.copyOf(CombattimentoRichiesto.LUOGHI);
+		luoghi.add(TipoLocazione.TEMPIO);
 		LUOGHI = Collections.unmodifiableSet(luoghi);
 	}
 
@@ -41,7 +41,7 @@ public final class RitualeRichiesto {
 	private final TipoMissione tipo;
 	private final AspettoDelMandante aspetto;
 	private final String mandante;
-	private final ClassiLocazione luogo;
+	private final TipoLocazione luogo;
 	private final MaterialeRichiesto ingrediente;
 	private final int quantita;
 	private final String domanda;
@@ -70,7 +70,7 @@ public final class RitualeRichiesto {
 		tipo = campi.enumerato("TIPO", TipoMissione.class);
 		aspetto = campi.enumerato("ASPETTO", AspettoDelMandante.class);
 		mandante = campi.obbligatorio("MANDANTE");
-		luogo = campi.enumerato("LUOGO", ClassiLocazione.class);
+		luogo = campi.enumerato("LUOGO", TipoLocazione.class);
 		if (!LUOGHI.contains(luogo)) {
 			throw new IllegalArgumentException("Il luogo è fra " + LUOGHI + ": " + riga);
 		}
@@ -154,7 +154,7 @@ public final class RitualeRichiesto {
 	/**
 	 * Dove si celebra.
 	 */
-	public ClassiLocazione getLuogo() {
+	public TipoLocazione getLuogo() {
 		return luogo;
 	}
 

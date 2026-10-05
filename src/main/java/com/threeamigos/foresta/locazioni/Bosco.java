@@ -8,6 +8,7 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
 public class Bosco extends LocazioneBase {
@@ -27,8 +28,8 @@ public class Bosco extends LocazioneBase {
 	public static final String VARIANTE_MAPPA = "VARIANTE_MAPPA";
 
 	@Override
-	public ClassiLocazione getClasseLocazione() {
-		return ClassiLocazione.BOSCO;
+	public TipoLocazione getClasseLocazione() {
+		return TipoLocazione.BOSCO;
 	}
 
 	public static void impostaVarianteMappaACaso(LocazioneMD modelloDati) {

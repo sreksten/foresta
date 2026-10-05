@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -47,13 +47,13 @@ public class LocazioneMD implements Serializzabile {
 	 */
 	private String uuid = UUID.randomUUID().toString();
 
-	private ClassiLocazione classe;
+	private TipoLocazione classe;
 	private final Map<String, String> proprieta = new HashMap<>();
 
 	public LocazioneMD() {
 	}
 
-	public LocazioneMD(ClassiLocazione classe) {
+	public LocazioneMD(TipoLocazione classe) {
 		this.classe = classe;
 	}
 
@@ -61,11 +61,11 @@ public class LocazioneMD implements Serializzabile {
 		return uuid;
 	}
 
-	public ClassiLocazione getClasse() {
+	public TipoLocazione getClasse() {
 		return classe;
 	}
 
-	public void setClasse(ClassiLocazione classe) {
+	public void setClasse(TipoLocazione classe) {
 		this.classe = classe;
 	}
 
@@ -111,7 +111,7 @@ public class LocazioneMD implements Serializzabile {
 		// Il limite -1 conserva gli eventuali campi vuoti in coda
 		String[] tokens = line.split("\\|", -1);
 		uuid = tokens[0];
-		classe = ClassiLocazione.valueOf(tokens[1]);
+		classe = TipoLocazione.valueOf(tokens[1]);
 		MappaProprieta.leggi(tokens, 2, proprieta);
 	}
 }

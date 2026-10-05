@@ -6,6 +6,7 @@ import com.threeamigos.foresta.motore.Stato;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
 /**
@@ -14,7 +15,7 @@ import com.threeamigos.foresta.tipi.TipoRiposo;
 
 public interface Locazione {
 
-	ClassiLocazione getClasseLocazione();
+	TipoLocazione getClasseLocazione();
 
 	/**
 	 * Il modello dati della casella su cui si trova questa locazione: vi vive

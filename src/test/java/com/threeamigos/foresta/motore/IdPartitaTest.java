@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -16,7 +16,7 @@ class IdPartitaTest {
     void lIdentificativoRestaDopoUnCaricamentoECambiaConUnaPartitaNuova() {
         String id;
         try (PartitaDiTest partita = PartitaDiTest.nuova(121)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             id = Statistiche.getIdPartita();
             assertNotNull(id);
             partita.salva(Comando.NUMERO_2);

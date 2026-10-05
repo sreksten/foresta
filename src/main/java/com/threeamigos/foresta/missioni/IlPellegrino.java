@@ -3,7 +3,6 @@ package com.threeamigos.foresta.missioni;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Tempio;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Foresta;
@@ -11,6 +10,7 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.Misc;
 
 /**
@@ -90,7 +90,7 @@ public class IlPellegrino extends IncaricoInCitta {
 	protected Passo costruisciPassoDelCompito(String id) {
 		switch (id) {
 			case META:
-				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, ClassiLocazione.TEMPIO)
+				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, TipoLocazione.TEMPIO)
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getTempio());
 							BusEventi.pubblica(new NotificaTestoParagrafo(Misc.inizialeMaiuscola(getNomeDelTempio())

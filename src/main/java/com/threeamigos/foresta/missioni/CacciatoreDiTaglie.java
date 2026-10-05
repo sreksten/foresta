@@ -3,13 +3,13 @@ package com.threeamigos.foresta.missioni;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.Misc;
 
 /**
@@ -88,7 +88,7 @@ public class CacciatoreDiTaglie extends IncaricoInCitta {
 		switch (id) {
 			case COVO:
 				// Le rovine non si segnano sulla mappa: il gruppo sa solo da che parte cercarle
-				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, ClassiLocazione.ROVINE)
+				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, TipoLocazione.ROVINE)
 						.esegui(() -> {
 							String direzione = Misc.getDirezione(GruppoGiocatore.getIstanza(), getCovo());
 							aggiungiProprieta(DIREZIONE, direzione);

@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.ClasseMissione;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
@@ -15,6 +14,7 @@ import com.threeamigos.foresta.missioni.SconfiggiLaStrega;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -47,7 +47,7 @@ class ScenarioLocazioniRivendicateTest {
         @Override
         protected Passo costruisciPasso(String id) {
             if ("CERCA".equals(id)) {
-                return cercaLocazione(MomentoControllo.PRE_LOCAZIONE, ClassiLocazione.TEMPIO).esegui(this::attivaMissione).poi("ARRIVATI");
+                return cercaLocazione(MomentoControllo.PRE_LOCAZIONE, TipoLocazione.TEMPIO).esegui(this::attivaMissione).poi("ARRIVATI");
             }
             return Passo.quando(MomentoControllo.PRE_LOCAZIONE, () -> false);
         }
@@ -56,7 +56,7 @@ class ScenarioLocazioniRivendicateTest {
     private static PartitaDiTest nuovaPartita(long seme) {
         PartitaDiTest partita = PartitaDiTest.nuova(seme);
         partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+                () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         return partita;
     }
 
@@ -69,21 +69,21 @@ class ScenarioLocazioniRivendicateTest {
     void iQuattroCastelliLiRivendicanoLeLoroMissioniAInizioPartita() {
         try (PartitaDiTest partita = nuovaPartita(31)) {
             Object[][] castelli = {
-                    {SconfiggiLaStrega.class, ClassiLocazione.CASTELLO_STREGA},
-                    {SconfiggiIlLich.class, ClassiLocazione.CASTELLO_LICH},
-                    {SconfiggiIlMinotauroGigante.class, ClassiLocazione.CASTELLO_MINOTAURO},
-                    {SconfiggiLIdra.class, ClassiLocazione.CASTELLO_IDRA},
+                    {SconfiggiLaStrega.class, TipoLocazione.CASTELLO_STREGA},
+                    {SconfiggiIlLich.class, TipoLocazione.CASTELLO_LICH},
+                    {SconfiggiIlMinotauroGigante.class, TipoLocazione.CASTELLO_MINOTAURO},
+                    {SconfiggiLIdra.class, TipoLocazione.CASTELLO_IDRA},
             };
             for (Object[] castello : castelli) {
                 Missione missione = RegistroMissioni.getMissionePrincipale().getMissioniSecondarie().stream()
                         .filter(((Class<?>) castello[0])::isInstance).findFirst().orElseThrow(AssertionError::new);
-                CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica((ClassiLocazione) castello[1]);
+                CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica((TipoLocazione) castello[1]);
                 assertNotNull(coordinate, castello[1] + " deve esistere");
                 assertTrue(missione.isAttiva());
                 assertEquals(coordinate, RegistroMissioni.getLocazioneOccupata(missione));
                 assertSame(missione, RegistroMissioni.getMissioneCheHaOccupato(coordinate).orElse(null));
             }
-            assertNull(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CASTELLO_DRAGO), "il Drago si mostra solo dopo");
+            assertNull(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CASTELLO_DRAGO), "il Drago si mostra solo dopo");
         }
     }
 
@@ -107,7 +107,7 @@ class ScenarioLocazioniRivendicateTest {
             missione.controllaPreLocazione();
             assertEquals("ARRIVATI", missione.getPassoCorrente());
             CoordinateMD tempio = RegistroMissioni.getLocazioneOccupata(missione);
-            assertEquals(ClassiLocazione.TEMPIO, Foresta.getLocazione(tempio));
+            assertEquals(TipoLocazione.TEMPIO, Foresta.getLocazione(tempio));
             assertNotEquals(partita.gruppo().getCoordinate(), tempio);
         }
     }
@@ -117,23 +117,23 @@ class ScenarioLocazioniRivendicateTest {
         try (PartitaDiTest partita = nuovaPartita(34)) {
             MissioneDelTempio prima = aggiungi(new MissioneDelTempio());
             MissioneDelTempio seconda = aggiungi(new MissioneDelTempio());
-            for (CoordinateMD tempio : coordinate(ClassiLocazione.TEMPIO)) {
+            for (CoordinateMD tempio : coordinate(TipoLocazione.TEMPIO)) {
                 RegistroMissioni.occupaLocazione(tempio, prima);
             }
-            assertEquals(Optional.empty(), RegistroMissioni.cerca(ClassiLocazione.TEMPIO, seconda));
+            assertEquals(Optional.empty(), RegistroMissioni.cerca(TipoLocazione.TEMPIO, seconda));
 
             // Un solo bosco visitato, e niente paludi visitate: il tempio nuovo sorge lì
-            CoordinateMD visitato = coordinate(ClassiLocazione.BOSCO).stream()
+            CoordinateMD visitato = coordinate(TipoLocazione.BOSCO).stream()
                     .filter(c -> !c.equals(partita.gruppo().getCoordinate()) && RegistroArtefatti.getArtefattoInLocazione(c) == null)
                     .findFirst().orElseThrow(AssertionError::new);
-            for (ClassiLocazione classe : new ClassiLocazione[]{ClassiLocazione.BOSCO, ClassiLocazione.PALUDE}) {
+            for (TipoLocazione classe : new TipoLocazione[]{TipoLocazione.BOSCO, TipoLocazione.PALUDE}) {
                 coordinate(classe).forEach(c -> Foresta.setLocazioneVisitata(c, false));
             }
             Foresta.setLocazioneVisitata(visitato, true);
 
-            Optional<CoordinateMD> costruito = RegistroMissioni.cercaOCostruisci(ClassiLocazione.TEMPIO, seconda);
+            Optional<CoordinateMD> costruito = RegistroMissioni.cercaOCostruisci(TipoLocazione.TEMPIO, seconda);
             assertEquals(Optional.of(visitato), costruito);
-            assertEquals(ClassiLocazione.TEMPIO, Foresta.getLocazione(visitato));
+            assertEquals(TipoLocazione.TEMPIO, Foresta.getLocazione(visitato));
             assertFalse(Foresta.isLocazioneVisitata(visitato), "il tempio nuovo è da visitare");
             assertSame(seconda, RegistroMissioni.getMissioneCheHaOccupato(visitato).orElse(null));
         }
@@ -144,18 +144,18 @@ class ScenarioLocazioniRivendicateTest {
         try (PartitaDiTest partita = nuovaPartita(33)) {
             MissioneDelTempio prima = aggiungi(new MissioneDelTempio());
             MissioneDelTempio seconda = aggiungi(new MissioneDelTempio());
-            List<CoordinateMD> templi = coordinate(ClassiLocazione.TEMPIO);
+            List<CoordinateMD> templi = coordinate(TipoLocazione.TEMPIO);
             // La prima rivendica tutti i templi tranne l'ultimo, che diventa la casella del gruppo
             CoordinateMD ultimo = templi.remove(templi.size() - 1);
             for (CoordinateMD tempio : templi) {
                 RegistroMissioni.occupaLocazione(tempio, prima);
             }
             partita.gruppo().setCoordinate(ultimo);
-            assertEquals(Optional.empty(), RegistroMissioni.cerca(ClassiLocazione.TEMPIO, seconda),
+            assertEquals(Optional.empty(), RegistroMissioni.cerca(TipoLocazione.TEMPIO, seconda),
                     "i templi sono tutti della prima missione, in corso, o del gruppo");
 
             prima.completaMissione();
-            Optional<CoordinateMD> trovato = RegistroMissioni.cerca(ClassiLocazione.TEMPIO, seconda);
+            Optional<CoordinateMD> trovato = RegistroMissioni.cerca(TipoLocazione.TEMPIO, seconda);
             assertTrue(trovato.isPresent(), "finita la prima missione, i suoi templi tornano disponibili");
             assertSame(seconda, RegistroMissioni.getMissioneCheHaOccupato(trovato.get()).orElse(null));
             // Gli altri ricordano ancora chi li aveva
@@ -169,10 +169,10 @@ class ScenarioLocazioniRivendicateTest {
         try (PartitaDiTest partita = nuovaPartita(34)) {
             MissioneDelTempio prima = aggiungi(new MissioneDelTempio());
             MissioneDelTempio seconda = aggiungi(new MissioneDelTempio());
-            CoordinateMD tempio = coordinate(ClassiLocazione.TEMPIO).get(0);
+            CoordinateMD tempio = coordinate(TipoLocazione.TEMPIO).get(0);
             RegistroMissioni.occupaLocazione(tempio, prima);
             RegistroMissioni.occupaLocazione(tempio, seconda);
-            CoordinateMD strega = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CASTELLO_STREGA);
+            CoordinateMD strega = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CASTELLO_STREGA);
 
             partita.salva(Comando.NUMERO_3);
             assertTrue(partita.leggi(Comando.NUMERO_3));
@@ -189,7 +189,7 @@ class ScenarioLocazioniRivendicateTest {
         }
     }
 
-    private static List<CoordinateMD> coordinate(ClassiLocazione classe) {
+    private static List<CoordinateMD> coordinate(TipoLocazione classe) {
         List<CoordinateMD> trovate = new ArrayList<>();
         for (int x = 0; x < Foresta.getDimensioneX(); x++) {
             for (int y = 0; y < Foresta.getDimensioneY(); y++) {
@@ -205,7 +205,7 @@ class ScenarioLocazioniRivendicateTest {
      * Come se il gruppo avesse appena sconfitto chi stava nel castello: la locazione è completa e si azzera, come a
      * fine locazione, e la missione si completa.
      */
-    private static CoordinateMD sconfiggi(PartitaDiTest partita, ClassiLocazione castello, Missione missione) {
+    private static CoordinateMD sconfiggi(PartitaDiTest partita, TipoLocazione castello, Missione missione) {
         CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(castello);
         Foresta.getLocazioneMD(coordinate).aggiungiProprieta(LocazioneMD.COMPLETA, LocazioneMD.AFFERMATIVO);
         Foresta.costruisciIstanza(coordinate).azzeraLocazione(partita.gruppo());
@@ -221,30 +221,30 @@ class ScenarioLocazioniRivendicateTest {
     void ogniCastelloSconfittoDiventaRovineERicordaChiCiStava() {
         try (PartitaDiTest partita = nuovaPartita(35)) {
             Object[][] castelli = {
-                    {SconfiggiLaStrega.class, ClassiLocazione.CASTELLO_STREGA, "Qui sorgeva il castello della Strega."},
-                    {SconfiggiIlLich.class, ClassiLocazione.CASTELLO_LICH, "Qui sorgeva il castello del Lich."},
-                    {SconfiggiIlMinotauroGigante.class, ClassiLocazione.CASTELLO_MINOTAURO, "Qui sorgeva il castello del Minotauro Gigante."},
-                    {SconfiggiLIdra.class, ClassiLocazione.CASTELLO_IDRA, "Qui sorgeva il castello dell'Idra."},
+                    {SconfiggiLaStrega.class, TipoLocazione.CASTELLO_STREGA, "Qui sorgeva il castello della Strega."},
+                    {SconfiggiIlLich.class, TipoLocazione.CASTELLO_LICH, "Qui sorgeva il castello del Lich."},
+                    {SconfiggiIlMinotauroGigante.class, TipoLocazione.CASTELLO_MINOTAURO, "Qui sorgeva il castello del Minotauro Gigante."},
+                    {SconfiggiLIdra.class, TipoLocazione.CASTELLO_IDRA, "Qui sorgeva il castello dell'Idra."},
             };
             for (Object[] castello : castelli) {
                 Missione missione = missione((Class<? extends Missione>) castello[0]);
-                CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica((ClassiLocazione) castello[1]);
+                CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica((TipoLocazione) castello[1]);
                 assertEquals(Optional.empty(), RegistroMissioni.getRicordo(coordinate), "il castello c'è ancora");
-                sconfiggi(partita, (ClassiLocazione) castello[1], missione);
-                assertEquals(ClassiLocazione.ROVINE, Foresta.getLocazione(coordinate));
-                assertNull(Foresta.getCoordinateLocazioneUnica((ClassiLocazione) castello[1]));
+                sconfiggi(partita, (TipoLocazione) castello[1], missione);
+                assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(coordinate));
+                assertNull(Foresta.getCoordinateLocazioneUnica((TipoLocazione) castello[1]));
                 assertEquals(Optional.of(castello[2]), RegistroMissioni.getRicordo(coordinate));
             }
 
             // Sconfitti gli alleati, compare il castello del Drago, che a sua volta diventa rovine
             SconfiggiIlDrago drago = RegistroMissioni.getMissionePrincipale();
             drago.controllaPostLocazione();
-            CoordinateMD castelloDrago = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CASTELLO_DRAGO);
+            CoordinateMD castelloDrago = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CASTELLO_DRAGO);
             assertNotNull(castelloDrago);
             assertSame(drago, RegistroMissioni.getMissioneCheHaOccupato(castelloDrago).orElse(null));
-            sconfiggi(partita, ClassiLocazione.CASTELLO_DRAGO, drago);
-            assertEquals(ClassiLocazione.ROVINE, Foresta.getLocazione(castelloDrago));
-            assertNull(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CASTELLO_DRAGO));
+            sconfiggi(partita, TipoLocazione.CASTELLO_DRAGO, drago);
+            assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(castelloDrago));
+            assertNull(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CASTELLO_DRAGO));
             assertEquals(Optional.of("Qui sorgeva il castello del Drago."), RegistroMissioni.getRicordo(castelloDrago));
         }
     }
@@ -252,7 +252,7 @@ class ScenarioLocazioniRivendicateTest {
     @Test
     void entrandoFraLeRovineDiUnCastelloSiLeggeCheCosaCiSorgeva() {
         try (PartitaDiTest partita = nuovaPartita(36)) {
-            CoordinateMD rovine = sconfiggi(partita, ClassiLocazione.CASTELLO_STREGA, missione(SconfiggiLaStrega.class));
+            CoordinateMD rovine = sconfiggi(partita, TipoLocazione.CASTELLO_STREGA, missione(SconfiggiLaStrega.class));
             // Il gruppo esce dalla città da una casella accanto alle rovine e ci entra con un passo
             boolean daSud = rovine.getY() + 1 < Foresta.getDimensioneY();
             partita.gruppo().setCoordinate(new CoordinateMD(rovine.getX(), rovine.getY() + (daSud ? 1 : -1)));

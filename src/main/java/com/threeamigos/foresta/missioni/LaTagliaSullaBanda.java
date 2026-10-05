@@ -3,13 +3,13 @@ package com.threeamigos.foresta.missioni;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * In città c'è una taglia sul capo di una banda di hobgoblin che si nasconde in un bosco: la missione rivendica il
@@ -82,7 +82,7 @@ public class LaTagliaSullaBanda extends IncaricoInCitta {
 	protected Passo costruisciPassoDelCompito(String id) {
 		switch (id) {
 			case COVO:
-				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, ClassiLocazione.BOSCO)
+				return cercaLocazione(MomentoControllo.IN_LOCAZIONE, TipoLocazione.BOSCO)
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getCovo());
 							BusEventi.pubblica(new NotificaTestoParagrafo("Il bosco dove si nasconde la banda di " + getCapobanda() + " è segnato sulla mappa."));

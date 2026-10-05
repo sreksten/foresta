@@ -2,12 +2,12 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.IlRapimento;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ScenarioRapimentoTest {
 
     private static IlRapimento prendiLIncarico(PartitaDiTest partita) {
-        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+        partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         IlRapimento rapimento = RegistroMissioni.getTutteLeMissioni().stream().filter(IlRapimento.class::isInstance)
                 .map(IlRapimento.class::cast).findFirst().orElseThrow(AssertionError::new);
         // Come a una visita tranquilla della città
@@ -48,7 +48,7 @@ class ScenarioRapimentoTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(131)) {
             IlRapimento rapimento = prendiLIncarico(partita);
             CoordinateMD covo = rapimento.getCovo();
-            assertEquals(ClassiLocazione.GROTTA, Foresta.getLocazione(covo));
+            assertEquals(TipoLocazione.GROTTA, Foresta.getLocazione(covo));
             assertTrue(Foresta.isLocazioneConosciuta(covo));
             assertTrue(Foresta.getCoordinateDaSegnalare().contains(covo));
             List<Personaggio> banda = RegistroMissioni.getIncontroMissione(covo).orElseThrow(AssertionError::new);
@@ -60,7 +60,7 @@ class ScenarioRapimentoTest {
             assertTrue(partita.gruppo().isOspiteVulnerabile(armando));
             assertFalse(partita.gruppo().getPersonaggi().contains(armando));
 
-            CoordinateMD nyena = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA);
+            CoordinateMD nyena = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA);
             partita.gruppo().setCoordinate(nyena);
             int monete = partita.gruppo().getMonete();
             rapimento.controllaPreLocazione();
@@ -89,7 +89,7 @@ class ScenarioRapimentoTest {
             assertTrue(rapimento.getDescrizione().contains("dare la notizia"), rapimento.getDescrizione());
 
             // In città la scena triste, poi la missione fallisce, senza monete
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA));
+            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             int monete = partita.gruppo().getMonete();
             rapimento.controllaPreLocazione();
             assertEquals("LUTTO", rapimento.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));

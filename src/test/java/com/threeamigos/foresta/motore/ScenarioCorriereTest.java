@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.IlContrabbandiere;
 import com.threeamigos.foresta.missioni.IlCorriere;
 import com.threeamigos.foresta.missioni.Passo;
@@ -9,6 +8,7 @@ import com.threeamigos.foresta.missioni.Spedizione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -52,10 +52,10 @@ class ScenarioCorriereTest {
     @Test
     void laLetteraArrivaAlBorgomastroDiRuunaCheLaPaga() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(181)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
-            IlCorriere corriere = prendiLIncarico(LETTERA, ClassiLocazione.CITTA_RUUNA);
-            CoordinateMD ruuna = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_RUUNA);
-            CoordinateMD nyena = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA);
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            IlCorriere corriere = prendiLIncarico(LETTERA, TipoLocazione.CITTA_RUUNA);
+            CoordinateMD ruuna = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_RUUNA);
+            CoordinateMD nyena = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA);
             int distanza = Math.abs(ruuna.getX() - nyena.getX()) + Math.abs(ruuna.getY() - nyena.getY());
             assertEquals(distanza, corriere.getDistanza());
             assertTrue(Foresta.isLocazioneConosciuta(ruuna));
@@ -83,15 +83,15 @@ class ScenarioCorriereTest {
     @Test
     void lAntidotoArrivaInTempoSoloSeIlGruppoSiSbriga() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(182)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
-            IlCorriere corriere = prendiLIncarico(ANTIDOTO, ClassiLocazione.CITTA_RUUNA);
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            IlCorriere corriere = prendiLIncarico(ANTIDOTO, TipoLocazione.CITTA_RUUNA);
             assertEquals(corriere.getDistanza() * 2 + 12, corriere.getOreConcesse());
             assertTrue(corriere.getDescrizione().endsWith("Ore rimaste: " + corriere.getOreConcesse() + "."), corriere.getDescrizione());
 
             LineaTemporale.aggiungiOre(corriere.getOreConcesse());
             assertEquals(0, corriere.getOreRimaste());
             int monete = partita.gruppo().getMonete();
-            consegnaA(partita, corriere, Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_RUUNA));
+            consegnaA(partita, corriere, Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_RUUNA));
             assertTrue(corriere.isCompleta());
             assertTrue(partita.gruppo().getMonete() > monete);
         }
@@ -100,10 +100,10 @@ class ScenarioCorriereTest {
     @Test
     void lAntidotoArrivatoTardiFaFallireLaMissione() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(183)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
-            IlCorriere corriere = prendiLIncarico(ANTIDOTO, ClassiLocazione.CITTA_RUUNA);
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            IlCorriere corriere = prendiLIncarico(ANTIDOTO, TipoLocazione.CITTA_RUUNA);
             LineaTemporale.aggiungiOre(corriere.getOreConcesse() + 1);
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_RUUNA));
+            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_RUUNA));
             corriere.controllaPreLocazione();
             assertTrue(corriere.isFallita());
             assertTrue(partita.testi().contains("Troppo tardi: la fiala di antidoto non arriverà più in tempo al fabbro di Ruuna."),
@@ -114,9 +114,9 @@ class ScenarioCorriereTest {
     @Test
     void seLaCittaDiDestinazioneVieneDistruttaLaMissioneFallisce() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(184)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
-            IlCorriere corriere = prendiLIncarico(LETTERA, ClassiLocazione.CITTA_RUUNA);
-            LineaTemporale.setCittaDistrutta(ClassiLocazione.CITTA_RUUNA);
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            IlCorriere corriere = prendiLIncarico(LETTERA, TipoLocazione.CITTA_RUUNA);
+            LineaTemporale.setCittaDistrutta(TipoLocazione.CITTA_RUUNA);
             corriere.controllaPreLocazione();
             assertTrue(corriere.isFallita());
             assertTrue(partita.testi().contains("Ruuna è stata distrutta: la lettera sigillata non arriverà più al borgomastro."),
@@ -138,10 +138,10 @@ class ScenarioCorriereTest {
     @Test
     void ilVinoDiContrabbandoArrivaSeNessunoCombatte() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(187)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
-            IlCorriere contrabbando = prendiLIncarico(IlContrabbandiere.class, VINO, ClassiLocazione.CITTA_RUUNA);
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            IlCorriere contrabbando = prendiLIncarico(IlContrabbandiere.class, VINO, TipoLocazione.CITTA_RUUNA);
             int monete = partita.gruppo().getMonete();
-            consegnaA(partita, contrabbando, Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_RUUNA));
+            consegnaA(partita, contrabbando, Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_RUUNA));
             assertTrue(contrabbando.isCompleta());
             assertTrue(partita.gruppo().getMonete() > monete);
             assertTrue(RegistroMissioni.getTutteLeMissioni().stream().anyMatch(m -> m instanceof IlContrabbandiere && m != contrabbando));
@@ -151,10 +151,10 @@ class ScenarioCorriereTest {
     @Test
     void seIlContrabbandiereCombattePerStradaLaMissioneFallisce() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(188)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
-            IlCorriere contrabbando = prendiLIncarico(IlContrabbandiere.class, VINO, ClassiLocazione.CITTA_RUUNA);
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            IlCorriere contrabbando = prendiLIncarico(IlContrabbandiere.class, VINO, TipoLocazione.CITTA_RUUNA);
             // Il corriere normale invece può combattere quanto vuole
-            IlCorriere corriere = prendiLIncarico(LETTERA, ClassiLocazione.CITTA_RUUNA);
+            IlCorriere corriere = prendiLIncarico(LETTERA, TipoLocazione.CITTA_RUUNA);
             partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GOBLIN));
             contrabbando.controllaPostLocazione();
             corriere.controllaPostLocazione();
@@ -168,19 +168,19 @@ class ScenarioCorriereTest {
     @Test
     void laDestinazioneEUnAltraCittaESenzaAltreCittaLIncaricoNonSiOffre() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(185)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             IlCorriere corriere = corriere();
             // Una destinazione già fissata ma uguale alla città dell'incarico non vale
-            corriere.aggiungiProprieta(IlCorriere.DESTINAZIONE, ClassiLocazione.CITTA_NYENA.name());
+            corriere.aggiungiProprieta(IlCorriere.DESTINAZIONE, TipoLocazione.CITTA_NYENA.name());
             corriere.controllaPreLocazione();
-            assertNotEquals(ClassiLocazione.CITTA_NYENA, corriere.getDestinazione());
+            assertNotEquals(TipoLocazione.CITTA_NYENA, corriere.getDestinazione());
             assertTrue(corriere.getDistanza() > 0);
         }
         try (PartitaDiTest partita = PartitaDiTest.nuova(186)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
-            LineaTemporale.setCittaDistrutta(ClassiLocazione.CITTA_RUUNA);
-            LineaTemporale.setCittaDistrutta(ClassiLocazione.CITTA_FLEENA);
-            LineaTemporale.setCittaDistrutta(ClassiLocazione.CITTA_MALGAARD);
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            LineaTemporale.setCittaDistrutta(TipoLocazione.CITTA_RUUNA);
+            LineaTemporale.setCittaDistrutta(TipoLocazione.CITTA_FLEENA);
+            LineaTemporale.setCittaDistrutta(TipoLocazione.CITTA_MALGAARD);
             IlCorriere corriere = corriere();
             corriere.controllaPreLocazione();
             assertEquals("INCARICO", corriere.getPassoCorrente());
@@ -203,11 +203,11 @@ class ScenarioCorriereTest {
     /**
      * Come a una visita tranquilla della città, con la spedizione e la destinazione fissate.
      */
-    private static IlCorriere prendiLIncarico(String spedizione, ClassiLocazione destinazione) {
+    private static IlCorriere prendiLIncarico(String spedizione, TipoLocazione destinazione) {
         return prendiLIncarico(IlCorriere.class, spedizione, destinazione);
     }
 
-    private static IlCorriere prendiLIncarico(Class<? extends IlCorriere> classe, String spedizione, ClassiLocazione destinazione) {
+    private static IlCorriere prendiLIncarico(Class<? extends IlCorriere> classe, String spedizione, TipoLocazione destinazione) {
         IlCorriere corriere = corriere(classe);
         corriere.aggiungiProprieta("PARAMETRO_" + IlCorriere.SPEDIZIONE, spedizione);
         corriere.aggiungiProprieta(IlCorriere.DESTINAZIONE, destinazione.name());

@@ -5,7 +5,6 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInLocanda;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Foresta;
@@ -14,6 +13,7 @@ import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.Collections;
@@ -94,7 +94,7 @@ public class LaBenedizione extends MissioneAPassi {
 
 	private static boolean inUnaLocandaGiaVisitata() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		if (gruppo.getClasseLocazioneCorrente() != ClassiLocazione.LOCANDA) {
+		if (gruppo.getClasseLocazioneCorrente() != TipoLocazione.LOCANDA) {
 			return false;
 		}
 		String visite = Foresta.getLocazioneMD(gruppo.getCoordinate()).ottieniProprieta(Locanda.LOCANDA_VISITE);
@@ -184,7 +184,7 @@ public class LaBenedizione extends MissioneAPassi {
 				return attendiLeAffidate(FAVORE, MomentoControllo.POST_LOCAZIONE)
 						.poi(() -> sonoRiusciteLeAffidate(FAVORE) ? TEMPIO : FALLIMENTO);
 			case TEMPIO:
-				return cercaLocazione(MomentoControllo.POST_LOCAZIONE, ClassiLocazione.TEMPIO)
+				return cercaLocazione(MomentoControllo.POST_LOCAZIONE, TipoLocazione.TEMPIO)
 						.esegui(() -> {
 							Foresta.setLocazioneConosciuta(getTempio());
 							BusEventi.pubblica(new NotificaTestoParagrafo(Misc.inizialeMaiuscola(benedizione.getMandante()) + " vi aspetta "

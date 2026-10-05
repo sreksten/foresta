@@ -5,7 +5,6 @@ import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.GruppoGiocatoreMD;
@@ -14,7 +13,9 @@ import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.tools.Misc;
@@ -415,14 +416,14 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		return md.getCoordinate();
 	}
 
-	private ClassiLocazione getClasseLocazioneCorrente(int x, int y) {
+	private TipoLocazione getClasseLocazioneCorrente(int x, int y) {
 		return Foresta.getLocazione(x, y);
 	}
 
 	/**
 	 * Usata da oggetti Cofano per sapere se può essere vuoto o meno
 	 */
-	public ClassiLocazione getClasseLocazioneCorrente() {
+	public TipoLocazione getClasseLocazioneCorrente() {
 		return Foresta.getLocazione(md.getCoordinate());
 	}
 
@@ -442,13 +443,13 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		if (getY() == 0) {
 			return 0;
 		}
-		ClassiLocazione locazioneCorrente;
+		TipoLocazione locazioneCorrente;
 		for (int i = 1; i <= Comando.MAX_MOVIMENTO; i++) {
 			if (getY() - i == 0) {
 				return i;
 			}
 			locazioneCorrente = getClasseLocazioneCorrente(getX(), getY() - i);
-			if (locazioneCorrente != ClassiLocazione.BOSCO && locazioneCorrente != ClassiLocazione.RADURA) {
+			if (locazioneCorrente != TipoLocazione.BOSCO && locazioneCorrente != TipoLocazione.RADURA) {
 				return i;
 			}
 		}
@@ -466,13 +467,13 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	public final int getMaxPassiEst() {
 		if (getX() == Foresta.getDimensioneX() - 1)
 			return 0;
-		ClassiLocazione locazioneCorrente;
+		TipoLocazione locazioneCorrente;
 		for (int i = 1; i <= Comando.MAX_MOVIMENTO; i++) {
 			if (getX() + i == Foresta.getDimensioneX() - 1) {
 				return i;
 			}
 			locazioneCorrente = getClasseLocazioneCorrente(getX() + i, getY());
-			if (locazioneCorrente != ClassiLocazione.BOSCO && locazioneCorrente != ClassiLocazione.RADURA) {
+			if (locazioneCorrente != TipoLocazione.BOSCO && locazioneCorrente != TipoLocazione.RADURA) {
 				return i;
 			}
 		}
@@ -491,13 +492,13 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		if (getY() == Foresta.getDimensioneY() - 1) {
 			return 0;
 		}
-		ClassiLocazione locazioneCorrente;
+		TipoLocazione locazioneCorrente;
 		for (int i = 1; i <= Comando.MAX_MOVIMENTO; i++) {
 			if (getY() + i == Foresta.getDimensioneY() - 1) {
 				return i;
 			}
 			locazioneCorrente = getClasseLocazioneCorrente(getX(), getY() + i);
-			if (locazioneCorrente != ClassiLocazione.BOSCO && locazioneCorrente != ClassiLocazione.RADURA) {
+			if (locazioneCorrente != TipoLocazione.BOSCO && locazioneCorrente != TipoLocazione.RADURA) {
 				return i;
 			}
 		}
@@ -516,13 +517,13 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		if (getX() == 0) {
 			return 0;
 		}
-		ClassiLocazione locazioneCorrente;
+		TipoLocazione locazioneCorrente;
 		for (int i = 1; i <= Comando.MAX_MOVIMENTO; i++) {
 			if (getX() - i == 0) {
 				return i;
 			}
 			locazioneCorrente = getClasseLocazioneCorrente(getX() - i, getY());
-			if (locazioneCorrente != ClassiLocazione.BOSCO && locazioneCorrente != ClassiLocazione.RADURA) {
+			if (locazioneCorrente != TipoLocazione.BOSCO && locazioneCorrente != TipoLocazione.RADURA) {
 				return i;
 			}
 		}
@@ -546,10 +547,10 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 
 	public final void pernotta(TipoRiposo tipoRiposo) {
 		Logger.log("Inizio pernottamento");
-		ClassiLocazione classeLocazione = getClasseLocazioneCorrente();
+		TipoLocazione classeLocazione = getClasseLocazioneCorrente();
 		int ore = LineaTemporale.oreFinoAlMattino();
-		boolean alCoperto = classeLocazione == ClassiLocazione.LOCANDA
-				|| classeLocazione.getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA;
+		boolean alCoperto = classeLocazione == TipoLocazione.LOCANDA
+				|| classeLocazione.getCategoria() == CategoriaLocazione.CITTA;
 		Logger.log("Pernottamento al coperto? " + alCoperto);
 		if (alCoperto) {
 			StringBuilder sb = new StringBuilder("La stanchezza accumulata ed il tepore delle coperte fanno addormentare subito ");
@@ -632,7 +633,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
 	}
 
-	public boolean isInLocazioneUnica(ClassiLocazione classeLocazioneUnica) {
+	public boolean isInLocazioneUnica(TipoLocazione classeLocazioneUnica) {
 		return getClasseLocazioneCorrente() == classeLocazioneUnica;
 	}
 

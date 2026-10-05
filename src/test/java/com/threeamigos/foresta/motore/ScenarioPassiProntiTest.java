@@ -2,7 +2,6 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.ClasseMissione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
@@ -11,6 +10,7 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -58,7 +58,7 @@ class ScenarioPassiProntiTest {
     void laCacciaContaGliAvversariEGliOggettiDalBusEPagaAlRitorno() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(51)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-                    () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+                    () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             CacciaAiGoblin missione = new CacciaAiGoblin();
             RegistroMissioni.getMissionePrincipale().aggiungiMissione(missione);
             CoordinateMD nyena = partita.gruppo().getCoordinate();

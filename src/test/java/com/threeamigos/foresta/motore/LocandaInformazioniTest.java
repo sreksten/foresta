@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -20,7 +20,7 @@ class LocandaInformazioniTest {
 	void unaLocandaDaAlMassimoTreInformazioni() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
-					() -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+					() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 			// A gruppo pieno in locanda non si incontra nessuno: si ricevono informazioni
 			while (partita.gruppo().getNumeroPersonaggiPermanenti() < Costanti.MAX_PERSONAGGI_GRUPPO_GIOCATORE) {
 				partita.gruppo().aggiungiPersonaggio(new Guerriero("Compagno", 1));
@@ -43,7 +43,7 @@ class LocandaInformazioniTest {
 			// Il conto e' della locanda e resta anche dopo un caricamento
 			partita.salva(Comando.NUMERO_3);
 			assertTrue(partita.leggi(Comando.NUMERO_3));
-			CoordinateMD nyena = Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA);
+			CoordinateMD nyena = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA);
 			assertEquals(String.valueOf(Costanti.LOCANDA_MASSIMO_INFORMAZIONI),
 					Foresta.getLocazioneMD(nyena).ottieniProprieta(Locanda.LOCANDA_INFORMAZIONI_DATE));
 		}

@@ -8,16 +8,16 @@ import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
 import com.threeamigos.foresta.interfacce.Arma;
-import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 
 import java.util.*;
@@ -317,17 +317,17 @@ final class GiocatoreAutomatico {
 		List<CoordinateMD> locandeNuove = new ArrayList<>();
 		for (int x = 0; x < Foresta.getDimensioneX(); x++) {
 			for (int y = 0; y < Foresta.getDimensioneY(); y++) {
-				ClassiLocazione classe = Mappa.nota(x, y);
+				TipoLocazione classe = Mappa.nota(x, y);
 				CoordinateMD c = new CoordinateMD(x, y);
 				if (classe == null || c.equals(qui)) {
 					continue;
 				}
-				if (classe.getTipoLocazione() == TipoLocazione.CITTA) {
+				if (classe.getCategoria() == CategoriaLocazione.CITTA) {
 					citta.add(c);
-				} else if (classe == ClassiLocazione.LOCANDA) {
+				} else if (classe == TipoLocazione.LOCANDA) {
 					locande.add(c);
 				}
-				if ((classe == ClassiLocazione.LOCANDA || classe.getTipoLocazione() == TipoLocazione.CITTA)
+				if ((classe == TipoLocazione.LOCANDA || classe.getCategoria() == CategoriaLocazione.CITTA)
 						&& Foresta.getLocazioneMD(c).ottieniProprieta(Locanda.LOCANDA_VISITATA) == null) {
 					locandeNuove.add(c);
 				}
@@ -1268,7 +1268,7 @@ final class GiocatoreAutomatico {
 		/**
 		 * La classe della casella se è conosciuta, altrimenti null
 		 */
-		static ClassiLocazione nota(int x, int y) {
+		static TipoLocazione nota(int x, int y) {
 			if (x < 0 || y < 0 || x >= Foresta.getDimensioneX() || y >= Foresta.getDimensioneY()) {
 				return null;
 			}
@@ -1291,8 +1291,8 @@ final class GiocatoreAutomatico {
 				if ((d == 0 && ny == 0) || (d == 1 && nx == dimX - 1) || (d == 2 && ny == dimY - 1) || (d == 3 && nx == 0)) {
 					return i;
 				}
-				ClassiLocazione classe = nota(nx, ny);
-				if (classe != null && classe != ClassiLocazione.BOSCO && classe != ClassiLocazione.RADURA) {
+				TipoLocazione classe = nota(nx, ny);
+				if (classe != null && classe != TipoLocazione.BOSCO && classe != TipoLocazione.RADURA) {
 					return i;
 				}
 			}
@@ -1302,11 +1302,11 @@ final class GiocatoreAutomatico {
 		/**
 		 * Il rischio di fermarsi su una casella: circa la probabilità di trovarci mostri, pesata per la loro forza
 		 */
-		static double rischio(ClassiLocazione classe, boolean meta) {
-			if (classe == null || classe == ClassiLocazione.BOSCO || classe == ClassiLocazione.RADURA) {
+		static double rischio(TipoLocazione classe, boolean meta) {
+			if (classe == null || classe == TipoLocazione.BOSCO || classe == TipoLocazione.RADURA) {
 				return 1.0d;
 			}
-			switch (classe.getTipoLocazione()) {
+			switch (classe.getCategoria()) {
 				case CITTA:
 					return 0.2d;
 				case CASTELLO:
@@ -1380,8 +1380,8 @@ final class GiocatoreAutomatico {
 				}
 				int x = nodo / dimY;
 				int y = nodo % dimY;
-				ClassiLocazione qui = nota(x, y);
-				if (nodo != partenza && qui != null && qui.getTipoLocazione() == TipoLocazione.CASTELLO) {
+				TipoLocazione qui = nota(x, y);
+				if (nodo != partenza && qui != null && qui.getCategoria() == CategoriaLocazione.CASTELLO) {
 					continue;
 				}
 				for (int d = 0; d < 4; d++) {

@@ -4,13 +4,14 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.personaggi.Drago;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
 public class CastelloDrago extends LocazioneUnica {
 
 	@Override
-	public ClassiLocazione getClasseLocazione() {
-		return ClassiLocazione.CASTELLO_DRAGO;
+	public TipoLocazione getClasseLocazione() {
+		return TipoLocazione.CASTELLO_DRAGO;
 	}
 
 	@Override
@@ -29,7 +30,7 @@ public class CastelloDrago extends LocazioneUnica {
 		if (isCompleta()) {
 			LineaTemporale.setDragoSconfitto(true);
 			g.setLocazioneCorrenteVisitata();
-			Foresta.distruggiLocazioneUnica(getClasseLocazione(), ClassiLocazione.ROVINE);
+			Foresta.distruggiLocazioneUnica(getClasseLocazione(), TipoLocazione.ROVINE);
 		}
 	}
 

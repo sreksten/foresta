@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.CombattimentoRichiesto;
 import com.threeamigos.foresta.missioni.IncaricoDiCombattimento;
 import com.threeamigos.foresta.missioni.TipoMissione;
@@ -9,6 +8,7 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
@@ -62,7 +62,7 @@ class ScenarioIncaricoDiCombattimentoTest {
     @Test
     void iTrollStannoNellaGrottaSegnataEPoiSiRiscuote() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(171)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             IncaricoDiCombattimento incarico = RegistroMissioni.getTutteLeMissioni().stream()
                     .filter(IncaricoDiCombattimento.class::isInstance).map(IncaricoDiCombattimento.class::cast)
                     .findFirst().orElseThrow(AssertionError::new);
@@ -80,7 +80,7 @@ class ScenarioIncaricoDiCombattimentoTest {
                     incarico.getDescrizione());
 
             CoordinateMD covo = incarico.getCovo();
-            assertEquals(ClassiLocazione.GROTTA, Foresta.getLocazione(covo));
+            assertEquals(TipoLocazione.GROTTA, Foresta.getLocazione(covo));
             assertTrue(Foresta.isLocazioneConosciuta(covo));
             assertEquals("Qui viveva " + capo + ".", incarico.getRicordoDellaLocazione());
 
@@ -99,7 +99,7 @@ class ScenarioIncaricoDiCombattimentoTest {
             assertTrue(partita.testi().contains(capo + " non sfascerà più niente. Il mugnaio aspetta a Nyena."), String.valueOf(partita.testi()));
             assertEquals("Fatto: torna dal mugnaio a Nyena a riscuotere.", incarico.getDescrizione());
 
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA));
+            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             int monete = partita.gruppo().getMonete();
             incarico.controllaPreLocazione();
             incarico.segnaIntermezzoPassoMostrato("RITORNO");
@@ -114,7 +114,7 @@ class ScenarioIncaricoDiCombattimentoTest {
     @Test
     void laCampionessaDelDuelloEUnaGuerrieraConUnNomeDaCampionessa() {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(172)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             IncaricoDiCombattimento incarico = RegistroMissioni.getTutteLeMissioni().stream()
                     .filter(IncaricoDiCombattimento.class::isInstance).map(IncaricoDiCombattimento.class::cast)
                     .findFirst().orElseThrow(AssertionError::new);

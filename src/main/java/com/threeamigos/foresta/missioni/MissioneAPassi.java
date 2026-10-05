@@ -5,14 +5,13 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissio
 import com.threeamigos.foresta.eventi.notifiche.NotificaArtefattoTrovato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.Ondata;
 import com.threeamigos.foresta.motore.LineaTemporale;
+import com.threeamigos.foresta.motore.Ondata;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
@@ -25,6 +24,7 @@ import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Viandante;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -223,7 +223,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	/**
 	 * VAI: si conclude quando il gruppo è in quella locazione unica (una città, un castello…).
 	 */
-	protected final Passo vai(MomentoControllo momento, ClassiLocazione locazioneUnica) {
+	protected final Passo vai(MomentoControllo momento, TipoLocazione locazioneUnica) {
 		return Passo.quando(momento, () -> GruppoGiocatore.getIstanza().isInLocazioneUnica(locazioneUnica));
 	}
 
@@ -358,7 +358,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * fortunata, quanti ne mancano fino a quelli che possono stare in una locazione.
 	 */
 	@Override
-	public Optional<Oggetto> getOggettoInLocazione(CoordinateMD coordinate, ClassiLocazione classe, boolean visitata) {
+	public Optional<Oggetto> getOggettoInLocazione(CoordinateMD coordinate, TipoLocazione classe, boolean visitata) {
 		if (!isAttiva() || isCompleta() || isFallita() || Passo.FINE.equals(getPassoCorrente())) {
 			return Optional.empty();
 		}
@@ -437,7 +437,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 			return;
 		}
 		// Per i trofei un bosco, dove la missione mette i mostri che li portano (vedi raccogli)
-		ClassiLocazione classe = oggetti.isTrofeo() ? ClassiLocazione.BOSCO : oggetti.getLocazioni().iterator().next();
+		TipoLocazione classe = oggetti.isTrofeo() ? TipoLocazione.BOSCO : oggetti.getLocazioni().iterator().next();
 		RegistroMissioni.cercaOCostruisci(classe, this).ifPresent(coordinate -> {
 			aggiungiProprieta(RIPIEGO + oggetti.getChiave(), coordinate.getX() + SEPARATORE + coordinate.getY());
 			Foresta.setLocazioneConosciuta(coordinate);
@@ -966,7 +966,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * {@link RegistroMissioni#getLocazioneOccupata(Missione)}. Come ogni passo, si completa con {@code poi} e,
 	 * se serve, {@code esegui}.
 	 */
-	protected final Passo cercaLocazione(MomentoControllo momento, ClassiLocazione richiesta) {
+	protected final Passo cercaLocazione(MomentoControllo momento, TipoLocazione richiesta) {
 		return Passo.quando(momento, () -> RegistroMissioni.cercaOCostruisci(richiesta, this).isPresent());
 	}
 

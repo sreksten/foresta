@@ -29,7 +29,7 @@ Ci sono due momenti di innesco (enum `MomentoIntermezzo`):
            // Il terzo giorno, se il gruppo sta per entrare in una radura
            return momento == MomentoIntermezzo.INIZIO_LOCAZIONE
                    && LineaTemporale.getGiorno() >= 3
-                   && GruppoGiocatore.getIstanza().getClasseLocazioneCorrente() == ClassiLocazione.RADURA;
+                   && GruppoGiocatore.getIstanza().getClasseLocazioneCorrente() == TipoLocazione.RADURA;
        }
 
        @Override
@@ -65,7 +65,7 @@ Quando non serve più, togli `INTERMEZZO_DI_PROVA` da `ClasseIntermezzo` (è seg
 | Apertura della partita | `momento == MomentoIntermezzo.INIZIO_GIOCO` |
 | Dal giorno N in poi | `LineaTemporale.getGiorno() >= N` |
 | Missione principale completata | `RegistroMissioni.getMissionePrincipale().isCompleta()` |
-| Il gruppo sta per entrare in un tipo di locazione | `GruppoGiocatore.getIstanza().getClasseLocazioneCorrente() == ClassiLocazione.X` |
+| Il gruppo sta per entrare in un tipo di locazione | `GruppoGiocatore.getIstanza().getClasseLocazioneCorrente() == TipoLocazione.X` |
 | Nel gruppo c'è una certa classe | `GruppoGiocatore.getIstanza().getPersonaggiVivi().stream().anyMatch(p -> p.getClasse() == ClassePersonaggio.MAGO)` |
 
 Attenzione: in quel momento il gruppo si è già spostato, ma la **nuova** locazione non è ancora costruita. `getClasseLocazioneCorrente()` legge il tipo dalla casella e quindi dice già dove si sta entrando. `getLocazioneCorrente()`, invece, restituisce ancora l'oggetto della locazione precedente, con i suoi mostri e il suo stato.
@@ -87,7 +87,7 @@ public List<PaginaIntermezzo> getPagine() {
 
         // Pagina 2: scena con sfondo, un drago in lontananza, un fuoco e un dialogo
         new PaginaIntermezzo()
-            .conSfondo(ImmagineIntermezzo.locazione(ClassiLocazione.RADURA))
+            .conSfondo(ImmagineIntermezzo.locazione(TipoLocazione.RADURA))
             .conElemento(ElementoIntermezzo.personaggio("drago", ClassePersonaggio.DRAGO, 1.1, 0.25)
                 .conScala(0.4).conOpacita(0.6)                      // piccolo e semitrasparente
                 .poi(Tappa.inSecondi(8).verso(-0.1, 0.15))          // attraversa il cielo
@@ -149,7 +149,7 @@ Un'immagine si indica con `ImmagineIntermezzo`:
 | Tipo | Come | Note |
 | :--- | :--- | :--- |
 | Personaggio | `ImmagineIntermezzo.personaggio(ClassePersonaggio.X)` oppure la scorciatoia `ElementoIntermezzo.personaggio(id, classe, x, y)` | Le stesse immagini delle locazioni |
-| Illustrazione di una locazione | `ImmagineIntermezzo.locazione(ClassiLocazione.X)` | Adatta come sfondo |
+| Illustrazione di una locazione | `ImmagineIntermezzo.locazione(TipoLocazione.X)` | Adatta come sfondo |
 | Risorsa qualsiasi | `ImmagineIntermezzo.risorsa("intermezzi/Tramonto.png")` | Percorso relativo a `src/main/resources/com/threeamigos/foresta/img/` |
 | Sprite sheet | `ImmagineIntermezzo.spriteSheet("intermezzi/Pipistrello.png", colonne, righe, fotogrammiAlSecondo)` | Vedi sotto |
 | Animazione via codice | `ImmagineIntermezzo.animazione(Animazione.X)` | Vedi §8 |

@@ -1,10 +1,11 @@
 package com.threeamigos.foresta.intermezzi;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 /**
  * Quanto serve agli intermezzi delle locande, nel bosco o in città, per sapere se il
@@ -23,12 +24,12 @@ final class Locande {
 	 * entrati in città, prima ancora di aver scelto "Locanda".
 	 */
 	static boolean momentoCoerenteConLocazioneCorrente(MomentoIntermezzo momento) {
-		ClassiLocazione classe = GruppoGiocatore.getIstanza().getClasseLocazioneCorrente();
+		TipoLocazione classe = GruppoGiocatore.getIstanza().getClasseLocazioneCorrente();
 		if (momento == MomentoIntermezzo.INIZIO_LOCAZIONE) {
-			return classe == ClassiLocazione.LOCANDA;
+			return classe == TipoLocazione.LOCANDA;
 		}
 		if (momento == MomentoIntermezzo.INGRESSO_LOCANDA_IN_CITTA) {
-			return classe.getTipoLocazione() == ClassiLocazione.TipoLocazione.CITTA;
+			return classe.getCategoria() == CategoriaLocazione.CITTA;
 		}
 		return false;
 	}
@@ -38,8 +39,8 @@ final class Locande {
 	 */
 	static LocazioneMD getLocazioneMDLocandaCorrente() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		ClassiLocazione classe = gruppo.getClasseLocazioneCorrente();
-		if (classe != ClassiLocazione.LOCANDA && classe.getTipoLocazione() != ClassiLocazione.TipoLocazione.CITTA) {
+		TipoLocazione classe = gruppo.getClasseLocazioneCorrente();
+		if (classe != TipoLocazione.LOCANDA && classe.getCategoria() != CategoriaLocazione.CITTA) {
 			return null;
 		}
 		return Foresta.getLocazioneMD(gruppo.getCoordinate());

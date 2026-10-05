@@ -1,10 +1,12 @@
 package com.threeamigos.foresta.locazioni;
 
+import com.threeamigos.foresta.tipi.TipoLocazione;
+
 public class CittaNyena extends Citta {
 
 	@Override
-	public ClassiLocazione getClasseLocazione() {
-		return ClassiLocazione.CITTA_NYENA;
+	public TipoLocazione getClasseLocazione() {
+		return TipoLocazione.CITTA_NYENA;
 	}
 
 

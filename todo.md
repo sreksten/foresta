@@ -18,12 +18,12 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 ## Architettura (da valutare)
 
 - **Separare motore, modello dati e UI**, a passi (il primo è fatto: il vocabolario comune, `Comando` e gli enum `Tipo*`, sta in `tipi`, che non dipende da nessun altro pacchetto):
-  1. dividere gli enum `Classe*` (`ClassePersonaggio`, `ClassiLocazione`, `ClasseMissione`, `ClasseIncantesimo`, `ClassiOggetto`, `ClasseIntermezzo`, `ClassiOfferta`), che oggi sono anche fabbriche (`Arpia::new`...), in un identificativo puro in `tipi` (per esempio `TipoPersonaggio`) e la fabbrica nel pacchetto di dominio; cominciare da quelli che salva il modello dati;
+  1. dividere gli enum `Classe*` (fatto per le locazioni: `tipi.TipoLocazione` e `locazioni.FabbricaLocazioni`; restano `ClassePersonaggio`, `ClasseMissione`, `ClasseIncantesimo`, `ClassiOggetto`, `ClasseIntermezzo`, `ClassiOfferta`), che oggi sono anche fabbriche (`Arpia::new`...), in un identificativo puro in `tipi` (per esempio `TipoPersonaggio`) e la fabbrica nel pacchetto di dominio; cominciare da quelli che salva il modello dati;
   2. un modello dati fatto solo di dati: niente `Dado` nei registri `MD`, `EffettoDiStato` come dato, niente `Artefatto` in `RegistroArtefattiMD`, niente `Costanti` in `CoordinateMD`; poi spostarlo in `foresta.modellodati`;
   3. viste in sola lettura (interfacce in `interfacce`) per la UI al posto di `GruppoGiocatore.getIstanza()` e simili;
   4. i negozi solo a eventi, senza che la UI chiami gli `Automa*`.
 - **Separare il modello dati dal motore.** Oggi la UI importa direttamente classi del motore (`GruppoGiocatore`, `Foresta`, `Notizie`, `RegistroMissioni`...) e riceve dagli eventi gli `Automa*` dei negozi, che poi chiama. L'idea: la UI consulta il modello dati in sola lettura e verso il motore emette solo eventi (`Richiesta*`/`Comando*`). Vedi [`assessment.md`](assessment.md).
-- **`ClassiLocazione`.** `GROTTA_RECUPERA_IL_MEDAGLIONE` e `ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI` servono ancora? Dovrebbero essere state superate. Inoltre `ClassiLocazione` dovrebbe chiamarsi `TipoLocazione` e stare in `tipi` (vedi sotto).
+- **`TipoLocazione`.** `GROTTA_RECUPERA_IL_MEDAGLIONE` e `ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI` servono ancora? Dovrebbero essere state superate.
 - **`Notizie`** si mette in ascolto di una notizia (delle locande) invece di riceverne la pubblicazione: approccio inusuale.
 - **Nomi dei modelli dati.** Alcuni non finiscono per `MD` (`ModificatoreArtefatto`).
 

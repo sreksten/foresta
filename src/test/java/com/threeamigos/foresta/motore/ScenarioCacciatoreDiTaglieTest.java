@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.CacciatoreDiTaglie;
 import com.threeamigos.foresta.missioni.IlRapimento;
 import com.threeamigos.foresta.missioni.IncaricoInCitta;
@@ -9,6 +8,7 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -36,14 +36,14 @@ class ScenarioCacciatoreDiTaglieTest {
     void laBandaVaCercataBastaAbbattereIlCapoEPoiSiRiscuote() {
         // Senza trucchi: in modalità di prova la mappa è già tutta svelata
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(161)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             CacciatoreDiTaglie taglia = prendiLIncarico(partita, CacciatoreDiTaglie.class);
             String ricercato = taglia.getRicercato();
             assertEquals("Ricercato: " + ricercato, taglia.getNome());
 
             // Le rovine non sono sulla mappa: si sa solo da che parte cercarle
             CoordinateMD covo = taglia.getCovo();
-            assertEquals(ClassiLocazione.ROVINE, Foresta.getLocazione(covo));
+            assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(covo));
             assertFalse(Foresta.isLocazioneConosciuta(covo));
             assertFalse(Foresta.getCoordinateDaSegnalare().contains(covo));
             assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith("Dicono che la banda di " + ricercato)
@@ -71,7 +71,7 @@ class ScenarioCacciatoreDiTaglieTest {
             taglia.controllaPostLocazione();
             assertEquals("RITORNO", taglia.getPassoCorrente());
 
-            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(ClassiLocazione.CITTA_NYENA));
+            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             int monete = partita.gruppo().getMonete();
             taglia.controllaPreLocazione();
             taglia.segnaIntermezzoPassoMostrato("RITORNO");
@@ -86,7 +86,7 @@ class ScenarioCacciatoreDiTaglieTest {
     @Test
     void iNomiPescatiRestanoGliStessiDopoUnCaricamento() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(162)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             IlRapimento rapimento = prendiLIncarico(partita, IlRapimento.class);
             String ostaggio = rapimento.getOstaggio();
             String capobanda = rapimento.getCapobanda();

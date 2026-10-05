@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.intermezzi;
 
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,13 +40,13 @@ public final class ScenaFraCompagni {
 	private static final double SECONDI_SALITA_LUNA = 6;
 
 	private final String testo;
-	private final ClassiLocazione sfondo;
+	private final TipoLocazione sfondo;
 	private final boolean conFuoco;
 	private final List<ClassePersonaggio> personaggi;
 	private final List<BattutaIntermezzo> battute = new ArrayList<>();
 	private String luna;
 
-	private ScenaFraCompagni(String testo, ClassiLocazione sfondo, boolean conFuoco, List<Personaggio> personaggi) {
+	private ScenaFraCompagni(String testo, TipoLocazione sfondo, boolean conFuoco, List<Personaggio> personaggi) {
 		if (personaggi.size() < 2) {
 			throw new IllegalArgumentException("Per parlare fra sé servono almeno due personaggi");
 		}
@@ -61,13 +61,13 @@ public final class ScenaFraCompagni {
 	 * Intorno al fuoco, nel bosco, di notte: i primi due personaggi della lista parlano.
 	 */
 	public static ScenaFraCompagni allAccampamento(String testo, List<Personaggio> personaggi) {
-		return new ScenaFraCompagni(testo, ClassiLocazione.BOSCO, true, personaggi);
+		return new ScenaFraCompagni(testo, TipoLocazione.BOSCO, true, personaggi);
 	}
 
 	/**
 	 * In quella locazione: i primi due personaggi della lista parlano.
 	 */
-	public static ScenaFraCompagni in(ClassiLocazione locazione, String testo, List<Personaggio> personaggi) {
+	public static ScenaFraCompagni in(TipoLocazione locazione, String testo, List<Personaggio> personaggi) {
 		return new ScenaFraCompagni(testo, locazione, false, personaggi);
 	}
 

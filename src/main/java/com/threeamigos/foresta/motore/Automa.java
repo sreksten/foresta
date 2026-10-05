@@ -15,8 +15,6 @@ import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
 import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
-import com.threeamigos.foresta.locazioni.ClassiLocazione.TipoLocazione;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
@@ -28,10 +26,12 @@ import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.*;
+import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tools.*;
 
@@ -1874,12 +1874,12 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (gruppo.getNumeroPersonaggiVivi() <= 1 || (LineaTemporale.getOra() <= 20 && LineaTemporale.getOra() >= 6)) {
 			return false;
 		}
-		ClassiLocazione classeLocazione = gruppo.getClasseLocazioneCorrente();
+		TipoLocazione classeLocazione = gruppo.getClasseLocazioneCorrente();
 		// Nei castelli non si riposa (getTipoRiposo lancia un'eccezione): ci si resta dopo una fuga
-		return classeLocazione.getTipoLocazione() != TipoLocazione.CITTA &&
-				classeLocazione.getTipoLocazione() != TipoLocazione.CASTELLO &&
-				classeLocazione != ClassiLocazione.LOCANDA &&
-				classeLocazione != ClassiLocazione.PALUDE;
+		return classeLocazione.getCategoria() != CategoriaLocazione.CITTA &&
+				classeLocazione.getCategoria() != CategoriaLocazione.CASTELLO &&
+				classeLocazione != TipoLocazione.LOCANDA &&
+				classeLocazione != TipoLocazione.PALUDE;
 	}
 
 	/**

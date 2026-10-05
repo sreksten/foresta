@@ -3,13 +3,13 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.interni.InternoFumettoSuccessivo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaPaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
-import com.threeamigos.foresta.locazioni.ClassiLocazione;
 import com.threeamigos.foresta.missioni.LealtaRichiesta;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import org.junit.jupiter.api.Test;
 
@@ -26,7 +26,7 @@ class PergamenaFumettoSuccessivoTest {
     @Test
     void laPergamenaSaltaAlFumettoSuccessivoPoiGiraLaPagina() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(261)) {
-            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.LADRO, () -> partita.spostaGruppoIn(ClassiLocazione.CITTA_NYENA));
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.LADRO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             partita.comando(Comando.ESCI_DA_CITTA);
             partita.gruppo().setCoordinate(unaCasellaDiBosco());
             Guerriero sentinella = new Guerriero("Sentinella", 1);
@@ -67,7 +67,7 @@ class PergamenaFumettoSuccessivoTest {
     private static CoordinateMD unaCasellaDiBosco() {
         for (int x = 0; x < Foresta.getDimensioneX(); x++) {
             for (int y = 0; y < Foresta.getDimensioneY(); y++) {
-                if (Foresta.getLocazione(x, y) == ClassiLocazione.BOSCO) {
+                if (Foresta.getLocazione(x, y) == TipoLocazione.BOSCO) {
                     return new CoordinateMD(x, y);
                 }
             }
