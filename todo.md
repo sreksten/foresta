@@ -33,6 +33,14 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 - Ricontrollare l'economia partendo da [`economia.md`](economia.md): entrate, uscite, modello per livello e proposte (bottino dei nemici, preziosi che valgono col livello, missioni pagate col livello, prezzi degli ingredienti).
 - Dimensione ottimale della mappa: `Foresta.DIMENSIONE_X`/`DIMENSIONE_Y`, da tarare con le prove.
 
+## Il Bardo
+
+Oggi il Bardo non ha nessuna capacità propria ed è la classe più debole (vedi `risorse_e_documenti_vari/analisi_logoramento.md`). Idee, sul modello del dardo arcano di Mago ed Elfo (capacità innata, costa `MAGIA`, non consuma pergamene, è fra le scelte del comando incantesimi, occupa il turno e l'avversario risponde su chi la usa). Ognuna richiede una sua icona.
+
+- **Canto di guarigione** (il gioco non ha un curatore): cura il compagno più ferito (o tutto il gruppo, di meno), circa 30 × √livello aumentato da Saggezza e Carisma, per circa 4 di `MAGIA`.
+- **Canto ipnotico o di scherno** (il morale del nemico): `SPAVENTATO` o `CONFUSO` sugli avversari, con la Soggezione del Bardo contro il loro Coraggio. Usa effetti di stato che ci sono già.
+- **Ballata di incitamento** (il morale del gruppo): un bonus temporaneo al gruppo (Precisione o danno) per qualche round. Serve un effetto di stato positivo nuovo (per esempio `ISPIRATO`), il suo aggancio in `CalcolatoreCombattimento` e una riga in `interazioni_effetti_di_stato.md`.
+
 ## Grafica e immagini
 
 - Immagini degli artefatti che mancano per la rivelazione (`SpriteRivelazioneArtefatto`), da mettere in `img/oggetti`:

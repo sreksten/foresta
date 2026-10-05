@@ -7,6 +7,8 @@ import com.threeamigos.foresta.motore.tipi.TipoDanno;
 import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tools.Misc;
 
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.function.Function;
 
 public class ChimeraDrago extends PersonaggioBase implements Personaggio {
@@ -59,6 +61,11 @@ public class ChimeraDrago extends PersonaggioBase implements Personaggio {
 	@Override
 	public double getLivellamentoMagia() {
 		return Costanti.CHIMERADRAGO_LIVELLAMENTO_MAGIA;
+	}
+
+	@Override
+	protected Set<ClasseIncantesimo> getRepertorioIncantesimi() {
+		return EnumSet.of(ClasseIncantesimo.FUOCO, ClasseIncantesimo.VELENO);
 	}
 
 	@Override

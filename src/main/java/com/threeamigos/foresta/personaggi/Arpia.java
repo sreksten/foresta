@@ -5,6 +5,8 @@ import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.tipi.TipoAttributo;
 import com.threeamigos.foresta.tools.Misc;
 
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.function.Function;
 
 public class Arpia extends PersonaggioBase implements Personaggio {
@@ -57,6 +59,11 @@ public class Arpia extends PersonaggioBase implements Personaggio {
 	@Override
 	public double getLivellamentoMagia() {
 		return Costanti.ARPIA_LIVELLAMENTO_MAGIA;
+	}
+
+	@Override
+	protected Set<ClasseIncantesimo> getRepertorioIncantesimi() {
+		return EnumSet.of(ClasseIncantesimo.ARIA);
 	}
 
 	@Override

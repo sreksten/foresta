@@ -77,8 +77,8 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.setClasse(classe);
 		png = true;
 
-		// I boss partono con i valori impostati al massimo, gli altri personaggi partono con un pool di valori
-		// lievemente casuale, dal 75% al 100% dei valori massimi
+		// I boss partono con salute e magia piene, gli altri personaggi con un pool di valori lievemente casuale,
+		// dal 75% al 100% dei valori massimi
 		Function<Integer, Integer> funzionePerValoriIniziali;
 		if (isParteConValoriMassimi()) {
 			funzionePerValoriIniziali = val -> val;
@@ -91,9 +91,8 @@ public abstract class PersonaggioBase implements Personaggio {
 
 		// Queste impostano il resto - LanciatoreDeiDadi sovrascrive
 		impostaValoriDiPartenza(funzionePerValoriIniziali);
-		if (!isParteConValoriMassimi()) {
-			LanciatoreDeiDadi.tiraDadiPer(classe, getLivello(), md);
-		}
+		// Gli attributi primari vengono dal budget della classe (LanciatoreDeiDadi), boss compresi
+		LanciatoreDeiDadi.tiraDadiPer(classe, getLivello(), md);
 
 		ricalcolaAttributiSecondari();
 		classe.setQuantitaMassima(quantitaMassima);
@@ -160,6 +159,22 @@ public abstract class PersonaggioBase implements Personaggio {
 		this.amichevole = amichevole;
 	}
 
+	/**
+	 * Gli incantesimi malefici che il personaggio sa lanciare quando attacca (vedi scegliIncantesimoContro): i boss
+	 * tutti, Morte compresa; gli altri tutti tranne Morte. Le classi di mostri con un carattere preciso lo
+	 * restringono (l'Arpia l'Aria, i non morti il Gelo...).
+	 */
+	protected Set<ClasseIncantesimo> getRepertorioIncantesimi() {
+		Set<ClasseIncantesimo> repertorio = EnumSet.noneOf(ClasseIncantesimo.class);
+		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
+			if (classeIncantesimo.getTipo() == TipoIncantesimo.MALEFICO
+					&& (classeIncantesimo != ClasseIncantesimo.MORTE || isParteConValoriMassimi())) {
+				repertorio.add(classeIncantesimo);
+			}
+		}
+		return repertorio;
+	}
+
 	public boolean isMagico() {
 		return getLivellamentoMagia() > 0.0d;
 	}
@@ -188,6 +203,9 @@ public abstract class PersonaggioBase implements Personaggio {
 		return false;
 	}
 	
+	/**
+	 * I boss: partono con salute e magia piene e non possono essere mietuti (vedi applicaRisultatoCombattimento)
+	 */
 	public boolean isParteConValoriMassimi() {
 		return false;
 	}
@@ -339,9 +357,14 @@ public abstract class PersonaggioBase implements Personaggio {
 	/**
 	 * Calcola il mana rigenerato durante un turno di riposo.
 	 */
+	/**
+	 * La magia che il personaggio recupera a fine locazione (vedi Automa, stato FINE_LOCAZIONE_2). I modificatori di
+	 * RIGENERAZIONE_MAGIA (del personaggio, degli artefatti e dei set leggendari) valgono su tutta la base.
+	 */
 	public int getRigenerazioneMagia() {
-		// 1. Calcolo del recupero potenziale basato solo sulla capienza massima
-		double recuperoGrezzo = getQuantitaModificata(md, 5.0d, TipoAttributo.RIGENERAZIONE_MAGIA) + getMagiaMassima() * 0.05d;
+		// 1. Calcolo del recupero potenziale: una parte fissa e una sulla capienza massima
+		double recuperoGrezzo = getQuantitaModificata(md,
+				5.0d + getMagiaMassima() * Costanti.RIGENERAZIONE_MAGIA_QUOTA_MAGIA_MASSIMA, TipoAttributo.RIGENERAZIONE_MAGIA);
 		// 2. Applicazione del moltiplicatore di classe/razza
 		double manaRigenerato = recuperoGrezzo * getMoltiplicatoreRecuperoMagico();
 		// Arrotondamento a un decimale per l'interfaccia utente (UI)
@@ -469,22 +492,40 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public void attacca(Personaggio bersaglio) {
+		attacca(bersaglio, true);
+	}
+
+	public void rispondiInMischia(Personaggio bersaglio) {
+		attacca(bersaglio, false);
+	}
+
+	/**
+	 * Chi sa la magia sceglie se lanciare un incantesimo (scegliIncantesimoContro, che tiene conto di SILENZIATO);
+	 * altrimenti attacca con le sue fasi di attacco (la seconda arma compresa), ognuna sull'asse del suo tipo di
+	 * danno, finché il bersaglio resta in combattimento
+	 */
+	private void attacca(Personaggio bersaglio, boolean annunciaAttacco) {
 		Logger.log(getNome() + " attacca " + bersaglio.getNome());
 		Incantesimo incantesimoScelto = scegliIncantesimoContro(bersaglio);
 		if (incantesimoScelto != null) {
 			incantesimoScelto.formula(this, bersaglio, null);
-		} else {
+			return;
+		}
+		if (annunciaAttacco) {
 			OpzioniGetNome articoloDaIncludere = GruppoAvversario.getIstanza().getNumeroPersonaggiVivi() == 1 ?
 					OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE :
 					OpzioniGetNome.INCLUDI_ARTICOLO_INDETERMINATIVO_SINGOLARE;
-            String messaggio = getNome(articoloDaIncludere, OpzioniGetNome.INIZIALE_MAIUSCOLA) +
-                    " attacca " + bersaglio.getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + '.';
+			String messaggio = getNome(articoloDaIncludere, OpzioniGetNome.INIZIALE_MAIUSCOLA) +
+					" attacca " + bersaglio.getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + '.';
 			BusEventi.pubblica(new NotificaTestoFrase(messaggio));
-
-			boolean colpisce = CalcolatoreCombattimento.colpisce(this, bersaglio, SupertipoDanno.FISICO);
-			if (colpisce) {
-				Arma arma = getArmaEquipaggiata();
-                DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(this, bersaglio, arma);
+		}
+		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(this)) {
+			if (bersaglio.isFuoriCombattimento()) {
+				return;
+			}
+			Arma arma = fase.getArma();
+			if (CalcolatoreCombattimento.colpisce(this, bersaglio, arma.getTipoDanno().getSuperTipo())) {
+				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(this, bersaglio, arma, fase.getFattore());
 				Logger.log(getNome() + " colpisce " + bersaglio.getNome() + " assegnando " + risultato.getDanno() + " danni");
 				bersaglio.applicaRisultatoCombattimento(risultato);
 			} else {
@@ -619,6 +660,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 		List<IncantesimoMalefico> incantesimiDisponibili = Arrays.stream(ClasseIncantesimo.values())
 				.filter(i -> i.getCostoLancio() <= magiaCorrente && i.getTipo() == TipoIncantesimo.MALEFICO)
+				.filter(getRepertorioIncantesimi()::contains)
 				.map(i -> i.getIstanza(getLivello()))
 				.map(IncantesimoMalefico.class::cast)
 				.collect(Collectors.toList());
@@ -659,12 +701,13 @@ public abstract class PersonaggioBase implements Personaggio {
 
 		int probabilitaDiColpireMagico = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(
 				this, personaggioBersaglio, SupertipoDanno.MAGICO);
+        Arma arma = getArmaEquipaggiata();
+		// L'attacco con l'arma, sull'asse del suo tipo di danno (l'arma naturale del Lich, per esempio, è magica)
 		int probabilitaDiColpireFisico = CalcolatoreCombattimento.calcolaProbabilitaDiColpire(
-				this, personaggioBersaglio, SupertipoDanno.FISICO);
+				this, personaggioBersaglio, arma.getTipoDanno().getSuperTipo());
 
 		int possibiliDanniMagici = CalcolatoreCombattimento.calcolaDannoRisultante(this, personaggioBersaglio, piuPotente).getDanno();
 
-        Arma arma = getArmaEquipaggiata();
 		int possibiliDanniFisici = CalcolatoreCombattimento.calcolaDannoRisultante(this, personaggioBersaglio, arma).getDanno();
 
 		if (probabilitaDiColpireMagico * possibiliDanniMagici > probabilitaDiColpireFisico * possibiliDanniFisici) {

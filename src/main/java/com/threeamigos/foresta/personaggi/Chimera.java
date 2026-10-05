@@ -1,9 +1,12 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.tipi.TipoAttributo;
 import com.threeamigos.foresta.tools.Misc;
 
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.function.Function;
 
 public class Chimera extends PersonaggioBase implements Personaggio {
@@ -56,6 +59,11 @@ public class Chimera extends PersonaggioBase implements Personaggio {
 	@Override
 	public double getLivellamentoMagia() {
 		return Costanti.CHIMERA_LIVELLAMENTO_MAGIA;
+	}
+
+	@Override
+	protected Set<ClasseIncantesimo> getRepertorioIncantesimi() {
+		return EnumSet.of(ClasseIncantesimo.FUOCO, ClasseIncantesimo.VELENO);
 	}
 
 	@Override

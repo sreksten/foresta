@@ -120,15 +120,16 @@ public class LanciatoreDeiDadi {
         int livelloModificato = livello - 1;
 
         switch (classePersonaggio) {
-            // Boss finale:
+            // I boss: con i 35 punti di base, circa il doppio di un personaggio giocante (70) per il Drago e una volta e
+            // mezza-1,8 per gli altri a livello 1, perché si affrontano con il gruppo intero; crescono un po' più in fretta
             case DRAGO:
-                return 200 + (livelloModificato * 6);
+                return 105 + (livelloModificato * 6);
             case LICH:
             case STREGA:
-                return 155 + (livelloModificato * 5);
+                return 90 + (livelloModificato * 5);
             case IDRA:
             case MINOTAURO_GIGANTE:
-                return 135 + (livelloModificato * 4);
+                return 80 + (livelloModificato * 4);
             case BARDO:
             case CANTASTORIE:
             case VIANDANTE:

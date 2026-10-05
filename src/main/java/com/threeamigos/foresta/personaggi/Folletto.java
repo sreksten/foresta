@@ -1,10 +1,13 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.tipi.TipoAttributo;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tools.Misc;
 
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.function.Function;
 
 public class Folletto extends PersonaggioBase implements Personaggio {
@@ -60,6 +63,11 @@ public class Folletto extends PersonaggioBase implements Personaggio {
 	@Override
 	public double getLivellamentoMagia() {
 		return Costanti.FOLLETTO_LIVELLAMENTO_MAGIA;
+	}
+
+	@Override
+	protected Set<ClasseIncantesimo> getRepertorioIncantesimi() {
+		return EnumSet.of(ClasseIncantesimo.ACQUA, ClasseIncantesimo.GELO, ClasseIncantesimo.ARIA);
 	}
 
 	@Override

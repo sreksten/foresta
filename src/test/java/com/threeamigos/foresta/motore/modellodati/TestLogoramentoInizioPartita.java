@@ -2,6 +2,7 @@ package com.threeamigos.foresta.motore.modellodati;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
+import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.locazioni.LocazioneBase;
 import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
 import com.threeamigos.foresta.motore.Costanti;
@@ -202,6 +203,7 @@ public class TestLogoramentoInizioPartita {
             pg.addStanchezza(1);
             if (variante.recuperoAFineLocazione) {
                 pg.addSalute(pg.getRigenerazioneSalute());
+                pg.addMagia(pg.getRigenerazioneMagia());
             }
         }
         esito.locazioni = LOCAZIONI_MASSIME;
@@ -296,6 +298,95 @@ public class TestLogoramentoInizioPartita {
         }
     }
 
+    /**
+     * I boss al livello del mondo: com'è fatto ciascuno e come va un Guerriero con la sua dotazione tipica (CAVALIERE),
+     * uno contro uno
+     */
+    @Disabled("Da eseguire manualmente: i boss colpo per colpo")
+    @Test
+    void boss() {
+        PrintStream out = System.out;
+        System.setOut(NULL_STREAM);
+        try {
+            List<ClassePersonaggio> boss = Arrays.asList(ClassePersonaggio.IDRA, ClassePersonaggio.MINOTAURO_GIGANTE,
+                    ClassePersonaggio.LICH, ClassePersonaggio.STREGA, ClassePersonaggio.DRAGO);
+            for (int livello : new int[]{1, 3, 5, 8, 10}) {
+                Personaggio guerriero = ClassePersonaggio.GUERRIERO.getIstanza(livello);
+                Equipaggiamento.tipiciPer(ClassePersonaggio.GUERRIERO).get(0).equipaggia(guerriero);
+                out.printf("== livello %d: Guerriero CAVALIERE salute %d, forza %d, parata %d, res. magica %d%n", livello,
+                        guerriero.getSaluteMassima(), guerriero.getForza(), guerriero.getParata(), guerriero.getResistenzaMagica());
+                for (ClassePersonaggio classe : boss) {
+                    Personaggio b = classe.getIstanza(livello);
+                    StringBuilder armi = new StringBuilder();
+                    for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(b)) {
+                        armi.append(fase.getArma().getTipoDanno()).append(' ').append(fase.getArma().getDanni()).append(' ');
+                    }
+                    RisultatoMatrice r = CombatSimulatorMatrix.simulaScontroGruppo(ClassePersonaggio.GUERRIERO,
+                            Equipaggiamento.tipiciPer(ClassePersonaggio.GUERRIERO).get(0), ScortaDiPergamene.NESSUNA,
+                            classe, 1, livello, livello, 500);
+                    out.printf("%-17s salute %4d for %3d int %3d par %3d resM %3d bersagli %d armi [%s] | colpisce %4.1f%% danno %5.1f "
+                                    + "| subisce: colpito %4.1f%% danno %5.1f | vince %5.1f%% in %4.1f turni%n",
+                            classe, b.getSaluteMassima(), b.getForza(), b.getIntelligenza(), b.getParata(), b.getResistenzaMagica(),
+                            b.getBersagli(), armi.toString().trim(), r.tassoColpireMostro, r.dannoMedioMostro,
+                            r.tassoColpirePg, r.dannoMedioPg, r.winRatePg, r.mediaTurni);
+                }
+            }
+        } finally {
+            System.setOut(out);
+        }
+    }
+
+    @Disabled("Da eseguire manualmente: gli attributi che contano per colpire e difendersi, Guerriero contro Lich")
+    @Test
+    void attributiGuerrieroLich() {
+        PrintStream out = System.out;
+        System.setOut(NULL_STREAM);
+        try {
+            for (int livello : new int[]{1, 3, 5, 10}) {
+                Personaggio g = ClassePersonaggio.GUERRIERO.getIstanza(livello);
+                Equipaggiamento.tipiciPer(ClassePersonaggio.GUERRIERO).get(0).equipaggia(g);
+                Personaggio l = ClassePersonaggio.LICH.getIstanza(livello);
+                out.printf("L%-2d GUERRIERO prec %d des %d vel %d par %d resM %d sag %d int %d salute %d | LICH prec %d des %d vel %d par %d resM %d sag %d int %d salute %d tipo %s%n",
+                        livello, g.getPrecisione(), g.getDestrezza(), g.getVelocita(), g.getParata(), g.getResistenzaMagica(),
+                        g.getSaggezza(), g.getIntelligenza(), g.getSaluteMassima(),
+                        l.getPrecisione(), l.getDestrezza(), l.getVelocita(), l.getParata(), l.getResistenzaMagica(),
+                        l.getSaggezza(), l.getIntelligenza(), l.getSaluteMassima(), l.getArmaEquipaggiata().getTipoDanno().getSuperTipo());
+            }
+        } finally {
+            System.setOut(out);
+        }
+    }
+
+    @Disabled("Da eseguire manualmente: gli incantesimi dei mostri magici contro un Guerriero di livello 1")
+    @Test
+    void incantesimiDeiMostri() {
+        PrintStream out = System.out;
+        System.setOut(NULL_STREAM);
+        try {
+            Personaggio g = nuovoProtagonista(ClassePersonaggio.GUERRIERO);
+            out.printf("Guerriero: salute %d, res. magica %d, saggezza %d%n", g.getSaluteMassima(), g.getResistenzaMagica(), g.getSaggezza());
+            for (ClassePersonaggio classe : MOSTRI_DEL_BOSCO) {
+                Personaggio m = classe.getIstanza(1);
+                if (!((com.threeamigos.foresta.personaggi.PersonaggioBase) m).isMagico()) {
+                    continue;
+                }
+                StringBuilder sb = new StringBuilder(String.format("%-13s magia %3d int %2d:", classe, m.getMagia(), m.getIntelligenza()));
+                for (com.threeamigos.foresta.incantesimi.ClasseIncantesimo ci : com.threeamigos.foresta.incantesimi.ClasseIncantesimo.values()) {
+                    if (ci.getTipo() != com.threeamigos.foresta.incantesimi.TipoIncantesimo.MALEFICO || ci.getCostoLancio() > m.getMagia()) {
+                        continue;
+                    }
+                    com.threeamigos.foresta.incantesimi.IncantesimoMalefico inc =
+                            (com.threeamigos.foresta.incantesimi.IncantesimoMalefico) ci.getIstanza(1);
+                    sb.append(String.format(" %s %d%%x%d", ci, CalcolatoreCombattimento.calcolaProbabilitaDiColpire(m, g,
+                            inc.getTipoDanno().getSuperTipo()), CalcolatoreCombattimento.calcolaDannoRisultante(m, g, inc).getDanno()));
+                }
+                out.println(sb);
+            }
+        } finally {
+            System.setOut(out);
+        }
+    }
+
     @Disabled("Da eseguire manualmente: controlla la dotazione di base e i numeri di un colpo")
     @Test
     void controlloDotazione() {
@@ -372,7 +463,6 @@ public class TestLogoramentoInizioPartita {
      * L'esperienza dei mostri uccisi va al protagonista, come in LocazioneBase. Vero se vince.
      */
     private static boolean scontro(Personaggio pg, List<Personaggio> mostri, int[] pozioni) {
-        CombatSimulatorMatrix.StatisticheAttacco statistiche = new CombatSimulatorMatrix.StatisticheAttacco();
         for (int turno = 0; turno < CombatSimulatorMatrix.TURNI_MASSIMI; turno++) {
             Personaggio bersaglio = mostri.get(0);
             if (pozioni[0] > 0 && pg.getSalute() * 100 < pg.getSaluteMassima() * 35) {
@@ -381,7 +471,7 @@ public class TestLogoramentoInizioPartita {
                 pg.addSalute(Costanti.RECUPERO_DA_POZIONE_SALUTE);
             } else if (CombatSimulatorMatrix.conviene(pg, bersaglio)) {
                 DardoArcano dardo = new DardoArcano(pg);
-                CombatSimulatorMatrix.attacca(pg, bersaglio, new FaseDiAttacco(dardo, 1.0d), statistiche);
+                colpisci(pg, bersaglio, dardo, 1.0d);
                 pg.subMagia(dardo.getCostoLancio());
             } else {
                 for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(pg)) {
@@ -389,7 +479,7 @@ public class TestLogoramentoInizioPartita {
                     if (vivo == null) {
                         break;
                     }
-                    CombatSimulatorMatrix.attacca(pg, vivo, fase, statistiche);
+                    colpisci(pg, vivo, fase.getArma(), fase.getFattore());
                 }
             }
             for (Personaggio mostro : new ArrayList<>(mostri)) {
@@ -402,10 +492,20 @@ public class TestLogoramentoInizioPartita {
                 return true;
             }
             for (Personaggio mostro : mostri) {
-                for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(mostro)) {
-                    if (pg.isVivo()) {
-                        CombatSimulatorMatrix.attacca(mostro, pg, fase, statistiche);
-                    }
+                if (pg.isVivo()) {
+                    // Come nel gioco: con le armi o, se sa la magia, con un incantesimo
+                    mostro.rispondiInMischia(pg);
+                }
+            }
+            // A fine round passa un turno di effetti di stato per tutti (LocazioneBase.dopoIlRound)
+            if (pg.isVivo()) {
+                pg.applicaDanniDaEffettiDiStato();
+                pg.riduciEffettiDiStato();
+            }
+            for (Personaggio mostro : mostri) {
+                if (mostro.isVivo()) {
+                    mostro.applicaDanniDaEffettiDiStato();
+                    mostro.riduciEffettiDiStato();
                 }
             }
             if (!pg.isVivo()) {
@@ -413,6 +513,15 @@ public class TestLogoramentoInizioPartita {
             }
         }
         return false;
+    }
+
+    /**
+     * Un colpo come nel gioco: se va a segno il risultato (danno ed effetti di stato) si applica al difensore
+     */
+    private static void colpisci(Personaggio attaccante, Personaggio difensore, Arma arma, double fattore) {
+        if (CalcolatoreCombattimento.colpisce(attaccante, difensore, arma.getTipoDanno().getSuperTipo())) {
+            difensore.applicaRisultatoCombattimento(CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, difensore, arma, fattore));
+        }
     }
 
     private static Personaggio primoVivo(List<Personaggio> mostri) {

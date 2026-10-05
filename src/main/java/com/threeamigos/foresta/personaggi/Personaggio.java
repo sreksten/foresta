@@ -237,6 +237,11 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
 	 */
     void attacca(Personaggio bersaglio);
 	/**
+	 * Come attacca(Personaggio), ma senza annunciare l'attacco: la risposta di un avversario al combattente nella
+	 * mischia (LocazioneBase.eseguiSingoloAttacco). Chi sa la magia può lanciare un incantesimo.
+	 */
+	void rispondiInMischia(Personaggio bersaglio);
+	/**
 	 * Il personaggio attacca un gruppo avversario; questa viene chiamata per i PNG
 	 */
     void attacca(Gruppo bersaglio);

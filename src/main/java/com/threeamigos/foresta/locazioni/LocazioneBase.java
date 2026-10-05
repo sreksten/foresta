@@ -1207,20 +1207,14 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		Logger.log("Valutazione bersaglio -> combattente");
 
-		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(bersaglio)) {
-			Arma arma = fase.getArma();
-			boolean colpisce = CalcolatoreCombattimento.colpisce(bersaglio, combattente, arma.getTipoDanno().getSuperTipo());
-			if (colpisce) {
-				DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(bersaglio, combattente, arma, fase.getFattore());
-				combattente.applicaRisultatoCombattimento(risultato);
-				if (combattente.isFuoriCombattimento()) {
-					if (gruppo.getCapo().isVivo()) {
-						statoLocazione = StatoLocazione.IN_LOCAZIONE;
-						return Optional.of(Stato.IN_LOCAZIONE);
-					} else {
-						return Optional.of(Stato.GIOCO_PERSO);
-					}
-				}
+		// L'avversario risponde sul combattente: con le armi o, se sa la magia, con un incantesimo
+		bersaglio.rispondiInMischia(combattente);
+		if (combattente.isFuoriCombattimento()) {
+			if (gruppo.getCapo().isVivo()) {
+				statoLocazione = StatoLocazione.IN_LOCAZIONE;
+				return Optional.of(Stato.IN_LOCAZIONE);
+			} else {
+				return Optional.of(Stato.GIOCO_PERSO);
 			}
 		}
 

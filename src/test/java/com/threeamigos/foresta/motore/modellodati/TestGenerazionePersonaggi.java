@@ -126,27 +126,19 @@ public class TestGenerazionePersonaggi {
         System.out.println("File CSV generato: " + CSV_FILE);
     }
 
+    /**
+     * I boss (isParteConValoriMassimi) partono con salute e magia piene; gli attributi li ricevono dal budget come gli
+     * altri
+     */
     @Test
-    public void testValoriMassimiCoerenti() {
+    public void iBossPartonoConSaluteEMagiaPiene() {
         for (ClassePersonaggio classe : ClassePersonaggio.values()) {
-            Personaggio p = classe.getIstanza(1);
-            PersonaggioBase pb = (PersonaggioBase) p;
-
-            if (pb.isParteConValoriMassimi()) {
-                assertEquals(p.getForza(), pb.getMaxStatistica(TipoAttributo.FORZA),
-                        p.getNomeSingolare() + " ha isParteConValoriMassimi=true ma FORZA=" + p.getForza());
-                assertEquals(p.getDestrezza(), pb.getMaxStatistica(TipoAttributo.DESTREZZA),
-                        p.getNomeSingolare() + " ha isParteConValoriMassimi=true ma DESTREZZA=" + p.getDestrezza());
-                assertEquals(p.getCostituzione(), pb.getMaxStatistica(TipoAttributo.COSTITUZIONE),
-                        p.getNomeSingolare() + " ha isParteConValoriMassimi=true ma COSTITUZIONE=" + p.getCostituzione());
-                assertEquals(p.getIntelligenza(), pb.getMaxStatistica(TipoAttributo.INTELLIGENZA),
-                        p.getNomeSingolare() + " ha isParteConValoriMassimi=true ma INTELLIGENZA=" + p.getIntelligenza());
-                assertEquals(p.getSaggezza(), pb.getMaxStatistica(TipoAttributo.SAGGEZZA),
-                        p.getNomeSingolare() + " ha isParteConValoriMassimi=true ma SAGGEZZA=" + p.getSaggezza());
-                assertEquals(p.getCarisma(), pb.getMaxStatistica(TipoAttributo.CARISMA),
-                        p.getNomeSingolare() + " ha isParteConValoriMassimi=true ma CARISMA=" + p.getCarisma());
-                assertEquals(p.getFortuna(), pb.getMaxStatistica(TipoAttributo.FORTUNA),
-                        p.getNomeSingolare() + " ha isParteConValoriMassimi=true ma FORTUNA=" + p.getFortuna());
+            for (int livello : new int[]{1, 5}) {
+                PersonaggioBase pb = (PersonaggioBase) classe.getIstanza(livello);
+                if (pb.isParteConValoriMassimi()) {
+                    assertEquals(pb.getSaluteMassima(), pb.getSalute(), pb.getNomeSingolare() + " di livello " + livello);
+                    assertEquals(pb.getMagiaMassima(), pb.getMagia(), pb.getNomeSingolare() + " di livello " + livello);
+                }
             }
         }
     }

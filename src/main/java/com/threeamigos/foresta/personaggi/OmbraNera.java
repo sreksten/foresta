@@ -8,6 +8,8 @@ import com.threeamigos.foresta.motore.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.motore.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.tools.Misc;
 
+import java.util.EnumSet;
+import java.util.Set;
 import java.util.function.Function;
 
 public class OmbraNera extends PersonaggioBase implements Personaggio {
@@ -60,6 +62,11 @@ public class OmbraNera extends PersonaggioBase implements Personaggio {
 	@Override
 	public double getLivellamentoMagia() {
 		return Costanti.OMBRANERA_LIVELLAMENTO_MAGIA;
+	}
+
+	@Override
+	protected Set<ClasseIncantesimo> getRepertorioIncantesimi() {
+		return EnumSet.of(ClasseIncantesimo.GELO);
 	}
 
 	@Override

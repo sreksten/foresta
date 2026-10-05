@@ -48,7 +48,7 @@ public class Costanti {
     // deve aiutare chiunque la lanci, ma essere devastante solo in mano al Mago (moltiplicatore magico 2,0)
     public static final double INCANTESIMO_FATTORE_DANNI = 1.0;
     // Il dardo arcano, l'incantesimo innato di Mago ed Elfo: su un solo bersaglio, per poca MAGIA e senza consumare
-    // pergamene. Al Mago rende di più (una pergamena di fuoco fa 60) e costa meno che all'Elfo, che è
+    // pergamene. Al Mago rende di più (una pergamena di fuoco fa 50) e costa meno che all'Elfo, che è
     // un po' meno bravo con la magia e in cambio sa combattere
     public static final int DARDO_ARCANO_DANNI_MAGO = 20;
     public static final int DARDO_ARCANO_DANNI_ELFO = 15;
@@ -66,6 +66,9 @@ public class Costanti {
     // A fine locazione ogni personaggio vivo recupera getRigenerazioneSalute(): 5 punti più questa quota della salute
     // massima, aumentati dalla COSTITUZIONE (circa il 25% della salute massima a inizio partita)
     public static final double RIGENERAZIONE_SALUTE_QUOTA_SALUTE_MASSIMA = 0.15;
+    // Allo stesso modo ognuno recupera getRigenerazioneMagia(): 5 punti più questa quota della magia massima, per il
+    // moltiplicatore di recupero magico della classe (a inizio partita circa 12 al Mago, 9 al Bardo, 3 al Guerriero)
+    public static final double RIGENERAZIONE_MAGIA_QUOTA_MAGIA_MASSIMA = 0.05;
 
     // Fusione dall'incantatore: 10 monete più 5 per ogni effetto trasferito
     public static final int FUSIONE_COSTO_BASE = 10;
@@ -146,7 +149,7 @@ public class Costanti {
 
     public static final int INCANTESIMO_FUOCO_COSTO_ACQUISTO = 5;
     public static final int INCANTESIMO_FUOCO_COSTO_LANCIO = 3;
-    public static final int INCANTESIMO_FUOCO_DANNI = 60;
+    public static final int INCANTESIMO_FUOCO_DANNI = 50;
 
     public static final int INCANTESIMO_MORTE_COSTO_ACQUISTO = 5;
     public static final int INCANTESIMO_MORTE_COSTO_LANCIO = 5;
@@ -1024,8 +1027,8 @@ public class Costanti {
     public static final int EREMITA_PUNTI_ESPERIENZA = 15;
 
     public static final int EREMITA_SALUTE_BASE = 90;
-    public static final int EREMITA_MAGIA_BASE = 50;
-    public static final int EREMITA_LIVELLAMENTO_MAGIA = 25;
+    public static final int EREMITA_MAGIA_BASE = 20;
+    public static final int EREMITA_LIVELLAMENTO_MAGIA = 10;
     public static final double EREMITA_MOLTIPLICATORE_CARICO = 0.8;
     public static final String EREMITA_MOLTIPLICATORE_CARICO_NOTA = "Fisico non avvezzo agli sforzi prolungati; preferisce borse leggere per ingredienti alchemici e pergamene.";
     public static final double EREMITA_MOLTIPLICATORE_CRITICO = 0.8;
@@ -1278,8 +1281,8 @@ public class Costanti {
     public static final int GOBLIN_PUNTI_ESPERIENZA = 15;
 
     public static final int GOBLIN_SALUTE_BASE = 60;
-    public static final int GOBLIN_MAGIA_BASE = 5;
-    public static final int GOBLIN_LIVELLAMENTO_MAGIA = 2;
+    public static final int GOBLIN_MAGIA_BASE = 0;
+    public static final int GOBLIN_LIVELLAMENTO_MAGIA = 0;
     public static final double GOBLIN_MOLTIPLICATORE_CARICO = 0.6;
     public static final String GOBLIN_MOLTIPLICATORE_CARICO_NOTA = "Più piccolo di un umano e storicamente costretto ad arrangiarsi con equipaggiamento leggero e di fortuna.";
     public static final double GOBLIN_MOLTIPLICATORE_CRITICO = 1.2;
@@ -1330,8 +1333,8 @@ public class Costanti {
     public static final int HOBGOBLIN_PUNTI_ESPERIENZA = 15;
 
     public static final int HOBGOBLIN_SALUTE_BASE = 85;
-    public static final int HOBGOBLIN_MAGIA_BASE = 10;
-    public static final int HOBGOBLIN_LIVELLAMENTO_MAGIA = 4;
+    public static final int HOBGOBLIN_MAGIA_BASE = 0;
+    public static final int HOBGOBLIN_LIVELLAMENTO_MAGIA = 0;
     public static final double HOBGOBLIN_MOLTIPLICATORE_CARICO = 1.1;
     public static final String HOBGOBLIN_MOLTIPLICATORE_CARICO_NOTA = "Variante più robusta, militare e massiccia del goblin comune.";
     public static final double HOBGOBLIN_MOLTIPLICATORE_CRITICO = 1.1;

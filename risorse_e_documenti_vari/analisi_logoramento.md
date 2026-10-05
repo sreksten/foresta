@@ -183,3 +183,67 @@ Gli scontri comuni restano veri scontri (6-8 turni per il Guerriero a ogni livel
 
 - **I boss** uccidono un personaggio solo in 1-2 turni a ogni livello (lo facevano già prima): vanno misurati con un gruppo completo, e il simulatore oggi fa combattere un personaggio solo.
 - **Il simulatore con il gruppo**: per verificare il numero di mostri secondo il gruppo serve simulare più personaggi (nel gioco attacca uno alla volta il personaggio scelto, e chi avanza fra gli avversari "si disimpegna e attacca il gruppo").
+
+## 7. I boss (2026-10-05)
+
+**Com'erano.** I boss nascono al livello del mondo (`Castello*.crea`). Saltavano il budget di `LanciatoreDeiDadi` e partivano dai valori massimi della classe, cresciuti con `max × (1 + (√(livello + 3) − 2) / 2)`: a livello 1 la somma dei primari era 210-398 (Drago) contro 70 di un personaggio giocante e 50 di un mostro comune, e il rapporto cresceva con il livello. Con la probabilità di colpire `75 + 2 × (attacco − difesa)` un Guerriero colpiva i boss il 3-20% delle volte e ne veniva colpito il 95%; Drago e Lich lo uccidevano in uno o due colpi.
+
+**Modifica.** Anche i boss ricevono gli attributi dal budget di `LanciatoreDeiDadi`, ridotto: 105 + 6 a livello per il Drago, 90 + 5 per Lich e Strega, 80 + 4 per Idra e Minotauro Gigante. Con i 35 di base, a livello 1: Drago 140 (2 volte un personaggio), Lich e Strega 125, Idra e Minotauro Gigante 115. `isParteConValoriMassimi` resta solo per salute e magia piene e per l'immunità alla mietitura (l'OmbraFiamma, immortale, ora riceve anche lei gli attributi dal budget).
+
+**Uno contro uno**, Guerriero `CAVALIERE` del suo livello (`TestLogoramentoInizioPartita#boss`):
+
+| Livello 5 | Il boss colpisce | Danno del boss | Il Guerriero colpisce | Vince |
+| :--- | ---: | ---: | ---: | ---: |
+| Idra | 49% (era 94%) | 46 | 55% (era 5%) | 58% |
+| Minotauro Gigante | 38% | 71 | 67% | 41% |
+| Lich | 95% | 177 | 58% | 4% |
+| Strega | 55% | 10 | 54% | 100% |
+| Drago | 95% | 194 | 47% | 0% |
+
+**I mostri magici lanciano incantesimi anche in mischia.** Prima la risposta di un avversario in `eseguiSingoloAttacco` usava solo le sue armi; gli incantesimi (`scegliIncantesimoContro`, che rinuncia se il mostro è `SILENZIATO`) li lanciava solo rispondendo a un incantesimo, a un dardo o a una pozione. Ora risponde con `Personaggio.rispondiInMischia`, che è `attacca` senza l'annuncio. Il ramo delle armi di `attacca` usa ora tutte le fasi di attacco (anche la seconda arma), ognuna sull'asse del suo tipo di danno (prima sempre quello fisico, anche per l'arma necrotica del Lich); lo stesso vale per il confronto fra arma e incantesimo in `scegliIncantesimoContro`.
+
+**Gruppi** (`TestScontriDiGruppo`, nuovo): ogni personaggio con la sua prima dotazione tipica, le regole di `LocazioneBase` (una sola azione per round: mischia del combattente scelto, dardo arcano o pergamena; risposta del primo avversario, o di quello di turno su chi ha lanciato; un avversario in più attacca il gruppo, prima il Mago; se muore il capo è sconfitta). Vittorie senza pergamene né pozioni, con i mostri magici che lanciano incantesimi anche in mischia:
+
+| | Livello | Gue+Lad+Mag | Gue+Bar+Elf | Gue+Lad+Elf+Mag | Tutti e 5 |
+| :--- | ---: | ---: | ---: | ---: | ---: |
+| Idra | 3 / 5 / 8 | 95 / 98 / 100% | 55 / 77 / 93% | 100% | 100% |
+| Minotauro Gigante | 3 / 5 / 8 | 96 / 100 / 100% | 65 / 91 / 99% | 100% | 100% |
+| Strega | 3 / 5 / 8 | 69 / 68 / 75% | 10 / 18 / 27% | 71 / 80 / 87% | 71 / 80 / 84% |
+| Lich | 3 / 5 / 8 | 63 / 61 / 70% | 7 / 14 / 29% | 74 / 76 / 83% | 74 / 79 / 89% |
+| Drago | 3 / 5 / 8 | 12 / 21 / 66% | 0 / 0 / 0% | 16 / 32 / 74% | 15 / 41 / 78% |
+| Troll (3) | 3 / 5 / 8 | 100% | 100% | 100% | 100% |
+
+In media cade un personaggio a scontro contro Strega e Lich (da resuscitare). Cosa se ne ricava:
+
+- **L'ordine è quello voluto**: i bruti (Idra, Minotauro Gigante) si battono quasi sempre con il gruppo; Strega e Lich sono più duri; il Drago, che si affronta per ultimo, è il più duro di tutti e a livello 8 con quattro o cinque personaggi si batte tre volte su quattro.
+- **Il gruppo Guerriero+Bardo+Elfo** soffre i boss magici: il dardo dell'Elfo (15 × livello) e il Bardo fanno poco danno, e gli scontri contro i bruti durano 12-14 turni.
+- **Le pergamene di fuoco sono molto forti**: con 3 pergamene i mostri comuni del massimo numero cadono in 1-2 turni, e i bruti in 1-3. Il fuoco è stato abbassato da 60 a 50 × livello (2026-10-05): tre Troll a livello 3 cadono in 1,5-1,6 turni invece di 1,1-1,2; i boss non cambiano in modo apprezzabile. Drago, Chimera Drago, Strega e Viverna sono immuni al fuoco.
+- `scegliIncantesimoContro` lascia a un mostro magico un terzo di probabilità di non lanciare ("per ricaricare le pile": resta così), e gli fa preferire l'arma quando rende di più.
+
+Da decidere: il ruolo del Bardo.
+
+## 8. Gli incantesimi dei mostri comuni (2026-10-05)
+
+Da quando i mostri magici lanciano incantesimi anche in mischia (§7), il problema è emerso anche per i mostri comuni: ogni mostro magico conosceva tutti gli incantesimi malefici, e un Folletto di livello 1 lanciava un Fulmine da 117 contro i 150 di salute di un Guerriero. Il protagonista solo superava in media una locazione.
+
+**Modifiche.**
+- **Repertorio per classe** (`PersonaggioBase.getRepertorioIncantesimi`): i boss tutti i malefici, Morte compresa; Arpia Aria; Viverna Veleno; Chimera e Chimera Drago Fuoco e Veleno; Folletto Acqua, Gelo e Aria; i non morti (Fantasma, Ombra Nera, Spettro, Spirito) Gelo; tutti gli altri magici (Centauro, Eremita, Gargoyle, i personaggi giocanti avversari) tutti tranne Morte.
+- **Goblin e Hobgoblin senza magia** (magia di base e livellamento a 0), come lo Scheletro.
+- **Eremita** con meno magia: 20 + 10 a livello (era 50 + 25), cioè uno o due Fulmini.
+- **Recupero di magia a fine locazione** (`getRigenerazioneMagia`, prima inutilizzato): 5 + 5% della magia massima, per il moltiplicatore di recupero magico della classe (circa 12 al Mago, 9 al Bardo, 3 al Guerriero a livello 1).
+- `scegliIncantesimoContro` lascia una volta su tre di non lanciare ("per ricaricare le pile").
+
+**Il simulatore ora applica gli effetti di stato in entrambe le direzioni e li fa passare a fine round**, come il gioco. Prima i colpi non davano effetti di stato: per questo i numeri qui sotto non sono confrontabili con quelli dei §1-6, più ottimisti.
+
+Protagonista solo, a inizio partita, con 2 pozioni:
+
+| Classe | Locazioni in media | Arriva a 5 | Arriva a 10 |
+| :--- | ---: | ---: | ---: |
+| Guerriero | 4,7 | 52% | 3% |
+| Ladro | 3,1 | 25% | 1% |
+| Elfo | 6,5 | 76% | 14% |
+| Bardo | 2,6 | 16% | 0% |
+| Mago | 14,7 | 94% | 70% |
+
+Scontri singoli a livello 1 (vittorie del Guerriero): Arpia 94%, Folletto 90%, Chimera 58%, Viverna 55%, Eremita 49%; Goblin, Hobgoblin e Scheletro 100%. Chimera, Viverna ed Eremita restano i mostri magici più duri per un protagonista solo a inizio partita (l'inizio morbido esclude già Centauro, Chimera Drago, Gigante, Minotauro, Titano e Troll).
+
