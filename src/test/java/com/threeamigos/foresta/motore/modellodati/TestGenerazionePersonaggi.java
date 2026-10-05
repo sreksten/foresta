@@ -1,9 +1,10 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -36,8 +37,8 @@ public class TestGenerazionePersonaggi {
             writer.append("VELOCITA_MEDIA,FURTIVITA_MEDIA,PARATA_MEDIA,RESISTENZA_MAGICA_MEDIA,");
             writer.append("PERCEZIONE_MEDIA,SOGGEZIONE_MEDIA,FURIA_MEDIA,CORAGGIO_MEDIA,VALORE_MEDIA,CONTRATTAZIONE_MEDIA\n");
 
-            for (ClassePersonaggio classe : ClassePersonaggio.values()) {
-                Personaggio pPerMax = classe.getIstanza(1);
+            for (TipoPersonaggio classe : TipoPersonaggio.values()) {
+                Personaggio pPerMax = FabbricaPersonaggi.crea(classe, 1);
                 PersonaggioBase pbPerMax = (PersonaggioBase) pPerMax;
 
                 long sommaForza = 0, sommaDestrezza = 0, sommaCostituzione = 0, sommaIntelligenza = 0;
@@ -48,7 +49,7 @@ public class TestGenerazionePersonaggi {
                 long sommaContrattazione = 0;
 
                 for (int i = 0; i < NUMERO_ISTANZE; i++) {
-                    Personaggio p = classe.getIstanza(1);
+                    Personaggio p = FabbricaPersonaggi.crea(classe, 1);
                     assertNotNull(p);
                     sommaForza += p.getForza();
                     sommaDestrezza += p.getDestrezza();
@@ -132,9 +133,9 @@ public class TestGenerazionePersonaggi {
      */
     @Test
     public void iBossPartonoConSaluteEMagiaPiene() {
-        for (ClassePersonaggio classe : ClassePersonaggio.values()) {
+        for (TipoPersonaggio classe : TipoPersonaggio.values()) {
             for (int livello : new int[]{1, 5}) {
-                PersonaggioBase pb = (PersonaggioBase) classe.getIstanza(livello);
+                PersonaggioBase pb = (PersonaggioBase) FabbricaPersonaggi.crea(classe, livello);
                 if (pb.isParteConValoriMassimi()) {
                     assertEquals(pb.getSaluteMassima(), pb.getSalute(), pb.getNomeSingolare() + " di livello " + livello);
                     assertEquals(pb.getMagiaMassima(), pb.getMagia(), pb.getNomeSingolare() + " di livello " + livello);

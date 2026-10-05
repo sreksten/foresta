@@ -8,9 +8,9 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,7 +43,7 @@ class ScenarioPassiProntiTest {
                     return dialogo(MomentoControllo.IN_LOCAZIONE, () -> "Un mercante vi chiede di liberare la strada dai goblin.")
                             .esegui(this::attivaMissione).poi("CACCIA");
                 case "CACCIA":
-                    return sconfiggi(MomentoControllo.POST_LOCAZIONE, ClassePersonaggio.GOBLIN, 2).poi("RACCOLTA");
+                    return sconfiggi(MomentoControllo.POST_LOCAZIONE, TipoPersonaggio.GOBLIN, 2).poi("RACCOLTA");
                 case "RACCOLTA":
                     return raccogli(MomentoControllo.POST_LOCAZIONE, ClassiOggetto.PIETRA_PREZIOSA, 3).poi("RITORNO");
                 case "RITORNO":
@@ -64,17 +64,17 @@ class ScenarioPassiProntiTest {
             CoordinateMD nyena = partita.gruppo().getCoordinate();
 
             // Un goblin sconfitto prima di accettare l'incarico non conta
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GOBLIN));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
             missione.controllaInLocazione();
             assertTrue(missione.isAttiva());
             assertEquals(nyena, missione.getPuntoDiPartenza());
             assertEquals("CACCIA", missione.getPassoCorrente());
 
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GOBLIN));
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.TROLL));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.TROLL));
             missione.controllaPostLocazione();
             assertEquals("CACCIA", missione.getPassoCorrente(), "un goblin solo, e il troll non conta");
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GOBLIN));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
             missione.controllaPostLocazione();
             assertEquals("RACCOLTA", missione.getPassoCorrente());
 

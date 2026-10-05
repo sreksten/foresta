@@ -2,6 +2,7 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -14,9 +15,9 @@ class PersonaggioBaseTest {
 
     @Test
     void costruiscePersonaggioLivelloUno() {
-        for (ClassePersonaggio classe : ClassePersonaggio.values()) {
+        for (TipoPersonaggio classe : TipoPersonaggio.values()) {
             for (int i = 0; i < 10; i++) {
-                Personaggio personaggio = classe.getIstanza(1);
+                Personaggio personaggio = FabbricaPersonaggi.crea(classe, 1);
             }
         }
     }

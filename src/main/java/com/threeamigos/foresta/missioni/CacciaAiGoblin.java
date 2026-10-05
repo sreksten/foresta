@@ -4,7 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * In città un mercante chiede di liberare le strade dai goblin che assaltano le carovane: sconfitti
@@ -31,7 +31,7 @@ public class CacciaAiGoblin extends IncaricoInCitta {
 			return "Le strade sono libere: torna dal mercante di " + getNomeCitta() + " a riscuotere.";
 		}
 		return "Un mercante di " + getNomeCitta() + " ti ha chiesto di sconfiggere " + GOBLIN_DA_SCONFIGGERE
-				+ " goblin. Finora: " + getConteggioNelPassoCorrente(eventoSconfitto(ClassePersonaggio.GOBLIN)) + ".";
+				+ " goblin. Finora: " + getConteggioNelPassoCorrente(eventoSconfitto(TipoPersonaggio.GOBLIN)) + ".";
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class CacciaAiGoblin extends IncaricoInCitta {
 		if (!CACCIA.equals(id)) {
 			throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
 		}
-		return sconfiggi(MomentoControllo.POST_LOCAZIONE, ClassePersonaggio.GOBLIN, GOBLIN_DA_SCONFIGGERE)
+		return sconfiggi(MomentoControllo.POST_LOCAZIONE, TipoPersonaggio.GOBLIN, GOBLIN_DA_SCONFIGGERE)
 				.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo("Di goblin, per un po', non se ne vedranno: è ora di tornare dal mercante di "
 						+ getNomeCitta() + ".")))
 				.poi(RITORNO);

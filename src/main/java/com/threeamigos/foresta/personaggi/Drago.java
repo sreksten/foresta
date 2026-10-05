@@ -5,6 +5,7 @@ import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -25,7 +26,7 @@ public class Drago extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Drago(int livello) {
-		super(ClassePersonaggio.DRAGO, livello);
+		super(TipoPersonaggio.DRAGO, livello);
 	}
 
 	@Override

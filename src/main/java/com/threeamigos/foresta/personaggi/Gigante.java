@@ -3,6 +3,7 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -23,7 +24,7 @@ public class Gigante extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Gigante(int livello) {
-		super(ClassePersonaggio.GIGANTE, livello);
+		super(TipoPersonaggio.GIGANTE, livello);
 	}
 
 	@Override

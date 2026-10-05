@@ -7,9 +7,9 @@ import com.threeamigos.foresta.missioni.RitualeRichiesto;
 import com.threeamigos.foresta.missioni.TipoMissione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -104,8 +104,8 @@ class ScenarioRitualeTest {
             assertTrue(partita.testi().contains("Escono due spettri."), String.valueOf(partita.testi()));
             assertEquals(2, RegistroMissioni.getIncontroMissione(rovine).orElseThrow(AssertionError::new).size());
 
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.SPETTRO));
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.SPETTRO));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.SPETTRO));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.SPETTRO));
             rituale.controllaPostLocazione();
             assertEquals("RITORNO", rituale.getPassoCorrente());
             assertTrue(partita.testi().contains("Il varco è chiuso. Il sacerdote aspetta a Nyena."), String.valueOf(partita.testi()));
@@ -201,7 +201,7 @@ class ScenarioRitualeTest {
             assertEquals(rovine, partita.gruppo().getCoordinate());
             assertEquals("GUARDIANO", rituale.getPassoCorrente());
             assertEquals(2, GruppoAvversario.getIstanza().getNumeroPersonaggi());
-            assertEquals(ClassePersonaggio.SPETTRO, GruppoAvversario.getIstanza().getCapo().getClasse());
+            assertEquals(TipoPersonaggio.SPETTRO, GruppoAvversario.getIstanza().getCapo().getClasse());
         }
     }
 }

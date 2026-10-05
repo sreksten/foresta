@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.motore.modellodati;
 
 import com.threeamigos.foresta.motore.EffettoDiStato;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -32,7 +32,7 @@ public class PersonaggioMD implements Serializzabile {
 	/**
 	 * Classe del personaggio (Mago, Arpia, etc.)
 	 */
-	private ClassePersonaggio classe;
+	private TipoPersonaggio classe;
 	/**
 	 * Nome proprio del personaggio (quando presente)
 	 */
@@ -94,11 +94,11 @@ public class PersonaggioMD implements Serializzabile {
 		return uuid;
 	}
 
-	public ClassePersonaggio getClasse() {
+	public TipoPersonaggio getClasse() {
 		return classe;
 	}
 
-	public void setClasse(ClassePersonaggio classe) {
+	public void setClasse(TipoPersonaggio classe) {
 		this.classe = classe;
 	}
 
@@ -649,7 +649,7 @@ public class PersonaggioMD implements Serializzabile {
 		LettoreCampi campi = new LettoreCampi(stream.readLine());
 
 		uuid = campi.testo();
-		classe = campi.enumerato(ClassePersonaggio.class);
+		classe = campi.enumerato(TipoPersonaggio.class);
 		nome = campi.testoFacoltativo();
 		String vivoOMorto = campi.testo();
 		if ("vivo".equals(vivoOMorto)) {

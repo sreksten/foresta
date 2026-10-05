@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.Optional;
 
@@ -22,7 +22,7 @@ public final class SorveglianzaRichiesta {
 	private final TipoLocazione luogo;
 	private final int visite;
 	private final int ore;
-	private final ClassePersonaggio nemico;
+	private final TipoPersonaggio nemico;
 	private final int numero;
 	private final CapoDellaRiga capo;
 	private final int monete;
@@ -57,7 +57,7 @@ public final class SorveglianzaRichiesta {
 			throw new IllegalArgumentException("Le visite sono almeno 2, ore e monete almeno 1: " + riga);
 		}
 		Optional<String> classe = campi.facoltativo("NEMICO");
-		nemico = classe.map(ClassePersonaggio::valueOf).orElse(null);
+		nemico = classe.map(TipoPersonaggio::valueOf).orElse(null);
 		numero = nemico == null ? 0 : campi.intero("NUMERO");
 		capo = CapoDellaRiga.da(campi.facoltativo("CAPO"));
 		vittoria = campi.facoltativo("VITTORIA").orElse(null);
@@ -144,7 +144,7 @@ public final class SorveglianzaRichiesta {
 	/**
 	 * Chi salta fuori alla fine, o null se nessuno.
 	 */
-	public ClassePersonaggio getNemico() {
+	public TipoPersonaggio getNemico() {
 		return nemico;
 	}
 

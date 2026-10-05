@@ -5,6 +5,7 @@ import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -19,14 +20,14 @@ public class Idra extends PersonaggioBase implements Personaggio {
 	public String getDeP() { return Misc.DELLE; }
 	public String getDa() { return Misc.DA_UN_APOSTROFO; }
 
-	public ClassePersonaggio getClasse() { return ClassePersonaggio.IDRA; }
+	public TipoPersonaggio getClasse() { return TipoPersonaggio.IDRA; }
 	public String getNomeSingolare() { return "Idra"; }
 	public String getNomePlurale() { return "Idre"; }
 	public String getPronome() { return Misc.ESSA; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 
 	public Idra(int livello) {
-		super(ClassePersonaggio.IDRA, livello);
+		super(TipoPersonaggio.IDRA, livello);
 	}
 
 	@Override

@@ -5,9 +5,10 @@ import com.threeamigos.foresta.missioni.MaterialeRichiesto;
 import com.threeamigos.foresta.missioni.RichiestaDiMateriali;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -35,7 +36,7 @@ class ScenarioRichiesteDiMaterialiTest {
                 assertTrue(materiale.getPrezzo() > 0);
                 assertFalse(materiale.getBattutaDelCapo().isEmpty());
                 assertFalse(materiale.getRispostaDelMandante().isEmpty());
-                materiale.getNemici().forEach(nemico -> nemico.getMoltiplicatoriDiClasse());
+                materiale.getNemici().forEach(nemico -> FabbricaPersonaggi.modello(nemico));
                 plurali.add(materiale.getPlurale());
             }
             assertTrue(plurali.size() >= 5, mandante + ": " + plurali);
@@ -54,7 +55,7 @@ class ScenarioRichiesteDiMaterialiTest {
         MaterialeRichiesto viverna = MaterialeRichiesto.da(VIVERNA);
         assertTrue(viverna.isTrofeo());
         assertEquals("si prendono sconfiggendo le Viverne", viverna.getDaDoveViene());
-        assertTrue(viverna.daRaccogliere("X", 2).getNemici().contains(ClassePersonaggio.VIVERNA));
+        assertTrue(viverna.daRaccogliere("X", 2).getNemici().contains(TipoPersonaggio.VIVERNA));
 
         // Singolare maschile, plurale femminile
         MaterialeRichiesto orecchio = MaterialeRichiesto.da("M/F;orecchio di goblin;orecchie di goblin;NEMICI GOBLIN;3-4;6;a;b");
@@ -86,7 +87,7 @@ class ScenarioRichiesteDiMaterialiTest {
             // Le scaglie le portano le viverne, dovunque siano
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             avversari.rimuoviPersonaggi();
-            avversari.aggiungiPersonaggio(ClassePersonaggio.VIVERNA.getIstanza(1));
+            avversari.aggiungiPersonaggio(FabbricaPersonaggi.crea(TipoPersonaggio.VIVERNA, 1));
             assertTrue(armaiolo.getOggettoInLocazione(new CoordinateMD(0, 0), TipoLocazione.TEMPIO, true).isPresent());
 
             new OggettoMissione(armaiolo.getId(), RichiestaDiMateriali.MATERIALE, armaiolo.getMateriali().getNome(), 2)

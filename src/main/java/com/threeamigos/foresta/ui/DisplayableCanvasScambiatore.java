@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -55,7 +55,7 @@ abstract class DisplayableCanvasScambiatore implements Finestra {
     /**
      * Usiamo l'immagine del Ladro come riferimento per disegnar eil personaggio centrale della finestra di scambio
      */
-    protected static final int ALTEZZA_LADRO = ClassePersonaggioImmagine.getImmagine(ClassePersonaggio.LADRO).getHeight(null);
+    protected static final int ALTEZZA_LADRO = ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.LADRO).getHeight(null);
 
     /**
      * Larghezza globale della finestra di scambio
@@ -168,7 +168,7 @@ abstract class DisplayableCanvasScambiatore implements Finestra {
      */
     CoordinateFumetto getCoordinateFumetto() {
         if (COORDINATE_FUMETTO == null) {
-            Image ladro = ClassePersonaggioImmagine.getImmagine(ClassePersonaggio.LADRO);
+            Image ladro = ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.LADRO);
             int larghezzaImmagine = ladro.getWidth(null);
             int altezzaImmagine = ladro.getHeight(null);
 

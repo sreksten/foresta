@@ -3,8 +3,8 @@ package com.threeamigos.foresta.intermezzi;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,7 +76,7 @@ public class IntermezzoLocandaSecondaVisita implements Intermezzo {
 		String idElementoCapo = null;
 		for (int i = 0; i < personaggiVivi.size(); i++) {
 			Personaggio personaggio = personaggiVivi.get(i);
-			ClassePersonaggio classe = personaggio.getClasse();
+			TipoPersonaggio classe = personaggio.getClasse();
 			String idElemento = "personaggio" + i;
 			double targetX = X_TARGET_CAPO - i * DISTANZA_FRA_PERSONAGGI;
 			ElementoIntermezzo elemento = ElementoIntermezzo.personaggio(idElemento, classe, X_PARTENZA_PERSONAGGI, Y_PERSONAGGI)

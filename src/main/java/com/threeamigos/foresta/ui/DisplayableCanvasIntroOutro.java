@@ -6,9 +6,10 @@ import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.tools.Punteggio;
 import com.threeamigos.foresta.tools.TestataSalvataggio;
@@ -155,11 +156,11 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		doomdark = ImageCache.get("Avversari uccisi in " + (giorni > 1 ? (Misc.getCardinaleM(giorni) + " giorni:") : "un giorno:"), fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY);
 		graphics.drawImage(doomdark, locXOffset + 9, locYOffset, null);
 		locYOffset += fontMedium.getHeight();
-		for (ClassePersonaggio classePersonaggio : ClassePersonaggio.values()) {
+		for (TipoPersonaggio classePersonaggio : TipoPersonaggio.values()) {
 			int m = Statistiche.getMostriUccisi(classePersonaggio);
 			if (m > 0) {
 				color = (color == DoomdarkColorModel.Color.MEDIUM_GRAY ? DoomdarkColorModel.Color.LIGHT_GRAY : DoomdarkColorModel.Color.MEDIUM_GRAY); 
-				doomdark = ImageCache.get(m + " " + (m == 1 ? classePersonaggio.getNomeSingolare() : classePersonaggio.getNomePlurale()), fontMedium, color);
+				doomdark = ImageCache.get(m + " " + (m == 1 ? FabbricaPersonaggi.nomeSingolare(classePersonaggio) : FabbricaPersonaggi.nomePlurale(classePersonaggio)), fontMedium, color);
 				graphics.drawImage(doomdark, locXOffset + 9, locYOffset, null);
 				locYOffset += fontMedium.getHeight();
 			}

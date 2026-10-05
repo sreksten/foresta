@@ -10,11 +10,11 @@ import com.threeamigos.foresta.missioni.LaBenedizione;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -83,8 +83,8 @@ class ScenarioBenedizioneTest {
             assertEquals(TipoLocazione.RADURA, Foresta.getLocazione(radura));
             assertTrue(Foresta.isLocazioneConosciuta(radura));
             partita.gruppo().setCoordinate(radura);
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.OMBRA_NERA));
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.OMBRA_NERA));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.OMBRA_NERA));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.OMBRA_NERA));
             favore.controllaPostLocazione();
             assertTrue(favore.isCompleta());
             benedizione.controllaPostLocazione();

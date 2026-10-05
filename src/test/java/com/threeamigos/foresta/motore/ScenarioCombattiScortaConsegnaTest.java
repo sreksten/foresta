@@ -7,10 +7,10 @@ import com.threeamigos.foresta.missioni.LaTagliaSullaBanda;
 import com.threeamigos.foresta.missioni.RichiestaDiMateriali;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -40,7 +40,7 @@ class ScenarioCombattiScortaConsegnaTest {
             assertEquals(Optional.empty(), RegistroMissioni.getIncontroMissione(new CoordinateMD(covo.getX(), covo.getY() + 1)));
             List<Personaggio> banda = RegistroMissioni.getIncontroMissione(covo).orElseThrow(AssertionError::new);
             assertEquals(3, banda.size());
-            banda.forEach(p -> assertEquals(ClassePersonaggio.HOBGOBLIN, p.getClasse()));
+            banda.forEach(p -> assertEquals(TipoPersonaggio.HOBGOBLIN, p.getClasse()));
             assertEquals(taglia.getCapobanda(), banda.get(0).getNome());
             assertEquals(banda.get(1).getLivello() + 1, banda.get(0).getLivello());
 
@@ -53,18 +53,18 @@ class ScenarioCombattiScortaConsegnaTest {
             // Gli hobgoblin sconfitti altrove non contano
             partita.gruppo().setCoordinate(new CoordinateMD(covo.getX(), covo.getY() + 1));
             for (int i = 0; i < 3; i++) {
-                partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.HOBGOBLIN));
+                partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.HOBGOBLIN));
             }
             partita.gruppo().setCoordinate(covo);
             taglia.controllaPostLocazione();
             assertEquals("CACCIA", taglia.getPassoCorrente(), "quelli sconfitti fuori dal covo non contano");
 
             // Nel covo, due non bastano, tre sì
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.HOBGOBLIN));
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.HOBGOBLIN));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.HOBGOBLIN));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.HOBGOBLIN));
             taglia.controllaPostLocazione();
             assertEquals("CACCIA", taglia.getPassoCorrente());
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.HOBGOBLIN));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.HOBGOBLIN));
             taglia.controllaPostLocazione();
             assertEquals("RITORNO", taglia.getPassoCorrente());
             assertEquals(Optional.empty(), RegistroMissioni.getIncontroMissione(covo), "la banda non c'è più");
@@ -82,7 +82,7 @@ class ScenarioCombattiScortaConsegnaTest {
             assertEquals("VIAGGIO", pellegrino.getPassoCorrente());
             Personaggio anselmo = pellegrino.getScortato().orElseThrow(AssertionError::new);
             assertEquals(pellegrino.getPellegrino(), anselmo.getNome());
-            assertEquals(ClassePersonaggio.VIANDANTE, anselmo.getClasse());
+            assertEquals(TipoPersonaggio.VIANDANTE, anselmo.getClasse());
             assertTrue(partita.gruppo().getOspiti().contains(anselmo));
             assertFalse(partita.gruppo().getPersonaggi().contains(anselmo), "un ospite non combatte");
 

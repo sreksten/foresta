@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,12 +26,12 @@ final class OndateDellaRiga {
 	private static final int PRIMA_ONDATA_SUCCESSIVA = 2;
 
 	private static final class OndataDellaRiga {
-		private final ClassePersonaggio classe;
+		private final TipoPersonaggio classe;
 		private final int numero;
 		private final CapoDellaRiga capo;
 		private final String arrivo;
 
-		private OndataDellaRiga(ClassePersonaggio classe, int numero, CapoDellaRiga capo, String arrivo) {
+		private OndataDellaRiga(TipoPersonaggio classe, int numero, CapoDellaRiga capo, String arrivo) {
 			this.classe = classe;
 			this.numero = numero;
 			this.capo = capo;
@@ -62,7 +62,7 @@ final class OndateDellaRiga {
 			if (numero < 1) {
 				throw new IllegalArgumentException("Un'ondata ha almeno un nemico: " + riga);
 			}
-			ondate.add(new OndataDellaRiga(ClassePersonaggio.valueOf(parti[0]), numero,
+			ondate.add(new OndataDellaRiga(TipoPersonaggio.valueOf(parti[0]), numero,
 					CapoDellaRiga.da(parti.length == 3 ? Optional.of(parti[2]) : Optional.empty()), arrivo.get()));
 		}
 	}

@@ -9,6 +9,7 @@ import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -30,13 +31,13 @@ class DardoArcanoTest {
 
     @Test
     void loConosconoSoloMagoEdElfo() {
-        assertTrue(DardoArcano.conosciutoDa(ClassePersonaggio.MAGO));
-        assertTrue(DardoArcano.conosciutoDa(ClassePersonaggio.MAGA));
-        assertTrue(DardoArcano.conosciutoDa(ClassePersonaggio.ELFO));
-        assertTrue(DardoArcano.conosciutoDa(ClassePersonaggio.ELFA));
-        assertFalse(DardoArcano.conosciutoDa(ClassePersonaggio.GUERRIERO));
-        assertFalse(DardoArcano.conosciutoDa(ClassePersonaggio.LADRO));
-        assertFalse(DardoArcano.conosciutoDa(ClassePersonaggio.BARDO));
+        assertTrue(DardoArcano.conosciutoDa(TipoPersonaggio.MAGO));
+        assertTrue(DardoArcano.conosciutoDa(TipoPersonaggio.MAGA));
+        assertTrue(DardoArcano.conosciutoDa(TipoPersonaggio.ELFO));
+        assertTrue(DardoArcano.conosciutoDa(TipoPersonaggio.ELFA));
+        assertFalse(DardoArcano.conosciutoDa(TipoPersonaggio.GUERRIERO));
+        assertFalse(DardoArcano.conosciutoDa(TipoPersonaggio.LADRO));
+        assertFalse(DardoArcano.conosciutoDa(TipoPersonaggio.BARDO));
     }
 
     @Test

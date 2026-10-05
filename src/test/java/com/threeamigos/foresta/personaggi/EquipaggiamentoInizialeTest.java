@@ -4,6 +4,7 @@ import com.threeamigos.foresta.motore.RegistroPersonaggi;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -25,9 +26,9 @@ class EquipaggiamentoInizialeTest {
 
     @Test
     void ogniClasseGiocanteRiceveLaSuaDotazione() {
-        for (ClassePersonaggio classe : new ClassePersonaggio[]{ClassePersonaggio.GUERRIERO, ClassePersonaggio.LADRA,
-                ClassePersonaggio.ELFO, ClassePersonaggio.CANTASTORIE, ClassePersonaggio.MAGA}) {
-            Personaggio personaggio = classe.getIstanza(1);
+        for (TipoPersonaggio classe : new TipoPersonaggio[]{TipoPersonaggio.GUERRIERO, TipoPersonaggio.LADRA,
+                TipoPersonaggio.ELFO, TipoPersonaggio.CANTASTORIE, TipoPersonaggio.MAGA}) {
+            Personaggio personaggio = FabbricaPersonaggi.crea(classe, 1);
             EquipaggiamentoIniziale.equipaggia(personaggio);
             Collection<TipoArtefatto> tipi = personaggio.getModelloDati().getArtefatti().stream().map(ArtefattoMD::getTipo)
                     .collect(Collectors.toList());

@@ -7,7 +7,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaVariazionePunteggio;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazionePuntiEsperienzaPersonaggio;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.StatisticheMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 public class Statistiche {
 
@@ -67,11 +67,11 @@ public class Statistiche {
 		return GestoreProgressione.getXpPerProssimoLivello(getLivello());
 	}
 
-	private static void addMostroUcciso(ClassePersonaggio classe) {
+	private static void addMostroUcciso(TipoPersonaggio classe) {
 		getStatisticheMD().addMostroUcciso(classe);
 	}
 
-	public static int getMostriUccisi(ClassePersonaggio classe) {
+	public static int getMostriUccisi(TipoPersonaggio classe) {
 		return getStatisticheMD().getMostriUccisi(classe);
 	}
 

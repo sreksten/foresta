@@ -6,9 +6,10 @@ import com.threeamigos.foresta.missioni.Mandante;
 import com.threeamigos.foresta.missioni.RichiestaDiMateriali;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.Oggetto;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -60,7 +61,7 @@ class ScenarioTrofeiECartografoTest {
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             avversari.rimuoviPersonaggi();
             for (int i = 0; i < 3; i++) {
-                avversari.aggiungiPersonaggio(ClassePersonaggio.GOBLIN.getIstanza(1));
+                avversari.aggiungiPersonaggio(FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 1));
             }
             Oggetto orecchie = capitano.getOggettoInLocazione(new CoordinateMD(0, 0), TipoLocazione.ROVINE, true)
                     .orElseThrow(AssertionError::new);

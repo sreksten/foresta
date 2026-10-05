@@ -6,12 +6,12 @@ import com.threeamigos.foresta.missioni.CombattimentoRichiesto;
 import com.threeamigos.foresta.missioni.IncaricoDiCombattimento;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -35,7 +35,7 @@ class ScenarioDuelliTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(221)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             partita.eventi().ascolta(InternoPersonaggioArreso.class);
-            Personaggio uberto = IncontroDiMissione.di(ClassePersonaggio.GUERRIERO, 1).conCapo("Uberto").finoAllaResa().crea().get(0);
+            Personaggio uberto = IncontroDiMissione.di(TipoPersonaggio.GUERRIERO, 1).conCapo("Uberto").finoAllaResa().crea().get(0);
             assertTrue(uberto.isFinoAllaResa());
             GruppoAvversario.getIstanza().aggiungiPersonaggio(uberto);
 
@@ -64,7 +64,7 @@ class ScenarioDuelliTest {
     void inUnCombattimentoNormaleSiMuoreComePrima() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(222)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
-            Personaggio goblin = IncontroDiMissione.di(ClassePersonaggio.GOBLIN, 1).crea().get(0);
+            Personaggio goblin = IncontroDiMissione.di(TipoPersonaggio.GOBLIN, 1).crea().get(0);
             GruppoAvversario.getIstanza().aggiungiPersonaggio(goblin);
             Guerriero compagno = new Guerriero("Compagno", 1);
             partita.gruppo().aggiungiPersonaggio(compagno);

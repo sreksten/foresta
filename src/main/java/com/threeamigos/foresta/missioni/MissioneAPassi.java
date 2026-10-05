@@ -20,11 +20,11 @@ import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Viandante;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -317,7 +317,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * VAGABONDA_FINCHE + COMBATTI + CONTA_FINCHE: si conclude quando il gruppo ha sconfitto {@code quanti} avversari
 	 * di quella classe, dovunque, da quando questo è il passo corrente.
 	 */
-	protected final Passo sconfiggi(MomentoControllo momento, ClassePersonaggio classe, int quanti) {
+	protected final Passo sconfiggi(MomentoControllo momento, TipoPersonaggio classe, int quanti) {
 		return Passo.quando(momento, () -> getConteggioNelPassoCorrente(eventoSconfitto(classe)) >= quanti);
 	}
 
@@ -693,7 +693,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	/**
 	 * COMBATTI(bersaglio) per un cacciatore di taglie: come {@link #combatti}, ma basta abbattere il capo
 	 * dell'incontro, che deve essere di un'altra classe dalla banda (vedi IncontroDiMissione.conCapo(String,
-	 * ClassePersonaggio)).
+	 * TipoPersonaggio)).
 	 */
 	protected final Passo combattiIlCapo(Supplier<CoordinateMD> dove, IncontroDiMissione incontro) {
 		return Passo.quando(MomentoControllo.POST_LOCAZIONE,
@@ -888,14 +888,14 @@ public abstract class MissioneAPassi extends MissioneBase {
 
 	// --- Eventi di gioco contati per il passo corrente (vedi RegistroMissioni.registrati)
 
-	public static String eventoSconfitto(ClassePersonaggio classe) {
+	public static String eventoSconfitto(TipoPersonaggio classe) {
 		return "SCONFITTO_" + classe.name();
 	}
 
 	/**
 	 * Un avversario di quella classe sconfitto in quella casella (vedi {@link #combatti}).
 	 */
-	public static String eventoSconfittoIn(ClassePersonaggio classe, CoordinateMD coordinate) {
+	public static String eventoSconfittoIn(TipoPersonaggio classe, CoordinateMD coordinate) {
 		return eventoSconfitto(classe) + "_IN_" + coordinate.getX() + "_" + coordinate.getY();
 	}
 

@@ -6,6 +6,7 @@ import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -26,7 +27,7 @@ public class Scheletro extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Scheletro(int livello) {
-		super(ClassePersonaggio.SCHELETRO, livello);
+		super(TipoPersonaggio.SCHELETRO, livello);
 	}
 
 	@Override

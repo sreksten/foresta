@@ -73,7 +73,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	 */
 	private boolean daAffrontare;
 
-	public PersonaggioBase(ClassePersonaggio classe, int livello) {
+	public PersonaggioBase(TipoPersonaggio classe, int livello) {
 		md.setClasse(classe);
 		png = true;
 
@@ -95,7 +95,6 @@ public abstract class PersonaggioBase implements Personaggio {
 		LanciatoreDeiDadi.tiraDadiPer(classe, getLivello(), md);
 
 		ricalcolaAttributiSecondari();
-		classe.setQuantitaMassima(quantitaMassima);
 		BusEventi.pubblica(new InternoCreazionePersonaggio(this));
 	}
 
@@ -103,10 +102,14 @@ public abstract class PersonaggioBase implements Personaggio {
 	 * Un personaggio giocante (il giocatore o uno dei personaggi che si incontrano
 	 * nelle locande)
 	 */
-	public PersonaggioBase(String nome, ClassePersonaggio classe, int livello) {
+	public PersonaggioBase(String nome, TipoPersonaggio classe, int livello) {
 		this(classe, livello);
 		md.setNome(nome);
 		png = false;
+	}
+
+	int getQuantitaMassima() {
+		return quantitaMassima;
 	}
 
 	protected void setQuantitaMassima(int quantitaMassima) {
@@ -468,14 +471,14 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 		Personaggio bersaglio = null;
 		for (Personaggio personaggio : personaggiPossibili) {
-			if (personaggio.getClasse() == ClassePersonaggio.MAGA || personaggio.getClasse() == ClassePersonaggio.MAGO) {
+			if (personaggio.getClasse() == TipoPersonaggio.MAGA || personaggio.getClasse() == TipoPersonaggio.MAGO) {
 				bersaglio = personaggio;
 				break;
 			}
 		}
 		if (bersaglio == null) {
 			for (Personaggio personaggio : personaggiPossibili) {
-				if (personaggio.getClasse() == ClassePersonaggio.ELFA || personaggio.getClasse() == ClassePersonaggio.ELFO) {
+				if (personaggio.getClasse() == TipoPersonaggio.ELFA || personaggio.getClasse() == TipoPersonaggio.ELFO) {
 					bersaglio = personaggio;
 					break;
 				}
@@ -790,7 +793,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	// CLASSE
 	@Override
-	public ClassePersonaggio getClasse() {
+	public TipoPersonaggio getClasse() {
 		return md.getClasse();
 	}
 
@@ -1108,7 +1111,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.setSalute(salute);
 		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE, saluteOriginale, salute));
 
-		if ((md.getClasse() == ClassePersonaggio.GUERRIERO || md.getClasse() == ClassePersonaggio.GUERRIERA) &&
+		if ((md.getClasse() == TipoPersonaggio.GUERRIERO || md.getClasse() == TipoPersonaggio.GUERRIERA) &&
 				getFuria() > 0 && !hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
 			double sogliaBerserk = calcolaSaluteMassima() / 3.0d;
 			if (salute > 0 && salute <= sogliaBerserk) {
@@ -1806,7 +1809,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	private static int calcolaNumeroBersagli(PersonaggioMD md, Personaggio moltiplicatori) {
 		// Recuperiamo la classe per capire qual è la forza trainante del personaggio
-		ClassePersonaggio classe = moltiplicatori.getClasse();
+		TipoPersonaggio classe = moltiplicatori.getClasse();
 
 		double statPrincipale;
 		double statSecondaria;

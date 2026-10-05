@@ -1,7 +1,8 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * Prepara una partita minima fuori dal gioco, per gli strumenti di sviluppo come
@@ -18,14 +19,14 @@ public final class PartitaDiAnteprima {
 	/**
 	 * @return il protagonista, già capo del gruppo
 	 */
-	public static Personaggio prepara(ClassePersonaggio classeProtagonista, String nomeProtagonista,
-			ClassePersonaggio... classiCompagni) {
+	public static Personaggio prepara(TipoPersonaggio classeProtagonista, String nomeProtagonista,
+			TipoPersonaggio... classiCompagni) {
 		Foresta.reimposta();
-		Personaggio protagonista = classeProtagonista.getIstanza(1);
+		Personaggio protagonista = FabbricaPersonaggi.crea(classeProtagonista, 1);
 		protagonista.getModelloDati().setNome(nomeProtagonista);
 		GruppoGiocatore.getIstanza().aggiungiPersonaggioSenzaNotificare(protagonista);
 		for (int i = 0; i < classiCompagni.length; i++) {
-			Personaggio compagno = classiCompagni[i].getIstanza(1);
+			Personaggio compagno = FabbricaPersonaggi.crea(classiCompagni[i], 1);
 			compagno.getModelloDati().setNome("Compagno" + (i + 1));
 			GruppoGiocatore.getIstanza().aggiungiPersonaggioSenzaNotificare(compagno);
 		}

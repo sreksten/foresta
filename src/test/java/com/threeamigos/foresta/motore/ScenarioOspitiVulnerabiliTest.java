@@ -5,11 +5,12 @@ import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.Viandante;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import org.junit.jupiter.api.Test;
 
@@ -84,7 +85,7 @@ class ScenarioOspitiVulnerabiliTest {
         try (PartitaDiTest partita = partita(112)) {
             Viandante ostaggio = new Viandante("Ottone", 1);
             partita.gruppo().aggiungiOspite(ostaggio, true);
-            Personaggio goblin = ClassePersonaggio.GOBLIN.getIstanza(1);
+            Personaggio goblin = FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 1);
             for (int i = 0; i < 50 && partita.testi().stream().noneMatch(t -> t.contains("attacca Ottone")); i++) {
                 goblin.attacca(partita.gruppo());
                 partita.gruppo().getCapo().addSalute(partita.gruppo().getCapo().getSaluteMassima());

@@ -2,8 +2,8 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * In città una donna chiede di liberare suo marito, rapito da una banda di goblin che lo tiene in una grotta (vedi
@@ -42,7 +42,7 @@ public class IlRapimento extends LaLiberazione {
 	 * La banda di goblin dei rapitori, con il loro capo.
 	 */
 	public IncontroDiMissione getRapitori() {
-		return IncontroDiMissione.di(ClassePersonaggio.GOBLIN, RAPITORI).conCapo(getCapobanda());
+		return IncontroDiMissione.di(TipoPersonaggio.GOBLIN, RAPITORI).conCapo(getCapobanda());
 	}
 
 	@Override

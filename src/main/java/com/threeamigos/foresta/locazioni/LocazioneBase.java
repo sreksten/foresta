@@ -13,11 +13,12 @@ import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 
@@ -53,7 +54,7 @@ import java.util.Set;
 
 public abstract class LocazioneBase implements Locazione {
 
-	private static final ClassePersonaggio[] NESSUN_INCONTRO = {};
+	private static final TipoPersonaggio[] NESSUN_INCONTRO = {};
 	private static final ClassiOggetto[] NESSUN_OGGETTO = {};
 
 	private final GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
@@ -128,7 +129,7 @@ public abstract class LocazioneBase implements Locazione {
 	 * L'elenco dei mostri e degli oggetti che è possibile trovare all'interno di
 	 * questa locazione. Ogni locazione che ne ha sovrascrive questi due getter.
 	 */
-	protected ClassePersonaggio[] getPossibiliIncontri() {
+	protected TipoPersonaggio[] getPossibiliIncontri() {
 		return NESSUN_INCONTRO;
 	}
 
@@ -181,20 +182,20 @@ public abstract class LocazioneBase implements Locazione {
 	 * I mostri che non si incontrano durante l'inizio morbido (Costanti.INIZIO_MORBIDO_FINO_AL_LIVELLO): a livello 1
 	 * sono più forti di un protagonista solo con la dotazione di base
 	 */
-	public static final Set<ClassePersonaggio> MOSTRI_ESCLUSI_A_INIZIO_PARTITA = Collections.unmodifiableSet(EnumSet.of(
-			ClassePersonaggio.CENTAURO, ClassePersonaggio.CHIMERA_DRAGO, ClassePersonaggio.GIGANTE,
-			ClassePersonaggio.MINOTAURO, ClassePersonaggio.TITANO, ClassePersonaggio.TROLL));
+	public static final Set<TipoPersonaggio> MOSTRI_ESCLUSI_A_INIZIO_PARTITA = Collections.unmodifiableSet(EnumSet.of(
+			TipoPersonaggio.CENTAURO, TipoPersonaggio.CHIMERA_DRAGO, TipoPersonaggio.GIGANTE,
+			TipoPersonaggio.MINOTAURO, TipoPersonaggio.TITANO, TipoPersonaggio.TROLL));
 
 	/**
 	 * I mostri che si possono incontrare in una locazione, dato il livello del capo del gruppo: durante l'inizio
 	 * morbido senza quelli di MOSTRI_ESCLUSI_A_INIZIO_PARTITA (se ne resta almeno uno)
 	 */
-	public static ClassePersonaggio[] incontriPossibili(ClassePersonaggio[] mostri, int livelloCapo) {
+	public static TipoPersonaggio[] incontriPossibili(TipoPersonaggio[] mostri, int livelloCapo) {
 		if (livelloCapo > Costanti.INIZIO_MORBIDO_FINO_AL_LIVELLO) {
 			return mostri;
 		}
-		ClassePersonaggio[] ammessi = Arrays.stream(mostri).filter(m -> !MOSTRI_ESCLUSI_A_INIZIO_PARTITA.contains(m))
-				.toArray(ClassePersonaggio[]::new);
+		TipoPersonaggio[] ammessi = Arrays.stream(mostri).filter(m -> !MOSTRI_ESCLUSI_A_INIZIO_PARTITA.contains(m))
+				.toArray(TipoPersonaggio[]::new);
 		return ammessi.length > 0 ? ammessi : mostri;
 	}
 
@@ -218,34 +219,34 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	public void crea(GruppoGiocatore g, GruppoAvversario avversario) {
-		ClassePersonaggio[] m = incontriPossibili(getPossibiliIncontri(), g.getCapo().getLivello());
+		TipoPersonaggio[] m = incontriPossibili(getPossibiliIncontri(), g.getCapo().getLivello());
 		if (m.length > 0) {
 			// Non sempre si trovano mostri. Al primo turno però vogliamo sempre trovarne uno,
 			// un po' per non dare l'impressione che la foresta sia vuota, un po' per non far
 			// scattare immediatamente le missioni secondarie che scattano a fine locazione.
 			boolean possibilitaIncontro = Statistiche.getTurniGiocati() == 0 || Dado.tira(100) <= 90;
 			if (possibilitaIncontro) {
-				ClassePersonaggio classePersonaggio = null;
+				TipoPersonaggio classePersonaggio = null;
 
 				int ordinale = Dado.tiraAncheAUnaFaccia(m.length) - 1;
 				classePersonaggio = m[ordinale];
 
 				// FIXME occorrerebbe gestire la cosa un po' più elegantemente...
 				// PEr non far apparire subito un Eremita che fa scattare la missione secondaria a inizio locazione
-				while (Statistiche.getTurniGiocati() == 0 && classePersonaggio == ClassePersonaggio.EREMITA) {
+				while (Statistiche.getTurniGiocati() == 0 && classePersonaggio == TipoPersonaggio.EREMITA) {
 					ordinale = Dado.tiraAncheAUnaFaccia(m.length) - 1;
 					classePersonaggio = m[ordinale];
 				}
 
 				int capLivello = numeroMassimoDiMostri(g.getCapo().getLivello(), g.getPersonaggiVivi().size());
 
-				int limiteMassimoIncontro = Math.min(capLivello, classePersonaggio.getQuantitaMassima());
+				int limiteMassimoIncontro = Math.min(capLivello, FabbricaPersonaggi.quantitaMassima(classePersonaggio));
 
 				int numero = Dado.tiraAncheAUnaFaccia(limiteMassimoIncontro);
 				Logger.log("Scelta da " + m.length + " personaggi la classe " + classePersonaggio + ", numero " + numero + " con cap " + capLivello);
 				Personaggio p;
 				for (int i = 0; i < numero; i++) {
-					p = classePersonaggio.getIstanza(Statistiche.getLivello());
+					p = FabbricaPersonaggi.crea(classePersonaggio, Statistiche.getLivello());
 					p.setOrdinale(i + 1);
 					avversario.aggiungiPersonaggio(p);
 				}
@@ -1105,8 +1106,8 @@ public abstract class LocazioneBase implements Locazione {
 		}
 	}
 
-	private List<ClassePersonaggio> classiAvversariVivi() {
-		List<ClassePersonaggio> classi = new ArrayList<>();
+	private List<TipoPersonaggio> classiAvversariVivi() {
+		List<TipoPersonaggio> classi = new ArrayList<>();
 		for (Personaggio avversario : gruppoAvversario.getPersonaggiVivi()) {
 			classi.add(avversario.getClasse());
 		}
@@ -1447,7 +1448,7 @@ public abstract class LocazioneBase implements Locazione {
 	public static int probabilitaDiPassareInosservati(Gruppo gruppo, Gruppo avversari, int ora) {
 		List<Personaggio> vivi = gruppo.getPersonaggiVivi();
 		OptionalInt ladro = vivi.stream()
-				.filter(p -> p.getClasse() == ClassePersonaggio.LADRO || p.getClasse() == ClassePersonaggio.LADRA)
+				.filter(p -> p.getClasse() == TipoPersonaggio.LADRO || p.getClasse() == TipoPersonaggio.LADRA)
 				.mapToInt(Personaggio::getFurtivita).max();
 		int furtivita = ladro.isPresent() ? ladro.getAsInt() : vivi.stream().mapToInt(Personaggio::getFurtivita).min().orElse(0);
 		int percezione = avversari.getPersonaggiVivi().stream().mapToInt(Personaggio::getPercezione).max().orElse(0);

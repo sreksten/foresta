@@ -3,10 +3,10 @@ package com.threeamigos.foresta.incantesimi;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.oggetti.Incantamento;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.Collection;
 import java.util.Collections;
@@ -32,14 +32,14 @@ public class DardoArcano implements Arma {
 		this.delMago = isMago(formulante.getClasse());
 	}
 
-	private static boolean isMago(ClassePersonaggio classe) {
-		return classe == ClassePersonaggio.MAGO || classe == ClassePersonaggio.MAGA;
+	private static boolean isMago(TipoPersonaggio classe) {
+		return classe == TipoPersonaggio.MAGO || classe == TipoPersonaggio.MAGA;
 	}
 
 	/**
 	 * @return true se la classe sa lanciare il dardo arcano (Mago/Maga, Elfo/Elfa)
 	 */
-	public static boolean conosciutoDa(ClassePersonaggio classe) {
+	public static boolean conosciutoDa(TipoPersonaggio classe) {
 		switch (classe) {
 			case MAGO:
 			case MAGA:
@@ -60,7 +60,7 @@ public class DardoArcano implements Arma {
 				&& !personaggio.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO);
 	}
 
-	private static int costoLancio(ClassePersonaggio classe) {
+	private static int costoLancio(TipoPersonaggio classe) {
 		return isMago(classe) ? Costanti.DARDO_ARCANO_COSTO_LANCIO_MAGO : Costanti.DARDO_ARCANO_COSTO_LANCIO_ELFO;
 	}
 

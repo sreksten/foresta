@@ -8,8 +8,8 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 /**
@@ -43,7 +43,7 @@ public class CacciatoreDiTaglie extends IncaricoInCitta {
 	 * La banda di goblin, con il ricercato, un hobgoblin, a capo.
 	 */
 	public IncontroDiMissione getBanda() {
-		return IncontroDiMissione.di(ClassePersonaggio.GOBLIN, GOBLIN).conCapo(getRicercato(), ClassePersonaggio.HOBGOBLIN);
+		return IncontroDiMissione.di(TipoPersonaggio.GOBLIN, GOBLIN).conCapo(getRicercato(), TipoPersonaggio.HOBGOBLIN);
 	}
 
 	/**

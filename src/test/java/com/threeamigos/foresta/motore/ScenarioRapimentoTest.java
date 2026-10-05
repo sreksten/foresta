@@ -4,10 +4,10 @@ import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.IlRapimento;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -36,7 +36,7 @@ class ScenarioRapimentoTest {
         CoordinateMD covo = rapimento.getCovo();
         partita.gruppo().setCoordinate(covo);
         for (int i = 0; i < IlRapimento.RAPITORI; i++) {
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GOBLIN));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
         }
         rapimento.controllaPostLocazione();
         assertEquals("VIAGGIO", rapimento.getPassoCorrente());

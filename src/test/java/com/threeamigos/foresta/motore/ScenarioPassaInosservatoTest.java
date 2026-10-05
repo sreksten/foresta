@@ -2,12 +2,13 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.locazioni.LocazioneBase;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Ladro;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,7 +29,7 @@ class ScenarioPassaInosservatoTest {
             GruppoGiocatore gruppo = partita.gruppo();
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             avversari.rimuoviPersonaggi();
-            Personaggio troll = ClassePersonaggio.TROLL.getIstanza(1);
+            Personaggio troll = FabbricaPersonaggi.crea(TipoPersonaggio.TROLL, 1);
             avversari.aggiungiPersonaggio(troll);
             Personaggio arsenio = gruppo.getCapo();
 
@@ -50,10 +51,10 @@ class ScenarioPassaInosservatoTest {
                     LocazioneBase.probabilitaDiPassareInosservati(gruppo, avversari, GIORNO));
 
             // Contro chi vede tutto, quasi impossibile; mai più del massimo
-            avversari.aggiungiPersonaggio(ClassePersonaggio.DRAGO.getIstanza(10));
+            avversari.aggiungiPersonaggio(FabbricaPersonaggi.crea(TipoPersonaggio.DRAGO, 10));
             assertEquals(5, LocazioneBase.probabilitaDiPassareInosservati(gruppo, avversari, GIORNO));
             avversari.rimuoviPersonaggi();
-            avversari.aggiungiPersonaggio(ClassePersonaggio.GIGANTE.getIstanza(1));
+            avversari.aggiungiPersonaggio(FabbricaPersonaggi.crea(TipoPersonaggio.GIGANTE, 1));
             gruppo.rimuoviPersonaggio(arsenio);
             gruppo.rimuoviPersonaggio(compagno);
             assertTrue(LocazioneBase.probabilitaDiPassareInosservati(gruppo, avversari, NOTTE) <= 75);
@@ -62,10 +63,10 @@ class ScenarioPassaInosservatoTest {
 
     @Test
     void gliAvversariDiUnaMissioneVannoAffrontatiTranneLeGuardieDiUnColpo() {
-        Personaggio covo = IncontroDiMissione.di(ClassePersonaggio.GOBLIN, 2).crea().get(0);
-        Personaggio guardia = IncontroDiMissione.di(ClassePersonaggio.GOBLIN, 2).aggirabile().crea().get(0);
+        Personaggio covo = IncontroDiMissione.di(TipoPersonaggio.GOBLIN, 2).crea().get(0);
+        Personaggio guardia = IncontroDiMissione.di(TipoPersonaggio.GOBLIN, 2).aggirabile().crea().get(0);
         assertTrue(covo.isDaAffrontare());
         assertFalse(guardia.isDaAffrontare());
-        assertFalse(ClassePersonaggio.GOBLIN.getIstanza(1).isDaAffrontare(), "gli avversari della foresta no");
+        assertFalse(FabbricaPersonaggi.crea(TipoPersonaggio.GOBLIN, 1).isDaAffrontare(), "gli avversari della foresta no");
     }
 }

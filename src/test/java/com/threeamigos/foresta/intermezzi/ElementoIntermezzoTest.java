@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.intermezzi;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -16,7 +16,7 @@ class ElementoIntermezzoTest {
     private static final double DELTA = 1e-9;
 
     private static ElementoIntermezzo elemento() {
-        return ElementoIntermezzo.personaggio("prova", ClassePersonaggio.MAGO, 0, 0.5);
+        return ElementoIntermezzo.personaggio("prova", TipoPersonaggio.MAGO, 0, 0.5);
     }
 
     @Test
@@ -89,7 +89,7 @@ class ElementoIntermezzoTest {
     @Test
     void orientatoNelVersoDelMotoSiGiraAlRitorno() {
         // Immagine che guarda a sinistra, che va verso sinistra e poi torna indietro
-        ElementoIntermezzo elemento = ElementoIntermezzo.personaggio("drago", ClassePersonaggio.DRAGO, 1, 0.2)
+        ElementoIntermezzo elemento = ElementoIntermezzo.personaggio("drago", TipoPersonaggio.DRAGO, 1, 0.2)
                 .poi(Tappa.inSecondi(4).verso(0, 0.2))
                 .ripeti(Ripetizione.AVANTI_E_INDIETRO)
                 .orientaNelVersoDelMoto(Verso.SINISTRA);

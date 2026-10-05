@@ -196,7 +196,7 @@ SOPRANNOME_GOBLIN
 #   2. singolare;
 #   3. plurale;
 #   4. provenienza: "LUOGHI" e i luoghi dove si raccoglie (RADURA, BOSCO, GROTTA, ROVINE, PALUDE), oppure "NEMICI" e i
-#      mostri a cui si prende sconfiggendoli (le ClassePersonaggio: GOBLIN, VIVERNA, CHIMERA_DRAGO...);
+#      mostri a cui si prende sconfiggendoli (i TipoPersonaggio: GOBLIN, VIVERNA, CHIMERA_DRAGO...);
 #   5. quante ne chiede il mandante, minimo-massimo (per esempio 3-5);
 #   6. quante monete paga per pezzo: di più per i materiali dei mostri pericolosi;
 #   7. la battuta del capo nell'intermezzo;
@@ -345,7 +345,7 @@ OGGETTO_SMARRITO
 #   TIPO=       il TipoMissione che copre (VENDETTA, COMBATTIMENTO_BESTIA, DUELLO, BLOCCO...);
 #   ASPETTO=    chi compare nella scena in città: QUALUNQUE, CAPITANO, ARMAIOLO, ALCHIMISTA o LOCANDIERE;
 #   MANDANTE=   chi chiede, con l'articolo (il mugnaio);
-#   NEMICO=, NUMERO=  chi va sconfitto (una ClassePersonaggio) e quanti;
+#   NEMICO=, NUMERO=  chi va sconfitto (un TipoPersonaggio) e quanti;
 #   CAPO=       facoltativo: uno di loro ha un nome e un livello in più. SI pesca il nome da NOME_CAPOBANDA,
 #               NOME_CAMPIONE, NOME_CAMPIONESSA, NOME_BRIGANTE o NOME_MAGO da lì, qualunque altra cosa è il nome stesso
 #               (CAPO=Teodolinda), quando i testi lo dicono. Fra i nemici vanno bene anche le classi del gruppo:

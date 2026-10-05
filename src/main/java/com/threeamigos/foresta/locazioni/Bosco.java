@@ -7,8 +7,8 @@ import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
 public class Bosco extends LocazioneBase {
@@ -45,21 +45,21 @@ public class Bosco extends LocazioneBase {
 		return valore == null ? 1 : Integer.parseInt(valore);
 	}
 
-	private static final ClassePersonaggio[] mostri = {
-			ClassePersonaggio.ARPIA,
-			ClassePersonaggio.CENTAURO,
-			ClassePersonaggio.CHIMERA,
-			ClassePersonaggio.CHIMERA_DRAGO,
-			ClassePersonaggio.EREMITA,
-			ClassePersonaggio.FOLLETTO,
-			ClassePersonaggio.GIGANTE,
-			ClassePersonaggio.GOBLIN,
-			ClassePersonaggio.HOBGOBLIN,
-			ClassePersonaggio.MINOTAURO,
-			ClassePersonaggio.SCHELETRO,
-			ClassePersonaggio.TITANO,
-			ClassePersonaggio.TROLL,
-			ClassePersonaggio.VIVERNA
+	private static final TipoPersonaggio[] mostri = {
+			TipoPersonaggio.ARPIA,
+			TipoPersonaggio.CENTAURO,
+			TipoPersonaggio.CHIMERA,
+			TipoPersonaggio.CHIMERA_DRAGO,
+			TipoPersonaggio.EREMITA,
+			TipoPersonaggio.FOLLETTO,
+			TipoPersonaggio.GIGANTE,
+			TipoPersonaggio.GOBLIN,
+			TipoPersonaggio.HOBGOBLIN,
+			TipoPersonaggio.MINOTAURO,
+			TipoPersonaggio.SCHELETRO,
+			TipoPersonaggio.TITANO,
+			TipoPersonaggio.TROLL,
+			TipoPersonaggio.VIVERNA
 	};
 
 	private static final ClassiOggetto[] oggetti = {
@@ -78,7 +78,7 @@ public class Bosco extends LocazioneBase {
 	};
 
 	@Override
-	public ClassePersonaggio[] getPossibiliIncontri() {
+	public TipoPersonaggio[] getPossibiliIncontri() {
 		return mostri;
 	}
 

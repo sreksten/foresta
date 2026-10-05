@@ -6,6 +6,7 @@ import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
 
 import java.util.Arrays;
@@ -26,7 +27,7 @@ public final class EquipaggiamentoIniziale {
 	/**
 	 * I pezzi della dotazione di una classe giocante; nessuno per le altre
 	 */
-	static List<TipoArtefatto> perClasse(ClassePersonaggio classe) {
+	static List<TipoArtefatto> perClasse(TipoPersonaggio classe) {
 		switch (classe) {
 			case GUERRIERO:
 			case GUERRIERA:

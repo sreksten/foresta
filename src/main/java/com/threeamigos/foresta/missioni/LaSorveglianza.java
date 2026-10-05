@@ -8,6 +8,7 @@ import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -159,7 +160,7 @@ public class LaSorveglianza extends IncaricoInCitta {
 	 */
 	private String getNomeDeiNemici() {
 		SorveglianzaRichiesta sorveglianza = getSorveglianza();
-		Personaggio modello = sorveglianza.getNemico().getMoltiplicatoriDiClasse();
+		Personaggio modello = FabbricaPersonaggi.modello(sorveglianza.getNemico());
 		if (sorveglianza.getNumero() == 1) {
 			String nemico = modello.getADS() + modello.getNomeSingolare();
 			return sorveglianza.isConCapo() ? getCapo() + ", " + nemico : nemico;

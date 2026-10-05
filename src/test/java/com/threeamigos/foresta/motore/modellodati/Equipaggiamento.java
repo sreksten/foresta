@@ -5,9 +5,10 @@ import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.GradoIncantamento;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.*;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.*;
 
@@ -89,7 +90,7 @@ public final class Equipaggiamento {
 	 * Le dotazioni tipiche di una classe giocabile (le versioni femminili come le maschili), o NESSUNO
 	 * per le altre
 	 */
-	public static List<Equipaggiamento> tipiciPer(ClassePersonaggio classe) {
+	public static List<Equipaggiamento> tipiciPer(TipoPersonaggio classe) {
 		switch (classe) {
 			case GUERRIERO:
 			case GUERRIERA:
@@ -164,8 +165,8 @@ public final class Equipaggiamento {
 	/**
 	 * @return il motivo per cui la classe, a quel livello, non può portare l'equipaggiamento, o vuoto se può
 	 */
-	public Optional<String> motivoRifiuto(ClassePersonaggio classe, int livello) {
-		return equipaggia(classe.getIstanza(livello));
+	public Optional<String> motivoRifiuto(TipoPersonaggio classe, int livello) {
+		return equipaggia(FabbricaPersonaggi.crea(classe, livello));
 	}
 
 	@Override

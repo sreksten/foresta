@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.motore.modellodati;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
 import org.junit.jupiter.api.Test;
 
@@ -30,14 +30,14 @@ class ModelloDatiSalvataggioTest {
                 ArtefattoMDTest.creaArtefatto(TipoArtefatto.ELMO, "l'elmo di Gorgor", ""), new CoordinateMD(3, 1));
         modello.getGruppoGiocatoreMD().setCoordinate(new CoordinateMD(1, 2));
         PersonaggioMD senzaNome = new PersonaggioMD();
-        senzaNome.setClasse(ClassePersonaggio.LADRO);
+        senzaNome.setClasse(TipoPersonaggio.LADRO);
         senzaNome.setVivo(true);
         ArtefattoMD spada = ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "la spada di fuoco", "");
         spada.setSlotEquipaggiamento(TipoSlotArtefatto.MANO_PRINCIPALE);
         spada.setNomeProprio("Diavolina");
         senzaNome.getArtefatti().add(spada);
         PersonaggioMD morto = new PersonaggioMD();
-        morto.setClasse(ClassePersonaggio.MAGA);
+        morto.setClasse(TipoPersonaggio.MAGA);
         morto.setNome("Pippa");
         morto.setVivo(false);
         modello.getGruppoGiocatoreMD().addPersonaggioMD(senzaNome);

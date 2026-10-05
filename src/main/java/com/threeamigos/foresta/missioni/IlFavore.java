@@ -6,6 +6,7 @@ import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -132,7 +133,7 @@ public class IlFavore extends MissioneAPassi {
 	 */
 	private String getNomeDeiNemici() {
 		FavoreRichiesto favore = getFavore();
-		Personaggio modello = favore.getNemico().getMoltiplicatoriDiClasse();
+		Personaggio modello = FabbricaPersonaggi.modello(favore.getNemico());
 		if (favore.getNumero() == 1) {
 			String nemico = modello.getADS() + modello.getNomeSingolare();
 			return favore.isConCapo() ? getCapo() + ", " + nemico : nemico;

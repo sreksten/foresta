@@ -4,9 +4,9 @@ import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.missioni.LaTagliaSullaBanda;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -49,7 +49,7 @@ class ScenarioCaselleSegnalateTest {
 
             partita.gruppo().setCoordinate(covo);
             for (int i = 0; i < LaTagliaSullaBanda.HOBGOBLIN; i++) {
-                partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.HOBGOBLIN));
+                partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.HOBGOBLIN));
             }
             taglia.controllaPostLocazione();
             taglia.completaMissione();

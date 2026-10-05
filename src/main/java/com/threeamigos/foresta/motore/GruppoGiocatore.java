@@ -11,12 +11,13 @@ import com.threeamigos.foresta.motore.modellodati.GruppoGiocatoreMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.tools.ModalitaDiProva;
@@ -81,13 +82,13 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		List<PersonaggioMD> personaggiDaAggiungere = new ArrayList<>(gruppoGiocatoreMD.getPersonaggiMD());
 		gruppoGiocatoreMD.getPersonaggiMD().clear();
 		for (PersonaggioMD personaggioMD : personaggiDaAggiungere) {
-			Personaggio personaggio = personaggioMD.getClasse().getIstanza(1);
+			Personaggio personaggio = FabbricaPersonaggi.crea(personaggioMD.getClasse(), 1);
 			personaggio.setModelloDati(personaggioMD);
 			aggiungiPersonaggioSenzaNotificare(personaggio);
 		}
 		ospiti.clear();
 		for (PersonaggioMD ospiteMD : gruppoGiocatoreMD.getOspitiMD()) {
-			Personaggio ospite = ospiteMD.getClasse().getIstanza(1);
+			Personaggio ospite = FabbricaPersonaggi.crea(ospiteMD.getClasse(), 1);
 			ospite.setModelloDati(ospiteMD);
 			ospiti.add(ospite);
 		}
@@ -596,7 +597,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 	public final void vendePreziosi() {
 		if (md.getPreziosi() > 0) {
 			int quantita = md.getPreziosi();
-			if (getPersonaggiVivi().stream().anyMatch(p -> p.getClasse() == ClassePersonaggio.LADRA || p.getClasse() == ClassePersonaggio.LADRO)) {
+			if (getPersonaggiVivi().stream().anyMatch(p -> p.getClasse() == TipoPersonaggio.LADRA || p.getClasse() == TipoPersonaggio.LADRO)) {
 				quantita += Dado.tiraAncheAUnaFaccia(md.getPreziosi());
 			}
             String notifica = chiMaiuscolo() +

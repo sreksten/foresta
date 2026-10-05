@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.intermezzi;
 
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,7 +34,7 @@ public class IntermezzoIntroduttivo implements Intermezzo {
 				.orElseGet(() -> capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
 		// Il protagonista al centro, a due terzi dell'altezza, sotto il testo. L'alfabeto
 		// grande ha solo lettere, cifre e ' , . ? : niente accenti (si scrive e') né due punti.
-		ClassePersonaggio classeEroe = capo.getClasse();
+		TipoPersonaggio classeEroe = capo.getClasse();
 		List<PaginaIntermezzo> pagineIntermezzo = new ArrayList<>();
 		pagineIntermezzo.add(new PaginaIntermezzo("La Foresta e' silenziosa, e " + eroe + " si inoltra fra gli alberi.")
 				.perSecondi(3)
@@ -52,7 +52,7 @@ public class IntermezzoIntroduttivo implements Intermezzo {
 								.poi(Tappa.inSecondi(2))
 								.poi(Tappa.inSecondi(0.1).specchiata(VersoDiDefault.serveSpecchiare(classeEroe, Verso.DESTRA))))
 						// L'eremita entra da destra e si ferma davanti all'eroe
-						.conElemento(ElementoIntermezzo.personaggio("eremita", ClassePersonaggio.EREMITA, 1.1, 0.61)
+						.conElemento(ElementoIntermezzo.personaggio("eremita", TipoPersonaggio.EREMITA, 1.1, 0.61)
 								.conBocca(0.5, -0.15)
 								.specchiato()
 								.poi(Tappa.inSecondi(2).verso(0.62, 0.61)))
@@ -60,7 +60,7 @@ public class IntermezzoIntroduttivo implements Intermezzo {
 						.conBattuta(BattutaIntermezzo.di("eroe", "Mi chiamo " + eroe + ". Sto cercando il Drago."));
 		finale.conBattuta(BattutaIntermezzo.di("eremita", "Il suo castello è nascosto da un incantesimo." +
 				" Non riuscirai a trovarlo, a meno che tu prima non sconfigga i suoi alleati.").perSecondi(4));
-		if (GruppoGiocatore.getIstanza().getCapo().getClasse() == ClassePersonaggio.OMBRAFIAMMA) {
+		if (GruppoGiocatore.getIstanza().getCapo().getClasse() == TipoPersonaggio.OMBRAFIAMMA) {
 			finale.conBattuta(BattutaIntermezzo.di("eremita", "E comunque... Non vorrei essere nei suoi panni."));
 		}
 		pagineIntermezzo.add(finale);
@@ -71,7 +71,7 @@ public class IntermezzoIntroduttivo implements Intermezzo {
 	 * L'eroe guarda a sinistra all'inizio, indipendentemente dal verso con cui è
 	 * disegnata l'immagine della sua classe (vedi {@link VersoDiDefault}).
 	 */
-	private static ElementoIntermezzo personaggioVersoSinistra(ClassePersonaggio classe, double x, double y) {
+	private static ElementoIntermezzo personaggioVersoSinistra(TipoPersonaggio classe, double x, double y) {
 		ElementoIntermezzo elemento = ElementoIntermezzo.personaggio("eroe", classe, x, y);
 		if (VersoDiDefault.serveSpecchiare(classe, Verso.SINISTRA)) {
 			elemento.specchiato();

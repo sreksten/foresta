@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.EnumSet;
 import java.util.Set;
@@ -25,7 +25,7 @@ public final class CombattimentoRichiesto {
 	private final TipoMissione tipo;
 	private final AspettoDelMandante aspetto;
 	private final String mandante;
-	private final ClassePersonaggio nemico;
+	private final TipoPersonaggio nemico;
 	private final int numero;
 	private final CapoDellaRiga capo;
 	private final boolean finoAllaResa;
@@ -50,7 +50,7 @@ public final class CombattimentoRichiesto {
 		tipo = campi.enumerato("TIPO", TipoMissione.class);
 		aspetto = campi.enumerato("ASPETTO", AspettoDelMandante.class);
 		mandante = campi.obbligatorio("MANDANTE");
-		nemico = campi.enumerato("NEMICO", ClassePersonaggio.class);
+		nemico = campi.enumerato("NEMICO", TipoPersonaggio.class);
 		numero = campi.intero("NUMERO");
 		capo = CapoDellaRiga.da(campi.facoltativo("CAPO"));
 		finoAllaResa = campi.facoltativo("RESA").map("SI"::equals).orElse(false);
@@ -116,7 +116,7 @@ public final class CombattimentoRichiesto {
 		return mandante;
 	}
 
-	public ClassePersonaggio getNemico() {
+	public TipoPersonaggio getNemico() {
 		return nemico;
 	}
 

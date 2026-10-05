@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.intermezzi;
 
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.Collections;
 import java.util.List;
@@ -47,7 +47,7 @@ final class ScenaNegozio {
 		String capo = null;
 		for (int i = 0; i < personaggiVivi.size(); i++) {
 			Personaggio personaggio = personaggiVivi.get(i);
-			ClassePersonaggio classe = personaggio.getClasse();
+			TipoPersonaggio classe = personaggio.getClasse();
 			String idElemento = "personaggio" + i;
 			double xArrivo = xArrivoCapo - i * DISTANZA_FRA_PERSONAGGI;
 			ElementoIntermezzo elemento = ElementoIntermezzo.personaggio(idElemento, classe, X_PARTENZA_PERSONAGGI, yPersonaggi)

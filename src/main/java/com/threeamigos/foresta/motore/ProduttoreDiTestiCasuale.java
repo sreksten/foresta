@@ -5,8 +5,8 @@ import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.motore.GrammarBean.InvalidGrammarException;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.Notizia;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import javax.swing.*;
 import java.io.IOException;
@@ -245,52 +245,52 @@ public class ProduttoreDiTestiCasuale {
 		// Occorre vedere se tante volte appare uno dei personaggi del gruppo o più di uno.
 		boolean applicabile = true;
 		Collection<Personaggio> personaggiVivi = GruppoGiocatore.getIstanza().getPersonaggiVivi();
-		Collection<ClassePersonaggio> classiPresenti = personaggiVivi.stream().map(Personaggio::getClasse).collect(Collectors.toSet());
-		boolean appareBardo = contenuto.contains(ClassePersonaggio.BARDO.name()) || contenuto.contains(ClassePersonaggio.CANTASTORIE.name());
+		Collection<TipoPersonaggio> classiPresenti = personaggiVivi.stream().map(Personaggio::getClasse).collect(Collectors.toSet());
+		boolean appareBardo = contenuto.contains(TipoPersonaggio.BARDO.name()) || contenuto.contains(TipoPersonaggio.CANTASTORIE.name());
 		if (appareBardo) {
-			applicabile = classiPresenti.contains(ClassePersonaggio.BARDO) || classiPresenti.contains(ClassePersonaggio.CANTASTORIE);
+			applicabile = classiPresenti.contains(TipoPersonaggio.BARDO) || classiPresenti.contains(TipoPersonaggio.CANTASTORIE);
 			if (!applicabile) {
 				return null;
 			}
-			contenuto = sostituisci(contenuto, ClassePersonaggio.CANTASTORIE, ClassePersonaggio.BARDO);
-			contenuto = sostituisci(contenuto, ClassePersonaggio.BARDO, ClassePersonaggio.CANTASTORIE);
+			contenuto = sostituisci(contenuto, TipoPersonaggio.CANTASTORIE, TipoPersonaggio.BARDO);
+			contenuto = sostituisci(contenuto, TipoPersonaggio.BARDO, TipoPersonaggio.CANTASTORIE);
 		}
-		boolean appareLadro = contenuto.contains(ClassePersonaggio.LADRO.name()) || contenuto.contains(ClassePersonaggio.LADRA.name());
+		boolean appareLadro = contenuto.contains(TipoPersonaggio.LADRO.name()) || contenuto.contains(TipoPersonaggio.LADRA.name());
 		if (appareLadro) {
-			applicabile = classiPresenti.contains(ClassePersonaggio.LADRO) || classiPresenti.contains(ClassePersonaggio.LADRA);
+			applicabile = classiPresenti.contains(TipoPersonaggio.LADRO) || classiPresenti.contains(TipoPersonaggio.LADRA);
 			if (!applicabile) {
 				return null;
 			}
-			contenuto = sostituisci(contenuto, ClassePersonaggio.LADRA, ClassePersonaggio.LADRO);
-			contenuto = sostituisci(contenuto, ClassePersonaggio.LADRO, ClassePersonaggio.LADRA);
+			contenuto = sostituisci(contenuto, TipoPersonaggio.LADRA, TipoPersonaggio.LADRO);
+			contenuto = sostituisci(contenuto, TipoPersonaggio.LADRO, TipoPersonaggio.LADRA);
 
 		}
-		boolean appareGuerriero = contenuto.contains(ClassePersonaggio.GUERRIERO.name()) || contenuto.contains(ClassePersonaggio.GUERRIERA.name());
+		boolean appareGuerriero = contenuto.contains(TipoPersonaggio.GUERRIERO.name()) || contenuto.contains(TipoPersonaggio.GUERRIERA.name());
 		if (appareGuerriero) {
-			applicabile = classiPresenti.contains(ClassePersonaggio.GUERRIERO) || classiPresenti.contains(ClassePersonaggio.GUERRIERA);
+			applicabile = classiPresenti.contains(TipoPersonaggio.GUERRIERO) || classiPresenti.contains(TipoPersonaggio.GUERRIERA);
 			if (!applicabile) {
 				return null;
 			}
-			contenuto = sostituisci(contenuto, ClassePersonaggio.GUERRIERA, ClassePersonaggio.GUERRIERO);
-			contenuto = sostituisci(contenuto, ClassePersonaggio.GUERRIERO, ClassePersonaggio.GUERRIERA);
+			contenuto = sostituisci(contenuto, TipoPersonaggio.GUERRIERA, TipoPersonaggio.GUERRIERO);
+			contenuto = sostituisci(contenuto, TipoPersonaggio.GUERRIERO, TipoPersonaggio.GUERRIERA);
 		}
-		boolean appareMago = contenuto.contains(ClassePersonaggio.MAGO.name()) || contenuto.contains(ClassePersonaggio.MAGA.name());
+		boolean appareMago = contenuto.contains(TipoPersonaggio.MAGO.name()) || contenuto.contains(TipoPersonaggio.MAGA.name());
 		if (appareMago) {
-			applicabile = classiPresenti.contains(ClassePersonaggio.MAGO) || classiPresenti.contains(ClassePersonaggio.MAGA);
+			applicabile = classiPresenti.contains(TipoPersonaggio.MAGO) || classiPresenti.contains(TipoPersonaggio.MAGA);
 			if (!applicabile) {
 				return null;
 			}
-			contenuto = sostituisci(contenuto, ClassePersonaggio.MAGA, ClassePersonaggio.MAGO);
-			contenuto = sostituisci(contenuto, ClassePersonaggio.MAGO, ClassePersonaggio.MAGA);
+			contenuto = sostituisci(contenuto, TipoPersonaggio.MAGA, TipoPersonaggio.MAGO);
+			contenuto = sostituisci(contenuto, TipoPersonaggio.MAGO, TipoPersonaggio.MAGA);
 		}
-		boolean appareElfo = contenuto.contains(ClassePersonaggio.ELFO.name()) || contenuto.contains(ClassePersonaggio.ELFA.name());
+		boolean appareElfo = contenuto.contains(TipoPersonaggio.ELFO.name()) || contenuto.contains(TipoPersonaggio.ELFA.name());
 		if (appareElfo) {
-			applicabile = classiPresenti.contains(ClassePersonaggio.ELFO) || classiPresenti.contains(ClassePersonaggio.ELFA);
+			applicabile = classiPresenti.contains(TipoPersonaggio.ELFO) || classiPresenti.contains(TipoPersonaggio.ELFA);
 			if (!applicabile) {
 				return null;
 			}
-			contenuto = sostituisci(contenuto, ClassePersonaggio.ELFA, ClassePersonaggio.ELFO);
-			contenuto = sostituisci(contenuto, ClassePersonaggio.ELFO, ClassePersonaggio.ELFA);
+			contenuto = sostituisci(contenuto, TipoPersonaggio.ELFA, TipoPersonaggio.ELFO);
+			contenuto = sostituisci(contenuto, TipoPersonaggio.ELFO, TipoPersonaggio.ELFA);
 		}
 		Personaggio eroe = GruppoGiocatore.getIstanza().capo;
 		contenuto = contenuto.replace("EROE", eroe.getNomeProprio().orElseThrow(() -> new IllegalStateException("Personaggio senza nome proprio")));
@@ -298,7 +298,7 @@ public class ProduttoreDiTestiCasuale {
 		return contenuto;
 	}
 
-	private static String sostituisci(String contenuto, ClassePersonaggio classe1, ClassePersonaggio classe2) {
+	private static String sostituisci(String contenuto, TipoPersonaggio classe1, TipoPersonaggio classe2) {
 		if (contenuto.contains(classe1.name())) {
 			Personaggio p = trova(classe1, classe2);
 			contenuto = contenuto.replace(classe1.name(), p.getNomeProprio().orElseThrow(() -> new IllegalStateException("Personaggio senza nome proprio")));
@@ -310,7 +310,7 @@ public class ProduttoreDiTestiCasuale {
 		return contenuto;
 	}
 
-	private static Personaggio trova(ClassePersonaggio classe, ClassePersonaggio classeDiRipiego) {
+	private static Personaggio trova(TipoPersonaggio classe, TipoPersonaggio classeDiRipiego) {
 		Collection<Personaggio> personaggiVivi = GruppoGiocatore.getIstanza().getPersonaggiVivi();
 		Optional<Personaggio> opt = personaggiVivi.stream().filter(p -> p.getClasse() == classe).findFirst();
 		if (!opt.isPresent()) {

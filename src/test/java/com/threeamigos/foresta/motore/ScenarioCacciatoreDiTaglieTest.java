@@ -5,10 +5,10 @@ import com.threeamigos.foresta.missioni.CacciatoreDiTaglie;
 import com.threeamigos.foresta.missioni.IlRapimento;
 import com.threeamigos.foresta.missioni.IncaricoInCitta;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -53,21 +53,21 @@ class ScenarioCacciatoreDiTaglieTest {
             // La banda: tre goblin e il ricercato, un hobgoblin
             List<Personaggio> banda = RegistroMissioni.getIncontroMissione(covo).orElseThrow(AssertionError::new);
             assertEquals(CacciatoreDiTaglie.GOBLIN + 1, banda.size());
-            assertEquals(ClassePersonaggio.GOBLIN, banda.get(0).getClasse());
+            assertEquals(TipoPersonaggio.GOBLIN, banda.get(0).getClasse());
             Personaggio capo = banda.get(banda.size() - 1);
-            assertEquals(ClassePersonaggio.HOBGOBLIN, capo.getClasse());
+            assertEquals(TipoPersonaggio.HOBGOBLIN, capo.getClasse());
             assertEquals(ricercato, capo.getNome());
 
             // Un hobgoblin abbattuto altrove non conta; i goblin nemmeno; il capo sì
             partita.gruppo().setCoordinate(new CoordinateMD(covo.getX() == 0 ? 1 : covo.getX() - 1, covo.getY()));
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.HOBGOBLIN));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.HOBGOBLIN));
             partita.gruppo().setCoordinate(covo);
             for (int i = 0; i < CacciatoreDiTaglie.GOBLIN; i++) {
-                partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GOBLIN));
+                partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
             }
             taglia.controllaPostLocazione();
             assertEquals("CACCIA", taglia.getPassoCorrente());
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.HOBGOBLIN));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.HOBGOBLIN));
             taglia.controllaPostLocazione();
             assertEquals("RITORNO", taglia.getPassoCorrente());
 

@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -11,7 +11,7 @@ class LanciatoreDeiDadiTest {
 
     @Test
     void lePercentualiDiOgniClasseSommanoACento() {
-        for (ClassePersonaggio classe : ClassePersonaggio.values()) {
+        for (TipoPersonaggio classe : TipoPersonaggio.values()) {
             assertEquals(100, Arrays.stream(LanciatoreDeiDadi.getPercentualiPer(classe)).sum(), classe.name());
         }
     }

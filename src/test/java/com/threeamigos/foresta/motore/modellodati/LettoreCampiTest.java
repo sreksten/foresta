@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore.modellodati;
 
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
 import org.junit.jupiter.api.Test;
 
@@ -46,7 +47,7 @@ class LettoreCampiTest {
     void unPersonaggioSenzaNomeSiSalvaESiRilegge() throws IOException {
         // Given: un nome vuoto vale come nessun nome
         PersonaggioMD personaggio = new PersonaggioMD();
-        personaggio.setClasse(com.threeamigos.foresta.personaggi.ClassePersonaggio.GUERRIERO);
+        personaggio.setClasse(com.threeamigos.foresta.tipi.TipoPersonaggio.GUERRIERO);
         personaggio.setNome("  ");
         personaggio.setVivo(true);
         assertNull(personaggio.getNome());
@@ -60,6 +61,6 @@ class LettoreCampiTest {
         // Then
         assertNull(riletto.getNome());
         assertTrue(riletto.isVivo());
-        assertEquals(com.threeamigos.foresta.personaggi.ClassePersonaggio.GUERRIERO, riletto.getClasse());
+        assertEquals(com.threeamigos.foresta.tipi.TipoPersonaggio.GUERRIERO, riletto.getClasse());
     }
 }

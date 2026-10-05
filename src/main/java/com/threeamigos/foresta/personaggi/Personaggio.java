@@ -310,7 +310,7 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
 	/**
 	 * La classe del personaggio da ClassiPersonaggio
 	 */
-    ClassePersonaggio getClasse();
+    TipoPersonaggio getClasse();
 
 	/**
 	 * Il nome proprio del personaggio (puo' non averlo)

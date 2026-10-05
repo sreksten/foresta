@@ -2,6 +2,7 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -22,11 +23,11 @@ public class OmbraFiamma extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 
 	public OmbraFiamma(int livello) {
-		super(ClassePersonaggio.OMBRAFIAMMA, livello);
+		super(TipoPersonaggio.OMBRAFIAMMA, livello);
 	}
 
 	public OmbraFiamma(String nome, int livello) {
-		super(nome, ClassePersonaggio.OMBRAFIAMMA, livello);
+		super(nome, TipoPersonaggio.OMBRAFIAMMA, livello);
 	}
 
 	@Override

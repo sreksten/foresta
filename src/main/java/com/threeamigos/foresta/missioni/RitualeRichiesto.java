@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -47,7 +47,7 @@ public final class RitualeRichiesto {
 	private final String domanda;
 	private final List<String> metodi;
 	private final int metodo;
-	private final ClassePersonaggio nemico;
+	private final TipoPersonaggio nemico;
 	private final int numero;
 	private final CapoDellaRiga capo;
 	private final int monete;
@@ -100,7 +100,7 @@ public final class RitualeRichiesto {
 				throw new IllegalArgumentException("METODO ed ERRORE vanno con METODI: " + riga);
 			}
 		}
-		nemico = campi.facoltativo("NEMICO").map(ClassePersonaggio::valueOf).orElse(null);
+		nemico = campi.facoltativo("NEMICO").map(TipoPersonaggio::valueOf).orElse(null);
 		numero = nemico == null ? 0 : campi.intero("NUMERO");
 		capo = CapoDellaRiga.da(campi.facoltativo("CAPO"));
 		vittoria = campi.facoltativo("VITTORIA").orElse(null);
@@ -207,7 +207,7 @@ public final class RitualeRichiesto {
 		return nemico != null;
 	}
 
-	public ClassePersonaggio getNemico() {
+	public TipoPersonaggio getNemico() {
 		return nemico;
 	}
 

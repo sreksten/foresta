@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.intermezzi;
 
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +32,7 @@ public class IntermezzoFinePrimaLocazione implements Intermezzo {
 		// Senza nome proprio l'eroe si chiama con la sua classe ("il guerriero")
 		String eroe = capo.getNomeProprio()
 				.orElseGet(() -> capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE));
-		ClassePersonaggio classeEroe = capo.getClasse();
+		TipoPersonaggio classeEroe = capo.getClasse();
 		List<PaginaIntermezzo> pagineIntermezzo = new ArrayList<>();
 		PaginaIntermezzo finale = new PaginaIntermezzo()
 						.conSfondo(ImmagineIntermezzo.locazione(TipoLocazione.BOSCO))
@@ -44,7 +44,7 @@ public class IntermezzoFinePrimaLocazione implements Intermezzo {
 								.poi(Tappa.inSecondi(2))
 								.poi(Tappa.inSecondi(0.1).specchiata(VersoDiDefault.serveSpecchiare(classeEroe, Verso.DESTRA))))
 						// L'eremita entra da destra e si ferma davanti all'eroe
-						.conElemento(ElementoIntermezzo.personaggio("eremita", ClassePersonaggio.EREMITA, 1.1, 0.61)
+						.conElemento(ElementoIntermezzo.personaggio("eremita", TipoPersonaggio.EREMITA, 1.1, 0.61)
 								.conBocca(0.5, -0.15)
 								.specchiato()
 								.poi(Tappa.inSecondi(2).verso(0.62, 0.61)))
@@ -59,7 +59,7 @@ public class IntermezzoFinePrimaLocazione implements Intermezzo {
 	 * L'eroe guarda a sinistra all'inizio, indipendentemente dal verso con cui è
 	 * disegnata l'immagine della sua classe (vedi {@link VersoDiDefault}).
 	 */
-	private static ElementoIntermezzo personaggioVersoSinistra(ClassePersonaggio classe, double x, double y) {
+	private static ElementoIntermezzo personaggioVersoSinistra(TipoPersonaggio classe, double x, double y) {
 		ElementoIntermezzo elemento = ElementoIntermezzo.personaggio("eroe", classe, x, y);
 		if (VersoDiDefault.serveSpecchiare(classe, Verso.SINISTRA)) {
 			elemento.specchiato();

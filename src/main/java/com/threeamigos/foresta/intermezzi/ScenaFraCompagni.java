@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.intermezzi;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public final class ScenaFraCompagni {
 	private final String testo;
 	private final TipoLocazione sfondo;
 	private final boolean conFuoco;
-	private final List<ClassePersonaggio> personaggi;
+	private final List<TipoPersonaggio> personaggi;
 	private final List<BattutaIntermezzo> battute = new ArrayList<>();
 	private String luna;
 
@@ -123,7 +123,7 @@ public final class ScenaFraCompagni {
 		return pagine;
 	}
 
-	private static ElementoIntermezzo versoDestra(String id, ClassePersonaggio classe, double x, double y) {
+	private static ElementoIntermezzo versoDestra(String id, TipoPersonaggio classe, double x, double y) {
 		ElementoIntermezzo elemento = ElementoIntermezzo.personaggio(id, classe, x, y);
 		if (VersoDiDefault.serveSpecchiare(classe, Verso.DESTRA)) {
 			elemento.specchiato();
@@ -131,7 +131,7 @@ public final class ScenaFraCompagni {
 		return elemento;
 	}
 
-	private static ElementoIntermezzo versoSinistra(String id, ClassePersonaggio classe, double x, double y) {
+	private static ElementoIntermezzo versoSinistra(String id, TipoPersonaggio classe, double x, double y) {
 		ElementoIntermezzo elemento = ElementoIntermezzo.personaggio(id, classe, x, y);
 		if (VersoDiDefault.serveSpecchiare(classe, Verso.SINISTRA)) {
 			elemento.specchiato();

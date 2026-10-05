@@ -12,9 +12,10 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Cofano;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -67,7 +68,7 @@ public class Tempio extends LocazioneBase {
 		}
 		Personaggio p;
 		for (int i = 0; i < nViverne; i++) {
-			p = ClassePersonaggio.VIVERNA.getIstanza(Statistiche.getLivello());
+			p = FabbricaPersonaggi.crea(TipoPersonaggio.VIVERNA, Statistiche.getLivello());
 			p.setOrdinale(i + 1);
 			gng.aggiungiPersonaggio(p);
 		}

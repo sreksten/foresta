@@ -4,11 +4,11 @@ import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.missioni.NonSparateSulPianista;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -63,7 +63,7 @@ class ScenarioNonSparateSulPianistaTest {
             assertEquals("VIAGGIO", pianista.getPassoCorrente());
             Personaggio ugolino = pianista.getScortato().orElseThrow(AssertionError::new);
             assertEquals(pianista.getBardo(), ugolino.getNome());
-            assertEquals(ClassePersonaggio.BARDO, ugolino.getClasse());
+            assertEquals(TipoPersonaggio.BARDO, ugolino.getClasse());
             assertTrue(partita.gruppo().isOspiteVulnerabile(ugolino));
 
             // La città è la più vicina alla locanda

@@ -2,6 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
 
 /**
@@ -17,7 +18,7 @@ public final class RiletturaPartita {
 
 	public static void ricostruisci() {
 		for (PersonaggioMD personaggioMD : ModelloDati.getIstanza().getGruppoGiocatoreMD().getPersonaggiMD()) {
-			PersonaggioBase.ricalcolaAttributiSecondari(personaggioMD, personaggioMD.getClasse().getMoltiplicatoriDiClasse());
+			PersonaggioBase.ricalcolaAttributiSecondari(personaggioMD, FabbricaPersonaggi.modello(personaggioMD.getClasse()));
 		}
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		gruppo.setModelloDati(ModelloDati.getIstanza().getGruppoGiocatoreMD());

@@ -3,6 +3,7 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -23,11 +24,11 @@ public class Guerriera extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 
 	public Guerriera(int livello) {
-		super(ClassePersonaggio.GUERRIERA, livello);
+		super(TipoPersonaggio.GUERRIERA, livello);
 	}
 
 	public Guerriera(String nome, int livello) {
-		super(nome, ClassePersonaggio.GUERRIERA, livello);
+		super(nome, TipoPersonaggio.GUERRIERA, livello);
 	}
 
 	@Override

@@ -10,9 +10,9 @@ import com.threeamigos.foresta.eventi.interni.InternoPreparazioneLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoTrofeoAcquisito;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
 import org.junit.jupiter.api.Test;
 
@@ -139,12 +139,12 @@ class TrofeiTest {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			partita.eventi().ascolta(InternoTrofeoAcquisito.class);
 
-			partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.TROLL));
+			partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.TROLL));
 			partita.pubblica(new InternoFineLocazione());
 			assertEquals(0, RegistroTrofei.getProgresso(TipoTrofeo.AMMAZZAGOBLIN), "un troll non e' un goblin");
 
 			for (int i = 0; i < 100; i++) {
-				partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GOBLIN));
+				partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
 			}
 			assertFalse(RegistroTrofei.isVinto(TipoTrofeo.AMMAZZAGOBLIN), "i trofei si controllano solo a fine locazione");
 
@@ -162,12 +162,12 @@ class TrofeiTest {
 	void lAmicoDiTuttiSiVinceDopoCentoAmicizie() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
 			for (int i = 0; i < 99; i++) {
-				partita.pubblica(new InternoAmiciziaStretta(Arrays.asList(ClassePersonaggio.GOBLIN, ClassePersonaggio.GOBLIN)));
+				partita.pubblica(new InternoAmiciziaStretta(Arrays.asList(TipoPersonaggio.GOBLIN, TipoPersonaggio.GOBLIN)));
 			}
 			partita.pubblica(new InternoFineLocazione());
 			assertFalse(RegistroTrofei.isVinto(TipoTrofeo.AMICO_DI_TUTTI), "contano le amicizie, non i personaggi");
 
-			partita.pubblica(new InternoAmiciziaStretta(Collections.singletonList(ClassePersonaggio.TROLL)));
+			partita.pubblica(new InternoAmiciziaStretta(Collections.singletonList(TipoPersonaggio.TROLL)));
 			partita.pubblica(new InternoFineLocazione());
 
 			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.AMICO_DI_TUTTI));
@@ -177,7 +177,7 @@ class TrofeiTest {
 	@Test
 	void ilCorruttoreContaLeCorruzioniRiuscite() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
-			List<ClassePersonaggio> treGoblin = Arrays.asList(ClassePersonaggio.GOBLIN, ClassePersonaggio.GOBLIN, ClassePersonaggio.GOBLIN);
+			List<TipoPersonaggio> treGoblin = Arrays.asList(TipoPersonaggio.GOBLIN, TipoPersonaggio.GOBLIN, TipoPersonaggio.GOBLIN);
 			for (int i = 0; i < 99; i++) {
 				partita.pubblica(new InternoCorruzioneRiuscita(treGoblin));
 			}
@@ -232,18 +232,18 @@ class TrofeiTest {
 	@Test
 	void iTrofeiDeiBossSiVinconoSconfiggendoliUnaVolta() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
-			partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.CHIMERA_DRAGO));
-			partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.IDRA));
+			partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.CHIMERA_DRAGO));
+			partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.IDRA));
 			partita.pubblica(new InternoFineLocazione());
 
 			assertFalse(RegistroTrofei.isVinto(TipoTrofeo.UCCIDI_IL_DRAGO), "una chimera drago non e' il Drago");
 			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.UCCIDI_L_IDRA));
 			assertFalse(RegistroTrofei.isVinto(TipoTrofeo.UCCIDI_LA_STREGA));
 
-			partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.DRAGO));
-			partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.STREGA));
-			partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.LICH));
-			partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.MINOTAURO_GIGANTE));
+			partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.DRAGO));
+			partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.STREGA));
+			partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.LICH));
+			partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.MINOTAURO_GIGANTE));
 			partita.pubblica(new InternoFineLocazione());
 
 			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.UCCIDI_IL_DRAGO));
@@ -302,7 +302,7 @@ class TrofeiTest {
 	@Test
 	void unBossUccisoInUnoScontroInCuiSiMuoreNonConta() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
-			partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.DRAGO));
+			partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.DRAGO));
 			// Il gruppo muore: la fine della locazione non arriva, e la partita successiva
 			// prepara una nuova locazione
 			partita.pubblica(new InternoPreparazioneLocazione());
@@ -349,7 +349,7 @@ class TrofeiTest {
 			assertFalse(RegistroTrofei.isVinto(TipoTrofeo.PERDIGIORNO), "manca ancora l'Ammazzagoblin");
 
 			for (int i = 0; i < 100; i++) {
-				partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GOBLIN));
+				partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
 			}
 			partita.pubblica(new InternoFineLocazione());
 

@@ -11,11 +11,11 @@ import com.threeamigos.foresta.missioni.LaLealta;
 import com.threeamigos.foresta.missioni.LealtaRichiesta;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Guerriera;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -87,8 +87,8 @@ class ScenarioLealtaTest {
             CoordinateMD radura = favore.getPosto();
             assertEquals(TipoLocazione.RADURA, Foresta.getLocazione(radura));
             partita.gruppo().setCoordinate(radura);
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GOBLIN));
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GOBLIN));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
             favore.controllaPostLocazione();
             assertTrue(favore.isCompleta());
             assertTrue(partita.testi().contains("Debito saldato per Bruna."), String.valueOf(partita.testi()));

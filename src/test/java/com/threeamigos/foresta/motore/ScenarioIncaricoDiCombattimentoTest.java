@@ -5,10 +5,10 @@ import com.threeamigos.foresta.missioni.CombattimentoRichiesto;
 import com.threeamigos.foresta.missioni.IncaricoDiCombattimento;
 import com.threeamigos.foresta.missioni.TipoMissione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
@@ -86,14 +86,14 @@ class ScenarioIncaricoDiCombattimentoTest {
 
             List<Personaggio> troll = RegistroMissioni.getIncontroMissione(covo).orElseThrow(AssertionError::new);
             assertEquals(2, troll.size());
-            assertEquals(ClassePersonaggio.TROLL, troll.get(0).getClasse());
+            assertEquals(TipoPersonaggio.TROLL, troll.get(0).getClasse());
             assertEquals(capo, troll.get(0).getNome());
 
             partita.gruppo().setCoordinate(covo);
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.TROLL));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.TROLL));
             incarico.controllaPostLocazione();
             assertEquals("CACCIA", incarico.getPassoCorrente());
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.TROLL));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.TROLL));
             incarico.controllaPostLocazione();
             assertEquals("RITORNO", incarico.getPassoCorrente());
             assertTrue(partita.testi().contains(capo + " non sfascerà più niente. Il mugnaio aspetta a Nyena."), String.valueOf(partita.testi()));
@@ -130,7 +130,7 @@ class ScenarioIncaricoDiCombattimentoTest {
                     + "segnato sulla mappa.", incarico.getDescrizione());
             List<Personaggio> sfidante = RegistroMissioni.getIncontroMissione(incarico.getCovo()).orElseThrow(AssertionError::new);
             assertEquals(1, sfidante.size());
-            assertEquals(ClassePersonaggio.GUERRIERA, sfidante.get(0).getClasse());
+            assertEquals(TipoPersonaggio.GUERRIERA, sfidante.get(0).getClasse());
             assertEquals(campionessa, sfidante.get(0).getNome());
         }
     }

@@ -3,9 +3,10 @@ package com.threeamigos.foresta.motore.modellodati;
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.Fuoco;
 import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.SupertipoDanno;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -23,12 +24,12 @@ class AnalisiBossTest {
 
     private static final int CAMPIONI = 300;
     private static final int[] LIVELLI = {1, 3, 5, 8, 10, 15, 20};
-    private static final ClassePersonaggio[] BOSS = {ClassePersonaggio.LICH, ClassePersonaggio.STREGA};
-    private static final ClassePersonaggio[] PG = {ClassePersonaggio.GUERRIERO, ClassePersonaggio.LADRO,
-            ClassePersonaggio.ELFO, ClassePersonaggio.BARDO, ClassePersonaggio.MAGO};
-    private static final ClassePersonaggio[] MOSTRI_COMUNI = {ClassePersonaggio.GOBLIN, ClassePersonaggio.HOBGOBLIN,
-            ClassePersonaggio.SCHELETRO, ClassePersonaggio.ARPIA, ClassePersonaggio.CENTAURO, ClassePersonaggio.TROLL,
-            ClassePersonaggio.MINOTAURO, ClassePersonaggio.GARGOYLE};
+    private static final TipoPersonaggio[] BOSS = {TipoPersonaggio.LICH, TipoPersonaggio.STREGA};
+    private static final TipoPersonaggio[] PG = {TipoPersonaggio.GUERRIERO, TipoPersonaggio.LADRO,
+            TipoPersonaggio.ELFO, TipoPersonaggio.BARDO, TipoPersonaggio.MAGO};
+    private static final TipoPersonaggio[] MOSTRI_COMUNI = {TipoPersonaggio.GOBLIN, TipoPersonaggio.HOBGOBLIN,
+            TipoPersonaggio.SCHELETRO, TipoPersonaggio.ARPIA, TipoPersonaggio.CENTAURO, TipoPersonaggio.TROLL,
+            TipoPersonaggio.MINOTAURO, TipoPersonaggio.GARGOYLE};
 
     @Disabled("Da eseguire manualmente per misurare la difficoltà dei boss")
     @Test
@@ -46,7 +47,7 @@ class AnalisiBossTest {
         }));
         try {
             ModelloDati.setIstanza(new ModelloDati());
-            for (ClassePersonaggio classeBoss : BOSS) {
+            for (TipoPersonaggio classeBoss : BOSS) {
                 stampaBoss(out, classeBoss);
             }
             stampaFuocoControMostriComuni(out, 5);
@@ -55,11 +56,11 @@ class AnalisiBossTest {
         }
     }
 
-    private static void stampaBoss(PrintStream out, ClassePersonaggio classeBoss) {
+    private static void stampaBoss(PrintStream out, TipoPersonaggio classeBoss) {
         out.println();
         out.println("=== " + classeBoss);
         for (int livello : LIVELLI) {
-            Personaggio boss = classeBoss.getIstanza(livello);
+            Personaggio boss = FabbricaPersonaggi.crea(classeBoss, livello);
             out.printf("Liv %2d: salute %d, difesa fisica %.0f (VEL %d + DES %d + PAR/2 %d), difesa magica %d (RM %d + SAG %d)%s%n",
                     livello, boss.getSaluteMassima(),
                     boss.getVelocita() + boss.getDestrezza() + boss.getParata() * 0.5d,
@@ -69,22 +70,22 @@ class AnalisiBossTest {
             out.printf("   %-9s %-22s %7s %8s %6s %7s | %7s %8s %6s %7s | %s%n",
                     "Classe", "Dotazione", "Att.fis", "Colpisce", "Danno", "Turni",
                     "Att.mag", "Fuoco", "Danno", "Turni", "Il boss lo butta giù in");
-            for (ClassePersonaggio classePg : PG) {
+            for (TipoPersonaggio classePg : PG) {
                 stampaRiga(out, classeBoss, classePg, livello, boss.getSaluteMassima(),
                         boss.isImmuneAIncantesimo(ClasseIncantesimo.FUOCO));
             }
         }
     }
 
-    private static void stampaRiga(PrintStream out, ClassePersonaggio classeBoss, ClassePersonaggio classePg, int livello,
+    private static void stampaRiga(PrintStream out, TipoPersonaggio classeBoss, TipoPersonaggio classePg, int livello,
                                    int saluteBoss, boolean immuneAlFuoco) {
         Equipaggiamento equipaggiamento = Equipaggiamento.tipiciPer(classePg).get(0);
         double attaccoFisico = 0, attaccoMagico = 0, colpisceFisico = 0, colpisceMagico = 0, dannoArma = 0,
                 dannoFuoco = 0, colpisceBoss = 0, dannoBoss = 0, salutePg = 0;
         for (int i = 0; i < CAMPIONI; i++) {
-            Personaggio pg = classePg.getIstanza(livello);
+            Personaggio pg = FabbricaPersonaggi.crea(classePg, livello);
             equipaggiamento.equipaggia(pg);
-            Personaggio boss = classeBoss.getIstanza(livello);
+            Personaggio boss = FabbricaPersonaggi.crea(classeBoss, livello);
             attaccoFisico += pg.getPrecisione() + pg.getDestrezza();
             attaccoMagico += pg.getPrecisione() + pg.getIntelligenza();
             colpisceFisico += CalcolatoreCombattimento.calcolaProbabilitaDiColpire(pg, boss, SupertipoDanno.FISICO);
@@ -115,17 +116,17 @@ class AnalisiBossTest {
 
     private static void stampaFuocoControMostriComuni(PrintStream out, int livello) {
         out.println();
-        out.println("=== Fuoco del Mago (" + Equipaggiamento.tipiciPer(ClassePersonaggio.MAGO).get(0).getNome()
+        out.println("=== Fuoco del Mago (" + Equipaggiamento.tipiciPer(TipoPersonaggio.MAGO).get(0).getNome()
                 + ") contro i mostri comuni, livello " + livello);
         out.printf("   %-10s %7s %8s %6s %7s%n", "Mostro", "Salute", "Colpisce", "Danno", "Turni");
-        Equipaggiamento equipaggiamento = Equipaggiamento.tipiciPer(ClassePersonaggio.MAGO).get(0);
-        for (ClassePersonaggio classeMostro : MOSTRI_COMUNI) {
+        Equipaggiamento equipaggiamento = Equipaggiamento.tipiciPer(TipoPersonaggio.MAGO).get(0);
+        for (TipoPersonaggio classeMostro : MOSTRI_COMUNI) {
             double salute = 0, colpisce = 0, danno = 0;
             boolean immune = false;
             for (int i = 0; i < CAMPIONI; i++) {
-                Personaggio mago = ClassePersonaggio.MAGO.getIstanza(livello);
+                Personaggio mago = FabbricaPersonaggi.crea(TipoPersonaggio.MAGO, livello);
                 equipaggiamento.equipaggia(mago);
-                Personaggio mostro = classeMostro.getIstanza(livello);
+                Personaggio mostro = FabbricaPersonaggi.crea(classeMostro, livello);
                 immune = mostro.isImmuneAIncantesimo(ClasseIncantesimo.FUOCO);
                 salute += mostro.getSaluteMassima();
                 colpisce += CalcolatoreCombattimento.calcolaProbabilitaDiColpire(mago, mostro, SupertipoDanno.MAGICO);

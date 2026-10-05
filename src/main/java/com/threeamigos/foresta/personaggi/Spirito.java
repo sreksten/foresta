@@ -6,6 +6,7 @@ import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.EnumSet;
@@ -28,7 +29,7 @@ public class Spirito extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Spirito(int livello) {
-		super(ClassePersonaggio.SPIRITO, livello);
+		super(TipoPersonaggio.SPIRITO, livello);
 	}
 
 	@Override

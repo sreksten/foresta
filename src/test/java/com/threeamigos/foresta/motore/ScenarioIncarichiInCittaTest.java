@@ -8,10 +8,10 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -92,7 +92,7 @@ class ScenarioIncarichiInCittaTest {
             assertTrue(caccia.getDescrizione().contains("Fleena"), caccia.getDescrizione());
 
             for (int i = 0; i < CacciaAiGoblin.GOBLIN_DA_SCONFIGGERE; i++) {
-                partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GOBLIN));
+                partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
             }
             caccia.controllaPostLocazione();
             assertEquals("RITORNO", caccia.getPassoCorrente());

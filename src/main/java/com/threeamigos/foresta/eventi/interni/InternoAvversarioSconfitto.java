@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * Un avversario del gruppo è morto, per mano di un personaggio del gruppo o per gli effetti di stato, o si è arreso
@@ -10,14 +10,14 @@ import com.threeamigos.foresta.personaggi.ClassePersonaggio;
  */
 public class InternoAvversarioSconfitto extends EventoBase {
 
-    private final ClassePersonaggio classe;
+    private final TipoPersonaggio classe;
 
-    public InternoAvversarioSconfitto(ClassePersonaggio classe) {
+    public InternoAvversarioSconfitto(TipoPersonaggio classe) {
         super(TipoEvento.INTERNO_AVVERSARIO_SCONFITTO);
         this.classe = classe;
     }
 
-    public ClassePersonaggio getClasse() {
+    public TipoPersonaggio getClasse() {
         return classe;
     }
 }

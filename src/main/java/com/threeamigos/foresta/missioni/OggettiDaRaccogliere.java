@@ -2,8 +2,8 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -44,7 +44,7 @@ public final class OggettiDaRaccogliere {
 	private int probabilita = 100;
 	private int massimoPerLocazione = 1;
 	private int oreAlRipiego = ORE_AL_RIPIEGO;
-	private Set<ClassePersonaggio> nemici = Collections.emptySet();
+	private Set<TipoPersonaggio> nemici = Collections.emptySet();
 	private CoordinateMD casella;
 
 	/**
@@ -73,7 +73,7 @@ public final class OggettiDaRaccogliere {
 	/**
 	 * Sono trofei che si prendono a quei nemici: compaiono dove ci sono, in qualunque locazione.
 	 */
-	public OggettiDaRaccogliere daiNemici(ClassePersonaggio primo, ClassePersonaggio... altri) {
+	public OggettiDaRaccogliere daiNemici(TipoPersonaggio primo, TipoPersonaggio... altri) {
 		nemici = EnumSet.of(primo, altri);
 		return this;
 	}
@@ -96,7 +96,7 @@ public final class OggettiDaRaccogliere {
 	/**
 	 * I nemici a cui si prendono questi oggetti, vuoto se non sono trofei.
 	 */
-	public Set<ClassePersonaggio> getNemici() {
+	public Set<TipoPersonaggio> getNemici() {
 		return Collections.unmodifiableSet(nemici);
 	}
 

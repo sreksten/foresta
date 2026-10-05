@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -83,7 +83,7 @@ public final class IndagineRichiesta {
 	private final String domanda;
 	private final List<String> sospetti;
 	private final int colpevole;
-	private final ClassePersonaggio nemico;
+	private final TipoPersonaggio nemico;
 	private final int numero;
 	private final CapoDellaRiga capo;
 	private final boolean finoAllaResa;
@@ -127,7 +127,7 @@ public final class IndagineRichiesta {
 		if (colpevole < 1 || colpevole > sospetti.size()) {
 			throw new IllegalArgumentException("Il colpevole è il numero di uno dei sospetti: " + riga);
 		}
-		nemico = campi.enumerato("NEMICO", ClassePersonaggio.class);
+		nemico = campi.enumerato("NEMICO", TipoPersonaggio.class);
 		numero = campi.intero("NUMERO");
 		capo = CapoDellaRiga.da(campi.facoltativo("CAPO"));
 		finoAllaResa = campi.facoltativo("RESA").map("SI"::equals).orElse(false);
@@ -219,7 +219,7 @@ public final class IndagineRichiesta {
 		return colpevole;
 	}
 
-	public ClassePersonaggio getNemico() {
+	public TipoPersonaggio getNemico() {
 		return nemico;
 	}
 

@@ -6,10 +6,10 @@ import com.threeamigos.foresta.missioni.IlSoccorso;
 import com.threeamigos.foresta.missioni.SoccorsoRichiesto;
 import com.threeamigos.foresta.missioni.TipoMissione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
@@ -61,7 +61,7 @@ class ScenarioSoccorsoTest {
             assertTrue(Foresta.isLocazioneConosciuta(bosco));
             List<Personaggio> arpie = RegistroMissioni.getIncontroMissione(bosco).orElseThrow(AssertionError::new);
             assertEquals(3, arpie.size());
-            assertEquals(ClassePersonaggio.ARPIA, arpie.get(0).getClasse());
+            assertEquals(TipoPersonaggio.ARPIA, arpie.get(0).getClasse());
 
             Personaggio taglialegna = salva(partita, soccorso);
             assertTrue(partita.gruppo().isOspiteVulnerabile(taglialegna));
@@ -114,7 +114,7 @@ class ScenarioSoccorsoTest {
     private static Personaggio salva(PartitaDiTest partita, IlSoccorso soccorso) {
         partita.gruppo().setCoordinate(soccorso.getCovo());
         for (int i = 0; i < 3; i++) {
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.ARPIA));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.ARPIA));
         }
         soccorso.controllaPostLocazione();
         assertEquals("VIAGGIO", soccorso.getPassoCorrente());

@@ -5,6 +5,7 @@ import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.motore.modellodati.RegistroPersonaggiMD;
 import com.threeamigos.foresta.personaggi.*;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 
 public class RegistroPersonaggi {
 
@@ -60,7 +61,7 @@ public class RegistroPersonaggi {
 		int livello = EquipaggiamentoIniziale.livelloCasualeDalMondo();
 		Personaggio pronto = compagno;
 		if (livello > compagno.getLivello()) {
-			pronto = compagno.getClasse().getIstanza(livello);
+			pronto = FabbricaPersonaggi.crea(compagno.getClasse(), livello);
 			pronto.getModelloDati().setNome(compagno.getNomeProprio().orElse(null));
 		}
 		EquipaggiamentoIniziale.equipaggia(pronto);
@@ -87,7 +88,7 @@ public class RegistroPersonaggi {
 		if (modelloDati == null) {
 			return null;
 		}
-		Personaggio personaggio = modelloDati.getClasse().getIstanza(1);
+		Personaggio personaggio = FabbricaPersonaggi.crea(modelloDati.getClasse(), 1);
 		personaggio.setModelloDati(modelloDati);
 		return personaggio;
 	}

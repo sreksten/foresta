@@ -2,12 +2,12 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.personaggi.PersonaggioBase;
 import com.threeamigos.foresta.tipi.SupertipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoMotivoRifiutoEquipaggiamento;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoSlotArtefatto;
 
 import java.util.Collection;
@@ -99,7 +99,7 @@ public final class RegoleEquipaggiamento {
 	}
 
 	public static EsitoControlloRichiestaEquipaggiamento valuta(Personaggio personaggio, ArtefattoMD artefatto) {
-		ClassePersonaggio classe = personaggio.getClasse();
+		TipoPersonaggio classe = personaggio.getClasse();
 		int livelloPersonaggio = personaggio.getLivello();
 		Collection<ArtefattoMD> equipaggiati = personaggio.getModelloDati().getArtefatti();
 
@@ -214,7 +214,7 @@ public final class RegoleEquipaggiamento {
 	 * @return true se la classe sa usare quel tipo di artefatto. La tabella vale per armi, scudo e libro:
 	 * tutto il resto lo possono portare tutti.
 	 */
-	static boolean puoUsare(ClassePersonaggio classe, TipoArtefatto tipo) {
+	static boolean puoUsare(TipoPersonaggio classe, TipoArtefatto tipo) {
 		boolean daTabella = tipo.getSupertipo() == SupertipoArtefatto.ARMA || tipo == TipoArtefatto.SCUDO
 				|| tipo == TipoArtefatto.LIBRO_MAGICO;
 		if (!daTabella) {
@@ -224,7 +224,7 @@ public final class RegoleEquipaggiamento {
 		return ammessi == null || ammessi.contains(tipo);
 	}
 
-	private static Set<TipoArtefatto> ammessi(ClassePersonaggio classe) {
+	private static Set<TipoArtefatto> ammessi(TipoPersonaggio classe) {
 		switch (classe) {
 			case GUERRIERO:
 			case GUERRIERA:
@@ -246,7 +246,7 @@ public final class RegoleEquipaggiamento {
 		}
 	}
 
-	static boolean puoImpugnareDueArmi(ClassePersonaggio classe) {
+	static boolean puoImpugnareDueArmi(TipoPersonaggio classe) {
 		switch (classe) {
 			case LADRO:
 			case LADRA:

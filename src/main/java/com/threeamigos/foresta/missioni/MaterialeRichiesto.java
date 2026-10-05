@@ -1,9 +1,10 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.oggetti.NomeOggetto;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.ArrayList;
@@ -36,7 +37,7 @@ public final class MaterialeRichiesto {
 	private final String singolare;
 	private final String plurale;
 	private final List<TipoLocazione> luoghi;
-	private final List<ClassePersonaggio> nemici;
+	private final List<TipoPersonaggio> nemici;
 	private final int quantitaMinima;
 	private final int quantitaMassima;
 	private final int prezzo;
@@ -64,12 +65,12 @@ public final class MaterialeRichiesto {
 		plurale = campi[2].trim();
 		String[] provenienza = campi[3].trim().split("\\s+");
 		List<TipoLocazione> dove = new ArrayList<>();
-		List<ClassePersonaggio> chi = new ArrayList<>();
+		List<TipoPersonaggio> chi = new ArrayList<>();
 		for (int i = 1; i < provenienza.length; i++) {
 			if (LUOGHI.equals(provenienza[0])) {
 				dove.add(TipoLocazione.valueOf(provenienza[i]));
 			} else if (NEMICI.equals(provenienza[0])) {
-				chi.add(ClassePersonaggio.valueOf(provenienza[i]));
+				chi.add(TipoPersonaggio.valueOf(provenienza[i]));
 			} else {
 				throw new IllegalArgumentException("La provenienza è LUOGHI o NEMICI: " + riga);
 			}
@@ -119,7 +120,7 @@ public final class MaterialeRichiesto {
 	public OggettiDaRaccogliere daRaccogliere(String chiave, int quantita) {
 		OggettiDaRaccogliere oggetti = OggettiDaRaccogliere.di(chiave, getNome(), quantita);
 		if (isTrofeo()) {
-			return oggetti.daiNemici(nemici.get(0), nemici.subList(1, nemici.size()).toArray(new ClassePersonaggio[0]))
+			return oggetti.daiNemici(nemici.get(0), nemici.subList(1, nemici.size()).toArray(new TipoPersonaggio[0]))
 					.alPiuPerLocazione(quantitaMassima);
 		}
 		return oggetti.in(luoghi.get(0), luoghi.subList(1, luoghi.size()).toArray(new TipoLocazione[0]))
@@ -210,7 +211,7 @@ public final class MaterialeRichiesto {
 		return luoghi;
 	}
 
-	public List<ClassePersonaggio> getNemici() {
+	public List<TipoPersonaggio> getNemici() {
 		return nemici;
 	}
 
@@ -220,8 +221,8 @@ public final class MaterialeRichiesto {
 	public String getDaDoveViene() {
 		List<String> parti = new ArrayList<>();
 		if (isTrofeo()) {
-			for (ClassePersonaggio nemico : nemici) {
-				Personaggio modello = nemico.getMoltiplicatoriDiClasse();
+			for (TipoPersonaggio nemico : nemici) {
+				Personaggio modello = FabbricaPersonaggi.modello(nemico);
 				parti.add(modello.getADP() + modello.getNomePlurale());
 			}
 			return "si prendono sconfiggendo " + elenco(parti);

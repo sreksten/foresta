@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -18,7 +18,7 @@ public class StatisticheMD implements Serializzabile {
 	// Identifica la partita, anche attraverso salvataggi e caricamenti: la classifica lo usa per non registrare
 	// più volte la stessa partita (vedi GestorePunteggiBase)
 	private String idPartita = UUID.randomUUID().toString();
-	private final Map<ClassePersonaggio, Integer> mostriUccisi = new EnumMap<>(ClassePersonaggio.class);
+	private final Map<TipoPersonaggio, Integer> mostriUccisi = new EnumMap<>(TipoPersonaggio.class);
 
 	/**
 	 * Restituisce il livello corrente del gioco
@@ -79,11 +79,11 @@ public class StatisticheMD implements Serializzabile {
 		this.puntiEsperienza = puntiEsperienza;
 	}
 
-	public final void addMostroUcciso(ClassePersonaggio classe) {
+	public final void addMostroUcciso(TipoPersonaggio classe) {
         mostriUccisi.merge(classe, 1, Integer::sum);
 	}
 
-	public final int getMostriUccisi(ClassePersonaggio classe) {
+	public final int getMostriUccisi(TipoPersonaggio classe) {
 		Integer uccisi = mostriUccisi.get(classe);
 		if (uccisi == null) {
 			return 0;
@@ -102,7 +102,7 @@ public class StatisticheMD implements Serializzabile {
 		stream.print(turniGiocati);
 		stream.print(PIPE);
 		stream.println(idPartita);
-		for (ClassePersonaggio classePersonaggio : ClassePersonaggio.values()) {
+		for (TipoPersonaggio classePersonaggio : TipoPersonaggio.values()) {
 			stream.print(classePersonaggio.name());
 			stream.print(PIPE);
 			stream.print(getMostriUccisi(classePersonaggio));
@@ -121,11 +121,11 @@ public class StatisticheMD implements Serializzabile {
 		turniGiocati = Integer.parseInt(st.testo());
 		idPartita = st.testo();
 		mostriUccisi.clear();
-		ClassePersonaggio[] classi = ClassePersonaggio.values();
+		TipoPersonaggio[] classi = TipoPersonaggio.values();
 		line = stream.readLine();
 		st = new LettoreCampi(line);
 		for (int i = 0; i < classi.length; i++) {
-			mostriUccisi.put(ClassePersonaggio.valueOf(st.testo()), Integer.parseInt(st.testo()));
+			mostriUccisi.put(TipoPersonaggio.valueOf(st.testo()), Integer.parseInt(st.testo()));
 		}
 	}
 }

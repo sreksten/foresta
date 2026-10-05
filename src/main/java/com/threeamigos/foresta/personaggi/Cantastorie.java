@@ -2,6 +2,7 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -22,11 +23,11 @@ public class Cantastorie extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.FEMMINA; }
 
 	public Cantastorie(int livello) {
-		super(ClassePersonaggio.CANTASTORIE, livello);
+		super(TipoPersonaggio.CANTASTORIE, livello);
 	}
 
 	public Cantastorie(String nome, int livello) {
-		super(nome, ClassePersonaggio.CANTASTORIE, livello);
+		super(nome, TipoPersonaggio.CANTASTORIE, livello);
 	}
 	
 	@Override

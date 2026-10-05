@@ -4,6 +4,7 @@ import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -14,6 +15,7 @@ import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -195,8 +197,8 @@ class ScenarioCorrezioniTest {
 	@Test
 	void ogniPersonaggioHaAlmenoUnBersaglio() {
 		ModelloDati.setIstanza(new ModelloDati());
-		for (com.threeamigos.foresta.personaggi.ClassePersonaggio classe : com.threeamigos.foresta.personaggi.ClassePersonaggio.values()) {
-			assertTrue(classe.getIstanza(1).getBersagli() >= 1, classe.name());
+		for (com.threeamigos.foresta.tipi.TipoPersonaggio classe : com.threeamigos.foresta.tipi.TipoPersonaggio.values()) {
+			assertTrue(FabbricaPersonaggi.crea(classe, 1).getBersagli() >= 1, classe.name());
 		}
 	}
 

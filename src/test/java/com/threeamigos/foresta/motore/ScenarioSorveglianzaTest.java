@@ -5,10 +5,10 @@ import com.threeamigos.foresta.missioni.LaSorveglianza;
 import com.threeamigos.foresta.missioni.SorveglianzaRichiesta;
 import com.threeamigos.foresta.missioni.TipoMissione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.EnumSet;
@@ -87,9 +87,9 @@ class ScenarioSorveglianzaTest {
             assertTrue(partita.testi().contains("Esce un troll."), String.valueOf(partita.testi()));
             List<Personaggio> troll = RegistroMissioni.getIncontroMissione(posto).orElseThrow(AssertionError::new);
             assertEquals(1, troll.size());
-            assertEquals(ClassePersonaggio.TROLL, troll.get(0).getClasse());
+            assertEquals(TipoPersonaggio.TROLL, troll.get(0).getClasse());
 
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.TROLL));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.TROLL));
             sorveglianza.controllaPostLocazione();
             assertEquals("RITORNO", sorveglianza.getPassoCorrente());
             assertTrue(partita.testi().contains("Il troll non russerà più. Il locandiere aspetta a Nyena."), String.valueOf(partita.testi()));

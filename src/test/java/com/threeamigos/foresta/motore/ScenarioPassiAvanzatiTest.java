@@ -13,10 +13,10 @@ import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.LinkedHashMap;
@@ -143,7 +143,7 @@ class ScenarioPassiAvanzatiTest {
             MissioneDiUnPasso scoperta = attiva(m -> m.evita(altrove));
             scoperta.controllaPreLocazione();
             assertFalse(scoperta.haCombattutoNelPassoCorrente());
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GOBLIN));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
             assertTrue(scoperta.haCombattutoNelPassoCorrente());
             scoperta.controllaPostLocazione();
             assertTrue(scoperta.isFallita());

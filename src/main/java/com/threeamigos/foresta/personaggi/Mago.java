@@ -2,6 +2,7 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -22,11 +23,11 @@ public class Mago extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Mago(int livello) {
-		super(ClassePersonaggio.MAGO, livello);
+		super(TipoPersonaggio.MAGO, livello);
 	}
 
 	public Mago(String nome, int livello) {
-		super(nome, ClassePersonaggio.MAGO, livello);
+		super(nome, TipoPersonaggio.MAGO, livello);
 	}
 
 	@Override

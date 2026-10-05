@@ -9,13 +9,14 @@ import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.FaseDiAttacco;
 import com.threeamigos.foresta.motore.GestoreProgressione;
 import com.threeamigos.foresta.personaggi.Bardo;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Elfo;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Ladro;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -39,15 +40,15 @@ import java.util.Random;
  */
 public class TestLogoramentoInizioPartita {
 
-    private static final List<ClassePersonaggio> CLASSI = Arrays.asList(ClassePersonaggio.GUERRIERO,
-            ClassePersonaggio.LADRO, ClassePersonaggio.ELFO, ClassePersonaggio.BARDO, ClassePersonaggio.MAGO);
+    private static final List<TipoPersonaggio> CLASSI = Arrays.asList(TipoPersonaggio.GUERRIERO,
+            TipoPersonaggio.LADRO, TipoPersonaggio.ELFO, TipoPersonaggio.BARDO, TipoPersonaggio.MAGO);
 
     // Quelli di Bosco e Radura
-    private static final ClassePersonaggio[] MOSTRI_DEL_BOSCO = {ClassePersonaggio.ARPIA,
-            ClassePersonaggio.CENTAURO, ClassePersonaggio.CHIMERA, ClassePersonaggio.CHIMERA_DRAGO,
-            ClassePersonaggio.EREMITA, ClassePersonaggio.FOLLETTO, ClassePersonaggio.GIGANTE, ClassePersonaggio.GOBLIN,
-            ClassePersonaggio.HOBGOBLIN, ClassePersonaggio.MINOTAURO, ClassePersonaggio.SCHELETRO,
-            ClassePersonaggio.TITANO, ClassePersonaggio.TROLL, ClassePersonaggio.VIVERNA};
+    private static final TipoPersonaggio[] MOSTRI_DEL_BOSCO = {TipoPersonaggio.ARPIA,
+            TipoPersonaggio.CENTAURO, TipoPersonaggio.CHIMERA, TipoPersonaggio.CHIMERA_DRAGO,
+            TipoPersonaggio.EREMITA, TipoPersonaggio.FOLLETTO, TipoPersonaggio.GIGANTE, TipoPersonaggio.GOBLIN,
+            TipoPersonaggio.HOBGOBLIN, TipoPersonaggio.MINOTAURO, TipoPersonaggio.SCHELETRO,
+            TipoPersonaggio.TITANO, TipoPersonaggio.TROLL, TipoPersonaggio.VIVERNA};
 
     private static final int LOCAZIONI_MASSIME = 40;
 
@@ -102,14 +103,14 @@ public class TestLogoramentoInizioPartita {
         int iterazioni = 1_000;
         out.println("== Scontri singoli a livello 1, dotazione di base: vittorie% / salute residua% quando vince ==");
         StringBuilder testata = new StringBuilder(String.format("%-16s", "mostro"));
-        for (ClassePersonaggio classe : CLASSI) {
+        for (TipoPersonaggio classe : CLASSI) {
             testata.append(String.format(" | %-17s", classe));
         }
         out.println(testata);
-        for (ClassePersonaggio mostro : MOSTRI_DEL_BOSCO) {
+        for (TipoPersonaggio mostro : MOSTRI_DEL_BOSCO) {
             for (int quantita = 1; quantita <= Math.min(2, quantitaMassima(mostro)); quantita++) {
                 StringBuilder riga = new StringBuilder(String.format("%-13s x%d", mostro, quantita));
-                for (ClassePersonaggio classe : CLASSI) {
+                for (TipoPersonaggio classe : CLASSI) {
                     int vittorie = 0;
                     double saluteResidua = 0;
                     for (int i = 0; i < iterazioni; i++) {
@@ -155,7 +156,7 @@ public class TestLogoramentoInizioPartita {
         out.println("== Locazioni attraversate prima di morire (media / mediana / % che arriva a 5 / a 10 / livello medio alla fine) ==");
         for (Variante variante : varianti) {
             out.println("-- " + variante.nome);
-            for (ClassePersonaggio classe : CLASSI) {
+            for (TipoPersonaggio classe : CLASSI) {
                 List<Integer> locazioni = new ArrayList<>();
                 double livelli = 0;
                 int arrivaA5 = 0;
@@ -180,7 +181,7 @@ public class TestLogoramentoInizioPartita {
         }
     }
 
-    private EsitoCatena catena(ClassePersonaggio classe, Variante variante) {
+    private EsitoCatena catena(TipoPersonaggio classe, Variante variante) {
         Personaggio pg = nuovoProtagonista(classe);
         int[] pozioni = {variante.pozioni};
         EsitoCatena esito = new EsitoCatena();
@@ -188,9 +189,9 @@ public class TestLogoramentoInizioPartita {
             boolean incontro = locazione == 1 || random.nextInt(100) < 90;
             if (incontro) {
                 int livello = pg.getLivello();
-                ClassePersonaggio[] possibili = variante.inizioMorbido
+                TipoPersonaggio[] possibili = variante.inizioMorbido
                         ? LocazioneBase.incontriPossibili(MOSTRI_DEL_BOSCO, livello) : MOSTRI_DEL_BOSCO;
-                ClassePersonaggio mostro = scegliMostro(possibili, locazione);
+                TipoPersonaggio mostro = scegliMostro(possibili, locazione);
                 // Senza inizio morbido, le regole di prima: fino a 2 mostri fino al livello 5
                 int cap = variante.inizioMorbido ? LocazioneBase.numeroMassimoDiMostri(livello, 1) : (livello <= 5 ? 2 : 3);
                 int quantita = 1 + random.nextInt(Math.min(cap, quantitaMassima(mostro)));
@@ -211,11 +212,11 @@ public class TestLogoramentoInizioPartita {
         return esito;
     }
 
-    private ClassePersonaggio scegliMostro(ClassePersonaggio[] possibili, int locazione) {
+    private TipoPersonaggio scegliMostro(TipoPersonaggio[] possibili, int locazione) {
         while (true) {
-            ClassePersonaggio mostro = possibili[random.nextInt(possibili.length)];
+            TipoPersonaggio mostro = possibili[random.nextInt(possibili.length)];
             // Come in LocazioneBase.crea: niente Eremita al primo turno
-            if (locazione != 1 || mostro != ClassePersonaggio.EREMITA) {
+            if (locazione != 1 || mostro != TipoPersonaggio.EREMITA) {
                 return mostro;
             }
         }
@@ -229,9 +230,9 @@ public class TestLogoramentoInizioPartita {
         BusEventi.impostaConsegna(Runnable::run);
         System.setOut(NULL_STREAM);
         try {
-            for (ClassePersonaggio classe : Arrays.asList(ClassePersonaggio.GUERRIERO, ClassePersonaggio.LADRO,
-                    ClassePersonaggio.MAGO)) {
-                for (ClassePersonaggio mostro : Arrays.asList(ClassePersonaggio.GOBLIN, ClassePersonaggio.TROLL)) {
+            for (TipoPersonaggio classe : Arrays.asList(TipoPersonaggio.GUERRIERO, TipoPersonaggio.LADRO,
+                    TipoPersonaggio.MAGO)) {
+                for (TipoPersonaggio mostro : Arrays.asList(TipoPersonaggio.GOBLIN, TipoPersonaggio.TROLL)) {
                     for (int livello : new int[]{1, 2, 3, 5}) {
                         int vittorie = 0;
                         double residua = 0;
@@ -269,22 +270,22 @@ public class TestLogoramentoInizioPartita {
         PrintStream out = System.out;
         System.setOut(NULL_STREAM);
         try {
-            List<ClassePersonaggio> classi = Arrays.asList(ClassePersonaggio.GUERRIERO, ClassePersonaggio.LADRO,
-                    ClassePersonaggio.ELFO, ClassePersonaggio.BARDO, ClassePersonaggio.MAGO);
-            Object[][] avversari = {{ClassePersonaggio.TROLL, 1}, {ClassePersonaggio.TROLL, 3},
-                    {ClassePersonaggio.GIGANTE, 2}, {ClassePersonaggio.MINOTAURO_GIGANTE, 1}, {ClassePersonaggio.IDRA, 1},
-                    {ClassePersonaggio.LICH, 1}, {ClassePersonaggio.STREGA, 1}, {ClassePersonaggio.DRAGO, 1}};
+            List<TipoPersonaggio> classi = Arrays.asList(TipoPersonaggio.GUERRIERO, TipoPersonaggio.LADRO,
+                    TipoPersonaggio.ELFO, TipoPersonaggio.BARDO, TipoPersonaggio.MAGO);
+            Object[][] avversari = {{TipoPersonaggio.TROLL, 1}, {TipoPersonaggio.TROLL, 3},
+                    {TipoPersonaggio.GIGANTE, 2}, {TipoPersonaggio.MINOTAURO_GIGANTE, 1}, {TipoPersonaggio.IDRA, 1},
+                    {TipoPersonaggio.LICH, 1}, {TipoPersonaggio.STREGA, 1}, {TipoPersonaggio.DRAGO, 1}};
             for (int livello : new int[]{5, 10, 15}) {
                 StringBuilder testata = new StringBuilder(String.format("livello %-2d          ", livello));
-                for (ClassePersonaggio classe : classi) {
+                for (TipoPersonaggio classe : classi) {
                     testata.append(String.format(" | %-15s", classe));
                 }
                 out.println(testata);
                 for (Object[] avversario : avversari) {
-                    ClassePersonaggio mostro = (ClassePersonaggio) avversario[0];
+                    TipoPersonaggio mostro = (TipoPersonaggio) avversario[0];
                     int quantita = (Integer) avversario[1];
                     StringBuilder riga = new StringBuilder(String.format("%-17s x%d", mostro, quantita));
-                    for (ClassePersonaggio classe : classi) {
+                    for (TipoPersonaggio classe : classi) {
                         RisultatoMatrice r = CombatSimulatorMatrix.simulaScontroGruppo(classe,
                                 Equipaggiamento.tipiciPer(classe).get(0), ScortaDiPergamene.NESSUNA, mostro, quantita,
                                 livello, livello, 500);
@@ -308,21 +309,21 @@ public class TestLogoramentoInizioPartita {
         PrintStream out = System.out;
         System.setOut(NULL_STREAM);
         try {
-            List<ClassePersonaggio> boss = Arrays.asList(ClassePersonaggio.IDRA, ClassePersonaggio.MINOTAURO_GIGANTE,
-                    ClassePersonaggio.LICH, ClassePersonaggio.STREGA, ClassePersonaggio.DRAGO);
+            List<TipoPersonaggio> boss = Arrays.asList(TipoPersonaggio.IDRA, TipoPersonaggio.MINOTAURO_GIGANTE,
+                    TipoPersonaggio.LICH, TipoPersonaggio.STREGA, TipoPersonaggio.DRAGO);
             for (int livello : new int[]{1, 3, 5, 8, 10}) {
-                Personaggio guerriero = ClassePersonaggio.GUERRIERO.getIstanza(livello);
-                Equipaggiamento.tipiciPer(ClassePersonaggio.GUERRIERO).get(0).equipaggia(guerriero);
+                Personaggio guerriero = FabbricaPersonaggi.crea(TipoPersonaggio.GUERRIERO, livello);
+                Equipaggiamento.tipiciPer(TipoPersonaggio.GUERRIERO).get(0).equipaggia(guerriero);
                 out.printf("== livello %d: Guerriero CAVALIERE salute %d, forza %d, parata %d, res. magica %d%n", livello,
                         guerriero.getSaluteMassima(), guerriero.getForza(), guerriero.getParata(), guerriero.getResistenzaMagica());
-                for (ClassePersonaggio classe : boss) {
-                    Personaggio b = classe.getIstanza(livello);
+                for (TipoPersonaggio classe : boss) {
+                    Personaggio b = FabbricaPersonaggi.crea(classe, livello);
                     StringBuilder armi = new StringBuilder();
                     for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(b)) {
                         armi.append(fase.getArma().getTipoDanno()).append(' ').append(fase.getArma().getDanni()).append(' ');
                     }
-                    RisultatoMatrice r = CombatSimulatorMatrix.simulaScontroGruppo(ClassePersonaggio.GUERRIERO,
-                            Equipaggiamento.tipiciPer(ClassePersonaggio.GUERRIERO).get(0), ScortaDiPergamene.NESSUNA,
+                    RisultatoMatrice r = CombatSimulatorMatrix.simulaScontroGruppo(TipoPersonaggio.GUERRIERO,
+                            Equipaggiamento.tipiciPer(TipoPersonaggio.GUERRIERO).get(0), ScortaDiPergamene.NESSUNA,
                             classe, 1, livello, livello, 500);
                     out.printf("%-17s salute %4d for %3d int %3d par %3d resM %3d bersagli %d armi [%s] | colpisce %4.1f%% danno %5.1f "
                                     + "| subisce: colpito %4.1f%% danno %5.1f | vince %5.1f%% in %4.1f turni%n",
@@ -343,9 +344,9 @@ public class TestLogoramentoInizioPartita {
         System.setOut(NULL_STREAM);
         try {
             for (int livello : new int[]{1, 3, 5, 10}) {
-                Personaggio g = ClassePersonaggio.GUERRIERO.getIstanza(livello);
-                Equipaggiamento.tipiciPer(ClassePersonaggio.GUERRIERO).get(0).equipaggia(g);
-                Personaggio l = ClassePersonaggio.LICH.getIstanza(livello);
+                Personaggio g = FabbricaPersonaggi.crea(TipoPersonaggio.GUERRIERO, livello);
+                Equipaggiamento.tipiciPer(TipoPersonaggio.GUERRIERO).get(0).equipaggia(g);
+                Personaggio l = FabbricaPersonaggi.crea(TipoPersonaggio.LICH, livello);
                 out.printf("L%-2d GUERRIERO prec %d des %d vel %d par %d resM %d sag %d int %d salute %d | LICH prec %d des %d vel %d par %d resM %d sag %d int %d salute %d tipo %s%n",
                         livello, g.getPrecisione(), g.getDestrezza(), g.getVelocita(), g.getParata(), g.getResistenzaMagica(),
                         g.getSaggezza(), g.getIntelligenza(), g.getSaluteMassima(),
@@ -363,10 +364,10 @@ public class TestLogoramentoInizioPartita {
         PrintStream out = System.out;
         System.setOut(NULL_STREAM);
         try {
-            Personaggio g = nuovoProtagonista(ClassePersonaggio.GUERRIERO);
+            Personaggio g = nuovoProtagonista(TipoPersonaggio.GUERRIERO);
             out.printf("Guerriero: salute %d, res. magica %d, saggezza %d%n", g.getSaluteMassima(), g.getResistenzaMagica(), g.getSaggezza());
-            for (ClassePersonaggio classe : MOSTRI_DEL_BOSCO) {
-                Personaggio m = classe.getIstanza(1);
+            for (TipoPersonaggio classe : MOSTRI_DEL_BOSCO) {
+                Personaggio m = FabbricaPersonaggi.crea(classe, 1);
                 if (!((com.threeamigos.foresta.personaggi.PersonaggioBase) m).isMagico()) {
                     continue;
                 }
@@ -393,7 +394,7 @@ public class TestLogoramentoInizioPartita {
         PrintStream out = System.out;
         System.setOut(NULL_STREAM);
         try {
-            for (ClassePersonaggio classe : CLASSI) {
+            for (TipoPersonaggio classe : CLASSI) {
                 Personaggio pg = nuovoProtagonista(classe);
                 StringBuilder sb = new StringBuilder(classe + ": arma " + pg.getArmaEquipaggiata().getClass().getSimpleName()
                         + " danno " + pg.getArmaEquipaggiata().getDanni() + " liv " + pg.getArmaEquipaggiata().getLivello()
@@ -404,17 +405,17 @@ public class TestLogoramentoInizioPartita {
                 }
                 out.println(sb);
             }
-            Object[][] coppie = {{ClassePersonaggio.GUERRIERO, Equipaggiamento.SPADA_E_SCUDO},
-                    {ClassePersonaggio.LADRO, Equipaggiamento.SPADA}, {ClassePersonaggio.MAGO, Equipaggiamento.NESSUNO}};
+            Object[][] coppie = {{TipoPersonaggio.GUERRIERO, Equipaggiamento.SPADA_E_SCUDO},
+                    {TipoPersonaggio.LADRO, Equipaggiamento.SPADA}, {TipoPersonaggio.MAGO, Equipaggiamento.NESSUNO}};
             for (Object[] coppia : coppie) {
-                for (ClassePersonaggio mostro : Arrays.asList(ClassePersonaggio.GOBLIN, ClassePersonaggio.SCHELETRO,
-                        ClassePersonaggio.TROLL, ClassePersonaggio.GIGANTE)) {
-                    RisultatoMatrice r = CombatSimulatorMatrix.simulaScontroGruppo((ClassePersonaggio) coppia[0],
+                for (TipoPersonaggio mostro : Arrays.asList(TipoPersonaggio.GOBLIN, TipoPersonaggio.SCHELETRO,
+                        TipoPersonaggio.TROLL, TipoPersonaggio.GIGANTE)) {
+                    RisultatoMatrice r = CombatSimulatorMatrix.simulaScontroGruppo((TipoPersonaggio) coppia[0],
                             (Equipaggiamento) coppia[1], mostro, 1, 1, 2_000);
                     out.printf("%-9s %-14s vs %-10s win %5.1f%% turni %5.2f colpisce %4.1f%%/%4.1f%% danno %5.1f/%5.1f salute %d/%d%n",
                             coppia[0], coppia[1], mostro, r.winRatePg, r.mediaTurni, r.tassoColpirePg, r.tassoColpireMostro,
-                            r.dannoMedioPg, r.dannoMedioMostro, ((ClassePersonaggio) coppia[0]).getIstanza(1).getSaluteMassima(),
-                            mostro.getIstanza(1).getSaluteMassima());
+                            r.dannoMedioPg, r.dannoMedioMostro, FabbricaPersonaggi.crea(((TipoPersonaggio) coppia[0]), 1).getSaluteMassima(),
+                            FabbricaPersonaggi.crea(mostro, 1).getSaluteMassima());
                 }
             }
         } finally {
@@ -422,7 +423,7 @@ public class TestLogoramentoInizioPartita {
         }
     }
 
-    private static Personaggio nuovoProtagonista(ClassePersonaggio classe) {
+    private static Personaggio nuovoProtagonista(TipoPersonaggio classe) {
         ModelloDati.setIstanza(new ModelloDati());
         Personaggio pg = conNome(classe);
         EquipaggiamentoIniziale.equipaggia(pg);
@@ -432,7 +433,7 @@ public class TestLogoramentoInizioPartita {
     /**
      * Con un nome, come il protagonista del gioco: un personaggio senza nome è un PNG e non accumula esperienza
      */
-    private static Personaggio conNome(ClassePersonaggio classe) {
+    private static Personaggio conNome(TipoPersonaggio classe) {
         switch (classe) {
             case GUERRIERO:
                 return new Guerriero("Eroe", 1);
@@ -449,10 +450,10 @@ public class TestLogoramentoInizioPartita {
         }
     }
 
-    private static List<Personaggio> generaMostri(ClassePersonaggio classe, int quantita, int livello) {
+    private static List<Personaggio> generaMostri(TipoPersonaggio classe, int quantita, int livello) {
         List<Personaggio> mostri = new ArrayList<>();
         for (int i = 0; i < quantita; i++) {
-            mostri.add(classe.getIstanza(livello));
+            mostri.add(FabbricaPersonaggi.crea(classe, livello));
         }
         return mostri;
     }
@@ -533,8 +534,8 @@ public class TestLogoramentoInizioPartita {
         return null;
     }
 
-    private static int quantitaMassima(ClassePersonaggio classe) {
-        classe.getIstanza(1);
-        return classe.getQuantitaMassima();
+    private static int quantitaMassima(TipoPersonaggio classe) {
+        FabbricaPersonaggi.crea(classe, 1);
+        return FabbricaPersonaggi.quantitaMassima(classe);
     }
 }

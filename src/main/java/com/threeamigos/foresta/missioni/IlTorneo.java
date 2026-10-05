@@ -12,8 +12,9 @@ import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 /**
@@ -112,8 +113,8 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 	/**
 	 * Uno sfidante per i testi: "un Guerriero".
 	 */
-	private static String unSfidante(ClassePersonaggio classe) {
-		Personaggio modello = classe.getMoltiplicatoriDiClasse();
+	private static String unSfidante(TipoPersonaggio classe) {
+		Personaggio modello = FabbricaPersonaggi.modello(classe);
 		return modello.getAIS() + modello.getNomeSingolare();
 	}
 
@@ -121,7 +122,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 	 * Il campione per i testi: "Bradamante la Fulva, la Guerriera".
 	 */
 	private String ilCampione() {
-		Personaggio modello = getTorneo().getCampione().getMoltiplicatoriDiClasse();
+		Personaggio modello = FabbricaPersonaggi.modello(getTorneo().getCampione());
 		return getCampione() + ", " + modello.getADS() + modello.getNomeSingolare();
 	}
 

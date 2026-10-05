@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.SupertipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 
@@ -188,7 +188,7 @@ public final class OggettoLeggendario {
 		if (parti.length != 2) {
 			throw new IllegalArgumentException("I guardiani sono classe e numero, \"VIVERNA 5\": " + guardiani);
 		}
-		return Optional.of(IncontroDiMissione.di(ClassePersonaggio.valueOf(parti[0]), Integer.parseInt(parti[1])));
+		return Optional.of(IncontroDiMissione.di(TipoPersonaggio.valueOf(parti[0]), Integer.parseInt(parti[1])));
 	}
 
 	/**

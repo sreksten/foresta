@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.intermezzi;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +19,7 @@ import java.util.List;
  * ({@link #orientaNelVersoDelMoto(Verso)}): in quel caso l'elemento guarda sempre dove va,
  * anche quando un'animazione avanti e indietro lo riporta al punto di partenza.
  * <pre>
- *     ElementoIntermezzo.di("drago", ImmagineIntermezzo.personaggio(ClassePersonaggio.DRAGO), 1.2, 0.2)
+ *     ElementoIntermezzo.di("drago", ImmagineIntermezzo.personaggio(TipoPersonaggio.DRAGO), 1.2, 0.2)
  *             .conScala(0.4).conOpacita(0.5)
  *             .poi(Tappa.inSecondi(10).verso(-0.2, 0.3))
  *             .ripeti(Ripetizione.CICLICA)
@@ -59,7 +59,7 @@ public final class ElementoIntermezzo {
 	}
 
 	/** Scorciatoia per l'immagine di una classe di personaggio. */
-	public static ElementoIntermezzo personaggio(String id, ClassePersonaggio classePersonaggio, double x, double y) {
+	public static ElementoIntermezzo personaggio(String id, TipoPersonaggio classePersonaggio, double x, double y) {
 		return new ElementoIntermezzo(id, ImmagineIntermezzo.personaggio(classePersonaggio), x, y);
 	}
 

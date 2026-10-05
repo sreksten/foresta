@@ -11,8 +11,8 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoCons
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
 
 import java.util.function.IntPredicate;
@@ -31,18 +31,18 @@ public enum ClasseTrofeo {
 	SBEVAZZONE(() -> new TrofeoAContatore<>(TipoTrofeo.SBEVAZZONE,
 			InternoPastoConsumatoInLocanda.class, evento -> 1, 100)),
 	AMMAZZAGOBLIN(() -> new TrofeoAContatore<>(TipoTrofeo.AMMAZZAGOBLIN,
-			InternoAvversarioSconfitto.class, evento -> evento.getClasse() == ClassePersonaggio.GOBLIN ? 1 : 0, 100)),
+			InternoAvversarioSconfitto.class, evento -> evento.getClasse() == TipoPersonaggio.GOBLIN ? 1 : 0, 100)),
 	AMICO_DI_TUTTI(() -> new TrofeoAContatore<>(TipoTrofeo.AMICO_DI_TUTTI,
 			InternoAmiciziaStretta.class, evento -> 1, 100)),
 	// Conta le corruzioni riuscite, una per volta, comunque sia composto il gruppo avversario
 	CORRUTTORE(() -> new TrofeoAContatore<>(TipoTrofeo.CORRUTTORE,
 			InternoCorruzioneRiuscita.class, evento -> 1, 100)),
 	// I boss: basta sconfiggerli una volta
-	UCCIDI_IL_DRAGO(() -> boss(TipoTrofeo.UCCIDI_IL_DRAGO, ClassePersonaggio.DRAGO)),
-	UCCIDI_LA_STREGA(() -> boss(TipoTrofeo.UCCIDI_LA_STREGA, ClassePersonaggio.STREGA)),
-	UCCIDI_IL_LICH(() -> boss(TipoTrofeo.UCCIDI_IL_LICH, ClassePersonaggio.LICH)),
-	UCCIDI_L_IDRA(() -> boss(TipoTrofeo.UCCIDI_L_IDRA, ClassePersonaggio.IDRA)),
-	UCCIDI_IL_MINOTAURO_GIGANTE(() -> boss(TipoTrofeo.UCCIDI_IL_MINOTAURO_GIGANTE, ClassePersonaggio.MINOTAURO_GIGANTE)),
+	UCCIDI_IL_DRAGO(() -> boss(TipoTrofeo.UCCIDI_IL_DRAGO, TipoPersonaggio.DRAGO)),
+	UCCIDI_LA_STREGA(() -> boss(TipoTrofeo.UCCIDI_LA_STREGA, TipoPersonaggio.STREGA)),
+	UCCIDI_IL_LICH(() -> boss(TipoTrofeo.UCCIDI_IL_LICH, TipoPersonaggio.LICH)),
+	UCCIDI_L_IDRA(() -> boss(TipoTrofeo.UCCIDI_L_IDRA, TipoPersonaggio.IDRA)),
+	UCCIDI_IL_MINOTAURO_GIGANTE(() -> boss(TipoTrofeo.UCCIDI_IL_MINOTAURO_GIGANTE, TipoPersonaggio.MINOTAURO_GIGANTE)),
 	// I tesori degli avversari: quanto si trova in una locazione incustodita non conta
 	RAPINATORE(() -> refurtiva(TipoTrofeo.RAPINATORE, ClassiOggetto.MONETA)),
 	LADRO_DI_PREZIOSI(() -> refurtiva(TipoTrofeo.LADRO_DI_PREZIOSI, ClassiOggetto.PIETRA_PREZIOSA)),
@@ -107,7 +107,7 @@ public enum ClasseTrofeo {
 		return evento.getEventoRichiestaAcquistoConsumabile().getTipoConsumabile();
 	}
 
-	private static Trofeo boss(TipoTrofeo tipo, ClassePersonaggio classe) {
+	private static Trofeo boss(TipoTrofeo tipo, TipoPersonaggio classe) {
 		return new TrofeoAContatore<>(tipo, InternoAvversarioSconfitto.class, evento -> evento.getClasse() == classe ? 1 : 0, 1);
 	}
 }

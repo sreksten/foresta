@@ -5,9 +5,9 @@ import com.threeamigos.foresta.missioni.IndagineRichiesta;
 import com.threeamigos.foresta.missioni.LIndagine;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -74,7 +74,7 @@ class ScenarioIndagineTest {
 
             partita.gruppo().setCoordinate(nascondiglio);
             for (int i = 0; i < 3; i++) {
-                partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GARGOYLE));
+                partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GARGOYLE));
             }
             indagine.controllaPostLocazione();
             assertEquals("RITORNO", indagine.getPassoCorrente());

@@ -3,6 +3,7 @@ package com.threeamigos.foresta.personaggi;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -17,7 +18,7 @@ public class Minotauro extends PersonaggioBase implements Personaggio {
 	public String getDeP() { return Misc.DEI; }
 	public String getDa() { return Misc.DAL; }
 
-	public ClassePersonaggio getClasse() { return ClassePersonaggio.MINOTAURO; }
+	public TipoPersonaggio getClasse() { return TipoPersonaggio.MINOTAURO; }
 
 	public String getNomeSingolare() { return "Minotauro"; }
 	public String getNomePlurale() { return "Minotauri"; }
@@ -25,7 +26,7 @@ public class Minotauro extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Minotauro(int livello) {
-		super(ClassePersonaggio.MINOTAURO, livello);
+		super(TipoPersonaggio.MINOTAURO, livello);
 	}
 
 	@Override

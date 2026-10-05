@@ -2,6 +2,7 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tools.Misc;
@@ -66,7 +67,7 @@ public class IlSoccorso extends LaLiberazione {
 	 */
 	private String getNomeDeiNemici() {
 		SoccorsoRichiesto soccorso = getSoccorso();
-		Personaggio modello = soccorso.getNemico().getMoltiplicatoriDiClasse();
+		Personaggio modello = FabbricaPersonaggi.modello(soccorso.getNemico());
 		if (soccorso.getNumero() == 1) {
 			String nemico = modello.getADS() + modello.getNomeSingolare();
 			return soccorso.isConCapo() ? getCapo() + ", " + nemico : nemico;

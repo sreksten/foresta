@@ -11,9 +11,10 @@ import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.Comparator;
@@ -114,7 +115,7 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 			return getLeggendario().getGuardiani().orElseGet(() -> guardianiPerLivello(Statistiche.getLivello()));
 		}
 		String[] parti = guardiani.split(SEPARATORE);
-		return IncontroDiMissione.di(ClassePersonaggio.valueOf(parti[0]), Integer.parseInt(parti[1]));
+		return IncontroDiMissione.di(TipoPersonaggio.valueOf(parti[0]), Integer.parseInt(parti[1]));
 	}
 
 	/**
@@ -122,22 +123,22 @@ public abstract class LaLeggenda extends MissioneAPassi implements ConLeggendari
 	 */
 	static IncontroDiMissione guardianiPerLivello(int livello) {
 		if (livello <= 2) {
-			return IncontroDiMissione.di(ClassePersonaggio.HOBGOBLIN, 4);
+			return IncontroDiMissione.di(TipoPersonaggio.HOBGOBLIN, 4);
 		}
 		if (livello <= 4) {
-			return IncontroDiMissione.di(ClassePersonaggio.TROLL, 3);
+			return IncontroDiMissione.di(TipoPersonaggio.TROLL, 3);
 		}
 		if (livello <= 6) {
-			return IncontroDiMissione.di(ClassePersonaggio.VIVERNA, 4);
+			return IncontroDiMissione.di(TipoPersonaggio.VIVERNA, 4);
 		}
-		return IncontroDiMissione.di(ClassePersonaggio.CHIMERA_DRAGO, 3);
+		return IncontroDiMissione.di(TipoPersonaggio.CHIMERA_DRAGO, 3);
 	}
 
 	/**
 	 * I guardiani per i testi, con l'articolo: "le Viverne".
 	 */
 	private String getNomeDeiGuardiani() {
-		Personaggio modello = getGuardiani().getClasse().getMoltiplicatoriDiClasse();
+		Personaggio modello = FabbricaPersonaggi.modello(getGuardiani().getClasse());
 		return modello.getADP() + modello.getNomePlurale();
 	}
 

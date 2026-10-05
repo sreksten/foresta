@@ -8,9 +8,10 @@ import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.NomeOggetto;
 import com.threeamigos.foresta.oggetti.Oggetto;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
@@ -26,7 +27,7 @@ class ScenarioTrofeiEdEsplorazioneTest {
 
     static final OggettiDaRaccogliere ORECCHIE = OggettiDaRaccogliere
             .di("ORECCHIE", new NomeOggetto("orecchio di goblin", "orecchie di goblin", "un ", "alcune ", "il ", "le "), 3)
-            .daiNemici(ClassePersonaggio.GOBLIN)
+            .daiNemici(TipoPersonaggio.GOBLIN)
             .alPiuPerLocazione(5);
 
     static class MissioneDiUnPasso extends MissioneAPassi {
@@ -64,11 +65,11 @@ class ScenarioTrofeiEdEsplorazioneTest {
         return missione;
     }
 
-    private static void avversari(ClassePersonaggio classe, int quanti) {
+    private static void avversari(TipoPersonaggio classe, int quanti) {
         GruppoAvversario avversari = GruppoAvversario.getIstanza();
         avversari.rimuoviPersonaggi();
         for (int i = 0; i < quanti; i++) {
-            avversari.aggiungiPersonaggio(classe.getIstanza(1));
+            avversari.aggiungiPersonaggio(FabbricaPersonaggi.crea(classe, 1));
         }
     }
 
@@ -79,18 +80,18 @@ class ScenarioTrofeiEdEsplorazioneTest {
             MissioneDiUnPasso caccia = attiva(MissioneDiUnPasso::trofei);
             CoordinateMD casella = new CoordinateMD(0, 0);
 
-            avversari(ClassePersonaggio.TROLL, 2);
+            avversari(TipoPersonaggio.TROLL, 2);
             assertEquals(Optional.empty(), caccia.getOggettoInLocazione(casella, TipoLocazione.BOSCO, false), "niente goblin, niente orecchie");
 
             // Due goblin: al più due orecchie, anche in una casella già visitata e in qualunque locazione
-            avversari(ClassePersonaggio.GOBLIN, 2);
+            avversari(TipoPersonaggio.GOBLIN, 2);
             Oggetto orecchie = caccia.getOggettoInLocazione(casella, TipoLocazione.ROVINE, true).orElseThrow(AssertionError::new);
             assertTrue(orecchie.getQuantita() >= 1 && orecchie.getQuantita() <= 2, String.valueOf(orecchie.getQuantita()));
             assertEquals("orecchio di goblin", orecchie.getNomeSingolare());
 
             // Mai più di quante ne mancano
             orecchie.prendi(partita.gruppo(), null);
-            avversari(ClassePersonaggio.GOBLIN, 4);
+            avversari(TipoPersonaggio.GOBLIN, 4);
             int mancanti = 3 - caccia.getContatore("ORECCHIE");
             for (int i = 0; i < 20; i++) {
                 caccia.getOggettoInLocazione(casella, TipoLocazione.BOSCO, false)
@@ -107,7 +108,7 @@ class ScenarioTrofeiEdEsplorazioneTest {
             java.util.List<com.threeamigos.foresta.personaggi.Personaggio> goblin = RegistroMissioni.getIncontroMissione(ripiego)
                     .orElseThrow(AssertionError::new);
             assertEquals(mancanti, goblin.size());
-            goblin.forEach(g -> assertEquals(ClassePersonaggio.GOBLIN, g.getClasse()));
+            goblin.forEach(g -> assertEquals(TipoPersonaggio.GOBLIN, g.getClasse()));
             assertEquals(mancanti, caccia.getOggettoInLocazione(ripiego, TipoLocazione.BOSCO, true)
                     .orElseThrow(AssertionError::new).getQuantita());
         }

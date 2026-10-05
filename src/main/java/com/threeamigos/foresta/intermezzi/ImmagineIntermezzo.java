@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.intermezzi;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.Arrays;
 import java.util.Objects;
@@ -30,7 +30,7 @@ public final class ImmagineIntermezzo {
 	}
 
 	private final Tipo tipo;
-	private ClassePersonaggio classePersonaggio;
+	private TipoPersonaggio classePersonaggio;
 	private TipoLocazione tipoLocazione;
 	private String risorsa;
 	private Animazione animazione;
@@ -44,7 +44,7 @@ public final class ImmagineIntermezzo {
 		this.tipo = tipo;
 	}
 
-	public static ImmagineIntermezzo personaggio(ClassePersonaggio classePersonaggio) {
+	public static ImmagineIntermezzo personaggio(TipoPersonaggio classePersonaggio) {
 		ImmagineIntermezzo immagine = new ImmagineIntermezzo(Tipo.PERSONAGGIO);
 		immagine.classePersonaggio = Objects.requireNonNull(classePersonaggio);
 		return immagine;
@@ -111,7 +111,7 @@ public final class ImmagineIntermezzo {
 		return tipo;
 	}
 
-	public ClassePersonaggio getClassePersonaggio() {
+	public TipoPersonaggio getClassePersonaggio() {
 		return classePersonaggio;
 	}
 

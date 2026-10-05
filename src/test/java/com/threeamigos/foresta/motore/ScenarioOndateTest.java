@@ -7,10 +7,10 @@ import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.IncaricoDiCombattimento;
 import com.threeamigos.foresta.missioni.IncontroDiMissione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -31,15 +31,15 @@ class ScenarioOndateTest {
 
     @Test
     void alPiuTreOndateEMaiInUnDuello() {
-        IncontroDiMissione incontro = IncontroDiMissione.di(ClassePersonaggio.GOBLIN, 2)
-                .poi(IncontroDiMissione.di(ClassePersonaggio.GOBLIN, 3), "Altri goblin!")
-                .poi(IncontroDiMissione.di(ClassePersonaggio.TROLL, 1), "Un troll!");
+        IncontroDiMissione incontro = IncontroDiMissione.di(TipoPersonaggio.GOBLIN, 2)
+                .poi(IncontroDiMissione.di(TipoPersonaggio.GOBLIN, 3), "Altri goblin!")
+                .poi(IncontroDiMissione.di(TipoPersonaggio.TROLL, 1), "Un troll!");
         assertEquals(3, incontro.getNumeroDiOndate());
-        assertEquals(Integer.valueOf(5), incontro.getSconfittiRichiesti().get(ClassePersonaggio.GOBLIN));
-        assertEquals(Integer.valueOf(1), incontro.getSconfittiRichiesti().get(ClassePersonaggio.TROLL));
-        assertThrows(IllegalStateException.class, () -> incontro.poi(IncontroDiMissione.di(ClassePersonaggio.GIGANTE, 1), "Troppi!"));
-        assertThrows(IllegalStateException.class, () -> IncontroDiMissione.di(ClassePersonaggio.GUERRIERO, 1).aDuello()
-                .poi(IncontroDiMissione.di(ClassePersonaggio.GUERRIERO, 1), "Un altro!"));
+        assertEquals(Integer.valueOf(5), incontro.getSconfittiRichiesti().get(TipoPersonaggio.GOBLIN));
+        assertEquals(Integer.valueOf(1), incontro.getSconfittiRichiesti().get(TipoPersonaggio.TROLL));
+        assertThrows(IllegalStateException.class, () -> incontro.poi(IncontroDiMissione.di(TipoPersonaggio.GIGANTE, 1), "Troppi!"));
+        assertThrows(IllegalStateException.class, () -> IncontroDiMissione.di(TipoPersonaggio.GUERRIERO, 1).aDuello()
+                .poi(IncontroDiMissione.di(TipoPersonaggio.GUERRIERO, 1), "Un altro!"));
     }
 
     @Test
@@ -52,9 +52,9 @@ class ScenarioOndateTest {
             partita.gruppo().setLocazioneCorrente(locazione);
             GruppoAvversario avversari = GruppoAvversario.getIstanza();
             avversari.reimposta();
-            IncontroDiMissione incontro = IncontroDiMissione.di(ClassePersonaggio.GOBLIN, 1)
-                    .poi(IncontroDiMissione.di(ClassePersonaggio.HOBGOBLIN, 2), "Arrivano due hobgoblin!")
-                    .poi(IncontroDiMissione.di(ClassePersonaggio.TROLL, 1).conCapo("Gruk"), "Arriva Gruk!");
+            IncontroDiMissione incontro = IncontroDiMissione.di(TipoPersonaggio.GOBLIN, 1)
+                    .poi(IncontroDiMissione.di(TipoPersonaggio.HOBGOBLIN, 2), "Arrivano due hobgoblin!")
+                    .poi(IncontroDiMissione.di(TipoPersonaggio.TROLL, 1).conCapo("Gruk"), "Arriva Gruk!");
             incontro.crea().forEach(avversari::aggiungiPersonaggio);
             avversari.setOndateSuccessive(incontro.creaOndateSuccessive());
 
@@ -67,7 +67,7 @@ class ScenarioOndateTest {
             sconfiggiTutti(avversari);
             assertEquals(Stato.IN_LOCAZIONE, locazione.impostaAzioni(partita.gruppo(), avversari, null));
             assertFalse(locazione.isCompleta());
-            assertEquals(Arrays.asList(ClassePersonaggio.HOBGOBLIN, ClassePersonaggio.HOBGOBLIN), classi(avversari.getPersonaggiVivi()));
+            assertEquals(Arrays.asList(TipoPersonaggio.HOBGOBLIN, TipoPersonaggio.HOBGOBLIN), classi(avversari.getPersonaggiVivi()));
             assertTrue(partita.testi().contains("Arrivano due hobgoblin!"), String.valueOf(partita.testi()));
             assertEquals(1, partita.eventi().tutti(InternoAssegnaCoordinateAPersonaggi.class).size());
             assertComandiSenzaScorciatoie(partita);
@@ -100,7 +100,7 @@ class ScenarioOndateTest {
             assertEquals("Qui cadde Gruk.", battaglia.getRicordoDellaLocazione());
 
             // Si entra: due goblin, poi un hobgoblin, poi il troll Gruk
-            assertEquals(Arrays.asList(ClassePersonaggio.GOBLIN, ClassePersonaggio.GOBLIN),
+            assertEquals(Arrays.asList(TipoPersonaggio.GOBLIN, TipoPersonaggio.GOBLIN),
                     classi(RegistroMissioni.getIncontroMissione(radura).orElseThrow(AssertionError::new)));
             List<Ondata> ondate = RegistroMissioni.getOndateSuccessiveMissione(radura);
             assertEquals(2, ondate.size());
@@ -110,19 +110,19 @@ class ScenarioOndateTest {
 
             // Battuti i goblin e l'hobgoblin, ma non Gruk (il gruppo è fuggito): la battaglia non è vinta
             partita.gruppo().setCoordinate(radura);
-            sconfitti(partita, ClassePersonaggio.GOBLIN, ClassePersonaggio.GOBLIN, ClassePersonaggio.HOBGOBLIN);
+            sconfitti(partita, TipoPersonaggio.GOBLIN, TipoPersonaggio.GOBLIN, TipoPersonaggio.HOBGOBLIN);
             battaglia.controllaPostLocazione();
             assertEquals("CACCIA", battaglia.getPassoCorrente());
 
             // Alla visita dopo si ricomincia, anche a contare: battere di nuovo solo i goblin e l'hobgoblin non basta
             RegistroMissioni.getIncontroMissione(radura);
-            sconfitti(partita, ClassePersonaggio.GOBLIN, ClassePersonaggio.GOBLIN, ClassePersonaggio.HOBGOBLIN);
+            sconfitti(partita, TipoPersonaggio.GOBLIN, TipoPersonaggio.GOBLIN, TipoPersonaggio.HOBGOBLIN);
             battaglia.controllaPostLocazione();
             assertEquals("CACCIA", battaglia.getPassoCorrente());
 
             // Tutte e tre le ondate nella stessa visita
             RegistroMissioni.getIncontroMissione(radura);
-            sconfitti(partita, ClassePersonaggio.GOBLIN, ClassePersonaggio.GOBLIN, ClassePersonaggio.HOBGOBLIN, ClassePersonaggio.TROLL);
+            sconfitti(partita, TipoPersonaggio.GOBLIN, TipoPersonaggio.GOBLIN, TipoPersonaggio.HOBGOBLIN, TipoPersonaggio.TROLL);
             battaglia.controllaPostLocazione();
             assertEquals("RITORNO", battaglia.getPassoCorrente());
             assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith("Anche Gruk è a terra.")), String.valueOf(partita.testi()));
@@ -142,13 +142,13 @@ class ScenarioOndateTest {
         }
     }
 
-    private static void sconfitti(PartitaDiTest partita, ClassePersonaggio... classi) {
-        for (ClassePersonaggio classe : classi) {
+    private static void sconfitti(PartitaDiTest partita, TipoPersonaggio... classi) {
+        for (TipoPersonaggio classe : classi) {
             partita.pubblica(new InternoAvversarioSconfitto(classe));
         }
     }
 
-    private static List<ClassePersonaggio> classi(List<Personaggio> personaggi) {
+    private static List<TipoPersonaggio> classi(List<Personaggio> personaggi) {
         return personaggi.stream().map(Personaggio::getClasse).collect(java.util.stream.Collectors.toList());
     }
 

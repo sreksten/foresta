@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * Un soccorso (vedi IlSoccorso), letto da una riga di SOCCORSO in missioni.txt, che ne descrive i campi: chi lo
@@ -19,7 +19,7 @@ public final class SoccorsoRichiesto {
 	private final AspettoDelMandante aspetto;
 	private final String mandante;
 	private final String persona;
-	private final ClassePersonaggio nemico;
+	private final TipoPersonaggio nemico;
 	private final int numero;
 	private final CapoDellaRiga capo;
 	private final TipoLocazione luogo;
@@ -43,7 +43,7 @@ public final class SoccorsoRichiesto {
 		aspetto = campi.enumerato("ASPETTO", AspettoDelMandante.class);
 		mandante = campi.obbligatorio("MANDANTE");
 		persona = campi.obbligatorio("PERSONA");
-		nemico = campi.enumerato("NEMICO", ClassePersonaggio.class);
+		nemico = campi.enumerato("NEMICO", TipoPersonaggio.class);
 		numero = campi.intero("NUMERO");
 		capo = CapoDellaRiga.da(campi.facoltativo("CAPO"));
 		luogo = campi.enumerato("LUOGO", TipoLocazione.class);
@@ -101,7 +101,7 @@ public final class SoccorsoRichiesto {
 		return persona;
 	}
 
-	public ClassePersonaggio getNemico() {
+	public TipoPersonaggio getNemico() {
 		return nemico;
 	}
 

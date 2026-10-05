@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * Il favore che una riga di missioni.txt chiede (vedi IlFavore): sconfiggere qualcuno in un posto, raccogliere
@@ -29,7 +29,7 @@ public final class FavoreRichiesto {
 	private final String nome;
 	private final Tipo tipo;
 	private final TipoLocazione luogo;
-	private final ClassePersonaggio nemico;
+	private final TipoPersonaggio nemico;
 	private final int numero;
 	private final CapoDellaRiga capo;
 	private final MaterialeRichiesto ingrediente;
@@ -59,7 +59,7 @@ public final class FavoreRichiesto {
 				throw new IllegalArgumentException("Il luogo del favore è fra " + CombattimentoRichiesto.LUOGHI + ": " + riga);
 			}
 		}
-		nemico = combattimento ? campi.enumerato("NEMICO", ClassePersonaggio.class) : null;
+		nemico = combattimento ? campi.enumerato("NEMICO", TipoPersonaggio.class) : null;
 		numero = combattimento ? campi.intero("NUMERO") : 0;
 		if (combattimento && numero < 1) {
 			throw new IllegalArgumentException("Il numero è almeno 1: " + riga);
@@ -108,7 +108,7 @@ public final class FavoreRichiesto {
 		return luogo;
 	}
 
-	public ClassePersonaggio getNemico() {
+	public TipoPersonaggio getNemico() {
 		return nemico;
 	}
 

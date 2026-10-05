@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.awt.image.BufferedImage;
 
@@ -10,25 +10,25 @@ public enum ClasseIcona {
 	MASCHIO(Comando.MASCHIO, "icone/Maschio.gif"),
 	FEMMINA(Comando.FEMMINA,"icone/Femmina.gif"),
 
-	CENTAURO(ClassePersonaggio.CENTAURO, "icone/Centauro.gif"),
-	EREMITA(ClassePersonaggio.EREMITA, "icone/Eremita.gif"),
-	GIGANTE(ClassePersonaggio.GIGANTE, "icone/Gigante.gif"),
-	GOBLIN(ClassePersonaggio.GOBLIN, "icone/Goblin.gif"),
-	HOBGOBLIN(ClassePersonaggio.HOBGOBLIN, "icone/Hobgoblin.gif"),
-	MINOTAURO(ClassePersonaggio.MINOTAURO, "icone/Minotauro.gif"),
-	SCHELETRO(ClassePersonaggio.SCHELETRO, "icone/Scheletro.gif"),
-	TITANO(ClassePersonaggio.TITANO, "icone/Titano.gif"),
-	GUERRIERA(Comando.GUERRIERA, ClassePersonaggio.GUERRIERA, "icone/Guerriera.gif"),
-	GUERRIERO(Comando.GUERRIERO, ClassePersonaggio.GUERRIERO, "icone/Guerriero.gif"),
-	LADRA(Comando.LADRA, ClassePersonaggio.LADRA, "icone/Ladra.gif"),
-	LADRO(Comando.LADRO, ClassePersonaggio.LADRO, "icone/Ladro.gif"),
-	BARDO(Comando.BARDO, ClassePersonaggio.BARDO, "icone/Bardo.gif"),
-	CANTASTORIE(Comando.CANTASTORIE, ClassePersonaggio.CANTASTORIE, "icone/Cantastorie.gif"),
-	ELFA(Comando.ELFA, ClassePersonaggio.ELFA, "icone/Elfa.gif"),
-	ELFO(Comando.ELFO, ClassePersonaggio.ELFO, "icone/Elfo.gif"),
-	MAGA(Comando.MAGA, ClassePersonaggio.MAGA, "icone/Maga.gif"),
-	MAGO(Comando.MAGO, ClassePersonaggio.MAGO, "icone/Mago.gif"),
-	OMBRAFIAMMA(ClassePersonaggio.OMBRAFIAMMA, "icone/OmbraFiamma.gif"),
+	CENTAURO(TipoPersonaggio.CENTAURO, "icone/Centauro.gif"),
+	EREMITA(TipoPersonaggio.EREMITA, "icone/Eremita.gif"),
+	GIGANTE(TipoPersonaggio.GIGANTE, "icone/Gigante.gif"),
+	GOBLIN(TipoPersonaggio.GOBLIN, "icone/Goblin.gif"),
+	HOBGOBLIN(TipoPersonaggio.HOBGOBLIN, "icone/Hobgoblin.gif"),
+	MINOTAURO(TipoPersonaggio.MINOTAURO, "icone/Minotauro.gif"),
+	SCHELETRO(TipoPersonaggio.SCHELETRO, "icone/Scheletro.gif"),
+	TITANO(TipoPersonaggio.TITANO, "icone/Titano.gif"),
+	GUERRIERA(Comando.GUERRIERA, TipoPersonaggio.GUERRIERA, "icone/Guerriera.gif"),
+	GUERRIERO(Comando.GUERRIERO, TipoPersonaggio.GUERRIERO, "icone/Guerriero.gif"),
+	LADRA(Comando.LADRA, TipoPersonaggio.LADRA, "icone/Ladra.gif"),
+	LADRO(Comando.LADRO, TipoPersonaggio.LADRO, "icone/Ladro.gif"),
+	BARDO(Comando.BARDO, TipoPersonaggio.BARDO, "icone/Bardo.gif"),
+	CANTASTORIE(Comando.CANTASTORIE, TipoPersonaggio.CANTASTORIE, "icone/Cantastorie.gif"),
+	ELFA(Comando.ELFA, TipoPersonaggio.ELFA, "icone/Elfa.gif"),
+	ELFO(Comando.ELFO, TipoPersonaggio.ELFO, "icone/Elfo.gif"),
+	MAGA(Comando.MAGA, TipoPersonaggio.MAGA, "icone/Maga.gif"),
+	MAGO(Comando.MAGO, TipoPersonaggio.MAGO, "icone/Mago.gif"),
+	OMBRAFIAMMA(TipoPersonaggio.OMBRAFIAMMA, "icone/OmbraFiamma.gif"),
 
 	SINGOLO_ATTACCO(Comando.SINGOLO_ATTACCO,"icone/SingoloAttacco.gif"),
 	COMBATTIMENTO(Comando.COMBATTIMENTO,"icone/Combattimento.gif"),
@@ -107,7 +107,7 @@ public enum ClasseIcona {
 	STORPSGORBLIN(Comando.STORPSGORBLIN, "icone/Storpsgorblin.gif");
 
 	private final Comando comando;
-	private final ClassePersonaggio classePersonaggio;
+	private final TipoPersonaggio classePersonaggio;
 	private final String nomeRisorsa;
 	// Caricata al primo uso, o da precarica(): cosi' la dimensione della finestra si calcola senza caricarle tutte
 	private volatile BufferedImage icona;
@@ -119,13 +119,13 @@ public enum ClasseIcona {
 		this.nomeRisorsa = nomeRisorsa;
 	}
 
-	ClasseIcona(ClassePersonaggio classePersonaggio, String nomeRisorsa) {
+	ClasseIcona(TipoPersonaggio classePersonaggio, String nomeRisorsa) {
 		this.comando = null;
 		this.classePersonaggio = classePersonaggio;
 		this.nomeRisorsa = nomeRisorsa;
 	}
 
-	ClasseIcona(Comando comando, ClassePersonaggio classePersonaggio, String nomeRisorsa) {
+	ClasseIcona(Comando comando, TipoPersonaggio classePersonaggio, String nomeRisorsa) {
 		this.comando = comando;
 		this.classePersonaggio = classePersonaggio;
 		this.nomeRisorsa = nomeRisorsa;
@@ -164,7 +164,7 @@ public enum ClasseIcona {
 		return altezzaMassima;
 	}
 
-	public static ClasseIcona ofClasse(ClassePersonaggio classePersonaggio) {
+	public static ClasseIcona ofClasse(TipoPersonaggio classePersonaggio) {
 		for (ClasseIcona corrente : values()) {
 			if (corrente.classePersonaggio == classePersonaggio) {
 				return corrente;

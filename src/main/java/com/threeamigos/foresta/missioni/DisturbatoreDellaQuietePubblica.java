@@ -3,8 +3,8 @@ package com.threeamigos.foresta.missioni;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.motore.GruppoAvversario;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 /**
@@ -56,7 +56,7 @@ public class DisturbatoreDellaQuietePubblica extends MissioneBase {
 		}
 		int eremiti = 0;
 		for (Personaggio personaggio : GruppoAvversario.getIstanza().getPersonaggi()) {
-			if (personaggio.getClasse() == ClassePersonaggio.EREMITA) {
+			if (personaggio.getClasse() == TipoPersonaggio.EREMITA) {
 				eremiti++;
 			}
 		}

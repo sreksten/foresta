@@ -2,9 +2,9 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.oggetti.Incantamento;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio; // Presumo sia la tua Enum delle 30 classi
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.tipi.TipoPersonaggio; // Presumo sia la tua Enum delle 30 classi
 
 import java.util.Collection;
 import java.util.Collections;
@@ -47,7 +47,7 @@ public class ArmaNaturale implements Arma {
     /**
      * Associa automaticamente ogni classe/mostro al suo corretto stile di attacco innato.
      */
-    private TipoAttaccoNaturale assegnaTipoAttacco(ClassePersonaggio classe) {
+    private TipoAttaccoNaturale assegnaTipoAttacco(TipoPersonaggio classe) {
         switch (classe) {
             case ARPIA:
             case FOLLETTO:

@@ -7,10 +7,10 @@ import com.threeamigos.foresta.missioni.OggettoLeggendario;
 import com.threeamigos.foresta.missioni.PescaLeggendaria;
 import com.threeamigos.foresta.missioni.TorneoRichiesto;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -65,17 +65,17 @@ class ScenarioTorneoTest {
 
             // Il primo turno: un guerriero, uno contro uno e fino alla resa
             Personaggio guerriero = unoSolo(lizza);
-            assertEquals(ClassePersonaggio.GUERRIERO, guerriero.getClasse());
+            assertEquals(TipoPersonaggio.GUERRIERO, guerriero.getClasse());
             assertTrue(guerriero.isSfidante() && guerriero.isFinoAllaResa());
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GUERRIERO));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GUERRIERO));
             torneo.controllaPostLocazione();
             assertEquals("SECONDO_TURNO", torneo.getPassoCorrente());
             assertTrue(partita.testi().contains("Il primo si arrende. Alla prossima visita alla lizza, il turno successivo."),
                     String.valueOf(partita.testi()));
 
             // Il secondo: un'elfa
-            assertEquals(ClassePersonaggio.ELFA, unoSolo(lizza).getClasse());
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.ELFA));
+            assertEquals(TipoPersonaggio.ELFA, unoSolo(lizza).getClasse());
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.ELFA));
             torneo.controllaPostLocazione();
             assertEquals("FINALE", torneo.getPassoCorrente());
             assertEquals("Il torneo della Rosa, la finale: affronta Bradamante, la Guerriera nella lizza segnata sulla mappa, uno "
@@ -84,10 +84,10 @@ class ScenarioTorneoTest {
 
             // La finale: la campionessa, con il suo nome; vinta, il leggendario va al gruppo
             Personaggio campionessa = unoSolo(lizza);
-            assertEquals(ClassePersonaggio.GUERRIERA, campionessa.getClasse());
+            assertEquals(TipoPersonaggio.GUERRIERA, campionessa.getClasse());
             assertEquals("Bradamante", campionessa.getNome());
             int artefatti = partita.gruppo().getInventario().size();
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GUERRIERA));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GUERRIERA));
             torneo.controllaPostLocazione();
             assertEquals("RITORNO", torneo.getPassoCorrente());
             assertEquals(artefatti + 1, partita.gruppo().getInventario().size());

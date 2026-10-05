@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -26,8 +26,8 @@ public final class TorneoRichiesto {
 	private final String mandante;
 	private final String titolo;
 	private final TipoLocazione luogo;
-	private final List<ClassePersonaggio> sfidanti = new ArrayList<>();
-	private final ClassePersonaggio campione;
+	private final List<TipoPersonaggio> sfidanti = new ArrayList<>();
+	private final TipoPersonaggio campione;
 	private final CapoDellaRiga nomeDelCampione;
 	private final int monete;
 	private final String richiesta;
@@ -52,13 +52,13 @@ public final class TorneoRichiesto {
 			throw new IllegalArgumentException("Il luogo è fra " + CombattimentoRichiesto.LUOGHI + ": " + riga);
 		}
 		for (String sfidante : campi.obbligatorio("SFIDANTI").trim().split("\\s+")) {
-			sfidanti.add(ClassePersonaggio.valueOf(sfidante));
+			sfidanti.add(TipoPersonaggio.valueOf(sfidante));
 		}
 		if (sfidanti.size() != SFIDANTI_PRIMA_DELLA_FINALE) {
 			throw new IllegalArgumentException("Gli sfidanti prima della finale sono " + SFIDANTI_PRIMA_DELLA_FINALE
 					+ ", separati da uno spazio (GUERRIERO ELFA): " + riga);
 		}
-		campione = campi.enumerato("CAMPIONE", ClassePersonaggio.class);
+		campione = campi.enumerato("CAMPIONE", TipoPersonaggio.class);
 		nomeDelCampione = CapoDellaRiga.da(campi.facoltativo("NOME"));
 		if (nomeDelCampione == null) {
 			throw new IllegalArgumentException("Manca il campo NOME in " + riga);
@@ -117,14 +117,14 @@ public final class TorneoRichiesto {
 	/**
 	 * Gli sfidanti dei turni prima della finale, nell'ordine.
 	 */
-	public List<ClassePersonaggio> getSfidanti() {
+	public List<TipoPersonaggio> getSfidanti() {
 		return Collections.unmodifiableList(sfidanti);
 	}
 
 	/**
 	 * Il campione da battere in finale.
 	 */
-	public ClassePersonaggio getCampione() {
+	public TipoPersonaggio getCampione() {
 		return campione;
 	}
 

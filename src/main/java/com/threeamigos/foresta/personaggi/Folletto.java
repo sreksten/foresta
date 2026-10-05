@@ -4,6 +4,7 @@ import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.offerte.ClassiOfferta;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.EnumSet;
@@ -26,7 +27,7 @@ public class Folletto extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Folletto(int livello) {
-		super(ClassePersonaggio.FOLLETTO, livello);
+		super(TipoPersonaggio.FOLLETTO, livello);
 	}
 
 	@Override

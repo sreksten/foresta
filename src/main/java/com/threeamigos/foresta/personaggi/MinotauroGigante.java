@@ -2,6 +2,7 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -16,14 +17,14 @@ public class MinotauroGigante extends PersonaggioBase implements Personaggio {
 	public String getDeP() { return Misc.DEI; }
 	public String getDa() { return Misc.DAL; }
 
-	public ClassePersonaggio getClasse() { return ClassePersonaggio.MINOTAURO_GIGANTE; }
+	public TipoPersonaggio getClasse() { return TipoPersonaggio.MINOTAURO_GIGANTE; }
 	public String getNomeSingolare() { return "Minotauro Gigante"; }
 	public String getNomePlurale() { return "Minotauri Giganti"; }
 	public String getPronome() { return Misc.ESSO; }
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public MinotauroGigante(int livello) {
-		super(ClassePersonaggio.MINOTAURO_GIGANTE, livello);
+		super(TipoPersonaggio.MINOTAURO_GIGANTE, livello);
 	}
 
 	@Override

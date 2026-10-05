@@ -2,11 +2,11 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.incantesimi.ClasseIncantesimo;
 import com.threeamigos.foresta.locazioni.Locazione;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -64,7 +64,7 @@ class SimulazionePartiteTest {
 	 * I numeri di uno scontro, per la tabella degli avversari
 	 */
 	static final class Scontro {
-		final ClassePersonaggio avversario;
+		final TipoPersonaggio avversario;
 		final boolean inCastello;
 		int danni;
 		int round;
@@ -72,7 +72,7 @@ class SimulazionePartiteTest {
 		boolean fuga;
 		boolean vinto;
 
-		Scontro(ClassePersonaggio avversario, boolean inCastello) {
+		Scontro(TipoPersonaggio avversario, boolean inCastello) {
 			this.avversario = avversario;
 			this.inCastello = inCastello;
 		}
@@ -301,7 +301,7 @@ class SimulazionePartiteTest {
 			}
 			risultato.giorni = LineaTemporale.getGiorno();
 			risultato.livello = Statistiche.getLivello();
-			risultato.mostriUccisi = Arrays.stream(ClassePersonaggio.values()).mapToInt(Statistiche::getMostriUccisi).sum();
+			risultato.mostriUccisi = Arrays.stream(TipoPersonaggio.values()).mapToInt(Statistiche::getMostriUccisi).sum();
 			risultato.fughe = giocatore.fughe;
 			risultato.corruzioni = giocatore.corruzioni;
 			risultato.amicizie = giocatore.amicizie;

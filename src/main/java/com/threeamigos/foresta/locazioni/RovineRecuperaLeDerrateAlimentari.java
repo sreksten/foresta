@@ -7,9 +7,9 @@ import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.oggetti.ClassiOggetto;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Troll;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 
 public class RovineRecuperaLeDerrateAlimentari extends LocazioneUnica {
@@ -38,7 +38,7 @@ public class RovineRecuperaLeDerrateAlimentari extends LocazioneUnica {
 	}
 
 	@Override
-	protected ClassePersonaggio[] getPossibiliIncontri() {
+	protected TipoPersonaggio[] getPossibiliIncontri() {
 		return rovine.getPossibiliIncontri();
 	}
 

@@ -2,8 +2,9 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.motore.Ondata;
 import com.threeamigos.foresta.motore.Statistiche;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -17,24 +18,24 @@ import java.util.Objects;
  * livello sopra gli altri. Il capo può essere uno della banda o, di un'altra classe, in più (vedi
  * {@link MissioneAPassi#combattiIlCapo}).
  * <pre>
- * IncontroDiMissione.di(ClassePersonaggio.HOBGOBLIN, 3).conCapo("Sgranf");
- * IncontroDiMissione.di(ClassePersonaggio.GOBLIN, 3).conCapo("Grumolo", ClassePersonaggio.HOBGOBLIN);
+ * IncontroDiMissione.di(TipoPersonaggio.HOBGOBLIN, 3).conCapo("Sgranf");
+ * IncontroDiMissione.di(TipoPersonaggio.GOBLIN, 3).conCapo("Grumolo", TipoPersonaggio.HOBGOBLIN);
  * </pre>
  * Può arrivare a ondate (vedi {@link #poi}): sconfitti tutti quelli in campo, la locazione si riempie di nuovo, fino a
  * {@value #ONDATE_MASSIME} ondate in tutto. Con delle ondate in arrivo non si corrompe, non si fa amicizia e non si
  * passa inosservati; chi fugge, alla visita dopo ricomincia dalla prima.
  * <pre>
- * IncontroDiMissione.di(ClassePersonaggio.SCHELETRO, 3)
- *         .poi(IncontroDiMissione.di(ClassePersonaggio.MAGO, 1).conCapo("Mortimer"), "Il negromante esce dall'ombra!");
+ * IncontroDiMissione.di(TipoPersonaggio.SCHELETRO, 3)
+ *         .poi(IncontroDiMissione.di(TipoPersonaggio.MAGO, 1).conCapo("Mortimer"), "Il negromante esce dall'ombra!");
  * </pre>
  */
 public final class IncontroDiMissione {
 
-	private final ClassePersonaggio classe;
+	private final TipoPersonaggio classe;
 	private final int numero;
 	private String nomeDelCapo;
 	// La classe del capo se non è uno della banda, altrimenti null
-	private ClassePersonaggio classeDelCapo;
+	private TipoPersonaggio classeDelCapo;
 	private boolean finoAllaResa;
 	private boolean aDuello;
 	private boolean aggirabile;
@@ -46,7 +47,7 @@ public final class IncontroDiMissione {
 	 */
 	public static final int ONDATE_MASSIME = 3;
 
-	private IncontroDiMissione(ClassePersonaggio classe, int numero) {
+	private IncontroDiMissione(TipoPersonaggio classe, int numero) {
 		if (numero < 1) {
 			throw new IllegalArgumentException("Serve almeno un avversario: " + numero);
 		}
@@ -54,7 +55,7 @@ public final class IncontroDiMissione {
 		this.numero = numero;
 	}
 
-	public static IncontroDiMissione di(ClassePersonaggio classe, int numero) {
+	public static IncontroDiMissione di(TipoPersonaggio classe, int numero) {
 		return new IncontroDiMissione(classe, numero);
 	}
 
@@ -122,8 +123,8 @@ public final class IncontroDiMissione {
 	 * Quanti avversari di ogni classe vanno sconfitti, in tutte le ondate: quelli della banda di ognuna (vedi
 	 * {@link MissioneAPassi#combatti}).
 	 */
-	public Map<ClassePersonaggio, Integer> getSconfittiRichiesti() {
-		Map<ClassePersonaggio, Integer> richiesti = new EnumMap<>(ClassePersonaggio.class);
+	public Map<TipoPersonaggio, Integer> getSconfittiRichiesti() {
+		Map<TipoPersonaggio, Integer> richiesti = new EnumMap<>(TipoPersonaggio.class);
 		richiesti.merge(classe, numero, Integer::sum);
 		ondateSuccessive.forEach(ondata -> richiesti.merge(ondata.classe, ondata.numero, Integer::sum));
 		return richiesti;
@@ -156,7 +157,7 @@ public final class IncontroDiMissione {
 	 * Un capo in più, di un'altra classe (un hobgoblin a capo di una banda di goblin): ha un nome proprio e un
 	 * livello in più della banda.
 	 */
-	public IncontroDiMissione conCapo(String nome, ClassePersonaggio classe) {
+	public IncontroDiMissione conCapo(String nome, TipoPersonaggio classe) {
 		this.nomeDelCapo = Objects.requireNonNull(nome);
 		this.classeDelCapo = Objects.requireNonNull(classe);
 		return this;
@@ -165,11 +166,11 @@ public final class IncontroDiMissione {
 	/**
 	 * La classe del capo: la sua, se non è uno della banda, altrimenti quella della banda.
 	 */
-	public ClassePersonaggio getClasseDelCapo() {
+	public TipoPersonaggio getClasseDelCapo() {
 		return classeDelCapo != null ? classeDelCapo : classe;
 	}
 
-	public ClassePersonaggio getClasse() {
+	public TipoPersonaggio getClasse() {
 		return classe;
 	}
 
@@ -190,7 +191,7 @@ public final class IncontroDiMissione {
 		int livello = Statistiche.getLivello();
 		for (int i = 0; i < numero; i++) {
 			boolean capo = i == 0 && nomeDelCapo != null && classeDelCapo == null;
-			Personaggio avversario = classe.getIstanza(capo ? livello + 1 : livello);
+			Personaggio avversario = FabbricaPersonaggi.crea(classe, capo ? livello + 1 : livello);
 			if (capo) {
 				avversario.getModelloDati().setNome(nomeDelCapo);
 			}
@@ -201,7 +202,7 @@ public final class IncontroDiMissione {
 			avversari.add(avversario);
 		}
 		if (classeDelCapo != null) {
-			Personaggio capo = classeDelCapo.getIstanza(livello + 1);
+			Personaggio capo = FabbricaPersonaggi.crea(classeDelCapo, livello + 1);
 			capo.getModelloDati().setNome(nomeDelCapo);
 			capo.setOrdinale(1);
 			capo.setFinoAllaResa(finoAllaResa);

@@ -8,10 +8,10 @@ import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GradoIncantamento;
 import com.threeamigos.foresta.oggetti.Incantamento;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.OmbraFiamma;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.*;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.ModalitaDiProva;
 
 import java.util.ArrayList;
@@ -755,8 +755,8 @@ public class CalcolatoreCombattimento {
      * Quanto del bonus del libro magico ha chi lo porta: tutto, tranne l'elfo, che non lo usa bene come il mago.
      */
     static double fattoreLibroMagico(Personaggio personaggio) {
-        ClassePersonaggio classe = personaggio.getClasse();
-        return classe == ClassePersonaggio.ELFO || classe == ClassePersonaggio.ELFA ? Costanti.LIBRO_MAGICO_FATTORE_ELFO : 1.0d;
+        TipoPersonaggio classe = personaggio.getClasse();
+        return classe == TipoPersonaggio.ELFO || classe == TipoPersonaggio.ELFA ? Costanti.LIBRO_MAGICO_FATTORE_ELFO : 1.0d;
     }
 
     private static Optional<Artefatto> libroMagico(Personaggio personaggio) {

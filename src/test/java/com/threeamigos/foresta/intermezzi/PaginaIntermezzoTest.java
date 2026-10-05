@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.intermezzi;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
@@ -20,8 +20,8 @@ class PaginaIntermezzoTest {
 
     private static PaginaIntermezzo paginaConDuePersonaggi() {
         return new PaginaIntermezzo()
-                .conElemento(ElementoIntermezzo.personaggio("a", ClassePersonaggio.MAGO, 0.3, 0.7))
-                .conElemento(ElementoIntermezzo.personaggio("b", ClassePersonaggio.EREMITA, 0.7, 0.7));
+                .conElemento(ElementoIntermezzo.personaggio("a", TipoPersonaggio.MAGO, 0.3, 0.7))
+                .conElemento(ElementoIntermezzo.personaggio("b", TipoPersonaggio.EREMITA, 0.7, 0.7));
     }
 
     @Test
@@ -51,9 +51,9 @@ class PaginaIntermezzoTest {
     @Test
     void laDurataDelContenutoIgnoraLeAnimazioniCheSiRipetono() {
         PaginaIntermezzo pagina = paginaConDuePersonaggi()
-                .conElemento(ElementoIntermezzo.personaggio("sfondo", ClassePersonaggio.DRAGO, 0, 0)
+                .conElemento(ElementoIntermezzo.personaggio("sfondo", TipoPersonaggio.DRAGO, 0, 0)
                         .poi(Tappa.inSecondi(100).verso(1, 0)).ripeti(Ripetizione.CICLICA))
-                .conElemento(ElementoIntermezzo.personaggio("entrata", ClassePersonaggio.GOBLIN, 0, 0)
+                .conElemento(ElementoIntermezzo.personaggio("entrata", TipoPersonaggio.GOBLIN, 0, 0)
                         .poi(Tappa.inSecondi(5).verso(1, 0)))
                 .conBattuta(BattutaIntermezzo.di("a", "Ciao").perSecondi(2));
 
@@ -66,6 +66,6 @@ class PaginaIntermezzoTest {
 
         assertThrows(IllegalArgumentException.class, () -> pagina.conBattuta(BattutaIntermezzo.di("nessuno", "Ehi")));
         assertThrows(IllegalArgumentException.class,
-                () -> pagina.conElemento(ElementoIntermezzo.personaggio("a", ClassePersonaggio.ELFO, 0, 0)));
+                () -> pagina.conElemento(ElementoIntermezzo.personaggio("a", TipoPersonaggio.ELFO, 0, 0)));
     }
 }

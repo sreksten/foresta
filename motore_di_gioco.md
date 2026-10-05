@@ -22,7 +22,7 @@ Documenti di dettaglio su singoli sottosistemi:
 | `motore.modellodati` | I bean serializzabili (suffisso `MD`) e `ModelloDati`, il contenitore radice |
 | `tipi` | Il vocabolario condiviso da motore, modello dati e UI, che non dipende da nessun altro pacchetto: `Comando` e gli enum di dominio (attributi, tipi di danno, effetti di stato, slot e rarità degli artefatti, tipi di riposo, di negozio, di trofeo) |
 | `eventi` | Il bus (`BusEventi`) e le quattro famiglie di eventi: `comandigiocatore`, `notifiche`, `richieste`, `interni` |
-| `personaggi` | `Personaggio` (contratto), `PersonaggioBase`, le classi giocabili e i mostri, `ClassePersonaggio`, `EquipaggiamentoIniziale` |
+| `personaggi` | `Personaggio` (contratto), `PersonaggioBase`, le classi giocabili e i mostri, `FabbricaPersonaggi` (che costruisce un personaggio da un `tipi.TipoPersonaggio`), `EquipaggiamentoIniziale` |
 | `locazioni` | `Locazione`, `LocazioneBase`, le locazioni comuni, le città, i castelli, `Locanda`, `FabbricaLocazioni` |
 | `missioni` | `Missione`, `MissioneAPassi`, `Passo`, le missioni concrete (vedi i due documenti sulle missioni) |
 | `intermezzi` | Le scene a pagine (vedi §10) |
@@ -204,7 +204,7 @@ Il risultato è un `DannoRisultante`, applicato con `Personaggio.applicaRisultat
 
 ### Personaggi
 
-`Personaggio` (contratto, ricco: identità e nomi con articoli, attributi, risorse, effetti di stato, equipaggiamento, flag di situazione) è realizzato da `PersonaggioBase`, estesa da una classe concreta per ogni `ClassePersonaggio`:
+`Personaggio` (contratto, ricco: identità e nomi con articoli, attributi, risorse, effetti di stato, equipaggiamento, flag di situazione) è realizzato da `PersonaggioBase`, estesa da una classe concreta per ogni `TipoPersonaggio`:
 - **giocabili**: Guerriero/Guerriera, Ladro/Ladra, Bardo/Cantastorie, Elfo/Elfa, Mago/Maga;
 - **mostri e non giocanti**: Arpia, Centauro, Chimera, ChimeraDrago, Drago, Eremita, Fantasma, Folletto, Gargoyle, Gigante, Goblin, Hobgoblin, Idra, Lich, Minotauro, MinotauroGigante, OmbraNera, Scheletro, Spettro, Spirito, Strega, Titano, Troll, Viverna;
 - speciali: `OmbraFiamma` (la prova) e `Viandante` (chi una missione scorta).

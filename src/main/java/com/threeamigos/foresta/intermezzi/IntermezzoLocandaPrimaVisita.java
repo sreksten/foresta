@@ -4,8 +4,8 @@ import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -77,11 +77,11 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 				.conRitaglioSuSfondo()
 				.conElemento(ElementoIntermezzo.di("locandiere", ImmagineIntermezzo.risorsa("personaggi/Locandiere.gif"), X_LOCANDIERE, Y_LOCANDIERE)
 						.conBocca(0.5, -0.15))
-				.conElemento(ElementoIntermezzo.personaggio("bardo", ClassePersonaggio.BARDO, X_BARDO, Y_BARDO)
+				.conElemento(ElementoIntermezzo.personaggio("bardo", TipoPersonaggio.BARDO, X_BARDO, Y_BARDO)
 						.conBocca(0.5, -0.15));
 
 		for (int i = 0; i < personaggiVivi.size(); i++) {
-			ClassePersonaggio classe = personaggiVivi.get(i).getClasse();
+			TipoPersonaggio classe = personaggiVivi.get(i).getClasse();
 			double targetX = X_TARGET_BASE - i * DISTANZA_FRA_PERSONAGGI;
 			pagina.conElemento(ElementoIntermezzo.personaggio("personaggio" + i, classe, X_PARTENZA_PERSONAGGI, Y_BARDO)
 					.orientaNelVersoDelMoto(VersoDiDefault.di(classe))

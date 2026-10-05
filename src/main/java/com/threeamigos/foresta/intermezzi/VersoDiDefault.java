@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.intermezzi;
 
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -15,20 +15,20 @@ import java.util.Map;
  */
 public final class VersoDiDefault {
 
-	private static final Map<ClassePersonaggio, Verso> VERSI = new EnumMap<>(ClassePersonaggio.class);
+	private static final Map<TipoPersonaggio, Verso> VERSI = new EnumMap<>(TipoPersonaggio.class);
 
 	static {
-		VERSI.put(ClassePersonaggio.OMBRAFIAMMA, Verso.SINISTRA);
-		VERSI.put(ClassePersonaggio.MAGO, Verso.SINISTRA);
-		VERSI.put(ClassePersonaggio.ELFO, Verso.SINISTRA);
-		VERSI.put(ClassePersonaggio.GUERRIERO, Verso.SINISTRA);
-		VERSI.put(ClassePersonaggio.LADRO, Verso.SINISTRA);
-		VERSI.put(ClassePersonaggio.BARDO, Verso.SINISTRA);
-		VERSI.put(ClassePersonaggio.ELFA, Verso.DESTRA);
-		VERSI.put(ClassePersonaggio.GUERRIERA, Verso.DESTRA);
-		VERSI.put(ClassePersonaggio.CANTASTORIE, Verso.DESTRA);
-		VERSI.put(ClassePersonaggio.MAGA, Verso.DESTRA);
-		VERSI.put(ClassePersonaggio.LADRA, Verso.DESTRA);
+		VERSI.put(TipoPersonaggio.OMBRAFIAMMA, Verso.SINISTRA);
+		VERSI.put(TipoPersonaggio.MAGO, Verso.SINISTRA);
+		VERSI.put(TipoPersonaggio.ELFO, Verso.SINISTRA);
+		VERSI.put(TipoPersonaggio.GUERRIERO, Verso.SINISTRA);
+		VERSI.put(TipoPersonaggio.LADRO, Verso.SINISTRA);
+		VERSI.put(TipoPersonaggio.BARDO, Verso.SINISTRA);
+		VERSI.put(TipoPersonaggio.ELFA, Verso.DESTRA);
+		VERSI.put(TipoPersonaggio.GUERRIERA, Verso.DESTRA);
+		VERSI.put(TipoPersonaggio.CANTASTORIE, Verso.DESTRA);
+		VERSI.put(TipoPersonaggio.MAGA, Verso.DESTRA);
+		VERSI.put(TipoPersonaggio.LADRA, Verso.DESTRA);
 	}
 
 	private VersoDiDefault() {
@@ -37,7 +37,7 @@ public final class VersoDiDefault {
 	/**
 	 * @throws IllegalArgumentException se la classe non è una delle classi giocanti note
 	 */
-	public static Verso di(ClassePersonaggio classe) {
+	public static Verso di(TipoPersonaggio classe) {
 		Verso verso = VERSI.get(classe);
 		if (verso == null) {
 			throw new IllegalArgumentException("Verso di default non noto per la classe " + classe);
@@ -49,7 +49,7 @@ public final class VersoDiDefault {
 	 * Se, per far guardare la classe indicata nel verso voluto, occorre specchiare
 	 * l'immagine originale.
 	 */
-	public static boolean serveSpecchiare(ClassePersonaggio classe, Verso versoVoluto) {
+	public static boolean serveSpecchiare(TipoPersonaggio classe, Verso versoVoluto) {
 		return di(classe) != versoVoluto;
 	}
 }

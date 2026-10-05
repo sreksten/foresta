@@ -6,10 +6,11 @@ import com.threeamigos.foresta.incantesimi.PortataIncantesimo;
 import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
 import com.threeamigos.foresta.motore.DannoRisultante;
 import com.threeamigos.foresta.motore.FaseDiAttacco;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio.NotificaMorte;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.SupertipoDanno;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +33,7 @@ public class CombatSimulatorMatrix {
 
     static final int TURNI_MASSIMI = 100;
 
-    public static RisultatoMatrice simulaScontroGruppo(ClassePersonaggio classePg, ClassePersonaggio classeMostro,
+    public static RisultatoMatrice simulaScontroGruppo(TipoPersonaggio classePg, TipoPersonaggio classeMostro,
                                                        int quantitaMostri, int livello, int iterazioni) {
         return simulaScontroGruppo(classePg, Equipaggiamento.NESSUNO, classeMostro, quantitaMostri, livello, iterazioni);
     }
@@ -42,8 +43,8 @@ public class CombatSimulatorMatrix {
      * @throws IllegalArgumentException se la classe non può portare l'equipaggiamento
      *                                  (vedi {@link Equipaggiamento#motivoRifiuto})
      */
-    public static RisultatoMatrice simulaScontroGruppo(ClassePersonaggio classePg, Equipaggiamento equipaggiamento,
-                                                       ClassePersonaggio classeMostro, int quantitaMostri,
+    public static RisultatoMatrice simulaScontroGruppo(TipoPersonaggio classePg, Equipaggiamento equipaggiamento,
+                                                       TipoPersonaggio classeMostro, int quantitaMostri,
                                                        int livello, int iterazioni) {
         return simulaScontroGruppo(classePg, equipaggiamento, ScortaDiPergamene.NESSUNA, classeMostro, quantitaMostri,
                 livello, iterazioni);
@@ -52,8 +53,8 @@ public class CombatSimulatorMatrix {
     /**
      * @param pergamene gli incantesimi che il PG può lanciare nello scontro
      */
-    public static RisultatoMatrice simulaScontroGruppo(ClassePersonaggio classePg, Equipaggiamento equipaggiamento,
-                                                       ScortaDiPergamene pergamene, ClassePersonaggio classeMostro,
+    public static RisultatoMatrice simulaScontroGruppo(TipoPersonaggio classePg, Equipaggiamento equipaggiamento,
+                                                       ScortaDiPergamene pergamene, TipoPersonaggio classeMostro,
                                                        int quantitaMostri, int livello, int iterazioni) {
         return simulaScontroGruppo(classePg, equipaggiamento, pergamene, classeMostro, quantitaMostri, livello, livello,
                 iterazioni);
@@ -63,8 +64,8 @@ public class CombatSimulatorMatrix {
      * @param livello        il livello del PG (e del suo equipaggiamento)
      * @param livelloMostri  il livello dei mostri, per scontri più duri di quelli alla pari
      */
-    public static RisultatoMatrice simulaScontroGruppo(ClassePersonaggio classePg, Equipaggiamento equipaggiamento,
-                                                       ScortaDiPergamene pergamene, ClassePersonaggio classeMostro,
+    public static RisultatoMatrice simulaScontroGruppo(TipoPersonaggio classePg, Equipaggiamento equipaggiamento,
+                                                       ScortaDiPergamene pergamene, TipoPersonaggio classeMostro,
                                                        int quantitaMostri, int livello, int livelloMostri,
                                                        int iterazioni) {
         int vittoriePg = 0;
@@ -76,7 +77,7 @@ public class CombatSimulatorMatrix {
         StatisticheAttacco statisticheMostro = new StatisticheAttacco();
 
         for (int i = 0; i < iterazioni; i++) {
-            Personaggio pg = classePg.getIstanza(livello);
+            Personaggio pg = FabbricaPersonaggi.crea(classePg, livello);
             Optional<String> rifiuto = equipaggiamento.equipaggia(pg);
             if (rifiuto.isPresent()) {
                 throw new IllegalArgumentException(classePg + " non può portare " + equipaggiamento + " (" + rifiuto.get() + ")");
@@ -84,7 +85,7 @@ public class CombatSimulatorMatrix {
 
             List<Personaggio> mostri = new ArrayList<>();
             for (int m = 0; m < quantitaMostri; m++) {
-                mostri.add(classeMostro.getIstanza(livelloMostri));
+                mostri.add(FabbricaPersonaggi.crea(classeMostro, livelloMostri));
             }
 
             boolean vittoria = false;

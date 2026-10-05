@@ -7,7 +7,7 @@ import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.motore.GestorePunteggiInMemoria;
 import com.threeamigos.foresta.motore.PartitaDiAnteprima;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
@@ -34,7 +34,7 @@ import java.util.Locale;
  *     java -cp target/test-classes:target/classes com.threeamigos.foresta.ui.AnteprimaIntermezzo [INTERMEZZO] [opzioni]
  *
  *     INTERMEZZO            un valore di ClasseIntermezzo (default: il primo)
- *     --classe CLASSE       classe del protagonista, un valore di ClassePersonaggio (default GUERRIERO)
+ *     --classe CLASSE       classe del protagonista, un valore di TipoPersonaggio (default GUERRIERO)
  *     --nome NOME           nome del protagonista (default Aldric)
  *     --compagni C1,C2,...  classi di eventuali compagni (fino a 4, oltre al protagonista),
  *                           per testare intermezzi come l'accampamento con gruppi più numerosi
@@ -86,16 +86,16 @@ public final class AnteprimaIntermezzo {
 	public static void main(String[] args) throws IOException {
 		args = argomentiAlchimista;
 		String nomeIntermezzo = ClasseIntermezzo.values()[0].name();
-		ClassePersonaggio classe = ClassePersonaggio.GUERRIERO;
+		TipoPersonaggio classe = TipoPersonaggio.GUERRIERO;
 		String nome = "Aldric";
-		ClassePersonaggio[] compagni = {};
+		TipoPersonaggio[] compagni = {};
 		int pagina = 1;
 		String png = null;
 		double[] istanti = {0, 1, 2, 4};
 		for (int i = 0; i < args.length; i++) {
 			switch (args[i]) {
 				case "--classe":
-					classe = ClassePersonaggio.valueOf(args[++i].toUpperCase(Locale.ROOT));
+					classe = TipoPersonaggio.valueOf(args[++i].toUpperCase(Locale.ROOT));
 					break;
 				case "--nome":
 					nome = args[++i];
@@ -292,11 +292,11 @@ public final class AnteprimaIntermezzo {
 
 	// ----- Argomenti
 
-	private static ClassePersonaggio[] leggiCompagni(String elenco) {
+	private static TipoPersonaggio[] leggiCompagni(String elenco) {
 		String[] parti = elenco.split(",");
-		ClassePersonaggio[] compagni = new ClassePersonaggio[parti.length];
+		TipoPersonaggio[] compagni = new TipoPersonaggio[parti.length];
 		for (int i = 0; i < parti.length; i++) {
-			compagni[i] = ClassePersonaggio.valueOf(parti[i].trim().toUpperCase(Locale.ROOT));
+			compagni[i] = TipoPersonaggio.valueOf(parti[i].trim().toUpperCase(Locale.ROOT));
 		}
 		return compagni;
 	}

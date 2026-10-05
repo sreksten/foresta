@@ -66,7 +66,7 @@ Quando non serve più, togli `INTERMEZZO_DI_PROVA` da `ClasseIntermezzo` (è seg
 | Dal giorno N in poi | `LineaTemporale.getGiorno() >= N` |
 | Missione principale completata | `RegistroMissioni.getMissionePrincipale().isCompleta()` |
 | Il gruppo sta per entrare in un tipo di locazione | `GruppoGiocatore.getIstanza().getTipoLocazioneCorrente() == TipoLocazione.X` |
-| Nel gruppo c'è una certa classe | `GruppoGiocatore.getIstanza().getPersonaggiVivi().stream().anyMatch(p -> p.getClasse() == ClassePersonaggio.MAGO)` |
+| Nel gruppo c'è una certa classe | `GruppoGiocatore.getIstanza().getPersonaggiVivi().stream().anyMatch(p -> p.getClasse() == TipoPersonaggio.MAGO)` |
 
 Attenzione: in quel momento il gruppo si è già spostato, ma la **nuova** locazione non è ancora costruita. `getTipoLocazioneCorrente()` legge il tipo dalla casella e quindi dice già dove si sta entrando. `getLocazioneCorrente()`, invece, restituisce ancora l'oggetto della locazione precedente, con i suoi mostri e il suo stato.
 
@@ -88,7 +88,7 @@ public List<PaginaIntermezzo> getPagine() {
         // Pagina 2: scena con sfondo, un drago in lontananza, un fuoco e un dialogo
         new PaginaIntermezzo()
             .conSfondo(ImmagineIntermezzo.locazione(TipoLocazione.RADURA))
-            .conElemento(ElementoIntermezzo.personaggio("drago", ClassePersonaggio.DRAGO, 1.1, 0.25)
+            .conElemento(ElementoIntermezzo.personaggio("drago", TipoPersonaggio.DRAGO, 1.1, 0.25)
                 .conScala(0.4).conOpacita(0.6)                      // piccolo e semitrasparente
                 .poi(Tappa.inSecondi(8).verso(-0.1, 0.15))          // attraversa il cielo
                 .ripeti(Ripetizione.AVANTI_E_INDIETRO)              // e torna indietro
@@ -96,7 +96,7 @@ public List<PaginaIntermezzo> getPagine() {
             .conElemento(ElementoIntermezzo.di("fuoco",
                 ImmagineIntermezzo.animazione(Animazione.FUOCO_DA_CAMPO), 0.5, 0.76))
             .conElemento(ElementoIntermezzo.personaggio("eroe", capo.getClasse(), 0.3, 0.7))
-            .conElemento(ElementoIntermezzo.personaggio("eremita", ClassePersonaggio.EREMITA, 1.1, 0.7)
+            .conElemento(ElementoIntermezzo.personaggio("eremita", TipoPersonaggio.EREMITA, 1.1, 0.7)
                 .specchiato()                                        // guarda verso l'eroe
                 .poi(Tappa.inSecondi(2).verso(0.7, 0.7)))           // entra da destra
             .conBattuta(BattutaIntermezzo.di("eremita", "Chi va là?").daSecondo(2))
@@ -148,7 +148,7 @@ Un'immagine si indica con `ImmagineIntermezzo`:
 
 | Tipo | Come | Note |
 | :--- | :--- | :--- |
-| Personaggio | `ImmagineIntermezzo.personaggio(ClassePersonaggio.X)` oppure la scorciatoia `ElementoIntermezzo.personaggio(id, classe, x, y)` | Le stesse immagini delle locazioni |
+| Personaggio | `ImmagineIntermezzo.personaggio(TipoPersonaggio.X)` oppure la scorciatoia `ElementoIntermezzo.personaggio(id, classe, x, y)` | Le stesse immagini delle locazioni |
 | Illustrazione di una locazione | `ImmagineIntermezzo.locazione(TipoLocazione.X)` | Adatta come sfondo |
 | Risorsa qualsiasi | `ImmagineIntermezzo.risorsa("intermezzi/Tramonto.png")` | Percorso relativo a `src/main/resources/com/threeamigos/foresta/img/` |
 | Sprite sheet | `ImmagineIntermezzo.spriteSheet("intermezzi/Pipistrello.png", colonne, righe, fotogrammiAlSecondo)` | Vedi sotto |
@@ -180,7 +180,7 @@ Uno sprite sheet è un'immagine divisa in una griglia di **fotogrammi della stes
 Ogni `ElementoIntermezzo` parte da uno **stato iniziale**: posizione data alla creazione, `conScala(s)`, `conOpacita(o)` (da 0 invisibile a 1 pieno), `specchiato()`. Poi percorre una sequenza di **tappe**, in modo lineare:
 
 ```java
-ElementoIntermezzo.personaggio("goblin", ClassePersonaggio.GOBLIN, -0.1, 0.7)
+ElementoIntermezzo.personaggio("goblin", TipoPersonaggio.GOBLIN, -0.1, 0.7)
     .conOpacita(0)
     .poi(Tappa.inSecondi(1).verso(0.2, 0.7).conOpacita(1))  // entra da sinistra comparendo
     .attendi(3)                                               // resta fermo 3 secondi

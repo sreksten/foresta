@@ -11,8 +11,9 @@ import com.threeamigos.foresta.motore.CalcolatoreCombattimento;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.DannoRisultante;
 import com.threeamigos.foresta.motore.FaseDiAttacco;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 
@@ -68,15 +69,15 @@ public class TestScontriDiGruppo {
         BusEventi.impostaConsegna(Runnable::run);
         System.setOut(NULL_STREAM);
         try {
-            List<List<ClassePersonaggio>> gruppi = Arrays.asList(
-                    Arrays.asList(ClassePersonaggio.GUERRIERO, ClassePersonaggio.LADRO, ClassePersonaggio.MAGO),
-                    Arrays.asList(ClassePersonaggio.GUERRIERO, ClassePersonaggio.BARDO, ClassePersonaggio.ELFO),
-                    Arrays.asList(ClassePersonaggio.GUERRIERO, ClassePersonaggio.LADRO, ClassePersonaggio.ELFO,
-                            ClassePersonaggio.MAGO),
-                    Arrays.asList(ClassePersonaggio.GUERRIERO, ClassePersonaggio.LADRO, ClassePersonaggio.ELFO,
-                            ClassePersonaggio.BARDO, ClassePersonaggio.MAGO));
-            List<ClassePersonaggio> boss = Arrays.asList(ClassePersonaggio.IDRA, ClassePersonaggio.MINOTAURO_GIGANTE,
-                    ClassePersonaggio.STREGA, ClassePersonaggio.LICH, ClassePersonaggio.DRAGO);
+            List<List<TipoPersonaggio>> gruppi = Arrays.asList(
+                    Arrays.asList(TipoPersonaggio.GUERRIERO, TipoPersonaggio.LADRO, TipoPersonaggio.MAGO),
+                    Arrays.asList(TipoPersonaggio.GUERRIERO, TipoPersonaggio.BARDO, TipoPersonaggio.ELFO),
+                    Arrays.asList(TipoPersonaggio.GUERRIERO, TipoPersonaggio.LADRO, TipoPersonaggio.ELFO,
+                            TipoPersonaggio.MAGO),
+                    Arrays.asList(TipoPersonaggio.GUERRIERO, TipoPersonaggio.LADRO, TipoPersonaggio.ELFO,
+                            TipoPersonaggio.BARDO, TipoPersonaggio.MAGO));
+            List<TipoPersonaggio> boss = Arrays.asList(TipoPersonaggio.IDRA, TipoPersonaggio.MINOTAURO_GIGANTE,
+                    TipoPersonaggio.STREGA, TipoPersonaggio.LICH, TipoPersonaggio.DRAGO);
             int[][] scorte = {{0, 0}, {3, 2}};  // {pergamene di fuoco, pozioni di salute}
             int iterazioni = 300;
             for (int livello : new int[]{3, 5, 8}) {
@@ -84,22 +85,22 @@ public class TestScontriDiGruppo {
                     out.printf("%n== livello %d, %d pergamene di fuoco e %d pozioni: vittorie / turni / caduti / salute residua del gruppo%n",
                             livello, scorta[0], scorta[1]);
                     StringBuilder testata = new StringBuilder(String.format("%-28s", "avversari"));
-                    for (List<ClassePersonaggio> gruppo : gruppi) {
+                    for (List<TipoPersonaggio> gruppo : gruppi) {
                         testata.append(String.format(" | %-26s", sigla(gruppo)));
                     }
                     out.println(testata);
                     List<Object[]> avversari = new ArrayList<>();
-                    for (ClassePersonaggio b : boss) {
+                    for (TipoPersonaggio b : boss) {
                         avversari.add(new Object[]{b, 1});
                     }
-                    avversari.add(new Object[]{ClassePersonaggio.TROLL, -1});
-                    avversari.add(new Object[]{ClassePersonaggio.GOBLIN, -1});
+                    avversari.add(new Object[]{TipoPersonaggio.TROLL, -1});
+                    avversari.add(new Object[]{TipoPersonaggio.GOBLIN, -1});
                     for (Object[] avversario : avversari) {
-                        ClassePersonaggio classe = (ClassePersonaggio) avversario[0];
+                        TipoPersonaggio classe = (TipoPersonaggio) avversario[0];
                         int quantitaFissa = (Integer) avversario[1];
                         StringBuilder riga = new StringBuilder(String.format("%-28s",
                                 classe + (quantitaFissa > 0 ? "" : " (massimo per il gruppo)")));
-                        for (List<ClassePersonaggio> gruppo : gruppi) {
+                        for (List<TipoPersonaggio> gruppo : gruppi) {
                             int quantita = quantitaFissa > 0 ? quantitaFissa
                                     : Math.min(LocazioneBase.numeroMassimoDiMostri(livello, gruppo.size()), quantitaMassima(classe));
                             int vittorie = 0;
@@ -129,9 +130,9 @@ public class TestScontriDiGruppo {
         }
     }
 
-    private static String sigla(List<ClassePersonaggio> gruppo) {
+    private static String sigla(List<TipoPersonaggio> gruppo) {
         StringBuilder sb = new StringBuilder();
-        for (ClassePersonaggio classe : gruppo) {
+        for (TipoPersonaggio classe : gruppo) {
             if (sb.length() > 0) {
                 sb.append('+');
             }
@@ -140,19 +141,19 @@ public class TestScontriDiGruppo {
         return sb.toString();
     }
 
-    Esito scontro(List<ClassePersonaggio> classi, ClassePersonaggio classeAvversari, int quantita, int livello,
+    Esito scontro(List<TipoPersonaggio> classi, TipoPersonaggio classeAvversari, int quantita, int livello,
                   int pergamene, int pozioni) {
         ModelloDati.setIstanza(new ModelloDati());
         List<Personaggio> gruppo = new ArrayList<>();
-        for (ClassePersonaggio classe : classi) {
-            Personaggio pg = classe.getIstanza(livello);
+        for (TipoPersonaggio classe : classi) {
+            Personaggio pg = FabbricaPersonaggi.crea(classe, livello);
             Equipaggiamento.tipiciPer(classe).get(0).equipaggia(pg);
             gruppo.add(pg);
         }
         Personaggio capo = gruppo.get(0);
         List<Personaggio> avversari = new ArrayList<>();
         for (int i = 0; i < quantita; i++) {
-            avversari.add(classeAvversari.getIstanza(livello));
+            avversari.add(FabbricaPersonaggi.crea(classeAvversari, livello));
         }
         int[] scorta = {pergamene, pozioni};
         int prossimoAttaccante = 0;
@@ -276,7 +277,7 @@ public class TestScontriDiGruppo {
         if (vivi.isEmpty()) {
             return null;
         }
-        for (ClassePersonaggio preferito : Arrays.asList(ClassePersonaggio.MAGO, ClassePersonaggio.ELFO)) {
+        for (TipoPersonaggio preferito : Arrays.asList(TipoPersonaggio.MAGO, TipoPersonaggio.ELFO)) {
             for (Personaggio p : vivi) {
                 if (p.getClasse() == preferito) {
                     return p;
@@ -411,8 +412,8 @@ public class TestScontriDiGruppo {
         return null;
     }
 
-    private static int quantitaMassima(ClassePersonaggio classe) {
-        classe.getIstanza(1);
-        return classe.getQuantitaMassima();
+    private static int quantitaMassima(TipoPersonaggio classe) {
+        FabbricaPersonaggi.crea(classe, 1);
+        return FabbricaPersonaggi.quantitaMassima(classe);
     }
 }

@@ -8,6 +8,7 @@ import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tools.Misc;
 
@@ -97,7 +98,7 @@ public class IncaricoDiCombattimento extends IncaricoInCitta {
 	 */
 	private String getNomeDeiNemici() {
 		CombattimentoRichiesto incarico = getIncarico();
-		Personaggio modello = incarico.getNemico().getMoltiplicatoriDiClasse();
+		Personaggio modello = FabbricaPersonaggi.modello(incarico.getNemico());
 		if (incarico.getNumero() == 1) {
 			String nemico = modello.getADS() + modello.getNomeSingolare();
 			return incarico.isConCapo() ? getCapo() + ", " + nemico : nemico;

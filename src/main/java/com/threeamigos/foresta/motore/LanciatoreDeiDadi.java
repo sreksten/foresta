@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  *
@@ -72,7 +72,7 @@ public class LanciatoreDeiDadi {
     private static final int[] STREGA = { 7, 13, 10, 25, 20, 20, 5 };
     private static final int[] DRAGO = { 22, 11, 20, 14, 13, 16, 4 };
 
-    static int[] getPercentualiPer(ClassePersonaggio classePersonaggio) {
+    static int[] getPercentualiPer(TipoPersonaggio classePersonaggio) {
         switch (classePersonaggio) {
             case ARPIA: return ARPIA;
             case BARDO:
@@ -115,7 +115,7 @@ public class LanciatoreDeiDadi {
         }
     }
 
-    private static int getPuntiDaDistribuire(ClassePersonaggio classePersonaggio, int livello) {
+    private static int getPuntiDaDistribuire(TipoPersonaggio classePersonaggio, int livello) {
         if (livello < 1) livello = 1;
         int livelloModificato = livello - 1;
 
@@ -149,7 +149,7 @@ public class LanciatoreDeiDadi {
         }
     }
 
-    public static void tiraDadiPer(ClassePersonaggio classePersonaggio, int livello, PersonaggioMD md) {
+    public static void tiraDadiPer(TipoPersonaggio classePersonaggio, int livello, PersonaggioMD md) {
         int puntiDaDistribuire = getPuntiDaDistribuire(classePersonaggio, livello);
         int[] percentuali = getPercentualiPer(classePersonaggio);
 
@@ -224,8 +224,8 @@ public class LanciatoreDeiDadi {
         int resto = budgetTotaleAtteso - sommaAttuale;
 
         // Assegniamo il resto degli arrotondamenti alla statistica chiave dell'archetipo
-        if (classePersonaggio == ClassePersonaggio.MAGO || classePersonaggio == ClassePersonaggio.MAGA ||
-                classePersonaggio == ClassePersonaggio.LICH || classePersonaggio == ClassePersonaggio.STREGA) {
+        if (classePersonaggio == TipoPersonaggio.MAGO || classePersonaggio == TipoPersonaggio.MAGA ||
+                classePersonaggio == TipoPersonaggio.LICH || classePersonaggio == TipoPersonaggio.STREGA) {
             intelligenzaInt += resto;
         } else {
             forzaInt += resto;

@@ -6,9 +6,9 @@ import com.threeamigos.foresta.missioni.IlCorriere;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Spedizione;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
 import java.util.HashSet;
@@ -155,7 +155,7 @@ class ScenarioCorriereTest {
             IlCorriere contrabbando = prendiLIncarico(IlContrabbandiere.class, VINO, TipoLocazione.CITTA_RUUNA);
             // Il corriere normale invece può combattere quanto vuole
             IlCorriere corriere = prendiLIncarico(LETTERA, TipoLocazione.CITTA_RUUNA);
-            partita.pubblica(new InternoAvversarioSconfitto(ClassePersonaggio.GOBLIN));
+            partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.GOBLIN));
             contrabbando.controllaPostLocazione();
             corriere.controllaPostLocazione();
             assertTrue(contrabbando.isFallita());

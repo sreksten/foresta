@@ -2,6 +2,7 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
 
 import java.util.function.Function;
@@ -22,17 +23,17 @@ public class Bardo extends PersonaggioBase implements Personaggio {
 	public Personaggio.Sesso getSesso() { return Personaggio.Sesso.MASCHIO; }
 
 	public Bardo(int livello) {
-		super(ClassePersonaggio.BARDO, livello);
+		super(TipoPersonaggio.BARDO, livello);
 	}
 
 	public Bardo(String nome, int livello) {
-		super(nome, ClassePersonaggio.BARDO, livello);
+		super(nome, TipoPersonaggio.BARDO, livello);
 	}
 
 	/**
 	 * Per chi ha le caratteristiche del bardo sotto un'altra classe (vedi Viandante).
 	 */
-	protected Bardo(String nome, ClassePersonaggio classe, int livello) {
+	protected Bardo(String nome, TipoPersonaggio classe, int livello) {
 		super(nome, classe, livello);
 	}
 	

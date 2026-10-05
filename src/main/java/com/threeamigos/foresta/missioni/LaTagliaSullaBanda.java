@@ -8,8 +8,8 @@ import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.personaggi.ClassePersonaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * In città c'è una taglia sul capo di una banda di hobgoblin che si nasconde in un bosco: la missione rivendica il
@@ -40,7 +40,7 @@ public class LaTagliaSullaBanda extends IncaricoInCitta {
 	 * La banda di hobgoblin, con il suo capo.
 	 */
 	public IncontroDiMissione getBanda() {
-		return IncontroDiMissione.di(ClassePersonaggio.HOBGOBLIN, HOBGOBLIN).conCapo(getCapobanda());
+		return IncontroDiMissione.di(TipoPersonaggio.HOBGOBLIN, HOBGOBLIN).conCapo(getCapobanda());
 	}
 
 	@Override
