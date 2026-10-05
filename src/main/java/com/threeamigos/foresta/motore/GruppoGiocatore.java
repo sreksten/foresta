@@ -163,7 +163,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		md.setIncantesimi(ClasseIncantesimo.ARIA, 3);
 		md.setIncantesimi(ClasseIncantesimo.ACQUA, 3);
 		md.setIncantesimi(ClasseIncantesimo.TERRA, 3);
-		md.setPozioniSalute(0);
+		md.setPozioniSalute(Costanti.POZIONI_SALUTE_INIZIALI);
 		md.setPozioniSaluteGrande(0);
 		md.setPozioniMagia(0);
 		md.setPozioniMagiaGrande(0);

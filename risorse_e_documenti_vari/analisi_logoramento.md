@@ -4,7 +4,7 @@ Domanda: perché in una partita normale (non di prova) il protagonista muore dop
 
 Strumento: `TestLogoramentoInizioPartita` (nei test, pacchetto `motore.modellodati`, `@Disabled`, da lanciare a mano). Riusa i metodi di `CombatSimulatorMatrix` e riproduce le condizioni reali di inizio partita:
 
-- protagonista di **livello 1**, **da solo**, con la **dotazione di base** di `EquipaggiamentoIniziale` (Guerriero spada e scudo; Ladro, Elfo e Bardo spada e veste; Mago bastone e veste), **senza monete né pozioni** (`GruppoGiocatoreMD.reimposta`);
+- protagonista di **livello 1**, **da solo**, con la **dotazione di base** di `EquipaggiamentoIniziale` (Guerriero spada e scudo; Ladro, Elfo e Bardo spada e veste; Mago bastone e veste), **senza pozioni e senza usare pergamene**. *Correzione (2026-10-05): il gruppo in realtà parte con 100 monete, 5 preziosi e 3 pergamene ciascuna di Aria, Acqua e Terra (`GruppoGiocatore.reimposta`); il simulatore non le usa, quindi il gioco vero è un po' più facile di quanto misurato qui.*;
 - incontri come in `LocazioneBase.crea` per bosco e radura: uno dei 14 mostri a caso, da 1 a `min(2, massimo per locazione)` esemplari fino al livello 5, **al livello del mondo** (qui quello del protagonista); un incontro il 90% delle volte, sempre alla prima locazione, mai l'Eremita alla prima;
 - la salute **non si rigenera** fra uno scontro e l'altro (`getRigenerazioneSalute` è mostrata nell'inventario ma nessuno la usa), la stanchezza cresce di 1 per locazione, l'esperienza dei mostri uccisi fa salire di livello.
 
@@ -149,6 +149,8 @@ Decise con l'autore dopo i §1-5:
 | Mago | 2,4 | 10,1 | 97% | 61% | 5,8 | 1,9 | 11,3 |
 
 Recupero e inizio morbido servono entrambi. Il Bardo resta il più debole (il suo ruolo di supporto non c'è ancora).
+
+**Pozioni iniziali** (`Costanti.POZIONI_SALUTE_INIZIALI`, 2 dal 2026-10-05, bevute sotto il 35% della salute): Guerriero 13,5 locazioni in media, Ladro 8,0, Elfo 7,7, Bardo 6,0, Mago 11,1; arriva ad almeno 5 locazioni il 76-100%. Le pergamene iniziali (3 di Aria, Acqua e Terra) non sono ancora simulate.
 
 ### La dotazione di livello 1 ai livelli successivi
 
