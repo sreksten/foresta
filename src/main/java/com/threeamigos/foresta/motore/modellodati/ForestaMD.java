@@ -71,10 +71,10 @@ public class ForestaMD implements Serializzabile {
 	 * essere stata portata a termine. Restano invece "visitata" e "conosciuta",
 	 * che sono della casella e non di quel che ci si trova sopra.
 	 */
-	public final void impostaLocazione(CoordinateMD coordinate, TipoLocazione classeLocazione) {
+	public final void impostaLocazione(CoordinateMD coordinate, TipoLocazione tipoLocazione) {
 		int offset = offset(coordinate.getX(), coordinate.getY());
 		LocazioneMD precedente = arrayLocazioni[offset];
-		LocazioneMD locazioneMD = new LocazioneMD(classeLocazione);
+		LocazioneMD locazioneMD = new LocazioneMD(tipoLocazione);
 		if (precedente != null) {
 			trasferisciProprieta(precedente, locazioneMD, LocazioneMD.VISITATA);
 			trasferisciProprieta(precedente, locazioneMD, LocazioneMD.CONOSCIUTA);
@@ -89,30 +89,30 @@ public class ForestaMD implements Serializzabile {
 		}
 	}
 
-	public final CoordinateMD ottieniCoordinateLocazioneUnica(TipoLocazione classeLocazione) {
-		return locazioniUniche.get(classeLocazione);
+	public final CoordinateMD ottieniCoordinateLocazioneUnica(TipoLocazione tipoLocazione) {
+		return locazioniUniche.get(tipoLocazione);
 	}
 
-	public final void aggiungiLocazioneUnica(TipoLocazione classeLocazione, CoordinateMD coordinate) {
-		locazioniUniche.put(classeLocazione, coordinate);
+	public final void aggiungiLocazioneUnica(TipoLocazione tipoLocazione, CoordinateMD coordinate) {
+		locazioniUniche.put(tipoLocazione, coordinate);
 	}
 	
-	public final void rimuoviLocazioneUnica(TipoLocazione classeLocazione) {
-		locazioniUniche.remove(classeLocazione);
+	public final void rimuoviLocazioneUnica(TipoLocazione tipoLocazione) {
+		locazioniUniche.remove(tipoLocazione);
 	}
 
 	public LocazioneMD ottieniLocazioneMD(CoordinateMD coordinate) {
 		return arrayLocazioni[offset(coordinate.getX(), coordinate.getY())];
 	}
 
-	public TipoLocazione ottieniClasseLocazione(CoordinateMD coordinate) {
-		return ottieniClasseLocazione(coordinate.getX(), coordinate.getY());
+	public TipoLocazione ottieniTipoLocazione(CoordinateMD coordinate) {
+		return ottieniTipoLocazione(coordinate.getX(), coordinate.getY());
 	}
 
-	public TipoLocazione ottieniClasseLocazione(int x, int y) {
+	public TipoLocazione ottieniTipoLocazione(int x, int y) {
 		LocazioneMD locazioneMD = arrayLocazioni[offset(x, y)];
 		// Durante la costruzione della Foresta le caselle non ancora assegnate sono vuote
-		return locazioneMD == null ? null : locazioneMD.getClasse();
+		return locazioneMD == null ? null : locazioneMD.getTipo();
 	}
 
 	public void reimposta(int dimensioneX, int dimensioneY) {
@@ -215,8 +215,8 @@ public class ForestaMD implements Serializzabile {
 			arrayLocazioni[indice] = locazioneMD;
 			int x = indice % dimensioneX;
 			int y = indice / dimensioneX;
-			if (locazioneMD.getClasse().isLocazioneUnica()) {
-				locazioniUniche.put(locazioneMD.getClasse(), new CoordinateMD(x, y));
+			if (locazioneMD.getTipo().isLocazioneUnica()) {
+				locazioniUniche.put(locazioneMD.getTipo(), new CoordinateMD(x, y));
 			}
 			if (locazioneMD.ottieniProprieta(LocazioneMD.CONOSCIUTA) != null) {
 				aggiornaEstremiConosciuti(x, y);

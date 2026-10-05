@@ -16,7 +16,7 @@ import com.threeamigos.foresta.tools.Misc;
 public class Rovine extends LocazioneBase {
 
 	@Override
-	public TipoLocazione getClasseLocazione() {
+	public TipoLocazione getTipoLocazione() {
 		return TipoLocazione.ROVINE;
 	}
 

@@ -126,7 +126,7 @@ public class LaLealta extends MissioneAPassi {
 	}
 
 	private List<PaginaIntermezzo> getPagineDelRingraziamento() {
-		return ScenaFraCompagni.in(GruppoGiocatore.getIstanza().getClasseLocazioneCorrente(),
+		return ScenaFraCompagni.in(GruppoGiocatore.getIstanza().getTipoLocazioneCorrente(),
 						getNomeDelCompagno() + " ha qualcosa da dire.", inScena())
 				.parlaIlPrimo(testo(getLealta().getRingraziamento()))
 				.getPagine();

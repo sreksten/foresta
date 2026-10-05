@@ -51,16 +51,16 @@ class ScenarioOggettoSmarritoTest {
             assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(posto));
             assertTrue(Foresta.isLocazioneConosciuta(posto));
             assertTrue(Math.abs(casella.getX() - posto.getX()) + Math.abs(casella.getY() - posto.getY()) <= LOggettoSmarrito.RAGGIO);
-            TipoLocazione classe = Foresta.getLocazione(casella);
-            assertTrue(classe.getCategoria() == CategoriaLocazione.STANDARD && classe != TipoLocazione.LOCANDA, String.valueOf(classe));
+            TipoLocazione tipo = Foresta.getLocazione(casella);
+            assertTrue(tipo.getCategoria() == CategoriaLocazione.STANDARD && tipo != TipoLocazione.LOCANDA, String.valueOf(tipo));
             assertEquals("La fede nuziale del mugnaio", smarrito.getNome());
             assertTrue(smarrito.getDescrizione().startsWith("Cerca la fede nuziale che il mugnaio di Nyena ha perso vicino"), smarrito.getDescrizione());
 
             // La fede sta in quella casella, anche se già visitata, e in nessun'altra
-            assertTrue(smarrito.getOggettoInLocazione(casella, classe, true).isPresent());
+            assertTrue(smarrito.getOggettoInLocazione(casella, tipo, true).isPresent());
             CoordinateMD altrove = new CoordinateMD(casella.getX() + LOggettoSmarrito.RAGGIO * 2 + 1, casella.getY());
             for (int i = 0; i < 50; i++) {
-                assertFalse(smarrito.getOggettoInLocazione(altrove, classe, false).isPresent());
+                assertFalse(smarrito.getOggettoInLocazione(altrove, tipo, false).isPresent());
             }
 
             // Niente ripiego, anche dopo giorni

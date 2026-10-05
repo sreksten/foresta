@@ -12,7 +12,7 @@ import com.threeamigos.foresta.tipi.TipoRiposo;
 public class Radura extends LocazioneBase {
 
 	@Override
-	public TipoLocazione getClasseLocazione() {
+	public TipoLocazione getTipoLocazione() {
 		return TipoLocazione.RADURA;
 	}
 

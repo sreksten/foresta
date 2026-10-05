@@ -10,7 +10,7 @@ import com.threeamigos.foresta.tipi.TipoRiposo;
 public class CastelloDrago extends LocazioneUnica {
 
 	@Override
-	public TipoLocazione getClasseLocazione() {
+	public TipoLocazione getTipoLocazione() {
 		return TipoLocazione.CASTELLO_DRAGO;
 	}
 
@@ -30,7 +30,7 @@ public class CastelloDrago extends LocazioneUnica {
 		if (isCompleta()) {
 			LineaTemporale.setDragoSconfitto(true);
 			g.setLocazioneCorrenteVisitata();
-			Foresta.distruggiLocazioneUnica(getClasseLocazione(), TipoLocazione.ROVINE);
+			Foresta.distruggiLocazioneUnica(getTipoLocazione(), TipoLocazione.ROVINE);
 		}
 	}
 

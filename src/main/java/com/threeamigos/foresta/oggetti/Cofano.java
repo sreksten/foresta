@@ -53,11 +53,11 @@ public class Cofano extends OggettoBase implements Oggetto {
 
 	@Override
 	public boolean prendi(GruppoGiocatore gruppo, Comando azione) {
-		TipoLocazione classeLocazione = gruppo.getClasseLocazioneCorrente();
+		TipoLocazione tipoLocazione = gruppo.getTipoLocazioneCorrente();
 		int min;
 		int max;
 		int tipo;
-		if (classeLocazione.getCategoria() == CategoriaLocazione.CASTELLO) {
+		if (tipoLocazione.getCategoria() == CategoriaLocazione.CASTELLO) {
 			min = 1;
 			max = 6;
 		} else {

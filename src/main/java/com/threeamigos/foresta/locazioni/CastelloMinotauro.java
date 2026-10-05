@@ -11,7 +11,7 @@ import com.threeamigos.foresta.tipi.TipoRiposo;
 public class CastelloMinotauro extends LocazioneUnica {
 
 	@Override
-	public TipoLocazione getClasseLocazione() {
+	public TipoLocazione getTipoLocazione() {
 		return TipoLocazione.CASTELLO_MINOTAURO;
 	}
 
@@ -31,7 +31,7 @@ public class CastelloMinotauro extends LocazioneUnica {
 	public void azzeraLocazione(GruppoGiocatore g) {
 		if (isCompleta()) {
 			g.setLocazioneCorrenteVisitata();
-			Foresta.distruggiLocazioneUnica(getClasseLocazione(), TipoLocazione.ROVINE);
+			Foresta.distruggiLocazioneUnica(getTipoLocazione(), TipoLocazione.ROVINE);
 		}
 	}
 

@@ -57,11 +57,11 @@ public final class OggettoSmarrito {
 		proprietario = campi[2].trim();
 		List<TipoLocazione> dove = new ArrayList<>();
 		for (String posto : campi[3].trim().split("\\s+")) {
-			TipoLocazione classe = TipoLocazione.valueOf(posto);
-			if (!POSTI.contains(classe)) {
+			TipoLocazione tipo = TipoLocazione.valueOf(posto);
+			if (!POSTI.contains(tipo)) {
 				throw new IllegalArgumentException("I posti sono fra " + POSTI + ": " + riga);
 			}
-			dove.add(classe);
+			dove.add(tipo);
 		}
 		posti = Collections.unmodifiableList(dove);
 		monete = Integer.parseInt(campi[4].trim());

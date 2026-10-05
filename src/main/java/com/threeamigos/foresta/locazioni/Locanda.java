@@ -85,7 +85,7 @@ public class Locanda extends LocazioneBase {
 
 
 	@Override
-	public TipoLocazione getClasseLocazione() {
+	public TipoLocazione getTipoLocazione() {
 		return TipoLocazione.LOCANDA;
 	}
 
@@ -118,7 +118,7 @@ public class Locanda extends LocazioneBase {
 	}
 
 	public static void impostaDatiLocanda(LocazioneMD modelloDati, ProduttoreDiTestiCasuale.DatiLocanda datiLocanda) {
-		if (modelloDati.getClasse() == TipoLocazione.LOCANDA) {
+		if (modelloDati.getTipo() == TipoLocazione.LOCANDA) {
 			modelloDati.setNome(datiLocanda.getNome());
 		} else {
 			modelloDati.aggiungiProprieta(LOCANDA_NOME_IN_CITTA, datiLocanda.getNome());
@@ -147,7 +147,7 @@ public class Locanda extends LocazioneBase {
 	 * Il nome della locanda della casella, nel bosco o in una città.
 	 */
 	public static String getNome(LocazioneMD modelloDati) {
-		return modelloDati.getClasse() == TipoLocazione.LOCANDA ? modelloDati.getNome() : modelloDati.ottieniProprieta(LOCANDA_NOME_IN_CITTA);
+		return modelloDati.getTipo() == TipoLocazione.LOCANDA ? modelloDati.getNome() : modelloDati.ottieniProprieta(LOCANDA_NOME_IN_CITTA);
 	}
 
 	private String getNomeLocandiere() {

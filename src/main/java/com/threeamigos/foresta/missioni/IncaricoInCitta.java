@@ -158,7 +158,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 			case INCARICO:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::isIncaricoDaOffrire)
 						.esegui(() -> {
-							aggiungiProprieta(CITTA, gruppo.getClasseLocazioneCorrente().name());
+							aggiungiProprieta(CITTA, gruppo.getTipoLocazioneCorrente().name());
 							allIncarico();
 						})
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaIncarico().getPagine())
@@ -213,9 +213,9 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	}
 
 	private boolean inUnaCitta() {
-		TipoLocazione classe = GruppoGiocatore.getIstanza().getClasseLocazioneCorrente();
-		return classe != null && classe.getCategoria() == CategoriaLocazione.CITTA
-				&& !LineaTemporale.isCittaDistrutta(classe);
+		TipoLocazione tipo = GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();
+		return tipo != null && tipo.getCategoria() == CategoriaLocazione.CITTA
+				&& !LineaTemporale.isCittaDistrutta(tipo);
 	}
 
 	protected final boolean nellaCitta() {

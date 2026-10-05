@@ -351,16 +351,16 @@ class SimulazionePartiteTest {
 				chiudiScontro();
 				locazione = corrente;
 				if (corrente != null) {
-					TipoLocazione classe = corrente.getClasseLocazione();
-					if (classe == TipoLocazione.LOCANDA) {
+					TipoLocazione tipo = corrente.getTipoLocazione();
+					if (tipo == TipoLocazione.LOCANDA) {
 						risultato.visiteLocande++;
-					} else if (classe.getCategoria() == CategoriaLocazione.CITTA) {
+					} else if (tipo.getCategoria() == CategoriaLocazione.CITTA) {
 						risultato.visiteCitta++;
 					} else {
 						List<Personaggio> avversari = GruppoAvversario.getIstanza().getPersonaggiVivi();
 						if (!avversari.isEmpty()) {
 							scontro = new Scontro(avversari.get(0).getClasse(),
-									classe.getCategoria() == CategoriaLocazione.CASTELLO);
+									tipo.getCategoria() == CategoriaLocazione.CASTELLO);
 							risultato.scontri.add(scontro);
 						}
 					}
@@ -423,8 +423,8 @@ class SimulazionePartiteTest {
 				risultato.moneteSpese += monetePrima - monete;
 			}
 			if (gruppo.getNumeroPersonaggi() > personaggiPrima && locazione != null) {
-				TipoLocazione classe = locazione.getClasseLocazione();
-				if (classe == TipoLocazione.LOCANDA || classe.getCategoria() == CategoriaLocazione.CITTA) {
+				TipoLocazione tipo = locazione.getTipoLocazione();
+				if (tipo == TipoLocazione.LOCANDA || tipo.getCategoria() == CategoriaLocazione.CITTA) {
 					risultato.reclutati += gruppo.getNumeroPersonaggi() - personaggiPrima;
 				} else {
 					risultato.mercenari += gruppo.getNumeroPersonaggi() - personaggiPrima;

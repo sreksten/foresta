@@ -25,7 +25,7 @@ public class LaLeggendaDelLocandiere extends LaLeggenda {
 	@Override
 	protected boolean isPostoDelRacconto() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		if (gruppo.getClasseLocazioneCorrente() != TipoLocazione.LOCANDA) {
+		if (gruppo.getTipoLocazioneCorrente() != TipoLocazione.LOCANDA) {
 			return false;
 		}
 		String visite = Foresta.getLocazioneMD(gruppo.getCoordinate()).ottieniProprieta(Locanda.LOCANDA_VISITE);

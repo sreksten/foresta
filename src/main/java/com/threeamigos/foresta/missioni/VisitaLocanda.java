@@ -28,11 +28,11 @@ public class VisitaLocanda extends MissioneBase {
 		super(ClasseMissione.VISITA_LOCANDA);
 	}
 
-	public void setCitta(TipoLocazione classeCitta) {
-		if (classeCitta.getCategoria() != CategoriaLocazione.CITTA) {
-			throw new IllegalArgumentException(classeCitta.name() + " non è una città");
+	public void setCitta(TipoLocazione tipoCitta) {
+		if (tipoCitta.getCategoria() != CategoriaLocazione.CITTA) {
+			throw new IllegalArgumentException(tipoCitta.name() + " non è una città");
 		}
-		aggiungiProprieta(CITTA, classeCitta.name());
+		aggiungiProprieta(CITTA, tipoCitta.name());
 	}
 
 	@Override
@@ -55,7 +55,7 @@ public class VisitaLocanda extends MissioneBase {
 		if (nome != null) {
 			return nome;
 		}
-		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(getClasseCitta());
+		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(getTipoCitta());
 		if (coordinate == null) {
 			return "locanda perduta";
 		}
@@ -73,7 +73,7 @@ public class VisitaLocanda extends MissioneBase {
 			// missione che le contiene, ed è quella ad annunciarsi
 			getNomeLocanda();
 			attivaMissione();
-		} else if (!isCompleta() && getClasseCitta() != null && LineaTemporale.isCittaDistrutta(getClasseCitta())) {
+		} else if (!isCompleta() && getTipoCitta() != null && LineaTemporale.isCittaDistrutta(getTipoCitta())) {
 			// Distrutta la citta', la sua locanda non c'e' piu'
 			BusEventi.pubblica(new NotificaTestoParagrafo("La '" + getNomeLocanda() + "' è andata distrutta con la sua città: una tappa che non si potrà più fare."));
 			fallisciMissione();
@@ -87,21 +87,21 @@ public class VisitaLocanda extends MissioneBase {
 
 	@Override
 	public void controllaPostLocazione() {
-		TipoLocazione classeCitta = getClasseCitta();
-		if (isCompleta() || classeCitta == null) {
+		TipoLocazione tipoCitta = getTipoCitta();
+		if (isCompleta() || tipoCitta == null) {
 			return;
 		}
 		// La casella della città si ricorda della bevuta, quindi non serve né
 		// trovarsi lì né sapere quale istanza l'ha ospitata.
-		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(classeCitta);
+		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(tipoCitta);
 		if (coordinate != null && Foresta.getLocazioneMD(coordinate).ottieniProprieta(Locanda.LOCANDA_VISITATA) != null) {
 			completaMissione();
 			BusEventi.pubblica(new NotificaTestoParagrafo("Una tappa in meno: " + getNome() + " è cosa fatta."));
 		}
 	}
 
-	private TipoLocazione getClasseCitta() {
-		String nomeClasseCitta = ottieniProprieta(CITTA);
-		return nomeClasseCitta == null ? null : TipoLocazione.valueOf(nomeClasseCitta);
+	private TipoLocazione getTipoCitta() {
+		String nomeTipoCitta = ottieniProprieta(CITTA);
+		return nomeTipoCitta == null ? null : TipoLocazione.valueOf(nomeTipoCitta);
 	}
 }

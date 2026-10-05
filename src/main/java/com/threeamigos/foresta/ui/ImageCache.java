@@ -154,15 +154,15 @@ public class ImageCache {
 		BufferedImage d;
 		locazioni.put(TipoLocazione.BOSCO, BufferedImageBuilder.buildBufferedImage(RISORSA_BOSCO));
 		d = BufferedImageBuilder.buildBufferedImage("locazioni/Castello.gif");
-		for (TipoLocazione classeLocazione : TipoLocazione.values()) {
-			if (classeLocazione.getCategoria() == CategoriaLocazione.CASTELLO) {
-				locazioni.put(classeLocazione, d);
+		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
+			if (tipoLocazione.getCategoria() == CategoriaLocazione.CASTELLO) {
+				locazioni.put(tipoLocazione, d);
 			}
 		}
 		d = BufferedImageBuilder.buildBufferedImage("locazioni/Citta.gif");
-		for (TipoLocazione classeLocazione : TipoLocazione.values()) {
-			if (classeLocazione.getCategoria() == CategoriaLocazione.CITTA) {
-				locazioni.put(classeLocazione, d);
+		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
+			if (tipoLocazione.getCategoria() == CategoriaLocazione.CITTA) {
+				locazioni.put(tipoLocazione, d);
 			}
 		}
 		d = BufferedImageBuilder.buildBufferedImage("locazioni/Grotta.gif");
@@ -184,15 +184,15 @@ public class ImageCache {
 		mappaVariantiBosco[3] = BufferedImageBuilder.buildBufferedImage("mappa/Foresta4.gif");
 		mappa.put(TipoLocazione.BOSCO, mappaVariantiBosco[0]);
 		d = BufferedImageBuilder.buildBufferedImage("mappa/Castello.gif");
-		for (TipoLocazione classeLocazione : TipoLocazione.values()) {
-			if (classeLocazione.getCategoria() == CategoriaLocazione.CASTELLO) {
-				mappa.put(classeLocazione, d);
+		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
+			if (tipoLocazione.getCategoria() == CategoriaLocazione.CASTELLO) {
+				mappa.put(tipoLocazione, d);
 			}
 		}
 		d = BufferedImageBuilder.buildBufferedImage("mappa/Citta.gif");
-		for (TipoLocazione classeLocazione : TipoLocazione.values()) {
-			if (classeLocazione.getCategoria() == CategoriaLocazione.CITTA) {
-				mappa.put(classeLocazione, d);
+		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
+			if (tipoLocazione.getCategoria() == CategoriaLocazione.CITTA) {
+				mappa.put(tipoLocazione, d);
 			}
 		}
 		d = BufferedImageBuilder.buildBufferedImage("mappa/Grotta.gif");

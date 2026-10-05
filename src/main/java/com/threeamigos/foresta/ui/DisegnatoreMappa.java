@@ -71,12 +71,12 @@ public class DisegnatoreMappa {
     }
 
     protected static Image recuperaImmaginePerLocazione(CoordinateMD coordinateMD) {
-        TipoLocazione classeLocazione = Foresta.getLocazione(coordinateMD);
+        TipoLocazione tipoLocazione = Foresta.getLocazione(coordinateMD);
         BufferedImage image;
-        if (classeLocazione == TipoLocazione.BOSCO) {
+        if (tipoLocazione == TipoLocazione.BOSCO) {
             image = ImageCache.getImmagineMappaBosco(Bosco.getVarianteMappa(Foresta.getLocazioneMD(coordinateMD)));
         } else {
-            image = ImageCache.mappa.get(classeLocazione);
+            image = ImageCache.mappa.get(tipoLocazione);
         }
         return image;
     }

@@ -135,7 +135,7 @@ public class IlCorriere extends IncaricoInCitta {
 	 * Le città, diverse da quella in cui si trova il gruppo, che ci sono ancora.
 	 */
 	private static List<TipoLocazione> altreCitta() {
-		TipoLocazione qui = GruppoGiocatore.getIstanza().getClasseLocazioneCorrente();
+		TipoLocazione qui = GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();
 		List<TipoLocazione> altre = new ArrayList<>();
 		for (TipoLocazione citta : TipoLocazione.values()) {
 			if (citta.getCategoria() == CategoriaLocazione.CITTA && citta != qui

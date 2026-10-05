@@ -30,9 +30,9 @@ public class Informazioni implements Offerta {
 		StringBuilder sb = new StringBuilder("Scambiando quattro chiacchiere, ")
 				.append(gruppo.getCapo().getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE))
 				.append(" viene a sapere che ");
-		TipoLocazione classeLocazione = gruppo.getClasseLocazioneCorrente();
+		TipoLocazione tipoLocazione = gruppo.getTipoLocazioneCorrente();
 		int tipo;
-		if (classeLocazione.getCategoria() == CategoriaLocazione.CITTA) {
+		if (tipoLocazione.getCategoria() == CategoriaLocazione.CITTA) {
 			// Qualsiasi informazione ma non quelle sulle citta' visto che gia' ci siamo
 			tipo = Dado.tira(2, 3);
 		} else {
@@ -54,26 +54,26 @@ public class Informazioni implements Offerta {
 		
 	private void informazioniSuCitta(GruppoGiocatore gruppo, StringBuilder sb) {
 		List<TipoLocazione> citta = new ArrayList<>();
-		for (TipoLocazione classeLocazione : TipoLocazione.values()) {
-			if (classeLocazione.getCategoria() == CategoriaLocazione.CITTA &&
-					Foresta.getCoordinateLocazioneUnica(classeLocazione) != null) {
-				citta.add(classeLocazione);
+		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
+			if (tipoLocazione.getCategoria() == CategoriaLocazione.CITTA &&
+					Foresta.getCoordinateLocazioneUnica(tipoLocazione) != null) {
+				citta.add(tipoLocazione);
 			}
 		}
 		if (citta.isEmpty()) {
 			sb.append("tutte le città sono state distrutte dal Drago.");
 		} else {
 			int indice = Dado.tiraAncheAUnaFaccia(citta.size()) - 1;
-			TipoLocazione classeLocazione = citta.get(indice);
-			CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(classeLocazione);
+			TipoLocazione tipoLocazione = citta.get(indice);
+			CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(tipoLocazione);
 			Foresta.setLocazioneConosciuta(coordinate);
-			sb.append(classeLocazione.getNomeProprio());
+			sb.append(tipoLocazione.getNomeProprio());
 			sb.append(" si trova ").append(Misc.getDirezione(gruppo, coordinate));
 		}
 	}
 
 	private void informazioniSuCastello(GruppoGiocatore gruppo, StringBuilder sb) {
-		TipoLocazione classeLocazione = TipoLocazione.CASTELLO_DRAGO;
+		TipoLocazione tipoLocazione = TipoLocazione.CASTELLO_DRAGO;
 		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CASTELLO_DRAGO);
 		if (coordinate == null) {
 			List<TipoLocazione> castelli = new ArrayList<>();
@@ -84,11 +84,11 @@ public class Informazioni implements Offerta {
 				}
 			}
 			int indice = Dado.tiraAncheAUnaFaccia(castelli.size()) - 1;
-			classeLocazione = castelli.get(indice);
-			coordinate = Foresta.getCoordinateLocazioneUnica(classeLocazione);
+			tipoLocazione = castelli.get(indice);
+			coordinate = Foresta.getCoordinateLocazioneUnica(tipoLocazione);
 		}
 		Foresta.setLocazioneConosciuta(coordinate);
-		sb.append(classeLocazione.getNomeProprio());
+		sb.append(tipoLocazione.getNomeProprio());
 		sb.append(" sorge ").append(Misc.getDirezione(gruppo, coordinate));
 	}
 

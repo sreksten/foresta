@@ -63,7 +63,7 @@ public abstract class LocazioneBase implements Locazione {
 	 * Lo stato durevole della casella: nome, visitata, conosciuta, completa.
 	 * Sopravvive alla visita e al salvataggio.
 	 */
-	private LocazioneMD md = new LocazioneMD(getClasseLocazione());
+	private LocazioneMD md = new LocazioneMD(getTipoLocazione());
 
 	private Oggetto oggettoCorrente;
 	// Se il gruppo può (ancora) tentare di corrompere gli avversari
@@ -149,7 +149,7 @@ public abstract class LocazioneBase implements Locazione {
 	@Override
 	public String getNome() {
 		// Per una locazione unica il nome c'è sempre, anche su un'istanza senza la sua casella
-		return md.getNome() != null ? md.getNome() : getClasseLocazione().getNomeProprio();
+		return md.getNome() != null ? md.getNome() : getTipoLocazione().getNomeProprio();
 	}
 
 	/**
@@ -1038,7 +1038,7 @@ public abstract class LocazioneBase implements Locazione {
 	
 	private Stato gestisciNuovaLocazione() {
 		Logger.log("LocazioneBase.NUOVA_LOCAZIONE");
-		CategoriaLocazione tipoLocazione = gruppo.getClasseLocazioneCorrente().getCategoria();
+		CategoriaLocazione categoria = gruppo.getTipoLocazioneCorrente().getCategoria();
 		int numeroAvversari = gruppoAvversario.getNumeroPersonaggi();
 		custodita = numeroAvversari > 0;
 		if (numeroAvversari == 0) {
@@ -1046,7 +1046,7 @@ public abstract class LocazioneBase implements Locazione {
 				BusEventi.pubblica(new NotificaTestoFrase("Essendo il tesoro incustodito, " +
 						gruppo.chi() + " se ne impossessa."));
 			}
-			if (tipoLocazione != CategoriaLocazione.MISSIONE_SECONDARIA) {
+			if (categoria != CategoriaLocazione.MISSIONE_SECONDARIA) {
 				gruppo.riposa(getTipoRiposo());
 			}
 			setCompleta(true);
@@ -1056,7 +1056,7 @@ public abstract class LocazioneBase implements Locazione {
 			// Non possiamo fare amicizia o corrompere per completare le missioni secondarie! E nemmeno con delle
 			// ondate in arrivo: corrotta la prima, non arriverebbero le altre
 			//TODO il meccanismo delle missioni andrebbe gestito meglio
-			if (tipoLocazione != CategoriaLocazione.MISSIONE_SECONDARIA && !gruppoAvversario.hasOndateSuccessive()) {
+			if (categoria != CategoriaLocazione.MISSIONE_SECONDARIA && !gruppoAvversario.hasOndateSuccessive()) {
 				Personaggio p;
 				for (int i = 0; i < numeroAvversari; i++) {
 					p = gruppoAvversario.getPersonaggio(i);
@@ -1433,7 +1433,7 @@ public abstract class LocazioneBase implements Locazione {
 	 */
 	private boolean isPassaggioPossibile() {
 		return !passaggioEscluso && statoLocazione == StatoLocazione.IN_LOCAZIONE
-				&& gruppo.getClasseLocazioneCorrente().getCategoria() == CategoriaLocazione.STANDARD
+				&& gruppo.getTipoLocazioneCorrente().getCategoria() == CategoriaLocazione.STANDARD
 				&& !gruppoAvversario.getPersonaggiVivi().isEmpty() && !gruppoAvversario.isDaAffrontare() && !gruppoAvversario.isDuello()
 				&& !gruppoAvversario.hasOndateSuccessive();
 	}

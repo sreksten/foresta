@@ -62,8 +62,8 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 	void disegnaLocazione(Graphics2D graphics) {
 		GruppoGiocatore g = GruppoGiocatore.getIstanza();
 		GruppoAvversario gng = GruppoAvversario.getIstanza();
-		TipoLocazione classeLocazione = g.getClasseLocazioneCorrente();
-		BufferedImage locazione = ImageCache.locazioni.get(classeLocazione);
+		TipoLocazione tipoLocazione = g.getTipoLocazioneCorrente();
+		BufferedImage locazione = ImageCache.locazioni.get(tipoLocazione);
 		int locXOffset = topLeftX;
 		graphics.drawImage(locazione, locXOffset, topLeftY, null);
 
@@ -125,7 +125,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 	
 	SpriteInterface raccogliOggetto() {
 		GruppoGiocatore g = GruppoGiocatore.getIstanza();
-		BufferedImage locazione = ImageCache.locazioni.get(g.getClasseLocazioneCorrente());
+		BufferedImage locazione = ImageCache.locazioni.get(g.getTipoLocazioneCorrente());
 		Oggetto oggetto = g.getLocazioneCorrente().getOggetto();
 		if (oggetto != null && oggetto.getClasse() != ClassiOggetto.ARTEFATTO) {
 			BufferedImage d = ClassiOggettoImmagine.getImmagine(oggetto.getClasse());

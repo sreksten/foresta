@@ -317,17 +317,17 @@ final class GiocatoreAutomatico {
 		List<CoordinateMD> locandeNuove = new ArrayList<>();
 		for (int x = 0; x < Foresta.getDimensioneX(); x++) {
 			for (int y = 0; y < Foresta.getDimensioneY(); y++) {
-				TipoLocazione classe = Mappa.nota(x, y);
+				TipoLocazione tipo = Mappa.nota(x, y);
 				CoordinateMD c = new CoordinateMD(x, y);
-				if (classe == null || c.equals(qui)) {
+				if (tipo == null || c.equals(qui)) {
 					continue;
 				}
-				if (classe.getCategoria() == CategoriaLocazione.CITTA) {
+				if (tipo.getCategoria() == CategoriaLocazione.CITTA) {
 					citta.add(c);
-				} else if (classe == TipoLocazione.LOCANDA) {
+				} else if (tipo == TipoLocazione.LOCANDA) {
 					locande.add(c);
 				}
-				if ((classe == TipoLocazione.LOCANDA || classe.getCategoria() == CategoriaLocazione.CITTA)
+				if ((tipo == TipoLocazione.LOCANDA || tipo.getCategoria() == CategoriaLocazione.CITTA)
 						&& Foresta.getLocazioneMD(c).ottieniProprieta(Locanda.LOCANDA_VISITATA) == null) {
 					locandeNuove.add(c);
 				}
@@ -1291,8 +1291,8 @@ final class GiocatoreAutomatico {
 				if ((d == 0 && ny == 0) || (d == 1 && nx == dimX - 1) || (d == 2 && ny == dimY - 1) || (d == 3 && nx == 0)) {
 					return i;
 				}
-				TipoLocazione classe = nota(nx, ny);
-				if (classe != null && classe != TipoLocazione.BOSCO && classe != TipoLocazione.RADURA) {
+				TipoLocazione tipo = nota(nx, ny);
+				if (tipo != null && tipo != TipoLocazione.BOSCO && tipo != TipoLocazione.RADURA) {
 					return i;
 				}
 			}
@@ -1302,11 +1302,11 @@ final class GiocatoreAutomatico {
 		/**
 		 * Il rischio di fermarsi su una casella: circa la probabilità di trovarci mostri, pesata per la loro forza
 		 */
-		static double rischio(TipoLocazione classe, boolean meta) {
-			if (classe == null || classe == TipoLocazione.BOSCO || classe == TipoLocazione.RADURA) {
+		static double rischio(TipoLocazione tipo, boolean meta) {
+			if (tipo == null || tipo == TipoLocazione.BOSCO || tipo == TipoLocazione.RADURA) {
 				return 1.0d;
 			}
-			switch (classe.getCategoria()) {
+			switch (tipo.getCategoria()) {
 				case CITTA:
 					return 0.2d;
 				case CASTELLO:
@@ -1316,7 +1316,7 @@ final class GiocatoreAutomatico {
 				default:
 					break;
 			}
-			switch (classe) {
+			switch (tipo) {
 				case PALUDE:
 					return 0.1d;
 				case LOCANDA:

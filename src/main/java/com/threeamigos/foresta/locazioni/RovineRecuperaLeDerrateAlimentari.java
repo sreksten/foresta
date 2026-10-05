@@ -18,7 +18,7 @@ public class RovineRecuperaLeDerrateAlimentari extends LocazioneUnica {
 	private final Rovine rovine = new Rovine();
 
 	@Override
-	public TipoLocazione getClasseLocazione() {
+	public TipoLocazione getTipoLocazione() {
 		return TipoLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI;
 	}
 
@@ -54,7 +54,7 @@ public class RovineRecuperaLeDerrateAlimentari extends LocazioneUnica {
 	public void azzeraLocazione(GruppoGiocatore g) {
 		if (isCompleta()) {
 			g.setLocazioneCorrenteVisitata();
-			Foresta.distruggiLocazioneUnica(getClasseLocazione(), TipoLocazione.ROVINE);
+			Foresta.distruggiLocazioneUnica(getTipoLocazione(), TipoLocazione.ROVINE);
 		}
 	}
 

@@ -18,8 +18,8 @@ final class TestiDeiLuoghi {
 	/**
 	 * Un luogo di quella classe, con l'articolo indeterminativo: "una grotta", "delle rovine".
 	 */
-	static String indefinito(TipoLocazione classe) {
-		switch (classe) {
+	static String indefinito(TipoLocazione tipo) {
+		switch (tipo) {
 			case GROTTA:
 				return "una grotta";
 			case ROVINE:
@@ -42,8 +42,8 @@ final class TestiDeiLuoghi {
 	/**
 	 * Dentro un luogo di quella classe: "in una grotta", "fra delle rovine".
 	 */
-	static String dentro(TipoLocazione classe) {
-		return (classe == TipoLocazione.ROVINE ? "fra " : "in ") + indefinito(classe);
+	static String dentro(TipoLocazione tipo) {
+		return (tipo == TipoLocazione.ROVINE ? "fra " : "in ") + indefinito(tipo);
 	}
 
 	/**
@@ -55,7 +55,7 @@ final class TestiDeiLuoghi {
 			return "il posto";
 		}
 		LocazioneMD md = Foresta.getLocazioneMD(posto);
-		switch (md.getClasse()) {
+		switch (md.getTipo()) {
 			case TEMPIO:
 				return Tempio.getNome(md);
 			case ROVINE:

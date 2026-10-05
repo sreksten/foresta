@@ -416,14 +416,14 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		return md.getCoordinate();
 	}
 
-	private TipoLocazione getClasseLocazioneCorrente(int x, int y) {
+	private TipoLocazione getTipoLocazioneCorrente(int x, int y) {
 		return Foresta.getLocazione(x, y);
 	}
 
 	/**
 	 * Usata da oggetti Cofano per sapere se può essere vuoto o meno
 	 */
-	public TipoLocazione getClasseLocazioneCorrente() {
+	public TipoLocazione getTipoLocazioneCorrente() {
 		return Foresta.getLocazione(md.getCoordinate());
 	}
 
@@ -448,7 +448,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 			if (getY() - i == 0) {
 				return i;
 			}
-			locazioneCorrente = getClasseLocazioneCorrente(getX(), getY() - i);
+			locazioneCorrente = getTipoLocazioneCorrente(getX(), getY() - i);
 			if (locazioneCorrente != TipoLocazione.BOSCO && locazioneCorrente != TipoLocazione.RADURA) {
 				return i;
 			}
@@ -472,7 +472,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 			if (getX() + i == Foresta.getDimensioneX() - 1) {
 				return i;
 			}
-			locazioneCorrente = getClasseLocazioneCorrente(getX() + i, getY());
+			locazioneCorrente = getTipoLocazioneCorrente(getX() + i, getY());
 			if (locazioneCorrente != TipoLocazione.BOSCO && locazioneCorrente != TipoLocazione.RADURA) {
 				return i;
 			}
@@ -497,7 +497,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 			if (getY() + i == Foresta.getDimensioneY() - 1) {
 				return i;
 			}
-			locazioneCorrente = getClasseLocazioneCorrente(getX(), getY() + i);
+			locazioneCorrente = getTipoLocazioneCorrente(getX(), getY() + i);
 			if (locazioneCorrente != TipoLocazione.BOSCO && locazioneCorrente != TipoLocazione.RADURA) {
 				return i;
 			}
@@ -522,7 +522,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 			if (getX() - i == 0) {
 				return i;
 			}
-			locazioneCorrente = getClasseLocazioneCorrente(getX() - i, getY());
+			locazioneCorrente = getTipoLocazioneCorrente(getX() - i, getY());
 			if (locazioneCorrente != TipoLocazione.BOSCO && locazioneCorrente != TipoLocazione.RADURA) {
 				return i;
 			}
@@ -547,10 +547,10 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 
 	public final void pernotta(TipoRiposo tipoRiposo) {
 		Logger.log("Inizio pernottamento");
-		TipoLocazione classeLocazione = getClasseLocazioneCorrente();
+		TipoLocazione tipoLocazione = getTipoLocazioneCorrente();
 		int ore = LineaTemporale.oreFinoAlMattino();
-		boolean alCoperto = classeLocazione == TipoLocazione.LOCANDA
-				|| classeLocazione.getCategoria() == CategoriaLocazione.CITTA;
+		boolean alCoperto = tipoLocazione == TipoLocazione.LOCANDA
+				|| tipoLocazione.getCategoria() == CategoriaLocazione.CITTA;
 		Logger.log("Pernottamento al coperto? " + alCoperto);
 		if (alCoperto) {
 			StringBuilder sb = new StringBuilder("La stanchezza accumulata ed il tepore delle coperte fanno addormentare subito ");
@@ -633,8 +633,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 		BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
 	}
 
-	public boolean isInLocazioneUnica(TipoLocazione classeLocazioneUnica) {
-		return getClasseLocazioneCorrente() == classeLocazioneUnica;
+	public boolean isInLocazioneUnica(TipoLocazione tipoLocazioneUnica) {
+		return getTipoLocazioneCorrente() == tipoLocazioneUnica;
 	}
 
 	public void addPuntiEsperienza(int puntiEsperienza) {

@@ -5,7 +5,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
 public class CittaMalgaard extends Citta {
 
 	@Override
-	public TipoLocazione getClasseLocazione() {
+	public TipoLocazione getTipoLocazione() {
 		return TipoLocazione.CITTA_MALGAARD;
 	}
 

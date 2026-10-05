@@ -76,7 +76,7 @@ public interface Missione {
 	 *
 	 * @param visitata se il gruppo aveva già completato la locazione in una visita precedente
 	 */
-	default Optional<Oggetto> getOggettoInLocazione(CoordinateMD coordinate, TipoLocazione classe, boolean visitata) {
+	default Optional<Oggetto> getOggettoInLocazione(CoordinateMD coordinate, TipoLocazione tipo, boolean visitata) {
 		return Optional.empty();
 	}
 

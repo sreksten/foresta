@@ -304,7 +304,7 @@ public class RegistroMissioni {
 	 * Missione.getOggettoInLocazione), se ce n'è uno: chiede prima alla missione che ha rivendicato la casella, poi
 	 * alle altre in corso, e vince la prima che risponde.
 	 */
-	public static Optional<Oggetto> getOggettoMissione(CoordinateMD coordinate, TipoLocazione classe, boolean visitata) {
+	public static Optional<Oggetto> getOggettoMissione(CoordinateMD coordinate, TipoLocazione tipo, boolean visitata) {
 		List<Missione> candidate = new ArrayList<>();
 		getMissioneCheHaOccupato(coordinate).ifPresent(candidate::add);
 		for (Missione missione : getTutteLeMissioni()) {
@@ -314,7 +314,7 @@ public class RegistroMissioni {
 		}
 		for (Missione missione : candidate) {
 			if (missione.isAttiva() && !missione.isCompleta() && !missione.isFallita()) {
-				Optional<Oggetto> oggetto = missione.getOggettoInLocazione(coordinate, classe, visitata);
+				Optional<Oggetto> oggetto = missione.getOggettoInLocazione(coordinate, tipo, visitata);
 				if (oggetto.isPresent()) {
 					return oggetto;
 				}
@@ -449,9 +449,9 @@ public class RegistroMissioni {
 	private static Optional<CoordinateMD> cercaDaSostituire(Missione missione, Quadrante quadrante, boolean soloVisitate) {
 		CoordinateMD gruppo = GruppoGiocatore.getIstanza().getCoordinate();
 		for (CoordinateMD coordinate : aQuadratiConcentrici(quadrante)) {
-			TipoLocazione classe = Foresta.getLocazione(coordinate);
+			TipoLocazione tipo = Foresta.getLocazione(coordinate);
 			if (!coordinate.equals(gruppo)
-					&& (classe == TipoLocazione.BOSCO || classe == TipoLocazione.PALUDE)
+					&& (tipo == TipoLocazione.BOSCO || tipo == TipoLocazione.PALUDE)
 					&& (!soloVisitate || Foresta.isLocazioneVisitata(coordinate))
 					&& isDisponibile(coordinate, missione)
 					&& RegistroArtefatti.getArtefattoInLocazione(coordinate) == null) {
@@ -482,13 +482,13 @@ public class RegistroMissioni {
 	}
 
 	/**
-	 * Un quadrante a caso in cui non c'è nessuna locazione unica di quel tipo, o null se ce n'è in tutti.
+	 * Un quadrante a caso in cui non c'è nessuna locazione unica di quella categoria, o null se ce n'è in tutti.
 	 */
-	static Quadrante quadranteSenza(CategoriaLocazione tipo) {
+	static Quadrante quadranteSenza(CategoriaLocazione categoria) {
 		List<Quadrante> liberi = Quadrante.inOrdineCasuale();
-		for (TipoLocazione classe : TipoLocazione.values()) {
-			if (classe.getCategoria() == tipo && classe.isLocazioneUnica()) {
-				CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(classe);
+		for (TipoLocazione tipo : TipoLocazione.values()) {
+			if (tipo.getCategoria() == categoria && tipo.isLocazioneUnica()) {
+				CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(tipo);
 				if (coordinate != null) {
 					liberi.remove(Quadrante.di(coordinate));
 				}

@@ -16,12 +16,12 @@ public class MuoviALocazione extends MissioneBase {
 	private static final String COORDINATA_X = "COORDINATA_X";
 	private static final String COORDINATA_Y = "COORDINATA_Y";
 
-	public void setLocazioneUnica(TipoLocazione classeLocazione) {
-		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(classeLocazione);
+	public void setLocazioneUnica(TipoLocazione tipoLocazione) {
+		CoordinateMD coordinate = Foresta.getCoordinateLocazioneUnica(tipoLocazione);
 		aggiungiProprieta(COORDINATA_X, String.valueOf(coordinate.getX()));
 		aggiungiProprieta(COORDINATA_Y, String.valueOf(coordinate.getY()));
 		StringBuilder sb = new StringBuilder();
-		sb.append("Raggiungi ").append(classeLocazione.getNomeProprio());
+		sb.append("Raggiungi ").append(tipoLocazione.getNomeProprio());
 		aggiungiProprieta(NOME, sb.toString());
 		sb = new StringBuilder();
 		sb.append("Raggiungi la locazione designata");

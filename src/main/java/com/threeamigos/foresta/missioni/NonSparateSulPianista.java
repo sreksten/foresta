@@ -151,7 +151,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 
 	private boolean isTerzaVisitaAUnaLocanda() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		if (gruppo.getClasseLocazioneCorrente() != TipoLocazione.LOCANDA) {
+		if (gruppo.getTipoLocazioneCorrente() != TipoLocazione.LOCANDA) {
 			return false;
 		}
 		String visite = Foresta.getLocazioneMD(gruppo.getCoordinate()).ottieniProprieta(Locanda.LOCANDA_VISITE);
@@ -174,18 +174,18 @@ public class NonSparateSulPianista extends MissioneAPassi {
 		CoordinateMD qui = GruppoGiocatore.getIstanza().getCoordinate();
 		TipoLocazione piuVicina = null;
 		int distanzaMinima = Integer.MAX_VALUE;
-		for (TipoLocazione classe : TipoLocazione.values()) {
-			if (classe.getCategoria() != CategoriaLocazione.CITTA || LineaTemporale.isCittaDistrutta(classe)) {
+		for (TipoLocazione tipo : TipoLocazione.values()) {
+			if (tipo.getCategoria() != CategoriaLocazione.CITTA || LineaTemporale.isCittaDistrutta(tipo)) {
 				continue;
 			}
-			CoordinateMD citta = Foresta.getCoordinateLocazioneUnica(classe);
+			CoordinateMD citta = Foresta.getCoordinateLocazioneUnica(tipo);
 			if (citta == null) {
 				continue;
 			}
 			int distanza = Math.abs(citta.getX() - qui.getX()) + Math.abs(citta.getY() - qui.getY());
 			if (distanza < distanzaMinima) {
 				distanzaMinima = distanza;
-				piuVicina = classe;
+				piuVicina = tipo;
 			}
 		}
 		return piuVicina;

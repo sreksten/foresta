@@ -20,9 +20,9 @@ public class LaLeggendaDellArmaiolo extends LaLeggenda {
 
 	@Override
 	protected boolean isPostoDelRacconto() {
-		TipoLocazione classe = GruppoGiocatore.getIstanza().getClasseLocazioneCorrente();
-		return classe != null && classe.getCategoria() == CategoriaLocazione.CITTA
-				&& !LineaTemporale.isCittaDistrutta(classe);
+		TipoLocazione tipo = GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();
+		return tipo != null && tipo.getCategoria() == CategoriaLocazione.CITTA
+				&& !LineaTemporale.isCittaDistrutta(tipo);
 	}
 
 	@Override

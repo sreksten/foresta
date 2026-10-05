@@ -43,7 +43,7 @@ public class SconfiggiIlMinotauroGigante extends MissioneBase implements Mission
     @Override
     public void controllaPostLocazione() {
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-        if (gruppo.getClasseLocazioneCorrente() == TipoLocazione.CASTELLO_MINOTAURO && gruppo.getLocazioneCorrente().isCompleta()) {
+        if (gruppo.getTipoLocazioneCorrente() == TipoLocazione.CASTELLO_MINOTAURO && gruppo.getLocazioneCorrente().isCompleta()) {
             completaMissione();
             BusEventi.pubblica(new NotificaTestoParagrafo("Il Minotauro è stato sconfitto!"));
         }

@@ -15,7 +15,7 @@ import com.threeamigos.foresta.tipi.TipoRiposo;
 
 public interface Locazione {
 
-	TipoLocazione getClasseLocazione();
+	TipoLocazione getTipoLocazione();
 
 	/**
 	 * Il modello dati della casella su cui si trova questa locazione: vi vive

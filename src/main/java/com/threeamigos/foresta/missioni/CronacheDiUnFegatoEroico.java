@@ -15,10 +15,10 @@ public class CronacheDiUnFegatoEroico extends MissioneBase {
 	public CronacheDiUnFegatoEroico() {
 		super(ClasseMissione.CRONACHE_DI_UN_FEGATO_EROICO);
 		// Una tappa per città: se il mondo ne guadagnasse una, la missione la seguirebbe
-		for (TipoLocazione classeLocazione : TipoLocazione.values()) {
-			if (classeLocazione.getCategoria() == CategoriaLocazione.CITTA) {
+		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
+			if (tipoLocazione.getCategoria() == CategoriaLocazione.CITTA) {
 				VisitaLocanda visitaLocanda = new VisitaLocanda();
-				visitaLocanda.setCitta(classeLocazione);
+				visitaLocanda.setCitta(tipoLocazione);
 				aggiungiMissione(visitaLocanda);
 			}
 		}
@@ -36,7 +36,7 @@ public class CronacheDiUnFegatoEroico extends MissioneBase {
 
 	@Override
 	public void controllaPreLocazione() {
-		if (!isAttiva() && GruppoGiocatore.getIstanza().getClasseLocazioneCorrente().getCategoria() == CategoriaLocazione.CITTA) {
+		if (!isAttiva() && GruppoGiocatore.getIstanza().getTipoLocazioneCorrente().getCategoria() == CategoriaLocazione.CITTA) {
 			BusEventi.pubblica(new NotificaTestoParagrafo(getDescrizione() + ": " + getNome() + " si scrive un boccale per volta."));
 			attivaMissione();
 		}

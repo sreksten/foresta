@@ -253,7 +253,7 @@ class DisplayableCanvasIntermezzo implements Finestra {
 			case PERSONAGGIO:
 				return ClassePersonaggioImmagine.getImmagine(immagine.getClassePersonaggio());
 			case LOCAZIONE:
-				return ImageCache.locazioni.get(immagine.getClasseLocazione());
+				return ImageCache.locazioni.get(immagine.getTipoLocazione());
 			case SPRITE_SHEET:
 				BufferedImage[] fotogrammi = fotogrammi(immagine);
 				return fotogrammi == null ? null : fotogrammi[immagine.getFotogrammaAl(secondi)];

@@ -24,12 +24,12 @@ final class Locande {
 	 * entrati in città, prima ancora di aver scelto "Locanda".
 	 */
 	static boolean momentoCoerenteConLocazioneCorrente(MomentoIntermezzo momento) {
-		TipoLocazione classe = GruppoGiocatore.getIstanza().getClasseLocazioneCorrente();
+		TipoLocazione tipo = GruppoGiocatore.getIstanza().getTipoLocazioneCorrente();
 		if (momento == MomentoIntermezzo.INIZIO_LOCAZIONE) {
-			return classe == TipoLocazione.LOCANDA;
+			return tipo == TipoLocazione.LOCANDA;
 		}
 		if (momento == MomentoIntermezzo.INGRESSO_LOCANDA_IN_CITTA) {
-			return classe.getCategoria() == CategoriaLocazione.CITTA;
+			return tipo.getCategoria() == CategoriaLocazione.CITTA;
 		}
 		return false;
 	}
@@ -39,8 +39,8 @@ final class Locande {
 	 */
 	static LocazioneMD getLocazioneMDLocandaCorrente() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-		TipoLocazione classe = gruppo.getClasseLocazioneCorrente();
-		if (classe != TipoLocazione.LOCANDA && classe.getCategoria() != CategoriaLocazione.CITTA) {
+		TipoLocazione tipo = gruppo.getTipoLocazioneCorrente();
+		if (tipo != TipoLocazione.LOCANDA && tipo.getCategoria() != CategoriaLocazione.CITTA) {
 			return null;
 		}
 		return Foresta.getLocazioneMD(gruppo.getCoordinate());

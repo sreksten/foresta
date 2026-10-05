@@ -43,7 +43,7 @@ public class SconfiggiIlLich extends MissioneBase implements Missione {
     @Override
     public void controllaPostLocazione() {
         GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
-        if (gruppo.getClasseLocazioneCorrente() == TipoLocazione.CASTELLO_LICH && gruppo.getLocazioneCorrente().isCompleta()) {
+        if (gruppo.getTipoLocazioneCorrente() == TipoLocazione.CASTELLO_LICH && gruppo.getLocazioneCorrente().isCompleta()) {
             completaMissione();
             BusEventi.pubblica(new NotificaTestoParagrafo("Il Lich è stato sconfitto!"));
         }

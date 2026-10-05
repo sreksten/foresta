@@ -64,14 +64,14 @@ class ScenarioNomiDelleLocazioniTest {
         }
     }
 
-    private static CoordinateMD prima(TipoLocazione classe) {
+    private static CoordinateMD prima(TipoLocazione tipo) {
         for (int x = 0; x < Foresta.getDimensioneX(); x++) {
             for (int y = 0; y < Foresta.getDimensioneY(); y++) {
-                if (Foresta.getLocazione(x, y) == classe) {
+                if (Foresta.getLocazione(x, y) == tipo) {
                     return new CoordinateMD(x, y);
                 }
             }
         }
-        throw new AssertionError("nessuna casella " + classe);
+        throw new AssertionError("nessuna casella " + tipo);
     }
 }

@@ -21,7 +21,7 @@ import com.threeamigos.foresta.tools.Misc;
 public class Tempio extends LocazioneBase {
 
 	@Override
-	public TipoLocazione getClasseLocazione() {
+	public TipoLocazione getTipoLocazione() {
 		return TipoLocazione.TEMPIO;
 	}
 

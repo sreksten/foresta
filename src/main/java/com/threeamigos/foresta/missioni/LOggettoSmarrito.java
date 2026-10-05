@@ -86,8 +86,8 @@ public class LOggettoSmarrito extends IncaricoInCitta {
 			return;
 		}
 		List<TipoLocazione> posti = getSmarrito().getPosti();
-		TipoLocazione classe = posti.get(Dado.tiraAncheAUnaFaccia(posti.size()) - 1);
-		CoordinateMD posto = RegistroMissioni.cercaOCostruisci(classe, this)
+		TipoLocazione tipo = posti.get(Dado.tiraAncheAUnaFaccia(posti.size()) - 1);
+		CoordinateMD posto = RegistroMissioni.cercaOCostruisci(tipo, this)
 				// Solo se nella foresta non c'è più neanche un bosco o una palude: allora l'ha perso appena fuori città
 				.orElseGet(() -> Foresta.getCoordinateLocazioneUnica(getCitta()));
 		List<CoordinateMD> nascondigli = nascondigliAttorno(posto);

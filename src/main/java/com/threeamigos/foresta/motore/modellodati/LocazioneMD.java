@@ -47,26 +47,26 @@ public class LocazioneMD implements Serializzabile {
 	 */
 	private String uuid = UUID.randomUUID().toString();
 
-	private TipoLocazione classe;
+	private TipoLocazione tipo;
 	private final Map<String, String> proprieta = new HashMap<>();
 
 	public LocazioneMD() {
 	}
 
-	public LocazioneMD(TipoLocazione classe) {
-		this.classe = classe;
+	public LocazioneMD(TipoLocazione tipo) {
+		this.tipo = tipo;
 	}
 
 	public String getUuid() {
 		return uuid;
 	}
 
-	public TipoLocazione getClasse() {
-		return classe;
+	public TipoLocazione getTipo() {
+		return tipo;
 	}
 
-	public void setClasse(TipoLocazione classe) {
-		this.classe = classe;
+	public void setTipo(TipoLocazione tipo) {
+		this.tipo = tipo;
 	}
 
 	public void aggiungiProprieta(String nome, String valore) {
@@ -97,7 +97,7 @@ public class LocazioneMD implements Serializzabile {
 	public void salva(PrintWriter stream) throws IOException {
 		stream.print(uuid);
 		stream.print(PIPE);
-		stream.print(classe.name());
+		stream.print(tipo.name());
 		if (!proprieta.isEmpty()) {
 			stream.print(PIPE);
 			stream.print(MappaProprieta.salva(proprieta));
@@ -111,7 +111,7 @@ public class LocazioneMD implements Serializzabile {
 		// Il limite -1 conserva gli eventuali campi vuoti in coda
 		String[] tokens = line.split("\\|", -1);
 		uuid = tokens[0];
-		classe = TipoLocazione.valueOf(tokens[1]);
+		tipo = TipoLocazione.valueOf(tokens[1]);
 		MappaProprieta.leggi(tokens, 2, proprieta);
 	}
 }

@@ -708,7 +708,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				gruppoAvversario.setOndateSuccessive(RegistroMissioni.getOndateSuccessiveMissione(gruppo.getCoordinate()));
 			});
 			// ...e l'oggetto che una missione vuole qui, che può dipendere dagli avversari (i trofei di una caccia)
-			RegistroMissioni.getOggettoMissione(gruppo.getCoordinate(), gruppo.getClasseLocazioneCorrente(),
+			RegistroMissioni.getOggettoMissione(gruppo.getCoordinate(), gruppo.getTipoLocazioneCorrente(),
 							Foresta.isLocazioneVisitata(gruppo.getCoordinate()))
 					.ifPresent(locazioneCorrente::collocaOggettoMissione);
 		}
@@ -1874,12 +1874,12 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (gruppo.getNumeroPersonaggiVivi() <= 1 || (LineaTemporale.getOra() <= 20 && LineaTemporale.getOra() >= 6)) {
 			return false;
 		}
-		TipoLocazione classeLocazione = gruppo.getClasseLocazioneCorrente();
+		TipoLocazione tipoLocazione = gruppo.getTipoLocazioneCorrente();
 		// Nei castelli non si riposa (getTipoRiposo lancia un'eccezione): ci si resta dopo una fuga
-		return classeLocazione.getCategoria() != CategoriaLocazione.CITTA &&
-				classeLocazione.getCategoria() != CategoriaLocazione.CASTELLO &&
-				classeLocazione != TipoLocazione.LOCANDA &&
-				classeLocazione != TipoLocazione.PALUDE;
+		return tipoLocazione.getCategoria() != CategoriaLocazione.CITTA &&
+				tipoLocazione.getCategoria() != CategoriaLocazione.CASTELLO &&
+				tipoLocazione != TipoLocazione.LOCANDA &&
+				tipoLocazione != TipoLocazione.PALUDE;
 	}
 
 	/**

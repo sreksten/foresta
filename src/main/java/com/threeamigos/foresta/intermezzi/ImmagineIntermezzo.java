@@ -31,7 +31,7 @@ public final class ImmagineIntermezzo {
 
 	private final Tipo tipo;
 	private ClassePersonaggio classePersonaggio;
-	private TipoLocazione classeLocazione;
+	private TipoLocazione tipoLocazione;
 	private String risorsa;
 	private Animazione animazione;
 	// Solo per gli sprite sheet
@@ -50,9 +50,9 @@ public final class ImmagineIntermezzo {
 		return immagine;
 	}
 
-	public static ImmagineIntermezzo locazione(TipoLocazione classeLocazione) {
+	public static ImmagineIntermezzo locazione(TipoLocazione tipoLocazione) {
 		ImmagineIntermezzo immagine = new ImmagineIntermezzo(Tipo.LOCAZIONE);
-		immagine.classeLocazione = Objects.requireNonNull(classeLocazione);
+		immagine.tipoLocazione = Objects.requireNonNull(tipoLocazione);
 		return immagine;
 	}
 
@@ -115,8 +115,8 @@ public final class ImmagineIntermezzo {
 		return classePersonaggio;
 	}
 
-	public TipoLocazione getClasseLocazione() {
-		return classeLocazione;
+	public TipoLocazione getTipoLocazione() {
+		return tipoLocazione;
 	}
 
 	/** Il percorso della risorsa, per RISORSA e SPRITE_SHEET. */
@@ -154,7 +154,7 @@ public final class ImmagineIntermezzo {
 			case PERSONAGGIO:
 				return "personaggio " + classePersonaggio;
 			case LOCAZIONE:
-				return "locazione " + classeLocazione;
+				return "locazione " + tipoLocazione;
 			case SPRITE_SHEET:
 				return "sprite sheet " + risorsa + " " + colonne + "x" + righe
 						+ (sequenza == null ? "" : " " + Arrays.toString(sequenza));

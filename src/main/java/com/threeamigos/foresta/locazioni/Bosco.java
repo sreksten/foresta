@@ -28,7 +28,7 @@ public class Bosco extends LocazioneBase {
 	public static final String VARIANTE_MAPPA = "VARIANTE_MAPPA";
 
 	@Override
-	public TipoLocazione getClasseLocazione() {
+	public TipoLocazione getTipoLocazione() {
 		return TipoLocazione.BOSCO;
 	}
 

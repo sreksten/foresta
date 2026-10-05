@@ -358,7 +358,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * fortunata, quanti ne mancano fino a quelli che possono stare in una locazione.
 	 */
 	@Override
-	public Optional<Oggetto> getOggettoInLocazione(CoordinateMD coordinate, TipoLocazione classe, boolean visitata) {
+	public Optional<Oggetto> getOggettoInLocazione(CoordinateMD coordinate, TipoLocazione tipo, boolean visitata) {
 		if (!isAttiva() || isCompleta() || isFallita() || Passo.FINE.equals(getPassoCorrente())) {
 			return Optional.empty();
 		}
@@ -377,13 +377,13 @@ public abstract class MissioneAPassi extends MissioneBase {
 					: Optional.empty();
 		}
 		// Nella locazione del ripiego ci sono tutti quelli che mancano, anche se è già stata visitata
-		if (coordinate.equals(getRipiego(oggetti)) && (oggetti.isTrofeo() || oggetti.getLocazioni().contains(classe))) {
+		if (coordinate.equals(getRipiego(oggetti)) && (oggetti.isTrofeo() || oggetti.getLocazioni().contains(tipo))) {
 			return Optional.of(new OggettoMissione(getId(), oggetti.getChiave(), oggetti.getNome(), mancanti));
 		}
 		if (oggetti.isTrofeo()) {
 			return getTrofeo(oggetti, mancanti);
 		}
-		if (!oggetti.getLocazioni().contains(classe)) {
+		if (!oggetti.getLocazioni().contains(tipo)) {
 			return Optional.empty();
 		}
 		if (visitata || Dado.tira(100) > oggetti.getProbabilita()) {
@@ -437,8 +437,8 @@ public abstract class MissioneAPassi extends MissioneBase {
 			return;
 		}
 		// Per i trofei un bosco, dove la missione mette i mostri che li portano (vedi raccogli)
-		TipoLocazione classe = oggetti.isTrofeo() ? TipoLocazione.BOSCO : oggetti.getLocazioni().iterator().next();
-		RegistroMissioni.cercaOCostruisci(classe, this).ifPresent(coordinate -> {
+		TipoLocazione tipo = oggetti.isTrofeo() ? TipoLocazione.BOSCO : oggetti.getLocazioni().iterator().next();
+		RegistroMissioni.cercaOCostruisci(tipo, this).ifPresent(coordinate -> {
 			aggiungiProprieta(RIPIEGO + oggetti.getChiave(), coordinate.getX() + SEPARATORE + coordinate.getY());
 			Foresta.setLocazioneConosciuta(coordinate);
 			NomeOggetto nome = oggetti.getNome();

@@ -152,14 +152,14 @@ class ScenarioOndateTest {
         return personaggi.stream().map(Personaggio::getClasse).collect(java.util.stream.Collectors.toList());
     }
 
-    private static CoordinateMD unaCasellaDi(TipoLocazione classe) {
+    private static CoordinateMD unaCasellaDi(TipoLocazione tipo) {
         for (int x = 0; x < Foresta.getDimensioneX(); x++) {
             for (int y = 0; y < Foresta.getDimensioneY(); y++) {
-                if (Foresta.getLocazione(x, y) == classe) {
+                if (Foresta.getLocazione(x, y) == tipo) {
                     return new CoordinateMD(x, y);
                 }
             }
         }
-        throw new AssertionError("nessuna casella di " + classe);
+        throw new AssertionError("nessuna casella di " + tipo);
     }
 }

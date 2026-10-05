@@ -14,7 +14,7 @@ import com.threeamigos.foresta.tipi.TipoRiposo;
 public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 
 	@Override
-	public TipoLocazione getClasseLocazione() {
+	public TipoLocazione getTipoLocazione() {
 		return TipoLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE;
 	}
 
@@ -59,7 +59,7 @@ public class GrottaRecuperaIlMedaglione extends LocazioneUnica {
 		if (isCompleta()) {
 			g.setLocazioneCorrenteVisitata();
 			// Come per i castelli: la casella diventa una grotta qualsiasi e la locazione unica sparisce dall'elenco
-			Foresta.distruggiLocazioneUnica(getClasseLocazione(), TipoLocazione.GROTTA);
+			Foresta.distruggiLocazioneUnica(getTipoLocazione(), TipoLocazione.GROTTA);
 		}
 	}
 

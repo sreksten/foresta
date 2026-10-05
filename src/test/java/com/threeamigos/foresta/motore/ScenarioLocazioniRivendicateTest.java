@@ -126,8 +126,8 @@ class ScenarioLocazioniRivendicateTest {
             CoordinateMD visitato = coordinate(TipoLocazione.BOSCO).stream()
                     .filter(c -> !c.equals(partita.gruppo().getCoordinate()) && RegistroArtefatti.getArtefattoInLocazione(c) == null)
                     .findFirst().orElseThrow(AssertionError::new);
-            for (TipoLocazione classe : new TipoLocazione[]{TipoLocazione.BOSCO, TipoLocazione.PALUDE}) {
-                coordinate(classe).forEach(c -> Foresta.setLocazioneVisitata(c, false));
+            for (TipoLocazione tipo : new TipoLocazione[]{TipoLocazione.BOSCO, TipoLocazione.PALUDE}) {
+                coordinate(tipo).forEach(c -> Foresta.setLocazioneVisitata(c, false));
             }
             Foresta.setLocazioneVisitata(visitato, true);
 
@@ -189,11 +189,11 @@ class ScenarioLocazioniRivendicateTest {
         }
     }
 
-    private static List<CoordinateMD> coordinate(TipoLocazione classe) {
+    private static List<CoordinateMD> coordinate(TipoLocazione tipo) {
         List<CoordinateMD> trovate = new ArrayList<>();
         for (int x = 0; x < Foresta.getDimensioneX(); x++) {
             for (int y = 0; y < Foresta.getDimensioneY(); y++) {
-                if (Foresta.getLocazione(x, y) == classe) {
+                if (Foresta.getLocazione(x, y) == tipo) {
                     trovate.add(new CoordinateMD(x, y));
                 }
             }

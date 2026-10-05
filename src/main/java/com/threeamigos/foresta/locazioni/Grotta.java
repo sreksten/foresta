@@ -15,7 +15,7 @@ import com.threeamigos.foresta.tipi.TipoRiposo;
 public class Grotta extends LocazioneBase {
 
 	@Override
-	public TipoLocazione getClasseLocazione() {
+	public TipoLocazione getTipoLocazione() {
 		return TipoLocazione.GROTTA;
 	}
 

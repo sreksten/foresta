@@ -29,7 +29,7 @@ Ci sono due momenti di innesco (enum `MomentoIntermezzo`):
            // Il terzo giorno, se il gruppo sta per entrare in una radura
            return momento == MomentoIntermezzo.INIZIO_LOCAZIONE
                    && LineaTemporale.getGiorno() >= 3
-                   && GruppoGiocatore.getIstanza().getClasseLocazioneCorrente() == TipoLocazione.RADURA;
+                   && GruppoGiocatore.getIstanza().getTipoLocazioneCorrente() == TipoLocazione.RADURA;
        }
 
        @Override
@@ -65,10 +65,10 @@ Quando non serve più, togli `INTERMEZZO_DI_PROVA` da `ClasseIntermezzo` (è seg
 | Apertura della partita | `momento == MomentoIntermezzo.INIZIO_GIOCO` |
 | Dal giorno N in poi | `LineaTemporale.getGiorno() >= N` |
 | Missione principale completata | `RegistroMissioni.getMissionePrincipale().isCompleta()` |
-| Il gruppo sta per entrare in un tipo di locazione | `GruppoGiocatore.getIstanza().getClasseLocazioneCorrente() == TipoLocazione.X` |
+| Il gruppo sta per entrare in un tipo di locazione | `GruppoGiocatore.getIstanza().getTipoLocazioneCorrente() == TipoLocazione.X` |
 | Nel gruppo c'è una certa classe | `GruppoGiocatore.getIstanza().getPersonaggiVivi().stream().anyMatch(p -> p.getClasse() == ClassePersonaggio.MAGO)` |
 
-Attenzione: in quel momento il gruppo si è già spostato, ma la **nuova** locazione non è ancora costruita. `getClasseLocazioneCorrente()` legge il tipo dalla casella e quindi dice già dove si sta entrando. `getLocazioneCorrente()`, invece, restituisce ancora l'oggetto della locazione precedente, con i suoi mostri e il suo stato.
+Attenzione: in quel momento il gruppo si è già spostato, ma la **nuova** locazione non è ancora costruita. `getTipoLocazioneCorrente()` legge il tipo dalla casella e quindi dice già dove si sta entrando. `getLocazioneCorrente()`, invece, restituisce ancora l'oggetto della locazione precedente, con i suoi mostri e il suo stato.
 
 ---
 
