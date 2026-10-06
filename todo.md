@@ -52,7 +52,6 @@ Oggi il Bardo non ha nessuna capacità propria ed è la classe più debole (vedi
   - ingredienti magici (oggi usano l'icona della pergamena): Pergamena, Gemma, Monile, Gingillo, Sigillo.
 - Il Viandante (`ClassePersonaggio.VIANDANTE`, chi si fa scortare dalle missioni) usa le immagini del bardo: servono `personaggi/Viandante.gif` e `icone/Viandante-nobordo-piccolo.gif` (`ClassePersonaggioImmagine`).
 - `img/oggetti/OggettoMissione.gif` è un sacchetto provvisorio, da ridisegnare: lo usano tutti gli oggetti delle missioni (i materiali delle richieste: erbe, minerali, pesci, trofei; l'oggetto smarrito). In futuro magari un'immagine per ogni oggetto.
-- La sacerdotessa che offre una benedizione in locanda (`ScenaInLocanda.conSacerdote`) ha l'immagine della maga: serve `personaggi/Sacerdotessa.gif` (il sacerdote ha già la sua).
 
 ## TODO e FIXME nel codice
 

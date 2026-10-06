@@ -13,9 +13,8 @@ public final class ScenaInLocanda {
 	private static final String SFONDO = "fondi/InternoLocanda.gif";
 	private static final String PRIMO_PIANO = "fondi/ForegroundLocanda.gif";
 	private static final String LOCANDIERE = "personaggi/Locandiere.gif";
-	// Per ora una sacerdotessa ha l'aspetto della maga (manca personaggi/Sacerdotessa.gif)
 	private static final String SACERDOTE = "personaggi/Sacerdote.gif";
-	private static final String SACERDOTESSA = "personaggi/Maga.gif";
+	private static final String SACERDOTESSA = "personaggi/Sacerdotessa.gif";
 	private static final String ID_LOCANDIERE = "locandiere";
 	// Come la scenetta d'ingresso nella locanda (vedi NegozioInScena.LOCANDA)
 	private static final double X_LOCANDIERE = 0.65;
