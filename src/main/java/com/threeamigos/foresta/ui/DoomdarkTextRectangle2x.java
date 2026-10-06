@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.motore.Costanti;
+import com.threeamigos.foresta.modellodati.NotizieMD;
 import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.ui.DoomdarkFont.UnsupportedCharacterException;
 
@@ -14,7 +14,7 @@ import java.util.List;
  * vengono conservate in uno storico, e il raster viene ridisegnato a partire da quello:
  * è ciò che permette di tornare indietro con la rotella invece di limitarsi a far
  * scorrere via il testo vecchio. Lo storico condivide il limite con quanto ricordato
- * da {@link com.threeamigos.foresta.motore.Notizie} (vedi {@link Costanti#MASSIMO_MESSAGGI_RICORDATI}),
+ * da {@link com.threeamigos.foresta.motore.Notizie} (vedi {@link NotizieMD#MASSIMO_MESSAGGI_RICORDATI}),
  * così che dopo un ricaricamento il pannello possa essere ripopolato per intero.
  */
 public class DoomdarkTextRectangle2x {
@@ -122,7 +122,7 @@ public class DoomdarkTextRectangle2x {
 		for (String line : lines) {
 			righe.addAll(FontTool.split(fontMedium, line, width));
 		}
-		while (righe.size() > Costanti.MASSIMO_MESSAGGI_RICORDATI) {
+		while (righe.size() > NotizieMD.MASSIMO_MESSAGGI_RICORDATI) {
 			righe.remove(0);
 		}
 		// Un messaggio nuovo riporta in fondo: nel mezzo di una partita non deve poter

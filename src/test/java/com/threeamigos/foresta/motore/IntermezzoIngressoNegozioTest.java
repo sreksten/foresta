@@ -86,6 +86,9 @@ class IntermezzoIngressoNegozioTest {
 			assertTrue(ModelloDati.getIstanza().getIntermezziMD().isScattato(TipoIntermezzo.INTERMEZZO_ALCHIMISTA.name()));
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			assertEquals(1, partita.eventi().tutti(ComandoAperturaInventarioFornitore.class).size());
+			ComandoAperturaInventarioFornitore apertura = partita.eventi().ultimo(ComandoAperturaInventarioFornitore.class);
+			assertFalse(apertura.getOfferte().isEmpty(), "il motore manda il listino con l'apertura");
+			assertFalse(apertura.getOroscopo().isEmpty(), "e l'oroscopo");
 			assertApreNegozioSenzaTornareAllaSchermataDiGioco(partita, ComandoAperturaInventarioFornitore.class);
 
 			partita.comando(Comando.ANNULLA);

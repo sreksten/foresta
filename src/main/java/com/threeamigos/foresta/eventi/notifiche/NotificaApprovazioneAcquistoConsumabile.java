@@ -13,13 +13,16 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabil
 public class NotificaApprovazioneAcquistoConsumabile extends EventoBase {
 
     private final ComandoAcquistoConsumabile comandoAcquistoConsumabile;
+    private final int prezzoPagato;
 
     /**
      * @param comandoAcquistoConsumabile la richiesta di acquisto di un Consumabile da un commerciante che si approva
+     * @param prezzoPagato quanto ha pagato il gruppo, dopo la contrattazione
      */
-    public NotificaApprovazioneAcquistoConsumabile(ComandoAcquistoConsumabile comandoAcquistoConsumabile) {
+    public NotificaApprovazioneAcquistoConsumabile(ComandoAcquistoConsumabile comandoAcquistoConsumabile, int prezzoPagato) {
         super(TipoEvento.NOTIFICA_APPROVAZIONE_ACQUISTO_CONSUMABILE);
         this.comandoAcquistoConsumabile = comandoAcquistoConsumabile;
+        this.prezzoPagato = prezzoPagato;
     }
 
     /**
@@ -27,6 +30,13 @@ public class NotificaApprovazioneAcquistoConsumabile extends EventoBase {
      */
     public ComandoAcquistoConsumabile getEventoRichiestaAcquistoConsumabile() {
         return comandoAcquistoConsumabile;
+    }
+
+    /**
+     * @return quanto ha pagato il gruppo, dopo la contrattazione
+     */
+    public int getPrezzoPagato() {
+        return prezzoPagato;
     }
 
 }

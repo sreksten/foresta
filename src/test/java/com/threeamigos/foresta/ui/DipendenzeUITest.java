@@ -43,11 +43,6 @@ class DipendenzeUITest {
 	 * Le dipendenze che restano da togliere: quando se ne toglie una, va tolta anche da qui (il test lo pretende)
 	 */
 	private static final Set<String> ECCEZIONI = new TreeSet<>(Arrays.asList(
-			// l'alchimista costruisce da sé le offerte e l'oroscopo, e DoomdarkTextRectangle2x legge
-			// Costanti.MASSIMO_MESSAGGI_RICORDATI (todo.md, Architettura, punto 6)
-			"motore.Costanti",
-			"motore.ProduttoreDiTestiCasuale",
-			"incantesimi.FabbricaIncantesimi",
 			// ForestaUI lo legge da InternoStatoDiGioco per sapere se il gioco è ancora al logo o all'intro
 			"motore.Stato"));
 

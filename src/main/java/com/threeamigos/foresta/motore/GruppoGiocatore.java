@@ -784,7 +784,13 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	}
 
 	private void suEventoRichiestaAcquistoConsumabile(ComandoAcquistoConsumabile comandoAcquistoConsumabile) {
-		int costoOggetto = prezzoAcquisto(comandoAcquistoConsumabile.getPrezzo());
+		// Il prezzo lo decide l'offerta dell'alchimista; se il comando non ne corrisponde a nessuna, si ignora
+		Optional<OffertaConsumabile> offerta = OfferteAlchimista.trova(this, comandoAcquistoConsumabile.getTipoConsumabile(),
+				comandoAcquistoConsumabile.getClasseIncantesimo(), comandoAcquistoConsumabile.getPersonaggio());
+		if (!offerta.isPresent()) {
+			return;
+		}
+		int costoOggetto = prezzoAcquisto(offerta.get().getCosto());
 		if (getMonete() >= costoOggetto) {
 			switch (comandoAcquistoConsumabile.getTipoConsumabile()) {
 				case POZIONE_SALUTE:
@@ -825,7 +831,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 					throw new IllegalArgumentException("Tipo consumabile non valido");
 			}
 			subMonete(costoOggetto);
-			BusEventi.pubblica(new NotificaApprovazioneAcquistoConsumabile(comandoAcquistoConsumabile));
+			BusEventi.pubblica(new NotificaApprovazioneAcquistoConsumabile(comandoAcquistoConsumabile, costoOggetto));
 		} else {
 			BusEventi.pubblica(new NotificaRifiutoAcquistoConsumabile(comandoAcquistoConsumabile));
 		}

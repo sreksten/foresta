@@ -17,6 +17,12 @@ import java.util.List;
  */
 public class NotizieMD implements Serializzabile {
 
+	/**
+	 * Quanti messaggi si ricordano. Lo storico scorrevole del pannello di testo (ui.DoomdarkTextRectangle2x)
+	 * ha lo stesso limite, così che dopo un ricaricamento il pannello possa essere ripopolato per intero.
+	 */
+	public static final int MASSIMO_MESSAGGI_RICORDATI = 100;
+
 	// Le più recenti in testa, le più vecchie in coda.
 	private final List<MessaggioMD> ultimiMessaggi = new ArrayList<>();
 	private final List<Notizia> ultimeNotizie = new ArrayList<>();

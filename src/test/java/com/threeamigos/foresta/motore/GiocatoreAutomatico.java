@@ -685,7 +685,7 @@ final class GiocatoreAutomatico {
 
 	/**
 	 * Gli acquisti dall'alchimista, come il doppio click della UI (DisplayableCanvasScambiatoreConsumabili):
-	 * ComandoAcquistoConsumabile col costo di listino, che il gruppo sconta con la contrattazione.
+	 * ComandoAcquistoConsumabile; il costo di listino lo decide il motore, e il gruppo lo sconta con la contrattazione.
 	 */
 	private void acquistaDallAlchimista(GruppoGiocatore gruppo) {
 		int vivi = gruppo.getNumeroPersonaggiVivi();
@@ -765,7 +765,7 @@ final class GiocatoreAutomatico {
 
 	private boolean compra(GruppoGiocatore gruppo, TipoConsumabile tipo, ClasseIncantesimo classe, Personaggio personaggio, int costo) {
 		int prima = gruppo.getMonete();
-		partita.pubblica(new ComandoAcquistoConsumabile(tipo, classe, personaggio, costo));
+		partita.pubblica(new ComandoAcquistoConsumabile(tipo, classe, personaggio));
 		int spese = prima - gruppo.getMonete();
 		moneteNeiNegozi += Math.max(0, spese);
 		return spese > 0 || (spese == 0 && gruppo.prezzoAcquisto(costo) == 0);

@@ -140,7 +140,8 @@ public class SnifferBusEventi {
     }
 
     private void onEventoApprovazioneAcquistoConsumabile(NotificaApprovazioneAcquistoConsumabile evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaAcquistoConsumabile().getUuid());
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaAcquistoConsumabile().getUuid()
+                + ", Pagato: " + evento.getPrezzoPagato());
     }
 
     private void onEventoApprovazionePrelievoArtefatto(NotificaApprovazionePrelievoArtefatto evento) {
@@ -343,7 +344,7 @@ public class SnifferBusEventi {
     private void onEventoRichiestaAcquistoConsumabile(ComandoAcquistoConsumabile evento) {
         ClasseIncantesimo incantesimo = evento.getClasseIncantesimo();
         Logger.log(headerEvento(evento) + "Gruppo richiede di acquistare " + evento.getTipoConsumabile() +
-                (incantesimo != null ? (" " + incantesimo) : "") + ", Costo: " + evento.getPrezzo());
+                (incantesimo != null ? (" " + incantesimo) : ""));
     }
 
     private void onEventoRichiestaAperturaFinestraCombattimento(InternoRichiestaAperturaFinestraCombattimento evento) {

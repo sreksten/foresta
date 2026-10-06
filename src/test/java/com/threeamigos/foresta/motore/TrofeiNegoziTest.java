@@ -73,17 +73,19 @@ class TrofeiNegoziTest {
 	@Test
 	void bombaroloECartografoContanoGliAcquistiDallAlchimista() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(11)) {
+			// Il prezzo lo decide l'alchimista: servono le monete per pagarlo
+			partita.gruppo().addMonete(100_000);
 			for (int i = 0; i < 100; i++) {
-				partita.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.INCANTESIMO, FabbricaIncantesimi.casuale(), null, 0));
+				partita.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.INCANTESIMO, FabbricaIncantesimi.casuale(), null));
 			}
-			partita.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.POZIONE_SALUTE, null, null, 0));
+			partita.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.POZIONE_SALUTE, null, null));
 			partita.pubblica(new InternoFineLocazione());
 
 			assertEquals(100, RegistroTrofei.getProgresso(TipoTrofeo.BOMBAROLO), "una pozione non e' un incantesimo");
 			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.BOMBAROLO));
 			assertFalse(RegistroTrofei.isVinto(TipoTrofeo.CARTOGRAFO));
 
-			partita.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.MAPPA_COMPLETA_FORESTA, null, null, 0));
+			partita.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.MAPPA_COMPLETA_FORESTA, null, null));
 			partita.pubblica(new InternoFineLocazione());
 
 			assertTrue(RegistroTrofei.isVinto(TipoTrofeo.CARTOGRAFO));

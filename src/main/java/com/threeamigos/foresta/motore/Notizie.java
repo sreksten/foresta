@@ -42,7 +42,7 @@ public class Notizie {
 	private static void aggiungiMessaggio(MessaggioMD messaggioMD) {
 		List<MessaggioMD> ultimiMessaggi = getNotizieMD().getUltimiMessaggi();
 		ultimiMessaggi.add(0, messaggioMD);
-		while (ultimiMessaggi.size() > Costanti.MASSIMO_MESSAGGI_RICORDATI) {
+		while (ultimiMessaggi.size() > NotizieMD.MASSIMO_MESSAGGI_RICORDATI) {
 			ultimiMessaggi.remove(ultimiMessaggi.size() - 1);
 		}
 	}

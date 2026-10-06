@@ -104,7 +104,8 @@ public abstract class Citta extends LocazioneUnica {
 				stato = StatoInCitta.DA_ALCHIMISTA;
 				List<Comando> comandiPossibili = new ArrayList<>();
 				comandiPossibili.add(Comando.ANNULLA);
-				BusEventi.pubblica(new ComandoAperturaInventarioFornitore(comandiPossibili));
+				BusEventi.pubblica(new ComandoAperturaInventarioFornitore(comandiPossibili, OfferteAlchimista.elenco(g),
+						String.join(" ", ProduttoreDiTestiCasuale.oroscopo())));
 
 			} else if (azione == Comando.ARMAIOLO) {
 				stato = StatoInCitta.DA_ARMAIOLO;

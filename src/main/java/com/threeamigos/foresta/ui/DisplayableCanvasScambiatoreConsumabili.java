@@ -5,11 +5,10 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabil
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoConsumabile;
-import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
+import com.threeamigos.foresta.interfacce.VistaOffertaConsumabile;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
 
@@ -24,10 +23,17 @@ import java.util.List;
  */
 public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasScambiatore {
 
+    // Il listino che il motore ha mandato con l'apertura della bottega: nomi, descrizioni e costi sono suoi
+    private List<? extends VistaOffertaConsumabile> offerte = Collections.emptyList();
+
     public DisplayableCanvasScambiatoreConsumabili(int width, int height, VistaPartita vistaPartita) {
         super(width, height, vistaPartita);
         BusEventi.iscriviti(NotificaApprovazioneAcquistoConsumabile.class, this::gestisciEventoApprovazioneAcquistoConsumabile);
         BusEventi.iscriviti(NotificaRifiutoAcquistoConsumabile.class, this::gestisciEventoRifiutoAcquistoConsumabile);
+    }
+
+    void impostaOfferte(List<? extends VistaOffertaConsumabile> offerte) {
+        this.offerte = offerte;
     }
 
     private void gestisciEventoApprovazioneAcquistoConsumabile(NotificaApprovazioneAcquistoConsumabile notificaApprovazioneAcquistoConsumabile) {
@@ -35,7 +41,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
 
         ComandoAcquistoConsumabile comando = notificaApprovazioneAcquistoConsumabile.getEventoRichiestaAcquistoConsumabile();
 
-        aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteMoneta, -vistaPartita.getGruppoGiocatore().prezzoAcquisto(comando.getPrezzo()), font,
+        aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteMoneta, -notificaApprovazioneAcquistoConsumabile.getPrezzoPagato(), font,
                 xMassimaZonaCentrale, yRigaMonete(), "Monete spese"));
 
         if (comando.getTipoConsumabile() == TipoConsumabile.INCANTESIMO) {
@@ -270,7 +276,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         Consumabile consumabile = trovaConsumabile(disponibili, xMinimaZonaDestra, offsetYZonaDestra, x, y, true);
         if (consumabile != null) {
             BusEventi.pubblica(new ComandoAcquistoConsumabile(consumabile.tipo, consumabile.classeIncantesimo,
-                    consumabile.personaggio, consumabile.costo));
+                    consumabile.personaggio));
         }
     }
 
@@ -278,146 +284,64 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         List<Consumabile> elencoGruppo = new ArrayList<>();
         VistaGruppoGiocatore gruppoGiocatore = vistaPartita.getGruppoGiocatore();
         for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
-            int quantita = gruppoGiocatore.getIncantesimi(classeIncantesimo);
-            if (quantita > 0) {
-                elencoGruppo.add(costruisciIncantesimo(classeIncantesimo, quantita));
+            aggiungiSePosseduto(elencoGruppo, TipoConsumabile.INCANTESIMO, classeIncantesimo,
+                    gruppoGiocatore.getIncantesimi(classeIncantesimo));
+        }
+        aggiungiSePosseduto(elencoGruppo, TipoConsumabile.POZIONE_SALUTE, null, gruppoGiocatore.getPozioniSalute());
+        aggiungiSePosseduto(elencoGruppo, TipoConsumabile.POZIONE_SALUTE_GRANDE, null, gruppoGiocatore.getPozioniSaluteGrande());
+        aggiungiSePosseduto(elencoGruppo, TipoConsumabile.POZIONE_MAGIA, null, gruppoGiocatore.getPozioniMagia());
+        aggiungiSePosseduto(elencoGruppo, TipoConsumabile.POZIONE_MAGIA_GRANDE, null, gruppoGiocatore.getPozioniMagiaGrande());
+        return elencoGruppo;
+    }
+
+    /**
+     * Ciò che il gruppo ha si descrive come la voce del listino che lo vende (stesso nome, stessa descrizione)
+     */
+    private void aggiungiSePosseduto(List<Consumabile> elenco, TipoConsumabile tipo, ClasseIncantesimo classeIncantesimo,
+                                     int quantita) {
+        if (quantita <= 0) {
+            return;
+        }
+        for (VistaOffertaConsumabile offerta : offerte) {
+            if (offerta.getTipo() == tipo && offerta.getClasseIncantesimo() == classeIncantesimo) {
+                elenco.add(daOfferta(offerta, quantita));
+                return;
             }
         }
-        if (gruppoGiocatore.getPozioniSalute() > 0) {
-            elencoGruppo.add(costruisciPozioneSalute(gruppoGiocatore.getPozioniSalute()));
-        }
-        if (gruppoGiocatore.getPozioniSaluteGrande() > 0) {
-            elencoGruppo.add(costruisciPozioneSaluteGrande(gruppoGiocatore.getPozioniSaluteGrande()));
-        }
-        if (gruppoGiocatore.getPozioniMagia() > 0) {
-            elencoGruppo.add(costruisciPozioneMagia(gruppoGiocatore.getPozioniMagia()));
-        }
-        if (gruppoGiocatore.getPozioniMagiaGrande() > 0) {
-            elencoGruppo.add(costruisciPozioneMagiaGrande(gruppoGiocatore.getPozioniMagiaGrande()));
-        }
-        return elencoGruppo;
     }
 
     private List<Consumabile> getElencoVenditore() {
         List<Consumabile> elencoVenditore = new ArrayList<>();
-        for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
-            elencoVenditore.add(costruisciIncantesimo(classeIncantesimo, 1));
+        for (VistaOffertaConsumabile offerta : offerte) {
+            elencoVenditore.add(daOfferta(offerta, 1));
         }
-        elencoVenditore.add(costruisciPozioneSalute(1));
-        elencoVenditore.add(costruisciPozioneSaluteGrande(1));
-        elencoVenditore.add(costruisciPozioneMagia(1));
-        elencoVenditore.add(costruisciPozioneMagiaGrande(1));
-        VistaGruppoGiocatore gruppoGiocatore = vistaPartita.getGruppoGiocatore();
-        for (VistaPersonaggio personaggio : gruppoGiocatore.getPersonaggiVivi()) {
-            if (!personaggio.isPNG()) {
-                Consumabile consumabile = new Consumabile(
-                        TipoConsumabile.AUMENTO_MAGIA_SINGOLO,
-                        "Aumento Magia massima",
-                        "Aumenta la magia massima di " + personaggio.getNome(),
-                        1,
-                        null,
-                        personaggio,
-                        Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO,
-                        ClassePersonaggioImmagine.getIcona(personaggio.getClasse())
-                );
-                elencoVenditore.add(consumabile);
-            }
-        }
-        long conteggioPersonaggi = gruppoGiocatore.getPersonaggiVivi()
-                .stream()
-                .filter(p -> !p.isPNG())
-                .count();
-        if (conteggioPersonaggi > 1) {
-            long costo = Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO +
-                    (conteggioPersonaggi - 1) * Costanti.COSTO_AUMENTO_MAGIA_GIOCATORE_SINGOLO * 75 / 100;
-            Consumabile consumabile = new Consumabile(
-                    TipoConsumabile.AUMENTO_MAGIA_GRUPPO,
-                    "Aumento Magia massima",
-                    "Aumenta la magia massima di tutto il gruppo",
-                    1,
-                    null,
-                    null,
-                    (int)costo,
-                    ImageCache.spriteGruppo
-            );
-            elencoVenditore.add(consumabile);
-        }
-        elencoVenditore.add(new Consumabile(TipoConsumabile.MAPPA_PARZIALE_FORESTA,
-                "Mappa della zona",
-                "Una mappa della zona circostante",
-                1,
-                null,
-                null,
-                Costanti.COSTO_MAPPA_DELLA_ZONA,
-                ImageCache.spriteMappa
-        ));
-        elencoVenditore.add(new Consumabile(TipoConsumabile.MAPPA_COMPLETA_FORESTA,
-                "Mappa della Foresta",
-                "Una mappa completa della Foresta",
-                1,
-                null,
-                null,
-                Costanti.COSTO_MAPPA_DELLA_FORESTA,
-                ImageCache.spriteMappa
-        ));
         return elencoVenditore;
     }
 
-    private Consumabile costruisciIncantesimo(ClasseIncantesimo classeIncantesimo, int quantita) {
-        String nomeSingolare = classeIncantesimo.getNomeSingolare();
-        nomeSingolare = nomeSingolare.substring(0, 1).toUpperCase() + nomeSingolare.substring(1);
-        return new Consumabile(TipoConsumabile.INCANTESIMO,
-                nomeSingolare,
-                classeIncantesimo.getEffetto(),
-                quantita,
-                classeIncantesimo,
-                null,
-                FabbricaIncantesimi.costoAcquisto(classeIncantesimo),
-                ImageCache.spriteIncantesimi[classeIncantesimo.ordinal()]);
+    private Consumabile daOfferta(VistaOffertaConsumabile offerta, int quantita) {
+        return new Consumabile(offerta.getTipo(), offerta.getNome(), offerta.getDescrizione(), quantita,
+                offerta.getClasseIncantesimo(), offerta.getPersonaggio(), offerta.getCosto(), iconaDi(offerta));
     }
 
-    private Consumabile costruisciPozioneSalute(int quantita) {
-        return new Consumabile(TipoConsumabile.POZIONE_SALUTE,
-                "Pozione della Salute",
-                "Fa riacquistare punti di Salute",
-                quantita,
-                null,
-                null,
-                Costanti.COSTO_POZIONE_SALUTE,
-                ImageCache.spritePozioneSalute);
-    }
-
-    private Consumabile costruisciPozioneSaluteGrande(int quantita) {
-        return new Consumabile(TipoConsumabile.POZIONE_SALUTE_GRANDE,
-                "Pozione della Salute (grande)",
-                "Fa riacquistare punti di Salute e ne aumenta il livello massimo",
-                quantita,
-                null,
-                null,
-                Costanti.COSTO_POZIONE_SALUTE_GRANDE,
-                ImageCache.spritePozioneSaluteGrande);
-    }
-
-    private Consumabile costruisciPozioneMagia(int quantita) {
-        return new Consumabile(TipoConsumabile.POZIONE_MAGIA,
-                "Pozione della Magia",
-                "Fa riacquistare punti di Magia",
-                quantita,
-                null,
-                null,
-                Costanti.COSTO_POZIONE_MAGIA,
-                ImageCache.spritePozioneMagia);
-    }
-
-    private Consumabile costruisciPozioneMagiaGrande(int quantita) {
-        return new Consumabile(TipoConsumabile.POZIONE_MAGIA_GRANDE,
-                "Pozione della Magia (grande)",
-                "Fa riacquistare punti di Magia e ne aumenta il livello massimo",
-                quantita,
-                null,
-                null,
-                Costanti.COSTO_POZIONE_MAGIA_GRANDE,
-                ImageCache.spritePozioneMagiaGrande);
+    private static Image iconaDi(VistaOffertaConsumabile offerta) {
+        switch (offerta.getTipo()) {
+            case INCANTESIMO:
+                return ImageCache.spriteIncantesimi[offerta.getClasseIncantesimo().ordinal()];
+            case POZIONE_SALUTE:
+                return ImageCache.spritePozioneSalute;
+            case POZIONE_SALUTE_GRANDE:
+                return ImageCache.spritePozioneSaluteGrande;
+            case POZIONE_MAGIA:
+                return ImageCache.spritePozioneMagia;
+            case POZIONE_MAGIA_GRANDE:
+                return ImageCache.spritePozioneMagiaGrande;
+            case AUMENTO_MAGIA_SINGOLO:
+                return ClassePersonaggioImmagine.getIcona(offerta.getPersonaggio().getClasse());
+            case AUMENTO_MAGIA_GRUPPO:
+                return ImageCache.spriteGruppo;
+            default:
+                return ImageCache.spriteMappa;
+        }
     }
 
     private static class Consumabile {

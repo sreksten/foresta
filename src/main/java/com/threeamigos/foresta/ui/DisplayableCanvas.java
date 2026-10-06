@@ -7,10 +7,10 @@ import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.VistaBancoDiLavoro;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
+import com.threeamigos.foresta.interfacce.VistaOffertaConsumabile;
 import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.modellodati.MessaggioMD;
-import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -823,11 +823,18 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
-	public void alchimista() {
+	public void impostaOfferteAlchimista(List<? extends VistaOffertaConsumabile> offerte) {
+		alchimista.impostaOfferte(offerte);
+		repaint();
+	}
+
+	/**
+	 * @param oroscopo il testo con cui l'alchimista accoglie il gruppo, scelto dal motore
+	 */
+	public void alchimista(String oroscopo) {
 		stato = StatoDisplayableCanvas.STATO_ALCHIMISTA;
 		// FIXME: capire come gestire l'oroscopo a modo e se si possa allargare il fumetto dinamicamente.
 		// FIXME: fatto quello, si può dismettere tutto il vecchio flusso.
-		String oroscopo = String.join(" ", ProduttoreDiTestiCasuale.oroscopo());
 		notificaFumetto(oroscopo, alchimista.getCoordinateFumetto());
 		notificaFumetto("Cosa posso fare per voi?", alchimista.getCoordinateFumetto());
 		repaint();

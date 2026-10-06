@@ -15,7 +15,7 @@ Sorgenti in `src/main/java/com/threeamigos/foresta` (abbreviato `…/` sotto), r
 | Combattimento | `…/motore/CalcolatoreCombattimento`, `Ondata`, `…/modellodati/EffettoDiStatoMD` | `motore_di_gioco.md` §7, `interazioni_effetti_di_stato.md` |
 | Personaggi e gruppi | `…/personaggi`, `…/motore/Gruppo*`, `GestoreProgressione` | `motore_di_gioco.md` §8 |
 | Oggetti, artefatti, incantatore | `…/oggetti`, `…/motore/Automa{Inventario,AcquistiArtefatti,Incantatore,ScambiatoreArtefatti}`, `Regole*` | `artefatti_e_incantamenti.md` |
-| Negozi ed economia | `…/offerte`, `…/motore/RegoleContrattazione` | `economia.md` |
+| Negozi ed economia | `…/offerte`, `…/motore/RegoleContrattazione`, `OfferteAlchimista` | `economia.md` |
 | Missioni (infrastruttura) | `…/missioni/MissioneAPassi`, `Passo`, `…/motore/RegistroMissioni` | `gestione_missioni.md` |
 | Missioni (catalogo) | `…/missioni/*` | `passi_missioni.md` |
 | Intermezzi | `…/intermezzi`, `…/motore/RegistroIntermezzi` | `intermezzi.md` |
@@ -49,6 +49,6 @@ Panoramica in `motore_grafico.md`.
 
 ## Build e test
 
-`mvn test` esegue tutti i test (JUnit 5, in `src/test/java`); al 2026-10-06 sono 709, tutti verdi (16 saltati).
+`mvn test` esegue tutti i test (JUnit 5, in `src/test/java`); al 2026-10-06 sono 714, tutti verdi (16 saltati).
 `ui/DipendenzeUITest` controlla che la UI non importi motore e dominio: le dipendenze che restano sono nelle sue `ECCEZIONI`.
 Le cose da fare generali sono in `todo.md`; i `TODO`/`FIXME` puntuali restano nel codice.
