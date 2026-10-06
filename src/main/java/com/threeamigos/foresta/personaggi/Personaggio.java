@@ -138,7 +138,7 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
     void setSfidante(boolean sfidante);
 	/**
 	 * Se il personaggio va affrontato per forza: lo vuole una missione (vedi IncontroDiMissione). Allora non si può
-	 * passare inosservati (vedi LocazioneBase).
+	 * passare inosservati, né corromperlo, né farci amicizia (vedi LocazioneBase).
 	 */
     boolean isDaAffrontare();
     void setDaAffrontare(boolean daAffrontare);

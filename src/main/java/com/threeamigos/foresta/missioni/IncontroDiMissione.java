@@ -22,8 +22,11 @@ import java.util.Objects;
  * IncontroDiMissione.di(TipoPersonaggio.GOBLIN, 3).conCapo("Grumolo", TipoPersonaggio.HOBGOBLIN);
  * </pre>
  * Può arrivare a ondate (vedi {@link #poi}): sconfitti tutti quelli in campo, la locazione si riempie di nuovo, fino a
- * {@value #ONDATE_MASSIME} ondate in tutto. Con delle ondate in arrivo non si corrompe, non si fa amicizia e non si
- * passa inosservati; chi fugge, alla visita dopo ricomincia dalla prima.
+ * {@value #ONDATE_MASSIME} ondate in tutto. Chi fugge, alla visita dopo ricomincia dalla prima.
+ * <p>
+ * Gli avversari di una missione vanno sconfitti: non si corrompono, non si fa amicizia con loro e non si passa
+ * inosservati (vedi Personaggio.isDaAffrontare), a meno che siano {@link #aggirabile} (le guardie di un colpo, che si
+ * possono evitare). Le ondate in arrivo tolgono le stesse scorciatoie anche alle guardie.
  * <pre>
  * IncontroDiMissione.di(TipoPersonaggio.SCHELETRO, 3)
  *         .poi(IncontroDiMissione.di(TipoPersonaggio.MAGO, 1).conCapo("Mortimer"), "Il negromante esce dall'ombra!");

@@ -1056,8 +1056,10 @@ public abstract class LocazioneBase implements Locazione {
 			return Stato.FINE_LOCAZIONE;
 		} else {
 			setCompleta(false);
-			// Né con delle ondate in arrivo: corrotta la prima, non arriverebbero le altre
-			if (!gruppoAvversario.hasOndateSuccessive()) {
+			// Né con degli avversari che una missione vuole sconfitti (vedi Personaggio.isDaAffrontare): un capobanda con
+			// una taglia non si corrompe, e una banda non diventa amica. E nemmeno con delle ondate in arrivo: corrotta
+			// la prima, non arriverebbero le altre
+			if (!gruppoAvversario.hasOndateSuccessive() && !gruppoAvversario.isDaAffrontare()) {
 				Personaggio p;
 				for (int i = 0; i < numeroAvversari; i++) {
 					p = gruppoAvversario.getPersonaggio(i);

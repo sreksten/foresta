@@ -361,8 +361,9 @@ OGGETTO_SMARRITO
 #   VITTORIA=, RINGRAZIAMENTO=, RICORDO=  quando sono sconfitti, al ritorno in città, e il ricordo del luogo;
 #   ONDATA_2=, ARRIVO_2=, ONDATA_3=, ARRIVO_3=  facoltativi: le ondate che arrivano, sconfitti tutti quelli in campo
 #               (al massimo tre in tutto, non in un duello): classe e numero, e se c'è un capo con un nome il terzo
-#               pezzo è come CAPO= (TROLL 1 SI); ARRIVO_ è che cosa si scrive quando l'ondata arriva. Con le ondate non
-#               si corrompe, non si fa amicizia e non si passa inosservati; chi fugge, alla visita dopo ricomincia.
+#               pezzo è come CAPO= (TROLL 1 SI); ARRIVO_ è che cosa si scrive quando l'ondata arriva. Chi fugge,
+#               alla visita dopo ricomincia. Per tutti i nemici di un incarico (non solo con le ondate) non si corrompe, non si fa
+#               amicizia e non si passa inosservati: vanno sconfitti.
 # Nei testi %CAPO% è il nome del capo, %CAPO_2% e %CAPO_3% quelli dei capi delle ondate. Nei testi non si usa il ";".
 # Una riga può pescare dei pezzi a caso dalla grammatica: i titoli nobiliari, per esempio, scelgono il titolo una
 # volta sola con [TITOLO_NOBILE=[TITOLO_DELLA_PALUDE]] e lo ripetono nei testi con [#TITOLO_NOBILE], e i nemici con

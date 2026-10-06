@@ -71,8 +71,8 @@ Compaiono solo nelle locazioni mai visitate (salvo trofei e casella fissa), mai 
 | `conCapo(nome[, classe])` | il primo avversario (o uno in più, di un'altra classe) ha un nome proprio e un livello sopra gli altri |
 | `finoAllaResa()` | gli avversari, sconfitti, si arrendono; se si arrende tutto il gruppo, il gruppo se ne va e torna per la rivincita |
 | `aDuello()` | un solo avversario sfida a duello: uno contro uno, gli altri del gruppo in panchina (un rifiuto lascia lo sfidante dov'è) |
-| `poi(ondata, arrivo)` | un'ondata che arriva a quelli di prima sconfitti, con il testo d'arrivo; **al massimo 3 ondate** in tutto, mai con un duello; con ondate non si corrompe, non si fa amicizia e non si passa inosservati, e chi fugge ricomincia dalla prima |
-| `aggirabile()` | si può evitare passando inosservati (le guardie di un colpo); gli altri avversari vanno affrontati |
+| `poi(ondata, arrivo)` | un'ondata che arriva a quelli di prima sconfitti, con il testo d'arrivo; **al massimo 3 ondate** in tutto, mai con un duello; chi fugge ricomincia dalla prima |
+| `aggirabile()` | si può evitare passando inosservati (le guardie di un colpo); gli altri avversari vanno affrontati: non si passa inosservati, non si corrompono e non si fa amicizia con loro |
 
 Gli avversari nascono al livello del mondo. Come panchina, resa, duello e passaggio inosservato agiscono in combattimento è descritto in [`motore_di_gioco.md`](motore_di_gioco.md) §7.
 

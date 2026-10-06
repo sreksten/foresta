@@ -129,6 +129,28 @@ class ScenarioOndateTest {
         }
     }
 
+    @Test
+    void unaBandaDiMissioneNonSiCorrompeNeSiFaAmiciziaNeSiAggira() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(291)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            partita.gruppo().addMonete(100);
+            CoordinateMD bosco = unaCasellaDi(TipoLocazione.BOSCO);
+            partita.gruppo().setCoordinate(bosco);
+            Locazione locazione = Foresta.costruisciIstanza(bosco);
+            partita.gruppo().setLocazioneCorrente(locazione);
+            GruppoAvversario avversari = GruppoAvversario.getIstanza();
+            avversari.reimposta();
+
+            // Gli elfi e i centauri, di norma, si corrompono e fanno amicizia: ma questi li vuole una missione
+            IncontroDiMissione.di(TipoPersonaggio.ELFO, 2).conCapo("Elrohir", TipoPersonaggio.CENTAURO).crea()
+                    .forEach(avversari::aggiungiPersonaggio);
+            assertTrue(avversari.getPersonaggi().stream().allMatch(p -> p.isCorrompibile() && p.isAmichevole()),
+                    "di loro sono corrompibili e amichevoli");
+            assertEquals(Stato.IN_LOCAZIONE, locazione.impostaAzioni(partita.gruppo(), avversari, null));
+            assertComandiSenzaScorciatoie(partita);
+        }
+    }
+
     private static void assertComandiSenzaScorciatoie(PartitaDiTest partita) {
         java.util.Collection<Comando> comandi = partita.eventi().ultimo(InternoAggiornamentoComandiDisponibili.class).getPossibilita();
         assertTrue(comandi.contains(Comando.COMBATTIMENTO), String.valueOf(comandi));
