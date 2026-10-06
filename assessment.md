@@ -67,7 +67,7 @@ Valutazione dello stato del progetto al **2026-10-05**, scritta dopo la revision
 - **Tipi di missione non coperti:** 18 `TipoMissione` senza missione né annotazione (`RITIRATA_TATTICA`, `SCAMBIO_OSTAGGI`, `INGANNO`, `IMBROGLIONE`, `RAPIMENTO`, `RIFUGIO`, `BLINDATURA`, `ARTIGIANATO`, `COSTRUZIONE` e nove di progressione). Nessun test verifica i commenti `// Coperto da:` (`passi_missioni.md` §7).
 - **Codice senza utilizzatori:** il passo `COSTRUISCI` è usato solo dai test; l'interfaccia `FornitoreMissione` non è usata da nessuna classe (`gestione_missioni.md` §11).
 - **Grammatiche:** la produzione `NOTIZIE_CITTA` esiste (`src/main/resources/com/threeamigos/foresta/motore/locande.txt:831`) ma nessuna classe la usa. Le vecchie `artefatti.txt` e `artefatti_pp.txt` sono state tolte dal gioco il 2026-10-05.
-- **Immagini provvisorie:** Viandante, sacerdote e sacerdotessa usano immagini di altre classi; gli oggetti di missione condividono un sacchetto provvisorio ([`todo.md`](todo.md)).
+- **Immagini provvisorie:** gli oggetti di missione condividono un sacchetto provvisorio ([`todo.md`](todo.md)).
 
 ## 6. Prossimi passi consigliati
 
@@ -77,7 +77,7 @@ Valutazione dello stato del progetto al **2026-10-05**, scritta dopo la revision
 4. **Decidere sulla modalità verticale**: sistemarla o toglierla. Oggi è rotta.
 5. **Separare il modello dati dalla UI**: fatto (viste in sola lettura verso la UI, identificativi verso il motore; vedi [`motore_di_gioco.md`](motore_di_gioco.md) §1). Il passo successivo sarebbe dividere il progetto in moduli.
 6. **Un test sui commenti `// Coperto da:`** dei `TipoMissione`, prima di aggiungere nuove famiglie di missioni.
-7. **Immagini mancanti** (artefatti, Viandante, sacerdoti, oggetti di missione), quando c'è tempo per la grafica.
+7. **Immagini mancanti** (artefatti, oggetti di missione), quando c'è tempo per la grafica.
 
 ## 7. Come è stato fatto
 

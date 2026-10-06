@@ -29,6 +29,7 @@ public enum ClasseIcona {
 	MAGA(Comando.MAGA, TipoPersonaggio.MAGA, "icone/Maga.gif"),
 	MAGO(Comando.MAGO, TipoPersonaggio.MAGO, "icone/Mago.gif"),
 	OMBRAFIAMMA(TipoPersonaggio.OMBRAFIAMMA, "icone/OmbraFiamma.gif"),
+	VIANDANTE(TipoPersonaggio.VIANDANTE, "icone/Viandante.gif"),
 
 	SINGOLO_ATTACCO(Comando.SINGOLO_ATTACCO,"icone/SingoloAttacco.gif"),
 	COMBATTIMENTO(Comando.COMBATTIMENTO,"icone/Combattimento.gif"),
