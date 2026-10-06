@@ -77,7 +77,7 @@ Compaiono solo nelle locazioni mai visitate (salvo trofei e casella fissa), mai 
 
 Gli avversari nascono al livello del mondo. Come panchina, resa, duello e passaggio inosservato agiscono in combattimento è descritto in [`motore_di_gioco.md`](motore_di_gioco.md) §7.
 
-**`Ricompensa`**: `Ricompensa.inMonete(n).conPreziosi(n).conEsperienza(n).conArtefatto(supplier)`. **`Costruzione`**: `Costruzione.con(materiali…).conMonete(n).inOre(n)`. **`Mandante`** e **`AspettoDelMandante`**: chi chiede e come compare nella scena in città (un mandante qualsiasi con l'aspetto del locandiere, il capitano delle guardie, l'armaiolo, l'alchimista, il locandiere); `ScenaInCitta` e `ScenaInLocanda` sono le scene degli intermezzi. **`TestiDeiLuoghi`**: come i testi nominano i luoghi.
+**`Ricompensa`**: `Ricompensa.inMonete(n).conPreziosi(n).conEsperienza(n).conArtefatto(supplier)`. **`Costruzione`**: `Costruzione.con(materiali…).conMonete(n).inOre(n)`. **`Mandante`** e **`AspettoDelMandante`**: chi chiede e come compare nella scena in città (un mandante qualsiasi con l'aspetto del locandiere, il capitano delle guardie, l'armaiolo, l'alchimista, il locandiere); `ScenaInCitta` e `ScenaInLocanda` sono le scene degli intermezzi. Se la missione ha portato in città qualcuno (un ostaggio liberato, un bardo da riportare a casa) lo dice alla scena con `ScenaInCitta.conOspite(classe)` prima delle battute: nella scena, che si costruisce dopo che la missione lo ha già congedato dal gruppo, entra subito dopo il capo e prima degli altri e guarda il mandante (un viandante è `TipoPersonaggio.VIANDANTE`); `parlaLOspite` gli dà una battuta. **`TestiDeiLuoghi`**: come i testi nominano i luoghi.
 
 ## 4. Le missioni concrete
 

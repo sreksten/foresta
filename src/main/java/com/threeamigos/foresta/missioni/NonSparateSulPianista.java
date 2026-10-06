@@ -15,6 +15,7 @@ import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * Non sparate sul pianista: alla terza visita a una locanda nel bosco, a una visita tranquilla, il locandiere chiede
@@ -152,7 +153,10 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	}
 
 	private ScenaInCitta scenaDellaMoglie() {
+		// Il viandante è già stato congedato dal gruppo (vedi scorta): lo si dice alla scena, che lo mette dopo il capo, rivolto
+		// verso la moglie (il bardo scortato appare con le fattezze del viandante)
 		return ScenaInCitta.conMoglieDelBardo()
+				.conOspite(TipoPersonaggio.VIANDANTE)
 				.parlaIlMandante(getBardo() + "! Di nuovo in queste condizioni!")
 				.parlaIlCapo("Lo abbiamo trovato in una locanda, abbracciato al suo liuto.")
 				.parlaIlMandante("Grazie, viandanti. A lui ci penso io.")

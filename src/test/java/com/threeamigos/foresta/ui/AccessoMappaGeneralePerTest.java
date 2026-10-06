@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.motore.VistaPartitaMotore;
+
 import java.awt.image.BufferedImage;
 
 /**
@@ -9,7 +11,7 @@ import java.awt.image.BufferedImage;
 public class AccessoMappaGeneralePerTest {
 
 	public static BufferedImage mappaGenerale() {
-		return DisegnatoreMappa.ottieniMappaGenerale();
+		return new DisegnatoreMappa(new VistaPartitaMotore()).ottieniMappaGenerale();
 	}
 
 	public static int larghezzaIcona() {

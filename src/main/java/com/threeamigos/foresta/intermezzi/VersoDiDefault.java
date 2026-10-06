@@ -24,6 +24,8 @@ public final class VersoDiDefault {
 		VERSI.put(TipoPersonaggio.GUERRIERO, Verso.SINISTRA);
 		VERSI.put(TipoPersonaggio.LADRO, Verso.SINISTRA);
 		VERSI.put(TipoPersonaggio.BARDO, Verso.SINISTRA);
+		// Il viandante che le missioni scortano (come ospite) compare nelle scene come chi lo scorta
+		VERSI.put(TipoPersonaggio.VIANDANTE, Verso.SINISTRA);
 		VERSI.put(TipoPersonaggio.ELFA, Verso.DESTRA);
 		VERSI.put(TipoPersonaggio.GUERRIERA, Verso.DESTRA);
 		VERSI.put(TipoPersonaggio.CANTASTORIE, Verso.DESTRA);
