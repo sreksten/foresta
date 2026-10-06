@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.motore.modellodati;
 
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 
@@ -6,13 +6,13 @@ import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
  *
  * @author Stefano Reksten
  */
-public class EffettoDiStato {
+public class EffettoDiStatoMD {
 
     private final TipoEffettoDiStato tipoEffettoDiStato;
     private int valore;
     private int danniNelTempo;
 
-    public EffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int valore, int danniNelTempo) {
+    public EffettoDiStatoMD(TipoEffettoDiStato tipoEffettoDiStato, int valore, int danniNelTempo) {
         this.tipoEffettoDiStato = tipoEffettoDiStato;
         this.valore = valore;
         this.danniNelTempo = danniNelTempo;

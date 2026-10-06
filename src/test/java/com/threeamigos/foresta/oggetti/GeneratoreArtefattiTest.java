@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
+
 import com.threeamigos.foresta.motore.ArmaNaturale;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
@@ -114,14 +116,14 @@ class GeneratoreArtefattiTest {
             assertEquals(livello, pergamena.getLivello());
             int effetti = md.getIncantamenti().size() + md.getModificatori().size();
             assertEquals(Math.min(3, livello), effetti);
-            assertEquals(md.getIncantamenti().size(), md.getIncantamenti().stream().map(Incantamento::getTipoDannoElementale).distinct().count());
+            assertEquals(md.getIncantamenti().size(), md.getIncantamenti().stream().map(IncantamentoMD::getTipoDannoElementale).distinct().count());
             assertEquals(md.getModificatori().size(), md.getModificatori().stream().map(m -> m.getTipoAttributo()).distinct().count());
             for (ModificatoreAttributo modificatore : md.getModificatori()) {
                 assertTrue(GeneratoreArtefattiTabelle.attributiDi(tipo).contains(modificatore.getTipoAttributo()), md.getNome());
             }
             // Il grado nel nome: niente per il medio
             assertEquals(grado != GradoIncantamento.MEDIO, md.getNome().contains(" " + grado.getNome()), md.getNome());
-            for (Incantamento incantamento : md.getIncantamenti()) {
+            for (IncantamentoMD incantamento : md.getIncantamenti()) {
                 assertTrue(GeneratoreArtefattiTabelle.danniDi(tipo).contains(incantamento.getTipoDannoElementale()), md.getNome());
                 assertNotEquals(SupertipoDanno.FISICO, incantamento.getTipoDannoElementale().getSuperTipo());
                 assertTrue(incantamento.getDannoBonusFisso() == 0 || incantamento.getDannoBonusFisso() == grado.getBonusFisso());
@@ -161,7 +163,7 @@ class GeneratoreArtefattiTest {
                 assertTrue(md.getIncantamenti().size() + md.getModificatori().size() < artefatto.getEffettiMassimi());
             }
             GradoIncantamento grado = GradoIncantamento.perLivello(livello);
-            for (Incantamento incantamento : md.getIncantamenti()) {
+            for (IncantamentoMD incantamento : md.getIncantamenti()) {
                 assertTrue(incantamento.getDannoBonusFisso() == 0 || incantamento.getDannoBonusFisso() == grado.getBonusFisso());
             }
         }
@@ -227,11 +229,11 @@ class GeneratoreArtefattiTest {
     @Test
     void prezziDelListino() {
         // Incantamento: 0,5 per punto di danno, fisso × livello + coefficiente × Intelligenza tipica (9,7)
-        assertEquals(0.5 * (10 + 0.97), ListinoPergamene.prezzo(new Incantamento("prova", TipoDanno.ACIDO, 10, 0.1), 1), 0.0001);
-        assertEquals(0.5 * (40 + 0.97), ListinoPergamene.prezzo(new Incantamento("prova", TipoDanno.ACIDO, 10, 0.1), 4), 0.0001);
-        assertEquals(0.5 * 40, ListinoPergamene.prezzo(new Incantamento("prova", TipoDanno.ACIDO, 10, 0), 4), 0.0001);
+        assertEquals(0.5 * (10 + 0.97), ListinoPergamene.prezzo(new IncantamentoMD("prova", TipoDanno.ACIDO, 10, 0.1), 1), 0.0001);
+        assertEquals(0.5 * (40 + 0.97), ListinoPergamene.prezzo(new IncantamentoMD("prova", TipoDanno.ACIDO, 10, 0.1), 4), 0.0001);
+        assertEquals(0.5 * 40, ListinoPergamene.prezzo(new IncantamentoMD("prova", TipoDanno.ACIDO, 10, 0), 4), 0.0001);
         // +25% per un tipo di danno con effetti di stato
-        assertEquals(0.5 * 40 * 1.25, ListinoPergamene.prezzo(new Incantamento("prova", TipoDanno.FUOCO, 10, 0), 4), 0.0001);
+        assertEquals(0.5 * 40 * 1.25, ListinoPergamene.prezzo(new IncantamentoMD("prova", TipoDanno.FUOCO, 10, 0), 4), 0.0001);
         // Modificatore fisso: 0,5 per ogni 1% del valore tipico, quindi +3 di Precisione (3,2) costa più di +3 di Forza (11,5)
         assertEquals(0.5 * 300 / 11.5, ListinoPergamene.prezzo(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 3)), 0.0001);
         assertEquals(0.5 * 300 / 3.2, ListinoPergamene.prezzo(new ModificatoreAttributo(TipoAttributo.PRECISIONE, TipoModificatore.AUMENTO_FISSO, 3)), 0.0001);

@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.oggetti.ListinoPergamene;
 import com.threeamigos.foresta.tipi.SupertipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
@@ -230,7 +230,7 @@ public final class RegoleIncantatura {
 	private static List<Effetto> trasferibili(Artefatto artefatto, Artefatto ingrediente) {
 		List<Effetto> effetti = new ArrayList<>();
 		if (!isLibro(artefatto)) {
-			for (Incantamento incantamento : ingrediente.getIncantamenti()) {
+			for (IncantamentoMD incantamento : ingrediente.getIncantamenti()) {
 				effetti.add(new Effetto(incantamento, null, ListinoPergamene.prezzo(incantamento, artefatto.getLivello())));
 			}
 		}
@@ -260,11 +260,11 @@ public final class RegoleIncantatura {
 	 */
 	private static final class Effetto {
 
-		private final Incantamento incantamento;
+		private final IncantamentoMD incantamento;
 		private final ModificatoreAttributo modificatore;
 		private final double prezzo;
 
-		private Effetto(Incantamento incantamento, ModificatoreAttributo modificatore, double prezzo) {
+		private Effetto(IncantamentoMD incantamento, ModificatoreAttributo modificatore, double prezzo) {
 			this.incantamento = incantamento;
 			this.modificatore = modificatore;
 			this.prezzo = prezzo;

@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.oggetti.Incantamento;
+import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.tipi.*;
 
 import java.io.BufferedReader;
@@ -42,7 +42,7 @@ public class ArtefattoMD implements Serializzabile {
 	// Stato per la UI: se false, l'elenco modificatori/incantamenti resta chiuso.
 	private boolean figliVisibili = true;
 	private final Collection<ModificatoreAttributo> modificatori = new ArrayList<>();
-	private final Collection<Incantamento> incantamenti = new ArrayList<>();
+	private final Collection<IncantamentoMD> incantamenti = new ArrayList<>();
 
 	public String getUuid() {
 		return uuid;
@@ -219,16 +219,16 @@ public class ArtefattoMD implements Serializzabile {
 		modificatori.add(new ModificatoreAttributo(tipoAttributo, tipoModificatore, quantita, nota));
 	}
 
-	public Collection<Incantamento> getIncantamenti() {
+	public Collection<IncantamentoMD> getIncantamenti() {
 		return incantamenti;
 	}
 
-	public void addIncantamento(Incantamento incantamento) {
+	public void addIncantamento(IncantamentoMD incantamento) {
 		incantamenti.add(incantamento);
 	}
 
 	public void addIncantamento(String nomeIncantamento, TipoDanno tipoDanno, int dannoBonusFisso, double coefficienteScala) {
-		incantamenti.add(new Incantamento(nomeIncantamento, tipoDanno, dannoBonusFisso, coefficienteScala));
+		incantamenti.add(new IncantamentoMD(nomeIncantamento, tipoDanno, dannoBonusFisso, coefficienteScala));
 	}
 
 	public boolean isFigliVisibili() {
@@ -283,7 +283,7 @@ public class ArtefattoMD implements Serializzabile {
 			stream.println(Serializzabile.facoltativo(modificatore.getNote()));
 		}
 
-		for (Incantamento incantamento : incantamenti) {
+		for (IncantamentoMD incantamento : incantamenti) {
 			stream.print(incantamento.getNomeIncantamento());
 			stream.print(PIPE);
 			stream.print(incantamento.getTipoDannoElementale().name());
@@ -331,7 +331,7 @@ public class ArtefattoMD implements Serializzabile {
 			TipoDanno tipoDannoElementale = campi.enumerato(TipoDanno.class);
 			int dannoBonusFisso = campi.intero();
 			double coefficienteScala = campi.decimale();
-			incantamenti.add(new Incantamento(nomeIncantamento, tipoDannoElementale, dannoBonusFisso, coefficienteScala));
+			incantamenti.add(new IncantamentoMD(nomeIncantamento, tipoDannoElementale, dannoBonusFisso, coefficienteScala));
 		}
 	}
 }

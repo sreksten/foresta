@@ -1,8 +1,9 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.motore.Costanti;
-
 public class CoordinateMD {
+
+	// Per l'hashCode: con lati della foresta fino a questa misura due caselle non hanno mai lo stesso hash
+	private static final int MAX_DIMENSIONE_LATO_FORESTA = 80;
 	
 	private int x;
 	private int y;
@@ -45,7 +46,7 @@ public class CoordinateMD {
 	
 	@Override
 	public int hashCode() {
-		return Costanti.MAX_DIMENSIONE_LATO_FORESTA * x + y;
+		return MAX_DIMENSIONE_LATO_FORESTA * x + y;
 	}
 
 	@Override

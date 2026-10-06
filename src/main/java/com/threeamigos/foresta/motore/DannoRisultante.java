@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.motore.modellodati.EffettoDiStatoMD;
+
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
@@ -19,7 +21,7 @@ public class DannoRisultante {
     private TipoDanno tipoDanno;
     private int danno;
     private final Collection<TipoInterazioneConEffettiDiStato> interazioni = new ArrayList<>();
-    private final Collection<EffettoDiStato> effettiDiStatoDaAggiungere = new ArrayList<>();
+    private final Collection<EffettoDiStatoMD> effettiDiStatoDaAggiungere = new ArrayList<>();
     private final Collection<TipoEffettoDiStato> effettiDiStatoDaRimuovere = new ArrayList<>();
     private boolean colpoDiGrazia = false;
     private int curaAdArea = 0;
@@ -66,10 +68,10 @@ public class DannoRisultante {
     }
 
     public void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int durata, int danniNelTempo) {
-        effettiDiStatoDaAggiungere.add(new EffettoDiStato(tipoEffettoDiStato, durata, danniNelTempo));
+        effettiDiStatoDaAggiungere.add(new EffettoDiStatoMD(tipoEffettoDiStato, durata, danniNelTempo));
     }
 
-    public Collection<EffettoDiStato> getEffettiDiStatoDaAggiungere() {
+    public Collection<EffettoDiStatoMD> getEffettiDiStatoDaAggiungere() {
         return effettiDiStatoDaAggiungere;
     }
 

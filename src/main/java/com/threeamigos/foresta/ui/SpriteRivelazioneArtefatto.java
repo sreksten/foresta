@@ -2,9 +2,9 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.motore.RegoleSetLeggendari;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoModificatore;
@@ -95,7 +95,7 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 		this.colore = COLORE[gradino];
 		this.area = area;
 		this.destinazione = destinazione;
-		for (Incantamento incantamento : md.getIncantamenti()) {
+		for (IncantamentoMD incantamento : md.getIncantamenti()) {
 			coloriRaggi.add(COLORI_ELEMENTI.getOrDefault(incantamento.getTipoDannoElementale(), colore));
 		}
 		if (coloriRaggi.isEmpty()) {
@@ -374,7 +374,7 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 		RegoleSetLeggendari.tipiDelSet(md).ifPresent(tipi ->
 				righe.add(ImageCache.get(tipi, font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima)));
 		List<String> incantamenti = new ArrayList<>();
-		for (Incantamento incantamento : md.getIncantamenti()) {
+		for (IncantamentoMD incantamento : md.getIncantamenti()) {
 			incantamenti.add(incantamento(incantamento));
 		}
 		List<String> bonus = new ArrayList<>();
@@ -427,7 +427,7 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 		return modificatore.getTipoAttributo().getNome() + ' ' + valore;
 	}
 
-	private static String incantamento(Incantamento incantamento) {
+	private static String incantamento(IncantamentoMD incantamento) {
 		StringBuilder sb = new StringBuilder(maiuscola(incantamento.getNomeIncantamento()));
 		List<String> parti = new ArrayList<>();
 		if (incantamento.getDannoBonusFisso() != 0) {

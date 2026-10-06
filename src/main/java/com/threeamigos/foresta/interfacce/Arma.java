@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.oggetti.Incantamento;
+import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.tipi.TipoDanno;
 
 import java.util.Collection;
@@ -16,6 +16,6 @@ public interface Arma {
     TipoDanno getTipoDanno();
 
     boolean isIncantata();
-    Collection<Incantamento> getIncantamenti();
+    Collection<IncantamentoMD> getIncantamenti();
 
 }

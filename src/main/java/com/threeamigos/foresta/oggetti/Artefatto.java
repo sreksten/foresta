@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
+
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
@@ -120,7 +122,7 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 	/**
 	 * Incantamenti fatti sull'artefatto
 	 */
-	public Collection<Incantamento> getIncantamenti() {
+	public Collection<IncantamentoMD> getIncantamenti() {
 		return md.getIncantamenti();
 	}
 

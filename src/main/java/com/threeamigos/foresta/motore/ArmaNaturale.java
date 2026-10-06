@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.interfacce.Arma;
-import com.threeamigos.foresta.oggetti.Incantamento;
+import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoPersonaggio; // Presumo sia la tua Enum delle 30 classi
@@ -118,7 +118,7 @@ public class ArmaNaturale implements Arma {
     }
 
     @Override
-    public Collection<Incantamento> getIncantamenti() {
+    public Collection<IncantamentoMD> getIncantamenti() {
         return Collections.emptyList();
     }
 }

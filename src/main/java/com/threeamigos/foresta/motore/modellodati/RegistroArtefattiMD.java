@@ -1,8 +1,5 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.motore.Dado;
-import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
-import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 
 import java.io.BufferedReader;
@@ -10,7 +7,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
 import java.util.function.Predicate;
-import java.util.stream.Collectors;
 
 public class RegistroArtefattiMD implements Serializzabile {
 
@@ -35,19 +31,19 @@ public class RegistroArtefattiMD implements Serializzabile {
 		elencoIniziale.add(artefattoMD);
 	}
 
-	public final ArtefattoMD getArtefattoDisponibile() {
-		return Dado.selezionaCasualmente(elencoIniziale);
+	public final int getNumeroDisponibili() {
+		return elencoIniziale.size();
 	}
 
-	public final ArtefattoESuaUbicazione getArtefattoCasuale() {
-		if (!artefattiSmarriti.isEmpty()) {
-            ArrayList<CoordinateMD> elencoCoordinate = new ArrayList<>(artefattiSmarriti.keySet());
-			int indice = Dado.tiraAncheAUnaFaccia(elencoCoordinate.size()) - 1;
-			CoordinateMD coordinate = elencoCoordinate.get(indice);
-			ArtefattoMD artefatto = artefattiSmarriti.get(coordinate);
-			return new ArtefattoESuaUbicazione(artefatto, coordinate);
-		}
-		return null;
+	/**
+	 * Toglie dall'elenco iniziale l'artefatto in quella posizione (la sceglie a caso il motore).
+	 */
+	public final ArtefattoMD rimuoviDisponibile(int indice) {
+		return elencoIniziale.remove(indice);
+	}
+
+	public final Set<CoordinateMD> getUbicazioniArtefattiSmarriti() {
+		return Collections.unmodifiableSet(artefattiSmarriti.keySet());
 	}
 
 	public final void addArtefattoInLocazione(ArtefattoMD artefatto, CoordinateMD coordinate) {
@@ -169,34 +165,13 @@ public class RegistroArtefattiMD implements Serializzabile {
 		getMagazzino(coordinate, negozio).removeIf(daTenere.negate());
 	}
 
-	private Collection<ArtefattoMD> getMagazzino(CoordinateMD coordinate, TipoNegozio negozio) {
+	/**
+	 * Il magazzino del negozio in quella città, modificabile (lo crea vuoto se ancora non c'è).
+	 */
+	public Collection<ArtefattoMD> getMagazzino(CoordinateMD coordinate, TipoNegozio negozio) {
 		return magazzini
 				.computeIfAbsent(negozio, k -> new HashMap<>())
 				.computeIfAbsent(coordinate, k -> new ArrayList<>());
-	}
-
-	public ScambiatoreArtefatti getScambiatorePerNegozio(CoordinateMD coordinate, TipoNegozio negozio) {
-		return new ScambiatoreArtefatti() {
-			@Override
-			public Collection<Artefatto> getInventario() {
-				return getMagazzino(coordinate, negozio)
-						.stream()
-						.map(Artefatto::di)
-						.collect(Collectors.toList());
-			}
-			@Override
-			public void addArtefatto(Artefatto artefatto) {
-				getMagazzino(coordinate, negozio).add(artefatto.getModelloDati());
-			}
-			@Override
-			public void removeArtefatto(Artefatto artefatto) {
-				getMagazzino(coordinate, negozio).remove(artefatto.getModelloDati());
-			}
-			@Override
-			public boolean tratta(Artefatto artefatto) {
-				return negozio.tratta(artefatto.getTipo());
-			}
-		};
 	}
 
 	public static class ArtefattoESuaUbicazione {

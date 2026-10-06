@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.modellodati.EffettoDiStatoMD;
+
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.interfacce.OggettoConArticoli;
 import com.threeamigos.foresta.motore.*;
@@ -533,7 +535,7 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
 	/**
 	 * Effetti di stato attivi sul personaggio
 	 */
-    Collection<EffettoDiStato> getEffettiDiStato();
+    Collection<EffettoDiStatoMD> getEffettiDiStato();
 
 	/**
 	 * Aggiunge un effetto di stato al personaggio

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
+
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
@@ -63,7 +65,7 @@ public final class ListinoPergamene {
 	 */
 	public static int prezzo(ArtefattoMD ingrediente) {
 		double prezzo = 0;
-		for (Incantamento incantamento : ingrediente.getIncantamenti()) {
+		for (IncantamentoMD incantamento : ingrediente.getIncantamenti()) {
 			prezzo += prezzo(incantamento, ingrediente.getLivello());
 		}
 		for (ModificatoreAttributo modificatore : ingrediente.getModificatori()) {
@@ -76,7 +78,7 @@ public final class ListinoPergamene {
 	 * Il prezzo di un incantamento su un oggetto di quel livello, perché la parte fissa si moltiplica per il
 	 * livello dell'oggetto (vedi CalcolatoreCombattimento).
 	 */
-	public static double prezzo(Incantamento incantamento, int livello) {
+	public static double prezzo(IncantamentoMD incantamento, int livello) {
 		double danno = Math.abs(incantamento.getDannoBonusFisso()) * livello
 				+ Math.abs(incantamento.getCoefficienteScala()) * valoreTipico(TipoAttributo.INTELLIGENZA);
 		double prezzo = Costanti.PERGAMENA_PREZZO_PER_PUNTO_DI_DANNO * danno;

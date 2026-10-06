@@ -245,7 +245,7 @@ public final class Equipaggiamento {
 			}
 			if (incantamento != null) {
 				GradoIncantamento grado = GradoIncantamento.perLivello(livello);
-				md.addIncantamento("Incantamento " + grado.getNome(), incantamento, grado.getBonusFisso(), grado.getCoefficiente());
+				md.addIncantamento("IncantamentoMD " + grado.getNome(), incantamento, grado.getBonusFisso(), grado.getCoefficiente());
 			}
 			return Artefatto.di(md);
 		}

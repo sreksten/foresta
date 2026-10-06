@@ -4,10 +4,10 @@ import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.personaggi.Elfa;
 import com.threeamigos.foresta.personaggi.Elfo;
 import com.threeamigos.foresta.personaggi.Guerriero;
@@ -197,7 +197,7 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
     @Test
     void ilBonusDelLibroEQuelloDelSuoGradoPiuUnQuarto() {
         // Livello 4: grado medio, +10 e +10%, più il 25%
-        Incantamento bonus = CalcolatoreCombattimento.bonusLibroMagico(artefatto(TipoArtefatto.LIBRO_MAGICO, 4), TipoDanno.ARIA);
+        IncantamentoMD bonus = CalcolatoreCombattimento.bonusLibroMagico(artefatto(TipoArtefatto.LIBRO_MAGICO, 4), TipoDanno.ARIA);
         assertEquals(TipoDanno.ARIA, bonus.getTipoDannoElementale());
         assertEquals(13, bonus.getDannoBonusFisso());
         assertEquals(0.125, bonus.getCoefficienteScala(), DELTA);
@@ -275,7 +275,7 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
 
     private static Artefatto pezzoIncantato(TipoArtefatto tipo, int livello, TipoDanno tipoDanno, int fisso, double coefficiente) {
         Artefatto pezzo = artefatto(tipo, livello);
-        pezzo.getModelloDati().addIncantamento("Incantamento di prova", tipoDanno, fisso, coefficiente);
+        pezzo.getModelloDati().addIncantamento("IncantamentoMD di prova", tipoDanno, fisso, coefficiente);
         return pezzo;
     }
 
@@ -302,7 +302,7 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
             }
 
             @Override
-            public java.util.Collection<Incantamento> getIncantamenti() {
+            public java.util.Collection<IncantamentoMD> getIncantamenti() {
                 return java.util.Collections.emptyList();
             }
         };

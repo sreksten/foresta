@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
@@ -88,7 +88,7 @@ class CalcolatoreCombattimentoBerserkTest {
             }
 
             @Override
-            public Collection<Incantamento> getIncantamenti() {
+            public Collection<IncantamentoMD> getIncantamenti() {
                 return Collections.emptyList();
             }
         };

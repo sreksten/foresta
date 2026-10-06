@@ -73,7 +73,7 @@ già porta con sé.
 - [x] Shock di Realtà (danno FISICO, qualsiasi tipo): rimuove subito SPAVENTATO (o CONFUSO, vedi sotto) e +20% danno (`moltiplicatoreDannoStato * 1.2`); nuovo valore `TipoInterazioneConEffettiDiStato.SHOCK_DI_REALTA`, gestiti entrambi anche in `ForestaUI`
 
 ### SANGUINAMENTO — ✅ chiuso
-- [x] Diluizione Ematica (ACQUA): dimezza il danno periodico da sanguinamento (`EffettoDiStato.setDanniNelTempo(danniNelTempo / 2)`, mutato direttamente sull'effetto SANGUINAMENTO già attivo tramite `DannoRisultante.diluizioneEmaticaAttiva`, applicato in `PersonaggioBase.applicaRisultatoCombattimento` — necessario perché il "rinforzo" di `addEffettoDiStato` può solo aumentare durata/danno, mai ridurli) e +5% danno (`moltiplicatoreDannoStato * 1.05`); l'idea della pozza di sangue calpestabile è stata scartata (non gestibile); nuovo valore `TipoInterazioneConEffettiDiStato.DILUIZIONE_EMATICA`
+- [x] Diluizione Ematica (ACQUA): dimezza il danno periodico da sanguinamento (`EffettoDiStatoMD.setDanniNelTempo(danniNelTempo / 2)`, mutato direttamente sull'effetto SANGUINAMENTO già attivo tramite `DannoRisultante.diluizioneEmaticaAttiva`, applicato in `PersonaggioBase.applicaRisultatoCombattimento` — necessario perché il "rinforzo" di `addEffettoDiStato` può solo aumentare durata/danno, mai ridurli) e +5% danno (`moltiplicatoreDannoStato * 1.05`); l'idea della pozza di sangue calpestabile è stata scartata (non gestibile); nuovo valore `TipoInterazioneConEffettiDiStato.DILUIZIONE_EMATICA`
 - [x] Coagulazione Forzata (GELO): rimuove SANGUINAMENTO, applica RALLENTATO e +5% danno (`moltiplicatoreDannoStato * 1.05`); nuovo valore `TipoInterazioneConEffettiDiStato.COAGULAZIONE_FORZATA`, gestiti entrambi anche in `ForestaUI`
 
 ### AVVELENATO — ✅ chiuso

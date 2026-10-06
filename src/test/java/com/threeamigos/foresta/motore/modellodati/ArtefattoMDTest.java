@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.oggetti.Incantamento;
+import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 import org.junit.jupiter.api.Test;
@@ -163,7 +163,7 @@ class ArtefattoMDTest {
         // Then
         assertEquals(1, ricaricato.getModificatori().size());
         assertTrue(ricaricato.getModificatori().contains(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 5, "Forza")));
-        List<Incantamento> incantamenti = new ArrayList<>(ricaricato.getIncantamenti());
+        List<IncantamentoMD> incantamenti = new ArrayList<>(ricaricato.getIncantamenti());
         assertEquals(2, incantamenti.size());
         verificaIncantamento(incantamenti, "Il Peperoncino di Cayenna", TipoDanno.FUOCO, 10, 0.5);
         verificaIncantamento(incantamenti, "La serpe di Yalar", TipoDanno.VELENO, 4, 0.25);
@@ -325,7 +325,7 @@ class ArtefattoMDTest {
         assertEquals(TipoSlotArtefatto.NUCLEO, ricaricato.getTipo().getSlotArtefatto());
         assertEquals("una pergamena del fuoco", ricaricato.getNome());
         assertTrue(ricaricato.getModificatori().isEmpty());
-        List<Incantamento> incantamenti = new ArrayList<>(ricaricato.getIncantamenti());
+        List<IncantamentoMD> incantamenti = new ArrayList<>(ricaricato.getIncantamenti());
         assertEquals(2, incantamenti.size());
         verificaIncantamento(incantamenti, "Fiamma", TipoDanno.FUOCO, 10, 0.1);
         verificaIncantamento(incantamenti, "Brina", TipoDanno.GELO, 0, 0.05);
@@ -355,7 +355,7 @@ class ArtefattoMDTest {
         assertEquals(2, modificatori.size());
         assertTrue(modificatori.contains(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 2)));
         assertTrue(modificatori.contains(new ModificatoreAttributo(TipoAttributo.CORAGGIO, TipoModificatore.AUMENTO_PERCENTUALE, 10)));
-        List<Incantamento> incantamenti = new ArrayList<>(ricaricato.getIncantamenti());
+        List<IncantamentoMD> incantamenti = new ArrayList<>(ricaricato.getIncantamenti());
         assertEquals(2, incantamenti.size());
         verificaIncantamento(incantamenti, "Fiamma", TipoDanno.FUOCO, 15, 0.2);
         verificaIncantamento(incantamenti, "Brina", TipoDanno.GELO, 5, 0.05);
@@ -421,12 +421,12 @@ class ArtefattoMDTest {
         return ricaricato;
     }
 
-    private static void verificaIncantamento(List<Incantamento> incantamenti, String nome, TipoDanno tipoDanno,
+    private static void verificaIncantamento(List<IncantamentoMD> incantamenti, String nome, TipoDanno tipoDanno,
                                              int dannoBonusFisso, double coefficienteScala) {
-        Incantamento incantamento = incantamenti.stream()
+        IncantamentoMD incantamento = incantamenti.stream()
                 .filter(i -> i.getNomeIncantamento().equals(nome))
                 .findFirst()
-                .orElseThrow(() -> new AssertionError("Incantamento non riletto: " + nome));
+                .orElseThrow(() -> new AssertionError("IncantamentoMD non riletto: " + nome));
         assertEquals(tipoDanno, incantamento.getTipoDannoElementale());
         assertEquals(dannoBonusFisso, incantamento.getDannoBonusFisso());
         assertEquals(coefficienteScala, incantamento.getCoefficienteScala(), 0.0001);

@@ -7,6 +7,9 @@ import com.threeamigos.foresta.motore.modellodati.RegistroPersonaggiMD;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class RegistroPersonaggi {
 
 	private RegistroPersonaggi() {
@@ -40,16 +43,33 @@ public class RegistroPersonaggi {
 		aggiungiPersonaggio(new Maga("LeFey", 1));
 	}
 
+	/**
+	 * Uno a caso fra quelli ancora da sistemare nella foresta, tolto dall'elenco; null se sono finiti.
+	 */
 	static Personaggio getPersonaggioDisponibile() {
-		return costruisciPersonaggio(getRegistroMD().getPersonaggioDisponibile());
+		int disponibili = getRegistroMD().getNumeroDisponibili();
+		if (disponibili == 0) {
+			return null;
+		}
+		return costruisciPersonaggio(getRegistroMD().rimuoviDisponibile(Dado.tiraAncheAUnaFaccia(disponibili) - 1));
 	}
 
 	static int getNumeroPersonaggiDisponibili() {
 		return getRegistroMD().getNumeroDisponibili();
 	}
 
+	/**
+	 * Uno a caso fra quelli che aspettano in una locazione, tolto dalla sua locazione; null se non ce ne sono.
+	 */
 	static Personaggio getPersonaggioCasuale() {
-		return costruisciPersonaggio(getRegistroMD().getPersonaggioCasuale());
+		List<CoordinateMD> ubicazioni = new ArrayList<>(getRegistroMD().getUbicazioniPersonaggi());
+		if (ubicazioni.isEmpty()) {
+			return null;
+		}
+		CoordinateMD coordinate = ubicazioni.get(Dado.tiraAncheAUnaFaccia(ubicazioni.size()) - 1);
+		PersonaggioMD personaggio = getRegistroMD().getPersonaggioInLocazione(coordinate);
+		getRegistroMD().rimuoviPersonaggioInLocazione(coordinate);
+		return costruisciPersonaggio(personaggio);
 	}
 
 	/**

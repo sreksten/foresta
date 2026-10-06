@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.personaggi;
 
+import com.threeamigos.foresta.motore.modellodati.EffettoDiStatoMD;
+
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoCreazionePersonaggio;
 import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
@@ -545,16 +547,16 @@ public abstract class PersonaggioBase implements Personaggio {
 
 		// Il risultato del combattimento potrebbe cercare di applicare più di una volta lo stesso effetto di stato;
 		// in questo caso, manteniamo solo il maggiore
-		Map<TipoEffettoDiStato, EffettoDiStato> mappaFiltrata = risultato.getEffettiDiStatoDaAggiungere().stream()
+		Map<TipoEffettoDiStato, EffettoDiStatoMD> mappaFiltrata = risultato.getEffettiDiStatoDaAggiungere().stream()
 				.collect(Collectors.toMap(
-						EffettoDiStato::getTipoEffettoDiStato, // Chiave della mappa: il tipo di stato (es. CONGELATO)
+						EffettoDiStatoMD::getTipoEffettoDiStato, // Chiave della mappa: il tipo di stato (es. CONGELATO)
 						effetto -> effetto,       // Valore della mappa: l'oggetto effetto stesso
 						// Funzione di risoluzione conflitti: se la chiave esiste già, confronta le durate e tiene il maggiore
 						(effettoEsistente, nuovoEffetto) ->
 								nuovoEffetto.getDurata() > effettoEsistente.getDurata() ? nuovoEffetto : effettoEsistente
 				));
 
-		for (EffettoDiStato effetto : mappaFiltrata.values()) {
+		for (EffettoDiStatoMD effetto : mappaFiltrata.values()) {
 			addEffettoDiStato(effetto.getTipoEffettoDiStato(), effetto.getDurata(), effetto.getDanniNelTempo());
 		}
 		for (TipoEffettoDiStato tipoEffettoDiStato: risultato.getEffettiDiStatoDaRimuovere()) {
@@ -1964,7 +1966,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	// EFFETTI DI STATO
 
-	public Collection<EffettoDiStato> getEffettiDiStato() {
+	public Collection<EffettoDiStatoMD> getEffettiDiStato() {
 		return md.getEffettiDiStato();
 	}
 
@@ -1981,13 +1983,13 @@ public abstract class PersonaggioBase implements Personaggio {
 		if (durata <= 0) {
 			throw new IllegalArgumentException("Valore effetto di stato non valido");
 		}
-		Collection<EffettoDiStato> effettiDiStato = md.getEffettiDiStato();
-		Optional<EffettoDiStato> equivalenteOpt = effettiDiStato
+		Collection<EffettoDiStatoMD> effettiDiStato = md.getEffettiDiStato();
+		Optional<EffettoDiStatoMD> equivalenteOpt = effettiDiStato
 				.stream().
 				filter(e -> e.getTipoEffettoDiStato() == tipoEffettoDiStato)
 				.findFirst();
 		if (equivalenteOpt.isPresent()) {
-			EffettoDiStato equivalente = equivalenteOpt.get();
+			EffettoDiStatoMD equivalente = equivalenteOpt.get();
 			boolean duraDiPiu = equivalente.getDurata() < durata;
 			boolean aumentaDanni = equivalente.getDanniNelTempo() < danniNelTempo;
 			if (duraDiPiu || aumentaDanni) {
@@ -2002,7 +2004,7 @@ public abstract class PersonaggioBase implements Personaggio {
 						equivalente.getDurata(), equivalente.getDanniNelTempo()));
 			}
 		} else {
-			md.getEffettiDiStato().add(new EffettoDiStato(tipoEffettoDiStato, durata, danniNelTempo));
+			md.getEffettiDiStato().add(new EffettoDiStatoMD(tipoEffettoDiStato, durata, danniNelTempo));
 			BusEventi.pubblica(new NotificaVariazioneEffettoDiStatoPersonaggio(this,
 					NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.AGGIUNTA, tipoEffettoDiStato,
 					-1, durata));
@@ -2013,7 +2015,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	public void applicaDanniDaEffettiDiStato() {
 		// Copia perché subSalute() può a sua volta aggiungere un nuovo effetto di stato
 		// (es. BERSERK) alla stessa collezione che stiamo scorrendo.
-		for (EffettoDiStato effettoDiStato : new ArrayList<>(getEffettiDiStato())) {
+		for (EffettoDiStatoMD effettoDiStato : new ArrayList<>(getEffettiDiStato())) {
 			if (effettoDiStato.getDanniNelTempo() > 0) {
 				subSalute(effettoDiStato.getDanniNelTempo(), null,
 						Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.NO);
@@ -2023,8 +2025,8 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public void riduciEffettiDiStato() {
-		List<EffettoDiStato> effettiDiStatoDaRimuovere = new ArrayList<>();
-		for (EffettoDiStato effettoDiStato : getEffettiDiStato()) {
+		List<EffettoDiStatoMD> effettiDiStatoDaRimuovere = new ArrayList<>();
+		for (EffettoDiStatoMD effettoDiStato : getEffettiDiStato()) {
 			int valorePrecedente = effettoDiStato.getDurata();
 			int valoreAttuale = valorePrecedente - 1;
 			if (valoreAttuale > 0) {
@@ -2052,7 +2054,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public void rimuoviEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
-		List<EffettoDiStato> effettiDiStatoDaRimuovere = getEffettiDiStato()
+		List<EffettoDiStatoMD> effettiDiStatoDaRimuovere = getEffettiDiStato()
 				.stream()
 				.filter(e -> tipoEffettoDiStato == null || e.getTipoEffettoDiStato() == tipoEffettoDiStato)
 				.collect(Collectors.toList());
@@ -2071,7 +2073,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public int getQuantitaEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {
-		return md.getEffettiDiStato().stream().filter(e -> e.getTipoEffettoDiStato() == tipoEffettoDiStato).mapToInt(EffettoDiStato::getDurata).sum();
+		return md.getEffettiDiStato().stream().filter(e -> e.getTipoEffettoDiStato() == tipoEffettoDiStato).mapToInt(EffettoDiStatoMD::getDurata).sum();
 	}
 
 	// Scambiatore Artefatti

@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.motore.modellodati.EffettoDiStatoMD;
+
 import com.threeamigos.foresta.eventi.interni.InternoRichiestaChiusuraFinestraCombattimento;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.missioni.*;
@@ -221,7 +223,7 @@ class ScenarioMissioniELocazioniTest {
 	private static int durata(Personaggio personaggio, TipoEffettoDiStato tipo) {
 		return personaggio.getEffettiDiStato().stream()
 				.filter(e -> e.getTipoEffettoDiStato() == tipo)
-				.mapToInt(EffettoDiStato::getDurata)
+				.mapToInt(EffettoDiStatoMD::getDurata)
 				.findFirst().orElse(0);
 	}
 }

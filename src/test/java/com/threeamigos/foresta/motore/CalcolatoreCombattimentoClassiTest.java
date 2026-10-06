@@ -3,9 +3,9 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Ladro;
 import com.threeamigos.foresta.personaggi.Mago;
@@ -67,14 +67,14 @@ class CalcolatoreCombattimentoClassiTest {
 
     @Test
     void laParteFissaDiUnIncantamentoEUgualePerTutti() {
-        Incantamento soloFisso = new Incantamento("Fuoco", TipoDanno.FUOCO, 10, 0.0);
+        IncantamentoMD soloFisso = new IncantamentoMD("Fuoco", TipoDanno.FUOCO, 10, 0.0);
         assertEquals(dannoIncantamento(new Ladro("Riferimento", 5), soloFisso),
                 dannoIncantamento(new Mago("Merlino", 5), soloFisso), 1.0);
     }
 
     @Test
     void laPartePercentualeDiUnIncantamentoScalaColDannoMagico() {
-        Incantamento soloPercentuale = new Incantamento("Fuoco", TipoDanno.FUOCO, 0, 1.0);
+        IncantamentoMD soloPercentuale = new IncantamentoMD("Fuoco", TipoDanno.FUOCO, 0, 1.0);
         double ladro = dannoIncantamento(new Ladro("Riferimento", 5), soloPercentuale);
         double mago = dannoIncantamento(new Mago("Merlino", 5), soloPercentuale);
         assertEquals(ladro * Costanti.MAGO_MOLTIPLICATORE_DANNI_MAGICI, mago, 1.0);
@@ -83,7 +83,7 @@ class CalcolatoreCombattimentoClassiTest {
     /**
      * Quanto aggiunge l'incantamento: il danno della stessa spada con e senza
      */
-    private double dannoIncantamento(PersonaggioBase attaccante, Incantamento incantamento) {
+    private double dannoIncantamento(PersonaggioBase attaccante, IncantamentoMD incantamento) {
         double senza = danno(attaccante, arma(TipoDanno.TAGLIENTE, Collections.emptyList()));
         double con = danno(attaccante, arma(TipoDanno.TAGLIENTE, Collections.singletonList(incantamento)));
         return con - senza;
@@ -99,7 +99,7 @@ class CalcolatoreCombattimentoClassiTest {
         return CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, difensore, arma).getDanno();
     }
 
-    private static Arma arma(TipoDanno tipoDanno, Collection<Incantamento> incantamenti) {
+    private static Arma arma(TipoDanno tipoDanno, Collection<IncantamentoMD> incantamenti) {
         return new Arma() {
             @Override
             public int getDanni() {
@@ -122,7 +122,7 @@ class CalcolatoreCombattimentoClassiTest {
             }
 
             @Override
-            public Collection<Incantamento> getIncantamenti() {
+            public Collection<IncantamentoMD> getIncantamenti() {
                 return incantamenti;
             }
         };

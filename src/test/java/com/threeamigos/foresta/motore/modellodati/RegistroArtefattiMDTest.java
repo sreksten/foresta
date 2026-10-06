@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
-import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.Test;
 
@@ -22,16 +20,16 @@ class RegistroArtefattiMDTest {
         ArtefattoMD dallArmaiolo = ArtefattoMDTest.creaArtefatto(TipoArtefatto.SCUDO, "lo scudo fiscale", "che si fa fare sconti");
         dallArmaiolo.addModificatore(TipoAttributo.PARATA, TipoModificatore.AUMENTO_PERCENTUALE, 10, "Parata");
         dallArmaiolo.addIncantamento("La battuta del cavolo", TipoDanno.GELO, 10, 0.5);
-        registro.getScambiatorePerNegozio(new CoordinateMD(7, 1), TipoNegozio.ARMAIOLO).addArtefatto(Artefatto.di(dallArmaiolo));
+        registro.getMagazzino(new CoordinateMD(7, 1), TipoNegozio.ARMAIOLO).add(dallArmaiolo);
         // When
         RegistroArtefattiMD ricaricato = salvaERileggi(registro);
         // Then
         ArtefattoMD tempioRiletto = ricaricato.getArtefattoInLocazione(new CoordinateMD(3, 4));
         assertEquals("il pugnale di Worr", tempioRiletto.getNome());
         assertTrue(tempioRiletto.getModificatori().contains(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 2, "Forza")));
-        Collection<Artefatto> armaiolo = ricaricato.getScambiatorePerNegozio(new CoordinateMD(7, 1), TipoNegozio.ARMAIOLO).getInventario();
+        Collection<ArtefattoMD> armaiolo = ricaricato.getMagazzino(new CoordinateMD(7, 1), TipoNegozio.ARMAIOLO);
         assertEquals(1, armaiolo.size());
-        Artefatto scudo = armaiolo.iterator().next();
+        ArtefattoMD scudo = armaiolo.iterator().next();
         assertEquals("lo scudo fiscale", scudo.getNome());
         assertTrue(scudo.getModificatori().contains(new ModificatoreAttributo(TipoAttributo.PARATA, TipoModificatore.AUMENTO_PERCENTUALE, 10, "Parata")));
         assertEquals(1, scudo.getIncantamenti().size());
@@ -42,20 +40,20 @@ class RegistroArtefattiMDTest {
         // Given
         RegistroArtefattiMD registro = new RegistroArtefattiMD();
         CoordinateMD citta = new CoordinateMD(7, 1);
-        registro.getScambiatorePerNegozio(citta, TipoNegozio.ARMAIOLO)
-                .addArtefatto(Artefatto.di(ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "la spada d'argento", "che luccica")));
+        registro.getMagazzino(citta, TipoNegozio.ARMAIOLO)
+                .add(ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "la spada d'argento", "che luccica"));
         ArtefattoMD pergamena = ArtefattoMDTest.creaArtefatto(TipoArtefatto.PERGAMENA, "una pergamena del fuoco", "che scotta");
         pergamena.addIncantamento("Fuoco minore", TipoDanno.FUOCO, 5, 0.05);
-        ScambiatoreArtefatti venditore = registro.getScambiatorePerNegozio(citta, TipoNegozio.VENDITORE_DI_PERGAMENE);
-        venditore.addArtefatto(Artefatto.di(pergamena));
-        venditore.addArtefatto(Artefatto.di(ArtefattoMDTest.creaArtefatto(TipoArtefatto.PERGAMENA, "una pergamena del gelo", "che gela")));
+        Collection<ArtefattoMD> venditore = registro.getMagazzino(citta, TipoNegozio.VENDITORE_DI_PERGAMENE);
+        venditore.add(pergamena);
+        venditore.add(ArtefattoMDTest.creaArtefatto(TipoArtefatto.PERGAMENA, "una pergamena del gelo", "che gela"));
         // When
         RegistroArtefattiMD ricaricato = salvaERileggi(registro);
         // Then
-        Collection<Artefatto> armaiolo = ricaricato.getScambiatorePerNegozio(citta, TipoNegozio.ARMAIOLO).getInventario();
+        Collection<ArtefattoMD> armaiolo = ricaricato.getMagazzino(citta, TipoNegozio.ARMAIOLO);
         assertEquals(1, armaiolo.size());
         assertEquals("la spada d'argento", armaiolo.iterator().next().getNome());
-        Collection<Artefatto> pergamene = ricaricato.getScambiatorePerNegozio(citta, TipoNegozio.VENDITORE_DI_PERGAMENE).getInventario();
+        Collection<ArtefattoMD> pergamene = ricaricato.getMagazzino(citta, TipoNegozio.VENDITORE_DI_PERGAMENE);
         assertEquals(2, pergamene.size());
         assertTrue(pergamene.stream().allMatch(a -> a.getTipo() == TipoArtefatto.PERGAMENA));
         assertTrue(pergamene.stream().anyMatch(a -> a.getIncantamenti().size() == 1));

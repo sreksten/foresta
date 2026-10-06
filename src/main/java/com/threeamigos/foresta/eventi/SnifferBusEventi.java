@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.eventi;
 
+import com.threeamigos.foresta.motore.modellodati.EffettoDiStatoMD;
+
 import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
@@ -460,7 +462,7 @@ public class SnifferBusEventi {
 
     private void onEventoVariazioneEffettoDiStato(NotificaVariazioneEffettoDiStatoPersonaggio evento) {
         Personaggio p = evento.getPersonaggio();
-        Logger.log(headerEvento(evento) + String.format("Tipo: %s, EffettoDiStato: %s - ",
+        Logger.log(headerEvento(evento) + String.format("Tipo: %s, EffettoDiStatoMD: %s - ",
                 evento.getTipo(), evento.getEffetto()) + formattaStatistichePersonaggio(p));
     }
 

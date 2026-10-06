@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.motore.EffettoDiStato;
+import com.threeamigos.foresta.motore.modellodati.EffettoDiStatoMD;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoModificatore;
@@ -84,7 +84,7 @@ public class PersonaggioMD implements Serializzabile {
 	/**
 	 * Effetti di stato applicati al personaggio
 	 */
-	private Collection<EffettoDiStato> effettiDiStato = new ArrayList<>();
+	private Collection<EffettoDiStatoMD> effettiDiStato = new ArrayList<>();
 	/**
 	 * Artefatti posseduti dal personaggio
 	 */
@@ -590,11 +590,11 @@ public class PersonaggioMD implements Serializzabile {
 		this.causaTrapasso = Serializzabile.senzaPipe(causaTrapasso);
 	}
 
-	public Collection<EffettoDiStato> getEffettiDiStato() {
+	public Collection<EffettoDiStatoMD> getEffettiDiStato() {
 		return effettiDiStato;
 	}
 
-	public void setEffettiDiStato(Collection<EffettoDiStato> effettiDiStato) {
+	public void setEffettiDiStato(Collection<EffettoDiStatoMD> effettiDiStato) {
 		this.effettiDiStato = effettiDiStato;
 	}
 
@@ -682,7 +682,7 @@ public class PersonaggioMD implements Serializzabile {
 		effettiDiStato.clear();
 		while (campi.haAltriCampi()) {
 			String[] attributoValore = campi.testo().split(MappaProprieta.SEPARATORE);
-			EffettoDiStato effettoDiStato = new EffettoDiStato(TipoEffettoDiStato.valueOf(attributoValore[0]),
+			EffettoDiStatoMD effettoDiStato = new EffettoDiStatoMD(TipoEffettoDiStato.valueOf(attributoValore[0]),
 					Integer.parseInt(attributoValore[1]), Integer.parseInt(attributoValore[2]));
 			effettiDiStato.add(effettoDiStato);
 		}

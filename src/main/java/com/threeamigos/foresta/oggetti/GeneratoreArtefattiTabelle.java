@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
+
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
@@ -218,7 +220,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		GradoIncantamento grado = GradoIncantamento.perLivello(livello);
 		int numero = 1 + random.nextInt(massimo);
 		for (int i = 0; i < numero; i++) {
-			Incantamento incantamento = generaIncantamento(grado);
+			IncantamentoMD incantamento = generaIncantamento(grado);
 			md.addIncantamento(incantamento);
 			md.setCostoAcquisto(md.getCostoAcquisto() + (int) Math.round(ListinoPergamene.prezzo(incantamento, livello)));
 		}
@@ -269,7 +271,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 			costo += Math.signum(modificatore.getIntensita()) * ListinoPergamene.prezzo(aggiunto);
 		}
 		for (TipoDanno tipoDanno : risultato.getDanni()) {
-			Incantamento incantamento = new Incantamento(tipoDanno.getNome() + ' ' + grado.getNome(), tipoDanno,
+			IncantamentoMD incantamento = new IncantamentoMD(tipoDanno.getNome() + ' ' + grado.getNome(), tipoDanno,
 					grado.getBonusFisso(), grado.getCoefficiente());
 			md.addIncantamento(incantamento);
 			costo += ListinoPergamene.prezzo(incantamento, livello);
@@ -381,11 +383,11 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		return nomeComune + ' ' + grado.getNome() + nome.substring(nomeComune.length());
 	}
 
-	private Incantamento generaIncantamento(GradoIncantamento grado) {
+	private IncantamentoMD generaIncantamento(GradoIncantamento grado) {
 		return generaIncantamento(grado, TIPI_DANNO_INCANTAMENTO.get(random.nextInt(TIPI_DANNO_INCANTAMENTO.size())));
 	}
 
-	private Incantamento generaIncantamento(GradoIncantamento grado, TipoDanno tipoDanno) {
+	private IncantamentoMD generaIncantamento(GradoIncantamento grado, TipoDanno tipoDanno) {
 		int bonusFisso = grado.getBonusFisso();
 		double coefficiente = grado.getCoefficiente();
 		switch (random.nextInt(3)) {
@@ -398,7 +400,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 			default:
 				break;
 		}
-		return new Incantamento(tipoDanno.getNome() + ' ' + grado.getNome(), tipoDanno, bonusFisso, coefficiente);
+		return new IncantamentoMD(tipoDanno.getNome() + ' ' + grado.getNome(), tipoDanno, bonusFisso, coefficiente);
 	}
 
 	private void aggiungiModificatore(ArtefattoMD md, TipoAttributo attributo, GradoIncantamento grado) {

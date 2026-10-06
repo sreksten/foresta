@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
+
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.tipi.TipoDanno;
@@ -31,7 +33,7 @@ public class ArmaFisica extends Artefatto implements Arma {
     }
 
     @Override
-    public Collection<Incantamento> getIncantamenti() {
+    public Collection<IncantamentoMD> getIncantamenti() {
         return md.getIncantamenti();
     }
 }

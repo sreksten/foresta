@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.motore.modellodati;
 
-import com.threeamigos.foresta.motore.Dado;
-
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -22,24 +20,19 @@ public class RegistroPersonaggiMD implements Serializzabile {
 		elencoIniziale.add(personaggioMD);
 	}
 
-	public final PersonaggioMD getPersonaggioDisponibile() {
-		return Dado.selezionaCasualmente(elencoIniziale);
+	/**
+	 * Toglie dall'elenco iniziale il personaggio in quella posizione (la sceglie a caso il motore).
+	 */
+	public final PersonaggioMD rimuoviDisponibile(int indice) {
+		return elencoIniziale.remove(indice);
 	}
 
 	public final int getNumeroDisponibili() {
 		return elencoIniziale.size();
 	}
 
-	public final PersonaggioMD getPersonaggioCasuale() {
-		if (!personaggiInLocazione.isEmpty()) {
-            ArrayList<CoordinateMD> elencoCoordinate = new ArrayList<>(personaggiInLocazione.keySet());
-			int indice = Dado.tiraAncheAUnaFaccia(elencoCoordinate.size()) - 1;
-			CoordinateMD coordinate = elencoCoordinate.get(indice);
-			PersonaggioMD personaggio = personaggiInLocazione.get(coordinate);
-			personaggiInLocazione.remove(coordinate);
-			return personaggio;
-		}
-		return null;
+	public final Set<CoordinateMD> getUbicazioniPersonaggi() {
+		return Collections.unmodifiableSet(personaggiInLocazione.keySet());
 	}
 
 	public final void addPersonaggioInLocazione(PersonaggioMD personaggio, CoordinateMD coordinate) {

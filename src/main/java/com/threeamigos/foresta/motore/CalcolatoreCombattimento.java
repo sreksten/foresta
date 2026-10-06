@@ -5,9 +5,9 @@ import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GradoIncantamento;
-import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.personaggi.OmbraFiamma;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.*;
@@ -548,7 +548,7 @@ public class CalcolatoreCombattimento {
 
         if (arma.isIncantata()) {
             double moltiplicatoreSet = moltiplicatoreSet(attaccante, arma);
-            for (Incantamento inc : arma.getIncantamenti()) {
+            for (IncantamentoMD inc : arma.getIncantamenti()) {
                 TipoDanno elementoMagico = inc.getTipoDannoElementale();
 
                 if (difensore.isImmuneATipoDanno(elementoMagico)) {
@@ -630,7 +630,7 @@ public class CalcolatoreCombattimento {
             // --- TRAGUARDO 2: Stati degli Incantamenti (Multipli e Indipendenti) ---
             if (arma.isIncantata()) {
                 double moltiplicatoreSet = moltiplicatoreSet(attaccante, arma);
-                for (Incantamento incantamento : arma.getIncantamenti()) {
+                for (IncantamentoMD incantamento : arma.getIncantamenti()) {
                     if (difensore.isImmuneATipoDanno(incantamento.getTipoDannoElementale())) {
                         continue;
                     }
@@ -685,7 +685,7 @@ public class CalcolatoreCombattimento {
      * con l'INTELLIGENZA e il moltiplicatore di danno magico di chi colpisce: una spada di fuoco rende di più
      * in mano a un elfo che a un guerriero. Contro un bersaglio BAGNATO il fuoco fa la metà.
      */
-    private static double dannoIncantamento(Personaggio attaccante, Personaggio difensore, Incantamento incantamento,
+    private static double dannoIncantamento(Personaggio attaccante, Personaggio difensore, IncantamentoMD incantamento,
                                             int livelloOggetto, double fattore, double moltiplicatoreParteFissa) {
         double dannoGrezzo = ((incantamento.getDannoBonusFisso() * livelloOggetto * moltiplicatoreParteFissa) +
                 (attaccante.getIntelligenza() * incantamento.getCoefficienteScala() * attaccante.getMoltiplicatoreDanniMagici())) * fattore;
@@ -713,7 +713,7 @@ public class CalcolatoreCombattimento {
                 continue;
             }
             double moltiplicatoreSet = RegoleSetLeggendari.moltiplicatore(difensore.getModelloDati().getArtefatti(), pezzo.getModelloDati());
-            for (Incantamento incantamento : pezzo.getIncantamenti()) {
+            for (IncantamentoMD incantamento : pezzo.getIncantamenti()) {
                 if (incantamento.getTipoDannoElementale() == tipoDanno) {
                     fisso += incantamento.getDannoBonusFisso() * pezzo.getLivello() * moltiplicatoreSet;
                     percentuale += incantamento.getCoefficienteScala() * Costanti.RESISTENZA_FATTORE_PERCENTUALE * moltiplicatoreSet;
@@ -769,10 +769,10 @@ public class CalcolatoreCombattimento {
      * Il bonus del libro magico come un incantamento del tipo di danno dell'incantesimo: parte fissa e
      * percentuale del grado adatto al livello del libro, più il 25%.
      */
-    static Incantamento bonusLibroMagico(Artefatto libro, TipoDanno tipoDanno) {
+    static IncantamentoMD bonusLibroMagico(Artefatto libro, TipoDanno tipoDanno) {
         GradoIncantamento grado = GradoIncantamento.perLivello(libro.getLivello());
         double maggiorazione = 1.0d + Costanti.LIBRO_MAGICO_MAGGIORAZIONE;
-        return new Incantamento("Libro magico", tipoDanno,
+        return new IncantamentoMD("Libro magico", tipoDanno,
                 (int) Math.round(grado.getBonusFisso() * maggiorazione), grado.getCoefficiente() * maggiorazione);
     }
 

@@ -20,8 +20,10 @@ import com.threeamigos.foresta.tipi.TipoNegozio;
 import com.threeamigos.foresta.tools.CostruttoreArtefatto;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 public class RegistroArtefatti {
 
@@ -235,12 +237,27 @@ public class RegistroArtefatti {
 		Foresta.setLocazioneConosciuta(coordinate);
 	}
 
+	/**
+	 * Uno a caso fra quelli ancora da sistemare nella foresta, tolto dall'elenco; null se sono finiti.
+	 */
 	static Artefatto getArtefattoDisponibile() {
-		return costruisciArtefatto(getRegistroArtefatti().getArtefattoDisponibile());
+		int disponibili = getRegistroArtefatti().getNumeroDisponibili();
+		if (disponibili == 0) {
+			return null;
+		}
+		return costruisciArtefatto(getRegistroArtefatti().rimuoviDisponibile(Dado.tiraAncheAUnaFaccia(disponibili) - 1));
 	}
 
+	/**
+	 * Uno a caso fra gli artefatti smarriti nelle locazioni, con la sua ubicazione; null se non ce ne sono.
+	 */
 	public static RegistroArtefattiMD.ArtefattoESuaUbicazione getArtefattoCasuale() {
-		return getRegistroArtefatti().getArtefattoCasuale();
+		List<CoordinateMD> ubicazioni = new ArrayList<>(getRegistroArtefatti().getUbicazioniArtefattiSmarriti());
+		if (ubicazioni.isEmpty()) {
+			return null;
+		}
+		CoordinateMD coordinate = ubicazioni.get(Dado.tiraAncheAUnaFaccia(ubicazioni.size()) - 1);
+		return new RegistroArtefattiMD.ArtefattoESuaUbicazione(getRegistroArtefatti().getArtefattoInLocazione(coordinate), coordinate);
 	}
 
 	public static void addArtefattoInLocazione(Artefatto artefatto, CoordinateMD coordinate) {
@@ -282,7 +299,31 @@ public class RegistroArtefatti {
 	}
 
 	public static ScambiatoreArtefatti getScambiatorePerNegozio(CoordinateMD coordinate, TipoNegozio negozio) {
-		return getRegistroArtefatti().getScambiatorePerNegozio(coordinate, negozio);
+		return new ScambiatoreArtefatti() {
+			@Override
+			public Collection<Artefatto> getInventario() {
+				return getMagazzino().stream().map(Artefatto::di).collect(Collectors.toList());
+			}
+
+			@Override
+			public void addArtefatto(Artefatto artefatto) {
+				getMagazzino().add(artefatto.getModelloDati());
+			}
+
+			@Override
+			public void removeArtefatto(Artefatto artefatto) {
+				getMagazzino().remove(artefatto.getModelloDati());
+			}
+
+			@Override
+			public boolean tratta(Artefatto artefatto) {
+				return negozio.tratta(artefatto.getTipo());
+			}
+
+			private Collection<ArtefattoMD> getMagazzino() {
+				return getRegistroArtefatti().getMagazzino(coordinate, negozio);
+			}
+		};
 	}
 
 	/**

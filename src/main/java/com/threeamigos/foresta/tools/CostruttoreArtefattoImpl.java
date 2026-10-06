@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.tools;
 
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
@@ -91,7 +91,7 @@ public class CostruttoreArtefattoImpl implements
     }
 
     @Override
-    public CostruttoreArtefatto.StepIncantamento setIncantamento(Incantamento incantamento) {
+    public CostruttoreArtefatto.StepIncantamento setIncantamento(IncantamentoMD incantamento) {
         artefattoMD.addIncantamento(incantamento);
         return this;
     }

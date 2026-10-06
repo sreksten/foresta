@@ -10,9 +10,9 @@ import com.threeamigos.foresta.motore.AutomaScambiatoreArtefatti;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegoleSetLeggendari;
 import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.oggetti.Incantamento;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.SupertipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
@@ -326,7 +326,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
                         null, null, null,
                         null, null, null,
                         null, artefatto);
-                for (Incantamento incantamento : artefatto.getIncantamenti()) {
+                for (IncantamentoMD incantamento : artefatto.getIncantamenti()) {
                     nodo.creaNodo(
                             incantamento.getNomeIncantamento(), font, coloreAttributi,
                             null, null, null,

@@ -1,7 +1,6 @@
 package com.threeamigos.foresta.motore;
 
 import java.util.Deque;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.ConcurrentLinkedDeque;
 
@@ -156,24 +155,5 @@ public class Dado {
             throw new IllegalArgumentException("Il valore minimo deve essere minore al valore massimo");
         }
         return intero(min, max);
-    }
-
-    /**
-     * <b>Sfila un elemento casuale</b> da una collezione e lo restituisce
-     */
-    public static <T> T selezionaCasualmente(List<T> elencoIniziale) {
-        T t = null;
-        int size = elencoIniziale.size();
-        if (size > 0) {
-            if (size == 1) {
-                t = elencoIniziale.get(0);
-                elencoIniziale.remove(0);
-            } else {
-                int indice = Dado.tira(size) - 1;
-                t = elencoIniziale.get(indice);
-                elencoIniziale.remove(indice);
-            }
-        }
-        return t;
     }
 }

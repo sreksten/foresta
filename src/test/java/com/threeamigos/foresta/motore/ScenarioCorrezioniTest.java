@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.motore.modellodati.EffettoDiStatoMD;
+
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
@@ -283,7 +285,7 @@ class ScenarioCorrezioniTest {
 	private static int durata(Personaggio personaggio, TipoEffettoDiStato tipo) {
 		return personaggio.getEffettiDiStato().stream()
 				.filter(e -> e.getTipoEffettoDiStato() == tipo)
-				.mapToInt(EffettoDiStato::getDurata)
+				.mapToInt(EffettoDiStatoMD::getDurata)
 				.findFirst().orElse(0);
 	}
 }
