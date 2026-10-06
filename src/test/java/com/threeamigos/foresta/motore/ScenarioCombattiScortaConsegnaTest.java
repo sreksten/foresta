@@ -5,7 +5,7 @@ import com.threeamigos.foresta.missioni.IlPellegrino;
 import com.threeamigos.foresta.missioni.IncaricoInCitta;
 import com.threeamigos.foresta.missioni.LaTagliaSullaBanda;
 import com.threeamigos.foresta.missioni.RichiestaDiMateriali;
-import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;

@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
-import com.threeamigos.foresta.motore.modellodati.RegistroPersonaggiMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.modellodati.PersonaggioMD;
+import com.threeamigos.foresta.modellodati.RegistroPersonaggiMD;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 

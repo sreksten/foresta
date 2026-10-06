@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tipi.SupertipoDanno;
 import com.threeamigos.foresta.tipi.TipoAttributo;

@@ -2,9 +2,9 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoDiGioco;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.ComandiPossibili;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 

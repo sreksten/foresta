@@ -4,7 +4,7 @@ import com.threeamigos.foresta.eventi.interni.InternoRichiestaAperturaFinestraCo
 import com.threeamigos.foresta.missioni.ColpoRichiesto;
 import com.threeamigos.foresta.missioni.IlColpo;
 import com.threeamigos.foresta.missioni.TipoMissione;
-import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.Test;

@@ -1,16 +1,16 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
+import com.threeamigos.foresta.modellodati.IncantamentoMD;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.interfacce.OggettoConCosto;
 import com.threeamigos.foresta.interfacce.OggettoConPeso;
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
-import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.SupertipoArtefatto;

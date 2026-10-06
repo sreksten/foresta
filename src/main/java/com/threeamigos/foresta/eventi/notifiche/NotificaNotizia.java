@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.motore.modellodati.Notizia;
+import com.threeamigos.foresta.modellodati.Notizia;
 
 /**
  * Una notizia che il motore di gioco invia al giocatore, destinata a essere mostrata

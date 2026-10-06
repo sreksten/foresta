@@ -7,7 +7,7 @@ import com.threeamigos.foresta.missioni.IntermezzoDiPasso;
 import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.missioni.Passo;
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;

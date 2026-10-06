@@ -5,7 +5,7 @@ import com.threeamigos.foresta.missioni.IlContrabbandiere;
 import com.threeamigos.foresta.missioni.IlCorriere;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.Spedizione;
-import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;

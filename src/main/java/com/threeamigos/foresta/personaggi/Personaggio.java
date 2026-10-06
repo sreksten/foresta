@@ -1,12 +1,12 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.motore.modellodati.EffettoDiStatoMD;
+import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
 
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.interfacce.OggettoConArticoli;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.*;

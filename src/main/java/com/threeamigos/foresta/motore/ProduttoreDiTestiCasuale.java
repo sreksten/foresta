@@ -2,9 +2,9 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoException;
+import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.modellodati.Notizia;
 import com.threeamigos.foresta.motore.GrammarBean.InvalidGrammarException;
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.modellodati.Notizia;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 

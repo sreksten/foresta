@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.tools;
 
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 
 /**
  * Questa classe contiene la codifica numero-stringa per ordinali e cardinali,

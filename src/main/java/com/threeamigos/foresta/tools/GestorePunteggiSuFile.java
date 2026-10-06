@@ -2,8 +2,8 @@ package com.threeamigos.foresta.tools;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoException;
-import com.threeamigos.foresta.motore.modellodati.LettoreCampi;
-import com.threeamigos.foresta.motore.modellodati.Serializzabile;
+import com.threeamigos.foresta.modellodati.LettoreCampi;
+import com.threeamigos.foresta.modellodati.Serializzabile;
 
 import java.io.BufferedReader;
 import java.io.File;

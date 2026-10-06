@@ -3,9 +3,9 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoCreazioneSpriteATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneConoscenzaMappa;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.ui.sfx.CloudManager;
 

@@ -4,8 +4,8 @@ import com.threeamigos.foresta.missioni.CronacheDiUnFegatoEroico;
 import com.threeamigos.foresta.missioni.DisturbatoreDellaQuietePubblica;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.NessunBoccaleLasciatoIndietro;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.RegistroMissioni;
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 
 import java.awt.*;
 import java.util.ArrayList;

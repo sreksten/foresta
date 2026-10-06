@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
 
 /**
  * Una benedizione (vedi LaBenedizione), letta da una riga di BENEDIZIONE in missioni.txt, che ne descrive i campi: chi

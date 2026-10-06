@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.awt.*;

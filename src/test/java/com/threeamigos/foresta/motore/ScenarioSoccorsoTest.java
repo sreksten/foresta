@@ -5,7 +5,7 @@ import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.IlSoccorso;
 import com.threeamigos.foresta.missioni.SoccorsoRichiesto;
 import com.threeamigos.foresta.missioni.TipoMissione;
-import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;

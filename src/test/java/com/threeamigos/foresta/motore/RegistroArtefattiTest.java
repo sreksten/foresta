@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.oggetti.ArmaFisica;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;

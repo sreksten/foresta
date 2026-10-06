@@ -3,9 +3,9 @@ package com.threeamigos.foresta.missioni;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMissioneCompletata;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAggiornamentoStatoMissione;
+import com.threeamigos.foresta.modellodati.MissioneMD;
 import com.threeamigos.foresta.motore.GestoreProgressione;
 import com.threeamigos.foresta.motore.RegistroMissioni;
-import com.threeamigos.foresta.motore.modellodati.MissioneMD;
 import com.threeamigos.foresta.tipi.ClasseMissione;
 
 import java.util.ArrayList;

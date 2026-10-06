@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.tools;
 
-import com.threeamigos.foresta.motore.modellodati.LettoreCampi;
+import com.threeamigos.foresta.modellodati.LettoreCampi;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

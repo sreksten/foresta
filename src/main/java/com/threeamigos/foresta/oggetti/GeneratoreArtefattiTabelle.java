@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.oggetti;
 
-import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
+import com.threeamigos.foresta.modellodati.IncantamentoMD;
 
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Dado;
-import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;

@@ -1,11 +1,11 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.motore.modellodati.EffettoDiStatoMD;
+import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
 
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
-import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Mago;

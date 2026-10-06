@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.motore.modellodati.TrofeiMD;
+import com.threeamigos.foresta.modellodati.TrofeiMD;
 
 /**
  * Dove stanno i trofei vinti, che valgono da una partita all'altra: Main passa a RegistroTrofei l'implementazione

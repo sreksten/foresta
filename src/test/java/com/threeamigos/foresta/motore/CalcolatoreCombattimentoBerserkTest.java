@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.interfacce.Arma;
-import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.IncantamentoMD;
+import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;

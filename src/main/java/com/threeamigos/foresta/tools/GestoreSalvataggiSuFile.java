@@ -5,12 +5,12 @@ import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
 import com.threeamigos.foresta.eventi.notifiche.NotificaErroreCaricamento;
 import com.threeamigos.foresta.interfacce.GestoreSalvataggi;
+import com.threeamigos.foresta.modellodati.GruppoGiocatoreMD;
+import com.threeamigos.foresta.modellodati.LettoreCampi;
+import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.modellodati.Serializzabile;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
-import com.threeamigos.foresta.motore.modellodati.GruppoGiocatoreMD;
-import com.threeamigos.foresta.motore.modellodati.LettoreCampi;
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.modellodati.Serializzabile;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 

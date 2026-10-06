@@ -215,7 +215,7 @@ public class Costanti {
     public static final int COSTO_MAPPA_DELLA_ZONA = 10;
     public static final int COSTO_MAPPA_DELLA_FORESTA = 20;
 
-    // Notizie (vedi motore.Notizie / motore.modellodati.NotizieMD)
+    // Notizie (vedi motore.Notizie / modellodati.NotizieMD)
     // Condivisa anche dallo storico scorrevole del pannello di testo (ui.DoomdarkTextRectangle2x),
     // così che dopo un ricaricamento il pannello possa essere ripopolato per intero.
     public static final int MASSIMO_MESSAGGI_RICORDATI = 100;

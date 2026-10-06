@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.modellodati.MissioneMD;
 import com.threeamigos.foresta.motore.Ondata;
-import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.modellodati.MissioneMD;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoLocazione;

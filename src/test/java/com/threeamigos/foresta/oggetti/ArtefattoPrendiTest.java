@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.oggetti;
 
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;

@@ -5,7 +5,7 @@ import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.intermezzi.FabbricaIntermezzi;
 import com.threeamigos.foresta.locazioni.FabbricaLocazioni;
 import com.threeamigos.foresta.missioni.FabbricaMissioni;
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.offerte.FabbricaOfferte;
 import com.threeamigos.foresta.oggetti.FabbricaOggetti;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;

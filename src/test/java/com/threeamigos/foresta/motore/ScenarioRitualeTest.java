@@ -5,7 +5,7 @@ import com.threeamigos.foresta.missioni.IlRituale;
 import com.threeamigos.foresta.missioni.Passo;
 import com.threeamigos.foresta.missioni.RitualeRichiesto;
 import com.threeamigos.foresta.missioni.TipoMissione;
-import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.oggetti.OggettoMissione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;

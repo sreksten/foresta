@@ -4,10 +4,10 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaNotizia;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
-import com.threeamigos.foresta.motore.modellodati.MessaggioMD;
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.modellodati.Notizia;
-import com.threeamigos.foresta.motore.modellodati.NotizieMD;
+import com.threeamigos.foresta.modellodati.MessaggioMD;
+import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.modellodati.Notizia;
+import com.threeamigos.foresta.modellodati.NotizieMD;
 
 import java.util.List;
 

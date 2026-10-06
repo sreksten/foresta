@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.intermezzi;
 
 import com.threeamigos.foresta.locazioni.Locanda;
+import com.threeamigos.foresta.modellodati.LocazioneMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.modellodati.LocazioneMD;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 

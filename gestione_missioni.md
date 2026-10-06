@@ -2,7 +2,7 @@
 
 Come il motore rappresenta, controlla, salva e collega al resto del gioco le missioni: l'infrastruttura. Il vocabolario dei passi e la mappatura dei tipi di missione sono in [`passi_missioni.md`](passi_missioni.md); per l'automa che le controlla vedi [`motore_di_gioco.md`](motore_di_gioco.md) §3; per gli intermezzi [`intermezzi.md`](intermezzi.md).
 
-Tutto il codice è in `missioni/` (modello e missioni concrete), in `motore/RegistroMissioni`, `motore/RegistroIntermezzi` e `motore/modellodati/MissioneMD`, `RegistroMissioniMD`.
+Tutto il codice è in `missioni/` (modello e missioni concrete), in `motore/RegistroMissioni`, `motore/RegistroIntermezzi` e `modellodati/MissioneMD`, `RegistroMissioniMD`.
 
 ## 1. Il modello
 

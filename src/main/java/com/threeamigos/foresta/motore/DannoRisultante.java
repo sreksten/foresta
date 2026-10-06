@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.motore.modellodati.EffettoDiStatoMD;
+import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
 
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoDanno;

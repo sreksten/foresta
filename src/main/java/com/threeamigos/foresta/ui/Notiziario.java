@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.modellodati.Notizia;
 import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.motore.Notizie;
-import com.threeamigos.foresta.motore.modellodati.Notizia;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

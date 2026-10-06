@@ -3,7 +3,7 @@ package com.threeamigos.foresta.tools;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.interfacce.GestoreTrofei;
-import com.threeamigos.foresta.motore.modellodati.TrofeiMD;
+import com.threeamigos.foresta.modellodati.TrofeiMD;
 
 import java.io.BufferedReader;
 import java.io.File;

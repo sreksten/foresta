@@ -10,7 +10,7 @@ import com.threeamigos.foresta.missioni.IlFavore;
 import com.threeamigos.foresta.missioni.LaLealta;
 import com.threeamigos.foresta.missioni.LealtaRichiesta;
 import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Guerriera;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;

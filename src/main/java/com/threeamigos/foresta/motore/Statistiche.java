@@ -5,8 +5,8 @@ import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloMondo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazionePunteggio;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazionePuntiEsperienzaPersonaggio;
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.modellodati.StatisticheMD;
+import com.threeamigos.foresta.modellodati.ModelloDati;
+import com.threeamigos.foresta.modellodati.StatisticheMD;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 public class Statistiche {

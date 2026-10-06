@@ -7,7 +7,7 @@ import com.threeamigos.foresta.eventi.interni.InternoMostraSchermataGioco;
 import com.threeamigos.foresta.eventi.notifiche.NotificaPaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.IntermezzoLocandaPrimaVisita;
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoLocazione;

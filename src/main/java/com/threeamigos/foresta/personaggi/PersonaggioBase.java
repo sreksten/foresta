@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.motore.modellodati.EffettoDiStatoMD;
+import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoCreazionePersonaggio;
@@ -12,10 +12,10 @@ import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.motore.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.offerte.FabbricaOfferte;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;

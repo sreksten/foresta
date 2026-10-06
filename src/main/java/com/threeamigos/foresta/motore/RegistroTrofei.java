@@ -5,7 +5,7 @@ import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoPreparazioneLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoTrofeoAcquisito;
 import com.threeamigos.foresta.interfacce.GestoreTrofei;
-import com.threeamigos.foresta.motore.modellodati.TrofeiMD;
+import com.threeamigos.foresta.modellodati.TrofeiMD;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
 import com.threeamigos.foresta.trofei.ClasseTrofeo;
 import com.threeamigos.foresta.trofei.Trofeo;

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.interfacce.Arma;
-import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
+import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoPersonaggio; // Presumo sia la tua Enum delle 30 classi

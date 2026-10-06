@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.motore.modellodati.MessaggioMD;
+import com.threeamigos.foresta.modellodati.MessaggioMD;
 
 import java.util.List;
 

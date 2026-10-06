@@ -4,7 +4,7 @@ import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.missioni.CacciatoreDiTaglie;
 import com.threeamigos.foresta.missioni.IlRapimento;
 import com.threeamigos.foresta.missioni.IncaricoInCitta;
-import com.threeamigos.foresta.motore.modellodati.CoordinateMD;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;

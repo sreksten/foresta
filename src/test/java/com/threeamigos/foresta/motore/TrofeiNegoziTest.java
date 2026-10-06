@@ -6,7 +6,7 @@ import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
-import com.threeamigos.foresta.motore.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoArtefatto;

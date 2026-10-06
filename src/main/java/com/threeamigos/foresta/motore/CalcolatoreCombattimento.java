@@ -5,7 +5,7 @@ import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
-import com.threeamigos.foresta.motore.modellodati.IncantamentoMD;
+import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GradoIncantamento;
 import com.threeamigos.foresta.personaggi.OmbraFiamma;

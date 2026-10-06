@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.interfacce.GestoreTrofei;
-import com.threeamigos.foresta.motore.modellodati.TrofeiMD;
+import com.threeamigos.foresta.modellodati.TrofeiMD;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
 
 import java.io.BufferedReader;

@@ -2,9 +2,9 @@ package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
+import com.threeamigos.foresta.modellodati.MissioneMD;
+import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.LineaTemporale;
-import com.threeamigos.foresta.motore.modellodati.MissioneMD;
-import com.threeamigos.foresta.motore.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.ClasseMissione;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

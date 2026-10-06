@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.motore.modellodati.PersonaggioMD;
+import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
