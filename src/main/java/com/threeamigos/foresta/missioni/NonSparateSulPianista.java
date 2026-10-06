@@ -9,7 +9,7 @@ import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.personaggi.Bardo;
+import com.threeamigos.foresta.personaggi.Viandante;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
@@ -109,7 +109,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 						.poi(ACCETTAZIONE);
 			case ACCETTAZIONE:
 				return prendiInScorta(MomentoControllo.IN_LOCAZIONE, this::nellaLocanda,
-								() -> new Bardo(getBardo(), EquipaggiamentoIniziale.livelloCasualeDalMondo()), true)
+								() -> new Viandante(getBardo(), EquipaggiamentoIniziale.livelloCasualeDalMondo()), true)
 						.esegui(() -> {
 							aggiungiProprieta(CITTA, cittaPiuVicina().name());
 							aggiungiProprieta(LIVELLO_DELL_INCARICO, String.valueOf(Statistiche.getLivello()));
@@ -152,12 +152,14 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	}
 
 	private ScenaInCitta scenaDellaMoglie() {
-		// Il bardo è ancora nel gruppo (si congeda a fine missione): la scena lo mette dopo il capo, rivolto verso la moglie
+		// Il bardo (un Viandante, disegnato apposta come il bardo della locanda) è ancora nel gruppo, si congeda a fine missione:
+		// la scena lo mette dopo il capo, rivolto verso la moglie
 		return ScenaInCitta.conMoglieDelBardo()
 				.parlaIlMandante(getBardo() + "! Di nuovo in queste condizioni!")
 				.parlaIlCapo("Lo abbiamo trovato in una locanda, abbracciato al suo liuto.")
 				.parlaIlMandante("Grazie, viandanti. A lui ci penso io.")
 				.parlaIlMandante(getBardo() + ", non ti basteranno tre Pozioni della Salute grandi quando avrò finito con te!")
+				.parlaLOspite("Qualcuno ha un boccale di Sglord?")
 				.parlaIlCapo("(Non vorrei essere nei suoi panni.)");
 	}
 
