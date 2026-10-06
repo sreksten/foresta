@@ -22,12 +22,12 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
- * La UI legge lo stato da interfacce e parla al motore con gli eventi (vedi todo.md, "Separare motore, modello dati
- * e UI"): qui si controlla, leggendo i sorgenti, che non dipenda da altro.
+ * La UI legge lo stato da interfacce e parla al motore con gli eventi (vedi motore_di_gioco.md, "La separazione fra
+ * motore, modello dati e UI"): qui si controlla, leggendo i sorgenti, che non dipenda da altro.
  * <p>
  * Dalla UI si possono usare i pacchetti di {@link #PACCHETTI_AMMESSI}; da quelli di {@link #PACCHETTI_DI_SERVIZIO}
  * solo le classi che a loro volta non dipendono dal motore o dal dominio (per esempio i dati degli intermezzi o
- * Misc). Gli eventi portano ancora oggetti del dominio: è il punto 8 del todo, e questo test non lo guarda.
+ * Misc). Che gli eventi non portino oggetti del dominio lo controlla DipendenzeEventiTest.
  */
 class DipendenzeUITest {
 

@@ -21,7 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 /**
  * Gli eventi che la UI riceve (notifiche, richieste, comandi e interni con una vista) portano solo viste in sola
  * lettura, identificativi e dati: se portassero Personaggio o Artefatto, la UI potrebbe chiamarne i metodi che
- * scrivono (vedi todo.md, "Separare motore, modello dati e UI"). Qui si controlla, leggendo i sorgenti, che nessun
+ * scrivono (vedi motore_di_gioco.md, "La separazione fra motore, modello dati e UI"). Qui si controlla, leggendo i sorgenti, che nessun
  * evento importi classi del motore o del dominio; le sole eccezioni sono quelle di {@link #ECCEZIONI}.
  */
 class DipendenzeEventiTest {

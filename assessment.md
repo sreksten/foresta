@@ -75,7 +75,7 @@ Valutazione dello stato del progetto al **2026-10-05**, scritta dopo la revision
 2. **Riequilibrare l'economia** partendo da [`economia.md`](economia.md), insieme al punto 1, perché bottino e prezzi crescono col livello del mondo.
 3. **Rendere robuste le notizie**: controllo del formato al caricamento della grammatica (o un test che produca tutte le alternative) e `null` invece dell'eccezione dopo 20 tentativi.
 4. **Decidere sulla modalità verticale**: sistemarla o toglierla. Oggi è rotta.
-5. **Separare il modello dati dalla UI**, un pezzo alla volta, iniziando dalle schermate che si toccano per altri motivi.
+5. **Separare il modello dati dalla UI**: fatto (viste in sola lettura verso la UI, identificativi verso il motore; vedi [`motore_di_gioco.md`](motore_di_gioco.md) §1). Il passo successivo sarebbe dividere il progetto in moduli.
 6. **Un test sui commenti `// Coperto da:`** dei `TipoMissione`, prima di aggiungere nuove famiglie di missioni.
 7. **Immagini mancanti** (artefatti, Viandante, sacerdoti, oggetti di missione), quando c'è tempo per la grafica.
 
