@@ -244,7 +244,7 @@ PANE_E_SPADA$
 ORCO_SENSIBILE$
     [IDENTIFICATIVO=ORCO_SENSIBILE]\
     [DIALOGO=Benvenuti... snif... all'Orco Sensibile. Scusate, ma quella ballata sulla caduta di Forte Grigio mi spezza sempre il cuore. Entrate con animo gentile, vi prego. Niente parole dure, niente insulti e se dovete sfidare qualcuno a duello, fate che sia una gara di poesia. Chi non rispetta i sentimenti altrui viene preso a pugni in faccia ma con molta, molta tristezza. Cosa vi porto da bere per affogare i dispiaceri?]\
-    [RECENSIONE=All'interno dell'Orcon Sensibile si recitano poesie e si piange davanti alla birra.]\
+    [RECENSIONE=All'interno dell'Orco Sensibile si recitano poesie e si piange davanti alla birra.]\
     [NOME_LOCANDA=L'Orco Sensibile]\
     [NOME_LOCANDIERE=[NOME_CASUALE]]\
     [#NOME_LOCANDA]
