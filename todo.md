@@ -26,7 +26,6 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 
 ## Gioco e contenuti
 
-- Quando una città viene distrutta, rimane la "storia" della casella? ("Qui sorgeva la città di ...")
 - Carta, forbice e sasso.
 - Mostrare in locazione anche i personaggi del gruppo.
 - Fumetto che attende la chiusura.
