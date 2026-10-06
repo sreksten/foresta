@@ -78,7 +78,7 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 				.conRitaglioSuSfondo()
 				.conElemento(ElementoIntermezzo.di("locandiere", ImmagineIntermezzo.risorsa("personaggi/Locandiere.gif"), X_LOCANDIERE, Y_LOCANDIERE)
 						.conBocca(0.5, -0.15))
-				.conElemento(ElementoIntermezzo.personaggio("bardo", TipoPersonaggio.BARDO, X_BARDO, Y_BARDO)
+				.conElemento(ElementoIntermezzo.di("bardo", ImmagineIntermezzo.risorsa("personaggi/BardoLocanda.gif"), X_BARDO, Y_BARDO)
 						.conBocca(0.5, -0.15));
 
 		for (int i = 0; i < personaggiVivi.size(); i++) {
