@@ -82,11 +82,12 @@ class ScenarioNonSparateSulPianistaTest {
             int monete = partita.gruppo().getMonete();
             pianista.controllaPreLocazione();
             assertEquals("VIAGGIO", pianista.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
-            assertTrue(partita.gruppo().getOspiti().isEmpty(), "il bardo è a casa");
+            assertFalse(partita.gruppo().getOspiti().isEmpty(), "il bardo c'è ancora per la scena");
             pianista.segnaIntermezzoPassoMostrato("VIAGGIO");
             pianista.controllaInLocazione();
             assertEquals(monete + 20, partita.gruppo().getMonete());
             assertTrue(pianista.isCompleta());
+            assertTrue(partita.gruppo().getOspiti().isEmpty(), "il bardo è a casa");
         }
     }
 

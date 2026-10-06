@@ -6,6 +6,7 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * La pagina di un intermezzo in un negozio o in una locanda: il negoziante è al suo posto,
@@ -27,31 +28,26 @@ final class ScenaNegozio {
 	private final PaginaIntermezzo pagina;
 	static final String ID_OSPITE = "ospite";
 
+	private final boolean haOspiti;
 	private final String idNegoziante;
 	private final String idCapo;
 	private final double secondoFineIngresso;
 	private boolean primaBattuta = true;
 
 	/**
-	 * Senza ospite: vedi {@link #ScenaNegozio(String, String, String, ElementoIntermezzo, double, double, double, TipoPersonaggio)}.
+	 * @param primoPiano l'immagine sopra a tutta la scena (il bancone), o null se non ce n'è
+	 *
+	 * Gli ospiti vivi del gruppo (un ostaggio liberato, un colpevole catturato, un bardo da riportare a casa)
+	 * entrano subito dopo il capo, prima degli altri, camminando come loro verso il negoziante, e quindi lo guardano:
+	 * la missione li congeda solo alla fine, così la scena li trova nel gruppo, con la loro classe.
 	 */
 	ScenaNegozio(String sfondo, String primoPiano, String idNegoziante, ElementoIntermezzo negoziante,
 				 double yPersonaggi, double xArrivoCapo, double ritardoFraPartenze) {
-		this(sfondo, primoPiano, idNegoziante, negoziante, yPersonaggi, xArrivoCapo, ritardoFraPartenze, null);
-	}
-
-	/**
-	 * @param primoPiano l'immagine sopra a tutta la scena (il bancone), o null se non ce n'è
-	 * @param ospite la classe di chi la missione ha scortato fin qui (un ostaggio liberato, un colpevole catturato), o
-	 *               null: entra subito dopo il capo, prima degli altri, camminando come loro verso il negoziante, e
-	 *               quindi lo guarda. Non è nel gruppo (la missione lo ha già congedato), perciò la scena non lo trova:
-	 *               lo dice chi la costruisce
-	 */
-	ScenaNegozio(String sfondo, String primoPiano, String idNegoziante, ElementoIntermezzo negoziante,
-				 double yPersonaggi, double xArrivoCapo, double ritardoFraPartenze, TipoPersonaggio ospite) {
 		this.idNegoziante = idNegoziante;
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		List<Personaggio> personaggiVivi = gruppo.getPersonaggiVivi();
+		List<Personaggio> ospiti = gruppo.getOspiti().stream().filter(Personaggio::isVivo).collect(Collectors.toList());
+		haOspiti = !ospiti.isEmpty();
 
 		pagina = new PaginaIntermezzo()
 				.conSfondo(ImmagineIntermezzo.risorsa(sfondo))
@@ -71,9 +67,12 @@ final class ScenaNegozio {
 				elemento.conBocca(0.5, -0.15);
 			}
 			pagina.conElemento(elemento);
-			if (personaggio == gruppo.getCapo() && ospite != null) {
-				pagina.conElemento(cammina(ID_OSPITE, ospite, posto++, xArrivoCapo, yPersonaggi, ritardoFraPartenze)
-						.conBocca(0.5, -0.15));
+			if (personaggio == gruppo.getCapo()) {
+				for (int k = 0; k < ospiti.size(); k++) {
+					ElementoIntermezzo elementoOspite = cammina(idOspite(k), ospiti.get(k).getClasse(), posto++, xArrivoCapo,
+							yPersonaggi, ritardoFraPartenze);
+					pagina.conElemento(k == 0 ? elementoOspite.conBocca(0.5, -0.15) : elementoOspite);
+				}
 			}
 		}
 		idCapo = capo;
@@ -107,8 +106,18 @@ final class ScenaNegozio {
 		return battuta(idCapo, testo);
 	}
 
+	/**
+	 * Una battuta del primo ospite.
+	 */
 	ScenaNegozio parlaLOspite(String testo) {
-		return battuta(ID_OSPITE, testo);
+		if (!haOspiti) {
+			throw new IllegalStateException("Nessun ospite in scena");
+		}
+		return battuta(idOspite(0), testo);
+	}
+
+	private static String idOspite(int indice) {
+		return indice == 0 ? ID_OSPITE : ID_OSPITE + indice;
 	}
 
 	/**

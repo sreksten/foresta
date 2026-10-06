@@ -1,9 +1,6 @@
 package com.threeamigos.foresta.intermezzi;
 
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
-
 import java.util.List;
-import java.util.Objects;
 
 /**
  * La pagina di un intermezzo in una strada di città: il mandante di una missione aspetta sulla destra, il gruppo
@@ -18,13 +15,8 @@ import java.util.Objects;
  *     .getPagine();
  * </pre>
  * Se la missione ha portato fin qui qualcuno (un ostaggio liberato, un colpevole catturato, un bardo da riportare a
- * casa) lo si aggiunge con {@link #conOspite}, prima delle battute: entra subito dopo il capo e guarda il mandante.
- * <pre>
- * ScenaInCitta.conMoglieDelBardo()
- *     .conOspite(TipoPersonaggio.BARDO)
- *     .parlaIlMandante("Di nuovo in queste condizioni!")
- *     .getPagine();
- * </pre>
+ * casa), che è ancora tra gli ospiti del gruppo (la missione lo congeda alla fine), la scena lo mostra con la sua
+ * classe: entra subito dopo il capo, prima degli altri, e guarda il mandante. Se è morto non c'è.
  */
 public final class ScenaInCitta {
 
@@ -43,8 +35,7 @@ public final class ScenaInCitta {
 	private static final double RITARDO_FRA_PARTENZE = 0.6;
 
 	private final String immagineMandante;
-	private TipoPersonaggio ospite;
-	// Si costruisce alla prima battuta (o a getPagine), così conOspite può ancora dire chi c'è in scena
+	// Si costruisce alla prima battuta (o a getPagine), con il gruppo di quel momento
 	private ScenaNegozio scena;
 
 	private ScenaInCitta(String immagineMandante) {
@@ -55,26 +46,9 @@ public final class ScenaInCitta {
 		if (scena == null) {
 			scena = new ScenaNegozio(SFONDO, null, ID_MANDANTE,
 					ElementoIntermezzo.di(ID_MANDANTE, ImmagineIntermezzo.risorsa(immagineMandante), X_MANDANTE, Y_PERSONAGGI),
-					Y_PERSONAGGI, X_ARRIVO_CAPO, RITARDO_FRA_PARTENZE, ospite);
+					Y_PERSONAGGI, X_ARRIVO_CAPO, RITARDO_FRA_PARTENZE);
 		}
 		return scena;
-	}
-
-	/**
-	 * Chi la missione ha scortato o portato fin qui, che nella scena compare insieme al gruppo: entra subito dopo il
-	 * capo e prima degli altri personaggi, e come loro cammina verso il mandante, quindi lo guarda. La missione lo ha
-	 * già congedato dal gruppo (vedi MissioneAPassi.scorta) e la scena non lo trova: la classe va detta qui, e per
-	 * un {@link com.threeamigos.foresta.personaggi.Viandante} è {@code TipoPersonaggio.VIANDANTE}. Si chiama prima
-	 * delle battute.
-	 *
-	 * @throws IllegalStateException se la scena ha già cominciato (battute già scritte)
-	 */
-	public ScenaInCitta conOspite(TipoPersonaggio classe) {
-		if (scena != null) {
-			throw new IllegalStateException("L'ospite va detto prima delle battute");
-		}
-		this.ospite = Objects.requireNonNull(classe);
-		return this;
 	}
 
 	/**
@@ -130,13 +104,10 @@ public final class ScenaInCitta {
 	}
 
 	/**
-	 * Una battuta dell'ospite, se la scena ne ha uno (vedi {@link #conOspite}): per esempio il ringraziamento di un
+	 * Una battuta dell'ospite, se la scena ne ha uno (un ospite del gruppo): per esempio il ringraziamento di un
 	 * ostaggio liberato.
 	 */
 	public ScenaInCitta parlaLOspite(String testo) {
-		if (ospite == null) {
-			throw new IllegalStateException("Nessun ospite in scena: vedi conOspite");
-		}
 		scena().parlaLOspite(testo);
 		return this;
 	}

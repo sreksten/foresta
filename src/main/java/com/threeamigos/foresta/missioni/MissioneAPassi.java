@@ -765,12 +765,16 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 */
 	protected final Passo prendiInScorta(MomentoControllo momento, BooleanSupplier quando, Supplier<Personaggio> scortato,
 										  boolean vulnerabile) {
-		return Passo.quando(momento, quando)
-				.esegui(() -> {
-					Personaggio personaggio = scortato.get();
-					GruppoGiocatore.getIstanza().aggiungiOspite(personaggio, vulnerabile);
-					aggiungiProprieta(SCORTATO, personaggio.getModelloDati().getUuid());
-				});
+		return Passo.quando(momento, quando).esegui(() -> accogliOspite(scortato.get(), vulnerabile));
+	}
+
+	/**
+	 * Lo scortato si unisce al gruppo subito, dentro l'azione di un passo (per esempio un colpevole che si arrende
+	 * alla fine di un combattimento); la missione se lo ricorda come per {@link #prendiInScorta}.
+	 */
+	protected final void accogliOspite(Personaggio personaggio, boolean vulnerabile) {
+		GruppoGiocatore.getIstanza().aggiungiOspite(personaggio, vulnerabile);
+		aggiungiProprieta(SCORTATO, personaggio.getModelloDati().getUuid());
 	}
 
 	/**
@@ -778,11 +782,19 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * gruppo.
 	 */
 	protected final Passo scorta(MomentoControllo momento, Supplier<CoordinateMD> destinazione) {
-		return Passo.quando(momento, () -> destinazione.get() != null
+		return scorta(momento, destinazione, true);
+	}
+
+	/**
+	 * Come {@link #scorta(MomentoControllo, Supplier)}; con {@code congeda} falso lo scortato resta nel gruppo fino
+	 * alla fine della missione (vedi {@link #completaMissione()}), e così le scene che seguono lo mostrano.
+	 */
+	protected final Passo scorta(MomentoControllo momento, Supplier<CoordinateMD> destinazione, boolean congeda) {
+		Passo passo = Passo.quando(momento, () -> destinazione.get() != null
 						&& destinazione.get().equals(GruppoGiocatore.getIstanza().getCoordinate())
 						&& getScortato().filter(Personaggio::isVivo).isPresent())
-				.esegui(this::congedaScortato)
 				.segnala(destinazione);
+		return congeda ? passo.esegui(this::congedaScortato) : passo;
 	}
 
 	/**
@@ -790,7 +802,16 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * la missione fallisce con il testo (e lui si separa dal gruppo, vedi {@link #fallisciMissione()}).
 	 */
 	protected final Passo scorta(MomentoControllo momento, Supplier<CoordinateMD> destinazione, Supplier<String> testoSeMuore) {
-		return scorta(momento, destinazione)
+		return scorta(momento, destinazione, testoSeMuore, true);
+	}
+
+	/**
+	 * Come {@link #scorta(MomentoControllo, Supplier, Supplier)}, con il {@code congeda} di
+	 * {@link #scorta(MomentoControllo, Supplier, boolean)}.
+	 */
+	protected final Passo scorta(MomentoControllo momento, Supplier<CoordinateMD> destinazione, Supplier<String> testoSeMuore,
+								 boolean congeda) {
+		return scorta(momento, destinazione, congeda)
 				.falliscoSe(() -> getScortato().map(scortato -> !scortato.isVivo()).orElse(false), testoSeMuore);
 	}
 
@@ -801,6 +822,15 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * esempio con un passo che porta la brutta notizia a chi aspettava.
 	 */
 	protected final Passo scortaFinoAllaMeta(MomentoControllo momento, Supplier<CoordinateMD> destinazione) {
+		return scortaFinoAllaMeta(momento, destinazione, true);
+	}
+
+	/**
+	 * Come {@link #scortaFinoAllaMeta(MomentoControllo, Supplier)}; con {@code congeda} falso lo scortato resta nel
+	 * gruppo, anche morto, fino alla fine della missione (vedi {@link #completaMissione()}): le scene che seguono
+	 * mostrano solo gli ospiti vivi.
+	 */
+	protected final Passo scortaFinoAllaMeta(MomentoControllo momento, Supplier<CoordinateMD> destinazione, boolean congeda) {
 		return Passo.quando(momento, () -> getScortato().map(scortato -> !scortato.isVivo()).orElse(false)
 						|| destinazione.get() != null && destinazione.get().equals(GruppoGiocatore.getIstanza().getCoordinate())
 						&& getScortato().filter(Personaggio::isVivo).isPresent())
@@ -808,7 +838,9 @@ public abstract class MissioneAPassi extends MissioneBase {
 					if (getScortato().map(scortato -> !scortato.isVivo()).orElse(false)) {
 						aggiungiProprieta(SCORTATO_MORTO, AFFERMATIVO);
 					}
-					congedaScortato();
+					if (congeda) {
+						congedaScortato();
+					}
 				})
 				.segnala(destinazione);
 	}
@@ -856,6 +888,7 @@ public abstract class MissioneAPassi extends MissioneBase {
 
 	@Override
 	public void completaMissione() {
+		congedaScortato();
 		super.completaMissione();
 		lasciaUnaMissioneNuova();
 	}

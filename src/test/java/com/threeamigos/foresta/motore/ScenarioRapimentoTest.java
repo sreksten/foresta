@@ -64,12 +64,14 @@ class ScenarioRapimentoTest {
             partita.gruppo().setCoordinate(nyena);
             int monete = partita.gruppo().getMonete();
             rapimento.controllaPreLocazione();
-            assertTrue(partita.gruppo().getOspiti().isEmpty(), "Armando è a casa");
+            // Armando è ancora nel gruppo mentre la scena lo mostra, e se ne separa a missione conclusa
+            assertTrue(partita.gruppo().getOspiti().contains(armando), "Armando c'è per la scena");
             assertEquals("RITORNO", rapimento.getPassoConIntermezzoInAttesa(MomentoIntermezzo.INIZIO_LOCAZIONE));
             rapimento.segnaIntermezzoPassoMostrato("RITORNO");
             rapimento.controllaInLocazione();
             assertEquals(monete + 35, partita.gruppo().getMonete());
             assertTrue(rapimento.isCompleta());
+            assertTrue(partita.gruppo().getOspiti().isEmpty(), "Armando è a casa");
         }
     }
 
@@ -84,7 +86,6 @@ class ScenarioRapimentoTest {
             rapimento.controllaPreLocazione();
             assertFalse(rapimento.isFallita());
             assertEquals("LUTTO", rapimento.getPassoCorrente());
-            assertTrue(partita.gruppo().getOspiti().isEmpty(), "Armando non viaggia più con il gruppo");
             assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith(rapimento.getOstaggio() + " non ce l'ha fatta")), String.valueOf(partita.testi()));
             assertTrue(rapimento.getDescrizione().contains("dare la notizia"), rapimento.getDescrizione());
 
@@ -97,6 +98,7 @@ class ScenarioRapimentoTest {
             rapimento.segnaIntermezzoPassoMostrato("LUTTO");
             rapimento.controllaInLocazione();
             assertTrue(rapimento.isFallita());
+            assertTrue(partita.gruppo().getOspiti().isEmpty(), "Armando morto non resta fra gli ospiti");
             assertEquals(monete, partita.gruppo().getMonete());
             assertTrue(partita.testi().contains("La moglie di " + rapimento.getOstaggio() + " chiude la porta senza dire una parola."));
         }

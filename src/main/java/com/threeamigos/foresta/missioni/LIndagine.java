@@ -3,10 +3,11 @@ package com.threeamigos.foresta.missioni;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.missioni.IndagineRichiesta.Indizio;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
+import com.threeamigos.foresta.personaggi.Viandante;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
@@ -217,6 +218,12 @@ public class LIndagine extends IncaricoInCitta {
 			case CATTURA:
 				return combatti(this::getPosto, getNemici())
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(testo(indagine.getVittoria()) + " " + getAttesa())))
+						.esegui(() -> {
+							// Un colpevole che si arrende viene portato in città dal gruppo; negli altri casi non c'è nessuno da mostrare
+							if (indagine.isFinoAllaResa() && indagine.isConCapo()) {
+								accogliOspite(new Viandante(getCapo(), EquipaggiamentoIniziale.livelloCasualeDalMondo()), false);
+							}
+						})
 						.poi(RITORNO);
 			case ERRORE:
 				return Passo.quando(MomentoControllo.IN_LOCAZIONE, () -> true)
@@ -244,7 +251,6 @@ public class LIndagine extends IncaricoInCitta {
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return getIndagine().getAspetto().nuovaScena()
-				.conOspite(TipoPersonaggio.VIANDANTE)
 				.parlaIlMandante(testo(getIndagine().getRingraziamento()))
 				.parlaIlMandante("Ecco le " + getRicompensa() + " monete promesse.");
 	}

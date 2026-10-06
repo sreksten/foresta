@@ -127,7 +127,6 @@ public class IlRapimento extends LaLiberazione {
 	@Override
 	protected ScenaInCitta scenaRingraziamento() {
 		return ScenaInCitta.conMandante()
-				.conOspite(TipoPersonaggio.VIANDANTE)
 				.parlaIlMandante(getOstaggio() + "! Sei tornato!")
 				.parlaIlMandante("Non so come ringraziarvi. Ecco le " + RICOMPENSA + " monete.")
 				.parlaIlCapo("Tenetelo d'occhio, la prossima volta.");

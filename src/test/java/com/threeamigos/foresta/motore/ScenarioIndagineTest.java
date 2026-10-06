@@ -78,6 +78,7 @@ class ScenarioIndagineTest {
             }
             indagine.controllaPostLocazione();
             assertEquals("RITORNO", indagine.getPassoCorrente());
+            assertTrue(partita.gruppo().getOspiti().isEmpty(), "senza un colpevole catturato non c'è nessuno da mostrare");
             assertTrue(partita.testi().contains("Le campane sono salve. Il sacerdote aspetta a Nyena."), String.valueOf(partita.testi()));
 
             partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
@@ -89,6 +90,34 @@ class ScenarioIndagineTest {
             assertTrue(indagine.isCompleta());
             assertEquals("Qui c'erano le campane.", indagine.getRicordoDellaLocazione());
             assertTrue(RegistroMissioni.getTutteLeMissioni().stream().anyMatch(m -> m instanceof LIndagine && m != indagine));
+        }
+    }
+
+    @Test
+    void ilColpevoleCheSiArrendeTornaInCittaConIlGruppoEPoiSiSepara() {
+        String ladro = CAMPANE.replace("COLPEVOLE=2;NEMICO=GARGOYLE;NUMERO=3;", "COLPEVOLE=2;NEMICO=LADRO;NUMERO=1;CAPO=Ugo;RESA=SI;");
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(203)) {
+            LIndagine indagine = prendiLIncarico(partita, ladro);
+            raccogliGliIndizi(partita, indagine);
+            indagine.rispondi("2");
+            indagine.controllaInLocazione();
+            partita.gruppo().setCoordinate(indagine.getPosto());
+            for (int i = 0; i < 2; i++) {
+                partita.pubblica(new InternoAvversarioSconfitto(TipoPersonaggio.LADRO));
+            }
+            indagine.controllaPostLocazione();
+            assertEquals("RITORNO", indagine.getPassoCorrente());
+            assertEquals(1, partita.gruppo().getOspiti().size());
+            assertEquals("Ugo", partita.gruppo().getOspiti().get(0).getNome());
+            assertFalse(partita.gruppo().isOspiteVulnerabile(partita.gruppo().getOspiti().get(0)));
+
+            partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
+            indagine.controllaPreLocazione();
+            assertFalse(partita.gruppo().getOspiti().isEmpty(), "c'è per la scena");
+            indagine.segnaIntermezzoPassoMostrato("RITORNO");
+            indagine.controllaInLocazione();
+            assertTrue(indagine.isCompleta());
+            assertTrue(partita.gruppo().getOspiti().isEmpty());
         }
     }
 
@@ -106,10 +135,14 @@ class ScenarioIndagineTest {
     }
 
     private static LIndagine prendiLIncarico(PartitaDiTest partita) {
+        return prendiLIncarico(partita, CAMPANE);
+    }
+
+    private static LIndagine prendiLIncarico(PartitaDiTest partita, String riga) {
         partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
         LIndagine indagine = RegistroMissioni.getTutteLeMissioni().stream().filter(LIndagine.class::isInstance)
                 .map(LIndagine.class::cast).findFirst().orElseThrow(AssertionError::new);
-        indagine.aggiungiProprieta("PARAMETRO_" + LIndagine.INDAGINE, CAMPANE);
+        indagine.aggiungiProprieta("PARAMETRO_" + LIndagine.INDAGINE, riga);
         indagine.controllaPreLocazione();
         indagine.segnaIntermezzoPassoMostrato("INCARICO");
         indagine.controllaInLocazione();

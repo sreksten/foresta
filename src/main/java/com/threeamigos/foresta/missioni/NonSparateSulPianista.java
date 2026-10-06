@@ -15,7 +15,6 @@ import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * Non sparate sul pianista: alla terza visita a una locanda nel bosco, a una visita tranquilla, il locandiere chiede
@@ -121,7 +120,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 						.poi(VIAGGIO);
 			case VIAGGIO:
 				return scorta(MomentoControllo.PRE_LOCAZIONE, () -> Foresta.getCoordinateLocazioneUnica(getCitta()),
-								() -> getBardo() + " il bardo non ce l'ha fatta: a casa non arriverà mai. Il locandiere non ve lo perdonerà.")
+								() -> getBardo() + " il bardo non ce l'ha fatta: a casa non arriverà mai. Il locandiere non ve lo perdonerà.", false)
 						.falliscoSe(this::isCittaDistrutta, () -> getNomeCitta() + " è stata distrutta: " + getBardo() + " non ha più una casa a cui tornare.")
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaDellaMoglie().getPagine())
 						.poi(ARRIVO);
@@ -153,10 +152,8 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	}
 
 	private ScenaInCitta scenaDellaMoglie() {
-		// Il viandante è già stato congedato dal gruppo (vedi scorta): lo si dice alla scena, che lo mette dopo il capo, rivolto
-		// verso la moglie (il bardo scortato appare con le fattezze del viandante)
+		// Il bardo è ancora nel gruppo (si congeda a fine missione): la scena lo mette dopo il capo, rivolto verso la moglie
 		return ScenaInCitta.conMoglieDelBardo()
-				.conOspite(TipoPersonaggio.VIANDANTE)
 				.parlaIlMandante(getBardo() + "! Di nuovo in queste condizioni!")
 				.parlaIlCapo("Lo abbiamo trovato in una locanda, abbracciato al suo liuto.")
 				.parlaIlMandante("Grazie, viandanti. A lui ci penso io.")

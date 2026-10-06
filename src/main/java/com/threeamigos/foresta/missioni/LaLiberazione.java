@@ -109,7 +109,7 @@ public abstract class LaLiberazione extends IncaricoInCitta {
 						.esegui(() -> BusEventi.pubblica(new NotificaTestoParagrafo(testoLiberato())))
 						.poi(VIAGGIO);
 			case VIAGGIO:
-				return scortaFinoAllaMeta(MomentoControllo.PRE_LOCAZIONE, () -> Foresta.getCoordinateLocazioneUnica(getCitta()))
+				return scortaFinoAllaMeta(MomentoControllo.PRE_LOCAZIONE, () -> Foresta.getCoordinateLocazioneUnica(getCitta()), false)
 						.esegui(() -> {
 							if (isScortatoMorto()) {
 								BusEventi.pubblica(new NotificaTestoParagrafo(testoMorto()));

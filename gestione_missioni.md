@@ -116,7 +116,7 @@ Si salva solo l'id del passo corrente (`PASSO_CORRENTE`) più le proprietà che 
 
 **Missioni affidate.** Un passo può **affidare** missioni secondarie decise in quel momento (`affida(chiave, momento, quando, fornitore)`): il fornitore le crea, diventano figlie della madre (entrano nel suo modello dati e si salvano con lei), vengono attivate e i loro id si ricordano sotto la chiave; si affidano una sola volta. `attendiLeAffidate(chiave, momento)` si conclude quando sono finite tutte; `sonoRiusciteLeAffidate` e `getMissioniAffidate` dicono com'è andata, per diramare.
 
-**Scorta.** Una missione può prendere con sé un `Viandante` (o un personaggio fatto da lei) come **ospite** del gruppo (`prendiInScorta`, anche vulnerabile), che a destinazione si separa; se è vulnerabile e muore la missione può fallire o ramificarsi (`scorta`, `scortaFinoAllaMeta`, `isScortatoMorto`). Quando la missione fallisce o finisce lo scortato si separa.
+**Scorta.** Una missione può prendere con sé un `Viandante` (o un personaggio fatto da lei) come **ospite** del gruppo (`prendiInScorta`, anche vulnerabile), che a destinazione si separa (o, con `congeda` falso, resta fino alla fine della missione, perché la scena di ritorno lo mostri; `accogliOspite` lo aggiunge dentro l'azione di un passo); se è vulnerabile e muore la missione può fallire o ramificarsi (`scorta`, `scortaFinoAllaMeta`, `isScortatoMorto`). Quando la missione fallisce o finisce lo scortato si separa.
 
 **Hook sul mondo.** Le sottoclassi realizzano i cinque metodi di default di `Missione` (§1) leggendo il passo corrente: gli avversari dell'incontro (`getIncontroInLocazione`), le ondate, gli oggetti seminati (`getOggettoInLocazione`).
 

@@ -70,11 +70,12 @@ class ScenarioSoccorsoTest {
             partita.gruppo().setCoordinate(Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_NYENA));
             int monete = partita.gruppo().getMonete();
             soccorso.controllaPreLocazione();
-            assertTrue(partita.gruppo().getOspiti().isEmpty());
+            assertTrue(partita.gruppo().getOspiti().contains(taglialegna));
             soccorso.segnaIntermezzoPassoMostrato("RITORNO");
             soccorso.controllaInLocazione();
             assertEquals(monete + 35, partita.gruppo().getMonete());
             assertTrue(soccorso.isCompleta());
+            assertTrue(partita.gruppo().getOspiti().isEmpty());
             assertTrue(RegistroMissioni.getTutteLeMissioni().stream().anyMatch(m -> m instanceof IlSoccorso && m != soccorso));
         }
     }
