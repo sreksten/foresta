@@ -22,6 +22,7 @@ public final class ScenaInCitta {
 	private static final String ARMAIOLO = "personaggi/Armaiolo.gif";
 	private static final String ALCHIMISTA = "personaggi/Alchimista.gif";
 	private static final String CAPITANO = "personaggi/Guerriero.gif";
+	private static final String MOGLIE_DEL_BARDO = "personaggi/MoglieDelBardo.gif";
 	private static final String ID_MANDANTE = "mandante";
 	// Le coordinate sono dello schermo e lo sfondo della città (390 × 320) è più piccolo di quelli dei negozi:
 	// mandante e gruppo stanno sul selciato nelle stesse proporzioni dello sfondo, il mandante a destra
@@ -71,6 +72,13 @@ public final class ScenaInCitta {
 	 */
 	public static ScenaInCitta conCapitano() {
 		return new ScenaInCitta(CAPITANO);
+	}
+
+	/**
+	 * La moglie del bardo ubriaco, in città
+	 */
+	public static ScenaInCitta conMoglieDelBardo() {
+		return new ScenaInCitta(MOGLIE_DEL_BARDO);
 	}
 
 	public ScenaInCitta parlaIlMandante(String testo) {

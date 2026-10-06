@@ -144,7 +144,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	}
 
 	private ScenaInCitta scenaDellaMoglie() {
-		return ScenaInCitta.conMandante()
+		return ScenaInCitta.conMoglieDelBardo()
 				.parlaIlMandante(getBardo() + "! Di nuovo in queste condizioni!")
 				.parlaIlCapo("Lo abbiamo trovato in una locanda, abbracciato al suo liuto.")
 				.parlaIlMandante("Grazie, viandanti. A lui ci penso io.");
@@ -188,6 +188,9 @@ public class NonSparateSulPianista extends MissioneAPassi {
 				distanzaMinima = distanza;
 				piuVicina = tipo;
 			}
+		}
+		if (piuVicina != null) {
+			Foresta.setLocazioneConosciuta(Foresta.getCoordinateLocazioneUnica(piuVicina));
 		}
 		return piuVicina;
 	}
