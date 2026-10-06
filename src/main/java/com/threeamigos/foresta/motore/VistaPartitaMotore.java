@@ -8,7 +8,7 @@ import com.threeamigos.foresta.locazioni.Bosco;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.Notizia;
+import com.threeamigos.foresta.modellodati.NotiziaMD;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -57,7 +57,7 @@ public class VistaPartitaMotore implements VistaPartita {
 	}
 
 	@Override
-	public List<Notizia> getUltimeNotizie() {
+	public List<NotiziaMD> getUltimeNotizie() {
 		return Notizie.getUltimeNotizie();
 	}
 

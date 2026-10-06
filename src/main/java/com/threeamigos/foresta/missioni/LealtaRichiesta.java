@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 
 /**
  * Il problema personale di un compagno (vedi LaLealta), letto da una riga di LEALTA in missioni.txt, che ne descrive i
@@ -84,7 +84,7 @@ public final class LealtaRichiesta {
 	/**
 	 * Il modificatore permanente che il compagno riceve, con la nota {@link #NOTA}.
 	 */
-	public ModificatoreAttributo nuovoModificatore() {
+	public ModificatoreAttributoMD nuovoModificatore() {
 		return modificatore.nuovo(NOTA);
 	}
 

@@ -2,7 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.*;
 import org.junit.jupiter.api.BeforeEach;
@@ -143,7 +143,7 @@ class IncantatoreTest {
         assertEquals(TipoArtefatto.SPADA, incantata.getTipo());
         assertEquals("Lama Del Drago", incantata.getNomeProprio().orElse(null));
         assertEquals(1, incantata.getIncantamenti().size());
-        assertTrue(incantata.getModificatori().contains(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 2)));
+        assertTrue(incantata.getModificatori().contains(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 2)));
     }
 
     @Test

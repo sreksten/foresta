@@ -3,7 +3,7 @@ package com.threeamigos.foresta.oggetti;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tipi.*;
@@ -265,7 +265,7 @@ public class GeneratoreArtefattiTabelle implements GeneratoreArtefatti {
 		int costoBase = md.getCostoAcquisto();
 		double costo = costoBase;
 		for (GrammaticaArtefatti.Modificatore modificatore : risultato.getModificatori()) {
-			ModificatoreAttributo aggiunto = new ModificatoreAttributo(modificatore.getAttributo(), TipoModificatore.AUMENTO_FISSO,
+			ModificatoreAttributoMD aggiunto = new ModificatoreAttributoMD(modificatore.getAttributo(), TipoModificatore.AUMENTO_FISSO,
 					modificatore.getIntensita() * grado.getGradino(), "");
 			md.addModificatore(aggiunto);
 			costo += Math.signum(modificatore.getIntensita()) * ListinoPergamene.prezzo(aggiunto);

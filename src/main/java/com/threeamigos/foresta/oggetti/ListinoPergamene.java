@@ -3,7 +3,7 @@ package com.threeamigos.foresta.oggetti;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 
@@ -68,7 +68,7 @@ public final class ListinoPergamene {
 		for (IncantamentoMD incantamento : ingrediente.getIncantamenti()) {
 			prezzo += prezzo(incantamento, ingrediente.getLivello());
 		}
-		for (ModificatoreAttributo modificatore : ingrediente.getModificatori()) {
+		for (ModificatoreAttributoMD modificatore : ingrediente.getModificatori()) {
 			prezzo += prezzo(modificatore);
 		}
 		return Math.max(Costanti.PERGAMENA_PREZZO_MINIMO, (int) Math.round(prezzo));
@@ -88,7 +88,7 @@ public final class ListinoPergamene {
 		return prezzo;
 	}
 
-	public static double prezzo(ModificatoreAttributo modificatore) {
+	public static double prezzo(ModificatoreAttributoMD modificatore) {
 		double quantita = Math.abs(modificatore.getQuantita());
 		switch (modificatore.getTipoModificatoreAttributo()) {
 			case AUMENTO_FISSO:

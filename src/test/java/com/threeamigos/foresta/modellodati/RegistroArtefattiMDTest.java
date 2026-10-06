@@ -26,12 +26,12 @@ class RegistroArtefattiMDTest {
         // Then
         ArtefattoMD tempioRiletto = ricaricato.getArtefattoInLocazione(new CoordinateMD(3, 4));
         assertEquals("il pugnale di Worr", tempioRiletto.getNome());
-        assertTrue(tempioRiletto.getModificatori().contains(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 2, "Forza")));
+        assertTrue(tempioRiletto.getModificatori().contains(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 2, "Forza")));
         Collection<ArtefattoMD> armaiolo = ricaricato.getMagazzino(new CoordinateMD(7, 1), TipoNegozio.ARMAIOLO);
         assertEquals(1, armaiolo.size());
         ArtefattoMD scudo = armaiolo.iterator().next();
         assertEquals("lo scudo fiscale", scudo.getNome());
-        assertTrue(scudo.getModificatori().contains(new ModificatoreAttributo(TipoAttributo.PARATA, TipoModificatore.AUMENTO_PERCENTUALE, 10, "Parata")));
+        assertTrue(scudo.getModificatori().contains(new ModificatoreAttributoMD(TipoAttributo.PARATA, TipoModificatore.AUMENTO_PERCENTUALE, 10, "Parata")));
         assertEquals(1, scudo.getIncantamenti().size());
     }
 

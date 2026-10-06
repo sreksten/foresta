@@ -2,7 +2,7 @@ package com.threeamigos.foresta.strumenti;
 
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
@@ -73,7 +73,7 @@ public class CostruttoreArtefattoImpl implements
     }
 
     @Override
-    public CostruttoreArtefatto.StepModificatore setModificatore(ModificatoreAttributo modificatore) {
+    public CostruttoreArtefatto.StepModificatore setModificatore(ModificatoreAttributoMD modificatore) {
         artefattoMD.addModificatore(modificatore);
         return this;
     }

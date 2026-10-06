@@ -14,7 +14,7 @@ import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.interfacce.VistaPezzoDelSet;
 import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
 import com.threeamigos.foresta.tipi.SupertipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
@@ -294,7 +294,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
                         null, null, null,
                         null, null, null,
                         null, artefatto);
-                for (ModificatoreAttributo modificatore : artefatto.getModificatori()) {
+                for (ModificatoreAttributoMD modificatore : artefatto.getModificatori()) {
                     String valore;
                     int valoreIntero = (int) modificatore.getQuantita();
                     switch (modificatore.getTipoModificatoreAttributo()) {

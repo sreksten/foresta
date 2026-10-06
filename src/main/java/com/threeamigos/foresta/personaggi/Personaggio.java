@@ -5,7 +5,7 @@ import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.interfacce.OggettoConArticoli;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.offerte.Offerta;
@@ -145,7 +145,7 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	/**
 	 * Un modificatore permanente di un attributo (una benedizione, per esempio): resta finché non lo si toglie.
 	 */
-    void addModificatore(ModificatoreAttributo modificatore);
+    void addModificatore(ModificatoreAttributoMD modificatore);
 	/**
 	 * Il personaggio muore a causa di qualcosa
 	 */

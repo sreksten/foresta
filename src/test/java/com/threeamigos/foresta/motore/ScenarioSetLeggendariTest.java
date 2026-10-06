@@ -3,7 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.missioni.OggettoLeggendario;
 import com.threeamigos.foresta.missioni.SetLeggendario;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
@@ -106,10 +106,10 @@ class ScenarioSetLeggendariTest {
 
     @Test
     void siMoltiplicanoSoloIBonusFissiEPercentuali() {
-        ModificatoreAttributo fisso = new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 4);
-        ModificatoreAttributo percentuale = new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 20);
-        ModificatoreAttributo malus = new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, -2);
-        ModificatoreAttributo assoluto = new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.QUANTITA_ASSOLUTA, 10);
+        ModificatoreAttributoMD fisso = new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 4);
+        ModificatoreAttributoMD percentuale = new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 20);
+        ModificatoreAttributoMD malus = new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, -2);
+        ModificatoreAttributoMD assoluto = new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.QUANTITA_ASSOLUTA, 10);
         assertEquals(6.0d, RegoleSetLeggendari.applica(fisso, 1.5d).getQuantita());
         assertEquals(30.0d, RegoleSetLeggendari.applica(percentuale, 1.5d).getQuantita());
         assertSame(malus, RegoleSetLeggendari.applica(malus, 1.5d));
@@ -124,7 +124,7 @@ class ScenarioSetLeggendariTest {
         TipoAttributo attributo = null;
         for (SetLeggendario candidato : setInOrdine()) {
             for (TipoAttributo primario : PRIMARI.keySet()) {
-                List<ModificatoreAttributo> modificatori = modificatoriSu(pezziDi(candidato), primario);
+                List<ModificatoreAttributoMD> modificatori = modificatoriSu(pezziDi(candidato), primario);
                 if (!modificatori.isEmpty() && modificatori.stream().allMatch(m -> m.getTipoModificatoreAttributo() == TipoModificatore.AUMENTO_FISSO)
                         && modificatori.stream().anyMatch(m -> m.getQuantita() > 0)) {
                     set = candidato;
@@ -262,7 +262,7 @@ class ScenarioSetLeggendariTest {
         return new ArrayList<>(CatalogoLeggendari.getPezzi(set.getChiave()));
     }
 
-    private static List<ModificatoreAttributo> modificatoriSu(List<String> pezzi, TipoAttributo attributo) {
+    private static List<ModificatoreAttributoMD> modificatoriSu(List<String> pezzi, TipoAttributo attributo) {
         return pezzi.stream()
                 .flatMap(pezzo -> Leggendari.con(pezzo).costruisci().getModificatori().stream())
                 .filter(modificatore -> modificatore.getTipoAttributo() == attributo)
@@ -272,7 +272,7 @@ class ScenarioSetLeggendariTest {
     /**
      * La somma dei modificatori fissi, con i bonus moltiplicati e i malus no.
      */
-    private static double somma(List<ModificatoreAttributo> modificatori, double moltiplicatore) {
+    private static double somma(List<ModificatoreAttributoMD> modificatori, double moltiplicatore) {
         return modificatori.stream()
                 .mapToDouble(m -> m.getQuantita() > 0 ? m.getQuantita() * moltiplicatore : m.getQuantita())
                 .sum();

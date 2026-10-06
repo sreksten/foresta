@@ -80,7 +80,7 @@ public class PersonaggioMD implements Serializzabile {
 	/**
 	 * Modificatori permanenti agli attributi dei personaggi
 	 */
-	private Collection<ModificatoreAttributo> modificatori = new ArrayList<>();
+	private Collection<ModificatoreAttributoMD> modificatori = new ArrayList<>();
 	/**
 	 * Effetti di stato applicati al personaggio
 	 */
@@ -606,11 +606,11 @@ public class PersonaggioMD implements Serializzabile {
 		this.artefatti = artefatti;
 	}
 
-	public Collection<ModificatoreAttributo> getModificatori() {
+	public Collection<ModificatoreAttributoMD> getModificatori() {
 		return modificatori;
 	}
 
-	public void setModificatori(Collection<ModificatoreAttributo> modificatori) {
+	public void setModificatori(Collection<ModificatoreAttributoMD> modificatori) {
 		this.modificatori = modificatori;
 	}
 
@@ -673,7 +673,7 @@ public class PersonaggioMD implements Serializzabile {
 		while (campi.haAltriCampi()) {
 			// Limite 4: la nota può contenere il separatore
 			String[] attributoValore = campi.testo().split(MappaProprieta.SEPARATORE, 4);
-			ModificatoreAttributo modificatore = new ModificatoreAttributo(TipoAttributo.valueOf(attributoValore[0]),
+			ModificatoreAttributoMD modificatore = new ModificatoreAttributoMD(TipoAttributo.valueOf(attributoValore[0]),
 					TipoModificatore.valueOf(attributoValore[1]), Double.parseDouble(attributoValore[2]),
 					attributoValore.length > 3 ? attributoValore[3] : "");
 			modificatori.add(modificatore);

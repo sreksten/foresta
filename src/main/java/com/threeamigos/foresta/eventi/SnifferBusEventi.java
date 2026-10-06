@@ -8,7 +8,7 @@ import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.interfacce.OggettoConCosto;
 import com.threeamigos.foresta.interfacce.OggettoConPeso;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
@@ -132,7 +132,7 @@ public class SnifferBusEventi {
     }
 
     private void onEventoAggiuntaModificatore(NotificaAggiuntaModificatorePersonaggio evento) {
-        ModificatoreAttributo modificatore = evento.getModificatore();
+        ModificatoreAttributoMD modificatore = evento.getModificatore();
         Logger.log(headerEvento(evento) + formattaModificatoreAttributo(modificatore) +
                 formattaStatistichePersonaggio(evento.getPersonaggio()));
     }
@@ -533,7 +533,7 @@ public class SnifferBusEventi {
                 p.getForza(), p.getDestrezza(), p.getCostituzione(), p.getIntelligenza(), p.getSaggezza(), p.getCarisma(), p.getFortuna());
     }
 
-    private String formattaModificatoreAttributo(ModificatoreAttributo modificatore) {
+    private String formattaModificatoreAttributo(ModificatoreAttributoMD modificatore) {
         return String.format("TipoAttributo: %s, TipoModificatore: %s, Quantità: %5f, Note: %s - ",
                 modificatore.getTipoModificatoreAttributo(), modificatore.getTipoAttributo(), modificatore.getQuantita(), modificatore.getNote());
     }

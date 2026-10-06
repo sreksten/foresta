@@ -9,14 +9,14 @@ import java.util.Objects;
  * Modifica di un certo scostamento (positivo o negativo) il valore base di un attributo di un personaggio
  * @author Stefano Reksten
  */
-public class ModificatoreAttributo {
+public class ModificatoreAttributoMD {
 
     private final TipoAttributo tipoAttributo;
     private final TipoModificatore tipoModificatore;
     private final double quantita;
     private final String note;
 
-    public ModificatoreAttributo(TipoAttributo tipoAttributo, TipoModificatore tipoModificatore,
+    public ModificatoreAttributoMD(TipoAttributo tipoAttributo, TipoModificatore tipoModificatore,
                                  double quantita, String note) {
         this.tipoAttributo = tipoAttributo;
         this.tipoModificatore = tipoModificatore;
@@ -24,7 +24,7 @@ public class ModificatoreAttributo {
         this.note = Serializzabile.senzaPipe(note);
     }
 
-    public ModificatoreAttributo(TipoAttributo tipoAttributo, TipoModificatore tipoModificatore,
+    public ModificatoreAttributoMD(TipoAttributo tipoAttributo, TipoModificatore tipoModificatore,
                                  double quantita) {
         this(tipoAttributo, tipoModificatore, quantita, "");
     }
@@ -47,10 +47,10 @@ public class ModificatoreAttributo {
 
     @Override
     public boolean equals(Object obj) {
-        if (!(obj instanceof ModificatoreAttributo)) {
+        if (!(obj instanceof ModificatoreAttributoMD)) {
             return false;
         }
-        ModificatoreAttributo other = (ModificatoreAttributo) obj;
+        ModificatoreAttributoMD other = (ModificatoreAttributoMD) obj;
         return tipoAttributo == other.tipoAttributo && tipoModificatore == other.tipoModificatore
                 && quantita == other.quantita && Objects.equals(note, other.note);
     }

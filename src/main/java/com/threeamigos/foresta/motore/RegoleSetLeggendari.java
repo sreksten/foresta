@@ -4,7 +4,7 @@ import com.threeamigos.foresta.interfacce.VistaPezzoDelSet;
 import com.threeamigos.foresta.missioni.OggettoLeggendario;
 import com.threeamigos.foresta.missioni.SetLeggendario;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoModificatore;
@@ -65,14 +65,14 @@ public final class RegoleSetLeggendari {
 	/**
 	 * Il modificatore con il moltiplicatore: solo se è un bonus, fisso o percentuale.
 	 */
-	public static ModificatoreAttributo applica(ModificatoreAttributo modificatore, double moltiplicatore) {
+	public static ModificatoreAttributoMD applica(ModificatoreAttributoMD modificatore, double moltiplicatore) {
 		boolean bonus = modificatore.getQuantita() > 0
 				&& (modificatore.getTipoModificatoreAttributo() == TipoModificatore.AUMENTO_FISSO
 				|| modificatore.getTipoModificatoreAttributo() == TipoModificatore.AUMENTO_PERCENTUALE);
 		if (moltiplicatore == 1.0d || !bonus) {
 			return modificatore;
 		}
-		return new ModificatoreAttributo(modificatore.getTipoAttributo(), modificatore.getTipoModificatoreAttributo(),
+		return new ModificatoreAttributoMD(modificatore.getTipoAttributo(), modificatore.getTipoModificatoreAttributo(),
 				modificatore.getQuantita() * moltiplicatore, modificatore.getNote());
 	}
 

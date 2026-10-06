@@ -6,7 +6,7 @@ import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.missioni.LealtaRichiesta;
 import com.threeamigos.foresta.modellodati.IntermezziMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoAttributo;
@@ -32,7 +32,7 @@ class ScenarioAccampamentoTest {
             Guerriero sentinella = new Guerriero("Sentinella", 1);
             // Già "leale" (vedi LaLealta): altrimenti la sua confidenza impedirebbe per sempre
             // all'intermezzo dell'accampamento di scattare (vedi IntermezzoAccampamento)
-            sentinella.addModificatore(new ModificatoreAttributo(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 0, LealtaRichiesta.NOTA));
+            sentinella.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 0, LealtaRichiesta.NOTA));
             partita.gruppo().aggiungiPersonaggio(sentinella);
             IntermezziMD intermezzi = ModelloDati.getIstanza().getIntermezziMD();
             List<String> scene = new ArrayList<>();

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.strumenti;
 
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
@@ -42,7 +42,7 @@ public interface CostruttoreArtefatto {
         StepModificatore setPeso(double peso);
     }
     interface StepModificatore {
-        StepModificatore setModificatore(ModificatoreAttributo modificatore);
+        StepModificatore setModificatore(ModificatoreAttributoMD modificatore);
         StepModificatore setModificatore(TipoAttributo modificatore, TipoModificatore tipoModificatore, double quantita, String nota);
         StepModificatore setModificatore(TipoAttributo modificatore, TipoModificatore tipoModificatore, double quantita);
         StepIncantamento setIncantamento(IncantamentoMD incantamento);

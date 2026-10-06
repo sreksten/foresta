@@ -5,7 +5,7 @@ import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Ladro;
 import com.threeamigos.foresta.personaggi.Mago;
@@ -36,7 +36,7 @@ class CalcolatoreCombattimentoClassiTest {
     void preparaDifensore() {
         ModelloDati.setIstanza(new ModelloDati());
         difensore = new Guerriero("Bersaglio", 5);
-        difensore.addModificatore(new ModificatoreAttributo(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 1000));
+        difensore.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 1000));
     }
 
     @Test
@@ -93,9 +93,9 @@ class CalcolatoreCombattimentoClassiTest {
      * Il danno di un attaccante con FORZA e INTELLIGENZA fissate a 20 e senza critici
      */
     private double danno(PersonaggioBase attaccante, Arma arma) {
-        attaccante.addModificatore(new ModificatoreAttributo(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
-        attaccante.addModificatore(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.QUANTITA_ASSOLUTA, 20));
-        attaccante.addModificatore(new ModificatoreAttributo(TipoAttributo.INTELLIGENZA, TipoModificatore.QUANTITA_ASSOLUTA, 20));
+        attaccante.addModificatore(new ModificatoreAttributoMD(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
+        attaccante.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.QUANTITA_ASSOLUTA, 20));
+        attaccante.addModificatore(new ModificatoreAttributoMD(TipoAttributo.INTELLIGENZA, TipoModificatore.QUANTITA_ASSOLUTA, 20));
         return CalcolatoreCombattimento.calcolaDannoRisultante(attaccante, difensore, arma).getDanno();
     }
 

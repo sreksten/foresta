@@ -2,7 +2,7 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoModificatore;
@@ -376,7 +376,7 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 		}
 		List<String> bonus = new ArrayList<>();
 		List<String> malus = new ArrayList<>();
-		for (ModificatoreAttributo modificatore : artefatto.getModificatori()) {
+		for (ModificatoreAttributoMD modificatore : artefatto.getModificatori()) {
 			(modificatore.getQuantita() >= 0 ? bonus : malus).add(modificatore(modificatore));
 		}
 		aggiungi(righe, incantamenti, font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima);
@@ -416,7 +416,7 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 		}
 	}
 
-	private static String modificatore(ModificatoreAttributo modificatore) {
+	private static String modificatore(ModificatoreAttributoMD modificatore) {
 		String valore = String.format("%+.0f", modificatore.getQuantita());
 		if (modificatore.getTipoModificatoreAttributo() == TipoModificatore.AUMENTO_PERCENTUALE) {
 			valore += "%";

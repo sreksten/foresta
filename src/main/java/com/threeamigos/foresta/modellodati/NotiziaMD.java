@@ -11,15 +11,15 @@ import java.io.PrintWriter;
  *
  * @author Stefano Reksten
  */
-public class Notizia implements Serializzabile {
+public class NotiziaMD implements Serializzabile {
 
 	private String id;
 	private String corpo;
 
-	public Notizia() {
+	public NotiziaMD() {
 	}
 
-	public Notizia(String id, String corpo) {
+	public NotiziaMD(String id, String corpo) {
 		this.id = Serializzabile.senzaPipe(id);
 		this.corpo = Serializzabile.senzaPipe(corpo);
 	}

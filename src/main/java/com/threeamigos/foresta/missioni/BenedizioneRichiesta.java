@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 
 /**
  * Una benedizione (vedi LaBenedizione), letta da una riga di BENEDIZIONE in missioni.txt, che ne descrive i campi: chi
@@ -81,7 +81,7 @@ public final class BenedizioneRichiesta {
 	/**
 	 * Il modificatore permanente che la benedizione dà a chi la riceve.
 	 */
-	public ModificatoreAttributo nuovoModificatore() {
+	public ModificatoreAttributoMD nuovoModificatore() {
 		return modificatore.nuovo(nomeDellaBenedizione);
 	}
 

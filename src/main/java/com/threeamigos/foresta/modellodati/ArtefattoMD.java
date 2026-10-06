@@ -41,7 +41,7 @@ public class ArtefattoMD implements Serializzabile {
 	private double peso;
 	// Stato per la UI: se false, l'elenco modificatori/incantamenti resta chiuso.
 	private boolean figliVisibili = true;
-	private final Collection<ModificatoreAttributo> modificatori = new ArrayList<>();
+	private final Collection<ModificatoreAttributoMD> modificatori = new ArrayList<>();
 	private final Collection<IncantamentoMD> incantamenti = new ArrayList<>();
 
 	public String getUuid() {
@@ -206,17 +206,17 @@ public class ArtefattoMD implements Serializzabile {
 		this.peso = peso;
 	}
 
-	public Collection<ModificatoreAttributo> getModificatori() {
+	public Collection<ModificatoreAttributoMD> getModificatori() {
 		return modificatori;
 	}
 
-	public void addModificatore(ModificatoreAttributo modificatore) {
+	public void addModificatore(ModificatoreAttributoMD modificatore) {
 		modificatori.add(modificatore);
 	}
 
 	public void addModificatore(TipoAttributo tipoAttributo, TipoModificatore tipoModificatore,
 								double quantita, String nota) {
-		modificatori.add(new ModificatoreAttributo(tipoAttributo, tipoModificatore, quantita, nota));
+		modificatori.add(new ModificatoreAttributoMD(tipoAttributo, tipoModificatore, quantita, nota));
 	}
 
 	public Collection<IncantamentoMD> getIncantamenti() {
@@ -273,7 +273,7 @@ public class ArtefattoMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.println(incantamenti.size());
 
-		for (ModificatoreAttributo modificatore : modificatori) {
+		for (ModificatoreAttributoMD modificatore : modificatori) {
 			stream.print(modificatore.getTipoAttributo().name());
 			stream.print(PIPE);
 			stream.print(modificatore.getTipoModificatoreAttributo().name());
@@ -320,9 +320,9 @@ public class ArtefattoMD implements Serializzabile {
 			TipoModificatore tipoModificatore = campi.enumerato(TipoModificatore.class);
 			double quantita = campi.decimale();
 			// Nota vuota: si rilegge come "", come la mette il costruttore a tre argomenti di
-			// ModificatoreAttributo, altrimenti il modificatore riletto non sarebbe più equals all'originale
+			// ModificatoreAttributoMD, altrimenti il modificatore riletto non sarebbe più equals all'originale
 			String note = campi.testo();
-			modificatori.add(new ModificatoreAttributo(tipoAttributo, tipoModificatore, quantita, note));
+			modificatori.add(new ModificatoreAttributoMD(tipoAttributo, tipoModificatore, quantita, note));
 		}
 		incantamenti.clear();
 		for (int i = 0; i < numeroIncantamenti; i++) {

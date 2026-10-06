@@ -5,7 +5,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.modellodati.MessaggioMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.Notizia;
+import com.threeamigos.foresta.modellodati.NotiziaMD;
 import com.threeamigos.foresta.modellodati.NotizieMD;
 
 import java.util.List;
@@ -51,8 +51,8 @@ public class Notizie {
 	 * Una notizia nuova per la schermata della mappa (la produce la locanda, vedi Locanda.generaNotizia): va in
 	 * testa, e le più vecchie oltre il limite si scartano. La UI la legge da VistaPartita.getUltimeNotizie.
 	 */
-	public static void aggiungiNotizia(Notizia notizia) {
-		List<Notizia> ultimeNotizie = getNotizieMD().getUltimeNotizie();
+	public static void aggiungiNotizia(NotiziaMD notizia) {
+		List<NotiziaMD> ultimeNotizie = getNotizieMD().getUltimeNotizie();
 		ultimeNotizie.add(0, notizia);
 		while (ultimeNotizie.size() > NotizieMD.MASSIMO_NOTIZIE_RICORDATE) {
 			ultimeNotizie.remove(ultimeNotizie.size() - 1);
@@ -70,7 +70,7 @@ public class Notizie {
 	/**
 	 * Le ultime notizie destinate alla schermata della mappa, dalla più recente alla più vecchia.
 	 */
-	public static List<Notizia> getUltimeNotizie() {
+	public static List<NotiziaMD> getUltimeNotizie() {
 		return getNotizieMD().getUltimeNotizie();
 	}
 }

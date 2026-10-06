@@ -30,13 +30,13 @@ public class NotizieMD implements Serializzabile {
 
 	// Le più recenti in testa, le più vecchie in coda.
 	private final List<MessaggioMD> ultimiMessaggi = new ArrayList<>();
-	private final List<Notizia> ultimeNotizie = new ArrayList<>();
+	private final List<NotiziaMD> ultimeNotizie = new ArrayList<>();
 
 	public List<MessaggioMD> getUltimiMessaggi() {
 		return ultimiMessaggi;
 	}
 
-	public List<Notizia> getUltimeNotizie() {
+	public List<NotiziaMD> getUltimeNotizie() {
 		return ultimeNotizie;
 	}
 
@@ -52,7 +52,7 @@ public class NotizieMD implements Serializzabile {
 			messaggioMD.salva(stream);
 		}
 		stream.println(ultimeNotizie.size());
-		for (Notizia notizia : ultimeNotizie) {
+		for (NotiziaMD notizia : ultimeNotizie) {
 			notizia.salva(stream);
 		}
 	}
@@ -69,7 +69,7 @@ public class NotizieMD implements Serializzabile {
 		ultimeNotizie.clear();
 		int numeroNotizie = Integer.parseInt(stream.readLine());
 		for (int i = 0; i < numeroNotizie; i++) {
-			Notizia notizia = new Notizia();
+			NotiziaMD notizia = new NotiziaMD();
 			notizia.leggi(stream);
 			ultimeNotizie.add(notizia);
 		}

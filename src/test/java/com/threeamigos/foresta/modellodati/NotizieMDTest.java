@@ -19,7 +19,7 @@ class NotizieMDTest {
         NotizieMD originale = new NotizieMD();
         originale.getUltimiMessaggi().add(new MessaggioMD("Una frase | con un separatore", false));
         originale.getUltimiMessaggi().add(new MessaggioMD("Un paragrafo", true));
-        originale.getUltimeNotizie().add(new Notizia("CV1", "Titolo - Corpo"));
+        originale.getUltimeNotizie().add(new NotiziaMD("CV1", "Titolo - Corpo"));
         StringWriter scrittura = new StringWriter();
         try (PrintWriter writer = new PrintWriter(scrittura)) {
             originale.salva(writer);

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.modellodati.Notizia;
+import com.threeamigos.foresta.modellodati.NotiziaMD;
 import com.threeamigos.foresta.strumenti.Logger;
 
 import java.awt.*;
@@ -35,7 +35,7 @@ class Notiziario {
 	private final int altezza;
 	private final VistaPartita vistaPartita;
 
-	private List<Notizia> notizieCostruite = new ArrayList<>();
+	private List<NotiziaMD> notizieCostruite = new ArrayList<>();
 	private BufferedImage immagineCorrente;
 	private float x;
 	// -1 = nessuna chiamata precedente (o il notiziario era vuoto): il prossimo
@@ -49,7 +49,7 @@ class Notiziario {
 	}
 
 	void disegna(Graphics2D g, int xBanda, int yBanda) {
-		List<Notizia> notizieAttuali = vistaPartita.getUltimeNotizie();
+		List<NotiziaMD> notizieAttuali = vistaPartita.getUltimeNotizie();
 		if (notizieAttuali.isEmpty()) {
 			ultimoAggiornamentoNanos = -1;
 			return;
@@ -104,14 +104,14 @@ class Notiziario {
 		g.setPaint(gradienteOriginale);
 	}
 
-	private void costruisciImmagineComplessiva(List<Notizia> notizieAttuali) {
+	private void costruisciImmagineComplessiva(List<NotiziaMD> notizieAttuali) {
 		List<BufferedImage> segmenti = new ArrayList<>();
 		int larghezzaTotale = 0;
 		// Il "-" con i suoi margini è disegnato come immagine dedicata invece che
 		// come testo " - ": gli spazi del font Doomdark sono larghi solo pochi
 		// pixel, troppo poco per separare visibilmente due notizie concatenate.
 		BufferedImage separatore = costruisciSeparatore();
-		for (Notizia notizia : notizieAttuali) {
+		for (NotiziaMD notizia : notizieAttuali) {
 			try {
 				BufferedImage segmento = costruisciImmagine(notizia);
 				segmenti.add(segmento);
@@ -165,7 +165,7 @@ class Notiziario {
 		return immagine;
 	}
 
-	private BufferedImage costruisciImmagine(Notizia notizia) {
+	private BufferedImage costruisciImmagine(NotiziaMD notizia) {
 		String corpo = notizia.getCorpo();
 		int posizioneSeparatore = corpo.indexOf(SEPARATORE_TITOLO);
 

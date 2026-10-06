@@ -2,7 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.ListinoPergamene;
 import com.threeamigos.foresta.tipi.SupertipoArtefatto;
@@ -234,7 +234,7 @@ public final class RegoleIncantatura {
 				effetti.add(new Effetto(incantamento, null, ListinoPergamene.prezzo(incantamento, artefatto.getLivello())));
 			}
 		}
-		for (ModificatoreAttributo modificatore : ingrediente.getModificatori()) {
+		for (ModificatoreAttributoMD modificatore : ingrediente.getModificatori()) {
 			if (modificatore.getTipoAttributo() != TipoAttributo.POTERE_MAGICO || accettaPotereMagico(artefatto)) {
 				effetti.add(new Effetto(null, modificatore, ListinoPergamene.prezzo(modificatore)));
 			}
@@ -261,10 +261,10 @@ public final class RegoleIncantatura {
 	private static final class Effetto {
 
 		private final IncantamentoMD incantamento;
-		private final ModificatoreAttributo modificatore;
+		private final ModificatoreAttributoMD modificatore;
 		private final double prezzo;
 
-		private Effetto(IncantamentoMD incantamento, ModificatoreAttributo modificatore, double prezzo) {
+		private Effetto(IncantamentoMD incantamento, ModificatoreAttributoMD modificatore, double prezzo) {
 			this.incantamento = incantamento;
 			this.modificatore = modificatore;
 			this.prezzo = prezzo;

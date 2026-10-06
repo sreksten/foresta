@@ -14,7 +14,7 @@ import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.offerte.FabbricaOfferte;
@@ -1157,7 +1157,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public void addSaluteMassima(int quantita, String note) {
-		ModificatoreAttributo modificatore = new ModificatoreAttributo(TipoAttributo.SALUTE, TipoModificatore.AUMENTO_FISSO, quantita, note);
+		ModificatoreAttributoMD modificatore = new ModificatoreAttributoMD(TipoAttributo.SALUTE, TipoModificatore.AUMENTO_FISSO, quantita, note);
 		addModificatore(modificatore);
 	}
 
@@ -1196,7 +1196,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public void addMagiaMassima(int quantita, String note) {
-		ModificatoreAttributo modificatore = new ModificatoreAttributo(TipoAttributo.MAGIA, TipoModificatore.AUMENTO_FISSO, quantita, note);
+		ModificatoreAttributoMD modificatore = new ModificatoreAttributoMD(TipoAttributo.MAGIA, TipoModificatore.AUMENTO_FISSO, quantita, note);
 		addModificatore(modificatore);
 	}
 
@@ -1466,7 +1466,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.STANCHEZZA, quantitaPrecedente, quantitaAttuale));
 	}
 
-	public void addModificatore(ModificatoreAttributo modificatore) {
+	public void addModificatore(ModificatoreAttributoMD modificatore) {
 		int saluteMassimaPrecedente = getSaluteMassima();
 		int magiaMassimaPrecedente = getMagiaMassima();
 
@@ -1941,7 +1941,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	private static double getQuantitaModificata(PersonaggioMD md, double quantitaOriginale, TipoAttributo tipoAttributo) {
-		List<ModificatoreAttributo> modificatoriLocali = new ArrayList<>();
+		List<ModificatoreAttributoMD> modificatoriLocali = new ArrayList<>();
 
 		md.getModificatori()
 				.stream()
@@ -1960,20 +1960,20 @@ public abstract class PersonaggioBase implements Personaggio {
 		OptionalDouble modificatoreAssoluto = modificatoriLocali
 				.stream()
 				.filter(m -> m.getTipoModificatoreAttributo() == TipoModificatore.QUANTITA_ASSOLUTA)
-				.mapToDouble(ModificatoreAttributo::getQuantita).min();
+				.mapToDouble(ModificatoreAttributoMD::getQuantita).min();
 
 		if (modificatoreAssoluto.isPresent())
 			return modificatoreAssoluto.getAsDouble();
 
 		double quantitaFisse = modificatoriLocali.stream()
 				.filter(m -> m.getTipoModificatoreAttributo() == TipoModificatore.AUMENTO_FISSO)
-				.mapToDouble(ModificatoreAttributo::getQuantita).sum();
+				.mapToDouble(ModificatoreAttributoMD::getQuantita).sum();
 
 		quantitaOriginale += quantitaFisse;
 
 		double quantitaPercentuali = modificatoriLocali.stream()
 				.filter(m -> m.getTipoModificatoreAttributo() == TipoModificatore.AUMENTO_PERCENTUALE)
-				.mapToDouble(ModificatoreAttributo::getQuantita).sum();
+				.mapToDouble(ModificatoreAttributoMD::getQuantita).sum();
 
 		return quantitaOriginale * (1 + quantitaPercentuali / 100);
 	}

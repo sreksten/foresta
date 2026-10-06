@@ -9,7 +9,7 @@ import com.threeamigos.foresta.interfacce.OggettoConCosto;
 import com.threeamigos.foresta.interfacce.OggettoConPeso;
 import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
 import com.threeamigos.foresta.motore.RegoleSetLeggendari;
@@ -162,7 +162,7 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso, Vist
 	/**
 	 * Modificatori permanenti agli attributi dei personaggi
 	 */
-	public Collection<ModificatoreAttributo> getModificatori() {
+	public Collection<ModificatoreAttributoMD> getModificatori() {
 		return md.getModificatori();
 	}
 

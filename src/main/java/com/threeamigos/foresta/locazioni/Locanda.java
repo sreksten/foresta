@@ -8,7 +8,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
 import com.threeamigos.foresta.modellodati.LocazioneMD;
-import com.threeamigos.foresta.modellodati.Notizia;
+import com.threeamigos.foresta.modellodati.NotiziaMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.offerte.Informazioni;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -363,7 +363,7 @@ public class Locanda extends LocazioneBase {
 	 * fatto sosta (non quando viene respinto sulla porta per mancanza di monete).
 	 */
 	private void generaNotizia() {
-		Notizia notizia = ProduttoreDiTestiCasuale.getNotiziaLocanda(getIdentificativo(), getNome(), getNomeLocandiere());
+		NotiziaMD notizia = ProduttoreDiTestiCasuale.getNotiziaLocanda(getIdentificativo(), getNome(), getNomeLocandiere());
 		BusEventi.pubblica(new NotificaTestoParagrafo(notizia.getCorpo()));
 		Notizie.aggiungiNotizia(notizia);
 	}

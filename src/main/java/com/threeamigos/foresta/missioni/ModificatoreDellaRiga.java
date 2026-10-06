@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.missioni;
 
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 
@@ -47,7 +47,7 @@ final class ModificatoreDellaRiga {
 	/**
 	 * Un modificatore nuovo, con quella nota (il nome della benedizione, della lealtà...).
 	 */
-	ModificatoreAttributo nuovo(String nota) {
-		return new ModificatoreAttributo(attributo, tipoModificatore, quantita, nota);
+	ModificatoreAttributoMD nuovo(String nota) {
+		return new ModificatoreAttributoMD(attributo, tipoModificatore, quantita, nota);
 	}
 }

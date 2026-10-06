@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.modellodati.Notizia;
+import com.threeamigos.foresta.modellodati.NotiziaMD;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
 
@@ -30,7 +30,7 @@ public interface VistaPartita {
 	/**
 	 * Le ultime notizie delle locande, dalla più recente: la lista è viva, chi la tiene ne faccia una copia
 	 */
-	List<Notizia> getUltimeNotizie();
+	List<NotiziaMD> getUltimeNotizie();
 
 	int getGiorno();
 

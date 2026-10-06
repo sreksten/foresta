@@ -55,10 +55,10 @@ class ArtefattoMDTest {
         artefatto.addModificatore(TipoAttributo.CARISMA, TipoModificatore.AUMENTO_PERCENTUALE, 10, "Carisma");
         artefatto.addModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, 5, "Valore");
         // Then
-        Collection<ModificatoreAttributo> modificatori = artefatto.getModificatori();
+        Collection<ModificatoreAttributoMD> modificatori = artefatto.getModificatori();
         assertEquals(2, modificatori.size());
-        assertTrue(modificatori.contains(new ModificatoreAttributo(TipoAttributo.CARISMA, TipoModificatore.AUMENTO_PERCENTUALE, 10, "Carisma")));
-        assertTrue(modificatori.contains(new ModificatoreAttributo(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, 5, "Valore")));
+        assertTrue(modificatori.contains(new ModificatoreAttributoMD(TipoAttributo.CARISMA, TipoModificatore.AUMENTO_PERCENTUALE, 10, "Carisma")));
+        assertTrue(modificatori.contains(new ModificatoreAttributoMD(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, 5, "Valore")));
     }
 
     @Test
@@ -82,7 +82,7 @@ class ArtefattoMDTest {
         artefatto.setCostoAcquisto(costoAcquisto);
         artefatto.setPeso(peso);
         artefatto.addModificatore(TipoAttributo.CARISMA, TipoModificatore.AUMENTO_PERCENTUALE, 10, "Carisma");
-        ModificatoreAttributo modificatore = new ModificatoreAttributo(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, 5, "Valore");
+        ModificatoreAttributoMD modificatore = new ModificatoreAttributoMD(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, 5, "Valore");
         artefatto.addModificatore(modificatore);
         // When
         artefatto.salva(printWriter);
@@ -100,10 +100,10 @@ class ArtefattoMDTest {
         assertEquals(danni, artefattoRicaricato.getDanni());
         assertEquals(costoAcquisto, artefattoRicaricato.getCostoAcquisto());
         assertEquals(peso, artefattoRicaricato.getPeso(), 0.0001);
-        Collection<ModificatoreAttributo> modificatoriRicaricati = artefattoRicaricato.getModificatori();
+        Collection<ModificatoreAttributoMD> modificatoriRicaricati = artefattoRicaricato.getModificatori();
         assertEquals(2, modificatoriRicaricati.size());
-        assertTrue(modificatoriRicaricati.contains(new ModificatoreAttributo(TipoAttributo.CARISMA, TipoModificatore.AUMENTO_PERCENTUALE, 10, "Carisma")));
-        assertTrue(modificatoriRicaricati.contains(new ModificatoreAttributo(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, 5, "Valore")));
+        assertTrue(modificatoriRicaricati.contains(new ModificatoreAttributoMD(TipoAttributo.CARISMA, TipoModificatore.AUMENTO_PERCENTUALE, 10, "Carisma")));
+        assertTrue(modificatoriRicaricati.contains(new ModificatoreAttributoMD(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, 5, "Valore")));
     }
 
     @Test
@@ -116,11 +116,11 @@ class ArtefattoMDTest {
         // When
         ArtefattoMD ricaricato = salvaERileggi(artefatto);
         // Then
-        Collection<ModificatoreAttributo> modificatori = ricaricato.getModificatori();
+        Collection<ModificatoreAttributoMD> modificatori = ricaricato.getModificatori();
         assertEquals(3, modificatori.size());
-        assertTrue(modificatori.contains(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 5, "Forza")));
-        assertTrue(modificatori.contains(new ModificatoreAttributo(TipoAttributo.CORAGGIO, TipoModificatore.AUMENTO_PERCENTUALE, 2.5, "Coraggio")));
-        assertTrue(modificatori.contains(new ModificatoreAttributo(TipoAttributo.VELOCITA, TipoModificatore.QUANTITA_ASSOLUTA, -3, "Velocita")));
+        assertTrue(modificatori.contains(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 5, "Forza")));
+        assertTrue(modificatori.contains(new ModificatoreAttributoMD(TipoAttributo.CORAGGIO, TipoModificatore.AUMENTO_PERCENTUALE, 2.5, "Coraggio")));
+        assertTrue(modificatori.contains(new ModificatoreAttributoMD(TipoAttributo.VELOCITA, TipoModificatore.QUANTITA_ASSOLUTA, -3, "Velocita")));
     }
 
     @Test
@@ -128,7 +128,7 @@ class ArtefattoMDTest {
         // Given: il costruttore a tre argomenti (quello usato dal CostruttoreArtefatto e
         // dall'anello magico) mette come nota la stringa vuota
         ArtefattoMD artefatto = creaArtefatto(TipoArtefatto.ANELLO, "un Anello magico del Grifone", "che aumenta il Valore");
-        ModificatoreAttributo modificatore = new ModificatoreAttributo(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, 5);
+        ModificatoreAttributoMD modificatore = new ModificatoreAttributoMD(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, 5);
         artefatto.addModificatore(modificatore);
         // When
         ArtefattoMD ricaricato = salvaERileggi(artefatto);
@@ -162,7 +162,7 @@ class ArtefattoMDTest {
         ArtefattoMD ricaricato = salvaERileggi(artefatto);
         // Then
         assertEquals(1, ricaricato.getModificatori().size());
-        assertTrue(ricaricato.getModificatori().contains(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 5, "Forza")));
+        assertTrue(ricaricato.getModificatori().contains(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 5, "Forza")));
         List<IncantamentoMD> incantamenti = new ArrayList<>(ricaricato.getIncantamenti());
         assertEquals(2, incantamenti.size());
         verificaIncantamento(incantamenti, "Il Peperoncino di Cayenna", TipoDanno.FUOCO, 10, 0.5);
@@ -197,8 +197,8 @@ class ArtefattoMDTest {
         assertEquals("il talismano di Yalar", secondoRicaricato.getNome());
         assertEquals("il cui potere è nella fortuna", secondoRicaricato.getDescrizione());
         assertEquals(2, secondoRicaricato.getModificatori().size());
-        assertTrue(secondoRicaricato.getModificatori().contains(new ModificatoreAttributo(TipoAttributo.FORTUNA, TipoModificatore.AUMENTO_PERCENTUALE, 10, "Fortuna")));
-        assertTrue(secondoRicaricato.getModificatori().contains(new ModificatoreAttributo(TipoAttributo.CARISMA, TipoModificatore.AUMENTO_FISSO, 1, "Carisma")));
+        assertTrue(secondoRicaricato.getModificatori().contains(new ModificatoreAttributoMD(TipoAttributo.FORTUNA, TipoModificatore.AUMENTO_PERCENTUALE, 10, "Fortuna")));
+        assertTrue(secondoRicaricato.getModificatori().contains(new ModificatoreAttributoMD(TipoAttributo.CARISMA, TipoModificatore.AUMENTO_FISSO, 1, "Carisma")));
         assertTrue(secondoRicaricato.getIncantamenti().isEmpty());
         assertNull(reader.readLine());
     }
@@ -251,7 +251,7 @@ class ArtefattoMDTest {
         assertEquals("Diavolina", ricaricato.getNomeProprio());
         assertEquals("la spada  di fuoco", ricaricato.getNome());
         assertEquals("che  brucia", ricaricato.getDescrizione());
-        assertTrue(ricaricato.getModificatori().contains(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 1, "nota")));
+        assertTrue(ricaricato.getModificatori().contains(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 1, "nota")));
         assertEquals("Fiamma", ricaricato.getIncantamenti().iterator().next().getNomeIncantamento());
         assertNull(ArtefattoMD.normalizzaNomeProprio("|"));
     }
@@ -270,7 +270,7 @@ class ArtefattoMDTest {
         assertEquals("", ricaricato.getDescrizione());
         assertEquals(3, ricaricato.getLivello());
         assertEquals(7, ricaricato.getDanni());
-        assertTrue(ricaricato.getModificatori().contains(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 1)));
+        assertTrue(ricaricato.getModificatori().contains(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 1)));
         assertEquals(ArtefattoMD.NESSUN_NOME, ricaricato.getIncantamenti().iterator().next().getNomeIncantamento());
     }
 
@@ -351,10 +351,10 @@ class ArtefattoMDTest {
         ArtefattoMD ricaricato = salvaERileggi(pergamena);
         // Then
         assertEquals(TipoArtefatto.PERGAMENA, ricaricato.getTipo());
-        Collection<ModificatoreAttributo> modificatori = ricaricato.getModificatori();
+        Collection<ModificatoreAttributoMD> modificatori = ricaricato.getModificatori();
         assertEquals(2, modificatori.size());
-        assertTrue(modificatori.contains(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 2)));
-        assertTrue(modificatori.contains(new ModificatoreAttributo(TipoAttributo.CORAGGIO, TipoModificatore.AUMENTO_PERCENTUALE, 10)));
+        assertTrue(modificatori.contains(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 2)));
+        assertTrue(modificatori.contains(new ModificatoreAttributoMD(TipoAttributo.CORAGGIO, TipoModificatore.AUMENTO_PERCENTUALE, 10)));
         List<IncantamentoMD> incantamenti = new ArrayList<>(ricaricato.getIncantamenti());
         assertEquals(2, incantamenti.size());
         verificaIncantamento(incantamenti, "Fiamma", TipoDanno.FUOCO, 15, 0.2);

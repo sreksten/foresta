@@ -6,7 +6,7 @@ import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Elfa;
 import com.threeamigos.foresta.personaggi.Elfo;
@@ -39,8 +39,8 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
     void preparaDifensore() {
         ModelloDati.setIstanza(new ModelloDati());
         difensore = new Guerriero("Bersaglio", 5);
-        difensore.addModificatore(new ModificatoreAttributo(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 1000));
-        difensore.addModificatore(new ModificatoreAttributo(TipoAttributo.RESISTENZA_MAGICA, TipoModificatore.QUANTITA_ASSOLUTA, 30));
+        difensore.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 1000));
+        difensore.addModificatore(new ModificatoreAttributoMD(TipoAttributo.RESISTENZA_MAGICA, TipoModificatore.QUANTITA_ASSOLUTA, 30));
     }
 
     // --- Resistenze
@@ -206,7 +206,7 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
     @Test
     void ilLibroMagicoAumentaIlDannoDegliIncantesimi() {
         Mago mago = new Mago("Merlino", 4);
-        mago.addModificatore(new ModificatoreAttributo(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
+        mago.addModificatore(new ModificatoreAttributoMD(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
         IncantesimoMalefico aria = (IncantesimoMalefico) FabbricaIncantesimi.crea(ClasseIncantesimo.ARIA, 4);
         int senzaLibro = CalcolatoreCombattimento.calcolaDannoRisultante(mago, difensore, aria).getDanno();
         mago.addArtefatto(artefatto(TipoArtefatto.LIBRO_MAGICO, 4));
@@ -221,7 +221,7 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
         assertEquals(1.0d, CalcolatoreCombattimento.fattoreLibroMagico(new Mago("Merlino", 4)), DELTA);
 
         Elfo elfo = new Elfo("Legolas", 4);
-        elfo.addModificatore(new ModificatoreAttributo(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
+        elfo.addModificatore(new ModificatoreAttributoMD(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
         IncantesimoMalefico aria = (IncantesimoMalefico) FabbricaIncantesimi.crea(ClasseIncantesimo.ARIA, 4);
         int senzaLibro = CalcolatoreCombattimento.calcolaDannoRisultante(elfo, difensore, aria).getDanno();
         elfo.addArtefatto(artefatto(TipoArtefatto.LIBRO_MAGICO, 4));
@@ -232,7 +232,7 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
     @Test
     void ilLibroMagicoNonAiutaLeArmi() {
         Mago mago = new Mago("Merlino", 4);
-        mago.addModificatore(new ModificatoreAttributo(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
+        mago.addModificatore(new ModificatoreAttributoMD(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
         Arma bastone = arma(TipoDanno.CONTUNDENTE);
         int senzaLibro = CalcolatoreCombattimento.calcolaDannoRisultante(mago, difensore, bastone).getDanno();
         mago.addArtefatto(artefatto(TipoArtefatto.LIBRO_MAGICO, 4));
@@ -243,17 +243,17 @@ class CalcolatoreCombattimentoEquipaggiamentoTest {
 
     private static Guerriero attaccante() {
         Guerriero attaccante = new Guerriero("Attaccante", 5);
-        attaccante.addModificatore(new ModificatoreAttributo(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
+        attaccante.addModificatore(new ModificatoreAttributoMD(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
         return attaccante;
     }
 
     private static <P extends PersonaggioBase> P conParata(P personaggio, int parata) {
-        personaggio.addModificatore(new ModificatoreAttributo(TipoAttributo.PARATA, TipoModificatore.QUANTITA_ASSOLUTA, parata));
+        personaggio.addModificatore(new ModificatoreAttributoMD(TipoAttributo.PARATA, TipoModificatore.QUANTITA_ASSOLUTA, parata));
         return personaggio;
     }
 
     private static <P extends PersonaggioBase> P conResistenzaMagica(P personaggio, int resistenza) {
-        personaggio.addModificatore(new ModificatoreAttributo(TipoAttributo.RESISTENZA_MAGICA, TipoModificatore.QUANTITA_ASSOLUTA, resistenza));
+        personaggio.addModificatore(new ModificatoreAttributoMD(TipoAttributo.RESISTENZA_MAGICA, TipoModificatore.QUANTITA_ASSOLUTA, resistenza));
         return personaggio;
     }
 

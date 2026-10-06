@@ -57,7 +57,7 @@ class DisplayableCanvasAnnuncioGlobaleTest {
 
 	@Test
 	void unAnnuncioFuoriDaUnIntermezzoComparesubito() {
-		canvas.notificaAnnuncioGlobale("LIVELLO SUCCESSIVO", "Notizia di prova");
+		canvas.notificaAnnuncioGlobale("LIVELLO SUCCESSIVO", "NotiziaMD di prova");
 
 		assertEquals(1, uiOccupataPubblicati.get(),
 				"fuori da un intermezzo l'annuncio deve comparire subito, come prima di questa modifica");

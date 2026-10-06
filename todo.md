@@ -15,10 +15,6 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 - **Schermi alti meno di 804 px.** La barra delle icone copre il fondo del riquadro delle missioni.
 - **Scorrimento del riquadro del gruppo.** `DisplayableCanvasRiquadroGruppo` scorre i personaggi di tre righe per volta, diversamente da `DisplayableCanvasRiquadroMissioni`: capire se si può fare come quest'ultimo.
 
-## Architettura (da valutare)
-
-- **Nomi dei modelli dati.** Alcuni non finiscono per `MD` (`ModificatoreArtefatto`).
-
 ## Gioco e contenuti
 
 - Quando una città viene distrutta, rimane la "storia" della casella? ("Qui sorgeva la città di ...")

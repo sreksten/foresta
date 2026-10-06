@@ -5,7 +5,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaPaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.BattutaProgrammata;
 import com.threeamigos.foresta.missioni.LealtaRichiesta;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoAttributo;
@@ -32,7 +32,7 @@ class PergamenaFumettoSuccessivoTest {
             Guerriero sentinella = new Guerriero("Sentinella", 1);
             // Già "leale" (vedi LaLealta): altrimenti la sua confidenza ruberebbe la scena al primo
             // accampamento invece dell'intermezzo normale (vedi IntermezzoAccampamento)
-            sentinella.addModificatore(new ModificatoreAttributo(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 0, LealtaRichiesta.NOTA));
+            sentinella.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 0, LealtaRichiesta.NOTA));
             partita.gruppo().aggiungiPersonaggio(sentinella);
             while (LineaTemporale.getOra() <= 20) {
                 LineaTemporale.aggiungiOre(1);

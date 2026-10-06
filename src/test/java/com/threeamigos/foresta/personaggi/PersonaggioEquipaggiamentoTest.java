@@ -2,7 +2,7 @@ package com.threeamigos.foresta.personaggi;
 
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.motore.ArmaNaturale;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
@@ -93,7 +93,7 @@ class PersonaggioEquipaggiamentoTest {
         assertEquals(Optional.empty(), new Guerriero("Pippo", 1).puoEquipaggiare(artefatto(TipoArtefatto.ARMATURA, 1)));
         // Con un anello della forza anche il ladro la indossa
         Ladro forzuto = new Ladro("Pippo", 1);
-        forzuto.addModificatore(new ModificatoreAttributo(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 10));
+        forzuto.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 10));
         assertEquals(Optional.empty(), forzuto.puoEquipaggiare(artefatto(TipoArtefatto.ARMATURA, 1)));
     }
 

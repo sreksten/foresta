@@ -3,7 +3,7 @@ package com.threeamigos.foresta.oggetti;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 
 /**
@@ -31,7 +31,7 @@ public class TestArtefatti2 {
         sb.append(String.format("liv %2d %-5s %3d mo, danni %2d: ", md.getLivello(), md.getRarita().getNome(),
                 md.getCostoAcquisto(), md.getDanni()));
         sb.append(artefatto.getNomeCompleto());
-        for (ModificatoreAttributo modificatore : md.getModificatori()) {
+        for (ModificatoreAttributoMD modificatore : md.getModificatori()) {
             sb.append(String.format(" [%s %+.0f]", modificatore.getTipoAttributo().getNome(), modificatore.getQuantita()));
         }
         for (IncantamentoMD incantamento : md.getIncantamenti()) {

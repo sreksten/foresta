@@ -3,7 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.Notizia;
+import com.threeamigos.foresta.modellodati.NotiziaMD;
 import com.threeamigos.foresta.motore.GrammarBean.InvalidGrammarException;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -209,11 +209,11 @@ public class ProduttoreDiTestiCasuale {
 		return oroscopo;
 	}
 
-	public static Notizia getNotiziaLocanda(String identificativoLocanda, String nomeLocanda, String nomeLocandiere) {
+	public static NotiziaMD getNotiziaLocanda(String identificativoLocanda, String nomeLocanda, String nomeLocandiere) {
 		return getNotiziaLocanda(identificativoLocanda, nomeLocanda, nomeLocandiere, 0);
 	}
 
-	private static Notizia getNotiziaLocanda(String identificativoLocanda, String nomeLocanda, String nomeLocandiere, int tentativo) {
+	private static NotiziaMD getNotiziaLocanda(String identificativoLocanda, String nomeLocanda, String nomeLocandiere, int tentativo) {
 		if (tentativo >= MASSIMO_TENTATIVI_NOTIZIA_LOCANDA) {
 			throw new IllegalStateException("Non è stato possibile trovare una notizia applicabile e non recente per la locanda " + identificativoLocanda);
 		}
@@ -231,7 +231,7 @@ public class ProduttoreDiTestiCasuale {
 		}
 		contenuto = contenuto.replace("NOME_LOCANDA", nomeLocanda);
 		contenuto = contenuto.replace("NOME_LOCANDIERE", nomeLocandiere);
-		return new Notizia(identificativo, contenuto);
+		return new NotiziaMD(identificativo, contenuto);
 	}
 
 	/**

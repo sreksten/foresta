@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.tipi.SupertipoDanno;
 import com.threeamigos.foresta.tipi.TipoAttributo;
@@ -60,6 +60,6 @@ class CalcolatoreCombattimentoSpaventatoTest {
     }
 
     private static void fissa(Guerriero personaggio, TipoAttributo attributo, int valore) {
-        personaggio.addModificatore(new ModificatoreAttributo(attributo, TipoModificatore.QUANTITA_ASSOLUTA, valore));
+        personaggio.addModificatore(new ModificatoreAttributoMD(attributo, TipoModificatore.QUANTITA_ASSOLUTA, valore));
     }
 }

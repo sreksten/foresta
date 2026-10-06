@@ -3,7 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
@@ -26,7 +26,7 @@ class DardoArcanoTest {
     void preparaDifensore() {
         ModelloDati.setIstanza(new ModelloDati());
         difensore = new Guerriero("Bersaglio", 5);
-        difensore.addModificatore(new ModificatoreAttributo(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 1000));
+        difensore.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 1000));
     }
 
     @Test
@@ -85,8 +85,8 @@ class DardoArcanoTest {
     }
 
     private double danno(PersonaggioBase formulante) {
-        formulante.addModificatore(new ModificatoreAttributo(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
-        formulante.addModificatore(new ModificatoreAttributo(TipoAttributo.INTELLIGENZA, TipoModificatore.QUANTITA_ASSOLUTA, 20));
+        formulante.addModificatore(new ModificatoreAttributoMD(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
+        formulante.addModificatore(new ModificatoreAttributoMD(TipoAttributo.INTELLIGENZA, TipoModificatore.QUANTITA_ASSOLUTA, 20));
         return CalcolatoreCombattimento.calcolaDannoRisultante(formulante, difensore, new DardoArcano(formulante)).getDanno();
     }
 }

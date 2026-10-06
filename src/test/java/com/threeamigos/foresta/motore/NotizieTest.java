@@ -2,7 +2,7 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.modellodati.Notizia;
+import com.threeamigos.foresta.modellodati.NotiziaMD;
 import com.threeamigos.foresta.modellodati.NotizieMD;
 import com.threeamigos.foresta.tipi.Comando;
 import org.junit.jupiter.api.Test;
@@ -21,7 +21,7 @@ class NotizieTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(5)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             for (int i = 1; i <= NotizieMD.MASSIMO_NOTIZIE_RICORDATE + 3; i++) {
-                Notizie.aggiungiNotizia(new Notizia("N" + i, "Titolo " + i + " - Corpo"));
+                Notizie.aggiungiNotizia(new NotiziaMD("N" + i, "Titolo " + i + " - Corpo"));
             }
             assertEquals(NotizieMD.MASSIMO_NOTIZIE_RICORDATE, Notizie.getUltimeNotizie().size());
             assertEquals("N" + (NotizieMD.MASSIMO_NOTIZIE_RICORDATE + 3), Notizie.getUltimeNotizie().get(0).getId());

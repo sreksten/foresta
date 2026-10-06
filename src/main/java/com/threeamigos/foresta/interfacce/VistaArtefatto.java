@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.interfacce;
 
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
 
@@ -60,7 +60,7 @@ public interface VistaArtefatto {
 		return getIncantamenti().size() + getModificatori().size();
 	}
 
-	Collection<ModificatoreAttributo> getModificatori();
+	Collection<ModificatoreAttributoMD> getModificatori();
 
 	Collection<IncantamentoMD> getIncantamenti();
 

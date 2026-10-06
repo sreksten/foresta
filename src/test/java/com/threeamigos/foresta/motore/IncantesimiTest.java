@@ -4,7 +4,7 @@ import com.threeamigos.foresta.incantesimi.Fulmine;
 import com.threeamigos.foresta.incantesimi.Fuoco;
 import com.threeamigos.foresta.incantesimi.Morte;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Mago;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -31,9 +31,9 @@ class IncantesimiTest {
     void preparaCombattenti() {
         ModelloDati.setIstanza(new ModelloDati());
         mago = new Mago("Merlino", 5);
-        mago.addModificatore(new ModificatoreAttributo(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
+        mago.addModificatore(new ModificatoreAttributoMD(TipoAttributo.CRITICO, TipoModificatore.QUANTITA_ASSOLUTA, 0));
         bersaglio = new Guerriero("Bersaglio", 5);
-        bersaglio.addModificatore(new ModificatoreAttributo(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 1000));
+        bersaglio.addModificatore(new ModificatoreAttributoMD(TipoAttributo.FORTUNA, TipoModificatore.QUANTITA_ASSOLUTA, 1000));
     }
 
     @Test
@@ -41,7 +41,7 @@ class IncantesimiTest {
         // Given
         int senza = CalcolatoreCombattimento.calcolaDannoRisultante(mago, bersaglio, new Fuoco(5)).getDanno();
         // When
-        mago.addModificatore(new ModificatoreAttributo(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_PERCENTUALE, 50));
+        mago.addModificatore(new ModificatoreAttributoMD(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_PERCENTUALE, 50));
         int con = CalcolatoreCombattimento.calcolaDannoRisultante(mago, bersaglio, new Fuoco(5)).getDanno();
         // Then
         assertTrue(con > senza, "con POTERE_MAGICO " + con + ", senza " + senza);
@@ -105,7 +105,7 @@ class IncantesimiTest {
             avversario.addEffettoDiStato(TipoEffettoDiStato.STORDITO, 1, 0);
             avversari.aggiungiPersonaggio(avversario);
         }
-        mago.addModificatore(new ModificatoreAttributo(TipoAttributo.NUMERO_BERSAGLI, TipoModificatore.QUANTITA_ASSOLUTA, 2));
+        mago.addModificatore(new ModificatoreAttributoMD(TipoAttributo.NUMERO_BERSAGLI, TipoModificatore.QUANTITA_ASSOLUTA, 2));
         int[] saluteIniziale = avversari.getPersonaggi().stream().mapToInt(Personaggio::getSalute).toArray();
         // When
         new Fulmine(5).formula(mago, null, avversari);
