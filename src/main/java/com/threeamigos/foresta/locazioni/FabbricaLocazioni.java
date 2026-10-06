@@ -22,8 +22,6 @@ public final class FabbricaLocazioni {
 		COSTRUTTORI.put(TipoLocazione.ROVINE, Rovine::new);
 		COSTRUTTORI.put(TipoLocazione.TEMPIO, Tempio::new);
 		COSTRUTTORI.put(TipoLocazione.GROTTA, Grotta::new);
-		COSTRUTTORI.put(TipoLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE, GrottaRecuperaIlMedaglione::new);
-		COSTRUTTORI.put(TipoLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, RovineRecuperaLeDerrateAlimentari::new);
 		COSTRUTTORI.put(TipoLocazione.CITTA_NYENA, CittaNyena::new);
 		COSTRUTTORI.put(TipoLocazione.CITTA_MALGAARD, CittaMalgaard::new);
 		COSTRUTTORI.put(TipoLocazione.CITTA_RUUNA, CittaRuuna::new);

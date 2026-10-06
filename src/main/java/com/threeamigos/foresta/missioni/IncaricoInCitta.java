@@ -29,7 +29,7 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
  * Se la città in cui si riscuote viene distrutta dopo l'accettazione, la missione fallisce.
  * <p>
  * Un incarico può avere una città fissa ({@link #getCittaFissa()}): è la storia di quella città (il medaglione di
- * Fleena, le derrate di Ruuna, vedi MissioneRecuperaBersaglio), e parte alla prima visita. Gli altri si prendono in
+ * Fleena, le derrate di Ruuna, vedi IncaricoDiCombattimentoBase), e parte alla prima visita. Gli altri si prendono in
  * una città qualsiasi, ma solo a una visita tranquilla, in cui nessun'altra missione mostra un intermezzo entrando in
  * città: non alla prima visita, quando parte la missione della città, né quando si torna a concluderne una; fra due
  * incarichi pronti nella stessa visita parte il primo controllato, l'altro aspetta.

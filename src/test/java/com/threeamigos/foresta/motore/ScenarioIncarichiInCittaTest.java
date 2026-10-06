@@ -47,7 +47,7 @@ class ScenarioIncarichiInCittaTest {
             assertEquals("INCARICO", mandragola.getPassoCorrente());
 
             // A medaglione ancora da trovare la visita è tranquilla: parte il primo incarico controllato, l'altro aspetta
-            medaglione.aggiungiProprieta("PASSO_CORRENTE", "RECUPERO");
+            medaglione.aggiungiProprieta("PASSO_CORRENTE", "CACCIA");
             caccia.controllaPreLocazione();
             mandragola.controllaPreLocazione();
             assertEquals("ACCETTAZIONE", caccia.getPassoCorrente());

@@ -1044,7 +1044,6 @@ public abstract class LocazioneBase implements Locazione {
 	
 	private Stato gestisciNuovaLocazione() {
 		Logger.log("LocazioneBase.NUOVA_LOCAZIONE");
-		CategoriaLocazione categoria = gruppo.getTipoLocazioneCorrente().getCategoria();
 		int numeroAvversari = gruppoAvversario.getNumeroPersonaggi();
 		custodita = numeroAvversari > 0;
 		if (numeroAvversari == 0) {
@@ -1052,17 +1051,13 @@ public abstract class LocazioneBase implements Locazione {
 				BusEventi.pubblica(new NotificaTestoFrase("Essendo il tesoro incustodito, " +
 						gruppo.chi() + " se ne impossessa."));
 			}
-			if (categoria != CategoriaLocazione.MISSIONE_SECONDARIA) {
-				gruppo.riposa(getTipoRiposo());
-			}
+			gruppo.riposa(getTipoRiposo());
 			setCompleta(true);
 			return Stato.FINE_LOCAZIONE;
 		} else {
 			setCompleta(false);
-			// Non possiamo fare amicizia o corrompere per completare le missioni secondarie! E nemmeno con delle
-			// ondate in arrivo: corrotta la prima, non arriverebbero le altre
-			//TODO il meccanismo delle missioni andrebbe gestito meglio
-			if (categoria != CategoriaLocazione.MISSIONE_SECONDARIA && !gruppoAvversario.hasOndateSuccessive()) {
+			// Né con delle ondate in arrivo: corrotta la prima, non arriverebbero le altre
+			if (!gruppoAvversario.hasOndateSuccessive()) {
 				Personaggio p;
 				for (int i = 0; i < numeroAvversari; i++) {
 					p = gruppoAvversario.getPersonaggio(i);

@@ -113,40 +113,6 @@ class ScenarioMissioniELocazioniTest {
 	}
 
 	@Test
-	void ilTerzoLadroDellaGrottaEAlmenoDiPrimoLivelloELaGrottaCompletaDiventaUnaGrotta() {
-		try (PartitaDiTest partita = PartitaDiTest.nuova(23)) {
-			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
-			CoordinateMD coordinate = Foresta.costruisciLocazioneUnica(TipoLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE, true);
-			partita.gruppo().setCoordinate(coordinate);
-			Locazione grotta = Foresta.costruisciIstanza(coordinate);
-			GruppoAvversario avversari = GruppoAvversario.getIstanza();
-			avversari.reimposta();
-			grotta.crea(partita.gruppo(), avversari);
-			assertEquals(4, avversari.getNumeroPersonaggi());
-			avversari.getPersonaggi().forEach(p -> assertTrue(p.getLivello() >= 1, p.getNome() + " livello " + p.getLivello()));
-
-			Foresta.getLocazioneMD(coordinate).aggiungiProprieta(LocazioneMD.COMPLETA, LocazioneMD.AFFERMATIVO);
-			grotta.azzeraLocazione(partita.gruppo());
-			assertEquals(TipoLocazione.GROTTA, Foresta.getLocazione(coordinate));
-			assertNull(Foresta.getCoordinateLocazioneUnica(TipoLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE));
-		}
-	}
-
-	@Test
-	void leRovineDelleDerrateCompleteDiventanoRovine() {
-		try (PartitaDiTest partita = PartitaDiTest.nuova(24)) {
-			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
-			CoordinateMD coordinate = Foresta.costruisciLocazioneUnica(TipoLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, true);
-			partita.gruppo().setCoordinate(coordinate);
-			Foresta.getLocazioneMD(coordinate).aggiungiProprieta(LocazioneMD.COMPLETA, LocazioneMD.AFFERMATIVO);
-			Locazione rovine = Foresta.costruisciIstanza(coordinate);
-			rovine.azzeraLocazione(partita.gruppo());
-			assertEquals(TipoLocazione.ROVINE, Foresta.getLocazione(coordinate));
-			assertNull(Foresta.getCoordinateLocazioneUnica(TipoLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI));
-		}
-	}
-
-	@Test
 	void annullareUnaSceltaEIlNoAllaFugaNonFannoPassareIlTurno() {
 		try (PartitaDiTest partita = PartitaDiTest.nuova(25)) {
 			partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,

@@ -17,11 +17,6 @@ public enum TipoLocazione {
 	TEMPIO(CategoriaLocazione.STANDARD),
 	GROTTA(CategoriaLocazione.STANDARD),
 	/*
-	 * Locazioni per le missioni secondarie
-	 */
-	GROTTA_RECUPERA_IL_MEDAGLIONE(CategoriaLocazione.MISSIONE_SECONDARIA, "la grotta dei ladri del Medaglione"),
-	ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI(CategoriaLocazione.MISSIONE_SECONDARIA, "il covo dei Troll ladri di derrate"),
-	/*
 	 * Città
 	 */
 	CITTA_NYENA(CategoriaLocazione.CITTA, "la città di Nyena"),

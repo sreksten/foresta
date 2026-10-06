@@ -169,10 +169,10 @@ Alcune missioni hanno bisogno di un **luogo**: un covo, un tempio, un castello. 
 Se la città in cui si riscuote viene distrutta, **ogni passo** (anche quelli del compito) ha una guardia `falliscoSe` che fa fallire la missione. Si riscuote in un'altra città se l'incarico è portare qualcosa a qualcuno (`getCittaDelRitorno`).
 
 Due famiglie:
-- **città fissa** (`getCittaFissa()`): la storia di una città (il medaglione di Fleena, le derrate di Ruuna, sulla base `MissioneRecuperaBersaglio`); parte alla prima visita e non si ripete;
+- **città fissa** (`getCittaFissa()`): la storia di una città (il medaglione di Fleena, le derrate di Ruuna: sottoclassi di `IncaricoDiCombattimentoBase` che hanno solo la città e la produzione di `missioni.txt` con la loro riga); parte alla prima visita e non si ripete;
 - **città qualsiasi**: si offre in una città qualsiasi, ma solo a una **visita tranquilla** (§5) e passata la pausa dopo l'incarico precedente; è ripetibile.
 
-`MissioneRecuperaBersaglio` aggiunge due passi al compito: `COVO` (compare il covo, rivendicato dalla missione, subito dopo l'accettazione) e `RECUPERO` (a fine locazione, nel covo completato, il claim passa sulla città di ritorno e si torna a riscuotere).
+`IncaricoDiCombattimentoBase` aggiunge due passi al compito: `COVO` (la missione rivendica un posto della classe giusta, lo segna sulla mappa subito dopo l'accettazione) e `CACCIA` (a fine locazione, sconfitti tutti i nemici, si torna a riscuotere). Il medaglione e le derrate sono incarichi di questa famiglia, con le stesse regole delle altre caselle rivendicate (§6): non hanno più locazioni uniche proprie.
 
 ## 9. Come si scrive una missione nuova
 

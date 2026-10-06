@@ -10,6 +10,9 @@ import java.util.Set;
  * Un incarico di combattimento (vedi IncaricoDiCombattimento), letto da una riga di INCARICO_DI_COMBATTIMENTO in
  * missioni.txt, che ne descrive i campi: chi lo chiede, chi va sconfitto, dove, quanto si paga e i testi.
  * Nei testi %CAPO% è il nome del capo, se c'è (vedi CapoDellaRiga).
+ * Una riga può anche essere la storia di una città (vedi IncaricoDiCombattimentoBase.getCittaFissa), come il medaglione
+ * di Fleena: allora sta in una produzione sua e scrive la descrizione della missione (DESCRIZIONE=,
+ * DESCRIZIONE_RITORNO=).
  */
 public final class CombattimentoRichiesto {
 
@@ -40,12 +43,14 @@ public final class CombattimentoRichiesto {
 	private final String vittoria;
 	private final String ringraziamento;
 	private final String ricordo;
+	private final String descrizione;
+	private final String descrizioneAlRitorno;
 
 	private CombattimentoRichiesto(String riga) {
 		this.riga = riga;
 		CampiDiGrammatica campi = CampiDiGrammatica.da(riga, OndateDellaRiga.conICampiDelleOndate("CHIAVE", "TIPO", "ASPETTO",
 				"MANDANTE", "NEMICO", "NUMERO", "CAPO", "RESA", "DUELLO", "LUOGO", "MONETE", "TITOLO", "RICHIESTA", "BATTUTA",
-				"RISPOSTA", "VITTORIA", "RINGRAZIAMENTO", "RICORDO"));
+				"RISPOSTA", "VITTORIA", "RINGRAZIAMENTO", "RICORDO", "DESCRIZIONE", "DESCRIZIONE_RITORNO"));
 		chiave = campi.obbligatorio("CHIAVE");
 		tipo = campi.enumerato("TIPO", TipoMissione.class);
 		aspetto = campi.enumerato("ASPETTO", AspettoDelMandante.class);
@@ -77,6 +82,11 @@ public final class CombattimentoRichiesto {
 		vittoria = campi.obbligatorio("VITTORIA");
 		ringraziamento = campi.obbligatorio("RINGRAZIAMENTO");
 		ricordo = campi.obbligatorio("RICORDO");
+		descrizione = campi.facoltativo("DESCRIZIONE").orElse(null);
+		descrizioneAlRitorno = campi.facoltativo("DESCRIZIONE_RITORNO").orElse(null);
+		if ((descrizione == null) != (descrizioneAlRitorno == null)) {
+			throw new IllegalArgumentException("DESCRIZIONE e DESCRIZIONE_RITORNO vanno insieme: " + riga);
+		}
 	}
 
 	/**
@@ -178,6 +188,23 @@ public final class CombattimentoRichiesto {
 	 */
 	public String getRicordo() {
 		return ricordo;
+	}
+
+	/**
+	 * Che cosa dice la descrizione della missione finché i nemici non sono sconfitti, se la riga la scrive (DESCRIZIONE=,
+	 * per gli incarichi che sono una storia: un medaglione da recuperare), altrimenti null e la descrizione la compone la
+	 * missione dal mandante e dai nemici.
+	 */
+	public String getDescrizione() {
+		return descrizione;
+	}
+
+	/**
+	 * Che cosa dice la descrizione una volta sconfitti, da riscuotere in città (DESCRIZIONE_RITORNO=): null se la
+	 * riga non scrive la descrizione.
+	 */
+	public String getDescrizioneAlRitorno() {
+		return descrizioneAlRitorno;
 	}
 
 	/**

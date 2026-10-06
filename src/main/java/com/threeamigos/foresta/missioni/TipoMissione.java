@@ -33,7 +33,7 @@ public enum TipoMissione {
      * Esempio: estrarre minerali, gemme, cristalli da una miniera
      */
     MINIERA(SupertipoMissione.ACQUISIZIONE),
-    // Coperto da: RecuperaIlMedaglione, RecuperaLeDerrateAlimentari (riusabili per recuperare un oggetto generico qualsiasi)
+    // Coperto da: RecuperaIlMedaglione, RecuperaLeDerrateAlimentari (incarichi di combattimento con la città fissa; un oggetto qualsiasi si recupera con una riga di INCARICO_DI_COMBATTIMENTO)
     /**
      * Esempio: ritrovare un amuleto o un cimelio di famiglia e riportarlo al legittimo proprietario
      */

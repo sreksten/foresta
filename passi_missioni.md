@@ -9,7 +9,7 @@ Il codice è in `missioni/`; le grammatiche in `src/main/resources/com/threeamig
 - **Annotare i `TipoMissione` coperti.** Sopra ogni valore di `missioni/TipoMissione.java` coperto da una missione vera c'è un commento `// Coperto da: NomeClasse` (più classi separate da virgole, con fra parentesi il mandante o il caso). Aggiungendo o togliendo una missione si aggiornano questi commenti.
 - **Tipi non sviluppabili.** I tipi impossibili nella Foresta stanno **commentati nell'enum**, con `// Non fattibile nella Foresta: ...` e il motivo; quelli che non si addicono al tono del gioco `// Non adatto al tono del gioco: ...`; non vanno riproposti. I tipi che per ora non vale la pena sviluppare restano nell'enum con `// Da non sviluppare per ora: ...` e il motivo.
 - **Le missioni particolari** (andare a bere in tutte le locande, disturbare dieci eremiti) non sono missioni standard di un gioco fantasy e non si annotano.
-- **`RICERCA_OGGETTO`** è coperto da `LOggettoSmarrito` (oggetti comuni e ripetibili); la ricerca dei leggendari è un'altra cosa (`CACCIA_AL_TESORO`, §4). **`RECUPERO`** è coperto dal medaglione e dalle derrate, riusabili per un oggetto qualsiasi.
+- **`RICERCA_OGGETTO`** è coperto da `LOggettoSmarrito` (oggetti comuni e ripetibili); la ricerca dei leggendari è un'altra cosa (`CACCIA_AL_TESORO`, §4). **`RECUPERO`** è coperto dal medaglione e dalle derrate, che sono incarichi di combattimento con la città fissa; per recuperare un oggetto qualsiasi basta una riga in più.
 - Una riga di grammatica di molti incarichi dichiara il suo tipo nel campo `TIPO=` (un valore di `TipoMissione`, letto con controllo): è il modo in cui il contenuto si collega alla mappatura del §5.
 
 ## 2. Il vocabolario dei passi
@@ -86,8 +86,8 @@ Quasi tutte nascono sopra `IncaricoInCitta` (vedi [`gestione_missioni.md`](gesti
 
 | Missione | Dove | Compito | Ricompensa |
 | :--- | :--- | :--- | :--- |
-| `RecuperaIlMedaglione` | Fleena | un uomo chiede il medaglione di famiglia rubato da una banda di ladri: compare la grotta dei ladri (`COVO`), si recupera (`RECUPERO`) e si torna in città | 20 monete |
-| `RecuperaLeDerrateAlimentari` | Ruuna | stessa struttura (`MissioneRecuperaBersaglio`), con il covo dei Troll ladri di derrate | 20 monete |
+| `RecuperaIlMedaglione` | Fleena | un uomo chiede il medaglione di famiglia rubato da una banda di quattro ladri: la missione rivendica una grotta e la segna sulla mappa (`COVO`), si sconfiggono i ladri (`CACCIA`) e si torna in città; nemici, testi e descrizione stanno nella produzione `RECUPERA_IL_MEDAGLIONE` di `missioni.txt` | 20 monete |
+| `RecuperaLeDerrateAlimentari` | Ruuna | stessa struttura (`IncaricoDiCombattimentoBase`), con sette Troll ladri di derrate fra delle rovine; produzione `RECUPERA_LE_DERRATE_ALIMENTARI` | 20 monete |
 
 ### Combattimenti
 
@@ -96,7 +96,7 @@ Quasi tutte nascono sopra `IncaricoInCitta` (vedi [`gestione_missioni.md`](gesti
 | `CacciaAiGoblin` | un mercante chiede di liberare le strade: 3 goblin sconfitti dovunque (`sconfiggi`); 15 monete |
 | `LaTagliaSullaBanda` | una taglia sul capo di una banda di 3 hobgoblin in un bosco rivendicato e segnato sulla mappa (`combatti`); 30 monete; il capo ha un nome dalla grammatica |
 | `CacciatoreDiTaglie` | come sopra, ma la banda (3 goblin con un capo hobgoblin) si nasconde fra delle rovine **non segnate**: il mandante dice solo in che direzione; basta abbattere il capo (`combattiIlCapo`); 30 monete |
-| `IncaricoDiCombattimento` | la famiglia più ampia: qualcuno vuole sconfitto qualcosa che si nasconde in un posto della classe giusta (`COVO`, poi `CACCIA`), descritto da una riga di `INCARICO_DI_COMBATTIMENTO` (`CombattimentoRichiesto`): vendette, duelli, battaglie a ondate, imboscate, cariche, blocchi, assedi, bestie, pulizie di dungeon, riti di combattimento, titoli nobiliari buffi, la carovana dell'usuraio... Una riga può avere capo con nome, resa, duello e ondate |
+| `IncaricoDiCombattimento` | la famiglia più ampia: qualcuno vuole sconfitto qualcosa che si nasconde in un posto della classe giusta (`COVO`, poi `CACCIA`), descritto da una riga di `INCARICO_DI_COMBATTIMENTO` (`CombattimentoRichiesto`): vendette, duelli, battaglie a ondate, imboscate, cariche, blocchi, assedi, bestie, pulizie di dungeon, riti di combattimento, titoli nobiliari buffi, la carovana dell'usuraio... Una riga può avere capo con nome, resa, duello e ondate. La logica sta in `IncaricoDiCombattimentoBase`, da cui derivano anche le storie di Fleena e di Ruuna (una produzione con una riga sola, che scrive anche la descrizione con `DESCRIZIONE=` e `DESCRIZIONE_RITORNO=`) |
 | `SconfiggiLaStrega` `SconfiggiIlLich` `SconfiggiIlMinotauroGigante` `SconfiggiLIdra` `SconfiggiIlDrago` | le cinque missioni principali (vedi [`gestione_missioni.md`](gestione_missioni.md) §7) |
 
 ### Soccorso e scorta

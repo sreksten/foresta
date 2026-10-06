@@ -1312,8 +1312,6 @@ final class GiocatoreAutomatico {
 					return 0.2d;
 				case CASTELLO:
 					return meta ? 5.0d : Double.POSITIVE_INFINITY;
-				case MISSIONE_SECONDARIA:
-					return 1.5d;
 				default:
 					break;
 			}

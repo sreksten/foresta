@@ -395,8 +395,7 @@ public class Foresta {
 
 	/**
 	 * Le locazioni da segnalare sulla mappa con Indicatore.gif: quelle di un artefatto di cui
-	 * si è saputo tramite Informazioni, più il bersaglio, ancora da raggiungere, di una missione
-	 * "Recupera le derrate alimentari" o "Recupera il medaglione" attualmente attiva.
+	 * si è saputo tramite Informazioni, più le caselle rivendicate dalle missioni a passi attive che il gruppo conosce.
 	 */
 	public static List<CoordinateMD> getCoordinateDaSegnalare() {
 		Set<CoordinateMD> coordinateDaSegnalare = new LinkedHashSet<>(RegistroArtefatti.getLocalizzazioniConosciute());

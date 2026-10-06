@@ -3,6 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.interni.InternoAvversarioSconfitto;
 import com.threeamigos.foresta.missioni.LaTagliaSullaBanda;
 import com.threeamigos.foresta.missioni.Missione;
+import com.threeamigos.foresta.missioni.RecuperaIlMedaglione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -22,7 +23,11 @@ class ScenarioCaselleSegnalateTest {
         try (PartitaDiTest partita = PartitaDiTest.nuova(22)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
                     () -> partita.spostaGruppoIn(TipoLocazione.CITTA_FLEENA));
-            CoordinateMD covo = Foresta.getCoordinateLocazioneUnica(TipoLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE);
+            Missione medaglione = RegistroMissioni.getTutteLeMissioni().stream().filter(RecuperaIlMedaglione.class::isInstance)
+                    .findFirst().orElseThrow(AssertionError::new);
+            CoordinateMD covo = RegistroMissioni.getLocazioneOccupata(medaglione);
+            assertNotNull(covo);
+            assertEquals(TipoLocazione.GROTTA, Foresta.getLocazione(covo), "una grotta come le altre");
             assertTrue(Foresta.getCoordinateDaSegnalare().contains(covo));
 
             // I castelli no, anche se conosciuti

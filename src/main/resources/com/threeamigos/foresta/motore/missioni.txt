@@ -625,6 +625,37 @@ INCARICO_DI_COMBATTIMENTO
     RINGRAZIAMENTO=Squillino le trombe! Anzi, la tromba: l'altra è dal ricettatore. Da oggi siete [#TITOLO_NOBILE], con tutti gli onori e nessuna rendita.;\
     RICORDO=Questa palude è il feudo di un [#TITOLO_NOBILE], con tutti gli onori e nessuna rendita.
 
+# ---------------------------------------------------------------------------------------------
+# Le storie delle città (vedi RecuperaIlMedaglione e RecuperaLeDerrateAlimentari)
+# ---------------------------------------------------------------------------------------------
+#
+# Sono incarichi di combattimento come quelli di qui sopra (stessi campi), ma ognuno è la storia di una città: ha una
+# produzione tutta sua, con una riga sola, e non si pesca a caso. Parte alla prima visita alla città e non si ripete.
+# Scrivono anche la descrizione della missione (DESCRIZIONE= finché i nemici non sono sconfitti,
+# DESCRIZIONE_RITORNO= quando si torna a riscuotere), che negli incarichi pescati la missione compone da sola.
+
+RECUPERA_IL_MEDAGLIONE
+    CHIAVE=MEDAGLIONE_DI_FLEENA;TIPO=RECUPERO;ASPETTO=QUALUNQUE;MANDANTE=il derubato;NEMICO=LADRO;NUMERO=4;LUOGO=GROTTA;\
+    MONETE=20;TITOLO=Recupera il medaglione;\
+    RICHIESTA=Viandanti, vi prego, aiutatemi! Una banda di ladri mi ha rubato il medaglione di famiglia, l'unico ricordo di mia madre.;\
+    BATTUTA=Consideralo già al tuo collo.;RISPOSTA=Grazie, viandanti! Che la fortuna vi accompagni.;\
+    VITTORIA=I ladri sono a terra e il medaglione è di nuovo nelle vostre mani. Si può tornare in città per reclamare la ricompensa.;\
+    RINGRAZIAMENTO=Il mio medaglione! Siete tornati davvero! Grazie, grazie di cuore.;\
+    RICORDO=In questa grotta i ladri nascondevano il medaglione rubato.;\
+    DESCRIZIONE=Un uomo ti ha chiesto di recuperare il suo prezioso medaglione rubato da una banda di ladri.;\
+    DESCRIZIONE_RITORNO=Torna in città per riconsegnare il medaglione rubato in cambio della ricompensa.
+
+RECUPERA_LE_DERRATE_ALIMENTARI
+    CHIAVE=DERRATE_DI_RUUNA;TIPO=RECUPERO;ASPETTO=QUALUNQUE;MANDANTE=il Borgomastro;NEMICO=TROLL;NUMERO=7;LUOGO=ROVINE;\
+    MONETE=20;TITOLO=Recupera le derrate alimentari;\
+    RICHIESTA=Forestieri! Sono il Borgomastro di Ruuna, e la città ha bisogno di voi. Una banda di Troll ha fatto sparire il carico di derrate per l'inverno.;\
+    BATTUTA=Ai Troll ci pensiamo noi.;RISPOSTA=Riportate le derrate e Ruuna non patirà la fame.;\
+    VITTORIA=I Troll sono sconfitti e le derrate alimentari sono state recuperate. Si può tornare in città per reclamare la ricompensa.;\
+    RINGRAZIAMENTO=Le derrate! Quest'inverno Ruuna non patirà la fame.;\
+    RICORDO=Fra queste rovine i Troll nascondevano le derrate di Ruuna.;\
+    DESCRIZIONE=Il Borgomastro chiede aiuto: una banda di Troll ha fatto sparire un carico di derrate alimentari. Offre 20 monete come ricompensa.;\
+    DESCRIZIONE_RITORNO=Torna in città per riconsegnare le derrate alimentari recuperate e ottenere la ricompensa di 20 monete.
+
 # I titoli nobiliari buffi che Sua Maestà concede (vedi le righe di TITOLO_NOBILIARE qui sopra) e i nemici da
 # sconfiggere per averli, pescati a caso. Le alternative pesano poco perché le righe che le usano non escano più
 # spesso delle altre (vedi GrammarBean, il peso delle alternative che contengono riferimenti).

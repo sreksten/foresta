@@ -67,16 +67,12 @@ class ScenarioNomiDelleRovineTest {
     }
 
     @Test
-    void leRovineDiUnCastelloDiUnaCittaEDelCovoPrendonoIlNomeDaQuelloCheCera() {
+    void leRovineDiUnCastelloEDiUnaCittaPrendonoIlNomeDaQuelloCheCera() {
         try (PartitaDiTest partita = PartitaDiTest.nuova(94)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
             CoordinateMD ruuna = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CITTA_RUUNA);
             Foresta.distruggiLocazioneUnica(TipoLocazione.CITTA_RUUNA, TipoLocazione.ROVINE);
             assertEquals("le Rovine della città di Ruuna", Foresta.getLocazioneMD(ruuna).getNome());
-
-            CoordinateMD covo = Foresta.costruisciLocazioneUnica(TipoLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, true);
-            Foresta.distruggiLocazioneUnica(TipoLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, TipoLocazione.ROVINE);
-            assertEquals("le Rovine del covo dei Troll ladri di derrate", Foresta.getLocazioneMD(covo).getNome());
 
             RegistroMissioni.getMissionePrincipale().getMissioniSecondarie().forEach(m -> m.controllaPreLocazione());
             CoordinateMD lich = Foresta.getCoordinateLocazioneUnica(TipoLocazione.CASTELLO_LICH);

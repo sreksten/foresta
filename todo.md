@@ -31,7 +31,6 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
      - quando la UI gestisce la notifica il personaggio può non esserci più (un avversario morto esce dal gruppo, un'ondata sostituisce la precedente, un ospite lascia il gruppo), e ritrovarlo per id fallirebbe; per non perderne i dati l'evento dovrebbe portarsene una copia, cioè rifare a mano `VistaPersonaggio`.
 
      L'asimmetria è voluta: dal motore alla UI le viste, perché la UI legge e mostra; dalla UI al motore gli identificativi (punto 7), perché il motore è il proprietario, ritrova da sé l'oggetto vero e ignora il comando se non lo trova.
-- **`TipoLocazione`.** `GROTTA_RECUPERA_IL_MEDAGLIONE` e `ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI` servono ancora? Dovrebbero essere state superate.
 - **`Notizie`** si mette in ascolto di una notizia (delle locande) invece di riceverne la pubblicazione: approccio inusuale.
 - **Nomi dei modelli dati.** Alcuni non finiscono per `MD` (`ModificatoreArtefatto`).
 

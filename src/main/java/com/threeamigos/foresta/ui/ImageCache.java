@@ -169,13 +169,11 @@ public class ImageCache {
 		}
 		d = BufferedImageBuilder.buildBufferedImage("locazioni/Grotta.gif");
 		locazioni.put(TipoLocazione.GROTTA, d);
-		locazioni.put(TipoLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE, d);
 		locazioni.put(TipoLocazione.LOCANDA, BufferedImageBuilder.buildBufferedImage("locazioni/Locanda.gif"));
 		locazioni.put(TipoLocazione.PALUDE, BufferedImageBuilder.buildBufferedImage("locazioni/Palude.gif"));
 		locazioni.put(TipoLocazione.RADURA, BufferedImageBuilder.buildBufferedImage("locazioni/Radura.gif"));
 		d = BufferedImageBuilder.buildBufferedImage("locazioni/Rovine.gif");
 		locazioni.put(TipoLocazione.ROVINE, d);
-		locazioni.put(TipoLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, d);
 		locazioni.put(TipoLocazione.TEMPIO, BufferedImageBuilder.buildBufferedImage("locazioni/Tempio.gif"));
 
 		mappa = new EnumMap<>(TipoLocazione.class);
@@ -198,13 +196,11 @@ public class ImageCache {
 		}
 		d = BufferedImageBuilder.buildBufferedImage("mappa/Grotta.gif");
 		mappa.put(TipoLocazione.GROTTA, d);
-		mappa.put(TipoLocazione.GROTTA_RECUPERA_IL_MEDAGLIONE, d);
 		mappa.put(TipoLocazione.LOCANDA, BufferedImageBuilder.buildBufferedImage("mappa/Locanda.gif"));
 		mappa.put(TipoLocazione.PALUDE, BufferedImageBuilder.buildBufferedImage("mappa/Palude.gif"));
 		mappa.put(TipoLocazione.RADURA, BufferedImageBuilder.buildBufferedImage("mappa/Radura.gif"));
 		d = BufferedImageBuilder.buildBufferedImage("mappa/Rovine.gif");
 		mappa.put(TipoLocazione.ROVINE, d);
-		mappa.put(TipoLocazione.ROVINE_RECUPERA_LE_DERRATE_ALIMENTARI, d);
 		mappa.put(TipoLocazione.TEMPIO, BufferedImageBuilder.buildBufferedImage("mappa/Tempio.gif"));
 		segnalino = BufferedImageBuilder.buildBufferedImage("mappa/Segnalino.gif");
 		indicatore = BufferedImageBuilder.buildBufferedImage("mappa/Indicatore.gif");
