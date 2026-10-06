@@ -81,13 +81,13 @@ final class PartitaDiTest implements AutoCloseable {
 		RegistroArtefatti.registrati();
 		RegistroMissioni.registrati();
 
-		registratore.ascolta(InternoErrore.class, InternoException.class, InternoStatoDiGioco.class,
+		registratore.ascolta(InternoErrore.class, InternoException.class, InternoFaseDiGioco.class,
 				InternoAggiornamentoComandiDisponibili.class, RichiestaSelezioneDirezione.class,
 				RichiestaAperturaInventarioCommerciante.class, RichiestaAperturaInventarioFornitore.class,
 				NotificaTestoFrase.class, NotificaTestoParagrafo.class, NotificaPaginaIntermezzo.class,
 				NotificaApprovazioneAcquistoArtefatto.class, NotificaRifiutoAcquistoArtefatto.class,
 				NotificaApprovazioneVenditaArtefatto.class, NotificaRifiutoVenditaArtefatto.class);
-		BusEventi.iscriviti(InternoStatoDiGioco.class, e -> comandiDisponibili = new ArrayList<>(e.getComandiPossibili()));
+		BusEventi.iscriviti(InternoFaseDiGioco.class, e -> comandiDisponibili = new ArrayList<>(e.getComandiPossibili()));
 		BusEventi.iscriviti(InternoAggiornamentoComandiDisponibili.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaSelezioneDirezione.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaAperturaInventarioCommerciante.class, this::aggiornaComandi);

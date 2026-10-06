@@ -2,44 +2,44 @@ package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.motore.Stato;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.FaseDiGioco;
 
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 
 /**
- * Evento interno - l'automa annuncia il nuovo stato in cui il gioco si trova.
+ * Evento interno - l'automa annuncia alla UI la nuova fase del gioco (vedi FaseDiGioco).
  * Può portare con se una lista di comandi possibili. Se non ci sono, valgono i comandi precedentemente impostati.
  *
  * @author Stefano Reksten
  */
-public class InternoStatoDiGioco extends EventoBase {
+public class InternoFaseDiGioco extends EventoBase {
 
-    private final Stato stato;
+    private final FaseDiGioco fase;
     private final Collection<Comando> comandiPossibili;
 
-    public InternoStatoDiGioco(Stato stato) {
-        super(TipoEvento.INTERNO_STATO_DI_GIOCO);
-        this.stato = stato;
+    public InternoFaseDiGioco(FaseDiGioco fase) {
+        super(TipoEvento.INTERNO_FASE_DI_GIOCO);
+        this.fase = fase;
         this.comandiPossibili = Collections.emptyList();
     }
 
-    public InternoStatoDiGioco(Stato stato, Comando ... comandiPossibili) {
-        super(TipoEvento.INTERNO_STATO_DI_GIOCO);
-        this.stato = stato;
+    public InternoFaseDiGioco(FaseDiGioco fase, Comando ... comandiPossibili) {
+        super(TipoEvento.INTERNO_FASE_DI_GIOCO);
+        this.fase = fase;
         this.comandiPossibili = Arrays.asList(comandiPossibili);
     }
 
-    public InternoStatoDiGioco(Stato stato, Collection<Comando> comandiPossibili) {
-        super(TipoEvento.INTERNO_STATO_DI_GIOCO);
-        this.stato = stato;
+    public InternoFaseDiGioco(FaseDiGioco fase, Collection<Comando> comandiPossibili) {
+        super(TipoEvento.INTERNO_FASE_DI_GIOCO);
+        this.fase = fase;
         this.comandiPossibili = comandiPossibili;
     }
 
-    public Stato getStato() {
-        return stato;
+    public FaseDiGioco getFase() {
+        return fase;
     }
 
     public Collection<Comando> getComandiPossibili() {

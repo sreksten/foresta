@@ -40,11 +40,10 @@ class DipendenzeUITest {
 	private static final Set<String> PACCHETTI_DI_SERVIZIO = new HashSet<>(Arrays.asList("strumenti", "intermezzi"));
 
 	/**
-	 * Le dipendenze che restano da togliere: quando se ne toglie una, va tolta anche da qui (il test lo pretende)
+	 * Le dipendenze che restano da togliere (oggi nessuna): quando se ne toglie una, va tolta anche da qui (il test
+	 * lo pretende)
 	 */
-	private static final Set<String> ECCEZIONI = new TreeSet<>(Arrays.asList(
-			// ForestaUI lo legge da InternoStatoDiGioco per sapere se il gioco è ancora al logo o all'intro
-			"motore.Stato"));
+	private static final Set<String> ECCEZIONI = new TreeSet<>();
 
 	private static final Pattern RIFERIMENTO = Pattern.compile("\\bcom\\.threeamigos\\.foresta\\.([a-z]+)\\.([A-Z]\\w*|\\*)");
 

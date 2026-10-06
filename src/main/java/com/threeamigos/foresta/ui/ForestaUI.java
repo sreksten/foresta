@@ -9,7 +9,7 @@ import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.motore.Stato;
+import com.threeamigos.foresta.tipi.FaseDiGioco;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
@@ -47,7 +47,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	private final boolean barraDock;
 	private final GestorePunteggi gestorePunteggi;
 	private final VistaPartita vistaPartita;
-	private Stato statoDiGioco;
+	private FaseDiGioco faseDiGioco;
 
 	/**
 	 * @param saltaLogoIniziale vero per non mostrare il logo iniziale (per esempio nelle partite di prova): si
@@ -109,7 +109,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(RichiestaSelezioneIncantesimoDaLanciare.class, this::gestisciEventoSelezioneIncantesimoDaLanciare);
 		BusEventi.iscriviti(RichiestaSelezioneSiNo.class, this::gestisciEventoSelezioneSiNo);
 		BusEventi.iscriviti(RichiestaSelezioneMissione.class, this::gestisciEventoSelezioneMissione);
-		BusEventi.iscriviti(InternoStatoDiGioco.class, this::gestisciEventoStatoDiGioco);
+		BusEventi.iscriviti(InternoFaseDiGioco.class, this::gestisciEventoFaseDiGioco);
 		BusEventi.iscriviti(NotificaVariazioneEffettoDiStatoPersonaggio.class, this::gestisciEventoVariazioneEffettoDiStato);
 		BusEventi.iscriviti(NotificaVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
 		BusEventi.iscriviti(NotificaVariazioneStatoVitalePersonaggio.class, this::gestisciEventoVariazioneStatoVitalePersonaggio);
@@ -244,9 +244,9 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	public void tick() {
-		if (statoDiGioco == Stato.LOGO_INIZIALE) {
+		if (faseDiGioco == FaseDiGioco.LOGO_INIZIALE) {
 			avanzaLogoIniziale();
-		} else if (statoDiGioco == Stato.INTRO) {
+		} else if (faseDiGioco == FaseDiGioco.INTRO) {
 			displayableCanvas.avanzaIntro();
 		}
 	}
@@ -417,55 +417,45 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.TESTO);
 	}
 
-	private void gestisciEventoStatoDiGioco(InternoStatoDiGioco evento) {
-		statoDiGioco = evento.getStato();
-		switch(statoDiGioco) {
+	private void gestisciEventoFaseDiGioco(InternoFaseDiGioco evento) {
+		faseDiGioco = evento.getFase();
+		switch (faseDiGioco) {
 			case LOGO_INIZIALE:
 				avviaLogoIniziale();
 				break;
 
 			case INTRO:
-				 // Richiama la schermata o animazione di introduzione
+				// Richiama la schermata o animazione di introduzione
 				displayableCanvas.avviaIntro();
 				// La prima schermata (loghi o classifica) deve restare per un periodo intero
 				temporizzatore.iniziaDopo(5_000);
 				impostaAzioni(evento.getComandiPossibili());
 				break;
 
-			case FILE_DI_SALVATAGGIO_NON_VALIDO:
-				displayableCanvas.scriviGrande("File di salvataggio non valido.");
-				impostaAzioni(evento.getComandiPossibili());
-				break;
-
-			case PRE_GAME_ATTESA_NOME_PERSONAGGIO:
+			case NOME_PERSONAGGIO:
 				temporizzatore.termina();
 				displayableCanvas.scriviGrande("Scegli il nome del tuo personaggio o lascialo vuoto per un personaggio casuale.");
 				prompt.setVisible(true);
 				impostaAzioni(Collections.emptyList());
 				break;
 
-			case PRE_GAME_ATTESA_SESSO_PERSONAGGIO:
+			case SESSO_PERSONAGGIO:
 				displayableCanvas.scriviGrande("Scegli il sesso di " + prompt.getText());
 				impostaAzioni(evento.getComandiPossibili());
 				break;
 
-			case PRE_GAME_ATTESA_CLASSE_PERSONAGGIO:
+			case CLASSE_PERSONAGGIO:
 				displayableCanvas.scriviGrande("Scegli la classe di " + prompt.getText());
 				impostaAzioni(evento.getComandiPossibili());
 				break;
 
-			case ATTESA_DIREZIONE:
-				BusEventi.pubblica(new InternoErrore("Non dovrei arrivare in gestisciEventoStatoDiGioco in stato ATTESA_DIREZIONE"));
-				impostaAzioni(evento.getComandiPossibili());
-				break;
-
-			case SELEZIONE_SALVATAGGIO_DA_SCRIVERE:
+			case SALVATAGGIO_DA_SCRIVERE:
 				// La schermata è già aperta, con le testate, da RichiestaSelezioneSlotPerSalvataggio
 				impostaAzioni(evento.getComandiPossibili());
 				break;
 
 			default:
-				throw new IllegalArgumentException("Stato di gioco non ancora gestito: " + evento.getStato());
+				throw new IllegalArgumentException("Fase di gioco non ancora gestita: " + evento.getFase());
 		}
 	}
 

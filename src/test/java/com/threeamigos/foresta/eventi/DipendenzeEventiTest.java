@@ -48,9 +48,7 @@ class DipendenzeEventiTest {
 			"interni/InternoRisultatoValutazionePersonaggioAttaccante.java",
 			"interni/InternoSpostamentoArtefatto.java",
 			"interni/InternoStoccaggioArtefatto.java",
-			"interni/InternoVenditaArtefatto.java",
-			// ForestaUI lo legge per sapere in che stato è l'Automa (todo.md, Architettura, punto 6)
-			"interni/InternoStatoDiGioco.java"));
+			"interni/InternoVenditaArtefatto.java"));
 
 	@Test
 	void gliEventiNonPortanoClassiDelDominio() throws IOException {

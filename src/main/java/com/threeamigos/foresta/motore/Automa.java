@@ -28,6 +28,7 @@ import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.FaseDiGioco;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
@@ -293,7 +294,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		stato = Stato.LOGO_INIZIALE;
 		logoInizialeMostrato = false;
 		motorePrecaricato = false;
-		BusEventi.pubblica(new InternoStatoDiGioco(Stato.LOGO_INIZIALE));
+		BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.LOGO_INIZIALE));
 		esecutorePrecaricamento.execute(() -> {
 			ProduttoreDiTestiCasuale.precarica();
 			GeneratoreArtefatti.precarica();
@@ -319,7 +320,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 */
 	private void mostraIntro() {
 		stato = Stato.INTRO;
-		BusEventi.pubblica(new InternoStatoDiGioco(Stato.INTRO, getComandiPossibiliInStatoIntro()));
+		BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.INTRO, getComandiPossibiliInStatoIntro()));
 	}
 
 	private Collection<Comando> getComandiPossibiliInStatoIntro() {
@@ -435,7 +436,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		switch (comando) {
 			case PERGAMENA:
 				stato = Stato.PRE_GAME_ATTESA_NOME_PERSONAGGIO;
-				BusEventi.pubblica(new InternoStatoDiGioco(stato));
+				BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.NOME_PERSONAGGIO));
 				return Esito.FERMATI;
 			case FLOPPY_CARICA:
 				stato = Stato.PRE_GAME_SELEZIONE_SALVATAGGIO_DA_LEGGERE;
@@ -458,7 +459,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			BusEventi.pubblica(new InternoCaricamentoCompletato(new ArrayList<>(Notizie.getUltimiMessaggi())));
 			return Esito.CONTINUA_CON_INGRESSO;
 		} else {
-			BusEventi.pubblica(new InternoStatoDiGioco(Stato.INTRO, getComandiPossibiliInStatoIntro()));
+			BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.INTRO, getComandiPossibiliInStatoIntro()));
 			stato = Stato.INTRO;
 			return Esito.FERMATI;
 		}
@@ -486,17 +487,17 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		}
 
 		stato = Stato.PRE_GAME_ATTESA_SESSO_PERSONAGGIO;
-		BusEventi.pubblica(new InternoStatoDiGioco(stato, Comando.MASCHIO, Comando.FEMMINA));
+		BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.SESSO_PERSONAGGIO, Comando.MASCHIO, Comando.FEMMINA));
 		return Esito.FERMATI;
 	}
 
 	private Esito gestisciComandoInStatoPreGameAttesaSessoPersonaggio(Comando comando) {
 		stato = Stato.PRE_GAME_ATTESA_CLASSE_PERSONAGGIO;
 		if (comando == Comando.FEMMINA) {
-			BusEventi.pubblica(new InternoStatoDiGioco(stato, Comando.GUERRIERA, Comando.LADRA,
+			BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.CLASSE_PERSONAGGIO, Comando.GUERRIERA, Comando.LADRA,
 					Comando.CANTASTORIE, Comando.ELFA, Comando.MAGA));
 		} else {
-			BusEventi.pubblica(new InternoStatoDiGioco(stato, Comando.GUERRIERO, Comando.LADRO,
+			BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.CLASSE_PERSONAGGIO, Comando.GUERRIERO, Comando.LADRO,
 					Comando.BARDO, Comando.ELFO, Comando.MAGO));
 		}
 		return Esito.FERMATI;
@@ -1171,7 +1172,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				stato = Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE;
 				// Le testate dei salvataggi per la schermata di scelta: la UI non legge i salvataggi da sé
 				BusEventi.pubblica(new RichiestaSelezioneSlotPerSalvataggio(gestoreSalvataggi.getSalvataggiDisponibili()));
-				BusEventi.pubblica(new InternoStatoDiGioco(Stato.SELEZIONE_SALVATAGGIO_DA_SCRIVERE,
+				BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.SALVATAGGIO_DA_SCRIVERE,
 						Comando.NUMERO_1, Comando.NUMERO_2, Comando.NUMERO_3, Comando.NUMERO_4, Comando.NUMERO_5,
 						Comando.NO));
 				return Esito.FERMATI;

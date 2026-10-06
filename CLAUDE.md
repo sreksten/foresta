@@ -50,5 +50,5 @@ Panoramica in `motore_grafico.md`.
 ## Build e test
 
 `mvn test` esegue tutti i test (JUnit 5, in `src/test/java`); al 2026-10-06 sono 718, tutti verdi (16 saltati).
-`ui/DipendenzeUITest` controlla che la UI non importi motore e dominio, `eventi/DipendenzeEventiTest` che gli eventi non portino classi del dominio: le dipendenze che restano sono nelle loro `ECCEZIONI`.
+`ui/DipendenzeUITest` controlla che la UI non importi motore e dominio, `eventi/DipendenzeEventiTest` che gli eventi non portino classi del dominio: le dipendenze che restano da togliere sono nelle loro `ECCEZIONI` (per la UI oggi nessuna).
 Le cose da fare generali sono in `todo.md`; i `TODO`/`FIXME` puntuali restano nel codice.

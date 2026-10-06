@@ -451,7 +451,7 @@ public enum TipoEvento {
     /**
      * Cambio di stato dell'automa principale che informa la UI
      */
-    INTERNO_STATO_DI_GIOCO,
+    INTERNO_FASE_DI_GIOCO,
     /**
      * Il giocatore ha vinto un trofeo
      */
