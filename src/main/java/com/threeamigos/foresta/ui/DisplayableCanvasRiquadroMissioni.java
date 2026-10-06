@@ -131,7 +131,7 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 		if (missione == null) {
 			return;
 		}
-		BusEventi.pubblica(ComandoCommutazioneElenco.di(missione));
+		BusEventi.pubblica(ComandoCommutazioneElenco.missione(missione.getId()));
 	}
 
 	@Override

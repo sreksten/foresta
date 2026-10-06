@@ -276,7 +276,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         Consumabile consumabile = trovaConsumabile(disponibili, xMinimaZonaDestra, offsetYZonaDestra, x, y, true);
         if (consumabile != null) {
             BusEventi.pubblica(new ComandoAcquistoConsumabile(consumabile.tipo, consumabile.classeIncantesimo,
-                    consumabile.personaggio));
+                    consumabile.personaggio == null ? null : consumabile.personaggio.getUuid()));
         }
     }
 

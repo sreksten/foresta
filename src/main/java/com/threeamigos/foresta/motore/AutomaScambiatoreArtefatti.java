@@ -4,7 +4,12 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
 import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.oggetti.Artefatto;
 
+import java.lang.ref.WeakReference;
 import java.util.Collection;
+import java.util.Map;
+import java.util.Optional;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * Gestisce lo scambio di artefatti tra l'inventario di un personaggio e un pool generico
@@ -21,13 +26,62 @@ public abstract class AutomaScambiatoreArtefatti implements VistaScambio {
 	 * questi automi: la UI ne conosce solo la vista.
 	 */
 	static void esegui(ComandoScambioArtefatto comando) {
-		AutomaScambiatoreArtefatti scambio = (AutomaScambiatoreArtefatti) comando.getScambio();
-		Artefatto artefatto = Artefatto.da(comando.getArtefatto());
-		if (comando.getDestinazione() == ComandoScambioArtefatto.Destinazione.PARTE_ATTIVA) {
-			scambio.richiediSpostamentoSuParteAttiva(artefatto);
-		} else {
-			scambio.richiediSpostamentoSuParteRemota(artefatto);
+		Optional<AutomaScambiatoreArtefatti> scambio = trova(comando.getIdScambio());
+		if (!scambio.isPresent()) {
+			return;
 		}
+		// L'artefatto sta nella parte da cui parte lo spostamento
+		boolean versoParteAttiva = comando.getDestinazione() == ComandoScambioArtefatto.Destinazione.PARTE_ATTIVA;
+		Collection<Artefatto> partenza = versoParteAttiva
+				? scambio.get().getInventarioParteRemota() : scambio.get().getInventarioParteAttiva();
+		Optional<Artefatto> artefatto = cerca(partenza, comando.getUuidArtefatto());
+		if (!artefatto.isPresent()) {
+			return;
+		}
+		if (versoParteAttiva) {
+			scambio.get().richiediSpostamentoSuParteAttiva(artefatto.get());
+		} else {
+			scambio.get().richiediSpostamentoSuParteRemota(artefatto.get());
+		}
+	}
+
+	/**
+	 * Gli scambi che la UI può nominare nei comandi, per identificativo. I riferimenti sono deboli: uno scambio
+	 * dura finché una schermata lo tiene, poi non lo si può più chiamare.
+	 */
+	private static final Map<String, WeakReference<AutomaScambiatoreArtefatti>> SCAMBI = new ConcurrentHashMap<>();
+
+	/**
+	 * Lo scambio con quell'identificativo, se esiste ancora
+	 */
+	static Optional<AutomaScambiatoreArtefatti> trova(String id) {
+		if (id == null) {
+			return Optional.empty();
+		}
+		WeakReference<AutomaScambiatoreArtefatti> riferimento = SCAMBI.get(id);
+		return Optional.ofNullable(riferimento == null ? null : riferimento.get());
+	}
+
+	private static Optional<Artefatto> cerca(Collection<Artefatto> inventario, String uuid) {
+		if (uuid == null) {
+			return Optional.empty();
+		}
+		return inventario.stream().filter(a -> uuid.equals(a.getUuid())).findFirst();
+	}
+
+	/**
+	 * L'artefatto con quell'uuid in una delle due parti dello scambio, se c'è
+	 */
+	Optional<Artefatto> trovaArtefatto(String uuid) {
+		Optional<Artefatto> artefatto = cerca(getInventarioParteAttiva(), uuid);
+		return artefatto.isPresent() ? artefatto : cerca(getInventarioParteRemota(), uuid);
+	}
+
+	private final String id = UUID.randomUUID().toString();
+
+	@Override
+	public final String getId() {
+		return id;
 	}
 
 	/**
@@ -44,6 +98,8 @@ public abstract class AutomaScambiatoreArtefatti implements VistaScambio {
 	public AutomaScambiatoreArtefatti(ScambiatoreArtefatti parteAttiva, ScambiatoreArtefatti parteRemota) {
 		this.parteAttiva = parteAttiva;
 		this.parteRemota = parteRemota;
+		SCAMBI.values().removeIf(riferimento -> riferimento.get() == null);
+		SCAMBI.put(id, new WeakReference<>(this));
 	}
 
 	public ScambiatoreArtefatti getParteAttiva() {

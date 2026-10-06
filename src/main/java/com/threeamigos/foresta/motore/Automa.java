@@ -1957,7 +1957,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 */
 	private void onComandoSpesaPuntoAbilita(ComandoSpesaPuntoAbilita comando) {
 		GruppoGiocatore.getIstanza().getPersonaggi().stream()
-				.filter(personaggio -> personaggio == comando.getPersonaggio())
+				.filter(personaggio -> personaggio.getUuid().equals(comando.getUuidPersonaggio()))
 				.findFirst()
 				.ifPresent(personaggio -> personaggio.spendiPuntoAbilita(comando.getAttributo()));
 	}
@@ -1966,15 +1966,18 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 * Apre o chiude l'elenco dei modificatori di un artefatto o la descrizione di una missione
 	 */
 	private static void onComandoCommutazioneElenco(ComandoCommutazioneElenco comando) {
-		if (comando.getArtefatto() != null) {
-			Artefatto artefatto = Artefatto.da(comando.getArtefatto());
-			if (artefatto.isFigliVisibili()) {
-				artefatto.nascondiFigli();
-			} else {
-				artefatto.mostraFigli();
-			}
-		} else {
-			RegistroMissioni.getMissione(comando.getMissione().getId()).ifPresent(missione -> {
+		if (comando.getUuidArtefatto() != null) {
+			AutomaScambiatoreArtefatti.trova(comando.getIdScambio())
+					.flatMap(scambio -> scambio.trovaArtefatto(comando.getUuidArtefatto()))
+					.ifPresent(artefatto -> {
+						if (artefatto.isFigliVisibili()) {
+							artefatto.nascondiFigli();
+						} else {
+							artefatto.mostraFigli();
+						}
+					});
+		} else if (comando.getIdMissione() != null) {
+			RegistroMissioni.getMissione(comando.getIdMissione()).ifPresent(missione -> {
 				if (missione.isDescrizioneVisibile()) {
 					missione.nascondiDescrizione();
 				} else {

@@ -2,43 +2,60 @@ package com.threeamigos.foresta.eventi.comandigiocatore;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.interfacce.VistaArtefatto;
-import com.threeamigos.foresta.interfacce.VistaMissione;
 
 /**
  * Il giocatore apre o chiude, con un click, l'elenco dei modificatori di un artefatto o la descrizione di una
  * missione. Lo stato si salva con la partita: l'Automa lo scrive nell'artefatto o nella missione.
+ * <p>
+ * Porta solo identificativi: l'artefatto sta sempre in una schermata di scambio, e il motore lo cerca nelle sue due
+ * parti; se non trova niente, ignora il comando.
  */
 public class ComandoCommutazioneElenco extends EventoBase {
 
-    private final VistaArtefatto artefatto;
-    private final VistaMissione missione;
+    private final String idScambio;
+    private final String uuidArtefatto;
+    private final String idMissione;
 
-    private ComandoCommutazioneElenco(VistaArtefatto artefatto, VistaMissione missione) {
+    private ComandoCommutazioneElenco(String idScambio, String uuidArtefatto, String idMissione) {
         super(TipoEvento.COMANDO_COMMUTAZIONE_ELENCO);
-        this.artefatto = artefatto;
-        this.missione = missione;
+        this.idScambio = idScambio;
+        this.uuidArtefatto = uuidArtefatto;
+        this.idMissione = idMissione;
     }
 
-    public static ComandoCommutazioneElenco di(VistaArtefatto artefatto) {
-        return new ComandoCommutazioneElenco(artefatto, null);
+    /**
+     * @param idScambio lo scambio aperto in cui sta l'artefatto
+     * @param uuidArtefatto l'artefatto di cui aprire o chiudere l'elenco dei modificatori
+     */
+    public static ComandoCommutazioneElenco artefatto(String idScambio, String uuidArtefatto) {
+        return new ComandoCommutazioneElenco(idScambio, uuidArtefatto, null);
     }
 
-    public static ComandoCommutazioneElenco di(VistaMissione missione) {
-        return new ComandoCommutazioneElenco(null, missione);
+    /**
+     * @param idMissione la missione di cui aprire o chiudere la descrizione
+     */
+    public static ComandoCommutazioneElenco missione(String idMissione) {
+        return new ComandoCommutazioneElenco(null, null, idMissione);
+    }
+
+    /**
+     * Lo scambio in cui sta l'artefatto, o null se il comando riguarda una missione
+     */
+    public String getIdScambio() {
+        return idScambio;
     }
 
     /**
      * L'artefatto di cui aprire o chiudere l'elenco dei modificatori, o null se il comando riguarda una missione
      */
-    public VistaArtefatto getArtefatto() {
-        return artefatto;
+    public String getUuidArtefatto() {
+        return uuidArtefatto;
     }
 
     /**
      * La missione di cui aprire o chiudere la descrizione, o null se il comando riguarda un artefatto
      */
-    public VistaMissione getMissione() {
-        return missione;
+    public String getIdMissione() {
+        return idMissione;
     }
 }

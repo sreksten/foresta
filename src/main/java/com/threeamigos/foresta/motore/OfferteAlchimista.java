@@ -2,7 +2,6 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.interfacce.VistaOffertaConsumabile;
-import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
@@ -31,10 +30,10 @@ public final class OfferteAlchimista {
 
 	/**
 	 * L'offerta a cui corrisponde una richiesta di acquisto, se c'è: per gli incantesimi conta la classe, per
-	 * l'aumento di magia di un personaggio il personaggio (lo stesso oggetto del listino).
+	 * l'aumento di magia di un personaggio il suo uuid.
 	 */
 	static Optional<OffertaConsumabile> trova(GruppoGiocatore gruppo, TipoConsumabile tipo, ClasseIncantesimo classe,
-											  VistaPersonaggio personaggio) {
+											  String uuidPersonaggio) {
 		for (OffertaConsumabile offerta : costruisci(gruppo)) {
 			if (offerta.getTipo() != tipo) {
 				continue;
@@ -42,7 +41,8 @@ public final class OfferteAlchimista {
 			if (tipo == TipoConsumabile.INCANTESIMO && offerta.getClasseIncantesimo() != classe) {
 				continue;
 			}
-			if (tipo == TipoConsumabile.AUMENTO_MAGIA_SINGOLO && offerta.getPersonaggio() != personaggio) {
+			if (tipo == TipoConsumabile.AUMENTO_MAGIA_SINGOLO
+					&& (offerta.getPersonaggio() == null || !offerta.getPersonaggio().getUuid().equals(uuidPersonaggio))) {
 				continue;
 			}
 			return Optional.of(offerta);

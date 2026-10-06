@@ -405,7 +405,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         if (artefatto == null) {
             return;
         }
-        BusEventi.pubblica(ComandoCommutazioneElenco.di(artefatto));
+        BusEventi.pubblica(ComandoCommutazioneElenco.artefatto(scambio.getId(), artefatto.getUuid()));
     }
 
     protected abstract boolean processaDoppioClickPersonaggio(int x, int y, Tasto tasto);
@@ -421,13 +421,13 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         List<VistaArtefatto> inventarioPersonaggio = new ArrayList<>(scambio.getInventarioParteAttiva());
         VistaArtefatto artefatto = trovaArtefatto(inventarioPersonaggio, xMinimaZonaSinistra, offsetYZonaSinistra, x, y, true);
         if (artefatto != null) {
-            BusEventi.pubblica(new ComandoScambioArtefatto(scambio, ComandoScambioArtefatto.Destinazione.PARTE_REMOTA, artefatto));
+            BusEventi.pubblica(new ComandoScambioArtefatto(scambio.getId(), ComandoScambioArtefatto.Destinazione.PARTE_REMOTA, artefatto.getUuid()));
             return;
         }
         Collection<? extends VistaArtefatto> disponibili = scambio.getInventarioParteRemota();
         artefatto = trovaArtefatto(disponibili, xMinimaZonaDestra, offsetYZonaDestra, x, y, false);
         if (artefatto != null) {
-            BusEventi.pubblica(new ComandoScambioArtefatto(scambio, ComandoScambioArtefatto.Destinazione.PARTE_ATTIVA, artefatto));
+            BusEventi.pubblica(new ComandoScambioArtefatto(scambio.getId(), ComandoScambioArtefatto.Destinazione.PARTE_ATTIVA, artefatto.getUuid()));
         }
     }
 

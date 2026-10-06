@@ -112,7 +112,7 @@ class AlchimistaTest {
 			Personaggio personaggio = gruppo.getPersonaggiVivi().stream().filter(p -> !p.isPNG()).findFirst().get();
 			int magia = personaggio.getMagiaMassima();
 
-			partita.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.AUMENTO_MAGIA_SINGOLO, null, personaggio));
+			partita.pubblica(new ComandoAcquistoConsumabile(TipoConsumabile.AUMENTO_MAGIA_SINGOLO, null, personaggio.getUuid()));
 
 			assertEquals(magia + Costanti.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, personaggio.getMagiaMassima());
 		}

@@ -9,6 +9,12 @@ import java.util.Collection;
  */
 public interface VistaScambio {
 
+	/**
+	 * L'identificativo dello scambio: la UI lo manda nei comandi (ComandoScambioArtefatto, ComandoCommutazioneElenco)
+	 * al posto della vista, e il motore ritrova da sé lo scambio
+	 */
+	String getId();
+
 	Collection<? extends VistaArtefatto> getInventarioParteAttiva();
 
 	Collection<? extends VistaArtefatto> getInventarioParteRemota();

@@ -791,7 +791,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	private void suEventoRichiestaAcquistoConsumabile(ComandoAcquistoConsumabile comandoAcquistoConsumabile) {
 		// Il prezzo lo decide l'offerta dell'alchimista; se il comando non ne corrisponde a nessuna, si ignora
 		Optional<OffertaConsumabile> offerta = OfferteAlchimista.trova(this, comandoAcquistoConsumabile.getTipoConsumabile(),
-				comandoAcquistoConsumabile.getClasseIncantesimo(), comandoAcquistoConsumabile.getPersonaggio());
+				comandoAcquistoConsumabile.getClasseIncantesimo(), comandoAcquistoConsumabile.getUuidPersonaggio());
 		if (!offerta.isPresent()) {
 			return;
 		}
@@ -811,7 +811,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 					addPozioniMagiaGrande(1);
 					break;
 				case AUMENTO_MAGIA_SINGOLO:
-					personaggi.stream().filter(p -> p == comandoAcquistoConsumabile.getPersonaggio()).findFirst()
+					personaggi.stream().filter(p -> p.getUuid().equals(comandoAcquistoConsumabile.getUuidPersonaggio())).findFirst()
 							.ifPresent(p -> p.addMagiaMassima(Costanti.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "ALCHIMISTA"));
 					break;
 				case AUMENTO_MAGIA_GRUPPO:

@@ -2,8 +2,6 @@ package com.threeamigos.foresta.eventi.comandigiocatore;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.interfacce.VistaArtefatto;
-import com.threeamigos.foresta.interfacce.VistaScambio;
 
 /**
  * Il giocatore sposta un artefatto da una parte all'altra di uno scambio aperto (doppio click nella schermata).
@@ -17,26 +15,26 @@ public class ComandoScambioArtefatto extends EventoBase {
         PARTE_REMOTA
     }
 
-    private final VistaScambio scambio;
+    private final String idScambio;
     private final Destinazione destinazione;
-    private final VistaArtefatto artefatto;
+    private final String uuidArtefatto;
 
-    public ComandoScambioArtefatto(VistaScambio scambio, Destinazione destinazione, VistaArtefatto artefatto) {
+    public ComandoScambioArtefatto(String idScambio, Destinazione destinazione, String uuidArtefatto) {
         super(TipoEvento.COMANDO_SCAMBIO_ARTEFATTO);
-        this.scambio = scambio;
+        this.idScambio = idScambio;
         this.destinazione = destinazione;
-        this.artefatto = artefatto;
+        this.uuidArtefatto = uuidArtefatto;
     }
 
-    public VistaScambio getScambio() {
-        return scambio;
+    public String getIdScambio() {
+        return idScambio;
     }
 
     public Destinazione getDestinazione() {
         return destinazione;
     }
 
-    public VistaArtefatto getArtefatto() {
-        return artefatto;
+    public String getUuidArtefatto() {
+        return uuidArtefatto;
     }
 }

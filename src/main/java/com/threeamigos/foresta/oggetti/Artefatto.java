@@ -47,8 +47,9 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso, Vist
 	}
 
 	/**
-	 * L'artefatto di una vista che arriva dalla UI con un comando: le viste degli artefatti sono artefatti, e il
-	 * motore passa da qui per tornare all'oggetto che può cambiare.
+	 * L'artefatto di una vista che la UI passa come argomento di una domanda (per esempio se un personaggio può
+	 * equipaggiarlo): le viste degli artefatti sono artefatti. I comandi della UI non portano viste ma uuid, e il
+	 * motore ritrova l'artefatto da sé.
 	 */
 	public static Artefatto da(VistaArtefatto vista) {
 		return (Artefatto) vista;

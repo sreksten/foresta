@@ -38,20 +38,20 @@ class ScenarioScambiAEventiTest {
 
             // Dal personaggio al gruppo e ritorno
             VistaArtefatto artefatto = new ArrayList<>(scambio.getInventarioParteAttiva()).get(0);
-            partita.pubblica(new ComandoScambioArtefatto(scambio, ComandoScambioArtefatto.Destinazione.PARTE_REMOTA, artefatto));
+            partita.pubblica(new ComandoScambioArtefatto(scambio.getId(), ComandoScambioArtefatto.Destinazione.PARTE_REMOTA, artefatto.getUuid()));
             assertTrue(PartitaDiTest.contiene(partita.gruppo().getInventario(), artefatto));
             assertFalse(PartitaDiTest.contiene(personaggio.getInventario(), artefatto));
             // Come la UI, si prende l'artefatto dall'elenco mostrato: il gruppo lo ricrea dal suo modello dati
             VistaArtefatto nelGruppo = scambio.getInventarioParteRemota().stream()
                     .filter(a -> a.getUuid().equals(artefatto.getUuid())).findFirst().orElseThrow(AssertionError::new);
-            partita.pubblica(new ComandoScambioArtefatto(scambio, ComandoScambioArtefatto.Destinazione.PARTE_ATTIVA, nelGruppo));
+            partita.pubblica(new ComandoScambioArtefatto(scambio.getId(), ComandoScambioArtefatto.Destinazione.PARTE_ATTIVA, nelGruppo.getUuid()));
             assertTrue(PartitaDiTest.contiene(personaggio.getInventario(), artefatto));
             assertFalse(PartitaDiTest.contiene(scambio.getInventarioParteRemota(), artefatto));
 
             // Un punto abilità sulla forza
             personaggio.getModelloDati().setPuntiAbilitaDisponibili(1);
             int forza = personaggio.getForza();
-            partita.pubblica(new ComandoSpesaPuntoAbilita(personaggio, TipoAttributo.FORZA));
+            partita.pubblica(new ComandoSpesaPuntoAbilita(personaggio.getUuid(), TipoAttributo.FORZA));
             assertEquals(0, personaggio.getPuntiAbilitaDisponibili());
             assertTrue(personaggio.getForza() > forza, "forza " + personaggio.getForza());
         }
@@ -62,18 +62,59 @@ class ScenarioScambiAEventiTest {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(231)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             VistaPartita vista = new VistaPartitaMotore();
+            VistaScambio scambio = apriInventario(partita);
 
-            VistaArtefatto artefatto = new ArrayList<>(vista.getGruppoGiocatore().getPersonaggio(0).getInventario()).get(0);
+            VistaArtefatto artefatto = new ArrayList<>(scambio.getInventarioParteAttiva()).get(0);
             assertTrue(artefatto.isFigliVisibili());
-            partita.pubblica(ComandoCommutazioneElenco.di(artefatto));
+            partita.pubblica(ComandoCommutazioneElenco.artefatto(scambio.getId(), artefatto.getUuid()));
             assertFalse(artefatto.isFigliVisibili());
-            partita.pubblica(ComandoCommutazioneElenco.di(artefatto));
+            partita.pubblica(ComandoCommutazioneElenco.artefatto(scambio.getId(), artefatto.getUuid()));
             assertTrue(artefatto.isFigliVisibili());
 
             VistaMissione missione = vista.getMissioniAttive().get(0);
             assertTrue(missione.isDescrizioneVisibile());
-            partita.pubblica(ComandoCommutazioneElenco.di(missione));
+            partita.pubblica(ComandoCommutazioneElenco.missione(missione.getId()));
             assertFalse(missione.isDescrizioneVisibile());
         }
+    }
+
+    @Test
+    void unComandiConIdentificativiCheNonCorrispondonoANienteSiIgnorano() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(231)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+            VistaScambio scambio = apriInventario(partita);
+            Personaggio personaggio = partita.gruppo().getCapo();
+            VistaArtefatto artefatto = new ArrayList<>(scambio.getInventarioParteAttiva()).get(0);
+            int nelPersonaggio = personaggio.getInventario().size();
+            int nelGruppo = partita.gruppo().getInventario().size();
+
+            // Uno scambio che non c'è, un artefatto che non c'è, nessun identificativo
+            partita.pubblica(new ComandoScambioArtefatto("non-esiste", ComandoScambioArtefatto.Destinazione.PARTE_REMOTA, artefatto.getUuid()));
+            partita.pubblica(new ComandoScambioArtefatto(scambio.getId(), ComandoScambioArtefatto.Destinazione.PARTE_REMOTA, "non-esiste"));
+            partita.pubblica(new ComandoScambioArtefatto(null, ComandoScambioArtefatto.Destinazione.PARTE_REMOTA, null));
+            // Un artefatto della parte sbagliata: sta nel personaggio, non nel gruppo
+            partita.pubblica(new ComandoScambioArtefatto(scambio.getId(), ComandoScambioArtefatto.Destinazione.PARTE_ATTIVA, artefatto.getUuid()));
+            assertEquals(nelPersonaggio, personaggio.getInventario().size());
+            assertEquals(nelGruppo, partita.gruppo().getInventario().size());
+
+            partita.pubblica(ComandoCommutazioneElenco.artefatto("non-esiste", artefatto.getUuid()));
+            partita.pubblica(ComandoCommutazioneElenco.artefatto(scambio.getId(), "non-esiste"));
+            partita.pubblica(ComandoCommutazioneElenco.missione("non-esiste"));
+            assertTrue(artefatto.isFigliVisibili());
+
+            personaggio.getModelloDati().setPuntiAbilitaDisponibili(1);
+            int forza = personaggio.getForza();
+            partita.pubblica(new ComandoSpesaPuntoAbilita("non-esiste", TipoAttributo.FORZA));
+            partita.pubblica(new ComandoSpesaPuntoAbilita(null, TipoAttributo.FORZA));
+            assertEquals(1, personaggio.getPuntiAbilitaDisponibili());
+            assertEquals(forza, personaggio.getForza());
+        }
+    }
+
+    private static VistaScambio apriInventario(PartitaDiTest partita) {
+        partita.comando(Comando.ESCI_DA_CITTA);
+        partita.eventi().ascolta(RichiestaAperturaInventarioGruppo.class);
+        partita.comando(Comando.INVENTARIO);
+        return partita.eventi().ultimo(RichiestaAperturaInventarioGruppo.class).getScambio();
     }
 }

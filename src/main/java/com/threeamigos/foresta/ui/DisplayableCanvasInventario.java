@@ -247,7 +247,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
     protected boolean processaDoppioClickPersonaggio(int x, int y, Tasto tasto) {
                 TipoAttributo attributo = trovaAttributo(personaggio, x, y);
         if (attributo != null) {
-            BusEventi.pubblica(new ComandoSpesaPuntoAbilita(personaggio, attributo));
+            BusEventi.pubblica(new ComandoSpesaPuntoAbilita(personaggio.getUuid(), attributo));
             return true;
         }
         return false;

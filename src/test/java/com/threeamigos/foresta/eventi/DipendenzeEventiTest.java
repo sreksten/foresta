@@ -81,6 +81,23 @@ class DipendenzeEventiTest {
 		}
 	}
 
+	/**
+	 * I comandi che la UI manda al motore portano solo dati e identificativi (uuid, id, tipi): il motore ritrova da sé
+	 * gli oggetti veri e ignora il comando se non corrispondono a niente. Con una vista in mano, invece, dovrebbe
+	 * fidarsi di quel che la UI gli passa.
+	 */
+	@Test
+	void iComandiDellaUINonPortanoViste() throws IOException {
+		Set<String> conViste = new TreeSet<>();
+		for (Path file : sorgenti()) {
+			String nome = EVENTI.relativize(file).toString().replace('\\', '/');
+			if (nome.startsWith("comandigiocatore/") && codice(file).contains("com.threeamigos.foresta.interfacce.Vista")) {
+				conViste.add(nome);
+			}
+		}
+		assertTrue(conViste.isEmpty(), "Questi comandi portano viste invece di identificativi:\n" + String.join("\n", conViste));
+	}
+
 	private static String codice(Path file) throws IOException {
 		return new String(Files.readAllBytes(file), StandardCharsets.UTF_8)
 				.replaceAll("(?s)/\\*.*?\\*/", "")

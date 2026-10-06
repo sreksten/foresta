@@ -2,7 +2,6 @@ package com.threeamigos.foresta.eventi.comandigiocatore;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
 
@@ -16,14 +15,14 @@ public class ComandoAcquistoConsumabile extends EventoBase {
 
     private final TipoConsumabile tipoConsumabile;
     private final ClasseIncantesimo classeIncantesimo;
-    private final VistaPersonaggio personaggio;
+    private final String uuidPersonaggio;
 
     public ComandoAcquistoConsumabile(TipoConsumabile tipoConsumabile, ClasseIncantesimo classeIncantesimo,
-                                      VistaPersonaggio personaggio) {
+                                      String uuidPersonaggio) {
         super(TipoEvento.COMANDO_ACQUISTO_CONSUMABILE);
         this.tipoConsumabile = tipoConsumabile;
         this.classeIncantesimo = classeIncantesimo;
-        this.personaggio = personaggio;
+        this.uuidPersonaggio = uuidPersonaggio;
     }
 
     public TipoConsumabile getTipoConsumabile() {
@@ -34,7 +33,7 @@ public class ComandoAcquistoConsumabile extends EventoBase {
         return classeIncantesimo;
     }
 
-    public VistaPersonaggio getPersonaggio() {
-    	return personaggio;
+    public String getUuidPersonaggio() {
+        return uuidPersonaggio;
     }
 }

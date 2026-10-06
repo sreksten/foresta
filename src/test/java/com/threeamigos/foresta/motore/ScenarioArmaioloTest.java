@@ -98,10 +98,10 @@ class ScenarioArmaioloTest {
 
 	// Come il doppio click della UI
 	private void compra(VistaScambio bottega, VistaArtefatto artefatto) {
-		partita.pubblica(new ComandoScambioArtefatto(bottega, ComandoScambioArtefatto.Destinazione.PARTE_ATTIVA, artefatto));
+		partita.pubblica(new ComandoScambioArtefatto(bottega.getId(), ComandoScambioArtefatto.Destinazione.PARTE_ATTIVA, artefatto.getUuid()));
 	}
 
 	private void vendi(VistaScambio bottega, VistaArtefatto artefatto) {
-		partita.pubblica(new ComandoScambioArtefatto(bottega, ComandoScambioArtefatto.Destinazione.PARTE_REMOTA, artefatto));
+		partita.pubblica(new ComandoScambioArtefatto(bottega.getId(), ComandoScambioArtefatto.Destinazione.PARTE_REMOTA, artefatto.getUuid()));
 	}
 }

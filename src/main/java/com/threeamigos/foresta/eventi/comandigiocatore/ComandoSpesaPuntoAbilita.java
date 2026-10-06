@@ -2,7 +2,6 @@ package com.threeamigos.foresta.eventi.comandigiocatore;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 
 /**
@@ -10,17 +9,17 @@ import com.threeamigos.foresta.tipi.TipoAttributo;
  */
 public class ComandoSpesaPuntoAbilita extends EventoBase {
 
-    private final VistaPersonaggio personaggio;
+    private final String uuidPersonaggio;
     private final TipoAttributo attributo;
 
-    public ComandoSpesaPuntoAbilita(VistaPersonaggio personaggio, TipoAttributo attributo) {
+    public ComandoSpesaPuntoAbilita(String uuidPersonaggio, TipoAttributo attributo) {
         super(TipoEvento.COMANDO_SPESA_PUNTO_ABILITA);
-        this.personaggio = personaggio;
+        this.uuidPersonaggio = uuidPersonaggio;
         this.attributo = attributo;
     }
 
-    public VistaPersonaggio getPersonaggio() {
-        return personaggio;
+    public String getUuidPersonaggio() {
+        return uuidPersonaggio;
     }
 
     public TipoAttributo getAttributo() {

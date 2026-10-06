@@ -753,7 +753,7 @@ final class GiocatoreAutomatico {
 		for (Artefatto artefatto : new ArrayList<>(gruppo.getInventario())) {
 			if (negozio.tratta(artefatto.getTipo())) {
 				int prima = gruppo.getMonete();
-				partita.pubblica(new ComandoScambioArtefatto(bottega, ComandoScambioArtefatto.Destinazione.PARTE_REMOTA, artefatto));
+				partita.pubblica(new ComandoScambioArtefatto(bottega.getId(), ComandoScambioArtefatto.Destinazione.PARTE_REMOTA, artefatto.getUuid()));
 				moneteDaVendite += Math.max(0, gruppo.getMonete() - prima);
 			}
 		}
@@ -765,7 +765,7 @@ final class GiocatoreAutomatico {
 
 	private boolean compra(GruppoGiocatore gruppo, TipoConsumabile tipo, ClasseIncantesimo classe, Personaggio personaggio, int costo) {
 		int prima = gruppo.getMonete();
-		partita.pubblica(new ComandoAcquistoConsumabile(tipo, classe, personaggio));
+		partita.pubblica(new ComandoAcquistoConsumabile(tipo, classe, personaggio == null ? null : personaggio.getUuid()));
 		int spese = prima - gruppo.getMonete();
 		moneteNeiNegozi += Math.max(0, spese);
 		return spese > 0 || (spese == 0 && gruppo.prezzoAcquisto(costo) == 0);
