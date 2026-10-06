@@ -6,11 +6,12 @@ import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto;
+import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
+import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.AutomaScambiatoreArtefatti;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegoleSetLeggendari;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -36,8 +37,8 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
     // personaggio, aggiornata a ogni disegnaInventario e usata per l'hit-test dei click.
     protected int yAttributi = 0;
 
-    DisplayableCanvasScambiatoreArtefatti(int width, int height) {
-        super(width, height);
+    DisplayableCanvasScambiatoreArtefatti(int width, int height, VistaPartita vistaPartita) {
+        super(width, height, vistaPartita);
         BusEventi.iscriviti(NotificaApprovazioneAcquistoArtefatto.class, this::gestisciEventoApprovazioneAcquistoArtefatto);
         BusEventi.iscriviti(NotificaRifiutoAcquistoArtefatto.class, this::gestisciEventoRifiutoAcquistoArtefatto);
         BusEventi.iscriviti(NotificaApprovazioneVenditaArtefatto.class, this::gestisciEventoApprovazioneVenditaArtefatto);
@@ -62,7 +63,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         }
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Grazie per il vostro acquisto!", getCoordinateFumetto()));
 
-        int costo = GruppoGiocatore.getIstanza().prezzoAcquisto(
+        int costo = vistaPartita.getGruppoGiocatore().prezzoAcquisto(
                 notificaApprovazioneAcquistoArtefatto.getEventoRichiestaSpostamentoArtefatto().getOggettoDaSpostare().getCostoAcquisto());
         aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteMoneta, -costo, font,
                 xMassimaZonaCentrale, yRigaMonete(), "Monete spese"));
@@ -74,7 +75,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         }
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo(fraseDopoLaVendita(), getCoordinateFumetto()));
 
-        int costo = GruppoGiocatore.getIstanza().prezzoVendita(
+        int costo = vistaPartita.getGruppoGiocatore().prezzoVendita(
                 notificaApprovazioneVenditaArtefatto.getEventoRichiestaSpostamentoArtefatto().getOggettoDaSpostare().getCostoAcquisto());
         aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteMoneta, costo, font,
                 xMassimaZonaCentrale, yRigaMonete(), "Monete acquisite"));
@@ -170,7 +171,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
      * attiva è quanto si ricava vendendo, sulla remota quanto si paga comprando.
      */
     private IntUnaryOperator prezzo(boolean parteAttiva) {
-        GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
+        VistaGruppoGiocatore gruppo = vistaPartita.getGruppoGiocatore();
         if (parteAttiva) {
             return automa.mostraCostoSuParteAttiva() ? gruppo::prezzoVendita : null;
         }
@@ -450,9 +451,9 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
     /**
      * Gli artefatti indossati da ogni personaggio del gruppo.
      */
-    private static List<Collection<ArtefattoMD>> equipaggiamentiDelGruppo() {
+    private List<Collection<ArtefattoMD>> equipaggiamentiDelGruppo() {
         List<Collection<ArtefattoMD>> equipaggiamenti = new ArrayList<>();
-        for (Personaggio personaggio : GruppoGiocatore.getIstanza().getPersonaggi()) {
+        for (Personaggio personaggio : vistaPartita.getGruppoGiocatore().getPersonaggi()) {
             equipaggiamenti.add(personaggio.getModelloDati().getArtefatti());
         }
         return equipaggiamenti;
@@ -461,9 +462,9 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
     /**
      * Gli artefatti del gruppo che nessuno indossa.
      */
-    private static Collection<ArtefattoMD> inventarioDelGruppo() {
+    private Collection<ArtefattoMD> inventarioDelGruppo() {
         List<ArtefattoMD> inventario = new ArrayList<>();
-        for (Artefatto artefatto : GruppoGiocatore.getIstanza().getInventario()) {
+        for (Artefatto artefatto : vistaPartita.getGruppoGiocatore().getInventario()) {
             inventario.add(artefatto.getModelloDati());
         }
         return inventario;

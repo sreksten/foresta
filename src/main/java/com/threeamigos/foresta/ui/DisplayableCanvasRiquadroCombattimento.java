@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.motore.GruppoAvversario;
+import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.personaggi.Personaggio;
 
 import java.awt.*;
@@ -20,7 +20,10 @@ class DisplayableCanvasRiquadroCombattimento implements Finestra {
 	private String nomeAvversario;
 	private final DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 
-	DisplayableCanvasRiquadroCombattimento(int parentWidth, int parentHeight) {
+	private final VistaPartita vistaPartita;
+
+	DisplayableCanvasRiquadroCombattimento(int parentWidth, int parentHeight, VistaPartita vistaPartita) {
+		this.vistaPartita = vistaPartita;
 		cornice = ImageCache.cornicePiccola;
 		visible = false;
 		xOffset = (parentWidth - cornice.getWidth()) >> 1;
@@ -68,7 +71,7 @@ class DisplayableCanvasRiquadroCombattimento implements Finestra {
 				nomeAvversario = nomeOpt.get();
 			} else {
 				nomeAvversario = avversario.getNomeSingolare();
-				if (GruppoAvversario.getIstanza().getNumeroPersonaggi() > 1) {
+				if (vistaPartita.getGruppoAvversario().getNumeroPersonaggi() > 1) {
 					int l = avversario.getOrdinale();
 					if (l > 0) {
 						nomeAvversario += " " + l;

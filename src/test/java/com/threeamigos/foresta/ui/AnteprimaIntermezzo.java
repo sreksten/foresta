@@ -7,6 +7,7 @@ import com.threeamigos.foresta.intermezzi.Intermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.motore.GestorePunteggiInMemoria;
 import com.threeamigos.foresta.motore.PartitaDiAnteprima;
+import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -79,7 +80,7 @@ public final class AnteprimaIntermezzo {
 		larghezza = contenuto.width;
 		altezza = contenuto.height;
 		schermata = new DisplayableCanvasIntermezzo(larghezza, altezza, new DisplayableCanvasIntroOutro(larghezza, altezza,
-				new GestorePunteggiInMemoria()));
+				new GestorePunteggiInMemoria(), new VistaPartitaMotore()));
 		pagine = generaPagine();
 		this.indicePagina = Math.max(0, Math.min(indicePagina, pagine.size() - 1));
 	}

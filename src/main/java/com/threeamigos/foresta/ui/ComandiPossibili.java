@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.motore;
+package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.tipi.Comando;
 import java.util.ArrayList;
@@ -6,11 +6,11 @@ import java.util.Collection;
 import java.util.List;
 
 /**
- * Una classe che tiene traccia di quali siano tutti i comandi possibili.
+ * I comandi che il giocatore può dare in questo momento, come li ha mandati il motore con l'ultima richiesta: la barra
+ * delle icone li mostra (vedi DisplayableCanvasBarraIcone.impostaAzioni).
  *
  * @author Stefano Reksten
  */
-//FIXME occorrerebbe non avere una classe condivisa tra automa e UI, tutto dovrebbe arrivare via scambio eventi
 public class ComandiPossibili {
 
 	private ComandiPossibili() {

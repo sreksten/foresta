@@ -30,10 +30,10 @@ Documenti di dettaglio su singoli sottosistemi:
 | `offerte` | I servizi che un incontro amichevole o una locanda propongono |
 | `incantesimi` | Le dieci formule e il loro catalogo |
 | `trofei` | Gli obiettivi che valgono da una partita all'altra |
-| `interfacce` | `ControlloreDiGioco`, `Arma`, `FornitoreMissione` e le interfacce di oggetto |
+| `interfacce` | `ControlloreDiGioco`, i gestori di salvataggi, classifica e trofei, le viste in sola lettura per la UI (`VistaPartita`, `VistaGruppoGiocatore`, `VistaGruppo`, `VistaMappa`), `Arma`, `FornitoreMissione` e le interfacce di oggetto |
 | `tools` | Salvataggi, classifica e trofei su file, temporizzatore, `Misc`, `ModalitaDiProva`, `CostruttoreArtefatto` |
 
-Il motore parla alla UI solo tramite il bus eventi (§4). Le sole dipendenze del motore verso `ui` sono l'enum `InterfacciaUtente.Finestra`, usato da `InternoPortaInPrimoPiano` per dire quale riquadro portare in primo piano, e i due punti in cui usa Swing per il thread (`BusEventi` e `TemporizzatoreJ2SE`, §2 e §4). Nel verso opposto la separazione non c'è: la UI legge direttamente lo stato di dominio (`GruppoGiocatore`, `Foresta`, `Notizie`, `RegistroMissioni`...) e chiama gli `Automa*` dei negozi che le arrivano con gli eventi (vedi §13 e [`todo.md`](todo.md)).
+Il motore parla alla UI solo tramite il bus eventi (§4). Le sole dipendenze del motore verso `ui` sono l'enum `InterfacciaUtente.Finestra`, usato da `InternoPortaInPrimoPiano` per dire quale riquadro portare in primo piano, e i due punti in cui usa Swing per il thread (`BusEventi` e `TemporizzatoreJ2SE`, §2 e §4). Nel verso opposto la separazione è a metà: la UI legge lo stato della partita da `interfacce.VistaPartita`, una vista in sola lettura che `Main` le passa (l'implementazione è `VistaPartitaMotore`, che delega ai gruppi e alle classi statiche del motore), ma chiama ancora gli `Automa*` dei negozi che le arrivano con gli eventi e alcune regole statiche del motore (vedi §13 e [`todo.md`](todo.md)).
 
 ## 2. Avvio e ciclo principale
 
@@ -110,7 +110,7 @@ Gli eventi sono organizzati per **direzione e intento**:
 
 | Pacchetto | Direzione | Esempi |
 | :--- | :--- | :--- |
-| `eventi.comandigiocatore` | UI → motore | `ComandoDiGioco`, `ComandoInvioTesto`, `ComandoAcquistoArtefatto`, `ComandoVenditaArtefatto`, `ComandoSpostamentoArtefatto`, `ComandoIncantatura`, `ComandoAperturaTrofei`, `ComandoVisualizzazioneMappa` |
+| `eventi.comandigiocatore` | UI → motore | `ComandoDiGioco`, `ComandoInvioTesto`, `ComandoAcquistoArtefatto`, `ComandoVenditaArtefatto`, `ComandoSpostamentoArtefatto`, `ComandoIncantatura`, `ComandoAperturaTrofei`, `ComandoVisualizzazioneMappa`, `ComandoImpostazioneAiuto` |
 | `eventi.notifiche` | motore → UI, fatto compiuto | `NotificaTestoParagrafo`/`NotificaTestoFrase`, `NotificaNotizia`, `NotificaPaginaIntermezzo`, `NotificaFineGioco`, le coppie `Notifica*Approvazione*`/`Notifica*Rifiuto*` |
 | `eventi.richieste` | motore → UI, richieste di input | `RichiestaSelezioneDirezione`, `RichiestaSelezioneSiNo`, `RichiestaSelezioneMissione`, `RichiestaTesto` |
 | `eventi.interni` | tecnici, non rivolti al giocatore | `InternoStatoDiGioco`, `InternoAggiornamentoComandiDisponibili`, `InternoCaricamentoCompletato`, `InternoUiOccupata`/`InternoUiInattiva`, `InternoErrore`, `InternoException`, gli eventi di sprite |
@@ -281,7 +281,7 @@ Uscendo da una locanda, `Locanda.generaNotizia()` produce una notizia satirica s
 Punti di attenzione verificati sul codice, utili per l'assessment e un eventuale refactoring.
 
 - **`Automa` molto grande.** Quasi 2000 righe, circa 70 gestori e una trentina di campi di stato (intermezzo, domanda di missione, negozio in attesa, formulante...). Ogni nuova funzione aggiunge uno stato e un gestore, e le transizioni sono sparse nei metodi. L'avanzamento automatico però è ordinato (un solo ciclo, con tetto).
-- **La UI legge e chiama il dominio direttamente.** 29 file di `ui` importano classi di `motore` (`GruppoGiocatore` in 12, poi `Foresta`, `Notizie`, `Statistiche`, `RegistroMissioni`, `Costanti`...), e `DisplayableCanvas` riceve dagli eventi `AutomaInventario` e `AutomaIncantatore`, che poi chiama. Il bus separa quindi i comandi, ma non lo stato. Da valutare: separare il modello dati dal motore, così che la UI lo consulti in sola lettura e verso il motore emetta solo eventi ([`todo.md`](todo.md)).
+- **La UI chiama ancora parte del dominio.** Lo stato lo legge da `VistaPartita` (§1), ma 14 file di `ui` importano ancora classi di `motore`: gli `Automa*` dei negozi che `DisplayableCanvas` riceve dagli eventi e poi chiama, le regole statiche `RegoleSetLeggendari` e `RegoleIncantatura`, e utilità come `Logger`, `Costanti`, `Dado`, `ProduttoreDiTestiCasuale`. Le viste poi restituiscono oggetti di dominio (`Personaggio`, `Artefatto`, `Missione`), non soltanto dati. Il passo successivo, i negozi solo a eventi, è in [`todo.md`](todo.md).
 - **Doppio significato di `impostaAzioni(..., null)`.** Nelle locazioni vuol dire sia "prima entrata" sia "avanza di un passo", e in `LocazioneBase` ogni passo fa trascorrere un turno di effetti di stato. È stato aggirato con `ripresentaComandi()`, ma il contratto resta implicito. In particolare nei quattro casi `CHI_BEVE_POZIONE_*` la locazione richiama sé stessa con `null` per far trascorrere il turno dopo la pozione (probabilmente voluto: bere è un'azione).
 - **Dipendenza Gson e vecchia grammatica degli artefatti: tolte (2026-10-05).** Gson non era usato da nessuna classe ed è stato tolto dal `pom.xml`; `artefatti.txt` e `artefatti_pp.txt`, sostituiti da `artefatti2.txt` e `artefatti2_pp.txt`, sono in `risorse_e_documenti_vari/` come raccolta di spunti.
 - **Persistenza proprietaria senza versione.** Il formato a righe con `|` è fragile all'evoluzione dello schema; si accetta, perché la retrocompatibilità non interessa. Restano le due fragilità di `NotizieMD` (a-capo e `|` nelle notizie).

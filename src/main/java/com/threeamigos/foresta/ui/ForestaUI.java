@@ -6,6 +6,7 @@ import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
+import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
@@ -43,31 +44,22 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	private boolean logoInizialeConcluso;
 	private final boolean barraDock;
 	private final GestorePunteggi gestorePunteggi;
+	private final VistaPartita vistaPartita;
 	private Stato statoDiGioco;
-
-	public ForestaUI(Orientamento orientamento, boolean tuttoSchermo, GestorePunteggi gestorePunteggi,
-					 Temporizzatore temporizzatore) {
-		this(orientamento, tuttoSchermo, false, gestorePunteggi, temporizzatore);
-	}
 
 	/**
 	 * @param saltaLogoIniziale vero per non mostrare il logo iniziale (per esempio nelle partite di prova): si
 	 *                          aspetta solo il caricamento delle risorse e si passa subito all'INTRO
-	 */
-	public ForestaUI(Orientamento orientamento, boolean tuttoSchermo, boolean saltaLogoIniziale,
-					 GestorePunteggi gestorePunteggi, Temporizzatore temporizzatore) {
-		this(orientamento, tuttoSchermo, saltaLogoIniziale, true, gestorePunteggi, temporizzatore);
-	}
-
-	/**
 	 * @param barraDock vero per la barra delle icone che si ingrandisce sotto il cursore, come il Dock di macOS
 	 *                  (vedi DisplayableCanvasBarraIconeDock; solo in orientamento orizzontale)
 	 * @param gestorePunteggi la classifica da mostrare nell'intro (la stessa che riceve l'Automa)
+	 * @param vistaPartita lo stato della partita da mostrare, in sola lettura
 	 */
 	public ForestaUI(Orientamento orientamento, boolean tuttoSchermo, boolean saltaLogoIniziale, boolean barraDock,
-					 GestorePunteggi gestorePunteggi, Temporizzatore temporizzatore) {
+					 GestorePunteggi gestorePunteggi, VistaPartita vistaPartita, Temporizzatore temporizzatore) {
 		this.barraDock = barraDock;
 		this.gestorePunteggi = gestorePunteggi;
+		this.vistaPartita = vistaPartita;
 		this.orientamento = orientamento;
 		this.tuttoSchermo = tuttoSchermo;
 		this.saltaLogoIniziale = saltaLogoIniziale;
@@ -214,7 +206,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 		Logger.log("Orientamento: " + orientamento);
 		displayableCanvas = new DisplayableCanvas(larghezza, altezza, orientamentoCanvas(orientamento), SPESSORE_BARRA_ICONE, barraDock,
-				gestorePunteggi);
+				gestorePunteggi, vistaPartita);
 		interfacciaCompleta = true;
 	}
 

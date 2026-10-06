@@ -4,6 +4,7 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -38,7 +39,7 @@ class MappaNomeSottoIlMouseTest {
         }
         GruppoGiocatore.getIstanza().setModelloDati(ModelloDati.getIstanza().getGruppoGiocatoreMD());
         ModelloDati.getIstanza().getGruppoGiocatoreMD().setCoordinate(new CoordinateMD(0, 0));
-        mappa = new DisplayableCanvasMappaATuttoSchermo(LATO_SCHERMO, LATO_SCHERMO);
+        mappa = new DisplayableCanvasMappaATuttoSchermo(LATO_SCHERMO, LATO_SCHERMO, new VistaPartitaMotore());
         mappa.centraSuGiocatore();
         scostamentoX = (LATO_SCHERMO - Foresta.getDimensioneX() * DisegnatoreMappa.LARGHEZZA_ICONA) / 2;
         scostamentoY = (LATO_SCHERMO - Foresta.getDimensioneY() * DisegnatoreMappa.ALTEZZA_ICONA) / 2;

@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 import org.junit.jupiter.api.Test;
 
@@ -13,7 +14,7 @@ class DisplayableCanvasCommercianteTest {
 
     @Test
     void allaVenditaArmaioloEVenditoreDiconoCheCosaFarannoDellaMerce() {
-        DisplayableCanvasCommerciante commerciante = new DisplayableCanvasCommerciante(1024, 768);
+        DisplayableCanvasCommerciante commerciante = new DisplayableCanvasCommerciante(1024, 768, new VistaPartitaMotore());
         commerciante.impostaNegozio(TipoNegozio.ARMAIOLO);
         assertEquals("Con il materiale che mi hai fornito, farò altre meravigliose creazioni!", commerciante.fraseDopoLaVendita());
         commerciante.impostaNegozio(TipoNegozio.VENDITORE_DI_PERGAMENE);

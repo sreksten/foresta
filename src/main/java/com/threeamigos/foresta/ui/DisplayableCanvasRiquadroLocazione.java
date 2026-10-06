@@ -1,10 +1,10 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.interfacce.VistaGruppo;
+import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
+import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Dado;
-import com.threeamigos.foresta.motore.GruppoAvversario;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
@@ -39,7 +39,10 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		}
 	}
 
-	DisplayableCanvasRiquadroLocazione(int topLeftX, int topLeftY) {
+	private final VistaPartita vistaPartita;
+
+	DisplayableCanvasRiquadroLocazione(int topLeftX, int topLeftY, VistaPartita vistaPartita) {
+		this.vistaPartita = vistaPartita;
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
 	}
@@ -48,7 +51,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		mappaCoordinate.clear();
 		mappaImmagini.clear();
 		effettiAttivi.clear();
-		GruppoAvversario gruppoAvversario = GruppoAvversario.getIstanza();
+		VistaGruppo gruppoAvversario = vistaPartita.getGruppoAvversario();
 		int i = 0;
 		for (Personaggio personaggioCorrente : gruppoAvversario.getPersonaggi()) {
 			BufferedImage d = ClassePersonaggioImmagine.getImmagine(personaggioCorrente.getClasse());
@@ -60,8 +63,8 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 	}
 
 	void disegnaLocazione(Graphics2D graphics) {
-		GruppoGiocatore g = GruppoGiocatore.getIstanza();
-		GruppoAvversario gng = GruppoAvversario.getIstanza();
+		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
+		VistaGruppo gng = vistaPartita.getGruppoAvversario();
 		TipoLocazione tipoLocazione = g.getTipoLocazioneCorrente();
 		BufferedImage locazione = ImageCache.locazioni.get(tipoLocazione);
 		int locXOffset = topLeftX;
@@ -77,9 +80,9 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 			graphics.drawImage(d, coordinate.getX(), coordinate.getY(), null);
 		}
 
-		Oggetto oggetto = g.getLocazioneCorrente().getOggetto();
-		if (oggetto != null && oggetto.getClasse() != TipoOggetto.ARTEFATTO) {
-			BufferedImage d = ClassiOggettoImmagine.getImmagine(oggetto.getClasse());
+		TipoOggetto tipoOggetto = g.getTipoOggettoInLocazione();
+		if (tipoOggetto != null && tipoOggetto != TipoOggetto.ARTEFATTO) {
+			BufferedImage d = ClassiOggettoImmagine.getImmagine(tipoOggetto);
 			graphics.drawImage(d, locXOffset + locazione.getWidth() - d.getWidth() - 5, ImageCache.SPACING + locazione.getHeight() - d.getHeight() - 5, null);
 		}
 	}
@@ -124,14 +127,14 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 	}
 	
 	SpriteInterface raccogliOggetto() {
-		GruppoGiocatore g = GruppoGiocatore.getIstanza();
+		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
 		BufferedImage locazione = ImageCache.locazioni.get(g.getTipoLocazioneCorrente());
-		Oggetto oggetto = g.getLocazioneCorrente().getOggetto();
-		if (oggetto != null && oggetto.getClasse() != TipoOggetto.ARTEFATTO) {
-			BufferedImage d = ClassiOggettoImmagine.getImmagine(oggetto.getClasse());
+		TipoOggetto tipoOggetto = g.getTipoOggettoInLocazione();
+		if (tipoOggetto != null && tipoOggetto != TipoOggetto.ARTEFATTO) {
+			BufferedImage d = ClassiOggettoImmagine.getImmagine(tipoOggetto);
 			return new SpriteATempo(d, topLeftX + locazione.getWidth() - d.getWidth() - 5,
 					ImageCache.SPACING + locazione.getHeight() - d.getHeight() - 5,
-					"Raccolto oggetto " + oggetto.getClasse());
+					"Raccolto oggetto " + tipoOggetto);
 		}
 		return null;
 	}

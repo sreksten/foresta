@@ -3,6 +3,7 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoPrelievoArtefatto;
+import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.missioni.SetLeggendario;
 import com.threeamigos.foresta.motore.RegoleSetLeggendari;
 import com.threeamigos.foresta.oggetti.Artefatto;
@@ -50,8 +51,8 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
     }
     // --- FINE classe di appoggio
 
-    DisplayableCanvasInventario(int width, int height) {
-        super(width, height);
+    DisplayableCanvasInventario(int width, int height, VistaPartita vistaPartita) {
+        super(width, height, vistaPartita);
         BusEventi.iscriviti(NotificaRifiutoPrelievoArtefatto.class, this::onEventoRifiutoPrelievo);
     }
 

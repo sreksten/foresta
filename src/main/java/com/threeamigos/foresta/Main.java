@@ -11,6 +11,7 @@ import com.threeamigos.foresta.motore.RegistroArtefatti;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.RegistroTrofei;
 import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.tools.*;
 import com.threeamigos.foresta.ui.ForestaUI;
 import com.threeamigos.foresta.ui.Orientamento;
@@ -68,7 +69,8 @@ public class Main {
 		BusEventi.iscriviti(InternoInterfacciaUtentePronta.class, e -> controlloreDiGioco.inizia());
 
 		Temporizzatore temporizzatoreUI = new TemporizzatoreJ2SE();
-		new ForestaUI(orientamento, tuttoSchermo, saltaLogo, barraDock, gestorePunteggi, temporizzatoreUI);
+		new ForestaUI(orientamento, tuttoSchermo, saltaLogo, barraDock, gestorePunteggi, new VistaPartitaMotore(),
+				temporizzatoreUI);
 
 		//FIXME gestire l'elenco finestre togliendolo da InterfacciaUtente
 	}

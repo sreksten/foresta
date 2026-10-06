@@ -172,6 +172,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 		BusEventi.iscriviti(ComandoDiGioco.class, this::onEventoComandoDiGioco);
 		BusEventi.iscriviti(ComandoInvioTesto.class, this::onEventoTestoDisponibile);
+		// L'interruttore dell'aiuto vale in ogni stato: non passa dalla macchina a stati
+		BusEventi.iscriviti(ComandoImpostazioneAiuto.class,
+				e -> ModelloDati.getIstanza().setAiutoAbilitato(e.isAbilitato()));
 		BusEventi.iscriviti(InternoFineLogoIniziale.class, e -> {
 			logoInizialeMostrato = true;
 			passaAllIntroSePronto();

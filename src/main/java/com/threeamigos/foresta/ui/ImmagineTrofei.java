@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.motore.RegistroTrofei;
+import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
 import com.threeamigos.foresta.trofei.ClasseTrofeo;
 import com.threeamigos.foresta.trofei.Trofeo;
@@ -36,7 +36,7 @@ final class ImmagineTrofei {
 	/**
 	 * L'immagine dei trofei così come sono adesso, larga quanto chiesto; con il titolo "trofei" in cima, se serve.
 	 */
-	static BufferedImage costruisci(int larghezza, boolean conTitolo) {
+	static BufferedImage costruisci(VistaPartita vistaPartita, int larghezza, boolean conTitolo) {
 		DoomdarkFont font = DoomdarkFontMedium.getInstance();
 		int spazioFraTrofei = font.getHeight();
 		List<Image[]> trofei = new ArrayList<>();
@@ -48,7 +48,7 @@ final class ImmagineTrofei {
 		}
 		for (TipoTrofeo tipo : TipoTrofeo.perTipologia()) {
 			Trofeo trofeo = ClasseTrofeo.di(tipo);
-			boolean vinto = RegistroTrofei.isVinto(tipo);
+			boolean vinto = vistaPartita.isTrofeoVinto(tipo);
 			int progresso = vinto ? trofeo.getObiettivo() : trofeo.getProgresso();
 			DoomdarkColorModel.Color colore = vinto ? VINTO : MANCANTE;
 			Image quantita = ImageCache.get(progresso + "/" + trofeo.getObiettivo(), font, colore);

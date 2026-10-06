@@ -2,9 +2,8 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoDiGioco;
-import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.ComandiPossibili;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoImpostazioneAiuto;
+import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 
@@ -21,8 +20,8 @@ import java.util.List;
  * testa e in coda, che servono a scorrere tra le varie scelte.
  * <p>
  * In fondo ai comandi la barra aggiunge da sola l'interruttore dell'aiuto, che il gioco non vede: AIUTO quando
- * l'aiuto è spento, NO_AIUTO quando è acceso (l'icona mostra cosa fa il click). Lo stato sta in ModelloDati e si
- * salva con la partita. Ad aiuto acceso, passando sopra un'icona compare un cartiglio con la descrizione del comando
+ * l'aiuto è spento, NO_AIUTO quando è acceso (l'icona mostra cosa fa il click). La barra lo legge da VistaPartita e
+ * lo cambia con ComandoImpostazioneAiuto: l'Automa lo scrive in ModelloDati, che lo salva con la partita. Ad aiuto acceso, passando sopra un'icona compare un cartiglio con la descrizione del comando
  * (Comando.getDescrizione), sempre dentro lo schermo (vedi disegnaAiuto).
  */
 class DisplayableCanvasBarraIcone implements Finestra {
@@ -71,7 +70,10 @@ class DisplayableCanvasBarraIcone implements Finestra {
 	int mouseY = -1;
 	boolean mousePremuto = false;
 
-	DisplayableCanvasBarraIcone(int orientamento, int offsetX, int offsetY, int larghezza, int altezza) {
+	private final VistaPartita vistaPartita;
+
+	DisplayableCanvasBarraIcone(int orientamento, int offsetX, int offsetY, int larghezza, int altezza, VistaPartita vistaPartita) {
+		this.vistaPartita = vistaPartita;
 		this.orientamento = orientamento;
 		this.offsetX = offsetX;
 		this.offsetY = offsetY;
@@ -125,8 +127,12 @@ class DisplayableCanvasBarraIcone implements Finestra {
 	/**
 	 * L'icona dell'interruttore mostra cosa fa il click: accendere l'aiuto se è spento, spegnerlo se è acceso
 	 */
-	private static Comando comandoAiuto() {
-		return ModelloDati.getIstanza().isAiutoAbilitato() ? Comando.NO_AIUTO : Comando.AIUTO;
+	private Comando comandoAiuto() {
+		return comandoAiuto(vistaPartita.isAiutoAbilitato());
+	}
+
+	private static Comando comandoAiuto(boolean aiutoAbilitato) {
+		return aiutoAbilitato ? Comando.NO_AIUTO : Comando.AIUTO;
 	}
 
 	private static boolean isInterruttoreAiuto(Comando comando) {
@@ -134,13 +140,15 @@ class DisplayableCanvasBarraIcone implements Finestra {
 	}
 
 	/**
-	 * Accende o spegne l'aiuto e cambia l'icona dell'interruttore, senza cambiare pagina di scelte
+	 * Accende o spegne l'aiuto e cambia l'icona dell'interruttore, senza cambiare pagina di scelte. L'icona nuova
+	 * segue la scelta, senza aspettare che l'Automa la scriva nel modello dati.
 	 */
 	private void commutaAiuto(Comando azione) {
-		ModelloDati.getIstanza().setAiutoAbilitato(azione == Comando.AIUTO);
+		boolean aiutoAbilitato = azione == Comando.AIUTO;
+		BusEventi.pubblica(new ComandoImpostazioneAiuto(aiutoAbilitato));
 		for (int i = 0; i < comandi.length; i++) {
 			if (isInterruttoreAiuto(comandi[i])) {
-				comandi[i] = comandoAiuto();
+				comandi[i] = comandoAiuto(aiutoAbilitato);
 				icone[i] = getIcona(comandi[i]);
 			}
 		}
@@ -155,7 +163,7 @@ class DisplayableCanvasBarraIcone implements Finestra {
 	}
 
 	private ClasseIcona getIconaPersonaggio(int indice) {
-		Personaggio personaggio = GruppoGiocatore.getIstanza().getPersonaggio(indice);
+		Personaggio personaggio = vistaPartita.getGruppoGiocatore().getPersonaggio(indice);
 		if (personaggio == null) {
 			throw new IllegalStateException("Personaggio non trovato con indice " + indice);
 		}
@@ -277,7 +285,7 @@ class DisplayableCanvasBarraIcone implements Finestra {
 	 * dopo aver disegnato lo schermo intero, grande larghezzaSchermo x altezzaSchermo.
 	 */
 	void disegnaAiuto(Graphics2D graphics, int larghezzaSchermo, int altezzaSchermo) {
-		if (!ModelloDati.getIstanza().isAiutoAbilitato() || mouseX < 0) {
+		if (!vistaPartita.isAiutoAbilitato() || mouseX < 0) {
 			return;
 		}
 		for (int i = 0; i < iconeVisibili.size(); i++) {

@@ -4,12 +4,14 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
 import com.threeamigos.foresta.eventi.notifiche.*;
+import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.GruppoGiocatoreMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
@@ -17,6 +19,7 @@ import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.tools.Misc;
@@ -35,7 +38,7 @@ import java.util.stream.Collectors;
  * Un insieme di personaggi guidati da un giocatore
  */
 
-public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
+public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, VistaGruppoGiocatore {
 
 	public static GruppoGiocatore of(GruppoGiocatoreMD gruppoGiocatoreMD) {
 		return new GruppoGiocatore(gruppoGiocatoreMD);
@@ -430,6 +433,12 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti {
 
 	public Locazione getLocazioneCorrente() {
 		return locazioneCorrente;
+	}
+
+	@Override
+	public TipoOggetto getTipoOggettoInLocazione() {
+		Oggetto oggetto = locazioneCorrente == null ? null : locazioneCorrente.getOggetto();
+		return oggetto == null ? null : oggetto.getClasse();
 	}
 
 	public void setLocazioneCorrente(Locazione locazioneCorrente) {

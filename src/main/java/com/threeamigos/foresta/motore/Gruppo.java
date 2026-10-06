@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.interfacce.VistaGruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 
@@ -12,7 +13,7 @@ import java.util.stream.Collectors;
  * Un insieme di personaggi
  */
 
-public abstract class Gruppo {
+public abstract class Gruppo implements VistaGruppo {
 	
 	// Caratteristiche del gruppo
 	protected List<Personaggio> personaggi = new ArrayList<>();
@@ -172,6 +173,7 @@ public abstract class Gruppo {
 		return personaggi.size() > 1 ? "Il gruppo" : capo.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 	}
 	
+	@Override
 	public boolean contiene(Personaggio personaggio) {
 		return personaggi.contains(personaggio);
 	}

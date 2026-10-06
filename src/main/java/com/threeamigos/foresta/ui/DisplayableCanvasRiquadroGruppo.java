@@ -4,8 +4,8 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoCreazioneSpriteATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloPersonaggio;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneStatistichePersonaggio;
-import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
+import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 
@@ -50,7 +50,10 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 	private int mouseX = -1;
 	private int mouseY = -1;
 
-	DisplayableCanvasRiquadroGruppo(int topLeftX, int topLeftY) {
+	private final VistaPartita vistaPartita;
+
+	DisplayableCanvasRiquadroGruppo(int topLeftX, int topLeftY, VistaPartita vistaPartita) {
+		this.vistaPartita = vistaPartita;
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
 		innerWidth = ImageCache.corniceGrande.getWidth() - (DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE << 1);
@@ -85,7 +88,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 	void disegnaStatus(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
 		
-		GruppoGiocatore g = GruppoGiocatore.getIstanza();
+		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
 		int locXOffset = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE;
 		int locYOffset = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE;
 
@@ -189,7 +192,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 	}
 
 	private int getOrdinalePersonaggio(Personaggio personaggio) {
-		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
+		VistaGruppoGiocatore gruppo = vistaPartita.getGruppoGiocatore();
 		for (int i = 0; i < gruppo.getNumeroPersonaggi(); i++) {
 			if (gruppo.getPersonaggio(i).equals(personaggio)) {
 				return i;
@@ -230,10 +233,10 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 	 * larghezzaSchermo x altezzaSchermo.
 	 */
 	void disegnaAiuto(Graphics2D graphics, int larghezzaSchermo, int altezzaSchermo) {
-		if (!ModelloDati.getIstanza().isAiutoAbilitato() || mouseX < 0) {
+		if (!vistaPartita.isAiutoAbilitato() || mouseX < 0) {
 			return;
 		}
-		GruppoGiocatore g = GruppoGiocatore.getIstanza();
+		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
 		if (g.getNumeroPersonaggi() + g.getOspiti().size() > personaggiVisibili) {
 			Cartiglio.disegnaAccantoAlMouse(graphics, Collections.singletonList(Cartiglio.AIUTO_ROTELLA),
 					topLeftX + mouseX, topLeftY + mouseY, larghezzaSchermo, altezzaSchermo);
@@ -271,7 +274,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 	}
 
 	void gestisciEventoVariazioneStatistichePersonaggio(NotificaVariazioneStatistichePersonaggio evento) {
-		if (!GruppoGiocatore.getIstanza().contiene(evento.getPersonaggio())) {
+		if (!vistaPartita.getGruppoGiocatore().contiene(evento.getPersonaggio())) {
 			return;
 		}
 		switch (evento.getTipoAttributo()) {

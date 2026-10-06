@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.interfacce.VistaPartita;
+
 import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
@@ -49,8 +51,8 @@ class DisplayableCanvasBarraIconeDock extends DisplayableCanvasBarraIcone {
 	 */
 	private final List<Rectangle> rettangoli = new ArrayList<>();
 
-	DisplayableCanvasBarraIconeDock(int offsetX, int offsetY, int larghezza, int altezza) {
-		super(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, offsetX, offsetY, larghezza, altezza);
+	DisplayableCanvasBarraIconeDock(int offsetX, int offsetY, int larghezza, int altezza, VistaPartita vistaPartita) {
+		super(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE, offsetX, offsetY, larghezza, altezza, vistaPartita);
 	}
 
 	/**

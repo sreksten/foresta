@@ -1,8 +1,8 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.modellodati.Notizia;
 import com.threeamigos.foresta.motore.Logger;
-import com.threeamigos.foresta.motore.Notizie;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -11,7 +11,7 @@ import java.util.List;
 
 /**
  * Ticker delle notizie in fondo alla mappa a tutto schermo: mostra le
- * {@link Notizie#getUltimeNotizie()} come un'unica striscia composita
+ * {@link VistaPartita#getUltimeNotizie()} come un'unica striscia composita
  * (titolo in giallo + corpo in bianco con {@link DoomdarkFontMedium},
  * separate da un "-" con margini di {@value #LARGHEZZA_MARGINE_SEPARATORE_NOTIZIE}px,
  * incluso dopo l'ultima per un loop continuo), disegnata più volte affiancata (tiling) così che una
@@ -33,6 +33,7 @@ class Notiziario {
 
 	private final int larghezza;
 	private final int altezza;
+	private final VistaPartita vistaPartita;
 
 	private List<Notizia> notizieCostruite = new ArrayList<>();
 	private BufferedImage immagineCorrente;
@@ -41,13 +42,14 @@ class Notiziario {
 	// disegna() non fa avanzare lo scroll, si limita a registrare il timestamp.
 	private long ultimoAggiornamentoNanos = -1;
 
-	Notiziario(int larghezza, int altezza) {
+	Notiziario(int larghezza, int altezza, VistaPartita vistaPartita) {
 		this.larghezza = larghezza;
 		this.altezza = altezza;
+		this.vistaPartita = vistaPartita;
 	}
 
 	void disegna(Graphics2D g, int xBanda, int yBanda) {
-		List<Notizia> notizieAttuali = Notizie.getUltimeNotizie();
+		List<Notizia> notizieAttuali = vistaPartita.getUltimeNotizie();
 		if (notizieAttuali.isEmpty()) {
 			ultimoAggiornamentoNanos = -1;
 			return;
@@ -121,7 +123,7 @@ class Notiziario {
 			}
 		}
 
-		// Snapshot per valore: Notizie.getUltimeNotizie() restituisce la lista viva,
+		// Snapshot per valore: VistaPartita.getUltimeNotizie() restituisce la lista viva,
 		// quindi va copiata per poterla confrontare più avanti con il suo stato futuro.
 		notizieCostruite = new ArrayList<>(notizieAttuali);
 

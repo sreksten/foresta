@@ -5,8 +5,8 @@ import com.threeamigos.foresta.eventi.interni.InternoCreazioneSpriteATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneDisponibilitaPreziosi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneDisponibilitaMonete;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazionePuntiEsperienzaPersonaggio;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
+import com.threeamigos.foresta.interfacce.VistaPartita;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -26,7 +26,10 @@ class DisplayableCanvasRiquadroStatistiche implements Finestra {
 	private final int scrittaX;
 	private final int totaleX;
 	
-	DisplayableCanvasRiquadroStatistiche(int topLeftX, int topLeftY) {
+	private final VistaPartita vistaPartita;
+
+	DisplayableCanvasRiquadroStatistiche(int topLeftX, int topLeftY, VistaPartita vistaPartita) {
+		this.vistaPartita = vistaPartita;
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
 		moneteY = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_STATISTICHE + 4;
@@ -45,7 +48,7 @@ class DisplayableCanvasRiquadroStatistiche implements Finestra {
 	}
 
 	void disegnaStatistiche(Graphics2D graphics) {
-		GruppoGiocatore gruppoGiocatore = GruppoGiocatore.getIstanza();
+		VistaGruppoGiocatore gruppoGiocatore = vistaPartita.getGruppoGiocatore();
 		graphics.drawImage(ImageCache.cornicePiccola, topLeftX, topLeftY, null);
 		
 		Image image = ImageCache.get("Monete", fontMedium, coloreTestata);
@@ -60,8 +63,8 @@ class DisplayableCanvasRiquadroStatistiche implements Finestra {
 
 		image = ImageCache.get("Punti", fontMedium, coloreTestata);
 		graphics.drawImage(image, scrittaX, puntiY, null);
-		int puntiEsperienza = Statistiche.getPuntiEsperienza();
-		int puntiPerProssimoLivello = Statistiche.getPuntiEsperienzaPerProssimoLivello();
+		int puntiEsperienza = vistaPartita.getPuntiEsperienza();
+		int puntiPerProssimoLivello = vistaPartita.getPuntiEsperienzaPerProssimoLivello();
 		image = ImageCache.get(puntiEsperienza + "/" + puntiPerProssimoLivello, fontMedium, coloreTestata);
 		graphics.drawImage(image, totaleX - image.getWidth(null), puntiY, null);
 	}

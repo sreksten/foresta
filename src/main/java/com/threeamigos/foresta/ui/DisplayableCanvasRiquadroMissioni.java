@@ -1,11 +1,10 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.missioni.CronacheDiUnFegatoEroico;
 import com.threeamigos.foresta.missioni.DisturbatoreDellaQuietePubblica;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.missioni.NessunBoccaleLasciatoIndietro;
-import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.RegistroMissioni;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -32,7 +31,10 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 	private int mouseX = -1;
 	private int mouseY = -1;
 
-	DisplayableCanvasRiquadroMissioni(int topLeftX, int topLeftY) {
+	private final VistaPartita vistaPartita;
+
+	DisplayableCanvasRiquadroMissioni(int topLeftX, int topLeftY, VistaPartita vistaPartita) {
+		this.vistaPartita = vistaPartita;
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
 		innerWidth = ImageCache.corniceGrande.getWidth() - ((DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE  + SPACING) << 1);
@@ -57,7 +59,7 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 	private ComponenteScorrevole<Missione> costruisciComponenteScorrevole() {
 		ComponenteScorrevole<Missione> componenteScorrevole = new ComponenteScorrevole<>(innerWidth, 10, 2);
 		DoomdarkColorAlternante coloreAlternante = new DoomdarkColorAlternante();
-		for (Missione missione : RegistroMissioni.getMissioniAttive()) {
+		for (Missione missione : vistaPartita.getMissioniAttive()) {
 			DoomdarkColorModel.Color colore = coloreAlternante.getColor();
 			ComponenteScorrevole<Missione>.Nodo nodo = componenteScorrevole.creaNodo(
 					missione.getNome(), fontNome, colore,
@@ -65,7 +67,7 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 					getIcona(missione), missione);
 			configuraNodo(nodo, missione, colore, true);
 		}
-		List<Missione> missioniCompletate = RegistroMissioni.getMissioniCompletate();
+		List<Missione> missioniCompletate = vistaPartita.getMissioniCompletate();
 		if (!missioniCompletate.isEmpty()) {
 			componenteScorrevole.creaSeparatore();
 			for (Missione missione : missioniCompletate) {
@@ -78,7 +80,7 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 			}
 		}
 		// Le fallite per ultime, dopo un altro separatore, in rosso
-		List<Missione> missioniFallite = RegistroMissioni.getMissioniFallite();
+		List<Missione> missioniFallite = vistaPartita.getMissioniFallite();
 		if (!missioniFallite.isEmpty()) {
 			componenteScorrevole.creaSeparatore();
 			for (Missione missione : missioniFallite) {
@@ -155,7 +157,7 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 	 * tutto lo schermo, grande larghezzaSchermo x altezzaSchermo.
 	 */
 	void disegnaAiuto(Graphics2D graphics, int larghezzaSchermo, int altezzaSchermo) {
-		if (!ModelloDati.getIstanza().isAiutoAbilitato() || mouseX < 0) {
+		if (!vistaPartita.isAiutoAbilitato() || mouseX < 0) {
 			return;
 		}
 		int bordo = DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + SPACING;

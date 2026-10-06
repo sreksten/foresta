@@ -3,7 +3,7 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoVenditaArtefatto;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 
 import java.awt.*;
@@ -20,8 +20,8 @@ public class DisplayableCanvasCommerciante extends DisplayableCanvasScambiatoreA
 
     private TipoNegozio negozio = TipoNegozio.ARMAIOLO;
 
-    DisplayableCanvasCommerciante(int width, int height) {
-        super(width, height);
+    DisplayableCanvasCommerciante(int width, int height, VistaPartita vistaPartita) {
+        super(width, height, vistaPartita);
         BusEventi.iscriviti(NotificaRifiutoVenditaArtefatto.class, this::gestisciEventoRifiutoVenditaArtefatto);
     }
 
@@ -87,7 +87,7 @@ public class DisplayableCanvasCommerciante extends DisplayableCanvasScambiatoreA
 
         Image i = ImageCache.get("Monete", coloreTestata);
         graphics.drawImage(i, xMinimaZonaCentrale, y, null);
-        i = ImageCache.get(GruppoGiocatore.getIstanza().getMonete(), font, coloreTestata);
+        i = ImageCache.get(vistaPartita.getGruppoGiocatore().getMonete(), font, coloreTestata);
         graphics.drawImage(i, xMassimaZonaCentrale - i.getWidth(null), y, null);
 
         y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;

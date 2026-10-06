@@ -2,8 +2,9 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoDiGioco;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoImpostazioneAiuto;
 import com.threeamigos.foresta.modellodati.ModelloDati;
-import com.threeamigos.foresta.motore.ComandiPossibili;
+import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.tipi.Comando;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
@@ -27,6 +28,7 @@ class BarraIconeAiutoTest {
 
     private ModelloDati modelloDatiPrecedente;
     private final List<ComandoDiGioco> comandiMandati = new ArrayList<>();
+    private final List<ComandoImpostazioneAiuto> aiutiMandati = new ArrayList<>();
 
     @BeforeEach
     void prepara() {
@@ -35,6 +37,11 @@ class BarraIconeAiutoTest {
         BusEventi.azzera();
         BusEventi.impostaConsegna(Runnable::run);
         BusEventi.iscriviti(ComandoDiGioco.class, comandiMandati::add);
+        // Come fa l'Automa, che scrive l'aiuto nel modello dati
+        BusEventi.iscriviti(ComandoImpostazioneAiuto.class, e -> {
+            aiutiMandati.add(e);
+            ModelloDati.getIstanza().setAiutoAbilitato(e.isAbilitato());
+        });
     }
 
     @AfterEach
@@ -48,7 +55,7 @@ class BarraIconeAiutoTest {
     void lInterruttoreMostraCosaFaIlClickELoStatoNonArrivaAlGioco() {
         // Given
         DisplayableCanvasBarraIcone barra = new DisplayableCanvasBarraIcone(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE,
-                0, ALTEZZA_SCHERMO - 70, LARGHEZZA_SCHERMO, 70);
+                0, ALTEZZA_SCHERMO - 70, LARGHEZZA_SCHERMO, 70, new VistaPartitaMotore());
         ComandiPossibili.set(Comando.NORD, Comando.SUD);
         // When
         barra.impostaAzioni();
@@ -58,6 +65,7 @@ class BarraIconeAiutoTest {
         // When
         barra.esegui(Comando.NO_AIUTO);
         // Then
+        assertFalse(aiutiMandati.get(0).isAbilitato());
         assertFalse(ModelloDati.getIstanza().isAiutoAbilitato());
         assertEquals(Comando.AIUTO, ultimo(barra));
         // When
@@ -65,13 +73,14 @@ class BarraIconeAiutoTest {
         // Then
         assertTrue(ModelloDati.getIstanza().isAiutoAbilitato());
         assertEquals(Comando.NO_AIUTO, ultimo(barra));
+        assertEquals(2, aiutiMandati.size());
         assertTrue(comandiMandati.isEmpty(), "l'interruttore non manda comandi al gioco: " + comandiMandati);
     }
 
     @Test
     void senzaComandiNonCeNemmenoLInterruttore() {
         DisplayableCanvasBarraIcone barra = new DisplayableCanvasBarraIcone(DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE,
-                0, ALTEZZA_SCHERMO - 70, LARGHEZZA_SCHERMO, 70);
+                0, ALTEZZA_SCHERMO - 70, LARGHEZZA_SCHERMO, 70, new VistaPartitaMotore());
         ComandiPossibili.reimposta();
         barra.impostaAzioni();
         assertTrue(barra.iconeVisibili.isEmpty());

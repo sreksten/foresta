@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui.sfx;
 
-import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.interfacce.VistaMappa;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -32,9 +32,9 @@ public class CloudManager {
 	private CloudManager() {
 	}
 
-	public static void assicuraGenerate(int width, int height, int larghezzaIcona, int altezzaIcona) {
+	public static void assicuraGenerate(VistaMappa mappa, int width, int height, int larghezzaIcona, int altezzaIcona) {
 		if (clouds == null) {
-			genera(width, height, larghezzaIcona, altezzaIcona);
+			genera(mappa, width, height, larghezzaIcona, altezzaIcona);
 		}
 	}
 
@@ -81,13 +81,13 @@ public class CloudManager {
 		}
 	}
 
-	private static void genera(int width, int height, int larghezzaIcona, int altezzaIcona) {
+	private static void genera(VistaMappa mappa, int width, int height, int larghezzaIcona, int altezzaIcona) {
 		Random rand = new Random();
 
-		int daX = Foresta.getMinXConosciuta();
-		int aX = Foresta.getMaxXConosciuta();
-		int daY = Foresta.getMinYConosciuta();
-		int aY = Foresta.getMaxYConosciuta();
+		int daX = mappa.getMinXConosciuta();
+		int aX = mappa.getMaxXConosciuta();
+		int daY = mappa.getMinYConosciuta();
+		int aY = mappa.getMaxYConosciuta();
 
 		int larghezzaMappa = (aX - daX + 1) * larghezzaIcona;
 		int altezzaMappa = (aY - daY + 1) * altezzaIcona;

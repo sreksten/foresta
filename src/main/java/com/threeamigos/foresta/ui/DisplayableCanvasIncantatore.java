@@ -5,7 +5,7 @@ import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAvvisoIncantatura;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoIncantatura;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.motore.RegoleIncantatura;
 import com.threeamigos.foresta.oggetti.Artefatto;
 
@@ -20,8 +20,8 @@ import java.util.Optional;
  */
 public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreArtefatti {
 
-    DisplayableCanvasIncantatore(int width, int height) {
-        super(width, height);
+    DisplayableCanvasIncantatore(int width, int height, VistaPartita vistaPartita) {
+        super(width, height, vistaPartita);
         BusEventi.iscriviti(NotificaRifiutoIncantatura.class, this::onEventoRifiutoIncantatura);
         BusEventi.iscriviti(NotificaAvvisoIncantatura.class,
                 evento -> BusEventi.pubblica(new InternoNotificaViaFumettoATempo(evento.getFrase(), getCoordinateFumetto())));
@@ -70,12 +70,12 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
         graphics.drawImage(immaginePersonaggio, (width - immaginePersonaggio.getWidth()) / 2, y - immaginePersonaggio.getHeight(), null);
         y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
-        y = disegnaValore(graphics, "Monete", String.valueOf(GruppoGiocatore.getIstanza().getMonete()), y, coloreTestata);
+        y = disegnaValore(graphics, "Monete", String.valueOf(vistaPartita.getGruppoGiocatore().getMonete()), y, coloreTestata);
 
         Collection<Artefatto> banco = automa.getParteRemota().getInventario();
         boolean conIngredienti = banco.stream().anyMatch(RegoleIncantatura::isIngrediente);
         if (conIngredienti) {
-            y = disegnaValore(graphics, "Costo fusione", String.valueOf(GruppoGiocatore.getIstanza().costoFusione(banco)), y, coloreTestata);
+            y = disegnaValore(graphics, "Costo fusione", String.valueOf(vistaPartita.getGruppoGiocatore().costoFusione(banco)), y, coloreTestata);
         }
         Optional<Artefatto> artefatto = RegoleIncantatura.artefattoSulBanco(banco);
         if (artefatto.isPresent()) {

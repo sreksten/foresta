@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.interfacce.VistaPartita;
+
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
@@ -26,7 +28,10 @@ class DisplayableCanvasTrofei implements Finestra {
 	private final int height;
 	private ScorrimentoVerticale scorrimento;
 
-	DisplayableCanvasTrofei(int width, int height) {
+	private final VistaPartita vistaPartita;
+
+	DisplayableCanvasTrofei(int width, int height, VistaPartita vistaPartita) {
+		this.vistaPartita = vistaPartita;
 		this.width = width;
 		this.height = height;
 	}
@@ -36,7 +41,7 @@ class DisplayableCanvasTrofei implements Finestra {
 	 */
 	void apri() {
 		int cimaElenco = QUOTA_TITOLO + TestoGrande.ALTEZZA_RIGA + SPAZIO_SOTTO_IL_TITOLO;
-		scorrimento = new ScorrimentoVerticale(ImmagineTrofei.costruisci(width - 2 * MARGINE, false),
+		scorrimento = new ScorrimentoVerticale(ImmagineTrofei.costruisci(vistaPartita, width - 2 * MARGINE, false),
 				new Rectangle(0, cimaElenco, width, height - cimaElenco));
 	}
 

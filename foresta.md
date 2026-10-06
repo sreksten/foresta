@@ -48,7 +48,7 @@ Il codice si divide in due parti, che si parlano attraverso un bus eventi publis
 
 - **Un solo thread per la logica.** `BusEventi` consegna gli eventi sull'Event Dispatch Thread, e anche gli impulsi del timer del motore vi arrivano. Il thread della UI si limita a chiedere un `repaint()` 60 volte al secondo quando c'è qualcosa da animare.
 - **Il motore non conosce la UI**, salvo l'enum `InterfacciaUtente.Finestra` usato per portare in primo piano un riquadro.
-- **La UI invece conosce il dominio.** Il bus separa i comandi, ma la UI legge direttamente `GruppoGiocatore`, `Foresta`, `Notizie` e altri oggetti del motore, e chiama gli `Automa*` dei negozi che le arrivano con gli eventi. Separare il modello dati dal motore è fra le cose da valutare ([`todo.md`](todo.md)).
+- **La UI legge lo stato da una vista.** La UI legge lo stato della partita da `interfacce.VistaPartita`, in sola lettura, e verso il motore manda eventi; chiama però ancora gli `Automa*` dei negozi che le arrivano con gli eventi. Il resto della separazione è fra le cose da valutare ([`todo.md`](todo.md)).
 
 ## Avvio
 

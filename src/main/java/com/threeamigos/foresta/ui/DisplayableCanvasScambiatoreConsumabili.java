@@ -6,8 +6,9 @@ import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoConsumabile;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
+import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
+import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
@@ -23,8 +24,8 @@ import java.util.List;
  */
 public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasScambiatore {
 
-    public DisplayableCanvasScambiatoreConsumabili(int width, int height) {
-        super(width, height);
+    public DisplayableCanvasScambiatoreConsumabili(int width, int height, VistaPartita vistaPartita) {
+        super(width, height, vistaPartita);
         BusEventi.iscriviti(NotificaApprovazioneAcquistoConsumabile.class, this::gestisciEventoApprovazioneAcquistoConsumabile);
         BusEventi.iscriviti(NotificaRifiutoAcquistoConsumabile.class, this::gestisciEventoRifiutoAcquistoConsumabile);
     }
@@ -34,7 +35,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
 
         ComandoAcquistoConsumabile comando = notificaApprovazioneAcquistoConsumabile.getEventoRichiestaAcquistoConsumabile();
 
-        aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteMoneta, -GruppoGiocatore.getIstanza().prezzoAcquisto(comando.getPrezzo()), font,
+        aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteMoneta, -vistaPartita.getGruppoGiocatore().prezzoAcquisto(comando.getPrezzo()), font,
                 xMassimaZonaCentrale, yRigaMonete(), "Monete spese"));
 
         if (comando.getTipoConsumabile() == TipoConsumabile.INCANTESIMO) {
@@ -100,7 +101,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
 
         Image i = ImageCache.get("Monete", coloreTestata);
         graphics.drawImage(i, xMinimaZonaCentrale, y, null);
-        i = ImageCache.get(GruppoGiocatore.getIstanza().getMonete(), font, coloreTestata);
+        i = ImageCache.get(vistaPartita.getGruppoGiocatore().getMonete(), font, coloreTestata);
         graphics.drawImage(i, xMassimaZonaCentrale - i.getWidth(null), y, null);
 
         y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
@@ -233,7 +234,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
             String nome = consumabile.nome;
             ComponenteScorrevole<Consumabile>.Nodo nodo = componenteScorrevole.creaNodo(
                     nome, font, colore,
-                    String.valueOf(mostraCosto ? GruppoGiocatore.getIstanza().prezzoAcquisto(consumabile.costo) : consumabile.quantita), fontSmall,
+                    String.valueOf(mostraCosto ? vistaPartita.getGruppoGiocatore().prezzoAcquisto(consumabile.costo) : consumabile.quantita), fontSmall,
                     mostraCosto ? DoomdarkColorModel.Color.YELLOW : DoomdarkColorModel.Color.LIGHT_GRAY,
                     consumabile.descrizione, fontSmall, colore,
                     consumabile.icona, consumabile);
@@ -275,7 +276,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
 
     private List<Consumabile> getElencoGruppo() {
         List<Consumabile> elencoGruppo = new ArrayList<>();
-        GruppoGiocatore gruppoGiocatore = GruppoGiocatore.getIstanza();
+        VistaGruppoGiocatore gruppoGiocatore = vistaPartita.getGruppoGiocatore();
         for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
             int quantita = gruppoGiocatore.getIncantesimi(classeIncantesimo);
             if (quantita > 0) {
@@ -306,7 +307,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         elencoVenditore.add(costruisciPozioneSaluteGrande(1));
         elencoVenditore.add(costruisciPozioneMagia(1));
         elencoVenditore.add(costruisciPozioneMagiaGrande(1));
-        GruppoGiocatore gruppoGiocatore = GruppoGiocatore.getIstanza();
+        VistaGruppoGiocatore gruppoGiocatore = vistaPartita.getGruppoGiocatore();
         for (Personaggio personaggio : gruppoGiocatore.getPersonaggiVivi()) {
             if (!personaggio.isPNG()) {
                 Consumabile consumabile = new Consumabile(

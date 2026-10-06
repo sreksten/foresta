@@ -3,9 +3,9 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoCreazioneSpriteATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneConoscenzaMappa;
+import com.threeamigos.foresta.interfacce.VistaMappa;
+import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.ui.sfx.CloudManager;
 
@@ -24,7 +24,9 @@ class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements Finestr
 	private final int minOffsetPerNuvole;
     private final int larghezzaRiquadroMappa;
 
-	DisplayableCanvasRiquadroMappa(int topLeftX, int topLeftY, int larghezzaSchermo, int altezzaSchermo) {
+	DisplayableCanvasRiquadroMappa(int topLeftX, int topLeftY, int larghezzaSchermo, int altezzaSchermo,
+								   VistaPartita vistaPartita) {
+		super(vistaPartita);
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
 		this.larghezzaSchermo = larghezzaSchermo;
@@ -43,7 +45,8 @@ class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements Finestr
 
 	void disegnaMappa(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceMappa, topLeftX, topLeftY, null);
-		CoordinateMD coordinateGruppo = GruppoGiocatore.getIstanza().getCoordinate();
+		VistaMappa mappa = vistaPartita.getMappa();
+		CoordinateMD coordinateGruppo = vistaPartita.getGruppoGiocatore().getCoordinate();
 		int gruppoX = coordinateGruppo.getX();
 		int gruppoY = coordinateGruppo.getY();
 		int daX = gruppoX - 3;
@@ -52,9 +55,9 @@ class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements Finestr
 			daX = 0;
 			aX = 6;
 		}
-		if (aX >= Foresta.getDimensioneX()) {
-			daX = Foresta.getDimensioneX() - 7;
-			aX = Foresta.getDimensioneX() - 1;
+		if (aX >= mappa.getDimensioneX()) {
+			daX = mappa.getDimensioneX() - 7;
+			aX = mappa.getDimensioneX() - 1;
 		}
 		int daY = gruppoY - 3;
 		int aY = gruppoY + 3;
@@ -62,9 +65,9 @@ class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements Finestr
 			daY = 0;
 			aY = 6;
 		}
-		if (aY >= Foresta.getDimensioneY()) {
-			daY = Foresta.getDimensioneY() - 7;
-			aY = Foresta.getDimensioneY() - 1;
+		if (aY >= mappa.getDimensioneY()) {
+			daY = mappa.getDimensioneY() - 7;
+			aY = mappa.getDimensioneY() - 1;
 		}
 		int localXOffset = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_MAPPA;
 		int localYOffset = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_MAPPA;
@@ -78,7 +81,7 @@ class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements Finestr
 			int coordinateY = localYOffset + (gruppoY - daY) * ALTEZZA_ICONA;
 			graphics.drawImage(ImageCache.segnalino, coordinateX, coordinateY, null);
 
-			for (CoordinateMD coordinate : Foresta.getCoordinateDaSegnalare()) {
+			for (CoordinateMD coordinate : mappa.getCoordinateDaSegnalare()) {
 				int x = coordinate.getX();
 				int y = coordinate.getY();
 				if (x >= daX && x <= aX && y >= daY && y <= aY) {
@@ -101,7 +104,7 @@ class DisplayableCanvasRiquadroMappa extends DisegnatoreMappa implements Finestr
 
 		// 4. Imposta la trasparenza e disegna le nuvole condivise con la mappa a tutto schermo
 		graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, 0.45f));
-		CloudManager.assicuraGenerate(larghezzaSchermo, altezzaSchermo, LARGHEZZA_ICONA, ALTEZZA_ICONA);
+		CloudManager.assicuraGenerate(mappa, larghezzaSchermo, altezzaSchermo, LARGHEZZA_ICONA, ALTEZZA_ICONA);
 		CloudManager.disegna(graphics, daX, daY, localXOffset, localYOffset, LARGHEZZA_ICONA, ALTEZZA_ICONA);
 
 		// 5. RIPRISTINA TUTTO: Rimuove la clip e la trasparenza per i disegni successivi

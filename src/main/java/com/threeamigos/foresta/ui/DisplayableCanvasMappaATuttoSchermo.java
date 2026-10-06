@@ -1,9 +1,7 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.Notizie;
 import com.threeamigos.foresta.tools.Misc;
 import com.threeamigos.foresta.ui.sfx.CloudManager;
 
@@ -35,28 +33,30 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 	private int yMouse;
 
 
-	DisplayableCanvasMappaATuttoSchermo(int width, int height) {
+	DisplayableCanvasMappaATuttoSchermo(int width, int height, VistaPartita vistaPartita) {
+		super(vistaPartita);
 		this.width = width;
 		this.height = height;
-		this.notiziario = new Notiziario(width - LARGHEZZA_SFERA_MAGICA_COPERTA, ALTEZZA_ICONA);
+		this.notiziario = new Notiziario(width - LARGHEZZA_SFERA_MAGICA_COPERTA, ALTEZZA_ICONA, vistaPartita);
 	}
 
 	// La fascia del notiziario occupa spazio solo quando ci sono effettivamente
 	// notizie da mostrare: altrimenti la mappa può usare tutta l'altezza disponibile.
 	private int altezzaMappa() {
-		return Notizie.getUltimeNotizie().isEmpty() ? height : height - ALTEZZA_ICONA;
+		return vistaPartita.getUltimeNotizie().isEmpty() ? height : height - ALTEZZA_ICONA;
 	}
 
 	void centraSuGiocatore() {
 		// Ho una mappa che può essere più o meno grande rispetto a uno schermo.
 		// Le dimensioni dello schermo sono width e height.
 		// L'immagine che rappresenta la mappa ha dimensioni:
-		int dimensioneMappaX = Foresta.getDimensioneX() * LARGHEZZA_ICONA;
-		int dimensioneMappaY = Foresta.getDimensioneY() * ALTEZZA_ICONA;
+		int dimensioneMappaX = vistaPartita.getMappa().getDimensioneX() * LARGHEZZA_ICONA;
+		int dimensioneMappaY = vistaPartita.getMappa().getDimensioneY() * ALTEZZA_ICONA;
 		// Il giocatore rappresentato sulla mappa si trova in posizione:
-		int posizioneXGiocatoreSuMappa = GruppoGiocatore.getIstanza().getX() * LARGHEZZA_ICONA +
+		CoordinateMD coordinateGruppo = vistaPartita.getGruppoGiocatore().getCoordinate();
+		int posizioneXGiocatoreSuMappa = coordinateGruppo.getX() * LARGHEZZA_ICONA +
 				LARGHEZZA_ICONA / 2;
-		int posizioneYGiocatoreSuMappa = GruppoGiocatore.getIstanza().getY() * ALTEZZA_ICONA +
+		int posizioneYGiocatoreSuMappa = coordinateGruppo.getY() * ALTEZZA_ICONA +
 				ALTEZZA_ICONA / 2;
 		// Vogliamo rappresentare la mappa a video inizialmente con il giocatore
 		// posizionato al centro.
@@ -93,10 +93,10 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 	 * vuota nell'immagine della mappa.
 	 */
 	private void disegnaSegnalino(Graphics2D graphics) {
-		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
+		CoordinateMD coordinateGruppo = vistaPartita.getGruppoGiocatore().getCoordinate();
 		graphics.drawImage(ImageCache.segnalino,
-				mappaXOffset + gruppo.getX() * LARGHEZZA_ICONA,
-				mappaYOffset + gruppo.getY() * ALTEZZA_ICONA, null);
+				mappaXOffset + coordinateGruppo.getX() * LARGHEZZA_ICONA,
+				mappaYOffset + coordinateGruppo.getY() * ALTEZZA_ICONA, null);
 	}
 
 	/**
@@ -105,7 +105,7 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 	 * dell'immagine statica della mappa (vedi DisegnatoreMappa.ottieniMappaGenerale).
 	 */
 	private void disegnaIndicatori(Graphics2D graphics) {
-		for (CoordinateMD coordinate : Foresta.getCoordinateDaSegnalare()) {
+		for (CoordinateMD coordinate : vistaPartita.getMappa().getCoordinateDaSegnalare()) {
 			graphics.drawImage(ImageCache.indicatore,
 					mappaXOffset + coordinate.getX() * LARGHEZZA_ICONA,
 					mappaYOffset + coordinate.getY() * ALTEZZA_ICONA, null);
@@ -115,8 +115,8 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 	void disegnaMappaATuttoSchermo(Graphics2D graphics) {
 
 		int altezzaMappa = altezzaMappa();
-		int dimensioneMappaX = Foresta.getDimensioneX() * LARGHEZZA_ICONA;
-		int dimensioneMappaY = Foresta.getDimensioneY() * ALTEZZA_ICONA;
+		int dimensioneMappaX = vistaPartita.getMappa().getDimensioneX() * LARGHEZZA_ICONA;
+		int dimensioneMappaY = vistaPartita.getMappa().getDimensioneY() * ALTEZZA_ICONA;
 
 		// L'altezza disponibile può essere cambiata da un frame all'altro (es. è appena
 		// arrivata la prima notizia, o si è svuotato il notiziario): l'offset va rivalidato
@@ -142,7 +142,7 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 			disegnaIndicatori(graphics);
 		}
 
-		CloudManager.assicuraGenerate(width, height, LARGHEZZA_ICONA, ALTEZZA_ICONA);
+		CloudManager.assicuraGenerate(vistaPartita.getMappa(), width, height, LARGHEZZA_ICONA, ALTEZZA_ICONA);
 
 		// Applica la clip sull'area occupata dalla mappa, in modo che le nuvole non
 		// vengano disegnate al di fuori di essa quando la mappa è più piccola dello schermo
@@ -178,18 +178,18 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 
 	/**
 	 * Il nome della casella sotto il mouse, se il gruppo la conosce e ne ha uno (città, castelli, locande, templi;
-	 * vedi Foresta.getNomeDaMostrare), o null. Mai mentre si trascina la mappa o sopra il notiziario.
+	 * vedi VistaMappa.getNomeDaMostrare), o null. Mai mentre si trascina la mappa o sopra il notiziario.
 	 */
 	String getNomeSottoIlMouse() {
-		return mouseSuCasellaValida() ? Foresta.getNomeDaMostrare(getCasellaSottoIlMouse()) : null;
+		return mouseSuCasellaValida() ? vistaPartita.getMappa().getNomeDaMostrare(getCasellaSottoIlMouse()) : null;
 	}
 
 	/**
-	 * Il nome della missione per cui la casella sotto il mouse lampeggia (vedi Foresta.getNomeMissioneDaMostrare),
+	 * Il nome della missione per cui la casella sotto il mouse lampeggia (vedi VistaMappa.getNomeMissioneDaMostrare),
 	 * o null. Mai mentre si trascina la mappa o sopra il notiziario.
 	 */
 	String getNomeMissioneSottoIlMouse() {
-		return mouseSuCasellaValida() ? Foresta.getNomeMissioneDaMostrare(getCasellaSottoIlMouse()) : null;
+		return mouseSuCasellaValida() ? vistaPartita.getMappa().getNomeMissioneDaMostrare(getCasellaSottoIlMouse()) : null;
 	}
 
 	/**
@@ -265,8 +265,8 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 			mappaYOffset += deltaY;
 
 			// Ricalcoliamo al volo le dimensioni reali della mappa
-			int dimensioneMappaX = Foresta.getDimensioneX() * LARGHEZZA_ICONA;
-			int dimensioneMappaY = Foresta.getDimensioneY() * ALTEZZA_ICONA;
+			int dimensioneMappaX = vistaPartita.getMappa().getDimensioneX() * LARGHEZZA_ICONA;
+			int dimensioneMappaY = vistaPartita.getMappa().getDimensioneY() * ALTEZZA_ICONA;
 
 			// 3. APPLICAZIONE DEL CLAMPING SULL'ASSE X
 			if (dimensioneMappaX <= width) {

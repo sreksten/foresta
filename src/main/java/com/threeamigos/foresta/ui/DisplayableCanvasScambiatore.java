@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
@@ -60,6 +61,9 @@ abstract class DisplayableCanvasScambiatore implements Finestra {
     /**
      * Larghezza globale della finestra di scambio
      */
+    // Lo stato della partita, in sola lettura: monete, prezzi, personaggi e inventario del gruppo
+    protected final VistaPartita vistaPartita;
+
     protected final int width;
     /**
      * Altezza globale della finestra di scambio
@@ -148,7 +152,8 @@ abstract class DisplayableCanvasScambiatore implements Finestra {
         return 3 * SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + fontHeight + ALTEZZA_LADRO;
     }
 
-    protected DisplayableCanvasScambiatore(int width, int height) {
+    protected DisplayableCanvasScambiatore(int width, int height, VistaPartita vistaPartita) {
+        this.vistaPartita = vistaPartita;
         // Imposta la dimensione della finestra e calcola l'ampiezza delle tre colonne sinistra, centrale, destra
         this.width = width;
         this.height = height;
@@ -233,7 +238,7 @@ abstract class DisplayableCanvasScambiatore implements Finestra {
      * finestra: va chiamato per ultimo, sopra il resto della schermata
      */
     protected void disegnaAiuto(Graphics2D graphics, List<String> righe) {
-        if (ModelloDati.getIstanza().isAiutoAbilitato() && mouseX >= 0) {
+        if (vistaPartita.isAiutoAbilitato() && mouseX >= 0) {
             Cartiglio.disegnaAccantoAlMouse(graphics, righe, mouseX, mouseY, width, height);
         }
     }

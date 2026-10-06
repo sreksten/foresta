@@ -3,7 +3,8 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoCreazioneSpriteATempo;
 import com.threeamigos.foresta.eventi.notifiche.*;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
+import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 
 import java.awt.*;
@@ -28,7 +29,10 @@ class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 	private final int nomeDestraX;
 	private final int totaleDestraX;
 
-	DisplayableCanvasRiquadroIncantesimiEPozioni(int topLeftX, int topLeftY) {
+	private final VistaPartita vistaPartita;
+
+	DisplayableCanvasRiquadroIncantesimiEPozioni(int topLeftX, int topLeftY, VistaPartita vistaPartita) {
+		this.vistaPartita = vistaPartita;
 		this.topLeftX = topLeftX;
 		this.topLeftY = topLeftY;
 		int maxIconWidth = 0;
@@ -60,7 +64,7 @@ class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 				ImageCache.corniceIncantesimi.getWidth() - 2* DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI,
 				ImageCache.corniceIncantesimi.getHeight() - 2 * DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI);
 
-		GruppoGiocatore g = GruppoGiocatore.getIstanza();
+		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 		int locYOffset = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI;
 		DoomdarkColorAlternante color = new DoomdarkColorAlternante();

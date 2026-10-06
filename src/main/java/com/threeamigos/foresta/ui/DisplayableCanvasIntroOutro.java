@@ -4,8 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoErrore;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
-import com.threeamigos.foresta.motore.LineaTemporale;
-import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
@@ -73,10 +72,14 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 
 	private final GestorePunteggi gestorePunteggi;
 
+	private final VistaPartita vistaPartita;
+
 	/**
 	 * @param gestorePunteggi la classifica, che l'intro mostra fra le sue pagine
+	 * @param vistaPartita la partita appena finita, per le statistiche e i trofei
 	 */
-	DisplayableCanvasIntroOutro(int width, int height, GestorePunteggi gestorePunteggi) {
+	DisplayableCanvasIntroOutro(int width, int height, GestorePunteggi gestorePunteggi, VistaPartita vistaPartita) {
+		this.vistaPartita = vistaPartita;
 		this.gestorePunteggi = gestorePunteggi;
 		this.width = width;
 		this.height = height;
@@ -151,13 +154,13 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		int locYOffset = yOffset + 20;
 		DoomdarkColorModel.Color color = DoomdarkColorModel.Color.MEDIUM_GRAY;
 		Image doomdark;
-		int giorni = LineaTemporale.getGiorno();
+		int giorni = vistaPartita.getGiorno();
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
 		doomdark = ImageCache.get("Avversari uccisi in " + (giorni > 1 ? (Misc.getCardinaleM(giorni) + " giorni:") : "un giorno:"), fontMedium, DoomdarkColorModel.Color.LIGHT_GRAY);
 		graphics.drawImage(doomdark, locXOffset + 9, locYOffset, null);
 		locYOffset += fontMedium.getHeight();
 		for (TipoPersonaggio classePersonaggio : TipoPersonaggio.values()) {
-			int m = Statistiche.getMostriUccisi(classePersonaggio);
+			int m = vistaPartita.getMostriUccisi(classePersonaggio);
 			if (m > 0) {
 				color = (color == DoomdarkColorModel.Color.MEDIUM_GRAY ? DoomdarkColorModel.Color.LIGHT_GRAY : DoomdarkColorModel.Color.MEDIUM_GRAY); 
 				doomdark = ImageCache.get(m + " " + (m == 1 ? FabbricaPersonaggi.nomeSingolare(classePersonaggio) : FabbricaPersonaggi.nomePlurale(classePersonaggio)), fontMedium, color);
@@ -336,7 +339,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 	private void trofei(Graphics2D graphics, double secondi) {
 		disegnaOmbraDelDrago(graphics);
 		if (scorrimento == null) {
-			scorrimento = ScorrimentoVerticale.dalBasso(ImmagineTrofei.costruisci(width - 2 * MARGINE, true),
+			scorrimento = ScorrimentoVerticale.dalBasso(ImmagineTrofei.costruisci(vistaPartita, width - 2 * MARGINE, true),
 					schermo(), FASCIA);
 		}
 		scorrimento.avanza(secondi, VELOCITA);

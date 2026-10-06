@@ -51,6 +51,10 @@ public enum TipoEvento {
      */
     COMANDO_DI_GIOCO,
     /**
+     * Il giocatore accende o spegne l'aiuto della barra delle icone
+     */
+    COMANDO_IMPOSTAZIONE_AIUTO,
+    /**
      * Il giocatore invia un testo al motore
      */
     COMANDO_INVIO_TESTO,
