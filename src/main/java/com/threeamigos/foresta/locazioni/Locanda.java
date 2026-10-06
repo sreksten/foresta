@@ -4,7 +4,6 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
 import com.threeamigos.foresta.eventi.interni.InternoPastoConsumatoInLocanda;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
-import com.threeamigos.foresta.eventi.notifiche.NotificaNotizia;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
@@ -366,7 +365,7 @@ public class Locanda extends LocazioneBase {
 	private void generaNotizia() {
 		Notizia notizia = ProduttoreDiTestiCasuale.getNotiziaLocanda(getIdentificativo(), getNome(), getNomeLocandiere());
 		BusEventi.pubblica(new NotificaTestoParagrafo(notizia.getCorpo()));
-		BusEventi.pubblica(new NotificaNotizia(notizia));
+		Notizie.aggiungiNotizia(notizia);
 	}
 
 	private Stato richiediSePernottare(GruppoGiocatore gruppo) {

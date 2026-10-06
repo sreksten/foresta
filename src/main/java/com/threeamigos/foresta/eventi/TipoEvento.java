@@ -217,10 +217,6 @@ public enum TipoEvento {
      */
     NOTIFICA_TESTO_FRASE,
     /**
-     * Una notizia viene inviata dal motore al giocatore, per essere mostrata in seguito nella schermata della mappa
-     */
-    NOTIFICA_NOTIZIA,
-    /**
      * Una pagina di un intermezzo da mostrare a tutto schermo
      */
     NOTIFICA_PAGINA_INTERMEZZO,

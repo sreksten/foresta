@@ -23,6 +23,11 @@ public class NotizieMD implements Serializzabile {
 	 */
 	public static final int MASSIMO_MESSAGGI_RICORDATI = 100;
 
+	/**
+	 * Quante notizie delle locande si ricordano (e quante ne mostra il notiziario della mappa)
+	 */
+	public static final int MASSIMO_NOTIZIE_RICORDATE = 10;
+
 	// Le più recenti in testa, le più vecchie in coda.
 	private final List<MessaggioMD> ultimiMessaggi = new ArrayList<>();
 	private final List<Notizia> ultimeNotizie = new ArrayList<>();

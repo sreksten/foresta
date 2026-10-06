@@ -215,8 +215,7 @@ public class Costanti {
     public static final int COSTO_MAPPA_DELLA_ZONA = 10;
     public static final int COSTO_MAPPA_DELLA_FORESTA = 20;
 
-    // Notizie (vedi motore.Notizie / modellodati.NotizieMD; i messaggi ricordati sono in NotizieMD.MASSIMO_MESSAGGI_RICORDATI)
-    public static final int MASSIMO_NOTIZIE_RICORDATE = 10;
+    // Notizie e messaggi ricordati: vedi NotizieMD.MASSIMO_MESSAGGI_RICORDATI e MASSIMO_NOTIZIE_RICORDATE
 
     // Intermezzi (vedi intermezzi.Intermezzo): secondi dopo cui una pagina avanza da sola;
     // con 0 avanza solo al click sulla pergamena

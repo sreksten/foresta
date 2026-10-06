@@ -17,7 +17,6 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 
 ## Architettura (da valutare)
 
-- **`Notizie`** si mette in ascolto di una notizia (delle locande) invece di riceverne la pubblicazione: approccio inusuale.
 - **Nomi dei modelli dati.** Alcuni non finiscono per `MD` (`ModificatoreArtefatto`).
 
 ## Gioco e contenuti

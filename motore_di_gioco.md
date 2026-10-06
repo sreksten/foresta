@@ -131,7 +131,7 @@ Gli eventi sono organizzati per **direzione e intento**:
 | Pacchetto | Direzione | Esempi |
 | :--- | :--- | :--- |
 | `eventi.comandigiocatore` | UI → motore | `ComandoDiGioco`, `ComandoInvioTesto`, `ComandoImpostazioneAiuto`, `ComandoScambioArtefatto`, `ComandoSpesaPuntoAbilita`, `ComandoCommutazioneElenco`, `ComandoAcquistoConsumabile` |
-| `eventi.notifiche` | motore → UI, fatto compiuto | `NotificaTestoParagrafo`/`NotificaTestoFrase`, `NotificaNotizia`, `NotificaPaginaIntermezzo`, `NotificaFineGioco`, le coppie `Notifica*Approvazione*`/`Notifica*Rifiuto*` |
+| `eventi.notifiche` | motore → UI, fatto compiuto | `NotificaTestoParagrafo`/`NotificaTestoFrase`, `NotificaPaginaIntermezzo`, `NotificaFineGioco`, le coppie `Notifica*Approvazione*`/`Notifica*Rifiuto*` |
 | `eventi.richieste` | motore → UI, richieste di input o di aprire una schermata | `RichiestaSelezioneDirezione`, `RichiestaSelezioneSiNo`, `RichiestaSelezioneMissione`, `RichiestaTesto`, `RichiestaAperturaInventarioGruppo`/`...Commerciante`/`...Fornitore`, `RichiestaAperturaIncantatore`, `RichiestaAperturaTrofei`, `RichiestaVisualizzazioneMappa` |
 | `eventi.interni` | tecnici, non rivolti al giocatore | `InternoFaseDiGioco` (la fase che la UI deve mostrare: `tipi.FaseDiGioco`, un piccolo sottoinsieme degli stati dell'`Automa`), i comandi che il motore manda a sé stesso (`InternoAcquistoArtefatto`, `InternoVenditaArtefatto`, `InternoPrelievoArtefatto`, `InternoStoccaggioArtefatto`, `InternoIncantatura`, con la base `InternoSpostamentoArtefatto`), `InternoAggiornamentoComandiDisponibili`, `InternoCaricamentoCompletato`, `InternoUiOccupata`/`InternoUiInattiva`, `InternoErrore`, `InternoException`, gli eventi di sprite |
 
@@ -139,7 +139,7 @@ Classi base: `EventoBase` (identificatore e `TipoEvento`), `EventoSuPersonaggio`
 
 Le operazioni economiche usano un pattern **richiesta/verdetto**: il comando della UI non sposta nulla, il motore verifica e pubblica un'approvazione o un rifiuto con il motivo (fondi insufficienti, peso, slot, regole di equipaggiamento), e solo dopo l'approvazione l'oggetto si sposta.
 
-Un caso insolito: `motore.Notizie` ascolta le notifiche di testo e di notizia per tenere uno storico in `NotizieMD`, invece di essere chiamato da chi le pubblica (§9).
+Un caso a parte: `motore.Notizie` ascolta le notifiche di testo (`NotificaTestoFrase` e `NotificaTestoParagrafo`) per tenere in `NotizieMD` lo storico di quel che il giocatore ha visto, che si salva con la partita e ripopola il pannello di testo dopo un caricamento. È voluto: i punti che le pubblicano sono centinaia, e lo storico è proprio ciò che è passato di lì. Le notizie delle locande invece le riceve da chi le produce, con `Notizie.aggiungiNotizia`: nessun altro le ascolterebbe (§11).
 
 ## 5. Modello dati e persistenza
 
@@ -283,9 +283,9 @@ Nello stato `INTERMEZZO` l'automa pubblica `NotificaPaginaIntermezzo`, e la UI m
 
 Uscendo da una locanda, `Locanda.generaNotizia()` produce una notizia satirica sulle malefatte del gruppo:
 1. `ProduttoreDiTestiCasuale.getNotiziaLocanda` pesca da `NOTIZIE_<identificativo>` (quattro specifiche della locanda più le generiche); ogni alternativa è `ID-Titolo - Corpo`;
-2. si riprova se l'id è fra le ultime `MASSIMO_NOTIZIE_RICORDATE` (10) o se la notizia non è applicabile, fino a 20 tentativi, poi `IllegalStateException`;
+2. si riprova se l'id è fra le ultime `NotizieMD.MASSIMO_NOTIZIE_RICORDATE` (10) o se la notizia non è applicabile, fino a 20 tentativi, poi `IllegalStateException`;
 3. i segnaposto di classe (`BARDO`/`CANTASTORIE`, `LADRO`/`LADRA`, ...) rendono la notizia applicabile solo se nel gruppo c'è un personaggio vivo di quella classe e vengono sostituiti col suo nome; `EROE` diventa il nome del capo, e `NOME_LOCANDA`, `NOME_LOCANDIERE` e la desinenza di genere si sostituiscono;
-4. la notizia esce due volte: come `NotificaTestoParagrafo` (pannello di testo) e come `NotificaNotizia` (notiziario della mappa).
+4. la notizia esce due volte: come `NotificaTestoParagrafo` (pannello di testo) e con una chiamata diretta a `Notizie.aggiungiNotizia` (notiziario della mappa, che la UI legge da `VistaPartita.getUltimeNotizie`).
 
 `Notizie` tiene gli ultimi `MASSIMO_MESSAGGI_RICORDATI` (100) messaggi e le ultime 10 notizie, più recente in testa.
 
