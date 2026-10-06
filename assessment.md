@@ -24,7 +24,7 @@ Valutazione dello stato del progetto al **2026-10-05**, scritta dopo la revision
 | Artefatti generati, set leggendari, incantatore | Fatta | Mancano diverse immagini per la rivelazione degli artefatti ([`todo.md`](todo.md)); il piano aperto è in [`artefatti_e_incantamenti.md`](artefatti_e_incantamenti.md) |
 | Incantesimi e pozioni | Fatta | Dieci formule più il dardo arcano |
 | Negozi di città e offerte | Fatta | I negozi esistono solo in città; negozi sparsi nella foresta sono un'idea aperta |
-| Economia | **Da rivedere** | Analisi completa in [`economia.md`](economia.md), con un elenco di cose che non tornano; il riequilibrio non è iniziato |
+| Economia | **Riequilibrata, da misurare** | Analisi in [`economia.md`](economia.md): più monete iniziali, preziosi e missioni che valgono col livello; restano da misurare le nuove entrate col simulatore |
 | Missioni principali (Drago e alleati) | Fatta | Scritte a mano su `MissioneBase` |
 | Missioni a passi | Fatta, in crescita | 129 dei 190 `TipoMissione` coperti, 18 non coperti né annotati ([`passi_missioni.md`](passi_missioni.md) §6) |
 | Intermezzi | Fatta | Con anteprima fuori dal gioco per gli autori |
@@ -72,7 +72,7 @@ Valutazione dello stato del progetto al **2026-10-05**, scritta dopo la revision
 ## 6. Prossimi passi consigliati
 
 1. **Bilanciare il combattimento contro i boss**: è il problema che più incide sull'esperienza di gioco. Il piano è in [`artefatti_e_incantamenti.md`](artefatti_e_incantamenti.md).
-2. **Riequilibrare l'economia** partendo da [`economia.md`](economia.md), insieme al punto 1, perché bottino e prezzi crescono col livello del mondo.
+2. **Misurare l'economia** dopo il riequilibrio (preziosi e missioni col livello, 150 monete iniziali), insieme al punto 1, perché prezzi ed entrate crescono col livello del mondo: vedi [`economia.md`](economia.md).
 3. **Rendere robuste le notizie**: controllo del formato al caricamento della grammatica (o un test che produca tutte le alternative) e `null` invece dell'eccezione dopo 20 tentativi.
 4. **Decidere sulla modalità verticale**: sistemarla o toglierla. Oggi è rotta.
 5. **Separare il modello dati dalla UI**: fatto (viste in sola lettura verso la UI, identificativi verso il motore; vedi [`motore_di_gioco.md`](motore_di_gioco.md) §1). Il passo successivo sarebbe dividere il progetto in moduli.

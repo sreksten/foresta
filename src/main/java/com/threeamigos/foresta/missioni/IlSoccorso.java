@@ -189,7 +189,7 @@ public class IlSoccorso extends LaLiberazione {
 	}
 
 	@Override
-	protected int getRicompensa() {
+	protected int getRicompensaBase() {
 		return getSoccorso().getMonete();
 	}
 }

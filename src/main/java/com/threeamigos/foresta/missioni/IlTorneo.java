@@ -244,7 +244,7 @@ public class IlTorneo extends IncaricoInCitta implements ConLeggendario {
 	}
 
 	@Override
-	protected int getRicompensa() {
+	protected int getRicompensaBase() {
 		return getTorneo().getMonete();
 	}
 }

@@ -355,7 +355,7 @@ OGGETTO_SMARRITO
 #   DUELLO=     facoltativo, SI se il nemico (uno solo) sfida a duello: entrando si sceglie chi del gruppo lo affronta,
 #               gli altri si fanno da parte; rifiutando la sfida, il gruppo se ne va e lo sfidante resta lì;
 #   LUOGO=      dove si nascondono: GROTTA, ROVINE, BOSCO, PALUDE o RADURA (si segna sulla mappa);
-#   MONETE=     quanto si paga;
+#   MONETE=     quanto si paga al primo livello del mondo: l'incarico paga questa cifra per il livello di quando si offre;
 #   TITOLO=, RICHIESTA=, BATTUTA=, RISPOSTA=  il nome della missione e le battute dell'incarico (mandante, capo,
 #               mandante); dove stanno e quanto pagano lo aggiunge la missione;
 #   VITTORIA=, RINGRAZIAMENTO=, RICORDO=  quando sono sconfitti, al ritorno in città, e il ricordo del luogo;

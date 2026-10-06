@@ -173,7 +173,7 @@ public class IlColpo extends IncaricoInCitta {
 	}
 
 	@Override
-	protected int getRicompensa() {
+	protected int getRicompensaBase() {
 		return getColpo().getMonete();
 	}
 }

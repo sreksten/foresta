@@ -164,7 +164,7 @@ Alcune missioni hanno bisogno di un **luogo**: un covo, un tempio, un castello. 
 3. i passi del compito, da `primoPassoDelCompito()`; l'ultimo va a `RITORNO`;
 4. `RITORNO` (`PRE_LOCAZIONE`, nella città di ritorno): l'intermezzo del ringraziamento;
 5. `CONSEGNA` (se il compito era procurarsi oggetti): il gruppo li consegna;
-6. `RICOMPENSA` (`IN_LOCAZIONE`): le monete, e la missione si completa.
+6. `RICOMPENSA` (`IN_LOCAZIONE`): le monete, e la missione si completa. La paga che ogni missione scrive (`getRicompensaBase`) è quella del primo livello del mondo: `getRicompensa` la moltiplica per il livello di quando l'incarico si è offerto, fissato nella proprietà `LIVELLO_DELL_INCARICO` così che la cifra detta nelle scene e quella pagata siano la stessa (vedi [`economia.md`](economia.md)).
 
 Se la città in cui si riscuote viene distrutta, **ogni passo** (anche quelli del compito) ha una guardia `falliscoSe` che fa fallire la missione. Si riscuote in un'altra città se l'incarico è portare qualcosa a qualcuno (`getCittaDelRitorno`).
 

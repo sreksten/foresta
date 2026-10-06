@@ -172,6 +172,9 @@ public class Costanti {
     // Pozioni
     // Le pozioni di salute con cui il gruppo parte
     public static final int POZIONI_SALUTE_INIZIALI = 2;
+    // Con cosa comincia una partita: le monete bastano a un'arma nuova per tutti dopo i primi pasti (vedi economia.md)
+    public static final int MONETE_INIZIALI = 150;
+    public static final int PREZIOSI_INIZIALI = 5;
     public static final int RECUPERO_DA_POZIONE_SALUTE = 100;
     public static final int RECUPERO_DA_POZIONE_SALUTE_GRANDE = 150;
     public static final int AUMENTO_SALUTE_DA_POZIONE_SALUTE_GRANDE = 10;

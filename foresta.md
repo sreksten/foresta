@@ -78,7 +78,7 @@ Il codice si divide in due parti, che si parlano attraverso un bus eventi publis
 | [`passi_missioni.md`](passi_missioni.md) | Catalogo dei passi e delle missioni concrete, mappatura dei tipi di missione |
 | [`intermezzi.md`](intermezzi.md) | Come scrivere, animare e provare un intermezzo |
 | [`artefatti_e_incantamenti.md`](artefatti_e_incantamenti.md) | Artefatti, pergamene, incantatore, bilanciamento del combattimento (con il piano di lavoro) |
-| [`economia.md`](economia.md) | Bilancio dell'economia del gioco: entrate, uscite, prezzi per livello, cosa non torna. **Il riequilibrio è ancora da affrontare** |
+| [`economia.md`](economia.md) | Bilancio dell'economia del gioco: entrate, uscite, prezzi per livello, cosa non torna e le decisioni prese. **Da misurare con il simulatore dopo il riequilibrio** |
 | [`interazioni_effetti_di_stato.md`](interazioni_effetti_di_stato.md) | Interazioni fra effetti di stato e tipi di danno |
 | [`GrammarBean.md`](GrammarBean.md) | Manuale e assessment del motore di grammatiche |
 | [`assessment.md`](assessment.md) | Valutazione dello stato del progetto e prossimi passi |

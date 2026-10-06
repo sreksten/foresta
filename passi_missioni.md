@@ -85,6 +85,8 @@ Quasi tutte nascono sopra `IncaricoInCitta` (vedi [`gestione_missioni.md`](gesti
 
 ### Le storie delle città (città fissa)
 
+Le ricompense in monete di questo catalogo sono le paghe del primo livello del mondo: un incarico in città paga quella cifra per il livello di quando si è offerto (20 monete al primo livello, 200 al decimo; vedi [`economia.md`](economia.md)).
+
 | Missione | Dove | Compito | Ricompensa |
 | :--- | :--- | :--- | :--- |
 | `RecuperaIlMedaglione` | Fleena | un uomo chiede il medaglione di famiglia rubato da una banda di quattro ladri: la missione rivendica una grotta e la segna sulla mappa (`COVO`), si sconfiggono i ladri (`CACCIA`) e si torna in città; nemici, testi e descrizione stanno nella produzione `RECUPERA_IL_MEDAGLIONE` di `missioni.txt` | 20 monete |

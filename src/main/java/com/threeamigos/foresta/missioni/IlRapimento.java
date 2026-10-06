@@ -151,7 +151,7 @@ public class IlRapimento extends LaLiberazione {
 	}
 
 	@Override
-	protected int getRicompensa() {
+	protected int getRicompensaBase() {
 		return RICOMPENSA;
 	}
 }

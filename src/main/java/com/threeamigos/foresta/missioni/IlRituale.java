@@ -264,7 +264,7 @@ public class IlRituale extends IncaricoInCitta {
 	}
 
 	@Override
-	protected int getRicompensa() {
+	protected int getRicompensaBase() {
 		return getRituale().getMonete();
 	}
 }

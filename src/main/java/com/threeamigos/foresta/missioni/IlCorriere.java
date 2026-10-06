@@ -284,7 +284,7 @@ public class IlCorriere extends IncaricoInCitta {
 	 * Le monete della spedizione, più una ogni due caselle di strada.
 	 */
 	@Override
-	protected int getRicompensa() {
+	protected int getRicompensaBase() {
 		return getSpedizione().getMonete() + getDistanza() / 2;
 	}
 }

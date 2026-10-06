@@ -160,7 +160,7 @@ public class LaDocumentazione extends IncaricoInCitta {
 	}
 
 	@Override
-	protected int getRicompensa() {
+	protected int getRicompensaBase() {
 		return getDocumentazione().getMonete();
 	}
 }

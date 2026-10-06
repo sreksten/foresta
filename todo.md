@@ -6,7 +6,7 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 
 - missioni: [`gestione_missioni.md`](gestione_missioni.md) §11 e [`passi_missioni.md`](passi_missioni.md) §7;
 - artefatti, pergamene, incantatore, bilanciamento: la lista di [`artefatti_e_incantamenti.md`](artefatti_e_incantamenti.md);
-- economia: [`economia.md`](economia.md), sezioni "Che cosa non torna" e "Proposte".
+- economia: [`economia.md`](economia.md), sezioni "Che cosa non torna" e "Da fare / idee aperte".
 
 ## Bug noti
 
@@ -30,7 +30,7 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 - Mostrare in locazione anche i personaggi del gruppo.
 - Fumetto che attende la chiusura.
 - Come ci sono locande sparse per la foresta, anche qualche negozio (armaiolo, alchimista, venditore di pergamene, incantatore).
-- Ricontrollare l'economia partendo da [`economia.md`](economia.md): entrate, uscite, modello per livello e proposte (bottino dei nemici, preziosi che valgono col livello, missioni pagate col livello, prezzi degli ingredienti).
+- Misurare con il simulatore (`TestMonteCarloMatrix`) le nuove entrate dell'economia (preziosi e missioni che valgono col livello, 150 monete iniziali) e, se serve, ritarare i prezzi degli ingredienti: vedi [`economia.md`](economia.md).
 - Dimensione ottimale della mappa: `Foresta.DIMENSIONE_X`/`DIMENSIONE_Y`, da tarare con le prove.
 
 ## Il Bardo

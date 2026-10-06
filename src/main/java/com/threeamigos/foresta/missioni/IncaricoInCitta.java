@@ -9,6 +9,7 @@ import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.LineaTemporale;
+import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.ClasseMissione;
@@ -47,6 +48,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 	private static final String CONSEGNA = "CONSEGNA";
 	private static final String RICOMPENSA = "RICOMPENSA";
 	private static final String CITTA = "CITTA";
+	private static final String LIVELLO_DELL_INCARICO = "LIVELLO_DELL_INCARICO";
 	private static final String PREFISSO_CITTA = "CITTA_";
 
 	protected IncaricoInCitta(ClasseMissione classe) {
@@ -61,7 +63,18 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 
 	protected abstract String testoRicompensa();
 
-	protected abstract int getRicompensa();
+	protected abstract int getRicompensaBase();
+
+	/**
+	 * Quanto paga l'incarico: la paga base (quella che la missione scrive, per il primo livello del mondo) per il
+	 * livello del mondo di quando l'incarico si è offerto. Si fissa allora, così la cifra promessa nelle scene e
+	 * quella pagata a fine lavoro sono la stessa anche se nel frattempo il livello sale; prima che l'incarico si offra
+	 * vale quello di adesso.
+	 */
+	protected final int getRicompensa() {
+		String livello = ottieniProprieta(LIVELLO_DELL_INCARICO);
+		return getRicompensaBase() * (livello != null ? Integer.parseInt(livello) : Statistiche.getLivello());
+	}
 
 	protected abstract String primoPassoDelCompito();
 
@@ -162,6 +175,7 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::isIncaricoDaOffrire)
 						.esegui(() -> {
 							aggiungiProprieta(CITTA, gruppo.getTipoLocazioneCorrente().name());
+							aggiungiProprieta(LIVELLO_DELL_INCARICO, String.valueOf(Statistiche.getLivello()));
 							allIncarico();
 						})
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaIncarico().getPagine())

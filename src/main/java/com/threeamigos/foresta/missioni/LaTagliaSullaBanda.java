@@ -126,7 +126,7 @@ public class LaTagliaSullaBanda extends IncaricoInCitta {
 	}
 
 	@Override
-	protected int getRicompensa() {
+	protected int getRicompensaBase() {
 		return RICOMPENSA;
 	}
 }

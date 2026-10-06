@@ -97,7 +97,7 @@ public class IlCartografo extends IncaricoInCitta {
 	 * Tre monete per zona, più cinque.
 	 */
 	@Override
-	protected int getRicompensa() {
+	protected int getRicompensaBase() {
 		return 3 * getCaselle() + 5;
 	}
 }

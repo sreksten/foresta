@@ -160,7 +160,7 @@ public class RichiestaDiMateriali extends IncaricoInCitta {
 	 * Il prezzo per pezzo del materiale, più cinque.
 	 */
 	@Override
-	protected int getRicompensa() {
+	protected int getRicompensaBase() {
 		return getMateriale().getPrezzo() * getQuantita() + 5;
 	}
 }

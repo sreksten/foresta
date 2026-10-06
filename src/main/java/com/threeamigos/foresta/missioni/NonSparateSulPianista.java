@@ -12,6 +12,7 @@ import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
+import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.personaggi.Bardo;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
@@ -38,7 +39,9 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	private static final String BARDO = "BARDO";
 	// La terza visita: le visite precedenti alla locanda sono già contate quando si entra
 	private static final int VISITE_PRECEDENTI = 2;
+	// La paga base, per il primo livello del mondo: si moltiplica per il livello di quando il bardo si affida al gruppo
 	private static final int RICOMPENSA = 20;
+	private static final String LIVELLO_DELL_INCARICO = "LIVELLO_DELL_INCARICO";
 	private static final String INCARICO = "INCARICO";
 	private static final String ACCETTAZIONE = "ACCETTAZIONE";
 	private static final String VIAGGIO = "VIAGGIO";
@@ -113,6 +116,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 								() -> new Bardo(getBardo(), EquipaggiamentoIniziale.livelloCasualeDalMondo()), true)
 						.esegui(() -> {
 							aggiungiProprieta(CITTA, cittaPiuVicina().name());
+							aggiungiProprieta(LIVELLO_DELL_INCARICO, String.valueOf(Statistiche.getLivello()));
 							BusEventi.pubblica(new NotificaTestoParagrafo(getBardo() + " il bardo, che non si regge in piedi, si unisce al gruppo: va riportato a casa, "
 									+ Misc.conPreposizione("in", getNomeCitta()) + "."));
 							attivaMissione();
@@ -125,12 +129,20 @@ public class NonSparateSulPianista extends MissioneAPassi {
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaDellaMoglie().getPagine())
 						.poi(ARRIVO);
 			case ARRIVO:
-				return ricompensa(MomentoControllo.IN_LOCAZIONE, RICOMPENSA,
-								() -> "La moglie di " + getBardo() + " paga " + RICOMPENSA + " monete e trascina il marito in casa per un orecchio.")
+				return ricompensa(MomentoControllo.IN_LOCAZIONE, getRicompensa(),
+								() -> "La moglie di " + getBardo() + " paga " + getRicompensa() + " monete e trascina il marito in casa per un orecchio.")
 						.poi(Passo.FINE);
 			default:
 				throw new IllegalArgumentException("Passo sconosciuto per " + getNome() + ": " + id);
 		}
+	}
+
+	/**
+	 * Quanto paga la moglie del bardo: la paga base per il livello del mondo di quando il bardo si è affidato al gruppo.
+	 */
+	private int getRicompensa() {
+		String livello = ottieniProprieta(LIVELLO_DELL_INCARICO);
+		return RICOMPENSA * (livello != null ? Integer.parseInt(livello) : Statistiche.getLivello());
 	}
 
 	private ScenaInLocanda scenaDelLocandiere() {

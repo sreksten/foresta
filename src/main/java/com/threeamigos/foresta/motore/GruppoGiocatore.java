@@ -178,8 +178,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		super.reimposta();
 		md.reimposta();
 		ospiti.clear();
-		md.setMonete(100);
-		md.setPreziosi(5);
+		md.setMonete(Costanti.MONETE_INIZIALI);
+		md.setPreziosi(Costanti.PREZIOSI_INIZIALI);
 		md.setIncantesimi(ClasseIncantesimo.ARIA, 3);
 		md.setIncantesimi(ClasseIncantesimo.ACQUA, 3);
 		md.setIncantesimi(ClasseIncantesimo.TERRA, 3);
@@ -624,13 +624,15 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	}
 
 	/**
-	 * La vendita dei preziosi ha miglior successo se nel gruppo c'è un ladro
+	 * Un prezioso vale quanto il livello del mondo, così le pietre e le corone seguono i prezzi che salgono col livello;
+	 * la vendita ha miglior successo se nel gruppo c'è un ladro
 	 */
 	public final void vendePreziosi() {
 		if (md.getPreziosi() > 0) {
-			int quantita = md.getPreziosi();
+			int valore = Statistiche.getLivello();
+			int quantita = md.getPreziosi() * valore;
 			if (getPersonaggiVivi().stream().anyMatch(p -> p.getClasse() == TipoPersonaggio.LADRA || p.getClasse() == TipoPersonaggio.LADRO)) {
-				quantita += Dado.tiraAncheAUnaFaccia(md.getPreziosi());
+				quantita += Dado.tiraAncheAUnaFaccia(md.getPreziosi()) * valore;
 			}
             String notifica = chiMaiuscolo() +
                     " ha venduto i preziosi raccolti, ricavandone " +
