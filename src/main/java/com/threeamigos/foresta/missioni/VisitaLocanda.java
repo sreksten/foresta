@@ -5,6 +5,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.ClasseMissione;
@@ -74,6 +75,9 @@ public class VisitaLocanda extends MissioneBase {
 			// missione che le contiene, ed è quella ad annunciarsi
 			getNomeLocanda();
 			attivaMissione();
+		} else if (!isCompleta() && getTipoCitta() != null && !LineaTemporale.isCittaDistrutta(getTipoCitta())) {
+			// Finché la tappa non è fatta, la città con la locanda lampeggia sulla mappa
+			RegistroMissioni.segnalaLocazione(this, Foresta.getCoordinateLocazioneUnica(getTipoCitta()));
 		} else if (!isCompleta() && getTipoCitta() != null && LineaTemporale.isCittaDistrutta(getTipoCitta())) {
 			// Distrutta la citta', la sua locanda non c'e' piu'
 			BusEventi.pubblica(new NotificaTestoParagrafo("La '" + getNomeLocanda() + "' è andata distrutta con la sua città: una tappa che non si potrà più fare."));

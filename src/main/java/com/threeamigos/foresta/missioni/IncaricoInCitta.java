@@ -6,6 +6,8 @@ import com.threeamigos.foresta.intermezzi.MomentoIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.modellodati.CoordinateMD;
+import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.LineaTemporale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
@@ -173,11 +175,13 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 						.poi(primoPassoDelCompito());
 			case RITORNO:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::nellaCittaDelRitorno)
+						.segnala(this::coordinateDellaCittaDelRitorno)
 						.conIntermezzo(MomentoIntermezzo.INIZIO_LOCAZIONE, () -> scenaRingraziamento().getPagine())
 						.falliscoSe(this::isCittaDistrutta, this::testoCittaDistrutta)
 						.poi(getOggettiDaConsegnare() != null ? CONSEGNA : RICOMPENSA);
 			case CONSEGNA:
 				return consegna(MomentoControllo.IN_LOCAZIONE, this::nellaCittaDelRitorno, getOggettiDaConsegnare(), this::testoConsegna)
+						.segnala(this::coordinateDellaCittaDelRitorno)
 						.falliscoSe(this::isCittaDistrutta, this::testoCittaDistrutta)
 						.poi(RICOMPENSA);
 			case RICOMPENSA:
@@ -187,6 +191,15 @@ public abstract class IncaricoInCitta extends MissioneAPassi {
 			default:
 				return costruisciPassoDelCompito(id).falliscoSe(this::isCittaDistrutta, this::testoCittaDistrutta);
 		}
+	}
+
+	/**
+	 * Dov'è la città in cui si riscuote, per il segnalino sulla mappa mentre ci si deve tornare; null se è stata
+	 * distrutta.
+	 */
+	protected final CoordinateMD coordinateDellaCittaDelRitorno() {
+		TipoLocazione citta = getCittaDelRitorno();
+		return citta == null || LineaTemporale.isCittaDistrutta(citta) ? null : Foresta.getCoordinateLocazioneUnica(citta);
 	}
 
 	/**

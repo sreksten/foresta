@@ -7,6 +7,7 @@ import com.threeamigos.foresta.ui.sfx.CloudManager;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Finestra {
@@ -185,17 +186,18 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 	}
 
 	/**
-	 * Il nome della missione per cui la casella sotto il mouse lampeggia (vedi VistaMappa.getNomeMissioneDaMostrare),
-	 * o null. Mai mentre si trascina la mappa o sopra il notiziario.
+	 * I nomi delle missioni per cui la casella sotto il mouse lampeggia (vedi VistaMappa.getNomiMissioniDaMostrare),
+	 * nessuno se non lampeggia. Mai mentre si trascina la mappa o sopra il notiziario.
 	 */
-	String getNomeMissioneSottoIlMouse() {
-		return mouseSuCasellaValida() ? vistaPartita.getMappa().getNomeMissioneDaMostrare(getCasellaSottoIlMouse()) : null;
+	List<String> getNomiMissioniSottoIlMouse() {
+		return mouseSuCasellaValida() ? vistaPartita.getMappa().getNomiMissioniDaMostrare(getCasellaSottoIlMouse())
+				: Collections.emptyList();
 	}
 
 	/**
 	 * Il nome della casella sotto il mouse su un cartiglio accanto al puntatore, tenuto dentro la mappa; se la casella
-	 * lampeggia anche per una missione (vedi getNomeMissioneSottoIlMouse), un secondo cartiglio con il nome della
-	 * missione sotto il primo.
+	 * lampeggia anche per delle missioni (vedi getNomiMissioniSottoIlMouse), una riga con il nome di ognuna sotto la
+	 * prima.
 	 */
 	private void disegnaNomeSottoIlMouse(Graphics2D graphics, int altezzaMappa) {
 		List<String> righe = new ArrayList<>();
@@ -203,8 +205,7 @@ class DisplayableCanvasMappaATuttoSchermo extends DisegnatoreMappa implements Fi
 		if (nome != null) {
 			righe.add(Misc.inizialeMaiuscola(nome));
 		}
-		String nomeMissione = getNomeMissioneSottoIlMouse();
-		if (nomeMissione != null) {
+		for (String nomeMissione : getNomiMissioniSottoIlMouse()) {
 			righe.add(Misc.inizialeMaiuscola(nomeMissione));
 		}
 		Cartiglio.disegnaAccantoAlMouse(graphics, righe, xMouse, yMouse, width, altezzaMappa);

@@ -211,6 +211,7 @@ public class IlCorriere extends IncaricoInCitta {
 						.poi(VIAGGIO);
 			case VIAGGIO:
 				return Passo.quando(MomentoControllo.PRE_LOCAZIONE, this::nellaCittaDelRitorno)
+						.segnala(this::coordinateDellaCittaDelRitorno)
 						.falliscoSe(this::isInRitardo, () -> "Troppo tardi: " + spedizione.getOggettoConArticolo() + " non arriverà più in tempo "
 								+ Misc.conPreposizione("a", getDestinatarioDiCitta()) + ".")
 						.falliscoSe(() -> isDiNascosto() && haCombattutoNelPassoCorrente(), () -> "La voce del combattimento si è sparsa: "

@@ -49,8 +49,9 @@ public interface VistaMappa {
 	String getNomeDaMostrare(CoordinateMD coordinate);
 
 	/**
-	 * Il nome della missione per cui la casella lampeggia, se il gruppo la conosce; altrimenti null
+	 * I nomi delle missioni per cui la casella lampeggia (più di una, se più missioni ci mandano il gruppo), se il
+	 * gruppo la conosce; altrimenti nessuno
 	 */
-	String getNomeMissioneDaMostrare(CoordinateMD coordinate);
+	List<String> getNomiMissioniDaMostrare(CoordinateMD coordinate);
 
 }

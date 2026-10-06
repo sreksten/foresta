@@ -179,8 +179,8 @@ public class VistaPartitaMotore implements VistaPartita {
 		}
 
 		@Override
-		public String getNomeMissioneDaMostrare(CoordinateMD coordinate) {
-			return Foresta.getNomeMissioneDaMostrare(coordinate);
+		public List<String> getNomiMissioniDaMostrare(CoordinateMD coordinate) {
+			return Foresta.getNomiMissioniDaMostrare(coordinate);
 		}
 	}
 }

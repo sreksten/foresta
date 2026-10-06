@@ -111,6 +111,15 @@ public class RegistroMissioni {
 	private static final String LOCAZIONE_OCCUPATA = "LOCAZIONE_OCCUPATA";
 
 	/**
+	 * Le caselle che le missioni in corso fanno lampeggiare sulla mappa perché ci si deve andare (vedi
+	 * {@link #segnalaLocazione}): per ogni missione la casella, e più missioni possono segnalare la stessa. È una cache
+	 * di quanto le missioni scrivono nella proprietà {@code LOCAZIONE_SEGNALATA}, e si ricostruisce da lì dopo un
+	 * caricamento: serve a non ricalcolare i passi di ogni missione a ogni fotogramma.
+	 */
+	private static final Map<String, CoordinateMD> locazioniSegnalate = new HashMap<>();
+	private static final String LOCAZIONE_SEGNALATA = "LOCAZIONE_SEGNALATA";
+
+	/**
 	 * La coordinata, se non null, dove la prossima {@code crea()} non deve generare né avversari né oggetti: una
 	 * missione (LaBenedizione, IlPellegrino, IlRituale) vi conclude al suo arrivo, in un tempio o un posto che
 	 * considera sicuro (un pellegrino non andrebbe in un tempio infestato). Si consuma una volta sola, vedi
@@ -120,6 +129,7 @@ public class RegistroMissioni {
 
 	private static void pulisciElenchi() {
 		locazioniOccupate.clear();
+		locazioniSegnalate.clear();
 		prossimoClaim = 0;
 		elencoMissioniPredefinite.clear();
 		elencoMissioniPredefiniteCompletate.clear();
@@ -200,6 +210,7 @@ public class RegistroMissioni {
 		aggiornaDopoRiletturaImpl(md.getMissioniAttive());
 		aggiornaDopoRiletturaImpl(md.getMissioniCompletate());
 		ricostruisciLocazioniOccupate();
+		ricostruisciLocazioniSegnalate();
 	}
 
 	// --- Locazioni rivendicate dalle missioni (vedi gestione_missioni.md, §6-7)
@@ -211,6 +222,42 @@ public class RegistroMissioni {
 	public static void occupaLocazione(CoordinateMD coordinate, Missione missione) {
 		missione.aggiungiProprieta(LOCAZIONE_OCCUPATA, coordinate.getX() + "," + coordinate.getY() + "," + prossimoClaim++);
 		locazioniOccupate.put(coordinate, missione.getId());
+	}
+
+	/**
+	 * La missione chiede di segnare sulla mappa la casella dove ci si deve andare (la città in cui tornare, quella a cui
+	 * portare qualcosa), e di far sapere al gruppo dov'è. Ne segna una sola alla volta: una nuova prende il posto della
+	 * precedente. Più missioni possono segnare la stessa casella. Non cambia chi occupa la locazione (vedi
+	 * {@link #occupaLocazione}): la casella non si rivendica, e il suo contenuto resta quello di sempre.
+	 * Il segnalino sparisce con {@link #togliSegnalino}, o da solo quando la missione finisce.
+	 */
+	public static void segnalaLocazione(Missione missione, CoordinateMD coordinate) {
+		if (coordinate == null) {
+			togliSegnalino(missione);
+			return;
+		}
+		if (coordinate.equals(locazioniSegnalate.get(missione.getId()))) {
+			return;
+		}
+		locazioniSegnalate.put(missione.getId(), coordinate);
+		missione.aggiungiProprieta(LOCAZIONE_SEGNALATA, coordinate.getX() + "," + coordinate.getY());
+		Foresta.setLocazioneConosciuta(coordinate);
+	}
+
+	/**
+	 * La missione non ha più bisogno del segnalino (se ce l'aveva).
+	 */
+	public static void togliSegnalino(Missione missione) {
+		if (locazioniSegnalate.remove(missione.getId()) != null) {
+			missione.rimuoviProprieta(LOCAZIONE_SEGNALATA);
+		}
+	}
+
+	/**
+	 * La casella che la missione sta segnando, o null.
+	 */
+	public static CoordinateMD getLocazioneSegnalata(Missione missione) {
+		return locazioniSegnalate.get(missione.getId());
 	}
 
 	/**
@@ -269,19 +316,36 @@ public class RegistroMissioni {
 					caselle.add(coordinate);
 				}
 			}
+			// Il posto dove la missione dice di andare, anche se non l'ha rivendicato (una città, una locanda)
+			CoordinateMD segnalata = locazioniSegnalate.get(missione.getId());
+			if (segnalata != null && isInCorso(missione) && Foresta.isLocazioneConosciuta(segnalata)) {
+				caselle.add(segnalata);
+			}
 		}
 		return caselle;
 	}
 
+	private static boolean isInCorso(Missione missione) {
+		return missione.isAttiva() && !missione.isCompleta() && !missione.isFallita();
+	}
+
 	/**
-	 * Il nome della missione a passi attiva per cui quella coordinata lampeggia (vedi {@link #getLocazioniDaSegnalare}),
-	 * o null se non ce n'è una: per esempio se la casella lampeggia solo per un artefatto di cui si è saputo.
+	 * I nomi delle missioni in corso per cui quella coordinata lampeggia (vedi {@link #getLocazioniDaSegnalare}): quella
+	 * che l'ha rivendicata e tutte quelle che la segnano, anche in più di una per la stessa città. Vuota se la casella
+	 * lampeggia solo per un artefatto di cui si è saputo.
 	 */
-	public static String getNomeMissioneDaSegnalare(CoordinateMD coordinate) {
-		return getMissioneCheHaOccupato(coordinate)
-				.filter(missione -> missione instanceof MissioneAPassi && missione.isAttiva() && !missione.isCompleta() && !missione.isFallita())
-				.map(Missione::getNome)
-				.orElse(null);
+	public static List<String> getNomiMissioniDaSegnalare(CoordinateMD coordinate) {
+		List<String> nomi = new ArrayList<>();
+		getMissioneCheHaOccupato(coordinate)
+				.filter(missione -> missione instanceof MissioneAPassi && isInCorso(missione))
+				.ifPresent(missione -> nomi.add(missione.getNome()));
+		for (Missione missione : getTutteLeMissioni()) {
+			if (coordinate.equals(locazioniSegnalate.get(missione.getId())) && isInCorso(missione)
+					&& !nomi.contains(missione.getNome())) {
+				nomi.add(missione.getNome());
+			}
+		}
+		return nomi;
 	}
 
 	/**
@@ -536,6 +600,19 @@ public class RegistroMissioni {
 	}
 
 	/**
+	 * Dopo un caricamento: i segnalini si rileggono dalle proprietà delle missioni.
+	 */
+	private static void ricostruisciLocazioniSegnalate() {
+		for (Missione missione : getTutteLeMissioni()) {
+			String valore = missione.ottieniProprieta(LOCAZIONE_SEGNALATA);
+			if (valore != null) {
+				String[] parti = valore.split(",");
+				locazioniSegnalate.put(missione.getId(), new CoordinateMD(Integer.parseInt(parti[0]), Integer.parseInt(parti[1])));
+			}
+		}
+	}
+
+	/**
 	 * Dopo un caricamento: i claim si rileggono dalle proprietà delle missioni, nell'ordine in cui sono stati fatti.
 	 */
 	private static void ricostruisciLocazioniOccupate() {
@@ -690,6 +767,7 @@ public class RegistroMissioni {
 	 * missione, con la sua proprieta' FALLITA.
 	 */
 	public static void fallisciMissione(Missione missione) {
+		togliSegnalino(missione);
 		if (TipoMissionePredefinita.contieneMissione(missione.getId())) {
 			TipoMissionePredefinita tipoMissione = TipoMissionePredefinita.valueOf(missione.getId());
 			elencoMissioniPredefinite.remove(tipoMissione);
@@ -716,6 +794,7 @@ public class RegistroMissioni {
 	 * missione, con la sua proprieta' COMPLETA (vedi getMissioniCompletate).
 	 */
 	public static void completaMissione(Missione missione) {
+		togliSegnalino(missione);
 		if (TipoMissionePredefinita.contieneMissione(missione.getId())) {
 			TipoMissionePredefinita tipoMissione = TipoMissionePredefinita.valueOf(missione.getId());
 			elencoMissioniPredefinite.remove(tipoMissione);

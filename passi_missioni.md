@@ -48,6 +48,7 @@ Operazioni sul `Passo` stesso, non sulla missione:
 | `falliscoSe(condizione, testo)` | **`FALLISCI_SE`**: guardia che fa fallire la missione (la prima che scatta) |
 | `aOgniControllo(azione)` | azione a ogni valutazione del passo (la usano `sorveglia` ed `esplora` per i conteggi) |
 | `semina(oggetti)`, `affronta(dove, incontro)` | oggetti o avversari di missione nelle locazioni, finché è il passo corrente |
+| `segnala(dove)` | la casella lampeggia sulla mappa e il gruppo la conosce, finché è il passo corrente (una città in cui andare o tornare); concluso il passo il segnalino sparisce. Non rivendica la casella |
 | `conIntermezzo(momento, pagine)` | intermezzo dopo la conclusione |
 
 ## 3. Oggetti di supporto dei passi

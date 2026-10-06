@@ -19,6 +19,7 @@ import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -235,15 +236,15 @@ public class Foresta {
 	}
 
 	/**
-	 * Il nome della missione da mostrare sulla mappa per quella casella (vedi RegistroMissioni.getNomeMissioneDaSegnalare),
-	 * se il gruppo la conosce; altrimenti null.
+	 * I nomi delle missioni da mostrare sulla mappa per quella casella (vedi RegistroMissioni.getNomiMissioniDaSegnalare),
+	 * se il gruppo la conosce; altrimenti nessuno.
 	 */
-	public static String getNomeMissioneDaMostrare(CoordinateMD coordinate) {
+	public static List<String> getNomiMissioniDaMostrare(CoordinateMD coordinate) {
 		if (coordinate.getX() < 0 || coordinate.getX() >= getDimensioneX() || coordinate.getY() < 0 || coordinate.getY() >= getDimensioneY()
 				|| !isLocazioneConosciuta(coordinate)) {
-			return null;
+			return Collections.emptyList();
 		}
-		return RegistroMissioni.getNomeMissioneDaSegnalare(coordinate);
+		return RegistroMissioni.getNomiMissioniDaSegnalare(coordinate);
 	}
 
 	/**

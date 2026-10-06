@@ -4,6 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Foresta;
+import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -42,6 +43,11 @@ public class MuoviALocazione extends MissioneBase {
 	@Override
 	public void controllaPreLocazione() {
 		CoordinateMD coordinate = GruppoGiocatore.getIstanza().getCoordinate();
+		// Finché non ci si è arrivati, la locazione da raggiungere lampeggia sulla mappa
+		if (!isCompleta() && ottieniProprieta(COORDINATA_X) != null) {
+			RegistroMissioni.segnalaLocazione(this, new CoordinateMD(Integer.parseInt(ottieniProprieta(COORDINATA_X)),
+					Integer.parseInt(ottieniProprieta(COORDINATA_Y))));
+		}
 		if (String.valueOf(coordinate.getX()).equals(ottieniProprieta(COORDINATA_X)) &&
 				String.valueOf(coordinate.getY()).equals(ottieniProprieta(COORDINATA_Y))) {
 			completaMissione();

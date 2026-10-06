@@ -150,9 +150,11 @@ public abstract class MissioneAPassi extends MissioneBase {
 		for (int passiDiFila = 0; !isCompleta() && !isFallita(); passiDiFila++) {
 			String id = getPassoCorrente();
 			if (Passo.FINE.equals(id)) {
+				RegistroMissioni.togliSegnalino(this);
 				return;
 			}
 			Passo passo = costruisciPasso(id);
+			aggiornaSegnalino(passo);
 			// La guardia di falliscoSe vale in tutti i controlli, prima di tutto il resto
 			if (passo.isFallito()) {
 				BusEventi.pubblica(new NotificaTestoParagrafo(passo.getTestoFallimento()));
@@ -190,6 +192,15 @@ public abstract class MissioneAPassi extends MissioneBase {
 		}
 	}
 
+	/**
+	 * Il segnalino sulla mappa è quello del passo corrente (vedi {@link Passo#segnala}): a ogni passo che comincia si
+	 * mette o si toglie, quindi concluso un passo sparisce quello che aveva segnato. Va fatto a ogni controllo e non
+	 * solo quando si avanza, perché il passo può segnare una casella che prima non c'era.
+	 */
+	private void aggiornaSegnalino(Passo passo) {
+		RegistroMissioni.segnalaLocazione(this, passo.getLuogoDaSegnalare());
+	}
+
 	private void impostaPassoCorrente(String id) {
 		aggiungiProprieta(PASSO_CORRENTE, validaId(id));
 	}
@@ -225,7 +236,8 @@ public abstract class MissioneAPassi extends MissioneBase {
 	 * VAI: si conclude quando il gruppo è in quella locazione unica (una città, un castello…).
 	 */
 	protected final Passo vai(MomentoControllo momento, TipoLocazione locazioneUnica) {
-		return Passo.quando(momento, () -> GruppoGiocatore.getIstanza().isInLocazioneUnica(locazioneUnica));
+		return Passo.quando(momento, () -> GruppoGiocatore.getIstanza().isInLocazioneUnica(locazioneUnica))
+				.segnala(() -> Foresta.getCoordinateLocazioneUnica(locazioneUnica));
 	}
 
 	/**
@@ -769,7 +781,8 @@ public abstract class MissioneAPassi extends MissioneBase {
 		return Passo.quando(momento, () -> destinazione.get() != null
 						&& destinazione.get().equals(GruppoGiocatore.getIstanza().getCoordinate())
 						&& getScortato().filter(Personaggio::isVivo).isPresent())
-				.esegui(this::congedaScortato);
+				.esegui(this::congedaScortato)
+				.segnala(destinazione);
 	}
 
 	/**
@@ -796,7 +809,8 @@ public abstract class MissioneAPassi extends MissioneBase {
 						aggiungiProprieta(SCORTATO_MORTO, AFFERMATIVO);
 					}
 					congedaScortato();
-				});
+				})
+				.segnala(destinazione);
 	}
 
 	/**

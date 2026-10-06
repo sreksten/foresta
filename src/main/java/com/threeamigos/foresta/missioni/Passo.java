@@ -76,6 +76,7 @@ public final class Passo {
 	private OggettiDaRaccogliere oggettiDaSeminare;
 	private Supplier<CoordinateMD> luogoDellIncontro;
 	private IncontroDiMissione incontro;
+	private Supplier<CoordinateMD> luogoDaSegnalare;
 
 	private Passo(MomentoControllo momento, BooleanSupplier condizione) {
 		this.momento = Objects.requireNonNull(momento);
@@ -160,6 +161,24 @@ public final class Passo {
 		this.luogoDellIncontro = Objects.requireNonNull(dove);
 		this.incontro = Objects.requireNonNull(incontro);
 		return this;
+	}
+
+	/**
+	 * Finché questo è il passo corrente, la casella in quelle coordinate (la città in cui tornare, quella a cui portare
+	 * qualcosa) lampeggia sulla mappa e il gruppo la conosce; concluso il passo, il segnalino sparisce da solo (vedi
+	 * {@link MissioneAPassi#aggiornaSegnalino}). Se il supplier dà null, non c'è niente da segnalare. Non rivendica
+	 * la casella: per un posto che la missione occupa c'è {@link MissioneAPassi#cercaLocazione}.
+	 */
+	public Passo segnala(Supplier<CoordinateMD> dove) {
+		this.luogoDaSegnalare = Objects.requireNonNull(dove);
+		return this;
+	}
+
+	/**
+	 * La casella da far lampeggiare finché questo è il passo corrente, o null.
+	 */
+	public CoordinateMD getLuogoDaSegnalare() {
+		return luogoDaSegnalare == null ? null : luogoDaSegnalare.get();
 	}
 
 	/**
