@@ -4,6 +4,7 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventario
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
+import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.Comando;
@@ -47,7 +48,7 @@ class ScenarioArmaioloTest {
 		int contrattazioneSenzaScudo = partita.gruppo().getContrattazione();
 		partita.gruppo().getCapo().addArtefatto(Leggendari.con(Leggendari.SCUDO_DELL_ESATTORE).costruisci());
 		VistaScambio bottega = entraDallArmaiolo();
-		Artefatto scelto = new ArrayList<>(bottega.getInventarioParteRemota()).get(0);
+		VistaArtefatto scelto = new ArrayList<>(bottega.getInventarioParteRemota()).get(0);
 		int moneteIniziali = partita.gruppo().getMonete();
 		int prezzo = partita.gruppo().prezzoAcquisto(scelto.getCostoAcquisto());
 
@@ -66,7 +67,7 @@ class ScenarioArmaioloTest {
 	@Test
 	void rivendeAllArmaioloAlPrezzoTrattato() {
 		VistaScambio bottega = entraDallArmaiolo();
-		Artefatto scelto = new ArrayList<>(bottega.getInventarioParteRemota()).get(0);
+		VistaArtefatto scelto = new ArrayList<>(bottega.getInventarioParteRemota()).get(0);
 		compra(bottega, scelto);
 		int moneteDopoAcquisto = partita.gruppo().getMonete();
 
@@ -96,11 +97,11 @@ class ScenarioArmaioloTest {
 	}
 
 	// Come il doppio click della UI
-	private void compra(VistaScambio bottega, Artefatto artefatto) {
+	private void compra(VistaScambio bottega, VistaArtefatto artefatto) {
 		partita.pubblica(new ComandoScambioArtefatto(bottega, ComandoScambioArtefatto.Destinazione.PARTE_ATTIVA, artefatto));
 	}
 
-	private void vendi(VistaScambio bottega, Artefatto artefatto) {
+	private void vendi(VistaScambio bottega, VistaArtefatto artefatto) {
 		partita.pubblica(new ComandoScambioArtefatto(bottega, ComandoScambioArtefatto.Destinazione.PARTE_REMOTA, artefatto));
 	}
 }

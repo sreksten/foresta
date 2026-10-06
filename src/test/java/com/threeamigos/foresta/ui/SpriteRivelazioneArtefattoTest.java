@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
@@ -15,16 +16,16 @@ class SpriteRivelazioneArtefattoTest {
     @Test
     void loSplendoreCresceConEffettiRaritaELivelloSopraIlMondo() {
         // Spoglio, al livello del mondo
-        assertEquals(0, SpriteRivelazioneArtefatto.splendore(artefatto(3, 0, TipoRaritaArtefatto.COMUNE), 3));
+        assertEquals(0, SpriteRivelazioneArtefatto.splendore(Artefatto.di(artefatto(3, 0, TipoRaritaArtefatto.COMUNE)), 3));
         // Un effetto, o un livello sopra il mondo
-        assertEquals(1, SpriteRivelazioneArtefatto.splendore(artefatto(3, 1, TipoRaritaArtefatto.COMUNE), 3));
-        assertEquals(1, SpriteRivelazioneArtefatto.splendore(artefatto(4, 0, TipoRaritaArtefatto.COMUNE), 3));
+        assertEquals(1, SpriteRivelazioneArtefatto.splendore(Artefatto.di(artefatto(3, 1, TipoRaritaArtefatto.COMUNE)), 3));
+        assertEquals(1, SpriteRivelazioneArtefatto.splendore(Artefatto.di(artefatto(4, 0, TipoRaritaArtefatto.COMUNE)), 3));
         // Raro con un effetto: 3 punti
-        assertEquals(2, SpriteRivelazioneArtefatto.splendore(artefatto(3, 1, TipoRaritaArtefatto.RARO), 3));
+        assertEquals(2, SpriteRivelazioneArtefatto.splendore(Artefatto.di(artefatto(3, 1, TipoRaritaArtefatto.RARO)), 3));
         // Leggendario con un effetto: 5 punti
-        assertEquals(3, SpriteRivelazioneArtefatto.splendore(artefatto(3, 1, TipoRaritaArtefatto.LEGGENDARIO), 3));
+        assertEquals(3, SpriteRivelazioneArtefatto.splendore(Artefatto.di(artefatto(3, 1, TipoRaritaArtefatto.LEGGENDARIO)), 3));
         // Livelli sotto il mondo non tolgono niente
-        assertEquals(1, SpriteRivelazioneArtefatto.splendore(artefatto(1, 2, TipoRaritaArtefatto.COMUNE), 5));
+        assertEquals(1, SpriteRivelazioneArtefatto.splendore(Artefatto.di(artefatto(1, 2, TipoRaritaArtefatto.COMUNE)), 5));
     }
 
     private static ArtefattoMD artefatto(int livello, int effetti, TipoRaritaArtefatto rarita) {

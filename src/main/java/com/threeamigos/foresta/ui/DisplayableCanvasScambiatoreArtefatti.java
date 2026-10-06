@@ -1,21 +1,22 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoCommutazioneElenco;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpostamentoArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto;
+import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
+import com.threeamigos.foresta.interfacce.VistaPezzoDelSet;
 import com.threeamigos.foresta.interfacce.VistaScambio;
-import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.RegoleSetLeggendari;
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
 import com.threeamigos.foresta.tipi.SupertipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 
@@ -134,7 +135,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
      */
     private List<String> righeAiuto() {
         List<String> righe = new ArrayList<>();
-        Collection<Artefatto> elenco;
+        Collection<? extends VistaArtefatto> elenco;
         boolean parteAttiva;
         int boxX;
         int offset;
@@ -154,7 +155,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         } else {
             return righe;
         }
-        Artefatto artefatto = trovaArtefatto(elenco, boxX, offset, mouseX, mouseY, parteAttiva);
+        VistaArtefatto artefatto = trovaArtefatto(elenco, boxX, offset, mouseX, mouseY, parteAttiva);
         if (artefatto != null) {
             righe.add(Cartiglio.aiutoClick(artefatto.isFigliVisibili(), "elenco modificatori"));
             righe.add(doppioClick);
@@ -181,14 +182,14 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
      * Il colore del livello di un artefatto: di suo grigio, le schermate lo ridefiniscono per dire a colpo
      * d'occhio se l'artefatto si può prendere (inventario) o incantare (incantatore).
      */
-    protected DoomdarkColorModel.Color coloreLivello(Artefatto artefatto, boolean parteAttiva) {
+    protected DoomdarkColorModel.Color coloreLivello(VistaArtefatto artefatto, boolean parteAttiva) {
         return DoomdarkColorModel.Color.MEDIUM_GRAY;
     }
 
     /**
      * Accanto al nome: il livello, nel suo colore, e il prezzo in giallo se la parte lo mostra.
      */
-    private Image valore(Artefatto artefatto, boolean parteAttiva) {
+    private Image valore(VistaArtefatto artefatto, boolean parteAttiva) {
         Image livello = ImageCache.get("Lv " + artefatto.getLivello(), fontSmall, coloreLivello(artefatto, parteAttiva));
         IntUnaryOperator prezzo = prezzo(parteAttiva);
         if (prezzo == null) {
@@ -206,11 +207,11 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         return valore;
     }
 
-    private int disegnaElenco(Graphics2D graphics, Collection<Artefatto> artefatti, int x, int offset,
+    private int disegnaElenco(Graphics2D graphics, Collection<? extends VistaArtefatto> artefatti, int x, int offset,
                               boolean parteAttiva) {
 
-        Artefatto evidenziato = trovaArtefatto(artefatti, x, offset, mouseX, mouseY, parteAttiva);
-        ComponenteScorrevole<Artefatto> componenteScorrevole = costruisciComponenteScorrevoleArtefatti(artefatti, evidenziato, parteAttiva);
+        VistaArtefatto evidenziato = trovaArtefatto(artefatti, x, offset, mouseX, mouseY, parteAttiva);
+        ComponenteScorrevole<VistaArtefatto> componenteScorrevole = costruisciComponenteScorrevoleArtefatti(artefatti, evidenziato, parteAttiva);
 
         int nuovoOffset = componenteScorrevole.limitaOffset(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, offset);
         Image image = componenteScorrevole.produci(ALTEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, nuovoOffset);
@@ -224,17 +225,17 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
      * (livello ed eventuale prezzo), così le righe cadono alla stessa quota. L'artefatto passato in
      * evidenziato (se non null) viene disegnato in bianco invece che in grigio chiaro.
      */
-    private ComponenteScorrevole<Artefatto> costruisciComponenteScorrevoleArtefatti(Collection<Artefatto> artefatti,
-                                                                                    Artefatto evidenziato, boolean parteAttiva) {
+    private ComponenteScorrevole<VistaArtefatto> costruisciComponenteScorrevoleArtefatti(Collection<? extends VistaArtefatto> artefatti,
+                                                                                    VistaArtefatto evidenziato, boolean parteAttiva) {
 
-        ComponenteScorrevole<Artefatto> componenteScorrevole = new ComponenteScorrevole<>(
+        ComponenteScorrevole<VistaArtefatto> componenteScorrevole = new ComponenteScorrevole<>(
                 LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO, 10, 2);
 
-        Collection<Artefatto> artefattiDaDisegnare = ordinaArtefattiDaDisegnare(artefatti);
+        Collection<VistaArtefatto> artefattiDaDisegnare = ordinaArtefattiDaDisegnare(artefatti);
 
         Image separatorePrecedente = null;
 
-        for (Artefatto artefatto : artefattiDaDisegnare) {
+        for (VistaArtefatto artefatto : artefattiDaDisegnare) {
 
             Image immagineSeparatore = getImmagineSeparatore(artefatto.getTipo());
             if (immagineSeparatore != separatorePrecedente) {
@@ -260,15 +261,15 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
 
             // In grande il nome proprio (o il nome), in piccolo la descrizione
             // TODO da riguardare con la resa grafica
-            String nome = artefatto.getModelloDati().getNomeBreve();
+            String nome = artefatto.getNomeBreve();
             nome = nome.substring(0, 1).toUpperCase() + nome.substring(1);
-            ComponenteScorrevole<Artefatto>.Nodo nodo = componenteScorrevole.creaNodo(
+            ComponenteScorrevole<VistaArtefatto>.Nodo nodo = componenteScorrevole.creaNodo(
                     nome, font, colore,
                     valore(artefatto, parteAttiva),
-                    artefatto.getModelloDati().getDescrizioneBreve(), fontSmall, colore,
+                    artefatto.getDescrizioneBreve(), fontSmall, colore,
                     null, artefatto);
             nodo.setFigliVisibili(artefatto.isFigliVisibili());
-            RegoleSetLeggendari.descrizioneSet(artefatto.getModelloDati()).ifPresent(set -> {
+            artefatto.getDescrizioneSet().ifPresent(set -> {
                 nodo.creaNodo(
                         set, font, coloreSeparatori,
                         null, null, null,
@@ -276,10 +277,9 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
                         null, artefatto);
                 // I pezzi: verdi quelli indossati da chi indossa questo, gialli quelli del gruppo, grigi da trovare
                 // (di questi solo il tipo)
-                for (RegoleSetLeggendari.Pezzo pezzo : RegoleSetLeggendari.pezzi(artefatto.getModelloDati(),
-                        equipaggiamentiDelGruppo(), inventarioDelGruppo())) {
-                    boolean noto = pezzo.getStato() != RegoleSetLeggendari.StatoPezzo.DA_TROVARE
-                            || pezzo.getChiave().equals(artefatto.getModelloDati().getPezzoLeggendario());
+                for (VistaPezzoDelSet pezzo : vistaPartita.getGruppoGiocatore().getPezziDelSet(artefatto)) {
+                    boolean noto = pezzo.getStato() != StatoPezzoDelSet.DA_TROVARE
+                            || pezzo.getChiave().equals(artefatto.getPezzoLeggendario());
                     DoomdarkColorModel.Color colorePezzo = colorePezzo(pezzo.getStato());
                     nodo.creaNodo(
                             pezzo.getTipo().getDescrizione(), font, colorePezzo,
@@ -352,8 +352,8 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
     /**
      * Per supertipo e tipo, e dentro lo stesso tipo dal livello più alto al più basso: i migliori in cima.
      */
-    static Collection<Artefatto> ordinaArtefattiDaDisegnare(Collection<Artefatto> artefatti) {
-        java.util.List<Artefatto> artefattiDaDisegnare = new ArrayList<>(artefatti);
+    static Collection<VistaArtefatto> ordinaArtefattiDaDisegnare(Collection<? extends VistaArtefatto> artefatti) {
+        java.util.List<VistaArtefatto> artefattiDaDisegnare = new ArrayList<>(artefatti);
         artefattiDaDisegnare.sort((a1, a2) -> {
             int ordinaleSupertipo1 = a1.getTipo().getSupertipo().ordinal();
             int ordinaleSupertipo2 = a2.getTipo().getSupertipo().ordinal();
@@ -378,7 +378,7 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
      * finestra, oppure null se il punto non cade sull'elenco o non corrisponde al titolo
      * di un artefatto (es. una riga di modificatore/incantamento, o spazio vuoto).
      */
-    private Artefatto trovaArtefatto(Collection<Artefatto> artefatti, int boxX, int offset, int x, int y, boolean parteAttiva) {
+    private VistaArtefatto trovaArtefatto(Collection<? extends VistaArtefatto> artefatti, int boxX, int offset, int x, int y, boolean parteAttiva) {
         int xInterno = x - (boxX + SPACING);
         int yInterno = y - (DIMENSIONE_BORDO_INTERNO + 2 * SPACING);
         if (xInterno < 0 || xInterno >= LARGHEZZA_DISPONIBILE_IN_RIQUADRO_INVENTARIO
@@ -398,19 +398,15 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         if (processaClickPersonaggio(x, y, tasto)) {
             return;
         }
-        java.util.List<Artefatto> inventarioPersonaggio = new ArrayList<>(scambio.getInventarioParteAttiva());
-        Artefatto artefatto = trovaArtefatto(inventarioPersonaggio, xMinimaZonaSinistra, offsetYZonaSinistra, x, y, true);
+        java.util.List<VistaArtefatto> inventarioPersonaggio = new ArrayList<>(scambio.getInventarioParteAttiva());
+        VistaArtefatto artefatto = trovaArtefatto(inventarioPersonaggio, xMinimaZonaSinistra, offsetYZonaSinistra, x, y, true);
         if (artefatto == null) {
             artefatto = trovaArtefatto(scambio.getInventarioParteRemota(), xMinimaZonaDestra, offsetYZonaDestra, x, y, false);
         }
         if (artefatto == null) {
             return;
         }
-        if (artefatto.isFigliVisibili()) {
-            artefatto.nascondiFigli();
-        } else {
-            artefatto.mostraFigli();
-        }
+        BusEventi.pubblica(ComandoCommutazioneElenco.di(artefatto));
     }
 
     protected abstract boolean processaDoppioClickPersonaggio(int x, int y, Tasto tasto);
@@ -423,20 +419,20 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         if (processaDoppioClickPersonaggio(x, y, tasto)) {
             return;
         }
-        List<Artefatto> inventarioPersonaggio = new ArrayList<>(scambio.getInventarioParteAttiva());
-        Artefatto artefatto = trovaArtefatto(inventarioPersonaggio, xMinimaZonaSinistra, offsetYZonaSinistra, x, y, true);
+        List<VistaArtefatto> inventarioPersonaggio = new ArrayList<>(scambio.getInventarioParteAttiva());
+        VistaArtefatto artefatto = trovaArtefatto(inventarioPersonaggio, xMinimaZonaSinistra, offsetYZonaSinistra, x, y, true);
         if (artefatto != null) {
             BusEventi.pubblica(new ComandoScambioArtefatto(scambio, ComandoScambioArtefatto.Destinazione.PARTE_REMOTA, artefatto));
             return;
         }
-        Collection<Artefatto> disponibili = scambio.getInventarioParteRemota();
+        Collection<? extends VistaArtefatto> disponibili = scambio.getInventarioParteRemota();
         artefatto = trovaArtefatto(disponibili, xMinimaZonaDestra, offsetYZonaDestra, x, y, false);
         if (artefatto != null) {
             BusEventi.pubblica(new ComandoScambioArtefatto(scambio, ComandoScambioArtefatto.Destinazione.PARTE_ATTIVA, artefatto));
         }
     }
 
-    private static DoomdarkColorModel.Color colorePezzo(RegoleSetLeggendari.StatoPezzo stato) {
+    private static DoomdarkColorModel.Color colorePezzo(StatoPezzoDelSet stato) {
         switch (stato) {
             case INDOSSATO:
                 return DoomdarkColorModel.Color.GREEN;
@@ -445,28 +441,6 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
             default:
                 return DoomdarkColorModel.Color.MEDIUM_GRAY;
         }
-    }
-
-    /**
-     * Gli artefatti indossati da ogni personaggio del gruppo.
-     */
-    private List<Collection<ArtefattoMD>> equipaggiamentiDelGruppo() {
-        List<Collection<ArtefattoMD>> equipaggiamenti = new ArrayList<>();
-        for (Personaggio personaggio : vistaPartita.getGruppoGiocatore().getPersonaggi()) {
-            equipaggiamenti.add(personaggio.getModelloDati().getArtefatti());
-        }
-        return equipaggiamenti;
-    }
-
-    /**
-     * Gli artefatti del gruppo che nessuno indossa.
-     */
-    private Collection<ArtefattoMD> inventarioDelGruppo() {
-        List<ArtefattoMD> inventario = new ArrayList<>();
-        for (Artefatto artefatto : vistaPartita.getGruppoGiocatore().getInventario()) {
-            inventario.add(artefatto.getModelloDati());
-        }
-        return inventario;
     }
 
     /**

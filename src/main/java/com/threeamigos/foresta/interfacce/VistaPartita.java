@@ -1,6 +1,5 @@
 package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.modellodati.Notizia;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
@@ -22,11 +21,11 @@ public interface VistaPartita {
 
 	VistaMappa getMappa();
 
-	List<Missione> getMissioniAttive();
+	List<? extends VistaMissione> getMissioniAttive();
 
-	List<Missione> getMissioniCompletate();
+	List<? extends VistaMissione> getMissioniCompletate();
 
-	List<Missione> getMissioniFallite();
+	List<? extends VistaMissione> getMissioniFallite();
 
 	/**
 	 * Le ultime notizie delle locande, dalla più recente: la lista è viva, chi la tiene ne faccia una copia

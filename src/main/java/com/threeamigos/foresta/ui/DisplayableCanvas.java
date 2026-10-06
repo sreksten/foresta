@@ -4,12 +4,13 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
+import com.threeamigos.foresta.interfacce.VistaBancoDiLavoro;
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.modellodati.MessaggioMD;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -361,7 +362,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	// Eventi del riquadro del gruppo
 
 	private void gestisciEventoAumentoLivelloPersonaggio(NotificaAumentoLivelloPersonaggio evento) {
-		Personaggio personaggio = evento.getPersonaggio();
+		VistaPersonaggio personaggio = evento.getPersonaggio();
 		notificaAnnuncioGlobale("LEVEL UP!", personaggio.getNome() + " A LIVELLO " + personaggio.getLivello() + "!");
 		notifica("LEVEL UP! Ora " + personaggio.getNome() + " è al livello " + personaggio.getLivello() + "!");
 		// La notifica come iconcina è fatta dal riquadro del gruppo
@@ -789,7 +790,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
-	public void impostaScambioInventario(VistaScambio scambio, Personaggio personaggio) {
+	public void impostaScambioInventario(VistaScambio scambio, VistaPersonaggio personaggio) {
 		inventario.impostaScambio(scambio, personaggio);
 		repaint();
 	}
@@ -817,8 +818,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
-	public void impostaScambioIncantatore(VistaScambio scambio) {
-		incantatore.impostaScambio(scambio);
+	public void impostaBancoIncantatore(VistaBancoDiLavoro banco) {
+		incantatore.impostaBanco(banco);
 		repaint();
 	}
 
@@ -943,7 +944,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
-	public void notificaVariazioneStatoVitale(Personaggio personaggio) {
+	public void notificaVariazioneStatoVitale(VistaPersonaggio personaggio) {
 		if (personaggio.isPNG()) {
 			aggiungiSprite(riquadroLocazione.notificaMorte(personaggio));
 		} else {
@@ -951,7 +952,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 	}
 
-	public void variaSalute(Personaggio personaggio, int variazione) {
+	public void variaSalute(VistaPersonaggio personaggio, int variazione) {
 		if (personaggio.isPNG()) {
 			aggiungiSprite(riquadroLocazione.variaSalute(personaggio, variazione));
 		} else {
@@ -959,7 +960,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 	}
 
-	public void variaMagia(Personaggio personaggio, int variazione) {
+	public void variaMagia(VistaPersonaggio personaggio, int variazione) {
 		if (personaggio.isPNG()) {
 			aggiungiSprite(riquadroLocazione.variaMagia(personaggio, variazione));
 		} else {
@@ -1006,11 +1007,11 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		BusEventi.pubblica(new InternoUiOccupata());
 	}
 
-	public void aggiungiEffettoDiStato(Personaggio personaggio, TipoEffettoDiStato effettoDiStato, DoomdarkColorModel.Color colore) {
+	public void aggiungiEffettoDiStato(VistaPersonaggio personaggio, TipoEffettoDiStato effettoDiStato, DoomdarkColorModel.Color colore) {
 		aggiungiSprite(riquadroLocazione.aggiungiEffettoDiStato(personaggio, effettoDiStato, colore));
 	}
 
-	public void aggiungiInterazione(Personaggio personaggio, TipoInterazioneConEffettiDiStato interazione) {
+	public void aggiungiInterazione(VistaPersonaggio personaggio, TipoInterazioneConEffettiDiStato interazione) {
 		aggiungiSprite(riquadroLocazione.aggiungiInterazione(personaggio, interazione));
 	}
 

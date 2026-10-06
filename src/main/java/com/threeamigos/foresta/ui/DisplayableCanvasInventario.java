@@ -4,12 +4,10 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpesaPuntoAbilita;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoPrelievoArtefatto;
+import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.interfacce.VistaScambio;
-import com.threeamigos.foresta.missioni.SetLeggendario;
-import com.threeamigos.foresta.motore.RegoleSetLeggendari;
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 
 import java.awt.*;
@@ -54,7 +52,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
     // --- FINE classe di appoggio
 
     // Il personaggio di cui si mostra l'inventario: la parte attiva dello scambio
-    private Personaggio personaggio;
+    private VistaPersonaggio personaggio;
 
     DisplayableCanvasInventario(int width, int height, VistaPartita vistaPartita) {
         super(width, height, vistaPartita);
@@ -64,7 +62,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
     /**
      * @param scambio fra l'inventario del personaggio (parte attiva) e quello del gruppo (parte remota)
      */
-    void impostaScambio(VistaScambio scambio, Personaggio personaggio) {
+    void impostaScambio(VistaScambio scambio, VistaPersonaggio personaggio) {
         impostaScambio(scambio);
         this.personaggio = personaggio;
     }
@@ -95,7 +93,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         DoomdarkColorModel.Color coloreTestata = DoomdarkColorModel.Color.LIGHT_GRAY;
 
         // Nome personaggio
-        doomdark = ImageCache.get(personaggio.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA), coloreTestata);
+        doomdark = ImageCache.get(personaggio.getNome(VistaPersonaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA), coloreTestata);
         graphics.drawImage(doomdark, (width - doomdark.getWidth(null)) / 2, y, null);
         y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
@@ -109,8 +107,8 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
         // I set leggendari completi, sotto l'immagine: quello che segue scende di quanto serve
-        for (SetLeggendario set : RegoleSetLeggendari.setCompleti(personaggio.getModelloDati().getArtefatti())) {
-            doomdark = ImageCache.get(RegoleSetLeggendari.descrizioneSetCompleto(set), DoomdarkColorModel.Color.YELLOW);
+        for (String setCompleto : personaggio.getDescrizioniSetCompleti()) {
+            doomdark = ImageCache.get(setCompleto, DoomdarkColorModel.Color.YELLOW);
             graphics.drawImage(doomdark, (width - doomdark.getWidth(null)) / 2, y, null);
             y += fontHeight + SPACING;
         }
@@ -145,7 +143,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
      * evidenziato (se non null ed è primario) viene disegnato in bianco invece che nel suo
      * colore consueto.
      */
-    private ComponenteScorrevole<TipoAttributo> costruisciComponenteScorrevoleAttributi(Personaggio p, TipoAttributo evidenziato) {
+    private ComponenteScorrevole<TipoAttributo> costruisciComponenteScorrevoleAttributi(VistaPersonaggio p, TipoAttributo evidenziato) {
 
         ComponenteScorrevole<TipoAttributo> componenteScorrevole = new ComponenteScorrevole<>(
                 width - 2 * corniceInventarioWidth - 4 * SPACING, 10, 2);
@@ -203,7 +201,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
      * della finestra, oppure null se il punto non cade sull'elenco degli attributi o non
      * corrisponde al titolo di un attributo.
      */
-    private TipoAttributo trovaAttributo(Personaggio p, int x, int y) {
+    private TipoAttributo trovaAttributo(VistaPersonaggio p, int x, int y) {
         int larghezzaAttributi = width - 2 * corniceInventarioWidth - 4 * SPACING;
         int xInterno = x - (corniceInventarioWidth + 2 * SPACING);
         if (xInterno < 0 || xInterno >= larghezzaAttributi || y < yAttributi || y >= height) {
@@ -239,11 +237,11 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
      * qualunque motivo: livello, classe, peso, forza, posto occupato. Quelli che ha già restano grigi.
      */
     @Override
-    protected DoomdarkColorModel.Color coloreLivello(Artefatto artefatto, boolean parteAttiva) {
+    protected DoomdarkColorModel.Color coloreLivello(VistaArtefatto artefatto, boolean parteAttiva) {
         if (parteAttiva) {
             return super.coloreLivello(artefatto, true);
         }
-                return personaggio.puoEquipaggiare(artefatto).isPresent() ? DoomdarkColorModel.Color.RED : DoomdarkColorModel.Color.GREEN;
+                return personaggio.isEquipaggiabile(artefatto) ? DoomdarkColorModel.Color.GREEN : DoomdarkColorModel.Color.RED;
     }
 
     protected boolean processaDoppioClickPersonaggio(int x, int y, Tasto tasto) {

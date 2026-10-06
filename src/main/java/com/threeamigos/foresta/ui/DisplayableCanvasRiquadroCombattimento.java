@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -14,8 +14,8 @@ class DisplayableCanvasRiquadroCombattimento implements Finestra {
 	private final int yOffset;
 	private final BufferedImage cornice;
 	private final Rectangle rettangolo;
-	private Personaggio combattente;
-	private Personaggio avversario;
+	private VistaPersonaggio combattente;
+	private VistaPersonaggio avversario;
 	private String nomeCombattente;
 	private String nomeAvversario;
 	private final DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
@@ -55,15 +55,15 @@ class DisplayableCanvasRiquadroCombattimento implements Finestra {
 		this.visible = visible;
 	}
 
-	void setCombattente(Personaggio combattente) {
+	void setCombattente(VistaPersonaggio combattente) {
 		this.combattente = combattente;
-		nomeCombattente = combattente.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
+		nomeCombattente = combattente.getNome(VistaPersonaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
 		int l = cornice.getWidth() - 30;
 		while (FontTool.getWidth(fontMedium, nomeCombattente) > l)
 			nomeCombattente = nomeCombattente.substring(0, nomeCombattente.length() - 2);
 	}
 
-	void setAvversario(Personaggio avversario) {
+	void setAvversario(VistaPersonaggio avversario) {
 		this.avversario = avversario;
 		if (avversario != null) {
 			Optional<String> nomeOpt = avversario.getNomeProprio();

@@ -7,10 +7,12 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
 import com.threeamigos.foresta.interfacce.OggettoConCosto;
 import com.threeamigos.foresta.interfacce.OggettoConPeso;
+import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.RegoleEquipaggiamento;
+import com.threeamigos.foresta.motore.RegoleSetLeggendari;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.SupertipoArtefatto;
@@ -25,7 +27,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
+public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso, VistaArtefatto {
 
 	protected final ArtefattoMD md;
 
@@ -44,6 +46,20 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 		return new Artefatto(md);
 	}
 
+	/**
+	 * L'artefatto di una vista che arriva dalla UI con un comando: le viste degli artefatti sono artefatti, e il
+	 * motore passa da qui per tornare all'oggetto che può cambiare.
+	 */
+	public static Artefatto da(VistaArtefatto vista) {
+		return (Artefatto) vista;
+	}
+
+	@Override
+	public final String getUuid() {
+		return md.getUuid();
+	}
+
+	@Override
 	public final TipoArtefatto getTipo() {
 		return md.getTipo();
 	}
@@ -54,6 +70,36 @@ public class Artefatto implements Oggetto, OggettoConCosto, OggettoConPeso {
 
 	public final String getDescrizione() {
 		return md.getDescrizione();
+	}
+
+	@Override
+	public final String getNomeBreve() {
+		return md.getNomeBreve();
+	}
+
+	@Override
+	public final String getDescrizioneBreve() {
+		return md.getDescrizioneBreve();
+	}
+
+	@Override
+	public int getDanni() {
+		return md.getDanni();
+	}
+
+	@Override
+	public final String getPezzoLeggendario() {
+		return md.getPezzoLeggendario();
+	}
+
+	@Override
+	public final Optional<String> getDescrizioneSet() {
+		return RegoleSetLeggendari.descrizioneSet(md);
+	}
+
+	@Override
+	public final Optional<String> getTipiDelSet() {
+		return RegoleSetLeggendari.tipiDelSet(md);
 	}
 
 	public final Optional<String> getNomeProprio() {

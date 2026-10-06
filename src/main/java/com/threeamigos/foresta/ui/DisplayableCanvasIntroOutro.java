@@ -5,8 +5,8 @@ import com.threeamigos.foresta.eventi.interni.InternoErrore;
 import com.threeamigos.foresta.eventi.interni.InternoException;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
-import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tools.Misc;
@@ -207,7 +207,7 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		int id = numeroDaComando(testata.getId());
 		int coordinataY = getCoordinataY(id);
 		String descrizione = testata.getDescrizione();
-        Collection<Personaggio> personaggi = testata.getGruppoGiocatore().getPersonaggi();
+        Collection<? extends VistaPersonaggio> personaggi = testata.getGruppoGiocatore().getPersonaggi();
 		disegnaPersonaggi(graphics, id, personaggi, coordinataY);
 		BufferedImage immagineConAlone = TestoGrande.conAlone(
 				TestoGrande.immagine(id + " - " + descrizione.toLowerCase(), width - 2 * RAGGIO_ALONE, true), RAGGIO_ALONE);
@@ -435,12 +435,12 @@ public class DisplayableCanvasIntroOutro implements Finestra {
 		return 50 + 100 * id;
 	}
 
-	private void disegnaPersonaggi(Graphics2D graphics, int id, Collection<Personaggio> personaggi, int coordinataY) {
+	private void disegnaPersonaggi(Graphics2D graphics, int id, Collection<? extends VistaPersonaggio> personaggi, int coordinataY) {
 		List<BufferedImage> immagini = new ArrayList<>();
 		List<Integer> coordinateX = new ArrayList<>();
 		int coordinataX = (width >> 1) + 100 * (id - 3);
 		int altezzaMinima = 999;
-		for (Personaggio personaggio : personaggi) {
+		for (VistaPersonaggio personaggio : personaggi) {
 			BufferedImage immagine = ClassePersonaggioImmagine.getImmagine(personaggio.getClasse());
 			immagini.add(0, immagine);
 			coordinateX.add(0, coordinataX);

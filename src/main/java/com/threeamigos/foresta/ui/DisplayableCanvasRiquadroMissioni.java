@@ -1,10 +1,9 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoCommutazioneElenco;
+import com.threeamigos.foresta.interfacce.VistaMissione;
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.missioni.CronacheDiUnFegatoEroico;
-import com.threeamigos.foresta.missioni.DisturbatoreDellaQuietePubblica;
-import com.threeamigos.foresta.missioni.Missione;
-import com.threeamigos.foresta.missioni.NessunBoccaleLasciatoIndietro;
 
 import java.awt.*;
 import java.util.ArrayList;
@@ -44,7 +43,7 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 	void disegnaMissioni(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
 
-		ComponenteScorrevole<Missione> componenteScorrevole = costruisciComponenteScorrevole();
+		ComponenteScorrevole<VistaMissione> componenteScorrevole = costruisciComponenteScorrevole();
 		// L'elenco può essere cambiato dall'ultimo scorrimento: l'offset va rimesso nei limiti
 		offsetY = componenteScorrevole.limitaOffset(innerHeight, offsetY);
 		Image image = componenteScorrevole.produci(innerHeight, offsetY);
@@ -56,23 +55,23 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 	 * L'albero viene ricostruito a ogni disegno e a ogni click: lo stato di apertura
 	 * dei nodi non vive qui ma nel modello dati delle missioni.
 	 */
-	private ComponenteScorrevole<Missione> costruisciComponenteScorrevole() {
-		ComponenteScorrevole<Missione> componenteScorrevole = new ComponenteScorrevole<>(innerWidth, 10, 2);
+	private ComponenteScorrevole<VistaMissione> costruisciComponenteScorrevole() {
+		ComponenteScorrevole<VistaMissione> componenteScorrevole = new ComponenteScorrevole<>(innerWidth, 10, 2);
 		DoomdarkColorAlternante coloreAlternante = new DoomdarkColorAlternante();
-		for (Missione missione : vistaPartita.getMissioniAttive()) {
+		for (VistaMissione missione : vistaPartita.getMissioniAttive()) {
 			DoomdarkColorModel.Color colore = coloreAlternante.getColor();
-			ComponenteScorrevole<Missione>.Nodo nodo = componenteScorrevole.creaNodo(
+			ComponenteScorrevole<VistaMissione>.Nodo nodo = componenteScorrevole.creaNodo(
 					missione.getNome(), fontNome, colore,
 					missione.getDescrizione(), fontDescrizione, colore,
 					getIcona(missione), missione);
 			configuraNodo(nodo, missione, colore, true);
 		}
-		List<Missione> missioniCompletate = vistaPartita.getMissioniCompletate();
+		List<? extends VistaMissione> missioniCompletate = vistaPartita.getMissioniCompletate();
 		if (!missioniCompletate.isEmpty()) {
 			componenteScorrevole.creaSeparatore();
-			for (Missione missione : missioniCompletate) {
+			for (VistaMissione missione : missioniCompletate) {
 				DoomdarkColorModel.Color colore = DoomdarkColorModel.Color.DARK_GRAY;
-				ComponenteScorrevole<Missione>.Nodo nodo = componenteScorrevole.creaNodo(
+				ComponenteScorrevole<VistaMissione>.Nodo nodo = componenteScorrevole.creaNodo(
 						missione.getNome(), fontNome, colore,
 						missione.getDescrizione(), fontDescrizione, colore,
 						getIcona(missione), missione);
@@ -80,12 +79,12 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 			}
 		}
 		// Le fallite per ultime, dopo un altro separatore, in rosso
-		List<Missione> missioniFallite = vistaPartita.getMissioniFallite();
+		List<? extends VistaMissione> missioniFallite = vistaPartita.getMissioniFallite();
 		if (!missioniFallite.isEmpty()) {
 			componenteScorrevole.creaSeparatore();
-			for (Missione missione : missioniFallite) {
+			for (VistaMissione missione : missioniFallite) {
 				DoomdarkColorModel.Color colore = DoomdarkColorModel.Color.RED;
-				ComponenteScorrevole<Missione>.Nodo nodo = componenteScorrevole.creaNodo(
+				ComponenteScorrevole<VistaMissione>.Nodo nodo = componenteScorrevole.creaNodo(
 						missione.getNome(), fontNome, colore,
 						missione.getDescrizione(), fontDescrizione, colore,
 						getIcona(missione), missione);
@@ -100,14 +99,14 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 	 * sotto-missioni completate, che compaiono fra le completate (vedi RegistroMissioni.getMissioniCompletate).
 	 * Vale a ogni livello dell'albero.
 	 */
-	private void configuraNodo(ComponenteScorrevole<Missione>.Nodo nodo, Missione missione, DoomdarkColorModel.Color colore,
+	private void configuraNodo(ComponenteScorrevole<VistaMissione>.Nodo nodo, VistaMissione missione, DoomdarkColorModel.Color colore,
 			boolean nascondiCompletate) {
 		nodo.setFigliVisibili(missione.isDescrizioneVisibile());
-		for (Missione missioneSecondaria : missione.getMissioniSecondarie()) {
+		for (VistaMissione missioneSecondaria : missione.getMissioniSecondarie()) {
 			if (!missioneSecondaria.isAttiva() || (nascondiCompletate && missioneSecondaria.isCompleta())) {
 				continue;
 			}
-			ComponenteScorrevole<Missione>.Nodo nodoFiglio = nodo.creaNodo(
+			ComponenteScorrevole<VistaMissione>.Nodo nodoFiglio = nodo.creaNodo(
 					missioneSecondaria.getNome(), fontNome, colore,
 					missioneSecondaria.getDescrizione(), fontDescrizione, colore,
 					null, missioneSecondaria);
@@ -128,15 +127,11 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 			return;
 		}
 		// La quota va espressa in coordinate della lista, non della finestra visibile
-		Missione missione = costruisciComponenteScorrevole().riferimentoTitoloAllaQuota(yInterno + offsetY);
+		VistaMissione missione = costruisciComponenteScorrevole().riferimentoTitoloAllaQuota(yInterno + offsetY);
 		if (missione == null) {
 			return;
 		}
-		if (missione.isDescrizioneVisibile()) {
-			missione.nascondiDescrizione();
-		} else {
-			missione.mostraDescrizione();
-		}
+		BusEventi.pubblica(ComandoCommutazioneElenco.di(missione));
 	}
 
 	@Override
@@ -166,9 +161,9 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 		if (xInterno < 0 || xInterno >= innerWidth || yInterno < 0 || yInterno >= innerHeight) {
 			return;
 		}
-		ComponenteScorrevole<Missione> componenteScorrevole = costruisciComponenteScorrevole();
+		ComponenteScorrevole<VistaMissione> componenteScorrevole = costruisciComponenteScorrevole();
 		List<String> righe = new ArrayList<>();
-		Missione missione = componenteScorrevole.riferimentoTitoloAllaQuota(yInterno + offsetY);
+		VistaMissione missione = componenteScorrevole.riferimentoTitoloAllaQuota(yInterno + offsetY);
 		if (missione != null) {
 			righe.add(Cartiglio.aiutoClick(missione.isDescrizioneVisibile(), "descrizione"));
 		}
@@ -187,14 +182,15 @@ class DisplayableCanvasRiquadroMissioni implements Finestra {
 		}
 	}
 
-	private Image getIcona(Missione missione) {
-		if (NessunBoccaleLasciatoIndietro.class.isAssignableFrom(missione.getClass()) ||
-				CronacheDiUnFegatoEroico.class.isAssignableFrom(missione.getClass())) {
-			return ImageCache.missioneBirra;
+	private Image getIcona(VistaMissione missione) {
+		switch (missione.getClasse()) {
+			case NESSUN_BOCCALE_LASCIATO_INDIETRO:
+			case CRONACHE_DI_UN_FEGATO_EROICO:
+				return ImageCache.missioneBirra;
+			case DISTURBATORE_DELLA_QUIETE_PUBBLICA:
+				return ImageCache.missioneGallo;
+			default:
+				return null;
 		}
-		if (DisturbatoreDellaQuietePubblica.class.isAssignableFrom(missione.getClass())) {
-			return ImageCache.missioneGallo;
-		}
-		return null;
 	}
 }

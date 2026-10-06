@@ -3,9 +3,9 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.interfacce.VistaGruppo;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.Dado;
-import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -26,8 +26,8 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 	private final int topLeftX;
 	private final int topLeftY;
 
-	private final Map<Personaggio, CoordinateMD> mappaCoordinate = new HashMap<>();
-	private final Map<Personaggio, BufferedImage> mappaImmagini = new HashMap<>();
+	private final Map<VistaPersonaggio, CoordinateMD> mappaCoordinate = new HashMap<>();
+	private final Map<VistaPersonaggio, BufferedImage> mappaImmagini = new HashMap<>();
 	private final List<EffettoAttivo> effettiAttivi = new ArrayList<>();
 
 	private static final class EffettoAttivo {
@@ -53,7 +53,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		effettiAttivi.clear();
 		VistaGruppo gruppoAvversario = vistaPartita.getGruppoAvversario();
 		int i = 0;
-		for (Personaggio personaggioCorrente : gruppoAvversario.getPersonaggi()) {
+		for (VistaPersonaggio personaggioCorrente : gruppoAvversario.getPersonaggi()) {
 			BufferedImage d = ClassePersonaggioImmagine.getImmagine(personaggioCorrente.getClasse());
 			mappaImmagini.put(personaggioCorrente, d);
 			CoordinateMD coordinate = new CoordinateMD(topLeftX + i++ * 20 + Dado.tira(10),
@@ -71,10 +71,10 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		graphics.drawImage(locazione, locXOffset, topLeftY, null);
 
 		// Lista invertita
-		List<Personaggio> avversariDaDisegnare = new ArrayList<>();
+		List<VistaPersonaggio> avversariDaDisegnare = new ArrayList<>();
 		gng.getPersonaggiVivi().forEach(p -> avversariDaDisegnare.add(0, p));
 
-		for (Personaggio personaggioCorrente : avversariDaDisegnare) {
+		for (VistaPersonaggio personaggioCorrente : avversariDaDisegnare) {
 			BufferedImage d = mappaImmagini.get(personaggioCorrente);
 			CoordinateMD coordinate = mappaCoordinate.get(personaggioCorrente);
 			graphics.drawImage(d, coordinate.getX(), coordinate.getY(), null);
@@ -87,7 +87,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		}
 	}
 	
-	SpriteInterface notificaMorte(Personaggio personaggio) {
+	SpriteInterface notificaMorte(VistaPersonaggio personaggio) {
 		CoordinateMD coordinate = mappaCoordinate.get(personaggio);
 		if (coordinate == null) {
 			return null;
@@ -96,7 +96,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 				coordinate.getX(), coordinate.getY());
 	}
 
-	SpriteInterface variaLivello(Personaggio personaggio, int variazione) {
+	SpriteInterface variaLivello(VistaPersonaggio personaggio, int variazione) {
 		CoordinateMD coordinate = mappaCoordinate.get(personaggio);
 		if (coordinate == null) {
 			return null;
@@ -106,7 +106,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 				"Livello aumentato");
 	}
 	
-	SpriteInterface variaSalute(Personaggio personaggio, int variazione) {
+	SpriteInterface variaSalute(VistaPersonaggio personaggio, int variazione) {
 		CoordinateMD coordinate = mappaCoordinate.get(personaggio);
 		if (coordinate == null) {
 			return null;
@@ -116,7 +116,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 				"Salute modificata");
 	}
 	
-	SpriteInterface variaMagia(Personaggio personaggio, int variazione) {
+	SpriteInterface variaMagia(VistaPersonaggio personaggio, int variazione) {
 		CoordinateMD coordinate = mappaCoordinate.get(personaggio);
 		if (coordinate == null) {
 			return null;
@@ -139,7 +139,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		return null;
 	}
 
-	SpriteInterface aggiungiEffettoDiStato(Personaggio personaggio, TipoEffettoDiStato effettoDiStato, DoomdarkColorModel.Color colore) {
+	SpriteInterface aggiungiEffettoDiStato(VistaPersonaggio personaggio, TipoEffettoDiStato effettoDiStato, DoomdarkColorModel.Color colore) {
 		CoordinateMD coordinate = mappaCoordinate.get(personaggio);
 		if (coordinate == null) {
 			return null;
@@ -154,7 +154,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		return sprite;
 	}
 
-	SpriteInterface aggiungiInterazione(Personaggio personaggio, TipoInterazioneConEffettiDiStato interazione) {
+	SpriteInterface aggiungiInterazione(VistaPersonaggio personaggio, TipoInterazioneConEffettiDiStato interazione) {
 		CoordinateMD coordinate = mappaCoordinate.get(personaggio);
 		if (coordinate == null) {
 			return null;

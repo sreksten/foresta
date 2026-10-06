@@ -1,8 +1,6 @@
 package com.threeamigos.foresta.interfacce;
 
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoOggetto;
@@ -18,9 +16,9 @@ public interface VistaGruppoGiocatore extends VistaGruppo {
 	/**
 	 * I personaggi temporanei che il gruppo scorta
 	 */
-	List<Personaggio> getOspiti();
+	List<? extends VistaPersonaggio> getOspiti();
 
-	boolean isOspiteVulnerabile(Personaggio ospite);
+	boolean isOspiteVulnerabile(VistaPersonaggio ospite);
 
 	int getMonete();
 
@@ -37,14 +35,15 @@ public interface VistaGruppoGiocatore extends VistaGruppo {
 	int prezzoVendita(int costo);
 
 	/**
-	 * Quanto costa all'incantatore fondere gli artefatti sul banco di lavoro
-	 */
-	int costoFusione(Collection<Artefatto> banco);
-
-	/**
 	 * Gli artefatti nell'inventario comune del gruppo
 	 */
-	Collection<Artefatto> getInventario();
+	Collection<? extends VistaArtefatto> getInventario();
+
+	/**
+	 * I pezzi del set leggendario dell'artefatto e dove stanno: indossati da chi indossa l'artefatto, del gruppo o da
+	 * trovare. Vuoto se non è un pezzo di un set.
+	 */
+	List<? extends VistaPezzoDelSet> getPezziDelSet(VistaArtefatto artefatto);
 
 	int getIncantesimi(ClasseIncantesimo classeIncantesimo);
 

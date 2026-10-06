@@ -5,13 +5,12 @@ import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAvvisoIncantatura;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoIncantatura;
+import com.threeamigos.foresta.interfacce.VistaArtefatto;
+import com.threeamigos.foresta.interfacce.VistaBancoDiLavoro;
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.motore.RegoleIncantatura;
-import com.threeamigos.foresta.oggetti.Artefatto;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.util.Collection;
 import java.util.Optional;
 
 /**
@@ -19,6 +18,9 @@ import java.util.Optional;
  * Nella colonna centrale le monete, il costo della fusione e i posti dell'artefatto sul banco.
  */
 public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreArtefatti {
+
+    // Lo stesso scambio della classe base, con quel che serve per mostrare la fusione
+    private VistaBancoDiLavoro banco;
 
     DisplayableCanvasIncantatore(int width, int height, VistaPartita vistaPartita) {
         super(width, height, vistaPartita);
@@ -28,12 +30,17 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
         BusEventi.iscriviti(NotificaApprovazioneIncantatura.class, this::onEventoApprovazioneIncantatura);
     }
 
+    void impostaBanco(VistaBancoDiLavoro banco) {
+        impostaScambio(banco);
+        this.banco = banco;
+    }
+
     private void onEventoRifiutoIncantatura(NotificaRifiutoIncantatura evento) {
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo(evento.getMotivo().getFrase(), getCoordinateFumetto()));
     }
 
     private void onEventoApprovazioneIncantatura(NotificaApprovazioneIncantatura evento) {
-        String nome = evento.getArtefatto().getModelloDati().getNomeBreve();
+        String nome = evento.getArtefatto().getNomeBreve();
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Ecco fatto! " + nome.substring(0, 1).toUpperCase()
                 + nome.substring(1) + " è pronto.", getCoordinateFumetto()));
     }
@@ -72,15 +79,14 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
 
         y = disegnaValore(graphics, "Monete", String.valueOf(vistaPartita.getGruppoGiocatore().getMonete()), y, coloreTestata);
 
-        Collection<Artefatto> banco = scambio.getInventarioParteRemota();
-        boolean conIngredienti = banco.stream().anyMatch(RegoleIncantatura::isIngrediente);
+        boolean conIngredienti = banco.getInventarioParteRemota().stream().anyMatch(a -> a.getTipo().isIngrediente());
         if (conIngredienti) {
-            y = disegnaValore(graphics, "Costo fusione", String.valueOf(vistaPartita.getGruppoGiocatore().costoFusione(banco)), y, coloreTestata);
+            y = disegnaValore(graphics, "Costo fusione", String.valueOf(banco.getCostoFusione()), y, coloreTestata);
         }
-        Optional<Artefatto> artefatto = RegoleIncantatura.artefattoSulBanco(banco);
+        Optional<? extends VistaArtefatto> artefatto = banco.getArtefattoSulBanco();
         if (artefatto.isPresent()) {
-            int effetti = RegoleIncantatura.effetti(artefatto.get());
-            int daAggiungere = RegoleIncantatura.effettiDaTrasferire(banco);
+            int effetti = artefatto.get().getNumeroEffetti();
+            int daAggiungere = banco.getEffettiDaTrasferire();
             y = disegnaValore(graphics, "Effetti", (effetti + daAggiungere) + "/" + artefatto.get().getEffettiMassimi(), y, coloreTestata);
         }
 
@@ -101,11 +107,11 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
      * o no (rosso); gli altri (accessori, ingredienti) restano grigi.
      */
     @Override
-    protected DoomdarkColorModel.Color coloreLivello(Artefatto artefatto, boolean parteAttiva) {
+    protected DoomdarkColorModel.Color coloreLivello(VistaArtefatto artefatto, boolean parteAttiva) {
         if (!artefatto.isIncantabile()) {
             return super.coloreLivello(artefatto, parteAttiva);
         }
-        return RegoleIncantatura.effetti(artefatto) < artefatto.getEffettiMassimi()
+        return artefatto.getNumeroEffetti() < artefatto.getEffettiMassimi()
                 ? DoomdarkColorModel.Color.GREEN : DoomdarkColorModel.Color.RED;
     }
 

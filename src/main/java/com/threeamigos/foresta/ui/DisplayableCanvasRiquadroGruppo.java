@@ -6,7 +6,7 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaAumentoLivelloPersonaggi
 import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneStatistichePersonaggio;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 
 import java.awt.*;
@@ -93,9 +93,9 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		int locYOffset = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE;
 
 		int l = g.getNumeroPersonaggi();
-		List<Personaggio> ospiti = g.getOspiti();
+		List<? extends VistaPersonaggio> ospiti = g.getOspiti();
 		saltaPrimi = Math.min(saltaPrimi, Math.max(0, l + ospiti.size() - personaggiVisibili));
-		Personaggio p;
+		VistaPersonaggio p;
 		for (int i = 0; i < l; i++) {
 			if (i < saltaPrimi) {
 				continue;
@@ -172,7 +172,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 			if (riga >= personaggiVisibili) {
 				break;
 			}
-			Personaggio ospite = ospiti.get(i);
+			VistaPersonaggio ospite = ospiti.get(i);
 			String nome = ospite.getNomeProprio().map(n -> n + "-" + ospite.getNomeSingolare()).orElse(ospite.getNomeSingolare());
 			DoomdarkColorModel.Color colore = ospite.isVivo() ? DoomdarkColorModel.Color.MEDIUM_GRAY : DoomdarkColorModel.Color.DARK_GRAY;
 			graphics.drawImage(ImageCache.get(nome, fontMedium, colore), locXOffset, locYOffset, null);
@@ -191,7 +191,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 	}
 
-	private int getOrdinalePersonaggio(Personaggio personaggio) {
+	private int getOrdinalePersonaggio(VistaPersonaggio personaggio) {
 		VistaGruppoGiocatore gruppo = vistaPartita.getGruppoGiocatore();
 		for (int i = 0; i < gruppo.getNumeroPersonaggi(); i++) {
 			if (gruppo.getPersonaggio(i).equals(personaggio)) {
@@ -206,7 +206,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 	 * effettivamente disegnato, tenendo conto dello scorrimento; -1 se il personaggio non è
 	 * visibile nella porzione corrente del riquadro.
 	 */
-	private int getRigaVisibilePersonaggio(Personaggio personaggio) {
+	private int getRigaVisibilePersonaggio(VistaPersonaggio personaggio) {
 		int ordinale = getOrdinalePersonaggio(personaggio);
 		if (ordinale == -1) {
 			return -1;
@@ -260,7 +260,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 	}
 
-	private SpriteATempo costruisciSpritePerVariazioneLivello(Personaggio personaggio, int variazione) {
+	private SpriteATempo costruisciSpritePerVariazioneLivello(VistaPersonaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
@@ -319,7 +319,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 	}
 
-	private SpriteATempo costruisciSpritePerVariazioneSalute(Personaggio personaggio, int variazione) {
+	private SpriteATempo costruisciSpritePerVariazioneSalute(VistaPersonaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
@@ -340,7 +340,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 	}
 
-	private SpriteATempo costruisciSpritePerVariazioneSaluteMassima(Personaggio personaggio, int variazione) {
+	private SpriteATempo costruisciSpritePerVariazioneSaluteMassima(VistaPersonaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
@@ -361,7 +361,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 	}
 
-	private SpriteATempo costruisciSpritePerVariazioneMagia(Personaggio personaggio, int variazione) {
+	private SpriteATempo costruisciSpritePerVariazioneMagia(VistaPersonaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
@@ -382,7 +382,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 	}
 
-	private SpriteATempo costruisciSpritePerVariazioneMagiaMassima(Personaggio personaggio, int variazione) {
+	private SpriteATempo costruisciSpritePerVariazioneMagiaMassima(VistaPersonaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
@@ -403,7 +403,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 	}
 
-	private SpriteATempo costruisciSpritePerVariazioneCoraggio(Personaggio personaggio, int variazione) {
+	private SpriteATempo costruisciSpritePerVariazioneCoraggio(VistaPersonaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
@@ -424,7 +424,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 	}
 
-	private SpriteATempo costruisciSpritePerVariazioneValore(Personaggio personaggio, int variazione) {
+	private SpriteATempo costruisciSpritePerVariazioneValore(VistaPersonaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
@@ -445,7 +445,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 	}
 
-	private SpriteATempo costruisciSpritePerVariazioneCarisma(Personaggio personaggio, int variazione) {
+	private SpriteATempo costruisciSpritePerVariazioneCarisma(VistaPersonaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
@@ -466,7 +466,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 	}
 
-	private SpriteATempo costruisciSpritePerVariazioneStanchezza(Personaggio personaggio, int variazione) {
+	private SpriteATempo costruisciSpritePerVariazioneStanchezza(VistaPersonaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}
@@ -488,7 +488,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 	}
 
-	private SpriteATempo costruisciSpritePerVariazioneTempo(Personaggio personaggio, int variazione) {
+	private SpriteATempo costruisciSpritePerVariazioneTempo(VistaPersonaggio personaggio, int variazione) {
 		if (variazione == 0) {
 			return null;
 		}

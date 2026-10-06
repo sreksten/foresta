@@ -8,8 +8,8 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoConsumabi
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.motore.Costanti;
-import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoConsumabile;
 
@@ -308,7 +308,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         elencoVenditore.add(costruisciPozioneMagia(1));
         elencoVenditore.add(costruisciPozioneMagiaGrande(1));
         VistaGruppoGiocatore gruppoGiocatore = vistaPartita.getGruppoGiocatore();
-        for (Personaggio personaggio : gruppoGiocatore.getPersonaggiVivi()) {
+        for (VistaPersonaggio personaggio : gruppoGiocatore.getPersonaggiVivi()) {
             if (!personaggio.isPNG()) {
                 Consumabile consumabile = new Consumabile(
                         TipoConsumabile.AUMENTO_MAGIA_SINGOLO,
@@ -427,12 +427,12 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         private final String descrizione;
         private final int quantita;
         private final ClasseIncantesimo classeIncantesimo;
-        private final Personaggio personaggio;
+        private final VistaPersonaggio personaggio;
         private final int costo;
         private final Image icona;
 
         public Consumabile(TipoConsumabile tipo, String nome, String descrizione, int quantita,
-                           ClasseIncantesimo classeIncantesimo, Personaggio personaggio,
+                           ClasseIncantesimo classeIncantesimo, VistaPersonaggio personaggio,
                            int costo, Image icona) {
             this.tipo = tipo;
             this.nome = nome;

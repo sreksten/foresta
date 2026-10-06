@@ -1,10 +1,8 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.RegoleSetLeggendari;
-import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoModificatore;
@@ -88,14 +86,13 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 	 * @param area         dove sta la rivelazione, centrata: tutto lo schermo
 	 * @param destinazione dove vola all'uscita (il riquadro del gruppo)
 	 */
-	SpriteRivelazioneArtefatto(Artefatto artefatto, int livelloMondo, Rectangle area, Point destinazione) {
-		ArtefattoMD md = artefatto.getModelloDati();
-		this.gradino = splendore(md, livelloMondo);
+	SpriteRivelazioneArtefatto(VistaArtefatto artefatto, int livelloMondo, Rectangle area, Point destinazione) {
+		this.gradino = splendore(artefatto, livelloMondo);
 		this.raggio = RAGGIO[gradino];
 		this.colore = COLORE[gradino];
 		this.area = area;
 		this.destinazione = destinazione;
-		for (IncantamentoMD incantamento : md.getIncantamenti()) {
+		for (IncantamentoMD incantamento : artefatto.getIncantamenti()) {
 			coloriRaggi.add(COLORI_ELEMENTI.getOrDefault(incantamento.getTipoDannoElementale(), colore));
 		}
 		if (coloriRaggi.isEmpty()) {
@@ -104,15 +101,15 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 				coloriRaggi.add(Color.WHITE);
 			}
 		}
-		this.immagine = immagine(md.getTipo());
-		this.pannello = pannello(md, Math.min(area.width - 48, 900));
+		this.immagine = immagine(artefatto.getTipo());
+		this.pannello = pannello(artefatto, Math.min(area.width - 48, 900));
 		int altezzaTotale = 2 * raggio + 12 + pannello.getHeight();
 		int alto = area.y + Math.max(6, (area.height - altezzaTotale) / 2);
 		this.centroX = (int) area.getCenterX();
 		this.centroY = alto + raggio;
 		// Il pannello si centra sotto il cerchio, senza uscire dall'area
 		this.pannelloX = Math.max(area.x + 4, Math.min(area.x + area.width - 4 - pannello.getWidth(), centroX - pannello.getWidth() / 2));
-		Random random = new Random(md.getNome().hashCode());
+		Random random = new Random(artefatto.getNome().hashCode());
 		scintille = new float[SCINTILLE[gradino]][];
 		for (int i = 0; i < scintille.length; i++) {
 			// angolo, distanza in raggi, fase, dimensione
@@ -125,14 +122,14 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 	 * Quanto spicca l'artefatto, da 0 (spoglio) a 3: un punto per effetto, due se è raro e quattro se leggendario,
 	 * più i livelli sopra quello del mondo.
 	 */
-	static int splendore(ArtefattoMD md, int livelloMondo) {
-		int punti = md.getModificatori().size() + md.getIncantamenti().size();
-		if (md.getRarita() == TipoRaritaArtefatto.RARO) {
+	static int splendore(VistaArtefatto artefatto, int livelloMondo) {
+		int punti = artefatto.getModificatori().size() + artefatto.getIncantamenti().size();
+		if (artefatto.getRarita() == TipoRaritaArtefatto.RARO) {
 			punti += 2;
-		} else if (md.getRarita() == TipoRaritaArtefatto.LEGGENDARIO) {
+		} else if (artefatto.getRarita() == TipoRaritaArtefatto.LEGGENDARIO) {
 			punti += 4;
 		}
-		punti += Math.max(0, md.getLivello() - livelloMondo);
+		punti += Math.max(0, artefatto.getLivello() - livelloMondo);
 		if (punti == 0) {
 			return 0;
 		}
@@ -348,38 +345,38 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 	 * descrizione, livello e rarità, il set leggendario e i tipi dei suoi pezzi, poi gli incantamenti e i
 	 * modificatori, verdi i bonus e rossi i malus. Tutto con il font medio, che si legge meglio del piccolo.
 	 */
-	private BufferedImage pannello(ArtefattoMD md, int larghezzaMassima) {
+	private BufferedImage pannello(VistaArtefatto artefatto, int larghezzaMassima) {
 		DoomdarkFont font = DoomdarkFontMedium.getInstance();
 		List<Image> righe = new ArrayList<>();
-		String nomeProprio = md.getNomeProprio();
-		if (nomeProprio != null) {
-			righe.add(ImageCache.get(nomeProprio, font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima));
-			righe.add(ImageCache.get(maiuscola(md.getNome()), font, DoomdarkColorModel.Color.WHITE, larghezzaMassima));
+		Optional<String> nomeProprio = artefatto.getNomeProprio();
+		if (nomeProprio.isPresent()) {
+			righe.add(ImageCache.get(nomeProprio.get(), font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima));
+			righe.add(ImageCache.get(maiuscola(artefatto.getNome()), font, DoomdarkColorModel.Color.WHITE, larghezzaMassima));
 		} else {
-			righe.add(ImageCache.get(maiuscola(md.getNome()), font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima));
+			righe.add(ImageCache.get(maiuscola(artefatto.getNome()), font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima));
 		}
-		if (md.getDescrizione() != null) {
-			righe.add(ImageCache.get(maiuscola(md.getDescrizione()), font, DoomdarkColorModel.Color.LIGHT_GRAY, larghezzaMassima));
+		if (artefatto.getDescrizione() != null) {
+			righe.add(ImageCache.get(maiuscola(artefatto.getDescrizione()), font, DoomdarkColorModel.Color.LIGHT_GRAY, larghezzaMassima));
 		}
-		StringBuilder dati = new StringBuilder("Livello ").append(md.getLivello());
-		if (md.getRarita() != TipoRaritaArtefatto.COMUNE) {
-			dati.append(", ").append(md.getRarita().getNome());
+		StringBuilder dati = new StringBuilder("Livello ").append(artefatto.getLivello());
+		if (artefatto.getRarita() != TipoRaritaArtefatto.COMUNE) {
+			dati.append(", ").append(artefatto.getRarita().getNome());
 		}
-		if (md.getDanni() > 0) {
-			dati.append(", danni ").append(md.getDanni());
+		if (artefatto.getDanni() > 0) {
+			dati.append(", danni ").append(artefatto.getDanni());
 		}
 		righe.add(ImageCache.get(dati.toString(), font, DoomdarkColorModel.Color.WHITE, larghezzaMassima));
-		RegoleSetLeggendari.descrizioneSet(md).ifPresent(set ->
+		artefatto.getDescrizioneSet().ifPresent(set ->
 				righe.add(ImageCache.get(set, font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima)));
-		RegoleSetLeggendari.tipiDelSet(md).ifPresent(tipi ->
+		artefatto.getTipiDelSet().ifPresent(tipi ->
 				righe.add(ImageCache.get(tipi, font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima)));
 		List<String> incantamenti = new ArrayList<>();
-		for (IncantamentoMD incantamento : md.getIncantamenti()) {
+		for (IncantamentoMD incantamento : artefatto.getIncantamenti()) {
 			incantamenti.add(incantamento(incantamento));
 		}
 		List<String> bonus = new ArrayList<>();
 		List<String> malus = new ArrayList<>();
-		for (ModificatoreAttributo modificatore : md.getModificatori()) {
+		for (ModificatoreAttributo modificatore : artefatto.getModificatori()) {
 			(modificatore.getQuantita() >= 0 ? bonus : malus).add(modificatore(modificatore));
 		}
 		aggiungi(righe, incantamenti, font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima);

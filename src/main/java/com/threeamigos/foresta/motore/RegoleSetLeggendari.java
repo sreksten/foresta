@@ -1,9 +1,11 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.interfacce.VistaPezzoDelSet;
 import com.threeamigos.foresta.missioni.OggettoLeggendario;
 import com.threeamigos.foresta.missioni.SetLeggendario;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tools.Misc;
@@ -75,39 +77,22 @@ public final class RegoleSetLeggendari {
 	}
 
 	/**
-	 * Dove sta un pezzo di un set, rispetto a un altro pezzo dello stesso set.
-	 */
-	public enum StatoPezzo {
-		/**
-		 * Lo indossa chi indossa l'altro pezzo.
-		 */
-		INDOSSATO,
-		/**
-		 * Ce l'ha il gruppo: nell'inventario, o addosso a un altro personaggio.
-		 */
-		DEL_GRUPPO,
-		/**
-		 * Il gruppo non ce l'ha.
-		 */
-		DA_TROVARE
-	}
-
-	/**
 	 * Un pezzo di un set, per i testi: la chiave, il nome breve, il tipo e dove sta.
 	 */
-	public static final class Pezzo {
+	public static final class Pezzo implements VistaPezzoDelSet {
 		private final String chiave;
 		private final String nome;
 		private final TipoArtefatto tipo;
-		private final StatoPezzo stato;
+		private final StatoPezzoDelSet stato;
 
-		Pezzo(OggettoLeggendario leggendario, StatoPezzo stato) {
+		Pezzo(OggettoLeggendario leggendario, StatoPezzoDelSet stato) {
 			this.chiave = leggendario.getChiave();
 			this.nome = leggendario.getNomeBreve();
 			this.tipo = leggendario.getTipo();
 			this.stato = stato;
 		}
 
+		@Override
 		public String getChiave() {
 			return chiave;
 		}
@@ -115,15 +100,18 @@ public final class RegoleSetLeggendari {
 		/**
 		 * Il nome breve, con l'articolo.
 		 */
+		@Override
 		public String getNome() {
 			return nome;
 		}
 
+		@Override
 		public TipoArtefatto getTipo() {
 			return tipo;
 		}
 
-		public StatoPezzo getStato() {
+		@Override
+		public StatoPezzoDelSet getStato() {
 			return stato;
 		}
 	}
@@ -168,8 +156,8 @@ public final class RegoleSetLeggendari {
 		equipaggiamenti.forEach(equipaggiamento -> delGruppo.addAll(pezziDelSet(equipaggiamento, chiave)));
 		List<Pezzo> pezzi = new ArrayList<>();
 		for (String pezzo : CatalogoLeggendari.getPezzi(chiave)) {
-			StatoPezzo stato = indossati.contains(pezzo) ? StatoPezzo.INDOSSATO
-					: delGruppo.contains(pezzo) ? StatoPezzo.DEL_GRUPPO : StatoPezzo.DA_TROVARE;
+			StatoPezzoDelSet stato = indossati.contains(pezzo) ? StatoPezzoDelSet.INDOSSATO
+					: delGruppo.contains(pezzo) ? StatoPezzoDelSet.DEL_GRUPPO : StatoPezzoDelSet.DA_TROVARE;
 			pezzi.add(new Pezzo(leggendario(pezzo), stato));
 		}
 		return pezzi;

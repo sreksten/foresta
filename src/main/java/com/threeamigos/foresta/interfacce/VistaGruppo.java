@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.personaggi.Personaggio;
-
 import java.util.List;
 
 /**
@@ -11,15 +9,15 @@ public interface VistaGruppo {
 
 	int getNumeroPersonaggi();
 
-	List<Personaggio> getPersonaggi();
+	List<? extends VistaPersonaggio> getPersonaggi();
 
-	List<Personaggio> getPersonaggiVivi();
+	List<? extends VistaPersonaggio> getPersonaggiVivi();
 
 	/**
 	 * @param numero da 0 a getNumeroPersonaggi() - 1
 	 */
-	Personaggio getPersonaggio(int numero);
+	VistaPersonaggio getPersonaggio(int numero);
 
-	boolean contiene(Personaggio personaggio);
+	boolean contiene(VistaPersonaggio personaggio);
 
 }

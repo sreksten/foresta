@@ -4,6 +4,7 @@ import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
 
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.interfacce.OggettoConArticoli;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.motore.*;
@@ -15,27 +16,13 @@ import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import java.util.Collection;
 import java.util.Optional;
 
-public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
+/**
+ * Un personaggio: le letture stanno in VistaPersonaggio, che è quel che ne vede la UI.
+ */
+public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, ScambiatoreArtefatti {
 
-	enum OpzioniGetNome {
-		/**
-		 * Es. il, la
-		 */
-		INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
-		/**
-		 * Es. un, una
-		 */
-		INCLUDI_ARTICOLO_INDETERMINATIVO_SINGOLARE,
-		/**
-		 * Es. del, della
-		 */
-		INCLUDI_PREPOSIZIONE_ARTICOLATA,
-		/**
-		 * Riporta in maiuscolo la prima lettera del risultato (non necessariamente del nome se preceduto da
-		 * preposizione o articolo)
-		 */
-		INIZIALE_MAIUSCOLA
-	}
+	@Override
+	Collection<Artefatto> getInventario();
 
 	enum NotificaFerite {
 		SI,
@@ -85,6 +72,7 @@ public interface Personaggio extends OggettoConArticoli, ScambiatoreArtefatti {
 	/**
 	 * Ritorna l'ordinale del personaggio all'interno del gruppo
 	 */
+    @Override
     int getOrdinale();
 
 	/**

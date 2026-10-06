@@ -12,6 +12,7 @@ import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
@@ -974,6 +975,18 @@ public abstract class PersonaggioBase implements Personaggio {
 			return Optional.of(esitoControlloRichiestaEquipaggiamento);
 		}
 		return Optional.empty();
+	}
+
+	@Override
+	public boolean isEquipaggiabile(VistaArtefatto artefatto) {
+		return !puoEquipaggiare(Artefatto.da(artefatto)).isPresent();
+	}
+
+	@Override
+	public List<String> getDescrizioniSetCompleti() {
+		return RegoleSetLeggendari.setCompleti(md.getArtefatti()).stream()
+				.map(RegoleSetLeggendari::descrizioneSetCompleto)
+				.collect(Collectors.toList());
 	}
 
 	public boolean puoPrendere(double quantita) {

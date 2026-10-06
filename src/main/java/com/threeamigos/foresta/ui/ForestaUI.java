@@ -7,8 +7,8 @@ import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
@@ -334,7 +334,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	private void gestisciEventoRichiestaAperturaIncantatore(ComandoAperturaIncantatore evento) {
 		impostaAzioni(evento.getPossibilita());
-		displayableCanvas.impostaScambioIncantatore(evento.getScambio());
+		displayableCanvas.impostaBancoIncantatore(evento.getBanco());
 		displayableCanvas.incantatore(evento.getMessaggio());
 	}
 
@@ -471,7 +471,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	private void gestisciEventoVariazioneStatistichePersonaggio(NotificaVariazioneStatistichePersonaggio evento) {
-		Personaggio personaggio = evento.getPersonaggio();
+		VistaPersonaggio personaggio = evento.getPersonaggio();
 		if (!personaggio.isPNG()) {
 			return;
 		}
@@ -502,7 +502,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	private void gestisciEventoInterazione(NotificaInterazionePersonaggio evento) {
-		Personaggio personaggio = evento.getPersonaggio();
+		VistaPersonaggio personaggio = evento.getPersonaggio();
 		TipoInterazioneConEffettiDiStato tipoInterazione = evento.getTipoInterazione();
 		switch (tipoInterazione) {
 			case ELETTROCUZIONE:
@@ -546,7 +546,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	private void gestisciEventoVariazioneEffettoDiStato(NotificaVariazioneEffettoDiStatoPersonaggio evento) {
-		Personaggio personaggio = evento.getPersonaggio();
+		VistaPersonaggio personaggio = evento.getPersonaggio();
 		TipoEffettoDiStato tipoEffettoDiStato = evento.getEffetto();
 		switch (evento.getTipo()) {
 			case AGGIUNTA:

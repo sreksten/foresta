@@ -39,7 +39,7 @@ public final class RegoleIncantatura {
 	 * Numero di effetti (incantamenti più modificatori) di un artefatto o di un ingrediente.
 	 */
 	public static int effetti(Artefatto artefatto) {
-		return artefatto.getIncantamenti().size() + artefatto.getModificatori().size();
+		return artefatto.getNumeroEffetti();
 	}
 
 	/**

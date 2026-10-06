@@ -4,7 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoDiGioco;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoImpostazioneAiuto;
 import com.threeamigos.foresta.interfacce.VistaPartita;
-import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.tipi.Comando;
 
 import java.awt.*;
@@ -163,7 +163,7 @@ class DisplayableCanvasBarraIcone implements Finestra {
 	}
 
 	private ClasseIcona getIconaPersonaggio(int indice) {
-		Personaggio personaggio = vistaPartita.getGruppoGiocatore().getPersonaggio(indice);
+		VistaPersonaggio personaggio = vistaPartita.getGruppoGiocatore().getPersonaggio(indice);
 		if (personaggio == null) {
 			throw new IllegalStateException("Personaggio non trovato con indice " + indice);
 		}

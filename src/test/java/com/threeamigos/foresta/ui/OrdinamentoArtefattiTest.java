@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
@@ -21,10 +22,10 @@ class OrdinamentoArtefattiTest {
 		Artefatto spada3b = artefatto(TipoArtefatto.SPADA, 3, "b");
 		Artefatto elmo = artefatto(TipoArtefatto.ELMO, 9, "z");
 
-		List<Artefatto> ordinati = new ArrayList<>(DisplayableCanvasScambiatoreArtefatti.ordinaArtefattiDaDisegnare(
+		List<VistaArtefatto> ordinati = new ArrayList<>(DisplayableCanvasScambiatoreArtefatti.ordinaArtefattiDaDisegnare(
 				Arrays.asList(spada1, elmo, spada3b, spada5, spada3a)));
 
-		List<Artefatto> spade = new ArrayList<>(ordinati);
+		List<VistaArtefatto> spade = new ArrayList<>(ordinati);
 		spade.remove(elmo);
 		assertEquals(Arrays.asList(spada5, spada3a, spada3b, spada1), spade, "livello decrescente, poi nome");
 		int posizioneElmo = ordinati.indexOf(elmo);

@@ -7,6 +7,7 @@ import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
 import com.threeamigos.foresta.tipi.SupertipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
@@ -217,18 +218,18 @@ class ScenarioSetLeggendariTest {
 
         List<RegoleSetLeggendari.Pezzo> dalPrimo = RegoleSetLeggendari.pezzi(primo, equipaggiamenti, Collections.emptyList());
         assertEquals(pezzi, dalPrimo.stream().map(RegoleSetLeggendari.Pezzo::getChiave).collect(Collectors.toList()));
-        assertEquals(RegoleSetLeggendari.StatoPezzo.INDOSSATO, dalPrimo.get(0).getStato());
-        assertEquals(RegoleSetLeggendari.StatoPezzo.DEL_GRUPPO, dalPrimo.get(1).getStato());
-        dalPrimo.subList(2, dalPrimo.size()).forEach(pezzo -> assertEquals(RegoleSetLeggendari.StatoPezzo.DA_TROVARE, pezzo.getStato()));
+        assertEquals(StatoPezzoDelSet.INDOSSATO, dalPrimo.get(0).getStato());
+        assertEquals(StatoPezzoDelSet.DEL_GRUPPO, dalPrimo.get(1).getStato());
+        dalPrimo.subList(2, dalPrimo.size()).forEach(pezzo -> assertEquals(StatoPezzoDelSet.DA_TROVARE, pezzo.getStato()));
 
         List<RegoleSetLeggendari.Pezzo> dalSecondo = RegoleSetLeggendari.pezzi(secondo, equipaggiamenti, Collections.emptyList());
-        assertEquals(RegoleSetLeggendari.StatoPezzo.DEL_GRUPPO, dalSecondo.get(0).getStato());
-        assertEquals(RegoleSetLeggendari.StatoPezzo.INDOSSATO, dalSecondo.get(1).getStato());
+        assertEquals(StatoPezzoDelSet.DEL_GRUPPO, dalSecondo.get(0).getStato());
+        assertEquals(StatoPezzoDelSet.INDOSSATO, dalSecondo.get(1).getStato());
 
         // Un pezzo nell'inventario del gruppo, che nessuno indossa, è del gruppo
         List<RegoleSetLeggendari.Pezzo> conInventario = RegoleSetLeggendari.pezzi(primo, Collections.singletonList(
                 new ArrayList<>(Collections.singletonList(primo))), Collections.singletonList(secondo));
-        assertEquals(RegoleSetLeggendari.StatoPezzo.DEL_GRUPPO, conInventario.get(1).getStato());
+        assertEquals(StatoPezzoDelSet.DEL_GRUPPO, conInventario.get(1).getStato());
     }
 
     @Test

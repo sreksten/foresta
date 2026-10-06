@@ -22,10 +22,11 @@ public abstract class AutomaScambiatoreArtefatti implements VistaScambio {
 	 */
 	static void esegui(ComandoScambioArtefatto comando) {
 		AutomaScambiatoreArtefatti scambio = (AutomaScambiatoreArtefatti) comando.getScambio();
+		Artefatto artefatto = Artefatto.da(comando.getArtefatto());
 		if (comando.getDestinazione() == ComandoScambioArtefatto.Destinazione.PARTE_ATTIVA) {
-			scambio.richiediSpostamentoSuParteAttiva(comando.getArtefatto());
+			scambio.richiediSpostamentoSuParteAttiva(artefatto);
 		} else {
-			scambio.richiediSpostamentoSuParteRemota(comando.getArtefatto());
+			scambio.richiediSpostamentoSuParteRemota(artefatto);
 		}
 	}
 

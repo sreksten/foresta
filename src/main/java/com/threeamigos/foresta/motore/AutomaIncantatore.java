@@ -3,6 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.notifiche.NotificaAvvisoIncantatura;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoIncantatura;
+import com.threeamigos.foresta.interfacce.VistaBancoDiLavoro;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
 
@@ -13,13 +14,30 @@ import java.util.Optional;
  * Si sposta liberamente dal banco al gruppo; verso il banco valgono le regole di RegoleIncantatura,
  * e un rifiuto diventa una NotificaRifiutoIncantatura (un fumetto).
  */
-public class AutomaIncantatore extends AutomaScambiatoreArtefatti {
+public class AutomaIncantatore extends AutomaScambiatoreArtefatti implements VistaBancoDiLavoro {
 
+	private final GruppoGiocatore gruppo;
 	private final BancoDiLavoro banco;
 
 	public AutomaIncantatore(GruppoGiocatore gruppo, BancoDiLavoro banco) {
 		super(gruppo, banco);
+		this.gruppo = gruppo;
 		this.banco = banco;
+	}
+
+	@Override
+	public Optional<Artefatto> getArtefattoSulBanco() {
+		return RegoleIncantatura.artefattoSulBanco(banco.getInventario());
+	}
+
+	@Override
+	public int getEffettiDaTrasferire() {
+		return RegoleIncantatura.effettiDaTrasferire(banco.getInventario());
+	}
+
+	@Override
+	public int getCostoFusione() {
+		return gruppo.costoFusione(banco.getInventario());
 	}
 
 	public BancoDiLavoro getBanco() {

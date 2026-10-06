@@ -1,17 +1,27 @@
 package com.threeamigos.foresta.missioni;
 
+import com.threeamigos.foresta.interfacce.VistaMissione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.MissioneMD;
 import com.threeamigos.foresta.motore.Ondata;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
-public interface Missione {
+/**
+ * Una missione: le letture stanno in VistaMissione, che è quel che ne vede la UI.
+ */
+public interface Missione extends VistaMissione {
+
+	@Override
+	default ClasseMissione getClasse() {
+		return getModelloDati().getClasse();
+	}
 
 	String getId();
 
@@ -113,6 +123,7 @@ public interface Missione {
 
 	void sostituisciMissioniSecondarie(List<Missione> missioni);
 
+	@Override
 	List<Missione> getMissioniSecondarie();
 
 }

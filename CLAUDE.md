@@ -49,5 +49,5 @@ Panoramica in `motore_grafico.md`.
 
 ## Build e test
 
-`mvn test` esegue tutti i test (JUnit 5, in `src/test/java`); al 2026-10-06 sono 706, tutti verdi (16 saltati).
+`mvn test` esegue tutti i test (JUnit 5, in `src/test/java`); al 2026-10-06 sono 707, tutti verdi (16 saltati).
 Le cose da fare generali sono in `todo.md`; i `TODO`/`FIXME` puntuali restano nel codice.

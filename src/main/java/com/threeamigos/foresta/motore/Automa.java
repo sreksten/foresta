@@ -174,7 +174,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		BusEventi.iscriviti(ComandoInvioTesto.class, this::onEventoTestoDisponibile);
 		// Gli spostamenti di artefatti nella schermata di scambio aperta: li fa lo scambio stesso
 		BusEventi.iscriviti(ComandoScambioArtefatto.class, AutomaScambiatoreArtefatti::esegui);
-		BusEventi.iscriviti(ComandoSpesaPuntoAbilita.class, e -> e.getPersonaggio().spendiPuntoAbilita(e.getAttributo()));
+		BusEventi.iscriviti(ComandoSpesaPuntoAbilita.class, this::onComandoSpesaPuntoAbilita);
+		BusEventi.iscriviti(ComandoCommutazioneElenco.class, Automa::onComandoCommutazioneElenco);
 		// L'interruttore dell'aiuto vale in ogni stato: non passa dalla macchina a stati
 		BusEventi.iscriviti(ComandoImpostazioneAiuto.class,
 				e -> ModelloDati.getIstanza().setAiutoAbilitato(e.isAbilitato()));
@@ -1949,5 +1950,37 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 		BusEventi.pubblica(new ComandoAperturaInventarioGruppo(comandiPossibili,
 				new AutomaInventario(personaggioScelto, gruppo), personaggioScelto));
+	}
+
+	/**
+	 * Il punto abilità che il giocatore spende dall'inventario, su un personaggio del gruppo
+	 */
+	private void onComandoSpesaPuntoAbilita(ComandoSpesaPuntoAbilita comando) {
+		GruppoGiocatore.getIstanza().getPersonaggi().stream()
+				.filter(personaggio -> personaggio == comando.getPersonaggio())
+				.findFirst()
+				.ifPresent(personaggio -> personaggio.spendiPuntoAbilita(comando.getAttributo()));
+	}
+
+	/**
+	 * Apre o chiude l'elenco dei modificatori di un artefatto o la descrizione di una missione
+	 */
+	private static void onComandoCommutazioneElenco(ComandoCommutazioneElenco comando) {
+		if (comando.getArtefatto() != null) {
+			Artefatto artefatto = Artefatto.da(comando.getArtefatto());
+			if (artefatto.isFigliVisibili()) {
+				artefatto.nascondiFigli();
+			} else {
+				artefatto.mostraFigli();
+			}
+		} else {
+			RegistroMissioni.getMissione(comando.getMissione().getId()).ifPresent(missione -> {
+				if (missione.isDescrizioneVisibile()) {
+					missione.nascondiDescrizione();
+				} else {
+					missione.mostraDescrizione();
+				}
+			});
+		}
 	}
 }

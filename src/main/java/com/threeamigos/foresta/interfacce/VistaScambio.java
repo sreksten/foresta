@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.oggetti.Artefatto;
-
 import java.util.Collection;
 
 /**
@@ -11,9 +9,9 @@ import java.util.Collection;
  */
 public interface VistaScambio {
 
-	Collection<Artefatto> getInventarioParteAttiva();
+	Collection<? extends VistaArtefatto> getInventarioParteAttiva();
 
-	Collection<Artefatto> getInventarioParteRemota();
+	Collection<? extends VistaArtefatto> getInventarioParteRemota();
 
 	/**
 	 * Se accanto agli artefatti della parte attiva si mostra quanto si ricava vendendoli

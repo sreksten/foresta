@@ -9,6 +9,7 @@ import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneDirezione;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneIncantesimoDaLanciare;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneMissione;
 import com.threeamigos.foresta.eventi.richieste.RichiestaSelezioneSiNo;
+import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
@@ -281,8 +282,8 @@ final class PartitaDiTest implements AutoCloseable {
 	 * Se l'inventario del gruppo contiene quell'artefatto. Si confrontano i modelli dati: getInventario() crea
 	 * ogni volta nuovi Artefatto attorno ai modelli, che non sono uguali tra loro.
 	 */
-	static boolean contiene(Collection<Artefatto> inventario, Artefatto artefatto) {
-		return inventario.stream().anyMatch(a -> a.getModelloDati() == artefatto.getModelloDati());
+	static boolean contiene(Collection<? extends VistaArtefatto> inventario, VistaArtefatto artefatto) {
+		return inventario.stream().anyMatch(a -> a.getUuid().equals(artefatto.getUuid()));
 	}
 
 	/**

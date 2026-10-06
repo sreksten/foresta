@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.interfacce.VistaGruppo;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
 
@@ -174,7 +175,7 @@ public abstract class Gruppo implements VistaGruppo {
 	}
 	
 	@Override
-	public boolean contiene(Personaggio personaggio) {
+	public boolean contiene(VistaPersonaggio personaggio) {
 		return personaggi.contains(personaggio);
 	}
 }

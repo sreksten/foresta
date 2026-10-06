@@ -55,6 +55,10 @@ public enum TipoEvento {
      */
     COMANDO_IMPOSTAZIONE_AIUTO,
     /**
+     * Il giocatore apre o chiude l'elenco dei modificatori di un artefatto o la descrizione di una missione
+     */
+    COMANDO_COMMUTAZIONE_ELENCO,
+    /**
      * Il giocatore spende un punto abilità di un personaggio
      */
     COMANDO_SPESA_PUNTO_ABILITA,

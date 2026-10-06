@@ -4,8 +4,11 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
 import com.threeamigos.foresta.eventi.notifiche.*;
+import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.locazioni.Locazione;
+import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.GruppoGiocatoreMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
@@ -123,6 +126,11 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 
 	public final boolean isOspiteVulnerabile(Personaggio ospite) {
 		return md.getOspitiVulnerabili().contains(ospite.getModelloDati().getUuid());
+	}
+
+	@Override
+	public final boolean isOspiteVulnerabile(VistaPersonaggio ospite) {
+		return ospiti.stream().filter(o -> o == ospite).anyMatch(this::isOspiteVulnerabile);
 	}
 
 	private List<Personaggio> getOspitiVulnerabiliVivi() {
@@ -433,6 +441,15 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 
 	public Locazione getLocazioneCorrente() {
 		return locazioneCorrente;
+	}
+
+	@Override
+	public List<RegoleSetLeggendari.Pezzo> getPezziDelSet(VistaArtefatto artefatto) {
+		List<Collection<ArtefattoMD>> equipaggiamenti = personaggi.stream()
+				.map(p -> p.getModelloDati().getArtefatti())
+				.collect(Collectors.toList());
+		List<ArtefattoMD> inventario = getInventario().stream().map(Artefatto::getModelloDati).collect(Collectors.toList());
+		return RegoleSetLeggendari.pezzi(Artefatto.da(artefatto).getModelloDati(), equipaggiamenti, inventario);
 	}
 
 	@Override
@@ -782,8 +799,8 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 					addPozioniMagiaGrande(1);
 					break;
 				case AUMENTO_MAGIA_SINGOLO:
-					comandoAcquistoConsumabile.getPersonaggio()
-							.addMagiaMassima(Costanti.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "ALCHIMISTA");
+					personaggi.stream().filter(p -> p == comandoAcquistoConsumabile.getPersonaggio()).findFirst()
+							.ifPresent(p -> p.addMagiaMassima(Costanti.AUMENTO_MAGIA_DA_POZIONE_MAGIA_GRANDE, "ALCHIMISTA"));
 					break;
 				case AUMENTO_MAGIA_GRUPPO:
 					for (Personaggio personaggio : getPersonaggiVivi()) {
