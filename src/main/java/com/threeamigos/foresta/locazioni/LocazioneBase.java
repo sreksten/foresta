@@ -24,7 +24,8 @@ import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tools.Misc;
+import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 
 import java.util.ArrayList;

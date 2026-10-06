@@ -2,7 +2,7 @@ package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.tools.Misc;
+import com.threeamigos.foresta.strumenti.Misc;
 
 /**
  * Loot a sé, come spada e scudo.

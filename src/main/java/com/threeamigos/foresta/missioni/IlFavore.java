@@ -9,7 +9,7 @@ import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tools.Misc;
+import com.threeamigos.foresta.strumenti.Misc;
 
 /**
  * Il favore che un sacerdote chiede in cambio della sua benedizione (vedi LaBenedizione), o che un compagno chiede

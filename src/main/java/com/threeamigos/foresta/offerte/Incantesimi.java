@@ -8,7 +8,7 @@ import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tools.Misc;
+import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 
 public class Incantesimi implements Offerta {

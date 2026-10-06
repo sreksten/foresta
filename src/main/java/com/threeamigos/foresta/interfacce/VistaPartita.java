@@ -43,6 +43,26 @@ public interface VistaPartita {
 	boolean isTrofeoVinto(TipoTrofeo trofeo);
 
 	/**
+	 * Quanto serve per vincere il trofeo: 100 goblin, 50 missioni, 1 per un boss
+	 */
+	int getObiettivoTrofeo(TipoTrofeo trofeo);
+
+	/**
+	 * A che punto è il trofeo, da 0 all'obiettivo, accumulato partita dopo partita
+	 */
+	int getProgressoTrofeo(TipoTrofeo trofeo);
+
+	/**
+	 * Il nome di un personaggio di quel tipo ("goblin"), per le statistiche
+	 */
+	String getNomeSingolare(TipoPersonaggio tipoPersonaggio);
+
+	/**
+	 * Il nome di più personaggi di quel tipo ("goblin"), per le statistiche
+	 */
+	String getNomePlurale(TipoPersonaggio tipoPersonaggio);
+
+	/**
 	 * Se sono accesi i cartigli dell'aiuto (vedi DisplayableCanvasBarraIcone)
 	 */
 	boolean isAiutoAbilitato();

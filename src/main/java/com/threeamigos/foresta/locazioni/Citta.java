@@ -17,7 +17,7 @@ import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
 import com.threeamigos.foresta.tipi.TipoNegozio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
-import com.threeamigos.foresta.tools.Misc;
+import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.ArrayList;
 import java.util.Collection;

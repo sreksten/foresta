@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tools;
+package com.threeamigos.foresta.strumenti;
 
 import org.junit.jupiter.api.Test;
 

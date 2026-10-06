@@ -18,7 +18,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tools.ModalitaDiProva;
+import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 
 import java.util.*;
 

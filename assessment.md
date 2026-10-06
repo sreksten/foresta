@@ -30,7 +30,7 @@ Valutazione dello stato del progetto al **2026-10-05**, scritta dopo la revision
 | Intermezzi | Fatta | Con anteprima fuori dal gioco per gli autori |
 | Notizie delle locande e notiziario | Fatta | Con le fragilità del §4 |
 | Trofei | Fatta | 100% di copertura dei test |
-| Salvataggi, classifica | Fatta | 5 slot (`tools/GestoreSalvataggiSuFile.java:32`) |
+| Salvataggi, classifica | Fatta | 5 slot (`strumenti/GestoreSalvataggiSuFile.java:32`) |
 | Sistema di aiuto | Fatto | Cartigli con la descrizione dei comandi sopra la barra delle icone, con un interruttore salvato con la partita (2026-10-05) |
 | Modalità verticale | **Rotta** | Barra icone sovrapposta e contenuto tagliato (`motore_grafico.md` §12) |
 | Personaggi del gruppo visibili in locazione | Assente | [`todo.md`](todo.md) |

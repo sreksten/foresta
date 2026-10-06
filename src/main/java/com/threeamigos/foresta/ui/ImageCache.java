@@ -2,11 +2,10 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoPuliziaCacheDinamicaImmagini;
-import com.threeamigos.foresta.locazioni.Bosco;
-import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.strumenti.Logger;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -72,7 +71,10 @@ public class ImageCache {
 	static Map<TipoLocazione, BufferedImage> locazioni;
 	static Map<TipoLocazione, BufferedImage> mappa;
 	// Le immagini alternative del bosco sulla mappa (indice 0 = Foresta.gif), vedi
-	// Bosco.VARIANTE_MAPPA e getImmagineMappaBosco
+	// Bosco.VARIANTE_MAPPA e getImmagineMappaBosco: devono essere Bosco.NUMERO_VARIANTI_MAPPA (lo controlla un test)
+	static final String[] RISORSE_VARIANTI_BOSCO = {
+			"mappa/Foresta.gif", "mappa/Foresta2.gif", "mappa/Foresta3.gif", "mappa/Foresta4.gif"
+	};
 	static BufferedImage[] mappaVariantiBosco;
 	static BufferedImage[] lettere;
 	static BufferedImage[] cifre;
@@ -177,11 +179,10 @@ public class ImageCache {
 		locazioni.put(TipoLocazione.TEMPIO, BufferedImageBuilder.buildBufferedImage("locazioni/Tempio.gif"));
 
 		mappa = new EnumMap<>(TipoLocazione.class);
-		mappaVariantiBosco = new BufferedImage[Bosco.NUMERO_VARIANTI_MAPPA];
-		mappaVariantiBosco[0] = BufferedImageBuilder.buildBufferedImage("mappa/Foresta.gif");
-		mappaVariantiBosco[1] = BufferedImageBuilder.buildBufferedImage("mappa/Foresta2.gif");
-		mappaVariantiBosco[2] = BufferedImageBuilder.buildBufferedImage("mappa/Foresta3.gif");
-		mappaVariantiBosco[3] = BufferedImageBuilder.buildBufferedImage("mappa/Foresta4.gif");
+		mappaVariantiBosco = new BufferedImage[RISORSE_VARIANTI_BOSCO.length];
+		for (int i = 0; i < RISORSE_VARIANTI_BOSCO.length; i++) {
+			mappaVariantiBosco[i] = BufferedImageBuilder.buildBufferedImage(RISORSE_VARIANTI_BOSCO[i]);
+		}
 		mappa.put(TipoLocazione.BOSCO, mappaVariantiBosco[0]);
 		d = BufferedImageBuilder.buildBufferedImage("mappa/Castello.gif");
 		for (TipoLocazione tipoLocazione : TipoLocazione.values()) {
@@ -351,7 +352,7 @@ public class ImageCache {
 	}
 
 	/**
-	 * L'immagine della variante di bosco indicata (1-based, vedi {@link Bosco#getVarianteMappa}),
+	 * L'immagine della variante di bosco indicata (1-based, vedi Bosco.getVarianteMappa),
 	 * da usare al posto di {@code mappa.get(TipoLocazione.BOSCO)}.
 	 */
 	public static BufferedImage getImmagineMappaBosco(int variante) {

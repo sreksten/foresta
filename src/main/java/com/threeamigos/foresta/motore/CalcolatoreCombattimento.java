@@ -12,7 +12,8 @@ import com.threeamigos.foresta.personaggi.OmbraFiamma;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.*;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
-import com.threeamigos.foresta.tools.ModalitaDiProva;
+import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 
 import java.util.ArrayList;
 import java.util.List;

@@ -4,7 +4,7 @@ import com.threeamigos.foresta.motore.CatalogoLeggendari;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.motore.RegistroMissioni;
-import com.threeamigos.foresta.tools.Misc;
+import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.ArrayList;
 import java.util.Comparator;

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
-import com.threeamigos.foresta.tools.Punteggio;
+import com.threeamigos.foresta.strumenti.Punteggio;
 
 import java.util.ArrayList;
 import java.util.Comparator;

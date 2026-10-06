@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.ui;
 
-import com.threeamigos.foresta.motore.Logger;
+import com.threeamigos.foresta.strumenti.Logger;
 
 import javax.imageio.ImageIO;
 import java.awt.*;

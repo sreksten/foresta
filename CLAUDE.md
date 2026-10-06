@@ -10,7 +10,7 @@ Sorgenti in `src/main/java/com/threeamigos/foresta` (abbreviato `…/` sotto), r
 | :--- | :--- | :--- |
 | Avvio, macchina a stati, ciclo di una locazione | `Main`, `…/motore/Automa` (implementa `…/interfacce/ControlloreDiGioco`), `…/motore/Stato` | `motore_di_gioco.md` §2–3 |
 | Bus eventi | `…/eventi` (`notifiche`, `richieste`, `interni`, `comandigiocatore`) | `motore_di_gioco.md` §4 |
-| Salvataggi e modello dati | `…/modellodati`, `…/interfacce/GestoreSalvataggi`, `…/tools/GestoreSalvataggiSuFile`, `…/motore/RiletturaPartita` | `motore_di_gioco.md` §5 |
+| Salvataggi e modello dati | `…/modellodati`, `…/interfacce/GestoreSalvataggi`, `…/strumenti/GestoreSalvataggiSuFile`, `…/motore/RiletturaPartita` | `motore_di_gioco.md` §5 |
 | Mappa, tempo, locazioni | `…/motore/Foresta`, `LineaTemporale`, `…/locazioni` | `motore_di_gioco.md` §6 |
 | Combattimento | `…/motore/CalcolatoreCombattimento`, `Ondata`, `…/modellodati/EffettoDiStatoMD` | `motore_di_gioco.md` §7, `interazioni_effetti_di_stato.md` |
 | Personaggi e gruppi | `…/personaggi`, `…/motore/Gruppo*`, `GestoreProgressione` | `motore_di_gioco.md` §8 |
@@ -49,5 +49,6 @@ Panoramica in `motore_grafico.md`.
 
 ## Build e test
 
-`mvn test` esegue tutti i test (JUnit 5, in `src/test/java`); al 2026-10-06 sono 707, tutti verdi (16 saltati).
+`mvn test` esegue tutti i test (JUnit 5, in `src/test/java`); al 2026-10-06 sono 709, tutti verdi (16 saltati).
+`ui/DipendenzeUITest` controlla che la UI non importi motore e dominio: le dipendenze che restano sono nelle sue `ECCEZIONI`.
 Le cose da fare generali sono in `todo.md`; i `TODO`/`FIXME` puntuali restano nel codice.

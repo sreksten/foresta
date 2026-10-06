@@ -9,7 +9,7 @@ import com.threeamigos.foresta.missioni.MissioneAPassi;
 import com.threeamigos.foresta.modellodati.IntermezziMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.tipi.TipoIntermezzo;
-import com.threeamigos.foresta.tools.ModalitaDiProva;
+import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 
 /**
  * Facciata su {@link IntermezziMD}: sceglie il prossimo intermezzo da mostrare e

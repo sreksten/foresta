@@ -9,9 +9,11 @@ import com.threeamigos.foresta.missioni.Missione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.Notizia;
+import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
+import com.threeamigos.foresta.trofei.ClasseTrofeo;
 
 import java.util.List;
 
@@ -82,6 +84,26 @@ public class VistaPartitaMotore implements VistaPartita {
 	@Override
 	public boolean isTrofeoVinto(TipoTrofeo trofeo) {
 		return RegistroTrofei.isVinto(trofeo);
+	}
+
+	@Override
+	public int getObiettivoTrofeo(TipoTrofeo trofeo) {
+		return ClasseTrofeo.di(trofeo).getObiettivo();
+	}
+
+	@Override
+	public int getProgressoTrofeo(TipoTrofeo trofeo) {
+		return ClasseTrofeo.di(trofeo).getProgresso();
+	}
+
+	@Override
+	public String getNomeSingolare(TipoPersonaggio tipoPersonaggio) {
+		return FabbricaPersonaggi.nomeSingolare(tipoPersonaggio);
+	}
+
+	@Override
+	public String getNomePlurale(TipoPersonaggio tipoPersonaggio) {
+		return FabbricaPersonaggi.nomePlurale(tipoPersonaggio);
 	}
 
 	@Override

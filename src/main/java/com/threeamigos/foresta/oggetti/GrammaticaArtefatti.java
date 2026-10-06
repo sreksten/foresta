@@ -2,10 +2,10 @@ package com.threeamigos.foresta.oggetti;
 
 import com.threeamigos.foresta.motore.GrammarBean.InvalidGrammarException;
 import com.threeamigos.foresta.motore.GrammarBean;
-import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
+import com.threeamigos.foresta.strumenti.Logger;
 
 import java.io.IOException;
 import java.io.InputStream;

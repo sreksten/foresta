@@ -1,6 +1,4 @@
-package com.threeamigos.foresta.tools;
-
-import com.threeamigos.foresta.motore.Logger;
+package com.threeamigos.foresta.strumenti;
 
 import java.io.File;
 

@@ -29,7 +29,7 @@ Il codice si divide in due parti, che si parlano attraverso un bus eventi publis
 
 | Parte | Pacchetti | Documento |
 | :--- | :--- | :--- |
-| **Motore di gioco** | `motore`, `modellodati`, `tipi`, `eventi`, `personaggi`, `locazioni`, `missioni`, `intermezzi`, `oggetti`, `offerte`, `incantesimi`, `trofei`, `interfacce`, `tools` | [`motore_di_gioco.md`](motore_di_gioco.md) |
+| **Motore di gioco** | `motore`, `modellodati`, `tipi`, `eventi`, `personaggi`, `locazioni`, `missioni`, `intermezzi`, `oggetti`, `offerte`, `incantesimi`, `trofei`, `interfacce`, `strumenti` | [`motore_di_gioco.md`](motore_di_gioco.md) |
 | **Motore grafico** | `ui`, `ui.sfx` | [`motore_grafico.md`](motore_grafico.md) |
 
 ```

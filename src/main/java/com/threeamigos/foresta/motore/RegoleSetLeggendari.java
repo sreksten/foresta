@@ -8,7 +8,7 @@ import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
 import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoModificatore;
-import com.threeamigos.foresta.tools.Misc;
+import com.threeamigos.foresta.strumenti.Misc;
 
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;

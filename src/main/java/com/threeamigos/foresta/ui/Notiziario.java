@@ -2,7 +2,7 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.modellodati.Notizia;
-import com.threeamigos.foresta.motore.Logger;
+import com.threeamigos.foresta.strumenti.Logger;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tools;
+package com.threeamigos.foresta.strumenti;
 
 /**
  * La modalità di prova, per chi sviluppa: si attiva con la system property testMode a true, yes o 1 (es.

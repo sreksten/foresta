@@ -1,6 +1,4 @@
-package com.threeamigos.foresta.tools;
-
-import com.threeamigos.foresta.motore.Temporizzabile;
+package com.threeamigos.foresta.strumenti;
 
 /**
  * Il temporizzatore serve per far ricevere ad un oggetto un impulso

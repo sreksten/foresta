@@ -15,9 +15,9 @@ import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoNegozio;
-import com.threeamigos.foresta.tools.Misc;
-import com.threeamigos.foresta.tools.Temporizzatore;
-import com.threeamigos.foresta.tools.TestataSalvataggio;
+import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.strumenti.Temporizzatore;
+import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 
 import javax.swing.*;
 import javax.swing.Timer;

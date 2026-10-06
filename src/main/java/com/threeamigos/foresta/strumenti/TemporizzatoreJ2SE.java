@@ -1,8 +1,7 @@
-package com.threeamigos.foresta.tools;
+package com.threeamigos.foresta.strumenti;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoException;
-import com.threeamigos.foresta.motore.Temporizzabile;
 
 import javax.swing.SwingUtilities;
 import java.util.concurrent.Executors;

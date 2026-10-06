@@ -11,7 +11,7 @@ import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tools.Misc;
+import com.threeamigos.foresta.strumenti.Misc;
 
 /**
  * In città qualcuno vuole sconfitto qualcosa che si nasconde nella foresta: una bestia rara, una banda in un covo, una

@@ -12,7 +12,7 @@ import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.motore.RegistroTrofei;
 import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
-import com.threeamigos.foresta.tools.*;
+import com.threeamigos.foresta.strumenti.*;
 import com.threeamigos.foresta.ui.ForestaUI;
 import com.threeamigos.foresta.ui.Orientamento;
 

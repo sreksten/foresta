@@ -8,7 +8,7 @@ import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
-import com.threeamigos.foresta.tools.CostruttoreArtefatto;
+import com.threeamigos.foresta.strumenti.CostruttoreArtefatto;
 
 import java.util.ArrayList;
 import java.util.Collections;

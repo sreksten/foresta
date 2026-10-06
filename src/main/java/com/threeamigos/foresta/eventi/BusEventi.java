@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi;
 
 import com.threeamigos.foresta.eventi.interni.InternoException;
-import com.threeamigos.foresta.motore.Logger;
+import com.threeamigos.foresta.strumenti.Logger;
 
 import javax.swing.*;
 import java.util.List;

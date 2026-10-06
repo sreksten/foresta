@@ -2,7 +2,7 @@ package com.threeamigos.foresta.modellodati;
 
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.tipi.*;
-import com.threeamigos.foresta.tools.CostruttoreArtefatto;
+import com.threeamigos.foresta.strumenti.CostruttoreArtefatto;
 import org.junit.jupiter.api.Test;
 
 import java.io.*;

@@ -17,7 +17,7 @@ import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tools.ModalitaDiProva;
+import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 
 import java.util.ArrayList;
 import java.util.Collection;

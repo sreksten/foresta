@@ -7,6 +7,7 @@ import com.threeamigos.foresta.modellodati.Notizia;
 import com.threeamigos.foresta.motore.GrammarBean.InvalidGrammarException;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.strumenti.Logger;
 
 import javax.swing.*;
 import java.io.IOException;

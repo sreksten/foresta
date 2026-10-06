@@ -4,7 +4,7 @@ import com.threeamigos.foresta.locazioni.Rovine;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.tools.Misc;
+import com.threeamigos.foresta.strumenti.Misc;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;

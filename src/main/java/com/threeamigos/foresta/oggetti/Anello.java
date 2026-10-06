@@ -9,8 +9,9 @@ import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.tools.CostruttoreArtefatto;
-import com.threeamigos.foresta.tools.Misc;
+import com.threeamigos.foresta.strumenti.CostruttoreArtefatto;
+import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.Misc;
 
 import java.util.Optional;
 

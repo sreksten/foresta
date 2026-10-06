@@ -5,8 +5,8 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneConoscenzaMapp
 import com.threeamigos.foresta.motore.Foresta;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.Logger;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.strumenti.Logger;
 
 public class MappaZona implements Offerta {
 

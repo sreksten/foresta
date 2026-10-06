@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tools;
+package com.threeamigos.foresta.strumenti;
 
 import com.threeamigos.foresta.modellodati.LettoreCampi;
 import org.junit.jupiter.api.Test;

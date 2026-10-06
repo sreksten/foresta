@@ -17,7 +17,7 @@ import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.TipoNegozio;
-import com.threeamigos.foresta.tools.CostruttoreArtefatto;
+import com.threeamigos.foresta.strumenti.CostruttoreArtefatto;
 
 import java.util.ArrayList;
 import java.util.Collection;

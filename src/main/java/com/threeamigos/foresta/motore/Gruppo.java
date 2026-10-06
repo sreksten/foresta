@@ -4,6 +4,7 @@ import com.threeamigos.foresta.interfacce.VistaGruppo;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.strumenti.Logger;
 
 import java.util.ArrayList;
 import java.util.List;

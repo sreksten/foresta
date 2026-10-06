@@ -8,7 +8,7 @@ import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
-import com.threeamigos.foresta.tools.Temporizzatore;
+import com.threeamigos.foresta.strumenti.Temporizzatore;
 
 import java.awt.*;
 import java.awt.geom.Ellipse2D;

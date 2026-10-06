@@ -5,7 +5,6 @@ import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -17,8 +16,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 class DisplayableCanvasRiquadroLocazione implements Finestra {
+
+	// Per sparpagliare un po' gli avversari: non Dado, che segue il seme della partita e non va consumato dalla UI
+	private final Random caso = new Random();
 
 	private static final int SOLLEVAMENTO_ANCORA = 8;
 	private static final int SCOSTAMENTO_SOVRAPPOSIZIONE = 20;
@@ -56,7 +59,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		for (VistaPersonaggio personaggioCorrente : gruppoAvversario.getPersonaggi()) {
 			BufferedImage d = ClassePersonaggioImmagine.getImmagine(personaggioCorrente.getClasse());
 			mappaImmagini.put(personaggioCorrente, d);
-			CoordinateMD coordinate = new CoordinateMD(topLeftX + i++ * 20 + Dado.tira(10),
+			CoordinateMD coordinate = new CoordinateMD(topLeftX + i++ * 20 + 1 + caso.nextInt(10),
 					ImageCache.SPACING + ImageCache.locazioni.get(TipoLocazione.BOSCO).getHeight() - i * 6 - d.getHeight());
 			mappaCoordinate.put(personaggioCorrente, coordinate);
 		}

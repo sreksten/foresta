@@ -223,7 +223,7 @@ class ScenarioCorrezioniTest {
 		ModelloDati.setIstanza(new ModelloDati());
 		com.threeamigos.foresta.personaggi.Ladro ladro = new com.threeamigos.foresta.personaggi.Ladro("L", 1);
 		int prima = ladro.getPrecisione();
-		com.threeamigos.foresta.oggetti.Artefatto anello = com.threeamigos.foresta.tools.CostruttoreArtefatto.istanza()
+		com.threeamigos.foresta.oggetti.Artefatto anello = com.threeamigos.foresta.strumenti.CostruttoreArtefatto.istanza()
 				.setTipo(TipoArtefatto.ANELLO)
 				.setNome("anello di prova").setDescrizione("che fa mirare meglio").setLivello(1).setDanniBase(0)
 				.setCostoAcquisto(1).setPeso(0)

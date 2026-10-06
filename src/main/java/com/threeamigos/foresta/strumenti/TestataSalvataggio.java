@@ -1,6 +1,6 @@
-package com.threeamigos.foresta.tools;
+package com.threeamigos.foresta.strumenti;
 
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.tipi.Comando;
 
 /**
@@ -13,9 +13,9 @@ public class TestataSalvataggio {
 
     private final Comando id;
     private final String descrizione;
-    private final GruppoGiocatore gruppoGiocatore;
+    private final VistaGruppoGiocatore gruppoGiocatore;
 
-    public TestataSalvataggio(Comando id, String descrizione, GruppoGiocatore gruppoGiocatore) {
+    public TestataSalvataggio(Comando id, String descrizione, VistaGruppoGiocatore gruppoGiocatore) {
         this.id = id;
         this.descrizione = descrizione;
         this.gruppoGiocatore = gruppoGiocatore;
@@ -29,7 +29,7 @@ public class TestataSalvataggio {
         return descrizione;
     }
 
-    public GruppoGiocatore getGruppoGiocatore() {
+    public VistaGruppoGiocatore getGruppoGiocatore() {
         return gruppoGiocatore;
     }
 }

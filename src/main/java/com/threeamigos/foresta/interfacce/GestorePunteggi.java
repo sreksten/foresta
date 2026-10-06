@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.interfacce;
 
-import com.threeamigos.foresta.tools.Punteggio;
+import com.threeamigos.foresta.strumenti.Punteggio;
 
 /**
  * La classifica dei punteggi: Main crea l'implementazione (GestorePunteggiSuFile) e la passa all'Automa, che vi

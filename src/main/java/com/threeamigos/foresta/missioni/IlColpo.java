@@ -11,7 +11,7 @@ import com.threeamigos.foresta.motore.RegistroMissioni;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseMissione;
-import com.threeamigos.foresta.tools.Misc;
+import com.threeamigos.foresta.strumenti.Misc;
 
 /**
  * In città qualcuno chiede un colpo: rubare qualcosa, guastare le provviste di qualcuno, appiccare un fuoco, entrare

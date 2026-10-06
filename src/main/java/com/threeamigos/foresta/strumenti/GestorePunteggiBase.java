@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.tools;
+package com.threeamigos.foresta.strumenti;
 
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.modellodati.Serializzabile;

@@ -34,7 +34,7 @@ import com.threeamigos.foresta.tipi.TipoDanno;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.TipoOggetto;
-import com.threeamigos.foresta.tools.*;
+import com.threeamigos.foresta.strumenti.*;
 
 import java.util.*;
 import java.util.concurrent.Executor;

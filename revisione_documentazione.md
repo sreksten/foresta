@@ -12,7 +12,7 @@ Piano di lavoro per verificare sul codice i documenti di progetto e arrivare a u
 | `gestione_missioni.md` | 1071 | **diario di progettazione**: proposte numerate seguite da "Come è stato implementato (data)" |
 | `passi_missioni.md` | 1143 | catalogo dei passi e mappatura `TipoMissione` → passi, seguito da **~40 voci di diario datate** |
 
-Il codice conta circa 520 file Java (~75.000 righe), in `com.threeamigos.foresta`, divisi nei pacchetti `motore` (con `modellodati` e `tipi`), `eventi` (`notifiche`, `richieste`, `interni`, `comandigiocatore`), `missioni`, `intermezzi`, `personaggi`, `locazioni`, `oggetti`, `offerte`, `incantesimi`, `trofei`, `interfacce`, `ui` (con `sfx`) e `tools`.
+Il codice conta circa 520 file Java (~75.000 righe), in `com.threeamigos.foresta`, divisi nei pacchetti `motore` (con `modellodati` e `tipi`), `eventi` (`notifiche`, `richieste`, `interni`, `comandigiocatore`), `missioni`, `intermezzi`, `personaggi`, `locazioni`, `oggetti`, `offerte`, `incantesimi`, `trofei`, `interfacce`, `ui` (con `sfx`) e `strumenti`.
 
 Il problema principale non riguarda tanto i documenti brevi quanto i due documenti sulle missioni. Sono cresciuti per accumulo: una sezione propone una cosa, una sezione successiva dice com'è stata fatta, e un'altra ancora la corregge. Per sapere come funziona una missione oggi bisogna leggerli tutti e ricostruire l'ultima versione di ogni decisione.
 

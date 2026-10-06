@@ -6,7 +6,7 @@ import com.threeamigos.foresta.modellodati.LettoreCampi;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.Comando;
-import com.threeamigos.foresta.tools.TestataSalvataggio;
+import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 
 import java.io.BufferedReader;
 import java.io.IOException;

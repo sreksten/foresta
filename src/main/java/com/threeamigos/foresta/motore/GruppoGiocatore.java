@@ -25,8 +25,9 @@ import com.threeamigos.foresta.tipi.TipoMotivoRifiutoIncantatura;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
-import com.threeamigos.foresta.tools.Misc;
-import com.threeamigos.foresta.tools.ModalitaDiProva;
+import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.strumenti.ModalitaDiProva;
 import com.threeamigos.foresta.ui.InterfacciaUtente;
 
 import java.util.ArrayList;

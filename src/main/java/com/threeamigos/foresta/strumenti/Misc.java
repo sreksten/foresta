@@ -1,7 +1,7 @@
-package com.threeamigos.foresta.tools;
+package com.threeamigos.foresta.strumenti;
 
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
+import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 
 /**
  * Questa classe contiene la codifica numero-stringa per ordinali e cardinali,
@@ -145,8 +145,9 @@ public class Misc {
 	 * Riporta la direzione di un punto della foresta rispetto ad un gruppo
 	 * (per le informazioni su città, castelli, artefatti, o per gli eventi)
 	 */
-	public static String getDirezione(GruppoGiocatore g, CoordinateMD coordinate) {
-		return getDirezione(g.getX(), g.getY(), coordinate.getX(), coordinate.getY());
+	public static String getDirezione(VistaGruppoGiocatore g, CoordinateMD coordinate) {
+		CoordinateMD da = g.getCoordinate();
+		return getDirezione(da.getX(), da.getY(), coordinate.getX(), coordinate.getY());
 	}
 
 	public static String getDirezione(int daX, int daY, int aX, int aY) {

@@ -8,13 +8,15 @@ import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
-import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.motore.Stato;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
-import com.threeamigos.foresta.tools.Temporizzatore;
-import com.threeamigos.foresta.tools.TestataSalvataggio;
+import com.threeamigos.foresta.strumenti.Logger;
+import com.threeamigos.foresta.strumenti.Temporizzabile;
+import com.threeamigos.foresta.strumenti.Temporizzatore;
+import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 import com.threeamigos.foresta.ui.sfx.TracciatoreLogo;
 
 import javax.swing.*;

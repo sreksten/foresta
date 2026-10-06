@@ -2,8 +2,6 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.tipi.TipoTrofeo;
-import com.threeamigos.foresta.trofei.ClasseTrofeo;
-import com.threeamigos.foresta.trofei.Trofeo;
 
 import java.awt.Graphics2D;
 import java.awt.Image;
@@ -47,11 +45,11 @@ final class ImmagineTrofei {
 			altezza += titolo.getHeight() + SPAZIO_DOPO_IL_TITOLO;
 		}
 		for (TipoTrofeo tipo : TipoTrofeo.perTipologia()) {
-			Trofeo trofeo = ClasseTrofeo.di(tipo);
 			boolean vinto = vistaPartita.isTrofeoVinto(tipo);
-			int progresso = vinto ? trofeo.getObiettivo() : trofeo.getProgresso();
+			int obiettivo = vistaPartita.getObiettivoTrofeo(tipo);
+			int progresso = vinto ? obiettivo : vistaPartita.getProgressoTrofeo(tipo);
 			DoomdarkColorModel.Color colore = vinto ? VINTO : MANCANTE;
-			Image quantita = ImageCache.get(progresso + "/" + trofeo.getObiettivo(), font, colore);
+			Image quantita = ImageCache.get(progresso + "/" + obiettivo, font, colore);
 			int larghezzaTesti = larghezza - quantita.getWidth(null) - SPAZIO_QUANTITA;
 			BufferedImage nome = TestoGrande.immagine(tipo.getNome(), larghezzaTesti, false);
 			Image descrizione = ImageCache.get(tipo.getDescrizione(), font, colore, larghezzaTesti);

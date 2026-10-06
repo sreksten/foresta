@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.richieste;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.tools.TestataSalvataggio;
+import com.threeamigos.foresta.strumenti.TestataSalvataggio;
 
 import java.util.Collection;
 
