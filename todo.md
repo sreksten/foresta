@@ -10,6 +10,7 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 
 ## Bug noti
 
+- **Non sparate sul pianista.** Ho segnato come conosciuta la città, occorrerebbe metterle anche il segnalino. e la descrizione della missione nel cartiglio.
 - **Combattimento.** Personaggi di livello 5 pesantemente armati non riescono nemmeno a scalfire un boss come la Strega o il Lich.
 - **Modalità VERTICALE.** `DisplayableCanvasBarraIcone` avanza di 32 px con icone alte 64, e la finestra è larga al massimo 400 px (vedi [`motore_grafico.md`](motore_grafico.md) §12).
 - **Schermi alti meno di 804 px.** La barra delle icone copre il fondo del riquadro delle missioni.

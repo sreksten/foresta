@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.EnumMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ForestaMD implements Serializzabile {
 
@@ -31,8 +32,13 @@ public class ForestaMD implements Serializzabile {
 	// Si potrebbe fare anche un ciclo su tutta la foresta ma così si fa prima.
 	private Map<TipoLocazione, CoordinateMD> locazioniUniche;
 
-	// Incrementato ogni volta che cambia visivamente la mappa (conosciuta/visitata),
+	// Cambia ogni volta che cambia visivamente la mappa (conosciuta/visitata),
 	// così chi disegna la mappa generale sa quando la sua cache è da ricostruire.
+	// Il contatore è unico per tutta l'esecuzione: se ogni partita ripartisse da 0,
+	// una partita nuova o caricata potrebbe avere la stessa versione di quella
+	// disegnata per ultima (morendo nella prima locazione, per esempio) e la mappa
+	// a video resterebbe quella vecchia.
+	private static final AtomicInteger ULTIMA_VERSIONE_MAPPA = new AtomicInteger();
 	private int versioneMappa;
 
 	public int getVersioneMappa() {
@@ -124,7 +130,7 @@ public class ForestaMD implements Serializzabile {
 		maxXConosciuta = -1;
 		minYConosciuta = -1;
 		maxYConosciuta = -1;
-		versioneMappa = 0;
+		versioneMappa = ULTIMA_VERSIONE_MAPPA.incrementAndGet();
 	}
 
 	public final void impostaLocazioneVisitata(CoordinateMD coordinate) {
@@ -138,7 +144,7 @@ public class ForestaMD implements Serializzabile {
 		} else {
 			locazioneMD.rimuoviProprieta(LocazioneMD.VISITATA);
 		}
-		versioneMappa++;
+		versioneMappa = ULTIMA_VERSIONE_MAPPA.incrementAndGet();
 	}
 
 	public final boolean isLocazioneVisitata(CoordinateMD coordinate) {
@@ -170,7 +176,7 @@ public class ForestaMD implements Serializzabile {
 	private void impostaLocazioneConosciuta(int x, int y) {
 		arrayLocazioni[offset(x, y)].aggiungiProprieta(LocazioneMD.CONOSCIUTA, LocazioneMD.AFFERMATIVO);
 		aggiornaEstremiConosciuti(x, y);
-		versioneMappa++;
+		versioneMappa = ULTIMA_VERSIONE_MAPPA.incrementAndGet();
 	}
 
 	private void aggiornaEstremiConosciuti(int x, int y) {
