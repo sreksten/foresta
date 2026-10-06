@@ -172,6 +172,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 		BusEventi.iscriviti(ComandoDiGioco.class, this::onEventoComandoDiGioco);
 		BusEventi.iscriviti(ComandoInvioTesto.class, this::onEventoTestoDisponibile);
+		// Gli spostamenti di artefatti nella schermata di scambio aperta: li fa lo scambio stesso
+		BusEventi.iscriviti(ComandoScambioArtefatto.class, AutomaScambiatoreArtefatti::esegui);
+		BusEventi.iscriviti(ComandoSpesaPuntoAbilita.class, e -> e.getPersonaggio().spendiPuntoAbilita(e.getAttributo()));
 		// L'interruttore dell'aiuto vale in ogni stato: non passa dalla macchina a stati
 		BusEventi.iscriviti(ComandoImpostazioneAiuto.class,
 				e -> ModelloDati.getIstanza().setAiutoAbilitato(e.isAbilitato()));
@@ -1945,6 +1948,6 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		Personaggio personaggioScelto = gruppo.getPersonaggio(indicePersonaggioInventario);
 
 		BusEventi.pubblica(new ComandoAperturaInventarioGruppo(comandiPossibili,
-				new AutomaInventario(personaggioScelto, gruppo)));
+				new AutomaInventario(personaggioScelto, gruppo), personaggioScelto));
 	}
 }

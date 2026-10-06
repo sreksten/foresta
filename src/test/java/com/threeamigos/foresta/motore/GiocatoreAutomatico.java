@@ -2,11 +2,12 @@ package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioCommerciante;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoVenditaArtefatto;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
 import com.threeamigos.foresta.interfacce.Arma;
+import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.locazioni.Locazione;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
@@ -745,15 +746,14 @@ final class GiocatoreAutomatico {
 
 	/**
 	 * Vende al negozio aperto tutti gli artefatti dell'inventario del gruppo che tratta (quelli che nessuno ha
-	 * potuto equipaggiare), come il trascinamento della UI (AutomaAcquistiArtefatti).
+	 * potuto equipaggiare), come il doppio click della UI (ComandoScambioArtefatto).
 	 */
 	private void vendi(GruppoGiocatore gruppo, TipoNegozio negozio) {
-		AutomaAcquistiArtefatti bottega = partita.eventi().ultimo(ComandoAperturaInventarioCommerciante.class)
-				.getAutomaAcquistiArtefatti();
+		VistaScambio bottega = partita.eventi().ultimo(ComandoAperturaInventarioCommerciante.class).getScambio();
 		for (Artefatto artefatto : new ArrayList<>(gruppo.getInventario())) {
 			if (negozio.tratta(artefatto.getTipo())) {
 				int prima = gruppo.getMonete();
-				partita.pubblica(new ComandoVenditaArtefatto(bottega.getParteAttiva(), bottega.getParteRemota(), artefatto));
+				partita.pubblica(new ComandoScambioArtefatto(bottega, ComandoScambioArtefatto.Destinazione.PARTE_REMOTA, artefatto));
 				moneteDaVendite += Math.max(0, gruppo.getMonete() - prima);
 			}
 		}

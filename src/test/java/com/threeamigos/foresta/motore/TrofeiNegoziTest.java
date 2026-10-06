@@ -128,7 +128,7 @@ class TrofeiNegoziTest {
 	 * Un acquisto vero: il gruppo elabora il comando e, se le monete bastano, pubblica l'approvazione.
 	 */
 	private static void compra(PartitaDiTest partita, Artefatto artefatto) {
-		partita.pubblica(new ComandoAcquistoArtefatto(partita.gruppo(), new Magazzino(artefatto), artefatto));
+		partita.pubblica(new ComandoAcquistoArtefatto(partita.gruppo(), new Magazzino(artefatto), artefatto, null));
 	}
 
 	private static Artefatto artefatto(TipoArtefatto tipo, int livello) {

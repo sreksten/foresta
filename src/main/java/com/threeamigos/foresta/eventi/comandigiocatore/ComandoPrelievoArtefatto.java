@@ -2,6 +2,7 @@ package com.threeamigos.foresta.eventi.comandigiocatore;
 
 import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.interfacce.OggettoConPeso;
+import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
 
 /**
@@ -16,9 +17,10 @@ public class ComandoPrelievoArtefatto extends ComandoSpostamentoArtefatto<Oggett
      * @param parteAttiva l'inventario di un Personaggio
      * @param parteRemota l'inventario generale del GruppoGiocatore
      * @param oggettoDaPrelevare l'oggetto di interesse della transazione
+     * @param scambio lo scambio aperto da cui viene, o null
      */
     public ComandoPrelievoArtefatto(ScambiatoreArtefatti parteAttiva, ScambiatoreArtefatti parteRemota,
-                                    OggettoConPeso oggettoDaPrelevare) {
-        super(TipoEvento.COMANDO_PRELIEVO_ARTEFATTO, parteAttiva, parteRemota, oggettoDaPrelevare);
+                                    OggettoConPeso oggettoDaPrelevare, VistaScambio scambio) {
+        super(TipoEvento.COMANDO_PRELIEVO_ARTEFATTO, parteAttiva, parteRemota, oggettoDaPrelevare, scambio);
     }
 }

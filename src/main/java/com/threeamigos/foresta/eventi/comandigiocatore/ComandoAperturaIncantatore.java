@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.comandigiocatore;
 
 import com.threeamigos.foresta.eventi.RichiestaConComandi;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.motore.AutomaIncantatore;
+import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.tipi.Comando;
 
 import java.util.Collection;
@@ -12,20 +12,21 @@ import java.util.Collection;
  */
 public class ComandoAperturaIncantatore extends RichiestaConComandi {
 
-    private final AutomaIncantatore automaIncantatore;
+    private final VistaScambio scambio;
     private final String messaggio;
 
     /**
+     * @param scambio fra l'inventario del gruppo (parte attiva) e il banco di lavoro (parte remota)
      * @param messaggio il fumetto con cui l'incantatore accoglie, o null per nessuno
      */
-    public ComandoAperturaIncantatore(Collection<Comando> possibilita, AutomaIncantatore automaIncantatore, String messaggio) {
+    public ComandoAperturaIncantatore(Collection<Comando> possibilita, VistaScambio scambio, String messaggio) {
         super(TipoEvento.COMANDO_APERTURA_INCANTATORE, possibilita);
-        this.automaIncantatore = automaIncantatore;
+        this.scambio = scambio;
         this.messaggio = messaggio;
     }
 
-    public AutomaIncantatore getAutomaIncantatore() {
-        return automaIncantatore;
+    public VistaScambio getScambio() {
+        return scambio;
     }
 
     public String getMessaggio() {

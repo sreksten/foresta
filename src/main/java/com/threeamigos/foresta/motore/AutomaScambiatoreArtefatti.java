@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
+import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.oggetti.Artefatto;
 
 import java.util.Collection;
@@ -8,8 +10,24 @@ import java.util.Collection;
  * Gestisce lo scambio di artefatti tra l'inventario di un personaggio e un pool generico
  * di artefatti disponibili (tipicamente quello del gruppo, in futuro anche quello di un PNG),
  * appoggiandosi in entrambi i casi al contratto di ScambiatoreArtefatti.
+ * <p>
+ * La UI lo vede solo come VistaScambio, che riceve con l'evento di apertura della schermata, e gli chiede di spostare
+ * un artefatto con ComandoScambioArtefatto (vedi esegui).
  */
-public abstract class AutomaScambiatoreArtefatti {
+public abstract class AutomaScambiatoreArtefatti implements VistaScambio {
+
+	/**
+	 * Lo spostamento chiesto dalla UI, fatto dallo scambio da cui viene (l'Automa ci si iscrive). Lo scambio è uno di
+	 * questi automi: la UI ne conosce solo la vista.
+	 */
+	static void esegui(ComandoScambioArtefatto comando) {
+		AutomaScambiatoreArtefatti scambio = (AutomaScambiatoreArtefatti) comando.getScambio();
+		if (comando.getDestinazione() == ComandoScambioArtefatto.Destinazione.PARTE_ATTIVA) {
+			scambio.richiediSpostamentoSuParteAttiva(comando.getArtefatto());
+		} else {
+			scambio.richiediSpostamentoSuParteRemota(comando.getArtefatto());
+		}
+	}
 
 	/**
 	 * L'oggetto che attivamente decide di dare via o prelevare artefatti
@@ -31,17 +49,25 @@ public abstract class AutomaScambiatoreArtefatti {
 		return parteAttiva;
 	}
 
+	@Override
+	public Collection<Artefatto> getInventarioParteAttiva() {
+		return parteAttiva.getInventario();
+	}
+
+	@Override
 	public abstract boolean mostraCostoSuParteAttiva();
 
 	public ScambiatoreArtefatti getParteRemota() {
 		return parteRemota;
 	}
 
-	public abstract boolean mostraCostoSuParteRemota();
-
-	public Collection<Artefatto> getArtefattiDisponibili() {
+	@Override
+	public Collection<Artefatto> getInventarioParteRemota() {
 		return parteRemota.getInventario();
 	}
+
+	@Override
+	public abstract boolean mostraCostoSuParteRemota();
 
 	public abstract void richiediSpostamentoSuParteAttiva(Artefatto artefatto);
 

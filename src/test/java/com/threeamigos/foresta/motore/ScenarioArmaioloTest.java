@@ -1,8 +1,10 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioCommerciante;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
+import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
@@ -44,17 +46,17 @@ class ScenarioArmaioloTest {
 		// Il Ladro imbraccia lo Scudo Fiscale, che aggiunge 4 alla sua contrattazione
 		int contrattazioneSenzaScudo = partita.gruppo().getContrattazione();
 		partita.gruppo().getCapo().addArtefatto(Leggendari.con(Leggendari.SCUDO_DELL_ESATTORE).costruisci());
-		AutomaAcquistiArtefatti bottega = entraDallArmaiolo();
-		Artefatto scelto = new ArrayList<>(bottega.getParteRemota().getInventario()).get(0);
+		VistaScambio bottega = entraDallArmaiolo();
+		Artefatto scelto = new ArrayList<>(bottega.getInventarioParteRemota()).get(0);
 		int moneteIniziali = partita.gruppo().getMonete();
 		int prezzo = partita.gruppo().prezzoAcquisto(scelto.getCostoAcquisto());
 
-		bottega.richiediSpostamentoSuParteAttiva(scelto);
+		compra(bottega, scelto);
 
 		assertTrue(partita.eventi().haRicevuto(NotificaApprovazioneAcquistoArtefatto.class));
 		assertEquals(moneteIniziali - prezzo, partita.gruppo().getMonete());
 		assertTrue(PartitaDiTest.contiene(partita.gruppo().getInventario(), scelto));
-		assertFalse(PartitaDiTest.contiene(bottega.getParteRemota().getInventario(), scelto));
+		assertFalse(PartitaDiTest.contiene(bottega.getInventarioParteRemota(), scelto));
 		// Lo sconto è quello della sua contrattazione, scudo compreso
 		int contrattazione = partita.gruppo().getContrattazione();
 		assertTrue(contrattazione > contrattazioneSenzaScudo, "contrattazione " + contrattazione);
@@ -63,16 +65,16 @@ class ScenarioArmaioloTest {
 
 	@Test
 	void rivendeAllArmaioloAlPrezzoTrattato() {
-		AutomaAcquistiArtefatti bottega = entraDallArmaiolo();
-		Artefatto scelto = new ArrayList<>(bottega.getParteRemota().getInventario()).get(0);
-		bottega.richiediSpostamentoSuParteAttiva(scelto);
+		VistaScambio bottega = entraDallArmaiolo();
+		Artefatto scelto = new ArrayList<>(bottega.getInventarioParteRemota()).get(0);
+		compra(bottega, scelto);
 		int moneteDopoAcquisto = partita.gruppo().getMonete();
 
-		bottega.richiediSpostamentoSuParteRemota(scelto);
+		vendi(bottega, scelto);
 
 		assertTrue(partita.eventi().haRicevuto(NotificaApprovazioneVenditaArtefatto.class));
 		assertEquals(moneteDopoAcquisto + partita.gruppo().prezzoVendita(scelto.getCostoAcquisto()), partita.gruppo().getMonete());
-		assertTrue(PartitaDiTest.contiene(bottega.getParteRemota().getInventario(), scelto));
+		assertTrue(PartitaDiTest.contiene(bottega.getInventarioParteRemota(), scelto));
 		assertTrue(partita.gruppo().prezzoVendita(scelto.getCostoAcquisto()) < partita.gruppo().prezzoAcquisto(scelto.getCostoAcquisto()));
 	}
 
@@ -84,12 +86,21 @@ class ScenarioArmaioloTest {
 		partita.assertComandoDisponibile(Comando.ESCI_DA_CITTA);
 	}
 
-	private AutomaAcquistiArtefatti entraDallArmaiolo() {
+	private VistaScambio entraDallArmaiolo() {
 		partita.comando(Comando.ARMAIOLO);
 		List<ComandoAperturaInventarioCommerciante> aperture = partita.eventi().tutti(ComandoAperturaInventarioCommerciante.class);
 		assertEquals(1, aperture.size());
-		AutomaAcquistiArtefatti bottega = aperture.get(0).getAutomaAcquistiArtefatti();
-		assertFalse(bottega.getParteRemota().getInventario().isEmpty(), "l'armaiolo ha il magazzino vuoto");
+		VistaScambio bottega = aperture.get(0).getScambio();
+		assertFalse(bottega.getInventarioParteRemota().isEmpty(), "l'armaiolo ha il magazzino vuoto");
 		return bottega;
+	}
+
+	// Come il doppio click della UI
+	private void compra(VistaScambio bottega, Artefatto artefatto) {
+		partita.pubblica(new ComandoScambioArtefatto(bottega, ComandoScambioArtefatto.Destinazione.PARTE_ATTIVA, artefatto));
+	}
+
+	private void vendi(VistaScambio bottega, Artefatto artefatto) {
+		partita.pubblica(new ComandoScambioArtefatto(bottega, ComandoScambioArtefatto.Destinazione.PARTE_REMOTA, artefatto));
 	}
 }

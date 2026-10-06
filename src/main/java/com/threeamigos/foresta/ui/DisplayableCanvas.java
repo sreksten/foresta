@@ -5,11 +5,9 @@ import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.modellodati.MessaggioMD;
-import com.threeamigos.foresta.motore.AutomaAcquistiArtefatti;
-import com.threeamigos.foresta.motore.AutomaIncantatore;
-import com.threeamigos.foresta.motore.AutomaInventario;
 import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
@@ -791,8 +789,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
-	public void impostaAutomaInventario(AutomaInventario automaInventario) {
-		inventario.impostaAutoma(automaInventario);
+	public void impostaScambioInventario(VistaScambio scambio, Personaggio personaggio) {
+		inventario.impostaScambio(scambio, personaggio);
 		repaint();
 	}
 
@@ -802,9 +800,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
-	public void impostaAutomaCommerciante(TipoNegozio negozio, AutomaAcquistiArtefatti automaAcquistiArtefatti) {
+	public void impostaScambioCommerciante(TipoNegozio negozio, VistaScambio scambio) {
 		commerciante.impostaNegozio(negozio);
-		commerciante.impostaAutoma(automaAcquistiArtefatti);
+		commerciante.impostaScambio(scambio);
 		repaint();
 	}
 
@@ -819,8 +817,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		repaint();
 	}
 
-	public void impostaAutomaIncantatore(AutomaIncantatore automaIncantatore) {
-		incantatore.impostaAutoma(automaIncantatore);
+	public void impostaScambioIncantatore(VistaScambio scambio) {
+		incantatore.impostaScambio(scambio);
 		repaint();
 	}
 

@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpostamentoArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
@@ -8,10 +9,10 @@ import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtef
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoAcquistoArtefatto;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
-import com.threeamigos.foresta.motore.AutomaScambiatoreArtefatti;
 import com.threeamigos.foresta.motore.RegoleSetLeggendari;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -31,7 +32,8 @@ import java.util.function.IntUnaryOperator;
  */
 abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasScambiatore {
 
-    protected AutomaScambiatoreArtefatti automa;
+    // Lo scambio aperto, in sola lettura: gli spostamenti si chiedono con ComandoScambioArtefatto
+    protected VistaScambio scambio;
 
     // Quota (in coordinate della finestra) a cui inizia l'elenco delle caratteristiche del
     // personaggio, aggiornata a ogni disegnaInventario e usata per l'hit-test dei click.
@@ -46,15 +48,12 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
 
     /**
      * Ogni schermata di scambio (inventario, commerciante, incantatore...) è iscritta alle
-     * stesse notifiche: deve reagire solo a quelle dei comandi pubblicati dal proprio automa,
+     * stesse notifiche: deve reagire solo a quelle dei comandi del proprio scambio,
      * altrimenti un solo acquisto produce un fumetto e uno sprite per ciascuna schermata.
-     * Il comando porta le stesse parti dell'automa che lo ha pubblicato, quindi basta
-     * confrontarle per identità.
+     * Il comando porta lo scambio da cui viene, quindi basta confrontarlo per identità.
      */
     private boolean riguardaQuestaSchermata(ComandoSpostamentoArtefatto<?> comando) {
-        return automa != null
-                && comando.getParteAttiva() == automa.getParteAttiva()
-                && comando.getParteRemota() == automa.getParteRemota();
+        return scambio != null && comando.getScambio() == scambio;
     }
 
     private void gestisciEventoApprovazioneAcquistoArtefatto(NotificaApprovazioneAcquistoArtefatto notificaApprovazioneAcquistoArtefatto) {
@@ -95,23 +94,23 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         return "Grazie di aver fatto affari con noi!";
     }
 
-    void impostaAutoma(AutomaScambiatoreArtefatti automa) {
-        this.automa = automa;
+    void impostaScambio(VistaScambio scambio) {
+        this.scambio = scambio;
     }
 
     protected void disegnaInventario(Graphics2D graphics) {
 
         super.disegnaInventario(graphics);
 
-        if (automa == null) {
+        if (scambio == null) {
             return;
         }
 
         disegnaColonnaPersonaggio(graphics);
 
-        offsetYZonaSinistra = disegnaElenco(graphics, new ArrayList<>(automa.getParteAttiva().getInventario()), xMinimaZonaSinistra,
+        offsetYZonaSinistra = disegnaElenco(graphics, new ArrayList<>(scambio.getInventarioParteAttiva()), xMinimaZonaSinistra,
                 offsetYZonaSinistra, true);
-        offsetYZonaDestra = disegnaElenco(graphics, automa.getParteRemota().getInventario(), xMinimaZonaDestra, offsetYZonaDestra,
+        offsetYZonaDestra = disegnaElenco(graphics, scambio.getInventarioParteRemota(), xMinimaZonaDestra, offsetYZonaDestra,
                 false);
 
         disegnaIntestazioniInventario(graphics);
@@ -141,13 +140,13 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
         int offset;
         String doppioClick;
         if (dentroElenco(xMinimaZonaSinistra, mouseX, mouseY)) {
-            elenco = new ArrayList<>(automa.getParteAttiva().getInventario());
+            elenco = new ArrayList<>(scambio.getInventarioParteAttiva());
             parteAttiva = true;
             boxX = xMinimaZonaSinistra;
             offset = offsetYZonaSinistra;
             doppioClick = aiutoDoppioClickSinistra();
         } else if (dentroElenco(xMinimaZonaDestra, mouseX, mouseY)) {
-            elenco = automa.getArtefattiDisponibili();
+            elenco = scambio.getInventarioParteRemota();
             parteAttiva = false;
             boxX = xMinimaZonaDestra;
             offset = offsetYZonaDestra;
@@ -173,9 +172,9 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
     private IntUnaryOperator prezzo(boolean parteAttiva) {
         VistaGruppoGiocatore gruppo = vistaPartita.getGruppoGiocatore();
         if (parteAttiva) {
-            return automa.mostraCostoSuParteAttiva() ? gruppo::prezzoVendita : null;
+            return scambio.mostraCostoSuParteAttiva() ? gruppo::prezzoVendita : null;
         }
-        return automa.mostraCostoSuParteRemota() ? gruppo::prezzoAcquisto : null;
+        return scambio.mostraCostoSuParteRemota() ? gruppo::prezzoAcquisto : null;
     }
 
     /**
@@ -393,16 +392,16 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
 
     @Override
     public void processaClick(int x, int y, Tasto tasto) {
-        if (tasto != Tasto.SINISTRO || automa == null) {
+        if (tasto != Tasto.SINISTRO || scambio == null) {
             return;
         }
         if (processaClickPersonaggio(x, y, tasto)) {
             return;
         }
-        java.util.List<Artefatto> inventarioPersonaggio = new ArrayList<>(automa.getParteAttiva().getInventario());
+        java.util.List<Artefatto> inventarioPersonaggio = new ArrayList<>(scambio.getInventarioParteAttiva());
         Artefatto artefatto = trovaArtefatto(inventarioPersonaggio, xMinimaZonaSinistra, offsetYZonaSinistra, x, y, true);
         if (artefatto == null) {
-            artefatto = trovaArtefatto(automa.getArtefattiDisponibili(), xMinimaZonaDestra, offsetYZonaDestra, x, y, false);
+            artefatto = trovaArtefatto(scambio.getInventarioParteRemota(), xMinimaZonaDestra, offsetYZonaDestra, x, y, false);
         }
         if (artefatto == null) {
             return;
@@ -418,22 +417,22 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
 
     @Override
     public void processaDoppioClick(int x, int y, Tasto tasto) {
-        if (automa == null) {
+        if (scambio == null) {
             return;
         }
         if (processaDoppioClickPersonaggio(x, y, tasto)) {
             return;
         }
-        List<Artefatto> inventarioPersonaggio = new ArrayList<>(automa.getParteAttiva().getInventario());
+        List<Artefatto> inventarioPersonaggio = new ArrayList<>(scambio.getInventarioParteAttiva());
         Artefatto artefatto = trovaArtefatto(inventarioPersonaggio, xMinimaZonaSinistra, offsetYZonaSinistra, x, y, true);
         if (artefatto != null) {
-            automa.richiediSpostamentoSuParteRemota(artefatto);
+            BusEventi.pubblica(new ComandoScambioArtefatto(scambio, ComandoScambioArtefatto.Destinazione.PARTE_REMOTA, artefatto));
             return;
         }
-        Collection<Artefatto> disponibili = automa.getArtefattiDisponibili();
+        Collection<Artefatto> disponibili = scambio.getInventarioParteRemota();
         artefatto = trovaArtefatto(disponibili, xMinimaZonaDestra, offsetYZonaDestra, x, y, false);
         if (artefatto != null) {
-            automa.richiediSpostamentoSuParteAttiva(artefatto);
+            BusEventi.pubblica(new ComandoScambioArtefatto(scambio, ComandoScambioArtefatto.Destinazione.PARTE_ATTIVA, artefatto));
         }
     }
 

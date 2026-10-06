@@ -328,13 +328,13 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	private void gestisciEventoRichiestaAperturaInventarioCommerciante(ComandoAperturaInventarioCommerciante evento) {
 		impostaAzioni(evento.getPossibilita());
-		displayableCanvas.impostaAutomaCommerciante(evento.getNegozio(), evento.getAutomaAcquistiArtefatti());
+		displayableCanvas.impostaScambioCommerciante(evento.getNegozio(), evento.getScambio());
 		displayableCanvas.commerciante();
 	}
 
 	private void gestisciEventoRichiestaAperturaIncantatore(ComandoAperturaIncantatore evento) {
 		impostaAzioni(evento.getPossibilita());
-		displayableCanvas.impostaAutomaIncantatore(evento.getAutomaIncantatore());
+		displayableCanvas.impostaScambioIncantatore(evento.getScambio());
 		displayableCanvas.incantatore(evento.getMessaggio());
 	}
 
@@ -345,7 +345,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	private void gestisciEventoRichiestaAperturaInventarioGruppo(ComandoAperturaInventarioGruppo evento) {
 		impostaAzioni(evento.getPossibilita());
-		displayableCanvas.impostaAutomaInventario(evento.getAutomaInventario());
+		displayableCanvas.impostaScambioInventario(evento.getScambio(), evento.getPersonaggio());
 		displayableCanvas.inventario();
 	}
 

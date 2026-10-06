@@ -55,6 +55,14 @@ public enum TipoEvento {
      */
     COMANDO_IMPOSTAZIONE_AIUTO,
     /**
+     * Il giocatore spende un punto abilità di un personaggio
+     */
+    COMANDO_SPESA_PUNTO_ABILITA,
+    /**
+     * Il giocatore sposta un artefatto da una parte all'altra di uno scambio aperto
+     */
+    COMANDO_SCAMBIO_ARTEFATTO,
+    /**
      * Il giocatore invia un testo al motore
      */
     COMANDO_INVIO_TESTO,

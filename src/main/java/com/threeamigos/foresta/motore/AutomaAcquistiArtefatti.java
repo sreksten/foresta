@@ -27,11 +27,11 @@ public class AutomaAcquistiArtefatti extends AutomaScambiatoreArtefatti {
 
     @Override
     public void richiediSpostamentoSuParteAttiva(Artefatto artefatto) {
-        BusEventi.pubblica(new ComandoAcquistoArtefatto(getParteAttiva(), getParteRemota(), artefatto));
+        BusEventi.pubblica(new ComandoAcquistoArtefatto(getParteAttiva(), getParteRemota(), artefatto, this));
     }
 
     @Override
     public void richiediSpostamentoSuParteRemota(Artefatto artefatto) {
-        BusEventi.pubblica(new ComandoVenditaArtefatto(getParteAttiva(), getParteRemota(), artefatto));
+        BusEventi.pubblica(new ComandoVenditaArtefatto(getParteAttiva(), getParteRemota(), artefatto, this));
     }
 }

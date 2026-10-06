@@ -72,7 +72,7 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
 
         y = disegnaValore(graphics, "Monete", String.valueOf(vistaPartita.getGruppoGiocatore().getMonete()), y, coloreTestata);
 
-        Collection<Artefatto> banco = automa.getParteRemota().getInventario();
+        Collection<Artefatto> banco = scambio.getInventarioParteRemota();
         boolean conIngredienti = banco.stream().anyMatch(RegoleIncantatura::isIngrediente);
         if (conIngredienti) {
             y = disegnaValore(graphics, "Costo fusione", String.valueOf(vistaPartita.getGruppoGiocatore().costoFusione(banco)), y, coloreTestata);

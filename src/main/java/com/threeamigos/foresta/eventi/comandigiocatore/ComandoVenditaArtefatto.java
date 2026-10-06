@@ -2,6 +2,7 @@ package com.threeamigos.foresta.eventi.comandigiocatore;
 
 import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.interfacce.OggettoConCosto;
+import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
 
 /**
@@ -18,9 +19,10 @@ public class ComandoVenditaArtefatto extends ComandoSpostamentoArtefatto<Oggetto
      * @param parteAttiva l'inventario generale del GruppoGiocatore
      * @param parteRemota il commerciante
      * @param oggettoDaVendere l'oggetto di interesse della transazione
+     * @param scambio lo scambio aperto da cui viene, o null
      */
     public ComandoVenditaArtefatto(ScambiatoreArtefatti parteAttiva, ScambiatoreArtefatti parteRemota,
-                                   OggettoConCosto oggettoDaVendere) {
-        super(TipoEvento.COMANDO_VENDITA_ARTEFATTO, parteAttiva, parteRemota, oggettoDaVendere);
+                                   OggettoConCosto oggettoDaVendere, VistaScambio scambio) {
+        super(TipoEvento.COMANDO_VENDITA_ARTEFATTO, parteAttiva, parteRemota, oggettoDaVendere, scambio);
     }
 }

@@ -30,7 +30,7 @@ class MagazziniTest {
 			Artefatto spada = artefatto(TipoArtefatto.SPADA);
 			partita.gruppo().addArtefatto(spada);
 
-			partita.pubblica(new ComandoVenditaArtefatto(partita.gruppo(), armaiolo, spada));
+			partita.pubblica(new ComandoVenditaArtefatto(partita.gruppo(), armaiolo, spada, null));
 			assertTrue(contiene(armaiolo.getInventario(), spada), "fino all'uscita dalla citta' resta in vendita");
 
 			partita.comando(Comando.ESCI_DA_CITTA);
@@ -48,7 +48,7 @@ class MagazziniTest {
 			Artefatto pergamena = artefatto(TipoArtefatto.PERGAMENA);
 			partita.gruppo().addArtefatto(pergamena);
 
-			partita.pubblica(new ComandoVenditaArtefatto(partita.gruppo(), venditore, pergamena));
+			partita.pubblica(new ComandoVenditaArtefatto(partita.gruppo(), venditore, pergamena, null));
 			partita.comando(Comando.ESCI_DA_CITTA);
 
 			assertFalse(contiene(venditore.getInventario(), pergamena));
@@ -64,8 +64,8 @@ class MagazziniTest {
 			Artefatto spada = artefatto(TipoArtefatto.SPADA);
 			partita.gruppo().addArtefatto(spada);
 
-			partita.pubblica(new ComandoVenditaArtefatto(partita.gruppo(), armaiolo, spada));
-			partita.pubblica(new ComandoAcquistoArtefatto(partita.gruppo(), armaiolo, spada));
+			partita.pubblica(new ComandoVenditaArtefatto(partita.gruppo(), armaiolo, spada, null));
+			partita.pubblica(new ComandoAcquistoArtefatto(partita.gruppo(), armaiolo, spada, null));
 			partita.comando(Comando.ESCI_DA_CITTA);
 
 			assertTrue(contiene(partita.gruppo().getInventario(), spada), "la spada ricomprata resta al gruppo");

@@ -1,9 +1,11 @@
 package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpesaPuntoAbilita;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoPrelievoArtefatto;
 import com.threeamigos.foresta.interfacce.VistaPartita;
+import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.missioni.SetLeggendario;
 import com.threeamigos.foresta.motore.RegoleSetLeggendari;
 import com.threeamigos.foresta.oggetti.Artefatto;
@@ -51,9 +53,20 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
     }
     // --- FINE classe di appoggio
 
+    // Il personaggio di cui si mostra l'inventario: la parte attiva dello scambio
+    private Personaggio personaggio;
+
     DisplayableCanvasInventario(int width, int height, VistaPartita vistaPartita) {
         super(width, height, vistaPartita);
         BusEventi.iscriviti(NotificaRifiutoPrelievoArtefatto.class, this::onEventoRifiutoPrelievo);
+    }
+
+    /**
+     * @param scambio fra l'inventario del personaggio (parte attiva) e quello del gruppo (parte remota)
+     */
+    void impostaScambio(VistaScambio scambio, Personaggio personaggio) {
+        impostaScambio(scambio);
+        this.personaggio = personaggio;
     }
 
     void onEventoRifiutoPrelievo(NotificaRifiutoPrelievoArtefatto evento) {
@@ -81,14 +94,13 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         int y = SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
         DoomdarkColorModel.Color coloreTestata = DoomdarkColorModel.Color.LIGHT_GRAY;
 
-        Personaggio p = (Personaggio)automa.getParteAttiva();
         // Nome personaggio
-        doomdark = ImageCache.get(p.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA), coloreTestata);
+        doomdark = ImageCache.get(personaggio.getNome(Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA), coloreTestata);
         graphics.drawImage(doomdark, (width - doomdark.getWidth(null)) / 2, y, null);
         y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
         // Immagine personaggio
-        BufferedImage immaginePersonaggio = ClassePersonaggioImmagine.getImmagine(p.getClasse());
+        BufferedImage immaginePersonaggio = ClassePersonaggioImmagine.getImmagine(personaggio.getClasse());
 
         // Per tenere i personaggi sullo stesso livello (se si passa da un personaggio all'altro)
         // ed evitare sfarfallamenti, scegliamo il ladro come personaggio "base" per calcolare l'altezza a cui disegnare.
@@ -97,20 +109,20 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         y += SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
         // I set leggendari completi, sotto l'immagine: quello che segue scende di quanto serve
-        for (SetLeggendario set : RegoleSetLeggendari.setCompleti(p.getModelloDati().getArtefatti())) {
+        for (SetLeggendario set : RegoleSetLeggendari.setCompleti(personaggio.getModelloDati().getArtefatti())) {
             doomdark = ImageCache.get(RegoleSetLeggendari.descrizioneSetCompleto(set), DoomdarkColorModel.Color.YELLOW);
             graphics.drawImage(doomdark, (width - doomdark.getWidth(null)) / 2, y, null);
             y += fontHeight + SPACING;
         }
 
         // Livello, XP, punti disponibili
-        disegnaAttributoEValore(TipoAttributo.LIVELLO, p.getLivello(), graphics, y, coloreTestata);
+        disegnaAttributoEValore(TipoAttributo.LIVELLO, personaggio.getLivello(), graphics, y, coloreTestata);
         y += fontHeight + SPACING;
-        disegnaAttributoEValore(TipoAttributo.PUNTI_ESPERIENZA, p.getPuntiEsperienza(), graphics, y, coloreTestata);
+        disegnaAttributoEValore(TipoAttributo.PUNTI_ESPERIENZA, personaggio.getPuntiEsperienza(), graphics, y, coloreTestata);
         y += fontHeight + SPACING;
         // In verde se ci sono punti da spendere, perché si notino
-        disegnaAttributoEValore(TipoAttributo.PUNTI_ABILITA, p.getPuntiAbilitaDisponibili(), graphics, y,
-                p.getPuntiAbilitaDisponibili() > 0 ? DoomdarkColorModel.Color.GREEN : coloreTestata);
+        disegnaAttributoEValore(TipoAttributo.PUNTI_ABILITA, personaggio.getPuntiAbilitaDisponibili(), graphics, y,
+                personaggio.getPuntiAbilitaDisponibili() > 0 ? DoomdarkColorModel.Color.GREEN : coloreTestata);
         y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
         BufferedImage separatore = ImageCache.separatore;
@@ -119,8 +131,8 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
 
         // Attributi personaggio
         yAttributi = y;
-        TipoAttributo attributoEvidenziato = trovaAttributo(p, mouseX, mouseY);
-        ComponenteScorrevole<TipoAttributo> componenteScorrevole = costruisciComponenteScorrevoleAttributi(p, attributoEvidenziato);
+        TipoAttributo attributoEvidenziato = trovaAttributo(personaggio, mouseX, mouseY);
+        ComponenteScorrevole<TipoAttributo> componenteScorrevole = costruisciComponenteScorrevoleAttributi(personaggio, attributoEvidenziato);
 
         offsetYZonaCentrale = componenteScorrevole.limitaOffset(height - y, offsetYZonaCentrale);
         Image image = componenteScorrevole.produci(height - y, offsetYZonaCentrale);
@@ -209,8 +221,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
     }
 
     protected boolean processaClickPersonaggio(int x, int y, Tasto tasto) {
-        Personaggio personaggio = (Personaggio)automa.getParteAttiva();
-        TipoAttributo attributo = trovaAttributo(personaggio, x, y);
+                TipoAttributo attributo = trovaAttributo(personaggio, x, y);
         if (attributo != null) {
             StatoAttributo stato = statoDi(attributo);
             if (stato.isFigliVisibili()) {
@@ -232,15 +243,13 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
         if (parteAttiva) {
             return super.coloreLivello(artefatto, true);
         }
-        Personaggio personaggio = (Personaggio) automa.getParteAttiva();
-        return personaggio.puoEquipaggiare(artefatto).isPresent() ? DoomdarkColorModel.Color.RED : DoomdarkColorModel.Color.GREEN;
+                return personaggio.puoEquipaggiare(artefatto).isPresent() ? DoomdarkColorModel.Color.RED : DoomdarkColorModel.Color.GREEN;
     }
 
     protected boolean processaDoppioClickPersonaggio(int x, int y, Tasto tasto) {
-        Personaggio personaggio = (Personaggio)automa.getParteAttiva();
-        TipoAttributo attributo = trovaAttributo(personaggio, x, y);
+                TipoAttributo attributo = trovaAttributo(personaggio, x, y);
         if (attributo != null) {
-            personaggio.spendiPuntoAbilita(attributo);
+            BusEventi.pubblica(new ComandoSpesaPuntoAbilita(personaggio, attributo));
             return true;
         }
         return false;
