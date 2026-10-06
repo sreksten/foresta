@@ -280,7 +280,7 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
   - In città due nuovi comandi, `VENDITORE_DI_PERGAMENE` e `INCANTATORE`, con le loro icone. `FUSIONE` resta solo dentro la bottega dell'incantatore. Ordine dei negozi: locanda, alchimista, armaiolo, venditore di pergamene, incantatore.
   - `TipoNegozio` (`ARMAIOLO`, `VENDITORE_DI_PERGAMENE`) in `modellodati`, con `tratta(TipoArtefatto)`. `RegistroArtefattiMD` tiene i magazzini per (coordinate, negozio), salvati come `x|y|NEGOZIO|numero`.
   - `ScambiatoreArtefatti.tratta(Artefatto)` (di default vero); `GruppoGiocatore.vende` rifiuta con `NotificaRifiutoVenditaArtefatto` la vendita di quel che il negozio non tratta.
-  - `DisplayableCanvasArmaiolo` è diventato `DisplayableCanvasCommerciante`: una sola schermata per armaiolo e venditore, che cambia nome, immagine e intestazione secondo il `TipoNegozio` portato da `ComandoAperturaInventarioCommerciante`.
+  - `DisplayableCanvasArmaiolo` è diventato `DisplayableCanvasCommerciante`: una sola schermata per armaiolo e venditore, che cambia nome, immagine e intestazione secondo il `TipoNegozio` portato da `RichiestaAperturaInventarioCommerciante`.
   - Immagini vere per il venditore di pergamene e per l'incantatore (`img/personaggi/VenditoreDiPergamene.gif`, `Incantatore.gif`).
   - `RegistroArtefatti.riempiMagazzini`, chiamato da `Foresta` quando costruisce le città.
   - Test: `NegoziTest` (4) e uno nuovo in `RegistroArtefattiMDTest`. Tutta la suite è verde (306 test). Da provare a mano nel gioco.

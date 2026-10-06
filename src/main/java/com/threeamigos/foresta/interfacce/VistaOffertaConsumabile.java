@@ -5,7 +5,7 @@ import com.threeamigos.foresta.tipi.TipoConsumabile;
 
 /**
  * Una voce del listino dell'alchimista, come la vede la UI: il motore la costruisce a ogni apertura della bottega
- * (vedi ComandoAperturaInventarioFornitore) e decide anche il prezzo dell'acquisto, partendo da {@link #getCosto()}.
+ * (vedi RichiestaAperturaInventarioFornitore) e decide anche il prezzo dell'acquisto, partendo da {@link #getCosto()}.
  */
 public interface VistaOffertaConsumabile {
 

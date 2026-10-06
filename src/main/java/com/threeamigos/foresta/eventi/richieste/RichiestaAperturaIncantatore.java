@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.eventi.comandigiocatore;
+package com.threeamigos.foresta.eventi.richieste;
 
 import com.threeamigos.foresta.eventi.RichiestaConComandi;
 import com.threeamigos.foresta.eventi.TipoEvento;
@@ -10,7 +10,7 @@ import java.util.Collection;
 /**
  * Il giocatore entra (o torna, dopo aver dato il nome all'artefatto) nella bottega dell'incantatore.
  */
-public class ComandoAperturaIncantatore extends RichiestaConComandi {
+public class RichiestaAperturaIncantatore extends RichiestaConComandi {
 
     private final VistaBancoDiLavoro banco;
     private final String messaggio;
@@ -19,8 +19,8 @@ public class ComandoAperturaIncantatore extends RichiestaConComandi {
      * @param banco lo scambio fra l'inventario del gruppo (parte attiva) e il banco di lavoro (parte remota)
      * @param messaggio il fumetto con cui l'incantatore accoglie, o null per nessuno
      */
-    public ComandoAperturaIncantatore(Collection<Comando> possibilita, VistaBancoDiLavoro banco, String messaggio) {
-        super(TipoEvento.COMANDO_APERTURA_INCANTATORE, possibilita);
+    public RichiestaAperturaIncantatore(Collection<Comando> possibilita, VistaBancoDiLavoro banco, String messaggio) {
+        super(TipoEvento.RICHIESTA_APERTURA_INCANTATORE, possibilita);
         this.banco = banco;
         this.messaggio = messaggio;
     }

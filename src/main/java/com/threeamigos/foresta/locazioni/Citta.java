@@ -1,9 +1,9 @@
 package com.threeamigos.foresta.locazioni;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaIncantatore;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioCommerciante;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioFornitore;
+import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaIncantatore;
+import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioCommerciante;
+import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioFornitore;
 import com.threeamigos.foresta.eventi.interni.InternoIncantatura;
 import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
 import com.threeamigos.foresta.eventi.interni.InternoMostraSchermataGioco;
@@ -104,7 +104,7 @@ public abstract class Citta extends LocazioneUnica {
 				stato = StatoInCitta.DA_ALCHIMISTA;
 				List<Comando> comandiPossibili = new ArrayList<>();
 				comandiPossibili.add(Comando.ANNULLA);
-				BusEventi.pubblica(new ComandoAperturaInventarioFornitore(comandiPossibili, OfferteAlchimista.elenco(g),
+				BusEventi.pubblica(new RichiestaAperturaInventarioFornitore(comandiPossibili, OfferteAlchimista.elenco(g),
 						String.join(" ", ProduttoreDiTestiCasuale.oroscopo())));
 
 			} else if (azione == Comando.ARMAIOLO) {
@@ -158,7 +158,7 @@ public abstract class Citta extends LocazioneUnica {
 		List<Comando> comandiPossibili = new ArrayList<>();
 		comandiPossibili.add(Comando.ANNULLA);
 		ScambiatoreArtefatti magazzino = RegistroArtefatti.getScambiatorePerNegozio(g.getCoordinate(), negozio);
-		BusEventi.pubblica(new ComandoAperturaInventarioCommerciante(comandiPossibili, negozio,
+		BusEventi.pubblica(new RichiestaAperturaInventarioCommerciante(comandiPossibili, negozio,
 				new AutomaAcquistiArtefatti(g, magazzino)));
 	}
 
@@ -166,7 +166,7 @@ public abstract class Citta extends LocazioneUnica {
 		List<Comando> comandiPossibili = new ArrayList<>();
 		comandiPossibili.add(Comando.FUSIONE);
 		comandiPossibili.add(Comando.ANNULLA);
-		BusEventi.pubblica(new ComandoAperturaIncantatore(comandiPossibili, incantatore, messaggio));
+		BusEventi.pubblica(new RichiestaAperturaIncantatore(comandiPossibili, incantatore, messaggio));
 	}
 
 	/**

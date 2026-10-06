@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioGruppo;
+import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioGruppo;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoCommutazioneElenco;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpesaPuntoAbilita;
@@ -29,9 +29,9 @@ class ScenarioScambiAEventiTest {
         try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(231)) {
             partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
             partita.comando(Comando.ESCI_DA_CITTA);
-            partita.eventi().ascolta(ComandoAperturaInventarioGruppo.class);
+            partita.eventi().ascolta(RichiestaAperturaInventarioGruppo.class);
             partita.comando(Comando.INVENTARIO);
-            ComandoAperturaInventarioGruppo apertura = partita.eventi().ultimo(ComandoAperturaInventarioGruppo.class);
+            RichiestaAperturaInventarioGruppo apertura = partita.eventi().ultimo(RichiestaAperturaInventarioGruppo.class);
             VistaScambio scambio = apertura.getScambio();
             Personaggio personaggio = partita.gruppo().getCapo();
             assertSame(personaggio, apertura.getPersonaggio());

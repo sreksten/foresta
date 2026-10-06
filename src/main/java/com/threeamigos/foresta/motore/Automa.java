@@ -819,7 +819,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (comando != Comando.LOCANDA) {
 			// Armaiolo, alchimista, venditore di pergamene e incantatore hanno già richiesto,
 			// nella chiamata sopra, la loro finestra specifica (ComandoAperturaInventario*/
-			// ComandoAperturaIncantatore): non bisogna poi sovrascriverla con la schermata di
+			// RichiestaAperturaIncantatore): non bisogna poi sovrascriverla con la schermata di
 			// gioco normale (vedi mostraSchermataGiocoAllaRipresa in prosegui()), a differenza
 			// della locanda, il cui dialogo compare nella normale schermata di gioco.
 			mostraSchermataGiocoAllaRipresa = false;
@@ -1316,7 +1316,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		BusEventi.pubblica(new NotificaTestoParagrafo(gruppo.getCapo().getNome(
 				Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " consulta la sua mappa della Foresta."));
-		BusEventi.pubblica(new ComandoVisualizzazioneMappa());
+		BusEventi.pubblica(new RichiestaVisualizzazioneMappa());
 		return Esito.FERMATI;
 	}
 
@@ -1364,7 +1364,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 * La pagina dei trofei: l'unico comando è ANNULLA, che torna all'inventario.
 	 */
 	private Esito entraInStatoTrofei() {
-		BusEventi.pubblica(new ComandoAperturaTrofei(Collections.singletonList(Comando.ANNULLA)));
+		BusEventi.pubblica(new RichiestaAperturaTrofei(Collections.singletonList(Comando.ANNULLA)));
 		return Esito.FERMATI;
 	}
 
@@ -1948,7 +1948,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		indicePersonaggioInventario = Math.max(0, Math.min(indicePersonaggioInventario, gruppo.getNumeroPersonaggi() - 1));
 		Personaggio personaggioScelto = gruppo.getPersonaggio(indicePersonaggioInventario);
 
-		BusEventi.pubblica(new ComandoAperturaInventarioGruppo(comandiPossibili,
+		BusEventi.pubblica(new RichiestaAperturaInventarioGruppo(comandiPossibili,
 				new AutomaInventario(personaggioScelto, gruppo), personaggioScelto));
 	}
 

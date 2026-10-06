@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.eventi.comandigiocatore;
+package com.threeamigos.foresta.eventi.richieste;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
@@ -8,9 +8,9 @@ import com.threeamigos.foresta.eventi.TipoEvento;
  *
  * @author Stefano Reksten
  */
-public class ComandoVisualizzazioneMappa extends EventoBase {
+public class RichiestaVisualizzazioneMappa extends EventoBase {
 
-    public ComandoVisualizzazioneMappa() {
-        super(TipoEvento.COMANDO_VISUALIZZAZIONE_MAPPA);
+    public RichiestaVisualizzazioneMappa() {
+        super(TipoEvento.RICHIESTA_VISUALIZZAZIONE_MAPPA);
     }
 }

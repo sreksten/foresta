@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioCommerciante;
+import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioCommerciante;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
@@ -89,7 +89,7 @@ class ScenarioArmaioloTest {
 
 	private VistaScambio entraDallArmaiolo() {
 		partita.comando(Comando.ARMAIOLO);
-		List<ComandoAperturaInventarioCommerciante> aperture = partita.eventi().tutti(ComandoAperturaInventarioCommerciante.class);
+		List<RichiestaAperturaInventarioCommerciante> aperture = partita.eventi().tutti(RichiestaAperturaInventarioCommerciante.class);
 		assertEquals(1, aperture.size());
 		VistaScambio bottega = aperture.get(0).getScambio();
 		assertFalse(bottega.getInventarioParteRemota().isEmpty(), "l'armaiolo ha il magazzino vuoto");

@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.eventi.comandigiocatore;
+package com.threeamigos.foresta.eventi.richieste;
 
 import com.threeamigos.foresta.eventi.RichiestaConComandi;
 import com.threeamigos.foresta.eventi.TipoEvento;
@@ -13,7 +13,7 @@ import java.util.Collection;
  *
  * @author Stefano Reksten
  */
-public class ComandoAperturaInventarioCommerciante extends RichiestaConComandi {
+public class RichiestaAperturaInventarioCommerciante extends RichiestaConComandi {
 
     private final TipoNegozio negozio;
     private final VistaScambio scambio;
@@ -21,9 +21,9 @@ public class ComandoAperturaInventarioCommerciante extends RichiestaConComandi {
     /**
      * @param scambio fra l'inventario del gruppo (parte attiva) e il magazzino del negozio (parte remota)
      */
-    public ComandoAperturaInventarioCommerciante(Collection<Comando> possibilita, TipoNegozio negozio,
+    public RichiestaAperturaInventarioCommerciante(Collection<Comando> possibilita, TipoNegozio negozio,
                                                  VistaScambio scambio) {
-        super(TipoEvento.COMANDO_APERTURA_INVENTARIO_COMMERCIANTE, possibilita);
+        super(TipoEvento.RICHIESTA_APERTURA_INVENTARIO_COMMERCIANTE, possibilita);
         this.negozio = negozio;
         this.scambio = scambio;
     }

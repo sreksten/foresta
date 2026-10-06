@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioCommerciante;
+import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioCommerciante;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
@@ -749,7 +749,7 @@ final class GiocatoreAutomatico {
 	 * potuto equipaggiare), come il doppio click della UI (ComandoScambioArtefatto).
 	 */
 	private void vendi(GruppoGiocatore gruppo, TipoNegozio negozio) {
-		VistaScambio bottega = partita.eventi().ultimo(ComandoAperturaInventarioCommerciante.class).getScambio();
+		VistaScambio bottega = partita.eventi().ultimo(RichiestaAperturaInventarioCommerciante.class).getScambio();
 		for (Artefatto artefatto : new ArrayList<>(gruppo.getInventario())) {
 			if (negozio.tratta(artefatto.getTipo())) {
 				int prima = gruppo.getMonete();

@@ -90,11 +90,11 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(InternoPreparazioneLocazione.class, this::gestisciEventoPreparazioneLocazione);
 		BusEventi.iscriviti(InternoAssegnaCoordinateAPersonaggi.class, evento -> displayableCanvas.assegnaCoordinateAPersonaggi());
 		BusEventi.iscriviti(InternoRichiestaAperturaFinestraCombattimento.class, this::gestisciEventoRichiestaAperturaFinestraCombattimento);
-		BusEventi.iscriviti(ComandoAperturaInventarioCommerciante.class, this::gestisciEventoRichiestaAperturaInventarioCommerciante);
-		BusEventi.iscriviti(ComandoAperturaIncantatore.class, this::gestisciEventoRichiestaAperturaIncantatore);
-		BusEventi.iscriviti(ComandoAperturaInventarioFornitore.class, this::gestisciEventoRichiestaAperturaInventarioFornitore);
-		BusEventi.iscriviti(ComandoAperturaInventarioGruppo.class, this::gestisciEventoRichiestaAperturaInventarioGruppo);
-		BusEventi.iscriviti(ComandoAperturaTrofei.class, this::gestisciEventoRichiestaAperturaTrofei);
+		BusEventi.iscriviti(RichiestaAperturaInventarioCommerciante.class, this::gestisciEventoRichiestaAperturaInventarioCommerciante);
+		BusEventi.iscriviti(RichiestaAperturaIncantatore.class, this::gestisciEventoRichiestaAperturaIncantatore);
+		BusEventi.iscriviti(RichiestaAperturaInventarioFornitore.class, this::gestisciEventoRichiestaAperturaInventarioFornitore);
+		BusEventi.iscriviti(RichiestaAperturaInventarioGruppo.class, this::gestisciEventoRichiestaAperturaInventarioGruppo);
+		BusEventi.iscriviti(RichiestaAperturaTrofei.class, this::gestisciEventoRichiestaAperturaTrofei);
 		BusEventi.iscriviti(InternoRichiestaChiusuraFinestraCombattimento.class, this::gestisciEventoRichiestaChiusuraFinestraCombattimento);
 		BusEventi.iscriviti(NotificaRaccoltaOggetti.class, this::gestisciEventoRaccoltaOggetti);
 		BusEventi.iscriviti(RichiestaUscitaDalGioco.class, this::gestisciEventoRichiestaConfermaUscita);
@@ -104,7 +104,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(RichiestaSelezioneSlotPerRilettura.class, this::gestisciEventoSelezioneSalvataggio);
 		BusEventi.iscriviti(RichiestaSelezioneSlotPerSalvataggio.class,
 				e -> displayableCanvas.selezioneSlotSalvataggioDaSalvare(e.getSalvataggiDisponibili()));
-		BusEventi.iscriviti(ComandoVisualizzazioneMappa.class, this::gestisciEventoRichiestaVisualizzazioneMappa);
+		BusEventi.iscriviti(RichiestaVisualizzazioneMappa.class, this::gestisciEventoRichiestaVisualizzazioneMappa);
 		BusEventi.iscriviti(RichiestaSelezioneDirezione.class, this::gestisciEventoSelezioneDirezione);
 		BusEventi.iscriviti(RichiestaSelezioneIncantesimoDaLanciare.class, this::gestisciEventoSelezioneIncantesimoDaLanciare);
 		BusEventi.iscriviti(RichiestaSelezioneSiNo.class, this::gestisciEventoSelezioneSiNo);
@@ -328,31 +328,31 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		displayableCanvas.confermaUscita();
 	}
 
-	private void gestisciEventoRichiestaAperturaInventarioCommerciante(ComandoAperturaInventarioCommerciante evento) {
+	private void gestisciEventoRichiestaAperturaInventarioCommerciante(RichiestaAperturaInventarioCommerciante evento) {
 		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.impostaScambioCommerciante(evento.getNegozio(), evento.getScambio());
 		displayableCanvas.commerciante();
 	}
 
-	private void gestisciEventoRichiestaAperturaIncantatore(ComandoAperturaIncantatore evento) {
+	private void gestisciEventoRichiestaAperturaIncantatore(RichiestaAperturaIncantatore evento) {
 		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.impostaBancoIncantatore(evento.getBanco());
 		displayableCanvas.incantatore(evento.getMessaggio());
 	}
 
-	private void gestisciEventoRichiestaAperturaInventarioFornitore(ComandoAperturaInventarioFornitore evento) {
+	private void gestisciEventoRichiestaAperturaInventarioFornitore(RichiestaAperturaInventarioFornitore evento) {
 		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.impostaOfferteAlchimista(evento.getOfferte());
 		displayableCanvas.alchimista(evento.getOroscopo());
 	}
 
-	private void gestisciEventoRichiestaAperturaInventarioGruppo(ComandoAperturaInventarioGruppo evento) {
+	private void gestisciEventoRichiestaAperturaInventarioGruppo(RichiestaAperturaInventarioGruppo evento) {
 		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.impostaScambioInventario(evento.getScambio(), evento.getPersonaggio());
 		displayableCanvas.inventario();
 	}
 
-	private void gestisciEventoRichiestaAperturaTrofei(ComandoAperturaTrofei evento) {
+	private void gestisciEventoRichiestaAperturaTrofei(RichiestaAperturaTrofei evento) {
 		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.trofei();
 	}
@@ -390,7 +390,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		rinfresca();
 	}
 
-	private void gestisciEventoRichiestaVisualizzazioneMappa(ComandoVisualizzazioneMappa evento) {
+	private void gestisciEventoRichiestaVisualizzazioneMappa(RichiestaVisualizzazioneMappa evento) {
 		displayableCanvas.mappa();
 	}
 

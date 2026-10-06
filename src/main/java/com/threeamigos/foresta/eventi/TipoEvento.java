@@ -19,26 +19,6 @@ public enum TipoEvento {
      */
     COMANDO_ACQUISTO_CONSUMABILE,
     /**
-     * Richiesta di interazione con un commerciante col quale si può fare una compravendita (ad es., l'Armaiolo)
-     */
-    COMANDO_APERTURA_INVENTARIO_COMMERCIANTE,
-    /**
-     * Richiesta di interazione con un fornitore col quale si può fare un acquisto (ad es., l'Alchimista)
-     */
-    COMANDO_APERTURA_INVENTARIO_FORNITORE,
-    /**
-     * Richiesta di interazione con l'inventario di gruppo
-     */
-    COMANDO_APERTURA_INVENTARIO_GRUPPO,
-    /**
-     * Richiesta di vedere la pagina dei trofei, dall'inventario
-     */
-    COMANDO_APERTURA_TROFEI,
-    /**
-     * Richiesta di interazione con l'incantatore: inventario del gruppo e banco di lavoro per la fusione
-     */
-    COMANDO_APERTURA_INCANTATORE,
-    /**
      * Il giocatore invia un comando di gioco (generico) all'automa
      */
     COMANDO_DI_GIOCO,
@@ -62,13 +42,33 @@ public enum TipoEvento {
      * Il giocatore invia un testo al motore
      */
     COMANDO_INVIO_TESTO,
-    /**
-     * Richiede di visualizzare la mappa conosciuta della foresta a schermo intero
-     */
-    COMANDO_VISUALIZZAZIONE_MAPPA,
 
 
     // Richieste che il motore può fare ad un giocatore
+    /**
+     * Richiesta di interazione con l'incantatore: inventario del gruppo e banco di lavoro per la fusione
+     */
+    RICHIESTA_APERTURA_INCANTATORE,
+    /**
+     * Richiesta di interazione con un commerciante col quale si può fare una compravendita (ad es., l'Armaiolo)
+     */
+    RICHIESTA_APERTURA_INVENTARIO_COMMERCIANTE,
+    /**
+     * Richiesta di interazione con un fornitore col quale si può fare un acquisto (ad es., l'Alchimista)
+     */
+    RICHIESTA_APERTURA_INVENTARIO_FORNITORE,
+    /**
+     * Richiesta di interazione con l'inventario di gruppo
+     */
+    RICHIESTA_APERTURA_INVENTARIO_GRUPPO,
+    /**
+     * Richiesta di vedere la pagina dei trofei, dall'inventario
+     */
+    RICHIESTA_APERTURA_TROFEI,
+    /**
+     * Richiede di visualizzare la mappa conosciuta della foresta a schermo intero
+     */
+    RICHIESTA_VISUALIZZAZIONE_MAPPA,
     /**
      * Richiesta di scelta della direzione da seguire
      */

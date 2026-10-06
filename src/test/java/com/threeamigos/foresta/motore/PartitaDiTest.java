@@ -1,5 +1,10 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaIncantatore;
+import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioCommerciante;
+import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioFornitore;
+import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaInventarioGruppo;
+import com.threeamigos.foresta.eventi.richieste.RichiestaAperturaTrofei;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.RichiestaConComandi;
 import com.threeamigos.foresta.eventi.comandigiocatore.*;
@@ -78,18 +83,18 @@ final class PartitaDiTest implements AutoCloseable {
 
 		registratore.ascolta(InternoErrore.class, InternoException.class, InternoStatoDiGioco.class,
 				InternoAggiornamentoComandiDisponibili.class, RichiestaSelezioneDirezione.class,
-				ComandoAperturaInventarioCommerciante.class, ComandoAperturaInventarioFornitore.class,
+				RichiestaAperturaInventarioCommerciante.class, RichiestaAperturaInventarioFornitore.class,
 				NotificaTestoFrase.class, NotificaTestoParagrafo.class, NotificaPaginaIntermezzo.class,
 				NotificaApprovazioneAcquistoArtefatto.class, NotificaRifiutoAcquistoArtefatto.class,
 				NotificaApprovazioneVenditaArtefatto.class, NotificaRifiutoVenditaArtefatto.class);
 		BusEventi.iscriviti(InternoStatoDiGioco.class, e -> comandiDisponibili = new ArrayList<>(e.getComandiPossibili()));
 		BusEventi.iscriviti(InternoAggiornamentoComandiDisponibili.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaSelezioneDirezione.class, this::aggiornaComandi);
-		BusEventi.iscriviti(ComandoAperturaInventarioCommerciante.class, this::aggiornaComandi);
-		BusEventi.iscriviti(ComandoAperturaInventarioFornitore.class, this::aggiornaComandi);
-		BusEventi.iscriviti(ComandoAperturaIncantatore.class, this::aggiornaComandi);
-		BusEventi.iscriviti(ComandoAperturaInventarioGruppo.class, this::aggiornaComandi);
-		BusEventi.iscriviti(ComandoAperturaTrofei.class, this::aggiornaComandi);
+		BusEventi.iscriviti(RichiestaAperturaInventarioCommerciante.class, this::aggiornaComandi);
+		BusEventi.iscriviti(RichiestaAperturaInventarioFornitore.class, this::aggiornaComandi);
+		BusEventi.iscriviti(RichiestaAperturaIncantatore.class, this::aggiornaComandi);
+		BusEventi.iscriviti(RichiestaAperturaInventarioGruppo.class, this::aggiornaComandi);
+		BusEventi.iscriviti(RichiestaAperturaTrofei.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaSelezioneIncantesimoDaLanciare.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaSelezioneSiNo.class, this::aggiornaComandi);
 		BusEventi.iscriviti(RichiestaSelezioneMissione.class, this::aggiornaComandi);

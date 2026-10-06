@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.eventi.comandigiocatore;
+package com.threeamigos.foresta.eventi.richieste;
 
 import com.threeamigos.foresta.eventi.RichiestaConComandi;
 import com.threeamigos.foresta.eventi.TipoEvento;
@@ -16,14 +16,14 @@ import java.util.List;
  *
  * @author Stefano Reksten
  */
-public class ComandoAperturaInventarioFornitore extends RichiestaConComandi {
+public class RichiestaAperturaInventarioFornitore extends RichiestaConComandi {
 
     private final List<VistaOffertaConsumabile> offerte;
     private final String oroscopo;
 
-    public ComandoAperturaInventarioFornitore(Collection<Comando> possibilita,
+    public RichiestaAperturaInventarioFornitore(Collection<Comando> possibilita,
                                               List<? extends VistaOffertaConsumabile> offerte, String oroscopo) {
-        super(TipoEvento.COMANDO_APERTURA_INVENTARIO_FORNITORE, possibilita);
+        super(TipoEvento.RICHIESTA_APERTURA_INVENTARIO_FORNITORE, possibilita);
         this.offerte = Collections.unmodifiableList(offerte);
         this.oroscopo = oroscopo;
     }

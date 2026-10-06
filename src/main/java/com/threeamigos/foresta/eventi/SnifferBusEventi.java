@@ -82,9 +82,9 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(InternoAcquistoArtefatto.class, this::onEventoRichiestaAcquistoArtefatto);
         BusEventi.iscriviti(ComandoAcquistoConsumabile.class, this::onEventoRichiestaAcquistoConsumabile);
         BusEventi.iscriviti(InternoRichiestaAperturaFinestraCombattimento.class, this::onEventoRichiestaAperturaFinestraCombattimento);
-        BusEventi.iscriviti(ComandoAperturaInventarioCommerciante.class, this::onEventoRichiestaAperturaInventarioCommerciante);
-        BusEventi.iscriviti(ComandoAperturaInventarioFornitore.class, this::onEventoRichiestaAperturaInventarioFornitore);
-        BusEventi.iscriviti(ComandoAperturaInventarioGruppo.class, this::onEventoRichiestaAperturaInventarioGruppo);
+        BusEventi.iscriviti(RichiestaAperturaInventarioCommerciante.class, this::onEventoRichiestaAperturaInventarioCommerciante);
+        BusEventi.iscriviti(RichiestaAperturaInventarioFornitore.class, this::onEventoRichiestaAperturaInventarioFornitore);
+        BusEventi.iscriviti(RichiestaAperturaInventarioGruppo.class, this::onEventoRichiestaAperturaInventarioGruppo);
         BusEventi.iscriviti(InternoRichiestaChiusuraFinestraCombattimento.class, this::onEventoRichiestaChiusuraFinestraCombattimento);
         BusEventi.iscriviti(InternoPrelievoArtefatto.class, this::onEventoRichiestaPrelievoArtefatto);
         BusEventi.iscriviti(InternoRichiestaRefreshUI.class, this::onEventoRichiestaRefreshUI);
@@ -96,7 +96,7 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(RichiestaTesto.class, this::onEventoRichiestaTesto);
         BusEventi.iscriviti(InternoVenditaArtefatto.class, this::onEventoRichiestaVenditaArtefatto);
         BusEventi.iscriviti(InternoVenditaArtefatto.class, this::onEventoRichiestaVenditaArtefatto);
-        BusEventi.iscriviti(ComandoVisualizzazioneMappa.class, this::onEventoRichiestaVisualizzazioneMappa);
+        BusEventi.iscriviti(RichiestaVisualizzazioneMappa.class, this::onEventoRichiestaVisualizzazioneMappa);
         BusEventi.iscriviti(NotificaRifiutoAcquistoArtefatto.class, this::onEventoRifiutoAcquistoArtefatto);
         BusEventi.iscriviti(NotificaRifiutoAcquistoConsumabile.class, this::onEventoRifiutoAcquistoConsumabile);
         BusEventi.iscriviti(NotificaRifiutoPrelievoArtefatto.class, this::onEventoRifiutoPrelievoArtefatto);
@@ -346,15 +346,15 @@ public class SnifferBusEventi {
         Logger.log(headerEvento(evento) + notifica);
     }
 
-    private void onEventoRichiestaAperturaInventarioCommerciante(ComandoAperturaInventarioCommerciante evento) {
+    private void onEventoRichiestaAperturaInventarioCommerciante(RichiestaAperturaInventarioCommerciante evento) {
         Logger.log(headerEvento(evento) + evento.getNegozio());
     }
 
-    private void onEventoRichiestaAperturaInventarioFornitore(ComandoAperturaInventarioFornitore evento) {
+    private void onEventoRichiestaAperturaInventarioFornitore(RichiestaAperturaInventarioFornitore evento) {
         Logger.log(headerEvento(evento));
     }
 
-    private void onEventoRichiestaAperturaInventarioGruppo(ComandoAperturaInventarioGruppo evento) {
+    private void onEventoRichiestaAperturaInventarioGruppo(RichiestaAperturaInventarioGruppo evento) {
         Logger.log(headerEvento(evento));
     }
 
@@ -387,7 +387,7 @@ public class SnifferBusEventi {
                 .stream().map(TestataSalvataggio::getId).map(Comando::name).collect(Collectors.joining(", ")));
     }
 
-    private void onEventoRichiestaVisualizzazioneMappa(ComandoVisualizzazioneMappa evento) {
+    private void onEventoRichiestaVisualizzazioneMappa(RichiestaVisualizzazioneMappa evento) {
         Logger.log(headerEvento(evento));
     }
 

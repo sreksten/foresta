@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.eventi.comandigiocatore;
+package com.threeamigos.foresta.eventi.richieste;
 
 import com.threeamigos.foresta.eventi.RichiestaConComandi;
 import com.threeamigos.foresta.eventi.TipoEvento;
@@ -9,9 +9,9 @@ import java.util.Collection;
 /**
  * Il giocatore chiede di vedere la pagina dei trofei, dall'inventario.
  */
-public class ComandoAperturaTrofei extends RichiestaConComandi {
+public class RichiestaAperturaTrofei extends RichiestaConComandi {
 
-    public ComandoAperturaTrofei(Collection<Comando> possibilita) {
-        super(TipoEvento.COMANDO_APERTURA_TROFEI, possibilita);
+    public RichiestaAperturaTrofei(Collection<Comando> possibilita) {
+        super(TipoEvento.RICHIESTA_APERTURA_TROFEI, possibilita);
     }
 }
