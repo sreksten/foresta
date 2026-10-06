@@ -30,7 +30,7 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 - Mostrare in locazione anche i personaggi del gruppo.
 - Fumetto che attende la chiusura.
 - Come ci sono locande sparse per la foresta, anche qualche negozio (armaiolo, alchimista, venditore di pergamene, incantatore).
-- Misurare con il simulatore (`TestMonteCarloMatrix`) le nuove entrate dell'economia (preziosi e missioni che valgono col livello, 150 monete iniziali) e, se serve, ritarare i prezzi degli ingredienti: vedi [`economia.md`](economia.md).
+- Economia: le entrate sono misurate solo fino al livello 5, perché il giocatore automatico di `SimulazionePartiteTest` muore a livello 2-4 e non fa le missioni; farlo vivere più a lungo e fare le missioni, poi eventualmente ritarare i prezzi degli ingredienti: vedi [`economia.md`](economia.md).
 - Dimensione ottimale della mappa: `Foresta.DIMENSIONE_X`/`DIMENSIONE_Y`, da tarare con le prove.
 
 ## Il Bardo

@@ -104,6 +104,21 @@ class SimulazionePartiteTest {
 		int corruzioni;
 		int amicizie;
 		int moneteSpese;
+		/**
+		 * Le monete entrate nel gruppo (vendite all'armaiolo, preziosi, missioni, cofani...), in tutto e per livello del
+		 * mondo a cui sono arrivate; senza quelle perse nella fuga
+		 */
+		int moneteGuadagnate;
+		final Map<Integer, Integer> guadagnatePerLivello = new TreeMap<>();
+		int moneteFinali;
+		int preziosiVenduti;
+		/**
+		 * Dove sono entrate: in una città (vendita dei preziosi e degli artefatti, paghe delle missioni), in una locanda
+		 * (compagni reclutati), altrove (monete e cofani trovati nelle locazioni)
+		 */
+		int guadagnateInCitta;
+		int guadagnateInLocanda;
+		int guadagnateAltrove;
 		int moneteNeiNegozi;
 		int moneteDaVendite;
 		int pozioniComprate;
@@ -153,6 +168,10 @@ class SimulazionePartiteTest {
 					"Negozi", "PozCom", "Dan/comb", "Dan/rnd", "Dan/fuga");
 			perClasse.forEach((classe, risultati) -> stampaRisorse(out, classe, risultati));
 			out.println();
+			List<Risultato> tutte = new ArrayList<>();
+			perClasse.values().forEach(tutte::addAll);
+			stampaEntrate(out, tutte);
+			out.println();
 			out.println("Cause della morte del capo (partite)");
 			perClasse.forEach((classe, risultati) -> stampaCauseMorte(out, classe, risultati));
 			out.println();
@@ -191,6 +210,29 @@ class SimulazionePartiteTest {
 				media(risultati, r -> r.compagniMorti), media(risultati, r -> r.moneteSpese),
 				media(risultati, r -> r.moneteNeiNegozi), media(risultati, r -> r.pozioniComprate),
 				scontri == 0 ? 0 : danni / scontri, round == 0 ? 0 : danni / round, fughe == 0 ? 0 : danniFuga / fughe);
+	}
+
+	/**
+	 * Le monete entrate per livello del mondo (medie sulle partite che lo raggiungono), per misurare l'economia
+	 * (vedi economia.md): quanto entra, quanto si spende e quanto resta.
+	 */
+	private static void stampaEntrate(PrintStream out, List<Risultato> tutte) {
+		out.println("Entrate per livello del mondo (monete guadagnate nel livello, medie sulle partite che lo raggiungono)");
+		out.printf("%7s %8s %10s%n", "Livello", "Partite", "Entrate");
+		int massimo = tutte.stream().mapToInt(r -> r.livello).max().orElse(0);
+		for (int livello = 1; livello <= massimo; livello++) {
+			final int l = livello;
+			List<Risultato> arrivate = new ArrayList<>();
+			tutte.stream().filter(r -> r.livello >= l).forEach(arrivate::add);
+			out.printf("%7d %8d %10.1f%n", livello, arrivate.size(),
+					media(arrivate, r -> r.guadagnatePerLivello.getOrDefault(l, 0)));
+		}
+		out.printf("Per partita: entrate %.1f, spese %.1f, monete finali %.1f (di cui vendite all'armaiolo %.1f)%n",
+				media(tutte, r -> r.moneteGuadagnate), media(tutte, r -> r.moneteSpese), media(tutte, r -> r.moneteFinali),
+				media(tutte, r -> r.moneteDaVendite));
+		out.printf("Entrate per luogo: in città %.1f, in locanda %.1f, altrove %.1f; preziosi venduti %.1f%n",
+				media(tutte, r -> r.guadagnateInCitta), media(tutte, r -> r.guadagnateInLocanda),
+				media(tutte, r -> r.guadagnateAltrove), media(tutte, r -> r.preziosiVenduti));
 	}
 
 	private static void stampaCauseMorte(PrintStream out, Comando classe, List<Risultato> risultati) {
@@ -307,6 +349,7 @@ class SimulazionePartiteTest {
 			risultato.amicizie = giocatore.amicizie;
 			risultato.resurrezioni = giocatore.resurrezioni;
 			risultato.moneteNeiNegozi = giocatore.moneteNeiNegozi;
+			risultato.moneteFinali = partita.gruppo().getMonete();
 			risultato.moneteDaVendite = giocatore.moneteDaVendite;
 			risultato.pozioniComprate = giocatore.pozioniComprate;
 			risultato.pergameneComprate = giocatore.pergameneComprate;
@@ -336,6 +379,7 @@ class SimulazionePartiteTest {
 		private Locazione locazione;
 		private Scontro scontro;
 		private int monetePrima;
+		private int preziosiPrima;
 		private int personaggiPrima;
 		private int viviPrima;
 
@@ -374,6 +418,7 @@ class SimulazionePartiteTest {
 				salutePrima.put(p, p.getSalute());
 			}
 			monetePrima = gruppo.getMonete();
+			preziosiPrima = gruppo.getPreziosi();
 			personaggiPrima = gruppo.getNumeroPersonaggi();
 			viviPrima = gruppo.getNumeroPersonaggiVivi();
 		}
@@ -419,8 +464,22 @@ class SimulazionePartiteTest {
 				risultato.causaMorte = fuga ? "fuga" : scontro != null ? scontro.avversario.name() : "fuori dagli scontri";
 			}
 			int monete = gruppo.getMonete();
+			if (gruppo.getPreziosi() < preziosiPrima && !fuga) {
+				risultato.preziosiVenduti += preziosiPrima - gruppo.getPreziosi();
+			}
 			if (monete < monetePrima && !fuga) {
 				risultato.moneteSpese += monetePrima - monete;
+			} else if (monete > monetePrima) {
+				risultato.moneteGuadagnate += monete - monetePrima;
+				risultato.guadagnatePerLivello.merge(Statistiche.getLivello(), monete - monetePrima, Integer::sum);
+				TipoLocazione dove = locazione == null ? null : locazione.getTipoLocazione();
+				if (dove != null && dove.getCategoria() == CategoriaLocazione.CITTA) {
+					risultato.guadagnateInCitta += monete - monetePrima;
+				} else if (dove == TipoLocazione.LOCANDA) {
+					risultato.guadagnateInLocanda += monete - monetePrima;
+				} else {
+					risultato.guadagnateAltrove += monete - monetePrima;
+				}
 			}
 			if (gruppo.getNumeroPersonaggi() > personaggiPrima && locazione != null) {
 				TipoLocazione tipo = locazione.getTipoLocazione();
