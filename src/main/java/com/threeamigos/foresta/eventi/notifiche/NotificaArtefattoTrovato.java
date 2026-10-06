@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.interfacce.VistaArtefatto;
 
 /**
  * Il gruppo ha trovato un artefatto o un ingrediente magico in un cofano, o ha preso l'artefatto di un tempio:
@@ -11,16 +11,16 @@ import com.threeamigos.foresta.oggetti.Artefatto;
  */
 public class NotificaArtefattoTrovato extends EventoBase {
 
-    private final Artefatto artefatto;
+    private final VistaArtefatto artefatto;
     private final int livelloMondo;
 
-    public NotificaArtefattoTrovato(Artefatto artefatto, int livelloMondo) {
+    public NotificaArtefattoTrovato(VistaArtefatto artefatto, int livelloMondo) {
         super(TipoEvento.NOTIFICA_ARTEFATTO_TROVATO);
         this.artefatto = artefatto;
         this.livelloMondo = livelloMondo;
     }
 
-    public Artefatto getArtefatto() {
+    public VistaArtefatto getArtefatto() {
         return artefatto;
     }
 

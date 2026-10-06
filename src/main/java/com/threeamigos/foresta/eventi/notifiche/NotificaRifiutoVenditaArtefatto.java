@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoVenditaArtefatto;
+import com.threeamigos.foresta.eventi.interni.InternoVenditaArtefatto;
 import com.threeamigos.foresta.interfacce.OggettoConCosto;
 
 /**
@@ -17,7 +17,7 @@ public class NotificaRifiutoVenditaArtefatto extends NotificaRifiutoSpostamentoA
     /**
      * @param eventoRichiestaVenditaArtefatto la richiesta di vendita di un Artefatto che si rifiuta
      */
-    public NotificaRifiutoVenditaArtefatto(ComandoVenditaArtefatto eventoRichiestaVenditaArtefatto) {
+    public NotificaRifiutoVenditaArtefatto(InternoVenditaArtefatto eventoRichiestaVenditaArtefatto) {
         super(TipoEvento.NOTIFICA_RIFIUTO_VENDITA_ARTEFATTO, eventoRichiestaVenditaArtefatto);
     }
 }

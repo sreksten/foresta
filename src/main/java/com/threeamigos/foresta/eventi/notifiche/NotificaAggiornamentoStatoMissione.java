@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.missioni.Missione;
+import com.threeamigos.foresta.interfacce.VistaMissione;
 
 /**
  * Il motore informa il giocatore riguardo allo stato generale di una Missione.
@@ -11,18 +11,18 @@ import com.threeamigos.foresta.missioni.Missione;
  */
 public class NotificaAggiornamentoStatoMissione extends EventoBase {
 
-    public final Missione missione;
+    public final VistaMissione missione;
     public final String etichetta;
     public final String descrizione;
 
-    public NotificaAggiornamentoStatoMissione(Missione missione, String etichetta, String descrizione) {
+    public NotificaAggiornamentoStatoMissione(VistaMissione missione, String etichetta, String descrizione) {
         super(TipoEvento.NOTIFICA_AGGIORNAMENTO_STATO_MISSIONE);
         this.missione = missione;
         this.etichetta = etichetta;
         this.descrizione = descrizione;
     }
 
-    public Missione getMissione() {
+    public VistaMissione getMissione() {
         return missione;
     }
 

@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.EventoSuPersonaggio;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 
 /**
  *
@@ -10,14 +10,14 @@ import com.threeamigos.foresta.personaggi.Personaggio;
  */
 public class InternoRichiestaAperturaFinestraCombattimento extends EventoSuPersonaggio {
 
-    private final Personaggio avversario;
+    private final VistaPersonaggio avversario;
 
-    public InternoRichiestaAperturaFinestraCombattimento(Personaggio combattente, Personaggio avversario) {
+    public InternoRichiestaAperturaFinestraCombattimento(VistaPersonaggio combattente, VistaPersonaggio avversario) {
         super(TipoEvento.INTERNO_STATO_FINESTRA_COMBATTIMENTO, combattente);
         this.avversario = avversario;
     }
 
-    public Personaggio getAvversario() {
+    public VistaPersonaggio getAvversario() {
         return avversario;
     }
 }

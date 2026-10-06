@@ -2,7 +2,8 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpostamentoArtefatto;
+import com.threeamigos.foresta.eventi.interni.InternoSpostamentoArtefatto;
+import com.threeamigos.foresta.interfacce.VistaScambio;
 
 /**
  * Classe base per i rifiuti delle richieste di spostamento di un artefatto.
@@ -12,20 +13,35 @@ import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpostamentoArtefat
  */
 public abstract class NotificaRifiutoSpostamentoArtefatto<T> extends EventoBase {
 
-    private final ComandoSpostamentoArtefatto<T> comandoSpostamentoArtefatto;
+    private final InternoSpostamentoArtefatto<T> comandoSpostamentoArtefatto;
 
     /**
      * @param comandoSpostamentoArtefatto la richiesta di spostamento di un Artefatto che si rifiuta
      */
-    public NotificaRifiutoSpostamentoArtefatto(TipoEvento tipoEvento, ComandoSpostamentoArtefatto<T> comandoSpostamentoArtefatto) {
+    public NotificaRifiutoSpostamentoArtefatto(TipoEvento tipoEvento, InternoSpostamentoArtefatto<T> comandoSpostamentoArtefatto) {
         super(tipoEvento);
         this.comandoSpostamentoArtefatto = comandoSpostamentoArtefatto;
     }
 
     /**
-     * @return la richiesta originale di spostamento di un Artefatto che si rifiuta
+     * @return lo scambio aperto da cui veniva la richiesta, o null: le schermate rispondono solo alle notifiche del
+     * proprio (la richiesta stessa è interna al motore)
      */
-    public ComandoSpostamentoArtefatto<T> getEventoRichiestaSpostamento() {
-        return comandoSpostamentoArtefatto;
+    public VistaScambio getScambio() {
+        return comandoSpostamentoArtefatto.getScambio();
+    }
+
+    /**
+     * @return l'oggetto di cui si chiedeva lo spostamento
+     */
+    public T getOggettoSpostato() {
+        return comandoSpostamentoArtefatto.getOggettoDaSpostare();
+    }
+
+    /**
+     * @return l'identificativo della richiesta che si rifiuta
+     */
+    public String getUuidRichiesta() {
+        return comandoSpostamentoArtefatto.getUuid();
     }
 }

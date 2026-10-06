@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoSuPersonaggio;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.personaggi.PersonaggioBase;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 
 /**
@@ -18,7 +18,7 @@ public class NotificaConsumoPuntoAbilitaPersonaggio extends EventoSuPersonaggio 
      * @param personaggio il Personaggio che consuma il Punto Abilità
      * @param tipoAttributo l'Attributo del Personaggio che viene aumentato
      */
-	public NotificaConsumoPuntoAbilitaPersonaggio(PersonaggioBase personaggio, TipoAttributo tipoAttributo) {
+	public NotificaConsumoPuntoAbilitaPersonaggio(VistaPersonaggio personaggio, TipoAttributo tipoAttributo) {
 		super(TipoEvento.NOTIFICA_CONSUMO_PUNTO_ABILITA_PERSONAGGIO, personaggio);
         this.tipoAttributo = tipoAttributo;
 	}

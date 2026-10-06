@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.eventi.comandigiocatore;
+package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
@@ -11,7 +11,7 @@ import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
  *
  * @author Stefano Reksten
  */
-public abstract class ComandoSpostamentoArtefatto<T> extends EventoBase {
+public abstract class InternoSpostamentoArtefatto<T> extends EventoBase {
 
     private final ScambiatoreArtefatti parteAttiva;
     private final ScambiatoreArtefatti parteRemota;
@@ -25,7 +25,7 @@ public abstract class ComandoSpostamentoArtefatto<T> extends EventoBase {
      * @param scambio lo scambio aperto da cui viene il comando, o null se non viene da una schermata di scambio: le
      *                schermate rispondono solo alle notifiche del proprio
      */
-    public ComandoSpostamentoArtefatto(TipoEvento tipoEvento,
+    public InternoSpostamentoArtefatto(TipoEvento tipoEvento,
                                        ScambiatoreArtefatti parteAttiva, ScambiatoreArtefatti parteRemota,
                                        T oggettoDaSpostare, VistaScambio scambio) {
         super(tipoEvento);

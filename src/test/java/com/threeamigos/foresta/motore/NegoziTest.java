@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoVenditaArtefatto;
+import com.threeamigos.foresta.eventi.interni.InternoVenditaArtefatto;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
@@ -46,7 +46,7 @@ class NegoziTest {
         gruppo.addArtefatto(pergamena);
         ScambiatoreArtefatti armaiolo = RegistroArtefatti.getScambiatorePerNegozio(CITTA, TipoNegozio.ARMAIOLO);
 
-        assertFalse(gruppo.vende(new ComandoVenditaArtefatto(gruppo, armaiolo, pergamena, null)));
+        assertFalse(gruppo.vende(new InternoVenditaArtefatto(gruppo, armaiolo, pergamena, null)));
 
         assertEquals(0, gruppo.getMonete());
         assertTrue(nelGruppo(pergamena));
@@ -61,8 +61,8 @@ class NegoziTest {
         gruppo.addArtefatto(pergamena);
         ScambiatoreArtefatti venditore = RegistroArtefatti.getScambiatorePerNegozio(CITTA, TipoNegozio.VENDITORE_DI_PERGAMENE);
 
-        assertFalse(gruppo.vende(new ComandoVenditaArtefatto(gruppo, venditore, spada, null)));
-        assertTrue(gruppo.vende(new ComandoVenditaArtefatto(gruppo, venditore, pergamena, null)));
+        assertFalse(gruppo.vende(new InternoVenditaArtefatto(gruppo, venditore, spada, null)));
+        assertTrue(gruppo.vende(new InternoVenditaArtefatto(gruppo, venditore, pergamena, null)));
 
         // Un gruppo senza nessuno che sappia trattare vende a metà del costo (vedi RegoleContrattazione)
         assertEquals(15, gruppo.getMonete());

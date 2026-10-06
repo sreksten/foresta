@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoSuPersonaggio;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 
 /**
@@ -23,7 +23,7 @@ public class NotificaVariazioneStatistichePersonaggio extends EventoSuPersonaggi
      * @param valorePrecedente il valore precedente alla variazione
      * @param nuovoValore il valore successivo alla variazione
      */
-    public NotificaVariazioneStatistichePersonaggio(Personaggio personaggio, TipoAttributo tipoAttributo,
+    public NotificaVariazioneStatistichePersonaggio(VistaPersonaggio personaggio, TipoAttributo tipoAttributo,
                                                     double valorePrecedente, double nuovoValore) {
         super(TipoEvento.NOTIFICA_VARIAZIONE_STATISTICHE_PERSONAGGIO, personaggio);
         this.tipoAttributo = tipoAttributo;

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoStoccaggioArtefatto;
+import com.threeamigos.foresta.eventi.interni.InternoStoccaggioArtefatto;
 import com.threeamigos.foresta.interfacce.OggettoConPeso;
 
 /**
@@ -14,7 +14,7 @@ public class NotificaApprovazioneStoccaggioArtefatto extends NotificaApprovazion
     /**
      * @param eventoRichiestaStoccaggioArtefatto la richiesta di stoccaggio di un Artefatto che si approva
      */
-    public NotificaApprovazioneStoccaggioArtefatto(ComandoStoccaggioArtefatto eventoRichiestaStoccaggioArtefatto) {
+    public NotificaApprovazioneStoccaggioArtefatto(InternoStoccaggioArtefatto eventoRichiestaStoccaggioArtefatto) {
         super(TipoEvento.NOTIFICA_APPROVAZIONE_STOCCAGGIO_ARTEFATTO, eventoRichiestaStoccaggioArtefatto);
     }
 }

@@ -4,7 +4,7 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaIncantatore;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioCommerciante;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAperturaInventarioFornitore;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoIncantatura;
+import com.threeamigos.foresta.eventi.interni.InternoIncantatura;
 import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
 import com.threeamigos.foresta.eventi.interni.InternoMostraSchermataGioco;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoIncantatura;
@@ -199,7 +199,7 @@ public abstract class Citta extends LocazioneUnica {
 			return Stato.IN_LOCAZIONE;
 		}
 		stato = StatoInCitta.DA_INCANTATORE;
-		BusEventi.pubblica(new ComandoIncantatura(incantatore.getBanco(), testo));
+		BusEventi.pubblica(new InternoIncantatura(incantatore.getBanco(), testo));
 		apriIncantatore(null);
 		return Stato.IN_LOCAZIONE;
 	}

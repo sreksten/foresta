@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoSuPersonaggio;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 
 /**
@@ -31,7 +31,7 @@ public class NotificaVariazioneEffettoDiStatoPersonaggio extends EventoSuPersona
      * @param valorePrecedente il valore precedente alla variazione (durata)
      * @param nuovoValore il valore successivo alla variazione (durata)
      */
-    public NotificaVariazioneEffettoDiStatoPersonaggio(Personaggio personaggio, TipoVariazione tipoVariazione, TipoEffettoDiStato effetto,
+    public NotificaVariazioneEffettoDiStatoPersonaggio(VistaPersonaggio personaggio, TipoVariazione tipoVariazione, TipoEffettoDiStato effetto,
                                                        int valorePrecedente, int nuovoValore) {
         super(TipoEvento.NOTIFICA_VARIAZIONE_EFFETTO_DI_STATO_PERSONAGGIO, personaggio);
         this.tipoVariazione = tipoVariazione;

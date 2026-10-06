@@ -115,6 +115,11 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 	/**
 	 * Se il personaggio non può combattere: è morto o in panchina.
 	 */
+    @Override
+    default String getUuid() {
+        return getModelloDati().getUuid();
+    }
+
     default boolean isFuoriCombattimento() {
         return !isVivo() || isInPanchina();
     }

@@ -402,7 +402,7 @@ public class RegistroArtefatti {
 	 * Il negozio si riconosce dalla merce: il venditore tratta solo le pergamene, l'armaiolo tutto il resto.
 	 */
 	private static void ricordaVendita(NotificaApprovazioneVenditaArtefatto evento) {
-		Artefatto artefatto = (Artefatto) evento.getEventoRichiestaSpostamentoArtefatto().getOggettoDaSpostare();
+		Artefatto artefatto = (Artefatto) evento.getOggettoSpostato();
 		TipoNegozio negozio = TipoNegozio.VENDITORE_DI_PERGAMENE.tratta(artefatto.getTipo())
 				? TipoNegozio.VENDITORE_DI_PERGAMENE : TipoNegozio.ARMAIOLO;
 		vendutiNellaVisita.add(new Vendita(GruppoGiocatore.getIstanza().getCoordinate(), negozio, artefatto.getModelloDati()));

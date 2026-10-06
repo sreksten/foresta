@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoPrelievoArtefatto;
+import com.threeamigos.foresta.eventi.interni.InternoPrelievoArtefatto;
 import com.threeamigos.foresta.interfacce.OggettoConPeso;
 
 /**
@@ -16,7 +16,7 @@ public class NotificaApprovazionePrelievoArtefatto extends NotificaApprovazioneS
     /**
      * @param eventoRichiestaPrelievoArtefatto la richiesta di prelievo di un Artefatto che si approva
      */
-    public NotificaApprovazionePrelievoArtefatto(ComandoPrelievoArtefatto eventoRichiestaPrelievoArtefatto) {
+    public NotificaApprovazionePrelievoArtefatto(InternoPrelievoArtefatto eventoRichiestaPrelievoArtefatto) {
         super(TipoEvento.NOTIFICA_APPROVAZIONE_PRELIEVO_ARTEFATTO, eventoRichiestaPrelievoArtefatto);
     }
 }

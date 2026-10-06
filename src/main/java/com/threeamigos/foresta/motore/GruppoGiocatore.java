@@ -1,5 +1,10 @@
 package com.threeamigos.foresta.motore;
 
+import com.threeamigos.foresta.eventi.interni.InternoAcquistoArtefatto;
+import com.threeamigos.foresta.eventi.interni.InternoPrelievoArtefatto;
+import com.threeamigos.foresta.eventi.interni.InternoStoccaggioArtefatto;
+import com.threeamigos.foresta.eventi.interni.InternoVenditaArtefatto;
+import com.threeamigos.foresta.eventi.interni.InternoIncantatura;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
@@ -71,11 +76,11 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 
 	public GruppoGiocatore() {
 		super();
-		BusEventi.iscriviti(ComandoStoccaggioArtefatto.class, this::suEventoRichiestaStoccaggioArtefatto);
-		BusEventi.iscriviti(ComandoPrelievoArtefatto.class, this::suEventoRichiestaPrelievoArtefatto);
-		BusEventi.iscriviti(ComandoAcquistoArtefatto.class, this::suEventoRichiestaAcquistoArtefatto);
-		BusEventi.iscriviti(ComandoVenditaArtefatto.class, this::suEventoRichiestaVenditaArtefatto);
-		BusEventi.iscriviti(ComandoIncantatura.class, this::suEventoIncantatura);
+		BusEventi.iscriviti(InternoStoccaggioArtefatto.class, this::suEventoRichiestaStoccaggioArtefatto);
+		BusEventi.iscriviti(InternoPrelievoArtefatto.class, this::suEventoRichiestaPrelievoArtefatto);
+		BusEventi.iscriviti(InternoAcquistoArtefatto.class, this::suEventoRichiestaAcquistoArtefatto);
+		BusEventi.iscriviti(InternoVenditaArtefatto.class, this::suEventoRichiestaVenditaArtefatto);
+		BusEventi.iscriviti(InternoIncantatura.class, this::suEventoIncantatura);
 		BusEventi.iscriviti(ComandoAcquistoConsumabile.class, this::suEventoRichiestaAcquistoConsumabile);
 	}
 
@@ -699,20 +704,20 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		md.getArtefatti().remove(artefatto.getModelloDati());
 	}
 
-	private void suEventoRichiestaStoccaggioArtefatto(ComandoStoccaggioArtefatto eventoRichiestaStoccaggio) {
+	private void suEventoRichiestaStoccaggioArtefatto(InternoStoccaggioArtefatto eventoRichiestaStoccaggio) {
 		Artefatto artefatto = (Artefatto) eventoRichiestaStoccaggio.getOggettoDaSpostare();
 		eventoRichiestaStoccaggio.getParteAttiva().removeArtefatto(artefatto);
 		addArtefatto(artefatto);
 		BusEventi.pubblica(new NotificaApprovazioneStoccaggioArtefatto(eventoRichiestaStoccaggio));
 	}
 
-	private void suEventoRichiestaPrelievoArtefatto(ComandoPrelievoArtefatto eventoRichiestaPrelievoArtefatto) {
+	private void suEventoRichiestaPrelievoArtefatto(InternoPrelievoArtefatto eventoRichiestaPrelievoArtefatto) {
 		Artefatto artefatto = (Artefatto) eventoRichiestaPrelievoArtefatto.getOggettoDaSpostare();
 		Personaggio personaggio = (Personaggio) eventoRichiestaPrelievoArtefatto.getParteAttiva();
 		Optional<RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento> motivoRifiuto = personaggio.puoEquipaggiare(artefatto);
 		if (motivoRifiuto.isPresent()) {
 			RegoleEquipaggiamento.EsitoControlloRichiestaEquipaggiamento esito = motivoRifiuto.get();
-			BusEventi.pubblica(new NotificaRifiutoPrelievoArtefatto(eventoRichiestaPrelievoArtefatto, esito));
+			BusEventi.pubblica(new NotificaRifiutoPrelievoArtefatto(eventoRichiestaPrelievoArtefatto, esito.getFumetto()));
 		} else {
 			removeArtefatto(artefatto);
 			personaggio.addArtefatto(artefatto);
@@ -720,7 +725,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		}
 	}
 
-	private void suEventoRichiestaAcquistoArtefatto(ComandoAcquistoArtefatto comandoAcquistoArtefatto) {
+	private void suEventoRichiestaAcquistoArtefatto(InternoAcquistoArtefatto comandoAcquistoArtefatto) {
 		Artefatto artefatto = (Artefatto) comandoAcquistoArtefatto.getOggettoDaSpostare();
 		int costoOggetto = prezzoAcquisto(artefatto.getCostoAcquisto());
 		if (getMonete() >= costoOggetto) {
@@ -733,7 +738,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		}
 	}
 
-	private void suEventoRichiestaVenditaArtefatto(ComandoVenditaArtefatto eventoRichiestaVendita) {
+	private void suEventoRichiestaVenditaArtefatto(InternoVenditaArtefatto eventoRichiestaVendita) {
 		vende(eventoRichiestaVendita);
 	}
 
@@ -744,7 +749,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	 *
 	 * @return true se la vendita è riuscita
 	 */
-	boolean vende(ComandoVenditaArtefatto eventoRichiestaVendita) {
+	boolean vende(InternoVenditaArtefatto eventoRichiestaVendita) {
 		Artefatto artefatto = (Artefatto) eventoRichiestaVendita.getOggettoDaSpostare();
 		if (!eventoRichiestaVendita.getParteRemota().tratta(artefatto)) {
 			BusEventi.pubblica(new NotificaRifiutoVenditaArtefatto(eventoRichiestaVendita));
@@ -758,7 +763,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		return true;
 	}
 
-	private void suEventoIncantatura(ComandoIncantatura comandoIncantatura) {
+	private void suEventoIncantatura(InternoIncantatura comandoIncantatura) {
 		incanta(comandoIncantatura.getBanco(), comandoIncantatura.getNomeProprio());
 	}
 

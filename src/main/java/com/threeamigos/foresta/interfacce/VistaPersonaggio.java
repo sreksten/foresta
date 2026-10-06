@@ -32,6 +32,11 @@ public interface VistaPersonaggio {
 		INIZIALE_MAIUSCOLA
 	}
 
+	/**
+	 * L'identità del personaggio: resta la stessa anche se l'oggetto viene ricreato dal suo modello dati
+	 */
+	String getUuid();
+
 	TipoPersonaggio getClasse();
 
 	String getNome(OpzioniGetNome... opzioni);

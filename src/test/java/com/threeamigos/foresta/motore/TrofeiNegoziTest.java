@@ -1,6 +1,6 @@
 package com.threeamigos.foresta.motore;
 
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoArtefatto;
+import com.threeamigos.foresta.eventi.interni.InternoAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.interni.InternoFineLocazione;
 import com.threeamigos.foresta.eventi.interni.InternoOggettoRaccolto;
@@ -130,7 +130,7 @@ class TrofeiNegoziTest {
 	 * Un acquisto vero: il gruppo elabora il comando e, se le monete bastano, pubblica l'approvazione.
 	 */
 	private static void compra(PartitaDiTest partita, Artefatto artefatto) {
-		partita.pubblica(new ComandoAcquistoArtefatto(partita.gruppo(), new Magazzino(artefatto), artefatto, null));
+		partita.pubblica(new InternoAcquistoArtefatto(partita.gruppo(), new Magazzino(artefatto), artefatto, null));
 	}
 
 	private static Artefatto artefatto(TipoArtefatto tipo, int livello) {

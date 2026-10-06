@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.eventi.comandigiocatore;
+package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.TipoEvento;
 import com.threeamigos.foresta.interfacce.OggettoConCosto;
@@ -13,7 +13,7 @@ import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
  *
  * @author Stefano Reksten
  */
-public class ComandoVenditaArtefatto extends ComandoSpostamentoArtefatto<OggettoConCosto> {
+public class InternoVenditaArtefatto extends InternoSpostamentoArtefatto<OggettoConCosto> {
 
     /**
      * @param parteAttiva l'inventario generale del GruppoGiocatore
@@ -21,8 +21,8 @@ public class ComandoVenditaArtefatto extends ComandoSpostamentoArtefatto<Oggetto
      * @param oggettoDaVendere l'oggetto di interesse della transazione
      * @param scambio lo scambio aperto da cui viene, o null
      */
-    public ComandoVenditaArtefatto(ScambiatoreArtefatti parteAttiva, ScambiatoreArtefatti parteRemota,
+    public InternoVenditaArtefatto(ScambiatoreArtefatti parteAttiva, ScambiatoreArtefatti parteRemota,
                                    OggettoConCosto oggettoDaVendere, VistaScambio scambio) {
-        super(TipoEvento.COMANDO_VENDITA_ARTEFATTO, parteAttiva, parteRemota, oggettoDaVendere, scambio);
+        super(TipoEvento.INTERNO_VENDITA_ARTEFATTO, parteAttiva, parteRemota, oggettoDaVendere, scambio);
     }
 }

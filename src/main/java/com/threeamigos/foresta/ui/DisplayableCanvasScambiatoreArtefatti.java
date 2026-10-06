@@ -3,7 +3,6 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoCommutazioneElenco;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoScambioArtefatto;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpostamentoArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneAcquistoArtefatto;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneVenditaArtefatto;
@@ -51,38 +50,38 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
      * Ogni schermata di scambio (inventario, commerciante, incantatore...) è iscritta alle
      * stesse notifiche: deve reagire solo a quelle dei comandi del proprio scambio,
      * altrimenti un solo acquisto produce un fumetto e uno sprite per ciascuna schermata.
-     * Il comando porta lo scambio da cui viene, quindi basta confrontarlo per identità.
+     * La notifica porta lo scambio da cui veniva la richiesta, quindi basta confrontarlo per identità.
      */
-    private boolean riguardaQuestaSchermata(ComandoSpostamentoArtefatto<?> comando) {
-        return scambio != null && comando.getScambio() == scambio;
+    private boolean riguardaQuestaSchermata(VistaScambio scambioDellaNotifica) {
+        return scambio != null && scambioDellaNotifica == scambio;
     }
 
     private void gestisciEventoApprovazioneAcquistoArtefatto(NotificaApprovazioneAcquistoArtefatto notificaApprovazioneAcquistoArtefatto) {
-        if (!riguardaQuestaSchermata(notificaApprovazioneAcquistoArtefatto.getEventoRichiestaSpostamentoArtefatto())) {
+        if (!riguardaQuestaSchermata(notificaApprovazioneAcquistoArtefatto.getScambio())) {
             return;
         }
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Grazie per il vostro acquisto!", getCoordinateFumetto()));
 
         int costo = vistaPartita.getGruppoGiocatore().prezzoAcquisto(
-                notificaApprovazioneAcquistoArtefatto.getEventoRichiestaSpostamentoArtefatto().getOggettoDaSpostare().getCostoAcquisto());
+                notificaApprovazioneAcquistoArtefatto.getOggettoSpostato().getCostoAcquisto());
         aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteMoneta, -costo, font,
                 xMassimaZonaCentrale, yRigaMonete(), "Monete spese"));
     }
 
     private void gestisciEventoApprovazioneVenditaArtefatto(NotificaApprovazioneVenditaArtefatto notificaApprovazioneVenditaArtefatto) {
-        if (!riguardaQuestaSchermata(notificaApprovazioneVenditaArtefatto.getEventoRichiestaSpostamentoArtefatto())) {
+        if (!riguardaQuestaSchermata(notificaApprovazioneVenditaArtefatto.getScambio())) {
             return;
         }
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo(fraseDopoLaVendita(), getCoordinateFumetto()));
 
         int costo = vistaPartita.getGruppoGiocatore().prezzoVendita(
-                notificaApprovazioneVenditaArtefatto.getEventoRichiestaSpostamentoArtefatto().getOggettoDaSpostare().getCostoAcquisto());
+                notificaApprovazioneVenditaArtefatto.getOggettoSpostato().getCostoAcquisto());
         aggiungiSpriteLocale(new SpriteATempo(ImageCache.spriteMoneta, costo, font,
                 xMassimaZonaCentrale, yRigaMonete(), "Monete acquisite"));
     }
 
     private void gestisciEventoRifiutoAcquistoArtefatto(NotificaRifiutoAcquistoArtefatto notificaRifiutoAcquistoArtefatto) {
-        if (!riguardaQuestaSchermata(notificaRifiutoAcquistoArtefatto.getEventoRichiestaSpostamento())) {
+        if (!riguardaQuestaSchermata(notificaRifiutoAcquistoArtefatto.getScambio())) {
             return;
         }
         BusEventi.pubblica(new InternoNotificaViaFumettoATempo("Non hai abbastanza denaro per comprare questo oggetto.", getCoordinateFumetto()));

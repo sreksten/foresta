@@ -273,7 +273,7 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
   - In città il comando `FUSIONE` (icona `img/icone/Fusione.gif`, in `ClasseIcona`) apre la bottega: `DisplayableCanvasIncantatore`, per ora con l'immagine dell'alchimista. A sinistra l'inventario del gruppo, a destra il `BancoDiLavoro`, che non si salva. Nella colonna centrale monete, costo della fusione e posti dell'artefatto ("Effetti 2/3").
   - Dentro, `FUSIONE` fonde e `ANNULLA` esce, rimettendo nel gruppo quel che è rimasto sul banco.
   - `AutomaIncantatore`: con il doppio clic si sposta dal gruppo al banco secondo `RegoleIncantatura.puoMettereSulBanco` (un solo artefatto, incantabile, mai oltre i posti), e un rifiuto è un fumetto (`NotificaRifiutoIncantatura`). Dal banco al gruppo si sposta sempre.
-  - `FUSIONE`: `Citta` controlla le regole (`RegoleIncantatura.verifica`); se va, chiede il nome proprio con il `Prompt`, già compilato con quello attuale (`RichiestaTesto` con testo predefinito, `Prompt.mostra`). Il testo arriva alla città con il nuovo `Locazione.riceviTesto`, che pubblica `ComandoIncantatura`.
+  - `FUSIONE`: `Citta` controlla le regole (`RegoleIncantatura.verifica`); se va, chiede il nome proprio con il `Prompt`, già compilato con quello attuale (`RichiestaTesto` con testo predefinito, `Prompt.mostra`). Il testo arriva alla città con il nuovo `Locazione.riceviTesto`, che pubblica `InternoIncantatura`.
   - `GruppoGiocatore.incanta` ricontrolla, fa pagare (`Costanti.FUSIONE_COSTO_*`), copia incantamenti e modificatori, distrugge le pergamene, rimette l'artefatto nel gruppo e risponde con `NotificaApprovazioneIncantatura` ("Ecco fatto! …") o `NotificaRifiutoIncantatura`. Un nome vuoto vuol dire nessun nome proprio.
   - Test: `IncantatoreTest` (11). Tutta la suite è verde (301 test). Da provare a mano nel gioco: la schermata e il giro del `Prompt`.
 - [x] **Fase 5 (venditore di pergamene e magazzini).**
@@ -368,7 +368,7 @@ Ogni fase si può provare e committare da sola.
   - a sinistra l'inventario del gruppo;
   - a destra il banco di lavoro, con al massimo 1 artefatto incantabile e le pergamene, fino al limite dell'artefatto.
   - Uscendo, quello che resta sul banco torna nel gruppo: il banco non si salva.
-- **Conferma** → `ComandoIncantatura`. `GruppoGiocatore` ricontrolla le regole (§2), fa pagare, copia incantamenti e modificatori, distrugge le pergamene e risponde con `NotificaApprovazioneIncantatura` o `NotificaRifiutoIncantatura` (con il motivo).
+- **Conferma** → `InternoIncantatura`. `GruppoGiocatore` ricontrolla le regole (§2), fa pagare, copia incantamenti e modificatori, distrugge le pergamene e risponde con `NotificaApprovazioneIncantatura` o `NotificaRifiutoIncantatura` (con il motivo).
 - **Nome proprio** chiesto con il `Prompt`, già compilato con quello attuale.
 - **Test:** fusione riuscita; ciascun rifiuto; il caso "livello 3 con 1 incantamento → al più 1 in più"; il tetto di 5.
 

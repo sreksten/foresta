@@ -26,7 +26,7 @@ già porta con sé.
 - [x] `CalcolatoreCombattimento`: aggiornate tutte le chiamate esistenti
 - [x] `PersonaggioBase.applicaRisultatoCombattimento`: aggiornato il relay dell'evento
 - [x] `ForestaUI.gestisciEventoInterazione`, `DisplayableCanvas`/`DisplayableCanvasRiquadroLocazione.aggiungiInterazione`: aggiornato il tipo del parametro
-- [x] `SnifferBusEventi` e `NotificaInizioCombattimentoPersonaggio.formattaRisultatoCombattimento`: aggiornati i riferimenti al vecchio naming
+- [x] `SnifferBusEventi`: aggiornati i riferimenti al vecchio naming
 - [x] Migrato "Colpo di Grazia" dal flag `colpoDiGrazia` (mantenuto per la logica di danno) a un valore vero di `TipoInterazioneConEffettiDiStato.COLPO_DI_GRAZIA`, così compare anche a video (sprite verde) come le altre interazioni
 - [x] Aggiunte a ogni valore dell'enum le `precondizioni` (`TipoEffettoDiStato`) e gli `innescanti` (`TipoDanno`) come metadati dichiarativi — per ora solo documentazione, non ancora letti da `CalcolatoreCombattimento`
 

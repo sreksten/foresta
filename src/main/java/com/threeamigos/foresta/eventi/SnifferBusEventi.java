@@ -9,6 +9,7 @@ import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.interfacce.OggettoConCosto;
 import com.threeamigos.foresta.interfacce.OggettoConPeso;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributo;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.motore.ScambiatoreArtefatti;
 import com.threeamigos.foresta.oggetti.Artefatto;
@@ -42,7 +43,6 @@ public class SnifferBusEventi {
         // EventoBase è classe astratta
         BusEventi.iscriviti(InternoAggiornamentoComandiDisponibili.class, this::onEventoComandiDisponibili);
         BusEventi.iscriviti(ComandoDiGioco.class, this::onEventoComandoDiGioco);
-        BusEventi.iscriviti(NotificaInizioCombattimentoPersonaggio.class, this::onEventoCombattimento);
         BusEventi.iscriviti(NotificaConsumoPuntoAbilitaPersonaggio.class, this::onEventoConsumoPuntoAbilita);
         BusEventi.iscriviti(InternoCreazioneFumetto.class, this::onEventoCreazioneFumetto);
         BusEventi.iscriviti(InternoCreazionePersonaggio.class, this::onEventoCreazionePersonaggio);
@@ -79,23 +79,23 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(InternoCorruzioneRiuscita.class, this::onEventoCorruzioneRiuscita);
         BusEventi.iscriviti(InternoOggettoRaccolto.class, this::onEventoOggettoRaccolto);
         BusEventi.iscriviti(InternoMissioneCompletata.class, this::onEventoMissioneCompletata);
-        BusEventi.iscriviti(ComandoAcquistoArtefatto.class, this::onEventoRichiestaAcquistoArtefatto);
+        BusEventi.iscriviti(InternoAcquistoArtefatto.class, this::onEventoRichiestaAcquistoArtefatto);
         BusEventi.iscriviti(ComandoAcquistoConsumabile.class, this::onEventoRichiestaAcquistoConsumabile);
         BusEventi.iscriviti(InternoRichiestaAperturaFinestraCombattimento.class, this::onEventoRichiestaAperturaFinestraCombattimento);
         BusEventi.iscriviti(ComandoAperturaInventarioCommerciante.class, this::onEventoRichiestaAperturaInventarioCommerciante);
         BusEventi.iscriviti(ComandoAperturaInventarioFornitore.class, this::onEventoRichiestaAperturaInventarioFornitore);
         BusEventi.iscriviti(ComandoAperturaInventarioGruppo.class, this::onEventoRichiestaAperturaInventarioGruppo);
         BusEventi.iscriviti(InternoRichiestaChiusuraFinestraCombattimento.class, this::onEventoRichiestaChiusuraFinestraCombattimento);
-        BusEventi.iscriviti(ComandoPrelievoArtefatto.class, this::onEventoRichiestaPrelievoArtefatto);
+        BusEventi.iscriviti(InternoPrelievoArtefatto.class, this::onEventoRichiestaPrelievoArtefatto);
         BusEventi.iscriviti(InternoRichiestaRefreshUI.class, this::onEventoRichiestaRefreshUI);
         BusEventi.iscriviti(InternoRichiestaReinizializzazioneUI.class, this::onEventoRichiestaReinizializzazioneUI);
         // EventoRichiestaSpostamentoArtefatto è classe astratta
         BusEventi.iscriviti(RichiestaSelezioneSlotPerRilettura.class, this::onEventoRichiestaSelezioneSlotPerRilettura);
         BusEventi.iscriviti(RichiestaSelezioneSlotPerSalvataggio.class, this::onEventoRichiestaSelezioneSlotPerSalvataggio);
-        BusEventi.iscriviti(ComandoStoccaggioArtefatto.class, this::onEventoRichiestaStoccaggioArtefatto);
+        BusEventi.iscriviti(InternoStoccaggioArtefatto.class, this::onEventoRichiestaStoccaggioArtefatto);
         BusEventi.iscriviti(RichiestaTesto.class, this::onEventoRichiestaTesto);
-        BusEventi.iscriviti(ComandoVenditaArtefatto.class, this::onEventoRichiestaVenditaArtefatto);
-        BusEventi.iscriviti(ComandoVenditaArtefatto.class, this::onEventoRichiestaVenditaArtefatto);
+        BusEventi.iscriviti(InternoVenditaArtefatto.class, this::onEventoRichiestaVenditaArtefatto);
+        BusEventi.iscriviti(InternoVenditaArtefatto.class, this::onEventoRichiestaVenditaArtefatto);
         BusEventi.iscriviti(ComandoVisualizzazioneMappa.class, this::onEventoRichiestaVisualizzazioneMappa);
         BusEventi.iscriviti(NotificaRifiutoAcquistoArtefatto.class, this::onEventoRifiutoAcquistoArtefatto);
         BusEventi.iscriviti(NotificaRifiutoAcquistoConsumabile.class, this::onEventoRifiutoAcquistoConsumabile);
@@ -136,7 +136,7 @@ public class SnifferBusEventi {
     }
 
     private void onEventoApprovazioneAcquistoArtefatto(NotificaApprovazioneAcquistoArtefatto evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamentoArtefatto().getUuid());
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
     }
 
     private void onEventoApprovazioneAcquistoConsumabile(NotificaApprovazioneAcquistoConsumabile evento) {
@@ -145,15 +145,15 @@ public class SnifferBusEventi {
     }
 
     private void onEventoApprovazionePrelievoArtefatto(NotificaApprovazionePrelievoArtefatto evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamentoArtefatto().getUuid());
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
     }
 
     private void onEventoApprovazioneStoccaggioArtefatto(NotificaApprovazioneStoccaggioArtefatto evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamentoArtefatto().getUuid());
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
     }
 
     private void onEventoApprovazioneVenditaArtefatto(NotificaApprovazioneVenditaArtefatto evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamentoArtefatto().getUuid());
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
     }
 
     private void onEventoArtefattoTrovato(NotificaArtefattoTrovato evento) {
@@ -178,15 +178,8 @@ public class SnifferBusEventi {
         Logger.log(headerEvento(evento) + "Comando: " + comando);
     }
 
-    private void onEventoCombattimento(NotificaInizioCombattimentoPersonaggio evento) {
-        Personaggio p = evento.getPersonaggio();
-        Personaggio bersaglio = evento.getBersaglio();
-        Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) +
-                formattaStatistichePersonaggio(bersaglio) + evento.formattaRisultatoCombattimento());
-    }
-
     private void onEventoConsumoPuntoAbilita(NotificaConsumoPuntoAbilitaPersonaggio evento) {
-        Personaggio p = evento.getPersonaggio();
+        VistaPersonaggio p = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getTipoAttributo());
     }
 
@@ -195,7 +188,7 @@ public class SnifferBusEventi {
     }
 
     private void onEventoCreazionePersonaggio(InternoCreazionePersonaggio evento) {
-        Personaggio p  = evento.getPersonaggio();
+        VistaPersonaggio p  = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p));
     }
 
@@ -243,7 +236,7 @@ public class SnifferBusEventi {
     }
 
     private void onEventoInterazione(NotificaInterazionePersonaggio evento) {
-        Personaggio p = evento.getPersonaggio();
+        VistaPersonaggio p = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getTipoInterazione());
     }
 
@@ -334,7 +327,7 @@ public class SnifferBusEventi {
                 + (evento.isCustodito() ? ", custodito" : ", incustodito"));
     }
 
-    private void onEventoRichiestaAcquistoArtefatto(ComandoAcquistoArtefatto evento) {
+    private void onEventoRichiestaAcquistoArtefatto(InternoAcquistoArtefatto evento) {
         OggettoConCosto oggetto = evento.getOggettoDaSpostare();
         Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di acquistare "
                 + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") da "
@@ -369,7 +362,7 @@ public class SnifferBusEventi {
         Logger.log(headerEvento(evento) + "Chiusa");
     }
 
-    private void onEventoRichiestaPrelievoArtefatto(ComandoPrelievoArtefatto evento) {
+    private void onEventoRichiestaPrelievoArtefatto(InternoPrelievoArtefatto evento) {
         OggettoConPeso oggetto = evento.getOggettoDaSpostare();
         Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di prelevare "
                 + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") da "
@@ -398,7 +391,7 @@ public class SnifferBusEventi {
         Logger.log(headerEvento(evento));
     }
 
-    private void onEventoRichiestaStoccaggioArtefatto(ComandoStoccaggioArtefatto evento) {
+    private void onEventoRichiestaStoccaggioArtefatto(InternoStoccaggioArtefatto evento) {
         OggettoConPeso oggetto = evento.getOggettoDaSpostare();
         Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di stoccare "
                 + nomeOggetto(oggetto) + " (peso: " + oggetto.getPeso() + ") su "
@@ -409,7 +402,7 @@ public class SnifferBusEventi {
         Logger.log(headerEvento(evento) + "Richiesta: " + evento.getRichiesta());
     }
 
-    private void onEventoRichiestaVenditaArtefatto(ComandoVenditaArtefatto evento) {
+    private void onEventoRichiestaVenditaArtefatto(InternoVenditaArtefatto evento) {
         OggettoConCosto oggetto = evento.getOggettoDaSpostare();
         Logger.log(headerEvento(evento) + formattaParte(evento.getParteAttiva()) + " richiede di vendere "
                 + nomeOggetto(oggetto) + " (costo: " + oggetto.getCostoAcquisto() + ") a "
@@ -417,7 +410,7 @@ public class SnifferBusEventi {
     }
 
     private void onEventoRifiutoAcquistoArtefatto(NotificaRifiutoAcquistoArtefatto evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamento().getUuid());
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
     }
 
     private void onEventoRifiutoAcquistoConsumabile(NotificaRifiutoAcquistoConsumabile evento) {
@@ -425,15 +418,15 @@ public class SnifferBusEventi {
     }
 
     private void onEventoRifiutoPrelievoArtefatto(NotificaRifiutoPrelievoArtefatto evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamento().getUuid());
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
     }
 
     private void onEventoRifiutoStoccaggioArtefatto(NotificaRifiutoStoccaggioArtefatto evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamento().getUuid());
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
     }
 
     private void onEventoRifiutoVenditaArtefatto(NotificaRifiutoVenditaArtefatto evento) {
-        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getEventoRichiestaSpostamento().getUuid());
+        Logger.log(headerEvento(evento) + "Richiesta UUID " + evento.getUuidRichiesta());
     }
 
     private void onEventoSelezioneConfermaUscita(RichiestaUscitaDalGioco evento) {
@@ -457,12 +450,12 @@ public class SnifferBusEventi {
     }
 
     private void onEventoValutazioneAttaccante(InternoRisultatoValutazionePersonaggioAttaccante evento) {
-        Personaggio p = evento.getPersonaggio();
+        VistaPersonaggio p = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + formattaStatistichePersonaggio(p) + evento.getRisultatoValutazione());
     }
 
     private void onEventoVariazioneEffettoDiStato(NotificaVariazioneEffettoDiStatoPersonaggio evento) {
-        Personaggio p = evento.getPersonaggio();
+        VistaPersonaggio p = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + String.format("Tipo: %s, EffettoDiStatoMD: %s - ",
                 evento.getTipo(), evento.getEffetto()) + formattaStatistichePersonaggio(p));
     }
@@ -518,23 +511,23 @@ public class SnifferBusEventi {
     }
 
     private void onEventoVariazioneStatistichePersonaggio(NotificaVariazioneStatistichePersonaggio evento) {
-        Personaggio p = evento.getPersonaggio();
+        VistaPersonaggio p = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + String.format("Attributo: %s, Variazione: %7.2f -> %7.2f - ",
                 evento.getTipoAttributo(), evento.getValorePrecedente(), evento.getNuovoValore()) +
                 formattaStatistichePersonaggio(p));
     }
 
     private void onEventoVariazioneStatoVitalePersonaggio(NotificaVariazioneStatoVitalePersonaggio evento) {
-        Personaggio p = evento.getPersonaggio();
+        VistaPersonaggio p = evento.getPersonaggio();
         Logger.log(headerEvento(evento) + String.format("Stato: -> %s, Causa trapasso: -> %s - ",
                 p.isVivo() ? "Vivo" : "Morto", p.getCausaTrapasso()) + formattaStatistichePersonaggio(p));
     }
 
     //--- Metodi generali di utilità
 
-    private String formattaStatistichePersonaggio(Personaggio p) {
+    private String formattaStatistichePersonaggio(VistaPersonaggio p) {
         return String.format("UUID: %s,Nome: %17s, Livello: %2d, Salute: %3d/%3d; Magia: %3d/%3d; Forza: %3d; Destrezza: %3d; Costituzione: %3d; Intelligenza: %3d; Saggezza: %3d; Carisma: %3d; Fortuna: %3d",
-                p.getModelloDati().getUuid(), p.getNomeSingolare(), p.getLivello(), p.getSalute(), p.getSaluteMassima(), p.getMagia(), p.getMagiaMassima(),
+                p.getUuid(), p.getNomeSingolare(), p.getLivello(), p.getSalute(), p.getSaluteMassima(), p.getMagia(), p.getMagiaMassima(),
                 p.getForza(), p.getDestrezza(), p.getCostituzione(), p.getIntelligenza(), p.getSaggezza(), p.getCarisma(), p.getFortuna());
     }
 

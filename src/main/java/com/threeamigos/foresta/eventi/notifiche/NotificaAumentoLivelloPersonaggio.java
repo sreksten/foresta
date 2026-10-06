@@ -2,7 +2,7 @@ package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.EventoSuPersonaggio;
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 
 /**
  * Il livello di un Personaggio è stato aumentato.
@@ -14,7 +14,7 @@ public class NotificaAumentoLivelloPersonaggio extends EventoSuPersonaggio {
     private final int livelloPrecedente;
     private final int livelloAttuale;
 
-    public NotificaAumentoLivelloPersonaggio(Personaggio personaggio, int livelloPrecedente, int livelloAttuale) {
+    public NotificaAumentoLivelloPersonaggio(VistaPersonaggio personaggio, int livelloPrecedente, int livelloAttuale) {
         super(TipoEvento.NOTIFICA_AUMENTO_LIVELLO_PERSONAGGIO, personaggio);
         this.livelloPrecedente = livelloPrecedente;
         this.livelloAttuale = livelloAttuale;

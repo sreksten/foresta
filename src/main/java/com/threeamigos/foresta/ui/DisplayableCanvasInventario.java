@@ -68,7 +68,7 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
     }
 
     void onEventoRifiutoPrelievo(NotificaRifiutoPrelievoArtefatto evento) {
-        BusEventi.pubblica(new InternoNotificaViaFumettoATempo(evento.getEsito().getFumetto(), getCoordinateFumetto()));
+        BusEventi.pubblica(new InternoNotificaViaFumettoATempo(evento.getMotivo(), getCoordinateFumetto()));
     }
 
     @Override

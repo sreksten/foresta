@@ -100,7 +100,7 @@ public enum ClasseTrofeo {
 	}
 
 	private static Artefatto artefattoComprato(NotificaApprovazioneAcquistoArtefatto evento) {
-		return (Artefatto) evento.getEventoRichiestaSpostamentoArtefatto().getOggettoDaSpostare();
+		return (Artefatto) evento.getOggettoSpostato();
 	}
 
 	private static TipoConsumabile consumabileComprato(NotificaApprovazioneAcquistoConsumabile evento) {

@@ -1,7 +1,7 @@
 package com.threeamigos.foresta.eventi.notifiche;
 
 import com.threeamigos.foresta.eventi.TipoEvento;
-import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoArtefatto;
+import com.threeamigos.foresta.eventi.interni.InternoAcquistoArtefatto;
 import com.threeamigos.foresta.interfacce.OggettoConCosto;
 
 /**
@@ -15,7 +15,7 @@ public class NotificaRifiutoAcquistoArtefatto extends NotificaRifiutoSpostamento
     /**
      * @param comandoAcquistoArtefatto la richiesta di acquisto di un Artefatto che si rifiuta
      */
-    public NotificaRifiutoAcquistoArtefatto(ComandoAcquistoArtefatto comandoAcquistoArtefatto) {
+    public NotificaRifiutoAcquistoArtefatto(InternoAcquistoArtefatto comandoAcquistoArtefatto) {
         super(TipoEvento.NOTIFICA_RIFIUTO_ACQUISTO_ARTEFATTO, comandoAcquistoArtefatto);
     }
 }

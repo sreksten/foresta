@@ -1,4 +1,4 @@
-package com.threeamigos.foresta.eventi.comandigiocatore;
+package com.threeamigos.foresta.eventi.interni;
 
 import com.threeamigos.foresta.eventi.EventoBase;
 import com.threeamigos.foresta.eventi.TipoEvento;
@@ -9,13 +9,13 @@ import com.threeamigos.foresta.motore.BancoDiLavoro;
  * per l'artefatto. Il GruppoGiocatore ricontrolla le regole, fa pagare e risponde con
  * NotificaApprovazioneIncantatura o NotificaRifiutoIncantatura.
  */
-public class ComandoIncantatura extends EventoBase {
+public class InternoIncantatura extends EventoBase {
 
     private final BancoDiLavoro banco;
     private final String nomeProprio;
 
-    public ComandoIncantatura(BancoDiLavoro banco, String nomeProprio) {
-        super(TipoEvento.COMANDO_INCANTATURA);
+    public InternoIncantatura(BancoDiLavoro banco, String nomeProprio) {
+        super(TipoEvento.INTERNO_INCANTATURA);
         this.banco = banco;
         this.nomeProprio = nomeProprio;
     }

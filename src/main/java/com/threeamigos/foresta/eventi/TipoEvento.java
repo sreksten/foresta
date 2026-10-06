@@ -15,10 +15,6 @@ public enum TipoEvento {
 
     // Azioni che il giocatore vorrebbe intraprendere
     /**
-     * Richiesta di acquisto di un Consumabile da un commerciante
-     */
-    COMANDO_ACQUISTO_ARTEFATTO,
-    /**
      * Richiesta di acquisto di un Consumabile da un fornitore
      */
     COMANDO_ACQUISTO_CONSUMABILE,
@@ -43,10 +39,6 @@ public enum TipoEvento {
      */
     COMANDO_APERTURA_INCANTATORE,
     /**
-     * Richiesta di fondere sull'artefatto del banco di lavoro le pergamene che vi stanno
-     */
-    COMANDO_INCANTATURA,
-    /**
      * Il giocatore invia un comando di gioco (generico) all'automa
      */
     COMANDO_DI_GIOCO,
@@ -70,18 +62,6 @@ public enum TipoEvento {
      * Il giocatore invia un testo al motore
      */
     COMANDO_INVIO_TESTO,
-    /**
-     * Richiesta di spostamento di un Artefatto dall'inventario del gruppo a un Personaggio
-     */
-    COMANDO_PRELIEVO_ARTEFATTO,
-    /**
-     * Richiesta di spostamento di un Artefatto da un Personaggio all'inventario del gruppo
-     */
-    COMANDO_STOCCAGGIO_ARTEFATTO,
-    /**
-     * Richiesta di vendita di un Artefatto dall'inventario del gruppo a n commerciante
-     */
-    COMANDO_VENDITA_ARTEFATTO,
     /**
      * Richiede di visualizzare la mappa conosciuta della foresta a schermo intero
      */
@@ -180,10 +160,6 @@ public enum TipoEvento {
      * Mostra un annuncio in evidenza (ad esempio l'inizio di una missione)
      */
     NOTIFICA_GLOBALE,
-    /**
-     * Un Personaggio inizia a combattere con un altro Personaggio
-     */
-    NOTIFICA_INIZIO_COMBATTIMENTO_PERSONAGGIO,
     /**
      * Un Personaggio subisce una interazione con un effetto di stato come effetto collaterale di un combattimento
      */
@@ -303,6 +279,26 @@ public enum TipoEvento {
 
 
     // Eventi interni per il funzionamento del gioco
+    /**
+     * Richiesta di acquisto di un Consumabile da un commerciante
+     */
+    INTERNO_ACQUISTO_ARTEFATTO,
+    /**
+     * Richiesta di fondere sull'artefatto del banco di lavoro le pergamene che vi stanno
+     */
+    INTERNO_INCANTATURA,
+    /**
+     * Richiesta di spostamento di un Artefatto dall'inventario del gruppo a un Personaggio
+     */
+    INTERNO_PRELIEVO_ARTEFATTO,
+    /**
+     * Richiesta di spostamento di un Artefatto da un Personaggio all'inventario del gruppo
+     */
+    INTERNO_STOCCAGGIO_ARTEFATTO,
+    /**
+     * Richiesta di vendita di un Artefatto dall'inventario del gruppo a n commerciante
+     */
+    INTERNO_VENDITA_ARTEFATTO,
     /**
      * Elenco dei possibili comandi che l'interfaccia deve mostrare
      */
