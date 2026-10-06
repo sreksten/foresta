@@ -8,17 +8,13 @@ import com.threeamigos.foresta.intermezzi.ScenaInLocanda;
 import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
-import com.threeamigos.foresta.motore.Foresta;
-import com.threeamigos.foresta.motore.GruppoGiocatore;
-import com.threeamigos.foresta.motore.LineaTemporale;
-import com.threeamigos.foresta.motore.ProduttoreDiTestiCasuale;
-import com.threeamigos.foresta.motore.Statistiche;
+import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.personaggi.Bardo;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
+import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.ClasseMissione;
 import com.threeamigos.foresta.tipi.TipoLocazione;
-import com.threeamigos.foresta.strumenti.Misc;
 
 /**
  * Non sparate sul pianista: alla terza visita a una locanda nel bosco, a una visita tranquilla, il locandiere chiede
@@ -159,7 +155,9 @@ public class NonSparateSulPianista extends MissioneAPassi {
 		return ScenaInCitta.conMoglieDelBardo()
 				.parlaIlMandante(getBardo() + "! Di nuovo in queste condizioni!")
 				.parlaIlCapo("Lo abbiamo trovato in una locanda, abbracciato al suo liuto.")
-				.parlaIlMandante("Grazie, viandanti. A lui ci penso io.");
+				.parlaIlMandante("Grazie, viandanti. A lui ci penso io.")
+				.parlaIlMandante(getBardo() + ", non ti basteranno tre Pozioni della Salute grandi quando avrò finito con te!")
+				.parlaIlCapo("(Non vorrei essere nei suoi panni.)");
 	}
 
 	private boolean isTerzaVisitaAUnaLocanda() {
