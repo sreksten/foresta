@@ -61,7 +61,9 @@ public class SnifferBusEventi {
         BusEventi.iscriviti(ComandoInvioTesto.class, this::onEventoInvioTesto);
         BusEventi.iscriviti(NotificaTestoFrase.class, this::onEventoMessaggio);
         BusEventi.iscriviti(InternoMessaggio.class, this::onEventoMessaggioInterno);
-        BusEventi.iscriviti(InternoPortaInPrimoPiano.class, this::onEventoMostraFinestra);
+        BusEventi.iscriviti(InternoMostraFinestraStato.class, this::onEventoMostraFinestra);
+        BusEventi.iscriviti(InternoMostraFinestraStatistiche.class, this::onEventoMostraFinestra);
+        BusEventi.iscriviti(InternoMostraFinestraIncantesimiEPozioni.class, this::onEventoMostraFinestra);
         BusEventi.iscriviti(NotificaMostraPunteggiMigliori.class, this::onEventoMostraPunteggi);
         BusEventi.iscriviti(InternoMostraSchermataGioco.class, this::onEventoMostraSchermataGioco);
         BusEventi.iscriviti(NotificaMostraStatisticheFineGioco.class, this::onEventoMostraStatistiche);
@@ -256,8 +258,8 @@ public class SnifferBusEventi {
         Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getMessaggioInterno()));
     }
 
-    private void onEventoMostraFinestra(InternoPortaInPrimoPiano evento) {
-        Logger.log(String.format("%s - %s - %s ", new Date(), evento.getTipoEvento(), evento.getFinestre()));
+    private void onEventoMostraFinestra(EventoBase evento) {
+        Logger.log(String.format("%s - %s ", new Date(), evento.getTipoEvento()));
     }
 
     private void onEventoMostraPunteggi(NotificaMostraPunteggiMigliori evento) {

@@ -7,7 +7,8 @@ import com.threeamigos.foresta.eventi.interni.InternoVenditaArtefatto;
 import com.threeamigos.foresta.eventi.interni.InternoIncantatura;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.*;
-import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
+import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStatistiche;
+import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.interfacce.VistaGruppoGiocatore;
@@ -33,7 +34,6 @@ import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.strumenti.ModalitaDiProva;
-import com.threeamigos.foresta.ui.InterfacciaUtente;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -575,7 +575,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		getPersonaggiVivi().forEach(p -> p.riposa(1, tipoRiposo));
 		// Anche gli ospiti che si possono ferire recuperano
 		getOspitiVulnerabiliVivi().forEach(p -> p.riposa(1, tipoRiposo));
-		BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
+		BusEventi.pubblica(new InternoMostraFinestraStato());
 	}
 
 	public final void pernotta(TipoRiposo tipoRiposo) {
@@ -638,7 +638,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 			BusEventi.pubblica(new NotificaTestoFrase(notifica));
 			addMonete(quantita);
 			subPreziosi(md.getPreziosi());
-			BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATISTICHE));
+			BusEventi.pubblica(new InternoMostraFinestraStatistiche());
 		}
 	}
 
@@ -663,7 +663,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 
 		getPersonaggiVivi().forEach(Personaggio::fugge);
 
-		BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
+		BusEventi.pubblica(new InternoMostraFinestraStato());
 	}
 
 	public boolean isInLocazioneUnica(TipoLocazione tipoLocazioneUnica) {

@@ -47,7 +47,7 @@ Il codice si divide in due parti, che si parlano attraverso un bus eventi publis
 ```
 
 - **Un solo thread per la logica.** `BusEventi` consegna gli eventi sull'Event Dispatch Thread, e anche gli impulsi del timer del motore vi arrivano. Il thread della UI si limita a chiedere un `repaint()` 60 volte al secondo quando c'è qualcosa da animare.
-- **Il motore non conosce la UI**, salvo l'enum `InterfacciaUtente.Finestra` usato per portare in primo piano un riquadro.
+- **Il motore non conosce la UI**: per portare in primo piano un riquadro pubblica `InternoMostraFinestraStato`, `...Statistiche` o `...IncantesimiEPozioni`. Restano in `eventi` solo sei eventi che portano tipi della UI (gli sprite e i fumetti, che crea la UI stessa).
 - **La UI legge lo stato da una vista.** La UI legge lo stato della partita da `interfacce.VistaPartita`, in sola lettura, e dalla `VistaScambio` delle schermate di scambio, e verso il motore manda solo eventi. Anche personaggi, artefatti e missioni li vede come viste in sola lettura. Quel che resta della separazione è fra le cose da valutare ([`todo.md`](todo.md)).
 
 ## Avvio

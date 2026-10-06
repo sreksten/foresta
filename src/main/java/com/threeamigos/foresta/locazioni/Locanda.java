@@ -3,7 +3,7 @@ package com.threeamigos.foresta.locazioni;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoAggiornamentoComandiDisponibili;
 import com.threeamigos.foresta.eventi.interni.InternoPastoConsumatoInLocanda;
-import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
+import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
 import com.threeamigos.foresta.eventi.notifiche.NotificaNotizia;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.eventi.notifiche.NotificaTestoParagrafo;
@@ -18,7 +18,6 @@ import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import com.threeamigos.foresta.strumenti.Logger;
-import com.threeamigos.foresta.ui.InterfacciaUtente;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -229,7 +228,7 @@ public class Locanda extends LocazioneBase {
 		case ENTRATO:
 			if (gruppo.getMonete() < Costanti.COSTO_PASTO * gruppo.getNumeroPersonaggiVivi()) {
 				BusEventi.pubblica(new NotificaTestoFrase("Non avendo monete sufficienti per tutto il gruppo, una sola persona consuma un pasto in gran fretta. Chi lo fa?"));
-				BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
+				BusEventi.pubblica(new InternoMostraFinestraStato());
 				stato = StatoInLocanda.CHI_MANGIA;
 				Personaggio p;
 				List<Comando> comandiPossibiliChiMangia = new ArrayList<>();
@@ -285,7 +284,7 @@ public class Locanda extends LocazioneBase {
 		case PERSONAGGIO:
 			if (azione == Comando.SI) {
 				accetta(gruppo, true);
-				BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
+				BusEventi.pubblica(new InternoMostraFinestraStato());
 			} else {
 				accetta(gruppo, false);
 			}
@@ -329,7 +328,7 @@ public class Locanda extends LocazioneBase {
                     (personaggioDisponibile.getSesso() == Personaggio.Sesso.MASCHIO ? " lo" : " la") +
                     " vuole con se?";
 			BusEventi.pubblica(new NotificaTestoParagrafo(sb));
-			BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
+			BusEventi.pubblica(new InternoMostraFinestraStato());
 			return true;
 		}
 		return false;
@@ -347,7 +346,7 @@ public class Locanda extends LocazioneBase {
 			g.addIncantesimi(ClasseIncantesimo.FUOCO, Dado.tira(0, 3));
 			g.addPreziosi(Dado.tira(0, 10));
 			personaggioDisponibile = null;
-			BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
+			BusEventi.pubblica(new InternoMostraFinestraStato());
 		} else if (personaggioDisponibile != null) {
             String notifica = "“Pazienza. Sarà per un'altra volta.\" dice " +
                     personaggioDisponibile.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) +
@@ -379,7 +378,7 @@ public class Locanda extends LocazioneBase {
 			return Stato.FINE_LOCAZIONE;
 		} else {
 			BusEventi.pubblica(new NotificaTestoFrase(gruppo.chiMaiuscolo() + " desidera pernottare alla locanda?"));
-			BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
+			BusEventi.pubblica(new InternoMostraFinestraStato());
 			stato = StatoInLocanda.PERNOTTA;
 			BusEventi.pubblica(new RichiestaSelezioneSiNo());
 			return Stato.IN_LOCAZIONE;

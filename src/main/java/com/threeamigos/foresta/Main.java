@@ -72,6 +72,5 @@ public class Main {
 		new ForestaUI(orientamento, tuttoSchermo, saltaLogo, barraDock, gestorePunteggi, new VistaPartitaMotore(),
 				temporizzatoreUI);
 
-		//FIXME gestire l'elenco finestre togliendolo da InterfacciaUtente
 	}
 }

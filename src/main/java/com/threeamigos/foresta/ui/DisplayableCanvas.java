@@ -60,7 +60,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	private StatoDisplayableCanvas stato;
-	private final ArrayList<InterfacciaUtente.Finestra> stackElementiGrafici;
+	private final ArrayList<TipoFinestra> stackElementiGrafici;
 
 	private final Map<Finestra, Rectangle> mappaCoordinateElementiGrafici = new HashMap<>();
 	
@@ -136,14 +136,14 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		larghezzaSchermo = larghezzaContenuto;
 		altezzaSchermo = altezzaContenuto;
 		stackElementiGrafici = new ArrayList<>();
-		stackElementiGrafici.add(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
-		stackElementiGrafici.add(InterfacciaUtente.Finestra.STATO);
-		stackElementiGrafici.add(InterfacciaUtente.Finestra.MAPPA);
-		stackElementiGrafici.add(InterfacciaUtente.Finestra.STATISTICHE);
-		stackElementiGrafici.add(InterfacciaUtente.Finestra.GRAFICA);
-		stackElementiGrafici.add(InterfacciaUtente.Finestra.TESTO);
-		stackElementiGrafici.add(InterfacciaUtente.Finestra.MISSIONI);
-		stackElementiGrafici.add(InterfacciaUtente.Finestra.INFO_COMBATTIMENTO);
+		stackElementiGrafici.add(TipoFinestra.INCANTESIMI_E_POZIONI);
+		stackElementiGrafici.add(TipoFinestra.STATO);
+		stackElementiGrafici.add(TipoFinestra.MAPPA);
+		stackElementiGrafici.add(TipoFinestra.STATISTICHE);
+		stackElementiGrafici.add(TipoFinestra.GRAFICA);
+		stackElementiGrafici.add(TipoFinestra.TESTO);
+		stackElementiGrafici.add(TipoFinestra.MISSIONI);
+		stackElementiGrafici.add(TipoFinestra.INFO_COMBATTIMENTO);
 		// INTRO_OUTRO e MAPPA_A_TUTTO_SCHERMO non appartengono allo stack: occupano
 		// da soli tutto lo schermo e sono scelti in base allo stato del canvas.
 		stato = StatoDisplayableCanvas.STATO_INTRO;
@@ -366,44 +366,44 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		notificaAnnuncioGlobale("LEVEL UP!", personaggio.getNome() + " A LIVELLO " + personaggio.getLivello() + "!");
 		notifica("LEVEL UP! Ora " + personaggio.getNome() + " è al livello " + personaggio.getLivello() + "!");
 		// La notifica come iconcina è fatta dal riquadro del gruppo
-		primoPiano(InterfacciaUtente.Finestra.STATO);
+		primoPiano(TipoFinestra.STATO);
 		riquadroGruppo.gestisciEventoAumentoLivelloPersonaggio(evento);
 	}
 
 	private void gestisciEventoVariazioneStatistichePersonaggio(NotificaVariazioneStatistichePersonaggio evento) {
-		primoPiano(InterfacciaUtente.Finestra.STATO);
+		primoPiano(TipoFinestra.STATO);
 		riquadroGruppo.gestisciEventoVariazioneStatistichePersonaggio(evento);
 	}
 
 	// Eventi del riquadro incantesimi
 
 	private void gestisciEventoVariazioneIncantesimi(NotificaVariazioneDisponibilitaIncantesimi evento) {
-		primoPiano(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
+		primoPiano(TipoFinestra.INCANTESIMI_E_POZIONI);
 		riquadroIncantesimiEPozioni.gestisciEventoVariazioneIncantesimi(evento);
 	}
 
 	private void gestisciEventoVariazionePozioniSalute(NotificaVariazioneDisponibilitaPozioniSalute evento) {
-		primoPiano(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
+		primoPiano(TipoFinestra.INCANTESIMI_E_POZIONI);
 		riquadroIncantesimiEPozioni.gestisciEventoVariazionePozioniSalute(evento);
 	}
 
 	private void gestisciEventoVariazionePozioniSaluteGrandi(NotificaVariazioneDisponibilitaPozioniSaluteGrandi evento) {
-		primoPiano(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
+		primoPiano(TipoFinestra.INCANTESIMI_E_POZIONI);
 		riquadroIncantesimiEPozioni.gestisciEventoVariazionePozioniSaluteGrandi(evento);
 	}
 
 	private void gestisciEventoVariazionePozioniMagia(NotificaVariazioneDisponibilitaPozioniMagia evento) {
-		primoPiano(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
+		primoPiano(TipoFinestra.INCANTESIMI_E_POZIONI);
 		riquadroIncantesimiEPozioni.gestisciEventoVariazionePozioniMagia(evento);
 	}
 
 	private void gestisciEventoVariazionePozioniMagiaGrandi(NotificaVariazioneDisponibilitaPozioniMagiaGrandi evento) {
-		primoPiano(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
+		primoPiano(TipoFinestra.INCANTESIMI_E_POZIONI);
 		riquadroIncantesimiEPozioni.gestisciEventoVariazionePozioniMagiaGrandi(evento);
 	}
 
 	private void gestisciEventoAggiornamentoStatoMissione(NotificaAggiornamentoStatoMissione evento) {
-		primoPiano(InterfacciaUtente.Finestra.MISSIONI);
+		primoPiano(TipoFinestra.MISSIONI);
 		notificaAnnuncioGlobale(evento.getEtichetta(), evento.getDescrizione());
 	}
 
@@ -472,7 +472,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		riquadroTesto.clear();
 	}
 
-	public void primoPiano(InterfacciaUtente.Finestra finestra) {
+	public void primoPiano(TipoFinestra finestra) {
 		if (!stackElementiGrafici.remove(finestra)) {
 			throw new IllegalArgumentException("Elemento grafico non valido: " + finestra);
 		}
@@ -482,10 +482,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private void inGioco(Graphics gfx) {
 		Graphics2D graphics = (Graphics2D)gfx;
 
-		ArrayList<InterfacciaUtente.Finestra> copiaStack = new ArrayList<>(stackElementiGrafici.size());
+		ArrayList<TipoFinestra> copiaStack = new ArrayList<>(stackElementiGrafici.size());
 		copiaStack.addAll(stackElementiGrafici);
 
-		for (InterfacciaUtente.Finestra finestra : copiaStack) {
+		for (TipoFinestra finestra : copiaStack) {
 			switch (finestra) {
 			case MAPPA:
 				riquadroMappa.disegnaMappa(graphics);
@@ -606,7 +606,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	}
 
 	void preparaLocazione() {
-		primoPiano(InterfacciaUtente.Finestra.GRAFICA);
+		primoPiano(TipoFinestra.GRAFICA);
 		riquadroLocazione.assegnaCoordinateAgliAvversari();
 	}
 
@@ -955,7 +955,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		if (personaggio.isPNG()) {
 			aggiungiSprite(riquadroLocazione.notificaMorte(personaggio));
 		} else {
-			primoPiano(InterfacciaUtente.Finestra.STATO);
+			primoPiano(TipoFinestra.STATO);
 		}
 	}
 
@@ -963,7 +963,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		if (personaggio.isPNG()) {
 			aggiungiSprite(riquadroLocazione.variaSalute(personaggio, variazione));
 		} else {
-			primoPiano(InterfacciaUtente.Finestra.STATO);
+			primoPiano(TipoFinestra.STATO);
 		}
 	}
 
@@ -971,7 +971,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		if (personaggio.isPNG()) {
 			aggiungiSprite(riquadroLocazione.variaMagia(personaggio, variazione));
 		} else {
-			primoPiano(InterfacciaUtente.Finestra.STATO);
+			primoPiano(TipoFinestra.STATO);
 		}
 	}
 
@@ -1029,7 +1029,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 	}
 
-	private Finestra recuperaFinestra(InterfacciaUtente.Finestra finestra) {
+	private Finestra recuperaFinestra(TipoFinestra finestra) {
 		switch (finestra) {
 			case INTRO_OUTRO:
 				return riquadroIntroOutro;
@@ -1112,7 +1112,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			if (finestraATuttoSchermo != null) {
 				return creaRisultato(finestraATuttoSchermo, x, y);
 			}
-			ArrayList<InterfacciaUtente.Finestra> copiaStack = new ArrayList<>(stackElementiGrafici.size());
+			ArrayList<TipoFinestra> copiaStack = new ArrayList<>(stackElementiGrafici.size());
 			copiaStack.addAll(stackElementiGrafici);
 			// Lo stack viene disegnato dal fondo (indice 0) verso il primo piano (ultimo
 			// indice), quindi va percorso al contrario: l'evento spetta all'elemento

@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 
-public class ForestaUI implements InterfacciaUtente, Temporizzabile {
+public class ForestaUI implements Temporizzabile {
 
 	private final Orientamento orientamento;
 	private final boolean tuttoSchermo;
@@ -80,7 +80,9 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		BusEventi.iscriviti(InternoNotificaViaFumettoATempo.class, this::gestisciEventoFumetto);
 		BusEventi.iscriviti(NotificaInterazionePersonaggio.class, this::gestisciEventoInterazione);
 		BusEventi.iscriviti(NotificaTestoFrase.class, this::gestisciEventoMessaggio);
-		BusEventi.iscriviti(InternoPortaInPrimoPiano.class, this::gestisciEventoMostraFinestra);
+		BusEventi.iscriviti(InternoMostraFinestraStato.class, evento -> mostraFinestra(TipoFinestra.STATO));
+		BusEventi.iscriviti(InternoMostraFinestraStatistiche.class, evento -> mostraFinestra(TipoFinestra.STATISTICHE));
+		BusEventi.iscriviti(InternoMostraFinestraIncantesimiEPozioni.class, evento -> mostraFinestra(TipoFinestra.INCANTESIMI_E_POZIONI));
 		BusEventi.iscriviti(NotificaMostraPunteggiMigliori.class, this::gestisciEventoMostraPunteggi);
 		BusEventi.iscriviti(InternoMostraSchermataGioco.class, this::gestisciEventoMostraSchermataGioco);
 		BusEventi.iscriviti(NotificaMostraStatisticheFineGioco.class, this::gestisciEventoMostraStatistiche);
@@ -269,10 +271,8 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 		displayableCanvas.notifica(evento.getMessaggio());
 	}
 
-	private void gestisciEventoMostraFinestra(InternoPortaInPrimoPiano evento) {
-		for (InterfacciaUtente.Finestra finestra : evento.getFinestre()) {
-			displayableCanvas.primoPiano(finestra);
-		}
+	private void mostraFinestra(TipoFinestra finestra) {
+		displayableCanvas.primoPiano(finestra);
 		rinfresca();
 	}
 
@@ -282,7 +282,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	private void gestisciEventoMostraSchermataGioco(InternoMostraSchermataGioco evento) {
 		displayableCanvas.iniziaGioco();
-		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
+		displayableCanvas.primoPiano(TipoFinestra.GRAFICA);
 	}
 
 	private void gestisciEventoMostraStatistiche(NotificaMostraStatisticheFineGioco evento) {
@@ -358,7 +358,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	}
 
 	private void gestisciEventoRichiestaChiusuraFinestraCombattimento(InternoRichiestaChiusuraFinestraCombattimento evento) {
-		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.STATO);
+		displayableCanvas.primoPiano(TipoFinestra.STATO);
 		displayableCanvas.getRiquadroCombattimento().setVisible(false);
 	}
 
@@ -369,7 +369,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	private void gestisciEventoRichiestaReinizializzazioneUI(InternoRichiestaReinizializzazioneUI evento) {
 		displayableCanvas.reinizializza();
 		displayableCanvas.iniziaGioco();
-		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.GRAFICA);
+		displayableCanvas.primoPiano(TipoFinestra.GRAFICA);
 		rinfresca();
 	}
 
@@ -396,17 +396,17 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 
 	private void gestisciEventoSelezioneDirezione(RichiestaSelezioneDirezione evento) {
 		impostaAzioni(evento.getPossibilita());
-		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.MAPPA);
+		displayableCanvas.primoPiano(TipoFinestra.MAPPA);
 	}
 
 	private void gestisciEventoSelezioneIncantesimoDaLanciare(RichiestaSelezioneIncantesimoDaLanciare evento) {
 		impostaAzioni(evento.getPossibilita());
-		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.INCANTESIMI_E_POZIONI);
+		displayableCanvas.primoPiano(TipoFinestra.INCANTESIMI_E_POZIONI);
 	}
 
 	private void gestisciEventoSelezioneSiNo(RichiestaSelezioneSiNo evento) {
 		impostaAzioni(evento.getPossibilita());
-		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.STATO);
+		displayableCanvas.primoPiano(TipoFinestra.STATO);
 	}
 
 	/**
@@ -414,7 +414,7 @@ public class ForestaUI implements InterfacciaUtente, Temporizzabile {
 	 */
 	private void gestisciEventoSelezioneMissione(RichiestaSelezioneMissione evento) {
 		impostaAzioni(evento.getPossibilita());
-		displayableCanvas.primoPiano(InterfacciaUtente.Finestra.TESTO);
+		displayableCanvas.primoPiano(TipoFinestra.TESTO);
 	}
 
 	private void gestisciEventoFaseDiGioco(InternoFaseDiGioco evento) {

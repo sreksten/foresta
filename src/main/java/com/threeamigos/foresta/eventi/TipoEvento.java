@@ -421,9 +421,17 @@ public enum TipoEvento {
      */
     INTERNO_PASTO_CONSUMATO_IN_LOCANDA,
     /**
-     * Il motore chiede alla UI di portare in primo piano una certa Finestra
+     * Il motore chiede alla UI di portare in primo piano il riquadro dello stato del gruppo
      */
-    INTERNO_PORTA_IN_PRIMO_PIANO,
+    INTERNO_MOSTRA_FINESTRA_STATO,
+    /**
+     * Il motore chiede alla UI di portare in primo piano il riquadro delle statistiche
+     */
+    INTERNO_MOSTRA_FINESTRA_STATISTICHE,
+    /**
+     * Il motore chiede alla UI di portare in primo piano il riquadro degli incantesimi e delle pozioni
+     */
+    INTERNO_MOSTRA_FINESTRA_INCANTESIMI_E_POZIONI,
     /**
      * Prepara la locazione corrente per il turno di gioco
      */

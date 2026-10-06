@@ -1,13 +1,12 @@
 package com.threeamigos.foresta.offerte;
 
 import com.threeamigos.foresta.eventi.BusEventi;
-import com.threeamigos.foresta.eventi.interni.InternoPortaInPrimoPiano;
+import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Dado;
 import com.threeamigos.foresta.motore.GruppoAvversario;
 import com.threeamigos.foresta.motore.GruppoGiocatore;
 import com.threeamigos.foresta.personaggi.Personaggio;
-import com.threeamigos.foresta.ui.InterfacciaUtente;
 
 import java.util.List;
 
@@ -70,6 +69,6 @@ public class AiutoGratuito implements Offerta {
 		// il primo turno scatta subito
 		personaggio.setTempo(durata + 1);
 		gruppo.aggiungiPersonaggio(personaggio);
-		BusEventi.pubblica(new InternoPortaInPrimoPiano(InterfacciaUtente.Finestra.STATO));
+		BusEventi.pubblica(new InternoMostraFinestraStato());
 	}
 }
