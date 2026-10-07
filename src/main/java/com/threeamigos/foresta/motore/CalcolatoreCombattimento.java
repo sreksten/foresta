@@ -181,8 +181,20 @@ public class CalcolatoreCombattimento {
      * mano secondaria, al 40% (Costanti.DOPPIA_ARMA_FATTORE_SECONDA_ARMA).
      */
     public static List<FaseDiAttacco> fasiDiAttacco(Personaggio attaccante) {
+        return fasiDiAttacco(attaccante, null);
+    }
+
+    /**
+     * Come {@link #fasiDiAttacco(Personaggio)}, ma contro un difensore preciso: se l'attaccante combatte con la sua
+     * arma naturale, questa può cambiare in base a chi ha davanti (vedi ArmaNaturale.controDifensore).
+     */
+    public static List<FaseDiAttacco> fasiDiAttacco(Personaggio attaccante, Personaggio difensore) {
         List<FaseDiAttacco> fasi = new ArrayList<>();
-        fasi.add(new FaseDiAttacco(attaccante.getArmaEquipaggiata(), 1.0d));
+        Arma armaPrincipale = attaccante.getArmaEquipaggiata();
+        if (difensore != null && armaPrincipale instanceof ArmaNaturale) {
+            armaPrincipale = ((ArmaNaturale) armaPrincipale).controDifensore(difensore);
+        }
+        fasi.add(new FaseDiAttacco(armaPrincipale, 1.0d));
         attaccante.getArmaSecondaria()
                 .ifPresent(arma -> fasi.add(new FaseDiAttacco(arma, Costanti.DOPPIA_ARMA_FATTORE_SECONDA_ARMA)));
         return fasi;

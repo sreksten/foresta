@@ -219,6 +219,8 @@ Il combattimento si svolge dentro `LocazioneBase` (`gestisciCombattimento`, `ese
 
 Il risultato è un `DannoRisultante`, applicato con `Personaggio.applicaRisultatoCombattimento`. In modalità di prova l'`OmbraFiamma` colpisce sempre.
 
+**Arma naturale.** Senza un'arma in mano principale si attacca con l'`ArmaNaturale` della classe (artigli, morso, zanne draconiche col veleno, tocco gelido...). Le fasi di attacco di un turno (`fasiDiAttacco(attaccante, difensore)`) la scelgono in funzione di chi si ha davanti: la Fiamma viva dell'`OmbraFiamma` fa fuoco, ma contro chi è immune al fuoco (Drago, ChimeraDrago) ripiega sugli artigli (`ArmaNaturale.controDifensore`), altrimenti lo scontro non finirebbe mai. La doppia arma, invece, resta una questione di equipaggiamento: la seconda fase c'è solo se nella mano secondaria c'è un'arma vera (Ladro/Ladra, Elfo/Elfa).
+
 **Riposo.** `CalcolatoreRiposo.calcolaRiposo(personaggio, ore, tipoRiposo)`: il recupero di salute, magia e stanchezza scala con `√ore` e con il moltiplicatore del `TipoRiposo` (all'aperto senza fuoco 0,5, con fuoco 1,0, al coperto 1,5); i personaggi non morti o spettrali hanno moltiplicatori di recupero pari a 0 e saltano quelle componenti.
 
 ## 8. Personaggi, gruppi, progressione

@@ -1192,7 +1192,7 @@ public abstract class LocazioneBase implements Locazione {
 		Logger.log("Valutazione combattente -> bersaglio");
 		// Chi combatte con due armi ha una seconda fase, con l'arma secondaria, sullo stesso bersaglio
 		// (o sul prossimo vivo, se la prima l'ha ucciso)
-		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(combattente)) {
+		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(combattente, bersaglio)) {
 			Arma arma = fase.getArma();
 			boolean colpisce = CalcolatoreCombattimento.colpisce(combattente, bersaglio, arma.getTipoDanno().getSuperTipo());
 			if (colpisce) {

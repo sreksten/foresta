@@ -542,7 +542,7 @@ public abstract class PersonaggioBase implements Personaggio {
 					" attacca " + bersaglio.getNome(OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE) + '.';
 			BusEventi.pubblica(new NotificaTestoFrase(messaggio));
 		}
-		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(this)) {
+		for (FaseDiAttacco fase : CalcolatoreCombattimento.fasiDiAttacco(this, bersaglio)) {
 			if (bersaglio.isFuoriCombattimento()) {
 				return;
 			}

@@ -44,6 +44,23 @@ public class ArmaNaturale implements Arma {
         this.tipoAttacco = assegnaTipoAttacco(proprietario.getClasse());
     }
 
+    private ArmaNaturale(Personaggio proprietario, TipoAttaccoNaturale tipoAttacco) {
+        this.proprietario = proprietario;
+        this.tipoAttacco = tipoAttacco;
+    }
+
+    /**
+     * L'arma naturale con cui il proprietario attacca questo difensore: la Fiamma viva dell'Ombrafiamma non fa
+     * niente a chi è immune al fuoco, e contro di lui si ripiega sugli artigli, altrimenti lo scontro non finirebbe mai.
+     * Per tutte le altre combinazioni è l'arma stessa.
+     */
+    public ArmaNaturale controDifensore(Personaggio difensore) {
+        if (tipoAttacco == TipoAttaccoNaturale.FIAMMA_VIVA && difensore.isImmuneATipoDanno(tipoAttacco.tipoDanno)) {
+            return new ArmaNaturale(proprietario, TipoAttaccoNaturale.ARTIGLI_LEGGERI);
+        }
+        return this;
+    }
+
     /**
      * Associa automaticamente ogni classe/mostro al suo corretto stile di attacco innato.
      */
