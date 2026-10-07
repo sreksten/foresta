@@ -4,8 +4,7 @@ La sfida a carta, forbici e sasso e la missione che ne nasce, **La sfida dei cam
 
 ## 1. Panoramica
 
-Quando il gruppo stringe amicizia con degli avversari (`LocazioneBase`, stato `CHI_FA_AMICIZIA`), nel 33% dei casi (oggi
-al 100% per provare)
+Quando il gruppo stringe amicizia con degli avversari (`LocazioneBase`, stato `CHI_FA_AMICIZIA`), nel 33% dei casi
 (`Costanti.PERCENTUALE_PROBABILITA_CARTA_FORBICI_SASSO`) invece di un'offerta l'avversario sfida il capo del gruppo a carta,
 forbici e sasso. Si gioca **a tre mani vinte** (`Costanti.VITTORIE_PER_VINCERE_LA_SFIDA`), con i soli comandi `CARTA`,
 `FORBICE` e `SASSO`; un pareggio non conta e si rigioca. Ogni sfida vinta dal giocatore si conta per tutta la partita

@@ -8,8 +8,8 @@ public class Costanti {
 
     // Carta, forbici e sasso (vedi carta_forbici_sasso.md)
     // La probabilità, in percentuale, che chi stringe amicizia venga sfidato invece di ricevere un'offerta, finché la
-    // missione La sfida dei campioni non è partita (per ora al 100% per provare: il valore voluto è 33)
-    public static final int PERCENTUALE_PROBABILITA_CARTA_FORBICI_SASSO = 100;
+    // missione La sfida dei campioni non è partita
+    public static final int PERCENTUALE_PROBABILITA_CARTA_FORBICI_SASSO = 33;
     // Le mani da vincere per vincere la sfida
     public static final int VITTORIE_PER_VINCERE_LA_SFIDA = 3;
     // Le sfide vinte dal gruppo, in tutta la partita, dopo le quali l'avversario lo manda al torneo
