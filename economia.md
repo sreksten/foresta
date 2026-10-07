@@ -43,11 +43,11 @@ Gli acquisti nei negozi hanno uno sconto dovuto alla Contrattazione, di solito l
 | Artefatto dell'armaiolo | 5 + 5 × livello, spadone × 1,5 | più il listino degli effetti se incantato |
 | Ingrediente magico | 2-180 secondo tipo e livello | listino nuovo, vedi la tabella sotto |
 | Fusione | 10 + 5 per effetto trasferito | incantatore |
-| Corruzione | 2 × posti del gruppo | riesce il 70% delle volte; se fallisce non costa niente |
+| Corruzione | 2 × posti del gruppo | riesce il 70% delle volte (`Costanti.FACCE_DEL_DADO_DELLA_CORRUZIONE` e `SOGLIA_DEL_DADO_DELLA_CORRUZIONE`); se fallisce non si pagano le monete, ma c'è uno spregio (vedi sotto) |
 | Incantesimi offerti | quantità × prezzo / 2 | offerta dopo corruzione o amicizia |
 
 Perdite:
-- **amicizia fallita:** 1 volta su 5 si perdono 1-5 monete, 1 su 5 1-5 preziosi;
+- **amicizia o corruzione fallita:** uno spregio, a un tiro a cinque facce (`LocazioneBase.subisciUnoSpregio`): 1 volta su 5 si perdono 1-3 monete, 1 su 5 1-3 preziosi, 1 su 5 un incantesimo a caso (se il gruppo ne ha di quella classe), 1 su 5 un attacco del capo degli avversari, e 1 su 5 niente. L'attacco è uno solo, con l'arma principale: se colpisce, il danno (con le difese e gli effetti di stato del colpo) è limitato al 20% della salute che il personaggio ha in quel momento e in modo che gliene resti almeno 1 punto, quindi non si muore. La corruzione fallita ha gli stessi spregi anche se mancano le monete per pagare;
 - **fuga:** si perde a caso fino a metà di monete, preziosi, pergamene e pozioni.
 
 Prezzo medio di un ingrediente magico col listino nuovo, che si lascia com'è (misurato su 2000 ingredienti per tipo e livello):

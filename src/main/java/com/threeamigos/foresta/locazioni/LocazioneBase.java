@@ -106,6 +106,14 @@ public abstract class LocazioneBase implements Locazione {
 	private static final int ORA_DELL_ALBA = 6;
 	private static final int ORA_DEL_TRAMONTO = 20;
 
+	// Lo spregio per un tentativo di amicizia o di corruzione fallito (vedi subisciUnoSpregio): monete o preziosi persi al
+	// massimo, e le ferite al massimo, in percentuale della salute che il personaggio ha in quel momento (e lievi o gravi
+	// secondo quanto sono rispetto alla salute di prima)
+	private static final int SPREGIO_MASSIMO = 3;
+	private static final int SPREGIO_FERITE_MASSIME_PERCENTUALE = 20;
+	private static final int SPREGIO_FERITE_LIEVI_PERCENTUALE = 8;
+	private static final int SPREGIO_FERITE_GRAVI_PERCENTUALE = 15;
+
 	// La sfida a carta, forbici e sasso in corso (stato SFIDA_CARTA_FORBICI_SASSO), che non si salva
 	private PartitaCartaForbiciSasso sfida;
 
@@ -628,7 +636,7 @@ public abstract class LocazioneBase implements Locazione {
 					// Annullare non e' un'azione: nessun turno trascorre, si ripresentano solo i comandi
 					return annullaScelta();
 				}
-				if (gruppo.getMonete() >= gruppo.getNumeroPersonaggi() * 2 && Dado.tira(10) > 3) {
+				if (gruppo.getMonete() >= gruppo.getNumeroPersonaggi() * 2 && Dado.tira(Costanti.FACCE_DEL_DADO_DELLA_CORRUZIONE) > Costanti.SOGLIA_DEL_DADO_DELLA_CORRUZIONE) {
 					gruppo.subMonete(gruppo.getNumeroPersonaggi() * 2);
 					BusEventi.pubblica(new NotificaTestoFrase(gruppo.chiMaiuscolo() + " ha ottenuto un passaggio sicuro."));
 					BusEventi.pubblica(new InternoCorruzioneRiuscita(classiAvversariVivi()));
@@ -652,8 +660,17 @@ public abstract class LocazioneBase implements Locazione {
 					return Stato.FINE_LOCAZIONE;
 				} else {
 					Personaggio p = gruppo.getPersonaggio(azione);
-					BusEventi.pubblica(new NotificaTestoFrase("Il tentativo di corruzione " + p.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA) +
-							" non ha avuto successo."));
+					// Se fallisce, per qualunque motivo (anche se mancano le monete per pagare), c'è sempre uno spregio
+					String descrizione = subisciUnoSpregio(p);
+					String tentativo = "Il tentativo di corruzione " + p.getNome(Personaggio.OpzioniGetNome.INCLUDI_PREPOSIZIONE_ARTICOLATA)
+							+ " non ha avuto successo";
+					if (descrizione != null) {
+						BusEventi.pubblica(new NotificaTestoFrase(tentativo + ", e in una breve colluttazione " + descrizione));
+						// Non sapendo cosa andiamo a perdere rinfreschiamo tutto
+						BusEventi.pubblica(new InternoRichiestaRefreshUI());
+					} else {
+						BusEventi.pubblica(new NotificaTestoFrase(tentativo + "."));
+					}
 					opzioneCorruzioneDisponibile = false;
 					opzioneAmiciziaDisponibile = false;
 					statoLocazione = StatoLocazione.IN_LOCAZIONE;
@@ -667,11 +684,13 @@ public abstract class LocazioneBase implements Locazione {
 					return annullaScelta();
 				}
 				Personaggio personaggio = gruppo.getPersonaggio(azione);
-				int tiroDelDado = Dado.tira(12);
+				int tiroDelDado = Dado.tira(Costanti.FACCE_DEL_DADO_DELL_AMICIZIA);
 				Logger.log("Carisma personaggio: " + personaggio.getCarisma() + "; tiro del dado: " + tiroDelDado);
 				if (personaggio.getCarisma() > tiroDelDado) {
 					personaggio.addCarisma(1);
 					haStrettoAmicizia = true;
+					// Come con la corruzione: con l'amicizia l'oggetto non si prende, e sparisce subito
+					setOggetto(null);
 					BusEventi.pubblica(new InternoAmiciziaStretta(classiAvversariVivi()));
 					BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 							Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " riesce a stringere amicizia."));
@@ -698,51 +717,7 @@ public abstract class LocazioneBase implements Locazione {
 					setCompleta(true);
 					return Stato.FINE_LOCAZIONE;
 				} else {
-					int spregio = Dado.tira(5);
-					String descrizione = null;
-					switch (spregio) {
-						case 1:
-							ClasseIncantesimo quale = FabbricaIncantesimi.casuale();
-							if (gruppo.getIncantesimi(quale) > 0) {
-								descrizione = "perde un " + quale.getNomeSingolare() + '.';
-								gruppo.subIncantesimi(quale, 1);
-							}
-							break;
-						case 2:
-							Personaggio avversario = gruppoAvversario.getCapo();
-							int ferite = Dado.tiraAncheAUnaFaccia(avversario.getSalute());
-							if (ferite < 20) {
-								descrizione = "riceve alcune lievi ferite.";
-							} else if (ferite > 40) {
-								descrizione = "riceve gravi ferite.";
-							} else {
-								descrizione = "riceve alcune ferite.";
-							}
-							personaggio.subSalute(ferite, avversario, Personaggio.NotificaFerite.NO, Personaggio.NotificaMorte.SI);
-							break;
-						case 3:
-							if (gruppo.getMonete() > 0) {
-								descrizione = "perde alcune monete.";
-								int quanteMonetePerde = Dado.tira(5);
-								if (quanteMonetePerde > gruppo.getMonete()) {
-									quanteMonetePerde = gruppo.getMonete();
-								}
-								gruppo.subMonete(quanteMonetePerde);
-							}
-							break;
-						case 4:
-							if (gruppo.getPreziosi() > 0) {
-								descrizione = "perde alcuni preziosi.";
-								int quantiPreziosiPerde = Dado.tira(5);
-								if (quantiPreziosiPerde > gruppo.getPreziosi()) {
-									quantiPreziosiPerde = gruppo.getPreziosi();
-								}
-								gruppo.subPreziosi(quantiPreziosiPerde);
-							}
-							break;
-						default:
-							break;
-					}
+					String descrizione = subisciUnoSpregio(personaggio);
 
 					String s = personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE);
 					if (descrizione != null) {
@@ -1577,6 +1552,72 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		setCompleta(true);
 		return Stato.FINE_LOCAZIONE;
+	}
+
+	/**
+	 * Lo spregio per un tentativo di amicizia o di corruzione fallito: un tiro a cinque facce. Un incantesimo a caso
+	 * perso (se il gruppo ne ha di quella classe), un attacco dell'avversario, da 1 a {@value #SPREGIO_MASSIMO} monete o
+	 * preziosi persi (se ce ne sono), oppure niente.
+	 *
+	 * @return che cosa è successo a chi ha tentato, da scrivere dopo "in una breve colluttazione"; null se non è
+	 * successo niente
+	 */
+	private String subisciUnoSpregio(Personaggio personaggio) {
+		switch (Dado.tira(5)) {
+			case 1:
+				ClasseIncantesimo quale = FabbricaIncantesimi.casuale();
+				if (gruppo.getIncantesimi(quale) > 0) {
+					gruppo.subIncantesimi(quale, 1);
+					return "perde un " + quale.getNomeSingolare() + '.';
+				}
+				return null;
+			case 2:
+				return subisciUnAttaccoDellAvversario(personaggio);
+			case 3:
+				if (gruppo.getMonete() > 0) {
+					gruppo.subMonete(Math.min(Dado.tira(SPREGIO_MASSIMO), gruppo.getMonete()));
+					return "perde alcune monete.";
+				}
+				return null;
+			case 4:
+				if (gruppo.getPreziosi() > 0) {
+					gruppo.subPreziosi(Math.min(Dado.tira(SPREGIO_MASSIMO), gruppo.getPreziosi()));
+					return "perde alcuni preziosi.";
+				}
+				return null;
+			default:
+				return null;
+		}
+	}
+
+	/**
+	 * Un solo attacco del capo degli avversari, con l'arma principale: se colpisce, si calcola il danno come in ogni
+	 * combattimento (difese comprese) ma si limita al {@value #SPREGIO_FERITE_MASSIME_PERCENTUALE}% della salute che il
+	 * personaggio ha adesso (almeno un punto) e comunque in modo che gliene resti almeno uno: per un tentativo di amicizia
+	 * o di corruzione non si muore. Gli effetti di stato del colpo si applicano.
+	 *
+	 * @return la descrizione delle ferite, null se il colpo non arriva o non fa niente
+	 */
+	private String subisciUnAttaccoDellAvversario(Personaggio personaggio) {
+		Personaggio avversario = gruppoAvversario.getCapo();
+		FaseDiAttacco fase = CalcolatoreCombattimento.fasiDiAttacco(avversario).get(0);
+		Arma arma = fase.getArma();
+		if (!CalcolatoreCombattimento.colpisce(avversario, personaggio, arma.getTipoDanno().getSuperTipo())) {
+			return null;
+		}
+		DannoRisultante risultato = CalcolatoreCombattimento.calcolaDannoRisultante(avversario, personaggio, arma, fase.getFattore());
+		int salute = personaggio.getSalute();
+		int tetto = Math.min(Math.max(1, salute * SPREGIO_FERITE_MASSIME_PERCENTUALE / 100), Math.max(0, salute - 1));
+		int danno = Math.min(risultato.getDanno(), tetto);
+		risultato.setDanno(danno);
+		personaggio.applicaRisultatoCombattimento(risultato);
+		if (danno <= 0 && risultato.getEffettiDiStatoDaAggiungere().isEmpty()) {
+			return null;
+		}
+		if (danno * 100 > salute * SPREGIO_FERITE_GRAVI_PERCENTUALE) {
+			return "riceve gravi ferite.";
+		}
+		return danno * 100 < salute * SPREGIO_FERITE_LIEVI_PERCENTUALE ? "riceve alcune lievi ferite." : "riceve alcune ferite.";
 	}
 
 	private String nomeDelloSfidante() {

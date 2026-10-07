@@ -5,7 +5,9 @@ import com.threeamigos.foresta.eventi.interni.InternoSfidaCartaForbiciSasso;
 import com.threeamigos.foresta.missioni.LaSfidaDeiCampioni;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
+import com.threeamigos.foresta.oggetti.FabbricaOggetti;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoOggetto;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
@@ -47,6 +49,8 @@ class ScenarioCartaForbiciSassoTest {
             assertEquals(1, partita.eventi().tutti(InternoAmiciziaStretta.class).size());
             assertEquals(1, partita.eventi().tutti(InternoSfidaCartaForbiciSasso.class).size(), "la sfida si apre");
             InternoSfidaCartaForbiciSasso apertura = partita.eventi().tutti(InternoSfidaCartaForbiciSasso.class).get(0);
+            assertTrue(apertura.isInizio());
+            assertFalse(apertura.isFinale());
             assertEquals(MossaCartaForbiciSasso.SASSO, apertura.getMossaDelGiocatore());
             assertEquals(MossaCartaForbiciSasso.SASSO, apertura.getMossaDellAvversario());
             assertTrue(partita.testi().stream().anyMatch(t -> t.contains("dice: \"") && t.toLowerCase().contains("carta, forbici e sasso")),
@@ -61,6 +65,7 @@ class ScenarioCartaForbiciSassoTest {
             partita.comando(Comando.CARTA);
             assertEquals(LE_TRE_MOSSE, new HashSet<>(partita.comandiDisponibili()), "la sfida non è finita");
             InternoSfidaCartaForbiciSasso mano = lastEvent(partita);
+            assertFalse(mano.isInizio());
             assertEquals(2, mano.getPunteggioDelGiocatore());
             assertEquals(0, mano.getPunteggioDellAvversario());
             assertEquals(MossaCartaForbiciSasso.CARTA, mano.getMossaDelGiocatore());
@@ -74,6 +79,40 @@ class ScenarioCartaForbiciSassoTest {
             assertEquals(1, partita.gruppo().getSfideVinte());
             assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith("L'Idra dice: \"Poffarre")), String.valueOf(partita.testi()));
             assertFalse(LaSfidaDeiCampioni.isPartita(), "una sfida sola non basta");
+        }
+    }
+
+    @Test
+    void conUnAmiciziaRiuscitaLOggettoNonPresoSparisceSubito() {
+        try (PartitaDiTest partita = sfidataDaLIdra(25)) {
+            partita.gruppo().getLocazioneCorrente().collocaOggettoMissione(FabbricaOggetti.crea(TipoOggetto.MONETA));
+            assertEquals(TipoOggetto.MONETA, partita.gruppo().getTipoOggettoInLocazione());
+            int monete = partita.gruppo().getMonete();
+
+            // L'amicizia riesce e l'avversario sfida: la sfida è ancora in corso, e l'oggetto è già sparito
+            Dado.trucca(1, 1);
+            partita.comando(Comando.AMICIZIA);
+            assertEquals(LE_TRE_MOSSE, new HashSet<>(partita.comandiDisponibili()), "la sfida è in corso");
+            assertNull(partita.gruppo().getTipoOggettoInLocazione());
+            assertEquals(monete, partita.gruppo().getMonete());
+        }
+    }
+
+    @Test
+    void ancheDopoUnaCorruzioneRiuscitaLOggettoNonPresoSparisce() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(25)) {
+            partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.GUERRIERO,
+                    () -> partita.spostaGruppoIn(TipoLocazione.CASTELLO_IDRA));
+            partita.assertStato(Stato.IN_LOCAZIONE);
+            partita.gruppo().getLocazioneCorrente().collocaOggettoMissione(FabbricaOggetti.crea(TipoOggetto.MONETA));
+            assertEquals(TipoOggetto.MONETA, partita.gruppo().getTipoOggettoInLocazione());
+            int monete = partita.gruppo().getMonete();
+
+            Dado.trucca(10);
+            partita.comando(Comando.CORRUZIONE);
+
+            assertNull(partita.gruppo().getTipoOggettoInLocazione(), "con la corruzione l'oggetto non si prende e non resta lì");
+            assertTrue(partita.gruppo().getMonete() <= monete, "e non è stato preso");
         }
     }
 

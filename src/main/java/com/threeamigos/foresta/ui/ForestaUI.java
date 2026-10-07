@@ -362,7 +362,7 @@ public class ForestaUI implements Temporizzabile {
 
 	private void gestisciEventoSfidaCartaForbiciSasso(InternoSfidaCartaForbiciSasso evento) {
 		displayableCanvas.getRiquadroSfida().aggiorna(evento.getMossaDelGiocatore(), evento.getMossaDellAvversario(),
-				evento.getPunteggioDelGiocatore(), evento.getPunteggioDellAvversario());
+				evento.getPunteggioDelGiocatore(), evento.getPunteggioDellAvversario(), evento.isInizio());
 		displayableCanvas.primoPiano(TipoFinestra.SFIDA);
 		if (evento.isFinale()) {
 			displayableCanvas.dissolviLaSfida();

@@ -34,4 +34,30 @@ class RiquadroSfidaTest {
         // Immagini piccole: restano come sono
         assertEquals(1.0, DisplayableCanvasRiquadroSfida.fattoreDiScala(640, 480, 100, 50), 1e-9);
     }
+
+    @Test
+    void leManiSiMuovonoConDueSinusoidiEPartonoDaFerme() {
+        double ax = 10;
+        double ay = 7;
+        assertEquals(0, DisplayableCanvasRiquadroSfida.spostamentoOrizzontale(0, ax), 1e-9);
+        assertEquals(0, DisplayableCanvasRiquadroSfida.spostamentoVerticale(0, ay), 1e-9);
+        double massimoX = 0;
+        double massimoY = 0;
+        for (double t = 0; t < 5; t += 0.001) {
+            massimoX = Math.max(massimoX, Math.abs(DisplayableCanvasRiquadroSfida.spostamentoOrizzontale(t, ax)));
+            massimoY = Math.max(massimoY, Math.abs(DisplayableCanvasRiquadroSfida.spostamentoVerticale(t, ay)));
+        }
+        assertEquals(ax, massimoX, 0.01);
+        assertEquals(ay, massimoY, 0.01);
+        // Su e giù è più veloce di avanti e indietro: dopo un quarto del periodo di quest'ultimo, la prima è già tornata a zero
+        double quarto = 0.25 / DisplayableCanvasRiquadroSfida.FREQUENZA_ORIZZONTALE;
+        assertEquals(ax, DisplayableCanvasRiquadroSfida.spostamentoOrizzontale(quarto, ax), 1e-9);
+        assertTrue(Math.abs(DisplayableCanvasRiquadroSfida.spostamentoVerticale(quarto, ay)) < ay);
+        assertEquals(20, DisplayableCanvasRiquadroSfida.BORDO_DELLA_CORNICE);
+        // Le mani vanno verso il bordo con una salita dolce: ferme all'inizio, ferme alla fine, sempre in crescita fra le due
+        assertEquals(0, DisplayableCanvasRiquadroSfida.avvicinamentoAlBordo(0), 1e-9);
+        assertEquals(1, DisplayableCanvasRiquadroSfida.avvicinamentoAlBordo(DisplayableCanvasRiquadroSfida.SECONDI_PER_ANDARE_VERSO_IL_BORDO), 1e-9);
+        assertEquals(1, DisplayableCanvasRiquadroSfida.avvicinamentoAlBordo(10), 1e-9);
+        assertEquals(0.5, DisplayableCanvasRiquadroSfida.avvicinamentoAlBordo(DisplayableCanvasRiquadroSfida.SECONDI_PER_ANDARE_VERSO_IL_BORDO / 2), 1e-9);
+    }
 }

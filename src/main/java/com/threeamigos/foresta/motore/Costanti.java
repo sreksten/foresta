@@ -6,6 +6,15 @@ package com.threeamigos.foresta.motore;
  */
 public class Costanti {
 
+    // Amicizia e corruzione
+    // Il tentativo di amicizia riesce se il carisma di chi lo fa è maggiore del tiro di un dado con queste facce: con un
+    // carisma di una faccia in più il tentativo riesce sempre
+    public static final int FACCE_DEL_DADO_DELL_AMICIZIA = 12;
+    // Il tentativo di corruzione, se il gruppo ha le monete per pagare, riesce se il tiro di un dado con queste facce supera
+    // la soglia: 7 volte su 10 con questi valori
+    public static final int FACCE_DEL_DADO_DELLA_CORRUZIONE = 10;
+    public static final int SOGLIA_DEL_DADO_DELLA_CORRUZIONE = 3;
+
     // Carta, forbici e sasso (vedi carta_forbici_sasso.md)
     // La probabilità, in percentuale, che chi stringe amicizia venga sfidato invece di ricevere un'offerta, finché la
     // missione La sfida dei campioni non è partita

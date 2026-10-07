@@ -39,21 +39,34 @@ locazione, come `CHI_DUELLA`. Sfondo e avversari sono quelli della locazione; l'
   1 carta, 2 forbici, 3 sasso) e pubblica `InternoSfidaCartaForbiciSasso.mano(...)`.
 - **La fine** (`concludiLaSfida`): l'avversario commenta ("Poffarre! Non avevo mai incontrato un giocatore forte come te!" se
   vince il giocatore, "Heh! Sono sempre il più forte a questo gioco." se perde) e la locazione **finisce**, vinta o persa,
-  come dopo un'offerta accettata: `setCompleta(true)`, `haStrettoAmicizia` vero, l'oggetto non si prende. Se è la terza
+  come dopo un'offerta accettata: `setCompleta(true)`, `haStrettoAmicizia` vero, l'oggetto non si prende. L'oggetto non preso sparisce **subito**, appena l'amicizia riesce (`setOggetto(null)` in `CHI_FA_AMICIZIA`, come già per la corruzione), quindi non resta disegnato in una locazione che si svuota; vale per ogni amicizia, non solo per la sfida. Se è la terza
   vittoria, l'avversario aggiunge la frase del torneo e `LaSfidaDeiCampioni.avvia()` fa partire la missione.
 - **Il salvataggio.** Lo stato della sfida non si salva: si gioca fino a tre mani vinte e solo dopo si può salvare (durante
   la sfida non ci sono i comandi per farlo). Si salva solo il conto delle sfide vinte.
 
 ### La UI
 
-`DisplayableCanvasRiquadroSfida` (`TipoFinestra.SFIDA`) mostra, al centro dell'area di contenuto, le due mani affiancate:
-a sinistra la mano del giocatore (`img/fondi/<Carta|Forbici|Sasso>-sx.gif`), a destra quella dell'avversario (`…-dx.gif`),
-**entrambe all'inizio sasso**, e in alto il punteggio di ognuno con `TestoGrande` e il suo alone (`conAlone`). Le immagini
-(oggi 680 × 680) si caricano e si scalano al primo uso, qualunque siano le loro dimensioni: il riquadro occupa **al
-massimo metà della larghezza e metà dell'altezza** dell'area di contenuto (`fattoreDiScala`, mai un ingrandimento), centrato.
-Si disegna dopo tutte le altre finestre (nessuna lo copre). All'**ultima mano** (`InternoSfidaCartaForbiciSasso.isFinale`)
-`DisplayableCanvas.dissolviLaSfida` lo trasforma in uno `SpriteInDissolvenza` (intero per 1,5 s, poi sfuma in 1 s) e lo
-nasconde, perché non copra la mappa mentre si sceglie la direzione; `InternoPreparazioneLocazione` lo nasconde comunque.
+`DisplayableCanvasRiquadroSfida` (`TipoFinestra.SFIDA`) sta al centro dell'area di contenuto: la cornice larga
+(`ImageCache.corniceLarga`, `fondi/CorniceLarga.gif`) è lo **sfondo** e le mani (`img/fondi/<Carta|Forbici|Sasso>-sx.gif`
+per il giocatore, a sinistra, e `…-dx.gif` per l'avversario, a destra, con la trasparenza) si disegnano **sopra**; in alto
+il punteggio di ognuno, con `TestoGrande` e il suo alone (`conAlone`). Le immagini si caricano e si scalano al primo uso,
+qualunque siano le loro dimensioni: il riquadro occupa **al massimo metà della larghezza e metà dell'altezza** dell'area di
+contenuto (`fattoreDiScala`, mai un ingrandimento). Si disegna dopo tutte le altre finestre (nessuna lo copre).
+
+- **Mentre il giocatore sceglie** le mani, due sassi, si muovono "bim bum bam": su e giù e avanti e indietro, con due
+  sinusoidi piccole (`spostamentoOrizzontale` a `FREQUENZA_ORIZZONTALE`, 1 al secondo, e `spostamentoVerticale` al
+  doppio, ampiezza del 4% dello spazio dentro la cornice), la sinistra e la destra in senso opposto. Si muovono attorno a
+  una posizione **spostata verso il bordo** (`SPOSTAMENTO_VERSO_IL_BORDO`: ognuna verso il suo lato, fino al bordo e un po' oltre
+  (il 2% dello spazio)): ci arrivano con una salita dolce (`avvicinamentoAlBordo`, 0,8 s) a ogni ripartenza, partendo da
+  ferme al centro. Il movimento è ritagliato allo spazio dentro il bordo nero della cornice (`BORDO_DELLA_CORNICE`, 20 px
+  per lato): le mani possono quindi sovrapporsi al bordo, ma non si vedono sopra la cornice. Il canvas ridisegna a ogni
+  fotogramma finché si è in gioco: il tempo si legge da `System.nanoTime()`.
+- **Dopo la scelta** (`InternoSfidaCartaForbiciSasso`, non `isInizio`) le mani si fermano al centro e mostrano le due
+  mosse per `SECONDI_DI_PAUSA_DOPO_UNA_MANO` (mezzo secondo), poi tornano due sassi che si muovono, con il punteggio nuovo.
+  Se si sceglie di nuovo durante la pausa, la mano nuova prende il posto.
+- **All'ultima mano** (`isFinale`) `DisplayableCanvas.dissolviLaSfida` lo trasforma in uno `SpriteInDissolvenza` (fermo
+  e intero per 1,5 s, poi sfuma in 1 s) e lo nasconde, perché non copra la mappa mentre si sceglie la direzione;
+  `InternoPreparazioneLocazione` lo nasconde comunque.
 
 ## 3. La missione La sfida dei campioni
 

@@ -601,8 +601,9 @@ final class GiocatoreAutomatico {
 	}
 
 	private static double probabilitaAmicizia(GruppoGiocatore gruppo) {
-		// Riesce se il carisma supera un tiro da 1 a 12 (LocazioneBase, CHI_FA_AMICIZIA)
-		return Math.min(12, Math.max(0, piuCarismatico(gruppo).getCarisma() - 1)) / 12.0d;
+		// Riesce se il carisma supera un tiro del dado dell'amicizia (LocazioneBase, CHI_FA_AMICIZIA)
+		int facce = Costanti.FACCE_DEL_DADO_DELL_AMICIZIA;
+		return Math.min(facce, Math.max(0, piuCarismatico(gruppo).getCarisma() - 1)) / (double) facce;
 	}
 
 	private static Personaggio piuCarismatico(GruppoGiocatore gruppo) {

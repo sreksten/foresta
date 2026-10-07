@@ -37,6 +37,7 @@ public class ImageCache {
 	static BufferedImage corniceIncantesimi;
 	static BufferedImage corniceMappa;
 	static BufferedImage cornicePiccola;
+	static BufferedImage corniceLarga;
 	static BufferedImage corniceInventario;
 	static BufferedImage sferaMagica;
 	static BufferedImage armaiolo;
@@ -127,6 +128,7 @@ public class ImageCache {
 		corniceIncantesimi = BufferedImageBuilder.buildBufferedImage(RISORSA_CORNICE_INCANTESIMI);
 		corniceMappa = BufferedImageBuilder.buildBufferedImage(RISORSA_CORNICE_MAPPA);
 		cornicePiccola = BufferedImageBuilder.buildBufferedImage("fondi/CornicePiccola.gif");
+		corniceLarga = BufferedImageBuilder.buildBufferedImage("fondi/CorniceLarga.gif");
 		corniceInventario = BufferedImageBuilder.buildBufferedImage("fondi/CorniceInventario.gif");
 		sferaMagica = BufferedImageBuilder.buildBufferedImage("fondi/SferaMagica.gif");
 		armaiolo = BufferedImageBuilder.buildBufferedImage("personaggi/Armaiolo.gif");
