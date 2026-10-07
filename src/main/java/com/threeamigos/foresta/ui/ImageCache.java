@@ -130,8 +130,8 @@ public class ImageCache {
 		corniceIncantesimi = BufferedImageBuilder.buildBufferedImage(RISORSA_CORNICE_INCANTESIMI, zoom);
 		corniceMappa = BufferedImageBuilder.buildBufferedImage(RISORSA_CORNICE_MAPPA, zoom);
 		cornicePiccola = BufferedImageBuilder.buildBufferedImage("fondi/CornicePiccola.gif", zoom);
-		corniceLarga = BufferedImageBuilder.buildBufferedImage("fondinon2x2/CorniceLarga.gif");
-		corniceInventario = BufferedImageBuilder.buildBufferedImage("fondinon2x2/CorniceInventario.gif");
+		corniceLarga = BufferedImageBuilder.buildBufferedImage("fondi/CorniceLarga.gif", zoom);
+		corniceInventario = BufferedImageBuilder.buildBufferedImage("fondi/CorniceInventario.gif", zoom);
 		sferaMagica = BufferedImageBuilder.buildBufferedImage("fondinon2x2/SferaMagica.gif");
 		armaiolo = BufferedImageBuilder.buildBufferedImage("personaggi/Armaiolo.gif", LivelloDiZoom.valore());
 		alchimista = BufferedImageBuilder.buildBufferedImage("personaggi/Alchimista.gif", LivelloDiZoom.valore());
