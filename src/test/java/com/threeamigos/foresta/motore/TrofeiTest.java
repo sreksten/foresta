@@ -220,9 +220,15 @@ class TrofeiTest {
 			partita.eventi().ascolta(InternoAmiciziaStretta.class);
 			assertTrue(partita.gruppo().getCapo().getCarisma() > 1, "precondizione: il capo ha carisma");
 
-			// Qui interessa l'esito, non l'offerta del comando: il dado decide che l'amicizia riesce
-			Dado.trucca(1);
+			// Qui interessa l'esito, non l'offerta del comando: il dado decide che l'amicizia riesce, e un altro che
+			// l'avversario sfida a carta, forbici e sasso: la sfida si gioca (e si vince) fino in fondo, perché la
+			// locazione, e con lei il trofeo, finisca
+			Dado.trucca(1, 1);
 			partita.comando(Comando.AMICIZIA);
+			while (partita.comandiDisponibili().contains(Comando.CARTA)) {
+				Dado.trucca(3);
+				partita.comando(Comando.CARTA);
+			}
 
 			assertEquals(1, partita.eventi().tutti(InternoAmiciziaStretta.class).size());
 			assertEquals(1, RegistroTrofei.getProgresso(TipoTrofeo.AMICO_DI_TUTTI));

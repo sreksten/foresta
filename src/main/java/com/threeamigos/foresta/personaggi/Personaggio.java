@@ -137,6 +137,12 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
     boolean isSfidante();
     void setSfidante(boolean sfidante);
 	/**
+	 * Se il personaggio sfida il capo del gruppo a carta, forbici e sasso appena il gruppo entra in locazione: è uno
+	 * dei campioni de La sfida dei campioni (vedi LocazioneBase e carta_forbici_sasso.md).
+	 */
+    boolean isSfidanteACartaForbiciSasso();
+    void setSfidanteACartaForbiciSasso(boolean sfidante);
+	/**
 	 * Se il personaggio va affrontato per forza: lo vuole una missione (vedi IncontroDiMissione). Allora non si può
 	 * passare inosservati, né corromperlo, né farci amicizia (vedi LocazioneBase).
 	 */

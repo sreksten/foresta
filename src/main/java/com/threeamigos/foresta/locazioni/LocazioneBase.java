@@ -18,7 +18,9 @@ import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.missioni.LaSfidaDeiCampioni;
 import com.threeamigos.foresta.tipi.Comando;
+import com.threeamigos.foresta.tipi.MossaCartaForbiciSasso;
 import com.threeamigos.foresta.tipi.PortataIncantesimo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
@@ -104,6 +106,9 @@ public abstract class LocazioneBase implements Locazione {
 	private static final int ORA_DELL_ALBA = 6;
 	private static final int ORA_DEL_TRAMONTO = 20;
 
+	// La sfida a carta, forbici e sasso in corso (stato SFIDA_CARTA_FORBICI_SASSO), che non si salva
+	private PartitaCartaForbiciSasso sfida;
+
 	// Chi sta combattendo
 	private Personaggio combattente;
 
@@ -127,7 +132,8 @@ public abstract class LocazioneBase implements Locazione {
 		CHI_FA_AMICIZIA,
 		ACCETTA_OFFERTA,
 		CONFERMA_FUGA,
-		CHI_DUELLA
+		CHI_DUELLA,
+		SFIDA_CARTA_FORBICI_SASSO
 	}
 
 	/**
@@ -434,6 +440,9 @@ public abstract class LocazioneBase implements Locazione {
 				gestisciChiDuella(azione);
 				break;
 
+			case SFIDA_CARTA_FORBICI_SASSO:
+				return giocaUnaMano(azione);
+
 			case CHI_BEVE_POZIONE_SALUTE:
 				Logger.log("LocazioneBase.CHI_BEVE_POZIONE_SALUTE");
 				statoLocazione = StatoLocazione.IN_LOCAZIONE;
@@ -667,6 +676,11 @@ public abstract class LocazioneBase implements Locazione {
 					BusEventi.pubblica(new NotificaTestoFrase(personaggio.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
 							Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " riesce a stringere amicizia."));
 
+					// Finché la missione La sfida dei campioni non è partita, a volte l'avversario sfida invece di offrire
+					if (!LaSfidaDeiCampioni.isPartita() && MossaCartaForbiciSasso.puoGiocare(gruppoAvversario.getCapo().getClasse())
+							&& Dado.tira(100) <= Costanti.PERCENTUALE_PROBABILITA_CARTA_FORBICI_SASSO) {
+						return iniziaLaSfida();
+					}
 					offerta = gruppoAvversario.getCapo().getOfferta(Comando.AMICIZIA);
 					if (offerta != null && offerta.isFattibile(gruppo, gruppoAvversario)) {
 						BusEventi.pubblica(new NotificaTestoFrase(offerta.getDescrizione(gruppo, gruppoAvversario)));
@@ -833,6 +847,14 @@ public abstract class LocazioneBase implements Locazione {
 
 	private void impostaComandiPossibili() {
 		List<Comando> comandiPossibili = new ArrayList<>();
+		if (statoLocazione == StatoLocazione.SFIDA_CARTA_FORBICI_SASSO) {
+			// Durante la sfida non si può fare altro
+			for (MossaCartaForbiciSasso mossa : MossaCartaForbiciSasso.values()) {
+				comandiPossibili.add(mossa.getComando());
+			}
+			BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(comandiPossibili));
+			return;
+		}
 		// Possiamo combattere? Oppure, vogliamo cambiare chi combatte?
 		if (statoLocazione != StatoLocazione.IN_COMBATTIMENTO || gruppo.getNumeroPersonaggiVivi() > 1) {
 			comandiPossibili.add(Comando.SINGOLO_ATTACCO);
@@ -1076,6 +1098,12 @@ public abstract class LocazioneBase implements Locazione {
 						break;
 					}
 				}
+			}
+			if (gruppoAvversario.isSfidaACartaForbiciSasso()) {
+				// Un campione de La sfida dei campioni: si comincia subito, e le uniche azioni sono carta, forbici e sasso
+				opzioneAmiciziaDisponibile = false;
+				opzioneCorruzioneDisponibile = false;
+				return iniziaLaSfida();
 			}
 			if (gruppoAvversario.isDuello()) {
 				// Una sfida a duello: prima si sceglie chi la accetta, o la si rifiuta
@@ -1484,6 +1512,71 @@ public abstract class LocazioneBase implements Locazione {
 		}
 		impostaComandiPossibili();
 		return Stato.IN_LOCAZIONE;
+	}
+
+	/**
+	 * L'avversario sfida il capo del gruppo a carta, forbici e sasso (vedi carta_forbici_sasso.md): una sfida a tre mani
+	 * vinte, con i soli comandi carta, forbici e sasso.
+	 */
+	private Stato iniziaLaSfida() {
+		sfida = new PartitaCartaForbiciSasso();
+		statoLocazione = StatoLocazione.SFIDA_CARTA_FORBICI_SASSO;
+		opzioneAmiciziaDisponibile = false;
+		opzioneCorruzioneDisponibile = false;
+		BusEventi.pubblica(InternoSfidaCartaForbiciSasso.apre());
+		BusEventi.pubblica(new NotificaTestoFrase(nomeDelloSfidante() + " dice: \"" + ProduttoreDiTestiCasuale.fraseDiSfida() + "\""));
+		impostaComandiPossibili();
+		return Stato.IN_LOCAZIONE;
+	}
+
+	/**
+	 * Una mano: il giocatore ha scelto carta, forbici o sasso, e l'avversario sceglie a caso. Un altro comando non
+	 * conta (la sfida non si può lasciare).
+	 */
+	private Stato giocaUnaMano(Comando azione) {
+		MossaCartaForbiciSasso mossa = MossaCartaForbiciSasso.da(azione);
+		if (mossa == null) {
+			impostaComandiPossibili();
+			return Stato.IN_LOCAZIONE;
+		}
+		PartitaCartaForbiciSasso.Mano mano = sfida.gioca(mossa);
+		BusEventi.pubblica(InternoSfidaCartaForbiciSasso.mano(mano.getGiocatore(), mano.getAvversario(),
+				sfida.getVittorieDelGiocatore(), sfida.getVittorieDellAvversario(), sfida.isFinita()));
+		if (!sfida.isFinita()) {
+			impostaComandiPossibili();
+			return Stato.IN_LOCAZIONE;
+		}
+		return concludiLaSfida();
+	}
+
+	/**
+	 * Finita la sfida l'avversario commenta, e la locazione finisce. Se il gruppo ha vinto la terza sfida della partita
+	 * l'avversario lo manda al torneo e parte La sfida dei campioni. Nella sfida di un campione, invece, la locazione è
+	 * completa solo se il giocatore ha vinto: se ha perso resta com'era, e si può tornare a riprovare. In ogni caso è
+	 * come aver stretto amicizia: l'oggetto non si prende.
+	 */
+	private Stato concludiLaSfida() {
+		boolean vinta = sfida.haVintoIlGiocatore();
+		boolean diUnCampione = gruppoAvversario.isSfidaACartaForbiciSasso();
+		sfida = null;
+		statoLocazione = StatoLocazione.IN_LOCAZIONE;
+		haStrettoAmicizia = true;
+		BusEventi.pubblica(new NotificaTestoFrase(nomeDelloSfidante() + " dice: \""
+				+ (vinta ? ProduttoreDiTestiCasuale.fraseSeIlGiocatoreVince() : ProduttoreDiTestiCasuale.fraseSeIlGiocatorePerde()) + "\""));
+		if (diUnCampione) {
+			setCompleta(vinta);
+			setOggetto(null);
+			return Stato.FINE_LOCAZIONE;
+		}
+		if (vinta) {
+			gruppo.addSfidaVinta();
+			if (gruppo.getSfideVinte() >= Costanti.SFIDE_VINTE_PER_IL_TORNEO && !LaSfidaDeiCampioni.isPartita()) {
+				BusEventi.pubblica(new NotificaTestoFrase(nomeDelloSfidante() + " dice: \"" + ProduttoreDiTestiCasuale.fraseDelTorneo() + "\""));
+				LaSfidaDeiCampioni.avvia();
+			}
+		}
+		setCompleta(true);
+		return Stato.FINE_LOCAZIONE;
 	}
 
 	private String nomeDelloSfidante() {

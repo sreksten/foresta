@@ -119,6 +119,13 @@ public abstract class Gruppo implements VistaGruppo {
 	}
 
 	/**
+	 * Se qualcuno del gruppo sfida a carta, forbici e sasso (vedi Personaggio.isSfidanteACartaForbiciSasso).
+	 */
+	public final boolean isSfidaACartaForbiciSasso() {
+		return personaggi.stream().anyMatch(Personaggio::isSfidanteACartaForbiciSasso);
+	}
+
+	/**
 	 * Se qualcuno del gruppo combatte fino alla resa (vedi Personaggio.isFinoAllaResa).
 	 */
 	public final boolean isFinoAllaResa() {

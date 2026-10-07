@@ -1,0 +1,35 @@
+# Le frasi della sfida a carta, forbici e sasso (vedi carta_forbici_sasso.md e ProduttoreDiTestiCasuale.fraseDiSfida e
+# le altre): quello che dice l'avversario quando sfida il capo del gruppo, quando perde, quando vince e quando, alla
+# terza sfida persa, lo manda al torneo. E i nomi dei leggendari costruiti al volo per la ricompensa della missione
+# La sfida dei campioni, quando il catalogo non ne ha più (vedi LaSfidaDeiCampioni).
+#
+# Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
+
+SFIDA
+    Ti sfido a carta, forbici e sasso!
+    Ehi, tu! Una partita a carta, forbici e sasso? Ti sfido!
+    Prima di fare amicizia, mi devi battere a carta, forbici e sasso!
+    Carta, forbici e sasso! Ti sfido, e non accetto un no come risposta!
+
+GIOCATORE_VINCE
+    Poffarre! Non avevo mai incontrato un giocatore forte come te!
+    Poffarre! Sei il primo che mi batte a questo gioco!
+    Incredibile! Nessuno mi aveva mai battuto così!
+
+GIOCATORE_PERDE
+    Heh! Sono sempre il più forte a questo gioco.
+    Heh! Hai ancora molto da imparare, forestiero.
+    Ah ah! Il campione sono sempre io!
+
+TORNEO
+    Dovresti veramente prendere parte al torneo che si sta per svolgere.
+    Tu devi assolutamente partecipare al torneo che sta per cominciare!
+    C'è un torneo che sta per cominciare: i campioni ti aspettano.
+
+# I nomi dei leggendari costruiti al volo: [ARTICOLO]... qui no, ogni riga è già un nome con il suo articolo.
+NOME_LEGGENDARIO_DEI_CAMPIONI
+    il Trofeo del Primo Sasso
+    la Corona della Carta Eterna
+    le Forbici del Campione Imbattuto
+    il Medaglione dei Quattro Campioni
+    il Premio del Torneo Perduto

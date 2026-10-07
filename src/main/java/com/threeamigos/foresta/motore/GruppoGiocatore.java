@@ -230,6 +230,17 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		BusEventi.pubblica(new NotificaTestoFrase(nome + " lascia il gruppo."));
 	}
 
+	/**
+	 * Le sfide a carta, forbici e sasso vinte in tutta la partita.
+	 */
+	public final int getSfideVinte() {
+		return md.getSfideVinte();
+	}
+
+	public final void addSfidaVinta() {
+		md.setSfideVinte(md.getSfideVinte() + 1);
+	}
+
 	public final int getMonete() {
 		return md.getMonete();
 	}

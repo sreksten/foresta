@@ -444,6 +444,11 @@ final class GiocatoreAutomatico {
 			// In locanda senza monete per tutti: mangia il più malconcio, di preferenza il capo
 			return comandoPer(gruppo, piuBisognoso(gruppo));
 		}
+		if (comandi.contains(Comando.CARTA) || comandi.contains(Comando.FORBICE) || comandi.contains(Comando.SASSO)) {
+			// La sfida a carta, forbici e sasso: l'unica mossa possibile è sceglierne una, a caso
+			List<Comando> mosse = new ArrayList<>(comandi);
+			return mosse.get(random.nextInt(mosse.size()));
+		}
 		if (comandi.contains(Comando.COMBATTIMENTO) || comandi.contains(Comando.FUGA)) {
 			return scegliControAvversari(gruppo, comandi, false);
 		}

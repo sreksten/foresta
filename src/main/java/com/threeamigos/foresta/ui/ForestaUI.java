@@ -98,6 +98,7 @@ public class ForestaUI implements Temporizzabile {
 		BusEventi.iscriviti(RichiestaAperturaInventarioGruppo.class, this::gestisciEventoRichiestaAperturaInventarioGruppo);
 		BusEventi.iscriviti(RichiestaAperturaTrofei.class, this::gestisciEventoRichiestaAperturaTrofei);
 		BusEventi.iscriviti(InternoRichiestaChiusuraFinestraCombattimento.class, this::gestisciEventoRichiestaChiusuraFinestraCombattimento);
+		BusEventi.iscriviti(InternoSfidaCartaForbiciSasso.class, this::gestisciEventoSfidaCartaForbiciSasso);
 		BusEventi.iscriviti(NotificaRaccoltaOggetti.class, this::gestisciEventoRaccoltaOggetti);
 		BusEventi.iscriviti(RichiestaUscitaDalGioco.class, this::gestisciEventoRichiestaConfermaUscita);
 		BusEventi.iscriviti(InternoRichiestaRefreshUI.class, this::gestisciEventoRichiestaRefreshUI);
@@ -316,6 +317,8 @@ public class ForestaUI implements Temporizzabile {
 	}
 
 	private void gestisciEventoPreparazioneLocazione(InternoPreparazioneLocazione evento) {
+		// La sfida a carta, forbici e sasso finita nella locazione prima resta visibile fino a qui
+		displayableCanvas.getRiquadroSfida().setVisibile(false);
 		displayableCanvas.preparaLocazione();
 	}
 
@@ -355,6 +358,16 @@ public class ForestaUI implements Temporizzabile {
 	private void gestisciEventoRichiestaAperturaTrofei(RichiestaAperturaTrofei evento) {
 		impostaAzioni(evento.getPossibilita());
 		displayableCanvas.trofei();
+	}
+
+	private void gestisciEventoSfidaCartaForbiciSasso(InternoSfidaCartaForbiciSasso evento) {
+		displayableCanvas.getRiquadroSfida().aggiorna(evento.getMossaDelGiocatore(), evento.getMossaDellAvversario(),
+				evento.getPunteggioDelGiocatore(), evento.getPunteggioDellAvversario());
+		displayableCanvas.primoPiano(TipoFinestra.SFIDA);
+		if (evento.isFinale()) {
+			displayableCanvas.dissolviLaSfida();
+		}
+		rinfresca();
 	}
 
 	private void gestisciEventoRichiestaChiusuraFinestraCombattimento(InternoRichiestaChiusuraFinestraCombattimento evento) {

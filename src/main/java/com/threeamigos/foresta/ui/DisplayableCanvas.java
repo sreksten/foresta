@@ -69,6 +69,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 	private final transient DisplayableCanvasRiquadroLocazione riquadroLocazione;
 	private final transient DisplayableCanvasRiquadroStatistiche riquadroStatistiche;
 	private final transient DisplayableCanvasRiquadroCombattimento riquadroCombattimento;
+	private final transient DisplayableCanvasRiquadroSfida riquadroSfida;
+	private static final float SECONDI_DI_ATTESA_DELLA_SFIDA = 1.5f;
+	private static final float SECONDI_DI_DISSOLVENZA_DELLA_SFIDA = 1.0f;
 	private final transient DisplayableCanvasRiquadroTesto riquadroTesto;
 	private final transient DisplayableCanvasRiquadroGruppo riquadroGruppo;
 	private final transient DisplayableCanvasRiquadroIncantesimiEPozioni riquadroIncantesimiEPozioni;
@@ -144,6 +147,7 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		stackElementiGrafici.add(TipoFinestra.TESTO);
 		stackElementiGrafici.add(TipoFinestra.MISSIONI);
 		stackElementiGrafici.add(TipoFinestra.INFO_COMBATTIMENTO);
+		stackElementiGrafici.add(TipoFinestra.SFIDA);
 		// INTRO_OUTRO e MAPPA_A_TUTTO_SCHERMO non appartengono allo stack: occupano
 		// da soli tutto lo schermo e sono scelti in base allo stato del canvas.
 		stato = StatoDisplayableCanvas.STATO_INTRO;
@@ -198,6 +202,9 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 
 		// Lo calcola da solo perché è un elemento flottante a differenza degli altri che sono fissi
 		mappaCoordinateElementiGrafici.put(riquadroCombattimento, riquadroCombattimento.getRettangolo());
+
+		riquadroSfida = new DisplayableCanvasRiquadroSfida(larghezzaContenuto, altezzaContenuto);
+		mappaCoordinateElementiGrafici.put(riquadroSfida, riquadroSfida.getRettangolo());
 
 		elementoX = ImageCache.SPACING;
 		elementoY = ImageCache.SPACING + immagineLocazione.getHeight() + ImageCache.SPACING;
@@ -464,6 +471,20 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		}
 	}
 	
+	/**
+	 * Finita la sfida a carta, forbici e sasso il riquadro va via: diventa uno sprite che resta intero un attimo, per
+	 * vedere l'ultima mano, e poi si dissolve lasciando leggere la mappa.
+	 */
+	void dissolviLaSfida() {
+		aggiungiSprite(new SpriteInDissolvenza("Sfida a carta, forbici e sasso", riquadroSfida.inUnImmagine(),
+				riquadroSfida.getX(), riquadroSfida.getY(), SECONDI_DI_ATTESA_DELLA_SFIDA, SECONDI_DI_DISSOLVENZA_DELLA_SFIDA));
+		riquadroSfida.setVisibile(false);
+	}
+
+	DisplayableCanvasRiquadroSfida getRiquadroSfida() {
+		return riquadroSfida;
+	}
+
 	DisplayableCanvasRiquadroCombattimento getRiquadroCombattimento() {
 		return riquadroCombattimento;
 	}
@@ -511,10 +532,14 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 			case INFO_COMBATTIMENTO:
 				riquadroCombattimento.disegnaInfoCombattimento(graphics);
 				break;
+			case SFIDA:
+				// Si disegna dopo tutti gli altri, così nessuno lo copre
+				break;
 			default:
 				throw new IllegalArgumentException();
 			}
 		}
+		riquadroSfida.disegna(graphics);
 
 //		gfx.setColor(Color.RED);
 //		for (Rectangle rectangle : mappaCoordinateElementiGrafici.values()) {
@@ -1049,6 +1074,8 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 				return riquadroMissioni;
 			case INFO_COMBATTIMENTO:
 				return riquadroCombattimento;
+			case SFIDA:
+				return riquadroSfida;
 			case MAPPA_A_TUTTO_SCHERMO:
 				return mappaATuttoSchermo;
 			case INVENTARIO:

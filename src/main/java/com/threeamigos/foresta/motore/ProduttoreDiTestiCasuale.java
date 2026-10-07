@@ -29,6 +29,7 @@ public class ProduttoreDiTestiCasuale {
 	private static GrammarBean rovine;
 	private static GrammarBean missioni;
 	private static GrammarBean leggendari;
+	private static GrammarBean sfide;
 	private static final String OGGETTO_LEGGENDARIO = "OGGETTO_LEGGENDARIO";
 	private static final String SET_LEGGENDARIO = "SET_LEGGENDARIO";
 
@@ -65,6 +66,8 @@ public class ProduttoreDiTestiCasuale {
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/preposizioni_articolate_pp.txt"));
 			leggendari = new GrammarBean(
 					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/leggendari.txt"), null);
+			sfide = new GrammarBean(
+					ProduttoreDiTestiCasuale.class.getResourceAsStream("/com/threeamigos/foresta/motore/sfide.txt"), null);
 		} catch (InvalidGrammarException | IOException e) {
 			// Senza grammatiche il gioco non puo' andare avanti: si segnala l'errore e si esce. L'uscita va in coda
 			// sull'EDT dopo la notifica, cosi' chi ascolta le InternoException la riceve prima.
@@ -99,6 +102,42 @@ public class ProduttoreDiTestiCasuale {
 	 */
 	public static String nomeRovine() {
 		return rovine.produce("NOME_ROVINE").get(0).trim();
+	}
+
+	/**
+	 * La frase con cui chi ha stretto amicizia sfida il capo del gruppo a carta, forbici e sasso (vedi sfide.txt).
+	 */
+	public static String fraseDiSfida() {
+		return sfide.produce("SFIDA").get(0).trim();
+	}
+
+	/**
+	 * Quello che dice l'avversario quando il giocatore vince la sfida (vedi sfide.txt).
+	 */
+	public static String fraseSeIlGiocatoreVince() {
+		return sfide.produce("GIOCATORE_VINCE").get(0).trim();
+	}
+
+	/**
+	 * Quello che dice l'avversario quando il giocatore perde la sfida (vedi sfide.txt).
+	 */
+	public static String fraseSeIlGiocatorePerde() {
+		return sfide.produce("GIOCATORE_PERDE").get(0).trim();
+	}
+
+	/**
+	 * Quello che dice l'avversario alla terza sfida vinta dal gruppo, per mandarlo al torneo (vedi sfide.txt).
+	 */
+	public static String fraseDelTorneo() {
+		return sfide.produce("TORNEO").get(0).trim();
+	}
+
+	/**
+	 * Il nome, con l'articolo, di un leggendario costruito al volo per la ricompensa de La sfida dei campioni (vedi
+	 * sfide.txt).
+	 */
+	public static String nomeLeggendarioDeiCampioni() {
+		return sfide.produce("NOME_LEGGENDARIO_DEI_CAMPIONI").get(0).trim();
 	}
 
 	/**

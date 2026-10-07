@@ -304,6 +304,10 @@ public enum TipoEvento {
      */
     INTERNO_AMICIZIA_STRETTA,
     /**
+     * La sfida a carta, forbici e sasso: comincia o si è giocata una mano
+     */
+    INTERNO_SFIDA_CARTA_FORBICI_SASSO,
+    /**
      * Un avversario del gruppo è stato sconfitto
      */
     INTERNO_AVVERSARIO_SCONFITTO,

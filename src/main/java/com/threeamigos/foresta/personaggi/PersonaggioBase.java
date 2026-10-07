@@ -75,6 +75,10 @@ public abstract class PersonaggioBase implements Personaggio {
 	 */
 	private boolean sfidante;
 	/**
+	 * Sfida a carta, forbici e sasso (vedi Personaggio.isSfidanteACartaForbiciSasso): non si salva.
+	 */
+	private boolean sfidanteACartaForbiciSasso;
+	/**
 	 * Va affrontato per forza (vedi Personaggio.isDaAffrontare): non si salva.
 	 */
 	private boolean daAffrontare;
@@ -273,6 +277,16 @@ public abstract class PersonaggioBase implements Personaggio {
 	@Override
 	public void setSfidante(boolean sfidante) {
 		this.sfidante = sfidante;
+	}
+
+	@Override
+	public boolean isSfidanteACartaForbiciSasso() {
+		return sfidanteACartaForbiciSasso;
+	}
+
+	@Override
+	public void setSfidanteACartaForbiciSasso(boolean sfidante) {
+		this.sfidanteACartaForbiciSasso = sfidante;
 	}
 
 	/**

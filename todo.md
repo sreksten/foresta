@@ -26,7 +26,6 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 
 ## Gioco e contenuti
 
-- Carta, forbice e sasso.
 - Mostrare in locazione anche i personaggi del gruppo.
 - Fumetto che attende la chiusura.
 - Come ci sono locande sparse per la foresta, anche qualche negozio (armaiolo, alchimista, venditore di pergamene, incantatore).

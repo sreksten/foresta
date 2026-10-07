@@ -30,6 +30,16 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 	private final List<PersonaggioMD> ospiti = new ArrayList<>();
 	// Gli ospiti che gli avversari possono attaccare, per uuid
 	private final Set<String> ospitiVulnerabili = new HashSet<>();
+	// Le sfide a carta, forbici e sasso vinte in tutta la partita (vedi carta_forbici_sasso.md)
+	private int sfideVinte;
+
+	public int getSfideVinte() {
+		return sfideVinte;
+	}
+
+	public void setSfideVinte(int sfideVinte) {
+		this.sfideVinte = sfideVinte;
+	}
 
 	public List<PersonaggioMD> getOspitiMD() {
 		return ospiti;
@@ -150,6 +160,8 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		stream.print(PIPE);
 		stream.print(coordinate.getY());
 		stream.print(PIPE);
+		stream.print(sfideVinte);
+		stream.print(PIPE);
 		stream.println(artefatti.size());
 
 		for (ArtefattoMD artefatto : artefatti) {
@@ -182,6 +194,7 @@ public class GruppoGiocatoreMD extends GruppoMD implements Serializzabile {
 		pozioniMagia = Integer.parseInt(st.testo());
 		pozioniMagiaGrande = Integer.parseInt(st.testo());
 		coordinate = new CoordinateMD(Integer.parseInt(st.testo()), Integer.parseInt(st.testo()));
+		sfideVinte = Integer.parseInt(st.testo());
 		int numeroArtefatti = Integer.parseInt(st.testo());
 
 		artefatti.clear();

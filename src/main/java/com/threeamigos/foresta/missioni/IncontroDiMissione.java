@@ -41,6 +41,7 @@ public final class IncontroDiMissione {
 	private TipoPersonaggio classeDelCapo;
 	private boolean finoAllaResa;
 	private boolean aDuello;
+	private boolean aCartaForbiciSasso;
 	private boolean aggirabile;
 	private final List<IncontroDiMissione> ondateSuccessive = new ArrayList<>();
 	private final List<String> arrivi = new ArrayList<>();
@@ -97,6 +98,23 @@ public final class IncontroDiMissione {
 
 	public boolean isADuello() {
 		return aDuello;
+	}
+
+	/**
+	 * L'avversario sfida il capo del gruppo a carta, forbici e sasso appena il gruppo entra in locazione, e si va via
+	 * normalmente quando la sfida è finita (vedi Personaggio.isSfidanteACartaForbiciSasso). Solo per un avversario
+	 * solo.
+	 */
+	public IncontroDiMissione aCartaForbiciSasso() {
+		if (numero != 1 || classeDelCapo != null) {
+			throw new IllegalStateException("A carta, forbici e sasso si sfida da soli");
+		}
+		this.aCartaForbiciSasso = true;
+		return this;
+	}
+
+	public boolean isACartaForbiciSasso() {
+		return aCartaForbiciSasso;
 	}
 
 	/**
@@ -201,6 +219,7 @@ public final class IncontroDiMissione {
 			avversario.setOrdinale(i + 1);
 			avversario.setFinoAllaResa(finoAllaResa);
 			avversario.setSfidante(aDuello);
+			avversario.setSfidanteACartaForbiciSasso(aCartaForbiciSasso);
 			avversario.setDaAffrontare(!aggirabile);
 			avversari.add(avversario);
 		}

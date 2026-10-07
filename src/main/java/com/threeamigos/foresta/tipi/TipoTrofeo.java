@@ -13,6 +13,7 @@ public enum TipoTrofeo {
 
 	PERDIGIORNO("Perdigiorno", "Vinci tutti gli altri trofei", SupertipoTrofeo.SPECIALE),
 	CACCIATORE_DI_TAGLIE("Cacciatore di taglie", "Completa 50 missioni", SupertipoTrofeo.MISSIONE),
+	RE_DI_CARTA_FORBICI_E_SASSO("Re di carta, forbici e sasso", "Sconfiggi i quattro campioni di carta, forbici e sasso", SupertipoTrofeo.MISSIONE),
 	AMMAZZAGOBLIN("Ammazzagoblin", "Uccidi 100 goblin", SupertipoTrofeo.UCCISIONE),
 	UCCIDI_IL_DRAGO("Salvatore della Foresta", "Sconfiggi il Drago", SupertipoTrofeo.UCCISIONE),
 	UCCIDI_LA_STREGA("Il calderone è vuoto", "Sconfiggi la Strega", SupertipoTrofeo.UCCISIONE),

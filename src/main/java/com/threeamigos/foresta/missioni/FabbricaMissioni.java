@@ -54,6 +54,8 @@ public final class FabbricaMissioni {
 		COSTRUTTORI.put(ClasseMissione.LA_DOCUMENTAZIONE, LaDocumentazione::new);
 		COSTRUTTORI.put(ClasseMissione.IL_COLPO, IlColpo::new);
 		COSTRUTTORI.put(ClasseMissione.IL_RITUALE, IlRituale::new);
+		COSTRUTTORI.put(ClasseMissione.LA_SFIDA_DEI_CAMPIONI, LaSfidaDeiCampioni::new);
+		COSTRUTTORI.put(ClasseMissione.IL_CAMPIONE, IlCampione::new);
 		COSTRUTTORI.put(ClasseMissione.MISSIONE_DI_PROVA_SECONDARIA_UNO, MissioneDiProvaSecondariaUno::new);
 		COSTRUTTORI.put(ClasseMissione.MISSIONE_DI_PROVA_SECONDARIA_DUE, MissioneDiProvaSecondariaDue::new);
 		COSTRUTTORI.put(ClasseMissione.MISSIONE_DI_PROVA_TERZIARIA_UNO, MissioneDiProvaTerziariaUno::new);

@@ -716,10 +716,15 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				// ...con le ondate che arrivano dopo, se la missione ne vuole (vedi LocazioneBase.impostaAzioni)
 				gruppoAvversario.setOndateSuccessive(RegistroMissioni.getOndateSuccessiveMissione(gruppo.getCoordinate()));
 			});
-			// ...e l'oggetto che una missione vuole qui, che può dipendere dagli avversari (i trofei di una caccia)
-			RegistroMissioni.getOggettoMissione(gruppo.getCoordinate(), gruppo.getTipoLocazioneCorrente(),
-							Foresta.isLocazioneVisitata(gruppo.getCoordinate()))
-					.ifPresent(locazioneCorrente::collocaOggettoMissione);
+			if (gruppoAvversario.isSfidaACartaForbiciSasso()) {
+				// Un campione de La sfida dei campioni: lì si gioca e basta, niente oggetti, né suoi né di altre missioni
+				locazioneCorrente.rimuoviOggetto();
+			} else {
+				// ...e l'oggetto che una missione vuole qui, che può dipendere dagli avversari (i trofei di una caccia)
+				RegistroMissioni.getOggettoMissione(gruppo.getCoordinate(), gruppo.getTipoLocazioneCorrente(),
+								Foresta.isLocazioneVisitata(gruppo.getCoordinate()))
+						.ifPresent(locazioneCorrente::collocaOggettoMissione);
+			}
 		}
 		BusEventi.pubblica(new InternoPreparazioneLocazione());
 		BusEventi.pubblica(new NotificaTestoParagrafo(LineaTemporale.getDescrizioneOraDelGiorno()));
