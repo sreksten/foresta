@@ -131,10 +131,10 @@ public class ForestaUI implements Temporizzabile {
 		if (orientamento != Orientamento.ORIZZONTALE) {
 			return new Dimension(Math.min(screenDimension.width, 400), Math.min(screenDimension.height, 640));
 		}
-		Dimension corniceMappa = DimensioniRisorsa.di(ImageCache.RISORSA_CORNICE_MAPPA);
-		Dimension bosco = DimensioniRisorsa.di(ImageCache.RISORSA_BOSCO);
-		Dimension corniceGrande = DimensioniRisorsa.di(ImageCache.RISORSA_CORNICE_GRANDE);
-		Dimension corniceIncantesimi = DimensioniRisorsa.di(ImageCache.RISORSA_CORNICE_INCANTESIMI);
+		Dimension corniceMappa = DimensioniRisorsa.di(ImageCache.RISORSA_CORNICE_MAPPA, LivelloDiZoom.valore());
+		Dimension bosco = DimensioniRisorsa.di(ImageCache.RISORSA_BOSCO, LivelloDiZoom.valore());
+		Dimension corniceGrande = DimensioniRisorsa.di(ImageCache.RISORSA_CORNICE_GRANDE, LivelloDiZoom.valore());
+		Dimension corniceIncantesimi = DimensioniRisorsa.di(ImageCache.RISORSA_CORNICE_INCANTESIMI, LivelloDiZoom.valore());
 		int width = ImageCache.SPACING +
 				corniceMappa.width +
 				ImageCache.SPACING +

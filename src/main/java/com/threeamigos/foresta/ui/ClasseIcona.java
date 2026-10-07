@@ -138,7 +138,7 @@ public enum ClasseIcona {
 			synchronized (this) {
 				caricata = icona;
 				if (caricata == null) {
-					caricata = BufferedImageBuilder.buildBufferedImage(nomeRisorsa);
+					caricata = BufferedImageBuilder.buildBufferedImage(nomeRisorsa, LivelloDiZoom.valore());
 					icona = caricata;
 				}
 			}
@@ -159,7 +159,7 @@ public enum ClasseIcona {
 		if (altezzaMassima == -1) {
 			for (ClasseIcona corrente : values()) {
 				// Dall'intestazione del file: non serve caricare le icone per saperlo
-				altezzaMassima = Math.max(altezzaMassima, DimensioniRisorsa.di(corrente.nomeRisorsa).height);
+				altezzaMassima = Math.max(altezzaMassima, DimensioniRisorsa.di(corrente.nomeRisorsa, LivelloDiZoom.valore()).height);
 			}
 		}
 		return altezzaMassima;

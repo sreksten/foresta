@@ -47,7 +47,7 @@ locazione, come `CHI_DUELLA`. Sfondo e avversari sono quelli della locazione; l'
 ### La UI
 
 `DisplayableCanvasRiquadroSfida` (`TipoFinestra.SFIDA`) sta al centro dell'area di contenuto: la cornice larga
-(`ImageCache.corniceLarga`, `fondi/CorniceLarga.gif`) è lo **sfondo** e le mani (`img/fondi/<Carta|Forbici|Sasso>-sx.gif`
+(`ImageCache.corniceLarga`, `fondinon2x2/CorniceLarga.gif`) è lo **sfondo** e le mani (`img/fondi/<Carta|Forbici|Sasso>-sx.gif`
 per il giocatore, a sinistra, e `…-dx.gif` per l'avversario, a destra, con la trasparenza) si disegnano **sopra**; in alto
 il punteggio di ognuno, con `TestoGrande` e il suo alone (`conAlone`). Le immagini si caricano e si scalano al primo uso,
 qualunque siano le loro dimensioni: il riquadro occupa **al massimo metà della larghezza e metà dell'altezza** dell'area di

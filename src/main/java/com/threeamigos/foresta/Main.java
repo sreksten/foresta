@@ -14,6 +14,7 @@ import com.threeamigos.foresta.motore.Statistiche;
 import com.threeamigos.foresta.motore.VistaPartitaMotore;
 import com.threeamigos.foresta.strumenti.*;
 import com.threeamigos.foresta.ui.ForestaUI;
+import com.threeamigos.foresta.ui.LivelloDiZoom;
 import com.threeamigos.foresta.ui.Orientamento;
 
 public class Main {
@@ -38,6 +39,8 @@ public class Main {
                 saltaLogo = true;
             } else if (arg.equalsIgnoreCase("BARRACLASSICA")) {
                 barraDock = false;
+            } else if (arg.toUpperCase().startsWith("ZOOM=")) {
+                LivelloDiZoom.imposta(Double.parseDouble(arg.substring("ZOOM=".length())));
             } else if (arg.equalsIgnoreCase("MODALITA_DI_PROVA")) {
                 ModalitaDiProva.setAttiva(true);
             }

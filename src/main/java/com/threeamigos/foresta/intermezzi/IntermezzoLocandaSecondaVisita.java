@@ -70,7 +70,7 @@ public class IntermezzoLocandaSecondaVisita implements Intermezzo {
 		Personaggio capo = gruppo.getCapo();
 
 		PaginaIntermezzo pagina = new PaginaIntermezzo()
-				.conSfondo(ImmagineIntermezzo.risorsa("fondi/InternoLocanda.gif"))
+				.conSfondo(ImmagineIntermezzo.risorsa("fondinon2x2/InternoLocanda.gif"))
 				.conRitaglioSuSfondo()
 				.conElemento(ElementoIntermezzo.di("oste", ImmagineIntermezzo.risorsa("personaggi/Locandiere.gif"), X_OSTE, Y_PERSONAGGI));
 
@@ -100,7 +100,7 @@ public class IntermezzoLocandaSecondaVisita implements Intermezzo {
 		pagina.conBattuta(BattutaIntermezzo.di(idElementoCapo, recensione).daSecondo(tempoFineCammino + MARGINE_DOPO_CAMMINATA));
 
 		// Aggiunto per ultimo così resta sopra a tutto il resto della scena
-		pagina.conElemento(ElementoIntermezzo.di("foreground", ImmagineIntermezzo.risorsa("fondi/ForegroundLocanda.gif"), X_FOREGROUND, Y_FOREGROUND));
+		pagina.conElemento(ElementoIntermezzo.di("foreground", ImmagineIntermezzo.risorsa("fondinon2x2/ForegroundLocanda.gif"), X_FOREGROUND, Y_FOREGROUND));
 
 		List<PaginaIntermezzo> pagineIntermezzo = new ArrayList<>();
 		pagineIntermezzo.add(pagina);

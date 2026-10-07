@@ -18,8 +18,15 @@ public class BufferedImageBuilder {
 	 * Carica una risorsa grafica all'avvio: un'immagine mancante è un errore fatale.
 	 */
 	public static BufferedImage buildBufferedImage(String resource) {
+		return buildBufferedImage(resource, 1.0);
+	}
+
+	/**
+	 * Come {@link #buildBufferedImage(String)}, ma l'immagine viene ingrandita di {@code zoom} (2.0 = 200%).
+	 */
+	public static BufferedImage buildBufferedImage(String resource, double zoom) {
 		if (resource != null && !resource.isEmpty()) {
-			BufferedImage immagine = provaACaricare(resource);
+			BufferedImage immagine = provaACaricare(resource, zoom);
 			if (immagine == null) {
 				// Codice d'uscita diverso da 0, perché chi lancia il gioco da uno script veda l'errore
 				Logger.log("Risorsa grafica di base mancante o illeggibile: " + resource);
@@ -36,6 +43,17 @@ public class BufferedImageBuilder {
 	 * come quelle degli intermezzi.
 	 */
 	public static BufferedImage provaACaricare(String resource) {
+		return provaACaricare(resource, 1.0);
+	}
+
+	/**
+	 * Come {@link #provaACaricare(String)}, ma l'immagine viene ingrandita di {@code zoom} (2.0 = 200%):
+	 * i pixel vengono solo replicati, senza interpolazione. Con zoom 1.0 l'immagine resta com'è.
+	 */
+	public static BufferedImage provaACaricare(String resource, double zoom) {
+		if (!(zoom > 0)) {
+			throw new IllegalArgumentException("Zoom non valido: " + zoom);
+		}
 		if (resource != null && !resource.isEmpty()) {
 			// ImageIO.read(InputStream) non chiude lo stream: lo chiude il try
 			try (InputStream in = BufferedImageBuilder.class.getResourceAsStream("/com/threeamigos/foresta/img/" + resource)) {
@@ -46,9 +64,14 @@ public class BufferedImageBuilder {
 				if (img == null) {
 					throw new IllegalArgumentException("Formato non riconosciuto per il file " + resource);
 				}
-				BufferedImage copy = gc.createCompatibleImage(img.getWidth(), img.getHeight(), img.getTransparency());
+				int larghezza = (int) Math.round(img.getWidth() * zoom);
+				int altezza = (int) Math.round(img.getHeight() * zoom);
+				BufferedImage copy = gc.createCompatibleImage(larghezza, altezza, img.getTransparency());
 				Graphics2D g2d = copy.createGraphics();
-				g2d.drawImage(img, 0, 0, null);
+				if (zoom != 1.0) {
+					g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+				}
+				g2d.drawImage(img, 0, 0, larghezza, altezza, null);
 				g2d.dispose();
 				Logger.log("Image resource: " + resource + ", " + copy.getWidth() + "x" + copy.getHeight());
 				return copy;

@@ -74,7 +74,7 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 		List<Personaggio> personaggiVivi = GruppoGiocatore.getIstanza().getPersonaggiVivi();
 
 		PaginaIntermezzo pagina = new PaginaIntermezzo()
-				.conSfondo(ImmagineIntermezzo.risorsa("fondi/InternoLocanda.gif"))
+				.conSfondo(ImmagineIntermezzo.risorsa("fondinon2x2/InternoLocanda.gif"))
 				.conRitaglioSuSfondo()
 				.conElemento(ElementoIntermezzo.di("locandiere", ImmagineIntermezzo.risorsa("personaggi/Locandiere.gif"), X_LOCANDIERE, Y_LOCANDIERE)
 						.conBocca(0.5, -0.15))
@@ -117,7 +117,7 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 		//pagina.conBattuta(BattutaIntermezzo.di("locandiere", dialogo).conLarghezza(0.8).centrataOrizzontalmente());
 
 		// Aggiunto per ultimo così resta sopra a tutto il resto della scena
-		pagina.conElemento(ElementoIntermezzo.di("foreground", ImmagineIntermezzo.risorsa("fondi/ForegroundLocanda.gif"), X_FOREGROUND, Y_FOREGROUND));
+		pagina.conElemento(ElementoIntermezzo.di("foreground", ImmagineIntermezzo.risorsa("fondinon2x2/ForegroundLocanda.gif"), X_FOREGROUND, Y_FOREGROUND));
 
 		// Evita che Locanda.descrivi(), chiamato subito dopo con la locanda ormai
 		// costruita, ripeta il dialogo o anticipi la recensione appena mostrati qui

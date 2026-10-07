@@ -21,7 +21,7 @@ final class PannelloLogoIniziale extends JComponent {
 	private final TracciatoreLogo effetto;
 
 	PannelloLogoIniziale(int larghezza, int altezza) {
-		BufferedImage logo = BufferedImageBuilder.buildBufferedImage(ImageCache.RISORSA_LOGO_3AM);
+		BufferedImage logo = BufferedImageBuilder.buildBufferedImage(ImageCache.RISORSA_LOGO_3AM, LivelloDiZoom.valore());
 		// Lo sfondo lo dipinge il pannello, su tutta la finestra. Le scie svaniscono mentre il logo compare, il logo
 		// resta da solo per due secondi e poi svanisce anche lui: si passa al gioco da una finestra nera.
 		effetto = TracciatoreLogo.costruttore(logo)

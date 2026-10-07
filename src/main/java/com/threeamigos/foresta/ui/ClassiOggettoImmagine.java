@@ -33,7 +33,7 @@ public enum ClassiOggettoImmagine {
 
     ClassiOggettoImmagine(TipoOggetto tipoOggetto, String nomeRisorsa) {
         this.tipoOggetto = tipoOggetto;
-        this.immagine = BufferedImageBuilder.buildBufferedImage(nomeRisorsa);
+        this.immagine = BufferedImageBuilder.buildBufferedImage(nomeRisorsa, LivelloDiZoom.valore());
     }
 
     public static ClassiOggettoImmagine getClassiOggettoImmagine(TipoOggetto tipoOggetto) {

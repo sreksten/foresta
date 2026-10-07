@@ -10,8 +10,8 @@ import java.util.List;
  */
 public final class ScenaInLocanda {
 
-	private static final String SFONDO = "fondi/InternoLocanda.gif";
-	private static final String PRIMO_PIANO = "fondi/ForegroundLocanda.gif";
+	private static final String SFONDO = "fondinon2x2/InternoLocanda.gif";
+	private static final String PRIMO_PIANO = "fondinon2x2/ForegroundLocanda.gif";
 	private static final String LOCANDIERE = "personaggi/Locandiere.gif";
 	private static final String SACERDOTE = "personaggi/Sacerdote.gif";
 	private static final String SACERDOTESSA = "personaggi/Sacerdotessa.gif";

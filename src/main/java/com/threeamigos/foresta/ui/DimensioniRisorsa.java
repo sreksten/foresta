@@ -18,6 +18,14 @@ final class DimensioniRisorsa {
 	private DimensioniRisorsa() {
 	}
 
+	/**
+	 * Le dimensioni della risorsa dopo lo zoom con cui ImageCache la carica.
+	 */
+	static Dimension di(String risorsa, double zoom) {
+		Dimension d = di(risorsa);
+		return new Dimension((int) Math.round(d.width * zoom), (int) Math.round(d.height * zoom));
+	}
+
 	static Dimension di(String risorsa) {
 		String percorso = "/com/threeamigos/foresta/img/" + risorsa;
 		try (InputStream in = DimensioniRisorsa.class.getResourceAsStream(percorso)) {
