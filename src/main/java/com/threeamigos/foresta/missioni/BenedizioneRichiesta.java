@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.missioni;
 
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  * Una benedizione (vedi LaBenedizione), letta da una riga di BENEDIZIONE in missioni.txt, che ne descrive i campi: chi
@@ -15,7 +16,7 @@ public final class BenedizioneRichiesta {
 
 	private final String riga;
 	private final String chiave;
-	private final boolean sacerdotessa;
+	private final TipoPersonaggio classe;
 	private final String mandante;
 	private final String nomeDellaBenedizione;
 	private final ModificatoreDellaRiga modificatore;
@@ -34,7 +35,7 @@ public final class BenedizioneRichiesta {
 		if (!SACERDOTESSA.equals(aspetto) && !SACERDOTE.equals(aspetto)) {
 			throw new IllegalArgumentException("L'aspetto è SACERDOTE o SACERDOTESSA: " + riga);
 		}
-		sacerdotessa = SACERDOTESSA.equals(aspetto);
+		classe = SACERDOTESSA.equals(aspetto) ? TipoPersonaggio.SACERDOTESSA : TipoPersonaggio.SACERDOTE;
 		mandante = campi.obbligatorio("MANDANTE");
 		nomeDellaBenedizione = campi.obbligatorio("NOME");
 		modificatore = ModificatoreDellaRiga.da(campi.obbligatorio("BENEDIZIONE"), riga);
@@ -58,10 +59,10 @@ public final class BenedizioneRichiesta {
 	}
 
 	/**
-	 * Se a offrire la benedizione è una sacerdotessa (altrimenti un sacerdote).
+	 * La classe di chi offre la benedizione: SACERDOTESSA o SACERDOTE.
 	 */
-	public boolean isSacerdotessa() {
-		return sacerdotessa;
+	public TipoPersonaggio getClasse() {
+		return classe;
 	}
 
 	/**

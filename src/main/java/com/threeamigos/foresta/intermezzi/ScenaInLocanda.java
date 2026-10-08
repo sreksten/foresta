@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.intermezzi;
 
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
+
 import java.util.List;
 
 /**
@@ -13,8 +15,6 @@ public final class ScenaInLocanda {
 	private static final String SFONDO = "fondinon2x2/InternoLocanda.gif";
 	private static final String PRIMO_PIANO = "fondinon2x2/ForegroundLocanda.gif";
 	private static final String LOCANDIERE = "personaggi/Locandiere.gif";
-	private static final String SACERDOTE = "personaggi/Sacerdote.gif";
-	private static final String SACERDOTESSA = "personaggi/Sacerdotessa.gif";
 	private static final String ID_LOCANDIERE = "locandiere";
 	// Come la scenetta d'ingresso nella locanda (vedi NegozioInScena.LOCANDA)
 	private static final double X_LOCANDIERE = 0.65;
@@ -24,21 +24,30 @@ public final class ScenaInLocanda {
 
 	private final ScenaNegozio scena;
 
-	private ScenaInLocanda(String immagine) {
-		scena = new ScenaNegozio(SFONDO, PRIMO_PIANO, ID_LOCANDIERE,
-				ElementoIntermezzo.di(ID_LOCANDIERE, ImmagineIntermezzo.risorsa(immagine), X_LOCANDIERE, Y_PERSONAGGI),
+	private ScenaInLocanda(ElementoIntermezzo avventore) {
+		scena = new ScenaNegozio(SFONDO, PRIMO_PIANO, ID_LOCANDIERE, avventore,
 				Y_PERSONAGGI, X_ARRIVO_CAPO, RITARDO_FRA_PARTENZE);
 	}
 
 	public static ScenaInLocanda conLocandiere() {
-		return new ScenaInLocanda(LOCANDIERE);
+		return new ScenaInLocanda(ElementoIntermezzo.di(ID_LOCANDIERE, ImmagineIntermezzo.risorsa(LOCANDIERE), X_LOCANDIERE, Y_PERSONAGGI));
 	}
 
 	/**
 	 * Un sacerdote, o una sacerdotessa, seduto nella locanda: parla con {@link #parlaIlLocandiere}, al suo posto.
+	 * Guarda verso sinistra, da dove arriva il gruppo, qualunque sia il verso dell'immagine della sua classe.
+	 *
+	 * @param classe SACERDOTE o SACERDOTESSA
 	 */
-	public static ScenaInLocanda conSacerdote(boolean sacerdotessa) {
-		return new ScenaInLocanda(sacerdotessa ? SACERDOTESSA : SACERDOTE);
+	public static ScenaInLocanda conSacerdote(TipoPersonaggio classe) {
+		if (classe != TipoPersonaggio.SACERDOTE && classe != TipoPersonaggio.SACERDOTESSA) {
+			throw new IllegalArgumentException("Un sacerdote o una sacerdotessa, non " + classe);
+		}
+		ElementoIntermezzo sacerdote = ElementoIntermezzo.personaggio(ID_LOCANDIERE, classe, X_LOCANDIERE, Y_PERSONAGGI);
+		if (VersoDiDefault.serveSpecchiare(classe, Verso.SINISTRA)) {
+			sacerdote.specchiato();
+		}
+		return new ScenaInLocanda(sacerdote);
 	}
 
 	public ScenaInLocanda parlaIlLocandiere(String testo) {

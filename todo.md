@@ -47,8 +47,6 @@ Oggi il Bardo non ha nessuna capacità propria ed è la classe più debole (vedi
 Giocanti dal 2026-10-08, sul modello di Mago e Maga ma con l'alba sacra innata al posto del dardo arcano (vedi [`motore_di_gioco.md`](motore_di_gioco.md) §7). Da fare:
 
 - **Bilanciamento**: le statistiche sono una prima proposta (Saggezza 50, Intelligenza 40, 100 PS, magia dell'Elfo, danni fisici ×0,8). Nella simulazione (`SimulazionePartiteTest`, 30 partite per classe, giocatore automatico che non lancia l'alba sacra) arrivano a 7,6 giorni e livello 3,6, fra il Mago (10,3 e 5,0) e Elfo e Bardo (circa 4,5 e 2,5 giorni): da rivedere con l'uso reale. Il giocatore automatico non sa usare l'alba sacra: se serve, insegnargliela (`GiocatoreAutomatico`).
-- **Contenuti**: `locande.txt`, `leggendari.txt`, `missioni.txt` e `IncontroDiMissione` nominano `MAGO`/`MAGA`: controllare se vogliono una variante per i sacerdoti. `ProduttoreDiTestiCasuale` scambia le versioni maschili e femminili di Mago/Maga, Guerriero/a ecc. nei testi: non ancora per Sacerdote/Sacerdotessa.
-- Le missioni di benedizione e le scene in locanda usano già `personaggi/Sacerdote.gif` e `Sacerdotessa.gif` come aspetto di personaggi non giocanti (non sono i nuovi tipi).
 
 ## Verso dei personaggi e personaggi non combattenti
 

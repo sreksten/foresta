@@ -150,4 +150,24 @@ class SacerdoteTest {
             assertTrue(nomi.contains("Sorella Intronata:SACERDOTESSA"), nomi.toString());
         }
     }
+
+    @Test
+    void ilSacerdoteSedutoInLocandaEUnPersonaggioDelSuoTipo() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(13)) {
+            partita.iniziaCon("Elia", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
+            for (TipoPersonaggio classe : new TipoPersonaggio[]{TipoPersonaggio.SACERDOTE, TipoPersonaggio.SACERDOTESSA}) {
+                com.threeamigos.foresta.intermezzi.ImmagineIntermezzo immagine = com.threeamigos.foresta.intermezzi.ScenaInLocanda
+                        .conSacerdote(classe).getPagine().get(0).getElemento("locandiere").getImmagine();
+                assertEquals(com.threeamigos.foresta.intermezzi.ImmagineIntermezzo.Tipo.PERSONAGGIO, immagine.getTipo());
+                assertEquals(classe, immagine.getClassePersonaggio());
+            }
+            // Entrambi guardano verso sinistra, da dove arriva il gruppo: la sacerdotessa, disegnata verso destra, è specchiata
+            assertFalse(com.threeamigos.foresta.intermezzi.ScenaInLocanda.conSacerdote(TipoPersonaggio.SACERDOTE)
+                    .getPagine().get(0).getElemento("locandiere").getStatoAl(0).isSpecchiato());
+            assertTrue(com.threeamigos.foresta.intermezzi.ScenaInLocanda.conSacerdote(TipoPersonaggio.SACERDOTESSA)
+                    .getPagine().get(0).getElemento("locandiere").getStatoAl(0).isSpecchiato());
+            assertThrows(IllegalArgumentException.class,
+                    () -> com.threeamigos.foresta.intermezzi.ScenaInLocanda.conSacerdote(TipoPersonaggio.MAGO));
+        }
+    }
 }

@@ -132,7 +132,7 @@ public class LaBenedizione extends MissioneAPassi {
 
 	private List<PaginaIntermezzo> getPagineDellIncontro() {
 		BenedizioneRichiesta benedizione = getBenedizione();
-		return ScenaInLocanda.conSacerdote(benedizione.isSacerdotessa())
+		return ScenaInLocanda.conSacerdote(benedizione.getClasse())
 				.parlaIlLocandiere(benedizione.getRichiesta())
 				.parlaIlCapo(benedizione.getBattutaDelCapo())
 				.parlaIlLocandiere(benedizione.getRisposta())
