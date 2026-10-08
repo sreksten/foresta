@@ -3,23 +3,20 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.Locale;
 
 public enum ClasseIcona {
 
+	/* Inizio gioco */
+	FLOPPY_CARICA(Comando.FLOPPY_CARICA, "icone/Floppy.gif", Sfondo.VERDE),
+
+	/* Scelta sesso del personaggio a inizio gioco */
 	MASCHIO(Comando.MASCHIO, "icone/Maschio.gif", Sfondo.VERDE),
 	FEMMINA(Comando.FEMMINA,"icone/Femmina.gif", Sfondo.VERDE),
 
-	CENTAURO(TipoPersonaggio.CENTAURO, "icone/Centauro.gif", Sfondo.VERDE),
-	EREMITA(TipoPersonaggio.EREMITA, "icone/Eremita.gif", Sfondo.VERDE),
-	GIGANTE(TipoPersonaggio.GIGANTE, "icone/Gigante.gif", Sfondo.VERDE),
-	GOBLIN(TipoPersonaggio.GOBLIN, "icone/Goblin.gif", Sfondo.VERDE),
-	HOBGOBLIN(TipoPersonaggio.HOBGOBLIN, "icone/Hobgoblin.gif", Sfondo.VERDE),
-	MINOTAURO(TipoPersonaggio.MINOTAURO, "icone/Minotauro.gif", Sfondo.VERDE),
-	SCHELETRO(TipoPersonaggio.SCHELETRO, "icone/Scheletro.gif", Sfondo.VERDE),
-	TITANO(TipoPersonaggio.TITANO, "icone/Titano.gif", Sfondo.VERDE),
+	/* Personaggi normalmente giocabili */
 	GUERRIERA(Comando.GUERRIERA, TipoPersonaggio.GUERRIERA, "icone/Guerriera.gif", Sfondo.VERDE),
 	GUERRIERO(Comando.GUERRIERO, TipoPersonaggio.GUERRIERO, "icone/Guerriero.gif", Sfondo.VERDE),
 	LADRA(Comando.LADRA, TipoPersonaggio.LADRA, "icone/Ladra.gif", Sfondo.VERDE),
@@ -30,19 +27,40 @@ public enum ClasseIcona {
 	ELFO(Comando.ELFO, TipoPersonaggio.ELFO, "icone/Elfo.gif", Sfondo.VERDE),
 	MAGA(Comando.MAGA, TipoPersonaggio.MAGA, "icone/Maga.gif", Sfondo.VERDE),
 	MAGO(Comando.MAGO, TipoPersonaggio.MAGO, "icone/Mago.gif", Sfondo.VERDE),
+	/* Solo via trucco */
 	OMBRAFIAMMA(TipoPersonaggio.OMBRAFIAMMA, "icone/OmbraFiamma.gif", Sfondo.VERDE),
+	/* Personaggi che possono essere ospitati/giocati */
+	CENTAURO(TipoPersonaggio.CENTAURO, "icone/Centauro.gif", Sfondo.VERDE),
+	EREMITA(TipoPersonaggio.EREMITA, "icone/Eremita.gif", Sfondo.VERDE),
+	GIGANTE(TipoPersonaggio.GIGANTE, "icone/Gigante.gif", Sfondo.VERDE),
+	GOBLIN(TipoPersonaggio.GOBLIN, "icone/Goblin.gif", Sfondo.VERDE),
+	HOBGOBLIN(TipoPersonaggio.HOBGOBLIN, "icone/Hobgoblin.gif", Sfondo.VERDE),
+	MINOTAURO(TipoPersonaggio.MINOTAURO, "icone/Minotauro.gif", Sfondo.VERDE),
+	SCHELETRO(TipoPersonaggio.SCHELETRO, "icone/Scheletro.gif", Sfondo.VERDE),
+	TITANO(TipoPersonaggio.TITANO, "icone/Titano.gif", Sfondo.VERDE),
 	VIANDANTE(TipoPersonaggio.VIANDANTE, "icone/Viandante.gif", Sfondo.VERDE),
 
+	/* Pannello principale */
 	SINGOLO_ATTACCO(Comando.SINGOLO_ATTACCO,"icone/SingoloAttacco.gif", Sfondo.VERDE),
 	COMBATTIMENTO(Comando.COMBATTIMENTO,"icone/Combattimento.gif", Sfondo.VERDE),
 	INTERRUZIONE_COMBATTIMENTO(Comando.INTERRUZIONE_COMBATTIMENTO, "icone/Combattimento.gif", Sfondo.ROSSO),
 	INCANTESIMO(Comando.INCANTESIMO, "icone/Incantesimo.gif", Sfondo.VERDE),
 	CORRUZIONE(Comando.CORRUZIONE, "icone/Corruzione.gif", Sfondo.VERDE),
 	AMICIZIA(Comando.AMICIZIA,"icone/Amicizia.gif", Sfondo.VERDE),
+	ACCAMPAMENTO(Comando.ACCAMPAMENTO, "icone/Accampamento.gif", Sfondo.MARRONE),
+	MAPPA(Comando.MAPPA, "icone/Mappa.gif", Sfondo.VERDE),
+	POZIONE_SALUTE(Comando.POZIONE_SALUTE, "icone/PozioneSalute.gif", Sfondo.VERDE),
+	POZIONE_SALUTE_GRANDE(Comando.POZIONE_SALUTE_GRANDE, "icone/PozioneSaluteGrande.gif", Sfondo.VERDE),
+	POZIONE_MAGIA(Comando.POZIONE_MAGIA, "icone/PozioneMagia.gif", Sfondo.VERDE),
+	POZIONE_MAGIA_GRANDE(Comando.POZIONE_MAGIA_GRANDE, "icone/PozioneMagiaGrande.gif", Sfondo.VERDE),
+	INVENTARIO(Comando.INVENTARIO, "icone/Inventario.gif", Sfondo.VERDE),
 	FUGA(Comando.FUGA, "icone/Fuga.gif", Sfondo.ROSSO),
 	PASSA_INOSSERVATO(Comando.PASSA_INOSSERVATO, "icone/PassaInosservato.gif", Sfondo.VERDE),
+	FLOPPY_SALVA(Comando.FLOPPY_SALVA, "icone/Floppy.gif", Sfondo.VERDE),
 
+	/* Incantesimo tipico di mago/a o elfo/a che non richiedono pergamene per essere lanciati */
 	DARDO_ARCANO(Comando.DARDO_ARCANO, "icone/DardoArcano.gif", Sfondo.VERDE),
+	/* Incantesimi */
 	ARIA(Comando.ARIA,"icone/Aria.gif", Sfondo.VERDE),
 	ACQUA(Comando.ACQUA, "icone/Acqua.gif", Sfondo.VERDE),
 	TERRA(Comando.TERRA,"icone/Terra.gif", Sfondo.VERDE),
@@ -53,43 +71,39 @@ public enum ClasseIcona {
 	MORTE(Comando.MORTE, "icone/Morte.gif", Sfondo.VERDE),
 	RESURREZIONE(Comando.RESURREZIONE, "icone/Resurrezione.gif", Sfondo.VERDE),
 	ALBA_SACRA(Comando.ALBA_SACRA, "icone/AlbaSacra.gif", Sfondo.VERDE),
+	/* Annulla il lancio dell'incantesimo */
 	NO_INCANTESIMO(Comando.NO_INCANTESIMO, "icone/NoIncantesimo.gif", Sfondo.VERDE),
 
+	/* Direzione verso la quale muoversi a fine locazione */
 	NORD(Comando.NORD, "icone/Nord.gif", Sfondo.VERDE),
 	EST(Comando.EST, "icone/Est.gif", Sfondo.VERDE),
 	SUD(Comando.SUD, "icone/Sud.gif", Sfondo.VERDE),
 	OVEST(Comando.OVEST, "icone/Ovest.gif", Sfondo.VERDE),
 
-	ACCAMPAMENTO(Comando.ACCAMPAMENTO, "icone/Accampamento.gif", Sfondo.MARRONE),
-	POZIONE_SALUTE(Comando.POZIONE_SALUTE, "icone/PozioneSalute.gif", Sfondo.VERDE),
-	POZIONE_SALUTE_GRANDE(Comando.POZIONE_SALUTE_GRANDE, "icone/PozioneSaluteGrande.gif", Sfondo.VERDE),
-	POZIONE_MAGIA(Comando.POZIONE_MAGIA, "icone/PozioneMagia.gif", Sfondo.VERDE),
-	POZIONE_MAGIA_GRANDE(Comando.POZIONE_MAGIA_GRANDE, "icone/PozioneMagiaGrande.gif", Sfondo.VERDE),
-	MAPPA(Comando.MAPPA, "icone/Mappa.gif", Sfondo.VERDE),
-	INVENTARIO(Comando.INVENTARIO, "icone/Inventario.gif", Sfondo.VERDE),
-	FLOPPY_CARICA(Comando.FLOPPY_CARICA, "icone/Floppy.gif", Sfondo.VERDE),
-	FLOPPY_SALVA(Comando.FLOPPY_SALVA, "icone/Floppy.gif", Sfondo.VERDE),
-
+	/* Numero di passi / slot di salvataggio / slot di caricamento */
 	NUMERO_1(Comando.NUMERO_1, "icone/1.gif", Sfondo.VERDE),
 	NUMERO_2(Comando.NUMERO_2, "icone/2.gif", Sfondo.VERDE),
 	NUMERO_3(Comando.NUMERO_3, "icone/3.gif", Sfondo.VERDE),
 	NUMERO_4(Comando.NUMERO_4, "icone/4.gif", Sfondo.VERDE),
 	NUMERO_5(Comando.NUMERO_5, "icone/5.gif", Sfondo.VERDE),
 
+	/* Comandi in città */
 	LOCANDA(Comando.LOCANDA, "icone/Locanda.gif", Sfondo.VERDE),
 	NEGOZIO_ALCHIMISTA(Comando.NEGOZIO_ALCHIMISTA, "icone/NegozioAlchimista.gif", Sfondo.VERDE),
 	NEGOZIO_ARMAIOLO(Comando.NEGOZIO_ARMAIOLO, "icone/NegozioArmaiolo.gif", Sfondo.VERDE),
 	NEGOZIO_VENDITORE_DI_PERGAMENE(Comando.NEGOZIO_VENDITORE_DI_PERGAMENE, "icone/NegozioVenditoreDiPergamene.gif", Sfondo.VERDE),
 	NEGOZIO_INCANTATORE(Comando.NEGOZIO_INCANTATORE, "icone/NegozioIncantatore.gif", Sfondo.VERDE),
-	FUSIONE(Comando.FUSIONE, "icone/Fusione.gif", Sfondo.VERDE),
 	ESCI_DA_CITTA(Comando.ESCI_DA_CITTA, "icone/EsciDaCitta.gif", Sfondo.VERDE),
+	/* In negozio incantatore */
+	FUSIONE(Comando.FUSIONE, "icone/Fusione.gif", Sfondo.VERDE),
 
+	/* Azione su singolo personaggio / su gruppo */
+	/* Per ora disattivato, aumentava la magia dall'alchimista */
 	GRUPPO(Comando.GRUPPO, "icone/Gruppo.gif", Sfondo.VERDE),
 	SINGOLO(Comando.SINGOLO, "icone/Singolo.gif", Sfondo.VERDE),
 
 	SI(Comando.SI, "icone/Si.gif", Sfondo.VERDE),
 	NO(Comando.NO, "icone/No.gif", Sfondo.ROSSO),
-	
 	ANNULLA(Comando.ANNULLA, "icone/Annulla.gif", Sfondo.VERDE),
 
 	AIUTO(Comando.AIUTO, "icone/Aiuto.gif", Sfondo.VERDE),
