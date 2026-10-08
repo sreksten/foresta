@@ -45,7 +45,7 @@ class IntermezzoIngressoNegozioTest {
 			partita.nonSaltareIntermezzi();
 
 			long intermezziPrima = contaIntermezziAvviati(partita);
-			partita.comando(Comando.ARMAIOLO);
+			partita.comando(Comando.NEGOZIO_ARMAIOLO);
 			partita.assertStato(Stato.INTERMEZZO);
 			assertEquals(intermezziPrima + 1, contaIntermezziAvviati(partita),
 					"la prima volta dall'armaiolo deve comparire il suo intermezzo");
@@ -62,7 +62,7 @@ class IntermezzoIngressoNegozioTest {
 
 			// Si torna in piazza e si rientra dall'armaiolo una seconda volta
 			partita.comando(Comando.ANNULLA);
-			partita.comando(Comando.ARMAIOLO);
+			partita.comando(Comando.NEGOZIO_ARMAIOLO);
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			assertEquals(intermezziPrima + 1, contaIntermezziAvviati(partita),
 					"alla seconda visita l'intermezzo non deve ripetersi");
@@ -80,7 +80,7 @@ class IntermezzoIngressoNegozioTest {
 			partita.eventi().ascolta(InternoMostraSchermataGioco.class);
 			partita.nonSaltareIntermezzi();
 
-			partita.comando(Comando.ALCHIMISTA);
+			partita.comando(Comando.NEGOZIO_ALCHIMISTA);
 			partita.assertStato(Stato.INTERMEZZO);
 			partita.saltaIntermezzi();
 			assertTrue(ModelloDati.getIstanza().getIntermezziMD().isScattato(TipoIntermezzo.INTERMEZZO_ALCHIMISTA.name()));
@@ -92,7 +92,7 @@ class IntermezzoIngressoNegozioTest {
 			assertApreNegozioSenzaTornareAllaSchermataDiGioco(partita, RichiestaAperturaInventarioFornitore.class);
 
 			partita.comando(Comando.ANNULLA);
-			partita.comando(Comando.VENDITORE_DI_PERGAMENE);
+			partita.comando(Comando.NEGOZIO_VENDITORE_DI_PERGAMENE);
 			partita.assertStato(Stato.INTERMEZZO);
 			partita.saltaIntermezzi();
 			assertTrue(ModelloDati.getIstanza().getIntermezziMD().isScattato(TipoIntermezzo.INTERMEZZO_VENDITORE_DI_PERGAMENE.name()));
@@ -112,7 +112,7 @@ class IntermezzoIngressoNegozioTest {
 			partita.nonSaltareIntermezzi();
 
 			long intermezziPrima = contaIntermezziAvviati(partita);
-			partita.comando(Comando.INCANTATORE);
+			partita.comando(Comando.NEGOZIO_INCANTATORE);
 			partita.assertStato(Stato.INTERMEZZO);
 			partita.saltaIntermezzi();
 			assertTrue(ModelloDati.getIstanza().getIntermezziMD().isScattato(TipoIntermezzo.INTERMEZZO_INCANTATORE.name()));
@@ -121,7 +121,7 @@ class IntermezzoIngressoNegozioTest {
 			assertApreNegozioSenzaTornareAllaSchermataDiGioco(partita, RichiestaAperturaIncantatore.class);
 
 			partita.comando(Comando.ANNULLA);
-			partita.comando(Comando.INCANTATORE);
+			partita.comando(Comando.NEGOZIO_INCANTATORE);
 			partita.assertStato(Stato.IN_LOCAZIONE);
 			assertEquals(intermezziPrima + 1, contaIntermezziAvviati(partita), "non deve ripetersi alla seconda visita");
 			assertEquals(2, partita.eventi().tutti(RichiestaAperturaIncantatore.class).size());

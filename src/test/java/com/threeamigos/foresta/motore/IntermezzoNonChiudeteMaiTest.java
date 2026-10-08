@@ -31,17 +31,17 @@ class IntermezzoNonChiudeteMaiTest {
 		try (PartitaDiTest partita = inCitta()) {
 			portaAllOra(21);
 
-			partita.comando(Comando.ARMAIOLO);
+			partita.comando(Comando.NEGOZIO_ARMAIOLO);
 			assertTrue(isScattato(TipoIntermezzo.INTERMEZZO_ARMAIOLO.name()), "la prima volta il benvenuto");
 			assertEquals(0, conta(partita, DOMANDA_ALL_ARMAIOLO), "il benvenuto non si somma alla scenetta");
 			partita.comando(Comando.ANNULLA);
 
-			partita.comando(Comando.ARMAIOLO);
+			partita.comando(Comando.NEGOZIO_ARMAIOLO);
 			assertEquals(1, conta(partita, DOMANDA_ALL_ARMAIOLO));
 			assertEquals(1, conta(partita, RISPOSTA));
 			partita.comando(Comando.ANNULLA);
 
-			partita.comando(Comando.ARMAIOLO);
+			partita.comando(Comando.NEGOZIO_ARMAIOLO);
 			assertEquals(1, conta(partita, DOMANDA_ALL_ARMAIOLO), "una volta sola per partita");
 		}
 	}
@@ -49,21 +49,21 @@ class IntermezzoNonChiudeteMaiTest {
 	@Test
 	void negliOrariDiAperturaLaScenettaNonScatta() {
 		try (PartitaDiTest partita = inCitta()) {
-			partita.comando(Comando.ARMAIOLO);
+			partita.comando(Comando.NEGOZIO_ARMAIOLO);
 			partita.comando(Comando.ANNULLA);
 
 			portaAllOra(19);
-			partita.comando(Comando.ARMAIOLO);
+			partita.comando(Comando.NEGOZIO_ARMAIOLO);
 			partita.comando(Comando.ANNULLA);
 			assertEquals(0, conta(partita, DOMANDA_ALL_ARMAIOLO), "alle 19 il negozio e' ancora aperto");
 
 			portaAllOra(LineaTemporaleMD.PRIMA_ORA_DEL_MATTINO);
-			partita.comando(Comando.ARMAIOLO);
+			partita.comando(Comando.NEGOZIO_ARMAIOLO);
 			partita.comando(Comando.ANNULLA);
 			assertEquals(0, conta(partita, DOMANDA_ALL_ARMAIOLO), "dalle 8 il negozio e' di nuovo aperto");
 
 			portaAllOra(LineaTemporaleMD.PRIMA_ORA_DEL_MATTINO - 1);
-			partita.comando(Comando.ARMAIOLO);
+			partita.comando(Comando.NEGOZIO_ARMAIOLO);
 			assertEquals(1, conta(partita, DOMANDA_ALL_ARMAIOLO), "prima delle 8 e' ancora notte");
 		}
 	}

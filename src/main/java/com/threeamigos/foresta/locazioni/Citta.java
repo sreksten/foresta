@@ -78,8 +78,8 @@ public abstract class Citta extends LocazioneUnica {
 
 	private void impostaAzioniCitta() {
 		// I negozi in fila: locanda, alchimista, armaiolo, venditore di pergamene, incantatore
-		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.LOCANDA, Comando.ALCHIMISTA, Comando.ARMAIOLO,
-				Comando.VENDITORE_DI_PERGAMENE, Comando.INCANTATORE, Comando.INVENTARIO, Comando.ESCI_DA_CITTA));
+		BusEventi.pubblica(new InternoAggiornamentoComandiDisponibili(Comando.LOCANDA, Comando.NEGOZIO_ALCHIMISTA, Comando.NEGOZIO_ARMAIOLO,
+				Comando.NEGOZIO_VENDITORE_DI_PERGAMENE, Comando.NEGOZIO_INCANTATORE, Comando.INVENTARIO, Comando.ESCI_DA_CITTA));
 	}
 	
 	@Override
@@ -100,22 +100,22 @@ public abstract class Citta extends LocazioneUnica {
 					impostaAzioniCitta();
 				}
 
-			} else if (azione == Comando.ALCHIMISTA) {
+			} else if (azione == Comando.NEGOZIO_ALCHIMISTA) {
 				stato = StatoInCitta.DA_ALCHIMISTA;
 				List<Comando> comandiPossibili = new ArrayList<>();
 				comandiPossibili.add(Comando.ANNULLA);
 				BusEventi.pubblica(new RichiestaAperturaInventarioFornitore(comandiPossibili, OfferteAlchimista.elenco(g),
 						String.join(" ", ProduttoreDiTestiCasuale.oroscopo())));
 
-			} else if (azione == Comando.ARMAIOLO) {
+			} else if (azione == Comando.NEGOZIO_ARMAIOLO) {
 				stato = StatoInCitta.DA_ARMAIOLO;
 				apriNegozio(g, TipoNegozio.ARMAIOLO);
 
-			} else if (azione == Comando.VENDITORE_DI_PERGAMENE) {
+			} else if (azione == Comando.NEGOZIO_VENDITORE_DI_PERGAMENE) {
 				stato = StatoInCitta.DA_VENDITORE_DI_PERGAMENE;
 				apriNegozio(g, TipoNegozio.VENDITORE_DI_PERGAMENE);
 
-			} else if (azione == Comando.INCANTATORE) {
+			} else if (azione == Comando.NEGOZIO_INCANTATORE) {
 				stato = StatoInCitta.DA_INCANTATORE;
 				incantatore = new AutomaIncantatore(g, new BancoDiLavoro());
 				apriIncantatore("Mettete sul banco un artefatto e le pergamene da fondere.");

@@ -34,7 +34,7 @@ class ScenarioArmaioloTest {
 		partita.iniziaCon("Arsenio", Comando.MASCHIO, Comando.LADRO,
 				() -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
 		partita.assertStato(Stato.IN_LOCAZIONE);
-		partita.assertComandoDisponibile(Comando.ARMAIOLO);
+		partita.assertComandoDisponibile(Comando.NEGOZIO_ARMAIOLO);
 	}
 
 	@AfterEach
@@ -88,7 +88,7 @@ class ScenarioArmaioloTest {
 	}
 
 	private VistaScambio entraDallArmaiolo() {
-		partita.comando(Comando.ARMAIOLO);
+		partita.comando(Comando.NEGOZIO_ARMAIOLO);
 		List<RichiestaAperturaInventarioCommerciante> aperture = partita.eventi().tutti(RichiestaAperturaInventarioCommerciante.class);
 		assertEquals(1, aperture.size());
 		VistaScambio bottega = aperture.get(0).getScambio();

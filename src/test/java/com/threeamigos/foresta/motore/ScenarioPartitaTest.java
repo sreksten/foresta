@@ -86,7 +86,7 @@ class ScenarioPartitaTest {
 
 			partita.saltaIntermezzi();
 			partita.assertStato(Stato.IN_LOCAZIONE);
-			partita.assertComandoDisponibile(Comando.ARMAIOLO);
+			partita.assertComandoDisponibile(Comando.NEGOZIO_ARMAIOLO);
 		}
 	}
 

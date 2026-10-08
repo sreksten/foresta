@@ -423,11 +423,11 @@ final class GiocatoreAutomatico {
 		}
 		if (comandi.size() == 1 && comandi.contains(Comando.ANNULLA)) {
 			// In una bottega: dall'alchimista si compra, dall'armaiolo e dal venditore di pergamene si vende
-			if (negozioAperto == Comando.ALCHIMISTA) {
+			if (negozioAperto == Comando.NEGOZIO_ALCHIMISTA) {
 				acquistaDallAlchimista(gruppo);
-			} else if (negozioAperto == Comando.ARMAIOLO) {
+			} else if (negozioAperto == Comando.NEGOZIO_ARMAIOLO) {
 				vendi(gruppo, TipoNegozio.ARMAIOLO);
-			} else if (negozioAperto == Comando.VENDITORE_DI_PERGAMENE) {
+			} else if (negozioAperto == Comando.NEGOZIO_VENDITORE_DI_PERGAMENE) {
 				vendi(gruppo, TipoNegozio.VENDITORE_DI_PERGAMENE);
 			}
 			negozioAperto = null;
@@ -457,21 +457,21 @@ final class GiocatoreAutomatico {
 
 	private Comando scegliInPiazza(GruppoGiocatore gruppo, Collection<Comando> comandi) {
 		// Prima si vende quel che nessuno usa, poi si compra
-		if (!armaioloFatto && comandi.contains(Comando.ARMAIOLO) && haDaVendere(gruppo, TipoNegozio.ARMAIOLO)) {
+		if (!armaioloFatto && comandi.contains(Comando.NEGOZIO_ARMAIOLO) && haDaVendere(gruppo, TipoNegozio.ARMAIOLO)) {
 			armaioloFatto = true;
-			negozioAperto = Comando.ARMAIOLO;
-			return Comando.ARMAIOLO;
+			negozioAperto = Comando.NEGOZIO_ARMAIOLO;
+			return Comando.NEGOZIO_ARMAIOLO;
 		}
-		if (!venditoreFatto && comandi.contains(Comando.VENDITORE_DI_PERGAMENE)
+		if (!venditoreFatto && comandi.contains(Comando.NEGOZIO_VENDITORE_DI_PERGAMENE)
 				&& haDaVendere(gruppo, TipoNegozio.VENDITORE_DI_PERGAMENE)) {
 			venditoreFatto = true;
-			negozioAperto = Comando.VENDITORE_DI_PERGAMENE;
-			return Comando.VENDITORE_DI_PERGAMENE;
+			negozioAperto = Comando.NEGOZIO_VENDITORE_DI_PERGAMENE;
+			return Comando.NEGOZIO_VENDITORE_DI_PERGAMENE;
 		}
-		if (!negoziFatti && comandi.contains(Comando.ALCHIMISTA)) {
+		if (!negoziFatti && comandi.contains(Comando.NEGOZIO_ALCHIMISTA)) {
 			negoziFatti = true;
-			negozioAperto = Comando.ALCHIMISTA;
-			return Comando.ALCHIMISTA;
+			negozioAperto = Comando.NEGOZIO_ALCHIMISTA;
+			return Comando.NEGOZIO_ALCHIMISTA;
 		}
 		if (!locandaFatta && comandi.contains(Comando.LOCANDA) && gruppo.getMonete() >= Costanti.COSTO_PASTO) {
 			locandaFatta = true;

@@ -800,13 +800,13 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		switch (comando) {
 			case LOCANDA:
 				return MomentoIntermezzo.INGRESSO_LOCANDA_IN_CITTA;
-			case ALCHIMISTA:
+			case NEGOZIO_ALCHIMISTA:
 				return MomentoIntermezzo.INGRESSO_ALCHIMISTA;
-			case ARMAIOLO:
+			case NEGOZIO_ARMAIOLO:
 				return MomentoIntermezzo.INGRESSO_ARMAIOLO;
-			case VENDITORE_DI_PERGAMENE:
+			case NEGOZIO_VENDITORE_DI_PERGAMENE:
 				return MomentoIntermezzo.INGRESSO_VENDITORE_DI_PERGAMENE;
-			case INCANTATORE:
+			case NEGOZIO_INCANTATORE:
 				return MomentoIntermezzo.INGRESSO_INCANTATORE;
 			default:
 				return null;

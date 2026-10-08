@@ -81,10 +81,10 @@ public enum Comando {
 
 	// Scelte possibili all'interno di una città
 	LOCANDA("Visita la Locanda cittadina"),
-	ALCHIMISTA("Visita l'alchimista"),
-	ARMAIOLO("Visita l'armaiolo"),
-	VENDITORE_DI_PERGAMENE("Visita il venditore di pergamene"),
-	INCANTATORE("Visita l'incantatore"),
+	NEGOZIO_ALCHIMISTA("Visita l'alchimista"),
+	NEGOZIO_ARMAIOLO("Visita l'armaiolo"),
+	NEGOZIO_VENDITORE_DI_PERGAMENE("Visita il venditore di pergamene"),
+	NEGOZIO_INCANTATORE("Visita l'incantatore"),
 	// Nella bottega dell'incantatore, conferma la fusione
 	FUSIONE("Esegue la fusione"),
 	ESCI_DA_CITTA("Esce dalla città"),

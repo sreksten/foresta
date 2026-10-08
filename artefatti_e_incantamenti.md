@@ -187,7 +187,7 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
 - **Incantamenti uguali.** Restano **distinti** anche se hanno lo stesso `TipoDanno`, così non si aggira il limite; i bonus si sommano comunque. Le pergamene usate vengono distrutte.
 - **Nome proprio.** Si chiede a **ogni** fusione con il `Prompt`, proponendo come valore predefinito quello che l'artefatto aveva già, se ce l'aveva.
 - **Da dove si prende l'artefatto.** Solo dall'inventario del gruppo: se ce l'ha un personaggio, prima va riposto.
-- **Comandi.** In città `Comando.INCANTATORE` (icona `img/icone/Incantatore.gif`) apre la bottega; dentro, `Comando.FUSIONE` (icona `img/icone/Fusione.gif`) conferma la fusione.
+- **Comandi.** In città `Comando.NEGOZIO_INCANTATORE` (icona `img/icone/NegozioIncantatore.gif`) apre la bottega; dentro, `Comando.FUSIONE` (icona `img/icone/Fusione.gif`) conferma la fusione.
 
 ### Negozi e generatore
 
@@ -277,7 +277,7 @@ Vedi la tabella dei gradi in §6. Formula: `2 × bonus fisso + percentuale`; +25
   - `GruppoGiocatore.incanta` ricontrolla, fa pagare (`Costanti.FUSIONE_COSTO_*`), copia incantamenti e modificatori, distrugge le pergamene, rimette l'artefatto nel gruppo e risponde con `NotificaApprovazioneIncantatura` ("Ecco fatto! …") o `NotificaRifiutoIncantatura`. Un nome vuoto vuol dire nessun nome proprio.
   - Test: `IncantatoreTest` (11). Tutta la suite è verde (301 test). Da provare a mano nel gioco: la schermata e il giro del `Prompt`.
 - [x] **Fase 5 (venditore di pergamene e magazzini).**
-  - In città due nuovi comandi, `VENDITORE_DI_PERGAMENE` e `INCANTATORE`, con le loro icone. `FUSIONE` resta solo dentro la bottega dell'incantatore. Ordine dei negozi: locanda, alchimista, armaiolo, venditore di pergamene, incantatore.
+  - In città due nuovi comandi, `NEGOZIO_VENDITORE_DI_PERGAMENE` e `NEGOZIO_INCANTATORE`, con le loro icone. `FUSIONE` resta solo dentro la bottega dell'incantatore. Ordine dei negozi: locanda, alchimista, armaiolo, venditore di pergamene, incantatore.
   - `TipoNegozio` (`ARMAIOLO`, `VENDITORE_DI_PERGAMENE`) in `modellodati`, con `tratta(TipoArtefatto)`. `RegistroArtefattiMD` tiene i magazzini per (coordinate, negozio), salvati come `x|y|NEGOZIO|numero`.
   - `ScambiatoreArtefatti.tratta(Artefatto)` (di default vero); `GruppoGiocatore.vende` rifiuta con `NotificaRifiutoVenditaArtefatto` la vendita di quel che il negozio non tratta.
   - `DisplayableCanvasArmaiolo` è diventato `DisplayableCanvasCommerciante`: una sola schermata per armaiolo e venditore, che cambia nome, immagine e intestazione secondo il `TipoNegozio` portato da `RichiestaAperturaInventarioCommerciante`.
