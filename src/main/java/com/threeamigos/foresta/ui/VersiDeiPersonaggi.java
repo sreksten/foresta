@@ -3,7 +3,7 @@ package com.threeamigos.foresta.ui;
 import com.threeamigos.foresta.intermezzi.Verso;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
-import java.awt.Graphics2D;
+import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.EnumMap;
 import java.util.Map;
@@ -32,7 +32,7 @@ public final class VersiDeiPersonaggi {
 		VERSI.put(TipoPersonaggio.GARGOYLE, Verso.SINISTRA);
 		VERSI.put(TipoPersonaggio.GIGANTE, Verso.DESTRA);
 		VERSI.put(TipoPersonaggio.GOBLIN, Verso.DESTRA);
-		VERSI.put(TipoPersonaggio.HOBGOBLIN, Verso.DESTRA);
+		VERSI.put(TipoPersonaggio.HOBGOBLIN, Verso.SINISTRA);
 		VERSI.put(TipoPersonaggio.IDRA, Verso.DESTRA);
 		VERSI.put(TipoPersonaggio.LICH, Verso.DESTRA);
 		VERSI.put(TipoPersonaggio.MINOTAURO, Verso.DESTRA);

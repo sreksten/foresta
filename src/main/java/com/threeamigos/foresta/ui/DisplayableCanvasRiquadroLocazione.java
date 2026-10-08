@@ -92,7 +92,8 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		VistaGruppo gruppoAvversario = vistaPartita.getGruppoAvversario();
 		int i = 0;
 		for (VistaPersonaggio personaggioCorrente : gruppoAvversario.getPersonaggi()) {
-			BufferedImage d = ClassePersonaggioImmagine.getImmagine(personaggioCorrente.getClasse());
+			// Gli avversari stanno a sinistra e guardano a destra, verso il gruppo
+			BufferedImage d = ClassePersonaggioImmagine.getImmagine(personaggioCorrente.getClasse(), Verso.DESTRA);
 			mappaImmagini.put(personaggioCorrente, d);
 			CoordinateMD coordinate = new CoordinateMD(topLeftX + i++ * PASSO_ORIZZONTALE + 1 + caso.nextInt(10),
 					ImageCache.SPACING + ImageCache.locazioni.get(TipoLocazione.BOSCO).getHeight() - i * PASSO_VERTICALE - d.getHeight());
