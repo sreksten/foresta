@@ -980,24 +980,26 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		if (personaggio.isPNG()) {
 			aggiungiSprite(riquadroLocazione.notificaMorte(personaggio));
 		} else {
+			if (!personaggio.isVivo()) {
+				aggiungiSprite(riquadroLocazione.notificaMorte(personaggio));
+			}
 			primoPiano(TipoFinestra.STATO);
 		}
 	}
 
 	public void variaSalute(VistaPersonaggio personaggio, int variazione) {
-		if (personaggio.isPNG()) {
-			aggiungiSprite(riquadroLocazione.variaSalute(personaggio, variazione));
-		} else {
+		if (!personaggio.isPNG()) {
 			primoPiano(TipoFinestra.STATO);
 		}
+		// Anche i personaggi del gruppo, che ora si vedono in locazione
+		aggiungiSprite(riquadroLocazione.variaSalute(personaggio, variazione));
 	}
 
 	public void variaMagia(VistaPersonaggio personaggio, int variazione) {
-		if (personaggio.isPNG()) {
-			aggiungiSprite(riquadroLocazione.variaMagia(personaggio, variazione));
-		} else {
+		if (!personaggio.isPNG()) {
 			primoPiano(TipoFinestra.STATO);
 		}
+		aggiungiSprite(riquadroLocazione.variaMagia(personaggio, variazione));
 	}
 
 	public void raccogliOggetto() {

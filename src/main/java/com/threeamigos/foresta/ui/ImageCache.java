@@ -2,9 +2,11 @@ package com.threeamigos.foresta.ui;
 
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoPuliziaCacheDinamicaImmagini;
+import com.threeamigos.foresta.intermezzi.Verso;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.strumenti.Logger;
 
 import java.awt.*;
@@ -107,6 +109,11 @@ public class ImageCache {
 	// in modo da tenere in cache le stringhe usate più di frequente ma potendo ripulire
 	// la memoria da quelle non usate da più tempo, per velocizzare le operazioni di rendering.
 	private static final Map<DoomdarkFont, Map<DoomdarkColorModel.Color, Map<String, WeakReference<Image>>>> cacheDinamica =
+			new ConcurrentHashMap<>();
+	// Le immagini dei personaggi rivolte da una certa parte (vedi ClassePersonaggioImmagine.getImmagine con il verso):
+	// solo quelle che richiedono uno specchio, costruite alla prima richiesta. Riferimenti deboli come per le scritte:
+	// se nessuno le usa più (il personaggio non è più in scena) il reaper ripulisce la mappa e la memoria si libera.
+	private static final Map<TipoPersonaggio, Map<Verso, WeakReference<BufferedImage>>> immaginiPersonaggiPerVerso =
 			new ConcurrentHashMap<>();
 	// Il thread di background che gestisce il timer del reaper
 	private static final ScheduledExecutorService reaperExecutor = Executors.newSingleThreadScheduledExecutor(runnable -> {
@@ -332,6 +339,11 @@ public class ImageCache {
 						elementiDopo += mapPerString.size();
 					}
 				}
+				for (Map<Verso, WeakReference<BufferedImage>> mapPerVerso : immaginiPersonaggiPerVerso.values()) {
+					elementiPrima += mapPerVerso.size();
+					mapPerVerso.entrySet().removeIf(entry -> entry.getValue().get() == null);
+					elementiDopo += mapPerVerso.size();
+				}
 				int rimossi = elementiPrima - elementiDopo;
 				if (rimossi > 0) {
 					BusEventi.pubblica(new InternoPuliziaCacheDinamicaImmagini(elementiPrima, elementiDopo));
@@ -397,6 +409,22 @@ public class ImageCache {
 		// Lo stesso testo a capo a larghezze diverse è un'altra immagine: la larghezza entra nella chiave
 		return get(font, colore, larghezzaMassima + SEPARATORE_LARGHEZZA + testo,
 				() -> DoomdarkTextProducer.getImage(testo, font, colore, larghezzaMassima));
+	}
+
+	/**
+	 * L'immagine di un personaggio rivolta dal verso indicato, costruita con il costruttore la prima volta (o dopo che
+	 * il garbage collector ha reclamato la precedente) e poi ricordata. Chi la usa ne tiene un riferimento finché serve.
+	 */
+	static BufferedImage getImmaginePersonaggio(TipoPersonaggio tipo, Verso verso, Supplier<BufferedImage> costruttore) {
+		Map<Verso, WeakReference<BufferedImage>> perVerso = immaginiPersonaggiPerVerso
+				.computeIfAbsent(tipo, k -> new ConcurrentHashMap<>());
+		WeakReference<BufferedImage> ref = perVerso.get(verso);
+		BufferedImage immagine = (ref != null) ? ref.get() : null;
+		if (immagine == null) {
+			immagine = costruttore.get();
+			perVerso.put(verso, new WeakReference<>(immagine));
+		}
+		return immagine;
 	}
 
 	private static Image get(DoomdarkFont font, DoomdarkColorModel.Color colore, String chiave, Supplier<Image> costruttore) {

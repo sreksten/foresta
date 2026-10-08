@@ -477,10 +477,8 @@ public class ForestaUI implements Temporizzabile {
 	}
 
 	private void gestisciEventoVariazioneStatistichePersonaggio(NotificaVariazioneStatistichePersonaggio evento) {
+		// Anche i personaggi del gruppo, che si vedono in locazione: DisplayableCanvas porta in primo piano il loro riquadro
 		VistaPersonaggio personaggio = evento.getPersonaggio();
-		if (!personaggio.isPNG()) {
-			return;
-		}
 		TipoAttributo tipo = evento.getTipoAttributo();
 		if (tipo == TipoAttributo.SALUTE) {
 			displayableCanvas.variaSalute(personaggio, (int)(evento.getNuovoValore() - evento.getValorePrecedente()));

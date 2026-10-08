@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.intermezzi.Verso;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.awt.image.BufferedImage;
@@ -76,6 +77,19 @@ public enum ClassePersonaggioImmagine {
 
     public static BufferedImage getImmagine(TipoPersonaggio classePersonaggio) {
         return getClassePersonaggioImmagine(classePersonaggio).immagine;
+    }
+
+    /**
+     * L'immagine della classe rivolta verso il verso voluto: quella originale se già guarda da quella parte, altrimenti
+     * la sua versione specchiata, compatibile con lo schermo e ricordata da ImageCache (finché serve).
+     */
+    public static BufferedImage getImmagine(TipoPersonaggio classePersonaggio, Verso versoVoluto) {
+        BufferedImage originale = getImmagine(classePersonaggio);
+        if (!VersiDeiPersonaggi.serveSpecchiare(classePersonaggio, versoVoluto)) {
+            return originale;
+        }
+        return ImageCache.getImmaginePersonaggio(classePersonaggio, versoVoluto,
+                () -> BufferedImageBuilder.ingrandisci(VersiDeiPersonaggi.specchia(originale), 1.0));
     }
 
     public static BufferedImage getIcona(TipoPersonaggio classePersonaggio) {

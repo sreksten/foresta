@@ -2091,7 +2091,7 @@ public abstract class PersonaggioBase implements Personaggio {
 		effettiDiStatoDaRimuovere.forEach(effettoDiStato -> {
 			md.getEffettiDiStato().remove(effettoDiStato);
 			BusEventi.pubblica(new NotificaVariazioneEffettoDiStatoPersonaggio(this,
-					NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.RIMOZIONE, tipoEffettoDiStato,
+					NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.RIMOZIONE, effettoDiStato.getTipoEffettoDiStato(),
 					effettoDiStato.getDurata(), 0));
 		});
 	}

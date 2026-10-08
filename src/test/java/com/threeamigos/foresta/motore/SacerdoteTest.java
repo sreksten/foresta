@@ -170,4 +170,25 @@ class SacerdoteTest {
                     () -> com.threeamigos.foresta.intermezzi.ScenaInLocanda.conSacerdote(TipoPersonaggio.MAGO));
         }
     }
+
+    @Test
+    void rimuovendoTuttiGliEffettiOgniNotificaDiceQualeEffettoEFinito() {
+        try (PartitaDiTest partita = PartitaDiTest.nuova(14)) {
+            partita.iniziaCon("Elia", Comando.MASCHIO, Comando.GUERRIERO, () -> { });
+            partita.eventi().ascolta(com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneEffettoDiStatoPersonaggio.class);
+            Personaggio sacerdote = partita.gruppo().getCapo();
+            sacerdote.addEffettoDiStato(TipoEffettoDiStato.BRUCIATO, 3, 0);
+            sacerdote.addEffettoDiStato(TipoEffettoDiStato.AVVELENATO, 3, 0);
+            partita.eventi().svuota();
+            // Come fa l'alba sacra: toglie tutto, e la UI deve sapere cosa
+            sacerdote.rimuoviTuttiGliEffettiDiStato();
+            java.util.Set<TipoEffettoDiStato> rimossi = new java.util.HashSet<>();
+            for (com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneEffettoDiStatoPersonaggio evento
+                    : partita.eventi().tutti(com.threeamigos.foresta.eventi.notifiche.NotificaVariazioneEffettoDiStatoPersonaggio.class)) {
+                assertNotNull(evento.getEffetto(), "l'evento di rimozione non dice quale effetto");
+                rimossi.add(evento.getEffetto());
+            }
+            assertEquals(new java.util.HashSet<>(java.util.Arrays.asList(TipoEffettoDiStato.BRUCIATO, TipoEffettoDiStato.AVVELENATO)), rimossi);
+        }
+    }
 }
