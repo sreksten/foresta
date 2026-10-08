@@ -26,8 +26,16 @@ import java.util.List;
  */
 class DisplayableCanvasBarraIcone implements Finestra {
 
-	static final int ICONA_WIDTH = 62;
-	static final int ICONA_HEIGHT = 64;
+	/**
+	 * La misura delle icone dopo lo zoom (vedi ClasseIcona.componi): 64 x 64 con lo zoom predefinito
+	 */
+	static final int ICONA_WIDTH = ClasseIcona.getLarghezzaMassima();
+	static final int ICONA_HEIGHT = ClasseIcona.getAltezzaMassima();
+	/**
+	 * Quanto spazio, oltre alla loro larghezza, deve avere ogni icona della barra orizzontale per essere contata fra
+	 * quelle che ci stanno
+	 */
+	private static final int MARGINE_ICONA = 4;
 	/**
 	 * La distanza fra il cartiglio dell'aiuto e l'icona a cui si riferisce
 	 */
@@ -176,7 +184,7 @@ class DisplayableCanvasBarraIcone implements Finestra {
 		int quanteScelte = comandi.length;
 		int iconePossibili;
 		if (orientamento == DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE) {
-			iconePossibili = larghezza / 66;
+			iconePossibili = larghezza / (ICONA_WIDTH + MARGINE_ICONA);
 		} else {
 			iconePossibili = altezza / 66;
 		}
@@ -202,11 +210,11 @@ class DisplayableCanvasBarraIcone implements Finestra {
 		int iconeDaSaltare = saltaPrimi;
 
 		if (orientamento == DisplayableCanvas.ORIENTAMENTO_ORIZZONTALE) {
-			int offset = (larghezza - totaleIcone * 62) >> 1;
+			int offset = (larghezza - totaleIcone * ICONA_WIDTH) >> 1;
 			int offsetVerticale = (altezza - ClasseIcona.getAltezzaMassima()) >> 1;
 			if (precedente) {
 				iconeVisibili.add(new IconaVisibile(new Rectangle(offset, offsetVerticale, ICONA_WIDTH, ICONA_HEIGHT), comandoPrecedente, iconaPrecedente));
-				offset += 62;
+				offset += ICONA_WIDTH;
 			}
 			for (int i = 0; i < quanteScelte; i++) {
 				if (iconeDaSaltare > 0) {
@@ -214,7 +222,7 @@ class DisplayableCanvasBarraIcone implements Finestra {
 					continue;
 				}
 				iconeVisibili.add(new IconaVisibile(new Rectangle(offset, offsetVerticale, ICONA_WIDTH, ICONA_HEIGHT), comandi[i], icone[i]));
-				offset += 62; // 31 + 2 pixel vuoti di spazio
+				offset += ICONA_WIDTH;
 				iconeDaVisualizzare--;
 				if (iconeDaVisualizzare == 0) {
 					break;

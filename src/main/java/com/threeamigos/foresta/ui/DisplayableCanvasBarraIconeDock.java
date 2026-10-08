@@ -20,7 +20,7 @@ import java.util.List;
 class DisplayableCanvasBarraIconeDock extends DisplayableCanvasBarraIcone {
 
 	/**
-	 * L'icona sotto il cursore diventa 1,5 volte più grande: le icone sono disegni 31x32 raddoppiati, quindi a 93x96
+	 * L'icona sotto il cursore diventa 1,5 volte più grande: le icone sono disegni 32x32 raddoppiati, quindi a 96x96
 	 * i pixel restano netti (3x)
 	 */
 	private static final double SCALA_MASSIMA = 1.5d;

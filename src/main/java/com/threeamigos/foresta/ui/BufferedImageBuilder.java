@@ -64,15 +64,7 @@ public class BufferedImageBuilder {
 				if (img == null) {
 					throw new IllegalArgumentException("Formato non riconosciuto per il file " + resource);
 				}
-				int larghezza = (int) Math.round(img.getWidth() * zoom);
-				int altezza = (int) Math.round(img.getHeight() * zoom);
-				BufferedImage copy = gc.createCompatibleImage(larghezza, altezza, img.getTransparency());
-				Graphics2D g2d = copy.createGraphics();
-				if (zoom != 1.0) {
-					g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
-				}
-				g2d.drawImage(img, 0, 0, larghezza, altezza, null);
-				g2d.dispose();
+				BufferedImage copy = ingrandisci(img, zoom);
 				Logger.log("Image resource: " + resource + ", " + copy.getWidth() + "x" + copy.getHeight());
 				return copy;
 			} catch (Exception e) {
@@ -80,6 +72,26 @@ public class BufferedImageBuilder {
 			}
 		}
 		return null;
+	}
+
+	/**
+	 * Una copia compatibile con lo schermo dell'immagine ingrandita di {@code zoom} (2.0 = 200%): i pixel vengono
+	 * solo replicati, senza interpolazione. Con zoom 1.0 è una semplice copia.
+	 */
+	public static BufferedImage ingrandisci(BufferedImage img, double zoom) {
+		if (!(zoom > 0)) {
+			throw new IllegalArgumentException("Zoom non valido: " + zoom);
+		}
+		int larghezza = (int) Math.round(img.getWidth() * zoom);
+		int altezza = (int) Math.round(img.getHeight() * zoom);
+		BufferedImage copy = gc.createCompatibleImage(larghezza, altezza, img.getTransparency());
+		Graphics2D g2d = copy.createGraphics();
+		if (zoom != 1.0) {
+			g2d.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+		}
+		g2d.drawImage(img, 0, 0, larghezza, altezza, null);
+		g2d.dispose();
+		return copy;
 	}
 
 }
