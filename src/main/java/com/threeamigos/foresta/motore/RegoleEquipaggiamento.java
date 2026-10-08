@@ -35,6 +35,7 @@ public final class RegoleEquipaggiamento {
 			TipoArtefatto.LANCIA, TipoArtefatto.LIBRO_MAGICO);
 	private static final Set<TipoArtefatto> BARDO = EnumSet.of(TipoArtefatto.SPADA, TipoArtefatto.SCUDO);
 	private static final Set<TipoArtefatto> MAGO = EnumSet.of(TipoArtefatto.BASTONE_MAGICO, TipoArtefatto.LIBRO_MAGICO);
+	private static final Set<TipoArtefatto> SACERDOTE = EnumSet.of(TipoArtefatto.BASTONE_MAGICO, TipoArtefatto.MAZZA, TipoArtefatto.LIBRO_MAGICO);
 
 	/**
 	 * Lo slot che l'artefatto occuperebbe, oppure il motivo per cui non si può prendere.
@@ -241,6 +242,9 @@ public final class RegoleEquipaggiamento {
 			case MAGO:
 			case MAGA:
 				return MAGO;
+			case SACERDOTE:
+			case SACERDOTESSA:
+				return SACERDOTE;
 			default:
 				return null;
 		}

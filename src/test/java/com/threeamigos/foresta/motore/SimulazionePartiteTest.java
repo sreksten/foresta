@@ -41,7 +41,7 @@ import java.util.function.ToDoubleFunction;
 class SimulazionePartiteTest {
 
 	private static final int PARTITE_PER_CLASSE = 30;
-	private static final Comando[] CLASSI = {Comando.GUERRIERO, Comando.LADRO, Comando.ELFO, Comando.BARDO, Comando.MAGO};
+	private static final Comando[] CLASSI = {Comando.GUERRIERO, Comando.LADRO, Comando.ELFO, Comando.BARDO, Comando.MAGO, Comando.SACERDOTE};
 	/**
 	 * Oltre questi passi (comandi e impulsi) la partita si considera bloccata o infinita e si interrompe
 	 */

@@ -563,7 +563,10 @@ public abstract class LocazioneBase implements Locazione {
 							return Stato.GIOCO_PERSO;
 						}
 
-						gruppo.subIncantesimi(incantesimo.getClasse(), 1);
+						// Chi la conosce per natura (Sacerdote, Sacerdotessa) non consuma pergamene
+						if (!(incantesimo.getClasse() == ClasseIncantesimo.ALBA_SACRA && AlbaSacra.conosciutaDa(formulante.getClasse()))) {
+							gruppo.subIncantesimi(incantesimo.getClasse(), 1);
+						}
 
 						rispostaAvversaria(formulante, gruppo, gruppoAvversario);
 
@@ -840,8 +843,9 @@ public abstract class LocazioneBase implements Locazione {
 			comandiPossibili.add(Comando.INTERRUZIONE_COMBATTIMENTO);
 		}
 		// Possiamo formulare incantesimi? Si se ne abbiamo almeno uno e se uno dei personaggi vivi può lanciarlo,
-		// oppure se un Mago o un Elfo vivo ha la MAGIA per il dardo arcano
-		boolean incantesimoPossibile = gruppo.getPersonaggiVivi().stream().anyMatch(DardoArcano::puoLanciarlo);
+		// oppure se un Mago o un Elfo vivo ha la MAGIA per il dardo arcano, o un Sacerdote per l'alba sacra
+		boolean incantesimoPossibile = gruppo.getPersonaggiVivi().stream()
+				.anyMatch(p -> DardoArcano.puoLanciarlo(p) || AlbaSacra.puoLanciarlaInnata(p));
 		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
 			if (gruppo.getIncantesimi(classeIncantesimo) > 0 &&
 					gruppo.getPersonaggiVivi().stream().anyMatch(p -> p.puoFormulare(classeIncantesimo))) {

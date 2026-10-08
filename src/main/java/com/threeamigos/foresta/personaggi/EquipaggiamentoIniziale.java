@@ -41,6 +41,8 @@ public final class EquipaggiamentoIniziale {
 				return Arrays.asList(TipoArtefatto.SPADA, TipoArtefatto.VESTE);
 			case MAGO:
 			case MAGA:
+			case SACERDOTE:
+			case SACERDOTESSA:
 				return Arrays.asList(TipoArtefatto.BASTONE_MAGICO, TipoArtefatto.VESTE);
 			default:
 				return Collections.emptyList();

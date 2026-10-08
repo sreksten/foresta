@@ -17,6 +17,8 @@ public enum Comando {
 	ELFO("Crea un Elfo"),
 	MAGA("Crea una Maga"),
 	MAGO("Crea un Mago"),
+	SACERDOTESSA("Crea una Sacerdotessa"),
+	SACERDOTE("Crea un Sacerdote"),
 
 	// Le scelte tipiche all'interno di una locazione standard
 	SINGOLO_ATTACCO("Esegue un singolo attacco"),

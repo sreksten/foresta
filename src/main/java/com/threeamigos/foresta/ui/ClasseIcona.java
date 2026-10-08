@@ -27,6 +27,8 @@ public enum ClasseIcona {
 	ELFO(Comando.ELFO, TipoPersonaggio.ELFO, "icone/Elfo.gif", Sfondo.VERDE),
 	MAGA(Comando.MAGA, TipoPersonaggio.MAGA, "icone/Maga.gif", Sfondo.VERDE),
 	MAGO(Comando.MAGO, TipoPersonaggio.MAGO, "icone/Mago.gif", Sfondo.VERDE),
+	SACERDOTESSA(Comando.SACERDOTESSA, TipoPersonaggio.SACERDOTESSA, "icone/Sacerdotessa.gif", Sfondo.VERDE),
+	SACERDOTE(Comando.SACERDOTE, TipoPersonaggio.SACERDOTE, "icone/Sacerdote.gif", Sfondo.VERDE),
 	/* Solo via trucco */
 	OMBRAFIAMMA(TipoPersonaggio.OMBRAFIAMMA, "icone/OmbraFiamma.gif", Sfondo.VERDE),
 	/* Personaggi che possono essere ospitati/giocati */

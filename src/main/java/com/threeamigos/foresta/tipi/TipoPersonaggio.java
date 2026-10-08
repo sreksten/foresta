@@ -43,6 +43,8 @@ public enum TipoPersonaggio {
 	MAGA,
 	MAGO,
 	OMBRAFIAMMA,
+	SACERDOTE,
+	SACERDOTESSA,
 
 	// Solo per le missioni di scorta: non si incontra e non si recluta
 	VIANDANTE;

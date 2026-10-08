@@ -42,12 +42,20 @@ Oggi il Bardo non ha nessuna capacità propria ed è la classe più debole (vedi
 - **Canto ipnotico o di scherno** (il morale del nemico): `SPAVENTATO` o `CONFUSO` sugli avversari, con la Soggezione del Bardo contro il loro Coraggio. Usa effetti di stato che ci sono già.
 - **Ballata di incitamento** (il morale del gruppo): un bonus temporaneo al gruppo (Precisione o danno) per qualche round. Serve un effetto di stato positivo nuovo (per esempio `ISPIRATO`), il suo aggancio in `CalcolatoreCombattimento` e una riga in `interazioni_effetti_di_stato.md`.
 
+## Sacerdote e Sacerdotessa
+
+Giocanti dal 2026-10-08, sul modello di Mago e Maga ma con l'alba sacra innata al posto del dardo arcano (vedi [`motore_di_gioco.md`](motore_di_gioco.md) §7). Da fare:
+
+- **Bilanciamento**: le statistiche sono una prima proposta (Saggezza 50, Intelligenza 40, 100 PS, magia dell'Elfo, danni fisici ×0,8). Nella simulazione (`SimulazionePartiteTest`, 30 partite per classe, giocatore automatico che non lancia l'alba sacra) arrivano a 7,6 giorni e livello 3,6, fra il Mago (10,3 e 5,0) e Elfo e Bardo (circa 4,5 e 2,5 giorni): da rivedere con l'uso reale. Il giocatore automatico non sa usare l'alba sacra: se serve, insegnargliela (`GiocatoreAutomatico`).
+- **Contenuti**: `locande.txt`, `leggendari.txt`, `missioni.txt` e `IncontroDiMissione` nominano `MAGO`/`MAGA`: controllare se vogliono una variante per i sacerdoti. `ProduttoreDiTestiCasuale` scambia le versioni maschili e femminili di Mago/Maga, Guerriero/a ecc. nei testi: non ancora per Sacerdote/Sacerdotessa.
+- Le missioni di benedizione e le scene in locanda usano già `personaggi/Sacerdote.gif` e `Sacerdotessa.gif` come aspetto di personaggi non giocanti (non sono i nuovi tipi).
+
 ## Verso dei personaggi e personaggi non combattenti
 
 Le immagini dei personaggi guardano a destra o a sinistra, e la UI oggi non lo sa: solo gli intermezzi hanno qualcosa (`intermezzi/Verso`, `VersoDiDefault`, che copre le 12 classi giocanti più il Viandante e lancia `IllegalArgumentException` per le altre). Piano, in quest'ordine:
 
-1. **Nuovi `TipoPersonaggio` per i non combattenti** Locandiere, Armaiolo, Alchimista, VenditoreDiPergamene, Incantatore, Sacerdote, Sacerdotessa, MoglieDelBardo (BardoLocanda è un'altra immagine del Bardo, non un tipo). Sul modello di `Viandante` (25 righe che estendono `Bardo`): voce in `TipoPersonaggio` e `FabbricaPersonaggi.COSTRUTTORI`, classe con nomi, articoli, pronome e sesso, le voci nei `switch` di `PersonaggioBase` (circa riga 1862) e `LanciatoreDeiDadi` (due), voce in `ClassePersonaggioImmagine`. I test che scorrono tutti i tipi (`FabbricheTest`, `PersonaggioBaseTest`, `LanciatoreDeiDadiTest`, `TestGenerazionePersonaggi`) segnalano ciò che manca.
-   - Da decidere: la classe da cui ereditano le statistiche (contano se un ospite può essere bersaglio), per esempio Locandiere → Guerriero, Alchimista → Mago, Sacerdote/Sacerdotessa → Mago o Bardo.
+1. **Nuovi `TipoPersonaggio` per i non combattenti** Locandiere, Armaiolo, Alchimista, VenditoreDiPergamene, Incantatore, MoglieDelBardo (Sacerdote e Sacerdotessa sono già classi giocanti, vedi sotto) (BardoLocanda è un'altra immagine del Bardo, non un tipo). Sul modello di `Viandante` (25 righe che estendono `Bardo`): voce in `TipoPersonaggio` e `FabbricaPersonaggi.COSTRUTTORI`, classe con nomi, articoli, pronome e sesso, le voci nei `switch` di `PersonaggioBase` (circa riga 1862) e `LanciatoreDeiDadi` (due), voce in `ClassePersonaggioImmagine`. I test che scorrono tutti i tipi (`FabbricheTest`, `PersonaggioBaseTest`, `LanciatoreDeiDadiTest`, `TestGenerazionePersonaggi`) segnalano ciò che manca.
+   - Da decidere: la classe da cui ereditano le statistiche (contano se un ospite può essere bersaglio), per esempio Locandiere → Guerriero, Alchimista → Mago.
    - Icone (`icone/Nome.gif`, 32×32 trasparenti) per gli ospiti: ci sono per Alchimista e Armaiolo, mancano per gli altri (non verificato come reagisce la UI senza: `ClassePersonaggioImmagine.getIcona` restituisce `null`).
    - Da controllare: che non entrino in `LaSfidaDeiCampioni.classiAmichevoli()` e che non compaiano come avversari casuali; `StatisticheMD` salva un contatore per ogni tipo (formato che cambia, nessun problema).
    - Poi servono anche per le missioni di scorta ("salva il locandiere", "salva la moglie del bardo", "salva l'alchimista"), con `MissioneAPassi.prendiInScorta`, al posto del Viandante.

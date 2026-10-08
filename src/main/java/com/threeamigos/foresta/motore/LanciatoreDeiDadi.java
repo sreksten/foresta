@@ -24,6 +24,8 @@ public class LanciatoreDeiDadi {
     private static final int[] LADRO = { 10, 25, 10, 10, 10, 10, 25 };
     // Focus [] = {Intelligenza e Saggezza
     private static final int[] MAGO = { 5, 10, 10, 30, 25, 15, 5 };
+    // Il sacerdote punta sulla Saggezza, con più costituzione del mago
+    private static final int[] SACERDOTE = { 5, 10, 15, 20, 30, 15, 5 };
     // Equilibrato ed intelligente
     private static final int[] OMBRAFIAMMA = { 22, 11, 20, 14, 13, 16, 4 };
 
@@ -99,6 +101,8 @@ public class LanciatoreDeiDadi {
             case LICH: return LICH;
             case MAGA:
             case MAGO: return MAGO;
+            case SACERDOTE:
+            case SACERDOTESSA: return SACERDOTE;
             case MINOTAURO: return MINOTAURO;
             case MINOTAURO_GIGANTE: return MINOTAUROGIGANTE;
             case OMBRAFIAMMA: return OMBRAFIAMMA;
@@ -141,6 +145,8 @@ public class LanciatoreDeiDadi {
             case LADRO:
             case MAGA:
             case MAGO:
+            case SACERDOTE:
+            case SACERDOTESSA:
                 // CORRETTO: Budget PG a livello 1 = 35 punti extra (+4 punti per ogni livello successivo)
                 return 35 + (livelloModificato * 4);
             default:
@@ -227,6 +233,8 @@ public class LanciatoreDeiDadi {
         if (classePersonaggio == TipoPersonaggio.MAGO || classePersonaggio == TipoPersonaggio.MAGA ||
                 classePersonaggio == TipoPersonaggio.LICH || classePersonaggio == TipoPersonaggio.STREGA) {
             intelligenzaInt += resto;
+        } else if (classePersonaggio == TipoPersonaggio.SACERDOTE || classePersonaggio == TipoPersonaggio.SACERDOTESSA) {
+            saggezzaInt += resto;
         } else {
             forzaInt += resto;
         }

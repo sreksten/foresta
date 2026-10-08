@@ -6,6 +6,8 @@ import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 /**
  *
@@ -17,6 +19,23 @@ public class AlbaSacra  implements Incantesimo {
 
     public AlbaSacra(int livello) {
         this.livello = livello;
+    }
+
+    /**
+     * @return true se la classe sa lanciare l'alba sacra senza pergamene (Sacerdote e Sacerdotessa)
+     */
+    public static boolean conosciutaDa(TipoPersonaggio classe) {
+        return classe == TipoPersonaggio.SACERDOTE || classe == TipoPersonaggio.SACERDOTESSA;
+    }
+
+    /**
+     * @return true se il personaggio è vivo, la conosce per natura e ha abbastanza MAGIA per lanciarla: in tal caso non
+     * le servono pergamene, e se ne ha il lancio non ne consuma
+     */
+    public static boolean puoLanciarlaInnata(Personaggio personaggio) {
+        return personaggio.isVivo() && conosciutaDa(personaggio.getClasse())
+                && personaggio.getMagia() >= Costanti.INCANTESIMO_ALBA_SACRA_COSTO_LANCIO
+                && !personaggio.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO);
     }
 
     public ClasseIncantesimo getClasse() {

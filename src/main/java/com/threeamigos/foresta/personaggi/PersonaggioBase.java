@@ -1850,6 +1850,8 @@ public abstract class PersonaggioBase implements Personaggio {
 		switch (classe) {
 			case MAGO:
 			case MAGA:
+			case SACERDOTE:
+			case SACERDOTESSA:
 			case LICH:
 			case STREGA:
 				// I maghi concatenano minacce con la mente: Intelligenza (70%) + Saggezza (30%)

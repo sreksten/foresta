@@ -41,6 +41,9 @@ public class RegistroPersonaggi {
 
 		aggiungiPersonaggio(new Mago("Merlin", 1));
 		aggiungiPersonaggio(new Maga("LeFey", 1));
+
+		aggiungiPersonaggio(new Sacerdote("Fra' Stornato", 1));
+		aggiungiPersonaggio(new Sacerdotessa("Sorella Intronata", 1));
 	}
 
 	/**

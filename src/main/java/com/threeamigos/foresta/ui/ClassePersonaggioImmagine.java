@@ -34,6 +34,8 @@ public enum ClassePersonaggioImmagine {
     LICH(TipoPersonaggio.LICH, "personaggi/Lich.gif"),
     MAGA(TipoPersonaggio.MAGA, "personaggi/Maga.gif", "icone/Maga.gif"),
     MAGO(TipoPersonaggio.MAGO, "personaggi/Mago.gif", "icone/Mago.gif"),
+    SACERDOTESSA(TipoPersonaggio.SACERDOTESSA, "personaggi/Sacerdotessa.gif", "icone/Sacerdotessa.gif"),
+    SACERDOTE(TipoPersonaggio.SACERDOTE, "personaggi/Sacerdote.gif", "icone/Sacerdote.gif"),
     MINOTAURO(TipoPersonaggio.MINOTAURO, "personaggi/Minotauro.gif", "icone/Minotauro.gif"),
     MINOTAURO_GIGANTE(TipoPersonaggio.MINOTAURO_GIGANTE, "personaggi/MinotauroGigante.gif"),
     OMBRAFIAMMA(TipoPersonaggio.OMBRAFIAMMA, "personaggi/OmbraFiamma.gif", "icone/OmbraFiamma.gif"),

@@ -142,6 +142,8 @@ class ScenarioDuelliTest {
 
             // Combatte solo il compagno, scelto da solo perché è l'unico in campo
             GruppoAvversario.getIstanza().getCapo().getModelloDati().set(TipoAttributo.SALUTE, 1);
+            // Il compagno colpisce al primo colpo: altrimenti l'esito dipende dai dadi
+            Dado.trucca(1, 1, 1, 1, 1, 1, 1, 1);
             combatti(partita);
             assertEquals("RITORNO", sfida.getPassoCorrente());
             assertFalse(arsenio.isInPanchina(), "finito il duello si torna tutti in campo");

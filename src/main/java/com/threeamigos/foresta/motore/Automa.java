@@ -5,6 +5,7 @@ import com.threeamigos.foresta.eventi.comandigiocatore.*;
 import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
+import com.threeamigos.foresta.incantesimi.AlbaSacra;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
@@ -495,10 +496,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		stato = Stato.PRE_GAME_ATTESA_CLASSE_PERSONAGGIO;
 		if (comando == Comando.FEMMINA) {
 			BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.CLASSE_PERSONAGGIO, Comando.GUERRIERA, Comando.LADRA,
-					Comando.CANTASTORIE, Comando.ELFA, Comando.MAGA));
+					Comando.CANTASTORIE, Comando.ELFA, Comando.MAGA, Comando.SACERDOTESSA));
 		} else {
 			BusEventi.pubblica(new InternoFaseDiGioco(FaseDiGioco.CLASSE_PERSONAGGIO, Comando.GUERRIERO, Comando.LADRO,
-					Comando.BARDO, Comando.ELFO, Comando.MAGO));
+					Comando.BARDO, Comando.ELFO, Comando.MAGO, Comando.SACERDOTE));
 		}
 		return Esito.FERMATI;
 	}
@@ -534,6 +535,12 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 				break;
 			case MAGO:
 				personaggio = new Mago(nomePersonaggio, 1);
+				break;
+			case SACERDOTESSA:
+				personaggio = new Sacerdotessa(nomePersonaggio, 1);
+				break;
+			case SACERDOTE:
+				personaggio = new Sacerdote(nomePersonaggio, 1);
 				break;
 			default:
 				throw new IllegalArgumentException();
@@ -972,7 +979,16 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		if (DardoArcano.puoLanciarlo(formulante)) {
 			comandiPossibili.add(Comando.DARDO_ARCANO);
 		}
+		// Sacerdote e Sacerdotessa hanno l'alba sacra, che non consuma pergamene
+		boolean albaSacraInnata = AlbaSacra.puoLanciarlaInnata(formulante);
+		if (albaSacraInnata) {
+			comandiPossibili.add(Comando.ALBA_SACRA);
+		}
 		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
+			if (albaSacraInnata && classeIncantesimo == ClasseIncantesimo.ALBA_SACRA) {
+				// Già fra i comandi, anche se il gruppo ha delle pergamene
+				continue;
+			}
 			if (gruppo.getIncantesimi(classeIncantesimo) > 0 && formulante.getMagia() >= FabbricaIncantesimi.crea(classeIncantesimo, formulante.getLivello()).getCostoLancio()) {
 				comandiPossibili.add(classeIncantesimo.getComandoDiAttivazione());
 			}

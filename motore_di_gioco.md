@@ -199,6 +199,7 @@ Il combattimento si svolge dentro `LocazioneBase` (`gestisciCombattimento`, `ese
 - **Ospiti** (`GruppoGiocatore.getOspiti`, `Viandante`): personaggi che viaggiano col gruppo perché una missione li scorta; possono essere vulnerabili e bersaglio degli avversari.
 - **Passare inosservati**: `probabilitaDiPassareInosservati` confronta le furtività dei due gruppi con l'ora; dopo una vera azione non si può più.
 - **Dardo arcano**: l'incantesimo innato di Mago ed Elfo, su un solo bersaglio, senza pergamene.
+- **Alba sacra innata**: Sacerdote e Sacerdotessa non hanno il dardo arcano ma l'alba sacra (toglie tutti gli effetti di stato al gruppo, 5 `MAGIA`) sempre fra gli incantesimi che possono formulare (`AlbaSacra.puoLanciarlaInnata`), anche senza pergamene, e lanciandola non ne consumano. Hanno la magia dell'Elfo con più Saggezza e più robustezza (`SACERDOTE_*`, `SACERDOTESSA_*` in `Costanti`), usano bastone magico, mazza e libro magico, senza doppia arma, e partono con bastone magico e veste.
 
 **Probabilità di colpire.** `calcolaProbabilitaDiColpire`:
 1. un attaccante `STORDITO` fallisce sempre; un difensore `ATTERRATO`, `CONGELATO` o `STORDITO` viene sempre colpito;
@@ -228,7 +229,7 @@ Il risultato è un `DannoRisultante`, applicato con `Personaggio.applicaRisultat
 ### Personaggi
 
 `Personaggio` (contratto, ricco: identità e nomi con articoli, attributi, risorse, effetti di stato, equipaggiamento, flag di situazione) è realizzato da `PersonaggioBase`, estesa da una classe concreta per ogni `TipoPersonaggio`:
-- **giocabili**: Guerriero/Guerriera, Ladro/Ladra, Bardo/Cantastorie, Elfo/Elfa, Mago/Maga;
+- **giocabili**: Guerriero/Guerriera, Ladro/Ladra, Bardo/Cantastorie, Elfo/Elfa, Mago/Maga, Sacerdote/Sacerdotessa;
 - **mostri e non giocanti**: Arpia, Centauro, Chimera, ChimeraDrago, Drago, Eremita, Fantasma, Folletto, Gargoyle, Gigante, Goblin, Hobgoblin, Idra, Lich, Minotauro, MinotauroGigante, OmbraNera, Scheletro, Spettro, Spirito, Strega, Titano, Troll, Viverna;
 - speciali: `OmbraFiamma` (la prova) e `Viandante` (chi una missione scorta).
 
@@ -240,7 +241,7 @@ Il risultato è un `DannoRisultante`, applicato con `Personaggio.applicaRisultat
 
 `Gruppo` (astratta) ha due singleton: `GruppoGiocatore` e `GruppoAvversario`. Il gruppo del giocatore ha al massimo **5 permanenti** (`MAX_PERSONAGGI_GRUPPO_GIOCATORE`) e fino a **8 in tutto** (`MAX_PERSONAGGI_GRUPPO_TOTALE`) con i personaggi a tempo (aiuti gratuiti o mercenari, `isATempo`) e gli ospiti di locazione. Oltre ai personaggi tiene le risorse comuni: monete, preziosi, incantesimi per classe, quattro tipi di pozione, coordinate e locazione corrente, con le regole di movimento (`getMaxPassi*`). La contrattazione del gruppo determina i prezzi (`RegoleContrattazione`: sconto sugli acquisti fino al 20%, ricavo delle vendite fra il 50% e il 75%, così che comprare e rivendere non faccia mai guadagnare).
 
-I compagni da reclutare nascono con il mondo (`RegistroPersonaggi`: 5 guerrieri, 4 ladri, 2 bardi, 2 elfi, 2 maghi, tutti di livello 1) e sono sparsi in città e locande; chi entra nel gruppo (`preparaCompagno`) arriva al livello del mondo meno un numero a caso fra 0 e 2, con l'equipaggiamento di base della classe (`EquipaggiamentoIniziale`).
+I compagni da reclutare nascono con il mondo (`RegistroPersonaggi`: 5 guerrieri, 4 ladri, 2 bardi, 2 elfi, 2 maghi, 2 sacerdoti, Fra' Stornato e Sorella Intronata, tutti di livello 1) e sono sparsi in città e locande; chi entra nel gruppo (`preparaCompagno`) arriva al livello del mondo meno un numero a caso fra 0 e 2, con l'equipaggiamento di base della classe (`EquipaggiamentoIniziale`).
 
 ### Progressione
 

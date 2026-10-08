@@ -51,6 +51,8 @@ public final class FabbricaPersonaggi {
 		COSTRUTTORI.put(TipoPersonaggio.MAGA, Maga::new);
 		COSTRUTTORI.put(TipoPersonaggio.MAGO, Mago::new);
 		COSTRUTTORI.put(TipoPersonaggio.OMBRAFIAMMA, OmbraFiamma::new);
+		COSTRUTTORI.put(TipoPersonaggio.SACERDOTE, Sacerdote::new);
+		COSTRUTTORI.put(TipoPersonaggio.SACERDOTESSA, Sacerdotessa::new);
 		COSTRUTTORI.put(TipoPersonaggio.VIANDANTE, Viandante::new);
 	}
 

@@ -77,7 +77,9 @@ class ScenarioCartaForbiciSassoTest {
             assertTrue(lastEvent(partita).isFinale(), "l'ultima mano è l'ultima");
             assertFalse(new HashSet<>(partita.comandiDisponibili()).equals(LE_TRE_MOSSE), "la sfida è finita");
             assertEquals(1, partita.gruppo().getSfideVinte());
-            assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith("L'Idra dice: \"Poffarre")), String.valueOf(partita.testi()));
+            // Una delle frasi di GIOCATORE_VINCE (vedi sfide.txt), scelta a caso
+            assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith("L'Idra dice: \"Poffarre") || t.startsWith("L'Idra dice: \"Incredibile")),
+                    String.valueOf(partita.testi()));
             assertFalse(LaSfidaDeiCampioni.isPartita(), "una sfida sola non basta");
         }
     }
@@ -130,7 +132,7 @@ class ScenarioCartaForbiciSassoTest {
             partita.comando(Comando.FORBICE);
             partita.comando(Comando.FORBICE);
             assertEquals(0, partita.gruppo().getSfideVinte());
-            assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith("L'Idra dice: \"") && !t.contains("Poffarre")), String.valueOf(partita.testi()));
+            assertTrue(partita.testi().stream().anyMatch(t -> t.startsWith("L'Idra dice: \"") && !t.contains("Poffarre") && !t.contains("Incredibile")), String.valueOf(partita.testi()));
         }
     }
 
