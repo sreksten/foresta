@@ -179,7 +179,7 @@ abstract class DisplayableCanvasScambiatore implements Finestra {
             COORDINATE_FUMETTO = new CoordinateFumetto(
                     width / 2 + larghezzaImmagine + SPACING,
                     SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + altezzaImmagine / 2,
-                    width / 2 + ImageCache.armaiolo.getWidth() / 3,
+                    width / 2 + ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.ARMAIOLO).getWidth() / 3,
                     SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI + altezzaImmagine / 3
             );
         }

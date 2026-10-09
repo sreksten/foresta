@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaApprovazioneIncantatura;
@@ -70,7 +71,7 @@ public class DisplayableCanvasIncantatore extends DisplayableCanvasScambiatoreAr
         graphics.drawImage(doomdark, (width - doomdark.getWidth(null)) / 2, y, null);
         y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
-        BufferedImage immaginePersonaggio = ImageCache.incantatore;
+        BufferedImage immaginePersonaggio = ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.INCANTATORE);
 
         // Come per l'armaiolo, il ladro fa da altezza di riferimento per non far sfarfallare l'immagine
         y += ALTEZZA_LADRO;

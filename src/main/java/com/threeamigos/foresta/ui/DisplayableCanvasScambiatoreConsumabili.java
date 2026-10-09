@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.ui;
 
+import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoAcquistoConsumabile;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
@@ -97,7 +98,7 @@ public class DisplayableCanvasScambiatoreConsumabili extends DisplayableCanvasSc
         y += fontHeight + SPAZIATURA_TRA_PERSONAGGIO_E_ATTRIBUTI;
 
         // Immagine personaggio
-        BufferedImage immaginePersonaggio = ImageCache.alchimista;
+        BufferedImage immaginePersonaggio = ClassePersonaggioImmagine.getImmagine(TipoPersonaggio.ALCHIMISTA);
 
         // Per tenere i personaggi sullo stesso livello (se si passa da un personaggio all'altro)
         // ed evitare sfarfallamenti, scegliamo il ladro come personaggio "base" per calcolare l'altezza a cui disegnare.

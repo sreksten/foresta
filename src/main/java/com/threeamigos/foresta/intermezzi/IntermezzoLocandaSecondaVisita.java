@@ -72,7 +72,7 @@ public class IntermezzoLocandaSecondaVisita implements Intermezzo {
 		PaginaIntermezzo pagina = new PaginaIntermezzo()
 				.conSfondo(ImmagineIntermezzo.risorsa("fondinon2x2/InternoLocanda.gif"))
 				.conRitaglioSuSfondo()
-				.conElemento(ElementoIntermezzo.di("oste", ImmagineIntermezzo.risorsa("personaggi/Locandiere.gif"), X_OSTE, Y_PERSONAGGI));
+				.conElemento(ElementoIntermezzo.personaggio("oste", TipoPersonaggio.LOCANDIERE, X_OSTE, Y_PERSONAGGI));
 
 		String idElementoCapo = null;
 		for (int i = 0; i < personaggiVivi.size(); i++) {

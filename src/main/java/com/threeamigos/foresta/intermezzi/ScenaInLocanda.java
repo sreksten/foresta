@@ -14,7 +14,6 @@ public final class ScenaInLocanda {
 
 	private static final String SFONDO = "fondinon2x2/InternoLocanda.gif";
 	private static final String PRIMO_PIANO = "fondinon2x2/ForegroundLocanda.gif";
-	private static final String LOCANDIERE = "personaggi/Locandiere.gif";
 	private static final String ID_LOCANDIERE = "locandiere";
 	// Come la scenetta d'ingresso nella locanda (vedi NegozioInScena.LOCANDA)
 	private static final double X_LOCANDIERE = 0.65;
@@ -30,7 +29,7 @@ public final class ScenaInLocanda {
 	}
 
 	public static ScenaInLocanda conLocandiere() {
-		return new ScenaInLocanda(ElementoIntermezzo.di(ID_LOCANDIERE, ImmagineIntermezzo.risorsa(LOCANDIERE), X_LOCANDIERE, Y_PERSONAGGI));
+		return new ScenaInLocanda(ElementoIntermezzo.personaggio(ID_LOCANDIERE, TipoPersonaggio.LOCANDIERE, X_LOCANDIERE, Y_PERSONAGGI));
 	}
 
 	/**

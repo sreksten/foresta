@@ -42,10 +42,6 @@ public class ImageCache {
 	static BufferedImage corniceLarga;
 	static BufferedImage corniceInventario;
 	static BufferedImage sferaMagica;
-	static BufferedImage armaiolo;
-	static BufferedImage alchimista;
-	static BufferedImage venditoreDiPergamene;
-	static BufferedImage incantatore;
 	static BufferedImage ombraDelDrago;
 	// Lo sfondo della storia nell'intro: una foresta con templi e locande
 	static BufferedImage sfondoStoria;
@@ -140,10 +136,6 @@ public class ImageCache {
 		corniceLarga = BufferedImageBuilder.buildBufferedImage("fondi/CorniceLarga.gif", zoom);
 		corniceInventario = BufferedImageBuilder.buildBufferedImage("fondi/CorniceInventario.gif", zoom);
 		sferaMagica = BufferedImageBuilder.buildBufferedImage("fondinon2x2/SferaMagica.gif");
-		armaiolo = BufferedImageBuilder.buildBufferedImage("personaggi/Armaiolo.gif", LivelloDiZoom.valore());
-		alchimista = BufferedImageBuilder.buildBufferedImage("personaggi/Alchimista.gif", LivelloDiZoom.valore());
-		venditoreDiPergamene = BufferedImageBuilder.buildBufferedImage("personaggi/VenditoreDiPergamene.gif", LivelloDiZoom.valore());
-		incantatore = BufferedImageBuilder.buildBufferedImage("personaggi/Incantatore.gif", LivelloDiZoom.valore());
 		ombraDelDrago = BufferedImageBuilder.buildBufferedImage("fondi/OmbraDelDrago.gif", zoom);
 		sfondoStoria = BufferedImageBuilder.buildBufferedImage("fondinon2x2/SfondoStoria.gif");
 		trionfo = BufferedImageBuilder.buildBufferedImage("fondi/Trionfo.gif", zoom);

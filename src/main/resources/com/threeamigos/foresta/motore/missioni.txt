@@ -344,7 +344,9 @@ OGGETTO_SMARRITO
 // Una riga per incarico, campi CHIAVE=valore separati da ";" (una riga lunga si spezza con una "\" in fondo):
 //   CHIAVE=     l'identificativo, diverso per ogni riga;
 //   TIPO=       il TipoMissione che copre (VENDETTA, COMBATTIMENTO_BESTIA, DUELLO, BLOCCO...);
-//   ASPETTO=    chi compare nella scena in città: QUALUNQUE, CAPITANO, ARMAIOLO, ALCHIMISTA o LOCANDIERE;
+//   ASPETTO=    chi compare nella scena in città: un personaggio (CAPITANO, ARMAIOLO, ALCHIMISTA, LOCANDIERE,
+//               VENDITORE_DI_PERGAMENE, INCANTATORE, SACERDOTE, SACERDOTESSA, MAGO, MAGA, GUERRIERO, LADRO) oppure,
+//               se il mandante non ne ha uno, QUALUNQUE (un uomo) o DONNA;
 //   MANDANTE=   chi chiede, con l'articolo (il mugnaio);
 //   NEMICO=, NUMERO=  chi va sconfitto (un TipoPersonaggio) e quanti;
 //   CAPO=       facoltativo: uno di loro ha un nome e un livello in più. SI pesca il nome da NOME_CAPOBANDA,
@@ -380,7 +382,7 @@ INCARICO_DI_COMBATTIMENTO
     VITTORIA=Anche %CAPO_3% è a terra: l'esercito è sbaragliato, e la radura è di nuovo libera.;\
     RINGRAZIAMENTO=Goblin, hobgoblin e pure un troll! In città faranno una canzone. Brutta, ma una canzone.;\
     RICORDO=In questa radura fu sbaragliato l'esercito di %CAPO_3%.
-    CHIAVE=NOTTE_DEI_MORTI;TIPO=BATTAGLIA;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;NEMICO=SCHELETRO;NUMERO=4;LUOGO=ROVINE;\
+    CHIAVE=NOTTE_DEI_MORTI;TIPO=BATTAGLIA;ASPETTO=SACERDOTE;MANDANTE=il sacerdote;NEMICO=SCHELETRO;NUMERO=4;LUOGO=ROVINE;\
     MONETE=55;TITOLO=La notte dei morti;\
     RICHIESTA=Fra delle rovine i morti si sono messi a camminare. Tutti insieme, in fila, come a una processione. Qualcuno li comanda, e non è il parroco.;\
     BATTUTA=E chi li comanda?;RISPOSTA=Lo scoprirete quando avrete sistemato quelli in prima fila.;\
@@ -417,7 +419,7 @@ INCARICO_DI_COMBATTIMENTO
     VITTORIA=Le viverne non porteranno più via nessuna pecora.;\
     RINGRAZIAMENTO=I pastori vi ringraziano. Le pecore anche, a modo loro.;\
     RICORDO=Fra queste rovine nidificavano le viverne.
-    CHIAVE=SCHELETRI_DELLA_CRIPTA;TIPO=PULIZIA_DEI_DUNGEON;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;NEMICO=SCHELETRO;\
+    CHIAVE=SCHELETRI_DELLA_CRIPTA;TIPO=PULIZIA_DEI_DUNGEON;ASPETTO=SACERDOTE;MANDANTE=il sacerdote;NEMICO=SCHELETRO;\
     NUMERO=5;LUOGO=ROVINE;MONETE=35;TITOLO=La cripta inquieta;\
     RICHIESTA=La vecchia cripta fra le rovine è piena di scheletri che non vogliono saperne di riposare.;\
     BATTUTA=E noi cosa dovremmo fare, cantargli una ninna nanna?;RISPOSTA=Più o meno. Ma con la spada.;\
@@ -472,14 +474,14 @@ INCARICO_DI_COMBATTIMENTO
     VITTORIA=I predoni di %CAPO% non razzieranno più nessuna fattoria.;\
     RINGRAZIAMENTO=Le fattorie dormiranno tranquille. E anche le mie guardie.;\
     RICORDO=In questa radura i predoni di %CAPO% caddero in un agguato.
-    CHIAVE=FANTASMI_DEL_POZZO;TIPO=PROTEZIONE_TEMPORALE;ASPETTO=QUALUNQUE;MANDANTE=la vedova del fabbro;NEMICO=FANTASMA;\
+    CHIAVE=FANTASMI_DEL_POZZO;TIPO=PROTEZIONE_TEMPORALE;ASPETTO=DONNA;MANDANTE=la vedova del fabbro;NEMICO=FANTASMA;\
     NUMERO=3;LUOGO=RADURA;MONETE=30;TITOLO=I fantasmi del pozzo;\
     RICHIESTA=Nella radura del vecchio pozzo si radunano tre fantasmi, e stanotte tocca a me andare a prendere l'acqua.;\
     BATTUTA=Non potete andarci di giorno?;RISPOSTA=Di giorno il pozzo è asciutto. Lo so, non ha senso. Ma è così.;\
     VITTORIA=I fantasmi del pozzo sono svaniti.;\
     RINGRAZIAMENTO=Stanotte avrò la mia acqua, e senza nessuno che mi soffia sul collo.;\
     RICORDO=In questa radura, attorno al vecchio pozzo, si radunavano i fantasmi.
-    CHIAVE=SFIDA_DEL_CAMPIONE;TIPO=DUELLO;ASPETTO=QUALUNQUE;MANDANTE=il maestro d'armi;NEMICO=GUERRIERO;NUMERO=1;\
+    CHIAVE=SFIDA_DEL_CAMPIONE;TIPO=DUELLO;ASPETTO=GUERRIERO;MANDANTE=il maestro d'armi;NEMICO=GUERRIERO;NUMERO=1;\
     CAPO=NOME_CAMPIONE;RESA=SI;DUELLO=SI;LUOGO=RADURA;MONETE=35;TITOLO=La sfida di %CAPO%;\
     RICHIESTA=Un campione, %CAPO%, ha piantato la sua tenda in una radura e sfida chiunque passi. Ha già battuto tutti i miei allievi. E me.;\
     BATTUTA=E perché dovremmo batterlo noi?;RISPOSTA=Perché adesso nessuno vuole più prendere lezioni da me.;\
@@ -507,7 +509,7 @@ INCARICO_DI_COMBATTIMENTO
     VITTORIA=%CAPO% ammette la sconfitta, e chiede chi vi ha insegnato quegli incantesimi.;\
     RINGRAZIAMENTO=Se qualcuno chiede, ditegli che eravate miei allievi.;\
     RICORDO=Fra queste rovine si combatté un duello di magia.
-    CHIAVE=MINOTAURO_DEL_RITO;TIPO=COMBATTIMENTO_RITUALE;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;NEMICO=MINOTAURO;NUMERO=1;\
+    CHIAVE=MINOTAURO_DEL_RITO;TIPO=COMBATTIMENTO_RITUALE;ASPETTO=SACERDOTE;MANDANTE=il sacerdote;NEMICO=MINOTAURO;NUMERO=1;\
     CAPO=SI;RESA=SI;DUELLO=SI;LUOGO=BOSCO;MONETE=40;TITOLO=Il rito del minotauro;\
     RICHIESTA=Nel bosco vive un minotauro, %CAPO%. Ogni anno, per la festa del raccolto, qualcuno deve affrontarlo nel combattimento sacro.;\
     BATTUTA=E se vince lui?;RISPOSTA=Allora il raccolto è scarso, e i funerali costosi.;\
@@ -549,7 +551,7 @@ INCARICO_DI_COMBATTIMENTO
     VITTORIA=%CAPO% è sconfitto, e l'armatura del fabbro è tutta ammaccata.;\
     RINGRAZIAMENTO=Ammaccata? Benissimo. Me la riporta lui, a piedi, e la ripara a sue spese.;\
     RICORDO=In questa radura il cavaliere spergiuro %CAPO% ebbe quello che si meritava.
-    CHIAVE=MAGO_DEL_ROSPO;TIPO=VENDETTA;ASPETTO=QUALUNQUE;MANDANTE=la sorella del mercante;NEMICO=MAGO;NUMERO=1;\
+    CHIAVE=MAGO_DEL_ROSPO;TIPO=VENDETTA;ASPETTO=DONNA;MANDANTE=la sorella del mercante;NEMICO=MAGO;NUMERO=1;\
     CAPO=NOME_MAGO;RESA=SI;LUOGO=ROVINE;MONETE=40;TITOLO=Il mago e il rospo;\
     RICHIESTA=Un mago, %CAPO%, ha trasformato mio fratello in un rospo perché gli aveva venduto un mantello tarlato. Adesso vive fra delle rovine.;\
     BATTUTA=Il mago o vostro fratello?;RISPOSTA=Il mago. Mio fratello vive in un secchio, in cucina.;\
@@ -715,7 +717,7 @@ NEMICI_DELLE_ROVINE
 // Nei testi %CAPO% è il nome del capo, %CAPO_2% e %CAPO_3% quelli dei capi delle ondate. Nei testi non si usa il ";".
 
 SORVEGLIANZA
-    CHIAVE=CERCHIO_DI_PIETRE;TIPO=VIGILIA;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;LUOGO=RADURA;VISITE=3;ORE=20;\
+    CHIAVE=CERCHIO_DI_PIETRE;TIPO=VIGILIA;ASPETTO=SACERDOTE;MANDANTE=il sacerdote;LUOGO=RADURA;VISITE=3;ORE=20;\
     NEMICO=FANTASMA;NUMERO=2;MONETE=35;TITOLO=La veglia delle pietre;\
     RICHIESTA=In una radura c'è un cerchio di pietre antiche. Ogni cento anni qualcuno deve vegliarlo per tre notti. Quest'anno tocca a voi.;\
     BATTUTA=E se non lo veglia nessuno?;RISPOSTA=Non lo so. L'ultima volta che è successo non è sopravvissuto nessuno a raccontarlo.;\
@@ -724,7 +726,7 @@ SORVEGLIANZA
     VITTORIA=I fantasmi tornano dentro le pietre, per altri cento anni.;\
     RINGRAZIAMENTO=Il cerchio dormirà per altri cento anni. A quel tempo toccherà a qualcun altro, per fortuna.;\
     RICORDO=In questa radura c'è il cerchio di pietre che qualcuno vegliò per tre notti.
-    CHIAVE=TOMBA_DELL_EREMITA;TIPO=VIGILIA;ASPETTO=QUALUNQUE;MANDANTE=la sorella dell'eremita;LUOGO=BOSCO;VISITE=2;ORE=24;\
+    CHIAVE=TOMBA_DELL_EREMITA;TIPO=VIGILIA;ASPETTO=DONNA;MANDANTE=la sorella dell'eremita;LUOGO=BOSCO;VISITE=2;ORE=24;\
     MONETE=25;TITOLO=La tomba dell'eremita;\
     RICHIESTA=Mio fratello era un eremita, e l'abbiamo sepolto nel bosco dove viveva. La tradizione vuole che qualcuno vegli la sua tomba per due notti.;\
     BATTUTA=Perché non la vegliate voi?;RISPOSTA=Nel bosco ci sono i lupi. E poi mio fratello mi stava antipatico.;\
@@ -798,7 +800,7 @@ SORVEGLIANZA
     VITTORIA=Troll e hobgoblin sono sconfitti: il guado resta di tutti.;\
     RINGRAZIAMENTO=Il guado è libero, e il pedaggio lo chiedo io. Scherzo! Per voi è gratis.;\
     RICORDO=In questa palude c'è un guado che fu tenuto contro due troll.
-    CHIAVE=GROTTA_MURATA;TIPO=CONTENIMENTO;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;LUOGO=GROTTA;VISITE=3;ORE=12;\
+    CHIAVE=GROTTA_MURATA;TIPO=CONTENIMENTO;ASPETTO=SACERDOTE;MANDANTE=il sacerdote;LUOGO=GROTTA;VISITE=3;ORE=12;\
     NEMICO=SCHELETRO;NUMERO=3;MONETE=40;TITOLO=La grotta murata;\
     RICHIESTA=Tanto tempo fa abbiamo murato una grotta piena di scheletri. Ora il muro scricchiola. Andate a controllarlo, più volte, e se cede fermate chi esce.;\
     BATTUTA=Non si potrebbe rifare il muro?;RISPOSTA=Il muratore è dentro. È uno degli scheletri.;\
@@ -824,7 +826,7 @@ SORVEGLIANZA
     VITTORIA=I folletti scappano senza rape. Le rape restano, e non si lamentano.;\
     RINGRAZIAMENTO=Che rape! Ne ho venduta una al locandiere, e ci ha fatto la minestra per un mese.;\
     RICORDO=In questa radura crescevano rape grosse come botti.
-    CHIAVE=OCHE_DA_GUARDIA;TIPO=ALLEVAMENTO;ASPETTO=QUALUNQUE;MANDANTE=la guardiana di oche;LUOGO=PALUDE;VISITE=2;ORE=20;\
+    CHIAVE=OCHE_DA_GUARDIA;TIPO=ALLEVAMENTO;ASPETTO=DONNA;MANDANTE=la guardiana di oche;LUOGO=PALUDE;VISITE=2;ORE=20;\
     MONETE=30;TITOLO=Le oche da guardia;\
     RICHIESTA=Le mie oche ingrassano in una palude, ma adesso devono imparare a fare la guardia. Passate a sgridarle un paio di volte: devono imparare a starnazzare contro gli sconosciuti.;\
     BATTUTA=Sgridare delle oche?;RISPOSTA=Con autorità. Le oche capiscono l'autorità. Più di certi soldati.;\
@@ -849,7 +851,7 @@ SORVEGLIANZA
 // Nei testi %NOME% è il nome di chi va riportato a casa, %CAPO% quello del capo. Nei testi non si usa il ";".
 
 SOCCORSO
-    CHIAVE=TAGLIALEGNA_E_ARPIE;TIPO=SOCCORSO;ASPETTO=QUALUNQUE;MANDANTE=la moglie del taglialegna;PERSONA=il taglialegna;\
+    CHIAVE=TAGLIALEGNA_E_ARPIE;TIPO=SOCCORSO;ASPETTO=DONNA;MANDANTE=la moglie del taglialegna;PERSONA=il taglialegna;\
     NEMICO=ARPIA;NUMERO=3;LUOGO=BOSCO;MONETE=35;TITOLO=Il taglialegna nel bosco;\
     RICHIESTA=Mio marito %NOME% è andato a far legna in un bosco e non è tornato. Un cacciatore l'ha visto su un albero, con una gamba rotta e tre arpie che gli girano intorno.;\
     BATTUTA=Su un albero? Con una gamba rotta?;RISPOSTA=Le arpie fanno salire sugli alberi chiunque. Anche con due gambe rotte.;\
@@ -949,7 +951,7 @@ INDAGINE
     VITTORIA=I folletti sono sconfitti, e dal bosco escono barcollando i viandanti scomparsi, stanchi morti di ballare.;\
     RINGRAZIAMENTO=Sono tornati tutti, anche le mie guardie. Dicono che non vogliono ballare mai più.;\
     RICORDO=In questo bosco i folletti facevano ballare i viandanti fino allo sfinimento.
-    CHIAVE=CAMPANE_RUBATE;TIPO=TESTIMONI;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;MONETE=35;TITOLO=Le campane rubate;\
+    CHIAVE=CAMPANE_RUBATE;TIPO=TESTIMONI;ASPETTO=SACERDOTE;MANDANTE=il sacerdote;MONETE=35;TITOLO=Le campane rubate;\
     RICHIESTA=Stanotte qualcuno ha rubato le campane del campanile. Tutte e tre. Sapete quanto pesa una campana?;\
     BATTUTA=Tanto?;RISPOSTA=Tantissimo. Chiedete in giro, qualcuno avrà visto qualcosa.;\
     INDIZIO_1=LOCANDA:Un ubriaco giura di aver visto le campane volare via, di notte, verso delle rovine. Il locandiere dice che l'ubriaco giura tante cose.;\
@@ -988,7 +990,7 @@ INDAGINE
     VITTORIA=La banda di %CAPO% è sconfitta. Nel loro nascondiglio ci sono un costume da drago e tante lettere già firmate.;\
     RINGRAZIAMENTO=Un costume da drago! E io che pagavo. Non ditelo a nessuno, per favore.;\
     RICORDO=In questa palude la banda di %CAPO% si fingeva un drago.
-    CHIAVE=LUCI_NELLE_ROVINE;TIPO=SCOPERTA_SEGRETO;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;MONETE=40;\
+    CHIAVE=LUCI_NELLE_ROVINE;TIPO=SCOPERTA_SEGRETO;ASPETTO=SACERDOTE;MANDANTE=il sacerdote;MONETE=40;\
     TITOLO=Le luci nelle rovine;\
     RICHIESTA=Ogni notte, fra delle rovine, si accendono luci verdi. E da quando ci sono le luci, il cimitero è sempre più vuoto.;\
     BATTUTA=Più vuoto?;RISPOSTA=I morti. Spariscono i morti.;\
@@ -1002,7 +1004,7 @@ INDAGINE
     VITTORIA=Gli scheletri sono tornati polvere, e %CAPO_2% non risveglierà più nessuno. I tre libri tornano al tempio.;\
     RINGRAZIAMENTO=I morti possono tornare a riposare. Domani li rimettiamo al loro posto, uno per uno.;\
     RICORDO=In questa grotta il negromante %CAPO_2% nascondeva i suoi scheletri.
-    CHIAVE=MORTE_DEL_PESCATORE;TIPO=FORENSICA;ASPETTO=QUALUNQUE;MANDANTE=la vedova del pescatore;MONETE=35;\
+    CHIAVE=MORTE_DEL_PESCATORE;TIPO=FORENSICA;ASPETTO=DONNA;MANDANTE=la vedova del pescatore;MONETE=35;\
     TITOLO=La morte del pescatore;\
     RICHIESTA=Mio marito è morto in una palude, dove andava a pescare. Dicono che è stato un incidente. Io non ci credo.;\
     BATTUTA=E cosa credete?;RISPOSTA=Che qualcosa l'ha ucciso. Scopritelo voi, io non ho il coraggio di guardare.;\
@@ -1149,7 +1151,7 @@ INDAGINE
 // Nei testi %CAPO% è il nome del capo. Nei testi non si usa il ";".
 
 RITUALE
-    CHIAVE=FUOCO_DEL_SOLSTIZIO;TIPO=RITUALE;ASPETTO=QUALUNQUE;MANDANTE=la sacerdotessa;LUOGO=RADURA;\
+    CHIAVE=FUOCO_DEL_SOLSTIZIO;TIPO=RITUALE;ASPETTO=SACERDOTESSA;MANDANTE=la sacerdotessa;LUOGO=RADURA;\
     GENERE=F;INGREDIENTE=lacrima di resina;INGREDIENTI=lacrime di resina;DOVE=LUOGHI BOSCO;QUANTITA=4;\
     DOMANDA=La radura è pronta e la resina anche. Accendete il fuoco del solstizio?;\
     MONETE=30;TITOLO=Il fuoco del solstizio;\
@@ -1158,7 +1160,7 @@ RITUALE
     RITO=La resina prende fuoco con una fiammata alta, che profuma di bosco. Il fuoco del solstizio è acceso.;\
     RINGRAZIAMENTO=L'ho visto anche da qui, il vostro fuoco! L'inverno sarà breve, o almeno così dice la tradizione.;\
     RICORDO=In questa radura qualcuno accese il fuoco del solstizio.
-    CHIAVE=VARCO_DEGLI_SPETTRI;TIPO=SIGILLO;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;LUOGO=ROVINE;\
+    CHIAVE=VARCO_DEGLI_SPETTRI;TIPO=SIGILLO;ASPETTO=SACERDOTE;MANDANTE=il sacerdote;LUOGO=ROVINE;\
     GENERE=M;INGREDIENTE=frammento d'argento;INGREDIENTI=frammenti d'argento;DOVE=LUOGHI GROTTA;QUANTITA=3;\
     DOMANDA=Il varco fra le rovine pulsa di una luce fredda. Lo sigillate con l'argento?;\
     NEMICO=SPETTRO;NUMERO=2;MONETE=40;TITOLO=Il varco degli spettri;\
@@ -1168,7 +1170,7 @@ RITUALE
     VITTORIA=Gli spettri svaniscono, e il varco si chiude con un rumore di porta sbattuta.;\
     RINGRAZIAMENTO=Il varco è chiuso, e le notti sono di nuovo tranquille. Avete avanzato dell'argento, per caso?;\
     RICORDO=Fra queste rovine c'era un varco da cui uscivano gli spettri.
-    CHIAVE=FONTE_DELLA_RADURA;TIPO=BENEDIZIONE;ASPETTO=QUALUNQUE;MANDANTE=la levatrice;LUOGO=RADURA;\
+    CHIAVE=FONTE_DELLA_RADURA;TIPO=BENEDIZIONE;ASPETTO=DONNA;MANDANTE=la levatrice;LUOGO=RADURA;\
     GENERE=M;INGREDIENTE=giglio bianco;INGREDIENTI=gigli bianchi;DOVE=LUOGHI RADURA BOSCO;QUANTITA=3;\
     DOMANDA=La fonte gorgoglia piano. Gettate i gigli nell'acqua e la benedite?;\
     MONETE=25;TITOLO=La fonte dei neonati;\
@@ -1197,7 +1199,7 @@ RITUALE
     VITTORIA=Le ombre nere si dissolvono nel fumo, e gli alberi tornano verdi.;\
     RINGRAZIAMENTO=Le erbe del bosco sono di nuovo buone. Le ho assaggiate. Cioè, le ha assaggiate il mio assistente.;\
     RICORDO=Questo bosco era corrotto, finché qualcuno non lo purificò con il vischio.
-    CHIAVE=PASTORE_POSSEDUTO;TIPO=POSSESSIONE;ASPETTO=QUALUNQUE;MANDANTE=la moglie del pastore;LUOGO=TEMPIO;\
+    CHIAVE=PASTORE_POSSEDUTO;TIPO=POSSESSIONE;ASPETTO=DONNA;MANDANTE=la moglie del pastore;LUOGO=TEMPIO;\
     GENERE=F;INGREDIENTE=radice di valeriana;INGREDIENTI=radici di valeriana;DOVE=LUOGHI RADURA BOSCO;QUANTITA=3;\
     DOMANDA=Il pastore si contorce e ringhia. Come lo liberate?;\
     METODI=Gli recitate la formula al contrario/Gli fate respirare il fumo della valeriana bruciata/Lo cospargete di sale;\
@@ -1238,7 +1240,7 @@ RITUALE
     VITTORIA=Le arpie fuggono, e la barriera di cristallo si chiude sopra la strada con un suono di campanelle.;\
     RINGRAZIAMENTO=Da quando c'è la barriera, le arpie girano al largo. E la strada, di notte, brilla un po'.;\
     RICORDO=In questa radura c'è la barriera di cristallo che tiene lontane le arpie.
-    CHIAVE=SANTUARIO_DEI_VIANDANTI;TIPO=SANTUARIO;ASPETTO=QUALUNQUE;MANDANTE=la badessa;LUOGO=BOSCO;\
+    CHIAVE=SANTUARIO_DEI_VIANDANTI;TIPO=SANTUARIO;ASPETTO=SACERDOTESSA;MANDANTE=la badessa;LUOGO=BOSCO;\
     GENERE=M;INGREDIENTE=sasso bianco;INGREDIENTI=sassi bianchi;DOVE=LUOGHI RADURA PALUDE;QUANTITA=5;\
     DOMANDA=Nel bosco c'è il posto giusto, all'ombra di una quercia. Disponete i sassi e consacrate il santuario?;\
     MONETE=30;TITOLO=Il santuario dei viandanti;\
@@ -1247,7 +1249,7 @@ RITUALE
     RITO=I sassi bianchi formano un cerchio perfetto, e sotto la quercia scende una pace che si sente sulla pelle. Il santuario è consacrato.;\
     RINGRAZIAMENTO=Un viandante è già venuto a ringraziare: ha dormito nel santuario, e nessuno l'ha mangiato. È un buon inizio.;\
     RICORDO=In questo bosco, sotto una quercia, c'è il santuario dei viandanti.
-    CHIAVE=OCCHIO_DELLA_PALUDE;TIPO=DIVINAZIONE;ASPETTO=QUALUNQUE;MANDANTE=la veggente;LUOGO=PALUDE;\
+    CHIAVE=OCCHIO_DELLA_PALUDE;TIPO=DIVINAZIONE;ASPETTO=MAGA;MANDANTE=la veggente;LUOGO=PALUDE;\
     GENERE=F;INGREDIENTE=foglia di salice;INGREDIENTI=foglie di salice;DOVE=LUOGHI PALUDE BOSCO;QUANTITA=4;\
     DOMANDA=L'acqua della palude è ferma come uno specchio. Bruciate le foglie di salice e interrogate il futuro?;\
     MONETE=30;TITOLO=L'occhio della palude;\
@@ -1256,7 +1258,7 @@ RITUALE
     RITO=Nel fumo dei salici l'acqua si increspa e mostra un castello avvolto dalle fiamme, un drago, e un gruppo di eroi che gli va incontro. Vi assomigliano parecchio.;\
     RINGRAZIAMENTO=Un drago e degli eroi? Allora il futuro non è poi così annebbiato. Buona fortuna, comunque.;\
     RICORDO=In questa palude qualcuno vide il futuro nell'acqua ferma.
-    CHIAVE=CONGIUNZIONE_DEGLI_ASTRI;TIPO=ASTRI;ASPETTO=QUALUNQUE;MANDANTE=l'astrologo di corte;LUOGO=RADURA;\
+    CHIAVE=CONGIUNZIONE_DEGLI_ASTRI;TIPO=ASTRI;ASPETTO=MAGO;MANDANTE=l'astrologo di corte;LUOGO=RADURA;\
     GENERE=M;INGREDIENTE=petalo di gelsomino notturno;INGREDIENTI=petali di gelsomino notturno;DOVE=LUOGHI RADURA;QUANTITA=3;\
     DOMANDA=Il cielo sopra la radura è limpido, le stelle sono tutte al loro posto. Bruciate i petali e leggete le stelle?;\
     MONETE=30;TITOLO=La congiunzione degli astri;\
@@ -1305,7 +1307,7 @@ RITUALE
     VITTORIA=Lo spirito si inchina e stringe il patto: il fiume resterà negli argini, finché il mugnaio non pescherà.;\
     RINGRAZIAMENTO=Il patto è stretto! Ho già venduto le canne da pesca. Il mulino, quest'anno, resta dov'è.;\
     RICORDO=In questa palude fu stretto il patto tra il mugnaio e lo spirito delle acque.
-    CHIAVE=PIOGGIA_DI_RANE;TIPO=ANTI_MAGIA;ASPETTO=QUALUNQUE;MANDANTE=la fornaia;LUOGO=ROVINE;\
+    CHIAVE=PIOGGIA_DI_RANE;TIPO=ANTI_MAGIA;ASPETTO=DONNA;MANDANTE=la fornaia;LUOGO=ROVINE;\
     GENERE=M;INGREDIENTE=rametto di ruta;INGREDIENTI=rametti di ruta;DOVE=LUOGHI RADURA BOSCO;QUANTITA=4;\
     DOMANDA=Fra le rovine c'è ancora il cerchio dell'incantesimo, tracciato col carbone. Bruciate la ruta e scioglietelo?;\
     MONETE=35;TITOLO=La pioggia di rane;\
@@ -1314,7 +1316,7 @@ RITUALE
     RITO=Il fumo della ruta cancella il cerchio di carbone, e in lontananza, sopra la città, l'ultima rana cade con un plof. L'incantesimo è sciolto.;\
     RINGRAZIAMENTO=Niente più rane! Il pane di oggi è senza zampe. Ve ne do una pagnotta, controllata.;\
     RICORDO=Fra queste rovine fu sciolto l'incantesimo della pioggia di rane.
-    CHIAVE=ZUCCHE_DEL_VICINO;TIPO=MALEDIZIONE;ASPETTO=QUALUNQUE;MANDANTE=la contadina;LUOGO=RADURA;\
+    CHIAVE=ZUCCHE_DEL_VICINO;TIPO=MALEDIZIONE;ASPETTO=DONNA;MANDANTE=la contadina;LUOGO=RADURA;\
     GENERE=F;INGREDIENTE=bacca di belladonna;INGREDIENTI=bacche di belladonna;DOVE=LUOGHI BOSCO;QUANTITA=3;\
     DOMANDA=Le zucche del vicino crescono tranquille nella radura. Spargete le bacche e lanciate la maledizione?;\
     MONETE=25;TITOLO=Le zucche del vicino;\
@@ -1363,7 +1365,7 @@ RITUALE
     VITTORIA=I due briganti che non ci sono cascati non ci cascheranno più.;\
     RINGRAZIAMENTO=I briganti hanno cambiato bosco: dicono che in questo c'è un drago. Noi non smentiamo.;\
     RICORDO=In questo bosco, si dice, c'è un drago. Non c'è.
-    CHIAVE=SPIRITO_DELLA_BOTTEGA;TIPO=LEGAME_SPIRITUALE;ASPETTO=QUALUNQUE;MANDANTE=la vedova del mercante;LUOGO=TEMPIO;\
+    CHIAVE=SPIRITO_DELLA_BOTTEGA;TIPO=LEGAME_SPIRITUALE;ASPETTO=DONNA;MANDANTE=la vedova del mercante;LUOGO=TEMPIO;\
     GENERE=M;INGREDIENTE=lamento di fantasma;INGREDIENTI=lamenti di fantasma;DOVE=NEMICI FANTASMA;QUANTITA=2;\
     DOMANDA=Davanti all'altare del tempio, aprite le boccette. Legate i lamenti allo spirito del mercante?;\
     MONETE=40;TITOLO=Lo spirito di guardia;\
@@ -1381,7 +1383,7 @@ RITUALE
     RITO=I cristalli si illuminano uno dopo l'altro, e un filo di luce corre via dalla grotta verso la città. Da qualche parte, una pentola comincia a brillare.;\
     RINGRAZIAMENTO=I lampioni sono accesi! E anche le pentole del fabbro, ma lui dice che così cucina meglio.;\
     RICORDO=In questa grotta c'è una vena di energia che accende i lampioni della città.
-    CHIAVE=DEA_DEL_RACCOLTO;TIPO=COMUNIONE;ASPETTO=QUALUNQUE;MANDANTE=la sacerdotessa;LUOGO=TEMPIO;\
+    CHIAVE=DEA_DEL_RACCOLTO;TIPO=COMUNIONE;ASPETTO=SACERDOTESSA;MANDANTE=la sacerdotessa;LUOGO=TEMPIO;\
     GENERE=M;INGREDIENTE=giglio bianco;INGREDIENTI=gigli bianchi;DOVE=LUOGHI RADURA BOSCO;QUANTITA=4;\
     DOMANDA=L'altare è pronto, e i gigli profumano. Li deponete e chiamate la dea del raccolto?;\
     MONETE=35;TITOLO=Udienza con la dea;\
@@ -1390,7 +1392,7 @@ RITUALE
     RITO=Una luce dorata riempie il tempio, e una voce gentile promette un buon raccolto. Poi, più piano, aggiunge: “E dite a quella là che le zucchine sono nobili.”;\
     RINGRAZIAMENTO=Un buon raccolto! E va bene, va bene: le zucchine sono nobili. Ma non ditelo in giro.;\
     RICORDO=In questo tempio una dea promise un buon raccolto, e difese l'onore delle zucchine.
-    CHIAVE=TRANCE_DI_FRATELLO_ANSELMO;TIPO=TRANCE;ASPETTO=QUALUNQUE;MANDANTE=il priore;LUOGO=RADURA;\
+    CHIAVE=TRANCE_DI_FRATELLO_ANSELMO;TIPO=TRANCE;ASPETTO=SACERDOTE;MANDANTE=il priore;LUOGO=RADURA;\
     GENERE=F;INGREDIENTE=radice di valeriana;INGREDIENTI=radici di valeriana;DOVE=LUOGHI RADURA BOSCO;QUANTITA=3;\
     DOMANDA=Fratello Anselmo medita a gambe incrociate in mezzo alla radura. Come lo riportate indietro?;\
     METODI=Lo scuotete forte/Bruciate la valeriana sotto il suo naso/Gli suonate una campana nelle orecchie;METODO=2;\
@@ -1401,7 +1403,7 @@ RITUALE
     RITO=Il fumo della valeriana sale piano. Fratello Anselmo apre un occhio, poi l'altro, e chiede che giorno è. E se c'è del formaggio.;\
     RINGRAZIAMENTO=Fratello Anselmo è tornato, e il formaggio pure. Dice di aver visto l'infinito. Era più piccolo del previsto.;\
     RICORDO=In questa radura un monaco meditò per tre settimane, pensando al formaggio.
-    CHIAVE=TORRE_PENDENTE;TIPO=INCANTESIMO;ASPETTO=QUALUNQUE;MANDANTE=il mago di corte;LUOGO=ROVINE;\
+    CHIAVE=TORRE_PENDENTE;TIPO=INCANTESIMO;ASPETTO=MAGO;MANDANTE=il mago di corte;LUOGO=ROVINE;\
     GENERE=F;INGREDIENTE=piuma di civetta;INGREDIENTI=piume di civetta;DOVE=LUOGHI BOSCO ROVINE;QUANTITA=4;\
     DOMANDA=La torre fra le rovine pende paurosamente. Disponete le piume in cerchio e pronunciate l'incantesimo?;\
     NEMICO=GARGOYLE;NUMERO=2;MONETE=40;TITOLO=La torre pendente;\
@@ -1429,7 +1431,7 @@ RITUALE
     RITO=I petali si posano sull'altare, e dal tempio sembra uscire un sospiro di sollievo. Lontano, in un'altra città, un vecchio birraio si sveglia con la voglia di scrivere una lettera.;\
     RINGRAZIAMENTO=Mio fratello mi ha scritto! Mi perdona. E rivuole la ricetta. Vedremo.;\
     RICORDO=In questo tempio due fratelli si perdonarono una ricetta della birra.
-    CHIAVE=VITA_NUOVA_DEL_BRIGANTE;TIPO=RISCATTO;ASPETTO=QUALUNQUE;MANDANTE=l'ex brigante;LUOGO=ROVINE;\
+    CHIAVE=VITA_NUOVA_DEL_BRIGANTE;TIPO=RISCATTO;ASPETTO=LADRO;MANDANTE=l'ex brigante;LUOGO=ROVINE;\
     GENERE=M;INGREDIENTE=frammento d'argento;INGREDIENTI=frammenti d'argento;DOVE=LUOGHI GROTTA;QUANTITA=3;\
     DOMANDA=Fra le rovine c'è il vecchio covo. Seppellite l'argento sotto la soglia, come voto di una vita nuova?;\
     NEMICO=GUERRIERO;NUMERO=2;MONETE=35;TITOLO=La vita nuova;\
@@ -1439,7 +1441,7 @@ RITUALE
     VITTORIA=I vecchi compari se ne vanno con le pive nel sacco. La vita nuova può cominciare.;\
     RINGRAZIAMENTO=Fatto, allora. Da oggi sono un uomo onesto. Mi sento leggero. Forse perché non ho più l'argento.;\
     RICORDO=Fra queste rovine un brigante seppellì il suo passato, e un po' d'argento.
-    CHIAVE=FALO_DEL_CAVALIERE;TIPO=REDENZIONE_PUBBLICA;ASPETTO=QUALUNQUE;MANDANTE=il cavaliere caduto in disgrazia;LUOGO=RADURA;\
+    CHIAVE=FALO_DEL_CAVALIERE;TIPO=REDENZIONE_PUBBLICA;ASPETTO=GUERRIERO;MANDANTE=il cavaliere caduto in disgrazia;LUOGO=RADURA;\
     GENERE=F;INGREDIENTE=lacrima di resina;INGREDIENTI=lacrime di resina;DOVE=LUOGHI BOSCO;QUANTITA=4;\
     DOMANDA=Dalla radura il falò si vedrà fino in città. Accendete la resina e date il segnale?;\
     NEMICO=HOBGOBLIN;NUMERO=3;MONETE=35;TITOLO=Il falò del cavaliere;\
@@ -1777,7 +1779,7 @@ COLPO
     SCOPERTI=Gli hobgoblin vi hanno scoperti: il barone ora sa che qualcuno vuole il suo registro. Il colpo è fallito.;\
     RINGRAZIAMENTO=Il campo è di nuovo mio, nero su bianco. Il barone è furioso, ma non può dire perché.;\
     RICORDO=Fra queste rovine il barone teneva il registro dei confini, finché una pagina non cambiò.
-    CHIAVE=IDOLO_DEI_GOBLIN;TIPO=SACRILEGIO;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;LUOGO=GROTTA;NEMICO=GOBLIN;NUMERO=5;\
+    CHIAVE=IDOLO_DEI_GOBLIN;TIPO=SACRILEGIO;ASPETTO=SACERDOTE;MANDANTE=il sacerdote;LUOGO=GROTTA;NEMICO=GOBLIN;NUMERO=5;\
     CAPO=SI;MONETE=40;TITOLO=L'idolo dei goblin;\
     RICHIESTA=In una grotta i goblin di %CAPO% adorano un idolo, e prima di ogni razzia gli sacrificano qualcosa. Galline, per ora. Profanatelo, di nascosto: senza il suo favore non oseranno uscire.;\
     BATTUTA=Profanare un idolo? Non porta sfortuna?;RISPOSTA=Ai goblin sì. È proprio questo il punto.;\
