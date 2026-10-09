@@ -1,6 +1,6 @@
 FIABA
 	[PROEMIO] [RACCONTO]
-#	[RACCONTO_BREVE]
+	[RACCONTO_BREVE]
 
 PROEMIO
 	^[TEMPO_PROEMIO] [LUOGO_PROEMIO] [FATTO_PROEMIO].
@@ -33,9 +33,9 @@ QUANDO
     quando | { in un tempo | nell'era | { ai | nei } tempi | nell'epoca } in cui
 
 QUANDO_AVVENIMENTO_EPICO_FANTASTICO$
-# Il carattere $ dopo il nome di QUANDO_AVVENIMENTO è un one-shot-marker.
-# Significa che ogni alternativa scelta viene rimossa dal pool finché non si chiama reset():
-# una espansione non potrà mai generare due volte lo stesso risultato, ma il pool si esaurisce nel tempo.
+// Il carattere $ dopo il nome di QUANDO_AVVENIMENTO è un one-shot-marker.
+// Significa che ogni alternativa scelta viene rimossa dal pool finché non si chiama reset():
+// una espansione non potrà mai generare due volte lo stesso risultato, ma il pool si esaurisce nel tempo.
     le stelle erano ancora vicine alla terra
     il ferro era ancora morbido come l'argilla
     il silenzio regnava sul mondo
@@ -359,7 +359,7 @@ NOME_PROTAGONISTA
 	Teodorico | Teodolindo | Tristano | Valeriano | Zaccaria
 COGNOME_PROTAGONISTA
 	Sganga | Panzeri | Sbrodoloni | Sgangheroni | Sbrindelloni | Pupazzi
-    Barbagianni | Bellimbusti | Bertucca Boccaloni | Capocotta | Carciofani | Cataratta | Cazzabubboli
+    Barbagianni | Bellimbusti | Bertucca | Boccaloni | Capocotta | Carciofani | Cataratta | Cazzabubboli
     Chiappalepri | Ciarlatano | Ciafardoni | Girelloni | Inciampati | Mangiapasta | Maremmani | Masticabrodo
     Paciocchi | Pannoloni | Pantofolai | Paparazzi | Pappalardo | Patatracchi | Pasticciotti | Pizzicagnoli
     Sbrindellati | Schiaccianoci | Sciancati | Scorramani | Smandrappati | Spaccatutto | Sparafrasche | Strambelli
@@ -424,7 +424,7 @@ MOTIVAZIONE
     , perché un passero gli aveva urlato una profezia incomprensibile
     , stanco di fingere di avere una dignità che non possedeva
     , per sfuggire agli unici tre amici che ancora lo tolleravano
-# Il carattere pipe sopra indica una motivazione vuota
+// Il carattere pipe sopra indica una motivazione vuota
 
 DECISIONE_1
 	andare in culo a tutti | levarsi da tre passi | levarsi dai cosiddetti | prendere armi e bagagli
@@ -850,8 +850,8 @@ NOME_SEMPLICE_PRINCIPESSA$
 	Mafalda | Abelarda | Barbargilda | Brunilde | Gisella | Clotilde | Isolde | Teodolinda | Brigida | Gualberta
 	Ermantina | Amabilia | Eustachia | Eulalia | Labilia | Zelinda | Aurelia | Seraphina | Vincenza | Clementina
 	Elettra | Filomena | Aglaia | Zita | Lalla | Gisla | Tullia | Fausta | Onoria | Berta | Demetria | Ermina
-	Gaudenzia | Irene | Lidia | Matilde | Rina | Gisberta | Ermelinda | Gualberta | Ermengarda | Sigfrida
-    Sardina | Zoccola | Scarpina | Serratura | Spazzola Calamita | Sferruccola | Zavorra
+	Gaudenzia | Irene | Lidia | Matilde | Rina | Gisberta | Ermelinda | Ermengarda | Sigfrida
+    Sardina | Scarpina | Serratura | Sferruccola | Zavorra
     Rantastruzza | Masticarda | Sgrattina | Pizzicarda | Sgusciola | Ruvidilda | Stuccata | Grugnita | Sventola
     Zampata | Rantola
 

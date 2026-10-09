@@ -1,0 +1,5 @@
+// Una grammatica che include la sezione statica dei nomi
+RADICE
+    [NOME]
+
+#include_static <statico/nomi.txt>

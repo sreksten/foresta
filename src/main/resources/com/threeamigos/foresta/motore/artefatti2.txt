@@ -1,48 +1,48 @@
-# Nomi ed effetti degli artefatti generati a caso (vedi GrammaticaArtefatti e GrammarBean.md).
-#
-# FORMATO DEL RISULTATO
-#
-# Ogni produzione radice restituisce una sola riga: il nome dell'artefatto, con dentro dei
-# marcatori <chiave:valore> che GrammaticaArtefatti toglie dal testo e trasforma in dati:
-#
-#   <mod:FORZA+1>             un modificatore di attributo (un TipoAttributo) e la sua intensità,
-#                             da -3 a +3; il generatore la moltiplica per il gradino del livello
-#   <danno:FUOCO>             un incantamento di quel TipoDanno, del grado del livello
-#   <soprannome:Diavolina>    il nome proprio; se ce n'è più d'uno vale il primo
-#   <descrizione:che brucia>  la descrizione; se ce n'è più d'una vale la prima
-#
-# Esempio:
-#   @la spada ardente<danno:FUOCO><descrizione:che brucia i nemici><soprannome:Barbecue> del Monaco Distratto<mod:SAGGEZZA-1>
-# diventa "la spada ardente del Monaco Distratto", detta Barbecue, "che brucia i nemici", con un
-# incantamento di fuoco e un malus alla Saggezza.
-#
-# Ogni marcatore <mod> o <danno> è un effetto e occupa un posto nel limite di effetti
-# dell'artefatto (RaritaArtefatto). Per questo il marcatore sta attaccato alla parola che lo
-# giustifica, e ogni parte del nome porta UN solo effetto: il numero di parti è il numero di effetti.
-#
-# PRODUZIONI RADICE
-#
-# <TIPO>_<n>, dove TIPO è un TipoArtefatto e n il numero di effetti, da 0 a 3: SPADA, ARMATURA,
-# MASCHERA, VESTE, ELMO, SCUDO e SCHINIERI.
-# Il generatore chiede la radice con tanti effetti quanti ne ammette l'artefatto meno uno, lasciando
-# un posto libero per la fusione, e ripiega sulla più grande disponibile.
-#
-# GENERE E TIPO
-#
-# Le parole che si accordano col nome sono in tre sezioni, _FEMMINILE_SINGOLARE (la spada,
-# l'armatura, la maschera, la veste), _MASCHILE_SINGOLARE (l'elmo, lo scudo) e _MASCHILE_PLURALE (gli schinieri),
-# con le stesse righe nello stesso ordine: una parola ha lo stesso effetto in ogni genere.
-# Le sezioni comuni valgono per tutti i tipi; quelle _LAMA solo per le armi, _METALLO per ciò che
-# è di metallo (non la veste; la maschera sì), _STOFFA per la veste, _PROTEZIONE per i pezzi difensivi. Ogni tipo
-# ha le sue sezioni composte (AGGETTIVO_SPADA, DETTAGLIO_ELMO…) che mettono insieme quelle giuste.
-#
-# ARTICOLO
-#
-# "@la ", "@il " e "@i " a inizio riga sono l'articolo: artefatti2_pp.txt lo sceglie in base alla
-# parola che segue, così un prefisso può cominciare con qualunque lettera ("l'immane spada",
-# "lo smisurato elmo", "gli intrepidi schinieri").
-#
-# Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean) e < > @ (marcatori).
+// Nomi ed effetti degli artefatti generati a caso (vedi GrammaticaArtefatti e GrammarBean.md).
+//
+// FORMATO DEL RISULTATO
+//
+// Ogni produzione radice restituisce una sola riga: il nome dell'artefatto, con dentro dei
+// marcatori <chiave:valore> che GrammaticaArtefatti toglie dal testo e trasforma in dati:
+//
+//   <mod:FORZA+1>             un modificatore di attributo (un TipoAttributo) e la sua intensità,
+//                             da -3 a +3; il generatore la moltiplica per il gradino del livello
+//   <danno:FUOCO>             un incantamento di quel TipoDanno, del grado del livello
+//   <soprannome:Diavolina>    il nome proprio; se ce n'è più d'uno vale il primo
+//   <descrizione:che brucia>  la descrizione; se ce n'è più d'una vale la prima
+//
+// Esempio:
+//   @la spada ardente<danno:FUOCO><descrizione:che brucia i nemici><soprannome:Barbecue> del Monaco Distratto<mod:SAGGEZZA-1>
+// diventa "la spada ardente del Monaco Distratto", detta Barbecue, "che brucia i nemici", con un
+// incantamento di fuoco e un malus alla Saggezza.
+//
+// Ogni marcatore <mod> o <danno> è un effetto e occupa un posto nel limite di effetti
+// dell'artefatto (RaritaArtefatto). Per questo il marcatore sta attaccato alla parola che lo
+// giustifica, e ogni parte del nome porta UN solo effetto: il numero di parti è il numero di effetti.
+//
+// PRODUZIONI RADICE
+//
+// <TIPO>_<n>, dove TIPO è un TipoArtefatto e n il numero di effetti, da 0 a 3: SPADA, ARMATURA,
+// MASCHERA, VESTE, ELMO, SCUDO e SCHINIERI.
+// Il generatore chiede la radice con tanti effetti quanti ne ammette l'artefatto meno uno, lasciando
+// un posto libero per la fusione, e ripiega sulla più grande disponibile.
+//
+// GENERE E TIPO
+//
+// Le parole che si accordano col nome sono in tre sezioni, _FEMMINILE_SINGOLARE (la spada,
+// l'armatura, la maschera, la veste), _MASCHILE_SINGOLARE (l'elmo, lo scudo) e _MASCHILE_PLURALE (gli schinieri),
+// con le stesse righe nello stesso ordine: una parola ha lo stesso effetto in ogni genere.
+// Le sezioni comuni valgono per tutti i tipi; quelle _LAMA solo per le armi, _METALLO per ciò che
+// è di metallo (non la veste; la maschera sì), _STOFFA per la veste, _PROTEZIONE per i pezzi difensivi. Ogni tipo
+// ha le sue sezioni composte (AGGETTIVO_SPADA, DETTAGLIO_ELMO…) che mettono insieme quelle giuste.
+//
+// ARTICOLO
+//
+// "@la ", "@il " e "@i " a inizio riga sono l'articolo: artefatti2_pp.txt lo sceglie in base alla
+// parola che segue, così un prefisso può cominciare con qualunque lettera ("l'immane spada",
+// "lo smisurato elmo", "gli intrepidi schinieri").
+//
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean) e < > @ (marcatori).
 
 SPADA_0
     @la spada [COSMETICO_SPADA]
@@ -240,9 +240,9 @@ SCHINIERI_3
     @i schinieri [AGGETTIVO_ELEMENTALE_SCHINIERI] [COMPLEMENTO_SCHINIERI] [DETTAGLIO_SCHINIERI]
     @i [PREFISSO_SCHINIERI] schinieri [AGGETTIVO_SCHINIERI] [COMPLEMENTO_ELEMENTALE_SCHINIERI]
 
-# ---------------------------------------------------------------------------------------------
-# Le parti di ogni tipo: le sezioni comuni, del suo genere, più quelle adatte a che cosa è
-# ---------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+// Le parti di ogni tipo: le sezioni comuni, del suo genere, più quelle adatte a che cosa è
+// ---------------------------------------------------------------------------------------------
 
 COSMETICO_SPADA
     [COSMETICO_FEMMINILE_SINGOLARE]
@@ -421,7 +421,7 @@ AGGETTIVO_ELEMENTALE_SCHINIERI
 COMPLEMENTO_ELEMENTALE_SCHINIERI
     [COMPLEMENTO_ELEMENTALE_PROTEZIONE_PLURALE]
 
-# Senza effetti: solo colore
+// Senza effetti: solo colore
 COSMETICO_FEMMINILE_SINGOLARE
     d'ordinanza | del nonno | da collezione | da cucina | da esposizione
     in offerta speciale | fatta in casa | comprata al mercato | da souvenir | d'allenamento
@@ -455,13 +455,13 @@ COSMETICO_METALLO_MASCHILE_PLURALE
 COSMETICO_STOFFA_FEMMINILE_SINGOLARE
     stinta | rammendata | tarmata | di lana grezza | stirata male | con una macchia di sugo | lavata a novanta gradi
 
-# ---------------------------------------------------------------------------------------------
-# Parti con un modificatore di attributo. Una parola compare una volta sola per genere, sempre
-# con lo stesso effetto, così dal nome si capisce sempre che cosa fa l'artefatto.
-# ---------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+// Parti con un modificatore di attributo. Una parola compare una volta sola per genere, sempre
+// con lo stesso effetto, così dal nome si capisce sempre che cosa fa l'artefatto.
+// ---------------------------------------------------------------------------------------------
 
-# Aggettivi che stanno bene anche prima del nome: "la terribile spada". Al maschile mancano buono,
-# bello e santo, che davanti al nome si troncano ("il bel")
+// Aggettivi che stanno bene anche prima del nome: "la terribile spada". Al maschile mancano buono,
+// bello e santo, che davanti al nome si troncano ("il bel")
 PREFISSO_FEMMINILE_SINGOLARE
     { immane | smisurata | sovrumana | inarrestabile | inenarrabile | generosa | indomabile | mastodontica | formidabile | cruenta | poderosa | ciclopica }<mod:FORZA+2>
     { valente | fiera | temuta | blasonata | promettente | conclamata | autentica | gagliarda | subitanea | pronta | impetuosa | fulminea | vigorosa | rozza | severa | bruta | massiccia | dura | grezza | bestiale | ferina | violenta }<mod:FORZA+1>
@@ -656,7 +656,7 @@ PREFISSO_LAMA_FEMMINILE_SINGOLARE
     lacerante<mod:CRITICO+2>
     { penetrante | incisiva }<mod:CRITICO+1>
 
-# Aggettivi dopo il nome: "la spada pesantissima"
+// Aggettivi dopo il nome: "la spada pesantissima"
 AGGETTIVO_FEMMINILE_SINGOLARE
     { titanica | colossale | pesantissima | barbarica }<mod:FORZA+2>
     { muscolare | forzuta | sgobbona | impattante | dinamica | aggressiva | spaccapietre | picchiatrice | franca | scalpitante | calibrata | tosta | orsina }<mod:FORZA+1>
@@ -902,7 +902,7 @@ AGGETTIVO_STOFFA_FEMMINILE_SINGOLARE
     trapuntata<mod:COSTITUZIONE+1>
     lisa<mod:COSTITUZIONE-1>
 
-# Al posto di "affilata" e "tagliente" per i pezzi difensivi
+// Al posto di "affilata" e "tagliente" per i pezzi difensivi
 AGGETTIVO_PROTEZIONE_FEMMINILE_SINGOLARE
     borchiata<mod:CRITICO+1>
     irta di punte<mod:CRITICO+2>
@@ -918,7 +918,7 @@ AGGETTIVO_PROTEZIONE_MASCHILE_PLURALE
     irti di punte<mod:CRITICO+2>
     su misura<mod:PRECISIONE+1>
 
-# Complementi: "la spada del Monaco Distratto"
+// Complementi: "la spada del Monaco Distratto"
 COMPLEMENTO
     { del Cinghiale Furioso | del Golem d'Argilla | del Rinoceronte Caricante | del Berserker Cieco | del Fabbro Pesante | del Trattore | del Blocco di Cemento | del Sollevatore di Pesi | del Bulldozer | del Ghiottone Rampante }<mod:FORZA+2>
     { della Vittoria | del Campione | del Titano | del Toro | del Minotauro | del Braccio di Ferro | dello Smanettone | dello Scaricatore di Porto | del Traslocatore | del Culturista | del Ghepardo Corazzato | della Pantera | del Centauro | del Cavaliere d'Assalto | della Valanga | dello Smanettone del Lunedì | dell'Atleta dell'Ultimo Minuto | del Corridore con la Spesa | della Furia del Casello | dello Scatto Felino | dell'Orso | del Tasso del Miele | del Cinghiale | del Fabbro | del Palettatore | del Sollevatore | del Buttafuori | dello Scaricatore | del Fusto di Birra | del Bestione | del Ciclope | del Barbaro | dello Spaccapietre | del Picchiatore | del Martello | del Macigno | dello Smanettone Cieco | dello Scaricatore Distratto | della Spaccata | del Sasso nel Buio | della Foga Bruta }<mod:FORZA+1>
@@ -997,7 +997,7 @@ COMPLEMENTO_LAMA
     { del Filo Perso | del Coltello da Burro | della Spada di Gomma | della Lama di Cartone }<mod:CRITICO-1>
     della Lama Sghemba<mod:CRITICO-2>
 
-# Il dettaglio da catalogo in fondo al nome: "(con Camomilla in Omaggio)"
+// Il dettaglio da catalogo in fondo al nome: "(con Camomilla in Omaggio)"
 DETTAGLIO
     { (con { Cervello in Sciopero | Nebbia Mentale | Errori di Battitura | Logica Mancante | Bug di Sistema | Memoria Piena | Cortocircuito Logico | Dati Corrotti | Traduzione Imbarazzante | Schermo Nero }) | (senza { Manuale di Istruzioni | Guida Rapida | Scheda Tecnica | Tutorial Cartaceo | Istruzioni di Montaggio | Schema Logico | Assistenza dello Sviluppatore | Note del Produttore | Etichetta | Traduzione dei Testi | Bino di Note | Mappa dei Flussi | Note a Margine | Glossario Tecnico | FAQ Incluse }) }<mod:INTELLIGENZA-1>
     (con { Manuale di Istruzioni | Guida Rapida | Scheda Tecnica | Tutorial Cartaceo | Istruzioni di Montaggio | Schema Logico | Assistenza dello Sviluppatore | Note del Produttore | Etichetta | Traduzione dei Testi | Bino di Note | Mappa dei Flussi | Note a Margine | Glossario Tecnico | FAQ Incluse })<mod:INTELLIGENZA+1>
@@ -1044,7 +1044,7 @@ DETTAGLIO_LAMA
     { (con { Elsa Fragile | Paramano Mancante | Guardia Allentata | Impugnatura Corta | Protezione Assente | Manico Scheggiato | Struttura Aperta | Profilo Sottile | Nessuno Schermo | Gioco sul Blocco }) | (senza { Paramano Rinforzato | Elsa a Cesto | Guardia Maggiorata | Scudo da Pugno | Blocco di Sicurezza | Protezione Dita | Guardia d'Acciaio | Arresto di Battuta | Staffa di Protezione | Contrappeso Difensivo | Barriera Fisica | Croce d'Arresto | Copertura Laterale }) }<mod:PARATA-1>
     (con { Paramano Rinforzato | Elsa a Cesto | Guardia Maggiorata | Scudo da Pugno | Blocco di Sicurezza | Protezione Dita | Guardia d'Acciaio | Arresto di Battuta | Staffa di Protezione | Contrappeso Difensivo | Barriera Fisica | Croce d'Arresto | Copertura Laterale })<mod:PARATA+1>
 
-# Per i pezzi difensivi, anche di stoffa: niente lame, elsa o impugnatura
+// Per i pezzi difensivi, anche di stoffa: niente lame, elsa o impugnatura
 DETTAGLIO_PROTEZIONE
     { (con { Cinghie Allentate | Fibbie Difettose | Cuciture Cedevoli | Sconto del 50% | Difetto di Fabbrica | Lacci Sfilacciati }) | (senza { Rinforzi Strutturali | Imbottitura Rinforzata | Fodera Doppia | Lacci di Cuoio | Innesto Muscolare | Fibbie Robuste }) }<mod:FORZA-1>
     (con { Rinforzi Strutturali | Imbottitura Rinforzata | Fodera Doppia | Lacci di Cuoio | Innesto Muscolare | Fibbie Robuste })<mod:FORZA+1>
@@ -1063,12 +1063,12 @@ DETTAGLIO_PROTEZIONE
     { (con { Sonaglio di Serie | Allarme Acustico | Led Lampeggiante | Campanellino | Vernice Catarifrangente | Finitura Neon | Fibbie che Tintinnano }) | (senza { Imbottitura Silenziosa | Rivestimento Opaco | Fodera Felpata | Camuffamento Mimetico | Isolamento Acustico | Opacizzazione }) }<mod:FURTIVITA-1>
     (con { Imbottitura Silenziosa | Rivestimento Opaco | Fodera Felpata | Camuffamento Mimetico | Isolamento Acustico | Opacizzazione })<mod:FURTIVITA+1>
 
-# ---------------------------------------------------------------------------------------------
-# Parti elementali: un incantamento del tipo di danno, la descrizione che lo dice e, spesso, un
-# soprannome. Ogni elemento ha le sue produzioni, così aggettivo, soprannome e descrizione non
-# possono contraddirsi. Su un'arma l'incantamento fa danno, su un pezzo difensivo dà resistenza:
-# per questo le descrizioni sono diverse (EFFETTO_<ELEMENTO> e EFFETTO_<ELEMENTO>_PROTEZIONE).
-# ---------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+// Parti elementali: un incantamento del tipo di danno, la descrizione che lo dice e, spesso, un
+// soprannome. Ogni elemento ha le sue produzioni, così aggettivo, soprannome e descrizione non
+// possono contraddirsi. Su un'arma l'incantamento fa danno, su un pezzo difensivo dà resistenza:
+// per questo le descrizioni sono diverse (EFFETTO_<ELEMENTO> e EFFETTO_<ELEMENTO>_PROTEZIONE).
+// ---------------------------------------------------------------------------------------------
 
 AGGETTIVO_ELEMENTALE_ARMA_FEMMINILE_SINGOLARE
     [AGGETTIVO_ARIA_FEMMINILE_SINGOLARE][EFFETTO_ARIA]
@@ -1189,7 +1189,7 @@ COMPLEMENTO_ELEMENTALE_PROTEZIONE_PLURALE
     [COMPLEMENTO_VUOTO][EFFETTO_VUOTO_PROTEZIONE_PLURALE]
     [COMPLEMENTO_MALEDIZIONE][EFFETTO_MALEDIZIONE_PROTEZIONE_PLURALE]
 
-# ARIA
+// ARIA
 AGGETTIVO_ARIA_FEMMINILE_SINGOLARE
     sibilante | eolica | tempestosa | alata | ventosa | sventolante | ciclonica | turbinante | sbuffante | burrascosa | svolazzante
 
@@ -1225,7 +1225,7 @@ DESCRIZIONE_ARIA_PROTEZIONE
 DESCRIZIONE_ARIA_PROTEZIONE_PLURALE
     che fermano le raffiche di vento | che non si lasciano scompigliare da nessuna bufera | che fischiano quando tira vento
 
-# ACQUA
+// ACQUA
 AGGETTIVO_ACQUA_FEMMINILE_SINGOLARE
     idrica | marittima | lacustre | torrenziale | ondosa | umida | bagnata | a idromassaggio | fradicia | brodosa | fluviale | diluviante | inzuppata | gocciolante
 
@@ -1259,7 +1259,7 @@ DESCRIZIONE_ACQUA_PROTEZIONE
 DESCRIZIONE_ACQUA_PROTEZIONE_PLURALE
     che tengono all'asciutto anche sotto il diluvio | che non lasciano passare una goccia | che fanno scivolare via le onde
 
-# TERRA
+// TERRA
 AGGETTIVO_TERRA_FEMMINILE_SINGOLARE
     tellurica | sismica | rocciosa | granitica | terrosa | infangata | polverosa | ancestrale | sotterranea | minerale | lastricata | franosa
 
@@ -1293,7 +1293,7 @@ DESCRIZIONE_TERRA_PROTEZIONE
 DESCRIZIONE_TERRA_PROTEZIONE_PLURALE
     che non temono frane né sassate | che si scrollano di dosso il fango | che reggono il peso di una montagna
 
-# FUOCO
+// FUOCO
 AGGETTIVO_FUOCO_FEMMINILE_SINGOLARE
     fiammeggiante | ardente | vulcanica | incendiaria | piromane | bruciante | grigliata | piccante | magmatica | infernale | ustionante | a carbonella | carbonizzante | rovente
 
@@ -1327,7 +1327,7 @@ DESCRIZIONE_FUOCO_PROTEZIONE
 DESCRIZIONE_FUOCO_PROTEZIONE_PLURALE
     che respingono le fiamme | che non temono il fiato del drago | che tengono lontane le scottature
 
-# FULMINE
+// FULMINE
 AGGETTIVO_FULMINE_FEMMINILE_SINGOLARE
     ronzante | fulminante | voltaica | scintillante | galvanica | elettrica | temporalesca | ionica | magnetica | elettrizzante
 
@@ -1361,7 +1361,7 @@ DESCRIZIONE_FULMINE_PROTEZIONE
 DESCRIZIONE_FULMINE_PROTEZIONE_PLURALE
     che scaricano a terra i fulmini | che fanno da parafulmine | che non prendono la scossa
 
-# GELO
+// GELO
 AGGETTIVO_GELO_FEMMINILE_SINGOLARE
     gelida | artica | glaciale | invernale | criogenica | surgelata | freddolosa | polare | iperborea | brinata | sottozero | ghiacciata
 
@@ -1395,7 +1395,7 @@ DESCRIZIONE_GELO_PROTEZIONE
 DESCRIZIONE_GELO_PROTEZIONE_PLURALE
     che tengono caldo anche tra i ghiacci | che non temono il gelo | che scongiurano i geloni
 
-# ACIDO
+// ACIDO
 AGGETTIVO_ACIDO_FEMMINILE_SINGOLARE
     corrosiva | caustica | dissolvente | erosiva | aspra | sgorgante | brucia-stomaci | alchemica | putrescente | marinata | acida | basica | solvente
 
@@ -1429,7 +1429,7 @@ DESCRIZIONE_ACIDO_PROTEZIONE
 DESCRIZIONE_ACIDO_PROTEZIONE_PLURALE
     che non si lasciano corrodere | che resistono all'acido e all'aceto | che respingono gli schizzi corrosivi
 
-# SONICO
+// SONICO
 AGGETTIVO_SONICO_FEMMINILE_SINGOLARE
     tuonante | risonante | acustica | vibrante | supersonica | rumorosa | sbraitante | amplificata | ecoica | rimbombante | strillante | assordante
 
@@ -1463,7 +1463,7 @@ DESCRIZIONE_SONICO_PROTEZIONE
 DESCRIZIONE_SONICO_PROTEZIONE_PLURALE
     che attutiscono urla e boati | che fanno da tappo per le orecchie | che smorzano ogni rimbombo
 
-# VELENO
+// VELENO
 AGGETTIVO_VELENO_FEMMINILE_SINGOLARE
     letale | tossica | nociva | venefica | contaminata | malmostosa | arsenica | infetta | velenosa | al plutonio | all'uranio impoverito
 
@@ -1497,7 +1497,7 @@ DESCRIZIONE_VELENO_PROTEZIONE
 DESCRIZIONE_VELENO_PROTEZIONE_PLURALE
     che respingono i veleni | che fanno da antidoto | che tengono lontani i morsi delle serpi
 
-# NECROTICO
+// NECROTICO
 AGGETTIVO_NECROTICO_FEMMINILE_SINGOLARE
     spettrale | sepolcrale | cadaverica | tombale | macabra | ossuta | rianimata | scheletrica | putrefatta | cimiteriale | divoratrice
 
@@ -1531,7 +1531,7 @@ DESCRIZIONE_NECROTICO_PROTEZIONE
 DESCRIZIONE_NECROTICO_PROTEZIONE_PLURALE
     che tengono lontani i non morti | che riparano dal tocco della morte | che scacciano i vermi del sepolcro
 
-# SACRO
+// SACRO
 AGGETTIVO_SACRO_FEMMINILE_SINGOLARE
     benedetta | divina | radiosa | celestiale | sacra | consacrata | angelica | santificata | miracolosa | gloriosa | redentrice | martire | devota | incensata | purificatrice
 
@@ -1565,7 +1565,7 @@ DESCRIZIONE_SACRO_PROTEZIONE
 DESCRIZIONE_SACRO_PROTEZIONE_PLURALE
     che non si lasciano accecare dalla luce sacra | che riparano dai castighi celesti | che resistono alle prediche
 
-# PSICHICO
+// PSICHICO
 AGGETTIVO_PSICHICO_FEMMINILE_SINGOLARE
     allucinante | mentale | telepatica | illusoria | cerebrale | schizzata | paranoica | cervellotica | onirica | ipnotica | psicotica | allucinogena | emicranica | svitata | ululante
 
@@ -1599,7 +1599,7 @@ DESCRIZIONE_PSICHICO_PROTEZIONE
 DESCRIZIONE_PSICHICO_PROTEZIONE_PLURALE
     che proteggono la mente | che tengono fuori i pensieri altrui | che fanno da cappello di stagnola
 
-# ARCANO
+// ARCANO
 AGGETTIVO_ARCANO_FEMMINILE_SINGOLARE
     mistica | runica | prodigiosa | esoterica | eterea | magica | fatata | astratta | stellata | evocatrice | prestigiatrice | incantata
 
@@ -1633,7 +1633,7 @@ DESCRIZIONE_ARCANO_PROTEZIONE
 DESCRIZIONE_ARCANO_PROTEZIONE_PLURALE
     che assorbono gli incantesimi | che fanno rimbalzare la magia | che spengono le scintille arcane
 
-# VUOTO
+// VUOTO
 AGGETTIVO_VUOTO_FEMMINILE_SINGOLARE
     astrale | cosmica | siderale | gravitazionale | infinita | vacua | spaziale | dispersa | nullafacente | eclissata | nebulosa | interstellare | abissale | desolata
 
@@ -1667,7 +1667,7 @@ DESCRIZIONE_VUOTO_PROTEZIONE
 DESCRIZIONE_VUOTO_PROTEZIONE_PLURALE
     che resistono al richiamo del vuoto | che non si lasciano risucchiare | che tengono insieme ciò che il nulla disfa
 
-# MALEDIZIONE
+// MALEDIZIONE
 AGGETTIVO_MALEDIZIONE_FEMMINILE_SINGOLARE
     maledetta | sciagurata | funesta | infausta | dannata | iettatrice | malefica | disgraziata | sventurata | scalognata
 

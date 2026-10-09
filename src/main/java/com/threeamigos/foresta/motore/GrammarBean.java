@@ -75,7 +75,7 @@ import com.threeamigos.foresta.strumenti.Logger;
  *     (see {@link #checkTokenValidity}). A production name may therefore not end with
  *     {@code ?}. An assignment's value is free text, so {@code ?} and {@code |} inside
  *     {@code [key=value]} stay plain text.</li>
- *     <li>A line starting with {@code #} is a full-line comment and is ignored, as
+ *     <li>A line starting with {@code //} is a full-line comment and is ignored, as
  *     are empty lines.</li>
  *     <li>An alternative may start with a {@code [^N]} token ({@code N} a positive
  *     number, e.g. {@code 10} or {@code 2.5}) to give it a selection <b>weight</b>: under
@@ -190,12 +190,58 @@ import com.threeamigos.foresta.strumenti.Logger;
  */
 public class GrammarBean {
 
+	/**
+	 * Opens the text of a file included with {@code #include <file>}. The grammar knows only the name written in the
+	 * directive, relative to the folder of the file that includes it; where that folder is, and how a file is read, is up
+	 * to the resolver (see {@link #fromResource}).
+	 */
+	@FunctionalInterface
+	public interface IncludeResolver {
+		/**
+		 * @param path the path of the file, relative to the folder of the main grammar: it uses {@code /} as separator
+		 *             and never starts with it, nor contains {@code .}, {@code ..} or empty segments
+		 * @return the text of the file, or {@code null} if it does not exist
+		 * @throws IOException if the file exists but cannot be opened
+		 */
+		InputStream open(String path) throws IOException;
+
+		/**
+		 * A name that tells apart this file from every other in the whole program, so that {@code #include_static} can
+		 * share its productions among the grammars that include it. The default is null: the resolver does not support
+		 * static sections. {@link #fromResource} gives the URL of the resource.
+		 * @param path the same path as {@link #open}
+		 * @return the identity of the file, or null if the resolver cannot give one
+		 */
+		default String identity(String path) {
+			return null;
+		}
+	}
+
 	private static final String PRODUCTION = "Production ";
 	private static final String LINE = "Line ";
 	/**
 	 * Prefix marking a full-line comment in the grammar/post-production source files.
 	 */
-	private static final String COMMENT_PREFIX = "#";
+	private static final String COMMENT_PREFIX = "//";
+	/**
+	 * What a directive line starts with, in the first column. A line that starts with it and is not a known directive
+	 * is an error: a comment starts with {@link #COMMENT_PREFIX}.
+	 */
+	private static final String DIRECTIVE_PREFIX = "#";
+	/**
+	 * Directive that includes another file, C style: {@code #include <file>} on a line of its own, starting in the
+	 * first column. See {@link IncludeResolver}.
+	 */
+	private static final String INCLUDE_DIRECTIVE = "#include";
+	/**
+	 * Directive that includes a file as a <i>static section</i>: {@code #include_static <file>}. Its productions are
+	 * shared by every grammar that includes it (see {@link #resetStaticProductions()}).
+	 */
+	private static final String INCLUDE_STATIC_DIRECTIVE = "#include_static";
+	/**
+	 * How many files can include one another, one inside the other: stops runaway inclusions.
+	 */
+	private static final int MAX_INCLUDE_DEPTH = 10;
 	/**
 	 * Suffix marking a production as one-shot (removed once used within a cycle). A single
 	 * character rather than {@code {1}} to avoid visual confusion with inline alternation
@@ -339,7 +385,31 @@ public class GrammarBean {
 	 * like {@link #productionsMap}, which {@link #reset()} copies it from, so the one-shot
 	 * removal cascade walks the productions in declaration order.
 	 */
-	private final Map<String, List<WeightedAlternative>> currentProductionsMap = new LinkedHashMap<>();
+	private final Map<String, List<WeightedAlternative>> currentProductionsMap = new CurrentProductions();
+	/**
+	 * The static sections this grammar includes with {@code #include_static}, in the order of the directives.
+	 */
+	private final List<StaticSection> staticSections = new ArrayList<>();
+	/**
+	 * True when this instance is the one that loads a static section: such a source cannot include other static
+	 * sections.
+	 */
+	private boolean staticSource;
+	/**
+	 * Prefix of the names given to the inline-alternation productions: a static section has its own, so that its
+	 * names never meet those of the grammar that includes it.
+	 */
+	private String inlinePrefix = INLINE_PRODUCTION_PREFIX;
+	/**
+	 * The names of static productions already exhausted, whose alternatives have been pruned from
+	 * {@link #currentProductionsMap}.
+	 */
+	private final Set<String> prunedStaticNames = new HashSet<>();
+	/**
+	 * What {@link #staticEpoch} and {@link #staticVersion} were when this grammar last looked at the static sections.
+	 */
+	private long seenStaticEpoch;
+	private long seenStaticVersion;
 	/**
 	 * Fixed productions map
 	 */
@@ -431,6 +501,64 @@ public class GrammarBean {
 	}
 
 	/**
+	 * Where the files of the {@code #include} directives are read from; null if the grammar was built without one.
+	 */
+	private IncludeResolver includeResolver;
+	/**
+	 * For each line of the source after the inclusions, the file and the line it comes from ("nomi.txt:12"); null if
+	 * the source has no {@code #include}, so that the messages keep saying only "Line N".
+	 */
+	private List<String> sourceOrigins;
+
+	/**
+	 * Builds a grammar from a resource, resolving its {@code #include} directives in the same way: a name written in a
+	 * directive is a file in the folder of the resource that contains it, or in a subfolder of it.
+	 * @param anchor class used to find the resources, as for {@link Class#getResourceAsStream}
+	 * @param grammarResource the resource with the grammar, for example {@code "/com/mio/pacchetto/locande.txt"}
+	 * @param postProductionResource the resource with the post-production substitutions, or null
+	 * @throws InvalidGrammarException if a resource is missing or the grammar is not valid
+	 * @throws IOException if a resource cannot be read
+	 */
+	public static GrammarBean fromResource(Class<?> anchor, String grammarResource, String postProductionResource)
+			throws InvalidGrammarException, IOException {
+		String folder = grammarResource.substring(0, grammarResource.lastIndexOf('/') + 1);
+		try (InputStream grammar = anchor.getResourceAsStream(grammarResource);
+			 InputStream postProduction = postProductionResource == null ? null : anchor.getResourceAsStream(postProductionResource)) {
+			if (grammar == null) {
+				throw new InvalidGrammarException("Grammar resource not found: " + grammarResource);
+			}
+			if (postProductionResource != null && postProduction == null) {
+				throw new InvalidGrammarException("Post-production resource not found: " + postProductionResource);
+			}
+			return new GrammarBean(grammar, postProduction, new ResourceIncludeResolver(anchor, folder));
+		}
+	}
+
+	/**
+	 * Reads the included files from the class path, in the folder of the main grammar resource.
+	 */
+	private static final class ResourceIncludeResolver implements IncludeResolver {
+		private final Class<?> anchor;
+		private final String folder;
+
+		private ResourceIncludeResolver(Class<?> anchor, String folder) {
+			this.anchor = anchor;
+			this.folder = folder;
+		}
+
+		@Override
+		public InputStream open(String path) {
+			return anchor.getResourceAsStream(folder + path);
+		}
+
+		@Override
+		public String identity(String path) {
+			java.net.URL url = anchor.getResource(folder + path);
+			return url == null ? null : url.toString();
+		}
+	}
+
+	/**
 	 * Builds a grammar from a source string, with no post-production substitutions.
 	 * @param grammar grammar source text, see the class documentation for its syntax
 	 * @throws InvalidGrammarException if the text does not describe a valid grammar
@@ -478,6 +606,31 @@ public class GrammarBean {
 		init(new ByteArrayInputStream(grammar.getBytes(StandardCharsets.UTF_8)), postProduction);
 	}
 
+	/**
+	 * Like {@link #GrammarBean(InputStream, InputStream)}, but the grammar can include other files with
+	 * {@code #include <file>}: the resolver opens them (see {@link IncludeResolver}).
+	 * @param includeResolver where the included files are read from; null if the grammar has no {@code #include}
+	 */
+	public GrammarBean(InputStream grammar, InputStream postProduction, IncludeResolver includeResolver)
+			throws InvalidGrammarException, IOException {
+		if (grammar == null) {
+			throw new InvalidGrammarException("Grammar source file cannot be null");
+		}
+		this.includeResolver = includeResolver;
+		init(grammar, postProduction);
+	}
+
+	/**
+	 * Builds the grammar of a static section (see {@link StaticSection}).
+	 */
+	private GrammarBean(InputStream grammar, IncludeResolver includeResolver, String inlinePrefix)
+			throws InvalidGrammarException, IOException {
+		this.staticSource = true;
+		this.includeResolver = includeResolver;
+		this.inlinePrefix = inlinePrefix;
+		init(grammar, null);
+	}
+
 	private void init(InputStream grammar, InputStream postProduction) throws InvalidGrammarException, IOException {
 		setSourceFile(grammar);
 		setPostProductionFile(postProduction);
@@ -489,8 +642,449 @@ public class GrammarBean {
 	 */
 	private void setSourceFile(InputStream inputStream) throws InvalidGrammarException, IOException {
 		readSourceFileAndCreateProductionsMap(inputStream);
+		checkStaticNameCollisions();
 		checkProductionsValidity();
 		adjustWeightsForDescendants();
+	}
+
+	/**
+	 * The source of the grammar with every {@code #include <file>} replaced, on its own line, by the lines of that
+	 * file (which can include others, up to {@link #MAX_INCLUDE_DEPTH} deep), and every {@code #include_static <file>}
+	 * removed after registering its static section (see {@link StaticSection}). A file is included only once, wherever
+	 * it is asked for again, so two files can include the same third one and a file cannot include itself. A source
+	 * with no directive is returned as it is, and {@link #sourceOrigins} stays null.
+	 */
+	private InputStream withIncludes(InputStream inputStream) throws IOException, InvalidGrammarException {
+		List<String> lines = readLines(inputStream);
+		boolean needsExpansion = false;
+		for (String line : lines) {
+			if (line.startsWith(DIRECTIVE_PREFIX)) {
+				needsExpansion = true;
+				break;
+			}
+		}
+		sourceOrigins = null;
+		List<String> expanded = lines;
+		if (needsExpansion) {
+			expanded = new ArrayList<>();
+			List<String> origins = new ArrayList<>();
+			expandIncludes(lines, "", "source", 0, new HashSet<>(), expanded, origins);
+			sourceOrigins = origins;
+		}
+		StringBuilder text = new StringBuilder();
+		for (String line : expanded) {
+			text.append(line).append('\n');
+		}
+		return new ByteArrayInputStream(text.toString().getBytes(StandardCharsets.UTF_8));
+	}
+
+	private static List<String> readLines(InputStream inputStream) throws IOException {
+		List<String> lines = new ArrayList<>();
+		BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8));
+		String line;
+		while ((line = reader.readLine()) != null) {
+			lines.add(line);
+		}
+		return lines;
+	}
+
+	/**
+	 * Whether the line is a full-line comment: it starts with {@link #COMMENT_PREFIX}.
+	 */
+	private static boolean isComment(String line) {
+		return line.startsWith(COMMENT_PREFIX);
+	}
+
+	/**
+	 * The directive a line is, {@code "include"} or {@code "include_static"}, or null. The name must be the whole word
+	 * after the {@code #}: {@code #includes} or {@code # include} are not directives.
+	 */
+	private static String directive(String line) {
+		if (!line.startsWith(DIRECTIVE_PREFIX)) {
+			return null;
+		}
+		int end = 1;
+		while (end < line.length() && (Character.isLetter(line.charAt(end)) || line.charAt(end) == '_')) {
+			end++;
+		}
+		String name = line.substring(1, end);
+		return name.equals("include") || name.equals("include_static") ? name : null;
+	}
+
+	/**
+	 * Copies the lines to {@code output}, replacing the include directives with the lines of the files they name.
+	 * @param folder the folder of this file, relative to the main grammar ("" or ending with "/")
+	 * @param name how this file is called in the messages
+	 */
+	private void expandIncludes(List<String> lines, String folder, String name, int depth, Set<String> alreadyIncluded,
+								List<String> output, List<String> origins) throws IOException, InvalidGrammarException {
+		boolean continued = false;
+		for (int i = 0; i < lines.size(); i++) {
+			String line = lines.get(i);
+			String where = name + ":" + (i + 1);
+			// A line that continues the previous one (see LINE_CONTINUATION_MARKER) is never a directive
+			String directive = continued ? null : directive(line);
+			if (directive != null) {
+				String path = includePath(line, directive, where);
+				if (directive.equals("include")) {
+					includeFile(path, folder, where, depth, alreadyIncluded, output, origins);
+				} else {
+					includeStatic(path, folder, where);
+				}
+			} else {
+				if (!continued && line.startsWith(DIRECTIVE_PREFIX)) {
+					throw new InvalidGrammarException(where + ": Unknown directive: comments start with " + COMMENT_PREFIX
+							+ ", and a line starting with " + DIRECTIVE_PREFIX + " must be " + INCLUDE_DIRECTIVE
+							+ " or " + INCLUDE_STATIC_DIRECTIVE);
+				}
+				output.add(line);
+				origins.add(where);
+			}
+			if (continued) {
+				continued = line.endsWith(LINE_CONTINUATION_MARKER);
+			} else {
+				continued = !line.isEmpty() && !isComment(line) && line.endsWith(LINE_CONTINUATION_MARKER);
+			}
+		}
+		if (continued) {
+			throw new InvalidGrammarException(name + ": Line continuation marker '" + LINE_CONTINUATION_MARKER
+					+ "' at end of file");
+		}
+	}
+
+	/**
+	 * The name between {@code <} and {@code >} in an include directive.
+	 */
+	private static String includePath(String line, String directive, String where) throws InvalidGrammarException {
+		String shown = DIRECTIVE_PREFIX + directive;
+		String rest = line.substring(shown.length()).trim();
+		if (!rest.startsWith("<") || !rest.endsWith(">") || rest.length() < 3) {
+			throw new InvalidGrammarException(where + ": Malformed " + shown + ", expected " + shown + " <file>");
+		}
+		String path = rest.substring(1, rest.length() - 1).trim();
+		if (path.isEmpty() || path.startsWith("/") || path.contains("\\")) {
+			throw new InvalidGrammarException(where + ": Invalid file name in " + shown + ": '" + path
+					+ "' (it must be relative, with / as separator)");
+		}
+		for (String segment : path.split("/", -1)) {
+			if (segment.isEmpty() || segment.equals(".") || segment.equals("..")) {
+				throw new InvalidGrammarException(where + ": Invalid file name in " + shown + ": '" + path
+						+ "' (only the folder of the file that includes it, or its subfolders)");
+			}
+		}
+		return path;
+	}
+
+	private void includeFile(String path, String folder, String where, int depth, Set<String> alreadyIncluded,
+							 List<String> output, List<String> origins) throws IOException, InvalidGrammarException {
+		if (includeResolver == null) {
+			throw new InvalidGrammarException(where + ": " + INCLUDE_DIRECTIVE
+					+ " cannot be resolved: the grammar was built without an IncludeResolver (see GrammarBean.fromResource)");
+		}
+		String fullPath = folder + path;
+		if (!alreadyIncluded.add(fullPath)) {
+			return;
+		}
+		if (depth >= MAX_INCLUDE_DEPTH) {
+			throw new InvalidGrammarException(where + ": Too many nested " + INCLUDE_DIRECTIVE + " (more than "
+					+ MAX_INCLUDE_DEPTH + ")");
+		}
+		List<String> includedLines;
+		try (InputStream included = includeResolver.open(fullPath)) {
+			if (included == null) {
+				throw new InvalidGrammarException(where + ": Included file not found: " + fullPath);
+			}
+			includedLines = readLines(included);
+		}
+		if (!includedLines.isEmpty() && includedLines.get(0).startsWith("\uFEFF")) {
+			includedLines.set(0, includedLines.get(0).substring(1));
+		}
+		expandIncludes(includedLines, fullPath.substring(0, fullPath.lastIndexOf('/') + 1), fullPath, depth + 1,
+				alreadyIncluded, output, origins);
+	}
+
+	/**
+	 * Registers the static section of {@code #include_static <path>}, loading it the first time anyone asks for it.
+	 * It adds nothing to the text of this grammar: its productions are looked up in the shared section.
+	 */
+	private void includeStatic(String path, String folder, String where) throws IOException, InvalidGrammarException {
+		if (staticSource) {
+			throw new InvalidGrammarException(where + ": " + INCLUDE_STATIC_DIRECTIVE
+					+ " cannot be used inside a static section");
+		}
+		if (includeResolver == null) {
+			throw new InvalidGrammarException(where + ": " + INCLUDE_STATIC_DIRECTIVE
+					+ " cannot be resolved: the grammar was built without an IncludeResolver (see GrammarBean.fromResource)");
+		}
+		String fullPath = folder + path;
+		String key = includeResolver.identity(fullPath);
+		if (key == null) {
+			try (InputStream probe = includeResolver.open(fullPath)) {
+				if (probe == null) {
+					throw new InvalidGrammarException(where + ": Included file not found: " + fullPath);
+				}
+			}
+			throw new InvalidGrammarException(where + ": " + INCLUDE_STATIC_DIRECTIVE
+					+ " needs a resolver that identifies its files (see GrammarBean.fromResource)");
+		}
+		StaticSection section = loadStaticSection(key, fullPath, where);
+		if (staticSections.contains(section)) {
+			return;
+		}
+		for (String production : section.productions.keySet()) {
+			for (StaticSection other : staticSections) {
+				if (other.productions.containsKey(production)) {
+					throw new InvalidGrammarException(where + ": Production " + production + " is defined by two static sections ("
+							+ other.key + " and " + section.key + ")");
+				}
+			}
+		}
+		staticSections.add(section);
+	}
+
+	// ---------------------------------------------------------------------------------------------------------
+	// Static sections: #include_static <file>
+	// ---------------------------------------------------------------------------------------------------------
+
+	/**
+	 * Guards everything shared among the grammars: {@link #STATIC_SECTIONS}, the consumable productions of every
+	 * {@link StaticSection}, {@link #staticEpoch} and {@link #staticVersion}. A single lock, so that two threads
+	 * producing from two different grammars never take two locks in different orders.
+	 */
+	private static final Object STATIC_LOCK = new Object();
+	/**
+	 * Prefix of the inline-production names of a static section, followed by its number: {@code PROD_S1_0}.
+	 */
+	private static final String STATIC_INLINE_PREFIX = "PROD_S";
+	/**
+	 * The loaded static sections, by identity of the file (see {@link IncludeResolver#identity}).
+	 */
+	private static final Map<String, StaticSection> STATIC_SECTIONS = new HashMap<>();
+	/**
+	 * Changes with {@link #resetStaticProductions()}: a grammar that sees a new one rebuilds its own productions.
+	 */
+	private static long staticEpoch = 0;
+	/**
+	 * Changes whenever a static production is exhausted (or on a reset): a grammar that sees a new one prunes what
+	 * depended on it.
+	 */
+	private static long staticVersion = 0;
+
+	/**
+	 * A file included with {@code #include_static}: parsed once, for the whole program, as a grammar of its own (so it
+	 * cannot refer to productions of the grammar that includes it, which instead can refer to its productions). Its
+	 * productions are <b>shared</b>: a one-shot production consumed through one grammar is consumed for every other
+	 * grammar that includes the same file, until {@link GrammarBean#resetStaticProductions()}.
+	 * <p>
+	 * There is no automatic refill: an exhausted production stays exhausted, and the alternatives that depended on it
+	 * are removed, exactly as for an ordinary one-shot production (see {@link #removeProduction}).
+	 */
+	private static final class StaticSection {
+		final String key;
+		/**
+		 * The productions as loaded, weights included: never modified afterwards.
+		 */
+		final Map<String, List<WeightedAlternative>> productions;
+		final Set<String> oneShot;
+		/**
+		 * What can still be produced: the shared, consumable copy of {@link #productions}.
+		 */
+		final Map<String, List<WeightedAlternative>> current = new LinkedHashMap<>();
+
+		StaticSection(String key, Map<String, List<WeightedAlternative>> productions, Set<String> oneShot) {
+			this.key = key;
+			this.productions = productions;
+			this.oneShot = oneShot;
+			restore();
+		}
+
+		void restore() {
+			current.clear();
+			for (Map.Entry<String, List<WeightedAlternative>> entry : productions.entrySet()) {
+				current.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+			}
+		}
+	}
+
+	/**
+	 * The productions a grammar can produce now: its own, consumed as the grammar produces, and, for a name that is not
+	 * its own, the shared productions of its static sections.
+	 */
+	private final class CurrentProductions extends LinkedHashMap<String, List<WeightedAlternative>> {
+		private static final long serialVersionUID = 1L;
+
+		@Override
+		public List<WeightedAlternative> get(Object key) {
+			List<WeightedAlternative> own = super.get(key);
+			if (own != null || staticSections.isEmpty() || !(key instanceof String)) {
+				return own;
+			}
+			synchronized (STATIC_LOCK) {
+				for (StaticSection section : staticSections) {
+					List<WeightedAlternative> shared = section.current.get(key);
+					if (shared != null) {
+						return shared;
+					}
+				}
+			}
+			return null;
+		}
+
+		@Override
+		public boolean containsKey(Object key) {
+			return get(key) != null;
+		}
+	}
+
+	/**
+	 * Restores the shared productions of every static section loaded so far: what was consumed through any grammar
+	 * becomes available again. Every grammar that includes a static section also rebuilds its own productions the next
+	 * time it is used (including its own one-shot ones), so that nothing stays pruned for a name that is back. Call it
+	 * at the start of a game (see {@code ProduttoreDiTestiCasuale.resetProduzioni}).
+	 */
+	public static void resetStaticProductions() {
+		synchronized (STATIC_LOCK) {
+			for (StaticSection section : STATIC_SECTIONS.values()) {
+				section.restore();
+			}
+			staticEpoch++;
+			staticVersion++;
+		}
+	}
+
+	/**
+	 * The static section of that file, parsed the first time and shared afterwards.
+	 */
+	private StaticSection loadStaticSection(String key, String fullPath, String where) throws IOException, InvalidGrammarException {
+		synchronized (STATIC_LOCK) {
+			StaticSection loaded = STATIC_SECTIONS.get(key);
+			if (loaded != null) {
+				return loaded;
+			}
+			String folder = fullPath.substring(0, fullPath.lastIndexOf('/') + 1);
+			IncludeResolver resolver = includeResolver;
+			GrammarBean sectionGrammar;
+			try (InputStream stream = includeResolver.open(fullPath)) {
+				if (stream == null) {
+					throw new InvalidGrammarException(where + ": Included file not found: " + fullPath);
+				}
+				sectionGrammar = new GrammarBean(stream, path -> resolver.open(folder + path),
+						STATIC_INLINE_PREFIX + (STATIC_SECTIONS.size() + 1) + "_");
+			} catch (InvalidGrammarException e) {
+				if (e.getMessage().startsWith(where)) {
+					throw e;
+				}
+				throw new InvalidGrammarException(where + ": In the static section " + fullPath + ": " + e.getMessage());
+			}
+			StaticSection section = new StaticSection(key, sectionGrammar.productionsMap, sectionGrammar.oneShotProductions);
+			STATIC_SECTIONS.put(key, section);
+			return section;
+		}
+	}
+
+	/**
+	 * A grammar cannot define a production that one of its static sections already defines.
+	 */
+	private void checkStaticNameCollisions() throws InvalidGrammarException {
+		if (staticSections.isEmpty()) {
+			return;
+		}
+		for (String name : productionsMap.keySet()) {
+			for (StaticSection section : staticSections) {
+				if (section.productions.containsKey(name)) {
+					throw new InvalidGrammarException(PRODUCTION + name + " is repeated: it is also defined by the static section "
+							+ section.key);
+				}
+			}
+		}
+	}
+
+	private boolean isStaticName(String name) {
+		return staticSectionOf(name) != null;
+	}
+
+	private StaticSection staticSectionOf(String name) {
+		for (StaticSection section : staticSections) {
+			if (section.productions.containsKey(name)) {
+				return section;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Whether a production of that name exists, in this grammar or in one of its static sections.
+	 */
+	private boolean isDefined(String name) {
+		return productionsMap.containsKey(name) || isStaticName(name);
+	}
+
+	/**
+	 * Picks an alternative of a static production, consuming it if the production is one-shot. When the production is
+	 * exhausted it is removed from the shared productions with its dependents, and this grammar prunes its own
+	 * alternatives that used it. Must be called holding {@link #STATIC_LOCK}.
+	 */
+	private String getStaticProduction(String production) {
+		StaticSection section = staticSectionOf(production);
+		List<WeightedAlternative> alternatives = section.current.get(production);
+		if (alternatives == null || alternatives.isEmpty()) {
+			throw new IllegalArgumentException(PRODUCTION + production + " is empty!");
+		}
+		WeightedAlternative chosen = pick(alternatives);
+		if (section.oneShot.contains(production)) {
+			alternatives.remove(chosen);
+			if (alternatives.isEmpty()) {
+				removeProduction(section.current, production);
+				staticVersion++;
+				syncStatic();
+				seenStaticVersion = staticVersion;
+			}
+		}
+		return chosen.text;
+	}
+
+	/**
+	 * Removes from this grammar's own productions the alternatives that need a static production that is no longer
+	 * available, with what depended on them (see {@link #removeProduction}). Must be called holding
+	 * {@link #STATIC_LOCK}.
+	 */
+	private void syncStatic() {
+		for (StaticSection section : staticSections) {
+			for (String name : section.productions.keySet()) {
+				if (!section.current.containsKey(name) && prunedStaticNames.add(name)) {
+					removeProduction(currentProductionsMap, name);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Brings this grammar up to date with the static sections, before producing: if they were reset it rebuilds its own
+	 * productions, and if something was exhausted by another grammar it prunes what depended on it.
+	 */
+	private void refreshStatic() {
+		if (staticSections.isEmpty()) {
+			return;
+		}
+		synchronized (STATIC_LOCK) {
+			if (seenStaticEpoch != staticEpoch) {
+				rebuildCurrentProductions();
+			} else if (seenStaticVersion != staticVersion) {
+				syncStatic();
+				seenStaticVersion = staticVersion;
+			}
+		}
+	}
+
+	/**
+	 * Where a line of the source is, for the error messages: "Line N", plus the file and line it comes from when the
+	 * source includes other files ("Line 120 (nomi.txt:12)").
+	 */
+	private String position(int lineNumber) {
+		if (sourceOrigins == null || lineNumber < 1 || lineNumber > sourceOrigins.size()) {
+			return LINE + lineNumber;
+		}
+		return LINE + lineNumber + " (" + sourceOrigins.get(lineNumber - 1) + ")";
 	}
 
 	/**
@@ -505,21 +1099,21 @@ public class GrammarBean {
 	 * @throws InvalidGrammarException if the file ends with a dangling line continuation marker
 	 */
 	private void readSourceFileAndCreateProductionsMap(InputStream inputStream) throws IOException, InvalidGrammarException {
-		try (BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream, StandardCharsets.UTF_8))) {
+		try (BufferedReader reader = new BufferedReader(new InputStreamReader(withIncludes(inputStream), StandardCharsets.UTF_8))) {
 			String currentProduction = null;
 			int currentLineNumber = 0;
 			String line;
 			while ((line = reader.readLine()) != null) {
 				currentLineNumber++;
 
-				if (line.isEmpty() || line.startsWith(COMMENT_PREFIX)) {
+				if (line.isEmpty() || isComment(line)) {
 					continue;
 				}
 
 				while (line.endsWith(LINE_CONTINUATION_MARKER)) {
 					String nextLine = reader.readLine();
 					if (nextLine == null) {
-						throw new InvalidGrammarException(LINE + currentLineNumber + ": Line continuation marker '" + LINE_CONTINUATION_MARKER + "' at end of file");
+						throw new InvalidGrammarException(position(currentLineNumber) + ": Line continuation marker '" + LINE_CONTINUATION_MARKER + "' at end of file");
 					}
 					currentLineNumber++;
 					line = line.substring(0, line.length() - LINE_CONTINUATION_MARKER.length()) + nextLine;
@@ -527,7 +1121,7 @@ public class GrammarBean {
 
 				if (line.indexOf(LITERAL_OPENING_BRACKET_PLACEHOLDER) >= 0
 						|| line.indexOf(LITERAL_CLOSING_BRACKET_PLACEHOLDER) >= 0) {
-					throw new InvalidGrammarException(LINE + currentLineNumber
+					throw new InvalidGrammarException(position(currentLineNumber)
 							+ ": Reserved placeholder character found; use '" + ESCAPE_CHAR + OPENING_BRACKET
 							+ "' inside a quoted span for a literal bracket");
 				}
@@ -573,7 +1167,7 @@ public class GrammarBean {
 		if (previousProduction != null) {
 			List<WeightedAlternative> previousProductionChildren = productionsMap.get(previousProduction);
 			if (previousProductionChildren.isEmpty() && derivedProductions.get(previousProduction) == null) {
-				throw new InvalidGrammarException(LINE + currentLineNumber + ": Production " + previousProduction + " has no children.");
+				throw new InvalidGrammarException(position(currentLineNumber) + ": Production " + previousProduction + " has no children.");
 			}
 		}
 	}
@@ -601,13 +1195,13 @@ public class GrammarBean {
 				Collection<String> associatedProducers = derivedProductions.computeIfAbsent(currentProduction, k -> new HashSet<>());
 				for (String derivingProduction : derivingProductions.split(" ")) {
 					if (derivingProduction.equals(currentProduction)) {
-						throw new InvalidGrammarException(LINE + currentLineNumber + ": Production " + currentProduction + " derives from itself");
+						throw new InvalidGrammarException(position(currentLineNumber) + ": Production " + currentProduction + " derives from itself");
 					}
 					if (associatedProducers.contains(derivingProduction)) {
-						throw new InvalidGrammarException(LINE + currentLineNumber + ": Production " + derivingProduction + " is repeated more than once");
+						throw new InvalidGrammarException(position(currentLineNumber) + ": Production " + derivingProduction + " is repeated more than once");
 					}
 					if (derivedProductions.containsKey(derivingProduction)) {
-						throw new InvalidGrammarException(LINE + currentLineNumber + ": Production " + derivingProduction + " and Production " + currentProduction + " are mutually derived");
+						throw new InvalidGrammarException(position(currentLineNumber) + ": Production " + derivingProduction + " and Production " + currentProduction + " are mutually derived");
 					}
 					associatedProducers.add(derivingProduction);
 				}
@@ -620,14 +1214,14 @@ public class GrammarBean {
 			oneShotProductions.add(currentProduction);
 		}
 		if (currentProduction.endsWith(DEFAULT_MARKER)) {
-			throw new InvalidGrammarException(LINE + currentLineNumber + ": Production name " + currentProduction
+			throw new InvalidGrammarException(position(currentLineNumber) + ": Production name " + currentProduction
 					+ " may not end with '" + DEFAULT_MARKER + "', which marks a reference's default value");
 		}
 		if (rootNode == null) {
 			rootNode = currentProduction;
 		}
 		if (productionsMap.containsKey(currentProduction)) {
-			throw new InvalidGrammarException(LINE + currentLineNumber + ": Production " + currentProduction + " is repeated.");
+			throw new InvalidGrammarException(position(currentLineNumber) + ": Production " + currentProduction + " is repeated.");
 		}
 		productionsMap.put(currentProduction, new ArrayList<>());
 		return currentProduction;
@@ -670,17 +1264,17 @@ public class GrammarBean {
 		}
 		int closingBracketIndex = trimmedChild.indexOf(CLOSING_BRACKET);
 		if (closingBracketIndex < 0) {
-			throw new InvalidGrammarException(LINE + currentLineNumber + ": Missing '" + CLOSING_BRACKET + "' for weight token");
+			throw new InvalidGrammarException(position(currentLineNumber) + ": Missing '" + CLOSING_BRACKET + "' for weight token");
 		}
 		String weightText = trimmedChild.substring(weightTokenStart.length(), closingBracketIndex);
 		double weight;
 		try {
 			weight = Double.parseDouble(weightText);
 		} catch (NumberFormatException e) {
-			throw new InvalidGrammarException(LINE + currentLineNumber + ": Invalid weight '" + weightText + "': must be a positive number");
+			throw new InvalidGrammarException(position(currentLineNumber) + ": Invalid weight '" + weightText + "': must be a positive number");
 		}
 		if (!(weight > 0) || Double.isInfinite(weight)) {
-			throw new InvalidGrammarException(LINE + currentLineNumber + ": Invalid weight " + weightText + ": must be a positive number");
+			throw new InvalidGrammarException(position(currentLineNumber) + ": Invalid weight " + weightText + ": must be a positive number");
 		}
 		return new WeightedAlternative(trimmedChild.substring(closingBracketIndex + 1).trim(), weight);
 	}
@@ -740,7 +1334,7 @@ public class GrammarBean {
 			}
 		}
 		if (inQuotes) {
-			throw new InvalidGrammarException(LINE + currentLineNumber + ": Missing closing '" + QUOTE_CHAR + "'");
+			throw new InvalidGrammarException(position(currentLineNumber) + ": Missing closing '" + QUOTE_CHAR + "'");
 		}
 		alternatives.add(current.toString());
 		return alternatives;
@@ -868,7 +1462,7 @@ public class GrammarBean {
 				}
 			}
 		}
-		throw new InvalidGrammarException(LINE + currentLineNumber + ": Missing '" + CLOSING_BRACE
+		throw new InvalidGrammarException(position(currentLineNumber) + ": Missing '" + CLOSING_BRACE
 				+ "' for inline alternation started at '" + child.substring(openingBraceIndex) + "'");
 	}
 
@@ -895,7 +1489,7 @@ public class GrammarBean {
 	private String createInlineProduction(String inlineOptionsText, int currentLineNumber) throws InvalidGrammarException {
 		List<String> rawOptions = splitTopLevelAlternatives(inlineOptionsText, currentLineNumber);
 		if (rawOptions.size() < 2) {
-			throw new InvalidGrammarException(LINE + currentLineNumber + ": Inline alternation group '"
+			throw new InvalidGrammarException(position(currentLineNumber) + ": Inline alternation group '"
 					+ OPENING_BRACE + inlineOptionsText + CLOSING_BRACE + "' has no '|': a group with a single"
 					+ " option only strips its own braces. Remove them, or quote them (\"" + OPENING_BRACE
 					+ "\" ... \"" + CLOSING_BRACE + "\") to emit them as literal text");
@@ -907,7 +1501,7 @@ public class GrammarBean {
 		}
 		String name;
 		do {
-			name = INLINE_PRODUCTION_PREFIX + inlineProductionCounter++;
+			name = inlinePrefix + inlineProductionCounter++;
 		} while (productionsMap.containsKey(name));
 		productionsMap.put(name, options);
 		return name;
@@ -1005,7 +1599,7 @@ public class GrammarBean {
 			if (name.isEmpty()) {
 				throw new InvalidGrammarException(DEFAULT_MARKER + " marker must be preceded by a node name");
 			}
-			if (productionsMap.get(name) == null && !assignedKeys.contains(name)) {
+			if (productionsMap.get(name) == null && !assignedKeys.contains(name) && !isStaticName(name)) {
 				throw new InvalidGrammarException(PRODUCTION + name + " is not defined: a '" + DEFAULT_MARKER
 						+ "' default covers the order in which an assignment runs, not the existence of the name");
 			}
@@ -1026,7 +1620,8 @@ public class GrammarBean {
 			checkTokensValidity(thisProduction.substring(equalsPosition + ASSIGNMENT_MARKER.length()), assignedKeys);
 			return;
 		}
-		if (productionsMap.get(thisProduction) == null && !assignedKeys.contains(thisProduction) && !thisProduction.startsWith(REFERENCE_MARKER)) {
+		if (productionsMap.get(thisProduction) == null && !assignedKeys.contains(thisProduction) && !thisProduction.startsWith(REFERENCE_MARKER)
+				&& !isStaticName(thisProduction)) {
 			throw new InvalidGrammarException(PRODUCTION + thisProduction + " is not defined");
 		}
 	}
@@ -1087,6 +1682,14 @@ public class GrammarBean {
 		Double cached = aggregateWeightCache.get(name);
 		if (cached != null) {
 			return cached;
+		}
+		if (!productionsMap.containsKey(name)) {
+			// A production of a static section: its weights were adjusted when the section was loaded
+			double sectionTotal = 0;
+			for (WeightedAlternative alternative : staticSectionOf(name).productions.get(name)) {
+				sectionTotal += alternative.weight;
+			}
+			return sectionTotal;
 		}
 		List<WeightedAlternative> alternatives = productionsMap.get(name);
 		if (!inProgressProductions.add(name)) {
@@ -1149,7 +1752,7 @@ public class GrammarBean {
 				if (name.startsWith(GLOBAL_FIXED_PRODUCTION_MARKER) || name.startsWith(LOCAL_FIXED_PRODUCTION_MARKER)) {
 					name = name.substring(1);
 				}
-				if (!name.startsWith(REFERENCE_MARKER) && productionsMap.containsKey(name)) {
+				if (!name.startsWith(REFERENCE_MARKER) && isDefined(name)) {
 					referenced.add(name);
 				} else {
 					collectReferencedProductions(withDefault.fallback, referenced);
@@ -1163,7 +1766,7 @@ public class GrammarBean {
 			int equalsPosition = tokenBody.indexOf(ASSIGNMENT_MARKER);
 			if (equalsPosition >= 0) {
 				collectReferencedProductions(tokenBody.substring(equalsPosition + ASSIGNMENT_MARKER.length()), referenced);
-			} else if (!tokenBody.startsWith(REFERENCE_MARKER) && productionsMap.containsKey(tokenBody)) {
+			} else if (!tokenBody.startsWith(REFERENCE_MARKER) && isDefined(tokenBody)) {
 				referenced.add(tokenBody);
 			}
 			remaining = remaining.substring(closingBracketIndex + 1);
@@ -1207,7 +1810,7 @@ public class GrammarBean {
 			int currentLine = 0;
 			while ((line = reader.readLine()) != null) {
 				currentLine++;
-				if (line.trim().isEmpty() || line.startsWith(COMMENT_PREFIX)) {
+				if (line.trim().isEmpty() || isComment(line)) {
 					continue;
 				}
 				String[] parts = line.split(POST_PRODUCTION_SEPARATOR, 2);
@@ -1238,7 +1841,7 @@ public class GrammarBean {
 	 * @throws IllegalArgumentException if {@code rootNode} is not a defined production
 	 */
 	public void setRootNode(String rootNode) {
-		if (productionsMap.get(rootNode) == null) {
+		if (productionsMap.get(rootNode) == null && !isStaticName(rootNode)) {
 			throw new IllegalArgumentException(rootNode + ": not a valid production");
 		}
 		this.rootNode = rootNode;
@@ -1265,6 +1868,7 @@ public class GrammarBean {
 	 * @return false for a production that was never defined, too
 	 */
 	public boolean canProduce(String production) {
+		refreshStatic();
 		List<WeightedAlternative> alternatives = currentProductionsMap.get(production);
 		return alternatives != null && !alternatives.isEmpty();
 	}
@@ -1308,11 +1912,25 @@ public class GrammarBean {
 	 * happens to a run that outlives its smallest one-shot pool.
 	 */
 	public void reset() {
-		currentProductionsMap.clear();
-		for (Map.Entry<String, List<WeightedAlternative>> entry : productionsMap.entrySet()) {
-			currentProductionsMap.put(entry.getKey(), new ArrayList<>(entry.getValue()));
-		}
+		rebuildCurrentProductions();
 		globalFixedProductions.clear();
+	}
+
+	/**
+	 * Copies {@link #productionsMap} into {@link #currentProductionsMap} and prunes what the static sections have
+	 * already exhausted. It does not touch the static sections: only {@link #resetStaticProductions()} does.
+	 */
+	private void rebuildCurrentProductions() {
+		synchronized (STATIC_LOCK) {
+			currentProductionsMap.clear();
+			for (Map.Entry<String, List<WeightedAlternative>> entry : productionsMap.entrySet()) {
+				currentProductionsMap.put(entry.getKey(), new ArrayList<>(entry.getValue()));
+			}
+			prunedStaticNames.clear();
+			seenStaticEpoch = staticEpoch;
+			syncStatic();
+			seenStaticVersion = staticVersion;
+		}
 	}
 
 	/**
@@ -1380,6 +1998,7 @@ public class GrammarBean {
 	 * @return the produced text, split into one entry per line
 	 */
 	List<String> produceImpl(String startNode) {
+		refreshStatic();
 		String firstResult = produceImpl(startNode, currentProductionsMap, globalFixedProductions, startNode);
 		String intermediateResult = postProduce(firstResult);
         return new ArrayList<>(Arrays.asList(intermediateResult.split(LINE_BREAK_REGEX)));
@@ -1776,18 +2395,13 @@ public class GrammarBean {
 	 * cannot be picked again within the same production cycle.
 	 */
 	private String getProduction(Map<String, List<WeightedAlternative>> localProductionsMap, String production) {
-		List<WeightedAlternative> productions = localProductionsMap.get(production);
-		WeightedAlternative chosen;
-		switch (productionMode) {
-			case PRIMO:
-				chosen = productions.get(0);
-				break;
-			case ULTIMO:
-				chosen = productions.get(productions.size() - 1);
-				break;
-			default:
-				chosen = pickWeighted(productions);
+		if (isStaticName(production)) {
+			synchronized (STATIC_LOCK) {
+				return getStaticProduction(production);
+			}
 		}
+		List<WeightedAlternative> productions = localProductionsMap.get(production);
+		WeightedAlternative chosen = pick(productions);
 		if (oneShotProductions.contains(production)) {
 			productions.remove(chosen);
 			if (productions.isEmpty()) {
@@ -1795,6 +2409,20 @@ public class GrammarBean {
 			}
 		}
 		return chosen.text;
+	}
+
+	/**
+	 * Picks an alternative according to {@link #productionMode}: the first, the last, or a weighted-random one.
+	 */
+	private WeightedAlternative pick(List<WeightedAlternative> productions) {
+		switch (productionMode) {
+			case PRIMO:
+				return productions.get(0);
+			case ULTIMO:
+				return productions.get(productions.size() - 1);
+			default:
+				return pickWeighted(productions);
+		}
 	}
 
 	/**

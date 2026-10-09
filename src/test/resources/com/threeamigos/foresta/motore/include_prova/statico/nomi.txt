@@ -1,0 +1,5 @@
+// Nomi condivisi: uno solo per partita
+NOME$
+    Aldo
+    Bruno
+    Carlo

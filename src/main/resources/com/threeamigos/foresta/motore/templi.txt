@@ -1,13 +1,13 @@
-# I nomi dei templi della Foresta (vedi ProduttoreDiTestiCasuale.nomeTempio e Tempio.getNome): un edificio, con il
-# suo articolo, e a chi o a che cosa è dedicato. "il Santuario della Luna", "l'Eremo del Fine Settimana".
-# Il nome si dà al tempio la prima volta che serve e si salva con la casella.
-#
-# Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
+// I nomi dei templi della Foresta (vedi ProduttoreDiTestiCasuale.nomeTempio e Tempio.getNome): un edificio, con il
+// suo articolo, e a chi o a che cosa è dedicato. "il Santuario della Luna", "l'Eremo del Fine Settimana".
+// Il nome si dà al tempio la prima volta che serve e si salva con la casella.
+//
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
 
 NOME_TEMPIO
     [EDIFICIO] [DEDICA]
 
-# Il tempio vero e proprio esce più spesso degli altri
+// Il tempio vero e proprio esce più spesso degli altri
 EDIFICIO
     [^6] il Tempio
     [^3] il Santuario

@@ -1,13 +1,13 @@
-# "@la ", "@il " e "@i " sono gli articoli che artefatti2.txt mette a inizio riga: qui si sceglie
-# la forma giusta per la parola che segue. Le regole sono in ordine: l'ultima di ogni articolo,
-# generica, vale per tutte le altre consonanti.
+// "@la ", "@il " e "@i " sono gli articoli che artefatti2.txt mette a inizio riga: qui si sceglie
+// la forma giusta per la parola che segue. Le regole sono in ordine: l'ultima di ogni articolo,
+// generica, vale per tutte le altre consonanti.
 @la a:l'a
 @la e:l'e
 @la i:l'i
 @la o:l'o
 @la u:l'u
 @la :la 
-# "l'elmo", "lo scudo", "lo zelante", "lo gnomo", "lo psicotico", "il terribile elmo"
+// "l'elmo", "lo scudo", "lo zelante", "lo gnomo", "lo psicotico", "il terribile elmo"
 @il a:l'a
 @il e:l'e
 @il i:l'i
@@ -35,7 +35,7 @@
 @il x:lo x
 @il y:lo y
 @il :il 
-# "gli schinieri", "gli intrepidi schinieri", "i terribili schinieri"
+// "gli schinieri", "gli intrepidi schinieri", "i terribili schinieri"
 @i a:gli a
 @i e:gli e
 @i i:gli i

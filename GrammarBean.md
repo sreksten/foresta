@@ -71,7 +71,19 @@ new GrammarBean(String grammatica, String postProduzione)
 
 // Da stream (l'uso tipico nel progetto); postProduction può essere null
 new GrammarBean(InputStream grammatica, InputStream postProduzione)
+
+// Da stream, con una grammatica che include altri file con #include (§4.11)
+new GrammarBean(InputStream grammatica, InputStream postProduzione, GrammarBean.IncludeResolver risolutore)
+
+// Da risorsa del classpath, con gli #include risolti nella cartella della risorsa (§4.11)
+GrammarBean.fromResource(Class<?> ancora, String risorsaGrammatica, String risorsaPostProduzione)
 ```
+
+`IncludeResolver` è l'interfaccia con un metodo, `InputStream open(String percorso)`, che apre il testo di un
+file incluso (o restituisce `null` se non esiste), e un metodo facoltativo, `String identity(String percorso)`, che dà un
+nome unico al file (serve per `#include_static`, §4.12; di default è `null`: il risolutore non le supporta). `fromResource` ne costruisce uno che legge dal classpath, nella
+cartella della risorsa: per i file del progetto è il modo normale di caricare una grammatica che usa `#include`.
+I costruttori senza risolutore accettano solo grammatiche senza `#include`.
 
 Tutti dichiarano `throws InvalidGrammarException, IOException`. **Tutta la validazione e
 tutto il calcolo dei pesi avvengono nel costruttore**: se la grammatica è accettata, i pesi
@@ -98,6 +110,7 @@ GrammarBean bean = new GrammarBean(
 | `String getRootNode()` | La radice corrente. Di default è **la prima produzione dichiarata nel file**. |
 | `void setProductionMode(ProductionModeEnum)` | `RANDOM` (default), `FIRST`, `LAST`. |
 | `ProductionModeEnum getProductionMode()` | Il modo corrente. |
+| `static void resetStaticProductions()` | Restituisce tutte le sezioni statiche (§4.12): ciò che è stato consumato torna disponibile, e ogni grammatica che ne include una ricostruisce le proprie produzioni al prossimo uso. Da chiamare a inizio partita. |
 | `void addFixedProduction(String nome, String valore)` | Pre-imposta il valore che un riferimento `[*nome]` restituirà, prima di chiamare `produce()`. |
 
 `produceImpl(String)` è package-private: espone l'espansione di un token già racchiuso in
@@ -137,7 +150,8 @@ NOME_PRODUZIONE                     ← riga che inizia a colonna 0: dichiara un
 	seconda alternativa
 	terza | quarta | quinta         ← più alternative sulla stessa riga, separate da |
 
-# questa è una riga di commento, ignorata
+// questa è una riga di commento, ignorata
+#include <nomi.txt>                  ← include un altro file, a colonna 0: vedi §4.11
                                     ← le righe vuote sono ignorate
 
 ALTRA_PRODUZIONE
@@ -155,6 +169,15 @@ Regole:
 - Un'alternativa **vuota** è legittima e utilissima: rappresenta "qui non va niente"
   (§4.5). La si ottiene con un `|` finale (`grande|feroce|`) o con una riga contenente solo
   indentazione.
+
+### Commenti
+
+Un commento è una riga che inizia a colonna 0 con `//`, come in C e in Java: tutta la riga è ignorata. Una riga indentata
+che inizia con `//` è invece un'alternativa con quel testo, e un `//` a metà riga è testo: non esistono commenti a fine
+riga. Righe vuote e commenti contano comunque nella numerazione dei messaggi d'errore.
+
+Una riga che inizia con `#` e non è una direttiva (`#include`, `#include_static`) è un errore (`Unknown directive`):
+il `#` non è più un commento.
 
 ### Codifica dei caratteri
 
@@ -178,7 +201,9 @@ costruttori testuali: viene codificata in UTF-8 prima di essere riletta.
 | `NOME` a colonna 0 | riga intera | caricamento | Dichiara una produzione |
 | TAB/spazio iniziale | riga intera | caricamento | La riga è un'alternativa della produzione corrente |
 | `\|` | fra alternative | caricamento | Separatore di alternative |
-| `#` a inizio riga | riga intera | caricamento | Commento |
+| `//` a inizio riga | riga intera | caricamento | Commento |
+| `#include <file>` | riga intera, a colonna 0 | caricamento | **Include** un altro file (§4.11) |
+| `#include_static <file>` | riga intera, a colonna 0 | caricamento | Include una **sezione statica**, condivisa fra le grammatiche (§4.12) |
 | `\` a fine riga | fine riga | caricamento | Continuazione: la riga successiva viene accodata |
 | `NOME$` | header produzione | caricamento | Produzione **one-shot** |
 | `{a\|b\|c}` | in un'alternativa | caricamento | Gruppo di alternanza **inline** |
@@ -462,6 +487,136 @@ Conseguenze:
 
 ---
 
+### 4.11 Includere un altro file: `#include <file>`
+
+Una grammatica può leggere altre grammatiche con una riga in stile C, a colonna 0 e da sola:
+
+```
+RADICE
+    [NOME] [COGNOME]
+
+#include <nomi.txt>
+#include <cognomi/comuni.txt>
+```
+
+Il testo del file incluso prende il posto della riga, **prima** che la grammatica venga analizzata: per il parser è
+come se fosse scritto lì. Tutte le produzioni finiscono nello **stesso spazio dei nomi**: un nome definito due volte,
+anche in file diversi, è `Production X is repeated`, e i riferimenti `[Nome]` si risolvono da un file all'altro.
+
+**Quante direttive e dove**
+
+- Se ne possono mettere **quante si vogliono**, nello stesso file e nei file inclusi (ogni file viene incluso una sola
+  volta, vedi sotto).
+- Vanno **a colonna 0 e da sole sulla riga**, in qualsiasi punto del file: in cima, fra due produzioni, in fondo. Una
+  riga indentata che comincia con `#include` non è una direttiva ma un'alternativa con quel testo (e nessun file viene
+  aperto), e una direttiva a metà riga è testo come un altro.
+- Siccome il testo incluso viene incollato così com'è, **conta cosa c'è prima e cosa dopo la direttiva**:
+  - fra due produzioni, o in fondo: il caso normale, il file incluso aggiunge le sue produzioni;
+  - dopo l'intestazione e le alternative di una produzione, con un file che contiene **solo righe indentate**: le righe
+    diventano altre alternative di quella produzione (un modo per condividere una lista di alternative);
+  - **nel mezzo** di una produzione, con un file che comincia con un'intestazione: spezza la produzione, e le righe
+    indentate che seguono la direttiva appartengono all'**ultima produzione del file incluso**, non a quella di prima.
+    Non è un errore, il caricamento non lo segnala: è il caso da evitare, mettendo la direttiva fra due produzioni.
+
+**Dove si cerca il file**
+
+- Il nome è relativo alla cartella del file che contiene la direttiva: lo stesso livello (`<nomi.txt>`) oppure una
+  sottocartella (`<cognomi/comuni.txt>`). Un file incluso che a sua volta include `<altri.txt>` lo cerca nella *propria*
+  cartella, non in quella della grammatica principale.
+- Separatore sempre `/`. Non sono ammessi percorsi assoluti, `.`, `..` o segmenti vuoti: non si esce dalla cartella
+  della grammatica principale, e per questo non occorre fidarsi del contenuto delle direttive.
+- Con `fromResource` la cartella è quella della risorsa principale (`/com/.../motore/`). Con un `IncludeResolver` proprio
+  il percorso che il risolutore riceve è già completo, relativo alla cartella della principale (per esempio
+  `cognomi/comuni.txt`). Una grammatica con `#include` costruita senza risolutore è un errore al caricamento.
+
+**Regole**
+
+- **Un file si include una volta sola** in una stessa grammatica, dovunque venga richiesto di nuovo: due file possono
+  includere entrambi un terzo (le *dipendenze a rombo* funzionano) e due file che si includono a vicenda non girano
+  all'infinito. La seconda richiesta viene ignorata, non è un errore. Oltre 10 livelli di include uno dentro l'altro è
+  un errore (`Too many nested #include`).
+- **La radice di default** è la prima produzione del testo *già espanso*: se `#include` sta in cima al file, la prima
+  produzione è quella del file incluso. Per tenere la radice nella grammatica principale si mette l'`#include` dopo la
+  radice (come nell'esempio) o si chiama `setRootNode`.
+- **Le continuazioni di riga** (`\`, §4.9) non attraversano i file: una riga con `\` finale non può essere l'ultima
+  di un file incluso, e una riga che ne continua un'altra non è mai una direttiva (resta testo, e non viene aperto
+  nessun file).
+- **Ogni `GrammarBean` è indipendente**, anche se due includono lo **stesso identico file**: ciascuna ne ha la propria
+  copia, caricata e analizzata per conto suo (non c'è stato statico nella classe). Quindi le produzioni one-shot
+  (`NOME$`, §4.7) si consumano per grammatica e si azzerano con il `reset()` di *quella* grammatica; le produzioni
+  fissate (`[*Nome]`, `addFixedProduction`) e le variabili (`[chiave=valore]`) non passano da una all'altra. L'unica cosa
+  condivisa è la sorgente del caso, `Dado.sorgente()` (§2): un nome pescato in una grammatica sposta la sequenza
+  casuale anche per le altre, ma non le toglie nulla.
+  **Conseguenza:** un nome già uscito in `locande.txt` non è escluso in `fiabe.txt` o `missioni.txt`, anche se tutte e
+  tre includono la stessa lista one-shot con `#include`. Per condividere il consumo *fra* grammatiche si include il file
+  come sezione statica con `#include_static` (§4.12).
+- Un `#` seguito da altro (`# include` con lo spazio, `#includes`) non è una direttiva: è un errore
+  (`Unknown directive`). `#include` attaccato è una direttiva, e se è scritta male (senza `<...>`, con le
+  virgolette, con il nome vuoto) è un errore.
+- Il file di post-produzione (§6) non ha `#include`.
+- Gli errori di caricamento indicano **file e riga di provenienza**: `Line 120 (nomi.txt:12): …`; per le righe della
+  grammatica principale `(source:4)`. Senza `#include` i messaggi restano `Line N`.
+
+### 4.12 Sezioni statiche: `#include_static <file>`
+
+Come `#include`, ma il file non viene incollato nella grammatica: viene caricato **una sola volta per tutto il
+programma**, come una grammatica a sé, e le sue produzioni sono **condivise** da tutte le grammatiche che lo
+includono con `#include_static`. Serve a far consumare una sola volta, per l'intera partita, i valori di una lista
+one-shot (per esempio i nomi dei personaggi), qualunque grammatica li pesca.
+
+```
+RADICE
+    il signor [NOME]
+
+#include_static <nomi.txt>
+```
+
+**Cosa può includere e chi lo usa**
+
+- Il nome del file segue le regole di §4.11 (relativo alla cartella, sottocartelle, niente `..`). Serve un risolutore che
+  identifichi i file: `fromResource` lo fa (l'identità è l'URL della risorsa, quindi due grammatiche della stessa
+  cartella condividono la stessa sezione); con un `IncludeResolver` proprio bisogna implementare `identity`,
+  altrimenti è un errore.
+- Il file statico è **autonomo**: è analizzato da solo, quindi non può citare produzioni della grammatica che lo
+  include. Non può contenere `#include_static`, ma può avere `#include` normali, relativi alla sua cartella. Le sue
+  produzioni si citano in ogni forma (`[Nome]`, `[*Nome]`, `[!Nome]`, `[Nome? | ripiego]`) e si possono usare come
+  radice (`produce("NOME")`, `setRootNode`).
+- Un nome non può essere definito sia nella grammatica sia in una sezione che include, né da due sezioni incluse dalla
+  stessa grammatica: è un errore al caricamento.
+
+**Cosa è condiviso**
+
+- Una produzione one-shot (`NOME$`, §4.7) di una sezione si consuma **una volta sola per tutte le grammatiche**: un
+  valore uscito attraverso una non esce più da nessun'altra.
+- Quando si **esaurisce**, la produzione sparisce, con le produzioni della sezione che dipendevano da lei e, in **ogni**
+  grammatica che includa la sezione, con le alternative che la citano (la stessa potatura a cascata di una one-shot
+  normale, §4.7). Le altre grammatiche lo scoprono al primo uso dopo: `canProduce` e `produce` ne tengono conto.
+- **Non c'è ricarica automatica**: una produzione esaurita resta esaurita. Se servono più valori, il file deve
+  contenerne abbastanza; se una radice si svuota, `produce()` lancia `IllegalArgumentException`
+  (`Production X is empty!`), come per una one-shot locale.
+- Le produzioni che non sono one-shot sono condivise ma non si consumano.
+- Le produzioni fissate (`[*Nome]`, `addFixedProduction`) e le variabili restano **di ogni grammatica**: non passano
+  dall'una all'altra.
+
+**Ripristino**
+
+- `GrammarBean.resetStaticProductions()` (statico) restituisce tutte le sezioni statiche. Ogni grammatica che ne include
+  una, al prossimo uso, ricostruisce anche le proprie produzioni (comprese le sue one-shot locali), così non resta
+  potato nulla di ciò che è tornato disponibile. Va chiamato a inizio partita.
+- Il `reset()` di una singola grammatica **non** tocca le sezioni statiche: ripristina solo la parte sua, e pota di nuovo
+  ciò che nelle sezioni è ancora esaurito.
+
+**Pesi e thread**
+
+- I pesi di una sezione sono quelli calcolati quando il file è stato analizzato. Per il boost dei discendenti (§5), le
+  alternative della grammatica che citano una produzione della sezione contano il suo peso complessivo.
+- Un solo blocco protegge tutte le sezioni statiche: grammatiche diverse, in thread diversi, possono pescare dallo stesso
+  pool senza che un valore esca due volte. Una singola `GrammarBean` si usa comunque da un thread solo (§2).
+- Le sezioni statiche sono stato globale del programma. Nei test che dipendono da cosa è già uscito, si chiama
+  `resetStaticProductions()` all'inizio (e alla fine).
+- Gli errori dentro il file statico dicono dove è la direttiva e quale sezione: `Line 3 (source:3): In the static section
+  nomi.txt: …`.
+
 ## 5. Il sistema dei pesi
 
 È la parte meno intuitiva della classe e quella che più spesso produce distribuzioni
@@ -705,11 +860,11 @@ meccanica.
 
 Note pratiche:
 
-- Una riga che inizia con `#` è un **commento** e una riga vuota è ignorata, come nel file di
+- Una riga che inizia con `//` è un **commento** e una riga vuota è ignorata, come nel file di
   grammatica — una regola come `[,:[` ha bisogno di una spiegazione accanto molto più di una
   riga di grammatica. Commenti e righe vuote **contano** comunque nella numerazione riportata
-  dai messaggi d'errore, che punta quindi alla riga vera del file. Solo un `#` a inizio riga
-  apre un commento: uno dentro una regola è testo. Di conseguenza un `pre` che inizia con `#`
+  dai messaggi d'errore, che punta quindi alla riga vera del file. Solo un `//` a inizio riga
+  apre un commento: uno dentro una regola è testo. Di conseguenza un `pre` che inizia con `//`
   non è esprimibile, come nel file di grammatica.
 - Una riga di soli spazi è considerata vuota. Qui è diverso dal file di grammatica, dove una
   riga indentata e vuota è un'alternativa vuota significativa: in una regola `pre:post` non
@@ -878,7 +1033,7 @@ INCANTESIMI
 > esattamente il lavoro per cui quel file esiste:
 >
 > ```
-> # la virgola di troppo dopo la quadra aperta dell'array
+> // la virgola di troppo dopo la quadra aperta dell'array
 > [,:[
 > ```
 >
@@ -937,6 +1092,18 @@ for (int i = 0; i < 100_000; i++) {
 | `Production X already found.` | Nome di produzione duplicato |
 | `Production X does not produce anything.` | Produzione senza figli |
 | `Missing parent production.` | Riga indentata senza header che la precede |
+| `Malformed #include, expected #include <file>` | Direttiva senza `<...>`, con le virgolette o col nome vuoto (§4.11) |
+| `Invalid file name in #include: 'x' (…)` | Nome assoluto, con `..`, `.`, `\` o segmenti vuoti (§4.11) |
+| `Included file not found: x` | Il risolutore non trova il file (§4.11); il messaggio dice dove è la direttiva (`nomi.txt:3`) |
+| `#include cannot be resolved: the grammar was built without an IncludeResolver` | Grammatica con `#include` costruita senza risolutore (§4.11) |
+| `Too many nested #include (more than 10)` | Include troppo annidati (§4.11) |
+| `Grammar resource not found: x` | `fromResource` non trova la risorsa della grammatica |
+| `Unknown directive: comments start with //, …` | Una riga che inizia con `#` e non è una direttiva (§3) |
+| `#include_static cannot be used inside a static section` | Una sezione statica include un'altra sezione statica (§4.12) |
+| `#include_static needs a resolver that identifies its files` | Il risolutore non dà un'`identity` ai file (§4.12) |
+| `Production X is defined by two static sections (…)` | Due sezioni incluse dalla stessa grammatica definiscono lo stesso nome (§4.12) |
+| `Production X is repeated: it is also defined by the static section …` | La grammatica definisce un nome già definito da una sua sezione statica (§4.12) |
+| `In the static section f: …` | Un errore dentro il file statico; il messaggio dice anche dove è la direttiva |
 | `Line continuation marker '\' at end of file` | `\` finale sull'ultima riga |
 | `Missing '}' for inline alternation …` | Graffa non chiusa |
 | `Missing closing '"'` | Span letterale non chiuso |
@@ -1061,6 +1228,8 @@ javadoc lo documenta, ma il parametro non usato è un indizio di intento incompi
 - [ ] Ogni produzione ha almeno un'alternativa (verificato al caricamento in ogni posizione).
 - [ ] Nessun nome di produzione duplicato.
 - [ ] Nessuna riga indentata prima del primo header.
+- [ ] Se si usa `#include_static <file>` (§4.12): il file è autonomo, `resetStaticProductions()` è chiamato a inizio partita, ce ne sono abbastanza di ogni produzione one-shot (non c'è ricarica) e nessun nome è definito sia nella grammatica sia nella sezione.
+- [ ] Se si usa `#include <file>` (§4.11): la grammatica è caricata con `fromResource` (o con un risolutore), l'`#include` sta dopo la radice desiderata, e i nomi delle produzioni dei file inclusi non ripetono quelli degli altri.
 
 **Sintassi**
 

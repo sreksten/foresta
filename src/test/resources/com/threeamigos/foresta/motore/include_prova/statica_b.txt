@@ -1,0 +1,4 @@
+RADICE
+    il signor [NOME]
+
+#include_static <statico/nomi.txt>

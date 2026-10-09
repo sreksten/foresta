@@ -1,27 +1,27 @@
-# Gli oggetti leggendari (vedi OggettoLeggendario e LaLeggenda): ognuno è già pronto, con le sue proprietà
-# esagerate e la sua leggenda, e si pesca una volta sola per partita. Le sottosezioni sono one-shot ($): finite le
-# righe di un tipo, il tipo sparisce da OGGETTO_LEGGENDARIO; finiti tutti, non si raccontano più leggende.
-#
-# Una riga per oggetto, campi CHIAVE=valore separati da ";" (l'ordine non conta; una riga lunga si spezza con
-# una "\" in fondo):
-#   TIPO=          il TipoArtefatto (SPADA, SCUDO, NINNOLO, PERGAMENA...);
-#   NOME=          il nome completo, con l'articolo;
-#   CHIAVE=        l'identificativo dell'oggetto, diverso per ogni riga: lo usano i set, le partite salvate e i
-#                  test. Non va più cambiato; i nomi e le descrizioni invece si possono ritoccare liberamente;
-#   BREVE=         il nome con cui se ne parla, con l'articolo;
-#   DESCRIZIONE=   la descrizione, "che ...";
-#   LIVELLO=, COSTO=, PESO=  livello, prezzo d'acquisto e peso;
-#   DANNI=         i danni base: solo per le armi, e per le armi obbligatorio;
-#   MOD=           un modificatore, anche più d'uno: attributo e valore, "FORZA +100%" (percentuale) o "VALORE +2";
-#   INCANTAMENTO=  un incantamento, anche più d'uno: tipo di danno, danno fisso, coefficiente e nome,
-#                  "NECROTICO 12 0.15 Incantesimo di RomyJona";
-#   LEGGENDA=      una battuta della leggenda, almeno due: le racconta l'armaiolo o il locandiere. Non dire dove
-#                  riposa né chi lo custodisce: lo aggiunge la missione;
-#   GUARDIANI=     facoltativo, chi custodisce l'oggetto nel tempio: classe e quanti, "VIVERNA 5". Senza, dipende
-#                  dal livello del gruppo;
-#   SET=           facoltativo, la chiave del set di cui l'oggetto è un pezzo (vedi SET_LEGGENDARIO in fondo).
-#
-# Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean), § (salvataggi) e ";" (separa i campi).
+// Gli oggetti leggendari (vedi OggettoLeggendario e LaLeggenda): ognuno è già pronto, con le sue proprietà
+// esagerate e la sua leggenda, e si pesca una volta sola per partita. Le sottosezioni sono one-shot ($): finite le
+// righe di un tipo, il tipo sparisce da OGGETTO_LEGGENDARIO; finiti tutti, non si raccontano più leggende.
+//
+// Una riga per oggetto, campi CHIAVE=valore separati da ";" (l'ordine non conta; una riga lunga si spezza con
+// una "\" in fondo):
+//   TIPO=          il TipoArtefatto (SPADA, SCUDO, NINNOLO, PERGAMENA...);
+//   NOME=          il nome completo, con l'articolo;
+//   CHIAVE=        l'identificativo dell'oggetto, diverso per ogni riga: lo usano i set, le partite salvate e i
+//                  test. Non va più cambiato; i nomi e le descrizioni invece si possono ritoccare liberamente;
+//   BREVE=         il nome con cui se ne parla, con l'articolo;
+//   DESCRIZIONE=   la descrizione, "che ...";
+//   LIVELLO=, COSTO=, PESO=  livello, prezzo d'acquisto e peso;
+//   DANNI=         i danni base: solo per le armi, e per le armi obbligatorio;
+//   MOD=           un modificatore, anche più d'uno: attributo e valore, "FORZA +100%" (percentuale) o "VALORE +2";
+//   INCANTAMENTO=  un incantamento, anche più d'uno: tipo di danno, danno fisso, coefficiente e nome,
+//                  "NECROTICO 12 0.15 Incantesimo di RomyJona";
+//   LEGGENDA=      una battuta della leggenda, almeno due: le racconta l'armaiolo o il locandiere. Non dire dove
+//                  riposa né chi lo custodisce: lo aggiunge la missione;
+//   GUARDIANI=     facoltativo, chi custodisce l'oggetto nel tempio: classe e quanti, "VIVERNA 5". Senza, dipende
+//                  dal livello del gruppo;
+//   SET=           facoltativo, la chiave del set di cui l'oggetto è un pezzo (vedi SET_LEGGENDARIO in fondo).
+//
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean), § (salvataggi) e ";" (separa i campi).
 
 OGGETTO_LEGGENDARIO
     [SPADA_LEGGENDARIA]
@@ -266,15 +266,15 @@ SIGILLO_LEGGENDARIO$
     LEGGENDA=Il notaio Cavillo lo usò per comprare un castello con un fagiolo.;\
     LEGGENDA=Il castello c'è ancora. Il fagiolo, dicono, è diventato barone.
 
-# ---------------------------------------------------------------------------------------------
-# I set: un personaggio che indossa tutti i pezzi di un set ha i bonus di ognuno moltiplicati
-# (vedi SetLeggendario e RegoleSetLeggendari). I pezzi sono le righe sopra con SET= e la chiave
-# del set; devono essere almeno due, e si devono poter indossare insieme (niente due elmi, niente
-# pergamene). Una riga per set, campi CHIAVE=valore separati da ";":
-#   CHIAVE=          quella che i pezzi scrivono in SET=;
-#   NOME=            il nome del set, con l'articolo;
-#   MOLTIPLICATORE=  per quanto si moltiplicano i bonus dei pezzi, più di 1 (1.5 = la metà in più).
-# ---------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+// I set: un personaggio che indossa tutti i pezzi di un set ha i bonus di ognuno moltiplicati
+// (vedi SetLeggendario e RegoleSetLeggendari). I pezzi sono le righe sopra con SET= e la chiave
+// del set; devono essere almeno due, e si devono poter indossare insieme (niente due elmi, niente
+// pergamene). Una riga per set, campi CHIAVE=valore separati da ";":
+//   CHIAVE=          quella che i pezzi scrivono in SET=;
+//   NOME=            il nome del set, con l'articolo;
+//   MOLTIPLICATORE=  per quanto si moltiplicano i bonus dei pezzi, più di 1 (1.5 = la metà in più).
+// ---------------------------------------------------------------------------------------------
 
 SET_LEGGENDARIO$
     CHIAVE=ROMY_JONA;NOME=il Corredo di RomyJona;MOLTIPLICATORE=1.5

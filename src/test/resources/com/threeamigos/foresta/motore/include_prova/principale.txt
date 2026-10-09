@@ -1,0 +1,4 @@
+RADICE
+    [NOME] [COGNOME]
+
+#include <nomi/nomi.txt>

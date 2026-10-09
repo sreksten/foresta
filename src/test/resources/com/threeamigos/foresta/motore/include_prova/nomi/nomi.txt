@@ -1,0 +1,4 @@
+NOME
+    Aldo
+
+#include <cognomi.txt>

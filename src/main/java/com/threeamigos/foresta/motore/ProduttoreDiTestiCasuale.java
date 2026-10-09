@@ -363,6 +363,7 @@ public class ProduttoreDiTestiCasuale {
 		fiabe.reset();
 		oroscopi.reset();
 		locande.reset();
+		GrammarBean.resetStaticProductions();
 	}
 
 	public static List<DatiLocanda> getDatiLocanda(int quantita) {

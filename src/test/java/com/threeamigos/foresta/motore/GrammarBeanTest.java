@@ -142,7 +142,7 @@ class GrammarBeanTest {
 
     @Test
     void commentAndEmptyLinesAreSkipped() throws Exception {
-        GrammarBean bean = new GrammarBean("# a comment\nROOT\n\n\tHello\n");
+        GrammarBean bean = new GrammarBean("// a comment\nROOT\n\n\tHello\n");
         assertEquals("Hello", bean.produce().get(0));
     }
 
@@ -907,7 +907,7 @@ class GrammarBeanTest {
         // A rule like "[,:[" is cryptic enough that it needs a comment beside it, so the
         // post-production file accepts them like the grammar file does.
         GrammarBean bean = new GrammarBean("ROOT\n\ta il gatto\n",
-                "# questa riga spiega la regola\n\na il:al\n\n# e questa la chiude\n");
+                "// questa riga spiega la regola\n\na il:al\n\n// e questa la chiude\n");
         assertEquals("al gatto", bean.produce().get(0));
     }
 
@@ -916,19 +916,19 @@ class GrammarBeanTest {
         // Comments and blank lines are skipped but still counted, so the line number in the
         // message points at the offending line of the file, not at the n-th rule.
         GrammarBean.InvalidGrammarException ex = assertThrows(GrammarBean.InvalidGrammarException.class,
-                () -> new GrammarBean("ROOT\n\tx\n", "# commento\n\na il:al\nsenzaduepunti\n"));
+                () -> new GrammarBean("ROOT\n\tx\n", "// commento\n\na il:al\nsenzaduepunti\n"));
         assertTrue(ex.getMessage().startsWith("Line 4:"), ex.getMessage());
     }
 
     @Test
     void postProductionFileMadeOnlyOfCommentsMeansNoSubstitutions() throws Exception {
-        GrammarBean bean = new GrammarBean("ROOT\n\ta il gatto\n", "# nessuna regola qui\n\n");
+        GrammarBean bean = new GrammarBean("ROOT\n\ta il gatto\n", "// nessuna regola qui\n\n");
         assertEquals("a il gatto", bean.produce().get(0));
     }
 
     @Test
     void postProductionRuleIsNotConfusedWithACommentWhenTheHashIsNotFirst() throws Exception {
-        // Only a '#' at the very start of the line opens a comment: one inside a rule is text.
+        // Only a '//' at the very start of the line opens a comment: a '#' inside a rule is text.
         GrammarBean bean = new GrammarBean("ROOT\n\tvedi nota\n", "vedi:cfr. #1");
         assertEquals("cfr. #1 nota", bean.produce().get(0));
     }

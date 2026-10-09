@@ -1,14 +1,14 @@
-# I nomi delle rovine della Foresta (vedi ProduttoreDiTestiCasuale.nomeRovine e Rovine.getNome): che cosa resta, con
-# il suo articolo, e di chi o di che cosa era. "le Vestigia dell'Antico Impero", "il Mulino Abbandonato del Geometra
-# Distratto". Le rovine che nascono in partita, da un castello sconfitto o da una città distrutta, non pescano da qui:
-# prendono il nome da quello che c'era prima ("le Rovine del Maniero del Malefizio", vedi Foresta.distruggiLocazioneUnica).
-#
-# Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
+// I nomi delle rovine della Foresta (vedi ProduttoreDiTestiCasuale.nomeRovine e Rovine.getNome): che cosa resta, con
+// il suo articolo, e di chi o di che cosa era. "le Vestigia dell'Antico Impero", "il Mulino Abbandonato del Geometra
+// Distratto". Le rovine che nascono in partita, da un castello sconfitto o da una città distrutta, non pescano da qui:
+// prendono il nome da quello che c'era prima ("le Rovine del Maniero del Malefizio", vedi Foresta.distruggiLocazioneUnica).
+//
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
 
 NOME_ROVINE
     [RESTI] [ORIGINE]
 
-# Le rovine vere e proprie escono più spesso degli edifici crollati
+// Le rovine vere e proprie escono più spesso degli edifici crollati
 RESTI
     [^5] [GENERICI]
     [^4] [CROLLATI]

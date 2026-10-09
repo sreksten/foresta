@@ -1,15 +1,15 @@
-# I nomi dei personaggi delle missioni (vedi ProduttoreDiTestiCasuale): gli ostaggi da liberare, i bardi da
-# riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia; e i materiali che chiedono
-# l'alchimista, l'armaiolo, il capitano delle guardie e il locandiere; le cose da portare da una città all'altra,
-# anche di contrabbando; gli oggetti smarriti nella foresta; gli incarichi di combattimento, le sorveglianze, i
-# soccorsi, le indagini, i riti, le benedizioni, le lealtà, i tornei, le documentazioni e i colpi.
-# I nomi sono tutti maschili, perché i testi delle missioni parlano di "suo marito" e "sua moglie".
-#
-# Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
+// I nomi dei personaggi delle missioni (vedi ProduttoreDiTestiCasuale): gli ostaggi da liberare, i bardi da
+// riportare a casa, i pellegrini da accompagnare, i capibanda su cui c'è una taglia; e i materiali che chiedono
+// l'alchimista, l'armaiolo, il capitano delle guardie e il locandiere; le cose da portare da una città all'altra,
+// anche di contrabbando; gli oggetti smarriti nella foresta; gli incarichi di combattimento, le sorveglianze, i
+// soccorsi, le indagini, i riti, le benedizioni, le lealtà, i tornei, le documentazioni e i colpi.
+// I nomi sono tutti maschili, perché i testi delle missioni parlano di "suo marito" e "sua moglie".
+//
+// Caratteri da non usare nei testi: [ ] { } | " (sintassi di GrammarBean).
 
-# ---------------------------------------------------------------------------------------------
-# Ostaggi (vedi IlRapimento)
-# ---------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+// Ostaggi (vedi IlRapimento)
+// ---------------------------------------------------------------------------------------------
 
 NOME_OSTAGGIO
     Armando
@@ -29,9 +29,9 @@ NOME_OSTAGGIO
     Fulgenzio
     Nazzareno
 
-# ---------------------------------------------------------------------------------------------
-# Bardi (vedi NonSparateSulPianista)
-# ---------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+// Bardi (vedi NonSparateSulPianista)
+// ---------------------------------------------------------------------------------------------
 
 NOME_BARDO
     Ugolino
@@ -48,10 +48,11 @@ NOME_BARDO
     Melchiorre
     Zeffirino
     Liutprando
+    Felicino
 
-# ---------------------------------------------------------------------------------------------
-# Pellegrini (vedi IlPellegrino)
-# ---------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+// Pellegrini (vedi IlPellegrino)
+// ---------------------------------------------------------------------------------------------
 
 NOME_PELLEGRINO
     Anselmo
@@ -69,9 +70,9 @@ NOME_PELLEGRINO
     Saturnino
     Ireneo
 
-# ---------------------------------------------------------------------------------------------
-# Sfidanti dei duelli (vedi IncaricoDiCombattimento, CAPO=NOME_CAMPIONE o CAPO=NOME_CAMPIONESSA): nome ed epiteto
-# ---------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+// Sfidanti dei duelli (vedi IncaricoDiCombattimento, CAPO=NOME_CAMPIONE o CAPO=NOME_CAMPIONESSA): nome ed epiteto
+// ---------------------------------------------------------------------------------------------
 
 NOME_CAMPIONE
     [NOME_DI_CAMPIONE] [EPITETO_DI_CAMPIONE]
@@ -117,9 +118,9 @@ EPITETO_DI_CAMPIONESSA
     la Bella
     la Lunga
 
-# ---------------------------------------------------------------------------------------------
-# Briganti e maghi (vedi CAPO=NOME_BRIGANTE e CAPO=NOME_MAGO): capi di bande di ladri, maghi rivali
-# ---------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+// Briganti e maghi (vedi CAPO=NOME_BRIGANTE e CAPO=NOME_MAGO): capi di bande di ladri, maghi rivali
+// ---------------------------------------------------------------------------------------------
 
 NOME_BRIGANTE
     [NOME_DI_BRIGANTE] [SOPRANNOME_DI_BRIGANTE]
@@ -151,9 +152,9 @@ NOME_MAGO
     Mastro Tiburzio
     Mastro Ermete
 
-# ---------------------------------------------------------------------------------------------
-# Capibanda di goblin e hobgoblin (vedi LaTagliaSullaBanda e IlRapimento): a volte con un soprannome
-# ---------------------------------------------------------------------------------------------
+// ---------------------------------------------------------------------------------------------
+// Capibanda di goblin e hobgoblin (vedi LaTagliaSullaBanda e IlRapimento): a volte con un soprannome
+// ---------------------------------------------------------------------------------------------
 
 NOME_CAPOBANDA
     [^3] [NOME_GOBLIN]
@@ -187,23 +188,23 @@ SOPRANNOME_GOBLIN
     il Terribile, o quasi
     Pancia Molle
 
-# ---------------------------------------------------------------------------------------------
-# Richieste di materiali (vedi RichiestaDiMateriali e MaterialeRichiesto)
-# ---------------------------------------------------------------------------------------------
-#
-# Una produzione per mandante, una riga per materiale, otto campi separati da ";":
-#   1. genere: F o M, oppure M/F se il singolare e il plurale ne hanno uno diverso (orecchio, orecchie);
-#   2. singolare;
-#   3. plurale;
-#   4. provenienza: "LUOGHI" e i luoghi dove si raccoglie (RADURA, BOSCO, GROTTA, ROVINE, PALUDE), oppure "NEMICI" e i
-#      mostri a cui si prende sconfiggendoli (i TipoPersonaggio: GOBLIN, VIVERNA, CHIMERA_DRAGO...);
-#   5. quante ne chiede il mandante, minimo-massimo (per esempio 3-5);
-#   6. quante monete paga per pezzo: di più per i materiali dei mostri pericolosi;
-#   7. la battuta del capo nell'intermezzo;
-#   8. la risposta del mandante.
-# Nomi che cominciano per consonante (non s impura né z): gli articoli sono una/la/le o un/il/i.
-# Nei testi non si usa il ";". Meglio mostri che si incontrano spesso: quelli rari allungano la richiesta (c'è
-# comunque il ripiego dopo tre giorni).
+// ---------------------------------------------------------------------------------------------
+// Richieste di materiali (vedi RichiestaDiMateriali e MaterialeRichiesto)
+// ---------------------------------------------------------------------------------------------
+//
+// Una produzione per mandante, una riga per materiale, otto campi separati da ";":
+//   1. genere: F o M, oppure M/F se il singolare e il plurale ne hanno uno diverso (orecchio, orecchie);
+//   2. singolare;
+//   3. plurale;
+//   4. provenienza: "LUOGHI" e i luoghi dove si raccoglie (RADURA, BOSCO, GROTTA, ROVINE, PALUDE), oppure "NEMICI" e i
+//      mostri a cui si prende sconfiggendoli (i TipoPersonaggio: GOBLIN, VIVERNA, CHIMERA_DRAGO...);
+//   5. quante ne chiede il mandante, minimo-massimo (per esempio 3-5);
+//   6. quante monete paga per pezzo: di più per i materiali dei mostri pericolosi;
+//   7. la battuta del capo nell'intermezzo;
+//   8. la risposta del mandante.
+// Nomi che cominciano per consonante (non s impura né z): gli articoli sono una/la/le o un/il/i.
+// Nei testi non si usa il ";". Meglio mostri che si incontrano spesso: quelli rari allungano la richiesta (c'è
+// comunque il ripiego dopo tre giorni).
 
 RICHIESTA_ALCHIMISTA
     F;radice di mandragola;radici di mandragola;LUOGHI RADURA BOSCO;3-5;5;E quando le tiriamo su non strillano?;Solo un po'.
@@ -231,7 +232,7 @@ RICHIESTA_ARMAIOLO
 
 RICHIESTA_CAPITANO
     M/F;orecchio di goblin;orecchie di goblin;NEMICI GOBLIN;3-4;6;Prove? Non vi fidate di noi?;Mi fido delle prove.
-    M;dente di hobgoblin;denti di hobgoblin;NEMICI HOBGOBLIN;3-4;6;Anche quelli d'oro?;Quelli d'oro tenete pure.
+    M;dente di hobgoblin;denti di hobgoblin;NEMICI HOBGOBLIN;3-4;6;Anche quelli d'oro?;Quelli d'oro teneteli pure.
     M;teschio di scheletro;teschi di scheletro;NEMICI SCHELETRO;3-4;6;Ma non erano già morti?;Fateli morire meglio.
     M;corno di minotauro;corni di minotauro;NEMICI MINOTAURO;3-4;7;Tutti e due i corni?;Uno basta. Il minotauro non protesterà.
     F;piuma di arpia;piume di arpia;NEMICI ARPIA;3-4;6;Non volano via?;Le arpie sì. Le piume, se le tenete strette, no.
@@ -249,23 +250,23 @@ RICHIESTA_LOCANDIERE
     F;lumaca di palude;lumache di palude;LUOGHI PALUDE;4-5;4;Lumache? Almeno non scappano.;Appunto. Sono le uniche che non vi faranno correre.
     M;germano reale;germani reali;LUOGHI PALUDE;2-3;8;Dobbiamo spennarli noi?;Se li spennate voi vi do una moneta in più. Scherzo. Portateli e basta.
 
-# ---------------------------------------------------------------------------------------------
-# Spedizioni da una città all'altra (vedi IlCorriere e Spedizione)
-# ---------------------------------------------------------------------------------------------
-#
-# Una riga per spedizione, dieci campi separati da ";":
-#   1. genere dell'oggetto: F o M;
-#   2. l'oggetto, senza articolo (per esempio "fiala di antidoto");
-#   3. chi lo manda, con l'articolo;
-#   4. chi lo riceve, con l'articolo: abita in un'altra città, che sceglie la missione (non nominarla);
-#   5. URGENTE (un antidoto, una medicina: c'è una scadenza, che dipende dalla strada) o CON_CALMA;
-#   6. quante monete paga il destinatario, prima di aggiungere quelle per la strada;
-#   7. perché il mittente lo manda: la sua prima battuta nell'intermezzo;
-#   8. la battuta del capo;
-#   9. la risposta del mittente;
-#  10. il ringraziamento del destinatario, quando lo riceve.
-# Oggetti che cominciano per consonante (non s impura né z): gli articoli sono la/questa o il/questo.
-# Le prime sono semplici trasporti, poi antidoti, medicine, cure magiche ed epidemie.
+// ---------------------------------------------------------------------------------------------
+// Spedizioni da una città all'altra (vedi IlCorriere e Spedizione)
+// ---------------------------------------------------------------------------------------------
+//
+// Una riga per spedizione, dieci campi separati da ";":
+//   1. genere dell'oggetto: F o M;
+//   2. l'oggetto, senza articolo (per esempio "fiala di antidoto");
+//   3. chi lo manda, con l'articolo;
+//   4. chi lo riceve, con l'articolo: abita in un'altra città, che sceglie la missione (non nominarla);
+//   5. URGENTE (un antidoto, una medicina: c'è una scadenza, che dipende dalla strada) o CON_CALMA;
+//   6. quante monete paga il destinatario, prima di aggiungere quelle per la strada;
+//   7. perché il mittente lo manda: la sua prima battuta nell'intermezzo;
+//   8. la battuta del capo;
+//   9. la risposta del mittente;
+//  10. il ringraziamento del destinatario, quando lo riceve.
+// Oggetti che cominciano per consonante (non s impura né z): gli articoli sono la/questa o il/questo.
+// Le prime sono semplici trasporti, poi antidoti, medicine, cure magiche ed epidemie.
 
 TRASPORTO
     F;lettera sigillata;il notaio;il borgomastro;CON_CALMA;14;Ho una lettera che non posso affidare ai corrieri. L'ultimo l'ha aperta per leggerla.;E cosa c'è scritto?;Se ve lo dicessi, dovrei cercarmi un altro corriere.;Il sigillo è intatto! Allora esiste ancora gente onesta.
@@ -286,12 +287,12 @@ TRASPORTO
     F;proposta di tregua;il capitano delle guardie;il capitano della milizia;URGENTE;22;Le nostre guardie e la loro milizia si prendono a sassate per un ponte che nessuno usa più. Questa tregua mette fine alla faccenda, se arriva prima della prossima sassaiola.;E il ponte?;Lo dividiamo a metà. Una metà a testa, e la campata in mezzo alle capre.;Una tregua, finalmente! I miei uomini avevano finito i sassi.
     F;proposta d'accordo;il mugnaio;il pescatore;CON_CALMA;14;Il pescatore dice che il mio mulino gli spaventa i pesci, io dico che i suoi pesci mi intasano la ruota. Ho scritto un accordo, ma lui da me non lo accetterebbe mai.;E da noi sì?;Da voi forse. Siete neutrali. E grossi.;Un accordo? Il mulino si ferma la domenica, e io pesco solo dopo il tramonto. Si può fare.
 
-# ---------------------------------------------------------------------------------------------
-# Contrabbando da una città all'altra (vedi IlContrabbandiere)
-# ---------------------------------------------------------------------------------------------
-#
-# Gli stessi dieci campi delle spedizioni. La merce non dovrebbe girare, e va portata di nascosto: se per strada
-# il gruppo combatte, la missione fallisce (lo dice la missione, non serve scriverlo).
+// ---------------------------------------------------------------------------------------------
+// Contrabbando da una città all'altra (vedi IlContrabbandiere)
+// ---------------------------------------------------------------------------------------------
+//
+// Gli stessi dieci campi delle spedizioni. La merce non dovrebbe girare, e va portata di nascosto: se per strada
+// il gruppo combatte, la missione fallisce (lo dice la missione, non serve scriverlo).
 
 CONTRABBANDO
     F;botte di vino senza dazio;l'oste;il taverniere;CON_CALMA;20;Il dazio sul vino è più caro del vino. Allora il vino viaggia senza dazio.;E se ci fermano le guardie?;Dite che è aceto. Ha anche il sapore, quasi.;Che profumo! E nemmeno una moneta alle gabelle.
@@ -307,22 +308,22 @@ CONTRABBANDO
     M;cofanetto di gioielli di famiglia;la nobildonna decaduta;la sua vecchia balia;URGENTE;20;Domani arrivano gli esattori a pignorare tutto. I gioielli di mia nonna, però, non li avranno: nascondeteli dalla mia vecchia balia.;E se gli esattori ci fermano?;Non vi fermeranno, se non vi vedono. Non fatevi vedere.;I gioielli della signorina! Li terrò sotto il pavimento della stalla, nessuno ci guarda mai.
     M;baule di reliquie false;il mercante di reliquie;il priore di campagna;CON_CALMA;20;Queste sono le ossa di un santo. Di tre santi, a dire il vero, a giudicare dal numero di gambe. Il priore le vuole per la sua cappella, e le guardie farebbero troppe domande.;Sono vere?;Sono ossa. Su questo non vi mento.;Le sacre reliquie! Tre gambe... doveva essere un santo molto veloce.
 
-# ---------------------------------------------------------------------------------------------
-# Oggetti smarriti nella foresta (vedi LOggettoSmarrito e OggettoSmarrito)
-# ---------------------------------------------------------------------------------------------
-#
-# Una riga per oggetto, nove campi separati da ";":
-#   1. genere dell'oggetto: F o M;
-#   2. l'oggetto, senza articolo (per esempio "fede nuziale");
-#   3. chi l'ha perso, con l'articolo: è il mandante, in città;
-#   4. vicino a quali posti può averlo perso, uno o più fra TEMPIO, ROVINE, LOCANDA e GROTTA: la missione ne
-#      sceglie uno, lo segna sulla mappa e mette l'oggetto a non più di due passi da lì (non nominarlo);
-#   5. quante monete paga chi l'ha perso;
-#   6. come l'ha perso: la sua prima battuta nell'intermezzo;
-#   7. la battuta del capo;
-#   8. la risposta di chi l'ha perso;
-#   9. il ringraziamento, quando lo riavrà.
-# Oggetti che cominciano per consonante (non s impura né z): gli articoli sono la o il.
+// ---------------------------------------------------------------------------------------------
+// Oggetti smarriti nella foresta (vedi LOggettoSmarrito e OggettoSmarrito)
+// ---------------------------------------------------------------------------------------------
+//
+// Una riga per oggetto, nove campi separati da ";":
+//   1. genere dell'oggetto: F o M;
+//   2. l'oggetto, senza articolo (per esempio "fede nuziale");
+//   3. chi l'ha perso, con l'articolo: è il mandante, in città;
+//   4. vicino a quali posti può averlo perso, uno o più fra TEMPIO, ROVINE, LOCANDA e GROTTA: la missione ne
+//      sceglie uno, lo segna sulla mappa e mette l'oggetto a non più di due passi da lì (non nominarlo);
+//   5. quante monete paga chi l'ha perso;
+//   6. come l'ha perso: la sua prima battuta nell'intermezzo;
+//   7. la battuta del capo;
+//   8. la risposta di chi l'ha perso;
+//   9. il ringraziamento, quando lo riavrà.
+// Oggetti che cominciano per consonante (non s impura né z): gli articoli sono la o il.
 
 OGGETTO_SMARRITO
     F;fede nuziale;il mugnaio;TEMPIO ROVINE;15;Sono andato a pregare per un buon raccolto, e al ritorno la fede non c'era più. Mia moglie non se n'è ancora accorta.;E se se ne accorge?;Allora la missione diventa un'altra. Molto più pericolosa.;Eccola! Al dito, subito, prima che mia moglie torni dal mercato.
@@ -336,38 +337,38 @@ OGGETTO_SMARRITO
     M;pettine di tartaruga;la moglie del borgomastro;LOCANDA TEMPIO;12;Sono passata a prendere una tisana e ho perso il pettine. Mio marito dice che sono distratta. Io dico che è distratto il pettine.;E se è pieno di nodi?;Lo pulisco io. Voi trovatelo.;Il mio pettine! Adesso mio marito dovrà trovare un'altra cosa di cui lamentarsi.
     F;borraccia di rame;il carrettiere;GROTTA LOCANDA;10;Ho fatto sosta per far riposare il mulo e ho dimenticato la borraccia. Era di mio padre, e prima ancora di suo padre.;E dentro c'era ancora qualcosa?;Vino di mio nonno. Non bevetelo.;La borraccia di famiglia! Il vino di mio nonno è ancora lì? Meglio così.
 
-# ---------------------------------------------------------------------------------------------
-# Incarichi di combattimento (vedi IncaricoDiCombattimento e CombattimentoRichiesto)
-# ---------------------------------------------------------------------------------------------
-#
-# Una riga per incarico, campi CHIAVE=valore separati da ";" (una riga lunga si spezza con una "\" in fondo):
-#   CHIAVE=     l'identificativo, diverso per ogni riga;
-#   TIPO=       il TipoMissione che copre (VENDETTA, COMBATTIMENTO_BESTIA, DUELLO, BLOCCO...);
-#   ASPETTO=    chi compare nella scena in città: QUALUNQUE, CAPITANO, ARMAIOLO, ALCHIMISTA o LOCANDIERE;
-#   MANDANTE=   chi chiede, con l'articolo (il mugnaio);
-#   NEMICO=, NUMERO=  chi va sconfitto (un TipoPersonaggio) e quanti;
-#   CAPO=       facoltativo: uno di loro ha un nome e un livello in più. SI pesca il nome da NOME_CAPOBANDA,
-#               NOME_CAMPIONE, NOME_CAMPIONESSA, NOME_BRIGANTE o NOME_MAGO da lì, qualunque altra cosa è il nome stesso
-#               (CAPO=Teodolinda), quando i testi lo dicono. Fra i nemici vanno bene anche le classi del gruppo:
-#               GUERRIERO, MAGA, LADRO, ELFO...;
-#   RESA=       facoltativo, SI se si combatte fino alla resa e non all'ultimo sangue (un duello): sconfitti, i nemici
-#               si arrendono e restano vivi; se si arrende tutto il gruppo, torna per la rivincita;
-#   DUELLO=     facoltativo, SI se il nemico (uno solo) sfida a duello: entrando si sceglie chi del gruppo lo affronta,
-#               gli altri si fanno da parte; rifiutando la sfida, il gruppo se ne va e lo sfidante resta lì;
-#   LUOGO=      dove si nascondono: GROTTA, ROVINE, BOSCO, PALUDE o RADURA (si segna sulla mappa);
-#   MONETE=     quanto si paga al primo livello del mondo: l'incarico paga questa cifra per il livello di quando si offre;
-#   TITOLO=, RICHIESTA=, BATTUTA=, RISPOSTA=  il nome della missione e le battute dell'incarico (mandante, capo,
-#               mandante); dove stanno e quanto pagano lo aggiunge la missione;
-#   VITTORIA=, RINGRAZIAMENTO=, RICORDO=  quando sono sconfitti, al ritorno in città, e il ricordo del luogo;
-#   ONDATA_2=, ARRIVO_2=, ONDATA_3=, ARRIVO_3=  facoltativi: le ondate che arrivano, sconfitti tutti quelli in campo
-#               (al massimo tre in tutto, non in un duello): classe e numero, e se c'è un capo con un nome il terzo
-#               pezzo è come CAPO= (TROLL 1 SI); ARRIVO_ è che cosa si scrive quando l'ondata arriva. Chi fugge,
-#               alla visita dopo ricomincia. Per tutti i nemici di un incarico (non solo con le ondate) non si corrompe, non si fa
-#               amicizia e non si passa inosservati: vanno sconfitti.
-# Nei testi %CAPO% è il nome del capo, %CAPO_2% e %CAPO_3% quelli dei capi delle ondate. Nei testi non si usa il ";".
-# Una riga può pescare dei pezzi a caso dalla grammatica: i titoli nobiliari, per esempio, scelgono il titolo una
-# volta sola con [TITOLO_NOBILE=[TITOLO_DELLA_PALUDE]] e lo ripetono nei testi con [#TITOLO_NOBILE], e i nemici con
-# [NEMICI_DELLA_PALUDE].
+// ---------------------------------------------------------------------------------------------
+// Incarichi di combattimento (vedi IncaricoDiCombattimento e CombattimentoRichiesto)
+// ---------------------------------------------------------------------------------------------
+//
+// Una riga per incarico, campi CHIAVE=valore separati da ";" (una riga lunga si spezza con una "\" in fondo):
+//   CHIAVE=     l'identificativo, diverso per ogni riga;
+//   TIPO=       il TipoMissione che copre (VENDETTA, COMBATTIMENTO_BESTIA, DUELLO, BLOCCO...);
+//   ASPETTO=    chi compare nella scena in città: QUALUNQUE, CAPITANO, ARMAIOLO, ALCHIMISTA o LOCANDIERE;
+//   MANDANTE=   chi chiede, con l'articolo (il mugnaio);
+//   NEMICO=, NUMERO=  chi va sconfitto (un TipoPersonaggio) e quanti;
+//   CAPO=       facoltativo: uno di loro ha un nome e un livello in più. SI pesca il nome da NOME_CAPOBANDA,
+//               NOME_CAMPIONE, NOME_CAMPIONESSA, NOME_BRIGANTE o NOME_MAGO da lì, qualunque altra cosa è il nome stesso
+//               (CAPO=Teodolinda), quando i testi lo dicono. Fra i nemici vanno bene anche le classi del gruppo:
+//               GUERRIERO, MAGA, LADRO, ELFO...;
+//   RESA=       facoltativo, SI se si combatte fino alla resa e non all'ultimo sangue (un duello): sconfitti, i nemici
+//               si arrendono e restano vivi; se si arrende tutto il gruppo, torna per la rivincita;
+//   DUELLO=     facoltativo, SI se il nemico (uno solo) sfida a duello: entrando si sceglie chi del gruppo lo affronta,
+//               gli altri si fanno da parte; rifiutando la sfida, il gruppo se ne va e lo sfidante resta lì;
+//   LUOGO=      dove si nascondono: GROTTA, ROVINE, BOSCO, PALUDE o RADURA (si segna sulla mappa);
+//   MONETE=     quanto si paga al primo livello del mondo: l'incarico paga questa cifra per il livello di quando si offre;
+//   TITOLO=, RICHIESTA=, BATTUTA=, RISPOSTA=  il nome della missione e le battute dell'incarico (mandante, capo,
+//               mandante); dove stanno e quanto pagano lo aggiunge la missione;
+//   VITTORIA=, RINGRAZIAMENTO=, RICORDO=  quando sono sconfitti, al ritorno in città, e il ricordo del luogo;
+//   ONDATA_2=, ARRIVO_2=, ONDATA_3=, ARRIVO_3=  facoltativi: le ondate che arrivano, sconfitti tutti quelli in campo
+//               (al massimo tre in tutto, non in un duello): classe e numero, e se c'è un capo con un nome il terzo
+//               pezzo è come CAPO= (TROLL 1 SI); ARRIVO_ è che cosa si scrive quando l'ondata arriva. Chi fugge,
+//               alla visita dopo ricomincia. Per tutti i nemici di un incarico (non solo con le ondate) non si corrompe, non si fa
+//               amicizia e non si passa inosservati: vanno sconfitti.
+// Nei testi %CAPO% è il nome del capo, %CAPO_2% e %CAPO_3% quelli dei capi delle ondate. Nei testi non si usa il ";".
+// Una riga può pescare dei pezzi a caso dalla grammatica: i titoli nobiliari, per esempio, scelgono il titolo una
+// volta sola con [TITOLO_NOBILE=[TITOLO_DELLA_PALUDE]] e lo ripetono nei testi con [#TITOLO_NOBILE], e i nemici con
+// [NEMICI_DELLA_PALUDE].
 
 INCARICO_DI_COMBATTIMENTO
     CHIAVE=ESERCITO_DELLA_RADURA;TIPO=BATTAGLIA;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;NEMICO=GOBLIN;NUMERO=5;\
@@ -626,14 +627,14 @@ INCARICO_DI_COMBATTIMENTO
     RINGRAZIAMENTO=Squillino le trombe! Anzi, la tromba: l'altra è dal ricettatore. Da oggi siete [#TITOLO_NOBILE], con tutti gli onori e nessuna rendita.;\
     RICORDO=Questa palude è il feudo di un [#TITOLO_NOBILE], con tutti gli onori e nessuna rendita.
 
-# ---------------------------------------------------------------------------------------------
-# Le storie delle città (vedi RecuperaIlMedaglione e RecuperaLeDerrateAlimentari)
-# ---------------------------------------------------------------------------------------------
-#
-# Sono incarichi di combattimento come quelli di qui sopra (stessi campi), ma ognuno è la storia di una città: ha una
-# produzione tutta sua, con una riga sola, e non si pesca a caso. Parte alla prima visita alla città e non si ripete.
-# Scrivono anche la descrizione della missione (DESCRIZIONE= finché i nemici non sono sconfitti,
-# DESCRIZIONE_RITORNO= quando si torna a riscuotere), che negli incarichi pescati la missione compone da sola.
+// ---------------------------------------------------------------------------------------------
+// Le storie delle città (vedi RecuperaIlMedaglione e RecuperaLeDerrateAlimentari)
+// ---------------------------------------------------------------------------------------------
+//
+// Sono incarichi di combattimento come quelli di qui sopra (stessi campi), ma ognuno è la storia di una città: ha una
+// produzione tutta sua, con una riga sola, e non si pesca a caso. Parte alla prima visita alla città e non si ripete.
+// Scrivono anche la descrizione della missione (DESCRIZIONE= finché i nemici non sono sconfitti,
+// DESCRIZIONE_RITORNO= quando si torna a riscuotere), che negli incarichi pescati la missione compone da sola.
 
 RECUPERA_IL_MEDAGLIONE
     CHIAVE=MEDAGLIONE_DI_FLEENA;TIPO=RECUPERO;ASPETTO=QUALUNQUE;MANDANTE=il derubato;NEMICO=LADRO;NUMERO=4;LUOGO=GROTTA;\
@@ -657,9 +658,9 @@ RECUPERA_LE_DERRATE_ALIMENTARI
     DESCRIZIONE=Il Borgomastro chiede aiuto: una banda di Troll ha fatto sparire un carico di derrate alimentari. Offre 20 monete come ricompensa.;\
     DESCRIZIONE_RITORNO=Torna in città per riconsegnare le derrate alimentari recuperate e ottenere la ricompensa di 20 monete.
 
-# I titoli nobiliari buffi che Sua Maestà concede (vedi le righe di TITOLO_NOBILIARE qui sopra) e i nemici da
-# sconfiggere per averli, pescati a caso. Le alternative pesano poco perché le righe che le usano non escano più
-# spesso delle altre (vedi GrammarBean, il peso delle alternative che contengono riferimenti).
+// I titoli nobiliari buffi che Sua Maestà concede (vedi le righe di TITOLO_NOBILIARE qui sopra) e i nemici da
+// sconfiggere per averli, pescati a caso. Le alternative pesano poco perché le righe che le usano non escano più
+// spesso delle altre (vedi GrammarBean, il peso delle alternative che contengono riferimenti).
 
 TITOLO_DELLA_PALUDE
     [^0.1] Baronetto della Palude Puzzolente
@@ -695,23 +696,23 @@ NEMICI_DELLE_ROVINE
     [^0.1] NEMICO=SPETTRO;NUMERO=2
     [^0.1] NEMICO=FANTASMA;NUMERO=3
 
-# ---------------------------------------------------------------------------------------------
-# Sorveglianze (vedi LaSorveglianza e SorveglianzaRichiesta)
-# ---------------------------------------------------------------------------------------------
-#
-# Una riga per sorveglianza, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
-#   CHIAVE=, TIPO= (VIGILIA, SORVEGLIANZA, SPIONAGGIO), ASPETTO=, MANDANTE=, LUOGO=, MONETE=, TITOLO=, RICHIESTA=,
-#               BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=, RICORDO=  come per gli incarichi di combattimento; che posto
-#               è, quante volte passarci e quanto pagano lo aggiunge la missione;
-#   VISITE=     quante volte passare dal posto (almeno 2);
-#   ORE=        quante ore di gioco lasciar passare almeno fra una visita e l'altra;
-#   VEGLIA=     che cosa si scrive a una visita che conta, se non è l'ultima (la missione aggiunge quante ne mancano);
-#   SCOPERTA=   che cosa si scrive all'ultima visita;
-#   NEMICO=, NUMERO=, CAPO=, VITTORIA=  facoltativi: chi salta fuori all'ultima visita, da sconfiggere lì, e che
-#               cosa si scrive quando è sconfitto;
-#   ONDATA_2=, ARRIVO_2=, ONDATA_3=, ARRIVO_3=  facoltativi, solo con NEMICO=: le ondate che arrivano all'ultima
-#               visita dopo i primi nemici, come per gli incarichi di combattimento.
-# Nei testi %CAPO% è il nome del capo, %CAPO_2% e %CAPO_3% quelli dei capi delle ondate. Nei testi non si usa il ";".
+// ---------------------------------------------------------------------------------------------
+// Sorveglianze (vedi LaSorveglianza e SorveglianzaRichiesta)
+// ---------------------------------------------------------------------------------------------
+//
+// Una riga per sorveglianza, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
+//   CHIAVE=, TIPO= (VIGILIA, SORVEGLIANZA, SPIONAGGIO), ASPETTO=, MANDANTE=, LUOGO=, MONETE=, TITOLO=, RICHIESTA=,
+//               BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=, RICORDO=  come per gli incarichi di combattimento; che posto
+//               è, quante volte passarci e quanto pagano lo aggiunge la missione;
+//   VISITE=     quante volte passare dal posto (almeno 2);
+//   ORE=        quante ore di gioco lasciar passare almeno fra una visita e l'altra;
+//   VEGLIA=     che cosa si scrive a una visita che conta, se non è l'ultima (la missione aggiunge quante ne mancano);
+//   SCOPERTA=   che cosa si scrive all'ultima visita;
+//   NEMICO=, NUMERO=, CAPO=, VITTORIA=  facoltativi: chi salta fuori all'ultima visita, da sconfiggere lì, e che
+//               cosa si scrive quando è sconfitto;
+//   ONDATA_2=, ARRIVO_2=, ONDATA_3=, ARRIVO_3=  facoltativi, solo con NEMICO=: le ondate che arrivano all'ultima
+//               visita dopo i primi nemici, come per gli incarichi di combattimento.
+// Nei testi %CAPO% è il nome del capo, %CAPO_2% e %CAPO_3% quelli dei capi delle ondate. Nei testi non si usa il ";".
 
 SORVEGLIANZA
     CHIAVE=CERCHIO_DI_PIETRE;TIPO=VIGILIA;ASPETTO=QUALUNQUE;MANDANTE=il sacerdote;LUOGO=RADURA;VISITE=3;ORE=20;\
@@ -832,20 +833,20 @@ SORVEGLIANZA
     RINGRAZIAMENTO=Le mie oche da guardia! Ieri hanno messo in fuga un esattore. Il più bel giorno della mia vita.;\
     RICORDO=In questa palude vivevano le oche da guardia più feroci della regione.
 
-# ---------------------------------------------------------------------------------------------
-# Soccorsi (vedi IlSoccorso e SoccorsoRichiesto)
-# ---------------------------------------------------------------------------------------------
-#
-# Una riga per soccorso, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
-#   CHIAVE=, TIPO= (SOCCORSO, SALVATAGGIO), ASPETTO=, MANDANTE=, NEMICO=, NUMERO=, CAPO=, LUOGO=, MONETE=, TITOLO=,
-#               RICHIESTA=, BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=, RICORDO=  come per gli incarichi di combattimento;
-#               dov'è e quanto pagano lo aggiunge la missione;
-#   PERSONA=    chi va riportato a casa, con l'articolo, maschile (il taglialegna): il nome lo pesca la missione da
-#               NOME_OSTAGGIO;
-#   SOCCORSO=   che cosa si scrive quando, sconfitti i nemici, si unisce al gruppo (la missione aggiunge di
-#               riportarlo vivo in città);
-#   LUTTO=      l'ultima battuta del mandante, se è morto per strada.
-# Nei testi %NOME% è il nome di chi va riportato a casa, %CAPO% quello del capo. Nei testi non si usa il ";".
+// ---------------------------------------------------------------------------------------------
+// Soccorsi (vedi IlSoccorso e SoccorsoRichiesto)
+// ---------------------------------------------------------------------------------------------
+//
+// Una riga per soccorso, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
+//   CHIAVE=, TIPO= (SOCCORSO, SALVATAGGIO), ASPETTO=, MANDANTE=, NEMICO=, NUMERO=, CAPO=, LUOGO=, MONETE=, TITOLO=,
+//               RICHIESTA=, BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=, RICORDO=  come per gli incarichi di combattimento;
+//               dov'è e quanto pagano lo aggiunge la missione;
+//   PERSONA=    chi va riportato a casa, con l'articolo, maschile (il taglialegna): il nome lo pesca la missione da
+//               NOME_OSTAGGIO;
+//   SOCCORSO=   che cosa si scrive quando, sconfitti i nemici, si unisce al gruppo (la missione aggiunge di
+//               riportarlo vivo in città);
+//   LUTTO=      l'ultima battuta del mandante, se è morto per strada.
+// Nei testi %NOME% è il nome di chi va riportato a casa, %CAPO% quello del capo. Nei testi non si usa il ";".
 
 SOCCORSO
     CHIAVE=TAGLIALEGNA_E_ARPIE;TIPO=SOCCORSO;ASPETTO=QUALUNQUE;MANDANTE=la moglie del taglialegna;PERSONA=il taglialegna;\
@@ -913,26 +914,26 @@ SOCCORSO
     LUTTO=Povero %NOME%. Le sue pergamene, almeno, le faremo leggere a tutti.;\
     RICORDO=Fra queste rovine si nascose un copista inseguito dagli sgherri di %CAPO%.
 
-# ---------------------------------------------------------------------------------------------
-# Indagini (vedi LIndagine e IndagineRichiesta)
-# ---------------------------------------------------------------------------------------------
-#
-# Una riga per indagine, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
-#   CHIAVE=, TIPO= (INVESTIGAZIONE, TESTIMONI, CONTROSPIONAGGIO...), ASPETTO=, MANDANTE=, MONETE=, TITOLO=,
-#               RICHIESTA=, BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=  come per gli incarichi di combattimento;
-#   INDIZIO_1=, INDIZIO_2=, INDIZIO_3=  il terzo è facoltativo: LUOGO:testo, con il luogo fra GROTTA, ROVINE, BOSCO,
-#               PALUDE, RADURA, TEMPIO e LOCANDA. La missione segna i posti sulla mappa uno alla volta;
-#   DOMANDA=    la domanda dopo l'ultimo indizio;
-#   SOSPETTI=   da 2 a 5, separati da "/": le risposte possibili, nell'ordine;
-#   COLPEVOLE=  il numero del sospetto giusto, da 1. Gli indizi devono bastare a capirlo;
-#   NEMICO=, NUMERO=, CAPO=, RESA=, LUOGO=  chi va sconfitto nel nascondiglio del colpevole, e dov'è;
-#   ONDATA_2=, ARRIVO_2=, ONDATA_3=, ARRIVO_3=  facoltativi: le ondate che arrivano nel nascondiglio dopo i primi
-#               nemici, come per gli incarichi di combattimento (%CAPO_2% e %CAPO_3% nei testi);
-#   SMASCHERAMENTO=  quando si sceglie il colpevole giusto (la missione aggiunge che il nascondiglio è sulla mappa);
-#   ERRORE=     quando si accusa un innocente: la missione fallisce;
-#   VITTORIA=   quando chi è nel nascondiglio è sconfitto;
-#   RICORDO=    il ricordo del nascondiglio.
-# Nei testi %CAPO% è il nome del capo. Nei testi non si usa il ";".
+// ---------------------------------------------------------------------------------------------
+// Indagini (vedi LIndagine e IndagineRichiesta)
+// ---------------------------------------------------------------------------------------------
+//
+// Una riga per indagine, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
+//   CHIAVE=, TIPO= (INVESTIGAZIONE, TESTIMONI, CONTROSPIONAGGIO...), ASPETTO=, MANDANTE=, MONETE=, TITOLO=,
+//               RICHIESTA=, BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=  come per gli incarichi di combattimento;
+//   INDIZIO_1=, INDIZIO_2=, INDIZIO_3=  il terzo è facoltativo: LUOGO:testo, con il luogo fra GROTTA, ROVINE, BOSCO,
+//               PALUDE, RADURA, TEMPIO e LOCANDA. La missione segna i posti sulla mappa uno alla volta;
+//   DOMANDA=    la domanda dopo l'ultimo indizio;
+//   SOSPETTI=   da 2 a 5, separati da "/": le risposte possibili, nell'ordine;
+//   COLPEVOLE=  il numero del sospetto giusto, da 1. Gli indizi devono bastare a capirlo;
+//   NEMICO=, NUMERO=, CAPO=, RESA=, LUOGO=  chi va sconfitto nel nascondiglio del colpevole, e dov'è;
+//   ONDATA_2=, ARRIVO_2=, ONDATA_3=, ARRIVO_3=  facoltativi: le ondate che arrivano nel nascondiglio dopo i primi
+//               nemici, come per gli incarichi di combattimento (%CAPO_2% e %CAPO_3% nei testi);
+//   SMASCHERAMENTO=  quando si sceglie il colpevole giusto (la missione aggiunge che il nascondiglio è sulla mappa);
+//   ERRORE=     quando si accusa un innocente: la missione fallisce;
+//   VITTORIA=   quando chi è nel nascondiglio è sconfitto;
+//   RICORDO=    il ricordo del nascondiglio.
+// Nei testi %CAPO% è il nome del capo. Nei testi non si usa il ";".
 
 INDAGINE
     CHIAVE=VIANDANTI_SCOMPARSI;TIPO=INVESTIGAZIONE;ASPETTO=CAPITANO;MANDANTE=il capitano delle guardie;MONETE=40;\
@@ -1127,25 +1128,25 @@ INDAGINE
     RINGRAZIAMENTO=I folletti! Lo sapevo. Cioè, non lo sapevo, ma adesso lo scrivo come se lo sapessi da sempre.;\
     RICORDO=In questo bosco vivono i folletti che accendono le lucciole della palude.
 
-# ---------------------------------------------------------------------------------------------
-# Riti (vedi IlRituale e RitualeRichiesto)
-# ---------------------------------------------------------------------------------------------
-#
-# Una riga per rito, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
-#   CHIAVE=, TIPO= (RITUALE, SIGILLO, BENEDIZIONE, POSSESSIONE...), ASPETTO=, MANDANTE=, MONETE=, TITOLO=,
-#               RICHIESTA=, BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=, RICORDO=  come per gli incarichi di combattimento;
-#               dove si celebra, che ingredienti servono e quanto pagano lo aggiunge la missione;
-#   LUOGO=      dove si celebra: GROTTA, ROVINE, BOSCO, PALUDE, RADURA o TEMPIO;
-#   GENERE=, INGREDIENTE=, INGREDIENTI=, DOVE=, QUANTITA=  l'ingrediente, come i materiali dell'alchimista: genere,
-#               singolare, plurale, da dove viene (LUOGHI BOSCO RADURA, oppure NEMICI SPETTRO) e quanti ne servono;
-#   DOMANDA=    la domanda nel posto del rito, con gli ingredienti: una conferma, se non ci sono METODI;
-#   METODI=, METODO=, ERRORE=  facoltativi, insieme: da 2 a 4 modi di celebrare il rito, separati da "/" (la
-#               missione aggiunge "Non ancora"), il numero di quello giusto, da 1, e che cosa si scrive con quello
-#               sbagliato: la missione fallisce. Il racconto deve bastare a capire qual è il metodo giusto;
-#   RITO=       che cosa si scrive quando il rito si celebra: tutto, se nessuno salta fuori, altrimenti chi arriva;
-#   NEMICO=, NUMERO=, CAPO=, VITTORIA=  facoltativi: chi salta fuori durante il rito, da sconfiggere lì, e che
-#               cosa si scrive quando è sconfitto.
-# Nei testi %CAPO% è il nome del capo. Nei testi non si usa il ";".
+// ---------------------------------------------------------------------------------------------
+// Riti (vedi IlRituale e RitualeRichiesto)
+// ---------------------------------------------------------------------------------------------
+//
+// Una riga per rito, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
+//   CHIAVE=, TIPO= (RITUALE, SIGILLO, BENEDIZIONE, POSSESSIONE...), ASPETTO=, MANDANTE=, MONETE=, TITOLO=,
+//               RICHIESTA=, BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=, RICORDO=  come per gli incarichi di combattimento;
+//               dove si celebra, che ingredienti servono e quanto pagano lo aggiunge la missione;
+//   LUOGO=      dove si celebra: GROTTA, ROVINE, BOSCO, PALUDE, RADURA o TEMPIO;
+//   GENERE=, INGREDIENTE=, INGREDIENTI=, DOVE=, QUANTITA=  l'ingrediente, come i materiali dell'alchimista: genere,
+//               singolare, plurale, da dove viene (LUOGHI BOSCO RADURA, oppure NEMICI SPETTRO) e quanti ne servono;
+//   DOMANDA=    la domanda nel posto del rito, con gli ingredienti: una conferma, se non ci sono METODI;
+//   METODI=, METODO=, ERRORE=  facoltativi, insieme: da 2 a 4 modi di celebrare il rito, separati da "/" (la
+//               missione aggiunge "Non ancora"), il numero di quello giusto, da 1, e che cosa si scrive con quello
+//               sbagliato: la missione fallisce. Il racconto deve bastare a capire qual è il metodo giusto;
+//   RITO=       che cosa si scrive quando il rito si celebra: tutto, se nessuno salta fuori, altrimenti chi arriva;
+//   NEMICO=, NUMERO=, CAPO=, VITTORIA=  facoltativi: chi salta fuori durante il rito, da sconfiggere lì, e che
+//               cosa si scrive quando è sconfitto.
+// Nei testi %CAPO% è il nome del capo. Nei testi non si usa il ";".
 
 RITUALE
     CHIAVE=FUOCO_DEL_SOLSTIZIO;TIPO=RITUALE;ASPETTO=QUALUNQUE;MANDANTE=la sacerdotessa;LUOGO=RADURA;\
@@ -1449,28 +1450,28 @@ RITUALE
     RINGRAZIAMENTO=In città non si parla d'altro: il cavaliere e il falò! Nessuno ricorda più l'assedio. Quasi nessuno.;\
     RICORDO=In questa radura si accese il falò che riabilitò un cavaliere.
 
-# ---------------------------------------------------------------------------------------------
-# Benedizioni (vedi LaBenedizione, IlFavore e BenedizioneRichiesta)
-# ---------------------------------------------------------------------------------------------
-#
-# Una riga per benedizione, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
-#   CHIAVE=     l'identificativo, diverso per ogni riga;
-#   ASPETTO=    SACERDOTE o SACERDOTESSA: chi offre la benedizione, seduto in una locanda;
-#   MANDANTE=   chi è, con l'articolo (la sacerdotessa della luna);
-#   NOME=       il nome della benedizione, con l'articolo (la benedizione della luna): resta scritto nel modificatore;
-#   BENEDIZIONE=  ATTRIBUTO TIPO QUANTITA: il modificatore permanente, per esempio FORZA AUMENTO_FISSO 2 o
-#               SALUTE AUMENTO_PERCENTUALE 10 (TipoAttributo e TipoModificatore, solo aumenti);
-#   RICHIESTA=, BATTUTA=, RISPOSTA=  le battute in locanda (sacerdote, capo, sacerdote): la missione aggiunge
-#               la promessa della benedizione;
-#   FAVORE=     il nome del favore, che è la missione secondaria (Le ombre della radura). Il favore è di un tipo solo:
-#     - combattimento: LUOGO=, NEMICO=, NUMERO=, CAPO=  chi sconfiggere, e dove (come per gli incarichi di
-#               combattimento);
-#     - raccolta: GENERE=, INGREDIENTE=, INGREDIENTI=, DOVE=, QUANTITA=  che cosa raccogliere (come per i riti);
-#     - veglia: LUOGO=, VISITE=, ORE=, VEGLIA=  che posto vegliare, quante volte, a quante ore di distanza, e che cosa
-#               si scrive a una visita che conta, se non è l'ultima (come per le sorveglianze);
-#   VITTORIA=   quando il favore è fatto;
-#   BENEDETTO=  nel tempio, quando un personaggio riceve la benedizione: %PERSONAGGIO% è il suo nome.
-# Nei testi %CAPO% è il nome del capo dei nemici del favore. Nei testi non si usa il ";".
+// ---------------------------------------------------------------------------------------------
+// Benedizioni (vedi LaBenedizione, IlFavore e BenedizioneRichiesta)
+// ---------------------------------------------------------------------------------------------
+//
+// Una riga per benedizione, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
+//   CHIAVE=     l'identificativo, diverso per ogni riga;
+//   ASPETTO=    SACERDOTE o SACERDOTESSA: chi offre la benedizione, seduto in una locanda;
+//   MANDANTE=   chi è, con l'articolo (la sacerdotessa della luna);
+//   NOME=       il nome della benedizione, con l'articolo (la benedizione della luna): resta scritto nel modificatore;
+//   BENEDIZIONE=  ATTRIBUTO TIPO QUANTITA: il modificatore permanente, per esempio FORZA AUMENTO_FISSO 2 o
+//               SALUTE AUMENTO_PERCENTUALE 10 (TipoAttributo e TipoModificatore, solo aumenti);
+//   RICHIESTA=, BATTUTA=, RISPOSTA=  le battute in locanda (sacerdote, capo, sacerdote): la missione aggiunge
+//               la promessa della benedizione;
+//   FAVORE=     il nome del favore, che è la missione secondaria (Le ombre della radura). Il favore è di un tipo solo:
+//     - combattimento: LUOGO=, NEMICO=, NUMERO=, CAPO=  chi sconfiggere, e dove (come per gli incarichi di
+//               combattimento);
+//     - raccolta: GENERE=, INGREDIENTE=, INGREDIENTI=, DOVE=, QUANTITA=  che cosa raccogliere (come per i riti);
+//     - veglia: LUOGO=, VISITE=, ORE=, VEGLIA=  che posto vegliare, quante volte, a quante ore di distanza, e che cosa
+//               si scrive a una visita che conta, se non è l'ultima (come per le sorveglianze);
+//   VITTORIA=   quando il favore è fatto;
+//   BENEDETTO=  nel tempio, quando un personaggio riceve la benedizione: %PERSONAGGIO% è il suo nome.
+// Nei testi %CAPO% è il nome del capo dei nemici del favore. Nei testi non si usa il ";".
 
 BENEDIZIONE
     CHIAVE=BENEDIZIONE_DELLA_LUNA;ASPETTO=SACERDOTESSA;MANDANTE=la sacerdotessa della luna;NOME=la benedizione della luna;\
@@ -1532,25 +1533,25 @@ BENEDIZIONE
     VITTORIA=La terza veglia è finita: il santo può festeggiare in pace.;\
     BENEDETTO=La sacerdotessa copre gli occhi di %PERSONAGGIO% con la mano, e quando la toglie il buio sembra un po' meno buio.
 
-# ---------------------------------------------------------------------------------------------
-# Lealtà (vedi LaLealta, IlFavore e LealtaRichiesta)
-# ---------------------------------------------------------------------------------------------
-#
-# Una sera, intorno al fuoco dell'accampamento, un compagno del gruppo (non il capo) confida un problema personale e
-# chiede un favore; fatto il favore, ringrazia e riceve un modificatore permanente. Una riga per problema, campi
-# CHIAVE=valore separati da ";":
-#   CHIAVE=     identifica il problema;
-#   CONFIDENZA=, BATTUTA=, RISPOSTA=  le battute intorno al fuoco (compagno, capo, compagno);
-#   FAVORE=     il nome del favore, che è la missione secondaria, e i suoi campi, come per le benedizioni:
-#     - combattimento: LUOGO=, NEMICO=, NUMERO=, CAPO=;
-#     - raccolta: GENERE=, INGREDIENTE=, INGREDIENTI=, DOVE=, QUANTITA=;
-#     - veglia: LUOGO=, VISITE=, ORE=, VEGLIA=;
-#   VITTORIA=   quando il favore è fatto;
-#   RINGRAZIAMENTO=  che cosa dice il compagno a fine locazione, quando il favore è fatto;
-#   LEALTA=     ATTRIBUTO TIPO QUANTITA: il modificatore permanente del compagno, come per le benedizioni;
-#   LEALE=      quando il compagno riceve il modificatore.
-# Nei testi %PERSONAGGIO% è il nome del compagno, e %CAPO% il nome del capo dei nemici del favore. I testi devono
-# andare bene per qualunque compagno, di qualunque classe, maschio o femmina: niente aggettivi o participi riferiti a lui. Nei testi non si usa il ";".
+// ---------------------------------------------------------------------------------------------
+// Lealtà (vedi LaLealta, IlFavore e LealtaRichiesta)
+// ---------------------------------------------------------------------------------------------
+//
+// Una sera, intorno al fuoco dell'accampamento, un compagno del gruppo (non il capo) confida un problema personale e
+// chiede un favore; fatto il favore, ringrazia e riceve un modificatore permanente. Una riga per problema, campi
+// CHIAVE=valore separati da ";":
+//   CHIAVE=     identifica il problema;
+//   CONFIDENZA=, BATTUTA=, RISPOSTA=  le battute intorno al fuoco (compagno, capo, compagno);
+//   FAVORE=     il nome del favore, che è la missione secondaria, e i suoi campi, come per le benedizioni:
+//     - combattimento: LUOGO=, NEMICO=, NUMERO=, CAPO=;
+//     - raccolta: GENERE=, INGREDIENTE=, INGREDIENTI=, DOVE=, QUANTITA=;
+//     - veglia: LUOGO=, VISITE=, ORE=, VEGLIA=;
+//   VITTORIA=   quando il favore è fatto;
+//   RINGRAZIAMENTO=  che cosa dice il compagno a fine locazione, quando il favore è fatto;
+//   LEALTA=     ATTRIBUTO TIPO QUANTITA: il modificatore permanente del compagno, come per le benedizioni;
+//   LEALE=      quando il compagno riceve il modificatore.
+// Nei testi %PERSONAGGIO% è il nome del compagno, e %CAPO% il nome del capo dei nemici del favore. I testi devono
+// andare bene per qualunque compagno, di qualunque classe, maschio o femmina: niente aggettivi o participi riferiti a lui. Nei testi non si usa il ";".
 
 LEALTA
     CHIAVE=IL_DEBITO;\
@@ -1610,23 +1611,23 @@ LEALTA
     LEALTA=PERCEZIONE AUMENTO_FISSO 2;\
     LEALE=Gli occhi di %PERSONAGGIO% non temono più il buio, e ci vedono meglio.
 
-# ---------------------------------------------------------------------------------------------
-# Tornei (vedi IlTorneo e TorneoRichiesto)
-# ---------------------------------------------------------------------------------------------
-#
-# Una riga per torneo, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento. Il torneo si
-# combatte nella lizza, uno contro uno e fino alla resa: due turni e la finale, uno a ogni visita; chi perde può
-# tornare per la rivincita. In palio c'è un oggetto leggendario, che sceglie la missione, e la borsa del vincitore.
-#   CHIAVE=, ASPETTO=, MANDANTE=, MONETE=, TITOLO=, RICHIESTA=, BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=, RICORDO=  come
-#               per gli incarichi di combattimento; MONETE= è la borsa del vincitore. Dove si combatte, chi c'è in
-#               finale e che cosa c'è in palio lo aggiunge la missione;
-#   LUOGO=      la lizza: GROTTA, ROVINE, BOSCO, PALUDE o RADURA;
-#   SFIDANTI=   le classi degli sfidanti dei due turni prima della finale, separate da uno spazio (GUERRIERO ELFA);
-#   CAMPIONE=, NOME=  la classe del campione della finale e il suo nome, come CAPO= degli incarichi (SI, NOME_CAMPIONE,
-#               NOME_CAMPIONESSA, NOME_MAGO... o il nome stesso): ha un livello in più;
-#   PRIMO_TURNO=, SECONDO_TURNO=  quando lo sfidante di quel turno si arrende;
-#   FINALE=     quando il campione si arrende (la missione aggiunge la consegna del leggendario).
-# Nei testi %CAMPIONE% è il nome del campione. Nei testi non si usa il ";".
+// ---------------------------------------------------------------------------------------------
+// Tornei (vedi IlTorneo e TorneoRichiesto)
+// ---------------------------------------------------------------------------------------------
+//
+// Una riga per torneo, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento. Il torneo si
+// combatte nella lizza, uno contro uno e fino alla resa: due turni e la finale, uno a ogni visita; chi perde può
+// tornare per la rivincita. In palio c'è un oggetto leggendario, che sceglie la missione, e la borsa del vincitore.
+//   CHIAVE=, ASPETTO=, MANDANTE=, MONETE=, TITOLO=, RICHIESTA=, BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=, RICORDO=  come
+//               per gli incarichi di combattimento; MONETE= è la borsa del vincitore. Dove si combatte, chi c'è in
+//               finale e che cosa c'è in palio lo aggiunge la missione;
+//   LUOGO=      la lizza: GROTTA, ROVINE, BOSCO, PALUDE o RADURA;
+//   SFIDANTI=   le classi degli sfidanti dei due turni prima della finale, separate da uno spazio (GUERRIERO ELFA);
+//   CAMPIONE=, NOME=  la classe del campione della finale e il suo nome, come CAPO= degli incarichi (SI, NOME_CAMPIONE,
+//               NOME_CAMPIONESSA, NOME_MAGO... o il nome stesso): ha un livello in più;
+//   PRIMO_TURNO=, SECONDO_TURNO=  quando lo sfidante di quel turno si arrende;
+//   FINALE=     quando il campione si arrende (la missione aggiunge la consegna del leggendario).
+// Nei testi %CAMPIONE% è il nome del campione. Nei testi non si usa il ";".
 
 TORNEO
     CHIAVE=ROSA_APPASSITA;ASPETTO=QUALUNQUE;MANDANTE=il borgomastro;TITOLO=Il torneo della Rosa Appassita;LUOGO=RADURA;\
@@ -1657,17 +1658,17 @@ TORNEO
     RINGRAZIAMENTO=Un vincitore nuovo, dopo sei anni! I boccali della locanda non sono mai stati così rovesciati.;\
     RICORDO=In questo bosco si combatte ogni anno il torneo del Boccale Rovesciato.
 
-# ---------------------------------------------------------------------------------------------
-# Documentazioni (vedi LaDocumentazione e DocumentazioneRichiesta)
-# ---------------------------------------------------------------------------------------------
-#
-# Una riga per documentazione, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
-#   CHIAVE=, ASPETTO=, MANDANTE=, MONETE=, TITOLO=, RICHIESTA=, BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=  come per gli
-#               incarichi di combattimento;
-#   REPERTO_1=, REPERTO_2=, REPERTO_3=  il terzo è facoltativo: LUOGO:testo, come gli indizi delle indagini (GROTTA,
-#               ROVINE, BOSCO, PALUDE, RADURA, TEMPIO, LOCANDA). La missione segna i posti sulla mappa uno alla volta;
-#               il testo è quello che il gruppo trova e annota.
-# Nei testi non si usa il ";".
+// ---------------------------------------------------------------------------------------------
+// Documentazioni (vedi LaDocumentazione e DocumentazioneRichiesta)
+// ---------------------------------------------------------------------------------------------
+//
+// Una riga per documentazione, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
+//   CHIAVE=, ASPETTO=, MANDANTE=, MONETE=, TITOLO=, RICHIESTA=, BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=  come per gli
+//               incarichi di combattimento;
+//   REPERTO_1=, REPERTO_2=, REPERTO_3=  il terzo è facoltativo: LUOGO:testo, come gli indizi delle indagini (GROTTA,
+//               ROVINE, BOSCO, PALUDE, RADURA, TEMPIO, LOCANDA). La missione segna i posti sulla mappa uno alla volta;
+//               il testo è quello che il gruppo trova e annota.
+// Nei testi non si usa il ";".
 
 DOCUMENTAZIONE
     CHIAVE=ISCRIZIONI_DELLE_ROVINE;ASPETTO=QUALUNQUE;MANDANTE=lo storico;MONETE=35;TITOLO=Le iscrizioni perdute;\
@@ -1697,19 +1698,19 @@ DOCUMENTAZIONE
     REPERTO_2=LOCANDA:Qui la birra è eccellente, i letti duri come sassi e il gatto della locanda ruba il formaggio dai piatti.;\
     RINGRAZIAMENTO=Zuppa buona, birra eccellente, un gatto ladro. La mia guida sarà un successo. La mia locanda, naturalmente, avrà tre stelle.
 
-# ---------------------------------------------------------------------------------------------
-# Colpi (vedi IlColpo e ColpoRichiesto)
-# ---------------------------------------------------------------------------------------------
-#
-# Una riga per colpo, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
-#   CHIAVE=, TIPO= (FURTO, SABOTAGGIO, VANDALISMO, INCENDIO, VIOLAZIONE_DOMICILIO, AVVELENAMENTO), ASPETTO=,
-#               MANDANTE=, LUOGO=, MONETE=, TITOLO=, RICHIESTA=, BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=, RICORDO=  come per
-#               gli incarichi di combattimento; dov'è, chi fa la guardia e quanto pagano lo aggiunge la missione;
-#   NEMICO=, NUMERO=, CAPO=  le guardie: il colpo riesce passando inosservati fra loro. Più alta la loro percezione,
-#               più è difficile;
-#   COLPO=      che cosa si scrive quando il colpo riesce: che cosa si è fatto;
-#   SCOPERTI=   che cosa si scrive se il gruppo combatte con le guardie: il colpo fallisce.
-# Nei testi %CAPO% è il nome del capo delle guardie. Nei testi non si usa il ";".
+// ---------------------------------------------------------------------------------------------
+// Colpi (vedi IlColpo e ColpoRichiesto)
+// ---------------------------------------------------------------------------------------------
+//
+// Una riga per colpo, campi CHIAVE=valore separati da ";" come per gli incarichi di combattimento:
+//   CHIAVE=, TIPO= (FURTO, SABOTAGGIO, VANDALISMO, INCENDIO, VIOLAZIONE_DOMICILIO, AVVELENAMENTO), ASPETTO=,
+//               MANDANTE=, LUOGO=, MONETE=, TITOLO=, RICHIESTA=, BATTUTA=, RISPOSTA=, RINGRAZIAMENTO=, RICORDO=  come per
+//               gli incarichi di combattimento; dov'è, chi fa la guardia e quanto pagano lo aggiunge la missione;
+//   NEMICO=, NUMERO=, CAPO=  le guardie: il colpo riesce passando inosservati fra loro. Più alta la loro percezione,
+//               più è difficile;
+//   COLPO=      che cosa si scrive quando il colpo riesce: che cosa si è fatto;
+//   SCOPERTI=   che cosa si scrive se il gruppo combatte con le guardie: il colpo fallisce.
+// Nei testi %CAPO% è il nome del capo delle guardie. Nei testi non si usa il ";".
 
 COLPO
     CHIAVE=LIBRO_DELL_USURAIO;TIPO=FURTO;ASPETTO=QUALUNQUE;MANDANTE=il fornaio;LUOGO=ROVINE;NEMICO=TROLL;NUMERO=2;\
