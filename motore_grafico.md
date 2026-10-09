@@ -113,7 +113,7 @@ Un sistema di rendering del testo **proprietario**, in stile retro (il nome è u
 
 | Riquadro | Contenuto |
 | :--- | :--- |
-| `DisplayableCanvasRiquadroLocazione` | L'illustrazione della locazione, con gli avversari a sinistra e il gruppo del giocatore a destra (ognuno rivolto verso l'altro e specchiato se serve, secondo `VersiDeiPersonaggi`; chi non è vivo non si disegna e gli altri scalano) e i fumetti di effetto; l'oggetto sta al centro |
+| `DisplayableCanvasRiquadroLocazione` | L'illustrazione della locazione, con gli avversari a sinistra e il gruppo del giocatore a destra (ognuno rivolto verso l'altro e specchiato se serve, secondo `VersiDeiPersonaggi`; nel gruppo chi non è vivo non si disegna e gli altri scalano, tra gli avversari restano ai loro posti) e i fumetti di effetto; l'oggetto sta al centro |
 | `DisplayableCanvasRiquadroMappa` | La mappa in piccolo attorno al gruppo, con le nuvole |
 | `DisplayableCanvasRiquadroGruppo` | I personaggi con salute, magia, livello, coraggio, valore, stanchezza, carisma; scorrevole a rotella (un personaggio per scatto) |
 | `DisplayableCanvasRiquadroStatistiche` | Monete, preziosi, punti esperienza |

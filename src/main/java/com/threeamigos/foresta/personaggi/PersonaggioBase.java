@@ -1,7 +1,5 @@
 package com.threeamigos.foresta.personaggi;
 
-import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
-
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoCreazionePersonaggio;
 import com.threeamigos.foresta.eventi.interni.InternoMessaggio;
@@ -14,18 +12,16 @@ import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
 import com.threeamigos.foresta.motore.*;
 import com.threeamigos.foresta.offerte.FabbricaOfferte;
 import com.threeamigos.foresta.offerte.Offerta;
 import com.threeamigos.foresta.oggetti.Artefatto;
-import com.threeamigos.foresta.tipi.*;
-import com.threeamigos.foresta.tipi.ClasseIncantesimo;
-import com.threeamigos.foresta.tipi.TipoIncantesimo;
-import com.threeamigos.foresta.tipi.TipoOfferta;
 import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.strumenti.Misc;
+import com.threeamigos.foresta.tipi.*;
 
 import java.util.*;
 import java.util.function.Function;
@@ -1862,6 +1858,12 @@ public abstract class PersonaggioBase implements Personaggio {
 			case BARDO:
 			case CANTASTORIE:
 			case VIANDANTE:
+			case BARDO_LOCANDA:
+			case LOCANDIERE:
+			case ALCHIMISTA:
+			case VENDITORE_DI_PERGAMENE:
+			case INCANTATORE:
+			case MOGLIE_DEL_BARDO:
 				// I bardi ammaliano o spaventano folle intere: Carisma (70%) + Intelligenza (30%)
 				statPrincipale = get(md, PersonaggioMD::getCarisma, TipoAttributo.CARISMA);
 				statSecondaria = get(md, PersonaggioMD::getIntelligenza, TipoAttributo.INTELLIGENZA);
@@ -1883,6 +1885,7 @@ public abstract class PersonaggioBase implements Personaggio {
 			case GIGANTE:
 			case TITANO:
 			case DRAGO:
+			case ARMAIOLO:
 				// I bruti e i tank fisici: Forza (70%) + Costituzione (30%)
 				statPrincipale = get(md, PersonaggioMD::getForza, TipoAttributo.FORZA);
 				statSecondaria = get(md, PersonaggioMD::getCostituzione, TipoAttributo.COSTITUZIONE);

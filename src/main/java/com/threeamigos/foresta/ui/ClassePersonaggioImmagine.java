@@ -48,7 +48,15 @@ public enum ClassePersonaggioImmagine {
     TITANO(TipoPersonaggio.TITANO, "personaggi/Titano.gif", "icone/Titano.gif"),
     TROLL(TipoPersonaggio.TROLL, "personaggi/Troll.gif"),
     VIVERNA(TipoPersonaggio.VIVERNA, "personaggi/Viverna.gif"),
-    VIANDANTE(TipoPersonaggio.VIANDANTE, "personaggi/Viandante.gif", "icone/Viandante.gif");
+    // I non combattenti: le icone sono provvisorie, copie di quella del Viandante
+    LOCANDIERE(TipoPersonaggio.LOCANDIERE, "personaggi/Locandiere.gif", "icone/Locandiere.gif"),
+    ARMAIOLO(TipoPersonaggio.ARMAIOLO, "personaggi/Armaiolo.gif", "icone/Armaiolo.gif"),
+    ALCHIMISTA(TipoPersonaggio.ALCHIMISTA, "personaggi/Alchimista.gif", "icone/Alchimista.gif"),
+    VENDITORE_DI_PERGAMENE(TipoPersonaggio.VENDITORE_DI_PERGAMENE, "personaggi/VenditoreDiPergamene.gif", "icone/VenditoreDiPergamene.gif"),
+    INCANTATORE(TipoPersonaggio.INCANTATORE, "personaggi/Incantatore.gif", "icone/Incantatore.gif"),
+    MOGLIE_DEL_BARDO(TipoPersonaggio.MOGLIE_DEL_BARDO, "personaggi/MoglieDelBardo.gif", "icone/MoglieDelBardo.gif"),
+    VIANDANTE(TipoPersonaggio.VIANDANTE, "personaggi/Viandante.gif", "icone/Viandante.gif"),
+    BARDO_LOCANDA(TipoPersonaggio.BARDO_LOCANDA, "personaggi/BardoLocanda.gif", "icone/BardoLocanda.gif");
 
     private final TipoPersonaggio classePersonaggio;
     private final BufferedImage immagine;

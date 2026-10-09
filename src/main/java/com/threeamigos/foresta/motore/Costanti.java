@@ -872,6 +872,13 @@ public class Costanti {
     public static final String SACERDOTESSA_MOLTIPLICATORE_RECUPERO_FISICO_NOTA = "Riprende fiato con la preghiera e il riposo, un poco meno di un guerriero.";
     public static final String SACERDOTESSA_MOLTIPLICATORE_RECUPERO_MAGICO_NOTA = "La preghiera ricarica i suoi flussi sacri più in fretta di molti incantatori.";
 
+    // I personaggi non combattenti (locandiere, armaiolo, alchimista, venditore di pergamene, incantatore, moglie del
+    // bardo): come il bardo ma un poco meno, e senza capacità proprie (vedi PersonaggioNonCombattente)
+    public static final double NON_COMBATTENTE_FATTORE_STATISTICHE = 0.85;
+    public static final int NON_COMBATTENTE_SALUTE_BASE = 90;
+    public static final int NON_COMBATTENTE_MAGIA_BASE = 30;
+    public static final int NON_COMBATTENTE_LIVELLAMENTO_MAGIA = 14;
+
     // Personaggio giocabile segreto per test
 
     public static final int OMBRAFIAMMA_MAX_CARISMA = 9;

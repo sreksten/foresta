@@ -46,6 +46,14 @@ public enum TipoPersonaggio {
 	SACERDOTE,
 	SACERDOTESSA,
 
+	// Non combattenti: compaiono nelle scene e come ospiti delle missioni di scorta; non si incontrano e non si reclutano
+	LOCANDIERE,
+	ARMAIOLO,
+	ALCHIMISTA,
+	VENDITORE_DI_PERGAMENE,
+	INCANTATORE,
+	MOGLIE_DEL_BARDO,
+	BARDO_LOCANDA,
 	// Solo per le missioni di scorta: non si incontra e non si recluta
 	VIANDANTE;
 }

@@ -79,7 +79,15 @@ public class LanciatoreDeiDadi {
             case ARPIA: return ARPIA;
             case BARDO:
             case CANTASTORIE:
-            case VIANDANTE: return BARDO;
+            case VIANDANTE:
+            case BARDO_LOCANDA:
+            case LOCANDIERE:
+            case ARMAIOLO:
+            case ALCHIMISTA:
+            case VENDITORE_DI_PERGAMENE:
+            case INCANTATORE:
+            case MOGLIE_DEL_BARDO:
+            return BARDO;
             case CENTAURO: return CENTAURO;
             case CHIMERA: return CHIMERA;
             case CHIMERA_DRAGO: return CHIMERADRAGO;
@@ -137,6 +145,13 @@ public class LanciatoreDeiDadi {
             case BARDO:
             case CANTASTORIE:
             case VIANDANTE:
+            case BARDO_LOCANDA:
+            case LOCANDIERE:
+            case ARMAIOLO:
+            case ALCHIMISTA:
+            case VENDITORE_DI_PERGAMENE:
+            case INCANTATORE:
+            case MOGLIE_DEL_BARDO:
             case ELFA:
             case ELFO:
             case GUERRIERA:

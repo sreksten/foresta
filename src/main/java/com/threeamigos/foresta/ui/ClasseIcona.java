@@ -40,7 +40,14 @@ public enum ClasseIcona {
 	MINOTAURO(TipoPersonaggio.MINOTAURO, "icone/Minotauro.gif", Sfondo.VERDE),
 	SCHELETRO(TipoPersonaggio.SCHELETRO, "icone/Scheletro.gif", Sfondo.VERDE),
 	TITANO(TipoPersonaggio.TITANO, "icone/Titano.gif", Sfondo.VERDE),
+	LOCANDIERE(TipoPersonaggio.LOCANDIERE, "icone/Locandiere.gif", Sfondo.VERDE),
+	ARMAIOLO(TipoPersonaggio.ARMAIOLO, "icone/Armaiolo.gif", Sfondo.VERDE),
+	ALCHIMISTA(TipoPersonaggio.ALCHIMISTA, "icone/Alchimista.gif", Sfondo.VERDE),
+	VENDITORE_DI_PERGAMENE(TipoPersonaggio.VENDITORE_DI_PERGAMENE, "icone/VenditoreDiPergamene.gif", Sfondo.VERDE),
+	INCANTATORE(TipoPersonaggio.INCANTATORE, "icone/Incantatore.gif", Sfondo.VERDE),
+	MOGLIE_DEL_BARDO(TipoPersonaggio.MOGLIE_DEL_BARDO, "icone/MoglieDelBardo.gif", Sfondo.VERDE),
 	VIANDANTE(TipoPersonaggio.VIANDANTE, "icone/Viandante.gif", Sfondo.VERDE),
+	BARDO_LOCANDA(TipoPersonaggio.BARDO_LOCANDA, "icone/BardoLocanda.gif", Sfondo.VERDE),
 
 	/* Pannello principale */
 	SINGOLO_ATTACCO(Comando.SINGOLO_ATTACCO,"icone/SingoloAttacco.gif", Sfondo.VERDE),
