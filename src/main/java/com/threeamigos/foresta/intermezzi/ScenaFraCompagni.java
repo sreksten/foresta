@@ -124,18 +124,10 @@ public final class ScenaFraCompagni {
 	}
 
 	private static ElementoIntermezzo versoDestra(String id, TipoPersonaggio classe, double x, double y) {
-		ElementoIntermezzo elemento = ElementoIntermezzo.personaggio(id, classe, x, y);
-		if (VersoDiDefault.serveSpecchiare(classe, Verso.DESTRA)) {
-			elemento.specchiato();
-		}
-		return elemento;
+		return ElementoIntermezzo.personaggio(id, classe, x, y).guarda(Verso.DESTRA);
 	}
 
 	private static ElementoIntermezzo versoSinistra(String id, TipoPersonaggio classe, double x, double y) {
-		ElementoIntermezzo elemento = ElementoIntermezzo.personaggio(id, classe, x, y);
-		if (VersoDiDefault.serveSpecchiare(classe, Verso.SINISTRA)) {
-			elemento.specchiato();
-		}
-		return elemento;
+		return ElementoIntermezzo.personaggio(id, classe, x, y).guarda(Verso.SINISTRA);
 	}
 }

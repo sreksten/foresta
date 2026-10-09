@@ -85,7 +85,7 @@ public class IntermezzoLocandaPrimaVisita implements Intermezzo {
 			TipoPersonaggio classe = personaggiVivi.get(i).getClasse();
 			double targetX = X_TARGET_BASE - i * DISTANZA_FRA_PERSONAGGI;
 			pagina.conElemento(ElementoIntermezzo.personaggio("personaggio" + i, classe, X_PARTENZA_PERSONAGGI, Y_BARDO)
-					.orientaNelVersoDelMoto(VersoDiDefault.di(classe))
+					.orientaNelVersoDelMoto()
 					// Ritardo scaglionato: ogni personaggio parte un secondo dopo il precedente
 					.attendi(i * RITARDO_FRA_PARTENZE)
 					.poi(Tappa.inSecondi(SECONDI_CAMMINATA).verso(targetX, Y_BARDO)));

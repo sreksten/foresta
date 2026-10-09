@@ -14,9 +14,9 @@ import java.util.List;
  * L'identificativo serve alle {@link BattutaIntermezzo} per sapere chi parla: il fumetto
  * punta verso la bocca dell'elemento e lo segue se si muove.
  * <p>
- * Il verso dell'immagine si può fissare all'inizio ({@link #specchiato()}), cambiare tappa
- * per tappa ({@link Tappa#specchiata(boolean)}) oppure lasciar decidere al movimento
- * ({@link #orientaNelVersoDelMoto(Verso)}): in quel caso l'elemento guarda sempre dove va,
+ * Da che parte guarda l'elemento si può fissare all'inizio ({@link #guarda(Verso)}), cambiare tappa
+ * per tappa ({@link Tappa#guarda(Verso)}) oppure lasciar decidere al movimento
+ * ({@link #orientaNelVersoDelMoto()}): in quel caso l'elemento guarda sempre dove va,
  * anche quando un'animazione avanti e indietro lo riporta al punto di partenza.
  * <pre>
  *     ElementoIntermezzo.di("drago", ImmagineIntermezzo.personaggio(TipoPersonaggio.DRAGO), 1.2, 0.2)
@@ -36,8 +36,8 @@ public final class ElementoIntermezzo {
 	private StatoElemento statoIniziale;
 	private final List<Tappa> tappe = new ArrayList<>();
 	private Ripetizione ripetizione = Ripetizione.UNA_VOLTA;
-	// Da che parte guarda l'immagine originale, se il verso segue il movimento; null altrimenti
-	private Verso versoDellImmagine;
+	// Se il verso segue il movimento
+	private boolean versoDelMoto;
 	private double boccaX = BOCCA_X;
 	private double boccaY = BOCCA_Y;
 
@@ -47,7 +47,7 @@ public final class ElementoIntermezzo {
 		}
 		this.id = id;
 		this.immagine = immagine;
-		this.statoIniziale = new StatoElemento(x, y, 1, 1, false);
+		this.statoIniziale = new StatoElemento(x, y, 1, 1, null);
 	}
 
 	/**
@@ -65,32 +65,30 @@ public final class ElementoIntermezzo {
 
 	public ElementoIntermezzo conScala(double scala) {
 		statoIniziale = new StatoElemento(statoIniziale.getX(), statoIniziale.getY(), scala, statoIniziale.getOpacita(),
-				statoIniziale.isSpecchiato());
+				statoIniziale.getVerso());
 		return this;
 	}
 
 	public ElementoIntermezzo conOpacita(double opacita) {
 		statoIniziale = new StatoElemento(statoIniziale.getX(), statoIniziale.getY(), statoIniziale.getScala(), opacita,
-				statoIniziale.isSpecchiato());
+				statoIniziale.getVerso());
 		return this;
 	}
 
 	/**
-	 * Parte con l'immagine rovesciata orizzontalmente, per esempio per far guardare un
-	 * personaggio dalla parte opposta; le tappe possono poi cambiarlo.
+	 * Parte guardando da quella parte, qualunque sia il verso con cui è disegnata l'immagine (per un personaggio
+	 * lo sa la UI, vedi VersiDeiPersonaggi); le tappe possono poi cambiarlo.
 	 */
-	public ElementoIntermezzo specchiato() {
-		statoIniziale = statoIniziale.conSpecchiato(true);
+	public ElementoIntermezzo guarda(Verso verso) {
+		statoIniziale = statoIniziale.conVerso(verso);
 		return this;
 	}
 
 	/**
 	 * Durante gli spostamenti orizzontali l'elemento guarda nel verso in cui si muove.
-	 *
-	 * @param versoDellImmagine da che parte guarda l'immagine così com'è disegnata
 	 */
-	public ElementoIntermezzo orientaNelVersoDelMoto(Verso versoDellImmagine) {
-		this.versoDellImmagine = versoDellImmagine;
+	public ElementoIntermezzo orientaNelVersoDelMoto() {
+		this.versoDelMoto = true;
 		return this;
 	}
 
@@ -201,12 +199,11 @@ public final class ElementoIntermezzo {
 	 * orizzontale, lo fa guardare dalla parte in cui va; altrimenti vale il verso delle tappe.
 	 */
 	private StatoElemento orienta(StatoElemento stato, StatoElemento partenza, StatoElemento arrivo, boolean alRitorno) {
-		if (versoDellImmagine == null || arrivo.getX() == partenza.getX()) {
+		if (!versoDelMoto || arrivo.getX() == partenza.getX()) {
 			return stato;
 		}
 		boolean versoDestra = (arrivo.getX() > partenza.getX()) != alRitorno;
-		Verso versoDelMoto = versoDestra ? Verso.DESTRA : Verso.SINISTRA;
-		return stato.conSpecchiato(versoDelMoto != versoDellImmagine);
+		return stato.conVerso(versoDestra ? Verso.DESTRA : Verso.SINISTRA);
 	}
 
 	private StatoElemento statoFinale() {

@@ -34,7 +34,7 @@ public final class ScenaInLocanda {
 
 	/**
 	 * Un sacerdote, o una sacerdotessa, seduto nella locanda: parla con {@link #parlaIlLocandiere}, al suo posto.
-	 * Guarda verso sinistra, da dove arriva il gruppo, qualunque sia il verso dell'immagine della sua classe.
+	 * Guarda verso sinistra, da dove arriva il gruppo,.
 	 *
 	 * @param classe SACERDOTE o SACERDOTESSA
 	 */
@@ -42,11 +42,8 @@ public final class ScenaInLocanda {
 		if (classe != TipoPersonaggio.SACERDOTE && classe != TipoPersonaggio.SACERDOTESSA) {
 			throw new IllegalArgumentException("Un sacerdote o una sacerdotessa, non " + classe);
 		}
-		ElementoIntermezzo sacerdote = ElementoIntermezzo.personaggio(ID_LOCANDIERE, classe, X_LOCANDIERE, Y_PERSONAGGI);
-		if (VersoDiDefault.serveSpecchiare(classe, Verso.SINISTRA)) {
-			sacerdote.specchiato();
-		}
-		return new ScenaInLocanda(sacerdote);
+		return new ScenaInLocanda(ElementoIntermezzo.personaggio(ID_LOCANDIERE, classe, X_LOCANDIERE, Y_PERSONAGGI)
+				.guarda(Verso.SINISTRA));
 	}
 
 	public ScenaInLocanda parlaIlLocandiere(String testo) {

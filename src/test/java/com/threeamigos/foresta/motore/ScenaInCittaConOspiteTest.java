@@ -3,7 +3,7 @@ package com.threeamigos.foresta.motore;
 import com.threeamigos.foresta.intermezzi.ElementoIntermezzo;
 import com.threeamigos.foresta.intermezzi.PaginaIntermezzo;
 import com.threeamigos.foresta.intermezzi.ScenaInCitta;
-import com.threeamigos.foresta.intermezzi.VersoDiDefault;
+import com.threeamigos.foresta.intermezzi.Verso;
 import com.threeamigos.foresta.personaggi.Guerriero;
 import com.threeamigos.foresta.personaggi.Viandante;
 import com.threeamigos.foresta.tipi.Comando;
@@ -81,12 +81,11 @@ class ScenaInCittaConOspiteTest {
             conOspite(partita);
             PaginaIntermezzo pagina = ScenaInCitta.conMoglieDelBardo()
                     .parlaIlMandante("Ciao").getPagine().get(0);
-            // Il mandante sta a destra e il gruppo arriva da sinistra: chi cammina verso destra guarda a destra, e il
-            // bardo (la cui immagine guarda a sinistra) deve essere rovesciato, come il capo
+            // Il mandante sta a destra e il gruppo arriva da sinistra: chi cammina verso destra guarda a destra, come il capo
             assertTrue(pagina.getElemento("mandante").getStatoAl(FINE_INGRESSO).getX() > pagina.getElemento("ospite").getStatoAl(FINE_INGRESSO).getX());
-            assertEquals(pagina.getElemento("personaggio0").getStatoAl(FINE_INGRESSO).isSpecchiato(),
-                    pagina.getElemento("ospite").getStatoAl(FINE_INGRESSO).isSpecchiato());
-            assertTrue(pagina.getElemento("ospite").getStatoAl(FINE_INGRESSO).isSpecchiato());
+            assertEquals(pagina.getElemento("personaggio0").getStatoAl(FINE_INGRESSO).getVerso(),
+                    pagina.getElemento("ospite").getStatoAl(FINE_INGRESSO).getVerso());
+            assertEquals(Verso.DESTRA, pagina.getElemento("ospite").getStatoAl(FINE_INGRESSO).getVerso());
         }
     }
 
@@ -94,7 +93,6 @@ class ScenaInCittaConOspiteTest {
     void ilViandanteChePiuMissioniScortanoHaUnVersoEPuoEntrareInScena() {
         try (PartitaDiTest partita = conDueCompagni()) {
             conOspite(partita);
-            assertNotNull(VersoDiDefault.di(TipoPersonaggio.VIANDANTE));
             PaginaIntermezzo pagina = ScenaInCitta.conMandante()
                     .parlaIlMandante("Mio marito!").parlaLOspite("Siete stati voi?").getPagine().get(0);
             assertNotNull(pagina.getElemento("ospite"));

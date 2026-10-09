@@ -4,11 +4,11 @@ package com.threeamigos.foresta.intermezzi;
  * Un tratto dell'animazione di un elemento: in un certo numero di secondi l'elemento
  * passa, in modo lineare, dallo stato raggiunto alla tappa precedente a quello di questa
  * tappa. I valori non indicati restano quelli della tappa precedente, quindi una tappa
- * senza valori è una semplice attesa. Il verso dell'immagine ({@link #specchiata(boolean)})
+ * senza valori è una semplice attesa. Il verso ({@link #guarda(Verso)})
  * non si interpola: vale per tutta la durata della tappa.
  * <pre>
  *     Tappa.inSecondi(3).verso(0.8, 0.6).conScala(0.5).conOpacita(0)
- *     Tappa.inSecondi(2).verso(0.1, 0.6).specchiata(true)
+ *     Tappa.inSecondi(2).verso(0.1, 0.6).guarda(Verso.SINISTRA)
  * </pre>
  */
 public final class Tappa {
@@ -18,7 +18,7 @@ public final class Tappa {
 	private double y = Double.NaN;
 	private double scala = Double.NaN;
 	private double opacita = Double.NaN;
-	private Boolean specchiata;
+	private Verso verso;
 
 	private Tappa(double secondi) {
 		if (secondi < 0) {
@@ -49,11 +49,10 @@ public final class Tappa {
 	}
 
 	/**
-	 * Se durante questa tappa l'immagine va disegnata rovesciata orizzontalmente (true)
-	 * o così com'è (false); se non indicato resta come nella tappa precedente.
+	 * Da che parte deve guardare l'elemento durante questa tappa; se non indicato resta come nella tappa precedente.
 	 */
-	public Tappa specchiata(boolean specchiata) {
-		this.specchiata = specchiata;
+	public Tappa guarda(Verso verso) {
+		this.verso = verso;
 		return this;
 	}
 
@@ -70,6 +69,6 @@ public final class Tappa {
 				Double.isNaN(y) ? partenza.getY() : y,
 				Double.isNaN(scala) ? partenza.getScala() : scala,
 				Double.isNaN(opacita) ? partenza.getOpacita() : opacita,
-				specchiata == null ? partenza.isSpecchiato() : specchiata);
+				verso == null ? partenza.getVerso() : verso);
 	}
 }

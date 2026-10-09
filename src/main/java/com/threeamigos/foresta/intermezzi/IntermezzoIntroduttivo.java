@@ -51,11 +51,11 @@ public class IntermezzoIntroduttivo implements Intermezzo {
 						.conElemento(personaggioVersoSinistra(classeEroe, 0.38, 0.61)
 								.conBocca(0.5, -0.15)
 								.poi(Tappa.inSecondi(2))
-								.poi(Tappa.inSecondi(0.1).specchiata(VersoDiDefault.serveSpecchiare(classeEroe, Verso.DESTRA))))
+								.poi(Tappa.inSecondi(0.1).guarda(Verso.DESTRA)))
 						// L'eremita entra da destra e si ferma davanti all'eroe
 						.conElemento(ElementoIntermezzo.personaggio("eremita", TipoPersonaggio.EREMITA, 1.1, 0.61)
 								.conBocca(0.5, -0.15)
-								.specchiato()
+								.guarda(Verso.SINISTRA)
 								.poi(Tappa.inSecondi(2).verso(0.62, 0.61)))
 						.conBattuta(BattutaIntermezzo.di("eremita", "Chi va là?").daSecondo(2))
 						.conBattuta(BattutaIntermezzo.di("eroe", "Mi chiamo " + eroe + ". Sto cercando il Drago."));
@@ -69,14 +69,9 @@ public class IntermezzoIntroduttivo implements Intermezzo {
 	}
 
 	/**
-	 * L'eroe guarda a sinistra all'inizio, indipendentemente dal verso con cui è
-	 * disegnata l'immagine della sua classe (vedi {@link VersoDiDefault}).
+	 * L'eroe guarda a sinistra all'inizio, qualunque sia la classe.
 	 */
 	private static ElementoIntermezzo personaggioVersoSinistra(TipoPersonaggio classe, double x, double y) {
-		ElementoIntermezzo elemento = ElementoIntermezzo.personaggio("eroe", classe, x, y);
-		if (VersoDiDefault.serveSpecchiare(classe, Verso.SINISTRA)) {
-			elemento.specchiato();
-		}
-		return elemento;
+		return ElementoIntermezzo.personaggio("eroe", classe, x, y).guarda(Verso.SINISTRA);
 	}
 }

@@ -14,7 +14,8 @@ import java.util.Map;
  * guarda verso i mostri (vedi DisplayableCanvasRiquadroLocazione).
  * <p>
  * Un valore per ogni {@link TipoPersonaggio}, controllato da un test. I versi sono stati controllati guardando le
- * immagini; per le classi giocanti coincidono con quelli di {@code intermezzi.VersoDiDefault}.
+ * immagini. Servono anche agli intermezzi: le scene dicono da che parte deve guardare un personaggio (vedi
+ * ElementoIntermezzo#guarda) e la UI specchia l'immagine solo se serve.
  */
 public final class VersiDeiPersonaggi {
 
@@ -58,13 +59,13 @@ public final class VersiDeiPersonaggi {
 		VERSI.put(TipoPersonaggio.OMBRAFIAMMA, Verso.SINISTRA);
 		VERSI.put(TipoPersonaggio.SACERDOTE, Verso.SINISTRA);
 		VERSI.put(TipoPersonaggio.SACERDOTESSA, Verso.DESTRA);
-		// I non combattenti: versi provvisori, da controllare sulle immagini
-		VERSI.put(TipoPersonaggio.LOCANDIERE, Verso.DESTRA);
-		VERSI.put(TipoPersonaggio.ARMAIOLO, Verso.DESTRA);
-		VERSI.put(TipoPersonaggio.ALCHIMISTA, Verso.DESTRA);
-		VERSI.put(TipoPersonaggio.VENDITORE_DI_PERGAMENE, Verso.DESTRA);
-		VERSI.put(TipoPersonaggio.INCANTATORE, Verso.DESTRA);
-		VERSI.put(TipoPersonaggio.MOGLIE_DEL_BARDO, Verso.DESTRA);
+		// I non combattenti
+		VERSI.put(TipoPersonaggio.LOCANDIERE, Verso.SINISTRA);
+		VERSI.put(TipoPersonaggio.ARMAIOLO, Verso.SINISTRA);
+		VERSI.put(TipoPersonaggio.ALCHIMISTA, Verso.SINISTRA);
+		VERSI.put(TipoPersonaggio.VENDITORE_DI_PERGAMENE, Verso.SINISTRA);
+		VERSI.put(TipoPersonaggio.INCANTATORE, Verso.SINISTRA);
+		VERSI.put(TipoPersonaggio.MOGLIE_DEL_BARDO, Verso.SINISTRA);
 		VERSI.put(TipoPersonaggio.VIANDANTE, Verso.SINISTRA);
 		VERSI.put(TipoPersonaggio.BARDO_LOCANDA, Verso.SINISTRA);
 		VERSI.put(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, Verso.SINISTRA);

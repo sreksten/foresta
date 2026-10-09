@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 /**
@@ -78,36 +79,36 @@ class ElementoIntermezzoTest {
     void ilVersoDiUnaTappaValePerTuttoIlTratto() {
         ElementoIntermezzo elemento = elemento()
                 .poi(Tappa.inSecondi(2).verso(1, 0.5))
-                .poi(Tappa.inSecondi(2).verso(0, 0.5).specchiata(true));
+                .poi(Tappa.inSecondi(2).verso(0, 0.5).guarda(Verso.SINISTRA));
 
-        assertFalse(elemento.getStatoAl(1).isSpecchiato());
-        assertTrue(elemento.getStatoAl(3).isSpecchiato());
+        assertNull(elemento.getStatoAl(1).getVerso());
+        assertEquals(Verso.SINISTRA, elemento.getStatoAl(3).getVerso());
         // Resta come nell'ultima tappa anche a animazione finita
-        assertTrue(elemento.getStatoAl(10).isSpecchiato());
+        assertEquals(Verso.SINISTRA, elemento.getStatoAl(10).getVerso());
     }
 
     @Test
     void orientatoNelVersoDelMotoSiGiraAlRitorno() {
-        // Immagine che guarda a sinistra, che va verso sinistra e poi torna indietro
+        // Va verso sinistra e poi torna indietro
         ElementoIntermezzo elemento = ElementoIntermezzo.personaggio("drago", TipoPersonaggio.DRAGO, 1, 0.2)
                 .poi(Tappa.inSecondi(4).verso(0, 0.2))
                 .ripeti(Ripetizione.AVANTI_E_INDIETRO)
-                .orientaNelVersoDelMoto(Verso.SINISTRA);
+                .orientaNelVersoDelMoto();
 
-        assertFalse(elemento.getStatoAl(0).isSpecchiato());
-        assertFalse(elemento.getStatoAl(2).isSpecchiato());
-        assertTrue(elemento.getStatoAl(6).isSpecchiato());
-        assertFalse(elemento.getStatoAl(10).isSpecchiato());
+        assertEquals(Verso.SINISTRA, elemento.getStatoAl(0).getVerso());
+        assertEquals(Verso.SINISTRA, elemento.getStatoAl(2).getVerso());
+        assertEquals(Verso.DESTRA, elemento.getStatoAl(6).getVerso());
+        assertEquals(Verso.SINISTRA, elemento.getStatoAl(10).getVerso());
     }
 
     @Test
     void orientatoNelVersoDelMotoTieneIlVersoDelleTappeQuandoEFermo() {
-        ElementoIntermezzo elemento = elemento().specchiato()
+        ElementoIntermezzo elemento = elemento().guarda(Verso.SINISTRA)
                 .attendi(2)
                 .poi(Tappa.inSecondi(2).verso(1, 0.5))
-                .orientaNelVersoDelMoto(Verso.DESTRA);
+                .orientaNelVersoDelMoto();
 
-        assertTrue(elemento.getStatoAl(1).isSpecchiato());
-        assertFalse(elemento.getStatoAl(3).isSpecchiato());
+        assertEquals(Verso.SINISTRA, elemento.getStatoAl(1).getVerso());
+        assertEquals(Verso.DESTRA, elemento.getStatoAl(3).getVerso());
     }
 }

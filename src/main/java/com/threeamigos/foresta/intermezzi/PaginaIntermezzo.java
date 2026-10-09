@@ -18,7 +18,7 @@ import java.util.Map;
  *     new PaginaIntermezzo()
  *             .conSfondo(ImmagineIntermezzo.locazione(TipoLocazione.RADURA))
  *             .conElemento(ElementoIntermezzo.personaggio("eroe", capo.getClasse(), 0.3, 0.7))
- *             .conElemento(ElementoIntermezzo.personaggio("eremita", TipoPersonaggio.EREMITA, 0.7, 0.7).specchiato())
+ *             .conElemento(ElementoIntermezzo.personaggio("eremita", TipoPersonaggio.EREMITA, 0.7, 0.7).guarda(Verso.DESTRA))
  *             .conBattuta(BattutaIntermezzo.di("eremita", "Chi va là?"))
  *             .conBattuta(BattutaIntermezzo.di("eroe", "Sono " + nome + '.'))
  * </pre>

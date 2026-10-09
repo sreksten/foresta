@@ -95,12 +95,12 @@ public List<PaginaIntermezzo> getPagine() {
                 .conScala(0.4).conOpacita(0.6)                      // piccolo e semitrasparente
                 .poi(Tappa.inSecondi(8).verso(-0.1, 0.15))          // attraversa il cielo
                 .ripeti(Ripetizione.AVANTI_E_INDIETRO)              // e torna indietro
-                .orientaNelVersoDelMoto(Verso.SINISTRA))            // guardando dove va
+                .orientaNelVersoDelMoto())                           // guardando dove va
             .conElemento(ElementoIntermezzo.di("fuoco",
                 ImmagineIntermezzo.animazione(Animazione.FUOCO_DA_CAMPO), 0.5, 0.76))
             .conElemento(ElementoIntermezzo.personaggio("eroe", capo.getClasse(), 0.3, 0.7))
             .conElemento(ElementoIntermezzo.personaggio("eremita", TipoPersonaggio.EREMITA, 1.1, 0.7)
-                .specchiato()                                        // guarda verso l'eroe
+                .guarda(Verso.SINISTRA)                              // guarda verso l'eroe
                 .poi(Tappa.inSecondi(2).verso(0.7, 0.7)))           // entra da destra
             .conBattuta(BattutaIntermezzo.di("eremita", "Chi va là?").daSecondo(2))
             .conBattuta(BattutaIntermezzo.di("eroe", "Mi chiamo " + nome + ", e cerco il Drago."))
@@ -180,7 +180,7 @@ Uno sprite sheet è un'immagine divisa in una griglia di **fotogrammi della stes
 
 ## 5. Animare gli elementi
 
-Ogni `ElementoIntermezzo` parte da uno **stato iniziale**: posizione data alla creazione, `conScala(s)`, `conOpacita(o)` (da 0 invisibile a 1 pieno), `specchiato()`. Poi percorre una sequenza di **tappe**, in modo lineare:
+Ogni `ElementoIntermezzo` parte da uno **stato iniziale**: posizione data alla creazione, `conScala(s)`, `conOpacita(o)` (da 0 invisibile a 1 pieno), `guarda(verso)`. Poi percorre una sequenza di **tappe**, in modo lineare:
 
 ```java
 ElementoIntermezzo.personaggio("goblin", TipoPersonaggio.GOBLIN, -0.1, 0.7)
@@ -188,7 +188,7 @@ ElementoIntermezzo.personaggio("goblin", TipoPersonaggio.GOBLIN, -0.1, 0.7)
     .poi(Tappa.inSecondi(1).verso(0.2, 0.7).conOpacita(1))  // entra da sinistra comparendo
     .attendi(3)                                               // resta fermo 3 secondi
     .poi(Tappa.inSecondi(0.5).conScala(1.5))                  // si "gonfia"
-    .poi(Tappa.inSecondi(1).verso(-0.2, 0.7).specchiata(true)) // si gira e scappa
+    .poi(Tappa.inSecondi(1).verso(-0.2, 0.7).guarda(Verso.DESTRA)) // si gira e scappa
 ```
 
 - Ogni tappa indica la durata e **solo i valori che cambiano**. Gli altri restano quelli della tappa precedente.
@@ -205,9 +205,9 @@ ElementoIntermezzo.personaggio("goblin", TipoPersonaggio.GOBLIN, -0.1, 0.7)
 
 **Verso dell'immagine**, cioè da che parte guarda:
 
-- `specchiato()`: parte rovesciata orizzontalmente.
-- `Tappa.specchiata(true/false)`: cambia verso per quella tappa. Vale per tutta la tappa, non si interpola.
-- `orientaNelVersoDelMoto(Verso.X)`: guarda sempre dove va, indicando da che parte guarda l'immagine originale. Per esempio l'immagine del drago guarda a sinistra, quindi si usa `Verso.SINISTRA`. Funziona anche nella fase di ritorno di `AVANTI_E_INDIETRO`. Quando l'elemento non si muove in orizzontale vale il verso delle tappe.
+- `guarda(Verso.X)`: parte guardando da quella parte. La scena dice solo il verso voluto: se l'immagine di un personaggio è disegnata dall'altra parte la UI la specchia da sé (da che parte guarda ogni classe lo sa `ui/VersiDeiPersonaggi`). Le immagini che non sono personaggi non si specchiano.
+- `Tappa.guarda(Verso.X)`: cambia verso per quella tappa. Vale per tutta la tappa, non si interpola.
+- `orientaNelVersoDelMoto()`: guarda sempre dove va. Funziona anche nella fase di ritorno di `AVANTI_E_INDIETRO`. Quando l'elemento non si muove in orizzontale vale il verso delle tappe.
 
 ---
 
@@ -349,8 +349,8 @@ Gli errori (immagini mancanti, caratteri non supportati nei fumetti) vengono sta
 | `di(id, immagine, x, y)` / `personaggio(id, classe, x, y)` | Crea l'elemento con il centro in (x, y) | — |
 | `conScala(s)` | Scala iniziale | 1 |
 | `conOpacita(o)` | Opacità iniziale, da 0 a 1 | 1 |
-| `specchiato()` | Parte rovesciato orizzontalmente | no |
-| `orientaNelVersoDelMoto(verso)` | Guarda dove va | no |
+| `guarda(verso)` | Verso iniziale (la UI specchia l'immagine se serve) | così com'è |
+| `orientaNelVersoDelMoto()` | Guarda dove va | no |
 | `conBocca(x, y)` | Punto dei fumetti, in frazioni dell'immagine | 0.5, 0.15 |
 | `poi(tappa)` / `attendi(s)` | Aggiunge un tratto di animazione / una pausa | nessuna tappa |
 | `ripeti(ripetizione)` | Cosa fare a fine tappe | `UNA_VOLTA` |
@@ -362,7 +362,7 @@ Gli errori (immagini mancanti, caratteri non supportati nei fumetti) vengono sta
 | `Tappa.inSecondi(s)` | Crea una tappa di `s` secondi |
 | `verso(x, y)` | Posizione di arrivo |
 | `conScala(s)` / `conOpacita(o)` | Scala / opacità di arrivo |
-| `specchiata(true/false)` | Verso durante la tappa |
+| `guarda(verso)` | Verso durante la tappa |
 
 **`BattutaIntermezzo`**
 

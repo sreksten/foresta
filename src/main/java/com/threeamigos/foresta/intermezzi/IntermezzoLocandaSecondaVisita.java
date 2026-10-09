@@ -81,7 +81,7 @@ public class IntermezzoLocandaSecondaVisita implements Intermezzo {
 			String idElemento = "personaggio" + i;
 			double targetX = X_TARGET_CAPO - i * DISTANZA_FRA_PERSONAGGI;
 			ElementoIntermezzo elemento = ElementoIntermezzo.personaggio(idElemento, classe, X_PARTENZA_PERSONAGGI, Y_PERSONAGGI)
-					.orientaNelVersoDelMoto(VersoDiDefault.di(classe))
+					.orientaNelVersoDelMoto()
 					// Ritardo scaglionato: ogni personaggio parte un secondo dopo il precedente
 					.attendi(i * RITARDO_FRA_PARTENZE)
 					.poi(Tappa.inSecondi(SECONDI_CAMMINATA).verso(targetX, Y_PERSONAGGI));
@@ -91,7 +91,7 @@ public class IntermezzoLocandaSecondaVisita implements Intermezzo {
 				// personaggio; gli altri, fermi dopo aver camminato verso destra, restano
 				// voltati in quella direzione
 				elemento.conBocca(0.5, -0.15)
-						.poi(Tappa.inSecondi(SECONDI_VOLTATA_CAPO).specchiata(VersoDiDefault.serveSpecchiare(classe, Verso.SINISTRA)));
+						.poi(Tappa.inSecondi(SECONDI_VOLTATA_CAPO).guarda(Verso.SINISTRA));
 			}
 			pagina.conElemento(elemento);
 		}

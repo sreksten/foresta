@@ -155,6 +155,15 @@ class DisplayableCanvasIntermezzo implements Finestra {
 		return new Rectangle(x, y, larghezzaSfondo, altezzaSfondo);
 	}
 
+	/**
+	 * Se l'immagine va rovesciata per far guardare l'elemento dalla parte voluta. Lo sa solo per i personaggi (vedi
+	 * VersiDeiPersonaggi): le altre immagini sono disegnate così come sono.
+	 */
+	private static boolean serveSpecchiare(ImmagineIntermezzo immagine, StatoElemento stato) {
+		return stato.getVerso() != null && immagine.getTipo() == ImmagineIntermezzo.Tipo.PERSONAGGIO
+				&& VersiDeiPersonaggi.serveSpecchiare(immagine.getClassePersonaggio(), stato.getVerso());
+	}
+
 	private void disegnaElemento(Graphics2D graphics, ElementoIntermezzo elemento, StatoElemento stato, double secondi) {
 		BufferedImage immagine = immagine(elemento.getImmagine(), secondi, stato);
 		if (immagine == null) {
@@ -165,14 +174,15 @@ class DisplayableCanvasIntermezzo implements Finestra {
 		int x = (int) Math.round(stato.getX() * width) - larghezza / 2;
 		int y = (int) Math.round(stato.getY() * height) - altezza / 2;
 		posizioni.put(elemento.getId(), new Rectangle(x, y, larghezza, altezza));
-		versi.put(elemento.getId(), stato.isSpecchiato());
+		boolean specchiato = serveSpecchiare(elemento.getImmagine(), stato);
+		versi.put(elemento.getId(), specchiato);
 
 		float opacita = (float) Math.max(0, Math.min(1, stato.getOpacita()));
 		if (opacita == 0 || larghezza <= 0 || altezza <= 0) {
 			return;
 		}
 		graphics.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, opacita));
-		if (stato.isSpecchiato()) {
+		if (specchiato) {
 			graphics.drawImage(immagine, x + larghezza, y, -larghezza, altezza, null);
 		} else {
 			graphics.drawImage(immagine, x, y, larghezza, altezza, null);

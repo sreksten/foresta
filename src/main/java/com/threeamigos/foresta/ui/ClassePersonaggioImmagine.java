@@ -48,7 +48,7 @@ public enum ClassePersonaggioImmagine {
     TITANO(TipoPersonaggio.TITANO, "personaggi/Titano.gif", "icone/Titano.gif"),
     TROLL(TipoPersonaggio.TROLL, "personaggi/Troll.gif"),
     VIVERNA(TipoPersonaggio.VIVERNA, "personaggi/Viverna.gif"),
-    // I non combattenti: le icone sono provvisorie, copie di quella del Viandante
+    // I non combattenti
     LOCANDIERE(TipoPersonaggio.LOCANDIERE, "personaggi/Locandiere.gif", "icone/Locandiere.gif"),
     ARMAIOLO(TipoPersonaggio.ARMAIOLO, "personaggi/Armaiolo.gif", "icone/Armaiolo.gif"),
     ALCHIMISTA(TipoPersonaggio.ALCHIMISTA, "personaggi/Alchimista.gif", "icone/Alchimista.gif"),

@@ -92,7 +92,7 @@ final class ScenaNegozio {
 	private static ElementoIntermezzo cammina(String id, TipoPersonaggio classe, int posto, double xArrivoCapo,
 											  double yPersonaggi, double ritardoFraPartenze) {
 		return ElementoIntermezzo.personaggio(id, classe, X_PARTENZA_PERSONAGGI, yPersonaggi)
-				.orientaNelVersoDelMoto(VersoDiDefault.di(classe))
+				.orientaNelVersoDelMoto()
 				// Ritardo scaglionato: ogni personaggio parte un po' dopo il precedente
 				.attendi(posto * ritardoFraPartenze)
 				.poi(Tappa.inSecondi(SECONDI_CAMMINATA).verso(xArrivoCapo - posto * DISTANZA_FRA_PERSONAGGI, yPersonaggi));
