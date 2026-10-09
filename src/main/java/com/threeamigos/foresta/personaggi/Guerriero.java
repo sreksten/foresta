@@ -31,6 +31,13 @@ public class Guerriero extends PersonaggioBase implements Personaggio {
 		super(nome, TipoPersonaggio.GUERRIERO, livello);
 	}
 
+	/**
+	 * Per chi ha le caratteristiche del guerriero sotto un'altra classe (vedi CapitanoDelleGuardie).
+	 */
+	protected Guerriero(String nome, TipoPersonaggio classe, int livello) {
+		super(nome, classe, livello);
+	}
+
 	@Override
 	protected void impostaValoriDiPartenza(Function<Integer, Integer> funzione) {
 		setCorrompibile(true);

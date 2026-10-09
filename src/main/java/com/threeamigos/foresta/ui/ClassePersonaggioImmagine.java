@@ -56,7 +56,8 @@ public enum ClassePersonaggioImmagine {
     INCANTATORE(TipoPersonaggio.INCANTATORE, "personaggi/Incantatore.gif", "icone/Incantatore.gif"),
     MOGLIE_DEL_BARDO(TipoPersonaggio.MOGLIE_DEL_BARDO, "personaggi/MoglieDelBardo.gif", "icone/MoglieDelBardo.gif"),
     VIANDANTE(TipoPersonaggio.VIANDANTE, "personaggi/Viandante.gif", "icone/Viandante.gif"),
-    BARDO_LOCANDA(TipoPersonaggio.BARDO_LOCANDA, "personaggi/BardoLocanda.gif", "icone/BardoLocanda.gif");
+    BARDO_LOCANDA(TipoPersonaggio.BARDO_LOCANDA, "personaggi/BardoLocanda.gif", "icone/BardoLocanda.gif"),
+    CAPITANO_DELLE_GUARDIE(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, "personaggi/CapitanoDelleGuardie.gif", "icone/CapitanoDelleGuardie.gif");
 
     private final TipoPersonaggio classePersonaggio;
     private final BufferedImage immagine;

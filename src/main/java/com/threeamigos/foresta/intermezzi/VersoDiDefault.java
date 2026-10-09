@@ -35,6 +35,7 @@ public final class VersoDiDefault {
 		VERSI.put(TipoPersonaggio.MOGLIE_DEL_BARDO, Verso.DESTRA);
 		VERSI.put(TipoPersonaggio.VIANDANTE, Verso.SINISTRA);
 		VERSI.put(TipoPersonaggio.BARDO_LOCANDA, Verso.SINISTRA);
+		VERSI.put(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, Verso.SINISTRA);
 		VERSI.put(TipoPersonaggio.ELFA, Verso.DESTRA);
 		VERSI.put(TipoPersonaggio.GUERRIERA, Verso.DESTRA);
 		VERSI.put(TipoPersonaggio.CANTASTORIE, Verso.DESTRA);

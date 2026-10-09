@@ -229,6 +229,7 @@ public final class RegoleEquipaggiamento {
 		switch (classe) {
 			case GUERRIERO:
 			case GUERRIERA:
+			case CAPITANO_DELLE_GUARDIE:
 				return GUERRIERO;
 			case LADRO:
 			case LADRA:

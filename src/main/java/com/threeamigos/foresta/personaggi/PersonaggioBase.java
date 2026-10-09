@@ -1139,7 +1139,8 @@ public abstract class PersonaggioBase implements Personaggio {
 		md.setSalute(salute);
 		BusEventi.pubblica(new NotificaVariazioneStatistichePersonaggio(this, TipoAttributo.SALUTE, saluteOriginale, salute));
 
-		if ((md.getClasse() == TipoPersonaggio.GUERRIERO || md.getClasse() == TipoPersonaggio.GUERRIERA) &&
+		if ((md.getClasse() == TipoPersonaggio.GUERRIERO || md.getClasse() == TipoPersonaggio.GUERRIERA
+				|| md.getClasse() == TipoPersonaggio.CAPITANO_DELLE_GUARDIE) &&
 				getFuria() > 0 && !hasEffettoDiStato(TipoEffettoDiStato.BERSERK)) {
 			double sogliaBerserk = calcolaSaluteMassima() / 3.0d;
 			if (salute > 0 && salute <= sogliaBerserk) {
@@ -1880,6 +1881,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 			case GUERRIERO:
 			case GUERRIERA:
+			case CAPITANO_DELLE_GUARDIE:
 			case MINOTAURO:
 			case MINOTAURO_GIGANTE:
 			case GIGANTE:

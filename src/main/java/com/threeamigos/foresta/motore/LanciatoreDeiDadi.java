@@ -101,7 +101,8 @@ public class LanciatoreDeiDadi {
             case GIGANTE: return GIGANTE;
             case GOBLIN: return GOBLIN;
             case GUERRIERA:
-            case GUERRIERO: return GUERRIERO;
+            case GUERRIERO:
+            case CAPITANO_DELLE_GUARDIE: return GUERRIERO;
             case HOBGOBLIN: return HOBGOBLIN;
             case IDRA: return IDRA;
             case LADRA:
@@ -156,6 +157,7 @@ public class LanciatoreDeiDadi {
             case ELFO:
             case GUERRIERA:
             case GUERRIERO:
+            case CAPITANO_DELLE_GUARDIE:
             case LADRA:
             case LADRO:
             case MAGA:

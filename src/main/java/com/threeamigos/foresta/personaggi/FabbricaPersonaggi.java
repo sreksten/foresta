@@ -61,6 +61,7 @@ public final class FabbricaPersonaggi {
 		COSTRUTTORI.put(TipoPersonaggio.MOGLIE_DEL_BARDO, MoglieDelBardo::new);
 		COSTRUTTORI.put(TipoPersonaggio.VIANDANTE, Viandante::new);
 		COSTRUTTORI.put(TipoPersonaggio.BARDO_LOCANDA, BardoLocanda::new);
+		COSTRUTTORI.put(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, CapitanoDelleGuardie::new);
 	}
 
 	private FabbricaPersonaggi() {

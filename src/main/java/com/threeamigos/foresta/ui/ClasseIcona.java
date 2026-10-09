@@ -48,6 +48,7 @@ public enum ClasseIcona {
 	MOGLIE_DEL_BARDO(TipoPersonaggio.MOGLIE_DEL_BARDO, "icone/MoglieDelBardo.gif", Sfondo.VERDE),
 	VIANDANTE(TipoPersonaggio.VIANDANTE, "icone/Viandante.gif", Sfondo.VERDE),
 	BARDO_LOCANDA(TipoPersonaggio.BARDO_LOCANDA, "icone/BardoLocanda.gif", Sfondo.VERDE),
+	CAPITANO_DELLE_GUARDIE(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, "icone/CapitanoDelleGuardie.gif", Sfondo.VERDE),
 
 	/* Pannello principale */
 	SINGOLO_ATTACCO(Comando.SINGOLO_ATTACCO,"icone/SingoloAttacco.gif", Sfondo.VERDE),

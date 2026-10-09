@@ -31,6 +31,7 @@ public final class EquipaggiamentoIniziale {
 		switch (classe) {
 			case GUERRIERO:
 			case GUERRIERA:
+			case CAPITANO_DELLE_GUARDIE:
 				return Arrays.asList(TipoArtefatto.SPADA, TipoArtefatto.SCUDO);
 			case LADRO:
 			case LADRA:

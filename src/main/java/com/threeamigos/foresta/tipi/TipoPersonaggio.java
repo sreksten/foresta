@@ -54,6 +54,7 @@ public enum TipoPersonaggio {
 	INCANTATORE,
 	MOGLIE_DEL_BARDO,
 	BARDO_LOCANDA,
+	CAPITANO_DELLE_GUARDIE,
 	// Solo per le missioni di scorta: non si incontra e non si recluta
 	VIANDANTE;
 }
