@@ -40,11 +40,11 @@ public enum ClasseIncantesimo {
 			Comando.MORTE,
 			"Canalizza l'energia necrotica per prosciugare la forza vitale nemica, impedendo qualsiasi disperato tentativo di cura."),
 	RESURREZIONE(TipoIncantesimo.BENEFICO, PortataIncantesimo.SINGOLO_QUALSIASI, null,
-			"Resurr.", "incantesimo della Resurrezione", "incantesimi della Resurrezione",
+			"Resurrezione", "incantesimo della Resurrezione", "incantesimi della Resurrezione",
 			Comando.RESURREZIONE,
 			"Inverte il flusso del fato infliggendo un devastante rigetto rigenerativo alle creature d'ombra e ai non-morti."),
 	ALBA_SACRA(TipoIncantesimo.BENEFICO, PortataIncantesimo.GRUPPO, null,
-			"Alba", "incantesimo dell'Alba Sacra", "incantesimi dell'Alba Sacra",
+			"Alba Sacra", "incantesimo dell'Alba Sacra", "incantesimi dell'Alba Sacra",
 			Comando.ALBA_SACRA,
 			"Rimuove tutti gli effetti di stato e i modificatori temporanei al gruppo."),
 	SILENZIO(TipoIncantesimo.MALEFICO, PortataIncantesimo.GRUPPO, TipoDanno.ARCANO,
@@ -55,19 +55,19 @@ public enum ClasseIncantesimo {
 	private final TipoIncantesimo tipo;
 	private final PortataIncantesimo portata;
 	private final TipoDanno tipoDanno;
-	private final String nomeAbbreviato;
+	private final String nome;
 	private final String nomeSingolare;
 	private final String nomePlurale;
 	private final Comando comandoDiAttivazione;
 	private final String effetto;
 
 	ClasseIncantesimo(TipoIncantesimo tipo, PortataIncantesimo portata, TipoDanno tipoDanno,
-					  String nomeAbbreviato, String nomeSingolare, String nomePlurale,
+					  String nome, String nomeSingolare, String nomePlurale,
 					  Comando comando, String effetto) {
 		this.tipo = tipo;
 		this.portata = portata;
 		this.tipoDanno = tipoDanno;
-		this.nomeAbbreviato = nomeAbbreviato;
+		this.nome = nome;
 		this.nomeSingolare = nomeSingolare;
 		this.nomePlurale = nomePlurale;
 		this.comandoDiAttivazione = comando;
@@ -96,10 +96,10 @@ public enum ClasseIncantesimo {
 	}
 
 	/**
-	 * Il nome abbreviato di un incantesimo (es. Aria)
+	 * Il nome breve di un incantesimo, senza "incantesimo di" (es. Aria, Alba Sacra)
 	 */
-	public String getNomeAbbreviato() {
-		return nomeAbbreviato;
+	public String getNome() {
+		return nome;
 	}
 
 	/**
