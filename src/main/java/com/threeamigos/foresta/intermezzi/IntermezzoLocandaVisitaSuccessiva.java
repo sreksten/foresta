@@ -13,8 +13,9 @@ import java.util.List;
 /**
  * Intermezzo per i checkpoint {@link MomentoIntermezzo#INIZIO_LOCAZIONE} (locanda nel
  * bosco) e {@link MomentoIntermezzo#INGRESSO_LOCANDA_IN_CITTA} (locanda in città): scatta
- * alla seconda visita del gruppo a una locanda (qualunque locanda), e solo se il gruppo ha più
- * di un personaggio. Niente bardo questa volta: l'oste è sulla destra, il gruppo avanza
+ * a una visita successiva alla prima del gruppo a una locanda (qualunque locanda), e solo se il gruppo ha più
+ * di un personaggio. È un intermezzo **di ripiego** ({@link #isDiRipiego()}): se all'ingresso scatta altro (la prima visita, un
+ * incarico che si affida in quella locanda...) aspetta, e si vede alla prima visita in cui non scatta nient'altro. Niente bardo questa volta: l'oste è sulla destra, il gruppo avanza
  * con il capo in testa fino a poco oltre il centro, gli altri lo seguono in fila. Il capo
  * si volta verso il gruppo (guarda a sinistra, mentre tutti gli altri, fermi dove sono
  * arrivati camminando verso destra, continuano a guardare a destra) e racconta al secondo
@@ -23,7 +24,7 @@ import java.util.List;
  * Stesso trucco di {@link IntermezzoLocandaPrimaVisita} per scattare una volta per ogni
  * locanda: {@link #getId()} include l'identificativo della locanda corrente.
  */
-public class IntermezzoLocandaSecondaVisita implements Intermezzo {
+public class IntermezzoLocandaVisitaSuccessiva implements Intermezzo {
 
 	private static final double X_PARTENZA_PERSONAGGI = -0.15;
 	private static final double X_TARGET_CAPO = 0.55;
@@ -43,8 +44,13 @@ public class IntermezzoLocandaSecondaVisita implements Intermezzo {
 	@Override
 	public String getId() {
 		String identificativo = Locande.getIdentificativoLocandaCorrente();
-		return TipoIntermezzo.INTERMEZZO_LOCANDA_SECONDA_VISITA.name()
+		return TipoIntermezzo.INTERMEZZO_LOCANDA_VISITA_SUCCESSIVA.name()
 				+ (identificativo == null ? "" : "_" + identificativo);
+	}
+
+	@Override
+	public boolean isDiRipiego() {
+		return true;
 	}
 
 	@Override

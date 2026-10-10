@@ -50,6 +50,8 @@ Ci sono due momenti di innesco (enum `MomentoIntermezzo`):
 
    L'ordine dell'enum conta: se due intermezzi scattano nello stesso momento, vengono mostrati uno dopo l'altro in quell'ordine. `getId()` deve restituire il nome della costante: è ciò che viene salvato per ricordare che l'intermezzo è già scattato.
 
+   Un intermezzo può essere **di ripiego** (`isDiRipiego()`): scatta solo se nel momento non ne scatta, e non ne è già scattato, nessun altro, né fisso né di un passo di missione. Lo sono gli intermezzi notturni dei negozi e `IntermezzoLocandaVisitaSuccessiva`, che cede il posto a un incarico che si affida in quella locanda (per esempio `IlViaggioDellaMoglie`) e si vede alla prima visita in cui non scatta altro.
+
 3. **Provala** con l'anteprima (§9), senza giocare fino al punto in cui scatta:
 
    ```

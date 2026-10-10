@@ -9,12 +9,13 @@ public enum TipoIntermezzo {
 	INTERMEZZO_INTRODUTTIVO,
 	INTERMEZZO_FINE_PRIMA_LOCAZIONE,
 	INTERMEZZO_LOCANDA_PRIMA_VISITA,
-	INTERMEZZO_LOCANDA_SECONDA_VISITA,
 	INTERMEZZO_ARMAIOLO,
 	INTERMEZZO_ALCHIMISTA,
 	INTERMEZZO_VENDITORE_DI_PERGAMENE,
 	INTERMEZZO_INCANTATORE,
 	INTERMEZZO_ACCAMPAMENTO,
+	// Di ripiego: la visita successiva alla locanda, che aspetta se all'ingresso scatta altro (per esempio l'incarico di una missione)
+	INTERMEZZO_LOCANDA_VISITA_SUCCESSIVA,
 	// Di ripiego: chi entra a ore impossibili, solo se all'ingresso non scatta nient'altro
 	INTERMEZZO_NOTTE_ARMAIOLO,
 	INTERMEZZO_NOTTE_ALCHIMISTA,

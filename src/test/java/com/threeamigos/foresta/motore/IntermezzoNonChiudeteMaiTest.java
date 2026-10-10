@@ -93,7 +93,7 @@ class IntermezzoNonChiudeteMaiTest {
 	@Test
 	void laScenettaAspettaSeAllIngressoScattaUnAltroIntermezzo() {
 		try (PartitaDiTest partita = inCitta()) {
-			// In due: alla terza visita alla locanda scatta ancora la seconda visita, mai vista
+			// In due: alla terza visita alla locanda scatta ancora la visita successiva, mai vista
 			partita.gruppo().aggiungiPersonaggio(new Guerriero("Compagno", 1));
 			LocazioneMD nyena = locandaDiNyena();
 			nyena.aggiungiProprieta(Locanda.LOCANDA_VISITATA, LocazioneMD.AFFERMATIVO);
@@ -102,9 +102,9 @@ class IntermezzoNonChiudeteMaiTest {
 
 			partita.comando(Comando.LOCANDA);
 
-			assertTrue(isScattato(TipoIntermezzo.INTERMEZZO_LOCANDA_SECONDA_VISITA.name() + "_"
+			assertTrue(isScattato(TipoIntermezzo.INTERMEZZO_LOCANDA_VISITA_SUCCESSIVA.name() + "_"
 					+ nyena.ottieniProprieta(Locanda.LOCANDA_IDENTIFICATIVO)));
-			assertEquals(0, conta(partita, DOMANDA_AL_LOCANDIERE), "la seconda visita non si somma alla scenetta");
+			assertEquals(0, conta(partita, DOMANDA_AL_LOCANDIERE), "la visita successiva non si somma alla scenetta");
 			assertFalse(isScattato(TipoIntermezzo.INTERMEZZO_NOTTE_LOCANDA.name()), "resta per la prossima volta");
 		}
 	}
