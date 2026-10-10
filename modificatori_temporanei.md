@@ -7,7 +7,7 @@ I `ModificatoreAttributoMD` possono durare un tempo e un'arma può metterli sul 
 - Un modificatore può **durare un tempo**: poi se ne va da solo, come un effetto di stato.
 - Il tempo si misura in **turni di combattimento** oppure in **locazioni**.
 - Un modificatore ha un **bersaglio**: chi lo porta o chi viene colpito. Quelli sul bersaglio hanno senso solo sulle **armi**.
-- `ALBA_SACRA` toglie anche i modificatori temporanei, così i malus a tempo si curano e il Bardo potrà dare al gruppo bonus a tempo (per esempio un `CANTO_DI_VALORE`).
+- `ALBA_SACRA` toglie anche i modificatori temporanei, così i malus a tempo si curano. Il canto di valore del Bardo non è un modificatore ma un effetto di stato (`ISPIRATO`, vedi `bardo.md`).
 - Il `FIXME` della fuga (`PersonaggioBase.fugge`) diventa un malus a tempo di coraggio, valore e carisma.
 
 ## 2. Com'è oggi
@@ -97,7 +97,7 @@ Il numero e l'unità si possono scrivere attaccati o separati da uno spazio (`3T
 - **Scheda del personaggio** (il pannello attributi di `DisplayableCanvasInventario`):
   - L'attributo, primario o secondario, è **verde** se i modificatori temporanei lo alzano, **rosso** se lo abbassano; il valore mostrato è quello effettivo. Il colore guarda solo i temporanei, non l'equipaggiamento né le benedizioni, altrimenti con un po' di artefatti mezza scheda sarebbe già colorata. Se su un attributo ci sono bonus e malus conta il saldo. L'attributo sotto il mouse resta bianco: l'evidenziazione vince.
   - **Giallo** se un modificatore **porta l'attributo a un valore fisso** (`QUANTITA_ASSOLUTA`), permanente o temporaneo, da qualunque fonte: un'arma, un artefatto, una benedizione, un colpo subito. È l'unico colore che non guarda solo i temporanei: serve a far capire perché l'attributo ha quel valore e non sale più con i punti abilità o con gli altri bonus. Il giallo vince su verde e rosso (con più modificatori vince il minimo, come nel calcolo). Nel figlio dell'attributo (la descrizione, che si apre con un click) si aggiunge la riga "Fissato a 0 da: la Spada della Sfortuna di RomyJona (ancora 5 turni)", con la nota del modificatore, o il nome dell'artefatto, e la durata se è a tempo.
-  - In cima all'albero scorrevole un nodo **"Modificatori temporanei"**, presente solo se ce n'è almeno uno, con un figlio per modificatore ("Canto di Valore: Coraggio +3, ancora 2 turni"). Si apre e si chiude con un click, come i "Modificatori:" delle rivelazioni, e lo stato si salva allo stesso modo. Sta nell'albero e non sotto l'immagine perché lì c'è già la colonna dei set completi.
+  - In cima all'albero scorrevole un nodo **"Modificatori temporanei"**, presente solo se ce n'è almeno uno, con un figlio per modificatore ("Ignominia della fuga: Coraggio -20%, 2 locazioni"). Si apre e si chiude con un click, come i "Modificatori:" delle rivelazioni, e lo stato si salva allo stesso modo. Sta nell'albero e non sotto l'immagine perché lì c'è già la colonna dei set completi.
 - **Riquadro del gruppo** (`DisplayableCanvasRiquadroGruppo`): solo il colore, senza cartigli; chi è curioso apre la scheda del personaggio. Colora i valori che il riquadro mostra: salute massima (`SALUTE`), magia massima (`MAGIA`), coraggio, valore e carisma, con la stessa regola della scheda (`colorePerAttributo`).
 - **`VistaPersonaggio`** guadagna `getModificatoriTemporanei()` (attributo, descrizione, durata, unità), `getVariazioneDaTemporanei(attributo)` e `getFissaggio(attributo)` (chi fissa l'attributo e a che valore, se c'è), tutti calcolati dal motore (`PersonaggioBase`): `getVariazioneDaTemporanei` è la differenza fra l'attributo con e senza i modificatori temporanei, sul solo attributo (vedi Osservazioni). La UI non rifà i conti. `getFissaggio` restituisce un `ModificatoreAttivo` (`interfacce`): il modificatore e la fonte, cioè il nome dell'artefatto o la nota. `DipendenzeUITest` è verde.
 - **Sprite sul personaggio**, come per gli effetti di stato (`ForestaUI.gestisciEventoVariazioneModificatore`, `DisplayableCanvasRiquadroLocazione.aggiungiModificatore`): una scritta con la descrizione breve (`ModificatoreAttributoMD.descrizioneBreve`: "Furtività +5", "Coraggio -3", "Coraggio -20%", "Intelligenza a 0"), gialla se porta l'attributo a un valore, verde se lo alza, rossa se lo abbassa, grigia quando l'effetto è finito. Compare all'aggiunta e quando un doppione allunga la durata; non quando la durata scende di un turno. Solo per i modificatori a tempo.
@@ -148,15 +148,13 @@ In modalità di prova (`GruppoGiocatore`, insieme alla Falce del Tristo Mietitor
 
 ## Osservazioni
 
-- `ALBA_SACRA` così toglie anche i bonus temporanei dei compagni (un `CANTO_DI_VALORE` finirebbe appena si cura un avvelenamento). Se si vuole evitarlo, basta un campo `benefico` o distinguere per segno della variazione; per ora la decisione è tutto, come detto.
+- `ALBA_SACRA` toglie anche i bonus temporanei dei compagni, come gli effetti di stato buoni (`ISPIRATO` del Bardo): è voluto, fa pulito.
 - La durata in locazioni conta solo i personaggi vivi, come quelli a tempo: un compagno morto tiene il malus finché non risorge.
 - Il colore e la variazione guardano solo i modificatori scritti sull'attributo: un `FORTUNA =0` colora la fortuna, non il critico o la precisione che ne dipendono (il motore li ricalcola, ma la vista non sa quanto sarebbero senza i temporanei). Calcolarlo davvero vorrebbe dire ricalcolare una copia del personaggio senza temporanei a ogni fotogramma.
 - Un modificatore sul bersaglio sta su un'arma o su un ingrediente (la pergamena), che lo porta per passarlo a un'arma; `ArtefattoMD.addModificatore` rifiuta gli altri.
-- Un `CANTO_DI_VALORE` sarà un incantesimo o una capacità del Bardo, non un'arma: serve un modo di dare un modificatore a tempo al gruppo da un incantesimo (`PersonaggioBase.addModificatore` già lo permette).
 
 ## Da fare / idee aperte
 
 - Tarare i valori provvisori: tetto del moltiplicatore di prezzo dei modificatori a tempo (`PERGAMENA_MOLTIPLICATORE_PREZZO_TEMPO_MASSIMO`, 2), equivalenza locazione/turni (`PERGAMENA_TURNI_PER_LOCAZIONE`, 5) e malus della fuga (`FUGA_IGNOMINIA_*`).
-- Il Bardo e il `CANTO_DI_VALORE`: è un capitolo a parte.
 - Missioni (`BENEDIZIONE=`, `LEALTA=`) con una durata facoltativa: ora hanno solo modificatori permanenti.
 - Grammatica degli artefatti con modificatori a tempo sul bersaglio.

@@ -137,6 +137,39 @@ class ScenarioCantiDelBardoTest {
         }
     }
 
+    /**
+     * Il menu dell'Automa, con la partita vera: il Bardo che entra in un bosco con degli avversari trova nel menu degli
+     * incantesimi i canti (quello curativo no: nessuno è ferito).
+     */
+    @Test
+    void ilMenuDegliIncantesimiOffreICantiAlBardo() {
+        boolean provato = false;
+        for (long seme = 310; seme < 340 && !provato; seme++) {
+            try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(seme)) {
+                partita.iniziaCon("Orfeo", Comando.MASCHIO, Comando.BARDO, () -> partita.spostaGruppoIn(TipoLocazione.CITTA_NYENA));
+                CoordinateMD bosco = unaCasellaDi(TipoLocazione.BOSCO);
+                partita.gruppo().getCapo().addMagia(1000);
+                partita.gruppo().getCapo().addSalute(10000);
+                partita.comando(Comando.ESCI_DA_CITTA);
+                partita.gruppo().setCoordinate(new CoordinateMD(bosco.getX(), bosco.getY() + 1));
+                partita.comando(Comando.NORD).comando(Comando.NUMERO_1);
+                if (partita.stato() != Stato.IN_LOCAZIONE || GruppoAvversario.getIstanza().getNumeroPersonaggiVivi() == 0) {
+                    continue;
+                }
+                provato = true;
+                assertTrue(partita.comandiDisponibili().contains(Comando.INCANTESIMO), String.valueOf(partita.comandiDisponibili()));
+                partita.comando(Comando.INCANTESIMO);
+                partita.assertStato(Stato.INCANTESIMO_SCELTO);
+                Collection<Comando> menu = partita.comandiDisponibili();
+                assertTrue(menu.contains(Comando.CANTO_IPNOTICO), String.valueOf(menu));
+                assertTrue(menu.contains(Comando.CANTO_DI_VALORE), String.valueOf(menu));
+                assertFalse(menu.contains(Comando.CANTO_CURATIVO), String.valueOf(menu));
+                assertTrue(menu.contains(Comando.NO_INCANTESIMO), String.valueOf(menu));
+            }
+        }
+        assertTrue(provato, "nessun seme ha dato un bosco con degli avversari");
+    }
+
     private static CoordinateMD unaCasellaDi(TipoLocazione tipo) {
         for (int x = 0; x < Foresta.getDimensioneX(); x++) {
             for (int y = 0; y < Foresta.getDimensioneY(); y++) {

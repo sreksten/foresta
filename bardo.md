@@ -1,6 +1,6 @@
 # Il Bardo
 
-Piano di lavoro (2026-10-10) per dare al Bardo e alla Cantastorie tre capacità innate, i **canti**, sul modello del dardo arcano di Mago ed Elfo e dell'alba sacra di Sacerdote e Sacerdotessa; e per fare del Viandante una classe a sé. Nulla di quanto segue è ancora nel codice. Quando il lavoro sarà fatto, il documento va riscritto come descrizione dello stato attuale (la storia è in git). Le tre icone (`CantoCurativo.gif`, `CantoIpnotico.gif`, `CantoDiValore.gif`) ci sono già in `img/icone`.
+I tre **canti** innati del Bardo e della Cantastorie (e del bardo della locanda), sul modello del dardo arcano di Mago ed Elfo e dell'alba sacra di Sacerdote e Sacerdotessa, e il Viandante e i personaggi non combattenti che non sono più dei Bardi. Il lavoro è stato fatto il 2026-10-10 (fasi 1-11 al §5); le sezioni 3-6 descrivono com'è il codice adesso, la 2 com'era prima. Le tre icone sono `CantoCurativo.gif`, `CantoIpnotico.gif` e `CantoDiValore.gif` in `img/icone`.
 
 ## 1. Obiettivi
 
@@ -8,7 +8,7 @@ Piano di lavoro (2026-10-10) per dare al Bardo e alla Cantastorie tre capacità 
 - Il gioco ha finalmente un curatore, un modo di colpire il morale del nemico e un modo di rafforzare il gruppo.
 - Il Viandante e i personaggi non combattenti non sono più dei Bardi: hanno le loro caratteristiche, e nessuna capacità del Bardo gli arriva per eredità. Il `BardoLocanda` invece è un bardo a tutti gli effetti.
 
-## 2. Com'è oggi
+## 2. Com'era prima
 
 - **Dardo arcano** (`incantesimi/DardoArcano`): un'`Arma` che non sta in `ClasseIncantesimo`, perché non è una pergamena. `conosciutoDa(TipoPersonaggio)` e `puoLanciarlo(Personaggio)` (vivo, conosce, ha la MAGIA, non è `SILENZIATO`) decidono chi lo lancia; `Automa.entraInStatoSceltaIncantesimoDaLanciare` lo aggiunge ai comandi; `LocazioneBase.lanciaDardoArcano` lo lancia; `LocazioneBase.impostaComandiPossibili` lo conta per abilitare il comando `INCANTESIMO`.
 - **Alba sacra** (`incantesimi/AlbaSacra`): invece è un `Incantesimo` di `ClasseIncantesimo`, e chi la conosce per natura non ne consuma le pergamene.
@@ -48,25 +48,25 @@ Piano di lavoro (2026-10-10) per dare al Bardo e alla Cantastorie tre capacità 
 - Test da tenere verdi: `ScenarioOspitiVulnerabiliTest`, `ScenaInCittaConOspiteTest`, `ScenarioNonSparateSulPianistaTest`, `ScenarioCombattiScortaConsegnaTest`, `ClassePersonaggioImmagineTest`, `PersonaggiNonCombattentiTest`.
 - Il punto sul Viandante in `todo.md` ("valutare se farlo estendere `PersonaggioNonCombattente`... o escluderlo") si può togliere.
 
-## 5. Piano
+## 5. Fasi
 
 1. [x] **Viandante e non combattenti a sé** (2026-10-10): `Viandante` e `PersonaggioNonCombattente` estendono `PersonaggioBase`, con `VIANDANTE_*` e `NON_COMBATTENTE_*` in `Costanti` (i valori di prima: le massime dei non combattenti sono ora i numeri del bardo ×0,85, e `NON_COMBATTENTE_FATTORE_STATISTICHE` non c'è più). Gli articoli e il genere maschili sono ora in `PersonaggioNonCombattente`. Test: `ViandanteENonCombattentiASeTest`; la suite è rimasta verde.
 2. [x] **Interfaccia `Canto`** (2026-10-10), in `incantesimi`: `Canto` (`getTipo`, `getCostoLancio`, `boolean canta(cantore, gruppo, gruppoAvversario)`, che scala la MAGIA e dice se il canto c'è stato), `TipoCanto`, `FabbricaCanti`, `CantoDelBardo` (`conosciutoDa`, `puoCantare`, `cantiPossibili`: vivo, sa cantare, non `SILENZIATO`, MAGIA sufficiente) e le tre classi. `CantoCurativo` e `CantoIpnotico` hanno già i loro effetti (passi 5 e 6 sotto, fatti qui; per l'ipnotico `CalcolatoreCombattimento.calcolaDurataStato` è diventato pubblico); `CantoDiValore.canta` aspettava `ISPIRATO` (passi 7 e 8, fatti nella fase 5). Costanti: `CANTO_*` in `Costanti`. Resta da fare il fatto che la sede "in combattimento e con un avversario vivo" la decide chi offre i canti (passo 4), non `puoCantare`. Test: `CantiDelBardoTest`.
 3. [x] **Comandi e icone** (2026-10-10): `Comando.CANTO_CURATIVO`, `CANTO_IPNOTICO`, `CANTO_DI_VALORE`; tre voci di `ClasseIcona` con `CantoCurativo.gif`, `CantoIpnotico.gif`, `CantoDiValore.gif`; `TipoCanto.getComando()` e `TipoCanto.ofComando(comando)`. Test: `IconeDeiCantiTest`.
 4. [x] **Menu** (2026-10-10): `CantoDelBardo.cantiUtili(cantore, gruppo, gruppoAvversario)` dà i canti che si possono cantare adesso: nessuno se non ci sono avversari vivi, e il curativo solo se qualcuno è ferito. `Automa.entraInStatoSceltaIncantesimoDaLanciare` li aggiunge ai comandi; `LocazioneBase.impostaComandiPossibili` li conta per mostrare `INCANTESIMO` (anche se il gruppo non ha pergamene); `LocazioneBase.QUALE_FORMULA` ha un ramo che riconosce il comando (`TipoCanto.ofComando`) e chiama `cantaUnCanto`: rilegge `cantiUtili`, canta, chiude la locazione se gli avversari sono morti, altrimenti fa rispondere l'avversario sul Bardo; azzera corruzione e amicizia come ogni incantesimo. Un comando dato quando il canto non serve più non fa nulla e non costa. Test: `ScenarioCantiDelBardoTest` (la parte di `LocazioneBase`; la lista dei comandi in `Automa` non ha un test a sé).
-5. **Canto curativo**: il personaggio vivo del gruppo con la quota `salute / saluteMassima` più bassa (a parità il primo); `addSalute(cura)` con `cura = CANTO_CURATIVO_BASE × √livello × (1 + SAGGEZZA / SAGGEZZA_TIPICA)` (la forma esatta si tara insieme alle costanti); testo "Il Bardo canta per X: guarisce di N".
-6. **Canto ipnotico**: per ciascuno degli avversari vivi, fino a `NUMERO_BERSAGLI` (scelti a caso se sono di più), si tira contro il Coraggio con la Soggezione del Bardo; se il tiro riesce, `SPAVENTATO` o `CONFUSO` (uno a caso, lo stesso per tutti i bersagli del canto) con una durata calcolata come per gli altri stati (`calcolaDurataStato`). Un immune (`isImmuneAEffetto`) lo resiste da sé.
+5. [x] **Canto curativo** (2026-10-10, fatto con la fase 2): `CantoCurativo`; il personaggio vivo con la quota `salute / saluteMassima` più bassa (a parità il primo), `cura = CANTO_CURATIVO_BASE × √livello × (1 + SAGGEZZA / CANTO_CURATIVO_DIVISORE_SAGGEZZA)` (30, 50), mai oltre il massimo.
+6. [x] **Canto ipnotico** (2026-10-10, fatto con la fase 2): `CantoIpnotico`; fino a `NUMERO_BERSAGLI` avversari vivi scelti a caso, `SPAVENTATO` o `CONFUSO` (lo stesso per tutti), cede con probabilità `Soggezione / (Soggezione + Coraggio)` e per `calcolaDurataStato`; chi è immune lo resiste da sé.
 7. [x] **Effetto di stato `ISPIRATO`** (2026-10-10): `TipoEffettoDiStato.ISPIRATO`; `EffettoDiStatoMD.getIntensita()` (decimale, salvata come quarto campo dell'effetto in `PersonaggioMD`); `Personaggio.addEffettoDiStato(tipo, durata, danni, intensita)`, che quando c'è già lo stesso effetto tiene durata, danni e intensità più alti (non somma); in `PersonaggioBase.quantitaModificata` un `ISPIRATO` somma la sua intensità alle percentuali di `CORAGGIO` e `PRECISIONE` (e `getVariazioneDaTemporanei` lo conta fra i temporanei, quindi la scheda colora i due attributi di verde). Non agisce se un'`QUANTITA_ASSOLUTA` fissa l'attributo.
 8. [x] **Canto di valore** (2026-10-10): `CantoDiValore.canta` scala la MAGIA e dà `ISPIRATO` a tutti i vivi del gruppo con `CANTO_DI_VALORE_DURATA` (4) turni e intensità `min(50, 20 + 2,5 × livello)` (`CANTO_DI_VALORE_PERCENTUALE_*`); `getIntensita()`. Due canti rinfrescano senza sommare, e uno più forte sostituisce uno più debole.
 9. [x] **UI** (2026-10-10): lo sprite di `ISPIRATO` c'è già, perché `ForestaUI` ne mostra uno per ogni effetto di stato; la scheda del personaggio colora coraggio e precisione di verde (vedi il passo 7). Nessun codice nuovo.
-10. **Costanti e test**: le costanti (costi, cura base, durate, intensità), poi i test: comandi disponibili solo in combattimento e solo con la MAGIA, costo scalato, cura al più ferito e mai oltre il massimo, effetto ipnotico applicato o resistito, `NUMERO_BERSAGLI` rispettato, `ISPIRATO` a tutto il gruppo, rinfresco senza raddoppio con due canti, nessun canto per il Viandante, il Mago o il Locandiere.
-11. **Documenti**: questo, `motore_di_gioco.md` (§8, personaggi e capacità innate), `interazioni_effetti_di_stato.md` (`ISPIRATO` e il suo rapporto con `SPAVENTATO`/`CONFUSO`), `modificatori_temporanei.md` (il canto di valore non è un modificatore), `todo.md` (si toglie "Il Bardo" e il punto sul Viandante), `foresta.md` e `CLAUDE.md`.
+10. [x] **Costanti e test** (2026-10-10): le costanti `CANTO_*` stanno in `Costanti` (costi 4, 3 e 5; cura 30 e 50; valore 20%, 2,5%, 50%, 4 turni). Test: `CantiDelBardoTest` (chi canta, costi, cura, ipnotico, ispirato, rinfresco, salvataggio dell'intensità), `ScenarioCantiDelBardoTest` (la locazione e il menu dell'`Automa` con una partita vera), `IconeDeiCantiTest`, `ViandanteENonCombattentiASeTest`.
+11. [x] **Documenti** (2026-10-10): questo, `motore_di_gioco.md`, `interazioni_effetti_di_stato.md`, `modificatori_temporanei.md`, `foresta.md`, `CLAUDE.md`, e tolta da `todo.md` la sezione "Il Bardo".
 
 ## 6. Alba Sacra
 
 Non cambia. `AlbaSacra.formula` toglie tutti gli effetti di stato (`rimuoviTuttiGliEffettiDiStato`) e tutti i modificatori a tempo (`rimuoviTuttiIModificatoriTemporanei`), quindi anche `ISPIRATO`: l'Alba fa pulito, come si è deciso, e non si introduce nessuna distinzione fra effetti buoni e cattivi.
 
-## 7. Domande risolte
+## 7. Decisioni prese lungo il lavoro
 
 1. **Alba Sacra e `ISPIRATO`:** l'Alba toglie tutto, `ISPIRATO` compreso (§6).
 2. **Cura del canto curativo:** solo la Saggezza.
@@ -83,4 +83,5 @@ Non cambia. `AlbaSacra.formula` toglie tutti gli effetti di stato (`rimuoviTutti
 
 - Tarare costi, cura, durata e intensità. Con il tetto al 50% e il +22,5% già a livello 1 il canto di valore è molto forte nei primi livelli: va misurato.
 - Insegnare al `GiocatoreAutomatico` a cantare.
-- Un quarto canto (per esempio uno di scherno che abbassa le difese) è fuori da questo piano.
+- Un quarto canto (per esempio uno di scherno che abbassa le difese) è fuori da questo lavoro.
+- Tarare insieme anche la probabilità di cedere del canto ipnotico e il valore dei `VIANDANTE_*` e `NON_COMBATTENTE_*`, ora uguali a quelli del bardo.
