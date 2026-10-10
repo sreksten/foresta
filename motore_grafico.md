@@ -115,7 +115,7 @@ Un sistema di rendering del testo **proprietario**, in stile retro (il nome è u
 | :--- | :--- |
 | `DisplayableCanvasRiquadroLocazione` | L'illustrazione della locazione, con gli avversari a sinistra e il gruppo del giocatore a destra (ognuno rivolto verso l'altro e specchiato se serve, secondo `VersiDeiPersonaggi`; nel gruppo chi non è vivo non si disegna e gli altri scalano, tra gli avversari restano ai loro posti) e i fumetti di effetto; l'oggetto sta al centro |
 | `DisplayableCanvasRiquadroMappa` | La mappa in piccolo attorno al gruppo, con le nuvole |
-| `DisplayableCanvasRiquadroGruppo` | I personaggi con salute, magia, livello, coraggio, valore, stanchezza, carisma; scorrevole a rotella (un personaggio per scatto) |
+| `DisplayableCanvasRiquadroGruppo` | I personaggi con salute, magia, livello, coraggio, valore, stanchezza, carisma; scorrevole a pixel con la rotella come le missioni (stesse frecce; le notifiche di variazione partono dalla quota giusta anche se il personaggio è fuori vista, ritagliate sull’area della lista) |
 | `DisplayableCanvasRiquadroStatistiche` | Monete, preziosi, punti esperienza |
 | `DisplayableCanvasRiquadroIncantesimiEPozioni` | Gli incantesimi e le pozioni disponibili: una lista a una colonna con i nomi per intero, che scorre a pixel con la rotella del mouse, come le missioni (stesse frecce); le notifiche di variazione partono dalla riga giusta anche se fuori vista, ritagliate sull’area della lista (`SpriteBase.setRitaglio`) |
 | `DisplayableCanvasRiquadroMissioni` | Le missioni attive come albero scorrevole (§10), con lo stato di apertura dei nodi tenuto nel modello dati |

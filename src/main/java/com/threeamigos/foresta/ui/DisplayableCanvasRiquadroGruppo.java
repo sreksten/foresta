@@ -43,8 +43,13 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 	private final int leftXOffsetLabelCarisma;
 	private final int rightXOffsetCarisma;
 
-	private final int personaggiVisibili;
-	private int saltaPrimi = 0;
+	// Ogni personaggio (o ospite) occupa tre righe
+	private final int altezzaBlocco;
+	private final Rectangle areaLista;
+	// Pixel di scorrimento per ogni scatto della rotella, come per le missioni
+	private static final int PASSO_SCORRIMENTO = 2;
+	// Di quanti pixel è scrollata la lista
+	private int offsetY = 0;
 
 	// Dove sta il mouse, relativo al riquadro, per l'aiuto (-1 fuori)
 	private int mouseX = -1;
@@ -82,27 +87,28 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		leftXOffsetLabelCarisma = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 18;
 		rightXOffsetCarisma = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + glyph9Width * 23;
 
-		personaggiVisibili = (ImageCache.corniceGrande.getHeight() - (DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE << 1)) / (fontMedium.getHeight() * 3);
+		altezzaBlocco = fontMedium.getHeight() * 3;
+		areaLista = new Rectangle(topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE, topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE,
+				innerWidth, ImageCache.corniceGrande.getHeight() - (DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE << 1));
 	}
 
 	void disegnaStatus(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceGrande, topLeftX, topLeftY, null);
 		
 		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
-		int locXOffset = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE;
-		int locYOffset = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE;
+		int locXOffset = areaLista.x;
 
 		int l = g.getNumeroPersonaggi();
 		List<? extends VistaPersonaggio> ospiti = g.getOspiti();
-		saltaPrimi = Math.min(saltaPrimi, Math.max(0, l + ospiti.size() - personaggiVisibili));
+		// L'elenco può essere cambiato dall'ultimo scorrimento: l'offset va rimesso nei limiti
+		offsetY = Math.min(offsetY, offsetMassimo());
+		graphics.setClip(areaLista);
 		VistaPersonaggio p;
 		for (int i = 0; i < l; i++) {
-			if (i < saltaPrimi) {
+			if (!bloccoVisibile(i)) {
 				continue;
 			}
-			if (i - saltaPrimi >= personaggiVisibili) {
-				break;
-			}
+			int locYOffset = yDelBlocco(i);
 			p = g.getPersonaggio(i);
 			Image doomdark;
 			Optional<String> nomeOpt = p.getNomeProprio();
@@ -165,13 +171,10 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		}
 		// Dopo i personaggi, gli ospiti: solo il nome, perché non combattono
 		for (int i = 0; i < ospiti.size(); i++) {
-			int riga = l + i - saltaPrimi;
-			if (riga < 0) {
+			if (!bloccoVisibile(l + i)) {
 				continue;
 			}
-			if (riga >= personaggiVisibili) {
-				break;
-			}
+			int locYOffset = yDelBlocco(l + i);
 			VistaPersonaggio ospite = ospiti.get(i);
 			String nome = ospite.getNomeProprio().map(n -> n + "-" + ospite.getNomeSingolare()).orElse(ospite.getNomeSingolare());
 			DoomdarkColorModel.Color colore = ospite.isVivo() ? DoomdarkColorModel.Color.MEDIUM_GRAY : DoomdarkColorModel.Color.DARK_GRAY;
@@ -187,8 +190,57 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 				stato = "Ospite del gruppo";
 			}
 			graphics.drawImage(ImageCache.get(stato, fontMedium, DoomdarkColorModel.Color.DARK_GRAY, innerWidth), locXOffset, locYOffset, null);
-			locYOffset += fontMedium.getHeight() * 2;
 		}
+		disegnaFrecce(graphics);
+		graphics.setClip(null);
+	}
+
+	private int numeroBlocchi() {
+		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
+		return g.getNumeroPersonaggi() + g.getOspiti().size();
+	}
+
+	private int offsetMassimo() {
+		return Math.max(0, numeroBlocchi() * altezzaBlocco - areaLista.height);
+	}
+
+	/**
+	 * La quota a cui è disegnato il blocco di un personaggio (o ospite), tenendo conto dello scorrimento: può essere
+	 * fuori dalla lista
+	 */
+	private int yDelBlocco(int indice) {
+		return areaLista.y + indice * altezzaBlocco - offsetY;
+	}
+
+	private boolean bloccoVisibile(int indice) {
+		int y = yDelBlocco(indice);
+		return y + altezzaBlocco > areaLista.y && y < areaLista.y + areaLista.height;
+	}
+
+	/**
+	 * Le frecce delle missioni (vedi ComponenteScorrevole), in alto e in basso a destra se la lista continua da
+	 * quella parte
+	 */
+	private void disegnaFrecce(Graphics2D graphics) {
+		Image frecciaSu = ImageCache.componenteScorrevoleFrecciaSu;
+		Image frecciaGiu = ImageCache.componenteScorrevoleFrecciaGiu;
+		if (offsetY > 0) {
+			graphics.drawImage(frecciaSu, areaLista.x + areaLista.width - frecciaSu.getWidth(null) - ImageCache.SPACING,
+					areaLista.y + ImageCache.SPACING, null);
+		}
+		if (offsetY < offsetMassimo()) {
+			graphics.drawImage(frecciaGiu, areaLista.x + areaLista.width - frecciaGiu.getWidth(null) - ImageCache.SPACING,
+					areaLista.y + areaLista.height - ImageCache.SPACING - frecciaGiu.getHeight(null), null);
+		}
+	}
+
+	/**
+	 * Lo sprite parte dalla quota giusta anche se il blocco non si vede tutto (o per niente) perché la lista è
+	 * scrollata: si vede solo la parte dentro la lista
+	 */
+	private SpriteATempo conRitaglio(SpriteATempo sprite) {
+		sprite.setRitaglio(areaLista);
+		return sprite;
 	}
 
 	/**
@@ -213,20 +265,6 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		return -1;
 	}
 
-	/**
-	 * A differenza di {@link #getOrdinalePersonaggio}, riporta la riga a cui il personaggio è
-	 * effettivamente disegnato, tenendo conto dello scorrimento; -1 se il personaggio non è
-	 * visibile nella porzione corrente del riquadro.
-	 */
-	private int getRigaVisibilePersonaggio(VistaPersonaggio personaggio) {
-		int ordinale = getOrdinalePersonaggio(personaggio);
-		if (ordinale == -1) {
-			return -1;
-		}
-		int riga = ordinale - saltaPrimi;
-		return (riga < 0 || riga >= personaggiVisibili) ? -1 : riga;
-	}
-
 	@Override
 	public void processaMovimento(int x, int y) {
 		mouseX = x;
@@ -241,15 +279,14 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 
 	/**
 	 * Ad aiuto acceso, sopra il riquadro il cartiglio della rotella, se i personaggi (ospiti compresi) non ci stanno
-	 * tutti (più di personaggiVisibili, cioè 5). Va chiamato dopo aver disegnato tutto lo schermo, grande
+	 * tutti. Va chiamato dopo aver disegnato tutto lo schermo, grande
 	 * larghezzaSchermo x altezzaSchermo.
 	 */
 	void disegnaAiuto(Graphics2D graphics, int larghezzaSchermo, int altezzaSchermo) {
 		if (!vistaPartita.isAiutoAbilitato() || mouseX < 0) {
 			return;
 		}
-		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
-		if (g.getNumeroPersonaggi() + g.getOspiti().size() > personaggiVisibili) {
+		if (offsetMassimo() > 0) {
 			Cartiglio.disegnaAccantoAlMouse(graphics, Collections.singletonList(Cartiglio.AIUTO_ROTELLA),
 					topLeftX + mouseX, topLeftY + mouseY, larghezzaSchermo, altezzaSchermo);
 		}
@@ -257,11 +294,9 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 
 	@Override
 	public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
-		if (movimentoRotella == MovimentoRotella.SU) {
-			saltaPrimi = Math.max(0, saltaPrimi - numeroRotazioni);
-		} else if (movimentoRotella == MovimentoRotella.GIU) {
-			saltaPrimi += numeroRotazioni;
-		}
+		int spostamento = numeroRotazioni * PASSO_SCORRIMENTO;
+		offsetY = movimentoRotella == MovimentoRotella.SU ? offsetY - spostamento : offsetY + spostamento;
+		offsetY = Math.max(0, Math.min(offsetMassimo(), offsetY));
 	}
 
 	void gestisciEventoAumentoLivelloPersonaggio(NotificaAumentoLivelloPersonaggio evento) {
@@ -276,13 +311,13 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		int rigaPersonaggio = getRigaVisibilePersonaggio(personaggio);
+		int rigaPersonaggio = getOrdinalePersonaggio(personaggio);
 		if (rigaPersonaggio == -1) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteAumentoLivello;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (rigaPersonaggio * 3 + 1);
-		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetLivello, y, "Livello variato");
+		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * 1;
+		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, rightXOffsetLivello, y, "Livello variato"));
 	}
 
 	void gestisciEventoVariazioneStatistichePersonaggio(NotificaVariazioneStatistichePersonaggio evento) {
@@ -335,13 +370,13 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		int rigaPersonaggio = getRigaVisibilePersonaggio(personaggio);
+		int rigaPersonaggio = getOrdinalePersonaggio(personaggio);
 		if (rigaPersonaggio == -1) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (rigaPersonaggio * 3 + 1);
-		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetSalute, y, "Salute variata");
+		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * 1;
+		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, rightXOffsetSalute, y, "Salute variata"));
 	}
 
 	private void gestisciEventoVariazioneSaluteMassima(NotificaVariazioneStatistichePersonaggio evento) {
@@ -356,13 +391,13 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		int rigaPersonaggio = getRigaVisibilePersonaggio(personaggio);
+		int rigaPersonaggio = getOrdinalePersonaggio(personaggio);
 		if (rigaPersonaggio == -1) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (rigaPersonaggio * 3 + 1);
-		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetSaluteMassima, y, "Salute massima variata");
+		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * 1;
+		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, rightXOffsetSaluteMassima, y, "Salute massima variata"));
 	}
 
 	private void gestisciEventoVariazioneMagia(NotificaVariazioneStatistichePersonaggio evento) {
@@ -377,13 +412,13 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		int rigaPersonaggio = getRigaVisibilePersonaggio(personaggio);
+		int rigaPersonaggio = getOrdinalePersonaggio(personaggio);
 		if (rigaPersonaggio == -1) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteMagia;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (rigaPersonaggio * 3 + 1);
-		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetMagia, y, "Magia variata");
+		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * 1;
+		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, rightXOffsetMagia, y, "Magia variata"));
 	}
 
 	private void gestisciEventoVariazioneMagiaMassima(NotificaVariazioneStatistichePersonaggio evento) {
@@ -398,13 +433,13 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		int rigaPersonaggio = getRigaVisibilePersonaggio(personaggio);
+		int rigaPersonaggio = getOrdinalePersonaggio(personaggio);
 		if (rigaPersonaggio == -1) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteMagia;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (rigaPersonaggio * 3 + 1);
-		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetMagiaMassima, y, "Magia massima variata");
+		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * 1;
+		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, rightXOffsetMagiaMassima, y, "Magia massima variata"));
 	}
 
 	private void gestisciEventoVariazioneCoraggio(NotificaVariazioneStatistichePersonaggio evento) {
@@ -419,13 +454,13 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		int rigaPersonaggio = getRigaVisibilePersonaggio(personaggio);
+		int rigaPersonaggio = getOrdinalePersonaggio(personaggio);
 		if (rigaPersonaggio == -1) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (rigaPersonaggio * 3 + 2);
-		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetCoraggio, y, "Coraggio variato");
+		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * 2;
+		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, rightXOffsetCoraggio, y, "Coraggio variato"));
 	}
 
 	private void gestisciEventoVariazioneValore(NotificaVariazioneStatistichePersonaggio evento) {
@@ -440,13 +475,13 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		int rigaPersonaggio = getRigaVisibilePersonaggio(personaggio);
+		int rigaPersonaggio = getOrdinalePersonaggio(personaggio);
 		if (rigaPersonaggio == -1) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (rigaPersonaggio * 3 + 1);
-		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetValore, y, "Valore variato");
+		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * 1;
+		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, rightXOffsetValore, y, "Valore variato"));
 	}
 
 	private void gestisciEventoVariazioneCarisma(NotificaVariazioneStatistichePersonaggio evento) {
@@ -461,13 +496,13 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		int rigaPersonaggio = getRigaVisibilePersonaggio(personaggio);
+		int rigaPersonaggio = getOrdinalePersonaggio(personaggio);
 		if (rigaPersonaggio == -1) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteAmicizia;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (rigaPersonaggio * 3 + 1);
-		return new SpriteATempo(icona, variazione, fontMedium, rightXOffsetCarisma, y, "Carisma variato");
+		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * 1;
+		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, rightXOffsetCarisma, y, "Carisma variato"));
 	}
 
 	private void gestisciEventoVariazioneStanchezza(NotificaVariazioneStatistichePersonaggio evento) {
@@ -482,14 +517,14 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 		if (variazione == 0) {
 			return null;
 		}
-		int rigaPersonaggio = getRigaVisibilePersonaggio(personaggio);
+		int rigaPersonaggio = getOrdinalePersonaggio(personaggio);
 		if (rigaPersonaggio == -1) {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteCombattimento;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + fontMedium.getHeight() * (rigaPersonaggio * 3 + 2);
+		final int y = yDelBlocco(rigaPersonaggio) + fontMedium.getHeight() * 2;
 		DoomdarkColorModel.Color color = variazione < 0 ? DoomdarkColorModel.Color.GREEN : DoomdarkColorModel.Color.RED;
-		return new SpriteATempo(icona, variazione, fontMedium, color, rightXOffsetStanchezza, y, "Stanchezza variata");
+		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium, color, rightXOffsetStanchezza, y, "Stanchezza variata"));
 	}
 
 	private void gestisciEventoVariazioneTempo(NotificaVariazioneStatistichePersonaggio evento) {
@@ -509,9 +544,9 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 			return null;
 		}
 		BufferedImage icona = ImageCache.spriteTempo;
-		final int y = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE + ordinalePersonaggio * fontMedium.getHeight() * 3;
-		return new SpriteATempo(icona, variazione, fontMedium,
+		final int y = yDelBlocco(ordinalePersonaggio);
+		return conRitaglio(new SpriteATempo(icona, variazione, fontMedium,
 				topLeftX + ((ImageCache.corniceGrande.getWidth() - (DIMENSIONE_BORDO_INTERNO_CORNICE_GRANDE << 1)) >> 1),
-				y, "Tempo variato");
+				y, "Tempo variato"));
 	}
 }
