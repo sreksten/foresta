@@ -16,6 +16,9 @@ public abstract class SpriteBase implements SpriteInterface {
 	private float scalaFinale;
 	protected float secondiTrascorsi;
 	protected boolean attivo = true;
+	// Se impostata, lo sprite si vede solo dentro quest'area (in coordinate del canvas): parte dal punto giusto anche
+	// quando questo è fuori vista, e compare man mano che si muove
+	private Rectangle ritaglio;
 	// -1 = nessuna chiamata precedente ad anima(): il primo impulso non fa avanzare
 	// secondiTrascorsi (idem al comportamento storico a passo fisso), i successivi
 	// misurano il tempo reale trascorso invece di assumere una chiamata ogni 1/30 di
@@ -69,6 +72,13 @@ public abstract class SpriteBase implements SpriteInterface {
 	 */
 	protected abstract BufferedImage buildImage();
 
+	/**
+	 * Limita il disegno dello sprite a quest'area, in coordinate del canvas
+	 */
+	public final void setRitaglio(Rectangle ritaglio) {
+		this.ritaglio = ritaglio;
+	}
+
 	@Override
 	public final void anima(Graphics2D g) {
 		if (!attivo) {
@@ -97,6 +107,9 @@ public abstract class SpriteBase implements SpriteInterface {
 		// dove c'è già una scala 2x, sfoca e scurisce tutto quello che segue).
 		Graphics2D gSprite = (Graphics2D) g.create();
 		try {
+			if (ritaglio != null) {
+				gSprite.clip(ritaglio);
+			}
 			gSprite.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
 			gSprite.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR);
 			disegna(gSprite, x, y, scala);

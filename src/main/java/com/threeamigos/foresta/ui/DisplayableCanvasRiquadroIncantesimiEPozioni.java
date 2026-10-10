@@ -20,8 +20,8 @@ import java.util.function.ToIntFunction;
 class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 
 	private static final int DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI = 16;
-	// Lo spazio a destra delle quantità per le frecce che dicono che la lista continua
-	private static final int LARGHEZZA_FRECCE = 12;
+	// Pixel di scorrimento per ogni scatto della rotella, come per le missioni
+	private static final int PASSO_SCORRIMENTO = 2;
 
 	/**
 	 * Una riga della lista: l'icona, il nome e la quantità posseduta
@@ -39,15 +39,17 @@ class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 	}
 
 	private final List<Riga> righe = new ArrayList<>();
-	private final int righeVisibili;
+	private final int altezzaVisibile;
+	private final int altezzaRiga = DoomdarkFontMedium.getInstance().getHeight();
 	private final int topLeftX;
 	private final int topLeftY;
 	private final int iconaX;
 	private final int nomeX;
 	private final int totaleX;
-	private final int frecceX;
+	private final Rectangle areaLista;
 
-	private int primaRigaVisibile = 0;
+	// Di quanti pixel è scrollata la lista
+	private int offsetY = 0;
 
 	private final VistaPartita vistaPartita;
 
@@ -70,31 +72,31 @@ class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 			maxIconWidth = Math.max(maxIconWidth, righe.get(i).icona.getWidth());
 		}
 
-		int altezzaUtile = ImageCache.corniceIncantesimi.getHeight() - 2 * DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI;
-		righeVisibili = Math.max(1, altezzaUtile / DoomdarkFontMedium.getInstance().getHeight());
-		iconaX = topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI;
+		altezzaVisibile = ImageCache.corniceIncantesimi.getHeight() - 2 * DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI;
+		areaLista = new Rectangle(topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI,
+				topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI,
+				ImageCache.corniceIncantesimi.getWidth() - 2 * DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI, altezzaVisibile);
+		iconaX = areaLista.x;
 		nomeX = iconaX + maxIconWidth + 2;
-		frecceX = topLeftX + ImageCache.corniceIncantesimi.getWidth() - DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI - LARGHEZZA_FRECCE;
-		totaleX = frecceX - 2;
+		// Le quantità stanno a sinistra delle frecce, che si disegnano sopra la lista
+		totaleX = areaLista.x + areaLista.width - ImageCache.componenteScorrevoleFrecciaSu.getWidth(null) - 2 * ImageCache.SPACING;
 	}
 
-	private int primaRigaMassima() {
-		return Math.max(0, righe.size() - righeVisibili);
+	private int offsetMassimo() {
+		return Math.max(0, righe.size() * altezzaRiga - altezzaVisibile);
 	}
 
 	@Override
 	public void processaRotella(int x, int y, int numeroRotazioni, MovimentoRotella movimentoRotella) {
-		int spostamento = movimentoRotella == MovimentoRotella.SU ? -numeroRotazioni : numeroRotazioni;
-		primaRigaVisibile = Math.max(0, Math.min(primaRigaMassima(), primaRigaVisibile + spostamento));
+		int spostamento = numeroRotazioni * PASSO_SCORRIMENTO;
+		offsetY = movimentoRotella == MovimentoRotella.SU ? offsetY - spostamento : offsetY + spostamento;
+		offsetY = Math.max(0, Math.min(offsetMassimo(), offsetY));
 	}
 
 	void disegnaIncantesimi(Graphics2D graphics) {
 		graphics.drawImage(ImageCache.corniceIncantesimi, topLeftX, topLeftY, null);
 
-		graphics.setClip(topLeftX + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI,
-				topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI,
-				ImageCache.corniceIncantesimi.getWidth() - 2 * DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI,
-				ImageCache.corniceIncantesimi.getHeight() - 2 * DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI);
+		graphics.setClip(areaLista);
 
 		VistaGruppoGiocatore g = vistaPartita.getGruppoGiocatore();
 		DoomdarkFont fontMedium = DoomdarkFontMedium.getInstance();
@@ -102,9 +104,10 @@ class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 		// Si alternano i colori su tutte le righe, anche quelle fuori vista, perché scorrendo non cambino
 		for (int i = 0; i < righe.size(); i++) {
 			DoomdarkColorModel.Color colore = color.getColor();
-			if (i >= primaRigaVisibile && i < primaRigaVisibile + righeVisibili) {
+			int y = yDellaRiga(i);
+			if (y + altezzaRiga > areaLista.y && y < areaLista.y + altezzaVisibile) {
 				Riga riga = righe.get(i);
-				disegnaRiga(graphics, fontMedium, yDellaRiga(i), riga, riga.quantita.applyAsInt(g), colore);
+				disegnaRiga(graphics, fontMedium, y, riga, riga.quantita.applyAsInt(g), colore);
 			}
 		}
 		disegnaFrecce(graphics);
@@ -113,8 +116,7 @@ class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 	}
 
 	private int yDellaRiga(int indice) {
-		return topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI
-				+ (indice - primaRigaVisibile) * DoomdarkFontMedium.getInstance().getHeight();
+		return areaLista.y + indice * altezzaRiga - offsetY;
 	}
 
 	private void disegnaRiga(Graphics2D graphics, DoomdarkFont fontMedium, int y, Riga riga, int quantita, DoomdarkColorModel.Color color) {
@@ -126,21 +128,19 @@ class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 	}
 
 	/**
-	 * Le frecce in alto e in basso a destra, se la lista continua da quella parte
+	 * Le frecce delle missioni (vedi ComponenteScorrevole), in alto e in basso a destra se la lista continua da
+	 * quella parte
 	 */
 	private void disegnaFrecce(Graphics2D graphics) {
-		int larghezza = LARGHEZZA_FRECCE - 4;
-		int altezza = larghezza / 2 + 1;
-		int yAlto = topLeftY + DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI + 2;
-		int yBasso = topLeftY + ImageCache.corniceIncantesimi.getHeight() - DIMENSIONE_BORDO_INTERNO_CORNICE_INCANTESIMI - 2;
-		graphics.setColor(Color.LIGHT_GRAY);
-		if (primaRigaVisibile > 0) {
-			graphics.fillPolygon(new int[] { frecceX, frecceX + larghezza, frecceX + larghezza / 2 },
-					new int[] { yAlto + altezza, yAlto + altezza, yAlto }, 3);
+		Image frecciaSu = ImageCache.componenteScorrevoleFrecciaSu;
+		Image frecciaGiu = ImageCache.componenteScorrevoleFrecciaGiu;
+		if (offsetY > 0) {
+			graphics.drawImage(frecciaSu, areaLista.x + areaLista.width - frecciaSu.getWidth(null) - ImageCache.SPACING,
+					areaLista.y + ImageCache.SPACING, null);
 		}
-		if (primaRigaVisibile < primaRigaMassima()) {
-			graphics.fillPolygon(new int[] { frecceX, frecceX + larghezza, frecceX + larghezza / 2 },
-					new int[] { yBasso - altezza, yBasso - altezza, yBasso }, 3);
+		if (offsetY < offsetMassimo()) {
+			graphics.drawImage(frecciaGiu, areaLista.x + areaLista.width - frecciaGiu.getWidth(null) - ImageCache.SPACING,
+					areaLista.y + altezzaVisibile - ImageCache.SPACING - frecciaGiu.getHeight(null), null);
 		}
 	}
 
@@ -157,14 +157,17 @@ class DisplayableCanvasRiquadroIncantesimiEPozioni implements Finestra {
 	}
 
 	/**
-	 * Lo sprite della variazione sulla riga indicata; null se non c'è variazione o la riga è fuori vista
+	 * Lo sprite della variazione parte dalla riga indicata, anche se non si vede tutta (o per niente) perché la lista
+	 * è scrollata: si vede solo la parte dentro la lista
 	 */
 	private SpriteATempo costruisciSprite(int indiceRiga, int variazione, String descrizione) {
-		if (variazione == 0 || indiceRiga < primaRigaVisibile || indiceRiga >= primaRigaVisibile + righeVisibili) {
+		if (variazione == 0) {
 			return null;
 		}
-		return new SpriteATempo(righe.get(indiceRiga).icona, variazione, DoomdarkFontMedium.getInstance(),
+		SpriteATempo sprite = new SpriteATempo(righe.get(indiceRiga).icona, variazione, DoomdarkFontMedium.getInstance(),
 				totaleX, yDellaRiga(indiceRiga), descrizione);
+		sprite.setRitaglio(areaLista);
+		return sprite;
 	}
 
 	private int indicePozione(int numeroPozione) {
