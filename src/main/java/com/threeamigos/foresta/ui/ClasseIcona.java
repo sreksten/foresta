@@ -70,6 +70,10 @@ public enum ClasseIcona {
 
 	/* Incantesimo tipico di mago/a o elfo/a che non richiedono pergamene per essere lanciati */
 	DARDO_ARCANO(Comando.DARDO_ARCANO, "icone/DardoArcano.gif", Sfondo.VERDE),
+	/* I canti del bardo e della cantastorie, che non richiedono pergamene */
+	CANTO_CURATIVO(Comando.CANTO_CURATIVO, "icone/CantoCurativo.gif", Sfondo.VERDE),
+	CANTO_IPNOTICO(Comando.CANTO_IPNOTICO, "icone/CantoIpnotico.gif", Sfondo.VERDE),
+	CANTO_DI_VALORE(Comando.CANTO_DI_VALORE, "icone/CantoDiValore.gif", Sfondo.VERDE),
 	/* Incantesimi */
 	ARIA(Comando.ARIA,"icone/Aria.gif", Sfondo.VERDE),
 	ACQUA(Comando.ACQUA, "icone/Acqua.gif", Sfondo.VERDE),

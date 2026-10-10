@@ -53,6 +53,10 @@ public enum Comando {
 	ALBA_SACRA("Lancia un incantesimo di Alba Sacra"),
 	// L'incantesimo innato di Mago ed Elfo, che non consuma pergamene
 	DARDO_ARCANO("Lancia un Dardo Arcano"),
+	// I canti innati del Bardo e della Cantastorie, che non consumano pergamene
+	CANTO_CURATIVO("Canta il Canto Curativo"),
+	CANTO_IPNOTICO("Canta il Canto Ipnotico"),
+	CANTO_DI_VALORE("Canta il Canto di Valore"),
 	// Annulla la scelta di un incantesimo
 	NO_INCANTESIMO("Annulla il lancio di un incantesimo"),
 
