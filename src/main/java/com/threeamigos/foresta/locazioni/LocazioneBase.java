@@ -1151,6 +1151,9 @@ public abstract class LocazioneBase implements Locazione {
 			registraMorteAvversario(personaggio);
 		}
 		if (gruppoAvversario.getPersonaggiVivi().isEmpty()) {
+			// Anche se l'ultimo avversario muore di un effetto di stato (dopo un incantesimo, una pozione...) e non
+			// per un colpo: senza questo l'oggetto non verrebbe offerto
+			setCompleta(true);
 			return Stato.FINE_LOCAZIONE;
 		}
 		return null;
@@ -1165,9 +1168,6 @@ public abstract class LocazioneBase implements Locazione {
 	 */
 	private Stato dopoIlRound() {
 		Stato dopoGliEffetti = trascorriTurnoEffettiDiStato();
-		if (dopoGliEffetti == Stato.FINE_LOCAZIONE) {
-			setCompleta(true);
-		}
 		if (dopoGliEffetti != null) {
 			return dopoGliEffetti;
 		}
