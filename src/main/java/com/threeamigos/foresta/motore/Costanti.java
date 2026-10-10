@@ -69,6 +69,14 @@ public class Costanti {
     public static final int DARDO_ARCANO_COSTO_LANCIO_MAGO = 2;
     public static final int DARDO_ARCANO_COSTO_LANCIO_ELFO = 4;
 
+    // I canti innati del Bardo e della Cantastorie (vedi bardo.md): costano MAGIA, non consumano pergamene
+    public static final int CANTO_CURATIVO_COSTO_LANCIO = 4;
+    public static final int CANTO_IPNOTICO_COSTO_LANCIO = 3;
+    public static final int CANTO_DI_VALORE_COSTO_LANCIO = 5;
+    // Il canto curativo guarisce CANTO_CURATIVO_BASE × √livello, aumentato della SAGGEZZA divisa per questo valore
+    public static final double CANTO_CURATIVO_BASE = 30.0;
+    public static final double CANTO_CURATIVO_DIVISORE_SAGGEZZA = 50.0;
+
     // Un'arma fino a tanti livelli sotto quello di chi la impugna rende ancora tutta la parte dell'eroe; oltre, la parte
     // dell'eroe cala in proporzione (vedi CalcolatoreCombattimento.calcolaDannoRisultante)
     public static final int TOLLERANZA_LIVELLO_ARMA = 2;

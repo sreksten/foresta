@@ -823,7 +823,7 @@ public class CalcolatoreCombattimento {
                 (int) Math.round(grado.getBonusFisso() * maggiorazione), grado.getCoefficiente() * maggiorazione);
     }
 
-    private static int calcolaDurataStato(Personaggio difensore, TipoEffettoDiStato stato) {
+    public static int calcolaDurataStato(Personaggio difensore, TipoEffettoDiStato stato) {
         // Gestione immediata dell'unico stato a 1 turno fisso (Azione per rialzarsi)
         if (stato == TipoEffettoDiStato.ATTERRATO) {
             return 1;

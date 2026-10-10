@@ -1,0 +1,25 @@
+package com.threeamigos.foresta.incantesimi;
+
+import com.threeamigos.foresta.personaggi.Personaggio;
+
+/**
+ * Costruisce il canto di quel tipo, per il personaggio che lo canta
+ */
+public final class FabbricaCanti {
+
+	private FabbricaCanti() {
+	}
+
+	public static Canto crea(TipoCanto tipo, Personaggio cantore) {
+		switch (tipo) {
+			case CURATIVO:
+				return new CantoCurativo(cantore);
+			case IPNOTICO:
+				return new CantoIpnotico(cantore);
+			case DI_VALORE:
+				return new CantoDiValore(cantore);
+			default:
+				throw new IllegalArgumentException("TipoCanto non gestito: " + tipo);
+		}
+	}
+}
