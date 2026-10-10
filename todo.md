@@ -13,7 +13,6 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 - **Combattimento.** Personaggi di livello 5 pesantemente armati non riescono nemmeno a scalfire un boss come la Strega o il Lich.
 - **Modalità VERTICALE.** `DisplayableCanvasBarraIcone` avanza di 32 px con icone alte 64, e la finestra è larga al massimo 400 px (vedi [`motore_grafico.md`](motore_grafico.md) §12).
 - **Schermi alti meno di 804 px.** La barra delle icone copre il fondo del riquadro delle missioni.
-- **Scorrimento del riquadro del gruppo.** `DisplayableCanvasRiquadroGruppo` scorre i personaggi di tre righe per volta, diversamente da `DisplayableCanvasRiquadroMissioni`: capire se si può fare come quest'ultimo.
 
 ## Architettura
 
