@@ -1,12 +1,18 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.eventi.BusEventi;
+import com.threeamigos.foresta.eventi.notifiche.NotificaTestoFrase;
 import com.threeamigos.foresta.motore.Costanti;
 import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 
 /**
- * Il canto che rafforza il coraggio e la precisione di tutto il gruppo con un effetto di stato proprio, a cui
- * manca ancora l'agganciamento ai calcoli (vedi bardo.md, fasi 7 e 8): finché non c'è, non si può cantare.
+ * Il canto che rafforza il gruppo: tutti i personaggi vivi del gruppo diventano ISPIRATI, con coraggio e precisione
+ * aumentati di una percentuale che cresce con il livello del cantore (e non con il suo carisma): CANTO_DI_VALORE_PERCENTUALE_BASE
+ * più CANTO_DI_VALORE_PERCENTUALE_PER_LIVELLO per livello, fino a CANTO_DI_VALORE_PERCENTUALE_MASSIMA, per
+ * CANTO_DI_VALORE_DURATA turni. Cantarlo di nuovo non raddoppia l'effetto: rinfresca la durata (vedi
+ * Personaggio.addEffettoDiStato).
  */
 public class CantoDiValore implements Canto {
 
@@ -26,12 +32,22 @@ public class CantoDiValore implements Canto {
 		return Costanti.CANTO_DI_VALORE_COSTO_LANCIO;
 	}
 
-	public int getLivello() {
-		return livello;
+	/**
+	 * La percentuale di coraggio e di precisione in più, per il livello del cantore
+	 */
+	public double getIntensita() {
+		return Math.min(Costanti.CANTO_DI_VALORE_PERCENTUALE_MASSIMA,
+				Costanti.CANTO_DI_VALORE_PERCENTUALE_BASE + Costanti.CANTO_DI_VALORE_PERCENTUALE_PER_LIVELLO * livello);
 	}
 
 	@Override
 	public boolean canta(Personaggio cantore, Gruppo gruppo, Gruppo gruppoAvversario) {
-		throw new UnsupportedOperationException("Il canto di valore aspetta l'effetto di stato ISPIRATO (bardo.md, fasi 7 e 8)");
+		cantore.subMagia(getCostoLancio());
+		BusEventi.pubblica(new NotificaTestoFrase(cantore.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE,
+				Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA) + " intona un canto di valore: il gruppo si sente più coraggioso e preciso."));
+		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
+			personaggio.addEffettoDiStato(TipoEffettoDiStato.ISPIRATO, Costanti.CANTO_DI_VALORE_DURATA, 0, getIntensita());
+		}
+		return true;
 	}
 }

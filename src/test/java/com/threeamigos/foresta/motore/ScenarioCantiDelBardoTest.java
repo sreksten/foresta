@@ -123,6 +123,20 @@ class ScenarioCantiDelBardoTest {
         }
     }
 
+    @Test
+    void ilCantoDiValoreRendeIspiratoIlGruppoEIlTurnoSiConsuma() {
+        try (PartitaDiTest partita = PartitaDiTest.nuovaSenzaTrucchi(306)) {
+            partita.eventi().ascolta(InternoAggiornamentoComandiDisponibili.class);
+            inUnBoscoConUnBardo(partita, 1);
+            int magia = bardo.getMagia();
+            locazione.impostaAzioni(partita.gruppo(), avversari, Comando.INCANTESIMO);
+            locazione.impostaAzioni(partita.gruppo(), avversari, Comando.PERSONAGGIO_1);
+            locazione.impostaAzioni(partita.gruppo(), avversari, Comando.CANTO_DI_VALORE);
+            assertTrue(bardo.hasEffettoDiStato(TipoEffettoDiStato.ISPIRATO));
+            assertEquals(magia - Costanti.CANTO_DI_VALORE_COSTO_LANCIO, bardo.getMagia());
+        }
+    }
+
     private static CoordinateMD unaCasellaDi(TipoLocazione tipo) {
         for (int x = 0; x < Foresta.getDimensioneX(); x++) {
             for (int y = 0; y < Foresta.getDimensioneY(); y++) {

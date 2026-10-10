@@ -656,7 +656,7 @@ public class PersonaggioMD implements Serializzabile {
 		stream.println(valoriMassimi.entrySet().stream().map(e -> e.getKey().name() + MappaProprieta.SEPARATORE + e.getValue()).collect(Collectors.joining(PIPE)));
 		stream.println(valoriAttributi.entrySet().stream().map(e -> e.getKey().name() + MappaProprieta.SEPARATORE + e.getValue()).collect(Collectors.joining(PIPE)));
 		stream.println(modificatori.stream().map(m -> m.getTipoAttributo().name() + MappaProprieta.SEPARATORE + m.getTipoModificatoreAttributo().name() + MappaProprieta.SEPARATORE + m.getQuantita() + MappaProprieta.SEPARATORE + m.getUnitaDurata().name() + MappaProprieta.SEPARATORE + m.getDurata() + MappaProprieta.SEPARATORE + m.getBersaglio().name() + MappaProprieta.SEPARATORE + m.getNote()).collect(Collectors.joining(PIPE)));
-		stream.println(effettiDiStato.stream().map(e -> e.getTipoEffettoDiStato().name() + MappaProprieta.SEPARATORE + e.getDurata() + MappaProprieta.SEPARATORE + e.getDanniNelTempo()).collect(Collectors.joining(PIPE)));
+		stream.println(effettiDiStato.stream().map(e -> e.getTipoEffettoDiStato().name() + MappaProprieta.SEPARATORE + e.getDurata() + MappaProprieta.SEPARATORE + e.getDanniNelTempo() + MappaProprieta.SEPARATORE + e.getIntensita()).collect(Collectors.joining(PIPE)));
 
 		for (ArtefattoMD artefatto : artefatti) {
 			artefatto.salva(stream);
@@ -706,7 +706,8 @@ public class PersonaggioMD implements Serializzabile {
 		while (campi.haAltriCampi()) {
 			String[] attributoValore = campi.testo().split(MappaProprieta.SEPARATORE);
 			EffettoDiStatoMD effettoDiStato = new EffettoDiStatoMD(TipoEffettoDiStato.valueOf(attributoValore[0]),
-					Integer.parseInt(attributoValore[1]), Integer.parseInt(attributoValore[2]));
+					Integer.parseInt(attributoValore[1]), Integer.parseInt(attributoValore[2]),
+					Double.parseDouble(attributoValore[3]));
 			effettiDiStato.add(effettoDiStato);
 		}
 

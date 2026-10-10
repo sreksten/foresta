@@ -117,7 +117,12 @@ public enum TipoEffettoDiStato {
     // BERSERK (Berserk): Esclusivo ai Guerrieri. Attivato quando la salute scende sotto una soglia critica e il Guerriero ha FURIA > 0.
     // Mentre in stato BERSERK, il danno fisico del Guerriero scala esponenzialmente sulla proporzione di salute persa (più è ferito, più forte colpisce).
     // Lo stato termina automaticamente quando il Guerriero abbandona la locazione (ritorno alla mappa).
-    BERSERK("Berserk");
+    BERSERK("Berserk"),
+
+    // ISPIRATO (Inspired): L'effetto del canto di valore del Bardo (vedi bardo.md): coraggio e precisione crescono di una
+    // percentuale che dipende dal livello di chi canta (EffettoDiStatoMD.getIntensita), per qualche turno.
+    // Non ha danni nel tempo né interazioni con i tipi di danno.
+    ISPIRATO("Ispirato");
 
     private final String descrizione;
 

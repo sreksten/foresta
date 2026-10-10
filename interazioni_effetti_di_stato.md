@@ -97,3 +97,6 @@ già porta con sé.
 ### SILENZIATO — ✅ chiuso
 - [x] Risonanza Sigillata (ARCANO): +30% danno Puro che ignora le difese (`dannoPuroBonus = dannoOffensivoGrezzo * 0.3`, sommato a `dannoTotaleCombinato` dopo la mitigazione, non moltiplicato per `fattoreMitigazione`/`moltiplicatoreDannoStato`); nuovo valore `TipoInterazioneConEffettiDiStato.RISONANZA_SIGILLATA`
 - [x] Isolamento Sensoriale (PSICHICO): +50% danno (`moltiplicatoreDannoStato * 1.5`) e applica anche ACCECATO (senza rimuovere SILENZIATO); nuovo valore `TipoInterazioneConEffettiDiStato.ISOLAMENTO_SENSORIALE`, gestiti entrambi anche in `ForestaUI`
+
+### ISPIRATO — ✅ chiuso (effetto positivo, non nasce da un danno)
+- [x] L'effetto del canto di valore del Bardo (vedi `bardo.md`): coraggio e precisione crescono della sua intensità (20% + 2,5% per livello del cantore, al più 50%) per 4 turni. Non ha interazioni con i tipi di danno e non fa danni nel tempo. Si applica in `PersonaggioBase.quantitaModificata`, sommando l'intensità alle percentuali; non agisce se un `QUANTITA_ASSOLUTA` fissa l'attributo. L'Alba Sacra lo toglie come ogni altro effetto di stato.

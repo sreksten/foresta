@@ -551,6 +551,12 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
     void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int durata, int danniNelTempo);
 
 	/**
+	 * Come sopra, per gli stati che hanno una forza (vedi EffettoDiStatoMD.getIntensita). Se c'è già lo stesso effetto
+	 * non si somma: si tengono la durata e l'intensità più alte.
+	 */
+    void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int durata, int danniNelTempo, double intensita);
+
+	/**
 	 * Verifica se un personaggio ha un effetto di stato
 	 */
     boolean hasEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato);

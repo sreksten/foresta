@@ -578,7 +578,7 @@ public abstract class PersonaggioBase implements Personaggio {
 				));
 
 		for (EffettoDiStatoMD effetto : mappaFiltrata.values()) {
-			addEffettoDiStato(effetto.getTipoEffettoDiStato(), effetto.getDurata(), effetto.getDanniNelTempo());
+			addEffettoDiStato(effetto.getTipoEffettoDiStato(), effetto.getDurata(), effetto.getDanniNelTempo(), effetto.getIntensita());
 		}
 		for (ModificatoreAttributoMD modificatore : risultato.getModificatoriDaAggiungere()) {
 			addModificatore(modificatore);
@@ -2171,6 +2171,13 @@ public abstract class PersonaggioBase implements Personaggio {
 				.filter(m -> m.getTipoModificatoreAttributo() == TipoModificatore.VARIAZIONE_PERCENTUALE)
 				.mapToDouble(ModificatoreAttributoMD::getQuantita).sum();
 
+		// Il canto di valore: ISPIRATO dà al coraggio e alla precisione una percentuale in più, che si somma alle altre
+		if (conTemporanei && (tipoAttributo == TipoAttributo.CORAGGIO || tipoAttributo == TipoAttributo.PRECISIONE)) {
+			quantitaPercentuali += md.getEffettiDiStato().stream()
+					.filter(e -> e.getTipoEffettoDiStato() == TipoEffettoDiStato.ISPIRATO)
+					.mapToDouble(EffettoDiStatoMD::getIntensita).sum();
+		}
+
 		return quantitaOriginale * (1 + quantitaPercentuali / 100);
 	}
 
@@ -2181,6 +2188,11 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int durata, int danniNelTempo) {
+		addEffettoDiStato(tipoEffettoDiStato, durata, danniNelTempo, 0.0d);
+	}
+
+	@Override
+	public void addEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato, int durata, int danniNelTempo, double intensita) {
 		if (!isVivo()) {
 			return;
 		}
@@ -2202,19 +2214,23 @@ public abstract class PersonaggioBase implements Personaggio {
 			EffettoDiStatoMD equivalente = equivalenteOpt.get();
 			boolean duraDiPiu = equivalente.getDurata() < durata;
 			boolean aumentaDanni = equivalente.getDanniNelTempo() < danniNelTempo;
-			if (duraDiPiu || aumentaDanni) {
+			boolean aumentaIntensita = equivalente.getIntensita() < intensita;
+			if (duraDiPiu || aumentaDanni || aumentaIntensita) {
 				if (duraDiPiu) {
 					equivalente.setDurata(durata);
 				}
 				if (aumentaDanni) {
 					equivalente.setDanniNelTempo(danniNelTempo);
 				}
+				if (aumentaIntensita) {
+					equivalente.setIntensita(intensita);
+				}
 				BusEventi.pubblica(new NotificaVariazioneEffettoDiStatoPersonaggio(this,
 						NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.RINFORZO, tipoEffettoDiStato,
 						equivalente.getDurata(), equivalente.getDanniNelTempo()));
 			}
 		} else {
-			md.getEffettiDiStato().add(new EffettoDiStatoMD(tipoEffettoDiStato, durata, danniNelTempo));
+			md.getEffettiDiStato().add(new EffettoDiStatoMD(tipoEffettoDiStato, durata, danniNelTempo, intensita));
 			BusEventi.pubblica(new NotificaVariazioneEffettoDiStatoPersonaggio(this,
 					NotificaVariazioneEffettoDiStatoPersonaggio.TipoVariazione.AGGIUNTA, tipoEffettoDiStato,
 					-1, durata));

@@ -254,10 +254,130 @@ class CantiDelBardoTest {
         assertEquals(magia, bardo.getMagia());
     }
 
+    // --- Canto di valore
+
     @Test
-    void ilCantoDiValoreAspettaLEffettoDiStato() {
+    void ilPercentualeDelCantoDiValoreCresceConIlLivelloFinoAlTetto() {
+        assertEquals(22.5, new CantoDiValore(new Bardo("Orfeo", 1)).getIntensita(), 1e-9);
+        assertEquals(30.0, new CantoDiValore(new Bardo("Orfeo", 4)).getIntensita(), 1e-9);
+        assertEquals(50.0, new CantoDiValore(new Bardo("Orfeo", 12)).getIntensita(), 1e-9);
+        assertEquals(50.0, new CantoDiValore(new Bardo("Orfeo", 30)).getIntensita(), 1e-9);
+    }
+
+    @Test
+    void ilCantoDiValoreRendeIspiratiTuttiIVivi() {
         Bardo bardo = bardo();
-        Canto canto = FabbricaCanti.crea(TipoCanto.DI_VALORE, bardo);
-        assertThrows(UnsupportedOperationException.class, () -> canto.canta(bardo, compagni, avversari));
+        Guerriero vivo = new Guerriero("Vivo", 5);
+        Guerriero morto = new Guerriero("Morto", 5);
+        compagni.aggiungiPersonaggio(bardo);
+        compagni.aggiungiPersonaggio(vivo);
+        compagni.aggiungiPersonaggio(morto);
+        morto.muore("per distrazione");
+        int magia = bardo.getMagia();
+
+        assertTrue(FabbricaCanti.crea(TipoCanto.DI_VALORE, bardo).canta(bardo, compagni, avversari));
+
+        for (Personaggio p : Arrays.asList(bardo, vivo)) {
+            assertTrue(p.hasEffettoDiStato(TipoEffettoDiStato.ISPIRATO), p.getNomeSingolare());
+            assertEquals(Costanti.CANTO_DI_VALORE_DURATA, p.getEffettiDiStato().iterator().next().getDurata());
+        }
+        assertFalse(morto.hasEffettoDiStato(TipoEffettoDiStato.ISPIRATO));
+        assertEquals(magia - Costanti.CANTO_DI_VALORE_COSTO_LANCIO, bardo.getMagia());
+    }
+
+    @Test
+    void ilCantoDiValoreAlzaCoraggioEPrecisioneEBasta() {
+        Guerriero guerriero = new Guerriero("Arsenio", 5);
+        compagni.aggiungiPersonaggio(guerriero);
+        double coraggio = guerriero.getModelloDati().get(TipoAttributo.CORAGGIO);
+        double precisione = guerriero.getModelloDati().get(TipoAttributo.PRECISIONE);
+        int forza = guerriero.getForza();
+        assertEquals(0.0, guerriero.getVariazioneDaTemporanei(TipoAttributo.CORAGGIO));
+
+        Bardo bardo = new Bardo("Orfeo", 4);
+        bardo.addMagia(1000);
+        new CantoDiValore(bardo).canta(bardo, compagni, avversari);
+
+        assertEquals(coraggio * 0.30, guerriero.getVariazioneDaTemporanei(TipoAttributo.CORAGGIO), 1e-9);
+        assertEquals(precisione * 0.30, guerriero.getVariazioneDaTemporanei(TipoAttributo.PRECISIONE), 1e-9);
+        assertEquals(0.0, guerriero.getVariazioneDaTemporanei(TipoAttributo.FORZA));
+        assertEquals(forza, guerriero.getForza());
+    }
+
+    @Test
+    void duCantiDiValoreNonRaddoppianoMaRinfrescano() {
+        Guerriero guerriero = new Guerriero("Arsenio", 5);
+        compagni.aggiungiPersonaggio(guerriero);
+        Bardo primo = new Bardo("Orfeo", 4);
+        Bardo secondo = new Bardo("Lino", 4);
+        primo.addMagia(1000);
+        secondo.addMagia(1000);
+        new CantoDiValore(primo).canta(primo, compagni, avversari);
+        double variazione = guerriero.getVariazioneDaTemporanei(TipoAttributo.CORAGGIO);
+        guerriero.riduciEffettiDiStato();
+        guerriero.riduciEffettiDiStato();
+        assertEquals(Costanti.CANTO_DI_VALORE_DURATA - 2, guerriero.getEffettiDiStato().iterator().next().getDurata());
+
+        new CantoDiValore(secondo).canta(secondo, compagni, avversari);
+
+        assertEquals(1, guerriero.getEffettiDiStato().size());
+        assertEquals(Costanti.CANTO_DI_VALORE_DURATA, guerriero.getEffettiDiStato().iterator().next().getDurata());
+        assertEquals(variazione, guerriero.getVariazioneDaTemporanei(TipoAttributo.CORAGGIO), 1e-9);
+    }
+
+    @Test
+    void unCantoPiuForteSostituisceQuelloPiuDebole() {
+        Guerriero guerriero = new Guerriero("Arsenio", 5);
+        compagni.aggiungiPersonaggio(guerriero);
+        Bardo debole = new Bardo("Orfeo", 1);
+        Bardo forte = new Bardo("Lino", 10);
+        debole.addMagia(1000);
+        forte.addMagia(1000);
+        new CantoDiValore(debole).canta(debole, compagni, avversari);
+        assertEquals(22.5, guerriero.getEffettiDiStato().iterator().next().getIntensita(), 1e-9);
+        new CantoDiValore(forte).canta(forte, compagni, avversari);
+        assertEquals(1, guerriero.getEffettiDiStato().size());
+        assertEquals(45.0, guerriero.getEffettiDiStato().iterator().next().getIntensita(), 1e-9);
+        // Poi uno più debole non lo abbassa
+        new CantoDiValore(debole).canta(debole, compagni, avversari);
+        assertEquals(45.0, guerriero.getEffettiDiStato().iterator().next().getIntensita(), 1e-9);
+    }
+
+    @Test
+    void ilCantoDiValoreScadeELAlbaSacraLoToglie() {
+        Guerriero guerriero = new Guerriero("Arsenio", 5);
+        compagni.aggiungiPersonaggio(guerriero);
+        Bardo bardo = bardo();
+        new CantoDiValore(bardo).canta(bardo, compagni, avversari);
+        for (int turno = 0; turno < Costanti.CANTO_DI_VALORE_DURATA; turno++) {
+            guerriero.riduciEffettiDiStato();
+        }
+        assertFalse(guerriero.hasEffettoDiStato(TipoEffettoDiStato.ISPIRATO));
+        assertEquals(0.0, guerriero.getVariazioneDaTemporanei(TipoAttributo.CORAGGIO));
+
+        new CantoDiValore(bardo).canta(bardo, compagni, avversari);
+        guerriero.rimuoviTuttiGliEffettiDiStato();
+        assertFalse(guerriero.hasEffettoDiStato(TipoEffettoDiStato.ISPIRATO));
+    }
+
+    @Test
+    void lIntensitaDelloStatoSiSalvaESiRilegge() throws java.io.IOException {
+        Guerriero guerriero = new Guerriero("Arsenio", 5);
+        guerriero.addEffettoDiStato(TipoEffettoDiStato.ISPIRATO, 3, 0, 32.5);
+        guerriero.addEffettoDiStato(TipoEffettoDiStato.AVVELENATO, 2, 4);
+        java.io.StringWriter scritto = new java.io.StringWriter();
+        java.io.PrintWriter writer = new java.io.PrintWriter(scritto);
+        guerriero.getModelloDati().salva(writer);
+        writer.flush();
+        com.threeamigos.foresta.modellodati.PersonaggioMD riletto = new com.threeamigos.foresta.modellodati.PersonaggioMD();
+        riletto.leggi(new java.io.BufferedReader(new java.io.StringReader(scritto.toString())));
+        com.threeamigos.foresta.modellodati.EffettoDiStatoMD ispirato = riletto.getEffettiDiStato().stream()
+                .filter(e -> e.getTipoEffettoDiStato() == TipoEffettoDiStato.ISPIRATO).findFirst().get();
+        assertEquals(3, ispirato.getDurata());
+        assertEquals(32.5, ispirato.getIntensita(), 1e-9);
+        com.threeamigos.foresta.modellodati.EffettoDiStatoMD veleno = riletto.getEffettiDiStato().stream()
+                .filter(e -> e.getTipoEffettoDiStato() == TipoEffettoDiStato.AVVELENATO).findFirst().get();
+        assertEquals(4, veleno.getDanniNelTempo());
+        assertEquals(0.0, veleno.getIntensita());
     }
 }
