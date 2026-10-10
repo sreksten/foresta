@@ -198,10 +198,18 @@ public class RegistroPersonaggi {
 	 * per le scene e per le missioni che lo portano con il gruppo.
 	 */
 	public static Personaggio costruisciPersonaggio(ResidenteMD residente) {
+		return costruisciPersonaggio(residente, 1);
+	}
+
+	/**
+	 * Come {@link #costruisciPersonaggio(ResidenteMD)}, ma del livello indicato (per esempio quello del mondo, per chi
+	 * viaggia con il gruppo come ospite).
+	 */
+	public static Personaggio costruisciPersonaggio(ResidenteMD residente, int livello) {
 		if (residente.getClasse() == null) {
 			throw new IllegalStateException(residente.getNome() + " non ha ancora una classe");
 		}
-		Personaggio personaggio = FabbricaPersonaggi.crea(residente.getClasse(), 1);
+		Personaggio personaggio = FabbricaPersonaggi.crea(residente.getClasse(), livello);
 		personaggio.getModelloDati().setNome(residente.getNome());
 		return personaggio;
 	}

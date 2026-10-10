@@ -9,7 +9,6 @@ import com.threeamigos.foresta.locazioni.Locanda;
 import com.threeamigos.foresta.missioni.Passo.MomentoControllo;
 import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.motore.*;
-import com.threeamigos.foresta.personaggi.Viandante;
 import com.threeamigos.foresta.personaggi.EquipaggiamentoIniziale;
 import com.threeamigos.foresta.strumenti.Misc;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
@@ -21,8 +20,8 @@ import com.threeamigos.foresta.tipi.TipoLocazione;
  * Non sparate sul pianista: alla terza visita a una locanda nel bosco, a una visita tranquilla, il locandiere chiede
  * di riportare a casa un bardo che ha preso una sbronza solenne e non si regge in piedi, nella città più vicina. Il
  * bardo viaggia con il gruppo come ospite vulnerabile: arrivati, sua moglie paga e se lo porta in casa. Se per strada
- * muore, o la città viene distrutta, la missione fallisce. Il nome del bardo viene da missioni.txt: la missione si
- * ripete, con altri bardi e in altre locande.
+ * muore, o la città viene distrutta, la missione fallisce. Il bardo è il BardoLocanda, lo stesso in tutto il mondo (vedi
+ * RegistroPersonaggi): la missione si ripete, in altre locande, sempre con lui.
  * <ol>
  * <li>INCARICO, a inizio locazione, in una locanda nel bosco alla terza visita: l'intermezzo con il locandiere;</li>
  * <li>ACCETTAZIONE, in locazione, nella stessa locanda: il bardo si unisce al gruppo e la missione si ricorda la
@@ -110,7 +109,8 @@ public class NonSparateSulPianista extends MissioneAPassi {
 						.poi(ACCETTAZIONE);
 			case ACCETTAZIONE:
 				return prendiInScorta(MomentoControllo.IN_LOCAZIONE, this::nellaLocanda,
-								() -> new Viandante(getBardo(), EquipaggiamentoIniziale.livelloCasualeDalMondo()), true)
+								() -> RegistroPersonaggi.costruisciPersonaggio(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO),
+										EquipaggiamentoIniziale.livelloCasualeDalMondo()), true)
 						.esegui(() -> {
 							aggiungiProprieta(CITTA, cittaPiuVicina().name());
 							aggiungiProprieta(LIVELLO_DELL_INCARICO, String.valueOf(Statistiche.getLivello()));
@@ -153,7 +153,7 @@ public class NonSparateSulPianista extends MissioneAPassi {
 	}
 
 	private ScenaInCitta scenaDellaMoglie() {
-		// Il bardo (un Viandante, disegnato apposta come il bardo della locanda) è ancora nel gruppo, si congeda a fine missione:
+		// Il bardo (il BardoLocanda, con il nome che ha in tutto il mondo) è ancora nel gruppo, si congeda a fine missione:
 		// la scena lo mette dopo il capo, rivolto verso la moglie
 		return ScenaInCitta.conMoglieDelBardo()
 				.parlaIlMandante(getBardo() + "! Di nuovo in queste condizioni!")

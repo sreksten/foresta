@@ -8,6 +8,7 @@ import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.TipoLocazione;
+import com.threeamigos.foresta.tipi.PersonaggioNoto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import org.junit.jupiter.api.Test;
 
@@ -63,7 +64,8 @@ class ScenarioNonSparateSulPianistaTest {
             assertEquals("VIAGGIO", pianista.getPassoCorrente());
             Personaggio ugolino = pianista.getScortato().orElseThrow(AssertionError::new);
             assertEquals(pianista.getBardo(), ugolino.getNome());
-            assertEquals(TipoPersonaggio.VIANDANTE, ugolino.getClasse());
+            assertEquals(TipoPersonaggio.BARDO_LOCANDA, ugolino.getClasse());
+            assertEquals(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO).getNome(), ugolino.getNome(), "è il bardo della locanda, con il suo nome");
             assertTrue(partita.gruppo().isOspiteVulnerabile(ugolino));
 
             // La città è la più vicina alla locanda

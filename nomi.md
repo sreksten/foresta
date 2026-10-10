@@ -52,7 +52,7 @@ degli altri mandanti nei testi, le immagini proprie di borgomastro e levatrice e
   `MOGLIE_DEL_BARDO`, `BARDO_LOCANDA`, `CAPITANO_DELLE_GUARDIE`, `VIANDANTE` e i due generici `UOMO` e `DONNA` (classi `Uomo` e
   `Donna`, con l'immagine e il verso del locandiere e della moglie del bardo, e gli attributi dei non giocanti): sono il
   borgomastro e la levatrice, e i mandanti senza personaggio proprio (`ScenaInCitta.conMandante`/`conMandantessa`). Le scene
-  disegnano il personaggio ma non ne scrivono il nome; il Viandante delle missioni di scorta prende il nome dalla missione.
+  disegnano il personaggio ma non ne scrivono il nome; il Viandante delle missioni di scorta prende il nome dalla missione, mentre `NonSparateSulPianista` scorta il `BardoLocanda` costruito dal registro, con il suo nome.
 - **Nei testi e nelle schermate**: il capitano delle guardie si presenta con il nome nei testi delle missioni ("il capitano delle
   guardie, Rodolfo,": `IncaricoInCitta.mandante`/`mandanteDiCitta`, `Mandante.getApertura(nome)`, il mittente di `IlCorriere`);
   le schermate di armaiolo, venditore di pergamene, alchimista e incantatore hanno in cima il nome completo, spezzato su più
