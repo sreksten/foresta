@@ -55,6 +55,9 @@ public enum TipoPersonaggio {
 	MOGLIE_DEL_BARDO,
 	BARDO_LOCANDA,
 	CAPITANO_DELLE_GUARDIE,
+	// Gli abitanti senza una classe propria (il borgomastro, la levatrice, i mandanti qualunque): hanno l'aspetto del locandiere e della moglie del bardo
+	UOMO,
+	DONNA,
 	// Solo per le missioni di scorta: non si incontra e non si recluta
 	VIANDANTE;
 }

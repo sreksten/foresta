@@ -14,7 +14,7 @@ public enum PersonaggioNoto {
 	BARDO(TipoPersonaggio.BARDO_LOCANDA, Ambito.GLOBALE, "NOME_MASCHILE", false),
 	MOGLIE_DEL_BARDO(TipoPersonaggio.MOGLIE_DEL_BARDO, Ambito.GLOBALE, "NOME_MOGLIE", false),
 
-	BORGOMASTRO(null, Ambito.PER_CITTA, "NOME_ALTISONANTE", true),
+	BORGOMASTRO(TipoPersonaggio.UOMO, Ambito.PER_CITTA, "NOME_ALTISONANTE", true),
 	CAPITANO(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, Ambito.PER_CITTA, "NOME_CAPITANO", true),
 	ALCHIMISTA(TipoPersonaggio.ALCHIMISTA, Ambito.PER_CITTA, "NOME_MASTRO", true),
 	ARMAIOLO(TipoPersonaggio.ARMAIOLO, Ambito.PER_CITTA, "NOME_MASTRO", true),
@@ -23,7 +23,7 @@ public enum PersonaggioNoto {
 
 	LOCANDIERE(TipoPersonaggio.LOCANDIERE, Ambito.PER_LOCANDA, null, false),
 
-	LEVATRICE(null, Ambito.COMPARSA, "NOME_COMPARSA", false),
+	LEVATRICE(TipoPersonaggio.DONNA, Ambito.COMPARSA, "NOME_COMPARSA", false),
 
 	CAMPIONE(null, Ambito.PER_SFIDA, null, false);
 
@@ -53,8 +53,8 @@ public enum PersonaggioNoto {
 	}
 
 	/**
-	 * La classe del personaggio, o null se non ne ha ancora una (il borgomastro, la levatrice) o la dà la missione
-	 * (il campione).
+	 * La classe del personaggio (il borgomastro è un Uomo e la levatrice una Donna, finché non avranno una classe loro), o
+	 * null se la dà la missione (il campione).
 	 */
 	public TipoPersonaggio getTipo() {
 		return tipo;

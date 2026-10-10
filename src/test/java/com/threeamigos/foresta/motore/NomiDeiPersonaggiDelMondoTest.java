@@ -175,10 +175,13 @@ class NomiDeiPersonaggiDelMondoTest {
 	}
 
 	@Test
-	void ilBorgomastroNonHaAncoraUnaClasse() {
+	void ilBorgomastroEUnUomoELaLevatriceUnaDonna() {
 		ResidenteMD borgomastro = RegistroPersonaggi.getResidente(PersonaggioNoto.BORGOMASTRO, citta().get(0));
-		assertNull(borgomastro.getClasse());
-		assertThrows(IllegalStateException.class, () -> RegistroPersonaggi.costruisciPersonaggio(borgomastro));
+		assertEquals(TipoPersonaggio.UOMO, borgomastro.getClasse());
+		assertEquals(borgomastro.getNome(), RegistroPersonaggi.costruisciPersonaggio(borgomastro).getNomeProprio().orElse(null));
+		ResidenteMD levatrice = RegistroPersonaggi.getResidente(PersonaggioNoto.LEVATRICE);
+		assertEquals(TipoPersonaggio.DONNA, levatrice.getClasse());
+		assertEquals(Personaggio.Sesso.FEMMINA, RegistroPersonaggi.costruisciPersonaggio(levatrice).getSesso());
 	}
 
 	@Test

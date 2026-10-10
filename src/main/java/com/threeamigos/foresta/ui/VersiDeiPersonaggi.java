@@ -69,6 +69,9 @@ public final class VersiDeiPersonaggi {
 		VERSI.put(TipoPersonaggio.VIANDANTE, Verso.SINISTRA);
 		VERSI.put(TipoPersonaggio.BARDO_LOCANDA, Verso.SINISTRA);
 		VERSI.put(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, Verso.SINISTRA);
+		// Come il locandiere e la moglie del bardo, di cui hanno l'immagine
+		VERSI.put(TipoPersonaggio.UOMO, Verso.SINISTRA);
+		VERSI.put(TipoPersonaggio.DONNA, Verso.SINISTRA);
 	}
 
 	private VersiDeiPersonaggi() {

@@ -57,7 +57,9 @@ public enum ClassePersonaggioImmagine {
     MOGLIE_DEL_BARDO(TipoPersonaggio.MOGLIE_DEL_BARDO, "personaggi/MoglieDelBardo.gif", "icone/MoglieDelBardo.gif"),
     VIANDANTE(TipoPersonaggio.VIANDANTE, "personaggi/Viandante.gif", "icone/Viandante.gif"),
     BARDO_LOCANDA(TipoPersonaggio.BARDO_LOCANDA, "personaggi/BardoLocanda.gif", "icone/BardoLocanda.gif"),
-    CAPITANO_DELLE_GUARDIE(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, "personaggi/CapitanoDelleGuardie.gif", "icone/CapitanoDelleGuardie.gif");
+    CAPITANO_DELLE_GUARDIE(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, "personaggi/CapitanoDelleGuardie.gif", "icone/CapitanoDelleGuardie.gif"),
+    UOMO(TipoPersonaggio.UOMO, "personaggi/Uomo.gif", "icone/Uomo.gif"),
+    DONNA(TipoPersonaggio.DONNA, "personaggi/Donna.gif", "icone/Donna.gif");
 
     private final TipoPersonaggio classePersonaggio;
     private final BufferedImage immagine;

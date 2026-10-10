@@ -87,6 +87,8 @@ public class LanciatoreDeiDadi {
             case VENDITORE_DI_PERGAMENE:
             case INCANTATORE:
             case MOGLIE_DEL_BARDO:
+            case UOMO:
+            case DONNA:
             return BARDO;
             case CENTAURO: return CENTAURO;
             case CHIMERA: return CHIMERA;
@@ -153,6 +155,8 @@ public class LanciatoreDeiDadi {
             case VENDITORE_DI_PERGAMENE:
             case INCANTATORE:
             case MOGLIE_DEL_BARDO:
+            case UOMO:
+            case DONNA:
             case ELFA:
             case ELFO:
             case GUERRIERA:

@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * La pagina di un intermezzo in una strada di città: il mandante di una missione aspetta sulla destra, il gruppo
  * arriva in fila come quando entra in un negozio (vedi {@link ScenaNegozio}) e, appena arrivato, cominciano le
- * battute. Il mandante è un personaggio ({@link #con}): un mandante senza personaggio proprio ha l'aspetto del locandiere ({@link #conMandante()}) o, se donna, della moglie del bardo ({@link #conMandantessa()}); oppure è il locandiere
+ * battute. Il mandante è un personaggio ({@link #con}): un mandante senza personaggio proprio è un Uomo ({@link #conMandante()}) o, se donna, una Donna ({@link #conMandantessa()}), con l'aspetto del locandiere e della moglie del bardo; oppure è il locandiere
  * ({@link #conLocandiere()}), l'armaiolo ({@link #conArmaiolo()}) o l'alchimista ({@link #conAlchimista()}), o è il capitano delle guardie
  * ({@link #conCapitano()}).
  * <pre>
@@ -49,17 +49,17 @@ public final class ScenaInCitta {
 	}
 
 	/**
-	 * Un mandante di cui non c'è ancora il personaggio, se maschio: ha l'aspetto del locandiere.
+	 * Un mandante di cui non c'è ancora il personaggio, se maschio: un Uomo (che ha l'aspetto del locandiere).
 	 */
 	public static ScenaInCitta conMandante() {
-		return con(TipoPersonaggio.LOCANDIERE);
+		return con(TipoPersonaggio.UOMO);
 	}
 
 	/**
-	 * Come {@link #conMandante()}, ma una donna: ha l'aspetto della moglie del bardo.
+	 * Come {@link #conMandante()}, ma una donna: una Donna (che ha l'aspetto della moglie del bardo).
 	 */
 	public static ScenaInCitta conMandantessa() {
-		return con(TipoPersonaggio.MOGLIE_DEL_BARDO);
+		return con(TipoPersonaggio.DONNA);
 	}
 
 	/**

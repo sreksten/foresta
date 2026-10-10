@@ -49,6 +49,8 @@ public enum ClasseIcona {
 	VIANDANTE(TipoPersonaggio.VIANDANTE, "icone/Viandante.gif", Sfondo.VERDE),
 	BARDO_LOCANDA(TipoPersonaggio.BARDO_LOCANDA, "icone/BardoLocanda.gif", Sfondo.VERDE),
 	CAPITANO_DELLE_GUARDIE(TipoPersonaggio.CAPITANO_DELLE_GUARDIE, "icone/CapitanoDelleGuardie.gif", Sfondo.VERDE),
+	UOMO(TipoPersonaggio.UOMO, "icone/Uomo.gif", Sfondo.VERDE),
+	DONNA(TipoPersonaggio.DONNA, "icone/Donna.gif", Sfondo.VERDE),
 
 	/* Pannello principale */
 	SINGOLO_ATTACCO(Comando.SINGOLO_ATTACCO,"icone/SingoloAttacco.gif", Sfondo.VERDE),

@@ -7,8 +7,8 @@ import java.util.function.Supplier;
 
 /**
  * Chi compare nella scena in città quando un incarico si offre. Lo sceglie la riga della grammatica dell'incarico
- * (campo ASPETTO): un personaggio, se il mandante ne ha uno, altrimenti QUALUNQUE (un uomo, con l'aspetto del
- * locandiere) o DONNA (con quello della moglie del bardo).
+ * (campo ASPETTO): un personaggio, se il mandante ne ha uno, altrimenti QUALUNQUE (un Uomo, con l'aspetto del
+ * locandiere) o DONNA (una Donna, con quello della moglie del bardo).
  */
 enum AspettoDelMandante {
 
