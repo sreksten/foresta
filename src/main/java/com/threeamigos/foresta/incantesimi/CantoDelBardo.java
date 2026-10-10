@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.incantesimi;
 
+import com.threeamigos.foresta.motore.Gruppo;
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
@@ -31,6 +32,24 @@ public final class CantoDelBardo {
 		return personaggio.isVivo() && conosciutoDa(personaggio.getClasse())
 				&& !personaggio.hasEffettoDiStato(TipoEffettoDiStato.SILENZIATO)
 				&& personaggio.getMagia() >= FabbricaCanti.crea(tipo, personaggio).getCostoLancio();
+	}
+
+	/**
+	 * I canti che il personaggio può cantare adesso <b>nello scontro</b>: quelli che può cantare (vedi
+	 * {@link #cantiPossibili}) e che servono a qualcosa. I canti si cantano solo contro avversari vivi, quindi senza non
+	 * ce n'è nessuno; il canto curativo serve se qualcuno del gruppo è ferito.
+	 */
+	public static List<TipoCanto> cantiUtili(Personaggio personaggio, Gruppo gruppo, Gruppo gruppoAvversario) {
+		List<TipoCanto> canti = new ArrayList<>();
+		if (gruppoAvversario.getPersonaggiVivi().isEmpty()) {
+			return canti;
+		}
+		for (TipoCanto tipo : cantiPossibili(personaggio)) {
+			if (tipo != TipoCanto.CURATIVO || CantoCurativo.piuFerito(gruppo).isPresent()) {
+				canti.add(tipo);
+			}
+		}
+		return canti;
 	}
 
 	/**

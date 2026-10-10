@@ -503,6 +503,13 @@ public abstract class LocazioneBase implements Locazione {
 				Logger.log("LocazioneBase.QUALE_FORMULA: " + azione);
 				if (azione == Comando.NO_INCANTESIMO) {
 					return annullaScelta();
+				} else if (TipoCanto.ofComando(azione) != null) {
+					Stato statoDopoIlCanto = cantaUnCanto(gruppo.getFormulante(), TipoCanto.ofComando(azione), gruppo, gruppoAvversario);
+					if (statoDopoIlCanto != null) {
+						return statoDopoIlCanto;
+					}
+					statoLocazione = StatoLocazione.IN_LOCAZIONE;
+					break;
 				} else if (azione == Comando.DARDO_ARCANO) {
 					Stato statoDopoIlDardo = lanciaDardoArcano(gruppo.getFormulante(), gruppo, gruppoAvversario);
 					if (statoDopoIlDardo != null) {
@@ -793,6 +800,33 @@ public abstract class LocazioneBase implements Locazione {
 	}
 
 	/**
+	 * Un canto del Bardo o della Cantastorie: costa MAGIA, non consuma pergamene, occupa il turno e l'avversario
+	 * risponde (vedi {@link CantoDelBardo}).
+	 *
+	 * @return lo stato in cui passare se lo scontro finisce (avversari tutti morti o gioco perso), altrimenti null
+	 */
+	private Stato cantaUnCanto(Personaggio cantore, TipoCanto tipo, GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
+		opzioneCorruzioneDisponibile = false;
+		opzioneAmiciziaDisponibile = false;
+		// Il comando poteva essere stato dato quando il canto serviva e non serve più (e viceversa)
+		if (!CantoDelBardo.cantiUtili(cantore, gruppo, gruppoAvversario).contains(tipo)) {
+			return null;
+		}
+		if (!FabbricaCanti.crea(tipo, cantore).canta(cantore, gruppo, gruppoAvversario)) {
+			return null;
+		}
+		if (gruppoAvversario.getNumeroPersonaggiVivi() == 0) {
+			setCompleta(true);
+			return Stato.FINE_LOCAZIONE;
+		}
+		rispostaAvversaria(cantore, gruppo, gruppoAvversario);
+		if (!gruppo.getCapo().isVivo()) {
+			return Stato.GIOCO_PERSO;
+		}
+		return null;
+	}
+
+	/**
 	 * Il dardo arcano di Mago ed Elfo contro il primo avversario vivo: costa MAGIA, non consuma pergamene.
 	 *
 	 * @return lo stato in cui passare se lo scontro finisce (avversari tutti morti o gioco perso), altrimenti null
@@ -846,7 +880,8 @@ public abstract class LocazioneBase implements Locazione {
 		// Possiamo formulare incantesimi? Si se ne abbiamo almeno uno e se uno dei personaggi vivi può lanciarlo,
 		// oppure se un Mago o un Elfo vivo ha la MAGIA per il dardo arcano, o un Sacerdote per l'alba sacra
 		boolean incantesimoPossibile = gruppo.getPersonaggiVivi().stream()
-				.anyMatch(p -> DardoArcano.puoLanciarlo(p) || AlbaSacra.puoLanciarlaInnata(p));
+				.anyMatch(p -> DardoArcano.puoLanciarlo(p) || AlbaSacra.puoLanciarlaInnata(p)
+						|| !CantoDelBardo.cantiUtili(p, gruppo, gruppoAvversario).isEmpty());
 		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
 			if (gruppo.getIncantesimi(classeIncantesimo) > 0 &&
 					gruppo.getPersonaggiVivi().stream().anyMatch(p -> p.puoFormulare(classeIncantesimo))) {

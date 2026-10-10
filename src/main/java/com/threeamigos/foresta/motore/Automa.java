@@ -6,6 +6,8 @@ import com.threeamigos.foresta.eventi.interni.*;
 import com.threeamigos.foresta.eventi.notifiche.*;
 import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.incantesimi.AlbaSacra;
+import com.threeamigos.foresta.incantesimi.CantoDelBardo;
+import com.threeamigos.foresta.incantesimi.TipoCanto;
 import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.FabbricaIncantesimi;
 import com.threeamigos.foresta.incantesimi.Incantesimo;
@@ -990,6 +992,10 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 		boolean albaSacraInnata = AlbaSacra.puoLanciarlaInnata(formulante);
 		if (albaSacraInnata) {
 			comandiPossibili.add(Comando.ALBA_SACRA);
+		}
+		// Bardo e Cantastorie hanno i canti, che non consumano pergamene e si cantano solo contro avversari vivi
+		for (TipoCanto canto : CantoDelBardo.cantiUtili(formulante, gruppo, gruppoAvversario)) {
+			comandiPossibili.add(canto.getComando());
 		}
 		for (ClasseIncantesimo classeIncantesimo : ClasseIncantesimo.values()) {
 			if (albaSacraInnata && classeIncantesimo == ClasseIncantesimo.ALBA_SACRA) {
