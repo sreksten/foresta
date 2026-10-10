@@ -227,6 +227,44 @@ class NomiDeiPersonaggiDelMondoTest {
 	}
 
 	@Test
+	void iNomiSopravvivonoAlSalvataggioEAllaRilettura() throws IOException {
+		List<String> prima = nomiCompletiDeiResidenti();
+		String bardoPrima = RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO).getNome();
+		int quanti = ModelloDati.getIstanza().getRegistroPersonaggiMD().getResidenti().size();
+
+		StringWriter scritto = new StringWriter();
+		PrintWriter stream = new PrintWriter(scritto);
+		ModelloDati.getIstanza().salva(stream);
+		stream.flush();
+		ModelloDati riletto = new ModelloDati();
+		riletto.leggi(new BufferedReader(new StringReader(scritto.toString())));
+		// Una partita nuova pesca altri nomi: se la rilettura funziona, quelli salvati tornano uguali
+		Foresta.reimposta();
+		assertNotEquals(prima, nomiCompletiDeiResidenti(), "la partita nuova dovrebbe avere altri nomi");
+		ModelloDati.setIstanza(riletto);
+
+		assertEquals(quanti, riletto.getRegistroPersonaggiMD().getResidenti().size());
+		assertEquals(prima, nomiCompletiDeiResidenti());
+		assertEquals(quanti, riletto.getRegistroPersonaggiMD().getResidenti().size(), "nessun residente è stato ripescato");
+		assertEquals(bardoPrima, RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO).getNome());
+		assertEquals(bardoPrima, new NonSparateSulPianista().getBardo());
+	}
+
+	private static List<String> nomiCompletiDeiResidenti() {
+		List<String> nomi = new ArrayList<>();
+		for (TipoLocazione citta : citta()) {
+			for (PersonaggioNoto noto : PersonaggioNoto.values()) {
+				if (noto.getAmbito() == PersonaggioNoto.Ambito.PER_CITTA) {
+					nomi.add(RegistroPersonaggi.getNomeCompleto(RegistroPersonaggi.getResidente(noto, citta)));
+				}
+			}
+		}
+		nomi.add(RegistroPersonaggi.getNomeCompleto(RegistroPersonaggi.getResidente(PersonaggioNoto.BARDO)));
+		nomi.add(RegistroPersonaggi.getNomeCompleto(RegistroPersonaggi.getResidente(PersonaggioNoto.MOGLIE_DEL_BARDO)));
+		return nomi;
+	}
+
+	@Test
 	void unaNuovaPartitaDimenticaIResidenti() {
 		RegistroPersonaggi.registraCampione("Uberto l'Invitto", TipoPersonaggio.GUERRIERO);
 		Foresta.reimposta();
