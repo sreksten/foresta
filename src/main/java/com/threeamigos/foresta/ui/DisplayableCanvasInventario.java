@@ -243,14 +243,16 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
                 tipoAttributo.getDescrizione(), fontSmall, coloreEffettivo,
                 null, tipoAttributo);
         nodo.setFigliVisibili(statoDi(tipoAttributo).isFigliVisibili());
+        // La causa del valore fisso (sotto l'attributo) è gialla, ma diventa bianca insieme all'attributo sotto il mouse
+        DoomdarkColorModel.Color coloreCausa = coloreEffettivo == DoomdarkColorModel.Color.WHITE ? DoomdarkColorModel.Color.WHITE : DoomdarkColorModel.Color.YELLOW;
         fissaggio.ifPresent(f -> {
             ModificatoreAttributoMD modificatore = f.getModificatore();
             String da = f.getFonte().isEmpty() ? "" : "da " + f.getFonte();
             String durata = modificatore.isTemporaneo() ? " (" + modificatore.descrizioneDurata().replaceFirst("^per ", "ancora ") + ")" : "";
             nodo.creaNodo(
-                    "Fissato a " + (int) modificatore.getQuantita(), fontSmall, DoomdarkColorModel.Color.YELLOW,
+                    "Fissato a " + (int) modificatore.getQuantita(), fontSmall, coloreCausa,
                     null, null, null,
-                    (da + durata).trim().isEmpty() ? null : (da + durata).trim(), fontSmall, DoomdarkColorModel.Color.YELLOW,
+                    (da + durata).trim().isEmpty() ? null : (da + durata).trim(), fontSmall, coloreCausa,
                     null, tipoAttributo);
         });
     }
