@@ -33,6 +33,15 @@ public final class ScenaInLocanda {
 	}
 
 	/**
+	 * Il bardo della locanda, seduto in un angolo: parla con {@link #parlaIlBardo}. Guarda verso sinistra, da dove arriva il
+	 * gruppo.
+	 */
+	public static ScenaInLocanda conBardo() {
+		return new ScenaInLocanda(ElementoIntermezzo.personaggio(ID_LOCANDIERE, TipoPersonaggio.BARDO_LOCANDA, X_LOCANDIERE, Y_PERSONAGGI)
+				.guarda(Verso.SINISTRA));
+	}
+
+	/**
 	 * Un sacerdote, o una sacerdotessa, seduto nella locanda: parla con {@link #parlaIlLocandiere}, al suo posto.
 	 * Guarda verso sinistra, da dove arriva il gruppo,.
 	 *
@@ -49,6 +58,13 @@ public final class ScenaInLocanda {
 	public ScenaInLocanda parlaIlLocandiere(String testo) {
 		scena.parlaIlNegoziante(testo);
 		return this;
+	}
+
+	/**
+	 * Parla il bardo di {@link #conBardo()}.
+	 */
+	public ScenaInLocanda parlaIlBardo(String testo) {
+		return parlaIlLocandiere(testo);
 	}
 
 	public ScenaInLocanda parlaIlCapo(String testo) {

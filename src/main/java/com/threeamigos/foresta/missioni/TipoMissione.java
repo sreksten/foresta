@@ -263,7 +263,7 @@ public enum TipoMissione {
      * Esempio: liberare un fabbro elfo o un mago imprigionato
      */
     SALVATAGGIO(SupertipoMissione.PROTEZIONE),
-    // Coperto da: IlPellegrino, NonSparateSulPianista, IlRapimento
+    // Coperto da: IlPellegrino, NonSparateSulPianista, IlViaggioDellaMoglie, IlRapimento
     /**
      * Esempio: proteggere un mercante che attraversa un passo di montagna
      */

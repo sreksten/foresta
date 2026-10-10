@@ -111,6 +111,7 @@ Le ricompense in monete di questo catalogo sono le paghe del primo livello del m
 | `IlSoccorso` | riportare a casa un ferito o un prigioniero fra i nemici (il taglialegna fra le arpie, il minatore e il troll…), da righe di `SOCCORSO` (`SoccorsoRichiesto`); è ripetibile |
 | `IlPellegrino` | accompagnare un pellegrino a un tempio (rivendicato, segnato, **sicuro**: niente avversari né oggetti a caso all'arrivo) e tornare dalla sorella; `PARTENZA`, `VIAGGIO`, `META`; 25 monete |
 | `NonSparateSulPianista` | alla **terza visita** a una locanda nel bosco, a una visita tranquilla, il locandiere affida il bardo ubriaco da riportare a casa nella città più vicina; il bardo è il `BardoLocanda` del registro dei personaggi, con il suo nome, e viaggia come ospite **non vulnerabile** (è così ubriaco che i mostri non si curano di lui: non viene attaccato e non può morire); `INCARICO`, `ACCETTAZIONE`, `VIAGGIO`, `ARRIVO`; 20 monete; se la città è distrutta, fallisce; è su `MissioneAPassi` e non su `IncaricoInCitta` perché nasce in una locanda |
+| `IlViaggioDellaMoglie` | dopo che `NonSparateSulPianista` è stata completata, rientrando in una locanda nel bosco già visitata (la prima visita ha il suo benvenuto), a una visita tranquilla: il `BardoLocanda` ringrazia e chiede di accompagnare la moglie dalla città dove il gruppo l'aveva riportato la prima volta a un'altra, scelta a caso; la moglie è un ospite **non vulnerabile**; `INCARICO`, `ACCETTAZIONE`, `PRELEVAMENTO`, `PARTENZA`, `VIAGGIO`, `ARRIVO`; 25 monete per livello del mondo; se la città di partenza o quella di arrivo è distrutta, fallisce; il nome della missione è "Il viaggio di" e il nome della moglie del bardo |
 
 ### Raccolta e consegna
 
@@ -199,7 +200,7 @@ I contenuti variabili sono in `missioni.txt` (e `leggendari.txt`), caricate da `
 
 ### Protezione
 
-- `IlRapimento`: `SALVATAGGIO`, `SCORTA`; `IlSoccorso`: `SALVATAGGIO`, `SOCCORSO`, `EVACUAZIONE`, `PRIMO_SOCCORSO`, `ASILO`; `IlPellegrino`, `NonSparateSulPianista`: `SCORTA`
+- `IlRapimento`: `SALVATAGGIO`, `SCORTA`; `IlSoccorso`: `SALVATAGGIO`, `SOCCORSO`, `EVACUAZIONE`, `PRIMO_SOCCORSO`, `ASILO`; `IlPellegrino`, `NonSparateSulPianista`, `IlViaggioDellaMoglie`: `SCORTA`
 - `LaSorveglianza`: `DIFESA`, `QUARANTENA`, `CONTENIMENTO`, `VIGILIA`
 - `IlCorriere`: `GUARIGIONE`, `EPIDEMIA`, `CURA_MAGICA`, `ANTI_VELENO` (rimedi e antidoti, spesso urgenti)
 - `IlRituale`: `POSSESSIONE`, `BARRIERA_MAGICA`, `SANTUARIO`, `PURIFICAZIONE`

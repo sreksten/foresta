@@ -38,6 +38,7 @@ public final class FabbricaMissioni {
 		COSTRUTTORI.put(ClasseMissione.IL_PELLEGRINO, IlPellegrino::new);
 		COSTRUTTORI.put(ClasseMissione.IL_RAPIMENTO, IlRapimento::new);
 		COSTRUTTORI.put(ClasseMissione.NON_SPARATE_SUL_PIANISTA, NonSparateSulPianista::new);
+		COSTRUTTORI.put(ClasseMissione.IL_VIAGGIO_DELLA_MOGLIE, IlViaggioDellaMoglie::new);
 		COSTRUTTORI.put(ClasseMissione.CACCIATORE_DI_TAGLIE, CacciatoreDiTaglie::new);
 		COSTRUTTORI.put(ClasseMissione.IL_CARTOGRAFO, IlCartografo::new);
 		COSTRUTTORI.put(ClasseMissione.IL_CORRIERE, IlCorriere::new);

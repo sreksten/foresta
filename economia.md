@@ -18,7 +18,7 @@ Gli oggetti per terra compaiono solo alla prima visita di una cella e non ricomp
 | Cofano nei castelli | 5-10 monete, 1/6 | 5 per castello, 4 castelli | ~22 |
 | Artefatto o pergamena da un cofano | un artefatto casuale (10%) o un ingrediente magico (10%) a cofano, al livello del mondo | ogni cofano aperto | da rivendere o usare: 1 cofano su 5 |
 | Compagno reclutato in locanda | 5-15 monete + 0-10 preziosi | fino a 4 volte | ~40 + ~20 preziosi |
-| Missioni (gli incarichi in città, le storie di Fleena e Ruuna, il pianista) | la paga base della missione per il livello del mondo di quando si offre (20 al primo livello e 200 al decimo per le due storie) | le due storie una volta, gli incarichi senza città fissa si ripetono | cresce col livello |
+| Missioni (gli incarichi in città, le storie di Fleena e Ruuna, il pianista, il viaggio della moglie) | la paga base della missione per il livello del mondo di quando si offre (20 al primo livello e 200 al decimo per le due storie) | le due storie una volta, gli incarichi senza città fissa si ripetono | cresce col livello |
 | La sfida dei campioni (vedi [`carta_forbici_sasso.md`](carta_forbici_sasso.md)) | 100 monete per il livello del mondo di quando parte, più un leggendario | una volta, dopo tre sfide a carta, forbici e sasso vinte | ~100 × livello; non misurata col giocatore automatico |
 | Aiuto del mercenario (offerta dopo corruzione o amicizia) | 1-6 monete | di rado | trascurabile |
 
