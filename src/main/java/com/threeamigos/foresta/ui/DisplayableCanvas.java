@@ -530,15 +530,14 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 				riquadroMissioni.disegnaMissioni(graphics);
 				break;
 			case INFO_COMBATTIMENTO:
-				riquadroCombattimento.disegnaInfoCombattimento(graphics);
-				break;
 			case SFIDA:
-				// Si disegna dopo tutti gli altri, così nessuno lo copre
+				// Si disegnano dopo tutti gli altri, così nessuno li copre
 				break;
 			default:
 				throw new IllegalArgumentException();
 			}
 		}
+		riquadroCombattimento.disegnaInfoCombattimento(graphics);
 		riquadroSfida.disegna(graphics);
 
 //		gfx.setColor(Color.RED);

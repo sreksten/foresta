@@ -24,7 +24,7 @@ class DisplayableCanvasRiquadroCombattimento implements Finestra {
 
 	DisplayableCanvasRiquadroCombattimento(int parentWidth, int parentHeight, VistaPartita vistaPartita) {
 		this.vistaPartita = vistaPartita;
-		cornice = ImageCache.cornicePiccola;
+		cornice = ImageCache.corniceCombattimento;
 		visible = false;
 		xOffset = (parentWidth - cornice.getWidth()) >> 1;
 		yOffset = (parentHeight - cornice.getHeight()) >> 1;
@@ -55,10 +55,15 @@ class DisplayableCanvasRiquadroCombattimento implements Finestra {
 		this.visible = visible;
 	}
 
+	/** Larghezza a disposizione del nome: la cornice meno lo spazio per "salute/massima". */
+	private int larghezzaMassimaNome() {
+		return cornice.getWidth() - 30 - FontTool.getWidth(fontMedium, "000/000");
+	}
+
 	void setCombattente(VistaPersonaggio combattente) {
 		this.combattente = combattente;
 		nomeCombattente = combattente.getNome(VistaPersonaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
-		int l = cornice.getWidth() - 30;
+		int l = larghezzaMassimaNome();
 		while (FontTool.getWidth(fontMedium, nomeCombattente) > l)
 			nomeCombattente = nomeCombattente.substring(0, nomeCombattente.length() - 2);
 	}
@@ -78,7 +83,7 @@ class DisplayableCanvasRiquadroCombattimento implements Finestra {
 					}
 				}
 			}
-			int l = cornice.getWidth() - 30;
+			int l = larghezzaMassimaNome();
 			while (FontTool.getWidth(fontMedium, nomeAvversario) > l) {
 				nomeAvversario = nomeAvversario.substring(0, nomeAvversario.length() - 2);
 			}
@@ -106,7 +111,7 @@ class DisplayableCanvasRiquadroCombattimento implements Finestra {
 		disegnaBarraSalute(graphics, x, y, percentualeSalute, larghezzaMassimaBarra, altezzaBarra);
 		disegnaNomeConOmbra(graphics, nomeCombattente, x + SPAZIATURA, y + offsetDaBarra);
 		x = xOffset + cornice.getWidth() - OFFSET_DA_CORNICE - SPAZIATURA;
-		disegnaSaluteConOmbra(graphics, combattente.getSalute(), x, y + offsetDaBarra);
+		disegnaSaluteConOmbra(graphics, combattente.getSalute(), combattente.getSaluteMassima(), x, y + offsetDaBarra);
 
 		if (avversario != null) {
 			x = xOffset + OFFSET_DA_CORNICE;
@@ -116,7 +121,7 @@ class DisplayableCanvasRiquadroCombattimento implements Finestra {
 			disegnaBarraSalute(graphics, x, y, percentualeSalute, larghezzaMassimaBarra, altezzaBarra);
 			disegnaNomeConOmbra(graphics, nomeAvversario, x + SPAZIATURA, y + offsetDaBarra);
 			x = xOffset + cornice.getWidth() - OFFSET_DA_CORNICE;
-			disegnaSaluteConOmbra(graphics, avversario.getSalute(), x, y + offsetDaBarra);
+			disegnaSaluteConOmbra(graphics, avversario.getSalute(), avversario.getSaluteMassima(), x, y + offsetDaBarra);
 		}
 	}
 
@@ -137,9 +142,9 @@ class DisplayableCanvasRiquadroCombattimento implements Finestra {
 		graphics.drawImage(testoTrasformatoBianco, x, y, null);
 	}
 
-	private void disegnaSaluteConOmbra(Graphics2D graphics, int salute, int xIniziale, int y) {
+	private void disegnaSaluteConOmbra(Graphics2D graphics, int salute, int saluteMassima, int xIniziale, int y) {
 		final int OFFSET_OMBRA = 2;
-		String testo = String.valueOf(salute);
+		String testo = salute + "/" + saluteMassima;
 		Image testoTrasformatoNero = ImageCache.get(testo, fontMedium, DoomdarkColorModel.Color.BLACK);
 		int x = xIniziale - testoTrasformatoNero.getWidth(null);
 		graphics.drawImage(testoTrasformatoNero, x + OFFSET_OMBRA, y + OFFSET_OMBRA, null);
