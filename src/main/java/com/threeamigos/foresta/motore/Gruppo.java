@@ -7,8 +7,8 @@ import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.strumenti.Logger;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -152,11 +152,11 @@ public abstract class Gruppo implements VistaGruppo {
 	}
 
 	/**
-	 * Un ospite che un avversario attacca al posto di un personaggio del gruppo, se ce n'è uno (vedi
-	 * GruppoGiocatore): per gli altri gruppi mai.
+	 * Gli ospiti che un avversario può attaccare, come i personaggi del gruppo (vedi GruppoGiocatore): per gli altri
+	 * gruppi nessuno.
 	 */
-	public Optional<Personaggio> scegliOspiteBersaglio() {
-		return Optional.empty();
+	public List<Personaggio> getOspitiBersaglio() {
+		return Collections.emptyList();
 	}
 
 	public void rimuoviPersonaggi() {

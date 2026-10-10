@@ -120,7 +120,7 @@ class ScenarioIlViaggioDellaMoglieTest {
             assertEquals(moglie, signora.getNome());
             assertFalse(partita.gruppo().isOspiteVulnerabile(signora));
             for (int i = 0; i < 500; i++) {
-                assertFalse(partita.gruppo().scegliOspiteBersaglio().isPresent(), "un avversario ha attaccato la moglie del bardo");
+                assertTrue(partita.gruppo().getOspitiBersaglio().isEmpty(), "un avversario ha attaccato la moglie del bardo");
             }
 
             // All'arrivo paga e si separa dal gruppo

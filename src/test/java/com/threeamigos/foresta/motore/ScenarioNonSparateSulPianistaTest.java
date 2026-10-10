@@ -107,10 +107,8 @@ class ScenarioNonSparateSulPianistaTest {
             Personaggio ugolino = pianista.getScortato().orElseThrow(AssertionError::new);
 
             assertFalse(partita.gruppo().isOspiteVulnerabile(ugolino));
-            // Gli avversari non lo scelgono mai come bersaglio, per quanti attacchi facciano
-            for (int i = 0; i < 500; i++) {
-                assertFalse(partita.gruppo().scegliOspiteBersaglio().isPresent(), "un avversario ha attaccato il bardo ubriaco");
-            }
+            // Gli avversari non lo scelgono mai come bersaglio
+            assertTrue(partita.gruppo().getOspitiBersaglio().isEmpty(), "un avversario ha attaccato il bardo ubriaco");
             assertTrue(ugolino.isVivo());
             assertTrue(partita.testi().stream().anyMatch(t -> t.contains("i mostri non si curano nemmeno di lui")), String.valueOf(partita.testi()));
         }

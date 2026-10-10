@@ -482,41 +482,52 @@ public abstract class PersonaggioBase implements Personaggio {
 		}
 	}
 
+	/**
+	 * Chi attacca un gruppo: il Mago o la Maga più potenti (di livello più alto, a parità il primo), altrimenti il
+	 * Sacerdote o la Sacerdotessa più potenti, altrimenti uno a caso fra tutti i personaggi vivi e gli ospiti
+	 * vulnerabili vivi (vedi {@link Gruppo#getOspitiBersaglio()}), tutti con la stessa probabilità.
+	 */
 	public void attacca(Gruppo gruppoBersaglio) {
-		// Un ospite vulnerabile del gruppo può prendersi il colpo al posto di un personaggio
-		Optional<Personaggio> ospite = gruppoBersaglio.scegliOspiteBersaglio();
-		if (ospite.isPresent()) {
-			attacca(ospite.get());
-			return;
+		Personaggio bersaglio = scegliBersaglio(gruppoBersaglio);
+		if (bersaglio != null) {
+			attacca(bersaglio);
 		}
+	}
+
+	/**
+	 * @return null se non c'è nessuno da attaccare
+	 */
+	static Personaggio scegliBersaglio(Gruppo gruppoBersaglio) {
 		List<Personaggio> personaggiPossibili = gruppoBersaglio.getPersonaggiVivi();
 		if (personaggiPossibili.isEmpty()) {
 			// Sono tutti in panchina (si sono arresi): non c'è più nessuno da attaccare
-			return;
+			return null;
 		}
-		Personaggio bersaglio = null;
-		for (Personaggio personaggio : personaggiPossibili) {
-			if (personaggio.getClasse() == TipoPersonaggio.MAGA || personaggio.getClasse() == TipoPersonaggio.MAGO) {
-				bersaglio = personaggio;
-				break;
-			}
+		Personaggio bersaglio = piuPotenteTra(personaggiPossibili, TipoPersonaggio.MAGO, TipoPersonaggio.MAGA);
+		if (bersaglio == null) {
+			bersaglio = piuPotenteTra(personaggiPossibili, TipoPersonaggio.SACERDOTE, TipoPersonaggio.SACERDOTESSA);
 		}
 		if (bersaglio == null) {
-			for (Personaggio personaggio : personaggiPossibili) {
-				if (personaggio.getClasse() == TipoPersonaggio.ELFA || personaggio.getClasse() == TipoPersonaggio.ELFO) {
-					bersaglio = personaggio;
-					break;
-				}
+			List<Personaggio> candidati = new ArrayList<>(personaggiPossibili);
+			candidati.addAll(gruppoBersaglio.getOspitiBersaglio());
+			bersaglio = candidati.get(Dado.tiraAncheAUnaFaccia(candidati.size()) - 1);
+		}
+		return bersaglio;
+	}
+
+	/**
+	 * Il personaggio di una delle classi indicate con il livello più alto (a parità il primo), null se non ce ne sono
+	 */
+	private static Personaggio piuPotenteTra(List<Personaggio> personaggi, TipoPersonaggio primaClasse, TipoPersonaggio secondaClasse) {
+		Personaggio piuPotente = null;
+		for (Personaggio personaggio : personaggi) {
+			TipoPersonaggio classe = personaggio.getClasse();
+			if ((classe == primaClasse || classe == secondaClasse)
+					&& (piuPotente == null || personaggio.getLivello() > piuPotente.getLivello())) {
+				piuPotente = personaggio;
 			}
 		}
-		if (bersaglio == null) {
-			for (Personaggio personaggio : personaggiPossibili) {
-				if (bersaglio == null || Dado.tira(2) == 1) {
-					bersaglio = personaggio;
-				}
-			}
-		}
-		attacca(bersaglio);
+		return piuPotente;
 	}
 
 	public void attacca(Personaggio bersaglio) {

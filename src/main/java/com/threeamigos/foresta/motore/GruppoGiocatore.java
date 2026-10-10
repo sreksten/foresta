@@ -118,7 +118,7 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	 * Chi viaggia con il gruppo senza farne parte, per esempio chi una missione deve scortare: non combatte, non
 	 * conta nei limiti del gruppo e non si equipaggia. Gli ospiti possono essere quanti si vuole. Un ospite
 	 * vulnerabile (un ostaggio, un ferito da soccorrere) può essere attaccato dagli avversari, e quindi morire (vedi
-	 * {@link #scegliOspiteBersaglio()}); gli altri no.
+	 * {@link #getOspitiBersaglio()}); gli altri no.
 	 */
 	public final List<Personaggio> getOspiti() {
 		return Collections.unmodifiableList(ospiti);
@@ -152,17 +152,13 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 	}
 
 	/**
-	 * Un avversario attacca un ospite vulnerabile vivo con probabilità proporzionale: con tre personaggi vivi e un
-	 * ospite vulnerabile, un attacco su quattro va all'ospite.
+	 * Gli ospiti vulnerabili vivi: un avversario che non ha un bersaglio preferito li sceglie fra i personaggi vivi
+	 * con la stessa probabilità, quindi con tre personaggi vivi e un ospite vulnerabile un attacco su quattro va
+	 * all'ospite.
 	 */
 	@Override
-	public Optional<Personaggio> scegliOspiteBersaglio() {
-		List<Personaggio> vulnerabili = getOspitiVulnerabiliVivi();
-		int vivi = getPersonaggiVivi().size();
-		if (vulnerabili.isEmpty() || Dado.tiraAncheAUnaFaccia(vivi + vulnerabili.size()) <= vivi) {
-			return Optional.empty();
-		}
-		return Optional.of(vulnerabili.get(Dado.tiraAncheAUnaFaccia(vulnerabili.size()) - 1));
+	public List<Personaggio> getOspitiBersaglio() {
+		return getOspitiVulnerabiliVivi();
 	}
 
 	public final void rimuoviOspite(Personaggio ospite) {

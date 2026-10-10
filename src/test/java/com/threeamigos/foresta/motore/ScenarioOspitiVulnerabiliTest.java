@@ -14,6 +14,8 @@ import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRiposo;
 import org.junit.jupiter.api.Test;
 
+import java.util.Collections;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
@@ -64,19 +66,11 @@ class ScenarioOspitiVulnerabiliTest {
             assertTrue(partita.gruppo().isOspiteVulnerabile(ostaggio));
             assertFalse(partita.gruppo().isOspiteVulnerabile(pellegrino));
 
-            // Un solo personaggio vivo e un ospite vulnerabile: circa un attacco su due va all'ospite
-            int colpiAllOspite = 0;
-            for (int i = 0; i < 1000; i++) {
-                Personaggio bersaglio = partita.gruppo().scegliOspiteBersaglio().orElse(null);
-                assertNotSame(pellegrino, bersaglio);
-                if (bersaglio == ostaggio) {
-                    colpiAllOspite++;
-                }
-            }
-            assertTrue(colpiAllOspite > 400 && colpiAllOspite < 600, "colpi all'ospite: " + colpiAllOspite);
+            // Fra i bersagli ci sono solo gli ospiti vulnerabili vivi
+            assertEquals(Collections.singletonList(ostaggio), partita.gruppo().getOspitiBersaglio());
 
             ostaggio.muore("di prova");
-            assertFalse(partita.gruppo().scegliOspiteBersaglio().isPresent(), "un ospite morto non si attacca più");
+            assertTrue(partita.gruppo().getOspitiBersaglio().isEmpty(), "un ospite morto non si attacca più");
         }
     }
 
