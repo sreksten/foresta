@@ -128,5 +128,5 @@ nome di un residente: è accettato.
   la chiede.
 - Mostrare al giocatore i campioni incontrati: i dati ci sono (nome, classe, sconfitto), manca un punto della UI che li elenchi
   (la schermata delle statistiche o quella dei trofei).
-- Altre missioni di scorta ("salva l'alchimista", "salva la moglie del bardo"…): il personaggio si costruisce con
+- Altre missioni di scorta ("salva l'alchimista", "salva il locandiere"…; `IlViaggioDellaMoglie` scorta già la moglie del bardo): il personaggio si costruisce con
   `costruisciPersonaggio`; per il locandiere il nome va letto dalla locanda (vedi [`todo.md`](todo.md)).

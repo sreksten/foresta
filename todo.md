@@ -30,9 +30,6 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
   che usa i versi di `VersiDeiPersonaggi`), con gli sprite dei danni, degli effetti e della morte al posto giusto. Gli sprite a tempo di salute e magia (anche dei mostri) non si sovrappongono più: 
   se ce n'è già uno vicino e attivo, il nuovo parte più in basso (`primoPostoLibero`), e le variazioni nulle non ne creano. 
   Da guardare in partita: i mostri molto larghi (Drago, 454 px su 390) vengono coperti dal gruppo.
-- **Nomi dei personaggi non combattenti** (stato e idee aperte in [`nomi.md`](nomi.md)): fatti i nomi nelle liste, nel registro, nei testi delle missioni, nelle schermate dei negozi e nel bardo scortato. Restano le immagini proprie di borgomastro e levatrice, la levatrice nelle scene e un punto della UI che elenchi i campioni incontrati.
-  il registro dei residenti e i campioni. Restano: borgomastro e levatrice senza `TipoPersonaggio` né immagine, le scene e i testi delle missioni che dicono ancora "il capitano delle guardie" invece del
-  nome, il reset che può dare a un ostaggio il nome di un residente, la unificazione delle altre liste di `missioni.txt` e dei 18 compagni.
 - Fumetto che attende la chiusura.
 - Come ci sono locande sparse per la foresta, anche qualche negozio (armaiolo, alchimista, venditore di pergamene, incantatore).
 - Economia: le entrate sono misurate solo fino al livello 5, perché il giocatore automatico di `SimulazionePartiteTest` muore a livello 2-4 e non fa le missioni; farlo vivere più a lungo e fare le missioni, poi eventualmente ritarare i prezzi degli ingredienti: vedi [`economia.md`](economia.md).
@@ -40,8 +37,12 @@ Le idee aperte dei singoli sottosistemi stanno nei loro documenti:
 
 ## Personaggi non combattenti
 
-- **Mandanti senza personaggio proprio** (borgomastro, mugnaio, mercante, fabbro, notaio, vedove...): sono un `Uomo` (`ASPETTO=QUALUNQUE`) o una `Donna` (`DONNA`) in `AspettoDelMandante`, con l'immagine e il verso del locandiere e della moglie del bardo; servono immagini loro e, dove ne hanno bisogno, tipi propri.
-- Le **missioni di scorta** ("salva il locandiere", "salva la moglie del bardo", "salva l'alchimista"...) con `MissioneAPassi.prendiInScorta`, al posto del Viandante: i personaggi hanno ormai un nome proprio, e `RegistroPersonaggi.costruisciPersonaggio(residente, livello)` ne fa il `Personaggio` da dare al `Supplier` di `prendiInScorta`, come già fa `NonSparateSulPianista` con il `BardoLocanda`. Solo il locandiere non è nel registro: il suo nome sta nella locanda (`Locanda.LOCANDA_NOME_LOCANDIERE`).
+I nomi di questi personaggi sono fatti (liste, registro, testi delle missioni, schermate dei negozi): quello che resta e le idee aperte sono in [`nomi.md`](nomi.md) §8.
+
+- **Immagini e tipi propri per borgomastro e levatrice**, e per i mandanti senza personaggio proprio (mugnaio, mercante, fabbro, notaio, vedove...): oggi sono un `Uomo` o una `Donna` (`AspettoDelMandante`), con l'immagine e il verso del locandiere e della moglie del bardo.
+- **La levatrice e le altre comparse nelle scene**: il nome c'è, nessuna scena le chiede.
+- **Un punto della UI che elenchi i campioni incontrati** (nome, classe, se sconfitti): i dati sono già nel registro dei personaggi; si può mettere nella schermata delle statistiche o in quella dei trofei.
+- Le **missioni di scorta** ("salva il locandiere", "salva l'alchimista"...; "Il viaggio di" la moglie del bardo c'è già: `IlViaggioDellaMoglie`) con `MissioneAPassi.prendiInScorta`, al posto del Viandante: `RegistroPersonaggi.costruisciPersonaggio(residente, livello)` ne fa il `Personaggio` da dare al `Supplier`, come già fa `NonSparateSulPianista` con il `BardoLocanda`. Solo il locandiere non è nel registro: il suo nome sta nella locanda (`Locanda.LOCANDA_NOME_LOCANDIERE`).
 
 ## Grafica e immagini
 
