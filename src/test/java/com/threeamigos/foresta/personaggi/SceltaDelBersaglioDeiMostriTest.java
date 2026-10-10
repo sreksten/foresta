@@ -8,7 +8,7 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 /**
- * Chi attacca un mostro: il Mago o la Maga più potenti, poi il Sacerdote o la Sacerdotessa più potenti, poi uno a
+ * Chi attacca un mostro: il Mago o la Maga più potenti, poi il Sacerdote o la Sacerdotessa più potenti, poi l'Elfo o l'Elfa più potenti, poi uno a
  * caso fra i personaggi vivi e gli ospiti vulnerabili.
  */
 class SceltaDelBersaglioDeiMostriTest {
@@ -48,6 +48,20 @@ class SceltaDelBersaglioDeiMostriTest {
         gruppo.aggiungiOspite(new Viandante("Ottone", 1), true);
         for (int i = 0; i < 100; i++) {
             assertSame(sacerdotessa, PersonaggioBase.scegliBersaglio(gruppo));
+        }
+    }
+
+    @Test
+    void senzaMaghiNeSacerdotiGliElfiPiuPotenti() {
+        Personaggio guerriero = new Guerriero("G", 9);
+        Personaggio elfo = new Elfo("E", 2);
+        Personaggio elfa = new Elfa("F", 4);
+        gruppo.aggiungiPersonaggio(guerriero);
+        gruppo.aggiungiPersonaggio(elfo);
+        gruppo.aggiungiPersonaggio(elfa);
+        gruppo.aggiungiOspite(new Viandante("Ottone", 1), true);
+        for (int i = 0; i < 100; i++) {
+            assertSame(elfa, PersonaggioBase.scegliBersaglio(gruppo));
         }
     }
 

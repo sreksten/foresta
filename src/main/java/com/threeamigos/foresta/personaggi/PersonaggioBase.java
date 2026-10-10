@@ -508,6 +508,9 @@ public abstract class PersonaggioBase implements Personaggio {
 			bersaglio = piuPotenteTra(personaggiPossibili, TipoPersonaggio.SACERDOTE, TipoPersonaggio.SACERDOTESSA);
 		}
 		if (bersaglio == null) {
+			bersaglio = piuPotenteTra(personaggiPossibili, TipoPersonaggio.ELFO, TipoPersonaggio.ELFA);
+		}
+		if (bersaglio == null) {
 			List<Personaggio> candidati = new ArrayList<>(personaggiPossibili);
 			candidati.addAll(gruppoBersaglio.getOspitiBersaglio());
 			bersaglio = candidati.get(Dado.tiraAncheAUnaFaccia(candidati.size()) - 1);
