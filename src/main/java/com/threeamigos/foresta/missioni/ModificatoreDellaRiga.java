@@ -6,7 +6,7 @@ import com.threeamigos.foresta.tipi.TipoModificatore;
 
 /**
  * Un modificatore permanente scritto in una riga di missioni.txt come ATTRIBUTO TIPO QUANTITA, per esempio
- * FORZA AUMENTO_FISSO 2 o SALUTE AUMENTO_PERCENTUALE 10 (TipoAttributo e TipoModificatore, solo aumenti): la
+ * FORZA VARIAZIONE_FISSA 2 o SALUTE VARIAZIONE_PERCENTUALE 10 (TipoAttributo e TipoModificatore, solo aumenti): la
  * benedizione (vedi BenedizioneRichiesta) e la lealtà di un compagno (vedi LealtaRichiesta).
  */
 final class ModificatoreDellaRiga {
@@ -18,7 +18,7 @@ final class ModificatoreDellaRiga {
 	private ModificatoreDellaRiga(String valore, String riga) {
 		String[] parti = valore.trim().split("\\s+");
 		if (parti.length != 3) {
-			throw new IllegalArgumentException("Il modificatore è ATTRIBUTO TIPO QUANTITA (FORZA AUMENTO_FISSO 2): " + riga);
+			throw new IllegalArgumentException("Il modificatore è ATTRIBUTO TIPO QUANTITA (FORZA VARIAZIONE_FISSA 2): " + riga);
 		}
 		attributo = TipoAttributo.valueOf(parti[0]);
 		tipoModificatore = TipoModificatore.valueOf(parti[1]);

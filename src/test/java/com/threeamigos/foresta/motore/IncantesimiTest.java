@@ -41,7 +41,7 @@ class IncantesimiTest {
         // Given
         int senza = CalcolatoreCombattimento.calcolaDannoRisultante(mago, bersaglio, new Fuoco(5)).getDanno();
         // When
-        mago.addModificatore(new ModificatoreAttributoMD(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_PERCENTUALE, 50));
+        mago.addModificatore(new ModificatoreAttributoMD(TipoAttributo.POTERE_MAGICO, TipoModificatore.VARIAZIONE_PERCENTUALE, 50));
         int con = CalcolatoreCombattimento.calcolaDannoRisultante(mago, bersaglio, new Fuoco(5)).getDanno();
         // Then
         assertTrue(con > senza, "con POTERE_MAGICO " + con + ", senza " + senza);

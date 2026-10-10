@@ -229,7 +229,7 @@ public final class Equipaggiamento {
 						danni = (int) Math.round(danni * Costanti.ARTEFATTO_MOLTIPLICATORE_DUE_MANI);
 					} else if (tipo == TipoArtefatto.BASTONE_MAGICO) {
 						danni = danni / 2;
-						md.addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_PERCENTUALE, 5.0 * livello, "");
+						md.addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.VARIAZIONE_PERCENTUALE, 5.0 * livello, "");
 					}
 					md.setDanni(danni);
 					break;
@@ -237,10 +237,10 @@ public final class Equipaggiamento {
 				case ELMO:
 				case ARMATURA:
 					md.addModificatore(tipo == TipoArtefatto.VESTE ? TipoAttributo.RESISTENZA_MAGICA : TipoAttributo.PARATA,
-							TipoModificatore.AUMENTO_PERCENTUALE, 5.0 * livello, "");
+							TipoModificatore.VARIAZIONE_PERCENTUALE, 5.0 * livello, "");
 					break;
 				default:
-					md.addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_PERCENTUALE, 5.0 * livello, "");
+					md.addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.VARIAZIONE_PERCENTUALE, 5.0 * livello, "");
 					break;
 			}
 			if (incantamento != null) {

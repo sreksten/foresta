@@ -106,9 +106,9 @@ class ScenarioSetLeggendariTest {
 
     @Test
     void siMoltiplicanoSoloIBonusFissiEPercentuali() {
-        ModificatoreAttributoMD fisso = new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 4);
-        ModificatoreAttributoMD percentuale = new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 20);
-        ModificatoreAttributoMD malus = new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, -2);
+        ModificatoreAttributoMD fisso = new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 4);
+        ModificatoreAttributoMD percentuale = new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_PERCENTUALE, 20);
+        ModificatoreAttributoMD malus = new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, -2);
         ModificatoreAttributoMD assoluto = new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.QUANTITA_ASSOLUTA, 10);
         assertEquals(6.0d, RegoleSetLeggendari.applica(fisso, 1.5d).getQuantita());
         assertEquals(30.0d, RegoleSetLeggendari.applica(percentuale, 1.5d).getQuantita());
@@ -125,7 +125,7 @@ class ScenarioSetLeggendariTest {
         for (SetLeggendario candidato : setInOrdine()) {
             for (TipoAttributo primario : PRIMARI.keySet()) {
                 List<ModificatoreAttributoMD> modificatori = modificatoriSu(pezziDi(candidato), primario);
-                if (!modificatori.isEmpty() && modificatori.stream().allMatch(m -> m.getTipoModificatoreAttributo() == TipoModificatore.AUMENTO_FISSO)
+                if (!modificatori.isEmpty() && modificatori.stream().allMatch(m -> m.getTipoModificatoreAttributo() == TipoModificatore.VARIAZIONE_FISSA)
                         && modificatori.stream().anyMatch(m -> m.getQuantita() > 0)) {
                     set = candidato;
                     attributo = primario;

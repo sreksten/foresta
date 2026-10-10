@@ -15,10 +15,10 @@ class RegistroArtefattiMDTest {
         // Given
         RegistroArtefattiMD registro = new RegistroArtefattiMD();
         ArtefattoMD nelTempio = ArtefattoMDTest.creaArtefatto(TipoArtefatto.SPADA, "il pugnale di Worr", "il cui potere è nel combattimento");
-        nelTempio.addModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 2, "Forza");
+        nelTempio.addModificatore(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 2, "Forza");
         registro.addArtefattoInLocazione(nelTempio, new CoordinateMD(3, 4));
         ArtefattoMD dallArmaiolo = ArtefattoMDTest.creaArtefatto(TipoArtefatto.SCUDO, "lo scudo fiscale", "che si fa fare sconti");
-        dallArmaiolo.addModificatore(TipoAttributo.PARATA, TipoModificatore.AUMENTO_PERCENTUALE, 10, "Parata");
+        dallArmaiolo.addModificatore(TipoAttributo.PARATA, TipoModificatore.VARIAZIONE_PERCENTUALE, 10, "Parata");
         dallArmaiolo.addIncantamento("La battuta del cavolo", TipoDanno.GELO, 10, 0.5);
         registro.getMagazzino(new CoordinateMD(7, 1), TipoNegozio.ARMAIOLO).add(dallArmaiolo);
         // When
@@ -26,12 +26,12 @@ class RegistroArtefattiMDTest {
         // Then
         ArtefattoMD tempioRiletto = ricaricato.getArtefattoInLocazione(new CoordinateMD(3, 4));
         assertEquals("il pugnale di Worr", tempioRiletto.getNome());
-        assertTrue(tempioRiletto.getModificatori().contains(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 2, "Forza")));
+        assertTrue(tempioRiletto.getModificatori().contains(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 2, "Forza")));
         Collection<ArtefattoMD> armaiolo = ricaricato.getMagazzino(new CoordinateMD(7, 1), TipoNegozio.ARMAIOLO);
         assertEquals(1, armaiolo.size());
         ArtefattoMD scudo = armaiolo.iterator().next();
         assertEquals("lo scudo fiscale", scudo.getNome());
-        assertTrue(scudo.getModificatori().contains(new ModificatoreAttributoMD(TipoAttributo.PARATA, TipoModificatore.AUMENTO_PERCENTUALE, 10, "Parata")));
+        assertTrue(scudo.getModificatori().contains(new ModificatoreAttributoMD(TipoAttributo.PARATA, TipoModificatore.VARIAZIONE_PERCENTUALE, 10, "Parata")));
         assertEquals(1, scudo.getIncantamenti().size());
     }
 

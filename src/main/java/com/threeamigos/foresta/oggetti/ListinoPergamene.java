@@ -18,7 +18,7 @@ import java.util.Map;
  * coefficiente × Intelligenza tipica, per PERGAMENA_PREZZO_PER_PUNTO_DI_DANNO; +25% se il tipo di danno ha
  * effetti di stato;</li>
  * <li>modificatore: di quanto aumenta l'attributo rispetto al suo valore tipico, per
- * PERGAMENA_PREZZO_PER_PERCENTO_DI_ATTRIBUTO ogni 1%. Un AUMENTO_PERCENTUALE di q% vale q%; un AUMENTO_FISSO di q
+ * PERGAMENA_PREZZO_PER_PERCENTO_DI_ATTRIBUTO ogni 1%. Un VARIAZIONE_PERCENTUALE di q% vale q%; un VARIAZIONE_FISSA di q
  * vale q diviso il valore tipico, quindi +1 di Precisione (che vale circa 3) costa molto più di +1 di Forza
  * (circa 11). Una QUANTITA_ASSOLUTA ("porta a q") vale 5 × q.</li>
  * </ul>
@@ -91,9 +91,9 @@ public final class ListinoPergamene {
 	public static double prezzo(ModificatoreAttributoMD modificatore) {
 		double quantita = Math.abs(modificatore.getQuantita());
 		switch (modificatore.getTipoModificatoreAttributo()) {
-			case AUMENTO_FISSO:
+			case VARIAZIONE_FISSA:
 				return Costanti.PERGAMENA_PREZZO_PER_PERCENTO_DI_ATTRIBUTO * 100 * quantita / valoreTipico(modificatore.getTipoAttributo());
-			case AUMENTO_PERCENTUALE:
+			case VARIAZIONE_PERCENTUALE:
 				return Costanti.PERGAMENA_PREZZO_PER_PERCENTO_DI_ATTRIBUTO * quantita;
 			case QUANTITA_ASSOLUTA:
 				return Costanti.PERGAMENA_PREZZO_PER_PUNTO_ASSOLUTO * quantita;

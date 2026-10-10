@@ -210,7 +210,7 @@ public final class OggettoLeggendario {
 			boolean percentuale = parti[1].endsWith(PERCENTUALE);
 			double valore = Double.parseDouble(percentuale ? parti[1].substring(0, parti[1].length() - 1) : parti[1]);
 			costruttore = costruttore.setModificatore(TipoAttributo.valueOf(parti[0]),
-					percentuale ? TipoModificatore.AUMENTO_PERCENTUALE : TipoModificatore.AUMENTO_FISSO, valore);
+					percentuale ? TipoModificatore.VARIAZIONE_PERCENTUALE : TipoModificatore.VARIAZIONE_FISSA, valore);
 		}
 		Artefatto artefatto;
 		if (incantamenti.isEmpty()) {

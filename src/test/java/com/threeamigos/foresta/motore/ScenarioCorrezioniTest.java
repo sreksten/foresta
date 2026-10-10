@@ -228,7 +228,7 @@ class ScenarioCorrezioniTest {
 				.setNome("anello di prova").setDescrizione("che fa mirare meglio").setLivello(1).setDanniBase(0)
 				.setCostoAcquisto(1).setPeso(0)
 				.setModificatore(TipoAttributo.DESTREZZA,
-						TipoModificatore.AUMENTO_FISSO, 200)
+						TipoModificatore.VARIAZIONE_FISSA, 200)
 				.costruisci();
 		ladro.addArtefatto(anello);
 		assertTrue(ladro.getPrecisione() > prima, "precisione " + prima + " -> " + ladro.getPrecisione());

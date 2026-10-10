@@ -9,12 +9,12 @@ public enum TipoModificatore {
     /**
      * Modifica un attributo di un numero fisso di punti
      */
-    AUMENTO_FISSO,
+    VARIAZIONE_FISSA,
 
     /**
      * Modifica un attributo di una certa percentuale
      */
-    AUMENTO_PERCENTUALE,
+    VARIAZIONE_PERCENTUALE,
 
     /**
      * Modifica un attributo portandolo a una data quantità fissa

@@ -30,20 +30,20 @@ import static org.junit.jupiter.api.Assertions.*;
 class ScenarioBenedizioneTest {
 
     private static final String LUNA = "CHIAVE=LUNA_DI_PROVA;ASPETTO=SACERDOTESSA;MANDANTE=la sacerdotessa della luna;"
-            + "NOME=la benedizione della luna;BENEDIZIONE=SALUTE AUMENTO_PERCENTUALE 10;RICHIESTA=Un favore.;BATTUTA=Quale?;"
+            + "NOME=la benedizione della luna;BENEDIZIONE=SALUTE VARIAZIONE_PERCENTUALE 10;RICHIESTA=Un favore.;BATTUTA=Quale?;"
             + "RISPOSTA=Le ombre.;FAVORE=Le ombre della radura;LUOGO=RADURA;NEMICO=OMBRA_NERA;NUMERO=2;"
             + "VITTORIA=Le ombre sono svanite.;BENEDETTO=La luce scende su %PERSONAGGIO%.";
 
     private static final String TERRA = "CHIAVE=TERRA_DI_PROVA;ASPETTO=SACERDOTE;MANDANTE=il sacerdote della terra;"
-            + "NOME=la benedizione della terra;BENEDIZIONE=COSTITUZIONE AUMENTO_FISSO 2;RICHIESTA=Fiori.;BATTUTA=Quali?;"
+            + "NOME=la benedizione della terra;BENEDIZIONE=COSTITUZIONE VARIAZIONE_FISSA 2;RICHIESTA=Fiori.;BATTUTA=Quali?;"
             + "RISPOSTA=Di loto.;FAVORE=I fiori;GENERE=M;INGREDIENTE=fiore di loto bianco;INGREDIENTI=fiori di loto bianco;"
             + "DOVE=LUOGHI PALUDE;QUANTITA=4;VITTORIA=I fiori ci sono.;BENEDETTO=La terra trema per %PERSONAGGIO%.";
     private static final String NOTTE = "CHIAVE=NOTTE_DI_PROVA;ASPETTO=SACERDOTESSA;MANDANTE=la sacerdotessa della notte;"
-            + "NOME=la benedizione della notte;BENEDIZIONE=PERCEZIONE AUMENTO_FISSO 2;RICHIESTA=La tomba.;BATTUTA=Quale?;"
+            + "NOME=la benedizione della notte;BENEDIZIONE=PERCEZIONE VARIAZIONE_FISSA 2;RICHIESTA=La tomba.;BATTUTA=Quale?;"
             + "RISPOSTA=Del santo.;FAVORE=La veglia;LUOGO=BOSCO;VISITE=2;ORE=16;VEGLIA=Tutto tace.;VITTORIA=La veglia è finita.;"
             + "BENEDETTO=Il buio è meno buio per %PERSONAGGIO%.";
     private static final String GUADO = "CHIAVE=GUADO_DI_PROVA;ASPETTO=SACERDOTE;MANDANTE=il sacerdote del fiume;"
-            + "NOME=la benedizione del fiume;BENEDIZIONE=SALUTE AUMENTO_PERCENTUALE 10;RICHIESTA=Il guado.;BATTUTA=Quale?;"
+            + "NOME=la benedizione del fiume;BENEDIZIONE=SALUTE VARIAZIONE_PERCENTUALE 10;RICHIESTA=Il guado.;BATTUTA=Quale?;"
             + "RISPOSTA=Quello del troll.;FAVORE=Il troll del guado;LUOGO=PALUDE;NEMICO=TROLL;NUMERO=1;"
             + "VITTORIA=Il guado è libero.;BENEDETTO=L'acqua scorre per %PERSONAGGIO%.";
 
@@ -61,8 +61,8 @@ class ScenarioBenedizioneTest {
         assertEquals(FavoreRichiesto.Tipo.VEGLIA, BenedizioneRichiesta.da(NOTTE).getFavore().getTipo());
         assertThrows(IllegalArgumentException.class, () -> BenedizioneRichiesta.da(LUNA + ";VISITE=2;ORE=3;VEGLIA=x"));
         assertThrows(IllegalArgumentException.class, () -> BenedizioneRichiesta.da(TERRA + ";LUOGO=PALUDE"));
-        assertThrows(IllegalArgumentException.class, () -> BenedizioneRichiesta.da(LUNA.replace("SALUTE AUMENTO_PERCENTUALE 10", "SALUTE 10")));
-        assertThrows(IllegalArgumentException.class, () -> BenedizioneRichiesta.da(LUNA.replace("AUMENTO_PERCENTUALE 10", "QUANTITA_ASSOLUTA 10")));
+        assertThrows(IllegalArgumentException.class, () -> BenedizioneRichiesta.da(LUNA.replace("SALUTE VARIAZIONE_PERCENTUALE 10", "SALUTE 10")));
+        assertThrows(IllegalArgumentException.class, () -> BenedizioneRichiesta.da(LUNA.replace("VARIAZIONE_PERCENTUALE 10", "QUANTITA_ASSOLUTA 10")));
         assertThrows(IllegalArgumentException.class, () -> BenedizioneRichiesta.da(LUNA.replace("ASPETTO=SACERDOTESSA", "ASPETTO=MAGA")));
     }
 

@@ -298,10 +298,10 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
                     String valore;
                     int valoreIntero = (int) modificatore.getQuantita();
                     switch (modificatore.getTipoModificatoreAttributo()) {
-                        case AUMENTO_FISSO:
+                        case VARIAZIONE_FISSA:
                             valore = segno(valoreIntero) + valoreIntero;
                             break;
-                        case AUMENTO_PERCENTUALE:
+                        case VARIAZIONE_PERCENTUALE:
                             valore = segno(valoreIntero) + valoreIntero + "%";
                             break;
                         case QUANTITA_ASSOLUTA:

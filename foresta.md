@@ -81,6 +81,7 @@ Il codice si divide in due parti, che si parlano attraverso un bus eventi publis
 | [`artefatti_e_incantamenti.md`](artefatti_e_incantamenti.md) | Artefatti, pergamene, incantatore, bilanciamento del combattimento (con il piano di lavoro) |
 | [`economia.md`](economia.md) | Bilancio dell'economia del gioco: entrate, uscite, prezzi per livello, cosa non torna e le decisioni prese, con le misure fatte col giocatore automatico fino al livello 5 |
 | [`interazioni_effetti_di_stato.md`](interazioni_effetti_di_stato.md) | Interazioni fra effetti di stato e tipi di danno |
+| [`modificatori_temporanei.md`](modificatori_temporanei.md) | Piano per i modificatori di attributo a tempo (turni o locazioni) e per le armi che li applicano al bersaglio |
 | [`GrammarBean.md`](GrammarBean.md) | Manuale e assessment del motore di grammatiche |
 | [`assessment.md`](assessment.md) | Valutazione dello stato del progetto e prossimi passi |
 | [`todo.md`](todo.md) | Cose da fare generali e bug noti |

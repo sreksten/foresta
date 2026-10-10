@@ -209,7 +209,7 @@ class GrammaticaArtefattiTest {
                 Artefatto artefatto = generatore.generaArtefatto(tipo, 1 + i % 10);
                 ArtefattoMD md = artefatto.getModelloDati();
                 assertTrue(md.getModificatori().stream().anyMatch(m -> m.getTipoAttributo() == difesa
-                        && m.getTipoModificatoreAttributo() == TipoModificatore.AUMENTO_PERCENTUALE), md.getNome());
+                        && m.getTipoModificatoreAttributo() == TipoModificatore.VARIAZIONE_PERCENTUALE), md.getNome());
                 assertNotNull(md.getDescrizione(), md.getNome());
                 // La difesa di base c'è anche quando l'artefatto non ha posti (comune di livello 1)
                 int effetti = md.getModificatori().size() - 1 + md.getIncantamenti().size();

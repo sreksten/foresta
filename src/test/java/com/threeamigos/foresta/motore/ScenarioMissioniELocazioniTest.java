@@ -158,7 +158,7 @@ class ScenarioMissioniELocazioniTest {
 			Artefatto amuleto = CostruttoreArtefatto.istanza()
 					.setTipo(TipoArtefatto.NINNOLO).setNome("amuleto di prova").setDescrizione("che dà salute")
 					.setLivello(1).setDanniBase(0).setCostoAcquisto(1).setPeso(0)
-					.setModificatore(TipoAttributo.SALUTE, TipoModificatore.AUMENTO_FISSO, 100)
+					.setModificatore(TipoAttributo.SALUTE, TipoModificatore.VARIAZIONE_FISSA, 100)
 					.costruisci();
 			guerriero.addArtefatto(amuleto);
 			guerriero.addSalute(guerriero.getSaluteMassima());

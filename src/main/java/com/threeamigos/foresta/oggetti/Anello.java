@@ -48,19 +48,19 @@ public class Anello extends OggettoBase implements Oggetto {
 			String[] appartenenzePossibili = new String[]{ "della Valchiria", "del Grifone", "del Paladino", "del Centurione", "della Manticora", "del Minotauro", "della Viverna" };
 			int indiceAppartenenza = Dado.tiraAncheAUnaFaccia(appartenenzePossibili.length) - 1;
 			nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
-			modificatore = new ModificatoreAttributoMD(TipoAttributo.VALORE, TipoModificatore.AUMENTO_FISSO, Costanti.ANELLO_MAGICO_AGGIUNTA_VALORE);
+			modificatore = new ModificatoreAttributoMD(TipoAttributo.VALORE, TipoModificatore.VARIAZIONE_FISSA, Costanti.ANELLO_MAGICO_AGGIUNTA_VALORE);
 			descrizione = "che aumenta il Valore";
 		} else if (tipo == 2) {
 			String[] appartenenzePossibili = new String[]{ "del Berserker", "della Fenice", "del Pegaso", "della Salamandra", "del Gladiatore", "dell'Ippogrifo", "dell'Esploratore" };
 			int indiceAppartenenza = Dado.tiraAncheAUnaFaccia(appartenenzePossibili.length) - 1;
 			nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
-			modificatore = new ModificatoreAttributoMD(TipoAttributo.CORAGGIO, TipoModificatore.AUMENTO_PERCENTUALE, Costanti.ANELLO_MAGICO_AGGIUNTA_CORAGGIO);
+			modificatore = new ModificatoreAttributoMD(TipoAttributo.CORAGGIO, TipoModificatore.VARIAZIONE_PERCENTUALE, Costanti.ANELLO_MAGICO_AGGIUNTA_CORAGGIO);
 			descrizione = "che aumenta il Coraggio";
 		} else {
 			String[] appartenenzePossibili = new String[]{ "della Sirena", "della Sfinge", "dell'Arcangelo", "della Gorgone", "del Dullahan", "della Lamia", "del Basilisco" };
 			int indiceAppartenenza = Dado.tiraAncheAUnaFaccia(appartenenzePossibili.length) - 1;
 			nome = "un Anello magico " + appartenenzePossibili[indiceAppartenenza];
-			modificatore = new ModificatoreAttributoMD(TipoAttributo.CARISMA, TipoModificatore.AUMENTO_PERCENTUALE, Costanti.ANELLO_MAGICO_AGGIUNTA_CARISMA);
+			modificatore = new ModificatoreAttributoMD(TipoAttributo.CARISMA, TipoModificatore.VARIAZIONE_PERCENTUALE, Costanti.ANELLO_MAGICO_AGGIUNTA_CARISMA);
 			descrizione = "che aumenta il Carisma";
 		}
 		return CostruttoreArtefatto.istanza()

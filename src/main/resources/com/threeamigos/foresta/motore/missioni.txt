@@ -1461,8 +1461,8 @@ RITUALE
 //   ASPETTO=    SACERDOTE o SACERDOTESSA: chi offre la benedizione, seduto in una locanda;
 //   MANDANTE=   chi è, con l'articolo (la sacerdotessa della luna);
 //   NOME=       il nome della benedizione, con l'articolo (la benedizione della luna): resta scritto nel modificatore;
-//   BENEDIZIONE=  ATTRIBUTO TIPO QUANTITA: il modificatore permanente, per esempio FORZA AUMENTO_FISSO 2 o
-//               SALUTE AUMENTO_PERCENTUALE 10 (TipoAttributo e TipoModificatore, solo aumenti);
+//   BENEDIZIONE=  ATTRIBUTO TIPO QUANTITA: il modificatore permanente, per esempio FORZA VARIAZIONE_FISSA 2 o
+//               SALUTE VARIAZIONE_PERCENTUALE 10 (TipoAttributo e TipoModificatore, solo aumenti);
 //   RICHIESTA=, BATTUTA=, RISPOSTA=  le battute in locanda (sacerdote, capo, sacerdote): la missione aggiunge
 //               la promessa della benedizione;
 //   FAVORE=     il nome del favore, che è la missione secondaria (Le ombre della radura). Il favore è di un tipo solo:
@@ -1477,7 +1477,7 @@ RITUALE
 
 BENEDIZIONE
     CHIAVE=BENEDIZIONE_DELLA_LUNA;ASPETTO=SACERDOTESSA;MANDANTE=la sacerdotessa della luna;NOME=la benedizione della luna;\
-    BENEDIZIONE=SALUTE AUMENTO_PERCENTUALE 10;\
+    BENEDIZIONE=SALUTE VARIAZIONE_PERCENTUALE 10;\
     RICHIESTA=Vi ho visti entrare. Avete l'aria di chi ha bisogno di protezione, e io ho bisogno di qualcuno che non abbia paura del buio.;\
     BATTUTA=Del buio no. Di quello che c'è dentro, dipende.;\
     RISPOSTA=Dentro ci sono due ombre nere, in una radura dove una volta si pregava la luna. Scacciatele.;\
@@ -1485,7 +1485,7 @@ BENEDIZIONE
     VITTORIA=Le ombre nere si dissolvono, e sulla radura torna a splendere la luna.;\
     BENEDETTO=La sacerdotessa posa le mani sulla fronte di %PERSONAGGIO%, e una luce d'argento scende dalle sue dita fino al cuore.
     CHIAVE=BENEDIZIONE_DEL_SOLE;ASPETTO=SACERDOTE;MANDANTE=il sacerdote del sole;NOME=la benedizione del sole;\
-    BENEDIZIONE=FORZA AUMENTO_FISSO 2;\
+    BENEDIZIONE=FORZA VARIAZIONE_FISSA 2;\
     RICHIESTA=Il sole dà forza a chi lo serve. Io lo servo da quarant'anni, e di forza me n'è rimasta poca. Voi ne avete, e io ho un problema.;\
     BATTUTA=Che problema?;\
     RISPOSTA=Dei ladri rubano le offerte del mio altare nel bosco. Le offerte del sole! Riprendetele, e il sole saprà ringraziarvi.;\
@@ -1493,7 +1493,7 @@ BENEDIZIONE
     VITTORIA=I ladri di %CAPO% sono sconfitti, e le offerte del sole tornano sull'altare.;\
     BENEDETTO=Il sacerdote alza le mani verso il cielo, e un raggio di sole cade dritto su %PERSONAGGIO%, caldo come una forgia.
     CHIAVE=BENEDIZIONE_DELLE_STELLE;ASPETTO=SACERDOTESSA;MANDANTE=la sacerdotessa delle stelle;NOME=la benedizione delle stelle;\
-    BENEDIZIONE=SAGGEZZA AUMENTO_FISSO 2;\
+    BENEDIZIONE=SAGGEZZA VARIAZIONE_FISSA 2;\
     RICHIESTA=Le stelle mi hanno detto che sareste venuti. Mi hanno detto anche che avreste ordinato la zuppa, e infatti.;\
     BATTUTA=E cos'altro dicono le stelle?;\
     RISPOSTA=Che in una cappella fra delle rovine due spettri disturbano chi prega. E che li scaccerete voi.;\
@@ -1501,7 +1501,7 @@ BENEDIZIONE
     VITTORIA=Gli spettri lasciano la cappella, e fra le rovine torna il silenzio.;\
     BENEDETTO=La sacerdotessa traccia una costellazione nell'aria, e le stelle si specchiano per un momento negli occhi di %PERSONAGGIO%.
     CHIAVE=BENEDIZIONE_DEL_VIANDANTE;ASPETTO=SACERDOTE;MANDANTE=il frate errante;NOME=la benedizione del viandante;\
-    BENEDIZIONE=FORTUNA AUMENTO_FISSO 2;\
+    BENEDIZIONE=FORTUNA VARIAZIONE_FISSA 2;\
     RICHIESTA=Vado di locanda in locanda a benedire i viandanti. Ma da qualche giorno c'è un troll, sul guado della palude, che i viandanti se li mangia.;\
     BATTUTA=E voi cosa fate, li benedite prima?;\
     RISPOSTA=Li benedico prima, sì. Ma preferirei benedirli dopo, quando sono arrivati sani e salvi dall'altra parte.;\
@@ -1509,7 +1509,7 @@ BENEDIZIONE
     VITTORIA=Il troll %CAPO% non mangerà più nessun viandante, e il guado è di nuovo libero.;\
     BENEDETTO=Il frate benedice %PERSONAGGIO% con un ramoscello d'ulivo, e borbotta che da oggi i dadi saranno dalla sua parte.
     CHIAVE=BENEDIZIONE_DEL_VENTO;ASPETTO=SACERDOTESSA;MANDANTE=la sacerdotessa del vento;NOME=la benedizione del vento;\
-    BENEDIZIONE=DESTREZZA AUMENTO_FISSO 2;\
+    BENEDIZIONE=DESTREZZA VARIAZIONE_FISSA 2;\
     RICHIESTA=Il vento è libero, e chi ne riceve la benedizione è leggero come una piuma. Ma il vento ha un problema: le arpie.;\
     BATTUTA=Il vento ha paura delle arpie?;\
     RISPOSTA=Non paura. Fastidio. Hanno fatto il nido fra delle rovine, e ogni volta che soffia gli tirano le piume.;\
@@ -1517,7 +1517,7 @@ BENEDIZIONE
     VITTORIA=Le arpie sono sconfitte, e fra le rovine il vento torna a soffiare indisturbato.;\
     BENEDETTO=La sacerdotessa soffia sul palmo della mano verso %PERSONAGGIO%, e un refolo fresco avvolge chi l'ha ricevuta, leggero.
     CHIAVE=BENEDIZIONE_DELLA_TERRA;ASPETTO=SACERDOTE;MANDANTE=il sacerdote della terra;NOME=la benedizione della terra;\
-    BENEDIZIONE=COSTITUZIONE AUMENTO_FISSO 2;\
+    BENEDIZIONE=COSTITUZIONE VARIAZIONE_FISSA 2;\
     RICHIESTA=La terra rende forti quelli che la rispettano. Io la rispetto, ma le mie ginocchia no: non riesco più a chinarmi.;\
     BATTUTA=E cosa dovremmo raccogliere, al posto vostro?;\
     RISPOSTA=Fiori di loto bianco, nelle paludi. Per la festa della semina. Ci si china parecchio, ve lo dico subito.;\
@@ -1526,7 +1526,7 @@ BENEDIZIONE
     VITTORIA=I fiori di loto bianco ci sono tutti: la festa della semina si può fare.;\
     BENEDETTO=Il sacerdote sparge un pugno di terra ai piedi di %PERSONAGGIO%, e la terra trema appena, come un cuore che batte.
     CHIAVE=BENEDIZIONE_DELLA_NOTTE;ASPETTO=SACERDOTESSA;MANDANTE=la sacerdotessa della notte;NOME=la benedizione della notte;\
-    BENEDIZIONE=PERCEZIONE AUMENTO_FISSO 2;\
+    BENEDIZIONE=PERCEZIONE VARIAZIONE_FISSA 2;\
     RICHIESTA=Nel bosco c'è la tomba di un santo eremita, e qualcuno deve vegliarla di notte, per tre notti, prima della sua festa.;\
     BATTUTA=E se non la veglia nessuno?;\
     RISPOSTA=Allora il santo si offende. E un santo offeso, credetemi, è peggio di un troll.;\
@@ -1563,7 +1563,7 @@ LEALTA
     FAVORE=Il debito di gioco;LUOGO=GROTTA;NEMICO=GOBLIN;NUMERO=4;CAPO=SI;\
     VITTORIA=%CAPO% e i suoi goblin non riscuoteranno più niente da nessuno.;\
     RINGRAZIAMENTO=Debito saldato. Per la prima volta da mesi dormirò senza un occhio aperto.;\
-    LEALTA=COSTITUZIONE AUMENTO_FISSO 2;\
+    LEALTA=COSTITUZIONE VARIAZIONE_FISSA 2;\
     LEALE=Senza più il debito sulle spalle, %PERSONAGGIO% cammina con un passo più saldo.
     CHIAVE=LA_TOMBA_DEL_MAESTRO;\
     CONFIDENZA=Il mio vecchio maestro è sepolto fra delle rovine qui vicino. Dicono che non riposi in pace.;\
@@ -1572,7 +1572,7 @@ LEALTA
     FAVORE=La tomba del maestro;LUOGO=ROVINE;NEMICO=SPETTRO;NUMERO=2;\
     VITTORIA=Gli spettri svaniscono, e fra le rovine scende un silenzio da biblioteca.;\
     RINGRAZIAMENTO=Ora il maestro riposa. Mi pare quasi di sentirlo dire che ci ho messo troppo.;\
-    LEALTA=SAGGEZZA AUMENTO_FISSO 2;\
+    LEALTA=SAGGEZZA VARIAZIONE_FISSA 2;\
     LEALE=%PERSONAGGIO% ripete sottovoce una lezione del maestro, e per la prima volta la capisce davvero.
     CHIAVE=I_FIORI_PER_LA_MADRE;\
     CONFIDENZA=Domani mia madre compie gli anni. Non la vedo da tanto, e non le ho mai mandato niente.;\
@@ -1581,7 +1581,7 @@ LEALTA
     FAVORE=I fiori per la madre;GENERE=F;INGREDIENTE=campanula azzurra;INGREDIENTI=campanule azzurre;DOVE=LUOGHI RADURA BOSCO;QUANTITA=3;\
     VITTORIA=Le campanule sono legate con un filo d'erba: un mazzo come si deve.;\
     RINGRAZIAMENTO=Le mando con il primo corriere. Magari stavolta mi risponde.;\
-    LEALTA=FORTUNA AUMENTO_FISSO 2;\
+    LEALTA=FORTUNA VARIAZIONE_FISSA 2;\
     LEALE=%PERSONAGGIO% sorride senza motivo per tutto il giorno, e la fortuna sembra ricambiare.
     CHIAVE=LA_LAMA_SPEZZATA;\
     CONFIDENZA=La mia prima arma si è spezzata in una grotta. Voglio farla rifondere, ma serve del metallo buono.;\
@@ -1590,7 +1590,7 @@ LEALTA
     FAVORE=La lama spezzata;GENERE=M;INGREDIENTE=frammento d'argento;INGREDIENTI=frammenti d'argento;DOVE=LUOGHI GROTTA;QUANTITA=4;\
     VITTORIA=Quattro frammenti d'argento: abbastanza per una lama, e non per un cucchiaio.;\
     RINGRAZIAMENTO=Tornerà come nuova. Anzi, meglio: questa volta so come si tiene.;\
-    LEALTA=FORZA AUMENTO_FISSO 2;\
+    LEALTA=FORZA VARIAZIONE_FISSA 2;\
     LEALE=%PERSONAGGIO% soppesa l'aria come se avesse già in pugno la lama nuova. Il braccio è più forte.
     CHIAVE=IL_GIURAMENTO;\
     CONFIDENZA=Ho giurato di vegliare la radura dove è caduto il mio compagno d'armi. Non l'ho mai fatto.;\
@@ -1600,7 +1600,7 @@ LEALTA
     VEGLIA=La radura è quieta. %PERSONAGGIO% resta in piedi in silenzio, a lungo.;\
     VITTORIA=La terza veglia è finita: il giuramento è mantenuto.;\
     RINGRAZIAMENTO=Ora posso guardare avanti. Grazie per essere rimasti con me.;\
-    LEALTA=SALUTE AUMENTO_PERCENTUALE 10;\
+    LEALTA=SALUTE VARIAZIONE_PERCENTUALE 10;\
     LEALE=Un peso è sparito dalle spalle di %PERSONAGGIO%, che sembra più forte di prima.
     CHIAVE=LE_LUCI_NELLA_PALUDE;\
     CONFIDENZA=Da bambini, io e mio fratello abbiamo seguito delle luci in una palude. Lui è tornato a casa prima di me, e io quelle luci le sogno ancora.;\
@@ -1610,7 +1610,7 @@ LEALTA
     VEGLIA=Le luci danzano sull'acqua. %PERSONAGGIO% le guarda, e non distoglie lo sguardo.;\
     VITTORIA=Le luci sono solo luci. Fanno anche un po' ridere, a guardarle bene.;\
     RINGRAZIAMENTO=Stanotte dormirò. Davvero, questa volta.;\
-    LEALTA=PERCEZIONE AUMENTO_FISSO 2;\
+    LEALTA=PERCEZIONE VARIAZIONE_FISSA 2;\
     LEALE=Gli occhi di %PERSONAGGIO% non temono più il buio, e ci vedono meglio.
 
 // ---------------------------------------------------------------------------------------------

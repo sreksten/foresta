@@ -235,11 +235,11 @@ class GeneratoreArtefattiTest {
         // +25% per un tipo di danno con effetti di stato
         assertEquals(0.5 * 40 * 1.25, ListinoPergamene.prezzo(new IncantamentoMD("prova", TipoDanno.FUOCO, 10, 0), 4), 0.0001);
         // Modificatore fisso: 0,5 per ogni 1% del valore tipico, quindi +3 di Precisione (3,2) costa più di +3 di Forza (11,5)
-        assertEquals(0.5 * 300 / 11.5, ListinoPergamene.prezzo(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 3)), 0.0001);
-        assertEquals(0.5 * 300 / 3.2, ListinoPergamene.prezzo(new ModificatoreAttributoMD(TipoAttributo.PRECISIONE, TipoModificatore.AUMENTO_FISSO, 3)), 0.0001);
+        assertEquals(0.5 * 300 / 11.5, ListinoPergamene.prezzo(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 3)), 0.0001);
+        assertEquals(0.5 * 300 / 3.2, ListinoPergamene.prezzo(new ModificatoreAttributoMD(TipoAttributo.PRECISIONE, TipoModificatore.VARIAZIONE_FISSA, 3)), 0.0001);
         // Percentuale: 0,5 per punto, qualunque sia l'attributo; assoluto 5 × q
-        assertEquals(5, ListinoPergamene.prezzo(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 10)), 0.0001);
-        assertEquals(5, ListinoPergamene.prezzo(new ModificatoreAttributoMD(TipoAttributo.PRECISIONE, TipoModificatore.AUMENTO_PERCENTUALE, 10)), 0.0001);
+        assertEquals(5, ListinoPergamene.prezzo(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_PERCENTUALE, 10)), 0.0001);
+        assertEquals(5, ListinoPergamene.prezzo(new ModificatoreAttributoMD(TipoAttributo.PRECISIONE, TipoModificatore.VARIAZIONE_PERCENTUALE, 10)), 0.0001);
         assertEquals(20, ListinoPergamene.prezzo(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.QUANTITA_ASSOLUTA, 4)), 0.0001);
     }
 }

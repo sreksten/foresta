@@ -67,8 +67,8 @@ public final class RegoleSetLeggendari {
 	 */
 	public static ModificatoreAttributoMD applica(ModificatoreAttributoMD modificatore, double moltiplicatore) {
 		boolean bonus = modificatore.getQuantita() > 0
-				&& (modificatore.getTipoModificatoreAttributo() == TipoModificatore.AUMENTO_FISSO
-				|| modificatore.getTipoModificatoreAttributo() == TipoModificatore.AUMENTO_PERCENTUALE);
+				&& (modificatore.getTipoModificatoreAttributo() == TipoModificatore.VARIAZIONE_FISSA
+				|| modificatore.getTipoModificatoreAttributo() == TipoModificatore.VARIAZIONE_PERCENTUALE);
 		if (moltiplicatore == 1.0d || !bonus) {
 			return modificatore;
 		}

@@ -33,11 +33,11 @@ class ScenarioLealtaTest {
 
     private static final String GOBLIN = "CHIAVE=GOBLIN_DI_PROVA;CONFIDENZA=Ho un debito.;BATTUTA=Con chi?;RISPOSTA=Con dei goblin.;"
             + "FAVORE=Il debito;LUOGO=RADURA;NEMICO=GOBLIN;NUMERO=2;VITTORIA=Debito saldato per %PERSONAGGIO%.;"
-            + "RINGRAZIAMENTO=Grazie davvero.;LEALTA=FORZA AUMENTO_FISSO 2;LEALE=%PERSONAGGIO% è più forte.";
+            + "RINGRAZIAMENTO=Grazie davvero.;LEALTA=FORZA VARIAZIONE_FISSA 2;LEALE=%PERSONAGGIO% è più forte.";
 
     private static final String GIURAMENTO = "CHIAVE=GIURAMENTO_DI_PROVA;CONFIDENZA=Ho un giuramento.;BATTUTA=Quale?;RISPOSTA=Vegliare.;"
             + "FAVORE=Il giuramento;LUOGO=RADURA;VISITE=3;ORE=12;VEGLIA=Si veglia.;VITTORIA=Veglia finita.;"
-            + "RINGRAZIAMENTO=Grazie.;LEALTA=FORZA AUMENTO_FISSO 2;LEALE=%PERSONAGGIO% è più forte.";
+            + "RINGRAZIAMENTO=Grazie.;LEALTA=FORZA VARIAZIONE_FISSA 2;LEALE=%PERSONAGGIO% è più forte.";
 
     @Test
     void ogniLealtaSiLegge() {
@@ -49,7 +49,7 @@ class ScenarioLealtaTest {
         }
         assertTrue(chiavi.size() >= 6, String.valueOf(chiavi));
         assertEquals(FavoreRichiesto.Tipo.COMBATTIMENTO, LealtaRichiesta.da(GOBLIN).getFavore().getTipo());
-        assertThrows(IllegalArgumentException.class, () -> LealtaRichiesta.da(GOBLIN.replace("LEALTA=FORZA AUMENTO_FISSO 2;", "")));
+        assertThrows(IllegalArgumentException.class, () -> LealtaRichiesta.da(GOBLIN.replace("LEALTA=FORZA VARIAZIONE_FISSA 2;", "")));
         assertThrows(IllegalArgumentException.class, () -> LealtaRichiesta.da(GOBLIN + ";VISITE=2;ORE=3;VEGLIA=x"));
         assertThrows(IllegalArgumentException.class, () -> LealtaRichiesta.da(GOBLIN + ";ASPETTO=SACERDOTE"));
     }

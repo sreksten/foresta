@@ -418,7 +418,7 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 
 	private static String modificatore(ModificatoreAttributoMD modificatore) {
 		String valore = String.format("%+.0f", modificatore.getQuantita());
-		if (modificatore.getTipoModificatoreAttributo() == TipoModificatore.AUMENTO_PERCENTUALE) {
+		if (modificatore.getTipoModificatoreAttributo() == TipoModificatore.VARIAZIONE_PERCENTUALE) {
 			valore += "%";
 		}
 		return modificatore.getTipoAttributo().getNome() + ' ' + valore;

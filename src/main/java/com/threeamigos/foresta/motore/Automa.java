@@ -1588,7 +1588,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					.setDanniBase(0)
 					.setCostoAcquisto(100)
 					.setPeso(3)
-					.setModificatore(TipoAttributo.COSTITUZIONE, TipoModificatore.AUMENTO_PERCENTUALE, 5)
+					.setModificatore(TipoAttributo.COSTITUZIONE, TipoModificatore.VARIAZIONE_PERCENTUALE, 5)
 					.costruisci();
 			personaggio.addArtefatto(elmoTremendo);
 
@@ -1600,8 +1600,8 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					.setDanniBase(5)
 					.setCostoAcquisto(10)
 					.setPeso(1)
-					.setModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_PERCENTUALE, 500)
-					.setModificatore(TipoAttributo.VALORE, TipoModificatore.AUMENTO_PERCENTUALE, 400)
+					.setModificatore(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_PERCENTUALE, 500)
+					.setModificatore(TipoAttributo.VALORE, TipoModificatore.VARIAZIONE_PERCENTUALE, 400)
 					.setIncantamento("Il Peperoncino di Cayenna", TipoDanno.FUOCO, 10, 0.5)
 					.costruisci();
 			personaggio.addArtefatto(cazzabubbolo);
@@ -1614,7 +1614,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 					.setDanniBase(0)
 					.setCostoAcquisto(20)
 					.setPeso(1)
-					.setModificatore(TipoAttributo.SAGGEZZA, TipoModificatore.AUMENTO_PERCENTUALE, 30)
+					.setModificatore(TipoAttributo.SAGGEZZA, TipoModificatore.VARIAZIONE_PERCENTUALE, 30)
 					.costruisci();
 			personaggio.addArtefatto(manualeUnix);
 

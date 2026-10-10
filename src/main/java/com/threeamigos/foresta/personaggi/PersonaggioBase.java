@@ -1170,7 +1170,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public void addSaluteMassima(int quantita, String note) {
-		ModificatoreAttributoMD modificatore = new ModificatoreAttributoMD(TipoAttributo.SALUTE, TipoModificatore.AUMENTO_FISSO, quantita, note);
+		ModificatoreAttributoMD modificatore = new ModificatoreAttributoMD(TipoAttributo.SALUTE, TipoModificatore.VARIAZIONE_FISSA, quantita, note);
 		addModificatore(modificatore);
 	}
 
@@ -1209,7 +1209,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	@Override
 	public void addMagiaMassima(int quantita, String note) {
-		ModificatoreAttributoMD modificatore = new ModificatoreAttributoMD(TipoAttributo.MAGIA, TipoModificatore.AUMENTO_FISSO, quantita, note);
+		ModificatoreAttributoMD modificatore = new ModificatoreAttributoMD(TipoAttributo.MAGIA, TipoModificatore.VARIAZIONE_FISSA, quantita, note);
 		addModificatore(modificatore);
 	}
 
@@ -1989,13 +1989,13 @@ public abstract class PersonaggioBase implements Personaggio {
 			return modificatoreAssoluto.getAsDouble();
 
 		double quantitaFisse = modificatoriLocali.stream()
-				.filter(m -> m.getTipoModificatoreAttributo() == TipoModificatore.AUMENTO_FISSO)
+				.filter(m -> m.getTipoModificatoreAttributo() == TipoModificatore.VARIAZIONE_FISSA)
 				.mapToDouble(ModificatoreAttributoMD::getQuantita).sum();
 
 		quantitaOriginale += quantitaFisse;
 
 		double quantitaPercentuali = modificatoriLocali.stream()
-				.filter(m -> m.getTipoModificatoreAttributo() == TipoModificatore.AUMENTO_PERCENTUALE)
+				.filter(m -> m.getTipoModificatoreAttributo() == TipoModificatore.VARIAZIONE_PERCENTUALE)
 				.mapToDouble(ModificatoreAttributoMD::getQuantita).sum();
 
 		return quantitaOriginale * (1 + quantitaPercentuali / 100);

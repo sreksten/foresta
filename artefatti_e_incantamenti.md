@@ -419,7 +419,7 @@ I bonus vanno a gradini:
 
 - **Prezzo secondo il valore in gioco** (`ListinoPergamene`, dal 2026-10-02; prima ogni punto costava uguale: 2 il fisso, 1 il percentuale).
   - **Incantamento:** 0,5 monete (`PERGAMENA_PREZZO_PER_PUNTO_DI_DANNO`) per ogni punto di danno grezzo che aggiunge a un colpo, cioè `bonus fisso × livello + coefficiente × Intelligenza tipica (9,7)`. Il livello è quello dell'ingrediente (che si compra vicino al livello del mondo), o quello dell'artefatto per gli artefatti incantati e per scegliere gli effetti migliori nella fusione.
-  - **Modificatore:** 0,5 monete (`PERGAMENA_PREZZO_PER_PERCENTO_DI_ATTRIBUTO`) per ogni 1% di cui aumenta il **valore tipico** dell'attributo, cioè la media delle classi giocanti in `PERSONAGGI_VALORI_MEDI.csv` (Forza 11,5, Precisione 3,2, Carico massimo 57; il Potere magico parte da 100). Un `AUMENTO_PERCENTUALE` di q% costa 0,5 × q; un `AUMENTO_FISSO` di q costa 0,5 × 100 × q / valore tipico, quindi +3 di Precisione (47) costa molto più di +3 di Forza (13). Una `QUANTITA_ASSOLUTA` ("porta a q") vale ancora `5 × q`.
+  - **Modificatore:** 0,5 monete (`PERGAMENA_PREZZO_PER_PERCENTO_DI_ATTRIBUTO`) per ogni 1% di cui aumenta il **valore tipico** dell'attributo, cioè la media delle classi giocanti in `PERSONAGGI_VALORI_MEDI.csv` (Forza 11,5, Precisione 3,2, Carico massimo 57; il Potere magico parte da 100). Un `VARIAZIONE_PERCENTUALE` di q% costa 0,5 × q; un `VARIAZIONE_FISSA` di q costa 0,5 × 100 × q / valore tipico, quindi +3 di Precisione (47) costa molto più di +3 di Forza (13). Una `QUANTITA_ASSOLUTA` ("porta a q") vale ancora `5 × q`.
   - **Minimo:** un ingrediente costa almeno 1 moneta (`PERGAMENA_PREZZO_MINIMO`).
 - **Il prezzo dell'ingrediente** è la somma dei prezzi dei suoi effetti.
 - **Effetti di stato:** +25% di prezzo per i `TipoDanno` che li hanno (`hasEffettiDiStato()`: FUOCO, GELO, VELENO…).
@@ -488,7 +488,7 @@ Perché marcatori nel testo e non JSON, come in `artefatti.txt`: il JSON costrin
 
 ### Valori e prezzo
 
-- Un modificatore è un `AUMENTO_FISSO` di intensità × gradino del livello (1, 2 o 3, `GradoIncantamento.getGradino`).
+- Un modificatore è un `VARIAZIONE_FISSA` di intensità × gradino del livello (1, 2 o 3, `GradoIncantamento.getGradino`).
 - Un incantamento è del grado del livello, con parte fissa e percentuale, e si chiama come quelli generati a caso ("Fuoco medio").
 - Il prezzo parte da quello base e sale del prezzo di pergamena (§6) di incantamenti e modificatori positivi, scende di quello dei modificatori negativi, ma non va sotto la metà del prezzo base.
 - Le spade da grammatica non ricevono incantamenti a caso (`incantaForse`): contraddirebbero il nome.

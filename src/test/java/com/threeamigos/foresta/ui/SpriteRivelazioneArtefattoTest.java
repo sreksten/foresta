@@ -38,7 +38,7 @@ class SpriteRivelazioneArtefattoTest {
             if (i % 2 == 0) {
                 md.addIncantamento("Fuoco minore", TipoDanno.FUOCO, 5, 0.05);
             } else {
-                md.addModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 1, "");
+                md.addModificatore(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 1, "");
             }
         }
         return md;

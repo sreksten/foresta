@@ -125,7 +125,7 @@ class IncantatoreTest {
         Artefatto spada = artefatto(TipoArtefatto.SPADA, 4);
         Artefatto pergamena = pergamena(0);
         pergamena.getModelloDati().addIncantamento("Gelo medio", TipoDanno.GELO, 10, 0.1);
-        pergamena.getModelloDati().addModificatore(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 2, "");
+        pergamena.getModelloDati().addModificatore(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 2, "");
         gruppo.addArtefatto(spada);
         gruppo.addArtefatto(pergamena);
         AutomaIncantatore incantatore = new AutomaIncantatore(gruppo, new BancoDiLavoro());
@@ -143,7 +143,7 @@ class IncantatoreTest {
         assertEquals(TipoArtefatto.SPADA, incantata.getTipo());
         assertEquals("Lama Del Drago", incantata.getNomeProprio().orElse(null));
         assertEquals(1, incantata.getIncantamenti().size());
-        assertTrue(incantata.getModificatori().contains(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.AUMENTO_FISSO, 2)));
+        assertTrue(incantata.getModificatori().contains(new ModificatoreAttributoMD(TipoAttributo.FORZA, TipoModificatore.VARIAZIONE_FISSA, 2)));
     }
 
     @Test
@@ -197,7 +197,7 @@ class IncantatoreTest {
     @Test
     void ilPotereMagicoSiFondeSoloSuBastoniELibriMagici() {
         Artefatto pergamena = artefatto(TipoArtefatto.PERGAMENA, 1);
-        pergamena.getModelloDati().addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_PERCENTUALE, 10, "");
+        pergamena.getModelloDati().addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.VARIAZIONE_PERCENTUALE, 10, "");
         List<Artefatto> banco = Collections.singletonList(pergamena);
         assertEquals(Optional.of(TipoMotivoRifiutoIncantatura.POTERE_MAGICO_FUORI_POSTO),
                 RegoleIncantatura.puoMettereSulBanco(banco, artefatto(TipoArtefatto.SPADA, 5)));
@@ -209,8 +209,8 @@ class IncantatoreTest {
     void suUnaSpadaIlPotereMagicoSiPerdeEPassaIlResto() {
         Artefatto spada = artefatto(TipoArtefatto.SPADA, 5);
         Artefatto sigillo = artefatto(TipoArtefatto.SIGILLO, 4);
-        sigillo.getModelloDati().addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_PERCENTUALE, 20, "");
-        sigillo.getModelloDati().addModificatore(TipoAttributo.PARATA, TipoModificatore.AUMENTO_FISSO, 3, "");
+        sigillo.getModelloDati().addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.VARIAZIONE_PERCENTUALE, 20, "");
+        sigillo.getModelloDati().addModificatore(TipoAttributo.PARATA, TipoModificatore.VARIAZIONE_FISSA, 3, "");
         BancoDiLavoro banco = new BancoDiLavoro();
         banco.addArtefatto(spada);
         assertEquals(Optional.empty(), RegoleIncantatura.puoMettereSulBanco(banco.getInventario(), sigillo));
@@ -233,7 +233,7 @@ class IncantatoreTest {
         // Given: una pergamena con un incantamento elementale e un modificatore di POTERE_MAGICO
         Artefatto libro = artefatto(TipoArtefatto.LIBRO_MAGICO, 5);
         Artefatto pergamena = pergamena(1);
-        pergamena.getModelloDati().addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.AUMENTO_PERCENTUALE, 10, "");
+        pergamena.getModelloDati().addModificatore(TipoAttributo.POTERE_MAGICO, TipoModificatore.VARIAZIONE_PERCENTUALE, 10, "");
         BancoDiLavoro banco = new BancoDiLavoro();
         banco.addArtefatto(libro);
         banco.addArtefatto(pergamena);
