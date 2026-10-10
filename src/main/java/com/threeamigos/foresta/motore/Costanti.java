@@ -77,6 +77,20 @@ public class Costanti {
     // massimo tanti mostri quanti i personaggi del gruppo, e mai uno dei mostri di MOSTRI_ESCLUSI_A_INIZIO_PARTITA
     public static final int INIZIO_MORBIDO_FINO_AL_LIVELLO = 3;
 
+    // L'ignominia della fuga (vedi PersonaggioBase.fugge): coraggio, valore e carisma calano di questa percentuale
+    // per questo numero di locazioni dopo quella della fuga
+    public static final int FUGA_IGNOMINIA_PERCENTUALE = 20;
+    public static final int FUGA_IGNOMINIA_LOCAZIONI = 3;
+    public static final String FUGA_IGNOMINIA_NOTA = "Ignominia della fuga";
+
+    // Il prezzo di un modificatore a tempo è quello del modificatore permanente per questo coefficiente per ogni
+    // turno di durata (vedi ListinoPergamene.prezzo), fino a un tetto. Una locazione vale tanti turni
+    // "Porta a 0" (QUANTITA_ASSOLUTA con 0) non vale 5 × 0: costa questo, fisso (prima del moltiplicatore del tempo)
+    public static final double PERGAMENA_PREZZO_PORTA_A_ZERO = 50;
+    public static final double PERGAMENA_COEFFICIENTE_PREZZO_PER_TURNO = 0.5;
+    public static final double PERGAMENA_MOLTIPLICATORE_PREZZO_TEMPO_MASSIMO = 2.0;
+    public static final int PERGAMENA_TURNI_PER_LOCAZIONE = 5;
+
     // A fine locazione ogni personaggio vivo recupera getRigenerazioneSalute(): 5 punti più questa quota della salute
     // massima, aumentati dalla COSTITUZIONE (circa il 25% della salute massima a inizio partita)
     public static final double RIGENERAZIONE_SALUTE_QUOTA_SALUTE_MASSIMA = 0.15;

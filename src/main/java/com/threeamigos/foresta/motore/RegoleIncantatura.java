@@ -5,6 +5,7 @@ import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.ListinoPergamene;
+import com.threeamigos.foresta.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.tipi.SupertipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoAttributo;
@@ -80,6 +81,9 @@ public final class RegoleIncantatura {
 			return Optional.of(passano == 1
 					? "L'artefatto ha posto per un solo effetto: passerà il migliore, gli altri andranno persi."
 					: "L'artefatto ha posto per " + passano + " effetti: passeranno i migliori, gli altri andranno persi.");
+		}
+		if (!isArma(artefatto.get()) && haModificatoriSulBersaglio(ingredienti)) {
+			return Optional.of("I modificatori sul bersaglio si fondono solo sulle armi: passeranno solo gli altri effetti.");
 		}
 		return Optional.of(isLibro(artefatto.get())
 				? "Sul libro gli incantamenti elementali non hanno effetto: passeranno solo gli altri effetti."
@@ -235,6 +239,9 @@ public final class RegoleIncantatura {
 			}
 		}
 		for (ModificatoreAttributoMD modificatore : ingrediente.getModificatori()) {
+			if (modificatore.getBersaglio() == BersaglioModificatore.BERSAGLIO && !isArma(artefatto)) {
+				continue;
+			}
 			if (modificatore.getTipoAttributo() != TipoAttributo.POTERE_MAGICO || accettaPotereMagico(artefatto)) {
 				effetti.add(new Effetto(null, modificatore, ListinoPergamene.prezzo(modificatore)));
 			}
@@ -249,6 +256,18 @@ public final class RegoleIncantatura {
 	private static boolean accettaPotereMagico(Artefatto artefatto) {
 		TipoArtefatto tipo = artefatto.getTipo();
 		return tipo == TipoArtefatto.BASTONE_MAGICO || tipo == TipoArtefatto.LIBRO_MAGICO;
+	}
+
+	/**
+	 * Un modificatore sul bersaglio lo mette un'arma quando colpisce: non ha senso su altro
+	 */
+	private static boolean isArma(Artefatto artefatto) {
+		return artefatto.getTipo().getSupertipo() == SupertipoArtefatto.ARMA;
+	}
+
+	private static boolean haModificatoriSulBersaglio(List<Artefatto> ingredienti) {
+		return ingredienti.stream().flatMap(i -> i.getModificatori().stream())
+				.anyMatch(m -> m.getBersaglio() == BersaglioModificatore.BERSAGLIO);
 	}
 
 	private static boolean isLibro(Artefatto artefatto) {

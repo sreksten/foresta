@@ -109,10 +109,6 @@ public enum TipoEvento {
      */
     NOTIFICA_AGGIORNAMENTO_STATO_MISSIONE,
     /**
-     * Un Personaggio acquisisce un Modificatore che ne cambia le statistiche
-     */
-    NOTIFICA_AGGIUNTA_MODIFICATORE_PERSONAGGIO,
-    /**
      * Notifica sull'approvazione di una richiesta di acquisto di un Artefatto
      */
     NOTIFICA_APPROVAZIONE_ACQUISTO_ARTEFATTO,
@@ -256,6 +252,10 @@ public enum TipoEvento {
      * Un Personaggio subisce una variazione di un effetto di stato come effetto collaterale di un combattimento
      */
     NOTIFICA_VARIAZIONE_EFFETTO_DI_STATO_PERSONAGGIO,
+    /**
+     * Un Personaggio riceve, cambia o perde un Modificatore che ne cambia le statistiche
+     */
+    NOTIFICA_VARIAZIONE_MODIFICATORE_PERSONAGGIO,
     /**
      * Variazione del punteggio globale
      */

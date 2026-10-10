@@ -211,6 +211,11 @@ public class ArtefattoMD implements Serializzabile {
 	}
 
 	public void addModificatore(ModificatoreAttributoMD modificatore) {
+		// Lo mette sul bersaglio un'arma che colpisce; un ingrediente (la pergamena) lo porta per passarlo a un'arma
+		if (modificatore.getBersaglio() == BersaglioModificatore.BERSAGLIO && tipo.getSupertipo() != SupertipoArtefatto.ARMA
+				&& !tipo.isIngrediente()) {
+			throw new IllegalArgumentException("Un modificatore sul bersaglio sta solo su un'arma o su un ingrediente, non su " + tipo);
+		}
 		modificatori.add(modificatore);
 	}
 
@@ -280,6 +285,12 @@ public class ArtefattoMD implements Serializzabile {
 			stream.print(PIPE);
 			stream.print(modificatore.getQuantita());
 			stream.print(PIPE);
+			stream.print(modificatore.getUnitaDurata().name());
+			stream.print(PIPE);
+			stream.print(modificatore.getDurata());
+			stream.print(PIPE);
+			stream.print(modificatore.getBersaglio().name());
+			stream.print(PIPE);
 			stream.println(Serializzabile.facoltativo(modificatore.getNote()));
 		}
 
@@ -319,10 +330,14 @@ public class ArtefattoMD implements Serializzabile {
 			TipoAttributo tipoAttributo = campi.enumerato(TipoAttributo.class);
 			TipoModificatore tipoModificatore = campi.enumerato(TipoModificatore.class);
 			double quantita = campi.decimale();
+			UnitaDurataModificatore unitaDurata = campi.enumerato(UnitaDurataModificatore.class);
+			int durata = campi.intero();
+			BersaglioModificatore bersaglio = campi.enumerato(BersaglioModificatore.class);
 			// Nota vuota: si rilegge come "", come la mette il costruttore a tre argomenti di
 			// ModificatoreAttributoMD, altrimenti il modificatore riletto non sarebbe più equals all'originale
 			String note = campi.testo();
-			modificatori.add(new ModificatoreAttributoMD(tipoAttributo, tipoModificatore, quantita, note));
+			modificatori.add(new ModificatoreAttributoMD(tipoAttributo, tipoModificatore, quantita, note, unitaDurata, durata,
+					bersaglio));
 		}
 		incantamenti.clear();
 		for (int i = 0; i < numeroIncantamenti; i++) {

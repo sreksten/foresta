@@ -1044,6 +1044,10 @@ public class DisplayableCanvas extends JPanel implements Runnable {
 		aggiungiSprite(riquadroLocazione.aggiungiEffettoDiStato(personaggio, effettoDiStato, colore));
 	}
 
+	public void aggiungiModificatore(VistaPersonaggio personaggio, String descrizione, DoomdarkColorModel.Color colore) {
+		aggiungiSprite(riquadroLocazione.aggiungiModificatore(personaggio, descrizione, colore));
+	}
+
 	public void aggiungiInterazione(VistaPersonaggio personaggio, TipoInterazioneConEffettiDiStato interazione) {
 		aggiungiSprite(riquadroLocazione.aggiungiInterazione(personaggio, interazione));
 	}

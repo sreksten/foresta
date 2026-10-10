@@ -27,6 +27,7 @@ import com.threeamigos.foresta.oggetti.GeneratoreArtefatti;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.*;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
+import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.FaseDiGioco;
@@ -1115,6 +1116,7 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 
 		// Aumentiamo la stanchezza, e fra una locazione e l'altra si riprende un po' di salute e di magia
 		for (Personaggio personaggioCorrente : gruppo.getPersonaggiVivi()) {
+			personaggioCorrente.riduciModificatori(UnitaDurataModificatore.LOCAZIONI);
 			personaggioCorrente.addStanchezza(1);
 			personaggioCorrente.addSalute(personaggioCorrente.getRigenerazioneSalute());
 			personaggioCorrente.addMagia(personaggioCorrente.getRigenerazioneMagia());

@@ -15,6 +15,7 @@ import com.threeamigos.foresta.interfacce.VistaPezzoDelSet;
 import com.threeamigos.foresta.interfacce.VistaScambio;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
 import com.threeamigos.foresta.tipi.SupertipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
@@ -311,10 +312,18 @@ abstract class DisplayableCanvasScambiatoreArtefatti extends DisplayableCanvasSc
                             valore = "";
                             break;
                     }
+                    // Il valore resta corto; chi lo colpisce e per quanto va sotto, nella descrizione
+                    StringBuilder dettaglio = new StringBuilder();
+                    if (modificatore.getBersaglio() == BersaglioModificatore.BERSAGLIO) {
+                        dettaglio.append("sul bersaglio");
+                    }
+                    if (modificatore.isTemporaneo()) {
+                        dettaglio.append(dettaglio.length() > 0 ? " " : "").append(modificatore.descrizioneDurata());
+                    }
                     nodo.creaNodo(
                             modificatore.getTipoAttributo().getNome(), font, coloreAttributi,
                             valore, font, coloreAttributi,
-                            null, null, null,
+                            dettaglio.length() > 0 ? dettaglio.toString() : null, fontSmall, coloreAttributi,
                             null, artefatto);
 
                 }

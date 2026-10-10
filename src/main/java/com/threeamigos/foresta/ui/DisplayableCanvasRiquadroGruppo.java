@@ -129,14 +129,14 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 				doomdark = ImageCache.get(p.getSalute(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetSalute - doomdark.getWidth(null), locYOffset, null);
 				graphics.drawImage(ImageCache.get("/", fontMedium, color), leftXOffsetSeparatoreSalute, locYOffset, null);
-				doomdark = ImageCache.get(p.getSaluteMassima(), fontMedium, color);
+				doomdark = ImageCache.get(p.getSaluteMassima(), fontMedium, colorePerAttributo(p, TipoAttributo.SALUTE, color));
 				graphics.drawImage(doomdark, rightXOffsetSaluteMassima - doomdark.getWidth(null), locYOffset, null);
 
 				graphics.drawImage(ImageCache.get("Mg:", fontMedium, color), leftXOffsetLabelMagia, locYOffset, null);
 				doomdark = ImageCache.get(p.getMagia(), fontMedium, color);
 				graphics.drawImage(doomdark, rightXOffsetMagia - doomdark.getWidth(null), locYOffset, null);
 				graphics.drawImage(ImageCache.get("/", fontMedium, color), leftXOffsetSeparatoreMagia, locYOffset, null);
-				doomdark = ImageCache.get(p.getMagiaMassima(), fontMedium, color);
+				doomdark = ImageCache.get(p.getMagiaMassima(), fontMedium, colorePerAttributo(p, TipoAttributo.MAGIA, color));
 				graphics.drawImage(doomdark, rightXOffsetMagiaMassima - doomdark.getWidth(null), locYOffset, null);
 
 				graphics.drawImage(ImageCache.get("Lv:", fontMedium, color), leftXOffsetLabelLivello, locYOffset, null);
@@ -145,11 +145,11 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 
 				locYOffset += fontMedium.getHeight();
 				graphics.drawImage(ImageCache.get("Cr:", fontMedium, color), leftXOffsetLabelCoraggio, locYOffset, null);
-				doomdark = ImageCache.get(p.getCoraggio(), fontMedium, color);
+				doomdark = ImageCache.get(p.getCoraggio(), fontMedium, colorePerAttributo(p, TipoAttributo.CORAGGIO, color));
 				graphics.drawImage(doomdark, rightXOffsetCoraggio - doomdark.getWidth(null), locYOffset, null);
 
 				graphics.drawImage(ImageCache.get("Vl:", fontMedium, color), leftXOffsetLabelValore, locYOffset, null);
-				doomdark = ImageCache.get(p.getValore(), fontMedium, color);
+				doomdark = ImageCache.get(p.getValore(), fontMedium, colorePerAttributo(p, TipoAttributo.VALORE, color));
 				graphics.drawImage(doomdark, rightXOffsetValore - doomdark.getWidth(null), locYOffset, null);
 
 				graphics.drawImage(ImageCache.get("St:", fontMedium, color), leftXOffsetLabelStanchezza, locYOffset, null);
@@ -157,7 +157,7 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 				graphics.drawImage(doomdark, rightXOffsetStanchezza - doomdark.getWidth(null), locYOffset, null);
 
 				graphics.drawImage(ImageCache.get("Ca:", fontMedium, color), leftXOffsetLabelCarisma, locYOffset, null);
-				doomdark = ImageCache.get(p.getCarisma(), fontMedium, color);
+				doomdark = ImageCache.get(p.getCarisma(), fontMedium, colorePerAttributo(p, TipoAttributo.CARISMA, color));
 				graphics.drawImage(doomdark, rightXOffsetCarisma - doomdark.getWidth(null), locYOffset, null);
 
 				locYOffset += fontMedium.getHeight();
@@ -189,6 +189,18 @@ class DisplayableCanvasRiquadroGruppo implements Finestra {
 			graphics.drawImage(ImageCache.get(stato, fontMedium, DoomdarkColorModel.Color.DARK_GRAY, innerWidth), locXOffset, locYOffset, null);
 			locYOffset += fontMedium.getHeight() * 2;
 		}
+	}
+
+	/**
+	 * Il colore di un valore: giallo se un modificatore porta l'attributo a un valore fisso, verde o rosso se i
+	 * modificatori temporanei lo alzano o lo abbassano (i dettagli sono nella scheda del personaggio)
+	 */
+	private static DoomdarkColorModel.Color colorePerAttributo(VistaPersonaggio p, TipoAttributo attributo, DoomdarkColorModel.Color colore) {
+		if (p.getFissaggio(attributo).isPresent()) {
+			return DoomdarkColorModel.Color.YELLOW;
+		}
+		double variazione = p.getVariazioneDaTemporanei(attributo);
+		return variazione > 0 ? DoomdarkColorModel.Color.GREEN : variazione < 0 ? DoomdarkColorModel.Color.RED : colore;
 	}
 
 	private int getOrdinalePersonaggio(VistaPersonaggio personaggio) {

@@ -30,7 +30,7 @@ public class SnifferBusEventi {
 
     public SnifferBusEventi() {
         BusEventi.iscriviti(NotificaAggiornamentoStatoMissione.class, this::onEventoAggiornamentoStatoMissione);
-        BusEventi.iscriviti(NotificaAggiuntaModificatorePersonaggio.class, this::onEventoAggiuntaModificatore);
+        BusEventi.iscriviti(NotificaVariazioneModificatorePersonaggio.class, this::onEventoVariazioneModificatore);
         BusEventi.iscriviti(NotificaApprovazioneAcquistoArtefatto.class, this::onEventoApprovazioneAcquistoArtefatto);
         BusEventi.iscriviti(NotificaApprovazioneAcquistoConsumabile.class, this::onEventoApprovazioneAcquistoConsumabile);
         BusEventi.iscriviti(NotificaApprovazionePrelievoArtefatto.class, this::onEventoApprovazionePrelievoArtefatto);
@@ -131,9 +131,10 @@ public class SnifferBusEventi {
                 evento.getEtichetta() + " - " + evento.getDescrizione());
     }
 
-    private void onEventoAggiuntaModificatore(NotificaAggiuntaModificatorePersonaggio evento) {
+    private void onEventoVariazioneModificatore(NotificaVariazioneModificatorePersonaggio evento) {
         ModificatoreAttributoMD modificatore = evento.getModificatore();
-        Logger.log(headerEvento(evento) + formattaModificatoreAttributo(modificatore) +
+        Logger.log(headerEvento(evento) + String.format("Tipo: %s, Durata: %d -> %d, ", evento.getTipo(),
+                evento.getDurataPrecedente(), evento.getNuovaDurata()) + formattaModificatoreAttributo(modificatore) +
                 formattaStatistichePersonaggio(evento.getPersonaggio()));
     }
 
@@ -534,8 +535,9 @@ public class SnifferBusEventi {
     }
 
     private String formattaModificatoreAttributo(ModificatoreAttributoMD modificatore) {
-        return String.format("TipoAttributo: %s, TipoModificatore: %s, Quantità: %5f, Note: %s - ",
-                modificatore.getTipoModificatoreAttributo(), modificatore.getTipoAttributo(), modificatore.getQuantita(), modificatore.getNote());
+        return String.format("TipoAttributo: %s, TipoModificatore: %s, Quantità: %5f, Durata: %s %d, Bersaglio: %s, Note: %s - ",
+                modificatore.getTipoAttributo(), modificatore.getTipoModificatoreAttributo(), modificatore.getQuantita(),
+                modificatore.getUnitaDurata(), modificatore.getDurata(), modificatore.getBersaglio(), modificatore.getNote());
     }
 
     private String headerEvento(EventoBase evento) {

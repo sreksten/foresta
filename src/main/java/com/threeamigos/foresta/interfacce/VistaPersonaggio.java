@@ -1,5 +1,7 @@
 package com.threeamigos.foresta.interfacce;
 
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 
 import java.util.Collection;
@@ -140,5 +142,22 @@ public interface VistaPersonaggio {
 	 * Per i testi, i set leggendari che il personaggio ha completato: "Set completo: Corredo di RomyJona (bonus x1,5)"
 	 */
 	List<String> getDescrizioniSetCompleti();
+
+	/**
+	 * I modificatori di attributo che il personaggio ha adesso e che scadono (a turni o a locazioni), con il tempo che resta
+	 */
+	Collection<ModificatoreAttributoMD> getModificatoriTemporanei();
+
+	/**
+	 * Di quanto i soli modificatori temporanei spostano un attributo: positivo se lo alzano, negativo se lo abbassano,
+	 * 0 se non lo toccano. Vale solo per i modificatori scritti su quell'attributo, non per quelli che ne dipendono.
+	 */
+	double getVariazioneDaTemporanei(TipoAttributo tipoAttributo);
+
+	/**
+	 * Se un modificatore porta l'attributo a un valore fisso (QUANTITA_ASSOLUTA), permanente o temporaneo, da un
+	 * artefatto o proprio: quello che vince (il valore più basso) e da dove viene.
+	 */
+	Optional<ModificatoreAttivo> getFissaggio(TipoAttributo tipoAttributo);
 
 }

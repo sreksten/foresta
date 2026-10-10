@@ -20,7 +20,7 @@ import java.util.Map;
  * <li>modificatore: di quanto aumenta l'attributo rispetto al suo valore tipico, per
  * PERGAMENA_PREZZO_PER_PERCENTO_DI_ATTRIBUTO ogni 1%. Un VARIAZIONE_PERCENTUALE di q% vale q%; un VARIAZIONE_FISSA di q
  * vale q diviso il valore tipico, quindi +1 di Precisione (che vale circa 3) costa molto più di +1 di Forza
- * (circa 11). Una QUANTITA_ASSOLUTA ("porta a q") vale 5 × q.</li>
+ * (circa 11). Una QUANTITA_ASSOLUTA ("porta a q") vale 5 × q, e "porta a 0" un prezzo fisso (50).</li>
  * </ul>
  * I valori stanno in Costanti e vanno bilanciati.
  */
@@ -89,6 +89,31 @@ public final class ListinoPergamene {
 	}
 
 	public static double prezzo(ModificatoreAttributoMD modificatore) {
+		return prezzoPermanente(modificatore) * moltiplicatoreTempo(modificatore);
+	}
+
+	/**
+	 * Un modificatore a tempo costa quanto il permanente per Costanti.PERGAMENA_COEFFICIENTE_PREZZO_PER_TURNO per ogni
+	 * turno di durata (una locazione vale PERGAMENA_TURNI_PER_LOCAZIONE turni), fino a
+	 * PERGAMENA_MOLTIPLICATORE_PREZZO_TEMPO_MASSIMO. Un permanente non cambia prezzo.
+	 */
+	private static double moltiplicatoreTempo(ModificatoreAttributoMD modificatore) {
+		int turni;
+		switch (modificatore.getUnitaDurata()) {
+			case TURNI:
+				turni = modificatore.getDurata();
+				break;
+			case LOCAZIONI:
+				turni = modificatore.getDurata() * Costanti.PERGAMENA_TURNI_PER_LOCAZIONE;
+				break;
+			default:
+				return 1.0d;
+		}
+		return Math.min(Costanti.PERGAMENA_MOLTIPLICATORE_PREZZO_TEMPO_MASSIMO,
+				Costanti.PERGAMENA_COEFFICIENTE_PREZZO_PER_TURNO * turni);
+	}
+
+	private static double prezzoPermanente(ModificatoreAttributoMD modificatore) {
 		double quantita = Math.abs(modificatore.getQuantita());
 		switch (modificatore.getTipoModificatoreAttributo()) {
 			case VARIAZIONE_FISSA:
@@ -96,7 +121,8 @@ public final class ListinoPergamene {
 			case VARIAZIONE_PERCENTUALE:
 				return Costanti.PERGAMENA_PREZZO_PER_PERCENTO_DI_ATTRIBUTO * quantita;
 			case QUANTITA_ASSOLUTA:
-				return Costanti.PERGAMENA_PREZZO_PER_PUNTO_ASSOLUTO * quantita;
+				// "Porta a 0" vale un prezzo fisso, non 5 × 0
+				return quantita == 0 ? Costanti.PERGAMENA_PREZZO_PORTA_A_ZERO : Costanti.PERGAMENA_PREZZO_PER_PUNTO_ASSOLUTO * quantita;
 			default:
 				throw new IllegalArgumentException("Tipo di modificatore non gestito: " + modificatore.getTipoModificatoreAttributo());
 		}

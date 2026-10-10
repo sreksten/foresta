@@ -13,6 +13,7 @@ Sorgenti in `src/main/java/com/threeamigos/foresta` (abbreviato `…/` sotto), r
 | Salvataggi e modello dati | `…/modellodati`, `…/interfacce/GestoreSalvataggi`, `…/strumenti/GestoreSalvataggiSuFile`, `…/motore/RiletturaPartita` | `motore_di_gioco.md` §5 |
 | Mappa, tempo, locazioni | `…/motore/Foresta`, `LineaTemporale`, `…/locazioni` | `motore_di_gioco.md` §6 |
 | Combattimento | `…/motore/CalcolatoreCombattimento`, `Ondata`, `…/modellodati/EffettoDiStatoMD` | `motore_di_gioco.md` §7, `interazioni_effetti_di_stato.md` |
+| Modificatori di attributo a tempo, armi che li mettono sul bersaglio | `…/modellodati/ModificatoreAttributoMD`, `…/missioni/ModificatoreDelTesto`, `PersonaggioBase`, `CalcolatoreCombattimento` | `modificatori_temporanei.md` |
 | Personaggi e gruppi | `…/personaggi`, `…/motore/Gruppo*`, `GestoreProgressione` | `motore_di_gioco.md` §8 |
 | Oggetti, artefatti, incantatore | `…/oggetti`, `…/motore/Automa{Inventario,AcquistiArtefatti,Incantatore,ScambiatoreArtefatti}`, `Regole*` | `artefatti_e_incantamenti.md` |
 | Negozi ed economia | `…/offerte`, `…/motore/RegoleContrattazione`, `OfferteAlchimista` | `economia.md` |
@@ -50,6 +51,6 @@ Panoramica in `motore_grafico.md`.
 
 ## Build e test
 
-`mvn test` esegue tutti i test (JUnit 5, in `src/test/java`); al 2026-10-08 sono 848, tutti verdi (16 saltati).
+`mvn test` esegue tutti i test (JUnit 5, in `src/test/java`); al 2026-10-10 sono 888, tutti verdi (16 saltati).
 `ui/DipendenzeUITest` controlla che la UI non importi motore e dominio, `eventi/DipendenzeEventiTest` che gli eventi non portino classi del dominio, `ui/DipendenzeVersoLaUITest` che nessuno fuori da `ui` la importi: le dipendenze che restano da togliere sono nelle loro `ECCEZIONI` (per la UI oggi nessuna).
 Le cose da fare generali sono in `todo.md`; i `TODO`/`FIXME` puntuali restano nel codice.

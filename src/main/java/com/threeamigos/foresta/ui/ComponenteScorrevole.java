@@ -269,6 +269,8 @@ public class ComponenteScorrevole<T> {
         }
 
         private Image creaImmagine(DoomdarkFont font, DoomdarkColorModel.Color color, String testo, int larghezza) {
+            // Un valore molto largo non deve lasciare alla chiave una larghezza negativa: l'immagine non si creerebbe
+            larghezza = Math.max(larghezza, font.getHeight());
             List<String> testi = FontTool.split(font, testo, larghezza);
             BufferedImage canvas = new BufferedImage(larghezza, (font.getHeight() + interlinea) * testi.size(), BufferedImage.TYPE_INT_ARGB);
             Graphics2D g2d = canvas.createGraphics();

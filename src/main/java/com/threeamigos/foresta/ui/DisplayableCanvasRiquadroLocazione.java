@@ -298,6 +298,17 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 	}
 
 	SpriteInterface aggiungiEffettoDiStato(VistaPersonaggio personaggio, TipoEffettoDiStato effettoDiStato, DoomdarkColorModel.Color colore) {
+		return aggiungiScrittaSulPersonaggio(personaggio, effettoDiStato.getDescrizione(), colore);
+	}
+
+	/**
+	 * Come l'effetto di stato, ma con la descrizione di un modificatore di attributo ("Furtività +5")
+	 */
+	SpriteInterface aggiungiModificatore(VistaPersonaggio personaggio, String descrizione, DoomdarkColorModel.Color colore) {
+		return aggiungiScrittaSulPersonaggio(personaggio, descrizione, colore);
+	}
+
+	private SpriteInterface aggiungiScrittaSulPersonaggio(VistaPersonaggio personaggio, String descrizione, DoomdarkColorModel.Color colore) {
 		CoordinateMD coordinate = mappaCoordinate.get(personaggio);
 		if (coordinate == null) {
 			return null;
@@ -306,7 +317,7 @@ class DisplayableCanvasRiquadroLocazione implements Finestra {
 		BufferedImage image = mappaImmagini.get(personaggio);
 		int x = xEffetto(personaggio, coordinate, image);
 		int yIniziale = coordinate.getY() + image.getHeight() / 3 - SOLLEVAMENTO_ANCORA;
-		SpriteEffetto sprite = new SpriteEffetto(effettoDiStato.getDescrizione(), DoomdarkFontMedium.getInstance(),
+		SpriteEffetto sprite = new SpriteEffetto(descrizione, DoomdarkFontMedium.getInstance(),
 				colore, x, yIniziale + calcolaOffsetVerticale(yIniziale));
 		effettiAttivi.add(new EffettoAttivo(yIniziale, sprite));
 		return sprite;

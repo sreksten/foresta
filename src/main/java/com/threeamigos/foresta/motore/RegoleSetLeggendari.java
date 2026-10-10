@@ -7,6 +7,7 @@ import com.threeamigos.foresta.modellodati.ArtefattoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.StatoPezzoDelSet;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
+import com.threeamigos.foresta.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.strumenti.Misc;
 
@@ -67,13 +68,13 @@ public final class RegoleSetLeggendari {
 	 */
 	public static ModificatoreAttributoMD applica(ModificatoreAttributoMD modificatore, double moltiplicatore) {
 		boolean bonus = modificatore.getQuantita() > 0
+				&& modificatore.getBersaglio() == BersaglioModificatore.PORTATORE
 				&& (modificatore.getTipoModificatoreAttributo() == TipoModificatore.VARIAZIONE_FISSA
 				|| modificatore.getTipoModificatoreAttributo() == TipoModificatore.VARIAZIONE_PERCENTUALE);
 		if (moltiplicatore == 1.0d || !bonus) {
 			return modificatore;
 		}
-		return new ModificatoreAttributoMD(modificatore.getTipoAttributo(), modificatore.getTipoModificatoreAttributo(),
-				modificatore.getQuantita() * moltiplicatore, modificatore.getNote());
+		return modificatore.conQuantita(modificatore.getQuantita() * moltiplicatore);
 	}
 
 	/**

@@ -26,6 +26,7 @@ import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoIncantesimo;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.UnitaDurataModificatore;
 import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.strumenti.Misc;
 
@@ -1140,6 +1141,7 @@ public abstract class LocazioneBase implements Locazione {
 		for (Personaggio personaggio : gruppo.getPersonaggiVivi()) {
 			personaggio.applicaDanniDaEffettiDiStato();
 			personaggio.riduciEffettiDiStato();
+			personaggio.riduciModificatori(UnitaDurataModificatore.TURNI);
 		}
 		if (!gruppo.getCapo().isVivo()) {
 			return Stato.GIOCO_PERSO;
@@ -1148,6 +1150,7 @@ public abstract class LocazioneBase implements Locazione {
 		for (Personaggio personaggio : gruppoAvversario.getPersonaggiVivi()) {
 			personaggio.applicaDanniDaEffettiDiStato();
 			personaggio.riduciEffettiDiStato();
+			personaggio.riduciModificatori(UnitaDurataModificatore.TURNI);
 			registraMorteAvversario(personaggio);
 		}
 		if (gruppoAvversario.getPersonaggiVivi().isEmpty()) {

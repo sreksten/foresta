@@ -6,6 +6,7 @@ import com.threeamigos.foresta.incantesimi.DardoArcano;
 import com.threeamigos.foresta.incantesimi.IncantesimoMalefico;
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.IncantamentoMD;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.GradoIncantamento;
 import com.threeamigos.foresta.personaggi.OmbraFiamma;
@@ -677,6 +678,23 @@ public class CalcolatoreCombattimento {
                                 Logger.log("L'incantamento applica stato magico: " + effettoMagico.name());
                             }
                         }
+                    }
+                }
+            }
+
+            // --- TRAGUARDO 3: Modificatori dell'arma sul bersaglio (es. FORTUNA porta a 0 per qualche turno) ---
+            // Un bersaglio immune al tipo di danno dell'arma lo è anche ai suoi modificatori. Per gli altri vale la
+            // probabilità degli stati degli incantamenti: il colpo contro la FORZA del difensore, più l'INTELLIGENZA
+            // di chi colpisce pesata dal POTERE_MAGICO
+            if (!immuneATipoDannoBase) {
+                for (ModificatoreAttributoMD modificatore : arma.getModificatoriSulBersaglio()) {
+                    double contributoMagico = attaccante.getIntelligenza() * attaccante.getPotereMagico() / 100.0d;
+                    double probModificatore = difensore.getForza() > 0
+                            ? ((dannoTotaleCombinato * 100.0d) / difensore.getForza()) + contributoMagico
+                            : 100.0d;
+                    if (Dado.tira(100) <= probModificatore) {
+                        dannoRisultante.addModificatoreDaAggiungere(modificatore.suPortatore());
+                        Logger.log("L'arma applica il modificatore: " + modificatore.getTipoAttributo() + " " + modificatore.getQuantita());
                     }
                 }
             }

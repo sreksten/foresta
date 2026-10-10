@@ -1,6 +1,7 @@
 package com.threeamigos.foresta.motore;
 
 import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 
 import com.threeamigos.foresta.personaggi.Personaggio;
 import com.threeamigos.foresta.tipi.TipoDanno;
@@ -22,6 +23,7 @@ public class DannoRisultante {
     private int danno;
     private final Collection<TipoInterazioneConEffettiDiStato> interazioni = new ArrayList<>();
     private final Collection<EffettoDiStatoMD> effettiDiStatoDaAggiungere = new ArrayList<>();
+    private final Collection<ModificatoreAttributoMD> modificatoriDaAggiungere = new ArrayList<>();
     private final Collection<TipoEffettoDiStato> effettiDiStatoDaRimuovere = new ArrayList<>();
     private boolean colpoDiGrazia = false;
     private int curaAdArea = 0;
@@ -73,6 +75,17 @@ public class DannoRisultante {
 
     public Collection<EffettoDiStatoMD> getEffettiDiStatoDaAggiungere() {
         return effettiDiStatoDaAggiungere;
+    }
+
+    /**
+     * Un modificatore che l'arma mette sul bersaglio colpito (già con bersaglio PORTATORE, vedi suPortatore)
+     */
+    public void addModificatoreDaAggiungere(ModificatoreAttributoMD modificatore) {
+        modificatoriDaAggiungere.add(modificatore);
+    }
+
+    public Collection<ModificatoreAttributoMD> getModificatoriDaAggiungere() {
+        return modificatoriDaAggiungere;
     }
 
     public void rimuoviEffettoDiStato(TipoEffettoDiStato tipoEffettoDiStato) {

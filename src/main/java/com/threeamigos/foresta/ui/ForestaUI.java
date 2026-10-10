@@ -8,11 +8,13 @@ import com.threeamigos.foresta.eventi.richieste.*;
 import com.threeamigos.foresta.interfacce.GestorePunteggi;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.Comando;
 import com.threeamigos.foresta.tipi.FaseDiGioco;
 import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
 import com.threeamigos.foresta.tipi.TipoInterazioneConEffettiDiStato;
+import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.strumenti.Logger;
 import com.threeamigos.foresta.strumenti.Temporizzabile;
 import com.threeamigos.foresta.strumenti.Temporizzatore;
@@ -114,6 +116,7 @@ public class ForestaUI implements Temporizzabile {
 		BusEventi.iscriviti(RichiestaSelezioneMissione.class, this::gestisciEventoSelezioneMissione);
 		BusEventi.iscriviti(InternoFaseDiGioco.class, this::gestisciEventoFaseDiGioco);
 		BusEventi.iscriviti(NotificaVariazioneEffettoDiStatoPersonaggio.class, this::gestisciEventoVariazioneEffettoDiStato);
+		BusEventi.iscriviti(NotificaVariazioneModificatorePersonaggio.class, this::gestisciEventoVariazioneModificatore);
 		BusEventi.iscriviti(NotificaVariazioneStatistichePersonaggio.class, this::gestisciEventoVariazioneStatistichePersonaggio);
 		BusEventi.iscriviti(NotificaVariazioneStatoVitalePersonaggio.class, this::gestisciEventoVariazioneStatoVitalePersonaggio);
 	}
@@ -568,6 +571,45 @@ public class ForestaUI implements Temporizzabile {
 			default:
 				throw new IllegalArgumentException("TipoVariazioneEffettoDiStato non gestito: " + evento.getTipo());
 		}
+	}
+
+	/**
+	 * Come per gli effetti di stato, uno sprite sul personaggio con la descrizione ("Furtività +5", "Intelligenza a 0"):
+	 * giallo se porta l'attributo a un valore, verde se lo alza, rosso se lo abbassa, grigio se l'effetto è finito. Solo
+	 * per i modificatori a tempo: quelli permanenti hanno già i loro messaggi.
+	 */
+	private void gestisciEventoVariazioneModificatore(NotificaVariazioneModificatorePersonaggio evento) {
+		ModificatoreAttributoMD modificatore = evento.getModificatore();
+		if (!modificatore.isTemporaneo()) {
+			return;
+		}
+		VistaPersonaggio personaggio = evento.getPersonaggio();
+		DoomdarkColorModel.Color colore;
+		switch (evento.getTipo()) {
+			case AGGIUNTA:
+				colore = coloreModificatore(modificatore);
+				break;
+			case MODIFICA:
+				// Solo se la durata si allunga (un doppione la rinfresca); se scende di un turno nessuno sprite
+				if (evento.getNuovaDurata() <= evento.getDurataPrecedente()) {
+					return;
+				}
+				colore = coloreModificatore(modificatore);
+				break;
+			case RIMOZIONE:
+				colore = DoomdarkColorModel.Color.MEDIUM_GRAY;
+				break;
+			default:
+				throw new IllegalArgumentException("TipoVariazioneModificatore non gestito: " + evento.getTipo());
+		}
+		displayableCanvas.aggiungiModificatore(personaggio, modificatore.descrizioneBreve(), colore);
+	}
+
+	private static DoomdarkColorModel.Color coloreModificatore(ModificatoreAttributoMD modificatore) {
+		if (modificatore.getTipoModificatoreAttributo() == TipoModificatore.QUANTITA_ASSOLUTA) {
+			return DoomdarkColorModel.Color.YELLOW;
+		}
+		return modificatore.getQuantita() >= 0 ? DoomdarkColorModel.Color.GREEN : DoomdarkColorModel.Color.RED;
 	}
 
 	private void rinfresca() {

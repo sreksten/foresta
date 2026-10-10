@@ -13,6 +13,8 @@
 > pubblicare `NotificaInterazionePersonaggio` per la UI, non decide nulla.
 > I salvataggi **non** devono restare retrocompatibili: il formato si cambia liberamente.
 
+I modificatori di attributo a tempo (`modificatori_temporanei.md`) non sono effetti di stato: li toglie anche l'Alba Sacra, ma l'immunità a un effetto di stato non li ferma; li ferma l'immunità al tipo di danno dell'arma che li applica.
+
 ## 0. Prerequisito: da `TipoInterazioneElementale` a `TipoInterazioneConEffettiDiStato` — ✅ fatto
 
 "Colpo di Grazia" (STORDITO/ATTERRATO + TAGLIENTE/PERFORANTE) è un'interazione fisica, non elementale, e prima era

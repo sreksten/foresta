@@ -4,16 +4,21 @@ import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.comandigiocatore.ComandoSpesaPuntoAbilita;
 import com.threeamigos.foresta.eventi.interni.InternoNotificaViaFumettoATempo;
 import com.threeamigos.foresta.eventi.notifiche.NotificaRifiutoPrelievoArtefatto;
+import com.threeamigos.foresta.interfacce.ModificatoreAttivo;
 import com.threeamigos.foresta.interfacce.VistaArtefatto;
 import com.threeamigos.foresta.interfacce.VistaPartita;
 import com.threeamigos.foresta.interfacce.VistaPersonaggio;
 import com.threeamigos.foresta.interfacce.VistaScambio;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.TipoAttributo;
+import com.threeamigos.foresta.tipi.TipoModificatore;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  *
@@ -43,6 +48,11 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
             figliVisibili = false;
         }
     }
+
+    // Il riferimento del titolo dell'elenco dei modificatori temporanei, per distinguerlo dagli attributi
+    private static final Object MODIFICATORI_TEMPORANEI = new Object();
+
+    private boolean modificatoriTemporaneiVisibili = true;
 
     private final Map<TipoAttributo, StatoAttributo> statiAttributi = new HashMap<>();
 
@@ -129,8 +139,9 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
 
         // Attributi personaggio
         yAttributi = y;
-        TipoAttributo attributoEvidenziato = trovaAttributo(personaggio, mouseX, mouseY);
-        ComponenteScorrevole<TipoAttributo> componenteScorrevole = costruisciComponenteScorrevoleAttributi(personaggio, attributoEvidenziato);
+        Object riferimentoSottoIlMouse = trovaRiferimento(personaggio, mouseX, mouseY);
+        TipoAttributo attributoEvidenziato = riferimentoSottoIlMouse instanceof TipoAttributo ? (TipoAttributo) riferimentoSottoIlMouse : null;
+        ComponenteScorrevole<Object> componenteScorrevole = costruisciComponenteScorrevoleAttributi(personaggio, attributoEvidenziato);
 
         offsetYZonaCentrale = componenteScorrevole.limitaOffset(height - y, offsetYZonaCentrale);
         Image image = componenteScorrevole.produci(height - y, offsetYZonaCentrale);
@@ -143,65 +154,113 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
      * evidenziato (se non null ed è primario) viene disegnato in bianco invece che nel suo
      * colore consueto.
      */
-    private ComponenteScorrevole<TipoAttributo> costruisciComponenteScorrevoleAttributi(VistaPersonaggio p, TipoAttributo evidenziato) {
+    private ComponenteScorrevole<Object> costruisciComponenteScorrevoleAttributi(VistaPersonaggio p, TipoAttributo evidenziato) {
 
-        ComponenteScorrevole<TipoAttributo> componenteScorrevole = new ComponenteScorrevole<>(
+        ComponenteScorrevole<Object> componenteScorrevole = new ComponenteScorrevole<>(
                 width - 2 * corniceInventarioWidth - 4 * SPACING, 10, 2);
 
         DoomdarkColorModel.Color colore;
 
         colore = DoomdarkColorModel.Color.LIGHT_GRAY;
 
-        creaNodo(componenteScorrevole, colore, TipoAttributo.FORZA, p.getForza(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.DESTREZZA, p.getDestrezza(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.COSTITUZIONE, p.getCostituzione(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.INTELLIGENZA, p.getIntelligenza(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.SAGGEZZA, p.getSaggezza(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.CARISMA, p.getCarisma(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.FORTUNA, p.getFortuna(), evidenziato);
+        creaNodoModificatoriTemporanei(componenteScorrevole, p);
+
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.FORZA, p.getForza(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.DESTREZZA, p.getDestrezza(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.COSTITUZIONE, p.getCostituzione(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.INTELLIGENZA, p.getIntelligenza(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.SAGGEZZA, p.getSaggezza(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.CARISMA, p.getCarisma(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.FORTUNA, p.getFortuna(), evidenziato);
 
         colore = DoomdarkColorModel.Color.MEDIUM_GRAY;
 
-        creaNodo(componenteScorrevole, colore, TipoAttributo.NUMERO_BERSAGLI, p.getBersagli(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.POTERE_MAGICO, p.getPotereMagico(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.RIGENERAZIONE_SALUTE, p.getRigenerazioneSalute(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.RIGENERAZIONE_MAGIA, p.getRigenerazioneMagia(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.CARICO_MASSIMO, p.getCaricoMassimo(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.CRITICO, p.getCritico(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.PRECISIONE, p.getPrecisione(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.VELOCITA, p.getVelocita(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.FURTIVITA, p.getFurtivita(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.PARATA, p.getParata(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.RESISTENZA_MAGICA, p.getResistenzaMagica(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.PERCEZIONE, p.getPercezione(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.SOGGEZIONE, p.getSoggezione(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.FURIA, p.getFuria(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.CORAGGIO, p.getCoraggio(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.VALORE, p.getValore(), evidenziato);
-        creaNodo(componenteScorrevole, colore, TipoAttributo.CONTRATTAZIONE, p.getContrattazione(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.NUMERO_BERSAGLI, p.getBersagli(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.POTERE_MAGICO, p.getPotereMagico(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.RIGENERAZIONE_SALUTE, p.getRigenerazioneSalute(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.RIGENERAZIONE_MAGIA, p.getRigenerazioneMagia(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.CARICO_MASSIMO, p.getCaricoMassimo(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.CRITICO, p.getCritico(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.PRECISIONE, p.getPrecisione(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.VELOCITA, p.getVelocita(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.FURTIVITA, p.getFurtivita(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.PARATA, p.getParata(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.RESISTENZA_MAGICA, p.getResistenzaMagica(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.PERCEZIONE, p.getPercezione(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.SOGGEZIONE, p.getSoggezione(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.FURIA, p.getFuria(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.CORAGGIO, p.getCoraggio(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.VALORE, p.getValore(), evidenziato);
+        creaNodo(componenteScorrevole, p, colore, TipoAttributo.CONTRATTAZIONE, p.getContrattazione(), evidenziato);
 
         return componenteScorrevole;
     }
 
-    private void creaNodo(ComponenteScorrevole<TipoAttributo> componenteScorrevole, DoomdarkColorModel.Color colore,
+    /**
+     * In cima, se il personaggio ha modificatori che scadono, l'elenco di quelli attivi con il tempo che resta
+     */
+    private void creaNodoModificatoriTemporanei(ComponenteScorrevole<Object> componenteScorrevole, VistaPersonaggio p) {
+        Collection<ModificatoreAttributoMD> temporanei = p.getModificatoriTemporanei();
+        if (temporanei.isEmpty()) {
+            return;
+        }
+        ComponenteScorrevole<Object>.Nodo nodo = componenteScorrevole.creaNodo(
+                "Modificatori temporanei", font, DoomdarkColorModel.Color.LIGHT_GRAY,
+                String.valueOf(temporanei.size()), font, DoomdarkColorModel.Color.LIGHT_GRAY,
+                null, null, null,
+                null, MODIFICATORI_TEMPORANEI);
+        nodo.setFigliVisibili(modificatoriTemporaneiVisibili);
+        for (ModificatoreAttributoMD modificatore : temporanei) {
+            DoomdarkColorModel.Color coloreModificatore = modificatore.getQuantita() >= 0
+                    && modificatore.getTipoModificatoreAttributo() != TipoModificatore.QUANTITA_ASSOLUTA
+                    ? DoomdarkColorModel.Color.GREEN : DoomdarkColorModel.Color.RED;
+            nodo.creaNodo(
+                    modificatore.descrizioneEffetto(), font, coloreModificatore,
+                    modificatore.descrizioneDurata().replaceFirst("^per ", ""), font, coloreModificatore,
+                    modificatore.getNote().isEmpty() ? null : modificatore.getNote(), fontSmall, coloreModificatore,
+                    null, MODIFICATORI_TEMPORANEI);
+        }
+    }
+
+    /**
+     * Giallo se un modificatore porta l'attributo a un valore fisso (da qualunque fonte); altrimenti verde o rosso
+     * se i modificatori temporanei lo alzano o lo abbassano. Sotto il mouse un attributo primario è bianco.
+     */
+    private void creaNodo(ComponenteScorrevole<Object> componenteScorrevole, VistaPersonaggio p, DoomdarkColorModel.Color colore,
                           TipoAttributo tipoAttributo, double valoreAttributo, TipoAttributo evidenziato) {
+        Optional<ModificatoreAttivo> fissaggio = p.getFissaggio(tipoAttributo);
+        double variazione = p.getVariazioneDaTemporanei(tipoAttributo);
+        DoomdarkColorModel.Color coloreBase = fissaggio.isPresent() ? DoomdarkColorModel.Color.YELLOW
+                : variazione > 0 ? DoomdarkColorModel.Color.GREEN
+                : variazione < 0 ? DoomdarkColorModel.Color.RED
+                : colore;
         DoomdarkColorModel.Color coloreEffettivo = tipoAttributo.isPrimario() && tipoAttributo == evidenziato
                 ? DoomdarkColorModel.Color.WHITE
-                : colore;
-        ComponenteScorrevole<TipoAttributo>.Nodo nodo = componenteScorrevole.creaNodo(
+                : coloreBase;
+        ComponenteScorrevole<Object>.Nodo nodo = componenteScorrevole.creaNodo(
                 tipoAttributo.getNome(), font, coloreEffettivo,
                 String.valueOf((int)valoreAttributo), font, coloreEffettivo,
                 tipoAttributo.getDescrizione(), fontSmall, coloreEffettivo,
                 null, tipoAttributo);
         nodo.setFigliVisibili(statoDi(tipoAttributo).isFigliVisibili());
+        fissaggio.ifPresent(f -> {
+            ModificatoreAttributoMD modificatore = f.getModificatore();
+            String da = f.getFonte().isEmpty() ? "" : "da " + f.getFonte();
+            String durata = modificatore.isTemporaneo() ? " (" + modificatore.descrizioneDurata().replaceFirst("^per ", "ancora ") + ")" : "";
+            nodo.creaNodo(
+                    "Fissato a " + (int) modificatore.getQuantita(), fontSmall, DoomdarkColorModel.Color.YELLOW,
+                    null, null, null,
+                    (da + durata).trim().isEmpty() ? null : (da + durata).trim(), fontSmall, DoomdarkColorModel.Color.YELLOW,
+                    null, tipoAttributo);
+        });
     }
 
     /**
      * Riporta l'attributo il cui titolo occupa la posizione (x, y) espressa in coordinate
-     * della finestra, oppure null se il punto non cade sull'elenco degli attributi o non
-     * corrisponde al titolo di un attributo.
+     * della finestra (oppure MODIFICATORI_TEMPORANEI, se è il titolo di quell'elenco), oppure null se il punto non
+     * cade sull'elenco degli attributi o non corrisponde a un titolo.
      */
-    private TipoAttributo trovaAttributo(VistaPersonaggio p, int x, int y) {
+    private Object trovaRiferimento(VistaPersonaggio p, int x, int y) {
         int larghezzaAttributi = width - 2 * corniceInventarioWidth - 4 * SPACING;
         int xInterno = x - (corniceInventarioWidth + 2 * SPACING);
         if (xInterno < 0 || xInterno >= larghezzaAttributi || y < yAttributi || y >= height) {
@@ -219,7 +278,12 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
     }
 
     protected boolean processaClickPersonaggio(int x, int y, Tasto tasto) {
-                TipoAttributo attributo = trovaAttributo(personaggio, x, y);
+        Object riferimento = trovaRiferimento(personaggio, x, y);
+        if (riferimento == MODIFICATORI_TEMPORANEI) {
+            modificatoriTemporaneiVisibili = !modificatoriTemporaneiVisibili;
+            return true;
+        }
+        TipoAttributo attributo = riferimento instanceof TipoAttributo ? (TipoAttributo) riferimento : null;
         if (attributo != null) {
             StatoAttributo stato = statoDi(attributo);
             if (stato.isFigliVisibili()) {
@@ -245,7 +309,8 @@ public class DisplayableCanvasInventario extends DisplayableCanvasScambiatoreArt
     }
 
     protected boolean processaDoppioClickPersonaggio(int x, int y, Tasto tasto) {
-                TipoAttributo attributo = trovaAttributo(personaggio, x, y);
+        Object riferimento = trovaRiferimento(personaggio, x, y);
+        TipoAttributo attributo = riferimento instanceof TipoAttributo ? (TipoAttributo) riferimento : null;
         if (attributo != null) {
             BusEventi.pubblica(new ComandoSpesaPuntoAbilita(personaggio.getUuid(), attributo));
             return true;

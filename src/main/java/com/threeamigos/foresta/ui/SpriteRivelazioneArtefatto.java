@@ -5,7 +5,7 @@ import com.threeamigos.foresta.modellodati.IncantamentoMD;
 import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoModificatore;
+import com.threeamigos.foresta.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.tipi.TipoOggetto;
 import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
 import com.threeamigos.foresta.strumenti.Temporizzatore;
@@ -377,7 +377,7 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 		List<String> bonus = new ArrayList<>();
 		List<String> malus = new ArrayList<>();
 		for (ModificatoreAttributoMD modificatore : artefatto.getModificatori()) {
-			(modificatore.getQuantita() >= 0 ? bonus : malus).add(modificatore(modificatore));
+			(modificatore.getQuantita() >= 0 || modificatore.getBersaglio() == BersaglioModificatore.BERSAGLIO ? bonus : malus).add(modificatore(modificatore));
 		}
 		aggiungi(righe, incantamenti, font, DoomdarkColorModel.Color.YELLOW, larghezzaMassima);
 		aggiungi(righe, bonus, font, DoomdarkColorModel.Color.GREEN, larghezzaMassima);
@@ -417,11 +417,7 @@ class SpriteRivelazioneArtefatto implements SpriteInterface {
 	}
 
 	private static String modificatore(ModificatoreAttributoMD modificatore) {
-		String valore = String.format("%+.0f", modificatore.getQuantita());
-		if (modificatore.getTipoModificatoreAttributo() == TipoModificatore.VARIAZIONE_PERCENTUALE) {
-			valore += "%";
-		}
-		return modificatore.getTipoAttributo().getNome() + ' ' + valore;
+		return modificatore.descrizione();
 	}
 
 	private static String incantamento(IncantamentoMD incantamento) {

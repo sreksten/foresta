@@ -57,6 +57,7 @@ public class AlbaSacra  implements Incantesimo {
 
         for (Personaggio personaggio : gruppoBersaglio.getPersonaggi()) {
             personaggio.rimuoviTuttiGliEffettiDiStato();
+            personaggio.rimuoviTuttiIModificatoriTemporanei();
         }
         formulante.subMagia(getCostoLancio());
     }

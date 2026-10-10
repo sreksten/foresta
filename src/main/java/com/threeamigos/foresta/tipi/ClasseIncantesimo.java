@@ -46,7 +46,7 @@ public enum ClasseIncantesimo {
 	ALBA_SACRA(TipoIncantesimo.BENEFICO, PortataIncantesimo.GRUPPO, null,
 			"Alba", "incantesimo dell'Alba Sacra", "incantesimi dell'Alba Sacra",
 			Comando.ALBA_SACRA,
-			"Rimuove tutti gli effetti di stato al gruppo.");
+			"Rimuove tutti gli effetti di stato e i modificatori temporanei al gruppo.");
 
 	private final TipoIncantesimo tipo;
 	private final PortataIncantesimo portata;

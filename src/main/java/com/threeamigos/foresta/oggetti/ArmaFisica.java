@@ -4,9 +4,12 @@ import com.threeamigos.foresta.modellodati.IncantamentoMD;
 
 import com.threeamigos.foresta.interfacce.Arma;
 import com.threeamigos.foresta.modellodati.ArtefattoMD;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
+import com.threeamigos.foresta.tipi.BersaglioModificatore;
 import com.threeamigos.foresta.tipi.TipoDanno;
 
 import java.util.Collection;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -35,5 +38,12 @@ public class ArmaFisica extends Artefatto implements Arma {
     @Override
     public Collection<IncantamentoMD> getIncantamenti() {
         return md.getIncantamenti();
+    }
+
+    @Override
+    public Collection<ModificatoreAttributoMD> getModificatoriSulBersaglio() {
+        return md.getModificatori().stream()
+                .filter(m -> m.getBersaglio() == BersaglioModificatore.BERSAGLIO)
+                .collect(Collectors.toList());
     }
 }

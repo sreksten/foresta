@@ -149,9 +149,22 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
     boolean isDaAffrontare();
     void setDaAffrontare(boolean daAffrontare);
 	/**
-	 * Un modificatore permanente di un attributo (una benedizione, per esempio): resta finché non lo si toglie.
+	 * Un modificatore di un attributo: permanente (una benedizione, per esempio), che resta finché non lo si toglie,
+	 * oppure a tempo. Uno a tempo uguale a uno già presente non si somma: ne rinfresca la durata, se è più lunga.
+	 * Va dato con bersaglio PORTATORE: quelli sul bersaglio sono delle armi, e la copia che l'arma mette sul
+	 * bersaglio colpito è suPortatore().
 	 */
     void addModificatore(ModificatoreAttributoMD modificatore);
+
+	/**
+	 * Fa scorrere di un'unità il tempo dei modificatori misurati in quell'unità: a zero se ne vanno
+	 */
+	void riduciModificatori(UnitaDurataModificatore unitaDurata);
+
+	/**
+	 * Toglie tutti i modificatori che scadono, benefici o no (vedi AlbaSacra)
+	 */
+	void rimuoviTuttiIModificatoriTemporanei();
 	/**
 	 * Il personaggio muore a causa di qualcosa
 	 */

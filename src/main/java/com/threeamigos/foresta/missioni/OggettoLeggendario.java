@@ -3,9 +3,7 @@ package com.threeamigos.foresta.missioni;
 import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.tipi.SupertipoArtefatto;
 import com.threeamigos.foresta.tipi.TipoArtefatto;
-import com.threeamigos.foresta.tipi.TipoAttributo;
 import com.threeamigos.foresta.tipi.TipoDanno;
-import com.threeamigos.foresta.tipi.TipoModificatore;
 import com.threeamigos.foresta.tipi.TipoPersonaggio;
 import com.threeamigos.foresta.tipi.TipoRaritaArtefatto;
 import com.threeamigos.foresta.strumenti.CostruttoreArtefatto;
@@ -32,7 +30,6 @@ public final class OggettoLeggendario {
 
 	private static final String SEPARATORE = ";";
 	private static final String UGUALE = "=";
-	private static final String PERCENTUALE = "%";
 	private static final int LEGGENDE_MINIME = 2;
 
 	private final String riga;
@@ -203,14 +200,7 @@ public final class OggettoLeggendario {
 		CostruttoreArtefatto.StepModificatore costruttore = (danni != null ? passo.setDanniBase(danni).setCostoAcquisto(costo)
 				: passo.setCostoAcquisto(costo)).setPeso(peso);
 		for (String modificatore : modificatori) {
-			String[] parti = modificatore.split("\\s+");
-			if (parti.length != 2) {
-				throw new IllegalArgumentException("Un modificatore è attributo e valore, \"FORZA +100%\": " + modificatore);
-			}
-			boolean percentuale = parti[1].endsWith(PERCENTUALE);
-			double valore = Double.parseDouble(percentuale ? parti[1].substring(0, parti[1].length() - 1) : parti[1]);
-			costruttore = costruttore.setModificatore(TipoAttributo.valueOf(parti[0]),
-					percentuale ? TipoModificatore.VARIAZIONE_PERCENTUALE : TipoModificatore.VARIAZIONE_FISSA, valore);
+			costruttore = costruttore.setModificatore(ModificatoreDelTesto.da(modificatore));
 		}
 		Artefatto artefatto;
 		if (incantamenti.isEmpty()) {

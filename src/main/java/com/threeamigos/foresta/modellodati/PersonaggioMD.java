@@ -655,7 +655,7 @@ public class PersonaggioMD implements Serializzabile {
 		stream.println(valoriMinimi.entrySet().stream().map(e -> e.getKey().name() + MappaProprieta.SEPARATORE + e.getValue()).collect(Collectors.joining(PIPE)));
 		stream.println(valoriMassimi.entrySet().stream().map(e -> e.getKey().name() + MappaProprieta.SEPARATORE + e.getValue()).collect(Collectors.joining(PIPE)));
 		stream.println(valoriAttributi.entrySet().stream().map(e -> e.getKey().name() + MappaProprieta.SEPARATORE + e.getValue()).collect(Collectors.joining(PIPE)));
-		stream.println(modificatori.stream().map(m -> m.getTipoAttributo().name() + MappaProprieta.SEPARATORE + m.getTipoModificatoreAttributo().name() + MappaProprieta.SEPARATORE + m.getQuantita() + MappaProprieta.SEPARATORE + m.getNote()).collect(Collectors.joining(PIPE)));
+		stream.println(modificatori.stream().map(m -> m.getTipoAttributo().name() + MappaProprieta.SEPARATORE + m.getTipoModificatoreAttributo().name() + MappaProprieta.SEPARATORE + m.getQuantita() + MappaProprieta.SEPARATORE + m.getUnitaDurata().name() + MappaProprieta.SEPARATORE + m.getDurata() + MappaProprieta.SEPARATORE + m.getBersaglio().name() + MappaProprieta.SEPARATORE + m.getNote()).collect(Collectors.joining(PIPE)));
 		stream.println(effettiDiStato.stream().map(e -> e.getTipoEffettoDiStato().name() + MappaProprieta.SEPARATORE + e.getDurata() + MappaProprieta.SEPARATORE + e.getDanniNelTempo()).collect(Collectors.joining(PIPE)));
 
 		for (ArtefattoMD artefatto : artefatti) {
@@ -692,11 +692,13 @@ public class PersonaggioMD implements Serializzabile {
 		campi = new LettoreCampi(stream.readLine());
 		modificatori.clear();
 		while (campi.haAltriCampi()) {
-			// Limite 4: la nota può contenere il separatore
-			String[] attributoValore = campi.testo().split(MappaProprieta.SEPARATORE, 4);
+			// Limite 7: la nota, l'ultimo campo, può contenere il separatore
+			String[] attributoValore = campi.testo().split(MappaProprieta.SEPARATORE, 7);
 			ModificatoreAttributoMD modificatore = new ModificatoreAttributoMD(TipoAttributo.valueOf(attributoValore[0]),
 					TipoModificatore.valueOf(attributoValore[1]), Double.parseDouble(attributoValore[2]),
-					attributoValore.length > 3 ? attributoValore[3] : "");
+					attributoValore.length > 6 ? attributoValore[6] : "",
+					UnitaDurataModificatore.valueOf(attributoValore[3]), Integer.parseInt(attributoValore[4]),
+					BersaglioModificatore.valueOf(attributoValore[5]));
 			modificatori.add(modificatore);
 		}
 		campi = new LettoreCampi(stream.readLine());

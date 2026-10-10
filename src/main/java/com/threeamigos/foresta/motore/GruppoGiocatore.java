@@ -19,7 +19,11 @@ import com.threeamigos.foresta.modellodati.CoordinateMD;
 import com.threeamigos.foresta.modellodati.GruppoGiocatoreMD;
 import com.threeamigos.foresta.modellodati.ModelloDati;
 import com.threeamigos.foresta.modellodati.PersonaggioMD;
+import com.threeamigos.foresta.missioni.ModificatoreDelTesto;
+import com.threeamigos.foresta.modellodati.ModificatoreAttributoMD;
 import com.threeamigos.foresta.oggetti.Artefatto;
+import com.threeamigos.foresta.strumenti.CostruttoreArtefatto;
+import com.threeamigos.foresta.tipi.TipoArtefatto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
@@ -205,8 +209,26 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 			md.setPozioniMagiaGrande(99);
 			// La Falce del Tristo Mietitore, per provare la Mietitura
 			CatalogoLeggendari.getLeggendario(CHIAVE_FALCE_DI_PROVA).ifPresent(falce -> addArtefatto(falce.costruisci()));
+			// Due spade di livello 1 per provare i modificatori temporanei sul bersaglio (vedi modificatori_temporanei.md)
+			addArtefatto(spadaDiProva("la Spada dell'Inciampo", "che fa inciampare chi colpisce",
+					ModificatoreDelTesto.da("FORTUNA =0 @BERSAGLIO 2TURNI")));
+			addArtefatto(spadaDiProva("la Spada della Debolezza", "che toglie forza a chi colpisce",
+					ModificatoreDelTesto.da("FORZA -2 @BERSAGLIO 3TURNI")));
 			Foresta.ottieniMappa();
 		}
+	}
+
+	private static Artefatto spadaDiProva(String nome, String descrizione, ModificatoreAttributoMD modificatore) {
+		return CostruttoreArtefatto.istanza()
+				.setTipo(TipoArtefatto.SPADA)
+				.setNome(nome)
+				.setDescrizione(descrizione)
+				.setLivello(1)
+				.setDanniBase(10)
+				.setCostoAcquisto(30)
+				.setPeso(2)
+				.setModificatore(modificatore)
+				.costruisci();
 	}
 
 	@Override
