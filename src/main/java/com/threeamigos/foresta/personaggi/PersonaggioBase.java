@@ -45,7 +45,6 @@ public abstract class PersonaggioBase implements Personaggio {
 	/**
 	 * Personaggio Non Giocante (*solitamente*, un avversario)
 	 */
-	private boolean png;
 	/**
 	 * Suscettibile a corruzione da parte del gruppo del giocatore
 	 */
@@ -81,7 +80,7 @@ public abstract class PersonaggioBase implements Personaggio {
 
 	public PersonaggioBase(TipoPersonaggio classe, int livello) {
 		md.setClasse(classe);
-		png = true;
+		md.setPng(true);
 
 		// I boss partono con salute e magia piene, gli altri personaggi con un pool di valori lievemente casuale,
 		// dal 75% al 100% dei valori massimi
@@ -111,7 +110,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	public PersonaggioBase(String nome, TipoPersonaggio classe, int livello) {
 		this(classe, livello);
 		md.setNome(nome);
-		png = false;
+		md.setPng(false);
 	}
 
 	int getQuantitaMassima() {
@@ -224,7 +223,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public boolean isPNG() {
-		return png;
+		return md.isPng();
 	}
 
 	public boolean isImmortale() {
@@ -623,7 +622,8 @@ public abstract class PersonaggioBase implements Personaggio {
 			}
 			GruppoAvversario.getIstanza().rimuoviPersonaggio(this);
 			Scheletro scheletro = new Scheletro(getLivello());
-			scheletro.setOspiteDiLocazione(true);
+			scheletro.setMotivoNelGruppo(TipoMotivoNelGruppo.MIETITURA);
+			scheletro.setTempo(Costanti.MIETITURA_DURATA_TURNI + 1);
 			GruppoGiocatore.getIstanza().aggiungiPersonaggio(scheletro);
 		}
 	}
@@ -743,8 +743,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public boolean isATempo() {
-		Optional<Double> tempoOpt = md.getOptional(TipoAttributo.TEMPO);
-		return tempoOpt.isPresent() && tempoOpt.get() != PersonaggioMD.SENZA_LIMITE;
+		return md.getMotivoNelGruppo().isATempo();
 	}
 
 	public void setTempo(int tempo) {
@@ -754,7 +753,7 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	public int decrementaTempo() {
-		double tempo = md.get(TipoAttributo.TEMPO);
+		double tempo = md.getOptional(TipoAttributo.TEMPO).orElse(0.0d);
 		if (!md.isVivo() || !isATempo()) {
 			return (int)tempo;
 		}
@@ -766,13 +765,13 @@ public abstract class PersonaggioBase implements Personaggio {
 	}
 
 	@Override
-	public void setOspiteDiLocazione(boolean ospiteDiLocazione) {
-		md.set(TipoAttributo.OSPITE_DI_LOCAZIONE, ospiteDiLocazione ? 1.0d : 0.0d);
+	public void setMotivoNelGruppo(TipoMotivoNelGruppo motivo) {
+		md.setMotivoNelGruppo(motivo);
 	}
 
 	@Override
-	public boolean isOspiteDiLocazione() {
-		return md.getOptional(TipoAttributo.OSPITE_DI_LOCAZIONE).orElse(0.0d) != 0.0d;
+	public TipoMotivoNelGruppo getMotivoNelGruppo() {
+		return md.getMotivoNelGruppo();
 	}
 
 	public Offerta getOfferta(Comando azione) {
@@ -801,7 +800,6 @@ public abstract class PersonaggioBase implements Personaggio {
 	
 	public void setModelloDati(PersonaggioMD personaggioMD) {
 		this.md = personaggioMD;
-		png = false;
 		ricalcolaAttributiSecondari();
 	}
 

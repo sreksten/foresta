@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.offerte;
 
+import com.threeamigos.foresta.tipi.TipoMotivoNelGruppo;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
 import com.threeamigos.foresta.motore.Costanti;
@@ -80,6 +81,7 @@ public class AiutoMercenario implements Offerta {
 	@Override
 	public void accetta(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
 		// il primo turno scatta subito
+		personaggio.setMotivoNelGruppo(TipoMotivoNelGruppo.AIUTO_MERCENARIO);
 		personaggio.setTempo(costo + 1);
 		gruppo.aggiungiPersonaggio(personaggio);
 		gruppo.subMonete(costo);

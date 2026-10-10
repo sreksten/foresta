@@ -1,5 +1,6 @@
 package com.threeamigos.foresta.offerte;
 
+import com.threeamigos.foresta.tipi.TipoMotivoNelGruppo;
 import com.threeamigos.foresta.eventi.BusEventi;
 import com.threeamigos.foresta.eventi.interni.InternoMostraFinestraStato;
 import com.threeamigos.foresta.motore.Costanti;
@@ -67,6 +68,7 @@ public class AiutoGratuito implements Offerta {
 	@Override
 	public void accetta(GruppoGiocatore gruppo, GruppoAvversario gruppoAvversario) {
 		// il primo turno scatta subito
+		personaggio.setMotivoNelGruppo(TipoMotivoNelGruppo.AIUTO_GRATUITO);
 		personaggio.setTempo(durata + 1);
 		gruppo.aggiungiPersonaggio(personaggio);
 		BusEventi.pubblica(new InternoMostraFinestraStato());

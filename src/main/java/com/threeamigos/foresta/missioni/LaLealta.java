@@ -70,7 +70,7 @@ public class LaLealta extends MissioneAPassi {
 	private static List<Personaggio> candidati() {
 		GruppoGiocatore gruppo = GruppoGiocatore.getIstanza();
 		return gruppo.getPersonaggiVivi().stream()
-				.filter(p -> p != gruppo.getCapo() && !p.isATempo() && !p.isOspiteDiLocazione())
+				.filter(p -> p != gruppo.getCapo() && !p.isATempo())
 				.filter(p -> p.getModelloDati().getModificatori().stream().noneMatch(m -> LealtaRichiesta.NOTA.equals(m.getNote())))
 				.collect(Collectors.toList());
 	}

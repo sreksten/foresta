@@ -1,10 +1,6 @@
 package com.threeamigos.foresta.modellodati;
 
-import com.threeamigos.foresta.modellodati.EffettoDiStatoMD;
-import com.threeamigos.foresta.tipi.TipoAttributo;
-import com.threeamigos.foresta.tipi.TipoEffettoDiStato;
-import com.threeamigos.foresta.tipi.TipoModificatore;
-import com.threeamigos.foresta.tipi.TipoPersonaggio;
+import com.threeamigos.foresta.tipi.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -60,10 +56,13 @@ public class PersonaggioMD implements Serializzabile {
 	 */
 	private String causaTrapasso;
 	/**
-	 * Tempo rimanente prima che il personaggio lasci il gruppo (per i personaggi amichevoli che si offrono di
-	 * accompagnare il gruppo)
+	 * Se è un PNG: non l'ha creato il giocatore, per cui non ha esperienza e può non avere un nome proprio
 	 */
-	private final int tempoZ = SENZA_LIMITE;
+	private boolean png;
+	/**
+	 * Perché si trova nel gruppo del giocatore (se vi si trova)
+	 */
+	private TipoMotivoNelGruppo motivoNelGruppo = TipoMotivoNelGruppo.PERMANENTE;
 
 	/**
 	 * Valori minimi per un dato attributo - solitamente non presenti
@@ -112,6 +111,22 @@ public class PersonaggioMD implements Serializzabile {
 	public void setNome(String nome) {
 		String pulito = Serializzabile.senzaPipe(nome);
 		this.nome = pulito == null || pulito.trim().isEmpty() ? null : pulito;
+	}
+
+	public boolean isPng() {
+		return png;
+	}
+
+	public void setPng(boolean png) {
+		this.png = png;
+	}
+
+	public TipoMotivoNelGruppo getMotivoNelGruppo() {
+		return motivoNelGruppo;
+	}
+
+	public void setMotivoNelGruppo(TipoMotivoNelGruppo motivoNelGruppo) {
+		this.motivoNelGruppo = motivoNelGruppo;
 	}
 
 	public boolean isVivo() {
@@ -631,6 +646,10 @@ public class PersonaggioMD implements Serializzabile {
 		stream.print(puntiAbilitaDisponibili);
 		stream.print(PIPE);
 		stream.print(artefatti.size());
+		stream.print(PIPE);
+		stream.print(png);
+		stream.print(PIPE);
+		stream.print(motivoNelGruppo.name());
 		stream.println();
 
 		stream.println(valoriMinimi.entrySet().stream().map(e -> e.getKey().name() + MappaProprieta.SEPARATORE + e.getValue()).collect(Collectors.joining(PIPE)));
@@ -663,6 +682,8 @@ public class PersonaggioMD implements Serializzabile {
 		esperienza = campi.intero();
 		puntiAbilitaDisponibili = campi.intero();
 		int numeroArtefatti = campi.intero();
+		png = campi.booleano();
+		motivoNelGruppo = campi.enumerato(TipoMotivoNelGruppo.class);
 
 		impostaValori(valoriMinimi, stream.readLine());
 		impostaValori(valoriMassimi, stream.readLine());

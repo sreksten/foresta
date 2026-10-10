@@ -705,6 +705,12 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	private Esito entraInStatoPreparazioneLocazione() {
 		gruppoAvversario.reimposta();
 		gruppo.svuotaPanchina();
+		// Chi è nel gruppo per un motivo che finisce con la sua morte (lo Scheletro della Mietitura) se ne va
+		for (Personaggio personaggioCorrente : new ArrayList<>(gruppo.getPersonaggi())) {
+			if (!personaggioCorrente.isVivo() && personaggioCorrente.getMotivoNelGruppo().isLasciaSeMuore()) {
+				gruppo.rimuoviPersonaggio(personaggioCorrente);
+			}
+		}
 		gruppo.getPersonaggiVivi().forEach(Personaggio::rimuoviTuttiGliEffettiDiStato);
 		locazioneCorrente = Foresta.costruisciIstanza(gruppo.getCoordinate());
 		gruppo.setLocazioneCorrente(locazioneCorrente);
@@ -1096,11 +1102,12 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			return Esito.CONTINUA_CON_INGRESSO;
 		}
 
-		// Controlliamo i personaggi "a tempo"
-		for (Personaggio personaggioCorrente : gruppo.getPersonaggiVivi()) {
-			if (personaggioCorrente.isATempo()) {
+		// Controlliamo i personaggi "a tempo": il tempo scorre solo per chi è vivo (chi è morto resta com'è, finché
+		// qualcuno non lo fa risorgere) e quando arriva a zero se ne vanno
+		for (Personaggio personaggioCorrente : new ArrayList<>(gruppo.getPersonaggi())) {
+			if (personaggioCorrente.isATempo() && personaggioCorrente.isVivo()) {
 				int tempo = personaggioCorrente.decrementaTempo();
-				if (tempo == 0) {
+				if (tempo <= 0) {
 					gruppo.rimuoviPersonaggio(personaggioCorrente);
 				}
 			}
@@ -1371,6 +1378,9 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 			case PERSONAGGIO_3:
 			case PERSONAGGIO_4:
 			case PERSONAGGIO_5:
+			case PERSONAGGIO_6:
+			case PERSONAGGIO_7:
+			case PERSONAGGIO_8:
 				indicePersonaggioInventario = comando.ordinal() - Comando.PERSONAGGIO_1.ordinal();
 				richiediAperturaInventarioGruppo();
 				return Esito.FERMATI;
@@ -1958,20 +1968,35 @@ public class Automa implements ControlloreDiGioco, Temporizzabile {
 	 * così che la prossima apertura dell'inventario riparta da lì.
 	 */
 	private void richiediAperturaInventarioGruppo() {
+		// Solo i personaggi del gruppo: chi è a tempo non ha un inventario. Il comando di ognuno
+		// resta quello della sua posizione nel gruppo, così l'icona nella barra è sempre quella giusta.
 		Collection<Comando> comandiPossibili = new ArrayList<>();
+		int primoDelGruppo = -1;
 		int l = gruppo.getNumeroPersonaggi();
 		for (int i = 0; i < l; i++) {
-			comandiPossibili.add(Comando.ofPersonaggio(i));
+			if (isDelGruppoPerInventario(gruppo.getPersonaggio(i))) {
+				comandiPossibili.add(Comando.ofPersonaggio(i));
+				if (primoDelGruppo < 0) {
+					primoDelGruppo = i;
+				}
+			}
 		}
 		comandiPossibili.add(Comando.MOSTRA_TROFEI);
 		comandiPossibili.add(Comando.ANNULLA);
 
-		// Ultimo personaggio selezionato
-		indicePersonaggioInventario = Math.max(0, Math.min(indicePersonaggioInventario, gruppo.getNumeroPersonaggi() - 1));
+		// Ultimo personaggio selezionato, se è ancora uno di quelli dell'inventario
+		if (indicePersonaggioInventario < 0 || indicePersonaggioInventario >= l
+				|| !isDelGruppoPerInventario(gruppo.getPersonaggio(indicePersonaggioInventario))) {
+			indicePersonaggioInventario = Math.max(0, primoDelGruppo);
+		}
 		Personaggio personaggioScelto = gruppo.getPersonaggio(indicePersonaggioInventario);
 
 		BusEventi.pubblica(new RichiestaAperturaInventarioGruppo(comandiPossibili,
 				new AutomaInventario(personaggioScelto, gruppo), personaggioScelto));
+	}
+
+	private static boolean isDelGruppoPerInventario(Personaggio personaggio) {
+		return !personaggio.isATempo();
 	}
 
 	/**

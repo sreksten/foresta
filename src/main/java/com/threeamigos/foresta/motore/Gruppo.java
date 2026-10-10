@@ -78,11 +78,11 @@ public abstract class Gruppo implements VistaGruppo {
 	}
 
 	/**
-	 * Riporta il numero di personaggi permanenti (esclusi quelli a tempo e gli ospiti di locazione).
+	 * Riporta il numero di personaggi permanenti (esclusi quelli a tempo).
 	 */
 	public final int getNumeroPersonaggiPermanenti() {
 		return (int) personaggi.stream()
-				.filter(p -> !p.isATempo() && !p.isOspiteDiLocazione())
+				.filter(p -> !p.isATempo())
 				.count();
 	}
 

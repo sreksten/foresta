@@ -249,31 +249,27 @@ public interface Personaggio extends VistaPersonaggio, OggettoConArticoli, Scamb
 
 	/**
 	 * Alcuni PNG possono decidere di aggregarsi al gruppo di un giocatore per
-	 * qualche turno.
+	 * qualche turno: il tempo conta solo per chi è a tempo (vedi {@link #isATempo()}).
 	 * @param turni il numero di turni per il quale il PNG seguirà un giocatore
 	 */
     void setTempo(int turni);
 
 	/**
-	 * Indica che un personaggio si ferma nel gruppo per un certo numero di turni.
+	 * Perché il personaggio si trova nel gruppo del giocatore (vedi TipoMotivoNelGruppo).
+	 */
+    void setMotivoNelGruppo(TipoMotivoNelGruppo motivo);
+
+    TipoMotivoNelGruppo getMotivoNelGruppo();
+
+	/**
+	 * Indica che un personaggio si ferma nel gruppo per un certo numero di turni (aiuto gratuito o mercenario).
 	 */
     boolean isATempo();
 	/**
 	 * Diminuisce il numero di turni per i quali un PNG rimane con un giocatore.
-	 * Quando la funzione restituisce 0 il PNG lascia il gruppo.
+	 * Quando la funzione restituisce 0 (o meno) il PNG lascia il gruppo.
 	 */
     int decrementaTempo();
-
-	/**
-	 * Un personaggio ospite del gruppo del giocatore resta solo per la durata
-	 * della locazione corrente, invece che per un numero di turni come {@link #isATempo()}.
-	 */
-    void setOspiteDiLocazione(boolean ospiteDiLocazione);
-
-	/**
-	 * Indica che il personaggio è un ospite di locazione (vedi {@link #setOspiteDiLocazione(boolean)}).
-	 */
-    boolean isOspiteDiLocazione();
 	/**
 	 * Ogni personaggio puo' fare differenti tipi di offerta, a seconda della sua classe.
 	 */

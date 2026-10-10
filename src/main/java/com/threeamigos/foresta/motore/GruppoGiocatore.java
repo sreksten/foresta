@@ -23,6 +23,7 @@ import com.threeamigos.foresta.oggetti.Artefatto;
 import com.threeamigos.foresta.oggetti.Oggetto;
 import com.threeamigos.foresta.personaggi.FabbricaPersonaggi;
 import com.threeamigos.foresta.personaggi.Personaggio;
+import com.threeamigos.foresta.tipi.TipoMotivoNelGruppo;
 import com.threeamigos.foresta.tipi.CategoriaLocazione;
 import com.threeamigos.foresta.tipi.ClasseIncantesimo;
 import com.threeamigos.foresta.tipi.Comando;
@@ -227,7 +228,12 @@ public class GruppoGiocatore extends Gruppo implements ScambiatoreArtefatti, Vis
 		// Anche dal modello dati, altrimenti ricomparirebbe dopo un salvataggio
 		md.getPersonaggiMD().remove(p.getModelloDati());
 		String nome = p.getNome(Personaggio.OpzioniGetNome.INCLUDI_ARTICOLO_DETERMINATIVO_SINGOLARE, Personaggio.OpzioniGetNome.INIZIALE_MAIUSCOLA);
-		BusEventi.pubblica(new NotificaTestoFrase(nome + " lascia il gruppo."));
+		if (p.getMotivoNelGruppo() == TipoMotivoNelGruppo.MIETITURA) {
+			// Non se ne va: è finito l'effetto della Mietitura che lo teneva in piedi
+			BusEventi.pubblica(new NotificaTestoFrase(nome + " torna alla polvere: l'effetto della Mietitura è finito."));
+		} else {
+			BusEventi.pubblica(new NotificaTestoFrase(nome + " lascia il gruppo."));
+		}
 	}
 
 	/**
